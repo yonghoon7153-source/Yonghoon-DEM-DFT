@@ -498,6 +498,9 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            'n_through_dof': n_through_dof,                      # 교집합 = 양 플레이트 관통
            'plate_z_um': (round(z_b, 3), round(z_plate, 3)), 'n_plate_vox': (n_pb, n_pt),
            'k_plates': (k_bot, k_top_ref), 'cg_info': int(info) if info else 0, 'resid': resid,
+           # ★ 해가 자기 경계조건을 들고 다닌다 (Codex #7) — 진단이 솔버의 주기성을 추측하지
+           #   않게.  `phase_current_share` 는 이 키를 읽고, 없으면 **거부**한다 (fail-closed).
+           'periodic_xy': bool(periodic_xy),
            'unconverged': unconv}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
@@ -526,15 +529,34 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     return np.where(nv > 0, je / np.maximum(nv, 1), 0.0)
 
 
-def phase_current_share(res, sid, sigma_of_sid):
-    """Fraction of total dissipation per σ-id (where the current actually flows)."""
+def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
+    """Fraction of total dissipation per σ-id (where the current actually flows).
+
+    ⚠ 2026-08-12 (Codex #7): 예전에는 **내부 면 3쌍만** 더했다.  주기 런에서 솔버는
+    `:442-446` 에서 x/y seam 을 커플링하는데 이 진단이 그 면을 분자·분모 양쪽에서 빼면서
+    **seam 을 타는 상의 분담이 통째로 사라졌다** (seam 지배 격자 실측: wrap face 소산 =
+    전체의 22.9 %, 그 100 %가 VGCF).  ⇒ 주기 런이면 wrap 면쌍을 **더한다**.
+    z 는 어떤 경우에도 감지 않는다 (플레이트로 막힌 축).
+
+    `periodic_xy` 는 인자 → `res['periodic_xy']` 순으로 결정하고, **둘 다 없으면 거부**한다
+    (fail-closed — 옛 res 를 조용히 비주기로 읽으면 같은 결함이 되살아난다).
+    """
     if 'phi' not in res:
         return {}
+    if periodic_xy is None:
+        periodic_xy = res.get('periodic_xy')
+    if periodic_xy is None:
+        raise ValueError('phase_current_share: 경계조건을 알 수 없다 — solve_sigma_z 의 새 '
+                         'res(periodic_xy 포함)를 쓰거나 periodic_xy= 를 명시할 것.  '
+                         '추측하면 주기 런에서 seam 상의 분담이 조용히 사라진다 (Codex #7)')
     P, cond = res['phi'], res['cond']
     sig = sigma_of_sid[sid]
     diss = np.zeros(sid.shape, np.float64)
-    for sl_a, sl_b in ((np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
-                       (np.s_[:, :, :-1], np.s_[:, :, 1:])):
+    pairs = [(np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
+             (np.s_[:, :, :-1], np.s_[:, :, 1:])]
+    if periodic_xy:                       # seam 면쌍 (마지막 층 ↔ 첫 층).  z 는 넣지 않는다.
+        pairs += [(np.s_[-1:, :, :], np.s_[:1, :, :]), (np.s_[:, -1:, :], np.s_[:, :1, :])]
+    for sl_a, sl_b in pairs:
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
         g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
@@ -1160,6 +1182,36 @@ def _selftest():
     e = d < 1e-6 and pj == 'jacobi' and pa in ('amg', 'jacobi')
     ok &= e; print(f"amg-inv:  σ_eff {sj:.8g} → {sa:.8g}  Δ={d:.1e}  precond {pj}→{pa}  "
                    f"(expect Δ<1e-6, 해-불변)  {'OK' if e else 'FAIL'}")
+    # ★★ Codex #7 — 주기 런에서 phase_current_share 가 seam 면을 세는가.
+    #    기하: x 로 4셀, 두 기둥이 **seam 을 통해서만** 이어진다.
+    #      i=0 기둥(SE, sid 6) = 바닥에서 k=3 까지 · i=3 기둥(VGCF, sid 3) = k=3 에서 천장까지
+    #    → 비주기면 관통 경로가 없고, 주기면 i=3↔i=0 seam 면 하나로 회로가 닫힌다.
+    #    같은 해(res)에 진단만 두 규약으로 돌려 **진단 자체의 결함**을 격리한다.
+    sid_p = np.zeros((4, 1, 6), np.int8)
+    sid_p[0, 0, 0:4] = 6                                  # SE 기둥 (바닥 쪽)
+    sid_p[3, 0, 3:6] = 3                                  # VGCF 기둥 (천장 쪽)
+    sig_tab = np.zeros(9, np.float64); sig_tab[6] = 1.0; sig_tab[3] = 100.0
+    r_np = solve_sigma_z(sid_p, sig_tab, 0.5, z_top_um=3.0, return_field=True, periodic_xy=False)
+    r_pp = solve_sigma_z(sid_p, sig_tab, 0.5, z_top_um=3.0, return_field=True, periodic_xy=True)
+    e = r_np['sigma_eff'] < 1e-9 and r_pp['sigma_eff'] > 1e-3
+    ok &= e; print(f"seam-geom: 비주기 σ={r_np['sigma_eff']:.2e} (관통 없음) · 주기 σ={r_pp['sigma_eff']:.4g}"
+                   f"  (seam 으로만 닫히는 회로)  {'OK' if e else 'FAIL'}")
+    e = r_pp.get('periodic_xy') is True and r_np.get('periodic_xy') is False
+    ok &= e; print(f"seam-tag:  해가 자기 경계조건을 들고 다닌다  {'OK' if e else 'FAIL'}")
+    sh_on = phase_current_share(r_pp, sid_p, sig_tab)                    # res 에서 True 를 읽는다
+    sh_off = phase_current_share(r_pp, sid_p, sig_tab, periodic_xy=False)  # 옛 규약 재현
+    # seam 면이 유일한 연결이므로 그것을 빼면 분담이 **달라져야** 한다 (가능도비 ≠ 1)
+    e = sh_on != sh_off and abs(sh_on.get(3, 0.0) - sh_off.get(3, 0.0)) > 1e-6
+    ok &= e; print(f"seam-share: VGCF 분담 주기 {sh_on.get(3, 0):.4f} vs 옛규약 {sh_off.get(3, 0):.4f} "
+                   f"(seam 면을 빼면 달라져야 한다)  {'OK' if e else 'FAIL'}")
+    e = abs(sum(sh_on.values()) - 1.0) < 1e-9
+    ok &= e; print(f"seam-norm:  주기 분담 합 = {sum(sh_on.values()):.9f}  {'OK' if e else 'FAIL'}")
+    try:
+        phase_current_share({'phi': r_pp['phi'], 'cond': r_pp['cond']}, sid_p, sig_tab)
+        e = False
+    except ValueError:
+        e = True
+    ok &= e; print(f"seam-fail-closed: 경계조건 없는 res 는 **거부**한다  {'OK' if e else 'FAIL'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
