@@ -586,6 +586,7 @@ def build(tag, path, disp, a, pool):
     _j = json
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
              "hop_distance_A": hop["d"], "hop_shell": hop.get("shell"),
+             "pair_equivalent": hop.get("pair_equivalent"),
              "hop_shell_requested": hop.get("requested_shell"), "nelec": nelec_vac,
              "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array,
                                             smear=smear, degauss=degauss, ecls=ecls,
@@ -693,11 +694,18 @@ def main():
               f"· k {r['kpts']} · 이미지 {a.images}")
         o = r.get("li_orbits")
         if o:
-            eqv = o["n_li_orbits"] == 1
+            # ⛔ 2026-08-12 — 여기서 **전역 orbit 수**로 판정하고 있었다. Codex 가 회수기에
+            #   대해 지적한 P0-4 와 같은 버그인데 표시만 안 고쳐져 있었다. 구조에 Li 자리가
+            #   2종이라는 사실은 "선택한 쌍이 비등가" 라는 뜻이 아니다 —
+            #   c-c 홉은 자리가 2종이어도 **끝점이 대칭 동등**하다.
+            pe = r.get("pair_equivalent")
+            sh = r.get("hop_shell")
+            verdict = ("**대칭 동등** (정=역 장벽이어야 한다)" if pe is True else
+                       "**비대칭** (정≠역이 정상 — 두 자리의 에너지 차다)" if pe is False else
+                       "**등가성 미상** (쌍 orbit 을 못 읽었다 — Δ끝점 게이트가 꺼진다)")
             print(f"     대칭 {o['spacegroup']} · Li 자리 {o['n_li_orbits']}종 "
-                  f"{o['wyckoffs']} → 끝점 "
-                  + ("**대칭 동등** (정=역 장벽이어야 한다)" if eqv else
-                     "**비대칭** (정≠역이 정상 — 두 자리의 에너지 차다)"))
+                  f"{o['wyckoffs']}"
+                  + (f" · 홉 shell {sh}" if sh else "") + f" → 끝점 " + verdict)
         if "arrival_err" in r:
             ok = r["arrival_err"] < 1e-6
             print(f"     끝점 검산: 뛴 Li 가 공공 자리에 도달 "
