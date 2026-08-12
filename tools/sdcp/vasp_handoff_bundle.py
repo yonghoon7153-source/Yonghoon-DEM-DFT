@@ -151,6 +151,30 @@ MAGMOM   = {magmom}
 LWAVE    = .FALSE.
 LCHARG   = .TRUE.
 """
+SLAB_SP = """SYSTEM = {system} [static · single-point]
+# **UMA 이완 기하 위의 단일점.** 승계할 relax 가 없으므로 원자중첩에서 시작한다.
+# ⚠ 기하는 DFT 최소점이 아니다 — E_ads 를 인용할 때 반드시 같이 적을 것.
+{common}EDIFF    = 1E-6
+IBRION   = -1
+NSW      = 0
+ISIF     = 2
+LREAL    = Auto
+LDIPOL   = .TRUE.
+IDIPOL   = 3
+DIPOL    = 0.5 0.5 {zcom:.4f}
+LDAU      = .TRUE.
+LDAUTYPE  = 2
+LDAUL     = {ldaul}
+LDAUU     = {ldauu}
+LDAUJ     = {ldauj}
+LDAUPRINT = 2
+LMAXMIX   = 4
+MAGMOM   = {magmom}
+ISTART   = 0
+ICHARG   = 2
+LWAVE    = .FALSE.
+LCHARG   = .TRUE.
+"""
 SLAB_STATIC = """SYSTEM = {system} [static]
 # 2/2상 — **판정 에너지의 정본** (Codex §2.2). relax 의 CONTCAR/CHGCAR 를 승계한다.
 {common}EDIFF    = 1E-6
@@ -279,7 +303,8 @@ exit $rc
 # ─────────────────────────────────────────────────────────────────────────────
 def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
                    allow_stale_gate: bool = False,
-                   top_n: Optional[int] = None) -> List[Dict[str, Any]]:
+                   top_n: Optional[int] = None,
+                   champion: bool = False) -> List[Dict[str, Any]]:
     """자격 있는 Li_top↔Ni_top 대조쌍. audit 을 주면 **왜 빠졌는지**를 채워 준다.
 
     ⚠ down_dir 수 ≠ 대조쌍 수. site-screen 은 일부 방향에서 자리 **종류**를 훑는다
@@ -333,6 +358,32 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
         out.append({"dir": dd, "roll": int(ro), "li": r, "ni": q,
                     "dE_uma": round(de, 4), "n_rolls": len(lst),
                     "dir_median_uma": round(med, 4)})
+    # ── 챔피언 모드 (2026-08-12) ────────────────────────────────────────────
+    #   "Li 위 최선 vs Ni 위 최선" 을 직접 비교한다. 흡착에서 계는 제일 좋은 자리를
+    #   찾아가므로 이게 물리적으로 자연스러운 비교다.
+    #   ⚠ 두 챔피언이 **다른 방향**일 수 있다 — 그러면 ΔE 에 자리 효과와 배향 효과가
+    #     섞인다. 그래서 matched=False 로 표시하고 분석기가 그렇게 읽게 한다.
+    if champion:
+        li = [r for r in fs if r["site"] == "Li_top" and r.get("nearest_cation") == "Li"]
+        ni = [r for r in fs if r["site"] == "Ni_top" and r.get("nearest_cation") == "Ni"]
+        if not li or not ni:
+            return []
+        rl = min(li, key=lambda r: r["E_pose_eV"])
+        rn = min(ni, key=lambda r: r["E_pose_eV"])
+        out = [{"dir": f"{rl['down_dir']}v{rn['down_dir']}", "roll": int(rl["roll_deg"]),
+                "li": rl, "ni": rn, "matched": False,
+                "dE_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4), "n_rolls": 1,
+                "dir_median_uma": round(rn["E_pose_eV"] - rl["E_pose_eV"], 4),
+                "champion_dirs": {"Li": rl["down_dir"], "Ni": rn["down_dir"]}}]
+        if audit is not None:
+            audit["n_down_dirs"] = len({str(r.get("down_dir")) for r in rows})
+            audit["n_contrast_pairs"] = 1
+            audit["excluded_dirs"] = {}
+            audit["mode"] = ("champion — Li 위 최선 vs Ni 위 최선. 두 챔피언이 다른 "
+                             "방향이면 ΔE 에 배향 효과가 섞인다(matched=False).")
+            audit["champion_dirs"] = out[0]["champion_dirs"]
+        return out
+
     # ── top_n 선별 (2026-08-12) ─────────────────────────────────────────────
     #   "MLIP 로 훑고 상위만 DFT" 는 표준 흐름이다. 다만 **#1 하나로는 판정이 안 된다** —
     #   ΔE 는 짝이 있어야 정의되고, 방향에 따라 부호가 뒤집히는 경우가 있어
@@ -482,7 +533,7 @@ def _com_frac(atoms) -> List[float]:
 def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, seed_name: str, extra_meta: Dict[str, Any],
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
-                   prescf: bool = True) -> Dict[str, Any]:
+                   prescf: bool = True, single_point: bool = False) -> Dict[str, Any]:
     """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
     jd.mkdir(parents=True, exist_ok=True)
     pos = SS._write_poscar(jd / "POSCAR", atoms, nslab, freeze, zcut=zcut)
@@ -499,12 +550,17 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
            **_ldau_lines(pos["species_order"])}
     tpls = {"pre": SLAB_PRE, "relax": SLAB_RELAX, "static": SLAB_STATIC,
             "dense": SLAB_STATIC}
+    if single_point:
+        # MLIP 로 기하를 닫고 DFT 는 결합에너지만 — 상이 하나뿐이라 사슬도 없다.
+        tpls = {"static": SLAB_SP, "dense": SLAB_SP}
     if not prescf:
         # ⚠ pre 를 빼면 relax 의 ISTART=1 이 읽을 WAVECAR 가 없다. VASP 는 조용히
         #   처음부터 시작하므로 "승계했다" 는 기록만 남고 실제로는 안 한 게 된다.
         tpls["relax"] = SLAB_RELAX.replace("ISTART   = 1", "ISTART   = 0") \
                                   .replace("ICHARG   = 0", "ICHARG   = 2")
-    phases = (["pre"] if prescf else []) + ["relax", "static"] + (["dense"] if dense else [])
+    phases = (["static"] if single_point
+              else (["pre"] if prescf else []) + ["relax", "static"]) \
+        + (["dense"] if dense else [])
     kmesh, incar_exp = {}, {}
     for ph in phases:
         (jd / ph).mkdir(exist_ok=True)
@@ -851,7 +907,11 @@ def geometry_audit(jd, meta):
     """relax/CONTCAR vs POSCAR — 등록·결합그래프·탈착·고정 drift. (게이트, 정보) 반환."""
     gates, info = [], {}
     init = read_poscar(os.path.join(jd, "POSCAR"))
-    fin = read_poscar(os.path.join(jd, "relax", "CONTCAR"))
+    sp_only = "relax" not in (meta.get("phases") or ["relax"])
+    # ⚠ 단일점 모드는 CONTCAR 가 없다 — 기하가 안 변하므로 POSCAR 가 곧 최종이다.
+    #   그렇다고 검사를 끄지 않는다: 등록·결합 감사는 그대로 돌아 자세가 의도대로인지 본다.
+    fin = init if sp_only else read_poscar(os.path.join(jd, "relax", "CONTCAR"))
+    info["single_point"] = sp_only
     if init is None or fin is None or len(fin["pos"]) != len(init["pos"]):
         gates.append("REGISTRY_UNVERIFIED(CONTCAR 없음/파싱 실패/원자수 불일치)")
         return gates, info
@@ -903,7 +963,7 @@ def geometry_audit(jd, meta):
     # ── 계면 정체성 (Codex P0-7) — 자리 선호를 묻던 계가 다른 계가 됐는가 ──
     #   ⚠ 이 검사들은 "버리라" 가 아니라 **격리하라** 는 뜻이다. 재구성·전이가 일어난
     #     끝점은 흡착 에너지의 질문 자체가 달라져 같은 표에 못 올린다.
-    if mol and (top_li or top_ni):
+    if mol and (top_li or top_ni) and not sp_only:
         top_all = sorted(set(top_li) | set(top_ni))
         # ① 자유 상부 양이온의 재구성 변위
         rec_d = max((mic_dist(init["pos"][i], fin["pos"][i], fin["cell"])
@@ -942,7 +1002,7 @@ def geometry_audit(jd, meta):
                          + ", ".join(f"{a}–{b} {d}Å" for a, b, d in newb[:3]) + ")")
 
     dmax = 0.0
-    for i, fx in enumerate(init["fixed"]):
+    for i, fx in enumerate([] if sp_only else init["fixed"]):
         if fx:
             dmax = max(dmax, mic_dist(init["pos"][i], fin["pos"][i], fin["cell"]))
     info["fixed_drift_A"] = round(dmax, 4)
@@ -1414,7 +1474,15 @@ def main():
         fe = sum(1 for x in dl if x * side > delta) / n
         # ★ 번들 이전에 방향을 잃었으면 **무조건 검열 등급**이다. n=3·계획=3 이라
         #   coverage 100% 로 보여 ROBUST 까지 올라가던 경로를 막는다 (Codex P0-6).
-        if lost:
+        champ = [p for p in man["pairs"].values()
+                 if p["fragment"] == frag and p.get("matched") is False]
+        if champ:
+            # 챔피언 비교는 "Li 위 최선 vs Ni 위 최선" 이다 — 방향 통계가 아니라
+            # **설계상 1쌍**이므로 n<3 로 거부하지 않는다. 대신 무엇을 비교했는지 적는다.
+            cd = champ[0].get("champion_dirs") or {}
+            same = cd.get("Li") == cd.get("Ni")
+            cls = ("CHAMPION_SAME_DIR" if same else "CHAMPION_MIXED_ORIENTATION")
+        elif lost:
             cls = "DIRECTION_CENSORED_%d_OF_%d" % (n_planned, nd or n_planned)
         elif expect_dirs and n_planned != expect_dirs:
             cls = "CONTRACT_SHORT(계약 %d · 계획 %d)" % (expect_dirs, n_planned)
@@ -1435,7 +1503,9 @@ def main():
             "median_eV": round(med, 4), "class": cls,
             "n_down_dirs": nd, "direction_coverage": None if cov is None else round(cov, 2),
             "disqualified_dirs": lost,
-            "read_as": "Li 우세 경향" if med > 0 else "Ni 우세 경향",
+            "read_as": ("Li 위 최선이 더 안정" if med > 0 else "Ni 위 최선이 더 안정")
+            if champ else ("Li 우세 경향" if med > 0 else "Ni 우세 경향"),
+            "champion_dirs": (champ[0].get("champion_dirs") if champ else None),
             "note": ("PBE+U(6.2)+D3-zero fixed-protocol tendency — UMA 값과 같은 표 금지. "
                      "δ=%.3f eV." % delta)}
         if lost:
@@ -1697,13 +1767,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             aud: Dict[str, Any] = {}
             pairs = discover_pairs(run, audit=aud,
                                    allow_stale_gate=a.allow_stale_gate,
-                                   top_n=a.top_n)
+                                   top_n=a.top_n, champion=a.champion)
             man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
                 continue
             want = expect.get(frag)
-            if want is not None and a.top_n is not None:
+            if a.champion:
+                want = 1
+            elif want is not None and a.top_n is not None:
                 want = min(want, a.top_n)
             if want is not None and len(pairs) != want:
                 bad(f"{frag}: 대조쌍 {len(pairs)}개 — 계약은 {want}개 "
@@ -1731,6 +1803,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                     bad(f"{pid}: {'/'.join(miss)} 쪽 xyz 없음 — 쌍 통째로 빠짐")
                     continue
                 pm = {"fragment": frag, "dir": p["dir"], "roll": p["roll"],
+                      "matched": p.get("matched", True),
+                      "champion_dirs": p.get("champion_dirs"),
                       "uma_dE": p["dE_uma"], "uma_dir_median": p["dir_median_uma"],
                       "n_rolls_folded": p["n_rolls"], "seeds": seeds,
                       "dense_probe": dense,
@@ -1757,7 +1831,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                              "fragment": frag, "source_pose": rec["label"],
                              "uma_E_pose_eV": rec["E_pose_eV"]},
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
-                            prescf=not a.no_prescf)
+                            prescf=not a.no_prescf, single_point=a.single_point)
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
@@ -1773,7 +1847,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         m = _emit_slab_job(out / rel, clean, len(clean), a.freeze, man["fragments"][0],
                            f"clean slab {sd}", sd, {"kind": "clean_ref"},
                            ledger, zcut=zcut, dense=sd == SEED_MAIN,
-                           prescf=not a.no_prescf)
+                           prescf=not a.no_prescf, single_point=a.single_point)
         slab_metas.append(m)
         plan(rel, m["phases"], True)
         n_jobs += 1
@@ -1813,7 +1887,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
-    (out / "README_REQUEST.md").write_text(README.format(
+    sp_note = ("\n> ## ⚠ 이 번들은 **단일점(single-point)** 입니다\n"
+               "> 기하는 MLIP(UMA)로 이완한 것이고 DFT 는 **결합에너지만** 냅니다.\n"
+               "> `relax/` 상이 없습니다 — `static/` 하나만 돌리면 됩니다.\n"
+               "> 인용 시 반드시 함께 적을 것: *기하는 DFT 최소점이 아니다*.\n\n"
+               if a.single_point else "")
+    (out / "README_REQUEST.md").write_text(sp_note + README.format(
         freeze_pct=int(a.freeze * 100), zcut_note=f"{zcut:.3f} Å",
         k_relax=KMESH["relax"], k_static=KMESH["static"]))
     (out / "POTCAR_SPEC.txt").write_text(
@@ -1995,7 +2074,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -2011,7 +2090,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -2035,7 +2114,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -2052,7 +2131,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -2251,6 +2330,12 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--champion", action="store_true",
+                    help="조각마다 **Li 위 최선 · Ni 위 최선** 한 쌍만 (방향 무관). "
+                         "두 챔피언이 다른 방향이면 ΔE 에 배향 효과가 섞인다 — 표시된다.")
+    ap.add_argument("--single_point", action="store_true",
+                    help="MLIP 기하 위의 **단일점만** — DFT 는 결합에너지만 낸다. "
+                         "relax 를 안 돌리므로 기하는 DFT 최소점이 아니다(인용 시 명시).")
     ap.add_argument("--top_n", type=int, default=None,
                     help="조각마다 **자세 안정도 상위 N 쌍**만 (MLIP 스크린 → DFT 확인). "
                          "권장 3 — 분석기가 n<3 이면 판정을 거부한다. 1 은 판정 불가.")
