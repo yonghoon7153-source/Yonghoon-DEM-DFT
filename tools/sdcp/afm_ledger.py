@@ -108,7 +108,22 @@ def parse_qe(path) -> dict:
         frac.append(xyz if "crystal" in phead else vecmat(xyz, inv))
     if not labels:
         raise ValueError(f"{path}: ATOMIC_POSITIONS 를 한 줄도 못 읽었다")
-    return {"cell": cell, "labels": labels, "frac": frac}
+    # ★ 부호를 추론하지 않는다 — QE 입력이 직접 정의한다 (2026-08-12 Codex Q1).
+    #   ATOMIC_SPECIES 의 **순서**가 starting_magnetization(i) 의 i 다.
+    spec_order = []
+    if "ATOMIC_SPECIES" in t:
+        for line in t.split("ATOMIC_SPECIES")[1].splitlines()[1:]:
+            v = line.split()
+            if len(v) < 3 or not re.fullmatch(r"[A-Z][a-zA-Z]*\d*", v[0]):
+                break
+            spec_order.append(v[0])
+    smag = {}
+    for m in re.finditer(r"starting_magnetization\s*\(\s*(\d+)\s*\)\s*=\s*(-?[\d.eE+]+)", t):
+        i = int(m.group(1))
+        if 1 <= i <= len(spec_order):
+            smag[spec_order[i - 1]] = float(m.group(2))
+    return {"cell": cell, "labels": labels, "frac": frac,
+            "species_order": spec_order, "starting_magnetization": smag}
 
 
 def parse_poscar(path) -> dict:
@@ -181,6 +196,22 @@ def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A,
     if not ref:
         raise ValueError(f"QE 입력에 {element}* 라벨이 없다")
     sub_names = sorted({l for _f, l in ref})
+    # 부호 = QE starting_magnetization 의 부호. 없으면 하드코딩 계보로 후퇴하되 기록한다.
+    smag = qe.get("starting_magnetization") or {}
+    have = {n: smag[n] for n in sub_names if n in smag and abs(smag[n]) > 1e-12}
+    if len(have) == len(sub_names):
+        sign_map = {n: (1.0 if v > 0 else -1.0) for n, v in have.items()}
+        sign_src = {n: f"starting_magnetization={v:+g}" for n, v in have.items()}
+    else:
+        missing = [n for n in sub_names if n not in have]
+        sign_map = {n: SIGN[n] for n in sub_names if n in SIGN}
+        if len(sign_map) != len(sub_names):
+            raise ValueError(f"{missing} 의 starting_magnetization 이 없고 SIGN 계보에도 "
+                             f"없다 — 부호를 추측하지 않는다")
+        sign_src = {n: "하드코딩 계보(SIGN) — QE 에 starting_magnetization 없음"
+                    for n in sign_map}
+    if len(set(sign_map.values())) < 2 and len(sub_names) > 1:
+        raise ValueError(f"부격자 부호가 전부 같다 {sign_map} — AFM 이 아니다")
 
     # 슬랩 원자를 QE 셀 분수좌표로 접는다: frac_qe = frac_slab · M
     rows, worst, thin = [], 0.0, None
@@ -223,13 +254,13 @@ def build_ledger(qe: dict, slab: dict, element="Ni", tol=MATCH_TOL_A,
 
     sign = [0.0] * len(slab["syms"])
     for r in rows:
-        sign[r["slab_index"]] = SIGN.get(r["sublattice"], 0.0)
+        sign[r["slab_index"]] = sign_map.get(r["sublattice"], 0.0)
     net = sum(sign)
     return {"element": element, "supercell_matrix": M, "n_replicas": nrep,
             "counts": counts, "max_residual_A": round(worst, 4),
             "min_second_nearest_margin_A": None if thin is None else round(thin, 4),
             "qe_site_usage": {ref[k][1] + f"#{k}": u for k, u in enumerate(use)},
-            "sign_convention": {k: SIGN[k] for k in sub_names if k in SIGN},
+            "sign_convention": sign_map, "sign_source": sign_src,
             "net_moment_muB": round(net, 6),
             "sign_by_slab_index": {str(r["slab_index"]): SIGN[r["sublattice"]]
                                    for r in rows},
@@ -384,6 +415,28 @@ def selftest() -> int:
     Path(td + "/n4").mkdir(parents=True, exist_ok=True)
     qp4 = _fake(td + "/n4", cq, [("O", 0.25, 0.25, 0.3)], "qe")
     fails(lambda: build_ledger(parse_qe(qp4), slab), "라벨이 없다", "N4 Ni 라벨 없음")
+    # 부호를 QE 에서 읽는 경로 (하드코딩 fallback 이 아니라)
+    Path(td + "/sm").mkdir(parents=True, exist_ok=True)
+    sm = Path(td + "/sm/qe.in")
+    sm.write_text(Path(qp).read_text().replace(
+        "CELL_PARAMETERS angstrom",
+        "ATOMIC_SPECIES\n  Li 6.9 li.upf\n  Ni1 58.7 ni.upf\n  Ni2 58.7 ni.upf\n"
+        "  O 16.0 o.upf\n  starting_magnetization(2) = +0.300\n"
+        "  starting_magnetization(3) = -0.300\n\nCELL_PARAMETERS angstrom"))
+    qsm = parse_qe(str(sm))
+    chk(qsm["starting_magnetization"] == {"Ni1": 0.3, "Ni2": -0.3},
+        f"QE starting_magnetization 파싱 {qsm['starting_magnetization']}")
+    lsm = build_ledger(qsm, slab)
+    chk(lsm["sign_convention"] == {"Ni1": 1.0, "Ni2": -1.0}
+        and "starting_magnetization" in str(lsm["sign_source"]),
+        f"부호를 QE 에서 회수 (하드코딩 아님) {lsm['sign_convention']}")
+    # 음성: 두 부격자가 같은 부호면 AFM 이 아니다
+    Path(td + "/sm2").mkdir(parents=True, exist_ok=True)
+    sm2 = Path(td + "/sm2/qe.in")
+    sm2.write_text(sm.read_text().replace("starting_magnetization(3) = -0.300",
+                                          "starting_magnetization(3) = +0.300"))
+    fails(lambda: build_ledger(parse_qe(str(sm2)), slab), "전부 같다",
+          "N4d 두 부격자 같은 부호")
     # N4b: 같은 QE 자리를 두 번 쓰고 다른 자리를 비워도 **총개수는 맞는다** (Codex 2026-08-12)
     Path(td + "/n4b").mkdir(parents=True, exist_ok=True)
     dup = [list(a) for a in sat]

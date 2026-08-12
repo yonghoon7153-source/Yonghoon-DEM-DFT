@@ -42,6 +42,10 @@
   "Ni1": 1.0,
   "Ni2": -1.0
  },
+ "sign_source": {
+  "Ni1": "starting_magnetization=+0.3",
+  "Ni2": "starting_magnetization=-0.3"
+ },
  "net_moment_muB": 0.0,
  "sign_by_slab_index": {
   "1": -1.0,

@@ -127,7 +127,8 @@ LCHARG   = .TRUE.
 """
 SLAB_RELAX = """SYSTEM = {system} [relax]
 # 1/3상 — 기하 이완. ⚠ 판정 에너지는 여기서 회수하지 않는다 (static 이 정본).
-# pre 의 WAVECAR(ISTART=1)를 승계해 dipole 을 켠 채 다시 수렴시킨다.
+# pre 의 WAVECAR + **스핀분극 CHGCAR** 를 둘 다 승계한다 (Codex Q4 권장안 B —
+# restart robustness 우선. MPI/빌드가 달라 WAVECAR 가 거부돼도 전하밀도는 남는다).
 {common}EDIFF    = 1E-5
 EDIFFG   = -0.02
 IBRION   = 2
@@ -135,7 +136,7 @@ NSW      = 200
 ISIF     = 2
 LREAL    = Auto
 ISTART   = 1
-ICHARG   = 0
+ICHARG   = 1
 LDIPOL   = .TRUE.
 IDIPOL   = 3
 DIPOL    = 0.5 0.5 {zcom:.4f}
@@ -276,8 +277,8 @@ exit $rc
 # ─────────────────────────────────────────────────────────────────────────────
 # 쌍 발견 — verdict 와 같은 자격 규칙 + 지문 균질성 (v1 승계)
 # ─────────────────────────────────────────────────────────────────────────────
-def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None
-                   ) -> List[Dict[str, Any]]:
+def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None,
+                   allow_stale_gate: bool = False) -> List[Dict[str, Any]]:
     """자격 있는 Li_top↔Ni_top 대조쌍. audit 을 주면 **왜 빠졌는지**를 채워 준다.
 
     ⚠ down_dir 수 ≠ 대조쌍 수. site-screen 은 일부 방향에서 자리 **종류**를 훑는다
@@ -293,10 +294,26 @@ def discover_pairs(run_dir: Path, audit: Optional[Dict[str, Any]] = None
         except ValueError:
             print(f"  ⚠ 깨진 JSON 건너뜀 (죽은 런의 반쪽 파일?): {jp.name}")
     fs = [r for r in rows if r.get("ranking_eligible") and r.get("E_pose_eV") is not None]
-    fps = sorted({str(r.get("fingerprint")) for r in fs if r.get("fingerprint")})
+    # ★ 지문이 **있는 행만** 모아 비교하면 전부 비어도 통과한다 (Codex P0-3).
+    #   비었거나 현재 게이트 판과 다르면 옛 프로토콜 산출을 새 정본으로 쓰는 셈이다.
+    nofp = [r.get("label") for r in fs if not r.get("fingerprint")]
+    if nofp:
+        sys.exit(f"⛔ {run_dir}: 프로토콜 지문이 없는 자세 {len(nofp)}개 "
+                 f"({nofp[:3]}) — 어느 프로토콜로 돈 것인지 알 수 없다. 추정하지 않는다")
+    fps = sorted({str(r["fingerprint"]) for r in fs})
     if len(fps) > 1:
         sys.exit(f"⛔ {run_dir} 에 프로토콜 지문이 {len(fps)}종 섞여 있다: {fps} — "
                  f"regate/재실행으로 정리한 뒤 다시 만들 것")
+    # ⚠ gate_version 은 레코드 최상위가 아니라 **protocol 안**에 있다 (make_protocol).
+    #   그리고 게이트는 이완 구조에 사후 적용하는 후처리라, 불일치의 해법은 재계산이
+    #   아니라 **regate** 다 (site_screen.gate_version docstring).
+    cur = str(SS.gate_version())
+    gvs = sorted({str((r.get("protocol") or {}).get("gate_version")) for r in fs})
+    if gvs != [cur] and not allow_stale_gate:
+        sys.exit(f"⛔ {run_dir}: gate_version {gvs} ≠ 현재 {cur} — 이 자세들의 "
+                 f"ranking_eligible 은 **옛 문턱**으로 매긴 것이다.\n"
+                 f"   이완은 다시 안 돌려도 된다 — regate 만 다시 돌린 뒤 만들 것 "
+                 f"(의도적이면 --allow_stale_gate).")
     idx = {(r["site"], r["down_dir"], r["roll_deg"]): r for r in fs}
     by_dir: Dict[str, List[Tuple[float, float, dict, dict]]] = {}
     for (s, dd, ro), r in idx.items():
@@ -449,7 +466,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
                    system: str, seed_name: str, extra_meta: Dict[str, Any],
                    ledger: Dict[str, Any], zcut=None, dense: bool = False,
                    prescf: bool = True) -> Dict[str, Any]:
-    """슬랩 잡 v2 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
+    """슬랩 잡 v3 — POSCAR(루트) + pre/ + relax/ + static/ (+dense/). MAGMOM 재매핑·검산."""
     jd.mkdir(parents=True, exist_ok=True)
     pos = SS._write_poscar(jd / "POSCAR", atoms, nslab, freeze, zcut=zcut)
     mag_orig = seed_configs(atoms, nslab, frag, ledger)[seed_name]
@@ -507,7 +524,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
 
 
 def _emit_mol_job(jd: Path, frag: str, mol, margin: float) -> Dict[str, Any]:
-    """기체상 기준계 v2 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상."""
+    """기체상 기준계 v3 — 상자 span+margin, IDIPOL=4+DIPOL(COM), NUPDOWN, 2상."""
     from ase import Atoms
     jd.mkdir(parents=True, exist_ok=True)
     p = mol.get_positions()
@@ -613,7 +630,13 @@ BOND_F = 1.25             # 결합 = d < BOND_F × (r_i + r_j)
 DETACH_A = 4.0            # 분자-슬랩 최소거리가 이보다 크면 탈착
 FIX_DRIFT_A = 0.10        # 고정(F F F) 원자가 이보다 움직이면 파일 불일치
 FORCE_TOL = 0.05          # eV/Å — 자유원자 잔여 힘 경고
-MOM_MIN = 0.30            # μB — Ni 국소 모멘트가 이보다 작으면 붕괴로 본다
+RECON_A = 0.60            # Å — 자유 상부 양이온이 이만큼 움직이면 재구성
+LI_OUT_A = 0.80           # Å — Li 가 바깥(+z)으로 이만큼 나오면 추출 의심
+LI_O_A = 2.60             # Å — Li–O 배위 반경
+LI_COORD_LOSS = 2         # O 배위가 이만큼 줄면 추출로 본다
+MOM_MIN = 0.30            # μB — **개별 검토 trigger** (판정 문턱 아님, Codex Q7)
+Q_RATIO_MIN = 0.50        # clean 대비 Q 가 이 아래면 집단 붕괴 (초기 민감도)
+F_SMALL_MAX = 0.25        # |m|<MOM_MIN 비율이 이 위면 집단 붕괴 (초기 민감도)
 #: 준중심(semicore) 변형이 다르면 원자가 전자 수가 달라진다 — 일관돼도 치명이다.
 SEMICORE = ("_pv", "_sv", "_h", "_s", "_d")
 
@@ -657,6 +680,10 @@ def read_outcar(p):
     nelm = re.search(r"NELM\s*=\s*(\d+)", t)
     iters = re.findall(r"Iteration\s+\d+\(\s*(\d+)\)", t)
     ver = re.search(r"vasp\.([\w.]+)", t)
+    # 파일 존재가 아니라 **읽었다는 로그**로 승계를 증명한다 (Codex Q4)
+    read_wav = bool(re.search(r"reading WAVECAR|WAVECAR.*read|initial charge.*wavefunc", t, re.I))
+    fell_back = bool(re.search(r"ISTART.*=.*0.*job.*fresh|WAVECAR not read|"
+                               r"wave function.*not.*found|reading from scratch", t, re.I))
     titels = re.findall(r"TITEL\s*=\s*(.+)", t)
     mag = re.findall(r"number of electron\s+[\d.]+\s+magnetization\s+(-?[\d.]+)", t)
     forces = None
@@ -680,6 +707,7 @@ def read_outcar(p):
                              and any(int(x) >= int(nelm.group(1)) for x in iters)),
             "nions": int(nions.group(1)) if nions else None,
             "nkpts": int(nk.group(1)) if nk else None,
+            "read_wavecar": read_wav, "restart_fell_back": fell_back,
             "titels": [x.strip() for x in titels],
             "vasp_version": ver.group(1) if ver else None,
             "mag_total": float(mag[-1]) if mag else None,
@@ -810,7 +838,9 @@ def geometry_audit(jd, meta):
         info["mol_slab_min_A"] = round(dsl, 3)
         if dsl > DETACH_A:
             gates.append(f"DETACHED(분자-슬랩 {dsl:.2f} Å > {DETACH_A})")
-        info["_contact_fp"] = sorted(contact_fp(fin, mol, slab_idx))
+        # ⚠ 지문에 **O 도 넣는다** — Li/Ni 만 보면 O 쪽 접촉 재구성을 못 본다 (Codex Q3)
+        o_idx = [i for i, sy in enumerate(fin["syms"]) if sy == "O" and i not in mol]
+        info["_contact_fp"] = sorted(contact_fp(fin, mol, slab_idx + o_idx))
     if mol:
         # 기체 기준계도 여기 온다 (슬랩이 없어 위 블록은 건너뛴다) — 결합 감사는 한다
         b0, b1 = mol_bond_graph(init, mol), mol_bond_graph(fin, mol)
@@ -818,6 +848,47 @@ def geometry_audit(jd, meta):
         info["bonds"] = {"initial": len(b0), "broken": len(broke), "formed": len(formed)}
         if broke or formed:
             gates.append(f"BOND_CHANGE(끊김 {len(broke)} · 생성 {len(formed)})")
+    # ── 계면 정체성 (Codex P0-7) — 자리 선호를 묻던 계가 다른 계가 됐는가 ──
+    #   ⚠ 이 검사들은 "버리라" 가 아니라 **격리하라** 는 뜻이다. 재구성·전이가 일어난
+    #     끝점은 흡착 에너지의 질문 자체가 달라져 같은 표에 못 올린다.
+    if mol and (top_li or top_ni):
+        top_all = sorted(set(top_li) | set(top_ni))
+        # ① 자유 상부 양이온의 재구성 변위
+        rec_d = max((mic_dist(init["pos"][i], fin["pos"][i], fin["cell"])
+                     for i in top_all if not init["fixed"][i]), default=0.0)
+        info["top_reconstruction_A"] = round(rec_d, 3)
+        if rec_d > RECON_A:
+            gates.append(f"SURFACE_RECONSTRUCTION(상부 양이온 {rec_d:.2f} Å > {RECON_A})")
+        # ② Li 바깥쪽 이탈 + O 배위 손실 (표면에서 뽑혀 나왔나)
+        o_slab = [i for i, sy in enumerate(fin["syms"]) if sy == "O" and i not in mol]
+        worst_li = (0.0, 0, 0)
+        for i in top_li:
+            dz = fin["pos"][i][2] - init["pos"][i][2]
+            n0 = sum(1 for j in o_slab
+                     if mic_dist(init["pos"][i], init["pos"][j], init["cell"]) < LI_O_A)
+            n1 = sum(1 for j in o_slab
+                     if mic_dist(fin["pos"][i], fin["pos"][j], fin["cell"]) < LI_O_A)
+            if dz - 0.0 > worst_li[0] or (n0 - n1) > worst_li[1]:
+                worst_li = (max(dz, worst_li[0]), max(n0 - n1, worst_li[1]), i)
+        info["li_outward_A"] = round(worst_li[0], 3)
+        info["li_O_coord_loss"] = worst_li[1]
+        if worst_li[0] > LI_OUT_A or worst_li[1] >= LI_COORD_LOSS:
+            gates.append(f"LI_EXTRACTION(바깥 이동 {worst_li[0]:.2f} Å · "
+                         f"O 배위 −{worst_li[1]})")
+        # ③ 새 계면 결합 (분자 원자 ↔ 슬랩 원자가 공유반경 안으로)
+        newb = []
+        for m in mol:
+            for i in slab_idx + o_slab:
+                cut = BOND_F * (RCOV.get(fin["syms"][m], 1.0) + RCOV.get(fin["syms"][i], 1.0))
+                d0 = mic_dist(init["pos"][m], init["pos"][i], init["cell"])
+                d1 = mic_dist(fin["pos"][m], fin["pos"][i], fin["cell"])
+                if d1 < cut <= d0:
+                    newb.append((fin["syms"][m], fin["syms"][i], round(d1, 2)))
+        info["new_interface_bonds"] = newb[:8]
+        if newb:
+            gates.append(f"INTERFACE_REACTION_OR_RECONSTRUCTION(새 계면 결합 {len(newb)}: "
+                         + ", ".join(f"{a}–{b} {d}Å" for a, b, d in newb[:3]) + ")")
+
     dmax = 0.0
     for i, fx in enumerate(init["fixed"]):
         if fx:
@@ -994,16 +1065,40 @@ def main():
                             f"안 뒤집혔다 — 표면·라디칼 상대 스핀이 달라졌다)")
                     else:
                         rec["geom"]["magnetic"]["note"] = "전역 반전 — 시간반전이라 같은 상태"
-                # ⚠ MOM_MIN 은 보편 문턱이 아니다 (Ni 전하상태·공유결합성에 따라 낮을 수
-                #   있다). 전면 붕괴만 게이트로 잡고, 일부는 검토 표시로 남긴다.
-                if len(small) > 0.5 * len(ni):
-                    rec["gates"].append(
-                        f"MOMENT_COLLAPSED({len(small)}/{len(ni)} 이 |m|<{MOM_MIN} — 과반)")
-                elif small:
+                # ⚠ MOM_MIN 단독 문턱은 보편적이지 않다 (Codex Q7). LORBIT local moment 는
+                #   PAW sphere/projector 의존 정성 지표라 표면 Ni 가 물리적으로 0.3 아래로
+                #   갈 수 있다. 집단 지표 Q(부호 정규화 평균)와 f_small 을 clean 기준으로
+                #   보정해 판정한다 — 절대 판정은 main() 에서 clean 분포를 알고 내린다.
+                Q = sum(sg * ni[i] * got[i] for i in ni) / len(ni)
+                rec["geom"]["magnetic"]["Q_muB"] = round(Q, 3)
+                rec["geom"]["magnetic"]["f_small"] = round(len(small) / len(ni), 3)
+                if small:
                     rec["geom"]["magnetic"]["review"] = (
-                        f"{len(small)}개가 |m|<{MOM_MIN} — clean 슬랩 분포와 대조할 것")
+                        f"{len(small)}개가 |m|<{MOM_MIN} — clean 분포와 대조 (아래 집단 판정)")
         rec["ok"] = not rec["gates"]
         jobs[rel] = rec
+
+    # ── 자기 붕괴는 **clean seed 분포 기준**으로 판정한다 (Codex Q7) ──────────
+    #   숫자(0.5·0.25)는 초기 민감도일 뿐이다. clean 두 seed 의 Q 를 기준으로 보고,
+    #   기준이 없으면 판정을 보류한다(임의 문턱으로 죽이지 않는다).
+    q_clean = [r["geom"]["magnetic"]["Q_muB"] for j, r in jobs.items()
+               if "clean_slab" in j and (r.get("geom") or {}).get("magnetic", {}).get("Q_muB")]
+    q_ref = max(q_clean) if q_clean else None
+    for j, r in jobs.items():
+        mg = (r.get("geom") or {}).get("magnetic")
+        if not mg or "Q_muB" not in mg:
+            continue
+        mg["Q_clean_ref"] = q_ref
+        if q_ref is None:
+            mg["verdict"] = "clean 기준 없음 — 자기 붕괴 판정 보류"
+            continue
+        ratio = mg["Q_muB"] / q_ref if q_ref else None
+        mg["Q_ratio"] = None if ratio is None else round(ratio, 3)
+        if ratio is not None and (ratio < Q_RATIO_MIN or mg["f_small"] > F_SMALL_MAX):
+            r["gates"].append(
+                f"MAGNETIC_COLLAPSE(Q/Q_clean={ratio:.2f} · f_small={mg['f_small']:.2f} "
+                f"— clean 대비 집단 붕괴)")
+            r["ok"] = not r["gates"]
 
     # ── POTCAR 변형: 준중심 차이는 일관돼도 치명 (Codex P0-C) ────────────────
     subs, mixed = {}, False
@@ -1105,10 +1200,14 @@ def main():
                 fa = set(jli.get("_contact_fp") or [])
                 fb = set(jni.get("_contact_fp") or [])
                 if not fa and not fb:
-                    # ⚠ 양쪽 다 접촉이 없으면 지문은 **정보가 없다**. 빈 집합끼리 같다고
-                    #   해서도, 다르다고 해서도 안 된다 — RMSD 로만 판정하고 그렇게 적는다.
-                    #   (진짜 떠 있으면 DETACHED 가 따로 잡는다.)
-                    jac, fp_ok, why = None, True, "접촉 없음 — RMSD 로만"
+                    # ⚠ 양쪽 다 접촉이 없으면 지문은 **정보가 없다**. CONTACT_A 3.0 과
+                    #   DETACH_A 4.0 사이에 미판정 shell 이 있으므로 "떠 있지 않다" 가
+                    #   "지문이 검증됐다" 를 뜻하지 않는다 (Codex Q3). RMSD 는 진단으로만
+                    #   남기고 이 쌍은 최종 분류에서 뺀다.
+                    jac, fp_ok, why = None, False, "접촉 지문 없음 — 미검증"
+                    rec["gates"].append(
+                        f"BASIN_UNVERIFIED_EMPTY_CONTACT_FP(분자 RMSD {rms:.2f} Å 는 "
+                        f"진단값 — 3.0~4.0 Å 미판정 shell)")
                 else:
                     jac = len(fa & fb) / len(fa | fb)
                     fp_ok = jac >= FP_JACCARD
@@ -1317,7 +1416,7 @@ if __name__ == "__main__":
 '''
 
 
-README = """# VASP 외주 요청 v2 — SDCP/PTFE 자리 선호 + 흡착에너지 (원샷)
+README = """# VASP 외주 요청 v3 — SDCP/PTFE 자리 선호 + 흡착에너지 (원샷)
 
 ## 무엇을 계산하나
 LiNiO₂(104) 슬랩 위 분자 조각의 **자리 선호**(Li_top vs Ni_top)와 **흡착에너지**.
@@ -1423,7 +1522,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
         commit = "unknown"
     man: Dict[str, Any] = {
         "created": __import__("datetime").date.today().isoformat(), "repo_commit": commit,
-        "bundle_version": "v2", "gate_version": SS.gate_version(),
+        "bundle_version": "v3", "gate_version": SS.gate_version(),
         "freeze_frac_dft": a.freeze, "kmesh": KMESH, "nslab": nslab,
         "seeds_full": list(SEEDS_FULL), "seed_main": SEED_MAIN,
         "potcar_spec": {}, "fragments": [], "pairs": {}, "refs": {}, "planned": {},
@@ -1435,7 +1534,7 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
             "24/48(동전 던지기) 일치라 **다른 자기 배치**였다. 그 seed 로 만든 번들은 무효."),
         "afm_ledger": ledger,
         "protocol_delta_vs_phaseB": ("의도된 개선: LASPH T(납품 F) · LDIPOL T(납품 F) · "
-                                     "ISMEAR 0/0.05(납품 1/0.2) · relax+static 2상(납품 "
+                                     "ISMEAR 0/0.05(납품 1/0.2) · pre+relax+static+dense 다상(납품 "
                                      "단일점) · LREAL static .FALSE.(납품 Auto). "
                                      "승계: U 6.2 · IVDW 11 · ENCUT 520 · Ni_pv."),
     }
@@ -1497,7 +1596,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 bad(f"{frag}: {run} 없음")
                 continue
             aud: Dict[str, Any] = {}
-            pairs = discover_pairs(run, audit=aud)
+            pairs = discover_pairs(run, audit=aud,
+                                   allow_stale_gate=a.allow_stale_gate)
             man["pair_audit"][frag] = aud
             if not pairs:
                 bad(f"{frag}: 자격 쌍 0개")
@@ -1534,7 +1634,15 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                       "dense_probe": dense,
                       "li_prefix": f"{tier}/{pid}__Litop",
                       "ni_prefix": f"{tier}/{pid}__Nitop"}
+                pm["source_sha256"] = {}
                 for role, (xp, rec) in xyzs.items():
+                    jp = xp.with_suffix(".json")
+                    pm["source_sha256"][role] = {
+                        "xyz": hashlib.sha256(xp.read_bytes()).hexdigest(),
+                        "json": (hashlib.sha256(jp.read_bytes()).hexdigest()
+                                 if jp.is_file() else None),
+                        "fingerprint": rec.get("fingerprint"),
+                        "gate_version": rec.get("gate_version")}
                     cx = ase_read(xp); cx.set_cell(slab.cell.array); cx.set_pbc(True)
                     _assert_slab_lineage(cx, nslab, slab, f"{pid}/{role}", man)
                     used_els |= set(cx.get_chemical_symbols())
@@ -1737,7 +1845,10 @@ def selftest() -> int:
             (run / f"{lab}.json").write_text(json.dumps({
                 "label": lab, "site": role, "down_dir": dd, "roll_deg": 0,
                 "fragment": "ptfe_dimer", "E_pose_eV": e,
-                "nearest_cation": ncat, "ranking_eligible": True}))
+                "nearest_cation": ncat, "ranking_eligible": True,
+                "fingerprint": "stfp0001",
+                "protocol": {"fingerprint": "stfp0001",
+                             "gate_version": SS.gate_version()}}))
 
     SS.load_slab = lambda: slab_at
     SS.load_fragment = lambda f: (Atoms(symbols=mol_syms, positions=mol_at(3.0)),
@@ -1761,7 +1872,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False)
+                            no_prescf=False, allow_stale_gate=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -1769,10 +1880,36 @@ def selftest() -> int:
         chk("계약 위반" in str(e), f"N0 xyz 누락 → 생성 중단 ({str(e).splitlines()[0][:44]})")
     (run.parent / "hidden.xyz").rename(hidden)
 
+    # ── N0b 지문 없는 소스 행 (옛 판은 '있는 행만' 비교해 전부 비어도 통과했다) ──
+    jp0 = run / "ptfe_dimer__Li_top__fib00__r000.json"
+    keep = jp0.read_text()
+    d0 = json.loads(keep); d0.pop("fingerprint")
+    jp0.write_text(json.dumps(d0))
+    ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
+                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
+                            qe="(none)", expect=None, allow_partial=False,
+                            no_prescf=False, allow_stale_gate=False)
+    try:
+        build_bundle(ab, ledger=led)
+        chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
+    except SystemExit as e:
+        chk("지문이 없는" in str(e), f"N0b 지문 없는 소스 → 중단 ({str(e).splitlines()[0][:40]})")
+    # ── N0c gate_version 이 옛값 ──
+    d0["fingerprint"] = "stfp0001"
+    d0["protocol"] = {"fingerprint": "stfp0001", "gate_version": "OLDGATE01"}
+    jp0.write_text(json.dumps(d0))
+    ac = argparse.Namespace(**{**vars(ab), "out": str(td / "bundle_oldgate")})
+    try:
+        build_bundle(ac, ledger=led)
+        chk(False, "N0c 옛 gate_version → **번들이 만들어졌다**")
+    except SystemExit as e:
+        chk("gate_version" in str(e), f"N0c 옛 gate_version → 중단 (regate 안내)")
+    jp0.write_text(keep)
+
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False)
+                           no_prescf=False, allow_stale_gate=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -1916,7 +2053,7 @@ def selftest() -> int:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", default="/data/work/runs/sdcp_v4_sitescreen")
-    ap.add_argument("--out", default="/data/work/runs/sdcp_vasp_oneshot_v2")
+    ap.add_argument("--out", default="/data/work/runs/sdcp_vasp_oneshot_v3")
     ap.add_argument("--freeze", type=float, default=0.85)
     ap.add_argument("--nslab", type=int, default=192)
     ap.add_argument("--frags", nargs="*", default=None)
@@ -1925,6 +2062,8 @@ def main():
                     help="Ni1/Ni2 라벨이 있는 QE 입력 (부격자 원장의 원본)")
     ap.add_argument("--expect", nargs="*", default=None,
                     help="계약 방향 수 재정의: ptfe_c10=5 ptfe_dimer=3 ...")
+    ap.add_argument("--allow_stale_gate", action="store_true",
+                    help="옛 gate_version 산출을 그대로 쓴다 (기본은 중단 — regate 를 권함)")
     ap.add_argument("--allow_partial", action="store_true",
                     help="계약 위반을 안고 만든다 (기본은 중단 — 축소 번들 방지)")
     ap.add_argument("--no_prescf", action="store_true",
