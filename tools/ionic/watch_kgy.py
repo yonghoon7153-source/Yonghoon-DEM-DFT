@@ -226,8 +226,19 @@ def section_long():
                 pass
     print(f"   출력 {tot / 1e6:.1f} MB (traj 는 종료 시 한 번에 쓰인다 — 0 이어도 정상)")
     if age is not None:
+        # ⚠ 이 MD 드라이버는 진행 로그를 거의 안 찍는다 — 로그 침묵만으로 경고하면
+        #   늑대소년이 된다(실측 228분 침묵인데 GPU 94%로 정상 실행 중이었다).
+        #   드라이버·GPU 가 살아 있으면 침묵은 정상이라고 말한다.
+        try:
+            gutil = int(str(gpu).split(",")[0].strip())
+        except (ValueError, IndexError):
+            gutil = None
+        alive = ndrv > 0 and (gutil is None or gutil > 10)
+        note = ("   (드라이버·GPU 살아 있음 — 이 드라이버는 원래 진행 로그를 안 찍는다)"
+                if alive else
+                "   ⚠ 30분 넘게 조용한데 드라이버/GPU 도 놀고 있다 — 죽었는지 확인")
         print(f"   로그 마지막 갱신 {age:.0f}분 전"
-              + ("   ⚠ 30분 넘게 조용하다 — 살아 있는지 확인" if age > 30 and not mj else ""))
+              + (note if age > 30 and not mj else ""))
     b = None
     if mj:
         try:

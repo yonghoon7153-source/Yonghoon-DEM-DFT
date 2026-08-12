@@ -258,13 +258,23 @@ for ph in pre relax static dense; do
              need pre/CHGCAR  "pre 상이 CHGCAR 를 안 남겼다"
              cp pre/WAVECAR pre/CHGCAR relax/
            fi ;;
-    static) need relax/CONTCAR "relax 를 먼저 완주시킬 것"
-            need relax/CHGCAR  "ICHARG=1 인데 승계할 전하밀도가 없다 (relax LCHARG=.TRUE. 확인)"
-            cp relax/CONTCAR static/POSCAR
-            cp relax/CHGCAR  static/CHGCAR ;;
-    dense)  need relax/CONTCAR "relax 를 먼저 완주시킬 것"
+    static) if [ -d relax ]; then
+              need relax/CONTCAR "relax 를 먼저 완주시킬 것"
+              need relax/CHGCAR  "ICHARG=1 인데 승계할 전하밀도가 없다 (relax LCHARG=.TRUE. 확인)"
+              cp relax/CONTCAR static/POSCAR
+              cp relax/CHGCAR  static/CHGCAR
+            else
+              # 단일점 모드 — relax 가 애초에 없다. 루트 POSCAR 를 그대로 쓰고
+              # ISTART=0/ICHARG=2 (원자중첩)로 시작한다. CHGCAR 입력 없음.
+              cp POSCAR static/POSCAR
+            fi ;;
+    dense)  if [ -d relax ]; then
+              need relax/CONTCAR "relax 를 먼저 완주시킬 것"
+              cp relax/CONTCAR dense/POSCAR
+            else
+              cp POSCAR dense/POSCAR          # 단일점 — 기하가 안 변한다
+            fi
             need static/CHGCAR "dense 는 **static** 의 전하밀도를 승계한다 — static 먼저"
-            cp relax/CONTCAR dense/POSCAR
             cp static/CHGCAR dense/CHGCAR ;;
   esac
   echo "  ▶ $ph"
@@ -553,8 +563,12 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
     tpls = {"pre": SLAB_PRE, "relax": SLAB_RELAX, "static": SLAB_STATIC,
             "dense": SLAB_STATIC}
     if single_point:
-        # MLIP 로 기하를 닫고 DFT 는 결합에너지만 — 상이 하나뿐이라 사슬도 없다.
-        tpls = {"static": SLAB_SP, "dense": SLAB_SP}
+        # MLIP 로 기하를 닫고 DFT 는 결합에너지만.
+        # ⚠ dense 는 static 의 CHGCAR 를 승계해야 하므로 ICHARG=1 이어야 한다.
+        #   같은 SLAB_SP(ICHARG=2)를 재사용하면 복사한 CHGCAR 를 **안 쓴다**.
+        tpls = {"static": SLAB_SP,
+                "dense": SLAB_SP.replace("ICHARG   = 2", "ICHARG   = 1")
+                                .replace("[static · single-point]", "[dense · single-point]")}
     if not prescf:
         # ⚠ pre 를 빼면 relax 의 ISTART=1 이 읽을 WAVECAR 가 없다. VASP 는 조용히
         #   처음부터 시작하므로 "승계했다" 는 기록만 남고 실제로는 안 한 게 된다.
