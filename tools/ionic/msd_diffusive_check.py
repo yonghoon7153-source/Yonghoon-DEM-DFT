@@ -87,9 +87,25 @@ def loglog_slope(t, y, lo, hi):
     return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
 
 
+def _curve(d, mto=False):
+    """(t, y) 회수. --mto 면 msd_Li_A2_mto/times_ps_mto 를 쓴다.
+
+    ⚠ MTO 가 없는 옛 런에서 조용히 STO 로 후퇴하지 않는다 — 어느 곡선을 본 것인지
+      모르면 판정을 못 쓴다. 없으면 (None, None) 을 돌려 그 런을 건너뛰게 한다.
+    """
+    if mto:
+        y = d.get("msd_Li_A2_mto")
+        return (d.get("times_ps_mto") or d.get("times_ps"), y) if y else (None, None)
+    return d.get("times_ps"), d.get("msd_Li_A2")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--glob", required=True, help="msd.json 글롭 (따옴표로 감쌀 것)")
+    ap.add_argument("--mto", action="store_true",
+                    help="다중 시간원점 곡선(msd_Li_A2_mto)으로 본다. "
+                         "케이지/sub-diffusion 을 가르는 c 행 판별을 MTO 에 거는 것이 "
+                         "이 플래그의 존재 이유다 (STO 는 늦은 창의 원점이 적어 판별 불가).")
     ap.add_argument("--window", type=float, nargs=2, default=[2.0, 50.0],
                     help="D 를 맞춘 창 (기본 2 50 — 캠페인 규약)")
     ap.add_argument("--average", action="store_true",
@@ -145,13 +161,14 @@ def main():
         byST = {}
         for f in files:
             d = json.load(open(f))
-            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+            t, y = _curve(d, a.mto)
             if not t or not y:
                 continue
             lab = case_label(f)
             sysname = lab.split("/")[0] if "/" in lab else lab   # 계 이름
             byST.setdefault((sysname, int(d.get("T_K", 0))), []).append((t, y, f))
-        print(f"계·온도별 MSD 앙상블 평균 (창 {lo}–{hi} ps)")
+        print(f"계·온도별 MSD 앙상블 평균 (창 {lo}–{hi} ps)"
+              + ("  **곡선: MTO(다중 시간원점)**" if a.mto else "  [곡선: STO]"))
         print(f"{'계':12s} {'T (K)':>7s} {'n_runs':>7s} {'beta':>6s} {'c [Å²]':>8s} "
               f"{'MSD@hi':>9s}  판정")
         for key in sorted(byST):
@@ -175,7 +192,8 @@ def main():
         print("    통계가 √n 배 좋아져서 c 판별(케이지 vs sub-diffusion)이 실제로 가능해진다.")
         print()
 
-    print(f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
+    print(("**MTO 곡선**" if a.mto else "STO 곡선") + " · "
+          + f"창 {lo}–{hi} ps · β=1 확산 · β<{BETA_OK[0]} 케이지 · "
           f"창끝 MSD < {MSD_MIN_A2} Å² 면 통계 부족")
     # ⚠⚠ β<0.8 을 곧바로 '케이지' 로 읽지 말 것 — **창끝 MSD 를 같이 본다.**
     #   2026-08-11 귀무분포 검정(tools/ionic/beta_null_test.py): 케이지가 0 인 이상
@@ -187,7 +205,7 @@ def main():
     bad = []
     for f in files:
         d = json.load(open(f))
-        t, y = d.get("times_ps"), d.get("msd_Li_A2")
+        t, y = _curve(d, a.mto)
         D = d.get("D_Li_cm2_s")
         tag = case_label(f)
         # ⚠ P1-6 — D 가 null 인 msd.json 하나만 있어도 옛 코드는 TypeError 로 죽어
@@ -270,7 +288,7 @@ def main():
                 tag, t, y = _it
             else:
                 d = json.load(open(_it))
-                t, y = d.get("times_ps"), d.get("msd_Li_A2")
+                t, y = _curve(d, a.mto)
                 if not t or not y:
                     continue
                 tag = case_label(_it)
