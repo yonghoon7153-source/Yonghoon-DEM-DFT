@@ -216,11 +216,12 @@
     "O_p",
     "O_s"
    ],
-   "status": "DEPRECATED",
-   "superseded_by": "nd2o3_mp-2763_frozen4f",
+   "status": "retracted",
    "deprecated_on": "2026-08-12",
-   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
-   "canonical": false
+   "reason": "4f-in-valence PP(z=14)의 SCF 해가 금속이라 **fixed-occ 갭이라는 물리량 자체가 정의되지 않는다**. '더 나은 값으로 교체' 가 아니라 애초에 갭이 아니었다 — 그래서 superseded 가 아니라 retracted.",
+   "canonical": false,
+   "use_policy": "blocked",
+   "replacement": "nd2o3_mp-2763_frozen4f"
   },
   "lindo2_mp-1222355": {
    "tag": "lindo2_mp-1222355",
@@ -252,12 +253,13 @@
     "O_s"
    ],
    "dos_chain_complete": true,
-   "status": "DEPRECATED",
+   "status": "retracted",
    "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음).",
-   "superseded_by": "lindo2_mp-1222355_frozen4f",
    "deprecated_on": "2026-08-12",
-   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
-   "canonical": false
+   "reason": "4f-in-valence PP(z=14)의 SCF 해가 금속이라 **fixed-occ 갭이라는 물리량 자체가 정의되지 않는다**. '더 나은 값으로 교체' 가 아니라 애초에 갭이 아니었다 — 그래서 superseded 가 아니라 retracted.",
+   "canonical": false,
+   "use_policy": "blocked",
+   "replacement": "lindo2_mp-1222355_frozen4f"
   },
   "nd2s3_mp-438": {
    "tag": "nd2s3_mp-438",
@@ -287,12 +289,13 @@
     "S_s"
    ],
    "dos_chain_complete": true,
-   "status": "DEPRECATED",
+   "status": "retracted",
    "not_in_this_run": "이번 회수에서 작업폴더에 gap.json 이 없었다 — 옛 기록을 그대로 보존한다(지우지 않음).",
-   "superseded_by": "nd2s3_mp-438_frozen4f",
    "deprecated_on": "2026-08-12",
-   "reason": "4f 를 원자가에 둔 PP(z=14)의 SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다. 아래 gap/vbm/cbm 은 **갭이 아니다** — 어떤 형태로도 갭으로 인용 금지. 경위 보존용으로만 남긴다.",
-   "canonical": false
+   "reason": "4f-in-valence PP(z=14)의 SCF 해가 금속이라 **fixed-occ 갭이라는 물리량 자체가 정의되지 않는다**. '더 나은 값으로 교체' 가 아니라 애초에 갭이 아니었다 — 그래서 superseded 가 아니라 retracted.",
+   "canonical": false,
+   "use_policy": "blocked",
+   "replacement": "nd2s3_mp-438_frozen4f"
   },
   "nd2o3_mp-2763_frozen4f": {
    "tag": "nd2o3_mp-2763_frozen4f",
@@ -369,5 +372,5 @@
  },
  "nd_verdict_2026_08_11": "★ frozen-4f 경로 개통: Nd.pbe-spdn-kjpaw_psl.1.0.0(z=11) 로 Nd₂O₃ 갭 3.948 eV 실측 — MP 같은 구조 3.812 eV 와 3.6% 차로 검증 합격. 2026-08-07 판정('우리 계산으로 정의되지 않는다')은 4f-in-valence PP 에 한정된 진술로 격하된다. 나머지 Nd 상은 같은 경로로 재계산 중.",
  "nd_frozen4f_update_2026_08_11": "frozen-4f PP 검증 3종 완료: Nd₂O₃ 3.948(MP 3.812, +3.6%) · LiNdO₂ 3.698(4.212, −12.2%) · Nd₂S₃ 0.770(0.760, +1.3%). ⚠ 상위 2종의 순위가 MP 와 뒤집힘(차 0.25 eV, 교차코드 산포 안) — 인용 시 명시. 2026-08-07 의 'Nd 갭은 우리 계산으로 정의되지 않는다' 는 4f-in-valence PP 에 한정된 진술로 격하. Li₃Nd 는 금속(N(E_F) 5.32)이라 갭 없음(NOT_APPLICABLE) — sei_electronic_class.json.",
- "_deprecation_note": "nd2o3/lindo2/nd2s3 의 접미사 없는 항목은 4f-in-valence 산출이라 DEPRECATED 다. 정본은 `*_frozen4f` (z=11). kb/projects/sei_products_2026_08_06.md ✅해소 절 참조."
+ "_deprecation_note": "nd2o3/lindo2/nd2s3 의 접미사 없는 항목은 **retracted** 다 (4f-in-valence — 갭이라는 양이 성립 안 함). 정본은 *_frozen4f. 소비자는 status allowlist 로 걸러야 한다 — 표시만으로는 안 막힌다 (2026-08-12: webapp 이 status!='rejected' 만 봐서 −6.46 eV 가 갭으로 서빙되고 있었다)."
 }

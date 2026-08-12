@@ -3119,8 +3119,14 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                 z.write(q, q.relative_to(out_final.parent))
     print(f"\n→ {out_final}  · 잡 {n_jobs}개 · 쌍 {len(man['pairs'])}개 · 조각 {man['fragments']}")
     print(f"→ {zp}  ({zp.stat().st_size / 1e6:.1f} MB)")
-    print("  ⚠ POTCAR 미포함(라이선스) — POTCAR_SPEC.txt 의 변형(Ni_pv)을 정확히 쓸 것")
-    print("  ⚠ 판정 에너지는 static — relax 만 돌리면 분석기가 fail-closed 로 막는다")
+    # ⚠ 모드가 바뀌었는데 메시지가 안 따라오면 외주처가 없는 절차를 찾는다.
+    if a.single_point:
+        print("  ⚠ POTCAR 미포함(라이선스) — 잡마다 POTCAR_ASSEMBLE.sh 로 조립할 것 "
+              "(종 순서가 잡마다 다르다)")
+        print("  ⚠ 단일점 — relax 상이 없다. static (+일부 dense) 만 돈다")
+    else:
+        print("  ⚠ POTCAR 미포함(라이선스) — POTCAR_SPEC.txt 의 변형(Ni_pv)을 정확히 쓸 것")
+        print("  ⚠ 판정 에너지는 static — relax 만 돌리면 분석기가 fail-closed 로 막는다")
     return out_final
 
 

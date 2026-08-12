@@ -139,9 +139,12 @@ def read_gap(path):
     # ⚠ NOT_APPLICABLE 은 손상이 아니라 **판정**이다 — 4f 를 원자가에 둔 PP 로는
     #   SCF 해가 금속이라 fixed-occ 갭이라는 양이 성립하지 않는다 (Nd 계열).
     #   손상으로 찍고 "nscf 를 다시 돌려라" 고 하면 틀린 조언이다.
-    if str(d.get("gap")).upper() in ("NOT_APPLICABLE", "N/A", "NA", "METAL"):
-        return None, ("금속 해 — 갭 미정의 (손상 아님). Nd 계열은 frozen-4f PP 가 "
-                      "있어야 갭이 성립한다: tools/sei/nd_frozen4f.py --plan")
+    #   ⚠⚠ 2026-08-12 재발 — `gap` 만 봤는데 실제 파일은 `gap: null` 이고 판정은
+    #     `verdict`/`electronic_class` 에 있다. 필드를 잘못 봐서 다시 "손상" 으로 찍혔다.
+    _v = {str(d.get(k) or "").upper() for k in ("gap", "verdict", "electronic_class")}
+    if _v & {"NOT_APPLICABLE", "N/A", "NA", "METAL"}:
+        return None, ("금속 해 — 갭 미정의 (**손상 아님**). 재계산 불필요. "
+                      + str(d.get("reason") or "")[:60])
     try:
         for k in ("vbm", "cbm", "gap"):
             d[k] = float(d[k])
@@ -380,6 +383,20 @@ def selftest():
     chk(run_note(r1) is None, "_NOTE.txt 없으면 아무것도 안 한다")
     open(os.path.join(r1, "_NOTE.txt"), "w").write("c→c 진짜 경로\n둘째 줄은 무시\n")
     chk(run_note(r1) == "c→c 진짜 경로", f"_NOTE.txt 첫 줄만 ({run_note(r1)})")
+    # ── 금속 판정 (2026-08-12 **재발** — 필드를 잘못 봐서 두 번 났다) ──────────
+    #   실제 파일은 gap: null 이고 판정은 verdict/electronic_class 에 있다.
+    #   "손상" 으로 찍고 nscf 재계산을 시키면 틀린 조언이다.
+    d0, e0 = read_gap(gj("li3nd", json.dumps(
+        {"gap": None, "verdict": "NOT_APPLICABLE", "electronic_class": "metal",
+         "reason": "electronic_class=metal — 금속엔 VBM/CBM 이 없다"})))
+    chk(d0 is None and e0 and "손상 아님" in e0 and "재계산 불필요" in e0,
+        f"gap:null + verdict:NOT_APPLICABLE → 금속 판정 ({str(e0)[:40]})")
+    d1, e1 = read_gap(gj("m2", json.dumps({"gap": "NOT_APPLICABLE"})))
+    chk(d1 is None and e1 and "손상 아님" in e1, "gap 필드에 직접 와도 잡는다")
+    # ★ 음성: 진짜 손상은 여전히 손상이어야 한다 (금속으로 봐주면 안 된다)
+    d2, e2 = read_gap(gj("broke", json.dumps({"gap": "abc", "vbm": 1, "cbm": 2})))
+    chk(d2 is None and e2 and "손상" in e2 and "아님" not in e2,
+        f"파싱 불가 값은 여전히 **손상** ({str(e2)[:36]})")
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -417,10 +434,16 @@ if not pairs:
 else:
     print(f"① SEI DFT — {len(pairs)}종 × 6단계   (✓ 완료 · ▸ 중단 · ✗ 오류 · 공백 미착수)")
     print("   " + " " * 26 + "  ".join(f"{s:>6s}" for _, s in STAGES))
+    # ⚠ 화면은 **감시용**이다. 완주하고 건강한 것은 한 줄로 접고, 손볼 게 있는 것만
+    #   펼친다 (2026-08-12: 13종 × 6단계를 다 찍으니 ④ NEB 가 화면 밖으로 밀렸다).
     ndone = 0
     _cur = None
+    _folded = {}
     for _root, t in pairs:
         if multi and _root != _cur:
+            if _cur is not None and _folded.get(_cur):
+                print(f"     ✓ 완주 {len(_folded[_cur])}: "
+                      + " · ".join(_folded[_cur]))
             _cur = _root
             _n = run_note(_root)
             print(f"   ┌ {root_label(_root)}" + (f"  — {_n}" if _n else ""))
@@ -486,8 +509,14 @@ print(BAR)
 #   상황판 전체를 죽였다(③④ 가 아예 안 나옴). 감시 화면이 나쁜 데이터 한 줄에 죽으면
 #   안 된다 — 숫자가 아닌 레코드는 **버리지 말고 '손상' 로 따로 세워** 보여 준다.
 gaps, gaps_bad = [], []
-for j in sorted(g for r in sei_roots
-                for g in glob.glob(os.path.join(r, "*", "gap.json"))):
+_seen_gap = set()
+for j in sorted((g for r in sei_roots
+                 for g in glob.glob(os.path.join(r, "*", "gap.json"))),
+                key=lambda x: ("frozen4f" not in x, x)):   # frozen4f 를 먼저 = 정본 우선
+    _tag = os.path.basename(os.path.dirname(j))
+    if _tag in _seen_gap:
+        continue                       # 같은 상이 두 루트에 있으면 정본 하나만
+    _seen_gap.add(_tag)
     rec, why = read_gap(j)
     (gaps if rec else gaps_bad).append(rec or (os.path.basename(os.path.dirname(j)), why))
 if gaps or gaps_bad:
@@ -529,16 +558,28 @@ else:
 
 print(BAR)
 
-# ── 3) SDCP 외주 패키지 ────────────────────────────────────────────────────
-z = SDCP_VASP + ".zip"
-if os.path.isfile(z):
-    n = len([x for x in glob.glob(os.path.join(SDCP_VASP, "*", "POSCAR"))])
-    print(f"③ SDCP VASP 외주 패키지 — ✅ 준비됨 ({n} job · "
-          f"{os.path.getsize(z)//1024} KB)")
-    print(f"   {z}")
-    print("   로컬로:  scp root@121.78.116.27:" + z + " ~/Downloads/")
+# ── 3) SDCP 외주 번들 (**가장 최근 것**) ────────────────────────────────────
+#   ⚠ 옛 판은 2026-08-08 납품 zip 하나를 고정으로 가리켰다. 새 번들을 만들어도
+#     화면은 계속 옛것을 "준비됨" 이라 찍었다 (2026-08-12 정정).
+_bd = sorted(glob.glob(os.path.expanduser("~/Yonghoon-DEM-DFT/bundles/*/MANIFEST.json")),
+             key=os.path.getmtime, reverse=True)
+if _bd:
+    _m = _bd[0]
+    try:
+        _mm = json.load(open(_m, encoding="utf-8"))
+        _sub = _mm.get("submission") or {}
+        _z = os.path.dirname(_m) + ".zip"
+        print(f"③ SDCP 외주 번들 — {os.path.basename(os.path.dirname(_m))}  "
+              f"잡 {_mm.get('n_jobs','?')} · static {_sub.get('n_static','?')} + "
+              f"dense {_sub.get('n_dense_mandatory','?')}"
+              + (f" · zip {os.path.getsize(_z)//1024} KB" if os.path.isfile(_z) else ""))
+        print(f"   범위: {str(_mm.get('claim_scope',''))[:88]}")
+    except (OSError, ValueError) as e:
+        print(f"③ SDCP 외주 번들 — MANIFEST 읽기 실패 ({type(e).__name__})")
+elif os.path.isfile(SDCP_VASP + ".zip"):
+    print(f"③ SDCP 외주 번들 — 새 번들 없음. 옛 납품 zip 만 있다 ({SDCP_VASP}.zip)")
 else:
-    print("③ SDCP VASP 외주 패키지 — 없음 (qe_to_vasp.py --zip 으로 생성)")
+    print("③ SDCP 외주 번들 — 없음 (tools/sdcp/vasp_handoff_bundle.py 로 생성)")
 
 print(BAR)
 

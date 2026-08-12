@@ -23,6 +23,34 @@ CONCEPTS = KB / "concepts"
 # ─────────────────────────────────────────────────────────────
 # 개념 상세 페이지 (Glossary '더보기' → kb/concepts/<id>.md)
 # ─────────────────────────────────────────────────────────────
+
+#: 이 status 만 정본으로 본다. 나머지는 **전부** release 화면에서 뺀다.
+#: (status 가 아예 없는 legacy record 는 당분간 정본으로 취급 — legacy debt)
+_STATUS_OK = {"", "none", "canonical", "ok"}
+#: 아는 비정본 status. 여기 없는 낯선 값은 **fail-closed** 로 뺀다.
+_STATUS_KNOWN_BAD = {"rejected", "retracted", "superseded", "deprecated",
+                     "historical", "diagnostic", "provisional", "skipped"}
+
+
+def record_shown(rec):
+    """(보여줄까, 숨긴 이유) — db record 하나의 release 노출 판정.
+
+    ⚠ **allowlist 다.** denylist(`status != "rejected"`)로 두면 새 status 가 생길 때마다
+      조용히 뚫린다. 2026-08-12 에 실제로 그랬다: retracted 로 표시한 4f-in-valence 갭
+      −6.46 eV 가 webapp 에 밴드갭으로 계속 나오고 있었다.
+
+    이 함수가 **못 하는 것**: status 가 없는 legacy record 를 검증하지 못한다.
+      지금은 정본으로 통과시킨다(legacy debt). schema v1 이 들어오면 fail-closed 로 바꾼다.
+    """
+    if not isinstance(rec, dict):
+        return True, None
+    s = str(rec.get("status") or "").strip().lower()
+    if s in _STATUS_OK:
+        return True, None
+    if s in _STATUS_KNOWN_BAD:
+        return False, s
+    return False, f"unknown status {s!r} (fail-closed)"
+
 def concept_ids() -> set:
     """kb/concepts/*.md 로 존재하는 개념 id 집합 (더보기 링크 노출 판단)."""
     return {f.stem for f in CONCEPTS.glob("*.md")} if CONCEPTS.exists() else set()
@@ -682,6 +710,16 @@ def sei_summary() -> dict:
             "nd2s3": ("Nd₂S₃", "Nd2S3")}
     rows, rejected = [], []
     for tag, g in G.get("results", {}).items():
+        # ★ status allowlist — denylist 는 새 status 가 생길 때마다 뚫린다.
+        #   2026-08-12: status=='rejected' 만 걸러서 **retracted 인 −6.46 eV 가
+        #   밴드갭으로 서빙되고 있었다**. 모르는 status 는 fail-closed 로 뺀다.
+        _shown, _why_hidden = record_shown(g)
+        if not _shown:
+            rejected.append({"tag": tag, "name": tag, "mp": "",
+                             "gap": g.get("gap"), "gap_rejected": True,
+                             "why": g.get("reason") or f"status={_why_hidden}",
+                             "vlo": None, "vhi": None, "vstatus": None, "decomp": ""})
+            continue
         stem = tag.split("_mp")[0]
         disp, vkey = NAME.get(stem, (stem, stem))
         v = V.get(vkey, {})
@@ -734,7 +772,7 @@ def sei_axes() -> dict:
         try:
             n_gap = sum(1 for v in _j.loads(gp.read_text(encoding="utf-8"))
                         .get("results", {}).values()
-                        if v.get("status") != "rejected" and v.get("gap") is not None)
+                        if record_shown(v)[0] and v.get("gap") is not None)
         except (OSError, ValueError):
             pass
     n_v = 0

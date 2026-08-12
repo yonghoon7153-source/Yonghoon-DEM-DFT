@@ -82,9 +82,9 @@ def audit_file(f):
     except (OSError, ValueError) as e:
         return None, f"{type(e).__name__}"
     try:
-        rel = str(f.relative_to(REPO))
+        rel = f.relative_to(REPO).as_posix()
     except ValueError:
-        rel = str(f)                      # selftest 의 임시 경로
+        rel = pathlib.Path(f).as_posix()                      # selftest 의 임시 경로
     rec = {"file": rel, "kind": type(d).__name__}
     if not isinstance(d, dict):
         rec["date"] = None
@@ -133,7 +133,8 @@ def audit_file(f):
     rec["superseded_unmarked"] = [
         (o, n) for o, n in sup
         if not (isinstance(res.get(o), dict)
-                and (str(res[o].get("status", "")).upper().startswith("DEPRECAT")
+                and (str(res[o].get("status", "")).lower()
+                     in ("deprecated", "retracted", "superseded", "historical")
                      or res[o].get("superseded_by")
                      or res[o].get("canonical") is False))]
     return rec, None
@@ -163,9 +164,9 @@ def build_citation_index():
     """
     names = {}
     for f in PROPS.rglob("*.json"):
-        names[f.name] = str(f.relative_to(REPO))
+        names[f.name] = f.relative_to(REPO).as_posix()
     for f in PROPS.rglob("*.csv"):
-        names[f.name] = str(f.relative_to(REPO))
+        names[f.name] = f.relative_to(REPO).as_posix()
     idx = {v: [] for v in names.values()}
     for tree in CITE_TREES:
         d = REPO / tree
@@ -180,7 +181,7 @@ def build_citation_index():
                 continue
             for nm, rel in names.items():
                 if nm in txt:
-                    idx[rel].append(str(f.relative_to(REPO)))
+                    idx[rel].append(f.relative_to(REPO).as_posix())
     return idx
 
 
@@ -211,12 +212,18 @@ def chain_check(recs):
 def cmd_audit(show_all=False, cited_only=False):
     """db/properties 전체 신선도 감사 — 요약이 기본, 목록은 --audit_all."""
     cites = build_citation_index()
+    # ★ P0-5 — 감사는 json 만 본다. db/properties 는 csv 가 더 많다(146 vs 77).
+    #   Origin-ready CSV 가 그림 숫자에 직결되므로 **덮지 못한다는 사실**을 먼저 찍는다.
+    by_fmt = {}
+    for f in PROPS.rglob("*"):
+        if f.is_file():
+            by_fmt[f.suffix.lower() or "(없음)"] = by_fmt.get(f.suffix.lower() or "(없음)", 0) + 1
     files = sorted(PROPS.rglob("*.json"))
     recs, broken = [], []
     for f in files:
         r, err = audit_file(f)
         if err:
-            broken.append((str(f.relative_to(REPO)), err))
+            broken.append((f.relative_to(REPO).as_posix(), err))
         else:
             r["cited_by"] = cites.get(r["file"], [])
             r["hard_cited_by"] = [w for w in r["cited_by"] if _is_hard(w)]
@@ -233,6 +240,12 @@ def cmd_audit(show_all=False, cited_only=False):
     nodecl = [r for r in recs if r.get("kind") == "dict"
               and r.get("sources") and not r.get("sources_declared")]
     ncited = sum(1 for r in recs if r.get("cited_by"))
+    _tot = sum(by_fmt.values())
+    print(f"⚠ 감사 범위: **json 만** {len(files)}/{_tot} 파일 "
+          f"({100*len(files)/max(1,_tot):.0f}%) — " +
+          " · ".join(f"{k}{v}" for k, v in sorted(by_fmt.items(), key=lambda kv: -kv[1])[:5]))
+    print(f"  csv/npy/cube 는 provenance 감사 밖이다 (Codex 2026-08-12 P0-5). "
+          f"Origin-ready CSV 가 그림 숫자에 직결되므로 schema v1 에서 덮어야 한다.")
     print(f"=== db 신선도 감사 ===  json {len(files)}개 (읽기 실패 {len(broken)})"
           + (f" · **강한 인용만** {len(recs)}개 (그림/원고/정본 앵커)" if cited_only
              else f" · 인용됨 {ncited} / 미인용 {len(recs) - ncited}"))
@@ -369,6 +382,25 @@ def selftest():
         {"source": "runs/x/y.out", "results": {}}), encoding="utf-8")
     dc, _ = audit_file(td / "decl.json")
     chk(dc["sources_declared"] == ["runs/x/y.out"], "최상위 source 는 declared 로 잡는다")
+    # ★ P0-1 회귀 — 경로는 **POSIX 로** 나와야 한다. Windows 에서 tools\\figures 가 되면
+    #   _is_hard() 의 "tools/figures/" 검사가 전부 빗나가 --cited 가 0건이 된다.
+    chk("\\" not in dc["file"], f"내부 경로에 역슬래시가 없다 ({dc['file']})")
+    chk(_is_hard("tools/figures/x.py") and _is_hard("webapp/data.py")
+        and not _is_hard("kb/notes/x.md"), "강한 인용 판정이 POSIX 경로로 동작")
+    # ★ retracted 를 표시로 인정 (Codex: superseded 가 아니라 retracted 가 정확)
+    (td / "retr.json").write_text(json.dumps({"results": {
+        "a": {"gap": -6.4, "status": "retracted"}, "a_frozen4f": {"gap": 3.9}}}),
+        encoding="utf-8")
+    rt, _ = audit_file(td / "retr.json")
+    chk(rt["superseded"] and not rt["superseded_unmarked"],
+        "status=retracted 도 표시로 인정한다")
+    # ★ 음성: 모르는 status 는 표시로 인정하면 안 된다
+    (td / "weird.json").write_text(json.dumps({"results": {
+        "a": {"gap": 1.0, "status": "maybe_ok"}, "a_frozen4f": {"gap": 2.0}}}),
+        encoding="utf-8")
+    wd, _ = audit_file(td / "weird.json")
+    chk(wd["superseded_unmarked"] == [("a", "a_frozen4f")],
+        "낯선 status 는 '표시됨' 으로 봐주지 않는다")
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
