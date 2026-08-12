@@ -87,11 +87,11 @@
     {
       "id": "CL-05",
       "date": "2026-08-12",
-      "status": "hold",
+      "status": "live",
       "claim": "SR-01 의 기전은 전기적 단절이 아니라 경로 강제다",
       "measured": {
         "metric": "plugged_frac + largest_mass_frac",
-        "value": "0.944 / 0.375 (point) vs 0.995 / 0.859 (segment)",
+        "value": "corrected 5킷: plugged_frac point 0.9720/0.9572/0.9474/0.9420/0.9139 · segment 0.9968/0.9944/0.9944/0.9941/0.9920 (P:S 0:10→10:0).  largest_mass_frac point 0.0125→0.6981 vs segment 0.5443→0.9267",
         "unit": "fraction of carbon mass"
       },
       "asserted": "점 스탬프에서 탄소는 회로에 꽂혀 있으나 자기 자신과 끊겨 전류가 AM 을 우회한다",
@@ -100,25 +100,25 @@
       "h0_predicts": "plugged_frac 이 작다 (≲0.3) · 최대성분이 z 를 관통하지 못한다",
       "h1_predicts": "plugged_frac ≈ 1 · 최대성분 질량몫만 크게 줄어든다",
       "bridge": "성분 수(세는 양)가 아니라 AM 면-인접 질량몫을 **별도로** 측정했다 — 이것이 CL-03 에 없던 다리다.",
-      "verdict": "h1 채택 — plugged_frac 이 **5/5 킷 전부 0.92~0.97** 로 탄소는 어디서나 회로에 꽂혀 있다.  ⚠⚠ 단 최초 서술('점 팔도 z 를 관통하므로 문턱 아래가 아니다')은 kit_ps_7_3 **한 킷**에서 본 것이라 **과일반화였다** — 5킷 스윕에서 0_10/3_7/5_5 는 관통 질량이 **정확히 0.0000** 이다.  경로 강제(기전)는 보편이고, 고속도로 생존 여부는 **조성 의존**이다 → CL-08.  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫.",
-      "must_recheck": "corrected 5킷 스윕 완료 전까지 `evidence_state=hold`.  생산 STEP3 기본이 비주기이므로 corrected 는 모든 축 zero-padding (z 포함).  kit_ps_7_3 선행 결과로는 결론(경로 강제) 불변, Δ 0.16 %p.",
-      "evidence_state": "hold",
+      "verdict": "h1 채택 — plugged_frac 이 **5/5 킷 전부 **0.91~0.97**** 로 탄소는 어디서나 회로에 꽂혀 있다.  ⚠⚠ 단 최초 서술('점 팔도 z 를 관통하므로 문턱 아래가 아니다')은 kit_ps_7_3 **한 킷**에서 본 것이라 **과일반화였다** — 5킷 스윕에서 0_10/3_7/5_5 는 관통 질량이 **정확히 0.0000** 이다.  경로 강제(기전)는 보편이고, 고속도로 생존 여부는 **조성 의존**이다 → CL-08.  ⚠ 기하 측정이다 — 수송 귀결과 배수 크기는 STEP3 (게이트 ⑤⑥) 몫.\n★ hold 해제 2026-08-12 — 막던 두 조항이 **측정으로** 해소됐다. (1) corrected CSV 는 커밋돼 있었다. (2) `segment_cells` 재수정 후 전수 재실행 → 바이트 동일. ⚠ 이 무해성은 **이 샘플링 밀도의 성질**이지 버그가 사소했다는 뜻이 아니다 — step/vox 를 올리거나(서브샘플 경로) 해상도를 낮추면 다시 도달 가능해진다. 그때는 재판정할 것.",
+      "evidence_state": "active",
       "legacy_measurement": {
         "metric": "plugged_frac (LEGACY mixed-boundary)",
         "value": "0.944 (point) / 0.995 (segment)",
         "why_held": "xyz toroidal AM-touch + 비주기 6-face 라벨 + carbon-envelope spans_z = 세 규약 혼합 (Codex intentional error #6, CONFIRMED).  **철회하지 않고 보존**하되 기전 증거로 사용 금지.",
-        "corrected_partial": "kit_ps_7_3 corrected: point 0.9420 / segment 0.9941 (Δ −0.0016) — 결론 불변"
+        "corrected_partial": "kit_ps_7_3 corrected: point 0.9420 / segment 0.9941 (Δ −0.0016) — 결론 불변",
+        "corrected_full": "5킷 corrected point plugged_frac = 0.9720/0.9572/0.9474/0.9420/0.9139 — legacy 대비 최대 Δ 0.0016.  결론(경로 강제) 불변."
       },
-      "hold_reason": "corrected 5킷 CSV 가 아직 커밋되지 않았고, 같은 커밋에서 `segment_cells` 가 바뀌어 `largest_mass_frac` 도 전수 재실행 전에는 고정할 수 없다 (Codex 재검증 P1 §4)."
+      "provenance": "corrected 5킷 재실행 2026-08-12 (segment_cells 재수정 6f689062 **이후** 코드로): docs/data/sr01_carbon_network_corrected.csv 가 재실행 결과와 **바이트 동일** (git diff 공백).  기전: 생산 샘플링이 step/vox = 0.3037 (섬유 점 간격 0.1215 µm, 복셀 0.4 µm) 이라 폴리라인 한 구간이 셀 경계를 최대 1개만 넘는다 — DDA 버그가 살던 다중교차 경로가 **도달 불가**하다.  폴리라인 수준 대조로도 확인: 0_10 64,767 · 3_7 54,915 · 5_5 48,408 · 7_3 42,508 구간에서 **차이 0** (old_cells == new_cells, only_old = only_new = 0)."
     },
     {
       "id": "CL-08",
       "date": "2026-08-12",
-      "status": "hold",
+      "status": "live",
       "claim": "점 스탬프의 손상 크기는 침대 조성의 함수다 (알고리즘-조건부일 뿐 아니라 침대-조건부)",
       "measured": {
         "metric": "largest_mass_frac_ratio_point_over_segment",
-        "value": "0.023 / 0.104 / 0.145 / 0.436 / 0.753 (P:S 0:10 → 10:0)",
+        "value": "corrected 5킷 point/segment largest_mass_frac 비 = 0.0229 / 0.1037 / 0.1453 / 0.4362 / 0.7534 (P:S 0:10→10:0), 5/5 단조 증가.  손상배수 43.6× → 1.33×",
         "unit": "fraction"
       },
       "asserted": "손상이 1.3× ~ 43.6× 로 벌어지므로 ×35.79 를 단일 보정으로 인용할 수 없다",
@@ -127,8 +127,8 @@
       "h0_predicts": "5킷에서 pt/sg 비가 같다",
       "h1_predicts": "AM 갭률이 높을수록 비가 작다 — 단조",
       "bridge": "AM 갭률(am_gaps_per_fibre_mean, 시더가 AM 내부 점을 드랍해 생기는 물리적 단절)과 대조했다.  r = -0.967, ln(pt/sg) = 0.960 - 2.980·gap, R² = 0.934, 5/5 단조.",
-      "verdict": "h1 채택.  ⇒ (a) 스크리닝 법칙 성립 — 스캐폴드 CSV 만으로 GPU 없이 손상 예측 가능.  (b) 게이트 ⑤ 의 교호작용 I 가 0 이 아닐 것을 **예측**한다 (SBE/DBE 는 조성이 다르다) — Codex 가 2런이 아니라 4런을 요구한 근거가 측정으로 뒷받침됐다.  (c) 원고의 +52 % 는 그 베드의 AM 갭률과 함께 보고돼야 한다.  ⚠ 예측이지 결과가 아니다 — SBE/DBE 의 AM 갭률은 CPU 로 잴 수 있으므로 ⑤ 실행 **전에** 사전등록할 것.",
-      "hold_reason": "corrected 5킷 CSV 가 아직 커밋되지 않았고, 같은 커밋에서 `segment_cells` 가 바뀌어 `largest_mass_frac` 도 전수 재실행 전에는 고정할 수 없다 (Codex 재검증 P1 §4)."
+      "verdict": "h1 채택.  ⇒ (a) 스크리닝 법칙 성립 — 스캐폴드 CSV 만으로 GPU 없이 손상 예측 가능.  (b) 게이트 ⑤ 의 교호작용 I 가 0 이 아닐 것을 **예측**한다 (SBE/DBE 는 조성이 다르다) — Codex 가 2런이 아니라 4런을 요구한 근거가 측정으로 뒷받침됐다.  (c) 원고의 +52 % 는 그 베드의 AM 갭률과 함께 보고돼야 한다.  ⚠ 예측이지 결과가 아니다 — SBE/DBE 의 AM 갭률은 CPU 로 잴 수 있으므로 ⑤ 실행 **전에** 사전등록할 것.\n★ hold 해제 2026-08-12 — 막던 두 조항이 **측정으로** 해소됐다. (1) corrected CSV 는 커밋돼 있었다. (2) `segment_cells` 재수정 후 전수 재실행 → 바이트 동일. ⚠ 이 무해성은 **이 샘플링 밀도의 성질**이지 버그가 사소했다는 뜻이 아니다 — step/vox 를 올리거나(서브샘플 경로) 해상도를 낮추면 다시 도달 가능해진다. 그때는 재판정할 것.  corrected 값이 hold 이전에 적은 수치(0.023/0.104/0.145/0.436/0.753)를 **소수 셋째 자리까지 재현**한다.",
+      "provenance": "corrected 5킷 재실행 2026-08-12 (segment_cells 재수정 6f689062 **이후** 코드로): docs/data/sr01_carbon_network_corrected.csv 가 재실행 결과와 **바이트 동일** (git diff 공백).  기전: 생산 샘플링이 step/vox = 0.3037 (섬유 점 간격 0.1215 µm, 복셀 0.4 µm) 이라 폴리라인 한 구간이 셀 경계를 최대 1개만 넘는다 — DDA 버그가 살던 다중교차 경로가 **도달 불가**하다.  폴리라인 수준 대조로도 확인: 0_10 64,767 · 3_7 54,915 · 5_5 48,408 · 7_3 42,508 구간에서 **차이 0** (old_cells == new_cells, only_old = only_new = 0)."
     },
     {
       "id": "CL-06",
