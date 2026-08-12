@@ -399,6 +399,10 @@ def build(tag, path, disp, a, pool):
     info = {"tag": tag, "disp": disp, "rep": rep, "nat": nat,
             "cell": at.cell.array.copy(), "els": els,
             "hop_d": hop["d"], "nelec": nelec_vac,
+            # ⚠ 계획 화면이 쓰는 dict 는 **이것**이다 (meta.json 쪽이 아니다).
+            #   여기 안 실으면 --plan 이 "미상" 으로 찍힌다 (2026-08-12 실측).
+            "hop_shell": hop.get("shell"),
+            "pair_equivalent": hop.get("pair_equivalent"),
             "L": at.cell.lengths().round(2).tolist(),
             "kpts": kmesh(at.cell.array, a.kdens),
             "li_orbits": orb,
