@@ -668,14 +668,25 @@ def main():
     ap.add_argument("--ignore_electronic_class", action="store_true",
                     help="⚠ electronic_class 게이트 무시 — 디버그 전용. "
                          "금속에 절연체 규약을 걸거나 4f 미해결 상을 강행하게 된다")
+    ap.add_argument("--pseudo_list", action="store_true",
+                    help="pseudo 전체 목록을 찍는다 (기본은 우리 계 원소만)")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     a = ap.parse_args()
 
     pool = find_pseudos(a.pseudo_dir)
-    print(f"pseudo 디렉터리 {a.pseudo_dir}" + ("" if pool else "  ⚠ 비어 있다"))
-    for e, f in sorted(pool.items()):
-        print(f"  {e:3s} {f}")
+    # ⚠ 출력은 기본이 요약이다 (CLAUDE.md). pseudo 100여 종을 매번 찍으면 정작
+    #   봐야 할 ⛔ 줄이 스크롤 밖으로 밀린다 — 실제로 그랬다.
+    print(f"pseudo 디렉터리 {a.pseudo_dir} — {len(pool)}종"
+          + ("" if pool else "  ⚠ 비어 있다")
+          + ("" if "--pseudo_list" in sys.argv else "  (목록은 --pseudo_list)"))
+    _want = {"Li", "Nd", "S", "P", "O", "Cl"}          # 우리 계에 실제로 쓰는 것
+    for e in sorted(_want & set(pool)):
+        print(f"  {e:3s} {pool[e]}")
+    if "--pseudo_list" in sys.argv:
+        for e, f in sorted(pool.items()):
+            if e not in _want:
+                print(f"  {e:3s} {f}")
     if not a.plan:
         os.makedirs(a.work, exist_ok=True)
 
