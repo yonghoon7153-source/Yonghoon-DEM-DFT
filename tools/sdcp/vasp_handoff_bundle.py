@@ -804,6 +804,27 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         incar_exp["dense_cand"] = {k: m.group(1) for k in AUDIT_KEYS
                                    for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)]
                                    if m}
+    # ★ POTCAR 는 **잡마다 다르다** (Codex 7차 §11) — POSCAR 종 순서가 조각마다
+    #   다르므로 하나의 concatenated POTCAR 를 공용할 수 없다. 조립 명령을 잡 안에 둔다.
+    _pv = [POTCAR_SPEC.get(e, e) for e in pos["species_order"]]
+    (jd / "POTCAR_ASSEMBLE.sh").write_text(
+        "#!/usr/bin/env bash\n"
+        "# 이 잡의 POTCAR 를 만든다. PBE PAW 5.4 세트 경로를 PP 로 준다.\n"
+        "#   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh\n"
+        "# ⚠ 종 순서는 이 잡 POSCAR 전용이다 — 다른 잡에 복사하지 말 것.\n"
+        "set -e\n"
+        f'ORDER="{" ".join(_pv)}"\n'
+        ': "${PP:?PP 를 지정하세요 (PBE PAW 5.4 세트 루트)}"\n'
+        'rm -f POTCAR\n'
+        'for v in $ORDER; do\n'
+        '  f="$PP/$v/POTCAR"\n'
+        '  [ -f "$f" ] || { echo "⛔ 없음: $f"; exit 1; }\n'
+        '  cat "$f" >> POTCAR\n'
+        'done\n'
+        'n=$(grep -ac TITEL POTCAR)\n'
+        f'[ "$n" = {len(_pv)} ] || {{ echo "⛔ TITEL {len(_pv)}개여야 하는데 $n개"; exit 1; }}\n'
+        'grep -a TITEL POTCAR\n'
+        f'echo "✔ 조립 완료 — 종 순서 {" ".join(pos["species_order"])}"\n')
     (jd / "run_job.sh").write_text(RUN_JOB)
     top = _top_cations(atoms, nslab, sym)
     rev = {i: k for k, i in enumerate(pos["order"])}      # 원본 → POSCAR 위치
@@ -1719,6 +1740,43 @@ def main():
                     rec["geom"]["magnetic"]["ldau"] = None
                     results_ldau_missing.append(rel)
 
+                # ── dense 자기감사 — static 과 **같은 수준**으로 (Codex 7차 §8) ──
+                #   ⚠ 옛 판은 dense 에 모멘트 표가 없으면 그냥 서명에서 빠졌다. 그러면
+                #     local moment 가 없는 dense OUTCAR 도 E0 만으로 κ 에 들어간다.
+                #     dense 는 **에너지를 내는 상**이므로 static 과 같은 문턱을 건다.
+                dn = ocs.get("dense")
+                if dn is not None:
+                    dm = dn.get("moments")
+                    if not dm:
+                        rec["gates"].append(
+                            "DENSE_MOMENTS_MISSING(dense OUTCAR 에 모멘트 표가 없다 — "
+                            "자기상태를 모르고 κ 에 쓸 수 없다)")
+                    elif dn.get("nions") and len(dm) != dn["nions"]:
+                        rec["gates"].append(
+                            f"DENSE_MOMENT_COUNT({len(dm)} != NIONS {dn['nions']})")
+                    elif max(ni) >= len(dm):
+                        rec["gates"].append(
+                            f"DENSE_MOMENT_SHORT(Ni 인덱스 {max(ni)} 가 표 밖 — "
+                            f"표 길이 {len(dm)})")
+                    else:
+                        miss = [i for i in ni if i >= len(dm)]
+                        dq = sum(sg * ni[i] * dm[i] for i in ni) / len(ni)
+                        dsmall = [i for i in ni if abs(dm[i]) < MOM_MIN]
+                        rec["geom"]["magnetic"]["dense"] = {
+                            "n_ni_found": len(ni) - len(miss),
+                            "Q_muB": round(dq, 3),
+                            "f_small": round(len(dsmall) / len(ni), 3),
+                            "total_muB": dn.get("mag_total")}
+                        qs = rec["geom"]["magnetic"].get("Q_muB")
+                        if qs is not None and abs(qs) > 1e-9:
+                            rat = dq / qs
+                            rec["geom"]["magnetic"]["dense"]["Q_ratio_vs_static"] = round(rat, 3)
+                            if rat < Q_RATIO_MIN:
+                                rec["gates"].append(
+                                    f"DENSE_MAGNETIC_COLLAPSE(Q_dense/Q_static={rat:.2f} — "
+                                    f"k 를 촘촘히 했더니 자기상태가 무너졌다. κ 는 k 효과가 "
+                                    f"아니라 spin-state 차를 재게 된다)")
+
                 # ── 상별 자기 branch — k 를 바꾸며 상태가 넘어가면 'k 오차'가 아니다 ──
                 sig = {}
                 for ph2 in phases:
@@ -2388,86 +2446,59 @@ def _readme_sp(man: Dict[str, Any], a, zcut: float, n_jobs: int,
     mc = man.get("magnetic_controls") or []
     ks = (man.get("kmesh_override") or {}).get("static") or KMESH["static"]
     kd = (man.get("kmesh_override") or {}).get("dense") or KMESH["dense"]
-    return f"""# VASP 외주 요청 — SDCP/PTFE **Wave 1 (단일점 자리 대비)**
+    longest = 56          # h — C10 static→dense 사슬 (비용 모형 중앙 추정, ±2배)
+    return f"""# VASP 계산 요청 — LiNiO₂(104) 위 분자 조각 단일점
 
-## 한 줄 요약
-**UMA(MLIP)로 이완한 기하 위의 PBE+U 단일점 에너지**만 계산합니다.
-DFT 기하 이완은 **하지 않습니다**. 낼 수 있는 값은 같은 조각 안의 자리 대비
-ΔE = E(Ni_top) − E(Li_top) 뿐이고, **절대 흡착에너지는 이 판의 범위 밖**입니다.
+바쁘신 중에 부탁드려 죄송합니다. **VASP 단일점 SCF {n_st + n_dn}회**입니다.
+구조 최적화는 저희가 MLIP 으로 끝냈고, DFT 는 에너지만 필요합니다.
 
-## 규모 — 실제 계획값
-| 항목 | 값 |
-|---|---:|
-| 잡 폴더 | {n_jobs} |
-| static 상 (coarse k {ks}) | {n_st} |
-| dense 상 (k {kd}) | {n_dn} |
-| **VASP 실행 총 횟수** | **{n_st + n_dn}** |
+## 하실 일
 
-dense 는 **k 보정자**로 지정한 조각에만 켭니다: {dc or '(없음)'}.
-나머지 조각은 이 보정자에서 잰 k 이동을 전이해 해석합니다 —
-`K_TRANSFER_SCREENED` 이지 `K_CONVERGED` 가 아닙니다.
-
-## 잡 구조 — 상이 **static (+dense)** 뿐입니다
-각 잡 폴더: `POSCAR` + `static/` (+ 일부 `dense/`) + `run_job.sh` + `job.json`.
-- `static` 은 루트 `POSCAR` 를 그대로 씁니다. `ISTART=0 · ICHARG=2`(원자중첩 시작) —
-  **승계할 CHGCAR 가 없습니다.** relax 폴더는 애초에 없습니다.
-- `dense` 는 **같은 루트 POSCAR** + `static/CHGCAR` 를 승계합니다 (`ICHARG=1`).
 ```
-cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 64 vasp_std" bash run_job.sh
+cd <잡폴더>
+PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh     # 그 잡 전용 POTCAR 조립
+VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 ```
-⚠ `run_all.sh` 는 **직렬 디버그 러너**입니다 — 병렬 제출기가 아닙니다.
-실제 제출 계약은 `SUBMIT_CONTRACT.md` 를 보세요.
 
-## 실행 순서
-1. `controls/` — clean 슬랩 2 seed. **자기 붕괴 판정의 기준**입니다.
-   빠지면 모든 잡이 "판정 보류" 로 통과해 버립니다 ({len(mc)}개)
-2. `tier1/` — 이번 판의 목적
-3. `tier2/` — 나머지 조각
-자기 seed 는 **전 끝점 2종(pm1/net4)**입니다. 하나만 돌리면 그 쌍은 판정에서 빠집니다.
+잡 폴더 {n_jobs}개가 `controls/` · `tier1/` · `tier2/` 에 있습니다.
+서로 **완전히 독립**이라 원하시는 만큼 동시에 돌리셔도 됩니다.
 
-## 반송물 (잡마다)
-- **`static/OUTCAR` — 필수** (`.gz` 그대로 가능)
-- **`dense/OUTCAR` — 있는 잡은 필수**. 빠지면 그 조각이 `K_UNVERIFIED` 로 내려갑니다
-- `CONTCAR` 는 필요 없습니다 (기하가 안 변합니다). vasprun.xml 선택.
-- CHGCAR/WAVECAR 반송 불필요
-- ⚠ **INCAR/KPOINTS/POSCAR 를 고치지 마세요.** 분석기가 MANIFEST 의 sha256 과 대조하고,
-  상 폴더의 실행시 POSCAR 가 루트 POSCAR 와 **byte 단위로 같은지**도 확인합니다.
+## 미리 아셔야 할 것 두 가지
 
-## ⚠ 지켜야 결과가 성립하는 것
-- **INCAR 수정 금지.** 예외 ①: NCORE/KPAR/NSIM 등 병렬 자유.
-  예외 ② — SCF 가 안 붙을 때만, 순서대로: 1) `ALGO = All`
-  2) `AMIX=0.1 · BMIX=0.0001 · AMIX_MAG=0.2 · BMIX_MAG=0.0001` — 쓴 것을 그 잡의
-  `NOTES.txt` 에 남기고, 그래도 안 되면 그 잡은 중단 후 알려 주세요.
-- 발산/미수렴 잡은 그대로 두고 알려 주세요.
+- **가장 긴 잡이 약 {longest} 시간**입니다 (48코어 기준 추정, ±2배). walltime 상한이
+  이보다 짧으면 그 잡만 알려 주세요 — 저희가 나눠서 다시 만들어 드리겠습니다.
+- **POTCAR 는 잡마다 종 순서가 다릅니다.** 위 `POTCAR_ASSEMBLE.sh` 가 그 잡에 맞게
+  만들고 검증까지 합니다. 하나를 만들어 전체에 복사하시면 틀립니다.
 
-POTCAR 는 미포함(라이선스) — `POTCAR_SPEC.txt` 변형 그대로. **Ni 는 Ni_pv**
-(2026-08-08 납품과 동일). VASP 5.4.4 또는 6.x + PBE PAW 5.4 세트.
+## 보내 주실 것
 
-## 완주 후 — **2단계**입니다
+각 잡의 **`static/OUTCAR`** (있는 잡은 `dense/OUTCAR` 도). `.gz` 그대로 좋습니다.
+`CONTCAR`·`CHGCAR`·`WAVECAR` 는 필요 없습니다.
+
+## 부탁
+
+`INCAR`·`KPOINTS`·`POSCAR` 는 그대로 두시면 감사하겠습니다 (병렬 태그
+NCORE/KPAR/NSIM 은 자유롭게 바꾸셔도 됩니다). SCF 가 안 붙는 잡이 있으면
+`ALGO = All` 을 먼저 시도해 보시고, 그래도 안 되면 그 잡은 두고 알려 주세요.
+
+## 확인용
+
 ```
-python3 analyze_results.py . --plan_dense    # ① 어느 자기 branch 를 더 재야 하는지 판정
-bash run_dense_selected.sh                   # ② 계획에 있는 것만 실행 (보통 0건)
-python3 analyze_results.py .                 # ③ 최종
+python3 analyze_results.py .       # 필수 산출이 빠지면 exit 2 로 알려 줍니다
 ```
-①은 coarse static 을 보고 **보고할 branch 를 이미 dense 했는지** 확인합니다.
-보통은 그렇고, 그러면 ②는 아무것도 안 돌고 즉시 끝납니다 (추가 비용 0).
-주 seed 가 무효이거나 다른 seed 가 20 meV 넘게 낮을 때만 최대 2건이 추가됩니다
-(`dense_cand/` 에 입력이 이미 들어 있습니다 — 새로 만들 것 없습니다).
-근거는 `DENSE_PLAN.json` 에 남습니다. 필수 산출이 빠지면 exit 2 입니다.
-`RESULTS.json` + `DENSE_PLAN.json` + 반송물을 보내 주세요.
 
-## 프로토콜 (요약)
-PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR=0/0.05 ·
-ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3+DIPOL(COM) ·
-static k {ks} · dense k {kd} · 고정 평면 z ≤ {zcut:.3f} Å (아래 {int(a.freeze * 100)}%) ·
-자기 seed = 2026-08-08 납품 계보 부격자 원장(Ni 24/24 ±1 μB).
-근거는 `MANIFEST.json`.
+---
+계산 조건·근거·범위는 `MANIFEST.json` 에, 제출 관련 수치는 `SUBMIT_CONTRACT.md` 에
+적어 두었습니다. 궁금한 점 있으시면 편하게 물어봐 주세요.
 
-## 이 번들로 **주장할 수 없는 것**
-- DFT 이완 기준의 자리 선호 (기하가 UMA 것입니다)
-- 절대 흡착에너지 E_ads · "흡착이 유리하다" · 조각 간 결합 세기 비교
-  (clean/기체 기준계가 없습니다 — `controls/` 는 자기 대조군이지 E_ads 기준계가 아닙니다)
-- 전역/배향 무관 자리 선호 (배향은 교차 끝점이 있는 조각에서만 분리됩니다)
+<details><summary>프로토콜 요약 (참고)</summary>
+
+PBE+U(Ni d 6.2 Dudarev) · D3 zero damping(IVDW=11) · ENCUT 520 · ISMEAR 0/0.05 ·
+ISYM=0 · LASPH · ADDGRID · LDIPOL/IDIPOL=3 · static k {ks} · dense k {kd} ·
+고정 평면 z ≤ {zcut:.3f} Å · 자기 seed 2종(각 끝점마다 둘 다 필요합니다) ·
+Ni 는 **Ni_pv** (2026-08-08 납품과 동일 계보) · VASP 5.4.4 또는 6.x + PBE PAW 5.4.
+dense 는 k 검증용이라 {n_dn}개 잡에만 있습니다: {dc or '(없음)'}.
+</details>
 """
 
 
@@ -2512,7 +2543,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%8 --wrap='
 - 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
   (192원자 · NKPTS 4 · 48코어 · 30,438 s / 58 전자스텝 = **525 s/스텝**)
 - **±2배 불확실성**을 인정하는 모델입니다. 계약값이 아니라 계획용 수치입니다.
-- `python3 tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json --concurrency 8`
+- `python3 tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json --concurrent {a.concurrency}`
   로 이 번들의 실제 계획에서 다시 계산하세요.
 - ⚠ **aggregate 시간 ÷ 동시 실행 수**는 산술 하한입니다. 한 잡의
   static→dense 임계경로가 그 하한보다 길면 하한에 도달할 수 없습니다.
@@ -2821,7 +2852,8 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                             ledger, zcut=zcut, dense=dense and sd == SEED_MAIN,
                             prescf=not a.no_prescf, single_point=a.single_point,
                             kmesh_over=kover,
-                            dense_cand=dense and sd != SEED_MAIN)
+                            dense_cand=(a.adaptive_dense and dense
+                                        and sd != SEED_MAIN))
                         slab_metas.append(m)
                         plan(rel, m["phases"], req)
                         n_jobs += 1
@@ -3022,7 +3054,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     man["potcar_spec"] = {e: POTCAR_SPEC.get(e, e) for e in sorted(used_els)}
     (out / "analyze_results.py").write_text(ANALYZER)
     (out / "run_all.sh").write_text(RUN_ALL)
-    (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
+    if a.adaptive_dense:
+        (out / "run_dense_selected.sh").write_text(RUN_DENSE_SEL)
+    # ⚠ 문서가 잡 수를 읽으므로 **문서보다 먼저** 확정한다 (Codex 7차 §11 —
+    #   지금은 SUBMIT_CONTRACT 가 '?' 를 찍고 있었다).
+    man["n_jobs"] = n_jobs
     # ★ 모드별 README (Codex 6차 §8) — 옛 README 는 82계·259상·relax 반송·refs 표를
     #   그대로 담고 있어 **단일점 Wave 1 과 정면으로 모순**된다. 실행 계약과 provenance
     #   문서를 옛 판으로 내보내는 것은 문구 문제가 아니라 반송 계약 위반이다.
@@ -3047,7 +3083,6 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     for p in sorted(out.rglob("*")):
         if p.is_file() and p.name != "MANIFEST.json":
             files[str(p.relative_to(out))] = hashlib.sha256(p.read_bytes()).hexdigest()
-    man["n_jobs"] = n_jobs
     # ── 제출 계약을 MANIFEST 에 못 박는다 (Codex 6차 §7) ─────────────────────
     #   "2.4일" 이 어떤 코어 수·병렬도의 값인지 기록이 없으면 나중에 아무도 모른다.
     n_st = sum(1 for p in man["planned"].values()
@@ -3415,7 +3450,7 @@ def selftest() -> int:
     a0 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_short"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(a0, ledger=led)
         chk(False, "N0 xyz 누락 → **번들이 만들어졌다** (축소 정본 = fail-open)")
@@ -3431,7 +3466,7 @@ def selftest() -> int:
     ab = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_nofp"),
                             freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                             qe="(none)", expect=None, allow_partial=False,
-                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
+                            no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     try:
         build_bundle(ab, ledger=led)
         chk(False, "N0b 지문 없는 소스 → **번들이 만들어졌다**")
@@ -3455,7 +3490,7 @@ def selftest() -> int:
     at3 = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle_top3"),
                              freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                              qe="(none)", expect=None, allow_partial=False,
-                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
+                             no_prescf=False, allow_stale_gate=False, top_n=3, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     o3 = build_bundle(at3, ledger=led)
     m3 = json.loads((o3 / "MANIFEST.json").read_text())
     kept = sorted({v["dir"] for v in m3["pairs"].values()})
@@ -3472,7 +3507,7 @@ def selftest() -> int:
     a = argparse.Namespace(runs=str(td / "runs"), out=str(td / "bundle"),
                            freeze=0.85, nslab=nslab, frags=["ptfe_dimer"],
                            qe="(none)", expect=None, allow_partial=False,
-                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
+                           no_prescf=False, allow_stale_gate=False, top_n=None, single_point=False, champion=False, kmesh_static=None, kmesh_dense=None, refs=True, cross_endpoints=None, mag_controls=False, dense_frags=None, cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out = build_bundle(a, ledger=led)
     man = json.loads((out / "MANIFEST.json").read_text())
     n_pre = sum(1 for p in man["planned"].values() if "pre" in (p.get("phases") or []))
@@ -3485,7 +3520,7 @@ def selftest() -> int:
         frags=["ptfe_dimer"], qe="(none)", expect=None, allow_partial=False,
         no_prescf=False, allow_stale_gate=False, top_n=None, single_point=True,
         champion=True, kmesh_static=None, kmesh_dense=None, refs=False,
-        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0)
+        cross_endpoints=["ptfe_dimer"], mag_controls=True, dense_frags=["ptfe_dimer"], cores=48, concurrency=8, no_cross=False, global_champion_meV=20.0, adaptive_dense=False)
     out_sp = build_bundle(a_sp, ledger=led)
     # ★ **배포되는 분석기**의 k 라벨·guard band selftest 를 그대로 돌린다.
     #   이 로직은 문자열 템플릿 안이라 여기서 import 로 시험할 수 없다 — 실행이 유일한 길.
@@ -3494,8 +3529,26 @@ def selftest() -> int:
     for ln in rk.stdout.splitlines():
         print("   " + ln)
     chk(rk.returncode == 0, f"배포 분석기 k-selftest (rc={rk.returncode})")
+    # ★ dense 모멘트 hard gate (Codex 7차 §8) — dense 는 **에너지를 내는 상**이므로
+    #   모멘트 표가 없으면 조용히 빠지면 안 된다. 옛 판은 그랬다.
+    az0 = (out_sp / "analyze_results.py").read_text()
+    chk("DENSE_MOMENTS_MISSING" in az0 and "DENSE_MAGNETIC_COLLAPSE" in az0,
+        "분석기에 dense 모멘트 게이트가 있다")
+    chk(az0.count("DENSE_MOMENT_COUNT") and az0.count("DENSE_MOMENT_SHORT"),
+        "표 길이·Ni 인덱스 범위도 본다")
 
-    # ── 조건부 dense: 후보 입력이 러너에 **안 걸리는지** + 계획 두 경로 ──────
+    # ── 기본은 **꺼짐** (Codex 7차 권장 A) — 외주 요청에 2단계 절차를 안 넣는다 ──
+    chk(not list(out_sp.rglob("dense_cand/INCAR")),
+        "기본 빌드에 dense 후보가 없다 (adaptive dense 기본 꺼짐)")
+    chk(not (out_sp / "run_dense_selected.sh").is_file(),
+        "기본 빌드에 run_dense_selected.sh 도 없다 (요청서가 짧아진다)")
+    # ── 켰을 때만: 후보 입력이 러너에 **안 걸리는지** + 계획 두 경로 ──────────
+    a_ad = argparse.Namespace(**{**vars(a_sp), "out": str(td / "bundle_adapt"),
+                                 "adaptive_dense": True})
+    out_ad = build_bundle(a_ad, ledger=led)
+    chk((out_ad / "run_dense_selected.sh").is_file(),
+        "--adaptive_dense 를 켜면 러너가 들어간다")
+    out_sp = out_ad                       # 이하 조건부 dense 검사는 켠 번들로
     cands = sorted(out_sp.rglob("dense_cand/INCAR"))
     chk(len(cands) == 2, f"dense 후보 입력 {len(cands)}개 (보정자 끝점 × net4)")
     if cands:
@@ -3695,6 +3748,21 @@ def selftest() -> int:
         t = _re.sub(r"NKPTS = \d+", f"NKPTS = {nk}", t)      # 진짜 dense 는 k 가 늘어난다
         t = t.replace("LREAL = Auto", "LREAL = .FALSE.")
         (dj / "OUTCAR").write_text(t.replace(f"{e0:.6f}", f"{e0 + shift:.6f}"))
+    # ★ 음성 N13 (Codex 7차 §8) — dense 에서 **모멘트 표만** 지운다. 에너지·NKPTS 는
+    #   멀쩡하므로, 게이트가 없으면 이 잡은 아무 문제 없이 κ 에 들어간다.
+    dm_job = None
+    for dj in sorted(out.rglob("dense")):
+        # ⚠ fib00 은 **유일하게 살아남는 정상 쌍**이다 — 여기를 죽이면 하류 시험
+        #   ("유효 1/계획 5") 이 NO_DATA 로 무너진다. 이미 막힌 쌍에서 고른다.
+        if (dj.is_dir() and (dj / "OUTCAR").is_file()
+                and "Litop" in dj.parent.name and "fib00" not in dj.parent.name):
+            txt = (dj / "OUTCAR").read_text()
+            if "magnetization (x)" in txt:
+                head, _sep, _tail = txt.partition("magnetization (x)")
+                (dj / "OUTCAR").write_text(
+                    head + "\n General timing and accounting informations for this job\n")
+                dm_job = str(dj.parent.relative_to(out))
+                break
     chk(n_dense >= 2 * len(DIRS), f"tier1 전 pm1 끝점에 dense 상 ({n_dense}개)")
 
     # ── 음성 케이스 심기 ────────────────────────────────────────────────────
@@ -3803,6 +3871,12 @@ def selftest() -> int:
         f"N6 TITEL 없음 → POTCAR_UNVERIFIED (통과 아님)")
     chk(any("MAGNETIC_COLLAPSE" in g for g in res["jobs"][mc_job]["gates"]),
         f"N7 모멘트 붕괴 → MAGNETIC_COLLAPSE (clean 기준 Q/f_small)")
+    if dm_job:
+        gts = res["jobs"].get(dm_job, {}).get("gates", [])
+        chk(any("DENSE_MOMENT" in g for g in gts),
+            f"N13 dense 모멘트 표만 삭제 → 게이트 발화 ({[g[:34] for g in gts]})")
+    else:
+        chk(False, "N13 전제 실패: 모멘트 표 있는 dense 잡을 못 찾았다")
     chk(len(res["integrity"]["changed"]) == 1, f"N9 INCAR 변조 → 무결성 1건 감지")
 
     # ── 양성: 게이트에 안 걸린 쌍은 값이 **정확히** 복원돼야 한다 ──
@@ -3859,6 +3933,12 @@ def main():
                     help="교차 끝점을 만들 조각을 **제한**한다 (기본: 필요한 조각 전부). "
                          "챔피언 자세키가 다른 조각에만 실제로 생긴다 — 같으면 0개다. "
                          "제한하면 나머지 불일치 조각은 배향 혼입 상태로 남는다(경고).")
+    ap.add_argument("--adaptive_dense", action="store_true",
+                    help="조건부 dense(dense_cand/ + --plan_dense + run_dense_selected.sh)를 "
+                         "켠다. **기본은 꺼짐** (Codex 7차 권장 A): 승격된 dense 를 최종 "
+                         "분석기가 읽는 경로가 아직 end-to-end 로 검증되지 않았고, 외주처에 "
+                         "2단계 절차를 요구하게 된다. 꺼 두면 발동 상황은 "
+                         "MAGNETIC_K_UNRESOLVED 로 닫힌다.")
     ap.add_argument("--global_champion_meV", type=float, default=20.0,
                     help="풀 제한으로 ΔE 가 이만큼(meV) 이상 움직이면 **전역 최선 자세도** "
                          "끝점으로 넣는다. 배향일치 대비(재는 것)와 전역 자리 선호"
