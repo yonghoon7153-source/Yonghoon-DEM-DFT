@@ -89,21 +89,51 @@ DIAGNOSTICS = {
     },
 }
 
-# 소스에서 인접 규약을 **읽어낸다** (선언을 믿지 않는다 — 코드가 정본)
+# 소스에서 인접 규약을 **읽어낸다** (선언을 믿지 않는다 — 코드가 정본).
+#
+# ⚠ 2026-08-12 감사(S1a): 첫 판의 시그니처 4개는 후보 함수 **32개 중 2개**만 읽어냈다.
+#   나머지 30개는 `None` 이 되어, 등록부가 **검사가 반박할 수 없는 선언**으로 전락했다
+#   (규칙이 자기 목적을 잃는 형태).  솔버의 실제 관용구를 넣어 그 구멍을 메운다.
 _ADJ_SIG = {
-    '26-conn': ('np.ones((3, 3, 3)', 'generate_binary_structure(3, 3)'),
-    '6-face': ('generate_binary_structure(3, 1)', '_label6', 'n_components_6face'),
+    '26-conn': ('np.ones((3, 3, 3)', 'np.ones((3,3,3)', 'structure=np.ones(',
+                'generate_binary_structure(3, 3)'),
+    '6-face': ('generate_binary_structure(3, 1)', '_label6', 'n_components_6face',
+               'np.s_[:-1, :, :]', 'np.s_[:, :-1, :]', 'np.s_[:, :, :-1]',
+               'ndimage.label(cond', 'ndimage.label(pore', 'ndimage.label(uni'),
 }
+#  주기 wrap 은 **별도 축**이다.  솔버가 x/y 를 감아 전류를 흘리는데 진단이 그 face 를
+#  합에서 빼면, 둘은 같은 인접 규약을 쓰면서도 **다른 그래프**를 본다.
+#  실측(S1a): seam 지배 격자에서 wrap face 소산 = 전체의 22.9 %, 그 100 %가 VGCF 몫.
+_PERIODIC_SIG = ('periodic_xy', 'periodic=', 'PERIODIC', 'x: nx-1', 'wrap')
 
 
 def _detect_adjacency(fn):
-    """함수 소스에서 인접 규약을 추정한다.  ⚠ 선언과 다르면 **선언이 틀린 것**이다."""
+    """함수 소스에서 인접 규약을 추정한다.  ⚠ 선언과 다르면 **선언이 틀린 것**이다.
+
+    다중 히트는 최다 득표로 정한다 (동점이면 병기 → 등록부 대조에서 오류로 드러난다).
+    """
     try:
         src = inspect.getsource(fn)
     except (OSError, TypeError):
         return None
-    hits = [k for k, sigs in _ADJ_SIG.items() if any(s in src for s in sigs)]
-    return hits[0] if len(hits) == 1 else (None if not hits else '/'.join(sorted(hits)))
+    score = {k: sum(src.count(s) for s in sigs) for k, sigs in _ADJ_SIG.items()}
+    best = max(score.values())
+    if best == 0:
+        return None
+    top = sorted(k for k, v in score.items() if v == best)
+    return top[0] if len(top) == 1 else '/'.join(top)
+
+
+def _detect_periodic(fn):
+    """이 함수가 주기 wrap 을 **다루는가** (인자로 받거나 코드에서 감는가)."""
+    try:
+        src = inspect.getsource(fn)
+        params = set(inspect.signature(fn).parameters)
+    except (OSError, TypeError, ValueError):
+        return None
+    if {'periodic', 'periodic_xy', 'box_xy'} & params:
+        return True
+    return any(s in src for s in _PERIODIC_SIG)
 
 
 def _resolve(dotted):
@@ -124,9 +154,22 @@ def check_convention_parity(verbose=True):
             warns.append(f'{dname}: 불러올 수 없음 ({type(e).__name__}) — 규약 대조 생략')
             continue
         seen = _detect_adjacency(fn)
-        if seen and seen != d['adjacency']:
+        if seen is None:
+            warns.append(f'{dname}: 소스에서 인접 규약을 **읽지 못했다** — 이 항목의 등록값은 '
+                         f'검사가 반박할 수 없는 선언이다.  _ADJ_SIG 에 관용구를 추가할 것')
+        elif seen != d['adjacency']:
             errs.append(f'{dname}: 등록부는 {d["adjacency"]} 라는데 소스는 {seen} '
                         f'— **등록부가 낡았다** (코드가 정본)')
+        # ★ 주기 축 — 같은 인접 규약이어도 솔버가 감고 진단이 안 감으면 다른 그래프다
+        try:
+            sfn = _resolve(d['diagnoses']) if '.' in d['diagnoses'] else None
+        except Exception:
+            sfn = None
+        s_per = _detect_periodic(sfn) if sfn is not None else solver.get('periodic')
+        d_per = _detect_periodic(fn)
+        if s_per and d_per is False and not d.get('periodic_waiver'):
+            errs.append(f'{dname}: 솔버는 주기 wrap 을 다루는데 진단은 **그 face 를 안 본다** '
+                        f'— 같은 인접 규약이라도 다른 그래프다 (periodic_waiver 로 포기 명시할 것)')
         if d['adjacency'] != solver['adjacency']:
             if not d.get('waiver'):
                 errs.append(f'{dname}: 솔버는 {solver["adjacency"]} 인데 진단은 '
