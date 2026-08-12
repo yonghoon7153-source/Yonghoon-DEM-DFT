@@ -60,8 +60,14 @@ def point_cells_from(pts_um, vox):
     return np.floor(np.asarray(pts_um) / vox).astype(np.int64)
 
 
-def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, check_order=True,
-        occ_res=0.25, max_fibres=0, gap_tol=2.0):
+def seed_carbon_on_kit(kit='kit_ps_7_3', n_grid=288, vgcf_wt=1.0, seed=0,
+                       occ_res=0.25, max_fibres=0):
+    """실침대 위에 production 시더로 VGCF 를 깐다 — A/B 와 네트워크 측정의 **공통 앞단**.
+
+    ★ 두 소비자가 **정확히 같은 점 구름**을 봐야 한다.  따로 씨 뿌리면 per-fibre 단절과
+      전역 네트워크가 **다른 실현**을 비교하게 되고, 차이가 래스터 때문인지 시드 때문인지
+      구분할 수 없다.  그래서 여기 한 곳에서만 만든다 (CLAUDE.md 사다리 ②).
+    """
     am_c, am_r, se_c, se_r, lat, thick = load_kit(kit)
     dx = lat / n_grid                                        # MPM 격자 (box lateral / n_grid)
     step = 0.7 * dx                                          # production 점 간격 규약
@@ -109,8 +115,18 @@ def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, check_order=
     pts, fid, _w = _ad.seed_fibres(
         nobj, box, step, rng, L=_ad.VGCF_L, L_cv=0.35, curl=0.06,
         in_am=in_am, return_ids=True, return_vol=True)
-    pts = np.asarray(pts, np.float64)
-    fid = np.asarray(fid)
+    return {'pts': np.asarray(pts, np.float64), 'fid': np.asarray(fid),
+            'step': step, 'dx': dx, 'lat': lat, 'thick': thick,
+            'am_c': am_c, 'am_r': am_r, 'se_c': se_c, 'se_r': se_r,
+            'nobj': nobj, 'nobj_full': nobj_full, 'kit': kit, 'n_grid': n_grid}
+
+
+def run(kit='kit_ps_7_3', n_grid=288, vox=0.4, vgcf_wt=1.0, seed=0, check_order=True,
+        occ_res=0.25, max_fibres=0, gap_tol=2.0):
+    S = seed_carbon_on_kit(kit, n_grid, vgcf_wt, seed, occ_res, max_fibres)
+    pts, fid, step = S['pts'], S['fid'], S['step']
+    dx, lat, thick = S['dx'], S['lat'], S['thick']
+    am_r, se_r, nobj, nobj_full = S['am_r'], S['se_r'], S['nobj'], S['nobj_full']
 
     pt_comp, sg_comp, pt_cells, sg_cells, nseg, n_gap = [], [], [], [], [], []
     order_bad = 0
