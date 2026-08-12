@@ -832,6 +832,65 @@ def parse_args(argv):
     return ap.parse_args(argv)
 
 
+def _fin(v):
+    """JSON 안전화: NaN/Inf → None.  §F1 — 모르는 값은 **날조하지 말고 null** 로 나간다
+    (`json.dump` 는 NaN 을 그대로 써서 표준 JSON 파서가 거부하는 파일을 만든다)."""
+    try:
+        f = float(v)
+    except (TypeError, ValueError):
+        return None
+    return f if np.isfinite(f) else None
+
+
+def am_load_split_profile(absorb_z, trac_se_z, wallp, k_floor, k_wall, band=None):
+    """★★ R2.5-v2 — z-슬라이스 프로파일에서 **정의 가능한** 하중분담만 뽑는다 (numpy 전용).
+
+    **왜 부피 전체 합이 아니라 프로파일인가.**  R1 실측(real_14, 2026-08-12)에서
+    `|AMr|/wallP` 가 하중 ×7.9 되는 내내 **1.00 ± 0.015** 였다 (0.956/1.005/1.010/1.014/0.985).
+    같은 압력 구간에서 DEM 실측은 0.517→0.675 (+30 %) 로 움직인다.  얼린 AM 이 침대를
+    가로지르면 플래튼이 넣은 z-운동량은 결국 AM 셀에서 죽으므로
+    `Σ_전부피 흡수 = 벽 주입량` 이 **보존 항등식**이고
+    `f = |AMr|/(|AMr|+wallP) ≡ 0.5` 가 구조적으로 고정된다.
+    ⇒ **전부피 합은 증거가 아니다** (가능도비 1).  0.50 은 측정이 아니라 회계의 그림자다.
+
+    **더 근본적으로**: 얼린 AM 은 하중을 흡수만 하고 전달하지 않는 **운동량 싱크**라
+    "AM 이 몇 %를 지느냐"가 이 모델에서 원리적으로 정의되지 않는다 (frame[5] 경계).
+
+    **그래도 남는 잘 정의된 양**: 하중이 바닥으로 빠져나갈 때 **SE 가 실어 나른 몫**.
+    AM 이 흡수한 것은 가상 앵커로 나가므로 바닥 바로 위에서
+
+        f_AM = 1 − σzz_SE(floor) / wallP        ← DEM 수입 없이 **측정**되는 하중분담
+
+    absorb_z  : 슬라이스별 순 흡수 |dn|−|up| (GPa, 전단면 정규화 완료)
+    trac_se_z : 슬라이스별 SE 축 트랙션 (GPa, φ_SE 포함 = wallP 와 같은 척도)
+    k_floor/k_wall : 재료가 존재하는 셀 구간 [k_floor, k_wall)
+    band      : 바닥 평균 띠 두께(셀).  기본 = max(2, (k_wall−k_floor)//32)
+
+    `pinned=True` 는 전부피 합이 wallP 의 5 % 안 = **위 항등식이 실제로 성립** = 전부피
+    판독을 하중분담으로 인용하면 안 된다는 뜻이다 (판별검사 그 자체).
+    ⚠ wallP≈0 인 하강 초기에는 전부 NaN — 비는 정의되지 않는다.
+    """
+    a = np.asarray(absorb_z, dtype=float); t = np.asarray(trac_se_z, dtype=float)
+    lo = int(max(k_floor, 0)); hi = int(min(k_wall, len(a), len(t)))
+    out = {'f_am_cut': float('nan'), 'se_floor': float('nan'), 'absorb_total': float('nan'),
+           'absorb_top_frac': float('nan'), 'pinned': None, 'n_cells': max(hi - lo, 0)}
+    if hi - lo < 4:
+        return out                                     # 재료 구간이 없으면 프로파일도 없다
+    if band is None:
+        band = max(2, (hi - lo) // 32)
+    band = int(min(max(band, 1), hi - lo))
+    seg_a = a[lo:hi]; seg_t = t[lo:lo + band]
+    out['se_floor'] = float(np.nanmean(seg_t)) if np.isfinite(seg_t).any() else float('nan')
+    tot = float(np.nansum(seg_a)); out['absorb_total'] = tot
+    ntop = max(1, (hi - lo) // 10)                     # 상단 10 % 가 흡수한 몫 (항등식이면 작다)
+    if abs(tot) > 1e-30:
+        out['absorb_top_frac'] = float(np.nansum(a[hi - ntop:hi]) / tot)
+    if abs(wallp) > 1e-9:
+        out['f_am_cut'] = 1.0 - out['se_floor'] / float(wallp)
+        out['pinned'] = bool(abs(tot / float(wallp) - 1.0) < 0.05)
+    return out
+
+
 def _selftest():
     """--selftest: pure-numpy checks of the restart state layer (no taichi / no GPU needed)."""
     import json as _json
@@ -1194,6 +1253,49 @@ def _selftest():
         abs(_supp_at(7.0) - len(_t) * np.pi) < 1e-9)
     chk('am-jam: 최고점 평면의 지지 면적은 0 (그 위엔 아무것도 없다)',
         _supp_at(float(_t.max())) == 0.0)
+
+    # ── ★R2.5-v2: 슬라이스 하중분담 (전부피 합 축퇴의 판별검사) ────────────────────────
+    #   D1(판별력 필드): 각 검사는 **경쟁 가설이 다른 값을 예측할 때만** 증거다.  아래 두
+    #   합성 침대는 f_am_cut 이 0.0 과 0.8 로 갈리는데 전부피 합은 **둘 다 같은 값**을 준다.
+    _NZ = 100; _KF, _KW = 10, 90
+    # (A) 싱크 침대: 흡수가 전 구간에 퍼져 하중이 바닥에 도달하지 못한다 → SE 트랙션 0
+    _abs_A = np.zeros(_NZ); _abs_A[_KF:_KW] = 0.30 / (_KW - _KF)
+    _trc_A = np.zeros(_NZ)
+    _sA = am_load_split_profile(_abs_A, _trc_A, 0.30, _KF, _KW)
+    chk('R2.5-v2: 흡수합 = wallP 면 pinned (전부피 판독 무효 선언)', _sA['pinned'] is True)
+    chk('R2.5-v2: 싱크 침대의 f_am_cut = 1.0 (SE 가 아무것도 안 내보냄)',
+        abs(_sA['f_am_cut'] - 1.0) < 1e-12)
+    # (B) 전달 침대: 같은 흡수 총량인데 SE 가 바닥으로 0.24 를 실어 나른다 → f_am_cut 0.2
+    _trc_B = np.zeros(_NZ); _trc_B[_KF:_KW] = 0.24
+    _sB = am_load_split_profile(_abs_A, _trc_B, 0.30, _KF, _KW)
+    chk('R2.5-v2: 같은 흡수·다른 SE 트랙션 → f_am_cut 이 갈린다 (판별력 > 0)',
+        abs(_sB['f_am_cut'] - 0.2) < 1e-9 and abs(_sA['f_am_cut'] - _sB['f_am_cut']) > 0.5)
+    chk('R2.5-v2: 그런데 전부피 합은 두 침대가 **동일** (그래서 증거가 아니다)',
+        abs(_sA['absorb_total'] - _sB['absorb_total']) < 1e-12)
+    # (C) 상단 집중: 흡수가 꼭대기에 몰리면 top10 % 몫이 1 에 가깝다 (프로파일이 형태를 본다)
+    _abs_C = np.zeros(_NZ); _abs_C[_KW - 8:_KW] = 0.30 / 8
+    _sC = am_load_split_profile(_abs_C, _trc_B, 0.30, _KF, _KW)
+    chk('R2.5-v2: 상단 집중 흡수 → absorb_top10pct ≈ 1', _sC['absorb_top_frac'] > 0.99)
+    chk('R2.5-v2: 균일 흡수 → absorb_top10pct ≈ 0.1', abs(_sA['absorb_top_frac'] - 0.1) < 0.02)
+    # (D) wallP≈0 (하강 초기) → 비는 정의되지 않는다.  0 으로 눕히지 말고 NaN 을 유지할 것
+    _s0 = am_load_split_profile(_abs_A, _trc_B, 0.0, _KF, _KW)
+    chk('R2.5-v2: wallP≈0 이면 f_am_cut 은 NaN (0 이 아니다)', not np.isfinite(_s0['f_am_cut']))
+    chk('R2.5-v2: wallP≈0 이면 pinned 판정도 보류 (None)', _s0['pinned'] is None)
+    # (E) 재료 구간이 없으면 프로파일 없음 — 조용히 0 을 내지 말 것
+    _sE = am_load_split_profile(_abs_A, _trc_B, 0.30, 50, 52)
+    chk('R2.5-v2: 구간 < 4 셀이면 전부 NaN (거짓 정밀 금지)',
+        not np.isfinite(_sE['f_am_cut']) and _sE['n_cells'] == 2)
+    # (F) §F1: NaN 은 JSON 에 null 로 나간다 (json.dump 가 표준 위반 파일을 만드는 것 차단)
+    chk('R2.5-v2: _fin(NaN) → None', _fin(float('nan')) is None and _fin(float('inf')) is None)
+    chk('R2.5-v2: _fin(수) → float 그대로', abs(_fin(0.496) - 0.496) < 1e-12)
+    # (G) ★ R1 실측 재현: |AMr|/wallP = 1.00±0.015 가 하중 ×7.9 내내 유지 = 압력 무감각
+    _obs = [(0.0384, 0.0367), (0.0836, 0.0840), (0.1483, 0.1498),
+            (0.2117, 0.2146), (0.3023, 0.2978)]
+    _f = [abs(a) / (abs(a) + abs(w)) for w, a in _obs]
+    chk('R2.5-v2: R1 실측 f_am_volume_sum 이 전부 0.5 근방 (구조적 고정)',
+        max(abs(x - 0.5) for x in _f) < 0.015)
+    chk('R2.5-v2: 하중 ×7.9 에도 f 변동 < DEM 의 1/10 (DEM 은 0.517→0.675)',
+        (max(_f) - min(_f)) < 0.1 * (0.675 - 0.517))
 
     print(f"selftest: {ok}/{ok + len(fail)} PASS" + (f"   FAILED: {fail}" if fail else ""))
     return 1 if fail else 0
@@ -2183,6 +2285,24 @@ def main(argv):
     #     의무는 없다 — 어긋나면 frame[5] 경계의 정량화다.
     amf_dn = ti.field(ti.f32, ())                               # 위에서 눌러 들어온 몫 (v_z<0)
     amf_up = ti.field(ti.f32, ())                               # 아래에서 밀어올린 몫 (v_z>0)
+    # ── ★★ R2.5-v2 (2026-08-12) — 부피 전체 합은 **하중분담을 못 잰다** ────────────────────
+    #   R1 실측(real_14, frame 185→265): |AMr|/wallP = 0.956/1.005/1.010/1.014/0.985 로
+    #   **하중이 ×7.9 되는 내내 1.00 ± 0.015**.  같은 압력 구간에서 DEM 실측은 0.517→0.675
+    #   (+30 %) 로 움직인다 — MPM 쪽이 20배 덜 반응한다.
+    #   기전: AM 골격이 침대를 가로지르므로 플래튼이 넣은 z-운동량은 결국 **첫 AM 셀에서**
+    #   죽는다.  ⇒ `Σ_전부피 = 벽 주입량` 이 보존 **항등식**이고
+    #   `f = |AMr|/(|AMr|+wallP) ≡ 0.5` 가 구조적으로 고정된다.  0.847 도 0.517 도 아닌
+    #   딱 0.50 이 나온 것은 측정이 아니라 **회계의 그림자**다.
+    #   ⇒ **더 근본적으로**: 얼린 AM 은 하중을 흡수만 하고 전달하지 않는 **운동량 싱크**라,
+    #     "AM 이 몇 %를 지느냐"가 이 모델에서 **원리적으로 정의되지 않는다** (frame[5] 경계).
+    #   그러나 **잘 정의되는 것이 하나 남는다**: 하중이 바닥으로 나갈 때 **SE 가 실어 나른 몫**.
+    #   AM 이 흡수한 것은 가상 앵커로 빠지므로 바닥 바로 위의 SE 축응력 트랙션이
+    #     `σzz_SE(floor)/wallP = 1 − f_AM`  ← **수입 없이 측정되는 하중분담**
+    #   이 배열들은 그 두 프로파일이다 (측정 전용 — 해·정지 판정 비트 동일).
+    amf_zdn = ti.field(ti.f32, nz)                              # 슬라이스별 AM 흡수 (아래방향)
+    amf_zup = ti.field(ti.f32, nz)                              # 슬라이스별 AM 흡수 (위방향)
+    szz_zs  = ti.field(ti.f32, nz)                              # Σ(-σzz/J)·pvol  → 슬라이스 SE 트랙션
+    szz_zn  = ti.field(ti.f32, nz)                              # Σ pvol          → 슬라이스 SE 부피
     scaffold_on = bool(args.am_scaffold)                        # fixed-AM grid obstacle (real skeleton)
     SE_AM_DRAG = float(args.se_am_drag) if scaffold_on else 0.0   # ★ SE-AM confinement drag coef (compile-time const)
     am_mask = ti.field(ti.i32, (n_grid, n_grid, nz) if scaffold_on else (1, 1, 1))
@@ -2301,6 +2421,10 @@ def main(argv):
                     P += coh_p[p] * J * ti.Matrix.identity(ti.f32, 3)        # attractive σ in compression → binds
             szz[None] += -P[2, 2] / J                                         # -σzz = compressive axial pressure (GPa)
             pm = pvol_p[p]                                                    # per-point vol = mass (ρ=1)
+            if ti.static(scaffold_on):                                        # ★R2.5-v2 SE 축응력 프로파일
+                _kz = ti.min(ti.max(int(x[p][2] * inv_dx), 0), nz - 1)        #   부피가중 = 트랙션 (φ_SE 포함)
+                szz_zs[_kz] += (-P[2, 2] / J) * pm
+                szz_zn[_kz] += pm
             st = (-dt * pm * 4 * inv_dx * inv_dx) * P; affine = st + pm * C[p]
             for a, b, c in ti.static(ti.ndrange(3, 3, 3)):
                 off = ti.Vector([a, b, c]); dpos = (off.cast(ti.f32) - fx) * dx
@@ -2320,8 +2444,10 @@ def main(argv):
                         _mz = grid_m[I] * grid_v[I][2]
                         if _mz < 0.0:
                             amf_dn[None] += _mz
+                            amf_zdn[I[2]] += _mz              # ★R2.5-v2 슬라이스별 (부피합은 항등식)
                         else:
                             amf_up[None] += _mz
+                            amf_zup[I[2]] += _mz
                         grid_v[I] = ti.Vector.zero(ti.f32, 3)
                     else:
                         if ti.static(SE_AM_DRAG > 0.0):                  # ★ SE-AM confinement: damp SE flow near AM
@@ -2562,6 +2688,8 @@ def main(argv):
     _unload_step0 = 0.05 * vmax              # START SMALL — the elastic unload branch is stiff
     for frame in range(args.frames):
         sacc = 0.0; wacc = 0.0; amdn = 0.0; amup = 0.0          # ★R2.5
+        if scaffold_on:                                         # ★R2.5-v2 프로파일은 프레임 단위로 누산
+            amf_zdn.fill(0.0); amf_zup.fill(0.0); szz_zs.fill(0.0); szz_zn.fill(0.0)
         for _ in range(args.sub):
             substep()
             if FIBRE_ROD:                                    # Tier-2: rods buckle emergently under the press
@@ -2576,7 +2704,18 @@ def main(argv):
         wallp = wacc / args.sub
         am_dn = amdn / args.sub; am_up = amup / args.sub        # ★R2.5 (GPa, 부호 그대로)
         am_net = abs(am_dn) - abs(am_up)                        # 순 전달 = 위에서 받은 − 아래로 흘린
+        # ⚠ f_am_mpm 은 **하중분담이 아니다** — 전부피 합이 보존 항등식이라 ≡0.5 로 고정된다
+        #   (R1 실측 1.00±0.015 @ 하중 ×7.9).  진단용으로만 인쇄하고 판정은 split['f_am_cut'] 으로.
         f_am_mpm = (abs(am_net) / (abs(am_net) + abs(wallp))) if (abs(am_net) + abs(wallp)) > 1e-30 else 0.0
+        split = {'f_am_cut': float('nan'), 'se_floor': float('nan'), 'absorb_total': float('nan'),
+                 'absorb_top_frac': float('nan'), 'pinned': None, 'n_cells': 0}
+        if scaffold_on:                                          # ★R2.5-v2 슬라이스 프로파일
+            _nrm = max(args.sub, 1) * dt * area
+            _absorb_z = np.abs(amf_zdn.to_numpy() / _nrm) - np.abs(amf_zup.to_numpy() / _nrm)
+            _trac_z = szz_zs.to_numpy() / (max(args.sub, 1) * area * dx)   # φ_SE 포함 = wallP 척도
+            split = am_load_split_profile(_absorb_z, _trac_z, wallp,
+                                          int(FLOOR * n_grid) + 1,
+                                          min(int(wall_z[None] * n_grid), nz))
         p = wallp if args.readout == 'wallP' else sig_mean   # servo signal
         height = wall_z[None] - FLOOR
         por = max(0.0, 1.0 - solid_vol / (area * height)) * 100.0
@@ -2946,7 +3085,11 @@ def main(argv):
                       else 'descend' if not reached else 'servo')
             print(f"  frame {frame:3d} [{_phase}]  "
                   f"{args.readout}={p:7.4f} GPa (wallP={wallp:.4f} σzz_vol={sig_mean:.4f}"
-                  + (f" AMr={am_net:+.4f} f_AM_mpm={f_am_mpm:.3f}" if scaffold_on else "") + ")  "
+                  + (f" AMr={am_net:+.4f} f_AM_mpm={f_am_mpm:.3f}"
+                     + f" | SEfl={split['se_floor']:.4f} fAMcut={split['f_am_cut']:.3f}"
+                     + f" top%={split['absorb_top_frac'] * 100:.0f}"
+                     + (" PINNED" if split['pinned'] else "")
+                     if scaffold_on else "") + ")  "
                   f"porosity={por:6.2f}%  wall_z={wall_z[None]:.3f}{thick}", flush=True)
         if conv >= _conv_need and frame > 20:
             if not args.quiet:
@@ -3306,6 +3449,22 @@ def main(argv):
                 # hundreds of hours" state is NOT represented — only the stress-equilibrated geometry is.
                 'rate_dependence': 'NOT_MODELLED_rate_independent_J2',
                 'T_C': None, 'T_dependence': 'NOT_MODELLED',   # this solver has no temperature axis at all
+            }
+        split = locals().get('split')                        # frames=0 이면 프레임 변수가 없다
+        if scaffold_on and split:                            # ★R2.5-v2 하중분담 (수입 없이 측정)
+            m['am_load_split'] = {
+                'f_am_cut': _fin(split['f_am_cut']),          # 1 − σzz_SE(floor)/wallP  ← **판정용**
+                'se_floor_traction_GPa': _fin(split['se_floor']),
+                'volume_sum_pinned': split['pinned'],        # True = 전부피 합이 항등식 (판독 무효)
+                'absorb_total_GPa': _fin(split['absorb_total']),
+                'absorb_top10pct_frac': _fin(split['absorb_top_frac']),
+                'f_am_volume_sum': _fin(f_am_mpm),           # ⚠ 하중분담 아님 — 회계의 그림자 (≡0.5)
+                'method': 'R2.5-v2 z-slice: frozen AM is a momentum SINK, so the volume sum is a '
+                          'conservation identity (measured |AMr|/wallP = 1.00±0.015 over a ×7.9 load '
+                          'range).  Only the SE traction leaving at the floor is well posed.',
+                'caveat': 'AM load share is UNDEFINED in this model (AM absorbs, never transmits); '
+                          'f_am_cut is the complement of the SE-borne exit traction, NOT a DEM-'
+                          'convention f_AM.  Compare to DEM only as a frame[5] boundary, never fit.',
             }
         _add_meta = locals().get('_add_meta') or {}          # per-additive recipe+physics (if additives seeded)
         if not _add_meta and _state_in is not None and _state_meta.get('additives'):
