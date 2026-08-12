@@ -1034,6 +1034,16 @@ def read_ldau(t):
     return out or None
 
 
+def _pk(path, root):
+    """잡 키를 **POSIX 구분자**로 정규화한다.
+
+    ⚠ os.path.relpath 는 Windows 에서 `tier1\\job` 을 낸다. MANIFEST 의 prefix 는
+      `tier1/job` 이라, 개별 잡이 멀쩡해도 pair 조회가 전부 실패해 "필수 산출 누락"
+      으로 보였다 (2026-08-12 Codex 재감사 P0-6). 키는 한 표기법이어야 한다.
+    """
+    return os.path.relpath(path, root).replace(os.sep, "/").replace("\\", "/").strip("/")
+
+
 def read_outcar(p):
     t = _read_text(p)
     if t is None:
@@ -1385,9 +1395,12 @@ def plan_dense(root, man, jobs, E, E_dense):
                                    f"{(em - ea) * 1000:.0f} meV 더 낮다)")
                 cand.append((1, pid, role, alt, ent))
             elif ea is not None and abs(em - ea) <= BRANCH_TIE_EV:
-                ent["decision"] = (f"TIE({abs(em - ea) * 1000:.0f} meV ≤ "
-                                   f"{BRANCH_TIE_EV * 1000:.0f}) — 보고 branch 를 이미 "
-                                   f"dense 함. 추가 없음(원하면 optional 후보)")
+                # ⚠ tie 는 "괜찮다" 가 아니라 **재순위 위험 구간**이다. adaptive 가
+                #   꺼져 있으면 추가 계산이 불가능하므로 그 사실을 판정으로 남긴다.
+                ent["decision"] = (f"MAGNETIC_K_UNRESOLVED(두 branch 차 "
+                                   f"{abs(em - ea) * 1000:.0f} meV ≤ "
+                                   f"{BRANCH_TIE_EV * 1000:.0f} — k 보정 ±10 으로 순서가 "
+                                   f"뒤집힐 수 있는데 adaptive dense 가 꺼져 있다)")
             else:
                 ent["decision"] = (f"OK({main} 이 {(ea - em) * 1000:.0f} meV 낮다 — "
                                    f"보고 branch = dense 한 branch)")
@@ -1421,7 +1434,8 @@ def plan_dense(root, man, jobs, E, E_dense):
     for n in plan["notes"]:
         print(f"  ⚠ {n}")
     print(f"\n→ {op}")
-    print("   실행: bash run_dense_selected.sh   (이 계획에 있는 것만 돈다)")
+    print("   ⚠ 이 모드는 --adaptive_dense 로 만든 번들에서만 의미가 있다. "
+          "기본 번들에는 dense_cand/ 도 run_dense_selected.sh 도 없다.")
     return 0
 
 
@@ -1644,7 +1658,7 @@ def main():
                 continue          # 이완판은 CONTCAR 승계가 정상 — 달라야 맞다
             if hashlib.sha256(open(pp, "rb").read()).hexdigest() != rh:
                 integrity["runtime_poscar_mismatch"].append(
-                    os.path.relpath(pp, root))
+                    _pk(pp, root))
     # ★ phase POSCAR 를 반송받지 못하면 위 검사는 **조용히 건너뛴다** = fail-open.
     #   OUTCAR 가 있는데 POSCAR 가 없으면 OUTCAR 좌표로 대조한다 (Codex P0-6).
     integrity["geometry_unverified"] = []
@@ -1660,7 +1674,7 @@ def main():
                 continue
             oc = read_outcar(os.path.join(jd, ph, "OUTCAR"))
             pos = (oc or {}).get("positions")
-            rel = os.path.relpath(os.path.join(jd, ph), root)
+            rel = _pk(os.path.join(jd, ph), root)
             if not pos or not want or len(pos) != len(want["pos"]):
                 integrity["geometry_unverified"].append(rel)
                 continue
@@ -1676,7 +1690,7 @@ def main():
         if not os.path.isfile(jp):
             continue
         meta = json.load(open(jp))
-        rel = os.path.relpath(jd, root).rstrip("/")
+        rel = _pk(jd, root)
         phases = (planned.get(rel) or {}).get("phases") or meta.get("phases") or \
             ["relax", "static"]
         ocs = {ph: read_outcar(os.path.join(jd, ph, "OUTCAR")) for ph in phases}
@@ -1771,16 +1785,26 @@ def main():
                     rec["gates"].append(
                         f"MAGNETIC_PARTIAL_FLIP({len(flip)}/{len(ni)} Ni 가 시드 topology 와 "
                         f"다르다 — 다른 자기 basin 이다)")
-                if sg < 0:
-                    # 전역 반전이면 **분자 라디칼도 같이** 뒤집혀야 같은 상태다.
-                    ms = {int(k): float(v) for k, v in mol_sign.items() if int(k) < len(mom)}
-                    notflip = [i for i, v in ms.items() if mom[i] * -1.0 * v <= 0]
-                    if ms and notflip:
+                # ★★ 라디칼 상대 스핀은 **항상** 본다 (Codex 재감사 P0-2).
+                #   옛 판은 Ni 가 전역 반전(sg<0)일 때만 검사해서, Ni topology 는
+                #   그대로인데 라디칼 하나만 뒤집힌 경우가 **게이트 없이 통과**했다.
+                #   dense 에는 넣었는데 static 에는 안 넣어서 실질적으로 열려 있었다.
+                ms = {int(k): float(v) for k, v in mol_sign.items() if int(k) < len(mom)}
+                if ms:
+                    # Ni 전역부호 sg 로 정규화한 뒤 라디칼의 **상대** 부호를 본다.
+                    bad = [i for i, v in ms.items() if mom[i] * sg * v <= 0]
+                    small = [i for i in ms if abs(mom[i]) < MOM_MIN]
+                    rec["geom"]["magnetic"]["radical"] = {
+                        "n": len(ms), "sign_mismatch": len(bad), "collapsed": len(small),
+                        "ni_global_sign": sg, "total_muB": st.get("mag_total")}
+                    if bad or small:
                         rec["gates"].append(
-                            f"MAGNETIC_RELATIVE_FLIP(Ni 는 전역 반전인데 라디칼 {len(notflip)}개는 "
-                            f"안 뒤집혔다 — 표면·라디칼 상대 스핀이 달라졌다)")
-                    else:
-                        rec["geom"]["magnetic"]["note"] = "전역 반전 — 시간반전이라 같은 상태"
+                            f"RADICAL_BRANCH_CHANGED(부호 불일치 {len(bad)} · 소실 "
+                            f"{len(small)}/{len(ms)} — Ni 부호를 정규화한 뒤에도 라디칼 "
+                            f"상대 스핀이 시드와 다르다. 다른 스핀 basin 이다)")
+                    elif sg < 0:
+                        rec["geom"]["magnetic"]["note"] = (
+                            "Ni·라디칼이 **함께** 전역 반전 — 시간반전이라 같은 상태")
                 # ── LDAU occupation + total M 기록 (Codex P0-2 ③) ──
                 #   판정용이 아니라 **기록용**이다 — 절대값은 PAW sphere 규약 의존.
                 ld = st.get("ldau")
@@ -2230,13 +2254,18 @@ def main():
                 if de_main is not None:
                     rec["orientation_term_eV"] = round(dg - de_main, 4)
                     flip = (dg > 0) != (de_main > 0)
+                    _gk = rec.get("global_k_status", "")
                     rec["global_vs_matched"] = (
+                        f"K_UNRESOLVED_GLOBAL({_gk}) — 전역 끝점을 dense 로 검증하지 "
+                        f"않았다. 부호 비교는 진단용이고 headline 아님"
+                        if _gk.startswith("K_UNVERIFIED") else
                         "SIGN_DIFFERS — 배향일치 대비와 전역 자리 선호가 **반대**다. "
                         "어느 질문인지 밝히지 않고 인용 금지."
                         if flip and min(abs(dg), abs(de_main)) > GUARD_EV else
                         "SIGN_AGREES" if not flip else
                         "UNRESOLVED(한쪽이 guard band 안)")
-                    if flip and min(abs(dg), abs(de_main)) > GUARD_EV:
+                    if flip and min(abs(dg), abs(de_main)) > GUARD_EV \
+                            and not rec.get("global_k_status", "").startswith("K_UNVERIFIED"):
                         # ⚠ 이건 계산 실패가 아니다 — 각 추정량은 유효하다.
                         #   금지되는 건 **하나의 site preference 숫자로 합치는 것**뿐이다.
                         #   그래서 gates(=값 무효화)가 아니라 해석 라벨로 남긴다.
@@ -2325,6 +2354,8 @@ def main():
                 rec["two_by_two_k_status"] = ("K_UNVERIFIED_CROSS — 교차 끝점은 "
                                               "dense 를 안 돌렸다. 아래 부호 결론은 "
                                               "coarse 값 기준이다")
+                # ⚠ k 라벨은 이 루프가 끝나야 정해진다(κ 를 여기서 모은다). 잠정 판정만
+                #   쓰고, 아래 후처리에서 K 게이트를 씌운다.
                 rec["two_by_two_verdict"] = (
                     "UNRESOLVED(한쪽이 guard band 안 — 부호 비교 불가)" if not both_big else
                     "SIGN_AGREES_AT_BOTH_SAMPLED_POSES — **두 표본 자세에서** 부호 일치 "
@@ -2354,10 +2385,13 @@ def main():
                 rec["dE_coarse_eV"] = de_main
                 de_main = round(_dni - _dli, 4)
                 rec["headline_from"] = "dense (직접 k 검증) — coarse 는 dE_coarse_eV 에"
-                rec["k_uncertainty_meV"] = 0.0
+                # ⚠ 0 은 "3×4×1 의 잔여 k 오차가 없다" 가 아니라 **전이 허용치를 안 썼다**
+                #   는 뜻이다 (Codex 재감사). 이름을 그렇게 바꾼다.
+                rec["k_transfer_allowance_meV"] = 0.0
+                rec["k_residual_note"] = "직접 dense — 전이 허용치 미적용. 잔여 k 오차는 미추정"
             else:
                 rec["headline_from"] = "coarse (dense 없음/게이트) — k 불확실성 ±10 meV"
-                rec["k_uncertainty_meV"] = GUARD_EV * 1000
+                rec["k_transfer_allowance_meV"] = GUARD_EV * 1000
             rec["dE_Ni_minus_Li_eV"] = de_main
             # ±10 meV k guard band — 30 meV 판정바닥과 **합치지 않는다**
             a_de = abs(de_main)
@@ -2386,6 +2420,22 @@ def main():
         cal, kap_all, man.get("fragments", []))
     results["k_transfer"] = k_transfer
     results["k_labels"] = k_labels
+    # ── K 미검증 quantity 의 **부호 결론을 막는다** (Codex 재감사 P0-3) ─────────
+    #   교차 끝점과 전역 끝점은 dense 를 안 돌린다. 조각의 k 라벨이 UNVERIFIED 면
+    #   coarse 값으로 부호를 말할 근거가 없다.
+    for _pid, _r in results["pairs"].items():
+        _lb = k_labels.get(_r.get("fragment"), "K_UNVERIFIED")
+        if _r.get("two_by_two_verdict") and _lb == "K_UNVERIFIED":
+            _r["two_by_two_verdict"] = (
+                f"K_UNRESOLVED_2x2(교차는 coarse only · 조각 라벨 {_lb} — 부호 결론 "
+                f"보류. I 의 전이 오차폭은 두 대비의 차라 최악 "
+                f"±{2 * GUARD_EV * 1000:.0f} meV)")
+            _r["gates"] = [g for g in _r.get("gates", [])
+                           if not g.startswith("POSE_DEPENDENT_SIGN")]
+        for _t2, _c in (_r.get("cross") or {}).items():
+            _c["k_note"] = (f"coarse only · 조각 라벨 {_lb}"
+                            + (" — 부호 결론 보류" if _lb == "K_UNVERIFIED" else
+                               f" · 전이 허용 ±{GUARD_EV * 1000:.0f} meV"))
 
     for frag in man.get("fragments", []):
         dl = [r["dE_Ni_minus_Li_eV"] for r in results["pairs"].values()
@@ -2529,12 +2579,16 @@ def main():
     for w in results["warnings"]:
         print(f"  ⚠ {w}")
     print(f"\n→ {out}")
+    # ⚠ 기하를 **검증하지 못한 것**도 실패다 (Codex 재감사 P0-1). 옛 판은 경고만
+    #   찍고 exit 0 이라, 실제 VASP 가 무엇을 읽었는지 모르는 채 완주로 보였다.
     if integrity["changed"] or integrity["missing"] or \
-            integrity.get("runtime_poscar_mismatch"):
+            integrity.get("runtime_poscar_mismatch") or \
+            integrity.get("geometry_unverified"):
         print(f"\n⛔ **입력 무결성 실패** — 변경 {len(integrity['changed'])} · "
               f"사라짐 {len(integrity['missing'])} · 실행시 기하 불일치 "
-              f"{len(integrity.get('runtime_poscar_mismatch') or [])} — exit 2 "
-              f"(삭제도 변조다)")
+              f"{len(integrity.get('runtime_poscar_mismatch') or [])} · 기하 미검증 "
+              f"{len(integrity.get('geometry_unverified') or [])} — exit 2 "
+              f"(삭제도 변조이고, **검증 못 한 것도 통과가 아니다**)")
         return 2
     if missing:
         print(f"\n⛔ **필수 산출 미완 {len(missing)}건** (tier1/refs) — fail-closed, exit 2:")
@@ -2595,8 +2649,10 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 `INCAR`·`KPOINTS`·`POSCAR` 를 **한 글자도 고치지 말아 주세요.** 분석기가 sha256 으로
 대조해서, 병렬 태그 한 줄만 바꿔도 전체를 거부합니다 (NCORE 는 4 로 넣어 두었습니다).
 병렬 조정이 꼭 필요하시면 알려 주세요 — 저희가 다시 만들어 드리는 게 빠릅니다.
-SCF 가 안 붙는 잡이 있으면
-`ALGO = All` 을 먼저 시도해 보시고, 그래도 안 되면 그 잡은 두고 알려 주세요.
+
+SCF 가 안 붙는 잡이 있으면 **그대로 두고 알려만 주세요.** 설정을 바꿔 다시 돌리시는
+것보다, 저희가 그 잡만 새로 만들어 드리는 편이 확실합니다 (바뀐 입력은 저희 쪽
+검증을 통과하지 못합니다).
 
 ## 확인용
 
@@ -2652,7 +2708,7 @@ static  (독립 — 잡끼리 완전 병렬)
 ls -d tier1/*/ tier2/*/ controls/*/ > JOBS.txt
 # Slurm 예시 — 동시 8개
 sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
-  --ntasks={a.cores} --time=96:00:00 --wrap='
+  --ntasks={a.cores} --time=120:00:00 --wrap='
   j=$(sed -n "${{SLURM_ARRAY_TASK_ID}}p" JOBS.txt)
   cd "$j"
   PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh    # ★ 잡마다 종 순서가 다르다
@@ -2663,7 +2719,7 @@ sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
 그 잡은 조용히 **다른 계**를 계산합니다. `POTCAR_ASSEMBLE.sh` 가 잡마다 조립하고
 TITEL 수까지 검증합니다.
 ⚠ walltime — 가장 긴 잡이 중앙 추정 56 h 이고 모형 불확실성이 ±2배입니다.
-   96 h 이상을 권합니다 (24–48 h 면 그 잡이 잘립니다).
+   ±2배 외피가 112 h 이므로 **120 h** 를 권합니다 (24–48 h 면 그 잡이 잘립니다).
 
 ## 비용 추정의 출처
 - 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
@@ -3691,6 +3747,23 @@ def selftest() -> int:
         "2×2 가 MANIFEST 의 prefix 를 읽는다 (결과 dict 엔 없었다)")
     chk('two_by_two") or {}).get("afm2424_pm1")' in az0,
         "완료 라벨이 **two_by_two 가 채워졌을 때만** 붙는다")
+    # ── Codex 재감사 (2026-08-12) 여섯 건이 실제로 들어갔는지 ─────────────────
+    for _k, _why in (
+            ('integrity.get("geometry_unverified")', "P0-1 기하 미검증 → exit 2"),
+            ("RADICAL_BRANCH_CHANGED", "P0-2 static 라디칼 게이트"),
+            ("K_UNRESOLVED_2x2", "P0-3 2×2 부호 결론 차단"),
+            ("K_UNRESOLVED_GLOBAL", "P0-3 전역 부호 결론 차단"),
+            ("MAGNETIC_K_UNRESOLVED", "P0-4 branch 경합 판정"),
+            ("k_transfer_allowance_meV", "명명 — 잔여 오차 0 이 아니다"),
+            ("def _pk(", "P0-6 POSIX 잡 키 정규화")):
+        chk(_k in az0, f"분석기에 {_why}")
+    # ★ static 라디칼이 **Ni 전역반전과 무관하게** 검사되는지 (옛 판은 sg<0 일 때만)
+    _i = az0.index("ms = {int(k): float(v) for k, v in mol_sign.items()")
+    chk("if sg < 0:" not in az0[max(0, _i - 300):_i],
+        "static 라디칼 검사가 sg<0 조건 **밖**에 있다 (항상 돈다)")
+    # ★ 음성: Windows 구분자를 줘도 POSIX 키가 나오는지
+    chk("os.sep" in az0 and 'replace(os.sep, "/")' in az0,
+        "잡 키가 os.sep 을 / 로 바꾼다 (Windows 에서 tier1\\job 이 되던 버그)")
 
     # ── 기본은 **꺼짐** (Codex 7차 권장 A) — 외주 요청에 2단계 절차를 안 넣는다 ──
     chk(not list(out_sp.rglob("dense_cand/INCAR")),
@@ -4048,7 +4121,8 @@ def selftest() -> int:
     if _has_dense:
         chk(abs(p0["dE_coarse_eV"] - truth["fib00"]) < 1e-6,
             f"coarse 값도 보존된다 ({p0['dE_coarse_eV']})")
-        chk("dense" in str(p0.get("headline_from", "")) and p0.get("k_uncertainty_meV") == 0.0,
+        chk("dense" in str(p0.get("headline_from", ""))
+            and p0.get("k_transfer_allowance_meV") == 0.0,
             f"headline 출처와 k 불확실성 0 을 기록 ({p0.get('headline_from')})")
     kg = res["numerical_gates"].get("k_ptfe_dimer__fib00_r000")
     chk(kg is not None and abs(kg["dE_meV"] - 3.0) < 1e-6,
