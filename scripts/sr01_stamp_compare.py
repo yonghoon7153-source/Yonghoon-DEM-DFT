@@ -38,7 +38,7 @@ _FIELDS = (
 )
 
 
-def extract_payload_cmd(text, out_name, stamp):
+def extract_payload_cmd(text, out_name, stamp, extra_flags='', tag=None):
     """킷 `run_mpm.sh` 본문 → payload 호출 **한 덩어리**를 뽑아 --out/스탬프를 바꾼 문자열.
 
     ⚠ run_mpm.sh 가 실패 안내에서 권하는 sed 한 줄
@@ -68,15 +68,17 @@ def extract_payload_cmd(text, out_name, stamp):
     tail = body[-1]
     if '--out mpm_payload.json' not in tail:
         raise SystemExit(f'ABORT — 예상과 다른 --out 줄: {tail.strip()[:120]}')
+    _ex = (' ' + extra_flags.strip()) if extra_flags and extra_flags.strip() else ''
     tail = tail.replace('--out mpm_payload.json',
-                        f'--step3-fibre-stamp {stamp} --out {out_name}')
+                        f'--step3-fibre-stamp {stamp}{_ex} --out {out_name}')
     body[-1] = tail.rstrip().rstrip('\\').rstrip()      # 끝의 줄이음 제거 (EOF 에서 매달리지 않게)
     joined = '\n'.join(body) + '\n'
     # ★ payload 가 쓰는 **다른** 파일도 팔별로 갈라 놓는다.  안 그러면 두 팔이 같은
     #   step4_grid.npz 에 겹쳐 쓰고, 마지막에 run_mpm.sh 가 만든 production 산출물까지
     #   선분-팔의 것으로 바뀐다 (STEP4 를 나중에 돌리면 조용히 다른 베드의 격자를 읽는다).
+    _tag = tag or f'{stamp}stamp'
     joined = re.sub(r'(--save-step4-grid\s+)(\S+?)(\.npz\b)',
-                    lambda m: f'{m.group(1)}{m.group(2)}_{stamp}stamp{m.group(3)}', joined)
+                    lambda m: f'{m.group(1)}{m.group(2)}_{_tag}{m.group(3)}', joined)
     stray = [t for t in joined.split() if t.startswith('--save-') and t != '--save-step4-grid']
     if stray:
         sys.stderr.write(f'  ⚠ 팔별로 안 갈라 놓은 출력 플래그: {sorted(set(stray))} '
@@ -417,6 +419,18 @@ def _selftest():
         chk('step4_grid_segmentstamp.npz' in cmd,
             '20) ★ step4 격자도 팔별로 갈라짐 (production step4_grid.npz 보호)')
         cp = extract_payload_cmd(txt, 'mpm_payload_pointstamp.json', 'point')
+        # ★ #9 AM-only 바닥 — extra_flags 주입이 **실제로** 들어가고 다른 것을 안 건드리는가
+        fl = extract_payload_cmd(txt, 'mpm_payload_amonly.json', 'segment',
+                                 extra_flags='--sigma-vgcf 1e-9', tag='amonly')
+        chk('--sigma-vgcf 1e-9' in fl, '21) extra_flags 가 명령에 들어간다')
+        chk('--out mpm_payload_amonly.json' in fl, '22) --out 이 바뀐다')
+        chk('--step3-fibre-stamp segment' in fl, '23) 스탬프는 생산 규약(segment) 유지')
+        chk('mpm_payload.json' not in fl.replace('mpm_payload_amonly.json', ''),
+            '24) 원본 --out 이 남지 않는다')
+        chk(fl.count('--sigma-vgcf') == 1, '25) 중복 주입 없음')
+        # 주입 전/후가 그 두 토큰 말고는 같아야 한다 (조용한 부작용 차단)
+        base = extract_payload_cmd(txt, 'mpm_payload_amonly.json', 'segment', tag='amonly')
+        chk(fl.replace(' --sigma-vgcf 1e-9', '') == base, '26) 주입 외 부작용 0')
         ta, tb = cp.split(), cmd.split()
         # 규칙으로 판정한다 (하드코딩 목록이 아니라) — 나중에 출력 플래그가 더 갈라져도 유효.
         #   다른 토큰은 **앞 토큰이 출력 플래그이거나 --step3-fibre-stamp** 여야 한다.
@@ -473,6 +487,12 @@ def main(argv=None):
     ap.add_argument('--out-name', default='mpm_payload_segstamp.json', help='--extract-payload 의 --out')
     ap.add_argument('--stamp', default='segment', choices=('point', 'segment'),
                     help='--extract-payload 가 박을 --step3-fibre-stamp')
+    ap.add_argument('--extra-flags', default='',
+                    help='--extract-payload 가 --out 앞에 끼워 넣을 추가 플래그 '
+                         '(예: "--sigma-vgcf 1e-9" = AM-only 바닥).  '
+                         '⚠ 같은 런 폴더에 여러 변종을 돌리면 --tag 도 줄 것')
+    ap.add_argument('--tag', default='',
+                    help='팔별 산출물(step4 grid 등)에 붙일 꼬리표.  기본 = <stamp>stamp')
     ap.add_argument('--check-arm', default='',
                     help='payload 하나가 **쓸 수 있는 팔 결과인지** 검사 (러너 재개용).  '
                          '완전하면 exit 0, 아니면 이유를 찍고 exit 1.  --stamp 로 어느 팔인지 지정.')
@@ -489,7 +509,8 @@ def main(argv=None):
         return 1 if why else 0
     if x.extract_payload:
         sys.stdout.write(extract_payload_cmd(
-            open(x.extract_payload, encoding='utf-8').read(), x.out_name, x.stamp))
+            open(x.extract_payload, encoding='utf-8').read(), x.out_name, x.stamp,
+            extra_flags=x.extra_flags, tag=(x.tag or None)))
         return 0
     if not x.a or not x.b:
         ap.error('payload 두 개가 필요합니다 (또는 --selftest).')
