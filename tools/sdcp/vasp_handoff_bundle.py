@@ -1764,11 +1764,19 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
     mom = ("\n magnetization (x)\n\n# of ion       s       p       d       tot\n"
            "------------------------------------------\n" + "\n".join(mom_rows)
            + "\n--------------------------------------------------\n")
-    head = (f" vasp.6.4.2\n{titels}\n   NIONS = {n}\n"
-            f"   NELM   =    200;   NELMIN=  6;\n")
     end = " General timing and accounting\n"
     for ph in meta.get("phases", ["relax", "static"]):
         (jd / ph).mkdir(exist_ok=True)
+        # ⚠ 실제 OUTCAR 는 NKPTS 와 INCAR 태그를 되울린다. 안 쓰면 새 검사들이 전부
+        #   UNVERIFIED 로 걸려 **양성 경로가 통째로 죽는다** (2026-08-12 실측).
+        inc = (jd / ph / "INCAR").read_text() if (jd / ph / "INCAR").is_file() else ""
+        echo = "\n".join(f"   {k} = {m.group(1)}" for k in AUDIT_KEYS
+                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", inc, re.M)] if m)
+        nk = 1
+        for v in str((meta.get("kmesh") or {}).get(ph, "1 1 1")).split():
+            nk *= int(v)
+        head = (f" vasp.6.4.2\n{titels}\n   NIONS = {n}\n   NKPTS = {nk}\n{echo}\n"
+                f"   NELM   =    200;   NELMIN=  6;\n")
         body = head + "Iteration      1(  33)\n"
         if ph == "relax":
             body += (f" POSITION      TOTAL-FORCE (eV/Angst)\n ---\n{frc}\n"
@@ -1942,9 +1950,15 @@ def selftest() -> int:
         if not dj.is_dir():
             continue
         n_dense += 1
+        meta = json.loads((dj.parent / "job.json").read_text())
         t = (dj.parent / "static" / "OUTCAR").read_text()
         e0 = float(_re.search(RX, t).group(1))
         shift = 0.003 if "Nitop" in dj.parent.name else 0.0
+        nk = 1
+        for v in str((meta.get("kmesh") or {}).get("dense", "1 1 1")).split():
+            nk *= int(v)
+        t = _re.sub(r"NKPTS = \d+", f"NKPTS = {nk}", t)      # 진짜 dense 는 k 가 늘어난다
+        t = t.replace("LREAL = Auto", "LREAL = .FALSE.")
         (dj / "OUTCAR").write_text(t.replace(f"{e0:.6f}", f"{e0 + shift:.6f}"))
     chk(n_dense >= 2 * len(DIRS), f"tier1 전 pm1 끝점에 dense 상 ({n_dense}개)")
 
@@ -1997,6 +2011,10 @@ def selftest() -> int:
     p = out / mc_job / "static" / "OUTCAR"
     p.write_text(_re.sub(r"(\d+\s+0\.000\s+0\.000\s+)(-?[\d.]+)(\s+)(-?[\d.]+)",
                          r"\g<1>0.000\g<3>0.000", p.read_text()))
+    # N10 dense 에 static 산출을 복사 — NKPTS 가 안 늘어야 잡힌다 (Codex P0-5)
+    dc_job = "tier1/ptfe_dimer__fib02_r000__Nitop__afm2424_pm1"
+    if (out / dc_job / "dense").is_dir():
+        shutil.copy(out / dc_job / "static" / "OUTCAR", out / dc_job / "dense" / "OUTCAR")
     # N8 필수 누락: box24 static 삭제
     (out / "refs/mol__ptfe_dimer__box24/static/OUTCAR").unlink()
     # N9 입력 변조: 한 잡의 INCAR 을 고친다 → 무결성 실패
@@ -2020,8 +2038,8 @@ def selftest() -> int:
         f"N5 잘린 OUTCAR → NOT_TERMINATED ({res['jobs'][tr_job]['gates']})")
     chk(any("POTCAR_UNVERIFIED" in g for g in res["jobs"][nt_job]["gates"]),
         f"N6 TITEL 없음 → POTCAR_UNVERIFIED (통과 아님)")
-    chk(any("MOMENT_COLLAPSED" in g for g in res["jobs"][mc_job]["gates"]),
-        f"N7 모멘트 붕괴 → MOMENT_COLLAPSED ({res['jobs'][mc_job]['gates']})")
+    chk(any("MAGNETIC_COLLAPSE" in g for g in res["jobs"][mc_job]["gates"]),
+        f"N7 모멘트 붕괴 → MAGNETIC_COLLAPSE (clean 기준 Q/f_small)")
     chk(len(res["integrity"]["changed"]) == 1, f"N9 INCAR 변조 → 무결성 1건 감지")
 
     # ── 양성: 게이트에 안 걸린 쌍은 값이 **정확히** 복원돼야 한다 ──
@@ -2037,6 +2055,8 @@ def selftest() -> int:
     chk(not res["e_ads"], "상자 게이트 실패 → E_ads 를 만들지 않는다")
     chk(bool(res["required_missing"]), f"N8 필수 누락 기록 {len(res['required_missing'])}건")
     # ── PAIR_COLLAPSED 양성/음성 (새 basin 판정) ──
+    chk(any("KMESH_NOT_DENSER" in g for g in res["jobs"][dc_job]["gates"]),
+        f"N10 dense 에 static 복사 → KMESH_NOT_DENSER ({res['jobs'][dc_job]['gates'][:1]})")
     chk(any("PAIR_COLLAPSED" in g for g in res["pairs"]["ptfe_dimer__fib01_r000"]["gates"]),
         "N1 두 끝점이 같은 자리로 → PAIR_COLLAPSED (RMSD+접촉지문)")
     chk(not any("PAIR_COLLAPSED" in g for g in p0["gates"]),
