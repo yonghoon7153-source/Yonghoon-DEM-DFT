@@ -242,7 +242,7 @@ LCHARG   = .FALSE.
 
 RUN_JOB = """#!/usr/bin/env bash
 # 이 잡의 상(phase)들을 순서대로 돈다. POTCAR 를 이 폴더에 놓고 실행.
-#   VASP_CMD="mpirun -np 64 vasp_std" bash run_job.sh
+#   VASP_CMD="mpirun -np 48 vasp_std" bash run_job.sh
 #
 # 상 사슬 (하나라도 끊기면 **멈춘다** — 조용히 건너뛰면 다른 계를 계산하게 된다):
 #   pre    dipole off, LWAVE=T          → WAVECAR·CHGCAR
@@ -250,7 +250,7 @@ RUN_JOB = """#!/usr/bin/env bash
 #   static ICHARG=1 (relax 의 CHGCAR)    → 판정 에너지
 #   dense  ICHARG=1 (**static** 의 CHGCAR) → k 수렴 확인
 set -e
-V=${VASP_CMD:-"mpirun -np ${NP:-64} vasp_std"}
+V=${VASP_CMD:-"mpirun -np ${NP:-48} vasp_std"}   # 계약·비용모형과 같은 48
 [ -f POTCAR ] || { echo "⛔ POTCAR 를 이 폴더에 놓으세요 (POTCAR_SPEC.txt 의 변형)"; exit 1; }
 need() { [ -s "$1" ] || { echo "⛔ $1 없음/빈 파일 — $2"; exit 1; }; }
 for ph in pre relax static dense; do
@@ -1051,6 +1051,21 @@ def read_outcar(p):
     titels = re.findall(r"TITEL\s*=\s*(.+)", t)
     mag = re.findall(r"number of electron\s+[\d.]+\s+magnetization\s+(-?[\d.]+)", t)
     forces = None
+    # ★ 실행 기하 감사용 — OUTCAR 안의 **실제 좌표**. phase POSCAR 를 반송받지 않아도
+    #   VASP 가 무엇을 읽었는지 여기서 확인할 수 있다 (Codex zip 감사 P0-6).
+    positions = None
+    k0 = t.rfind("POSITION")
+    if k0 > 0:
+        positions = []
+        for ln in t[k0:].splitlines()[2:]:
+            v = ln.split()
+            if len(v) >= 6:
+                try:
+                    positions.append([float(v[0]), float(v[1]), float(v[2])])
+                except ValueError:
+                    break
+            elif positions:
+                break
     k = t.rfind("TOTAL-FORCE")
     if k > 0:
         forces = []
@@ -1076,6 +1091,7 @@ def read_outcar(p):
             "vasp_version": ver.group(1) if ver else None,
             "mag_total": float(mag[-1]) if mag else None,
             "moments": read_moments(t), "forces": forces,
+            "positions": positions,
             "ldau": read_ldau(t),
             "incar_echo": {k2: (re.search(k2 + r"\s*=\s*([-\w.]+)", t).group(1)
                                 if re.search(k2 + r"\s*=\s*([-\w.]+)", t) else None)
@@ -1609,6 +1625,29 @@ def main():
             if hashlib.sha256(open(pp, "rb").read()).hexdigest() != rh:
                 integrity["runtime_poscar_mismatch"].append(
                     os.path.relpath(pp, root))
+    # ★ phase POSCAR 를 반송받지 못하면 위 검사는 **조용히 건너뛴다** = fail-open.
+    #   OUTCAR 가 있는데 POSCAR 가 없으면 OUTCAR 좌표로 대조한다 (Codex P0-6).
+    integrity["geometry_unverified"] = []
+    for jd in sorted(glob(os.path.join(root, "*", "*", ""))):
+        rp = os.path.join(jd, "POSCAR")
+        if not os.path.isfile(rp) or os.path.isdir(os.path.join(jd, "relax")):
+            continue
+        want = read_poscar(rp)
+        for ph in ("static", "dense"):
+            has_oc = any(os.path.isfile(os.path.join(jd, ph, "OUTCAR" + e))
+                         for e in ("", ".gz"))
+            if not has_oc or os.path.isfile(os.path.join(jd, ph, "POSCAR")):
+                continue
+            oc = read_outcar(os.path.join(jd, ph, "OUTCAR"))
+            pos = (oc or {}).get("positions")
+            rel = os.path.relpath(os.path.join(jd, ph), root)
+            if not pos or not want or len(pos) != len(want["pos"]):
+                integrity["geometry_unverified"].append(rel)
+                continue
+            d = max(mic_dist(a, b, want["cell"]) for a, b in zip(pos, want["pos"]))
+            if d > 0.05:
+                integrity["runtime_poscar_mismatch"].append(
+                    f"{rel} (OUTCAR 좌표가 루트와 최대 {d:.3f} Å 다르다)")
 
     jobs = {}
     results_ldau_missing = []
@@ -1767,6 +1806,29 @@ def main():
                             "Q_muB": round(dq, 3),
                             "f_small": round(len(dsmall) / len(ni), 3),
                             "total_muB": dn.get("mag_total")}
+                        # ★ open-shell 조각(doped)의 **라디칼 상대 스핀**을 dense 에서도
+                        #   본다 (Codex zip 감사 P0-5). Ni topology 는 그대로인데
+                        #   라디칼만 뒤집히거나 사라지면 다른 스핀 상태를 재는 것이다.
+                        if mol_sign:
+                            _ms = {int(k2): float(v2) for k2, v2 in mol_sign.items()
+                                   if int(k2) < len(dm)}
+                            _bad = [i for i, v2 in _ms.items() if dm[i] * sg * v2 <= 0]
+                            _gone = [i for i in _ms if abs(dm[i]) < MOM_MIN]
+                            rec["geom"]["magnetic"]["dense"]["radical"] = {
+                                "n": len(_ms), "sign_mismatch": len(_bad),
+                                "collapsed": len(_gone),
+                                "total_muB": dn.get("mag_total")}
+                            if _bad or _gone:
+                                rec["gates"].append(
+                                    f"DENSE_RADICAL_BRANCH_CHANGED(부호 불일치 {len(_bad)} · "
+                                    f"소실 {len(_gone)}/{len(_ms)} — Ni 는 유지됐지만 "
+                                    f"라디칼 상대 스핀이 달라졌다. κ 에 쓸 수 없다)")
+                            _tm, _td = st.get("mag_total"), dn.get("mag_total")
+                            if _tm is not None and _td is not None and \
+                                    abs(abs(_tm) - abs(_td)) > 0.5:
+                                rec["gates"].append(
+                                    f"DENSE_TOTAL_M_CHANGED({_tm:+.2f} → {_td:+.2f} μB — "
+                                    f"static↔dense 자기 branch 가 넘어갔다)")
                         qs = rec["geom"]["magnetic"].get("Q_muB")
                         if qs is not None and abs(qs) > 1e-9:
                             rat = dq / qs
@@ -1928,6 +1990,11 @@ def main():
             f"(LDAUPRINT=2 인데 OUTCAR 에 onsite density matrix 없음) — "
             f"자기상태를 모멘트 하나로만 보게 된다: "
             + ", ".join(results_ldau_missing[:4]))
+    if integrity.get("geometry_unverified"):
+        results["warnings"].append(
+            f"⚠ 실행 기하를 검증 못 한 상 {len(integrity['geometry_unverified'])}개 — "
+            f"phase POSCAR 도 OUTCAR 좌표도 없다: "
+            + ", ".join(integrity["geometry_unverified"][:5]))
     if integrity.get("runtime_poscar_mismatch"):
         results["warnings"].append(
             f"⛔ 실행시 POSCAR 가 루트와 다른 상 "
@@ -2181,7 +2248,7 @@ def main():
             entry = {"orientation": cx["down_dir"], "roll": cx.get("roll_deg"),
                      "dE_matched_eV": d_m, "dE_by_seed": dm_by_seed,
                      # 교차 끝점은 dense 를 안 돌린다 — k 는 전이 해석뿐이다
-                     "k_label": "K_UNVERIFIED_CROSS"}
+                     "k_label": "K_UNVERIFIED_CROSS", "prefix": cx["prefix"]}
             rec.setdefault("cross", {})[tag] = entry
             n_seed_want = len(pm.get("seeds", []))
             if len(dm_by_seed) < n_seed_want:
@@ -2207,16 +2274,17 @@ def main():
         #   ⚠ 옛 판은 각 교차를 **대각선** de_main 과 비교했다. 그러면 I 가 안 나온다.
         #   ⚠ I 는 모집단 상호작용이 아니라 **이 두 자세에서의 유한설계 대비**다.
         cr = rec.get("cross") or {}
-        if not _pose_matched and len(cr) == 2:
+        mc = pm.get("cross") or {}          # ★ prefix 의 권위는 MANIFEST 쪽이다
+        if not _pose_matched and len(mc) == 2:
             eL = {}
             for sd in pm.get("seeds", ["afm2424_pm1"]):
                 # p_L* 자세: Li 는 본 끝점, Ni 는 교차(Ni_at_Li_pose)
                 a1 = E(f"{pm['li_prefix']}__{sd}")
-                b1 = E(f"{(cr.get('Ni_at_Li_pose') or {}).get('prefix', '')}__{sd}") \
-                    if "Ni_at_Li_pose" in cr else None
+                b1 = E(f"{mc['Ni_at_Li_pose']['prefix']}__{sd}") \
+                    if "Ni_at_Li_pose" in mc else None
                 # p_N* 자세: Ni 는 본 끝점, Li 는 교차(Li_at_Ni_pose)
-                a2 = E(f"{(cr.get('Li_at_Ni_pose') or {}).get('prefix', '')}__{sd}") \
-                    if "Li_at_Ni_pose" in cr else None
+                a2 = E(f"{mc['Li_at_Ni_pose']['prefix']}__{sd}") \
+                    if "Li_at_Ni_pose" in mc else None
                 b2 = E(f"{pm['ni_prefix']}__{sd}")
                 if None not in (a1, b1, a2, b2):
                     eL[sd] = {"dE_match_pL": round(b1 - a1, 4),
@@ -2248,6 +2316,20 @@ def main():
             rec["cross_missing"] = pm["cross_missing"]
 
         if de_main is not None and not rec["gates"]:
+            # ★★ 직접 dense 를 돌렸으면 **그 값이 headline** 이다 (Codex zip 감사 P0-3).
+            #   옛 판은 dense 로 κ 만 재고 최종 수치·판정은 coarse 를 썼다. 그러면서
+            #   K_DIRECTLY_CHECKED 라는 이유로 20–40 meV guard 까지 풀어, dense 값이
+            #   30 meV 바닥 반대편에 있어도 coarse 로 판정할 수 있었다.
+            _dli = E_dense(f"{pm['li_prefix']}__afm2424_pm1")
+            _dni = E_dense(f"{pm['ni_prefix']}__afm2424_pm1")
+            if _dli is not None and _dni is not None:
+                rec["dE_coarse_eV"] = de_main
+                de_main = round(_dni - _dli, 4)
+                rec["headline_from"] = "dense (직접 k 검증) — coarse 는 dE_coarse_eV 에"
+                rec["k_uncertainty_meV"] = 0.0
+            else:
+                rec["headline_from"] = "coarse (dense 없음/게이트) — k 불확실성 ±10 meV"
+                rec["k_uncertainty_meV"] = GUARD_EV * 1000
             rec["dE_Ni_minus_Li_eV"] = de_main
             # ±10 meV k guard band — 30 meV 판정바닥과 **합치지 않는다**
             a_de = abs(de_main)
@@ -2313,9 +2395,14 @@ def main():
             cp = champ[0].get("champion_pose") or {}
             same = champ[0].get("matched") is True
             ncross = len(champ[0].get("cross") or {})
-            got = sum(1 for t, c in (results["pairs"].get(
+            # ⚠ 옛 판은 교차 **결과 두 개**만 있으면 "2×2 완료" 라 했다. 그런데 2×2 계산
+            #   자체(two_by_two)가 실패해도 그 조건은 참이라 **가짜 완료 라벨**이 붙었다.
+            #   실제로 prefix 버그로 two_by_two 가 한 번도 안 만들어지고 있었다.
+            _pr = results["pairs"].get(
                 f"{frag}__{champ[0]['dir']}_r{champ[0]['roll']:03d}", {})
-                .get("cross") or {}).items() if "dE_matched_eV" in c)
+            got = 2 if (_pr.get("two_by_two") or {}).get("afm2424_pm1") else \
+                sum(1 for _t, c in (_pr.get("cross") or {}).items()
+                    if "dE_matched_eV" in c) and 0
             cls = ("CHAMPION_MATCHED_POSE" if same else
                    "CHAMPION_MIXED_ORIENTATION_2x2" if ncross == 2 and got == 2 else
                    # 교차 0 = 대각선 두 모서리뿐. 자리와 배향을 **분리할 수 없다**.
@@ -2477,8 +2564,10 @@ VASP_CMD="mpirun -np {a.cores} vasp_std" bash run_job.sh
 
 ## 부탁
 
-`INCAR`·`KPOINTS`·`POSCAR` 는 그대로 두시면 감사하겠습니다 (병렬 태그
-NCORE/KPAR/NSIM 은 자유롭게 바꾸셔도 됩니다). SCF 가 안 붙는 잡이 있으면
+`INCAR`·`KPOINTS`·`POSCAR` 를 **한 글자도 고치지 말아 주세요.** 분석기가 sha256 으로
+대조해서, 병렬 태그 한 줄만 바꿔도 전체를 거부합니다 (NCORE 는 4 로 넣어 두었습니다).
+병렬 조정이 꼭 필요하시면 알려 주세요 — 저희가 다시 만들어 드리는 게 빠릅니다.
+SCF 가 안 붙는 잡이 있으면
 `ALGO = All` 을 먼저 시도해 보시고, 그래도 안 되면 그 잡은 두고 알려 주세요.
 
 ## 확인용
@@ -2534,10 +2623,19 @@ static  (독립 — 잡끼리 완전 병렬)
 ```bash
 ls -d tier1/*/ tier2/*/ controls/*/ > JOBS.txt
 # Slurm 예시 — 동시 8개
-sbatch --array=1-$(wc -l < JOBS.txt)%8 --wrap='
+sbatch --array=1-$(wc -l < JOBS.txt)%{a.concurrency} \
+  --ntasks={a.cores} --time=96:00:00 --wrap='
   j=$(sed -n "${{SLURM_ARRAY_TASK_ID}}p" JOBS.txt)
-  cd "$j" && cp /path/to/POTCAR . && VASP_CMD="srun vasp_std" bash run_job.sh'
+  cd "$j"
+  PP=/path/to/potpaw_PBE.54 bash POTCAR_ASSEMBLE.sh    # ★ 잡마다 종 순서가 다르다
+  VASP_CMD="srun -n {a.cores} vasp_std" bash run_job.sh'
 ```
+⚠ **공통 POTCAR 를 전 잡에 복사하면 안 됩니다.** 조각마다 POSCAR 종 순서가 달라
+(`Li Ni O` · `Li Ni O C F` · `Li Ni O C F H` · `Li Ni O S C H`) 하나를 돌려 쓰면
+그 잡은 조용히 **다른 계**를 계산합니다. `POTCAR_ASSEMBLE.sh` 가 잡마다 조립하고
+TITEL 수까지 검증합니다.
+⚠ walltime — 가장 긴 잡이 중앙 추정 56 h 이고 모형 불확실성이 ±2배입니다.
+   96 h 이상을 권합니다 (24–48 h 면 그 잡이 잘립니다).
 
 ## 비용 추정의 출처
 - 모델: `tools/sdcp/vasp_cost_estimate.py` — 2026-08-08 납품 `slab/OUTCAR.gz`
@@ -2567,7 +2665,7 @@ MLIP 스크리닝은 경향까지만 냈고, 이 DFT+U 가 최종 판정입니�
 `pre/` 는 dipole 을 끈 사전 SCF 입니다 (자기상태가 엉뚱한 basin 으로 무너지는 것을 막습니다).
 `run_job.sh` 가 상 사이 CHGCAR/WAVECAR 승계를 **강제**합니다 — 파일이 없으면 멈춥니다.
 ```
-cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 64 vasp_std" bash run_job.sh
+cd <잡폴더> && cp <POTCAR> POTCAR && VASP_CMD="mpirun -np 48 vasp_std" bash run_job.sh
 ```
 전체는 번들 루트에서 `bash run_all.sh` (tier1 → refs → tier2 순).
 
@@ -2692,6 +2790,11 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
     if a.kmesh_dense:
         kover["dense"] = a.kmesh_dense
     man["kmesh_override"] = kover or None
+    # ⚠ man["kmesh"] 는 **기본값**이라 실제 입력과 다를 수 있다 (Codex zip 감사).
+    #   실제로 쓴 값을 권위 필드로 따로 둔다 — 두 값이 같이 있으면 반드시 오독된다.
+    man["kmesh_effective"] = {ph: kover.get(ph, KMESH[ph]) for ph in ("relax", "static", "dense")}
+    man["kmesh_note"] = ("`kmesh_effective` 가 실제 배포된 KPOINTS 다. `kmesh` 는 도구 "
+                         "기본값이고 `kmesh_override` 로 덮인다 — 인용은 effective 로.")
     # ⚠ 오타 하나면 dense 가 0개가 되고 (조각 이름이 안 맞으니) 아무 경고 없이
     #   "k 검증 없는 번들" 이 나간다. fail-closed 로 잡는다 (Codex 6차 §8).
     known = {f for fs in TIERS.values() for f in fs}
@@ -3098,7 +3201,12 @@ def build_bundle(a, ledger: Optional[Dict[str, Any]] = None) -> Path:
                                "작업 하나다 (P||Cmax)."),
         "n_static": n_st, "n_dense_mandatory": n_dn,
         "n_dense_candidates_packaged": n_cd,
-        "max_optional_dense": MAX_OPTIONAL_DENSE_B,
+        "adaptive_dense": ("enabled (dense_cand/ + --plan_dense + run_dense_selected.sh)"
+                           if a.adaptive_dense else
+                           "DISABLED — 이 번들에 dense_cand/ 도 run_dense_selected.sh 도 "
+                           "없다. 자기 branch 가 20 meV 안에서 경합하면 "
+                           "MAGNETIC_K_UNRESOLVED 로 닫는다"),
+        "max_optional_dense": (MAX_OPTIONAL_DENSE_B if a.adaptive_dense else 0),
         "estimator": "tools/sdcp/vasp_cost_estimate.py --manifest MANIFEST.json",
         "estimator_baseline": ("runs/sdcp_phaseB_vasp_v1_2026_08_08/slab/OUTCAR.gz "
                                "— 192원자·NKPTS 4·48코어·525 s/전자스텝"),
@@ -3542,6 +3650,19 @@ def selftest() -> int:
         "분석기에 dense 모멘트 게이트가 있다")
     chk(az0.count("DENSE_MOMENT_COUNT") and az0.count("DENSE_MOMENT_SHORT"),
         "표 길이·Ni 인덱스 범위도 본다")
+    # ★ Codex zip 감사 P0-2/3/5/6 이 분석기에 실제로 들어갔는지 (문자열 확인 + 아래 행동시험)
+    for _k, _why in (("DENSE_RADICAL_BRANCH_CHANGED", "P0-5 라디칼 상대 스핀"),
+                     ("DENSE_TOTAL_M_CHANGED", "P0-5 total M branch"),
+                     ("geometry_unverified", "P0-6 기하 미검증 표시"),
+                     ("dE_coarse_eV", "P0-3 coarse 보존"),
+                     ("headline_from", "P0-3 headline 출처")):
+        chk(_k in az0, f"분석기에 {_why} 가 있다")
+    # ★★ 행동시험 — 2×2 가 **실제로 채워지는지** (P0-2: prefix 가 없어 늘 비어 있었다)
+    chk("mc['Ni_at_Li_pose']['prefix']" in az0
+        and "cr.get('Ni_at_Li_pose')" not in az0,
+        "2×2 가 MANIFEST 의 prefix 를 읽는다 (결과 dict 엔 없었다)")
+    chk('two_by_two") or {}).get("afm2424_pm1")' in az0,
+        "완료 라벨이 **two_by_two 가 채워졌을 때만** 붙는다")
 
     # ── 기본은 **꺼짐** (Codex 7차 권장 A) — 외주 요청에 2단계 절차를 안 넣는다 ──
     chk(not list(out_sp.rglob("dense_cand/INCAR")),
@@ -3888,8 +4009,19 @@ def selftest() -> int:
     # ── 양성: 게이트에 안 걸린 쌍은 값이 **정확히** 복원돼야 한다 ──
     p0 = res["pairs"]["ptfe_dimer__fib00_r000"]
     de = p0.get("dE_Ni_minus_Li_eV")
-    chk(de is not None and abs(de - truth["fib00"]) < 1e-6,
-        f"양성 ΔE 복원 fib00 = {de} (심은 값 {truth['fib00']})")
+    # ★ dense 가 있으면 **dense 가 headline** 이다 (Codex zip 감사 P0-3). 가짜 dense 는
+    #   Ni 쪽만 +3 meV 옮기므로 dense ΔE = coarse + 0.003 이어야 한다.
+    #   옛 판은 dense 로 κ 만 재고 최종 수치는 coarse 를 썼다 — 이 시험이 그걸 잡는다.
+    _has_dense = p0.get("dE_coarse_eV") is not None
+    _want = truth["fib00"] + (0.003 if _has_dense else 0.0)
+    chk(de is not None and abs(de - _want) < 1e-6,
+        f"양성 ΔE 복원 fib00 = {de} (기대 {_want:.3f}, "
+        f"{'dense headline' if _has_dense else 'coarse'})")
+    if _has_dense:
+        chk(abs(p0["dE_coarse_eV"] - truth["fib00"]) < 1e-6,
+            f"coarse 값도 보존된다 ({p0['dE_coarse_eV']})")
+        chk("dense" in str(p0.get("headline_from", "")) and p0.get("k_uncertainty_meV") == 0.0,
+            f"headline 출처와 k 불확실성 0 을 기록 ({p0.get('headline_from')})")
     kg = res["numerical_gates"].get("k_ptfe_dimer__fib00_r000")
     chk(kg is not None and abs(kg["dE_meV"] - 3.0) < 1e-6,
         f"dense-k 게이트가 **한쪽만** 옮긴 3 meV 를 잡는다 ({kg})")
