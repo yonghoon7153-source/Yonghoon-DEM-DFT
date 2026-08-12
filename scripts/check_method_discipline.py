@@ -224,6 +224,78 @@ def verify_declared_adjacency(name, spec):
     return True, f'{name}: {decl} — AST 대조로 확인 ({len(conns)} 규약 일치)'
 
 
+#  ③ 지역 import 그림자 — `UnboundLocalError` 를 정적으로 잡는다.
+#     계기 (2026-08-12 실사고): `mpm_webapp_payload.py` 는 모듈 수준에서 `import os as _os`
+#     인데 어떤 함수 안에 `import os` 가 있었다.  그러면 그 함수에서 `os` 는 **지역명**이 되고,
+#     그 대입보다 앞줄의 `os.path.exists(...)` 는 UnboundLocalError 다.  그 예외를 근처의
+#     `except Exception` 이 삼켜 **선분 스탬프가 조용히 꺼졌다** — 런은 성공한 것처럼 끝나고
+#     요청과 다른 규약을 쟀다.  한 건을 고치는 대신 **패턴을 검사로 승격**한다.
+def find_local_import_shadows(path):
+    """(errors, collisions) — 지역 import 로 생기는 UnboundLocalError 위험과 이름 충돌.
+
+    errors     : 그 이름이 **오직 import 로만** 묶이는데 그 줄보다 앞에서 쓰인다 = 확실한 위험
+    collisions : 같은 함수에서 한 이름이 **일반 대입과 import 양쪽**에 묶인다 = 재바인딩 위험
+                 (예: dict `_tb` 를 쓰다가 except 안에서 `import traceback as _tb`)
+    ⚠ 정밀화 이유: 첫 판은 일반 대입을 안 봐서 `_tb` 를 12건 오탐했다.  오탐이 많으면
+      검사기를 끄게 되고, 그러면 규칙이 없는 것보다 나쁘다 (S0 의 교훈).
+    """
+    import ast
+    tree = ast.parse(open(path, encoding='utf-8').read())
+    errs, coll = [], []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        imp = {}                                      # import 로 묶이는 이름 → 첫 줄
+        asg = {}                                      # 그 외 대입으로 묶이는 이름 → 첫 줄
+        for a in list(fn.args.args) + list(fn.args.kwonlyargs) + list(fn.args.posonlyargs):
+            asg[a.arg] = 0
+        for n in ast.walk(fn):
+            if isinstance(n, (ast.Import, ast.ImportFrom)):
+                for al in n.names:
+                    nm = (al.asname or al.name).split('.')[0]
+                    imp[nm] = min(imp.get(nm, 10 ** 9), n.lineno)
+            elif isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
+                asg[n.id] = min(asg.get(n.id, 10 ** 9), n.lineno)
+        for n in ast.walk(fn):
+            if not (isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)):
+                continue
+            if n.id not in imp or n.lineno >= imp[n.id]:
+                continue
+            if n.id in asg and asg[n.id] <= n.lineno:
+                continue                              # 앞에서 일반 대입됨 → unbound 아님
+            errs.append((fn.name, n.id, n.lineno, imp[n.id]))
+        for nm in sorted(set(imp) & set(asg)):
+            coll.append((fn.name, nm, asg[nm], imp[nm]))
+    return sorted(set(errs)), sorted(set(coll))
+
+
+_SHADOW_SCAN = ('mpm_webapp_payload.py', 'step3_sigma.py', 'mpm3d_compaction.py',
+                'network_conductivity.py', 'sr01_carbon_network.py', 'fibre_segment_raster.py')
+
+
+def check_local_import_shadows(verbose=True):
+    errs, warns = [], []
+    root = os.path.join(ROOT, 'scripts')
+    for fname in _SHADOW_SCAN:
+        fp = os.path.join(root, fname)
+        if not os.path.exists(fp):
+            errs.append(f'{fname}: 스캔 대상인데 파일이 없다 — 목록이 낡았다 (fail-closed)')
+            continue
+        hits, coll = find_local_import_shadows(fp)
+        for func, nm, use, imp in hits:
+            errs.append(f'{fname}:{use} `{nm}` 가 함수 `{func}` 의 지역 import(:{imp})보다 '
+                        f'**앞에서** 쓰인다 — UnboundLocalError.  근처 except 가 삼키면 '
+                        f'기능이 조용히 꺼진다')
+        for func, nm, aline, iline in coll:
+            warns.append(f'{fname}: `{nm}` 이 함수 `{func}` 에서 대입(:{aline})과 '
+                         f'import(:{iline}) 양쪽에 묶인다 — 그 import 가 실행되면 앞의 값이 '
+                         f'덮인다 (오류는 아니지만 이름을 갈라 놓을 것)')
+        if verbose and not hits:
+            print(f'  OK      {fname}: 지역 import 그림자 없음'
+                  + (f'  (⚠ 이름 충돌 {len(coll)}건)' if coll else ''))
+    return errs, warns
+
+
 def check_convention_parity(verbose=True):
     errs, warns = [], []
     # ★ 등록부의 adjacency 를 먼저 **검증**한다 — 이 검사가 없으면 아래 패리티는
@@ -349,6 +421,7 @@ def _staggered_blind_fixture():
 
 def _rung_oblique_segment():
     """비스듬한 1D 도체 — 점은 깨지고 선분은 안 깨진다 (알려진 정답)."""
+
     P = np.stack([np.linspace(0.3, 6.3, 60)] * 3, axis=1)
     assert_stamp_discriminating(P, 0.4, 'oblique 1D conductor')
     return True, '대각 도체: 점↔선분을 가른다 (거동으로 확인)'
@@ -619,7 +692,8 @@ def run_all(verbose=True):
     errs, warns = [], []
     for title, fn in (('규칙 A — 규약·격자·주기 패리티 (D4)', check_convention_parity),
                       ('규칙 B — 판별력 있는 rung (D2)', check_oblique_rungs),
-                      ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger)):
+                      ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger),
+                      ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
         if verbose:
             print(f'\n{title}')
         e, w = fn(verbose=verbose)
@@ -648,6 +722,39 @@ def _selftest():
         == '26-conn')
     chk('A: 프로브는 독스트링 경고에 흔들리지 않는다 (v1 오탐 해소)',
         probe_adjacency(lambda g: ndimage.label(g)) == '6-face')
+    # ★★ 규칙 F — 지역 import 그림자.  실사고(2026-08-12): `mpm_webapp_payload` 가 모듈에서
+    #    `import os as _os` 인데 main 안에 `import os` 가 있어 그 앞의 `os.path.exists` 가
+    #    UnboundLocalError → 근처 `except Exception` 이 삼켜 **선분 스탬프가 조용히 꺼졌다**.
+    #    아래 4건은 "검사가 **진짜 버그를 잡고 오탐은 안 내는가**" 를 묻는다.
+    import tempfile as _tf
+    _fx = os.path.join(_tf.mkdtemp(), 'fx.py')
+    open(_fx, 'w').write(
+        'import os as _os\n'
+        'def main():\n'
+        '    if _os.path.exists("x"):\n'
+        '        print(os.path.exists("y"))     # ← import 보다 앞 = UnboundLocalError\n'
+        '    import os\n'
+        '    return os\n')
+    _e, _c = find_local_import_shadows(_fx)
+    chk('F: import 보다 앞에서 쓴 이름을 잡는다 (실사고 재현)',
+        len(_e) == 1 and _e[0][1] == 'os')
+    open(_fx, 'w').write(
+        'def main():\n'
+        '    _tb = {}\n'
+        '    _tb["a"] = 1\n'
+        '    try:\n'
+        '        pass\n'
+        '    except Exception:\n'
+        '        import traceback as _tb\n'
+        '    return _tb\n')
+    _e, _c = find_local_import_shadows(_fx)
+    chk('F: 앞에서 일반 대입된 이름은 **오탐하지 않는다** (첫 판이 12건 오탐했다)', len(_e) == 0)
+    chk('F: 그래도 대입↔import 충돌은 경고로 남긴다', len(_c) == 1 and _c[0][1] == '_tb')
+    open(_fx, 'w').write('def main():\n    import os\n    return os.getcwd()\n')
+    chk('F: 정상 순서는 통과 (과잉차단 아님)', find_local_import_shadows(_fx) == ([], []))
+    _ep, _ = find_local_import_shadows(os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py'))
+    chk('F: 생산 파일이 현재 깨끗하다 (회귀 방지)', _ep == [])
+
     _save_d = dict(DIAGNOSTICS); DIAGNOSTICS.clear()
     e_a, _ = check_convention_parity(verbose=False)
     DIAGNOSTICS.update(_save_d)

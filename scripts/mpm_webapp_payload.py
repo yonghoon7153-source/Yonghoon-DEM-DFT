@@ -810,7 +810,10 @@ def main():
             #   없으면 STEP3 가 phase 화이트리스트로 폴백한다 (옛 산출물 호환).
             _kind_all = None
             _kp = (a.fibre[:-4] if a.fibre.endswith('.npy') else a.fibre) + '_kind.npy'
-            if os.path.exists(_kp):
+            # ⚠ 반드시 `_os` — 이 함수 안에 `import os` 가 있어 `os` 는 **지역명**이고,
+            #   그 대입은 여기보다 뒤라 `os.path` 는 UnboundLocalError 다.  2026-08-12 실사고:
+            #   그 예외를 아래 `except Exception` 이 삼켜 **선분 스탬프가 조용히 꺼졌다**.
+            if _os.path.exists(_kp):
                 try:
                     _kind_all = np.load(_kp)
                     print(f'  STEP3: fid 의미 파일 로드 ({_kp}) — 경로 '
@@ -822,8 +825,16 @@ def main():
                       flush=True)
                 _fid_all = None
         except Exception as _e:                                # noqa: BLE001
-            print(f'  ⚠ --fibre 로드 실패 ({type(_e).__name__}) → 선분 스탬프 비활성', flush=True)
+            # ★ 2026-08-12 fail-closed: `--step3-fibre-stamp segment` 를 **명시적으로** 요청했으면
+            #   조용히 점으로 내려앉으면 안 된다.  런은 성공한 것처럼 끝나고 **다른 규약을 잰다**
+            #   (실사고: UnboundLocalError 를 여기서 삼켜 선분 팔이 점 팔이 됐다).
+            print(f'  ⚠ --fibre 로드 실패 ({type(_e).__name__}: {_e}) → 선분 스탬프 비활성', flush=True)
             _fid_all = None
+            if getattr(a, 'step3_fibre_stamp', 'point') == 'segment':
+                raise SystemExit(
+                    f'ABORT — --step3-fibre-stamp segment 인데 --fibre 로드가 실패했다 '
+                    f'({type(_e).__name__}: {_e}).  점-스탬프로 진행하면 요청과 **다른 규약**을 '
+                    f'재게 된다.  --fibre 를 고치거나 --step3-fibre-stamp point 를 명시할 것.')
 
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
@@ -851,8 +862,11 @@ def main():
             _afid = None
             if a.step3_fibre_stamp == 'segment':
                 if _fid_all is None:
-                    print('  ⚠ STEP3 --step3-fibre-stamp segment 인데 --fibre npy 가 없다 → '
-                          '점-스탬프로 진행 (킷의 --save-fibre 산출물을 --fibre 로 주세요)', flush=True)
+                    raise SystemExit(
+                        'ABORT — --step3-fibre-stamp segment 인데 --fibre npy 가 없다.  '
+                        '점-스탬프로 진행하면 요청과 **다른 규약**을 재게 되고, 그 런은 성공한 '
+                        '것처럼 끝난다 (2026-08-12 실사고).  킷의 --save-fibre 산출물을 --fibre 로 '
+                        '주거나, 점 규약을 원하면 --step3-fibre-stamp point 를 명시할 것.')
                 elif _m.any():
                     _afid = _fid_all[_m]
                     print(f'  STEP3: 섬유 **선분 스탬프** ON — 도체점 {int(_m.sum()):,} · '

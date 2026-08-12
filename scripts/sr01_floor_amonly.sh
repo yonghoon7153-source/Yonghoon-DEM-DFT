@@ -93,7 +93,21 @@ print()
 print('── AM-only 바닥 ──────────────────────────────────────────')
 print('  sigma_e_eff_S_cm :', s3.get('sigma_e_eff_S_cm'))
 print('  sigma_ion_eff    :', s3.get('sigma_ion_eff_S_cm'))
-nd = (s3.get('electronic') or {}).get('n_dof')
+# ⚠ 2026-08-12: 첫 판은 `s3['electronic']['n_dof']` 를 봤는데 **그런 키가 없어** 양쪽 None 이
+#   됐고, 검사가 "불일치" 라고 **거짓 경보**를 냈다.  실제 자리를 찾아 쓴다.
+def n_dof_of(d):
+    for path in (('electronic', 'n_dof'), ('sigma_e', 'n_dof'), ('n_dof_e',), ('n_dof',)):
+        v = d
+        for k in path:
+            v = v.get(k) if isinstance(v, dict) else None
+            if v is None:
+                break
+        if isinstance(v, int):
+            return v
+    return None
+
+
+nd = n_dof_of(s3)
 print('  n_dof(e)         :', nd)
 
 # ★ 코드 드리프트 검사 — 이 런은 기존 두 팔보다 나중 코드로 돈다.
@@ -102,14 +116,19 @@ print('  n_dof(e)         :', nd)
 ref = sys.argv[2]
 if os.path.exists(ref):
     r3 = s3_of(ref)
-    rnd = (r3.get('electronic') or {}).get('n_dof')
+    rnd = n_dof_of(r3)
     print()
     if nd is not None and rnd is not None and nd == rnd:
         print(f'  ✓ n_dof 일치 (선분 팔 {rnd:,}) — 격자·마스크 불변, σ 만 달랐다.')
         print(f'    선분 팔 σ_e = {r3.get("sigma_e_eff_S_cm")}  ⇒ 바닥 대비 배수 = '
               f'{(r3.get("sigma_e_eff_S_cm") or 0) / (s3.get("sigma_e_eff_S_cm") or 1):.4g}×')
+    elif nd is None or rnd is None:
+        print(f'  ⚠ n_dof 를 못 읽었다 (바닥 {nd} · 선분 팔 {rnd}) — 검사 **미실시**.')
+        print('     이것은 불일치가 아니다.  step3 의 n_dof 키 자리를 확인할 것.')
+        print(f'    선분 팔 σ_e = {r3.get("sigma_e_eff_S_cm")}  ⇒ 배수 = '
+              f'{(r3.get("sigma_e_eff_S_cm") or 0) / (s3.get("sigma_e_eff_S_cm") or 1):.4g}×')
     else:
-        print(f'  ⚠⚠ n_dof 불일치: 바닥 {nd} vs 선분 팔 {rnd}')
+        print(f'  ⚠⚠ n_dof 불일치: 바닥 {nd:,} vs 선분 팔 {rnd:,}')
         print('     σ 만 바꿨는데 전도 마스크가 달라졌다 = 그 사이 코드가 솔브 경로를 바꿨다.')
         print('     **브래킷에 쓰지 말 것** — 선분 팔을 같은 코드로 다시 돌려야 한다.')
 else:
