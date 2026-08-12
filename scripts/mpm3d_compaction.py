@@ -1898,6 +1898,8 @@ def main(argv):
                         else np.zeros((0, 3), np.float32))   # ★A14: pre-additive SE cloud (seed-box frame)
             #   for the seed-time sheath↔SE trade-off — built ONLY when SWCNT is in the recipe (the
             #   boolean-index copy is ~0.5 GB at 384³; don't pay it for every additive run)
+            # ★ fid 의미 (additives.ID_PATH/ID_GROUP) — 추측 금지, 시더가 선언한다
+            kind_np = np.zeros(len(xs), np.int8)
             fibre_np = np.full(len(xs), -1, np.int32)   # per-point fibre/aggregate id (-1 = SE; ≥0 = a fibre /
             dia_np = np.zeros(len(xs), np.float32)      # per-point relative fibre Ø (0 = SE/non-fibre; ∝√weight)
             carbon_seed = []                            # carbon (VGCF/SuperP) pts in seed-box frame → PTFE
@@ -2037,6 +2039,10 @@ def main(argv):
                     _fid = _fid + _gfib; _gfib = int(_fid.max()) + 1
                 pts = (pts + off).astype(np.float32)
                 fibre_np = np.concatenate([fibre_np, _fid])
+                #   ★ 이 첨가제의 fid 가 **경로인지 그룹인지**를 시더 선언에서 받아 같이 싣는다
+                #     (SR-01 후속: phase 로 추측하면 SuperP thinky 에서 깨진다).
+                kind_np = np.concatenate([kind_np, np.full(len(_fid),
+                                          _ad.id_kind_of(kind, _proc_regime), np.int8)])
                 dia_np = np.concatenate([dia_np, np.sqrt(np.maximum(_w, 1e-6)).astype(np.float32)])   # Ø∝√weight
                 mu_a, la_a = lame(E, nu)
                 xs = np.concatenate([xs, pts])
@@ -3333,6 +3339,11 @@ def main(argv):
               + " ".join(f"{int(u)}:{c}" for u, c in zip(_u, _c)) + ")")
     if args.save_fibre and fibre_np is not None:
         np.save(args.save_fibre, fibre_np)                  # -1 = SE/SuperP, ≥0 = fibre index (VGCF/PTFE)
+        # ★ fid 의미도 같이 남긴다 (`<save_fibre>_kind.npy`).  없으면 소비자가 phase 로 추측해야
+        #   하고 그 추측이 SuperP 에서 깨진다 (SR-01 후속, 2026-08-12).
+        if 'kind_np' in locals() and kind_np is not None and len(kind_np) == len(fibre_np):
+            _fk = str(args.save_fibre)
+            np.save((_fk[:-4] if _fk.endswith('.npy') else _fk) + '_kind.npy', kind_np)
         print(f"  saved fibre ids → {args.save_fibre} ({n} pts, {int(fibre_np.max()) + 1} fibres)")
     if args.save_fibre_dia and dia_np is not None:
         np.save(args.save_fibre_dia, dia_np)                # per-point relative Ø (∝√weight; PTFE draw d∝√(V/L))

@@ -123,6 +123,41 @@ def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_
     return out
 
 
+# ── ★ fid 의 의미 선언 (SR-01 후속, 2026-08-12) ─────────────────────────────────────────
+#   `return_ids=True` 가 돌려주는 정수는 시더마다 **뜻이 다르다**:
+#     · seed_fibres / seed_sheath / seed_carbon_black(ballmill) → **경로 id** (점열이 폴리라인)
+#     · seed_coat / seed_sdcp(anchored) / seed_carbon_black(thinky) → **그룹 id** (= AM 구 index
+#       또는 응집체 index).  같은 id 의 점들은 **순서가 없고** 구 표면에 흩어져 있다.
+#   ⚠ 이 구분을 phase 로 추측하면 **깨진다**: SuperP(phase 3)는 mixing 에 따라 둘 다 될 수 있다.
+#   ⚠ 그룹 id 를 폴리라인으로 오인해 선분 래스터하면 구 표면을 헤집는 가짜 도체가 생긴다 —
+#     실측(구 R=3 µm·47점·vox 0.4): 셀 45 → 582 (×12.9), 그중 87 % 가 **AM 구 내부**.
+#     gap 가드는 간격이 균일해 **발화하지 않는다**(파단 0 건).
+#   ⇒ 시더가 **선언**하고 소비자(STEP3)가 그것을 라우팅에 쓴다.  추측 금지.
+ID_PATH = 1        # 점열이 순서 있는 경로 — 선분 래스터가 **의미 있음**
+ID_GROUP = 0       # 같은 host/응집체를 뜻하는 그룹 — 선분 래스터 **금지**
+
+#: mpm3d 조립부의 `kind` (+ SuperP 의 process regime) → fid 의미.
+#: ⚠ 새 시더를 추가하면 **여기에 등록**해야 한다 (미등록은 ID_GROUP = 안전한 쪽).
+SEEDER_ID_KIND = {
+    'fibre':      ID_PATH,     # seed_fibres        — 섬유 폴리라인
+    'sheath':     ID_PATH,     # seed_sheath        — geodesic 체인 (fid=chain, 순서 보존)
+    'cblack':     ID_PATH,     # seed_carbon_black  — random-walk 체인 (ballmill)
+    'particle':   ID_GROUP,    # seed_sdcp          — anchored singles = AM 구 index
+    'coat':       ID_GROUP,    # seed_coat          — AM 구 index
+    'coat_block': ID_GROUP,    # SuperP thinky → seed_coat 라우팅 = AM 구 index
+}
+
+
+def id_kind_of(kind, proc_regime=None):
+    """조립부의 (kind, process regime) → ID_PATH | ID_GROUP.  **모르면 ID_GROUP**(안전한 쪽).
+
+    ★ SuperP 가 이 함수가 필요한 이유: `kind='cblack'` 이라도 thinky 는 `coat_block` 으로
+      라우팅돼 **AM 구 index** 를 fid 로 받는다 — phase 만으로는 못 가른다."""
+    if proc_regime == 'coat_block':
+        return ID_GROUP
+    return SEEDER_ID_KIND.get(kind, ID_GROUP)
+
+
 def seed_coat(n, box_um, dx_um, rng, am=None, shell_um=0.20, surface_frac=1.0,
               in_am=None, return_ids=False):
     """CONFORMAL COAT seeding (A4 coat regime): n points in a thin shell ON the AM sphere

@@ -806,6 +806,17 @@ def main():
     if getattr(a, 'fibre', '') and phase is not None:
         try:
             _fid_all = np.load(a.fibre)
+            # ★ fid 의미(경로/그룹) 동반 파일 — 있으면 그것이 이긴다 (SR-01 후속).
+            #   없으면 STEP3 가 phase 화이트리스트로 폴백한다 (옛 산출물 호환).
+            _kind_all = None
+            _kp = (a.fibre[:-4] if a.fibre.endswith('.npy') else a.fibre) + '_kind.npy'
+            if os.path.exists(_kp):
+                try:
+                    _kind_all = np.load(_kp)
+                    print(f'  STEP3: fid 의미 파일 로드 ({_kp}) — 경로 '
+                          f'{int((_kind_all == 1).sum()):,} / 그룹 {int((_kind_all == 0).sum()):,} 점', flush=True)
+                except Exception as _e:
+                    print(f'  ⚠ fid 의미 파일 읽기 실패 ({_e}) → phase 폴백', flush=True)
             if len(_fid_all) != len(se):
                 print(f'  ⚠ --fibre 길이 {len(_fid_all):,} ≠ SE 점 {len(se):,} → 선분 스탬프 비활성',
                       flush=True)
@@ -850,7 +861,8 @@ def main():
             print('  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…', flush=True)
             _septs = (se[phase == 1] - _off) * UM if phase is not None else (se - _off) * UM
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
-                                       se_pts=_septs, add_fid=_afid)   # SE stamped (sid 6) → ionic solve
+                                       se_pts=_septs, add_fid=_afid, add_kind=(_kind_all[_m] if _kind_all is not None
+                                                    and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
                               0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)

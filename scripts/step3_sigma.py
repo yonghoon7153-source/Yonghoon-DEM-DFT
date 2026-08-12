@@ -183,7 +183,7 @@ def _solve_cg(L, b):
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
-              add_fid=None, fid_gap_tol=2.0):
+              add_fid=None, fid_gap_tol=2.0, add_kind=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -253,7 +253,8 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         #   ⇒ `add_fid` (섬유 id) 를 주면 **선분 스탬프**로 굽는다.  **기본은 현행 점 스탬프**
         #     (opt-in) — Δσ_e 크기를 재기 전에 default 를 바꾸지 않는다.
         if add_fid is not None and len(add_fid) == len(add_pts):
-            ijk, ph = _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, fid_gap_tol)
+            ijk, ph = _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, fid_gap_tol,
+                                         add_kind=add_kind)
         else:
             ijk = np.floor((add_pts - lo) / vox).astype(int)
             ok = ((ijk >= 0) & (ijk < n)).all(1)
@@ -285,7 +286,7 @@ POLYLINE_PHASES = (2, 4, 6)
 
 
 def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
-                       polyline_phases=POLYLINE_PHASES):
+                       polyline_phases=POLYLINE_PHASES, add_kind=None):
     """섬유 점열 → **선분이 지나는 셀** (6-face 연결 보장).  → (ijk, phase)
 
     ★ 같은 fid 의 연속 점을 경로로 보고 Amanatides–Woo 로 굽는다.  ⚠ 시더가 **AM 안 점을
@@ -299,6 +300,9 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
     F = np.asarray(add_fid)
     PH = np.asarray(add_phase)
     poly = set(int(p) for p in polyline_phases)
+    # ★ 시더가 선언한 fid 의미가 있으면 **그것이 이긴다** (additives.ID_PATH/ID_GROUP).
+    #   phase 화이트리스트는 옛 산출물용 폴백일 뿐 — SuperP 는 phase 로 못 가른다.
+    K = np.asarray(add_kind) if add_kind is not None and len(add_kind) == len(P) else None
     out_ijk, out_ph = [], []
     for f in np.unique(F):
         m = F == f
@@ -306,7 +310,8 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
         if len(Q) == 0:
             continue
         ph_f = PH[m][0]
-        if int(ph_f) not in poly:                           # ★ 경로가 아닌 fid → 점 스탬프
+        is_path = (int(K[m][0]) == 1) if K is not None else (int(ph_f) in poly)
+        if not is_path:                                     # ★ 경로가 아닌 fid → 점 스탬프
             cc = np.floor((Q - lo) / vox).astype(int)
             out_ijk.append(cc); out_ph.append(np.full(len(cc), ph_f)); continue
         if len(Q) == 1:
@@ -1269,6 +1274,52 @@ def _selftest_segstamp():
         pass
     chk('12) POLYLINE_PHASES = (2,4,6) — VGCF·PTFE·SWCNT 만 경로',
         tuple(POLYLINE_PHASES) == (2, 4, 6))
+
+    # ── ② fid 의미 계약: 시더 선언이 phase 추측을 **이긴다** (Codex E-01) ────────────────
+    #   SuperP(phase 3) 는 mixing 에 따라 경로(ballmill)도 그룹(thinky)도 된다 — phase 로는
+    #   원리적으로 못 가른다.
+    import additives as _adt
+    chk('13) SuperP ballmill = 경로 (체인)', _adt.id_kind_of('cblack') == _adt.ID_PATH)
+    chk('14) ★ SuperP thinky = 그룹 — 같은 phase 인데 반대라 phase 로는 못 가른다',
+        _adt.id_kind_of('cblack', 'coat_block') == _adt.ID_GROUP)
+    chk('15) 미등록 시더는 안전측(GROUP)', _adt.id_kind_of('nope') == _adt.ID_GROUP)
+    #   ★ **대각선**이어야 점 스탬프가 끊긴다 (축정렬 선은 점으로도 face 를 공유한다 —
+    #     이것이 리포 selftest 가 4개월간 이 결함을 통과시킨 이유이기도 하다).
+    _s0 = np.array([2.0, 2.0, 2.0]); _d1 = np.array([6.0, 6.0, 6.0])
+    _ln = _s0 + np.linspace(0, 1, 40)[:, None] * _d1[None, :]
+    _f0 = np.zeros(len(_ln), np.int32); _n3 = np.array([64, 64, 64]); _lo3 = np.zeros(3)
+    _ph3 = np.full(len(_ln), 3, np.int8)
+    _ijp, _ = _fibre_segment_ijk(_ln, _ph3, _f0, _lo3, 0.4, _n3,
+                                 add_kind=np.full(len(_ln), _adt.ID_PATH, np.int8))
+    _ijg, _ = _fibre_segment_ijk(_ln, _ph3, _f0, _lo3, 0.4, _n3,
+                                 add_kind=np.full(len(_ln), _adt.ID_GROUP, np.int8))
+    chk('16) ★ 같은 phase·같은 점열이라도 kind=PATH 는 잇고 GROUP 은 안 잇는다',
+        n_components_6face(np.unique(_ijp, axis=0)) == 1
+        and n_components_6face(np.unique(_ijg, axis=0)) > 1)
+    _ijf, _ = _fibre_segment_ijk(_ln, _ph3, _f0, _lo3, 0.4, _n3)
+    chk('17) kind 없으면 phase 폴백 (3 ∉ POLYLINE_PHASES → 점) = 옛 산출물 호환',
+        np.array_equal(np.unique(_ijf, axis=0), np.unique(_ijg, axis=0)))
+
+    # ── ③ segment_cells 음방향 + **정확한 복셀 경계** 끝점 (Codex E-06) ─────────────────
+    #   기존 음방향 사례는 끝점이 경계에 정확히 놓이지 않아 이 경로를 안 탔다.
+    from fibre_segment_raster import segment_cells as _sc
+    for _nm, _p0, _p1 in (('음방향-경계끝', np.array([2.0, .2, .2]), np.array([0.8, .2, .2])),
+                          ('양방향-경계끝', np.array([0.8, .2, .2]), np.array([2.0, .2, .2])),
+                          ('음방향-경계시작', np.array([1.6, .2, .2]), np.array([0.5, .2, .2]))):
+        _cc = np.unique(_sc(_p0, _p1, 0.4), axis=0)
+        _sp = int(abs(np.floor(_p1[0] / 0.4) - np.floor(_p0[0] / 0.4))) + 1
+        chk(f'18-{_nm}) 1성분 · 셀 {len(_cc)} = 기대 {_sp} (여분/backtrack 없음)',
+            n_components_6face(_cc) == 1 and len(_cc) == _sp)
+
+    # ── ④ point legacy parity — 계약 도입이 점 경로를 안 건드린다 ─────────────────────
+    _amc = np.array([[5.0, 5.0, 5.0]]); _amr = np.array([1.5]); _amt = np.array([1])
+    _hi3 = _lo3 + 64 * 0.4
+    _sa, _ = rasterize(_amc, _amr, _amt, _ln, np.full(len(_ln), 2, np.int8), _lo3, _hi3, 0.4)
+    _sb, _ = rasterize(_amc, _amr, _amt, _ln, np.full(len(_ln), 2, np.int8), _lo3, _hi3, 0.4,
+                       add_kind=np.full(len(_ln), _adt.ID_PATH, np.int8))
+    chk('19) ★ add_fid 없이는 add_kind 를 줘도 점 경로 bitwise 동일 (legacy parity)',
+        np.array_equal(_sa, _sb))
+
     print(f'\nstep3 segment-stamp selftest: {ok}/{ok + fail} PASS')
     return 0 if not fail else 1
 
