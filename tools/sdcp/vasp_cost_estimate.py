@@ -167,10 +167,14 @@ def manifest_jobs(path, base, atoms_fallback):
             # ⚠ 기체 기준계 잡에는 magmom_poscar 가 없다(슬랩 전용 필드). 그러면
             #   조용히 atoms_fallback(=222)로 후퇴해 **분자를 슬랩처럼 계상**한다.
             #   2026-08-12: 기체 8잡이 96 h 로 잡혀 총액이 570 → 714 h 로 부풀었다.
-            n_at = (len(meta.get("magmom_poscar") or [])
-                    or sum((meta.get("counts") or {}).values())
-                    or len(meta.get("species_order") or [])
-                    or atoms_fallback)
+            # ⚠ counts 는 실물에서 **list**(종별 개수)다. 내 selftest 는 dict 로
+            #   만들어서 시험은 통과하고 실물이 AttributeError 로 죽었다 —
+            #   fixture 가 실제 모양과 다르면 시험이 아무것도 보증하지 못한다.
+            _c = meta.get("counts")
+            _nc = (sum(_c.values()) if isinstance(_c, dict)
+                   else sum(_c) if isinstance(_c, (list, tuple)) else 0)
+            n_at = (len(meta.get("magmom_poscar") or []) or _nc
+                    or len(meta.get("species_order") or []) or atoms_fallback)
             km = meta.get("kmesh") or {}
             inc = meta.get("incar_expected") or {}
             ph_h = {}
@@ -414,7 +418,7 @@ def selftest() -> int:
         gd = os.path.join(td, "refs", "mol__x")
         os.makedirs(gd, exist_ok=True)
         with open(os.path.join(gd, "job.json"), "w") as fh:
-            json.dump({"phases": ["relax", "static"], "counts": {"C": 2, "F": 4},
+            json.dump({"phases": ["relax", "static"], "counts": [2, 4],
                        "kmesh": {"relax": "1 1 1", "static": "1 1 1"},
                        "incar_expected": {"relax": {"LREAL": "Auto"},
                                           "static": {"LREAL": ".FALSE."}}}, fh)
@@ -425,6 +429,13 @@ def selftest() -> int:
         _gas = [x for x in jl3 if "mol__" in x[0]][0]
         chk(_gas[1] < 1.0,
             f"기체 6원자 잡이 1 h 미만 ({_gas[1]:.2f} h) — 슬랩(222원자)으로 안 센다")
+        # ★ counts 가 dict 인 판도 받아야 한다 (도구마다 모양이 다를 수 있다)
+        with open(os.path.join(gd, "job.json"), "w") as fh:
+            json.dump({"phases": ["static"], "counts": {"C": 2, "F": 4},
+                       "kmesh": {"static": "1 1 1"},
+                       "incar_expected": {"static": {"LREAL": "Auto"}}}, fh)
+        _gas2 = [x for x in manifest_jobs(mp, b, 222)[1] if "mol__" in x[0]][0]
+        chk(_gas2[1] < 1.0, f"counts 가 dict 여도 같다 ({_gas2[1]:.2f} h)")
         os.remove(os.path.join(gd, "job.json"))
         # ★ 음성: job.json 이 없으면 **후퇴했다고 말해야** 한다 (조용한 가정 금지)
         os.remove(os.path.join(jd, "job.json"))
@@ -440,6 +451,24 @@ def selftest() -> int:
         class _B:
             manifest, atoms, concurrent, cores = mp, 222, 8, None
         chk(report_manifest(_B(), b) == 2, "계획 0잡 → exit 2 (0 h 를 내지 않는다)")
+    # ── 실물 번들이 있으면 **그걸로** 돌린다 (합성 fixture 만으론 모양이 어긋난다) ──
+    #   2026-08-12: counts 를 dict 로 만든 fixture 는 통과했는데 실물(list)에서 죽었다.
+    import glob as _g
+    _real = sorted(_g.glob(os.path.join(
+        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+        "bundles", "*", "MANIFEST.json")))
+    if _real:
+        try:
+            _mm, _jl, _md = manifest_jobs(_real[-1], b, 222)
+            _gasj = [x for x in _jl if "mol__" in x[0]]
+            chk(bool(_jl), f"실물 번들 회수 {len(_jl)}잡 ({os.path.basename(os.path.dirname(_real[-1]))})")
+            if _gasj:
+                chk(max(x[1] for x in _gasj) < 2.0,
+                    f"실물 기체 잡 최대 {max(x[1] for x in _gasj):.2f} h < 2 h")
+        except Exception as e:
+            chk(False, f"실물 번들에서 예외 — {type(e).__name__}: {e}")
+    else:
+        print("  · 실물 번들 없음 (bundles/*/MANIFEST.json) — 합성만 시험함")
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
