@@ -3,7 +3,7 @@ title: "Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)"
 date: 2026-08-12
 updated: 2026-08-12
 tags: [li3n, neb, revision, manuscript, diffusion-barrier, af-assb]
-status: 확정 — 2026-08-12 사용자 결정: 0.118(두 점 on-N/TS)로 그림 교체
+status: 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외 · 자리 이름 미사용
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -196,7 +196,46 @@ in-plane Li 가 차지하고 있어서, 그 중심 위에 앉는 것 = 그 Li �
 | C-2 ★ | Figure set | bar graph 라벨 "on-N (atop)" / "bridge" | 실측 배위와 반대 (C4). "adsorption minimum" / "saddle configuration" 으로 |
 
 
-## 그림 교체 지침 (2026-08-12 결정 후)
+## 최종 결정 (2026-08-12) — 궤적 패널 제외
+
+원고 v5 Fig. 5 는 **(c) 흡착에너지 막대 + 인셋 2컷 · (d) 확산 프로파일 · (e) 장벽 막대** 로 간다.
+**궤적(경로) 패널은 넣지 않는다.**
+
+이유: 우리 두 계산점은 (우물, 안장) 쌍이 아니다. min→saddle 직선 위 자리 배치를 재보면
+
+| 거리 | 무엇 | 바로 아래 (가로) |
+|---|---|---|
+| 0.000 Å | **min (계산됨)** | Li77 0.20 Å → on-Li |
+| 2.107 Å | on-Li 이웃 | Li76 0.07 Å |
+| **2.534 Å** | **saddle (계산됨)** | Li76 **0.50 Å** |
+| 4.213 Å | atop-N | N32 0.11 Å |
+| 6.322 Å | on-Li 등가 | Li55 0.13 Å |
+
+**계산된 안장점은 두 on-Li 자리 *사이*가 아니라 한쪽 on-Li 위에 0.50 Å 겹쳐 있다.**
+따라서 on-Li → saddle → on-Li 배치를 우리 데이터로 만들 수 없다. 그 hop 의 실제 안장
+위치(1.05 Å, N–N 다리)는 계산된 적이 없다 — **136원자 1런**이면 닫힌다 (Gap 1b).
+
+만들어둔 궤적 파일들은 그 1런 이후 재사용용으로 repo 에 보존:
+`docs/figures/li3n/{hop_frames, onN_path, onLi_path, onLi_hop3, onLi_curved3pt}/`.
+
+## 확정 캡션
+
+> **(c)** Adsorption energies of a Li adatom at the adsorption minimum and the adjacent
+> saddle-region configuration on the Li₃N (001) surface, with the corresponding atomic models.
+>
+> **(d)** Calculated diffusion energy profiles and **(e)** corresponding diffusion barriers for
+> Li adatom on the LiC₆ (0001) and Li₃N (001) surfaces. Symbols in (d) denote DFT-calculated
+> configurations and the lines are guides to the eye.
+
+## LiC₆ 끝점 비대칭 (공동연구자 질문, 2026-08-12)
+
+LiC₆ 7-image 상대에너지 `0 / 0.1674 / 0.2818 / 0.2866 / 0.2764 / 0.1583 / −0.0222`.
+마지막이 0보다 0.022 eV 낮다 — 두 끝점을 독립 이완시켜 생긴 잔차(이상격자에서는 등가).
+장벽은 **출발 자리 기준**이므로 0.290 eV. 더 낮은 끝점 기준이면 0.312 eV 가 되어
+LiC₆ 가 오히려 커지므로, 0.290 이 우리 주장에 **보수적인** 선택이다.
+(Li₃N 은 두 끝점이 격자 병진으로 정확히 등가 → 0 → 0.118 → 0 이 정확.)
+
+## 그림 교체 지침 (2026-08-12 결정 후 — 참고용, 이번 원고엔 미사용)
 
 ### 데이터는 이미 db 에 있다 — 새로 계산할 것 없음
 
