@@ -200,6 +200,73 @@ A 의 2025행이 U 에 **전부 포함**되지만(A-only 0), 공통 95열 중 **
 - ⚠ 다만 **G3 문턱 2.14 V 는 host 상대 기준**이라 풀이 바뀌어도 그대로다.
   G5(roster median)와 `transport_norm` 정규화는 풀 의존이라 **다시 계산해야 한다.**
 
+## 회수 1차 실행 결과 (2026-08-13)
+
+`esw_cascade_batch.py --csv unified_dataset_273.csv` → **270 champion 처리 완료**
+(`oxidation_stability_cascade_v2.json`). GPU 0시간, DFT 0건, MP hull 만.
+
+| 검증 | 결과 |
+|---|---|
+| **세대 드리프트** | 옛 141개 (종,농도) 쌍 전부 매칭 · **ox_V 변경 0건** → 회수는 **순수 확장** |
+| 회수 43종의 G3 | **21종이 ox_V ≥ 2.14** (LiBr·LiCl·LiI·Li₂S·CaS·MgS·MgCl₂·MgBr₂·MgI₂·CaCl₂·CaBr₂·AlCl₃·AlI₃·Al₂S₃·Ga₂S₃·ScCl₃·YCl₃·SiS₂·SnS₂·GeS₂·CrCl₃) |
+| 탈락 22종 | AlBr₃·AlN·BaCl₂·Ca₃N₂·FeCl₃·GaCl₃·GaN·HfCl₄·LaCl₃·Li₃N·Mg₃N₂·Na₂S·NaI·NbCl₅·NdCl₃·Sb₂S₃·SmCl₃·SrCl₂·TaCl₅·TiCl₄·ZrBr₄·ZrCl₄ |
+
+**LiBr = LiF = Li₂O = CaF₂ = CaO = 2.14 / 1.242 / win 0.898** — 한 자리도 안 다르다.
+"LiBr 은 왜 없나" 의 답은 **"있었으면 LiF 와 같은 등급"** 이다.
+
+### 신규 관측 — onset 은 음이온이 아니라 **양이온**이 정한다
+
+| | ox_V | |
+|---|---|---|
+| Ga₂O₃ | 2.356 | 기존 |
+| **Ga₂S₃** | **2.356** | 회수 신규 |
+| Al₂O₃ | 2.354 | 기존 |
+| **Al₂S₃** | **2.356** | 회수 신규 |
+
+같은 M³⁺ 이면 O든 S든 onset 이 같다. 기존 그림 캡션의 *"6 exceptions = all trivalent
+**oxides**"* 는 산화물만 본 표본 효과였다. 회수분이 그 대조군을 제공했다.
+
+⚠ **"6종 → 11종" 으로 쓰면 안 된다.** 값이 하나도 안 바뀌었으므로 Al₂O₃·MoO₃·WO₃ 는
+옛 데이터에서도 이미 2.14 위였다. 그림의 "6" 은 `cascade_v23_ranked.csv` 의 **도펀트별
+집계값** 기준이고 위 21/11 은 **(종,농도) 최대값** 기준 — 다른 통계다. 같은 집계로
+비교하려면 ranked.csv 를 재생성한 뒤에 다시 세야 한다.
+
+### 회수 체인의 남은 블로커
+
+```
+cascade_v23_champions.csv (141행 → 270행 재생성 필요)
+oxidation_stability_cascade.csv (_v2.json → CSV 변환 필요)
+        ↓ tools/figures/plot_cascade_insights.py:145   ← ranked.csv 는 여기서 나온다
+cascade_v23_ranked.csv
+        ↓ tools/cascade/build_screening_funnel.py
+cascade_screening_funnel.json
+```
+
+`plot_cascade_insights.py` 의 `parse()` 가 **산화물/불화물만 가정**하고 있었다
+(ZrCl₄ → "F"·원자가 1). 2026-08-13 수정 + selftest 15케이스.
+
+## stage 10(σ MD) · 11(W_ad) 는 **미실행**이다 — 미수확이 아니다 (2026-08-13 확인)
+
+`unified_dataset_273.csv` 에서 `sigma_md_*`·`wad_*` 가 전 계열 결측이라
+"수천 GPU-시간이 수확 안 됐나" 를 의심했으나, 실측은 그 반대다:
+
+| | |
+|---|---|
+| `10_md_sigma` 디렉터리 | **5 / 270** (옛 시험런 잔재) |
+| `11_*` 디렉터리 | **0 / 270** |
+| `STAGE_10.DONE` · `STAGE_11.DONE` | **각 0** |
+| 개별 `dataset.csv` 의 sigma·wad 열 | **0/20 행** |
+
+`TOP_K_SIGMA=0` 으로 꺼서 돌렸다 (비용). **비용 산정도 이걸로 맞는다** — 헤더의
+"~17 h/cascade · 193 days" 는 σ·W_ad 를 **켰을 때** 추정이고, 실제는 5/26 시작 →
+7/11 통합 = 46일에 273개 = **cascade 당 ~4 h**. 17 h − σ 12 h ≈ 4 h 로 정합.
+
+⚠ **총 투입은 ~1,100 GPU-시간이지 4,600 시간이 아니다** (2026-08-13 정정).
+
+**함의**: cascade 어디에도 MD σ 가 없다. G4 의 `transport_norm` 은 영구적으로
+**정적 BVSE 프록시**이며, "BVSE 를 전도도라 부르지 않는다" 는 단서는 회수로 없앨 수 있는
+것이 아니라 **새 계산이 필요한 항목**이다. 세미나의 그 방어선은 유지된다.
+
 ## 반증·한계
 
 - ESW 배치 스크립트(`esw_cascade_batch.py`) 자체는 아직 안 읽었다. 47에서 멈춘 것이
