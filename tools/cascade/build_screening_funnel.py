@@ -1062,6 +1062,21 @@ def main():
         "pool_names": pool_names,
     }
 
+    # ⛔⛔ 2026-08-13 — 손으로 붙인 블록을 **재생성이 지운다**. `_provenance_audit` 는
+    #   2026-08-12 provenance sweep 이 사후 추적으로 넣은 것이고 이 생성기가 만들지
+    #   않는다. 그래서 아무 생각 없이 재빌드하면 조용히 사라진다 (실제로 당했다).
+    #   → 기존 파일의 `_` 로 시작하는 최상위 키는 **그대로 승계**한다.
+    if OUT.is_file():
+        try:
+            prev = json.load(open(OUT, encoding="utf-8"))
+        except (OSError, ValueError):
+            prev = {}
+        carried = {k: v for k, v in prev.items()
+                   if k.startswith("_") and k not in out}
+        if carried:
+            out.update(carried)
+            print(f"[funnel] 손편집 블록 승계: {' '.join(sorted(carried))}")
+
     json.dump(out, open(OUT, "w"), ensure_ascii=False, indent=1, sort_keys=False)
     open(OUT, "a").write("\n")
 

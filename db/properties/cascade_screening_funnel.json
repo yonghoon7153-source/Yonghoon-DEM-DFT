@@ -3658,5 +3658,15 @@
   "ZnO",
   "ZrF4",
   "ZrO2"
- ]
+ ],
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "tools/cascade/build_screening_funnel.py",
+  "source": "db/properties/cascade_v23_ranked.csv 외 3 (파생) · 원 캠페인 master_batch_273.sh 91화합물×3농도",
+  "collected": "2026-07-28",
+  "confidence": "high",
+  "note": "결정론적 재빌드 가능(2회 md5 동일)",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ }
 }
