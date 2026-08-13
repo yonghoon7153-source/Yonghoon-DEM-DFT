@@ -1,0 +1,3 @@
+case_id,phase_set_assumption,host_oxidation_onset_V,delta_vs_lis4_included_V,record_present_species,method_comparable_species,candidate_phase_set_id,status,note
+Scenario A,LiS4 included,2.140,0.000,90,0,,sensitivity_only,"Host-only sensitivity scenario; the recovered candidate rows do not preserve a shared phase_set_id."
+Scenario B,LiS4 excluded,2.256,0.116,90,0,,sensitivity_only,"Do not mix this host anchor with candidate records generated under an unknown or different phase set."

@@ -1009,8 +1009,8 @@ _MANIFEST_STATUS = ("historical", "recovered_unvalidated", "approved",
 _MANIFEST_USE_SCOPE = ("default_visible", "archive_only", "diagnostic_only", "blocked")
 
 CASCADE_TRUTH_LABELS = {
-    "planned_slots":        ("계획 슬롯", "master_batch_273.sh: 91 화합물 × 3 라벨"),
-    "completed_slots":      ("완주 슬롯", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
+    "planned_slots":        ("계획 슬롯", "91종 PLANNED INPUT ROSTER × 3 라벨 — shortlist 아님"),
+    "completed_slots":      ("완주 슬롯 (enabled-workflow)", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
     "completed_species":    ("완주 종", "ESW 회수분에서 센다 — 91종 중 90종"),
     "historical_snapshot_species": ("역사 스냅샷", "2026-06-29 취합 경계. 재현 가능하나 superseded"),
     "approved_current_leaderboard_species": ("승인된 ranking", "결측이 아니라 점수·게이트 타당성이 미해결"),
@@ -1167,21 +1167,14 @@ def load_cascade() -> dict:
     #: 게이트별 완결성 (Codex 2026-08-14 인계). 내 단일 88/1/1 보다 정밀하다 —
     #:  축마다 분모가 다르고, G3 는 "onset 90건 있으나 method-complete 0" 을 구분한다.
     v2["gate_completeness"] = read_csv("properties/cascade_audit_gate_completeness.csv")
-    #: 5개 audit 패널 — 기본 공개가 허용된 유일한 그림 (source_of_truth §4.4)
-    v2["audit_figures"] = [
-        (f"docs/figures/cascade/cascade_audit_{n}.png",
-         f"db/properties/cascade_audit_{n}.csv", t)
-        for n, t in [("campaign_status", "캠페인 현황"),
-                     ("g3_phase_set", "G3 phase-set 민감도"),
-                     ("g4_rescore", "G4 분해 — blocking 제거 재점수"),
-                     ("interface_axes", "계면 축 (47종 post-hoc)"),
-                     ("ml_validation", "ML 검증 · acquisition")]
-        if (ROOT / f"docs/figures/cascade/cascade_audit_{n}.png").is_file()]
-    # 내려받기 가능한 것만 남긴다 (없는 파일을 링크로 걸지 않는다)
-    # ⛔ 2026-08-14 — 회수분은 diagnostic_only 다. 링크에 opt-in 파라미터를 실어야
-    #   artifact_policy 가 403 을 내지 않는다 (숨겼는데 받아지는 상태를 끝낸다).
-    v2["downloads"] = [(rel, label, "view=diagnostic" if "20260629" not in rel else "archive=1")
-                       for rel, label in CASCADE_V2_META["downloads"] if (ROOT / rel).is_file()]
+    #: 5개 audit 패널 — **원장의 figures 를 그대로 따른다.** 여기 목록을 따로 두면
+    #:  Round-3 익명화 같은 정책 변경이 화면에만 반영 안 되는 일이 생긴다.
+    _man = load_cascade_manifest()
+    v2["audit_figures"] = [(f["image"], f["csv"], f["title"])
+                           for f in (_man.get("figures") or [])
+                           if (ROOT / f["image"]).is_file()] if _man.get("ok") else []
+    #: 공개 표 — Round-3 gate denominator 계약 (record_present ≠ method_valid)
+    v2["gate_denominators"] = read_csv("properties/cascade_seminar_gate_denominators_round3.csv")
     out["v2"] = v2
     return out
 

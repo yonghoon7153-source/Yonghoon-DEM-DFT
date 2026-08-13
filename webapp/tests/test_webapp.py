@@ -747,7 +747,11 @@ def test_artifact_policy_gates_every_api_path():
     c = A.app.test_client()
     cases = [
         ("/api/file/db/properties/cascade_audit_gate_completeness.csv?dl=1", 200),
-        ("/api/file/docs/figures/cascade/cascade_audit_g4_rescore.png", 200),
+        # Round-3 — 종명이 든 감사본은 공개 금지, 익명 공개판이 default_visible
+        ("/api/file/docs/figures/cascade/cascade_audit_g4_rescore.png", 403),
+        ("/api/file/docs/figures/cascade/cascade_audit_g4_rescore.png?view=diagnostic", 200),
+        ("/api/file/docs/figures/cascade/cascade_seminar_g4_anonymized_round3.png", 200),
+        ("/api/file/db/properties/cascade_seminar_gate_denominators_round3.csv?dl=1", 200),
         ("/api/file/db/properties/cascade_v23_ranked_v2.csv?dl=1", 403),
         ("/api/file/db/properties/cascade_v23_ranked_v2.csv?dl=1&view=diagnostic", 200),
         ("/api/file/db/properties/cascade_v23_ranked.csv?dl=1", 403),
@@ -815,6 +819,39 @@ def test_g5_completeness_separates_presence_from_validity():
     assert g5["validity_aware_partial"] == "AlBr3|MgI2|Na2S"
     assert g5["validity_aware_dropped"] == "AlI3"
     assert all(r.get("completeness_basis") for r in t["data"]), "completeness_basis 가 비었다"
+
+
+def test_public_g4_panel_is_anonymized():
+    """Round-3 정책: 후보 identity 는 acquisition 전용. 공개 패널에 종명이 있으면 안 된다."""
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    pub = {f["image"] for f in man["figures"]}
+    assert "docs/figures/cascade/cascade_seminar_g4_anonymized_round3.png" in pub
+    assert "docs/figures/cascade/cascade_audit_g4_rescore.png" not in pub, \
+        "종명이 든 G4 패널이 공개 목록으로 돌아왔다"
+    # 익명 CSV 는 종명을 담지 않는다
+    t = D.read_csv("properties/cascade_seminar_g4_anonymized_round3.csv")
+    ids = {str(r["case_id"]) for r in t["data"]}
+    assert ids == {"Case A", "Case B", "Case C", "Case D", "Case E", "Case F"}
+    blob = json.dumps(t["data"], ensure_ascii=False)
+    for sp in ("B2O3", "Cr2O3", "Ga2O3", "In2O3", "Sc2O3", "Y2O3"):
+        assert sp not in blob, f"익명 CSV 에 {sp} 가 남아 있다"
+    h = _cascade_html()
+    assert "cascade_audit_g4_rescore.png" not in h, "기본 화면이 종명 패널을 띄운다"
+
+
+def test_gate_denominators_separate_record_from_method():
+    """기록이 있다 ≠ 비교 가능하다. G3 는 record 90 · method 유효 0 이어야 한다."""
+    t = D.read_csv("properties/cascade_seminar_gate_denominators_round3.csv")
+    by = {r["gate"]: r for r in t["data"]}
+    assert by["G3"]["record_present_species"] == 90
+    assert by["G3"]["all_label_method_valid_species"] == 0
+    assert by["G3"]["status"] == "blocked_method_contract"
+    assert by["G5"]["all_label_method_valid_species"] == 86
+    assert by["G5"]["partial_species"] == "AlBr3|MgI2|Na2S"
+    assert by["G4"]["dropped_species"] == "AlI3|MgI2"
+    for g, r in by.items():
+        assert r["approved_current_species"] == 0, f"{g} 가 승인된 것처럼 적혀 있다"
+    assert "게이트 분모 계약" in _cascade_html()
 
 
 def test_audit_generator_runs_without_windows_fonts():

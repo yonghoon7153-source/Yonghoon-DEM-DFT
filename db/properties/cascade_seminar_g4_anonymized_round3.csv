@@ -1,0 +1,7 @@
+case_id,historical_composite_score,legacy_bvs_only_rescore,historical_cutoff,historical_composite_pass,legacy_bvs_only_pass,pool_id,normalization_n,normalization_min_raw_bvs,normalization_max_raw_bvs,actual_x,status,note
+Case A,0.1000,0.1000,0.30,N,N,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Public anonymized derivative; candidate identity is acquisition-only."
+Case B,0.0500,0.8086,0.30,N,Y,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Blocking failure forced the historical composite score to 0.05."
+Case C,0.0500,0.3989,0.30,N,Y,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Blocking failure forced the historical composite score to 0.05."
+Case D,0.0500,0.6652,0.30,N,Y,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Blocking failure forced the historical composite score to 0.05."
+Case E,0.0500,0.4868,0.30,N,Y,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Blocking failure forced the historical composite score to 0.05."
+Case F,0.0500,0.8825,0.30,N,Y,cascade-v23-o37-f10-2026-06,47,0.81992549,0.92611474,0.25,historical_gate_audit,"Blocking failure forced the historical composite score to 0.05."

@@ -164,39 +164,39 @@
       complete = 90종 전수 · partial/incomplete = 그 축은 90종 최종판이 <b>아니다</b>.</div>
   </div>
 
-  {# ── 게이트별 완결성 (Codex 인계) — 축마다 분모가 다르다. 단일 88/1/1 보다 정확하다 ── #}
-  {% set GC = (casc.v2 or {}).gate_completeness %}
-  {% if GC and GC.data %}
+  {# ── 게이트 분모 계약 (Round-3) — record_present ≠ method_valid ── #}
+  {% set GD = (casc.v2 or {}).gate_denominators %}
+  {% if GD and GD.data %}
   <div class="card">
-    <h3>게이트별 완결성 <span class="muted" style="font-weight:400;font-size:.8rem">축마다 분모가 다르다 — 결측을 탈락으로 세지 않는다</span></h3>
+    <h3>게이트 분모 계약 <span class="muted" style="font-weight:400;font-size:.8rem">
+      <b>기록이 있다 ≠ 비교 가능하다</b> · 결측을 탈락으로 세지 않는다</span></h3>
     <div class="tbl-scroll"><table class="data-table"><thead><tr>
-      <th>gate</th><th>추정량</th><th>전 라벨 완전</th><th>부분</th><th>결측</th>
-      <th>legacy 집계로 사용 가능</th><th>승인</th><th>method status</th></tr></thead><tbody>
-    {% for r in GC.data %}
+      <th>gate</th><th>기록 있는 종</th><th>method 유효 (전 라벨)</th><th>부분</th><th>결측</th>
+      <th>legacy 집계로 사용 가능</th><th>승인</th><th>status</th></tr></thead><tbody>
+    {% for r in GD.data %}
       <tr>
         <td><b>{{ r.gate }}</b></td>
-        <td style="font-size:.84em">{{ r.estimator }}</td>
-        <td class="num">{{ r.all_label_complete_species }}</td>
+        <td class="num">{{ r.record_present_species }}</td>
+        <td class="num"><b{% if r.all_label_method_valid_species == 0 %} style="color:var(--red)"{% endif %}>{{ r.all_label_method_valid_species }}</b></td>
         <td class="mono" style="font-size:.84em">{{ r.partial_species or '—' }}</td>
         <td class="mono" style="font-size:.84em">{{ r.dropped_species or '—' }}</td>
-        <td class="num">{{ r.usable_under_legacy_aggregator }}</td>
-        <td class="num"><span class="badge {{ 'ok' if r.approved_for_current_ranking else 'err' }}">{{ r.approved_for_current_ranking }}</span></td>
-        <td><span class="badge {{ 'err' if 'blocked' in (r.method_status|string) else 'warn' }}">{{ r.method_status }}</span></td>
+        <td class="num">{{ r.legacy_usable_species }}</td>
+        <td class="num"><span class="badge err">{{ r.approved_current_species }}</span></td>
+        <td><span class="badge {{ 'err' if 'blocked' in (r.status|string) else 'warn' }}">{{ r.status }}</span></td>
       </tr>
       <tr><td></td><td colspan="7" class="muted" style="font-size:.78rem;padding-top:0">{{ r.note }}</td></tr>
     {% endfor %}
     </tbody></table></div>
     <div class="callout cal-danger" style="margin-top:10px;font-size:.82rem">
-      <b>G3 가 핵심이다</b> — onset 기록은 90종 전부 있지만 <b>method-complete 비교는 0종</b>이다
+      <b>G3 가 핵심이다</b> — onset <b>기록</b>은 90종 전부 있는데 <b>method 유효는 0종</b>이다
       (<span class="mono">blocked_method_contract</span>). 파생표가 <span class="mono">phase_set_id</span> 를
-      떨어뜨렸고 plain/Cl-rich 지지가 섞여 있다. <b>기록이 있다 ≠ 비교 가능하다.</b>
-      그리고 회수 270건 중 <b>124건</b>의 onset 반응식에 LiS4 가 들어 있다 — LiS4 를 빼면
-      host onset 이 2.140 → 2.256 V 로 움직이므로, 같은 phase set 으로 다시 재기 전에는
-      작은 onset 차이를 후보 고유 효과로 읽으면 안 된다.
+      떨어뜨렸고 plain/Cl-rich 지지가 섞여 있다. 회수 270 반응 중 <b>124건</b>에 LiS4 가 들어 있고,
+      LiS4 를 빼면 host onset 이 2.140 → 2.256 V 로 움직인다.
+      <div style="margin-top:6px"><b>G5</b> 는 <b>method 유효 86</b> 이다 — presence 로 세면 88 이지만
+      비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 AlBr₃·MgI₂·Na₂S 가 부분으로 내려간다.</div>
     </div>
     <div class="muted" style="font-size:.76rem;margin-top:6px">
-      출처: <span class="mono">db/properties/cascade_audit_gate_completeness.csv</span>
-      (Codex 감사 · 고정 소스 <span class="mono">9abe5105</span>)</div>
+      출처: <span class="mono">db/properties/cascade_seminar_gate_denominators_round3.csv</span></div>
   </div>
   {% endif %}
 

@@ -1,0 +1,5 @@
+gate,record_present_species,all_label_method_valid_species,partial_species,dropped_species,legacy_usable_species,approved_current_species,status,note
+G1,90,88,MgI2,AlI3,89,0,recovered_diagnostic,"Presence audit; all three nominal labels realize actual_x=0.25."
+G3,90,0,,"method identity unavailable for all 90",90,0,blocked_method_contract,"Record presence is not candidate-host comparability without a shared phase_set_id."
+G4,90,88,,"AlI3|MgI2",88,0,historical_only,"x005 legacy BVS input; missing remains missing and the composite is circular and pool-relative."
+G5,90,86,"AlBr3|MgI2|Na2S",AlI3,89,0,recovered_diagnostic,"Validity-aware count excludes nonphysical elastic labels; the legacy species aggregator remains unapproved."

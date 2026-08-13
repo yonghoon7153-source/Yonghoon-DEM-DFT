@@ -885,6 +885,57 @@ G5 의 86/AlBr₃·MgI₂·Na₂S/AlI₃/89 도 champions_v2 에서 직접 계�
 테스트 **60 passed** (신규 7건 포함: 정책 전 경로 · 서버측 gate · 원장 단독소유 ·
 artifact 별 provenance · G3 합성 ID 금지 · G4 메타 · G5 validity · LF 고정).
 
+### Round-3 공개 패키지 반영 — **익명화 정책이 내 화면을 뒤집었다** (2026-08-14 심야)
+
+`Cascade_Audit_Seminar_2026_08_14_round3_package.zip` (25장 공개 덱 + 대본 + Origin CSV 3종 +
+PNG/SVG). 받자마자 분모를 우리 데이터로 다시 셌고 **전부 재현**됐다:
+
+| 축 | Codex | 우리 재현 |
+|---|---|---|
+| record_present | 90 | 90 ✅ |
+| G1 all-label | 88 | 88 ✅ |
+| G4 x005 입력 | 88 / 결측 AlI₃·MgI₂ | 88 / AlI₃·MgI₂ ✅ |
+| G5 method 유효 | 86 / AlBr₃·MgI₂·Na₂S / AlI₃ / 89 | 동일 ✅ |
+
+#### ⛔ 정책 충돌 — 내 기본 화면이 후보 이름을 띄우고 있었다
+
+Round-3 의 공개 경계는 *"candidate identity is **acquisition-only**"* 다. 그런데 내가 올린
+G4 감사 패널은 **B₂O₃·Cr₂O₃·Ga₂O₃·In₂O₃·Sc₂O₃·Y₂O₃ 를 그대로 표시**하고 있었다.
+89행 랭킹과 endpoint 명단은 서버측으로 막아놓고 정작 감사 그림에서 여섯 종을 노출한 것이다.
+
+교체했다 — 공개 패널은 **익명본**(Case A–F · Scenario A/B), 종명이 든 판은 `diagnostic_only`:
+
+| 공개 (default_visible) | 진단 (diagnostic_only) |
+|---|---|
+| `cascade_seminar_g4_anonymized_round3.{png,csv}` | `cascade_audit_g4_rescore.{png,csv}` |
+| `cascade_seminar_g3_sensitivity_round3.{png,csv}` | `cascade_audit_g3_phase_set.{png,csv}` |
+
+그리고 화면의 패널 목록을 **원장의 `figures` 에서 파생**하게 바꿨다. 목록을 화면 코드에
+따로 두면 이번 같은 정책 변경이 화면에만 반영 안 되는 일이 또 생긴다.
+
+#### 게이트 표를 분모 계약으로 교체
+
+`gate_denominators_round3.csv` 가 **record_present 와 method_valid 를 열로 분리**한다.
+내 앞 표는 `all_label_complete_species` 하나에 두 개념이 섞여 있었다:
+
+| gate | 기록 | **method 유효** | status |
+|---|---|---|---|
+| G1 | 90 | 88 | recovered_diagnostic |
+| **G3** | **90** | **0** | **blocked_method_contract** |
+| G4 | 90 | 88 | historical_only |
+| G5 | 90 | **86** | recovered_diagnostic |
+
+**모든 게이트의 `approved_current_species` 가 0 이다.**
+
+#### 그 밖
+
+- headline 문구: `270 완주` → **`270 완주 (enabled-workflow)`**
+- 91종 타일: **`PLANNED INPUT ROSTER × 3 라벨 — shortlist 아님`**
+- 진단 PNG 도 원장에 등록해 **미등록 거부가 아니라 `diagnostic_only` 로 명시**한다
+  (미등록이면 차단 사유가 '원장에 없다' 로만 나와 정책 의도가 안 보인다)
+
+테스트 **65 passed** (신규 2건: 공개 G4 패널 익명 확인 · 분모 계약 record≠method).
+
 ### 남은 이견 (Codex 에게 재확인 요청할 것)
 
 1. **후보명 완전 비노출 vs opt-in.** 나는 `<details>` opt-in 으로 했다. 완전히 숨기면
