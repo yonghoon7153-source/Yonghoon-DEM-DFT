@@ -85,8 +85,24 @@ def staircase_factor(pts, fid, vox, gap_tol=2.0, phase=None, sel_phase=None):
     if not per_seg:
         raise ValueError('측정할 폴리라인 구간이 없다')
     a = np.array(per_seg)
+    # ── ★ 짧은 구간 경고 (2026-08-13) ────────────────────────────────────────────────
+    #   통제 실험(등방 랜덤 다발, 참값 1.5): estimator 의 **격자 간 산포는 구간 길이에
+    #   좌우된다**.  vox 0.4/0.3/0.25 에서 폭 —
+    #     구간 7.08 µm → 옛 0.0028 · 새 0.0011      구간 1.08 µm → 옛 0.0417 · 새 0.0187
+    #     구간 0.60 µm → 옛 0.1443 · 새 0.0658      구간 0.36 µm → 옛 0.2149 · 새 0.0409
+    #   실침대 재실측 폭 0.0456 은 **구간 ~1 µm 대의 estimator 편향과 같은 크기**다.
+    #   ⇒ "k 가 격자에 의존한다" 는 결론을 내리기 전에 이 편향부터 빼야 한다.
+    #   ⚠ 새 estimator 도 아주 짧은 구간에서는 편향된다 (0.36 µm 에서 1.345 < 1.5) —
+    #     방향만 반대다.  둘 다 짧은 구간에서는 못 믿는다.
+    short = float((a[:, 1] < 1.0).mean())
     return float(tot_path / tot_true), {
         'n_segments': len(per_seg),
+        'run_len_um_med': float(f'{np.median(a[:, 1]):.4g}'),
+        'short_run_frac': float(f'{short:.4f}'),
+        'short_run_warning': (
+            None if short < 0.2 else
+            f'구간의 {short:.0%} 가 1 µm 미만 — 이 영역에서 estimator 는 격자마다 최대 '
+            f'0.04~0.21 흔들린다 (통제실험).  k 의 격자 의존을 물리로 읽지 말 것'),
         'k_length_weighted': float(f'{tot_path / tot_true:.4f}'),
         'k_unweighted_med': float(f'{np.median(a[:, 0]):.4f}'),
         'k_p10_p90': [float(f'{np.percentile(a[:, 0], 10):.4f}'),
@@ -99,9 +115,12 @@ def staircase_factor(pts, fid, vox, gap_tol=2.0, phase=None, sel_phase=None):
                  '(CL-20 retired, 2026-08-13): 계단 길이는 σ_e 를 낮추지만 격자가 만드는 '
                  '섬유 간 **가짜 상호연결**은 높이고, 관측 구간에서는 후자가 더 크다 (CL-24). '
                  '그리고 k 자신이 격자에 의존한다 — 아래 grid_dependence 참조'),
-        'grid_dependence': ('k 는 vox 무관이 아니다.  같은 침대 재실측(옛 estimator): '
-                            '1.4855@0.4 · 1.4917@0.3 · 1.4461@0.25 (폭 0.046).  '
-                            '새 estimator 로 다시 잴 것'),
+        'grid_dependence': ('옛 estimator 로 잰 실침대 k 는 격자마다 달랐다 — 1.4855@0.4 · '
+                            '1.4917@0.3 · 1.4461@0.25 (폭 0.046).  ⚠ 그러나 통제실험은 그 '
+                            '폭이 **짧은 구간에서의 estimator 편향**과 같은 크기임을 보인다 '
+                            '(구간 1.08 µm 에서 옛 폭 0.0417).  ⇒ "k 가 격자에 의존한다" 는 '
+                            '**아직 성립하지 않는다**; 새 estimator 로 재고 short_run_frac 을 '
+                            '함께 볼 것'),
     }
 
 
