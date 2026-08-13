@@ -1,0 +1,11 @@
+artifact,status,web_default,reason
+historical 47 ranked/funnel,superseded,N,campaign coverage stops at 47
+recovered 90 GP records,recovered_unvalidated,status-only,270 records recovered; phase-set/branch comparability remains open
+ranked/themes/funnel v2,recovered_diagnostic,N,"89-species derived product; AlI3 absent, MgI2 axis-specific missingness, stale 47-era prose"
+cascade_pool_audit_v2.json,invalid_as_gate_audit,N,requires unused B0 and omits the Pugh input used by G5
+legacy Cascade figure family,archive_only,N,"O/F-only parsers, fail-open pool fallback, and source-overwrite hazards"
+sei_product_gaps.json,invalid,N,stable E_hull=0 entries were treated as falsy
+esw_lpscl_profile.json summary,invalid,N,stored summary disagrees with raw profile
+constrained ESW K>0,exploratory,N,leading/relax/hybrid modes conflict
+interface axes historical 47,historical_post_hoc,audit-only,not integrated; cutoff and geometry sensitive
+co-doping ML queue,hypothesis_only,audit-only,explicit pair property labels = 0

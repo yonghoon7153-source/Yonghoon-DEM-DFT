@@ -848,12 +848,39 @@ use_scope       : default_visible | archive_only | diagnostic_only | blocked
 
 `/cascade/diagnostic` 은 gate 없으면 **후보명이 DOM 에 안 실린다** (403 화면에서 실측).
 
-#### 남은 열린 항목
+#### 남은 두 건도 닫았다 (같은 날)
 
-- 그림 재생성 불가 — 이 컨테이너에 플로터의 TrueType 폰트가 없다. G3 CSV 를 고쳤지만
-  그 그림은 host onset 두 값과 LiS4 수만 표시해서 **영향 없음**을 이미지로 확인했다.
-- `datasets`·`metric_contract` 를 원장에 옮겼지만 `recovered_artifacts`·`source_hashes` 는
-  아직 플로터 sidecar 에만 있다.
+**① 그림 재생성 — 폰트가 근본 문제였다.** `_font()` 가 `C:/Windows/Fonts/arial.ttf`
+하나에 묶여 있어 **Linux 에서 이 도구가 아예 안 돌았다.** 폴백 체인을 넣었다:
+
+```
+Arial (Windows) → Liberation Sans (Arial 메트릭 호환) → DejaVu Sans → PIL default
+```
+
+이 환경은 **Liberation Sans** 로 해결됐고, 재렌더 결과가 Arial 원본과 시각적으로 동일하다
+(메트릭 호환이라 같은 좌표계에서 레이아웃이 안 흔들린다). 어느 폰트를 썼는지는
+원장 `render_provenance` 에 싣는다 — **폰트가 바뀌면 PNG 바이트가 바뀌므로 무결성의 전제다.**
+
+그리고 더 중요한 것: 내가 손으로 고쳤던 감사 CSV 3건(G3 가정 분리 · G4 pool 메타 ·
+G5 validity)을 **생성기에 이식**했다. 손으로 고친 CSV 는 재현 불가라 원장이 해시로 묶어봐야
+의미가 없다. 이제 `plot_cascade_audit_2026_08.py` 가 그 내용을 스스로 만든다 —
+G5 의 86/AlBr₃·MgI₂·Na₂S/AlI₃/89 도 champions_v2 에서 직접 계산한다.
+**두 번 돌려도 바이트가 같은 것을 md5 로 확인했다.**
+
+부수: `csv.writer` 기본 lineterminator 가 `\r\n` 이라 생성기가 CRLF 를 쓰고 있었다.
+`lineterminator="\n"` 으로 고정했다.
+
+**② 원장 자기완결.** `recovered_artifacts` · `source_hashes` · `render_provenance` 를
+플로터 sidecar 에서 원장으로 옮겼다. 이제 **원장만 보면 된다**:
+
+| 블록 | 내용 |
+|---|---|
+| `source_hashes` | 고정 커밋 blob 해시 (패널 입력이 조용히 안 바뀌었다는 근거) |
+| `recovered_artifacts` | 회수 sidecar 행수·해시 + **게이트별 완결성** + ingestion 감사 |
+| `render_provenance` | 사용 폰트 + 폰트가 바뀌면 해시가 바뀐다는 경고 |
+| `datasets` · `metric_contract` | 앞 라운드에 옮김 |
+
+테스트 **63 passed** (신규 3건: 폰트 없이도 도구가 도나 · 원장 자기완결 · CSV 가 생성기에서 재현되나).
 
 테스트 **60 passed** (신규 7건 포함: 정책 전 경로 · 서버측 gate · 원장 단독소유 ·
 artifact 별 provenance · G3 합성 ID 금지 · G4 메타 · G5 validity · LF 고정).

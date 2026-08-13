@@ -110,6 +110,112 @@
    "reciprocal_metric_warning": "열 이름은 pugh 지만 값은 G/B 다. B/G 는 행별로 뒤집은 뒤 통계를 내야 한다 — 1/mean(G/B) ≠ mean(B/G)."
   }
  },
+ "source_hashes": {
+  "db/properties/oxidation_stability_cascade_v2.json": {
+   "sha256": "9ef15dcb83de7f1cd08b4fca57ec3610eb6947cc7a4aca865d53c95c9388cca8",
+   "bytes": 134513,
+   "sha256_lf": "9ef15dcb83de7f1cd08b4fca57ec3610eb6947cc7a4aca865d53c95c9388cca8"
+  },
+  "db/properties/cascade_v23_all.csv": {
+   "sha256": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
+   "bytes": 1436260,
+   "sha256_lf": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba"
+  },
+  "db/properties/oxidation_stability_cascade.json": {
+   "sha256": "70b269c254f9001c1e7d070d7d884f4b5a5290483a07a4dffe6f65bd3ffbbba8",
+   "bytes": 71306,
+   "sha256_lf": "70b269c254f9001c1e7d070d7d884f4b5a5290483a07a4dffe6f65bd3ffbbba8"
+  }
+ },
+ "recovered_artifacts": {
+  "db/properties/cascade_v23_champions_v2.csv": {
+   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
+   "bytes": 57541,
+   "sha256_lf": "6bd18eaff5f92c9b0d33754064682a5f3591596584e29f083585dd6f63998c0c",
+   "rows": 270
+  },
+  "db/properties/cascade_v23_litransport_v2.csv": {
+   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
+   "bytes": 22903,
+   "sha256_lf": "7400735cb74b4492bc87713b9f38126f13a0c8170d1454a7e4cb9108a2e97fbc",
+   "rows": 270
+  },
+  "db/properties/oxidation_stability_cascade_v2.csv": {
+   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
+   "bytes": 4456,
+   "sha256_lf": "3086244e562e9704abb4622c953a29a94305fe5651990d58d8f632a20005fb1a",
+   "rows": 90
+  },
+  "db/properties/cascade_v23_ranked_v2.csv": {
+   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
+   "bytes": 4828,
+   "sha256_lf": "024e12eb412d3e9c195e670925a125e31fb3fb77ded8f486c8c25d060ade7166",
+   "rows": 89
+  },
+  "_gate_completeness": {
+   "G1": {
+    "all_label_complete_species": "88",
+    "partial": "MgI2",
+    "dropped": "AlI3",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_diagnostic",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G2": {
+    "all_label_complete_species": "90",
+    "partial": "",
+    "dropped": "",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_unvalidated",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G3": {
+    "all_label_complete_species": "0",
+    "partial": "",
+    "dropped": "method identity unavailable for all 90",
+    "approved_for_current_ranking": "0",
+    "method_status": "blocked_method_contract",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G4": {
+    "all_label_complete_species": "88",
+    "partial": "",
+    "dropped": "AlI3|MgI2",
+    "approved_for_current_ranking": "0",
+    "method_status": "historical_only",
+    "completeness_basis": "field_presence",
+    "validity_aware_all_label_species": ""
+   },
+   "G5": {
+    "all_label_complete_species": "88",
+    "partial": "MgI2",
+    "dropped": "AlI3",
+    "approved_for_current_ranking": "0",
+    "method_status": "recovered_diagnostic",
+    "completeness_basis": "field_presence (validity-aware columns alongside)",
+    "validity_aware_all_label_species": "86"
+   }
+  },
+  "_ingestion_audit": {
+   "n_esw": 90,
+   "n_evaluable": 89,
+   "n_complete": 88,
+   "dropped": {
+    "AlI3": "gate 입력 전면 결측 — champion 0/3 · litransport 0/3. ESW 만 있고 평가 불가"
+   },
+   "partial": {
+    "MgI2": "부분 결측 — champion 2/3 · litransport 2/3. 남은 라벨 평균으로 평가됨"
+   }
+  },
+  "_note": "행이 있다 ≠ 비교 가능하다. G3 는 record-complete 90 인데 method-comparable 0 이다 (phase_set_id 미기록)."
+ },
+ "render_provenance": {
+  "figure_font": "Liberation Sans (Arial metric-compatible)",
+  "note": "옛 판은 C:/Windows/Fonts/arial.ttf 하나에 묶여 있어 Linux 에서 도구가 아예 안 돌았다. 지금은 Arial → Liberation Sans(메트릭 호환) → DejaVu Sans 폴백이다. 폰트가 다르면 PNG 해시가 달라지므로 재생성 시 원장을 같이 갱신해야 한다."
+ },
  "artifacts": [
   {
    "artifact_id": "cascade-v23-cascade_v23_all",
@@ -342,8 +448,8 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
-   "image_sha256": "dea3d0d994af7db24c1a7b89025b8fbb146e341467f4fb1c42cdc877c42a3dab",
-   "image_bytes": 55023,
+   "image_sha256": "e0162410c9f4a80c8b6418aa6d346ad7bf01fd0d43933f768b64207a3663b04a",
+   "image_bytes": 56836,
    "csv_sha256": "c7487cf341d14c02030f63c62beb35c67d3b7d0f6fa19ff8250eb80a180d5ccb",
    "csv_bytes": 245,
    "csv_rows": 6
@@ -356,13 +462,13 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
-   "csv_source_commit": "working tree (2026-08-14 amendment)",
+   "csv_source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
    "csv_derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "csv_override_reason": "recovered 행의 synthetic phase_set_id 를 비우고 phase_set_assumption 으로 분리했다. 합성 ID 를 남기면 method-complete=0 판정과 정면으로 충돌한다 — 반응식에 LiS4 가 들어 있다는 사실은 method identity 가 아니다. 그림은 host onset 두 값과 LiS4 수만 표시하므로 영향 없음.",
-   "image_sha256": "3eb636f61af9155061166795fd7759449632b88739bd8388eb1b5f6b57233c7a",
-   "image_bytes": 46154,
-   "csv_sha256": "ccac1c8ae1c6900fadd1c2d8bbe55cc2644df6ec641be8cd3b44e0f2d16da96e",
-   "csv_bytes": 631,
+   "image_sha256": "783b7ebb561aeb810bf7d9df50b74f7b03bde09583ce6a822a9ffd308b9070e5",
+   "image_bytes": 47934,
+   "csv_sha256": "aa168c1e2e74f80cb1f15e4b6e18cbd13bd24b889e183873d89fdb3ef9e396ef",
+   "csv_bytes": 596,
    "csv_rows": 3
   },
   {
@@ -373,13 +479,13 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
-   "csv_source_commit": "working tree (2026-08-14 amendment)",
+   "csv_source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
    "csv_derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "csv_override_reason": "pool_id · normalization_n · BVS pool min/max · actual_x · concentration_label 추가. min–max 점수를 고정 물성처럼 읽지 못하게 하는 메타다 — B2O3 는 historical 47 풀에서 0.1000, recovered 88 풀에서 0.1998 (둘 다 fail). 기존 값 열은 안 건드렸다.",
-   "image_sha256": "1c5b9d029c8bd2948a431833249d2e0aa5247ed473a3af28f042b989a63e5f07",
-   "image_bytes": 60617,
-   "csv_sha256": "b993fefa0c8b43b1c3a80505b9ee6297ee8e0dc31c7e49fd0242ce84006d341e",
-   "csv_bytes": 1389,
+   "image_sha256": "bdda98cfe1662de09039bdf7b7ac00e565093f991e56d22e7ca502e13ed30119",
+   "image_bytes": 62354,
+   "csv_sha256": "9ddec5818a27fd4074c68453ff1c576cf49ac5f086f5518851eacd08b2f29a9a",
+   "csv_bytes": 956,
    "csv_rows": 6
   },
   {
@@ -390,8 +496,8 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
-   "image_sha256": "a33669cd05ac0235b068a0b2a40695df49f2f3c06d93bb0094650d0dc146a5f9",
-   "image_bytes": 43916,
+   "image_sha256": "20e34c1b2fc069383404d3239fc21047fab7b271933c4b6345682fd6540c54e8",
+   "image_bytes": 46165,
    "csv_sha256": "5c6e9c71f42c2f178d4fb9c1ec9c51ee5fb0b37d407a5490027d0c3cec197eed",
    "csv_bytes": 313,
    "csv_rows": 4
@@ -404,8 +510,8 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
-   "image_sha256": "c6fbafc0d82b87210138ce68d622e63f4d19f255354ce1292991bd77a7675c9b",
-   "image_bytes": 60579,
+   "image_sha256": "6a657a2a8dc2a8cc90c58f94471901b97664826278dcd414446616fe233228f6",
+   "image_bytes": 62420,
    "csv_sha256": "901add0f85b06765c42e391f720fe87f4f75bb50d648c6ebb1671e9897acc6b8",
    "csv_bytes": 394,
    "csv_rows": 5
@@ -416,10 +522,10 @@
    "path": "db/properties/cascade_audit_gate_completeness.csv",
    "approval_status": "audit_current",
    "use_scope": "default_visible",
-   "source_commit": "working tree (2026-08-14 amendment)",
-   "sha256": "61cf1678722056c86187e97f5531cf610dc956eb82335f580cad14d0331e981b",
-   "bytes": 2230,
-   "sha256_lf": "61cf1678722056c86187e97f5531cf610dc956eb82335f580cad14d0331e981b",
+   "source_commit": "regenerated by plot_cascade_audit_2026_08.py (2026-08-14)",
+   "sha256": "f83c2c38db729597634aaf697d03ca0c741ca27ac06ae79b3b9b26808c787e91",
+   "bytes": 1780,
+   "sha256_lf": "f83c2c38db729597634aaf697d03ca0c741ca27ac06ae79b3b9b26808c787e91",
    "rows": 5,
    "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "override_reason": "completeness_basis 열과 G5 validity-aware 열 추가. presence 로 세면 88/1/1 이지만 비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 86 / AlBr3·MgI2·Na2S / AlI3 / usable 89 다. 기존 presence 수치는 그대로 두고 옆에 병기했다."

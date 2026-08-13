@@ -109,17 +109,52 @@ def _local_csv(path: Path) -> list[dict[str, str]]:
 
 def _write_csv(name: str, rows: list[dict], fields: list[str]) -> Path:
     out = DB / name
-    with out.open("w", newline="", encoding="utf-8") as handle:
-        writer = csv.DictWriter(handle, fieldnames=fields)
+    # ⚠ 2026-08-14 — csv.writer 기본 lineterminator 는 \r\n 이다. 이 CSV 들은 원장이
+    #   해시로 묶으므로 깨끗한 checkout 에서 개행이 달라지면 무결성 대조가 실패한다.
+    with out.open("w", newline="\n", encoding="utf-8") as handle:
+        writer = csv.DictWriter(handle, fieldnames=fields, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
     return out
 
 
+#: 폰트 폴백 체인 — Windows 전용 경로 하나에 묶여 있어서 **Linux 에서 이 도구가 아예
+#:  안 돌았다** (2026-08-14). Liberation Sans 는 Arial 과 **메트릭 호환**이라 같은
+#:  좌표계에서 레이아웃이 거의 동일하다. 어느 폰트로 그렸는지는 원장에 기록한다 —
+#:  폰트가 바뀌면 PNG 바이트가 바뀌므로 provenance 없이는 무결성 대조가 무의미해진다.
+_FONT_CHAIN = [
+    ("Arial (Windows)", "C:/Windows/Fonts/arial.ttf", "C:/Windows/Fonts/arialbd.ttf"),
+    ("Liberation Sans (Arial metric-compatible)",
+     "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+     "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"),
+    ("DejaVu Sans", "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+     "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf"),
+]
+_FONT_USED: list[str] = []
+
+
+def resolved_font() -> str:
+    """이번 실행이 실제로 쓴 폰트 이름. 원장·릴리스 노트에 싣는다."""
+    if not _FONT_USED:
+        _font(12)
+    return _FONT_USED[0] if _FONT_USED else "PIL default (bitmap)"
+
+
 def _font(size: int, bold: bool = False) -> ImageFont.FreeTypeFont:
-    face = "arialbd.ttf" if bold else "arial.ttf"
-    path = Path("C:/Windows/Fonts") / face
-    return ImageFont.truetype(str(path), size=size)
+    for name, reg, bd in _FONT_CHAIN:
+        path = Path(bd if bold else reg)
+        if not path.is_file():
+            continue
+        if not _FONT_USED:
+            _FONT_USED.append(name)
+        return ImageFont.truetype(str(path), size=size)
+    # 마지막 폴백 — 크기 조절이 되는 기본 폰트. 레이아웃이 달라지므로 경고를 남긴다.
+    if not _FONT_USED:
+        _FONT_USED.append("PIL default (bitmap) — ⚠ 레이아웃이 다를 수 있다")
+    try:
+        return ImageFont.load_default(size=size)
+    except TypeError:                       # Pillow < 10.1
+        return ImageFont.load_default()
 
 
 def _canvas(title: str, subtitle: str = "") -> tuple[Image.Image, ImageDraw.ImageDraw]:
@@ -347,18 +382,27 @@ def g3_figure(records: dict) -> tuple[Path, Path]:
             "note": "Do not apply this threshold to included-phase-set candidates",
         },
         {
+            # ⛔ 2026-08-14 (Codex Round-3 P1) — 여기 synthetic phase_set_id 를 적으면
+            #   `method-complete = 0` 판정과 정면으로 충돌한다. 반응식에 LiS4 가 있다는
+            #   사실은 **method identity 가 아니다**. ID 는 비우고 가정만 따로 적는다.
             "system": "Recovered candidate records",
-            "phase_set_id": "mp-gga-gga-u__lis4-included",
+            "phase_set_id": "",
+            "phase_set_assumption": "mp-gga-gga-u__lis4-included (assumption — not recorded per row)",
             "oxidation_onset_V": "",
             "delta_vs_included_V": "",
             "status": "recovered_unvalidated",
-            "note": f"{len(li_s4)}/270 onset reactions contain LiS4",
+            "note": (f"{len(li_s4)}/270 onset reactions contain LiS4. Reaction content is NOT "
+                     "method identity — no phase_set_id, MP entry ids or MP snapshot hash "
+                     "was recorded."),
         },
     ]
+    for r in rows:
+        r.setdefault("phase_set_assumption", "")
     csv_path = _write_csv(
         "cascade_audit_g3_phase_set.csv",
         rows,
-        ["system", "phase_set_id", "oxidation_onset_V", "delta_vs_included_V", "status", "note"],
+        ["system", "phase_set_id", "phase_set_assumption", "oxidation_onset_V",
+         "delta_vs_included_V", "status", "note"],
     )
     image, draw = _canvas(
         "G3 changes when the competing phase set changes",
@@ -408,6 +452,15 @@ def g4_figure() -> tuple[Path, Path]:
                 "historical_pass_gt_0p30": "Y" if composite > 0.30 else "N",
                 "bvs_only_pass_gt_0p30": "Y" if bvs_only > 0.30 else "N",
                 "status": "historical_gate_audit",
+                # ⛔ 2026-08-14 (Codex Round-3 P1) — min–max 점수는 **풀 상대값**이다.
+                #   메타 없이 실으면 고정 물성처럼 읽힌다: 같은 B2O3 가 historical 47 풀에서
+                #   0.1000(풀 최솟값이라 바닥값), recovered 88 풀에서 0.1998 이다 (둘 다 fail).
+                "pool_id": "cascade-v23-o37-f10-2026-06",
+                "normalization_n": len(vals),
+                "bvs_pool_min": f"{lo:.6f}",
+                "bvs_pool_max": f"{hi:.6f}",
+                "actual_x": "0.25",
+                "concentration_label": "x005",
             }
         )
     csv_path = _write_csv(
@@ -422,6 +475,12 @@ def g4_figure() -> tuple[Path, Path]:
             "historical_pass_gt_0p30",
             "bvs_only_pass_gt_0p30",
             "status",
+            "pool_id",
+            "normalization_n",
+            "bvs_pool_min",
+            "bvs_pool_max",
+            "actual_x",
+            "concentration_label",
         ],
     )
     image, draw = _canvas(
@@ -592,7 +651,62 @@ def gate_completeness_csv() -> Path:
         {"gate": "G4", "estimator": "legacy BVS plus 4A foreign-center composite", "required_fields": "bvs_li_proxy_score@x005|tier2_dopant_blocking_fraction@x005", "all_label_complete_species": 88, "partial_species": "", "dropped_species": "AlI3|MgI2", "usable_under_legacy_aggregator": 88, "approved_for_current_ranking": 0, "method_status": "historical_only", "note": "Missing x005 input must stay missing, not fail. The score is not canonical BVSE, a barrier, diffusivity, or conductivity."},
         {"gate": "G5", "estimator": "UMA relaxed-ion elastic screen", "required_fields": "elastic_E_young_GPa|elastic_pugh_GoverB", "all_label_complete_species": 88, "partial_species": "MgI2", "dropped_species": "AlI3", "usable_under_legacy_aggregator": 89, "approved_for_current_ranking": 0, "method_status": "recovered_diagnostic", "note": "MgI2 is silently averaged from two labels; the median and final ranking are pool-relative."},
     ]
+    # ⛔ 2026-08-14 (Codex Round-3 P1) — 위 수치는 **field presence** 다. 값이 물리적인지는
+    #   안 본다. 실제로 Na2S_x100 은 B_hill = -36.27 GPa (탄성 계산 실패) 인데 presence 로는
+    #   완전한 종으로 잡히고, 그 행이 3점 평균에 들어가 "Na2S 가 연성 경험칙을 넘는다" 는
+    #   틀린 결론을 만들었다. presence 옆에 validity-aware 판정을 병기한다.
+    validity = _elastic_validity_by_species()
+    for row in rows:
+        row["completeness_basis"] = "field_presence"
+        row["validity_aware_all_label_species"] = ""
+        row["validity_aware_partial"] = ""
+        row["validity_aware_dropped"] = ""
+        if row["gate"] == "G5":
+            row["completeness_basis"] = "field_presence (validity-aware columns alongside)"
+            row["validity_aware_all_label_species"] = validity["all_label_valid"]
+            row["validity_aware_partial"] = "|".join(validity["partial"])
+            row["validity_aware_dropped"] = "|".join(validity["dropped"])
+            row["note"] += (
+                f" Presence-only counting gives 88/1/1; excluding unphysical elastic rows "
+                f"(B_hill or G_hill <= 0) gives {validity['all_label_valid']} all-label-valid, "
+                f"partial {'|'.join(validity['partial'])}, dropped {'|'.join(validity['dropped'])}, "
+                f"usable {validity['usable']}. Na2S_x100 has B_hill = -36.27 GPa."
+            )
+    fields = fields + ["completeness_basis", "validity_aware_all_label_species",
+                       "validity_aware_partial", "validity_aware_dropped"]
     return _write_csv("cascade_audit_gate_completeness.csv", rows, fields)
+
+
+def _elastic_validity_by_species() -> dict:
+    """탄성 행이 **물리적인가** 로 다시 센다 (presence 가 아니라 validity).
+
+    음의 Hill 계수는 연질이 아니라 계산 실패다. 이 구분이 없으면 실패 행이 평균에
+    섞여 조용히 결론을 만든다 (2026-08-14 Na2S 사례).
+    """
+    def num(v):
+        try:
+            return float(v)
+        except (TypeError, ValueError):
+            return None
+
+    per: dict[str, dict[str, int]] = {}
+    for row in _local_csv(DB / "cascade_v23_champions_v2.csv"):
+        sp = re.sub(r"_x\d+.*$", "", row.get("_dir") or row["dopant"]).split("+")[0]
+        d = per.setdefault(sp, {"n": 0, "valid": 0})
+        d["n"] += 1
+        E, P = num(row.get("elastic_E_young_GPa")), num(row.get("elastic_pugh_GoverB"))
+        if E is None or P is None:
+            continue
+        B, G = num(row.get("elastic_B_hill_GPa")), num(row.get("elastic_G_hill_GPa"))
+        nu = num(row.get("elastic_poisson_nu"))
+        if all(x is None or x > 0 for x in (B, G, E, P)) and (nu is None or nu >= 0):
+            d["valid"] += 1
+    return {
+        "all_label_valid": sum(1 for d in per.values() if d["valid"] == d["n"]),
+        "partial": sorted(s for s, d in per.items() if 0 < d["valid"] < d["n"]),
+        "dropped": sorted(s for s, d in per.items() if d["valid"] == 0),
+        "usable": sum(1 for d in per.values() if d["valid"] > 0),
+    }
 
 
 def _file_meta(path: Path, csv_rows: bool = False) -> dict:

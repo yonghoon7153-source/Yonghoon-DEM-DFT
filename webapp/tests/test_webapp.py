@@ -817,6 +817,50 @@ def test_g5_completeness_separates_presence_from_validity():
     assert all(r.get("completeness_basis") for r in t["data"]), "completeness_basis 가 비었다"
 
 
+def test_audit_generator_runs_without_windows_fonts():
+    """C:/Windows/Fonts 하나에 묶여 Linux 에서 도구가 아예 안 돌았다 (2026-08-14)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "pca", ROOT / "tools" / "figures" / "plot_cascade_audit_2026_08.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    f = m._font(24, bold=True)
+    assert f is not None
+    assert m.resolved_font(), "어느 폰트를 썼는지 보고하지 않는다"
+    # 폴백 체인에 Windows 밖 경로가 있어야 한다
+    assert any(not r.startswith("C:") for _n, r, _b in m._FONT_CHAIN)
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    assert man["render_provenance"]["figure_font"], "원장에 폰트 provenance 가 없다"
+
+
+def test_ledger_is_self_contained():
+    """원장만 보면 되도록 — 계약 블록이 플로터 sidecar 에만 남아 있으면 안 된다."""
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    for k in ("datasets", "metric_contract", "source_hashes", "recovered_artifacts",
+              "render_provenance", "artifacts", "figures", "supporting_tables"):
+        assert k in man, f"원장에 {k} 가 없다"
+    g = man["recovered_artifacts"]["_gate_completeness"]
+    assert g["G3"]["method_status"] == "blocked_method_contract"
+    assert str(g["G5"]["validity_aware_all_label_species"]) == "86"
+    assert all(str(v["approved_for_current_ranking"]) == "0" for v in g.values())
+
+
+def test_audit_csvs_are_reproducible_from_the_generator():
+    """손으로 고친 CSV 는 재현 불가다 — 생성기가 같은 내용을 만들어야 한다."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "pca2", ROOT / "tools" / "figures" / "plot_cascade_audit_2026_08.py")
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    v = m._elastic_validity_by_species()
+    assert v["all_label_valid"] == 86 and v["dropped"] == ["AlI3"]
+    assert v["partial"] == ["AlBr3", "MgI2", "Na2S"] and v["usable"] == 89
+    src = (ROOT / "tools" / "figures" / "plot_cascade_audit_2026_08.py").read_text(encoding="utf-8")
+    assert 'lineterminator="\\n"' in src, "csv.writer 가 다시 CRLF 를 쓴다"
+    assert '"phase_set_assumption"' in src, "G3 가정 열이 생성기에 없다"
+    assert '"pool_id": "cascade-v23-o37-f10-2026-06"' in src, "G4 pool 메타가 생성기에 없다"
+
+
 def test_db_property_files_are_lf_pinned():
     """깨끗한 Windows checkout 에서 CRLF 로 바뀌면 해시 대조가 깨진다 (P1)."""
     ga = (ROOT / ".gitattributes").read_text(encoding="utf-8")
