@@ -124,7 +124,33 @@ def hop_frac(hop):
     return (m / 3.0, n / 3.0)
 
 
-def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070)):
+def widest_offset(atoms, cell, fx, fy, ux, uy, span=1.1, n=45, target=2.15):
+    """직선에 수직으로 훑어, 기판 원자에서 가장 멀어지는 lateral offset(Å)을 고른다.
+
+    실제 MEP 는 원자 사이 통로를 따라 휜다. 직선은 근사이고 구속 직선 스캔이
+    MEP 의 상한인 이유이기도 하다. 여기서는 **기하학적 통로**(최근접 기판원자 거리가
+    최대인 선)를 따라가게 해서 그림이 물리적으로 자연스럽게 보이도록만 한다.
+    ** 에너지 계산이 아니다. 어느 점도 이완된 배치가 아니다. **
+    """
+    (a1x, a1y), (a2x, a2y) = lat2d(cell)
+    det = a1x * a2y - a1y * a2x
+    best = (None, -1.0)
+    for i in range(n):
+        t = -span + 2 * span * i / (n - 1)
+        cx, cy = t * ux, t * uy                      # Å 단위 수직 이동
+        dfx = (cx * a2y - cy * a2x) / det            # -> 분수좌표
+        dfy = (cy * a1x - cx * a1y) / det
+        gx, gy = fx + dfx, fy + dfy
+        z = ride_height(atoms, cell, gx, gy, target)
+        r = min((neighbours(atoms, cell, gx, gy, z, el, 6.0) or [9.9])[0] for el in ("N", "Li"))
+        # 같은 target 을 만족하는 높이를 쓰므로, 더 낮은 z 로 만족하는 쪽이 통로가 넓다
+        score = -z
+        if score > best[1]:
+            best = ((gx, gy, z), score)
+    return best[0]
+
+
+def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070), curve=False):
     """on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작점 = 계산된 최소점 xy.
 
     on-Li 자리 = N 삼각형 중심 = Li2N 면의 in-plane Li 바로 위 (db
@@ -133,12 +159,28 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070)):
 
     ** 끝점만 계산된 자리와 같은 xy 다. 중간점과 반대쪽 끝은 표시용 보간이다. **
     """
+    amp_f = (0.0, 0.0)
+    if curve:
+        (a1x, a1y), (a2x, a2y) = lat2d(cell)
+        hx, hy = hop[0] * a1x + hop[1] * a2x, hop[0] * a1y + hop[1] * a2y
+        L = math.hypot(hx, hy)
+        ux, uy = -hy / L, hx / L
+        mx, my = ad[3] + 0.5 * hop[0], ad[4] + 0.5 * hop[1]
+        gx, gy, _z = widest_offset(atoms, cell, mx, my, ux, uy, target=target)
+        amp_f = (gx - mx, gy - my)          # 중점에서의 수직 이탈 (분수좌표)
     out = []
     for xi in xis:
         if not (0.0 <= xi <= 1.0):
             raise ValueError(f"xi={xi} 가 [0,1] 밖이다")
         fx, fy = ad[3] + xi * hop[0], ad[4] + xi * hop[1]
-        out.append((xi, fx, fy, ride_height(atoms, cell, fx, fy, target)))
+        if curve and 0.0 < xi < 1.0:
+            # 중점에서 찾은 통로 폭을 sin(pi*xi) 로 부드럽게 적용 -> 대칭 활 모양,
+            # 끝에서 꺾이지 않는다. (점마다 독립으로 최적화하면 한쪽으로 쏠리고 끝에서 튄다)
+            dfx = amp_f[0] * math.sin(math.pi * xi)
+            dfy = amp_f[1] * math.sin(math.pi * xi)
+            fx, fy = fx + dfx, fy + dfy
+        z = ride_height(atoms, cell, fx, fy, target)
+        out.append((xi, fx, fy, z))
     return out
 
 
@@ -537,6 +579,17 @@ def selftest():
     chk(f"ride_height 가 목표 거리 재현 (측정 {got:.3f})", abs(got - 2.15) < 0.02)
     z2 = ride_height(subs, cellR, 0.5, 0.5, target=3.00)
     chk("목표를 키우면 더 높이 뜬다", z2 > z)
+    # widest_offset: 통로 쪽으로 비켜서면 더 낮은 높이로 같은 여유를 얻는다
+    two = [(1, "N", "N1", 0.45, 0.5, 0.40, 0), (2, "N", "N2", 0.55, 0.5, 0.40, 1)]
+    zs = ride_height(two, cellR, 0.5, 0.5, 2.15)
+    g = widest_offset(two, cellR, 0.5, 0.5, 0.0, 1.0, target=2.15)
+    chk("widest_offset 이 더 낮은 z 를 찾음", g[2] <= zs + 1e-9)
+    # 육방정에서는 Cartesian y 이동이 fx·fy 를 둘 다 바꾼다 -> 분수좌표가 아니라
+    # **Cartesian 변위가 (ux,uy) 와 평행한지**로 검사해야 한다
+    (_c1x, _c1y), (_c2x, _c2y) = lat2d(cellR)
+    _dx = (g[0] - 0.5) * _c1x + (g[1] - 0.5) * _c2x
+    _dy = (g[0] - 0.5) * _c1y + (g[1] - 0.5) * _c2y
+    chk("widest_offset 이 수직방향으로만 움직임", abs(_dx) < 1e-6)
     # 헤더에 인자가 붙는 섹션(THERI 1)도 찾아야 한다 — 못 찾으면 원자가 조용히 누락된다
     demo = ["STRUC", "  1 Li Li1 1.0 0 0 0 1a 1", "  0 0 0 0 0 0 0",
             "THERI 1", "  1 Li1 -0.0", "  0 0 0"]
@@ -569,6 +622,8 @@ def main():
     ap.add_argument("--n2", help="끝 on-N 의 사이트 라벨 (예 N36)")
     ap.add_argument("--onLi", action="store_true",
                     help="on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작 = 계산된 최소점")
+    ap.add_argument("--curve", action="store_true",
+                    help="--onLi: 직선 대신 원자 사이 **통로**를 따라 휘게 (표시용)")
     ap.add_argument("--ride", type=float, default=2.15,
                     help="--onLi: 각 점에서 최근접 기판 원자와의 목표 거리 (A)")
     ap.add_argument("--onN", action="store_true",
@@ -640,7 +695,7 @@ def main():
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
     if a.onLi:
-        pts = onLi_path(atoms, cell, ad, xis, target=a.ride)
+        pts = onLi_path(atoms, cell, ad, xis, target=a.ride, curve=a.curve)
         xi_ts = 0.5
         w = min(min((neighbours(atoms, cell, p[1], p[2], p[3], el, 6.0) or [9.9])[0]
                     for el in ("N", "Li")) for p in pts)
@@ -649,7 +704,7 @@ def main():
         L = math.hypot(dfx * b1x + dfy * b2x, dfx * b1y + dfy * b2y)
         print(f"on-Li -> N-N bridge -> on-Li : {L:.3f} A (최단 on-Li 간격). 중점 = N-N 다리")
         print(f"   경로 최저 기판거리 = {w:.3f} A (목표 {a.ride})")
-        if abs(L - 2.107) > 0.15:
+        if abs(L - 2.107) > 0.15 and not a.curve:
             sys.exit(f"거부: 경로 길이 {L:.3f} A 가 최단 on-Li 간격(2.107 A)이 아니다")
         print("*** 표시 전용: 시작점만 계산된 xy(최소점), 나머지는 보간. ***")
     elif a.onN:
