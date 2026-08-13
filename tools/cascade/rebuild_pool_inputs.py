@@ -138,14 +138,47 @@ def build_esw_csv(esw_json):
     return rows
 
 
+#: litransport 가 싣는 열 (build_screening_funnel.load_pool 이 `_dir` 로 조인한다)
+LITRANS_COLS = ["_dir", "bvs_li_proxy_score", "migration_volume_fraction",
+                "tier2_dopant_blocking_fraction", "tier2_li_li_disorder_std",
+                "cation_site", "anion_site"]
+
+
+def build_litransport(all_csv):
+    """champion 행만 뽑아 G4 축 입력을 만든다. `_dir` 은 `<dopant>_x0NN` 형식이어야
+    한다 — funnel 이 `rpartition('_x')` 로 도펀트와 농도를 가른다."""
+    import re
+    rows = list(csv.DictReader(open(all_csv, encoding="utf-8")))
+    out = []
+    for r in rows:
+        if str(r.get("rank_combined", "")).strip() != "1":
+            continue
+        name = r.get("_dir") or r.get("name", "")
+        # Ag2O_x020_cLi24ga... → Ag2O_x005 (funnel 은 x002/x005/x010 을 기대한다)
+        m = re.match(r"(.+?)_x(\d+)", name)
+        if not m:
+            continue
+        pct = {"002": "002", "005": "005", "010": "010",
+               "020": "002", "050": "005", "100": "010"}.get(m.group(2))
+        if not pct:
+            continue
+        o = {c: r.get(c, "") for c in LITRANS_COLS}
+        o["_dir"] = f"{m.group(1)}_x{pct}"
+        out.append(o)
+    return out
+
+
 def write_esw_csv(rows, path, src):
+    # ⚠ 주석줄은 **csv.writer 로 쓰지 않는다**. 줄 안에 쉼표가 있으면 writer 가
+    #   따옴표로 감싸 `"#...` 가 되고, 소비자의 `line.startswith("#")` 주석 필터를
+    #   빠져나가 헤더 파싱이 깨진다 (2026-08-14 build_screening_funnel 에서 실측).
     with open(path, "w", newline="", encoding="utf-8") as f:
+        f.write(f"# grand-potential ESW per cascade dopant (UMA champion composition; "
+                f"MP GGA_GGA+U hull). Source: {os.path.basename(src)} via "
+                f"tools/cascade/rebuild_pool_inputs.py\n")
+        f.write("# ox_V = PLAIN champion; clrich_ox_V = +Clrich chain variant "
+                "(blank = no variant or no plain). Do not merge the two.\n")
         w = csv.writer(f)
-        w.writerow([f"# grand-potential ESW per cascade dopant (UMA champion composition, "
-                    f"MP GGA_GGA+U hull). Source: {os.path.basename(src)} via "
-                    f"tools/cascade/rebuild_pool_inputs.py"])
-        w.writerow(["# ox_V = PLAIN champion; clrich_ox_V = +Clrich chain variant "
-                    "(빈 칸 = 변형 없음 또는 plain 부재). 섞지 말 것."])
         w.writerow(list(rows[0]))
         for r in rows:
             w.writerow([r[k] for k in rows[0]])
@@ -204,6 +237,17 @@ def selftest():
     chk("collapse" in fe["note"], f"window<0.05 → collapse 플래그 ({fe['note']})")
     chk(fe["anion"] == "Cl" and fe["valence"] == 3, "회수 계열도 정상 분류")
 
+    # ★ 음성: 주석줄이 따옴표로 감싸이면 소비자의 `#` 필터를 빠져나가 헤더가 깨진다
+    ep = td / "esw.csv"
+    write_esw_csv(rows, ep, "x.json")
+    lines = open(ep, encoding="utf-8").read().splitlines()
+    chk(all(l.startswith("#") for l in lines[:2]),
+        f"주석줄이 따옴표 없이 '#' 로 시작 ({lines[0][:12]!r})")
+    parsed = list(csv.DictReader(l for l in open(ep, encoding="utf-8")
+                                 if not l.startswith("#")))
+    chk(parsed and "dopant" in parsed[0],
+        f"'#' 필터만으로 헤더가 잡힌다 ({list(parsed[0])[:3] if parsed else '실패'})")
+
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
@@ -229,6 +273,14 @@ def main():
         w.writeheader()
         w.writerows(ch)
     print(f"[champions] {p1}  {len(ch)}행 (전체 {ntot}행 중 rank_combined==1)")
+
+    lit = build_litransport(a.all_csv)
+    p3 = PROP / f"cascade_v23_litransport{suf}.csv"
+    with open(p3, "w", newline="", encoding="utf-8") as f:
+        w = csv.DictWriter(f, fieldnames=LITRANS_COLS)
+        w.writeheader()
+        w.writerows(lit)
+    print(f"[litransport] {p3}  {len(lit)}행")
 
     rows = build_esw_csv(a.esw_json)
     p2 = PROP / f"oxidation_stability_cascade{suf}.csv"

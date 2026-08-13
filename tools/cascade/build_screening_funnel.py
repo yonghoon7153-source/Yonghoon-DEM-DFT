@@ -42,7 +42,10 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROP = ROOT / "db" / "properties"
-OUT = PROP / "cascade_screening_funnel.json"
+# 경로 env 오버라이드 (2026-08-14) — 회수분(90종) 풀로 정본을 덮지 않고 병렬 생성한다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+OUT = PROP / f"cascade_screening_funnel{_SUF}.json"
 
 BUILD_DATE = "2026-07-28"
 
@@ -96,10 +99,10 @@ def load_champion_by_x():
 
 # ── 데이터 로드 + ionic_transport norm 재계산 ────────────────────────────────
 def load_pool():
-    ranked = read_csv_rows(PROP / "cascade_v23_ranked.csv")
-    oxid = {r["dopant"]: r for r in read_csv_rows(PROP / "oxidation_stability_cascade.csv")}
+    ranked = read_csv_rows(PROP / f"cascade_v23_ranked{_SUF}.csv")
+    oxid = {r["dopant"]: r for r in read_csv_rows(PROP / f"oxidation_stability_cascade{_SUF}.csv")}
     lit = {}
-    for r in read_csv_rows(PROP / "cascade_v23_litransport.csv"):
+    for r in read_csv_rows(PROP / f"cascade_v23_litransport{_SUF}.csv"):
         d, _, x = r["_dir"].rpartition("_x")
         lit.setdefault(d, {})[x] = r
 

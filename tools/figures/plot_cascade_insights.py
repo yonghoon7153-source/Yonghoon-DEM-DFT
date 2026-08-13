@@ -14,7 +14,13 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-OUT="docs/figures/cascade"
+# 경로는 env 로 갈아끼운다 — 정본을 덮지 않고 회수분(90종)으로 병렬 생성하기 위해.
+#   CASCADE_CHAMP / CASCADE_ESW / CASCADE_RANKED / CASCADE_FIGDIR (2026-08-14)
+OUT=os.environ.get("CASCADE_FIGDIR","docs/figures/cascade")
+CHAMP=os.environ.get("CASCADE_CHAMP","db/properties/cascade_v23_champions.csv")
+ESWCSV=os.environ.get("CASCADE_ESW","db/properties/oxidation_stability_cascade.csv")
+RANKED=os.environ.get("CASCADE_RANKED","db/properties/cascade_v23_ranked.csv")
+os.makedirs(OUT, exist_ok=True)
 LANTH={"La","Nd","Sm","Gd"}; ALKALI={"Li","Na"}; AE={"Mg","Ca","Sr","Ba"}
 MAIN={"B","Al","Ga","In","Si","Ge","Sn","Sb"}
 GRPC={"lanthanide":"#ec407a","TM":"#5c6bc0","main-group":"#26a69a","alk.earth":"#7cb342","alkali":"#9e9e9e"}
@@ -73,7 +79,7 @@ if __name__ == "__main__" and "--selftest" in os.sys.argv:
 
 # ---- merge champions (per-dopant mean) + ESW ----
 ch={}
-for r in csv.DictReader(open("db/properties/cascade_v23_champions.csv")):
+for r in csv.DictReader(open(CHAMP)):
     d=r["dopant"].split("+")[0]; ch.setdefault(d,[]).append(r)
 def agg(d,key,drop_nu_neg=False):
     vs=[]
@@ -85,7 +91,7 @@ def agg(d,key,drop_nu_neg=False):
     return np.mean(vs) if vs else math.nan
 esw={}
 import io
-_raw=open("db/properties/oxidation_stability_cascade.csv").read().splitlines()
+_raw=open(ESWCSV).read().splitlines()
 _h=next(i for i,l in enumerate(_raw) if l.startswith("dopant,"))
 for r in csv.DictReader(io.StringIO("\n".join(_raw[_h:]))):
     esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]),fnum(r["window_V"]))
@@ -182,14 +188,14 @@ plt.savefig(f"{OUT}/cascade_v23_insights.pdf",bbox_inches="tight")
 print(f"saved {OUT}/cascade_v23_insights.png")
 
 # ranked CSV
-with open("db/properties/cascade_v23_ranked.csv","w",newline="") as f:
+with open(RANKED,"w",newline="") as f:
     w=csv.writer(f); w.writerow(["# composite cathode-coating ranking. UMA relative. x=0.25.",
         "score=0.30*ox+0.25*stable+0.20*soft+0.15*ductile+0.10*window (min-max norm)."])
     w.writerow(["rank","dopant","group","score","de","ox_V","red_V","E_GPa","pugh","pareto"])
     for i,x in enumerate(sorted(D,key=lambda x:-x["score"]),1):
         w.writerow([i,x["dop"],x["grp"],f"{x['score']:.3f}",f"{x['de']:.3f}",x["ox"],x["red"],
                     f"{x['E']:.1f}",f"{x['pugh']:.2f}","Y" if x["dop"] in pareto else ""])
-print("saved db/properties/cascade_v23_ranked.csv")
+print(f"saved {RANKED}")
 
 # insights
 print(f"\nPareto-optimal ({len(pareto)}): {', '.join(pareto)}")
