@@ -150,7 +150,10 @@ def widest_offset(atoms, cell, fx, fy, ux, uy, span=1.1, n=45, target=2.15):
     return best[0]
 
 
-def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070), curve=False):
+ONLI_STEP = (-0.111074, 0.111070)   # 최단 on-Li -> on-Li (2.107 A)
+
+
+def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1):
     """on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작점 = 계산된 최소점 xy.
 
     on-Li 자리 = N 삼각형 중심 = Li2N 면의 in-plane Li 바로 위 (db
@@ -159,6 +162,7 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070), curv
 
     ** 끝점만 계산된 자리와 같은 xy 다. 중간점과 반대쪽 끝은 표시용 보간이다. **
     """
+    hop = hop or (ONLI_STEP[0] * steps, ONLI_STEP[1] * steps)
     amp_f = (0.0, 0.0)
     if curve:
         (a1x, a1y), (a2x, a2y) = lat2d(cell)
@@ -181,6 +185,10 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070), curv
             fx, fy = fx + dfx, fy + dfy
         z = ride_height(atoms, cell, fx, fy, target)
         out.append((xi, fx, fy, z))
+    # NOTE: 반대쪽 끝이 시작보다 높게 나온다. 시작 자리에서만 기판이 이완돼 (in-plane Li 가
+    # 0.95 A 눌려 내려가) 있기 때문이다. 선형 추세를 빼서 높이를 맞추면 반대쪽이 기판을
+    # 파고든다 (2026-08-12 시도: 최근접 0.54 A). 고정 기판 한 장으로 그리는 이상 이 상승은
+    # 물리적으로 필요한 것이므로 그대로 둔다.
     return out
 
 
@@ -622,6 +630,9 @@ def main():
     ap.add_argument("--n2", help="끝 on-N 의 사이트 라벨 (예 N36)")
     ap.add_argument("--onLi", action="store_true",
                     help="on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작 = 계산된 최소점")
+    ap.add_argument("--key_xi", help="큰 공으로 강조할 xi 목록 (기본 0,0.5,1)")
+    ap.add_argument("--steps", type=int, default=1,
+                    help="--onLi: 최단 on-Li 스텝(2.107 A)의 배수. 3 = 격자 등가 자리(6.322 A)")
     ap.add_argument("--curve", action="store_true",
                     help="--onLi: 직선 대신 원자 사이 **통로**를 따라 휘게 (표시용)")
     ap.add_argument("--ride", type=float, default=2.15,
@@ -685,6 +696,9 @@ def main():
     else:
         hop = tuple(int(t) for t in a.hop.split(","))
     xis = [float(t) for t in a.xi.replace(" ", "").split(",")]
+    global KEY_XI
+    if a.key_xi:
+        KEY_XI = tuple(float(t) for t in a.key_xi.replace(" ", "").split(","))
 
     clear = CLEARANCE_A if (a.onN or a.onLi) else min_clearance(atoms, cell, ad[3:6], hop)
     if clear < CLEARANCE_A and not a.allow_collision:
@@ -695,7 +709,7 @@ def main():
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
     if a.onLi:
-        pts = onLi_path(atoms, cell, ad, xis, target=a.ride, curve=a.curve)
+        pts = onLi_path(atoms, cell, ad, xis, target=a.ride, curve=a.curve, steps=a.steps)
         xi_ts = 0.5
         w = min(min((neighbours(atoms, cell, p[1], p[2], p[3], el, 6.0) or [9.9])[0]
                     for el in ("N", "Li")) for p in pts)
@@ -704,8 +718,9 @@ def main():
         L = math.hypot(dfx * b1x + dfy * b2x, dfx * b1y + dfy * b2y)
         print(f"on-Li -> N-N bridge -> on-Li : {L:.3f} A (최단 on-Li 간격). 중점 = N-N 다리")
         print(f"   경로 최저 기판거리 = {w:.3f} A (목표 {a.ride})")
-        if abs(L - 2.107) > 0.15 and not a.curve:
-            sys.exit(f"거부: 경로 길이 {L:.3f} A 가 최단 on-Li 간격(2.107 A)이 아니다")
+        if abs(L - 2.107 * a.steps) > 0.15 and not a.curve:
+            sys.exit(f"거부: 경로 길이 {L:.3f} A 가 on-Li 스텝 x{a.steps} "
+                     f"({2.107*a.steps:.3f} A) 이 아니다")
         print("*** 표시 전용: 시작점만 계산된 xy(최소점), 나머지는 보간. ***")
     elif a.onN:
         pts, picked = onN_path(atoms, cell, ad, xis, h_top=a.h_top, h_bridge=a.h_bridge,
