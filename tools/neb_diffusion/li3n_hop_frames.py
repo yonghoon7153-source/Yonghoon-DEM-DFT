@@ -124,6 +124,24 @@ def hop_frac(hop):
     return (m / 3.0, n / 3.0)
 
 
+def onLi_path(atoms, cell, ad, xis, target=2.15, hop=(-0.111074, 0.111070)):
+    """on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작점 = 계산된 최소점 xy.
+
+    on-Li 자리 = N 삼각형 중심 = Li2N 면의 in-plane Li 바로 위 (db
+    hollow_site_identification_2026_06_09). 최단 on-Li↔on-Li 는 a/sqrt(3) = 2.107 A 이고
+    중점이 N-N 다리다. 높이는 ride_height 로 점마다 맞춘다.
+
+    ** 끝점만 계산된 자리와 같은 xy 다. 중간점과 반대쪽 끝은 표시용 보간이다. **
+    """
+    out = []
+    for xi in xis:
+        if not (0.0 <= xi <= 1.0):
+            raise ValueError(f"xi={xi} 가 [0,1] 밖이다")
+        fx, fy = ad[3] + xi * hop[0], ad[4] + xi * hop[1]
+        out.append((xi, fx, fy, ride_height(atoms, cell, fx, fy, target)))
+    return out
+
+
 def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25, n1_label=None, n2_label=None):
     """on-N -> N-N bridge -> on-N 대칭 경로. [(xi, fx, fy, fz)] 반환.
 
@@ -196,6 +214,30 @@ def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25, n1_label=None, n2_
         h = h_bridge + (h_top - h_bridge) * (2 * abs(xi - 0.5)) ** 2   # 대칭, 다리에서 최저
         out.append((xi, fx, fy, zN + h / c))
     return out, picked
+
+
+def ride_height(atoms, cell, fx, fy, target=2.15, zlo=0.40, zhi=0.60):
+    """(fx,fy) 에서 **가장 가까운 기판 원자와의 거리 = target** 이 되는 adatom z(분수).
+
+    고정 높이로 직선을 그으면 기판 요철 때문에 어떤 점에서는 원자를 파고든다
+    (2026-08-12: on-Li 반대쪽 끝에서 Li-Li 1.373 A). 점마다 높이를 맞추면 궤적이
+    지형을 타고 넘는 모양이 되고, 어디서도 결합거리 아래로 안 내려간다.
+    """
+    def closest(zf):
+        r = []
+        for el in ("N", "Li"):
+            v = neighbours(atoms, cell, fx, fy, zf, el, 6.0)
+            if v:
+                r.append(v[0])
+        return min(r) if r else 9.9
+    lo, hi = zlo, zhi
+    for _ in range(40):                      # 이분법 — closest 는 z 에 대해 단조 증가
+        mid = (lo + hi) / 2
+        if closest(mid) < target:
+            lo = mid
+        else:
+            hi = mid
+    return hi
 
 
 def min_clearance(atoms, cell, f_min, hop, n=60, z=None):
@@ -487,6 +529,14 @@ def selftest():
     except ValueError:
         chk("표면 N 부족 거부", True)
     chk("on-N 최저거리 기준이 결합거리대", 1.6 <= ONN_MIN_LI_N <= 2.0)
+    # ride_height: 목표 거리를 실제로 만들어내는가 (단조성 가정 검증 포함)
+    cellR = [10.95, 10.95, 28.545, 90.0, 90.0, 120.0]
+    subs = [(1, "N", "N1", 0.5, 0.5, 0.40, 0)]
+    z = ride_height(subs, cellR, 0.5, 0.5, target=2.15)
+    got = neighbours(subs, cellR, 0.5, 0.5, z, "N", 6.0)[0]
+    chk(f"ride_height 가 목표 거리 재현 (측정 {got:.3f})", abs(got - 2.15) < 0.02)
+    z2 = ride_height(subs, cellR, 0.5, 0.5, target=3.00)
+    chk("목표를 키우면 더 높이 뜬다", z2 > z)
     # 헤더에 인자가 붙는 섹션(THERI 1)도 찾아야 한다 — 못 찾으면 원자가 조용히 누락된다
     demo = ["STRUC", "  1 Li Li1 1.0 0 0 0 1a 1", "  0 0 0 0 0 0 0",
             "THERI 1", "  1 Li1 -0.0", "  0 0 0"]
@@ -517,6 +567,10 @@ def main():
                     help="N 관통 경로도 강행 (진단 전용 — 그림으로 쓰지 말 것)")
     ap.add_argument("--n1", help="시작 on-N 의 사이트 라벨 (예 N20) — 고정하면 그림이 안 움직인다")
     ap.add_argument("--n2", help="끝 on-N 의 사이트 라벨 (예 N36)")
+    ap.add_argument("--onLi", action="store_true",
+                    help="on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작 = 계산된 최소점")
+    ap.add_argument("--ride", type=float, default=2.15,
+                    help="--onLi: 각 점에서 최근접 기판 원자와의 목표 거리 (A)")
     ap.add_argument("--onN", action="store_true",
                     help="on-N -> N-N bridge -> on-N 대칭 경로 (최근접 N-N). 표시 전용")
     ap.add_argument("--h_top", type=float, default=1.90, help="on-N 위 adatom 높이 (A)")
@@ -577,7 +631,7 @@ def main():
         hop = tuple(int(t) for t in a.hop.split(","))
     xis = [float(t) for t in a.xi.replace(" ", "").split(",")]
 
-    clear = CLEARANCE_A if a.onN else min_clearance(atoms, cell, ad[3:6], hop)
+    clear = CLEARANCE_A if (a.onN or a.onLi) else min_clearance(atoms, cell, ad[3:6], hop)
     if clear < CLEARANCE_A and not a.allow_collision:
         sys.exit(f"거부: 경로상 최소 Li-N = {clear:.3f} A < {CLEARANCE_A} A -- 직선이 N 을 관통한다.\n"
                  "  Li3N(001) 에서는 모든 격자 병진 방향이 그렇다 (docstring 경고 참조).\n"
@@ -585,7 +639,20 @@ def main():
                  "  진단 목적이면 --allow_collision.")
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
-    if a.onN:
+    if a.onLi:
+        pts = onLi_path(atoms, cell, ad, xis, target=a.ride)
+        xi_ts = 0.5
+        w = min(min((neighbours(atoms, cell, p[1], p[2], p[3], el, 6.0) or [9.9])[0]
+                    for el in ("N", "Li")) for p in pts)
+        (b1x, b1y), (b2x, b2y) = lat2d(cell)
+        dfx, dfy = pts[-1][1] - pts[0][1], pts[-1][2] - pts[0][2]
+        L = math.hypot(dfx * b1x + dfy * b2x, dfx * b1y + dfy * b2y)
+        print(f"on-Li -> N-N bridge -> on-Li : {L:.3f} A (최단 on-Li 간격). 중점 = N-N 다리")
+        print(f"   경로 최저 기판거리 = {w:.3f} A (목표 {a.ride})")
+        if abs(L - 2.107) > 0.15:
+            sys.exit(f"거부: 경로 길이 {L:.3f} A 가 최단 on-Li 간격(2.107 A)이 아니다")
+        print("*** 표시 전용: 시작점만 계산된 xy(최소점), 나머지는 보간. ***")
+    elif a.onN:
         pts, picked = onN_path(atoms, cell, ad, xis, h_top=a.h_top, h_bridge=a.h_bridge,
                                n1_label=a.n1, n2_label=a.n2)
         print(f"   사용한 표면 N: {picked[0]} -> {picked[1]}   (--n1/--n2 로 고정 가능)")
@@ -634,7 +701,7 @@ def main():
         name = f"li3n_hop_xi{int(round(xi * 100)):03d}_adNa_display.vesta"
         dst = os.path.join(a.outdir, name)
         write_frame(lines, ad[6], "Na", "Na1", fx, fy, fz, dst)
-        if a.onN:      # onN 은 전부 표시용 — 계산된 구조가 하나도 없다
+        if a.onN or a.onLi:      # 표시용 경로 — 계산된 구조가 하나도 없다
             note = "  ★ 강조점" if any(abs(xi - v) < 1e-6 for v in KEY_XI) else ""
         else:
             note = "  <- 계산된 구조" if abs(xi) < 1e-9 or abs(xi - round(xi_ts, 1)) < 1e-9 else ""
