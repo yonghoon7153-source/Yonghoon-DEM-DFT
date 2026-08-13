@@ -100,7 +100,7 @@ def hop_frac(hop):
     return (m / 3.0, n / 3.0)
 
 
-def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
+def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25, n1_label=None, n2_label=None):
     """on-N -> N-N bridge -> on-N 대칭 경로. [(xi, fx, fy, fz)] 반환.
 
     최근접 N-N 짝 중 중점이 셀 중앙에 가장 가까운 것을 고른다 (경로가 슬랩 가운데를
@@ -111,9 +111,11 @@ def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
     """
     (a1x, a1y), (a2x, a2y) = lat2d(cell)
     c = cell[2]
-    Ns = [(gx, gy, gz) for _i, el, _l, gx, gy, gz, _j in atoms if el == "N"]
-    ztop = max(g[2] for g in Ns)
-    Ns = [g for g in Ns if g[2] > ztop - 0.02]          # 표면 N 평면만
+    _allN = [((gx, gy, gz), lb) for _i, el, lb, gx, gy, gz, _j in atoms if el == "N"]
+    ztop = max(g[0][2] for g in _allN)
+    _allN = [t for t in _allN if t[0][2] > ztop - 0.02]     # 표면 N 평면만
+    Ns = [t[0] for t in _allN]
+    Nlab = [t[1] for t in _allN]
     if len(Ns) < 2:
         raise ValueError("표면 N 을 2개 이상 못 찾았다")
 
@@ -122,25 +124,44 @@ def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
         dx -= round(dx); dy -= round(dy)
         return (dx * a1x + dy * a2x, dx * a1y + dy * a2y, dx, dy)
 
-    # 최근접 N-N 짝 중 **중점이 셀 중앙에 가장 가까운** 것. adatom 최근접으로 고르면
-    # 경로가 슬랩 가장자리에 붙어 렌더에서 잘린다 (2026-08-12).
-    pairs = []
-    for g1 in Ns:
-        for g2 in Ns:
+    if n1_label:                 # 자리를 못 박는다 — 재생성해도 그림이 안 움직이게
+        g1 = next((g for g, lb in zip(Ns, Nlab) if lb == n1_label), None)
+        if g1 is None:
+            raise ValueError(f"--n1 {n1_label} 을 표면 N 에서 못 찾았다")
+        cand = []
+        for g2, lb2 in zip(Ns, Nlab):
             vx, vy, dx, dy = vec(g1[:2] + (0,), g2)
             d = math.hypot(vx, vy)
-            if not (3.0 < d < 4.2):                       # 최근접 N-N (a = 3.65 A)
-                continue
-            mfx, mfy = g1[0] + 0.5 * dx, g1[1] + 0.5 * dy
-            efx, efy = g1[0] + dx, g1[1] + dy
-            if not all(0.06 < v < 0.94 for v in (g1[0], g1[1], efx, efy, mfx, mfy)):
-                continue                                   # 끝점/중점이 경계에 걸리면 제외
-            cx = (mfx - 0.5) * a1x + (mfy - 0.5) * a2x
-            cy = (mfx - 0.5) * a1y + (mfy - 0.5) * a2y
-            pairs.append((math.hypot(cx, cy), g1, dx, dy))
-    if not pairs:
-        raise ValueError("셀 안쪽에 놓이는 최근접 N-N 짝을 못 찾았다")
-    _c, n1, ddx, ddy = min(pairs, key=lambda t: t[0])
+            if 3.0 < d < 4.2 and (n2_label is None or lb2 == n2_label):
+                cand.append((lb2, d, dx, dy))
+        if not cand:
+            raise ValueError(f"{n1_label} 의 최근접 N 짝을 못 찾았다"
+                             + (f" (--n2 {n2_label})" if n2_label else ""))
+        cand.sort(key=lambda t: t[0])          # 라벨 순 = 결정론적
+        _lb, _d, ddx, ddy = cand[0]
+        n1 = g1
+        picked = (n1_label, _lb)
+    else:
+      # 최근접 N-N 짝 중 **중점이 셀 중앙에 가장 가까운** 것. adatom 최근접으로 고르면
+      # 경로가 슬랩 가장자리에 붙어 렌더에서 잘린다 (2026-08-12).
+      pairs = []
+      for g1 in Ns:
+          for g2 in Ns:
+              vx, vy, dx, dy = vec(g1[:2] + (0,), g2)
+              d = math.hypot(vx, vy)
+              if not (3.0 < d < 4.2):                       # 최근접 N-N (a = 3.65 A)
+                  continue
+              mfx, mfy = g1[0] + 0.5 * dx, g1[1] + 0.5 * dy
+              efx, efy = g1[0] + dx, g1[1] + dy
+              if not all(0.06 < v < 0.94 for v in (g1[0], g1[1], efx, efy, mfx, mfy)):
+                  continue                                   # 끝점/중점이 경계에 걸리면 제외
+              cx = (mfx - 0.5) * a1x + (mfy - 0.5) * a2x
+              cy = (mfx - 0.5) * a1y + (mfy - 0.5) * a2y
+              pairs.append((math.hypot(cx, cy), g1, dx, dy))
+      if not pairs:
+          raise ValueError("셀 안쪽에 놓이는 최근접 N-N 짝을 못 찾았다")
+      _c, n1, ddx, ddy = min(pairs, key=lambda t: t[0])
+      picked = (next(lb for g, lb in zip(Ns, Nlab) if g is n1), "(auto)")
     zN = n1[2]
     out = []
     for xi in xis:
@@ -150,7 +171,7 @@ def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
         fy = n1[1] + xi * ddy
         h = h_bridge + (h_top - h_bridge) * (2 * abs(xi - 0.5)) ** 2   # 대칭, 다리에서 최저
         out.append((xi, fx, fy, zN + h / c))
-    return out
+    return out, picked
 
 
 def min_clearance(atoms, cell, f_min, hop, n=60, z=None):
@@ -374,7 +395,7 @@ def selftest():
     fake = [(1, "N", "N1", 1 / 3, 1 / 3, 0.40, 0), (2, "N", "N2", 2 / 3, 1 / 3, 0.40, 0),
             (3, "N", "N3", 1 / 3, 2 / 3, 0.40, 0)]
     cell0 = [10.95, 10.95, 28.545, 90.0, 90.0, 120.0]
-    op = onN_path(fake, cell0, (0, "Na", "Na1", 0.40, 0.40, 0.46, 0), [0.0, 0.25, 0.5, 0.75, 1.0])
+    op, _pk = onN_path(fake, cell0, (0, "Na", "Na1", 0.40, 0.40, 0.46, 0), [0.0, 0.25, 0.5, 0.75, 1.0])
     chk("onN 경로가 대칭", abs(op[1][3] - op[3][3]) < 1e-12)
     chk("다리(중점)에서 가장 낮음", op[2][3] == min(p[3] for p in op))
     chk("경로 3점이 on-N / bridge / on-N", len(KEY_XI) == 3 and KEY_XI[1] == 0.5)
@@ -417,6 +438,8 @@ def main():
     ap.add_argument("--report", action="store_true", help="각 프레임 N 배위 거리 출력")
     ap.add_argument("--allow_collision", action="store_true",
                     help="N 관통 경로도 강행 (진단 전용 — 그림으로 쓰지 말 것)")
+    ap.add_argument("--n1", help="시작 on-N 의 사이트 라벨 (예 N20) — 고정하면 그림이 안 움직인다")
+    ap.add_argument("--n2", help="끝 on-N 의 사이트 라벨 (예 N36)")
     ap.add_argument("--onN", action="store_true",
                     help="on-N -> N-N bridge -> on-N 대칭 경로 (최근접 N-N). 표시 전용")
     ap.add_argument("--h_top", type=float, default=1.90, help="on-N 위 adatom 높이 (A)")
@@ -456,7 +479,9 @@ def main():
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
     if a.onN:
-        pts = onN_path(atoms, cell, ad, xis, h_top=a.h_top, h_bridge=a.h_bridge)
+        pts, picked = onN_path(atoms, cell, ad, xis, h_top=a.h_top, h_bridge=a.h_bridge,
+                               n1_label=a.n1, n2_label=a.n2)
+        print(f"   사용한 표면 N: {picked[0]} -> {picked[1]}   (--n1/--n2 로 고정 가능)")
         xi_ts = 0.5
         # onN 은 끝점이 일부러 N 바로 위(결합거리)다 -> 격자 병진용 가드 대신
         # "경로 최저 Li-N 이 결합거리 아래로 내려가지 않는가" 로 본다
@@ -497,7 +522,10 @@ def main():
         name = f"li3n_hop_xi{int(round(xi * 100)):03d}_adNa_display.vesta"
         dst = os.path.join(a.outdir, name)
         write_frame(lines, ad[6], "Na", "Na1", fx, fy, fz, dst)
-        note = "  <- 계산된 구조" if abs(xi) < 1e-9 or abs(xi - round(xi_ts, 1)) < 1e-9 else ""
+        if a.onN:      # onN 은 전부 표시용 — 계산된 구조가 하나도 없다
+            note = "  ★ 강조점" if any(abs(xi - v) < 1e-6 for v in KEY_XI) else ""
+        else:
+            note = "  <- 계산된 구조" if abs(xi) < 1e-9 or abs(xi - round(xi_ts, 1)) < 1e-9 else ""
         print(f"-> {dst}  xi={xi:.2f}  frac=({fx:.4f},{fy:.4f},{fz:.4f}){note}")
         if a.report:
             r = neighbours(atoms, cell, fx, fy, fz, "N", 3.0)
