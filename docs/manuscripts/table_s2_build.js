@@ -85,7 +85,16 @@ const doc = new Document({
       p("", { after: 140 }),
       p("Both surfaces use identical electronic-structure settings, so the two barriers are directly comparable. On Li₃N(001) the pronounced adsorbate-induced relaxation of the soft ionic surface destabilised elastic-band calculations, so the barrier was evaluated from two independently converged constrained relaxations instead.",
         { after: 110 }),
-      p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound. The Li₃N(001) value of 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [54]."),
+      p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound. The Li₃N(001) value of 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [54].",
+        { after: 160 }),
+
+      p("References.", { bold: true, after: 60 }),
+      p("Calculations were performed with Quantum ESPRESSO [43] using the PBE exchange–correlation functional [44] with ultrasoft [45] and projector augmented-wave pseudopotentials (P. E. Blöchl, Phys. Rev. B 50 (1994) 17953), and Marzari–Vanderbilt cold smearing (N. Marzari, D. Vanderbilt, A. De Vita, M. C. Payne, Phys. Rev. Lett. 82 (1999) 3296).",
+        { size: 17, after: 80 }),
+      p("The LiC₆(0001) migration path was obtained with the climbing-image nudged elastic band method [40] from an image-dependent pair potential initial guess (S. Smidstrup, A. Pedersen, K. Stokbro, H. Jónsson, J. Chem. Phys. 140 (2014) 214106), using the UMA machine-learned interatomic potential [41] as implemented in the Atomic Simulation Environment [42].",
+        { size: 17, after: 80 }),
+      p("Pseudopotentials: Li from the GBRV library (K. F. Garrity, J. W. Bennett, K. M. Rabe, D. Vanderbilt, Comput. Mater. Sci. 81 (2014) 446); N and C from PSlibrary (A. Dal Corso, Comput. Mater. Sci. 95 (2014) 337).",
+        { size: 17 }),
     ],
   }],
 });
