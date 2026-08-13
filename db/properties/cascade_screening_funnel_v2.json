@@ -273,7 +273,7 @@
    "id": "G4",
    "name": "li_transport",
    "label": "정적 Li-환경 프록시 (BVS + 4 Å foreign-center)",
-   "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) with blocking<0.6 게이트, 탈락자 0.05 평탄화. ⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례한다 (host 원소만 든 종은 0.0 으로 자동 통과 — 판정 아님).",
+   "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @ 라벨 x005) with blocking<0.6 게이트, 탈락자 0.05 평탄화. ⛔ **순환**: blocking 컷을 못 넘으면 BVS 값을 버리고 norm 을 0.05 로 강제한다 — 컷 0.3 보다 낮으므로 blocking 탈락 = G4 탈락이 결정론적으로 따라온다. '두 독립 신호가 일치했다'로 읽으면 안 된다. ⚠ 라벨 x002/x005/x010 은 셋 다 실측 x=0.25 다 — 'x=0.05' 가 아니다. ⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례한다 (host 원소만 든 종은 0.0 으로 자동 통과 — 판정 아님).",
    "threshold": "transport_norm > 0.3",
    "concentration_convention": "x=0.05 단일 (litransport *_x005 — 농도 평균 아님)",
    "threshold_basis": "두 겹이고, **선택압의 거의 전부가 첫 겹에서 나온다**. ① blocking<0.6 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계)이지만 host 앵커도 문헌 대응도 없는 **상속 상수**다 — G4 단독 탈락 36종 중 31종이 이 상수에 죽고, bvs 컷(0.3) 단독 기여는 5종(B2O3, GeO2, MgI2, Sb2S3, ZrCl4)뿐이다. ② 0.3 컷은 통과자 분포 **하위 꼬리의 공백 구간**(GeO2 0.2724 ↔ YCl3 0.3537, 폭 0.0813) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.1↔0.1998 = 0.0998, 그 다음이 0.3633↔0.4493 = 0.086, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. → threshold_sensitivity 의 G4_li_transport(bvs 컷) **와 G4_blocking(상속 상수) 스윕을 반드시 함께 볼 것** — 코어 생존자 수는 blocking 컷만 흔들어도 6↔21 로 움직인다.",

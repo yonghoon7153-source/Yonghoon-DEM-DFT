@@ -184,11 +184,23 @@ def write_esw_csv(rows, path, src):
             w.writerow([r[k] for k in rows[0]])
 
 
-#: gate 입력으로 실제로 쓰이는 열. 하나라도 비면 그 (종, 라벨) 은 평가에 못 들어간다.
+#: gate 입력으로 **실제로** 쓰이는 열. 하나라도 비면 그 (종, 라벨) 은 평가에 못 들어간다.
+#
+#  ⛔ 2026-08-14 정정 (Codex 리뷰 P0-3). 처음 판은 `eos_B0_GPa` 를 넣고
+#  `elastic_pugh_GoverB` 를 뺐는데 **둘 다 거꾸로**였다. build_screening_funnel.py 의
+#  load_pool() 이 게이트에 쓰는 값은 de · ox_V/window_V · bvs · blocking · E_GPa ·
+#  **pugh(GoverB, G5 연성축)** 이고, `eos_B0_GPa` 는 **어느 게이트도 쓰지 않는다**
+#  (화면 표시용). 그래서 옛 71/18/1 은 gate completeness 가 아니었다.
 GATE_INPUT_COLS = {
-    "champions":   ["rerank_de_post_anneal", "elastic_E_young_GPa", "eos_B0_GPa"],
-    "litransport": ["bvs_li_proxy_score", "tier2_dopant_blocking_fraction"],
+    "champions":   ["rerank_de_post_anneal",      # → ranked.de   (G1 안정성)
+                    "elastic_E_young_GPa",        # → ranked.E_GPa (G5 기계)
+                    "elastic_pugh_GoverB"],       # → ranked.pugh  (G5 연성)
+    "litransport": ["bvs_li_proxy_score",         # → G4 transport_norm
+                    "tier2_dopant_blocking_fraction"],  # → G4 blocking 게이트
 }
+#: 게이트가 **안 쓰는데** champions csv 에 있는 열 — 완결성 판정에 넣지 않는다.
+NON_GATE_COLS = ["eos_B0_GPa", "eos_fit_quality_ok", "anneal_dV_pct",
+                 "elastic_B_hill_GPa", "elastic_G_hill_GPa", "elastic_poisson_nu"]
 
 
 def audit_completeness(champ_rows, lit_rows, esw_rows):
@@ -241,6 +253,12 @@ def audit_completeness(champ_rows, lit_rows, esw_rows):
         "n_esw": len(esw_sp), "n_evaluable": len(esw_sp) - len(dropped),
         "n_complete": len(complete), "dropped": dropped, "partial": partial,
         "gate_input_cols": GATE_INPUT_COLS,
+        "non_gate_cols": NON_GATE_COLS,
+        "gate_input_basis": (
+            "build_screening_funnel.py load_pool() 이 게이트에 실제로 넣는 값만 센다: "
+            "de(G1) · E_GPa·pugh(G5) · bvs·blocking(G4). "
+            "⛔ eos_B0_GPa 는 어느 게이트도 쓰지 않는다 — 2026-08-14 이전 판은 그것을 세고 "
+            "pugh 를 빼서 gate completeness 가 아니었다 (Codex 리뷰 P0-3)."),
     }
 
 

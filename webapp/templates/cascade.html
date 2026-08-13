@@ -14,6 +14,16 @@
 {% for row in (t.data or []) %}<tr>{% for c in cols %}<td class="{% if row[c] is number %}num{% endif %}">{% if mo_col and c == mo_col and row[c] in modb %}<span class="mo-click" role="button" tabindex="0" title="클릭 → 분자오비탈" onclick="openMO('{{ row[c] }}')" onkeydown="_kbd(event)">{{ row[c] }}</span>{% else %}{{ num(row[c]) }}{% endif %}</td>{% endfor %}</tr>{% endfor %}
 </tbody></table></div>{% endmacro %}
 
+{# ⛔ 2026-08-14 (Codex 리뷰 P0-4) — 47종/수작업 축이 archive 표시 없이 current 탭처럼
+   살아 있었다. 모든 남은 탭에 **무엇으로 만든 표인지 + 왜 결과가 아닌지**를 붙인다. #}
+{% macro tabstate(kind, source, why) %}
+<div class="callout {{ 'cal-danger' if kind == 'superseded' else 'cal-warning' }}" style="margin:0 0 12px;font-size:.83rem">
+  <b>{% if kind == 'superseded' %}🗄 superseded — 결과로 인용하지 말 것{% else %}⚠ 미검증 — 결과로 인용하지 말 것{% endif %}</b>
+  <span class="mono muted" style="margin-left:6px">{{ source }}</span>
+  <div style="margin-top:5px">{{ why|bold }}</div>
+</div>
+{% endmacro %}
+
 {% block content %}
 {# 색은 style.css 의 --grp-* 토큰 (테마 따라감) — JS 리터럴 하드코딩 금지 #}
 {% set gcol = {'TM':'var(--grp-tm)','lanthanide':'var(--grp-lanthanide)','main-group':'var(--grp-main)','alk.earth':'var(--grp-alkearth)','alkali':'var(--grp-alkali)'} %}
@@ -146,9 +156,8 @@
       <tr><td><span class="badge ok">complete</span></td><td class="mono">{{ VA.n_complete }}</td>
           <td style="font-size:.86em">모든 농도 라벨에서 gate 입력이 다 있음</td></tr>
       <tr><td><span class="badge warn">partial</span></td><td class="mono">{{ VA.partial|length }}</td>
-          <td style="font-size:.86em">일부 라벨 결측 → <b>남은 라벨 평균</b>으로 평가됨.
-            그중 <b class="mono">MgI2</b> 는 champion 2/3 · litransport <b>2/3</b> 로 두 축 다 빈다.<br>
-            <span class="mono" style="font-size:.92em">{{ VA.partial.keys()|sort|join(' ') }}</span></td></tr>
+          <td style="font-size:.86em">일부 라벨 결측 → <b>남은 라벨 평균</b>으로 평가됨:
+            {% for sp, why in VA.partial.items() %}<b class="mono">{{ sp }}</b> — {{ why }}{% endfor %}</td></tr>
       <tr><td><span class="badge err">dropped</span></td><td class="mono">{{ VA.dropped|length }}</td>
           <td style="font-size:.86em">{% for sp, why in VA.dropped.items() %}<b class="mono">{{ sp }}</b> — {{ why }}{% endfor %}</td></tr>
     </tbody></table></div>
@@ -169,6 +178,35 @@
       <th>대상</th><th>정정</th></tr></thead><tbody>
     {% for what, txt in RF %}<tr><td><b>{{ what }}</b></td><td style="font-size:.86em">{{ txt|bold }}</td></tr>{% endfor %}
     </tbody></table></div>
+  </div>
+  {% endif %}
+
+  {% set SB = ((casc.v2 or {}).meta or {}).score_blockers %}
+  {% if SB %}
+  <div class="card">
+    <h3>90종 랭킹이 왜 확정이 아닌가 <span class="muted" style="font-weight:400;font-size:.8rem">막고 있는 건 결측이 아니다</span></h3>
+    <div class="callout cal-warning" style="margin:0 0 10px;font-size:.83rem">
+      <b>완결성은 사실상 해결됐다</b> — 완전 88 · 부분 1(MgI₂) · 전면결측 1(AlI₃).
+      89종 랭킹은 <span class="mono">cascade_v23_ranked_v2.csv</span> 로 <b>지금 내려받을 수 있다</b>.
+      확정을 막는 건 아래 <b>점수·게이트의 타당성</b>이다.
+    </div>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>blocker</th><th>내용</th></tr></thead><tbody>
+    {% for what, why in SB %}<tr><td><b>{{ what }}</b></td><td style="font-size:.86em">{{ why|bold }}</td></tr>{% endfor %}
+    </tbody></table></div>
+    {% if ((casc.v2 or {}).meta or {}).ali3_fallback %}
+    <div class="muted" style="font-size:.78rem;margin-top:8px">
+      <b>90번째(AlI₃)를 넣는 유일한 경로</b> — {{ casc.v2.meta.ali3_fallback|bold }}</div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {% if casc.g4.circularity %}
+  <div class="card">
+    <h3>⛔ G4 는 독립 두 신호의 AND 가 아니다 <span class="muted" style="font-weight:400;font-size:.8rem">build_screening_funnel.py:139–142</span></h3>
+    <pre class="mono" style="font-size:.76rem;background:var(--bg);padding:10px;border-radius:6px;overflow-x:auto">{{ casc.g4.circularity.code }}</pre>
+    <div style="font-size:.85rem;margin-top:6px">{{ casc.g4.circularity.why_it_matters|bold }}</div>
+    <div class="muted" style="font-size:.78rem;margin-top:4px">{{ casc.g4.circularity.consequence }}</div>
   </div>
   {% endif %}
 
@@ -252,7 +290,11 @@
     <b>🗄 superseded — 이 깔때기는 {{ POOL }}종판이다.</b>
     90종 회수 후 waterfall 은 <span class="mono">89–89–84–45–28–1</span> 로 바뀌었고(정본 47종판은
     <span class="mono">47–47–43–25–11–1</span>), 그마저 <b>미검증 진단물</b>이다 — 결측 19종을 안고 있다.
-    아래 게이트 <b>정의·순서민감도 논증은 그대로 유효</b>하지만 <b>통과 수치는 옛것</b>이다.
+    <b>⛔ 그리고 게이트 정의 자체가 미해결이다</b> — 아래 순서민감도 논증은 "순서를 바꾸면 중간 수가
+    달라진다"는 사실만 보이는 것이고, 게이트가 옳다는 뜻이 아니다:
+    <b>G3</b> 는 경쟁상 phase set(mp-ID·MP 스냅샷)이 기록돼 있지 않고,
+    <b>G4</b> 는 blocking 이 BVS 를 덮어쓰는 순환 합성값이며,
+    <b>G5</b> 는 median 컷이라 <b>풀이 바뀌면 문턱이 같이 움직인다</b>(47종↔89종 비교 불가).
     현행 상태는 <b>📋 현황·감사</b>, 90종 waterfall 은 <b>🔁 90종 회수분</b> 탭.
   </div>
 
@@ -507,6 +549,7 @@
 {% if casc.stability %}
 {% set S = casc.stability %}
 <div class="tab-panel" id="tab-stab">
+  {{ tabstate("unvalidated", "cascade_stability_axes_verdict.json (47종 위 후처리)", "T9–T11 은 **47종 풀 위에서 돌린 후처리 축**이다. 90종 회수분으로는 다시 안 돌렸다. 게이트 후보(G6/G7)로 제안된 단계이지 채택된 게이트가 아니다.") }}
   <div class="callout cal-danger">
     <b>이 탭의 데이터가 우리 자신의 판정 하나를 뒤집었다.</b>
     2026-07-28 M6 에서 <b>양극 상대만</b> 계산하고 "89/94 통과, unique_kill 0 → vacuous 게이트"라고
@@ -573,6 +616,7 @@
 <!-- 🎯 테마 — 테마별 재구성 + 조합(기하평균) UI -->
 {% if casc.themes %}
 <div class="tab-panel" id="tab-theme">
+  {{ tabstate("superseded", "cascade_v23_themes.json (47종)", "테마 norm 은 **47종 min–max 정규화**라 풀이 바뀌면 값이 통째로 바뀐다. 90종판은 cascade_v23_themes_v2.json 에 있고 아직 화면에 연결하지 않았다. 그리고 ionic_transport 테마는 G4 와 같은 순환(blocking 이 BVS 를 덮어씀)을 물려받는다.") }}
   <div class="callout cal-warning" style="margin:0 0 12px">
     <div class="cal-t">⚠ 큐레이션 값 포함</div>
     <div class="cal-b" style="font-size:.8rem">{{ casc.themes.curation_disclaimer }}</div>
@@ -628,6 +672,7 @@
 
 <!-- Champions -->
 <div class="tab-panel" id="tab-champ">
+  {{ tabstate("superseded", "cascade_v23_champions.csv (141행 · 47종)", "90종판은 cascade_v23_champions_v2.csv (270행) 이고 🔁 탭에서 내려받을 수 있다. 이 표는 대조용으로 남긴 옛 판이다.") }}
   <div class="card">
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
       <h3 style="margin:0">상위 후보 정밀화 (champions) — EOS · 탄성 · anneal</h3>
@@ -673,16 +718,27 @@
 </div>
 
 <!-- Oxidation ESW -->
+{# ⛔ 2026-08-14 (Codex 리뷰 P0-2) — 탭 배지는 90종인데 표는 47종 파일을 읽고 있었다.
+     v2 가 있으면 v2 를 쓰고, 없을 때만 v1 로 내려간다. 어느 쪽인지 화면에 적는다. #}
 <div class="tab-panel" id="tab-esw">
+  {% set ESW = (casc.v2.oxidation if (casc.v2 and casc.v2.present and casc.v2.oxidation) else casc.oxidation) %}
+  {% set ESW_IS_V2 = (casc.v2 and casc.v2.present and casc.v2.oxidation) %}
+  <div class="callout {{ 'cal-warning' if ESW_IS_V2 else 'cal-danger' }}" style="margin:0 0 12px;font-size:.83rem">
+    {% if ESW_IS_V2 %}<b>✅ 90종 전수 (oxidation_stability_cascade_v2.csv · {{ (ESW.data or [])|length }}행).</b>
+      옛 141건과 ox_V 차이 0 — 드리프트 없음.
+    {% else %}<b>⚠ v2 파일이 없어 47종판을 표시 중이다.</b>{% endif %}
+    <div style="margin-top:6px"><b>⛔ 재현성 한계 (v1·v2 공통)</b> — {{ casc.v2.meta.esw_limits }}</div>
+  </div>
   <div class="card">
     <h3>Grand-potential 전기화학 안정성창(ESW) <span class="muted" style="font-weight:400;font-size:.8rem">도펀트명 클릭 = 분자오비탈</span></h3>
-    {{ gtable(casc.oxidation, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note'], mo_col='dopant', modb=mo_db) }}
+    {{ gtable(ESW, ['dopant','anion','valence','group','ox_V','red_V','ocv_V','window_V','clrich_ox_V','note'], mo_col='dopant', modb=mo_db) }}
     <div class="muted" style="font-size:.74rem;margin-top:6px">MP-hull(GGA/GGA+U) 기반 → elastic/EOS 재계산과 무관. collapse(window&lt;0.05V)=후기전이금속 회피. <b>clrich_ox_V</b> = Cl-rich <b>변형 조성</b>의 grand-potential onset(3종만 산출) — 우리 canonical 호스트 축(comp1 Cl1.0 vs modelc Cl1.6)에서는 onset이 2.14 V로 <b>동일</b>하다(S²⁻-pin, oxidation_stability.json). 축을 명시하지 않고 'Cl-rich가 더/덜 산화안정'이라고 쓰지 말 것.</div>
   </div>
 </div>
 
 <!-- Synergy (v1 휴리스틱 + ML v2 교호작용) -->
 <div class="tab-panel" id="tab-syn">
+  {{ tabstate("unvalidated", "cascade_v23_synergy_pairs.csv (v1 휴리스틱) + codoping_ml_v2", "⛔ **explicit pair 라벨이 0개다** — 실제로 두 도펀트를 함께 넣고 계산한 셀이 하나도 없다. 전부 단일 도펀트 프록시에서 만든 **가설**이고 교호작용은 모델 외삽이다. 그리고 47종 풀 위의 1,081 pair 다 — 90종이면 C(90,2)=4,005 로 바뀐다.") }}
   <div class="card">
     <h3>공동도핑 시너지 — v1 휴리스틱 <span class="muted" style="font-weight:400;font-size:.8rem">단일도펀트 프록시 기반 가설 — 미검증</span></h3>
     {{ gtable(casc.synergy, ['rank','pairA','pairB','synergy','joint_window_V','gain_vs_best_single','radius_match','avg_stab','tags']) }}

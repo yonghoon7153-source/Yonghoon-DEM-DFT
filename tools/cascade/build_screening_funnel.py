@@ -268,8 +268,13 @@ def build_gates(rows):
             "label": "정적 Li-환경 프록시 (BVS + 4 Å foreign-center)",
             "label_note": ("⛔ 이온전도 측정이 아니다. 옛 라벨 'Li 수송 유지' 는 폐기 — "
                            "이 게이트에 MD 확산계수·NEB 장벽·σ 는 하나도 들어가지 않는다."),
-            "metric": ("ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) "
+            "metric": ("ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @ 라벨 x005) "
                        f"with blocking<{BLOCKING_GATE} 게이트, 탈락자 {GATE_FLOOR} 평탄화. "
+                       "⛔ **순환**: blocking 컷을 못 넘으면 BVS 값을 버리고 norm 을 "
+                       f"{GATE_FLOOR} 로 강제한다 — 컷 {TRANSPORT_CUT} 보다 낮으므로 "
+                       "blocking 탈락 = G4 탈락이 결정론적으로 따라온다. "
+                       "'두 독립 신호가 일치했다'로 읽으면 안 된다. "
+                       "⚠ 라벨 x002/x005/x010 은 셋 다 실측 x=0.25 다 — 'x=0.05' 가 아니다. "
                        "⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 "
                        "파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 "
                        "다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. "

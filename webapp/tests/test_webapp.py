@@ -679,6 +679,48 @@ def test_superseded_and_diagnostic_tabs_are_labelled():
         assert d.get("status") == want, f"{f} status={d.get('status')} — {want} 이어야 한다"
 
 
+def test_esw_tab_reads_the_file_its_badge_claims():
+    """탭 배지는 90종인데 표는 47종 파일을 읽고 있었다 (Codex 리뷰 P0-2)."""
+    casc = D.load_cascade()
+    v2ox = (casc.get("v2") or {}).get("oxidation") or {}
+    assert len(v2ox.get("data") or []) == 90, "ESW v2 가 90행이 아니다"
+    assert len(casc["oxidation"].get("data") or []) < 90, "v1 이 90행이면 이 대비가 무의미"
+    h = _cascade_html()
+    assert "oxidation_stability_cascade_v2.csv" in h, "ESW 탭이 어느 파일을 쓰는지 안 적혀 있다"
+    assert "mp-ID" in h, "ESW phase-set 미기록 한계가 화면에 없다"
+
+
+def test_page_scope_names_the_real_host_and_concentration():
+    """호스트는 Cl:P=1.0 (Li6PS5Cl 계열)이고 라벨 x002/x005/x010 은 셋 다 실측 x=0.25 다."""
+    s = D.CASCADE_META["scope"]
+    assert "Li₆PS₅Cl" in s and "Cl:P = 1.0" in s, f"호스트 표기가 틀렸다: {s}"
+    assert "0.25" in s, "농도 라벨 정정이 scope 에 없다"
+    assert "Li₅.₄PS₄.₄Cl₁.₆" not in s, "Model C 로 되돌아갔다"
+    for f in ("cascade_screening_funnel.json", "cascade_screening_funnel_v2.json"):
+        g4 = [g for g in json.loads((D.DB / "properties" / f).read_text(encoding="utf-8"))["gates"]
+              if g["id"] == "G4"][0]
+        assert "@x=0.05)" not in g4["metric"], f"{f} G4 metric 이 'x=0.05' 로 되돌아갔다"
+
+
+def test_g4_circularity_is_stated():
+    """blocking 탈락자는 transport_norm 이 0.05 로 강제된다 — 두 독립 신호가 아니다 (P0-5)."""
+    src = (ROOT / "tools" / "cascade" / "build_screening_funnel.py").read_text(encoding="utf-8")
+    assert "n = GATE_FLOOR" in src, "순환을 만드는 코드가 사라졌다 — 이 테스트를 갱신할 것"
+    assert D.G4_DECOMP.get("circularity"), "G4_DECOMP 에 순환 설명이 없다"
+    h = _cascade_html()
+    assert "독립 두 신호의 AND 가 아니다" in h, "G4 순환이 화면에 없다"
+
+
+def test_remaining_tabs_declare_their_state():
+    """champions·themes·stability·co-doping 이 archive 표시 없이 current 처럼 뜨면 안 된다 (P0-4)."""
+    h = _cascade_html()
+    for panel, probe in [("tab-champ", "cascade_v23_champions.csv (141행 · 47종)"),
+                         ("tab-theme", "cascade_v23_themes.json (47종)"),
+                         ("tab-stab", "47종 풀 위에서 돌린 후처리 축"),
+                         ("tab-syn", "explicit pair 라벨이 0개다")]:
+        assert probe in h, f"{panel} 에 상태 배너가 없다"
+
+
 def test_g4_is_not_called_li_transport():
     """G4 는 정적 프록시 두 개다. '전도도를 쟀다'로 읽히는 이름을 되살리지 말 것."""
     h = _cascade_html()
@@ -706,11 +748,27 @@ def test_v2_json_text_does_not_inherit_47_species():
     assert d["pool_provenance"]["pool_size"] == 89, "v2 풀 크기가 89 가 아니다"
 
 
+def test_gate_audit_counts_only_columns_the_gates_use():
+    """옛 감사는 gate 가 **안 쓰는** eos_B0_GPa 를 세고 쓰는 pugh 를 빼서 18종을 부분결측으로
+    만들었다 (Codex 리뷰 P0-3). 게이트 입력 정의가 다시 어긋나면 여기서 잡는다."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "rpi", ROOT / "tools" / "cascade" / "rebuild_pool_inputs.py")
+    rpi = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rpi)
+    champ = set(rpi.GATE_INPUT_COLS["champions"])
+    assert "elastic_pugh_GoverB" in champ, "G5 연성축(pugh)이 gate 입력에서 빠졌다"
+    assert "eos_B0_GPa" not in champ, "eos_B0_GPa 는 어느 게이트도 쓰지 않는다 — 세면 안 된다"
+    assert "eos_B0_GPa" in rpi.NON_GATE_COLS
+
+
 def test_missing_gate_inputs_are_on_the_default_screen():
-    """AlI3 전면 결측 · 부분 결측 18종 · blocking=0 아티팩트는 기본 화면에 떠 있어야 한다."""
+    """AlI3 전면 결측 · MgI2 부분 결측 · blocking=0 아티팩트는 기본 화면에 떠 있어야 한다."""
     h = _cascade_html()
     aud = json.loads((D.DB / "properties" / "cascade_pool_audit_v2.json").read_text(encoding="utf-8"))
-    assert aud["n_evaluable"] == 89 and len(aud["dropped"]) == 1 and len(aud["partial"]) == 18
+    assert aud["n_esw"] == 90 and aud["n_evaluable"] == 89
+    assert list(aud["dropped"]) == ["AlI3"] and list(aud["partial"]) == ["MgI2"]
+    assert aud["n_complete"] == 88
     head = h.split('id="tab-esw"')[0]          # 기본(감사) 화면 범위 안에서만 찾는다
     for probe in ("AlI3", "MgI2", "Li2S", "LiCl"):
         assert probe in head, f"{probe} 가 기본 감사 화면에 없다"

@@ -894,8 +894,10 @@ CASCADE_FILES_V2 = {
 CASCADE_V2_META = {
     # ⛔ 2026-08-14 Codex 감사 반영 — "90종 funnel" 은 과장이었다.
     #    ESW 는 90종이지만 gate 입력이 비면 조용히 빠진다: AlI₃ 전면 결측 → 랭킹·깔때기 89종.
-    #    부분 결측 18종은 남은 라벨 평균으로 평가돼 있다. 화면은 이 구분을 그대로 쓴다.
-    "headline": "90종 회수 → 89종 부분평가 (전면 결측 1 · 부분 결측 18)",
+    #    부분 결측종은 남은 라벨 평균으로 평가돼 있다. 화면은 이 구분을 그대로 쓴다.
+    #: ⛔ 2026-08-14 두 번째 정정 (Codex P0-3). 옛 "부분 결측 18" 은 gate 가 **안 쓰는**
+    #:  eos_B0_GPa 를 세고 실제로 쓰는 pugh 를 빼서 나온 허수였다. 바로잡으니 1종(MgI₂)이다.
+    "headline": "90종 회수 → 89종 평가 가능 (완전 88 · 부분 결측 1 MgI₂ · 전면 결측 1 AlI₃)",
     "scope": "완주한 전체 90종 · 270 champion (273 슬롯 중 270 완주; As₂S₃ 3건은 stage-01 seed 실패)",
     #: ✅ 2026-08-14 해소 — 빌더가 풀 크기를 하드코딩하던 것을 NP 로 바꿔 두 판을 다시 만들었다.
     #:  그 과정에서 47종 문안이 숨기고 있던 사실 하나가 드러났다(아래 recovered_facts).
@@ -907,7 +909,10 @@ CASCADE_V2_META = {
     "recovered_facts": [
         ("연성 경험칙", "47종에서는 'B/G>1.75 를 넘는 종이 하나도 없다' 가 참이었다. 90종 회수분에서는 "
                     "**Na₂S 가 B/G 2.50** 으로 넘는다 (로스터 B/G 범위 0.98→2.50). "
-                    "⚠ Na₂S 는 부분 결측 18종 중 하나라 연성 판정으로 인용 금지 — 서술만 정정한다."),
+                    "⚠ UMA 상대값이라 연성 판정으로 인용 금지 — 서술만 정정한다."),
+        ("결측 규모", "옛 감사가 말한 '부분 결측 18종' 은 **허수**였다 — gate 가 안 쓰는 eos_B0_GPa 를 "
+                  "세고 실제로 쓰는 pugh 를 빼서 나온 수다. 바로잡으면 부분 결측은 **MgI₂ 1종**이고 "
+                  "88종이 완전하다 (Codex 리뷰 P0-3)."),
         ("G4 라벨", "'Li 수송 유지' 라는 게이트 이름을 폐기했다. 입력은 legacy BVS(Adams-2003) + "
                   "4 Å foreign-center count 두 정적 프록시뿐이고 MD·NEB 는 하나도 안 들어갔다."),
     ],
@@ -917,14 +922,33 @@ CASCADE_V2_META = {
     "status": {
         # 축별 완성도를 다르게 표시한다 — 89종 파생을 90종 최종판처럼 보이게 하지 않는다.
         "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수 회수"),
-        "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
-        "ranked":    ("incomplete", "recovered / incomplete — 89 of 90. AlI₃ 는 gate 입력(형성에너지·"
-                                    "탄성·BVS)이 전면 결측이라 ESW 만 있고 랭킹에 못 들어간다"),
-        "funnel":    ("partial",    "89종 **부분평가** waterfall 89–89–84–45–28–1 (정본 47종판 "
-                                    "47–47–43–25–11–1). ⚠ 18종은 일부 농도 라벨이 결측이라 남은 "
-                                    "라벨 평균으로 평가됐다 — '90종 funnel' 이 아니다"),
+        "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음). "
+                                    "⚠ 단 phase-set 재현성은 v1·v2 **공통 미보유** — 아래 esw_limits"),
+        "ranked":    ("incomplete", "89 of 90 — 완결성은 사실상 해결(완전 88 · 부분 1 MgI₂). "
+                                    "AlI₃ 만 champion(rank_combined==1) 에 gate 입력이 없다. "
+                                    "⛔ 남은 blocker 는 결측이 아니라 **점수의 타당성**이다 — score_blockers 참조"),
+        "funnel":    ("partial",    "89종 waterfall 89–89–84–45–28–1 (47종판 47–47–43–25–11–1). "
+                                    "⛔ 게이트 정의 자체가 미해결: G4 순환(blocking 이 BVS 를 덮어씀) · "
+                                    "G5 median 컷이 로스터 의존 · G3 phase set 미기록"),
         "figures":   ("partial",    "docs/figures/cascade_v2/ — insights 1종만 재생성, 나머지 18종 대기"),
     },
+    #: ESW 의 재현성 한계 — **v2 회귀가 아니라 v1·v2 공통**이다 (Codex 리뷰 지적 확인).
+    "esw_limits": ("반응식은 화학식 문자열로만 남고 **경쟁상의 mp-ID·MP 스냅샷 버전이 기록돼 있지 않다**"
+                   " (v1 141건·v2 270건 모두 같은 필드셋). 같은 onset 을 다시 만들려면 MP 를 다시 "
+                   "질의해야 하고, 그 사이 hull 이 바뀌면 값이 달라질 수 있다 — 재현 가능한 인용을 "
+                   "하려면 entry id 를 남기도록 esw_cascade_batch.py 를 고쳐 다시 돌려야 한다."),
+    #: ⛔ "왜 90종 랭킹을 확정 안 하나" 에 대한 답 — 결측이 아니라 **점수**가 막고 있다.
+    "score_blockers": [
+        ("G4 순환", "blocking 컷 탈락자는 transport_norm 이 0.05 로 강제돼 BVS 값이 버려진다. "
+                  "두 독립 신호의 AND 가 아니라 한 신호가 다른 신호를 덮어쓴 합성값이다."),
+        ("G5 로스터 의존", "기계 게이트가 median 컷이라 **풀이 바뀌면 문턱이 같이 움직인다.** "
+                       "47종 판과 89종 판의 G5 통과자를 같은 기준으로 비교할 수 없다."),
+        ("가중치 수작업", "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window 는 "
+                     "물리에서 유도한 값이 아니라 손으로 정한 값이다. soft+ductile 0.35 는 "
+                     "'연질일수록 좋다'는 단조 가정인데 bucci2017 이 반증한다."),
+        ("ox_V 축퇴", "호스트 S²⁻ 가 onset 을 pin 해서 여러 종이 같은 ox_V 로 뭉친다 — 변별력이 낮다."),
+        ("절대값 부풀림", "UMA 탄성이 실험(AFM/UPE 12–22 GPa) 대비 높다. 캐스케이드 내부 상대비교만 유효."),
+    ],
     #: 90종 waterfall 에서 **판정이 아닌 이유로** 통과한 종. 화면에 반드시 병기한다.
     "artifacts": {
         "Li2S": "blocking = 0.0 (구성 원소가 전부 host Li/P/S/Cl → dopant 원자 0개). 판정 아님",
@@ -940,28 +964,39 @@ CASCADE_V2_META = {
                      "SnS2", "WO3", "YCl3", "ZnO"],
         "gate_power": {"G1": (0, 0), "G2": (5, 0), "G3": (44, 5), "G4": (36, 7)},
         "note": ("G1 은 90종에서도 0종 탈락 — vacuous 판정 유지. G2 도 unique kill 0. "
-                 "G3·G4 만 고유 기여가 있다 (각 5 · 7종)."),
+                 "G3·G4 만 고유 기여가 있다 (각 5 · 7종). "
+                 "⚠ G4 의 36종 탈락은 blocking kill 과 bvs kill 이 섞인 수다 — 순환 때문에 "
+                 "분리해서 인용해야 한다 (funnel JSON 의 G4 selection_pressure 블록)."),
     },
+    #: AlI₃ 를 90번째로 넣을 수 있는 유일한 경로 — **비-champion 대체**. 쓰려면 명시해야 한다.
+    "ali3_fallback": ("AlI₃ 는 rank_combined==1 (champion) 행에 탄성·EOS·BVS 가 없지만 "
+                      "**rank_combined==2 행에는 전부 있다**(E 45.05·43.60·42.21 GPa, B0 20.98·17.04·18.03). "
+                      "그 행으로 대체하면 90/90 이 되지만, 다른 종은 champion 인데 AlI₃ 만 2위 배치가 되어 "
+                      "**동일 기준 비교가 깨진다.** 쓰려면 표에 그 사실을 병기할 것. "
+                      "(같은 상황인 다른 종은 La₂O₃+Clrich 변형 하나뿐 — 종 수준에선 AlI₃ 단 1건.)"),
     "downloads": [
         ("db/properties/cascade_v23_all.csv",                "전체 원자료 (90종 · 3615행 · 102열)"),
         ("db/properties/cascade_v23_champions_v2.csv",       "champion 270행"),
         ("db/properties/cascade_v23_litransport_v2.csv",     "G4 정적 프록시 270행 (BVS + 4 Å blocking) ⚠ 전도도 아님"),
         ("db/properties/oxidation_stability_cascade_v2.csv", "grand-potential ESW 90종"),
         ("db/properties/oxidation_stability_cascade_v2.json","ESW 원본 (분해 반응식 포함, 270 champion)"),
-        ("db/properties/cascade_v23_ranked_v2.csv",          "합성점수 랭킹 89종 ⚠ incomplete"),
+        ("db/properties/cascade_v23_ranked_v2.csv",          "합성점수 랭킹 89종 ⚠ 점수 타당성 미해결 (score_blockers)"),
         ("db/properties/cascade_v23_all_20260629_47species.csv", "옛 47종 판 (2026-06-29, 대조용)"),
         ("db/properties/cascade_pool_audit_v2.json",          "완결성 감사 (전면/부분 결측 판정)"),
     ],
-    "caveat": ("⚠ 89종 랭킹과 미완 funnel 을 90종 최종판으로 인용하지 말 것. "
-               "원자료와 ESW 는 90종 전수이고 그대로 내려받을 수 있다."),
+    "caveat": ("⚠ 89종 랭킹을 90종 최종판으로 인용하지 말 것. 다만 **막고 있는 것은 결측이 아니다** — "
+               "완결성은 완전 88 · 부분 1 · 전면결측 1 로 사실상 해결됐고, 남은 blocker 는 "
+               "게이트·점수의 타당성이다 (score_blockers). 원자료와 ESW 는 90종 전수라 그대로 쓸 수 있다."),
 }
 #: ── 파이프라인 실측 — 화면 최상단 수치의 **유일한 출처** ────────────────────
 #:  2026-08-14 개정. 이전 화면은 "47 랭킹 / 4 Pareto / 141 champion / 14 verified" 를
 #:  최신 승인 결과처럼 띄웠는데, 그건 2026-06-29 에 멈춘 **취합 경계**의 숫자였다.
 #:  근거: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md
 CASCADE_TRUTH = {
-    "planned": (273, "계획 슬롯", "90종 × 3 농도 라벨 (일부 계열은 라벨 수가 다름)"),
-    "completed": (270, "완주 (STAGE_12)", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
+    # ⛔ 2026-08-14 정정 (Codex 리뷰 P0-1) — 설계는 **91종** × 3 = 273 이다.
+    #    90 은 완주한 species 수(As₂S₃ 탈락 후)이지 계획 수가 아니다.
+    "planned": (273, "계획 슬롯", "master_batch_273.sh: 91 화합물 × 3 라벨 (산화물 37 + 나머지 54)"),
+    "completed": (270, "완주 (STAGE_12)", "91종 중 90종 완주 — As₂S₃ 3건만 stage-01 seed 생성 실패"),
     "recovered": (90, "회수 — ESW 전수", "2026-08-13 회수. 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
     "approved": (0, "승인된 ranking", "47종판은 취합 경계라 superseded · 89종판은 미검증 diagnostic"),
     "why_zero": ("승인 0 은 '실패' 가 아니라 **현재 상태의 정확한 이름**이다. "
@@ -979,12 +1014,27 @@ G4_DECOMP = {
     "why_renamed": ("'Li 수송' 은 전도도·확산을 잰 것처럼 읽힌다. G4 에 들어가는 값은 "
                     "**어닐 기하 위에서 계산한 정적 프록시 두 개**이고, 둘 다 이온이 "
                     "움직이는 계산이 아니다. MD·NEB 는 이 축에 하나도 안 들어갔다."),
-    "gate": "G4 = transport_norm > 0.30  AND  blocking < 0.60",
+    "gate": "G4 = transport_norm > 0.30  (blocking 은 그 안에 이미 접혀 있다 — 아래 순환 참조)",
+    #: ⛔⛔ 2026-08-14 (Codex 리뷰 P0-5) — G4 는 **독립 두 신호의 AND 가 아니다.**
+    #:  build_screening_funnel.py:139-142 가 blocking 컷을 통과 못 하면 BVS 값을 버리고
+    #:  transport_norm 을 GATE_FLOOR(0.05)로 **강제**한다. TRANSPORT_CUT 이 0.30 이므로
+    #:  blocking 탈락 = G4 탈락이 결정론적으로 따라온다.
+    "circularity": {
+        "code": "if blocking < 0.60:  n = 0.05+0.05 + n*(1-0.05-0.05)\nelse:              n = 0.05   # ← BVS 값 폐기",
+        "why_it_matters": ("blocking 에서 떨어진 종의 transport_norm 은 **전부 정확히 0.05** 다 — "
+                           "BVS 가 아무리 좋아도 같은 값이 된다. 그래서 '두 개의 독립적인 수송 신호가 "
+                           "일치했다'(예: 6/6 trade-off)로 읽으면 안 된다. 한 신호가 다른 신호를 "
+                           "덮어쓴 뒤의 합성값이다."),
+        "consequence": "G4 탈락 사유를 인용할 때는 blocking kill / bvs kill 을 반드시 분리할 것.",
+    },
     "inputs": [
         {
             "col": "bvs_li_proxy_score",
             "name": "legacy BVS (Adams-2003 파라미터)",
-            "what": "어닐 후 기하에서 Li 자리의 bond-valence sum. transport_norm = min–max(이 값 @x=0.05).",
+            # ⛔ P0-6 — 'x005' 는 **디렉터리 라벨**이고 실제 치환율이 아니다.
+            "what": "어닐 후 기하에서 Li 자리의 bond-valence sum. transport_norm = min–max(이 값 @라벨 x005). "
+                    "⚠ 라벨 x002/x005/x010 은 셋 다 **실측 x = 0.25** 로 뭉개져 있다 (dualx_v23 실측). "
+                    "'x=0.05 에서 쟀다'는 서술은 틀렸다.",
             "warn": ("⛔ **정본 BVSE 와 다른 파라미터다.** cascade 는 tools/doping/bvse_proxy.py 의 "
                      "Adams-2003 값(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40)을 쓰고, 우리 정본은 "
                      "softBV(R₀ S 2.105 · Cl 2.249 · O 1.466 · b 0.37)다. "
@@ -1003,7 +1053,12 @@ G4_DECOMP = {
 }
 CASCADE_META = {
     "title": "Doping Cascade — AI 계산 기반 도핑 스크리닝 (UMA)",
-    "scope": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 기반 산화물/불화물 도펀트 스크리닝, x=0.25",
+    # ⛔ 2026-08-14 정정 (Codex 리뷰 P0-7). 옛 문구는 "Model C (Li₅.₄PS₄.₄Cl₁.₆) 기반 … x=0.25" 였다.
+    #    ESW 반응식 좌변이 Li22P4(S5Cl)4 계열 = **Cl:P = 1.0** 이라 Model C(Cl 1.6)가 아니다.
+    #    그리고 x002/x005/x010 은 라벨일 뿐 실측은 셋 다 x=0.25 다 (P0-6).
+    "scope": ("Li₆PS₅Cl 계열 아지로다이트 호스트(Cl:P = 1.0, ESW 반응식 좌변 실측) 위의 "
+              "산화물·할로겐화물·황화물 도펀트 91종 스크리닝. 농도 라벨 x002/x005/x010 은 "
+              "셋 다 실측 x = 0.25 — Model C(Cl₁.₆) 가 아니고 x=0.05 도 아니다"),
     "engine": "UMA-s-1p1 (task=omat) · anneal→champion→EOS/elastic/ESW/Li-proxy 캐스케이드",
     "score_formula": "score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window (min–max 정규화)",
     "caveat": "절대 탄성값은 실험(AFM/UPE 12–22 GPa) 대비 높게 나옴 — 캐스케이드 내부(UMA-vs-UMA) 순위·상대비교만. EOS B0 ≠ elastic B_VRH.",
