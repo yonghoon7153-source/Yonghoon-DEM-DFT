@@ -267,6 +267,84 @@ cascade_screening_funnel.json
 **정적 BVSE 프록시**이며, "BVSE 를 전도도라 부르지 않는다" 는 단서는 회수로 없앨 수 있는
 것이 아니라 **새 계산이 필요한 항목**이다. 세미나의 그 방어선은 유지된다.
 
+## ★ co-modification 선례가 이미 데이터에 있다 (2026-08-13)
+
+`oxidation_stability_cascade_v2.json` 을 plain champion vs `chain_Cl` champion 으로 갈라
+비교했다. `chain_Cl` = cascade Type-C 사슬로 **Cl seed 를 추가로 넣은 구조**.
+
+| dopant | plain | +Clrich | Δ (V) | 부류 |
+|---|---|---|---|---|
+| **WO₃** | 2.140 | **2.356** | **+0.216** | 천장까지 도약 |
+| **MoO₃** | 2.140 | **2.356** | **+0.216** | 천장까지 도약 |
+| **Al₂O₃** | 2.140 | **2.354** | **+0.214** | 천장까지 도약 |
+| Nd₂O₃ | 1.920 | 1.987 | +0.067 | 오르지만 host 미만 |
+| Sm₂O₃ | 1.989 | 2.034 | +0.045 | 오르지만 host 미만 |
+| ZnO · MgO | 2.140 | 2.140 | 0.000 | 안 움직임 |
+| Y₂O₃ | 2.282 | 2.282 | 0.000 | 이미 천장 위 |
+| Sc₂O₃ | 2.356 | 2.339 | **−0.017** | 이미 천장, 오히려 손해 |
+
+(B₂O₃ 는 chain_Cl 챔피언만 있어 비교 불가. chain_Cl 챔피언 17개 · 10종.)
+
+**규칙**: Cl 단독으로는 S²⁻ 핀(2.14)을 못 깬다(ZnO·MgO 무변화). 양이온 단독으로도 못 깬다
+(W·Mo·Al plain = 2.140). **둘이 같이 있어야** 2.35 천장에 닿는다. 그리고 이미 천장에 있는
+Sc₂O₃ 는 Cl 을 더하면 **잃는다**(−0.017) — "많이 넣을수록 좋다" 가 아니다.
+
+**천장 2.35–2.36 은 M³⁺ 단독군(Sc·Cr·In·Ga·Y·B, +회수 Ga₂S₃·Al₂S₃)이 도달하는 값과 같다.**
+즉 서로 다른 경로로 같은 한계에 수렴한다 — 새 산화-제한 반응이 S²⁻ 를 대체한 지점.
+
+### 한계
+
+- n=9 (비교 가능한 종). 큰 도약은 **3종뿐**이고, 회수 43종은 chain_Cl 변형이 없어 이 표를
+  넓히지 못한다 (내가 "3 → N 으로 늘 것" 이라 예상한 것은 **틀렸다**).
+- `chain_Cl` 은 같은 cascade 안의 **Cl seed 추가**지 별도 화합물과의 명시적 공동치환이 아니다.
+  "co-doping 계산" 이 아니라 "**co-modification 선례**" 로 인용할 것.
+- 옛 `oxidation_stability_cascade.csv` 의 `clrich_ox_V` 열이 정확히 이 3종만 담고 있었다 —
+  즉 이 관측 자체는 6/25 판에도 있었고, 아무도 전면에 안 꺼냈을 뿐이다.
+
+## ⛔ 등록이 멈춘 진짜 이유 — 미푸시 브랜치 (2026-08-13 census)
+
+gabia 체크아웃 전수 조사에서 나왔다. cascade 작업 디렉터리 `/data/work/repo` 는
+**우리 브랜치가 아니다**:
+
+| 체크아웃 | 브랜치 | 최종 커밋 | db/properties |
+|---|---|---|---|
+| `/root/Yonghoon-DEM-DFT` | claude/friendly-meitner-lldvar | 2026-08-13 | **206개 · 11 M** (정본) |
+| `/root/work/Yonghoon-DEM-DFT` | b2o3run | 2026-07-18 | 98개 · 3.8 M |
+| `/data/work/b2o3md` | claude/friendly-meitner-lldvar | 2026-06-30 | 52개 · 3.1 M |
+| **`/data/work/repo`** | **claude/configure-spawn-halogen-lithium-TjDCB** | **2026-06-29** | **17개** (cascade 전용 sparse) |
+| `/data/work/repo_dos` | claude/friendly-meitner-lldvar | 2026-06-15 | 13개 |
+| `/data/work/v30u_ensemble/Yonghoon-DEM-DFT` | claude/dft-script-generator-webapp-GPSAG | 2026-03-26 | — |
+
+그리고 그 브랜치의 **원격 tip 은 2026-06-16** (`a90fd1cf`) 인데 gabia 로컬은 6/29 다.
+등록 커밋 3개(`336cb2e8` 36종 → `c649492f` 39종 → `2c34123e` 141종)는
+**이 repo 의 어느 브랜치·어느 커밋에도 존재하지 않는다** (`git cat-file -e` 전부 실패).
+
+**`cascade_v23_all.csv` 는 우리 repo 이력에 단 한 번도 없었다.** 풀 47종을 정의하는 그 파일이
+gabia 디스크 한 곳의 **미푸시 커밋 안**에만 있다. 우리 `db/properties/` 의 cascade_v23_*
+파일들(champions·ranked·litransport·themes·synergy·eos_refit)은 그 브랜치에서 **손으로 복사해
+온 산물**이고, 원본 all.csv 는 따라오지 않았다.
+
+→ 6/29 에 등록이 멈춘 것은 "사람이 잊어서" 가 아니라 **그 브랜치 자체가 그날 버려졌기 때문**이다.
+7/11 에 계산이 끝났을 때 등록할 브랜치가 이미 없었다.
+
+**보존 조치 필요**: `git bundle create` 로 미푸시 커밋을 파일화할 것 (인증 불필요).
+
+## 아직 안 본 것 — census 가 드러낸 규모
+
+`/data/work/runs` 총 **479 GB**. 이번 조사에서 본 것은 `multi_category`(1.3 G)·`sei_*`·`sdcp_v2` 뿐.
+
+| 미조사 | 크기 |
+|---|---|
+| `sdcp_linio2_binding` | 165 G |
+| `/data/work/bml` | 155 G |
+| `li_neb_diffusion` | 86 G |
+| `comp2_elastic_{uspp,dft,k444,0p01,lobster,relax}` | 합 ~63 G |
+| `nd_doped_modelc` | 53 G |
+| `lpsocl_{dft,elf,bader}` | 45 G |
+
+**cascade 에서 확인된 병(계산 완료 ↔ 정본 미등록)이 이 종목들에도 있는지는 미검**이다.
+1 MB 이상 필터로는 안 잡힌다 — cascade 의 `oxidation_stability_cascade.json` 도 71 KB 였다.
+
 ## 반증·한계
 
 - ESW 배치 스크립트(`esw_cascade_batch.py`) 자체는 아직 안 읽었다. 47에서 멈춘 것이
