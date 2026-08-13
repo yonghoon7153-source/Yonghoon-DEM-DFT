@@ -345,6 +345,43 @@ gabia 디스크 한 곳의 **미푸시 커밋 안**에만 있다. 우리 `db/pro
 **cascade 에서 확인된 병(계산 완료 ↔ 정본 미등록)이 이 종목들에도 있는지는 미검**이다.
 1 MB 이상 필터로는 안 잡힌다 — cascade 의 `oxidation_stability_cascade.json` 도 71 KB 였다.
 
+## ★ 농도축은 존재한다 — `dualx_v23` (2026-08-13 발견)
+
+`/data/work/runs/dualx_v23` (68 MB · 20 dirs). **x002/x005/x010 이 전부 x=0.25 로 뭉개진
+그 버그를 고친 판**이 이미 돌아 있었고, 등록되지 않았다.
+
+```bash
+# run_dualx.sh / run_dualx_highx.sh — 우리 repo tools/doping/ 에 있다
+env COMPOUND_FILTER=$cmp X_COMPOUND=0.0625 bash tier_cascade.sh <cif> $OUT 5 2,2,1 0
+env COMPOUND_FILTER=$cmp X_COMPOUND=0.25   bash tier_cascade.sh <cif> $OUT 5 2,2,1 0
+```
+
+- **`2,2,1` 슈퍼셀** (16 f.u.) — 하드코딩 `1,1,1` 이 아니다. `hard_dopant_handling_protocol.md`
+  의 처방(2,2,1 → actual x 0.0625)과 정확히 일치.
+- `actual_x` 실측 **0.0625 · 0.25** 두 값만 존재 — 진짜 두 농도다.
+- 대상 10종: Sc₂O₃·Gd₂O₃·Cr₂O₃·Y₂O₃·La₂O₃·HfO₂·Ta₂O₅·Nb₂O₅·V₂O₅·TiF₄
+- **stage 04(anneal)에서 의도적으로 kill** — 스크립트가 `STAGE_04.DONE` 보고 `kill -TERM`.
+  중단이 아니라 설계(싸게 보려고). 20/20 이 04 까지 완주, 05 는 13, 06 은 10.
+- 헤더 명시: *"Purpose: apples-to-apples **blocking_fraction** comparison ... in an identical cell"*
+  → **원래 목적이 G4 축의 농도 응답**이었다. 형성에너지는 부산물.
+- 헤더가 한계도 자백: *"the typeA_cluster structure-gen bug is left AS-IS on purpose,
+  so both concentrations sample structures identically"*.
+
+### 형성에너지의 농도 응답 — sub-linear
+
+| species | x=0.0625 | x=0.25 | 비 (high/low) |
+|---|---|---|---|
+| Gd₂O₃ | −0.6391 | −1.2951 | 2.03 |
+| Nb₂O₅ | −0.5789 | −1.0186 | 1.76 |
+| V₂O₅ | −0.5767 | −0.9671 | 1.68 |
+| La₂O₃ | −0.5474 | −0.9219 | 1.68 |
+
+같은 셀에 unit 이 1 → 4 로 **4배**인데 ΔE/atom 은 **1.7–2.0배**. 순수 가산이면 4배여야 한다.
+→ **도펀트–도펀트 상호작용이 반발적이고, 안정화 이득은 농도에 대해 포화한다.** 4종 4/4 일치.
+
+⚠ n=4 (두 농도가 다 있는 종). UMA 상대값이고 어닐까지만 — ESW·탄성·BVSE 는 없다.
+"농도 의존 **산화안정성**" 은 여전히 말할 수 없다. 말할 수 있는 것은 형성에너지의 농도 응답까지.
+
 ## 반증·한계
 
 - ESW 배치 스크립트(`esw_cascade_batch.py`) 자체는 아직 안 읽었다. 47에서 멈춘 것이
