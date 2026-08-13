@@ -23,7 +23,23 @@ As₂S₃ × 3의 `n_structures = 0`만 개별적으로 문서화돼 있습니�
 
 아니요. **현재는 nominal campaign label**로만 취급합니다.
 
-저장소의 농도 metadata가 서로 충돌해 실제 stoichiometric x가 닫히지 않았습니다. 따라서 농도 의존성이나 dose robustness라는 표현 대신 “세 campaign label 사이의 정적 proxy 변화”라고 말합니다.  
+이유는 metadata 정리 문제가 아니라 **구조 생성 단계의 결함**입니다 (2026-06-17 기록,
+`kb/methodology/hard_dopant_handling_protocol.md`):
+
+- `master_batch_273.sh` 가 `X_COMPOUND=0.02/0.05/0.10` 은 넘기면서 **SUPERCELL 을 `1,1,1` 로 하드코딩**했습니다.
+- 화합물 도펀트는 최소 1 unit 이 들어가야 하고(B₂O₃ = 2B+3O), base [1,1,1] = 4 f.u. 이므로
+  **1 unit = x 0.25 가 바닥**입니다. 그 셀에서 2% 는 실현 불가입니다.
+- `run_compound_batch` 은 농도를 **라벨로만 기록**하고(`s.setdefault('concentration', label_conc)`)
+  구조는 1 unit 고정입니다.
+- 실측 확인: **B₂O₃ x002·x005·x010 은 actual_x 가 전부 0.25 이고 구조·에너지가 동일**했습니다
+  — 세 라벨이 같은 구조 세 번이었습니다.
+
+따라서 농도 의존성이나 dose robustness 라는 표현 대신 "세 campaign label 사이의 정적 proxy 변화"
+라고 말합니다. 되돌리려면 metadata 수정이 아니라 **목표 농도에 맞는 supercell 로 구조를 다시
+생성**하고 라벨 대신 actual_x 를 써야 합니다(같은 문서의 "영구 픽스").
+
+⚠ 실측은 B₂O₃ 에 대해 확인된 것이고, 기제(하드코딩된 셀 + 라벨 기록)는 캠페인 전체에
+걸립니다. 종별 재확인은 하지 않았습니다.  
 관련 슬라이드: S3, S14, A1.
 
 ### Q4. 왜 oxide와 fluoride만 들어 있는가? 선택 편향 아닌가?
