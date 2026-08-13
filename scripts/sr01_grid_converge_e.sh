@@ -25,6 +25,15 @@ set -uo pipefail
 KIT_IN="${1:-}"; shift || true
 VOXES="${*:-0.4 0.3}"
 [ -n "$KIT_IN" ] || { echo "사용: bash scripts/sr01_grid_converge_e.sh <KIT> [vox ...]"; exit 2; }
+# ★ BRIDGE_UM 를 주면 AM 접촉 브리지 반경을 **물리 단위로 고정**한다 (CL-21 교란 분리).
+#   기본(빈 값) = 현행 1.2·vox → 격자를 조이면 브리지도 같이 얇아져 탄소 효과와 섞인다.
+#   예:  BRIDGE_UM=0.48 bash scripts/sr01_grid_converge_e.sh kit_SBE 0.4 0.3
+BRIDGE_UM="${BRIDGE_UM:-}"
+BR_FLAG=""; BR_TAG=""
+if [ -n "$BRIDGE_UM" ]; then
+  BR_FLAG=" --step3-bridge-um $BRIDGE_UM"; BR_TAG="b$(echo "$BRIDGE_UM" | tr -d '.')"
+  echo "[gc] ★ 브리지 반경 **고정** $BRIDGE_UM µm — 격자와 무관하게 유지된다"
+fi
 KIT="$(cd "$KIT_IN" && pwd)"
 SCR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
@@ -45,7 +54,7 @@ cd "$RUN"
 echo "[gc] run: $RUN   vox 목록: $VOXES"
 
 for VOX in $VOXES; do
-  TAG="gc$(echo "$VOX" | tr -d '.')"
+  TAG="gc$(echo "$VOX" | tr -d '.')${BR_TAG}"
   OUT="mpm_payload_${TAG}.json"
   if [ -s "$OUT" ]; then echo "[gc] SKIP (있음) $OUT"; continue; fi
 
@@ -68,23 +77,27 @@ PY
   ) || exit 1
 
   python3 "$SCR/sr01_stamp_compare.py" --extract-payload "$KIT/run_mpm.sh" \
-          --stamp segment --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX" \
+          --stamp segment --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX$BR_FLAG" \
           --tag "$TAG" --out-name "$OUT" > "_$TAG.sh" || exit 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "_$TAG.sh"; } > "$TAG.sh"
   rm -f "_$TAG.sh"
   grep -q -- "--step3-vox $VOX" "$TAG.sh" || { echo "ABORT — vox 미주입"; exit 1; }
+  if [ -n "$BRIDGE_UM" ]; then
+    grep -q -- "--step3-bridge-um $BRIDGE_UM" "$TAG.sh" || { echo "ABORT — 브리지 미주입"; exit 1; }
+  fi
   grep -q -- "--sigma-vgcf $SIGMA" "$TAG.sh" || { echo "ABORT — σ 미주입"; exit 1; }
   echo "[gc] ── vox $VOX · σ_VGCF $SIGMA → $OUT"
   bash "$TAG.sh" || { echo "[gc] vox $VOX FAILED (OOM 이면 그 사실이 결과다 — 기록할 것)"; }
 done
 
-python3 - $VOXES <<'PY'
+python3 - "$BR_TAG" $VOXES <<'PY'
 import json, os, sys
 
+BR = sys.argv[1]
 rows = []
-for v in sys.argv[1:]:
-    f = f"mpm_payload_gc{v.replace('.', '')}.json"
+for v in sys.argv[2:]:
+    f = f"mpm_payload_gc{v.replace('.', '')}{BR}.json"
     if not os.path.exists(f):
         rows.append((v, None, None, None, 'FAILED/OOM')); continue
     d = json.load(open(f))

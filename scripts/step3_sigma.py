@@ -190,7 +190,7 @@ def _solve_cg(L, b):
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
-              add_fid=None, fid_gap_tol=2.0, add_kind=None):
+              add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -242,7 +242,11 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                 mid = am_c[i] + (am_c[j] - am_c[i]) * (am_r[i] + 0.5 * (d - am_r[i] - am_r[j])) / max(d, 1e-12)
                 soft = i if am_t[i] == 1 else j            # the LOWER-σ particle = AM_P (0.005 < AM_S 0.010)
                 s = 2 if (am_t[i] == 1 or am_t[j] == 1) else 1   # mixed / P-P → AM_P id (series-conservative);
-                _ball(mid, 1.2 * vox, s, soft)             #   S-S stays AM_S.  (Review M2: was inverted.)
+                # ★ 2026-08-13: 브리지 반경이 **격자에 묶여 있다** (1.2·vox).  격자를 조이면
+                #   AM 접촉 목도 같이 얇아져 격자 수렴 시험에서 탄소 효과와 **섞인다** (CL-21).
+                #   `bridge_um` 을 주면 물리 단위로 **고정**한다.  기본 None = 현행(1.2·vox) 이라
+                #   기존 호출은 바이트 동일.
+                _ball(mid, (1.2 * vox if bridge_um is None else float(bridge_um)), s, soft)
     # additive points: cell-stamp (carbon overwrites AM at shared cells — the higher-σ phase wins,
     # which is the physical series-shortcut at an anchored contact)
     if add_pts is not None and len(add_pts):

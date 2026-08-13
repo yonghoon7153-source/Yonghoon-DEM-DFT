@@ -429,6 +429,8 @@ def main():
     # trust unit; σ table: AM = A1-locked (Trevisanello 10/5 mS/cm), carbon/SDCP = §F1 order-of-
     # magnitude hooks (record travels in metrics.step3.sigma_table so runs are comparable).
     ap.add_argument('--no-step3', action='store_true', help='skip the STEP3 σ_e network solve')
+    ap.add_argument('--step3-bridge-um', type=float, default=0.0,
+                    help='AM 접촉 브리지 반경을 **물리 단위**로 고정 (µm).  0 = 현행 1.2·vox (격자에 묶임). 격자 수렴 시험에서 탄소 효과와 브리지 효과를 분리하려면 고정할 것 (CL-21)')
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 voxel size (µm).  0.4 default: AM-carbon bridges (band 0.15µm) land in '
                          'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
@@ -874,9 +876,14 @@ def main():
             _hi = ((SW[1] - SW[0]) * UM, (SW[1] - SW[0]) * UM, max((top - FLOOR) * UM, a.step3_vox))
             print('  STEP3: voxelizing conductive+SE grid (풀해상도 — 이후 전자/이온 CG 솔브, 침묵 수 분 정상)…', flush=True)
             _septs = (se[phase == 1] - _off) * UM if phase is not None else (se - _off) * UM
+            _bru = (float(a.step3_bridge_um) if getattr(a, 'step3_bridge_um', 0) > 0 else None)
+            if _bru is not None:
+                print(f'  STEP3: AM 접촉 브리지 반경 **고정** {_bru} µm '
+                      f'(기본은 1.2·vox = {1.2 * a.step3_vox:.3f}) — 격자 수렴 시험용', flush=True)
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
-                                       se_pts=_septs, add_fid=_afid, add_kind=(_kind_all[_m] if _kind_all is not None
-                                                    and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
+                                       se_pts=_septs, add_fid=_afid, bridge_um=_bru,
+                                       add_kind=(_kind_all[_m] if _kind_all is not None
+                                                 and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
                               0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
