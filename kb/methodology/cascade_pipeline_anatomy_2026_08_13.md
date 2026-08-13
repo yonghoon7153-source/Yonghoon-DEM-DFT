@@ -436,7 +436,7 @@ blocking_fraction comparison at x=0.25 vs x=0.0625 in an identical cell"*).
 
 ## 미조사분 전수 확인 (2026-08-13 심야)
 
-### `09e_ehull` 270개 — **G1 을 못 살린다** (기대 철회)
+### `09e_ehull` 270개 — G1 을 못 살린다 (그리고 **우리는 이미 알고 있었다**)
 
 행 키가 `hull_E_at_winner_composition_eV_atom` 이다 — **hull 까지의 거리가 아니라
 그 조성에서의 hull 에너지 절대값**(−5.5 ~ −7.9 eV/atom). `E_above_hull` 은 없다.
@@ -447,6 +447,19 @@ blocking_fraction comparison at x=0.25 vs x=0.0625 in an identical cell"*).
 
 다만 `hull_decomposition` (270개) 은 유효하다 — ESW 반응식과 짝이 되는 분해산물 정보로
 passivation 논의에 쓸 수 있다.
+
+⛔ **더 중요한 정정**: `E_above_hull` 은 **이미 repo 에 있다** —
+`cascade_stability_axes.csv` 의 `e_above_hull_meV`, 47종 전부.
+**46종이 0.0 meV, 최대가 CrO₃ 46 meV.** 그리고 `cascade_stability_axes_verdict.json` T10 이
+내가 오늘 세운 것과 **똑같은 가설을 이미 세우고 기각했다**:
+
+> **예측이 빗나갔다.** "G1 이 vacuous 한 원인은 hull 대신 host 상대 Δe 를 쓰기 때문" 이라
+> 가정하고 T10 을 세웠는데 **hull 로 바꿔도 탈락 0종**이다. 원인은 기준이 아니라 **풀**이다 —
+> 47종이 애초에 안정한 흔한 이성분 산화물·불화물로 큐레이션돼 있어 어떤 열역학 안정성
+> 기준을 걸어도 통과한다. → T10 은 접는다.
+
+즉 "못 구한다" 가 아니라 **"구했고 아무것도 안 바뀐다"** 가 정답이다. 그리고 그 편이 낫다 —
+G1 이 vacuous 한 것이 **풀 큐레이션의 성질**이라는 정량 근거가 되기 때문이다.
 
 ### σ MD · W_ad — **존재한다** (앞선 "없음" 판정 정정)
 
@@ -534,6 +547,28 @@ champion 262개 실측:
 P11 의 "산화 개선 ↔ Li 경로 충돌" 은 (a) M³⁺ 가 onset 을 올린다는 실제 효과와
 (b) M₂O₃ 가 원자 수가 많아 blocking 이 기계적으로 높다는 사실이 **겹친 것**일 수 있다.
 R² 0.768 이면 blocking 에서 원자 수를 뺀 잔여 정보는 23% 다.
+
+### ⚠ 위 우려는 **실측으로 기각됐다** (2026-08-14, `cascade_seminar_oxidation_transport_47.csv`)
+
+6종의 실제 G4 탈락 사유를 열어보니 blocking 이 아니라 **transport_norm** 이 지배한다:
+
+| | blocking | **transport_norm** | fail_mode |
+|---|---|---|---|
+| Cr₂O₃ | 0.889 | **0.05** | blocking_cut |
+| In₂O₃ | 0.833 | **0.05** | blocking_cut |
+| Y₂O₃ | 0.833 | **0.05** | blocking_cut |
+| Sc₂O₃ | 0.778 | **0.05** | blocking_cut |
+| Ga₂O₃ | 0.611 | **0.05** | blocking_cut |
+| **B₂O₃** | **0.588 (통과)** | **0.10** | bvs_branch_cut |
+
+G4 = `transport_norm > 0.30` **AND** `blocking < 0.60`. 6종 전부 transport_norm 이
+**0.05–0.10 으로 문턱의 1/6–1/3** 이다. **blocking 항을 통째로 제거해도 6종 전부 탈락한다.**
+B₂O₃ 는 blocking 을 통과(0.588)하고도 BVSE 축에서 떨어진다.
+
+→ **"trade-off 가 원자 수 교락" 이라는 우려는 성립하지 않는다. P11 은 그대로 유효하고,
+근거는 기하 개수가 아니라 BVSE 유래 이온 경로 프록시다.**
+(blocking 이 원자 수 프록시라는 사실 자체는 여전히 참이고, G4 탈락 27종 중 24종을
+설명한다는 것도 참이다. 다만 **이 6종에 대해서는 결정적 요인이 아니다.**)
 
 ### 발표 대응 (2026-08-14)
 
