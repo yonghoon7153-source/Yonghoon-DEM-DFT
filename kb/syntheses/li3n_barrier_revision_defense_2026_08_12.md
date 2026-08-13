@@ -3,7 +3,7 @@ title: "Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)"
 date: 2026-08-12
 updated: 2026-08-12
 tags: [li3n, neb, revision, manuscript, diffusion-barrier, af-assb]
-status: 진행 — 원고 v5 투고 전, A-4 결정 대기
+status: 확정 — 2026-08-12 사용자 결정: 0.118(두 점 on-N/TS)로 그림 교체
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -57,7 +57,11 @@ LiC₆ 는 0.290 (`db/properties/li3n_barrier_origin.csv` `LiC6_DFT_eV` 최대 0
 
 ## Counter-arguments
 
-### C1. "0.102 는 미수렴 NEB 에서 나왔다" — **유효한 반론, 미해소**
+### C1. "0.102 는 미수렴 NEB 에서 나왔다" — ~~유효한 반론~~ → **해소 (2026-08-12)**
+
+**해소 경로**: 사용자가 그림을 0.118(두 점 on-N/TS 구속이완)로 교체하기로 결정.
+보고 수치가 양쪽 BFGS 수렴한 계산에서 나오므로 이 반론은 성립하지 않는다.
+아래 원문은 기록 보존.
 
 `fmax_eV_per_A_at_stop: 0.11` (목표 0.05). 원고 Methods 가 "0.05 eV Å⁻¹ 기준" 이라고
 쓰면 사실과 다르다. 0.118(구속이완, 양쪽 수렴)로 통일하면 이 반론 자체가 사라진다.
@@ -110,8 +114,7 @@ db 는 같은 뒤집힘을 이미 두 번 기록했다 (NEB img 라벨 · drag p
 ## Gap
 
 1. **6층 243원자 2점 테스트** — C2·C3 를 동시에 닫는 유일한 실험. 미실행. 최우선.
-2. **원고 A-4 결정** — 0.102 유지(①: Methods 에서 수치 문장 삭제) vs 0.118 통일(②: Fig 5e·S9 수정).
-   ② 를 택하면 C1 이 소멸한다. 결정 전까지 이 카드의 status 는 "진행".
+2. ~~원고 A-4 결정~~ → **② 0.118 통일로 확정 (2026-08-12)**. C1 소멸.
 3. **NEB 실패 계보의 SI 문단화** — 초안 없음. C1 후속 질문이 오면 필요.
 4. **LiC₆ full DFT NEB** — 미실행(`lic6_0001_dft_full` queued). 있으면 비율 하한 주장이 실측으로 바뀐다.
 
@@ -122,14 +125,52 @@ db 는 같은 뒤집힘을 이미 두 번 기록했다 (NEB img 라벨 · drag p
 
 | # | 문서 | 항목 | 조치 |
 |---|---|---|---|
-| A-1 | MS Methods | Li₃N 방법이 "UMA CI-NEB → DFT 단일점" 으로 기술됨 | 그 경로의 Li₃N 값은 0.049(철회). 재작성 필요 |
+| A-1 ★ | MS Methods | Li₃N 방법이 "UMA CI-NEB → DFT 단일점" 으로 기술됨 | 그 경로의 Li₃N 값은 0.049(철회). **구속이완 문단으로 교체 확정** |
 | A-2 ★ | MS Methods | 진공 ≈17 Å | → **15.7 Å** (c 28.545 − 슬랩 12.80) |
 | A-3 ★ | MS Methods | "ultrasoft pseudopotentials" 총론 | LiC₆ 의 C 는 **PAW** → 원소별 병기 |
 | A-4 ★ | MS Methods | 교체 문단에 **LiC₆ 방법 서술이 없음** | LiC₆(CI-NEB + DFT 단일점) 문장 유지 |
 | A-5 | MS Methods | 레퍼런스 `[1][2][3]` | → 본문 번호 `[43] [44] [54]` |
 | A-6 | MS Methods | "following the image discretization of [54]" | 삭제 (C5 참조) |
-| A-7 | MS Results | 0.102 eV / "≈65% reduction" | 0.118 로 가면 → **59%**, 비율 2.46× |
+| A-7 ★ | MS Results | 0.102 eV / "≈65% reduction" | → **0.118 eV / ≈59%**, 비율 2.46× |
 | B-1 ★ | SI | Table S2 부재 | 신규 삽입 (2열 압축판, 12행) |
-| B-2 | SI | Fig. S9 캡션 "nudged elastic band calculations" | A-4 결정에 연동 |
+| B-2 ★ | SI | Fig. S9 캡션 "nudged elastic band calculations" | → 구속이완 서술로 교체 |
 | B-3 ★ | SI | Fig. S9 자리 라벨 | 자리 명명 금지 (C4) |
-| C-1 | Figure set | Fig 5d/5e/S9 의 0.102 | 사용자 결정: **수정 없이 사용** (2026-08-12) |
+| C-1 | Figure set | Fig 5d/5e/S9 의 0.102 | **0.118 로 교체 결정 (2026-08-12)** — 아래 §그림 교체 지침 |
+
+
+## 그림 교체 지침 (2026-08-12 결정 후)
+
+### 데이터는 이미 db 에 있다 — 새로 계산할 것 없음
+
+`db/properties/li3n_barrier_origin.csv` (Origin-ready, 401행):
+
+| 열 | 무엇 | 최대 |
+|---|---|---|
+| `DFTpoint_eV` (3점, `xi_DFTpoint`) | **실제 계산한 점** — 0 / 0.11820 / 0 | 0.11820 |
+| `Li3N_guide_eV` | 눈 안내선 (아래 ⚠) | 0.11820 |
+| `LiC6_DFT_eV` | 7-image DFT-SCF 스플라인 | 0.28968 |
+| `kT300_eV` | 상온 기준선 | 0.02585 |
+
+구조 파일: `db/structures/li3n_onN_min.vasp`·`.xyz`, `db/structures/li3n_TS_saddle.vasp`·`.xyz`.
+
+### ⚠ guide 곡선의 정체 (2026-08-12 검산)
+
+`Li3N_guide_eV` == `db/properties/li3n_neb_fit_optimal.csv` 의 `Li3N_migstep_eV`
+× (0.1182 / 0.10201), **편차 5e-7** — 즉 **폐기한 mirrored-spline NEB 의 모양에 진폭만
+두 점 값으로 갈아끼운 곡선**이다. 우리가 계산한 것은 점 2개뿐이므로:
+
+- 5d 에서 이 곡선을 **계산된 경로처럼 그리면 안 된다.** 실선 금지, 점선 + 캡션에
+  "dashed line is a guide to the eye connecting the two computed configurations" 명시.
+- 더 안전한 대안: 5d 에서 Li₃N 곡선을 빼고 **LiC₆ 실측 7점 프로파일만** 남긴 뒤,
+  Li₃N 은 5e 막대와 S9 구조 2컷이 담당하게 한다.
+- Fig S9 는 7단계 → **2컷(최소점 · 안장점)** 으로. 중간 이미지는 존재하지 않는다.
+
+### 자리 이름은 여전히 부르지 않는다
+
+C4 가 그대로 살아 있다 — 파일명 라벨과 실측 배위수가 반대다. "adsorption minimum" /
+"saddle-region configuration" 으로만 쓴다. Table S2 도 그렇게 되어 있다.
+
+### 산출물
+
+`docs/manuscripts/Table_S2_DFT_parameters.docx` — 0.118 / 0.290 결과행 복구
+(0.102 와의 충돌이 사라졌으므로). 생성기 `docs/manuscripts/table_s2_build.js`.

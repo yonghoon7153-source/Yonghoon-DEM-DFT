@@ -56,6 +56,7 @@ const rows = [
   row("Barrier definition",
       "E(saddle-region configuration) − E(relaxed adsorption minimum)",
       "E(highest-energy image) − E(initial adsorption minimum)"),
+  row("Migration barrier", "0.118 eV", "0.290 eV", { bold: true }),
 ];
 
 const doc = new Document({
@@ -84,7 +85,7 @@ const doc = new Document({
       p("", { after: 140 }),
       p("Both surfaces use identical electronic-structure settings, so the two barriers are directly comparable. On Li₃N(001) the pronounced adsorbate-induced relaxation of the soft ionic surface destabilised elastic-band calculations, so the barrier was evaluated from two independently converged constrained relaxations instead.",
         { after: 110 }),
-      p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound."),
+      p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound. The Li₃N(001) value of 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [54]."),
     ],
   }],
 });
