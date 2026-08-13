@@ -153,6 +153,27 @@ def widest_offset(atoms, cell, fx, fy, ux, uy, span=1.1, n=45, target=2.15):
 ONLI_STEP = (-0.111074, 0.111070)   # 최단 on-Li -> on-Li (2.107 A)
 
 
+def zigzag_path(atoms, cell, A, B, Cc, xis, target=2.15, z_start=None):
+    """A -> B -> Cc 세 자리를 지나는 **부드러운 곡선** 위의 점들. [(xi,fx,fy,fz)].
+
+    on-Li 자리는 벌집이라 연속 hop 이 120도로 꺾인다. 꺾인 선분 두 개로 그리면 각이
+    지저분하므로 2차 Bezier 로 이어 붙인다. 제어점을 P1 = (4B - A - C)/2 로 잡으면
+    t = 0.5 에서 곡선이 **정확히 B 를 지난다** (t=0 -> A, t=1 -> Cc 도 정확).
+    높이는 ride_height 로 점마다 맞추되, z_start 가 주어지면 첫 점은 그 값(계산된 구조)을 쓴다.
+    """
+    P1 = ((4 * B[0] - A[0] - Cc[0]) / 2.0, (4 * B[1] - A[1] - Cc[1]) / 2.0)
+    out = []
+    for t in xis:
+        if not (0.0 <= t <= 1.0):
+            raise ValueError(f"xi={t} 가 [0,1] 밖이다")
+        u = 1.0 - t
+        fx = u * u * A[0] + 2 * u * t * P1[0] + t * t * Cc[0]
+        fy = u * u * A[1] + 2 * u * t * P1[1] + t * t * Cc[1]
+        z = z_start if (t == 0.0 and z_start is not None) else ride_height(atoms, cell, fx, fy, target)
+        out.append((t, fx, fy, z))
+    return out
+
+
 def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1,
               arc=False, bow=0.0):
     """on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작점 = 계산된 최소점 xy.
