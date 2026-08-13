@@ -184,6 +184,66 @@ def write_esw_csv(rows, path, src):
             w.writerow([r[k] for k in rows[0]])
 
 
+#: gate 입력으로 실제로 쓰이는 열. 하나라도 비면 그 (종, 라벨) 은 평가에 못 들어간다.
+GATE_INPUT_COLS = {
+    "champions":   ["rerank_de_post_anneal", "elastic_E_young_GPa", "eos_B0_GPa"],
+    "litransport": ["bvs_li_proxy_score", "tier2_dopant_blocking_fraction"],
+}
+
+
+def audit_completeness(champ_rows, lit_rows, esw_rows):
+    """⛔ 2026-08-14 (Codex 감사) — "90종 funnel" 은 틀린 표현이다.
+
+    ESW 는 90종이지만 gate 입력(형성에너지·탄성·BVS)이 비면 그 종은 랭킹·깔때기에서
+    **조용히 빠진다**. AlI₃ 가 정확히 그 경우였고(champion 3개·litransport 3개 전부 결측),
+    MgI₂ 는 x050 이 통째로 비었는데 나머지 두 라벨 평균으로 살아남았다.
+    → 종을 dropped / partial / complete 로 갈라 기록한다. 화면은 이 판정을 그대로 쓴다.
+    """
+    def base(x):
+        import re
+        return re.sub(r"_x\d+.*$", "", x).split("+")[0]
+
+    def blank(v):
+        return str(v).strip() in ("", "nan", "None", "NA")
+
+    per = {}
+    for r in champ_rows:
+        sp = base(r.get("_dir") or r.get("dopant", ""))
+        d = per.setdefault(sp, {"champ_ok": 0, "champ_n": 0, "lit_ok": 0, "lit_n": 0})
+        d["champ_n"] += 1
+        if not any(blank(r.get(c, "")) for c in GATE_INPUT_COLS["champions"]):
+            d["champ_ok"] += 1
+    for r in lit_rows:
+        sp = base(r.get("_dir", ""))
+        d = per.setdefault(sp, {"champ_ok": 0, "champ_n": 0, "lit_ok": 0, "lit_n": 0})
+        d["lit_n"] += 1
+        if not any(blank(r.get(c, "")) for c in GATE_INPUT_COLS["litransport"]):
+            d["lit_ok"] += 1
+
+    esw_sp = {r["dopant"] for r in esw_rows}
+    dropped, partial, complete = {}, {}, []
+    for sp in sorted(esw_sp):
+        d = per.get(sp, {"champ_ok": 0, "champ_n": 0, "lit_ok": 0, "lit_n": 0})
+        if d["champ_ok"] == 0 or d["lit_ok"] == 0:
+            dropped[sp] = (f"gate 입력 전면 결측 — champion {d['champ_ok']}/{d['champ_n']} · "
+                           f"litransport {d['lit_ok']}/{d['lit_n']}. ESW 만 있고 평가 불가")
+        elif d["champ_ok"] < d["champ_n"] or d["lit_ok"] < d["lit_n"]:
+            partial[sp] = (f"부분 결측 — champion {d['champ_ok']}/{d['champ_n']} · "
+                           f"litransport {d['lit_ok']}/{d['lit_n']}. 남은 라벨 평균으로 평가됨")
+        else:
+            complete.append(sp)
+    return {
+        "audited": "2026-08-14",
+        "audited_by": "tools/cascade/rebuild_pool_inputs.py --audit (Codex 감사 반영)",
+        "headline": (f"ESW {len(esw_sp)}종 회수 → gate 평가 {len(esw_sp) - len(dropped)}종 "
+                     f"(전면 결측 {len(dropped)} · 부분 결측 {len(partial)})"),
+        "⛔_do_not_say": "\"90종 funnel\" — 정확히는 \"90종 회수 → 89종 부분평가\"다.",
+        "n_esw": len(esw_sp), "n_evaluable": len(esw_sp) - len(dropped),
+        "n_complete": len(complete), "dropped": dropped, "partial": partial,
+        "gate_input_cols": GATE_INPUT_COLS,
+    }
+
+
 def selftest():
     """양성 + **음성**. 옛 판이 틀리던 입력과 plain/Clrich 분리를 확인한다."""
     import tempfile
@@ -287,6 +347,16 @@ def main():
     write_esw_csv(rows, p2, a.esw_json)
     n_clr = sum(1 for r in rows if r["clrich_ox_V"] != "")
     print(f"[esw]       {p2}  {len(rows)}종 · Cl-rich 비교 가능 {n_clr}종")
+
+    audit = audit_completeness(ch, lit, rows)
+    p4 = PROP / f"cascade_pool_audit{suf}.json"
+    json.dump(audit, open(p4, "w"), ensure_ascii=False, indent=1)
+    open(p4, "a").write("\n")
+    print(f"[audit]     {p4}  {audit['headline']}")
+    if audit["dropped"]:
+        print(f"            ⛔ 전면 결측: {' '.join(sorted(audit['dropped']))}")
+    if audit["partial"]:
+        print(f"            ⚠ 부분 결측: {' '.join(sorted(audit['partial']))}")
     print("다음: python3 tools/figures/plot_cascade_insights.py "
           "→ cascade_v23_ranked.csv → tools/cascade/build_screening_funnel.py")
     return 0

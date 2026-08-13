@@ -10,7 +10,21 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-OUT = "docs/figures/cascade"; os.makedirs(OUT, exist_ok=True)
+# ── 회수분(90종) 병렬 생성 shim (2026-08-14) ────────────────────────────────
+#   CASCADE_SUFFIX=_v2 CASCADE_FIGDIR=docs/figures/cascade_v2 로 돌리면 정본을 안 건드리고
+#   같은 그림을 회수 풀로 다시 그린다. 접미사가 비면 동작이 100% 이전과 같다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+_FIGDIR = _os.environ.get("CASCADE_FIGDIR", "")
+def _csv(name):
+    """db/properties 상대 경로에 접미사를 끼운다. 'a/b/x.csv' → 'a/b/x_v2.csv'."""
+    if not _SUF: return name
+    root, ext = _os.path.splitext(name)
+    cand = root + _SUF + ext
+    return cand if _os.path.exists(cand) else name
+
+
+OUT = _FIGDIR or "docs/figures/cascade"; os.makedirs(OUT, exist_ok=True)
 LANTH={"La","Nd","Sm","Gd"}; ALKALI={"Li","Na"}; AE={"Mg","Ca","Sr","Ba"}
 MAIN={"B","Al","Ga","In","Si","Ge","Sn","Sb"}
 # dopant: (ox_V, red_V, ocv_V, win_V) — PLAIN variant
@@ -59,7 +73,7 @@ def esw_note(d):
     return ";".join(n)
 
 # ---- write CSV (clean: leading '#' provenance is raw-written [no quoting], header is a real row) ----
-with open("db/properties/oxidation_stability_cascade.csv","w",newline="") as f:
+with open(_csv("db/properties/oxidation_stability_cascade.csv"),"w",newline="") as f:
     f.write("# grand-potential ESW per cascade dopant (UMA champion composition, MP GGA_GGA+U hull). "
             "Source: esw_cascade_batch.py @ gabia, PLAIN variant. Read with pandas.read_csv(comment='#').\n")
     f.write("# ref undoped: comp1/modelc ox=2.14 red=1.24 ocv=1.72 ; nd ox=1.92 (matches Nd2O3 here). "

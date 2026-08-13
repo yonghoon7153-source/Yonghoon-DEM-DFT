@@ -11,7 +11,21 @@ import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Patch
 
-CSV = "db/properties/cascade_v23_champions.csv"; OUT = "docs/figures/cascade"
+# ── 회수분(90종) 병렬 생성 shim (2026-08-14) ────────────────────────────────
+#   CASCADE_SUFFIX=_v2 CASCADE_FIGDIR=docs/figures/cascade_v2 로 돌리면 정본을 안 건드리고
+#   같은 그림을 회수 풀로 다시 그린다. 접미사가 비면 동작이 100% 이전과 같다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+_FIGDIR = _os.environ.get("CASCADE_FIGDIR", "")
+def _csv(name):
+    """db/properties 상대 경로에 접미사를 끼운다. 'a/b/x.csv' → 'a/b/x_v2.csv'."""
+    if not _SUF: return name
+    root, ext = _os.path.splitext(name)
+    cand = root + _SUF + ext
+    return cand if _os.path.exists(cand) else name
+
+
+CSV = _csv("db/properties/cascade_v23_champions.csv"); OUT = _FIGDIR or "docs/figures/cascade"
 LANTH = {"La","Nd","Sm","Gd"}; ALKALI={"Li","Na"}; AE={"Mg","Ca","Sr","Ba"}
 MAIN={"B","Al","Ga","In","Si","Ge","Sn","Sb"}
 def fnum(s):

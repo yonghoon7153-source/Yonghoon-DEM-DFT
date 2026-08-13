@@ -42,11 +42,25 @@ if str(ROOT) not in sys.path:
 
 from tools.figures.house_style import ELEM, INK, MUT, apply_axes  # noqa: E402
 
+# ── 회수분(90종) 병렬 생성 shim (2026-08-14) ────────────────────────────────
+#   CASCADE_SUFFIX=_v2 CASCADE_FIGDIR=docs/figures/cascade_v2 로 돌리면 정본을 안 건드리고
+#   같은 그림을 회수 풀로 다시 그린다. 접미사가 비면 동작이 100% 이전과 같다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+_FIGDIR = _os.environ.get("CASCADE_FIGDIR", "")
+def _csv(name):
+    """db/properties 상대 경로에 접미사를 끼운다. 'a/b/x.csv' → 'a/b/x_v2.csv'."""
+    if not _SUF: return name
+    root, ext = _os.path.splitext(name)
+    cand = root + _SUF + ext
+    return cand if _os.path.exists(cand) else name
+
+
 
 PROP = ROOT / "db" / "properties"
 FIG = ROOT / "docs" / "figures" / "cascade"
 FUNNEL = PROP / "cascade_screening_funnel.json"
-LITRANSPORT = PROP / "cascade_v23_litransport.csv"
+LITRANSPORT = PROP / _csv("cascade_v23_litransport.csv")
 
 HOST_OX_V = 2.14
 G4_TRANSPORT_CUT = 0.30

@@ -677,11 +677,28 @@
       <span class="muted" style="font-weight:400;font-size:.8rem">회수 {{ VM.recovered_on }}</span></h3>
     <div class="callout cal-warning" style="margin:0 0 12px">
       <div class="cal-b" style="font-size:.82rem">
+        <b style="font-size:1.05em">{{ VM.headline }}</b><br>
         <b>범위</b> — {{ VM.scope }}<br>
         <b>왜</b> — {{ VM.why }}<br>
-        <b>{{ VM.caveat }}</b>
+        <b>{{ VM.caveat }}</b><br>
+        {{ VM.inherited_text_warning }}
       </div>
     </div>
+
+    {% if V.audit %}{% set A = V.audit %}
+    <h4 style="margin:14px 0 6px">완결성 감사 <span class="muted" style="font-weight:400;font-size:.8rem">{{ A.audited }} · {{ A['⛔_do_not_say'] }}</span></h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>구분</th><th>종</th><th>의미</th></tr></thead><tbody>
+      <tr><td><span class="badge ok">complete</span></td><td class="mono">{{ A.n_complete }}</td>
+          <td style="font-size:.86em">모든 농도 라벨에서 gate 입력이 다 있음</td></tr>
+      <tr><td><span class="badge warn">partial</span></td><td class="mono">{{ A.partial|length }}</td>
+          <td style="font-size:.86em">일부 라벨 결측 — 남은 라벨 평균으로 평가됨:
+            <span class="mono">{{ A.partial.keys()|sort|join(' ') }}</span></td></tr>
+      <tr><td><span class="badge warn">dropped</span></td><td class="mono">{{ A.dropped|length }}</td>
+          <td style="font-size:.86em">gate 입력 전면 결측 → ESW 만 있고 <b>평가 불가</b>:
+            {% for sp, why in A.dropped.items() %}<span class="mono">{{ sp }}</span> — {{ why }}{% endfor %}</td></tr>
+    </tbody></table></div>
+    {% endif %}
 
     <h4 style="margin:14px 0 6px">축별 완성도</h4>
     <div class="tbl-scroll"><table class="data-table"><thead><tr>

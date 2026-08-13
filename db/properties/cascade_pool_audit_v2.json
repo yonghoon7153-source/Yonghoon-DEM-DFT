@@ -1,0 +1,43 @@
+{
+ "audited": "2026-08-14",
+ "audited_by": "tools/cascade/rebuild_pool_inputs.py --audit (Codex 감사 반영)",
+ "headline": "ESW 90종 회수 → gate 평가 89종 (전면 결측 1 · 부분 결측 18)",
+ "⛔_do_not_say": "\"90종 funnel\" — 정확히는 \"90종 회수 → 89종 부분평가\"다.",
+ "n_esw": 90,
+ "n_evaluable": 89,
+ "n_complete": 71,
+ "dropped": {
+  "AlI3": "gate 입력 전면 결측 — champion 0/3 · litransport 0/3. ESW 만 있고 평가 불가"
+ },
+ "partial": {
+  "BaCl2": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "Cu2O": "부분 결측 — champion 1/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "LaCl3": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "LaF3": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "Li2O": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "Li3N": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "LiI": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "MgCl2": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "MgI2": "부분 결측 — champion 2/3 · litransport 2/3. 남은 라벨 평균으로 평가됨",
+  "MgS": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "MnO": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "MoO3": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "Na2S": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "Sb2O5": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "SrCl2": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "TiF4": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "V2O5": "부분 결측 — champion 1/3 · litransport 3/3. 남은 라벨 평균으로 평가됨",
+  "YCl3": "부분 결측 — champion 2/3 · litransport 3/3. 남은 라벨 평균으로 평가됨"
+ },
+ "gate_input_cols": {
+  "champions": [
+   "rerank_de_post_anneal",
+   "elastic_E_young_GPa",
+   "eos_B0_GPa"
+  ],
+  "litransport": [
+   "bvs_li_proxy_score",
+   "tier2_dopant_blocking_fraction"
+  ]
+ }
+}

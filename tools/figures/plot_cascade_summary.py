@@ -11,7 +11,21 @@ from collections import Counter
 import matplotlib; matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
-OUT="docs/figures/cascade"
+
+# ── 회수분(90종) 병렬 생성 shim (2026-08-14) ────────────────────────────────
+#   CASCADE_SUFFIX=_v2 CASCADE_FIGDIR=docs/figures/cascade_v2 로 돌리면 정본을 안 건드리고
+#   같은 그림을 회수 풀로 다시 그린다. 접미사가 비면 동작이 100% 이전과 같다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+_FIGDIR = _os.environ.get("CASCADE_FIGDIR", "")
+def _csv(name):
+    """db/properties 상대 경로에 접미사를 끼운다. 'a/b/x.csv' → 'a/b/x_v2.csv'."""
+    if not _SUF: return name
+    root, ext = _os.path.splitext(name)
+    cand = root + _SUF + ext
+    return cand if _os.path.exists(cand) else name
+
+OUT = _FIGDIR or "docs/figures/cascade"
 LANTH={"La","Nd","Sm","Gd"}; ALKALI={"Li","Na"}; AE={"Mg","Ca","Sr","Ba"}; MAIN={"B","Al","Ga","In","Si","Ge","Sn","Sb"}
 def fnum(s):
     try: return float(s)
@@ -23,11 +37,11 @@ def parse(d):
     cat=[(e,n) for e,n in toks if e not in ("O","F")][0]
     av=2 if an=="O" else 1; bn=[n for e,n in toks if e==an][0]; val=round(av*bn/cat[1])
     return cat[0],an,val
-lt={r["_dir"]:r for r in csv.DictReader(open("db/properties/cascade_v23_litransport.csv"))}
+lt={r["_dir"]:r for r in csv.DictReader(open(_csv("db/properties/cascade_v23_litransport.csv")))}
 ch={}
-for r in csv.DictReader(open("db/properties/cascade_v23_champions.csv")): ch.setdefault(r["dopant"].split("+")[0],[]).append(r)
+for r in csv.DictReader(open(_csv("db/properties/cascade_v23_champions.csv"))): ch.setdefault(r["dopant"].split("+")[0],[]).append(r)
 esw={}
-_raw=open("db/properties/oxidation_stability_cascade.csv").read().splitlines()
+_raw=open(_csv("db/properties/oxidation_stability_cascade.csv")).read().splitlines()
 _h=next(i for i,l in enumerate(_raw) if l.startswith("dopant,"))
 for r in csv.DictReader(io.StringIO("\n".join(_raw[_h:]))): esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]),fnum(r["window_V"]))
 def agg(d,k,dn=False):

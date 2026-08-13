@@ -22,10 +22,24 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 
+# ── 회수분(90종) 병렬 생성 shim (2026-08-14) ────────────────────────────────
+#   CASCADE_SUFFIX=_v2 CASCADE_FIGDIR=docs/figures/cascade_v2 로 돌리면 정본을 안 건드리고
+#   같은 그림을 회수 풀로 다시 그린다. 접미사가 비면 동작이 100% 이전과 같다.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
+_FIGDIR = _os.environ.get("CASCADE_FIGDIR", "")
+def _csv(name):
+    """db/properties 상대 경로에 접미사를 끼운다. 'a/b/x.csv' → 'a/b/x_v2.csv'."""
+    if not _SUF: return name
+    root, ext = _os.path.splitext(name)
+    cand = root + _SUF + ext
+    return cand if _os.path.exists(cand) else name
+
+
 INK, MUT = "#1f2937", "#6b7280"
 NAVY, RED, TEAL, VIOLET, ORANGE, GREEN = "#1F4E79", "#9E2A2B", "#0d9488", "#7c3aed", "#c05621", "#65a30d"
 
-D = json.load(open("db/properties/cascade_v23_themes.json"))["dopants"]
+D = json.load(open(_csv("db/properties/cascade_v23_themes.json")))["dopants"]
 SC = {r["dopant"]: r for r in csv.DictReader(open("db/properties/cascade_seminar_scorecard_47.csv"))}
 
 # (라벨, themes 필드, favorable 방향 +1=클수록 좋음)

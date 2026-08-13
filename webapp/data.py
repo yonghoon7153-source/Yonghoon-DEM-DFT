@@ -892,17 +892,29 @@ CASCADE_FILES_V2 = {
     "ranked":      "cascade_v23_ranked_v2.csv",
 }
 CASCADE_V2_META = {
+    # ⛔ 2026-08-14 Codex 감사 반영 — "90종 funnel" 은 과장이었다.
+    #    ESW 는 90종이지만 gate 입력이 비면 조용히 빠진다: AlI₃ 전면 결측 → 랭킹·깔때기 89종.
+    #    부분 결측 18종은 남은 라벨 평균으로 평가돼 있다. 화면은 이 구분을 그대로 쓴다.
+    "headline": "90종 회수 → 89종 부분평가 (전면 결측 1 · 부분 결측 18)",
     "scope": "완주한 전체 90종 · 270 champion (273 슬롯 중 270 완주; As₂S₃ 3건은 stage-01 seed 실패)",
+    #: v2 JSON 이 상속한 문자열 경고 — 빌더의 description·honesty_header 는 47종 시절 문안이라
+    #: 그 안의 "47종"·"x=0.02/0.05/0.10" 은 **현행 아님**. 화면에서 그대로 읽히지 않게 한다.
+    "inherited_text_warning": ("⚠ 아래 funnel·themes JSON 의 description·honesty_header 는 47종 시절 "
+                               "문안을 그대로 물려받았다 — 그 안의 '47종'·'x=0.02/0.05/0.10'·"
+                               "'Li 수송' 표현은 **현행 90종 판정이 아니다**. 숫자는 재계산됐지만 "
+                               "설명 문자열은 아직 갱신되지 않았다."),
     "why": ("정본 47종은 물리 판정이 아니라 **취합 경계**였다. 등록이 2026-06-29 에 멈췄고 "
             "계산은 7-11 에 끝났다. 빠져 있던 43종도 STAGE_12 까지 완주해 있었다."),
     "recovered_on": "2026-08-13",
     "status": {
         # 축별 완성도를 다르게 표시한다 — 89종 파생을 90종 최종판처럼 보이게 하지 않는다.
-        "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수"),
+        "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수 회수"),
         "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
-        "ranked":    ("incomplete", "recovered / incomplete — 89 of 90 (형성에너지 결측 1종 제외)"),
-        "funnel":    ("recovered",  "90종 waterfall 89–89–84–45–28–1 (정본 47종판은 47–47–43–25–11–1). "
-                                    "themes 를 90종으로 재생성해 transport_norm 재정규화 완료"),
+        "ranked":    ("incomplete", "recovered / incomplete — 89 of 90. AlI₃ 는 gate 입력(형성에너지·"
+                                    "탄성·BVS)이 전면 결측이라 ESW 만 있고 랭킹에 못 들어간다"),
+        "funnel":    ("partial",    "89종 **부분평가** waterfall 89–89–84–45–28–1 (정본 47종판 "
+                                    "47–47–43–25–11–1). ⚠ 18종은 일부 농도 라벨이 결측이라 남은 "
+                                    "라벨 평균으로 평가됐다 — '90종 funnel' 이 아니다"),
         "figures":   ("partial",    "docs/figures/cascade_v2/ — insights 1종만 재생성, 나머지 18종 대기"),
     },
     #: 90종 waterfall 에서 **판정이 아닌 이유로** 통과한 종. 화면에 반드시 병기한다.
@@ -930,6 +942,7 @@ CASCADE_V2_META = {
         ("db/properties/oxidation_stability_cascade_v2.json","ESW 원본 (분해 반응식 포함, 270 champion)"),
         ("db/properties/cascade_v23_ranked_v2.csv",          "합성점수 랭킹 89종 ⚠ incomplete"),
         ("db/properties/cascade_v23_all_20260629_47species.csv", "옛 47종 판 (2026-06-29, 대조용)"),
+        ("db/properties/cascade_pool_audit_v2.json",          "완결성 감사 (전면/부분 결측 판정)"),
     ],
     "caveat": ("⚠ 89종 랭킹과 미완 funnel 을 90종 최종판으로 인용하지 말 것. "
                "원자료와 ESW 는 90종 전수이고 그대로 내려받을 수 있다."),
@@ -976,6 +989,8 @@ def load_cascade() -> dict:
             v2["present"] = True
     v2["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel_v2.json")
     v2["themes"] = _load_json(DB / "properties" / "cascade_v23_themes_v2.json")
+    # 완결성 감사 — 화면은 "90종 funnel" 이 아니라 이 판정(전면/부분 결측)을 표시한다.
+    v2["audit"] = _load_json(DB / "properties" / "cascade_pool_audit_v2.json")
     # 내려받기 가능한 것만 남긴다 (없는 파일을 링크로 걸지 않는다)
     v2["downloads"] = [(rel, label) for rel, label in CASCADE_V2_META["downloads"]
                        if (ROOT / rel).is_file()]
