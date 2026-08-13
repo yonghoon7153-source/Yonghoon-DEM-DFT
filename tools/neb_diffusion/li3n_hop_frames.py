@@ -40,6 +40,9 @@ import sys
 
 HOP_DEFAULT = (-1, 1)
 CLEARANCE_A = 1.90      # 이보다 가까우면 Li 가 N 을 관통 — 그림으로 쓸 수 없다
+TS_XI_MAX = 1.35        # 계산된 안장점이 hop 위 어디까지 있어도 되는가.
+                        # xi_ts > 1 = 안장점이 도착지보다 더 멀다 = 이 hop 의 안장점이 아니다.
+                        # 경고만 하고 통과시킨다 (그림은 hop 자체가 물리적이면 그릴 수 있다).
 
 
 def parse_vesta(path):
@@ -82,7 +85,11 @@ def adatom_of(atoms):
 
 
 def hop_frac(hop):
-    """격자 병진 (m,n) -> 3x3 supercell 분수좌표 증분."""
+    """격자 병진 (m,n) -> 3x3 supercell 분수좌표 증분. ('free',dfx,dfy) 면 그대로."""
+    if len(hop) == 3 and hop[0] == "free":
+        if abs(hop[1]) < 1e-9 and abs(hop[2]) < 1e-9:
+            raise ValueError("--to_frac 가 시작점과 같다")
+        return (hop[1], hop[2])
     m, n = hop
     if not (isinstance(m, int) and isinstance(n, int)):
         raise ValueError("hop 은 정수쌍이어야 한다 (원시격자 병진)")
@@ -114,15 +121,15 @@ def frame_positions(f_min, f_ts, hop, xis):
     vx, vy = f_ts[0] - f_min[0], f_ts[1] - f_min[1]
     denom = dfx * dfx + dfy * dfy
     xi_ts = (vx * dfx + vy * dfy) / denom
-    if not (0.05 < xi_ts < 0.95):
+    if not (0.05 < xi_ts < TS_XI_MAX):
         raise ValueError(f"TS 가 hop 위 xi={xi_ts:.3f} — 이 hop 의 안장점이 아닌 듯하다")
     out = []
     for xi in xis:
         if not (0.0 <= xi <= 1.0):
             raise ValueError(f"xi={xi} 가 [0,1] 밖이다")
         # z: (0, z_min) - (xi_ts, z_ts) - (1-xi_ts, z_ts) - (1, z_min) 를 잇는 대칭 꺾은선
-        t = min(xi, 1.0 - xi)
-        zf = f_min[2] + (f_ts[2] - f_min[2]) * (t / xi_ts if t < xi_ts else 1.0)
+        t = min(xi, 1.0 - xi) if xi_ts < 0.95 else xi
+        zf = f_min[2] + (f_ts[2] - f_min[2]) * (min(t / xi_ts, 1.0) if xi_ts > 0 else 0.0)
         out.append((xi, f_min[0] + xi * dfx, f_min[1] + xi * dfy, zf))
     return out, xi_ts
 
@@ -188,6 +195,11 @@ def selftest():
     except ValueError:
         chk("hop 밖 TS 거부", True)
     chk("관통 임계가 Li-N 결합보다 낮게 잡혀 있지 않다", CLEARANCE_A >= 1.85)
+    chk("TS_XI_MAX 가 1 을 넘는 경우를 허용", 1.0 < TS_XI_MAX < 2.0)
+    try:   # 완전히 반대 방향이면 여전히 거부해야 한다
+        frame_positions(fmin, fts, (1, -1), [0.5]); chk("역방향 hop 거부", False)
+    except ValueError:
+        chk("역방향 hop 거부", True)
     try:
         adatom_of([(1, "Li", "Li1", 0, 0, 0, 0)]); chk("adatom 없음 거부", False)
     except SystemExit:
@@ -204,6 +216,7 @@ def main():
     ap.add_argument("--outdir")
     ap.add_argument("--xi", default="0,0.2,0.4,0.5,0.6,0.8,1.0")
     ap.add_argument("--hop", default="-1,1", help="원시격자 병진 (m,n); 기본 -1,1 = sqrt(3)a")
+    ap.add_argument("--to_frac", help="끝점 supercell 분수좌표 'fx,fy' (--hop 대신; 격자 병진이 아니어도 됨)")
     ap.add_argument("--report", action="store_true", help="각 프레임 N 배위 거리 출력")
     ap.add_argument("--allow_collision", action="store_true",
                     help="N 관통 경로도 강행 (진단 전용 — 그림으로 쓰지 말 것)")
@@ -220,7 +233,11 @@ def main():
     if [round(x, 4) for x in cell] != [round(x, 4) for x in cell_t]:
         sys.exit("min/TS 셀이 다르다 — 같은 슬랩이 아니다")
     ad, ad_t = adatom_of(atoms), adatom_of(atoms_t)
-    hop = tuple(int(t) for t in a.hop.split(","))
+    if a.to_frac:
+        tfx, tfy = [float(t) for t in a.to_frac.replace(" ", "").split(",")]
+        hop = ("free", tfx - ad[3], tfy - ad[4])
+    else:
+        hop = tuple(int(t) for t in a.hop.split(","))
     xis = [float(t) for t in a.xi.replace(" ", "").split(",")]
 
     clear = min_clearance(atoms, cell, ad[3:6], hop)
@@ -232,6 +249,9 @@ def main():
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
     pts, xi_ts = frame_positions(ad[3:6], ad_t[3:6], hop, xis)
+    if xi_ts > 1.0:
+        print(f"*** 주의: 계산된 안장점이 hop 위 xi={xi_ts:.2f} — 도착지보다 멀다.\n"
+              f"    이 hop 의 안장점은 계산된 적이 없다. 프레임의 중간 높이는 표시용 보간이다. ***")
     (a1x, a1y), (a2x, a2y) = lat2d(cell)
     dfx, dfy = hop_frac(hop)
     hx, hy = dfx * a1x + dfy * a2x, dfx * a1y + dfy * a2y
