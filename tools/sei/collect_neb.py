@@ -10,8 +10,15 @@
        끝점 하나가 다른 국소최소로 흘렀다는 뜻이다
   셋 다 안 보고 숫자만 옮기면 조용히 틀린 값이 논문에 들어간다.
 
-  python3 tools/sei/collect_neb.py
+이 도구가 못 하는 것
+  · 셀 크기 수렴을 대신 봐 주지 않는다 — jellium/이미지 상호작용은 별도 런으로 확인할 것.
+  · 홉이 **전도 경로인지**는 판정하지 않는다 (끝점 대칭·수렴만 본다). li3nd c→b 처럼
+    수렴·대칭 검사를 다 통과하고도 "일어나지 않는 홉" 일 수 있다.
+
+  python3 tools/sei/collect_neb.py                       # 기본 루트 전부 (아래 ROOTS)
   python3 tools/sei/collect_neb.py --work /data/work/runs/sei_neb
+  python3 tools/sei/collect_neb.py --work a:b,c          # 콜론/쉼표로 여러 루트
+  python3 tools/sei/collect_neb.py --selftest
 """
 import argparse
 import glob
@@ -21,12 +28,43 @@ import re
 import sys
 
 OUT = "db/properties/sei_neb.json"
+#: NEB 작업 루트 — watch_gabia.py 의 NEBW 와 같은 목록이어야 한다.
+#: ⛔⛔ 2026-08-13 — 옛 판은 `--work` 하나만 받고 그 루트 결과로 파일을 **통째로 덮어썼다**.
+#:   루트가 4개가 된 뒤로는 마지막에 회수한 루트만 db 에 남는다: ccpath 를 회수하면
+#:   v2 의 li2s 가 사라지고, 그 뒤 v3 를 회수하면 방금 인용 가능해진 li3nd 가 사라진다.
+#:   게다가 같은 상 이름이 루트마다 **다른 홉**이라 tag 키가 서로를 덮어쓴다
+#:   (li3nd 는 v2=c→b · ccpath=c→c · cc333=3×3×3 로 셋이다).
+#:   → 여러 루트를 한 번에 읽고, 키를 `<루트라벨>/<상>` 으로 쓴다.
+ROOTS = os.environ.get("NEBW",
+                       "/data/work/runs/sei_neb_v2"
+                       ":/data/work/runs/sei_neb_v2_ccpath"
+                       ":/data/work/runs/sei_neb_v2_cc333"
+                       ":/data/work/runs/sei_neb_v3")
+
+
+def split_roots(spec):
+    """콜론/쉼표 목록 → (존재하는 루트, 없는 루트). 없는 건 조용히 버리지 않는다."""
+    out, missing = [], []
+    for x in re.split(r"[:,]", spec or ""):
+        x = x.strip()
+        if not x:
+            continue
+        (out if os.path.isdir(x) else missing).append(x)
+    return out, missing
+
+
+def root_label(d):
+    """/data/work/runs/sei_neb_v2_ccpath → v2_ccpath (표와 키에 쓰는 짧은 이름)."""
+    b = os.path.basename(os.path.normpath(d))
+    return b[len("sei_neb_"):] if b.startswith("sei_neb_") else b
 # QE neb.x 가 찍는 줄:
 #   activation energy (->) =   0.286745 eV
 #   activation energy (<-) =   0.286712 eV
 _ACT = re.compile(r"activation energy\s*\((->|<-)\)\s*=\s*(-?[\d.]+)\s*eV")
 _IMG = re.compile(r"num_of_images\s*=\s*(\d+)")
-_CI = re.compile(r"CI_scheme\s*=\s*'([^']+)'")
+#: neb.**in** 은 네임리스트라 `CI_scheme = 'auto'`, neb.**out** 은 echo 라
+#: `CI_scheme                     =    auto` — 따옴표를 강제하면 out 에서 안 맞는다.
+_CI = re.compile(r"CI_scheme\s*=\s*'?([\w.\-]+)'?")
 
 
 def read_one(d):
@@ -59,7 +97,11 @@ def read_one(d):
         "Ea_forward_eV": fwd[-1] if fwd else None,
         "Ea_backward_eV": bwd[-1] if bwd else None,
         "num_of_images": int(_IMG.search(inp).group(1)) if _IMG.search(inp) else None,
-        "CI_scheme": _CI.search(inp).group(1) if _CI.search(inp) else None,
+        # ★ neb.out 을 **먼저** 본다 — 실제로 돈 것이 무엇인지는 출력이 정본이다.
+        #   neb.in 만 보면 CI 로 재생성해 놓고 CI 런이 안 뜬 상태(옛 neb.out)를
+        #   'CI 완료' 로 읽는다. 없으면 입력으로 폴백.
+        "CI_scheme": ((_CI.search(t) or _CI.search(inp)).group(1)
+                      if (_CI.search(t) or _CI.search(inp)) else None),
         # ⚠ 전하는 meta.json 이 정본이다 — 입력 문자열 추론은 옛 규약을 되살릴 수 있다
         "tot_charge_from_input": (re.search(r"tot_charge\s*=\s*(-?[\d.]+)", inp).group(1)
                                   if re.search(r"tot_charge\s*=\s*(-?[\d.]+)", inp) else None),
@@ -168,33 +210,111 @@ def read_one(d):
     return r
 
 
+def selftest():
+    """양성 + **음성**. 음성이 없으면 통과해도 아무것도 보증 못 한다."""
+    import shutil
+    import tempfile
+    td = tempfile.mkdtemp(prefix="collect_neb_st_")
+    ok = True
+
+    def chk(cond, msg):
+        nonlocal ok
+        print(("  ✓ " if cond else "  ✗ ") + msg)
+        ok &= bool(cond)
+
+    def mk(root, tag, ea, ci="auto", conv=True, eqv=True):
+        d = os.path.join(td, root, tag)
+        os.makedirs(d, exist_ok=True)
+        json.dump({"endpoints_symmetry_equivalent": eqv,
+                   "electronic_class": "metal", "tot_charge": 0},
+                  open(os.path.join(d, "meta.json"), "w"))
+        # ★ 픽스처는 **실제 형식**이어야 한다 — neb.in 은 따옴표 있는 네임리스트,
+        #   neb.out 은 따옴표 없는 echo. 어제 픽스처가 둘 다 따옴표라 정규식 결함을
+        #   그대로 통과시켰다 (2026-08-13).
+        open(os.path.join(d, "neb.in"), "w").write(
+            f"  num_of_images = 7,\n  CI_scheme = '{ci}',\n  tot_charge = 0,\n")
+        body = (f"     num_of_images                 =    7\n"
+                f"     CI_scheme                     =    {ci}\n"
+                f"     activation energy (->) =   {ea:.6f} eV\n"
+                f"     activation energy (<-) =   {ea:.6f} eV\n")
+        if conv:
+            body += "     neb: convergence achieved in 1 iterations\n"
+        open(os.path.join(d, "neb.out"), "w").write(body)
+        return d
+
+    # 양성: CI 켜짐 + 수렴 + 대칭 → 인용 가능
+    r = read_one(mk("sei_neb_v2_ccpath", "li3nd", 0.228981))
+    chk(r["citable"] and abs(r["Ea_effective_eV"] - 0.228981) < 1e-9,
+        f"CI·수렴·대칭 → 인용 가능 ({r.get('Ea_effective_eV')})")
+    # 음성 ①: no-CI 는 하한이라 인용 불가여야 한다
+    r = read_one(mk("sei_neb_v2", "li2s", 0.305, ci="no-CI"))
+    chk(not r["citable"] and any("CI" in c for c in r["blocking_checks"]),
+        f"no-CI → 인용 불가 ({r['blocking_checks']})")
+    # 음성 ②: 미수렴
+    r = read_one(mk("sei_neb_v3", "licl", 0.4, conv=False))
+    chk(not r["citable"], "미수렴 → 인용 불가")
+    # 음성 ③ ★ 루트가 달라도 상 이름이 같으면 **덮어쓰면 안 된다** (2026-08-13 실측 결함)
+    mk("sei_neb_v2", "li3nd", 2.0717, ci="no-CI", eqv=False)
+    keys = {}
+    for root in sorted(glob.glob(os.path.join(td, "*"))):
+        for d in sorted(glob.glob(os.path.join(root, "*"))):
+            rr = read_one(d)
+            rr["root"] = root_label(root)
+            keys[f"{rr['root']}/{rr['tag']}"] = rr
+    n_li3nd = [k for k in keys if k.endswith("/li3nd")]
+    chk(len(n_li3nd) == 2 and "v2_ccpath/li3nd" in keys and "v2/li3nd" in keys,
+        f"같은 상 li3nd 가 루트 2개에 **둘 다** 남는다 ({sorted(n_li3nd)})")
+    chk(keys["v2_ccpath/li3nd"]["citable"] and not keys["v2/li3nd"]["citable"],
+        "루트별 판정이 섞이지 않는다 (ccpath 인용 가능 · v2 불가)")
+    # 루트 목록 파서
+    got, miss = split_roots(f"{td}/sei_neb_v2:{td}/nope, {td}/sei_neb_v3")
+    chk(len(got) == 2 and miss == [f"{td}/nope"], f"콜론·쉼표 목록 + 없는 루트 보고 ({miss})")
+    chk(root_label("/a/b/sei_neb_v2_ccpath") == "v2_ccpath"
+        and root_label("/a/b/other") == "other", "루트 짧은 이름")
+    shutil.rmtree(td, ignore_errors=True)
+    print("selftest " + ("PASS" if ok else "FAIL"))
+    return 0 if ok else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--work", default=os.environ.get("WORK", "/data/work/runs/sei_neb"))
+    ap.add_argument("--work", default=os.environ.get("WORK", ROOTS),
+                    help="작업 루트. 콜론/쉼표로 **여러 개**를 준다 (기본은 ROOTS 전부)")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
-    dirs = sorted(d for d in glob.glob(os.path.join(a.work, "*")) if os.path.isdir(d))
-    if not dirs:
-        print(f"⛔ {a.work} 에 작업 폴더가 없다 — build_neb_inputs.py 부터")
+    if a.selftest:
+        return selftest()
+    roots, missing = split_roots(a.work)
+    for m in missing:
+        print(f"⚠ 루트 없음: {m}")
+    if not roots:
+        print(f"⛔ {a.work} 에 존재하는 루트가 없다 — build_neb_inputs.py 부터")
         return 1
     res = {}
     print(f"{'상':12s} {'상태':12s} {'Ea→':>8s} {'Ea←':>8s} {'유효Ea':>8s} {'끝점':>6s} {'스텝':>5s}  판정")
-    for d in dirs:
-        r = read_one(d)
-        res[r["tag"]] = r
-        f = r.get("Ea_forward_eV"); b = r.get("Ea_backward_eV")
-        ef = r.get("Ea_effective_eV"); eq = r.get("endpoints_symmetry_equivalent")
-        print(f"{r['tag']:12s} {r['status']:12s} "
-              f"{(f'{f:.4f}' if f is not None else '—'):>8s} "
-              f"{(f'{b:.4f}' if b is not None else '—'):>8s} "
-              f"{(f'{ef:.4f}' if ef is not None else '—'):>8s} "
-              f"{('대칭' if eq else ('비대칭' if eq is False else '?')):>6s} "
-              f"{r.get('n_path_steps', 0):5d}  "
-              + ("✅ 인용 가능" if r.get("citable") else
-                 ("⚠ " + " · ".join(r.get("blocking_checks") or ["진행 중"]))[:64]))
-        if r.get("site_energy_diff_eV"):
-            print(f"{'':12s} └ Li 자리 두 종류 {r.get('li_orbits', {}).get('wyckoffs')} — "
-                  f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
-                  f"수송 장벽은 유효Ea 를 쓴다")
+    for root in roots:
+        dirs = sorted(d for d in glob.glob(os.path.join(root, "*")) if os.path.isdir(d))
+        print(f"┌ {root_label(root)}" + ("" if dirs else "   (상 폴더 없음)"))
+        for d in dirs:
+            r = read_one(d)
+            r["root"] = root_label(root)
+            # 키에 루트를 넣는다 — 같은 상 이름이 루트마다 다른 홉이라 tag 로 키를 잡으면
+            # 조용히 서로를 덮어쓴다 (li3nd 셋이 하나로 뭉개졌다).
+            res[f"{r['root']}/{r['tag']}"] = r
+            f = r.get("Ea_forward_eV"); b = r.get("Ea_backward_eV")
+            ef = r.get("Ea_effective_eV"); eq = r.get("endpoints_symmetry_equivalent")
+            print(f"{r['tag']:12s} {r['status']:12s} "
+                  f"{(f'{f:.4f}' if f is not None else '—'):>8s} "
+                  f"{(f'{b:.4f}' if b is not None else '—'):>8s} "
+                  f"{(f'{ef:.4f}' if ef is not None else '—'):>8s} "
+                  f"{('대칭' if eq else ('비대칭' if eq is False else '?')):>6s} "
+                  f"{r.get('n_path_steps', 0):5d}  "
+                  + ("✅ 인용 가능" if r.get("citable") else
+                     ("⚠ " + " · ".join(r.get("blocking_checks") or ["진행 중"]))[:64]))
+            if r.get("site_energy_diff_eV"):
+                print(f"{'':12s} └ Li 자리 두 종류 {r.get('li_orbits', {}).get('wyckoffs')} — "
+                      f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
+                      f"수송 장벽은 유효Ea 를 쓴다")
     ok = [r for r in res.values() if r.get("citable")]
     # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.
     #   그래서 새 게이트가 콘솔에서 li2s 를 막아도 **db 파일은 안 건드려**,
@@ -214,6 +334,8 @@ def main():
             "warning": ("⚠ jellium 보정은 유한 셀 근사다 — 절대값은 셀 수렴 확인 뒤 인용할 것. "
                         "**상 사이 비교**가 이 값의 용도다. "
                         "⛔ BVSE 프록시 값과 같은 표에 놓지 말 것(단위는 같아도 다른 양이다)."),
+            "roots": [root_label(r) for r in roots],
+            "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
             "n_citable": len(ok), "n_total": len(res),
             "retracted": len(ok) == 0,
             "retraction_reason": (None if ok else

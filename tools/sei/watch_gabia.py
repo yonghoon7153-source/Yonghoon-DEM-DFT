@@ -39,7 +39,11 @@ NEBW = os.environ.get("NEBW",
                       ":/data/work/runs/sei_neb_v2_cc333"
                       ":/data/work/runs/sei_neb_v3")
 #: neb.out 머리의 CI_scheme — 'no-CI' 면 장벽이 이미지 격자만큼 **과소평가**된다.
-_CIS = re.compile(r"CI_scheme\s*=\s*'([^']+)'")
+#: ⚠ 따옴표를 요구하면 안 된다. neb.**in** 은 네임리스트라 `CI_scheme = 'auto'` 지만
+#:   neb.**out** 은 그대로 echo 해서 `CI_scheme                     =    auto` 로 찍는다.
+#:   따옴표를 강제한 첫 판은 neb.out 에서 한 번도 안 맞았고, meta.json 폴백 덕분에
+#:   화면이 맞아 보였다 — meta 와 실제 런이 어긋나면 그대로 거짓말이 된다. (2026-08-13)
+_CIS = re.compile(r"CI_scheme\s*=\s*'?([\w.\-]+)'?")
 
 
 def split_roots(spec):
@@ -342,9 +346,13 @@ def selftest():
     #   화면이 ✓ 라고 말하는데 collect_neb.py 는 retracted:true 를 찍고 있었다.
     #   같은 판정을 화면도 해야 한다 — 양성/음성 둘 다 건다.
     CONV = "     neb: convergence achieved in 12 iterations\n"
+    # ★ 실제 neb.out 형식 — 따옴표 없이 열 맞춤으로 echo 된다. 픽스처가 진짜와
+    #   다르면 selftest 는 내 착각을 통과시킨다 (2026-08-13에 실제로 그랬다).
+    def QE_CI(v):
+        return f"     CI_scheme                     =    {v}\n"
     # 음성 ⑥-a: 수렴했지만 CI_scheme='no-CI' → 인용 불가 경고 + ↓ 표시
     s = neb_status(mk("li3nd_noci", True, -100.0, -100.0,
-                      "     CI_scheme = 'no-CI'\n" + body + CONV))
+                      QE_CI("no-CI") + body + CONV))
     chk(s["state"] == "✓" and s["ci"] == "no-CI"
         and any("CI 가 꺼져 있다" in x for x in s["alerts"]),
         f"수렴 + no-CI → 인용 불가 경고 ({s['ci']})")
@@ -354,13 +362,13 @@ def selftest():
         "CI_scheme 줄 없음 → no-CI 로 간주하고 경고 (조용한 통과 금지)")
     # 음성 ⑥-c: **전도 경로가 아닌 런**(끝점 2.07 eV)에 CI 를 권하면 안 된다 — 실측 오조언
     s = neb_status(mk("li3nd_cb", False, -100.0, -102.072,
-                      "     CI_scheme = 'no-CI'\n" + body + CONV))
+                      QE_CI("no-CI") + body + CONV))
     chk(any("돌릴 이유가 없다" in x for x in s["alerts"])
         and not any("2단계가 남았다" in x for x in s["alerts"]),
         f"비대칭 2072 meV + no-CI → CI 권하지 않는다 ({[x[-30:] for x in s['alerts']]})")
     # ★ 그런데 _NOTE.txt 가 이미 설명한 런이면 **한 줄로 끝낸다** (중복 금지)
     d_cb = mk("li3nd_cb2", False, -100.0, -102.072,
-              "     CI_scheme = 'no-CI'\n" + body + CONV)
+              QE_CI("no-CI") + body + CONV)
     open(os.path.join(td, "_NOTE.txt"), "w").write("c→b — 일어나지 않는 홉\n")
     s = neb_status(d_cb)
     chk(len(s["alerts"]) == 1 and "설명돼 있다" in s["alerts"][0],
@@ -368,11 +376,11 @@ def selftest():
     os.remove(os.path.join(td, "_NOTE.txt"))
     # 양성 ③: CI 2단계까지 끝난 런은 조용해야 한다 — 안 그러면 경고가 늑대소년이 된다
     s = neb_status(mk("li3nd_ci", True, -100.0, -100.0,
-                      "     CI_scheme = 'auto'\n" + body + CONV))
+                      QE_CI("auto") + body + CONV))
     chk(s["ci"] == "auto" and not s["alerts"], f"CI auto + 수렴 → 조용 ({s['alerts']})")
     # 미수렴 단계에서는 CI 경고를 내지 않는다 (아직 1단계 도는 중이 정상이다)
     s = neb_status(mk("li3p_running", True, -100.0, -100.0,
-                      "     CI_scheme = 'no-CI'\n" + body))
+                      QE_CI("no-CI") + body))
     chk(s["state"] == "▸" and not any("CI 가 꺼져" in x for x in s["alerts"]),
         "진행 중 + no-CI → CI 경고 없음 (1단계가 정상)")
     # 음성 ①: 대칭 동등인데 끝점 57 meV — 미수렴 (2026-08 실측 사고)
