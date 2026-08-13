@@ -160,9 +160,15 @@ def section_long():
     gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
              "--format=csv,noheader,nounits").strip().splitlines()
     gpu = gpu[0] if gpu else "?"
-    base = os.path.join(LONG, "lpsocl", "T600_s2")
-    mj = next(iter(sorted(glob.glob(os.path.join(base, "**", "msd.json"),
-                                    recursive=True))), None)
+    # ⚠ 2026-08-14 — 단일 시드(s2)만 보던 것을 **전 시드**로 넓힌다. β 0.799 가 문턱
+    #   0.80 바로 아래라 한 시드로 판정하면 뒤집힌다 (2026-07-09 1.33× 철회의 재발 방지).
+    seed_mj = {}
+    for d in sorted(glob.glob(os.path.join(LONG, "lpsocl", "T600_s*"))):
+        sd = os.path.basename(d).split("_s")[-1]
+        f = next(iter(sorted(glob.glob(os.path.join(d, "**", "msd.json"), recursive=True))), None)
+        if f:
+            seed_mj[sd] = f
+    mj = seed_mj.get("2") or (next(iter(seed_mj.values()), None))
     if not os.path.isdir(LONG) and not up:
         print("   · 미착수. 걸려면:")
         # ⚠ ONLY 는 **위치인자**로 준다 — 환경변수만 주면 옛 판에서 all 로 돌았다 (2026-08-14).
@@ -249,10 +255,49 @@ def section_long():
                              j.get("msd_Li_A2_mto") or j.get("msd_Li_A2"))
         except (OSError, ValueError, KeyError):
             print("   ⛔ msd.json 손상")
-    v, why = long_verdict(b)
-    print(f"   β(창 2–50) = {b if b is None else round(b, 3)}  →  **{v}**")
+    # 시드별 β 를 전부 읽어 중앙값으로 판정한다 (단일 시드 판정 금지)
+    betas = {}
+    for sd, f in sorted(seed_mj.items()):
+        try:
+            jj = json.load(open(f))
+            bb = _beta_series(jj.get("times_ps_mto") or jj.get("times_ps"),
+                              jj.get("msd_Li_A2_mto") or jj.get("msd_Li_A2"))
+            if bb is not None:
+                betas[sd] = bb
+        except (OSError, ValueError, KeyError):
+            print(f"   ⛔ s{sd} msd.json 손상")
+    if betas:
+        print("   β(창 2–50) 시드별: "
+              + " · ".join(f"s{k} {v:.3f}" for k, v in sorted(betas.items())))
+    n = len(betas)
+    if n >= 3:
+        import statistics
+        b_use = statistics.median(betas.values())
+        src = f"3시드 중앙값 (n={n})"
+    else:
+        b_use = b
+        src = f"⚠ 단일 시드 — **판정 보류** (시드 {n}/3)"
+    v, why = long_verdict(b_use)
+    if n < 3 and b_use is not None:
+        v = "△ 시드 부족"
+        why = (f"선언 규칙상 3시드가 있어야 판정한다. 지금 {n}종뿐 — "
+               f"s3·s4 가 끝날 때까지 (B)/(C) 를 말하지 않는다.")
+    print(f"   β = {b_use if b_use is None else round(b_use, 3)}  ({src})  →  **{v}**")
     print(f"     {why}")
-    print(f"   선언한 규칙: β≥{BETA_PASS} (C) · β<{BETA_FAIL} (B) · 사이면 시드 추가")
+    print(f"   선언한 규칙: β≥{BETA_PASS} (C) · β<{BETA_FAIL} (B) · 사이면 시드 추가 · **3시드 중앙값으로 판정**")
+    stray = [os.path.basename(d) for d in
+             sorted(glob.glob(os.path.join(LONG, "*")))
+             if os.path.isdir(d) and os.path.basename(d) != "lpsocl"]
+    if stray:
+        # ⚠ 500/700/900 은 **1저자 요청 #1(6점 아레니우스)** 의 정당한 축이다 — 쓰레기가 아니다.
+        #   다만 이 폴더의 것은 2026-08-12 런이 ONLY/TEMP_PROD 버그로 **딸려 돌린 중복**이고,
+        #   700/900 은 2026-08-11 에 이미 21런 돌아 결과가 나와 있다 (8/21 게이트 탈락).
+        #   그리고 500 K 는 §9-6 이 "예상 실패에 30시간" 이라며 **명시적으로 보류**한 온도다.
+        print(f"   ⚠ 이 폴더에 lpsocl 외 산출물: {' '.join(stray)}")
+        print("     500/700/900 은 요청 #1(6점 아레니우스)의 축이지만, 700/900 은 2026-08-11"
+              " 21런으로 이미 있고(8/21 탈락)")
+        print("     500 K 는 kb/reports/paper_first_author_requests_2026_08.md §9-6 이"
+              " **보류 결정**한 온도다 — 여기 것은 버그로 딸려온 중복.")
     if mj:
         print("   확정 판정은 창 스캔으로:")
         print(f"     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
@@ -282,6 +327,23 @@ def selftest_long():
     chk(not holes, f"0.60~1.00 에 판정 구멍 없음 (구멍 {holes[:3]})")
     # 음성: PASS 와 FAIL 이 뒤집혀 있으면 안 된다
     chk(BETA_FAIL < BETA_PASS, f"문턱 순서 {BETA_FAIL} < {BETA_PASS}")
+    # ★ 2026-08-14 추가 — **시드 수 규칙**. 3시드 미만이면 (B)/(C) 를 말하면 안 된다.
+    #   화면 로직과 같은 판정을 여기서 재현한다 (0.799 가 문턱 바로 아래라 실전 위험).
+    import statistics as _st
+    def _decide(bs):
+        """시드별 β dict → (판정, 사용한 β). 화면 로직의 축약."""
+        if len(bs) >= 3:
+            return long_verdict(_st.median(bs.values()))[0], _st.median(bs.values())
+        return "△ 시드 부족", (next(iter(bs.values())) if bs else None)
+    chk(_decide({"2": 0.799})[0] == "△ 시드 부족", "단일 시드 → 판정 보류")
+    chk(_decide({"2": 0.799, "3": 0.81})[0] == "△ 시드 부족", "2시드도 보류")
+    # 중앙값이라 한 시드가 튀어도 안 뒤집힌다
+    chk(_decide({"2": 0.799, "3": 0.81, "4": 0.79})[0] == "△ 경계",
+        f"3시드 중앙값 0.799 → 경계 유지 ({_decide({'2':0.799,'3':0.81,'4':0.79})[1]:.3f})")
+    chk(_decide({"2": 0.799, "3": 0.82, "4": 0.83})[0] == "✅ (C) 확정",
+        "3시드 중앙값 0.82 → (C)")
+    chk(_decide({"2": 0.72, "3": 0.74, "4": 0.70})[0] == "⛔ (B) 확정",
+        "3시드 중앙값 0.72 → (B)")
     chk("복귀" in long_verdict(0.9)[1] and "뺀다" in long_verdict(0.7)[1],
         "처방이 판정과 반대로 붙지 않았다")
     print("selftest PASS" if ok else "selftest FAIL")
