@@ -34,7 +34,9 @@ SDCP_VASP = "/data/work/runs/sdcp_v2/phaseB_vasp"
 #: NEB 작업 루트 — **여러 개**를 콜론/쉼표로 준다. 같은 상(li3nd)이 경로마다
 #:  다른 홉을 뜻할 수 있어(b→c vs c→c) 루트를 갈라 보여 준다.
 NEBW = os.environ.get("NEBW",
-                      "/data/work/runs/sei_neb_v2:/data/work/runs/sei_neb_v2_ccpath")
+                      "/data/work/runs/sei_neb_v2"
+                      ":/data/work/runs/sei_neb_v2_ccpath"
+                      ":/data/work/runs/sei_neb_v3")
 
 
 def split_roots(spec):
