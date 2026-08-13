@@ -434,6 +434,25 @@ blocking_fraction comparison at x=0.25 vs x=0.0625 in an identical cell"*).
 같은 `2,2,1` 셀에서 In₂O₃·Ga₂O₃·B₂O₃ 를 x=0.0625 로 stage 04 까지 — `run_dualx.sh` 의
 `for c in ...` 목록만 바꾸면 된다. 그러면 6종 전수로 P11 을 농도 조건부로 다시 쓸 수 있다.
 
+## TODO (2026-08-14 발표 이후, 우선순위 순)
+
+1. **`09e_ehull` 270개 수집** — 최우선. funnel 이 스스로 *"G1 은 VACUOUS"* 라고 자백하는데,
+   문헌 기준(Xiao F2: `E_hull < 5 meV/atom`)으로 다시 걸 데이터가 270개 있고 한 번도 안 썼다.
+   G1 이 처음으로 진짜 게이트가 될 수 있다.
+2. **회수 체인 실행** — `tools/cascade/rebuild_pool_inputs.py` (2026-08-13 신설, selftest 10건).
+   `--inplace` 없이 먼저 돌려 `_v2` 로 뽑고 옛 판과 대조 → `plot_cascade_insights.py`
+   → `build_screening_funnel.py` → 새 waterfall. **풀 47 → 90.**
+3. **In₂O₃·Ga₂O₃·B₂O₃ x=0.0625** — tmux `dualx3` 로 예약됨(2026-08-14 00:02, QE 대기).
+   끝나면 6종 전수가 되어 P11 을 농도 조건부로 확정 가능.
+4. `09f_esw` 270개 · `FINAL_RANKING.json` 270개 · `predictor/` · `dft_inputs/` 수집
+5. `multi_category_2026_05_19_v22_OLD_radiusonly_20260525` (276 dirs · 238 MB) ·
+   `tier_..._overgenerated` (COMPOUND_FILTER 버그 사례) 확인
+6. `tools/doping` 미독 ~20파일 (특히 `bvse_proxy.py` 296줄 — G4 축의 정의)
+7. 덱 반영 — 20-스테이지 슬라이드 · P3(273 축) · P5(회수 가능한 43종) · P11(농도 조건)
+
+**2026-08-14 발표는 현행 대본 그대로 간다.** 오늘 발견은 전부 "좋아지는" 방향이지만
+3번이 끝나야 P11 에 농도 조건을 붙일 수 있고, 2번이 끝나야 90종 숫자를 말할 수 있다.
+
 ## 반증·한계
 
 - ESW 배치 스크립트(`esw_cascade_batch.py`) 자체는 아직 안 읽었다. 47에서 멈춘 것이
