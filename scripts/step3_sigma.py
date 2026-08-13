@@ -358,7 +358,7 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     Returns dict(sigma_eff, n_dof, plate_z_um, n_plate_vox, cg_info, resid, unconverged
     [, phi, cond])."""
     nx, ny, nz = sid.shape
-    sig = sigma_of_sid[sid]                                # per-voxel σ (S/cm)
+    sig = sigma_field(sigma_of_sid, sid)                     # 표 또는 복셀별 σ (S/cm)
     cond = sig > 0
     if not cond.any():
         return {'sigma_eff': 0.0, 'n_dof': 0, 'n_floating_dropped': 0, 'cg_info': 0, 'resid': 0.0,
@@ -514,7 +514,7 @@ def per_particle_current(res, sid, pid, sigma_of_sid, n_am):
     if 'phi' not in res:                                   # early-returned solve (see res['reason'])
         return np.zeros(n_am, np.float64)
     P, cond = res['phi'], res['cond']
-    sig = sigma_of_sid[sid]
+    sig = sigma_field(sigma_of_sid, sid)
     jz = np.zeros(sid.shape, np.float64)
     sa, sb = sig[:, :, :-1], sig[:, :, 1:]
     both = cond[:, :, :-1] & cond[:, :, 1:]
@@ -557,7 +557,7 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
                          'res(periodic_xy 포함)를 쓰거나 periodic_xy= 를 명시할 것.  '
                          '추측하면 주기 런에서 seam 상의 분담이 조용히 사라진다 (Codex #7)')
     P, cond = res['phi'], res['cond']
-    sig = sigma_of_sid[sid]
+    sig = sigma_field(sigma_of_sid, sid)
     diss = np.zeros(sid.shape, np.float64)
     pairs = [(np.s_[:-1, :, :], np.s_[1:, :, :]), (np.s_[:, :-1, :], np.s_[:, 1:, :]),
              (np.s_[:, :, :-1], np.s_[:, :, 1:])]
@@ -641,6 +641,71 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
     return out
 
 
+def sigma_field(sigma_of_sid, sid):
+    """σ 표(1-D, sid 색인) **또는** 복셀별 σ 배열(sid 와 같은 shape) → 복셀별 σ.
+
+    ★ 2026-08-12 (게이트 ⑥): 직경-보존 재척도는 섬유마다 다른 σ 를 요구한다 —
+      상대 Ø 가 0.23~8.48 로 퍼져 있어 **스칼라 하나로는 표현할 수 없다**
+      (조화평균 2.96 vs 산술평균 125 S/cm = 42배 차 — 우리가 좁히려는 브래킷보다 크다).
+      그래서 σ 를 표가 아니라 **장(field)** 으로도 받을 수 있게 한다.
+      1-D 표를 주는 기존 호출은 **바이트 동일**하게 동작한다.
+    """
+    a = np.asarray(sigma_of_sid)
+    if a.ndim == 1:
+        return a[sid]
+    if a.shape != np.shape(sid):
+        raise ValueError(f'sigma_field: 복셀별 σ 배열의 shape {a.shape} 가 sid {np.shape(sid)} 와 '
+                         f'다르다 — 조용히 브로드캐스트하면 다른 격자의 σ 를 쓰게 된다')
+    return a
+
+
+def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmonic'):
+    """게이트 ⑥ — **직경-보존 σ 재척도**.  (sigma_eff, prov) 반환.
+
+    왜: 선분 래스터는 섬유를 **1 복셀 굵기 관**으로 굽는다.  실제 VGCF 는 Ø 0.15 µm 인데
+    복셀은 0.4 µm 라 단면이 (0.4/0.15)² ≈ 7.1 배 부풀고, 그만큼 σ_e 가 과대평가된다
+    (정본 §7: 선분은 접촉 ×2.67 · 점은 조각남 ÷2.9 라 1 wt% 에서 **거의 상쇄** — 즉
+    직경 보정 없이 선분만 켜면 과소평가를 **더 큰 과대평가**로 바꾼다).
+
+    보존량은 **단위길이당 컨덕턴스** G/L = σ·A.  래스터 관의 단면이 A_vox = vox² 이므로
+        σ_eff = σ_bulk · A_real / A_vox = σ_bulk · π d² / (4 vox²)
+    여기서 d = d_ref · dia_rel (섬유마다 다르다 — `--save-fibre-dia` 가 상대 Ø 를 준다).
+
+    `mode`:
+      'harmonic'   섬유를 따라 저항이 **직렬**로 더해지므로 A 의 조화평균이 옳다 (기본).
+      'arithmetic' 섬유들이 **병렬**로 놓인 극한.  둘은 상·하한 성격이라 **병기**할 것.
+      'single'     dia_rel 없이 공칭 Ø 하나만 (dia_rel=None 일 때 자동).
+
+    ⚠ 이것은 **단면** 보정만이다.  계단식 경로가 만드는 **여분 길이**(대각 스텝에서 L 이
+    √3 까지 늘어난다)는 보정하지 않는다 — 그 잔차는 σ_eff 를 더 낮추는 방향이므로
+    여기 결과는 **상한**이다.  라벨: prov['unmodelled'].
+    """
+    A_vox = float(vox_um) ** 2
+    if dia_rel is None:
+        d = np.array([float(d_ref_um)])
+        mode = 'single'
+    else:
+        r = np.asarray(dia_rel, np.float64)
+        r = r[np.isfinite(r) & (r > 0)]
+        if not r.size:
+            raise ValueError('diameter_preserving_sigma: 유효한 dia_rel 이 없다 (전부 0/NaN)')
+        d = float(d_ref_um) * r
+    A = np.pi * d * d / 4.0
+    if mode == 'harmonic':
+        A_eff = float(len(A) / np.sum(1.0 / A))
+    else:
+        A_eff = float(np.mean(A))
+    f = A_eff / A_vox
+    prov = {'mode': mode, 'd_ref_um': float(d_ref_um), 'vox_um': float(vox_um),
+            'n_points': int(len(A)), 'A_real_eff_um2': float(f'{A_eff:.6g}'),
+            'A_vox_um2': A_vox, 'factor': float(f'{f:.6g}'),
+            'sigma_bulk': float(sigma_bulk), 'sigma_eff': float(f'{sigma_bulk * f:.6g}'),
+            'unmodelled': ('계단식 경로의 여분 길이 (대각 스텝에서 최대 √3) 미보정 — '
+                           '그 잔차는 σ_eff 를 더 낮추므로 이 값은 **상한**이다'),
+            'caveat': '단면 보존만. 접촉 저항·협착은 별개 축.'}
+    return float(sigma_bulk * f), prov
+
+
 def carbon_se_contact_area(sid, vox, periodic_xy=False):
     """탄소(VGCF 3·SuperP 4·SWCNT 8) ↔ SE(6) 복셀-면 접촉 면적 (µm²).
     kim2024 Fig3b: NCM–SE–carbon 3상 계면이 sulfide SE 전기화학 분해를 촉매 → 이 면적이
@@ -706,7 +771,7 @@ def joule_hotspot(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0.0),
     if 'phi' not in res:
         return None
     P, cond = res['phi'], res['cond']
-    sig = sigma_of_sid[sid]
+    sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
     q = np.where(cond, jmag * jmag / np.maximum(sig, 1e-30), 0.0)     # 발열밀도 (run-relative, W/cm³ 스케일 전)
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond & (q > 0)
@@ -753,7 +818,7 @@ def field_point_cloud(res, sid, sigma_of_sid, vox, sel_sids, box_lo=(0.0, 0.0, 0
     if 'phi' not in res:
         return None, None
     P, cond = res['phi'], res['cond']
-    sig = sigma_of_sid[sid]
+    sig = sigma_field(sigma_of_sid, sid)
     jmag = _voxel_jmag(P, cond, sig, periodic_xy=bool(res.get('periodic_xy')))
     sel = np.isin(sid, np.asarray(list(sel_sids), np.int64)) & cond
     ii, jj, kk = np.where(sel)
@@ -1251,6 +1316,41 @@ def _selftest():
     except ValueError:
         e = True
     ok &= e; print(f"seam-fail-closed: 경계조건 없는 res 는 **거부**한다  {'OK' if e else 'FAIL'}")
+    # ★★ 게이트 ⑥ — 복셀별 σ 장(field) 경로.  표 경로와 **같은 답**을 내야 하고(회귀 0),
+    #    장을 바꾸면 **답이 바뀌어야** 한다(실효 확인).
+    _sidu = np.ones((4, 4, 8), np.int8)
+    _tab = np.array([0.0, 2.0])
+    _a = solve_sigma_z(_sidu, _tab, 0.5, z_top_um=4.0)['sigma_eff']
+    _b = solve_sigma_z(_sidu, np.full(_sidu.shape, 2.0), 0.5, z_top_um=4.0)['sigma_eff']
+    e = abs(_a - _b) < 1e-12 * max(1.0, abs(_a))
+    ok &= e; print(f"field-eq:  표 {_a:.8g} == 장 {_b:.8g}  (기존 호출 바이트 동일)  {'OK' if e else 'FAIL'}")
+    _f = np.full(_sidu.shape, 2.0); _f[:, :, 3] = 0.5          # 한 층만 저전도 → 직렬 병목
+    _c = solve_sigma_z(_sidu, _f, 0.5, z_top_um=4.0)['sigma_eff']
+    e = _c < _b * 0.9
+    ok &= e; print(f"field-eff: 장을 바꾸면 답이 바뀐다 {_b:.6g} → {_c:.6g}  {'OK' if e else 'FAIL'}")
+    try:
+        solve_sigma_z(_sidu, np.zeros((2, 2, 2)), 0.5, z_top_um=4.0)
+        e = False
+    except ValueError:
+        e = True
+    ok &= e; print(f"field-shape: shape 불일치는 **거부**한다 (조용한 브로드캐스트 금지)  {'OK' if e else 'FAIL'}")
+    # 직경-보존 재척도 — 공칭 Ø 와 분포 Ø
+    _se, _pv = diameter_preserving_sigma(100.0, None, 0.15, 0.4)
+    e = abs(_se - 100.0 * np.pi * 0.15 ** 2 / 4 / 0.16) < 1e-9 and _pv['mode'] == 'single'
+    ok &= e; print(f"dia-nominal: σ 100 → {_se:.4g} S/cm (Ø0.15 · vox0.4)  {'OK' if e else 'FAIL'}")
+    _rel = np.array([0.23, 0.5, 1.0, 1.0, 1.0, 2.0, 8.48])
+    _h = diameter_preserving_sigma(100.0, _rel, 0.15, 0.4, mode='harmonic')[0]
+    _ar = diameter_preserving_sigma(100.0, _rel, 0.15, 0.4, mode='arithmetic')[0]
+    e = _h < _ar and _ar / _h > 10.0
+    ok &= e; print(f"dia-spread: 조화 {_h:.4g} vs 산술 {_ar:.4g} = {_ar/_h:.0f}배 "
+                   f"⇒ **스칼라 하나로 못 쓴다**  {'OK' if e else 'FAIL'}")
+    try:
+        diameter_preserving_sigma(100.0, np.zeros(5), 0.15, 0.4)
+        e = False
+    except ValueError:
+        e = True
+    ok &= e; print(f"dia-empty: 유효 Ø 가 없으면 **거부** (0 을 만들지 않는다)  {'OK' if e else 'FAIL'}")
+
     # ★ Codex #7 (나머지 3종) — 주기 인자가 **실제로 답을 바꾸는가**.
     #    seam 을 사이에 둔 탄소↔SE 쌍 / seam 이웃이 SE 인 AM 을 각각 배치한다.
     sid_s = np.zeros((4, 1, 4), np.int8)
