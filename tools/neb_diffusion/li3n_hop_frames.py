@@ -342,7 +342,8 @@ def main():
     print(f"hop {hop} = {math.hypot(hx, hy):.3f} A ; 계산된 TS 는 xi = {xi_ts:.3f}")
     os.makedirs(a.outdir, exist_ok=True)
     if a.merge:
-        dst = os.path.join(a.outdir, "li3n_hop_alladatoms_display.vesta")
+        dst = os.path.join(a.outdir, "li3n_hop_alladatoms%s_display.vesta"
+                           % ("_nobond" if a.no_bonds else ""))
         n = write_merged(lines, ad[6], pts, dst, no_bonds=a.no_bonds)
         print(f"-> {dst}  ({len(pts)} 위치, 총 원자 {n})")
         for xi, fx, fy, fz in pts:
