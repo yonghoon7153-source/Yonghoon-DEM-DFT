@@ -52,7 +52,7 @@ evidenceScope: multi-source-primary
 
 ```
 git fetch origin 'refs/heads/claude/unified-2026-05-15:refs/remotes/origin/claude/unified-2026-05-15'
-git show origin/claude/unified-2026-05-15:tools/doping/master_batch_273.sh
+git show origin/claude/unified-2026-05-15:tools/doping/master_batch_273.sh   # lint-skip-path (이 브랜치엔 없음)
 ```
 
 ### master_batch_273.sh (v4.5.20) — 바깥 루프
@@ -480,7 +480,7 @@ v23 에서는 `TOP_K_SIGMA=0` 이라 정말 없지만, 옛 radiusonly 캠페인�
 | | S | Cl | b |
 |---|---|---|---|
 | CLAUDE.md 규약 (`tools/comp1_v3/`) | R0 **2.105** | **2.249** | 0.37 |
-| cascade (`tools/doping/bvse_proxy.py`) | R0 **1.94** | **1.91** | S 만 **0.40** |
+| cascade (`tools/doping/bvse_proxy.py`) | R0 **1.94** | **1.91** | S 만 **0.40** | <!-- lint-skip-path: gabia 전용, 이 브랜치 미수록 -->
 
 Adams 2003 계열 값이다. → **G4 의 transport 축 값은 우리 BVSE 결과와 같은 표에 올리면 안 된다.**
 `tools/convention_check.py` 가 MSD 창은 잡지만 BVSE R0 은 안 잡는다 (규약 확장 후보).

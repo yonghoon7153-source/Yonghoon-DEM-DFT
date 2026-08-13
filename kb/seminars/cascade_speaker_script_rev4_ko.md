@@ -6,6 +6,8 @@ tags: [seminar, cascade, script, rev4]
 status: 확정 — 사용자 작성본이 정본. 덱 30장과 1:1 대응 확인
 confidence: high
 verificationStatus: verified
+verifiedAt: 2026-08-13
+verifiedBy: 사용자 작성본 대조 (덱 30장 1:1) + db/properties 정본값 대조
 explored: false
 authoredBy: human
 effort: high
