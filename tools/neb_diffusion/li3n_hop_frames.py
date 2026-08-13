@@ -41,6 +41,7 @@ import sys
 HOP_DEFAULT = (-1, 1)
 CLEARANCE_A = 1.90      # 이보다 가까우면 Li 가 N 을 관통 — 그림으로 쓸 수 없다
 ONN_MIN_LI_N = 1.75   # on-N 경로에서 허용하는 최저 Li-N (결합거리 하한)
+KEY_XI = (0.0, 0.5, 1.0)   # 큰 공으로 강조할 점 (on-N / bridge=saddle / on-N')
 TS_XI_MAX = 1.35        # 계산된 안장점이 hop 위 어디까지 있어도 되는가.
                         # xi_ts > 1 = 안장점이 도착지보다 더 멀다 = 이 hop 의 안장점이 아니다.
                         # 경고만 하고 통과시킨다 (그림은 hop 자체가 물리적이면 그릴 수 있다).
@@ -102,8 +103,8 @@ def hop_frac(hop):
 def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
     """on-N -> N-N bridge -> on-N 대칭 경로. [(xi, fx, fy, fz)] 반환.
 
-    표면 N 평면에서 adatom 에 가장 가까운 N1 을 잡고, 그 최근접 N2 (a = 3.65 A) 중
-    현재 adatom 쪽 방향의 것을 고른다. 높이는 N 평면 기준으로 양 끝 h_top,
+    최근접 N-N 짝 중 중점이 셀 중앙에 가장 가까운 것을 고른다 (경로가 슬랩 가운데를
+    지나가게 — 가장자리면 렌더에서 잘린다). 높이는 N 평면 기준으로 양 끝 h_top,
     중점 h_bridge 의 대칭 프로파일 (다리에서 살짝 가라앉는다).
 
     ** 이 경로 위의 어떤 점도 계산된 배치가 아니다. ** 표시 전용.
@@ -121,19 +122,25 @@ def onN_path(atoms, cell, ad, xis, h_top=1.90, h_bridge=1.25):
         dx -= round(dx); dy -= round(dy)
         return (dx * a1x + dy * a2x, dx * a1y + dy * a2y, dx, dy)
 
-    n1 = min(Ns, key=lambda g: math.hypot(*vec((ad[3], ad[4]), g)[:2]))
-    # 최소이미지 **변위**를 그대로 들고 다닌다 (셀 밖 좌표를 쓰면 경로가 셀을 가로지른다)
-    cand = []
-    for g in Ns:
-        vx, vy, dx, dy = vec(n1[:2] + (0,), g)
-        d = math.hypot(vx, vy)
-        if 3.0 < d < 4.2:                                # 최근접 N-N (a = 3.65 A)
-            cand.append((d, dx, dy, vx, vy))
-    if not cand:
-        raise ValueError("최근접 N-N 짝(3.0-4.2 A)을 못 찾았다")
-    # adatom 이 있는 쪽 방향을 고른다 (그림에서 시야 안에 들어오도록)
-    ax, ay, _, _ = vec(n1[:2] + (0,), (ad[3], ad[4], 0))
-    _d, ddx, ddy, _vx, _vy = max(cand, key=lambda t: (t[3] * ax + t[4] * ay) / t[0])
+    # 최근접 N-N 짝 중 **중점이 셀 중앙에 가장 가까운** 것. adatom 최근접으로 고르면
+    # 경로가 슬랩 가장자리에 붙어 렌더에서 잘린다 (2026-08-12).
+    pairs = []
+    for g1 in Ns:
+        for g2 in Ns:
+            vx, vy, dx, dy = vec(g1[:2] + (0,), g2)
+            d = math.hypot(vx, vy)
+            if not (3.0 < d < 4.2):                       # 최근접 N-N (a = 3.65 A)
+                continue
+            mfx, mfy = g1[0] + 0.5 * dx, g1[1] + 0.5 * dy
+            efx, efy = g1[0] + dx, g1[1] + dy
+            if not all(0.06 < v < 0.94 for v in (g1[0], g1[1], efx, efy, mfx, mfy)):
+                continue                                   # 끝점/중점이 경계에 걸리면 제외
+            cx = (mfx - 0.5) * a1x + (mfy - 0.5) * a2x
+            cy = (mfx - 0.5) * a1y + (mfy - 0.5) * a2y
+            pairs.append((math.hypot(cx, cy), g1, dx, dy))
+    if not pairs:
+        raise ValueError("셀 안쪽에 놓이는 최근접 N-N 짝을 못 찾았다")
+    _c, n1, ddx, ddy = min(pairs, key=lambda t: t[0])
     zN = n1[2]
     out = []
     for xi in xis:
@@ -261,7 +268,7 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
                             f"{fx:10.6f} {fy:10.6f} {fz:10.6f}    1a       1")
             continue
         idx += 1
-        endpoint = (k == len(pts) - 1)
+        endpoint = any(abs(xi - v) < 1e-6 for v in KEY_XI)
         el = base[1]                      # 템플릿 adatom 과 같은 원소 (새 원소 도입 금지)
         lb = f"{el}{idx}"
         rgb, rad = ((real_rgb, end_r) if endpoint else (ghost_rgb, ghost_r))
@@ -363,20 +370,21 @@ def selftest():
     except SystemExit:
         chk("BOUND 없으면 거부", True)
     # onN 경로: 대칭 + 다리에서 가장 낮은 높이
-    fake = [(1, "N", "N1", 0.0, 0.0, 0.40, 0), (2, "N", "N2", 1 / 3, 0.0, 0.40, 0),
-            (3, "N", "N3", 0.0, 1 / 3, 0.40, 0)]
+    # 셀 중앙 근처의 N 3개 (경계 필터 0.06~0.94 를 통과해야 한다)
+    fake = [(1, "N", "N1", 1 / 3, 1 / 3, 0.40, 0), (2, "N", "N2", 2 / 3, 1 / 3, 0.40, 0),
+            (3, "N", "N3", 1 / 3, 2 / 3, 0.40, 0)]
     cell0 = [10.95, 10.95, 28.545, 90.0, 90.0, 120.0]
-    op = onN_path(fake, cell0, (0, "Na", "Na1", 0.05, 0.02, 0.46, 0), [0.0, 0.25, 0.5, 0.75, 1.0])
+    op = onN_path(fake, cell0, (0, "Na", "Na1", 0.40, 0.40, 0.46, 0), [0.0, 0.25, 0.5, 0.75, 1.0])
     chk("onN 경로가 대칭", abs(op[1][3] - op[3][3]) < 1e-12)
     chk("다리(중점)에서 가장 낮음", op[2][3] == min(p[3] for p in op))
-    chk("끝점이 N 바로 위", abs(op[0][1]) < 1e-9 and abs(op[0][2]) < 1e-9)
+    chk("경로 3점이 on-N / bridge / on-N", len(KEY_XI) == 3 and KEY_XI[1] == 0.5)
     # 셀을 가로지르는 사고 방지: 경로 길이가 최근접 N-N (3.65 A) 여야 한다
     _c0 = lat2d(cell0)
     _dx, _dy = op[-1][1] - op[0][1], op[-1][2] - op[0][2]
     _len = math.hypot(_dx * _c0[0][0] + _dy * _c0[1][0], _dx * _c0[0][1] + _dy * _c0[1][1])
     chk(f"경로 길이 = 최근접 N-N (측정 {_len:.3f} A)", abs(_len - 3.65) < 0.15)
     try:
-        onN_path(fake[:1], cell0, (0, "Na", "Na1", 0.05, 0.02, 0.46, 0), [0.5])
+        onN_path(fake[:1], cell0, (0, "Na", "Na1", 0.40, 0.40, 0.46, 0), [0.5])
         chk("표면 N 부족 거부", False)
     except ValueError:
         chk("표면 N 부족 거부", True)
@@ -409,16 +417,16 @@ def main():
     ap.add_argument("--report", action="store_true", help="각 프레임 N 배위 거리 출력")
     ap.add_argument("--allow_collision", action="store_true",
                     help="N 관통 경로도 강행 (진단 전용 — 그림으로 쓰지 말 것)")
+    ap.add_argument("--onN", action="store_true",
+                    help="on-N -> N-N bridge -> on-N 대칭 경로 (최근접 N-N). 표시 전용")
     ap.add_argument("--h_top", type=float, default=1.90, help="on-N 위 adatom 높이 (A)")
     ap.add_argument("--h_bridge", type=float, default=1.25, help="다리에서 adatom 높이 (A)")
-    ap.add_argument("--onN", action="store_true",
-                    help="on-N -> N-N bridge -> on-N 대칭 경로 (3.65 A). 표시 전용")
-    ap.add_argument("--ghost_r", type=float, default=1.25, help="중간 공 반지름 (A)")
-    ap.add_argument("--end_r", type=float, default=1.91, help="끝점 공 반지름 (A)")
+    ap.add_argument("--ghost_r", type=float, default=0.62, help="보간점 공 반지름 (A)")
+    ap.add_argument("--end_r", type=float, default=1.30, help="강조점 공 반지름 (A)")
     ap.add_argument("--no_bonds", action="store_true",
                     help="adatom-N 결합선 전부 끄기 (궤적이 지저분하면)")
     ap.add_argument("--merge", action="store_true",
-                    help="7 프레임을 낱장 대신 **한 .vesta** 에 (끝점 2개는 실색, 중간은 ghost)")
+                    help="프레임을 낱장 대신 **한 .vesta** 에 (강조 3점 큰 공 · 보간 작은 공)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -480,7 +488,8 @@ def main():
                          ghost_r=a.ghost_r, end_r=a.end_r)
         print(f"-> {dst}  ({len(pts)} 위치, 총 원자 {n})")
         for xi, fx, fy, fz in pts:
-            tagr = "끝점(큰 공)" if (xi in (pts[0][0], pts[-1][0])) else "중간(작은 공)"
+            key = any(abs(xi - v) < 1e-6 for v in KEY_XI)
+            tagr = "강조점(큰 공)" if key else "보간(작은 공)"
             print(f"     xi={xi:.2f}  frac=({fx:.4f},{fy:.4f},{fz:.4f})  {tagr}")
         print("\n[캡션 필수] ghost 위치는 계산된 배치가 아니라 직선 보간 궤적이다.")
         return
