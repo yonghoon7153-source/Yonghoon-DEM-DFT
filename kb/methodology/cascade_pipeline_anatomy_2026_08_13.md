@@ -17,9 +17,34 @@ evidenceScope: multi-source-primary
 
 ## 요약
 
-풀이 47인 이유는 **물리 게이트도, "3축 완비"도, 취합 순번도 아니다.
-`ox_V`/`red_V` 를 만드는 진짜 ESW 배치가 47종만 돌았기 때문**이다.
-나머지 다섯 축은 90종 전부 있다. 회수 비용은 **GPU 0시간**이다.
+풀이 47인 이유는 **물리 게이트가 아니라 repo 취합 단계 한 곳**이다.
+계산은 270/273 완주했고 미취합종도 `STAGE_12.DONE` 까지 찍혀 있다.
+`esw_cascade_batch.py` 도 자기 입력을 다 처리했다 — **그 입력
+(`cascade_v23_all.csv`) 이 이미 47종이었다.** 회수 비용은 **GPU 0시간**이다.
+
+### 확정된 사슬 (2026-08-13 gabia 실측)
+
+```
+273 슬롯 → 270 완주            (As₂S₃ 3만 stage-02 종료)
+  ├─ 09f_esw 270/270           ← 캐스케이드 안. 단 이것은 진짜 ESW 가 아니다
+  └─ unified_dataset_273.csv   3615행 · 90종 · 5축(UMA·BVSE·anneal·EOS·elastic) 전부
+           ↓  ⛔ 여기서 43종이 사라진다 — 계산이 아니라 취합
+     cascade_v23_all.csv       2025행 · 47종 · rank_combined==1 → 141행 · ZrCl4 없음
+           ↓
+     esw_cascade_batch.py      (MP hull, DFT 0건) → oxidation_stability_cascade.json
+                                                     Jun 25 11:28 = 스냅샷 날짜 그 자체
+           ↓
+     cascade_v23_ranked.csv    47행 (ox_V 없으면 행 자체가 안 생김)
+           ↓
+     풀 = 47
+```
+
+**완주 증거**: `ZrCl4_x005` 는 `STAGE_00`–`STAGE_12b` **18개 마커 전부** + 4.5 MB +
+`FINAL_RANKING.json`·`dataset.csv`·`dft_inputs`·`predictor` — 취합된 `Al2O3_x005`(5.1 MB)와
+구성이 동일하다. **판정 못 한 게 아니라 판정하고도 표에 안 실렸다.**
+`As2S3_x005` 만 `STAGE_00/01/02` 3개 · 308 KB — 문서화된 seed 실패가 실물로 재현.
+
+**cascade 관련 zip 은 존재하지 않는다** (gabia 전수 확인 — 아카이브는 전부 MPM/DEM·SDCP).
 
 ## 코드 계보 (2026-08-13 실측)
 
@@ -111,6 +136,24 @@ for cmp in "${ALL_COMPOUNDS[@]}"; do for conc in x002 x005 x010; do …
 `cascade_screening_funnel.json` 의 `selection_history` 가 적은
 *"ESW·탄성·BVSE 3축이 모두 채워진 47종"* 은 **결과적으로는 맞지만 원인을 흐린다** —
 탄성·BVSE 는 90종 전부 있었고 실제로 갈린 축은 ESW 하나다.
+
+## 병목 확정 — `cascade_v23_all.csv` (2026-08-13)
+
+| 파일 | 내용 | ZrCl₄ · LiBr · Li₂S |
+|---|---|---|
+| `unified_dataset_273.csv` (run dir) | 3615행 · **90종** · 5축 전부 | 모두 있음 |
+| `cascade_v23_all.csv` (`/data/work/repo/db/properties/`) | 2025행 · 고유 dopant 58(=47종 + `+Clrich` 변형) · `rank_combined==1` **141행** | **전부 없음** |
+| `oxidation_stability_cascade.json` | **141 항목** · 2026-06-25 11:28 | 없음 |
+
+**ESW 배치는 자기 입력을 100% 처리했다** (141 in → 141 out). 43종은 그 앞,
+`cascade_v23_all.csv` 를 만드는 취합 단계에서 사라졌다. 파일 날짜(6/25 11:28)가
+canonical 스냅샷 날짜와 같다 — 그날 있던 것까지만 모아 굳었고, 뒤에 끝난
+cascade 들이 재취합을 트리거하지 않았다.
+
+⚠ **`cascade_v23_all.csv` 를 만드는 스크립트를 아직 못 찾았다.** repo·unified 브랜치에서
+이 이름을 쓰는 건 `esw_cascade_batch.py`(읽기 전용)뿐이다. 회수 1단계는 그 취합기를
+찾거나, `unified_dataset_273.csv` → 같은 schema 로 변환하는 것이다.
+(schema 차이 주의: `cascade_v23_all.csv` 는 `+Clrich` 변형을 별도 dopant 로 센다.)
 
 ## 회수 경로 (다음 loop 1순위)
 
