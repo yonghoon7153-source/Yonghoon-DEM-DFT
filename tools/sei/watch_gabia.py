@@ -277,9 +277,12 @@ def neb_status(d):
             _diag = (r["eqv"] is not True and r["ep_dE_meV"] is not None
                      and abs(r["ep_dE_meV"]) > EP_BIG_MEV)
             if _diag:
-                r["alerts"].append(
-                    f"{r['tag']}: CI 미적용(하한)이지만 **CI 를 돌릴 이유가 없다** — "
-                    f"끝점이 {r['ep_dE_meV']:+.0f} meV 라 전도 경로가 아니다(자리 에너지 차)")
+                # _NOTE.txt 가 이미 "이 런은 설명돼 있다" 를 찍었으면 같은 말을 두 줄로
+                # 하지 않는다 — 2분마다 갱신되는 화면이라 중복 한 줄이 계속 쌓인다.
+                if not any("설명돼 있다" in x for x in r["alerts"]):
+                    r["alerts"].append(
+                        f"{r['tag']}: CI 미적용(하한)이지만 **CI 를 돌릴 이유가 없다** — "
+                        f"끝점이 {r['ep_dE_meV']:+.0f} meV 라 전도 경로가 아니다(자리 에너지 차)")
             else:
                 r["alerts"].append(
                     f"{r['tag']}: 수렴했지만 **CI 가 꺼져 있다** — 장벽은 하한이고 인용 불가. "
@@ -355,6 +358,14 @@ def selftest():
     chk(any("돌릴 이유가 없다" in x for x in s["alerts"])
         and not any("2단계가 남았다" in x for x in s["alerts"]),
         f"비대칭 2072 meV + no-CI → CI 권하지 않는다 ({[x[-30:] for x in s['alerts']]})")
+    # ★ 그런데 _NOTE.txt 가 이미 설명한 런이면 **한 줄로 끝낸다** (중복 금지)
+    d_cb = mk("li3nd_cb2", False, -100.0, -102.072,
+              "     CI_scheme = 'no-CI'\n" + body + CONV)
+    open(os.path.join(td, "_NOTE.txt"), "w").write("c→b — 일어나지 않는 홉\n")
+    s = neb_status(d_cb)
+    chk(len(s["alerts"]) == 1 and "설명돼 있다" in s["alerts"][0],
+        f"_NOTE 있는 진단 런 → 경고 1줄 ({len(s['alerts'])}줄)")
+    os.remove(os.path.join(td, "_NOTE.txt"))
     # 양성 ③: CI 2단계까지 끝난 런은 조용해야 한다 — 안 그러면 경고가 늑대소년이 된다
     s = neb_status(mk("li3nd_ci", True, -100.0, -100.0,
                       "     CI_scheme = 'auto'\n" + body + CONV))
