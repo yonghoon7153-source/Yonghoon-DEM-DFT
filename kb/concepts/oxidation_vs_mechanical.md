@@ -1,7 +1,7 @@
 ---
 title: 산화안정성과 기계적물성 — 정의부터 DFT 계산까지
 date: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-13
 tags: [esw, elastic, dft, methodology, concepts]
 status: 확정
 confidence: high
@@ -463,6 +463,76 @@ clamped-ion, 내부 좌표를 다시 이완시키면 relaxed-ion 이다. 원자�
 
 **계산된 창을 실험 CV 창과 직접 비교하기.** 두 값의 정의가 다르다. 굳이 비교하려면
 탄소를 섞어 반응 면적을 키운 실험과 비교하거나, 계산 쪽에서 준안정성을 함께 논해야 한다.
+
+**창 경계 두 숫자만 비교하고 끝내기 (2026-08-13 추가).** 아래 절 참조 — 경계가 같아도
+그 위 영역의 구동력 크기는 조성마다 완전히 다르다.
+
+**접촉 면적 논증에 B₀ 를 쓰기 (2026-08-13 추가).** 아래 절 참조 — Cl-rich 는 B₀ 로는
+무르고 E·G 로는 단단하다. 방향이 반대다.
+
+---
+
+## Cl-rich 가 왜 계면에서 나은가 — 세 층을 구분한다 (2026-08-13)
+
+"창이 같은데 실험에서 Cl-rich 가 낫다 → 부동태화 때문" 으로 요약하면 앞의 두 층을 버린다.
+순서대로 세 층이 다 기여한다.
+
+### 층 1 — 창 경계가 같다 ≠ 열역학이 같다 (**우리 데이터로 확인됨**)
+
+경계는 ΔφD 가 0 을 벗어나는 **한 점**일 뿐이고, 그 위 영역의 ΔφD 크기는 조성마다 다르다.
+`kb/results/interface_reactivity_v2_voltage_resolved_2026_06_21.md`:
+
+- 충전(탈리튬화) 양극 전부에서 LPSCl 이 LPSCl1.6 보다 반응성이 높고,
+  격차가 **+0.29 eV/atom @ 4.5 V (CoO₂)** 까지 벌어진다.
+- 4.3·4.5 V 에서는 LPSCl 값이 **양극 종류와 무관하게 동일**(−1.5438 / −1.7153) —
+  그 전압대의 반응은 SE 자신의 산화이고 양극은 O sink 다.
+
+→ **경계 두 숫자가 아니라 ΔφD(V) 곡선 전체를 비교해야 한다.** hull 이 이미 차이의
+상당 부분을 설명하고 있는데 "창이 같다" 로 요약하면 그 정보를 스스로 버린다.
+
+### 층 2 — hull 이 자리를 못 가른다 (단, **species 는 안다**)
+
+⚠ 흔한 오귀속: 2.14 V 를 IP/밴드엣지 계산 값으로 인용하는 것. **2.14 V 는 grand-potential
+onset 이다** (`cascade_screening_funnel.json` `host_ox_V`, G3 문턱의 정의). hull 값을
+hull 의 반례로 들면 안 된다.
+
+그리고 hull 은 산화되는 **종**은 안다 — 분해산물이 상이기 때문이다.
+`oxidation_stability.json`:
+
+> Both oxidize first at 2.14 V via **S²⁻ → LiS₄ (polysulfide)**. Cl⁻ is electrochemically
+> inert until ~3.3 V (SCl) / ~3.4 V (PCl₅, modelc only). Since S is present and is the VBM
+> in both (S 3p), the oxidation onset is set by S, not Cl.
+
+hull 이 **원리적으로 못 하는 것**은 4a/4d 의 free S²⁻ 와 PS₄³⁻ 안의 S 를 **자리 수준**에서
+가르는 일이다. Cl 치환은 바로 그 free S²⁻ 자리를 대체하므로 가장 산화되기 쉬운 종의
+**개수**를 줄인다.
+
+→ 다만 우리 계산의 결론은 **onset 이 같다**(2.14 V 동일, 19종이 그 값에 pin —
+"S²⁻-limited onset 축퇴"). 그러므로 이 층은 **onset 을 옮기는 기제가 아니라 층 1 의
+기제**로 써야 한다: 개수가 줄면 onset 이 아니라 **반응의 크기(ΔφD)** 가 준다.
+
+### 층 3 — 분해층의 전자절연성 (부동태화)
+
+Cl 이 많으면 분해산물의 LiCl 비중이 커진다. LiCl 은 넓은 갭 전자절연체라 self-limiting 이
+잘 되고, S/polysulfide 는 전자 경로를 만들어 층이 계속 자란다. 같은 ΔφD 여도 **분해가
+멈추는 두께**가 달라진다. (§6 의 세 번째 축과 같은 얘기다.)
+
+### 실험 쪽 confound — 어느 탄성률을 쓰느냐로 방향이 뒤집힌다
+
+실험 "산화 안정성" 이 SE+carbon 복합체 LSV/chronoamperometry 라면 carbon 함량·압력·
+densification 이 전류를 크게 흔든다. 면적당으로 정규화하지 않으면 재료 차이가 아니라
+microstructure 차이를 볼 수 있다 — 여기까지는 맞는 지적이고 방어에 유용하다.
+
+⚠ 그런데 그 논증의 근거로 **B₀ 를 쓰면 방향이 반대가 된다.** `elastic.json` 이 경고한다:
+
+| 양 | comp1 | Cl-rich | 방향 |
+|---|---|---|---|
+| EOS **B₀** | 26.2 | comp3 20.8 / modelc 21.7 GPa | Cl-rich 가 **무름** |
+| **E_VRH** | 22.06 | modelc 27.66 GPa (+24%) | Cl-rich 가 **단단함** (Kim 실험과 일치) |
+
+접촉 면적은 접촉역학이라 **E·G** 가 지배한다. E 로 보면 Cl-rich 가 더 단단해 같은 압력에서
+덜 눌리고 접촉 면적이 **작아진다**. "Cl-rich 가 연질이라 접촉이 늘어난다" 는 B₀ 를 쓴 것이고
+부호가 뒤집힌다. db 의 문장 그대로: *"Quote the right modulus for the right claim."*
 
 ---
 
