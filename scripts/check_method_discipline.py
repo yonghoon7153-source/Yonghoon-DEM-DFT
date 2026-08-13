@@ -36,6 +36,7 @@ v2 의 설계 원칙 (감사에 대한 응답):
 from __future__ import annotations
 
 import argparse
+import glob
 import inspect
 import json
 import os
@@ -238,8 +239,26 @@ def find_local_import_shadows(path):
                  (예: dict `_tb` 를 쓰다가 except 안에서 `import traceback as _tb`)
     ⚠ 정밀화 이유: 첫 판은 일반 대입을 안 봐서 `_tb` 를 12건 오탐했다.  오탐이 많으면
       검사기를 끄게 되고, 그러면 규칙이 없는 것보다 나쁘다 (S0 의 교훈).
+    ⚠ 2026-08-13 (Codex CDX-10): `ast.walk` 가 **중첩 함수 안으로 내려가** 그쪽 지역 import 를
+      바깥 함수 것으로 오인했다 — 중첩 함수는 자기 스코프라 바깥은 멀쩡한데 오류를 냈다
+      (재현: 바깥이 `os.path` 를 쓰고 안쪽 함수가 `import os` 하면 런타임 정상인데 오탐).
+      ⇒ 스코프 경계(중첩 def/lambda/class)에서 멈추는 순회로 교체.  중첩 함수 자신은
+      바깥 루프가 따로 잡으므로 검사에서 빠지지 않는다.
     """
     import ast
+
+    def own_scope(fn):
+        """fn 의 **자기 스코프** 노드만 (중첩 def/lambda/class 는 경계에서 자른다)."""
+        out, stack = [], list(ast.iter_child_nodes(fn))
+        while stack:
+            n = stack.pop()
+            out.append(n)
+            if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef,
+                              ast.Lambda, ast.ClassDef)):
+                continue                              # 다른 스코프 — 내려가지 않는다
+            stack.extend(ast.iter_child_nodes(n))
+        return out
+
     tree = ast.parse(open(path, encoding='utf-8').read())
     errs, coll = [], []
     for fn in ast.walk(tree):
@@ -249,14 +268,19 @@ def find_local_import_shadows(path):
         asg = {}                                      # 그 외 대입으로 묶이는 이름 → 첫 줄
         for a in list(fn.args.args) + list(fn.args.kwonlyargs) + list(fn.args.posonlyargs):
             asg[a.arg] = 0
-        for n in ast.walk(fn):
+        body = own_scope(fn)
+        for n in body:
+            if isinstance(n, (ast.Global, ast.Nonlocal)):
+                for nm in n.names:                    # global/nonlocal 선언 = 지역 아님
+                    asg[nm] = 0
+        for n in body:
             if isinstance(n, (ast.Import, ast.ImportFrom)):
                 for al in n.names:
                     nm = (al.asname or al.name).split('.')[0]
                     imp[nm] = min(imp.get(nm, 10 ** 9), n.lineno)
             elif isinstance(n, ast.Name) and isinstance(n.ctx, (ast.Store, ast.Del)):
                 asg[n.id] = min(asg.get(n.id, 10 ** 9), n.lineno)
-        for n in ast.walk(fn):
+        for n in body:
             if not (isinstance(n, ast.Name) and isinstance(n.ctx, ast.Load)):
                 continue
             if n.id not in imp or n.lineno >= imp[n.id]:
@@ -269,19 +293,37 @@ def find_local_import_shadows(path):
     return sorted(set(errs)), sorted(set(coll))
 
 
-_SHADOW_SCAN = ('mpm_webapp_payload.py', 'step3_sigma.py', 'mpm3d_compaction.py',
-                'network_conductivity.py', 'sr01_carbon_network.py', 'fibre_segment_raster.py')
+# ⚠ 2026-08-13 (Codex CDX-10): 손으로 적은 6-파일 목록은 tracked 415 개의 **1.4 %** 였다 —
+#   그 목록에 없던 신규 `fibre_1d_network.py` 는 검사 밖이었다.  이제 `scripts/**/*.py` 를
+#   **자동 열거**한다 (스코프 정정 후 전 리포 0 오류를 확인하고 올렸다).  목록이 낡을 일이 없다.
+_SHADOW_ALWAYS = ('mpm_webapp_payload.py', 'step3_sigma.py', 'mpm3d_compaction.py',
+                  'network_conductivity.py', 'sr01_carbon_network.py',
+                  'fibre_segment_raster.py')
+
+
+def _shadow_scan_files():
+    """스캔 대상 = scripts/**/*.py 전부.  `_SHADOW_ALWAYS` 는 **반드시 있어야 하는** 최소집합
+    (사라지면 fail-closed — 실사고가 났던 파일들이라 조용히 빠지면 안 된다)."""
+    root = os.path.join(ROOT, 'scripts')
+    found = sorted(os.path.relpath(p, root)
+                   for p in glob.glob(os.path.join(root, '**', '*.py'), recursive=True))
+    return found
 
 
 def check_local_import_shadows(verbose=True):
     errs, warns = [], []
     root = os.path.join(ROOT, 'scripts')
-    for fname in _SHADOW_SCAN:
+    scan = _shadow_scan_files()
+    for must in _SHADOW_ALWAYS:                       # fail-closed — 실사고 파일이 빠지면 거부
+        if must not in scan:
+            errs.append(f'{must}: 반드시 스캔해야 하는 파일인데 없다 (fail-closed)')
+    for fname in scan:
         fp = os.path.join(root, fname)
-        if not os.path.exists(fp):
-            errs.append(f'{fname}: 스캔 대상인데 파일이 없다 — 목록이 낡았다 (fail-closed)')
+        try:
+            hits, coll = find_local_import_shadows(fp)
+        except SyntaxError as ex:
+            warns.append(f'{fname}: 파싱 불가 ({ex.__class__.__name__}) — 스캔에서 건너뜀')
             continue
-        hits, coll = find_local_import_shadows(fp)
         for func, nm, use, imp in hits:
             errs.append(f'{fname}:{use} `{nm}` 가 함수 `{func}` 의 지역 import(:{imp})보다 '
                         f'**앞에서** 쓰인다 — UnboundLocalError.  근처 except 가 삼키면 '
@@ -631,6 +673,14 @@ def check_claim(c):
         if not c.get('provenance'):
             e.append(f'{c["id"]}: kind={c["kind"]} 는 `provenance` 필수 '
                      f'(코드 위치·기본값·누가 언제 정했나)')
+    # ── 규칙 G (2026-08-13, Codex CDX-11) — 대체된 주장이 live 로 남으면 안 된다 ────────
+    #   실사고: CL-20 은 `superseded_by: CL-21` 을 달고 verdict 안에서 자기 결론을 무효화하면서도
+    #   `status: live` 로 검사기를 통과했다.  그 상태의 원장을 읽은 사람은 철회된 하한 논증을
+    #   현재형으로 인용하게 된다 (실제로 `diameter_preserving_sigma` 의 provenance 가 그것을
+    #   새 payload 마다 다시 찍어내고 있었다 — 같은 날 CDX-14 로 적발).
+    if c.get('superseded_by') and c['status'] == 'live':
+        e.append(f'{c["id"]}: `superseded_by`({c["superseded_by"]}) 가 있는데 status=live — '
+                 f'대체된 주장은 retired/hold 여야 한다 (규칙 G)')
     return e + _reject_reasons(c)
 
 
@@ -878,6 +928,20 @@ def _selftest():
         check_claim(dict(base, measured={'metric': 'n_components', 'value': 1, 'unit': 'c'},
                          asserted='탄소가 고립되지 않는다', h1_predicts='성분 수 = 1',
                          parity_certified='sr01_carbon_network.carbon_network_stats')) == [])
+    # ── 규칙 G (Codex CDX-11) ─────────────────────────────────────────────────────
+    #   실사고: CL-20 이 `superseded_by: CL-21` 을 달고 verdict 안에서 자기 결론을 무효화
+    #   하면서도 status=live 로 통과했다 → 철회된 하한 논증이 계속 인용 가능했다.
+    good = dict(base, measured={'metric': 'n_components', 'value': 1, 'unit': 'c'},
+                asserted='탄소가 고립되지 않는다', h1_predicts='성분 수 = 1',
+                parity_certified='sr01_carbon_network.carbon_network_stats')
+    chk('G-0: 기준 픽스처는 통과한다 (G 시험의 전제)', check_claim(good) == [])
+    chk('G-1: superseded_by + live 는 거부 (CL-20 이 이 상태로 통과했었다)',
+        any('규칙 G' in x for x in check_claim(dict(good, status='live',
+                                                   superseded_by='CL-21'))))
+    chk('G-2: superseded_by + retired 는 통과 (과잉차단 없음)',
+        check_claim(dict(good, status='retired', superseded_by='CL-21')) == [])
+    chk('G-3: superseded_by 없는 live 는 그대로 통과',
+        check_claim(dict(good, status='live')) == [])
 
     print(f'\ncheck_method_discipline v3 selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

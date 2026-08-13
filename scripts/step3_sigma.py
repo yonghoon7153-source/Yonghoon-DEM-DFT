@@ -711,9 +711,16 @@ def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmo
       'single'     dia_rel 없이 공칭 Ø 하나만 (dia_rel=None 일 때 자동).
 
     ⚠ 이것은 **단면** 보정만이다.  계단식 경로의 **여분 길이** k (축정렬 1 ~ 대각 √3)는
-    보정하지 않는다.  R_ras = k·R_true 이므로 이 σ 로 푼 σ_e 는 참값의 **하한**이고,
-    참값 ≈ σ_e × k^w (w = 그 상의 소산분담).  라벨: prov['unmodelled'].
-    (2026-08-13 부호 정정 — 처음엔 '상한' 이라고 적었다.)
+    보정하지 않는다.
+    ⚠⚠ **하한/상한 어느 쪽도 주장하지 말 것** (2026-08-13, CL-20 retired → CL-24).
+    한때 여기에 "R_ras = k·R_true 이므로 이 σ 로 푼 σ_e 는 하한" 이라고 적었다 (그 전엔
+    상한이라고 적었다).  **둘 다 철회한다** — 두 가지 이유로:
+      ① k 를 재는 `sr01_staircase_factor.py` 가 `np.unique` 로 경로 순서·재방문을 버리고
+         고유 셀 수만 세므로 **순서 있는 저항 경로 길이가 아니다** (Codex CDX-02).
+         재실행값도 격자마다 다르다: 1.4855@0.4 · 1.4917@0.3 · 1.4461@0.25.
+      ② 격자 실측(CL-24)이 보여주듯 계단 길이(σ_e↓)와 **가짜 상호연결**(σ_e↑)이 반대
+         방향으로 경쟁하고, 후자가 관측 구간에서 더 크다.  ⇒ 부호가 정해지지 않는다.
+    라벨: prov['unmodelled'] 은 이제 **미보정 축의 목록**이지 방향 주장이 아니다.
     """
     A_vox = float(vox_um) ** 2
     if dia_rel is None:
@@ -735,10 +742,13 @@ def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmo
             'n_points': int(len(A)), 'A_real_eff_um2': float(f'{A_eff:.6g}'),
             'A_vox_um2': A_vox, 'factor': float(f'{f:.6g}'),
             'sigma_bulk': float(sigma_bulk), 'sigma_eff': float(f'{sigma_bulk * f:.6g}'),
-            'unmodelled': ('계단식 경로의 여분 길이 k (1~√3) 미보정 — 래스터 경로가 k 배 '
-                           '길어 저항이 k 배 크므로 이 σ 로 푼 σ_e 는 **하한**이다.  '
-                           '참값 ≈ σ_e × k^w (w = 그 상의 소산분담).  '
-                           '2026-08-13 부호 정정 — 처음엔 상한이라고 적었다'),
+            'unmodelled': ('미보정 축 (방향 주장 아님): ① 계단식 경로의 여분 길이 k '
+                           '(축정렬 1 ~ 대각 √3) ② 격자가 만드는 섬유 간 가짜 상호연결 '
+                           '— ①은 σ_e 를 낮추고 ②는 높여 **경쟁**하므로 이 σ 로 푼 σ_e 에 '
+                           '하한/상한 어느 쪽도 붙일 수 없다'),
+            'bound': None,
+            'bound_reason': ('grid_nonconverged; no_valid_bound — CL-17(천장)·CL-20(하한) '
+                             '모두 retired.  격자 스윕은 CL-24 참조'),
             'caveat': '단면 보존만. 접촉 저항·협착은 별개 축.'}
     return float(sigma_bulk * f), prov
 
