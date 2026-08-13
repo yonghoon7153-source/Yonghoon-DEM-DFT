@@ -867,3 +867,125 @@ python -m src.halfcell --config configs/base.yaml --method ocp --force --verify
 
 10회는 **실행 전에 횟수를 고정**했고 실패분을 버리고 재시도하지 않았다
 (셸 시간 제한 때문에 5+3+2 로 나눠 실행했으나 같은 커밋의 연속 10회다).
+
+---
+
+## 20. 14차 게이트 GO 후 본 실행 기록 (2026-08-12 ~ 13)
+
+리뷰 5차에서 GO. 코드는 `c0f1daa0` / `source_digest d50295f980ccaa81` 로 동결한
+채 계산·보고·보관을 끝냈다. 아래는 **실행 로그에서 그대로 옮긴 수치**다.
+
+### 20.1 환경과 실행
+
+| 항목 | 값 |
+|---|---|
+| 코드 | `c0f1daa0d92a7625c3602799c81db04b5e2e5783`, `source_digest d50295f980ccaa81` |
+| 하드웨어 | Tesla V100-PCIE-32GB · 32코어 · RAM 125 GB |
+| GPU 사용 | **없음** — PyBaMM DFN + composite phases 는 IDAKLU(CPU) 경로 |
+| pre-flight | pytest 304 passed (35분) · strict smoke 통과 |
+| baseline | ne_primary 36.64970365763882 / ne_secondary 3446.0841935406315 / pe 58439.87386449178 |
+| half-cell | `구조검사 true` · `재생성_배열일치 true` |
+
+| 단계 | 결과 | 소요 |
+|---|---|---|
+| grid | ok 3,069 / failed 924 (의도 3,993) | 1,931.6 s |
+| main fit (grid 기준) | 12,276행 = 3,069 × 4목적함수 | 10,364.4 s |
+| half-cell fit | 12,276행 | 9,332.3 s |
+| paired fixed-5 (1차) | 6,138행 — **무효, 폐기** (20.3) | 7,046.6 s |
+| paired fixed-5 (재실행) | 6,138행 = 3,069 × 2목적함수 | 6,924.5 s |
+| wsweep · score · Hessian · 보고서 | — | 약 9 h |
+| archive | 요청 4 · 검증 가능 4 · 불완전 0 · 합계 116 MB | — |
+
+### 20.2 grid invariant (fitting 전, 리뷰 조건 4)
+
+```
+validator ok = True | fail = []
+grid_sig_version = 5 | signed noise = [0.0, 0.001, 0.005]
+effective_solver = IDAKLUSolver · pybamm 26.7.1.0 · pybammsolvers 0.9.0 · casadi 3.7.2
+observed conditions = 3069 (3069 기대)
+observed family     = 1023 (1023 기대), noise 집합 불일치 0
+max Δq_mah = 0 mAh (≤1e-6)   max Δv = 0 V (≤1e-10)
+n_failed_total = 924 (924 기대)
+fully-failed family = 308 (308 기대), noise 불일치 0
+=== INVARIANT PASS ===
+```
+
+family 내 편차가 허용오차가 아니라 **정확히 0** 이다 — 14차 발견 1 이 요구한
+"noise 는 solve 이후에만 얹힌다"가 3,069조건 전수에서 성립했다.
+
+### 20.3 실행 중 사고 1건 — 검증 장치가 처음으로 실제 사고를 잡았다
+
+paired fit(20:29~22:30) **도중**, 같은 clone 에서 작업하던 다른 세션이
+`claude/stoic-knuth-NObVQ`(DEM/MPM 계열)로 브랜치를 전환했다. 그 브랜치에는
+`degradation-degeneracy/src/`·`configs/` 가 없어 tracked 파일이 통째로 사라졌다.
+이미 import 된 모듈로 계산은 끝까지 돌았지만, 산출물의 코드 정체성은 깨졌다.
+
+검출:
+
+```
+results/grid_curves_v4    src_changed=False git_changed=None
+results/grid_fit_v4       src_changed=False git_changed=False
+results/halfcell_fit_v4   src_changed=False git_changed=False
+results/paired_fixed5_v4  src_changed=True  git_changed=True
+results/paired_fixed5_v4  ok=False fail=['입력봉인_교차일치', '실행중_코드불변']
+```
+
+- `실행중_코드불변` = `src/` 소멸, `입력봉인_교차일치` = 종료 시점에 봉인 입력
+  (`configs/base.yaml` 등)을 재해시할 수 없게 된 것.
+- **`--resume` 으로 잇지 않았다.** run_sig 가 같아 기술적으로는 가능하지만 어느
+  행이 코드가 사라진 상태에서 계산됐는지 증명할 수 없다. 처음부터 재실행했고
+  재실행분은 `src_changed=False / git_changed=False / ok=True` 다.
+- 무효본은 `results/_INVALID_paired_fixed5_v4_srcchanged` 로 보존(gitignore).
+- 재발 방지: DEM/MPM 작업을 `git worktree add ~/dem-work` 로 분리했다.
+
+F49(5차)부터 쌓아 온 코드 identity 봉인이 **가정된 위협이 아니라 실제 사고**를
+잡은 첫 사례다. 이 장치가 없었다면 결론 2의 인용 정본이 조용히 통과했다.
+
+### 20.4 결과 (`docs/RESULTS.md`, 복원가능군 5,904행 · tol 2%p)
+
+| objective | degeneracy | (바이어스 보정) | 평균 \|err\| | raw 반대부호 |
+|---|---|---|---|---|
+| pOCV only | 78% | 67% | 4.7%p | 29% |
+| pOCV + dV/dQ (33p) | 62% | 15% | 2.5%p | 68% |
+| + dQ/dV (34p) | 63% | 25% | 2.4%p | 48% |
+| dQ/dV only | 77% | 66% | 5.0%p | 22% |
+
+- **결론 1**: dQ/dV 추가로 62% → 63%, 사실상 변화 없음. 모집단에 따라 방향이
+  뒤집힌다(복원가능군 +0.5%p vs 전체 격자 −2.6%p). optimizer protocol 이 달라
+  정보량 비교가 아니며, 인용 정본은 `docs/RESULTS_PAIRED_FIXED5.md` 다.
+- **결론 2**: 참 격차 ≥6%p 조건이 "같다"로 붕괴하는 비율 **0%** (n=245),
+  사건 우도비 90.0. 임계를 흔들면 2.5~113.7(중앙값 16.8)로 움직이는 국소
+  봉우리라 단독 인용 불가 — 6차 리뷰의 철회 판단이 v4 에서도 유지된다.
+- **결론 3**: 22p 근방 degeneracy 12%.
+- **기준 곡선 효과**: 33p 에서 Case 1(half-cell) **7%** vs Case 2(grid) **62%**.
+  목적함수를 바꾼 차이(62↔63%)와 자릿수가 다르다 — 결론 3(기준 곡선 > 목적함수)
+  이 v4 에서 재현됐다.
+- 격자의 **52%** 는 grid 기준에서 원리적으로 복원 불가.
+
+### 20.5 보관과 외부 검증
+
+archive 4/4 승격(116 MB), `artifacts/artifact_index.yaml` 의 `source_commit` 은
+전부 `c0f1daa0`(계산 시작 커밋 — 14차 발견 8). **다른 clone 에서 실제로 확인**:
+
+```
+── grid_curves_v4    검증 가능: 필요한 파일이 모두 있고 digest가 일치한다
+── grid_fit_v4       검증 가능: …
+── halfcell_fit_v4   검증 가능: …
+── paired_fixed5_v4  검증 가능: …
+```
+
+### 20.6 이번 실행에서 새로 드러난 결함 — 15차 게이트 대상
+
+전부 **실측으로 확인**했고, digest 동결 때문에 **이번 라운드에서는 고치지 않았다**.
+
+| # | 결함 | 근거 | 영향 |
+|---|---|---|---|
+| A | `run.sh --mode hessian` 이 **분리 배치에서 동작 불가**. `run_hessian` 이 `curves.parquet` 과 `fits.parquet` 을 같은 `--in` 에서 읽는데, 게이트가 요구한 producer/fit 분리(F70)에서는 한 디렉터리에 둘 다 없다 | `src/hessian.py:135`, 실행 시 `FileNotFoundError: results/grid_fit_v4/curves.parquet` | 문서화된 실행 순서가 그대로는 실패. 이번엔 봉인 스냅샷(`_inputs/<digest>_curves.parquet`)을 staging 디렉터리로 먹여 우회 |
+| B | **score → hessian → report 순서가 인용 금지 배너를 만든다.** hessian 이 `degeneracy_summary.yaml` 에 넣는 `hessian_pe_ne_coupled_frac`·`hessian_eps` 를 stale 검사의 재계산본이 모른다 | `_numbers_equal(saved+hessian키, 재계산)` → **False** (직접 측정) | 정상 실행이 스스로 인용 불가 문서를 만든다. 이번엔 hessian 뒤에 score 를 한 번 더 돌려 회피(보고서 Hessian 절은 `hessian_*.parquet` 에서 나오므로 손실 없음) |
+| C | A·B 가 지금까지 안 드러난 이유 — **`scripts/smoke_e2e.sh` 에 hessian 단계가 없다** | smoke 8개 단계에 hessian 없음 | 커버리지 구멍. 15차에서 smoke 에 hessian 단계 추가 필요 |
+| D | `_verify_noise_families` 의 `sorted(fams.items(), key=repr)` 이 **DataFrame 을 통째로 문자열화**한다 (값이 `(noise, cid, DataFrame)` 목록) | traceback 이 pandas `to_string` → `_trim_zeros_float` 에서 잡힘. 곡선 검증 1회에 수십 분 | 14차에 내가 넣은 결함. 기능은 정확하나 검증이 병목. `key=lambda kv: kv[0]` 로 고칠 것 |
+| E | 보관 묶음이 **git EOL 정규화로 깨질 뻔했다**. `failed.csv` 는 `csv.writer` 가 CRLF 로 쓰는데 `.gitattributes` 의 `*.csv text eol=lf` 가 이를 LF 로 바꾼다 | `git add` 경고 4건 | 다른 clone 에서 복원한 바이트가 `payload_sha256`·`입력_digest_재해시` 와 어긋난다 = archive 의 존재 이유가 무너진다. `artifacts/** -text` 로 막았고(RUN_SCOPE 밖이라 digest 불변) 외부 clone 검증으로 확인했으나, **이를 고정하는 회귀 테스트가 없다** |
+| F | 한 clone 을 두 세션이 공유하면 브랜치 전환만으로 실행 중 코드가 사라진다 (20.3) | 실제 사고 | 검출은 됐으나 **예방은 운영 규율에만 의존**한다. 실행 중 주기적 digest 확인 등 코드 측 강화 여지 |
+
+A·B·C 는 **정상 실행 경로의 결함**이라 15차의 우선 대상이다. D 는 성능, E 는
+회귀 테스트 부재, F 는 설계 판단이 필요한 항목이다.
