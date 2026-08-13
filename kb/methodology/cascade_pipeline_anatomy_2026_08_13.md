@@ -150,10 +150,46 @@ for cmp in "${ALL_COMPOUNDS[@]}"; do for conc in x002 x005 x010; do …
 canonical 스냅샷 날짜와 같다 — 그날 있던 것까지만 모아 굳었고, 뒤에 끝난
 cascade 들이 재취합을 트리거하지 않았다.
 
-⚠ **`cascade_v23_all.csv` 를 만드는 스크립트를 아직 못 찾았다.** repo·unified 브랜치에서
-이 이름을 쓰는 건 `esw_cascade_batch.py`(읽기 전용)뿐이다. 회수 1단계는 그 취합기를
-찾거나, `unified_dataset_273.csv` → 같은 schema 로 변환하는 것이다.
-(schema 차이 주의: `cascade_v23_all.csv` 는 `+Clrich` 변형을 별도 dopant 로 센다.)
+### 단일 실패점 — 통합은 자동, **등록은 수동**이었다
+
+`master_batch_273.sh` 마지막 블록:
+
+```python
+csvs = sorted(glob.glob('$BATCH_DIR/*/dataset.csv'))   # 270개 cascade
+unified = pd.concat(dfs, ignore_index=True)
+unified.to_csv('$BATCH_DIR/unified_dataset_273.csv')   # ← 자동
+```
+
+반면 `cascade_v23_all.csv` 를 **쓰는 코드는 어디에도 없다** (읽는 것만 3개).
+git 로그가 수동 등록의 흔적이다:
+
+```
+336cb2e8  register doping cascade results to DB (36 compounds incl. NiO)
+c649492f  register cascade: +Al2O3 x002/x005/x010 (39 compounds total)
+2c34123e  cascade v23: aggregate 141 done compounds        ← 마지막, 6/29
+```
+
+36 → 39 → 141 로 "그때까지 done 인 것" 을 손으로 커밋했고 141(=47종)에서 멈췄다.
+
+| 시각 | 파일 | 내용 |
+|---|---|---|
+| 6/25 10:58 | `cascade_v23_champions.csv` | 141행 |
+| 6/25 11:28 | `oxidation_stability_cascade.json` | 141 항목 |
+| **6/29 11:52** | `cascade_v23_all.csv` | 2025행 · 47종 · **수동 등록 마지막** |
+| **7/11 23:06** | `unified_dataset_273.csv` | 3615행 · 90종 · **자동 통합, 등록 안 됨** |
+
+**계산이 끝난 것은 7/11 이고 등록이 멈춘 것은 6/29 다 — 12일 차이.**
+
+스키마가 이를 확증한다: U 에만 있는 열이 `composition_Br`·`composition_I`·`composition_N` —
+A 에는 그 원소 열 자체가 없다.
+
+### ⚠ 부수 위험 — 47종 값도 옛 세대일 수 있다
+
+A 의 2025행이 U 에 **전부 포함**되지만(A-only 0), 공통 95열 중 **8열의 값이 다르다**
+(`bvs_li_proxy_score`·`elastic_poisson_nu`·`screen_dV_over_V0`·`tier2_lattice_angle_dev_deg`·
+`bvs_li_std` 등). U 는 **재계산된 세대**다. 즉 지금 db 의 47종 수치도 7/11 판과 다를 수 있고,
+`bvs_li_proxy_score` 는 **G4 의 입력**이다. 덧붙이기(merge)가 아니라 **세대 교체**로 가야 하며,
+교체 후 G4 통과 명단이 바뀌는지 반드시 대조할 것.
 
 ## 회수 경로 (다음 loop 1순위)
 
