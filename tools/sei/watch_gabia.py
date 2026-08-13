@@ -36,7 +36,10 @@ SDCP_VASP = "/data/work/runs/sdcp_v2/phaseB_vasp"
 NEBW = os.environ.get("NEBW",
                       "/data/work/runs/sei_neb_v2"
                       ":/data/work/runs/sei_neb_v2_ccpath"
+                      ":/data/work/runs/sei_neb_v2_cc333"
                       ":/data/work/runs/sei_neb_v3")
+#: neb.out 머리의 CI_scheme — 'no-CI' 면 장벽이 이미지 격자만큼 **과소평가**된다.
+_CIS = re.compile(r"CI_scheme\s*=\s*'([^']+)'")
 
 
 def split_roots(spec):
@@ -170,10 +173,12 @@ def _neb_rows(ss):
         err = f"{s['err']:.3f}→{s['thr'] or 0.05:.2f}" if s["err"] is not None else "—"
         it = (f"{s['state']}it{s['it']}" if s["it"]
               else {"◦": "◦SCF", "✗": "✗", " ": "—"}.get(s["state"], s["state"]))
-        ea = f"{s['ea']:.3f}" if s["ea"] is not None else "—"
+        # Ea 뒤 ↓ = no-CI 하한(인용 불가) · CI = 2단계까지 끝난 값
+        ea = (f"{s['ea']:.3f}" + ("CI" if s["ci"] not in (None, "no-CI") else "↓")) \
+            if s["ea"] is not None else "—"
         age = f"{s['age_min']:.0f}분" if s["age_min"] is not None else "—"
         print(f"   {s['tag']:11s}{s['ep_mark']:>5s} {dep:>11s}  "
-              f"{it:>5s} {err:>13s} {ea:>9s} {age:>7s}")
+              f"{it:>5s} {err:>13s} {ea:>11s} {age:>7s}")
 
 
 def neb_status(d):
@@ -185,7 +190,7 @@ def neb_status(d):
     """
     r = {"tag": os.path.basename(d), "state": " ", "it": None, "err": None,
          "thr": None, "ea": None, "ep_mark": "  ", "ep_dE_meV": None,
-         "eqv": None, "age_min": None, "alerts": []}
+         "eqv": None, "age_min": None, "ci": None, "alerts": []}
     meta = {}
     mp = os.path.join(d, "meta.json")
     if os.path.isfile(mp):
@@ -195,6 +200,7 @@ def neb_status(d):
             r["alerts"].append(f"{r['tag']}: meta.json 손상 — 대칭 게이트를 못 켠다")
     r["eqv"] = meta.get("endpoints_symmetry_equivalent")
     r["thr"] = meta.get("path_thr")
+    r["ci"] = meta.get("ci_scheme")          # neb.out 을 읽으면 아래에서 덮어쓴다
 
     # ── 끝점 ──
     ei, mi = relax_end(os.path.join(d, "ep_initial", "relax.out"))
@@ -254,8 +260,20 @@ def neb_status(d):
         free = [float(e) for _en, e, fz in rows if fz == "F"] or \
                [float(e) for _en, e, _fz in rows]
         r["err"] = max(free) if free else None
+    _ci = _CIS.search(t)
+    if _ci:
+        r["ci"] = _ci.group(1)
     if "neb: convergence achieved" in t:
         r["state"] = "✓"
+        # ⚠⚠ 2026-08-13 — 옛 화면은 여기서 끝이었다. 그런데 QE 권고 2단계(no-CI 수렴 →
+        #   restart + CI)의 **1단계만** 돈 런은 ✓ 로 보이면서 실제로는 인용 불가다
+        #   (collect_neb.py 가 retracted:true 로 찍는다). 화면이 "끝났다" 고 말하는데
+        #   db 는 "못 쓴다" 고 말하는 상태가 하루 갔다. 같은 판정을 여기서도 한다.
+        if r["ci"] in (None, "no-CI"):
+            r["alerts"].append(
+                f"{r['tag']}: 수렴했지만 **CI 가 꺼져 있다** — 장벽은 하한이고 인용 불가. "
+                f"2단계가 남았다: run_sei_neb.sh ci {r['tag']} → build --ci_scheme auto "
+                f"--restart → run_sei_neb.sh {r['tag']}")
     else:
         # ◦ = 돌기 시작했는데 첫 경로 스텝이 아직 안 나왔다 (이미지 7개 SCF 중).
         #   미착수(공백)와 구분해야 한다 — 안 그러면 "안 걸렸나?" 하고 또 건다.
@@ -306,6 +324,29 @@ def selftest():
     s = neb_status(mk("li2o", True, -100.0, -100.0,
                       body + "     neb: convergence achieved in 12 iterations\n"))
     chk(s["state"] == "✓", "수렴 문자열 → ✓")
+    # ── CI 단계 (2026-08-13) ────────────────────────────────────────────────
+    #   화면이 ✓ 라고 말하는데 collect_neb.py 는 retracted:true 를 찍고 있었다.
+    #   같은 판정을 화면도 해야 한다 — 양성/음성 둘 다 건다.
+    CONV = "     neb: convergence achieved in 12 iterations\n"
+    # 음성 ⑥-a: 수렴했지만 CI_scheme='no-CI' → 인용 불가 경고 + ↓ 표시
+    s = neb_status(mk("li3nd_noci", True, -100.0, -100.0,
+                      "     CI_scheme = 'no-CI'\n" + body + CONV))
+    chk(s["state"] == "✓" and s["ci"] == "no-CI"
+        and any("CI 가 꺼져 있다" in x for x in s["alerts"]),
+        f"수렴 + no-CI → 인용 불가 경고 ({s['ci']})")
+    # 음성 ⑥-b: CI_scheme 줄 자체가 없어도(옛 출력) 조용히 통과시키지 않는다
+    s = neb_status(mk("li2s_noline", True, -100.0, -100.0, body + CONV))
+    chk(any("CI 가 꺼져 있다" in x for x in s["alerts"]),
+        "CI_scheme 줄 없음 → no-CI 로 간주하고 경고 (조용한 통과 금지)")
+    # 양성 ③: CI 2단계까지 끝난 런은 조용해야 한다 — 안 그러면 경고가 늑대소년이 된다
+    s = neb_status(mk("li3nd_ci", True, -100.0, -100.0,
+                      "     CI_scheme = 'auto'\n" + body + CONV))
+    chk(s["ci"] == "auto" and not s["alerts"], f"CI auto + 수렴 → 조용 ({s['alerts']})")
+    # 미수렴 단계에서는 CI 경고를 내지 않는다 (아직 1단계 도는 중이 정상이다)
+    s = neb_status(mk("li3p_running", True, -100.0, -100.0,
+                      "     CI_scheme = 'no-CI'\n" + body))
+    chk(s["state"] == "▸" and not any("CI 가 꺼져" in x for x in s["alerts"]),
+        "진행 중 + no-CI → CI 경고 없음 (1단계가 정상)")
     # 음성 ①: 대칭 동등인데 끝점 57 meV — 미수렴 (2026-08 실측 사고)
     s = neb_status(mk("li2s_bad", True, -100.0, -100.057, body))
     chk(any("대칭 동등" in x for x in s["alerts"]),
@@ -675,7 +716,8 @@ else:
     print(f"④ SEI NEB — 루트 {len(by_root)}개 · neb.x 프로세스 {neb_pid}"
           f"   (✓수렴 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
     print(f"   {'상':11s}{'끝점':>5s} {'Δ끝점':>11s}  {'경로':>5s} {'오차→문턱':>13s}"
-          f" {'Ea→(eV)':>9s} {'갱신':>7s}")
+          f" {'Ea→(eV)':>11s} {'갱신':>7s}")
+    print("   Ea 뒤 ↓ = no-CI 하한(**인용 불가**) · CI = 2단계까지 끝난 값")
     for _d, _ss in by_root:
         note = run_note(_d)
         print(f"   ┌ {root_label(_d)}"
