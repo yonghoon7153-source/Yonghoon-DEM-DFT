@@ -68,14 +68,18 @@ if [ -n "$AFTER" ]; then
     ts "   먼저: python3 tools/sei/build_neb_inputs.py --work $WORK ..."
     exit 1
   fi
-  ts "⏳ $AFTER 의 neb.x 가 끝나기를 기다린다 (내 입력 ${n_in}개 확인됨)"
-  # ⚠ 조건을 단순하게 둔다: **이 기계에 neb.x 가 하나도 없으면** 앞 작업이 끝난 것이다.
-  #   GPU 가 하나뿐이라 NEB 를 겹쳐 돌리지 않기 때문이다. 프로세스 이름에서 작업
+  ts "⏳ $AFTER 의 계산이 끝나기를 기다린다 (내 입력 ${n_in}개 확인됨)"
+  # ⚠ 조건을 단순하게 둔다: **이 기계에 계산 프로세스가 하나도 없으면** 앞 작업이 끝난 것이다.
+  #   GPU 가 하나뿐이라 겹쳐 돌리지 않기 때문이다. 프로세스 이름에서 작업
   #   폴더를 파싱하려 들면(neb.x 는 인자에 폴더를 안 싣는다) 조용히 틀린다.
+  # ⚠⚠ 2026-08-13 — neb.x 만 보면 **끝점 이완 구간(pw.x)을 못 본다**. 앞 작업이
+  #   `endpoints` 단계면 neb.x 가 0 이라 대기가 즉시 풀리고 pw.x 와 GPU 를 다툰다
+  #   (아래 nvidia-smi 가드에 걸려 그대로 죽는다). pw.x 도 같이 본다.
+  WAITPAT="[n]eb\.x|[p]w\.x"
   waited=0
-  while pgrep -f "[n]eb\.x" >/dev/null; do
+  while pgrep -f "$WAITPAT" >/dev/null; do
     sleep 300; waited=$((waited+5))
-    [ $((waited % 60)) = 0 ] && ts "   ... ${waited}분째 대기 (neb.x $(pgrep -cf '[n]eb\.x')개)"
+    [ $((waited % 60)) = 0 ] && ts "   ... ${waited}분째 대기 (계산 프로세스 $(pgrep -cf "$WAITPAT")개)"
   done
   ts "✔ 앞 작업이 끝났다 (${waited}분 대기) — 이어서 시작한다"
   for f in "$AFTER"/*/neb.out; do
