@@ -1,9 +1,9 @@
 ---
 title: Xu 2026 의 "Li–Nd alloy SEI" 주장은 열역학·전자구조로 기각된다
 date: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-13
 tags: [sei, li3nd, xu2026, argyrodite, nd, rebuttal]
-status: 방어 중 — Li₃Nd NEB 재계산 진행
+status: 방어 중 — Li₃Nd c→c NEB **완료·인용 가능** (0.229 eV, CI) · 셀 수렴만 진행 중
 confidence: medium
 verificationStatus: verified
 verifiedAt: 2026-08-11
@@ -41,6 +41,35 @@ hull +0.197 eV/atom·theoretical)이고 0 V 평형 산물은 NdP 쪽이며 그 L
 검증 경계: ①②는 자체 적대 리뷰, ③의 인용 문안("조건절 의무")은 Codex NEB 재리뷰가
 확인. Li₃Nd DOS 실측 자체는 오늘 1회 계산 — 재현 런은 아직 없다.
 
+### 4. Li 이동장벽 — **0.229 eV** (2026-08-13 완료, 인용 가능)
+
+`/data/work/runs/sei_neb_v2_ccpath/li3nd` · `db/properties/sei_neb.json` 의
+`v2_ccpath/li3nd` (`citable: true`, 4개 루트 중 유일).
+
+| | |
+|---|---|
+| 홉 | Wyckoff **c→c**, 3.667 Å (8c 부격자, a/√2 = 3.666) |
+| Ea | 정 0.228981 / 역 0.228958 eV — **대칭** (차 23 μeV) |
+| CI | `CI_scheme = auto`, climbing image 5. no-CI 0.228980 → CI 0.228981 (**1 μeV**) |
+| 셀·전하 | 2×2×2, 31원자. **금속이라 tot_charge = 0 · mv smearing · jellium 없음** |
+| 수렴 | 경로 오차 0.039 < 0.05 eV/Å · 끝점 독립 이완 Δ 0 mV |
+
+CI 가 값을 안 바꾼 게 결함이 아니다 — 대칭 홉이라 안장점이 경로 중앙에 있고
+이미지 격자가 이미 그 점을 밟고 있었다. **비대칭 홉에서는 이렇게 안 된다**
+(li3po4g c-d 처럼 자리가 다르면 CI 가 실제로 값을 올린다).
+
+⛔ 같은 상의 `v2/li3nd` 2.072 eV 는 **c→b**, 즉 공공이 비싼 자리로 밀려가는
+"일어나지 않는 홉" 이다. 장벽으로 인용하지 않는다 (`kb/results/li3nd_endpoint_asymmetry_2026_08_12.md`).
+
+**인용 문안 (조건절 의무 — `sei_electronic_class.json` `cite_with`)**
+
+> Even if Li₃Nd were to form kinetically — it lies 0.197 eV/atom above the Li–Nd
+> convex hull and no stable ordered Li–Nd phase exists — it is metallic
+> (N(E_F) = 5.324 states/eV) and presents a low Li migration barrier of 0.23 eV.
+> It therefore cannot act as the electron-blocking interphase invoked in ref. X.
+
+장벽만 떼어 쓰면 P2(안정상 0개)와 **모순돼 보인다**. 조건절과 hull 거리를 반드시 같이 쓴다.
+
 ## Counter-arguments
 
 - **DB≠자연**: MP hull 은 0 K ordered convex hull. 실제 계면에선 준안정 kinetic
@@ -58,7 +87,10 @@ hull +0.197 eV/atom·theoretical)이고 0 V 평형 산물은 NdP 쪽이며 그 L
 
 ## Gap
 
-- Li₃Nd NEB 진행 중 (sei_neb_v2 파일럿) — 장벽이 나와도 단독 인용 금지, 조건절 동반.
+- ~~Li₃Nd NEB 진행 중~~ → **완료 (2026-08-13)**. 0.229 eV, CI, 인용 가능.
+  조건절 동반 의무는 그대로. 남은 것은 **셀 수렴 1건**: 2×2×2(31원자) 의 공공–공공
+  이미지 상호작용이 미검증이다. 3×3×3(107원자, `sei_neb_v2_cc333`) 진행 중 —
+  수십 meV 안에 들어오면 절대값 인용까지 열린다. 그 전까지는 **상 사이 비교**로만 쓴다.
 - XPS ~995 eV 피크의 대안 배정(NdP? Nd⁰? 환원 NdOx?) — 우리가 계산으로 채울 수
   있는 빈칸이나 아직 착수 안 함.
 - x=0.025(Xu 조성)에서의 grand-potential 재계산 없음 — 반박의 조성 이식성 미검.
