@@ -11,7 +11,8 @@ set -uo pipefail
 cd "${SDCP_DIR:-$HOME/sdcp}" 2>/dev/null || { echo "ABORT — ~/sdcp 없음"; exit 1; }
 
 echo "══ 프로세스 ═══════════════════════════════════════════════"
-N=$(pgrep -fc mpm_webapp_payload 2>/dev/null || echo 0)
+N=$(pgrep -f mpm_webapp_payload 2>/dev/null | wc -l | tr -d " ")
+[ -n "$N" ] || N=0
 if [ "$N" -gt 1 ]; then
   echo "  ⚠⚠ payload 프로세스 $N 개 — **동시 실행 중이다**.  GPU 를 나눠 쓰면"
   echo "     느려지거나 OOM 이고, 어느 런이 실패했는지 로그가 섞인다."
@@ -80,6 +81,6 @@ if all(r4) and all(r3):
     print()
     print(f'  ratio 0.4 → 0.3 : {a:.4f} → {b:.4f}  = {(b/a-1)*100:+.2f} %'
           f'   I = {math.log(b)-math.log(a):+.4f}')
-    print('  ⇒ |Δ| < 3 % 면 **비는 격자에 강건** = 헤드라인(+42.15 %) 생존.')
-    print('     그 이상이면 비 자체가 이산화 의존 = 비교 전체를 다시 세워야 한다.')
+    print('  ⇒ |Δ| < 3 % 면 **비는 격자에 강건** = 헤드라인 생존.')
+    print('     ★ 2026-08-13 실측: Δ = −18.25 % (판정선의 6.1배) ⇒ **강건하지 않다** (CL-22).')
 PY
