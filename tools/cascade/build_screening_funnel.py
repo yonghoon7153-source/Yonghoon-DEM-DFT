@@ -17,6 +17,21 @@
 
 산출: db/properties/cascade_screening_funnel.json
 결정론: 난수 없음, 표준 라이브러리만, 정렬된 리스트만 출력 → 2회 실행 md5 동일.
+
+--audit_raw <캠페인루트>  (2026-08-13 추가)
+  이 파일은 "91 → 47 은 물리 게이트가 아니라 파이프라인 탈락" 이라고 **주장**하는데,
+  정작 그 근거인 원자료(273 실행 디렉터리)는 repo 에 없다. 세미나에서 "왜 염화물이
+  0/19 냐" 를 물으면 CSV 요약을 되읽는 것 말고 답할 게 없었다.
+  이 모드는 gabia 의 캠페인 루트를 훑어 **종별로 어느 축이 비었는지**를 세고
+  계열별로 집계한다. 판정을 만들지 않고 파일 존재 여부만 센다.
+
+  python3 tools/cascade/build_screening_funnel.py --audit_raw /data/work/runs/multi_category_2026_05_26_v23
+  python3 tools/cascade/build_screening_funnel.py --selftest
+
+이 도구가 못 하는 것
+  · 축이 빈 **이유**를 말하지 못한다 — 로그를 읽지 않고 산출물 유무만 본다.
+    (n_structures=0 처럼 stage-01 이 정직 종료한 경우만 예외적으로 집어낸다.)
+  · 원자료가 없는 종에 대해서는 아무 말도 하지 않는다. 없는 것은 없다고 찍는다.
 """
 import csv
 import hashlib
@@ -381,7 +396,148 @@ def run_sequence(rows, gates, order, standalone_kill=None):
     return steps, sorted(r["dopant"] for r in alive)
 
 
+# ── 원자료 감사 (--audit_raw) ────────────────────────────────────────────────
+#: 캠페인 산출물 → 3축 매핑. 값은 glob 패턴이고, **하나라도 맞으면 그 축은 채워진 것**.
+#:  축 이름은 pool_provenance 의 "ESW·탄성·BVSE 3축" 과 같은 이름을 쓴다.
+AXIS_GLOBS = {
+    "ESW": ["**/esw*.json", "**/*oxidation*.json", "**/*window*.json"],
+    "elastic": ["**/elastic*.json", "**/*cij*.json", "**/eos*.json", "**/*B0*.json"],
+    "BVSE": ["**/bvse*.json", "**/*litransport*.json", "**/*blocking*.json"],
+}
+#: stage-01 이 자리 열거를 못 해 정직 종료한 흔적 (As₂S₃ 선례).
+SEED_FAIL_KEYS = ("n_structures", "n_seeds", "n_candidates")
+
+
+def _family_map():
+    """attrition CSV 에서 종 → 계열. 없으면 빈 dict (감사는 계열 없이도 돈다)."""
+    p = PROP / "cascade_seminar_pool_attrition_273_to_47.csv"
+    if not p.is_file():
+        return {}
+    return {r["candidate"]: r["family"] for r in read_csv_rows(p)}
+
+
+def _species_of(dirname):
+    """`ZrCl4_x002` → `ZrCl4`. 라벨 접미사만 떼고 나머지는 그대로 둔다."""
+    import re
+    return re.sub(r"_x0\d\d.*$", "", dirname)
+
+
+def audit_raw(root):
+    """캠페인 루트를 훑어 종별 축 충족·seed 실패를 센다. 판정하지 않고 존재만 센다."""
+    import collections
+    import re
+    root = Path(root)
+    if not root.is_dir():
+        print(f"⛔ 캠페인 루트가 없다: {root}")
+        return 1
+    fam = _family_map()
+    per = {}                                   # species → {axis: bool, seed0: bool, n_dirs}
+    for d in sorted(p for p in root.iterdir() if p.is_dir()):
+        sp = _species_of(d.name)
+        rec = per.setdefault(sp, {"axes": {a: False for a in AXIS_GLOBS},
+                                  "seed0": False, "n_dirs": 0})
+        rec["n_dirs"] += 1
+        for axis, pats in AXIS_GLOBS.items():
+            if rec["axes"][axis]:
+                continue
+            rec["axes"][axis] = any(next(d.glob(pat), None) is not None for pat in pats)
+        # stage-01 정직 종료 흔적: n_structures 류가 0 으로 적힌 json
+        for j in list(d.glob("**/*.json"))[:60]:
+            try:
+                t = j.read_text(errors="ignore")
+            except OSError:
+                continue
+            if any(re.search(rf'"{k}"\s*:\s*0\b', t) for k in SEED_FAIL_KEYS):
+                rec["seed0"] = True
+                break
+
+    by_fam = collections.defaultdict(lambda: collections.Counter())
+    for sp, rec in per.items():
+        f = fam.get(sp, "?")
+        by_fam[f]["species"] += 1
+        by_fam[f]["dirs"] += rec["n_dirs"]
+        if all(rec["axes"].values()):
+            by_fam[f]["all3"] += 1
+        if rec["seed0"]:
+            by_fam[f]["seed0"] += 1
+        for a, ok in rec["axes"].items():
+            if not ok:
+                by_fam[f][f"no_{a}"] += 1
+
+    print(f"캠페인 루트: {root}")
+    print(f"실행 디렉터리 {sum(r['n_dirs'] for r in per.values())}개 · 종 {len(per)}개\n")
+    hdr = f"{'family':12s} {'종':>4s} {'실행':>5s} {'3축완비':>7s} {'seed0':>6s} " \
+          f"{'ESW없음':>8s} {'탄성없음':>9s} {'BVSE없음':>9s}"
+    print(hdr); print("-" * len(hdr))
+    for f in sorted(by_fam, key=lambda x: -by_fam[x]["species"]):
+        c = by_fam[f]
+        print(f"{f:12s} {c['species']:4d} {c['dirs']:5d} {c['all3']:7d} {c['seed0']:6d} "
+              f"{c['no_ESW']:8d} {c['no_elastic']:9d} {c['no_BVSE']:9d}")
+    print("\n⚠ 이 표는 **산출물 유무**만 센다. 축이 빈 이유(수렴 실패·파라미터 부재·미실행)는")
+    print("  로그를 따로 봐야 한다. seed0 = stage-01 이 자리를 못 만들고 정직 종료한 종.")
+    miss = sorted(sp for sp, r in per.items() if not all(r["axes"].values()))
+    if miss:
+        print(f"\n3축 미완 종 {len(miss)}개: {' '.join(miss[:40])}"
+              + (" …" if len(miss) > 40 else ""))
+    return 0
+
+
+def _selftest():
+    """양성 + **음성**. 가짜 캠페인 트리를 만들어 축 감지와 seed0 을 확인한다."""
+    import shutil
+    import tempfile
+    td = Path(tempfile.mkdtemp(prefix="funnel_audit_st_"))
+    ok = True
+
+    def chk(cond, msg):
+        nonlocal ok
+        print(("  ✓ " if cond else "  ✗ ") + msg)
+        ok &= bool(cond)
+
+    def mk(name, axes=(), seed0=False):
+        d = td / name
+        (d / "stage01").mkdir(parents=True)
+        for a in axes:
+            (d / f"{a.lower()}_result.json").write_text("{}")
+        (d / "stage01" / "summary.json").write_text(
+            '{"n_structures": 0}' if seed0 else '{"n_structures": 12}')
+        return d
+
+    mk("Al2O3_x002", axes=("esw", "elastic", "bvse"))
+    mk("ZrCl4_x002", axes=("esw",))                      # 2축 결손
+    mk("As2S3_x002", axes=(), seed0=True)                # seed 실패
+    per = {}
+    for d in sorted(p for p in td.iterdir() if p.is_dir()):
+        sp = _species_of(d.name)
+        r = {a: any(next(d.glob(g), None) is not None for g in gs)
+             for a, gs in AXIS_GLOBS.items()}
+        per[sp] = r
+    chk(_species_of("ZrCl4_x002") == "ZrCl4" and _species_of("Li2O") == "Li2O",
+        "라벨 접미사만 떼어낸다")
+    chk(all(per["Al2O3"].values()), f"3축 완비 감지 ({per['Al2O3']})")
+    # ★ 음성: 일부만 있는 종을 '완비' 로 세면 안 된다
+    chk(not all(per["ZrCl4"].values()) and per["ZrCl4"]["ESW"],
+        f"부분 충족은 미완으로 (ZrCl4 {per['ZrCl4']})")
+    chk(not any(per["As2S3"].values()), "산출물 없는 종은 전 축 미충족")
+    # ★ 음성: 없는 루트를 조용히 통과시키지 않는다
+    chk(audit_raw(td / "nope") == 1, "없는 루트 → 종료코드 1")
+    shutil.rmtree(td, ignore_errors=True)
+    print("selftest " + ("PASS" if ok else "FAIL"))
+    return 0 if ok else 1
+
+
 def main():
+    import argparse
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--audit_raw", metavar="ROOT",
+                    help="캠페인 실행 루트를 훑어 종별 3축 충족 현황을 센다 (gabia)")
+    ap.add_argument("--selftest", action="store_true")
+    a, _unknown = ap.parse_known_args()
+    if a.selftest:
+        raise SystemExit(_selftest())
+    if a.audit_raw:
+        raise SystemExit(audit_raw(a.audit_raw))
+
     rows = load_pool()
     gates = build_gates(rows)
     pool_names = sorted(r["dopant"] for r in rows)
