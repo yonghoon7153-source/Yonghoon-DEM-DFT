@@ -706,9 +706,10 @@ def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmo
       'arithmetic' 섬유들이 **병렬**로 놓인 극한.  둘은 상·하한 성격이라 **병기**할 것.
       'single'     dia_rel 없이 공칭 Ø 하나만 (dia_rel=None 일 때 자동).
 
-    ⚠ 이것은 **단면** 보정만이다.  계단식 경로가 만드는 **여분 길이**(대각 스텝에서 L 이
-    √3 까지 늘어난다)는 보정하지 않는다 — 그 잔차는 σ_eff 를 더 낮추는 방향이므로
-    여기 결과는 **상한**이다.  라벨: prov['unmodelled'].
+    ⚠ 이것은 **단면** 보정만이다.  계단식 경로의 **여분 길이** k (축정렬 1 ~ 대각 √3)는
+    보정하지 않는다.  R_ras = k·R_true 이므로 이 σ 로 푼 σ_e 는 참값의 **하한**이고,
+    참값 ≈ σ_e × k^w (w = 그 상의 소산분담).  라벨: prov['unmodelled'].
+    (2026-08-13 부호 정정 — 처음엔 '상한' 이라고 적었다.)
     """
     A_vox = float(vox_um) ** 2
     if dia_rel is None:
@@ -730,8 +731,10 @@ def diameter_preserving_sigma(sigma_bulk, dia_rel, d_ref_um, vox_um, mode='harmo
             'n_points': int(len(A)), 'A_real_eff_um2': float(f'{A_eff:.6g}'),
             'A_vox_um2': A_vox, 'factor': float(f'{f:.6g}'),
             'sigma_bulk': float(sigma_bulk), 'sigma_eff': float(f'{sigma_bulk * f:.6g}'),
-            'unmodelled': ('계단식 경로의 여분 길이 (대각 스텝에서 최대 √3) 미보정 — '
-                           '그 잔차는 σ_eff 를 더 낮추므로 이 값은 **상한**이다'),
+            'unmodelled': ('계단식 경로의 여분 길이 k (1~√3) 미보정 — 래스터 경로가 k 배 '
+                           '길어 저항이 k 배 크므로 이 σ 로 푼 σ_e 는 **하한**이다.  '
+                           '참값 ≈ σ_e × k^w (w = 그 상의 소산분담).  '
+                           '2026-08-13 부호 정정 — 처음엔 상한이라고 적었다'),
             'caveat': '단면 보존만. 접촉 저항·협착은 별개 축.'}
     return float(sigma_bulk * f), prov
 
