@@ -434,11 +434,63 @@ blocking_fraction comparison at x=0.25 vs x=0.0625 in an identical cell"*).
 같은 `2,2,1` 셀에서 In₂O₃·Ga₂O₃·B₂O₃ 를 x=0.0625 로 stage 04 까지 — `run_dualx.sh` 의
 `for c in ...` 목록만 바꾸면 된다. 그러면 6종 전수로 P11 을 농도 조건부로 다시 쓸 수 있다.
 
+## 미조사분 전수 확인 (2026-08-13 심야)
+
+### `09e_ehull` 270개 — **G1 을 못 살린다** (기대 철회)
+
+행 키가 `hull_E_at_winner_composition_eV_atom` 이다 — **hull 까지의 거리가 아니라
+그 조성에서의 hull 에너지 절대값**(−5.5 ~ −7.9 eV/atom). `E_above_hull` 은 없다.
+
+거리를 얻으려면 `E(우리 구조) − E(hull)` 이 필요한데 우리 구조는 **UMA**, hull 은
+**MP DFT** 라 기준계가 달라 뺄 수 없다. **못 쓰는 것이지 잊은 것이 아니다.**
+→ **G1 은 vacuous 인 채로 유지.** 발표 P10 은 현행 그대로 맞다.
+
+다만 `hull_decomposition` (270개) 은 유효하다 — ESW 반응식과 짝이 되는 분해산물 정보로
+passivation 논의에 쓸 수 있다.
+
+### σ MD · W_ad — **존재한다** (앞선 "없음" 판정 정정)
+
+`multi_category_2026_05_19_v22_OLD_radiusonly_20260525`:
+
+| | 개수 | 대상 |
+|---|---|---|
+| `STAGE_10.DONE` (σ MD) | **7** | Cu₂O_x002 · Li₂O_x002/005/010 · Na₂O_x002/005/010 |
+| `STAGE_11.DONE` (W_ad) | **6** | Li₂O ×3 · Na₂O ×3 |
+| 그 캠페인 `dataset.csv` 의 sigma/wad | **0 / 45행** | 스테이지는 돌았는데 **수집이 안 됐다** |
+
+v23 에서는 `TOP_K_SIGMA=0` 이라 정말 없지만, 옛 radiusonly 캠페인에는 있다.
+**"σ 는 어디에도 없다" 는 2026-08-13 판정은 틀렸다.** 다만 7종이고 radiusonly(폐기 계보)라
+인용 가치는 낮다. 병은 같다 — `collect_dataset.py` 가 stage 10/11 을 읽지 않는다.
+
+### `bvse_proxy.py` — **BV 파라미터가 정본과 갈라져 있다**
+
+| | S | Cl | b |
+|---|---|---|---|
+| CLAUDE.md 규약 (`tools/comp1_v3/`) | R0 **2.105** | **2.249** | 0.37 |
+| cascade (`tools/doping/bvse_proxy.py`) | R0 **1.94** | **1.91** | S 만 **0.40** |
+
+Adams 2003 계열 값이다. → **G4 의 transport 축 값은 우리 BVSE 결과와 같은 표에 올리면 안 된다.**
+`tools/convention_check.py` 가 MSD 창은 잡지만 BVSE R0 은 안 잡는다 (규약 확장 후보).
+
+부수 정정: cascade 판은 **Br 2.07 · I 2.29 · N 1.61 · Se · Te** 까지 갖고 있다. 내가
+"BVSE 가 S·Cl·O 만 지원해서 회수 14종은 축을 못 채운다" 고 추측한 것은 **틀렸다**
+(실측으로 이미 뒤집혔지만 이유도 틀렸다).
+
+### 나머지
+
+- `09f_esw` 270개 · `FINAL_RANKING.json` 270개 (`provenance/weights/n_structures/rows/grouped_stats`)
+  — 구조 확인만, 미수집
+- `predictor/` 270개 = `training_summary.json` + `predictor_screen_de_per_atom.pkl`
+  (캐스케이드마다 학습된 ML 모델 270개, 미수집)
+- `dft_inputs/` 270개 = `dft_input_summary.json` 뿐 (실제 입력 없음)
+- `_OLD_radiusonly_20260525` 276 dirs 중 완주는 6개뿐 (STAGE_12)
+- `tier_..._overgenerated` 는 종별 디렉터리가 아니라 **단일 cascade** 의 스테이지 디렉터리들이다
+  (COMPOUND_FILTER 미설정 → 5250 구조 과생성 사례)
+
 ## TODO (2026-08-14 발표 이후, 우선순위 순)
 
-1. **`09e_ehull` 270개 수집** — 최우선. funnel 이 스스로 *"G1 은 VACUOUS"* 라고 자백하는데,
-   문헌 기준(Xiao F2: `E_hull < 5 meV/atom`)으로 다시 걸 데이터가 270개 있고 한 번도 안 썼다.
-   G1 이 처음으로 진짜 게이트가 될 수 있다.
+1. ~~`09e_ehull` 로 G1 재건~~ → **불가 확인 (2026-08-13 심야)**. 위 절 참조 — 거리가 아니라
+   hull 절대에너지이고 UMA/MP 기준계가 달라 뺄 수 없다. G1 은 vacuous 유지.
 2. **회수 체인 실행** — `tools/cascade/rebuild_pool_inputs.py` (2026-08-13 신설, selftest 10건).
    `--inplace` 없이 먼저 돌려 `_v2` 로 뽑고 옛 판과 대조 → `plot_cascade_insights.py`
    → `build_screening_funnel.py` → 새 waterfall. **풀 47 → 90.**
