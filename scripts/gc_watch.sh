@@ -28,7 +28,7 @@ command -v nvidia-smi >/dev/null && nvidia-smi --query-gpu=memory.used,memory.to
 
 echo
 echo "══ 로그 (마지막 줄) ═══════════════════════════════════════"
-for f in gc_dbe.log gc_025.log gc_bridge.log; do
+for f in $(ls -1 gc_*.log 2>/dev/null); do
   [ -f "$f" ] || { printf '  %-14s (없음)\n' "$f"; continue; }
   last=$(grep -v '^\s*$' "$f" | tail -1 | cut -c1-118)
   age=$(( $(date +%s) - $(stat -c %Y "$f") ))
@@ -74,13 +74,17 @@ for tag, lab in (('gc04', 'vox 0.4'), ('gc03', 'vox 0.3'), ('gc025', 'vox 0.25')
     else:
         miss = [n for n, v in (('SBE', a), ('DBE', b)) if not v]
         print(f'  {lab:9s} 미완 ({", ".join(miss)} 없음)')
-r4 = [sig('kit_SBE', 'gc04'), sig('kit_DBE', 'gc04')]
-r3 = [sig('kit_SBE', 'gc03'), sig('kit_DBE', 'gc03')]
-if all(r4) and all(r3):
-    a, b = r4[1] / r4[0], r3[1] / r3[0]
+rs = [(v, sig('kit_SBE', t), sig('kit_DBE', t))
+      for t, v in (('gc04', 0.4), ('gc03', 0.3), ('gc025', 0.25))]
+rs = [(v, b / a) for v, a, b in rs if a and b]
+if len(rs) >= 2:
     print()
-    print(f'  ratio 0.4 → 0.3 : {a:.4f} → {b:.4f}  = {(b/a-1)*100:+.2f} %'
-          f'   I = {math.log(b)-math.log(a):+.4f}')
-    print('  ⇒ |Δ| < 3 % 면 **비는 격자에 강건** = 헤드라인 생존.')
-    print('     ★ 2026-08-13 실측: Δ = −18.25 % (판정선의 6.1배) ⇒ **강건하지 않다** (CL-22).')
+    for (v0, a), (v1, b) in zip(rs, rs[1:]):
+        print(f'  ratio {v0} → {v1} µm : {a:.4f} → {b:.4f}  = {(b/a-1)*100:+.2f} %'
+              f'   I = {math.log(b)-math.log(a):+.4f}')
+    print('  ⇒ |Δ| < 3 % 면 **비는 격자에 강건** = 헤드라인 생존 (런 전 등록).')
+    print('     ★ 0.4→0.3 실측 Δ = −18.25 % = 판정선의 6.1배 ⇒ **강건하지 않다** (CL-22).')
+    if len(rs) >= 3:
+        print(f'     ★★ 3점 확보 — 비가 {rs[0][1]:.4f} → {rs[1][1]:.4f} → {rs[2][1]:.4f} 로'
+              f' 수렴하는지 감속을 볼 것.')
 PY
