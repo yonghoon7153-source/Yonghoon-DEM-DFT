@@ -262,9 +262,19 @@ def build_gates(rows):
         "G4": {
             "id": "G4",
             "name": "li_transport",
-            "label": "Li 수송 유지 (채널 미폐색)",
+            # ⛔ 2026-08-14 — 라벨에서 "Li 수송" 을 뺐다. 전도도·확산을 잰 것처럼 읽혔는데
+            #    입력은 정적 프록시 두 개뿐이다(legacy BVS + 4 Å foreign-center count).
+            #    MD·NEB 는 이 축에 하나도 안 들어갔다. name 은 하위호환 때문에 유지.
+            "label": "정적 Li-환경 프록시 (BVS + 4 Å foreign-center)",
+            "label_note": ("⛔ 이온전도 측정이 아니다. 옛 라벨 'Li 수송 유지' 는 폐기 — "
+                           "이 게이트에 MD 확산계수·NEB 장벽·σ 는 하나도 들어가지 않는다."),
             "metric": ("ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @x=0.05) "
-                       f"with blocking<{BLOCKING_GATE} 게이트, 탈락자 {GATE_FLOOR} 평탄화"),
+                       f"with blocking<{BLOCKING_GATE} 게이트, 탈락자 {GATE_FLOOR} 평탄화. "
+                       "⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 "
+                       "파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 "
+                       "다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. "
+                       "blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례한다 "
+                       "(host 원소만 든 종은 0.0 으로 자동 통과 — 판정 아님)."),
             "threshold": f"transport_norm > {TRANSPORT_CUT}",
             "predicate": lambda r: r["transport_norm"] is not None and r["transport_norm"] > TRANSPORT_CUT,
             "missing": lambda r: r["transport_norm"] is None,
@@ -922,8 +932,11 @@ def main():
     ]
 
     # ── pool provenance ─────────────────────────────────────────────────────
+    # ⚠ 2026-08-14 — 풀 크기를 문자열에 **하드코딩하지 않는다.** _v2 로 돌리면 89 인데
+    #    설명문만 "47종" 으로 남아 화면이 스스로 모순됐다 (Codex 감사). NP 로 통일.
+    NP = len(rows)
     pool_provenance = {
-        "pool_size": len(rows),
+        "pool_size": NP,
         "what_it_is": ("**큐레이션된 도펀트 후보군**. 화학적 사전지식(코팅 문헌·합성 전구체·발란스 다양성)으로 "
                        "사람이 고른 목록이지, 어떤 DB를 전수로 훑어 남은 잔존군이 아니다."),
         "selection_history": [
@@ -932,12 +945,17 @@ def main():
             "(kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md)",
             "master_batch_273.sh (v4.5.20) 로 91 화합물 × 농도 3종(x=0.02/0.05/0.10) = 273 cascade 실행 "
             "(kb/projects/cascade_v23_review_2026_07_11.md: 273/273 완료)",
-            "그 중 ESW·탄성·BVSE 3축이 모두 채워진 47종이 cascade_v23_ranked.csv 에 등재 = 이 풀",
+            (f"그 중 gate 입력이 채워진 {NP}종이 cascade_v23_ranked{_SUF or ''}.csv 에 등재 = 이 풀"
+             + ("  ⚠ 47 은 물리 판정이 아니라 **2026-06-29 에 멈춘 취합 경계**였다 "
+                "(계산은 7-11 에 270/273 완주). kb/methodology/cascade_pipeline_anatomy_2026_08_13.md"
+                if NP <= 47 else
+                "  ← 90종 회수분. AlI₃ 1종은 gate 입력 전면 결측이라 빠졌고, 18종은 일부 라벨 "
+                "결측 상태로 남은 라벨 평균으로 평가됐다 (cascade_pool_audit_v2.json)")),
         ],
         "attrition_is_not_screening": (
-            "91 → 47 의 감소는 **물리 게이트가 아니라 파이프라인 탈락**이다(구조 seed 생성 실패 등, "
+            f"91 → {NP} 의 감소는 **물리 게이트가 아니라 파이프라인/취합 탈락**이다(구조 seed 생성 실패 등, "
             "예: As₂S₃ 3종은 stage-01 n_structures=0 으로 정직 종료). "
-            "이 44종은 '떨어뜨린' 것이 아니라 '판정하지 못한' 것 — 깔때기 숫자에 합산하면 안 된다."),
+            "이들은 '떨어뜨린' 것이 아니라 '판정하지 못한' 것 — 깔때기 숫자에 합산하면 안 된다."),
         "literature_pool_comparison": {
             "discovery_funnels_we_are_NOT": {
                 "xiao2019_cathode_coating_screening": "104,082 (ICSD + data-mined 치환 신조성, Li-함유)",
@@ -948,14 +966,20 @@ def main():
                 "ong2013_lgps_family_substitution": "11 조성 (LGPS 골격 M×X 치환족)",
                 "fujimura2013_ml_conductivity_origin": "92 조성 (γ-LISICON 족) + 실험 σ 95점",
             },
-            "verdict": ("47은 발견 깔때기 체급이 아니라 **조성족 스캔** 체급이다(Ong 11 < 우리 47 < Fujimura 92). "
+            "verdict": (f"{NP}은 발견 깔때기 체급이 아니라 **조성족 스캔** 체급이다"
+                        f"(Ong 11 < 우리 {NP} < Fujimura 92 / Kahle 4,963). "
                         "이 계보로 위치를 잡으면 정직하면서도 문헌적으로 정당하다."),
         },
         "not_a_discovery_funnel": (
             "❗ 이 JSON의 게이트 통과 수는 **발견 성능 지표가 아니다**. 'N만 개에서 걸러냈다'는 서술은 "
             "우리 데이터로 지지되지 않는다. 정확한 서술: "
-            "'큐레이션된 47종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 "
-            "어디서 몇 종이 떨어지는지를 보인 뷰'."),
+            f"'큐레이션된 {NP}종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 "
+            "어디서 몇 종이 떨어지는지를 보인 뷰'."
+            + ("  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — gate 입력 결측 19종(전면 1 · 부분 18)을 "
+               "안고 있어 순위·통과 수를 결과로 인용하면 안 된다."
+               if _SUF else
+               "  ⛔ 그리고 이 판은 **superseded** 다 — 2026-06-29 취합 경계의 47종이고, "
+               "완주분은 90종이다.")),
         "related_but_different_funnel": (
             "kb/methodology/dopant_screening_funnel_2026_06_13.md 는 **한 도펀트 내부의 배치(config) 깔때기**"
             "(Nd₂O₃ 342 configs → cfg141)다. 여기 깔때기는 **도펀트 종(species) 수준** — 층이 다르니 "
@@ -965,10 +989,12 @@ def main():
     out = {
         "property": "cascade_screening_funnel",
         "date": BUILD_DATE,
-        "description": ("cascade v23 도펀트 47종을 문헌 표준(Xiao 2019 F1–F6 · Sendek 2017 전제조건→ML · "
+        "description": (f"cascade v23 도펀트 {NP}종을 문헌 표준(Xiao 2019 F1–F6 · Sendek 2017 전제조건→ML · "
                         "Kahle 2020 pinball→FPMD)의 순차 게이트 깔때기로 재표현한 뷰. "
                         "게이트별 통과/탈락 명단·임계값 근거·문헌 대응, vacuous 게이트 플래그, "
-                        "게이트 순서 민감도, 문헌 대비표를 포함."),
+                        "게이트 순서 민감도, 문헌 대비표를 포함."
+                        + ("  [_v2 · 90종 회수분 — 미검증 진단물]" if _SUF else "  [superseded · 47종 취합 경계판]")),
+        "status": ("recovered_unvalidated_diagnostic" if _SUF else "superseded_47species"),
         "honesty_header": pool_provenance["not_a_discovery_funnel"],
         "pool_provenance": pool_provenance,
         "host_anchors": {

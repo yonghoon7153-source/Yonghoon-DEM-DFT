@@ -264,6 +264,23 @@ def main():
             "de": fnum(r.get("de")),
         })
 
+    # ⚠ 2026-08-14 — 풀 크기·로스터 범위를 문자열에 하드코딩하지 않는다. _v2(89종)로 돌리면
+    #    설명문만 "47종"·"0.98–1.59" 로 남아 화면이 스스로 모순됐다 (Codex 감사).
+    #    ⚠ 옛 문자열의 "로스터 범위 0.98–1.59" 는 pugh(G/B) 가 아니라 **B/G = 1/pugh** 범위였다
+    #    (1/1.02=0.98, 1/0.63=1.59). 그대로 두면 89종에서 틀린 주장이 된다 — 아래처럼 계산해서 쓴다.
+    NP = len(rows)
+    _pg = sorted(r["pugh"] for r in rows if r.get("pugh") is not None and r["pugh"] > 0)
+    _bg = [1.0 / p for p in _pg]                       # B/G = 1/pugh
+    BG_RANGE = f"{min(_bg):.2f}–{max(_bg):.2f}" if _bg else "n/a"
+    _bg_ductile = [r["dopant"] for r in rows
+                   if r.get("pugh") and r["pugh"] > 0 and 1.0 / r["pugh"] > 1.75]
+    #  ⛔ 47종에서는 0종이라 "아무도 못 넘는다" 가 참이었다. 풀이 바뀌면 참이 아닐 수 있다.
+    DUCT_CLAIM = (f"**{NP}종 어느 것도 B/G>1.75 연성 경험칙을 못 넘는다**"
+                  if not _bg_ductile else
+                  f"**{len(_bg_ductile)}종이 B/G>1.75 를 넘는다** ({' '.join(sorted(_bg_ductile))}) — "
+                  "47종 시절의 '아무도 못 넘는다' 는 이 풀에서 더 이상 참이 아니다. "
+                  "⚠ 다만 UMA 상대값이고 결측 라벨 평균이 섞여 있어 연성 판정으로 인용 금지")
+
     # (key, direction +1=클수록 좋음, gate) — norm 계산과 top 목록의 단일 정의
     THEMES = {
         "oxidative_stability": ("ox_V", +1, lambda r: (r.get("window_V") or 0) > 0.05),
@@ -363,10 +380,18 @@ def main():
             "question": "전자 누설(덴드라이트 씨앗)을 막을 넓은 갭 도펀트는?",
             "metric": "문헌 전형 밴드갭 (eV) ↑ — 큐레이션 값(우리 계산 아님)",
             "caveat": "불화물≫폐각 산화물>d⁰>후기TM/d¹⁰(TCO·Ag₂O 위험). ±0.5 eV 등급용."},
-        "ionic_transport": {"label": "Li 수송 유지", "icon": "🔋",
-            "question": "도핑해도 Li 채널을 안 막는 도펀트는?",
-            "metric": "BVS Li proxy (x=0.05) ↑ · blocking<0.6 게이트",
-            "caveat": "BVSE·기하 프록시 — 절대 σ 아님."},
+        # ⛔ 2026-08-14 — 옛 라벨 "Li 수송 유지" 폐기. G4 와 같은 입력을 쓰는데 이름만
+        #    수송 측정처럼 읽혔다 (Codex 감사). key 는 하위호환 때문에 유지.
+        "ionic_transport": {"label": "정적 Li-환경 프록시 (BVS + 4 Å foreign-center)", "icon": "🔎",
+            "question": "어닐 기하에서 Li 주변 결합환경이 덜 흐트러진 도펀트는?",
+            "metric": "legacy BVS Li proxy (x=0.05) ↑ · blocking<0.6 게이트",
+            "caveat": ("⛔ 이온전도 측정이 아니다 — MD 확산계수·NEB 장벽·σ 는 하나도 안 들어갔다. "
+                       "① BVS 는 tools/doping/bvse_proxy.py 의 Adams-2003 파라미터"
+                       "(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40)라 정본 softBV(2.105/2.249/0.37)와 다르다 "
+                       "— comp1 BVSE 결과와 같은 표에 올리지 말 것. "
+                       "② blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례하고, "
+                       "host 원소만 든 종(Li₂S·LiCl)은 0.0 으로 자동 통과한다 — 판정 아님."),
+            "renamed_from": "Li 수송 유지 (2026-08-14 폐기)"},
         "disorder_promotion": {"label": "음이온 무질서 유도 (anti-site)", "icon": "🌀",
             "question": "anti-site/자리 무질서를 키워 σ를 올릴 후보는?",
             "metric": "Li–Li disorder std (x=0.05) ↑",
@@ -391,8 +416,8 @@ def main():
             "question": "취성 파괴 대신 소성 변형으로 버틸 도펀트는?",
             "metric": "G/B ↓ (= Pugh B/G ↑)",
             "caveat": "열 이름은 pugh 지만 값은 **G/B**(champions csv elastic_pugh_GoverB)라 낮을수록 연성. "
-                      "실제 B/G = 1/pugh 이고 로스터 범위가 0.98–1.59 라 **47종 어느 것도 B/G>1.75 연성 "
-                      "경험칙을 못 넘는다**. 동점 다수 — tie_count_at_cut 참조. UMA 상대."},
+                      f"실제 B/G = 1/pugh 이고 로스터 B/G 범위가 {BG_RANGE} 라 {DUCT_CLAIM}. "
+                      "동점 다수 — tie_count_at_cut 참조. UMA 상대."},
         "air_stability": {"label": "공기/수분 내성 (정성 등급)", "icon": "🌫️",
             "question": "H₂S 발생·가수분해를 억제할 도펀트는?",
             "metric": "HSAB soft-S 친화 등급 + F 보너스 ↑ — 큐레이션",
@@ -434,12 +459,16 @@ def main():
     out = {
         "property": "cascade_v23_themes",
         "date": "2026-07-27",
-        "description": ("cascade v23 도펀트의 테마별 재구성(12+1 테마). 각 도펀트에 "
+        "description": (f"cascade v23 도펀트 {NP}종의 테마별 재구성(12+1 테마). 각 도펀트에 "
                         "norm[theme]∈[0,1](1=좋음, 방향보정·게이트 반영) 내장 — 임의 테마 "
-                        "2+개 조합(기하평균/산점도)은 프론트에서 norm으로 계산."),
+                        "2+개 조합(기하평균/산점도)은 프론트에서 norm으로 계산."
+                        + ("  [_v2 · 90종 회수분 — 미검증 진단물. gate 입력 결측 19종을 안고 있다]"
+                           if _SUF else "  [superseded · 47종 취합 경계판]")),
+        "status": ("recovered_unvalidated_diagnostic" if _SUF else "superseded_47species"),
+        "pool_size": NP,
         "combine_rule": "combined = (∏ norm_i)^(1/n) 기하평균 — 한 테마라도 바닥이면 종합도 바닥 (AND 의미).",
-        "source_files": ["cascade_v23_ranked.csv", "oxidation_stability_cascade.csv",
-                         "cascade_v23_litransport.csv", "zhu2020_si_hydrolysis_energies.csv"],
+        "source_files": [f"cascade_v23_ranked{_SUF}.csv", f"oxidation_stability_cascade{_SUF}.csv",
+                         f"cascade_v23_litransport{_SUF}.csv", "zhu2020_si_hydrolysis_energies.csv"],
         "curation_disclaimer": ("cost_tier(가격 등급)·gap_lit_eV(문헌 전형 갭)·air_hsab/air_protect_tier(정성 보호 등급 — "
                                 "⚠ 이름과 달리 HSAB 로는 절반만 설명된다. [Zhu20] SI 대조 결과 35종 중 9종이 "
                                 "어긋나며 전부 과소평가 방향(In³⁺·Sn⁴⁺·Ba²⁺·Na⁺·Ge⁴⁺·Ga³⁺·Sr²⁺·Ca²⁺). "

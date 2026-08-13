@@ -76,15 +76,21 @@
 </details>
 {% endif %}
 
+{# ── 최상단 = 파이프라인 실측. 옛 타일(47/4/141/14)은 superseded 보관함으로 내렸다.
+     그 숫자들은 2026-06-29 에 멈춘 취합 경계였고 승인 결과가 아니다 (2026-08-14 개정). #}
+{% set T = casc.truth %}
 <div class="stat-tiles">
-  <div class="st"><div class="st-v">{{ stats.dopants }}</div><div class="st-l">랭킹된 도펀트</div></div>
-  <div class="st"><div class="st-v">{{ stats.pareto }}</div><div class="st-l">Pareto-optimal</div></div>
-  <div class="st"><div class="st-v">{{ stats.champions }}</div><div class="st-l">상위 후보 정밀화 (champions)</div></div>
-  <div class="st" title="doping_cascade_verified.json — 전부 UMA-s-1p1 내부(EOS·elastic·anneal) 수렴 감사, DFT 검증 아님">
-    <div class="st-v">{{ stats.verified if stats.verified is not none else '—' }}</div>
-    <div class="st-l">UMA 수렴 감사 서브셋</div>
-    <div class="st-l">DFT 심층검증은 {{ deep_map|length }}건 ({{ deep_map.keys()|join('·') }})</div>
+  {% for key in ['planned','completed','recovered','approved'] %}{% set t = T[key] %}
+  <div class="st{% if key == 'approved' %} st-zero{% endif %}" title="{{ t[2] }}">
+    <div class="st-v">{{ t[0] }}</div><div class="st-l">{{ t[1] }}</div>
+    <div class="st-l" style="opacity:.8">{{ t[2] }}</div>
   </div>
+  {% endfor %}
+</div>
+<div class="callout cal-danger" style="margin:10px 0;font-size:.84rem">
+  <b>현재 승인된 도펀트 랭킹은 0건이다.</b> {{ T.why_zero }}
+  <div class="muted" style="margin-top:6px;font-size:.94em">아래 <b>🗄 47종 (superseded)</b> 와
+    <b>🔁 90종 회수분</b> 은 둘 다 <b>보관·진단용</b>으로만 열어둔다 — 원자료·ESW 는 90종 전수라 그대로 내려받을 수 있다.</div>
 </div>
 
 {# ⚠ verified 서브셋 최상위에 _CONFLICT_UNRESOLVED_* 가 있는데 화면 어디에도 안 떴다.
@@ -99,21 +105,101 @@
 </div>
 {% endif %}
 <div class="tabs" id="tabs">
-  <button class="active" data-tab="board">🏆 Leaderboard</button>
-  {% if casc.funnel %}<button data-tab="funnel">🔻 깔때기</button>{% endif %}
-  {% if casc.stability %}<button data-tab="stab">🛡 안정성 3축</button>{% endif %}
-  {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
+  {# 순서 = 신뢰도 순. 승인된 결과가 없으므로 **감사 화면이 기본**이다 (2026-08-14). #}
+  <button class="active" data-tab="audit">📋 현황·감사</button>
+  <button data-tab="esw">🧪 Oxidation ESW <span class="tb-ok">90종</span></button>
+  {% if casc.v2 and casc.v2.present %}<button data-tab="v2">🔁 90종 회수분 <span class="tb-diag">diagnostic</span></button>{% endif %}
+  <button data-tab="ion">🔎 G4 프록시 분해</button>
   <button data-tab="champ">⚙️ Champions</button>
-  <button data-tab="ion">🔋 Li transport</button>
-  <button data-tab="esw">🧪 Oxidation ESW</button>
+  {% if casc.themes %}<button data-tab="theme">🎯 테마</button>{% endif %}
+  {% if casc.stability %}<button data-tab="stab">🛡 안정성 3축</button>{% endif %}
   <button data-tab="syn">🤝 Co-doping</button>
-  {% if casc.v2 and casc.v2.present %}<button data-tab="v2">🔁 90종 회수분</button>{% endif %}
+  <button data-tab="board">🗄 47종 리더보드 <span class="tb-sup">superseded</span></button>
+  {% if casc.funnel %}<button data-tab="funnel">🗄 47종 깔때기 <span class="tb-sup">superseded</span></button>{% endif %}
 </div>
 
 <!-- Leaderboard -->
-<div class="tab-panel active" id="tab-board">
+{# ══ 📋 현황·감사 — 기본 화면. 축별 완성도와 결측을 결과보다 먼저 보여준다 ══ #}
+<div class="tab-panel active" id="tab-audit">
+  {% set VA = (casc.v2 or {}).audit %}{% set VS = ((casc.v2 or {}).meta or {}).status or {} %}
   <div class="card">
-    <h3>설계공간 — Young's modulus vs 산화 onset <span class="muted" style="font-weight:400;font-size:.8rem">색=score · Pareto는 링</span></h3>
+    <h3>축별 완성도 <span class="muted" style="font-weight:400;font-size:.8rem">파생물마다 완성도가 다르다 — 하나로 뭉뚱그리지 않는다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>축</th><th>등급</th><th>내용</th></tr></thead><tbody>
+    {% set _axl = {'raw':'원자료 (champions · litransport)','oxidation':'grand-potential ESW',
+                   'ranked':'합성점수 랭킹','funnel':'게이트 깔때기','figures':'그림 재생성'} %}
+    {% for ax in casc.audit_axes %}{% if ax in VS %}{% set g, txt = VS[ax] %}
+      <tr><td><b>{{ _axl.get(ax, ax) }}</b></td>
+          <td><span class="badge {{ 'ok' if g == 'complete' else 'warn' }}">{{ g }}</span></td>
+          <td style="font-size:.86em">{{ txt }}</td></tr>
+    {% endif %}{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.75rem;margin-top:6px">
+      complete = 90종 전수 · partial/incomplete = 그 축은 90종 최종판이 <b>아니다</b>.</div>
+  </div>
+
+  {% if VA %}
+  <div class="card">
+    <h3>gate 입력 결측 <span class="muted" style="font-weight:400;font-size:.8rem">{{ VA.audited }} · {{ VA['⛔_do_not_say'] }}</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>구분</th><th>종</th><th>의미</th></tr></thead><tbody>
+      <tr><td><span class="badge ok">complete</span></td><td class="mono">{{ VA.n_complete }}</td>
+          <td style="font-size:.86em">모든 농도 라벨에서 gate 입력이 다 있음</td></tr>
+      <tr><td><span class="badge warn">partial</span></td><td class="mono">{{ VA.partial|length }}</td>
+          <td style="font-size:.86em">일부 라벨 결측 → <b>남은 라벨 평균</b>으로 평가됨.
+            그중 <b class="mono">MgI2</b> 는 champion 2/3 · litransport <b>2/3</b> 로 두 축 다 빈다.<br>
+            <span class="mono" style="font-size:.92em">{{ VA.partial.keys()|sort|join(' ') }}</span></td></tr>
+      <tr><td><span class="badge err">dropped</span></td><td class="mono">{{ VA.dropped|length }}</td>
+          <td style="font-size:.86em">{% for sp, why in VA.dropped.items() %}<b class="mono">{{ sp }}</b> — {{ why }}{% endfor %}</td></tr>
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:10px;font-size:.82rem">
+      <b>⚠ 판정이 아닌 이유로 통과한 종</b> — waterfall 끝단에 남지만 물성 판정이 아니다.
+      <ul style="margin:6px 0 0;padding-left:18px">
+      {% for sp, why in ((casc.v2.meta or {}).artifacts or {}).items() %}<li><b class="mono">{{ sp }}</b> — {{ why }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+  {% endif %}
+
+  {% set RF = ((casc.v2 or {}).meta or {}).recovered_facts %}
+  {% if RF %}
+  <div class="card">
+    <h3>회수로 <b>뒤집힌 서술</b> <span class="muted" style="font-weight:400;font-size:.8rem">47종 문안을 그대로 뒀으면 계속 틀린 채 남았을 것들</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>대상</th><th>정정</th></tr></thead><tbody>
+    {% for what, txt in RF %}<tr><td><b>{{ what }}</b></td><td style="font-size:.86em">{{ txt|bold }}</td></tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <h3>그래서 지금 인용할 수 있는 것 / 없는 것</h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>대상</th><th>지위</th><th>쓸 수 있나</th></tr></thead><tbody>
+      <tr><td>원자료 90종 · 270 champion</td><td><span class="badge ok">complete</span></td>
+          <td>✅ 내려받아 그대로 쓸 수 있다 (UMA 상대값 단서는 유지)</td></tr>
+      <tr><td>grand-potential ESW 90종</td><td><span class="badge ok">complete</span></td>
+          <td>✅ 옛 141건과 ox_V 차이 0 — 드리프트 없음</td></tr>
+      <tr><td>47종 리더보드 · Pareto</td><td><span class="badge err">superseded</span></td>
+          <td>⛔ 결과로 인용 금지. 계산이 덜 끝난 시점의 <b>취합 경계</b>였다</td></tr>
+      <tr><td>89종 재랭킹 · 깔때기</td><td><span class="badge warn">diagnostic</span></td>
+          <td>⛔ 미검증 진단물. 결측 19종을 안고 있다</td></tr>
+      <tr><td>DFT 심층검증</td><td><span class="badge ok">{{ deep_map|length }}건</span></td>
+          <td>✅ {{ deep_map.keys()|join(' · ') }} — 조성 페이지의 DFT 값만이 실제 신뢰선</td></tr>
+    </tbody></table></div>
+  </div>
+</div>
+
+{# 🗄 superseded — 47종 시대 리더보드. 결과가 아니라 기록으로만 남긴다 #}
+<div class="tab-panel" id="tab-board">
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>🗄 이 탭은 superseded 보관함이다 — 결과로 인용하지 말 것.</b>
+    아래 {{ stats.dopants }}종 리더보드 · Pareto {{ stats.pareto }}건 · champion {{ stats.champions }}행은
+    <b>2026-06-29 에 멈춘 취합 경계</b>의 산물이다. 계산은 2026-07-11 에 270/273 으로 끝나 있었고,
+    빠져 있던 43종도 STAGE_12 까지 완주해 있었다. 현행 상태는 <b>📋 현황·감사</b> 탭.
+  </div>
+  <div class="card">
+    <h3>설계공간 — Young's modulus vs 산화 onset <span class="muted" style="font-weight:400;font-size:.8rem">색=score · Pareto는 링 · <b>superseded</b></span></h3>
     <div class="chart" id="scatter"></div>
     <div class="muted" style="font-size:.74rem;margin-top:4px">낮은 E(연질) + 높은 ox_V(넓은 창)이 <b>설계 목표축</b>. ⚠ 단조 규칙은 아니다 — bucci2017은 compliant SE(E≈15 GPa)가 오히려 micro-cracking에 <b>취약</b>하다고 보고(비선형 운동학 효과). UMA 상대값.</div>
   </div>
@@ -161,6 +247,14 @@
 {% set P0 = (PERMS|selectattr('key','equalto','P0_literature_order')|list|first) or (PERMS|first) %}
 {% macro fwidth(n) %}{{ [ (n / POOL * 100), 16 ]|max|round(1) }}{% endmacro %}
 <div class="tab-panel" id="tab-funnel">
+
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>🗄 superseded — 이 깔때기는 {{ POOL }}종판이다.</b>
+    90종 회수 후 waterfall 은 <span class="mono">89–89–84–45–28–1</span> 로 바뀌었고(정본 47종판은
+    <span class="mono">47–47–43–25–11–1</span>), 그마저 <b>미검증 진단물</b>이다 — 결측 19종을 안고 있다.
+    아래 게이트 <b>정의·순서민감도 논증은 그대로 유효</b>하지만 <b>통과 수치는 옛것</b>이다.
+    현행 상태는 <b>📋 현황·감사</b>, 90종 waterfall 은 <b>🔁 90종 회수분</b> 탭.
+  </div>
 
   <!-- ❗ 최상단 정직성 callout — 이 탭의 필수 요건 -->
   <div class="callout cal-danger" style="margin:0 0 16px">
@@ -550,11 +644,31 @@
 </div>
 
 <!-- Li transport -->
+{# ⛔ 이 탭의 옛 이름은 "Li transport" 였다. 전도도를 잰 것처럼 읽혀서 이름을 버리고
+     G4 의 실제 입력 두 개를 분해해 보여준다 (2026-08-14). #}
 <div class="tab-panel" id="tab-ion">
+  {% set G = casc.g4 %}
+  <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+    <b>이 축의 옛 이름 “{{ G.old_name }}” 은 폐기했다.</b> {{ G.why_renamed }}
+    <div style="margin-top:6px">잰 적 없는 것: {% for m in G.not_measured %}<span class="badge err" style="margin-right:4px">{{ m }}</span>{% endfor %}</div>
+  </div>
   <div class="card">
-    <h3>Li 수송 프록시 <span class="muted" style="font-weight:400;font-size:.8rem">BVS proxy · migration volume · blocking · disorder</span></h3>
+    <h3>G4 게이트의 실제 정의 <span class="mono muted" style="font-weight:400;font-size:.8rem">{{ G.gate }}</span></h3>
+    {% for inp in G.inputs %}
+    <div class="callout cal-warning" style="margin:0 0 10px;font-size:.83rem">
+      <b>{{ loop.index }}. {{ inp.name }}</b> <span class="mono muted">{{ inp.col }}</span><br>
+      {{ inp.what }}<br><span style="display:inline-block;margin-top:4px">{{ inp.warn }}</span>
+    </div>
+    {% endfor %}
+    <div class="muted" style="font-size:.75rem">
+      두 값 모두 <b>어닐 기하 위의 정적 프록시</b>다 — 빠른 스크리닝용이고, 이동장벽·확산계수는
+      DFT/MD 심층검증에서만 나온다. G4 를 “이온전도가 좋다/나쁘다”로 읽지 말 것.</div>
+  </div>
+  <div class="card">
+    <h3>원자료 <span class="muted" style="font-weight:400;font-size:.8rem">위 두 열이 G4 입력 · 나머지는 참고 열</span></h3>
     {{ gtable(casc.litransport, ['_dir','bvs_li_proxy_score','migration_volume_fraction','tier2_dopant_blocking_fraction','tier2_li_li_disorder_std','cation_site','anion_site']) }}
-    <div class="muted" style="font-size:.74rem;margin-top:6px">BVSE·기하 기반 프록시(빠른 스크리닝) — 정밀 확산은 DFT/MD 심층검증에서.</div>
+    <div class="muted" style="font-size:.74rem;margin-top:6px">⚠ 이 표는 47종판이다. 90종 전수는
+      <b>🔁 90종 회수분</b> 탭의 <span class="mono">cascade_v23_litransport_v2.csv</span> 로 내려받을 것.</div>
   </div>
 </div>
 
@@ -674,7 +788,13 @@
 <div class="tab-panel" id="tab-v2">
   <div class="card">
     <h3>회수분 — 완주한 전체 90종 · 270 champion
+      <span class="badge warn" style="vertical-align:middle;margin-left:6px">Recovered · unvalidated diagnostic</span>
       <span class="muted" style="font-weight:400;font-size:.8rem">회수 {{ VM.recovered_on }}</span></h3>
+    <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
+      <b>이 탭의 랭킹·깔때기는 결과가 아니라 진단물이다.</b> 아직 검증 절차를 거치지 않았고
+      gate 입력 결측 19종(전면 1 · 부분 18)을 안고 있다 — <b>원고·발표에 순위로 인용하지 말 것.</b>
+      반대로 <b>원자료(90종 · 270 champion)와 ESW(90종)는 complete</b> 이라 아래에서 그대로 내려받아 쓸 수 있다.
+    </div>
     <div class="callout cal-warning" style="margin:0 0 12px">
       <div class="cal-b" style="font-size:.82rem">
         <b style="font-size:1.05em">{{ VM.headline }}</b><br>

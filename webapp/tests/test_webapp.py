@@ -640,6 +640,82 @@ def test_seminar_runsheet_tracks_the_script():
     assert len(re.findall(r'class="sem-badge">([A-Z])<', t)) == len(rs)
 
 
+# ── cascade 화면의 지위 표시 (2026-08-14 개정) ──────────────────────────────
+#   화면이 47종 시대 결과를 최신 승인물처럼 보여주던 것을 고쳤다. 그 상태로 되돌아가면
+#   사이트가 스스로 모순되므로(승인 0건인데 1위 표가 뜬다) 여기서 잠근다.
+def _cascade_html():
+    return A.app.test_client().get("/cascade").get_data(as_text=True)
+
+
+def test_cascade_defaults_to_the_audit_screen():
+    """승인된 랭킹이 0건이므로 기본 탭은 결과가 아니라 감사 화면이어야 한다."""
+    h = _cascade_html()
+    m = re.search(r'<button class="active" data-tab="([a-z0-9]+)"', h)
+    assert m, "#tabs 에 active 버튼이 없다"
+    assert m.group(1) == "audit", f"기본 탭이 '{m.group(1)}' 이다 — 감사 화면이어야 한다"
+    assert re.search(r'<div class="tab-panel active" id="tab-audit"', h), "tab-audit 패널이 active 가 아니다"
+
+
+def test_cascade_headline_numbers_come_from_truth():
+    """최상단 타일은 273/270/90/0 (파이프라인 실측) 이어야 한다 — 47/4/141/14 로 되돌리지 말 것."""
+    t = D.CASCADE_TRUTH
+    assert [t[k][0] for k in ("planned", "completed", "recovered", "approved")] == [273, 270, 90, 0]
+    h = _cascade_html()
+    assert "승인된 도펀트 랭킹은 0건" in h, "승인 0건 배너가 화면에 없다"
+    # 옛 타일 라벨이 최상단으로 돌아오면 안 된다
+    assert "랭킹된 도펀트</div>" not in h, "47종 타일 라벨이 최상단에 되살아났다"
+
+
+def test_superseded_and_diagnostic_tabs_are_labelled():
+    """47종 판은 superseded, 90종 회수분은 미검증 diagnostic 으로 라벨링돼야 한다."""
+    h = _cascade_html()
+    assert "superseded 보관함" in h, "47종 리더보드에 superseded 경고가 없다"
+    assert "Recovered · unvalidated diagnostic" in h, "90종 탭에 diagnostic 배지가 없다"
+    for f, want in [("cascade_screening_funnel.json", "superseded_47species"),
+                    ("cascade_screening_funnel_v2.json", "recovered_unvalidated_diagnostic"),
+                    ("cascade_v23_themes.json", "superseded_47species"),
+                    ("cascade_v23_themes_v2.json", "recovered_unvalidated_diagnostic")]:
+        d = json.loads((D.DB / "properties" / f).read_text(encoding="utf-8"))
+        assert d.get("status") == want, f"{f} status={d.get('status')} — {want} 이어야 한다"
+
+
+def test_g4_is_not_called_li_transport():
+    """G4 는 정적 프록시 두 개다. '전도도를 쟀다'로 읽히는 이름을 되살리지 말 것."""
+    h = _cascade_html()
+    assert "🔋 Li transport" not in h, "탭 이름이 'Li transport' 로 되돌아왔다"
+    # 옛 이름은 **폐기 안내문 안에서만** 나와도 된다 — 살아있는 라벨로 다시 쓰이면 안 된다.
+    for m in re.finditer("Li 수송 유지", h):
+        ctx = h[max(0, m.start() - 260):m.end() + 260]
+        assert "폐기" in ctx, f"G4 옛 라벨이 정정 문맥 없이 살아 있다: …{ctx[200:420]}…"
+    assert "Adams-2003" in h, "legacy BVS 파라미터 경고가 화면에 없다"
+    assert "4 Å foreign-center" in h, "blocking 프록시의 실제 정의가 화면에 없다"
+    for f in ("cascade_screening_funnel.json", "cascade_screening_funnel_v2.json"):
+        g4 = [g for g in json.loads((D.DB / "properties" / f).read_text(encoding="utf-8"))["gates"]
+              if g["id"] == "G4"][0]
+        assert "Li 수송" not in g4["label"], f"{f} 의 G4 label 이 되돌아갔다: {g4['label']}"
+
+
+def test_v2_json_text_does_not_inherit_47_species():
+    """빌더가 풀 크기를 하드코딩하면 _v2 설명문만 47종으로 남아 화면이 스스로 모순된다."""
+    for f in ("cascade_screening_funnel_v2.json", "cascade_v23_themes_v2.json"):
+        d = json.loads((D.DB / "properties" / f).read_text(encoding="utf-8"))
+        for key in ("description", "honesty_header"):
+            if key in d:
+                assert "47종" not in d[key], f"{f}[{key}] 에 '47종' 이 남아 있다"
+    d = json.loads((D.DB / "properties" / "cascade_screening_funnel_v2.json").read_text(encoding="utf-8"))
+    assert d["pool_provenance"]["pool_size"] == 89, "v2 풀 크기가 89 가 아니다"
+
+
+def test_missing_gate_inputs_are_on_the_default_screen():
+    """AlI3 전면 결측 · 부분 결측 18종 · blocking=0 아티팩트는 기본 화면에 떠 있어야 한다."""
+    h = _cascade_html()
+    aud = json.loads((D.DB / "properties" / "cascade_pool_audit_v2.json").read_text(encoding="utf-8"))
+    assert aud["n_evaluable"] == 89 and len(aud["dropped"]) == 1 and len(aud["partial"]) == 18
+    head = h.split('id="tab-esw"')[0]          # 기본(감사) 화면 범위 안에서만 찾는다
+    for probe in ("AlI3", "MgI2", "Li2S", "LiCl"):
+        assert probe in head, f"{probe} 가 기본 감사 화면에 없다"
+
+
 def _cmt_worker_tmp(arg):
     path, rel, i = arg
     D.COMMENTS_PATH = Path(path)          # 자식 프로세스에도 임시 경로를 심는다

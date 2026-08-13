@@ -261,6 +261,8 @@ def cascade_page():
     ranked = casc.get("ranked", {}).get("data", [])
     ver = casc.get("verified") or {}
     comp = ver.get("compounds")
+    # ⚠ 2026-08-14 — 이 수치들은 **superseded 47종판**의 것이다. 최상단 타일은
+    #    D.CASCADE_TRUTH(273/270/90/0)를 쓰고, 아래는 보관함 탭 안에서만 쓴다.
     stats = {
         "dopants": len(ranked),
         "pareto": sum(1 for r in ranked if str(r.get("pareto", "")).strip().upper() == "Y"),

@@ -188,6 +188,20 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .badge.b-todo{background:var(--todo-bg);color:var(--todo-fg)}
 .badge.b-fam{background:var(--bg);color:var(--dim)}
 .badge.b-prov{background:color-mix(in srgb,var(--amber) 16%,var(--card));color:var(--amber)}  /* canonical 잠정값 */
+/* 완성도 등급 — cascade 감사 화면. ok/warn/err 는 쓰이고 있었는데 정의가 없어 무늬만 배지였다 */
+.badge.ok{background:color-mix(in srgb,var(--green) 15%,var(--card));color:var(--green)}
+.badge.warn{background:color-mix(in srgb,var(--amber) 16%,var(--card));color:var(--amber)}
+.badge.err{background:color-mix(in srgb,var(--red) 14%,var(--card));color:var(--red)}
+
+/* 승인 0건 타일 — 이 0 은 결측이 아니라 판정이라서 눈에 띄어야 한다 */
+.stat-tiles .st.st-zero{border-color:color-mix(in srgb,var(--red) 45%,var(--border))}
+.stat-tiles .st.st-zero .st-v{color:var(--red)}
+/* 탭 이름표 — 어느 탭이 승인/진단/보관인지 한눈에 */
+.tabs button .tb-ok,.tabs button .tb-diag,.tabs button .tb-sup{
+  font-size:.62rem;font-weight:700;padding:1px 6px;border-radius:20px;margin-left:5px;vertical-align:middle}
+.tabs button .tb-ok{background:color-mix(in srgb,var(--green) 16%,var(--card));color:var(--green)}
+.tabs button .tb-diag{background:color-mix(in srgb,var(--amber) 18%,var(--card));color:var(--amber)}
+.tabs button .tb-sup{background:color-mix(in srgb,var(--red) 14%,var(--card));color:var(--red)}
 
 /* tables */
 .data-table{width:100%;border-collapse:collapse;font-size:.86rem}

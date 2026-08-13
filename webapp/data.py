@@ -897,12 +897,20 @@ CASCADE_V2_META = {
     #    부분 결측 18종은 남은 라벨 평균으로 평가돼 있다. 화면은 이 구분을 그대로 쓴다.
     "headline": "90종 회수 → 89종 부분평가 (전면 결측 1 · 부분 결측 18)",
     "scope": "완주한 전체 90종 · 270 champion (273 슬롯 중 270 완주; As₂S₃ 3건은 stage-01 seed 실패)",
-    #: v2 JSON 이 상속한 문자열 경고 — 빌더의 description·honesty_header 는 47종 시절 문안이라
-    #: 그 안의 "47종"·"x=0.02/0.05/0.10" 은 **현행 아님**. 화면에서 그대로 읽히지 않게 한다.
-    "inherited_text_warning": ("⚠ 아래 funnel·themes JSON 의 description·honesty_header 는 47종 시절 "
-                               "문안을 그대로 물려받았다 — 그 안의 '47종'·'x=0.02/0.05/0.10'·"
-                               "'Li 수송' 표현은 **현행 90종 판정이 아니다**. 숫자는 재계산됐지만 "
-                               "설명 문자열은 아직 갱신되지 않았다."),
+    #: ✅ 2026-08-14 해소 — 빌더가 풀 크기를 하드코딩하던 것을 NP 로 바꿔 두 판을 다시 만들었다.
+    #:  그 과정에서 47종 문안이 숨기고 있던 사실 하나가 드러났다(아래 recovered_facts).
+    "inherited_text_warning": ("✅ v2 JSON 의 description·honesty_header·source_files 는 2026-08-14 에 "
+                               "풀 크기 연동으로 재생성됐다 — 더 이상 '47종' 문안을 물려받지 않는다. "
+                               "각 JSON 의 status 필드로 지위를 구분한다 "
+                               "(superseded_47species / recovered_unvalidated_diagnostic)."),
+    #: 회수 후 **판정이 뒤집힌** 서술. 47종 문안을 그대로 뒀으면 계속 틀린 채로 남았을 것들.
+    "recovered_facts": [
+        ("연성 경험칙", "47종에서는 'B/G>1.75 를 넘는 종이 하나도 없다' 가 참이었다. 90종 회수분에서는 "
+                    "**Na₂S 가 B/G 2.50** 으로 넘는다 (로스터 B/G 범위 0.98→2.50). "
+                    "⚠ Na₂S 는 부분 결측 18종 중 하나라 연성 판정으로 인용 금지 — 서술만 정정한다."),
+        ("G4 라벨", "'Li 수송 유지' 라는 게이트 이름을 폐기했다. 입력은 legacy BVS(Adams-2003) + "
+                  "4 Å foreign-center count 두 정적 프록시뿐이고 MD·NEB 는 하나도 안 들어갔다."),
+    ],
     "why": ("정본 47종은 물리 판정이 아니라 **취합 경계**였다. 등록이 2026-06-29 에 멈췄고 "
             "계산은 7-11 에 끝났다. 빠져 있던 43종도 STAGE_12 까지 완주해 있었다."),
     "recovered_on": "2026-08-13",
@@ -937,7 +945,7 @@ CASCADE_V2_META = {
     "downloads": [
         ("db/properties/cascade_v23_all.csv",                "전체 원자료 (90종 · 3615행 · 102열)"),
         ("db/properties/cascade_v23_champions_v2.csv",       "champion 270행"),
-        ("db/properties/cascade_v23_litransport_v2.csv",     "Li 수송 프록시 270행"),
+        ("db/properties/cascade_v23_litransport_v2.csv",     "G4 정적 프록시 270행 (BVS + 4 Å blocking) ⚠ 전도도 아님"),
         ("db/properties/oxidation_stability_cascade_v2.csv", "grand-potential ESW 90종"),
         ("db/properties/oxidation_stability_cascade_v2.json","ESW 원본 (분해 반응식 포함, 270 champion)"),
         ("db/properties/cascade_v23_ranked_v2.csv",          "합성점수 랭킹 89종 ⚠ incomplete"),
@@ -946,6 +954,52 @@ CASCADE_V2_META = {
     ],
     "caveat": ("⚠ 89종 랭킹과 미완 funnel 을 90종 최종판으로 인용하지 말 것. "
                "원자료와 ESW 는 90종 전수이고 그대로 내려받을 수 있다."),
+}
+#: ── 파이프라인 실측 — 화면 최상단 수치의 **유일한 출처** ────────────────────
+#:  2026-08-14 개정. 이전 화면은 "47 랭킹 / 4 Pareto / 141 champion / 14 verified" 를
+#:  최신 승인 결과처럼 띄웠는데, 그건 2026-06-29 에 멈춘 **취합 경계**의 숫자였다.
+#:  근거: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md
+CASCADE_TRUTH = {
+    "planned": (273, "계획 슬롯", "90종 × 3 농도 라벨 (일부 계열은 라벨 수가 다름)"),
+    "completed": (270, "완주 (STAGE_12)", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
+    "recovered": (90, "회수 — ESW 전수", "2026-08-13 회수. 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
+    "approved": (0, "승인된 ranking", "47종판은 취합 경계라 superseded · 89종판은 미검증 diagnostic"),
+    "why_zero": ("승인 0 은 '실패' 가 아니라 **현재 상태의 정확한 이름**이다. "
+                 "47종 리더보드는 계산이 덜 끝난 시점의 경계였고, 89종 재랭킹은 "
+                 "gate 입력 결측 19종을 안은 채 만든 진단물이다. 어느 쪽도 "
+                 "'우리 스크리닝 결과' 로 인용할 수 없다."),
+}
+#: 감사 5축 — 기본 화면으로 승격한다 (전에는 90종 탭 안에만 있었다).
+#:  라벨은 CASCADE_V2_META['status'] 의 (등급, 문장) 을 그대로 쓴다.
+CASCADE_AUDIT_AXES = ["raw", "oxidation", "ranked", "funnel", "figures"]
+#: ── G4 분해 — 화면에서 "Li transport" 라는 이름을 **쓰지 않는다** ──────────
+#:  그 이름이 이온전도 측정처럼 읽혔다. 실제 입력은 아래 두 정적 프록시뿐이다.
+G4_DECOMP = {
+    "old_name": "Li transport",
+    "why_renamed": ("'Li 수송' 은 전도도·확산을 잰 것처럼 읽힌다. G4 에 들어가는 값은 "
+                    "**어닐 기하 위에서 계산한 정적 프록시 두 개**이고, 둘 다 이온이 "
+                    "움직이는 계산이 아니다. MD·NEB 는 이 축에 하나도 안 들어갔다."),
+    "gate": "G4 = transport_norm > 0.30  AND  blocking < 0.60",
+    "inputs": [
+        {
+            "col": "bvs_li_proxy_score",
+            "name": "legacy BVS (Adams-2003 파라미터)",
+            "what": "어닐 후 기하에서 Li 자리의 bond-valence sum. transport_norm = min–max(이 값 @x=0.05).",
+            "warn": ("⛔ **정본 BVSE 와 다른 파라미터다.** cascade 는 tools/doping/bvse_proxy.py 의 "
+                     "Adams-2003 값(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40)을 쓰고, 우리 정본은 "
+                     "softBV(R₀ S 2.105 · Cl 2.249 · O 1.466 · b 0.37)다. "
+                     "**이 값을 comp1 BVSE 결과와 같은 표에 올리면 안 된다.**"),
+        },
+        {
+            "col": "tier2_dopant_blocking_fraction",
+            "name": "4 Å foreign-center 프록시",
+            "what": "도펀트 원자 4 Å 안에 있는 Li 의 비율. 순수 기하 count 이고 장벽·경로가 아니다.",
+            "warn": ("⛔ 도펀트 **원자 수에 거의 비례**한다 — 물성이 아니라 농도의 대리값에 가깝다. "
+                     "그래서 host 원소만 든 종(Li₂S·LiCl)은 도펀트 원자가 0개라 "
+                     "**blocking = 0.0 으로 자동 통과**한다. 판정이 아니다."),
+        },
+    ],
+    "not_measured": ["MD 확산계수 D", "CI-NEB 이동장벽 E_m", "Nernst–Einstein σ", "임피던스"],
 }
 CASCADE_META = {
     "title": "Doping Cascade — AI 계산 기반 도핑 스크리닝 (UMA)",
@@ -960,7 +1014,8 @@ CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
 
 
 def load_cascade() -> dict:
-    out = {"meta": CASCADE_META}
+    out = {"meta": CASCADE_META, "truth": CASCADE_TRUTH, "g4": G4_DECOMP,
+           "audit_axes": CASCADE_AUDIT_AXES}
     for k, fn in CASCADE_FILES.items():
         out[k] = read_csv(f"properties/{fn}")
     out["trivalent"] = _load_json(DB / "properties" / "doping_cascade_trivalent_M3.json")
