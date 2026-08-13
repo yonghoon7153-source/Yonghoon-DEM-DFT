@@ -77,7 +77,7 @@ Cl 을 늘린 조성과 원조성을 같은 프로토콜로 비교하면 밴드�
 → "이게 저희만의 관측인지 확인해 봤습니다."
 
 ## P12. 외부 대조 — 같은 방법, 같은 질문 ⏱70 ★★
-저희가 산화 축에 쓰는 grand-potential 방법의 **원저자인 Yifei Mo 그룹**이, argyrodite 실험 표준인 Zeier 그룹과 함께 2022년에 같은 질문을 던졌습니다 — *"치환으로 argyrodite 의 산화 안정성을 바꿀 수 있는가."*
+화면의 **Banik 외 (2022)** — 저희가 산화 축에 쓰는 grand-potential 방법의 **원저자인 Yifei Mo 그룹**과 argyrodite 실험 표준인 Zeier 그룹이 함께 쓴 논문입니다. 여기서 같은 질문을 던집니다 — *"치환으로 argyrodite 의 산화 안정성을 바꿀 수 있는가."*
 
 그쪽 답은 **아니오** 입니다. HAXPES 가전자대 끝, DFT pDOS·COHP, grand-potential 분해창, stepwise CV 가 전부 같은 말을 합니다 — VBM 은 자유 S²⁻ 와 PS₄³⁻ 의 비결합 S 3p 가 채우고 있어서, **S 가 조성에 남아 있는 한 산화 한계는 S 가 고정**합니다.
 
