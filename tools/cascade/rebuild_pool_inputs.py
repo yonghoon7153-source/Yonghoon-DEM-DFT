@@ -319,8 +319,33 @@ def _sha_rows(path):
     return hashlib.sha256(b).hexdigest(), len(b), n
 
 
+#: Codex 감사 산출물 (2026-08-14 인계). 5개 패널 + 게이트별 완결성 표.
+#:  ⚠ PNG 는 `9abe5105` 에서 만든 것을 그대로 쓴다 — 이 컨테이너엔 플로터가 쓰는
+#:  TrueType 폰트가 없어 재생성하면 바이트가 달라져 무결성이 깨진다.
+AUDIT_FIGURES = ["campaign_status", "g3_phase_set", "g4_rescore",
+                 "interface_axes", "ml_validation"]
+AUDIT_SUPPORTING = ["cascade_audit_gate_completeness.csv"]
+PINNED_SOURCE_COMMIT = "9abe5105cacafa22ab3e185f09e2a4c37118b9a9"
+
+
+def _meta(path, csv_rows=False):
+    """sha256 · bytes (· 주석 제외 데이터 행수). plot_cascade_audit 의 _file_meta 와 같은 규약."""
+    import hashlib
+    b = path.read_bytes()
+    it = {"sha256": hashlib.sha256(b).hexdigest(), "bytes": len(b)}
+    if csv_rows:
+        lines = [x for x in b.decode("utf-8-sig").splitlines() if x and not x.startswith("#")]
+        it["rows"] = max(0, len(lines) - 1)
+    return it
+
+
 def build_manifest(audit):
-    """artifact manifest — 화면 최상단 숫자의 **유일한 기계 계약**."""
+    """artifact manifest — 화면 최상단 숫자의 **유일한 기계 계약**.
+
+    스키마는 Codex 의 `tools/figures/plot_cascade_audit_2026_08.py` 가 검증하는
+    schema_version 2 를 따르고, 거기에 우리 webapp 이 쓰는 `artifacts` 블록을 얹는다.
+    두 도구가 같은 파일을 보므로 스키마가 갈라지면 안 된다.
+    """
     arts = []
     for fn, status, desc, lims in MANIFEST_ARTIFACTS:
         p = PROP / fn
@@ -336,19 +361,47 @@ def build_manifest(audit):
             "actual_x": 0.25, "campaign_labels": ["x002", "x005", "x010"],
             "limitations": lims,
         })
+    # ── Codex schema_version 2 가 요구하는 블록 ────────────────────────────
+    figs = []
+    for name in AUDIT_FIGURES:
+        img = ROOT / "docs" / "figures" / "cascade" / f"cascade_audit_{name}.png"
+        tab = PROP / f"cascade_audit_{name}.csv"
+        if not (img.is_file() and tab.is_file()):
+            continue
+        im, tb = _meta(img), _meta(tab, csv_rows=True)
+        figs.append({"image": f"docs/figures/cascade/{img.name}",
+                     "csv": f"db/properties/{tab.name}", "status": "audit-current",
+                     "image_sha256": im["sha256"], "image_bytes": im["bytes"],
+                     "csv_sha256": tb["sha256"], "csv_bytes": tb["bytes"], "csv_rows": tb["rows"]})
+    sup = []
+    for fn in AUDIT_SUPPORTING:
+        p = PROP / fn
+        if p.is_file():
+            it = _meta(p, csv_rows=True)
+            sup.append({"path": f"db/properties/{fn}", "status": "audit-current", **it})
+
     return {
         "property": "cascade_audit_manifest",
-        "generated_by": "tools/cascade/rebuild_pool_inputs.py --manifest",
+        # Codex 플로터 계약 — 이 세 값이 바뀌면 --validate-only 가 막는다
+        "schema_version": 2,
+        "artifact_id": "cascade-audit-2026-08-14",
+        "status": "audit_current__leaderboard_unavailable",
+        "source_commit": PINNED_SOURCE_COMMIT,
+        "source_of_truth": "docs/reviews/cascade_dftweb_source_of_truth_2026_08_14.md",
+        "figures": figs,
+        "supporting_tables": sup,
+        "generated_by": "tools/cascade/rebuild_pool_inputs.py (schema는 plot_cascade_audit_2026_08.py 와 공유)",
         "contract": ("화면 최상단 숫자와 artifact 지위의 유일한 출처. loader 는 여기 없는 "
                      "artifact 나 MANIFEST_STATUS 밖의 status 를 만나면 표시하지 않고 "
                      "fail-closed 한다. sha256/rows 가 어긋나면 stale 로 막는다."),
         "status_vocabulary": list(MANIFEST_STATUS),
         # ⚠ 이 네 수는 화면 타일의 출처다. audit 에서 파생하고 손으로 안 적는다.
+        # ⚠ 키 이름은 Codex 플로터가 **정확히 대조**한다 — 바꾸면 validate 가 막는다.
         "headline": {
             "planned_slots": 273, "completed_slots": 270,
             "completed_species": audit["n_esw"],
             "historical_snapshot_species": 47,
-            "approved_current_leaderboard": 0,
+            "approved_current_leaderboard_species": 0,
             "explicit_pair_property_labels": 0,
         },
         "headline_basis": ("273 = master_batch_273.sh 의 91 화합물 × 3 라벨. "
@@ -484,7 +537,8 @@ def main():
     json.dump(man, open(p5, "w"), ensure_ascii=False, indent=1)
     open(p5, "a").write("\n")
     print(f"[manifest]  {p5}  artifact {len(man['artifacts'])}건 · "
-          f"승인 {man['headline']['approved_current_leaderboard']}종")
+          f"승인 {man['headline']['approved_current_leaderboard_species']}종 · "
+          f"figure {len(man['figures'])} · supporting {len(man['supporting_tables'])}")
     print("다음: python3 tools/figures/plot_cascade_insights.py "
           "→ cascade_v23_ranked.csv → tools/cascade/build_screening_funnel.py")
     return 0

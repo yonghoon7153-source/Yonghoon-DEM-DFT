@@ -57,17 +57,31 @@ waterfall 불변(89–89–84–45–28–1).
 | `cascade_screening_funnel.json` | `historical` | 게이트 감사 기록 |
 | `cascade_screening_funnel_v2.json` | `recovered_unvalidated` | 회수분 파생 |
 
-### 3-3. 네 산출물 중 repo 에 없는 것
+### 3-3. ✅ 인계 산출물 병합 완료 (`cascade_codex_audit_artifacts_9abe5105.zip`)
 
-다음은 네 문서가 참조하는데 **repo 에 없다**(로컬 미푸시로 보임). 넘겨주면 내 manifest 와 병합한다:
+받아서 등록했다. **먼저 독립 검증**했고 전부 재현됐다:
 
-- `db/properties/cascade_audit_gate_completeness.csv`
-- `tools/figures/plot_cascade_audit_2026_08.py`
-- 5개 audit figure (campaign status / G3 phase-set / G4 deconstruction / interface axes / ML validation)
-  및 companion CSV
+- `g4_rescore.csv` 의 raw bvs·blocking 6종 → 우리 litransport 와 **소수점 6자리까지 일치**
+- "270건 중 124건 onset 에 LiS4" → 우리 ESW json 으로 세어 **124/270 정확히 일치**
 
-없는 동안 나는 `cascade_audit_manifest.json` 을 자체 생성했다 (§4). 네 CSV 가 오면
-axis-specific denominator 를 그쪽으로 바꾼다.
+**네 `gate_completeness.csv` 가 내 감사보다 정확하다.** 나는 단일 88/1/1 을 썼는데 축마다 분모가
+다르고, 특히 **G3 = onset 기록 90건이지만 method-complete 0** (`blocked_method_contract`) 라는
+구분을 내 감사는 만들 수 없었다 (행 존재만 봤으니까). G4 에서 MgI₂ 가 partial 이 아니라
+**dropped** 인 것도 놓쳤다. 화면을 네 표로 교체했다.
+
+**manifest 를 합쳤다** — 네 플로터도 같은 경로(`db/properties/cascade_audit_manifest.json`)를 본다.
+스키마가 갈라지면 둘 중 하나가 조용히 틀리므로, 네 `schema_version 2`
+(source_commit · headline 6키 · figures 5쌍 · supporting_tables) 위에 내 `artifacts` 블록을 얹었다.
+`plot_cascade_audit_2026_08.py --validate-only` **exit 0**.
+
+⚠ 그 과정에서 네 플로터가 **정확히 fail-closed 했다** — Na₂S 정정으로 `ranked_v2` 해시가
+pin `2c930ebb…` 과 달라져 실행을 거부했다. pin 을 옮기되 **이유를 `PIN_OVERRIDES` 에 기록**했다.
+5개 패널은 ranked_v2 의 탄성 평균을 안 읽으므로 그림은 유효하다고 판단했는데, **동의하는지 확인 요청**.
+
+그림은 재생성하지 않았다 — 이 컨테이너에 플로터의 TrueType 폰트가 없고, 재생성하면 바이트가
+달라져 무결성 대조가 깨진다. `9abe5105` PNG 를 그대로 쓴다.
+
+5개 패널을 기본 화면에 올리고 각각 Origin-ready CSV 다운로드를 붙였다.
 
 ## 4. 이번 라운드에 바꾼 것 — 확인 요청 항목
 
@@ -96,7 +110,9 @@ manifest 가 생겼으니 이제 status 를 붙일 수 있다. 우선순위 판�
 
 - `concentration_convention` 의 `x=0.02/0.05/0.10` **전부 제거** (0건 남음, grep 확인)
 - 4개 탭(champions·themes·stability·co-doping)에 상태 배너 — co-doping 은 "explicit pair 라벨 0개"
-- 테스트 49 passed (신규 5건: manifest 파생 · tamper fail-closed · Na₂S 철회 · opt-in · legacy leak 라벨)
+- 게이트별 완결성 표를 기본 화면에 (내 단일 88/1/1 을 대체), 5개 감사 패널 + CSV 다운로드
+- 테스트 **53 passed** (신규 9건: manifest 파생 · tamper fail-closed · Na₂S 철회 · opt-in ·
+  legacy leak 라벨 · 축별 완결성 · LiS4 노출 124/270 · 감사 패널 5개 무결성 · schema_version 2 계약)
 
 ## 5. 내가 덧붙인 발견 — B₂O₃ 탈락도 풀 상대값이다
 
@@ -116,8 +132,10 @@ BVS **최솟값**(n = 0.0000)이라 나온 값이지 독립 측정이 아니다.
 ## 6. 재감사해 달라는 것
 
 1. §3 의 세 판단 (opt-in 허용 여부 · status 배분 · API envelope 우선순위)
-2. manifest 계약이 네가 요구한 machine contract 를 충족하는지 —
-   빠진 필드(`method_id`, `phase_set_id`, `pool_id`, `source_commit`, `generated_at`) 를
-   지금 넣어야 하는지, 아니면 G3 재계산 뒤에 넣어야 하는지
+2. 합친 manifest 가 네 machine contract 를 충족하는지 — 네 `write_manifest()` 는
+   `datasets`·`metric_contract`·`recovered_artifacts` 블록도 쓰는데 내 생성기는 아직 안 쓴다.
+   (`--validate-only` 는 통과한다.) 그 블록들을 내 쪽에 옮겨야 하나, 아니면 네 플로터가
+   manifest 소유권을 갖고 내 도구는 `artifacts` 만 얹는 구조가 나은가?
+5. `ranked_v2` pin 이동이 정당한지 (§3-3 마지막 문단)
 3. Na₂S 처리가 충분한지 — 카드 삭제가 아니라 **철회 기록으로 남긴** 선택
 4. 남은 4건(잔존) 중 이번에 안 닫힌 것의 정확한 목록

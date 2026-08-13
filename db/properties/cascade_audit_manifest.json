@@ -1,6 +1,72 @@
 {
  "property": "cascade_audit_manifest",
- "generated_by": "tools/cascade/rebuild_pool_inputs.py --manifest",
+ "schema_version": 2,
+ "artifact_id": "cascade-audit-2026-08-14",
+ "status": "audit_current__leaderboard_unavailable",
+ "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+ "source_of_truth": "docs/reviews/cascade_dftweb_source_of_truth_2026_08_14.md",
+ "figures": [
+  {
+   "image": "docs/figures/cascade/cascade_audit_campaign_status.png",
+   "csv": "db/properties/cascade_audit_campaign_status.csv",
+   "status": "audit-current",
+   "image_sha256": "dea3d0d994af7db24c1a7b89025b8fbb146e341467f4fb1c42cdc877c42a3dab",
+   "image_bytes": 55023,
+   "csv_sha256": "468d323730c60126f4e85263603e8d8ae9369535ac2f167a454936f777b99b90",
+   "csv_bytes": 252,
+   "csv_rows": 6
+  },
+  {
+   "image": "docs/figures/cascade/cascade_audit_g3_phase_set.png",
+   "csv": "db/properties/cascade_audit_g3_phase_set.csv",
+   "status": "audit-current",
+   "image_sha256": "3eb636f61af9155061166795fd7759449632b88739bd8388eb1b5f6b57233c7a",
+   "image_bytes": 46154,
+   "csv_sha256": "76a3aeedd9e704927c813018eb16167d7cab17c637c2ab4405925d848b77d23d",
+   "csv_bytes": 427,
+   "csv_rows": 3
+  },
+  {
+   "image": "docs/figures/cascade/cascade_audit_g4_rescore.png",
+   "csv": "db/properties/cascade_audit_g4_rescore.csv",
+   "status": "audit-current",
+   "image_sha256": "1c5b9d029c8bd2948a431833249d2e0aa5247ed473a3af28f042b989a63e5f07",
+   "image_bytes": 60617,
+   "csv_sha256": "5d24595af5849a5ef8eb401b734c77e4f4ffec1ad44a3c5eb0e3928e38f9b467",
+   "csv_bytes": 530,
+   "csv_rows": 6
+  },
+  {
+   "image": "docs/figures/cascade/cascade_audit_interface_axes.png",
+   "csv": "db/properties/cascade_audit_interface_axes.csv",
+   "status": "audit-current",
+   "image_sha256": "a33669cd05ac0235b068a0b2a40695df49f2f3c06d93bb0094650d0dc146a5f9",
+   "image_bytes": 43916,
+   "csv_sha256": "f9bd346b12d6d8ccb9735937444ca3e80fb379ce533bd14d22085ecc263d03b4",
+   "csv_bytes": 318,
+   "csv_rows": 4
+  },
+  {
+   "image": "docs/figures/cascade/cascade_audit_ml_validation.png",
+   "csv": "db/properties/cascade_audit_ml_validation.csv",
+   "status": "audit-current",
+   "image_sha256": "c6fbafc0d82b87210138ce68d622e63f4d19f255354ce1292991bd77a7675c9b",
+   "image_bytes": 60579,
+   "csv_sha256": "26ef6f6ed97db9b47dd6702909499896f76becdbbdd6e75106315b2cd8da2c0d",
+   "csv_bytes": 400,
+   "csv_rows": 5
+  }
+ ],
+ "supporting_tables": [
+  {
+   "path": "db/properties/cascade_audit_gate_completeness.csv",
+   "status": "audit-current",
+   "sha256": "3c52a342eea9dd6ec813cb1f94bc81dd06ce6ac8e42553ff82de47daaf129ec2",
+   "bytes": 1332,
+   "rows": 5
+  }
+ ],
+ "generated_by": "tools/cascade/rebuild_pool_inputs.py (schema는 plot_cascade_audit_2026_08.py 와 공유)",
  "contract": "화면 최상단 숫자와 artifact 지위의 유일한 출처. loader 는 여기 없는 artifact 나 MANIFEST_STATUS 밖의 status 를 만나면 표시하지 않고 fail-closed 한다. sha256/rows 가 어긋나면 stale 로 막는다.",
  "status_vocabulary": [
   "historical",
@@ -14,7 +80,7 @@
   "completed_slots": 270,
   "completed_species": 90,
   "historical_snapshot_species": 47,
-  "approved_current_leaderboard": 0,
+  "approved_current_leaderboard_species": 0,
   "explicit_pair_property_labels": 0
  },
  "headline_basis": "273 = master_batch_273.sh 의 91 화합물 × 3 라벨. 270 = 완주 슬롯(As₂S₃ 3건 seed 실패). completed_species 는 ESW 회수분에서 센다. approved = 0 은 판정이다 — 결측이 아니라 점수·게이트 타당성이 미해결.",

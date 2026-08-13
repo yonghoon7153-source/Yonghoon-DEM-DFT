@@ -663,7 +663,7 @@ def test_cascade_headline_comes_from_the_manifest():
     got = {k: v for k, v, _l, _n in t["tiles"]}
     assert got["planned_slots"] == 273 and got["completed_slots"] == 270
     assert got["completed_species"] == 90 and got["historical_snapshot_species"] == 47
-    assert got["approved_current_leaderboard"] == 0
+    assert got["approved_current_leaderboard_species"] == 0
     assert got["explicit_pair_property_labels"] == 0
     h = _cascade_html()
     assert "승인된 도펀트 랭킹은 0건" in h, "승인 0건 배너가 화면에 없다"
@@ -717,6 +717,59 @@ def test_recovered_ranking_is_not_shown_as_a_leaderboard():
     assert "후보명 보기 (opt-in" in h, "G4 endpoint 명단이 기본 노출로 돌아왔다"
     assert "89행 표 열기 (opt-in" in h, "89종 랭킹이 기본 노출로 돌아왔다"
     assert "이 표를 리더보드로 읽지 말 것" in h
+
+
+def test_gate_completeness_is_axis_specific():
+    """축마다 분모가 다르다. G3 는 기록 90건이지만 method-complete 0 이어야 한다."""
+    t = D.read_csv("properties/cascade_audit_gate_completeness.csv")
+    by = {r["gate"]: r for r in (t.get("data") or [])}
+    assert set(by) == {"G1", "G2", "G3", "G4", "G5"}, f"게이트 5개가 아니다: {sorted(by)}"
+    assert by["G3"]["all_label_complete_species"] == 0
+    assert by["G3"]["method_status"] == "blocked_method_contract"
+    assert by["G4"]["dropped_species"] == "AlI3|MgI2", "G4 는 MgI2 도 결측이다 (x005 입력 없음)"
+    for g, r in by.items():
+        assert r["approved_for_current_ranking"] == 0, f"{g} 가 승인된 것처럼 적혀 있다"
+    h = _cascade_html()
+    assert "blocked_method_contract" in h, "G3 method status 가 화면에 없다"
+
+
+def test_lis4_exposure_is_quantified():
+    """LiS4 가 든 onset 반응이 몇 건인지 세어 화면 주장과 맞는지 본다."""
+    gp = json.loads((D.DB / "properties" / "oxidation_stability_cascade_v2.json")
+                    .read_text(encoding="utf-8"))["results"]
+    n = sum(1 for r in gp.values() if "LiS4" in (r.get("oxidation_onset_rxn") or ""))
+    assert (n, len(gp)) == (124, 270), f"LiS4 노출이 바뀌었다: {n}/{len(gp)}"
+    assert "124" in _cascade_html(), "LiS4 노출 수치가 화면에 없다"
+
+
+def test_audit_figures_are_the_only_default_figures():
+    """계약상 기본 공개가 허용된 그림은 5개 audit 패널뿐이다."""
+    figs = (D.load_cascade().get("v2") or {}).get("audit_figures") or []
+    assert len(figs) == 5, f"audit 패널이 5개가 아니다: {len(figs)}"
+    c = A.app.test_client()
+    for png, csvp, _t in figs:
+        assert (ROOT / png).is_file() and (ROOT / csvp).is_file()
+        assert c.get(f"/api/file/{png}").status_code == 200
+        assert c.get(f"/api/file/{csvp}?dl=1").status_code == 200
+
+
+def test_manifest_satisfies_the_audit_generator_contract():
+    """manifest 는 Codex 플로터가 검증하는 schema_version 2 계약도 만족해야 한다."""
+    m = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    assert m.get("schema_version") == 2
+    assert m.get("source_commit") == "9abe5105cacafa22ab3e185f09e2a4c37118b9a9"
+    assert m["headline"] == {
+        "planned_slots": 273, "completed_slots": 270, "completed_species": 90,
+        "historical_snapshot_species": 47,
+        "approved_current_leaderboard_species": 0,
+        "explicit_pair_property_labels": 0,
+    }
+    assert len(m.get("figures", [])) == 5, "audit figure/CSV 쌍은 정확히 5개여야 한다"
+    import hashlib
+    for it in m["figures"]:
+        for key, hkey in (("image", "image_sha256"), ("csv", "csv_sha256")):
+            b = (ROOT / it[key]).read_bytes()
+            assert hashlib.sha256(b).hexdigest() == it[hkey], f"{it[key]} 무결성 실패"
 
 
 def test_legacy_rank_is_labelled_wherever_it_leaks():

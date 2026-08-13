@@ -1,0 +1,7 @@
+species,legacy_bvs_raw,blocking_4A_fraction,historical_composite_score,bvs_only_rescore,historical_pass_gt_0p30,bvs_only_pass_gt_0p30,status
+B2O3,0.819925,0.588235,0.1000,0.1000,N,N,historical_gate_audit
+Cr2O3,0.903529,0.888889,0.0500,0.8086,N,Y,historical_gate_audit
+Ga2O3,0.855193,0.611111,0.0500,0.3989,N,Y,historical_gate_audit
+In2O3,0.886613,0.833333,0.0500,0.6652,N,Y,historical_gate_audit
+Sc2O3,0.865558,0.777778,0.0500,0.4868,N,Y,historical_gate_audit
+Y2O3,0.912255,0.833333,0.0500,0.8825,N,Y,historical_gate_audit

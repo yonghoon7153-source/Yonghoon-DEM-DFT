@@ -1008,7 +1008,7 @@ CASCADE_TRUTH_LABELS = {
     "completed_slots":      ("완주 슬롯", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
     "completed_species":    ("완주 종", "ESW 회수분에서 센다 — 91종 중 90종"),
     "historical_snapshot_species": ("역사 스냅샷", "2026-06-29 취합 경계. 재현 가능하나 superseded"),
-    "approved_current_leaderboard": ("승인된 ranking", "결측이 아니라 점수·게이트 타당성이 미해결"),
+    "approved_current_leaderboard_species": ("승인된 ranking", "결측이 아니라 점수·게이트 타당성이 미해결"),
     "explicit_pair_property_labels": ("explicit pair 라벨", "두 도펀트를 함께 넣고 계산한 셀 = 0"),
 }
 CASCADE_TRUTH_WHY_ZERO = (
@@ -1154,6 +1154,19 @@ def load_cascade() -> dict:
     v2["themes"] = _load_json(DB / "properties" / "cascade_v23_themes_v2.json")
     # 완결성 감사 — 화면은 "90종 funnel" 이 아니라 이 판정(전면/부분 결측)을 표시한다.
     v2["audit"] = _load_json(DB / "properties" / "cascade_pool_audit_v2.json")
+    #: 게이트별 완결성 (Codex 2026-08-14 인계). 내 단일 88/1/1 보다 정밀하다 —
+    #:  축마다 분모가 다르고, G3 는 "onset 90건 있으나 method-complete 0" 을 구분한다.
+    v2["gate_completeness"] = read_csv("properties/cascade_audit_gate_completeness.csv")
+    #: 5개 audit 패널 — 기본 공개가 허용된 유일한 그림 (source_of_truth §4.4)
+    v2["audit_figures"] = [
+        (f"docs/figures/cascade/cascade_audit_{n}.png",
+         f"db/properties/cascade_audit_{n}.csv", t)
+        for n, t in [("campaign_status", "캠페인 현황"),
+                     ("g3_phase_set", "G3 phase-set 민감도"),
+                     ("g4_rescore", "G4 분해 — blocking 제거 재점수"),
+                     ("interface_axes", "계면 축 (47종 post-hoc)"),
+                     ("ml_validation", "ML 검증 · acquisition")]
+        if (ROOT / f"docs/figures/cascade/cascade_audit_{n}.png").is_file()]
     # 내려받기 가능한 것만 남긴다 (없는 파일을 링크로 걸지 않는다)
     v2["downloads"] = [(rel, label) for rel, label in CASCADE_V2_META["downloads"]
                        if (ROOT / rel).is_file()]

@@ -759,6 +759,51 @@ Codex 표에서 B₂O₃ 만 0.1000 인데, 이건 `0.10 + 0.90n` 의 **바닥**
 - G4 endpoint 명단과 89행 랭킹을 `<details>` **opt-in** 뒤로. 수는 보이되 명단은 접어둔다.
 - `concentration_convention` 의 `x=0.02/0.05/0.10` 전부 제거 — 라벨이지 농도가 아니다.
 
+### 인계 산출물 병합 완료 (같은 날 저녁, `cascade_codex_audit_artifacts_9abe5105.zip`)
+
+repo 에 없던 4종을 받아 등록했다. 받자마자 **독립 검증부터** 했고 전부 재현됐다:
+
+| 검증 | 결과 |
+|---|---|
+| `g4_rescore.csv` 의 raw bvs·blocking 6종 | 우리 litransport 와 **소수점 6자리까지 일치** |
+| "회수 270건 중 124건 onset 에 LiS4" | 우리 ESW json 으로 세어 **124/270 정확히 일치** |
+
+**`cascade_audit_gate_completeness.csv` 가 내 감사보다 정확하다.** 나는 단일 88/1/1 을 썼는데
+이건 **축마다 분모가 다르다**:
+
+| gate | 전 라벨 완전 | 부분 | 결측 | method status |
+|---|---|---|---|---|
+| G1 | 88 | MgI₂ | AlI₃ | recovered_diagnostic |
+| G2 | 90 | — | — | recovered_unvalidated |
+| **G3** | **0** | — | **90종 전부 method identity 없음** | **blocked_method_contract** |
+| G4 | 88 | — | AlI₃·**MgI₂** | historical_only |
+| G5 | 88 | MgI₂ | AlI₃ | recovered_diagnostic |
+
+**G3 가 핵심이다** — onset *기록*은 90종 전부 있는데 **method-complete 비교는 0종**이다.
+파생표가 `phase_set_id` 를 떨어뜨렸고 plain/Cl-rich 지지가 섞여 있다. *기록이 있다 ≠ 비교 가능하다.*
+내 감사는 "행이 있나" 만 봤기 때문에 이 구분을 못 만들었다. 화면을 이 표로 교체했다.
+(G4 에서 MgI₂ 가 partial 이 아니라 **dropped** 인 것도 내가 놓친 것 — x005 입력이 없다.)
+
+### manifest 를 한 파일로 합쳤다
+
+Codex 플로터도 `db/properties/cascade_audit_manifest.json` 을 본다 — 내가 만든 것과 **같은 경로**다.
+스키마를 갈라두면 둘 중 하나가 조용히 틀리므로 합쳤다: Codex 의 `schema_version 2`
+(source_commit · headline 키 6개 · figures 5쌍 · supporting_tables) + 내 `artifacts` 블록.
+이제 양쪽이 같은 파일을 검증한다 — `plot_cascade_audit_2026_08.py --validate-only` **exit 0**.
+
+⚠ 그 과정에서 플로터가 **정확히 fail-closed 했다**: Na₂S 정정으로 `ranked_v2` 해시가 pin
+(`2c930ebb…`)과 달라져 실행을 거부했다. pin 을 옮기되 **왜 옮겼는지를 `PIN_OVERRIDES` 에 기록**했다
+— 이유 없이 옮기면 이 장치가 무의미해진다. 5개 패널은 ranked_v2 의 탄성 평균을 안 쓰므로 그림은 유효하다.
+
+**그림은 재생성하지 않았다.** 이 컨테이너에 플로터가 쓰는 TrueType 폰트가 없고, 재생성하면
+바이트가 달라져 무결성 대조가 깨진다. `9abe5105` 에서 만든 PNG 를 그대로 쓴다.
+
+### 5개 감사 패널을 기본 화면에 올렸다
+
+계약(§4.4)이 기본 공개를 허용한 유일한 그림이다 — campaign status · G3 phase-set 민감도 ·
+G4 분해 · 계면 축 · ML 검증. 각 패널에 Origin-ready CSV 다운로드를 붙였다.
+리더보드·Pareto·수송 순위·pair 예측 그림은 이번 릴리스에 넣지 않는다.
+
 ### 남은 이견 (Codex 에게 재확인 요청할 것)
 
 1. **후보명 완전 비노출 vs opt-in.** 나는 `<details>` opt-in 으로 했다. 완전히 숨기면

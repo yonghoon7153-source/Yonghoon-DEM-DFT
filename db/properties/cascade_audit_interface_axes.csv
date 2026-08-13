@@ -1,0 +1,5 @@
+axis,pass_count,kill_count,pool_count,cutoff_meV_atom,status,application_caveat
+Cathode full,45,2,47,100,historical_post_hoc,
+Cathode half,44,3,47,100,historical_post_hoc,
+LPSCl SE,18,29,47,100,historical_post_hoc,
+Li metal,12,35,47,100,historical_post_hoc,Li-metal axis applies only when modified SE contacts Li
