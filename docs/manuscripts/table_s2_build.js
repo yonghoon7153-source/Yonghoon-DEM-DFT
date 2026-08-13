@@ -32,6 +32,15 @@ const p = (text, o = {}) => new Paragraph({
   children: [new TextRun({ text, size: o.size ?? 18, bold: o.bold, font: "Times New Roman" })],
 });
 
+// 각주 3종 (2026-08-13).  제출본은 --nonotes (각주 없이 나감).
+//   full    : 원래 2문단.  왜 두 방법인가 + LiC6 하한 + 문헌 0.133 정합.
+//   compact : 위 3가지를 표 각주 2줄로 압축.  자리가 없을 때 이걸 쓴다.
+//   nonotes : 제출된 형태.  세 정보가 원고 어디에도 없다 — 리비전 오면 compact 를 붙인다.
+//             (근거: kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md)
+const MODE = process.argv.includes("--nonotes") ? "nonotes"
+           : process.argv.includes("--compact") ? "compact" : "full";
+const fn = (mark) => (MODE === "compact" ? mark : "");   // 각주 표시는 compact 에서만
+
 const rows = [
   row("Parameter", "Li₃N(001)", "LiC₆(0001)", { bold: true, shade: HDR }),
 
@@ -51,13 +60,29 @@ const rows = [
   row("Fixed atoms", "Bottom two Li₂N/Li bilayers", "Bottom 50 % of the slab"),
 
   row("Migration path",
-      "Constrained relaxation: adatom lateral (x, y) coordinates fixed; its height and all unconstrained atoms relaxed independently",
-      "CI-NEB [4] with the UMA-oc20 machine-learned potential [6] (7 images, IDPP initial path [5], 0.05 eV Å⁻¹) as implemented in ASE [7], then DFT single-point energies on those geometries"),
+      "Constrained relaxation" + fn("ᵃ") + ": adatom lateral (x, y) coordinates fixed; its height and all unconstrained atoms relaxed independently",
+      "CI-NEB [4] with the UMA-oc20 machine-learned potential [6] (7 images, IDPP initial path [5], 0.05 eV Å⁻¹) as implemented in ASE [7], then DFT single-point energies on those geometries" + fn("ᵇ")),
   row("Barrier definition",
       "E(saddle-region configuration) − E(relaxed adsorption minimum)",
       "E(highest-energy image) − E(initial adsorption minimum)"),
   row("Migration barrier", "0.118 eV", "0.290 eV", { bold: true }),
 ];
+
+const NOTES = {
+  full: [
+    p("Both surfaces use identical electronic-structure settings, so the two barriers are directly comparable. On Li₃N(001) the pronounced adsorbate-induced relaxation of the soft ionic surface destabilised elastic-band calculations, so the barrier was evaluated from two independently converged constrained relaxations instead.",
+      { after: 110 }),
+    p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound. The Li₃N(001) value of 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [8].",
+      { after: 160 }),
+  ],
+  compact: [
+    p("ᵃ Elastic-band calculations were unstable on the soft Li₃N(001) surface, so its barrier was evaluated from two independently converged constrained relaxations; the resulting 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [8].",
+      { size: 16, after: 40 }),
+    p("ᵇ The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries, which smooth the transition state; that barrier, and hence the ratio quoted in the main text, is a conservative lower bound.",
+      { size: 16, after: 160 }),
+  ],
+  nonotes: [],
+}[MODE];
 
 const doc = new Document({
   styles: { default: { document: { run: { font: "Times New Roman", size: 20 } } } },
@@ -83,10 +108,7 @@ const doc = new Document({
       }),
 
       p("", { after: 140 }),
-      p("Both surfaces use identical electronic-structure settings, so the two barriers are directly comparable. On Li₃N(001) the pronounced adsorbate-induced relaxation of the soft ionic surface destabilised elastic-band calculations, so the barrier was evaluated from two independently converged constrained relaxations instead.",
-        { after: 110 }),
-      p("The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries; because such potentials smooth the transition state, the LiC₆ barrier — and hence the barrier ratio quoted in the main text — is a conservative lower bound. The Li₃N(001) value of 0.118 eV agrees with the 0.133 eV reported for the same surface in ref. [8].",
-        { after: 160 }),
+      ...NOTES,
 
       p("References", { bold: true, size: 18, after: 80 }),
       p("[1] P. Giannozzi, S. Baroni, N. Bonini, M. Calandra, R. Car, C. Cavazzoni, D. Ceresoli, G. L. Chiarotti, M. Cococcioni, I. Dabo, A. Dal Corso, S. de Gironcoli, S. Fabris, G. Fratesi, R. Gebauer, U. Gerstmann, C. Gougoussis, A. Kokalj, M. Lazzeri, L. Martin-Samos, N. Marzari, F. Mauri, R. Mazzarello, S. Paolini, A. Pasquarello, L. Paulatto, C. Sbraccia, S. Scandolo, G. Sclauzero, A. P. Seitsonen, A. Smogunov, P. Umari, R. M. Wentzcovitch, QUANTUM ESPRESSO: a modular and open-source software project for quantum simulations of materials, J. Phys.: Condens. Matter 21 (2009) 395502. https://doi.org/10.1088/0953-8984/21/39/395502.", { size: 16, after: 40 }),
@@ -101,7 +123,10 @@ const doc = new Document({
   }],
 });
 
+const OUT_DIR = process.env.TABLE_S2_OUT || ".";
+const OUT = `${OUT_DIR}/Table_S2_DFT_parameters${MODE === "full" ? "" : "_" + MODE}.docx`;
+
 Packer.toBuffer(doc).then((b) => {
-  fs.writeFileSync("/tmp/claude-0/-home-user-Yonghoon-DEM-DFT/82ea256b-12bc-5a75-994e-7718d79c71ba/scratchpad/Table_S2_DFT_parameters.docx", b);
-  console.log("wrote Table_S2_DFT_parameters.docx");
+  fs.writeFileSync(OUT, b);
+  console.log(`wrote ${OUT}  (notes mode: ${MODE})`);
 });

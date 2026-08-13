@@ -1,9 +1,9 @@
 ---
 title: "Li3N(001) 장벽 — 리비전 방어 카드 (AF-ASSB 원고 v5)"
 date: 2026-08-12
-updated: 2026-08-12
+updated: 2026-08-13
 tags: [li3n, neb, revision, manuscript, diffusion-barrier, af-assb]
-status: 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외 · 자리 이름 미사용
+status: 확정 — 2026-08-12: 0.118 로 통일 · 궤적 패널 제외 · 자리 이름 미사용 / 2026-08-13: Table S2 각주는 제출 보류(리비전 시 첨부)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -174,6 +174,45 @@ in-plane Li 가 차지하고 있어서, 그 중심 위에 앉는 것 = 그 Li �
 2. ~~원고 A-4 결정~~ → **② 0.118 통일로 확정 (2026-08-12)**. C1 소멸.
 3. **NEB 실패 계보의 SI 문단화** — 초안 없음. C1 후속 질문이 오면 필요.
 4. **LiC₆ full DFT NEB** — 미실행(`lic6_0001_dft_full` queued). 있으면 비율 하한 주장이 실측으로 바뀐다.
+
+## Table S2 각주 — 제출본에서 뺐다 (2026-08-13 결정, 리비전 대비 자산)
+
+SI v6 에 들어간 Table S2 는 표만 들어가고 **각주가 빠졌다**. 그 결과 아래 3가지가
+**원고·SI 어디에도 없다** (`0.133` 은 두 문서 전문 검색에서 0회):
+
+1. 왜 두 표면에 서로 다른 방법을 썼는가 (Li₃N 구속이완 vs LiC₆ CI-NEB)
+2. LiC₆ 0.290 이 **보수적 하한**인 이유 (MLIP 기하 위 DFT 단일점 → TS 가 매끄러워짐)
+3. 우리 0.118 이 **문헌 0.133 (ref [54])** 과 정합한다는 사실
+
+**결정**: 제출본에는 붙이지 않는다. 리비전 질의가 오면 아래 압축본을 표 밑에 붙인다.
+셋 다 방어 문장이지 새 주장이 아니므로, 리비전 회신에서 붙여도 자기모순이 안 생긴다.
+
+### 붙일 때 쓸 압축 각주 (표 각주 2줄, 그대로 복붙)
+
+표 안 표시: `Constrained relaxation`**ᵃ** (Li₃N 열) · `…on those geometries`**ᵇ** (LiC₆ 열)
+
+> ᵃ Elastic-band calculations were unstable on the soft Li₃N(001) surface, so its barrier was
+> evaluated from two independently converged constrained relaxations; the resulting 0.118 eV
+> agrees with the 0.133 eV reported for the same surface in ref. [8].
+>
+> ᵇ The LiC₆(0001) energies are DFT single points on machine-learned-potential geometries, which
+> smooth the transition state; that barrier, and hence the ratio quoted in the main text, is a
+> conservative lower bound.
+
+(각주 안의 `[8]` 은 Table S2 자체 번호 = 본문 ref [54] = Kim et al., *ACS Nano* 17 (2023) 3168.
+Table S2 를 SI 본문 번호로 합쳤다면 `[54]` 로 바꿔 쓴다.)
+
+생성: `TABLE_S2_OUT=<dir> NODE_PATH=/root/.claude/skills/synced/docx/node_modules \
+node docs/manuscripts/table_s2_build.js --compact`
+(`--nonotes` = 제출된 형태, 무플래그 = 원래 2문단 full)
+
+### 리비전에서 이 각주가 필요해지는 질문
+
+| 예상 질문 | 대응 각주 |
+|---|---|
+| "왜 한쪽만 NEB 인가 / 두 값이 비교 가능한가" | ᵃ 앞부분 + 표의 전자구조 행이 동일함 |
+| "MLIP 기하 위 단일점이면 장벽이 과소평가 아닌가" | ᵇ — 과소평가가 **맞고**, 그래서 비율이 하한 |
+| "문헌값과 다르지 않나" | ᵃ 뒷부분 (0.118 vs 0.133, 같은 대역) |
 
 ## 문서별 수정 리스트 (2026-08-12 대조)
 
