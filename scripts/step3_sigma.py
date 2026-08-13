@@ -641,6 +641,36 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
     return out
 
 
+def dia_stats_by_phase(dia_rel, phase, sel_phases=None):
+    """상(phase)별 상대 Ø 통계 — **어느 상이 스프레드를 갖는지**를 재서 판정한다.
+
+    ★ 왜 (2026-08-12 자기정정, CL-16): 나는 상대 Ø 0.23~8.48 을 **혼합 모집단**에서 읽고
+      "스칼라 재척도 불가" 라고 결론냈다.  틀렸다 — `mpm3d_compaction:2225` 가
+      `dia = √weight` 이고 VGCF 는 `vol_conserve=False` 라 **weight 가 균일(=1)** 이다
+      (`additives.py:626` "a manufactured fibre has constant Ø").  스프레드는 **PTFE**
+      (constant-volume drawing, d ∝ √(V/L)) 것이고 PTFE 는 전자망에서 **절연체**다.
+      ⇒ σ_e 에 대해서는 VGCF 단일 Ø 스칼라가 **정확**하다.
+      교훈: 분포를 볼 때 **어느 모집단인지 먼저 가른다**.
+    """
+    d = np.asarray(dia_rel, np.float64)
+    ph = np.asarray(phase)
+    if d.shape != ph.shape:
+        raise ValueError(f'dia_stats_by_phase: dia {d.shape} != phase {ph.shape}')
+    out = {}
+    for p in (sorted(set(int(x) for x in np.unique(ph))) if sel_phases is None
+              else list(sel_phases)):
+        m = (ph == p) & np.isfinite(d) & (d > 0)
+        if not m.any():
+            out[int(p)] = None
+            continue
+        v = d[m]
+        out[int(p)] = {'n': int(m.sum()), 'min': float(f'{v.min():.4g}'),
+                       'med': float(f'{np.median(v):.4g}'), 'max': float(f'{v.max():.4g}'),
+                       'cv': float(f'{(v.std() / v.mean() if v.mean() else 0.0):.4g}'),
+                       'uniform': bool(v.max() - v.min() < 1e-6 * max(1.0, v.max()))}
+    return out
+
+
 def sigma_field(sigma_of_sid, sid):
     """σ 표(1-D, sid 색인) **또는** 복셀별 σ 배열(sid 와 같은 shape) → 복셀별 σ.
 
@@ -1342,8 +1372,21 @@ def _selftest():
     _h = diameter_preserving_sigma(100.0, _rel, 0.15, 0.4, mode='harmonic')[0]
     _ar = diameter_preserving_sigma(100.0, _rel, 0.15, 0.4, mode='arithmetic')[0]
     e = _h < _ar and _ar / _h > 10.0
-    ok &= e; print(f"dia-spread: 조화 {_h:.4g} vs 산술 {_ar:.4g} = {_ar/_h:.0f}배 "
-                   f"⇒ **스칼라 하나로 못 쓴다**  {'OK' if e else 'FAIL'}")
+    ok &= e; print(f"dia-spread: 혼합 모집단이면 조화 {_h:.4g} vs 산술 {_ar:.4g} = {_ar/_h:.0f}배 "
+                   f"(평균 규약이 지배)  {'OK' if e else 'FAIL'}")
+    # ★ 자기정정 (CL-16): 그 스프레드는 **PTFE** 것이다.  상별로 가르면 VGCF 는 균일하다.
+    _dia = np.concatenate([np.ones(50), np.array([0.23, 0.5, 2.0, 8.48] * 5)])
+    _ph = np.concatenate([np.full(50, 2), np.full(20, 4)])          # 2=VGCF · 4=PTFE
+    _st = dia_stats_by_phase(_dia, _ph)
+    e = _st[2]['uniform'] is True and _st[4]['uniform'] is False and _st[2]['cv'] == 0.0
+    ok &= e; print(f"dia-phase: VGCF 균일={_st[2]['uniform']} (cv {_st[2]['cv']}) · "
+                   f"PTFE 균일={_st[4]['uniform']} (cv {_st[4]['cv']}) ⇒ **상을 먼저 가른다**"
+                   f"  {'OK' if e else 'FAIL'}")
+    _v = diameter_preserving_sigma(100.0, _dia[_ph == 2], 0.15, 0.4, mode='harmonic')[0]
+    _v2 = diameter_preserving_sigma(100.0, _dia[_ph == 2], 0.15, 0.4, mode='arithmetic')[0]
+    e = abs(_v - _v2) < 1e-9 and abs(_v - 11.0447) < 1e-3
+    ok &= e; print(f"dia-vgcf:  VGCF 만 쓰면 두 평균이 **같다** ({_v:.4g} == {_v2:.4g}) "
+                   f"⇒ 전자망에는 스칼라가 정확하다  {'OK' if e else 'FAIL'}")
     try:
         diameter_preserving_sigma(100.0, np.zeros(5), 0.15, 0.4)
         e = False
