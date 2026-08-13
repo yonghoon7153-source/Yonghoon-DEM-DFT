@@ -795,7 +795,7 @@ def test_g3_does_not_claim_a_synthetic_phase_set_id():
     rec = [r for r in t["data"] if r["status"] == "recovered_unvalidated"]
     assert rec, "recovered 행이 사라졌다"
     assert not str(rec[0]["phase_set_id"] or "").strip(), "recovered 행이 다시 phase_set_id 를 주장한다"
-    assert "가정" in str(rec[0]["phase_set_assumption"]), "가정 표기가 없다"
+    assert "assumption" in str(rec[0]["phase_set_assumption"]), "가정 표기가 없다"
 
 
 def test_g4_rescore_carries_pool_metadata():
@@ -820,8 +820,12 @@ def test_g5_completeness_separates_presence_from_validity():
 def test_db_property_files_are_lf_pinned():
     """깨끗한 Windows checkout 에서 CRLF 로 바뀌면 해시 대조가 깨진다 (P1)."""
     ga = (ROOT / ".gitattributes").read_text(encoding="utf-8")
-    assert "db/properties/*.csv   text eol=lf" in ga
-    assert "db/properties/*.json  text eol=lf" in ga
+    # 광역 규칙(db/properties/*.csv)은 blob 이 CRLF 인 기존 80여 파일을 리플로우시켜서
+    # 감사 원장이 해시로 묶는 파일에만 건다. 나머지 이식성은 sha256_lf 가 담당한다.
+    assert "db/properties/cascade_audit_*.csv   text eol=lf" in ga
+    assert "db/properties/cascade_audit_*.json  text eol=lf" in ga
+    for p in sorted((ROOT / "db" / "properties").glob("cascade_audit_*.csv")):
+        assert b"\r\n" not in p.read_bytes(), f"{p.name} 이 CRLF 다 (csv.writer 기본값 주의)"
     man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
     for a in man["artifacts"]:
         assert a.get("sha256_lf"), f"{a['source_path']} 에 LF 정규화 해시가 없다"

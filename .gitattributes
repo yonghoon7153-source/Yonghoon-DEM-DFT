@@ -16,8 +16,11 @@ webapp/journal.jsonl merge=union
 #   깨끗한 Windows snapshot(`git archive`)에서 gate-completeness CSV 가 LF 1332 →
 #   CRLF 1338 바이트로 바뀌어 manifest 무결성 검증이 실패했다. dirty worktree 에서는
 #   통과했기 때문에 로컬 테스트로는 안 잡혔다.
-db/properties/*.csv   text eol=lf
-db/properties/*.json  text eol=lf
+#   ⚠ 규칙을 db/properties/*.csv 전체로 걸었더니 blob 이 CRLF 인 기존 80여 파일이
+#   한꺼번에 리플로우됐다. 이 라운드의 문제와 무관한 변경이라 **감사 원장이 해시로
+#   묶는 파일에만** 건다. 나머지는 원장의 `sha256_lf`(개행 정규화 해시)로 이식성을 얻는다.
+db/properties/cascade_audit_*.csv   text eol=lf
+db/properties/cascade_audit_*.json  text eol=lf
 
 # VESTA 는 반대다 — CLAUDE.md 규약상 ASCII + **CRLF** 여야 IMPORT_DENSITY 가 안 깨진다.
 *.vesta  text eol=crlf

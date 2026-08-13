@@ -344,8 +344,8 @@
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "image_sha256": "dea3d0d994af7db24c1a7b89025b8fbb146e341467f4fb1c42cdc877c42a3dab",
    "image_bytes": 55023,
-   "csv_sha256": "468d323730c60126f4e85263603e8d8ae9369535ac2f167a454936f777b99b90",
-   "csv_bytes": 252,
+   "csv_sha256": "c7487cf341d14c02030f63c62beb35c67d3b7d0f6fa19ff8250eb80a180d5ccb",
+   "csv_bytes": 245,
    "csv_rows": 6
   },
   {
@@ -361,8 +361,8 @@
    "csv_override_reason": "recovered 행의 synthetic phase_set_id 를 비우고 phase_set_assumption 으로 분리했다. 합성 ID 를 남기면 method-complete=0 판정과 정면으로 충돌한다 — 반응식에 LiS4 가 들어 있다는 사실은 method identity 가 아니다. 그림은 host onset 두 값과 LiS4 수만 표시하므로 영향 없음.",
    "image_sha256": "3eb636f61af9155061166795fd7759449632b88739bd8388eb1b5f6b57233c7a",
    "image_bytes": 46154,
-   "csv_sha256": "1f7909c27e841edbd8f2bf71e4e5ba0b389bc647ab5ff4bce87a2bcf6ca5a260",
-   "csv_bytes": 615,
+   "csv_sha256": "ccac1c8ae1c6900fadd1c2d8bbe55cc2644df6ec641be8cd3b44e0f2d16da96e",
+   "csv_bytes": 631,
    "csv_rows": 3
   },
   {
@@ -378,8 +378,8 @@
    "csv_override_reason": "pool_id · normalization_n · BVS pool min/max · actual_x · concentration_label 추가. min–max 점수를 고정 물성처럼 읽지 못하게 하는 메타다 — B2O3 는 historical 47 풀에서 0.1000, recovered 88 풀에서 0.1998 (둘 다 fail). 기존 값 열은 안 건드렸다.",
    "image_sha256": "1c5b9d029c8bd2948a431833249d2e0aa5247ed473a3af28f042b989a63e5f07",
    "image_bytes": 60617,
-   "csv_sha256": "890f5664c1f10a3a7483e0d687da818cb50a05a0f18a49f56ba920782179d199",
-   "csv_bytes": 963,
+   "csv_sha256": "b993fefa0c8b43b1c3a80505b9ee6297ee8e0dc31c7e49fd0242ce84006d341e",
+   "csv_bytes": 1389,
    "csv_rows": 6
   },
   {
@@ -392,8 +392,8 @@
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "image_sha256": "a33669cd05ac0235b068a0b2a40695df49f2f3c06d93bb0094650d0dc146a5f9",
    "image_bytes": 43916,
-   "csv_sha256": "f9bd346b12d6d8ccb9735937444ca3e80fb379ce533bd14d22085ecc263d03b4",
-   "csv_bytes": 318,
+   "csv_sha256": "5c6e9c71f42c2f178d4fb9c1ec9c51ee5fb0b37d407a5490027d0c3cec197eed",
+   "csv_bytes": 313,
    "csv_rows": 4
   },
   {
@@ -406,8 +406,8 @@
    "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "image_sha256": "c6fbafc0d82b87210138ce68d622e63f4d19f255354ce1292991bd77a7675c9b",
    "image_bytes": 60579,
-   "csv_sha256": "26ef6f6ed97db9b47dd6702909499896f76becdbbdd6e75106315b2cd8da2c0d",
-   "csv_bytes": 400,
+   "csv_sha256": "901add0f85b06765c42e391f720fe87f4f75bb50d648c6ebb1671e9897acc6b8",
+   "csv_bytes": 394,
    "csv_rows": 5
   }
  ],
@@ -417,9 +417,9 @@
    "approval_status": "audit_current",
    "use_scope": "default_visible",
    "source_commit": "working tree (2026-08-14 amendment)",
-   "sha256": "7838b463e0a4196d8674d70a14703bbf7a0dbd963c85d737d2f1c2b5badcb35a",
-   "bytes": 1779,
-   "sha256_lf": "97b2e17a171f734f96778bec053d83f56b3c1269afe3033a588afc2254a3fa74",
+   "sha256": "61cf1678722056c86187e97f5531cf610dc956eb82335f580cad14d0331e981b",
+   "bytes": 2230,
+   "sha256_lf": "61cf1678722056c86187e97f5531cf610dc956eb82335f580cad14d0331e981b",
    "rows": 5,
    "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "override_reason": "completeness_basis 열과 G5 validity-aware 열 추가. presence 로 세면 88/1/1 이지만 비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 86 / AlBr3·MgI2·Na2S / AlI3 / usable 89 다. 기존 presence 수치는 그대로 두고 옆에 병기했다."

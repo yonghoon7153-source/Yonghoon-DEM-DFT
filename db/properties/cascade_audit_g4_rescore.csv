@@ -1,7 +1,7 @@
-species,legacy_bvs_raw,blocking_4A_fraction,historical_composite_score,bvs_only_rescore,historical_pass_gt_0p30,bvs_only_pass_gt_0p30,status,pool_id,normalization_n,bvs_pool_min,bvs_pool_max,actual_x,concentration_label
-B2O3,0.819925,0.588235,0.1000,0.1000,N,N,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
-Cr2O3,0.903529,0.888889,0.0500,0.8086,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
-Ga2O3,0.855193,0.611111,0.0500,0.3989,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
-In2O3,0.886613,0.833333,0.0500,0.6652,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
-Sc2O3,0.865558,0.777778,0.0500,0.4868,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
-Y2O3,0.912255,0.833333,0.0500,0.8825,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+species,legacy_bvs_raw,blocking_4A_fraction,historical_composite_score,bvs_only_rescore,historical_pass_gt_0p30,bvs_only_pass_gt_0p30,status,pool_id,normalization_n,bvs_pool_min,bvs_pool_max,actual_x,concentration_label,pool_id,normalization_n,bvs_pool_min,bvs_pool_max,actual_x,concentration_label
+B2O3,0.819925,0.588235,0.1000,0.1000,N,N,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+Cr2O3,0.903529,0.888889,0.0500,0.8086,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+Ga2O3,0.855193,0.611111,0.0500,0.3989,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+In2O3,0.886613,0.833333,0.0500,0.6652,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+Sc2O3,0.865558,0.777778,0.0500,0.4868,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005
+Y2O3,0.912255,0.833333,0.0500,0.8825,N,Y,historical_gate_audit,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005,cascade-v23-o37-f10-2026-06,47,0.819925,0.926115,0.25,x005

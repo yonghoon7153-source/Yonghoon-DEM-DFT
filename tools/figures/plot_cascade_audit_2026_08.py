@@ -215,13 +215,27 @@ def _materialize_recovered_v2() -> dict[str, dict]:
     return status
 
 
+def _sha_of_pinned_canon(rel: str, expected: tuple) -> str:
+    """고정 커밋 blob 의 **개행 정규화** 해시. blob 을 못 읽으면 원문 해시로 폴백."""
+    try:
+        blob = subprocess.check_output(["git", "show", f"{RECOVERED_REF}:{rel}"], cwd=ROOT)
+        return _sha(blob.replace(b"\r\n", b"\n"))
+    except Exception:
+        return expected[0]
+
+
 def _validate_local_recovered_v2() -> dict[str, dict]:
     """Validate exact local copies without falling back to another pool."""
     status = {}
     for rel in RECOVERED_DERIVED:
         data = (ROOT / rel).read_bytes()
         expected = EXPECTED_SOURCE[rel]
-        if (_sha(data), len(data)) != expected:
+        # ⚠ 2026-08-14 (Codex Round-3 P1) — 바이트 완전일치만 보면 **개행 하나로 실패**한다.
+        #   깨끗한 Windows checkout 에서 CSV 가 CRLF 로 변환돼 정직한 파일이 위조로 잡혔다.
+        #   그래서 원문 해시 **또는** 개행 정규화 해시 중 하나가 맞으면 통과시킨다.
+        #   내용이 실제로 바뀌면 둘 다 어긋나므로 탐지력은 그대로다.
+        canon = data.replace(b"\r\n", b"\n")
+        if (_sha(data), len(data)) != expected and _sha(canon) != _sha_of_pinned_canon(rel, expected):
             raise RuntimeError(
                 f"Local recovered artifact differs from pinned source: {rel}; "
                 "run with --materialize-recovered in a reviewed workspace"
