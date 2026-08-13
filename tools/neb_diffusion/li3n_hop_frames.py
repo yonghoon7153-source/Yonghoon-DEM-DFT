@@ -153,7 +153,8 @@ def widest_offset(atoms, cell, fx, fy, ux, uy, span=1.1, n=45, target=2.15):
 ONLI_STEP = (-0.111074, 0.111070)   # 최단 on-Li -> on-Li (2.107 A)
 
 
-def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1):
+def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1,
+              arc=False, bow=0.0):
     """on-Li -> N-N bridge -> on-Li 최단 hop (2.107 A). 시작점 = 계산된 최소점 xy.
 
     on-Li 자리 = N 삼각형 중심 = Li2N 면의 in-plane Li 바로 위 (db
@@ -164,7 +165,17 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1)
     """
     hop = hop or (ONLI_STEP[0] * steps, ONLI_STEP[1] * steps)
     amp_f = (0.0, 0.0)
-    if curve:
+    if bow:
+        # 화면 평면에서 활처럼 휘게: 진행방향에 수직으로 bow(Å)만큼 sin(pi*xi) 로 부풀린다.
+        # 부호가 휘는 쪽을 정한다. (--curve 는 통로 폭에서 자동으로 정하지만 보통 너무 작다)
+        (a1x, a1y), (a2x, a2y) = lat2d(cell)
+        hx, hy = hop[0] * a1x + hop[1] * a2x, hop[0] * a1y + hop[1] * a2y
+        L = math.hypot(hx, hy)
+        ux, uy = -hy / L, hx / L
+        det = a1x * a2y - a1y * a2x
+        cx, cy = bow * ux, bow * uy
+        amp_f = ((cx * a2y - cy * a2x) / det, (cy * a1x - cx * a1y) / det)
+    elif curve:
         (a1x, a1y), (a2x, a2y) = lat2d(cell)
         hx, hy = hop[0] * a1x + hop[1] * a2x, hop[0] * a1y + hop[1] * a2y
         L = math.hypot(hx, hy)
@@ -177,7 +188,7 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1)
         if not (0.0 <= xi <= 1.0):
             raise ValueError(f"xi={xi} 가 [0,1] 밖이다")
         fx, fy = ad[3] + xi * hop[0], ad[4] + xi * hop[1]
-        if curve and 0.0 < xi < 1.0:
+        if (curve or bow) and 0.0 < xi < 1.0:
             # 중점에서 찾은 통로 폭을 sin(pi*xi) 로 부드럽게 적용 -> 대칭 활 모양,
             # 끝에서 꺾이지 않는다. (점마다 독립으로 최적화하면 한쪽으로 쏠리고 끝에서 튄다)
             dfx = amp_f[0] * math.sin(math.pi * xi)
@@ -185,6 +196,16 @@ def onLi_path(atoms, cell, ad, xis, target=2.15, hop=None, curve=False, steps=1)
             fx, fy = fx + dfx, fy + dfy
         z = ride_height(atoms, cell, fx, fy, target)
         out.append((xi, fx, fy, z))
+    if arc:
+        # 점프처럼 보이게: 양 끝 높이를 **같게** 맞추고 가운데를 띄운 활 모양.
+        # 끝 높이는 두 끝의 ride 중 높은 쪽 (낮은 쪽으로 맞추면 반대쪽이 기판을 판다).
+        # 진폭은 중간 구간에서 필요한 높이를 다 덮도록 잡는다.
+        zc = cell[2]
+        zlev = max(out[0][3], out[-1][3])
+        need = max((out[k][3] - zlev) for k in range(len(out))) if len(out) > 2 else 0.0
+        amp = max(need, 0.0) + 0.35 / zc          # 여유 0.35 A 더 띄워 점프처럼
+        out = [(xi, fx, fy, zlev + amp * math.sin(math.pi * xi)) for xi, fx, fy, _z in out]
+        return out
     # NOTE: 반대쪽 끝이 시작보다 높게 나온다. 시작 자리에서만 기판이 이완돼 (in-plane Li 가
     # 0.95 A 눌려 내려가) 있기 때문이다. 선형 추세를 빼서 높이를 맞추면 반대쪽이 기판을
     # 파고든다 (2026-08-12 시도: 최근접 0.54 A). 고정 기판 한 장으로 그리는 이상 이 상승은
@@ -633,6 +654,10 @@ def main():
     ap.add_argument("--key_xi", help="큰 공으로 강조할 xi 목록 (기본 0,0.5,1)")
     ap.add_argument("--steps", type=int, default=1,
                     help="--onLi: 최단 on-Li 스텝(2.107 A)의 배수. 3 = 격자 등가 자리(6.322 A)")
+    ap.add_argument("--bow", type=float, default=0.0,
+                    help="--onLi: 화면 평면에서 휘는 양 (Å). 부호가 휘는 쪽. 예 1.2 / -1.2")
+    ap.add_argument("--arc", action="store_true",
+                    help="--onLi: 양 끝 높이를 맞추고 가운데를 띄운 **점프 활** 모양 높이")
     ap.add_argument("--curve", action="store_true",
                     help="--onLi: 직선 대신 원자 사이 **통로**를 따라 휘게 (표시용)")
     ap.add_argument("--ride", type=float, default=2.15,
@@ -709,7 +734,8 @@ def main():
     if clear < CLEARANCE_A:
         print(f"*** 경고: 경로상 최소 Li-N = {clear:.3f} A -- 물리적으로 불가능한 궤적이다. 그림 금지. ***")
     if a.onLi:
-        pts = onLi_path(atoms, cell, ad, xis, target=a.ride, curve=a.curve, steps=a.steps)
+        pts = onLi_path(atoms, cell, ad, xis, target=a.ride, curve=a.curve,
+                        steps=a.steps, arc=a.arc, bow=a.bow)
         xi_ts = 0.5
         w = min(min((neighbours(atoms, cell, p[1], p[2], p[3], el, 6.0) or [9.9])[0]
                     for el in ("N", "Li")) for p in pts)
@@ -718,7 +744,7 @@ def main():
         L = math.hypot(dfx * b1x + dfy * b2x, dfx * b1y + dfy * b2y)
         print(f"on-Li -> N-N bridge -> on-Li : {L:.3f} A (최단 on-Li 간격). 중점 = N-N 다리")
         print(f"   경로 최저 기판거리 = {w:.3f} A (목표 {a.ride})")
-        if abs(L - 2.107 * a.steps) > 0.15 and not a.curve:
+        if abs(L - 2.107 * a.steps) > 0.15 and not (a.curve or a.bow):
             sys.exit(f"거부: 경로 길이 {L:.3f} A 가 on-Li 스텝 x{a.steps} "
                      f"({2.107*a.steps:.3f} A) 이 아니다")
         print("*** 표시 전용: 시작점만 계산된 xy(최소점), 나머지는 보간. ***")
