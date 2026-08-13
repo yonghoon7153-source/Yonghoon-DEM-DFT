@@ -115,7 +115,7 @@ Three compounds (Al2O3_x010, Sc2O3_x002, MgO_x002/005) had their champion in the
 ## Open questions / follow-up
 
 1. **B0 = 0 fit failures** (MnO_x002, CoO_x010, ZnO_x010): re-run EOS with wider volume grid or different BM3 initial guess. Low priority — Cij already gives the modulus story.
-2. **Sc2O3** only has x=0.02 result. Run x=0.05 and x=0.10 to confirm the favorability trend (probably worth the GPU time given the headline E_VRH=18.7 GPa).
+2. **Sc2O3** only has x=0.02 result. Run x=0.05 and x=0.10 to confirm the favorability trend (⚠ the E_VRH=18.7 GPa headline that motivated this was wrong — corrected to 42.082 on 2026-08-12, rank 18/40, so the softness argument for prioritising it no longer holds).
 3. **Top candidates for Paper #2 (coating) DFT validation**: Sc2O3_x002 + Al2O3_x005 + Li2O_x005 + MnO_x005 ⇒ 4 configs. Same protocol as Nd2O3 (DFT+U for Sc/Mn 3d if needed, ISPIN=2 for Mn).
 4. **Charge compensation for acceptors** (when Sc3+/Al3+ replaces Li+, need 2 Li vacancies): cascade `tools/doping` already handles this via `add_li_interstitials` etc.; the converged dE values include the compensation.
 5. **vm db push of doping_cascade_verified.json**: this update extends the file (Al2O3 already there) with the other 13 dopants. Companion update commit alongside this markdown.

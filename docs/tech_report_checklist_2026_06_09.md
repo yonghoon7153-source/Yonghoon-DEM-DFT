@@ -285,7 +285,7 @@
 - **41 champions across 14 dopants × 3 concentrations + Sc2O3 x002 alone, all converged.** `docs/cascade/cascade_dopants_2026_06_09.md` + `db/properties/doping_cascade_verified.json`.
 - **Site preference unambiguous:** 38/41 → Li_24g, 3/41 → Li_48h (chemistry signal: self-similar Li2O all; small monovalent Cu+, Ag+ tie-breakers), **0/41 → P_4b**. Site-preference review (with literature-evidence tags) was a separate codebase task — see §9 + audit notes if reviewer asks about Y@P, etc.
 - **Coating candidates (low E_VRH, weekly-report goal):**
-  1. **Sc2O3 x=0.02** (E_VRH 18.7, dE −0.974) — softest + strongest formation.
+  1. **Sc2O3 x=0.02** (E_VRH **42.082**, dE **−0.9338**) — strongest formation, but softness rank 18/40. ⚠ 2026-08-12 값 정정: 옛 'softest + strongest' 헤드라인 폐기 (E_VRH 18.7 은 2.2배 틀린 값이었다).
   2. Al2O3 x=0.05 (29.3, −0.809).
   3. Li2O x=0.05 (32.4, −0.531) — softest monovalent.
   4. MnO x=0.05 (32.6, −0.662) — low ΔV.

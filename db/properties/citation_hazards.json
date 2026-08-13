@@ -16,7 +16,7 @@
    "level": "RESOLVED",
    "what": "[해소] Sc2O3_x002 · Al2O3_x005 5개 값 — gabia FINAL_RANKING.json 으로 trivalent_M3 가 전부 맞음이 확정. verified 파일을 정정했다.",
    "why": "doping_cascade_trivalent_M3.json 과 값 충돌 미해소 (E 18.7 vs 42.1)",
-   "fix": "⚠ 남은 것: '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차).",
+   "fix": "[2026-08-13 해소] '최연질 = Sc2O3 18.7 GPa' 는 실제 **42.082** 이므로 E_VRH 순위표를 다시 매겨야 한다 (2.2배 오차). → 재정렬 완료.",
    "resolved": "2026-08-12"
   },
   {
@@ -126,13 +126,15 @@
   },
   {
    "file": "db/properties/doping_cascade_verified.json",
-   "level": "HOLD",
+   "level": "RESOLVED",
    "what": "coating_candidates_ranked_by_E_VRH 순위표",
    "why": "rank1 의 E_VRH 가 18.7 → 42.082 로 정정돼 **순위 자체가 무효**",
-   "fix": "gabia FINAL_RANKING.json 로 14 dopant × 3 농도 전체를 다시 정렬"
+   "fix": "완료 — 40 챔피언 전체 재정렬. 새 1~3위 Li2O_x005 32.4 / MnO_x005 32.6 / NiO_x010 33.9. Sc2O3_x002 18위(42.082), Al2O3_x005 28위(47.018). 옛 순위표는 doping_cascade_verified.json `_superseded_ranking_2026_08_12` 에 보존.",
+   "resolved": "2026-08-13"
   }
  ],
  "_history": [
+  "2026-08-13: E_VRH 순위표 재계산 완료 — HOLD 해소. 최연질이 Sc2O3 → Li2O_x005 로 바뀌었고, Sc2O3 는 형성에너지 1위 · 연질 18위로 두 축이 분리됐다.",
   "2026-08-12: doping_cascade 값 충돌 해소 (BLOCKED→RESOLVED). 순위표 재계산이 새 HOLD 로 승계."
  ]
 }

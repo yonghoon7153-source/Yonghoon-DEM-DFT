@@ -144,7 +144,7 @@ All extracted, all paper-grade:
 
 ### doping_cascade_verified.json
 - 14 dopants × 3 concentrations (+ Sc2O3 x002 alone) = 41/41 converged
-- coating ranking: Sc2O3_x002 (E_VRH 18.7) > Al2O3_x005 (29.3) > Li2O_x005 (32.4) > MnO_x005 (32.6) > NiO_x010 (33.9)
+- coating ranking ⚠ **2026-08-13 재계산**: Li2O_x005 (32.4) > MnO_x005 (32.6) > NiO_x010 (33.9) > MnO_x010 (35.9) > BaO_x005 (36.2). Sc2O3_x002 는 42.082 로 18위, Al2O3_x005 는 47.018 로 28위 — 옛 순위(Sc2O3 18.7 1위)는 값 오류로 폐기.
 
 ### diffusion.json
 - Li3N(001) — DFT NEB on_N converged (E = −1485.18 Ry, force 0.002); barrier preliminary 148–174 meV vs Cui 2023 133 meV; hollow_s2 converging, bridge_s2 pending

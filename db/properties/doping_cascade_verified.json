@@ -8,7 +8,7 @@
   "elastic": "UMA-s-1p1 relaxed-ion Cij -> Voigt-Reuss-Hill (B_hill/G_hill = B_VRH/G_VRH); E_VRH = 9BG/(3B+G). Absolute UMA elastic runs HIGH vs experimental AFM/UPE (12-22 GPa) — compare WITHIN cascade (UMA-vs-UMA) only.",
   "eos": "UMA-s-1p1 Birch-Murnaghan B0 (hydrostatic). Distinct quantity from elastic B_VRH (harmonic Cij); EOS B0 < B_VRH typically (~2x for soft argyrodites)."
  },
- "_full_audit_2026_06_09": "⚠ 잠정(값 충돌 미해소 — _CONFLICT_UNRESOLVED_2026_07_27 참조): 14 dopants x 3 concentrations + Sc2O3 x002 = 41 champions, ALL converged. See docs/cascade/cascade_dopants_2026_06_09.md for the full table + interpretation. Key findings: 38/41 champions on Li_24g, 3/41 on Li_48h (Li2O all, Cu2O x002/x010, Ag2O x010, Na2O x005), 0/41 on P_4b. Top by formation energy: Sc2O3 (-0.974) > Al2O3 cluster (-0.79..-0.82) > Mn/Co/Ca/Ba cluster (-0.57..-0.66) > rest (-0.48..-0.56). Top by softness (low E_VRH = coating candidate): Sc2O3_x002 18.7 > Al2O3_x005 29.3 > Li2O_x005 32.4 > MnO_x005 32.6 > NiO_x010 33.9. Three cases (MnO_x002, CoO_x010, ZnO_x010) returned B0=0 (EOS fit failure) but Cij/E_VRH still good. Markdown owns the narrative; this JSON holds queryable headline numbers per dopant.",
+ "_full_audit_2026_06_09": "14 dopants x 3 concentrations + Sc2O3 x002 = 41 champions, ALL converged. See docs/cascade/cascade_dopants_2026_06_09.md for the full table + interpretation. Key findings: 38/41 champions on Li_24g, 3/41 on Li_48h (Li2O all, Cu2O x002/x010, Ag2O x010, Na2O x005), 0/41 on P_4b. Top by formation energy: Sc2O3 (-0.9338) > Al2O3 cluster (-0.79..-0.82) > Mn/Co/Ca/Ba cluster (-0.57..-0.66) > rest (-0.48..-0.56). Top by softness (low E_VRH = coating candidate), RECOMPUTED 2026-08-13 after the value correction: Li2O_x005 32.4 > MnO_x005 32.6 > NiO_x010 33.9 > MnO_x010 35.9 > BaO_x005 36.2. Sc2O3_x002 falls to rank 18 (42.082) and Al2O3_x005 to rank 28 (47.018); the old 'softest = Sc2O3 18.7' headline is retracted. Three cases (MnO_x002, CoO_x010, ZnO_x010) returned B0=0 (EOS fit failure) but Cij/E_VRH still good. Markdown owns the narrative; this JSON holds queryable headline numbers per dopant.",
  "compounds": {
   "Sc2O3": {
    "verified_date": "2026-06-09",
@@ -426,47 +426,86 @@
   }
  },
  "coating_candidates_ranked_by_E_VRH": {
-  "_purpose": "For Hyundai low-modulus coating-layer goal (weekly report). Sorted ascending in E_VRH (softer first); only champions with both favorable dE and good EOS+elastic data.",
-  "rank1_Sc2O3_x002": {
-   "E_VRH": 42.082,
-   "dE_post": -0.9338,
-   "site": "Li_24g+Clrich",
-   "note": "best overall: softest AND strongest formation",
-   "_superseded_2026_08_12": {
-    "E_VRH": {
-     "old": 18.7,
-     "new": 42.082
-    },
-    "dE_post": {
-     "old": -0.974,
-     "new": -0.9338
-    }
-   },
-   "⛔_ranking_stale": "E_VRH 가 18.7 → 42.082 로 정정됐으므로 **이 순위표를 다시 매겨야 한다**. '최연질 = Sc2O3 18.7' 헤드라인은 폐기."
-  },
-  "rank2_Al2O3_x005": {
-   "E_VRH": 29.3,
-   "dE_post": -0.809,
-   "site": "Li_24g",
-   "note": "literature-known route"
-  },
-  "rank3_Li2O_x005": {
+  "_recomputed_2026_08_13": "E_VRH 오름차순 전체 재정렬 (40 챔피언). 2026-08-12 정정(Sc2O3_x002 18.7→42.082, Al2O3_x005 29.32→47.018) 반영. 이전 순위표는 _superseded_ranking_2026_08_12 에 보존.",
+  "definition": "낮은 E_VRH = 연질 = coating 후보. UMA 내부 스크리닝이라 **캐스케이드 내부 상대비교 전용**, 절대값 인용 금지.",
+  "rank1_Li2O_x005": {
    "E_VRH": 32.4,
    "dE_post": -0.531,
-   "site": "Li_48h",
-   "note": "softest monovalent"
+   "EOS_B0": 23.8
   },
-  "rank4_MnO_x005": {
+  "rank2_MnO_x005": {
    "E_VRH": 32.6,
    "dE_post": -0.662,
-   "site": "Li_24g",
-   "note": "low dV (-2.4%) + good dE"
+   "EOS_B0": 18.2
   },
-  "rank5_NiO_x010": {
+  "rank3_NiO_x010": {
    "E_VRH": 33.9,
    "dE_post": -0.551,
-   "site": "Li_24g",
-   "note": "matches earlier db NiO direction"
+   "EOS_B0": 19.2
+  },
+  "rank4_MnO_x010": {
+   "E_VRH": 35.9,
+   "dE_post": -0.639,
+   "EOS_B0": 18.0
+  },
+  "rank5_BaO_x005": {
+   "E_VRH": 36.2,
+   "dE_post": -0.571,
+   "EOS_B0": 20.0
+  },
+  "_where_the_corrected_two_landed": {
+   "Sc2O3_x002": {
+    "rank": 18,
+    "E_VRH": 42.082
+   },
+   "Al2O3_x005": {
+    "rank": 28,
+    "E_VRH": 47.018
+   }
+  },
+  "_insight_2026_08_13": "정정 전에는 Sc2O3_x002 가 **연질 1위이자 형성에너지 1위** 였다('best overall: softest AND strongest formation'). 정정 후 형성에너지는 여전히 1위(-0.9338)지만 연질은 **18위**다 — 두 축이 분리됐다. 한 후보가 두 축을 모두 이기던 그림이 값 하나로 무너진 사례이고, 캐스케이드의 산화-수송 트레이드오프와 같은 종류의 교훈이다.",
+  "_superseded_ranking_2026_08_12": {
+   "rank1_Sc2O3_x002": {
+    "E_VRH": 42.082,
+    "dE_post": -0.9338,
+    "site": "Li_24g+Clrich",
+    "note": "best overall: softest AND strongest formation",
+    "_superseded_2026_08_12": {
+     "E_VRH": {
+      "old": 18.7,
+      "new": 42.082
+     },
+     "dE_post": {
+      "old": -0.974,
+      "new": -0.9338
+     }
+    },
+    "⛔_ranking_stale": "E_VRH 가 18.7 → 42.082 로 정정됐으므로 **이 순위표를 다시 매겨야 한다**. '최연질 = Sc2O3 18.7' 헤드라인은 폐기."
+   },
+   "rank2_Al2O3_x005": {
+    "E_VRH": 29.3,
+    "dE_post": -0.809,
+    "site": "Li_24g",
+    "note": "literature-known route"
+   },
+   "rank3_Li2O_x005": {
+    "E_VRH": 32.4,
+    "dE_post": -0.531,
+    "site": "Li_48h",
+    "note": "softest monovalent"
+   },
+   "rank4_MnO_x005": {
+    "E_VRH": 32.6,
+    "dE_post": -0.662,
+    "site": "Li_24g",
+    "note": "low dV (-2.4%) + good dE"
+   },
+   "rank5_NiO_x010": {
+    "E_VRH": 33.9,
+    "dE_post": -0.551,
+    "site": "Li_24g",
+    "note": "matches earlier db NiO direction"
+   }
   }
  },
  "_provenance_audit": {

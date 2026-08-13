@@ -2989,7 +2989,7 @@ Hypothesis:
   • Oxide gettering으로 LiCl 2차상 형성 억제
 
 Active 후보 (14 dopant × 3 conc cascade screening):
-  ★ Sc₂O₃   — cascade strongest winner (de_post=-0.974, E_VRH 18.7 GPa)
+  ★ Sc₂O₃   — cascade strongest winner (de_post=-0.974, E_VRH 18.7 GPa) ⚠[2026-08-13 정정: E_VRH 18.7 → **42.082**(연질 18/40위), de_post −0.974 → **−0.9338**. 'softest' 주장 폐기, 형성에너지 1위만 유효]
   ★ B₂O₃    — thermal stabilizer, anneal+EOS 진행 (V100 paused)
   ★ Nd₂O₃   — DFT-relaxed run5 완료 (E=-3566.21 Ry), EOS+post 대기
   • Al₂O₃ cluster (-0.79..-0.82), MnO/CoO 부드러움 후보
@@ -3016,7 +3016,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 >
 > 아래 panel paper #2 strategy. Oxide doping으로 mitigate. O²⁻가 PS₄ 부분 치환 또는 4d 점유 → O-Li 강한 결합 thermal ↑, Cl-O mixed sublattice anisotropy 완화, oxide gettering LiCl 차단.
 >
-> 14 dopant × 3 농도 cascade screening 진행, 41 champion verified. Sc₂O₃ strongest winner (de -0.974, E_VRH 18.7 가장 soft). B₂O₃ Nd₂O₃ DFT validation 진행.
+> 14 dopant × 3 농도 cascade screening 진행, 41 champion verified. Sc₂O₃ strongest winner (de -0.974, E_VRH 18.7 가장 soft). ⚠[2026-08-13 정정: E_VRH 18.7 → **42.082**(연질 18/40위), de_post −0.974 → **−0.9338**. 'softest' 주장 폐기, 형성에너지 1위만 유효] B₂O₃ Nd₂O₃ DFT validation 진행.
 >
 > Pipeline cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD.
 >
@@ -3033,7 +3033,7 @@ Pipeline: cascade screen → DFT EOS → §8 → NCM interface → calendar AIMD
 
 ### Q&A
 - "왜 oxide doping?" → O²⁻ 강한 Li 결합 + Cl/O mixed sublattice 안정화 + 2차상 차단
-- "Sc₂O₃ 왜 strongest?" → de_post -0.974, E_VRH 18.7 soft, single x002만 완료 (x005/x010 follow-up)
+- "Sc₂O₃ 왜 strongest?" → de_post -0.974, E_VRH 18.7 soft, single x002만 완료 (x005/x010 follow-up) ⚠[2026-08-13 정정: E_VRH 18.7 → **42.082**(연질 18/40위), de_post −0.974 → **−0.9338**. 'softest' 주장 폐기, 형성에너지 1위만 유효]
 - "B₂O₃ 진행?" → V100 GPU lock paused. 마지막 EOS v0.98 BFGS step 5. gabia 재개 가능
 - "Nd₂O₃ 4f 어렵?" → DFT+U(U=6) ISPIN=2 처리. PDOS 어렵지만 EOS OK. run5 V0 완료
 - "14 dopant 전체 compare?" → doping_cascade_verified.json 41 champion 완료. paper #2 systematic ranking

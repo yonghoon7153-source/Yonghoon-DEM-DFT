@@ -1087,7 +1087,7 @@ add_text(s, Inches(0.7), Inches(4.25), Inches(12.0), Inches(0.4),
 add_text(s, Inches(0.7), Inches(4.65), Inches(12.0), Inches(1.9),
          "Hypothesis: O²⁻ PS₄ 부분 치환 또는 4d 자리 점유 → O–Li 강한 결합, Cl/O mixed sublattice, LiCl 2차상 차단\n\n"
          "Active 후보 (14 dopant × 3 conc cascade screening):\n"
-         "  ★ Sc₂O₃   — cascade strongest (de_post = −0.974, E_VRH 18.7 GPa)\n"
+         "  ★ Sc₂O₃   — strongest formation (de_post = −0.9338); E_VRH 42.082 = rank 18/40\n"
          "  ★ B₂O₃    — thermal stabilizer, anneal+EOS 진행\n"
          "  ★ Nd₂O₃   — DFT-relaxed run5 완료, EOS+post 대기\n"
          "  • Al₂O₃ cluster · MnO/CoO 부드러움 후보 (41 champions verified)",
