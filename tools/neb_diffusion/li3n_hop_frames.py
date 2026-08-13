@@ -250,6 +250,22 @@ def fix_bound(lines, zmax_needed, margin=0.03):
     return new, old
 
 
+def recenter(lines, atoms, mid_fx, mid_fy):
+    """모든 원자의 분수좌표 xy 를 평행이동해 (mid_fx, mid_fy) 가 (0.5, 0.5) 로 오게 한다.
+
+    주기 슬랩이므로 전체 평행이동은 **같은 구조**다 (원점만 바뀐다). BOUND 를 넓히는
+    방식은 adatom 까지 주기복제돼 노란 공이 여러 개 생기므로 쓰지 않는다.
+    반환: (dx, dy) 적용된 이동량.
+    """
+    dx, dy = 0.5 - mid_fx, 0.5 - mid_fy
+    for _i, _el, _lb, fx, fy, fz, ln in atoms:
+        t = lines[ln].split()
+        nfx, nfy = (fx + dx) % 1.0, (fy + dy) % 1.0
+        lines[ln] = (f"{t[0]:>3s} {t[1]:>2s} {t[2]:>10s}  {float(t[3]):.4f} "
+                     f"{nfx:10.6f} {nfy:10.6f} {float(t[6]):10.6f}    {t[7]}       {t[8]}")
+    return dx, dy
+
+
 def _section_end(lines, header, nzero):
     """header 섹션의 종료줄(0 이 nzero 개) 인덱스."""
     # 헤더에 인자가 붙는 섹션이 있다 (예: "THERI 1") -> 첫 토큰으로 찾는다
@@ -399,6 +415,16 @@ def selftest():
     chk("onN 경로가 대칭", abs(op[1][3] - op[3][3]) < 1e-12)
     chk("다리(중점)에서 가장 낮음", op[2][3] == min(p[3] for p in op))
     chk("경로 3점이 on-N / bridge / on-N", len(KEY_XI) == 3 and KEY_XI[1] == 0.5)
+    # recenter: 지정한 점이 (0.5,0.5) 로 오고, 상대거리는 보존되어야 한다
+    L = ["  1 Li        Li1  1.0000   0.100000   0.900000   0.300000    1a       1",
+         "  2  N         N1  1.0000   0.200000   0.800000   0.400000    1a       1"]
+    A = [(1, "Li", "Li1", 0.1, 0.9, 0.3, 0), (2, "N", "N1", 0.2, 0.8, 0.4, 1)]
+    recenter(L, A, 0.1, 0.9)
+    f0 = [float(x) for x in L[0].split()[4:7]]
+    f1 = [float(x) for x in L[1].split()[4:7]]
+    chk("recenter: 기준점이 (0.5,0.5)", abs(f0[0] - 0.5) < 1e-9 and abs(f0[1] - 0.5) < 1e-9)
+    chk("recenter: 상대 변위 보존", abs((f1[0] - f0[0]) - 0.1) < 1e-9 and abs((f1[1] - f0[1]) + 0.1) < 1e-9)
+    chk("recenter: z 불변", abs(f0[2] - 0.3) < 1e-9 and abs(f1[2] - 0.4) < 1e-9)
     # 셀을 가로지르는 사고 방지: 경로 길이가 최근접 N-N (3.65 A) 여야 한다
     _c0 = lat2d(cell0)
     _dx, _dy = op[-1][1] - op[0][1], op[-1][2] - op[0][2]
@@ -446,6 +472,8 @@ def main():
     ap.add_argument("--h_bridge", type=float, default=1.25, help="다리에서 adatom 높이 (A)")
     ap.add_argument("--ghost_r", type=float, default=0.62, help="보간점 공 반지름 (A)")
     ap.add_argument("--end_r", type=float, default=1.30, help="강조점 공 반지름 (A)")
+    ap.add_argument("--no_recenter", action="store_true",
+                    help="구조 평행이동(궤적을 셀 중앙으로) 끄기")
     ap.add_argument("--no_bonds", action="store_true",
                     help="adatom-N 결합선 전부 끄기 (궤적이 지저분하면)")
     ap.add_argument("--merge", action="store_true",
@@ -505,6 +533,11 @@ def main():
     dfx, dfy = hop_frac(hop)
     hx, hy = dfx * a1x + dfy * a2x, dfx * a1y + dfy * a2y
     print(f"hop {hop} = {math.hypot(hx, hy):.3f} A ; 계산된 TS 는 xi = {xi_ts:.3f}")
+    if not a.no_recenter:
+        mid = pts[len(pts) // 2]
+        dx, dy = recenter(lines, atoms, mid[1], mid[2])
+        pts = [(xi, (fx + dx) % 1.0, (fy + dy) % 1.0, fz) for xi, fx, fy, fz in pts]
+        print(f"   구조 평행이동 ({dx:+.4f},{dy:+.4f}) — 궤적 중점을 (0.5,0.5) 로")
     os.makedirs(a.outdir, exist_ok=True)
     if a.merge:
         dst = os.path.join(a.outdir, "li3n_hop_alladatoms%s_display.vesta"
