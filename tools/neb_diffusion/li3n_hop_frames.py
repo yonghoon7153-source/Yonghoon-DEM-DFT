@@ -47,6 +47,30 @@ TS_XI_MAX = 1.35        # 계산된 안장점이 hop 위 어디까지 있어도 
                         # 경고만 하고 통과시킨다 (그림은 hop 자체가 물리적이면 그릴 수 있다).
 
 
+def parse_vesta_lines(lines):
+    """이미 읽은 줄 목록에서 파싱 (parse_vesta 와 같은 형식 반환)."""
+    cell = None
+    atoms = []
+    for i, l in enumerate(lines):
+        if l.strip() == "CELLP":
+            cell = [float(x) for x in lines[i + 1].split()[:6]]
+        if l.strip() == "STRUC":
+            j = i + 1
+            while j < len(lines):
+                s_ = lines[j].split()
+                if not s_ or s_[0] == "0":
+                    break
+                if re.match(r"^\d+$", s_[0]) and len(s_) >= 8:
+                    atoms.append((int(s_[0]), s_[1], s_[2],
+                                  float(s_[4]), float(s_[5]), float(s_[6]), j))
+                    j += 2
+                else:
+                    j += 1
+    if cell is None or not atoms:
+        raise SystemExit("VESTA 파싱 실패 (CELLP/STRUC 없음)")
+    return cell, atoms, lines
+
+
 def parse_vesta(path):
     """(cell6, [(idx, elem, label, fx, fy, fz, struc_line_no)], lines) 반환."""
     lines = open(path, encoding="ascii", errors="strict").read().splitlines()
@@ -250,6 +274,24 @@ def fix_bound(lines, zmax_needed, margin=0.03):
     return new, old
 
 
+def wrap_xy(lines, atoms):
+    """분수좌표 xy 를 [0,1) 로 접는다. 반환: 옮긴 원자 수.
+
+    이완 중 원자가 셀 경계를 넘으면 VESTA 의 BOUND(0~1)가 그 원자를 안 그린다.
+    두 구조가 서로 다른 원자를 잃으면 같은 슬랩인데 실루엣이 달라 보인다
+    (2026-08-12: min 10개 / TS 9개가 밖에 있어 인셋 두 장이 달라 보였다).
+    """
+    n = 0
+    for _i, _el, _lb, fx, fy, fz, ln in atoms:
+        nfx, nfy = fx % 1.0, fy % 1.0
+        if abs(nfx - fx) > 1e-9 or abs(nfy - fy) > 1e-9:
+            n += 1
+        t = lines[ln].split()
+        lines[ln] = (f"{t[0]:>3s} {t[1]:>2s} {t[2]:>10s}  {float(t[3]):.4f} "
+                     f"{nfx:10.6f} {nfy:10.6f} {float(t[6]):10.6f}    {t[7]}       {t[8]}")
+    return n
+
+
 def recenter(lines, atoms, mid_fx, mid_fy):
     """모든 원자의 분수좌표 xy 를 평행이동해 (mid_fx, mid_fy) 가 (0.5, 0.5) 로 오게 한다.
 
@@ -425,6 +467,15 @@ def selftest():
     chk("recenter: 기준점이 (0.5,0.5)", abs(f0[0] - 0.5) < 1e-9 and abs(f0[1] - 0.5) < 1e-9)
     chk("recenter: 상대 변위 보존", abs((f1[0] - f0[0]) - 0.1) < 1e-9 and abs((f1[1] - f0[1]) + 0.1) < 1e-9)
     chk("recenter: z 불변", abs(f0[2] - 0.3) < 1e-9 and abs(f1[2] - 0.4) < 1e-9)
+    # wrap_xy: 경계 밖 원자를 접어 넣는가
+    L2 = ["  1 Li        Li1  1.0000  -0.019600   1.030000   0.300000    1a       1"]
+    A2 = [(1, "Li", "Li1", -0.0196, 1.03, 0.3, 0)]
+    nw = wrap_xy(L2, A2)
+    g = [float(x) for x in L2[0].split()[4:7]]
+    chk("wrap_xy: 밖 원자 1개 접음", nw == 1)
+    chk("wrap_xy: [0,1) 로", abs(g[0] - 0.9804) < 1e-6 and abs(g[1] - 0.03) < 1e-6)
+    L3 = ["  1 Li        Li1  1.0000   0.500000   0.500000   0.300000    1a       1"]
+    chk("wrap_xy: 안쪽은 안 건드림", wrap_xy(L3, [(1, "Li", "Li1", 0.5, 0.5, 0.3, 0)]) == 0)
     # 셀을 가로지르는 사고 방지: 경로 길이가 최근접 N-N (3.65 A) 여야 한다
     _c0 = lat2d(cell0)
     _dx, _dy = op[-1][1] - op[0][1], op[-1][2] - op[0][2]
@@ -478,10 +529,38 @@ def main():
                     help="adatom-N 결합선 전부 끄기 (궤적이 지저분하면)")
     ap.add_argument("--merge", action="store_true",
                     help="프레임을 낱장 대신 **한 .vesta** 에 (강조 3점 큰 공 · 보간 작은 공)")
+    ap.add_argument("--fix_display", nargs="+", metavar="VESTA",
+                    help="입력 .vesta 들을 표시용으로 정리 (xy 를 [0,1) 로 접고 BOUND 확장) "
+                         "-> --outdir 에 *_fixed.vesta")
+    ap.add_argument("--shift", help="--fix_display 와 함께: 전체 평행이동 'dx,dy' (분수좌표)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         sys.exit(selftest())
+    if a.fix_display:
+        if not a.outdir:
+            sys.exit("--outdir 필요")
+        os.makedirs(a.outdir, exist_ok=True)
+        sh = [float(t) for t in a.shift.replace(" ", "").split(",")] if a.shift else (0.0, 0.0)
+        for f in a.fix_display:
+            cell, atoms, lines = parse_vesta(f)
+            if sh != (0.0, 0.0):
+                for _i, _el, _lb, fx, fy, fz, ln in atoms:
+                    t = lines[ln].split()
+                    lines[ln] = (f"{t[0]:>3s} {t[1]:>2s} {t[2]:>10s}  {float(t[3]):.4f} "
+                                 f"{(fx + sh[0]) % 1.0:10.6f} {(fy + sh[1]) % 1.0:10.6f} "
+                                 f"{float(t[6]):10.6f}    {t[7]}       {t[8]}")
+                cell, atoms, lines = parse_vesta_lines(lines)
+            n = wrap_xy(lines, atoms)
+            zb_new, zb_old = fix_bound(lines, max(x[5] for x in atoms))
+            dst = os.path.join(a.outdir,
+                               os.path.basename(f).replace(".vesta", "_fixed.vesta"))
+            txt = "\n".join(lines) + "\n"
+            txt.encode("ascii")
+            with open(dst, "w", newline="\r\n") as fh:
+                fh.write(txt)
+            print(f"-> {dst}  (경계 밖 {n}개 접음, BOUND zmax {zb_old:g} -> {zb_new:g})")
+        sys.exit(0)
     for r in ("fmin", "ts", "outdir"):
         if not getattr(a, r):
             sys.exit(f"--{'min' if r == 'fmin' else r} 필요")
