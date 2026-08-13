@@ -51,6 +51,7 @@ DRAG_RUNNING = {"xi": [2 / 8, 3 / 8], "eV": [0.596, 0.893]}                     
 LIC6_X = np.linspace(0, 1, 7)
 LIC6_Y = np.array([0.0, 0.1674, 0.2818, 0.2866, 0.2764, 0.1583, -0.0222])       # diffusion.json
 KBT300 = 0.02569
+KBT_300 = 8.617333262e-5 * 300.0        # 0.02585 eV — 300 K 표기용
 
 VIOLET, TEAL, ORANGE = ELEM["P"], ELEM["Li"], "#f59e0b"
 
@@ -86,6 +87,32 @@ if "--manuscript" in sys.argv:
         w.writerow(["saddle_configuration", f"{EADS['bridge_saddle3']:.4f}", f"{E_SADDLE3:.8f}", "bfgs_converged"])
         w.writerow(["delta_E_eV", f"{BARRIER_2PT:.4f}", "", "= migration barrier reported"])
     print("->", csvp)
+
+    # 경로 패널용 대칭 프로파일 CSV — 구조 패널(on-N -> bridge -> on-N)과 같은 대칭.
+    # guide 는 sin^2 (정점 xi=0.5, 진폭 = 2점 장벽). 옛 NEB 모양을 재활용하지 않는다.
+    prof = REPO / "db/properties/li3n_lic6_profile_origin.csv"
+    xi = np.linspace(0, 1, 401)
+    li3n = BARRIER_2PT * np.sin(np.pi * xi) ** 2
+    try:
+        from scipy.interpolate import make_interp_spline
+        lic6 = make_interp_spline(LIC6_X, LIC6_Y, k=3)(xi)
+    except Exception:
+        lic6 = np.interp(xi, LIC6_X, LIC6_Y)
+    with open(prof, "w", newline="") as f:
+        w = _csv.writer(f)
+        w.writerow(["# Li3N(001) vs LiC6(0001) Li-adatom migration profile (Origin-ready)"])
+        w.writerow([f"# Li3N_guide_eV = {BARRIER_2PT:.4f} * sin^2(pi*xi): SYMMETRIC guide to the eye,"])
+        w.writerow(["#   peak exactly at xi=0.5 to match the on-N -> bridge -> on-N structure panel."])
+        w.writerow(["#   NOT a computed path - only xi=0 and the saddle are computed configurations."])
+        w.writerow(["# LiC6_DFT_eV = cubic spline through the 7 DFT-SCF image energies (diffusion.json lic6_0001_dft_scf)."])
+        w.writerow(["# Li3N_DFTpoint_eV: the two values that ARE computed, at xi = 0 and 0.5."])
+        w.writerow(["xi", "Li3N_guide_eV", "LiC6_DFT_eV", "kT300_eV", "xi_DFTpoint", "Li3N_DFTpoint_eV"])
+        dp = {0.0: 0.0, 0.5: BARRIER_2PT, 1.0: 0.0}
+        for x, g, l in zip(xi, li3n, lic6):
+            k = round(x, 4)
+            a_, b_ = ((f"{k:.4f}", f"{dp[k]:.5f}") if k in dp else ("", ""))
+            w.writerow([f"{x:.4f}", f"{g:.5f}", f"{l:.5f}", f"{KBT_300:.5f}", a_, b_])
+    print("->", prof, f"(Li3N peak {li3n.max():.5f} @ xi={xi[li3n.argmax()]:.3f}; LiC6 peak {lic6.max():.5f})")
     sys.exit(0)
 
 fig, (ax, bx) = plt.subplots(1, 2, figsize=(13.2, 5.4), constrained_layout=True)
