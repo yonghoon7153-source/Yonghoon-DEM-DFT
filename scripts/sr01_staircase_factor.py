@@ -56,15 +56,32 @@ def staircase_factor(pts, fid, vox, gap_tol=2.0, phase=None, sel_phase=None):
             if len(R) < 2:
                 continue
             cells = np.vstack([segment_cells(R[i], R[i + 1], vox) for i in range(len(R) - 1)])
-            cells = np.unique(cells, axis=0)
-            n_steps = max(len(cells) - 1, 0)
-            L_true = float(np.linalg.norm(R[-1] - R[0]))          # 끝점 사이 직선거리
-            L_arc = float(np.linalg.norm(np.diff(R, axis=0), axis=1).sum())
-            if L_arc <= 0:
+            # ⚠⚠ 2026-08-13 (Codex CDX-02) — 첫 판은 `np.unique(cells, axis=0)` 였다.
+            #   그것은 **경로 순서와 재방문을 통째로 버리고** 고유 셀 수만 세므로 순서 있는
+            #   저항 경로 길이가 아니다.  `segment_cells` 는 DDA 라 이미 순서를 지켜 내주는데
+            #   그걸 버리고 있었다.  ⇒ **연속 중복만** 없애고 순서를 지킨다.
+            keep = np.ones(len(cells), bool)
+            keep[1:] = (cells[1:] != cells[:-1]).any(1)
+            cells = cells[keep]
+            if len(cells) < 2:
                 continue
-            tot_path += n_steps * vox
-            tot_true += L_arc                                     # 곡률은 물리 — 호길이가 참길이
-            per_seg.append((n_steps * vox / L_arc, L_arc, L_true / L_arc))
+            # 6-face 솔버가 실제로 지나야 하는 홉 수 = 연속 셀 사이 L1 거리의 합.
+            # (DDA 가 대각으로 튀면 L1 이 2~3 이고, 그것이 6-face 로는 2~3 홉이다.)
+            n_hops = int(np.abs(np.diff(cells.astype(np.int64), axis=0)).sum())
+            L_arc = float(np.linalg.norm(np.diff(R, axis=0), axis=1).sum())
+            L_chord = float(np.linalg.norm(R[-1] - R[0]))         # 끝점 사이 직선거리
+            # ⚠ 분모를 호길이 전체로 두면 **끝 셀의 부분 통과**만큼 체계적으로 짧게 나온다
+            #   (축정렬 픽스처가 k = 0.940 < 1 로 나왔던 이유 — 경로가 직선보다 짧을 수 없는데도).
+            #   래스터 경로의 양 끝은 **셀 중심**이므로, 참길이도 같은 두 중심 사이로 재야 한다.
+            c0 = (cells[0] + 0.5) * vox
+            c1 = (cells[-1] + 0.5) * vox
+            span = float(np.linalg.norm(c1 - c0))
+            if L_chord <= 0 or L_arc <= 0 or span <= 0:
+                continue
+            L_ref = L_arc * (span / L_chord)          # 호길이를 중심-중심 구간으로 환산
+            tot_path += n_hops * vox
+            tot_true += L_ref
+            per_seg.append((n_hops * vox / L_ref, L_ref, L_chord / L_arc))
     if not per_seg:
         raise ValueError('측정할 폴리라인 구간이 없다')
     a = np.array(per_seg)
@@ -77,8 +94,14 @@ def staircase_factor(pts, fid, vox, gap_tol=2.0, phase=None, sel_phase=None):
         'total_true_um': float(f'{tot_true:.4g}'),
         'total_path_um': float(f'{tot_path:.4g}'),
         'straightness_med': float(f'{np.median(a[:, 2]):.4f}'),   # 끝점거리/호길이 (1 = 직선)
-        'note': ('k > 1 이면 래스터 경로가 길어 저항이 크다 ⇒ 직경-보존 σ_e 는 **하한**이고 '
-                 '참값은 그만큼 위다.  등방 랜덤 이론값 1.5 · 축정렬 1 · 대각 √3=1.732'),
+        'note': ('k > 1 이면 래스터 경로가 길어 저항이 크다.  등방 랜덤 이론값 1.5 · '
+                 '축정렬 1 · 대각 √3=1.732.  ⚠⚠ **k 로 σ_e 에 하한/상한을 붙이지 말 것** '
+                 '(CL-20 retired, 2026-08-13): 계단 길이는 σ_e 를 낮추지만 격자가 만드는 '
+                 '섬유 간 **가짜 상호연결**은 높이고, 관측 구간에서는 후자가 더 크다 (CL-24). '
+                 '그리고 k 자신이 격자에 의존한다 — 아래 grid_dependence 참조'),
+        'grid_dependence': ('k 는 vox 무관이 아니다.  같은 침대 재실측(옛 estimator): '
+                            '1.4855@0.4 · 1.4917@0.3 · 1.4461@0.25 (폭 0.046).  '
+                            '새 estimator 로 다시 잴 것'),
     }
 
 
@@ -91,15 +114,21 @@ def _selftest():
         print(('  PASS  ' if c else '  FAIL  ') + n)
 
     vox = 0.4
-    # 축정렬 → k = 1
+    # ★ 축정렬 → k = 1 **정확히**.  옛 estimator 는 0.940 (< 1 = 비물리)인데 허용오차
+    #   0.06 안에 0.0001 차로 들어와 PASS 했다 (Codex CDX-02).  이제 등호로 묶는다.
     t = np.arange(0, 40) * 0.12
     P = np.stack([t, np.full_like(t, 1.1), np.full_like(t, 2.1)], 1)
-    k, _ = staircase_factor(P, np.zeros(len(P), int), vox)
-    chk(f'축정렬 k ≈ 1 (측정 {k:.3f})', abs(k - 1.0) < 0.06)
-    # 대각 (1,1,1) → k = √3
+    k, st_ax = staircase_factor(P, np.zeros(len(P), int), vox)
+    chk(f'축정렬 k = 1 **정확히** (측정 {k:.6f}; 옛 estimator 0.940)', abs(k - 1.0) < 1e-9)
+    chk(f'★ 축정렬에서도 k ≥ 1 (경로가 직선보다 짧을 수 없다; p10={st_ax["k_p10_p90"][0]})',
+        st_ax['k_p10_p90'][0] >= 1.0 - 1e-9)
+    # 대각 (1,1,1) → k = √3.  ⚠ 여기는 정확히 안 맞는다 — 끝 셀 중심이 선 위에 있지 않아
+    #   `span` 에 잔차가 남는다 (측정 1.7306 vs 1.7321 = **0.086 %**).  축정렬은 선과 중심이
+    #   같은 직선이라 정확히 1 이 나온다.  ⇒ 잔차를 숨기지 말고 허용오차로 **명시**한다.
     P = np.stack([t, t + 0.20, t + 0.10], 1)
     k, _ = staircase_factor(P, np.zeros(len(P), int), vox)
-    chk(f'대각 k ≈ √3 = 1.732 (측정 {k:.3f})', abs(k - 3 ** 0.5) < 0.10)
+    chk(f'대각 k = √3 = 1.732051 ± 0.086 % 끝셀잔차 (측정 {k:.6f}; 옛 estimator 1.678)',
+        abs(k - 3 ** 0.5) < 0.005)
     # 등방 랜덤 다발 → k ≈ 1.5
     rng = np.random.default_rng(0)
     pts, fids = [], []
