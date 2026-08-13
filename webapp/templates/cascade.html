@@ -107,6 +107,7 @@
   <button data-tab="ion">🔋 Li transport</button>
   <button data-tab="esw">🧪 Oxidation ESW</button>
   <button data-tab="syn">🤝 Co-doping</button>
+  {% if casc.v2 and casc.v2.present %}<button data-tab="v2">🔁 90종 회수분</button>{% endif %}
 </div>
 
 <!-- Leaderboard -->
@@ -667,6 +668,92 @@
   </div>
   {% endif %}
 </div>
+
+{% if casc.v2 and casc.v2.present %}
+{% set V = casc.v2 %}{% set VM = V.meta %}
+<div class="tab-panel" id="tab-v2">
+  <div class="card">
+    <h3>회수분 — 완주한 전체 90종 · 270 champion
+      <span class="muted" style="font-weight:400;font-size:.8rem">회수 {{ VM.recovered_on }}</span></h3>
+    <div class="callout cal-warning" style="margin:0 0 12px">
+      <div class="cal-b" style="font-size:.82rem">
+        <b>범위</b> — {{ VM.scope }}<br>
+        <b>왜</b> — {{ VM.why }}<br>
+        <b>{{ VM.caveat }}</b>
+      </div>
+    </div>
+
+    <h4 style="margin:14px 0 6px">축별 완성도</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>축</th><th>상태</th><th>설명</th></tr></thead><tbody>
+      {% for k, (st, desc) in VM.status.items() %}
+      <tr>
+        <td class="mono">{{ k }}</td>
+        <td><span class="badge {{ 'ok' if st in ('complete','recovered') else 'warn' }}">{{ st }}</span></td>
+        <td style="font-size:.86em">{{ desc }}</td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+
+    {% if VM.funnel_v2 %}{% set F2 = VM.funnel_v2 %}
+    <h4 style="margin:16px 0 6px">깔때기 — 90종 vs 정본 47종</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>풀</th><th>pool</th><th>G1 구조</th><th>G2 창</th><th>G3 산화</th>
+      <th>G4 Li경로</th><th>G5 역학*</th></tr></thead><tbody>
+      <tr><td><b>90종 회수분</b></td>{% for n in F2.waterfall %}<td class="mono"><b>{{ n }}</b></td>{% endfor %}</tr>
+      <tr class="muted"><td>정본 47종</td>{% for n in F2.canonical %}<td class="mono">{{ n }}</td>{% endfor %}</tr>
+    </tbody></table></div>
+    <div class="muted" style="font-size:.78rem;margin-top:6px">
+      * G5 는 roster 상대 순위라 물리 탈락 게이트가 아니다 — 최종 1종을 결론으로 인용하지 말 것.
+      비교 endpoint 는 <b>G4</b> 다. {{ F2.note }}
+    </div>
+
+    <h4 style="margin:16px 0 6px">G4 endpoint — {{ F2.endpoint_n }}종
+      <span class="muted" style="font-weight:400;font-size:.8rem">(정본 47종판은 11종)</span></h4>
+    <div style="display:flex;flex-wrap:wrap;gap:6px">
+      {% for d in F2.endpoint %}
+        {% set art = VM.artifacts.get(d) %}
+        <span class="badge {{ 'warn' if art else '' }}" title="{{ art or '' }}">
+          {{ d }}{% if art %} ⚠{% endif %}</span>
+      {% endfor %}
+    </div>
+    {% if VM.artifacts %}
+    <div class="callout cal-warning" style="margin:10px 0 0">
+      <div class="cal-b" style="font-size:.8rem"><b>⚠ 판정이 아닌 통과</b> —
+        {% for d, why in VM.artifacts.items() %}<b>{{ d }}</b>: {{ why }}{% if not loop.last %} · {% endif %}{% endfor %}
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+
+    <h4 style="margin:16px 0 6px">내려받기</h4>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>파일</th><th>내용</th></tr></thead><tbody>
+      {% for rel, label in V.downloads %}
+      <tr>
+        <td><a class="mono" href="/api/file/{{ rel }}?dl=1">⬇ {{ rel.split('/')[-1] }}</a></td>
+        <td style="font-size:.86em">{{ label }}</td>
+      </tr>{% endfor %}
+    </tbody></table></div>
+    <div class="muted" style="font-size:.78rem;margin-top:6px">
+      근거: <span class="mono">kb/methodology/cascade_pipeline_anatomy_2026_08_13.md</span>
+    </div>
+  </div>
+
+  {% if V.ranked and V.ranked.data %}
+  <div class="card">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+      <h3 style="margin:0">90종 랭킹 <span class="badge warn">incomplete — 89 of 90</span></h3>
+      <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('v2-tbl',this.value)">
+    </div>
+    <div class="tbl-scroll"><table class="data-table sortable" id="v2-tbl"><thead><tr>
+      {% for c in V.ranked.cols %}<th>{{ c }}</th>{% endfor %}</tr></thead><tbody>
+      {% for row in V.ranked.data %}<tr>{% for c in V.ranked.cols %}
+        <td class="{{ 'mono' if c != 'dopant' else '' }}">{{ row[c] }}</td>{% endfor %}</tr>{% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+</div>
+{% endif %}
 
 {% if casc.trivalent and casc.trivalent.site_rule %}
 <div class="card insight-card">

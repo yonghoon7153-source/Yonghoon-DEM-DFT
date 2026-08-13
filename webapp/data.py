@@ -901,9 +901,26 @@ CASCADE_V2_META = {
         "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수"),
         "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
         "ranked":    ("incomplete", "recovered / incomplete — 89 of 90 (형성에너지 결측 1종 제외)"),
-        "funnel":    ("blocked",    "blocked pending 90-species themes — transport_norm 이 roster "
-                                    "상대라 풀이 47→90 이면 재정규화가 필요하다 (23종 불일치로 빌더가 거부)"),
+        "funnel":    ("recovered",  "90종 waterfall 89–89–84–45–28–1 (정본 47종판은 47–47–43–25–11–1). "
+                                    "themes 를 90종으로 재생성해 transport_norm 재정규화 완료"),
         "figures":   ("partial",    "docs/figures/cascade_v2/ — insights 1종만 재생성, 나머지 18종 대기"),
+    },
+    #: 90종 waterfall 에서 **판정이 아닌 이유로** 통과한 종. 화면에 반드시 병기한다.
+    "artifacts": {
+        "Li2S": "blocking = 0.0 (구성 원소가 전부 host Li/P/S/Cl → dopant 원자 0개). 판정 아님",
+        "LiCl": "blocking = 0.0 (동일 사유). 판정 아님",
+    },
+    "funnel_v2": {
+        "waterfall": [89, 89, 84, 45, 28, 1],
+        "canonical": [47, 47, 43, 25, 11, 1],
+        "endpoint_n": 28,
+        "endpoint": ["Ag2O", "AlCl3", "CaCl2", "CaF2", "CaO", "CaS", "CrCl3", "Ga2S3",
+                     "GeS2", "Li2O", "Li2S", "LiBr", "LiCl", "LiF", "LiI", "MgCl2",
+                     "MgF2", "MgO", "MgS", "MoO3", "ScCl3", "SiO2", "SiS2", "SnO2",
+                     "SnS2", "WO3", "YCl3", "ZnO"],
+        "gate_power": {"G1": (0, 0), "G2": (5, 0), "G3": (44, 5), "G4": (36, 7)},
+        "note": ("G1 은 90종에서도 0종 탈락 — vacuous 판정 유지. G2 도 unique kill 0. "
+                 "G3·G4 만 고유 기여가 있다 (각 5 · 7종)."),
     },
     "downloads": [
         ("db/properties/cascade_v23_all.csv",                "전체 원자료 (90종 · 3615행 · 102열)"),
@@ -950,6 +967,19 @@ def load_cascade() -> dict:
     out["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel.json")
     # T9-T11 안정성 3축 — 깔때기 G6/G7 후보. M6 의 vacuous 판정을 뒤집은 데이터.
     out["stability"] = _load_json(DB / "properties" / "cascade_stability_axes_verdict.json")
+    # 🔁 회수분 (완주한 전체 90종 · 270 champion). 정본 47종과 **나란히** 싣고,
+    #    축별 완성도(status)를 그대로 노출한다 — 89종 파생을 최종판처럼 보이게 하지 않는다.
+    v2 = {"meta": CASCADE_V2_META, "present": False}
+    for k, fn in CASCADE_FILES_V2.items():
+        if (DB / "properties" / fn).exists():
+            v2[k] = read_csv(f"properties/{fn}")
+            v2["present"] = True
+    v2["funnel"] = _load_json(DB / "properties" / "cascade_screening_funnel_v2.json")
+    v2["themes"] = _load_json(DB / "properties" / "cascade_v23_themes_v2.json")
+    # 내려받기 가능한 것만 남긴다 (없는 파일을 링크로 걸지 않는다)
+    v2["downloads"] = [(rel, label) for rel, label in CASCADE_V2_META["downloads"]
+                       if (ROOT / rel).is_file()]
+    out["v2"] = v2
     return out
 
 
