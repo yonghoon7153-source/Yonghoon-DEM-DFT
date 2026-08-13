@@ -1,0 +1,7 @@
+"# Li3N(001) Li adatom E_ads, 2-point constrained relaxation (kgy, QE 7.4.1-GPU)"
+# E_ads = E(slab+ad) - E(bare slab) - E(isolated spin-pol Li atom); refs in db/properties/li3n_adsorption.json
+# 자리 이름은 의도적으로 쓰지 않는다 (실측 배위가 파일명 라벨과 반대 — kb 카드 C4)
+configuration,E_ads_eV,E_total_Ry,status
+adsorption_minimum,-2.9877,-2176.44473796,bfgs_converged
+saddle_configuration,-2.8695,-2176.43605123,bfgs_converged
+delta_E_eV,0.1182,,= migration barrier reported

@@ -14,6 +14,17 @@
 
 Regenerate at 9/9 with the final drag profile (this is the in-progress cut).
 Outputs: docs/figures/li3n/li3n_barrier_v2.png + db/properties/li3n_barrier_fig_origin.csv
+
+--manuscript (2026-08-12): 원고용 2-막대 패널만 따로 출력한다. 진단용 3번째 막대
+(drag p0 pocket)와 미수렴 표시를 빼고, **자리 이름을 부르지 않는다** — 실측 배위가
+파일명 라벨과 반대라서 (min 이 표면 N 3개 2.17/2.19/2.38 A, saddle 이 1개 1.97 A).
+근거: kb/syntheses/li3n_barrier_revision_defense_2026_08_12.md C4.
+  python3 tools/figures/fig_li3n_barrier_v2.py --manuscript
+출력: docs/figures/li3n/li3n_eads_manuscript.png + db/properties/li3n_eads_manuscript_origin.csv
+
+이 스크립트가 못 하는 것: 새로 계산하지 않는다 (등록된 에너지만 읽는다). 자리 이름을
+판정하지 않는다. drag pocket 이 min 보다 0.085 eV 낮다는 사실을 --manuscript 패널은
+표시하지 않는다 — 그건 본문/캡션이 다룰 문제다.
 """
 import sys
 from pathlib import Path
@@ -42,6 +53,40 @@ LIC6_Y = np.array([0.0, 0.1674, 0.2818, 0.2866, 0.2764, 0.1583, -0.0222])       
 KBT300 = 0.02569
 
 VIOLET, TEAL, ORANGE = ELEM["P"], ELEM["Li"], "#f59e0b"
+
+if "--manuscript" in sys.argv:
+    import csv as _csv
+    fig, ax = plt.subplots(figsize=(4.6, 5.2), constrained_layout=True)
+    LBL = ["adsorption\nminimum", "saddle\nconfiguration"]
+    VAL = [EADS["onN_min4"], EADS["bridge_saddle3"]]
+    COL = [TEAL, ELEM["S"]]
+    ax.bar([0, 1], VAL, width=0.56, color=COL, zorder=3)
+    for x, v in zip([0, 1], VAL):
+        ax.text(x, v - 0.055, f"{v:.3f} eV", ha="center", va="top",
+                fontsize=12, fontweight="bold", color=INK)
+    yb = min(VAL) - 0.28
+    ax.plot([0, 0, 1, 1], [VAL[0] - 0.16, yb, yb, VAL[1] - 0.16], color=MUT, lw=1.1, zorder=2)
+    ax.text(0.5, yb - 0.035, f"$\\Delta E$ = {BARRIER_2PT:.3f} eV", ha="center", va="top",
+            fontsize=11.5, color=INK)
+    ax.axhline(0, color=INK, lw=1.0)
+    ax.set_xticks([0, 1]); ax.set_xticklabels(LBL, fontsize=11, color=MUT)
+    ax.set_xlim(-0.62, 1.62); ax.set_ylim(yb - 0.22, 0.16)
+    apply_axes(ax, ylabel="$E_\\mathrm{ads}$ vs isolated Li atom (eV)")
+    OUTD = REPO / "docs/figures/li3n"; OUTD.mkdir(parents=True, exist_ok=True)
+    png = OUTD / "li3n_eads_manuscript.png"
+    fig.savefig(png, dpi=300); print("->", png)
+    csvp = REPO / "db/properties/li3n_eads_manuscript_origin.csv"
+    with open(csvp, "w", newline="") as f:
+        w = _csv.writer(f)
+        w.writerow(["# Li3N(001) Li adatom E_ads, 2-point constrained relaxation (kgy, QE 7.4.1-GPU)"])
+        w.writerow(["# E_ads = E(slab+ad) - E(bare slab) - E(isolated spin-pol Li atom); refs in db/properties/li3n_adsorption.json"])
+        w.writerow(["# 자리 이름은 의도적으로 쓰지 않는다 (실측 배위가 파일명 라벨과 반대 — kb 카드 C4)"])
+        w.writerow(["configuration", "E_ads_eV", "E_total_Ry", "status"])
+        w.writerow(["adsorption_minimum", f"{EADS['onN_min4']:.4f}", f"{E_MIN4:.8f}", "bfgs_converged"])
+        w.writerow(["saddle_configuration", f"{EADS['bridge_saddle3']:.4f}", f"{E_SADDLE3:.8f}", "bfgs_converged"])
+        w.writerow(["delta_E_eV", f"{BARRIER_2PT:.4f}", "", "= migration barrier reported"])
+    print("->", csvp)
+    sys.exit(0)
 
 fig, (ax, bx) = plt.subplots(1, 2, figsize=(13.2, 5.4), constrained_layout=True)
 

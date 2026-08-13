@@ -151,6 +151,68 @@ def neighbours(atoms, cell, fx, fy, fz, elem="N", cut=3.0):
     return sorted(out)
 
 
+def _section_end(lines, header, nzero):
+    """header 섹션의 종료줄(0 이 nzero 개) 인덱스."""
+    # 헤더에 인자가 붙는 섹션이 있다 (예: "THERI 1") -> 첫 토큰으로 찾는다
+    i = next((k for k, l in enumerate(lines)
+              if l.split() and l.split()[0] == header), None)
+    if i is None:
+        raise SystemExit(f"{header} 섹션이 없다")
+    for k in range(i + 1, len(lines)):
+        t = lines[k].split()
+        if t and all(x == "0" for x in t) and len(t) == nzero:
+            return k
+    raise SystemExit(f"{header} 종료줄(0 x{nzero}) 을 못 찾음")
+
+
+def write_merged(lines, ad_line, pts, dst, ghost_elem="K",
+                 ghost_rgb=(250, 228, 130), ghost_r=1.30):
+    """7 프레임의 adatom 을 **한 구조**에 다 넣는다.
+
+    끝점 2개(xi=0, xi=1)는 원래 원소/크기 그대로(결합선 유지), 중간점은 ghost 원소로
+    넣어 SBOND 규칙에 안 걸리게 한다 -> 결합선 없이 옅은 공만 찍힌다.
+    STRUC / THERI / SITET 세 목록에 모두 넣어야 VESTA 가 인식한다.
+    """
+    out = list(lines)
+    base = out[ad_line].split()
+    nat = int(base[0])
+    real_rgb, real_r = (249, 220, 60), 1.91
+    new_struc, new_theri, new_sitet = [], [], []
+    idx = nat
+    for k, (xi, fx, fy, fz) in enumerate(pts):
+        if k == 0:
+            out[ad_line] = (f"{nat:>3d} {'Na':>2s} {'Na1':>10s}  1.0000 "
+                            f"{fx:10.6f} {fy:10.6f} {fz:10.6f}    1a       1")
+            continue
+        idx += 1
+        endpoint = (k == len(pts) - 1)
+        el = "Na" if endpoint else ghost_elem
+        lb = f"{el}{idx}"
+        rgb, rad = ((real_rgb, real_r) if endpoint else (ghost_rgb, ghost_r))
+        new_struc += [f"{idx:>3d} {el:>2s} {lb:>10s}  1.0000 "
+                      f"{fx:10.6f} {fy:10.6f} {fz:10.6f}    1a       1",
+                      "                            0.000000   0.000000   0.000000  0.00"]
+        new_theri.append(f"{idx:>3d} {lb:>10s} -0.000000")
+        new_sitet.append(f"{idx:>3d} {lb:>10s}  {rad:.4f} {rgb[0]:3d} {rgb[1]:3d} {rgb[2]:3d} "
+                         f"{rgb[0]:3d} {rgb[1]:3d} {rgb[2]:3d}  50  0")
+    # ATOMT 에 ghost 원소 등록 (없으면 VESTA 가 기본색으로 덮어쓴다)
+    ia = _section_end(out, "ATOMT", 6)
+    i0 = next(k for k, l in enumerate(out) if l.split() and l.split()[0] == "ATOMT")
+    n_at = sum(1 for l in out[i0 + 1:ia] if l.split())
+    new_atomt = [f"{n_at + 1:>3d} {ghost_elem:>10s}  {ghost_r:.4f} "
+                 f"{ghost_rgb[0]:3d} {ghost_rgb[1]:3d} {ghost_rgb[2]:3d} "
+                 f"{ghost_rgb[0]:3d} {ghost_rgb[1]:3d} {ghost_rgb[2]:3d}  50"]
+    for header, nzero, block in (("ATOMT", 6, new_atomt), ("SITET", 6, new_sitet),
+                                 ("THERI", 3, new_theri), ("STRUC", 7, new_struc)):
+        e = _section_end(out, header, nzero)
+        out[e:e] = block
+    txt = "\n".join(out) + "\n"
+    txt.encode("ascii")
+    with open(dst, "w", newline="\r\n") as f:
+        f.write(txt)
+    return idx
+
+
 def write_frame(lines, line_no, elem, label, fx, fy, fz, dst):
     out = list(lines)
     old = out[line_no].split()
@@ -200,6 +262,19 @@ def selftest():
         frame_positions(fmin, fts, (1, -1), [0.5]); chk("역방향 hop 거부", False)
     except ValueError:
         chk("역방향 hop 거부", True)
+    # 병합 블록이 세 목록 전부에 들어가는가 (하나라도 빠지면 VESTA 가 원자를 무시한다)
+    import inspect as _ins
+    src = _ins.getsource(write_merged)
+    chk("STRUC/THERI/SITET/ATOMT 넷 다 갱신", all(h in src for h in ("STRUC", "THERI", "SITET", "ATOMT")))
+    chk("ghost 는 SBOND 안 걸리는 원소", "ghost_elem=\"K\"" in src)
+    # 헤더에 인자가 붙는 섹션(THERI 1)도 찾아야 한다 — 못 찾으면 원자가 조용히 누락된다
+    demo = ["STRUC", "  1 Li Li1 1.0 0 0 0 1a 1", "  0 0 0 0 0 0 0",
+            "THERI 1", "  1 Li1 -0.0", "  0 0 0"]
+    chk("'THERI 1' 처럼 인자 붙은 헤더 인식", _section_end(demo, "THERI", 3) == 5)
+    try:
+        _section_end(demo, "SITET", 6); chk("없는 섹션 거부", False)
+    except SystemExit:
+        chk("없는 섹션 거부", True)
     try:
         adatom_of([(1, "Li", "Li1", 0, 0, 0, 0)]); chk("adatom 없음 거부", False)
     except SystemExit:
@@ -220,6 +295,8 @@ def main():
     ap.add_argument("--report", action="store_true", help="각 프레임 N 배위 거리 출력")
     ap.add_argument("--allow_collision", action="store_true",
                     help="N 관통 경로도 강행 (진단 전용 — 그림으로 쓰지 말 것)")
+    ap.add_argument("--merge", action="store_true",
+                    help="7 프레임을 낱장 대신 **한 .vesta** 에 (끝점 2개는 실색, 중간은 ghost)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -257,6 +334,15 @@ def main():
     hx, hy = dfx * a1x + dfy * a2x, dfx * a1y + dfy * a2y
     print(f"hop {hop} = {math.hypot(hx, hy):.3f} A ; 계산된 TS 는 xi = {xi_ts:.3f}")
     os.makedirs(a.outdir, exist_ok=True)
+    if a.merge:
+        dst = os.path.join(a.outdir, "li3n_hop_alladatoms_display.vesta")
+        n = write_merged(lines, ad[6], pts, dst)
+        print(f"-> {dst}  ({len(pts)} 위치, 총 원자 {n})")
+        for xi, fx, fy, fz in pts:
+            tagr = "실색(Na)" if (xi in (pts[0][0], pts[-1][0])) else "ghost(K)"
+            print(f"     xi={xi:.2f}  frac=({fx:.4f},{fy:.4f},{fz:.4f})  {tagr}")
+        print("\n[캡션 필수] ghost 위치는 계산된 배치가 아니라 직선 보간 궤적이다.")
+        return
     for xi, fx, fy, fz in pts:
         name = f"li3n_hop_xi{int(round(xi * 100)):03d}_adNa_display.vesta"
         dst = os.path.join(a.outdir, name)
