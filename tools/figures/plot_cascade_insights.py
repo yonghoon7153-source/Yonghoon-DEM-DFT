@@ -21,15 +21,55 @@ GRPC={"lanthanide":"#ec407a","TM":"#5c6bc0","main-group":"#26a69a","alk.earth":"
 def fnum(s):
     try: return float(s)
     except: return math.nan
+#: 음이온별 형식 원자가. ⛔⛔ 2026-08-13 — 옛 판은 `anion = "O" if ... else "F"` 로
+#:  **산화물/불화물만** 가정했다. 47종 풀에서는 참이었지만, 6/29 이후 등록되지 않았던
+#:  염화물·황화물·브롬화물·요오드화물·질화물 43종을 회수해 넣으면 ZrCl4 가 "F" 로,
+#:  Li3N 이 "F" 로 잡혀 **원자가가 조용히 틀린다** (ZrCl4 → val 1, 실제 4).
+#:  터지지 않고 그림·랭킹만 틀리는 종류라 제일 위험하다.
+ANION_VAL={"O":2,"S":2,"N":3,"F":1,"Cl":1,"Br":1,"I":1}
 def parse(d):
     d=d.split("+")[0]
     toks=[(e,int(n) if n else 1) for e,n in re.findall(r"([A-Z][a-z]?)(\d*)",d) if e]
-    anion="O" if any(e=="O" for e,_ in toks) else "F"
-    cat=[(e,n) for e,n in toks if e not in ("O","F")][0]
-    av=2 if anion=="O" else 1; bn=[n for e,n in toks if e==anion][0]; val=round(av*bn/cat[1])
+    # 뒤쪽 원소부터 음이온 후보를 찾는다 (LiCl 의 Cl, Li2S 의 S, Li3N 의 N).
+    an=[e for e,_ in toks if e in ANION_VAL]
+    if not an:
+        raise ValueError(f"음이온을 못 찾았다: {d} — ANION_VAL 에 추가할 것")
+    anion=an[-1]
+    cats=[(e,n) for e,n in toks if e!=anion]
+    if not cats:
+        raise ValueError(f"양이온을 못 찾았다: {d}")
+    cat=cats[0]
+    av=ANION_VAL[anion]; bn=[n for e,n in toks if e==anion][0]
+    val=round(av*bn/cat[1])
     grp=("lanthanide" if cat[0] in LANTH else "alkali" if cat[0] in ALKALI
          else "alk.earth" if cat[0] in AE else "main-group" if cat[0] in MAIN else "TM")
     return cat[0],anion,val,grp
+
+
+def _selftest_parse():
+    """양성 + **음성**. 옛 판이 틀리던 입력을 반드시 포함한다."""
+    ok=True
+    cases=[("Al2O3",("Al","O",3)), ("MgO",("Mg","O",2)), ("Li2O",("Li","O",1)),
+           ("LiF",("Li","F",1)),  ("ZrF4",("Zr","F",4)), ("CaF2",("Ca","F",2)),
+           # ↓ 옛 판이 전부 "F" 로 오인하던 것들 (회수 43종)
+           ("ZrCl4",("Zr","Cl",4)), ("LiBr",("Li","Br",1)), ("LiI",("Li","I",1)),
+           ("Li2S",("Li","S",1)),   ("Al2S3",("Al","S",3)), ("Li3N",("Li","N",1)),
+           ("Mg3N2",("Mg","N",2)),  ("Ga2S3",("Ga","S",3)), ("NbCl5",("Nb","Cl",5))]
+    for d,(c,a,v) in cases:
+        got=parse(d)[:3]
+        good=got==(c,a,v)
+        ok&=good
+        print(("  ✓ " if good else "  ✗ ")+f"{d:7s} → {got}"+("" if good else f"  기대 {(c,a,v)}"))
+    try:
+        parse("Xx9"); print("  ✗ 미지 음이온을 통과시켰다"); ok=False
+    except ValueError:
+        print("  ✓ 음이온을 못 찾으면 예외 (조용한 오분류 금지)")
+    print("selftest "+("PASS" if ok else "FAIL"))
+    return 0 if ok else 1
+
+
+if __name__ == "__main__" and "--selftest" in os.sys.argv:
+    raise SystemExit(_selftest_parse())
 
 # ---- merge champions (per-dopant mean) + ESW ----
 ch={}
