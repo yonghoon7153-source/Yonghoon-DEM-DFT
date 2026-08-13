@@ -131,7 +131,13 @@ def _beta_series(t, y, lo=2.0, hi=50.0):
 #   ★ 정지 규칙을 **미리** 박아 둔다 — 결과를 보고 기준을 고치지 않기 위해서다
 #     (kb/methodology/beta_gate_seed_policy.md: '통과할 때까지 다시' 금지).
 LONG = os.environ.get("LONGDIR") or os.path.join(H, "work", "runs", "lpsocl_600_long")
-LONG_LOG = os.path.join(H, "logs", "lpsocl800.log")
+def _newest_long_log():
+    """가장 최근 ~/logs/lpsocl*.log — 시드 추가 런이 새 로그를 쓰기 때문 (2026-08-14).
+    옛 로그를 계속 읽으면 '141분 전 갱신' 같은 죽은 정보가 화면에 남는다."""
+    c = sorted(glob.glob(os.path.join(H, "logs", "lpsocl*.log")),
+               key=lambda f: os.path.getmtime(f), reverse=True)
+    return c[0] if c else os.path.join(H, "logs", "lpsocl800.log")
+LONG_LOG = os.environ.get("LONGLOG") or _newest_long_log()
 LONG_TARGET_PS = 800.0
 LONG_HOURS_PER_200PS = 3.42          # 실측 (arrhenius_6pt 21런)
 BETA_PASS, BETA_FAIL = 0.80, 0.75    # 사이면 경계 → 시드 추가
@@ -158,7 +164,9 @@ def long_verdict(b):
 
 def section_long():
     print("⑥ lpsocl 600 K × 800 ps — (B) 진짜 멱함수 vs (C) 느린 전이 판정")
-    up = "lpsocl800" in sh("tmux ls")
+    # ⚠ 2026-08-14 — 세션 이름을 "lpsocl800" 으로 고정하면 시드 추가 런(lpsocl_s34)을
+    #   못 본다. 실제로 s3 가 도는데 "완료·tmux 없음" 으로 찍혔다. 접두사로 찾는다.
+    up = any(ln.split(":")[0].startswith("lpsocl") for ln in sh("tmux ls").splitlines() if ln.strip())
     # ⚠ 러너 쉘이 살아 있는 건 **python 이 돈다는 증거가 아니다**. 드라이버를 직접 본다.
     nproc = len([x for x in sh("pgrep -f '[r]un_arrhenius_6pt.sh'").split() if x])
     ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
@@ -304,7 +312,8 @@ def section_long():
     if True:
         print("   ★ 판정은 이 명령으로만 (watch 숫자로 판정 금지):")
         print(f"     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
-        print(f"       --glob '{LONG}/*/T*_s*/**/msd.json'")
+        # ⚠ `*/T*_s*` 는 modelc·b2o3 까지 빨아들인다 — 판정 대상은 lpsocl 600 K 뿐이다
+        print(f"       --glob '{LONG}/lpsocl/T600_s*/**/msd.json'")
     for ln in tail:
         print(f"   │ {ln[:96]}")
 
@@ -349,6 +358,22 @@ def selftest_long():
     # ★ 경계면 **시드를 더 넣지 않는다** — 선언 문서의 규칙이 처방에 반영됐는지
     chk("시드 추가" in long_verdict(0.78)[1],
         f"경계 처방에 시드 추가가 적혀 있다 ({long_verdict(0.78)[1][:30]})")
+    # ★ 2026-08-14 — 화면이 옛 런을 보던 3건의 회귀 시험
+    import tempfile as _tf
+    _td = _tf.mkdtemp(prefix="watch_long_st_")
+    _lg = os.path.join(_td, "logs"); os.makedirs(_lg)
+    for nm, mt in (("lpsocl800.log", 1000), ("lpsocl_s34.log", 2000)):
+        f = os.path.join(_lg, nm); open(f, "w").write("x\n"); os.utime(f, (mt, mt))
+    _newest = sorted(glob.glob(os.path.join(_lg, "lpsocl*.log")),
+                     key=lambda f: os.path.getmtime(f), reverse=True)[0]
+    chk(os.path.basename(_newest) == "lpsocl_s34.log",
+        f"가장 최근 lpsocl*.log 를 고른다 ({os.path.basename(_newest)})")
+    _sessions = "lpsocl_s34: 1 windows\nqegpu: 1 windows"
+    chk(any(l.split(":")[0].startswith("lpsocl") for l in _sessions.splitlines()),
+        "세션 이름이 lpsocl800 이 아니어도 잡는다")
+    chk(not any(l.split(":")[0].startswith("lpsocl") for l in "qegpu: 1 windows".splitlines()),
+        "lpsocl 세션이 없으면 없다고 한다 (오탐 없음)")
+    import shutil as _sh; _sh.rmtree(_td, ignore_errors=True)
     chk("복귀" in long_verdict(0.9)[1] and "뺀다" in long_verdict(0.7)[1],
         "처방이 판정과 반대로 붙지 않았다")
     print("selftest PASS" if ok else "selftest FAIL")
