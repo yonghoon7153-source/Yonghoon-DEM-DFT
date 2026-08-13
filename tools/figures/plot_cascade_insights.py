@@ -81,12 +81,24 @@ if __name__ == "__main__" and "--selftest" in os.sys.argv:
 ch={}
 for r in csv.DictReader(open(CHAMP)):
     d=r["dopant"].split("+")[0]; ch.setdefault(d,[]).append(r)
-def agg(d,key,drop_nu_neg=False):
+def _elastic_ok(r):
+    """탄성 행이 물리적인가. **음의 B_hill/G_hill 은 계산 실패**이지 연질이 아니다.
+
+    2026-08-14: Na2S_x100 이 B_hill = -36.27 GPa 인데 nu 만 보던 옛 가드를 통과해
+    3점 평균에 들어갔고, 그 평균의 역수(1/0.40 = 2.50)가 "Na2S 가 연성 경험칙을
+    넘는다" 는 **틀린 발견**을 만들었다 (Codex 재감사에서 잡힘).
+    """
+    B,G = fnum(r.get("elastic_B_hill_GPa","")), fnum(r.get("elastic_G_hill_GPa",""))
+    if not math.isnan(B) and B<=0: return False
+    if not math.isnan(G) and G<=0: return False
+    return not (fnum(r["elastic_poisson_nu"])<0)
+
+def agg(d,key,elastic=False):
     vs=[]
     for r in ch[d]:
         v=fnum(r[key])
         if math.isnan(v): continue
-        if drop_nu_neg and fnum(r["elastic_poisson_nu"])<0: continue
+        if elastic and not _elastic_ok(r): continue
         vs.append(v)
     return np.mean(vs) if vs else math.nan
 esw={}

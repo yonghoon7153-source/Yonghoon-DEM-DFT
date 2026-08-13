@@ -126,7 +126,8 @@ function elCard(e){
   if(facts)h+='<div class="el-facts">'+facts+'</div>';
   // 캐스케이드
   if(e.cascade&&e.cascade.length){
-    h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🤖 도핑 스크리닝 (캐스케이드 · UMA 상대값)</div>'+
+    h+='<div class="el-casc"><div class="el-sec-t" style="color:var(--violet)">🗄 도핑 스크리닝 — <b>historical 47종</b> (UMA 상대값)</div>'+
+      '<div class="muted" style="font-size:.74rem;margin:-2px 0 6px;color:var(--red)">⛔ superseded 스냅샷 — 현재 승인된 랭킹은 0종. 완주분은 90종.</div>'+
       e.cascade.map(function(c){return '<a class="casc-hit" href="/cascade#'+c.dopant+'" title="UMA-s-1p1 상대 스크리닝 — score·ox·E 절대값은 캐스케이드 내부 상대비교만 (DFT 아님)"><b>'+c.dopant+'</b>'+
         '<span>rank #'+(c.rank!=null?Math.round(c.rank):'?')+'</span><span>score '+(c.score!=null?c.score:'—')+'</span>'+
         '<span>ox '+(c.ox_V!=null?c.ox_V:'—')+' V</span><span>E '+(c.E_GPa!=null?c.E_GPa:'—')+' GPa (UMA)</span>'+

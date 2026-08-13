@@ -656,14 +656,77 @@ def test_cascade_defaults_to_the_audit_screen():
     assert re.search(r'<div class="tab-panel active" id="tab-audit"', h), "tab-audit 패널이 active 가 아니다"
 
 
-def test_cascade_headline_numbers_come_from_truth():
-    """최상단 타일은 273/270/90/0 (파이프라인 실측) 이어야 한다 — 47/4/141/14 로 되돌리지 말 것."""
-    t = D.CASCADE_TRUTH
-    assert [t[k][0] for k in ("planned", "completed", "recovered", "approved")] == [273, 270, 90, 0]
+def test_cascade_headline_comes_from_the_manifest():
+    """타일 숫자는 하드코드가 아니라 manifest 파생이어야 한다 (Codex 리뷰 P1)."""
+    t = D.cascade_truth()
+    assert t["ok"], f"manifest 가 유효하지 않다: {t.get('problems')} {t.get('stale')}"
+    got = {k: v for k, v, _l, _n in t["tiles"]}
+    assert got["planned_slots"] == 273 and got["completed_slots"] == 270
+    assert got["completed_species"] == 90 and got["historical_snapshot_species"] == 47
+    assert got["approved_current_leaderboard"] == 0
+    assert got["explicit_pair_property_labels"] == 0
     h = _cascade_html()
     assert "승인된 도펀트 랭킹은 0건" in h, "승인 0건 배너가 화면에 없다"
-    # 옛 타일 라벨이 최상단으로 돌아오면 안 된다
     assert "랭킹된 도펀트</div>" not in h, "47종 타일 라벨이 최상단에 되살아났다"
+
+
+def test_manifest_tamper_fails_closed():
+    """파일이 바뀌었는데 manifest 가 안 따라오면 숫자를 추측하지 말고 막아야 한다."""
+    import hashlib
+    m = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    for a in m["artifacts"]:
+        p = ROOT / a["source_path"]
+        assert hashlib.sha256(p.read_bytes()).hexdigest() == a["sha256"], (
+            f"{a['source_path']} 가 manifest 와 어긋난다 — rebuild_pool_inputs.py 를 다시 돌릴 것")
+        assert a["status"] in D._MANIFEST_STATUS
+        assert a["actual_x"] == 0.25, "실측 농도는 0.25 다 (라벨 x002/x005/x010 은 농도가 아니다)"
+    # 위조 시나리오: status 를 어휘 밖 값으로 바꾸면 ok=False 여야 한다
+    orig = D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8")
+    try:
+        bad = json.loads(orig)
+        bad["artifacts"][0]["status"] = "approved_by_nobody"
+        D.CASCADE_MANIFEST_PATH.write_text(json.dumps(bad, ensure_ascii=False), encoding="utf-8")
+        D._load_json.cache_clear() if hasattr(D._load_json, "cache_clear") else None
+        assert D.cascade_truth()["ok"] is False, "알 수 없는 status 인데 fail-closed 하지 않았다"
+    finally:
+        D.CASCADE_MANIFEST_PATH.write_text(orig, encoding="utf-8")
+        D._load_json.cache_clear() if hasattr(D._load_json, "cache_clear") else None
+
+
+def test_na2s_ductility_claim_is_retracted():
+    """음의 B_hill 행을 평균에 넣고 역수를 취해 만든 '연성 반증' 은 철회됐다."""
+    import csv as _csv
+    rows = list(_csv.DictReader(
+        l for l in (D.DB / "properties" / "cascade_v23_champions_v2.csv")
+        .read_text(encoding="utf-8").splitlines() if not l.startswith("#")))
+    bad = [r for r in rows if r["elastic_B_hill_GPa"].strip()
+           and float(r["elastic_B_hill_GPa"]) <= 0]
+    assert bad, "비물리 행이 사라졌다면 이 회귀 테스트를 갱신할 것"
+    rk = {r["dopant"]: r for r in _csv.DictReader(
+        l for l in (D.DB / "properties" / "cascade_v23_ranked_v2.csv")
+        .read_text(encoding="utf-8").splitlines() if not l.startswith("#"))}
+    # 실패 행이 평균에서 빠졌으므로 Na2S 의 B/G 는 1.75 아래여야 한다
+    assert 1.0 / float(rk["Na2S"]["pugh"]) < 1.75, "Na2S 가 다시 연성 경험칙을 넘었다 — 가드 확인"
+    th = json.loads((D.DB / "properties" / "cascade_v23_themes_v2.json").read_text(encoding="utf-8"))
+    assert "어느 것도 B/G>1.75" in th["themes"]["ductility"]["caveat"], "연성 서술이 되돌아갔다"
+
+
+def test_recovered_ranking_is_not_shown_as_a_leaderboard():
+    """승인 0종인 동안 89행 랭킹과 endpoint 후보명은 opt-in 뒤에 있어야 한다."""
+    h = _cascade_html()
+    assert "후보명 보기 (opt-in" in h, "G4 endpoint 명단이 기본 노출로 돌아왔다"
+    assert "89행 표 열기 (opt-in" in h, "89종 랭킹이 기본 노출로 돌아왔다"
+    assert "이 표를 리더보드로 읽지 말 것" in h
+
+
+def test_legacy_rank_is_labelled_wherever_it_leaks():
+    """composition·elements 가 47종 rank 를 상태 없이 현재 판정처럼 보여주면 안 된다."""
+    c = A.app.test_client()
+    comp = c.get("/composition/b2o3").get_data(as_text=True)
+    assert "🤖 Cascade hit" not in comp, "'Cascade hit' 배지가 되살아났다"
+    assert "superseded 47종 스냅샷" in comp, "composition 에 지위 표시가 없다"
+    el = c.get("/elements").get_data(as_text=True)
+    assert "historical 47종" in el, "elements 카드에 지위 표시가 없다"
 
 
 def test_superseded_and_diagnostic_tabs_are_labelled():

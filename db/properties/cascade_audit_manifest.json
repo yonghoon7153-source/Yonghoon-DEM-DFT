@@ -1,0 +1,220 @@
+{
+ "property": "cascade_audit_manifest",
+ "generated_by": "tools/cascade/rebuild_pool_inputs.py --manifest",
+ "contract": "화면 최상단 숫자와 artifact 지위의 유일한 출처. loader 는 여기 없는 artifact 나 MANIFEST_STATUS 밖의 status 를 만나면 표시하지 않고 fail-closed 한다. sha256/rows 가 어긋나면 stale 로 막는다.",
+ "status_vocabulary": [
+  "historical",
+  "recovered_unvalidated",
+  "approved",
+  "superseded",
+  "invalid"
+ ],
+ "headline": {
+  "planned_slots": 273,
+  "completed_slots": 270,
+  "completed_species": 90,
+  "historical_snapshot_species": 47,
+  "approved_current_leaderboard": 0,
+  "explicit_pair_property_labels": 0
+ },
+ "headline_basis": "273 = master_batch_273.sh 의 91 화합물 × 3 라벨. 270 = 완주 슬롯(As₂S₃ 3건 seed 실패). completed_species 는 ESW 회수분에서 센다. approved = 0 은 판정이다 — 결측이 아니라 점수·게이트 타당성이 미해결.",
+ "actual_x": 0.25,
+ "actual_x_note": "라벨 x002/x005/x010 은 1×1×1 · 4 f.u. 셀의 정수 치환 때문에 셋 다 실측 x=0.25 다. 농도 스윕도 반복실험도 아니다.",
+ "host": {
+  "formula_hint": "Li₆PS₅Cl 계열 (Cl:P = 1.0)",
+  "evidence": "ESW 반응식 좌변 Li22P4(S5Cl)4 계열",
+  "not": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 가 아니다"
+ },
+ "artifacts": [
+  {
+   "artifact_id": "cascade-v23-cascade_v23_all",
+   "source_path": "db/properties/cascade_v23_all.csv",
+   "status": "recovered_unvalidated",
+   "description": "완주 원자료 (unified_dataset_273.csv 회수분)",
+   "sha256": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
+   "bytes": 1436260,
+   "rows": 3615,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "UMA 상대값",
+    "일부 열은 재계산 세대가 섞여 있을 수 있음"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_champions_v2",
+   "source_path": "db/properties/cascade_v23_champions_v2.csv",
+   "status": "recovered_unvalidated",
+   "description": "champion 270행 (rank_combined==1)",
+   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
+   "bytes": 57541,
+   "rows": 270,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "champion 재선정 안 함",
+    "Na2S_x100 은 B_hill 음수 — 탄성 계산 실패 행"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_litransport_v2",
+   "source_path": "db/properties/cascade_v23_litransport_v2.csv",
+   "status": "recovered_unvalidated",
+   "description": "G4 정적 프록시 270행",
+   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
+   "bytes": 22903,
+   "rows": 270,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "legacy Adams-2003 BVS — 정본 softBV 아님",
+    "blocking 은 4 Å foreign-center count"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_stability_cascade_v2",
+   "source_path": "db/properties/oxidation_stability_cascade_v2.csv",
+   "status": "recovered_unvalidated",
+   "description": "grand-potential ESW 90종",
+   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
+   "bytes": 4456,
+   "rows": 90,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "phase_set_id·mp-ID·MP 스냅샷 미기록 — 재현 불가",
+    "host onset 2.140 V 는 phase set 의존 (LiS4 제외 시 2.256 V)"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_ranked_v2",
+   "source_path": "db/properties/cascade_v23_ranked_v2.csv",
+   "status": "recovered_unvalidated",
+   "description": "합성점수 랭킹 89종 (AlI3 제외)",
+   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
+   "bytes": 4828,
+   "rows": 89,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "G4 순환 (blocking 이 BVS 를 덮어씀)",
+    "G5 median 컷은 로스터 상대",
+    "가중치 수작업",
+    "min-max 정규화라 풀이 바뀌면 값이 바뀜"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_all_20260629_47species",
+   "source_path": "db/properties/cascade_v23_all_20260629_47species.csv",
+   "status": "historical",
+   "description": "2026-06-29 취합 경계판 (47종)",
+   "sha256": "15be321fb779e0629b96dda60bc2686ed9a8ee85c2fcdd7547c20f76253d04f8",
+   "bytes": 779245,
+   "rows": 2025,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "캠페인 커버리지 기준으로 superseded"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_v23_ranked",
+   "source_path": "db/properties/cascade_v23_ranked.csv",
+   "status": "superseded",
+   "description": "47종 랭킹 — 역사 스냅샷",
+   "sha256": "2f7eae91d8acc2acba99b1210f6962396aca548a7674a71d5c3f0867f1ad6c18",
+   "bytes": 2598,
+   "rows": 47,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "결과로 인용 금지",
+    "90종 회수 이전 판"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_screening_funnel",
+   "source_path": "db/properties/cascade_screening_funnel.json",
+   "status": "historical",
+   "description": "47종 게이트 감사",
+   "sha256": "aa18c7b427276593d9db8ce4508fd961df08666018604664640c9fd82b3fea31",
+   "bytes": 79420,
+   "rows": null,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "G3 phase set 미기록",
+    "G4 순환",
+    "G5 로스터 상대"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_screening_funnel_v2",
+   "source_path": "db/properties/cascade_screening_funnel_v2.json",
+   "status": "recovered_unvalidated",
+   "description": "89종 게이트 감사",
+   "sha256": "b5c0f327a780221f049002c5dcc17950e247ca867c431c6f61dfa520cdcdcc51",
+   "bytes": 99787,
+   "rows": null,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "위와 동일 + 풀 상대 정규화 재계산됨"
+   ]
+  },
+  {
+   "artifact_id": "cascade-v23-cascade_pool_audit_v2",
+   "source_path": "db/properties/cascade_pool_audit_v2.json",
+   "status": "recovered_unvalidated",
+   "description": "gate 입력 완결성 감사",
+   "sha256": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43",
+   "bytes": 1297,
+   "rows": null,
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "limitations": [
+    "행 존재만 본다 — 값의 물리성은 안 본다"
+   ]
+  }
+ ]
+}

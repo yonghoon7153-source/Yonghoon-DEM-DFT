@@ -193,6 +193,10 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .badge.warn{background:color-mix(in srgb,var(--amber) 16%,var(--card));color:var(--amber)}
 .badge.err{background:color-mix(in srgb,var(--red) 14%,var(--card));color:var(--red)}
 
+/* manifest headline 6개 — 4개 기준 그리드에 6개가 들어가므로 좁게 깐다 */
+.stat-tiles.st-6{grid-template-columns:repeat(auto-fit,minmax(158px,1fr))}
+.stat-tiles.st-6 .st{padding:12px 13px}
+.stat-tiles.st-6 .st-v{font-size:1.55rem}
 /* 승인 0건 타일 — 이 0 은 결측이 아니라 판정이라서 눈에 띄어야 한다 */
 .stat-tiles .st.st-zero{border-color:color-mix(in srgb,var(--red) 45%,var(--border))}
 .stat-tiles .st.st-zero .st-v{color:var(--red)}

@@ -11,92 +11,92 @@
 #    (Li2O 는 대조 대상이 Li2S = 기준선 자기 자신이라 정의상 제외된다.)
 # chloride 열은 as_published(pub)과 우리 환산값(preset_ours)이 다르다 — 섞어 쓰지 말 것.
 dopant,group,cation,oxidation_state,hsab_grade_raw,air_protect_tier,dG_hyd_MS_lit_eV_per_H2O,MS_reference_compound,dG_hyd_MCl_lit_pub_eV_per_H2O,dG_hyd_MCl_preset_ours_eV_per_H2O,MCl_reference_compound,mismatch_vs_hsab
-Cr2O3,TM,Cr,3,0.2,0.2,,,1.002,0.2877,CrCl3 (mp-569890),NO_LIT_DATA
 Sc2O3,TM,Sc,3,0.2,0.2,-0.449,Sc2S3 (mp-401),0.982,0.2677,ScCl3 (mp-23309),consistent
+Cr2O3,TM,Cr,3,0.2,0.2,,,1.002,0.2877,CrCl3 (mp-569890),NO_LIT_DATA
 Gd2O3,lanthanide,Gd,3,0.2,0.2,-0.342,Gd2S3 (mp-608146),1.089,0.3747,GdCl3 (mp-23265),consistent
 In2O3,main-group,In,3,0.2,0.2,0.599,In2S3 (mp-22216),1.035,0.3207,InCl3 (mp-862983),UNDERRATED_by_hsab
 Y2O3,TM,Y,3,0.2,0.2,-0.4,Y2S3 (mp-541289),1.131,0.4167,YCl3 (mp-27455),consistent
 B2O3,main-group,B,3,0.2,0.2,-0.901,B2S3 (mp-1199451),-0.12,-0.8343,BCl3 (mp-23184),consistent
-Ga2O3,main-group,Ga,3,0.2,0.2,0.362,Ga2S3 (mp-539),1.053,0.3387,GaCl3 (mp-30952),UNDERRATED_by_hsab
 WO3,TM,W,6,0.2,0.2,,,1.055,0.3407,WCl6 (mp-571518),NO_LIT_DATA
 Al2O3,main-group,Al,3,0.2,0.2,-0.91,Al2S3 (mp-2654),0.228,-0.4863,AlCl3 (mp-25469),consistent
+Ga2O3,main-group,Ga,3,0.2,0.2,0.362,Ga2S3 (mp-539),1.053,0.3387,GaCl3 (mp-30952),UNDERRATED_by_hsab
 Al2S3,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
 Nb2O5,TM,Nb,5,0.2,0.2,,,0.529,-0.1853,NbCl5 (mp-23307),NO_LIT_DATA
-MoO3,TM,Mo,6,0.2,0.2,,,,,,NO_LIT_DATA
-CrO3,TM,Cr,6,0.2,0.2,,,,,,NO_LIT_DATA
 Ta2O5,TM,Ta,5,0.2,0.2,,,0.497,-0.2173,TaCl5 (mp-29831),NO_LIT_DATA
-Ca3N2,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
+CrO3,TM,Cr,6,0.2,0.2,,,,,,NO_LIT_DATA
 Sm2O3,lanthanide,Sm,3,0.2,0.2,-0.303,Sm2S3 (mp-1403),0.892,0.1777,SmCl3 (mp-867875),consistent
+Ca3N2,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
+MoO3,TM,Mo,6,0.2,0.2,,,,,,NO_LIT_DATA
 Ga2S3,main-group,Ga,,0.2,0.2,,,,,,NO_LIT_DATA
-ScF3,TM,Sc,3,0.2,0.45,-0.449,Sc2S3 (mp-401),0.982,0.2677,ScCl3 (mp-23309),consistent
 Mg3N2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
 CrCl3,TM,Cr,,0.2,0.2,,,,,,NO_LIT_DATA
+ScF3,TM,Sc,3,0.2,0.45,-0.449,Sc2S3 (mp-401),0.982,0.2677,ScCl3 (mp-23309),consistent
 MgF2,alk.earth,Mg,2,0.2,0.45,,,,,,NO_LIT_DATA
 CaO,alk.earth,Ca,2,0.2,0.2,0.264,CaS (mp-1672),1.161,0.8038,CaCl2 (mp-22904),UNDERRATED_by_hsab
+Sb2O5,main-group,Sb,5,0.2,0.2,-0.167,Sb2S5 (mvc-15221),1.054,0.3397,SbCl5 (mp-23176),consistent
+MgBr2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
+LaF3,lanthanide,La,3,0.2,0.45,-0.365,La2S3 (mp-7475),1.375,0.6607,LaCl3 (mp-22896),consistent
 AlF3,main-group,Al,3,0.2,0.45,-0.91,Al2S3 (mp-2654),0.228,-0.4863,AlCl3 (mp-25469),consistent
 YF3,TM,Y,3,0.2,0.45,-0.4,Y2S3 (mp-541289),1.131,0.4167,YCl3 (mp-27455),consistent
-MgBr2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
-CaBr2,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
-Sb2O5,main-group,Sb,5,0.2,0.2,-0.167,Sb2S5 (mvc-15221),1.054,0.3397,SbCl5 (mp-23176),consistent
 HfO2,TM,Hf,4,0.2,0.2,-0.625,HfS2 (mp-985829),0.501,-0.2133,HfCl4 (mp-29422),consistent
-LaF3,lanthanide,La,3,0.2,0.45,-0.365,La2S3 (mp-7475),1.375,0.6607,LaCl3 (mp-22896),consistent
-MgCl2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
-ScCl3,TM,Sc,,0.2,0.2,,,,,,NO_LIT_DATA
+CaBr2,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
 V2O5,TM,V,5,0.2,0.2,,,1.058,0.3437,VCl5 (mp-1101909),NO_LIT_DATA
 GaN,main-group,Ga,,0.2,0.2,,,,,,NO_LIT_DATA
+ScCl3,TM,Sc,,0.2,0.2,,,,,,NO_LIT_DATA
 Nd2O3,lanthanide,Nd,3,0.2,0.2,-0.191,Nd2S3 (mp-438),1.298,0.5837,NdCl3 (mp-23183),consistent
-AlCl3,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
-AlN,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
-CaF2,alk.earth,Ca,2,0.2,0.45,0.264,CaS (mp-1672),1.161,0.8038,CaCl2 (mp-22904),UNDERRATED_by_hsab
-Li2O,alkali,Li,1,0.2,0.2,0.225,Li2S (mp-1153),1.335,0.9778,LiCl (mp-1185319),consistent
-SiO2,main-group,Si,4,0.2,0.2,-0.847,SiS2 (mp-1602),0.174,-0.5403,SiCl4 (mp-28391),consistent
+MgCl2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
 CaCl2,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
+AlCl3,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
 YCl3,TM,Y,,0.2,0.2,,,,,,NO_LIT_DATA
+AlN,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
+SiO2,main-group,Si,4,0.2,0.2,-0.847,SiS2 (mp-1602),0.174,-0.5403,SiCl4 (mp-28391),consistent
 LiI,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
 MgI2,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
-LiCl,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
-SnO2,main-group,Sn,4,0.2,0.2,0.441,SnS2 (mp-1170),1.127,0.4127,SnCl4 (mp-29866),UNDERRATED_by_hsab
-ZnO,TM,Zn,2,0.6,0.6,1.081,ZnS (mp-556716),1.809,1.0947,ZnCl2 (mp-22909),consistent
+Li2O,alkali,Li,1,0.2,0.2,0.225,Li2S (mp-1153),1.335,0.9778,LiCl (mp-1185319),consistent
 NdF3,lanthanide,Nd,3,0.2,0.45,-0.191,Nd2S3 (mp-438),1.298,0.5837,NdCl3 (mp-23183),consistent
+ZnO,TM,Zn,2,0.6,0.6,1.081,ZnS (mp-556716),1.809,1.0947,ZnCl2 (mp-22909),consistent
 LiF,alkali,Li,1,0.2,0.45,0.225,Li2S (mp-1153),1.335,0.9778,LiCl (mp-1185319),consistent
+SnO2,main-group,Sn,4,0.2,0.2,0.441,SnS2 (mp-1170),1.127,0.4127,SnCl4 (mp-29866),UNDERRATED_by_hsab
+LiCl,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
 ZrF4,TM,Zr,4,0.2,0.45,-0.459,ZrS2 (mp-1186),0.669,-0.0453,ZrCl4 (mp-569175),consistent
-Ag2O,TM,Ag,1,1.0,1.0,1.04,Ag2S (mp-31053),2.688,1.9737,AgCl (mp-22922),consistent
-Na2S,alkali,Na,,0.2,0.2,,,,,,NO_LIT_DATA
-LiBr,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
-MgS,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
-La2O3,lanthanide,La,3,0.2,0.2,-0.365,La2S3 (mp-7475),1.375,0.6607,LaCl3 (mp-22896),consistent
-Li3N,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
-Li2S,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
+CaF2,alk.earth,Ca,2,0.2,0.45,0.264,CaS (mp-1672),1.161,0.8038,CaCl2 (mp-22904),UNDERRATED_by_hsab
 MnO,TM,Mn,2,0.2,0.2,0.17,MnS (mp-2065),0.739,0.3818,MnCl2 (mp-28233),consistent
-TiF4,TM,Ti,4,0.2,0.45,-0.304,TiS2 (mp-2156),0.671,-0.0433,TiCl4 (mp-30092),consistent
-BaO,alk.earth,Ba,2,0.2,0.2,0.422,BaS (mp-1500),1.636,1.2788,BaCl2 (mp-568662),UNDERRATED_by_hsab
+MgS,alk.earth,Mg,,0.2,0.2,,,,,,NO_LIT_DATA
+LiBr,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
+La2O3,lanthanide,La,3,0.2,0.2,-0.365,La2S3 (mp-7475),1.375,0.6607,LaCl3 (mp-22896),consistent
+Li2S,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
 CaS,alk.earth,Ca,,0.2,0.2,,,,,,NO_LIT_DATA
+Li3N,alkali,Li,,0.2,0.2,,,,,,NO_LIT_DATA
+Ag2O,TM,Ag,1,1.0,1.0,1.04,Ag2S (mp-31053),2.688,1.9737,AgCl (mp-22922),consistent
 GeO2,main-group,Ge,4,0.2,0.2,0.412,GeS2 (mp-542613),1.155,0.4407,GeCl4 (mp-30086),UNDERRATED_by_hsab
-SrO,alk.earth,Sr,2,0.2,0.2,0.359,SrS (mp-1087),1.398,1.0408,SrCl2 (mp-23209),UNDERRATED_by_hsab
 SrCl2,alk.earth,Sr,,0.2,0.2,,,,,,NO_LIT_DATA
-MgO,alk.earth,Mg,2,0.2,0.2,,,,,,NO_LIT_DATA
+SrO,alk.earth,Sr,2,0.2,0.2,0.359,SrS (mp-1087),1.398,1.0408,SrCl2 (mp-23209),UNDERRATED_by_hsab
+NaI,alkali,Na,,0.2,0.2,,,,,,NO_LIT_DATA
+BaO,alk.earth,Ba,2,0.2,0.2,0.422,BaS (mp-1500),1.636,1.2788,BaCl2 (mp-568662),UNDERRATED_by_hsab
 HfCl4,TM,Hf,,0.2,0.2,,,,,,NO_LIT_DATA
 BaCl2,alk.earth,Ba,,0.2,0.2,,,,,,NO_LIT_DATA
-NaI,alkali,Na,,0.2,0.2,,,,,,NO_LIT_DATA
+MgO,alk.earth,Mg,2,0.2,0.2,,,,,,NO_LIT_DATA
 TiO2,TM,Ti,4,0.2,0.2,-0.304,TiS2 (mp-2156),0.671,-0.0433,TiCl4 (mp-30092),consistent
-GeS2,main-group,Ge,,0.2,0.2,,,,,,NO_LIT_DATA
-Na2O,alkali,Na,1,0.2,0.2,0.416,Na2S (mp-648),1.88,1.5228,NaCl (mp-22862),UNDERRATED_by_hsab
-SiS2,main-group,Si,,0.2,0.2,,,,,,NO_LIT_DATA
+TiF4,TM,Ti,4,0.2,0.45,-0.304,TiS2 (mp-2156),0.671,-0.0433,TiCl4 (mp-30092),consistent
 TiCl4,TM,Ti,,0.2,0.2,,,,,,NO_LIT_DATA
-SmCl3,lanthanide,Sm,,0.2,0.2,,,,,,NO_LIT_DATA
+GeS2,main-group,Ge,,0.2,0.2,,,,,,NO_LIT_DATA
+SiS2,main-group,Si,,0.2,0.2,,,,,,NO_LIT_DATA
 SnS2,main-group,Sn,,0.2,0.2,,,,,,NO_LIT_DATA
+Na2O,alkali,Na,1,0.2,0.2,0.416,Na2S (mp-648),1.88,1.5228,NaCl (mp-22862),UNDERRATED_by_hsab
+SmCl3,lanthanide,Sm,,0.2,0.2,,,,,,NO_LIT_DATA
 Fe2O3,TM,Fe,3,0.2,0.2,,,0.423,-0.2913,FeCl3 (mp-583463),NO_LIT_DATA
 ZrO2,TM,Zr,4,0.2,0.2,-0.459,ZrS2 (mp-1186),0.669,-0.0453,ZrCl4 (mp-569175),consistent
-NdCl3,lanthanide,Nd,,0.2,0.2,,,,,,NO_LIT_DATA
 LaCl3,lanthanide,La,,0.2,0.2,,,,,,NO_LIT_DATA
+NdCl3,lanthanide,Nd,,0.2,0.2,,,,,,NO_LIT_DATA
+Na2S,alkali,Na,,0.2,0.2,,,,,,NO_LIT_DATA
 ZrCl4,TM,Zr,,0.2,0.2,,,,,,NO_LIT_DATA
-CoO,TM,Co,2,0.6,0.6,,,,,,NO_LIT_DATA
 AlBr3,main-group,Al,,0.2,0.2,,,,,,NO_LIT_DATA
-NiO,TM,Ni,2,0.6,0.6,,,,,,NO_LIT_DATA
-FeCl3,TM,Fe,,0.2,0.2,,,,,,NO_LIT_DATA
+CoO,TM,Co,2,0.6,0.6,,,,,,NO_LIT_DATA
 TaCl5,TM,Ta,,0.2,0.2,,,,,,NO_LIT_DATA
+FeCl3,TM,Fe,,0.2,0.2,,,,,,NO_LIT_DATA
+NiO,TM,Ni,2,0.6,0.6,,,,,,NO_LIT_DATA
 ZrBr4,TM,Zr,,0.2,0.2,,,,,,NO_LIT_DATA
-Cu2O,TM,Cu,1,1.0,1.0,1.267,Cu2S (mp-581212),1.527,0.8127,CuCl (mp-22914),consistent
 NbCl5,TM,Nb,,0.2,0.2,,,,,,NO_LIT_DATA
 Sb2S3,main-group,Sb,,0.2,0.2,,,,,,NO_LIT_DATA
+Cu2O,TM,Cu,1,1.0,1.0,1.267,Cu2S (mp-581212),1.527,0.8127,CuCl (mp-22914),consistent
 GaCl3,main-group,Ga,,0.2,0.2,,,,,,NO_LIT_DATA

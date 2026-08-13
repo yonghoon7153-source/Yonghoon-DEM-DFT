@@ -907,9 +907,14 @@ CASCADE_V2_META = {
                                "(superseded_47species / recovered_unvalidated_diagnostic)."),
     #: 회수 후 **판정이 뒤집힌** 서술. 47종 문안을 그대로 뒀으면 계속 틀린 채로 남았을 것들.
     "recovered_facts": [
-        ("연성 경험칙", "47종에서는 'B/G>1.75 를 넘는 종이 하나도 없다' 가 참이었다. 90종 회수분에서는 "
-                    "**Na₂S 가 B/G 2.50** 으로 넘는다 (로스터 B/G 범위 0.98→2.50). "
-                    "⚠ UMA 상대값이라 연성 판정으로 인용 금지 — 서술만 정정한다."),
+        ("⛔ 철회 — Na₂S 연성", "2026-08-14 오전에 내가 '90종에서는 Na₂S 가 B/G 2.50 으로 연성 경험칙을 "
+                          "넘는다' 고 올렸다. **틀렸다** (Codex 재감사에서 잡힘). 두 겹의 잘못이었다: "
+                          "① `Na2S_x100` 은 **B_hill = −36.27 GPa** — 음의 체적탄성률, 즉 탄성 계산 "
+                          "실패 행인데 3점 평균에 들어갔다. ② 그 평균을 역수 취했는데 1/mean(G/B) 는 "
+                          "mean(B/G) 가 아니다. 실패 행을 빼면 Na₂S 는 **B/G 1.22** 이고 "
+                          "'89종 어느 것도 1.75 를 못 넘는다' 가 다시 참이다. "
+                          "생성기(`plot_cascade_insights.py`)에 B_hill·G_hill ≤ 0 차단을 넣었다 — "
+                          "270행 중 이 한 행이 유일한 비물리 행이다."),
         ("결측 규모", "옛 감사가 말한 '부분 결측 18종' 은 **허수**였다 — gate 가 안 쓰는 eos_B0_GPa 를 "
                   "세고 실제로 쓰는 pugh 를 빼서 나온 수다. 바로잡으면 부분 결측은 **MgI₂ 1종**이고 "
                   "88종이 완전하다 (Codex 리뷰 P0-3)."),
@@ -992,18 +997,66 @@ CASCADE_V2_META = {
 #:  2026-08-14 개정. 이전 화면은 "47 랭킹 / 4 Pareto / 141 champion / 14 verified" 를
 #:  최신 승인 결과처럼 띄웠는데, 그건 2026-06-29 에 멈춘 **취합 경계**의 숫자였다.
 #:  근거: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md
-CASCADE_TRUTH = {
-    # ⛔ 2026-08-14 정정 (Codex 리뷰 P0-1) — 설계는 **91종** × 3 = 273 이다.
-    #    90 은 완주한 species 수(As₂S₃ 탈락 후)이지 계획 수가 아니다.
-    "planned": (273, "계획 슬롯", "master_batch_273.sh: 91 화합물 × 3 라벨 (산화물 37 + 나머지 54)"),
-    "completed": (270, "완주 (STAGE_12)", "91종 중 90종 완주 — As₂S₃ 3건만 stage-01 seed 생성 실패"),
-    "recovered": (90, "회수 — ESW 전수", "2026-08-13 회수. 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
-    "approved": (0, "승인된 ranking", "47종판은 취합 경계라 superseded · 89종판은 미검증 diagnostic"),
-    "why_zero": ("승인 0 은 '실패' 가 아니라 **현재 상태의 정확한 이름**이다. "
-                 "47종 리더보드는 계산이 덜 끝난 시점의 경계였고, 89종 재랭킹은 "
-                 "gate 입력 결측 19종을 안은 채 만든 진단물이다. 어느 쪽도 "
-                 "'우리 스크리닝 결과' 로 인용할 수 없다."),
+#: ⛔ 2026-08-14 (Codex 리뷰 P1) — 예전엔 이 네 수가 여기 하드코드였다. 그건 "정본" 이
+#:  아니라 또 하나의 사본이다. 지금은 **manifest 에서 파생**하고, manifest 가 없거나
+#:  status 어휘 밖의 값이 있으면 화면을 fail-closed 한다.
+CASCADE_MANIFEST_PATH = DB / "properties" / "cascade_audit_manifest.json"
+_MANIFEST_STATUS = ("historical", "recovered_unvalidated", "approved", "superseded", "invalid")
+
+CASCADE_TRUTH_LABELS = {
+    "planned_slots":        ("계획 슬롯", "master_batch_273.sh: 91 화합물 × 3 라벨"),
+    "completed_slots":      ("완주 슬롯", "As₂S₃ 3건만 stage-01 seed 생성 실패"),
+    "completed_species":    ("완주 종", "ESW 회수분에서 센다 — 91종 중 90종"),
+    "historical_snapshot_species": ("역사 스냅샷", "2026-06-29 취합 경계. 재현 가능하나 superseded"),
+    "approved_current_leaderboard": ("승인된 ranking", "결측이 아니라 점수·게이트 타당성이 미해결"),
+    "explicit_pair_property_labels": ("explicit pair 라벨", "두 도펀트를 함께 넣고 계산한 셀 = 0"),
 }
+CASCADE_TRUTH_WHY_ZERO = (
+    "승인 0 은 '실패' 가 아니라 **현재 상태의 정확한 이름**이다. 47종 리더보드는 "
+    "계산이 덜 끝난 시점의 취합 경계였고, 89종 재랭킹은 게이트 정의(G4 순환 · G5 로스터 "
+    "상대 · G3 phase set 미기록)가 닫히기 전의 진단물이다. 어느 쪽도 '우리 스크리닝 결과' "
+    "로 인용할 수 없다.")
+
+
+def load_cascade_manifest() -> dict:
+    """artifact manifest. 없거나 status 어휘가 어긋나면 `ok=False` 로 fail-closed."""
+    m = _load_json(CASCADE_MANIFEST_PATH) or {}
+    problems = []
+    if not m:
+        problems.append("manifest 파일이 없다 — tools/cascade/rebuild_pool_inputs.py 로 생성할 것")
+    for a in m.get("artifacts", []):
+        if a.get("status") not in _MANIFEST_STATUS:
+            problems.append(f"{a.get('source_path')}: 알 수 없는 status {a.get('status')!r}")
+    # sha256/rows 대조 — 파일이 바뀌었는데 manifest 가 안 따라오면 stale 이다.
+    import hashlib
+    stale = []
+    for a in m.get("artifacts", []):
+        p = ROOT / (a.get("source_path") or "")
+        if not p.is_file():
+            stale.append((a.get("source_path"), "파일 없음")); continue
+        b = p.read_bytes()
+        if hashlib.sha256(b).hexdigest() != a.get("sha256"):
+            stale.append((a.get("source_path"), "sha256 불일치 — manifest 재생성 필요"))
+    m["_problems"], m["_stale"] = problems, stale
+    m["ok"] = not problems and not stale
+    return m
+
+
+def cascade_truth() -> dict:
+    """화면 타일. manifest 가 정상일 때만 값이 나오고, 아니면 빈 dict (fail-closed)."""
+    m = load_cascade_manifest()
+    if not m.get("ok"):
+        return {"ok": False, "problems": m.get("_problems", []), "stale": m.get("_stale", []), "tiles": []}
+    h = m.get("headline", {})
+    return {
+        "ok": True,
+        "tiles": [(k, h[k], *CASCADE_TRUTH_LABELS[k]) for k in CASCADE_TRUTH_LABELS if k in h],
+        "basis": m.get("headline_basis", ""),
+        "why_zero": CASCADE_TRUTH_WHY_ZERO,
+        "actual_x": m.get("actual_x"), "actual_x_note": m.get("actual_x_note", ""),
+        "host": m.get("host", {}),
+        "artifacts": m.get("artifacts", []),
+    }
 #: 감사 5축 — 기본 화면으로 승격한다 (전에는 90종 탭 안에만 있었다).
 #:  라벨은 CASCADE_V2_META['status'] 의 (등급, 문장) 을 그대로 쓴다.
 CASCADE_AUDIT_AXES = ["raw", "oxidation", "ranked", "funnel", "figures"]
@@ -1069,7 +1122,7 @@ CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
 
 
 def load_cascade() -> dict:
-    out = {"meta": CASCADE_META, "truth": CASCADE_TRUTH, "g4": G4_DECOMP,
+    out = {"meta": CASCADE_META, "truth": cascade_truth(), "g4": G4_DECOMP,
            "audit_axes": CASCADE_AUDIT_AXES}
     for k, fn in CASCADE_FILES.items():
         out[k] = read_csv(f"properties/{fn}")

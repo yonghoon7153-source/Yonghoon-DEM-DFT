@@ -262,6 +262,109 @@ def audit_completeness(champ_rows, lit_rows, esw_rows):
     }
 
 
+#: ── artifact manifest ────────────────────────────────────────────────────
+#  왜: 화면 최상단 숫자가 data.py 하드코드였다. "이게 정본" 이라고 부를 수 없다
+#  (2026-08-14 Codex 리뷰 P1). 파일의 sha256·바이트·주석 제외 행수를 같이 굳혀서
+#  **파일이 바뀌면 화면이 조용히 옛말을 하지 않고 fail-closed** 되게 한다.
+#
+#  status 어휘 (5개, 이 밖의 값은 loader 가 거부한다):
+#    historical            — 재현 가능하지만 캠페인 커버리지 기준으로는 대체됨
+#    recovered_unvalidated — 회수됐고 검증 전. 다운로드는 되지만 결과로 인용 금지
+#    approved              — 승인된 정본 (현재 cascade 에는 **하나도 없다**)
+#    superseded            — 더 나은 세대가 있음
+#    invalid               — 생성기 결함이 확인됨. 화면에서 차단
+MANIFEST_STATUS = ("historical", "recovered_unvalidated", "approved", "superseded", "invalid")
+
+#: (파일, status, 한 줄 설명, 한계)
+MANIFEST_ARTIFACTS = [
+    ("cascade_v23_all.csv", "recovered_unvalidated",
+     "완주 원자료 (unified_dataset_273.csv 회수분)",
+     ["UMA 상대값", "일부 열은 재계산 세대가 섞여 있을 수 있음"]),
+    ("cascade_v23_champions_v2.csv", "recovered_unvalidated",
+     "champion 270행 (rank_combined==1)",
+     ["champion 재선정 안 함", "Na2S_x100 은 B_hill 음수 — 탄성 계산 실패 행"]),
+    ("cascade_v23_litransport_v2.csv", "recovered_unvalidated",
+     "G4 정적 프록시 270행",
+     ["legacy Adams-2003 BVS — 정본 softBV 아님", "blocking 은 4 Å foreign-center count"]),
+    ("oxidation_stability_cascade_v2.csv", "recovered_unvalidated",
+     "grand-potential ESW 90종",
+     ["phase_set_id·mp-ID·MP 스냅샷 미기록 — 재현 불가",
+      "host onset 2.140 V 는 phase set 의존 (LiS4 제외 시 2.256 V)"]),
+    ("cascade_v23_ranked_v2.csv", "recovered_unvalidated",
+     "합성점수 랭킹 89종 (AlI3 제외)",
+     ["G4 순환 (blocking 이 BVS 를 덮어씀)", "G5 median 컷은 로스터 상대",
+      "가중치 수작업", "min-max 정규화라 풀이 바뀌면 값이 바뀜"]),
+    ("cascade_v23_all_20260629_47species.csv", "historical",
+     "2026-06-29 취합 경계판 (47종)", ["캠페인 커버리지 기준으로 superseded"]),
+    ("cascade_v23_ranked.csv", "superseded",
+     "47종 랭킹 — 역사 스냅샷", ["결과로 인용 금지", "90종 회수 이전 판"]),
+    ("cascade_screening_funnel.json", "historical",
+     "47종 게이트 감사", ["G3 phase set 미기록", "G4 순환", "G5 로스터 상대"]),
+    ("cascade_screening_funnel_v2.json", "recovered_unvalidated",
+     "89종 게이트 감사", ["위와 동일 + 풀 상대 정규화 재계산됨"]),
+    ("cascade_pool_audit_v2.json", "recovered_unvalidated",
+     "gate 입력 완결성 감사", ["행 존재만 본다 — 값의 물리성은 안 본다"]),
+]
+
+
+def _sha_rows(path):
+    """sha256 · 바이트 · **주석(#) 제외** 데이터 행수. csv 는 헤더도 뺀다."""
+    import hashlib
+    b = path.read_bytes()
+    n = None
+    if path.suffix == ".csv":
+        lines = [l for l in b.decode("utf-8", "replace").splitlines()
+                 if l.strip() and not l.startswith("#")]
+        n = max(0, len(lines) - 1)          # 헤더 1줄
+    return hashlib.sha256(b).hexdigest(), len(b), n
+
+
+def build_manifest(audit):
+    """artifact manifest — 화면 최상단 숫자의 **유일한 기계 계약**."""
+    arts = []
+    for fn, status, desc, lims in MANIFEST_ARTIFACTS:
+        p = PROP / fn
+        if not p.exists():
+            continue
+        assert status in MANIFEST_STATUS, f"알 수 없는 status: {status}"
+        sha, nbytes, nrows = _sha_rows(p)
+        arts.append({
+            "artifact_id": f"cascade-v23-{p.stem}",
+            "source_path": f"db/properties/{fn}",
+            "status": status, "description": desc,
+            "sha256": sha, "bytes": nbytes, "rows": nrows,
+            "actual_x": 0.25, "campaign_labels": ["x002", "x005", "x010"],
+            "limitations": lims,
+        })
+    return {
+        "property": "cascade_audit_manifest",
+        "generated_by": "tools/cascade/rebuild_pool_inputs.py --manifest",
+        "contract": ("화면 최상단 숫자와 artifact 지위의 유일한 출처. loader 는 여기 없는 "
+                     "artifact 나 MANIFEST_STATUS 밖의 status 를 만나면 표시하지 않고 "
+                     "fail-closed 한다. sha256/rows 가 어긋나면 stale 로 막는다."),
+        "status_vocabulary": list(MANIFEST_STATUS),
+        # ⚠ 이 네 수는 화면 타일의 출처다. audit 에서 파생하고 손으로 안 적는다.
+        "headline": {
+            "planned_slots": 273, "completed_slots": 270,
+            "completed_species": audit["n_esw"],
+            "historical_snapshot_species": 47,
+            "approved_current_leaderboard": 0,
+            "explicit_pair_property_labels": 0,
+        },
+        "headline_basis": ("273 = master_batch_273.sh 의 91 화합물 × 3 라벨. "
+                           "270 = 완주 슬롯(As₂S₃ 3건 seed 실패). "
+                           "completed_species 는 ESW 회수분에서 센다. "
+                           "approved = 0 은 판정이다 — 결측이 아니라 점수·게이트 타당성이 미해결."),
+        "actual_x": 0.25,
+        "actual_x_note": ("라벨 x002/x005/x010 은 1×1×1 · 4 f.u. 셀의 정수 치환 때문에 "
+                          "셋 다 실측 x=0.25 다. 농도 스윕도 반복실험도 아니다."),
+        "host": {"formula_hint": "Li₆PS₅Cl 계열 (Cl:P = 1.0)",
+                 "evidence": "ESW 반응식 좌변 Li22P4(S5Cl)4 계열",
+                 "not": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 가 아니다"},
+        "artifacts": arts,
+    }
+
+
 def selftest():
     """양성 + **음성**. 옛 판이 틀리던 입력과 plain/Clrich 분리를 확인한다."""
     import tempfile
@@ -375,6 +478,13 @@ def main():
         print(f"            ⛔ 전면 결측: {' '.join(sorted(audit['dropped']))}")
     if audit["partial"]:
         print(f"            ⚠ 부분 결측: {' '.join(sorted(audit['partial']))}")
+
+    man = build_manifest(audit)
+    p5 = PROP / "cascade_audit_manifest.json"
+    json.dump(man, open(p5, "w"), ensure_ascii=False, indent=1)
+    open(p5, "a").write("\n")
+    print(f"[manifest]  {p5}  artifact {len(man['artifacts'])}건 · "
+          f"승인 {man['headline']['approved_current_leaderboard']}종")
     print("다음: python3 tools/figures/plot_cascade_insights.py "
           "→ cascade_v23_ranked.csv → tools/cascade/build_screening_funnel.py")
     return 0

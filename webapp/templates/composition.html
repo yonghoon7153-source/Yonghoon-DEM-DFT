@@ -58,9 +58,14 @@
 {% if cascade_dopant and cascade_rows and cascade_rows.ranked %}
 {% set cr = cascade_rows.ranked[0] %}
 <div class="card cascade-banner">
-  <div class="cb-tag">🤖 Cascade hit</div>
+  <div class="cb-tag">🗄 Cascade — historical 47종</div>
   <div class="cb-body">
-    <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝의 히트 조성 — 이 페이지는 그 <b>DFT 심층검증</b>이에요.</div>
+    <div><b>{{ cascade_dopant }}</b> 는 UMA 도핑 스크리닝에서 고른 조성 — 이 페이지는 그 <b>DFT 심층검증</b>이에요.</div>
+    {# ⛔ 2026-08-14 — 아래 rank/score 는 2026-06-29 취합 경계의 47종판이다. 현재 승인된
+       랭킹은 0종이므로 "현재 순위" 로 읽히면 안 된다 (Codex 재감사 legacy-rank 우회). #}
+    <div class="cb-cav" style="color:var(--red);font-weight:600;font-size:.82rem">
+      ⛔ 아래 rank·score 는 <b>superseded 47종 스냅샷</b>이다 — 현재 승인된 랭킹은 <b>0종</b>.
+      완주분은 90종이고 재랭킹은 게이트 정의가 닫힌 뒤에 한다.</div>
     <div class="cb-stats">
       <span class="cb-s"><em>rank</em> #{{ cr.rank|int }}{% if cascade_rows.total %}/{{ cascade_rows.total }}{% endif %}</span>
       <span class="cb-s"><em>score</em> {{ cr.score }}</span>
@@ -72,7 +77,7 @@
     </div>
     <div class="cb-cav muted">{{ cascade_meta.caveat if cascade_meta else '' }}</div>
   </div>
-  <a class="btn primary" href="/cascade#{{ cascade_dopant }}">캐스케이드 리더보드 →</a>
+  <a class="btn primary" href="/cascade">캐스케이드 감사 화면 →</a>
 </div>
 {% endif %}
 

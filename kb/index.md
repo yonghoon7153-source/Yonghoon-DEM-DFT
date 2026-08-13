@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-13 · managed-files: 209
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-13 · managed-files: 210
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -220,7 +220,7 @@
 - `kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md` — Pustorino et al. 2025 — LPSCl Li ordering → 기계적/전자 물성
 - `kb/literature_db/sundar_2025_lpscl_coating.md` — 📄 Sundar et al. 2025 — Computationally-Guided LPSCl Oxide Coating
 
-## seminars/ (19)
+## seminars/ (20)
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_README.md` — Research Seminar — Cascade final package
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_defense_QA_ko.md` — Research Seminar — Cascade Defense Q&A
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_script_ko.md` — Research Seminar — Cascade final speaker script
@@ -236,6 +236,7 @@
 - `kb/seminars/cascade_seminar_2026_08_spec_v2.md` — 🎤 Research Seminar spec **v2** — Screening cascade for sulfide SEs
 - `kb/seminars/cascade_seminar_supporting_materials_README.md` — Cascade seminar supporting materials
 - `kb/seminars/cascade_speaker_script_FINAL_ko.md` — 발표 대본 최종본 — Research Seminar 2026-08 · Cascade
+- `kb/seminars/cascade_speaker_script_audit_rev6_ko.md` — Cascade audit-first research seminar — Korean master script
 - `kb/seminars/cascade_speaker_script_rev2_ko.md` — 발표 대본 최종본 — Research Seminar 2026-08 · Cascade
 - `kb/seminars/cascade_speaker_script_rev3_FINAL_ko.md` — 발표 대본 — Research Seminar 2026-08 · Cascade **rev3 (정본)**
 - `kb/seminars/cascade_speaker_script_rev4_ko.md` — Cascade rev4 발표 대본 — Research Seminar 2026-08 ○미열람

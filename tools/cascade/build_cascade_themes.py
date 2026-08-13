@@ -269,17 +269,23 @@ def main():
     #    ⚠ 옛 문자열의 "로스터 범위 0.98–1.59" 는 pugh(G/B) 가 아니라 **B/G = 1/pugh** 범위였다
     #    (1/1.02=0.98, 1/0.63=1.59). 그대로 두면 89종에서 틀린 주장이 된다 — 아래처럼 계산해서 쓴다.
     NP = len(rows)
-    _pg = sorted(r["pugh"] for r in rows if r.get("pugh") is not None and r["pugh"] > 0)
-    _bg = [1.0 / p for p in _pg]                       # B/G = 1/pugh
-    BG_RANGE = f"{min(_bg):.2f}–{max(_bg):.2f}" if _bg else "n/a"
+    # ⛔⛔ 2026-08-14 두 번째 정정 (Codex 재감사). 앞 판이 만든 "Na₂S 가 B/G 2.50 으로
+    #    연성 경험칙을 넘는다" 는 **틀렸다**. 두 겹의 잘못이 겹쳤다:
+    #      ① ranked 의 pugh 는 라벨 3점 평균인데, Na2S_x100 은 **B_hill = −36.27 GPa**
+    #         (음의 체적탄성률 = 탄성 계산 실패)이라 G/B 가 −0.43 이다. 그 행이 평균에 들어갔다.
+    #      ② 그 평균을 역수 취했다. 1/mean(G/B) 는 mean(B/G) 가 아니다 (Jensen).
+    #    → 실패 행을 빼고, B/G 는 **행별로 뒤집은 뒤** 통계를 낸다.
+    _pg = [r["pugh"] for r in rows if r.get("pugh") is not None and r["pugh"] > 0]
+    _bg = sorted(1.0 / p for p in _pg)                 # B/G = 1/pugh, 행별
+    BG_RANGE = f"{_bg[0]:.2f}–{_bg[-1]:.2f}" if _bg else "n/a"
     _bg_ductile = [r["dopant"] for r in rows
                    if r.get("pugh") and r["pugh"] > 0 and 1.0 / r["pugh"] > 1.75]
     #  ⛔ 47종에서는 0종이라 "아무도 못 넘는다" 가 참이었다. 풀이 바뀌면 참이 아닐 수 있다.
     DUCT_CLAIM = (f"**{NP}종 어느 것도 B/G>1.75 연성 경험칙을 못 넘는다**"
                   if not _bg_ductile else
                   f"**{len(_bg_ductile)}종이 B/G>1.75 를 넘는다** ({' '.join(sorted(_bg_ductile))}) — "
-                  "47종 시절의 '아무도 못 넘는다' 는 이 풀에서 더 이상 참이 아니다. "
-                  "⚠ 다만 UMA 상대값이고 결측 라벨 평균이 섞여 있어 연성 판정으로 인용 금지")
+                  "⚠ 승격 전에 그 종의 라벨별 탄성이 물리적인지(B_hill>0) 먼저 확인할 것. "
+                  "2026-08-14 에 Na₂S 가 정확히 그 함정으로 잘못 올라왔다")
 
     # (key, direction +1=클수록 좋음, gate) — norm 계산과 top 목록의 단일 정의
     THEMES = {

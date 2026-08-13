@@ -697,6 +697,77 @@ AlI₃ 하나뿐이다(La₂O₃+Clrich 는 변형 체인). **쓸지 말지는 �
 ESW 탭이 배지대로의 파일을 읽는가 · scope 가 Li₆PS₅Cl/x=0.25 인가 · G4 순환이 게시돼 있는가 ·
 4개 탭에 상태 배너가 있는가 · gate 입력 정의가 pugh 를 포함하고 eos_B0 을 제외하는가.
 
+## ★★★ 릴리스 감사 라운드 2 — Codex 재감사 반영 + **내 오류 하나 철회** (2026-08-14 저녁)
+
+Codex 가 `Cascade_Audit_Seminar_2026_08_14_release.zip` 로 정본 계약·핸드오프·PPT·대본을 냈고,
+`23ba5244` 를 다시 동결 감사해 **1건 닫힘 / 3건 부분 / 4건 잔존** 판정을 줬다.
+문서는 `docs/reviews/` 에, 대본은 `kb/seminars/`, 덱은 `docs/seminars/` 에 등록했다.
+
+### ⛔ 내가 틀린 것 — Na₂S "연성 경험칙 반증" 철회
+
+오전에 *"90종에서는 Na₂S 가 B/G 2.50 으로 넘는다"* 고 올렸다. **틀렸다.** 두 겹이었다:
+
+1. `Na2S_x100_cLi24gaCl4d_s00` 의 **B_hill = −36.27 GPa** — 음의 체적탄성률은 연질이 아니라
+   **탄성 계산 실패**다. 옛 가드는 `nu < 0` 만 봐서 이 행이 3점 평균에 들어갔다.
+2. 그 평균을 역수 취했다. `1/mean(G/B) ≠ mean(B/G)` (Jensen).
+
+`mean(G/B) = 0.4012 → 1/0.4012 = 2.492`. 실패 행을 빼면 **Na₂S 는 B/G 1.22**,
+`89종 어느 것도 1.75 를 못 넘는다` 가 다시 참이다.
+
+**전수 확인: 270행 중 비물리 탄성 행은 이 한 행뿐이다.** `plot_cascade_insights.py` 의
+`agg()` 에 `_elastic_ok()` (B_hill·G_hill ≤ 0 차단)를 넣고 `ranked_v2` 를 재생성했다.
+waterfall 은 불변(89–89–84–45–28–1).
+
+> 교훈: **"새 발견" 이 단 한 종에서만 나오면 그 종의 원자료를 먼저 본다.** 풀 전체가
+> 조용한데 하나만 튀면 물리보다 실패 행일 확률이 높다.
+
+### Codex 수치 독립 검증 — 전부 재현됨
+
+| 주장 | 재현 |
+|---|---|
+| blocking 제거 시 6종 중 5종 통과 | ✅ Cr₂O₃ 0.8086 · Ga₂O₃ 0.3989 · In₂O₃ 0.6652 · Sc₂O₃ 0.4868 · Y₂O₃ 0.8825 · B₂O₃ 0.1000 — **소수점까지 일치** |
+| G4 단독 탈락 27종 중 24 blocking / 3 BVS | ✅ 우리 funnel JSON `threshold_basis` 에 이미 있던 값 (B₂O₃·GeO₂·MoO₃) |
+| LiS4 제외 시 host onset 2.256 V | ✅ `esw_lis4excluded.json` — comp1·modelc **둘 다** 2.256 |
+| 71/18/1 이 gate completeness 아님 | ✅ 이미 정정 (88/1/1) |
+
+### 내가 덧붙인 것 — **B₂O₃ 의 탈락도 풀 상대값이다**
+
+Codex 표에서 B₂O₃ 만 0.1000 인데, 이건 `0.10 + 0.90n` 의 **바닥**이다. 즉 B₂O₃ 는 47종 풀의
+**BVS 최솟값**(n = 0.0000)이라 그 값이 나온 것이지 독립 측정이 아니다. 89종 풀에서 다시 재면:
+
+| | 47종 풀 | 89종 풀 |
+|---|---|---|
+| 최솟값 종 | **B₂O₃** | **ZrCl₄** |
+| B₂O₃ blocking-free | 0.1000 (탈락) | **0.1998** (탈락) |
+| Ga₂O₃ | 0.3989 | 0.4620 |
+| Sc₂O₃ | 0.4868 | 0.5391 |
+
+**같은 종의 G4 점수가 로스터만 바꿔도 최대 +0.09 움직인다.** 결론(5/6 통과 · B₂O₃ 탈락)은
+두 풀에서 같지만, min–max 정규화를 쓰는 한 **어떤 G4 숫자도 풀 밖에서는 의미가 없다.**
+47종판과 89종판의 통과선을 나란히 비교하면 안 된다는 근거가 하나 더 늘었다.
+
+### 화면·계약 변경
+
+- **manifest 도입** — `db/properties/cascade_audit_manifest.json`
+  (`rebuild_pool_inputs.py --manifest` 가 생성). artifact 10건의 sha256·바이트·주석제외 행수와
+  status 5종(`historical`/`recovered_unvalidated`/`approved`/`superseded`/`invalid`)을 굳힌다.
+  **headline 6수치가 여기서 파생**되고, 파일이 바뀌었는데 manifest 가 안 따라오면
+  숫자를 추측하지 않고 **fail-closed** 한다. (실제로 개발 중 한 번 작동했다.)
+- 타일 4개 → **6개**: 273 계획 · 270 완주 · 90 완주종 · 47 역사스냅샷 · **0 승인** · **0 explicit pair**
+- `/composition` 의 `🤖 Cascade hit` → `🗄 Cascade — historical 47종` + superseded 경고,
+  `/elements` 카드도 동일. **legacy rank 우회 경로를 라벨링했다.**
+- G4 endpoint 명단과 89행 랭킹을 `<details>` **opt-in** 뒤로. 수는 보이되 명단은 접어둔다.
+- `concentration_convention` 의 `x=0.02/0.05/0.10` 전부 제거 — 라벨이지 농도가 아니다.
+
+### 남은 이견 (Codex 에게 재확인 요청할 것)
+
+1. **후보명 완전 비노출 vs opt-in.** 나는 `<details>` opt-in 으로 했다. 완전히 숨기면
+   "다음에 뭘 계산할지" 를 화면에서 못 고른다. 이게 계약 위반인지 판단 요청.
+2. **`historical` vs `superseded`** 를 47종 artifact 에 어떻게 나눠 붙일지. 지금은
+   원자료 CSV = `historical`, 파생 랭킹 = `superseded` 로 갈랐다.
+3. Codex 가 참조한 `cascade_audit_gate_completeness.csv`·`plot_cascade_audit_2026_08.py`·
+   5개 audit figure 는 **repo 에 없다**(로컬 미푸시). 넘겨주면 내 manifest 와 병합한다.
+
 ## TODO (2026-08-14 발표 이후, 우선순위 순)
 
 1. ~~`09e_ehull` 로 G1 재건~~ → **불가 확인 (2026-08-13 심야)**. 위 절 참조 — 거리가 아니라

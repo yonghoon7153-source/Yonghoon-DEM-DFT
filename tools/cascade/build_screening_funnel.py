@@ -195,7 +195,9 @@ def build_gates(rows):
             "threshold": "mean_x(de) < 0",
             "predicate": lambda r: r["de"] is not None and r["de"] < 0.0,
             "missing": lambda r: r["de"] is None,
-            "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
+            "concentration_convention": ("라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — "
+                                         "1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. "
+                                         "농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다."),
             "threshold_basis": (
                 "0 은 임의 컷이 아니라 **host 자신**(Δe = doped − undoped baseline)이다 — "
                 "'host보다 안정한가'라는 이분 질문의 물리적 기준점. 273-cascade 전체가 같은 "
@@ -216,7 +218,8 @@ def build_gates(rows):
             "threshold": f"window_V ≥ {COLLAPSE_WINDOW_V} V",
             "predicate": lambda r: r["window_V"] is not None and r["window_V"] >= COLLAPSE_WINDOW_V - 1e-12,
             "missing": lambda r: r["window_V"] is None,
-            "concentration_convention": "champion composition 단일 (농도 평균 아님)",
+            "concentration_convention": ("champion composition 단일 (농도 평균 아님). "
+                                         "실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다."),
             "threshold_basis": (
                 f"0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**"
                 "('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 "
@@ -242,7 +245,8 @@ def build_gates(rows):
             "threshold": f"ox_V ≥ {HOST_OX_V} V (undoped host onset)",
             "predicate": lambda r: r["ox_V"] is not None and r["ox_V"] >= HOST_OX_V - 1e-9,
             "missing": lambda r: r["ox_V"] is None,
-            "concentration_convention": "champion composition 단일 (농도 평균 아님)",
+            "concentration_convention": ("champion composition 단일 (농도 평균 아님). "
+                                         "실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다."),
             "threshold_basis": (
                 f"{HOST_OX_V} V = undoped comp1/modelc 의 grand-potential 산화 onset "
                 "(oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 "
@@ -326,7 +330,9 @@ def build_gates(rows):
             "predicate": (lambda r: (r["E_GPa"] is not None and r["GoverB"] is not None
                                      and r["E_GPa"] <= e_med + 1e-9 and r["GoverB"] <= gb_med + 1e-9)),
             "missing": lambda r: r["E_GPa"] is None or r["GoverB"] is None,
-            "concentration_convention": "3점 평균 (x=0.02/0.05/0.10)",
+            "concentration_convention": ("라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — "
+                                         "1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. "
+                                         "농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다."),
             "threshold_basis": (
                 "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, "
                 "같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 "
@@ -948,7 +954,8 @@ def main():
             "Round 1/2 reviewer 권장 = oxide 9–12종 (화학 일관성·Sundar 2025 코팅 문헌 근거)",
             "사용자 지적('ZrCl4·LiBr 같은 non-oxide 후보가 많다')으로 4-카테고리 22종으로 확장 "
             "(kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md)",
-            "master_batch_273.sh (v4.5.20) 로 91 화합물 × 농도 3종(x=0.02/0.05/0.10) = 273 cascade 실행 "
+            "master_batch_273.sh (v4.5.20) 로 91 화합물 × **라벨** 3종(x002/x005/x010) = 273 cascade 실행 "
+            "— ⛔ 라벨이지 농도가 아니다. 실측은 셋 다 x=0.25 "
             "(kb/projects/cascade_v23_review_2026_07_11.md: 273/273 완료)",
             (f"그 중 gate 입력이 채워진 {NP}종이 cascade_v23_ranked{_SUF or ''}.csv 에 등재 = 이 풀"
              + ("  ⚠ 47 은 물리 판정이 아니라 **2026-06-29 에 멈춘 취합 경계**였다 "
