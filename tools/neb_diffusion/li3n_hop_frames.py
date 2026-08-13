@@ -457,7 +457,7 @@ def _section_end(lines, header, nzero):
 
 
 def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.25,
-                 end_r=1.91, no_bonds=False):
+                 end_r=1.91, no_bonds=False, style_map=None):
     """7 프레임의 adatom 을 **한 구조**에 다 넣는다.
 
     전부 **같은 원소(Na)** 로 넣고 크기·색은 SITET(= 라벨 단위)으로 구분한다.
@@ -475,6 +475,15 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
     real_rgb = (249, 220, 60)
     new_struc, new_theri, new_sitet = [], [], []
     idx = nat
+    if style_map:                          # 첫 점도 SITET 로 색을 바꿀 수 있게
+        for kxi, (krgb, krad) in style_map.items():
+            if abs(pts[0][0] - kxi) < 1e-6:
+                for j, l in enumerate(out):
+                    t = l.split()
+                    if len(t) > 3 and t[1] == "Na1" and "." in t[2]:
+                        out[j] = (f"{t[0]:>3s} {'Na1':>10s}  {krad:.4f} "
+                                  f"{krgb[0]:3d} {krgb[1]:3d} {krgb[2]:3d} "
+                                  f"{krgb[0]:3d} {krgb[1]:3d} {krgb[2]:3d}  50  0")
     for k, (xi, fx, fy, fz) in enumerate(pts):
         if k == 0:
             out[ad_line] = (f"{nat:>3d} {'Na':>2s} {'Na1':>10s}  1.0000 "
@@ -485,6 +494,14 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
         el = base[1]                      # 템플릿 adatom 과 같은 원소 (새 원소 도입 금지)
         lb = f"{el}{idx}"
         rgb, rad = ((real_rgb, end_r) if endpoint else (ghost_rgb, ghost_r))
+        if style_map:              # xi 별 색·크기 덮어쓰기 (특정 점을 눈에 띄게)
+            for kxi, (krgb, krad) in style_map.items():
+                if abs(xi - kxi) < 1e-6:
+                    rgb, rad = krgb, krad
+        if style_map:                      # xi 별 색·크기 덮어쓰기 (특정 점을 눈에 띄게)
+            for kxi, (krgb, krad) in style_map.items():
+                if abs(xi - kxi) < 1e-6:
+                    rgb, rad = krgb, krad
         new_struc += [f"{idx:>3d} {el:>2s} {lb:>10s}  1.0000 "
                       f"{fx:10.6f} {fy:10.6f} {fz:10.6f}    1a       1",
                       "                            0.000000   0.000000   0.000000  0.00"]
@@ -495,6 +512,16 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
     zb_new, zb_old = fix_bound(out, max(p[3] for p in pts))
     if zb_new != zb_old:
         print(f"   BOUND zmax {zb_old:g} -> {zb_new:g} (adatom 이 경계 밖이었다)")
+    if style_map:                     # 첫 점(Na1)은 기존 SITET 줄을 고쳐야 한다
+        for kxi, (krgb, krad) in style_map.items():
+            if abs(pts[0][0] - kxi) > 1e-6:
+                continue
+            for j, l in enumerate(out):
+                t = l.split()
+                if len(t) >= 10 and t[1] == "Na1":
+                    out[j] = (f"{t[0]:>3s} {'Na1':>10s}  {krad:.4f} "
+                              f"{krgb[0]:3d} {krgb[1]:3d} {krgb[2]:3d} "
+                              f"{krgb[0]:3d} {krgb[1]:3d} {krgb[2]:3d}  50  0")
     if no_bonds:                      # Na-N 결합선 끄기 (최대거리 -> 0)
         for k, l in enumerate(out):
             t = l.split()
