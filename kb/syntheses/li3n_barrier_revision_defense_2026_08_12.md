@@ -196,7 +196,30 @@ in-plane Li 가 차지하고 있어서, 그 중심 위에 앉는 것 = 그 Li �
 | C-2 ★ | Figure set | bar graph 라벨 "on-N (atop)" / "bridge" | 실측 배위와 반대 (C4). "adsorption minimum" / "saddle configuration" 으로 |
 
 
-## 최종 결정 (2026-08-12) — 궤적 패널 제외
+## 최종 결정 (2026-08-12) — 궤적 패널 제외 · **공동연구자 합의 완료**
+
+김동석(BML)·안용훈 협의 결과 인셋(궤적)을 넣지 않기로 확정. Fig. 5 는
+**(c) 흡착에너지 막대 + 구조 · (d) 확산 프로파일 · (e) 장벽 막대** 세 패널.
+
+확정 캡션:
+> **(c)** Adsorption energies of a Li adatom at the adsorption minimum and the adjacent
+> saddle-region configuration on the Li₃N (001) surface, with the corresponding atomic models.
+>
+> **(d)** Calculated diffusion energy profiles and **(e)** corresponding diffusion barriers for
+> Li adatom on the LiC₆ (0001) and Li₃N (001) surfaces. Symbols in (d) denote DFT-calculated
+> configurations and the lines are guides to the eye.
+
+패널 라벨도 확정: (c) x축 눈금 `Minimum` / `Saddle`, 축 제목 없음.
+(d) 그래프 안 `Minimum` / `Saddle`. `top` / `bridge` 는 전부 제거 (C4·C7).
+
+### 궤적 제외로 사라진 노출
+
+- C6(계산된 안장점이 최근접 hop 의 안장점이 아님)이 **그림에서는** 드러날 자리가 없어졌다.
+  Methods·Table S2 는 "saddle-region configuration" 이라고만 쓰므로 서술도 안전.
+- "중간 배치를 계산했는가" 질문 자체가 발생하지 않는다.
+
+### 아래 지침은 참고용 (이번 원고 미사용)
+
 
 원고 v5 Fig. 5 는 **(c) 흡착에너지 막대 + 인셋 2컷 · (d) 확산 프로파일 · (e) 장벽 막대** 로 간다.
 **궤적(경로) 패널은 넣지 않는다.**
