@@ -80,7 +80,16 @@ grep -q "msd_multi_origin" "$DRIVER" 2>/dev/null || {
 OUTROOT=${OUTROOT:-$HOME/work/runs/arrhenius_6pt}
 DEVICE=${DEVICE:-cuda}
 SEEDS=${SEEDS:-"2 3 4"}          # 600 K 오차막대와 같은 시드 집합
-ONLY=${1:-all}
+# ⛔⛔ 2026-08-14 실측 — 옛 판은 `ONLY=${1:-all}` 이라 **환경변수 ONLY 를 무시**했다.
+#   watch_kgy.py 가 인쇄하는 추천 명령이 `ONLY=lpsocl ... bash run_arrhenius_6pt.sh` 형태라
+#   위치인자가 없어 전부 `all` 로 돌았다 → lpsocl 만 돌 줄 알았던 800 ps 런이 modelc·b2o3
+#   까지 끌고 가 대기열이 몇 배로 늘었다(2026-08-13 로그에서 확인).
+#   → 위치인자 우선, 없으면 환경변수, 그것도 없으면 all.
+ONLY=${1:-${ONLY:-all}}
+case "$ONLY" in
+  all|lpsocl|modelc|b2o3|comp1) : ;;
+  *) echo "⛔ ONLY='$ONLY' 는 모르는 계다 (all|lpsocl|modelc|b2o3|comp1)"; exit 1 ;;
+esac
 mkdir -p "$OUTROOT"
 
 # ── 중복 실행 가드 ──────────────────────────────────────────────────────────

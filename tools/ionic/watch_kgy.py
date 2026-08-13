@@ -165,10 +165,12 @@ def section_long():
                                     recursive=True))), None)
     if not os.path.isdir(LONG) and not up:
         print("   · 미착수. 걸려면:")
-        print("     tmux new -s lpsocl800 -d \"ONLY=lpsocl "
+        # ⚠ ONLY 는 **위치인자**로 준다 — 환경변수만 주면 옛 판에서 all 로 돌았다 (2026-08-14).
+        print("     tmux new -s lpsocl800 -d \""
               "OUTROOT=$HOME/work/runs/lpsocl_600_long \\")
         print("       SEEDS=2 TEMP_PROD='' LPSOCL_EXTRA='600:800' \\")
-        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/lpsocl800.log\"")
+        # ⚠ 계 이름은 **위치인자** — 환경변수 ONLY 만 주면 옛 판에서 all 로 돌았다 (2026-08-14)
+        print("       bash tools/ionic/run_arrhenius_6pt.sh lpsocl 2>&1 | tee -a ~/logs/lpsocl800.log\"")
         return
     # 시작 시각 = 러너의 ▶ 줄
     t0, tail = None, []
