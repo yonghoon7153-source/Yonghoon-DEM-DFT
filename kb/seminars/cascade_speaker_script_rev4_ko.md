@@ -32,8 +32,8 @@ evidenceScope: multi-source-primary
 LPSCl 조성을 바꾸면 한 축만 움직이지 않습니다. 황화물 산화·환원 분해가 계면 조성을 바꾸고, 그 부산물과 부피 변화는 다시 접촉 손실·균열·전류 불균일을 키웁니다. 가운데 보시면 cathode coating, SE doping, anode engineering이 각각 다른 실패 모드를 겨냥합니다. 이 그림은 우리가 모든 full-cell 열화를 계산했다는 뜻이 아니라, 왜 단일 점수 대신 여러 게이트가 필요한지 보여주는 문제 지도입니다.
 → 그 질문이 실제 캠페인에서는 얼마나 커지는지 보겠습니다.
 
-**P3. 273 is a run-slot count · 0:50**
-후보 화합물은 91종이었고, 각 후보를 세 개의 campaign label로 돌려서 실행 슬롯은 273개였습니다. 여기서 chemistry, configuration, target property는 후보 수를 더 곱한 숫자가 아니라 의사결정 차원입니다. 또 x002, x005, x010은 실제 농도로 환산한 값이 아니라 명목 라벨입니다. 이 구분을 먼저 해야 뒤의 숫자를 과장하지 않게 됩니다.
+**P3. 273 is a run-slot count · 0:50**  *(2026-08-13 수정 — 아래 검증 메모 §P3 참조)*
+후보 화합물은 91종이었고, 각 후보를 세 개의 campaign label로 돌려서 실행 슬롯은 273개였습니다. 273을 만드는 축은 이 둘뿐입니다 — chemistry가 91을 만들고 label이 3을 곱합니다. configuration과 target property는 각 슬롯 **안에서** 한 작업이지, 273에 다시 곱하는 축이 아닙니다. 그리고 x002, x005, x010은 원래 2·5·10%를 의도한 이름인데, 실제 4-f.u. 셀에서는 치환 개수가 정수라 세 경우 모두 x = 0.25가 됐습니다. 결과표 141행이 전부 그렇습니다. 그래서 이 결과를 농도 의존성으로 해석하지 않습니다.
 → 이 많은 조합에 비싼 계산을 똑같이 쓸 수는 없습니다.
 
 **P4. The cascade is a cost-allocation rule · 1:00**
@@ -169,6 +169,34 @@ Origin-ready CSV/PNG 네 종, webapp cascade loader와 template, canonical regis
 
 덱 `Research_Seminar_2026_08_cascade_rev4.pptx` 30장과 P1–P30 이 **1:1 대응**한다.
 아래는 대조에서 나온 것만.
+
+### §P3 — 수정 완료 (2026-08-13)
+
+원문 *"chemistry, configuration, target property는 후보 수를 더 곱한 숫자가 아니라 의사결정
+차원입니다"* 는 **chemistry 를 잘못 편입**했다. chemistry 는 91 을 만드는 진짜 축이고,
+273 = chemistry(91) × label(3) 이다. 곱하지 **않는** 것은 configuration 과 target property 뿐이며,
+그 둘은 "축이 아니다" 라기보다 **각 슬롯 안에서 수행한 작업**이다.
+
+x 라벨은 전수 확인됐다 (`db/properties/cascade_v23_champions.csv`):
+
+| | |
+|---|---|
+| `concentration = 0.25` | **141행 전부** |
+| `_dir` 라벨 분포 | x002 47 · x005 47 · x010 47 |
+| 원인 | 치환 개수가 정수 → `n = max(1, round(4x))`, 0.02·0.05·0.10 이 전부 n=1 → x=1/4 |
+
+**라벨별 값 차이는 있지만 농도 효과가 아니다** — 3라벨이 다 있는 38종에서 E_young 단조증가
+6종(16%)·단조감소 2종(5%), 무작위 기대치 16.7% 와 구별 안 됨. 라벨 간 상대 산포는 중앙값 13.8%,
+최대 40.6%. 즉 삼중항은 **같은 조성의 3회 반복**이고 그 산포는 configuration 선택 민감도다.
+(B₂O₃ 39.6 → 40.8 → 43.1 GPa 는 농도 추세처럼 보이지만 셋 다 x = 0.25.)
+
+**슬라이드 S3 도 손봐야 한다.** 지금은 네 카드 사이에 `×` 가 있어 네 축을 전부 곱한 것처럼 보인다:
+
+```
+Run grid:  91 chemistries × 3 campaign labels = 273 slots
+Within each slot:  configuration search → property evaluation
+Not a validated concentration sweep
+```
 
 ### 고쳐야 하는 것 1건
 
