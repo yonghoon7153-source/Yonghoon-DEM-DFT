@@ -143,7 +143,7 @@ def load_pool():
         r["transport_norm"] = round(n, 4)
 
     # 교차검증: 배포된 themes.json 과 한 종이라도 어긋나면 즉시 실패 (조용한 분기 금지)
-    tpath = PROP / "cascade_v23_themes.json"
+    tpath = PROP / f"cascade_v23_themes{_SUF}.json"
     if tpath.exists():
         ref = {t["dopant"]: t["norm"]["ionic_transport"] for t in json.load(open(tpath))["dopants"]}
         bad = [r["dopant"] for r in rows
@@ -845,7 +845,7 @@ def main():
     core_names = sorted(r["dopant"] for r in rows
                         if all(gates[g]["predicate"](r) for g in ["G1", "G2", "G3", "G4"]))
     gap_lit = {}
-    tpath = PROP / "cascade_v23_themes.json"
+    tpath = PROP / f"cascade_v23_themes{_SUF}.json"
     if tpath.exists():
         gap_lit = {t["dopant"]: t.get("gap_lit_eV") for t in json.load(open(tpath))["dopants"]}
     diag_rows = sorted(({"dopant": n, "gap_lit_eV": gap_lit.get(n)} for n in core_names),

@@ -881,6 +881,42 @@ CASCADE_FILES = {
     "synergy":     "cascade_v23_synergy_pairs.csv",# 공동도핑 시너지 가설
     "oxidation":   "oxidation_stability_cascade.csv",  # grand-potential ESW
 }
+#: 회수분 = **완주한 전체 90종 · 270 champion**. 2026-08-13 조사로 273 슬롯 중 270 이
+#:  완주했음이 확인됐고(빠진 43종도 STAGE_12 까지), ESW 를 다시 돌려 90종을 채웠다.
+#:  ⚠ 파생물의 완성도가 서로 다르다 — 아래 status 를 화면에 **그대로** 띄운다.
+#:  근거: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md
+CASCADE_FILES_V2 = {
+    "champions":   "cascade_v23_champions_v2.csv",
+    "litransport": "cascade_v23_litransport_v2.csv",
+    "oxidation":   "oxidation_stability_cascade_v2.csv",
+    "ranked":      "cascade_v23_ranked_v2.csv",
+}
+CASCADE_V2_META = {
+    "scope": "완주한 전체 90종 · 270 champion (273 슬롯 중 270 완주; As₂S₃ 3건은 stage-01 seed 실패)",
+    "why": ("정본 47종은 물리 판정이 아니라 **취합 경계**였다. 등록이 2026-06-29 에 멈췄고 "
+            "계산은 7-11 에 끝났다. 빠져 있던 43종도 STAGE_12 까지 완주해 있었다."),
+    "recovered_on": "2026-08-13",
+    "status": {
+        # 축별 완성도를 다르게 표시한다 — 89종 파생을 90종 최종판처럼 보이게 하지 않는다.
+        "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수"),
+        "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음)"),
+        "ranked":    ("incomplete", "recovered / incomplete — 89 of 90 (형성에너지 결측 1종 제외)"),
+        "funnel":    ("blocked",    "blocked pending 90-species themes — transport_norm 이 roster "
+                                    "상대라 풀이 47→90 이면 재정규화가 필요하다 (23종 불일치로 빌더가 거부)"),
+        "figures":   ("partial",    "docs/figures/cascade_v2/ — insights 1종만 재생성, 나머지 18종 대기"),
+    },
+    "downloads": [
+        ("db/properties/cascade_v23_all.csv",                "전체 원자료 (90종 · 3615행 · 102열)"),
+        ("db/properties/cascade_v23_champions_v2.csv",       "champion 270행"),
+        ("db/properties/cascade_v23_litransport_v2.csv",     "Li 수송 프록시 270행"),
+        ("db/properties/oxidation_stability_cascade_v2.csv", "grand-potential ESW 90종"),
+        ("db/properties/oxidation_stability_cascade_v2.json","ESW 원본 (분해 반응식 포함, 270 champion)"),
+        ("db/properties/cascade_v23_ranked_v2.csv",          "합성점수 랭킹 89종 ⚠ incomplete"),
+        ("db/properties/cascade_v23_all_20260629_47species.csv", "옛 47종 판 (2026-06-29, 대조용)"),
+    ],
+    "caveat": ("⚠ 89종 랭킹과 미완 funnel 을 90종 최종판으로 인용하지 말 것. "
+               "원자료와 ESW 는 90종 전수이고 그대로 내려받을 수 있다."),
+}
 CASCADE_META = {
     "title": "Doping Cascade — AI 계산 기반 도핑 스크리닝 (UMA)",
     "scope": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 기반 산화물/불화물 도펀트 스크리닝, x=0.25",

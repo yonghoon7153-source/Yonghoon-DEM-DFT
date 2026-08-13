@@ -31,6 +31,9 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROP = ROOT / "db" / "properties"
+# 회수분(90종) 병렬 생성용 접미사 (2026-08-14). 정본은 접미사 없이 그대로.
+import os as _os
+_SUF = _os.environ.get("CASCADE_SUFFIX", "")
 
 MASS = {"H": 1.008, "Li": 6.94, "B": 10.81, "C": 12.011, "N": 14.007, "O": 15.999,
         "F": 18.998, "Na": 22.99, "Mg": 24.305, "Al": 26.982, "Si": 28.085,
@@ -40,7 +43,10 @@ MASS = {"H": 1.008, "Li": 6.94, "B": 10.81, "C": 12.011, "N": 14.007, "O": 15.99
         "Ga": 69.723, "Ge": 72.63, "Sr": 87.62, "Y": 88.906, "Zr": 91.224,
         "Nb": 92.906, "Mo": 95.95, "Ag": 107.868, "In": 114.818, "Sn": 118.71,
         "Sb": 121.76, "Ba": 137.327, "La": 138.905, "Nd": 144.242, "Sm": 150.36,
-        "Gd": 157.25, "Hf": 178.49, "Ta": 180.948, "W": 183.84}
+        "Gd": 157.25, "Hf": 178.49, "Ta": 180.948, "W": 183.84,
+        # 2026-08-14 — 회수 43종(염화물·황화물·브롬화물·요오드화물·질화물)이 들어오면서
+        # 필요해진 원소. 옛 47종 풀은 산화물/불화물뿐이라 Br·I 가 없어 KeyError 로 죽었다.
+        "Br": 79.904, "I": 126.904, "As": 74.922}
 
 # 가격 정성 등급 (1 저가 ~ 5 고가). 2026 시장 감각 큐레이션 — 절대 시세 아님.
 COST_TIER = {"Al": 1, "Mg": 1, "Ca": 1, "Na": 1, "Fe": 1, "Si": 1, "Mn": 1,
@@ -199,10 +205,10 @@ def load_zhu2020():
 
 
 def main():
-    ranked = read_csv_rows(PROP / "cascade_v23_ranked.csv")
-    oxid = {r["dopant"]: r for r in read_csv_rows(PROP / "oxidation_stability_cascade.csv")}
+    ranked = read_csv_rows(PROP / f"cascade_v23_ranked{_SUF}.csv")
+    oxid = {r["dopant"]: r for r in read_csv_rows(PROP / f"oxidation_stability_cascade{_SUF}.csv")}
     lit = {}
-    for r in read_csv_rows(PROP / "cascade_v23_litransport.csv"):
+    for r in read_csv_rows(PROP / f"cascade_v23_litransport{_SUF}.csv"):
         d, _, x = r["_dir"].rpartition("_x")
         lit.setdefault(d, {})[x] = r
 
@@ -263,7 +269,12 @@ def main():
         "oxidative_stability": ("ox_V", +1, lambda r: (r.get("window_V") or 0) > 0.05),
         "reduction_anode": ("red_V", -1, lambda r: (r.get("window_V") or 0) > 0.05),
         "electronic_insulation": ("gap_lit_eV", +1, None),
-        "ionic_transport": ("bvs_x005", +1, lambda r: (r.get("blocking") or 1) < 0.6),
+        "ionic_transport": ("bvs_x005", +1,
+            # ⛔ 2026-08-14 — `or 1` 은 blocking == 0.0 을 결측으로 오인한다(falsy).
+            #   47종 풀엔 0.0 이 없어 드러나지 않았지만, 회수 43종의 Li2S·LiCl 은
+            #   구성 원소가 전부 host(Li,P,S,Cl)라 dopant_idx 가 비고 blocking 이
+            #   정확히 0.0 이다 → 게이트가 뒤집혀 funnel 과 규약이 갈라졌다.
+            lambda r: (r["blocking"] if r.get("blocking") is not None else 1.0) < 0.6),
         "disorder_promotion": ("disorder_std", +1, None),
         "dose_robustness": ("bvs_slope", +1, None),
         "lightweight": ("mass_per_cation", -1, None),
@@ -460,7 +471,19 @@ def main():
         "themes": T,
         "dopants": rows,
     }
-    p = PROP / "cascade_v23_themes.json"
+    p = PROP / f"cascade_v23_themes{_SUF}.json"
+    # ⛔ 재빌드가 **손으로 붙인 블록을 지운다**. `_provenance_audit` 는 provenance sweep 이
+    #   넣은 것이고 이 생성기가 만들지 않는다 (funnel 빌더에서 2026-08-13 같은 사고).
+    #   `_` 로 시작하는 최상위 키는 승계한다.
+    if p.exists():
+        try:
+            _prev = json.load(open(p, encoding="utf-8"))
+        except (OSError, ValueError):
+            _prev = {}
+        _carry = {k: v for k, v in _prev.items() if k.startswith("_") and k not in out}
+        if _carry:
+            out.update(_carry)
+            print(f"[themes] 손편집 블록 승계: {' '.join(sorted(_carry))}")
     json.dump(out, open(p, "w"), ensure_ascii=False, indent=1)
     open(p, "a").write("\n")
     print(f"[themes] {p} — 도펀트 {len(rows)} × 테마 {len(T)}")
@@ -471,7 +494,7 @@ def main():
     # open_items #13 의 검산을 **재생성 가능한 산출물**로 고정한다. 손으로 센 숫자를
     # 문서에만 적어 두면 다음 사람이 검증할 수 없다.
     LI2S_BASELINE = 0.225      # 기준선: Li2S 가수분해 ΔG (같은 표, 같은 조건)
-    cpath = PROP / "cascade_air_axis_lit_vs_tier.csv"
+    cpath = PROP / f"cascade_air_axis_lit_vs_tier{_SUF}.csv"
     with open(cpath, "w", newline="") as fh:
         fh.write("# cascade 47 도펀트의 공기/수분 축 — 우리 정성 등급 vs [Zhu20] 문헌 ΔG_hyd 대조.\n")
         fh.write("# !! dG_hyd_* 열은 문헌 소환값이다 (Angew. Chem. 2020, 59, 17472 SI 전수 전사). 우리 계산 아님.\n")
