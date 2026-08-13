@@ -270,10 +270,21 @@ def neb_status(d):
         #   (collect_neb.py 가 retracted:true 로 찍는다). 화면이 "끝났다" 고 말하는데
         #   db 는 "못 쓴다" 고 말하는 상태가 하루 갔다. 같은 판정을 여기서도 한다.
         if r["ci"] in (None, "no-CI"):
-            r["alerts"].append(
-                f"{r['tag']}: 수렴했지만 **CI 가 꺼져 있다** — 장벽은 하한이고 인용 불가. "
-                f"2단계가 남았다: run_sei_neb.sh ci {r['tag']} → build --ci_scheme auto "
-                f"--restart → run_sei_neb.sh {r['tag']}")
+            # ⚠ 다만 **전도 경로가 아닌 런에 CI 를 권하면 안 된다** (2026-08-13 실측).
+            #   li3nd c→b 는 끝점이 2.07 eV 벌어진 "안 일어나는 홉" 인데 화면이
+            #   "CI 2단계를 돌려라" 고 시켰다 — 없는 안장점을 정밀하게 재라는 뜻이라
+            #   GPU 만 태운다. 비대칭이 EP_BIG_MEV 를 넘으면 장벽 자체가 성립을 안 한다.
+            _diag = (r["eqv"] is not True and r["ep_dE_meV"] is not None
+                     and abs(r["ep_dE_meV"]) > EP_BIG_MEV)
+            if _diag:
+                r["alerts"].append(
+                    f"{r['tag']}: CI 미적용(하한)이지만 **CI 를 돌릴 이유가 없다** — "
+                    f"끝점이 {r['ep_dE_meV']:+.0f} meV 라 전도 경로가 아니다(자리 에너지 차)")
+            else:
+                r["alerts"].append(
+                    f"{r['tag']}: 수렴했지만 **CI 가 꺼져 있다** — 장벽은 하한이고 인용 불가. "
+                    f"2단계가 남았다: run_sei_neb.sh ci {r['tag']} → build --ci_scheme auto "
+                    f"--restart → run_sei_neb.sh {r['tag']}")
     else:
         # ◦ = 돌기 시작했는데 첫 경로 스텝이 아직 안 나왔다 (이미지 7개 SCF 중).
         #   미착수(공백)와 구분해야 한다 — 안 그러면 "안 걸렸나?" 하고 또 건다.
@@ -338,6 +349,12 @@ def selftest():
     s = neb_status(mk("li2s_noline", True, -100.0, -100.0, body + CONV))
     chk(any("CI 가 꺼져 있다" in x for x in s["alerts"]),
         "CI_scheme 줄 없음 → no-CI 로 간주하고 경고 (조용한 통과 금지)")
+    # 음성 ⑥-c: **전도 경로가 아닌 런**(끝점 2.07 eV)에 CI 를 권하면 안 된다 — 실측 오조언
+    s = neb_status(mk("li3nd_cb", False, -100.0, -102.072,
+                      "     CI_scheme = 'no-CI'\n" + body + CONV))
+    chk(any("돌릴 이유가 없다" in x for x in s["alerts"])
+        and not any("2단계가 남았다" in x for x in s["alerts"]),
+        f"비대칭 2072 meV + no-CI → CI 권하지 않는다 ({[x[-30:] for x in s['alerts']]})")
     # 양성 ③: CI 2단계까지 끝난 런은 조용해야 한다 — 안 그러면 경고가 늑대소년이 된다
     s = neb_status(mk("li3nd_ci", True, -100.0, -100.0,
                       "     CI_scheme = 'auto'\n" + body + CONV))
