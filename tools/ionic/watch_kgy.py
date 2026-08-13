@@ -147,8 +147,13 @@ def long_verdict(b):
     if b < BETA_FAIL:
         return "⛔ (B) 확정", ("홉이 4배로 늘어도 안 살아났다 — 진짜 멱함수다. "
                              "이 점은 D 인용 금지, 아레니우스에서 뺀다.")
-    return "△ 경계", (f"{BETA_FAIL}–{BETA_PASS} 사이 — 여기서만 시드 추가(s3·s4)를 건다. "
-                     f"단일 시드로 판정하지 않는다.")
+    # ⚠ 2026-08-14 — 처방이 시드 수에 따라 갈린다. 3시드 전이면 시드 추가,
+    #   3시드를 채우고도 경계면 **더 넣지 않고 판정 불가로 종결**한다
+    #   (6시드로도 표준오차 0.06→0.04 라 0.75/0.80 을 못 가른다).
+    #   선언: kb/methodology/beta_gate_seed_policy.md
+    return "△ 경계", (f"{BETA_FAIL}–{BETA_PASS} 사이 — 3시드 전이면 시드 추가(s3·s4), "
+                     f"3시드를 채우고도 경계면 **판정 불가로 종결**하고 그 점을 "
+                     f"아레니우스에서 뺀 채 '미해결' 로 보고한다. 시드를 더 넣지 않는다.")
 
 
 def section_long():
@@ -269,22 +274,20 @@ def section_long():
     if betas:
         print("   β(창 2–50) 시드별: "
               + " · ".join(f"s{k} {v:.3f}" for k, v in sorted(betas.items())))
+    # ⚠⚠ 여기 숫자는 **진단**이다. 판정량은 시드별 β 가 아니라
+    #   **시드 앙상블 평균곡선(MTO)에서 잰 β̄** 다 (규약: requests §4-2).
+    #   순서를 바꾸면 값이 달라진다(Jensen) — watch 는 msd.json 을 개별로만 읽으므로
+    #   판정을 낼 수 없다. 선언 문서: kb/methodology/beta_gate_seed_policy.md
     n = len(betas)
-    if n >= 3:
-        import statistics
-        b_use = statistics.median(betas.values())
-        src = f"3시드 중앙값 (n={n})"
+    print(f"   ⚠ 위는 **시드별 진단값**이다 — 판정량 아님 (규약 = 시드 평균곡선의 β̄).")
+    if n < 3:
+        print(f"   판정: **△ 시드 부족 ({n}/3)** — s3·s4 가 끝날 때까지 (B)/(C) 를 말하지 않는다.")
     else:
-        b_use = b
-        src = f"⚠ 단일 시드 — **판정 보류** (시드 {n}/3)"
-    v, why = long_verdict(b_use)
-    if n < 3 and b_use is not None:
-        v = "△ 시드 부족"
-        why = (f"선언 규칙상 3시드가 있어야 판정한다. 지금 {n}종뿐 — "
-               f"s3·s4 가 끝날 때까지 (B)/(C) 를 말하지 않는다.")
-    print(f"   β = {b_use if b_use is None else round(b_use, 3)}  ({src})  →  **{v}**")
-    print(f"     {why}")
-    print(f"   선언한 규칙: β≥{BETA_PASS} (C) · β<{BETA_FAIL} (B) · 사이면 시드 추가 · **3시드 중앙값으로 판정**")
+        print(f"   판정: 시드 {n}개 모임 → **아래 스캔을 돌려 β̄ 로 판정할 것** (watch 가 대신 못 한다).")
+    print(f"   선언한 규칙 (2026-08-14, 결과 보기 전 선언):")
+    print(f"     β̄ ≥ {BETA_PASS} → (C) 느린 전이 · 600 K 아레니우스 복귀")
+    print(f"     β̄ < {BETA_FAIL} → (B) 진짜 멱함수 · 그 점 제거")
+    print(f"     {BETA_FAIL}–{BETA_PASS} → **판정 불가로 종결. 시드 더 넣지 않는다** (6시드로도 SE 0.04 라 부족)")
     stray = [os.path.basename(d) for d in
              sorted(glob.glob(os.path.join(LONG, "*")))
              if os.path.isdir(d) and os.path.basename(d) != "lpsocl"]
@@ -298,8 +301,8 @@ def section_long():
               " 21런으로 이미 있고(8/21 탈락)")
         print("     500 K 는 kb/reports/paper_first_author_requests_2026_08.md §9-6 이"
               " **보류 결정**한 온도다 — 여기 것은 버그로 딸려온 중복.")
-    if mj:
-        print("   확정 판정은 창 스캔으로:")
+    if True:
+        print("   ★ 판정은 이 명령으로만 (watch 숫자로 판정 금지):")
         print(f"     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
         print(f"       --glob '{LONG}/*/T*_s*/**/msd.json'")
     for ln in tail:
@@ -338,12 +341,14 @@ def selftest_long():
     chk(_decide({"2": 0.799})[0] == "△ 시드 부족", "단일 시드 → 판정 보류")
     chk(_decide({"2": 0.799, "3": 0.81})[0] == "△ 시드 부족", "2시드도 보류")
     # 중앙값이라 한 시드가 튀어도 안 뒤집힌다
-    chk(_decide({"2": 0.799, "3": 0.81, "4": 0.79})[0] == "△ 경계",
-        f"3시드 중앙값 0.799 → 경계 유지 ({_decide({'2':0.799,'3':0.81,'4':0.79})[1]:.3f})")
-    chk(_decide({"2": 0.799, "3": 0.82, "4": 0.83})[0] == "✅ (C) 확정",
-        "3시드 중앙값 0.82 → (C)")
-    chk(_decide({"2": 0.72, "3": 0.74, "4": 0.70})[0] == "⛔ (B) 확정",
-        "3시드 중앙값 0.72 → (B)")
+    # ★ 문턱 자체의 시험 (판정량이 무엇이든 이 매핑은 같아야 한다)
+    chk(long_verdict(0.80)[0].startswith("✅"), "β̄ 0.80 → (C) (경계 포함)")
+    chk(long_verdict(0.799)[0].startswith("△"), "β̄ 0.799 → 경계")
+    chk(long_verdict(0.75)[0].startswith("△"), "β̄ 0.75 → 경계 (하한 포함)")
+    chk(long_verdict(0.749)[0].startswith("⛔"), "β̄ 0.749 → (B)")
+    # ★ 경계면 **시드를 더 넣지 않는다** — 선언 문서의 규칙이 처방에 반영됐는지
+    chk("시드 추가" in long_verdict(0.78)[1],
+        f"경계 처방에 시드 추가가 적혀 있다 ({long_verdict(0.78)[1][:30]})")
     chk("복귀" in long_verdict(0.9)[1] and "뺀다" in long_verdict(0.7)[1],
         "처방이 판정과 반대로 붙지 않았다")
     print("selftest PASS" if ok else "selftest FAIL")
