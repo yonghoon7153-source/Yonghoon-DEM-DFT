@@ -1,0 +1,2532 @@
+{
+  "method": "grand-potential ESW (get_element_profile, MP GGA_GGA+U); per cascade champion",
+  "source_csv": "/data/work/repo/db/properties/cascade_v23_all.csv",
+  "results": {
+    "Ag2O_x002": {
+      "dopant": "Ag2O",
+      "elements": [
+        "Ag",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.914,
+      "oxidation_onset_rxn": "Li22Ag2P4S19Cl4O -> 0.75 LiS4 + 3.75 Li3PS4 + 0.25 Li3PO4 + Ag2S + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22Ag2P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + 0.25 Li3PO4 + Ag2S + 4 LiCl",
+      "window_V": 0.417,
+      "n_breakpoints": 22
+    },
+    "Ag2O_x005": {
+      "dopant": "Ag2O",
+      "elements": [
+        "Ag",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.914,
+      "oxidation_onset_rxn": "Li22Ag2P4S19Cl4O -> 0.75 LiS4 + 3.75 Li3PS4 + 0.25 Li3PO4 + Ag2S + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22Ag2P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + 0.25 Li3PO4 + Ag2S + 4 LiCl",
+      "window_V": 0.417,
+      "n_breakpoints": 22
+    },
+    "Ag2O_x010": {
+      "dopant": "Ag2O",
+      "elements": [
+        "Ag",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.914,
+      "oxidation_onset_rxn": "Li22Ag2P4S19Cl4O -> 0.75 LiS4 + 3.75 Li3PS4 + 0.25 Li3PO4 + Ag2S + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22Ag2P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + 0.25 Li3PO4 + Ag2S + 4 LiCl",
+      "window_V": 0.417,
+      "n_breakpoints": 22
+    },
+    "Al2O3_x002": {
+      "dopant": "Al2O3+Clrich",
+      "elements": [
+        "Al",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.354,
+      "ocv_self_decomposition_V": 2.024,
+      "oxidation_onset_rxn": "Li17Al2P4S16Cl5O3 -> 3.5 Li3PS4 + 0.25 P2S7 + 5 LiCl + 0.125 LiAlS2 + 0.375 LiAl5O8 + Li",
+      "ocv_rxn": "Li17Al2P4S16Cl5O3 -> 4 Li3PS4 + 5 LiCl + Al2O3",
+      "window_V": 0.637,
+      "n_breakpoints": 22
+    },
+    "Al2O3_x005": {
+      "dopant": "Al2O3",
+      "elements": [
+        "Al",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.372,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Al2P4S17Cl4O3 -> 4 Li3PS4 + 0.1875 LiS4 + 4 LiCl + 0.125 LiAlS2 + 0.375 LiAl5O8 + 1.313 Li",
+      "ocv_rxn": "Li18Al2P4S17Cl4O3 -> 0.75 Li2S + 4 Li3PS4 + 4 LiCl + 0.125 LiAlS2 + 0.375 LiAl5O8",
+      "window_V": 0.768,
+      "n_breakpoints": 22
+    },
+    "Al2O3_x010": {
+      "dopant": "Al2O3+Clrich",
+      "elements": [
+        "Al",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.354,
+      "ocv_self_decomposition_V": 2.024,
+      "oxidation_onset_rxn": "Li17Al2P4S16Cl5O3 -> 3.5 Li3PS4 + 0.25 P2S7 + 5 LiCl + 0.125 LiAlS2 + 0.375 LiAl5O8 + Li",
+      "ocv_rxn": "Li17Al2P4S16Cl5O3 -> 4 Li3PS4 + 5 LiCl + Al2O3",
+      "window_V": 0.637,
+      "n_breakpoints": 22
+    },
+    "AlF3_x002": {
+      "dopant": "AlF3",
+      "elements": [
+        "Al",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.372,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + LiCl + 0.5 LiS4 + 3 LiF + 3.5 Li",
+      "ocv_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + 2 Li2S + LiCl + 3 LiF",
+      "window_V": 0.768,
+      "n_breakpoints": 18
+    },
+    "AlF3_x005": {
+      "dopant": "AlF3",
+      "elements": [
+        "Al",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.372,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + LiCl + 0.5 LiS4 + 3 LiF + 3.5 Li",
+      "ocv_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + 2 Li2S + LiCl + 3 LiF",
+      "window_V": 0.768,
+      "n_breakpoints": 18
+    },
+    "AlF3_x010": {
+      "dopant": "AlF3",
+      "elements": [
+        "Al",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.372,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + LiCl + 0.5 LiS4 + 3 LiF + 3.5 Li",
+      "ocv_rxn": "Li21AlP4S20ClF3 -> LiAlS2 + 4 Li3PS4 + 2 Li2S + LiCl + 3 LiF",
+      "window_V": 0.768,
+      "n_breakpoints": 18
+    },
+    "B2O3_x002": {
+      "dopant": "B2O3+Clrich",
+      "elements": [
+        "B",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 2.043,
+      "oxidation_limit_V": 2.317,
+      "ocv_self_decomposition_V": 2.091,
+      "oxidation_onset_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BS2 + 3 Li3PS4 + 0.5 P2S7 + 0.25 Li3B7O12 + 5 LiCl + 2.25 Li",
+      "ocv_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BPS4 + 3.75 Li3PS4 + 0.25 Li3B7O12 + 5 LiCl",
+      "window_V": 0.274,
+      "n_breakpoints": 23
+    },
+    "B2O3_x005": {
+      "dopant": "B2O3+Clrich",
+      "elements": [
+        "B",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 2.043,
+      "oxidation_limit_V": 2.317,
+      "ocv_self_decomposition_V": 2.091,
+      "oxidation_onset_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BS2 + 3 Li3PS4 + 0.5 P2S7 + 0.25 Li3B7O12 + 5 LiCl + 2.25 Li",
+      "ocv_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BPS4 + 3.75 Li3PS4 + 0.25 Li3B7O12 + 5 LiCl",
+      "window_V": 0.274,
+      "n_breakpoints": 23
+    },
+    "B2O3_x010": {
+      "dopant": "B2O3+Clrich",
+      "elements": [
+        "B",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 2.043,
+      "oxidation_limit_V": 2.317,
+      "ocv_self_decomposition_V": 2.091,
+      "oxidation_onset_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BS2 + 3 Li3PS4 + 0.5 P2S7 + 0.25 Li3B7O12 + 5 LiCl + 2.25 Li",
+      "ocv_rxn": "Li17B2P4S16Cl5O3 -> 0.25 BPS4 + 3.75 Li3PS4 + 0.25 Li3B7O12 + 5 LiCl",
+      "window_V": 0.274,
+      "n_breakpoints": 23
+    },
+    "BaO_x002": {
+      "dopant": "BaO",
+      "elements": [
+        "Ba",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.071,
+      "ocv_self_decomposition_V": 1.938,
+      "oxidation_onset_rxn": "BaLi22P4S19Cl4O -> BaS3 + 3.75 Li3PS4 + Li2S + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "BaLi22P4S19Cl4O -> 0.3333 Ba3(PS4)2 + 3.083 Li3PS4 + 4 Li2S + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.354,
+      "n_breakpoints": 19
+    },
+    "BaO_x005": {
+      "dopant": "BaO",
+      "elements": [
+        "Ba",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.071,
+      "ocv_self_decomposition_V": 1.938,
+      "oxidation_onset_rxn": "BaLi22P4S19Cl4O -> BaS3 + 3.75 Li3PS4 + Li2S + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "BaLi22P4S19Cl4O -> 0.3333 Ba3(PS4)2 + 3.083 Li3PS4 + 4 Li2S + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.354,
+      "n_breakpoints": 19
+    },
+    "BaO_x010": {
+      "dopant": "BaO",
+      "elements": [
+        "Ba",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.071,
+      "ocv_self_decomposition_V": 1.938,
+      "oxidation_onset_rxn": "BaLi22P4S19Cl4O -> BaS3 + 3.75 Li3PS4 + Li2S + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "BaLi22P4S19Cl4O -> 0.3333 Ba3(PS4)2 + 3.083 Li3PS4 + 4 Li2S + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.354,
+      "n_breakpoints": 19
+    },
+    "CaF2_x002": {
+      "dopant": "CaF2",
+      "elements": [
+        "Ca",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S20(ClF)2 -> 0.75 LiS4 + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S20(ClF)2 -> 3 Li2S + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "CaF2_x005": {
+      "dopant": "CaF2",
+      "elements": [
+        "Ca",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S20(ClF)2 -> 0.75 LiS4 + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S20(ClF)2 -> 3 Li2S + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "CaF2_x010": {
+      "dopant": "CaF2",
+      "elements": [
+        "Ca",
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S20(ClF)2 -> 0.75 LiS4 + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S20(ClF)2 -> 3 Li2S + CaS + 2 LiF + 4 Li3PS4 + 2 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "CaO_x002": {
+      "dopant": "CaO",
+      "elements": [
+        "Ca",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.75 LiS4 + 0.25 Li3PO4 + CaS + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 3 Li2S + CaS + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 17
+    },
+    "CaO_x005": {
+      "dopant": "CaO",
+      "elements": [
+        "Ca",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.75 LiS4 + 0.25 Li3PO4 + CaS + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 3 Li2S + CaS + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 17
+    },
+    "CaO_x010": {
+      "dopant": "CaO",
+      "elements": [
+        "Ca",
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.75 LiS4 + 0.25 Li3PO4 + CaS + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22CaP4S19Cl4O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 3 Li2S + CaS + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 17
+    },
+    "CoO_x002": {
+      "dopant": "CoO",
+      "elements": [
+        "Cl",
+        "Co",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.861,
+      "oxidation_limit_V": 1.873,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22CoP4S19Cl4O -> 3.75 Li3PS4 + 2.667 Li2S + 0.25 Li3PO4 + 0.3333 Co3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.012,
+      "n_breakpoints": 22
+    },
+    "CoO_x005": {
+      "dopant": "CoO",
+      "elements": [
+        "Cl",
+        "Co",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.861,
+      "oxidation_limit_V": 1.873,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22CoP4S19Cl4O -> 3.75 Li3PS4 + 2.667 Li2S + 0.25 Li3PO4 + 0.3333 Co3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.012,
+      "n_breakpoints": 22
+    },
+    "CoO_x010": {
+      "dopant": "CoO",
+      "elements": [
+        "Cl",
+        "Co",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.861,
+      "oxidation_limit_V": 1.873,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22CoP4S19Cl4O -> 3.75 Li3PS4 + 2.667 Li2S + 0.25 Li3PO4 + 0.3333 Co3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.012,
+      "n_breakpoints": 22
+    },
+    "Cr2O3_x002": {
+      "dopant": "Cr2O3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.729,
+      "oxidation_onset_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.633,
+      "n_breakpoints": 17
+    },
+    "Cr2O3_x005": {
+      "dopant": "Cr2O3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.729,
+      "oxidation_onset_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.633,
+      "n_breakpoints": 17
+    },
+    "Cr2O3_x010": {
+      "dopant": "Cr2O3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.723,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.729,
+      "oxidation_onset_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Cr2P4S17Cl4O3 -> 2 LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.633,
+      "n_breakpoints": 17
+    },
+    "CrO3_x002": {
+      "dopant": "CrO3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.729,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18CrP4S17Cl4O3 -> LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 0.5 LiS4 + 4 LiCl + 0.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.411,
+      "n_breakpoints": 22
+    },
+    "CrO3_x005": {
+      "dopant": "CrO3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.729,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18CrP4S17Cl4O3 -> LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 0.5 LiS4 + 4 LiCl + 0.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.411,
+      "n_breakpoints": 22
+    },
+    "CrO3_x010": {
+      "dopant": "CrO3",
+      "elements": [
+        "Cl",
+        "Cr",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.729,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18CrP4S17Cl4O3 -> LiCrS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 0.5 LiS4 + 4 LiCl + 0.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.411,
+      "n_breakpoints": 22
+    },
+    "Cu2O_x002": {
+      "dopant": "Cu2O",
+      "elements": [
+        "Cl",
+        "Cu",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.751,
+      "oxidation_limit_V": 1.864,
+      "ocv_self_decomposition_V": 1.757,
+      "oxidation_onset_rxn": "Li22Cu2P4S19Cl4O -> 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 2 CuS + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li22Cu2P4S19Cl4O -> 2 Li3CuS2 + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.113,
+      "n_breakpoints": 22
+    },
+    "Cu2O_x005": {
+      "dopant": "Cu2O",
+      "elements": [
+        "Cl",
+        "Cu",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.751,
+      "oxidation_limit_V": 1.864,
+      "ocv_self_decomposition_V": 1.757,
+      "oxidation_onset_rxn": "Li22Cu2P4S19Cl4O -> 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 2 CuS + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li22Cu2P4S19Cl4O -> 2 Li3CuS2 + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.113,
+      "n_breakpoints": 22
+    },
+    "Cu2O_x010": {
+      "dopant": "Cu2O",
+      "elements": [
+        "Cl",
+        "Cu",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.751,
+      "oxidation_limit_V": 1.864,
+      "ocv_self_decomposition_V": 1.757,
+      "oxidation_onset_rxn": "Li22Cu2P4S19Cl4O -> 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 2 CuS + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li22Cu2P4S19Cl4O -> 2 Li3CuS2 + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.113,
+      "n_breakpoints": 22
+    },
+    "Fe2O3_x002": {
+      "dopant": "Fe2O3",
+      "elements": [
+        "Cl",
+        "Fe",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.804,
+      "oxidation_limit_V": 1.808,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18Fe2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 FeS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.004,
+      "n_breakpoints": 16
+    },
+    "Fe2O3_x005": {
+      "dopant": "Fe2O3",
+      "elements": [
+        "Cl",
+        "Fe",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.804,
+      "oxidation_limit_V": 1.808,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18Fe2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 FeS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.004,
+      "n_breakpoints": 16
+    },
+    "Fe2O3_x010": {
+      "dopant": "Fe2O3",
+      "elements": [
+        "Cl",
+        "Fe",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.804,
+      "oxidation_limit_V": 1.808,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li18Fe2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 FeS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.004,
+      "n_breakpoints": 16
+    },
+    "Ga2O3_x002": {
+      "dopant": "Ga2O3",
+      "elements": [
+        "Cl",
+        "Ga",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.578,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Ga2P4S17Cl4O3 -> 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 2 LiGaS2 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Ga2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.75 Li3PO4 + 2 LiGaS2 + 4 LiCl",
+      "window_V": 0.778,
+      "n_breakpoints": 23
+    },
+    "Ga2O3_x005": {
+      "dopant": "Ga2O3",
+      "elements": [
+        "Cl",
+        "Ga",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.578,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Ga2P4S17Cl4O3 -> 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 2 LiGaS2 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Ga2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.75 Li3PO4 + 2 LiGaS2 + 4 LiCl",
+      "window_V": 0.778,
+      "n_breakpoints": 23
+    },
+    "Ga2O3_x010": {
+      "dopant": "Ga2O3",
+      "elements": [
+        "Cl",
+        "Ga",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.578,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Ga2P4S17Cl4O3 -> 0.75 Li3PO4 + 1.625 P2S7 + 0.4063 LiS4 + 2 LiGaS2 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Ga2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.75 Li3PO4 + 2 LiGaS2 + 4 LiCl",
+      "window_V": 0.778,
+      "n_breakpoints": 23
+    },
+    "Gd2O3_x002": {
+      "dopant": "Gd2O3",
+      "elements": [
+        "Cl",
+        "Gd",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.398,
+      "oxidation_limit_V": 2.118,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Gd2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 GdS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li18Gd2P4S17Cl4O3 -> 2 LiGdS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.72,
+      "n_breakpoints": 19
+    },
+    "Gd2O3_x005": {
+      "dopant": "Gd2O3",
+      "elements": [
+        "Cl",
+        "Gd",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.398,
+      "oxidation_limit_V": 2.118,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Gd2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 GdS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li18Gd2P4S17Cl4O3 -> 2 LiGdS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.72,
+      "n_breakpoints": 19
+    },
+    "Gd2O3_x010": {
+      "dopant": "Gd2O3",
+      "elements": [
+        "Cl",
+        "Gd",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.398,
+      "oxidation_limit_V": 2.118,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Gd2P4S17Cl4O3 -> 0.75 Li3PO4 + 3.25 Li3PS4 + 2 GdS2 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li18Gd2P4S17Cl4O3 -> 2 LiGdS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.72,
+      "n_breakpoints": 19
+    },
+    "GeO2_x002": {
+      "dopant": "GeO2",
+      "elements": [
+        "Cl",
+        "Ge",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.622,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + LiS4 + 4 LiCl + Li4GeS4 + 7 Li",
+      "ocv_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl + Li4GeS4",
+      "window_V": 0.518,
+      "n_breakpoints": 19
+    },
+    "GeO2_x005": {
+      "dopant": "GeO2",
+      "elements": [
+        "Cl",
+        "Ge",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.622,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + LiS4 + 4 LiCl + Li4GeS4 + 7 Li",
+      "ocv_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl + Li4GeS4",
+      "window_V": 0.518,
+      "n_breakpoints": 19
+    },
+    "GeO2_x010": {
+      "dopant": "GeO2",
+      "elements": [
+        "Cl",
+        "Ge",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.622,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + LiS4 + 4 LiCl + Li4GeS4 + 7 Li",
+      "ocv_rxn": "Li25GeP3S18(Cl2O)2 -> 2.5 Li3PS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl + Li4GeS4",
+      "window_V": 0.518,
+      "n_breakpoints": 19
+    },
+    "HfO2_x002": {
+      "dopant": "HfO2",
+      "elements": [
+        "Cl",
+        "Hf",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 1.996,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20HfP4S18(Cl2O)2 -> HfS3 + 3.5 Li3PS4 + Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li20HfP4S18(Cl2O)2 -> 4 Li3PS4 + 2 Li2S + 4 LiCl + HfO2",
+      "window_V": 0.754,
+      "n_breakpoints": 20
+    },
+    "HfO2_x005": {
+      "dopant": "HfO2",
+      "elements": [
+        "Cl",
+        "Hf",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 1.996,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20HfP4S18(Cl2O)2 -> HfS3 + 3.5 Li3PS4 + Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li20HfP4S18(Cl2O)2 -> 4 Li3PS4 + 2 Li2S + 4 LiCl + HfO2",
+      "window_V": 0.754,
+      "n_breakpoints": 20
+    },
+    "HfO2_x010": {
+      "dopant": "HfO2",
+      "elements": [
+        "Cl",
+        "Hf",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 1.996,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20HfP4S18(Cl2O)2 -> HfS3 + 3.5 Li3PS4 + Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li20HfP4S18(Cl2O)2 -> 4 Li3PS4 + 2 Li2S + 4 LiCl + HfO2",
+      "window_V": 0.754,
+      "n_breakpoints": 20
+    },
+    "In2O3_x002": {
+      "dopant": "In2O3",
+      "elements": [
+        "Cl",
+        "In",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.4062 LiS4 + 0.75 Li3PO4 + 1.625 P2S7 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.791,
+      "n_breakpoints": 24
+    },
+    "In2O3_x005": {
+      "dopant": "In2O3",
+      "elements": [
+        "Cl",
+        "In",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.4062 LiS4 + 0.75 Li3PO4 + 1.625 P2S7 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.791,
+      "n_breakpoints": 24
+    },
+    "In2O3_x010": {
+      "dopant": "In2O3",
+      "elements": [
+        "Cl",
+        "In",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.4062 LiS4 + 0.75 Li3PO4 + 1.625 P2S7 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18In2P4S17Cl4O3 -> 2 LiInS2 + 0.75 Li3PO4 + 3.25 Li3PS4 + 4 LiCl",
+      "window_V": 0.791,
+      "n_breakpoints": 24
+    },
+    "La2O3_x002": {
+      "dopant": "La2O3",
+      "elements": [
+        "Cl",
+        "La",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.523,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.2 La10S19 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + Li2S + La2S3 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.37,
+      "n_breakpoints": 21
+    },
+    "La2O3_x005": {
+      "dopant": "La2O3",
+      "elements": [
+        "Cl",
+        "La",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.523,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.2 La10S19 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + Li2S + La2S3 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.37,
+      "n_breakpoints": 21
+    },
+    "La2O3_x010": {
+      "dopant": "La2O3",
+      "elements": [
+        "Cl",
+        "La",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.523,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + 0.2 La10S19 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18La2P4S17Cl4O3 -> 3.25 Li3PS4 + Li2S + La2S3 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.37,
+      "n_breakpoints": 21
+    },
+    "LaF3_x002": {
+      "dopant": "LaF3",
+      "elements": [
+        "Cl",
+        "F",
+        "La",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.475,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21LaP4S20ClF3 -> 0.1 La10S19 + 2.1 Li2S + LiCl + 4 Li3PS4 + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21LaP4S20ClF3 -> 2.5 Li2S + LiCl + 4 Li3PS4 + 0.5 La2S3 + 3 LiF",
+      "window_V": 0.418,
+      "n_breakpoints": 19
+    },
+    "LaF3_x005": {
+      "dopant": "LaF3",
+      "elements": [
+        "Cl",
+        "F",
+        "La",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.475,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21LaP4S20ClF3 -> 0.1 La10S19 + 2.1 Li2S + LiCl + 4 Li3PS4 + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21LaP4S20ClF3 -> 2.5 Li2S + LiCl + 4 Li3PS4 + 0.5 La2S3 + 3 LiF",
+      "window_V": 0.418,
+      "n_breakpoints": 19
+    },
+    "LaF3_x010": {
+      "dopant": "LaF3",
+      "elements": [
+        "Cl",
+        "F",
+        "La",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.475,
+      "oxidation_limit_V": 1.893,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21LaP4S20ClF3 -> 0.1 La10S19 + 2.1 Li2S + LiCl + 4 Li3PS4 + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21LaP4S20ClF3 -> 2.5 Li2S + LiCl + 4 Li3PS4 + 0.5 La2S3 + 3 LiF",
+      "window_V": 0.418,
+      "n_breakpoints": 19
+    },
+    "Li2O_x002": {
+      "dopant": "Li2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + LiS4 + 0.25 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + 4 Li2S + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "Li2O_x005": {
+      "dopant": "Li2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + LiS4 + 0.25 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + 4 Li2S + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "Li2O_x010": {
+      "dopant": "Li2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + LiS4 + 0.25 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li24P4S19Cl4O -> 3.75 Li3PS4 + 4 Li2S + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.898,
+      "n_breakpoints": 14
+    },
+    "LiF_x002": {
+      "dopant": "LiF",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S20Cl3F -> LiS4 + 4 Li3PS4 + 3 LiCl + LiF + 7 Li",
+      "ocv_rxn": "Li24P4S20Cl3F -> 4 Li2S + 4 Li3PS4 + 3 LiCl + LiF",
+      "window_V": 0.898,
+      "n_breakpoints": 12
+    },
+    "LiF_x005": {
+      "dopant": "LiF",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S20Cl3F -> LiS4 + 4 Li3PS4 + 3 LiCl + LiF + 7 Li",
+      "ocv_rxn": "Li24P4S20Cl3F -> 4 Li2S + 4 Li3PS4 + 3 LiCl + LiF",
+      "window_V": 0.898,
+      "n_breakpoints": 12
+    },
+    "LiF_x010": {
+      "dopant": "LiF",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.242,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li24P4S20Cl3F -> LiS4 + 4 Li3PS4 + 3 LiCl + LiF + 7 Li",
+      "ocv_rxn": "Li24P4S20Cl3F -> 4 Li2S + 4 Li3PS4 + 3 LiCl + LiF",
+      "window_V": 0.898,
+      "n_breakpoints": 12
+    },
+    "MgF2_x002": {
+      "dopant": "MgF2",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Mg",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.343,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22MgP4S20(ClF)2 -> 4 Li3PS4 + 2 LiCl + 0.75 LiS4 + MgS + 2 LiF + 5.25 Li",
+      "ocv_rxn": "Li22MgP4S20(ClF)2 -> 3 Li2S + 4 Li3PS4 + 2 LiCl + MgS + 2 LiF",
+      "window_V": 0.797,
+      "n_breakpoints": 16
+    },
+    "MgF2_x005": {
+      "dopant": "MgF2",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Mg",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.343,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22MgP4S20(ClF)2 -> 4 Li3PS4 + 2 LiCl + 0.75 LiS4 + MgS + 2 LiF + 5.25 Li",
+      "ocv_rxn": "Li22MgP4S20(ClF)2 -> 3 Li2S + 4 Li3PS4 + 2 LiCl + MgS + 2 LiF",
+      "window_V": 0.797,
+      "n_breakpoints": 16
+    },
+    "MgF2_x010": {
+      "dopant": "MgF2",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Mg",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.343,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22MgP4S20(ClF)2 -> 4 Li3PS4 + 2 LiCl + 0.75 LiS4 + MgS + 2 LiF + 5.25 Li",
+      "ocv_rxn": "Li22MgP4S20(ClF)2 -> 3 Li2S + 4 Li3PS4 + 2 LiCl + MgS + 2 LiF",
+      "window_V": 0.797,
+      "n_breakpoints": 16
+    },
+    "MgO_x002": {
+      "dopant": "MgO+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mg",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.405,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21MgP4S18Cl5O -> MgS + 3.75 Li3PS4 + 0.5 LiS4 + 0.25 Li3PO4 + 5 LiCl + 3.5 Li",
+      "ocv_rxn": "Li21MgP4S18Cl5O -> MgS + 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 5 LiCl",
+      "window_V": 0.735,
+      "n_breakpoints": 20
+    },
+    "MgO_x005": {
+      "dopant": "MgO+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mg",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.405,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21MgP4S18Cl5O -> MgS + 3.75 Li3PS4 + 0.5 LiS4 + 0.25 Li3PO4 + 5 LiCl + 3.5 Li",
+      "ocv_rxn": "Li21MgP4S18Cl5O -> MgS + 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + 5 LiCl",
+      "window_V": 0.735,
+      "n_breakpoints": 20
+    },
+    "MgO_x010": {
+      "dopant": "MgO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mg",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.405,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22MgP4S19Cl4O -> MgS + 3.75 Li3PS4 + 0.75 LiS4 + 0.25 Li3PO4 + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22MgP4S19Cl4O -> MgS + 3.75 Li3PS4 + 3 Li2S + 0.25 Li3PO4 + 4 LiCl",
+      "window_V": 0.735,
+      "n_breakpoints": 20
+    },
+    "MnO_x002": {
+      "dopant": "MnO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mn",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.755,
+      "oxidation_limit_V": 1.794,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22MnP4S19Cl4O -> 0.25 Li3PO4 + 3.75 Li3PS4 + 0.5 Li(MnS2)2 + 2 Li2S + 4 LiCl + 1.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.039,
+      "n_breakpoints": 17
+    },
+    "MnO_x005": {
+      "dopant": "MnO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mn",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.755,
+      "oxidation_limit_V": 1.794,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22MnP4S19Cl4O -> 0.25 Li3PO4 + 3.75 Li3PS4 + 0.5 Li(MnS2)2 + 2 Li2S + 4 LiCl + 1.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.039,
+      "n_breakpoints": 17
+    },
+    "MnO_x010": {
+      "dopant": "MnO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mn",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.755,
+      "oxidation_limit_V": 1.794,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22MnP4S19Cl4O -> 0.25 Li3PO4 + 3.75 Li3PS4 + 0.5 Li(MnS2)2 + 2 Li2S + 4 LiCl + 1.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.039,
+      "n_breakpoints": 17
+    },
+    "MoO3_x002": {
+      "dopant": "MoO3",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mo",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.726,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li23MoP3S17Cl4O3 -> 0.75 Li3PO4 + 1.5 LiS4 + MoS2 + 2.25 Li3PS4 + 4 LiCl + 8.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.414,
+      "n_breakpoints": 19
+    },
+    "MoO3_x005": {
+      "dopant": "MoO3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mo",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 2.14,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li17MoP4S16Cl5O3 -> 0.75 Li3PO4 + 1.625 P2S7 + 0.6562 LiS4 + MoS2 + 5 LiCl + 9.094 Li",
+      "ocv_rxn": null,
+      "window_V": 0.216,
+      "n_breakpoints": 19
+    },
+    "MoO3_x010": {
+      "dopant": "MoO3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "Mo",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 2.14,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li17MoP4S16Cl5O3 -> 0.75 Li3PO4 + 1.625 P2S7 + 0.6562 LiS4 + MoS2 + 5 LiCl + 9.094 Li",
+      "ocv_rxn": null,
+      "window_V": 0.216,
+      "n_breakpoints": 19
+    },
+    "Na2O_x002": {
+      "dopant": "Na2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "Na",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.721,
+      "oxidation_onset_rxn": "Na2Li22P4S19Cl4O -> 0.8 Na2S5 + 0.4 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 3.6 LiCl + 6.4 Li",
+      "ocv_rxn": "Na2Li22P4S19Cl4O -> 2 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 Li2S + 2 LiCl",
+      "window_V": 0.343,
+      "n_breakpoints": 19
+    },
+    "Na2O_x005": {
+      "dopant": "Na2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "Na",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.721,
+      "oxidation_onset_rxn": "Na2Li22P4S19Cl4O -> 0.8 Na2S5 + 0.4 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 3.6 LiCl + 6.4 Li",
+      "ocv_rxn": "Na2Li22P4S19Cl4O -> 2 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 Li2S + 2 LiCl",
+      "window_V": 0.343,
+      "n_breakpoints": 19
+    },
+    "Na2O_x010": {
+      "dopant": "Na2O",
+      "elements": [
+        "Cl",
+        "Li",
+        "Na",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.721,
+      "oxidation_onset_rxn": "Na2Li22P4S19Cl4O -> 0.8 Na2S5 + 0.4 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 3.6 LiCl + 6.4 Li",
+      "ocv_rxn": "Na2Li22P4S19Cl4O -> 2 NaCl + 3.75 Li3PS4 + 0.25 Li3PO4 + 4 Li2S + 2 LiCl",
+      "window_V": 0.343,
+      "n_breakpoints": 19
+    },
+    "Nb2O5_x002": {
+      "dopant": "Nb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nb",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.738,
+      "oxidation_limit_V": 2.061,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Nb2P2S15Cl4O5 -> 0.75 Nb2PS10 + 0.07143 Li5(NbS2)7 + 6.5 Li2S + 1.25 Li3PO4 + 4 LiCl + 2.893 Li",
+      "ocv_rxn": null,
+      "window_V": 0.323,
+      "n_breakpoints": 27
+    },
+    "Nb2O5_x005": {
+      "dopant": "Nb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nb",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.738,
+      "oxidation_limit_V": 2.061,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Nb2P2S15Cl4O5 -> 0.75 Nb2PS10 + 0.07143 Li5(NbS2)7 + 6.5 Li2S + 1.25 Li3PO4 + 4 LiCl + 2.893 Li",
+      "ocv_rxn": null,
+      "window_V": 0.323,
+      "n_breakpoints": 27
+    },
+    "Nb2O5_x010": {
+      "dopant": "Nb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nb",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.738,
+      "oxidation_limit_V": 2.061,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Nb2P2S15Cl4O5 -> 0.75 Nb2PS10 + 0.07143 Li5(NbS2)7 + 6.5 Li2S + 1.25 Li3PO4 + 4 LiCl + 2.893 Li",
+      "ocv_rxn": null,
+      "window_V": 0.323,
+      "n_breakpoints": 27
+    },
+    "Nd2O3_x002": {
+      "dopant": "Nd2O3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nd",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.987,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li17Nd2P4S16Cl5O3 -> 0.2105 Li9Nd2(PS4)5 + 0.1579 Nd10S19 + 2.197 Li3PS4 + 0.75 Li3PO4 + 5 LiCl + 1.263 Li",
+      "ocv_rxn": "Li17Nd2P4S16Cl5O3 -> 3.25 Li3PS4 + Nd2S3 + 0.75 Li3PO4 + 5 LiCl",
+      "window_V": 0.469,
+      "n_breakpoints": 19
+    },
+    "Nd2O3_x005": {
+      "dopant": "Nd2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nd",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.92,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Nd2P4S17Cl4O3 -> 0.2 Nd10S19 + 3.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18Nd2P4S17Cl4O3 -> 3.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.402,
+      "n_breakpoints": 19
+    },
+    "Nd2O3_x010": {
+      "dopant": "Nd2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "Nd",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.92,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Nd2P4S17Cl4O3 -> 0.2 Nd10S19 + 3.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18Nd2P4S17Cl4O3 -> 3.25 Li3PS4 + Nd2S3 + Li2S + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.402,
+      "n_breakpoints": 19
+    },
+    "NdF3_x002": {
+      "dopant": "NdF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Nd",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.92,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21NdP4S20ClF3 -> 0.1 Nd10S19 + 4 Li3PS4 + 2.1 Li2S + LiCl + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21NdP4S20ClF3 -> 4 Li3PS4 + 2.5 Li2S + LiCl + 0.5 Nd2S3 + 3 LiF",
+      "window_V": 0.402,
+      "n_breakpoints": 15
+    },
+    "NdF3_x005": {
+      "dopant": "NdF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Nd",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.92,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21NdP4S20ClF3 -> 0.1 Nd10S19 + 4 Li3PS4 + 2.1 Li2S + LiCl + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21NdP4S20ClF3 -> 4 Li3PS4 + 2.5 Li2S + LiCl + 0.5 Nd2S3 + 3 LiF",
+      "window_V": 0.402,
+      "n_breakpoints": 15
+    },
+    "NdF3_x010": {
+      "dopant": "NdF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "Nd",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.518,
+      "oxidation_limit_V": 1.92,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21NdP4S20ClF3 -> 0.1 Nd10S19 + 4 Li3PS4 + 2.1 Li2S + LiCl + 3 LiF + 0.8 Li",
+      "ocv_rxn": "Li21NdP4S20ClF3 -> 4 Li3PS4 + 2.5 Li2S + LiCl + 0.5 Nd2S3 + 3 LiF",
+      "window_V": 0.402,
+      "n_breakpoints": 15
+    },
+    "NiO_x002": {
+      "dopant": "NiO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Ni",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.816,
+      "oxidation_limit_V": 1.838,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22NiP4S19Cl4O -> 2.667 Li2S + 0.25 Li3PO4 + 3.75 Li3PS4 + 0.3333 Ni3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.022,
+      "n_breakpoints": 25
+    },
+    "NiO_x005": {
+      "dopant": "NiO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Ni",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.816,
+      "oxidation_limit_V": 1.838,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22NiP4S19Cl4O -> 2.667 Li2S + 0.25 Li3PO4 + 3.75 Li3PS4 + 0.3333 Ni3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.022,
+      "n_breakpoints": 25
+    },
+    "NiO_x010": {
+      "dopant": "NiO",
+      "elements": [
+        "Cl",
+        "Li",
+        "Ni",
+        "O",
+        "P",
+        "S"
+      ],
+      "reduction_limit_V": 1.816,
+      "oxidation_limit_V": 1.838,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li22NiP4S19Cl4O -> 2.667 Li2S + 0.25 Li3PO4 + 3.75 Li3PS4 + 0.3333 Ni3S4 + 4 LiCl + 0.6667 Li",
+      "ocv_rxn": null,
+      "window_V": 0.022,
+      "n_breakpoints": 25
+    },
+    "Sb2O5_x002": {
+      "dopant": "Sb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sb"
+      ],
+      "reduction_limit_V": 1.777,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.957,
+      "oxidation_onset_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + LiS4 + 7 Li",
+      "ocv_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + 4 Li2S",
+      "window_V": 0.363,
+      "n_breakpoints": 25
+    },
+    "Sb2O5_x005": {
+      "dopant": "Sb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sb"
+      ],
+      "reduction_limit_V": 1.777,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.957,
+      "oxidation_onset_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + LiS4 + 7 Li",
+      "ocv_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + 4 Li2S",
+      "window_V": 0.363,
+      "n_breakpoints": 25
+    },
+    "Sb2O5_x010": {
+      "dopant": "Sb2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sb"
+      ],
+      "reduction_limit_V": 1.777,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.957,
+      "oxidation_onset_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + LiS4 + 7 Li",
+      "ocv_rxn": "Li24Sb2P2S15Cl4O5 -> 4 LiCl + 2 Li3SbS4 + 1.25 Li3PO4 + 0.75 Li3PS4 + 4 Li2S",
+      "window_V": 0.363,
+      "n_breakpoints": 25
+    },
+    "Sc2O3_x002": {
+      "dopant": "Sc2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 1.386,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Sc2P4S17Cl4O3 -> 2 LiScS2 + 1.625 P2S7 + 0.4063 LiS4 + 0.75 Li3PO4 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Sc2P4S17Cl4O3 -> 2 LiScS2 + 3.25 Li3PS4 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.97,
+      "n_breakpoints": 18
+    },
+    "Sc2O3_x005": {
+      "dopant": "Sc2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 1.386,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Sc2P4S17Cl4O3 -> 2 LiScS2 + 1.625 P2S7 + 0.4063 LiS4 + 0.75 Li3PO4 + 4 LiCl + 9.344 Li",
+      "ocv_rxn": "Li18Sc2P4S17Cl4O3 -> 2 LiScS2 + 3.25 Li3PS4 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.97,
+      "n_breakpoints": 18
+    },
+    "Sc2O3_x010": {
+      "dopant": "Sc2O3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 2.027,
+      "oxidation_limit_V": 2.339,
+      "ocv_self_decomposition_V": 2.08,
+      "oxidation_onset_rxn": "Li17Sc2P4S16Cl5O3 -> 2 LiScS2 + P2S7 + 1.25 Li3PS4 + 0.75 Li3PO4 + 5 LiCl + 4 Li",
+      "ocv_rxn": "Li17Sc2P4S16Cl5O3 -> 0.25 Li3Sc2(PO4)3 + 1.5 LiScS2 + 3.25 Li3PS4 + 5 LiCl",
+      "window_V": 0.312,
+      "n_breakpoints": 21
+    },
+    "ScF3_x002": {
+      "dopant": "ScF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 1.306,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21ScP4S20ClF3 -> 0.5 LiS4 + 4 Li3PS4 + 3 LiF + LiCl + LiScS2 + 3.5 Li",
+      "ocv_rxn": "Li21ScP4S20ClF3 -> 2 Li2S + 4 Li3PS4 + 3 LiF + LiCl + LiScS2",
+      "window_V": 0.834,
+      "n_breakpoints": 13
+    },
+    "ScF3_x005": {
+      "dopant": "ScF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 1.306,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21ScP4S20ClF3 -> 0.5 LiS4 + 4 Li3PS4 + 3 LiF + LiCl + LiScS2 + 3.5 Li",
+      "ocv_rxn": "Li21ScP4S20ClF3 -> 2 Li2S + 4 Li3PS4 + 3 LiF + LiCl + LiScS2",
+      "window_V": 0.834,
+      "n_breakpoints": 13
+    },
+    "ScF3_x010": {
+      "dopant": "ScF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Sc"
+      ],
+      "reduction_limit_V": 1.306,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21ScP4S20ClF3 -> 0.5 LiS4 + 4 Li3PS4 + 3 LiF + LiCl + LiScS2 + 3.5 Li",
+      "ocv_rxn": "Li21ScP4S20ClF3 -> 2 Li2S + 4 Li3PS4 + 3 LiF + LiCl + LiScS2",
+      "window_V": 0.834,
+      "n_breakpoints": 13
+    },
+    "SiO2_x002": {
+      "dopant": "SiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Si"
+      ],
+      "reduction_limit_V": 1.414,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25SiP3S18(Cl2O)2 -> 1.5 LiS4 + 3 Li3PS4 + 4 LiCl + SiO2 + 10.5 Li",
+      "ocv_rxn": "Li25SiP3S18(Cl2O)2 -> 3 Li3PS4 + 6 Li2S + 4 LiCl + SiO2",
+      "window_V": 0.726,
+      "n_breakpoints": 23
+    },
+    "SiO2_x005": {
+      "dopant": "SiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Si"
+      ],
+      "reduction_limit_V": 1.414,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25SiP3S18(Cl2O)2 -> 1.5 LiS4 + 3 Li3PS4 + 4 LiCl + SiO2 + 10.5 Li",
+      "ocv_rxn": "Li25SiP3S18(Cl2O)2 -> 3 Li3PS4 + 6 Li2S + 4 LiCl + SiO2",
+      "window_V": 0.726,
+      "n_breakpoints": 23
+    },
+    "SiO2_x010": {
+      "dopant": "SiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Si"
+      ],
+      "reduction_limit_V": 1.414,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25SiP3S18(Cl2O)2 -> 1.5 LiS4 + 3 Li3PS4 + 4 LiCl + SiO2 + 10.5 Li",
+      "ocv_rxn": "Li25SiP3S18(Cl2O)2 -> 3 Li3PS4 + 6 Li2S + 4 LiCl + SiO2",
+      "window_V": 0.726,
+      "n_breakpoints": 23
+    },
+    "Sm2O3_x002": {
+      "dopant": "Sm2O3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sm"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.034,
+      "ocv_self_decomposition_V": 1.784,
+      "oxidation_onset_rxn": "Li17Sm2P4S16Cl5O3 -> 0.1579 Sm10S19 + 2.829 Li3PS4 + 0.4211 SmPS4 + 0.75 Li3PO4 + 5 LiCl + 1.263 Li",
+      "ocv_rxn": "Li17Sm2P4S16Cl5O3 -> 3.25 Li3PS4 + Sm2S3 + 0.75 Li3PO4 + 5 LiCl",
+      "window_V": 0.317,
+      "n_breakpoints": 22
+    },
+    "Sm2O3_x005": {
+      "dopant": "Sm2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sm"
+      ],
+      "reduction_limit_V": 1.488,
+      "oxidation_limit_V": 1.989,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Sm2P4S17Cl4O3 -> 0.2 Sm10S19 + 3.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18Sm2P4S17Cl4O3 -> 3.25 Li3PS4 + 2 LiSmS2 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.501,
+      "n_breakpoints": 21
+    },
+    "Sm2O3_x010": {
+      "dopant": "Sm2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sm"
+      ],
+      "reduction_limit_V": 1.488,
+      "oxidation_limit_V": 1.989,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Sm2P4S17Cl4O3 -> 0.2 Sm10S19 + 3.25 Li3PS4 + 0.2 Li2S + 0.75 Li3PO4 + 4 LiCl + 1.6 Li",
+      "ocv_rxn": "Li18Sm2P4S17Cl4O3 -> 3.25 Li3PS4 + 2 LiSmS2 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.501,
+      "n_breakpoints": 21
+    },
+    "SnO2_x002": {
+      "dopant": "SnO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sn"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.72,
+      "oxidation_onset_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + LiS4 + 0.5 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl",
+      "window_V": 0.423,
+      "n_breakpoints": 23
+    },
+    "SnO2_x005": {
+      "dopant": "SnO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sn"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.72,
+      "oxidation_onset_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + LiS4 + 0.5 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl",
+      "window_V": 0.423,
+      "n_breakpoints": 23
+    },
+    "SnO2_x010": {
+      "dopant": "SnO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sn"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.72,
+      "oxidation_onset_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + LiS4 + 0.5 Li3PO4 + 4 LiCl + 7 Li",
+      "ocv_rxn": "Li25SnP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4SnS4 + 0.5 Li3PO4 + 4 Li2S + 4 LiCl",
+      "window_V": 0.423,
+      "n_breakpoints": 23
+    },
+    "SrO_x002": {
+      "dopant": "SrO",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sr"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.917,
+      "oxidation_onset_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + Li2S + SrS3 + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + SrS + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.343,
+      "n_breakpoints": 20
+    },
+    "SrO_x005": {
+      "dopant": "SrO",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sr"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.917,
+      "oxidation_onset_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + Li2S + SrS3 + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + SrS + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.343,
+      "n_breakpoints": 20
+    },
+    "SrO_x010": {
+      "dopant": "SrO",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Sr"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.06,
+      "ocv_self_decomposition_V": 1.917,
+      "oxidation_onset_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + Li2S + SrS3 + 4 LiCl + 0.25 Li3PO4 + 4 Li",
+      "ocv_rxn": "SrLi22P4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + SrS + 4 LiCl + 0.25 Li3PO4",
+      "window_V": 0.343,
+      "n_breakpoints": 20
+    },
+    "Ta2O5_x002": {
+      "dopant": "Ta2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ta"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.027,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Ta2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 TaS3 + 6 Li2S + 1.25 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.31,
+      "n_breakpoints": 17
+    },
+    "Ta2O5_x005": {
+      "dopant": "Ta2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ta"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.027,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Ta2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 TaS3 + 6 Li2S + 1.25 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.31,
+      "n_breakpoints": 17
+    },
+    "Ta2O5_x010": {
+      "dopant": "Ta2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ta"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.027,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li24Ta2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 TaS3 + 6 Li2S + 1.25 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": null,
+      "window_V": 0.31,
+      "n_breakpoints": 17
+    },
+    "TiF4_x002": {
+      "dopant": "TiF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3(S5F)4 -> 3 Li3PS4 + TiS3 + 5 Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li25TiP3(S5F)4 -> Li4TiS4 + 3 Li3PS4 + 4 Li2S + 4 LiF",
+      "window_V": 0.307,
+      "n_breakpoints": 19
+    },
+    "TiF4_x005": {
+      "dopant": "TiF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3(S5F)4 -> 3 Li3PS4 + TiS3 + 5 Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li25TiP3(S5F)4 -> Li4TiS4 + 3 Li3PS4 + 4 Li2S + 4 LiF",
+      "window_V": 0.307,
+      "n_breakpoints": 19
+    },
+    "TiF4_x010": {
+      "dopant": "TiF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3(S5F)4 -> 3 Li3PS4 + TiS3 + 5 Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li25TiP3(S5F)4 -> Li4TiS4 + 3 Li3PS4 + 4 Li2S + 4 LiF",
+      "window_V": 0.307,
+      "n_breakpoints": 19
+    },
+    "TiO2_x002": {
+      "dopant": "TiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + TiS3 + 5 Li2S + 4 LiCl + 0.5 Li3PO4 + 2 Li",
+      "ocv_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4TiS4 + 4 Li2S + 4 LiCl + 0.5 Li3PO4",
+      "window_V": 0.307,
+      "n_breakpoints": 24
+    },
+    "TiO2_x005": {
+      "dopant": "TiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + TiS3 + 5 Li2S + 4 LiCl + 0.5 Li3PO4 + 2 Li",
+      "ocv_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4TiS4 + 4 Li2S + 4 LiCl + 0.5 Li3PO4",
+      "window_V": 0.307,
+      "n_breakpoints": 24
+    },
+    "TiO2_x010": {
+      "dopant": "TiO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Ti"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.024,
+      "ocv_self_decomposition_V": 1.942,
+      "oxidation_onset_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + TiS3 + 5 Li2S + 4 LiCl + 0.5 Li3PO4 + 2 Li",
+      "ocv_rxn": "Li25TiP3S18(Cl2O)2 -> 2.5 Li3PS4 + Li4TiS4 + 4 Li2S + 4 LiCl + 0.5 Li3PO4",
+      "window_V": 0.307,
+      "n_breakpoints": 24
+    },
+    "V2O5_x002": {
+      "dopant": "V2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "V"
+      ],
+      "reduction_limit_V": 1.736,
+      "oxidation_limit_V": 2.042,
+      "ocv_self_decomposition_V": 1.791,
+      "oxidation_onset_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4 + 6 Li",
+      "ocv_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 Li3VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4",
+      "window_V": 0.306,
+      "n_breakpoints": 27
+    },
+    "V2O5_x005": {
+      "dopant": "V2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "V"
+      ],
+      "reduction_limit_V": 1.736,
+      "oxidation_limit_V": 2.042,
+      "ocv_self_decomposition_V": 1.791,
+      "oxidation_onset_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4 + 6 Li",
+      "ocv_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 Li3VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4",
+      "window_V": 0.306,
+      "n_breakpoints": 27
+    },
+    "V2O5_x010": {
+      "dopant": "V2O5",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "V"
+      ],
+      "reduction_limit_V": 1.736,
+      "oxidation_limit_V": 2.042,
+      "ocv_self_decomposition_V": 1.791,
+      "oxidation_onset_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4 + 6 Li",
+      "ocv_rxn": "Li24V2P2S15Cl4O5 -> 0.75 Li3PS4 + 2 Li3VS4 + 4 Li2S + 4 LiCl + 1.25 Li3PO4",
+      "window_V": 0.306,
+      "n_breakpoints": 27
+    },
+    "WO3_x002": {
+      "dopant": "WO3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "W"
+      ],
+      "reduction_limit_V": 2.14,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li17P4WS16Cl5O3 -> WS2 + 1.625 P2S7 + 0.75 Li3PO4 + 0.6562 LiS4 + 5 LiCl + 9.094 Li",
+      "ocv_rxn": null,
+      "window_V": 0.216,
+      "n_breakpoints": 17
+    },
+    "WO3_x005": {
+      "dopant": "WO3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "W"
+      ],
+      "reduction_limit_V": 2.14,
+      "oxidation_limit_V": 2.356,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li17P4WS16Cl5O3 -> WS2 + 1.625 P2S7 + 0.75 Li3PO4 + 0.6562 LiS4 + 5 LiCl + 9.094 Li",
+      "ocv_rxn": null,
+      "window_V": 0.216,
+      "n_breakpoints": 17
+    },
+    "WO3_x010": {
+      "dopant": "WO3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "W"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": null,
+      "oxidation_onset_rxn": "Li23P3WS17Cl4O3 -> 2.25 Li3PS4 + WS2 + 0.75 Li3PO4 + 1.5 LiS4 + 4 LiCl + 8.5 Li",
+      "ocv_rxn": null,
+      "window_V": 0.423,
+      "n_breakpoints": 17
+    },
+    "Y2O3_x002": {
+      "dopant": "Y2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.391,
+      "oxidation_limit_V": 2.282,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Y2P4S17Cl4O3 -> 1.25 LiYS2 + 0.75 YPO4 + 3.25 Li3PS4 + 0.375 LiS4 + 4 LiCl + 2.625 Li",
+      "ocv_rxn": "Li18Y2P4S17Cl4O3 -> 2 LiYS2 + 3.25 Li3PS4 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.891,
+      "n_breakpoints": 15
+    },
+    "Y2O3_x005": {
+      "dopant": "Y2O3",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.391,
+      "oxidation_limit_V": 2.282,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li18Y2P4S17Cl4O3 -> 1.25 LiYS2 + 0.75 YPO4 + 3.25 Li3PS4 + 0.375 LiS4 + 4 LiCl + 2.625 Li",
+      "ocv_rxn": "Li18Y2P4S17Cl4O3 -> 2 LiYS2 + 3.25 Li3PS4 + 0.75 Li3PO4 + 4 LiCl",
+      "window_V": 0.891,
+      "n_breakpoints": 15
+    },
+    "Y2O3_x010": {
+      "dopant": "Y2O3+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.717,
+      "oxidation_limit_V": 2.282,
+      "ocv_self_decomposition_V": 1.915,
+      "oxidation_onset_rxn": "Li17Y2P4S16Cl5O3 -> 1.25 LiYS2 + 0.75 YPO4 + 3.25 Li3PS4 + 0.125 LiS4 + 5 LiCl + 0.875 Li",
+      "ocv_rxn": "Li17Y2P4S16Cl5O3 -> 1.5 LiYS2 + 0.5 YPO4 + 3.25 Li3PS4 + 0.25 Li3PO4 + 5 LiCl",
+      "window_V": 0.565,
+      "n_breakpoints": 16
+    },
+    "YF3_x002": {
+      "dopant": "YF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.292,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21YP4S20ClF3 -> LiYS2 + 4 Li3PS4 + 0.5 LiS4 + 3 LiF + LiCl + 3.5 Li",
+      "ocv_rxn": "Li21YP4S20ClF3 -> LiYS2 + 4 Li3PS4 + 2 Li2S + 3 LiF + LiCl",
+      "window_V": 0.848,
+      "n_breakpoints": 15
+    },
+    "YF3_x005": {
+      "dopant": "YF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.292,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li26YP3S20ClF3 -> LiYS2 + 3 Li3PS4 + 1.5 LiS4 + 3 LiF + LiCl + 10.5 Li",
+      "ocv_rxn": "Li26YP3S20ClF3 -> LiYS2 + 3 Li3PS4 + 6 Li2S + 3 LiF + LiCl",
+      "window_V": 0.848,
+      "n_breakpoints": 15
+    },
+    "YF3_x010": {
+      "dopant": "YF3",
+      "elements": [
+        "Cl",
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Y"
+      ],
+      "reduction_limit_V": 1.292,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21YP4S20ClF3 -> LiYS2 + 4 Li3PS4 + 0.5 LiS4 + 3 LiF + LiCl + 3.5 Li",
+      "ocv_rxn": "Li21YP4S20ClF3 -> LiYS2 + 4 Li3PS4 + 2 Li2S + 3 LiF + LiCl",
+      "window_V": 0.848,
+      "n_breakpoints": 15
+    },
+    "ZnO_x002": {
+      "dopant": "ZnO+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zn"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21ZnP4S18Cl5O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 0.5 LiS4 + ZnS + 5 LiCl + 3.5 Li",
+      "ocv_rxn": "Li21ZnP4S18Cl5O -> 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + ZnS + 5 LiCl",
+      "window_V": 0.575,
+      "n_breakpoints": 19
+    },
+    "ZnO_x005": {
+      "dopant": "ZnO+Clrich",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zn"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li21ZnP4S18Cl5O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 0.5 LiS4 + ZnS + 5 LiCl + 3.5 Li",
+      "ocv_rxn": "Li21ZnP4S18Cl5O -> 3.75 Li3PS4 + 2 Li2S + 0.25 Li3PO4 + ZnS + 5 LiCl",
+      "window_V": 0.575,
+      "n_breakpoints": 19
+    },
+    "ZnO_x010": {
+      "dopant": "ZnO",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zn"
+      ],
+      "reduction_limit_V": 1.565,
+      "oxidation_limit_V": 2.14,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li22ZnP4S19Cl4O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 0.75 LiS4 + ZnS + 4 LiCl + 5.25 Li",
+      "ocv_rxn": "Li22ZnP4S19Cl4O -> 3.75 Li3PS4 + 3 Li2S + 0.25 Li3PO4 + ZnS + 4 LiCl",
+      "window_V": 0.575,
+      "n_breakpoints": 19
+    },
+    "ZrF4_x002": {
+      "dopant": "ZrF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25ZrP3(S5F)4 -> ZrS3 + 3 Li3PS4 + 5 Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li25ZrP3(S5F)4 -> 3 Li3PS4 + ZrS2 + 6 Li2S + 4 LiF",
+      "window_V": 0.165,
+      "n_breakpoints": 19
+    },
+    "ZrF4_x005": {
+      "dopant": "ZrF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20ZrP4(S5F)4 -> ZrS3 + 4 Li3PS4 + Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li20ZrP4(S5F)4 -> 4 Li3PS4 + ZrS2 + 2 Li2S + 4 LiF",
+      "window_V": 0.165,
+      "n_breakpoints": 19
+    },
+    "ZrF4_x010": {
+      "dopant": "ZrF4",
+      "elements": [
+        "F",
+        "Li",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25ZrP3(S5F)4 -> ZrS3 + 3 Li3PS4 + 5 Li2S + 4 LiF + 2 Li",
+      "ocv_rxn": "Li25ZrP3(S5F)4 -> 3 Li3PS4 + ZrS2 + 6 Li2S + 4 LiF",
+      "window_V": 0.165,
+      "n_breakpoints": 19
+    },
+    "ZrO2_x002": {
+      "dopant": "ZrO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li25ZrP3S18(Cl2O)2 -> 2.5 Li3PS4 + ZrS3 + 5 Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li25ZrP3S18(Cl2O)2 -> 2.5 Li3PS4 + ZrS2 + 6 Li2S + 0.5 Li3PO4 + 4 LiCl",
+      "window_V": 0.165,
+      "n_breakpoints": 21
+    },
+    "ZrO2_x005": {
+      "dopant": "ZrO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20ZrP4S18(Cl2O)2 -> 3.5 Li3PS4 + ZrS3 + Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li20ZrP4S18(Cl2O)2 -> 3.5 Li3PS4 + ZrS2 + 2 Li2S + 0.5 Li3PO4 + 4 LiCl",
+      "window_V": 0.165,
+      "n_breakpoints": 21
+    },
+    "ZrO2_x010": {
+      "dopant": "ZrO2",
+      "elements": [
+        "Cl",
+        "Li",
+        "O",
+        "P",
+        "S",
+        "Zr"
+      ],
+      "reduction_limit_V": 1.713,
+      "oxidation_limit_V": 1.878,
+      "ocv_self_decomposition_V": 1.717,
+      "oxidation_onset_rxn": "Li20ZrP4S18(Cl2O)2 -> 3.5 Li3PS4 + ZrS3 + Li2S + 0.5 Li3PO4 + 4 LiCl + 2 Li",
+      "ocv_rxn": "Li20ZrP4S18(Cl2O)2 -> 3.5 Li3PS4 + ZrS2 + 2 Li2S + 0.5 Li3PO4 + 4 LiCl",
+      "window_V": 0.165,
+      "n_breakpoints": 21
+    }
+  }
+}

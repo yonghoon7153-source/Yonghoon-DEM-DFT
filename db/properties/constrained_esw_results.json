@@ -1,0 +1,88 @@
+{
+  "method": "strain-explicit constrained ESW (Fitzhugh leading-order edge shift phi += K_eff*DeltaV/n_e). MP GGA_GGA+U volumes; LiS4/SCl3/Li5PS4Cl2 excluded.",
+  "k_eff_GPa": [
+    0.0,
+    10.0,
+    20.0
+  ],
+  "results": {
+    "comp1": {
+      "composition": "Li6PS5Cl",
+      "v_se_A3_per_fu": 254.16,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li",
+        "DeltaV_A3": -9.2,
+        "n_e": 2.0,
+        "eps_RXN": -0.0361,
+        "products_vol": "0.25Li3PS4(166.5) + 0.5LiCl(42.4) + 0.0313S(36.0)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P",
+        "DeltaV_A3": 48.9,
+        "n_e": 5.0,
+        "eps_RXN": 0.1923,
+        "products_vol": "5Li2S(234.1) + 0.5LiCl(42.4) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.632,
+          "oxidation_V": 1.969,
+          "width_V": 1.337
+        },
+        "20.0": {
+          "reduction_V": 0.021,
+          "oxidation_V": 1.682,
+          "width_V": 1.661
+        }
+      }
+    },
+    "modelc": {
+      "composition": "Li5.4P1S4.4Cl1.6",
+      "v_se_A3_per_fu": 243.29,
+      "oxidation_onset": {
+        "phi0_V": 2.256,
+        "rxn": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li",
+        "DeltaV_A3": 5.5,
+        "n_e": 0.8,
+        "eps_RXN": 0.0226,
+        "products_vol": "0.25Li3PS4(166.5) + 0.8LiCl(67.8) + 0.0125S(14.4)",
+        "missing_vol": []
+      },
+      "reduction_onset": {
+        "phi0_V": 1.242,
+        "rxn": "Li5.4P1S4.4Cl1.6 + 5 Li -> 4.4 Li2S + 1.6 LiCl + P",
+        "DeltaV_A3": 57.1,
+        "n_e": 5.0,
+        "eps_RXN": 0.2347,
+        "products_vol": "4.4Li2S(206.0) + 0.8LiCl(67.8) + 0.0238P(26.5)",
+        "missing_vol": []
+      },
+      "window_vs_k_eff": {
+        "0.0": {
+          "reduction_V": 1.242,
+          "oxidation_V": 2.256,
+          "width_V": 1.014
+        },
+        "10.0": {
+          "reduction_V": 0.529,
+          "oxidation_V": 2.685,
+          "width_V": 2.156
+        },
+        "20.0": {
+          "reduction_V": -0.184,
+          "oxidation_V": 3.114,
+          "width_V": 3.298
+        }
+      }
+    }
+  }
+}

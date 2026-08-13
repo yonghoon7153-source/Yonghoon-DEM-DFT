@@ -1,0 +1,227 @@
+{
+  "method": "pymatgen InterfacialReactivity (Richards/Ong 2016), use_hull_energy=True, MP GGA_GGA+U hull. Reaction energy per atom; more negative = more reactive interface = less stable.",
+  "chemsys": [
+    "C",
+    "Cl",
+    "Co",
+    "Li",
+    "Nd",
+    "O",
+    "P",
+    "S"
+  ],
+  "results": {
+    "LiCoO2": {
+      "comp1": {
+        "electrolyte": "Li6PS5Cl",
+        "min_reaction_energy_eV_per_atom": -0.32271,
+        "most_exothermic_reaction": "0.7423 LiCoO2 + 0.2577 Li6PS5Cl -> 0.08247 Co9S8 + 0.2577 Li3PO4 + 0.5155 Li2S + 0.2577 LiCl + 0.1134 Li2SO4",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "LiCoO2 -> LiCoO2"
+          },
+          {
+            "x_atomic_frac": 0.1884,
+            "reaction_energy_eV_per_atom": -0.1768,
+            "reaction": "0.9333 LiCoO2 + 0.06667 Li6PS5Cl -> 0.06667 Li6CoO4 + 0.06667 Li3PO4 + 0.06667 LiCl + 0.3333 Li2SO4 + 0.8667 Co"
+          },
+          {
+            "x_atomic_frac": 0.196,
+            "reaction_energy_eV_per_atom": -0.18108,
+            "reaction": "0.9302 LiCoO2 + 0.06977 Li6PS5Cl -> 0.186 Li2O + 0.06977 Li3PO4 + 0.06977 LiCl + 0.3488 Li2SO4 + 0.9302 Co"
+          },
+          {
+            "x_atomic_frac": 0.4037,
+            "reaction_energy_eV_per_atom": -0.28795,
+            "reaction": "0.8276 LiCoO2 + 0.1724 Li6PS5Cl -> 0.09195 Co9S8 + 0.4598 Li2O + 0.1724 Li3PO4 + 0.1724 LiCl + 0.1264 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5302,
+            "reaction_energy_eV_per_atom": -0.32271,
+            "reaction": "0.7423 LiCoO2 + 0.2577 Li6PS5Cl -> 0.08247 Co9S8 + 0.2577 Li3PO4 + 0.5155 Li2S + 0.2577 LiCl + 0.1134 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5983,
+            "reaction_energy_eV_per_atom": -0.32011,
+            "reaction": "0.6857 LiCoO2 + 0.3143 Li6PS5Cl -> 0.2286 Co3S4 + 0.3143 Li3PO4 + 0.6286 Li2S + 0.3143 LiCl + 0.02857 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.619,
+            "reaction_energy_eV_per_atom": -0.31632,
+            "reaction": "0.6667 LiCoO2 + 0.3333 Li6PS5Cl -> 0.1667 Co3S4 + 0.1667 CoS2 + 0.3333 Li3PO4 + 0.6667 Li2S + 0.3333 LiCl"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": -0.0,
+            "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+          }
+        ]
+      },
+      "modelc": {
+        "electrolyte": "Li5.4PS4.4Cl1.6",
+        "min_reaction_energy_eV_per_atom": -0.3308,
+        "most_exothermic_reaction": "0.7423 LiCoO2 + 0.2577 Li5.4P1S4.4Cl1.6 -> 0.08247 Co9S8 + 0.2577 Li3PO4 + 0.3608 Li2S + 0.4124 LiCl + 0.1134 Li2SO4",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "LiCoO2 -> LiCoO2"
+          },
+          {
+            "x_atomic_frac": 0.2026,
+            "reaction_energy_eV_per_atom": -0.18638,
+            "reaction": "0.9242 LiCoO2 + 0.07576 Li5.4P1S4.4Cl1.6 -> 0.05303 Li6CoO4 + 0.07576 Li3PO4 + 0.1212 LiCl + 0.3333 Li2SO4 + 0.8712 Co"
+          },
+          {
+            "x_atomic_frac": 0.209,
+            "reaction_energy_eV_per_atom": -0.19003,
+            "reaction": "0.9215 LiCoO2 + 0.07853 Li5.4P1S4.4Cl1.6 -> 0.1466 Li2O + 0.07853 Li3PO4 + 0.1257 LiCl + 0.3455 Li2SO4 + 0.9215 Co"
+          },
+          {
+            "x_atomic_frac": 0.4233,
+            "reaction_energy_eV_per_atom": -0.30258,
+            "reaction": "0.8086 LiCoO2 + 0.1914 Li5.4P1S4.4Cl1.6 -> 0.08984 Co9S8 + 0.3573 Li2O + 0.1914 Li3PO4 + 0.3063 LiCl + 0.1235 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5184,
+            "reaction_energy_eV_per_atom": -0.3308,
+            "reaction": "0.7423 LiCoO2 + 0.2577 Li5.4P1S4.4Cl1.6 -> 0.08247 Co9S8 + 0.2577 Li3PO4 + 0.3608 Li2S + 0.4124 LiCl + 0.1134 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5869,
+            "reaction_energy_eV_per_atom": -0.3292,
+            "reaction": "0.6857 LiCoO2 + 0.3143 Li5.4P1S4.4Cl1.6 -> 0.2286 Co3S4 + 0.3143 Li3PO4 + 0.44 Li2S + 0.5029 LiCl + 0.02857 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.6078,
+            "reaction_energy_eV_per_atom": -0.32562,
+            "reaction": "0.6667 LiCoO2 + 0.3333 Li5.4P1S4.4Cl1.6 -> 0.1667 Co3S4 + 0.1667 CoS2 + 0.3333 Li3PO4 + 0.4667 Li2S + 0.5333 LiCl"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": -0.0,
+            "reaction": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+          }
+        ]
+      },
+      "nd_doped": {
+        "electrolyte": "Li4.8Nd0.2PS4.1O0.3Cl1.6",
+        "min_reaction_energy_eV_per_atom": -0.32851,
+        "most_exothermic_reaction": "0.2626 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.7374 LiCoO2 -> 0.08193 Co9S8 + 0.02626 Nd2SO2 + 0.2626 Li3PO4 + 0.2823 Li2S + 0.4202 LiCl + 0.1127 Li2SO4",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "LiCoO2 -> LiCoO2"
+          },
+          {
+            "x_atomic_frac": 0.2098,
+            "reaction_energy_eV_per_atom": -0.18842,
+            "reaction": "0.0813 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.9187 LiCoO2 -> 0.04472 Li6CoO4 + 0.0813 Li3PO4 + 0.1301 LiCl + 0.3333 Li2SO4 + 0.00813 Nd2O3 + 0.874 Co"
+          },
+          {
+            "x_atomic_frac": 0.2153,
+            "reaction_energy_eV_per_atom": -0.19153,
+            "reaction": "0.0838 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.9162 LiCoO2 -> 0.1229 Li2O + 0.0838 Li3PO4 + 0.1341 LiCl + 0.3436 Li2SO4 + 0.00838 Nd2O3 + 0.9162 Co"
+          },
+          {
+            "x_atomic_frac": 0.4325,
+            "reaction_energy_eV_per_atom": -0.30378,
+            "reaction": "0.2026 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.7974 LiCoO2 -> 0.0886 Co9S8 + 0.2971 Li2O + 0.2026 Li3PO4 + 0.3241 LiCl + 0.1218 Li2SO4 + 0.02026 Nd2O3"
+          },
+          {
+            "x_atomic_frac": 0.4386,
+            "reaction_energy_eV_per_atom": -0.30565,
+            "reaction": "0.2066 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.7934 LiCoO2 -> 0.08815 Co9S8 + 0.2961 Li2O + 0.02066 Nd2SO2 + 0.2066 Li3PO4 + 0.3306 LiCl + 0.1212 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5165,
+            "reaction_energy_eV_per_atom": -0.32851,
+            "reaction": "0.2626 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.7374 LiCoO2 -> 0.08193 Co9S8 + 0.02626 Nd2SO2 + 0.2626 Li3PO4 + 0.2823 Li2S + 0.4202 LiCl + 0.1127 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.5851,
+            "reaction_energy_eV_per_atom": -0.3266,
+            "reaction": "0.3198 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.6802 LiCoO2 -> 0.2267 Co3S4 + 0.03198 Nd2SO2 + 0.3198 Li3PO4 + 0.3437 Li2S + 0.5116 LiCl + 0.02834 Li2SO4"
+          },
+          {
+            "x_atomic_frac": 0.6061,
+            "reaction_energy_eV_per_atom": -0.32291,
+            "reaction": "0.339 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.661 LiCoO2 -> 0.1653 Co3S4 + 0.1653 CoS2 + 0.0339 Nd2SO2 + 0.339 Li3PO4 + 0.3644 Li2S + 0.5424 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.6186,
+            "reaction_energy_eV_per_atom": -0.31711,
+            "reaction": "0.3509 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.6491 LiCoO2 -> 0.007018 Nd10S19 + 0.1763 Co3S4 + 0.1202 CoS2 + 0.3509 Li3PO4 + 0.3596 Li2S + 0.5614 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.8621,
+            "reaction_energy_eV_per_atom": -0.11507,
+            "reaction": "0.6757 Li4.8Nd0.2P1S4.1Cl1.6O0.3 + 0.3243 LiCoO2 -> 0.01351 Nd10S19 + 0.4628 Li3PS4 + 0.1081 Co3S4 + 0.2128 Li3PO4 + 0.2297 Li2S + 1.081 LiCl"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": -0.0,
+            "reaction": "Li4.8Nd0.2P1S4.1Cl1.6O0.3 -> 0.925 Li3PS4 + 0.075 Li3PO4 + 0.1 Li2S + 1.6 LiCl + 0.1 Nd2S3"
+          }
+        ]
+      }
+    },
+    "C": {
+      "comp1": {
+        "electrolyte": "Li6PS5Cl",
+        "min_reaction_energy_eV_per_atom": 0.0,
+        "most_exothermic_reaction": "C -> C",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "C -> C"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+          }
+        ]
+      },
+      "modelc": {
+        "electrolyte": "Li5.4PS4.4Cl1.6",
+        "min_reaction_energy_eV_per_atom": 0.0,
+        "most_exothermic_reaction": "C -> C",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "C -> C"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+          }
+        ]
+      },
+      "nd_doped": {
+        "electrolyte": "Li4.8Nd0.2PS4.1O0.3Cl1.6",
+        "min_reaction_energy_eV_per_atom": 0.0,
+        "most_exothermic_reaction": "C -> C",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "C -> C"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li4.8Nd0.2P1S4.1Cl1.6O0.3 -> 0.925 Li3PS4 + 0.075 Li3PO4 + 0.1 Li2S + 1.6 LiCl + 0.1 Nd2S3"
+          }
+        ]
+      }
+    }
+  },
+  "comparison_summary": {}
+}

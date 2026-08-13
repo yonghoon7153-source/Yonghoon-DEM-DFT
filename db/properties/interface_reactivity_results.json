@@ -1,0 +1,164 @@
+{
+  "method": "pymatgen InterfacialReactivity (Richards/Ong 2016), use_hull_energy=True, MP GGA_GGA+U hull. Reaction energy per atom; more negative = more reactive interface = less stable.",
+  "chemsys": [
+    "C",
+    "Cl",
+    "Co",
+    "Li",
+    "O",
+    "P",
+    "S"
+  ],
+  "results": {
+    "LiCoO2": {
+      "comp1": {
+        "electrolyte": "Li6PS5Cl",
+        "min_reaction_energy_eV_per_atom": -0.32271,
+        "most_exothermic_reaction": "0.7423 LiCoO2 + 0.2577 Li6PS5Cl -> 0.08247 Co9S8 + 0.1134 Li2SO4 + 0.2577 Li3PO4 + 0.5155 Li2S + 0.2577 LiCl",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "LiCoO2 -> LiCoO2"
+          },
+          {
+            "x_atomic_frac": 0.1884,
+            "reaction_energy_eV_per_atom": -0.1768,
+            "reaction": "0.9333 LiCoO2 + 0.06667 Li6PS5Cl -> 0.06667 Li6CoO4 + 0.3333 Li2SO4 + 0.06667 Li3PO4 + 0.06667 LiCl + 0.8667 Co"
+          },
+          {
+            "x_atomic_frac": 0.196,
+            "reaction_energy_eV_per_atom": -0.18108,
+            "reaction": "0.9302 LiCoO2 + 0.06977 Li6PS5Cl -> 0.3488 Li2SO4 + 0.06977 Li3PO4 + 0.186 Li2O + 0.06977 LiCl + 0.9302 Co"
+          },
+          {
+            "x_atomic_frac": 0.4037,
+            "reaction_energy_eV_per_atom": -0.28795,
+            "reaction": "0.8276 LiCoO2 + 0.1724 Li6PS5Cl -> 0.09195 Co9S8 + 0.1264 Li2SO4 + 0.1724 Li3PO4 + 0.4598 Li2O + 0.1724 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.5302,
+            "reaction_energy_eV_per_atom": -0.32271,
+            "reaction": "0.7423 LiCoO2 + 0.2577 Li6PS5Cl -> 0.08247 Co9S8 + 0.1134 Li2SO4 + 0.2577 Li3PO4 + 0.5155 Li2S + 0.2577 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.5983,
+            "reaction_energy_eV_per_atom": -0.32011,
+            "reaction": "0.6857 LiCoO2 + 0.3143 Li6PS5Cl -> 0.02857 Li2SO4 + 0.3143 Li3PO4 + 0.6286 Li2S + 0.2286 Co3S4 + 0.3143 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.619,
+            "reaction_energy_eV_per_atom": -0.31632,
+            "reaction": "0.6667 LiCoO2 + 0.3333 Li6PS5Cl -> 0.1667 CoS2 + 0.3333 Li3PO4 + 0.6667 Li2S + 0.1667 Co3S4 + 0.3333 LiCl"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+          }
+        ]
+      },
+      "modelc": {
+        "electrolyte": "Li5.4P1S4.4Cl1.6",
+        "min_reaction_energy_eV_per_atom": -0.3308,
+        "most_exothermic_reaction": "0.7423 LiCoO2 + 0.2577 Li5.4P1S4.4Cl1.6 -> 0.08247 Co9S8 + 0.1134 Li2SO4 + 0.2577 Li3PO4 + 0.3608 Li2S + 0.4124 LiCl",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "LiCoO2 -> LiCoO2"
+          },
+          {
+            "x_atomic_frac": 0.2026,
+            "reaction_energy_eV_per_atom": -0.18638,
+            "reaction": "0.9242 LiCoO2 + 0.07576 Li5.4P1S4.4Cl1.6 -> 0.05303 Li6CoO4 + 0.3333 Li2SO4 + 0.07576 Li3PO4 + 0.1212 LiCl + 0.8712 Co"
+          },
+          {
+            "x_atomic_frac": 0.209,
+            "reaction_energy_eV_per_atom": -0.19003,
+            "reaction": "0.9215 LiCoO2 + 0.07853 Li5.4P1S4.4Cl1.6 -> 0.3455 Li2SO4 + 0.07853 Li3PO4 + 0.1466 Li2O + 0.1257 LiCl + 0.9215 Co"
+          },
+          {
+            "x_atomic_frac": 0.4233,
+            "reaction_energy_eV_per_atom": -0.30258,
+            "reaction": "0.8086 LiCoO2 + 0.1914 Li5.4P1S4.4Cl1.6 -> 0.08984 Co9S8 + 0.1235 Li2SO4 + 0.1914 Li3PO4 + 0.3573 Li2O + 0.3063 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.5184,
+            "reaction_energy_eV_per_atom": -0.3308,
+            "reaction": "0.7423 LiCoO2 + 0.2577 Li5.4P1S4.4Cl1.6 -> 0.08247 Co9S8 + 0.1134 Li2SO4 + 0.2577 Li3PO4 + 0.3608 Li2S + 0.4124 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.5869,
+            "reaction_energy_eV_per_atom": -0.3292,
+            "reaction": "0.6857 LiCoO2 + 0.3143 Li5.4P1S4.4Cl1.6 -> 0.02857 Li2SO4 + 0.3143 Li3PO4 + 0.44 Li2S + 0.2286 Co3S4 + 0.5029 LiCl"
+          },
+          {
+            "x_atomic_frac": 0.6078,
+            "reaction_energy_eV_per_atom": -0.32562,
+            "reaction": "0.6667 LiCoO2 + 0.3333 Li5.4P1S4.4Cl1.6 -> 0.1667 CoS2 + 0.3333 Li3PO4 + 0.4667 Li2S + 0.1667 Co3S4 + 0.5333 LiCl"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+          }
+        ]
+      }
+    },
+    "C": {
+      "comp1": {
+        "electrolyte": "Li6PS5Cl",
+        "min_reaction_energy_eV_per_atom": 0.0,
+        "most_exothermic_reaction": "C -> C",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "C -> C"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+          }
+        ]
+      },
+      "modelc": {
+        "electrolyte": "Li5.4P1S4.4Cl1.6",
+        "min_reaction_energy_eV_per_atom": 0.0,
+        "most_exothermic_reaction": "C -> C",
+        "all_kinks": [
+          {
+            "x_atomic_frac": 0.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "C -> C"
+          },
+          {
+            "x_atomic_frac": 1.0,
+            "reaction_energy_eV_per_atom": 0.0,
+            "reaction": "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+          }
+        ]
+      }
+    }
+  },
+  "comparison_summary": {
+    "LiCoO2": {
+      "energies_eV_per_atom": {
+        "comp1": -0.32271,
+        "modelc": -0.3308
+      },
+      "more_reactive_interface": "modelc",
+      "delta_eV_per_atom": 0.00809
+    },
+    "C": {
+      "energies_eV_per_atom": {
+        "comp1": 0.0,
+        "modelc": 0.0
+      },
+      "more_reactive_interface": "modelc",
+      "delta_eV_per_atom": 0.0
+    }
+  }
+}

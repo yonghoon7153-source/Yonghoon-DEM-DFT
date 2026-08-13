@@ -1,0 +1,124 @@
+{
+  "excluded_formula": [
+    "Li5PS4Cl2",
+    "LiS4",
+    "SCl3"
+  ],
+  "dropped": [
+    [
+      "LiS4",
+      "{'identifier': 'mp-aaaceqmj', 'suffix': 'GGA', 'separator': '-'}"
+    ]
+  ],
+  "results": {
+    "comp1": {
+      "reduction_V": 1.242,
+      "ocv_V": 1.717,
+      "oxidation_onset_V": 2.256,
+      "steps": [
+        [
+          0.0,
+          8.0,
+          "Li6PS5Cl + 8 Li -> Li3P + 5 Li2S + LiCl"
+        ],
+        [
+          0.87,
+          6.0,
+          "Li6PS5Cl + 6 Li -> LiP + 5 Li2S + LiCl"
+        ],
+        [
+          0.932,
+          5.429,
+          "Li6PS5Cl + 5.429 Li -> 0.1429 Li3P7 + 5 Li2S + LiCl"
+        ],
+        [
+          1.177,
+          5.143,
+          "Li6PS5Cl + 5.143 Li -> 0.1429 LiP7 + 5 Li2S + LiCl"
+        ],
+        [
+          1.242,
+          5.0,
+          "Li6PS5Cl + 5 Li -> 5 Li2S + LiCl + P"
+        ],
+        [
+          1.717,
+          0.0,
+          "Li6PS5Cl -> Li3PS4 + Li2S + LiCl"
+        ],
+        [
+          2.256,
+          -2.0,
+          "Li6PS5Cl -> Li3PS4 + LiCl + S + 2 Li"
+        ],
+        [
+          2.385,
+          -5.0,
+          "Li6PS5Cl -> 0.5 P2S7 + LiCl + 1.5 S + 5 Li"
+        ],
+        [
+          3.326,
+          -6.0,
+          "Li6PS5Cl -> 0.5 P2S7 + 0.5 S + SCl + 6 Li"
+        ]
+      ]
+    },
+    "modelc": {
+      "reduction_V": 1.242,
+      "ocv_V": 1.717,
+      "oxidation_onset_V": 2.256,
+      "steps": [
+        [
+          0.0,
+          8.0,
+          "Li5.4P1S4.4Cl1.6 + 8 Li -> Li3P + 4.4 Li2S + 1.6 LiCl"
+        ],
+        [
+          0.87,
+          6.0,
+          "Li5.4P1S4.4Cl1.6 + 6 Li -> LiP + 4.4 Li2S + 1.6 LiCl"
+        ],
+        [
+          0.932,
+          5.429,
+          "Li5.4P1S4.4Cl1.6 + 5.429 Li -> 0.1429 Li3P7 + 4.4 Li2S + 1.6 LiCl"
+        ],
+        [
+          1.177,
+          5.143,
+          "Li5.4P1S4.4Cl1.6 + 5.143 Li -> 0.1429 LiP7 + 4.4 Li2S + 1.6 LiCl"
+        ],
+        [
+          1.242,
+          5.0,
+          "Li5.4P1S4.4Cl1.6 + 5 Li -> 4.4 Li2S + 1.6 LiCl + P"
+        ],
+        [
+          1.717,
+          -0.0,
+          "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 0.4 Li2S + 1.6 LiCl"
+        ],
+        [
+          2.256,
+          -0.8,
+          "Li5.4P1S4.4Cl1.6 -> Li3PS4 + 1.6 LiCl + 0.4 S + 0.8 Li"
+        ],
+        [
+          2.385,
+          -3.8,
+          "Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 1.6 LiCl + 0.9 S + 3.8 Li"
+        ],
+        [
+          3.326,
+          -4.7,
+          "Li5.4P1S4.4Cl1.6 -> 0.5 P2S7 + 0.7 LiCl + 0.9 SCl + 4.7 Li"
+        ],
+        [
+          3.388,
+          -5.4,
+          "Li5.4P1S4.4Cl1.6 -> 0.4588 P2S7 + 0.08235 PCl5 + 1.188 SCl + 5.4 Li"
+        ]
+      ]
+    }
+  }
+}
