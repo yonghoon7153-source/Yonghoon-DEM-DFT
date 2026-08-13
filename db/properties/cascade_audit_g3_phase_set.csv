@@ -1,4 +1,4 @@
-system,phase_set_id,oxidation_onset_V,delta_vs_included_V,status,note
-LPSCl host,mp-gga-gga-u__lis4-included,2.14,0.0,historical,Candidate and host must use this same phase set
-LPSCl host,mp-gga-gga-u__lis4-excluded,2.256,0.116,sensitivity-only,Do not apply this threshold to included-phase-set candidates
-Recovered candidate records,mp-gga-gga-u__lis4-included,,,recovered_unvalidated,124/270 onset reactions contain LiS4
+system,phase_set_id,oxidation_onset_V,delta_vs_included_V,status,note,phase_set_assumption
+LPSCl host,mp-gga-gga-u__lis4-included,2.14,0.0,historical,Candidate and host must use this same phase set,
+LPSCl host,mp-gga-gga-u__lis4-excluded,2.256,0.116,sensitivity-only,Do not apply this threshold to included-phase-set candidates,
+Recovered candidate records,,,,recovered_unvalidated,"124/270 onset reactions contain LiS4. Reaction content is NOT method identity — no phase_set_id, MP entry ids or MP snapshot hash was recorded for these rows.",mp-gga-gga-u__lis4-included (가정 — 행 단위 기록 없음)

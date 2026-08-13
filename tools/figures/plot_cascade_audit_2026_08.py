@@ -37,7 +37,12 @@ RECOVERED_DERIVED = [
     "db/properties/cascade_v23_champions_v2.csv",
     "db/properties/cascade_v23_litransport_v2.csv",
     "db/properties/oxidation_stability_cascade_v2.csv",
-    "db/properties/cascade_v23_ranked_v2.csv",
+    # ⛔ 2026-08-14 (Codex Round-3 P0-2) — ranked_v2 를 뺐다. **어느 패널도 안 읽는다.**
+    #   그런데 여기 있었기 때문에 Na2S 정정으로 그 파일만 뒤 커밋 산출물이 되자
+    #   "top-level source_commit 은 9abe5105 인데 한 파일만 922332c0" 이라는 mixed pin 이
+    #   생겼고, --materialize-recovered 는 9abe blob 을 읽어 922 해시를 기대해 실패했다.
+    #   다운로드 artifact 로서의 지위는 원장(cascade_audit_manifest.json)이 관리한다 —
+    #   거기엔 artifact 별 source_commit·derived_from·override_reason 이 있다.
 ]
 
 # These are hashes of bytes committed at PINNED_SOURCE_COMMIT.  The generator
@@ -49,17 +54,9 @@ EXPECTED_SOURCE = {
     "db/properties/cascade_v23_champions_v2.csv": ("15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d", 57541),
     "db/properties/cascade_v23_litransport_v2.csv": ("113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9", 22903),
     "db/properties/oxidation_stability_cascade_v2.csv": ("2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2", 4456),
-    # ⚠ 2026-08-14 pin 갱신 — 이 한 파일만 의도적으로 움직였다.
-    #   pin 2c930ebb… 는 `9abe5105` 시점 값이고, 그 뒤 Na2S 정정으로 바뀌었다:
-    #   `Na2S_x100` 의 B_hill = −36.27 GPa (탄성 계산 실패) 가 3점 평균에 들어가
-    #   pugh 0.40 → B/G 2.50 이라는 **틀린 "연성 경험칙 반증"** 을 만들었다.
-    #   plot_cascade_insights.py 의 `_elastic_ok()` 로 비물리 행을 빼고 재생성 →
-    #   Na2S pugh 0.82 (B/G 1.22). 270행 중 비물리 행은 그 하나뿐이라 다른 종은 불변이다.
-    #   5개 audit 패널은 ranked_v2 의 탄성 평균을 쓰지 않으므로 그림은 그대로 유효하다.
-    #   → 의도한 드리프트 1건만 pin 을 옮기고, 나머지 파일의 무단 변경은 계속 막는다.
-    "db/properties/cascade_v23_ranked_v2.csv": ("1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9", 4828),
 }
-#: pin 을 옮긴 기록 — 왜 옮겼는지 없이 옮기면 이 장치가 무의미해진다.
+#: pin 이동 기록 — 이제 **원장**(cascade_audit_manifest.json)의 artifact 별
+#: source_commit·derived_from·override_reason 이 정본이다. 여기는 이력용 사본.
 PIN_OVERRIDES = [
     {"path": "db/properties/cascade_v23_ranked_v2.csv",
      "was": "2c930ebbd4715d4afe6168a6b349ffef0a1b1b56c622d14962659e04eb637d4f",
@@ -593,7 +590,12 @@ def _file_meta(path: Path, csv_rows: bool = False) -> dict:
     return item
 
 
-def write_manifest(
+def write_manifest(  # noqa: D401  — ⛔ 2026-08-14 이후 **호출 금지**
+    # Codex Round-3 P0-1: 이 함수가 cascade_audit_manifest.json 을 통째로 덮어써서
+    # rebuild_pool_inputs 의 artifacts 블록을 지웠다(그 반대도 일어났다). 원장의 단독
+    # 소유자는 tools/cascade/build_cascade_audit_manifest.py 다. 이 함수는 sidecar
+    # (cascade_audit_manifest_plotter_sidecar.json) 로만 쓴다.
+
     hashes: dict,
     outputs: list[tuple[Path, Path]],
     records: dict,
@@ -696,7 +698,7 @@ def write_manifest(
             "path": f"db/properties/{path.name}", "status": "audit-current",
             "sha256": item["sha256"], "bytes": item["bytes"], "rows": item["rows"],
         })
-    out = DB / "cascade_audit_manifest.json"
+    out = DB / "cascade_audit_manifest_plotter_sidecar.json"   # ← 원장 아님 (sidecar)
     out.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     return out
 

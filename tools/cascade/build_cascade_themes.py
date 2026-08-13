@@ -468,7 +468,7 @@ def main():
         "description": (f"cascade v23 도펀트 {NP}종의 테마별 재구성(12+1 테마). 각 도펀트에 "
                         "norm[theme]∈[0,1](1=좋음, 방향보정·게이트 반영) 내장 — 임의 테마 "
                         "2+개 조합(기하평균/산점도)은 프론트에서 norm으로 계산."
-                        + ("  [_v2 · 90종 회수분 — 미검증 진단물. gate 입력 결측 19종을 안고 있다]"
+                        + ("  [_v2 · 90종 회수분 — 미검증 진단물. 게이트 정의 미확정 — G3 method-comparable 0]"
                            if _SUF else "  [superseded · 47종 취합 경계판]")),
         "status": ("recovered_unvalidated_diagnostic" if _SUF else "superseded_47species"),
         "pool_size": NP,

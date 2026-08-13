@@ -927,8 +927,11 @@ CASCADE_V2_META = {
     "status": {
         # 축별 완성도를 다르게 표시한다 — 89종 파생을 90종 최종판처럼 보이게 하지 않는다.
         "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수 회수"),
-        "oxidation": ("complete",   "grand-potential ESW 90종 — 옛 141건과 ox_V 차이 0 (드리프트 없음). "
-                                    "⚠ 단 phase-set 재현성은 v1·v2 **공통 미보유** — 아래 esw_limits"),
+        "oxidation": ("partial",    "**record-complete 90 / method-comparable 0.** 기록은 90종 전부 있고 "
+                                    "옛 141건과 ox_V 차이 0 이지만, 파생표가 phase_set_id 를 떨어뜨렸고 "
+                                    "plain/Cl-rich 지지가 섞여 있어 **같은 method 로 비교한 것이 0종**이다. "
+                                    "회수 270 반응 중 124건에 LiS4 가 들어 있고, LiS4 를 빼면 host onset 이 "
+                                    "2.140 → 2.256 V 로 움직인다 — 'complete · 그대로 사용 가능' 이 아니다"),
         "ranked":    ("incomplete", "89 of 90 — 완결성은 사실상 해결(완전 88 · 부분 1 MgI₂). "
                                     "AlI₃ 만 champion(rank_combined==1) 에 gate 입력이 없다. "
                                     "⛔ 남은 blocker 는 결측이 아니라 **점수의 타당성**이다 — score_blockers 참조"),
@@ -1001,7 +1004,9 @@ CASCADE_V2_META = {
 #:  아니라 또 하나의 사본이다. 지금은 **manifest 에서 파생**하고, manifest 가 없거나
 #:  status 어휘 밖의 값이 있으면 화면을 fail-closed 한다.
 CASCADE_MANIFEST_PATH = DB / "properties" / "cascade_audit_manifest.json"
-_MANIFEST_STATUS = ("historical", "recovered_unvalidated", "approved", "superseded", "invalid")
+_MANIFEST_STATUS = ("historical", "recovered_unvalidated", "approved",
+                    "superseded", "invalid", "audit_current")
+_MANIFEST_USE_SCOPE = ("default_visible", "archive_only", "diagnostic_only", "blocked")
 
 CASCADE_TRUTH_LABELS = {
     "planned_slots":        ("계획 슬롯", "master_batch_273.sh: 91 화합물 × 3 라벨"),
@@ -1025,8 +1030,13 @@ def load_cascade_manifest() -> dict:
     if not m:
         problems.append("manifest 파일이 없다 — tools/cascade/rebuild_pool_inputs.py 로 생성할 것")
     for a in m.get("artifacts", []):
-        if a.get("status") not in _MANIFEST_STATUS:
-            problems.append(f"{a.get('source_path')}: 알 수 없는 status {a.get('status')!r}")
+        # ⚠ 2026-08-14 — 필드가 `status` → `approval_status` 로 갈렸다 (릴리스 지위와
+        #   artifact 승인 지위를 나눈 결과). 옛 이름을 폴백으로 두면 조용히 통과하므로 안 둔다.
+        if a.get("approval_status") not in _MANIFEST_STATUS:
+            problems.append(f"{a.get('source_path')}: 알 수 없는 approval_status "
+                            f"{a.get('approval_status')!r}")
+        if a.get("use_scope") not in _MANIFEST_USE_SCOPE:
+            problems.append(f"{a.get('source_path')}: 알 수 없는 use_scope {a.get('use_scope')!r}")
     # sha256/rows 대조 — 파일이 바뀌었는데 manifest 가 안 따라오면 stale 이다.
     import hashlib
     stale = []
@@ -1168,8 +1178,10 @@ def load_cascade() -> dict:
                      ("ml_validation", "ML 검증 · acquisition")]
         if (ROOT / f"docs/figures/cascade/cascade_audit_{n}.png").is_file()]
     # 내려받기 가능한 것만 남긴다 (없는 파일을 링크로 걸지 않는다)
-    v2["downloads"] = [(rel, label) for rel, label in CASCADE_V2_META["downloads"]
-                       if (ROOT / rel).is_file()]
+    # ⛔ 2026-08-14 — 회수분은 diagnostic_only 다. 링크에 opt-in 파라미터를 실어야
+    #   artifact_policy 가 403 을 내지 않는다 (숨겼는데 받아지는 상태를 끝낸다).
+    v2["downloads"] = [(rel, label, "view=diagnostic" if "20260629" not in rel else "archive=1")
+                       for rel, label in CASCADE_V2_META["downloads"] if (ROOT / rel).is_file()]
     out["v2"] = v2
     return out
 
@@ -3134,9 +3146,15 @@ def dashboard_highlights() -> list:
         for r in rows:
             if r.get("rank") == 1:
                 top = r
+    # ⛔ 2026-08-14 (Codex Round-3 P0-4) — 여기 "UMA #1" 이 지위 없이 홈에 떠 있었다.
+    #   그 1위는 2026-06-29 취합 경계의 **역사 47종 스냅샷** 값이고, 승인된 current
+    #   ranking 은 0종이다. 이름을 지우지는 않되(다음 계산 대상 선정에 쓰인다) 지위를 박는다.
     if top:
-        hi.append({"t": "도핑 스크리닝 1위 후보", "v": f"{top['dopant']} (UMA #1)",
-                   "n": "코팅 후보 상위 · Nd₂O₃·B₂O₃는 DFT 검증됨 (절대값은 상대비교만)"})
+        hi.append({"t": "도핑 스크리닝 — 승인된 current ranking 0종",
+                   "v": f"역사 47종 스냅샷 1위: {top['dopant']} ⚠ superseded",
+                   "n": ("2026-06-29 취합 경계의 순위다 — 완주분은 90종이고 재랭킹은 게이트 정의"
+                         "(G3 method-comparable 0 · G4 순환 · G5 로스터 상대)가 닫힌 뒤에 한다. "
+                         "DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐 · UMA 절대값은 상대비교 전용")})
     # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
     #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
     hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB) — 기전 판정 완료",

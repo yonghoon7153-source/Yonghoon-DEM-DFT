@@ -296,7 +296,7 @@
       <tr><td>47종 리더보드 · Pareto</td><td><span class="badge err">superseded</span></td>
           <td>⛔ 결과로 인용 금지. 계산이 덜 끝난 시점의 <b>취합 경계</b>였다</td></tr>
       <tr><td>89종 재랭킹 · 깔때기</td><td><span class="badge warn">diagnostic</span></td>
-          <td>⛔ 미검증 진단물. 결측 19종을 안고 있다</td></tr>
+          <td>⛔ 미검증 진단물. G3 method-comparable 0 · G4 순환 · G5 로스터 상대</td></tr>
       <tr><td>DFT 심층검증</td><td><span class="badge ok">{{ deep_map|length }}건</span></td>
           <td>✅ {{ deep_map.keys()|join(' · ') }} — 조성 페이지의 DFT 값만이 실제 신뢰선</td></tr>
     </tbody></table></div>
@@ -364,7 +364,7 @@
   <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
     <b>🗄 superseded — 이 깔때기는 {{ POOL }}종판이다.</b>
     90종 회수 후 waterfall 은 <span class="mono">89–89–84–45–28–1</span> 로 바뀌었고(정본 47종판은
-    <span class="mono">47–47–43–25–11–1</span>), 그마저 <b>미검증 진단물</b>이다 — 결측 19종을 안고 있다.
+    <span class="mono">47–47–43–25–11–1</span>), 그마저 <b>미검증 진단물</b>이다 — 게이트 정의가 안 닫혔다.
     <b>⛔ 그리고 게이트 정의 자체가 미해결이다</b> — 아래 순서민감도 논증은 "순서를 바꾸면 중간 수가
     달라진다"는 사실만 보이는 것이고, 게이트가 옳다는 뜻이 아니다:
     <b>G3</b> 는 경쟁상 phase set(mp-ID·MP 스냅샷)이 기록돼 있지 않고,
@@ -923,8 +923,8 @@
       <span class="muted" style="font-weight:400;font-size:.8rem">회수 {{ VM.recovered_on }}</span></h3>
     <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
       <b>이 탭의 랭킹·깔때기는 결과가 아니라 진단물이다.</b> 아직 검증 절차를 거치지 않았고
-      gate 입력 결측 19종(전면 1 · 부분 18)을 안고 있다 — <b>원고·발표에 순위로 인용하지 말 것.</b>
-      반대로 <b>원자료(90종 · 270 champion)와 ESW(90종)는 complete</b> 이라 아래에서 그대로 내려받아 쓸 수 있다.
+      게이트 정의가 안 닫혔다 — <b>원고·발표에 순위로 인용하지 말 것.</b>
+      원자료(270 champion)와 ESW 는 <b>record-complete 90</b> 이지만 ESW 는 <b>method-comparable 0</b> 이다 (phase_set_id 미기록). 내려받아 쓰되 <b>'그대로 사용 가능' 이 아니다.</b>
     </div>
     <div class="callout cal-warning" style="margin:0 0 12px">
       <div class="cal-b" style="font-size:.82rem">
@@ -985,16 +985,9 @@
       (같은 6종의 blocking-free 점수가 47종 풀 대비 89종 풀에서 최대 +0.09 이동).
       후보명은 <b>다음 계산 대상 선정용</b>이지 결과가 아니다.
     </div>
-    <details><summary class="muted" style="cursor:pointer;font-size:.82rem">
-      후보명 보기 (opt-in — 결과 아님)</summary>
-    <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
-      {% for d in F2.endpoint %}
-        {% set art = VM.artifacts.get(d) %}
-        <span class="badge {{ 'warn' if art else '' }}" title="{{ art or '' }}">
-          {{ d }}{% if art %} ⚠{% endif %}</span>
-      {% endfor %}
-    </div>
-    </details>
+    {# ⛔ 2026-08-14 (Codex Round-3 P1) — <details> 는 후보명을 초기 DOM 에 다 싣는다.
+       "숨김" 이 아니라 접어둔 것뿐이라 public fail-closed 가 아니다. 서버 라우트로 옮긴다. #}
+    <a class="btn" href="/cascade/diagnostic?view=diagnostic#endpoint">후보명 열기 (acquisition 전용 화면) →</a>
     {% if VM.artifacts %}
     <div class="callout cal-warning" style="margin:10px 0 0">
       <div class="cal-b" style="font-size:.8rem"><b>⚠ 판정이 아닌 통과</b> —
@@ -1007,10 +1000,11 @@
     <h4 style="margin:16px 0 6px">내려받기</h4>
     <div class="tbl-scroll"><table class="data-table"><thead><tr>
       <th>파일</th><th>내용</th></tr></thead><tbody>
-      {% for rel, label in V.downloads %}
+      {% for rel, label, optin in V.downloads %}
       <tr>
-        <td><a class="mono" href="/api/file/{{ rel }}?dl=1">⬇ {{ rel.split('/')[-1] }}</a></td>
-        <td style="font-size:.86em">{{ label }}</td>
+        <td><a class="mono" href="/api/file/{{ rel }}?dl=1&amp;{{ optin }}">⬇ {{ rel.split('/')[-1] }}</a></td>
+        <td style="font-size:.86em">{{ label }}
+          <span class="badge {{ 'warn' if 'diagnostic' in optin else 'err' }}" style="margin-left:5px">{{ optin }}</span></td>
       </tr>{% endfor %}
     </tbody></table></div>
     <div class="muted" style="font-size:.78rem;margin-top:6px">
@@ -1029,14 +1023,7 @@
       + 0.10·window 는 <b>손으로 정한 가중치</b>이고, 입력 중 G4 는 순환이며 G5 는 로스터 상대다.
       승인된 랭킹은 <b>0종</b>. 아래는 다음 계산을 고르기 위한 진단물이다.
     </div>
-    <details><summary class="muted" style="cursor:pointer;font-size:.82rem;margin-bottom:8px">
-      89행 표 열기 (opt-in — 결과 아님)</summary>
-    <div class="tbl-scroll"><table class="data-table sortable" id="v2-tbl"><thead><tr>
-      {% for c in V.ranked.cols %}<th>{{ c }}</th>{% endfor %}</tr></thead><tbody>
-      {% for row in V.ranked.data %}<tr>{% for c in V.ranked.cols %}
-        <td class="{{ 'mono' if c != 'dopant' else '' }}">{{ row[c] }}</td>{% endfor %}</tr>{% endfor %}
-    </tbody></table></div>
-    </details>
+    <a class="btn" href="/cascade/diagnostic?view=diagnostic#ranking">89행 표 열기 (acquisition 전용 화면) →</a>
   </div>
   {% endif %}
 </div>

@@ -2,78 +2,25 @@
  "property": "cascade_audit_manifest",
  "schema_version": 2,
  "artifact_id": "cascade-audit-2026-08-14",
+ "owner": "tools/cascade/build_cascade_audit_manifest.py",
+ "owner_note": "이 파일의 writer 는 위 도구 **하나뿐**이다. plot_cascade_audit_2026_08.py 와 rebuild_pool_inputs.py 는 sidecar 만 쓴다 (Codex Round-3 P0-1).",
  "status": "audit_current__leaderboard_unavailable",
  "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+ "source_commit_note": "패널 고정 커밋. **artifact 마다 자기 source_commit 이 있고 그쪽이 우선한다** — ranked_v2 는 Na₂S 정정 이후 산출물이다.",
  "source_of_truth": "docs/reviews/cascade_dftweb_source_of_truth_2026_08_14.md",
- "figures": [
-  {
-   "image": "docs/figures/cascade/cascade_audit_campaign_status.png",
-   "csv": "db/properties/cascade_audit_campaign_status.csv",
-   "status": "audit-current",
-   "image_sha256": "dea3d0d994af7db24c1a7b89025b8fbb146e341467f4fb1c42cdc877c42a3dab",
-   "image_bytes": 55023,
-   "csv_sha256": "468d323730c60126f4e85263603e8d8ae9369535ac2f167a454936f777b99b90",
-   "csv_bytes": 252,
-   "csv_rows": 6
-  },
-  {
-   "image": "docs/figures/cascade/cascade_audit_g3_phase_set.png",
-   "csv": "db/properties/cascade_audit_g3_phase_set.csv",
-   "status": "audit-current",
-   "image_sha256": "3eb636f61af9155061166795fd7759449632b88739bd8388eb1b5f6b57233c7a",
-   "image_bytes": 46154,
-   "csv_sha256": "76a3aeedd9e704927c813018eb16167d7cab17c637c2ab4405925d848b77d23d",
-   "csv_bytes": 427,
-   "csv_rows": 3
-  },
-  {
-   "image": "docs/figures/cascade/cascade_audit_g4_rescore.png",
-   "csv": "db/properties/cascade_audit_g4_rescore.csv",
-   "status": "audit-current",
-   "image_sha256": "1c5b9d029c8bd2948a431833249d2e0aa5247ed473a3af28f042b989a63e5f07",
-   "image_bytes": 60617,
-   "csv_sha256": "5d24595af5849a5ef8eb401b734c77e4f4ffec1ad44a3c5eb0e3928e38f9b467",
-   "csv_bytes": 530,
-   "csv_rows": 6
-  },
-  {
-   "image": "docs/figures/cascade/cascade_audit_interface_axes.png",
-   "csv": "db/properties/cascade_audit_interface_axes.csv",
-   "status": "audit-current",
-   "image_sha256": "a33669cd05ac0235b068a0b2a40695df49f2f3c06d93bb0094650d0dc146a5f9",
-   "image_bytes": 43916,
-   "csv_sha256": "f9bd346b12d6d8ccb9735937444ca3e80fb379ce533bd14d22085ecc263d03b4",
-   "csv_bytes": 318,
-   "csv_rows": 4
-  },
-  {
-   "image": "docs/figures/cascade/cascade_audit_ml_validation.png",
-   "csv": "db/properties/cascade_audit_ml_validation.csv",
-   "status": "audit-current",
-   "image_sha256": "c6fbafc0d82b87210138ce68d622e63f4d19f255354ce1292991bd77a7675c9b",
-   "image_bytes": 60579,
-   "csv_sha256": "26ef6f6ed97db9b47dd6702909499896f76becdbbdd6e75106315b2cd8da2c0d",
-   "csv_bytes": 400,
-   "csv_rows": 5
-  }
- ],
- "supporting_tables": [
-  {
-   "path": "db/properties/cascade_audit_gate_completeness.csv",
-   "status": "audit-current",
-   "sha256": "3c52a342eea9dd6ec813cb1f94bc81dd06ce6ac8e42553ff82de47daaf129ec2",
-   "bytes": 1332,
-   "rows": 5
-  }
- ],
- "generated_by": "tools/cascade/rebuild_pool_inputs.py (schema는 plot_cascade_audit_2026_08.py 와 공유)",
- "contract": "화면 최상단 숫자와 artifact 지위의 유일한 출처. loader 는 여기 없는 artifact 나 MANIFEST_STATUS 밖의 status 를 만나면 표시하지 않고 fail-closed 한다. sha256/rows 가 어긋나면 stale 로 막는다.",
- "status_vocabulary": [
+ "approval_status_vocabulary": [
   "historical",
   "recovered_unvalidated",
   "approved",
   "superseded",
-  "invalid"
+  "invalid",
+  "audit_current"
+ ],
+ "use_scope_vocabulary": [
+  "default_visible",
+  "archive_only",
+  "diagnostic_only",
+  "blocked"
  ],
  "headline": {
   "planned_slots": 273,
@@ -91,196 +38,391 @@
   "evidence": "ESW 반응식 좌변 Li22P4(S5Cl)4 계열",
   "not": "Model C (Li₅.₄PS₄.₄Cl₁.₆) 가 아니다"
  },
+ "datasets": {
+  "historical_47": {
+   "approval_status": "historical",
+   "use_scope": "archive_only",
+   "species_count": 47,
+   "slot_count": 141,
+   "actual_x": 0.25,
+   "pool_id": "cascade-v23-o37-f10-2026-06",
+   "phase_set_id": null,
+   "phase_set_assumption": "mp-gga-gga-u__lis4-included (가정 — 행 단위 기록 없음)",
+   "limitations": [
+    "historical campaign snapshot",
+    "pool-relative ranks",
+    "not current campaign coverage"
+   ]
+  },
+  "recovered_90_gp": {
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "species_count": 90,
+   "actual_x": 0.25,
+   "pool_id": "cascade-v23-completed-90-2026-07",
+   "phase_set_id": null,
+   "phase_set_assumption": "mp-gga-gga-u__lis4-included (가정 — 행 단위 기록 없음)",
+   "overlap_with_historical": 141,
+   "overlap_oxidation_drift_count": 0,
+   "limitations": [
+    "not fully re-ranked or re-gated",
+    "G3 phase-set identity absent",
+    "G4 must be rebuilt with canonical softBV"
+   ]
+  },
+  "current_approved_leaderboard": {
+   "approval_status": "approved",
+   "use_scope": "blocked",
+   "species_count": 0,
+   "limitations": [
+    "존재하지 않는다 — 승인된 current ranking 은 0종이다"
+   ]
+  }
+ },
+ "metric_contract": {
+  "G3": {
+   "display_name": "MP phase-set onset",
+   "historical_host_onset_V": 2.14,
+   "alternate_host_onset_V": 2.256,
+   "rule": "compare candidate and host within the same phase_set_id",
+   "record_vs_comparable": "record-complete 90 / method-comparable 0 — 파생표가 phase_set_id 를 떨어뜨렸고 plain/Cl-rich 지지가 섞여 있다. '기록이 있다' 는 '비교 가능하다' 가 아니다.",
+   "lis4_exposure": {
+    "onset_reactions_containing_LiS4": 124,
+    "of_records": 270
+   }
+  },
+  "G4": {
+   "display_name": "legacy BVS + 4A foreign-center composite",
+   "blocking_definition": "fraction of Li within 4 A of atoms outside {Li,P,S,Cl}",
+   "historical_rule": "blocking<0.60 ? 0.10+0.90*minmax(BVS) : 0.05",
+   "circularity": "blocking 컷 탈락자는 BVS 값이 버려지고 norm 이 0.05 로 강제된다. 컷 0.30 보다 낮으므로 blocking 탈락 = G4 탈락이 결정론적으로 따라온다. 두 독립 신호의 AND 로 읽으면 안 된다.",
+   "pool_relative": "min-max 정규화라 같은 종의 점수가 로스터에 따라 움직인다 — B2O3 blocking-free 는 historical 47 풀에서 0.1000, recovered 88 풀에서 0.1998 이다 (둘 다 fail).",
+   "not_equivalent_to": [
+    "canonical BVSE",
+    "migration barrier",
+    "diffusivity",
+    "conductivity"
+   ]
+  },
+  "G5": {
+   "display_name": "UMA relaxed-ion elastic screen",
+   "presence_vs_validity": "field presence 로 세면 88/1/1 이지만, 비물리 탄성(B_hill·G_hill ≤ 0) 을 거르면 all-label-valid 86 · partial AlBr3|MgI2|Na2S · dropped AlI3 · usable 89 다.",
+   "reciprocal_metric_warning": "열 이름은 pugh 지만 값은 G/B 다. B/G 는 행별로 뒤집은 뒤 통계를 내야 한다 — 1/mean(G/B) ≠ mean(B/G)."
+  }
+ },
  "artifacts": [
   {
    "artifact_id": "cascade-v23-cascade_v23_all",
    "source_path": "db/properties/cascade_v23_all.csv",
-   "status": "recovered_unvalidated",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
    "description": "완주 원자료 (unified_dataset_273.csv 회수분)",
-   "sha256": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
-   "bytes": 1436260,
-   "rows": 3615,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "UMA 상대값",
     "일부 열은 재계산 세대가 섞여 있을 수 있음"
-   ]
+   ],
+   "sha256": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
+   "bytes": 1436260,
+   "sha256_lf": "a9e37f31ecf017bad6dd456b624c6af96252644d67aae6ef4dc51e1ca06eb3ba",
+   "rows": 3615
   },
   {
    "artifact_id": "cascade-v23-cascade_v23_champions_v2",
    "source_path": "db/properties/cascade_v23_champions_v2.csv",
-   "status": "recovered_unvalidated",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
    "description": "champion 270행 (rank_combined==1)",
-   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
-   "bytes": 57541,
-   "rows": 270,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "champion 재선정 안 함",
-    "Na2S_x100 은 B_hill 음수 — 탄성 계산 실패 행"
-   ]
+    "Na2S_x100 은 B_hill 음수 — 탄성 계산 실패 행 (소비자가 걸러야 한다)"
+   ],
+   "sha256": "15114e95ed90c62c51cc4917245f8abef3db827ebf7853b88cf36d5333b7852d",
+   "bytes": 57541,
+   "sha256_lf": "6bd18eaff5f92c9b0d33754064682a5f3591596584e29f083585dd6f63998c0c",
+   "rows": 270
   },
   {
    "artifact_id": "cascade-v23-cascade_v23_litransport_v2",
    "source_path": "db/properties/cascade_v23_litransport_v2.csv",
-   "status": "recovered_unvalidated",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
    "description": "G4 정적 프록시 270행",
-   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
-   "bytes": 22903,
-   "rows": 270,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "legacy Adams-2003 BVS — 정본 softBV 아님",
-    "blocking 은 4 Å foreign-center count"
-   ]
+    "blocking 은 4 Å foreign-center count",
+    "min–max 정규화라 풀 상대값"
+   ],
+   "sha256": "113b2466b8a4099bc829976ae0071eab7f52f5d64ea13950e6928789546aa2f9",
+   "bytes": 22903,
+   "sha256_lf": "7400735cb74b4492bc87713b9f38126f13a0c8170d1454a7e4cb9108a2e97fbc",
+   "rows": 270
   },
   {
    "artifact_id": "cascade-v23-oxidation_stability_cascade_v2",
    "source_path": "db/properties/oxidation_stability_cascade_v2.csv",
-   "status": "recovered_unvalidated",
-   "description": "grand-potential ESW 90종",
-   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
-   "bytes": 4456,
-   "rows": 90,
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "grand-potential ESW 90종 — **record-complete 90 / method-comparable 0**",
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "phase_set_id·mp-ID·MP 스냅샷 미기록 — 재현 불가",
-    "host onset 2.140 V 는 phase set 의존 (LiS4 제외 시 2.256 V)"
-   ]
+    "host onset 2.140 V 는 phase set 의존 (LiS4 제외 시 2.256 V)",
+    "270 회수 반응 중 124건에 LiS4 가 들어 있다"
+   ],
+   "sha256": "2f351cdaedee8b1504efb56fcbb975ee1b5fe2ad35f049e9c2ed7dddde0f06e2",
+   "bytes": 4456,
+   "sha256_lf": "3086244e562e9704abb4622c953a29a94305fe5651990d58d8f632a20005fb1a",
+   "rows": 90
   },
   {
    "artifact_id": "cascade-v23-cascade_v23_ranked_v2",
    "source_path": "db/properties/cascade_v23_ranked_v2.csv",
-   "status": "recovered_unvalidated",
-   "description": "합성점수 랭킹 89종 (AlI3 제외)",
-   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
-   "bytes": 4828,
-   "rows": 89,
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
+   "description": "합성점수 랭킹 89종 (AlI3 제외) — acquisition 전용",
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "922332c0",
    "limitations": [
     "G4 순환 (blocking 이 BVS 를 덮어씀)",
     "G5 median 컷은 로스터 상대",
     "가중치 수작업",
     "min-max 정규화라 풀이 바뀌면 값이 바뀜"
-   ]
+   ],
+   "sha256": "1995ce8d95d746db61bbc23d5804acd0f0a9784851525d4b913cb042077344f9",
+   "bytes": 4828,
+   "sha256_lf": "024e12eb412d3e9c195e670925a125e31fb3fb77ded8f486c8c25d060ade7166",
+   "rows": 89,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "Na2S ductility retraction — Na2S_x100 has B_hill = -36.27 GPa (failed elastic calculation) and was averaged in, producing a false B/G = 2.50. plot_cascade_insights.py now drops non-positive Hill moduli; Na2S is B/G 1.22. Only unphysical row in 270. No audit panel reads this file."
   },
   {
    "artifact_id": "cascade-v23-cascade_v23_all_20260629_47species",
    "source_path": "db/properties/cascade_v23_all_20260629_47species.csv",
-   "status": "historical",
+   "approval_status": "historical",
+   "use_scope": "archive_only",
    "description": "2026-06-29 취합 경계판 (47종)",
-   "sha256": "15be321fb779e0629b96dda60bc2686ed9a8ee85c2fcdd7547c20f76253d04f8",
-   "bytes": 779245,
-   "rows": 2025,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "캠페인 커버리지 기준으로 superseded"
-   ]
+   ],
+   "sha256": "15be321fb779e0629b96dda60bc2686ed9a8ee85c2fcdd7547c20f76253d04f8",
+   "bytes": 779245,
+   "sha256_lf": "dc651c4c1862009a89c4af8debae7b20d7657c51baa5d11cf5c53b2978419beb",
+   "rows": 2025
   },
   {
    "artifact_id": "cascade-v23-cascade_v23_ranked",
    "source_path": "db/properties/cascade_v23_ranked.csv",
-   "status": "superseded",
+   "approval_status": "superseded",
+   "use_scope": "archive_only",
    "description": "47종 랭킹 — 역사 스냅샷",
-   "sha256": "2f7eae91d8acc2acba99b1210f6962396aca548a7674a71d5c3f0867f1ad6c18",
-   "bytes": 2598,
-   "rows": 47,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "결과로 인용 금지",
     "90종 회수 이전 판"
-   ]
+   ],
+   "sha256": "2f7eae91d8acc2acba99b1210f6962396aca548a7674a71d5c3f0867f1ad6c18",
+   "bytes": 2598,
+   "sha256_lf": "d352415afdd79fbd4d6b46d5e88db64787a4bf74c4debde411f56bbd9c44c7ae",
+   "rows": 47
   },
   {
    "artifact_id": "cascade-v23-cascade_screening_funnel",
    "source_path": "db/properties/cascade_screening_funnel.json",
-   "status": "historical",
+   "approval_status": "historical",
+   "use_scope": "archive_only",
    "description": "47종 게이트 감사",
-   "sha256": "aa18c7b427276593d9db8ce4508fd961df08666018604664640c9fd82b3fea31",
-   "bytes": 79420,
-   "rows": null,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "G3 phase set 미기록",
     "G4 순환",
     "G5 로스터 상대"
-   ]
+   ],
+   "sha256": "aa18c7b427276593d9db8ce4508fd961df08666018604664640c9fd82b3fea31",
+   "bytes": 79420,
+   "sha256_lf": "aa18c7b427276593d9db8ce4508fd961df08666018604664640c9fd82b3fea31"
   },
   {
    "artifact_id": "cascade-v23-cascade_screening_funnel_v2",
    "source_path": "db/properties/cascade_screening_funnel_v2.json",
-   "status": "recovered_unvalidated",
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "diagnostic_only",
    "description": "89종 게이트 감사",
-   "sha256": "b5c0f327a780221f049002c5dcc17950e247ca867c431c6f61dfa520cdcdcc51",
-   "bytes": 99787,
-   "rows": null,
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
     "위와 동일 + 풀 상대 정규화 재계산됨"
-   ]
+   ],
+   "sha256": "8fc5fce2e1f56510936802bd9e9e3f5327f5c36d51444ca63ab992823adab579",
+   "bytes": 100099,
+   "sha256_lf": "8fc5fce2e1f56510936802bd9e9e3f5327f5c36d51444ca63ab992823adab579"
   },
   {
    "artifact_id": "cascade-v23-cascade_pool_audit_v2",
    "source_path": "db/properties/cascade_pool_audit_v2.json",
-   "status": "recovered_unvalidated",
-   "description": "gate 입력 완결성 감사",
-   "sha256": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43",
-   "bytes": 1297,
-   "rows": null,
+   "approval_status": "recovered_unvalidated",
+   "use_scope": "default_visible",
+   "description": "gate 입력 ingestion 감사 (행 존재만 본다)",
    "actual_x": 0.25,
    "campaign_labels": [
     "x002",
     "x005",
     "x010"
    ],
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
    "limitations": [
-    "행 존재만 본다 — 값의 물리성은 안 본다"
-   ]
+    "값의 물리성은 안 본다 — validity-aware 판정은 gate_completeness 표를 볼 것"
+   ],
+   "sha256": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43",
+   "bytes": 1297,
+   "sha256_lf": "34cae6e439e9a653a7e2b137092e7803aaee0542bbca4fcbf51bada231433f43"
+  }
+ ],
+ "figures": [
+  {
+   "panel": "campaign_status",
+   "title": "캠페인 현황",
+   "image": "docs/figures/cascade/cascade_audit_campaign_status.png",
+   "csv": "db/properties/cascade_audit_campaign_status.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "dea3d0d994af7db24c1a7b89025b8fbb146e341467f4fb1c42cdc877c42a3dab",
+   "image_bytes": 55023,
+   "csv_sha256": "468d323730c60126f4e85263603e8d8ae9369535ac2f167a454936f777b99b90",
+   "csv_bytes": 252,
+   "csv_rows": 6
+  },
+  {
+   "panel": "g3_phase_set",
+   "title": "G3 phase-set 민감도",
+   "image": "docs/figures/cascade/cascade_audit_g3_phase_set.png",
+   "csv": "db/properties/cascade_audit_g3_phase_set.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "csv_source_commit": "working tree (2026-08-14 amendment)",
+   "csv_derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "csv_override_reason": "recovered 행의 synthetic phase_set_id 를 비우고 phase_set_assumption 으로 분리했다. 합성 ID 를 남기면 method-complete=0 판정과 정면으로 충돌한다 — 반응식에 LiS4 가 들어 있다는 사실은 method identity 가 아니다. 그림은 host onset 두 값과 LiS4 수만 표시하므로 영향 없음.",
+   "image_sha256": "3eb636f61af9155061166795fd7759449632b88739bd8388eb1b5f6b57233c7a",
+   "image_bytes": 46154,
+   "csv_sha256": "1f7909c27e841edbd8f2bf71e4e5ba0b389bc647ab5ff4bce87a2bcf6ca5a260",
+   "csv_bytes": 615,
+   "csv_rows": 3
+  },
+  {
+   "panel": "g4_rescore",
+   "title": "G4 분해 — blocking 제거 재점수",
+   "image": "docs/figures/cascade/cascade_audit_g4_rescore.png",
+   "csv": "db/properties/cascade_audit_g4_rescore.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "csv_source_commit": "working tree (2026-08-14 amendment)",
+   "csv_derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "csv_override_reason": "pool_id · normalization_n · BVS pool min/max · actual_x · concentration_label 추가. min–max 점수를 고정 물성처럼 읽지 못하게 하는 메타다 — B2O3 는 historical 47 풀에서 0.1000, recovered 88 풀에서 0.1998 (둘 다 fail). 기존 값 열은 안 건드렸다.",
+   "image_sha256": "1c5b9d029c8bd2948a431833249d2e0aa5247ed473a3af28f042b989a63e5f07",
+   "image_bytes": 60617,
+   "csv_sha256": "890f5664c1f10a3a7483e0d687da818cb50a05a0f18a49f56ba920782179d199",
+   "csv_bytes": 963,
+   "csv_rows": 6
+  },
+  {
+   "panel": "interface_axes",
+   "title": "계면 축 (47종 post-hoc)",
+   "image": "docs/figures/cascade/cascade_audit_interface_axes.png",
+   "csv": "db/properties/cascade_audit_interface_axes.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "a33669cd05ac0235b068a0b2a40695df49f2f3c06d93bb0094650d0dc146a5f9",
+   "image_bytes": 43916,
+   "csv_sha256": "f9bd346b12d6d8ccb9735937444ca3e80fb379ce533bd14d22085ecc263d03b4",
+   "csv_bytes": 318,
+   "csv_rows": 4
+  },
+  {
+   "panel": "ml_validation",
+   "title": "ML 검증 · acquisition",
+   "image": "docs/figures/cascade/cascade_audit_ml_validation.png",
+   "csv": "db/properties/cascade_audit_ml_validation.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "image_sha256": "c6fbafc0d82b87210138ce68d622e63f4d19f255354ce1292991bd77a7675c9b",
+   "image_bytes": 60579,
+   "csv_sha256": "26ef6f6ed97db9b47dd6702909499896f76becdbbdd6e75106315b2cd8da2c0d",
+   "csv_bytes": 400,
+   "csv_rows": 5
+  }
+ ],
+ "supporting_tables": [
+  {
+   "path": "db/properties/cascade_audit_gate_completeness.csv",
+   "approval_status": "audit_current",
+   "use_scope": "default_visible",
+   "source_commit": "working tree (2026-08-14 amendment)",
+   "sha256": "7838b463e0a4196d8674d70a14703bbf7a0dbd963c85d737d2f1c2b5badcb35a",
+   "bytes": 1779,
+   "sha256_lf": "97b2e17a171f734f96778bec053d83f56b3c1269afe3033a588afc2254a3fa74",
+   "rows": 5,
+   "derived_from": "9abe5105cacafa22ab3e185f09e2a4c37118b9a9",
+   "override_reason": "completeness_basis 열과 G5 validity-aware 열 추가. presence 로 세면 88/1/1 이지만 비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 86 / AlBr3·MgI2·Na2S / AlI3 / usable 89 다. 기존 presence 수치는 그대로 두고 옆에 병기했다."
   }
  ]
 }

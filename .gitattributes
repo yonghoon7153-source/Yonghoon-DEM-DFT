@@ -12,6 +12,13 @@ webapp/journal.jsonl merge=union
 *.poscar text eol=lf
 *.UPF    text eol=lf
 
+# cascade 감사 원장 — **해시 대조 대상**이라 LF 고정 (2026-08-14 Codex Round 3)
+#   깨끗한 Windows snapshot(`git archive`)에서 gate-completeness CSV 가 LF 1332 →
+#   CRLF 1338 바이트로 바뀌어 manifest 무결성 검증이 실패했다. dirty worktree 에서는
+#   통과했기 때문에 로컬 테스트로는 안 잡혔다.
+db/properties/*.csv   text eol=lf
+db/properties/*.json  text eol=lf
+
 # VESTA 는 반대다 — CLAUDE.md 규약상 ASCII + **CRLF** 여야 IMPORT_DENSITY 가 안 깨진다.
 *.vesta  text eol=crlf
 

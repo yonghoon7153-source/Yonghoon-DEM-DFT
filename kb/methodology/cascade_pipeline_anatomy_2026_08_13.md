@@ -804,6 +804,60 @@ Codex 플로터도 `db/properties/cascade_audit_manifest.json` 을 본다 — �
 G4 분해 · 계면 축 · ML 검증. 각 패널에 Origin-ready CSV 다운로드를 붙였다.
 리더보드·Pareto·수송 순위·pair 예측 그림은 이번 릴리스에 넣지 않는다.
 
+### Round-3 재감사 반영 — P0 4건 · P1 6건 (2026-08-14 밤)
+
+판정: **감사 패널 조건부 GO · 전체 웹 NO-GO · 90종 leaderboard NO-GO.** 승인 ranking 계속 0종.
+검증 가능한 주장은 전부 재현했다 — **G5 validity-aware 86 / AlBr₃·MgI₂·Na₂S / AlI₃ / usable 89**
+가 우리 champions_v2 로 정확히 나왔다.
+
+| # | 지적 | 처리 |
+|---|---|---|
+| P0-1 | manifest owner 가 둘 (두 도구가 서로의 계약 블록을 지움) | **`build_cascade_audit_manifest.py` 신설 — 단독 writer.** 두 생산자는 sidecar 만 쓴다 |
+| P0-2 | mixed-source pin (top-level 9abe / ranked_v2 만 922) | artifact 별 `source_commit`·`derived_from`·`override_reason`. ranked_v2 는 **패널 의존에서 제거** (어느 패널도 안 읽는다) |
+| P0-3 | fail-closed 가 headline 에만 걸림 | **`webapp/artifact_policy.py` 중앙 resolver** — `/api/file`·`/api/csv`·`/api/property` 전부 경유 |
+| P0-4 | 홈 `UMA #1` 무표시 · `결측 19종` 잔존 · ESW `complete` | 전부 정정. ESW 는 **record-complete 90 / method-comparable 0** 로 |
+| P1 | `<details>` 는 후보명을 초기 DOM 에 다 싣는다 | **`/cascade/diagnostic` 서버 라우트** — `?view=diagnostic` 없으면 렌더 자체를 안 한다 (403) |
+| P1 | status 어휘 3중 혼선 | **두 축으로 분리**: `approval_status`(6종) ⊥ `use_scope`(4종) |
+| P1 | G3 CSV 의 synthetic phase_set_id | 비우고 `phase_set_assumption` 으로 분리 |
+| P1 | G4 CSV 메타 부족 | `pool_id`·`normalization_n`·BVS min/max·`actual_x` 추가 |
+| P1 | G5 는 presence 만 센다 | `completeness_basis` + validity-aware 열 병기 |
+| P1 | 깨끗한 checkout 에서 CRLF 로 무결성 실패 | `.gitattributes` 에 `db/properties/*.{csv,json} eol=lf` + 원장에 `sha256_lf` 병기 |
+
+#### 두 축 분리가 핵심이었다
+
+전에는 `historical` 같은 한 값이 "얼마나 믿을 수 있나" 와 "어디까지 보여줄 수 있나" 를 겸했다.
+이제 직교한다:
+
+```
+approval_status : historical | recovered_unvalidated | approved | superseded | invalid | audit_current
+use_scope       : default_visible | archive_only | diagnostic_only | blocked
+                                     ?archive=1     ?view=diagnostic
+```
+
+원장에 없는 cascade artifact 는 **거부**한다 (미등록 = 미승인).
+
+#### 실측으로 확인한 것
+
+| 경로 | 조건 없음 | opt-in |
+|---|---|---|
+| `cascade_v23_ranked_v2.csv` | **403** | `view=diagnostic` → 200 |
+| `cascade_v23_ranked.csv` (47종) | **403** | `archive=1` → 200 |
+| `/api/property/cascade_screening_funnel_v2` | **403** | `view=diagnostic` → 200 |
+| 감사 CSV·PNG | 200 | (default_visible) |
+| cascade 밖 파일 | 200 | (정책 대상 아님) |
+
+`/cascade/diagnostic` 은 gate 없으면 **후보명이 DOM 에 안 실린다** (403 화면에서 실측).
+
+#### 남은 열린 항목
+
+- 그림 재생성 불가 — 이 컨테이너에 플로터의 TrueType 폰트가 없다. G3 CSV 를 고쳤지만
+  그 그림은 host onset 두 값과 LiS4 수만 표시해서 **영향 없음**을 이미지로 확인했다.
+- `datasets`·`metric_contract` 를 원장에 옮겼지만 `recovered_artifacts`·`source_hashes` 는
+  아직 플로터 sidecar 에만 있다.
+
+테스트 **60 passed** (신규 7건 포함: 정책 전 경로 · 서버측 gate · 원장 단독소유 ·
+artifact 별 provenance · G3 합성 ID 금지 · G4 메타 · G5 validity · LF 고정).
+
 ### 남은 이견 (Codex 에게 재확인 요청할 것)
 
 1. **후보명 완전 비노출 vs opt-in.** 나는 `<details>` opt-in 으로 했다. 완전히 숨기면

@@ -12,6 +12,7 @@ import json, os, re
 from datetime import datetime as _dt
 import data as D
 import glossary as G
+import artifact_policy as AP   # cascade artifact 노출 정책 (Codex Round-3 P0-3)
 
 app = Flask(__name__)
 
@@ -278,6 +279,22 @@ def cascade_page():
                            mo_db=D.load_molecular_orbitals())
 
 
+@app.route("/cascade/diagnostic")
+def cascade_diagnostic():
+    """acquisition 전용 화면 — **결과 화면이 아니다** (Codex Round-3 P1).
+
+    기본 `/cascade` 에는 status·count 만 둔다. 후보명과 89행 랭킹은 여기서만 나가고,
+    `?view=diagnostic` 없이는 서버가 렌더 자체를 하지 않는다. `<details>` 로 접어두면
+    후보명이 초기 DOM 에 다 실려 public fail-closed 가 아니었다.
+    """
+    if request.args.get("view") != "diagnostic":
+        return render_template("cascade_diagnostic.html", active="cascade",
+                               gate=False, casc=None), 403
+    casc = D.load_cascade()
+    return render_template("cascade_diagnostic.html", active="cascade",
+                           gate=True, casc=casc)
+
+
 @app.route("/elements")
 def elements():
     e2c = D.element_to_comps()
@@ -401,7 +418,16 @@ def api_structure(fn):
 
 @app.route("/api/csv/<path:rel>")
 def api_csv(rel):
-    return jsonify(D.read_csv(rel))
+    # ⛔ 2026-08-14 (Codex Round-3 P0-3) — 정책이 headline 에만 걸려 있어서
+    #   화면에서 숨긴 artifact 를 이 경로로 그냥 받을 수 있었다. 이제 공통 resolver 를 탄다.
+    v = AP.resolve(f"db/{rel}" if not str(rel).startswith("db/") else rel, request.args)
+    if not v["allowed"]:
+        return jsonify({"error": v["reason"], "needs": v["needs"],
+                        **AP.envelope(rel, v)}), 403
+    out = D.read_csv(rel)
+    if v["governed"]:
+        out = {**out, "_artifact_status": AP.envelope(rel, v)}
+    return jsonify(out)
 
 
 @app.route("/api/file/<path:rel>")
@@ -413,6 +439,11 @@ def api_file(rel):
     p = D.safe_repo_path(rel)
     if p is None:
         abort(404)
+    # cascade artifact 는 원장의 use_scope 를 따른다 (archive=1 / view=diagnostic).
+    v = AP.resolve(rel, request.args)
+    if not v["allowed"]:
+        return jsonify({"error": v["reason"], "needs": v["needs"],
+                        **AP.envelope(rel, v)}), 403
     return send_from_directory(p.parent, p.name,
                                as_attachment=bool(request.args.get("dl")),
                                download_name=p.name)
@@ -498,9 +529,16 @@ def files_gallery():
 @app.route("/api/property/<name>")
 def api_property(name):
     p = D.DB / "properties" / f"{name}.json"
+    rel = f"db/properties/{name}.json"
+    v = AP.resolve(rel, request.args)
+    if not v["allowed"]:
+        return jsonify({"error": v["reason"], "needs": v["needs"],
+                        **AP.envelope(rel, v)}), 403
     d = D._load_json(p) if p.exists() else None
     if d is None:            # 없거나 깨진 JSON → 500 대신 404 (silent 500+traceback 방지)
         abort(404)
+    if v["governed"] and isinstance(d, dict):
+        d = {**d, "_artifact_status": AP.envelope(rel, v)}
     return jsonify(d)
 
 

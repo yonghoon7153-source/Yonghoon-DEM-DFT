@@ -234,11 +234,22 @@ def _routes():
                    and not r.rule.startswith("/static")})
 
 
+#: 기본 요청에서 **일부러 403** 인 라우트 — fail-closed 가 목적이라 200 이면 오히려 버그다.
+GATED_ROUTES = {"/cascade/diagnostic": ("view=diagnostic", 403)}
+
+
 def test_all_get_routes_200():
     c = A.app.test_client()
     bad = []
     for u in _routes():
         try:
+            if u in GATED_ROUTES:
+                q, want = GATED_ROUTES[u]
+                if c.get(u).status_code != want:
+                    bad.append(f"{u} (gated 인데 {want} 가 아니다)")
+                elif c.get(f"{u}?{q}").status_code != 200:
+                    bad.append(f"{u}?{q} (opt-in 인데 안 열린다)")
+                continue
             if c.get(u).status_code != 200:
                 bad.append(u)
         except Exception as ex:                      # 렌더 예외도 실패로 잡는다
@@ -678,13 +689,14 @@ def test_manifest_tamper_fails_closed():
         p = ROOT / a["source_path"]
         assert hashlib.sha256(p.read_bytes()).hexdigest() == a["sha256"], (
             f"{a['source_path']} 가 manifest 와 어긋난다 — rebuild_pool_inputs.py 를 다시 돌릴 것")
-        assert a["status"] in D._MANIFEST_STATUS
+        assert a["approval_status"] in D._MANIFEST_STATUS
+        assert a["use_scope"] in D._MANIFEST_USE_SCOPE
         assert a["actual_x"] == 0.25, "실측 농도는 0.25 다 (라벨 x002/x005/x010 은 농도가 아니다)"
     # 위조 시나리오: status 를 어휘 밖 값으로 바꾸면 ok=False 여야 한다
     orig = D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8")
     try:
         bad = json.loads(orig)
-        bad["artifacts"][0]["status"] = "approved_by_nobody"
+        bad["artifacts"][0]["approval_status"] = "approved_by_nobody"
         D.CASCADE_MANIFEST_PATH.write_text(json.dumps(bad, ensure_ascii=False), encoding="utf-8")
         D._load_json.cache_clear() if hasattr(D._load_json, "cache_clear") else None
         assert D.cascade_truth()["ok"] is False, "알 수 없는 status 인데 fail-closed 하지 않았다"
@@ -711,12 +723,108 @@ def test_na2s_ductility_claim_is_retracted():
     assert "어느 것도 B/G>1.75" in th["themes"]["ductility"]["caveat"], "연성 서술이 되돌아갔다"
 
 
-def test_recovered_ranking_is_not_shown_as_a_leaderboard():
-    """승인 0종인 동안 89행 랭킹과 endpoint 후보명은 opt-in 뒤에 있어야 한다."""
+def test_recovered_ranking_is_gated_server_side():
+    """<details> 는 후보명을 초기 DOM 에 다 싣는다 — 서버가 렌더 자체를 막아야 한다."""
+    c = A.app.test_client()
     h = _cascade_html()
-    assert "후보명 보기 (opt-in" in h, "G4 endpoint 명단이 기본 노출로 돌아왔다"
-    assert "89행 표 열기 (opt-in" in h, "89종 랭킹이 기본 노출로 돌아왔다"
-    assert "이 표를 리더보드로 읽지 말 것" in h
+    assert "/cascade/diagnostic" in h, "acquisition 화면 링크가 없다"
+    denied = c.get("/cascade/diagnostic")
+    assert denied.status_code == 403, "view=diagnostic 없이 열렸다"
+    body = denied.get_data(as_text=True)
+    fun = json.loads((D.DB / "properties" / "cascade_screening_funnel_v2.json")
+                     .read_text(encoding="utf-8"))
+    names = [g for g in (fun.get("gates") or []) if g.get("id") == "G4"]
+    ep = (D.load_cascade()["v2"]["meta"].get("funnel_v2") or {}).get("endpoint") or []
+    assert ep, "endpoint 목록이 비었다 — 이 테스트를 갱신할 것"
+    for sp in ep[:6]:
+        assert sp not in body, f"거부 화면에 후보명 {sp} 가 DOM 으로 실렸다"
+    allowed = c.get("/cascade/diagnostic?view=diagnostic")
+    assert allowed.status_code == 200 and ep[0] in allowed.get_data(as_text=True)
+
+
+def test_artifact_policy_gates_every_api_path():
+    """화면에서 숨긴 artifact 를 API 로 그냥 받을 수 있으면 안 된다 (Codex Round-3 P0-3)."""
+    c = A.app.test_client()
+    cases = [
+        ("/api/file/db/properties/cascade_audit_gate_completeness.csv?dl=1", 200),
+        ("/api/file/docs/figures/cascade/cascade_audit_g4_rescore.png", 200),
+        ("/api/file/db/properties/cascade_v23_ranked_v2.csv?dl=1", 403),
+        ("/api/file/db/properties/cascade_v23_ranked_v2.csv?dl=1&view=diagnostic", 200),
+        ("/api/file/db/properties/cascade_v23_ranked.csv?dl=1", 403),
+        ("/api/file/db/properties/cascade_v23_ranked.csv?dl=1&archive=1", 200),
+        ("/api/property/cascade_screening_funnel_v2", 403),
+        ("/api/property/cascade_screening_funnel_v2?view=diagnostic", 200),
+        ("/api/csv/properties/cascade_v23_ranked_v2.csv", 403),
+        ("/api/file/db/properties/electronic.json", 200),      # cascade 밖은 통과
+    ]
+    for url, want in cases:
+        got = c.get(url).status_code
+        assert got == want, f"{url} → {got} (want {want})"
+
+
+def test_manifest_has_a_single_owner():
+    """생산자 둘이 같은 원장을 통째로 덮어써 상대의 계약 블록을 지웠다 (P0-1)."""
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    assert man.get("owner") == "tools/cascade/build_cascade_audit_manifest.py"
+    for k in ("datasets", "metric_contract", "artifacts", "figures", "supporting_tables"):
+        assert k in man, f"원장에 {k} 블록이 없다 — 소유자가 다시 갈라졌다"
+    plotter = (ROOT / "tools" / "figures" / "plot_cascade_audit_2026_08.py").read_text(encoding="utf-8")
+    assert 'out = DB / "cascade_audit_manifest.json"' not in plotter, \
+        "플로터가 다시 원장을 쓴다 — sidecar 만 써야 한다"
+    rebuild = (ROOT / "tools" / "cascade" / "rebuild_pool_inputs.py").read_text(encoding="utf-8")
+    assert "cascade_audit_manifest.json" not in rebuild, \
+        "rebuild_pool_inputs 가 다시 원장을 쓴다"
+
+
+def test_artifact_provenance_is_per_file():
+    """top-level source_commit 하나로 전부를 덮으면 거짓말이 된다 (P0-2)."""
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    rk = [a for a in man["artifacts"] if a["source_path"].endswith("ranked_v2.csv")][0]
+    assert rk["source_commit"] != man["source_commit"], "ranked_v2 가 다시 고정 커밋으로 묶였다"
+    assert rk.get("derived_from") == man["source_commit"] and rk.get("override_reason")
+    plotter = (ROOT / "tools" / "figures" / "plot_cascade_audit_2026_08.py").read_text(encoding="utf-8")
+    dep = plotter.split("RECOVERED_DERIVED = [")[1].split("]")[0]
+    entries = [ln.strip() for ln in dep.splitlines() if ln.strip().startswith('"')]
+    assert not any("ranked_v2" in e for e in entries), \
+        "ranked_v2 가 다시 패널 의존에 들어갔다 (어느 패널도 안 읽는다)"
+
+
+def test_g3_does_not_claim_a_synthetic_phase_set_id():
+    """합성 phase_set_id 는 method-complete=0 판정과 충돌한다 (P1)."""
+    t = D.read_csv("properties/cascade_audit_g3_phase_set.csv")
+    rec = [r for r in t["data"] if r["status"] == "recovered_unvalidated"]
+    assert rec, "recovered 행이 사라졌다"
+    assert not str(rec[0]["phase_set_id"] or "").strip(), "recovered 행이 다시 phase_set_id 를 주장한다"
+    assert "가정" in str(rec[0]["phase_set_assumption"]), "가정 표기가 없다"
+
+
+def test_g4_rescore_carries_pool_metadata():
+    """min–max 점수를 고정 물성처럼 읽지 못하게 하는 메타 (P1)."""
+    t = D.read_csv("properties/cascade_audit_g4_rescore.csv")
+    r = t["data"][0]
+    for c in ("pool_id", "normalization_n", "bvs_pool_min", "bvs_pool_max", "actual_x"):
+        assert str(r.get(c, "")).strip() != "", f"{c} 가 없다"
+    assert float(r["actual_x"]) == 0.25
+
+
+def test_g5_completeness_separates_presence_from_validity():
+    """presence 88/1/1 옆에 validity-aware 86/AlBr3·MgI2·Na2S/AlI3 를 병기해야 한다 (P1)."""
+    t = D.read_csv("properties/cascade_audit_gate_completeness.csv")
+    g5 = [r for r in t["data"] if r["gate"] == "G5"][0]
+    assert g5["validity_aware_all_label_species"] == 86
+    assert g5["validity_aware_partial"] == "AlBr3|MgI2|Na2S"
+    assert g5["validity_aware_dropped"] == "AlI3"
+    assert all(r.get("completeness_basis") for r in t["data"]), "completeness_basis 가 비었다"
+
+
+def test_db_property_files_are_lf_pinned():
+    """깨끗한 Windows checkout 에서 CRLF 로 바뀌면 해시 대조가 깨진다 (P1)."""
+    ga = (ROOT / ".gitattributes").read_text(encoding="utf-8")
+    assert "db/properties/*.csv   text eol=lf" in ga
+    assert "db/properties/*.json  text eol=lf" in ga
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    for a in man["artifacts"]:
+        assert a.get("sha256_lf"), f"{a['source_path']} 에 LF 정규화 해시가 없다"
 
 
 def test_gate_completeness_is_axis_specific():

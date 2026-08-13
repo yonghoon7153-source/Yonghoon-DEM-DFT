@@ -532,13 +532,10 @@ def main():
     if audit["partial"]:
         print(f"            ⚠ 부분 결측: {' '.join(sorted(audit['partial']))}")
 
-    man = build_manifest(audit)
-    p5 = PROP / "cascade_audit_manifest.json"
-    json.dump(man, open(p5, "w"), ensure_ascii=False, indent=1)
-    open(p5, "a").write("\n")
-    print(f"[manifest]  {p5}  artifact {len(man['artifacts'])}건 · "
-          f"승인 {man['headline']['approved_current_leaderboard_species']}종 · "
-          f"figure {len(man['figures'])} · supporting {len(man['supporting_tables'])}")
+    # ⛔ 2026-08-14 (Codex Round-3 P0-1) — 이 도구는 manifest 를 **쓰지 않는다.**
+    #   두 생산자가 같은 원장을 통째로 덮어써서 늦게 돈 쪽이 상대의 계약 블록을 지웠다.
+    #   지금은 sidecar 만 쓰고, 원장은 build_cascade_audit_manifest.py 가 단독 소유한다.
+    print("다음: python3 tools/cascade/build_cascade_audit_manifest.py  (원장 갱신)")
     print("다음: python3 tools/figures/plot_cascade_insights.py "
           "→ cascade_v23_ranked.csv → tools/cascade/build_screening_funnel.py")
     return 0

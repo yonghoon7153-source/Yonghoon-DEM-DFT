@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Cascade — acquisition diagnostic{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div><h1>🔬 Cascade acquisition 진단물 <span class="muted" style="font-size:.7em">결과 화면 아님</span></h1>
+    <div class="sub">다음에 무엇을 계산할지 고르기 위한 화면이다 — 순위표가 아니다</div></div>
+</div>
+
+{% if not gate %}
+{# ⛔ 서버가 렌더 자체를 안 한다. 후보명이 DOM 에 실리지 않는다. #}
+<div class="callout cal-danger" style="font-size:.9rem">
+  <b>이 화면은 <span class="mono">?view=diagnostic</span> 없이는 열리지 않는다 (403).</b>
+  <div style="margin-top:8px">승인된 current ranking 은 <b>0종</b>이다. 후보명과 89행 랭킹은
+    결과가 아니라 acquisition 진단물이라, 명시적으로 요청해야만 나간다.</div>
+  <div class="muted" style="margin-top:8px">
+    계약: <span class="mono">docs/reviews/cascade_dftweb_source_of_truth_2026_08_14.md</span></div>
+  <div style="margin-top:12px"><a class="btn" href="/cascade">← 감사 화면으로</a></div>
+</div>
+{% else %}
+
+{% set V = casc.v2 %}{% set VM = V.meta %}
+<div class="callout cal-danger" style="margin:0 0 16px;font-size:.85rem">
+  <b>⛔ 아래를 리더보드·shortlist·winner 로 인용하지 말 것.</b>
+  <ul style="margin:6px 0 0;padding-left:18px">
+    <li><b>G3</b> — record-complete 90 / <b>method-comparable 0</b>. 파생표가
+      <span class="mono">phase_set_id</span> 를 떨어뜨렸고 plain/Cl-rich 지지가 섞여 있다.
+      회수 270 반응 중 <b>124건</b>에 LiS4 가 들어 있고, LiS4 를 빼면 host onset 이
+      2.140 → 2.256 V 로 움직인다.</li>
+    <li><b>G4</b> — blocking 컷 탈락자는 BVS 값이 버려지고 <span class="mono">transport_norm</span> 이
+      0.05 로 강제된다. 두 독립 신호의 AND 가 아니다. min–max 정규화라 풀이 바뀌면 점수가 움직인다
+      (B₂O₃ blocking-free: 47종 풀 0.1000 → 88종 풀 0.1998, 둘 다 fail).</li>
+    <li><b>G5</b> — median 컷이라 로스터 상대다. 47종판과 89종판의 통과선은 같은 기준이 아니다.
+      field presence 로 세면 88/1/1 이지만 비물리 탄성(B_hill·G_hill ≤ 0)을 거르면
+      all-label-valid <b>86</b> · partial AlBr₃·MgI₂·Na₂S · dropped AlI₃ 다.</li>
+    <li>가중치는 손으로 정한 값이고, UMA 절대 탄성은 실험 대비 부풀어 있다.</li>
+  </ul>
+</div>
+
+{% if VM.funnel_v2 %}{% set F2 = VM.funnel_v2 %}
+<div class="card" id="endpoint">
+  <h3>G4 endpoint 후보 — {{ F2.endpoint_n }}종
+    <span class="badge err" style="margin-left:6px">acquisition only</span></h3>
+  <div class="muted" style="font-size:.8rem;margin-bottom:8px">
+    다음 계산 대상 후보군이다. 통과 순서가 아니라 <b>어디서 멈췄는지</b>를 보는 목록이다.</div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    {% for d in F2.endpoint %}{% set art = VM.artifacts.get(d) %}
+      <span class="badge {{ 'warn' if art else '' }}" title="{{ art or '' }}">{{ d }}{% if art %} ⚠{% endif %}</span>
+    {% endfor %}
+  </div>
+  {% if VM.artifacts %}
+  <div class="callout cal-warning" style="margin:10px 0 0;font-size:.8rem">
+    <b>⚠ 판정이 아닌 통과</b> —
+    {% for d, why in VM.artifacts.items() %}<b>{{ d }}</b>: {{ why }}{% if not loop.last %} · {% endif %}{% endfor %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+{% if V.ranked and V.ranked.data %}
+<div class="card" id="ranking">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px">
+    <h3 style="margin:0">89종 진단 랭킹 <span class="badge err">recovered_unvalidated</span></h3>
+    <input class="search" style="max-width:220px" placeholder="도펀트 검색…" oninput="filtRows('diag-tbl',this.value)">
+  </div>
+  <div class="tbl-scroll"><table class="data-table sortable" id="diag-tbl"><thead><tr>
+    {% for c in V.ranked.cols %}<th onclick="sortT(this,{{ loop.index0 }})" tabindex="0" role="button" onkeydown="_kbd(event)">{{ c }}</th>{% endfor %}
+    </tr></thead><tbody>
+    {% for row in V.ranked.data %}<tr>{% for c in V.ranked.cols %}
+      <td class="{{ 'mono' if c != 'dopant' else '' }}">{{ row[c] }}</td>{% endfor %}</tr>{% endfor %}
+  </tbody></table></div>
+  <div class="muted" style="font-size:.78rem;margin-top:8px">
+    <a class="mono" href="/api/file/db/properties/cascade_v23_ranked_v2.csv?dl=1&amp;view=diagnostic">⬇ cascade_v23_ranked_v2.csv</a>
+    — 원장 지위 <span class="mono">recovered_unvalidated · diagnostic_only</span></div>
+</div>
+{% endif %}
+
+<div style="margin-top:14px"><a class="btn" href="/cascade">← 감사 화면으로</a></div>
+{% endif %}
+
+<script>
+function filtRows(id,q){var t=document.getElementById(id);if(!t)return;q=(q||'').toLowerCase();
+  Array.prototype.forEach.call(t.tBodies[0].rows,function(r){
+    r.style.display = r.textContent.toLowerCase().indexOf(q)>=0 ? '' : 'none';});}
+function _kbd(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();e.target.click();}}
+function sortT(th,idx){var tb=th.closest('table'),rows=Array.prototype.slice.call(tb.tBodies[0].rows);
+  var asc=!(th._asc);th._asc=asc;
+  rows.sort(function(a,b){var x=a.cells[idx].textContent.trim(),y=b.cells[idx].textContent.trim();
+    var nx=parseFloat(x),ny=parseFloat(y);
+    if(!isNaN(nx)&&!isNaN(ny))return asc?nx-ny:ny-nx;
+    return asc?x.localeCompare(y):y.localeCompare(x);});
+  rows.forEach(function(r){tb.tBodies[0].appendChild(r);});}
+</script>
+{% endblock %}
