@@ -1,0 +1,10 @@
+run_dir: results/halfcell_fit_v4
+inputs:
+  inputs/curves.parquet: results/grid_curves_v4/curves.parquet
+  inputs/base.yaml: configs/base.yaml
+  inputs/curves_manifest.yaml: results/grid_curves_v4/curves_manifest.yaml
+  inputs/curves_manifest_start.yaml: results/grid_curves_v4/curves_manifest_start.yaml
+  inputs/failed.csv: results/grid_curves_v4/failed.csv
+  inputs/a8e262f7d6aa4beb_ocp_b5009f515fb8.json: .cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json
+  inputs/a8e262f7d6aa4beb_ocp_b5009f515fb8.meta.yaml: .cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.meta.yaml
+nested: []

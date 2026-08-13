@@ -1,0 +1,28 @@
+recipe:
+  method: ocp
+  n_points: 400
+  branch: delithiation
+baseline_hash: a8e262f7d6aa4beb
+recipe_hash: b5009f515fb8
+parameter_set: Chen2020_composite
+source_digest: d50295f980ccaa81
+env:
+  python: 3.10.12
+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+  machine: x86_64
+  numpy: 2.2.6
+  scipy: 1.15.3
+  pandas: 2.3.3
+  joblib: 1.5.3
+  pyarrow: 25.0.1
+  pybamm: 26.7.1.0
+  matplotlib: 3.10.9
+  yaml: 6.0.3
+  pybammsolvers: 0.9.0
+  casadi: 3.7.2
+coverage:
+  pe_min: 0.0001
+  pe_max: 0.9999
+  ne_min: 8.349462684794871e-05
+  ne_max: 0.999916505373152
+cache_file: a8e262f7d6aa4beb_ocp_b5009f515fb8.json

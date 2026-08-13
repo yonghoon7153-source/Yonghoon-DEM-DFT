@@ -1,0 +1,179 @@
+run_type: grid_producer
+producer_version: 1
+timestamp: '2026-08-12T14:32:53'
+config_hash: 60d9205dda522e6c
+parameter_set: Chen2020_composite
+protocol_unified: charge_first
+grid_config:
+  lli:
+    start: 0.0
+    stop: 0.2
+    step: 0.02
+  lam_pe:
+    start: 0.0
+    stop: 0.2
+    step: 0.02
+    type: de
+  lam_ne:
+    start: 0.0
+    stop: 0.2
+    step: 0.02
+    type: de
+  noise:
+  - 0.0
+  - 0.001
+  - 0.005
+  noise_seed: 42
+noise_seed: 42
+source_digest: d50295f980ccaa81
+env:
+  python: 3.10.12
+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+  machine: x86_64
+  numpy: 2.2.6
+  scipy: 1.15.3
+  pandas: 2.3.3
+  joblib: 1.5.3
+  pyarrow: 25.0.1
+  pybamm: 26.7.1.0
+  matplotlib: 3.10.9
+  yaml: 6.0.3
+  pybammsolvers: 0.9.0
+  casadi: 3.7.2
+git_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+git_commit_short: c0f1daa0
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- se_curve/xfer_kit_ps_7_3_g192_e1173.json
+- se_curve/xfer_kit_ps_7_3_g192_e742.json
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 0
+git_untracked_critical: []
+curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+n_conditions: 3993
+_주의: 이 파일은 곡선을 만든 실행의 기록이다. fitting 은 이것을 **입력으로 봉인**하며 덮어쓰지 않는다 (F70).
+solver: IDAKLUSolver
+n_curves: 3069
+elapsed_s: 1931.6
+grid_run_spec:
+  grid_sig_version: 5
+  config_hash: 60d9205dda522e6c
+  noise:
+  - 0.0
+  - 0.001
+  - 0.005
+  config_files:
+  - configs/base.yaml
+  - configs/grid_fine.yaml
+  protocol_unified: charge_first
+  parameter_set: Chen2020_composite
+  noise_seed: 42
+  condition_ids_sha256: 7b08e97e129d0bf4
+  n_conditions_intended: 3993
+  postprocess:
+    n_trim: 3
+    n_interp: 300
+  discharged_state:
+    ne_primary: 36.64970365763882
+    ne_secondary: 3446.0841935406315
+    pe: 58439.87386449178
+  discharged_state_sha: db03ee9a19161c01fbd91949d1742fd447f64546bab296ff5c6f2f5ea4ae8cea
+  replay_recipe:
+    baseline:
+      ne_primary_init_conc: 27700.0
+      ne_primary_max_conc: 28700.0
+      ne_secondary_init_conc: 276610.0
+      ne_secondary_max_conc: 278000.0
+      pe_init_conc: 17038.0
+      pe_max_conc: 63104.0
+      ne_porosity: 0.25
+      ne_primary_vf: 0.735
+      ne_secondary_vf: 0.015
+      pe_porosity: 0.335
+      pe_vf: 0.665
+    guards:
+      max_mode_value: 0.9
+      max_porosity: 0.95
+      min_vf: 0.0001
+  effective_solver:
+    requested:
+      type: idaklu
+      fallback: casadi
+      rtol: 1.0e-06
+      atol: 1.0e-06
+      casadi_mode: safe
+    effective_class: IDAKLUSolver
+    pybamm: 26.7.1.0
+    pybammsolvers: 0.9.0
+    casadi: 3.7.2
+  source_digest: d50295f980ccaa81
+  env:
+    python: 3.10.12
+    platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+    machine: x86_64
+    numpy: 2.2.6
+    scipy: 1.15.3
+    pandas: 2.3.3
+    joblib: 1.5.3
+    pyarrow: 25.0.1
+    pybamm: 26.7.1.0
+    matplotlib: 3.10.9
+    yaml: 6.0.3
+    pybammsolvers: 0.9.0
+    casadi: 3.7.2
+grid_run_sig: c75fe4e3c155
+source_digest_changed_during_run: false
+failed_ids_sha256: 1d1443089d008658
+n_failed_total: 924
+effective_axes:
+  lli:
+  - 0.0
+  - 0.02
+  - 0.04
+  - 0.06
+  - 0.08
+  - 0.1
+  - 0.12
+  - 0.14
+  - 0.16
+  - 0.18
+  - 0.2
+  lam_pe:
+  - 0.0
+  - 0.02
+  - 0.04
+  - 0.06
+  - 0.08
+  - 0.1
+  - 0.12
+  - 0.14
+  - 0.16
+  - 0.18
+  - 0.2
+  lam_ne:
+  - 0.0
+  - 0.02
+  - 0.04
+  - 0.06
+  - 0.08
+  - 0.1
+  - 0.12
+  - 0.14
+  - 0.16
+  - 0.18
+  - 0.2
+  noise:
+  - 0.0
+  - 0.001
+  - 0.005
+_grid_config_주의: grid_config 는 config 파일 원본이다 — CLI 축 override 는 effective_axes 와
+  condition_ids_sha256 에만 반영된다 (10차).

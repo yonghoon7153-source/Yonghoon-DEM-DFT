@@ -1,0 +1,48 @@
+attempt_id: 20260812T175009_74221_000
+started_at: '2026-08-12T17:50:09'
+resume: false
+source_digest: d50295f980ccaa81
+git_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+git_commit_short: c0f1daa0
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- se_curve/xfer_kit_ps_7_3_g192_e1173.json
+- se_curve/xfer_kit_ps_7_3_g192_e742.json
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 0
+git_untracked_critical: []
+env:
+  python: 3.10.12
+  platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+  machine: x86_64
+  numpy: 2.2.6
+  scipy: 1.15.3
+  pandas: 2.3.3
+  joblib: 1.5.3
+  pyarrow: 25.0.1
+  pybamm: 26.7.1.0
+  matplotlib: 3.10.9
+  yaml: 6.0.3
+  pybammsolvers: 0.9.0
+  casadi: 3.7.2
+input_sha256:
+  results/grid_curves_v4/curves.parquet: b69dc7bee0bb2e32
+  configs/base.yaml: 26fe6c7cc2a2d719
+  results/grid_curves_v4/curves_manifest.yaml: a6e5ab9cf348ff44
+  results/grid_curves_v4/curves_manifest_start.yaml: c2cb4ed17f6c85fc
+  results/grid_curves_v4/failed.csv: c75885ba8739ca7a
+  .cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json: 636a425ace2d71e6
+  .cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.meta.yaml: 116a14dcf77d79a4
+halfcell_cache: .cache/halfcell/a8e262f7d6aa4beb_ocp_b5009f515fb8.json
+halfcell_recipe: null
+_주의: 실행 **시작** 시점 상태다 (입력 로드·self-fit 이전). manifest.yaml 은 종료 시점이므로 둘이 다르면 실행 도중 코드나
+  입력이 바뀐 것이다 (F42/F51). half-cell 캐시 digest 는 기준 곡선을 고른 뒤 attempt 파일에 추가된다.

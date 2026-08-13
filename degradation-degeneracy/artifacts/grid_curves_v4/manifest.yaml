@@ -1,0 +1,43 @@
+timestamp: '2026-08-12T14:00:40'
+config_hash: 60d9205dda522e6c
+pybamm_version: 26.7.1.0
+platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+python: 3.10.12
+git_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+git_commit_short: c0f1daa0
+git_dirty: false
+git_dirty_tracked: false
+git_dirty_files_in_scope: []
+git_dirty_out_of_scope:
+- se_curve/xfer_kit_ps_7_3_g192_e1173.json
+- se_curve/xfer_kit_ps_7_3_g192_e742.json
+git_dirty_repo_wide: true
+git_dirty_scope:
+- src/
+- tools/
+- configs/
+- scripts/
+- run.sh
+- requirements*.txt
+git_untracked_count: 0
+git_untracked_critical: []
+run_type: grid
+protocol_unified: charge_first
+solver: IDAKLUSolver
+nproc: 32
+chunk_size: 200
+n_conditions: 3993
+n_resume_skipped: 0
+discharged_state:
+  ne_primary: 36.64970365763882
+  ne_secondary: 3446.0841935406315
+  pe: 58439.87386449178
+reproducible: true
+n_ok: 3069
+n_failed: 924
+n_completed_total: 3993
+n_failed_total: 924
+n_curves_total: 3069
+elapsed_s: 1931.6
+curves_parquet: results/grid_curves_v4/curves.parquet
+finished: '2026-08-12T14:32:53'

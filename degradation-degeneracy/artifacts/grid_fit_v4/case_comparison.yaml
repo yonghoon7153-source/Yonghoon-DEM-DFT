@@ -1,0 +1,378 @@
+provenance:
+  grid:
+    run_dir: results/grid_fit_v4
+    scored_file: results/grid_fit_v4/fits.parquet
+    ok: true
+    fail: []
+    reference_실제: grid
+    reference_기대: grid
+    fits_sha256: 18ebb8e7b32ef879
+    manifest_sha256: 228664b1ca8dea7f
+  halfcell:
+    run_dir: results/halfcell_fit_v4
+    scored_file: results/halfcell_fit_v4/fits.parquet
+    ok: true
+    fail: []
+    reference_실제: halfcell
+    reference_기대: halfcell
+    fits_sha256: 6c5301cd4f24fa81
+    manifest_sha256: 3fa4106ac916dc3b
+provenance_ok: true
+공통_run_spec:
+  curves_sha:
+    grid: b69dc7bee0bb2e32
+    halfcell: b69dc7bee0bb2e32
+    일치: true
+  producer_sha:
+    grid: a6e5ab9cf348ff44
+    halfcell: a6e5ab9cf348ff44
+    일치: true
+  objectives:
+    grid:
+      dqdv_only: &id004
+        w_pocv: 0.0
+        w_dvdq: 0.0
+        w_dqdv: 1.0
+      pocv: &id001
+        w_pocv: 1.0
+        w_dvdq: 0.0
+        w_dqdv: 0.0
+      pocv_dvdq: &id002
+        w_pocv: 1.0
+        w_dvdq: 1.0
+        w_dqdv: 0.0
+      pocv_dvdq_dqdv: &id003
+        w_pocv: 1.0
+        w_dvdq: 1.0
+        w_dqdv: 1.0
+    halfcell:
+      dqdv_only: &id008
+        w_pocv: 0.0
+        w_dvdq: 0.0
+        w_dqdv: 1.0
+      pocv: &id005
+        w_pocv: 1.0
+        w_dvdq: 0.0
+        w_dqdv: 0.0
+      pocv_dvdq: &id006
+        w_pocv: 1.0
+        w_dvdq: 1.0
+        w_dqdv: 0.0
+      pocv_dvdq_dqdv: &id007
+        w_pocv: 1.0
+        w_dvdq: 1.0
+        w_dqdv: 1.0
+    일치: true
+  objective_order:
+    grid:
+    - pocv
+    - pocv_dvdq
+    - pocv_dvdq_dqdv
+    - dqdv_only
+    halfcell:
+    - pocv
+    - pocv_dvdq
+    - pocv_dvdq_dqdv
+    - dqdv_only
+    일치: true
+  v_col:
+    grid: v_full_noisy
+    halfcell: v_full_noisy
+    일치: true
+  warm_start:
+    grid: true
+    halfcell: true
+    일치: true
+  optimizer:
+    grid:
+      method: Nelder-Mead
+      adaptive: true
+      n_restarts: 5
+      agree_tol: 0.001
+      seed_scheme: sha1(cond_id)[:8]
+    halfcell:
+      method: Nelder-Mead
+      adaptive: true
+      n_restarts: 5
+      agree_tol: 0.001
+      seed_scheme: sha1(cond_id)[:8]
+    일치: true
+  base_config_sha:
+    grid: 26fe6c7cc2a2d719
+    halfcell: 26fe6c7cc2a2d719
+    일치: true
+  inventory:
+    grid:
+      n_pe_ah: 2.3577068144188655
+      n_ne_ah: 5.747602547811476
+      q_ref_ah: 5.621073220520553
+      w_pe: 0.2908842474792466
+      w_ne: 0.7091157525207533
+      kappa: 0.6935050803506653
+    halfcell:
+      n_pe_ah: 2.3577068144188655
+      n_ne_ah: 5.747602547811476
+      q_ref_ah: 5.621073220520553
+      w_pe: 0.2908842474792466
+      w_ne: 0.7091157525207533
+      kappa: 0.6935050803506653
+    일치: true
+  obj_cfg:
+    grid:
+      objectives:
+        pocv: *id001
+        pocv_dvdq: *id002
+        pocv_dvdq_dqdv: *id003
+        dqdv_only: *id004
+      scaling:
+        method: reference_rmse
+      dqdv:
+        smoothing: savgol
+        window: 21
+        polyorder: 3
+        peak_weight: 3.0
+        peak_prominence: 0.05
+        peak_halfwidth: 10
+      fitting:
+        bounds_presets:
+          original_33p:
+            init:
+            - 1.03
+            - -0.1
+            - 1.08
+            - -0.01
+            lb:
+            - 1.0
+            - -0.3
+            - 1.0
+            - -0.15
+            ub:
+            - 1.1
+            - 0.0
+            - 1.1
+            - 0.0
+          expanded:
+            init:
+            - 1.03
+            - -0.1
+            - 1.08
+            - -0.01
+            lb:
+            - 0.7
+            - -0.6
+            - 0.7
+            - -0.6
+            ub:
+            - 1.8
+            - 0.4
+            - 1.8
+            - 0.4
+          halfcell:
+            init:
+            - 1.05
+            - -0.05
+            - 1.4
+            - -0.4
+            lb:
+            - 0.5
+            - -1.5
+            - 0.5
+            - -1.5
+            ub:
+            - 3.0
+            - 1.0
+            - 3.0
+            - 1.0
+        method: Nelder-Mead
+        n_restarts: 5
+        detect_active_bounds: true
+      scoring:
+        tolerance: 0.02
+      _config_path: configs/objectives.yaml
+      _loaded_files:
+      - configs/objectives.yaml
+    halfcell:
+      objectives:
+        pocv: *id005
+        pocv_dvdq: *id006
+        pocv_dvdq_dqdv: *id007
+        dqdv_only: *id008
+      scaling:
+        method: reference_rmse
+      dqdv:
+        smoothing: savgol
+        window: 21
+        polyorder: 3
+        peak_weight: 3.0
+        peak_prominence: 0.05
+        peak_halfwidth: 10
+      fitting:
+        bounds_presets:
+          original_33p:
+            init:
+            - 1.03
+            - -0.1
+            - 1.08
+            - -0.01
+            lb:
+            - 1.0
+            - -0.3
+            - 1.0
+            - -0.15
+            ub:
+            - 1.1
+            - 0.0
+            - 1.1
+            - 0.0
+          expanded:
+            init:
+            - 1.03
+            - -0.1
+            - 1.08
+            - -0.01
+            lb:
+            - 0.7
+            - -0.6
+            - 0.7
+            - -0.6
+            ub:
+            - 1.8
+            - 0.4
+            - 1.8
+            - 0.4
+          halfcell:
+            init:
+            - 1.05
+            - -0.05
+            - 1.4
+            - -0.4
+            lb:
+            - 0.5
+            - -1.5
+            - 0.5
+            - -1.5
+            ub:
+            - 3.0
+            - 1.0
+            - 3.0
+            - 1.0
+        method: Nelder-Mead
+        n_restarts: 5
+        detect_active_bounds: true
+      scoring:
+        tolerance: 0.02
+      _config_path: configs/objectives.yaml
+      _loaded_files:
+      - configs/objectives.yaml
+    일치: true
+  source_digest:
+    grid: d50295f980ccaa81
+    halfcell: d50295f980ccaa81
+    일치: true
+  env:
+    grid:
+      python: 3.10.12
+      platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+      machine: x86_64
+      numpy: 2.2.6
+      scipy: 1.15.3
+      pandas: 2.3.3
+      joblib: 1.5.3
+      pyarrow: 25.0.1
+      pybamm: 26.7.1.0
+      matplotlib: 3.10.9
+      yaml: 6.0.3
+      pybammsolvers: 0.9.0
+      casadi: 3.7.2
+    halfcell:
+      python: 3.10.12
+      platform: Linux-5.15.0-130-generic-x86_64-with-glibc2.35
+      machine: x86_64
+      numpy: 2.2.6
+      scipy: 1.15.3
+      pandas: 2.3.3
+      joblib: 1.5.3
+      pyarrow: 25.0.1
+      pybamm: 26.7.1.0
+      matplotlib: 3.10.9
+      yaml: 6.0.3
+      pybammsolvers: 0.9.0
+      casadi: 3.7.2
+    일치: true
+  condition_ids_sha256:
+    grid: f4e633ebe62924a6
+    halfcell: f4e633ebe62924a6
+    일치: true
+_주의_공통성: 두 실행이 곡선·목적함수·optimizer 정책·환경까지 동일하다.
+reference별_허용차이:
+- bounds
+- bounds_preset
+- halfcell_cache
+- halfcell_meta_sha
+- halfcell_recipe
+- halfcell_sha
+- p_ini
+- reference
+_인과범위: '두 pipeline 은 reference 외에도 다음이 다르다: [''bounds'', ''bounds_preset'', ''halfcell_cache'',
+  ''halfcell_meta_sha'', ''halfcell_recipe'', ''halfcell_sha'', ''p_ini'', ''reference''].
+  이 표는 ''기준 곡선 단독 효과''가 아니라 **reference-specific fitting pipeline 의 차이**로 읽어야 한다.'
+_주의_provenance: 두 artifact 모두 provenance 검증을 통과했다.
+n_conditions_total: 3069
+n_conditions_common: 3069
+n_conditions_compared: 1476
+_모집단: 두 실행의 공통 조건 중, grid 기준에서 복원가능으로 분류된 것만. 행 수를 맞춰야 기준 효과와 난이도 차이가 섞이지 않는다.
+_주의_바이어스: '''(바이어스 보정)'' 열의 계수는 비교 모집단(공통 ∩ grid 복원가능)의 noise=0 행에서 다시 추정한 값이다 — 각
+  artifact 파일에 저장된 전체-모집단 보정과 다를 수 있다. halfcell 쪽 ''복원가능''은 측정이 아니라 고정값이므로(아래 참조)
+  기저는 keep 으로만 제한된다.'
+_주의_복원불가: halfcell의 복원불가 0%는 측정이 아니라 scoring.py가 reference != 'grid' 일 때 recoverable=True로
+  고정한 값이다. 결과로 인용하지 말 것.
+grid:
+  dqdv_only:
+    n: 1476
+    degenerate_frac: 0.7703252032520326
+    degenerate_frac_corrected: 0.6605691056910569
+    mean_abs_err: 0.05002507667282761
+    pe_ne_antisym_frac: 0.21612466124661248
+  pocv:
+    n: 1476
+    degenerate_frac: 0.7784552845528455
+    degenerate_frac_corrected: 0.6673441734417345
+    mean_abs_err: 0.04740802437764155
+    pe_ne_antisym_frac: 0.29200542005420055
+  pocv_dvdq:
+    n: 1476
+    degenerate_frac: 0.6219512195121951
+    degenerate_frac_corrected: 0.15176151761517614
+    mean_abs_err: 0.024691931000881677
+    pe_ne_antisym_frac: 0.6788617886178862
+  pocv_dvdq_dqdv:
+    n: 1476
+    degenerate_frac: 0.6273712737127372
+    degenerate_frac_corrected: 0.247289972899729
+    mean_abs_err: 0.023970438685444986
+    pe_ne_antisym_frac: 0.4803523035230352
+halfcell:
+  dqdv_only:
+    n: 1476
+    degenerate_frac: 0.9979674796747967
+    degenerate_frac_corrected: 0.4993224932249323
+    mean_abs_err: 0.06081000166083637
+    pe_ne_antisym_frac: 0.5711382113821138
+  pocv:
+    n: 1476
+    degenerate_frac: 0.5948509485094851
+    degenerate_frac_corrected: 0.4830623306233062
+    mean_abs_err: 0.04166230010283638
+    pe_ne_antisym_frac: 0.5088075880758808
+  pocv_dvdq:
+    n: 1476
+    degenerate_frac: 0.06571815718157181
+    degenerate_frac_corrected: 0.05894308943089431
+    mean_abs_err: 0.014119186925839106
+    pe_ne_antisym_frac: 0.2018970189701897
+  pocv_dvdq_dqdv:
+    n: 1476
+    degenerate_frac: 0.09959349593495935
+    degenerate_frac_corrected: 0.0508130081300813
+    mean_abs_err: 0.014327310998334999
+    pe_ne_antisym_frac: 0.6395663956639567

@@ -1,0 +1,32 @@
+_주의: RESULTS.md 의 앵커(fits/curves digest)와 여기 값이 같아야 그 보고서의 근거 묶음이다. source_commit
+  은 **계산을 시작한 코드**의 commit 이다. 이 index 와 묶음 bytes 는 `git add artifacts` 로 함께 커밋되며,
+  그 artifact commit 의 이름은 자기참조라 여기 쓸 수 없다 (12차 5-b·14차 8).
+source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+runs:
+  grid_curves_v4:
+    artifact_kind: grid_producer
+    payload_index_sha256: aca42a51cbe3237d365c024b6fc9ba48e73d6df2070b085babf54637d743c6da
+    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+    run_dir: results/grid_curves_v4
+    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+  grid_fit_v4:
+    artifact_kind: fit
+    payload_index_sha256: 1742058273bbe2493b4ef16a9947bbbdcf1b8d9f6d05bfb3bde8809c5c59a30d
+    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+    run_dir: results/grid_fit_v4
+    fits_sha256: 18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46
+    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+  halfcell_fit_v4:
+    artifact_kind: fit
+    payload_index_sha256: db56468838641f354e435e51a44b3c8adb5a1ebc8705529234e31ab97f2de7a6
+    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+    run_dir: results/halfcell_fit_v4
+    fits_sha256: 6c5301cd4f24fa81244fad24f8e3bca52b5130528b6d96866312742861eabd1d
+    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
+  paired_fixed5_v4:
+    artifact_kind: fit
+    payload_index_sha256: 061bafa062ac7caf2ff9b25777c717fc2abd0057b41177a3d678653c9d935b23
+    source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
+    run_dir: results/paired_fixed5_v4
+    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+    curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8

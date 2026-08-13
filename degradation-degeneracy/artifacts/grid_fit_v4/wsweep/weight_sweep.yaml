@@ -1,0 +1,40 @@
+w_grid:
+- 0.0
+- 0.25
+- 0.5
+- 0.75
+- 1.0
+- 1.25
+- 1.5
+- 1.75
+- 2.0
+n_conditions: 468
+stride: 2
+n_restarts: 5
+tol: 0.02
+method: Nelder-Mead
+adaptive: true
+seed_objective_used: false
+warm_start: true
+subset_curves_sha: b69dc7bee0bb2e32
+fits_sha256: fc9f9b6595fbeb389c06496bec85e50f7f0a2fe767c8fe054ae0ad7bd13f7d8c
+optimum:
+  metric: degenerate_frac_corrected
+  per_noise:
+    0.0:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.1518987341772152
+      n: 79
+    0.001:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.13924050632911392
+      n: 79
+    0.005:
+      w_dqdv: 0.0
+      degenerate_frac_corrected: 0.16455696202531644
+      n: 79
+  w_star_mean_over_noise: 0.0
+  value_at_w_star: 0.1518987341772152
+  value_at_w1: 0.29957805907172996
+  noise_levels_agree: true
+  _주의: 모든 노이즈 수준에서 같은 w가 최적 — 단일 값 채택 근거 있음.
