@@ -151,6 +151,29 @@ def neighbours(atoms, cell, fx, fy, fz, elem="N", cut=3.0):
     return sorted(out)
 
 
+def fix_bound(lines, zmax_needed, margin=0.03):
+    """BOUND 의 z 범위를 adatom 이 들어오도록 넓힌다. (넓힌 새 zmax, 원래 zmax) 반환.
+
+    VESTA 의 BOUND 는 표시 범위를 자른다. 원본 파일은 zmax=0.4 인데 adatom 은 z~0.45 라
+    **경계 밖**이다. 그래도 보였던 이유는 SBOND 가 '경계 밖이라도 결합된 원자는 끌어온다'
+    이기 때문 — 즉 결합을 끄거나 결합 규칙 없는 원소로 넣으면 원자가 조용히 사라진다.
+    (2026-08-12 두 번 같은 방식으로 당함.)
+    """
+    i = next((k for k, l in enumerate(lines) if l.split() and l.split()[0] == "BOUND"), None)
+    if i is None:
+        raise SystemExit("BOUND 섹션이 없다")
+    t = lines[i + 1].split()
+    if len(t) < 6:
+        raise SystemExit(f"BOUND 값줄을 못 읽음: {lines[i + 1]!r}")
+    old = float(t[5])
+    if zmax_needed + margin <= old:
+        return old, old
+    new = round(zmax_needed + margin, 4)
+    t[5] = f"{new:g}"
+    lines[i + 1] = "".join(f"{v:>9s}" for v in t[:6])
+    return new, old
+
+
 def _section_end(lines, header, nzero):
     """header 섹션의 종료줄(0 이 nzero 개) 인덱스."""
     # 헤더에 인자가 붙는 섹션이 있다 (예: "THERI 1") -> 첫 토큰으로 찾는다
@@ -200,6 +223,10 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
         new_theri.append(f"{idx:>3d} {lb:>10s} -0.000000")
         new_sitet.append(f"{idx:>3d} {lb:>10s}  {rad:.4f} {rgb[0]:3d} {rgb[1]:3d} {rgb[2]:3d} "
                          f"{rgb[0]:3d} {rgb[1]:3d} {rgb[2]:3d}  50  0")
+    # adatom 이 BOUND 밖이면 결합 없이는 안 보인다 -> 경계부터 넓힌다
+    zb_new, zb_old = fix_bound(out, max(p[3] for p in pts))
+    if zb_new != zb_old:
+        print(f"   BOUND zmax {zb_old:g} -> {zb_new:g} (adatom 이 경계 밖이었다)")
     if no_bonds:                      # Na-N 결합선 끄기 (최대거리 -> 0)
         for k, l in enumerate(out):
             t = l.split()
@@ -218,6 +245,7 @@ def write_merged(lines, ad_line, pts, dst, ghost_rgb=(252, 238, 170), ghost_r=1.
 
 def write_frame(lines, line_no, elem, label, fx, fy, fz, dst):
     out = list(lines)
+    fix_bound(out, fz)
     old = out[line_no].split()
     out[line_no] = (f"{old[0]:>3s} {elem:>2s} {label:>10s}  {float(old[3]):.4f} "
                     f"{fx:10.6f} {fy:10.6f} {fz:10.6f}    {old[7]}       {old[8]}")
@@ -272,6 +300,20 @@ def selftest():
     # VESTA 가 안 그리는 사고 재발 방지: 템플릿에 없던 원소를 새로 만들면 안 된다
     chk("새 원소를 도입하지 않는다 (el = base[1])", 'el = base[1]' in src)
     chk("ATOMT 를 건드리지 않는다", "new_atomt" not in src)
+    # BOUND 가 adatom 을 자르면 결합 없이는 안 보인다 — 넓히는지 확인
+    demo = ["BOUND", "       0        1         0        1         0      0.4", "  0   0   0   0  0"]
+    new, old = fix_bound(demo, 0.4537)
+    chk("BOUND zmax 를 adatom 위로 넓힘", new > 0.4537 and old == 0.4)
+    chk("BOUND 값줄이 6필드 유지", len(demo[1].split()) == 6)
+    # fix_bound 는 리스트를 제자리 수정한다 -> 새 사본으로 검사해야 한다
+    demo2 = ["BOUND", "       0        1         0        1         0      0.4", "  0   0   0   0  0"]
+    before = demo2[1]
+    n2, o2 = fix_bound(demo2, 0.20)
+    chk("이미 충분하면 안 건드림", n2 == o2 == 0.4 and demo2[1] == before)
+    try:
+        fix_bound(["STRUC"], 0.5); chk("BOUND 없으면 거부", False)
+    except SystemExit:
+        chk("BOUND 없으면 거부", True)
     # 헤더에 인자가 붙는 섹션(THERI 1)도 찾아야 한다 — 못 찾으면 원자가 조용히 누락된다
     demo = ["STRUC", "  1 Li Li1 1.0 0 0 0 1a 1", "  0 0 0 0 0 0 0",
             "THERI 1", "  1 Li1 -0.0", "  0 0 0"]
