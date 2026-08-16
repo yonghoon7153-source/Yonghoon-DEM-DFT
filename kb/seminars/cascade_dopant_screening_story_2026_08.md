@@ -185,50 +185,55 @@ Division of Materials Science & Engineering, Hanyang University
 
 ## ③ 후보군
 
-### 6 — Where prior screening stops
+### 6 — Where prior screening stops  ✅ 확정 (2026-08-16)
 
-> ■ Prior work (3): Site-resolved screening exists — for oxides, one cation
-> • Ceder's group screened 45 cations across three garnet sites by defect energy in 2015.
-> • A coating is a free-standing compound; a dopant must be placed and charge-balanced.
+> ■ Prior work (3): Site-resolved screening already exists
+> • One cation is placed on three candidate sites, and the site is chosen by energy.
+> &nbsp;&nbsp;(Li site · La site · Zr site → the lowest defect energy wins)
+> • Here [파랑]a whole compound enters[/], so a cation site and an anion site are chosen together.
+> &nbsp;&nbsp;(site × charge recipe → several structures per compound)
 
-`< 45 dopants × 3 sites in a garnet (literature) >`
-`해설` one cation at a time; the site is chosen by defect energy
-
-`< 91 compounds in our sulfide host (this work) >`
-`해설` a whole compound enters — cation and anion together
-
+우상단 출처 — *Adv. Energy Mater.*, 14, 2304025 (2024). / *Chem. Mater.*, 27, 4040 (2015).
+`< 45 dopants × 3 sites in a garnet >`　`해설` one cation at a time
+`< 91 compounds in our sulfide host >`　`해설` a whole compound at a time
 `[표]` study / host / what is varied / n / mechanical axis
+하단 — Lee 2024: *J. Mater. Chem. A*, 12, 7272.　Xiao 2019: *Joule*, 3, 1252.
+　　　 Left figure: Anderson et al. (2024) Fig. 3d, plotting defect energies from Miara et al. (2015).
 
 **[70초]**
 
-여기서 한 가지 분명히 하고 가겠습니다. **이런 스크리닝을 아무도 안 한 건 아닙니다.**
+여기서 하나 분명히 하고 가겠습니다. **이런 스크리닝을 아무도 안 한 건 아닙니다.**
 
-왼쪽 그림이 2015년 Ceder 그룹 연구입니다. LLZO 가넷에서 **도펀트 45종을 Li·La·Zr 세 자리
-각각에 넣어 결함 에너지를 계산**했습니다. 어느 자리에 앉을지를 계산으로 고른 거죠. 앞에서
-본 Anderson 2024가 그 예측을 받아서 59종을 실제로 합성한 겁니다.
+왼쪽이 2015년 Ceder 그룹 결과입니다. LLZO 가넷에서 **도펀트 45종을 Li·La·Zr 세 자리에
+각각 넣어 결함 에너지를 계산**했어요. 자리를 계산으로 고른 겁니다. 앞에서 본 실험 논문이
+이 예측을 받아서 59종을 실제로 합성한 거고요.
 
-황화물 쪽에도 있습니다. 2024년 Lee 등이 argyrodite에서 **84개 구조를 MLIP MD로 전수**
-계산했습니다.
+황화물 쪽에도 있습니다. 2024년에 argyrodite 구조 84개를 기계학습 퍼텐셜 MD로 전수
+계산한 연구가 있어요.
 
-그러면 저희는 뭐가 다르냐. 표 세 번째 칸을 봐 주세요. **무엇을 바꾸느냐**가 다릅니다.
+그러면 저희는 뭐가 다르냐. 표 **세 번째 칸**을 봐 주세요. **무엇을 바꾸느냐**가 다릅니다.
 
-Ceder 그룹은 **양이온 하나**를 바꿉니다. Lee는 **이미 화학식 안에 있는 원소**를 다른 걸로
-바꿉니다. Si를 Ge로, P를 Sb로. 둘 다 "격자 안의 한 원소를 교체"입니다.
+왼쪽 연구는 **양이온 하나**를 바꿉니다. 아래 두 번째 연구는 **이미 화학식 안에 있는
+원소**를 다른 걸로 바꿔요. 둘 다 격자 안의 한 원소를 교체하는 겁니다.
 
-저희는 **화합물 하나를 통째로 집어넣습니다.** MgO를 넣는다는 건 Mg 하나가 아니라 Mg와 O가
+저희는 **화합물 하나를 통째로 넣습니다.** MgO를 넣는다는 건 Mg 하나가 아니라 Mg랑 O가
 같이 들어간다는 뜻이고, 그러면 양이온 자리와 음이온 자리를 **동시에** 정해야 하고 전하도
 맞춰야 합니다. 오른쪽 그림이 그 결과예요.
 
-그리고 표 맨 오른쪽 칸. **기계 물성 축은 넷 중 저희만 있습니다.**
+그리고 표 **맨 오른쪽 칸.** 기계 물성 축은 넷 중 저희만 있습니다.
 
-💬 한 가지 덧붙이면 — 코팅 스크리닝은 상대적으로 쉽습니다. 코팅 물질은 **따로 존재하는
-화합물**이라 데이터베이스에서 꺼내 hull이랑 ESW만 구하면 됩니다. Xiao가 십만 종을 돌릴 수
-있었던 이유가 그거예요. 반면 도핑은 **그 화합물이 세상에 없습니다.** 구조를 직접 만들어야
-하고, 자리를 골라야 하고, 전하를 맞춰야 합니다. 이게 어려운 지점이고, 뒤에 나올 결과 1이
-정확히 그 대가입니다.
+💬 **말로만** — 코팅 스크리닝이 상대적으로 쉬운 이유가 여기 있습니다. 코팅 물질은
+   **따로 존재하는 화합물**이라 데이터베이스에서 꺼내 열역학만 보면 돼요. 십만 종을
+   돌릴 수 있었던 이유가 그겁니다. 반면 도핑은 그 화합물이 세상에 없어서 구조를 직접
+   만들고, 자리를 고르고, 전하를 맞춰야 합니다. 이게 어려운 지점이고, **뒤에 나올 결과 1이
+   정확히 그 대가**입니다.
 
-💡 이 장이 발표의 포지셔닝입니다. "아무도 안 했다"고 말하면 질문 한 방에 무너집니다.
-"했는데 무엇을 바꾸느냐가 다르다"가 방어 가능한 주장이고, 실제로도 그렇습니다.
+💡 이 장이 발표의 포지셔닝이다. **"아무도 안 했다"고 말하면 질문 한 방에 무너진다.**
+   "했는데 무엇을 바꾸느냐가 다르다" 가 방어 가능한 주장이고, 실제로도 그렇다.
+
+⚠ 인용 규율 — 왼쪽 그림은 **Anderson 2024 Fig. 3d** 이고 그 안의 값은 **Miara 2015** 다.
+   둘 다 적어야 출처가 맞다. Miara 원본은 아직 우리 litdb 에 digest 가 없다
+   (kb/open_items.md 「선행연구 대비 위치 규정」 A1 — 사용자 제공 예정).
 
 ---
 
