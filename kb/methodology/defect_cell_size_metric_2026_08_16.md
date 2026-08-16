@@ -11,7 +11,7 @@ verifiedBy: Codex 동결 리뷰 + 우리 repo 데이터 독립 재현 (3셀 λ�
 explored: false
 authoredBy: agent
 effort: high
-claimType: methodological
+claimType: prescriptive
 evidenceScope: multi-source-primary
 ---
 

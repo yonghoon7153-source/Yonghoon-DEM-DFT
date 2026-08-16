@@ -793,13 +793,21 @@ def test_artifact_provenance_is_per_file():
         "ranked_v2 가 다시 패널 의존에 들어갔다 (어느 패널도 안 읽는다)"
 
 
-def test_g3_does_not_claim_a_synthetic_phase_set_id():
-    """합성 phase_set_id 는 method-complete=0 판정과 충돌한다 (P1)."""
+def test_g3_phase_set_row_reflects_the_2026_08_16_closure():
+    """옛 판은 '합성 id 를 주장하지 마라'였다. 이제 진짜 id 를 싣는다 — 대신 두 가지를 지킨다:
+    ① 회수 행이 가정이 아니라 기록으로 바뀌었을 것 ② 조성족 섞임이 open 으로 남아 있을 것."""
     t = D.read_csv("properties/cascade_audit_g3_phase_set.csv")
-    rec = [r for r in t["data"] if r["status"] == "recovered_unvalidated"]
-    assert rec, "recovered 행이 사라졌다"
-    assert not str(rec[0]["phase_set_id"] or "").strip(), "recovered 행이 다시 phase_set_id 를 주장한다"
-    assert "assumption" in str(rec[0]["phase_set_assumption"]), "가정 표기가 없다"
+    rec = [r for r in t["data"] if r["status"] == "recovered_diagnostic"]
+    assert rec, "회수 행이 사라졌다"
+    assert "phase_set_id" in str(rec[0]["note"]), "무엇으로 닫혔는지가 행에 없다"
+    assert not str(rec[0]["phase_set_assumption"] or "").strip(), "닫혔는데 가정 표기가 남아 있다"
+    # 민감도 행은 여전히 '이 문턱을 다른 phase set 후보에 쓰지 마라' 여야 한다
+    sens = [r for r in t["data"] if r["status"] == "sensitivity-only"]
+    assert sens and abs(float(sens[0]["oxidation_onset_V"]) - 2.256) < 1e-9
+    # 조성족은 아직 안 닫혔다 — open 행이 사라지면 조용히 닫힌 척이 된다
+    op = [r for r in t["data"] if r["status"] == "open"]
+    assert op, "조성족 섞임 open 행이 사라졌다"
+    assert "Cl-rich" in str(op[0]["note"]) and "B2O3" in str(op[0]["note"])
 
 
 def test_g4_rescore_carries_pool_metadata():
@@ -840,18 +848,54 @@ def test_public_g4_panel_is_anonymized():
 
 
 def test_gate_denominators_separate_record_from_method():
-    """기록이 있다 ≠ 비교 가능하다. G3 는 record 90 · method 유효 0 이어야 한다."""
+    """기록이 있다 ≠ 비교 가능하다. G3 는 phase_set_id 를 싣고 나서야 90/90 이 됐다."""
     t = D.read_csv("properties/cascade_seminar_gate_denominators_round3.csv")
     by = {r["gate"]: r for r in t["data"]}
     assert by["G3"]["record_present_species"] == 90
-    assert by["G3"]["all_label_method_valid_species"] == 0
-    assert by["G3"]["status"] == "blocked_method_contract"
+    # 2026-08-16: phase_set_id + 같은 실행 안의 host 측정으로 0 → 90 (270/270 쌍)
+    assert by["G3"]["all_label_method_valid_species"] == 90
+    assert by["G3"]["status"] == "recovered_diagnostic"
+    assert "phase_set_id" in by["G3"]["note"]
     assert by["G5"]["all_label_method_valid_species"] == 86
     assert by["G5"]["partial_species"] == "AlBr3|MgI2|Na2S"
     assert by["G4"]["dropped_species"] == "AlI3|MgI2"
     for g, r in by.items():
         assert r["approved_current_species"] == 0, f"{g} 가 승인된 것처럼 적혀 있다"
     assert "게이트 분모 계약" in _cascade_html()
+
+
+def test_oxidation_onset_carries_its_composition_family():
+    """이름표가 같아도 조성이 다르면 나란히 놓지 않는다 (2026-08-16 Cl-rich 섞임)."""
+    pinned = json.loads((ROOT / "db/properties/oxidation_stability_cascade_v3_pinned.json")
+                        .read_text(encoding="utf-8"))
+    audit = pinned["composition_family_audit"]
+    assert audit["counts"] == {"Clrich": 17, "plain": 253}
+    assert audit["family_label_inconsistent"] == []
+    assert audit["species_with_no_plain_champion"] == ["B2O3"]
+    assert set(audit["species_improving_only_as_variant"]) == {"Al2O3", "MoO3", "WO3"}
+    # 모든 후보 행이 조성족을 달고 있어야 한다 — 빠진 행은 조용히 비교돼 버린다
+    cand = [v for k, v in pinned["results"].items() if "HOST" not in k.split("_")]
+    assert len(cand) == 270
+    assert all(v.get("composition_family") in ("plain", "Clrich") for v in cand)
+    assert all(v["delta_ox_vs_host_V_confounded"] == (v["composition_family"] != "plain")
+               for v in cand)
+    # DFT-deep B2O3 는 표의 onset 과 **다른 조성**이다 (부호가 반대)
+    col = pinned["dft_deep_composition_collision"]["B2O3"]
+    assert col["cascade_champion"]["ox_V"] > col["host_ox_V"] > col["dft_deep_cell"]["ox_V"]
+
+    # 47종 pool 로도 새어나가는지 — 오염은 B2O3 1건, 나머지는 plain/degenerate
+    pool = json.loads((ROOT / "db/properties/cascade_screening_funnel.json")
+                      .read_text(encoding="utf-8"))["pool"]
+    bad = [r["dopant"] for r in pool
+           if r["ox_composition_family"] in ("unmatched", "unresolved")]
+    assert not bad, f"조성족을 못 정한 종: {bad}"
+    assert [r["dopant"] for r in pool if r["ox_family_confounded"]] == ["B2O3"]
+
+    seminar = D.read_csv("properties/cascade_seminar_oxidation_transport_47.csv")
+    rows = {r["dopant"]: r for r in seminar["data"]}
+    assert rows["B2O3"]["ox_composition_family"] == "Clrich"
+    assert rows["B2O3"]["plain_champion_exists"] == 0
+    assert rows["WO3" if "WO3" in rows else "Sc2O3"]["ox_family_confounded"] == 0
 
 
 def test_audit_generator_runs_without_windows_fonts():
@@ -877,7 +921,7 @@ def test_ledger_is_self_contained():
               "render_provenance", "artifacts", "figures", "supporting_tables"):
         assert k in man, f"원장에 {k} 가 없다"
     g = man["recovered_artifacts"]["_gate_completeness"]
-    assert g["G3"]["method_status"] == "blocked_method_contract"
+    assert g["G3"]["method_status"] == "recovered_diagnostic"   # 2026-08-16 닫힘
     assert str(g["G5"]["validity_aware_all_label_species"]) == "86"
     assert all(str(v["approved_for_current_ranking"]) == "0" for v in g.values())
 
@@ -913,17 +957,18 @@ def test_db_property_files_are_lf_pinned():
 
 
 def test_gate_completeness_is_axis_specific():
-    """축마다 분모가 다르다. G3 는 기록 90건이지만 method-complete 0 이어야 한다."""
+    """축마다 분모가 다르다. G3 는 2026-08-16 에 0 → 90 으로 닫혔고, G4 는 아직 historical_only 다."""
     t = D.read_csv("properties/cascade_audit_gate_completeness.csv")
     by = {r["gate"]: r for r in (t.get("data") or [])}
     assert set(by) == {"G1", "G2", "G3", "G4", "G5"}, f"게이트 5개가 아니다: {sorted(by)}"
-    assert by["G3"]["all_label_complete_species"] == 0
-    assert by["G3"]["method_status"] == "blocked_method_contract"
+    assert by["G3"]["all_label_complete_species"] == 90
+    assert by["G3"]["method_status"] == "recovered_diagnostic"
+    assert "Cl-rich" in str(by["G3"]["note"]), "조성족 섞임이 G3 행에서 사라졌다"
     assert by["G4"]["dropped_species"] == "AlI3|MgI2", "G4 는 MgI2 도 결측이다 (x005 입력 없음)"
     for g, r in by.items():
         assert r["approved_for_current_ranking"] == 0, f"{g} 가 승인된 것처럼 적혀 있다"
     h = _cascade_html()
-    assert "blocked_method_contract" in h, "G3 method status 가 화면에 없다"
+    assert "recovered_diagnostic" in h, "G3 method status 가 화면에 없다"
 
 
 def test_lis4_exposure_is_quantified():

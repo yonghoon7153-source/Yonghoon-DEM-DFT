@@ -39,7 +39,7 @@
       "overlap_oxidation_drift_count": 0,
       "limitations": [
         "not fully re-ranked or re-gated",
-        "G3 phase-set sensitivity open",
+        "G3 phase-set identity closed 2026-08-16 but LiS4 sensitivity (2.140 vs 2.256 V) and composition-family mixing stay open",
         "G4 must be rebuilt with canonical softBV"
       ]
     },
@@ -55,7 +55,7 @@
       "funnel_status": "recovered_diagnostic__release_blocked",
       "field_presence": {
         "G1": "88 all-label complete; MgI2 partial; AlI3 absent",
-        "G2_G3": "90 records present; phase-set and branch comparability not preserved",
+        "G2_G3": "90 records present; G3 phase-set comparability restored 2026-08-16 (270/270 pairs, phase_set_id recorded); composition-family mixing (17 Cl-rich champion slots) remains open",
         "G4": "88 x005 inputs present; MgI2 and AlI3 missing",
         "G5": "88 all-label complete; MgI2 partial; AlI3 absent"
       },
@@ -76,7 +76,7 @@
       "display_name": "MP phase-set onset",
       "historical_host_onset_V": 2.14,
       "alternate_host_onset_V": 2.256,
-      "rule": "compare candidate and host within the same phase_set_id"
+      "rule": "compare candidate and host within the same phase_set_id AND the same composition family (plain vs Cl-rich chain variant)"
     },
     "G4": {
       "display_name": "legacy BVS + 4A foreign-center composite",
@@ -129,9 +129,9 @@
       "status": "audit-current",
       "image_sha256": "783b7ebb561aeb810bf7d9df50b74f7b03bde09583ce6a822a9ffd308b9070e5",
       "image_bytes": 47934,
-      "csv_sha256": "aa168c1e2e74f80cb1f15e4b6e18cbd13bd24b889e183873d89fdb3ef9e396ef",
-      "csv_bytes": 596,
-      "csv_rows": 3
+      "csv_sha256": "f814af7c03cd6f4ec4bde05b45e60b034e56c008fb3a57614e5b981f30166a84",
+      "csv_bytes": 1153,
+      "csv_rows": 4
     },
     {
       "image": "docs/figures/cascade/cascade_audit_g4_rescore.png",
@@ -169,8 +169,8 @@
     {
       "path": "db/properties/cascade_audit_gate_completeness.csv",
       "status": "audit-current",
-      "sha256": "f83c2c38db729597634aaf697d03ca0c741ca27ac06ae79b3b9b26808c787e91",
-      "bytes": 1780,
+      "sha256": "28990ac20d090ac2afeb9d79acb4160bd347b1c057b6bf039e08926541d178c7",
+      "bytes": 2100,
       "rows": 5
     },
     {

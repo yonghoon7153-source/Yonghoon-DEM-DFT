@@ -31,13 +31,131 @@ Caches the MP hull per chemsys so dopants sharing a chemsys pull once.
   ⚠ chemsys 가 다르면 entry 집합이 **필연적으로** 다르다(원소가 다르니까). 그건 결함이
   아니라 방법의 성질이다. phase_set_id 는 "같은 chemsys 를 같은 스냅샷으로 봤나" 를
   보증하지, 서로 다른 chemsys 를 같게 만들어 주지 않는다.
+
+★ 2026-08-16 (2) — **조성족(composition family) 표시** (미해결 항목 "clrich 섞임")
+  챔피언 슬롯은 (도펀트, 농도라벨) 하나당 하나이고, 그 슬롯은 combined_score 최대값이
+  가져간다. 그런데 후보 풀에는 **같은 도펀트의 두 설계 변형**이 들어 있다:
+    · compound_set        (plain)  — 음이온 S17Cl4 · Li18
+    · compound_set_chain  (Clrich) — 음이온 S16Cl5 · Li17  (S 하나를 Cl 로 바꾼 것)
+  그래서 270 슬롯 중 17개는 **다른 조성**이 이름표만 같은 채로 앉아 있다.
+  그 17개의 delta_ox_vs_host_V 는 host(Li6PS5Cl)와 비교되므로 도펀트 효과가 아니라
+  **도펀트 + 음이온 치환**의 합이다. 여기서는 값을 지우지 않고 `composition_family` 로
+  표시하고 `delta_ox_vs_host_V_confounded` 를 세운다. 판정은 사람이 한다.
+
+  못 하는 것: 이 도구는 Cl 치환분과 도펀트분을 **분해하지 못한다**. 분해하려면
+  도펀트 없는 Cl-rich 기준(Li_x P4 S16 Cl5)을 같은 phase set 안에서 재야 하고,
+  그건 아직 어느 phase set 에도 없다 (`missing_baseline` 로 기록).
 """
-import argparse, csv, json, os, math, hashlib
+import argparse, csv, json, os, math, hashlib, sys
 from collections import defaultdict
+
+try:
+    sys.stdout.reconfigure(encoding="utf-8")
+except Exception:
+    pass
 
 def fnum(s):
     try: return float(s)
     except: return None
+
+# ── 조성족 ────────────────────────────────────────────────────────────────────
+# 판별자는 CSV 의 charge_compensation 이다. dopant 라벨 접미사(+Clrich)는 **거울**일 뿐이라
+# 둘이 어긋나면 조용히 넘기지 않고 inconsistent 로 남긴다 (라벨만 믿다 틀린 전례가 있다).
+FAMILY_BY_CHARGE_COMP = {"compound_set": "plain", "compound_set_chain": "Clrich"}
+VARIANT_SUFFIX = "+Clrich"
+
+def classify_family(dopant_label, charge_comp):
+    """(family, dopant_base, consistent) — 모르는 charge_comp 는 plain 으로 넘기지 않는다."""
+    base = dopant_label[:-len(VARIANT_SUFFIX)] if dopant_label.endswith(VARIANT_SUFFIX) else dopant_label
+    fam = FAMILY_BY_CHARGE_COMP.get(charge_comp)
+    if fam is None:
+        return "unknown", base, False
+    label_says_variant = dopant_label.endswith(VARIANT_SUFFIX)
+    return fam, base, (label_says_variant == (fam != "plain"))
+
+def annotate_families(results, csv_path, host_family="plain", eps=1e-9):
+    """results 를 제자리에서 표시하고 감사 블록을 돌려준다.
+
+    못 하는 것: 이름이 CSV 에 없는 결과는 **추정하지 않는다** — 그냥 실패시킨다.
+    """
+    by_name = {}
+    with open(csv_path, encoding="utf-8") as fh:
+        for r in csv.DictReader(fh):
+            by_name[r.get("name", "")] = r
+    cand = [k for k in results if not k.startswith("__HOST__")]
+    missing = [k for k in cand if k not in by_name]
+    if missing:
+        raise SystemExit(f"CSV 에 없는 결과 {len(missing)}건 (조성족 미상): {missing[:5]}")
+
+    fams = defaultdict(list)
+    inconsistent = []
+    for k in cand:
+        row = by_name[k]
+        fam, base, ok = classify_family(row.get("dopant", ""), row.get("charge_compensation", ""))
+        v = results[k]
+        v["composition_family"] = fam
+        v["dopant_base"] = base
+        v["charge_compensation"] = row.get("charge_compensation", "")
+        v["family_label_consistent"] = ok
+        confounded = (fam != host_family)
+        v["delta_ox_vs_host_V_confounded"] = confounded
+        v["delta_confound"] = (
+            "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. "
+            "onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다."
+            if confounded else None)
+        v["comparable_to_plain_champions"] = not confounded
+        if not ok:
+            inconsistent.append(k)
+        fams[fam].append(k)
+
+    def rate(keys):
+        n = len(keys)
+        hi = sum(1 for k in keys
+                 if results[k].get("delta_ox_vs_host_V") is not None
+                 and results[k]["delta_ox_vs_host_V"] > eps)
+        return {"n": n, "n_raises_onset": hi, "pct": round(100.0 * hi / n, 1) if n else None}
+
+    plain_r, var_r = rate(fams.get("plain", [])), rate(fams.get("Clrich", []))
+    ratio = None
+    if plain_r["pct"] and var_r["pct"] is not None:      # plain 0% 면 비율을 만들지 않는다
+        ratio = round(var_r["pct"] / plain_r["pct"], 1)
+
+    ox_by = defaultdict(lambda: defaultdict(list))
+    for k in cand:
+        v = results[k]
+        if v.get("oxidation_limit_V") is not None:
+            ox_by[v["dopant_base"]][v["composition_family"]].append(v["oxidation_limit_V"])
+    only_variant, no_plain = [], []
+    for base, fam in sorted(ox_by.items()):
+        p, c = fam.get("plain"), fam.get("Clrich")
+        if not c:
+            continue
+        host_ox = next((results[k].get("host_ox_V_same_phase_set") for k in cand
+                        if results[k].get("dopant_base") == base
+                        and results[k].get("host_ox_V_same_phase_set") is not None), None)
+        if host_ox is None:
+            continue
+        if not p:
+            no_plain.append(base)
+        elif max(c) > host_ox + eps and max(p) <= host_ox + eps:
+            only_variant.append(base)
+
+    return {
+        "discriminator": "cascade CSV charge_compensation (compound_set=plain · compound_set_chain=Clrich)",
+        "why": ("(도펀트, 농도라벨) 슬롯을 combined_score 최대값이 가져가는데 후보 풀에 두 설계 "
+                "변형이 같이 있어서, 슬롯 일부를 plain 이 아닌 Cl-rich 조성이 차지했다. "
+                "이름표는 같지만 조성이 다르다."),
+        "host_family": host_family,
+        "counts": {f: len(v) for f, v in sorted(fams.items())},
+        "family_label_inconsistent": inconsistent,
+        "onset_raise_rate": {"plain": plain_r, "Clrich": var_r, "enrichment_ratio": ratio},
+        "species_improving_only_as_variant": only_variant,
+        "species_with_no_plain_champion": no_plain,
+        "missing_baseline": ("도펀트 없는 Cl-rich 기준(Li_x P4 S16 Cl5)이 **어느 phase set 에도 없다**. "
+                             "그게 없으면 Cl-rich 행의 Δ 를 (Cl 치환분)+(도펀트분) 으로 분해할 수 없다."),
+        "allowed_statement": ("Cl-rich 행은 plain 챔피언과 나란히 놓지 않는다. 인용할 때는 조성식을 "
+                              "같이 적고 '도펀트 효과' 라고 부르지 않는다."),
+    }
 
 def main():
     ap = argparse.ArgumentParser()
@@ -47,7 +165,28 @@ def main():
     ap.add_argument("--host", default=None,
                     help="host 조성 (예: 'Li24P4S20Cl4') — **같은 실행 안에서** 같이 재서 "
                          "candidate-host 비교를 성립시킨다. 다른 실행의 host 와 섞지 말 것")
+    ap.add_argument("--annotate", metavar="JSON", default=None,
+                    help="MP 없이 기존 출력에 조성족 표시만 입힌다 (제자리 갱신, 멱등)")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+    if a.selftest:
+        return selftest()
+    if a.annotate:
+        with open(a.annotate, encoding="utf-8") as fh:
+            doc = json.load(fh)
+        audit = annotate_families(doc["results"], a.csv)
+        doc["composition_family_audit"] = audit
+        with open(a.annotate, "w", encoding="utf-8") as fh:
+            json.dump(doc, fh, indent=2, ensure_ascii=False)
+        print(f"-> {a.annotate}")
+        print(f"   조성족 {audit['counts']}  라벨 불일치 {len(audit['family_label_inconsistent'])}건")
+        r = audit["onset_raise_rate"]
+        print(f"   host 초과: plain {r['plain']['n_raises_onset']}/{r['plain']['n']} = {r['plain']['pct']}%"
+              f" · Clrich {r['Clrich']['n_raises_onset']}/{r['Clrich']['n']} = {r['Clrich']['pct']}%"
+              f"  (x{r['enrichment_ratio']})")
+        print(f"   Cl-rich 에서만 개선: {audit['species_improving_only_as_variant']}")
+        print(f"   plain 챔피언 없음  : {audit['species_with_no_plain_champion']}")
+        return
     key = os.environ.get("MP_API_KEY") or os.environ.get("PMG_MAPI_KEY")
     if not key: raise SystemExit("Set MP_API_KEY (run on gabia).")
     from pymatgen.core import Composition, Element
@@ -198,8 +337,10 @@ def main():
             v["delta_ox_vs_host_V"] = None
             v["method_comparable"] = False
     host = results.get("__HOST__")
+    fam_audit = annotate_families(results, a.csv)
     json.dump({"method": "grand-potential ESW (get_element_profile, MP GGA_GGA+U); per cascade champion",
                "source_csv": a.csv,
+               "composition_family_audit": fam_audit,
                "phase_set_contract": (
                    "phase_set_id = sha256(sorted MP entry_ids)[:16]. 같은 id 면 같은 경쟁상 집합이다. "
                    "candidate-host 비교는 **같은 phase_set_id** 안에서만 성립한다. "
@@ -212,8 +353,11 @@ def main():
                    "후보와 host 를 **같은 phase_set_id**(같은 chemsys · 같은 MP 스냅샷 · "
                    "같은 entry 목록) 안에서 재서 delta_ox_vs_host_V 를 만든 건수. "
                    "이 값이 아니면 onset 차를 '후보 고유 효과' 로 읽을 수 없다."),
-               "results": results}, open(a.out, "w"), indent=2)
+               "results": results}, open(a.out, "w", encoding="utf-8"), indent=2, ensure_ascii=False)
     print(f"\n-> {a.out}")
+    print(f"   조성족 {fam_audit['counts']} · Cl-rich 에서만 개선 "
+          f"{fam_audit['species_improving_only_as_variant']} · plain 챔피언 없음 "
+          f"{fam_audit['species_with_no_plain_champion']}")
     print(f"   phase_set {len(phase_sets)}개 · "
           f"entry 총 {sum(v['n_entries'] for v in phase_sets.values())} · "
           f"MP db {sorted({str(v['db_version']) for v in phase_sets.values()})}")
@@ -232,5 +376,108 @@ def main():
         print(f"{name:18s} {str(d['oxidation_limit_V']):>6s} {str(d['reduction_limit_V']):>6s} "
               f"{str(d['ocv_self_decomposition_V']):>6s} {str(d['window_V']):>6s}")
 
+def selftest():
+    """조성족 분류·감사 자가시험. **음성 경로 포함** — 틀린 입력을 잡아내는지 본다."""
+    import tempfile, pathlib
+    ok = fail = 0
+    def chk(name, cond):
+        nonlocal ok, fail
+        if cond: ok += 1
+        else:
+            fail += 1
+            try: print(f"  ✗ {name}")
+            except Exception: print(f"  FAIL {name}")
+    def raises(fn):
+        try: fn(); return False
+        except SystemExit: return True
+        except Exception: return True
+
+    # ── 분류기 ────────────────────────────────────────────────────────────
+    chk("plain 분류",      classify_family("B2O3", "compound_set") == ("plain", "B2O3", True))
+    chk("Clrich 분류",     classify_family("B2O3+Clrich", "compound_set_chain") == ("Clrich", "B2O3", True))
+    chk("base 접미사 제거", classify_family("B2O3+Clrich", "compound_set_chain")[1] == "B2O3")
+    # 음성 ①: 라벨과 charge_comp 가 어긋나면 consistent=False 여야 한다
+    chk("음성: 라벨만 Clrich", classify_family("B2O3+Clrich", "compound_set")[2] is False)
+    chk("음성: 라벨만 plain",  classify_family("B2O3", "compound_set_chain")[2] is False)
+    # 음성 ②: 모르는 charge_comp 를 plain 으로 흘려보내면 안 된다
+    fam, _, cons = classify_family("B2O3", "something_new")
+    chk("음성: 미지 charge_comp 는 unknown", fam == "unknown" and cons is False)
+    chk("음성: 미지 charge_comp 를 plain 으로 안 넘김", fam != "plain")
+    chk("빈 charge_comp 도 unknown", classify_family("B2O3", "")[0] == "unknown")
+
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    def write_csv(rows):
+        p = tmp / "c.csv"
+        with open(p, "w", encoding="utf-8", newline="") as fh:
+            w = csv.writer(fh)
+            w.writerow(["name", "dopant", "charge_compensation"])
+            for r in rows: w.writerow(r)
+        return str(p)
+
+    # ── 감사 ──────────────────────────────────────────────────────────────
+    csvp = write_csv([("A_x020", "X2O3", "compound_set"),
+                      ("A_x050", "X2O3+Clrich", "compound_set_chain"),
+                      ("B_x020", "Y2O3", "compound_set"),
+                      ("B_x050", "Y2O3+Clrich", "compound_set_chain"),
+                      ("C_x020", "Z2O3+Clrich", "compound_set_chain")])
+    res = {
+        "A_x020": {"oxidation_limit_V": 2.140, "delta_ox_vs_host_V": 0.0,   "host_ox_V_same_phase_set": 2.14},
+        "A_x050": {"oxidation_limit_V": 2.354, "delta_ox_vs_host_V": 0.214, "host_ox_V_same_phase_set": 2.14},
+        "B_x020": {"oxidation_limit_V": 2.282, "delta_ox_vs_host_V": 0.142, "host_ox_V_same_phase_set": 2.14},
+        "B_x050": {"oxidation_limit_V": 2.282, "delta_ox_vs_host_V": 0.142, "host_ox_V_same_phase_set": 2.14},
+        "C_x050": {"oxidation_limit_V": 2.317, "delta_ox_vs_host_V": 0.177, "host_ox_V_same_phase_set": 2.14},
+        "__HOST__": {"oxidation_limit_V": 2.14},
+    }
+    # 음성 ③: CSV 에 이름이 없는 결과(C_x050 vs C_x020)는 추정하지 말고 실패해야 한다
+    chk("음성: CSV 미등재 이름이면 실패", raises(lambda: annotate_families(dict(res), csvp)))
+
+    res["C_x020"] = res.pop("C_x050")
+    audit = annotate_families(res, csvp)
+    chk("host 는 표시 대상 아님", "composition_family" not in res["__HOST__"])
+    chk("counts plain 2 / Clrich 3", audit["counts"] == {"Clrich": 3, "plain": 2})
+    chk("plain 은 confounded 아님",  res["A_x020"]["delta_ox_vs_host_V_confounded"] is False)
+    # 음성 ④: 변형 행을 confounded 로 안 세우면 실패
+    chk("음성: 변형 행은 confounded", res["A_x050"]["delta_ox_vs_host_V_confounded"] is True)
+    chk("음성: 변형 행은 plain 과 비교 불가", res["A_x050"]["comparable_to_plain_champions"] is False)
+    chk("confound 사유 문자열 존재", bool(res["A_x050"]["delta_confound"]))
+    chk("plain 은 사유 없음", res["A_x020"]["delta_confound"] is None)
+    chk("X2O3 는 Cl-rich 에서만 개선", audit["species_improving_only_as_variant"] == ["X2O3"])
+    # 음성 ⑤: plain 도 개선하는 종을 'Cl-rich 에서만' 에 넣으면 실패
+    chk("음성: Y2O3 는 목록에 없다", "Y2O3" not in audit["species_improving_only_as_variant"])
+    chk("Z2O3 는 plain 챔피언 없음", audit["species_with_no_plain_champion"] == ["Z2O3"])
+    # 음성 ⑥: plain 이 있는 종을 no_plain 에 넣으면 실패
+    chk("음성: X2O3 는 no_plain 아님", "X2O3" not in audit["species_with_no_plain_champion"])
+    r = audit["onset_raise_rate"]
+    chk("plain 초과율 1/2", (r["plain"]["n_raises_onset"], r["plain"]["n"]) == (1, 2))
+    chk("Clrich 초과율 3/3", (r["Clrich"]["n_raises_onset"], r["Clrich"]["n"]) == (3, 3))
+    chk("enrichment 2.0x", r["enrichment_ratio"] == 2.0)
+    chk("missing_baseline 명시", "Cl-rich" in audit["missing_baseline"])
+
+    # 멱등: 두 번 돌려도 같은 감사 결과
+    audit2 = annotate_families(res, csvp)
+    chk("멱등", audit2["counts"] == audit["counts"]
+                and audit2["onset_raise_rate"] == audit["onset_raise_rate"])
+
+    # 음성 ⑦: plain 초과율 0% 일 때 비율을 만들어내면 안 된다 (0 나눗셈/무한대 금지)
+    res0 = {"A_x020": {"oxidation_limit_V": 2.14, "delta_ox_vs_host_V": 0.0, "host_ox_V_same_phase_set": 2.14},
+            "A_x050": {"oxidation_limit_V": 2.35, "delta_ox_vs_host_V": 0.21, "host_ox_V_same_phase_set": 2.14}}
+    csv0 = write_csv([("A_x020", "X2O3", "compound_set"), ("A_x050", "X2O3+Clrich", "compound_set_chain")])
+    a0 = annotate_families(res0, csv0)
+    chk("음성: plain 0% 면 enrichment 없음", a0["onset_raise_rate"]["enrichment_ratio"] is None)
+
+    # 음성 ⑧: 라벨 불일치가 감사에 보고돼야 한다
+    csvb = write_csv([("A_x020", "X2O3+Clrich", "compound_set")])
+    ab = annotate_families({"A_x020": {"oxidation_limit_V": 2.14}}, csvb)
+    chk("음성: 라벨 불일치 보고", ab["family_label_inconsistent"] == ["A_x020"])
+
+    # 음성 ⑨: delta 가 None 인 행을 '초과' 로 세면 안 된다
+    csvn = write_csv([("A_x020", "X2O3", "compound_set")])
+    an = annotate_families({"A_x020": {"oxidation_limit_V": None, "delta_ox_vs_host_V": None}}, csvn)
+    chk("음성: delta None 은 초과 아님", an["onset_raise_rate"]["plain"]["n_raises_onset"] == 0)
+
+    try: print(f"\nselftest: {ok} passed, {fail} failed")
+    except Exception: print(f"\nselftest: {ok} passed, {fail} failed")
+    return 1 if fail else 0
+
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main() or 0)

@@ -61,6 +61,7 @@ PROP = ROOT / "db" / "properties"
 FIG = ROOT / "docs" / "figures" / "cascade"
 FUNNEL = PROP / "cascade_screening_funnel.json"
 LITRANSPORT = PROP / _csv("cascade_v23_litransport.csv")
+PINNED_ESW = PROP / "oxidation_stability_cascade_v3_pinned.json"
 
 HOST_OX_V = 2.14
 G4_TRANSPORT_CUT = 0.30
@@ -155,6 +156,43 @@ def favorable_percentile(values: list[float], *, higher_is_better: bool) -> np.n
     return ranks if higher_is_better else 1.0 - ranks
 
 
+def ox_composition_family(ox_v: float, families: dict[str, list[float]], tol: float = 1e-6) -> str:
+    """Which composition family does this ox_V actually come from?
+
+    The cascade champion slot is won by max combined_score across BOTH design
+    variants of a dopant (``compound_set`` = plain, ``compound_set_chain`` =
+    Cl-rich, one S swapped for Cl).  The pool label hides that, so a pool ox_V
+    can silently belong to a different composition than the plain champion.
+
+    Returns "plain" | "Clrich" | "degenerate" (identical onset either way, so
+    the label carries no confound) | "unmatched" (never silently accepted).
+    """
+    hit = sorted(fam for fam, vals in families.items()
+                 if any(abs(v - ox_v) <= tol for v in vals))
+    if not hit:
+        return "unmatched"
+    if len(hit) > 1:
+        return "degenerate"
+    return hit[0]
+
+
+def load_ox_families() -> dict[str, dict[str, list[float]]]:
+    """dopant_base -> {composition_family: [oxidation_limit_V, ...]} from the pinned ESW."""
+    data = json.loads(PINNED_ESW.read_text(encoding="utf-8"))
+    out: dict[str, dict[str, list[float]]] = {}
+    for key, row in data["results"].items():
+        if key.startswith("__HOST__") or "HOST" in key.split("_"):
+            continue
+        base, fam, ox = row.get("dopant_base"), row.get("composition_family"), row.get("oxidation_limit_V")
+        if base is None or fam is None:
+            raise AssertionError(
+                f"{PINNED_ESW.name} is not composition-family annotated "
+                f"(run: python3 tools/oxidation/esw_cascade_batch.py --annotate <json>)")
+        if ox is not None:
+            out.setdefault(base, {}).setdefault(fam, []).append(ox)
+    return out
+
+
 def load_rows() -> list[dict]:
     data = json.loads(FUNNEL.read_text(encoding="utf-8"))
     rows = [dict(row) for row in data["pool"]]
@@ -179,6 +217,28 @@ def load_rows() -> list[dict]:
         row["first_stop"] = first_stop(row)
         row["pass_G1_G4"] = row["first_stop"] == "PASS"
         row["dft_deep"] = row["dopant"] in DFT_DEEP
+
+    # ── composition family of the ox_V actually used (2026-08-16) ────────────
+    # 17/270 champion slots are held by the Cl-rich chain variant, not the plain
+    # composition the label implies.  Carry that through instead of dropping it.
+    ox_fams = load_ox_families()
+    for row in rows:
+        fams = ox_fams.get(row["dopant"])
+        if not fams:
+            raise AssertionError(f"no pinned ESW rows for {row['dopant']}")
+        fam = ox_composition_family(row["ox_V"], fams)
+        if fam == "unmatched":
+            raise AssertionError(
+                f"{row['dopant']} pool ox_V={row['ox_V']} matches no pinned champion "
+                f"(families: { {k: sorted(set(v)) for k, v in fams.items()} })")
+        row["ox_composition_family"] = fam
+        row["ox_family_confounded"] = fam == "Clrich"
+        row["plain_champion_exists"] = "plain" in fams
+
+    contaminated = sorted(r["dopant"] for r in rows if r["ox_family_confounded"])
+    if contaminated != ["B2O3"]:
+        raise AssertionError(
+            f"Cl-rich-sourced ox_V set changed: {contaminated} (was ['B2O3'] on 2026-08-16)")
 
     counts = {stage: sum(row["first_stop"] == stage for row in rows) for stage in STAGE_ORDER}
     expected = {"PASS": 11, "G4": 14, "G3": 18, "G2": 4, "G1": 0}
@@ -372,8 +432,9 @@ def plot_scorecard(rows: list[dict]) -> None:
         cbar.set_label("Within-pool favorable percentile (descriptive only)", fontsize=8.5, color=INK)
         cbar.ax.tick_params(colors=MUT, labelsize=7.5)
         cbar.outline.set_visible(False)
-    fig.text(0.5, 0.025, "$^{\\dagger}$ Existing deep DFT: B$_2$O$_3$ and Nd$_2$O$_3$ (2/47). G4 is heuristic; mechanics are roster-relative.", ha="center", fontsize=8.2, color=MUT)
-    fig.subplots_adjust(top=0.84, bottom=0.12, left=0.08, right=0.94)
+    fig.text(0.5, 0.032, "$^{\\dagger}$ Existing deep DFT: B$_2$O$_3$ and Nd$_2$O$_3$ (2/47). G4 is heuristic; mechanics are roster-relative.", ha="center", fontsize=8.2, color=MUT)
+    fig.text(0.5, 0.012, "For B$_2$O$_3$ the deep-DFT cell and the tabulated onset are different compositions (plain vs Cl-rich chain variant); see ox_composition_family in the CSV.", ha="center", fontsize=8.0, color=ELEM["O"])
+    fig.subplots_adjust(top=0.84, bottom=0.125, left=0.08, right=0.94)
     save(fig, "cascade_seminar_scorecard_47")
 
     out_rows = []
@@ -389,6 +450,9 @@ def plot_scorecard(rows: list[dict]) -> None:
                 "de_relative_eV_UMA": row["de"],
                 "window_V_MP_grand_potential": row["window_V"],
                 "oxidation_onset_V_MP_grand_potential": row["ox_V"],
+                "ox_composition_family": row["ox_composition_family"],
+                "ox_family_confounded": int(row["ox_family_confounded"]),
+                "plain_champion_exists": int(row["plain_champion_exists"]),
                 "bvs_li_proxy_score_x005_nominal": row["bvs_x005"],
                 "blocking_fraction_x005_nominal": row["blocking"],
                 "E_GPa_UMA_relative": row["E_GPa"],
@@ -439,7 +503,8 @@ def plot_oxidation_transport(rows: list[dict]) -> None:
         "In2O3": (8, 3), "Sc2O3": (-45, 7), "Y2O3": (8, -5),
     }
     for row in selected:
-        ax.annotate(formula_label(row["dopant"]), (row["ox_V"], row["bvs_x005"]), xytext=offsets[row["dopant"]], textcoords="offset points", fontsize=9, color=INK, fontweight="bold")
+        mark = "$^{\\ddagger}$" if row["ox_family_confounded"] else ""
+        ax.annotate(formula_label(row["dopant"]) + mark, (row["ox_V"], row["bvs_x005"]), xytext=offsets[row["dopant"]], textcoords="offset points", fontsize=9, color=INK, fontweight="bold")
 
     ax.axvline(HOST_OX_V, color=MUT, ls="--", lw=1.4)
     ax.axhline(raw_cut, color=ELEM["Li"], ls="--", lw=1.4)
@@ -471,8 +536,9 @@ def plot_oxidation_transport(rows: list[dict]) -> None:
     ax_note.text(0.50, 0.07, "Static pathway heuristic\n$\\ne$ conductivity", ha="center", fontsize=9.5, color=MUT)
 
     fig.suptitle("Oxidation gains do not survive the pathway gate", fontsize=18, color=INK, y=0.96)
-    fig.text(0.5, 0.025, "G4 = transport_norm > 0.30 AND blocking < 0.60. Oxidation: MP grand-potential onset; pathway: static BVSE/geometric proxy.", ha="center", fontsize=8.6, color=MUT)
-    fig.subplots_adjust(top=0.87, bottom=0.11, left=0.10, right=0.96)
+    fig.text(0.5, 0.032, "G4 = transport_norm > 0.30 AND blocking < 0.60. Oxidation: MP grand-potential onset; pathway: static BVSE/geometric proxy.", ha="center", fontsize=8.6, color=MUT)
+    fig.text(0.5, 0.010, "$^{\\ddagger}$ Onset comes from the Cl-rich chain variant (S$\\to$Cl substituted), not the plain composition: the gain is not a dopant-only effect.", ha="center", fontsize=8.2, color=ELEM["O"])
+    fig.subplots_adjust(top=0.87, bottom=0.115, left=0.10, right=0.96)
     save(fig, "cascade_seminar_oxidation_transport_47")
 
     out_rows = []
@@ -482,6 +548,9 @@ def plot_oxidation_transport(rows: list[dict]) -> None:
             {
                 "dopant": row["dopant"],
                 "oxidation_onset_V_MP_grand_potential": row["ox_V"],
+                "ox_composition_family": row["ox_composition_family"],
+                "ox_family_confounded": int(row["ox_family_confounded"]),
+                "plain_champion_exists": int(row["plain_champion_exists"]),
                 "host_oxidation_onset_V": HOST_OX_V,
                 "delta_oxidation_vs_host_V": row["ox_V"] - HOST_OX_V,
                 "bvs_li_proxy_score_x005_nominal": row["bvs_x005"],

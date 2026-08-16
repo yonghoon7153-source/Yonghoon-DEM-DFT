@@ -386,14 +386,32 @@ def g3_figure(records: dict) -> tuple[Path, Path]:
             #   `method-complete = 0` 판정과 정면으로 충돌한다. 반응식에 LiS4 가 있다는
             #   사실은 **method identity 가 아니다**. ID 는 비우고 가정만 따로 적는다.
             "system": "Recovered candidate records",
-            "phase_set_id": "",
-            "phase_set_assumption": "mp-gga-gga-u__lis4-included (assumption — not recorded per row)",
+            "phase_set_id": "recorded per row (84 sets, MP db 2026.04.13)",
+            "phase_set_assumption": "",
             "oxidation_onset_V": "",
             "delta_vs_included_V": "",
-            "status": "recovered_unvalidated",
+            "status": "recovered_diagnostic",
             "note": (f"{len(li_s4)}/270 onset reactions contain LiS4. Reaction content is NOT "
-                     "method identity — no phase_set_id, MP entry ids or MP snapshot hash "
-                     "was recorded."),
+                     "method identity, and since 2026-08-16 it is no longer the only handle: "
+                     "phase_set_id = sha256(sorted MP entry ids) is stored per row and the host "
+                     "is measured inside every chemsys, giving 270/270 comparable pairs."),
+        },
+        {
+            # ⛔ 2026-08-16 — phase set 을 닫아도 **조성**은 안 닫힌다. 챔피언 슬롯 17개가
+            #   plain 이 아니라 Cl-rich chain 변형이다. 같은 phase set 안의 차라도 조성이
+            #   다르면 '도펀트 효과' 가 아니다.
+            "system": "Composition family of the champion slot",
+            "phase_set_id": "same set; different composition",
+            "phase_set_assumption": "",
+            "oxidation_onset_V": "",
+            "delta_vs_included_V": "",
+            "status": "open",
+            "note": ("17/270 champion slots are held by the Cl-rich chain variant "
+                     "(compound_set_chain: one S replaced by Cl), not the plain composition. "
+                     "Host-exceeding rate is 6.7% for plain vs 64.7% for Cl-rich; B2O3 has no "
+                     "plain champion at all, so its +0.177 V is dopant plus anion substitution. "
+                     "No undoped Cl-rich reference exists in any phase set, so the two cannot "
+                     "be separated yet."),
         },
     ]
     for r in rows:
@@ -647,7 +665,7 @@ def gate_completeness_csv() -> Path:
     rows = [
         {"gate": "G1", "estimator": "UMA host-relative energy", "required_fields": "rerank_de_post_anneal", "all_label_complete_species": 88, "partial_species": "MgI2", "dropped_species": "AlI3", "usable_under_legacy_aggregator": 89, "approved_for_current_ranking": 0, "method_status": "recovered_diagnostic", "note": "All three directory labels have actual_x=0.25; MgI2 is silently averaged from two labels in the legacy aggregator."},
         {"gate": "G2", "estimator": "MP grand-potential window", "required_fields": "red_V|ox_V|window_V", "all_label_complete_species": 90, "partial_species": "", "dropped_species": "", "usable_under_legacy_aggregator": 90, "approved_for_current_ranking": 0, "method_status": "recovered_unvalidated", "note": "Record presence is complete, but branch and phase-set identity are not carried into the species-level table."},
-        {"gate": "G3", "estimator": "MP phase-set onset", "required_fields": "ox_V|host_anchor_V|phase_set_id", "all_label_complete_species": 0, "partial_species": "", "dropped_species": "method identity unavailable for all 90", "usable_under_legacy_aggregator": 90, "approved_for_current_ranking": 0, "method_status": "blocked_method_contract", "note": "Ninety species have an onset record, but the derived table strips phase_set_id and mixes plain/Cl-rich support; record presence is not method-complete comparability."},
+        {"gate": "G3", "estimator": "MP phase-set onset", "required_fields": "ox_V|host_anchor_V|phase_set_id", "all_label_complete_species": 90, "partial_species": "", "dropped_species": "", "usable_under_legacy_aggregator": 90, "approved_for_current_ranking": 0, "method_status": "recovered_diagnostic", "note": "2026-08-16: phase_set_id = sha256(sorted MP entry ids) is now recorded (MP db 2026.04.13, 84 phase sets) and the host is measured inside every candidate chemsys in the same run, giving 270/270 method-comparable pairs; host onset is 2.140 V in all 84 sets. Still open: 17/270 champion slots are held by the Cl-rich chain variant (compound_set_chain) rather than the plain composition the label implies, so those onset deltas mix dopant and anion substitution. Approval stays 0 because G4 is circular and G5 is roster-relative."},
         {"gate": "G4", "estimator": "legacy BVS plus 4A foreign-center composite", "required_fields": "bvs_li_proxy_score@x005|tier2_dopant_blocking_fraction@x005", "all_label_complete_species": 88, "partial_species": "", "dropped_species": "AlI3|MgI2", "usable_under_legacy_aggregator": 88, "approved_for_current_ranking": 0, "method_status": "historical_only", "note": "Missing x005 input must stay missing, not fail. The score is not canonical BVSE, a barrier, diffusivity, or conductivity."},
         {"gate": "G5", "estimator": "UMA relaxed-ion elastic screen", "required_fields": "elastic_E_young_GPa|elastic_pugh_GoverB", "all_label_complete_species": 88, "partial_species": "MgI2", "dropped_species": "AlI3", "usable_under_legacy_aggregator": 89, "approved_for_current_ranking": 0, "method_status": "recovered_diagnostic", "note": "MgI2 is silently averaged from two labels; the median and final ranking are pool-relative."},
     ]
@@ -764,7 +782,7 @@ def write_manifest(  # noqa: D401  — ⛔ 2026-08-14 이후 **호출 금지**
                 "source_commit": PINNED_SOURCE_COMMIT,
                 "overlap_with_historical": 141,
                 "overlap_oxidation_drift_count": 0,
-                "limitations": ["not fully re-ranked or re-gated", "G3 phase-set sensitivity open", "G4 must be rebuilt with canonical softBV"],
+                "limitations": ["not fully re-ranked or re-gated", "G3 phase-set identity closed 2026-08-16 but LiS4 sensitivity (2.140 vs 2.256 V) and composition-family mixing stay open", "G4 must be rebuilt with canonical softBV"],
             },
             "recovered_90_sidecar": {
                 "status": "recovered_unvalidated",
@@ -776,7 +794,7 @@ def write_manifest(  # noqa: D401  — ⛔ 2026-08-14 이후 **호출 금지**
                 "funnel_status": "recovered_diagnostic__release_blocked",
                 "field_presence": {
                     "G1": "88 all-label complete; MgI2 partial; AlI3 absent",
-                    "G2_G3": "90 records present; phase-set and branch comparability not preserved",
+                    "G2_G3": "90 records present; G3 phase-set comparability restored 2026-08-16 (270/270 pairs, phase_set_id recorded); composition-family mixing (17 Cl-rich champion slots) remains open",
                     "G4": "88 x005 inputs present; MgI2 and AlI3 missing",
                     "G5": "88 all-label complete; MgI2 partial; AlI3 absent",
                 },
@@ -794,7 +812,7 @@ def write_manifest(  # noqa: D401  — ⛔ 2026-08-14 이후 **호출 금지**
                 "display_name": "MP phase-set onset",
                 "historical_host_onset_V": 2.140,
                 "alternate_host_onset_V": 2.256,
-                "rule": "compare candidate and host within the same phase_set_id",
+                "rule": "compare candidate and host within the same phase_set_id AND the same composition family (plain vs Cl-rich chain variant)",
             },
             "G4": {
                 "display_name": "legacy BVS + 4A foreign-center composite",

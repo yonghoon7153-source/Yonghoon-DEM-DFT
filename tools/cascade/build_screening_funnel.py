@@ -125,6 +125,31 @@ def load_pool():
             "score": fnum(r.get("score")),
         })
 
+    # ── ox_V 가 어느 조성족에서 온 값인가 (2026-08-16) ─────────────────────────
+    # 챔피언 슬롯은 combined_score 최대값이 가져가는데 풀에 plain(compound_set) 과
+    # Cl-rich(compound_set_chain) 두 변형이 같이 있다. 라벨은 그걸 감춘다.
+    # 단일 출처는 pinned ESW 의 composition_family — 여기선 **옮겨 싣기만** 한다.
+    pinned_path = PROP / "oxidation_stability_cascade_v3_pinned.json"
+    fam_by_base = {}
+    if pinned_path.is_file():
+        pinned = json.load(open(pinned_path, encoding="utf-8"))
+        for k, v in pinned.get("results", {}).items():
+            if k.startswith("__HOST__") or "HOST" in k.split("_"):
+                continue
+            b, f, o = v.get("dopant_base"), v.get("composition_family"), v.get("oxidation_limit_V")
+            if b and f and o is not None:
+                fam_by_base.setdefault(b, {}).setdefault(f, []).append(o)
+    for r in rows:
+        fams = fam_by_base.get(r["dopant"], {})
+        hit = sorted(f for f, vals in fams.items()
+                     if r["ox_V"] is not None and any(abs(v - r["ox_V"]) <= 1e-6 for v in vals))
+        r["ox_composition_family"] = (
+            "unresolved" if not fams else
+            "unmatched" if not hit else
+            "degenerate" if len(hit) > 1 else hit[0])
+        r["ox_family_confounded"] = r["ox_composition_family"] == "Clrich"
+        r["plain_champion_exists"] = ("plain" in fams) if fams else None
+
     # ionic_transport norm — build_cascade_themes.py 와 **같은 규약**을 여기서 재계산한다
     # (themes.json 의존을 피해 자기완결적으로 감사 가능하게 하되, 아래에서 값 일치를 강제 검증).
     vals = [r["bvs_x005"] for r in rows if r["bvs_x005"] is not None]
@@ -247,6 +272,15 @@ def build_gates(rows):
             "missing": lambda r: r["ox_V"] is None,
             "concentration_convention": ("champion composition 단일 (농도 평균 아님). "
                                          "실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다."),
+            "composition_family_caveat": (
+                "⚠ 챔피언 슬롯은 combined_score 최대값이 가져가고, 후보 풀에는 같은 도펀트의 두 "
+                "설계 변형이 있다(compound_set=plain · compound_set_chain=Cl-rich, S 하나가 Cl 로 치환). "
+                "그래서 이 게이트의 ox_V 중 일부는 plain 이 아닌 Cl-rich 조성 값이다. "
+                "**B2O3 는 plain 챔피언 자체가 없어 3점 모두 +Clrich 다** — 그 2.317 V 는 "
+                "도펀트 효과가 아니라 (도펀트 + 음이온 치환) 의 합이다. "
+                "Al2O3·MoO3·WO3 는 plain 챔피언이 정확히 host(2.140) 이고 Cl-rich 형제만 넘는다. "
+                "행별 판정은 oxidation_stability_cascade_v3_pinned.json 의 composition_family / "
+                "delta_ox_vs_host_V_confounded 를 보라."),
             "threshold_basis": (
                 f"{HOST_OX_V} V = undoped comp1/modelc 의 grand-potential 산화 onset "
                 "(oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 "
@@ -602,6 +636,7 @@ def main():
             "metric": g["metric"],
             "threshold": g["threshold"],
             "concentration_convention": g.get("concentration_convention"),
+            "composition_family_caveat": g.get("composition_family_caveat"),
             "threshold_basis": g["threshold_basis"],
             "literature_analog": g["literature_analog"],
             "engine": g["engine"],
@@ -1099,6 +1134,9 @@ def main():
                   "window_V": r["window_V"], "transport_norm": r["transport_norm"],
                   "blocking": r["blocking"], "E_GPa": r["E_GPa"], "GoverB": r["GoverB"],
                   "esw_note": r["esw_note"],
+                  "ox_composition_family": r["ox_composition_family"],
+                  "ox_family_confounded": r["ox_family_confounded"],
+                  "plain_champion_exists": r["plain_champion_exists"],
                   "gates_passed": [g for g in REPRESENTATIVE_ORDER if gates[g]["predicate"](r)],
                   "gates_failed": [g for g in REPRESENTATIVE_ORDER if not gates[g]["predicate"](r)]}
                  for r in sorted(rows, key=lambda x: x["dopant"])],

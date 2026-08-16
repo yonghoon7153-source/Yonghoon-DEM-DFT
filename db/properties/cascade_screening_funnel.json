@@ -68,6 +68,7 @@
    "metric": "de = E(doped champion) − E(host), UMA 상대 (eV). ⚠ cascade_v23_ranked.csv 의 de 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점이며(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
    "threshold": "mean_x(de) < 0",
    "concentration_convention": "라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — 1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. 농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다.",
+   "composition_family_caveat": null,
    "threshold_basis": "0 은 임의 컷이 아니라 **host 자신**(Δe = doped − undoped baseline)이다 — 'host보다 안정한가'라는 이분 질문의 물리적 기준점. 273-cascade 전체가 같은 undoped 정형셀 기준으로 계산돼 랭킹이 성립한다(kb/projects/cascade_v23_review_2026_07_11.md §1).",
    "literature_analog": {
     "papers": [
@@ -105,6 +106,7 @@
    "metric": "window_V = ox_V − red_V (grand-potential ESW, MP GGA/GGA+U hull)",
    "threshold": "window_V ≥ 0.05 V",
    "concentration_convention": "champion composition 단일 (농도 평균 아님). 실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다.",
+   "composition_family_caveat": null,
    "threshold_basis": "0.05 V 는 oxidation_stability_cascade.csv 가 이미 명문화한 **collapse 규약**('window<0.05 V = collapse, avoid, late-TM Fe/Co/Ni/Mn')이며 build_cascade_themes.py 의 oxidative/reduction 테마 게이트와 동일 상수다. 이 빌더가 새로 만든 숫자가 아니라 기존 db 규약의 승계 — 규약이 'collapse = window<0.05' 이므로 경계값(정확히 0.05)은 **통과**시킨다(≥). 현재 데이터에는 경계값이 없어 판정은 동일(collapse 4종 최대 MnO 0.039, 비-collapse 최소 Cu2O 0.113).",
    "literature_analog": {
     "papers": [
@@ -152,6 +154,7 @@
    "metric": "ox_V (V vs Li, grand-potential onset)",
    "threshold": "ox_V ≥ 2.14 V (undoped host onset)",
    "concentration_convention": "champion composition 단일 (농도 평균 아님). 실측 x = 0.25 — 라벨 x002/x005/x010 은 농도값이 아니다.",
+   "composition_family_caveat": "⚠ 챔피언 슬롯은 combined_score 최대값이 가져가고, 후보 풀에는 같은 도펀트의 두 설계 변형이 있다(compound_set=plain · compound_set_chain=Cl-rich, S 하나가 Cl 로 치환). 그래서 이 게이트의 ox_V 중 일부는 plain 이 아닌 Cl-rich 조성 값이다. **B2O3 는 plain 챔피언 자체가 없어 3점 모두 +Clrich 다** — 그 2.317 V 는 도펀트 효과가 아니라 (도펀트 + 음이온 치환) 의 합이다. Al2O3·MoO3·WO3 는 plain 챔피언이 정확히 host(2.140) 이고 Cl-rich 형제만 넘는다. 행별 판정은 oxidation_stability_cascade_v3_pinned.json 의 composition_family / delta_ox_vs_host_V_confounded 를 보라.",
    "threshold_basis": "2.14 V = undoped comp1/modelc 의 grand-potential 산화 onset (oxidation_stability_cascade.csv 헤더에 명시된 ref). 즉 '도펀트를 넣어서 host보다 나빠지지 않는가'라는 상대 기준 — 임의 전압이 아니다. 주의: 19종이 정확히 2.14 V에 pin 돼 있다(S²⁻-limited onset 축퇴) → 이 게이트는 '초과'가 아니라 '비열화' 판정이며 축퇴군 내 순위는 무의미.",
    "literature_analog": {
     "papers": [
@@ -231,6 +234,7 @@
    "metric": "ionic_transport norm ∈[0,1] = min-max(bvs_li_proxy_score @ 라벨 x005) with blocking<0.6 게이트, 탈락자 0.05 평탄화. ⛔ **순환**: blocking 컷을 못 넘으면 BVS 값을 버리고 norm 을 0.05 로 강제한다 — 컷 0.3 보다 낮으므로 blocking 탈락 = G4 탈락이 결정론적으로 따라온다. '두 독립 신호가 일치했다'로 읽으면 안 된다. ⚠ 라벨 x002/x005/x010 은 셋 다 실측 x=0.25 다 — 'x=0.05' 가 아니다. ⚠ bvs_li_proxy_score 는 tools/doping/bvse_proxy.py 의 Adams-2003 파라미터(R₀ Li–S 1.94 · Li–Cl 1.91 · b_S 0.40) — 정본 softBV(2.105/2.249/0.37)와 다르므로 comp1 BVSE 결과와 같은 표에 올리지 말 것. blocking 은 도펀트 4 Å 내 Li 비율이라 도펀트 원자 수에 거의 비례한다 (host 원소만 든 종은 0.0 으로 자동 통과 — 판정 아님).",
    "threshold": "transport_norm > 0.3",
    "concentration_convention": "x=0.05 단일 (litransport *_x005 — 농도 평균 아님)",
+   "composition_family_caveat": null,
    "threshold_basis": "두 겹이고, **선택압의 거의 전부가 첫 겹에서 나온다**. ① blocking<0.6 은 build_cascade_themes.py 가 이미 쓰는 db 규약(승계)이지만 host 앵커도 문헌 대응도 없는 **상속 상수**다 — G4 단독 탈락 27종 중 24종이 이 상수에 죽고, bvs 컷(0.3) 단독 기여는 3종(B2O3, GeO2, MoO3)뿐이다. ② 0.3 컷은 통과자 분포 **하위 꼬리의 공백 구간**(MoO3 0.2863 ↔ MnO 0.3844, 폭 0.0981) 안에 놓았다. ⚠ 정확히 말하면 이건 분포 전체의 최대 공백이 아니다(최대는 0.6842↔0.845 = 0.1608, 그 다음이 0.1827↔0.2863 = 0.1036, 이게 3번째). 즉 '하위 꼬리를 자르는 자연스러운 위치 중 하나'이지 유일해가 아니다. → threshold_sensitivity 의 G4_li_transport(bvs 컷) **와 G4_blocking(상속 상수) 스윕을 반드시 함께 볼 것** — 코어 생존자 수는 blocking 컷만 흔들어도 6↔21 로 움직인다.",
    "literature_analog": {
     "papers": [
@@ -311,6 +315,7 @@
    "metric": "E_young (GPa, UMA) ↓ AND G/B ↓. ⚠ cascade_v23_ranked.csv 의 E_GPa·pugh(=G/B) 는 단일 챔피언 값이 아니라 **x∈{0.02, 0.05, 0.10} 챔피언 3점의 산술평균**이다(47/47 검증, champions csv elastic_E_young_GPa · elastic_pugh_GoverB 유래). 일부 도펀트는 plain·Cl-rich 조성족이 섞인 3점(B2O3 는 +Clrich 만 존재) → concentration_convention 블록 참조.",
    "threshold": "mean_x(E_GPa) ≤ 46.9 (roster median) AND mean_x(G/B) ≤ 0.78 (roster median)",
    "concentration_convention": "라벨 x002/x005/x010 3점 평균. ⛔ 이 라벨은 농도가 아니다 — 1×1×1·4 f.u. 셀의 정수 치환 때문에 셋 다 **실측 x = 0.25** 다. 농도 스윕도 반복실험도 아니므로 '2/5/10% 농도 의존성' 으로 읽으면 안 된다.",
+   "composition_family_caveat": null,
    "threshold_basis": "⚠ **G1–G4 와 달리 host 앵커가 없다.** UMA 탄성값은 절대 인용 금지 규율 대상이고, 같은 방법(UMA)으로 계산된 undoped host 의 E/(G/B) 항목이 cascade 산출물에 없다 (elastic.json 의 host 값은 DFT — 교차 인용 불가). 따라서 median split = **로스터 내부 상대 컷**이다(arbitrariness_flag). 게다가 컷이 걸리는 값 자체가 3농도 평균이라 **농도 산포가 게이트 폭과 맞먹는다** (E_young 농도 산포: NdF3 17.8 · WO3 17.0 · MgF2 16.8 GPa) → threshold_sensitivity.per_concentration_application 을 반드시 함께 볼 것. 문헌 절대 기준(Pugh B/G > 1.75)을 걸면 생존자 0 — literature_absolute_variants 참조.",
    "literature_analog": {
     "papers": [],
@@ -2635,6 +2640,9 @@
    "E_GPa": 47.4,
    "GoverB": 0.86,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2656,6 +2664,9 @@
    "E_GPa": 42.5,
    "GoverB": 0.77,
    "esw_note": "Cl-rich:ox->2.354",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2677,6 +2688,9 @@
    "E_GPa": 47.6,
    "GoverB": 0.84,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2698,6 +2712,9 @@
    "E_GPa": 41.2,
    "GoverB": 0.74,
    "esw_note": "",
+   "ox_composition_family": "Clrich",
+   "ox_family_confounded": true,
+   "plain_champion_exists": false,
    "gates_passed": [
     "G1",
     "G2",
@@ -2719,6 +2736,9 @@
    "E_GPa": 48.2,
    "GoverB": 0.85,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -2740,6 +2760,9 @@
    "E_GPa": 46.5,
    "GoverB": 1.02,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2761,6 +2784,9 @@
    "E_GPa": 45.2,
    "GoverB": 0.83,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2782,6 +2808,9 @@
    "E_GPa": 47.9,
    "GoverB": 0.82,
    "esw_note": "collapse",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1"
    ],
@@ -2803,6 +2832,9 @@
    "E_GPa": 37.5,
    "GoverB": 0.69,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2824,6 +2856,9 @@
    "E_GPa": 43.4,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2845,6 +2880,9 @@
    "E_GPa": 51.0,
    "GoverB": 0.89,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -2866,6 +2904,9 @@
    "E_GPa": 45.9,
    "GoverB": 0.78,
    "esw_note": "collapse",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G5"
@@ -2887,6 +2928,9 @@
    "E_GPa": 41.4,
    "GoverB": 0.92,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2908,6 +2952,9 @@
    "E_GPa": 41.6,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2929,6 +2976,9 @@
    "E_GPa": 56.2,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2950,6 +3000,9 @@
    "E_GPa": 46.9,
    "GoverB": 0.81,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2971,6 +3024,9 @@
    "E_GPa": 41.9,
    "GoverB": 0.72,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -2992,6 +3048,9 @@
    "E_GPa": 50.1,
    "GoverB": 0.77,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3013,6 +3072,9 @@
    "E_GPa": 40.5,
    "GoverB": 0.64,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3034,6 +3096,9 @@
    "E_GPa": 48.6,
    "GoverB": 0.89,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3055,6 +3120,9 @@
    "E_GPa": 58.2,
    "GoverB": 0.73,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3076,6 +3144,9 @@
    "E_GPa": 42.9,
    "GoverB": 0.83,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3097,6 +3168,9 @@
    "E_GPa": 57.9,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3118,6 +3192,9 @@
    "E_GPa": 35.4,
    "GoverB": 0.66,
    "esw_note": "collapse",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G4",
@@ -3139,6 +3216,9 @@
    "E_GPa": 42.7,
    "GoverB": 0.84,
    "esw_note": "Cl-rich:ox->2.356",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3160,6 +3240,9 @@
    "E_GPa": 49.6,
    "GoverB": 0.82,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3181,6 +3264,9 @@
    "E_GPa": 46.0,
    "GoverB": 0.67,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3202,6 +3288,9 @@
    "E_GPa": 47.1,
    "GoverB": 0.75,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3223,6 +3312,9 @@
    "E_GPa": 43.9,
    "GoverB": 0.74,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3244,6 +3336,9 @@
    "E_GPa": 45.9,
    "GoverB": 0.85,
    "esw_note": "collapse",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G4"
@@ -3265,6 +3360,9 @@
    "E_GPa": 51.5,
    "GoverB": 0.69,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3286,6 +3384,9 @@
    "E_GPa": 44.6,
    "GoverB": 0.64,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3307,6 +3408,9 @@
    "E_GPa": 46.5,
    "GoverB": 0.88,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3328,6 +3432,9 @@
    "E_GPa": 53.5,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3349,6 +3456,9 @@
    "E_GPa": 44.4,
    "GoverB": 0.68,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3370,6 +3480,9 @@
    "E_GPa": 48.1,
    "GoverB": 0.8,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3391,6 +3504,9 @@
    "E_GPa": 49.2,
    "GoverB": 0.79,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3412,6 +3528,9 @@
    "E_GPa": 49.2,
    "GoverB": 0.63,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3433,6 +3552,9 @@
    "E_GPa": 46.2,
    "GoverB": 0.96,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3454,6 +3576,9 @@
    "E_GPa": 52.1,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3475,6 +3600,9 @@
    "E_GPa": 52.5,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2"
@@ -3496,6 +3624,9 @@
    "E_GPa": 38.6,
    "GoverB": 0.76,
    "esw_note": "Cl-rich:ox->2.356",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3516,6 +3647,9 @@
    "E_GPa": 53.1,
    "GoverB": 0.71,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3537,6 +3671,9 @@
    "E_GPa": 51.6,
    "GoverB": 0.84,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3558,6 +3695,9 @@
    "E_GPa": 51.0,
    "GoverB": 0.76,
    "esw_note": "",
+   "ox_composition_family": "degenerate",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3579,6 +3719,9 @@
    "E_GPa": 42.2,
    "GoverB": 0.73,
    "esw_note": "O/F-degenerate",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",
@@ -3600,6 +3743,9 @@
    "E_GPa": 49.6,
    "GoverB": 0.78,
    "esw_note": "",
+   "ox_composition_family": "plain",
+   "ox_family_confounded": false,
+   "plain_champion_exists": true,
    "gates_passed": [
     "G1",
     "G2",

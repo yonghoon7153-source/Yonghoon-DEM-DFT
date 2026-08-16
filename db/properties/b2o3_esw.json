@@ -28,5 +28,23 @@
   "confidence": "medium",
   "note": "재현에 필요한 MP 엔트리 셋/제외상 목록이 없다",
   "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ },
+ "composition_collision_2026_08_16": {
+  "issue": "이 파일의 b2o3 2.03 V 와 cascade 챔피언 표의 B2O3 2.317 V 는 **다른 조성**이다. 값이 모순인 게 아니라 대상이 다르다 — 섞어 인용하면 부호가 뒤집힌다.",
+  "this_file_composition": "Li58 P8 S41 Cl16 B2 O3 (128-atom DFT-deep cell; ocv_decomp 의 16 LiCl 로 확인)",
+  "this_file_ox_V": 2.03,
+  "cascade_champion_composition": "Li17 B2 P4 S16 Cl5 O3 (=B2O3+Clrich, compound_set_chain 변형)",
+  "cascade_champion_ox_V": 2.317,
+  "host_ox_V": 2.14,
+  "same_method": "둘 다 grand-potential ESW · MP GGA_GGA+U · chemsys B-Cl-Li-O-P-S · 346 entries. cascade 쪽 phase_set_id 257d50d8c59cde8f (MP db 2026.04.13). host 값 2.14 가 양쪽에서 일치하므로 방법 차이가 아니라 조성 차이다.",
+  "sign_flip": "DFT 셀은 host 대비 **-0.11 V (악화)**, cascade Cl-rich 챔피언은 **+0.177 V (개선)**",
+  "why_it_matters": "세미나 표에서 B2O3 만 dft_deep=1 이면서 onset 이 Cl-rich 유래였다. '우리가 DFT 로 깊이 본 종이 산화 창을 넓힌다' 는 문장은 이 두 조성을 이어붙인 것이라 성립하지 않는다.",
+  "forbidden_statement": "B2O3 가 산화 onset 을 +0.177 V 올린다 (DFT 로 검증된 조성은 오히려 -0.11 V)",
+  "allowed_statement": "Cl-rich chain 변형 Li17B2P4S16Cl5O3 의 grand-potential onset 은 2.317 V 로 host(2.14 V)보다 높다. DFT-deep 셀 Li58P8S41Cl16B2O3 의 onset 은 2.03 V 로 host 보다 낮다.",
+  "cross_ref": [
+   "db/properties/oxidation_stability_cascade_v3_pinned.json (composition_family_audit)",
+   "db/properties/cascade_seminar_oxidation_transport_47.csv (ox_composition_family)",
+   "kb/methodology/cascade_composition_family_2026_08_16.md"
+  ]
  }
 }
