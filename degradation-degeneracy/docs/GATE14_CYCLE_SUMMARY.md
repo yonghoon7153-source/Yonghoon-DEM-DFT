@@ -4,8 +4,8 @@
 >
 > **수치의 정본은 `artifacts/*/` 의 `fits.parquet`·`objective_comparison.yaml`·
 > `degeneracy_summary.yaml`·`artifact_index.yaml` 이다.** `docs/RESULTS*.md` 는
-> 15차 리뷰가 지적한 표기·해석 오류(정수 반올림 `0%`, 비대칭 headline 등)가
-> 남아 있어 **아직 정본이 아니다** — 재생성·대조가 끝난 뒤에만 승격한다.
+> 15·16차가 지적한 표기·해석 오류를 고쳐 **빈 격리 root 에서 재생성**했고
+> (16차 P0 8항목 충족), 승격 여부는 17차 리뷰 판정을 기다린다.
 > 발견 원장은 `docs/08_REVIEW_RESPONSE.md` §16~21. 여기 적힌 숫자는 사본이므로
 > 인용 근거로 쓰지 말 것.
 
@@ -18,9 +18,9 @@
 | 계산 코드 | `c0f1daa0` · `source_digest d50295f980ccaa81` (각 실행의 **시작·종료 digest 가 일치**했고 변경이 검출되지 않음 — periodic 검사가 없으므로 '실행 내내 불변'을 증명한 것은 아니다) |
 | 산출물 | `artifacts/{grid_curves_v4, grid_fit_v4, halfcell_fit_v4, paired_fixed5_v4}` — Git blob 합계 **100.3 MB** (95.7 MiB, 88파일). `artifacts/` 디렉터리 전체는 116 MB (옛 v1/v2 포함) |
 | 산출물 인용 가능성 | **GO** — 재실행 불필요 (15차 리뷰 판정) |
-| 보고서 문구 인용 가능성 | **NO-GO** — 수치 표기·해석 수정 후 재생성 필요 |
-| 남은 작업 | 체크리스트 **15항목** (렌더링·해석 7 + 코드·문서 8) |
-| 커밋 | 산출물 `61c1a75` · 원장 정정 `1a33190` · 이 문서 `cb32179` |
+| 보고서 문구 인용 가능성 | 16차 P0 반영 후 재생성 완료 — **17차 판정 대기** |
+| 남은 작업 | **A·A'·B·C·E·F** (Hessian provenance 묶음 + EOL 회귀 + chunk fail-fast) |
+| 커밋 | 산출물 `61c1a75` · 코드 `34c156c` (`source_digest 4129e1a7c36c6534`) |
 
 ---
 
@@ -347,3 +347,29 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 | 14 | tar 백업을 재현성 증거처럼 제시 | 저장소 밖이라 제3자 확인 불가임을 명시 |
 
 15차-2 가 유지한 판정: **v4 curves/fits/archive 는 GO, 장시간 fit 재실행 불필요.**
+
+
+---
+
+## 10. 15·16차 반영 이후 (2026-08-16)
+
+계산은 다시 하지 않았다 (`c0f1daa0` / `d50295f980ccaa81` 봉인 그대로). 보고서
+생성 코드와 validator 만 고치고 **빈 격리 root** 에서 재생성했다.
+
+| 라운드 | 고친 것 |
+|---|---|
+| 15차 | 붕괴율 count 우선(`1/245 (0.41%)`), 전체격자 `64/604`·`3.69` 병기, "우도비"→"조건부 사건률 비", 22p 조건 명시, `평균 max-mode \|err\|` 라벨, Case 1/2 pipeline 한정, feasible domain 표현, Hessian 자기모순 제거, 결론 번호 |
+| 15차-3 (자체 발견) | `validate_provenance` 가 봉인 입력을 **CWD 우선**으로 찾아 격리 검증이 원본 파일을 대조하던 구멍. 실측: 격리본을 위조해도 `ok=True` → 수정 후 `fail=['입력_digest_재해시']` |
+| 16차 | `repo_root` 를 score·compare·report 전 경로에 관통, 상세표 count 우선, 모집단 분모 분리(목적함수당 1,476), **22p 최근접 8점이 "모두 PE=NE" 라는 거짓 전제 제거**(실측 PE=NE 4 + 2%p 4, wide-gap 0), paired 의 adaptive 경고 분기, multistart 서술 완화, 재현 블록에서 Hessian 분리, header 를 artifact producer / report generator 로 분리 |
+| D (성능) | family 정렬이 DataFrame 을 문자열화하던 것 제거 — 정렬 41.896 s → 0.0019 s |
+
+최종 재생성본은 두 문서 모두 **인용 금지 배너 없음**이고, header 에 다음이
+분리 기록된다.
+
+```
+artifact producer git/source_digest: c0f1daa0… / d50295f980ccaa81
+report generator git/source_digest/dirty: <생성 commit> / <생성 digest> / False
+```
+
+남은 것은 Hessian provenance 묶음(A·A'·B·C)과 E·F 다. Hessian 은 결론 근거에서
+이미 제외돼 있으므로 이 묶음은 보고서 승격의 차단점이 아니다.
