@@ -179,8 +179,29 @@ def apply_cut(mask, cut):
     return m
 
 
+MESH_UNAVAILABLE_REASON = None          # ★ 강등되면 여기 남는다 (매니페스트가 읽는다)
+
+
 def mesh_of(mask, step, smooth=0.0):
-    from skimage.measure import marching_cubes
+    """마스크 → (vertices, faces).  없으면 None.
+
+    ⚠⚠ 2026-08-16 실사고: `skimage` 가 없는 호스트에서 이 한 줄이 **과학 런 전체를 죽였다**
+      (사전등록 vox 0.15 판별 런 — σ 솔브에 도달도 못 했다).  메쉬는 **브라우저 시각화**용
+      이지 σ 와 무관하다.  ⇒ 없으면 **강등**하되 **조용히 넘어가지 않는다**:
+        · 화면에 크게 찍고
+        · `MESH_UNAVAILABLE_REASON` 에 남겨 매니페스트가 기록하게 한다.
+      (조용한 강등은 이 리포가 이미 크게 데인 패턴이다 — `--fibre` 선분 스탬프가 그렇게
+       꺼졌고 매니페스트는 요청값을 적어 검사를 통과시켰다.)
+    """
+    global MESH_UNAVAILABLE_REASON
+    try:
+        from skimage.measure import marching_cubes
+    except ImportError as ex:
+        MESH_UNAVAILABLE_REASON = f'{type(ex).__name__}: {ex}'
+        print(f'  ⚠⚠ 메쉬 생략 — scikit-image 없음 ({ex}).  σ/수송 결과는 **영향 없다**; '
+              f'브라우저 표면만 빠진다.  매니페스트에 mesh_unavailable 로 기록된다.',
+              flush=True)
+        return None
     if mask.sum() < 8:
         return None
     # pad so surfaces at the array border close into solids

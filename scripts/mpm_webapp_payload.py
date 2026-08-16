@@ -1618,6 +1618,8 @@ def main():
             #   앙상블 팔을 나중에 대조하려면 각 payload 가 자기 위상을 알고 있어야 한다.
             'origin_shift_um': [float(x) for x in _osh],
             'plate_z_grid_um': [float(_zb3), float(_zt3)],
+            # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).
+            'mesh_unavailable': getattr(_vc(), 'MESH_UNAVAILABLE_REASON', None),
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭
         }

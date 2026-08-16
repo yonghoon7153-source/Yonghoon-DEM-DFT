@@ -70,9 +70,11 @@ if [ "$CHECK_ONLY" = 0 ]; then
   python3 -m pip install -q --upgrade pip setuptools wheel 2>&1 | tail -2 | tee -a "$REPORT"
   if [ "$PYMIN" -le 8 ]; then
     #  py3.8 마지막 지원 버전 — 위로 올리면 설치가 조용히 실패하거나 구버전으로 내려앉는다
-    PKGS="numpy==1.24.4 scipy==1.10.1 pyamg==4.2.3"
+    #  scikit-image 는 payload 의 **메쉬(시각화)** 경로가 쓴다.  없으면 강등되지만
+    #  (viz_mpm_continuum.mesh_of, 2026-08-16) 있으면 브라우저 표면까지 나온다.
+    PKGS="numpy==1.24.4 scipy==1.10.1 pyamg==4.2.3 scikit-image==0.19.3"
   else
-    PKGS="numpy scipy pyamg"
+    PKGS="numpy scipy pyamg scikit-image"
   fi
   say "  설치: $PKGS"
   python3 -m pip install -q $PKGS 2>&1 | tail -3 | tee -a "$REPORT"
@@ -104,6 +106,43 @@ try:
 except Exception as e:
     print(f'  ○ cupy 실연산 불가: {type(e).__name__} — --step3-gpu 쓰지 말 것')
 PY
+
+say ""
+say "══ 4b 실제 파이프라인 import — 목록이 아니라 **코드**에 물어본다 ═══════"
+#  실사고 2026-08-16: 하드코딩한 의존 목록만 보고 넘어갔더니, 판별 런이 SE 점 6,800 만 개를
+#  다 읽은 **뒤에** skimage 없음으로 죽었다.  GPU 시간을 그만큼 버렸다.
+#  ⇒ 목록을 믿지 말고 **실제 모듈을 import** 해 본다.
+IMPCHK="$REPO/scripts/_import_check.py"
+cat > "$IMPCHK" <<'PYEOF'
+import importlib, os, sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+REQUIRED = ['step3_sigma', 'mpm_webapp_payload', 'viz_mpm_continuum', 'se_material',
+            'additives', 'sr01_realbed_ab', 'sr01_stamp_compare', 'fibre_segment_raster']
+OPTIONAL = [('skimage', 'mesh (browser surface) - omitted if absent, sigma unaffected'),
+            ('cupy', 'GPU solve (--step3-gpu) - CPU CG otherwise'),
+            ('pyamg', 'AMG preconditioner - Jacobi otherwise (slower)')]
+bad = 0
+for m in REQUIRED:
+    try:
+        importlib.import_module(m)
+        print('  OK   ' + m)
+    except Exception as e:
+        bad += 1
+        print('  FAIL ' + m + ': ' + type(e).__name__ + ': ' + str(e))
+for m, what in OPTIONAL:
+    try:
+        importlib.import_module(m)
+        print('  OK   ' + m + '   (' + what + ')')
+    except Exception:
+        print('  --   ' + m + ' absent -> ' + what)
+sys.exit(1 if bad else 0)
+PYEOF
+if (cd "$REPO" && PYTHONUTF8=1 python3 "$IMPCHK" 2>&1 | tee -a "$REPORT"; exit "${PIPESTATUS[0]}"); then
+  good "필수 모듈 전부 import 됨"
+else
+  bad "필수 모듈 import 실패 — 위 FAIL 참조"
+fi
+rm -f "$IMPCHK"
 
 say ""
 say "══ ⑤ 리포 selftest (전부 통과해야 런을 시작한다) ═══════"
