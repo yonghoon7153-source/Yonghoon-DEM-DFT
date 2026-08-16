@@ -11,10 +11,10 @@
 
 > ✅ provenance 검증 통과 — `manifest_존재`, `config_hash`, `clean_worktree`, `필수_입력_존재`, `run_spec_schema`, `sig_version`, `optimizer_정책`, `producer_곡선일치`, `목적함수_순서`, `입력봉인_교차일치`, `입력_스냅샷`, `곡선_producer_재검`, `코드_identity`, `시작_provenance`, `start_파일_존재`, `attempt_파일_존재`, `attempt_파일_일치`, `start_파일_일치`, `실행중_코드불변`, `시작종료_서명일치`, `_참고_코드재계산불가`, `입력_digest_재해시`, `run_signature_기록`, `run_signature_재계산`, `채점파일_정본`, `출력봉인_재계산`, `조건집합_서명일치`, `출력_완전성`, `출력_격자완전성`, `행별_서명`, `단일_서명`, `manifest와_일치`, `restart_출처`, `restart_예산_완주`
 
-생성: 2026-08-16 05:24 UTC  
+생성: 2026-08-16 06:16 UTC  
 입력: `results/paired_fixed5_v4`  
 artifact producer git/source_digest: `c0f1daa0d92a7625c3602799c81db04b5e2e5783` / `d50295f980ccaa81`  
-report generator git/source_digest/dirty: `34c156c597ec75ded21364bba6cd89d155fd4b50` / `4129e1a7c36c6534` / `False`  
+report generator git/source_digest/dirty: `4dc67f8b8acd55846c394d5b8206c7394e5b47d6` / `f234ff36b39d1ef0` / `False`  
 앵커 fits_sha256: `e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064`  
 앵커 curves_sha256(sealed): `b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8`  
 (대조: `artifacts/artifact_index.yaml` — 두 값이 같은 묶음이 이 보고서의 근거다)  
@@ -53,7 +53,7 @@ report generator git/source_digest/dirty: `34c156c597ec75ded21364bba6cd89d155fd4
 
    ⚠ 이 숫자들은 임계 설정에 의존한다. 붕괴로 세려면 격차를 6%p에서 2%p 아래로 끌어내려야 하므로 최소 4%p의 격차 오차가 필요한데, 실측 격차 오차는 중앙값 2.6%p·99분위 5.7%p다. 붕괴가 원리적으로 관측 가능한 범위이긴 하나, 낮은 붕괴율의 상당 부분은 **오차 스케일이 임계 간격보다 작다**는 사실에서 온다.
 
-3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 1/8 (12.50%)** (목적함수 `pocv_dvdq`, 최근접 8 grid 조건, raw max-mode 오차 > 2%p 임계)  — 행별 max-mode 절대오차의 평균 1.7%p, raw PE/NE 오차 반대부호 비율 50%, 참 PE-NE 격차 1.0%p → 복원 격차 1.9%p. ⚠ **이 8점은 참값이 모두 같은 격자점이 아니다** — 절반은 LAM_PE = LAM_NE, 절반은 |ΔLAM| = 2%p 이고 평균 참 격차가 1.0%p 다 (0.02 step 의 최근접 corner 구성). 여기에 wide-gap(≥6%p)은 **하나도 없으므로**, 이 표본으로는 "참 격차가 큰 조건이 '같다'로 붕괴하는가" 를 물을 수 없다 — 그 질문의 답은 위 2번이다. 이 8개는 실제 셀이 아니라 설계 격자의 최근접 점이며, 임계·반경·noise·목적함수를 바꾸면 값이 달라진다.
+3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 1/8 (12.50%)** (목적함수 `pocv_dvdq`, 최근접 8 grid 조건, raw max-mode 오차 > 2%p 임계)  — 행별 max-mode 절대오차의 평균 1.7%p, raw PE/NE 오차 반대부호 비율 50%, 참 PE-NE 격차 1.0%p → 복원 격차 1.9%p. ⚠ **이 8점은 참값이 모두 같은 격자점이 아니다** — PE=NE 가 4/8, |ΔLAM|>0 이 4/8 이고 최대 참 격차가 2.0%p 다. 평균 참 격차는 1.0%p 다. 여기에 wide-gap(≥6%p)은 **하나도 없으므로**, 이 표본으로는 "참 격차가 큰 조건이 '같다'로 붕괴하는가" 를 물을 수 없다 — 그 질문의 답은 위 2번이다. 이 8개는 실제 셀이 아니라 설계 격자의 최근접 점이며, 임계·반경·noise·목적함수를 바꾸면 값이 달라진다.
 
 4. **생성성공 격자의 52%는 선택한 grid-reference fitter 의 현재 α/bounds feasible domain 밖**이다 (참값 α<1 → 재구성 창이 reference 범위를 벗어나 truth 가 **표현 가능**하지 않다). 위 숫자는 모두 그 안쪽 **목적함수당 1476조건** 에서만 센 값이며(파일의 objective-condition 행 합계는 2952), 바깥을 섞으면 목적함수 간 차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 현재 표현식의 정의역 판정이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 안쪽 바깥을 함께 센 예외다.** gap 분석의 분모는 noise=0 의 98·245조건, 22p 는 8조건으로 각각 다르다.
 
@@ -99,7 +99,7 @@ dQ/dV의 이점은 노이즈에서 희석된다. 노이즈 0 결과만 인용하
 
 *모두 `noise = 0` 조건이다. 노이즈가 있으면 값이 달라진다(F10) — `objective_comparison.yaml`의 `verdict_22p.noise` 참조.*
 
-> ⚠ 이 8점은 **모두 참값이 같은 격자점이 아니다.** 0.02 step 에서 PE=NE 가 4개, |ΔLAM|=2%p 가 4개이며 평균 참 격차는 1%p 다. wide-gap(≥6%p)은 **하나도 없다** — 즉 22p 판정에 쓸 수 있는 것은 "참 격차가 큰 조건이 붕괴하는가" 가 아니라 국소 n=8 표본의 복원 성적뿐이다 (그 질문의 답은 결론 2 다).
+> ⚠ **이 8점은 참값이 모두 같은 격자점이 아니다.** PE=NE 가 4/8, |ΔLAM|>0 이 4/8 이고 최대 참 격차가 2.0%p 다. 여기에 wide-gap(≥6%p)은 **하나도 없으므로** 22p 판정에 쓸 수 있는 것은 "참 격차가 큰 조건이 붕괴하는가" 가 아니라 국소 n=8 표본의 복원 성적뿐이다 (그 질문의 답은 결론 2 다).
 
 | objective | 근방 조건 | recovery failure | 평균 max-mode \|err\| | err LAM_PE | err LAM_NE | raw 반대부호 |
 |---|---|---|---|---|---|---|
@@ -112,7 +112,7 @@ dQ/dV의 이점은 노이즈에서 희석된다. 노이즈 0 결과만 인용하
 
 *`noise = 0` 조건 기준.*
 
-22p 근방 격자점은 **참값이 애초에 `LAM_PE = LAM_NE`** 다. 거기서 복원값이 비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은 반대 방향이다 — **참값이 뚜렷이 다를 때도 fitting이 둘을 같다고 말하는가.**
+22p 근방 격자점은 **참 격차가 작다** — PE=NE 가 4/8, |ΔLAM|>0 이 4/8 이고 최대 참 격차가 2.0%p 다. 거기서 복원값이 비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은 반대 방향이다 — **참값이 뚜렷이 다를 때도 fitting이 둘을 같다고 말하는가.**
 
 | objective | 넓은 격차 조건 n | **격차 붕괴율** | shrinkage | 거짓 분리율 | 붕괴에 필요한 격차오차 / 실측 중앙값 |
 |---|---|---|---|---|---|
