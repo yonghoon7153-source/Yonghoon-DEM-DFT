@@ -1,9 +1,13 @@
 # 14차 게이트 사이클 요약 — 리뷰 5라운드 → 본 실행 → 15차 판정
 
 > 이 문서는 2026-08-11 ~ 08-13 사이에 일어난 일을 한 곳에 모은 **사람용 요약**이다.
-> 수치의 정본은 `artifacts/` 묶음과 `docs/RESULTS*.md` 이고, 발견 원장은
-> `docs/08_REVIEW_RESPONSE.md` §16~21 이다. 여기 적힌 숫자는 사본이므로 인용
-> 근거로 쓰지 말 것.
+>
+> **수치의 정본은 `artifacts/*/` 의 `fits.parquet`·`objective_comparison.yaml`·
+> `degeneracy_summary.yaml`·`artifact_index.yaml` 이다.** `docs/RESULTS*.md` 는
+> 15차 리뷰가 지적한 표기·해석 오류(정수 반올림 `0%`, 비대칭 headline 등)가
+> 남아 있어 **아직 정본이 아니다** — 재생성·대조가 끝난 뒤에만 승격한다.
+> 발견 원장은 `docs/08_REVIEW_RESPONSE.md` §16~21. 여기 적힌 숫자는 사본이므로
+> 인용 근거로 쓰지 말 것.
 
 ---
 
@@ -11,12 +15,12 @@
 
 | 항목 | 상태 |
 |---|---|
-| 계산 코드 | `c0f1daa0` · `source_digest d50295f980ccaa81` (실행 내내 불변) |
-| 산출물 | `artifacts/{grid_curves_v4, grid_fit_v4, halfcell_fit_v4, paired_fixed5_v4}` 116 MB |
+| 계산 코드 | `c0f1daa0` · `source_digest d50295f980ccaa81` (각 실행의 **시작·종료 digest 가 일치**했고 변경이 검출되지 않음 — periodic 검사가 없으므로 '실행 내내 불변'을 증명한 것은 아니다) |
+| 산출물 | `artifacts/{grid_curves_v4, grid_fit_v4, halfcell_fit_v4, paired_fixed5_v4}` — Git blob 합계 **100.3 MB** (95.7 MiB, 88파일). `artifacts/` 디렉터리 전체는 116 MB (옛 v1/v2 포함) |
 | 산출물 인용 가능성 | **GO** — 재실행 불필요 (15차 리뷰 판정) |
-| 보고서 문구 인용 가능성 | **NO-GO** — 수치 표기·해석 6건 수정 필요 |
-| 남은 작업 | 체크리스트 13항목 (렌더링 6 + 코드 7) |
-| 최신 커밋 | `1a33190` (원장 정정) / 산출물 `61c1a75` |
+| 보고서 문구 인용 가능성 | **NO-GO** — 수치 표기·해석 수정 후 재생성 필요 |
+| 남은 작업 | 체크리스트 **15항목** (렌더링·해석 7 + 코드·문서 8) |
+| 커밋 | 산출물 `61c1a75` · 원장 정정 `1a33190` · 이 문서 `cb32179` |
 
 ---
 
@@ -47,7 +51,7 @@
 ## 2. 동결과 본 실행 (V100)
 
 ```
-코드      c0f1daa0d92a7625c3602799c81db04b5e2e5783 / d50295f980ccaa81
+코드      c0f1daa0d92a7625c3602799c81db04b5e2e5783 / d50295f980ccaa81   (시작·종료 일치)
 하드웨어  Tesla V100-PCIE-32GB · 32코어 · RAM 125 GB
 GPU 사용  없음 — PyBaMM DFN + composite phases 는 IDAKLU(CPU) 경로
 ```
@@ -63,7 +67,7 @@ GPU 사용  없음 — PyBaMM DFN + composite phases 는 IDAKLU(CPU) 경로
 | paired fixed-5 (1차) | 6,138행 — **무효, 폐기** (§3) | 7,046.6 s |
 | paired fixed-5 (재실행) | **6,138행** = 3,069 × 2목적함수 | 6,924.5 s |
 | wsweep · score · Hessian · 보고서 | — | 약 9 h |
-| archive | 요청 4 · 검증 가능 4 · 불완전 0 · 116 MB | — |
+| archive | 요청 4 · 검증 가능 4 · 불완전 0 · Git blob 100.3 MB | — |
 
 ### fitting 전 invariant (게이트가 요구한 검사)
 
@@ -123,10 +127,17 @@ paired_fixed5_v4  ok=False fail=['입력봉인_교차일치', '실행중_코드�
 
 공정 비교에서 34p 는 "사실상 변화 없음"이 아니라 **recovery failure 가 61.9% →
 87.2% 로 크게 악화**했다. 단 이를 "dQ/dV 의 정보량이 더 나쁘다"로 읽으면 안 된다 —
-paired 에서 34p 해의 multimodal 비율이 97% 라 **optimizer 가 그 목적함수를 못 푸는
-효과**가 섞여 있다.
+paired 에서 34p 해의 multimodal 비율이 97% 인데, 이 관측에는 목적함수 지형·실제
+비식별성·parameterization·optimizer/protocol 의존성이 모두 섞여 있어 **한 요인으로
+귀속할 수 없다**.
 
-> **방어 가능한 문장**: 두 protocol 모두에서 dQ/dV 추가의 개선은 관측되지 않았다.
+> **방어 가능한 문장** (endpoint 를 고정해야 한다): 사전 정의한 raw 2%p max-mode
+> recovery-failure endpoint 는 비대칭 main(62.20% → 62.74%)과 matched-budget
+> paired(61.92% → 87.20%) 어느 쪽에서도 34p 에서 낮아지지 않았다.
+
+다른 endpoint 까지 싸잡아 "어떤 개선도 없었다"고 쓰면 **거짓**이다 — main 의 행별
+max-mode 절대오차 평균은 0.024692 → 0.023970 으로 미세하게 낮아진다. paired 의
+bias-corrected failure 는 0.144309 → 0.945122 로 크게 악화한다.
 
 ### 4.2 붕괴율과 우도비 — 조건부 값이다
 
@@ -143,11 +154,21 @@ paired 에서 34p 해의 multimodal 비율이 97% 라 **optimizer 가 그 목적
 - 붕괴 1건: `cond_id c2e8442aa1f3`, truth LAM_PE/NE = 0.16/0.08 (참 격차 8.0%p)
   → 복원 0.16367/0.161593 (복원 격차 0.21%p).
 
-### 4.3 22p 근방
+### 4.3 22p 근방 — artifact·목적함수마다 다르다
 
-`degenerate_frac = 0.125` 는 **8조건 중 1건**이고, 그 1건은 최대 mode 오차가
-2.02248%p 로 임계 2%p 를 0.022%p 넘긴 **경계 사건**이다. 임계를 2.025%p 로 바꾸면
-0/8, 1.9%p 로 바꾸면 2/8 이다.
+"12%" 는 **`paired_fixed5_v4`, 33p, noise=0, 최근접 8 grid 조건, raw max-mode
+error > 2%p** 에서 `1/8` 이다. 조건을 바꾸면 값이 달라진다:
+
+| artifact | objective | 최근접 8조건 failure |
+|---|---|---:|
+| paired fixed-5 | 33p | 1/8 = 12.5% |
+| paired fixed-5 | 34p | **4/8 = 50%** |
+| 비대칭 main | 33p | 1/8 = 12.5% |
+| 비대칭 main | 34p | 1/8 = 12.5% |
+
+그 1건은 최대 mode 오차가 2.02248%p 로 임계 2%p 를 0.022%p 넘긴 **경계 사건**이다.
+임계를 2.025%p 로 바꾸면 0/8, 1.9%p 로 바꾸면 2/8 이다. 이 8개는 실제 셀 8개가
+아니라 설계 격자의 최근접 8점이다.
 
 ### 4.4 기준 곡선 효과 (Case 1 vs Case 2)
 
@@ -160,11 +181,26 @@ paired 에서 34p 해의 multimodal 비율이 97% 라 **optimizer 가 그 목적
 외에 bounds·`p_ini`·mode 매핑도 다르므로 **reference 단독 인과효과가 아니라
 reference-specific pipeline 비교**로만 말할 수 있다.
 
-### 4.5 모집단
+### 4.5 모집단 — 분모를 정확히 쓴다
 
-- 격자의 **51.9%** 는 grid 기준에서 원리적으로 복원 불가 (참값 α<1).
-- 위 수치는 전부 복원가능군 **5,904행** 에서만 센 값이다.
-- 33p·34p 우열은 모집단에 따라 **뒤집힌다** (복원가능군 +0.54%p / 전체 −2.57%p).
+| 분모 | recoverable 부분집단 |
+|---|---:|
+| 생성성공 3,069 condition-noise rows | 1,476 = **48.1%** |
+| 의도한 3,993 condition-noise rows | 1,476 = **37.0%** |
+| family 단위 (1,331) | 492 = **37.0%** |
+
+- **목적함수당 1,476 rows** 다. `5,904` 는 main artifact 의 4목적함수 행 합계
+  (파일 행 수)이지 어떤 비율의 분모도 아니다. paired 는 2목적함수라 2,952 행이고
+  artifact 전체는 3,069 × 2 = 6,138 행이다.
+- gap 분석의 분모는 또 다르다 — noise=0 의 98·245 조건. 22p 는 8조건.
+- 1,476 을 독립 셀의 표본 수로 쓰면 안 된다. **492 degradation family × 3 noise
+  수준**의 동일가중 설계 격자다.
+- 생성성공군의 51.9%(1,593조건)는 **선택한 grid-reference fitter 의 현재 α/bounds
+  feasible domain 밖**이다(참 α<1). "원리적으로 복원 불가"라고 쓰지 않는다 — 실제
+  셀·다른 reference·다른 parameterization 으로 확장되는 표현이다.
+- **모집단에 따른 우열 뒤집힘은 비대칭 main 에만 있다** (`direction_flips=True`,
+  recoverable +0.54%p / 전체 −2.57%p). **paired 정본은 뒤집히지 않는다**
+  (`direction_flips=False`, recoverable +25.27%p / 전체 +15.74%p).
 
 ---
 
@@ -178,7 +214,11 @@ reference-specific pipeline 비교**로만 말할 수 있다.
   `.gitattributes` 의 `*.csv text eol=lf` 가 이를 정규화한다. `git add` 경고로
   발견해 `artifacts/** -text` 로 막았다(RUN_SCOPE 밖이라 digest 불변).
 - V100 반납 전 git 밖 원본(`results/`·`.cache/`·로그·사고 무효본)을
-  `v4_run_extras.tar` (331 MB, sha256 `eb1174…7ece`) 로 백업, 해시 대조 완료.
+  `v4_run_extras.tar` (331 MB) 로 백업하고 전송 전후 해시를 대조했다
+  (`eb1174509b48a7b4d1d50a96a032da50b8515eba89459e6ea02b65675b167ece`).
+  **다만 이 tar 는 저장소 밖에 있어 제3자가 확인할 수 없다** — 재현성 증거로
+  쓰려면 full digest 와 파일 목록을 별도 manifest 로 커밋해야 한다. 네 Git
+  artifact 의 인용 가능성에는 영향이 없다.
 
 ---
 
@@ -194,10 +234,20 @@ reference-specific pipeline 비교**로만 말할 수 있다.
 | Case 1 vs Case 2 | 제한적 GO — pipeline 비교로 한정 |
 | Hessian | 결론 근거 NO-GO (진단 참고만) |
 
-**8시간 재실행은 불필요**하다는 것이 핵심 판정이다. 근거는 `src/io.py:1511-1521` —
-`코드_재계산` 은 현재 commit == 기록 commit 이고 clean 일 때만 수행되고, 다른
-commit 에서는 `_참고_코드재계산불가` 로 사실만 남긴다. 따라서 코드를 고쳐 digest 가
-바뀌어도 **봉인 fits 로 보고서를 재생성할 때 인용 금지 배너가 생기지 않는다.**
+**8시간 재실행은 불필요**하다. 다만 그 근거는 "배너가 안 뜬다"가 **아니다** —
+배너 부재는 validator 정책일 뿐 과학적 증명이 못 된다 (15차-2 발견 11).
+
+올바른 근거는 세 가지다.
+1. 봉인된 `c0f1daa0` 코드·입력·출력이 서로 일치한다 (RUN_SCOPE 46파일 digest
+   `d50295f980ccaa81`, 네 manifest 의 시작·종료 기록 일치).
+2. A~F 는 canonical curves/fits 의 **계산식을 바꾸지 않는다** — 파생 단계(A·B),
+   커버리지·보관(C·E), 성능(D), 조기 중단(F)이다.
+3. A 의 staging 은 봉인 곡선과 byte-identical 이었고 재계산 Hessian 도 일치했다.
+
+운영상 사실로는 `src/io.py:1511-1521` 이 다른 commit 에서 `코드_재계산` 을 건너뛰고
+`_참고_코드재계산불가` 로 남기므로, 새 코드로 보고서를 재생성해도 배너는 생기지
+않는다. 그때는 **두 provenance 를 분리 기록**해야 한다 — 계산 generator
+(`c0f1daa0` + fits/curves full SHA-256)와 파생 report generator(새 commit·digest).
 
 ---
 
@@ -235,18 +285,29 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 
 ---
 
-## 8. 지금 인용해도 되는 문장 (실무용)
+## 8. **보고서 수정 후** 쓸 수 있는 문안 (현재형 아님)
 
-✅ 쓸 수 있다
+> 아래 문안은 `RESULTS*.md` 재생성·대조가 끝난 뒤에 쓴다. 지금 그대로 인용하면
+> 안 된다 (현재 보고서에는 정수 반올림 `0%` 와 비대칭 headline 이 남아 있다).
 
-> 이 합성 격자의 grid-reference 복원가능군(5,904행, 전체의 48%)에서, 공정
-> paired protocol(fixed-5 restart, no warm start, no adaptive)로 잰 recovery
-> failure 는 33p 61.9%, 34p 87.2% 였다. 두 protocol 어디에서도 dQ/dV 추가의
-> 개선은 관측되지 않았다.
+✅ 수정 후 쓸 수 있다
 
-> 참 LAM 격차가 6%p 이상인 245조건 중 1조건(0.41%)이 복원 격차 2%p 미만으로
-> 붕괴했다. 같은 임계·동일가중 격자에서 조건부 사건률 비는 90.0 이며, 전체
-> 생성성공 격자에서는 64/604(10.6%), 비 3.69 다.
+> 생성에 성공한 3,069 condition-noise grid rows 중, 선택한 grid-reference fitter
+> 에서 truth 가 표현 가능한 부분집단은 **목적함수당 1,476 rows** 였다
+> (492 degradation family × 3 noise 수준; 생성성공군의 48.1%, 의도한 3,993조건의
+> 37.0%). 사전 정의한 raw 2%p max-mode recovery-failure endpoint 는 비대칭 main
+> 에서 33p 918/1476(62.20%), 34p 926/1476(62.74%), matched fixed-5/no-warm/
+> no-adaptive pipeline 에서 각각 914/1476(61.92%), 1287/1476(87.20%) 였다.
+> 이 endpoint 에서는 어느 pipeline 에서도 34p 개선이 관측되지 않았으나,
+> 목적함수의 고유 정보량과 optimization/protocol 의존성은 분리되지 않았다.
+
+> `paired_fixed5_v4` 의 33p·noise=0·grid-reference recoverable 부분집단에서,
+> 복원 격차 2%p 미만 판정은 참 격차 2%p 미만군의 36/98(36.7%), 참 격차 6%p
+> 이상군의 1/245(0.41%) 에서 발생해 **조건부 기술적 사건률 비**가 90.0 이었다.
+> 생성성공 격자 전체에서는 각각 61/156(39.1%), 64/604(10.6%) 로 비가 3.69 다.
+> 두 값은 2–6%p 중간군을 제외하고 선택한 임계와 동일가중 합성 격자에 조건부이며
+> **실제 셀 posterior 가 아니다**. 의도한 3,993조건 중 924조건은 generation
+> guard 에서 실패했다.
 
 ❌ 쓸 수 없다
 
@@ -254,5 +315,35 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 - "붕괴가 없었다 / 0건 / 0%" → 실제 1/245
 - "우도비 90 이므로 22p 는 degeneracy 가 아니다" → 부분집단 조건부, posterior 아님
 - "기준 곡선이 목적함수보다 큰 원인" → pipeline 차이가 섞임
-- "격자의 52% 는 원리적으로 복원 불가" (물리 명제로) → grid reference 표현식에
-  조건부인 진술
+- "격자의 52% 는 원리적으로 복원 불가" (물리 명제로) → 현재 fitter 의 α/bounds
+  feasible domain 판정이다
+- "복원가능군 5,904행" → 목적함수당 1,476 rows 다 (5,904 는 main 4목적함수 합계)
+- "모집단에 따라 우열이 뒤집힌다" (paired 에) → 뒤집힘은 **비대칭 main 에만** 있다
+- "우도비" (무조건적 표현) → 동일가중 합성격자의 **조건부 기술적 사건률 비**
+
+
+---
+
+## 9. 이 문서 자체의 정정 이력
+
+`cb32179` 초판에 오류가 있어 15차-2 적대적 교차검토가 14건을 지적했고, 전부
+산출물 실측으로 확인해 반영했다.
+
+| # | 초판의 오류 | 정정 |
+|---|---|---|
+| 1 | `RESULTS*.md` 를 정본이라 하면서 동시에 NO-GO 라 했다 | 정본은 `artifacts/*` 의 parquet·YAML 로 한정. `RESULTS*.md` 는 재생성 후 승격 |
+| 2 | paired 분모를 5,904행이라 했다 | **목적함수당 1,476 rows**. 5,904 는 main 4목적함수 합계 |
+| 3 | "전체의 48%" 로 분모를 숨겼다 | 생성성공 3,069 기준 48.1% / 의도 3,993 기준 **37.0%** 병기 |
+| 4 | 모집단 우열 뒤집힘을 paired 에도 적용했다 | 뒤집힘은 **비대칭 main 에만** (`direction_flips`: main True / paired False) |
+| 5 | "어떤 개선도 관측되지 않았다" | endpoint 고정 필요 — main 의 max-mode 오차 평균은 미세 개선(0.024692→0.023970) |
+| 6 | 사건률 비 90 문장이 자기완결적이지 않았다 | artifact·목적함수·noise·모집단·중간구간 제외·민감도 명시 |
+| 7 | 22p 1/8 을 일반 결과처럼 썼다 | paired 34p 는 **4/8** — artifact·목적함수 명시 |
+| 8 | 97% multimodality 를 "optimizer 가 못 푼다"로 단정 | 요인 분리 불가로 완화 |
+| 9 | "원리적으로 복원 불가" | 현재 fitter 의 feasible domain 판정으로 수정 |
+| 10 | "실행 내내 불변" | 시작·종료 일치 + 변경 미검출로 낮춤 (periodic 검사 없음) |
+| 11 | 재실행 불필요 근거를 "배너 안 뜸"으로 제시 | 봉인 코드·입력·출력 일치와 A~F 의 영향 범위로 교체 |
+| 12 | v4 묶음 116 MB | Git blob **100.3 MB** (95.7 MiB, 88파일). 116M 은 `artifacts/` 전체 |
+| 13 | 체크리스트 13항목 / 최신 커밋 `1a33190` | **15항목**, 이 문서는 `cb32179` |
+| 14 | tar 백업을 재현성 증거처럼 제시 | 저장소 밖이라 제3자 확인 불가임을 명시 |
+
+15차-2 가 유지한 판정: **v4 curves/fits/archive 는 GO, 장시간 fit 재실행 불필요.**
