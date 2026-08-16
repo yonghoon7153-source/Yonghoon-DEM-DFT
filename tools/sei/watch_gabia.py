@@ -768,6 +768,92 @@ else:
     if neb_pid == 0 and any(s["state"] == "▸" for s in nebs):
         print("   ⚠ ▸(진행중) 인데 neb.x 프로세스가 0 — 죽었다. tmux 세션을 확인할 것")
 
+print(BAR)
+
+# ── 4b) cc333 고정셸 ②③ 검증 파이프라인 ──────────────────────────────────
+#  Codex 가 cc333 투입을 금지했고, **그 금지를 푸는 게 이 파이프라인**이다.
+#  단계마다 다음 명령을 찍어 준다 — watch 가 기억을 대신한다.
+FZ_WORK = os.environ.get("FZWORK", "/data/work/runs/sei_neb_v2_cc333")
+FZ_TAG = os.environ.get("FZTAG", "li3nd")
+FZ_R = os.environ.get("FZR", "4")
+
+
+def _fz():
+    base = os.path.join(FZ_WORK, FZ_TAG)
+    outd = os.path.join(base, f"frozen_R{FZ_R}")
+    cmd = (f"python3 tools/sei/symmetric_saddle.py --work {FZ_WORK} "
+           f"--tag {FZ_TAG} --relax_radius {FZ_R}")
+    print(f"④b cc333 고정셸 ②③ 검증 — Codex 투입금지를 푸는 경로 (R={FZ_R} Å · λ₁/2=7.78)")
+    if not os.path.isdir(base):
+        print(f"   · 루트 없음: {base}")
+        return
+    if not os.path.isfile(os.path.join(outd, "frozen_meta.json")):
+        print(f"   [1/4] 입력 미생성 →  {cmd}")
+        return
+    fm = {}
+    try:
+        fm = json.load(open(os.path.join(outd, "frozen_meta.json"), encoding="utf-8"))
+    except Exception:
+        pass
+    print(f"   [1/4] ✓ 입력 생성 — 자유 {fm.get('n_free')}/{fm.get('n_atoms')}원자 "
+          f"(자유도 {fm.get('dof_free')}/{fm.get('dof_total')}) · λ₁ {fm.get('lambda1_A')} Å")
+    ev = fm.get("midpoint_saddle_evidence") or {}
+    print(f"          대칭근거 {str(fm.get('symmetry_basis'))[:52]}")
+    print(f"          반전연산 {ev.get('inversion_maps_endpoints')} · "
+          f"mask 불변 {ev.get('freeze_mask_inversion_invariant')}")
+    # [2/4] 두 relax
+    st = {}
+    for s in ("endpoint", "saddle"):
+        o = os.path.join(outd, s, "relax.out")
+        if not os.path.isfile(o):
+            st[s] = "미착수"
+        else:
+            txt = open(o, encoding="utf-8", errors="replace").read()
+            st[s] = ("✓수렴" if "Begin final coordinates" in txt
+                     else ("⚠미수렴" if "JOB DONE" in txt else "▸진행중"))
+    print(f"   [2/4] relax  endpoint {st['endpoint']} · saddle {st['saddle']}")
+    if any(v in ("미착수", "▸진행중") for v in st.values()):
+        M = "/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi/bin/mpirun"
+        Q = "/data/apps/qe-7.4.1-gpu/bin/pw.x"
+        if st["endpoint"] == "미착수":
+            print(f"          tmux new -d -s fz{FZ_R} \"while pgrep -x neb.x >/dev/null; do sleep 60; done; \\")
+            print(f"            cd {outd}/endpoint && {M} -np 4 {Q} -in relax.in > relax.out 2>&1; \\")
+            print(f"            cd {outd}/saddle   && {M} -np 4 {Q} -in relax.in > relax.out 2>&1\"")
+        return
+    # [3/4] 검증 입력
+    need = ("rawforce", "probe_plus", "probe_minus")
+    have = [s for s in need if os.path.isfile(os.path.join(outd, s, "scf.in"))]
+    if len(have) < 3:
+        print(f"   [3/4] 검증 입력 미생성 →  {cmd} --emit_check")
+        return
+    ran = [s for s in need if os.path.isfile(os.path.join(outd, s, "scf.out"))]
+    print(f"   [3/4] 검증 scf  {len(ran)}/3 실행됨  ({' · '.join(need)})")
+    if len(ran) < 3:
+        for s in need:
+            if s not in ran:
+                print(f"          cd {outd}/{s} && mpirun -np 4 pw.x -in scf.in > scf.out")
+        return
+    # [4/4] 판정
+    vp = os.path.join(outd, "saddle_verification.json")
+    if not os.path.isfile(vp):
+        print(f"   [4/4] 판정 미실행 →  {cmd} --collect")
+        return
+    v = json.load(open(vp, encoding="utf-8"))
+    ok = v.get("saddle_verified")
+    print(f"   [4/4] **saddle_verified = {ok}**")
+    print(f"          홉방향 힘 {v.get('raw_force_along_hop_Ry_au')} · "
+          f"횡방향 {v.get('raw_force_perp_Ry_au')} (문턱 {v.get('force_tol_Ry_au')})")
+    print(f"          ΔE(+δ) {v.get('dE_plus_meV')} meV · ΔE(−δ) {v.get('dE_minus_meV')} meV "
+          f"(둘 다 음수여야 안장)")
+    for f in (v.get("failures") or []):
+        print(f"          ⛔ {f}")
+    if ok:
+        print("          ✅ Codex 투입금지 해제 조건 충족 — 남은 것: 대표 1건 CI-NEB/dimer 교차검증")
+
+
+_fz()
+
+
 # ── 5) 디스크 ──────────────────────────────────────────────────────────────
 df = sh("df -h /data | tail -1").split()
 if len(df) >= 5:
