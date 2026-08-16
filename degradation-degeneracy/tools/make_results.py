@@ -121,6 +121,53 @@ def _next_no(lines: list[str]) -> int:
     return sum(1 for x in lines if re.match(r"^\d+\. ", x)) + 1
 
 
+def _denominator_note(cmp_res: dict) -> str:
+    """★ 17차 사전 — 결론 4 의 '98·245조건, 22p 는 8조건' 도 상수였다.
+
+    분모가 결론의 해석을 좌우하는데 artifact 와 무관하게 고정돼 있었다.
+    """
+    base = "pocv_dvdq"
+    g = (cmp_res.get("gap_analysis") or {}).get(base) or {}
+    v = (cmp_res.get("verdict_22p") or {}).get(base) or {}
+    small, wide = g.get("n_small_gap_true"), g.get("n_wide_gap_true")
+    n22 = v.get("n_near")
+    if small is None or wide is None or n22 is None:
+        return "gap 분석과 22p 의 분모는 서로 다르다 — 각 절의 표를 볼 것."
+    noise = g.get("noise", 0.0)
+    return (f"gap 분석의 분모는 noise={noise:g} 의 {small}·{wide}조건, "
+            f"22p 는 {n22}조건으로 각각 다르다.")
+
+
+def _p22_composition(v: dict, g: dict | None = None) -> dict:
+    """★ 16차 발견 4 (17차 사전) — 22p 근방 표본의 **참값 구성**을 문장으로.
+
+    이전 판은 "절반은 PE=NE, 절반은 |ΔLAM|=2%p", "wide-gap 은 하나도 없다" 를
+    문자열 상수로 박아 두었다. v4 격자에서는 우연히 맞지만 반경·step·noise 를
+    바꾸면 provenance 통과 배지를 단 채 거짓을 말한다. 전부 verdict_22p 가
+    보고한 count 에서 만든다.
+    """
+    n = int(v.get("n_near", 0))
+    thr = (g or {}).get("gap_thresh", 0.06)
+    if "n_near_exact_equal" not in v or "max_true_pe_ne_gap" not in v:
+        # 구버전 artifact — 구성을 모른다. 지어내지 않고 모른다고 쓴다.
+        return {"headline": f"이 {n}점의 참값 구성은 이 artifact 에 기록되어 있지 않다",
+                "detail": "구버전 `verdict_22p` 라 구성을 인용하려면 재생성이 필요하다",
+                "wide": f"wide-gap(≥{_pp(thr, 0)}) 포함 여부를 확인할 수 없으므로"}
+    k = int(v["n_near_exact_equal"])
+    mx = float(v["max_true_pe_ne_gap"])
+    if k >= n:
+        headline = f"이 {n}점은 참값이 모두 LAM_PE = LAM_NE 다"
+        detail = f"PE=NE 가 {k}/{n} 이고 최대 참 격차가 {_pp(mx)} 다"
+    else:
+        headline = f"이 {n}점은 참값이 모두 같은 격자점이 아니다"
+        detail = (f"PE=NE 가 {k}/{n}, |ΔLAM|>0 이 {n - k}/{n} 이고 "
+                  f"최대 참 격차가 {_pp(mx)} 다")
+    wide = (f"여기에 wide-gap(≥{_pp(thr, 0)})은 **하나도 없으므로**" if mx < thr
+            else f"여기에 wide-gap(≥{_pp(thr, 0)})이 섞여 있으나 n={n} 의 국소 "
+                 f"표본이므로")
+    return {"headline": headline, "detail": detail, "wide": wide}
+
+
 def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     """핵심 결론 3줄 — 숫자에서 직접 만든다."""
     tbl = pd.DataFrame(cmp_res["table"]).set_index("objective")
@@ -249,6 +296,7 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     if v and "error" not in v:
         anti = v.get("pe_ne_antisym_frac", 0)
         gap_t, gap_r = v.get("true_pe_ne_gap"), v.get("recovered_pe_ne_gap")
+        comp = _p22_composition(v, g)
         # ★ 15차 발견 7 — 이 값은 artifact·목적함수·noise·반경·임계에 모두
         #   조건부다. count 를 먼저 쓰고 조건을 문장에 박는다.
         lines.append(
@@ -259,10 +307,8 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f" — 행별 max-mode 절대오차의 평균 {_pp(v['mean_abs_err'])}, "
             f"raw PE/NE 오차 반대부호 비율 {_pct(anti)}, "
             f"참 PE-NE 격차 {_pp(gap_t)} → 복원 격차 {_pp(gap_r)}. "
-            f"⚠ **이 {v['n_near']}점은 참값이 모두 같은 격자점이 아니다** — "
-            f"절반은 LAM_PE = LAM_NE, 절반은 |ΔLAM| = 2%p 이고 평균 참 격차가 "
-            f"{_pp(gap_t)} 다 (0.02 step 의 최근접 corner 구성). 여기에 wide-gap"
-            f"(≥6%p)은 **하나도 없으므로**, 이 표본으로는 \"참 격차가 큰 조건이 "
+            f"⚠ **{comp['headline']}** — {comp['detail']}. 평균 참 격차는 "
+            f"{_pp(gap_t)} 다. {comp['wide']}, 이 표본으로는 \"참 격차가 큰 조건이 "
             f"'같다'로 붕괴하는가\" 를 물을 수 없다 — 그 질문의 답은 위 2번이다. "
             f"이 {v['n_near']}개는 실제 셀이 아니라 설계 격자의 최근접 점이며, "
             f"임계·반경·noise·목적함수를 바꾸면 값이 달라진다.")
@@ -286,8 +332,7 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
         f"{summary.get('n_rows_recoverable', '?')}), 바깥을 섞으면 목적함수 간 "
         f"차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 현재 표현식의 정의역 "
         f"판정이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 "
-        f"안쪽 바깥을 함께 센 예외다.** gap 분석의 분모는 noise=0 의 98·245조건, "
-        f"22p 는 8조건으로 각각 다르다.")
+        f"안쪽 바깥을 함께 센 예외다.** " + _denominator_note(cmp_res))
     return lines
 
 
@@ -868,11 +913,13 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ★ 16차 발견 4 — "최근접 8점이 모두 LAM_PE = LAM_NE" 는 사실이 아니다.
     #   0.02 step 에서 (0.13, 0.13, 0.17) 의 8 corner 는 PE=NE 4개 + |PE-NE|=2%p
     #   4개이고 평균 참 격차가 1%p 다 (그 값을 같은 줄에 쓰면서 모순이었다).
-    P.append("> ⚠ 이 8점은 **모두 참값이 같은 격자점이 아니다.** 0.02 step 에서 "
-             "PE=NE 가 4개, |ΔLAM|=2%p 가 4개이며 평균 참 격차는 1%p 다. "
-             "wide-gap(≥6%p)은 **하나도 없다** — 즉 22p 판정에 쓸 수 있는 것은 "
-             "\"참 격차가 큰 조건이 붕괴하는가\" 가 아니라 국소 n=8 표본의 "
-             "복원 성적뿐이다 (그 질문의 답은 결론 2 다).\n")
+    _v22b = (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {}
+    _c22b = _p22_composition(_v22b, (cmp_res.get("gap_analysis") or {}).get("pocv_dvdq"))
+    P.append(f"> ⚠ **{_c22b['headline']}.** {_c22b['detail']}. "
+             f"{_c22b['wide']} 22p 판정에 쓸 수 있는 것은 "
+             f"\"참 격차가 큰 조건이 붕괴하는가\" 가 아니라 국소 "
+             f"n={_v22b.get('n_near', '?')} 표본의 복원 성적뿐이다 "
+             f"(그 질문의 답은 결론 2 다).\n")
     # ★ 16차 발견 6 — 이 열도 행별 max-mode 절대오차의 평균이다
     P.append("| objective | 근방 조건 | recovery failure | 평균 max-mode \\|err\\| | "
              "err LAM_PE | err LAM_NE | raw 반대부호 |")
@@ -895,10 +942,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     if any("gap_collapse_frac" in g for g in gaps.values()):
         P.append("## 전극 격차를 구분하는가 — 22p 질문의 직접적인 답\n")
         P.append("*`noise = 0` 조건 기준.*\n")
-        P.append("22p 근방 격자점은 **참값이 애초에 `LAM_PE = LAM_NE`** 다. 거기서 "
-                 "복원값이 비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은 "
-                 "반대 방향이다 — **참값이 뚜렷이 다를 때도 fitting이 둘을 같다고 "
-                 "말하는가.**\n")
+        # ★ 16차 발견 4 의 잔여 — 결론과 22p 절은 고쳤는데 이 도입부가 여전히
+        #   "근방은 애초에 PE=NE" 라고 단정해 같은 문서 안에서 자기모순이었다.
+        #   근방은 참 격차가 **작을 뿐**이고, 그것만으로도 논지는 성립한다.
+        _v22 = (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {}
+        _c22 = _p22_composition(_v22, gaps.get("pocv_dvdq"))
+        P.append(f"22p 근방 격자점은 **참 격차가 작다** — {_c22['detail']}. "
+                 f"거기서 복원값이 비슷하게 나오는 건 아무 증거가 못 된다. "
+                 f"물어야 할 것은 반대 방향이다 — **참값이 뚜렷이 다를 때도 "
+                 f"fitting이 둘을 같다고 말하는가.**\n")
         P.append("| objective | 넓은 격차 조건 n | **격차 붕괴율** | shrinkage | "
                  "거짓 분리율 | 붕괴에 필요한 격차오차 / 실측 중앙값 |")
         P.append("|---|---|---|---|---|---|")

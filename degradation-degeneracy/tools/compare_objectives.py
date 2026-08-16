@@ -153,6 +153,12 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
         "pe_ne_antisym_frac": float(near["pe_ne_antisym"].mean()),
         "recovered_pe_ne_gap": float(near["pe_ne_gap_recovered"].mean()),
         "true_pe_ne_gap": float(near["pe_ne_gap_true"].mean()),
+        # ★ 16차 발견 4 (17차 사전) — 근방 표본의 **참값 구성**. 보고서가
+        #   "절반은 PE=NE, wide-gap 은 하나도 없다" 를 문자열 상수로 박아
+        #   두면 격자·반경이 달라지는 순간 provenance 통과 배지를 단 채
+        #   거짓을 말한다. 구성은 데이터에서 나와야 한다.
+        "n_near_exact_equal": int((near["pe_ne_gap_true"] == 0).sum()),
+        "max_true_pe_ne_gap": float(near["pe_ne_gap_true"].max()),
     }
     if "degenerate_corrected" in near.columns:
         out["degenerate_frac_corrected"] = float(near["degenerate_corrected"].mean())

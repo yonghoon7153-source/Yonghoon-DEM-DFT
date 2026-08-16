@@ -3063,12 +3063,109 @@ def test_conclusion_22p_does_not_claim_all_equal_truth():
     from tools.make_results import _conclusion
 
     cmp_res = _gap_cmp_res()
+    # ★ 17차 사전 — 구성 문장이 데이터에서 나오게 바뀌면서, 구성 key 가 없는
+    #   fixture 는 이제 "구성을 알 수 없다" 로 렌더된다(지어내지 않는 것이 옳다).
+    #   v4 실측 구성을 넣어 원래 검사하려던 문장을 계속 태운다.
     cmp_res["verdict_22p"] = {"pocv_dvdq": {
         "n_near": 8, "degenerate_frac": 0.125, "mean_abs_err": 0.0168,
         "pe_ne_antisym_frac": 0.5, "true_pe_ne_gap": 0.010,
-        "recovered_pe_ne_gap": 0.019}}
+        "recovered_pe_ne_gap": 0.019,
+        "n_near_exact_equal": 4, "max_true_pe_ne_gap": 0.02}}
     txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
 
     assert "애초에 LAM_PE = LAM_NE인 격자점" not in txt, "거짓 전제가 남아 있다"
     assert "모두 같은 격자점이 아니다" in txt, txt[-700:]
     assert "wide-gap" in txt, "wide-gap 부재를 밝히지 않았다"
+
+
+# ── 17차 사전 자체발견 — 16차 발견 4 의 잔여 + 하드코딩된 구성 ──────────────
+
+def test_gap_section_intro_does_not_claim_all_22p_points_are_equal(tmp_path):
+    """★ 16차 발견 4 잔여 — 결론과 22p 절만 고치고 격차 절 도입부를 놓쳤다.
+
+    `make_results.build` 의 "전극 격차를 구분하는가" 절 도입부가 여전히
+    "22p 근방 격자점은 **참값이 애초에 LAM_PE = LAM_NE** 다" 라고 단정한다.
+    같은 문서 안에서 "이 8점은 모두 참값이 같은 격자점이 아니다" 와 정면으로
+    모순된다. 문서 전체를 한 번에 보는 검사로 고정한다.
+    """
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    run_compare(d, d)
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "참값이 애초에" not in text, \
+        "격차 절 도입부가 22p 근방이 모두 PE=NE 라는 거짓 전제를 다시 말한다"
+
+
+def test_verdict_22p_reports_truth_composition():
+    """★ 근방 표본의 참값 구성은 **데이터에서** 나와야 한다.
+
+    보고서가 "절반은 PE=NE, 절반은 2%p", "wide-gap 은 하나도 없다" 를 문자열
+    상수로 박아두면 다른 격자·반경에서 그대로 거짓이 된다. verdict_22p 가
+    구성을 직접 보고하게 만든다.
+    """
+    from tools.compare_objectives import verdict_22p
+
+    # 근방에 PE=NE 1점 + 격차 4%p 1점만 두는 격자 (반경 안에 들어오게 배치)
+    rows = []
+    for i, (pe, ne) in enumerate([(0.13, 0.13), (0.13, 0.09)]):
+        rows.append({
+            "cond_id": f"n{i}", "objective": "pocv_dvdq", "noise": 0.0,
+            "lli": 0.17, "lam_pe": pe, "lam_ne": ne,
+            "lli_hat": 0.17, "lam_pe_hat": pe, "lam_ne_hat": ne,
+            "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+        })
+    v = verdict_22p(_scored(pd.DataFrame(rows)), "pocv_dvdq", radius=0.05)
+
+    assert v["n_near"] == 2
+    assert v["n_near_exact_equal"] == 1, v
+    assert v["max_true_pe_ne_gap"] == pytest.approx(0.04), v
+
+
+def test_conclusion_22p_composition_is_not_hardcoded():
+    """★ 구성 문장이 fixture 값을 따라가야 한다 — '절반' 같은 상수는 금지."""
+    from tools.make_results import _conclusion
+
+    def render(n_near, n_eq, max_gap):
+        cmp_res = _gap_cmp_res()
+        cmp_res["verdict_22p"] = {"pocv_dvdq": {
+            "n_near": n_near, "degenerate_frac": 0.125, "mean_abs_err": 0.0168,
+            "pe_ne_antisym_frac": 0.5, "true_pe_ne_gap": 0.010,
+            "recovered_pe_ne_gap": 0.019,
+            "n_near_exact_equal": n_eq, "max_true_pe_ne_gap": max_gap}}
+        return "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    a = render(8, 4, 0.02)
+    b = render(6, 1, 0.09)
+
+    assert "절반" not in a, "구성을 '절반' 이라는 상수로 쓰고 있다"
+    assert "4/8" in a, a[-800:]
+    assert "1/6" in b, b[-800:]
+    # 최대 참 격차가 임계(6%p) 를 넘으면 "wide-gap 하나도 없다" 라고 하면 안 된다
+    assert "하나도 없" in a, a[-800:]
+    assert "하나도 없" not in b, "wide-gap 이 있는데도 없다고 단정한다"
+
+
+def test_conclusion_4_denominators_come_from_data():
+    """★ 결론 4 의 '98·245조건, 22p 는 8조건' 이 상수로 박혀 있으면 안 된다."""
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    cmp_res["gap_analysis"]["pocv_dvdq"]["n_small_gap_true"] = 40
+    cmp_res["gap_analysis"]["pocv_dvdq"]["n_wide_gap_true"] = 77
+    cmp_res["verdict_22p"] = {"pocv_dvdq": {
+        "n_near": 3, "degenerate_frac": 0.0, "mean_abs_err": 0.01,
+        "pe_ne_antisym_frac": 0.0, "true_pe_ne_gap": 0.0,
+        "recovered_pe_ne_gap": 0.0,
+        "n_near_exact_equal": 3, "max_true_pe_ne_gap": 0.0}}
+    txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    assert "98·245조건" not in txt, "gap 분모가 상수로 박혀 있다"
+    assert "40·77조건" in txt, txt[-600:]
+    assert "22p 는 3조건" in txt, txt[-600:]
