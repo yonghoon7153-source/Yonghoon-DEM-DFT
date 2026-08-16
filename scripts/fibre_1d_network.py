@@ -23,10 +23,13 @@
   · 폴리라인 구간마다 저항 R = L/(σ_bulk·A_real),  A_real = πd²/4      ← 참 단면·참 길이
   · 섬유↔섬유 접촉: 두 점이 (d_i+d_j)/2 안이면 Holm 협착 R = 1/(2σ·a),  a = 접촉반경
   · 섬유↔복셀상(AM·SDCP): 섬유 점이 그 상의 복셀 안이면 계면 컨덕턴스로 결합
-이 파일은 **섬유 부분망**만 만들고 검증한다.
-⚠ 복셀 FV 와의 결합(`couple_to_voxel_grid`)은 **아직 없다** — 설명에만 있고 정의도 호출도
-  없다 (Codex CDX-08 이 지적, 확인함).  그것이 생기기 전까지 이 모듈은 실침대 σ_e 를
-  낼 수 없다.
+이 파일은 **섬유 부분망**과 **복셀 결합 목록**을 만들고 검증한다 (조립은 step3_sigma 소관).
+★ `couple_to_voxel_grid` 2026-08-13 구현 (그전엔 이름만 있었다 — Codex CDX-08).
+  동축 공식 G = 2πσ_m L/ln(b/a), b = **Peaceman 0.2·vox** (앵커 있음).
+⚠⚠ **그리고 그것이 이 접근의 사용 영역을 결정했다**: 생산 격자 vox 0.4 µm 에서
+  b/a = 1.07 이라 Peaceman 의 얇은-선원 전제가 깨지고 결합이 사실상 단락이 된다 → **거부**.
+  vox ≳ 1 µm 면 회복된다.  1D 하이브리드는 섬유를 격자에 올리지 않으므로 격자는 AM·SE·
+  SDCP(≥ 0.3 µm)만 풀면 되고, **그래서 더 굵은 격자가 맞다** — 이것은 결함이 아니라 설계다.
 
 ⚠ 접촉 판정은 2026-08-13 에 **선분↔선분 기하**로 옮겨 점 샘플링 의존을 없앴다 (selftest
   ⑪⑫).  그래도 남는 자유도는 `touch_scale`(접촉 문턱)과 `a_frac`(Holm 반경)이고, 둘 다
@@ -190,6 +193,116 @@ def fibre_contacts(nodes, edges, d_um, sigma_bulk, node_line=None, touch_scale=1
             meta.append({'len_um': float(f'{ln:.6g}'), 'n_seg_pairs': len(members),
                          'distributed': bool(ln > 3.0 * float(d_um))})
     return (out, meta) if return_meta else out
+
+
+def node_lengths(nodes, edges):
+    """노드가 대표하는 섬유 길이 (인접 간선 길이의 절반씩) — 결합 컨덕턴스의 L."""
+    P = np.asarray(nodes, float)
+    L = np.zeros(len(P))
+    for e in edges:
+        i, j = int(e[0]), int(e[1])
+        h = float(np.linalg.norm(P[j] - P[i])) / 2.0
+        L[i] += h
+        L[j] += h
+    return L
+
+
+PEACEMAN_B_FRAC = 0.2          # Peaceman 1978 (SPE J. 18, 183) — 균일 정방 격자의 등가반경
+                               # r_o = 0.2·Δx.  선원(線源)이 유한체적 격자에 결합할 때 셀
+                               # 평균 전위가 나타나는 반경.  **앵커 있음** (저류층 시뮬레이션의
+                               # well index 와 같은 문제).  ⚠ 전제: 선원이 셀보다 훨씬 가늘 것.
+
+
+def couple_to_voxel_grid(nodes, edges, sid, box_lo, vox, sigma_by_sid, d_um,
+                         b_frac=PEACEMAN_B_FRAC, skip_sids=(0,), fibre_sids=(3, 8),
+                         strict=True):
+    """섬유 노드 ↔ 그 노드가 든 복셀 셀 사이의 **반경방향** 결합 → [(node, (i,j,k), G)].
+
+    이것이 없어서 1D 망은 실침대 σ_e 를 못 냈다 (Codex CDX-08: 이름만 있고 정의가 없었다).
+
+    **모형**: 섬유를 반지름 a = d/2 인 도체 실린더로 보고, 주위 매질(그 셀의 상)을 반지름
+    b 까지의 동축 껍질로 본다.  길이 L 구간의 반경방향 컨덕턴스는 동축 공식
+
+        G = 2π σ_m L / ln(b/a)                        [교과서 — 앵커 있음]
+
+    이고 σ_m 은 그 셀 상의 전도도, L 은 그 노드가 대표하는 섬유 길이 (`node_lengths`).
+
+    **b 에는 앵커가 있다**: Peaceman 1978 등가반경 `b = 0.2·vox` (균일 정방 격자에서 선원이
+    셀 평균 전위를 보는 반경 — 저류층 well index 와 같은 문제).  임의로 vox/2 를 고르면
+    안 된다: b_frac 0.35 → 1.0 만 흔들어도 총 결합 G 가 **168 %** 움직인다 (selftest ⑰).
+
+    ⚠⚠ **그러나 Peaceman 은 얇은 선원(a ≪ Δx)을 전제하고, 우리 생산 격자는 그 전제를 깬다.**
+      d 0.15 µm · vox 0.4 µm 에서 a = 0.075, b = 0.08 → **b/a = 1.067**, ln = 0.0645 이라
+      G 가 15배로 폭주한다 (사실상 단락).  ⇒ `strict=True` 면 **거부한다**.
+      이것은 결함이 아니라 **설계 지시**다: 1D 하이브리드에서는 섬유를 격자에 올리지 않으므로
+      복셀 격자는 AM·SE·SDCP(전부 ≥ 0.3 µm)만 풀면 된다 — 즉 **더 굵은 격자를 써야 한다**.
+      vox 1.0 µm 면 b = 0.2, b/a = 2.67, ln = 0.98 로 전제가 회복된다.
+      ⇒ **1D 결합은 vox ≳ 1 µm 에서만 유효**하고, 그것이 이 접근의 올바른 사용 영역이다.
+    ⚠ **계면 접촉저항은 모형에 없다** (완전 접촉 가정).  탄소↔SE 계면 저항 앵커가 없어서
+      훅만 둔다 (§F1) — 있으면 G 에 직렬로 넣으면 된다.
+    ⚠ 자기 상(`fibre_sids`)과 기공(`skip_sids`)에는 결합하지 않는다: 전자는 계면이 아니고
+      후자는 σ_m = 0 이라 어차피 0 이다.
+
+    반환은 **결합 목록만**이다 — 복셀 FV 계와의 조립은 step3_sigma 쪽에서 한다
+    (자유도 번호는 그쪽 소관이라 여기서 정하면 두 규약이 갈린다).
+    """
+    P = np.asarray(nodes, float)
+    S = np.asarray(sid)
+    lo = np.asarray(box_lo, float)
+    n = np.array(S.shape)
+    a = float(d_um) / 2.0
+    b = float(b_frac) * float(vox)
+    if b <= a:
+        raise ValueError(f'couple_to_voxel_grid: b={b:.4g} ≤ a={a:.4g} — '
+                         f'동축 공식이 무효다 (vox 가 섬유 굵기보다 작거나 b_frac 이 너무 작다)')
+    if strict and b / a < 1.5:
+        raise ValueError(
+            f'couple_to_voxel_grid: b/a = {b / a:.3f} < 1.5 — Peaceman 의 얇은-선원 전제가 '
+            f'깨진다 (d={d_um} µm, vox={vox} µm).  ln(b/a)={np.log(b / a):.4f} 라 결합 G 가 '
+            f'폭주해 사실상 단락이 된다.  ⇒ **더 굵은 복셀을 쓸 것**: 1D 하이브리드는 섬유를 '
+            f'격자에 올리지 않으므로 격자는 AM·SE·SDCP 만 풀면 되고, vox ≳ '
+            f'{a * 1.5 / float(b_frac):.2f} µm 면 전제가 회복된다.  '
+            f'그래도 강행하려면 strict=False (결과에 hybrid_invalid 라벨이 붙는다)')
+    lnba = float(np.log(b / a))
+    Ln = node_lengths(P, edges)
+    ijk = np.floor((P - lo) / float(vox)).astype(int)
+    inside = ((ijk >= 0) & (ijk < n)).all(1)
+    out = []
+    for q in np.nonzero(inside)[0]:
+        i, j, k = ijk[q]
+        s = int(S[i, j, k])
+        if s in skip_sids or s in fibre_sids:
+            continue
+        sm = float(sigma_by_sid.get(s, 0.0)) if isinstance(sigma_by_sid, dict) \
+            else float(sigma_by_sid[s])
+        if sm <= 0.0 or Ln[q] <= 0.0:
+            continue
+        out.append((int(q), (int(i), int(j), int(k)),
+                    float(2.0 * np.pi * sm * Ln[q] / lnba)))
+    return out
+
+
+def couple_sensitivity(nodes, edges, sid, box_lo, vox, sigma_by_sid, d_um,
+                       b_fracs=(0.35, 0.5, 0.75, 1.0), strict=False):
+    """`b` 규약 민감도를 **숨기지 않고** 스윕한다 — 총 결합 컨덕턴스의 밴드.
+
+    기본 b 는 Peaceman 앵커(0.2·vox)지만, 그 값이 얼마나 결과를 좌우하는지는 따로 보여야
+    한다.  `strict=False` 로 도는 이유 = 민감도 자체를 재는 것이 목적이라 무효 구간도 봐야
+    하기 때문.  **생산 계산은 strict=True 를 쓸 것.**
+    """
+    out = {}
+    for bf in b_fracs:
+        try:
+            c = couple_to_voxel_grid(nodes, edges, sid, box_lo, vox, sigma_by_sid, d_um,
+                                     b_frac=bf, strict=strict)
+        except ValueError as ex:
+            out[float(bf)] = {'error': str(ex)}
+            continue
+        out[float(bf)] = {'n_couplings': len(c), 'G_total': float(f'{sum(g for _, _, g in c):.6g}')}
+    v = [x['G_total'] for x in out.values() if 'G_total' in x]
+    out['spread_pct'] = float(f'{(max(v) / min(v) - 1) * 100:.3g}') if len(v) > 1 and min(v) > 0 \
+        else None
+    return out
 
 
 def solve_z(nodes, edges, z_lo, z_hi, area_um2, sigma_A=None, touch_um=0.0, eps=1e-9):
@@ -456,6 +569,58 @@ def _selftest():
     sa = solve_z(n6, e6 + ca, 0.0, LZ, AREA)[0]
     sb = solve_z(n6, e6 + cb, 0.0, LZ, AREA)[0]
     chk(f'⑬ a_frac 0.25 → 0.50 이 σ 를 바꾼다 ({sa:.4g} → {sb:.4g})', sb > sa > 0)
+
+    # ══ couple_to_voxel_grid (CDX-08 — 이름만 있고 정의가 없던 것) ══════════════════
+    #   sid 규약: 0=pore · 1=AM_S · 2=AM_P · 3=VGCF · 5=SDCP · 6=SE
+    SIG = {0: 0.0, 1: 1.0, 2: 1.0, 3: 100.0, 5: 0.5, 6: 1e-9}
+    VOX = 0.4
+    grid = np.full((5, 5, 5), 6, np.int8)                 # 전부 SE
+    zz = np.linspace(0.2, 1.8, 9)
+    Q = np.stack([np.full_like(zz, 1.0), np.full_like(zz, 1.0), zz], 1)
+    nq, eq = fibre_edges([Q], D, SIG[3])
+    c = couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), VOX, SIG, D, b_frac=0.5, strict=False)
+    # ⑭ 동축 공식 = 손계산
+    Ln = node_lengths(nq, eq)
+    lnba = np.log((0.5 * VOX) / (D / 2))
+    want = 2 * np.pi * SIG[6] * Ln[0] / lnba
+    got = next(g for q, _, g in c if q == 0)
+    chk(f'⑭ 동축 결합 G = 2πσL/ln(b/a) ({got:.6g} vs 손계산 {want:.6g})',
+        abs(got / want - 1) < 1e-12)
+    # ⑮ 기공(σ=0)과 자기 상(VGCF)에는 결합하지 않는다
+    gp = grid.copy(); gp[:] = 0
+    chk('⑮ 기공에는 결합 없음',
+        len(couple_to_voxel_grid(nq, eq, gp, (0., 0., 0.), VOX, SIG, D, strict=False)) == 0)
+    gc = grid.copy(); gc[:] = 3
+    chk('⑮b 자기 상(VGCF)에는 결합 없음 (계면이 아니다)',
+        len(couple_to_voxel_grid(nq, eq, gc, (0., 0., 0.), VOX, SIG, D, strict=False)) == 0)
+    # ⑯ 노드 길이 합 = 섬유 전체 길이 (결합 총량이 이중계산되지 않는다)
+    chk(f'⑯ Σ node_len = 섬유 길이 ({Ln.sum():.6g} vs {zz[-1]-zz[0]:.6g})',
+        abs(Ln.sum() / (zz[-1] - zz[0]) - 1) < 1e-12)
+    # ⑰ ★ 앵커 없는 b 를 숨기지 않는다 — 스윕해서 밴드로 보고
+    cs = couple_sensitivity(nq, eq, grid, (0., 0., 0.), VOX, SIG, D)
+    chk(f'⑰ ★ b 민감도를 보고한다 (b_frac 0.35~1.0 → G 총합 {cs["spread_pct"]} % 폭)',
+        cs.get('spread_pct') is not None and cs['spread_pct'] > 10)
+    # ⑱ b ≤ a 는 조용히 넘어가지 않고 거부 (vox 가 섬유보다 가는 극단)
+    bad = False
+    try:
+        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.1, SIG, D, b_frac=0.5, strict=False)
+    except ValueError:
+        bad = True
+    chk('⑱ b ≤ a 는 거부한다 (동축 공식 무효 구간)', bad)
+    # ⑲ ★ Peaceman 앵커(0.2·vox)로는 **생산 격자가 무효**임을 거부로 알린다
+    prod = False
+    try:
+        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.4, SIG, D)      # 기본 = Peaceman
+    except ValueError as ex:
+        prod = 'Peaceman' in str(ex) and '더 굵은 복셀' in str(ex)
+    chk('⑲ ★ vox 0.4 + Peaceman b/a = 1.07 → 거부하고 "더 굵은 복셀" 을 지시한다', prod)
+    # ⑳ vox 1.0 이면 전제가 회복되어 통과한다 (= 이 접근의 올바른 사용 영역)
+    big = np.full((4, 4, 4), 6, np.int8)
+    z2 = np.linspace(0.5, 3.0, 9)
+    Q2 = np.stack([np.full_like(z2, 1.5), np.full_like(z2, 1.5), z2], 1)
+    n2, e2 = fibre_edges([Q2], D, SIG[3])
+    c2 = couple_to_voxel_grid(n2, e2, big, (0., 0., 0.), 1.0, SIG, D)
+    chk(f'⑳ vox 1.0 µm 면 b/a = 2.67 로 전제 회복 → 통과 (결합 {len(c2)}개)', len(c2) > 0)
 
     print(f'\nfibre_1d_network selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
