@@ -42,12 +42,22 @@ except Exception:
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CSV = os.path.join(ROOT, "db", "properties", "cascade_v23_all.csv")
 
-#: 게이트에 3점 평균으로 들어가는 축들. (열, 짧은 이름, 어느 게이트가 쓰나)
-AXES = [("screen_de_per_atom", "de", "G1"),
-        ("elastic_E_young_GPa", "E_GPa", "G5"),
-        ("elastic_pugh_GoverB", "pugh", "G5"),
-        ("bvs_li_proxy_score", "bvs", "G4"),
-        ("eos_B0_GPa", "B0", "—")]
+#: (열, 짧은 이름, 게이트에서의 쓰임)
+#:
+#: ⛔ 2026-08-16 (Codex 재감사 P0-2·P0-3) — 앞 판은 두 가지를 틀렸다:
+#:   · G1 이 쓰는 열은 `screen_de_per_atom`(어닐 **전**)이 아니라
+#:     `rerank_de_post_anneal`(어닐 **후**) 이다. build_screening_funnel.py:93.
+#:     비가 0.083 이 아니라 **0.205** 다.
+#:   · G4 는 3점 **평균이 아니다.** litransport 의 **x005 한 점**만 쓴다
+#:     (build_screening_funnel.py:107,121). 그래서 여기 bvs 비는 "평균이 망쳤다" 가
+#:     아니라 **"의미 없는 세 라벨 중 하나를 임의 대표로 골랐다"** 의 근거다.
+#:   · `eos_B0_GPa` 는 **게이트 입력이 아니다** (funnel 에 0회 등장). 참고용.
+AXES = [("rerank_de_post_anneal", "de_post", "G1 (3점 평균)"),
+        ("elastic_E_young_GPa", "E_GPa", "G5 (3점 평균)"),
+        ("elastic_pugh_GoverB", "pugh", "G5 (3점 평균)"),
+        ("bvs_li_proxy_score", "bvs", "G4 (x005 단일 선택)"),
+        ("screen_de_per_atom", "de_screen", "게이트 아님 (어닐 전)"),
+        ("eos_B0_GPa", "B0", "게이트 아님")]
 
 #: 이 비를 넘으면 "그 축의 순위는 배치 잡음에 잠겼다" 고 부른다.
 NOISE_RATIO = 1.0
@@ -71,13 +81,27 @@ def site_kind(row):
             str(row.get("anion_site", "")).split("_")[0])
 
 
-def group_champions(rows, rank="1"):
-    """{도펀트: {농도라벨: 행}} — rank_combined==rank 인 챔피언만."""
+def base_species(dopant_label):
+    """`WO3+Clrich` → `WO3`. generator 변형 접미사를 떼고 **화학종**으로 묶는다."""
+    return (dopant_label or "").split("+", 1)[0]
+
+
+def group_champions(rows, rank="1", by_base=True):
+    """{종: {농도라벨: 행}} — rank_combined==rank 인 챔피언만, 세 라벨이 다 있는 것만.
+
+    ⛔⛔ 2026-08-16 (Codex 재감사 P0-1) — 앞 판은 `dopant` 를 **그대로** 키로 썼다.
+      그래서 `WO3` 와 `WO3+Clrich` 가 다른 종이 됐고, 라벨 사이에서 generator 변형이
+      바뀐 9종(Al2O3·MgO·MoO3·Nd2O3·Sc2O3·Sm2O3·WO3·Y2O3·ZnO)은 어느 이름으로도
+      3점이 안 돼 **통째로 빠졌다.** 81종은 전수가 아니었다 — 정정하면 90종이다.
+      (B2O3 는 3슬롯이 전부 +Clrich 라 빠지진 않았지만 `B2O3+Clrich` 라는 **다른 이름**
+       으로 세어졌다. 같은 결함의 다른 얼굴이다.)
+    """
+    key = base_species if by_base else (lambda x: x or "")
     by = collections.defaultdict(dict)
     for r in rows:
         if r.get("rank_combined") != rank:
             continue
-        by[r.get("dopant", "")][r.get("concentration_label", "")] = r
+        by[key(r.get("dopant", ""))][r.get("concentration_label", "")] = r
     return {k: v for k, v in by.items() if len(v) >= 3}
 
 
@@ -111,10 +135,12 @@ def composition_audit(by, els):
             "diff_composition_diff_site_kind": cross[(False, False)],
         },
         "interpretation": (
-            "교차 칸(같은 조성인데 자리 종류가 다르다 / 다른 조성인데 자리 종류가 같다)이 "
-            "0 이면, 조성 동일 여부는 **자리 종류 하나로 완전히 결정**된다. 그 경우 "
-            "'세 라벨의 조성이 같다' 는 설계된 통제가 아니라 최적화가 우연히 같은 부격자에 "
-            "앉은 결과다."),
+            "⛔ 2026-08-16 정정 — base 종으로 묶으면 '다른 조성 / 같은 자리 종류' 칸이 "
+            "**7종** 나온다(앞 판은 raw dopant 로 묶어 0 이었다). 따라서 "
+            "'조성 동일 여부가 자리 종류 하나로 완전히 결정된다' 는 **성립하지 않는다.** "
+            "같은 부격자에 앉고도 전하 보상 Li 수가 달라 조성이 갈리는 경우가 있다. "
+            "다만 '세 라벨의 조성이 같은 것은 설계된 통제가 아니다' 는 그대로다 — "
+            "그건 교차표와 무관하게, 라벨이 조성을 지정하지 않기 때문이다."),
         "differing_species": differing,
     }
 
@@ -149,7 +175,7 @@ def scatter_audit(by, axes=AXES, noise_ratio=NOISE_RATIO):
     return out
 
 
-def rank_stability(by, col="elastic_E_young_GPa", jump=5):
+def rank_stability(by, col="elastic_E_young_GPa", jump=5):   # G5 축 (3점 평균이 맞다)
     """④ 3점 평균 대신 하나만 써도 순위가 얼마나 움직이나."""
     base = {}
     for dop, d in by.items():
@@ -194,17 +220,19 @@ def main():
     print(f"  조성 같음 / 자리종류 다름  {ct['same_composition_diff_site_kind']:3d}")
     print(f"  조성 다름 / 자리종류 같음  {ct['diff_composition_same_site_kind']:3d}")
     print(f"  조성 다름 / 자리종류 다름  {ct['diff_composition_diff_site_kind']:3d}")
-    if not (ct["same_composition_diff_site_kind"] or ct["diff_composition_same_site_kind"]):
-        print("  → 교차 0: 조성 동일 여부는 **자리 종류 하나로 결정**된다 (통제가 아니다)")
+    off = ct["same_composition_diff_site_kind"] + ct["diff_composition_same_site_kind"]
+    print(f"  → 교차 칸 {off}종: "
+          + ("자리 종류만으로 결정된다" if not off else
+             "**자리 종류만으로는 설명 안 된다** (전하 보상 Li 수도 갈린다)"))
     print(f"  조성이 다른 종 {len(comp['differing_species'])}개: "
           f"{', '.join(x['dopant'] for x in comp['differing_species'][:8])}"
           f"{' …' if len(comp['differing_species']) > 8 else ''}")
 
-    print(f"\n{'축':7s}{'게이트':6s}{'종내범위(중앙)':>14s}{'종간SD':>9s}{'비':>7s}  판정")
+    print(f"\n{'축':11s}{'게이트에서의 쓰임':20s}{'종내(중앙)':>11s}{'종간SD':>9s}{'비':>7s}  판정")
     for name, v in sca.items():
         if "ratio_within_over_between" not in v:
             continue
-        print(f"{name:7s}{v['gate']:6s}{v['within_species_range_median']:14.3f}"
+        print(f"{name:11s}{v['gate']:20s}{v['within_species_range_median']:11.3f}"
               f"{v['between_species_sd']:9.3f}{(v['ratio_within_over_between'] or 0):7.2f}  {v['verdict']}")
     print(f"\n{rk['column']}: 평균 대신 한 점만 쓰면 {rk['jump_threshold']}계단 이상 이동 "
           f"{rk['moved_ge_jump_per_pick']} / {rk['n_species']}종")
@@ -256,13 +284,27 @@ def selftest():
     els = ["Li", "S", "Cl"]
     # 같은 자리·같은 조성 3점
     same = [mk("A", f"x{i:03d}", "Li_24g", "S_4a", {"Li": 24, "S": 20, "Cl": 4},
-               screen_de_per_atom=-0.5 - i * 0.001) for i in (2, 5, 10)]
+               rerank_de_post_anneal=-0.5 - i * 0.001) for i in (2, 5, 10)]
     # 다른 자리 → 다른 조성
     diff = [mk("B", "x002", "Li_24g", "Cl_4d", {"Li": 24, "S": 23, "Cl": 1}),
             mk("B", "x005", "Li_24g", "Cl_4d", {"Li": 24, "S": 23, "Cl": 1}),
             mk("B", "x010", "Li_24g", "S_4a", {"Li": 24, "S": 20, "Cl": 4})]
     by = group_champions(same + diff)
     chk("세 라벨 다 있는 종만 남는다", set(by) == {"A", "B"})
+    # ── base 그룹핑 (2026-08-16 Codex P0-1) ────────────────────────────────
+    chk("base_species 접미사 제거", base_species("WO3+Clrich") == "WO3")
+    chk("접미사 없으면 그대로", base_species("WO3") == "WO3")
+    chk("빈 값도 죽지 않는다", base_species(None) == "" and base_species("") == "")
+    # 라벨마다 generator 변형이 바뀐 종: raw 로 묶으면 사라지고 base 로 묶으면 살아난다
+    split = [mk("W", "x002", "Li_24g", "S_4a", {"Li": 17, "S": 16, "Cl": 5}),
+             mk("W", "x005", "Li_24g", "S_4a", {"Li": 17, "S": 16, "Cl": 5}),
+             mk("W", "x010", "P_4b", "S_4a", {"Li": 23, "S": 17, "Cl": 4})]
+    split[0]["dopant"] = split[1]["dopant"] = "W+Clrich"
+    chk("음성: raw 로 묶으면 사라진다",
+        "W" not in group_champions(split, by_base=False)
+        and "W+Clrich" not in group_champions(split, by_base=False))
+    chk("base 로 묶으면 살아난다", "W" in group_champions(split))
+    chk("기본값이 base 그룹핑", set(group_champions(split)) == {"W"})
     ca = composition_audit(by, els)
     ct = ca["cross_table"]
     chk("A: 조성 같음·자리 같음", ct["same_composition_same_site_kind"] == 1)
@@ -271,6 +313,16 @@ def selftest():
         and ct["diff_composition_same_site_kind"] == 0)
     chk("다른 종만 상세에 실린다", [x["dopant"] for x in ca["differing_species"]] == ["B"])
     chk("움직인 원자 S3 Cl3", ca["differing_species"][0]["moved_atoms"] == {"S": 3.0, "Cl": 3.0})
+    # 음성 ⑩: 같은 자리인데 조성이 다른 경우(전하 보상 차이)를 교차 칸에 제대로 넣는가
+    #   — 앞 판은 이 칸이 0 이라고 보고했고 그걸 근거로 "자리로 완전히 결정" 이라고 썼다
+    chg = [mk("D", "x002", "Li_24g", "S_4a", {"Li": 18, "S": 17, "Cl": 4}),
+           mk("D", "x005", "Li_24g", "S_4a", {"Li": 18, "S": 17, "Cl": 4}),
+           mk("D", "x010", "Li_24g", "S_4a", {"Li": 23, "S": 17, "Cl": 4})]
+    cc = composition_audit(group_champions(chg), els)["cross_table"]
+    chk("음성: 같은 자리·다른 조성이 교차 칸에 들어간다",
+        cc["diff_composition_same_site_kind"] == 1)
+    chk("음성: 그걸 '같은 조성' 으로 세지 않는다",
+        cc["same_composition_same_site_kind"] == 0)
     # 음성 ①: 3점이 안 되면 아예 제외 (2점을 3점처럼 세면 안 된다)
     chk("음성: 2점짜리는 제외", "C" not in group_champions(
         [mk("C", "x002", "Li_24g", "S_4a", {"Li": 1}),
@@ -287,10 +339,10 @@ def selftest():
     for j, dop in enumerate("PQRSTUVWXY"):
         for i in (2, 5, 10):
             sig.append(mk(dop, f"x{i:03d}", "Li_24g", "S_4a", {"Li": 24},
-                          screen_de_per_atom=-1.0 + 0.2 * j + 0.001 * i))
-    s = scatter_audit(group_champions(sig), axes=[("screen_de_per_atom", "de", "G1")])
-    chk("좁은 종내 → 신호", s["de"]["verdict"] == "신호가 잡음보다 큼")
-    chk("비가 1 미만", s["de"]["ratio_within_over_between"] < 1.0)
+                          rerank_de_post_anneal=-1.0 + 0.2 * j + 0.001 * i))
+    s = scatter_audit(group_champions(sig), axes=[("rerank_de_post_anneal", "de_post", "G1")])
+    chk("좁은 종내 → 신호", s["de_post"]["verdict"] == "신호가 잡음보다 큼")
+    chk("비가 1 미만", s["de_post"]["ratio_within_over_between"] < 1.0)
     # 음성 ③: 종내가 종간만큼 넓으면 **잡음** 이라고 말해야 한다
     # ⚠ 잡음은 **종마다 다른 방향**이어야 한다. 모든 종에 같은 오프셋을 주면
     #   한 점만 뽑아도 순위가 그대로라 rank_stability 가 0 이 나온다 (내 첫 픽스처의 오류).
@@ -299,23 +351,23 @@ def selftest():
         offs = [0.0, 0.6, 1.2] if j % 2 == 0 else [1.2, 0.0, 0.6]
         for n, i in enumerate((2, 5, 10)):
             noi.append(mk(dop, f"x{i:03d}", "Li_24g", "S_4a", {"Li": 24},
-                          screen_de_per_atom=-1.0 + 0.2 * j + offs[n]))
-    s2 = scatter_audit(group_champions(noi), axes=[("screen_de_per_atom", "de", "G1")])
-    chk("음성: 넓은 종내 → 배치 잡음", s2["de"]["verdict"] == "배치 잡음에 잠김")
-    chk("음성: 비가 1 이상", s2["de"]["ratio_within_over_between"] >= 1.0)
+                          rerank_de_post_anneal=-1.0 + 0.2 * j + offs[n]))
+    s2 = scatter_audit(group_champions(noi), axes=[("rerank_de_post_anneal", "de_post", "G1")])
+    chk("음성: 넓은 종내 → 배치 잡음", s2["de_post"]["verdict"] == "배치 잡음에 잠김")
+    chk("음성: 비가 1 이상", s2["de_post"]["ratio_within_over_between"] >= 1.0)
     # 음성 ④: 표본이 적으면 판정하지 않는다 (억지로 비를 만들지 않는다)
-    few = [mk("Z", f"x{i:03d}", "Li_24g", "S_4a", {"Li": 1}, screen_de_per_atom=-1.0)
+    few = [mk("Z", f"x{i:03d}", "Li_24g", "S_4a", {"Li": 1}, rerank_de_post_anneal=-1.0)
            for i in (2, 5, 10)]
-    s3 = scatter_audit(group_champions(few), axes=[("screen_de_per_atom", "de", "G1")])
-    chk("음성: 표본 부족이면 판정 안 함", s3["de"]["verdict"] == "표본 부족")
+    s3 = scatter_audit(group_champions(few), axes=[("rerank_de_post_anneal", "de_post", "G1")])
+    chk("음성: 표본 부족이면 판정 안 함", s3["de_post"]["verdict"] == "표본 부족")
     # 음성 ⑤: 값이 없는 열은 세지 않는다
     s4 = scatter_audit(group_champions(sig), axes=[("nonexistent_col", "nope", "—")])
     chk("음성: 없는 열은 판정 불가", s4["nope"]["verdict"] == "표본 부족")
 
     # ── 순위 안정성 ─────────────────────────────────────────────────────────
-    rk = rank_stability(group_champions(sig), col="screen_de_per_atom", jump=2)
+    rk = rank_stability(group_champions(sig), col="rerank_de_post_anneal", jump=2)
     chk("안정한 축은 이동 0", rk["moved_ge_jump_per_pick"] == [0, 0, 0])
-    rk2 = rank_stability(group_champions(noi), col="screen_de_per_atom", jump=2)
+    rk2 = rank_stability(group_champions(noi), col="rerank_de_post_anneal", jump=2)
     chk("음성: 불안정한 축은 이동 > 0", max(rk2["moved_ge_jump_per_pick"]) > 0)
 
     try: print(f"\nselftest: {ok} passed, {fail} failed")
