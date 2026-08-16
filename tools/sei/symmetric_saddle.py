@@ -196,6 +196,33 @@ def min_image(d, cell):
     return best
 
 
+def endpoint_dir(work_tag_dir, name):
+    """끝점 디렉터리 — **수렴본을 고른다.**
+
+    ⛔⛔ 2026-08-16 — 이어달리기는 `ep_initial_r2/` 처럼 새 디렉터리에 들어간다
+      (미수렴 원본을 덮지 않으려고). watch 의 [0/4] 는 `_r2` 를 보는데 이 도구는
+      `ep_initial/` 만 읽고 있었다 — 그대로 두면 **수렴본을 두고 미수렴 원본으로**
+      고정셸을 만든다. 화면과 도구가 다른 파일을 보는 상태였다.
+
+    규칙: `<name>_r2`, `<name>_r3`, … 중 **수렴한 것 중 가장 나중 것**을 쓰고,
+    하나도 수렴 안 했으면 원본 `<name>` 을 돌려준다(그럼 게이트가 막는다).
+    """
+    import glob as _g
+    cands = [os.path.join(work_tag_dir, name)]
+    cands += sorted(_g.glob(os.path.join(work_tag_dir, name + "_r*")))
+    conv = []
+    for c in cands:
+        o = os.path.join(c, "relax.out")
+        if not os.path.isfile(o):
+            continue
+        try:
+            if "Begin final coordinates" in open(o, encoding="utf-8", errors="replace").read():
+                conv.append(c)
+        except OSError:
+            pass
+    return conv[-1] if conv else os.path.join(work_tag_dir, name)
+
+
 def _symmetry_gate(meta, ini_out, fin_out):
     """대칭 근거를 판정한다 → (basis, warn, |ΔE|, sym, detail).
 
@@ -283,9 +310,12 @@ def build(work, tag, force=False, allow_unconverged=False):
     meta_p = os.path.join(d, "meta.json")
     meta = json.load(open(meta_p, encoding="utf-8")) if os.path.isfile(meta_p) else {}
 
-    ini_out = os.path.join(d, "ep_initial", "relax.out")
-    fin_out = os.path.join(d, "ep_final", "relax.out")
-    ini_in = os.path.join(d, "ep_initial", "relax.in")
+    ep_i, ep_f = endpoint_dir(d, "ep_initial"), endpoint_dir(d, "ep_final")
+    ini_out = os.path.join(ep_i, "relax.out")
+    fin_out = os.path.join(ep_f, "relax.out")
+    ini_in = os.path.join(ep_i, "relax.in")
+    if os.path.basename(ep_i) != "ep_initial" or os.path.basename(ep_f) != "ep_final":
+        print(f"   ↻ 이어달리기 수렴본을 쓴다: {os.path.basename(ep_i)} · {os.path.basename(ep_f)}")
     first, e1, i1 = read_relaxed(ini_out, allow_unconverged)
     last, e2, i2 = read_relaxed(fin_out, allow_unconverged)
     if first is None or last is None:
@@ -377,7 +407,7 @@ def collect(work, tag, radius=None, allow_unconverged=False):
         ep = os.path.join(base, "endpoint", "relax.out")
         sd = os.path.join(base, "saddle", "relax.out")
     else:
-        ep = os.path.join(d, "ep_initial", "relax.out")
+        ep = os.path.join(endpoint_dir(d, "ep_initial"), "relax.out")
         sd = os.path.join(d, "saddle", "relax.out")
     for p in (ep, sd):
         if not os.path.isfile(p):
@@ -451,8 +481,8 @@ def build_frozen(work, tag, radius, force=False):
     산출: <tag>/frozen_R<r>/{endpoint,saddle}/relax.in  (+ frozen_meta.json)
     """
     d = os.path.join(work, tag)
-    ini_in = os.path.join(d, "ep_initial", "relax.in")
-    fin_in = os.path.join(d, "ep_final", "relax.in")
+    ini_in = os.path.join(endpoint_dir(d, "ep_initial"), "relax.in")
+    fin_in = os.path.join(endpoint_dir(d, "ep_final"), "relax.in")
     for f in (ini_in, fin_in):
         if not os.path.isfile(f):
             return 1, f"⛔ 없음: {f} — build_neb_inputs.py 로 끝점 입력부터 만들 것"
@@ -461,8 +491,8 @@ def build_frozen(work, tag, radius, force=False):
     meta_p = os.path.join(d, "meta.json")
     meta = json.load(open(meta_p, encoding="utf-8")) if os.path.isfile(meta_p) else {}
     basis, warn, de, sym, sym_detail = _symmetry_gate(
-        meta, os.path.join(d, "ep_initial", "relax.out"),
-        os.path.join(d, "ep_final", "relax.out"))
+        meta, os.path.join(endpoint_dir(d, "ep_initial"), "relax.out"),
+        os.path.join(endpoint_dir(d, "ep_final"), "relax.out"))
     if basis is None and not force:
         return 1, _symmetry_refusal(tag, sym, de, sym_detail)
     if basis is None:
@@ -1137,6 +1167,33 @@ def selftest():
     chk(rc == 0 and "Ea" in msg, "[F5] --allow_unconverged 면 경고와 함께 회수")
 
     shutil.rmtree(td, ignore_errors=True)
+
+    # ── 이어달리기 디렉터리 선택 (2026-08-16) ──────────────────────────────
+    #   watch 의 [0/4] 는 ep_*_r2 를 보는데 이 도구는 원본만 읽고 있었다 —
+    #   수렴본을 두고 미수렴 원본으로 고정셸을 만들 뻔했다.
+    import tempfile as _tf
+    _d = _tf.mkdtemp(); _t = os.path.join(_d, "li3nd"); os.makedirs(_t)
+    def _mkep(name, converged):
+        os.makedirs(os.path.join(_t, name), exist_ok=True)
+        body = "     Total force =     0.001\n"
+        body += ("Begin final coordinates\nEnd final coordinates\n" if converged
+                 else "     The maximum number of steps has been reached.\n")
+        open(os.path.join(_t, name, "relax.out"), "w", encoding="utf-8").write(body)
+    _mkep("ep_initial", False)
+    chk(os.path.basename(endpoint_dir(_t, "ep_initial")) == "ep_initial",
+        "[이어달리기] 수렴본 없으면 원본")
+    _mkep("ep_initial_r2", True)
+    chk(os.path.basename(endpoint_dir(_t, "ep_initial")) == "ep_initial_r2",
+        "[이어달리기] 수렴한 _r2 를 고른다")
+    _mkep("ep_initial_r3", False)
+    chk(os.path.basename(endpoint_dir(_t, "ep_initial")) == "ep_initial_r2",
+        "[이어달리기·음성] 미수렴 _r3 로 가지 않는다")
+    _mkep("ep_initial_r4", True)
+    chk(os.path.basename(endpoint_dir(_t, "ep_initial")) == "ep_initial_r4",
+        "[이어달리기] 수렴본이 여럿이면 가장 나중 것")
+    chk(os.path.basename(endpoint_dir(_t, "ep_final")) == "ep_final",
+        "[이어달리기·음성] 없는 끝점은 원본 경로")
+
     _p("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
