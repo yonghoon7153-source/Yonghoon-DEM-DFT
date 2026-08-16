@@ -966,6 +966,11 @@ def main():
                          'k_plates': list(_res3.get('k_plates', ())),
                          'n_floating_dropped': _res3.get('n_floating_dropped', 0),
                          'cg_resid': float(f"{_res3['resid']:.2g}"),
+                         #  ★ 수렴 판정을 **기계가 읽을 수 있게** 남긴다 (사전등록 §5-1).
+                         #    실사고 2026-08-16: 판정기가 없는 필드를 읽어 미수렴 게이트가
+                         #    fail-open 이었다 (resid 는 로그에만 있었다).
+                         'cg_info': int(_res3.get('cg_info', 0) or 0),
+                         'unconverged': bool(_res3.get('unconverged', False)),
                          'dissipation_share': {_sname[k]: round(v, 4) for k, v in _share.items()},
                          'sigma_table_S_cm': {'AM_S': a.sigma_am_s, 'AM_P': a.sigma_am_p,
                                               'VGCF': a.sigma_vgcf, 'SuperP': a.sigma_superp,

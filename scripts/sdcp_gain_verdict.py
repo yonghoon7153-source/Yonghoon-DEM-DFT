@@ -42,7 +42,9 @@ def _read(path):
             'sigma_e': s.get('sigma_e_eff_S_cm'),
             'sigma_ion': s.get('sigma_ion_eff_S_cm'),
             'n_dof': s.get('n_dof'),
-            'cg_info': s.get('cg_info', (s.get('solve') or {}).get('cg_info')),
+            'cg_info': s.get('cg_info'),
+            'cg_resid': s.get('cg_resid'),
+            'unconverged': s.get('unconverged'),
             'origin_shift_um': man.get('origin_shift_um'),
             'vox': man.get('vox_um') or s.get('vox_um'),
             'bridge_um': man.get('bridge_um'),
@@ -72,13 +74,26 @@ def verdict(arms):
     out = {'prereg': PREREG, 'thresholds': {
         'h0_min_ratio': H0_MIN_RATIO, 'h1_ratio': H1_RATIO,
         'undecided': [UNDECIDED_LO, UNDECIDED_HI], 'se_max_pct': SE_MAX_PCT}}
-    # ① 미수렴 — 하나라도 있으면 보류
-    unconv = [r['file'] for k in arms for r in arms[k]
-              if r['cg_info'] not in (0, None)]
+    # ① 미수렴 — 하나라도 있으면 보류.  ★ **fail-closed**: 수렴 정보가 **없어도** 보류한다.
+    #   실사고 2026-08-16: `cg_info` 를 안 싣는 payload 를 None 으로 읽고 통과시켰다 =
+    #   fail-open.  "확인 못 했다" 와 "확인했고 괜찮다" 는 다르다.
+    unconv, unknown = [], []
+    for k in arms:
+        for r in arms[k]:
+            if r.get('unconverged') is True or (r.get('cg_info') not in (0, None)):
+                unconv.append(r['file'])
+            elif r.get('cg_info') is None and r.get('cg_resid') is None:
+                unknown.append(r['file'])
     if unconv:
         return dict(out, decision='HOLD',
                     reason=f'미수렴 팔 {len(unconv)}개 — prereg §5-1 (판정 보류)',
                     unconverged=unconv)
+    if unknown:
+        return dict(out, decision='HOLD',
+                    reason=f'수렴 정보 없는 팔 {len(unknown)}개 — 확인 못 한 것을 통과시키지 '
+                           f'않는다 (fail-closed).  payload 가 cg_info/cg_resid 를 싣도록 '
+                           f'고치고 다시 돌릴 것',
+                    no_convergence_info=unknown)
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
     if not st['SBE'] or not st['DBE'] or st['SBE']['n'] != st['DBE']['n']:
@@ -117,10 +132,12 @@ def _selftest():
         (ok := ok + 1) if c else fail.append(n)
         print(('  PASS  ' if c else '  FAIL  ') + n)
 
-    def mk(sbe, dbe, cg=0):
-        return {'SBE': [{'file': f'p2_SBE_a{i}.json', 'sigma_e': v, 'cg_info': cg}
+    def mk(sbe, dbe, cg=0, resid=1e-8):
+        return {'SBE': [{'file': f'p2_SBE_a{i}.json', 'sigma_e': v, 'cg_info': cg,
+                         'cg_resid': resid, 'unconverged': False}
                         for i, v in enumerate(sbe)],
-                'DBE': [{'file': f'p2_DBE_a{i}.json', 'sigma_e': v, 'cg_info': cg}
+                'DBE': [{'file': f'p2_DBE_a{i}.json', 'sigma_e': v, 'cg_info': cg,
+                         'cg_resid': resid, 'unconverged': False}
                         for i, v in enumerate(dbe)]}
 
     base = [1.0000, 1.0020, 0.9980, 1.0010, 0.9990, 1.0005, 0.9995, 1.0000]
@@ -136,6 +153,12 @@ def _selftest():
         verdict(mk(noisy, [v * 1.08 for v in noisy]))['decision'] == 'HOLD')
     chk('⑥ 팔 수가 다르면 HOLD',
         verdict(mk(base, base[:4]))['decision'] == 'HOLD')
+    #  ★ fail-closed — 수렴 정보가 **없으면** 통과시키지 않는다 (실사고 2026-08-16)
+    blind = {'SBE': [{'file': 'x', 'sigma_e': 1.0, 'cg_info': None, 'cg_resid': None}] * 8,
+             'DBE': [{'file': 'y', 'sigma_e': 1.08, 'cg_info': None, 'cg_resid': None}] * 8}
+    vb = verdict(blind)
+    chk(f'⑧ ★ 수렴 정보 없는 팔은 HOLD (옛 판은 통과시켰다): {vb["decision"]}',
+        vb['decision'] == 'HOLD' and 'no_convergence_info' in vb)
     chk('⑦ 문턱이 prereg 값과 같다 (코드가 사전등록이다)',
         (H0_MIN_RATIO, H1_RATIO, SE_MAX_PCT) == (1.05, 1.015, 1.17))
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
