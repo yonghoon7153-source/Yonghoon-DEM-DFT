@@ -1,0 +1,507 @@
+{
+  "what": "v23 세 농도 라벨(x002/x005/x010)의 실체와, 그 3점 평균이 게이트 축에 얼마나 잡음을 넣는지",
+  "why_labels_are_not_concentrations": "1×1×1 · 4 f.u. 셀은 P 가 4개뿐이고 치환이 정수라 최소 치환이 1/4 = x 0.25 다. 세 라벨이 전부 그 값으로 반올림됐다.",
+  "cannot_do": [
+    "어느 챔피언이 '맞는' 구조인지 말하지 못한다 — 흩어짐 크기만 잰다",
+    "흩어짐이 물리(자리 의존성)인지 최적화 실패(국소최소)인지 구별하지 못한다",
+    "게이트 통과/탈락이 실제로 뒤집히는지는 판정하지 않는다 (순위 이동만)",
+    "평균이 아닌 다른 집계가 옳다고 주장하지 않는다"
+  ],
+  "noise_ratio_threshold": 1.0,
+  "composition_audit": {
+    "n_species": 81,
+    "cross_table": {
+      "same_composition_same_site_kind": 59,
+      "same_composition_diff_site_kind": 0,
+      "diff_composition_same_site_kind": 0,
+      "diff_composition_diff_site_kind": 22
+    },
+    "interpretation": "교차 칸(같은 조성인데 자리 종류가 다르다 / 다른 조성인데 자리 종류가 같다)이 0 이면, 조성 동일 여부는 **자리 종류 하나로 완전히 결정**된다. 그 경우 '세 라벨의 조성이 같다' 는 설계된 통제가 아니라 최적화가 우연히 같은 부격자에 앉은 결과다.",
+    "differing_species": [
+      {
+        "dopant": "Al2S3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "Al2S3_x020_cLi24gaCl4d_s02",
+          "Al2S3_x050_cLi24gaCl4d_s02",
+          "Al2S3_x100_cLi24gaS4a_s02"
+        ]
+      },
+      {
+        "dopant": "AlCl3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "AlCl3_x020_cLi24gaCl4d_s00",
+          "AlCl3_x050_cLi24gaCl4d_s00",
+          "AlCl3_x100_cLi24gaS4a_s03"
+        ]
+      },
+      {
+        "dopant": "CaBr2",
+        "moved_atoms": {
+          "Cl": 2.0,
+          "S": 2.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "CaBr2_x020_cLi24gaCl4d_s03",
+          "CaBr2_x050_cLi24gaCl4d_s03",
+          "CaBr2_x100_cLi24gaS4a_s02"
+        ]
+      },
+      {
+        "dopant": "CrCl3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "CrCl3_x020_cLi24gaS4a_s04",
+          "CrCl3_x050_cLi24gaS4a_s04",
+          "CrCl3_x100_cLi24gaCl4d_s00"
+        ]
+      },
+      {
+        "dopant": "FeCl3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "FeCl3_x020_cLi24gaCl4d_s02",
+          "FeCl3_x050_cLi24gaCl4d_s02",
+          "FeCl3_x100_cLi24gaS4a_s04"
+        ]
+      },
+      {
+        "dopant": "LaCl3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "LaCl3_x020_cLi24gaS4a_s01",
+          "LaCl3_x050_cLi24gaCl4d_s01",
+          "LaCl3_x100_cLi24gaCl4d_s04"
+        ]
+      },
+      {
+        "dopant": "Li2S",
+        "moved_atoms": {
+          "Cl": 1.0,
+          "S": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "Li_48h"
+        ],
+        "names": [
+          "Li2S_x020_cLi48haS4a_s04",
+          "Li2S_x050_cLi24gaS4a_s02",
+          "Li2S_x100_cLi48haCl4d_s03"
+        ]
+      },
+      {
+        "dopant": "LiCl",
+        "moved_atoms": {
+          "Cl": 1.0,
+          "S": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "Li_48h"
+        ],
+        "names": [
+          "LiCl_x020_cLi48haS4a_s00",
+          "LiCl_x050_cLi24gaCl4d_s02",
+          "LiCl_x100_cLi24gaS4a_s00"
+        ]
+      },
+      {
+        "dopant": "MgBr2",
+        "moved_atoms": {
+          "Cl": 2.0,
+          "S": 2.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "MgBr2_x020_cLi24gaS4a_s03",
+          "MgBr2_x050_cLi24gaCl4d_s03",
+          "MgBr2_x100_cLi24gaCl4d_s04"
+        ]
+      },
+      {
+        "dopant": "MgS",
+        "moved_atoms": {
+          "Cl": 1.0,
+          "S": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_16e"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "MgS_x020_cLi24gaS16e_s04",
+          "MgS_x050_cLi24gaS16e_s01",
+          "MgS_x100_cLi24gaCl4d_s00"
+        ]
+      },
+      {
+        "dopant": "Na2S",
+        "moved_atoms": {
+          "Cl": 1.0,
+          "S": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "Li_48h"
+        ],
+        "names": [
+          "Na2S_x020_cLi48haS4a_s00",
+          "Na2S_x050_cLi24gaCl4d_s00",
+          "Na2S_x100_cLi24gaCl4d_s00"
+        ]
+      },
+      {
+        "dopant": "Sb2S3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_16e"
+        ],
+        "cation_sites": [
+          "P_4b"
+        ],
+        "names": [
+          "Sb2S3_x020_cP4baCl4d_s04",
+          "Sb2S3_x050_cP4baS16e_s03",
+          "Sb2S3_x100_cP4baCl4d_s04"
+        ]
+      },
+      {
+        "dopant": "ScCl3",
+        "moved_atoms": {
+          "Cl": 3.0,
+          "S": 3.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "ScCl3_x020_cLi24gaCl4d_s04",
+          "ScCl3_x050_cLi24gaS4a_s04",
+          "ScCl3_x100_cLi24gaCl4d_s04"
+        ]
+      },
+      {
+        "dopant": "SiS2",
+        "moved_atoms": {
+          "Cl": 2.0,
+          "S": 2.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "P_4b"
+        ],
+        "names": [
+          "SiS2_x020_cP4baCl4d_s00",
+          "SiS2_x050_cP4baS4a_s03",
+          "SiS2_x100_cP4baCl4d_s00"
+        ]
+      },
+      {
+        "dopant": "SnS2",
+        "moved_atoms": {
+          "Cl": 2.0,
+          "S": 2.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_16e",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "P_4b"
+        ],
+        "names": [
+          "SnS2_x020_cP4baS4a_s03",
+          "SnS2_x050_cP4baS16e_s03",
+          "SnS2_x100_cP4baCl4d_s01"
+        ]
+      },
+      {
+        "dopant": "SrCl2",
+        "moved_atoms": {
+          "Cl": 2.0,
+          "S": 2.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g"
+        ],
+        "names": [
+          "SrCl2_x020_cLi24gaS4a_s00",
+          "SrCl2_x050_cLi24gaCl4d_s03",
+          "SrCl2_x100_cLi24gaS4a_s00"
+        ]
+      },
+      {
+        "dopant": "TiCl4",
+        "moved_atoms": {
+          "Cl": 4.0,
+          "S": 4.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "P_4b"
+        ],
+        "names": [
+          "TiCl4_x020_cP4baS4a_s01",
+          "TiCl4_x050_cP4baCl4d_s03",
+          "TiCl4_x100_cP4baS4a_s01"
+        ]
+      },
+      {
+        "dopant": "YCl3",
+        "moved_atoms": {
+          "Li": 5.0,
+          "P": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "P_4b"
+        ],
+        "names": [
+          "YCl3_x020_cLi24gaCl4d_s01",
+          "YCl3_x050_cP4baCl4d_s03",
+          "YCl3_x100_cP4baCl4d_s03"
+        ]
+      },
+      {
+        "dopant": "YF3",
+        "moved_atoms": {
+          "Li": 5.0,
+          "P": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "P_4b"
+        ],
+        "names": [
+          "YF3_x020_cLi24gaCl4d_s00",
+          "YF3_x050_cP4baCl4d_s02",
+          "YF3_x100_cLi24gaCl4d_s00"
+        ]
+      },
+      {
+        "dopant": "ZrCl4",
+        "moved_atoms": {
+          "Cl": 4.0,
+          "Li": 5.0,
+          "P": 1.0,
+          "S": 4.0
+        },
+        "anion_sites": [
+          "Cl_4d",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "P_4b"
+        ],
+        "names": [
+          "ZrCl4_x020_cLi24gaS4a_s01",
+          "ZrCl4_x050_cP4baCl4d_s03",
+          "ZrCl4_x100_cLi24gaCl4d_s04"
+        ]
+      },
+      {
+        "dopant": "ZrF4",
+        "moved_atoms": {
+          "Li": 5.0,
+          "P": 1.0
+        },
+        "anion_sites": [
+          "Cl_4d"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "P_4b"
+        ],
+        "names": [
+          "ZrF4_x020_cP4baCl4d_s04",
+          "ZrF4_x050_cLi24gaCl4d_s04",
+          "ZrF4_x100_cP4baCl4d_s01"
+        ]
+      },
+      {
+        "dopant": "ZrO2",
+        "moved_atoms": {
+          "Li": 5.0,
+          "P": 1.0
+        },
+        "anion_sites": [
+          "S_16e",
+          "S_4a"
+        ],
+        "cation_sites": [
+          "Li_24g",
+          "P_4b"
+        ],
+        "names": [
+          "ZrO2_x020_cP4baS4a_s03",
+          "ZrO2_x050_cLi24gaS16e_s01",
+          "ZrO2_x100_cLi24gaS4a_s01"
+        ]
+      }
+    ]
+  },
+  "scatter_audit": {
+    "de": {
+      "gate": "G1",
+      "n_species": 81,
+      "within_species_range_median": 0.0167,
+      "between_species_sd": 0.1963,
+      "between_species_range": 1.2346,
+      "ratio_within_over_between": 0.085,
+      "verdict": "신호가 잡음보다 큼"
+    },
+    "E_GPa": {
+      "gate": "G5",
+      "n_species": 80,
+      "within_species_range_median": 6.279,
+      "between_species_sd": 5.8662,
+      "between_species_range": 32.8611,
+      "ratio_within_over_between": 1.07,
+      "verdict": "배치 잡음에 잠김"
+    },
+    "pugh": {
+      "gate": "G5",
+      "n_species": 80,
+      "within_species_range_median": 0.1188,
+      "between_species_sd": 0.2081,
+      "between_species_range": 2.0983,
+      "ratio_within_over_between": 0.571,
+      "verdict": "신호가 잡음보다 큼"
+    },
+    "bvs": {
+      "gate": "G4",
+      "n_species": 80,
+      "within_species_range_median": 0.0362,
+      "between_species_sd": 0.0134,
+      "between_species_range": 0.066,
+      "ratio_within_over_between": 2.705,
+      "verdict": "배치 잡음에 잠김"
+    },
+    "B0": {
+      "gate": "—",
+      "n_species": 78,
+      "within_species_range_median": 3.9059,
+      "between_species_sd": 2.5038,
+      "between_species_range": 13.5644,
+      "ratio_within_over_between": 1.56,
+      "verdict": "배치 잡음에 잠김"
+    }
+  },
+  "rank_stability": {
+    "column": "elastic_E_young_GPa",
+    "n_species": 79,
+    "jump_threshold": 5,
+    "moved_ge_jump_per_pick": [
+      54,
+      55,
+      46
+    ],
+    "note": "3점 평균 순위 대비 몇 종이 jump 계단 이상 움직이는가. 크면 '평균' 이라는 집계 선택 자체가 순위를 만든다는 뜻이다."
+  }
+}
