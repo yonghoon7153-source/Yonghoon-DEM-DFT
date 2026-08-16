@@ -48,6 +48,16 @@ print('  [p2] origin 이동 CLI 확인')
 PYTHONUTF8=1 python3 "$SCR/check_method_discipline.py" >/dev/null 2>&1 \
   || { echo "ABORT — 방법론 규율 검사 실패.  먼저 통과시킬 것"; exit 2; }
 echo "[p2] 규율 검사 통과"
+#  ★ 미정의 이름 게이트 (실사고 2026-08-16): 판별 런이 SE 점 6,792 만 개를 읽은 **뒤**
+#    `NameError: _zt3` 로 죽었다.  런이 실제로 쓰는 파일만 정적으로 먼저 본다.
+PYTHONUTF8=1 python3 "$SCR/check_undefined_names.py" \
+  "$SCR/mpm_webapp_payload.py" "$SCR/step3_sigma.py" "$SCR/viz_mpm_continuum.py" \
+  "$SCR/additives.py" "$SCR/sr01_stamp_compare.py" >/dev/null 2>&1 \
+  || { echo "ABORT — 미정의 이름 발견.  다음으로 확인:"; \
+       PYTHONUTF8=1 python3 "$SCR/check_undefined_names.py" \
+         "$SCR/mpm_webapp_payload.py" "$SCR/step3_sigma.py" "$SCR/viz_mpm_continuum.py" \
+         "$SCR/additives.py" "$SCR/sr01_stamp_compare.py"; exit 2; }
+echo "[p2] 미정의 이름 없음 (런 경로 5 파일)"
 
 # ── 8 팔 = {0, vox/2}³ ─────────────────────────────────────────────────────────────
 H=$(python3 -c "print(f'{$VOX/2:.6f}')")

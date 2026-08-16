@@ -72,9 +72,9 @@ if [ "$CHECK_ONLY" = 0 ]; then
     #  py3.8 마지막 지원 버전 — 위로 올리면 설치가 조용히 실패하거나 구버전으로 내려앉는다
     #  scikit-image 는 payload 의 **메쉬(시각화)** 경로가 쓴다.  없으면 강등되지만
     #  (viz_mpm_continuum.mesh_of, 2026-08-16) 있으면 브라우저 표면까지 나온다.
-    PKGS="numpy==1.24.4 scipy==1.10.1 pyamg==4.2.3 scikit-image==0.19.3"
+    PKGS="numpy==1.24.4 scipy==1.10.1 pyamg==4.2.3 scikit-image==0.19.3 pyflakes"
   else
-    PKGS="numpy scipy pyamg scikit-image"
+    PKGS="numpy scipy pyamg scikit-image pyflakes"
   fi
   say "  설치: $PKGS"
   python3 -m pip install -q $PKGS 2>&1 | tail -3 | tee -a "$REPORT"
@@ -143,6 +143,17 @@ else
   bad "필수 모듈 import 실패 — 위 FAIL 참조"
 fi
 rm -f "$IMPCHK"
+
+say ""
+say "══ 4c 미정의 이름 (긴 런 뒤 NameError 방지) ═══════════"
+if (cd "$REPO" && PYTHONUTF8=1 python3 scripts/check_undefined_names.py \
+      scripts/mpm_webapp_payload.py scripts/step3_sigma.py scripts/viz_mpm_continuum.py \
+      scripts/additives.py scripts/sr01_stamp_compare.py 2>&1 | tail -3 | tee -a "$REPORT"; \
+    exit "${PIPESTATUS[0]}"); then
+  good "런 경로에 미정의 이름 없음"
+else
+  bad "런 경로에 미정의 이름 — 위 참조"
+fi
 
 say ""
 say "══ ⑤ 리포 selftest (전부 통과해야 런을 시작한다) ═══════"

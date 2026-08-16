@@ -900,8 +900,9 @@ def main():
                                  f'(받은 {_osh.tolist()}, vox {a.step3_vox}).  그 밖이면 '
                                  f'위상 이동이 아니라 격자 자체가 달라진다')
             _lo3 = tuple(-_osh)
-            #  ★ 격자 좌표계의 플레이트 평면 — **모든** 솔브가 이것을 써야 한다.
-            #    하나라도 _ztop/0.0 을 그대로 쓰면 채널마다 좌표계가 갈린다 (이번 리뷰의 교훈).
+            #  방어적 초기화 — STEP3 가 예외로 건너뛰어도 매니페스트 조립이 죽지 않게.
+            #  (실사고: STEP3 를 try 가 삼킨 뒤 매니페스트에서 NameError 로 다시 터졌다.)
+            _zt3 = _zb3 = None
             _hi = tuple(np.asarray(_hi, np.float64) + _osh)
             if _osh.any():
                 print(f'  STEP3: ★ origin 이동 {_osh.tolist()} µm (위상만; 침대 손실 없음)',
@@ -916,7 +917,13 @@ def main():
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
             #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
-            #  ★ origin z-이동분을 플레이트 평면에 더한다 (위 주석 참조).  L 은 불변.
+            #  ★★ 격자 좌표계의 플레이트 평면 — **모든** 솔브가 이 두 값을 쓴다.
+            #     origin 을 −s 로 내렸으므로 침대는 격자좌표 [s_z, s_z+두께] 에 놓인다.
+            #     둘 다 s_z 를 더하므로 L = z_plate − z_b 는 **불변**이고 σ_eff 규약이 유지된다.
+            #     ⚠ 2026-08-16 실사고: 정의를 위로 옮긴다면서 **주석만 넣고 대입을 빠뜨려**
+            #       `NameError: _zt3` 로 판별 런이 죽었다 (STEP3 는 try 가 삼켜 "skipped" 로
+            #       찍혔고, 매니페스트 조립에서 다시 터졌다).  ⇒ `_ztop` 직후에 못 박는다.
+            _zt3, _zb3 = _ztop + float(_osh[2]), 0.0 + float(_osh[2])
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
                                       z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
             if _res3.get('reason'):
@@ -1617,7 +1624,8 @@ def main():
             # ★ origin 앙상블 (prereg sdcp_gain_prereg_20260816 §4) — **일어난 일**을 적는다.
             #   앙상블 팔을 나중에 대조하려면 각 payload 가 자기 위상을 알고 있어야 한다.
             'origin_shift_um': [float(x) for x in _osh],
-            'plate_z_grid_um': [float(_zb3), float(_zt3)],
+            'plate_z_grid_um': ([float(_zb3), float(_zt3)]
+                                if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).
             'mesh_unavailable': getattr(_vc(), 'MESH_UNAVAILABLE_REASON', None),
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
