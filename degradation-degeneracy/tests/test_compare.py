@@ -332,19 +332,20 @@ def test_results_doc_leads_with_gap_collapse(tmp_path):
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
     assert "격차 붕괴" in text
-    i_gap = text.index("두 전극을 같다고 답하는 비율")
-    i_22p = text.index("근방 자체의 degeneracy")
+    # ★ 15차 발견 2 — count 우선 렌더로 문구가 바뀌었다
+    i_gap = text.index("두 전극을 같다고 답한 것은")
+    i_22p = text.index("근방의 recovery failure")   # ★ 15차 발견 7 로 문구 변경
     assert i_gap < i_22p, "격차 붕괴 결론이 22p 근방 성적보다 앞에 와야 한다"
-    # 붕괴율 100% → 우도비가 1 미만이어야 하고, "실제로 비슷" 결론이 나오면 안 된다
+    # 붕괴율 100% → 사건률 비가 1 미만이어야 하고, "실제로 비슷" 결론이 나오면 안 된다
     import re
-    m = re.search(r"우도비 = ([\d.]+)", text)
-    assert m, "우도비가 결론에 없다"
-    assert float(m.group(1)) < 1.0, f"붕괴율 100%인데 우도비가 {m.group(1)}"
-    # ★ F28 — 우도비를 결론으로 승격시키면 안 된다. 세 제약이 항상 붙어야 한다.
+    m = re.search(r"사건률 비 = ([\d.]+)", text)
+    assert m, "사건률 비가 결론에 없다"
+    assert float(m.group(1)) < 1.0, f"붕괴율 100%인데 사건률 비가 {m.group(1)}"
+    # ★ F28 — 사건률 비를 결론으로 승격시키면 안 된다. 세 제약이 항상 붙어야 한다.
     assert "실제로 비슷하게 열화했다" not in text, \
-        "우도비를 '실제로 비슷하다'는 결론으로 승격시켰다"
+        "사건률 비를 '실제로 비슷하다'는 결론으로 승격시켰다"
     for must in ("임계 의존", "posterior가 아님", "부분집단 조건화"):
-        assert must in text, f"우도비 제약 '{must}'이 빠졌다"
+        assert must in text, f"사건률 비 제약 '{must}'이 빠졌다"
 
 
 def test_results_doc_conclusion_follows_the_number(tmp_path):
@@ -369,9 +370,9 @@ def test_results_doc_conclusion_follows_the_number(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
-    # 붕괴가 0이면 우도비가 inf가 되는데, 그 경우에도 문서가 깨지지 않아야 한다
+    # 붕괴가 0이면 사건률 비가 inf가 되는데, 그 경우에도 문서가 깨지지 않아야 한다
     import re
-    assert re.search(r"우도비 = (\S+)", text), "우도비가 결론에 없다"
+    assert re.search(r"사건률 비 = (\S+)", text), "사건률 비가 결론에 없다"
     # ★ 임계 의존성 경고 — 붕괴가 관측 불가능한 설정이면 반드시 붙어야 한다
     assert ("임계 설정에서 붕괴가 관측되기 어렵다" in text
             or "collapse_measurable" not in text), "임계 의존성 경고가 빠졌다"
@@ -2869,3 +2870,73 @@ def test_halfcell_prep_command_uses_signed_method(tmp_path):
     prep = next(ln for ln in text.split("## 재현")[1].splitlines()
                 if "src.halfcell" in ln)
     assert "--method sim" in prep, prep
+
+
+def _gap_cmp_res():
+    """결론 2 렌더를 태우는 최소 cmp_res — v4 실측값을 그대로 넣는다."""
+    return {
+        "table": [
+            {"objective": "pocv_dvdq", "n": 1476, "degenerate_frac": 0.619241,
+             "degenerate_frac_corrected": 0.144309, "mean_abs_err": 0.024227,
+             "pe_ne_antisym_frac": 0.68},
+            {"objective": "pocv_dvdq_dqdv", "n": 1476, "degenerate_frac": 0.871951,
+             "degenerate_frac_corrected": 0.945122, "mean_abs_err": 0.065287,
+             "pe_ne_antisym_frac": 0.36},
+        ],
+        "gap_analysis": {"pocv_dvdq": {
+            "population": "recoverable", "tol": 0.02, "gap_thresh": 0.06,
+            "n_wide_gap_true": 245, "n_small_gap_true": 98,
+            "gap_collapse_frac": 1 / 245, "false_split_frac": 0.6326530612244898,
+            "mean_true_gap_wide": 0.099, "mean_recovered_gap_wide": 0.104,
+            "shrinkage": 1.06, "likelihood_ratio_equal": 90.0,
+            "lr_sensitivity_min": 2.47, "lr_sensitivity_max": 113.7,
+            "lr_sensitivity_median": 16.83, "lr_is_local_spike": True,
+        }},
+        "gap_analysis_all_conditions": {"pocv_dvdq": {
+            "population": "all", "n_wide_gap_true": 604,
+            "gap_collapse_frac": 0.10596026490066225,
+            "likelihood_ratio_equal": 3.6903044871794877,
+        }},
+        "unrecoverable_frac": 0.519,
+    }
+
+
+def test_conclusion_renders_counts_not_rounded_percent():
+    """★ 15차 발견 2 — 붕괴를 정수 percent 로 반올림해 `0%` 로 쓰면 안 된다.
+
+    실제 값은 `1/245 = 0.408%` 인데 `_pct(x, 0)` 가 `0%` 로 반올림했다. 0건이면
+    사건률 비가 90.0 이 아니라 무한대여야 하므로, 보고서가 스스로 모순된 숫자를
+    실은 셈이다. count/denominator 를 먼저 쓴다.
+    """
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 1476}))
+    assert "1/245 (0.41%)" in txt, txt[:800]
+    assert "36/98" in txt, "작은 격차군도 count 로 써야 한다"
+    import re
+    assert not re.search(r"(?<![\d./])0%", txt), "정수 반올림 0% 가 남아 있다"
+
+
+def test_conclusion_pairs_conditional_ratio_with_all_population():
+    """★ 15차 발견 3 — 사건률 비 90 은 recoverable 조건부다. 전체 격자 값(3.69)과
+    함께 쓰지 않으면 단독 인용된다. '우도비' 라는 무조건적 이름도 쓰지 않는다."""
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 1476}))
+    assert "조건부 사건률 비" in txt, txt[:800]
+    assert "population=recoverable" in txt
+    assert "64/604" in txt and "3.69" in txt, "전체 격자 값이 병기되지 않았다"
+    assert "우도비" not in txt, "무조건적 '우도비' 표현이 남아 있다"
+
+
+def test_report_labels_error_column_as_max_mode(tmp_path):
+    """★ 15차 발견 6 — `평균 |err|` 는 일반 MAE 가 아니라 **행별 max-mode 절대
+    오차의 평균**이다 (`src/scoring.py`). 라벨이 계산과 달라 오인된다."""
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path, objectives=("pocv_dvdq",))
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "max-mode" in text, "오차 열 라벨이 max-mode 임을 밝히지 않는다"

@@ -99,7 +99,10 @@ def to_markdown(tbl: pd.DataFrame) -> str:
     """04_PROMPTS.md Phase 6이 요구한 형태의 마크다운 표."""
     has_noise = "noise" in tbl.columns
     head = ("| objective |" + (" noise |" if has_noise else "")
-            + " n | degeneracy | (바이어스 보정) | 평균 \\|err\\| | raw 반대부호 |")
+            # ★ 15차 발견 6 — 이 열은 일반 MAE 가 아니라 **행별 세 mode 중 최대
+            #   절대오차의 평균**이다 (src/scoring.py). 라벨이 계산과 달라
+            #   일반 MAE 로 오인·인용됐다.
+            + " n | degeneracy | (바이어스 보정) | 평균 max-mode \\|err\\| | raw 반대부호 |")
     sep = "|---|" + ("---|" if has_noise else "") + "---|---|---|---|---|"
     lines = [head, sep]
     for _, r in tbl.iterrows():

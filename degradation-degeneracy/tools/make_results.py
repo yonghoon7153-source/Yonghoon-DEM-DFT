@@ -35,6 +35,19 @@ def _pp(x, digits: int = 1) -> str:
     return "—" if x is None or pd.isna(x) else f"{100 * float(x):.{digits}f}%p"
 
 
+def _cnt(frac, n, digits: int = 2) -> str:
+    """★ 15차 발견 2 — **사건 수를 먼저** 쓰고 percent 는 괄호에 넣는다.
+
+    `_pct(1/245, 0)` 은 `0%` 로 반올림한다. 실제로는 245조건 중 1건이고,
+    0건이었다면 우도비가 90.0 이 아니라 무한대여야 한다 — 보고서가 스스로
+    모순된 숫자를 실었다. count/denominator 를 잃지 않는 표기로 바꾼다.
+    """
+    if frac is None or pd.isna(frac) or n is None:
+        return "—"
+    k = round(float(frac) * int(n))
+    return f"{k}/{int(n)} ({100 * float(frac):.{digits}f}%)"
+
+
 def _load(path: Path):
     if not path.exists():
         return None
@@ -155,17 +168,35 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     g = cmp_res.get("gap_analysis", {}).get(base, {})
     if g and "error" not in g and "gap_collapse_frac" in g:
         collapse, split = g["gap_collapse_frac"], g.get("false_split_frac")
+        # ★ 15차 발견 2 — count 를 먼저 쓴다. `_pct(1/245, 0)` 은 0% 로 반올림해
+        #   "붕괴 없음" 으로 읽혔고, 그 값과 우도비 90 이 서로 모순이었다.
+        n_wide = g.get("n_wide_gap_true")
+        n_small = g.get("n_small_gap_true") or g.get("n_narrow_gap_true")
         fact = (f"2. 참값이 뚜렷이 다른 조건(|ΔLAM|_true ≥ {_pp(g['gap_thresh'], 0)})에서 "
-                f"fitting이 두 전극을 같다고 답하는 비율은 "
-                f"**{_pct(collapse)}** (n={g['n_wide_gap_true']}). "
+                f"fitting이 두 전극을 같다고 답한 것은 "
+                f"**{_cnt(collapse, n_wide)}** 다. "
                 f"참 격차 {_pp(g['mean_true_gap_wide'])} → 복원 격차 "
                 f"{_pp(g['mean_recovered_gap_wide'])}, shrinkage {g['shrinkage']:.2f}. ")
         lr = g.get("likelihood_ratio_equal")
         if lr is not None and split is not None:
-            fact += (f"\n\n   관측 \"두 전극이 같다\"가 어느 쪽을 지지하는지 **사건 우도비**로 보면\n\n"
-                     f"   > P(같다고 답 | 참 격차 < {_pp(g['tol'], 0)}) = {_pct(1 - split)}\n"
-                     f"   > P(같다고 답 | 참 격차 ≥ {_pp(g['gap_thresh'], 0)}) = {_pct(collapse, 1)}\n"
-                     f"   > 우도비 = {lr:.1f}")
+            # ★ 15차 발견 3·6 — "우도비" 라는 무조건적 표현 대신 조건부임을 이름에
+            #   박고, 전체 격자 값을 **같은 문단에** 병기한다.
+            _all = ((cmp_res.get("gap_analysis_all_conditions") or {}).get(base) or {})
+            fact += (f"\n\n   이 관측이 어느 쪽을 지지하는지 **동일가중 합성격자의 "
+                     f"조건부 사건률 비**로 보면 (population="
+                     f"{g.get('population', 'recoverable')})\n\n"
+                     f"   > P(같다고 답 | 참 격차 < {_pp(g['tol'], 0)}) = "
+                     f"{_cnt(1 - split, n_small)}\n"
+                     f"   > P(같다고 답 | 참 격차 ≥ {_pp(g['gap_thresh'], 0)}) = "
+                     f"{_cnt(collapse, n_wide)}\n"
+                     f"   > 사건률 비 = {lr:.1f}")
+            if _all.get("likelihood_ratio_equal") is not None:
+                fact += (f"\n\n   같은 지표를 **전체 생성성공 격자**(population=all)에서 "
+                         f"재계산하면 넓은 격차 붕괴 "
+                         f"{_cnt(_all.get('gap_collapse_frac'), _all.get('n_wide_gap_true'))}, "
+                         f"사건률 비 **{_all['likelihood_ratio_equal']:.2f}** 다. "
+                         f"즉 위 값은 복원가능군 선택에 강하게 의존한다 — "
+                         f"두 값을 **함께** 인용하지 않으면 안 된다.")
             # ★ 이 값을 결론으로 승격시키지 않는다. 아래 세 제약을 같은 문단에 붙인다.
             lo, hi = g.get("lr_sensitivity_min"), g.get("lr_sensitivity_max")
             med = g.get("lr_sensitivity_median")
@@ -173,12 +204,12 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             if lo is not None:
                 spike = g.get("lr_is_local_spike")
                 fact += (f"\n   1. **임계 의존** — 같은 데이터에서 (참격차, 동일판정) 임계를 "
-                         f"흔들면 우도비가 {lo:.1f}~{hi:.1f}(중앙값 {med:.1f})로 움직인다. "
+                         f"흔들면 사건률 비가 {lo:.1f}~{hi:.1f}(중앙값 {med:.1f})로 움직인다. "
                          + ("현재 조합은 이웃보다 유독 높은 **국소 봉우리**다 — 이 값을 "
                             "대표값으로 인용하면 사후선택이 된다. "
                             if spike else "")
                          + "아래 임계 민감도 표를 함께 볼 것.\n")
-            fact += ("\n   2. **posterior가 아님** — 이건 두 합성 가설 아래의 *사건* 우도비다. "
+            fact += ("\n   2. **posterior가 아님** — 이건 두 합성 가설 아래의 *사건률 비*다. "
                      "`P(참값이 같다 | fitting이 같다고 답함)`으로 바꾸려면 실제 셀 집단의 "
                      "사전확률과, 여기서 버린 중간 격차 구간의 주변분포가 필요하다. "
                      "격자점을 같은 빈도로 센 것은 실제 셀의 분포가 아니다.\n")
@@ -200,22 +231,27 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
                      "**오차 스케일이 임계 간격보다 작다**는 사실에서 온다."
                      if g.get("collapse_measurable", True) else
                      "즉 낮은 붕괴율은 **이 임계 설정에서 붕괴가 관측되기 어렵다**는 사실의 "
-                     "재진술에 가깝고, 우도비도 그만큼 임계 의존적이다.")
+                     "재진술에 가깝고, 사건률 비도 그만큼 임계 의존적이다.")
         lines.append(fact)
 
     v = cmp_res.get("verdict_22p", {}).get(base, {})
     if v and "error" not in v:
         anti = v.get("pe_ne_antisym_frac", 0)
         gap_t, gap_r = v.get("true_pe_ne_gap"), v.get("recovered_pe_ne_gap")
+        # ★ 15차 발견 7 — 이 값은 artifact·목적함수·noise·반경·임계에 모두
+        #   조건부다. count 를 먼저 쓰고 조건을 문장에 박는다.
         lines.append(
-            f"3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방 자체의 degeneracy는 "
-            f"{_pct(v['degenerate_frac'])}**"
-            f" — 최근접 {v['n_near']}개 조건의 평균 |오차| {_pp(v['mean_abs_err'])}, "
+            f"3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 "
+            f"{_cnt(v['degenerate_frac'], v['n_near'])}** "
+            f"(목적함수 `{base}`, 최근접 {v['n_near']} grid 조건, "
+            f"raw max-mode 오차 > {_pp(g.get('tol', 0.02), 0) if g else '2%p'} 임계) "
+            f" — 행별 max-mode 절대오차의 평균 {_pp(v['mean_abs_err'])}, "
             f"raw PE/NE 오차 반대부호 비율 {_pct(anti)}, "
             f"참 PE-NE 격차 {_pp(gap_t)} → 복원 격차 {_pp(gap_r)}. "
             f"⚠ 이 근방은 참값이 애초에 LAM_PE = LAM_NE인 격자점이므로, "
             f"여기서 복원이 잘 된다는 사실만으로는 22p 결과를 옹호할 수 없다 "
-            f"(위 2번이 답이다).")
+            f"(위 2번이 답이다). 이 {v['n_near']}개는 실제 셀이 아니라 설계 격자의 "
+            f"최근접 점이며, 임계·반경·noise·목적함수를 바꾸면 값이 달라진다.")
 
     # ★ F33 — Hessian은 결론에서 뺐다. `pe_ne_coupled`는 평평한 방향에서 α_PE와
     #   α_NE가 **같은 부호**인지를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은
@@ -681,7 +717,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             "실패한 검사: "
             + ", ".join(f"`{k}` — {r}" for k, r in zip(prov["fail"], prov["reasons"]))
             + ".\n> \n"
-            "> 우도비, half-cell 목적함수 비교, raw PE/NE 부호 통계, multi-start, "
+            "> 사건률 비, half-cell 목적함수 비교, raw PE/NE 부호 통계, multi-start, "
             "Hessian 수치를 인용하지 마십시오.\n"
             "> \n"
             "> 방향성 관측(예: half-cell 기준이 grid 기준보다 오차가 작다)까지만 "
@@ -836,7 +872,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         if sens:
             P.append("### 임계 민감도 — 위 숫자를 인용하기 전에 볼 것\n")
             P.append("같은 데이터에서 (참 격차 cutoff, 동일 판정 tol) 두 임계만 바꿔 "
-                     "우도비를 다시 센 것이다 (`pocv_dvdq`, noise=0, 복원가능군). "
+                     "사건률 비를 다시 센 것이다 (`pocv_dvdq`, noise=0, 복원가능군). "
                      "값이 한 자릿수에서 수십까지 움직이면, 특정 조합의 값은 "
                      "**측정이 아니라 선택**이다.\n")
             for same_def, title in (("lt_tol", "참값 \"같다\" = 참 격차 < tol"),
@@ -867,7 +903,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                                 f" ÷ {r['n_wide_called_same']}/{r['n_wide']}</sub>")
                     P.append(f"| **{_pp(gt, 0)}** | " + " | ".join(cells) + " |")
                 P.append("")
-            P.append("각 칸은 `우도비` 아래에 `분자/분모 ÷ 분자/분모`를 함께 적었다. "
+            P.append("각 칸은 `사건률 비` 아래에 `분자/분모 ÷ 분자/분모`를 함께 적었다. "
                      "`∞`는 넓은 격차군에서 붕괴가 0건이라는 뜻이며, 요약 통계의 "
                      "min/max 범위에서는 제외되므로 개수를 "
                      "`gap_analysis.lr_sensitivity_n_infinite`로 따로 센다. "
@@ -879,7 +915,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         if "likelihood_ratio_equal" in ga and "likelihood_ratio_equal" in (
                 gaps.get("pocv_dvdq") or {}):
             P.append("### 모집단을 바꾸면 (복원불가군 포함)\n")
-            P.append(f"| 모집단 | n(참격차 작음) | n(참격차 큼) | 붕괴율 | 우도비 |")
+            P.append(f"| 모집단 | n(참격차 작음) | n(참격차 큼) | 붕괴 | 사건률 비 |")
             P.append("|---|---|---|---|---|")
             for label, gg in (("복원가능군", gaps["pocv_dvdq"]), ("전체 격자", ga)):
                 P.append(f"| {label} | {gg.get('n_small_gap_true', '—')} | "
@@ -888,7 +924,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                          f"{gg['likelihood_ratio_equal']:.1f} |")
             P.append("")
             P.append("복원가능군 조건화는 물리적 근거가 있지만(참 α<1이면 정답이 재구성 "
-                     "창 밖), **그 조건화가 우도비를 크게 바꾼다**는 사실은 결론과 같은 "
+                     "창 밖), **그 조건화가 사건률 비를 크게 바꾼다**는 사실은 결론과 같은 "
                      "무게로 적어야 한다.\n")
 
     # ── Hessian ──
@@ -950,10 +986,12 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             pass
         P.append("- **최소고윳값>0** — 100%가 아니면 그만큼은 최적점이 아니라 **안장점**에서 "
                  "곡률을 잰 것입니다. 그 조건들의 조건수는 해석하지 마세요.")
+        # ★ 15차 부수 발견 — 위 :172 는 이 지표가 22p 가설과 부호 규약이 달라
+        #   근거가 못 된다고 올바르게 경고해 놓고, 여기서 다시 "직접 증거" 라고
+        #   썼다. 자기모순이라 후자를 삭제한다.
         P.append("- **α_PE·α_NE 결합** — 평평한 방향에서 두 전극이 같은 부호로 묶여 "
-                 "있는 비율. 높으면 \"PE와 NE를 함께 움직여도 곡선이 안 변한다\"는 "
-                 "뜻이고, 22p에서 LAM_PE ≈ LAM_NE가 나온 것이 물리가 아니라 수학이라는 "
-                 "직접 증거가 된다.\n")
+                 "있는 비율입니다. **22p 가설(한쪽 과대·다른쪽 과소)은 부호가 반대**라 "
+                 "이 지표는 그 가설에 적용할 수 없습니다 (F33). 진단 참고로만 보세요.\n")
 
     # ── multi-start (F21) ──
     # ★ F21b: 목적함수 간 비교는 무작위 restart끼리만 해야 공정하다.
@@ -1029,7 +1067,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     if _case_rendered:
         from tools.compare_cases import to_markdown as case_md
         P.append("## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)\n")
-        P.append("목적함수를 바꾸는 것과 **기준 곡선을 바꾸는 것** 중 어느 쪽이 큰지.\n")
+        # ★ 15차 발견 5 — 두 실행은 reference 외에 bounds·p_ini·half-cell
+        #   cache/recipe·mode 변환도 다르다. "기준 곡선이 원인" 이라는 인과
+        #   귀속은 이 자료로 성립하지 않는다.
+        P.append("> ⚠ **이것은 reference 단독의 인과효과가 아닙니다.** 두 실행은 "
+                 "기준 곡선 외에 bounds preset·초기값 `p_ini`·half-cell "
+                 "cache/recipe·mode 변환도 함께 다릅니다. 따라서 아래 수치는 "
+                 "**두 reference-specific fitting pipeline 에서 관측된 값**으로만 "
+                 "읽어야 하며, reference 단독 효과를 주장하려면 나머지 축을 통제한 "
+                 "별도 대조가 필요합니다. 아래 `reference별_허용차이`·`_인과범위` 를 "
+                 "함께 보세요.\n")
         # F52: 두 artifact의 provenance 판정을 표 바로 위에 싣는다
         cp = case.get("provenance") or {}
         if cp:
