@@ -423,19 +423,48 @@ def solve_z(nodes, edges, z_lo, z_hi, area_um2, sigma_A=None, touch_um=0.0, eps=
 
 
 def contact_sensitivity(nodes, node_line, d_um, sigma_bulk, base_edges,
-                        z_lo, z_hi, area_um2, scales=(0.8, 1.0, 1.25), a_frac=0.25):
+                        z_lo, z_hi, area_um2, scales=(0.4, 0.6, 0.8, 1.0, 1.5, 2.0),
+                        a_frac=0.25):
     """접촉 판정 문턱을 흔들어 **새 자유도의 민감도**를 잰다.
 
     격자를 없앤 대신 '접촉 문턱' 이 자유도가 됐다 — 그것을 숨기지 않고 잰다.
+
+    ⚠⚠ 2026-08-13 정정 — **이 탐침이 한동안 눈이 멀어 있었다**.  선분-패치 병합을 넣은 뒤
+      기본 범위 (0.8, 1.0, 1.25) 에서는 접촉 수가 늘 1 이고 Holm G = 2σ·a_frac·d 가
+      **간격과 무관**하라 σ 가 전혀 안 움직였다 → `spread_pct = 0.0` 이 나왔다.
+      그 0.0 은 "둔감해서 안전" 이 아니라 "**아무것도 안 쟀다**" 였다.
+      ⇒ ⓐ 범위를 절벽(0.4~2.0)까지 넓히고 ⓑ 접촉 **수**의 변화도 함께 보고하고
+        ⓒ 문턱을 넘나드는 지점을 `cliff_between` 으로 지목한다.
+    ⚠ 남은 물리 한계 (미해결, §F1): `a = a_frac·d` 는 두 섬유의 **간격을 무시한다**.
+      실제 협착 반경은 간신히 닿을 때 0 이고 파고들수록 커져야 한다.  지금은 계단함수
+      (접촉이냐 아니냐)라서 문턱 근처에서 σ 가 **불연속**이다.  간격-의존 a 모형은
+      앵커가 없어 미구현 — `a_frac` 스윕으로만 밴드를 준다.
     """
     out = {}
-    for s in scales:
+    prev = None
+    cliff = []
+    for s in sorted(float(x) for x in scales):
         c = fibre_contacts(nodes, base_edges, d_um, sigma_bulk, node_line=node_line,
                            touch_scale=s, a_frac=a_frac)
         se, _ = solve_z(nodes, base_edges + c, z_lo, z_hi, area_um2)
-        out[float(s)] = {'n_contacts': len(c), 'sigma_eff': float(f'{se:.6g}')}
-    v = [x['sigma_eff'] for x in out.values()]
-    out['spread_pct'] = float(f'{(max(v) / min(v) - 1) * 100:.3g}') if min(v) > 0 else None
+        out[s] = {'n_contacts': len(c), 'sigma_eff': float(f'{se:.6g}')}
+        if prev is not None and len(c) != out[prev]['n_contacts']:
+            cliff.append((prev, s, out[prev]['n_contacts'], len(c)))
+        prev = s
+    # ⚠ 접촉이 **0 인 팔**을 분모에 넣으면 spread 가 1e15 % 같은 무의미한 수가 된다
+    #   (σ ≈ 1e-16 = 수치 0).  연결된 팔끼리만 비교하고, 0↔1 전이는 `cliff_between` 이 맡는다.
+    conn = [x for x in out.values() if isinstance(x, dict) and x['n_contacts'] > 0]
+    v = [x['sigma_eff'] for x in conn]
+    nc = [x['n_contacts'] for x in out.values() if isinstance(x, dict)]
+    out['spread_pct'] = (float(f'{(max(v) / min(v) - 1) * 100:.3g}')
+                         if len(v) > 1 and min(v) > 0 else (0.0 if len(v) == 1 else None))
+    out['n_arms_connected'] = len(conn)
+    out['n_contacts_range'] = [min(nc), max(nc)]
+    out['cliff_between'] = [{'from': a_, 'to': b_, 'n': [na, nb]} for a_, b_, na, nb in cliff]
+    out['probe_blind'] = (len(set(nc)) == 1 and not (out['spread_pct'] or 0.0) > 1e-9)
+    if out['probe_blind']:
+        out['probe_blind_note'] = ('이 범위에서 접촉 수도 σ 도 안 움직였다 — 둔감한 것이 '
+                                  '아니라 **탐침이 아무것도 못 쟀다**.  범위를 넓힐 것')
     return out
 
 
@@ -506,9 +535,13 @@ def _selftest():
         f'({se6:.4g} < {exact:.4g}, 접촉 {len(c6)}개)', 0 < se6 < exact and len(c6) > 0)
 
     # ⑦ ★ 새 자유도를 **숨기지 않는다** — 접촉 문턱 민감도를 재서 돌려준다
+    #   ⚠ 이 시험은 한동안 `spread 0.0 %` 를 PASS 로 통과시켰다 = 탐침이 눈이 먼 것을
+    #     "둔감해서 안전" 으로 읽었다.  이제 **절벽을 찾았는지**를 묻는다.
     s7 = contact_sensitivity(n6, nl, D, SIG, e6, 0.0, LZ, AREA)
-    chk(f'⑦ ★ 접촉 문턱 민감도를 보고한다 (spread {s7["spread_pct"]} %)',
-        s7.get('spread_pct') is not None)
+    chk(f'⑦ ★ 접촉 문턱 민감도를 보고한다 (spread {s7["spread_pct"]} %, '
+        f'접촉수 {s7["n_contacts_range"]})', s7.get('spread_pct') is not None)
+    chk(f'⑦b ★ 탐침이 눈멀지 않았다 — 절벽을 찾는다 {s7["cliff_between"]}',
+        not s7['probe_blind'] and len(s7['cliff_between']) >= 1)
 
     # ⑧ 플레이트에 안 닿으면 거부 (조용히 0 을 만들지 않는다)
     P8 = P[(P[:, 2] > 2.0) & (P[:, 2] < 8.0)]
