@@ -702,6 +702,22 @@ SPEC = {
           lines_y=2.80, lines_size=13.5, lines_lead=0.58,
           statement="A proxy may decide what to compute next.\nIt may not stand in for the result.",
           stmt_y=5.80, stmt_size=17),
+ 29: dict(gloss="Site screening: choosing which sublattice a dopant occupies  ·  Coating: a separate compound placed between electrolyte and cathode",
+          src="Miara 2015 via Anderson 2024 · Lee 2024 · Xiao 2019",
+          pics=[S+"prior_site_defect_energy.png", S+"step1_site_choice.png"],
+          fig_label=["45 dopants × 3 sites in a garnet (literature)", "91 compounds in our sulfide host (this work)"],
+          fig_note=["[b]one cation at a time; the site is chosen by defect energy[/b]",
+                    "[b]a whole compound enters — cation and anion together[/b]"],
+          pic_zone=dict(x=0.55, y=2.50, w=8.90, h=2.20),
+          table=dict(rows=[
+                    ['study', 'host', 'what is varied', 'n', 'mechanical axis'],
+                    ['Miara 2015 (via Anderson)', 'garnet oxide', 'one cation, 3 sites', '45', '[r]none[/r]'],
+                    ['Lee 2024', 'argyrodite', 'elements already in the formula', '84', '[r]none[/r]'],
+                    ['Xiao 2019', '[r]no host[/r] — free coating', 'the compound itself', '104,082', '[r]none[/r]'],
+                    ['this work', 'argyrodite sulfide', '[b]a foreign binary compound[/b]', '91', '[b]included[/b]'],
+                 ], y=5.12, w=8.76, size=10, first_col_w=2.30),
+          cap="Left: Anderson et al. (2024), Fig. 3d — defect energies from Miara, Richards, Wang & Ceder, "
+              "Chem. Mater. 27 (2015) 4040. Right: our own site-preference calculation."),
  28: dict(gloss="Roster: the full input list, before anything is judged  ·  Family: grouped by the dominant anion",
           src="master_batch roster · 91 compounds",
           roster_boxes=True,
@@ -820,6 +836,11 @@ VOICE = {
       ["The left column is [b]what the method answers[/b]; the right is what it is assumed to answer.",
        "Every entry on the right is a calculation that [r]has not been run[/r]."]),
 }
+VOICE[29] = ("Where prior screening stops",
+             "Prior work (3): Site-resolved screening exists — for oxides, one cation",
+             ["Ceder's group screened [b]45 cations across three garnet sites[/b] by defect energy in 2015.",
+              "A coating is a [r]free-standing compound[/r]; a dopant must be [b]placed and charge-balanced[/b]."])
+
 VOICE[28] = ("Full candidate roster",
              "Appendix A5: All 91 compounds, grouped by anion family",
              ["Every compound that entered the campaign is listed — [b]this is the denominator[/b].",
@@ -827,6 +848,19 @@ VOICE[28] = ("Full candidate roster",
 
 for _n, (_t, _h, _b) in VOICE.items():
     SPEC.setdefault(_n, {}).update(title=_t, header=_h, bullets=_b)
+
+# ── 선행연구 (3) 을 6번 자리에 끼운다 → 이후 장 번호가 한 칸씩 밀린다 ─────────
+# 임시 키 29 로 써 놓고 여기서 6 으로 옮긴다. sldIdLst 재정렬(reordered29)과 짝이다.
+_INSERT_AT, _TEMP_KEY = 6, 29
+_shift = {}
+for _k, _v in SPEC.items():
+    if _k == _TEMP_KEY:
+        _shift[_INSERT_AT] = _v
+    elif _k >= _INSERT_AT:
+        _shift[_k + 1] = _v
+    else:
+        _shift[_k] = _v
+SPEC = _shift
 
 # 텍스트만 손보고 내용 영역은 그대로 두는 장
 KEEP_ZONE = set()
@@ -1013,7 +1047,9 @@ def selftest():
                        + max(0.225, 0.0235 * sp_["table"].get("size", 11.5))
                        * len(sp_["table"]["rows"]) + 0.035, 2))
              for n, sp_ in SPEC.items() if sp_.get("table")
-             if sp_["table"].get("y", 2.55) + 0.30 + 0.265 * (len(sp_["table"]["rows"]) - 1) > CAP_Y]
+             if sp_["table"].get("y", 2.55)
+                + max(0.225, 0.0235 * sp_["table"].get("size", 11.5))
+                * len(sp_["table"]["rows"]) + 0.035 > CAP_Y]
     chk(f"음성: 표가 캡션 줄을 넘지 않음 ({bad_t})", not bad_t)
     # 음성 ⑫ — 그림 라벨 수가 그림 수보다 많으면 안 된다
     bad_l = [n for n, sp_ in SPEC.items()

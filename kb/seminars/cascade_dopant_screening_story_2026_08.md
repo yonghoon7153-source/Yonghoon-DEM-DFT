@@ -1,5 +1,5 @@
 ---
-title: LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v5 · 덱과 1:1)
+title: LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v6 · 덱과 1:1)
 date: 2026-08-16
 updated: 2026-08-16
 tags: [seminar, cascade, screening, doping, lpscl]
@@ -13,10 +13,10 @@ claimType: empirical
 evidenceScope: multi-source-mixed
 ---
 
-# LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v5)
+# LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v6)
 
-덱: `docs/Research_Seminar_2026_08_cascade_story_v5.pptx` (28장 · 그림 22 · 표 4)
-**슬라이드 번호와 이 대본의 번호가 1:1로 맞는다.** 본문 23장 + 부록 5장, 본문 약 21분.
+덱: `docs/Research_Seminar_2026_08_cascade_story_v6.pptx` (29장 · 그림 24 · 표 5)
+**슬라이드 번호와 이 대본의 번호가 1:1로 맞는다.** 본문 24장 + 부록 5장, 본문 약 22분.
 
 각 장 머리의 `> ■`·`> •` 은 **슬라이드에 실제로 인쇄된 문장**이다 (읽는 게 아니라 근거).
 그 아래 한국어가 말할 내용.
@@ -142,7 +142,54 @@ evidenceScope: multi-source-mixed
 
 ## ③ 후보군
 
-### 6 — Candidate chemistry space
+### 6 — Where prior screening stops
+
+> ■ Prior work (3): Site-resolved screening exists — for oxides, one cation
+> • Ceder's group screened 45 cations across three garnet sites by defect energy in 2015.
+> • A coating is a free-standing compound; a dopant must be placed and charge-balanced.
+
+`< 45 dopants × 3 sites in a garnet (literature) >`
+`해설` one cation at a time; the site is chosen by defect energy
+
+`< 91 compounds in our sulfide host (this work) >`
+`해설` a whole compound enters — cation and anion together
+
+`[표]` study / host / what is varied / n / mechanical axis
+
+**[70초]**
+
+여기서 한 가지 분명히 하고 가겠습니다. **이런 스크리닝을 아무도 안 한 건 아닙니다.**
+
+왼쪽 그림이 2015년 Ceder 그룹 연구입니다. LLZO 가넷에서 **도펀트 45종을 Li·La·Zr 세 자리
+각각에 넣어 결함 에너지를 계산**했습니다. 어느 자리에 앉을지를 계산으로 고른 거죠. 앞에서
+본 Anderson 2024가 그 예측을 받아서 59종을 실제로 합성한 겁니다.
+
+황화물 쪽에도 있습니다. 2024년 Lee 등이 argyrodite에서 **84개 구조를 MLIP MD로 전수**
+계산했습니다.
+
+그러면 저희는 뭐가 다르냐. 표 세 번째 칸을 봐 주세요. **무엇을 바꾸느냐**가 다릅니다.
+
+Ceder 그룹은 **양이온 하나**를 바꿉니다. Lee는 **이미 화학식 안에 있는 원소**를 다른 걸로
+바꿉니다. Si를 Ge로, P를 Sb로. 둘 다 "격자 안의 한 원소를 교체"입니다.
+
+저희는 **화합물 하나를 통째로 집어넣습니다.** MgO를 넣는다는 건 Mg 하나가 아니라 Mg와 O가
+같이 들어간다는 뜻이고, 그러면 양이온 자리와 음이온 자리를 **동시에** 정해야 하고 전하도
+맞춰야 합니다. 오른쪽 그림이 그 결과예요.
+
+그리고 표 맨 오른쪽 칸. **기계 물성 축은 넷 중 저희만 있습니다.**
+
+💬 한 가지 덧붙이면 — 코팅 스크리닝은 상대적으로 쉽습니다. 코팅 물질은 **따로 존재하는
+화합물**이라 데이터베이스에서 꺼내 hull이랑 ESW만 구하면 됩니다. Xiao가 십만 종을 돌릴 수
+있었던 이유가 그거예요. 반면 도핑은 **그 화합물이 세상에 없습니다.** 구조를 직접 만들어야
+하고, 자리를 골라야 하고, 전하를 맞춰야 합니다. 이게 어려운 지점이고, 뒤에 나올 결과 1이
+정확히 그 대가입니다.
+
+💡 이 장이 발표의 포지셔닝입니다. "아무도 안 했다"고 말하면 질문 한 방에 무너집니다.
+"했는데 무엇을 바꾸느냐가 다르다"가 방어 가능한 주장이고, 실제로도 그렇습니다.
+
+---
+
+### 7 — Candidate chemistry space
 
 > ■ Candidate set (1): 91 compounds across seven anion families
 > • Oxides were included for strong M–O bonding; halides because the host contains Cl.
@@ -164,7 +211,7 @@ evidenceScope: multi-source-mixed
 
 ---
 
-### 7 — Elemental coverage of the candidate set
+### 8 — Elemental coverage of the candidate set
 
 > ■ Candidate set (2): 36 cation elements, alkali metals to lanthanides
 > • Coverage is dense among transition metals and sparse in the heavy main group.
@@ -190,7 +237,7 @@ Li₃N, LiCl, LiF, LiBr, LiI 일곱 개를 돌렸다는 뜻입니다.
 
 ## ④ 어떻게 했나 — 9단계
 
-### 8 — Substitution site and charge compensation
+### 9 — Substitution site and charge compensation
 
 > ■ Step 1: The substitution site is enumerated before a structure is built
 > • The Li, P, S and Cl sublattices are distinct; an oxide needs a cation and an anion site.
@@ -213,7 +260,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 9 — Candidate structure generation
+### 10 — Candidate structure generation
 
 > ■ Step 2: Each allowed placement becomes a separate structure
 > • To cover the placement space, several structures per compound were generated.
@@ -233,7 +280,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 10 — Low-cost structure relaxation
+### 11 — Low-cost structure relaxation
 
 > ■ Step 3: A machine-learned potential screens structures before DFT
 > • To relax thousands of structures within budget, a fast interatomic potential was used.
@@ -258,7 +305,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 11 — Representative structure selection
+### 12 — Representative structure selection
 
 > ■ Step 4: One converged structure per candidate is carried forward
 > • Structures were kept if they converged and the cell volume stayed within 25 %.
@@ -278,7 +325,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 12 — Thermal perturbation of the selected structure
+### 13 — Thermal perturbation of the selected structure
 
 > ■ Step 5: A short anneal tests whether the arrangement survives
 > • To escape the nearest local minimum, each structure was heated briefly and relaxed again.
@@ -303,7 +350,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 13 — Static lithium transport pathway
+### 14 — Static lithium transport pathway
 
 > ■ Step 6: The Li energy landscape is mapped on the annealed geometry
 > • To flag transport risk without dynamics, a bond-valence landscape was computed.
@@ -330,7 +377,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 14 — Mechanical response of the doped lattice
+### 15 — Mechanical response of the doped lattice
 
 > ■ Step 7: Stiffness and compressibility are obtained from finite strains
 > • To assess particle contact under stack pressure, elastic moduli were computed.
@@ -352,7 +399,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 15 — Electrochemical stability window
+### 16 — Electrochemical stability window
 
 > ■ Step 8: The oxidation onset from a grand-potential construction
 > • To locate decomposition, the Li chemical potential was scanned as a voltage axis.
@@ -383,7 +430,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ---
 
-### 16 — Calculations that were not performed
+### 17 — Calculations that were not performed
 
 > ■ Step 9: Two designed stages produced no evidence
 > • Conductivity from dynamics — days per candidate; Step 6 stands in as a proxy.
@@ -410,7 +457,7 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 
 ## ⑤ 결과
 
-### 17 — Inventory of available evidence
+### 18 — Inventory of available evidence
 
 > ■ Result summary: The screen is broad in structure and thin in transport
 > • Structures, relaxation, anneal, Li maps, mechanics and oxidation windows all exist.
@@ -432,7 +479,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ---
 
-### 18 — Effect of structural identity on the measured value
+### 19 — Effect of structural identity on the measured value
 
 > ■ Result 1: The dopant name did not define a controlled comparison
 > • Across the three runs, 59 of 90 species kept one exact formula and 31 did not.
@@ -463,7 +510,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ---
 
-### 19 — Dependence of oxidation onset on dopant chemistry
+### 20 — Dependence of oxidation onset on dopant chemistry
 
 > ■ Result 2: Sulfur sets the limit; shifts away from it are conditional
 > • The valence-band edge is sulfur, so sulfur is oxidised first regardless of the dopant.
@@ -498,7 +545,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ---
 
-### 20 — Trade-off between stability and lithium transport
+### 21 — Trade-off between stability and lithium transport
 
 > ■ Result 3: Lattice stabilisation and Li mobility oppose each other
 > • Across our candidates the two axes correlate negatively — the trend is not noise.
@@ -528,7 +575,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ## ⑥ 다음 판
 
-### 21 — Design of the next campaign
+### 22 — Design of the next campaign
 
 > ■ Future work (1): Control is strengthened before scale is increased
 > • To separate chemistry from placement, the formula and site will be frozen before repeats.
@@ -557,7 +604,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ## ⑦ ML
 
-### 22 — Use of the data for machine learning
+### 23 — Use of the data for machine learning
 
 > ■ Future work (2): The data schedules calculations, not replaces them
 > • 90 candidates give about 4,000 pairs — not computable, but rankable for prioritisation.
@@ -586,7 +633,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ## ⑧ Discussion
 
-### 23 — Discussion
+### 24 — Discussion
 
 > ■ Open questions for the group
 > • What exists is a map of where the comparison is reliable, not a shortlist.
@@ -617,7 +664,7 @@ Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
 ## 부록 (질문 나올 때만)
 
-### 24 — Experimental counterpart in a garnet electrolyte
+### 25 — Experimental counterpart in a garnet electrolyte
 
 > ■ Appendix A1: The same survey performed by synthesis
 > • 59 dopants were synthesised and measured — the closest experimental analogue.
@@ -634,7 +681,7 @@ LLZO 에 도펀트 59 종을 **실제로 합성해** 전도도와 전기화학 �
 
 ---
 
-### 25 — Mapping of talk steps onto the executed workflow
+### 26 — Mapping of talk steps onto the executed workflow
 
 > ■ Appendix A2: Nine questions, and where each one was answered
 > • Each talk step is named by the question it answers; folders are named by what ran.
@@ -647,7 +694,7 @@ LLZO 에 도펀트 59 종을 **실제로 합성해** 전도도와 전기화학 �
 
 ---
 
-### 26 — Interpretation of the three campaign labels
+### 27 — Interpretation of the three campaign labels
 
 > ■ Appendix A3: The labels are neither concentrations nor repeats
 > • All three collapsed to the same substitution in a small cell — no concentration axis.
@@ -663,7 +710,7 @@ LLZO 에 도펀트 59 종을 **실제로 합성해** 전도도와 전기화학 �
 
 ---
 
-### 27 — Boundaries of each computational method
+### 28 — Boundaries of each computational method
 
 > ■ Appendix A4: Every method named by the question it can answer
 > • The left column is what the method answers; the right is what it is assumed to answer.
@@ -677,7 +724,7 @@ LLZO 에 도펀트 59 종을 **실제로 합성해** 전도도와 전기화학 �
 
 ---
 
-### 28 — Full candidate roster
+### 29 — Full candidate roster
 
 > ■ Appendix A5: All 91 compounds, grouped by anion family
 > • Every compound that entered the campaign is listed — this is the denominator.
