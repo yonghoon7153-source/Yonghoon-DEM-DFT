@@ -146,28 +146,42 @@ Division of Materials Science & Engineering, Hanyang University
 
 ---
 
-### 5 — Adopted design principle
+### 5 — Screening with a trained model  ✅ 확정 (2026-08-16)
 
-> ■ Prior work (2): The ordering was adopted; the thresholds were not
-> • Published thresholds were tuned for coatings, and a sulfide host fails all of them.
-> • The transferable rule: a cheap stage reorders the queue, it never certifies a material.
+> ■ Prior work (2): A trained model can replace the slowest gate
+> • One track runs three physical branches and merges them into a candidate list.
+> &nbsp;&nbsp;(stoichiometry · electronic structure · atomistic structure → most promising candidates)
+> • The other trains a classifier on measured conductivity and [파랑]feeds it back into the screen[/].
+> &nbsp;&nbsp;(measured pairs → feature extraction → superionic classifier)
+
+우상단 출처 — *Energy Environ. Sci.*, 10, 306 (2017).
+`< a trained model feeds back into the screen >`
 
 **[55초]**
 
-세 번째 갈래는 계산 대신 데이터를 씁니다. Sendek 은 만 이천 종을 물리 조건으로 거른
-다음, **실측 전도도가 있는 40 종으로 학습한 분류기**를 나머지에 적용했습니다.
+세 번째 갈래는 계산 대신 **데이터**를 씁니다. 그림이 상자 두 개로 나뉘어 있죠.
 
-저희가 이 논문들에서 가져온 것은 **문턱값이 아닙니다.** 그 문턱은 코팅 물질용이라
-황화물 host 는 전부 탈락합니다.
+**왼쪽이 스크리닝입니다.** 위에서 만 이천 종으로 시작해 세 갈래로 갈라집니다.
+조성에서는 원소 값이랑 매장량을 보고, 전자구조에서는 밴드갭·산화 전압·hull 에너지를
+보고, 원자구조에서는 특징을 뽑습니다. 그 셋이 아래로 모여서 유망 후보가 나와요.
 
-가져온 것은 순서입니다. 싼 단계는 다음 계산의 순서를 바꾸는 것이지 물질을 확정하지
-않는다. 이게 오늘의 규칙이고, 결과를 말할 때도 이 선을 지키겠습니다.
+**오른쪽이 모델입니다.** 실측 전도도가 있는 데이터로 특징을 뽑아 분류기를 학습시킵니다.
 
-💬 Sendek 은 "정확도 90 %"라고 쓰지 않습니다. 좋은 재료가 드물어 전부 나쁨이라고 찍어도
-정확도가 높게 나오니까요. 대신 무작위 대비 몇 배로 보고합니다. 저희도 그렇게 할 겁니다.
+여기 이 굵은 화살표를 봐 주세요. **오른쪽에서 학습한 모델이 왼쪽 스크린으로 다시
+들어갑니다.** 전도도가 계산으로는 제일 비싼 축인데, 그 자리를 모델이 대신하는 구조예요.
+
+💬 **말로만** — 저희도 나중에 같은 자리를 고민하게 됩니다. 오늘 발표에서 전도도는
+   결국 프록시로만 봤거든요. 그 얘기가 뒤에 나옵니다.
+   (이 한 마디가 STEP 6·9 로 가는 다리다. 안 하면 이 장이 그냥 남의 논문 소개로 끝난다.)
+
+⛔ **말하지 말 것** — "저희가 이 논문에서 무엇을 채택했다" 류.
+   본문을 안 읽었으므로 그림에 보이는 것까지만 말한다.
+   숫자도 **12,831 만** 그림에 있다. 21 종·40 종은 본문 값이라 쓰지 않는다.
+
+⚠ 슬라이드 상단 섹션명이 `Results & Discussion` 으로 돼 있는데, 이 장은 아직 문헌 소개다.
+   `Introduction` 이 맞다.
 
 ---
-
 
 ## ③ 후보군
 
