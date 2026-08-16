@@ -10,6 +10,7 @@
 """
 import io
 import json
+import pytest
 import os
 import re
 import sys
@@ -278,16 +279,52 @@ def test_no_literal_bold_markers_in_rendered_body():
 
 
 # ── 4) 보안 · 동시성 · 경로 ────────────────────────────────────────────────
-def test_mutations_locked_by_default():
-    """인증이 없으므로 기본은 읽기 전용이어야 한다 (공개 Render 배포)."""
+#: 쓰기 라우트 — 잠겼을 때 전부 403 이어야 한다.
+MUTATION_PROBES = [
+    ("POST", "/api/comments/db/properties/electronic.json", {"json": {"text": "x"}}),
+    ("DELETE", "/api/comments/db/properties/electronic.json?id=x", {}),
+    ("POST", "/api/log", {"json": {"kind": "note", "text": "x"}}),
+    ("POST", "/api/file-rename", {"json": {"rel": "a", "name": "b"}}),
+    ("POST", "/api/concept-upload/dft", {}),
+]
+
+
+def _readonly_for(env):
+    """주어진 환경변수로 app.py 의 잠금 판정만 다시 계산한다 (재import 없이)."""
+    on_render = bool(env.get("RENDER") or env.get("RENDER_SERVICE_ID"))
+    m = (env.get("ALLOW_MUTATIONS") or "").strip().lower()
+    if m in ("1", "true", "yes"):
+        allow = True
+    elif m in ("0", "false", "no"):
+        allow = False
+    else:
+        allow = not on_render
+    return not allow
+
+
+def test_mutations_locked_on_render_open_locally():
+    """의도는 '**원격**이 읽기 전용' 이다 — 로컬까지 잠그면 자기 노트북에서 코멘트를
+    못 단다 (2026-08-16 실제로 그랬다). 명시 env 는 양방향으로 이긴다."""
+    assert _readonly_for({"RENDER": "1"}) is True, "Render 기본이 열려 있다"
+    assert _readonly_for({"RENDER_SERVICE_ID": "x"}) is True
+    assert _readonly_for({}) is False, "로컬 기본이 잠겨 있다 — 코멘트를 못 단다"
+    assert _readonly_for({"RENDER": "1", "ALLOW_MUTATIONS": "1"}) is False, \
+        "Render 에서 명시적 허용이 안 먹는다"
+    assert _readonly_for({"ALLOW_MUTATIONS": "0"}) is True, "로컬 명시적 잠금이 안 먹는다"
+    for v in ("true", "yes", "TRUE"):
+        assert _readonly_for({"ALLOW_MUTATIONS": v}) is False, v
+    for v in ("false", "no", "NO"):
+        assert _readonly_for({"ALLOW_MUTATIONS": v}) is True, v
+    # 음성: 알 수 없는 값은 '허용' 으로 읽으면 안 된다 — 환경 판정으로 떨어진다
+    assert _readonly_for({"RENDER": "1", "ALLOW_MUTATIONS": "maybe"}) is True
+
+
+def test_mutation_routes_return_403_when_locked():
+    """잠긴 상태에서는 쓰기 라우트가 전부 403 이어야 한다."""
+    if not A.READ_ONLY:
+        pytest.skip("이 실행은 쓰기가 열려 있다 (로컬 기본) — 잠금 동작은 위 단위테스트가 본다")
     c = A.app.test_client()
-    assert A.READ_ONLY is True, "ALLOW_MUTATIONS 없이 쓰기가 열려 있다"
-    probes = [("POST", "/api/comments/db/properties/electronic.json", {"json": {"text": "x"}}),
-              ("DELETE", "/api/comments/db/properties/electronic.json?id=x", {}),
-              ("POST", "/api/log", {"json": {"kind": "note", "text": "x"}}),
-              ("POST", "/api/file-rename", {"json": {"rel": "a", "name": "b"}}),
-              ("POST", "/api/concept-upload/dft", {})]
-    for m, u, kw in probes:
+    for m, u, kw in MUTATION_PROBES:
         assert c.open(u, method=m, **kw).status_code == 403, f"{m} {u} 가 안 막혔다"
 
 

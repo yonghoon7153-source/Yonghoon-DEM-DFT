@@ -337,9 +337,11 @@
         '<div class="figpane-cap">' + capHtml(rec) + noteHtml(rec, true) + '</div>' +
         // 코멘트는 고정했을 때만 — 스쳐 지나가는 미리보기마다 fetch 하지 않는다
         (pinned ? '<div class="figpane-cmt"></div>' : '') +
-        '<div class="figpane-hint">' +
-        (pinned ? '제목줄 끌면 이동 · 모서리로 크기조절 · +/− 또는 Ctrl+휠로 확대(스크롤)'
-                : '클릭하면 고정 · 본문에서 드래그로도 열려요') + '</div>';
+        // 고정한 뒤에는 안내를 지운다 — 이미 조작법을 아는 상태이고, 코멘트 입력창
+        // 바로 옆에서 계속 읽히면 거슬린다 (2026-08-16 사용자 지적). 확대/이동은
+        // 제목줄 버튼의 title 툴팁으로 여전히 찾을 수 있다.
+        (pinned ? ''
+                : '<div class="figpane-hint">클릭하면 고정 · 본문에서 드래그로도 열려요</div>');
       var x = el.querySelector(".figpane-x");
       if (x) x.onclick = function (ev) { ev.preventDefault(); ev.stopPropagation(); close(); };
       // 고정된 팝업만 '창'으로 친다 — 스쳐 지나가는 미리보기까지 모달 배경막을 걷으면 깜빡인다

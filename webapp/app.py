@@ -28,11 +28,25 @@ app = Flask(__name__)
 #   즉 원격에서 쓴 기록은 보안 문제와 별개로 **어차피 유실된다.** 그래서 기본값은
 #   "원격 = 읽기 전용" 이 맞다.
 #
-#   로컬에서 쓰기를 켜려면:  ALLOW_MUTATIONS=1 python3 webapp/app.py
-#   (RENDER 환경변수가 있으면 명시적으로 켜지 않는 한 항상 잠근다.)
+#   ⚠ 2026-08-16 — 위 의도는 "**원격**이 읽기 전용" 이었는데 구현이
+#     `READ_ONLY = not ALLOW_MUTATIONS` 라 **로컬까지 잠갔다.** 그래서 자기 노트북에서
+#     그림에 코멘트를 달려 해도 "읽기 전용" 이라고 막혔다. 로컬 기본 바인딩은
+#     127.0.0.1 이라 "아무나 POST" 가 성립하지 않는다 — 위험은 공개 주소를 갖는
+#     Render 쪽에만 있다. 기본값을 의도대로 되돌린다:
+#
+#       Render (RENDER 환경변수 있음)  →  기본 **잠금**.  ALLOW_MUTATIONS=1 로만 해제
+#       로컬                            →  기본 **열림**.  ALLOW_MUTATIONS=0 으로 잠글 수 있음
+#
+#     즉 env 를 **안 주면 환경이 정한다**. 명시하면 그게 이긴다 (양방향).
 # ─────────────────────────────────────────────────────────────
 _ON_RENDER = bool(os.environ.get("RENDER") or os.environ.get("RENDER_SERVICE_ID"))
-ALLOW_MUTATIONS = os.environ.get("ALLOW_MUTATIONS", "").strip() in ("1", "true", "yes")
+_MUT_ENV = os.environ.get("ALLOW_MUTATIONS", "").strip().lower()
+if _MUT_ENV in ("1", "true", "yes"):
+    ALLOW_MUTATIONS = True                 # 명시적 허용 — Render 에서도 이게 이긴다
+elif _MUT_ENV in ("0", "false", "no"):
+    ALLOW_MUTATIONS = False                # 명시적 잠금 — 로컬에서도 잠근다
+else:
+    ALLOW_MUTATIONS = not _ON_RENDER       # 미지정: 로컬은 열고 원격은 잠근다
 READ_ONLY = not ALLOW_MUTATIONS
 
 
@@ -44,7 +58,8 @@ def _guard_mutation():
         "error": "읽기 전용 모드예요 — 이 서버에서는 저장이 꺼져 있어요.",
         "why": ("공개 배포에는 인증이 없고, Render 기본 파일시스템은 재시작 때 초기화돼서 "
                 "어차피 기록이 남지 않아요."),
-        "how": "로컬에서 쓰려면 ALLOW_MUTATIONS=1 로 실행하세요.",
+        "how": ("로컬이면 ALLOW_MUTATIONS 를 지우고(또는 =1) 다시 띄우면 열려요. "
+                "원격(Render)은 인증이 없어서 일부러 잠가 둡니다."),
         "on_render": _ON_RENDER,
     }), 403
 
