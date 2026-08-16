@@ -188,16 +188,31 @@ for t in "${TARGETS[@]}"; do
   # ★ 지문은 **스킵 판정보다 먼저** 기록한다 (옛 코드는 뒤에 있어 영영 안 써졌다)
   [ -n "$NEWH" ] && echo "$NEWH" > .protocol_hash
   # ★ P0-5 — CI 단계는 물리가 아니라 수렴 전략이라 지문에서 뺐다. 대신 여기 기록한다.
+  #  ⛔⛔ 2026-08-16 — 기록만 하고 **대조를 안 했다.** 그래서 2단계가 통째로 안 돌았다:
+  #    ci 모드가 neb.out 을 neb.out.noCI 로 옮기지만 *.path·tmp 는 restart 용으로 남긴다.
+  #    그런데 build_neb_inputs.py --restart 가 neb.out 을 **다시 만들지 않으므로**,
+  #    직전 런의 neb.out 이 없으면 아래 grep 이 안 걸려야 정상인데 —
+  #    li2s 는 다른 경로로 neb.out 이 남아 있어 "이미 수렴" 으로 건너뛰었다.
+  #    CI 가 지문에서 빠져 있어 protocol_hash 가드도 안 걸린다 (그게 P0-5 의 대가였다).
+  #    → 옛 .ci_stage 와 새 ci_scheme 가 다르면 **건너뛰지 않는다**.
+  OLDCIS=$(cat .ci_stage 2>/dev/null || echo "")
   CIS=$(python3 -c "import json;print(json.load(open('meta.json')).get('ci_scheme',''))" 2>/dev/null)
-  [ -n "$CIS" ] && echo "$CIS" > .ci_stage
   if grep -aq "neb: convergence achieved" neb.out 2>/dev/null; then
-    if [ "$CIS" = "no-CI" ]; then
+    if [ -n "$OLDCIS" ] && [ -n "$CIS" ] && [ "$OLDCIS" != "$CIS" ]; then
+      ts "  ▶ CI 단계가 바뀌었다 ($OLDCIS → $CIS) — 옛 neb.out 을 재사용하지 않고 다시 돌린다"
+      mv neb.out "neb.out.${OLDCIS}" 2>/dev/null || true
+    elif [ "$CIS" = "no-CI" ]; then
       ts "  ✓ no-CI 수렴 — 2단계(CI)로 가려면:  bash tools/sei/run_sei_neb.sh ci $t"
+      [ -n "$CIS" ] && echo "$CIS" > .ci_stage
+      cd - >/dev/null; continue
     else
-      ts "  ✓ 이미 수렴 — 건너뜀"
+      ts "  ✓ 이미 수렴 — 건너뜀 (CI 단계 $CIS)"
+      [ -n "$CIS" ] && echo "$CIS" > .ci_stage
+      cd - >/dev/null; continue
     fi
-    cd - >/dev/null; continue
   fi
+  # 지문은 실제로 돌리기로 한 뒤에 기록한다
+  [ -n "$CIS" ] && echo "$CIS" > .ci_stage
   # ⚠ neb.x 는 재시작 파일(prefix.path)이 있으면 이어서 돈다. 지우지 말 것.
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"
@@ -221,4 +236,9 @@ for t in "${TARGETS[@]}"; do
 done
 
 ts "═══ 결산 ═══"
-python3 "$REPO/tools/sei/collect_neb.py" --work "$WORK" || true
+# ⛔⛔ 2026-08-16 — 여기서 --work "$WORK" 를 주면 **그 루트 하나로 db 를 통째로 덮어쓴다.**
+#   collect_neb.py 는 2026-08-13 에 다중 루트로 고쳐졌는데 이 호출부가 단일 루트를 계속
+#   넘기고 있었다. 실측: li2s 하나 돌렸더니 n_citable 1/8 → 0/2 가 되고
+#   v2_ccpath/li3nd (0.229 eV, 인용 가능) 가 db 에서 사라졌다.
+#   → 인자 없이 부른다 (기본이 ROOTS 전부). collect 쪽에도 축소 거부 가드를 넣었다.
+python3 "$REPO/tools/sei/collect_neb.py" || true

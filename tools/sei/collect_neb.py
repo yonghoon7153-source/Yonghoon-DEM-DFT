@@ -271,6 +271,28 @@ def selftest():
     chk(len(got) == 2 and miss == [f"{td}/nope"], f"콜론·쉼표 목록 + 없는 루트 보고 ({miss})")
     chk(root_label("/a/b/sei_neb_v2_ccpath") == "v2_ccpath"
         and root_label("/a/b/other") == "other", "루트 짧은 이름")
+    # ── ⛔ 축소 거부 (2026-08-16 사고) ──────────────────────────────────────
+    #   run_sei_neb.sh 가 --work 로 루트 하나만 넘겨 db 를 v2 로 되돌렸고,
+    #   인용 가능하던 v2_ccpath/li3nd (0.229 eV) 가 사라졌다.
+    import io as _io, json as _json, contextlib as _ctx
+    _prev = {"roots": ["v2", "v2_ccpath"],
+             "results": {"v2_ccpath/li3nd": {"citable": True, "Ea_forward_eV": 0.228981}}}
+    _tmp_out = os.path.join(td, "sei_neb.json")
+    with open(_tmp_out, "w", encoding="utf-8") as fh:
+        _json.dump(_prev, fh)
+    _real_out = globals()["OUT"]
+    try:
+        globals()["OUT"] = _tmp_out
+        import argparse as _ap
+        _args = _ap.Namespace(allow_shrink=False)
+        # 루트가 v2 하나로 줄어드는 상황을 그대로 재현
+        _prev_roots = set(_prev["roots"]); _now_roots = {"v2"}
+        chk(bool(_prev_roots - _now_roots), "[음성] 루트 축소를 감지한다 (v2_ccpath 소멸)")
+        chk("v2_ccpath/li3nd" in [k for k, v in _prev["results"].items() if v.get("citable")],
+            "[음성] 사라질 인용 가능 결과를 이름으로 지목한다")
+    finally:
+        globals()["OUT"] = _real_out
+
     shutil.rmtree(td, ignore_errors=True)
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
@@ -280,6 +302,8 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", default=os.environ.get("WORK", ROOTS),
                     help="작업 루트. 콜론/쉼표로 **여러 개**를 준다 (기본은 ROOTS 전부)")
+    ap.add_argument("--allow-shrink", action="store_true",
+                    help="루트가 줄어드는 쓰기를 허용한다 (기본은 거부 — 사고 방지)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -315,6 +339,29 @@ def main():
                 print(f"{'':12s} └ Li 자리 두 종류 {r.get('li_orbits', {}).get('wyckoffs')} — "
                       f"정·역 차 {r['site_energy_diff_eV']:.3f} eV 는 **자리 에너지 차**다(정상). "
                       f"수송 장벽은 유효Ea 를 쓴다")
+    # ⛔⛔ 2026-08-16 — 다중 루트로 고쳤는데 **호출부**가 단일 루트를 계속 넘겨서
+    #   run_sei_neb.sh 의 마지막 collect 가 db 를 v2 하나로 되돌렸다.
+    #   실측: n_citable 1/8 → 0/2, v2_ccpath/li3nd (0.229, 인용 가능) 가 소멸.
+    #   호출부는 고쳤지만, **여기서도 막는다** — 루트가 줄어드는 쓰기는 사고다.
+    if os.path.exists(OUT) and not a.allow_shrink:
+        try:
+            prev = json.load(open(OUT, encoding="utf-8"))
+        except Exception:
+            prev = {}
+        prev_roots = set(prev.get("roots") or [])
+        now_roots = {root_label(r) for r in roots}
+        lost = prev_roots - now_roots
+        if lost:
+            print(f"\n⛔ 이번 회수는 루트가 **줄어든다** — 쓰지 않는다.")
+            print(f"   기존 {sorted(prev_roots)} → 이번 {sorted(now_roots)}  (사라질 루트: {sorted(lost)})")
+            prev_ok = [k for k, v in (prev.get("results") or {}).items() if v.get("citable")]
+            if prev_ok:
+                print(f"   ⚠ 그중 인용 가능한 결과가 있다: {prev_ok}")
+            print(f"   전체를 회수하려면 --work 없이 그냥 돌릴 것 (기본이 ROOTS 전부):")
+            print(f"     python3 tools/sei/collect_neb.py")
+            print(f"   정말 축소하려면 --allow-shrink (근거를 db 에 남길 것)")
+            return 1
+
     ok = [r for r in res.values() if r.get("citable")]
     # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.
     #   그래서 새 게이트가 콘솔에서 li2s 를 막아도 **db 파일은 안 건드려**,
