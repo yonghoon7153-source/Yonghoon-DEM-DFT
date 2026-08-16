@@ -36,6 +36,8 @@ v2 의 설계 원칙 (감사에 대한 응답):
 from __future__ import annotations
 
 import argparse
+import ast                      # ⚠ 모듈 수준 — `_src_of` 가 모듈 함수라 지역 import 로는
+                                #   안 보인다 (규칙 F 가 잡는 바로 그 패턴을 내가 냈다)
 import glob
 import inspect
 import json
@@ -181,11 +183,45 @@ def _ast_label_conns(module_name, func_name):
             st = node.args[1]
         if st is None:
             conns.add('6-face')
-        elif '3, 3, 3' in ast.unparse(st) or '3,3,3' in ast.unparse(st):
+            continue
+        src = _src_of(st)
+        if '3, 3, 3' in src or '3,3,3' in src:
             conns.add('26-conn')
         else:
-            conns.add(f'UNKNOWN({ast.unparse(st)})')
+            conns.add(f'UNKNOWN({src})')
     return conns
+
+
+def _src_of(node):
+    """AST 노드 → 소스 문자열.  ⚠ `ast.unparse` 는 **Python 3.9+** 다.
+
+    실사고 2026-08-16: 원격 GPU 호스트가 py3.8 이라 `AttributeError: module 'ast' has no
+    attribute 'unparse'` 로 규율 검사가 **fail-closed** 되어 런 게이트를 못 넘었다.
+    (fail-closed 자체는 옳은 동작 — 조용히 통과시키지 않았다.)
+    ⇒ 3.9+ 면 `unparse`, 아니면 우리가 쓰는 노드 모양만 직접 복원한다.  둘 다 안 되면
+      `UNKNOWN(...)` 로 남겨 **여전히 fail-closed** 다 (추측으로 통과시키지 않는다).
+    """
+    up = getattr(ast, 'unparse', None)
+    if up is not None:
+        return up(node)
+    # py3.8 대체 — `np.ones((3,3,3), bool)` · `generate_binary_structure(3, 1)` 류만 복원
+    if isinstance(node, ast.Tuple):
+        return '(' + ', '.join(_src_of(e) for e in node.elts) + ')'
+    if isinstance(node, ast.List):
+        return '[' + ', '.join(_src_of(e) for e in node.elts) + ']'
+    if isinstance(node, ast.Num):                       # py3.8: 상수는 Num/Str/NameConstant
+        return repr(node.n)
+    if isinstance(node, ast.Constant):
+        return repr(node.value)
+    if isinstance(node, ast.Name):
+        return node.id
+    if isinstance(node, ast.Attribute):
+        return f'{_src_of(node.value)}.{node.attr}'
+    if isinstance(node, ast.Call):
+        parts = [_src_of(a) for a in node.args]
+        parts += [f'{k.arg}={_src_of(k.value)}' for k in node.keywords if k.arg]
+        return f'{_src_of(node.func)}({", ".join(parts)})'
+    return f'<{type(node).__name__}>'
 
 
 def verify_declared_adjacency(name, spec):
@@ -928,6 +964,23 @@ def _selftest():
         check_claim(dict(base, measured={'metric': 'n_components', 'value': 1, 'unit': 'c'},
                          asserted='탄소가 고립되지 않는다', h1_predicts='성분 수 = 1',
                          parity_certified='sr01_carbon_network.carbon_network_stats')) == [])
+    # ── py3.8 호환 (2026-08-16 실사고: 원격 GPU 호스트가 3.8 이라 게이트가 막혔다) ──
+    #   `ast.unparse` 는 3.9+ 다.  `_src_of` 의 대체 경로가 **같은 답**을 내야 한다.
+    _n38 = ast.parse('f(np.ones((3, 3, 3), bool))').body[0].value.args[0]
+    _s39 = _src_of(_n38)
+    _u = ast.unparse if hasattr(ast, 'unparse') else None
+    if _u is not None:
+        del ast.unparse
+    try:
+        _s38 = _src_of(_n38)
+    finally:
+        if _u is not None:
+            ast.unparse = _u
+    chk(f'py38: unparse 없이도 같은 소스 복원 ({_s38!r})', _s38 == _s39 and '3, 3, 3' in _s38)
+    chk('py38: 모르는 노드는 추측하지 않고 <Type> 로 남긴다 (fail-closed 유지)',
+        _src_of(ast.parse('x[1:2]').body[0].value.slice).startswith('<')
+        or hasattr(ast, 'unparse'))
+
     # ── 규칙 G (Codex CDX-11) ─────────────────────────────────────────────────────
     #   실사고: CL-20 이 `superseded_by: CL-21` 을 달고 verdict 안에서 자기 결론을 무효화
     #   하면서도 status=live 로 통과했다 → 철회된 하한 논증이 계속 인용 가능했다.
