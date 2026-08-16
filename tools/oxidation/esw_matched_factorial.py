@@ -88,29 +88,64 @@ def cl_swap(comp):
     return c
 
 
-def dope(host, dopant, n_o_replaces_s=True):
+#: 이 recipe 가 가정하는 형식 전하. **일반 defect chemistry 규칙이 아니다** —
+#: 캐스케이드 compound_set generator 의 charge-compensation recipe 를 재현한 것이다.
+FORMAL_CHARGE = {"Li": +1, "P": +5, "S": -2, "Cl": -1, "O": -2}
+#: 검산: Li24(+24) + P4(+20) + S20(-40) + Cl4(-4) = 0 ✓  (PS4³⁻ 의 P⁵⁺)
+
+
+def formal_charge(comp, cation_charges):
+    """조성의 형식 전하 총합. 모르는 원소가 있으면 (None, 사유)."""
+    tot = 0.0
+    for e, n in comp.items():
+        z = FORMAL_CHARGE.get(e)
+        if z is None:
+            z = cation_charges.get(e)
+        if z is None:
+            return None, f"{e} 의 형식 전하를 모른다"
+        tot += z * n
+    return tot, None
+
+
+def dope(host, dopant):
     """host 에 도펀트 산화물을 넣는다 — 캐스케이드 compound_set 규약과 같은 형태.
 
     O 는 S 자리를 채우고, 양이온은 Li 자리를 대체한다. 전하 중성은 Li 개수로 맞춘다.
-    정수로 안 떨어지면 (None, 사유) 를 돌려준다 — 반올림하지 않는다.
+    정수로 안 떨어지거나 **중성이 안 맞으면** (None, 사유) 를 돌려준다 — 반올림하지 않는다.
+
+    ⛔ 2026-08-16 (Codex 재감사 B) — 앞 판은 `n_o_replaces_s` 라는 **쓰이지 않는 인자**를
+      달고 있었고, "정수가 아니면 거부" 분기는 정수 O 개수에서 **도달 불가능**했다.
+      이제 산화물이 중성이라는 가정에서 양이온 전하를 유도하고(2·n_O / n_cation),
+      결과 조성의 형식 전하 총합이 0 인지 **실제로 검산한다**.
     """
     c = dict(host)
     n_o = dopant.get("O", 0)
+    cations = {k: v for k, v in dopant.items() if k != "O"}
+    n_cat = sum(cations.values())
+    if not n_cat:
+        return None, "양이온이 없는 도펀트"
     if n_o and c.get("S", 0) < n_o:
         return None, "S 가 O 개수보다 적다"
     if n_o:
         c["S"] -= n_o
         c["O"] = c.get("O", 0) + n_o
-    cations = {k: v for k, v in dopant.items() if k != "O"}
-    # 양이온 총 전하 = 2*n_O (산화물이 중성이므로). Li⁺ 를 그만큼 빼면 중성이 유지된다.
-    charge = 2 * n_o
-    if charge != int(charge):
-        return None, "양이온 전하가 정수가 아니다"
-    if c.get("Li", 0) < charge:
+    # 중성 M_xO_y 이므로 양이온 총전하 = 2·n_O. 종당 전하가 정수가 아니면 거부한다.
+    total_cation_charge = 2 * n_o
+    per_cation = total_cation_charge / n_cat
+    if abs(per_cation - round(per_cation)) > 1e-9:
+        return None, (f"양이온 형식 전하가 정수가 아니다 "
+                      f"({total_cation_charge}/{n_cat} = {per_cation})")
+    if c.get("Li", 0) < total_cation_charge:
         return None, "Li 가 부족해 전하 보상이 안 된다"
-    c["Li"] -= int(charge)
+    c["Li"] -= int(total_cation_charge)
     for k, v in cations.items():
         c[k] = c.get(k, 0) + v
+    # 검산: 형식 전하 총합이 0 이어야 한다
+    z, why = formal_charge(c, {k: int(round(per_cation)) for k in cations})
+    if z is None:
+        return None, why
+    if abs(z) > 1e-9:
+        return None, f"형식 전하 총합이 0 이 아니다 ({z:+g})"
     return c, None
 
 
@@ -186,9 +221,32 @@ def decompose(vals, eps=1e-9):
     return out
 
 
+def ladder_cells(host=None, n=5):
+    """host 에서 −Li−S+Cl 을 n 번 반복한 사다리. 분기 전환이 **어디서** 일어나는지 본다.
+
+    Li24P4S20Cl4 → Li23P4S19Cl5 → Li22P4S18Cl6 → …
+    2×2 의 두 host 칸은 이 사다리의 처음 두 계단이다.
+    """
+    host = dict(host or HOST)
+    out, c = [("__ladder0__", None, dict(host))], dict(host)
+    for i in range(1, n + 1):
+        nxt = cl_swap(c)
+        if nxt is None:
+            break
+        out.append((f"__ladder{i}__", None, nxt))
+        c = nxt
+    return out
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", default="db/properties/oxidation_matched_factorial.json")
+    ap.add_argument("--exclude", nargs="*", default=[],
+                    help="경쟁상에서 뺄 reduced formula (예: --exclude LiS4). "
+                         "기전 주장을 하려면 LiS4 제외판을 같이 돌려 부호가 유지되는지 봐야 한다")
+    ap.add_argument("--ladder", type=int, default=0, metavar="N",
+                    help="host 에서 -Li-S+Cl 을 N 번 반복한 사다리를 같이 잰다 "
+                         "(분기 전환 지점을 찾는다). 0 이면 안 한다")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -202,6 +260,14 @@ def main():
     Li = Element("Li")
 
     cells, skipped = build_cells()
+    if a.ladder:
+        # 사다리는 host 전용 칸이라 종 루프의 hosts 에 그대로 얹힌다
+        cells = cells + [c for c in ladder_cells(n=a.ladder) if c[0] != "__ladder0__"]
+        print(f"  사다리 {a.ladder}칸 추가 (host 에서 -Li-S+Cl 반복)")
+    excl = {x.strip() for x in a.exclude if x.strip()}
+    if excl:
+        print(f"  ⚠ 경쟁상 제외: {sorted(excl)} — **다른 phase set 이다.** "
+              f"기본판과 절대값을 섞지 말 것")
     for name, why in skipped:
         print(f"  ⏭ {name} 건너뜀 — {why}")
 
@@ -217,6 +283,11 @@ def main():
         with MPRester(key) as mpr:
             entries = mpr.get_entries_in_chemsys(
                 els, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+        if excl:
+            n0 = len(entries)
+            entries = [e for e in entries
+                       if e.composition.reduced_formula not in excl]
+            print(f"    제외 {n0 - len(entries)}개 entry 제거")
             try:
                 db_version = mpr.get_database_version()
             except Exception:
@@ -225,9 +296,31 @@ def main():
         muref = pd.el_refs[Li].energy_per_atom
         eids = sorted(str(getattr(e, "entry_id", "") or "") for e in entries)
         psid = hashlib.sha256("|".join(eids).encode()).hexdigest()[:16]
+        # ★ 2026-08-16 (Codex 재감사 A) — entry ID 만 hash 하면 MP 가 **같은 ID 로 에너지나
+        #   보정을 바꿔도** 지문이 안 변한다. energy_per_atom·correction 까지 묶은 별도
+        #   지문을 같이 싣는다. 둘이 같아야 진짜 같은 hull 이다.
+        payload = []
+        for e in sorted(entries, key=lambda x: str(getattr(x, "entry_id", "") or "")):
+            eid = str(getattr(e, "entry_id", "") or "")
+            try: epa = f"{float(e.energy_per_atom):.9f}"
+            except Exception: epa = "?"
+            try: corr = f"{float(getattr(e, 'correction', 0.0)):.9f}"
+            except Exception: corr = "?"
+            payload.append(f"{eid}:{e.composition.reduced_formula}:{epa}:{corr}")
+        efid = hashlib.sha256("|".join(payload).encode()).hexdigest()[:16]
         phase_sets[psid] = {"chemsys": "-".join(els), "n_entries": len(entries),
                             "entry_ids": eids, "db_version": db_version,
-                            "thermo_types": ["GGA_GGA+U"], "exclusions": []}
+                            "thermo_types": ["GGA_GGA+U"], "exclusions": sorted(excl),
+                            "energy_fingerprint": efid,
+                            "fingerprint_contract": (
+                                "phase_set_id = sha256(sorted entry_ids) — 목록 동일성. "
+                                "energy_fingerprint = sha256(entry_id:formula:energy_per_atom:"
+                                "correction) — **값 동일성**. 둘 다 같아야 같은 hull 이다."),
+                            "n_duplicate_entry_ids": len(eids) - len(set(eids)),
+                            "n_empty_entry_ids": sum(1 for x in eids if not x)}
+        if len(eids) != len(set(eids)) or any(not x for x in eids):
+            print(f"  ⚠ [{'-'.join(els)}] entry_id 중복 {len(eids)-len(set(eids))} · "
+                  f"빈 값 {sum(1 for x in eids if not x)} — 지문 신뢰도 낮음")
         vals = {}
         for label, comp in hosts + items:
             try:
@@ -270,8 +363,11 @@ def main():
                   f"interaction {x['interaction_V']:+.3f}")
 
     doc = {
-        "method": ("matched 2x2 factorial, grand-potential ESW (get_element_profile, "
-                   "MP GGA_GGA+U). 네 칸이 chemsys 마다 같은 pinned entry set 안에 있다."),
+        "method": ("matched 2x2 operational contrast, grand-potential ESW "
+                   "(get_element_profile, MP GGA_GGA+U). 네 칸이 chemsys 마다 같은 "
+                   "pinned entry set 안에 있다."),
+        "exclusions": sorted(excl),
+        "ladder_steps": a.ladder,
         "design": {"H_plain": formula(HOST), "H_Cl": formula(cl_swap(HOST)),
                    "D_plain": "host + M_xO_y (O→S 자리, 양이온 전하만큼 Li 제거)",
                    "D_Cl": "D_plain 에 같은 S→Cl 치환 (Li 하나 더 제거)",
@@ -339,6 +435,28 @@ def selftest():
     # 음성 ④: Li 가 부족하면 거부 (전하 보상 불가)
     _bad2, w2 = dope({"Li": 2, "P": 4, "S": 20, "Cl": 4}, {"Al": 2, "O": 3})
     chk("음성: Li 부족이면 거부", _bad2 is None and "Li" in w2)
+    # ── 형식 전하 검산 (2026-08-16 Codex 재감사 B) ──────────────────────────
+    # host 자체가 중성이어야 한다: 24(+1) + 4(P는 PS4로 +5) ... P 는 FORMAL_CHARGE 에 없다
+    z, why = formal_charge(HOST, {})
+    chk("host 형식 전하 = 0", z is not None and abs(z) < 1e-9)
+    chk("H_Cl 도 중성", abs(formal_charge(cl_swap(HOST), {})[0]) < 1e-9)
+    # 음성 ⑦: 모르는 원소면 값을 만들지 않는다
+    _z, _w = formal_charge({"Li": 1, "Xx": 1}, {})
+    chk("음성: 모르는 원소 → None + 사유", _z is None and "Xx" in _w)
+    # 음성 ⑧: 양이온당 전하가 정수가 아니면 거부 (M3O4 계열)
+    _b3, w3 = dope(HOST, {"Fe": 3, "O": 4})
+    chk("음성: 양이온당 전하 비정수면 거부", _b3 is None and "정수가 아니다" in w3)
+    # 음성 ⑨: 양이온 없는 도펀트 거부
+    _b4, w4 = dope(HOST, {"O": 2})
+    chk("음성: 양이온 없으면 거부", _b4 is None and "양이온" in w4)
+    # 양성: M2O3 는 양이온당 +3, MO 는 +2
+    chk("M2O3 → 양이온당 +3", dope(HOST, {"Al": 2, "O": 3})[0]["Li"] == 24 - 6)
+    chk("MO   → 양이온당 +2", dope(HOST, {"Mg": 1, "O": 1})[0]["Li"] == 24 - 2)
+    chk("MO3  → 양이온당 +6", dope(HOST, {"Mo": 1, "O": 3})[0]["Li"] == 24 - 6)
+    # 음성 ⑩: 안 쓰이는 인자가 남아 있으면 안 된다
+    import inspect
+    chk("음성: dope() 에 미사용 인자 없음",
+        list(inspect.signature(dope).parameters) == ["host", "dopant"])
 
     # ── 셀 목록 ──────────────────────────────────────────────────────────────
     cells, skipped = build_cells()
@@ -347,6 +465,17 @@ def selftest():
     chk("종마다 두 칸", len(cells) == 2 + 2 * (len(DEFAULT_DOPANTS) - len(skipped)))
     chk("Al2O3 두 칸 존재",
         "Al2O3__D_plain" in labels and "Al2O3__D_Cl" in labels)
+
+    # ── 사다리 (2026-08-16) ─────────────────────────────────────────────────
+    lad = ladder_cells(n=4)
+    chk("사다리 0칸 = host", lad[0][2] == HOST)
+    chk("사다리 1칸 = H_Cl", lad[1][2] == {"Li": 23, "P": 4, "S": 19, "Cl": 5})
+    chk("사다리 4칸", lad[4][2] == {"Li": 20, "P": 4, "S": 16, "Cl": 8})
+    chk("사다리 라벨", [l for l, _s, _c in lad][:3]
+        == ["__ladder0__", "__ladder1__", "__ladder2__"])
+    # 음성 ⑪: S 가 바닥나면 더 안 만든다 (무한 생성 금지)
+    short = ladder_cells({"Li": 3, "P": 1, "S": 2, "Cl": 1}, n=10)
+    chk("음성: S 바닥나면 멈춘다", len(short) == 3)
 
     # ── 분해식 ───────────────────────────────────────────────────────────────
     v = {"__H_plain__": 2.140, "__H_Cl__": 2.200,

@@ -397,7 +397,11 @@ def build(audit: dict) -> dict:
             fig["csv_override_reason"] = AMENDED_CSV[tab.name]
         figs.append({**fig,
                      "image_sha256": im["sha256"], "image_bytes": im["bytes"],
-                     "csv_sha256": tb["sha256"], "csv_bytes": tb["bytes"], "csv_rows": tb["rows"]})
+                     # ⚠ 2026-08-16 — companion CSV 는 **텍스트**다. Windows 깨끗한 checkout
+                     #   에서 CRLF 로 나오므로 artifact 처럼 LF 정규화 해시를 같이 싣는다.
+                     #   PNG 은 바이너리라 원문 해시만이 맞다.
+                     "csv_sha256": tb["sha256"], "csv_sha256_lf": tb["sha256_lf"],
+                     "csv_bytes": tb["bytes"], "csv_rows": tb["rows"]})
 
     # 종명이 든 진단 PNG — **미등록 거부**가 아니라 diagnostic_only 로 명시한다.
     #  (미등록이면 "왜 막혔는지" 가 '원장에 없다' 로만 나와서 정책 의도가 안 보인다.)
@@ -490,12 +494,19 @@ def check(man: dict) -> list:
         if a.get("use_scope") not in USE_SCOPE:
             bad.append(f"{rel}: 알 수 없는 use_scope {a.get('use_scope')!r}")
     for f in man.get("figures", []):
-        for key, hk in (("image", "image_sha256"), ("csv", "csv_sha256")):
+        for key, hk, lfk in (("image", "image_sha256", None),
+                             ("csv", "csv_sha256", "csv_sha256_lf")):
             p = ROOT / f[key]
             if not p.is_file():
                 bad.append(f"{f[key]}: 파일 없음"); continue
-            if _meta(p)["sha256"] != f[hk]:
-                bad.append(f"{f[key]}: 해시 불일치")
+            m = _meta(p)
+            if m["sha256"] == f.get(hk):
+                continue
+            # 텍스트 companion 만 LF 정규화로 후퇴한다 (PNG 은 원문 해시가 정답)
+            if lfk and f.get(lfk) and m["sha256_lf"] == f[lfk]:
+                continue
+            bad.append(f"{f[key]}: 해시 불일치"
+                       + (" (원문·LF정규화 둘 다)" if lfk else ""))
     if len(man.get("figures", [])) != 5:
         bad.append(f"감사 패널이 {len(man.get('figures', []))}개다 — 정확히 5개여야 한다")
     return bad
@@ -558,6 +569,20 @@ def selftest() -> int:
         crlf["artifacts"][0]["sha256"] = hashlib.sha256(
             p.read_bytes().replace(b"\n", b"\r\n")).hexdigest()
         chk("[CRLF] 원문 해시가 달라도 LF 정규화로 통과한다", check(crlf) == [])
+    # figure companion CSV 도 같은 규칙이어야 한다 (2026-08-16 — 여기만 raw 였다)
+    figs = [f for f in man.get("figures", []) if (ROOT / f["csv"]).is_file()]
+    if figs:
+        cf = json.loads(json.dumps(man))
+        cf["figures"][0]["csv_sha256"] = hashlib.sha256(
+            (ROOT / figs[0]["csv"]).read_bytes().replace(b"\n", b"\r\n")).hexdigest()
+        chk("[CRLF] figure companion CSV 도 LF 정규화로 통과한다", check(cf) == [])
+        cf2 = json.loads(json.dumps(man))
+        cf2["figures"][0]["csv_sha256"] = "0" * 64
+        cf2["figures"][0]["csv_sha256_lf"] = "0" * 64
+        chk("음성: figure CSV 둘 다 틀리면 잡는다", check(cf2) != [])
+        cf3 = json.loads(json.dumps(man))
+        cf3["figures"][0]["image_sha256"] = "0" * 64
+        chk("음성: PNG 은 LF 후퇴가 없다", check(cf3) != [])
 
     print("selftest", "PASS" if ok else "FAIL")
     return 0 if ok else 1
