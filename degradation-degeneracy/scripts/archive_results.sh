@@ -120,6 +120,15 @@ PYEOF
     continue
   fi
 
+  # ★ 18차 발견 6 — 바이트 무결성만으로는 파생 YAML 이 **최신 의미**를 담는지
+  #   증명하지 못한다. v4 에서 실제로 경계 규약 수정 이전 값이 묶음에 들어갔다.
+  #   봉인 fits 에서 재계산해 대조하고, 다르면 이 run 은 승격하지 않는다.
+  if ! "$PY" -m tools.check_derived_fresh "$run"; then
+    echo "  → 파생 산출물이 stale 이라 보관하지 않습니다 (기존 묶음 유지)"
+    n_bad=$((n_bad+1))
+    continue
+  fi
+
   # ★ 11차 발견 6 — candidate 에 만들고 **전부 통과한 뒤에만** 교체한다.
   #   bundle 종료 코드도 반드시 집계한다 (예전에는 무시하고 ok=1 로 시작했다).
   cand="$DEST/.candidate_$name"

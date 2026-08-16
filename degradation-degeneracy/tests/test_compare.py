@@ -3806,3 +3806,157 @@ def test_reproduction_scope_is_rendered_from_what_was_emitted(tmp_path):
     # Hessian 절이 있으면 **기본 eps 포함 전체**가 명령에서 빠졌다고 말해야 한다
     assert "Hessian 절" in full, full
     assert "비기본" not in full, "기본 Hessian 도 빠졌는데 비기본만 빠진 것처럼 쓴다"
+
+
+# ── 18차 발견 6 — 파생 산출물의 versioned analysis manifest ─────────────────
+
+def test_comparison_yaml_carries_its_own_analysis_anchor(tmp_path):
+    """★ 18차 발견 6 — YAML 을 **직접 읽는** 소비자가 이번 오류의 시작점이다.
+
+    파일 자체에 schema version·spec id·fits anchor 가 없으면, 복원한 사람이
+    그 숫자가 어느 fits 에서 어느 규약으로 나왔는지 알 수 없다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    y = yaml.safe_load((d / "objective_comparison.yaml").read_text(encoding="utf-8"))
+    a = y.get("_analysis")
+    assert a, "objective_comparison.yaml 에 `_analysis` self-description 이 없다"
+    assert a["schema_version"] >= 1
+    assert len(a["analysis_spec_id"]) == 64
+    assert len(a["fits_sha256"]) == 64
+
+
+def test_analysis_anchor_does_not_trip_the_stale_check(tmp_path):
+    """★ `_analysis` 는 `_` 로 시작해 F87 key 집합 대조에서 제외돼야 한다."""
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+    text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    assert "파생_stale_objective_comparison.yaml" not in text
+
+
+def test_analysis_manifest_records_the_full_provenance_chain(tmp_path):
+    """★ 발견 6 — raw producer 와 derived generator 를 **분리** 기록한다.
+
+    `manifest.yaml` 에 파생 정보를 덧붙이면 후대 분석 코드를 원래 계산에 거짓
+    귀속하게 된다. 별도 `analysis_manifest.yaml` 이어야 한다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    m = yaml.safe_load((d / "analysis_manifest.yaml").read_text(encoding="utf-8"))
+
+    assert m["analysis_schema_version"] >= 1
+    assert len(m["analysis_spec_id"]) == 64
+    assert len(m["raw_inputs"]["fits_sha256"]) == 64
+    g = m["generator"]
+    assert len(g["git_commit"]) in (0, 40)
+    assert g["source_digest"]
+    assert g["git_dirty"] in (True, False)
+    p = m["parameters"]
+    assert p["tol"] == 0.02 and p["gap_thresh"] == 0.06
+    assert p["gap_atol"] == 1e-9
+    assert p["p22_center"] == [0.13, 0.13, 0.17]
+    assert p["p22_radius"] == 0.021
+    assert p["p22_metric"] == "unscaled_euclidean_fractional_coordinates"
+    assert p["p22_empty_radius_policy"] == "nearest_fallback"
+    assert len(p["selected_condition_ids_sha256"]) == 64
+    assert len(m["derived_outputs"]["objective_comparison.yaml"]) == 64
+    # raw 계산 manifest 는 건드리지 않는다
+    assert "analysis_schema_version" not in (
+        yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+        if (d / "manifest.yaml").exists() else {})
+
+
+def test_derived_semantic_gate_fails_on_stale_yaml(tmp_path):
+    """★ 발견 6 — 보관 전에 **봉인 fits 에서 재계산**해 의미 동치를 검사한다.
+
+    `payload_sha256.yaml` 은 stale bytes 도 충실히 해시한다. 바이트 보존은
+    파생 파일이 최신 의미를 담는지 증명하지 못한다.
+    """
+    import yaml
+
+    from tools.compare_objectives import run_compare, verify_derived_freshness
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    assert verify_derived_freshness(d)["ok"] is True
+
+    # 저장본의 숫자 하나를 옛 값으로 되돌린다 (= stale 보관본 재현)
+    y = yaml.safe_load((d / "objective_comparison.yaml").read_text(encoding="utf-8"))
+    y["gap_analysis"]["pocv_dvdq"]["n_small_gap_true"] = 98
+    (d / "objective_comparison.yaml").write_text(
+        yaml.safe_dump(y, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    got = verify_derived_freshness(d)
+    assert got["ok"] is False, got
+    assert any("n_small_gap_true" in w for w in got["fail"]), got
+
+
+def test_archive_gate_blocks_a_run_whose_derived_yaml_is_stale(tmp_path):
+    """★ 18차 발견 6 — 보관 게이트가 파생 semantic freshness 를 봐야 한다.
+
+    지금까지 게이트는 raw inputs/fits provenance 만 봤다. stale 파생 YAML 은
+    바이트 무결성 검사를 그대로 통과하므로 묶음 안으로 들어갔다.
+    """
+    import subprocess
+    import sys
+
+    import yaml
+
+    from tools.compare_objectives import run_compare
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    root = Path(__file__).resolve().parent.parent
+    cmd = [sys.executable, "-m", "tools.check_derived_fresh", str(d)]
+    ok = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
+    assert ok.returncode == 0, ok.stdout + ok.stderr
+
+    y = yaml.safe_load((d / "objective_comparison.yaml").read_text(encoding="utf-8"))
+    y["gap_analysis"]["pocv_dvdq"]["n_small_gap_true"] = 98
+    (d / "objective_comparison.yaml").write_text(
+        yaml.safe_dump(y, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    bad = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
+    assert bad.returncode != 0, bad.stdout
+    assert "n_small_gap_true" in bad.stdout + bad.stderr

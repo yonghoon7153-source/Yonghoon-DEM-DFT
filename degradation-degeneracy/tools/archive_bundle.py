@@ -96,6 +96,8 @@ def required_files(run_dir: Path) -> tuple:
 
 #: 검증에는 안 쓰이지만 재생성 비용이 커서 같이 남기는 것들
 KEEP_FILES = ("degeneracy_summary.yaml", "objective_comparison.yaml",
+              # ★ 18차 발견 6 — 파생 분석 provenance (raw 계산 manifest 와 분리)
+              "analysis_manifest.yaml",
               "objective_comparison.csv", "objective_comparison_by_noise.csv",
               "objective_comparison_all_conditions.csv",
               "case_comparison.yaml", "weight_sweep.yaml", "weight_sweep_summary.csv",

@@ -550,6 +550,148 @@ def plot_weight_curve(summary: pd.DataFrame, out_path,
 
 # ---------------------------------------------------------------- 실행
 
+# ------------------------------------------------- 파생 분석 provenance (18차 발견 6)
+
+#: 파생 분석 산출물 스키마 버전. 파생 정의·규약이 바뀌면 올린다.
+#: ★ raw 계산 provenance(`manifest.yaml`)와 **분리**한다 — 거기에 덧붙이면
+#: 후대 분석 코드를 원래 계산에 거짓 귀속하게 된다 (18차 발견 6).
+ANALYSIS_SCHEMA_VERSION = 1
+
+#: 22p 표본 선택 protocol — 결론을 정의하므로 spec 에 박는다 (18차 발견 9)
+P22_METRIC = "unscaled_euclidean_fractional_coordinates"
+P22_EMPTY_RADIUS_POLICY = "nearest_fallback"
+
+
+def analysis_parameters(df: pd.DataFrame, tol: float = 0.02,
+                        gap_thresh: float = 0.06, noise: float = 0.0,
+                        p22_radius: float = 0.021) -> dict:
+    """이 파생 산출물을 정의하는 **모든** 자유 파라미터."""
+    from src.io import _sha256_lines
+    conds = sorted(set(df["cond_id"].astype(str))) if "cond_id" in df.columns else []
+    return {
+        "tol": float(tol),
+        "gap_thresh": float(gap_thresh),
+        "gap_atol": float(GAP_ATOL),
+        "population": "recoverable(alpha_true >= 1 - atol) / all 두 벌 모두 기록",
+        "noise": float(noise),
+        "noise_unit": "sigma[V] of independent Gaussian voltage noise",
+        "p22_center": [float(EXP_22P["lam_pe"]), float(EXP_22P["lam_ne"]),
+                       float(EXP_22P["lli"])],
+        "p22_radius": float(p22_radius),
+        "p22_metric": P22_METRIC,
+        "p22_empty_radius_policy": P22_EMPTY_RADIUS_POLICY,
+        "selected_condition_ids_sha256": _sha256_lines(conds),
+    }
+
+
+def analysis_spec_id(params: dict) -> str:
+    """파라미터 집합의 canonical digest — 같은 spec 인지 한 값으로 대조한다."""
+    import hashlib
+    import json
+    return hashlib.sha256(
+        json.dumps(params, sort_keys=True, default=str).encode()).hexdigest()
+
+
+def _generator_identity() -> dict:
+    """★ 18차 발견 6 — **파생 분석을 만든 코드** 좌표 (raw 계산 좌표와 분리)."""
+    from src.io import env_fingerprint, git_info, source_digest
+    gi = git_info()
+    return {
+        "git_commit": gi.get("git_commit", ""),
+        "source_digest": source_digest(),
+        "git_dirty": bool(gi.get("git_dirty")),
+        "env": env_fingerprint(),
+    }
+
+
+def write_analysis_manifest(out_dir, in_dir, params: dict,
+                            derived: "list[str]") -> dict:
+    """`analysis_manifest.yaml` — raw 입력 · 생성 코드 · 파라미터 · 출력 digest."""
+    import yaml
+
+    from src.io import env_fingerprint, file_digest, git_info, source_digest
+    out_dir, in_dir = Path(out_dir), Path(in_dir)
+
+    def _fd(p):
+        p = Path(p)
+        return file_digest(p, full=True) if p.is_file() else None
+
+    man = {
+        "analysis_schema_version": ANALYSIS_SCHEMA_VERSION,
+        "analysis_spec_id": analysis_spec_id(params),
+        "raw_inputs": {
+            "fits_sha256": _fd(in_dir / "fits.parquet"),
+            "curves_sha256": _fd(in_dir / "curves.parquet"),
+            "run_manifest_sha256": _fd(in_dir / "manifest.yaml"),
+        },
+        "generator": _generator_identity(),
+        "parameters": params,
+        "derived_outputs": {n: _fd(out_dir / n) for n in derived},
+    }
+    (out_dir / "analysis_manifest.yaml").write_text(
+        yaml.safe_dump(man, allow_unicode=True, sort_keys=False,
+                       default_flow_style=False), encoding="utf-8")
+    return man
+
+
+def verify_derived_freshness(run_dir, tol: float = 0.02) -> dict:
+    """★ 18차 발견 6 — 보관 전 **의미 동치** 게이트.
+
+    `payload_sha256.yaml` 은 stale bytes 도 충실히 해시한다. 바이트 보존은 파생
+    파일이 봉인 fits 에서 재계산한 최신 의미를 담는지 증명하지 못한다. 여기서
+    직접 재계산해 숫자를 대조한다.
+    """
+    import math
+
+    import yaml
+    run_dir = Path(run_dir)
+    saved_p = run_dir / "objective_comparison.yaml"
+    fits_p = run_dir / "fits.parquet"
+    if not saved_p.is_file():
+        return {"ok": False, "fail": ["objective_comparison.yaml 없음"]}
+    if not fits_p.is_file():
+        return {"ok": False, "fail": ["fits.parquet 없음 — 재계산 불가"]}
+
+    from tools.compare_cases import _scored
+    saved = yaml.safe_load(saved_p.read_text(encoding="utf-8")) or {}
+    now = run_compare(run_dir, write=False, df=_scored(fits_p, tol), tol=tol)
+
+    fail = []
+
+    def walk(a, b, path=""):
+        if isinstance(a, dict):
+            for k, v in a.items():
+                if isinstance(k, str) and k.startswith("_"):
+                    continue           # 주석·self-description 은 대조 대상 아님
+                if not isinstance(b, dict) or k not in b:
+                    fail.append(f"{path}.{k}: 재계산본에 없다")
+                    continue
+                walk(v, b[k], f"{path}.{k}")
+        elif isinstance(a, (list, tuple)):
+            if not isinstance(b, (list, tuple)) or len(a) != len(b):
+                fail.append(f"{path}: 길이 불일치")
+                return
+            for i, (x, y) in enumerate(zip(a, b)):
+                walk(x, y, f"{path}[{i}]")
+        elif isinstance(a, bool):
+            if bool(b) != a:
+                fail.append(f"{path}: {a} ≠ {b}")
+        elif isinstance(a, (int, float)):
+            if not isinstance(b, (int, float)) or isinstance(b, bool) \
+                    or not math.isclose(float(a), float(b),
+                                        rel_tol=1e-9, abs_tol=1e-12):
+                fail.append(f"{path}: {a} ≠ {b}")
+
+    walk(saved, now)
+    # self-description 이 실제 fits 를 가리키는가
+    anchor = (saved.get("_analysis") or {}).get("fits_sha256")
+    if anchor:
+        from src.io import file_digest
+        if anchor != file_digest(fits_p, full=True):
+            fail.append("_analysis.fits_sha256: 이 fits 가 아니다")
+    return {"ok": not fail, "fail": fail[:20]}
+
+
 def run_compare(in_dir, out_dir=None, tol: float = 0.02,
                 write: bool = True, df: "pd.DataFrame | None" = None) -> dict:
     """★ F69 — `write=False` / `df=` 는 **재검증용**이다.
@@ -636,10 +778,27 @@ def run_compare(in_dir, out_dir=None, tol: float = 0.02,
     except KeyError:
         pass
     if write:
+        # ★ 18차 발견 6 — 이 파일을 **직접 읽는** 소비자가 오류의 시작점이었다.
+        #   어느 fits 에서 어느 규약으로 나왔는지 파일 자체가 말해야 한다.
+        #   key 가 `_` 로 시작하므로 F87 key 집합 대조에서는 제외된다.
+        from src.io import file_digest as _fd0
+        _params = analysis_parameters(df, tol=tol)
+        _fits_p = in_dir / "fits.parquet"
+        result["_analysis"] = {
+            "schema_version": ANALYSIS_SCHEMA_VERSION,
+            "analysis_spec_id": analysis_spec_id(_params),
+            "fits_sha256": (_fd0(_fits_p, full=True)
+                            if _fits_p.is_file() else None),
+            "_주의": ("이 파일의 숫자는 위 fits 에서 이 spec 으로 계산됐다. "
+                     "spec 이나 fits 가 다르면 인용하지 말 것."),
+        }
         (out_dir / "objective_comparison.yaml").write_text(
             yaml.safe_dump(result, allow_unicode=True, sort_keys=False,
                            default_flow_style=False),
             encoding="utf-8")
+        write_analysis_manifest(out_dir, in_dir, _params,
+                                ["objective_comparison.yaml",
+                                 "degeneracy_summary.yaml"])
         print(to_markdown(tbl))
     return result
 
