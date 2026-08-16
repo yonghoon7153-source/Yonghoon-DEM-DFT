@@ -69,7 +69,9 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
 
   # 이 vox 의 직경-보존 σ_VGCF 를 다시 뽑는다 (격자마다 다르다 — 기존 러너와 같은 규약)
   local SIGMA
-  SIGMA=$(cd "$RUN" && STEP3_VOX="$VOX" python3 - <<'PY'
+  #  ⚠ 2026-08-16 실사고: `P2_SCR` 를 이 heredoc 에 안 넘겨 KeyError 로 전 팔이 실패했다.
+  #    (fail-closed 는 작동했다 — 쓰레기 대신 0 팔을 냈다.)  두 변수를 **여기서** 넘긴다.
+  SIGMA=$(cd "$RUN" && P2_SCR="$SCR" STEP3_VOX="$VOX" python3 - <<'PY'
 import os, sys
 import numpy as np
 sys.path.insert(0, os.environ['P2_SCR'])
@@ -108,7 +110,13 @@ for SH in "${SHIFTS[@]}"; do
   [ "$i" -ge "$ARMS" ] && break
   for K in kit_SBE kit_DBE; do
     [ -d "$K" ] || { echo "[p2] ABORT — $K 없음 (~/sdcp 에서 돌릴 것)"; exit 2; }
-    run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}_a${i}"
+    #  ★ fail-fast — 한 팔이 실패하면 **전체를 멈춘다**.  실패한 팔을 빼고 계속하면
+    #    팔 수가 달라져 앙상블이 오염된다 (판정기가 HOLD 를 내겠지만 GPU 시간을 버린다).
+    if ! run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}_a${i}"; then
+      echo "[p2] ABORT — 팔 p2_${K#kit_}_a${i} 실패.  원인을 고치고 다시 돌릴 것"
+      echo "     (이미 끝난 팔은 $OUTDIR 에 남아 있어 다음 실행에서 SKIP 된다)"
+      exit 1
+    fi
   done
   i=$((i+1))
 done
