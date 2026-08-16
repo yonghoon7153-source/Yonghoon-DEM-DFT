@@ -86,9 +86,16 @@ SEEDS=${SEEDS:-"2 3 4"}          # 600 K 오차막대와 같은 시드 집합
 #   까지 끌고 가 대기열이 몇 배로 늘었다(2026-08-13 로그에서 확인).
 #   → 위치인자 우선, 없으면 환경변수, 그것도 없으면 all.
 ONLY=${1:-${ONLY:-all}}
+#  EXTRA_SYS 로 붙인 임시 계(셀 확대 시험 등)도 ONLY 로 고를 수 있어야 한다.
+_EXTRA_LABELS=$(printf '%s\n' "${EXTRA_SYS:-}" | awk -F'|' 'NF>1{print $1}' | tr '\n' '|')
 case "$ONLY" in
   all|lpsocl|modelc|b2o3|comp1) : ;;
-  *) echo "⛔ ONLY='$ONLY' 는 모르는 계다 (all|lpsocl|modelc|b2o3|comp1)"; exit 1 ;;
+  *) case "|$_EXTRA_LABELS" in
+       *"|$ONLY|"*) : ;;
+       *) echo "⛔ ONLY='$ONLY' 는 모르는 계다 (all|lpsocl|modelc|b2o3|comp1"
+          [ -n "$_EXTRA_LABELS" ] && echo "   EXTRA_SYS 라벨: ${_EXTRA_LABELS%|}"
+          echo "   임시 계를 쓰려면 EXTRA_SYS='라벨|db/structures/....xyz' 를 같이 줄 것)"; exit 1 ;;
+     esac ;;
 esac
 mkdir -p "$OUTROOT"
 
@@ -107,6 +114,12 @@ modelc|db/structures/modelc_V0_k663.xyz
 lpsocl|db/structures/lpsocl_relaxV0.xyz
 b2o3|db/structures/b2o3_relaxV0.xyz
 EOF
+  # ★ 2026-08-16 — 임시 계를 **파일 편집 없이** 붙인다 (셀 확대 시험 등).
+  #   `EXTRA_SYS='lpsocl_3x3x1|db/structures/lpsocl_relaxV0_3x3x1.xyz'` (줄바꿈으로 여러 개)
+  #   ⚠ LPSOCL_EXTRA 는 라벨이 정확히 'lpsocl' 일 때만 붙으므로, 임시 계의 온도는
+  #     TEMP_PROD 로 직접 줄 것 (예: TEMP_PROD='600:200').
+  [ -n "${EXTRA_SYS:-}" ] && printf '%s\n' "$EXTRA_SYS"
+  :
 }
 # 온도:prod(ps). 500 K 만 길다 — 위 주석 참조.
 #   기본 = 신규 온도만 (30런 계획). 전면 재실행(구 54런)을 원하면:
