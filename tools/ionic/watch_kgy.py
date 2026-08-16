@@ -379,11 +379,77 @@ def selftest_long():
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
+# ═══ ⑦ lpsocl 3×3×1 셀 확대 — β 실패가 상자 탓인지 시험 ═══════════════════════
+#  근거 (2026-08-16 실측): 원본 셀의 **최소 수직 폭**이 5.672 Å 이라
+#  무상관 한계 (d/2)² = 8.04 Å² 인데, 창끝 MSD 가 25.8 Å² 로 **3.21배 초과**다.
+#  이온이 짧은 방향에서 상자를 세 번 가로질렀다는 뜻이고, 그러면 변위가 자기
+#  주기이미지와 상관돼 늦은 시간 MSD 증가가 눌린다. 관측 3증상이 한꺼번에 설명된다:
+#    · β 가 1 로 안 가고 0.87 에서 포화 (창 100–200)
+#    · 절편 c 가 창 따라 2.17 → 21.15 Å² (10배)
+#    · 시드를 늘려도 안 고쳐짐 — 모든 시드가 같은 상자
+#  ⚠ 한계는 |a|(6.95 Å)가 아니라 **수직 폭**이다. 삼방정계라 1.2배 차이 난다.
+CELL = os.environ.get("CELLDIR") or os.path.join(H, "work", "runs", "arrhenius_6pt", "lpsocl_3x3x1")
+CELL_LOG = os.environ.get("CELLLOG") or os.path.join(H, "logs", "lpsocl_3x3x1.log")
+
+
+def section_cell():
+    print("⑦ lpsocl 3×3×1 셀 확대 — β 실패가 상자 탓인지 시험 (558원자 · 3시드 · 200 ps)")
+    up = any(ln.split(":")[0] == "lp331" for ln in sh("tmux ls").splitlines() if ln.strip())
+    ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
+    gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
+             "--format=csv,noheader,nounits").strip().splitlines()
+    print(f"   유한크기: 원본 최소 수직폭 5.67 Å → (d/2)² 8.04 Å² · MSD 25.8 → **3.21× 초과**")
+    print(f"             3×3×1  최소 수직폭 17.02 Å → (d/2)² 72.4 Å² · MSD 25.8 → **0.36× 여유**")
+    seeds = {}
+    for d in sorted(glob.glob(os.path.join(CELL, "T600_s*"))):
+        sd = os.path.basename(d).split("_s")[-1]
+        f = next(iter(sorted(glob.glob(os.path.join(d, "**", "msd.json"), recursive=True))), None)
+        if f:
+            seeds[sd] = f
+    if not os.path.isdir(CELL) and not up:
+        print("   · 미착수. 걸려면:")
+        print("     tmux new -d -s lp331 \"cd ~/Yonghoon-DEM-DFT && ONLY=lpsocl_3x3x1 \\")
+        print("       EXTRA_SYS='lpsocl_3x3x1|db/structures/lpsocl_relaxV0_3x3x1.xyz' \\")
+        print("       TEMP_PROD='600:200' LPSOCL_EXTRA='' SEEDS='2 3 4' \\")
+        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/lpsocl_3x3x1.log\"")
+        return
+    st = "▶ 진행 중" if (up or ndrv) else ("✅ 완료" if seeds else "⚠ 시작 안 됨")
+    print(f"   상태 {st} · tmux lp331 {'있음' if up else '없음'} · 드라이버 {ndrv} · GPU {gpu[0] if gpu else '?'}")
+    if os.path.isfile(CELL_LOG):
+        age = (NOW - datetime.fromtimestamp(os.path.getmtime(CELL_LOG))).total_seconds() / 60
+        print(f"   로그 마지막 갱신 {age:.0f}분 전  ({CELL_LOG})")
+        try:
+            for ln in open(CELL_LOG, errors="ignore").read().splitlines()[-2:]:
+                print(f"   │ {ln[:100]}")
+        except OSError:
+            pass
+    if seeds:
+        bs = []
+        for sd in sorted(seeds):
+            b = beta(seeds[sd])
+            bs.append((sd, b))
+        print("   β(창 2–50) 시드별: " + " · ".join(
+            f"s{sd} {('%.3f' % b) if b is not None else '—'}" for sd, b in bs))
+        print("   ⚠ 위는 **시드별 진단값**이다 — 판정량은 시드 평균곡선의 β̄ (규약).")
+    print(f"   ★ 판정 (시드 3개 모인 뒤):")
+    print(f"     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+    print(f"       --glob '{CELL}/T600_s*/**/msd.json'")
+    print("   해석: 작은 셀 β̄ = 0.77 (3시드 평균, 2026-08-16 확정)")
+    print("     · β̄ ≥ 0.80  → **상자가 원인 확정**. 600 K 복귀 + modelc·b2o3 도 같은 셀로 재계산해야 비교 성립")
+    print("     · β̄ 여전 0.77 급 → 상자가 아니다. 진짜 sub-diffusion — 그 점 제거하고 재적합")
+    print("   ⚠ modelc(β600 0.868)·b2o3(0.806)도 **같은 5.67 Å 상자**다. D 가 작아 덜 걸렸을 뿐일 수 있어")
+    print("     lpsocl 만 큰 셀로 재면 '+90 meV' 가 화학 차이인지 셀 차이인지 못 가른다.")
+
+
 if "--selftest" in sys.argv:
     sys.exit(selftest_long())
 
 if ONLY == "long":
     section_long()
+    sys.exit(0)
+
+if ONLY == "cell":
+    section_cell()
     sys.exit(0)
 
 
@@ -886,3 +952,5 @@ if br and br != "claude/friendly-meitner-lldvar":
 if ONLY == "":
     print(BAR)
     section_long()
+    print(BAR)
+    section_cell()
