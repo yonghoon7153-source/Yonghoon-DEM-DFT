@@ -11,7 +11,7 @@
 
 > ✅ provenance 검증 통과 — `manifest_존재`, `config_hash`, `clean_worktree`, `필수_입력_존재`, `run_spec_schema`, `sig_version`, `optimizer_정책`, `producer_곡선일치`, `목적함수_순서`, `입력봉인_교차일치`, `입력_스냅샷`, `곡선_producer_재검`, `코드_identity`, `시작_provenance`, `start_파일_존재`, `attempt_파일_존재`, `attempt_파일_일치`, `start_파일_일치`, `실행중_코드불변`, `시작종료_서명일치`, `_참고_코드재계산불가`, `입력_digest_재해시`, `run_signature_기록`, `run_signature_재계산`, `채점파일_정본`, `출력봉인_재계산`, `조건집합_서명일치`, `출력_완전성`, `출력_격자완전성`, `행별_서명`, `단일_서명`, `manifest와_일치`, `restart_출처`, `restart_예산_완주`
 
-생성: 2026-08-16 03:56 UTC  
+생성: 2026-08-16 04:22 UTC  
 입력: `results/paired_fixed5_v4`  
 git: `c0f1daa0d92a7625c3602799c81db04b5e2e5783`  
 앵커 fits_sha256: `e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064`  

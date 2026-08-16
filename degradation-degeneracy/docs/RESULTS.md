@@ -2,15 +2,9 @@
 
 > 이 파일은 `tools/make_results.py`가 결과 파일에서 자동 생성한다. 직접 수정하지 말 것.
 
-> # ⛔ 인용 금지
-> 
-> 이 문서는 **재현 정보가 갖춰지지 않은 artifact**에서 생성됐습니다. 실패한 검사: `비교입력_halfcell` — results/halfcell_fit_v4 가 provenance 검증 실패: ['입력_스냅샷', '입력_digest_재해시'], `비교입력_재계산_불합격` — 다시 계산한 case 비교의 provenance_ok 가 참이 아니다 (artifact 검증 실패 또는 spec 불일치: 두 실행이 곡선·목적함수·optimizer 정책·환경까지 동일하다.).
-> 
-> 사건률 비, half-cell 목적함수 비교, raw PE/NE 부호 통계, multi-start, Hessian 수치를 인용하지 마십시오.
-> 
-> 방향성 관측(예: half-cell 기준이 grid 기준보다 오차가 작다)까지만 참고하고, **정확한 비율과 p-value는 clean 재실행 후에** 쓰십시오. 경위와 철회 목록은 `docs/08_REVIEW_RESPONSE.md`에 있습니다.
+> ✅ provenance 검증 통과 — `manifest_존재`, `config_hash`, `clean_worktree`, `필수_입력_존재`, `run_spec_schema`, `sig_version`, `optimizer_정책`, `producer_곡선일치`, `목적함수_순서`, `입력봉인_교차일치`, `입력_스냅샷`, `곡선_producer_재검`, `코드_identity`, `시작_provenance`, `start_파일_존재`, `attempt_파일_존재`, `attempt_파일_일치`, `start_파일_일치`, `실행중_코드불변`, `시작종료_서명일치`, `_참고_코드재계산불가`, `입력_digest_재해시`, `run_signature_기록`, `run_signature_재계산`, `채점파일_정본`, `출력봉인_재계산`, `조건집합_서명일치`, `출력_완전성`, `출력_격자완전성`, `행별_서명`, `단일_서명`, `manifest와_일치`, `restart_출처`, `비교입력_grid`, `비교입력_halfcell`, `파생_case_comparison.yaml`
 
-생성: 2026-08-16 04:01 UTC  
+생성: 2026-08-16 04:29 UTC  
 입력: `results/grid_fit_v4`  
 git: `c0f1daa0d92a7625c3602799c81db04b5e2e5783`  
 앵커 fits_sha256: `18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46`  
@@ -218,7 +212,7 @@ dQ/dV의 이점은 노이즈에서 희석된다. 노이즈 0 결과만 인용하
 | artifact | 경로 | provenance |
 |---|---|---|
 | grid | `results/grid_fit_v4` | ✅ 통과 |
-| halfcell | `results/halfcell_fit_v4` | ⛔ 실패 — ['입력_스냅샷', '입력_digest_재해시'] |
+| halfcell | `results/halfcell_fit_v4` | ✅ 통과 |
 
 공통 1476조건 (전체 3069 중, grid 기준 복원가능군으로 맞춤)
 
