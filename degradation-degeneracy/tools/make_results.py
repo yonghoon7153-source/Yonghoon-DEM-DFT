@@ -278,13 +278,17 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
         f"{_next_no(lines)}. **생성성공 격자의 {_pct(ur)}는 선택한 grid-reference "
         f"fitter 의 현재 α/bounds feasible domain 밖**이다 (참값 α<1 → 재구성 창이 "
         f"reference 범위를 벗어나 truth 가 **표현 가능**하지 않다). 위 숫자는 모두 "
-        f"그 안쪽 {summary.get('n_rows_recoverable', '?')}행에서만 센 값이며, "
-        f"바깥을 섞으면 목적함수 간 차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 "
-        f"현재 표현식의 정의역 판정이다.")
+        f"그 안쪽 **목적함수당 {int((summary.get('n_rows_recoverable') or 0) / max(len(tbl.index), 1))}조건** "
+        f"에서만 센 값이며(파일의 objective-condition 행 합계는 "
+        f"{summary.get('n_rows_recoverable', '?')}), 바깥을 섞으면 목적함수 간 "
+        f"차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 현재 표현식의 정의역 "
+        f"판정이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 "
+        f"안쪽 바깥을 함께 센 예외다.** gap 분석의 분모는 noise=0 의 98·245조건, "
+        f"22p 는 8조건으로 각각 다르다.")
     return lines
 
 
-def _recheck_derived(in_dir: Path, name: str) -> dict | None:
+def _recheck_derived(in_dir: Path, name: str, repo_root=None) -> dict | None:
     """★ F69 — 파생 YAML 의 숫자를 **fits 에서 다시 계산해** 대조한다.
 
     보고서는 저장된 YAML 을 그대로 렌더한다. 그래서 비율 한 개만 고쳐도
@@ -305,7 +309,8 @@ def _recheck_derived(in_dir: Path, name: str) -> dict | None:
             if set(prov) != {"grid", "halfcell"}:
                 return {"ok": False, "why": "provenance tag 가 불완전해 재계산할 수 없다"}
             now = compare(Path(prov["grid"]["scored_file"]),
-                          Path(prov["halfcell"]["scored_file"]))
+                          Path(prov["halfcell"]["scored_file"]),
+                          repo_root=repo_root)   # ★ 16차 발견 1
             # ★ 10차 발견 5 — 세 지표만 짝짓던 방식은 `n_conditions_common` 등
             #   나머지 숫자의 변조(999999)를 그대로 통과시켰고, 보고서가 그 값을
             #   렌더했다 (리뷰 실측). key 집합 + 숫자 **전체**를 대조하고,
@@ -469,7 +474,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         try:
             from src.scoring import run_scoring as _rs
             with tempfile.TemporaryDirectory() as _td:
-                summary = _rs(in_dir, out_dir=_td, tol=0.02)
+                summary = _rs(in_dir, out_dir=_td, tol=0.02, repo_root=repo_root)
             # ★ F87 — `saved_summary` 가 빈 dict 면 falsy 라 **조건 자체를
             #   건너뛰었다** — 발견 8 이 지적한 형태 그대로다. 파일 존재로 본다.
             if (in_dir / "degeneracy_summary.yaml").exists() \
@@ -620,7 +625,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   결론을 먼저 본다.
     # 열 존재 여부만 보면 임의의 문자열 하나로 배너가 사라진다 (F38).
     from src.io import validate_provenance
-    prov = validate_provenance(in_dir)
+    # ★ 16차 발견 1 — 격리 root 를 validator 까지 관통시킨다
+    prov = validate_provenance(in_dir, repo_root=repo_root)
     # ★ F52b — 배너는 주 입력만 보면 안 된다. 비교표에 쓰인 half-cell artifact도
     #   전이적 입력이므로 그 검증 결과를 합친다 (compare_cases 가 봉인해 둔다).
     cc = _load(in_dir / "case_comparison.yaml") or {}
@@ -630,7 +636,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     from src.io import file_digest as _fd
     for tag, v in list(cc_prov.items()):
         rd, sf = v.get("run_dir"), v.get("scored_file")
-        now = validate_provenance(rd, fits_path=sf) if rd else {"ok": False, "fail": ["run_dir 없음"]}
+        now = (validate_provenance(rd, repo_root=repo_root, fits_path=sf)
+               if rd else {"ok": False, "fail": ["run_dir 없음"]})
         if not now["ok"]:
             v["ok"] = False
             v["fail"] = now["fail"]
@@ -683,7 +690,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         prov["checks"][f"파생_stale_{s}"] = "실패 — 재계산과 불일치"
     _case_render = None
     for name, why in (("case_comparison.yaml", "비교표"),):
-        rc = _recheck_derived(in_dir, name)
+        rc = _recheck_derived(in_dir, name, repo_root=repo_root)
         if rc is None:
             continue
         prov["checks"][f"파생_{name}"] = "통과" if rc["ok"] else f"실패 — {rc['why']}"
@@ -744,9 +751,22 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  + ", ".join(f"`{k}`" for k in prov["checks"]) + "\n")
     P.append(f"생성: {datetime.now(timezone.utc).astimezone().strftime('%Y-%m-%d %H:%M %Z')}  ")
     P.append(f"입력: `{in_dir}`  ")
+    # ★ 16차 발견 10 — 계산 artifact 를 만든 코드와 **이 문장을 만든 코드**는
+    #   다르다. 하나의 `git:` 로 합치면 인용자가 둘을 구분할 수 없다.
     if manifest:
-        P.append(f"git: `{manifest.get('git_commit', '?')}`"
-                 f"{' (dirty)' if manifest.get('git_dirty') else ''}  ")
+        P.append(f"artifact producer git/source_digest: "
+                 f"`{manifest.get('git_commit', '?')}`"
+                 f"{' (dirty)' if manifest.get('git_dirty') else ''}"
+                 f" / `{(manifest.get('run_spec') or {}).get('source_digest', '?')}`  ")
+    try:
+        from src.io import git_info as _gi, source_digest as _sd
+        _rroot = Path(__file__).resolve().parent.parent   # renderer 의 저장소 root
+        _rg = _gi(_rroot)
+        P.append(f"report generator git/source_digest/dirty: "
+                 f"`{_rg.get('git_commit', '?')}` / `{_sd(_rroot)}` / "
+                 f"`{_rg.get('git_dirty')}`  ")
+    except Exception as e:  # noqa: BLE001
+        P.append(f"report generator: 확인 불가 ({type(e).__name__})  ")
     # ★ 10차 자체 확인 1 — untracked 산출물의 진본성 앵커. manifest 의 seal 은
     #   자기신고라 "값 변조 + 재봉인"을 구분하지 못한다. 이 문서가 커밋되면
     #   아래 digest 가 저장소 이력에 남아, 이후 변조는 보고서 재생성 diff 로
@@ -792,10 +812,18 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
              f"`{gap.get('max_lam_pe_at_low_lli', '?')}`, 격자 전체 최대는 "
              f"`{gap.get('max_lam_pe_overall', '?')}`. "
              f"고LAM_PE 결론은 고LLI가 동반된 조건에서만 검증된 것이다.")
-    P.append("- **restart 불일치율(F4)**: adaptive 조기 종료로 조건마다 restart 수가 "
-             "달라, multi-start 불일치율을 목적함수 간 비교 지표로 쓰지 않았다. "
-             "`degeneracy_summary.yaml`의 `restart_conditioned` 항목에 "
-             "restart 수로 조건화한 값만 있다.")
+    # ★ 16차 발견 7 — 이 경고는 adaptive 실행에만 해당한다. fixed-budget paired
+    #   문서에 그대로 실리면 문서가 자기 protocol 과 모순된다.
+    if _mopt0.get("adaptive") is not False:
+        P.append("- **restart 불일치율(F4)**: adaptive 조기 종료로 조건마다 restart 수가 "
+                 "달라, multi-start 불일치율을 목적함수 간 비교 지표로 쓰지 않았다. "
+                 "`degeneracy_summary.yaml`의 `restart_conditioned` 항목에 "
+                 "restart 수로 조건화한 값만 있다.")
+    else:
+        P.append(f"- **restart 예산(F4)**: 이 실행은 adaptive 조기 종료를 끄고 "
+                 f"restart {_mspec0.get('n_restarts')}개를 고정했다. 따라서 조건마다 "
+                 f"예산이 다른 문제는 없다. 남는 한계는 유한 restart 표본이라는 "
+                 f"점이며, multi-start 지표는 그 budget 안에서만 유효하다.")
     P.append("- **방법 바이어스(F5)**: 판정 기준 2%p가 방법 자체의 계통 편향과 "
              "같은 크기일 수 있어, 바이어스를 뺀 보정 판정을 표에 나란히 뒀다. "
              "두 값이 크게 다르면 그 목적함수의 결론은 약하다.")
@@ -834,7 +862,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ── 22p ──
     P.append("## 22p 실험 조건 판정\n")
     P.append("*모두 `noise = 0` 조건이다. 노이즈가 있으면 값이 달라진다(F10) — `objective_comparison.yaml`의 `verdict_22p.noise` 참조.*\n")
-    P.append("| objective | 근방 조건 | degeneracy | 평균 \\|err\\| | "
+    # ★ 16차 발견 4 — "최근접 8점이 모두 LAM_PE = LAM_NE" 는 사실이 아니다.
+    #   0.02 step 에서 (0.13, 0.13, 0.17) 의 8 corner 는 PE=NE 4개 + |PE-NE|=2%p
+    #   4개이고 평균 참 격차가 1%p 다 (그 값을 같은 줄에 쓰면서 모순이었다).
+    P.append("> ⚠ 이 8점은 **모두 참값이 같은 격자점이 아니다.** 0.02 step 에서 "
+             "PE=NE 가 4개, |ΔLAM|=2%p 가 4개이며 평균 참 격차는 1%p 다. "
+             "wide-gap(≥6%p)은 **하나도 없다** — 즉 22p 판정에 쓸 수 있는 것은 "
+             "\"참 격차가 큰 조건이 붕괴하는가\" 가 아니라 국소 n=8 표본의 "
+             "복원 성적뿐이다 (그 질문의 답은 결론 2 다).\n")
+    # ★ 16차 발견 6 — 이 열도 행별 max-mode 절대오차의 평균이다
+    P.append("| objective | 근방 조건 | recovery failure | 평균 max-mode \\|err\\| | "
              "err LAM_PE | err LAM_NE | raw 반대부호 |")
     P.append("|---|---|---|---|---|---|---|")
     for o, v in cmp_res.get("verdict_22p", {}).items():
@@ -868,10 +905,13 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             need = (f"{_pp(g['collapse_requires_gap_err'], 0)} / "
                     f"{_pp(g['gap_err_median'])}"
                     if "collapse_requires_gap_err" in g else "—")
+            # ★ 16차 발견 2 — 상세표도 count 우선. 핵심 문단은 1/245 라고
+            #   쓰면서 여기서 0% 로 반올림하면 문서가 스스로 모순된다.
             P.append(f"| {o} | {g['n_wide_gap_true']} | "
-                     f"**{_pct(g['gap_collapse_frac'])}** | "
+                     f"**{_cnt(g['gap_collapse_frac'], g['n_wide_gap_true'])}** | "
                      f"{g['shrinkage']:.2f} | "
-                     f"{_pct(g.get('false_split_frac'))} | {need} |")
+                     f"{_cnt(g.get('false_split_frac'), g.get('n_small_gap_true'))} | "
+                     f"{need} |")
         P.append("")
         P.append("- **격차 붕괴율**: 참 격차 ≥ 6%p인데 복원 격차 < 2%p로 답한 비율. "
                  "높을수록 \"두 전극이 비슷하다\"는 관측이 무의미해진다.")
@@ -931,13 +971,17 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         if "likelihood_ratio_equal" in ga and "likelihood_ratio_equal" in (
                 gaps.get("pocv_dvdq") or {}):
             P.append("### 모집단을 바꾸면 (복원불가군 포함)\n")
-            P.append(f"| 모집단 | n(참격차 작음) | n(참격차 큼) | 붕괴 | 사건률 비 |")
-            P.append("|---|---|---|---|---|")
-            for label, gg in (("복원가능군", gaps["pocv_dvdq"]), ("전체 격자", ga)):
-                P.append(f"| {label} | {gg.get('n_small_gap_true', '—')} | "
-                         f"{gg.get('n_wide_gap_true', '—')} | "
-                         f"{_pct(gg.get('gap_collapse_frac'))} | "
-                         f"{gg['likelihood_ratio_equal']:.1f} |")
+            # ★ 16차 발견 5 — 분자를 숨기면 독자가 사건률 비를 감사할 수 없다.
+            #   양쪽 군 모두 k/n 으로 낸다.
+            P.append(f"| 모집단 | 작은 격차에서 \"같다\" | 넓은 격차 붕괴 | 사건률 비 |")
+            P.append("|---|---|---|---|")
+            for label, gg in (("복원가능군", gaps["pocv_dvdq"]),
+                              ("전체 생성성공 격자", ga)):
+                _sp = gg.get("false_split_frac")
+                P.append(f"| {label} | "
+                         f"{_cnt(None if _sp is None else 1 - _sp, gg.get('n_small_gap_true'))} | "
+                         f"{_cnt(gg.get('gap_collapse_frac'), gg.get('n_wide_gap_true'))} | "
+                         f"{gg['likelihood_ratio_equal']:.2f} |")
             P.append("")
             P.append("복원가능군 조건화는 물리적 근거가 있지만(참 α<1이면 정답이 재구성 "
                      "창 밖), **그 조건화가 사건률 비를 크게 바꾼다**는 사실은 결론과 같은 "
@@ -1051,13 +1095,19 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             P.append(f"| {o} | {d['n']} | **{_pct(d['flat_valley_frac'])}** | "
                      f"{_pct(d['multimodal_frac'])} | {_pct(d['unique_min_frac'])} |")
         P.append("")
-        P.append("- **flat valley** — 같은 J인데 해가 서로 멀다. "
-                 "**데이터가 그 조합을 구분하지 못한다는 직접 증거**입니다. "
-                 "초기값을 아무리 잘 줘도 사라지지 않고, 측정 방식을 바꿔야 줄어듭니다.")
-        P.append("- **multimodal** — J가 다른 국소최소가 여럿. degeneracy가 아니라 "
-                 "**최적화 난이도**입니다. 좋은 초기값을 주면 사라집니다 "
-                 "(dQ/dV 항이 이 경우였습니다 — 아래 참조).")
-        P.append("- **unique min** — 해가 유일. 문제 없음.\n")
+        # ★ 16차 발견 8 — 이 셋은 유한 restart 표본에 J·parameter tolerance 를
+        #   적용한 **휴리스틱 분류**다. 구조적 식별성의 증명이 아니다.
+        P.append(f"- **flat valley** — 같은 J(허용 `j_tol`) 안에서 해가 "
+                 f"`p_tol` 보다 멀다. 이 solver·restart 예산에서 관측된 "
+                 f"**실용적 flatness 신호**이며, 데이터가 그 조합을 구분하지 "
+                 f"못한다는 구조적 증명은 아니다.")
+        P.append("- **multimodal** — J가 다른 국소최소가 여럿 잡혔다. "
+                 "**optimizer difficulty 와 일치하는 관측**이며, 목적함수의 "
+                 "고유 정보량 부족과 분리되지 않는다.")
+        P.append("- **unique min** — 관측된 restart 범위에서 다른 동등해를 "
+                 "찾지 못했다. 전역 유일해의 증명이 아니다.")
+        P.append(f"\n*분류 임계와 예산: `j_tol`·`p_tol`·restart "
+                 f"{_mspec0.get('n_restarts', '?')}개 (`src/scoring.py`).*\n")
         worst = max(ms_rows.items(), key=lambda kv: kv[1].get("multimodal_frac", 0))
         if worst[1].get("multimodal_frac", 0) > 0.9:
             P.append(f"> ⚠ **`{worst[0]}`의 multimodal이 "
@@ -1200,6 +1250,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             f"--nproc $(nproc)", *_fit_flags(_rs)]
     P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
+    # ★ 16차 발견 9 — `--mode hessian` 은 producer/fit 분리 배치에서 곡선을 못
+    #   찾고(A 미수정), `score → hessian → report` 순서는 Hessian 이 summary 를
+    #   변이시켜 stale 판정을 만든다(B 미수정). 기본 체인에서 분리하고 실제로
+    #   쓴 우회를 적는다 — 이 블록대로 실행하면 이 문서와 같은 상태가 나와야 한다.
+    P.append("")
+    P.append("# Hessian (선택) — A·B 수정 전까지는 아래 우회가 필요하다")
+    P.append("#   1) 봉인 곡선 스냅샷을 staging 에 링크해 --in 으로 준다")
+    P.append("#   2) Hessian 뒤에 score 를 한 번 더 돌려 summary 를 fits 정본으로 되돌린다")
+    P.append("")
     P.append(f"./run.sh --mode hessian --in {in_dir}")
     # ★ 14차 2차 발견 4 — 이 블록만 실행하면 **이 문서가 렌더한 절이 전부**
     #   다시 나와야 한다. 예전에는 주 fit chain 만 있어서, sweep 절과

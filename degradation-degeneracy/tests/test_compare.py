@@ -3012,3 +3012,42 @@ def test_input_digest_resolves_against_repo_root_not_cwd(tmp_path, monkeypatch):
     v = validate_provenance(d, repo_root=tmp_path)
     assert "입력_digest_재해시" in v["fail"], (
         "CWD 의 정상 사본이 root 의 위조본을 가렸다 — 격리 검증이 비어 있다")
+
+
+def test_full_chain_threads_repo_root_to_validator(tmp_path, monkeypatch):
+    """★ 16차 발견 1 — `repo_root` 가 score·compare·report 까지 관통해야 한다.
+
+    `src/io.py` 의 CWD 우선 참조는 15차-3 에서 고쳤지만, `build()`·`run_scoring()`
+    ·`compare()` 가 `validate_provenance()` 에 root 를 **넘기지 않아** 기본
+    root(=`src/io.py` 가 있는 원본 저장소)로 되돌아갔다. 격리 root 에서 보고서를
+    만들어도 원본 저장소 파일이 검증되므로, 초록 provenance 가 격리본을
+    증명하지 않는다.
+
+    위조 파일로 재현하려면 기본 root 에 **일치하는** 사본이 있어야 해서 환경에
+    의존한다. 그래서 전달 자체를 관찰한다 — validator 가 받은 `repo_root` 를
+    기록하고, 모두 우리가 준 root 인지 본다.
+    """
+    import src.io as io_mod
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path, repo_root=tmp_path)
+    run_compare(d, d)
+
+    seen: list = []
+    orig = io_mod.validate_provenance
+
+    def spy(run_dir, repo_root=None, fits_path=None):
+        seen.append(repo_root)
+        return orig(run_dir, repo_root=repo_root, fits_path=fits_path)
+
+    monkeypatch.setattr(io_mod, "validate_provenance", spy)
+    build(d, tmp_path / "R.md", repo_root=tmp_path)
+
+    assert seen, "validator 가 호출되지 않았다 — 테스트가 무의미하다"
+    bad = [r for r in seen if r is None or Path(r) != Path(tmp_path)]
+    assert not bad, (
+        f"{len(bad)}/{len(seen)} 호출이 repo_root 를 받지 못했다 (기본 root 로 "
+        f"되돌아간다): {bad[:3]}")
+
+

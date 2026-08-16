@@ -50,7 +50,8 @@ def _scored(fits_path: Path, tol: float) -> pd.DataFrame:
     return apply_bias_correction(df, clean_bias(df), tol)
 
 
-def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
+def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02,
+            repo_root=None) -> dict:
     """★ F52 — 두 artifact **모두** provenance를 검증하고 digest를 봉인한다.
 
     이 표는 두 실행의 비교인데, `make_results.py` 의 배너는 주 입력 디렉터리
@@ -68,7 +69,9 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02) -> dict:
         run_dir = fp.parent if fp.is_file() else fp
         scored_file = fp if fp.is_file() else run_dir / "fits.parquet"
         # F59: **실제로 채점한 파일**을 검증 대상으로 넘긴다
-        v = validate_provenance(run_dir, fits_path=scored_file)
+        # ★ 16차 발견 1 — 격리 root 를 관통시킨다
+        v = validate_provenance(run_dir, repo_root=repo_root,
+                                fits_path=scored_file)
         mp = run_dir / "manifest.yaml"
         man = (yaml.safe_load(mp.read_text(encoding="utf-8")) or {}) if mp.exists() else {}
         spec = man.get("run_spec") or {}

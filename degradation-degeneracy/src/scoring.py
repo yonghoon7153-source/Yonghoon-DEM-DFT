@@ -391,7 +391,7 @@ def summarize(df: pd.DataFrame, tol: float = DEFAULT_TOL) -> dict:
 # ---------------------------------------------------------------- CLI
 
 def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
-                fits_name: str = "fits.parquet", allow_uncanonical: bool = False) -> dict:
+                fits_name: str = "fits.parquet", allow_uncanonical: bool = False, repo_root=None) -> dict:
     """★ F69 — 채점 대상은 **정본 fits.parquet 뿐**이다.
 
     예전에는 `--fits` 로 임의 parquet 을 받아 provenance 검사 없이
@@ -428,7 +428,7 @@ def run_scoring(in_dir, out_dir=None, tol: float = DEFAULT_TOL,
     #   fitting 이후 파일이 바뀌었다면 채점 결과부터 이미 다른 숫자다.
     seal_state = "정상"
     if canonical:
-        v = validate_provenance(in_dir, fits_path=fits_path)
+        v = validate_provenance(in_dir, repo_root=repo_root, fits_path=fits_path)
         bad = [k for k in ("출력봉인_재계산", "조건집합_서명일치", "출력_완전성")
                if k in v["fail"]]
         if bad:
