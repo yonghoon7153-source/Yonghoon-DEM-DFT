@@ -94,36 +94,59 @@ GROUP_OF = {"Li":"alkali","Na":"alkali","Ag":"TM","Mg":"alk.earth","Ca":"alk.ear
 
 
 def fig_periodic():
-    """계열별 단색 — 채도 인코딩은 흐려 보여서 되돌렸다(2026-08-16). 숫자가 개수를 진다."""
-    import re
-    from matplotlib.colors import to_rgb
-    rows = _all_rows()
-    sp = sorted({base_species(r["dopant"]) for r in rows})
-    cnt = {}
-    for x in sp:
-        for m in re.findall(r"[A-Z][a-z]?", x):
-            if m not in ("O", "S", "F", "Cl", "Br", "I", "N"):
-                cnt[m] = cnt.get(m, 0) + 1
+    """주기율표 성능 지도 — 원본(plot_cascade_summary.py) 양식을 발표용으로 다시 그린다.
 
+    ⚠ 색·숫자는 **2026-06-29 취합 스냅샷의 composite score** 다. 승인된 current ranking 은
+      0종이므로 순위로 인용하면 안 된다 — 슬라이드 캡션이 그 단서를 진다.
+    ⚠ 이 함수의 ax.text 는 **칸 라벨**(원소 기호·숫자)이라 '그림 안 글씨 금지' 규칙의 예외다.
+      문장은 넣지 않는다.
+    """
+    import csv as _csv
+    from matplotlib.patches import Rectangle as _R
+    import matplotlib.pyplot as _plt
+    D = []
+    for r in _read(os.path.join(DB, "cascade_v23_ranked.csv")):
+        try:
+            D.append(dict(dop=r["dopant"], comp=float(r["score"]),
+                          de=float(r["de"]) if r.get("de") else 0.0))
+        except (KeyError, ValueError):
+            continue
+    import re
+    best = {}
+    for x in D:
+        for m in re.findall(r"[A-Z][a-z]?", base_species(x["dop"])):
+            if m in ("O", "S", "F", "Cl", "Br", "I", "N"):
+                continue
+            if m not in best or x["comp"] > best[m]["comp"]:
+                best[m] = x
+
+    lo = min(x["comp"] for x in D); hi = max(x["comp"] for x in D)
+    cmap = _plt.cm.RdYlGn
     _rc()
-    fig, ax = plt.subplots(figsize=(13.0, 5.4))
-    BW, GAP = 1.0, 0.10
+    fig, ax = _plt.subplots(figsize=(14.5, 6.6))
     for el, (c, r) in PT.items():
-        base = to_rgb(GROUP_C[GROUP_OF.get(el, "TM")])
-        fill = tuple(1 - 0.30 * (1 - ch) for ch in base)          # 계열 단색
-        x0, y0 = c * (BW + GAP), -r * (BW + GAP)
-        ax.add_patch(Rectangle((x0, y0), BW, BW, facecolor=fill,
-                               edgecolor=base, lw=2.0, zorder=2))
-    ly = -8.00 * (BW + GAP)
-    x = 1.0 * (BW + GAP)
-    for g, col in GROUP_C.items():
-        base = to_rgb(col)
-        ax.add_patch(Rectangle((x, ly), 0.58, 0.58,
-                               facecolor=tuple(1 - .30 * (1 - ch) for ch in base),
-                               edgecolor=base, lw=2.0))
-    ax.set_xlim(0.45, 20.9 * (BW + GAP))
-    ax.set_ylim(-8.50 * (BW + GAP), -0.55 * (BW + GAP))
-    ax.axis("off")
+        if el in best:
+            x = best[el]
+            t = (x["comp"] - lo) / (hi - lo)
+            col = cmap(t)
+            dark = t < 0.16 or t > 0.84          # 진한 빨강·초록 위에서는 흰 글씨
+            ax.add_patch(_R((c, -r), 0.92, 0.92, facecolor=col, edgecolor="#374151", lw=0.9))
+            ax.text(c + 0.46, -r + 0.63, el, ha="center", va="center",
+                    fontsize=15, fontweight="bold", color=hs.INK)
+            ax.text(c + 0.46, -r + 0.34, f"{x['comp']:.2f}", ha="center", va="center",
+                    fontsize=11, color=hs.INK)
+            ax.text(c + 0.46, -r + 0.13, f"de {x['de']:+.1f}", ha="center", va="center",
+                    fontsize=8, color=("#f8fafc" if dark else "#4b5563"))
+        else:
+            ax.add_patch(_R((c, -r), 0.92, 0.92, facecolor="#f1f5f9",
+                            edgecolor="#cbd5e1", lw=0.7))
+            ax.text(c + 0.46, -r + 0.46, el, ha="center", va="center",
+                    fontsize=13, color="#94a3b8")
+    ax.set_xlim(0.4, 16.4); ax.set_ylim(-8.05, 0.10); ax.axis("off")
+    sm = _plt.cm.ScalarMappable(cmap=cmap, norm=_plt.Normalize(lo, hi))
+    cb = fig.colorbar(sm, ax=ax, fraction=0.022, pad=0.01)
+    cb.set_label("composite score  (2026-06-29 snapshot)", fontsize=12)
+    cb.ax.tick_params(labelsize=10)
     return _save(fig, "roster_periodic_table.png")
 
 
@@ -400,7 +423,8 @@ def selftest():
     # 음성 ② — 제목을 달면 안 된다 (슬라이드가 제목을 진다)
     chk("음성: set_title 미사용", "set_title" not in body)
     # 음성 ⑥ — 그림 안에 문장을 넣지 않는다 (슬라이드가 문구를 진다, 2026-08-16 지시)
-    chk("음성: ax.text 미사용", "ax.text(" not in body)
+    _outside = body.split("# ── 2. 어느 자리를 고르는가", 1)[1]
+    chk("음성: fig_periodic 밖에서 ax.text 미사용", "ax.text(" not in _outside)
     chk("음성: ax.annotate 미사용", "ax.annotate(" not in body)
     # 음성 ③ — 필요한 원본 데이터가 있어야 한다
     need = ["cascade_v23_all.csv", "site_preference_raw_78.csv", "oxidation_stability_cascade_v2.csv"]

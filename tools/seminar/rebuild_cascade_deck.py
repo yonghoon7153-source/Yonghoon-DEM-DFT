@@ -431,8 +431,8 @@ SPEC = {
                     ['iodides', '4', 'largest halide — mobility control', 'AlI₃  LiI  MgI₂  NaI'],
                  ], y=2.60, w=8.76, size=11.5, first_col_w=1.35),
           cap="Grouped by the dominant anion. Order inside a family carries no meaning — this is the input list, not a shortlist."),
- 7:  dict(fig_label='candidate elements on the periodic table',
-          fig_note='the small number is how many compounds of that element were run',
+ 7:  dict(fig_label='best score per element, 2026-06-29 snapshot',
+          fig_note='[r]colour is a superseded snapshot score — read the block pattern, not the order[/r]',
           gloss='Cation: the metal we substitute in  ·  Coverage: how many compounds of that element we ran',
           src='Our roster, drawn on the table',
           title="Where they sit",
@@ -440,7 +440,9 @@ SPEC = {
           bullets=["The number in each box is [b]how many different compounds of that element[/b] we actually ran.",
                    "Coverage is broad in the transition metals and thin in the [r]heavy main group[/r]."],
           pics=[S+"roster_periodic_table.png"],
-          cap="Our own roster. Colour marks the chemical family only — it is not a score and not a ranking."),
+          cap="Our calculation: for each element, the best composite score among its compounds. "
+              "⚠ This is the 2026-06-29 snapshot and the approved current ranking is 0 species — "
+              "the readable content is the block structure (late transition metals sit together in red), not the order."),
 
  # ④ 9단계
  8:  dict(fig_note='large cations take Li sites; small group-14 ions replace P',
@@ -751,10 +753,10 @@ VOICE = {
       "Candidate set (1): 91 compounds across seven anion families",
       ["Oxides were included for [b]strong M–O bonding[/b]; halides because the host contains Cl.",
        "Sulfides, nitrides and heavy halides were included as [b]anion-family controls[/b]."]),
- 7:  ("Elemental coverage of the candidate set",
-      "Candidate set (2): 36 cation elements, alkali metals to lanthanides",
-      ["Coverage is dense among transition metals and [r]sparse in the heavy main group[/r].",
-       "The list is [r]biased toward well-characterised stable compounds[/r] — see Result 1."]),
+ 7:  ("Candidate set on the periodic table",
+      "Candidate set (2): 36 cation elements, coloured by their best score",
+      ["Late transition metals sit together in [r]red[/r] — that block is the oxidation-window loss.",
+       "⚠ The colour is a [r]superseded snapshot[/r]; the pattern is readable, the ordering is not."]),
  8:  ("Substitution site and charge compensation",
       "Step 1: The substitution site is enumerated before a structure is built",
       ["The Li, P, S and Cl sublattices are distinct; an oxide needs [b]a cation and an anion site[/b].",

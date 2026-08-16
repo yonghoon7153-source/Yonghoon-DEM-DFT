@@ -211,31 +211,35 @@ Ceder 그룹은 **양이온 하나**를 바꿉니다. Lee는 **이미 화학식 
 
 ---
 
-### 8 — Elemental coverage of the candidate set
+### 8 — Candidate set on the periodic table
 
-> ■ Candidate set (2): 36 cation elements, alkali metals to lanthanides
-> • Coverage is dense among transition metals and sparse in the heavy main group.
-> • The list is biased toward well-characterised stable compounds — see Result 1.
+> ■ Candidate set (2): 36 cation elements, coloured by their best score
+> • Late transition metals sit together in red — that block is the oxidation-window loss.
+> • ⚠ The colour is a superseded snapshot; the pattern is readable, the ordering is not.
 
-`< candidate elements on the periodic table >`
-`해설` the small number is how many compounds of that element were run
+`< best score per element, 2026-06-29 snapshot >`
+`해설` colour is a superseded snapshot score — read the block pattern, not the order
 
-**[50초]**
+**[60초]**
 
 같은 목록을 주기율표에 올리면 이렇게 됩니다. 양이온 원소로 36 종입니다.
 
-칸 안의 작은 숫자가 그 원소의 화합물을 몇 개 돌렸는지입니다. Li 가 7 이면 Li₂O, Li₂S,
-Li₃N, LiCl, LiF, LiBr, LiI 일곱 개를 돌렸다는 뜻입니다.
+칸 색이 그 원소의 화합물 중 **가장 좋았던 종합 점수**입니다. 초록이 높고 빨강이 낮습니다.
+아래 작은 숫자는 host 대비 안정성이고요.
 
-전이금속은 촘촘하고 무거운 주족은 비어 있습니다. 의도라기보다 **어떤 화합물이 잘
-알려져 있느냐**를 따라간 결과입니다.
+⚠ 먼저 단서를 하나 달겠습니다. **이 색은 작년 6월 취합 시점의 스냅샷이고, 지금 승인된
+순위는 0종입니다.** 그러니까 "Sc 가 1등"처럼 읽으시면 안 됩니다.
 
-⚠ 색은 화학 계열 구분입니다. 점수도 순위도 아닙니다.
+대신 **덩어리로 읽으시면 됩니다.** 가운데 Fe, Co, Ni, Cu 가 통째로 빨갛죠. 이게 우연이
+아니라 뒤에 나올 결과 2 — **후기 전이금속에서 산화 창이 붕괴한다** — 와 같은 얘기입니다.
+반대로 Sc, Y, Gd 같은 3가 양이온과 In, Ga 쪽이 초록입니다.
+
+즉 이 그림에서 신뢰할 수 있는 건 **화학군 단위의 패턴**이지 개별 순서가 아닙니다.
+
+💡 청중이 반드시 "그래서 Sc 를 쓰면 되나요"라고 묻습니다. 답은 "그 순위는 아직 승인 안
+했습니다. 결과 1 을 보시면 왜 그런지 나옵니다"입니다. 미리 준비해 두세요.
 
 ---
-
-
-## ④ 어떻게 했나 — 9단계
 
 ### 9 — Substitution site and charge compensation
 
