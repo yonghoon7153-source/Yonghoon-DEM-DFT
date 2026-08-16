@@ -291,8 +291,42 @@ def load_relaxed(tag, path, relaxed_from):
     return at, outp
 
 
+def shortest_translation(cell, R=3):
+    """최단 비영 격자 병진 λ₁ = min |n₁a+n₂b+n₃c| [Å].
+
+    ⛔⛔ 2026-08-16 (Codex 리뷰 P0) — **점결함의 최근접 주기 이미지는 여기 있다.**
+    앞선 판은 면 높이 V/|a_j×a_k| 를 "실제 이미지 거리" 라고 썼는데 그건 격자 **평면**
+    사이 거리라 슬랩 분리에나 맞는 양이고, 점-이미지 거리가 아니며 basis 의존이다.
+    실측 차이가 1.22배라 판정이 뒤집혔다:
+
+      Li₃Nd 2×2×2  면높이 8.469 → **λ₁ 10.372**   (10 Å 기준 통과)
+      Li₂S  3×3×3  면높이 9.880 → **λ₁ 12.100**   (통과)
+      lpsocl 1×1×1 면높이 5.672 → **λ₁  6.940**
+
+    즉 "기존 셀이 10 Å 에 미달한다" 는 서술은 틀렸다. 면 높이는 **보수적 하한**으로만 쓴다.
+    """
+    import itertools
+    import numpy as _np
+    C = _np.asarray(cell, float)
+    best = float("inf")
+    for n in itertools.product(range(-R, R + 1), repeat=3):
+        if n == (0, 0, 0):
+            continue
+        best = min(best, float(_np.linalg.norm(n[0]*C[0] + n[1]*C[1] + n[2]*C[2])))
+    return best
+
+
+def cell_metrics(cell):
+    """(λ₁, 면높이 3개). λ₁ 이 점결함 기준, 면높이는 보수적 하한."""
+    import numpy as _np
+    C = _np.asarray(cell, float)
+    V = abs(float(_np.linalg.det(C)))
+    faces = [V / float(_np.linalg.norm(_np.cross(C[(i+1) % 3], C[(i+2) % 3]))) for i in range(3)]
+    return shortest_translation(C), faces
+
+
 def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
-                  ecls=None, pps=None) -> str:
+                  ecls=None, pps=None, hop=None, endpoints=None) -> str:
     """입력 규약 지문 — 프로토콜이 바뀌면 옛 neb.out/tmp/prefix.path 를 재사용하면 안 된다.
 
     ★ 2026-08-11 (Codex 검토 P0-3) — 같은 WORK 에 새 입력을 쓰면 runner 가 옛 neb.out 의
@@ -312,9 +346,21 @@ def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
     payload = {"tag": tag, "ecutwfc": ECUTWFC, "ecutrho": ECUTRHO, "q": q,
                "images": a.images, "path_thr": a.path_thr, "kpts": list(kpts),
                "nat": nat, "min_l": a.min_l, "min_l_basis": a.min_l_basis,
-               "cell_perp_widths_A": [round(x, 3) for x in perp],
-               "min_perp_width_A": round(min(perp), 3),
-               "min_cell_A_is_vector_length": True,
+               # ⛔ 2026-08-16 (Codex P0) — perp 는 build() 지역변수였다. 여기서 참조해
+               #   **NameError 로 죽었고**, 그 시점엔 이미 새 neb.in 을 쓴 뒤라
+               #   새 입력 + 옛 meta 조합이 남을 수 있었다. 셀 지표는 인자로 받은
+               #   cell 에서 직접 계산한다.
+               "lambda1_A": round(shortest_translation(cell), 3),
+               "face_heights_A": [round(x, 3) for x in cell_metrics(cell)[1]],
+               # ⛔ 2026-08-16 (Codex P0) — 홉 정체성이 지문에 없었다. 실측: Li₃Nd 의
+               #   b→c (2.07173 eV) 와 c→c (0.228981 eV) 가 **같은 해시 5f78cec0339e**
+               #   였다. 작업 폴더가 달라 우연히 안 섞였을 뿐이다.
+               "hop_shell": (hop or {}).get("shell"),
+               "hop_pair_orbits": (hop or {}).get("pair_orbits"),
+               "hop_vac_index": (hop or {}).get("vac"),
+               "hop_moving_index": (hop or {}).get("hop"),
+               "hop_distance_A": (round(float((hop or {}).get("d", 0)), 4) if hop else None),
+               "endpoint_coords_sha": endpoints,
                "cell": [round(float(x), 6) for v in cell for x in v],
                "smearing": smear, "degauss": degauss,
                "electronic_class": (ecls or {}).get("class"),
@@ -354,21 +400,27 @@ def build(tag, path, disp, a, pool):
     #   안 재고 있었다. 이제 수직 폭으로 고른다.
     #   ⚠ 그래서 같은 --min_l 값이라도 옛 판보다 큰 셀이 나온다 (의도된 변화).
     #   옛 동작이 필요하면 --min_l_basis vector.
+    # ⛔⛔ 2026-08-16 (Codex 리뷰 P0) — 기준을 **λ₁(최단 격자 병진)** 으로 되돌린다.
+    #   직전 판은 면 높이(perp)를 "실제 이미지 거리" 라며 기본으로 삼았는데, 그건
+    #   격자 평면 사이 거리지 점-이미지 거리가 아니다. 실측 1.22배 차이로 판정이 뒤집혔다:
+    #   Li₃Nd 2×2×2 는 면높이 8.47 로는 미달인데 λ₁ 10.37 로는 **통과**다.
+    #   면 높이는 버리지 않고 보수적 하한으로 meta 에 같이 싣는다.
     L = at0.cell.lengths()
-    if a.min_l_basis == "perp":
-        C = np.asarray(at0.cell.array, float)
-        V = abs(float(np.linalg.det(C)))
-        base = [V / float(np.linalg.norm(np.cross(C[(i + 1) % 3], C[(i + 2) % 3])))
-                for i in range(3)]
+    if a.min_l_basis == "vector":
+        base_rep = tuple(max(1, int(np.ceil(a.min_l / x))) for x in L)
     else:
-        base = list(L)
-    rep = tuple(max(1, int(np.ceil(a.min_l / x))) for x in base)
+        # λ₁ 은 배수의 단순 함수가 아니므로 **배수를 키워가며 실제로 만족하는 최소**를 찾는다
+        base_rep = None
+        for m in range(1, 9):
+            C = np.asarray(at0.repeat((m, m, m)).cell.array, float)
+            if shortest_translation(C) >= a.min_l:
+                base_rep = (m, m, m)
+                break
+        if base_rep is None:
+            return {"tag": tag, "skip": f"λ₁ ≥ {a.min_l} Å 를 8배 안에서 못 만든다"}
+    rep = base_rep
     at = at0.repeat(rep)
-    # 실제로 확보된 수직 폭을 meta 에 싣는다 (벡터 길이와 헷갈리지 않게)
-    _C = np.asarray(at.cell.array, float)
-    _V = abs(float(np.linalg.det(_C)))
-    perp = [_V / float(np.linalg.norm(np.cross(_C[(i + 1) % 3], _C[(i + 2) % 3])))
-            for i in range(3)]
+    _lam1, perp = cell_metrics(at.cell.array)
     els = sorted(set(at.get_chemical_symbols()))
     miss = [e for e in els if e not in pool]
     if miss:
@@ -616,9 +668,24 @@ def build(tag, path, disp, a, pool):
              "hop_distance_A": hop["d"], "hop_shell": hop.get("shell"),
              "pair_equivalent": hop.get("pair_equivalent"),
              "hop_shell_requested": hop.get("requested_shell"), "nelec": nelec_vac,
-             "protocol_hash": protocol_hash(tag, a, q, info["kpts"], nat, at.cell.array,
-                                            smear=smear, degauss=degauss, ecls=ecls,
-                                            pps={e: pool[e] for e in els}),
+             "protocol_hash": protocol_hash(
+                 tag, a, q, info["kpts"], nat, at.cell.array,
+                 smear=smear, degauss=degauss, ecls=ecls,
+                 pps={e: pool[e] for e in els},
+                 # ⛔ 홉 정체성 — 이게 없어서 b→c 와 c→c 가 같은 해시를 가졌다
+                 hop={"shell": hop.get("shell"), "pair_orbits": hop.get("pair_orbits"),
+                      "vac": hop.get("vac"), "hop": hop.get("hop"), "d": hop.get("d")},
+                 # 끝점 좌표 자체도 지문에 넣는다 (같은 shell 이어도 다른 쌍일 수 있다)
+                 endpoints=_hl.sha256(
+                     json.dumps([[s, [round(x, 6) for x in p]] for s, p in first]
+                                + [[s, [round(x, 6) for x in p]] for s, p in last],
+                                sort_keys=True).encode()).hexdigest()[:16]),
+             "lambda1_A": round(_lam1, 3),
+             "face_heights_A": [round(x, 3) for x in perp],
+             "min_face_height_A": round(min(perp), 3),
+             "cell_metric_note": ("점결함 이미지 거리는 **λ₁(최단 격자 병진)** 이다. "
+                                  "면 높이는 격자 평면 간 거리라 보수적 하한으로만 쓴다 "
+                                  "(둘의 비가 fcc 에서 1.22배 — 2026-08-16 Codex 리뷰)."),
              "endpoints_relaxed": info.get("endpoints_relaxed"),
              "ci_scheme": a.ci_scheme,
              "tot_charge": q, "vacancy_charge": ("neutral" if is_metal else a.vacancy_charge),
@@ -659,9 +726,10 @@ def main():
     ap.add_argument("--work", default=WORK)
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--min_l", type=float, default=10.0,
-                    help="공공-공공 주기 거리의 최소값 [Å] (기본 기준 = 주기면 수직 폭)")
-    ap.add_argument("--min_l_basis", choices=("perp", "vector"), default="perp",
-                    help="min_l 을 무엇으로 재나. perp = 주기면 수직 거리(기본, 물리적으로 "
+                    help="공공-공공 주기 거리의 최소값 [Å] (기본 기준 = λ₁ 최단 격자 병진)")
+    ap.add_argument("--min_l_basis", choices=("lambda1", "vector"), default="lambda1",
+                    help="min_l 을 무엇으로 재나. lambda1 = 최단 격자 병진(기본, 점결함 이미지 거리) · "
+                         "vector = 격자벡터 길이(옛 동작). ⛔ 면 높이(perp)는 슬랩용이라 뺐다"
                          "옳다) · vector = 격자벡터 길이(2026-08-16 이전 동작, 비직교 셀에서 "
                          "이미지 거리를 과대평가한다)")
     ap.add_argument("--images", type=int, default=7, help="NEB 이미지 수 (끝 2개 포함)")
