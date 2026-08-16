@@ -908,7 +908,10 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
         fams.setdefault(key, []).append((noise, str(cid), g))
 
     bad_set, bad_q, bad_v = [], [], []
-    for key, members in sorted(fams.items(), key=repr):
+    # ★ 15차 발견 D — 정렬 키는 family 좌표(kv[0])만이다. `key=repr` 는 값의
+    #   DataFrame 까지 `to_string()` 으로 렌더해 검증을 수십 분으로 만들었다
+    #   (실측 16.47s → 0.838s). 판정은 동일하다.
+    for key, members in sorted(fams.items(), key=lambda kv: kv[0]):
         noises = sorted(n for n, _, _ in members)
         if noises != want:
             bad_set.append(f"{key}(noise {noises} ≠ 서명 {want})")
@@ -950,7 +953,7 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
                     fail_fams.setdefault(key, []).append(float(c["noise"]))
                 except Exception:  # noqa: BLE001
                     continue
-        split = sorted(set(fams) & set(fail_fams), key=repr)
+        split = sorted(set(fams) & set(fail_fams))
     else:
         split = []
 
@@ -958,7 +961,7 @@ def _verify_noise_families(curves_path: Path, spec: dict, d: Path) -> dict:
     # 그 family 도 서명된 noise 집합을 **정확히 한 번씩** 가져야 한다.
     # 교차 family 는 위 분할 검사가 이미 실패시키므로 여기서 제외한다.
     bad_fail_set = []
-    for key, noises in sorted(fail_fams.items(), key=repr):
+    for key, noises in sorted(fail_fams.items(), key=lambda kv: kv[0]):
         if key in fams:
             continue
         got = sorted(noises)

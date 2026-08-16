@@ -2288,3 +2288,34 @@ def test_fully_failed_family_noise_completeness(tmp_path):
     assert "관측_noise_family_분할" in f4, f4
     assert "실패_noise_family_완전성" not in f4, \
         "교차 family 를 fully-failed 완전성 검사로 이중 계상했다"
+
+
+def test_noise_family_verification_does_not_stringify_dataframes(tmp_path, monkeypatch):
+    """★ 15차 발견 D — family 정렬이 DataFrame 을 통째로 문자열화하면 안 된다.
+
+    `sorted(fams.items(), key=repr)` 는 값(`(noise, cond_id, DataFrame)` 목록)까지
+    `repr` 한다. 정렬에 필요한 것은 family 좌표(키)뿐인데 pandas `to_string()` 이
+    family 수만큼 돌아 곡선 검증이 수십 분이 됐다 (실측 16.47s → 0.838s, 19.7배).
+
+    wall-time 임계는 머신마다 흔들리므로, **`DataFrame.__repr__` 이 호출되면
+    실패**시키는 방식으로 고정한다.
+    """
+    import pandas as pd
+
+    from src.io import validate_curves_provenance
+
+    want = [0.0, 0.001, 0.005]
+    d = sign_producer(tmp_path / "fam",
+                      _noise_family_df({n: 4000.0 for n in want},
+                                       {n: 4.2 for n in want}),
+                      failed_conds=_guard_fail_conds(want), spec_noise=want)
+
+    calls: list[int] = []
+    monkeypatch.setattr(pd.DataFrame, "__repr__",
+                        lambda self: (calls.append(1), "<df>")[1])
+    v = validate_curves_provenance(d)
+
+    assert v["ok"], v["fail"]
+    assert not calls, (
+        f"검증 중 DataFrame.__repr__ 이 {len(calls)}회 호출됐다 — "
+        f"정렬 키가 값까지 문자열화하고 있다 (15차 발견 D)")
