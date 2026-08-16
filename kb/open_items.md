@@ -814,6 +814,26 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 | 6 | Rare Metals 2025, 44, 2366 | CSP 보조 |
 | 7 | arXiv:2601.04746 — BEARS 스킬 3계층 | T7 실측치 |
 
+### 🆕 선행연구 대비 위치 규정 — 확보 예정 (2026-08-16 신설 · 사용자 제공 예정)
+> 계기: 세미나 6장(`Where prior screening stops`)을 쓰다가 **"LPSCl 도펀트 계산 스크리닝
+> 선례 없음" 이 사실이 아님**을 확인했다. "아무도 안 했다" 는 주장은 쓰지 않는다.
+> 우리 주장은 **무엇을 바꾸는가**로만 방어한다 — 외부 이성분 화합물을 통째로 넣는다는 점,
+> 그리고 기계 물성 축이 있다는 점.
+
+| 순위 | 논문 | 왜 필요한가 | 상태 |
+|---|---|---|---|
+| **A1** | **Miara, Richards, Wang, Ceder — Chem. Mater. 2015, 27, 4040**<br>LLZO 가넷 **도펀트 45종 × Li/La/Zr 세 자리 결함에너지** | **우리 포지셔닝의 가장 직접적인 비교 대상.** 자리별 계산 도펀트 스크리닝의 직계 선례이고, Anderson 2024 가 이 예측을 받아 59종을 실제 합성했다. 지금은 Anderson digest 안의 **인용값(Fig 3d)** 으로만 있어 방법 세부(code·functional·셀·U)를 모른다 | 🔜 **사용자가 논문 제공 예정** — 받으면 litdb-curator 로 digest |
+| A2 | Lee 2024, *J. Mater. Chem. A* **12**, 7272 — argyrodite 84 구조 MTP-MD 전수 | 황화물·MLIP·체급 유사. 이미 digest 있음(`lee2024_multicomponent_argyrodite_mixed_oxidation_mtp`) — **비교표에 이미 반영됨**. 추가 확보 불필요 | ✅ 보유 |
+| A3 | Jun 2022, *J. Mater. Chem. A* **10**, 7888 — argyrodite 계산 스크리닝 기술자(ion-cage 균일도, 한양대 ERICA) | 같은 계열의 argyrodite 계산 스크리닝. digest 보유(`jun2022_argyrodite_ion_cage_size_descriptor`) | ✅ 보유 |
+
+**A1 받으면 할 일**
+1. digest 생성 → `litdb/papers/miara2015_llzo_dopant_site_defect_energy.md`
+2. `litdb/comparison_vs_ours.md` 에 계보 note 추가 — 축은 **"무엇을 바꾸는가"** 하나로 고정
+3. 세미나 덱 6장 표의 `Miara 2015 (via Anderson)` 행을 **직접 인용**으로 승격
+   (`tools/seminar/rebuild_cascade_deck.py` SPEC 임시키 29 → 6번 슬라이드)
+4. 확인할 것: 45종의 **음이온 자리 도핑이 있는지** — 없다면 "우리는 화합물 통째로" 주장이 더 강해지고,
+   있다면 그 부분은 주장에서 빼야 한다
+
 ### 🔁 판정 정정 이력 (우리가 냈다가 뒤집은 판정)
 
 웹앱 **`/benchmarks` → 판정 정정 이력**에 ①주장 →②무엇이 틀렸나 →③어떻게 알았나 →④지금 무엇을 아나
