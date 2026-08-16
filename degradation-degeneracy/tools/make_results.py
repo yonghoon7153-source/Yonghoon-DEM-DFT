@@ -114,6 +114,13 @@ def _warm_start_asymmetry(fits) -> str | None:
             f"early stop off의 paired 재실행이 필요합니다.")
 
 
+def _next_no(lines: list[str]) -> int:
+    """다음 결론 번호. ★ 15차 — `len(lines)+1` 은 ⓘ·⚠ 같은 **부속 줄까지** 세서
+    번호가 3 다음 5 로 건너뛰었다. `N. ` 로 시작하는 줄만 센다."""
+    import re
+    return sum(1 for x in lines if re.match(r"^\d+\. ", x)) + 1
+
+
 def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     """핵심 결론 3줄 — 숫자에서 직접 만든다."""
     tbl = pd.DataFrame(cmp_res["table"]).set_index("objective")
@@ -132,10 +139,14 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
         else:
             verdict = ("**사실상 변화가 없다**(차이 2%p 이내). 즉 34p의 dQ/dV 추가는 "
                        "이 합성 격자에서 최종 오차를 측정 가능하게 줄이지 못한다.")
+        # ★ 15차 발견 1 — 정수 반올림(62→87)이 비대칭 pipeline 값(62→63)과
+        #   헷갈리는 통로가 됐다. count 와 소수 한 자리를 함께 낸다.
         lines.append(
-            f"1. dQ/dV 항을 넣으면 degeneracy가 {_pct(b['degenerate_frac'])} → "
-            f"{_pct(i['degenerate_frac'])}로 {verdict} "
-            f"(평균 |오차| {_pp(b['mean_abs_err'])} → {_pp(i['mean_abs_err'])}, "
+            f"1. dQ/dV 항을 넣으면 recovery failure 가 "
+            f"{_cnt(b['degenerate_frac'], b['n'], 1)} → "
+            f"{_cnt(i['degenerate_frac'], i['n'], 1)} 로 {verdict} "
+            f"(행별 max-mode 절대오차의 평균 {_pp(b['mean_abs_err'])} → "
+            f"{_pp(i['mean_abs_err'])}, "
             f"raw PE/NE 오차 반대부호 비율 {_pct(b['pe_ne_antisym_frac'])} → "
             f"{_pct(i['pe_ne_antisym_frac'])} — **물리적 상쇄로 해석 불가**)")
         # ★ pe_ne_antisym은 raw 오차의 **부호**만 센다. 목적함수마다 전역 편향의
@@ -260,11 +271,16 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     #   eps 미수렴·안장점 혼입 때문에 어느 쪽으로도 근거가 못 된다.)
 
     ur = cmp_res.get("unrecoverable_frac", 0.0)
+    # ★ 15차 발견 9 — "원리적으로 복원 불가" 는 실제 셀·다른 reference·다른
+    #   parameterization 까지 확장되는 물리 명제로 읽힌다. 지금 판정하는 것은
+    #   **선택한 grid-reference fitter 의 α/bounds feasible domain** 이다.
     lines.append(
-        f"{len(lines) + 1}. **격자의 {_pct(ur)}는 grid 기준에서 원리적으로 복원 불가**"
-        f"(참값 α<1 → 재구성 창이 reference 범위를 벗어남)다. "
-        f"위 숫자는 모두 복원가능군 {summary.get('n_rows_recoverable', '?')}행에서만 센 값이며, "
-        f"복원불가군을 섞으면 목적함수 간 차이가 묻힌다.")
+        f"{_next_no(lines)}. **생성성공 격자의 {_pct(ur)}는 선택한 grid-reference "
+        f"fitter 의 현재 α/bounds feasible domain 밖**이다 (참값 α<1 → 재구성 창이 "
+        f"reference 범위를 벗어나 truth 가 **표현 가능**하지 않다). 위 숫자는 모두 "
+        f"그 안쪽 {summary.get('n_rows_recoverable', '?')}행에서만 센 값이며, "
+        f"바깥을 섞으면 목적함수 간 차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 "
+        f"현재 표현식의 정의역 판정이다.")
     return lines
 
 

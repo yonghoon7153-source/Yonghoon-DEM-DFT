@@ -2917,6 +2917,42 @@ def test_conclusion_renders_counts_not_rounded_percent():
     assert not re.search(r"(?<![\d./])0%", txt), "정수 반올림 0% 가 남아 있다"
 
 
+def test_conclusion_1_uses_counts_and_decimal():
+    """★ 15차 발견 1 — 결론 1 도 정수 반올림하면 안 된다.
+
+    paired 정본은 `61.9% → 87.2%` 인데 `_pct(x, 0)` 이 `62% → 87%` 로 반올림해
+    원장이 비대칭 pipeline 값(62→63)과 헷갈리는 통로가 됐다. count 와 소수를
+    함께 낸다.
+    """
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 2952}))
+    assert "914/1476" in txt and "1287/1476" in txt, txt[:500]
+    assert "61.9" in txt and "87.2" in txt, "소수 한 자리가 없다"
+
+
+def test_conclusion_unrecoverable_is_domain_not_physics():
+    """★ 15차 발견 9 — "원리적으로 복원 불가" 는 실제 셀·다른 reference 까지
+    확장되는 물리 명제로 읽힌다. 현재 fitter 의 feasible domain 판정으로 쓴다."""
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 2952}))
+    assert "원리적으로 복원 불가" not in txt, "물리 명제로 읽히는 표현이 남아 있다"
+    assert "feasible domain" in txt or "표현 가능" in txt, txt[-600:]
+
+
+def test_conclusion_numbering_is_sequential():
+    """★ 15차 — 결론 번호가 3 다음 5 로 건너뛴다 (`len(lines)+1` 이 부속 줄까지
+    센다). 읽는 사람은 빠진 항목이 있다고 오해한다."""
+    import re
+
+    from tools.make_results import _conclusion
+
+    nums = [int(m.group(1)) for line in _conclusion(_gap_cmp_res(), {})
+            if (m := re.match(r"^(\d+)\. ", line))]
+    assert nums == list(range(1, len(nums) + 1)), f"번호가 건너뛴다: {nums}"
+
+
 def test_conclusion_pairs_conditional_ratio_with_all_population():
     """★ 15차 발견 3 — 사건률 비 90 은 recoverable 조건부다. 전체 격자 값(3.69)과
     함께 쓰지 않으면 단독 인용된다. '우도비' 라는 무조건적 이름도 쓰지 않는다."""
