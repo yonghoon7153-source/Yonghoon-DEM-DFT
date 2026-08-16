@@ -283,15 +283,15 @@ def main():
         with MPRester(key) as mpr:
             entries = mpr.get_entries_in_chemsys(
                 els, additional_criteria={"thermo_types": ["GGA_GGA+U"]})
+            try:
+                db_version = mpr.get_database_version()
+            except Exception:
+                db_version = None
         if excl:
             n0 = len(entries)
             entries = [e for e in entries
                        if e.composition.reduced_formula not in excl]
             print(f"    제외 {n0 - len(entries)}개 entry 제거")
-            try:
-                db_version = mpr.get_database_version()
-            except Exception:
-                db_version = None
         pd = PhaseDiagram(entries)
         muref = pd.el_refs[Li].energy_per_atom
         eids = sorted(str(getattr(e, "entry_id", "") or "") for e in entries)
@@ -358,9 +358,10 @@ def main():
         print(f"  [{'-'.join(els)}] {len(entries)} entries · phase_set {psid}")
         if sp in d and d[sp].get("complete"):
             x = d[sp]
-            print(f"    {sp:8s} main(Cl) {x['main_Cl_V']:+.3f} · "
-                  f"main(dopant) {x['main_dopant_V']:+.3f} · "
-                  f"interaction {x['interaction_V']:+.3f}")
+            print(f"    {sp:8s} baseline {x['baseline_cl_recipe_contrast_V']:+.3f} · "
+                  f"plain-dopant {x['plain_dopant_recipe_contrast_V']:+.3f} · "
+                  f"conditional {x['conditional_cl_recipe_contrast_V']:+.3f} · "
+                  f"inter {x['recipe_interaction_V']:+.3f}")
 
     doc = {
         "method": ("matched 2x2 operational contrast, grand-potential ESW "
@@ -515,9 +516,100 @@ def selftest():
     chk("음성: 무엇이 없는지 말한다", d5["missing"] == ["H_Cl"])
     chk("음성: 결측인데 값을 만들지 않는다", "recipe_interaction_V" not in d5)
 
+    # ── production path 스모크 (2026-08-16) ─────────────────────────────────
+    #   ⛔ 앞 판 selftest 는 순수 함수만 봤다. 실제로 터진 버그 둘은 **전부 main() 안**
+    #     이었다: (①) --exclude 를 넣으며 db_version 조회를 `if excl:` 블록 안으로
+    #     들여써서 --exclude 없이 돌면 UnboundLocalError, (②) 필드명을 바꾸고 요약
+    #     print 를 안 고쳐 KeyError. 둘 다 MP 없이 잡을 수 있었다 — 스텁으로 돌린다.
+    ok2, fail2 = _smoke_main(chk)
+    del ok2, fail2
     try: print(f"\nselftest: {ok} passed, {fail} failed")
     except Exception: print(f"\nselftest: {ok} passed, {fail} failed")
     return 1 if fail else 0
+
+
+def _smoke_main(chk):
+    """가짜 MP 로 main() 을 끝까지 돌린다. 값이 아니라 **경로**를 검사한다."""
+    import types, tempfile, os as _os, sys as _sys
+
+    class _Comp(dict):
+        def __init__(self, d): super().__init__(d)
+        @property
+        def elements(self): return list(self)
+        @property
+        def reduced_formula(self): return formula(dict(self))
+    class _Entry:
+        def __init__(self, i, f):
+            self.entry_id, self.composition = f"mp-{i}", _Comp(f)
+            self.energy_per_atom, self.correction = -1.0 - i * 0.01, 0.0
+    class _PD:
+        def __init__(self, entries): self.el_refs = {"Li": types.SimpleNamespace(energy_per_atom=-1.9)}
+        def get_element_profile(self, el, comp):
+            # host 계열은 2.140, 도펀트가 있으면 조금 올린다 — 부호만 있으면 된다
+            v = 2.140 + (0.2 if any(e not in ("Li", "P", "S", "Cl") for e in comp) else 0.0)
+            return [{"chempot": -1.9 - v, "evolution": -1.0, "reaction": "A -> B"},
+                    {"chempot": -1.9 - v, "evolution": +1.0, "reaction": "TIE(+evo)"},
+                    {"chempot": -1.9 - (v + 0.5), "evolution": -1.0, "reaction": "higher"}]
+    class _MPR:
+        def __init__(self, key): pass
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+        def get_entries_in_chemsys(self, els, additional_criteria=None):
+            return [_Entry(i, {e: 1}) for i, e in enumerate(els)] + [_Entry(99, {"Li": 1, "S": 4})]
+        def get_database_version(self): return "2026.stub"
+
+    saved = {k: _sys.modules.get(k) for k in
+             ("pymatgen", "pymatgen.core", "pymatgen.analysis",
+              "pymatgen.analysis.phase_diagram", "mp_api", "mp_api.client")}
+    saved_argv, saved_key = _sys.argv[:], _os.environ.get("MP_API_KEY")
+    try:
+        core = types.ModuleType("pymatgen.core")
+        core.Composition, core.Element = _Comp, (lambda s: s)
+        pdm = types.ModuleType("pymatgen.analysis.phase_diagram"); pdm.PhaseDiagram = _PD
+        cli = types.ModuleType("mp_api.client"); cli.MPRester = _MPR
+        for name, mod in (("pymatgen", types.ModuleType("pymatgen")),
+                          ("pymatgen.core", core),
+                          ("pymatgen.analysis", types.ModuleType("pymatgen.analysis")),
+                          ("pymatgen.analysis.phase_diagram", pdm),
+                          ("mp_api", types.ModuleType("mp_api")),
+                          ("mp_api.client", cli)):
+            _sys.modules[name] = mod
+        _os.environ["MP_API_KEY"] = "stub"
+        td = tempfile.mkdtemp()
+        for label, argv in (("기본", []),
+                            ("--exclude", ["--exclude", "LiS4"]),
+                            ("--ladder", ["--ladder", "3"]),
+                            ("둘 다", ["--exclude", "LiS4", "--ladder", "2"])):
+            out = _os.path.join(td, f"o{len(argv)}{label}.json")
+            _sys.argv = ["x", "--out", out] + argv
+            try:
+                import contextlib, io as _io
+                with contextlib.redirect_stdout(_io.StringIO()):   # 스모크 출력은 삼킨다
+                    main()
+                err = None
+            except Exception as e:
+                err = f"{type(e).__name__}: {e}"
+            chk(f"스모크[{label}]: main() 이 끝까지 돈다 ({err or 'ok'})", err is None)
+            if err is None:
+                doc = json.load(open(out, encoding="utf-8"))
+                chk(f"스모크[{label}]: decomposition 비어 있지 않다",
+                    bool(doc.get("decomposition")))
+                chk(f"스모크[{label}]: phase set 에 energy_fingerprint",
+                    all("energy_fingerprint" in v for v in doc["phase_sets"].values()))
+                # 음성: onset 반응식이 negative-evolution step 이어야 한다 (tie 함정)
+                rx = [r for r in doc["results"].values() if "error" not in r]
+                chk(f"스모크[{label}]: onset 이 +evo step 을 잡지 않는다",
+                    all(r.get("oxidation_onset_rxn") != "TIE(+evo)" for r in rx))
+                chk(f"스모크[{label}]: onset evolution 이 음수",
+                    all((r.get("oxidation_onset_evolution") or -1) < 0 for r in rx))
+    finally:
+        for k, v in saved.items():
+            if v is None: _sys.modules.pop(k, None)
+            else: _sys.modules[k] = v
+        _sys.argv = saved_argv
+        if saved_key is None: _os.environ.pop("MP_API_KEY", None)
+        else: _os.environ["MP_API_KEY"] = saved_key
+    return 0, 0
 
 
 if __name__ == "__main__":
