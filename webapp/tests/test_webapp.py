@@ -901,6 +901,90 @@ def test_oxidation_onset_carries_its_composition_family():
     assert [d for d, r in rows.items() if r["ox_family_confounded"]] == ["B2O3"]
 
 
+def test_seminar_17d9a373_handoff_contract():
+    """세미나 최종 핸드오프(17d9a373)의 회귀 계약 12건을 한 곳에서 잠근다."""
+    h = _cascade_html()
+    fac = json.loads((ROOT / "db/properties/oxidation_matched_factorial.json")
+                     .read_text(encoding="utf-8"))
+    nol = json.loads((ROOT / "db/properties/oxidation_matched_factorial_nolis4.json")
+                     .read_text(encoding="utf-8"))
+
+    # 1. G3 네 층을 동시에 렌더한다
+    for token in ("270/270", "17/17", "0/11"):
+        assert token in h, f"G3 상태에 {token} 이 없다"
+    assert "approved current ranking" in h.lower() or "승인" in h
+
+    # 2·3. stale / 금지 문구가 **주장으로** 안 나온다.
+    #   ⚠ 감사 화면은 "이렇게 말하면 안 된다" 목록을 일부러 띄운다 — 그 블록을 걷어내고 본다.
+    #     안 그러면 경고문 자체가 위반으로 잡혀서, 경고를 지우는 게 테스트 통과법이 된다.
+    body = re.sub(r"<!--FORBIDDEN-->.*?<!--/FORBIDDEN-->", "", h, flags=re.S)
+    assert "<!--FORBIDDEN-->" in h, "금지 목록 블록이 사라졌다"
+    assert len(body) < len(h), "금지 목록을 못 걷어냈다 (정규식 확인)"
+    for forb in ("method-comparable 0", "effect attribution closed",
+                 "Cl 효과는 0", "Cl effect = 0", "11/11 species validated", "9.7배"):
+        assert forb not in body, f"금지 문구가 주장으로 화면에 있다: {forb}"
+    # 그리고 그 목록에는 여전히 들어 있어야 한다 (경고를 지워서 통과하면 안 된다)
+    for forb in ("effect attribution closed", "11/11 species validated"):
+        assert forb in h, f"금지 목록에서 {forb} 가 빠졌다"
+
+    # 4. chain audit 이 exact 10 / multi 7 을 재현
+    mt = json.loads((ROOT / "db/properties/oxidation_stability_cascade_v3_pinned.json")
+                    .read_text(encoding="utf-8"))["composition_family_audit"]["matched_transform"]
+    assert mt["counts"] == {"exact": 10, "multi_transform": 7}
+
+    # 5. 두 비율이 분모·non-causal 라벨과 같은 패널에
+    assert "9.63" in h and "2.59" in h
+    assert "17/253" in h and "11/17" in h and "4/16" in h
+    assert "post-selection descriptive association" in h
+    for never in ("Cl effect size", "causal enrichment", "success rate"):
+        assert never in h, f"'이렇게 부르지 않는다' 목록에 {never} 가 없다"
+        assert never not in body, f"{never} 가 목록 밖에서 쓰이고 있다"
+
+    # 6. B2O3 exact composition mismatch → validation link 없음
+    assert D.CASCADE_JOIN_STATUS["b2o3"]["validation_link_status"] == "different_composition"
+
+    # 7. ladder4 = 2.356 · S16 · 0.5 LiS4
+    lad = {r["cell"]: r for r in D.load_factorial()["included"]["ladder"]}
+    assert lad["__ladder4__"]["ox_V"] == 2.356
+    assert "S16" in lad["__ladder4__"]["formula"]
+    assert "LiS4" in lad["__ladder4__"]["rxn"], "ladder4 에서 LiS4 가 사라졌다"
+    assert lad["__ladder3__"]["ox_V"] == 2.140
+    assert "MECHANISM HYPOTHESIS" in h, "사다리가 가설 표시 없이 나간다"
+
+    # 8. LiS4 제외판 값 고정
+    ex = nol["decomposition"]
+    for sp, want in (("WO3", 0.000), ("Al2O3", 0.098), ("MoO3", 0.129), ("B2O3", 0.283)):
+        got = ex[sp]["conditional_cl_recipe_contrast_V"]
+        assert abs(got - want) < 5e-4, f"{sp} {got} != {want}"
+    assert nol["exclusions"] == ["LiS4"]
+    assert ex["Al2O3"]["H_plain_V"] == 2.256, "제외판 host 가 2.256 이 아니다"
+    assert fac["decomposition"]["Al2O3"]["H_plain_V"] == 2.140
+    assert "다른 phase set" in h, "두 판을 섞지 말라는 경고가 화면에 없다"
+
+    # 9. stage 09f 가 current G2/G3 source 로 표시되지 않는다
+    gm = dict(D.CASCADE_STAGE_GATE_MAP)
+    assert "09f" in gm["G2 / G3 (current)"] and "아니다" in gm["G2 / G3 (current)"]
+    assert "NOT A TRUE GRAND-POTENTIAL ESW" in h
+
+    # 10. stage 10/11 은 NOT RUN · 0/270 (unharvested 아님)
+    tail = [g for g in D.CASCADE_STAGE_GROUPS if g["id"] == "10-12b"][0]
+    blob = " ".join(tail["warnings"])
+    assert blob.count("NOT RUN") >= 2 and "0/270" in blob
+    assert "unharvested" not in h and "미수확" not in h
+
+    # 11. 기본 DOM 에 archive/diagnostic 후보 행이 없다 (별도 테스트가 상세히 본다)
+    assert h.count('"dopant":') == 0
+
+    # 12. manifest 에 두 factorial 원장이 다 등록돼 있다
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    reg = {a["source_path"]: a for a in man["artifacts"]}
+    for fn, scope in (("oxidation_matched_factorial.json", "default_visible"),
+                      ("oxidation_matched_factorial_nolis4.json", "diagnostic_only")):
+        k = f"db/properties/{fn}"
+        assert k in reg, f"{fn} 이 원장에 없다"
+        assert reg[k]["use_scope"] == scope
+
+
 def test_default_cascade_does_not_ship_the_superseded_ranking():
     """경고 배너는 접근 정책이 아니다 — archive/diagnostic 행은 초기 DOM 에 없어야 한다.
 
@@ -934,9 +1018,11 @@ def test_factorial_does_not_claim_a_closed_causal_attribution():
     """baseline contrast 0 을 'Cl 효과 0' 으로 쓰면 안 된다 (2026-08-16 재감사 P0-1)."""
     f = json.loads((ROOT / "db/properties/oxidation_matched_factorial.json")
                    .read_text(encoding="utf-8"))
-    v = f["verdict_2026_08_16_rev2"]
+    v = f["verdict"]   # 도구가 생성한다 (손편집 금지)
     assert "'Cl 효과는 0'" in v["NO_GO"] and "'인과 귀속 폐쇄'" in v["NO_GO"]
     assert v["three_fields_not_one"]["element_level_causal_attribution"] == "not_claimed"
+    assert v["baseline_nonzero_species"] == [], "baseline 이 0 이 아닌 종이 생겼다"
+    assert v["conditional_range_V"] == [-0.017, 0.283]
     assert v["mechanism_status"].startswith("hypothesis")
     for sp, d in f["decomposition"].items():
         if not d.get("complete"):

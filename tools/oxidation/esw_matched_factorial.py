@@ -221,6 +221,45 @@ def decompose(vals, eps=1e-9):
     return out
 
 
+def _verdict(dec, excl, ladder_steps):
+    """판정 블록. **데이터에서 유도되는 것만** — 손으로 붙이지 않는다."""
+    done = {k: v for k, v in dec.items() if v.get("complete")}
+    cond = {k: v["conditional_cl_recipe_contrast_V"] for k, v in done.items()}
+    base_nonzero = [k for k, v in done.items()
+                    if abs(v["baseline_cl_recipe_contrast_V"]) > 1e-9]
+    return {
+        "GO": ("11종의 **조성 수준** 2×2 grand-potential operational contrast (진단물)"),
+        "NO_GO": ["'Cl 효과는 0'", "'Cl-rich 개선 반증' (보편 개선 주장만 반증)",
+                  "'인과 귀속 폐쇄'", "LiS4→P2S7 을 보편 기전으로"],
+        "unchanged": "승인 current ranking = 0종",
+        "headline": ("**undoped 기준에서는** −Li−S+Cl recipe 가 onset 을 움직이지 않았다. "
+                     "그러나 **도펀트가 있을 때**의 조건부 recipe 효과는 종에 따라 다르다 "
+                     f"({min(cond.values()):+.3f} ~ {max(cond.values()):+.3f} V)."),
+        "baseline_is_not_a_main_effect": (
+            "baseline = H_Cl − H_plain 은 marginal main effect 가 아니라 **도펀트가 없는 "
+            "기준점의 simple contrast** 다. 이게 0 인 것을 'Cl 효과 0' 으로 읽으면 안 된다."),
+        "not_independent_samples": (
+            f"{len(done)}종 모두 같은 H_plain·H_Cl 을 쓴다. 도펀트 원소는 host 조성에 없어 "
+            "host 분해에 참여할 수 없으므로 **독립 표본이 아니라** 같은 host contrast 를 "
+            f"{len(done)}개 확장 roster 에서 반복 확인한 것이다."),
+        "baseline_nonzero_species": base_nonzero,
+        "conditional_range_V": [round(min(cond.values()), 4), round(max(cond.values()), 4)],
+        "three_fields_not_one": {
+            "operational_factorial_coverage": "17/17 chain rows",
+            "element_level_causal_attribution": "not_claimed",
+            "structural_realization_validated": f"0/{len(done)}",
+        },
+        "mechanism_status": "hypothesis (appendix) — 본문 결론 금지",
+        "phase_roster": {"exclusions": sorted(excl),
+                         "note": ("제외 목록이 다르면 **다른 phase set** 이다. 절대 onset 을 "
+                                  "섞지 말 것 — contrast 자체가 roster 에 의존한다.")},
+        "ladder_steps": ladder_steps,
+        "still_open": ["자리 점유·구조 실현 가능성 (structural realization)",
+                       "legacy b2o3_esw 의 phase-set identity",
+                       "LiS4 포함/제외 민감도는 1차 확인했으나 구조 수준은 미확인"],
+    }
+
+
 def ladder_cells(host=None, n=5):
     """host 에서 −Li−S+Cl 을 n 번 반복한 사다리. 분기 전환이 **어디서** 일어나는지 본다.
 
@@ -382,6 +421,9 @@ def main():
             "보편적 원소 효과가 아니라 이 구조 생성 규약 안의 대비다",
             "Li 전하 보상이 정수로 안 떨어지는 도펀트는 건너뛴다 (반올림 금지)",
         ],
+        # ⛔ 2026-08-16 — 판정 블록을 **도구가 만든다.** 손으로 붙이면 다음 재실행이 지운다
+        #   (실제로 --ladder 재실행이 verdict 를 날렸다). 데이터에서 유도되는 것만 적는다.
+        "verdict": _verdict(decomposed, excl, a.ladder),
         "skipped": [{"species": n, "why": w} for n, w in skipped],
         "phase_sets": phase_sets,
         "decomposition": decomposed,

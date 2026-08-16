@@ -227,7 +227,7 @@
   "_note": "행이 있다 ≠ 비교 가능하다. G3 는 record-complete 90 인데 phase-set comparable 270/270 이지만 효과 귀속은 0/17 이다 (chain generator 17행 중 exact 대응 10 · multi-transform 7)."
  },
  "render_provenance": {
-  "figure_font": "DejaVu Sans",
+  "figure_font": "Liberation Sans (Arial metric-compatible)",
   "note": "옛 판은 C:/Windows/Fonts/arial.ttf 하나에 묶여 있어 Linux 에서 도구가 아예 안 돌았다. 지금은 Arial → Liberation Sans(메트릭 호환) → DejaVu Sans 폴백이다. 폰트가 다르면 PNG 해시가 달라지므로 재생성 시 원장을 같이 갱신해야 한다."
  },
  "artifacts": [
@@ -439,9 +439,35 @@
     "LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다",
     "structural realization 0/11"
    ],
-   "sha256": "8ad80d3b75e068e764fa16ba3b6b0a997644bf7b0fe400011f25c7e4ce516309",
-   "bytes": 403528,
-   "sha256_lf": "8ad80d3b75e068e764fa16ba3b6b0a997644bf7b0fe400011f25c7e4ce516309"
+   "sha256": "073dc6aaf45ca464c1e8bbcf9f78cbca19c48a292a96da4bfbeac5bfafb7b5ed",
+   "bytes": 404979,
+   "sha256_lf": "073dc6aaf45ca464c1e8bbcf9f78cbca19c48a292a96da4bfbeac5bfafb7b5ed"
+  },
+  {
+   "artifact_id": "cascade-v23-oxidation_matched_factorial_nolis4",
+   "source_path": "db/properties/oxidation_matched_factorial_nolis4.json",
+   "approval_status": "audit_current",
+   "use_scope": "diagnostic_only",
+   "description": "matched 2x2 — **LiS4 제외 phase set**. contrast 가 roster 의존인지 보는 robustness 판",
+   "actual_x": 0.25,
+   "campaign_labels": [
+    "x002",
+    "x005",
+    "x010"
+   ],
+   "source_commit": "17d9a373",
+   "limitations": [
+    "⛔ **다른 phase set 이다** — 기본판과 절대 onset 을 섞지 말 것 (host 2.256 vs 2.140)",
+    "conditional contrast 가 크게 움직인다: WO3 +0.216→0.000 · Al2O3 +0.214→+0.098 · MoO3 +0.216→+0.129",
+    "B2O3 만 +0.283 불변 · Sc2O3 -0.017→-0.046",
+    "부호는 대체로 유지되나 크기는 안 버틴다 — 인용 시 roster 를 반드시 같이 적을 것",
+    "사다리 없음 (ladder_steps=0) — 사다리는 기본판에만 있다"
+   ],
+   "sha256": "3743cdfa47866b7649095696be992cdf97375494ea3e8d1a3d140ea8fa4fbffd",
+   "bytes": 381159,
+   "sha256_lf": "3743cdfa47866b7649095696be992cdf97375494ea3e8d1a3d140ea8fa4fbffd",
+   "derived_from": "db/properties/oxidation_matched_factorial.json",
+   "override_reason": "phase-roster robustness 1차 — 기전을 본문 결론으로 못 올리는 이유"
   },
   {
    "artifact_id": "cascade-v23-b2o3_esw",

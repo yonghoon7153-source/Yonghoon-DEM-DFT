@@ -1152,6 +1152,99 @@ CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
 #   (다음 계산 대상 선정에 쓰인다) **validation 이라고 부르지 않는다.**
 #   validation 으로 인정하려면 composition_formula + composition_hash + method_id +
 #   phase_set_id 가 모두 일치해야 한다.
+# ── 2026-08-16 세미나 최종 핸드오프 (17d9a373) ───────────────────────────────
+#   G3 상태는 **네 층**이다. 하나로 합치면 곧바로 자기모순이 생긴다 (실제로 생겼었다).
+CASCADE_G3_STATE = {
+    "phase_set_comparable": "270/270",
+    "operational_factorial_coverage": "17/17 chain rows · 11 recipe systems",
+    "structural_realization_validated": "0/11",
+    "approved_current_ranking": 0,
+    "allowed": ["phase-set comparable 270/270",
+                "17/17 chain rows have formula-level operational contrasts "
+                "across 11 recipe systems"],
+    "forbidden": ["effect attribution closed", "11/11 species validated",
+                  "current G3 ranking approved", "Cl effect = 0"],
+}
+
+#: matched 2×2 — 값은 db 가 원본이고 여기엔 **설계와 문구**만 둔다.
+CASCADE_FACTORIAL_CONTRACT = {
+    "cells": {"H_plain": "Li24P4S20Cl4", "H_Cl": "Li23P4S19Cl5",
+              "D_plain": "Li18M2P4S17Cl4O3", "D_Cl": "Li17M2P4S16Cl5O3"},
+    "contrasts": {
+        "baseline_cl_recipe_contrast": "H_Cl − H_plain   (도펀트 없는 기준)",
+        "plain_dopant_recipe_contrast": "D_plain − H_plain",
+        "conditional_cl_recipe_contrast": "D_Cl − D_plain   (도펀트가 있을 때)",
+        "recipe_interaction": "conditional − baseline",
+    },
+    "caveats": [
+        "11 expanded rosters 는 **독립 host 실험 11개가 아니다** — 같은 두 조성의 반복이다",
+        "total 이 historical chain delta 와 일치하는 것은 **round-trip consistency** 다",
+        "actual structure/site validation 은 **0/11** 이다",
+        "'main effect' 가 아니라 recipe contrast 다 — 원소 수준 인과를 함의하지 않는다",
+    ],
+}
+
+#: 두 enrichment 비율 — 반드시 분모와 non-causal 라벨을 붙여 같은 패널에.
+CASCADE_ENRICHMENT = {
+    "full_pool": {"plain": "17/253", "chain": "11/17", "ratio": 9.63,
+                  "denominator_note": "chain 후보가 없던 237 슬롯도 분모에 들어 있다"},
+    "eligible_slots": {"plain": "4/16", "chain": "11/17", "ratio": 2.59,
+                       "denominator_note": "chain 후보가 실제 있던 33 슬롯만"},
+    "label": "post-selection descriptive association",
+    "why_not_causal": ("챔피언은 combined_score 최대값으로 **사후 선택**됐고, "
+                       "x 라벨은 독립 반복이 아니다 (270행 전부 loading 0.25)."),
+    "never_call_it": ["Cl effect size", "causal enrichment", "success rate"],
+}
+
+#: 20 스테이지 해설 — 네 그룹. stage_status 와 gate_status 를 한 enum 으로 합치지 않는다.
+CASCADE_STAGE_GROUPS = [
+    {"id": "00-04", "name": "Generate and anneal",
+     "question": "라벨 하나를 어닐된 후보군으로 바꿀 수 있는가",
+     "input_output": "parent structure + dopant recipe → 후보 구조 · post-anneal geometry/energy",
+     "cost_class": "저비용 (UMA relax 1500 step · 500 K 50 ps FIRE)",
+     "why_before_next": "비싼 정적/유한변형 계산에 넣기 전에 후보 수를 줄인다",
+     "cannot_claim": "열역학적 formation energy · DFT 검증 · 전도도",
+     "warnings": ["01: COMPOUND_FILTER 누락 시 ~85종 전수 열거 = 5000+ 구조"]},
+    {"id": "05-08", "name": "Static pathway and mechanics",
+     "question": "어닐된 기하에서 Li 환경과 역학이 어떻게 보이는가",
+     "input_output": "post-anneal 구조 → legacy BVS · 4 Å blocking · EOS B0 · Cij",
+     "cost_class": "중간 (유한변형 계산)",
+     "why_before_next": "정적 프록시로 걸러 비싼 MD/계면 계산의 순서를 정한다",
+     "cannot_claim": "장시간 Li 확산 · 실제 BVSE barrier · 전자절연성 · 계면 접착",
+     "warnings": ["05: post-anneal geometry 를 쓴다 (BVS 는 결합길이에 지수민감) · "
+                  "legacy/noncanonical BVS · **전도도가 아니다**"]},
+    {"id": "09a-09f", "name": "Assemble and propose",
+     "question": "모은 자료로 다음 계산을 무엇으로 제안할 것인가",
+     "input_output": "스테이지 산출물 → combine/collect · predictor · dft_inputs · ehull",
+     "cost_class": "저비용 (조립)",
+     "why_before_next": "후보를 검증하는 단계가 아니라 **자료를 조립**하는 단계다",
+     "cannot_claim": "후보 검증 · current G2/G3 source",
+     "warnings": ["09f: **NOT A TRUE GRAND-POTENTIAL ESW** — current G3 는 pipeline 밖의 "
+                  "esw_cascade_batch.py 가 pinned MP roster 에서 다시 계산한 값이다",
+                  "09e: decomposition audit 이지 후보 E_above_hull 이 아니다",
+                  "09d: dft_inputs 존재는 DFT 완료가 아니다"]},
+    {"id": "10-12b", "name": "Expensive tail and final collection",
+     "question": "가장 비싼 축을 돌고 최종 수집을 했는가",
+     "input_output": "TOP_K_SIGMA 후보 → σ MD · W_ad → collect_final · train_final",
+     "cost_class": "최고 (σ MD ≈12 h · W_ad 5–15 h)",
+     "why_before_next": "여기가 실제 물성 검증 꼬리다",
+     "cannot_claim": "v23 에서는 아무것도 — 10·11 이 안 돌았다",
+     "warnings": ["10: **NOT RUN · 0/270** (TOP_K_SIGMA=0, STAGE_10.DONE 0개)",
+                  "11: **NOT RUN · 0/270** (STAGE_11.DONE 0개)",
+                  "12/12b 의 'final' 은 모든 물리축이 계산됐다는 뜻이 아니다"]},
+]
+
+#: 스테이지 ↔ 게이트는 **다른 체계**다. 매핑을 따로 둔다.
+CASCADE_STAGE_GATE_MAP = [
+    ("G1", "historical input ← stage 06 rerank"),
+    ("G2 / G3 (current)", "**pipeline 밖** — esw_cascade_batch.py 가 pinned MP roster 에서. "
+                          "stage 09f 가 아니다"),
+    ("G4", "legacy input ← stage 05 BVS + geometry-derived 4 Å proximity"),
+    ("G5", "legacy input ← stage 08 elastic"),
+    ("—", "09a–d = aggregation/predictor/input prep · 09e = decomposition audit · "
+          "10/11 = intended validation tail, v23 미실행"),
+]
+
 CASCADE_JOIN_STATUS = {
     "b2o3": {
         "validation_link_status": "different_composition",
@@ -1181,6 +1274,46 @@ CASCADE_JOIN_STATUS = {
                 "캐스케이드 조성이 같다는 것도 아직 조성식 대조로 확인하지 않았다."),
     },
 }
+
+
+def load_factorial() -> dict:
+    """matched 2×2 두 판(LiS4 포함/제외)을 같이 읽는다.
+
+    ⚠ 두 판은 **다른 phase set** 이다 (host 2.140 vs 2.256). 절대 onset 을 섞지 않도록
+      roster 를 값과 함께 돌려준다.
+    """
+    import json as _j
+    out = {}
+    for key, fn in (("included", "oxidation_matched_factorial.json"),
+                    ("excluded", "oxidation_matched_factorial_nolis4.json")):
+        p = ROOT / "db" / "properties" / fn
+        if not p.is_file():
+            continue
+        try:
+            d = _j.loads(p.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        out[key] = {"exclusions": d.get("exclusions") or [],
+                    "ladder_steps": d.get("ladder_steps") or 0,
+                    "decomposition": {k: v for k, v in (d.get("decomposition") or {}).items()
+                                      if v.get("complete")},
+                    "ladder": sorted(
+                        ({"cell": k.split("/")[-1],
+                          "formula": r.get("formula"),
+                          "ox_V": r.get("oxidation_limit_V"),
+                          "rxn": r.get("oxidation_onset_rxn")}
+                         for k, r in (d.get("results") or {}).items()
+                         if "ladder" in k and "error" not in r),
+                        key=lambda x: x["cell"]),
+                    "source": fn}
+        # 사다리는 종마다 중복 기록된다 (같은 host 칸) — cell 이름으로 유일화
+        seen, uniq = set(), []
+        for row in out[key]["ladder"]:
+            if row["cell"] in seen:
+                continue
+            seen.add(row["cell"]); uniq.append(row)
+        out[key]["ladder"] = uniq
+    return out
 
 
 def load_cascade() -> dict:

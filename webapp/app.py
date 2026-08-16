@@ -292,6 +292,9 @@ def cascade_page():
     have = {p["id"] for p in D.list_papers()}
     return render_template("cascade.html", active="cascade", casc=casc,
                            stats=stats, deep_map=deep_map, archive=archive, diagnostic=diagnostic,
+                           g3state=D.CASCADE_G3_STATE, fac=D.load_factorial(),
+                           facc=D.CASCADE_FACTORIAL_CONTRACT, enrich=D.CASCADE_ENRICHMENT,
+                           stages=D.CASCADE_STAGE_GROUPS, stagemap=D.CASCADE_STAGE_GATE_MAP,
                            lineage=D.METHOD_LINEAGE, lit_have=have,
                            mo_db=D.load_molecular_orbitals())
 

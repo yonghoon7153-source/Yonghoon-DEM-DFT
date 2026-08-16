@@ -164,6 +164,133 @@
       complete = 90종 전수 · partial/incomplete = 그 축은 90종 최종판이 <b>아니다</b>.</div>
   </div>
 
+  {# ── G3 네 층 + matched 2×2 + 사다리 (17d9a373 최종 핸드오프) ── #}
+  {% if g3state %}
+  <div class="card">
+    <h3>G3 상태 <span class="muted" style="font-weight:400;font-size:.8rem">
+      네 층을 한 숫자로 합치지 않는다</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><tbody>
+      <tr><td>phase-set comparability</td>
+          <td class="num"><b>{{ g3state.phase_set_comparable }}</b></td>
+          <td><span class="badge ok">닫힘</span></td></tr>
+      <tr><td>operational factorial coverage</td>
+          <td class="num"><b>{{ g3state.operational_factorial_coverage }}</b></td>
+          <td><span class="badge warn">식 수준</span></td></tr>
+      <tr><td>structural realization validated</td>
+          <td class="num"><b>{{ g3state.structural_realization_validated }}</b></td>
+          <td><span class="badge err">열림</span></td></tr>
+      <tr><td>approved current ranking</td>
+          <td class="num"><b>{{ g3state.approved_current_ranking }}</b>종</td>
+          <td><span class="badge err">0</span></td></tr>
+    </tbody></table></div>
+    {# data-forbidden-list: 여기 안의 문구는 **하지 말라는 예시**다. 회귀 테스트가 이 블록을
+       걷어내고 나머지에서 같은 문구를 찾는다 — 안 그러면 경고문 자체가 위반으로 잡힌다. #}
+    <div class="callout cal-danger" style="margin-top:8px;font-size:.82rem">
+      <!--FORBIDDEN-->⛔ 이렇게 말하면 안 된다: {% for f in g3state.forbidden %}<span class="mono">{{ f }}</span>{% if not loop.last %} · {% endif %}{% endfor %}<!--/FORBIDDEN-->
+    </div>
+  </div>
+
+  {% if enrich %}
+  <div class="card">
+    <h3>host 초과 비율 <span class="muted" style="font-weight:400;font-size:.8rem">
+      <b>{{ enrich.label }}</b> — 인과 아님</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>분모</th><th>plain</th><th>chain</th><th>비</th><th>분모 주의</th></tr></thead><tbody>
+      <tr><td>전체 챔피언</td><td class="mono">{{ enrich.full_pool.plain }}</td>
+          <td class="mono">{{ enrich.full_pool.chain }}</td>
+          <td class="num"><b>{{ enrich.full_pool.ratio }}배</b></td>
+          <td style="font-size:.82em">{{ enrich.full_pool.denominator_note }}</td></tr>
+      <tr><td>chain-eligible 33 슬롯</td><td class="mono">{{ enrich.eligible_slots.plain }}</td>
+          <td class="mono">{{ enrich.eligible_slots.chain }}</td>
+          <td class="num"><b>{{ enrich.eligible_slots.ratio }}배</b></td>
+          <td style="font-size:.82em">{{ enrich.eligible_slots.denominator_note }}</td></tr>
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:8px;font-size:.82rem">
+      {{ enrich.why_not_causal }}<br>
+      <!--FORBIDDEN-->⛔ 이렇게 부르지 않는다: {% for n in enrich.never_call_it %}<span class="mono">{{ n }}</span>{% if not loop.last %} · {% endif %}{% endfor %}<!--/FORBIDDEN-->
+    </div>
+  </div>
+  {% endif %}
+
+  {% if fac and fac.included %}
+  <div class="card">
+    <h3>matched 2×2 operational contrast
+      <span class="muted" style="font-weight:400;font-size:.8rem">
+        {{ facc.cells.H_plain }} · {{ facc.cells.H_Cl }} · {{ facc.cells.D_plain }} · {{ facc.cells.D_Cl }}</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>종</th><th>H_plain</th><th>H_Cl</th><th>D_plain</th><th>D_Cl</th>
+      <th>baseline</th><th>plain-dopant</th><th>conditional</th><th>interaction</th>
+      <th>LiS4 제외 conditional</th></tr></thead><tbody>
+    {% for sp, v in fac.included.decomposition|dictsort %}
+      {% set ex = (fac.excluded.decomposition[sp] if fac.excluded and sp in fac.excluded.decomposition else None) %}
+      <tr><td><b>{{ sp }}</b></td>
+        <td class="num">{{ v.H_plain_V }}</td><td class="num">{{ v.H_Cl_V }}</td>
+        <td class="num">{{ v.D_plain_V }}</td><td class="num">{{ v.D_Cl_V }}</td>
+        <td class="num">{{ '%+.3f'|format(v.baseline_cl_recipe_contrast_V) }}</td>
+        <td class="num">{{ '%+.3f'|format(v.plain_dopant_recipe_contrast_V) }}</td>
+        <td class="num"><b>{{ '%+.3f'|format(v.conditional_cl_recipe_contrast_V) }}</b></td>
+        <td class="num">{{ '%+.3f'|format(v.recipe_interaction_V) }}</td>
+        <td class="num" style="color:var(--red)">{% if ex %}{{ '%+.3f'|format(ex.conditional_cl_recipe_contrast_V) }}{% else %}—{% endif %}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="callout cal-danger" style="margin-top:8px;font-size:.82rem">
+      <b>마지막 열은 다른 phase set 이다</b> (LiS4 제외 · host 2.256 vs 2.140) — 절대 onset 을 섞지 말 것.
+      conditional contrast 가 roster 에 의존한다: WO₃ +0.216 → 0.000 · Al₂O₃ +0.214 → +0.098.
+      <ul style="margin:6px 0 0;padding-left:18px">
+        {% for c in facc.caveats %}<li>{{ c }}</li>{% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  {% if fac.included.ladder %}
+  <div class="card">
+    <h3>host Li/Cl ladder
+      <span class="badge err">MECHANISM HYPOTHESIS · APPENDIX ONLY</span></h3>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>계단</th><th>조성</th><th>onset (V)</th><th>onset 반응식</th></tr></thead><tbody>
+    {% for r in fac.included.ladder %}
+      <tr><td class="mono">{{ r.cell }}</td><td class="mono">{{ r.formula }}</td>
+          <td class="num"><b>{{ r.ox_V }}</b></td>
+          <td class="mono" style="font-size:.78em">{{ r.rxn }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+    <div class="callout cal-warning" style="margin-top:8px;font-size:.82rem">
+      ✅ 허용: <b>S17 → S16</b> 에서 branch transition 이 일부 doped recipe 와 함께 관찰됨<br>
+      ⛔ 금지: LiS₄ 소멸 기전 · 보편적 Cl 기전 · 구조 검증됐다는 주장<br>
+      <b>ladder4 에도 0.5 LiS₄ 가 남는다</b> — 순수 host 사다리가 "LiS₄ 소멸" 을 반증한다.
+    </div>
+  </div>
+  {% endif %}
+  {% endif %}
+
+  {% if stages %}
+  <div class="card">
+    <h3>20-stage workflow — 비용을 어디에 쓰는가
+      <span class="muted" style="font-weight:400;font-size:.8rem">
+        stage_status 와 gate_status 는 <b>다른 체계</b>다</span></h3>
+    {% for g in stages %}
+    <div style="border-left:3px solid var(--muted);padding:6px 0 6px 10px;margin-bottom:10px">
+      <div><b class="mono">{{ g.id }}</b> · <b>{{ g.name }}</b>
+        <span class="muted" style="font-size:.8rem">— {{ g.cost_class }}</span></div>
+      <div style="font-size:.84rem;margin-top:3px"><b>묻는 것</b> {{ g.question }}</div>
+      <div style="font-size:.82rem" class="muted"><b>입출력</b> {{ g.input_output }}</div>
+      <div style="font-size:.82rem" class="muted"><b>왜 이 순서</b> {{ g.why_before_next }}</div>
+      <div style="font-size:.82rem;color:var(--red)"><b>주장 못 함</b> {{ g.cannot_claim }}</div>
+      <ul style="margin:4px 0 0;padding-left:18px;font-size:.8rem">
+        {% for w in g.warnings %}<li>{{ w }}</li>{% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>게이트</th><th>스테이지 매핑</th></tr></thead><tbody>
+    {% for gate, mapping in stagemap %}
+      <tr><td class="mono"><b>{{ gate }}</b></td><td style="font-size:.84em">{{ mapping }}</td></tr>
+    {% endfor %}
+    </tbody></table></div>
+  </div>
+  {% endif %}
+  {% endif %}
+
   {# ── 게이트 분모 계약 (Round-3) — record_present ≠ method_valid ── #}
   {% set GD = (casc.v2 or {}).gate_denominators %}
   {% if GD and GD.data %}
