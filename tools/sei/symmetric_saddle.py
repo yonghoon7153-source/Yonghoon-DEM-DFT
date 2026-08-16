@@ -13,8 +13,15 @@
     끝점 1 + 안장 1 = **2 relax**. 수십~수백 배 싸다.
 
 ⛔ 대칭이 아니면 쓰면 안 된다
-  비대칭 홉(li3nd c→b 처럼 자리 종류가 다름)은 안장점이 중점에 없다. 이 도구는
-  끝점 대칭 동등성을 **입력 meta 에서 확인하고**, 아니면 거부한다.
+  비대칭 홉(li3nd c→b 처럼 자리 종류가 다름)은 안장점이 중점에 없다. 두 근거 중
+  하나가 있어야 통과하고, **어느 쪽으로 통과했는지 기록한다**:
+    (a) `meta.endpoints_symmetry_equivalent = true` — spglib orbit 판정
+    (b) **측정된 끝점 에너지 축퇴** |ΔE| ≤ 20 meV — 이완된 두 끝점 에너지가 같다
+  (b) 를 넣은 이유: cc333 은 build 가 "끝점 미이완" 으로 조기 반환해 meta.json 이
+  없는데, 재생성하면 `.ep_hash` 가 달라져 **이미 돌린 끝점 relax 를 버린다**.
+  그리고 (b) 는 메타데이터가 아니라 실측이라 근거로 더 낫다.
+  ⚠ (b) 는 **필요조건이지 충분조건이 아니다** — 대칭 비동등한 두 자리가 우연히 같은
+  에너지일 수 있다. (b) 로만 통과하면 경고를 남긴다.
 
 프로토콜 일치
   안장 입력은 `ep_initial/relax.in` 의 헤더(cell·k·q·smearing·PP·cutoff)를 **그대로
@@ -38,6 +45,9 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+#: 끝점 에너지 축퇴 문턱 [eV] — 이보다 크면 대칭 홉으로 안 본다.
+#:  0.229 eV 장벽 대비 20 meV 는 9% — 그 이상 어긋나면 중점이 안장점이라는 전제가 흔들린다.
+ENDPOINT_TOL_EV = 0.020
 
 
 def read_relaxed(outp):
@@ -99,13 +109,6 @@ def build(work, tag, force=False):
     meta_p = os.path.join(d, "meta.json")
     meta = json.load(open(meta_p, encoding="utf-8")) if os.path.isfile(meta_p) else {}
 
-    # ⛔ 대칭 게이트 — 비대칭 홉이면 중점이 안장점이 아니다.
-    sym = meta.get("endpoints_symmetry_equivalent")
-    if sym is not True and not force:
-        return 1, (f"⛔ {tag}: 끝점이 대칭 동등하지 않다 (meta: {sym!r}) — 중점법을 쓸 수 없다.\n"
-                   f"   비대칭 홉은 안장점이 중점에 없다. full NEB 을 쓸 것.\n"
-                   f"   (정말 강행하려면 --force — 근거를 db 에 남길 것)")
-
     ini_out = os.path.join(d, "ep_initial", "relax.out")
     fin_out = os.path.join(d, "ep_final", "relax.out")
     ini_in = os.path.join(d, "ep_initial", "relax.in")
@@ -116,6 +119,36 @@ def build(work, tag, force=False):
                    f"   먼저: bash tools/sei/run_sei_neb.sh endpoints {tag}")
     if [s for s, _ in first] != [s for s, _ in last]:
         return 1, f"⛔ {tag}: 두 끝점의 원자 목록이 다르다 — 같은 계가 아니다"
+
+    # ── 대칭 게이트 ────────────────────────────────────────────────────────
+    #  ⛔ 비대칭 홉이면 안장점이 중점에 없다. 두 근거 중 하나면 통과시키되 **어느 쪽인지 적는다**:
+    #    (a) meta 의 spglib orbit 판정 (`endpoints_symmetry_equivalent: true`)
+    #    (b) **측정된 끝점 에너지 축퇴** — 이완된 두 끝점 에너지가 같다
+    #  (b) 를 넣은 이유 (2026-08-16): cc333 은 build 가 "끝점 미이완" 으로 조기 반환해
+    #  meta.json 이 아예 없다. 그렇다고 재생성하면 .ep_hash 가 달라져 이미 돌린 끝점
+    #  relax 를 버린다. 그리고 (b) 는 메타데이터가 아니라 **실측**이라 더 낫다.
+    #  ⚠ 다만 (b) 는 필요조건이지 충분조건이 아니다 — 대칭 비동등한 두 자리가 우연히
+    #    같은 에너지일 수 있다. (b) 만으로 통과하면 경고를 남긴다.
+    sym = meta.get("endpoints_symmetry_equivalent")
+    e_ini, e_fin = final_energy(ini_out), final_energy(fin_out)
+    de = (abs(e_fin - e_ini) if (e_ini is not None and e_fin is not None) else None)
+    basis, warn = None, None
+    if sym is True:
+        basis = "meta.endpoints_symmetry_equivalent=true (spglib orbit)"
+    elif de is not None and de <= ENDPOINT_TOL_EV:
+        basis = f"measured endpoint degeneracy |ΔE| = {de*1000:.1f} meV ≤ {ENDPOINT_TOL_EV*1000:.0f} meV"
+        warn = ("⚠ spglib 판정(meta)이 없어 **끝점 에너지 축퇴**로만 통과했다. 이는 필요조건이지 "
+                "충분조건이 아니다 — 같은 홉이 더 작은 셀에서 대칭 동등으로 확인됐는지 함께 볼 것.")
+    if basis is None and not force:
+        return 1, (f"⛔ {tag}: 대칭 근거가 없다 — 중점법을 쓸 수 없다.\n"
+                   f"   meta.endpoints_symmetry_equivalent = {sym!r}\n"
+                   f"   끝점 에너지 차 |ΔE| = "
+                   + (f"{de*1000:.1f} meV (> {ENDPOINT_TOL_EV*1000:.0f} meV 문턱)" if de is not None
+                      else "측정 불가") + "\n"
+                   f"   비대칭 홉은 안장점이 중점에 없다. full NEB 을 쓸 것.\n"
+                   f"   (정말 강행하려면 --force — 근거를 db 에 남길 것)")
+    if basis is None:
+        basis = "⛔ --force (대칭 근거 없음)"
 
     cell = parse_cell(ini_in)
     # 뛰는 원자 = 두 끝점 사이 변위가 가장 큰 원자
@@ -157,6 +190,9 @@ def build(work, tag, force=False):
         "hop_distance_A": round(dmax, 4),
         "second_largest_displacement_A": round(others, 4),
         "endpoints_symmetry_equivalent": sym,
+        "symmetry_basis": basis,
+        "endpoint_energy_diff_eV": (round(de, 6) if de is not None else None),
+        "symmetry_warning": warn,
         "supercell": meta.get("supercell"), "min_cell_A": meta.get("min_cell_A"),
         "protocol_hash_of_endpoint": meta.get("protocol_hash"),
         "limitations": [
@@ -169,8 +205,9 @@ def build(work, tag, force=False):
     return 0, (f"✓ {tag}: 안장 입력 생성 → {sd}/relax.in\n"
                f"   뛰는 원자 #{j} {mid[j][0]} · 홉 {dmax:.3f} Å "
                f"(다음으로 큰 변위 {others:.3f} Å)\n"
-               f"   셀 {meta.get('supercell')} · 최소변 {meta.get('min_cell_A')} Å · "
-               f"끝점 대칭동등 {sym}\n"
+               f"   대칭 근거: {basis}\n"
+               + (f"   {warn}\n" if warn else "")
+               + f"   셀 {meta.get('supercell')} · 최소변 {meta.get('min_cell_A')} Å\n"
                f"   실행:  cd {sd} && mpirun -np <N> pw.x -in relax.in > relax.out")
 
 
@@ -265,10 +302,29 @@ def selftest():
 
     # ── 음성 ──
     mk("asym", False, A, B)
+    # 두 끝점 에너지를 크게 벌린다 → (b) 경로도 막혀야 한다
+    fp = os.path.join(td, "asym", "ep_final", "relax.out")
+    # ⚠ open(fp,"w").write(open(fp).read()) 은 **쓰기가 먼저 평가돼 파일을 자른 뒤** 읽는다.
+    _s = open(fp).read()
+    open(fp, "w").write(_s.replace("-100.0000 Ry", "-99.0000 Ry"))
     rc, msg = build(td, "asym")
-    chk(rc == 1 and "대칭 동등하지 않다" in msg, "[음성] 비대칭 홉을 거부한다")
+    chk(rc == 1 and "대칭 근거가 없다" in msg, "[음성] 비대칭 + 에너지 불일치를 거부한다")
+    chk("meV" in msg, "[음성] 거부 사유에 실측 |ΔE| 를 적는다")
     rc, _ = build(td, "asym", force=True)
     chk(rc == 0, "[음성] --force 로만 강행된다")
+    mm = json.load(open(os.path.join(td, "asym", "saddle", "saddle_meta.json")))
+    chk("--force" in str(mm.get("symmetry_basis")), "[음성] --force 로 통과하면 그렇게 기록한다")
+
+    # ★ meta 없이 **끝점 에너지 축퇴**로만 통과 (cc333 의 실제 상황)
+    d0 = mk("nometa", None, A, B)
+    os.remove(os.path.join(d0, "meta.json"))
+    rc, msg = build(td, "nometa")
+    chk(rc == 0 and "measured endpoint degeneracy" in msg,
+        "[핵심] meta 없어도 끝점 에너지 축퇴로 통과한다 (cc333 상황)")
+    chk("필요조건이지" in msg, "[핵심] 그때 충분조건이 아니라는 경고를 띄운다")
+    mm = json.load(open(os.path.join(td, "nometa", "saddle", "saddle_meta.json")))
+    chk(mm.get("endpoint_energy_diff_eV") == 0.0 and mm.get("symmetry_warning"),
+        "[핵심] 근거·ΔE·경고를 meta 에 남긴다")
 
     mk("same", True, A, A)
     rc, msg = build(td, "same")
@@ -281,7 +337,8 @@ def selftest():
 
     d = mk("notdone", True, A, B)
     p = os.path.join(d, "ep_final", "relax.out")
-    open(p, "w").write(open(p).read().replace("JOB DONE.", ""))
+    _s = open(p).read()                      # ⚠ 같은 truncate-before-read 함정
+    open(p, "w").write(_s.replace("JOB DONE.", ""))
     rc, msg = build(td, "notdone")
     chk(rc == 1, "[음성] JOB DONE 없는 relax.out 을 안 받는다")
 
