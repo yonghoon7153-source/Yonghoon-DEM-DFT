@@ -116,6 +116,19 @@ def final_energy(outp):
     return float(e[-1]) * 13.605693122994 if e else None
 
 
+def parse_input_positions(relax_in):
+    """relax.in 의 ATOMIC_POSITIONS (angstrom) → [(sym,[x,y,z])].
+
+    ★ 왜 relax.**in** 인가 (2026-08-16): cc333 의 relax.**out** 은 미수렴 BFGS 가
+    50스텝 밀어낸 표류 구조라 홉이 3.667 → 4.203 Å 로 벌어지고 이웃 하나가 1.24 Å
+    움직였다. 반면 relax.in 은 이상 좌표(홉 3.667, 나머지 변위 0.000)로 깨끗하다.
+    고정셸 방식은 여기서 새로 시작한다 — 표류를 승계하지 않는다.
+    """
+    txt = open(relax_in, encoding="utf-8").read()
+    i = txt.index("ATOMIC_POSITIONS")
+    return _pos_block(txt, i)
+
+
 def parse_cell(relax_in):
     """relax.in 의 CELL_PARAMETERS angstrom → 3×3 리스트."""
     t = open(relax_in, encoding="utf-8").read()
@@ -254,10 +267,15 @@ def build(work, tag, force=False, allow_unconverged=False):
                f"   실행:  cd {sd} && mpirun -np <N> pw.x -in relax.in > relax.out")
 
 
-def collect(work, tag):
+def collect(work, tag, radius=None):
     d = os.path.join(work, tag)
-    ep = os.path.join(d, "ep_initial", "relax.out")
-    sd = os.path.join(d, "saddle", "relax.out")
+    if radius:
+        base = os.path.join(d, f"frozen_R{radius:g}")
+        ep = os.path.join(base, "endpoint", "relax.out")
+        sd = os.path.join(base, "saddle", "relax.out")
+    else:
+        ep = os.path.join(d, "ep_initial", "relax.out")
+        sd = os.path.join(d, "saddle", "relax.out")
     for p in (ep, sd):
         if not os.path.isfile(p):
             return 1, f"⛔ 없음: {p}"
@@ -269,14 +287,17 @@ def collect(work, tag):
     t = open(sd, encoding="utf-8", errors="replace").read()
     fm = re.findall(r"Total force =\s+([\d.eE+-]+)", t)
     meta = {}
-    mp = os.path.join(d, "saddle", "saddle_meta.json")
+    mp = (os.path.join(d, f"frozen_R{radius:g}", "frozen_meta.json") if radius
+          else os.path.join(d, "saddle", "saddle_meta.json"))
     if os.path.isfile(mp):
         meta = json.load(open(mp, encoding="utf-8"))
     out = {
         "tag": tag, "root": os.path.basename(work.rstrip("/")),
         "Ea_eV": round(ea, 6), "E_endpoint_eV": round(e_end, 6), "E_saddle_eV": round(e_sad, 6),
         "total_force_last_Ry_au": float(fm[-1]) if fm else None,
-        "method": "symmetric-midpoint constrained relax (2 SCF relaxations, not NEB)",
+        "method": ("frozen-shell symmetric-midpoint" if radius
+                   else "symmetric-midpoint constrained relax (2 SCF relaxations, not NEB)"),
+        "relax_radius_A": radius,
         "supercell": meta.get("supercell"), "min_cell_A": meta.get("min_cell_A"),
         "caveat": ("대칭 홉 전제. 절대값 인용 전에 다른 셀에서 같은 방법으로 한 번 더 재고 "
                    "차이를 볼 것 — 이 도구의 용도가 그 비교다."),
@@ -288,6 +309,141 @@ def collect(work, tag):
                f"  마지막 Total force = {out['total_force_last_Ry_au']} (Ry/au) "
                f"— 구속점이 대칭점이면 작아야 한다\n"
                f"  JSON: {json.dumps(out, ensure_ascii=False)}")
+
+
+def build_frozen(work, tag, radius, force=False):
+    """고정셸 방식: 원거리 원자를 묶고 공공 주변만 이완한다.
+
+    왜 (2026-08-16)
+      3×3×3 은 107원자 = **자유도 321** 이라 nstep 50 으로 못 끝났다(16h41m, 잔여 힘
+      0.018 Ry/au = 문턱의 18배). 전이완을 끝내려면 GPU 8~12일이다.
+      그런데 우리가 재려는 건 **이미지 상호작용의 셀 의존성**이고, 공공에서 먼 원자는
+      두 셀 모두 이상 격자 위치에 있어 사실상 같다. 그 원자를 고정하면 자유도가
+      크게 줄어 BFGS 가 빨리 끝난다.
+
+    ⛔ 반드시 지킬 것
+      · 끝점과 안장에 **같은 중심·같은 반경·같은 자유 원자 집합**을 쓴다.
+        (다르면 E 차에 프로토콜 차이가 섞인다)
+      · 2×2×2 대조군도 **같은 규약**으로 다시 잰다. 전이완 0.229 와 직접 비교하지 않는다.
+      · 반경이 셀 수직 폭의 절반을 넘으면 자유영역이 자기 이미지와 닿아 의미가 없다 — 거부한다.
+
+    산출: <tag>/frozen_R<r>/{endpoint,saddle}/relax.in  (+ frozen_meta.json)
+    """
+    d = os.path.join(work, tag)
+    ini_in = os.path.join(d, "ep_initial", "relax.in")
+    fin_in = os.path.join(d, "ep_final", "relax.in")
+    for f in (ini_in, fin_in):
+        if not os.path.isfile(f):
+            return 1, f"⛔ 없음: {f} — build_neb_inputs.py 로 끝점 입력부터 만들 것"
+
+    first = parse_input_positions(ini_in)
+    last = parse_input_positions(fin_in)
+    if not first or not last or len(first) != len(last):
+        return 1, "⛔ relax.in 의 ATOMIC_POSITIONS 를 못 읽었다 (또는 원자 수가 다르다)"
+    if [s for s, _ in first] != [s for s, _ in last]:
+        return 1, "⛔ 두 끝점의 원자 목록이 다르다"
+
+    cell = parse_cell(ini_in)
+    if cell is None:
+        return 1, "⛔ CELL_PARAMETERS 를 못 읽었다"
+    import math
+    V = abs(_det3(cell))
+    widths = [V / _norm(_cross(cell[(i + 1) % 3], cell[(i + 2) % 3])) for i in range(3)]
+    dmin = min(widths)
+    if radius > dmin / 2.0 and not force:
+        return 1, (f"⛔ 반경 {radius} Å 이 셀 최소 수직폭의 절반({dmin/2:.2f} Å)을 넘는다 — "
+                   f"자유영역이 자기 이미지와 닿아 고정의 의미가 없다.\n"
+                   f"   수직폭 {[round(x,2) for x in widths]} Å. --force 로 강행 가능")
+
+    disp = [min_image([b[k] - a[k] for k in range(3)], cell)
+            for (_, a), (_, b) in zip(first, last)]
+    dn = [math.sqrt(sum(x * x for x in v)) for v in disp]
+    j = max(range(len(dn)), key=lambda i: dn[i])
+    dmax = dn[j]
+    others = sorted(dn)[-2] if len(dn) > 1 else 0.0
+    if dmax < 0.5:
+        return 1, f"⛔ 두 끝점이 같은 구조다 (최대 변위 {dmax:.3f} Å)"
+    if others > 0.3 * dmax and not force:
+        return 1, (f"⛔ 뛰는 원자 외에도 크게 움직인다 (2위 변위 {others:.3f} Å > 홉 {dmax:.3f} 의 30%) "
+                   f"— 단일 홉 입력이 아니다. --force 로 강행 가능")
+
+    # 중심 = 홉 중점 (끝점·안장 **공통**)
+    ctr = [first[j][1][k] + disp[j][k] / 2.0 for k in range(3)]
+    freeze = []
+    for i, (s, p) in enumerate(first):
+        v = min_image([p[k] - ctr[k] for k in range(3)], cell)
+        freeze.append(math.sqrt(sum(x * x for x in v)) > radius)
+    freeze[j] = False                      # 뛰는 원자는 항상 자유(안장에선 좌표 고정)
+    n_free = sum(1 for f in freeze if not f)
+    if n_free < 8 and not force:
+        return 1, (f"⛔ 자유 원자가 {n_free}개뿐이다 — 반경 {radius} Å 이 너무 작다. "
+                   f"--relax_radius 를 키울 것")
+
+    src = open(ini_in, encoding="utf-8").read()
+    head = src[:src.index("ATOMIC_POSITIONS")]
+    tail = src[src.index("K_POINTS"):]
+    outd = os.path.join(d, f"frozen_R{radius:g}")
+
+    def emit(sub, rows, fix_moving):
+        os.makedirs(os.path.join(outd, sub), exist_ok=True)
+        h = head.replace(f"prefix          = '{tag}_ep_initial'",
+                         f"prefix          = '{tag}_frozen_{sub}'")
+        L = [h.rstrip("\n"), "", "ATOMIC_POSITIONS angstrom"]
+        for i, (s, p) in enumerate(rows):
+            # 원거리 = 완전 고정 · 뛰는 원자는 안장에서만 고정
+            fx = "  0 0 0" if (freeze[i] or (fix_moving and i == j)) else ""
+            L.append(f"  {s:3s} %16.10f %16.10f %16.10f{fx}" % tuple(p))
+        L += ["", tail.rstrip("\n")]
+        open(os.path.join(outd, sub, "relax.in"), "w").write("\n".join(L) + "\n")
+
+    mid = [(s, [first[i][1][k] + disp[i][k] / 2.0 for k in range(3)])
+           for i, (s, _) in enumerate(first)]
+    emit("endpoint", first, fix_moving=False)
+    emit("saddle", mid, fix_moving=True)
+
+    meta = {
+        "tag": tag, "work": work, "method": "frozen-shell symmetric-midpoint",
+        "relax_radius_A": radius, "freeze_center_xyz": [round(x, 6) for x in ctr],
+        "n_atoms": len(first), "n_free": n_free, "n_frozen": len(first) - n_free,
+        "dof_free": 3 * n_free, "dof_total": 3 * len(first),
+        "moving_atom_index_0based": j, "moving_atom_symbol": first[j][0],
+        "hop_distance_A": round(dmax, 4), "second_largest_displacement_A": round(others, 4),
+        "cell_perp_widths_A": [round(x, 3) for x in widths],
+        "started_from": "relax.in (ideal) — relax.out 의 표류 구조를 승계하지 않는다",
+        "contract": ("끝점과 안장이 **같은 중심·반경·자유집합**을 쓴다. "
+                     "다른 셀과 비교하려면 그 셀도 같은 radius 로 이 도구를 돌릴 것. "
+                     "전이완 값(예: 2×2×2 의 0.229)과 직접 비교하지 말 것 — 프로토콜이 다르다."),
+        "limitations": ["원거리 이완을 버린다 — 절대 장벽은 전이완보다 약간 높게 나온다",
+                        "그 편향은 두 셀에서 같은 방향이라 **차이**에는 대부분 상쇄된다",
+                        "대칭 홉 전제 (안장 = 중점)"],
+    }
+    json.dump(meta, open(os.path.join(outd, "frozen_meta.json"), "w"),
+              ensure_ascii=False, indent=1)
+    return 0, (f"✓ {tag}: 고정셸 입력 생성 → {outd}/\n"
+               f"   반경 {radius} Å · 자유 {n_free}/{len(first)}원자 "
+               f"(자유도 {3*n_free} / {3*len(first)}, {100*n_free/len(first):.0f}%)\n"
+               f"   중심 = 홉 중점 · 홉 {dmax:.3f} Å (2위 변위 {others:.3f}) · "
+               f"셀 수직폭 {[round(x,1) for x in widths]} Å\n"
+               f"   ⚠ 끝점·안장이 같은 자유집합을 쓴다. **다른 셀도 같은 radius 로** 돌릴 것.\n"
+               f"   실행 (순서대로, 같은 노드):\n"
+               f"     cd {outd}/endpoint && mpirun -np <N> pw.x -in relax.in > relax.out\n"
+               f"     cd {outd}/saddle   && mpirun -np <N> pw.x -in relax.in > relax.out\n"
+               f"   회수:  python3 tools/sei/symmetric_saddle.py --work {work} --tag {tag} "
+               f"--collect --relax_radius {radius:g}")
+
+
+def _cross(a, b):
+    return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]
+
+
+def _norm(v):
+    return sum(x*x for x in v) ** 0.5
+
+
+def _det3(m):
+    return (m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])
+            - m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])
+            + m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]))
 
 
 def selftest():
@@ -438,14 +594,21 @@ def main():
     ap.add_argument("--tag", default="li3nd")
     ap.add_argument("--collect", action="store_true", help="돌린 뒤 Ea 를 뽑는다")
     ap.add_argument("--force", action="store_true", help="비대칭인데도 강행 (권장 안 함)")
+    ap.add_argument("--relax_radius", type=float, default=None,
+                    help="고정셸 방식: 이 반경[Å] 밖 원자를 고정하고 공공 주변만 이완한다. "
+                         "끝점·안장에 **같은** 중심·반경·자유집합을 쓴다")
     ap.add_argument("--allow_unconverged", action="store_true",
                     help="끝점 이완이 수렴 안 했어도 마지막 스텝 좌표로 진행 (결과에 명시된다)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    rc, msg = (collect(a.work, a.tag) if a.collect
-           else build(a.work, a.tag, a.force, a.allow_unconverged))
+    if a.relax_radius and not a.collect:
+        rc, msg = build_frozen(a.work, a.tag, a.relax_radius, a.force)
+    elif a.collect:
+        rc, msg = collect(a.work, a.tag, a.relax_radius)
+    else:
+        rc, msg = build(a.work, a.tag, a.force, a.allow_unconverged)
     print(msg)
     return rc
 
