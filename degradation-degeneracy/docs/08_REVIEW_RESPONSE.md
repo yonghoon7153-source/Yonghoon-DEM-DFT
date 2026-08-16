@@ -1262,3 +1262,100 @@ paired 는 nested sweep 이 없어 미표시).
 싣지만, **묶음을 복원해 그 YAML 을 직접 읽는 소비자는 옛 숫자를 본다.**
 발견 8 과 같은 실패 모드가 artifact 안에 남아 있는 셈이다. 재보관(v4.1 파생
 갱신)을 할지 문서화로 둘지는 17차 답변을 받아 정한다.
+
+---
+
+## 24. 18차 리뷰 대응 — 발견 1~11
+
+### 24.1 발견 1 (P0) — `collapse_measurable` 삭제
+
+리뷰의 반례를 그대로 실행해 확인했다.
+
+```
+true 0.10 → recovered 0.20   (붕괴와 정반대 방향)
+gap_collapse_frac = 0.0      collapse_measurable = True
+```
+
+`|recovered − true|` 의 p99 를 모든 행 공통 `gap_thresh − tol` 과 비교했으므로
+(a) `true − recovered > 0` **방향**과 (b) 행마다 다른 필요 감소량 `true − tol`
+을 둘 다 버렸다. 게다가 같은 결과에서 뽑은 오차분포로 그 결과의 낮은 사건률을
+방어하므로 **순환 논리**였다.
+
+boolean 과 "붕괴가 원리적으로 관측 가능한 범위" 문장을 삭제했다. 남긴 것은
+부호 있는 행별 여유의 기술통계뿐이다.
+
+| 지표 | v4 (recoverable·noise=0·33p) |
+|---|---|
+| `tol − 복원 격차` 중앙값 | −8.2%p |
+| 같은 값 최대 | 1.8%p |
+| 격차가 줄어든 방향 | 98/245 조건 |
+
+문장에 "이 값들은 **기술통계일 뿐, 붕괴가 관측 가능했다는 근거가 아니다**" 를
+명시하고, 견고성 판단은 임계 민감도 표와 모집단 제한으로만 하도록 했다.
+
+### 24.2 발견 2·3·4 (P0) — protocol·모집단·재현 범위
+
+| # | 수정 |
+|---|---|
+| 2 | `_random_only_note(warm_start)` — no-warm 에서는 restart 0 이 warm solution 이 아니라 `base_init` 이라고 쓴다. 절 제목도 표에서 종수를 센다 (paired 재생성본 `## 목적함수 2종 비교`) |
+| 3 | `α/bounds feasible domain`·`원리적으로 복원 불가` 를 전부 `α-window eligibility criterion` 으로. `feasible domain` 토큰을 요구하던 기존 assertion 도 바꿨다 |
+| 4 | `_reproduction_scope_note(has_wsweep, has_halfcell, has_hessian, warm_start)` — 실제 렌더 상태에서 만든다. Hessian 은 "기본 eps 포함 명령 전체 미출력" 으로 |
+
+### 24.3 발견 5 (P0) — lint 강화 + `GATE14_CYCLE_SUMMARY.md`
+
+1차 lint 의 네 한계를 모두 고쳤다.
+
+| 한계 | 수정 |
+|---|---|
+| fenced code 안의 `#` 를 heading 으로 오인 | `_strip_fences()` 로 코드 블록 제외 |
+| 절에 마커 하나면 그 절 전체 면제 | **claim ID 별 마커** `⛔ 철회[CLAIM_ID]` |
+| 단일 문구 regex | 동의어 포함 (`원리적으로 정답이 안 나`, `feasible domain 밖` 등) |
+| Hessian 순위·합성 하한 rule 부재 | `HESSIAN_EPS_ORDER`, `SYNTHETIC_IS_LOWER_BOUND`, `STALE_GAP_NUMBERS` 추가 |
+| — | 정본 링크에 대한 **positive assertion** 추가 |
+
+`GATE14_CYCLE_SUMMARY.md` 를 lint 대상에 넣고, "수치의 정본은
+`objective_comparison.yaml`" 선언을 **superseded** 로 바꿨다(정정표 포함).
+`05_HANDOFF.md` §10 의 F1·F7·F23 도 정정했다.
+
+### 24.4 발견 6 (P0) — 파생 분석 provenance + semantic 게이트
+
+리뷰가 제시한 스키마를 그대로 구현했다.
+
+- `analysis_manifest.yaml` — raw 입력 digest / **생성 코드 좌표(분리)** /
+  파라미터 / 출력 digest. raw 계산 `manifest.yaml` 은 건드리지 않는다
+- `objective_comparison.yaml` 에 `_analysis` self-description
+  (`schema_version` · `analysis_spec_id` · `fits_sha256`). `_` 로 시작하므로
+  F87 key 집합 대조에서는 제외된다
+- 파라미터에 22p selection protocol 을 박았다 (center · radius · metric
+  `unscaled_euclidean_fractional_coordinates` · `nearest_fallback` · 선택
+  cond_id digest) + noise 단위 `σ[V]`
+- `python -m tools.check_derived_fresh <run>` 게이트를
+  `scripts/archive_results.sh` 승격 직전에 태운다. stale 이면 그 run 은
+  승격하지 않고 기존 묶음을 유지한다
+
+### 24.5 발견 7·8·9·10·11 (P1)
+
+| # | 수정 | 실측 |
+|---|---|---|
+| 7 | `p_spread=0` → "qualifying restart 가 하나였거나 **여러 restart 가 같은 파라미터에 수렴**한 경우 모두 가능" | — |
+| 8 | 민감도 범위가 `<tol` 패널 값임을 명시 + exact-zero 패널 최대값 병기 | lt_tol `2.2~130.5`(중앙값 16.1) · exact_zero 최대 **165.4** — 리뷰 값과 일치 |
+| 9 | p22 wide 판정을 공통 `gap_ge` 로; empty-radius fallback 을 `radius_fallback`/`p22_radius_fallback` 로 기록 | v4 는 radius 0.021 에 8점이 있어 값 변화 없음 |
+| 10 | "안장점에서 곡률을 잰 것" → "국소 최소점임이 입증되지 않은 지점, saddle 인지 수치 artifact 인지 구분하지 않음". "최적점에서" → "optimizer 가 반환한 해에서(정상점 미검증)" | — |
+| 11 | 경계 수정 이전 경험값과 "8시간 재실행" 표현을 docstring 에서 제거 | — |
+
+### 24.6 검증
+
+| 항목 | 값 |
+|---|---|
+| 전체 테스트 | **359 passed** |
+| strict smoke | 통과 (clean 커밋 `3c77a94`) |
+| 재생성 | 격리 root 에 4묶음 복원 → `score → compare → cases → report` |
+| 두 보고서 | 인용 금지 배너 **0** · `provenance 검증 통과` **1** |
+| 계산 산출물 | **재fit 없음** |
+
+### 24.7 남은 것 — v4.1 파생 재보관
+
+코드·게이트·스키마는 준비됐다. 실제 재보관(`artifacts/` 의 파생 YAML 교체 +
+`analysis_manifest.yaml` 추가 + 네 v4 계열 보존 index 재생성)은 **아직 하지
+않았다** — `artifacts/` 바이트를 바꾸는 작업이라 사용자 판단을 받고 진행한다.
+raw `fits`/`curves`/`manifest`/`_inputs`/`wsweep` 는 byte-identical 로 보존한다.

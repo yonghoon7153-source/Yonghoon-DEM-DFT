@@ -4,10 +4,10 @@
 
 > ✅ provenance 검증 통과 — `manifest_존재`, `config_hash`, `clean_worktree`, `필수_입력_존재`, `run_spec_schema`, `sig_version`, `optimizer_정책`, `producer_곡선일치`, `목적함수_순서`, `입력봉인_교차일치`, `입력_스냅샷`, `곡선_producer_재검`, `코드_identity`, `시작_provenance`, `start_파일_존재`, `attempt_파일_존재`, `attempt_파일_일치`, `start_파일_일치`, `실행중_코드불변`, `시작종료_서명일치`, `_참고_코드재계산불가`, `입력_digest_재해시`, `run_signature_기록`, `run_signature_재계산`, `채점파일_정본`, `출력봉인_재계산`, `조건집합_서명일치`, `출력_완전성`, `출력_격자완전성`, `행별_서명`, `단일_서명`, `manifest와_일치`, `restart_출처`, `비교입력_grid`, `비교입력_halfcell`, `wsweep_provenance`, `파생_case_comparison.yaml`
 
-생성: 2026-08-16 07:58 UTC  
+생성: 2026-08-16 09:06 UTC  
 입력: `results/grid_fit_v4`  
 artifact producer git/source_digest: `c0f1daa0d92a7625c3602799c81db04b5e2e5783` / `d50295f980ccaa81`  
-report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271872` / `eee5d9cd99e059f7` / `False`  
+report generator git/source_digest/dirty: `3c77a94650628c1c093560af08ffda64d2120baf` / `739453aaf9c07be3` / `False`  
 앵커 fits_sha256: `18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46`  
 앵커 curves_sha256(sealed): `b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8`  
 (대조: `artifacts/artifact_index.yaml` — 두 값이 같은 묶음이 이 보고서의 근거다)  
@@ -40,7 +40,7 @@ report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271
 
    **이 값을 '두 전극이 실제로 비슷하다'로 읽을 수 없다.** 세 가지 때문이다.
 
-   1. **임계 의존** — 같은 데이터에서 (참격차, 동일판정) 임계를 흔들면 사건률 비가 2.2~130.5(중앙값 16.1)로 움직인다. 현재 조합은 이웃보다 유독 높은 **국소 봉우리**다 — 이 값을 대표값으로 인용하면 사후선택이 된다. 아래 임계 민감도 표를 함께 볼 것.
+   1. **임계 의존** — 같은 데이터에서 (참격차, 동일판정) 임계를 흔들면 사건률 비가 2.2~130.5(중앙값 16.1)로 움직인다 (이 범위는 첫 `<tol` 정의 패널의 값이다 — exact-zero 정의 패널은 별도로 최대 165.4 였다). 현재 조합은 이웃보다 유독 높은 **국소 봉우리**다 — 이 값을 대표값으로 인용하면 사후선택이 된다. 아래 임계 민감도 표를 함께 볼 것.
 
    2. **posterior가 아님** — 이건 두 합성 가설 아래의 *사건률 비*다. `P(참값이 같다 | fitting이 같다고 답함)`으로 바꾸려면 실제 셀 집단의 사전확률과, 여기서 버린 중간 격차 구간의 주변분포가 필요하다. 격자점을 같은 빈도로 센 것은 실제 셀의 분포가 아니다.
 
@@ -48,11 +48,11 @@ report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271
 
    → 지금 자료로 방어할 수 있는 문장은 하나뿐이다: **이 합성 격자의 복원가능군에서, 참 격차가 뚜렷한 조건이 '같다'로 붕괴하는 일은 드물었다.** 22p가 물리인지 degeneracy인지는 이것만으로 판정되지 않는다.
 
-   ⚠ 이 숫자들은 임계 설정에 의존한다. 붕괴로 세려면 격차를 6%p에서 2%p 아래로 끌어내려야 하므로 최소 4%p의 격차 오차가 필요한데, 실측 격차 오차는 중앙값 2.6%p·99분위 5.7%p다. 붕괴가 원리적으로 관측 가능한 범위이긴 하나, 낮은 붕괴율의 상당 부분은 **오차 스케일이 임계 간격보다 작다**는 사실에서 온다.
+   ⚠ 이 숫자들은 임계 설정에 의존한다. 붕괴로 세려면 격차를 6%p에서 2%p 아래로 끌어내려야 하므로 최소 4%p의 격차 오차가 필요한데, 실측 격차 오차는 중앙값 2.6%p·99분위 5.7%p다. 부호를 살려 행별로 보면 복원 격차가 판정 임계까지 남긴 여유(= tol − 복원 격차)는 중앙값 -8.2%p·최대 1.8%p 이고, 넓은 격차 245조건 중 격차가 줄어든 방향은 98조건이다. 이 값들은 **기술통계일 뿐, 붕괴가 관측 가능했다는 근거가 아니다** — 같은 결과에서 뽑은 오차분포로 그 결과의 낮은 사건률을 방어할 수 없다. 낮은 사건률의 견고성은 아래 임계 민감도 표와 모집단 제한으로만 판단할 것.
 
 3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 1/8 (12.50%)** (목적함수 `pocv_dvdq`, noise=0, radius=0.021 안의 최근접 8 grid 조건, raw max-mode 오차 > 2%p 임계)  — 행별 max-mode 절대오차의 평균 1.7%p, raw PE/NE 오차 반대부호 비율 50%, 참 PE-NE 격차 1.0%p → 복원 격차 1.9%p. ⚠ **이 8점은 참값이 모두 같은 격자점이 아니다** — PE=NE 가 4/8, |ΔLAM|>0 이 4/8 이고 최대 참 격차가 2.0%p 다. 평균 참 격차는 1.0%p 다. 여기에 wide-gap(≥6%p)은 **하나도 없으므로**, 이 표본으로는 "참 격차가 큰 조건이 '같다'로 붕괴하는가" 를 물을 수 없다 — 그 질문의 답은 위 2번이다. 이 8개는 실제 셀이 아니라 설계 격자의 최근접 점이며, 임계·반경·noise·목적함수를 바꾸면 값이 달라진다.
 
-4. **생성성공 격자의 52%는 선택한 grid-reference fitter 의 현재 α/bounds feasible domain 밖**이다 (참값 α<1 → 재구성 창이 reference 범위를 벗어나 truth 가 **표현 가능**하지 않다). 위 숫자는 모두 그 안쪽 **목적함수당 1476조건** 에서만 센 값이며(파일의 objective-condition 행 합계는 5904), 바깥을 섞으면 목적함수 간 차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 현재 표현식의 정의역 판정이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 안쪽 바깥을 함께 센 예외다.** gap 분석의 분모는 noise=0 의 66·245조건, 22p 는 8조건으로 각각 다르다.
+4. **생성성공 격자의 52%는 선택한 grid-reference 의 현재 α-window eligibility criterion 을 통과하지 못한다**(`src/scoring.py`: `alpha_true >= 1 − atol`). 이 판정은 설정된 box bounds 도, β 도, 물리적 표현 가능성도 검사하지 않는다 — 두 α 값 하나만 본다. 위 숫자는 모두 그 안쪽 **목적함수당 1476조건** 에서만 센 값이며(파일의 objective-condition 행 합계는 5904), 바깥을 섞으면 목적함수 간 차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 **현재 채점 규칙의 자격 판정**이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 안쪽 바깥을 함께 센 예외다.** gap 분석의 분모는 noise=0 의 66·245조건, 22p 는 8조건으로 각각 다르다.
 
    → **목적함수 간 비교(결론 2)의 인용 정본은 공정 paired 보고서 `docs/RESULTS_PAIRED_FIXED5.md` 다** (`results/paired_fixed5_v4` 에서 생성). 위 1번은 비대칭 pipeline(adaptive 조기 종료 + warm start 연쇄)에서 관측된 값이므로 단독 인용하지 말 것.
 
@@ -178,9 +178,9 @@ report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271
 
 > ⛔ **이 절은 문서 상단 provenance 검증 범위 밖입니다.** 상단의 초록 검사 목록은 fit artifact 를 검증한 결과이며, Hessian 산출물의 곡선·`obj_cfg`·`v_col`·reference·표본·`eps` 연결은 **어느 검사도 보지 않습니다**. 비인용 부록으로만 읽으세요 (A·A'·B·C 미수정).
 
-> ⚠⚠ **이 절의 수치를 식별성(degeneracy) 근거로 인용하지 마세요.** 적대적 리뷰에서 세 가지가 확인됐습니다 (F33). ① 목적함수가 보간·미분·peak 연산을 포함해 비매끄러운데 절대 step `eps` 하나를 모든 파라미터에 씁니다 — 34p 조건수 중앙값이 eps=1e-3/1e-4/1e-5에서 12.8/229/17381로 움직입니다. 수렴하지 않았다는 뜻입니다. ② `min_eigval_positive`가 100%가 아닌 만큼은 최적점이 아니라 **안장점**에서 곡률을 잰 것인데 flat score와 결합 판정은 그대로 집계됩니다. ③ `α_PE·α_NE 결합`은 **같은 부호**를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은 α에서 부호가 **반대**입니다 — 지표가 묻는 질문이 가설과 다릅니다.
+> ⚠⚠ **이 절의 수치를 식별성(degeneracy) 근거로 인용하지 마세요.** 적대적 리뷰에서 세 가지가 확인됐습니다 (F33). ① 목적함수가 보간·미분·peak 연산을 포함해 비매끄러운데 절대 step `eps` 하나를 모든 파라미터에 씁니다 — 34p 조건수 중앙값이 eps=1e-3/1e-4/1e-5에서 12.8/229/17381로 움직입니다. 수렴하지 않았다는 뜻입니다. ② `min_eigval_positive`가 100%가 아닌 만큼은 양의 정부호 국소 최소점임이 **입증되지 않은** 지점이고, 그것이 실제 saddle 인지 유한차분·비매끄러움 artifact 인지 현재 자료로는 **구분하지 않습니다**. 그런데도 flat score와 결합 판정은 그대로 집계됩니다. ③ `α_PE·α_NE 결합`은 **같은 부호**를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은 α에서 부호가 **반대**입니다 — 지표가 묻는 질문이 가설과 다릅니다.
 
-최적점에서 목적함수의 2차 미분입니다. 아래는 진단 참고로만 두고, 결론이나 optimizer 방어 문장에 쓰지 않습니다.
+optimizer 가 반환한 해에서 목적함수의 2차 미분입니다 — 그 점이 정상점(stationary)임은 검증되지 않았습니다. 아래는 진단 참고로만 두고, 결론이나 optimizer 방어 문장에 쓰지 않습니다.
 
 | objective | n | 조건수(중앙값) | flat score | 최소고윳값>0 | α_PE·α_NE 결합 |
 |---|---|---|---|---|---|
@@ -188,7 +188,7 @@ report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271
 
 - **조건수**는 매끄러운 목적함수라면 작을수록 최적점이 잘 정의돼 있다는 뜻이다. 다만 그 해석은 아래 조건이 모두 만족될 때만 쓸 수 있다.
 - ⚠ **조건수의 절대값도, 목적함수 간 순서도 인용하지 마세요.** 목적함수가 여러 스케일에서 울퉁불퉁하면 수치 Hessian 이 수렴하지 않아 eps 를 바꾸면 값이 자릿수 단위로 움직입니다 (F23). 순서가 eps 에 안정적이라는 근거는 확인되지 않았습니다 (이 표는 eps=0.0001, objective 1개).
-- **최소고윳값>0** — 100%가 아니면 그만큼은 최적점이 아니라 **안장점**에서 곡률을 잰 것입니다. 그 조건들의 조건수는 해석하지 마세요.
+- **최소고윳값>0** — 100%가 아니면 그만큼은 양의 정부호 국소 최소점임이 입증되지 않은 지점입니다. 실제 saddle 인지 유한차분·비매끄러움 효과인지는 **구분하지 않습니다**. 그 조건들의 조건수는 해석하지 마세요.
 - **α_PE·α_NE 결합** — 평평한 방향에서 두 전극이 같은 부호로 묶여 있는 비율입니다. **22p 가설(한쪽 과대·다른쪽 과소)은 부호가 반대**라 이 지표는 그 가설에 적용할 수 없습니다 (F33). 진단 참고로만 보세요.
 
 ## multi-start 진단 — 진짜 degeneracy와 최적화 난이도의 구분
@@ -212,7 +212,7 @@ report generator git/source_digest/dirty: `424d2958608dd696e348dfac19bc1da33c271
 
 > ⚠ **`pocv_dvdq_dqdv`의 multimodal이 97%로 극단적입니다.** flat valley 판정은 restart 2개 이상이 같은 J에 닿아야 성립하므로, 이렇게 지형이 울퉁불퉁하면 flat valley가 있어도 **관측되지 않습니다.** 이 목적함수의 낮은 flat valley 값을 "degeneracy가 적다"로 읽으면 안 됩니다. (예전에는 여기서 Hessian을 대안으로 안내했으나, 그 지표도 eps 미수렴·안장점 혼입·가설과 다른 부호 규약으로 근거가 되지 못합니다 — F33.)
 
-> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 `agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 `agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, `p_spread = 0`은 "해가 일치"가 아니라 "최적 J에 도달한 restart가 하나뿐"이라는 뜻입니다. 위 표가 그 자리를 대신합니다.
+> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 `agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 `agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, `p_spread = 0`은 qualifying restart 가 하나였거나 **여러 restart 가 같은 파라미터에 수렴한** 경우 모두 가능하므로 단독으로 해석하지 마세요. 위 표가 그 자리를 대신합니다.
 
 ## 기준 곡선 비교 — Case 1 (전 범위 half-cell) vs Case 2 (격자 곡선)
 
@@ -285,6 +285,6 @@ python -m src.halfcell --config configs/base.yaml --method ocp --force --verify
 ./run.sh --mode report --in results/grid_fit_v4 --compare results/halfcell_fit_v4
 ```
 
-> **재현 범위**: 위 명령은 이 산출물의 서명된 fit·sweep·half-cell 설정(objective·restart·clean/noisy·adaptive·warm start·reference·bounds preset·half-cell method·sweep w_grid/stride)을 복원합니다. 아직 명령으로 내보내지 않는 축은 sweep 의 bounds/reference/tol·optimizer method 와 비기본 `eps` 의 추가 Hessian 입니다 — 이 artifact 들이 기본값으로 돌았다면 그대로 재현되고, 아니면 해당 절은 `manifest.yaml` 의 `run_spec` 을 직접 보고 맞춰야 합니다.
+> **재현 범위**: 위 명령은 이 산출물의 서명된 fit(objective·restart·clean/noisy·adaptive·warm start·reference·bounds preset) · weight sweep(w_grid·stride·restart) · half-cell 기준 곡선(method) 과 Case 1↔2 비교 설정을 복원합니다. 아직 명령으로 내보내지 않는 축은 sweep 의 bounds·reference·tol·optimizer method · **Hessian 절 전체**(기본 eps 포함 — 명령을 싣지 않습니다) 입니다 — 해당 절은 `manifest.yaml` 의 `run_spec` 을 직접 보고 맞춰야 합니다.
 
 관련 문서: `docs/06_REVIEW_DECISIONS.md`(해석 규칙), `docs/07_LAM_LLI.md`(열화모드 정의), `docs/GPU_NOTES.md`(GPU 판정)
