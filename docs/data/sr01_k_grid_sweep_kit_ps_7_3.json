@@ -1,0 +1,52 @@
+[
+ {
+  "vox": 0.4,
+  "k_new": 1.483389,
+  "k_legacy": 1.485518,
+  "n_segments": 36833,
+  "run_len_um_med": 2.064,
+  "short_run_frac": 0.2769,
+  "short_run_warning": "구간의 28% 가 1 µm 미만 — 이 영역에서 estimator 는 격자마다 최대 0.04~0.21 흔들린다 (통제실험).  k 의 격자 의존을 물리로 읽지 말 것"
+ },
+ {
+  "vox": 0.3,
+  "k_new": 1.489118,
+  "k_legacy": 1.49172,
+  "n_segments": 37585,
+  "run_len_um_med": 2.011,
+  "short_run_frac": 0.2748,
+  "short_run_warning": "구간의 27% 가 1 µm 미만 — 이 영역에서 estimator 는 격자마다 최대 0.04~0.21 흔들린다 (통제실험).  k 의 격자 의존을 물리로 읽지 말 것"
+ },
+ {
+  "vox": 0.25,
+  "k_new": 1.491015,
+  "k_legacy": 1.446089,
+  "n_segments": 36437,
+  "run_len_um_med": 2.002,
+  "short_run_frac": 0.2699,
+  "short_run_warning": "구간의 27% 가 1 µm 미만 — 이 영역에서 estimator 는 격자마다 최대 0.04~0.21 흔들린다 (통제실험).  k 의 격자 의존을 물리로 읽지 말 것"
+ },
+ {
+  "summary": "k_new",
+  "min": 1.483389,
+  "max": 1.491015,
+  "range": 0.007626
+ },
+ {
+  "summary": "k_legacy",
+  "min": 1.446089,
+  "max": 1.49172,
+  "range": 0.045631
+ },
+ {
+  "summary": "k_common",
+  "min": 1.485866,
+  "max": 1.492157,
+  "range": 0.006291,
+  "n_runs_total": 39778,
+  "n_runs_common": 35315,
+  "dropped": 4463,
+  "run_len_um_med": 2.211,
+  "short_run_frac": 0.2204
+ }
+]
