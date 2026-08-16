@@ -115,24 +115,31 @@ Division of Materials Science & Engineering, Hanyang University
 
 ## ② 남들은 어떻게 하나
 
-### 4 — Screening strategies in the literature
+### 4 — Screening strategies in the literature  ✅ 확정 (2026-08-16)
 
 > ■ Prior work (1): Broad spaces are narrowed before accurate methods
-> • Xiao et al. reduced 104,082 coating candidates to three by sequential physical gates.
-> • Kahle et al. kept the candidates and instead raised the level of theory stage by stage.
+> • One route [파랑]removes candidates[/] at every gate, so only a few reach the accurate methods.
+> &nbsp;&nbsp;(band gap → phase stability → electrochemical window → reactivity · 104,082 → [파랑]3[/])
+> • The other [파랑]keeps every candidate[/] and raises the accuracy stage by stage.
+> &nbsp;&nbsp;(structure → band structure → fast model → first-principles MD at the last stage only)
 
-**[65초]**
+우상단 출처 — *Joule*, 3, 1252 (2019). / *Energy Environ. Sci.*, 13, 928 (2020).
+
+`< candidates removed at every gate >`　`< accuracy raised at every stage >`
+
+**[60초]**
 
 문헌도 같은 일을 합니다. 넓은 공간을 먼저 줄이고 나서 정확한 방법에 자원을 씁니다.
-다만 줄이는 방식이 두 갈래입니다.
+다만 줄이는 방식이 두 갈래예요.
 
-왼쪽 Xiao 는 **후보를 자릅니다.** 십만 종에서 밴드갭, 상 안정성, 전기화학 창, 반응성
-순서로 걸러 마지막에 세 종을 남깁니다.
+왼쪽은 **후보를 자릅니다.** 밴드갭, 상 안정성, 전기화학 창, 반응성 순으로 걸러서
+십만 종이 세 종이 됩니다.
 
-오른쪽 Kahle 은 반대입니다. **후보를 자르지 않고 정밀도를 올립니다.** 위에서는 구조만
-보고, 아래로 갈수록 비싼 방법을 쓰다가 맨 아래에서만 first-principles MD 를 돌립니다.
+오른쪽은 반대예요. **후보는 그대로 두고 정밀도를 올립니다.** 위에서는 구조만 보고,
+맨 아래에서만 first-principles MD 를 돌립니다.
 
-공통점은 하나입니다. 비싼 계산은 마지막에, 살아남은 소수에만.
+💬 **말로만** (슬라이드에 없음) — 공통점은 하나입니다. **비싼 계산은 살아남은 것에만.**
+   화면에 안 넣기로 했으니 이 문장은 반드시 입으로 나와야 합니다. 이게 다음 장으로 가는 다리예요.
 
 💡 십만이라는 숫자에서 청중이 놀랍니다. "저희는 91 개입니다"를 여기서 한 번 짚어 두면
 뒤에서 스케일 오해가 없습니다.
