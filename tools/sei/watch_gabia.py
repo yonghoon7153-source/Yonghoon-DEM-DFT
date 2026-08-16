@@ -133,11 +133,16 @@ def relax_end(p):
     try:
         t = open(p, errors="ignore").read()
     except OSError:
-        return None, "·"
+        return None, "·"                 # 파일 자체가 없다 = 미착수
     if re.search(r"Error in routine|%%%%|MPI_ABORT", t):
         return None, "✗"
     v = _TOTEN.findall(t)
     e = float(v[-1]) * RY_EV if v else None
+    if e is None:
+        # ⚠ 파일은 있는데 아직 '!  total energy' 가 없다 = **첫 SCF 진행 중**.
+        #   옛 판은 이걸 '·'(미착수)와 같게 찍어서, 방금 띄운 잡이 화면에선 안 뜬 것처럼
+        #   보였다 (2026-08-16 cc333 이어달리기 실측). 미착수와 구별한다.
+        return None, "◦"
     if "Begin final coordinates" in t:
         return e, "✓"
     exhausted = ("The maximum number of steps has been reached" in t
@@ -625,6 +630,13 @@ def selftest():
     chk(_mx != 0.003623, "음성: Total force(노름)를 성분 최대값으로 착각하지 않는다")
     _n2, _mx2 = relax_progress(os.path.join(td, "nope", "relax.out"))
     chk(_n2 is None and _mx2 is None, "음성: 없는 파일 → (None, None)")
+    # 파일 있음/없음을 구별하는가 (방금 띄운 잡이 화면에서 사라지면 안 된다)
+    _sd = os.path.join(td, "started"); os.makedirs(_sd, exist_ok=True)
+    open(os.path.join(_sd, "relax.out"), "w").write("     Program PWSCF starts ...\n")
+    chk(relax_end(os.path.join(_sd, "relax.out")) == (None, "◦"),
+        "양성: 파일은 있고 에너지 아직 → ◦ (SCF중)")
+    chk(relax_end(os.path.join(td, "nope", "relax.out")) == (None, "·"),
+        "음성: 파일 없음은 여전히 · (미착수)")
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
@@ -908,8 +920,11 @@ def _fz():
     print(f"   [0/4] 끝점  " + " · ".join(ep_line)
           + f"   (문턱 {FORC_CONV_THR:.0e} Ry/au 성분)")
     if any(m != "✓" for m in ep_state):
-        print(f"          ⛔ 끝점이 아직 수렴 안 함 — 고정셸을 걸면 편향이 실린다. "
-              f"이어달리기: {base}/ep_*_r2 (nstep 확인)")
+        run = any(m in ("◦", "▸") for m in ep_state)
+        print("          " + ("▸ 이어달리기가 돌고 있다 — 끝나면 [1/4] 로 넘어간다"
+                              if run else
+                              f"⛔ 끝점이 아직 수렴 안 함 — 고정셸을 걸면 편향이 실린다. "
+                              f"이어달리기: {base}/ep_*_r2 (nstep 확인)"))
         return
     if not os.path.isfile(os.path.join(outd, "frozen_meta.json")):
         print(f"   [1/4] 입력 미생성 →  {cmd}")
