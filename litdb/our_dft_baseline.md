@@ -35,4 +35,4 @@
 ## 비교 시 주의 (방법 의존성)
 - **band gap**: PBE는 과소평가(실험·HSE 대비 ~1 eV↓). 무질서 배열·k-mesh로 ±0.2–0.3 eV 흔들림 → 문헌과 절대 gap 직접 비교 금지, "wide-gap insulator" 수준만.
 - **mechanical**: relaxed-ion vs clamped-ion, PBE vs PBEsol/D3 로 E/B/G 크게 달라짐 → functional 명시 후 비교.
-- **ESW**: 0-pressure grand-potential은 S-limited라 조성 무관 onset만 봄. 무질서 metastability·기계 구속·계면은 별도 축.
+- **ESW**: 0-pressure grand-potential은 S-limited라 **comp1·modelc 두 무도핑 조성 사이에서** 동일한 onset만 봄 (⛔ "조성 무관"으로 일반화 금지 — 도펀트 없는 host 도 −Li−S+Cl 4회면 2.356 V 로 점프하고 도핑 D_plain 은 1.893–2.356 V 로 벌어진다). 무질서 metastability·기계 구속·계면은 별도 축.

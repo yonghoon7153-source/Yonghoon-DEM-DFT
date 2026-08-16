@@ -12,7 +12,9 @@
 ---
 
 ## 0. 이 digest를 읽는 법 (우리 캠페인에서의 위치) ★★
-**우리 cascade(47-dopant AI 계산 스크리닝)의 직계 조상 — "게이트식 고처리량 열역학 스크리닝"의 원형 논문이다.** 방법 계보로는 [Zhu15](`zhu2015_esw_grand_potential_origin.md`, ref 31)·Ong 2013(ref 18)·**[Rich16]**(`richards2016_interface_stability_pseudobinary.md`, ref 30 = pseudo-binary ΔE_rxt/Eq 4 원전 — Miara·Wang·Ceder 공저로 인적 연속)·Miara 2015(ref 35)의 grand-potential/반응성 도구를 **10만 규모 DB에 처음 깔때기(funnel)로 돌린 논문**이고, 산출물(폴리음이온 산화물 코팅, O-공유결합 논리)은 [Sundar](ALD 코팅 스크린)·[Son](5 V 차폐 SE)·우리 그룹 [Cha]/[Kang25] 코팅 라인의 상류다. **우리 cascade와 대상이 다름에 주의**: Xiao = *코팅 물질* 발굴(104,082 후보), 우리 = *한 host(argyrodite)의 도판트* 스크리닝(47종) — force-fit 금지, 그러나 게이트 축(상안정 hull·grand-potential ESW·화학 반응성·이온전도 프록시)과 임계값 설계는 1:1 벤치마크 대상 (§7c 표).
+**우리 cascade(argyrodite host 도판트 AI 스크리닝)의 직계 조상 — "게이트식 고처리량 열역학 스크리닝"의 원형 논문이다.** 방법 계보로는 [Zhu15](`zhu2015_esw_grand_potential_origin.md`, ref 31)·Ong 2013(ref 18)·**[Rich16]**(`richards2016_interface_stability_pseudobinary.md`, ref 30 = pseudo-binary ΔE_rxt/Eq 4 원전 — Miara·Wang·Ceder 공저로 인적 연속)·Miara 2015(ref 35)의 grand-potential/반응성 도구를 **10만 규모 DB에 처음 깔때기(funnel)로 돌린 논문**이고, 산출물(폴리음이온 산화물 코팅, O-공유결합 논리)은 [Sundar](ALD 코팅 스크린)·[Son](5 V 차폐 SE)·우리 그룹 [Cha]/[Kang25] 코팅 라인의 상류다. **우리 cascade와 대상이 다름에 주의**: Xiao = *코팅 물질* 발굴(104,082 후보), 우리 = *한 host(argyrodite)의 도판트* 스크리닝 — force-fit 금지, 그러나 게이트 축(상안정 hull·grand-potential ESW·화학 반응성·이온전도 프록시)과 임계값 설계는 1:1 벤치마크 대상 (§7c 표).
+
+> ⚠ **2026-08-16 갱신** — 우리 쪽 숫자가 바뀌었다. 계획 91 화합물 × 3 라벨 = **273 슬롯 → 270 완주 → base 90종**이고, **47 은 물리 게이트가 아니라 2026-06-29 취합 경계**다. 그리고 세 라벨(x002/x005/x010)은 **농도축이 아니다** — 4 f.u. 셀의 정수 치환이라 전부 generator loading 0.25 로 양자화됐고, 90종 중 **31종은 라벨 사이에서 exact formula 까지 바뀐다**. **승인된 current ranking 은 0종**이다. 아래 §7 의 대비는 그 상태에서 읽을 것.
 
 ## 0.5 처음 읽는 사람을 위한 배경 (이 논문이 전제하는 것들)
 
@@ -253,7 +255,7 @@ Table S1 106종 전수에서 `|ΔE_rxt(반충 NCM)| > |ΔE_rxt(만충 NCM)|`인 
 | Li₄B₇O₁₂Cl | 1.39 | 4.01 | 0.000 | −0.010 | −0.013 |
 
   - **반응성으로는 전수 챔피언 확정**: 8종 전부 |ΔE_rxt| ≤ **21 meV/atom**(LPS 기준은 ≤7), 폴리음이온 55종 평균보다 한 자릿수 낮다. §6a의 "borates = very promising"이 실물로 뒷받침됨.
-  - **⚠⚠ 그러나 산화한계로는 지고 있다**: 붕산염 V_ox는 **4.01–4.89 V로 전부 5 V 미만**인 반면, meta-phosphate 7종은 5.01–6.23 V. 즉 **"B–O 806 > P–O 597 kJ/mol이므로 붕산염이 더 산화에 강하다"는 추론은 이 데이터로 성립하지 않는다** — 결합해리에너지 위계는 **ΔE_rxt(화학 무반응성)로 발현되고 V_ox(전기화학 산화한계)로는 발현되지 않는다**. (원인 후보: V_ox는 결합 세기만이 아니라 조성의 Li 분율·μ_Li에 지배되고(§6c), 붕산염은 축합 metaphosphate만큼 저-Li가 아니다.) 🔑 우리 **B₂O₃ 서사에서 "B가 산화에 강하다"를 근거 없이 쓰면 안 되는 이유** — 우리 쪽 근거는 *host 격자 안에서의 onset +0.18 V*이지 Xiao의 붕산염 V_ox가 아니다.
+  - **⚠⚠ 그러나 산화한계로는 지고 있다**: 붕산염 V_ox는 **4.01–4.89 V로 전부 5 V 미만**인 반면, meta-phosphate 7종은 5.01–6.23 V. 즉 **"B–O 806 > P–O 597 kJ/mol이므로 붕산염이 더 산화에 강하다"는 추론은 이 데이터로 성립하지 않는다** — 결합해리에너지 위계는 **ΔE_rxt(화학 무반응성)로 발현되고 V_ox(전기화학 산화한계)로는 발현되지 않는다**. (원인 후보: V_ox는 결합 세기만이 아니라 조성의 Li 분율·μ_Li에 지배되고(§6c), 붕산염은 축합 metaphosphate만큼 저-Li가 아니다.) 🔑 우리 **B₂O₃ 서사에서 "B가 산화에 강하다"를 근거 없이 쓰면 안 되는 이유** — Xiao 의 붕산염 V_ox 는 우리 근거가 못 된다. ⛔ 그리고 2026-08-16 기준 **우리 쪽 근거도 없다**: 여기 적혀 있던 "host 격자 안에서의 onset +0.18 V" 는 chain 조성의 값이고, 같은 자리 plain 조성은 **2.034 V(host −0.106)** 다 (§7d).
 - **LiNbO₃/LiTaO₃의 자리**: 4d/5d 초기 TM의 덜 수축된 d 궤도가 O를 혼성 보호(V_ox 3.9~4.0 V대). Li₃PO₄ 형성이 원천 불가(P 없음)라 **산화물 양극과의 고온 공정에 최적** — 단 황화물 SSE와는 S/O 교환 구동력. **LLZO+산화물 양극 사이 버퍼로 이상적**(고전압 kinetic 안정화가 전제). 실증 근거로 **LiNbO₃-코팅 LCO·LMO가 황화물 SSB에서 효과적**(refs 20, 41)을 인용; 반응성 0급 계면 예시로 **LiTaO₃/NCM·LiNbO₃/LCO**(만충·반충 모두 구동력 없음)를 명시. 또 **Li₂ZrO₃는 LMO/LLZO 계면에서 전 산화물 코팅 중 최고 호환** — "코팅 선택 = 짝 특이적"의 Fig 5 내 사례.
 
 ### 6b. 왜 황화물 SSE에 코팅이 필수인가 (Figure 5·Table S2)
@@ -285,7 +287,7 @@ Table S1 106종 전수에서 `|ΔE_rxt(반충 NCM)| > |ΔE_rxt(만충 NCM)|`인 
 | LPSCl ESW | Fig 4 막대 ~**1.7–2.0 V** (figure-read; 표 없음), 본문 "thiophosphates <2.5 V" | OCV 1.717 / onset **2.14–2.256 V** (MP2026, LiS₄ 제외 시 2.256) | ✓ 동일 세대 계보([Zhu15] 1.71–2.01)와 일치; 우리 +0.13~0.25 V는 hull 세대(MP2020 S-보정) 효과 — **모순 아님** |
 | LPSCl/LCO 반응성 | **−339**(만충)/−493(반충) meV/atom; 산물 Li₃PO₄+Li₂S+Co₉S₈+Li₂SO₄+LiCl | interface_reactivity(vs LCO): Li₃PO₄/Li₂SO₄/폴리설파이드/LiCl | ✓ **Li₃PO₄·Li₂SO₄·LiCl 공통**; 그들 Li₂S+Co₉S₈ vs 우리 폴리설파이드 = hull entry 세대 차이. 우리도 ΔE_rxt 절대값(meV/atom)을 산출·병기하면 1:1 비교 완성 |
 | LPSCl/NCM 반응성 | −330/−471 meV/atom | (NCM은 우리 hull 밖 — Ni·Mn 부재) | ✗ 우리 공백 (§7c) |
-| 산화한계=음이온 화학 | Richards 명제 재확인 (기타군 302 중 1) | S²⁻-limited onset(조성 무관 2.256) = 같은 명제의 argyrodite 내부판 | ✓ 프레임 동일 |
+| 산화한계=음이온 화학 | Richards 명제 재확인 (기타군 302 중 1) | ⛔ **2026-08-16 정정** — 옛 서술 "S²⁻-limited onset(**조성 무관** 2.256)"은 성립하지 않는다. ① 2.256 은 **LiS₄ 제외** phase set 값이고 캐스케이드 pinned host 는 **2.140 V** 다. ② 조성 무관이 아니다: 도펀트 없는 host 도 −Li−S+Cl 을 네 번 반복하면 **2.356 V 로 점프**하고(Li₂₀P₄S₁₆Cl₈), 도핑 조성의 D_plain 은 **1.893–2.356 V** 로 벌어진다 | ⚠ 프레임(음이온 화학이 지배)은 유지되지만 **"조성 무관 고정" 은 철회** |
 | gap 사용법 | KS gap = 하한·게이트(>0.5 eV)·NCM 1.5 eV 대비 | fixed-occ nscf 고유값·"wide-gap" 수준 비교만 | ✓ 철학 동일(절대 gap 비교 금지) — 그들도 하한으로만 |
 
 ### 7b. 방법 계보 (grand-potential: [Zhu15] → 이 논문 → 우리)
@@ -296,21 +298,23 @@ Table S1 106종 전수에서 `|ΔE_rxt(반충 NCM)| > |ΔE_rxt(만충 NCM)|`인 
 ### 7c. 게이트 1:1 벤치마크 — Xiao funnel vs 우리 cascade v23 ★★★
 | 축 | **Xiao 2019 (순차 boolean 깔때기)** | **우리 cascade v23 (가중 score + 최소 게이트)** | 코멘트 |
 |---|---|---|---|
-| 대상/풀 | **코팅 물질** 발굴: Li-함유 **104,082**종(ICSD+data-mined) | **host 도판트** 스크리닝: modelc(Cl-rich argyrodite)에 **47종** 산화물/불화물 × x(≤0.25) | 대상 자체가 다름(물질 발굴 vs 격자 개질) — 수치 이식 금지 |
+| 대상/풀 | **코팅 물질** 발굴: Li-함유 **104,082**종(ICSD+data-mined) | **host 도판트** 스크리닝: Li₆PS₅Cl 계열 4 f.u. 셀에 **91 화합물 계획 → 270 슬롯 완주 → base 90종** (산화물 37·불화물 10·염화물 19·브롬 5·요오드 4·질화 5·황화 11). x002/x005/x010 은 **농도가 아니라 라벨** — 전부 generator loading 0.25 | 대상 자체가 다름(물질 발굴 vs 격자 개질) — 수치 이식 금지. ⚠ 47 은 취합 경계 |
 | 전자절연 | Filter 1: **Eg > 0.5 eV** (KS, 하한) + 방사성 제외 | host가 wide-gap(2.1 eV) 전제; 산물 절연성은 sei_products gap 축으로 별도 | 우리는 "분해산물의 gap"까지 분해 — 그들 논문 말미 "전자전도성 산물" 우려의 정량판 |
 | 상안정 | Filter 2: **E_hull < 0.005 eV/atom** (DFT-hull 절대) | **stable 0.25 가중치** = de_post_anneal (**UMA 상대**, min-max norm; boolean 아님) | 그들 = 절대 hull(5 meV 강컷: 합성가능 metastable 다수 탈락), 우리 = host 내 상대 안정화(연속) |
-| ESW | Filter 3: **V_ox ≥ 4.0 & V_red ≤ 2.7 V** (코팅 창이 양극 상한+SE 창과 겹침) | **ox 0.30 가중치**(grand-potential onset; S-limited라 2.14 V 근방 미세차) + **window > 0.05 V 게이트**(collapse=후기 TM Fe/Co/Ni/Mn 회피) | 같은 grand-potential, 다른 좌표계: 그들은 4 V 절대 문턱(코팅은 넘을 수 있음), 우리는 S-limited host라 절대 문턱 대신 **onset 미세이동+창 붕괴 회피** |
+| ESW | Filter 3: **V_ox ≥ 4.0 & V_red ≤ 2.7 V** (코팅 창이 양극 상한+SE 창과 겹침) | **ox 0.30 가중치**(grand-potential onset; host 2.140 V, 후보 분포 1.79–2.36 V — 19종이 정확히 2.140 에 축퇴) + **window > 0.05 V 게이트**(collapse=후기 TM Fe/Co/Ni/Mn 회피) | 같은 grand-potential, 다른 좌표계: 그들은 4 V 절대 문턱(코팅은 넘을 수 있음), 우리는 황화물 host라 절대 문턱 대신 **host 상대 비열화 판정**. ⚠ 2.140 축퇴군 내부 순위는 무의미 |
 | 화학 반응성 | Filter 4: **&#124;ΔE_rxt&#124; < 0.1 eV/atom vs LPS & 만충 NCM** (pseudo-binary) | (게이트 없음 — interface_reactivity vs LCO는 별도 축, NCM 미보유) | **그들에 있고 우리에 없는 축** ① |
 | 화학군 필터 | Filter 5: 폴리음이온 산화물만(66) — σ 문헌 근거 | 도판트 화학군 = 산화물 중심 + F-variant (O/F-degenerate 판정) | 유사한 "화학 상식 컷" |
-| 이온전도 | Filter 6: **CI-NEB vacancy E_m** — 대표 **6종만** 정밀 | **BVS proxy 47종 전원**(bvs_li_proxy_score·migration_volume_fraction·tier2 blocking) → 챔피언 MLIP-MD 검증 | 그들 6/66만 계산(비용) vs 우리 전수 프록시+선택 MD — HT 전도 공백을 우리가 프록시로 메움 |
+| 이온전도 | Filter 6: **CI-NEB vacancy E_m** — 대표 **6종만** 정밀 | **legacy BVS proxy 전수**(bvs_li_proxy_score·4 Å blocking). ⛔ **MLIP-MD 검증은 v23 에서 0/270 — 미실행**(stage 10). ⚠ G4 는 세 라벨 평균이 아니라 **x005 한 점**만 쓴다 | 그들은 6/66 을 **실제로 계산**했고 우리는 전수 프록시만 있다 — 동역학 축은 **양쪽 다 비어 있는 게 아니라 우리만 비어 있다** |
 | 기계 | **없음** | **soft 0.20 + ductile 0.15** (E_VRH·Pugh B/G) = 가중 35 % | **우리에 있고 그들에 없는 축** ① |
 | 조합/교호작용 | 없음(단일 조성 나열) | 테마 12+1 조합 + **co-doping 교호작용 ML**(codoping_ml_v2) | 우리 추가 축 ② |
-| 스코어링 철학 | 순차 hard gate → 통과/탈락 (경계값 근처 정보 소실) | **score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window** → 순위+trade-off 보존 (Sc₂O₃ 1위 0.813) | 깔때기의 "정보 소실"을 가중합으로 보완 — 대신 우리는 가중치 자의성 리스크 |
+| 스코어링 철학 | 순차 hard gate → 통과/탈락 (경계값 근처 정보 소실) | **score = 0.30·ox + 0.25·stable + 0.20·soft + 0.15·ductile + 0.10·window** → 순위+trade-off 보존. ⛔ **승인된 current ranking 은 0종** — 47종 시대의 1위(Sc₂O₃ 0.813)는 superseded 스냅샷이고 결과로 인용 금지 | 가중치 자의성 + **배치 잡음**: 같은 종 3점의 흩어짐이 종간 차이만큼 크다 (E 1.10 · BVS 2.81 배) → 그 축 순위는 물질 차이가 아니다 |
 | 힘/에너지 엔진 | DFT-hull **절대**(내부 MP-세대 DB) | **UMA-상대**(MLIP; 절대값 인용 금지 규율) + MP hull(ESW만 절대) | 우리 추가 축 ③ — 47종×x를 돌리는 비용 해법; 절대성은 희생 |
-| 산출 | 추천 물질 3종 + 설계 원리(O 공유결합·Li 트레이드오프) | 도판트 랭킹 + 테마 조합 + 예외 도판트(B₂O₃ onset +0.18 V 등) | 그들 "원리" ↔ 우리 "예외 발굴" 상보 |
+| 산출 | 추천 물질 3종 + 설계 원리(O 공유결합·Li 트레이드오프) | ⛔ **2026-08-16 정정** — 옛 서술의 "예외 도판트(B₂O₃ onset **+0.18 V**)"는 **철회**다. 그 +0.177 V 는 chain generator 조성 `Li₁₇B₂P₄S₁₆Cl₅O₃` 의 값이고, 같은 자리 plain 조성 `Li₁₈B₂P₄S₁₇Cl₄O₃` 는 **2.034 V 로 host 아래**(−0.106). 종 수준 귀속은 `unresolved` | 그들 "원리" 는 유효. 우리 쪽은 **아직 원리도 예외도 아닌 감사 단계** |
 
 ### 7d. 물리 논리의 재사용 지점
-- **O 공유결합→산화방어** = 우리 ICOHP P–O −8.43(P–S −5.98 대비 +41 %)·B–O 강결합·**B₂O₃ 도핑 onset +0.18 V**(cascade 예외 도판트)의 문헌 원리판. Xiao Table 3(동일 양이온 +phosphate → +0.4~1.4 V)는 "음이온 골격을 바꿔야 onset이 움직인다"는 점에서 [Banik](동족 치환 무효)과 상보 — 우리 cascade의 "산화물 도판트가 onset을 소폭 옮기는 예외"는 이 두 명제 사이에 정확히 위치.
+- **O 공유결합→산화방어** = 우리 ICOHP P–O −8.43(P–S −5.98 대비 +41 %)·B–O 강결합의 문헌 원리판. Xiao Table 3(동일 양이온 +phosphate → +0.4~1.4 V)는 "음이온 골격을 바꿔야 onset이 움직인다"는 점에서 [Banik](동족 치환 무효)과 상보.
+  ⛔ **2026-08-16 철회** — 여기 붙어 있던 "**B₂O₃ 도핑 onset +0.18 V**(cascade 예외 도판트)"는 이 원리의 우리 쪽 실증이 **아니다.** 그 값은 chain generator 조성의 것이고, 같은 자리 plain 조성은 **2.034 V(host −0.106)** 로 오히려 내려간다. legacy DFT-deep 셀 `Li₅₈P₈S₄₁Cl₁₆B₂O₃` 도 **2.03 V** 로 같은 방향이다. Xiao 의 O-공유결합 원리는 **코팅 물질 자체**(폴리음이온 골격)에 대한 것이고, 우리가 한 것은 **host 격자에 산화물을 소량 넣은 것**이라 같은 명제의 실증으로 이어붙일 수 없다.
+  ⚠ 그리고 우리 쪽에서 "산화물 도판트가 onset 을 옮긴다"를 말하려면 **자리·구조가 맞춰진 대비**가 필요한데, 현재 `structural realization validated = 0/11` 이다.
 - **Li 함량 trade-off**(V_ox↔σ) = 우리 cascade의 stability↔Li-mobility blocking trade-off와 동형 구조(레버만 다름: 그들 조성 Li분율, 우리 도판트 blocking).
 - **붕산염 챔피언** = 우리 +B₂O₃ 서사의 코팅판 지지 — 단 **B 3축 분리 필수**: (산화·계면 화학안정 ↑ [Xiao·우리]) vs (Li 이동성 ↓ 위험 [Xiao LiBa(B₃O₅)₃ E_m 1.96 eV]) vs (**가수분해 최악급 [Zhu20]**). "B가 좋다"는 축 명명 없이 말하면 틀림.
 
@@ -350,13 +354,13 @@ Table S1 106종 전수에서 `|ΔE_rxt(반충 NCM)| > |ΔE_rxt(만충 NCM)|`인 
 ## 11. 적용 인사이트 (cascade 벤치마크 발표용)
 1. **계보 문장**: "우리 cascade는 Xiao 2019(Joule) 깔때기의 게이트 축 3종 — 상안정·grand-potential ESW·이온전도 프록시 — 을 계승하되, 순차 boolean 깔때기를 **UMA-상대 가중 score(0.30 ox+0.25 stable+0.20 soft+0.15 ductile+0.10 window)**로 바꿔 '탈락' 대신 '순위+trade-off'를 보존한다."
 2. **추가 축 문장**: "Xiao가 비워둔 **기계 축(soft/ductile, 가중 35 %)**·**테마 조합·co-doping 교호작용 ML**·**MLIP(UMA) 상대 스크리닝**을 우리가 추가했고, 반대로 Xiao의 **양극(NCM/LCO) 반응성 게이트(&#124;ΔE_rxt&#124;<0.1 eV/atom·만충/반충)**와 **10⁵ 규모 후보 풀**은 우리에 없는 축이다 — 전자는 interface_reactivity의 Ni/Co/Mn chemsys 확장으로 이식 가능."
-3. **물리 연속성 문장**: "Xiao의 결론 '비금속–O 공유결합이 O 2p를 끌어내려 산화 한계를 올린다'(meta>pyro>ortho, B–O 806 kJ/mol)는 우리 ICOHP P–O −8.43·B₂O₃ onset +0.18 V와 같은 물리 — 우리는 그 원리를 코팅 물질 선택이 아니라 **host 격자 도핑**으로 옮겨 실행한 것."
+3. **물리 연속성 문장**: "Xiao의 결론 '비금속–O 공유결합이 O 2p를 끌어내려 산화 한계를 올린다'(meta>pyro>ortho, B–O 806 kJ/mol)는 우리 ICOHP P–O −8.43(P–S −5.98 대비 +41 %)과 같은 물리 — 우리는 그 원리를 코팅 물질 선택이 아니라 **host 격자 도핑**으로 옮겨 실행한 것." ⛔ 이 문장에 "B₂O₃ onset +0.18 V"를 붙이지 말 것(2026-08-16 철회, §7d) — 같은 자리 plain 조성은 2.034 V 로 host 아래다.
 4. **실무 후속**: (a) cascade CSV에 **ΔE_rxt(vs LCO, 나중에 NCM) 열 추가**(pymatgen InterfaceReactions; Xiao Table S2가 정답지 — LPSCl/LCO −339 meV/atom 재현부터). **★ 2026-08-03 추가 요건: 만충뿐 아니라 반충(탈리튬) 양극 entry로도 같이 돌릴 것** — Table S1 전수에서 반충에서만 반응이 켜지는 물질 7종이 **전부 Cl 함유**였다(§4b-2). Cl-rich host를 다루는 우리로선 만충 단독 계산이 위험을 구조적으로 못 본다, (b) 우리 funnel 그림을 Xiao Fig 1 문법으로 제작, (c) 붕산염 3축 분리(산화↑/이동성↓/가수분해↓) 슬라이드에 Xiao·[Zhu20] 병기.
 5. **경계 사례 교훈**: Xiao의 LiCoPO₄/LiNiPO₄ 탈락(액체계 스타 → 황화물계 부적합)은 "게이트는 *짝(전해질) 특이적*"의 상징 — 우리 도판트 랭킹도 host(Cl-rich argyrodite)·상대(LCO) 특이적임을 항상 명기.
 
 ## 12. 인용 가능 문장 (deck/paper용)
 - "Xiao et al. (Joule 2019) screened 104,082 Li-containing compounds through four sequential gates — band gap > 0.5 eV, E_hull < 5 meV/atom, V_ox ≥ 4.0 V with V_red ≤ 2.7 V, and |ΔE_rxt| < 100 meV/atom against both Li₃PS₄ and NCM — leaving 184 candidates, of which polyanionic oxides (66) dominate; LiH₂PO₄, LiTi₂(PO₄)₃ and LiPO₃ were the final recommendations."
-- "Their central design rule — covalent non-metal–oxygen bonding lowers the O 2p states and simultaneously raises the oxidation limit and suppresses O–S exchange — is the coating-side statement of the same physics we quantify inside the argyrodite lattice with ICOHP (P–O −8.43 vs P–S −5.98) and the B₂O₃-induced +0.18 V onset shift."
+- "Their central design rule — covalent non-metal–oxygen bonding lowers the O 2p states and simultaneously raises the oxidation limit and suppresses O–S exchange — is the coating-side statement of the same physics we quantify inside the argyrodite lattice with ICOHP (P–O −8.43 vs P–S −5.98)." ⛔ **2026-08-16** — 이 문장에서 "and the B₂O₃-induced **+0.18 V** onset shift" 는 **삭제**했다(§7d 철회). 산화 onset 쪽을 원고에 쓰려면 지금 방어되는 문장은 이것뿐이다: *"In our matched 2×2 contrast the S-limited onset of the pinned host (2.140 V) is largely preserved under oxide doping (D_plain 1.893–2.356 V), and the sign of any shift depends on the charge-compensation recipe at the same site; element-level attribution is therefore not claimed."*
 - "Our cascade inherits the Xiao-2019 gate axes (phase stability, grand-potential ESW, ion-mobility proxy) but replaces the sequential boolean funnel with a weighted composite score and adds the axes Xiao lacked — mechanical softness/ductility, theme combinations, co-doping interaction ML — while their cathode-reactivity gate and 10⁵-scale pool remain our to-do."
 - (LPSCl 반응성 소환값) "In the same framework, bare Li₆PS₅Cl reacts with LiCoO₂ at −339 meV/atom (fully lithiated; −493 half-lithiated), producing Li₃PO₄, Li₂S/Li₂SO₄, Co₉S₈ and LiCl — the numbers behind 'sulfide SEs need cathode coatings'."
 - **(SI 대조로만 나오는 문장, 2026-08-03)** "Notably, the conventional ternary-oxide coatings themselves — Li₂ZrO₃, LiNbO₃ and LiTaO₃ — do not appear among the 106 ICSD compounds that pass Xiao's own chemical-stability filter, since their reaction energies against Li₃PS₄ (−115, −164 and −139 meV/atom) exceed the 100 meV/atom cut-off; the incumbent coatings fail the very gate that selects their replacements."
