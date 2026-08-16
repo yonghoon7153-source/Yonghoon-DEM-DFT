@@ -1,0 +1,23 @@
+{
+ "kit": "kit_ps_7_3",
+ "len_um": 20.0,
+ "n_sdcp": 5659,
+ "sdcp_vol_pct": 1.0,
+ "rows": [
+  {
+   "vox": 0.4,
+   "sdcp_d_per_dx": 0.75,
+   "sigma_e_none": 0.00128382,
+   "sigma_e_sphere": 0.00136227,
+   "sigma_e_point": 0.00161865,
+   "origin_spread_point_pct": 4.66,
+   "vol_sphere_um3": 80.11,
+   "vol_point_um3": 353.6,
+   "vol_point_over_true": 4.42,
+   "vol_sphere_over_true": 1.001,
+   "gain_sphere_pct": 6.111,
+   "gain_point_pct": 26.08,
+   "point_over_sphere": 1.188
+  }
+ ]
+}
