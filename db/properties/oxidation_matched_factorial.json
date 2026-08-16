@@ -4631,11 +4631,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.14,
       "D_Cl_V": 2.354,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.0,
-      "interaction_V": 0.214,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.0,
+      "conditional_cl_recipe_contrast_V": 0.214,
+      "recipe_interaction_V": 0.214,
       "total_D_Cl_vs_host_V": 0.214,
-      "phase_set_id": "6bf9037d205ee069"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "B2O3": {
       "complete": true,
@@ -4643,11 +4645,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.034,
       "D_Cl_V": 2.317,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": -0.106,
-      "interaction_V": 0.283,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": -0.106,
+      "conditional_cl_recipe_contrast_V": 0.283,
+      "recipe_interaction_V": 0.283,
       "total_D_Cl_vs_host_V": 0.177,
-      "phase_set_id": "257d50d8c59cde8f"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "La2O3": {
       "complete": true,
@@ -4655,11 +4659,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 1.893,
       "D_Cl_V": 1.925,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": -0.247,
-      "interaction_V": 0.032,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": -0.247,
+      "conditional_cl_recipe_contrast_V": 0.032,
+      "recipe_interaction_V": 0.032,
       "total_D_Cl_vs_host_V": -0.215,
-      "phase_set_id": "4c33c0ac44b159ab"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "MgO": {
       "complete": true,
@@ -4667,11 +4673,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.14,
       "D_Cl_V": 2.14,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.0,
-      "interaction_V": 0.0,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.0,
+      "conditional_cl_recipe_contrast_V": 0.0,
+      "recipe_interaction_V": 0.0,
       "total_D_Cl_vs_host_V": 0.0,
-      "phase_set_id": "95fd684fa2d7baef"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "MoO3": {
       "complete": true,
@@ -4679,11 +4687,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.14,
       "D_Cl_V": 2.356,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.0,
-      "interaction_V": 0.216,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.0,
+      "conditional_cl_recipe_contrast_V": 0.216,
+      "recipe_interaction_V": 0.216,
       "total_D_Cl_vs_host_V": 0.216,
-      "phase_set_id": "8a430b8c688f4c06"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "Nd2O3": {
       "complete": true,
@@ -4691,11 +4701,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 1.92,
       "D_Cl_V": 1.987,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": -0.22,
-      "interaction_V": 0.067,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": -0.22,
+      "conditional_cl_recipe_contrast_V": 0.067,
+      "recipe_interaction_V": 0.067,
       "total_D_Cl_vs_host_V": -0.153,
-      "phase_set_id": "f537780fcd57ebfb"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "Sc2O3": {
       "complete": true,
@@ -4703,11 +4715,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.356,
       "D_Cl_V": 2.339,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.216,
-      "interaction_V": -0.017,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.216,
+      "conditional_cl_recipe_contrast_V": -0.017,
+      "recipe_interaction_V": -0.017,
       "total_D_Cl_vs_host_V": 0.199,
-      "phase_set_id": "0708691ed0323e88"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "Sm2O3": {
       "complete": true,
@@ -4715,11 +4729,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 1.989,
       "D_Cl_V": 2.034,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": -0.151,
-      "interaction_V": 0.045,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": -0.151,
+      "conditional_cl_recipe_contrast_V": 0.045,
+      "recipe_interaction_V": 0.045,
       "total_D_Cl_vs_host_V": -0.106,
-      "phase_set_id": "1d47ef124712d1a5"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "WO3": {
       "complete": true,
@@ -4727,11 +4743,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.14,
       "D_Cl_V": 2.356,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.0,
-      "interaction_V": 0.216,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.0,
+      "conditional_cl_recipe_contrast_V": 0.216,
+      "recipe_interaction_V": 0.216,
       "total_D_Cl_vs_host_V": 0.216,
-      "phase_set_id": "435000b2653a43c1"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "Y2O3": {
       "complete": true,
@@ -4739,11 +4757,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.282,
       "D_Cl_V": 2.282,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.142,
-      "interaction_V": 0.0,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.142,
+      "conditional_cl_recipe_contrast_V": 0.0,
+      "recipe_interaction_V": 0.0,
       "total_D_Cl_vs_host_V": 0.142,
-      "phase_set_id": "1780c9f3ddcc7bc8"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     },
     "ZnO": {
       "complete": true,
@@ -4751,11 +4771,13 @@
       "H_Cl_V": 2.14,
       "D_plain_V": 2.14,
       "D_Cl_V": 2.14,
-      "main_Cl_V": 0.0,
-      "main_dopant_V": 0.0,
-      "interaction_V": 0.0,
+      "baseline_cl_recipe_contrast_V": 0.0,
+      "plain_dopant_recipe_contrast_V": 0.0,
+      "conditional_cl_recipe_contrast_V": 0.0,
+      "recipe_interaction_V": 0.0,
       "total_D_Cl_vs_host_V": 0.0,
-      "phase_set_id": "74480e15ffd77b68"
+      "isolated_element_effect": false,
+      "scope": "네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 — 자리·구조·배열은 이 계산 밖이다."
     }
   },
   "results": {
@@ -5465,58 +5487,100 @@
     }
   },
   "verdict_2026_08_16": {
-    "headline": "main(Cl) = +0.000 in **all 11 species**. 도펀트 없이 S 하나를 Cl 로 바꾸는 것만으로는 산화 onset 이 전혀 안 움직인다 — 'Cl-rich 가 산화를 개선한다' 는 **반증됐다**.",
-    "reproduces_cascade": "각 종의 total(D_Cl − H_plain) 이 캐스케이드 chain 챔피언의 delta_ox_vs_host_V 와 소수점까지 일치한다 (Al2O3 +0.214 · B2O3 +0.177 · MoO3 +0.216 · WO3 +0.216). 같은 값을 재현하면서 분해했다는 뜻이다.",
-    "three_classes": {
-      "interaction_only": {
-        "species": [
-          "Al2O3",
-          "MoO3",
-          "WO3"
-        ],
-        "reading": "main(dopant)=0.000 · main(Cl)=0.000 · interaction=+0.214~0.216. 도펀트만도 Cl 만도 아무 효과가 없고 **둘이 같이 있어야만** 오른다. 어느 한쪽도 원인으로 지목할 수 없다."
+    "status": "SUPERSEDED — 아래 verdict_2026_08_16_rev2 를 볼 것",
+    "what_was_wrong": "앞 판 headline 'main(Cl)=0 이므로 Cl 효과는 0 · 효과 귀속 폐쇄' 는 범위가 너무 넓었다 (Codex 재감사 NO-GO)."
+  },
+  "field_rename_2026_08_16": {
+    "why": "Codex 재감사 P0-1: `H_Cl − H_plain` 은 marginal main effect 가 아니라 **도펀트가 없는 기준점의 simple contrast** 다. 'main(Cl)' 이라는 이름이 원소 수준 인과를 함의했다.",
+    "renamed": {
+      "main_Cl_V": "baseline_cl_recipe_contrast_V",
+      "main_dopant_V": "plain_dopant_recipe_contrast_V",
+      "interaction_V": "recipe_interaction_V"
+    },
+    "added": [
+      "conditional_cl_recipe_contrast_V (= D_Cl − D_plain, **도펀트가 있을 때**)",
+      "isolated_element_effect: false",
+      "scope"
+    ]
+  },
+  "verdict_2026_08_16_rev2": {
+    "GO": "11종의 **조성 수준** 2×2 grand-potential operational contrast (진단물)",
+    "NO_GO": [
+      "'Cl 효과는 0'",
+      "'Cl-rich 개선 반증' (보편 개선 주장만 반증)",
+      "'인과 귀속 폐쇄'",
+      "LiS4→P2S7 을 보편 기전으로"
+    ],
+    "unchanged": "승인 current ranking = 0종",
+    "headline": "**undoped LPSCl 기준에서는** −Li−S+Cl recipe 가 onset 을 움직이지 않았다(11개 확장 roster 에서 반복 확인). 그러나 **도펀트가 있을 때**의 조건부 recipe 효과는 종에 따라 양·음·0 이다.",
+    "conditional_vs_baseline": {
+      "Al2O3": {
+        "baseline": 0.0,
+        "conditional": 0.214
       },
-      "dopant_only": {
-        "species": [
-          "Sc2O3",
-          "Y2O3"
-        ],
-        "reading": "main(dopant) +0.216 / +0.142, interaction ~0 — Cl 없이도 오른다. 진짜 도펀트 효과.",
-        "note": "Sc2O3 는 interaction 이 -0.017 로 약하게 음수 — Cl 치환이 오히려 조금 깎는다."
+      "B2O3": {
+        "baseline": 0.0,
+        "conditional": 0.283
       },
-      "dopant_lowers": {
-        "species": [
-          "B2O3",
-          "La2O3",
-          "Nd2O3",
-          "Sm2O3"
-        ],
-        "reading": "main(dopant) 음수 — 도펀트가 onset 을 **내린다**. B2O3 는 -0.106, 란탄족은 -0.15~-0.25."
+      "La2O3": {
+        "baseline": 0.0,
+        "conditional": 0.032
       },
-      "inert": {
-        "species": [
-          "MgO",
-          "ZnO"
-        ],
-        "reading": "네 칸 전부 2.140 — 아무 일도 일어나지 않는다."
+      "MgO": {
+        "baseline": 0.0,
+        "conditional": 0.0
+      },
+      "MoO3": {
+        "baseline": 0.0,
+        "conditional": 0.216
+      },
+      "Nd2O3": {
+        "baseline": 0.0,
+        "conditional": 0.067
+      },
+      "Sc2O3": {
+        "baseline": 0.0,
+        "conditional": -0.017
+      },
+      "Sm2O3": {
+        "baseline": 0.0,
+        "conditional": 0.045
+      },
+      "WO3": {
+        "baseline": 0.0,
+        "conditional": 0.216
+      },
+      "Y2O3": {
+        "baseline": 0.0,
+        "conditional": 0.0
+      },
+      "ZnO": {
+        "baseline": 0.0,
+        "conditional": 0.0
       }
     },
-    "b2o3": {
-      "why_it_matters": "한 번도 존재한 적 없던 같은-자리 D_plain(B2O3) = Li18B2P4S17Cl4O3 가 **2.034 V** 로 host 아래다. 캐스케이드의 +0.177 은 chain 변형의 추가 개입(+0.283)이 도펀트 자체의 -0.106 을 덮은 것이다.",
-      "independent_support": "legacy DFT-deep 셀 Li58P8S41Cl16B2O3 가 2.03 V 였다 — **다른 조성인데 같은 방향·거의 같은 값**이다. 이는 방증이지 동일성 증명이 아니다. 두 조성을 한 pinned entry set 에서 재는 것은 여전히 안 했다.",
-      "resolves": "db/properties/b2o3_esw.json 의 부호 충돌을 **해소하지는 않지만** 방향을 정한다: B2O3 도핑 자체는 onset 을 내린다."
+    "not_eleven_independent": "11종 모두 같은 H_plain(Li24P4S20Cl4)·H_Cl(Li23P4S19Cl5)를 쓴다. 도펀트 원소는 H 조성에 없어 H 분해에 참여할 수 없으므로 반응식도 11개 phase diagram 에서 동일하다. **독립 표본 11개가 아니라** 같은 host contrast 를 11개 확장 roster 에서 반복 확인한 것이다.",
+    "mechanism_status": "hypothesis (appendix) — 본문 결론 금지",
+    "mechanism_counterexamples": {
+      "Al2O3": "LiS4 소멸 + P2S7 등장 — 주장과 일치 (유일)",
+      "MoO3/WO3": "P2S7 등장하지만 **LiS4 가 남는다**",
+      "B2O3": "D_plain 부터 이미 LiS4 가 없다 (Li2B2S5 분기)",
+      "Sc2O3": "D_plain 부터 이미 P2S7 이 있다",
+      "MgO/ZnO/Y2O3": "LiS4 가 계속 남고 onset 도 그대로"
     },
-    "mechanism": {
-      "observation": "2.140 은 LiS4 에 pin 된 값이다. H_plain(Li24)·H_Cl(Li23)·D_plain(Al2O3, Li18) 모두 생성물에 LiS4 가 있고 2.140 이다. D_Cl(Li17)에서 LiS4 가 사라지고 P2S7 이 나타나면서 2.354 로 뛴다.",
-      "reading": "연속적인 Cl 효과가 아니라 **이산적인 hull 분기 전환**이다 — 조성이 Li-poor 해져 LiS4 가 더는 sink 노릇을 못 하는 지점에서 분기가 바뀐다. Codex D 관찰(2.340-2.370 V 군 21/21 이 P2S7, 2.140 군 102/102 가 Li3PS4)과 맞물린다.",
-      "limits": "반응식 몇 개를 읽은 관찰이다. Li 문턱이 정확히 어디인지, 다른 도펀트에서도 같은지는 재지 않았다. 그리고 LiS4 를 제외하면 host 가 2.256 으로 움직이는 민감도가 그대로 남는다."
+    "three_fields_not_one": {
+      "operational_factorial_coverage": "17/17 chain rows",
+      "element_level_causal_attribution": "not_claimed",
+      "structural_realization_validated": "0/11"
     },
-    "what_this_does_not_close": [
-      "조성 수준 열역학 대비다 — 자리 점유·구조 실현 가능성은 계산 밖이다",
-      "캐스케이드 B2O3·MoO3·WO3 의 기존 plain 챔피언은 P_4b 자리라 여기 D_plain(Li_24g)과 다른 물건이다",
-      "보편적 원소 효과가 아니라 이 구조 생성 규약 안의 대비다",
-      "legacy b2o3_esw 와 캐스케이드를 한 pinned entry set 에서 재는 일은 여전히 안 했다",
-      "LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다"
+    "required_before_mechanism_headline": [
+      "LiS4-excluded phase set 에서 2×2 재실행",
+      "host Li/Cl ladder (Li24→Li23→Li22…) 를 한 roster 에서 스캔",
+      "branch identity 와 contrast 부호가 유지되는지 대조"
+    ],
+    "known_defects_in_this_file": [
+      "onset 반응식이 tie 에서 negative-evolution step 이 아닌 것을 잡았을 수 있다 (도구는 고쳤다 — 이 파일은 **재실행 전**이라 반응식 필드를 기전 근거로 쓰지 말 것)",
+      "phase_set_id 가 entry ID 만 hash 한다 — energy/correction 변경을 고정하지 못한다"
     ]
   }
 }

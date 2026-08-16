@@ -1,9 +1,9 @@
 ---
-title: 캐스케이드 조성족 섞임과 효과 귀속 — Cl 단독 효과는 0 이고 개선은 상호작용이다
+title: 캐스케이드 조성족 섞임 — 보편적 Cl 개선은 반증, 원소 수준 인과는 여전히 열림
 date: 2026-08-16
 updated: 2026-08-16
 tags: [cascade, esw, oxidation, composition, provenance, b2o3, correction, factorial, attribution]
-status: 확정 — 270 슬롯 전수 분류 + Codex f9 리뷰 반영 + **효과 귀속 닫힘**(matched 2×2, main(Cl)=0)
+status: 확정 — 조성족 분류 완료. **효과 귀속은 열림**(2026-08-16 재감사로 '닫힘' 철회)
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-16
@@ -143,85 +143,102 @@ host 와 비교된다. **종 수준 효과 귀속**이 안 닫힌 것이다.
 모르는 값은 **plain 으로 흘리지 않고** `unknown` 으로 떨어뜨린다.
 다만 **provenance 만으로는 부족하다** — `matched_transform_status` 로 조성 벡터를 같이 본다.
 
-## 효과 귀속 — 닫혔다 (2026-08-16, matched 2×2)
+## 효과 귀속 — **안 닫혔다** (2026-08-16 재감사로 철회)
 
-`tools/oxidation/esw_matched_factorial.py` 로 네 칸을 chemsys 마다 **같은 pinned entry set**
-안에서 쟀다 (11종 · 11 phase set · GPU 미사용).
+⛔ 앞 판은 "`main(Cl)=0` 이므로 Cl 효과는 0 · 효과 귀속 폐쇄" 라고 적었다. **철회한다.**
+
+`tools/oxidation/esw_matched_factorial.py` 로 네 칸을 chemsys 마다 같은 pinned entry set
+안에서 쟀다 (11종 · 11 phase set · GPU 미사용). 계산값 44개와 2×2 대수는 재현된다.
+**틀린 건 이름과 범위였다.**
+
+### 이름부터 틀렸다 (Codex 재감사 P0-1)
+
+`H_Cl − H_plain` 을 **main(Cl)** 이라 불렀는데, 그건 2×2 factorial 의 marginal main effect 가
+아니라 **도펀트가 없는 기준점의 simple contrast** 다. 도펀트가 있을 때의 recipe 효과는
+`D_Cl − D_plain` 이고, 그건 0 이 아니다.
 
 ```
-종        H_plain   H_Cl  D_plain   D_Cl |  main(Cl) main(dop)    inter   총합
-Al2O3      2.140  2.140    2.140  2.354 |    +0.000    +0.000   +0.214  +0.214
-B2O3       2.140  2.140    2.034  2.317 |    +0.000    -0.106   +0.283  +0.177
-MoO3       2.140  2.140    2.140  2.356 |    +0.000    +0.000   +0.216  +0.216
-WO3        2.140  2.140    2.140  2.356 |    +0.000    +0.000   +0.216  +0.216
-Sc2O3      2.140  2.140    2.356  2.339 |    +0.000    +0.216   -0.017  +0.199
-Y2O3       2.140  2.140    2.282  2.282 |    +0.000    +0.142   +0.000  +0.142
-La2O3      2.140  2.140    1.893  1.925 |    +0.000    -0.247   +0.032  -0.215
-Nd2O3      2.140  2.140    1.920  1.987 |    +0.000    -0.220   +0.067  -0.153
-Sm2O3      2.140  2.140    1.989  2.034 |    +0.000    -0.151   +0.045  -0.106
-MgO/ZnO    2.140  2.140    2.140  2.140 |    +0.000    +0.000   +0.000   0.000
+종        baseline(undoped)   conditional(doped)   interaction   총합
+Al2O3          +0.000              +0.214            +0.214     +0.214
+B2O3           +0.000              +0.283            +0.283     +0.177
+MoO3           +0.000              +0.216            +0.216     +0.216
+WO3            +0.000              +0.216            +0.216     +0.216
+Sc2O3          +0.000              -0.017            -0.017     +0.199
+Y2O3           +0.000              +0.000            +0.000     +0.142
+La2O3          +0.000              +0.032            +0.032     -0.215
+Nd2O3          +0.000              +0.067            +0.067     -0.153
+Sm2O3          +0.000              +0.045            +0.045     -0.106
+MgO/ZnO        +0.000              +0.000            +0.000      0.000
 ```
 
-총합(`D_Cl − H_plain`)이 캐스케이드 chain 챔피언의 `delta_ox_vs_host_V` 와 **소수점까지
-일치한다** — 같은 값을 재현하면서 분해했다.
-
-### ① `main(Cl) = +0.000` — **11/11**
-
-`H_Cl = Li₂₃P₄S₁₉Cl₅` 가 host 와 똑같이 2.140 이다. 도펀트 없이 S 하나를 Cl 로 바꾸는 것만으로는
-onset 이 **전혀 안 움직인다**.
-
-> ⛔ **"Cl-rich 가 산화를 개선한다" 는 반증됐다.** 9.63배·2.59배는 Cl 효과가 아니다.
-
-독립 방증: `constrained_esw_cl_scan.json` 의 undoped Cl 스캔도 LPSCl 0.5→1.6 에서 0.000 V
-(다른 phase set 이라 절대값은 다르다).
-
-### ② 세 부류
-
-| 부류 | 종 | 읽는 법 |
+| | 성립 | 불성립 |
 |---|---|---|
-| **상호작용 전용** | Al₂O₃ · MoO₃ · WO₃ | main 둘 다 0.000, interaction +0.214~0.216. **둘이 같이 있어야만** 오른다 — 어느 한쪽도 원인이 아니다 |
-| **도펀트 효과** | Sc₂O₃ +0.216 · Y₂O₃ +0.142 | interaction ~0. Cl 없이도 오른다 |
-| **도펀트가 내림** | B₂O₃ −0.106 · La₂O₃ −0.247 · Nd₂O₃ −0.220 · Sm₂O₃ −0.151 | 도핑 자체가 onset 을 낮춘다 |
-| 무반응 | MgO · ZnO | 네 칸 전부 2.140 |
+| ✅ | **"Cl-rich 가 보편적으로 개선한다" 는 반증됐다** | |
+| ⛔ | | "Cl 효과가 0 이다" · "인과 귀속이 닫혔다" |
 
-앞 판에서 "Al₂O₃ 가 유일한 clean 대비" 라고 적었는데, **그것도 상호작용이었다.**
+정확한 문장: **undoped LPSCl 기준에서는 −Li−S+Cl recipe 가 onset 을 움직이지 않았다.
+그러나 doped 조성에서는 그 조건부 효과가 종에 따라 양·음·0 으로 달라진다.**
 
-### ③ B₂O₃ — 방향이 정해졌다
+필드명도 바꿨다: `baseline_cl_recipe_contrast` · `plain_dopant_recipe_contrast` ·
+`conditional_cl_recipe_contrast` · `recipe_interaction`.
+difference-in-differences 자체는 비선형 응답에도 유효하다 — 문제는 **`main effect` 라는
+이름이 원소 수준 인과를 함의한 것**이었다.
 
-한 번도 존재한 적 없던 같은-자리 `D_plain(B₂O₃) = Li₁₈B₂P₄S₁₇Cl₄O₃` 가 **2.034 V** 로 host 아래다.
-캐스케이드의 +0.177 은 chain 변형의 추가 개입(**+0.283**)이 도펀트 자체의 **−0.106** 을 덮은 것이다.
+### 11/11 은 독립 표본 11개가 아니다 (재감사 P0-2)
 
-legacy DFT-deep 셀 `Li₅₈P₈S₄₁Cl₁₆B₂O₃` 가 **2.03 V** 였다 — **다른 조성인데 같은 방향·거의 같은 값**.
-⚠ 이는 **방증이지 동일성 증명이 아니다.** 두 조성을 한 pinned entry set 에서 재는 일은 여전히 안 했다.
+11종 모두 **같은** `H_plain = Li₂₄P₄S₂₀Cl₄` · `H_Cl = Li₂₃P₄S₁₉Cl₅` 를 쓴다. 도펀트 원소는
+host 조성에 없으므로 host 분해에 참여할 수 없고, 실제 반응식도 11개 phase diagram 에서
+전부 같다. 쓸 문장은:
 
-### ④ 기전 — 이산적 hull 분기 전환
+> The same undoped host-recipe contrast remained at 0.000 V in **eleven expanded phase rosters**.
+
+### LiS₄→P₂S₇ 기전은 Al 하나를 일반화한 것이었다 (재감사 P0-3)
+
+| 종 | D_plain | D_Cl | 내 주장과 |
+|---|---|---|---|
+| **Al₂O₃** | LiS4 ✓ | LiS4 **소멸** · P₂S₇ ✓ | ✅ 유일하게 일치 |
+| MoO₃·WO₃ | LiS4 ✓ | P₂S₇ ✓ 인데 **LiS4 도 남음** | ❌ |
+| B₂O₃ | **둘 다 없음** (Li₂B₂S₅ 분기) | P₂S₇ ✓ | ❌ 시작 분기가 다름 |
+| Sc₂O₃ | **이미 P₂S₇** | P₂S₇ ✓ | ❌ |
+| Y₂O₃·MgO·ZnO | LiS4 ✓ | LiS4 ✓ | onset 불변 |
+
+2.35 V 군과 P₂S₇ 의 연관은 **강한 branch marker** 지만 "Li 18→17 에서 LiS₄ 가 사라져
+P₂S₇ 로 전환" 은 **보편 기전이 아니다.** → **appendix hypothesis 로만.**
+
+기전을 본문 결론으로 쓰려면 먼저: ① LiS₄-excluded phase set 에서 2×2 재실행
+② host Li/Cl ladder(Li24→23→22…) 를 한 roster 에서 스캔 ③ branch identity 와 부호 유지 대조.
+
+### 세 축을 한 숫자로 덮지 않는다
 
 ```
-H_plain  Li24P4S20Cl4     → 4 Li3PS4 + LiS4     + 4 LiCl + 7 Li       2.140
-H_Cl     Li23P4S19Cl5     → 4 Li3PS4 + 0.75LiS4 + 5 LiCl + 5.25 Li    2.140
-D_plain  Li18Al2…Cl4O3    → 4 Li3PS4 + 0.19LiS4 + 4 LiCl + …          2.140
-D_Cl     Li17Al2…Cl5O3    → 3.5Li3PS4+ 0.25P2S7 + 5 LiCl + …          2.354
+operational_factorial_coverage    = 17/17 chain rows
+element_level_causal_attribution  = not_claimed
+structural_realization_validated  = 0/11
+approved_current_ranking          = 0종            ← 유지
 ```
-
-2.140 은 **LiS4 에 pin 된 값**이다. Li 가 18→17 로 떨어지는 지점에서 LiS4 가 더는 sink 노릇을
-못 해 **P₂S₇ 분기**로 넘어간다. 연속적인 Cl 효과가 아니라 **이산적 분기 전환**이고,
-Codex D 관찰(2.340–2.370 V 군 21/21 이 P₂S₇)과 맞물린다.
-
-⚠ 반응식 몇 개를 읽은 관찰이다. Li 문턱이 정확히 어디인지, 다른 도펀트에서도 같은지는 안 쟀다.
 
 ## 반증·한계
 
-- **조성 수준 열역학 대비다.** grand-potential ESW 는 조성만 받으므로 그 조성이 **구조적으로
-  실현 가능한지**는 말하지 않는다. 자리 점유·배열은 계산 밖이다.
+- **조성 수준 operational contrast 다.** grand-potential ESW 는 조성만 받으므로 그 조성이
+  **구조적으로 실현 가능한지**는 말하지 않는다 (`structural_realization_validated = 0/11`).
+- **캐스케이드 값과 일치하는 것은 round-trip consistency 검사**이지 독립 물리 검증이 아니다.
+  같은 조성·같은 entry roster·같은 알고리즘이면 같은 값이 나오는 게 당연하다.
 - 캐스케이드의 B₂O₃·MoO₃·WO₃ **기존 plain 챔피언은 `P_4b` 자리**라 이 설계의 `D_plain`(`Li_24g`)과
-  **다른 물건**이다. 조성은 맞춰도 자리는 못 맞춘다.
-- **보편적 원소 효과가 아니다** — 이 구조 생성 규약 안에서 정의된 대비다.
-- legacy `b2o3_esw` 와 캐스케이드를 한 pinned entry set 에서 재는 일은 **여전히 안 했다**.
-- **LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다.** 오히려 ④의 기전이
-  그 민감도가 왜 큰지를 설명한다 — 2.140 자체가 LiS4 에 걸린 값이다.
-- 이 카드는 **산화 onset 축만** 본다. de(G1)·E/GB(G5) 는 3점 평균이라 조성족이 행 안에서 섞여 있고,
-  그쪽 파급은 재지 않았다.
-- x 라벨(x002/x005/x010)은 농도가 아니다 — 실측은 셋 다 x=0.25.
+  **다른 물건**이다.
+- **전하 보상은 산화수를 검증하지 않는다.** 중성 M_xO_y 가정하에 양이온 총전하를 `2·n_O` 로
+  잡는다. 현재 11종에는 맞지만 **일반 defect chemistry 규칙이 아니다** —
+  `generator charge-compensation recipe` 라고 부른다.
+- **onset 반응식 선택에 tie 버그가 있었다.** onset 전압을 정한 뒤 전 step 중 |V−ox| 최소를
+  다시 찾아 반응식을 골라서, 축퇴 시 negative-evolution step 이 아닌 반응을 잡을 수 있었다.
+  도구는 고쳤지만 **현재 JSON 은 재실행 전**이라 반응식 필드를 기전 근거로 쓰면 안 된다.
+- `phase_set_id` 는 **entry ID 만** hash 한다 — energy/correction 변경을 고정하지 못한다.
+  `db_version + entry_id + energy + correction` 을 함께 묶어야 진짜 pinned 다.
+- B₂O₃ 2.034 vs legacy 2.03 은 **branch-level consistency 를 시사하는 정성적 수렴**이다.
+  legacy 에 phase_set ID·host identity 가 없으므로 "독립 검증" 도 "B 효과 방향 확정" 도 아니다.
+- **LiS₄ 포함/제외 민감도(2.140 vs 2.256)는 그대로 열려 있다.**
+- 이 카드는 **산화 onset 축만** 본다. de(G1)·E/GB(G5) 파급은 안 쟀다.
+- x 라벨(x002/x005/x010)은 농도가 아니다 — 실측은 셋 다 x=0.25 (`champions_v2.csv` 270행
+  concentration 전부 0.25). 이번 2×2 는 그 버그를 **고친 게 아니다**.
 
 ## 내가 틀린 것 (2026-08-16, Codex 리뷰 `f9adc9d2`)
 
@@ -232,6 +249,9 @@ Codex D 관찰(2.340–2.370 V 군 21/21 이 P₂S₇)과 맞물린다.
 | ③ | 9.7배 | **9.63배** (pct 를 먼저 반올림한 이중 반올림) |
 | ④ | 9.63배를 그대로 인용 | 분모에 chain 후보 없던 237 슬롯 포함 — eligible 33 슬롯이면 **2.59배** |
 | ⑤ | selftest `raises()` 가 `except Exception` | 오타로 죽어도 통과했다 — 예외 type·메시지 확인으로 |
+| ⑥ | `main(Cl)=0` → "Cl 효과 0 · 귀속 폐쇄" | **marginal main effect 가 아니라 undoped baseline contrast.** 조건부(D_Cl−D_plain)는 Al +0.214·B +0.283·Mo/W +0.216 |
+| ⑦ | "11/11 종에서 0" | 같은 host 두 조성을 **11개 확장 roster 에서 반복** — 독립 표본 아님 |
+| ⑧ | LiS₄→P₂S₇ 기전 | **Al 하나를 일반화.** Mo/W 는 LiS₄ 잔존, B/Sc 는 시작 분기가 다름 |
 
 ①은 Al₂O₃ 한 케이스(정확히 맞는다)에서 family 전체로 일반화한 것이다.
 `cation_site` 열을 이미 출력해 보고도 놓쳤다.

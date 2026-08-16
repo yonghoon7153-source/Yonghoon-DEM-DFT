@@ -14,13 +14,25 @@
       D_plain = Li18M2P4S17Cl4O3      같은 자리 M₂O₃ 도핑
       D_Cl    = Li17M2P4S16Cl5O3      도핑 + 같은 Cl 치환
 
-      main(Cl)     = f(H_Cl)   − f(H_plain)
-      main(dopant) = f(D_plain) − f(H_plain)
-      interaction  = [f(D_Cl) − f(D_plain)] − [f(H_Cl) − f(H_plain)]
+      baseline_cl_recipe_contrast    = f(H_Cl)    − f(H_plain)   ← 도펀트 없는 기준
+      plain_dopant_recipe_contrast   = f(D_plain) − f(H_plain)
+      conditional_cl_recipe_contrast = f(D_Cl)    − f(D_plain)   ← **도펀트가 있을 때**
+      recipe_interaction             = conditional − baseline    (difference-in-differences)
 
   네 값이 같은 hull 에서 나와야 차가 의미를 갖는다. chemsys 는 후보마다 다르므로
   (도펀트 원소가 들어간다) **chemsys 마다 네 칸을 전부 다시 잰다** — host 를 84개
   chemsys 에서 다시 잰 것과 같은 이유다.
+
+⛔⛔ 2026-08-16 (Codex 재감사) — 앞 판은 `H_Cl − f(H_plain)` 을 **main(Cl)** 이라 부르고
+  그게 0 인 것을 "Cl 효과는 0" 이라고 썼다. **틀렸다.**
+    · 그건 marginal main effect 가 아니라 **도펀트가 없는 기준점의 simple contrast** 다.
+    · 도펀트가 있을 때의 recipe 효과는 `D_Cl − D_plain` 이고 Al +0.214 · B +0.283 ·
+      Mo +0.216 · W +0.216 · Sc −0.017 로 **종마다 양·음·0** 이다.
+    · 성립하는 문장은 **"Cl-rich 가 보편적으로 개선한다는 주장은 반증"** 까지이고
+      **"Cl 효과가 0"** 은 아니다.
+  또한 11종의 H 셀은 **모두 같은 두 조성**이다. 도펀트 원소는 H 분해에 참여할 수 없으므로
+  11/11 은 독립 표본 11개가 아니라 **같은 host contrast 를 11개 확장 roster 에서 반복 확인**한
+  것이다.
 
 실행 (gabia — MP_API_KEY 필요, GPU 안 씀)
     python3 tools/oxidation/esw_matched_factorial.py \
@@ -30,10 +42,15 @@
 이 도구가 **못 하는 것**
   · 실제 구조를 만들지 않는다. grand-potential ESW 는 조성만 받으므로 조성식으로 충분하지만,
     그 조성이 **구조적으로 실현 가능한지**는 말하지 않는다. 자리 점유·배열은 이 계산 밖이다.
-  · 그래서 여기서 나오는 main effect 는 **조성 수준 열역학 대비**이지 특정 자리 치환의
-    효과가 아니다. 캐스케이드의 D_plain/D_Cl 과 조성은 맞춰도 **자리는 맞추지 못한다**
+  · 그래서 여기서 나오는 것은 **조성 수준 operational contrast** 이지 원소 수준 인과 효과가
+    아니다. 캐스케이드의 D_plain/D_Cl 과 조성은 맞춰도 **자리는 맞추지 못한다**
     (B/Mo/W 의 기존 plain 은 P_4b 라 이 설계의 D_plain 과 다른 물건이다).
   · 보편적 원소 효과로 승격하지 않는다 — 구조 생성 규약 안에서 정의된 대비다.
+  · **전하 보상은 산화수를 검증하지 않는다.** 중성 M_xO_y 를 가정하고 양이온 총전하를
+    `2·n_O` 로 잡는다. 현재 11종(중성 산화물)에는 맞지만 **일반 defect chemistry 규칙이
+    아니다** — generator charge-compensation recipe 라고 부를 것.
+  · **캐스케이드 값과 일치하는 것은 round-trip consistency 검사**이지 독립 물리 검증이
+    아니다. 같은 조성·같은 entry roster·같은 알고리즘이면 같은 값이 나오는 게 당연하다.
   · Li 화학량론이 정수로 안 떨어지는 도펀트(1가·5가 등)는 **건너뛴다.** 억지로 반올림하면
     전하 중성이 깨진 조성을 재게 된다.
 """
@@ -124,7 +141,24 @@ def build_cells(host=None, dopants=None):
 
 
 def decompose(vals, eps=1e-9):
-    """{라벨: onset} → 종마다 main/interaction. 값이 하나라도 없으면 그 종은 None."""
+    """{라벨: onset} → 종마다 네 contrast. 값이 하나라도 없으면 그 종은 None.
+
+    ⛔⛔ 2026-08-16 (Codex 재감사 P0-1) — 앞 판은 `H_Cl − H_plain` 을 **main(Cl)** 이라
+      불렀다. 그건 2×2 factorial 의 marginal main effect 가 아니라 **도펀트가 없는
+      기준점에서의 simple contrast** 다. 도펀트가 있을 때의 Cl-rich recipe 효과는
+      `D_Cl − D_plain = (그 simple contrast) + interaction` 이고, Al/B/Mo/W 에서 **양수**다.
+      그래서 "Cl 효과가 0" 은 성립하지 않는다. 성립하는 것은
+      **"undoped 기준에서 이 recipe 는 onset 을 안 움직인다"** 까지다.
+
+      이름을 바꿨다 (main → contrast):
+        baseline_cl_recipe_contrast    = f(H_Cl)   − f(H_plain)   ← 도펀트 없는 기준
+        plain_dopant_recipe_contrast   = f(D_plain)− f(H_plain)
+        conditional_cl_recipe_contrast = f(D_Cl)   − f(D_plain)   ← **도펀트가 있을 때**
+        recipe_interaction             = conditional − baseline   (difference-in-differences)
+
+      difference-in-differences 자체는 비선형 응답에도 유효하다. 문제는 'main effect' 라는
+      **이름**이 원소 수준 인과를 함의한 것이었다.
+    """
     hp, hc = vals.get("__H_plain__"), vals.get("__H_Cl__")
     out = {}
     for k in vals:
@@ -140,10 +174,14 @@ def decompose(vals, eps=1e-9):
         out[sp] = {
             "complete": True,
             "H_plain_V": hp, "H_Cl_V": hc, "D_plain_V": dp, "D_Cl_V": dc,
-            "main_Cl_V": round(hc - hp, 4),
-            "main_dopant_V": round(dp - hp, 4),
-            "interaction_V": round((dc - dp) - (hc - hp), 4),
+            "baseline_cl_recipe_contrast_V": round(hc - hp, 4),
+            "plain_dopant_recipe_contrast_V": round(dp - hp, 4),
+            "conditional_cl_recipe_contrast_V": round(dc - dp, 4),
+            "recipe_interaction_V": round((dc - dp) - (hc - hp), 4),
             "total_D_Cl_vs_host_V": round(dc - hp, 4),
+            "isolated_element_effect": False,
+            "scope": ("네 조성점 사이의 operational contrast 다. 특정 원자의 인과 효과가 아니다 "
+                      "— 자리·구조·배열은 이 계산 밖이다."),
         }
     return out
 
@@ -198,14 +236,23 @@ def main():
                           "evo": round(float(p["evolution"]), 4),
                           "rxn": str(p["reaction"])} for p in prof]
                 neg = [s for s in steps if s["evo"] < -1e-6]
-                ox = min((s["V"] for s in neg), default=None)
+                # ⛔ 2026-08-16 (Codex 재감사) — 앞 판은 onset 전압을 정한 뒤 **모든 step**
+                #   중 |V-ox| 가 최소인 것을 다시 찾아 반응식을 골랐다. 같은 전압에 여러
+                #   step 이 있으면(축퇴) onset 을 만든 negative-evolution step 이 아닌
+                #   반응이 잡힐 수 있다. onset step 자체를 보존한다.
+                onset_step = min(neg, key=lambda s: s["V"]) if neg else None
+                ox = onset_step["V"] if onset_step else None
+                n_tied = sum(1 for s in steps
+                             if ox is not None and abs(s["V"] - ox) < 1e-9)
                 vals[label] = ox
                 results[f"{sp}/{label}"] = {
                     "species": sp, "cell": label, "formula": formula(comp),
                     "composition": comp, "oxidation_limit_V": ox,
                     "phase_set_id": psid, "n_entries": len(entries),
-                    "oxidation_onset_rxn": (min(steps, key=lambda s: abs(s["V"] - ox))["rxn"]
-                                            if ox is not None else None)}
+                    "oxidation_onset_rxn": onset_step["rxn"] if onset_step else None,
+                    "oxidation_onset_evolution": onset_step["evo"] if onset_step else None,
+                    "n_steps_at_onset_V": n_tied,
+                    "onset_step_is_negative_evolution": bool(onset_step)}
             except Exception as e:
                 vals[label] = None
                 results[f"{sp}/{label}"] = {"species": sp, "cell": label,
@@ -305,22 +352,39 @@ def selftest():
     v = {"__H_plain__": 2.140, "__H_Cl__": 2.200,
          "X__D_plain": 2.300, "X__D_Cl": 2.500}
     d3 = decompose(v)["X"]
-    chk("main(Cl) = +0.060", abs(d3["main_Cl_V"] - 0.060) < 1e-9)
-    chk("main(dopant) = +0.160", abs(d3["main_dopant_V"] - 0.160) < 1e-9)
-    chk("interaction = +0.140", abs(d3["interaction_V"] - 0.140) < 1e-9)
+    chk("baseline Cl contrast = +0.060",
+        abs(d3["baseline_cl_recipe_contrast_V"] - 0.060) < 1e-9)
+    chk("plain dopant contrast = +0.160",
+        abs(d3["plain_dopant_recipe_contrast_V"] - 0.160) < 1e-9)
+    chk("conditional Cl contrast = +0.200",
+        abs(d3["conditional_cl_recipe_contrast_V"] - 0.200) < 1e-9)
+    chk("interaction = +0.140", abs(d3["recipe_interaction_V"] - 0.140) < 1e-9)
     chk("총 대비 = +0.360", abs(d3["total_D_Cl_vs_host_V"] - 0.360) < 1e-9)
-    # 음성 ⑤: 상호작용 0 이면 총합이 두 main 의 합이어야 한다
+    # 음성 ⑤: baseline 이 0 이어도 conditional 은 0 이 아닐 수 있다 (Codex 재감사 P0-1)
+    v0 = {"__H_plain__": 2.140, "__H_Cl__": 2.140,
+          "AL__D_plain": 2.140, "AL__D_Cl": 2.354}
+    d0 = decompose(v0)["AL"]
+    chk("음성: baseline 0 인데 conditional 은 +0.214",
+        abs(d0["baseline_cl_recipe_contrast_V"]) < 1e-9
+        and abs(d0["conditional_cl_recipe_contrast_V"] - 0.214) < 1e-9)
+    chk("음성: 'Cl 효과 0' 으로 읽히는 단일 필드가 없다",
+        "main_Cl_V" not in d0 and "main_dopant_V" not in d0)
+    chk("음성: 원소 수준 인과를 주장하지 않는다", d0["isolated_element_effect"] is False)
+    # 음성 ⑥: 상호작용 0 이면 conditional == baseline
     v2 = {"__H_plain__": 2.0, "__H_Cl__": 2.1, "Y__D_plain": 2.3, "Y__D_Cl": 2.4}
     d4 = decompose(v2)["Y"]
     chk("음성: 가법이면 interaction 0",
-        abs(d4["interaction_V"]) < 1e-9
-        and abs(d4["total_D_Cl_vs_host_V"] - (d4["main_Cl_V"] + d4["main_dopant_V"])) < 1e-9)
+        abs(d4["recipe_interaction_V"]) < 1e-9
+        and abs(d4["conditional_cl_recipe_contrast_V"]
+                - d4["baseline_cl_recipe_contrast_V"]) < 1e-9
+        and abs(d4["total_D_Cl_vs_host_V"] - (d4["baseline_cl_recipe_contrast_V"]
+                                              + d4["plain_dopant_recipe_contrast_V"])) < 1e-9)
     # 음성 ⑥: 값 하나가 없으면 계산하지 않는다 (0 으로 때우면 안 된다)
     d5 = decompose({"__H_plain__": 2.0, "__H_Cl__": None,
                     "Z__D_plain": 2.3, "Z__D_Cl": 2.4})["Z"]
     chk("음성: 결측이면 complete False", d5["complete"] is False)
     chk("음성: 무엇이 없는지 말한다", d5["missing"] == ["H_Cl"])
-    chk("음성: 결측인데 값을 만들지 않는다", "interaction_V" not in d5)
+    chk("음성: 결측인데 값을 만들지 않는다", "recipe_interaction_V" not in d5)
 
     try: print(f"\nselftest: {ok} passed, {fail} failed")
     except Exception: print(f"\nselftest: {ok} passed, {fail} failed")

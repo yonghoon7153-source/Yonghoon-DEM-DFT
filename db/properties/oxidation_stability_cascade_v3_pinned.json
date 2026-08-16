@@ -42903,79 +42903,14 @@
       "verdict": "충돌 없음 — 표의 onset 이 plain 챔피언 값이다"
     }
   },
-  "attribution_closed_2026_08_16": {
-    "status": "closed",
-    "by": "db/properties/oxidation_matched_factorial.json (matched 2x2, 11 species, 11 phase sets)",
-    "result": "main(Cl) = +0.000 in all 11 — Cl 치환 단독 효과는 0 이다. 따라서 composition_family_audit 의 9.63배·2.59배는 **Cl 효과가 아니다**.",
-    "supersedes": "composition_family_audit.missing_baseline 의 '기준이 없다' 는 이제 해소됐다. 그 필드는 역사 기록으로 남기고, 현재 판정은 이 블록이다.",
-    "per_species": {
-      "Al2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.0,
-        "interaction_V": 0.214,
-        "total_D_Cl_vs_host_V": 0.214
-      },
-      "B2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": -0.106,
-        "interaction_V": 0.283,
-        "total_D_Cl_vs_host_V": 0.177
-      },
-      "La2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": -0.247,
-        "interaction_V": 0.032,
-        "total_D_Cl_vs_host_V": -0.215
-      },
-      "MgO": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.0,
-        "interaction_V": 0.0,
-        "total_D_Cl_vs_host_V": 0.0
-      },
-      "MoO3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.0,
-        "interaction_V": 0.216,
-        "total_D_Cl_vs_host_V": 0.216
-      },
-      "Nd2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": -0.22,
-        "interaction_V": 0.067,
-        "total_D_Cl_vs_host_V": -0.153
-      },
-      "Sc2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.216,
-        "interaction_V": -0.017,
-        "total_D_Cl_vs_host_V": 0.199
-      },
-      "Sm2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": -0.151,
-        "interaction_V": 0.045,
-        "total_D_Cl_vs_host_V": -0.106
-      },
-      "WO3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.0,
-        "interaction_V": 0.216,
-        "total_D_Cl_vs_host_V": 0.216
-      },
-      "Y2O3": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.142,
-        "interaction_V": 0.0,
-        "total_D_Cl_vs_host_V": 0.142
-      },
-      "ZnO": {
-        "main_Cl_V": 0.0,
-        "main_dopant_V": 0.0,
-        "interaction_V": 0.0,
-        "total_D_Cl_vs_host_V": 0.0
-      }
-    },
-    "still_open": "자리 점유·구조 실현 가능성 · legacy b2o3_esw 의 phase-set identity · LiS4 포함/제외 민감도(2.140 vs 2.256)"
+  "attribution_status_2026_08_16": {
+    "retraction": "앞 판의 `attribution_closed_2026_08_16` 은 **철회한다** (Codex 재감사 NO-GO). '효과 귀속 폐쇄' 는 성립하지 않는다.",
+    "operational_factorial_coverage": "17/17 chain rows",
+    "element_level_causal_attribution": "not_claimed",
+    "structural_realization_validated": "0/11",
+    "what_holds": "undoped LPSCl 기준에서 −Li−S+Cl recipe 는 onset 을 안 움직인다 (11개 확장 roster 반복 확인, 독립 표본 11개 아님). 따라서 **'Cl-rich 가 보편적으로 개선한다'** 는 주장은 반증됐다.",
+    "what_does_not_hold": "'Cl 효과가 0' · '인과 귀속 폐쇄'. 도펀트가 있을 때의 조건부 recipe 효과 D_Cl−D_plain 은 Al +0.214 · B +0.283 · Mo/W +0.216 · Sc −0.017 로 **종마다 양·음·0** 이다.",
+    "source": "db/properties/oxidation_matched_factorial.json (verdict_2026_08_16_rev2)",
+    "approved_current_ranking": 0
   }
 }

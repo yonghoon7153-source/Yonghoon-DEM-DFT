@@ -930,6 +930,42 @@ def test_default_cascade_does_not_ship_the_superseded_ranking():
     assert c.get("/cascade/diagnostic?view=diagnostic").status_code == 200
 
 
+def test_factorial_does_not_claim_a_closed_causal_attribution():
+    """baseline contrast 0 을 'Cl 효과 0' 으로 쓰면 안 된다 (2026-08-16 재감사 P0-1)."""
+    f = json.loads((ROOT / "db/properties/oxidation_matched_factorial.json")
+                   .read_text(encoding="utf-8"))
+    v = f["verdict_2026_08_16_rev2"]
+    assert "'Cl 효과는 0'" in v["NO_GO"] and "'인과 귀속 폐쇄'" in v["NO_GO"]
+    assert v["three_fields_not_one"]["element_level_causal_attribution"] == "not_claimed"
+    assert v["mechanism_status"].startswith("hypothesis")
+    for sp, d in f["decomposition"].items():
+        if not d.get("complete"):
+            continue
+        # 옛 이름이 남아 있으면 '0 이므로 효과 없음' 으로 다시 읽힌다
+        assert "main_Cl_V" not in d and "main_dopant_V" not in d, sp
+        assert d["isolated_element_effect"] is False
+        # 대수 항등식: total = plain_dopant + conditional
+        assert abs(d["total_D_Cl_vs_host_V"]
+                   - (d["plain_dopant_recipe_contrast_V"]
+                      + d["conditional_cl_recipe_contrast_V"])) < 5e-4, sp
+    # baseline 0 인데 conditional 이 0 이 아닌 종이 실제로 있어야 한다 (그게 요점)
+    nz = [sp for sp, d in f["decomposition"].items()
+          if d.get("complete") and abs(d["baseline_cl_recipe_contrast_V"]) < 1e-9
+          and abs(d["conditional_cl_recipe_contrast_V"]) > 1e-9]
+    assert set(nz) >= {"Al2O3", "B2O3", "MoO3", "WO3"}, nz
+
+    pin = json.loads((ROOT / "db/properties/oxidation_stability_cascade_v3_pinned.json")
+                     .read_text(encoding="utf-8"))
+    assert "attribution_closed_2026_08_16" not in pin, "'닫힘' 블록이 남아 있다"
+    a = pin["attribution_status_2026_08_16"]
+    assert a["element_level_causal_attribution"] == "not_claimed"
+    assert a["approved_current_ranking"] == 0
+    man = json.loads(D.CASCADE_MANIFEST_PATH.read_text(encoding="utf-8"))
+    g3 = man["metric_contract"]["G3"]
+    assert "effect_attributable_chain_rows" not in g3, "한 숫자로 덮는 필드가 남아 있다"
+    assert g3["element_level_causal_attribution"] == "not_claimed"
+
+
 def test_g3_species_pass_is_split_from_attribution():
     """경고만 붙이고 species-level pass 를 유지하면 fail-open 이다 (Codex f9 P0-3)."""
     f = json.loads((ROOT / "db/properties/cascade_screening_funnel.json")
