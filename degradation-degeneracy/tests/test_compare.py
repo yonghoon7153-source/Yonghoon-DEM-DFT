@@ -3051,3 +3051,24 @@ def test_full_chain_threads_repo_root_to_validator(tmp_path, monkeypatch):
         f"되돌아간다): {bad[:3]}")
 
 
+
+
+def test_conclusion_22p_does_not_claim_all_equal_truth():
+    """★ 16차 발견 4 — 최근접 8점이 "모두 참값이 같다" 는 거짓이다.
+
+    0.02 step 에서 (0.13, 0.13, 0.17) 의 8 corner 는 PE=NE 4개 + |ΔLAM|=2%p
+    4개이고 평균 참 격차가 1%p 다. 같은 줄에서 평균 격차 1.0%p 를 쓰면서
+    "모두 같은 격자점" 이라고 하던 자기모순을 고정한다.
+    """
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    cmp_res["verdict_22p"] = {"pocv_dvdq": {
+        "n_near": 8, "degenerate_frac": 0.125, "mean_abs_err": 0.0168,
+        "pe_ne_antisym_frac": 0.5, "true_pe_ne_gap": 0.010,
+        "recovered_pe_ne_gap": 0.019}}
+    txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    assert "애초에 LAM_PE = LAM_NE인 격자점" not in txt, "거짓 전제가 남아 있다"
+    assert "모두 같은 격자점이 아니다" in txt, txt[-700:]
+    assert "wide-gap" in txt, "wide-gap 부재를 밝히지 않았다"
