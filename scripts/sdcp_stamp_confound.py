@@ -39,36 +39,49 @@ from step3_transport_resolution import (SDCP_D_UM, SID_AM, SID_SDCP, SID_SE,  # 
                                         rasterize_spheres, sdcp_point_cells)
 
 
-def build(vox, origin, length_um, am, se, sdcp_c, mode):
-    """sid 격자.  `mode` = 'sphere'(참 구) | 'point'(생산 점-스탬프) | 'none'."""
-    n = int(round(length_um / vox))
+def build(vox, origin, length_um, am, se, sdcp_c, mode, lattice_shift=None):
+    """sid 격자.  `mode` = 'sphere'(참 구) | 'point'(생산 점-스탬프) | 'none'.
+
+    ⚠ origin 앙상블은 `origin`(물리 crop 창)이 아니라 `lattice_shift`(격자 위상)로 한다
+      — Codex CDX-R2-01.  crop 을 움직이면 팔마다 SDCP/SE 표본이 달라져 위상 효과와
+      표본 효과가 섞인다.
+    """
+    sh = np.zeros(3) if lattice_shift is None else np.asarray(lattice_shift, float)
     sid = rasterize_spheres(vox, origin, length_um, [(se[0], se[1], SID_SE),
-                                                     (am[0], am[1], SID_AM)])
+                                                     (am[0], am[1], SID_AM)],
+                            lattice_shift=sh)
+    n = sid.shape[0]
     if mode == 'sphere':
         r = np.full(len(sdcp_c), SDCP_D_UM / 2.0)
-        add = rasterize_spheres(vox, origin, length_um, [(sdcp_c, r, SID_SDCP)])
+        add = rasterize_spheres(vox, origin, length_um, [(sdcp_c, r, SID_SDCP)],
+                                lattice_shift=sh)
         sid[add == SID_SDCP] = SID_SDCP
     elif mode == 'point':
-        ijk = sdcp_point_cells(sdcp_c, vox, origin, length_um, n)
+        #  격자 위상 이동 = 셀 경계가 −s 만큼 밀린 것과 같다 → floor((p−origin+s)/vox)
+        rel = np.asarray(sdcp_c, float) - np.asarray(origin, float) + sh
+        m = ((rel >= 0) & (rel < length_um + sh)).all(1)
+        ijk = np.floor(rel[m] / vox).astype(int)
+        ijk = ijk[((ijk >= 0) & (ijk < n)).all(1)]
         if len(ijk):
             sid[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = SID_SDCP
     return sid
 
 
-def run(am, se, sdcp_c, base_origin, length_um, voxes, n_origin=4):
+def run(am, se, sdcp_c, base_origin, length_um, voxes, n_origin=8):
     sig = np.zeros(9)
     sig[SID_AM] = SIGMA_E_AM
     sig[SID_SDCP] = SIGMA_E_SDCP                                 # SE·기공 = 전자 절연
     V_true = np.pi / 6.0 * SDCP_D_UM ** 3
     rows = []
     for vox in voxes:
-        shifts = [np.zeros(3)] + [np.eye(3)[k] * (vox / 2.0) for k in range(3)][:n_origin - 1]
+        import itertools as _it
+        shifts = [np.array(t) for t in _it.product((0.0, vox / 2.0), repeat=3)][:n_origin]
         res = {}
         for mode in ('none', 'sphere', 'point'):
             vals, vol = [], []
             for sh in shifts:
-                sid = build(vox, np.asarray(base_origin, float) + sh, length_um,
-                            am, se, sdcp_c, mode)
+                sid = build(vox, base_origin, length_um, am, se, sdcp_c, mode,
+                            lattice_shift=sh)
                 vals.append(float(solve_sigma_z(sid, sig, vox)['sigma_eff']))
                 vol.append(float((sid == SID_SDCP).sum()) * vox ** 3)
             res[mode] = (np.array(vals), float(np.mean(vol)))

@@ -1165,6 +1165,29 @@
       "provenance": "scripts/step3_transport_resolution.py (selftest 6/6), docs/data/step3_transport_resolution_kit_ps_7_3.json",
       "codex_review": "CDX-2026-08-13 ① (origin 앙상블) 의 CPU 대응판",
       "superseded_by": null
+    },
+    {
+      "id": "CL-31",
+      "date": "2026-08-16",
+      "status": "hold",
+      "kind": "hypothesis",
+      "claim": "통제 RVE 에서 **점-스탬프 SDCP 이득은 격자와 함께 붕괴하지만 참 구 이득은 붕괴하지 않는다** — 격자 의존이 표현 규약의 것임을 시사",
+      "measured": {
+        "metric": "σ_e 이득 (SDCP 없음 대비), 같은 SDCP 중심 좌표에 규약만 바꿔 적용",
+        "value": "점-스탬프 29.53 → 10.77 → 6.47 → 3.34 → **0.97 %** (vox 0.4→0.15) 인데 참 구는 6.74 → 5.78 → 5.40 → 9.59 → **11.20 %** 로 안 무너진다.  표현부피 점/참 = 4.38 → 1.88 → 1.09 → 0.56 → 0.24",
+        "unit": "%"
+      },
+      "asserted": "실침대의 +42 → +8.5 % 붕괴가 SDCP 표현 부피의 인공물일 수 있다는 CL-25 기전과 정합",
+      "h0": "스탬프 규약과 무관하게 이득이 격자와 함께 붕괴한다 (= 물리 수렴)",
+      "h1": "점-스탬프만 붕괴하고 참 구는 유지된다 (= 표현 인공물)",
+      "h0_predicts": "vox 0.15 에서 참 구 이득 = 1 %",
+      "h1_predicts": "vox 0.15 에서 참 구 이득 = 11 %",
+      "resolution": 2.0,
+      "bridge": "**같은 SDCP 중심 좌표**에 규약만 바꿔 굽는다.  AM·SE·격자·origin·σ 표가 전부 고정이라 차이는 정의상 스탬프 것뿐이다.",
+      "shared_input": "세 팔(없음/구/점)이 같은 킷 스캐폴드 AM·SE 와 같은 SDCP 중심 배열을 쓴다.",
+      "verdict": "h1 방향 (관측 참 구 11.20 %, h0 예측 1 %와 분해능의 5배 차).  점-스탬프 이득의 log-log 기울기 (vs 표현부피) 1.19/0.94/0.99/1.46 로, 실침대 3점에서 뽑은 사전등록 지수 1.15 (prereg §2) 와 **독립적으로 일치**한다.\n⚠⚠ **hold 인 이유 3가지 — 이 수치를 인용하지 말 것**:\n  ① 이 런은 origin 앙상블에 **물리 crop 을 움직였다** (Codex CDX-R2-01 과 같은 결함).  4 팔뿐이고 팔마다 SDCP/SE 표본이 달랐다.  고친 도구로 8 팔 재실행 중.\n  ② SDCP 배치가 **균일 랜덤 합성**이다 — 실제 `seed_sdcp`(AM 표면 앵커 + 기공 분산)가 아니다.  기전의 크기·부호만 주고 실침대 보정계수가 아니다.\n  ③ 침대가 **압밀 전 해석적 구**다 (CDX-R2-03 과 같은 한계).\n⇒ 실침대 판정은 사전등록(`sdcp_gain_prereg_20260816`)의 vox 0.15 런이 한다.",
+      "provenance": "scripts/sdcp_stamp_confound.py (selftest 8/8), docs/data/sdcp_stamp_confound_rve_MOVINGCROP4.json (결함 있는 첫 판, 보존)",
+      "codex_review": "CDX-R2-01 반영 전 데이터"
     }
   ],
   "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."

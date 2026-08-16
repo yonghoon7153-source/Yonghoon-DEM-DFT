@@ -1,0 +1,83 @@
+{
+ "kit": "kit_ps_7_3",
+ "len_um": 20.0,
+ "n_sdcp": 5659,
+ "sdcp_vol_pct": 1.0,
+ "rows": [
+  {
+   "vox": 0.4,
+   "sdcp_d_per_dx": 0.75,
+   "sigma_e_none": 0.00122686,
+   "sigma_e_sphere": 0.00130949,
+   "sigma_e_point": 0.00158916,
+   "origin_spread_point_pct": 8.11,
+   "vol_sphere_um3": 78.86,
+   "vol_point_um3": 350.8,
+   "vol_point_over_true": 4.385,
+   "vol_sphere_over_true": 0.986,
+   "gain_sphere_pct": 6.735,
+   "gain_point_pct": 29.53,
+   "point_over_sphere": 1.214
+  },
+  {
+   "vox": 0.3,
+   "sdcp_d_per_dx": 1.0,
+   "sigma_e_none": 0.00115932,
+   "sigma_e_sphere": 0.00122628,
+   "sigma_e_point": 0.00128417,
+   "origin_spread_point_pct": 1.13,
+   "vol_sphere_um3": 79.24,
+   "vol_point_um3": 150.4,
+   "vol_point_over_true": 1.88,
+   "vol_sphere_over_true": 0.99,
+   "gain_sphere_pct": 5.776,
+   "gain_point_pct": 10.77,
+   "point_over_sphere": 1.047
+  },
+  {
+   "vox": 0.25,
+   "sdcp_d_per_dx": 1.2,
+   "sigma_e_none": 0.00112052,
+   "sigma_e_sphere": 0.001181,
+   "sigma_e_point": 0.00119303,
+   "origin_spread_point_pct": 3.45,
+   "vol_sphere_um3": 79.36,
+   "vol_point_um3": 87.51,
+   "vol_point_over_true": 1.094,
+   "vol_sphere_over_true": 0.992,
+   "gain_sphere_pct": 5.397,
+   "gain_point_pct": 6.471,
+   "point_over_sphere": 1.01
+  },
+  {
+   "vox": 0.2,
+   "sdcp_d_per_dx": 1.5,
+   "sigma_e_none": 0.00105912,
+   "sigma_e_sphere": 0.00116064,
+   "sigma_e_point": 0.00109451,
+   "origin_spread_point_pct": 4.45,
+   "vol_sphere_um3": 79.36,
+   "vol_point_um3": 44.99,
+   "vol_point_over_true": 0.562,
+   "vol_sphere_over_true": 0.992,
+   "gain_sphere_pct": 9.585,
+   "gain_point_pct": 3.341,
+   "point_over_sphere": 0.943
+  },
+  {
+   "vox": 0.15,
+   "sdcp_d_per_dx": 2.0,
+   "sigma_e_none": 0.00100497,
+   "sigma_e_sphere": 0.00111753,
+   "sigma_e_point": 0.00101467,
+   "origin_spread_point_pct": 2.02,
+   "vol_sphere_um3": 78.57,
+   "vol_point_um3": 18.92,
+   "vol_point_over_true": 0.236,
+   "vol_sphere_over_true": 0.982,
+   "gain_sphere_pct": 11.2,
+   "gain_point_pct": 0.9652,
+   "point_over_sphere": 0.908
+  }
+ ]
+}
