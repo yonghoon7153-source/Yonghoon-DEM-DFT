@@ -305,7 +305,8 @@ def couple_sensitivity(nodes, edges, sid, box_lo, vox, sigma_by_sid, d_um,
     return out
 
 
-def solve_z(nodes, edges, z_lo, z_hi, area_um2, sigma_A=None, touch_um=0.0, eps=1e-9):
+def solve_z(nodes, edges, z_lo, z_hi, area_um2, sigma_A=None, touch_um=0.0, eps=1e-9,
+            node_line=None):
     """z 방향 유효 전도도 — **거리-인지 플레이트 결합** (step3 규약과 같게).
 
     ⚠ 첫 판은 밴드 안 노드를 φ 로 **클램프**했다.  그러면 고정단 사이 유효길이가 L − 2·band
@@ -334,14 +335,27 @@ def solve_z(nodes, edges, z_lo, z_hi, area_um2, sigma_A=None, touch_um=0.0, eps=
     #   ⚠⚠ 2026-08-13 (Codex CDX-07): 밴드 안 노드를 **전부** 물리면 같은 섬유가 플레이트에
     #     여러 번 닿아 병렬 단락이 생기고, 같은 직선을 41 → 161 점으로 재표현하면 σ 가
     #     +0.63 % 움직인다 (재현).  섬유는 플레이트에 **한 번** 닿는다.
-    comp = np.arange(n)
-    for _ in range(2):                                # 두 번이면 이 크기에서 수렴한다
-        for e in edges:
-            i2, j2 = int(e[0]), int(e[1])
-            r_ = min(comp[i2], comp[j2])
-            comp[i2] = comp[j2] = r_
-        for k in range(n):
-            comp[k] = comp[comp[k]]
+    # ⚠⚠⚠ 2026-08-16 (Codex CDX-R2-06) — **내가 어제 만든 P0 버그를 고친다.**
+    #   CDX-07 을 고치면서 "섬유당 탭 하나" 를 **"연결성분당 탭 하나"** 로 구현했다.
+    #   그런데 두 섬유가 접촉하면 한 성분으로 합쳐지므로 **플레이트 접점 하나가 삭제**된다.
+    #   반례(재현): 관통 섬유 2개 σ = 0.0353429 → 양의 접촉 1개 추가 → **0.0176715 (×0.5)**.
+    #   컨덕턴스를 더했는데 σ 가 줄었다 = **Rayleigh 단조성 위반** = 물리적으로 불가능.
+    #   ⇒ 탭의 단위는 **물리 섬유(폴리라인)** 다.  접촉은 물리 섬유를 합치지 않는다.
+    #   `node_line` 이 있으면 그것을 쓰고, 없으면 **구조 간선만**(접촉 제외) 으로 성분을 만든다.
+    #   ⚠ 미모형(§F1): 한 섬유가 플레이트에 **여러 번** 닿는 경우.  지금은 가장 가까운
+    #     노드 하나만 문다 — 실제로 여러 번 닿으면 과소평가다.
+    if node_line is not None:
+        comp = np.asarray(node_line, np.int64).copy()
+    else:
+        comp = np.arange(n)
+        struct = [e for e in edges if abs(int(e[0]) - int(e[1])) == 1]   # 사슬 간선만
+        for _ in range(2):
+            for e in struct:
+                i2, j2 = int(e[0]), int(e[1])
+                r_ = min(comp[i2], comp[j2])
+                comp[i2] = comp[j2] = r_
+            for k in range(n):
+                comp[k] = comp[comp[k]]
     # 플레이트 결합: (노드, φ_plate, G).  dist=0 이면 G 가 매우 커져 클램프와 같아진다.
     plate, best = [], {}
     for m, phi_p in ((z <= z_lo + touch + eps, 1.0), (z >= z_hi - touch - eps, 0.0)):
@@ -468,8 +482,9 @@ def contact_sensitivity(nodes, node_line, d_um, sigma_bulk, base_edges,
     return out
 
 
-def _selftest():
+def _selftest(a_frac=0.25):
     ok, fail = 0, []
+    print(f'  (a_frac = {a_frac} — Holm 접촉반경 a = a_frac·d, 앵커 없음 §F1)')
 
     def chk(n, c):
         nonlocal ok
@@ -528,7 +543,7 @@ def _selftest():
     n6, e6 = fibre_edges([F1, F2], D, SIG)
     nl = np.concatenate([np.zeros(len(F1), int), np.ones(len(F2), int)])
     se_nc, _ = solve_z(n6, e6, 0.0, LZ, AREA)
-    c6 = fibre_contacts(n6, e6, D, SIG, node_line=nl)
+    c6 = fibre_contacts(n6, e6, D, SIG, node_line=nl, a_frac=a_frac)
     se6, _ = solve_z(n6, e6 + c6, 0.0, LZ, AREA)
     chk(f'⑥a 접촉 없이는 관통 못 한다 (σ={se_nc:.3g})', abs(se_nc) < 1e-6 * exact)
     chk(f'⑥b 접촉을 놓으면 통하고 협착 때문에 단일보다 작다 '
@@ -605,45 +620,45 @@ def _selftest():
 
     # ══ couple_to_voxel_grid (CDX-08 — 이름만 있고 정의가 없던 것) ══════════════════
     #   sid 규약: 0=pore · 1=AM_S · 2=AM_P · 3=VGCF · 5=SDCP · 6=SE
-    SIG = {0: 0.0, 1: 1.0, 2: 1.0, 3: 100.0, 5: 0.5, 6: 1e-9}
+    SIGT = {0: 0.0, 1: 1.0, 2: 1.0, 3: 100.0, 5: 0.5, 6: 1e-9}   # ⚠ SIG(스칼라)를 덮지 말 것
     VOX = 0.4
     grid = np.full((5, 5, 5), 6, np.int8)                 # 전부 SE
     zz = np.linspace(0.2, 1.8, 9)
     Q = np.stack([np.full_like(zz, 1.0), np.full_like(zz, 1.0), zz], 1)
-    nq, eq = fibre_edges([Q], D, SIG[3])
-    c = couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), VOX, SIG, D, b_frac=0.5, strict=False)
+    nq, eq = fibre_edges([Q], D, SIGT[3])
+    c = couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), VOX, SIGT, D, b_frac=0.5, strict=False)
     # ⑭ 동축 공식 = 손계산
     Ln = node_lengths(nq, eq)
     lnba = np.log((0.5 * VOX) / (D / 2))
-    want = 2 * np.pi * SIG[6] * Ln[0] / lnba
+    want = 2 * np.pi * SIGT[6] * Ln[0] / lnba
     got = next(g for q, _, g in c if q == 0)
     chk(f'⑭ 동축 결합 G = 2πσL/ln(b/a) ({got:.6g} vs 손계산 {want:.6g})',
         abs(got / want - 1) < 1e-12)
     # ⑮ 기공(σ=0)과 자기 상(VGCF)에는 결합하지 않는다
     gp = grid.copy(); gp[:] = 0
     chk('⑮ 기공에는 결합 없음',
-        len(couple_to_voxel_grid(nq, eq, gp, (0., 0., 0.), VOX, SIG, D, strict=False)) == 0)
+        len(couple_to_voxel_grid(nq, eq, gp, (0., 0., 0.), VOX, SIGT, D, strict=False)) == 0)
     gc = grid.copy(); gc[:] = 3
     chk('⑮b 자기 상(VGCF)에는 결합 없음 (계면이 아니다)',
-        len(couple_to_voxel_grid(nq, eq, gc, (0., 0., 0.), VOX, SIG, D, strict=False)) == 0)
+        len(couple_to_voxel_grid(nq, eq, gc, (0., 0., 0.), VOX, SIGT, D, strict=False)) == 0)
     # ⑯ 노드 길이 합 = 섬유 전체 길이 (결합 총량이 이중계산되지 않는다)
     chk(f'⑯ Σ node_len = 섬유 길이 ({Ln.sum():.6g} vs {zz[-1]-zz[0]:.6g})',
         abs(Ln.sum() / (zz[-1] - zz[0]) - 1) < 1e-12)
     # ⑰ ★ 앵커 없는 b 를 숨기지 않는다 — 스윕해서 밴드로 보고
-    cs = couple_sensitivity(nq, eq, grid, (0., 0., 0.), VOX, SIG, D)
+    cs = couple_sensitivity(nq, eq, grid, (0., 0., 0.), VOX, SIGT, D)
     chk(f'⑰ ★ b 민감도를 보고한다 (b_frac 0.35~1.0 → G 총합 {cs["spread_pct"]} % 폭)',
         cs.get('spread_pct') is not None and cs['spread_pct'] > 10)
     # ⑱ b ≤ a 는 조용히 넘어가지 않고 거부 (vox 가 섬유보다 가는 극단)
     bad = False
     try:
-        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.1, SIG, D, b_frac=0.5, strict=False)
+        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.1, SIGT, D, b_frac=0.5, strict=False)
     except ValueError:
         bad = True
     chk('⑱ b ≤ a 는 거부한다 (동축 공식 무효 구간)', bad)
     # ⑲ ★ Peaceman 앵커(0.2·vox)로는 **생산 격자가 무효**임을 거부로 알린다
     prod = False
     try:
-        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.4, SIG, D)      # 기본 = Peaceman
+        couple_to_voxel_grid(nq, eq, grid, (0., 0., 0.), 0.4, SIGT, D)      # 기본 = Peaceman
     except ValueError as ex:
         prod = 'Peaceman' in str(ex) and '더 굵은 복셀' in str(ex)
     chk('⑲ ★ vox 0.4 + Peaceman b/a = 1.07 → 거부하고 "더 굵은 복셀" 을 지시한다', prod)
@@ -651,9 +666,40 @@ def _selftest():
     big = np.full((4, 4, 4), 6, np.int8)
     z2 = np.linspace(0.5, 3.0, 9)
     Q2 = np.stack([np.full_like(z2, 1.5), np.full_like(z2, 1.5), z2], 1)
-    n2, e2 = fibre_edges([Q2], D, SIG[3])
-    c2 = couple_to_voxel_grid(n2, e2, big, (0., 0., 0.), 1.0, SIG, D)
+    n2, e2 = fibre_edges([Q2], D, SIGT[3])
+    c2 = couple_to_voxel_grid(n2, e2, big, (0., 0., 0.), 1.0, SIGT, D)
     chk(f'⑳ vox 1.0 µm 면 b/a = 2.67 로 전제 회복 → 통과 (결합 {len(c2)}개)', len(c2) > 0)
+
+    # ══ 2026-08-16 Codex 2차 반례 (CDX-R2-06/07) — 내가 어제 만든 P0 ═══════════════
+    # ㉑ ★ Rayleigh 단조성: 양의 컨덕턴스를 더하면 σ 는 **줄 수 없다**
+    zz = np.linspace(0.0, LZ, 41)
+    PA = np.stack([np.full_like(zz, 5.00), np.full_like(zz, 5.0), zz], 1)
+    PB = np.stack([np.full_like(zz, 5.10), np.full_like(zz, 5.0), zz], 1)
+    nR, eR = fibre_edges([PA, PB], D, SIG)
+    nlR = np.r_[np.zeros(41, int), np.ones(41, int)]
+    s_no, _ = solve_z(nR, eR, 0.0, LZ, AREA, node_line=nlR)
+    cR = fibre_contacts(nR, eR, D, SIG, node_line=nlR)
+    s_yes, _ = solve_z(nR, eR + cR, 0.0, LZ, AREA, node_line=nlR)
+    chk(f'㉑ ★ 접촉 {len(cR)}개 추가로 σ 가 줄지 않는다 ({s_no:.6g} → {s_yes:.6g}); '
+        f'옛 코드 ×0.5 = Rayleigh 위반', s_yes >= s_no * (1 - 1e-9))
+    chk(f'㉑b 관통 섬유 2개 = 단일의 2배 ({s_no:.6g} vs {2 * exact:.6g})',
+        abs(s_no / (2 * exact) - 1) < 1e-9)
+    # ㉒ node_line 없이도 접촉이 플레이트 탭을 삭제하지 않는다 (구조 간선만으로 성분)
+    s_nl, _ = solve_z(nR, eR + cR, 0.0, LZ, AREA)
+    chk(f'㉒ node_line 없어도 Rayleigh 유지 ({s_nl:.6g} ≥ {s_no:.6g})',
+        s_nl >= s_no * (1 - 1e-9))
+    # ㉓ --a-frac 이 **실제로** 결과를 바꾼다 (어제는 parse 만 하고 배선이 없었다).
+    #   ⚠ 반드시 접촉이 **직렬 병목**인 픽스처로 재야 한다.  관통 섬유 2개(㉑)는 접촉이
+    #     병렬이라 a_frac 을 바꿔도 σ 가 안 움직인다 — 그 픽스처로 통과시키면 눈먼 시험이다.
+    s_a25 = solve_z(n6, e6 + fibre_contacts(n6, e6, D, SIG, node_line=nl, a_frac=0.25),
+                    0.0, LZ, AREA, node_line=nl)[0]
+    s_a50 = solve_z(n6, e6 + fibre_contacts(n6, e6, D, SIG, node_line=nl, a_frac=0.50),
+                    0.0, LZ, AREA, node_line=nl)[0]
+    chk(f'㉓ a_frac 이 **직렬** 접촉에서 σ 를 바꾼다 (0.25 → {s_a25:.6g} · '
+        f'0.50 → {s_a50:.6g}, Δ {(s_a50/s_a25-1)*100:+.2f} %)', s_a50 > s_a25 * 1.005)
+    chk('㉓b 병렬 접촉(관통 2개)에서는 a_frac 이 σ 를 안 바꾼다 = 시험 자체의 양성대조',
+        abs(solve_z(nR, eR + fibre_contacts(nR, eR, D, SIG, node_line=nlR, a_frac=0.5),
+                    0.0, LZ, AREA, node_line=nlR)[0] / s_no - 1) < 1e-9)
 
     print(f'\nfibre_1d_network selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
@@ -666,4 +712,4 @@ if __name__ == '__main__':
     ap.add_argument('--a-frac', type=float, default=0.25,
                     help='Holm 접촉반경 a = a_frac·d (앵커 없는 가정 §F1 — 스윕용)')
     a = ap.parse_args()
-    raise SystemExit(_selftest() if a.selftest else _selftest())
+    raise SystemExit(_selftest(a_frac=a.a_frac))

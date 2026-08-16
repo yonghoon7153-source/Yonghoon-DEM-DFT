@@ -431,6 +431,11 @@ def main():
     ap.add_argument('--no-step3', action='store_true', help='skip the STEP3 σ_e network solve')
     ap.add_argument('--step3-bridge-um', type=float, default=0.0,
                     help='AM 접촉 브리지 반경을 **물리 단위**로 고정 (µm).  0 = 현행 1.2·vox (격자에 묶임). 격자 수렴 시험에서 탄소 효과와 브리지 효과를 분리하려면 고정할 것 (CL-21)')
+    ap.add_argument('--step3-origin-shift', type=float, nargs=3, default=None,
+                    metavar=('SX', 'SY', 'SZ'),
+                    help='STEP3 격자 origin 을 축마다 [0, vox) 만큼 민다 (µm).  격자 **위상**만 '
+                         '바뀌고 침대는 안 잃는다.  origin 앙상블용 — 단일 origin σ 는 위상에 '
+                         '2.4~5.8 %% 흔들린다 (CL-30).  prereg sdcp_gain_prereg_20260816 §4')
     ap.add_argument('--step3-vox', type=float, default=0.4,
                     help='STEP3 voxel size (µm).  0.4 default: AM-carbon bridges (band 0.15µm) land in '
                          'same/adjacent voxels; smaller = finer necks but ∝1/vox³ dof.')
@@ -880,7 +885,28 @@ def main():
             if _bru is not None:
                 print(f'  STEP3: AM 접촉 브리지 반경 **고정** {_bru} µm '
                       f'(기본은 1.2·vox = {1.2 * a.step3_vox:.3f}) — 격자 수렴 시험용', flush=True)
-            sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, (0.0, 0.0, 0.0), _hi, a.step3_vox,
+            # ── ★ origin 앙상블 (2026-08-16, prereg sdcp_gain_prereg_20260816 §4) ──────────
+            #   격자 **위상**만 바꾼다: lo 를 −s 로 내리면 셀 경계가 s 만큼 밀리고 침대는
+            #   하나도 안 잃는다 (n = ceil((hi−lo)/vox) 라 축마다 셀이 하나 늘 뿐).
+            #   ⚠ z 를 밀면 플레이트 평면도 같이 밀어야 한다 — 솔버는 셀 중심을
+            #     (k+0.5)·vox 로 보므로 z_top/z_bot 에 **같은 s_z 를 더한다**.  그러면
+            #     L = z_plate − z_b 가 불변이라 σ_eff 규약이 유지된다.
+            #   왜 필요: 단일 origin 의 σ 는 위상에 2.4~5.8 % 흔들린다 (CL-30) — 그 잡음을
+            #     물리로 오독하지 않으려면 앙상블 평균이 필요하다.
+            _osh = np.array([float(x) for x in (a.step3_origin_shift or (0.0, 0.0, 0.0))],
+                            np.float64)
+            if (_osh < 0).any() or (_osh >= a.step3_vox).any():
+                raise SystemExit(f'ABORT — --step3-origin-shift 는 축마다 [0, vox) 여야 한다 '
+                                 f'(받은 {_osh.tolist()}, vox {a.step3_vox}).  그 밖이면 '
+                                 f'위상 이동이 아니라 격자 자체가 달라진다')
+            _lo3 = tuple(-_osh)
+            #  ★ 격자 좌표계의 플레이트 평면 — **모든** 솔브가 이것을 써야 한다.
+            #    하나라도 _ztop/0.0 을 그대로 쓰면 채널마다 좌표계가 갈린다 (이번 리뷰의 교훈).
+            _hi = tuple(np.asarray(_hi, np.float64) + _osh)
+            if _osh.any():
+                print(f'  STEP3: ★ origin 이동 {_osh.tolist()} µm (위상만; 침대 손실 없음)',
+                      flush=True)
+            sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox,
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
                                        add_kind=(_kind_all[_m] if _kind_all is not None
                                                  and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
@@ -890,8 +916,9 @@ def main():
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
             #   crowns (kgy first run: no_plate_contact); the sim thickness is the physical plate.
+            #  ★ origin z-이동분을 플레이트 평면에 더한다 (위 주석 참조).  L 은 불변.
             _res3 = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                      z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
+                                      z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
             if _res3.get('reason'):
                 print(f"  ⚠ STEP3 σ_e not solvable: {_res3['reason']}")
                 _s3mark('electronic', 'not_solvable', _res3['reason'])
@@ -1106,9 +1133,9 @@ def main():
                     return _mm2
                 _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
                 _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
-                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mw, periodic_xy=a.periodic)
+                                           z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mw, periodic_xy=a.periodic)
                 _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                           z_top_um=_ztop, z_bot_um=0.0, bot_allowed=_mb, periodic_xy=a.periodic)
+                                           z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic)
                 jb_am = None
                 if 'phi' in _res3b:
                     jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
@@ -1175,7 +1202,7 @@ def main():
                 _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0,
                                    0.0 if a.swcnt_ion_block else a.sigma_ion_se])
                 _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
-                                           z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
+                                           z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
@@ -1289,8 +1316,8 @@ def main():
                             #   캡을 잰다 — pore_tau docstring 이 명시한 바로 그 실패 모드.  이온
                             #   τ_full 솔브(_res3i)는 void σ=0 이라 무영향이므로 그대로 둔다.
                             _sig_geo = np.array([1.0, 0.0, 0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
-                            _res_geo = _s3.solve_sigma_z(_sidc, _sig_geo, a.step3_vox, z_top_um=_ztop,
-                                                         z_bot_um=0.0, periodic_xy=a.periodic)
+                            _res_geo = _s3.solve_sigma_z(_sidc, _sig_geo, a.step3_vox, z_top_um=_zt3,
+                                                         z_bot_um=_zb3, periodic_xy=a.periodic)
                             _D_geo = float(_res_geo['sigma_eff'])
                             _phi_geo = 1.0 - float(int(_cnt[1]) + int(_cnt[2])) / float(_sidc.size)
                             _tau_geo = _s3.tau_from_solve(_phi_geo, 1.0, _D_geo)
@@ -1352,7 +1379,7 @@ def main():
                 if not a.no_thermal:
                     try:
                         _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)
-                        _th = _s3.solve_thermal(sid3, a.step3_vox, _ztop, 0.0, _kt,
+                        _th = _s3.solve_thermal(sid3, a.step3_vox, _zt3, _zb3, _kt,
                                                 field_sids=(None if a.no_field else (1, 2, 3, 4, 5, 6, 7, 8)),
                                                 field_max=a.field_max_points, periodic_xy=a.periodic)
                         _tfp = _th.pop('_field_pts', None)
@@ -1429,7 +1456,7 @@ def main():
                     _t6 = _time.time()
                     _ppts = ((se[phase == 4] - _off) * UM
                              if (phase is not None and (phase == 4).any()) else None)
-                    _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts,
+                    _rp = _s3.pore_tau(sid3, a.step3_vox, z_top_um=_zt3, extra_solid_pts=_ppts,
                                        periodic_xy=a.periodic)
                     # ⚠ eps_connected_pct 는 either-plate 규약이다 (Codex #2) — 관통 공극률로
                     #   읽히지 않도록 basis 와 eps_through_pct 를 **함께** 실어 보낸다.
@@ -1451,7 +1478,7 @@ def main():
                     # ★ A13 — pore-PNM 위상지표 (nearest-seed 분할; τ와 같은 crop/PTFE-stamp 규약).
                     #   실패해도 pore-τ 결과는 유지 (내부 try).
                     try:
-                        _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_ztop, extra_solid_pts=_ppts,
+                        _pnm = _s3.pore_pnm(sid3, a.step3_vox, z_top_um=_zt3, extra_solid_pts=_ppts,
                                         periodic_xy=bool(a.periodic))
                         _s3mark('pnm', 'complete')
                         step3['pore']['pnm'] = _pnm
@@ -1479,7 +1506,7 @@ def main():
                     _gpp = a.i0_a_m2 * 1e-4 * 38.92          # i0[A/m²→A/cm²] × F/RT[V⁻¹] = g″ [S/cm²]
                     _gct = _gpp * (a.step3_vox ** 2) * 1e-4  # face-conductance (σ·vox_µm 코드 규약 정합)
                     _r4 = _s3.solve_reaction_current(sid3, _sig3, _sig3i, pid3, len(r), a.step3_vox,
-                                                     _gct, z_top_um=_ztop, z_bot_um=0.0, periodic_xy=a.periodic)
+                                                     _gct, z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
                     if _r4.get('reason'):
                         print(f"  ⚠ STEP4 rxn skipped: {_r4['reason']}")
                     else:
@@ -1514,7 +1541,9 @@ def main():
                     #   **항상 절연벽**으로 풀었다 (실격자서 i-망 wrap 면 30,895 · seam BV 11,543 누락).
                     np.savez_compressed(a.save_step4_grid, sid=sid3.astype(np.int8),
                                         pid=pid3.astype(np.int32), vox_um=a.step3_vox,
-                                        z_top_um=_ztop, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
+                                        z_top_um=_zt3, sig_e_S_cm=_sig3, sig_i_S_cm=_sig3i,
+                                        # ★ 격자 좌표계 값 — origin 이동 시 sid3 와 같은 계다.
+                                        origin_shift_um=np.asarray(_osh, np.float64),
                                         am_r_um=np.asarray(r, np.float64) * UM,
                                         periodic_xy=np.array(bool(getattr(a, 'periodic', False))),
                                         # ★ T1-a CONTRACT: STEP4-v2 reads sig_i from THIS npz, so the
@@ -1585,6 +1614,10 @@ def main():
             'fibre_stamp': ('segment' if _afid is not None else 'point'),
             'fibre_stamp_requested': a.step3_fibre_stamp,
             'fibre_stamp_applied': bool(_afid is not None),
+            # ★ origin 앙상블 (prereg sdcp_gain_prereg_20260816 §4) — **일어난 일**을 적는다.
+            #   앙상블 팔을 나중에 대조하려면 각 payload 가 자기 위상을 알고 있어야 한다.
+            'origin_shift_um': [float(x) for x in _osh],
+            'plate_z_grid_um': [float(_zb3), float(_zt3)],
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭
         }
