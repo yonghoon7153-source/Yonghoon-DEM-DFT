@@ -119,6 +119,32 @@ def to_markdown(tbl: pd.DataFrame) -> str:
     return "\n".join(lines)
 
 
+# ---------------------------------------------------------------- 격차 경계 규약
+
+#: ★ 17차 발견 1 — 참 격차는 설계 격자(0.02 step)에서 뺄셈으로 나오므로
+#: nominal 2%p 가 `0.01999999999999999` 로 표현된다. raw float 에 `< 0.02` 를
+#: 그대로 적용하면 **수학적으로 2%p 인 조건이 "2%p 미만" 군에 들어간다**.
+#: v4 실측: recoverable·noise=0·pocv_dvdq 에서 raw 98 vs nominal 66 (32조건 편입),
+#: 그 중 12조건이 분자에도 들어가 사건률 비가 90.00 → 89.09 로 움직였다.
+#: 격자 step 0.02 에 비해 표현 오차는 1e-16 규모이므로 1e-9 로 흡수한다.
+GAP_ATOL = 1e-9
+
+
+def gap_lt(x, thresh: float):
+    """`x < thresh` — **경계값은 '미만'이 아니다** (nominal thresh 는 제외)."""
+    return np.asarray(x, dtype=float) < (thresh - GAP_ATOL)
+
+
+def gap_ge(x, thresh: float):
+    """`x >= thresh` — **경계값은 '이상'이다** (nominal thresh 는 포함)."""
+    return np.asarray(x, dtype=float) >= (thresh - GAP_ATOL)
+
+
+def gap_is_zero(x):
+    """참 격차가 정확히 0 인가 (F34 exact-zero 군)."""
+    return np.abs(np.asarray(x, dtype=float)) <= GAP_ATOL
+
+
 # ---------------------------------------------------------------- 22p 판정
 
 def _near_22p(df: pd.DataFrame, objective: str, noise: float, radius: float):
@@ -151,7 +177,10 @@ def p22_truth_composition(df: pd.DataFrame, objective: str = "pocv_dvdq",
     near, _ = _near_22p(df, objective, noise, radius)
     if near is None:
         return {}
-    return {"n_near_exact_equal": int((near["pe_ne_gap_true"] == 0).sum()),
+    # ★ 17차 발견 9 — exact-equal 정의를 gap 경계 규약과 공유하고, 표본 크기를
+    #   함께 실어 renderer 가 verdict 와 **같은 표본**인지 대조할 수 있게 한다.
+    return {"n_near_composition": int(len(near)),
+            "n_near_exact_equal": int(gap_is_zero(near["pe_ne_gap_true"]).sum()),
             "max_true_pe_ne_gap": float(near["pe_ne_gap_true"].max())}
 
 
@@ -169,6 +198,10 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
     rec = bool(near["recoverable"].all()) if "recoverable" in near.columns else True
     out = {
         "objective": objective, "noise": noise,
+        # ★ 17차 발견 9 — radius 는 결론을 정의하는 **selection protocol** 이다.
+        #   기록하지 않으면 renderer 가 기본값을 다시 써서 다른 표본의 n_near 와
+        #   구성 문장이 한 문단에 섞인다.
+        "radius": float(radius),
         "n_near": int(len(near)),
         "nearest_distance": float(d.min()),
         "recoverable": rec,
@@ -217,17 +250,18 @@ def gap_sensitivity(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         for t in tol_grid:
             if g <= t:
                 continue        # "뚜렷이 다름"이 "같음"보다 좁으면 정의가 무너진다
-            wide = gt >= g
+            wide = pd.Series(gap_ge(gt, g), index=gt.index)
             # ★ F34 — "참값이 같다"의 정의를 두 가지로 나눠 둘 다 낸다.
             #   `< tol`은 tol을 바꿀 때 분모 자체가 같이 움직여, 임계 민감도를
             #   보려는 표에서 두 효과가 섞인다. exact-zero는 tol과 무관하게 고정된
             #   격자점 집합이라 임계 효과만 분리해서 볼 수 있다.
-            for same_def, same in (("lt_tol", gt < t),
-                                   ("exact_zero", gt.round(6) == 0)):
+            for same_def, same in (
+                    ("lt_tol", pd.Series(gap_lt(gt, t), index=gt.index)),
+                    ("exact_zero", pd.Series(gap_is_zero(gt), index=gt.index))):
                 if not same.any() or not wide.any():
                     continue
-                n_same_hat = int((gr[same] < t).sum())
-                n_wide_hat = int((gr[wide] < t).sum())
+                n_same_hat = int(gap_lt(gr[same], t).sum())
+                n_wide_hat = int(gap_lt(gr[wide], t).sum())
                 p_same = n_same_hat / int(same.sum())
                 p_diff = n_wide_hat / int(wide.sum())
                 rows.append({
@@ -249,8 +283,9 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
                  recoverable_only: bool = True) -> dict:
     """★ 22p 질문에 가장 직접적으로 답하는 지표.
 
-    22p 근방 격자점은 참값이 애초에 LAM_PE = LAM_NE라서, 거기서 복원값이
-    비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은 **반대 방향**이다.
+    22p 근방 격자점은 참 격차가 작아서(v4 실측: PE=NE 4/8, |ΔLAM|>0 4/8, 최대
+    2%p), 거기서 복원값이 비슷하게 나오는 건 아무 증거가 못 된다. 물어야 할 것은
+    **반대 방향**이다.
 
       격차 붕괴(gap collapse)
         참값이 뚜렷이 다른데(|ΔLAM|_true ≥ gap_thresh)
@@ -277,7 +312,7 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         return {"error": f"조건 없음 (objective={objective}, noise={noise})"}
 
     gt, gr = sub["pe_ne_gap_true"], sub["pe_ne_gap_recovered"]
-    wide, same = sub[gt >= gap_thresh], sub[gt < tol]
+    wide, same = sub[gap_ge(gt, gap_thresh)], sub[gap_lt(gt, tol)]
 
     out = {
         "objective": objective, "noise": noise,
@@ -287,7 +322,7 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         # ★ F28: 이 군은 "참 격차가 정확히 0"이 아니라 "< tol"이다. 옛 이름
         #   n_zero_gap_true는 조건을 잘못 말해서 바꿨다.
         "n_small_gap_true": int(len(same)),
-        "n_exact_zero_gap_true": int((gt.round(6) == 0).sum()),
+        "n_exact_zero_gap_true": int(gap_is_zero(gt).sum()),
     }
     if len(wide):
         w_gr = wide["pe_ne_gap_recovered"]
@@ -300,7 +335,7 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         required = float(gap_thresh - tol)
         out.update({
             # ★ 참값이 다른데 같다고 말하는 비율
-            "gap_collapse_frac": float((w_gr < tol).mean()),
+            "gap_collapse_frac": float(gap_lt(w_gr, tol).mean()),
             "mean_true_gap_wide": float(wide["pe_ne_gap_true"].mean()),
             "min_true_gap_wide": float(wide["pe_ne_gap_true"].min()),
             "mean_recovered_gap_wide": float(w_gr.mean()),
@@ -312,7 +347,7 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
         })
     if len(same):
         out["false_split_frac"] = float(
-            (same["pe_ne_gap_recovered"] >= tol).mean())
+            gap_ge(same["pe_ne_gap_recovered"], tol).mean())
 
     # ★ 22p 질문의 답을 우도비로 (리뷰 지적).
     #   관측 "두 전극이 같다"가 어느 가설을 더 지지하는가.

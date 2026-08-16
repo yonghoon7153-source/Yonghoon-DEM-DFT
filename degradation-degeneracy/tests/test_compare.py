@@ -3038,17 +3038,52 @@ def test_full_chain_threads_repo_root_to_validator(tmp_path, monkeypatch):
     orig = io_mod.validate_provenance
 
     def spy(run_dir, repo_root=None, fits_path=None):
-        seen.append(repo_root)
+        seen.append((Path(run_dir).name, repo_root))
         return orig(run_dir, repo_root=repo_root, fits_path=fits_path)
 
     monkeypatch.setattr(io_mod, "validate_provenance", spy)
     build(d, tmp_path / "R.md", repo_root=tmp_path)
 
     assert seen, "validator 가 호출되지 않았다 — 테스트가 무의미하다"
-    bad = [r for r in seen if r is None or Path(r) != Path(tmp_path)]
+    bad = [r for _, r in seen if r is None or Path(r) != Path(tmp_path)]
     assert not bad, (
         f"{len(bad)}/{len(seen)} 호출이 repo_root 를 받지 못했다 (기본 root 로 "
         f"되돌아간다): {bad[:3]}")
+
+
+def test_wsweep_validator_is_in_the_threaded_call_set(tmp_path, monkeypatch):
+    """★ 17차 발견 2 — nested wsweep 검증에서 `repo_root` 가 다시 끊긴다.
+
+    16차 대응은 main·scoring·case 세 경로만 관통시켰고
+    `make_results.py:563` 의 `_vp(in_dir / "wsweep")` 은 빠졌다. 그런데 기존
+    spy 테스트 fixture 에는 `wsweep/` 가 아예 없어 그 분기를 **실행조차 하지
+    않았다** — "관측된 호출은 모두 옳다" 는 검사만으로는 빠진 호출을 못 잡는다.
+
+    그래서 **기대 호출 집합**을 고정한다: 빠진 호출도 실패여야 한다.
+    """
+    import src.io as io_mod
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d, _ = _complete_artifact(tmp_path,
+                              objectives=("pocv_dvdq", "pocv_dvdq_dqdv"))
+    _wsweep_run(d)
+    run_compare(d, d)
+
+    seen: list = []
+    orig = io_mod.validate_provenance
+
+    def spy(run_dir, repo_root=None, fits_path=None):
+        seen.append((Path(run_dir).name, repo_root))
+        return orig(run_dir, repo_root=repo_root, fits_path=fits_path)
+
+    monkeypatch.setattr(io_mod, "validate_provenance", spy)
+    build(d, tmp_path / "R.md", repo_root=tmp_path)
+
+    assert "wsweep" in {n for n, _ in seen}, (
+        f"wsweep provenance 검증이 아예 호출되지 않았다: {sorted({n for n, _ in seen})}")
+    bad = [(n, r) for n, r in seen if r is None or Path(r) != Path(tmp_path)]
+    assert not bad, f"repo_root 가 끊긴 호출: {bad}"
 
 
 
@@ -3218,3 +3253,357 @@ def test_conclusion_4_denominators_come_from_data():
     assert "98·245조건" not in txt, "gap 분모가 상수로 박혀 있다"
     assert "40·77조건" in txt, txt[-600:]
     assert "22p 는 3조건" in txt, txt[-600:]
+
+
+# ── 17차 발견 1 — 2%p 경계가 binary float 때문에 작은-gap 군에 섞인다 ────────
+
+def _boundary_frame():
+    """참 격차가 **정확히 nominal 2%p** 인 조건들.
+
+    0.15−0.13 = 0.01999999999999999 처럼 float 표현이 임계 아래로 떨어지는
+    쌍과, 0.13−0.11 = 0.020000000000000004 처럼 위로 올라가는 쌍을 함께 둔다.
+    수학적으로는 둘 다 `|ΔLAM| = 2%p` 이므로 `< 2%p` 군에 **하나도** 들어가면
+    안 된다.
+    """
+    rows = []
+    pairs = [(0.15, 0.13), (0.09, 0.07), (0.19, 0.17),   # float < 0.02
+             (0.13, 0.11), (0.17, 0.15), (0.07, 0.05)]   # float > 0.02
+    for i, (pe, ne) in enumerate(pairs):
+        rows.append({
+            "cond_id": f"b{i}", "objective": "pocv_dvdq", "noise": 0.0,
+            "lli": 0.0, "lam_pe": pe, "lam_ne": ne,
+            "lli_hat": 0.0, "lam_pe_hat": pe, "lam_ne_hat": ne,
+            "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+        })
+    # 넓은 격차군이 없으면 gap_analysis 가 붕괴 지표를 안 낸다 — 함께 넣는다
+    return pd.concat([pd.DataFrame(rows), _gap_fits(collapse=False, n=4, seed=7)],
+                     ignore_index=True)
+
+
+def test_nominal_2pp_gap_is_not_counted_as_small_gap():
+    """★ 17차 발견 1 — nominal 2%p 는 `< 2%p` 가 아니다.
+
+    문서가 수학적으로 `|ΔLAM|_true < 2%p` 라고 쓰므로, 표현 오차로 임계
+    아래로 내려간 nominal 2%p 조건이 분모·분자에 들어가면 사건률 비가
+    바뀐다. v4 실측: raw 98 vs nominal 66 (32조건이 표현 오차로 편입).
+    """
+    from tools.compare_objectives import gap_analysis
+
+    g = gap_analysis(_scored(_boundary_frame()), "pocv_dvdq")
+
+    assert g["n_small_gap_true"] == 0, (
+        f"nominal 2%p 조건 {g['n_small_gap_true']}개가 `< 2%p` 군에 들어갔다")
+
+
+def test_nominal_6pp_gap_is_counted_as_wide_gap():
+    """★ 반대 방향 — nominal 6%p 는 `≥ 6%p` 다 (표현 오차로 빠지면 안 된다)."""
+    from tools.compare_objectives import gap_analysis
+
+    rows = []
+    for i, (pe, ne) in enumerate([(0.19, 0.13), (0.17, 0.11), (0.13, 0.07)]):
+        rows.append({
+            "cond_id": f"w{i}", "objective": "pocv_dvdq", "noise": 0.0,
+            "lli": 0.0, "lam_pe": pe, "lam_ne": ne,
+            "lli_hat": 0.0, "lam_pe_hat": pe, "lam_ne_hat": ne,
+            "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+        })
+    g = gap_analysis(_scored(pd.DataFrame(rows)), "pocv_dvdq")
+
+    assert g["n_wide_gap_true"] == 3, g
+
+
+def test_gap_sensitivity_uses_the_same_boundary_rule():
+    """★ 발견 1 — `gap_analysis` 와 `gap_sensitivity` 가 같은 helper 를 써야 한다.
+
+    민감도 표가 다른 경계 규약을 쓰면, 같은 (gap_thresh, tol) 칸이 본 분석과
+    다른 분모를 보고한다.
+    """
+    from tools.compare_objectives import gap_analysis, gap_sensitivity
+
+    # 경계 조건 + 진짜 작은-격차(PE=NE) 조건을 함께 — 그래야 (0.06,0.02) 칸이 산다
+    eq = []
+    for i, pe in enumerate([0.13, 0.11]):
+        eq.append({
+            "cond_id": f"e{i}", "objective": "pocv_dvdq", "noise": 0.0,
+            "lli": 0.0, "lam_pe": pe, "lam_ne": pe,
+            "lli_hat": 0.0, "lam_pe_hat": pe, "lam_ne_hat": pe,
+            "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+        })
+    df = _scored(pd.concat([_boundary_frame(), pd.DataFrame(eq)],
+                           ignore_index=True))
+    g = gap_analysis(df, "pocv_dvdq", gap_thresh=0.06, tol=0.02)
+    cell = [r for r in gap_sensitivity(df, "pocv_dvdq")
+            if r["same_def"] == "lt_tol"
+            and round(r["gap_thresh"], 6) == 0.06 and round(r["tol"], 6) == 0.02]
+
+    assert cell, "민감도 표에 (0.06, 0.02) 칸이 없다"
+    assert cell[0]["n_same"] == g["n_small_gap_true"], (
+        f"민감도 n_same={cell[0]['n_same']} vs 본 분석 "
+        f"n_small_gap_true={g['n_small_gap_true']}")
+    assert cell[0]["n_wide"] == g["n_wide_gap_true"]
+
+
+# ── 17차 발견 3·4·5·6·10 — 표와 반대이거나 protocol 과 안 맞는 서술 ──────────
+
+def _noise_cmp_res(better_with_noise: bool):
+    """노이즈별 표를 담은 최소 cmp_res.
+
+    `better_with_noise=True` 면 34p 가 모든 noise 에서 33p 보다 **나쁘다**
+    (paired 정본의 실제 방향). 그때 "dQ/dV 이점이 노이즈에서 희석된다" 는
+    문장은 표와 반대다.
+    """
+    rows = []
+    for noise, a, b in ((0.0, 0.60, 0.88), (0.001, 0.62, 0.88), (0.005, 0.64, 0.86)):
+        if not better_with_noise:
+            a, b = b, a
+        for o, f in (("pocv_dvdq", a), ("pocv_dvdq_dqdv", b)):
+            rows.append({"objective": o, "noise": noise, "n": 100,
+                         "degenerate_frac": f, "degenerate_frac_corrected": f,
+                         "mean_abs_err": 0.02, "pe_ne_antisym_frac": 0.5})
+    return rows
+
+
+def test_noise_dilution_claim_is_not_asserted_unconditionally():
+    """★ 17차 발견 3 — "dQ/dV 이점은 노이즈에서 희석된다" 는 표와 반대다.
+
+    paired 정본은 noise 0/0.001/0.005 에서 34p−33p 가 `+28/+26/+22%p` 로
+    **어느 noise 에서도 이점이 없다**. 표를 보지 않고 문장을 박으면 안 된다.
+    """
+    from tools.make_results import _noise_note
+
+    txt = _noise_note(_noise_cmp_res(better_with_noise=True))
+
+    assert "희석" not in txt, f"표와 반대인 단정이 남아 있다: {txt}"
+    assert "noise" in txt or "노이즈" in txt
+
+
+def test_multistart_agree_frac_note_branches_on_protocol():
+    """★ 17차 발견 4 — fixed-budget 실행에 adaptive 조기 종료 설명이 붙는다.
+
+    paired 는 `adaptive=False`·restart 5 고정인데 같은 문서가 `agree_frac` 이
+    "adaptive 조기 종료 때문에" 정의상 0 이라고 적는다.
+    """
+    from tools.make_results import _agree_frac_note
+
+    assert "adaptive 조기 종료" in _agree_frac_note(adaptive=True)
+    fixed = _agree_frac_note(adaptive=False)
+    assert "adaptive 조기 종료" not in fixed, fixed
+    assert "고정" in fixed, fixed
+
+
+def test_unrecoverable_is_never_called_principally_impossible():
+    """★ 17차 발견 6 — 결론에서는 완화하고 본문에서 "원리적으로" 로 되돌아간다.
+
+    실제 분류는 `alpha_true >= 1-atol` 이라는 eligibility rule 이다
+    (`src/scoring.py`). bounds 전체의 표현 가능성도, 다른 reference 의
+    불가능성도 검사하지 않는다.
+    """
+    import re
+
+    from tools.make_results import _unrecoverable_note
+
+    txt = _unrecoverable_note()
+
+    assert not re.search(r"원리적으로\s*\*{0,2}\s*복원", txt), txt
+    assert "eligibility" in txt or "α-window" in txt, txt
+
+
+def test_case_table_error_label_names_the_max_mode_statistic():
+    """★ 17차 발견 5 — Case 표의 값은 `abs_err_max.mean()` 이다."""
+    from tools.compare_cases import _case_markdown_header
+
+    head = _case_markdown_header()
+
+    assert "max-mode" in head, head
+
+
+def test_conclusion_2_renders_both_all_population_numerators():
+    """★ 17차 발견 10-1 — 전체군 사건률 비의 **반대쪽 분자**가 결론에 없다.
+
+    `64/604` 와 3.69 만 쓰면 핵심 결론만으로 비를 검산할 수 없다.
+    """
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    cmp_res["gap_analysis_all_conditions"]["pocv_dvdq"].update(
+        {"n_small_gap_true": 93, "false_split_frac": 1 - 34 / 93})
+    txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    assert "34/93" in txt, txt[txt.index("2. "):][:900]
+
+
+def test_conclusion_22p_states_noise_and_radius():
+    """★ 17차 발견 10-2 — 22p 결론에 `noise` 와 `radius` 가 없다."""
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    cmp_res["verdict_22p"] = {"pocv_dvdq": {
+        "n_near": 8, "degenerate_frac": 0.125, "mean_abs_err": 0.0168,
+        "pe_ne_antisym_frac": 0.5, "true_pe_ne_gap": 0.010,
+        "recovered_pe_ne_gap": 0.019, "noise": 0.0, "radius": 0.021,
+        "n_near_exact_equal": 4, "max_true_pe_ne_gap": 0.02}}
+    txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    seg = txt[txt.index("3. **22p"):]
+    assert "noise=0" in seg, seg[:700]
+    assert "radius=0.021" in seg, seg[:700]
+
+
+def test_threshold_caveat_does_not_claim_the_rate_is_purely_thresholds():
+    """★ 17차 발견 10-3 — "낮은 붕괴율은 측정이 아니라 임계 설정의 결과" 는 과도.
+
+    임계 간격 4%p > 실측 중앙 격차오차 2.6%p 는 붕괴를 어렵게 만든다는 뜻이지,
+    관측률 전체가 임계 설정만의 결과라는 증명이 아니다.
+    """
+    from tools.make_results import _gap_table_legend
+
+    txt = _gap_table_legend()
+
+    assert "측정이 아니라 임계 설정의" not in txt, txt
+    assert "일부는" in txt or "상당 부분" in txt, txt
+
+
+# ── 17차 발견 9 — 22p selection protocol 공유 ────────────────────────────────
+
+def test_verdict_22p_records_its_selection_protocol():
+    """★ 17차 발견 9 — `radius` 는 결론을 정의하는 protocol 인데 기록되지 않았다.
+
+    renderer 가 구성 helper 를 부를 때 기본값 0.021 을 다시 쓰므로, verdict 를
+    다른 radius 로 계산하면 **서로 다른 표본**의 `n_near` 와 구성 문장이
+    한 문단에 섞인다.
+    """
+    from tools.compare_objectives import verdict_22p
+
+    v = verdict_22p(_scored(_p22_frame()), "pocv_dvdq", radius=0.05)
+
+    assert v["radius"] == pytest.approx(0.05), v
+
+
+def test_p22_composition_refuses_a_different_sample():
+    """★ 발견 9 — 구성과 verdict 의 표본이 다르면 렌더를 실패시킨다."""
+    from tools.make_results import _p22_composition
+
+    v = {"n_near": 8, "n_near_exact_equal": 4, "max_true_pe_ne_gap": 0.02,
+         "n_near_composition": 6}          # 구성이 다른 표본에서 나왔다
+    with pytest.raises(ValueError, match="표본"):
+        _p22_composition(v, {"gap_thresh": 0.06})
+
+
+def test_build_passes_the_recorded_radius_to_the_composition_helper(tmp_path, monkeypatch):
+    """★ 발견 9 — renderer 가 기본값이 아니라 **기록된 radius** 를 써야 한다."""
+    import tools.compare_objectives as co
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    seen: list = []
+    orig = co.p22_truth_composition
+
+    def spy(frame, objective="pocv_dvdq", noise=0.0, radius=0.021):
+        seen.append(radius)
+        return orig(frame, objective, noise, radius)
+
+    monkeypatch.setattr(co, "p22_truth_composition", spy)
+    build(d, tmp_path / "R.md", repo_root=tmp_path)
+
+    assert seen, "구성 helper 가 호출되지 않았다"
+    from tools.compare_objectives import verdict_22p
+    want = verdict_22p(_scored(df), "pocv_dvdq")["radius"]
+    assert all(r == pytest.approx(want) for r in seen), (seen, want)
+
+
+# ── 17차 발견 7 — Hessian 은 녹색 배지·재현 명령 범위 밖이다 ─────────────────
+
+def _hessian_run(d, objectives=("pocv_dvdq",), eps=1e-4):
+    """fit 디렉터리에 Hessian 산출물을 놓는다 (렌더 경로만 태운다)."""
+    for o in objectives:
+        pd.DataFrame({
+            "cond_id": [f"c{i}" for i in range(4)],
+            "condition_number": [12.8, 229.0, 17381.0, 44.0],
+            "flat_direction_score": [0.1, 0.2, 0.3, 0.4],
+            "min_eigval_positive": [True, True, False, True],
+            "pe_ne_coupled": [True, False, False, True],
+            "eps": [eps] * 4,
+        }).to_parquet(d / f"hessian_{o}.parquet", index=False)
+
+
+def _built_with_hessian(tmp_path):
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    _hessian_run(d)
+    run_compare(d, d)
+    return build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+
+def test_reproduce_block_does_not_offer_a_broken_hessian_command(tmp_path):
+    """★ 17차 발견 7 — 재현 명령의 `--mode hessian` 은 분리배치에서 실패한다.
+
+    `src/hessian.py:135` 가 `curves.parquet` 을 못 찾고, 곡선을 임시로 놓아도
+    `degeneracy_summary.yaml` 을 변이시켜 보고서를 stale 로 만든다 (A·B 미수정).
+    문서가 그 명령을 제시하면 독자가 artifact 를 망가뜨린다.
+    """
+    text = _built_with_hessian(tmp_path)
+
+    assert "--mode hessian" not in text, \
+        "A·B 가 닫히기 전에는 Hessian 재현 명령을 제시하면 안 된다"
+
+
+def test_hessian_is_declared_outside_the_provenance_scope(tmp_path):
+    """★ 발견 7 — 녹색 provenance 배지가 Hessian 까지 검증한 것처럼 보인다.
+
+    fit provenance validator 는 Hessian 의 fits·곡선·obj_cfg·v_col·reference·
+    표본·eps 연결을 전혀 보지 않는다. 범위를 문서가 명시해야 한다.
+    """
+    text = _built_with_hessian(tmp_path)
+
+    i = text.index("곡률 진단")
+    assert "provenance 검증 범위 밖" in text[i:i + 1200], text[i:i + 900]
+
+
+def test_hessian_eps_ordering_claim_needs_more_than_one_objective(tmp_path):
+    """★ 발견 7 추가 — "같은 eps 에서의 순서는 의미 있다" 는 지지되지 않는다.
+
+    표에 objective 가 하나뿐이면 순서 자체가 없다.
+    """
+    text = _built_with_hessian(tmp_path)
+
+    i = text.index("곡률 진단")
+    seg = text[i:i + 2500]
+    assert "같은 eps에서의 순서**뿐입니다" not in seg, seg[:900]
+
+
+def test_sensitivity_says_when_the_two_same_definitions_coincide():
+    """★ 17차 자체 발견 — 경계 규약을 고치면 F34 의 두 정의가 **같은 집합**이 된다.
+
+    격자 step 이 0.02 이므로 canonical 하게 `참 격차 < 2%p` 는 `참 격차 == 0` 과
+    같다. v4 에서 tol=1%p·2%p 열의 두 패널이 완전히 동일해진다(n_same 66, LR
+    89.09). 두 패널을 나란히 실으면서 그 사실을 적지 않으면, 독자는 서로 독립인
+    두 확인으로 읽는다 — F34 가 두 정의를 나눈 이유(임계 효과 분리)가 인용
+    지점에서는 성립하지 않는다.
+    """
+    from tools.make_results import _same_def_overlap_note
+
+    same = [{"same_def": "lt_tol", "tol": 0.02, "gap_thresh": 0.06, "n_same": 66},
+            {"same_def": "exact_zero", "tol": 0.02, "gap_thresh": 0.06, "n_same": 66}]
+    diff = [{"same_def": "lt_tol", "tol": 0.05, "gap_thresh": 0.06, "n_same": 247},
+            {"same_def": "exact_zero", "tol": 0.05, "gap_thresh": 0.06, "n_same": 66}]
+
+    txt = _same_def_overlap_note(same + diff, tol=0.02, gap_thresh=0.06)
+    assert "같은 집합" in txt, txt
+    assert "66" in txt, txt
+
+    assert _same_def_overlap_note(same + diff, tol=0.05, gap_thresh=0.06) == ""

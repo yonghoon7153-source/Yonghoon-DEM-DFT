@@ -138,6 +138,106 @@ def _denominator_note(cmp_res: dict) -> str:
             f"22p 는 {n22}조건으로 각각 다르다.")
 
 
+def _noise_note(rows) -> str:
+    """★ 17차 발견 3 — 노이즈별 서술은 **표에서** 나와야 한다.
+
+    이전 판은 "dQ/dV 의 이점은 노이즈에서 희석된다" 를 무조건 출력했다.
+    paired 정본의 실제 방향은 34p−33p 가 noise 0/0.001/0.005 에서
+    `+28/+26/+22%p` 로 **어느 noise 에서도 이점이 없다** — 문장이 표와 정반대다.
+    """
+    by = {}
+    for r in rows or []:
+        o, n = r.get("objective"), r.get("noise")
+        if o in ("pocv_dvdq", "pocv_dvdq_dqdv") and n is not None:
+            by.setdefault(float(n), {})[o] = float(r.get("degenerate_frac", float("nan")))
+    diffs = {n: v["pocv_dvdq_dqdv"] - v["pocv_dvdq"]
+             for n, v in sorted(by.items())
+             if "pocv_dvdq" in v and "pocv_dvdq_dqdv" in v}
+    if not diffs:
+        return ("노이즈 수준별로 나눠 싣는다 — 어느 한 수준의 값만 인용하면 "
+                "protocol 의존성이 감춰진다.")
+    seq = ", ".join(f"noise {n:g} → {100 * d:+.0f}%p" for n, d in diffs.items())
+    worse = all(d > 0 for d in diffs.values())
+    better = all(d < 0 for d in diffs.values())
+    if worse:
+        verdict = ("이 실행에서는 **모든 노이즈 수준에서 34p 의 recovery failure 가 "
+                   "더 크다** — 노이즈 0 에서도 34p 의 이점이 관측되지 않는다.")
+    elif better:
+        verdict = "이 실행에서는 모든 노이즈 수준에서 34p 가 더 낫다."
+    else:
+        verdict = "노이즈 수준에 따라 **방향이 바뀐다** — 한 수준만 인용하면 안 된다."
+    return (f"34p − 33p 의 recovery failure 차이는 {seq} 다. {verdict} "
+            f"관측 방향·크기는 noise 수준과 실행 protocol 에 함께 의존하므로 "
+            f"표 전체를 함께 본다. 이것은 dQ/dV 의 정보량 우열을 증명하지 않는다 "
+            f"— optimizer difficulty 와 분리되지 않았다.")
+
+
+def _agree_frac_note(adaptive: bool) -> str:
+    """★ 17차 발견 4 — fixed-budget 실행에 adaptive 조기 종료 설명을 붙이면 안 된다."""
+    head = ("> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 "
+            "`agree_frac`과 `p_spread`는 인용하지 마세요. ")
+    if adaptive:
+        return head + ("adaptive 조기 종료 때문에 `agree_frac`은 restart를 5까지 간 "
+                       "조건에서 **정의상 0**이고, `p_spread = 0`은 \"해가 일치\"가 "
+                       "아니라 \"최적 J에 도달한 restart가 하나뿐\"이라는 뜻입니다. "
+                       "위 표가 그 자리를 대신합니다.\n")
+    return head + ("이 실행은 adaptive 를 끄고 restart 예산을 **고정**했으므로 조기 "
+                   "종료는 없습니다. 그럼에도 두 값은 `j_tol`·`p_tol` 판정에 그대로 "
+                   "의존하고, `p_spread = 0`은 \"해가 일치\"가 아니라 \"최적 J 에 "
+                   "도달한 restart 가 하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 "
+                   "대신합니다.\n")
+
+
+def _unrecoverable_note() -> str:
+    """★ 17차 발견 6 — 결론에서 완화한 표현이 본문에서 "원리적으로" 로 되돌아갔다.
+
+    실제 분류는 `src/scoring.py` 의 `alpha_true >= 1 - atol` 이라는 **eligibility
+    rule** 이다. bounds 전체의 표현 가능성도, 다른 reference·parameterization 의
+    불가능성도 검사하지 않는다.
+    """
+    return ("복원불가군(참 α<1)은 **현재 grid-reference 의 α-window eligibility "
+            "rule 밖**이다 (`src/scoring.py`: `alpha_true >= 1 − atol`). 위 표에서 "
+            "뺀 근거는 그것이다. 이것은 bounds 전체의 표현 가능성 판정도, 다른 "
+            "reference·parameterization 에서의 불가능성 판정도 아니다. 다만 그 "
+            "제외가 난이도와 무관하지 않으므로(저LLI에서 복원가능 비율이 훨씬 낮다) "
+            "전체군을 같이 싣는다.\n")
+
+
+def _gap_table_legend() -> str:
+    """★ 17차 발견 10-3 — "측정이 아니라 임계 설정의 결과" 는 과도한 단정."""
+    return ("- **붕괴에 필요한 격차오차**: 붕괴로 세려면 격차를 6%p에서 2%p 아래로 "
+            "끌어내려야 하므로 최소 4%p의 격차 오차가 필요합니다. 이 값이 실측 "
+            "격차오차 중앙값보다 크면, **낮은 붕괴율의 일부는 측정이 아니라 오차 "
+            "스케일이 임계 간격보다 작다는 사실에서 옵니다** — 관측률 전체가 임계 "
+            "설정만의 결과라는 뜻은 아니지만, 그대로 떼어 인용하지 마세요.\n")
+
+
+def _same_def_overlap_note(sens, tol: float, gap_thresh: float) -> str:
+    """★ 17차 자체 발견 — F34 의 두 "같다" 정의가 인용 지점에서 같은 집합인가.
+
+    격자 step 이 0.02 이므로 canonical 하게 `참 격차 < 2%p` 는 `참 격차 == 0` 과
+    같은 집합이다. 그러면 민감도 표의 두 패널이 그 열에서 완전히 동일해진다.
+    F34 가 두 정의를 나눈 이유는 "exact-zero 는 tol 과 무관한 고정 집합이라
+    임계 효과만 분리해 볼 수 있다" 였는데, **인용 지점에서 그 분리가 성립하지
+    않는다**. 나란히 싣고 아무 말도 안 하면 독립인 두 확인으로 읽힌다.
+    """
+    def pick(defn):
+        for r in sens or []:
+            if (r.get("same_def") == defn
+                    and round(float(r.get("tol", -1)), 6) == round(tol, 6)
+                    and round(float(r.get("gap_thresh", -1)), 6) == round(gap_thresh, 6)):
+                return r
+        return None
+    a, b = pick("lt_tol"), pick("exact_zero")
+    if not a or not b or a.get("n_same") != b.get("n_same"):
+        return ""
+    return (f"> ⓘ **이 격자에서 두 정의는 인용 지점(`참 격차 ≥ {_pp(gap_thresh, 0)}`, "
+            f"`동일 판정 < {_pp(tol, 0)}`)에서 같은 집합이다** — 양쪽 모두 "
+            f"{a['n_same']}조건이다. 격자 step 이 2%p 라 `< 2%p` 가 `= 0` 과 "
+            f"같아지기 때문이다. 두 패널을 **서로 독립인 두 확인으로 읽지 마세요**; "
+            f"정의가 갈리는 것은 `동일 판정` 임계를 3%p 이상으로 넓힐 때부터다.\n")
+
+
 def _p22_composition(v: dict, g: dict | None = None) -> dict:
     """★ 16차 발견 4 (17차 사전) — 22p 근방 표본의 **참값 구성**을 문장으로.
 
@@ -154,6 +254,13 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
                 "headline": f"이 {n}점의 참값 구성은 이 artifact 에 기록되어 있지 않다",
                 "detail": "구버전 `verdict_22p` 라 구성을 인용하려면 재생성이 필요하다",
                 "wide": f"wide-gap(≥{_pp(thr, 0)}) 포함 여부를 확인할 수 없으므로"}
+    # ★ 17차 발견 9 — 구성이 verdict 와 다른 표본에서 나왔으면 렌더를 멈춘다.
+    #   조용히 섞으면 provenance green 인 문서가 두 표본의 숫자를 한 문장에 넣는다.
+    n_comp = v.get("n_near_composition")
+    if n_comp is not None and int(n_comp) != n:
+        raise ValueError(
+            f"22p 구성이 verdict 와 다른 표본이다 (구성 n={n_comp}, verdict n={n}) "
+            f"— selection protocol(radius·noise·objective)이 어긋났다")
     k = int(v["n_near_exact_equal"])
     mx = float(v["max_true_pe_ne_gap"])
     if k >= n:
@@ -223,7 +330,7 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
                      f"{_pct(tbl.loc[base, 'degenerate_frac'])}다.")
 
     # ★ 22p 질문의 직접적인 답 — 22p 근방 성적보다 이게 먼저다.
-    #   22p 근방 격자점은 참값이 LAM_PE = LAM_NE라 "복원값도 같더라"가 증거가 안 된다.
+    #   22p 근방 격자점은 참 격차가 작아 "복원값도 같더라"가 증거가 안 된다.
     g = cmp_res.get("gap_analysis", {}).get(base, {})
     if g and "error" not in g and "gap_collapse_frac" in g:
         collapse, split = g["gap_collapse_frac"], g.get("false_split_frac")
@@ -250,8 +357,14 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
                      f"{_cnt(collapse, n_wide)}\n"
                      f"   > 사건률 비 = {lr:.1f}")
             if _all.get("likelihood_ratio_equal") is not None:
+                # ★ 17차 발견 10-1 — 반대쪽 분자(작은-격차에서 "같다")를 함께
+                #   내지 않으면 핵심 결론만으로 사건률 비를 검산할 수 없다.
+                _asm = (f"{_cnt(1 - _all['false_split_frac'], _all['n_small_gap_true'])}"
+                        if _all.get("false_split_frac") is not None
+                        and _all.get("n_small_gap_true") else None)
                 fact += (f"\n\n   같은 지표를 **전체 생성성공 격자**(population=all)에서 "
-                         f"재계산하면 넓은 격차 붕괴 "
+                         f"재계산하면 작은 격차에서 \"같다\" "
+                         f"{_asm or '(분자 미기록)'}, 넓은 격차 붕괴 "
                          f"{_cnt(_all.get('gap_collapse_frac'), _all.get('n_wide_gap_true'))}, "
                          f"사건률 비 **{_all['likelihood_ratio_equal']:.2f}** 다. "
                          f"즉 위 값은 복원가능군 선택에 강하게 의존한다 — "
@@ -303,7 +416,8 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
         lines.append(
             f"3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 "
             f"{_cnt(v['degenerate_frac'], v['n_near'])}** "
-            f"(목적함수 `{base}`, 최근접 {v['n_near']} grid 조건, "
+            f"(목적함수 `{base}`, noise={v.get('noise', 0):g}, "
+            f"radius={v.get('radius', 0.021):g} 안의 최근접 {v['n_near']} grid 조건, "
             f"raw max-mode 오차 > {_pp(g.get('tol', 0.02), 0) if g else '2%p'} 임계) "
             f" — 행별 max-mode 절대오차의 평균 {_pp(v['mean_abs_err'])}, "
             f"raw PE/NE 오차 반대부호 비율 {_pct(anti)}, "
@@ -492,6 +606,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         raise SystemExit(f"{in_dir}/objective_comparison.yaml 없음 — "
                          f"먼저 python tools/compare_objectives.py --in {in_dir}")
     stale: list[str] = []
+    # ★ 17차 발견 2 — nested wsweep 검증 결과를 header 검사 목록에 노출한다.
+    #   지금까지는 실패하면 stale 로만 새고, 통과했을 때 "검증 범위에 wsweep 이
+    #   들어 있었는가" 를 문서만 보고 확인할 수 없었다.
+    wsweep_prov: dict | None = None
 
     saved_summary = _load(in_dir / "degeneracy_summary.yaml") or {}
     manifest = _load(in_dir / "manifest.yaml") or {}
@@ -524,7 +642,9 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             from tools.compare_objectives import p22_truth_composition as _p22c
             for _o, _v in (cmp_res.get("verdict_22p") or {}).items():
                 if isinstance(_v, dict) and "error" not in _v:
-                    _v.update(_p22c(_scored_df, _o, _v.get("noise", 0.0)))
+                    # ★ 17차 발견 9 — **기록된** radius 를 쓴다 (기본값 재사용 금지)
+                    _v.update(_p22c(_scored_df, _o, _v.get("noise", 0.0),
+                                    _v.get("radius", 0.021)))
         except Exception as e:  # noqa: BLE001
             cmp_res = saved_cmp
             stale.append(f"objective_comparison.yaml (재계산 실패: {e})")
@@ -560,7 +680,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             #   optimum 만 재계산하고 nested validator·metadata 대조를 안 하면,
             #   보고서만으로 sweep 의 설정·표본 수·optimizer 조건을 확정할 수 없다.
             from src.io import validate_provenance as _vp
-            _wv = _vp(in_dir / "wsweep")
+            # ★ 17차 발견 2 — 여기서 repo_root 가 끊겨 있었다. 격리 root 로
+            #   복원한 보고서에서도 이 검증만 **원본 저장소**를 봤다.
+            _wv = _vp(in_dir / "wsweep", repo_root=repo_root)
+            wsweep_prov = _wv                    # header 검사 목록에 노출한다
             if not _wv["ok"]:
                 stale.append(f"wsweep provenance ({_wv['fail'][:3]})")
             _wman = _load(in_dir / "wsweep" / "manifest.yaml") or {}
@@ -745,6 +868,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             f"{s}의 저장본이 정본 fits 재계산과 다르다 — 보고서는 재계산 값을 "
             f"실었지만, 이 파일을 직접 읽는 소비자는 틀린 숫자를 본다"]
         prov["checks"][f"파생_stale_{s}"] = "실패 — 재계산과 불일치"
+    if wsweep_prov is not None:
+        prov["checks"]["wsweep_provenance"] = (
+            "통과" if wsweep_prov["ok"] else f"실패 — {wsweep_prov['fail'][:3]}")
+    elif (in_dir / "wsweep").exists():
+        prov["checks"]["wsweep_provenance"] = "미검증 — 재계산 경로를 타지 못했다"
     _case_render = None
     for name, why in (("case_comparison.yaml", "비교표"),):
         rc = _recheck_derived(in_dir, name, repo_root=repo_root)
@@ -900,11 +1028,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     if len(tbl_all):
         P.append("### 전체 격자 (복원불가군 포함)\n")
         ps = cmp_res.get("population_sensitivity") or {}
-        P.append(
-            "복원불가군(참 α<1)은 grid 기준에서 정답이 재구성 창 밖이라 **원리적으로** "
-            "복원되지 않는 조건이다. 위 표에서 뺀 근거는 그것이다. 다만 그 제외가 "
-            "난이도와 무관하지 않으므로(저LLI에서 복원가능 비율이 훨씬 낮다) 전체군을 "
-            "같이 싣는다.\n")
+        P.append(_unrecoverable_note())
         if ps.get("direction_flips"):
             P.append("> ⚠ **두 표에서 33p와 34p의 우열이 뒤집힙니다.** 결론 문장에 어느 "
                      "모집단인지 반드시 함께 쓰세요.\n")
@@ -912,8 +1036,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     if len(tbl_noise):
         P.append("### 노이즈 수준별 (F10)\n")
-        P.append("dQ/dV의 이점은 노이즈에서 희석된다. 노이즈 0 결과만 인용하면 "
-                 "과대평가가 된다.\n")
+        P.append(_noise_note(cmp_res.get("table_by_noise")
+                             or cmp_res.get("table_noise") or []) + "\n")
         P.append(to_markdown(tbl_noise) + "\n")
 
     # ── 22p ──
@@ -986,10 +1110,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         P.append("- **shrinkage**: 복원 격차 / 참 격차의 평균. 1이면 격차를 그대로 "
                  "복원, 0에 가까우면 전부 뭉갠다.")
         P.append("- **거짓 분리율**: 참값은 같은데 다르다고 답한 비율 (반대 방향 오류).")
-        P.append("- **붕괴에 필요한 격차오차**: 붕괴로 세려면 격차를 6%p에서 2%p 아래로 "
-                 "끌어내려야 하므로 최소 4%p의 격차 오차가 필요합니다. 이 값이 실측 "
-                 "격차오차 중앙값보다 크면, **낮은 붕괴율은 측정이 아니라 임계 설정의 "
-                 "결과**입니다 — 그대로 인용하지 마세요.\n")
+        P.append(_gap_table_legend())
 
         # ★ F28 — 임계 2차원 민감도. 한 칸만 떼어 인용하지 못하게 표 전체를 싣는다.
         sens = (cmp_res.get("gap_sensitivity") or {}).get("pocv_dvdq") or []
@@ -999,6 +1120,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      "사건률 비를 다시 센 것이다 (`pocv_dvdq`, noise=0, 복원가능군). "
                      "값이 한 자릿수에서 수십까지 움직이면, 특정 조합의 값은 "
                      "**측정이 아니라 선택**이다.\n")
+            _gref = (gaps.get("pocv_dvdq") or {})
+            _ov = _same_def_overlap_note(sens, tol=_gref.get("tol", 0.02),
+                                         gap_thresh=_gref.get("gap_thresh", 0.06))
+            if _ov:
+                P.append(_ov)
             for same_def, title in (("lt_tol", "참값 \"같다\" = 참 격차 < tol"),
                                     ("exact_zero", "참값 \"같다\" = 참 격차 정확히 0")):
                 rows = [r for r in sens if r.get("same_def") == same_def]
@@ -1058,6 +1184,12 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ── Hessian ──
     if hess_by_obj:
         P.append("## 곡률 진단 (Hessian) — 참고용, 결론 근거 아님\n")
+        # ★ 17차 발견 7 — 상단의 초록 검사 목록은 fit provenance 다. Hessian 의
+        #   곡선·obj_cfg·v_col·reference·표본·eps 연결은 **하나도 검증하지 않는다.**
+        P.append("> ⛔ **이 절은 문서 상단 provenance 검증 범위 밖입니다.** 상단의 "
+                 "초록 검사 목록은 fit artifact 를 검증한 결과이며, Hessian 산출물의 "
+                 "곡선·`obj_cfg`·`v_col`·reference·표본·`eps` 연결은 **어느 검사도 "
+                 "보지 않습니다**. 비인용 부록으로만 읽으세요 (A·A'·B·C 미수정).\n")
         P.append("> ⚠⚠ **이 절의 수치를 식별성(degeneracy) 근거로 인용하지 마세요.** "
                  "적대적 리뷰에서 세 가지가 확인됐습니다 (F33). ① 목적함수가 보간·미분·"
                  "peak 연산을 포함해 비매끄러운데 절대 step `eps` 하나를 모든 파라미터에 "
@@ -1086,10 +1218,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "있다는 뜻이다. 다만 그 해석은 아래 조건이 모두 만족될 때만 쓸 수 있다.")
         eps_vals = sorted({float(d["eps"].iloc[0]) for d in hess_by_obj.values()
                            if "eps" in d.columns})
-        P.append("- ⚠ **조건수의 절대값은 인용하지 마세요.** 목적함수가 여러 스케일에서 "
-                 "울퉁불퉁하면 수치 Hessian이 수렴하지 않아, eps를 바꾸면 값이 자릿수 "
-                 "단위로 움직입니다 (F23). 의미가 있는 것은 **같은 eps에서의 순서**뿐입니다"
-                 + (f" (이 표는 eps={eps_vals[0]:g})." if len(eps_vals) == 1
+        # ★ 17차 발견 7 추가 — "같은 eps 에서의 순서는 의미 있다" 는 지지되지
+        #   않는다. eps 를 바꾸면 값이 자릿수로 움직이고, 순서가 eps 에 안정적이라는
+        #   근거가 없다. objective 가 하나뿐이면 순서 자체가 없다.
+        P.append("- ⚠ **조건수의 절대값도, 목적함수 간 순서도 인용하지 마세요.** "
+                 "목적함수가 여러 스케일에서 울퉁불퉁하면 수치 Hessian 이 수렴하지 "
+                 "않아 eps 를 바꾸면 값이 자릿수 단위로 움직입니다 (F23). 순서가 "
+                 "eps 에 안정적이라는 근거는 확인되지 않았습니다"
+                 + (f" (이 표는 eps={eps_vals[0]:g}, objective {len(hess_by_obj)}개)."
+                    if len(eps_vals) == 1
                     else f" (⚠ 이 표에 eps가 {eps_vals} 로 섞여 있습니다 — 다시 뽑으세요)."))
         # ★ 조건수 순서가 실제 복원 성능과 어긋나면 그 사실을 문서가 스스로 말해야 한다
         try:
@@ -1186,11 +1323,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                      f"\"degeneracy가 적다\"로 읽으면 안 됩니다. "
                      f"(예전에는 여기서 Hessian을 대안으로 안내했으나, 그 지표도 eps 미수렴·"
                      f"안장점 혼입·가설과 다른 부호 규약으로 근거가 되지 못합니다 — F33.)\n")
-        P.append("> ⚠ `degeneracy_summary.yaml`의 `restart_conditioned` 블록에 있는 "
-                 "`agree_frac`과 `p_spread`는 인용하지 마세요. adaptive 조기 종료 때문에 "
-                 "`agree_frac`은 restart를 5까지 간 조건에서 **정의상 0**이고, "
-                 "`p_spread = 0`은 \"해가 일치\"가 아니라 \"최적 J에 도달한 restart가 "
-                 "하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 대신합니다.\n")
+        P.append(_agree_frac_note(_mopt0.get("adaptive") is not False))
 
     # ── 기준 곡선 비교 (Case 1 vs Case 2) ──
     # ★ 10차 발견 5 — 재계산본(_case_render)이 있으면 그것을 렌더한다.
@@ -1318,16 +1451,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             f"--nproc $(nproc)", *_fit_flags(_rs)]
     P.append(" ".join(_fit))
     P.append(f"./run.sh --mode score --in {in_dir}")
-    # ★ 16차 발견 9 — `--mode hessian` 은 producer/fit 분리 배치에서 곡선을 못
-    #   찾고(A 미수정), `score → hessian → report` 순서는 Hessian 이 summary 를
-    #   변이시켜 stale 판정을 만든다(B 미수정). 기본 체인에서 분리하고 실제로
-    #   쓴 우회를 적는다 — 이 블록대로 실행하면 이 문서와 같은 상태가 나와야 한다.
-    P.append("")
-    P.append("# Hessian (선택) — A·B 수정 전까지는 아래 우회가 필요하다")
-    P.append("#   1) 봉인 곡선 스냅샷을 staging 에 링크해 --in 으로 준다")
-    P.append("#   2) Hessian 뒤에 score 를 한 번 더 돌려 summary 를 fits 정본으로 되돌린다")
-    P.append("")
-    P.append(f"./run.sh --mode hessian --in {in_dir}")
+    # ★ 17차 발견 7 — Hessian 재현 명령을 **아예 싣지 않는다**. 분리배치에서는
+    #   `src/hessian.py:135` 가 곡선을 못 찾아 실패하고(A 미수정), 곡선을 임시로
+    #   놓아도 `degeneracy_summary.yaml` 을 변이시켜 보고서를 stale 로 만든다
+    #   (B 미수정). 독자가 그대로 실행하면 artifact 가 망가진다.
+    if hess_by_obj:
+        P.append("")
+        P.append("# Hessian 절은 이 재현 체인에 들어 있지 않습니다 (A·B 미수정).")
+        P.append("#   분리배치에서 hessian 모드는 곡선을 찾지 못하고, 실행하면")
+        P.append("#   degeneracy_summary.yaml 을 변이시켜 이 보고서를 stale 로 만듭니다.")
     # ★ 14차 2차 발견 4 — 이 블록만 실행하면 **이 문서가 렌더한 절이 전부**
     #   다시 나와야 한다. 예전에는 주 fit chain 만 있어서, sweep 절과
     #   Case 1↔Case 2 절을 렌더하면서도 재실행하면 그 두 절이 생기지 않았다.

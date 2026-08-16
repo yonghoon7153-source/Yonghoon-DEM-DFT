@@ -205,6 +205,16 @@ def compare(grid_fits: Path, halfcell_fits: Path, tol: float = 0.02,
     }
 
 
+def _case_markdown_header() -> str:
+    """★ 17차 발견 5 — 이 열은 일반 MAE 가 아니다.
+
+    값은 `abs_err_max.mean()`, 즉 **행별 세 mode 중 최대 절대오차의 평균**이다.
+    v4 33p 에서 표 값은 Case1/Case2 약 `1.412 / 2.469 %p` 인 반면 세 mode 전체
+    원소의 일반 MAE 는 약 `0.785 / 1.605 %p` 로 자릿수가 아니라 의미가 다르다.
+    """
+    return "| objective | degeneracy | (바이어스 보정) | 평균 max-mode \\|err\\| |"
+
+
 def to_markdown(res: dict) -> str:
     from tools.compare_objectives import OBJ_LABEL, OBJ_ORDER
 
@@ -213,7 +223,7 @@ def to_markdown(res: dict) -> str:
         f"공통 {res['n_conditions_compared']}조건 "
         f"(전체 {res['n_conditions_total']} 중, grid 기준 복원가능군으로 맞춤)",
         "",
-        "| objective | degeneracy | (바이어스 보정) | 평균 \\|err\\| |",
+        _case_markdown_header(),
         "|---|---|---|---|",
     ]
     for o in objs:
