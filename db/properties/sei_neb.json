@@ -9,7 +9,7 @@
     "v3"
   ],
   "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
-  "n_citable": 1,
+  "n_citable": 0,
   "n_total": 8,
   "retracted": false,
   "retraction_reason": null,
@@ -63,8 +63,24 @@
       "electronic_class": "insulator",
       "smearing": "gaussian",
       "blocking_checks": [],
-      "citable": true,
-      "root": "v2"
+      "citable": false,
+      "root": "v2",
+      "cell_convergence_status": "untested",
+      "absolute_citable": false,
+      "scientific_status": "provisional_single_cell",
+      "allowed_statement": "For the Li2S antifluorite 3x3x3 model, the charged-vacancy (V_Li-, jellium) nearest-neighbour c->c CI-NEB barrier is 0.305 eV under this finite-cell protocol.",
+      "forbidden_statement": "0.305 eV 를 수렴된 Li2S 고유 물성으로 인용하거나 실험·문헌 값과 나란히 놓는 것. 셀 수렴이 미시험이고, 하전 공공이라 jellium 유한셀 근사가 걸려 있다.",
+      "status_change_2026_08_16": "citable: true → false. 값·경로 수치는 그대로다. li3nd 에만 적용했던 4축 분리를 여기에도 적용했다 — 두 결과가 셀 수렴 축에서 **같은 상태**(단일셀·미시험)인데 한쪽만 무자격 통과였다. 규칙은 scientific_status=provisional_single_cell → citable=false 이고, 그 규칙이 li2s 에도 그대로 걸린다.",
+      "cell_size_gate_pass": true,
+      "cell_size_gate_metric": {
+        "criterion": "lambda1 = shortest nonzero lattice translation >= 10 A",
+        "lambda1_A": 12.1,
+        "min_face_height_A": 9.88,
+        "note": "점결함 이미지는 격자 병진 위에 있다. 면 높이(9.880)는 슬랩용 보수 하한이라 점-이미지 거리가 아니다 (2026-08-16 정정)."
+      },
+      "citable_downgraded_by": "scientific_status=provisional_single_cell (사람 판단 우선)",
+      "why_not_absolute": "① 셀 수렴 미시험 — 다른 셀에서 재본 적이 없다. ② 하전 공공(q=-1) + jellium 배경이라 유한셀 정전 보정이 근사다. ③ λ₁ 12.100 Å 통과는 **한 셀의 최소 요건**이지 수렴 증거가 아니다.",
+      "hop_note": "루트 라벨 v2 의 'c→b 진단용' 배너는 li3nd 용이다. Li2S 반형석은 Li 궤도가 8c 하나뿐이라(li_orbits.n_li_orbits=1) 이 홉은 c→c 최근접(d=2.8526 Å) — 진단용이 아니라 실제 전도 홉이다."
     },
     "v2/li3nd": {
       "tag": "li3nd",
@@ -222,5 +238,16 @@
       "status": "not_started",
       "root": "v3"
     }
+  },
+  "citability_contract_2026_08_16": {
+    "axes": [
+      "path_numerically_valid",
+      "cell_size_gate_pass",
+      "cell_convergence_status",
+      "absolute_citable"
+    ],
+    "rule": "scientific_status=provisional_single_cell 이면 citable=false. 값은 지우지 않는다.",
+    "current": "셀 수렴이 시험된 장벽은 **0건**이다. 그래서 n_citable=0 이다. 이건 '값이 틀렸다' 가 아니라 '아직 셀 수렴을 안 봤다' 는 뜻이고, allowed_statement 범위 안에서는 그대로 쓸 수 있다.",
+    "what_would_change_it": "v2_cc333 (Li3Nd 3x3x3) 이 닫히면 li3nd 가 승격 후보가 된다. li2s 는 별도의 두 번째 셀이 필요하다 — 아직 계획에 없다."
   }
 }

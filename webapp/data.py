@@ -795,6 +795,13 @@ def sei_axes() -> dict:
         except (OSError, ValueError):
             neb = {}
     n_neb = sum(1 for v in neb.values() if v.get("citable"))
+    # ⛔ 2026-08-16 — citable 0 을 "계산 안 됐다" 로 읽히게 두면 안 된다. 셀 수렴 축을
+    #   따로 세우면서 li2s·li3nd 가 provisional_single_cell 로 내려가 citable 이 0 이 됐는데,
+    #   **경로 자체는 수치적으로 유효**하다. 두 수를 나란히 보여야 거짓말이 안 된다.
+    n_neb_path_ok = sum(1 for v in neb.values()
+                        if v.get("status") == "converged"
+                        and v.get("Ea_effective_eV") is not None
+                        and not v.get("blocking_checks"))
     return {"axes": [
         {"n": "① Li⁺ 확산장벽",
          "state": ("⛔ 철회 — 재계산 중" if neb_retracted else
@@ -803,7 +810,9 @@ def sei_axes() -> dict:
          "detail": ("⛔ 기존 NEB 결과 전건 철회 (2026-08-11) — 재계산 대기. "
                     "협업자 요청 6종: Li₂O · Li₃PO₄γ · LiNdO₂ · LiCl · Li₂S · Li₃P"
                     if neb_retracted else
-                    (f"DFT CI-NEB {n_neb}/6 인용 가능" if neb else
+                    (f"DFT CI-NEB — 경로 수치 유효 {n_neb_path_ok}/6 · "
+                     f"셀 수렴 확인 {n_neb}/6 (인용 가능)"
+                     if neb else
                      "DFT CI-NEB 계산 중 (협업자 요청 6종)")),
          "why": ("BVSE 는 화학계를 넘나드는 비교에 못 쓴다 — 하필 Figure 5 의 주인공 "
                  "Li₂S(BVS 1.56)·LiCl(2.74)이 못 쓰는 쪽이고 Li₃P 는 파라미터가 없다. "

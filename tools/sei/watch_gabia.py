@@ -84,6 +84,10 @@ RY_EV = 13.605693122994
 EP_TOL_MEV = 5.0
 #: 비대칭 상이라도 두 Li 자리 차가 이보다 크면 이완 미완/끝점 구성 오류를 먼저 의심한다.
 EP_BIG_MEV = 500.0
+
+#: pw.x relax 힘 수렴 문턱 (Ry/au, **성분당**). 화면의 Total force 는 전 원자
+#: 노름이라 이 값과 직접 비교하면 안 된다 — relax_progress() 는 성분 최대값을 쓴다.
+FORC_CONV_THR = 1.0e-3
 _ACT = re.compile(r"activation energy\s*\((->|<-)\)\s*=\s*(-?[\d.]+)\s*eV")
 _IMGROW = re.compile(r"^\s*\d+\s+(-?[\d.]+)\s+(-?[\d.]+)\s+([TF])\s*$", re.M)
 _TOTEN = re.compile(r"^!\s+total energy\s+=\s+(-?[\d.]+)\s+Ry", re.M)
@@ -114,11 +118,17 @@ def done(d, stem):
 
 
 def relax_end(p):
-    """pw.x relax 출력 → (에너지 eV, 상태문자). 상태: ✓수렴 ▸진행/절단 ✗오류 ·없음.
+    """pw.x relax 출력 → (에너지 eV, 상태문자). 상태: ✓수렴 ▪스텝소진 ▸진행 ✗오류 ·없음.
 
     ⚠ 마지막 '!  total energy' 만 읽으면 **이완이 안 끝난 잡도 값이 나온다** — 그 값으로
       끝점 차를 재면 장벽이 아니라 미수렴을 재게 된다(2026-08-12 li3nd 2.07 eV 사례).
-      그래서 'End of BFGS Geometry Optimization' + 'JOB DONE' 을 같이 본다.
+
+    ⛔⛔ 2026-08-16 — 'End of BFGS Geometry Optimization' + 'JOB DONE' 은 **수렴 증거가
+      아니다.** QE 는 nstep 을 소진해도 그 두 줄을 똑같이 찍는다. cc333 끝점이 정확히
+      그 상태였고(50/50 스텝, 'The maximum number of steps has been reached',
+      max|F| 0.0035 vs 문턱 1e-3) 화면은 ✓✓ 로 "끝났다" 고 말하고 있었다.
+      수렴의 유일한 증거는 **'Begin final coordinates'** 다 — QE 는 힘 기준을 만족했을
+      때만 그 블록을 찍는다. 스텝 소진은 ▪ 로 따로 표시한다(값은 있으나 수렴 아님).
     """
     try:
         t = open(p, errors="ignore").read()
@@ -128,8 +138,37 @@ def relax_end(p):
         return None, "✗"
     v = _TOTEN.findall(t)
     e = float(v[-1]) * RY_EV if v else None
-    done = "End of BFGS Geometry Optimization" in t and "JOB DONE" in t
-    return e, ("✓" if done else ("▸" if e is not None else "·"))
+    if "Begin final coordinates" in t:
+        return e, "✓"
+    exhausted = ("The maximum number of steps has been reached" in t
+                 or ("End of BFGS Geometry Optimization" in t and "JOB DONE" in t))
+    if exhausted:
+        return e, "▪"
+    return e, ("▸" if e is not None else "·")
+
+
+def relax_progress(p):
+    """미수렴 relax 의 진척 → (스텝수, 마지막 max|F| 성분 Ry/au) 또는 (None, None).
+
+    ⚠ 화면에 찍히던 'Total force' 는 전 원자 **노름**이라 forc_conv_thr(성분 기준)과
+      단위가 안 맞는다. 107원자면 모든 성분이 문턱일 때 노름이 sqrt(3*107)*1e-3=0.018 —
+      그걸 문턱 1e-3 과 직접 비교하면 "18배 위" 라는 틀린 판독이 나온다(2026-08-16 실측).
+      여기서는 **성분 최대값**을 뽑는다.
+    """
+    try:
+        t = open(p, errors="ignore").read()
+    except OSError:
+        return None, None
+    n = len(re.findall(r"^ATOMIC_POSITIONS", t, flags=re.M))
+    i = t.rfind("Forces acting on atoms")
+    if i < 0:
+        return (n or None), None
+    mx = None
+    for m in re.finditer(r"atom\s+\d+\s+type\s+\d+\s+force\s*=\s*"
+                         r"([-\d.]+)\s+([-\d.]+)\s+([-\d.]+)", t[i:i + 80000]):
+        c = max(abs(float(x)) for x in m.groups())
+        mx = c if mx is None else max(mx, c)
+    return (n or None), mx
 
 
 def read_gap(path):
@@ -170,6 +209,9 @@ def _neb_rows(ss):
         # 대칭 동등이면 Δ끝점이 0 이어야 한다 / 비대칭이면 두 자리 에너지 차라 정상
         if s["ep_dE_meV"] is None:
             dep = "—"
+        elif not s.get("ep_converged"):
+            # 미수렴 끝점의 ΔE 는 축퇴 증거가 아니다 — ✓ 를 주면 안 된다 (2026-08-16)
+            dep = f"{s['ep_dE_meV']:+.0f}mV?"
         elif s["eqv"] is True:
             dep = f"{s['ep_dE_meV']:+.0f}mV{'✓' if abs(s['ep_dE_meV']) <= EP_TOL_MEV else '⛔'}"
         else:
@@ -210,15 +252,31 @@ def neb_status(d):
     ei, mi = relax_end(os.path.join(d, "ep_initial", "relax.out"))
     ef, mf = relax_end(os.path.join(d, "ep_final", "relax.out"))
     r["ep_mark"] = mi + mf
+    r["ep_converged"] = (mi == "✓" and mf == "✓")
     if "▸" in r["ep_mark"]:
         r["alerts"].append(f"{r['tag']}: 끝점 이완이 **안 끝났다**(BFGS 미완/JOB DONE 없음) — "
                            f"마지막 에너지는 수렴값이 아니다. Δ끝점을 믿지 말 것")
+    if "▪" in r["ep_mark"]:
+        # QE 가 'End of BFGS'+'JOB DONE' 을 찍어도 nstep 소진이면 수렴이 아니다.
+        bits = []
+        for nm, mk in (("ep_initial", mi), ("ep_final", mf)):
+            if mk != "▪":
+                continue
+            nst, mxf = relax_progress(os.path.join(d, nm, "relax.out"))
+            bits.append(f"{nm} {nst or '?'}스텝"
+                        + (f" max|F| {mxf:.5f}" if mxf is not None else ""))
+        r["alerts"].append(
+            f"{r['tag']}: 끝점이 **스텝 소진으로 멈췄다** (수렴 아님 — "
+            f"'Begin final coordinates' 없음): " + " · ".join(bits)
+            + f". 문턱 {FORC_CONV_THR:.0e} Ry/au(성분). Δ끝점을 대칭 증거로 쓰지 말 것")
     if "✗" in r["ep_mark"]:
         r["alerts"].append(f"{r['tag']}: 끝점 relax.out 에 오류")
     if ei is not None and ef is not None:
         r["ep_dE_meV"] = (ef - ei) * 1000.0
         ad = abs(r["ep_dE_meV"])
-        if r["eqv"] is True and ad > EP_TOL_MEV:
+        if not r.get("ep_converged") and r["eqv"] is True:
+            pass          # 미수렴 끝점의 ΔE 는 위에서 이미 경고했다 — 두 번 말하지 않는다
+        elif r["eqv"] is True and ad > EP_TOL_MEV:
             r["alerts"].append(
                 f"{r['tag']}: 끝점이 **대칭 동등**인데 {r['ep_dE_meV']:+.0f} meV 벌어졌다 "
                 f"(>{EP_TOL_MEV:.0f}) — 한쪽이 미수렴이다. NEB 장벽을 인용하지 말 것")
@@ -309,10 +367,21 @@ def selftest():
     td = tempfile.mkdtemp(prefix="watch_gabia_st_")
     ok = True
 
-    def mk(tag, eqv, e_ini, e_fin, neb_body=None, thr=0.05, converged=True):
+    def mk(tag, eqv, e_ini, e_fin, neb_body=None, thr=0.05, converged=True,
+           exhausted=False):
         d = os.path.join(td, tag)
-        tail = ("     End of BFGS Geometry Optimization\n   JOB DONE.\n"
-                if converged else "")           # 없으면 = 이완이 아직 안 끝난 출력
+        # ⛔ 2026-08-16 — 옛 픽스처는 'End of BFGS'+'JOB DONE' 만으로 "수렴" 을 흉내냈다.
+        #   그건 nstep 소진 출력과 **구별이 안 된다** (QE 가 둘 다 그 두 줄을 찍는다).
+        #   수렴의 증거는 'Begin final coordinates' 다.
+        if exhausted:
+            tail = ("     The maximum number of steps has been reached.\n"
+                    "     End of BFGS Geometry Optimization\n   JOB DONE.\n")
+        elif converged:
+            tail = ("     End of BFGS Geometry Optimization\n"
+                    "Begin final coordinates\nATOMIC_POSITIONS (crystal)\n"
+                    "End final coordinates\n   JOB DONE.\n")
+        else:
+            tail = ""                            # = 이완이 아직 안 끝난 출력
         for ep, e in (("ep_initial", e_ini), ("ep_final", e_fin)):
             os.makedirs(os.path.join(d, ep), exist_ok=True)
             if e is not None:
@@ -523,6 +592,40 @@ def selftest():
         f"_NOTE 있으면 조언 대신 설명 ({[x[-30:] for x in _a1]})")
     os.remove(os.path.join(td, "_NOTE.txt"))
     shutil.rmtree(td, ignore_errors=True)
+    # ── 끝점 수렴 판정 (2026-08-16) — nstep 소진을 수렴으로 읽으면 안 된다 ──────
+    s = neb_status(mk("cc333", None, -100.0, -100.004, body, exhausted=True))
+    chk("▪" in s["ep_mark"] and "✓" not in s["ep_mark"],
+        "음성: nstep 소진 → ▪ (✓ 아님)")
+    chk(any("스텝 소진" in a for a in s["alerts"]),
+        "음성: 스텝 소진을 경고로 말한다")
+    chk(s.get("ep_converged") is False, "음성: ep_converged=False")
+    s2 = neb_status(mk("cc333ok", None, -100.0, -100.004, body))
+    chk(s2["ep_mark"] == "✓✓" and s2.get("ep_converged") is True,
+        "양성: Begin final coordinates 있으면 ✓✓")
+    chk(not any("스텝 소진" in a for a in s2["alerts"]),
+        "양성: 수렴본에 소진 경고를 달지 않는다")
+    # 미수렴 끝점의 ΔE 는 축퇴 증거가 아니다 → 표에서 ✓ 를 주면 안 된다
+    s3 = neb_status(mk("cc333eq", True, -100.0, -100.001, body, exhausted=True))
+    chk(s3.get("ep_converged") is False and s3["eqv"] is True,
+        "음성: 대칭 True 라도 미수렴이면 ep_converged=False")
+    chk(not any("벌어졌다" in a for a in s3["alerts"]),
+        "음성: 미수렴이면 ΔE 경고를 중복해서 내지 않는다")
+    # relax_progress: 성분 최대값을 뽑는가 (노름이 아니라)
+    _pd = os.path.join(td, "prog"); os.makedirs(_pd, exist_ok=True)
+    _pf = os.path.join(_pd, "relax.out")
+    open(_pf, "w").write(
+        "ATOMIC_POSITIONS (crystal)\nATOMIC_POSITIONS (crystal)\n"
+        "     Forces acting on atoms (cartesian axes, Ry/au):\n"
+        "     atom    1 type  1   force =     0.00100000    0.00347000   -0.00020000\n"
+        "     atom    2 type  2   force =    -0.00050000    0.00010000    0.00005000\n"
+        "     Total force =     0.003623\n")
+    _n, _mx = relax_progress(_pf)
+    chk(_n == 2 and _mx is not None and abs(_mx - 0.00347) < 1e-9,
+        f"relax_progress: 스텝 2 · max|F| 성분 0.00347 (얻은 값 {_n}, {_mx})")
+    chk(_mx != 0.003623, "음성: Total force(노름)를 성분 최대값으로 착각하지 않는다")
+    _n2, _mx2 = relax_progress(os.path.join(td, "nope", "relax.out"))
+    chk(_n2 is None and _mx2 is None, "음성: 없는 파일 → (None, None)")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -750,7 +853,7 @@ if not nebs:
     print(f"④ SEI NEB — {roots or NEBW} 에 상 폴더가 없다 (build_neb_inputs.py 부터)")
 else:
     print(f"④ SEI NEB — 루트 {len(by_root)}개 · neb.x 프로세스 {neb_pid}"
-          f"   (✓수렴 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
+          f"   (✓수렴 ▪스텝소진 ▸진행 ◦SCF중 ✗오류 공백 미착수)")
     print(f"   {'상':11s}{'끝점':>5s} {'Δ끝점':>11s}  {'경로':>5s} {'오차→문턱':>13s}"
           f" {'Ea→(eV)':>11s} {'갱신':>7s}")
     print("   Ea 뒤 ↓ = no-CI 하한(**인용 불가**) · CI = 2단계까지 끝난 값")
@@ -786,6 +889,27 @@ def _fz():
     print(f"④b cc333 고정셸 ②③ 검증 — Codex 투입금지를 푸는 경로 (R={FZ_R} Å · λ₁/2=7.78)")
     if not os.path.isdir(base):
         print(f"   · 루트 없음: {base}")
+        return
+    # ── [0/4] 전제: 끝점이 **수렴**했나 (2026-08-16) ─────────────────────────
+    #   symmetric_saddle 은 여기 기하를 고정셸의 바탕으로 쓴다. 미수렴 기하로 시작하면
+    #   고정 원자가 제 위치가 아니라 장벽에 계통 편향이 실린다. nstep 소진을 "끝남" 으로
+    #   읽던 화면 때문에 이 전제가 안 보였다 — 이제 여기서 먼저 막는다.
+    ep_state, ep_line = [], []
+    for nm in ("ep_initial", "ep_final"):
+        src = os.path.join(base, nm, "relax.out")
+        alt = os.path.join(base, nm + "_r2", "relax.out")
+        use = alt if os.path.isfile(alt) else src
+        _e, mk = relax_end(use)
+        ep_state.append(mk)
+        nst, mxf = relax_progress(use)
+        ep_line.append(f"{nm}{'_r2' if use == alt else ''} {mk}"
+                       + (f" {nst}스텝" if nst else "")
+                       + (f" max|F| {mxf:.5f}" if mxf is not None else ""))
+    print(f"   [0/4] 끝점  " + " · ".join(ep_line)
+          + f"   (문턱 {FORC_CONV_THR:.0e} Ry/au 성분)")
+    if any(m != "✓" for m in ep_state):
+        print(f"          ⛔ 끝점이 아직 수렴 안 함 — 고정셸을 걸면 편향이 실린다. "
+              f"이어달리기: {base}/ep_*_r2 (nstep 확인)")
         return
     if not os.path.isfile(os.path.join(outd, "frozen_meta.json")):
         print(f"   [1/4] 입력 미생성 →  {cmd}")
