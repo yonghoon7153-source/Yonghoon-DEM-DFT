@@ -1155,3 +1155,110 @@ key 가 없는 상태에서 stale 없이 렌더되는지 보는 build 회귀를 
 | v4 재생성(격리 root) | 두 보고서 모두 **인용 금지 배너 0 · `provenance 검증 통과` 1** |
 | 거짓 전제 잔여 | `애초에` 0회 · `구버전` fallback 0회 |
 | 계산 산출물 | **불변** — `c0f1daa0` / `d50295f980ccaa81` 봉인 v4 그대로 |
+
+---
+
+## 23. 17차 리뷰 대응 — 발견 1~10
+
+### 23.1 발견 1 (숫자가 바뀜) — 2%p 경계의 binary float
+
+참 격차는 0.02 step 격자의 뺄셈이라 nominal 2%p 가 `0.01999999999999999` 로
+표현된다. raw float 에 `< 0.02` 를 그대로 걸어 **수학적으로 2%p 인 조건이
+"2%p 미만" 군**에 들어갔다. 봉인 v4 실측(recoverable·noise=0·`pocv_dvdq`):
+
+| 지표 | 수정 전 | 수정 후 |
+|---|---:|---:|
+| 작은-gap 분모 | 98 | **66** |
+| "같다"로 답한 분자 | 36 | **24** |
+| 사건률 비 (recoverable) | 90.00 | **89.09** |
+| 전체 격자 작은-gap | 61/156 | **34/93** |
+| 전체 격자 사건률 비 | 3.69 | **3.45** |
+| wide-gap 분모 / 붕괴 | 245 / 1 | **불변** |
+
+wide-gap 쪽이 불변인 이유: nominal 6%p 는 float 에서 위로 떨어져
+(`0.06000000000000001`) 이미 `>= 0.06` 에 들어 있었다. 즉 **한쪽 경계에서만**
+샜다.
+
+`gap_lt` / `gap_ge` / `gap_is_zero` 하나로 고정하고 `gap_analysis`·
+`gap_sensitivity`·`p22_truth_composition` 이 전부 그것만 쓴다 (`GAP_ATOL=1e-9`).
+
+**부수 결과 — 리뷰 미지적.** 경계를 canonical 하게 읽으면 F34 의 두 "같다"
+정의(`< tol` / exact-zero)가 **인용 지점에서 같은 집합**이 된다. 격자 step 이
+2%p 라 `< 2%p` 가 `= 0` 과 같아지기 때문이다.
+
+```
+tol=1%p  lt_tol n=66 LR=44.55  |  exact_zero n=66 LR=44.55
+tol=2%p  lt_tol n=66 LR=89.09  |  exact_zero n=66 LR=89.09   ← 인용 지점
+tol=3%p  lt_tol n=166 LR=13.28 |  exact_zero n=66 LR=15.19   ← 여기부터 갈린다
+```
+
+F34 가 두 정의를 나눈 이유는 "exact-zero 는 tol 과 무관한 고정 집합이라 임계
+효과만 분리해 볼 수 있다" 였는데, **정작 인용하는 칸에서 그 분리가 성립하지
+않는다.** 두 패널을 나란히 싣고 아무 말도 안 하면 독립인 두 확인으로 읽힌다 —
+보고서가 그 사실을 데이터에서 렌더한다.
+
+### 23.2 발견 2 — nested wsweep 의 `repo_root`
+
+16차 대응이 main·scoring·case 세 경로만 관통시켰고 `make_results.py:563` 의
+`_vp(in_dir / "wsweep")` 은 빠졌다. **기존 spy fixture 에 `wsweep/` 가 없어 그
+분기를 실행조차 하지 않았다** — "관측된 호출은 모두 옳다" 는 형태의 검사로는
+빠진 호출을 잡을 수 없다. 리뷰 지시대로 **기대 호출 집합**을 고정했고,
+`wsweep_provenance` 를 header 검사 목록에 노출했다 (main 보고서에 1건 표시,
+paired 는 nested sweep 이 없어 미표시).
+
+### 23.3 발견 3·4·5·6·10 — 서술
+
+| # | 수정 | 재생성 실물 |
+|---|---|---|
+| 3 | 노이즈 문장을 **표에서** 만든다 | main `noise 0 → +4%p, 0.001 → +0%p, 0.005 → −2%p … 방향이 바뀐다` · paired `+28/+26/+22%p … 모든 노이즈 수준에서 34p 가 더 크다` |
+| 4 | `agree_frac` 경고를 adaptive / fixed-budget 로 분기 | paired 에서 `adaptive 조기 종료 때문에` 0건 |
+| 5 | Case 표 라벨 | `평균 max-mode \|err\|` |
+| 6 | eligibility rule | `현재 grid-reference 의 α-window eligibility rule 밖` (`src/scoring.py`: `alpha_true >= 1 − atol`) |
+| 10-1 | 전체군 반대쪽 분자 | `작은 격차에서 "같다" 34/93 (36.56%)` 를 같은 문장에 |
+| 10-2 | 22p protocol | `noise=0, radius=0.021 안의 최근접 8 grid 조건` |
+| 10-3 | 임계 문구 | `낮은 붕괴율의 **일부는** … 오차 스케일이 임계 간격보다 작다는 사실에서` |
+
+### 23.4 발견 7 — Hessian 범위
+
+리뷰가 준 세 선택지 중 **2번(명시적 범위 제외 + 비인용 부록)** 을 택했다.
+
+- 재현 블록에서 hessian 실행 명령 **삭제** — 분리배치에서 실패하고, 실행하면
+  `degeneracy_summary.yaml` 을 변이시켜 보고서를 stale 로 만든다. 대신 그
+  사실을 주석으로 남긴다
+- Hessian 절 상단에 `⛔ 이 절은 문서 상단 provenance 검증 범위 밖입니다` +
+  검증되지 않는 항목 열거(곡선·`obj_cfg`·`v_col`·reference·표본·`eps`)
+- "같은 eps 에서의 순서는 의미 있다" **철회** — eps 안정성 근거가 없고, 표에
+  objective 가 하나뿐이면 순서 자체가 없다
+- `src/hessian.py` 머리말의 "이것이 degeneracy 의 **직접 증거**다" 를 부호 규약
+  경고로 교체 (α_PE·α_NE 같은 부호를 세는데 22p 가설은 반대 부호다)
+
+### 23.5 발견 8 — `05_HANDOFF.md`
+
+최상단에 철회 안내표(5행)를 넣고, 문제가 되는 절 4곳에 철회 표시를 달았다.
+지키는 방식은 **문구 금지가 아니라 구조 검사**다 (`tests/test_docs_lint.py`):
+철회 명제가 나오는 절에는 같은 절 안에 철회 표시가 있어야 한다. 역사 기록을
+지우라는 뜻이 아니라, 표시 없이 현행 답처럼 두지 말라는 뜻이다.
+
+### 23.6 발견 9 — 22p selection protocol
+
+`verdict_22p` 가 `radius` 를 기록하고(canonical protocol), renderer 는 기본값이
+아니라 **기록된 radius** 로 구성을 뽑는다. 구성 helper 가 `n_near_composition`
+을 함께 실어, verdict 와 표본 수가 다르면 `ValueError` 로 렌더를 멈춘다.
+
+### 23.7 검증
+
+| 항목 | 값 |
+|---|---|
+| 전체 테스트 | **339 passed** |
+| strict smoke | 통과 (clean 커밋 `424d295`) |
+| 재생성 | 빈 격리 root 에 4묶음 복원 → `score → compare → report` |
+| 두 보고서 | 인용 금지 배너 **0** · `provenance 검증 통과` **1** |
+| 계산 산출물 | **불변** — `fits.parquet` 재fit 없음 |
+
+### 23.8 남은 것 — 봉인 묶음 안의 파생 YAML 은 옛 숫자다
+
+`artifacts/*/objective_comparison.yaml` 은 발견 1 이전 값(`36/98`, `90.0`)을
+그대로 갖고 있다. 보고서는 `--mode report` 가 compare 를 먼저 돌려 재계산본을
+싣지만, **묶음을 복원해 그 YAML 을 직접 읽는 소비자는 옛 숫자를 본다.**
+발견 8 과 같은 실패 모드가 artifact 안에 남아 있는 셈이다. 재보관(v4.1 파생
+갱신)을 할지 문서화로 둘지는 17차 답변을 받아 정한다.
