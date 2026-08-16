@@ -9,7 +9,7 @@
     "v3"
   ],
   "key_format": "<루트라벨>/<상> — 같은 상이 루트마다 다른 홉이라 tag 만으로는 충돌한다",
-  "n_citable": 1,
+  "n_citable": 0,
   "n_total": 8,
   "retracted": false,
   "retraction_reason": null,
@@ -182,8 +182,22 @@
       "electronic_class": "metal",
       "smearing": "mv",
       "blocking_checks": [],
-      "citable": true,
-      "root": "v2_ccpath"
+      "root": "v2_ccpath",
+      "citable": false,
+      "path_numerically_valid": true,
+      "cell_size_gate_pass": true,
+      "cell_size_gate_metric": {
+        "criterion": "lambda1 = shortest nonzero lattice translation >= 10 A",
+        "lambda1_A": 10.372,
+        "min_face_height_A": 8.469,
+        "note": "점결함 이미지는 격자 병진 위에 있다. 면 높이(8.469)는 격자 평면 간 거리라 슬랩용 보수 하한이고 점-이미지 거리가 아니다 — 이 둘을 혼동해 2026-08-16 오전에 '셀 미달' 이라고 잘못 적었다 (Codex 리뷰 P0)."
+      },
+      "cell_convergence_status": "untested",
+      "absolute_citable": false,
+      "scientific_status": "provisional_single_cell",
+      "allowed_statement": "For the ordered metallic Li3Nd 2x2x2 model, the neutral-vacancy c->c CI-NEB barrier is 0.229 eV under this finite-cell protocol.",
+      "forbidden_statement": "0.229 eV 를 수렴된 Li3Nd 고유 물성이나 상간 순위로 승격하는 것. 셀 수렴이 미시험이다.",
+      "status_change_2026_08_16": "citable: true → false. 값은 보존한다. 경로 수치는 유효하고 셀 크기 게이트도 통과하지만, **셀 수렴은 시험되지 않았다** — 세 상태를 한 플래그로 뭉쳤던 것을 분리했다 (Codex 리뷰)."
     },
     "v2_cc333/li3nd": {
       "tag": "li3nd",
@@ -210,5 +224,13 @@
       "status": "not_started",
       "root": "v3"
     }
+  },
+  "status_vocabulary": {
+    "path_numerically_valid": "CI·대칭·경로 수렴 등 계산 자체가 유효한가",
+    "cell_size_gate_pass": "λ₁ ≥ min_l 기준을 통과했는가 (한 셀에서의 최소 요건)",
+    "cell_convergence_status": "untested|tested|converged — **다른 셀에서 재봤는가**",
+    "absolute_citable": "실험·문헌 절대값과 나란히 놓아도 되는가",
+    "scientific_status": "provisional_single_cell|multi_cell_converged|retracted",
+    "_why": "한 개의 citable 플래그가 이 넷을 뭉쳐서, 셀 게이트를 통과했다는 것과 셀 수렴을 확인했다는 것이 구별되지 않았다 (2026-08-16 Codex 리뷰)."
   }
 }

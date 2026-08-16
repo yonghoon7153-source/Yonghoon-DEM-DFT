@@ -367,6 +367,35 @@ def main():
             print(f"   정말 축소하려면 --allow-shrink (근거를 db 에 남길 것)")
             return 1
 
+    # ⛔⛔ 2026-08-16 — **사람이 정한 지위는 이월한다.** 그러지 않으면 다음 회수가
+    #   덮어써서 오늘 아침의 "0.229 가 db 에서 사라진" 사고가 형태만 바꿔 재발한다.
+    #   collect 가 계산할 수 있는 것(citable, blocking_checks)은 다시 만들고,
+    #   **판단**(셀 수렴 시험 여부·과학적 지위·허용 문장)은 이전 파일에서 가져온다.
+    CARRY = ("cell_convergence_status", "absolute_citable", "scientific_status",
+             "allowed_statement", "forbidden_statement", "status_change_2026_08_16",
+             "cell_size_gate_pass", "cell_size_gate_metric")
+    prev_res = {}
+    if os.path.exists(OUT):
+        try:
+            prev_res = (json.load(open(OUT, encoding="utf-8")).get("results") or {})
+        except Exception:
+            prev_res = {}
+    n_carried = 0
+    for k, v in res.items():
+        old = prev_res.get(k) or {}
+        for f in CARRY:
+            if f in old and f not in v:
+                v[f] = old[f]
+                n_carried += 1
+        # citable 은 계산값이지만, 사람이 내린 하향(absolute_citable=False 등)이 있으면
+        # 그쪽이 이긴다 — 자동 판정이 사람의 보류를 덮지 않는다.
+        if old.get("scientific_status") == "provisional_single_cell" and v.get("citable"):
+            v["citable"] = False
+            v.setdefault("citable_downgraded_by",
+                         "scientific_status=provisional_single_cell (사람 판단 우선)")
+    if n_carried:
+        print(f"   ↻ 사람이 정한 지위 {n_carried}개 항목을 이월했다 (자동 회수가 안 덮어쓴다)")
+
     ok = [r for r in res.values() if r.get("citable")]
     # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.
     #   그래서 새 게이트가 콘솔에서 li2s 를 막아도 **db 파일은 안 건드려**,
