@@ -1,0 +1,5 @@
+axis,unit,within one species,across species,ratio,read as
+relative stability,eV/atom,0.037,0.174,0.21,chemistry dominates
+Young's modulus,GPa,6.553,5.919,1.11,placement dominates
+Pugh ratio G/B,—,0.119,0.200,0.59,chemistry dominates
+Li-path proxy,—,0.037,0.013,2.83,placement dominates

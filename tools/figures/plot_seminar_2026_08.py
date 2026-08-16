@@ -25,7 +25,7 @@ import csv, io, os, sys, statistics as st
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "cascade"))
 import house_style as hs
-from cascade_ids import base_species
+from cascade_ids import base_species, slot_key
 
 import matplotlib
 matplotlib.use("Agg")
@@ -94,32 +94,61 @@ GROUP_OF = {"Li":"alkali","Na":"alkali","Ag":"TM","Mg":"alk.earth","Ca":"alk.ear
 
 
 def fig_periodic():
+    """계열 = 색상(hue), 화합물 수 = 채도(intensity). 순위가 아니라 커버리지 지도."""
     import re
+    from matplotlib.colors import to_rgb
     rows = _all_rows()
     sp = sorted({base_species(r["dopant"]) for r in rows})
     cnt = {}
-    for s in sp:
-        for m in re.findall(r"[A-Z][a-z]?", s):
+    for x in sp:
+        for m in re.findall(r"[A-Z][a-z]?", x):
             if m not in ("O", "S", "F", "Cl", "Br", "I", "N"):
                 cnt[m] = cnt.get(m, 0) + 1
+    hi = max(cnt.values())
+
     _rc()
-    fig, ax = plt.subplots(figsize=(12.4, 5.0))
+    fig, ax = plt.subplots(figsize=(13.0, 5.6))
+    BW, GAP = 1.0, 0.09
     for el, (c, r) in PT.items():
         g = GROUP_OF.get(el, "TM")
-        col = GROUP_C[g]
-        ax.add_patch(Rectangle((c, -r), .94, .94, facecolor=col, alpha=.16,
-                               edgecolor=col, lw=1.6, zorder=2))
-        ax.text(c + .47, -r + .60, el, ha="center", va="center", fontsize=17,
-                weight="bold", color=hs.INK, zorder=3)
-        ax.text(c + .47, -r + .26, f"{cnt.get(el,0)}", ha="center", va="center",
-                fontsize=11.5, color=hs.MUT, zorder=3)
-    for i, (g, col) in enumerate(GROUP_C.items()):
-        ax.add_patch(Rectangle((1 + i * 2.7, -7.95), .5, .45, facecolor=col, alpha=.16,
-                               edgecolor=col, lw=1.5))
-        ax.text(1.65 + i * 2.7, -7.72, g, fontsize=12.5, va="center", color=hs.INK)
-    ax.text(16.6, -1.2, "number = how many\ncompounds of that\nelement we ran",
-            fontsize=11.5, color=hs.MUT, va="top", ha="left")
-    ax.set_xlim(.4, 20.2); ax.set_ylim(-8.3, -.1)
+        base = to_rgb(GROUP_C[g])
+        n = cnt.get(el, 0)
+        t = 0.16 + 0.62 * (n / hi) ** 0.62                 # 개수 → 채도
+        fill = tuple(1 - t * (1 - ch) for ch in base)
+        x0, y0 = c * (BW + GAP), -r * (BW + GAP)
+        ax.add_patch(Rectangle((x0, y0), BW, BW, facecolor=fill,
+                               edgecolor=base, lw=1.4, zorder=2))
+        ax.text(x0 + BW / 2, y0 + BW * 0.60, el, ha="center", va="center",
+                fontsize=19, weight="bold", color=hs.INK, zorder=3)
+        ax.text(x0 + BW / 2, y0 + BW * 0.24, str(n), ha="center", va="center",
+                fontsize=12.5, color=hs.INK if n >= hi * .6 else hs.MUT, zorder=3)
+
+    # 범례 — 계열 (아래 한 줄)
+    ly = -8.05 * (BW + GAP)
+    x = 1.0 * (BW + GAP)
+    for g, col in GROUP_C.items():
+        base = to_rgb(col)
+        ax.add_patch(Rectangle((x, ly), 0.55, 0.55,
+                               facecolor=tuple(1 - .55 * (1 - ch) for ch in base),
+                               edgecolor=base, lw=1.5))
+        ax.text(x + 0.78, ly + 0.28, g, fontsize=14, va="center", color=hs.INK)
+        x += 3.5
+
+    # 채도 눈금 — 주기율표 가운데 빈 자리에 앉힌다
+    sx, sy = 16.9 * (BW + GAP), ly
+    ax.text(sx, sy + 1.05, "shade  =  compounds per element",
+            fontsize=13, color=hs.MUT)
+    for k, n in enumerate((1, 2, 3, 5, 7)):
+        base = to_rgb(GROUP_C["TM"])
+        t = 0.16 + 0.62 * (n / hi) ** 0.62
+        ax.add_patch(Rectangle((sx + k * 0.72, sy), 0.64, 0.55,
+                               facecolor=tuple(1 - t * (1 - ch) for ch in base),
+                               edgecolor="#cbd5e1", lw=1.0))
+        ax.text(sx + k * 0.72 + 0.32, sy + 0.28, str(n), ha="center", va="center",
+                fontsize=12, color=hs.INK)
+
+    ax.set_xlim(0.45, 20.6 * (BW + GAP))
+    ax.set_ylim(-8.55 * (BW + GAP), -0.55 * (BW + GAP))
     ax.axis("off")
     return _save(fig, "roster_periodic_table.png")
 
@@ -326,8 +355,97 @@ def fig_tradeoff():
     return _save(fig, "result3_stability_vs_traffic.png")
 
 
+
+# ── 8. STEP 3 — 어떤 구조가 살아남았나 ────────────────────────────────────────
+def fig_screen_survival():
+    """부피가 얼마나 움직였나. 25 % 넘게 부푼 구조는 다음 단계로 안 보낸다."""
+    vals = []
+    for r in _all_rows():
+        try:
+            vals.append(abs(float(r["screen_dV_over_V0"])) * 100)
+        except (ValueError, KeyError, TypeError):
+            continue
+    keep = [v for v in vals if v <= 25]
+    drop = [v for v in vals if v > 25]
+    _rc()
+    fig, ax = plt.subplots(figsize=(10.8, 4.7))
+    bins = list(range(0, 62, 2))
+    ax.hist(keep, bins=bins, color=GOOD, alpha=.85, zorder=3, label="carried forward")
+    ax.hist([min(v, 60) for v in drop], bins=bins, color=BAD, alpha=.92, zorder=4,
+            label="distorted too far — dropped here")
+    ax.axvline(25, color=hs.INK, ls="--", lw=1.5, zorder=5)
+    ax.legend(frameon=False, fontsize=13, loc="upper right", bbox_to_anchor=(1.0, .78))
+    ax.set_xlabel("how far the cell volume moved during relaxation  (%)")
+    ax.set_ylabel("number of candidate structures")
+    _bare(ax, grid="y")
+    ax.annotate(f"{len(drop)} of {len(vals):,} structures\nend up here",
+                xy=(30, len(drop) * 0.30), xytext=(38, max(len(keep) // 7, 60)),
+                fontsize=13.5, color=BAD, weight="bold",
+                arrowprops=dict(arrowstyle="->", color=BAD, lw=1.8))
+    return _save(fig, "step3_survival.png")
+
+
+# ── 9. STEP 5 — 흔들었더니 얼마나 내려갔나 ────────────────────────────────────
+def fig_anneal_gain():
+    vals = []
+    for r in _all_rows():
+        try:
+            vals.append(float(r["anneal_delta_E_meV"]))
+        except (ValueError, KeyError, TypeError):
+            continue
+    down = [v for v in vals if v < 0]
+    _rc()
+    fig, ax = plt.subplots(figsize=(10.4, 4.6))
+    n_, _, _ = ax.hist(vals, bins=44, color=hs.ELEM["P"], alpha=.82, zorder=3)
+    ax.axvline(0, color=hs.INK, lw=1.4, zorder=4)
+    ax.set_ylim(0, max(n_) * 1.34)
+    ax.set_xlabel("energy change caused by the short anneal  (meV per cell)")
+    ax.set_ylabel("number of structures")
+    _bare(ax, grid="y")
+    ax.text(.02, .96, "every structure found a lower-energy arrangement\nonce it was allowed to move",
+            transform=ax.transAxes, va="top", fontsize=14, color=GOOD, weight="bold")
+    ax.text(.98, .52, "the plain relaxation had stopped\nat the nearest minimum",
+            transform=ax.transAxes, va="top", ha="right", fontsize=13, color=hs.MUT)
+    return _save(fig, "step5_anneal_gain.png")
+
+
+# ── 10. 무엇이 있고 무엇이 없나 ───────────────────────────────────────────────
+def fig_coverage():
+    rows = _all_rows()
+    # ⚠ raw dopant 로 세면 `WO3` 와 `WO3+Clrich` 가 갈려 303 이 된다 — 정본은 slot_key
+    n_slot = len({slot_key(r) for r in rows})
+    def cov(col):
+        return len({slot_key(r) for r in rows if r.get(col)})
+    items = [("candidate structures", n_slot, True),
+             ("fast relaxation", n_slot, True),
+             ("short anneal", cov("anneal_delta_E_meV"), True),
+             ("static Li-path map", cov("bvs_li_proxy_score"), True),
+             ("stiffness / equation of state", cov("elastic_E_young_GPa"), True),
+             ("oxidation window", n_slot, True),
+             ("conductivity from dynamics", 0, False),
+             ("cathode interface, adhesion", 0, False)]
+    _rc()
+    fig, ax = plt.subplots(figsize=(10.6, 5.0))
+    for i, (name, v, good) in enumerate(items):
+        y = -i
+        ax.barh(y, n_slot, height=.52, color="#eef1f5", zorder=2)
+        ax.barh(y, v, height=.52, color=(GOOD if good else BAD), alpha=.85, zorder=3)
+        ax.text(-4, y, name, ha="right", va="center", fontsize=13.5, color=hs.INK)
+        lbl = f"{v}" if v else "none"
+        ax.text(n_slot + 6, y, lbl, va="center", fontsize=13,
+                color=(hs.INK if good and v else BAD), weight="bold" if not v else "normal")
+    ax.set_xlim(-108, n_slot * 1.12)
+    ax.set_ylim(-len(items) + .4, .7)
+    ax.set_yticks([])
+    ax.set_xlabel(f"how many of the {n_slot} planned runs actually produced this")
+    _bare(ax, grid="x")
+    ax.set_xticks([0, 90, 180, 270])
+    return _save(fig, "evidence_coverage.png")
+
+
 FIGS = [fig_periodic, fig_site_choice, fig_anion_site, fig_stability_band,
-        fig_label_spread, fig_oxidation_windows, fig_oxidation_by_group, fig_tradeoff]
+        fig_label_spread, fig_oxidation_windows, fig_oxidation_by_group, fig_tradeoff,
+        fig_screen_survival, fig_anneal_gain, fig_coverage]
 
 
 def selftest():

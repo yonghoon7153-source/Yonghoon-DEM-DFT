@@ -22,6 +22,7 @@ import copy, re, sys, os
 from pptx import Presentation
 from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN
 from PIL import Image
 
 #: 머리말 도형 개수 — 이 인덱스 미만은 절대 건드리지 않는다.
@@ -31,7 +32,7 @@ HEADER_N = 14
 COVER = 1
 COVER_BAND = (3.85, 5.15)
 #: 내용 영역 (인치)
-ZONE = dict(x=0.55, y=2.52, w=8.90, h=3.86)
+ZONE = dict(x=0.55, y=2.50, w=8.90, h=3.62)   # 아래 0.3 in 은 `< 그림이름 >` 자리
 CAP_Y = 6.46
 MUT = RGBColor(0x6b, 0x7d, 0x8f)
 FIG = "/home/user/Yonghoon-DEM-DFT/"
@@ -169,9 +170,9 @@ def add_caption(slide, text, y=CAP_Y):
     f.size, f.italic, f.color.rgb, f.name = Pt(9.5), True, MUT, "Arial"
 
 
-def add_statement(slide, text, y=3.6, size=17.5):
+def add_statement(slide, text, y=3.6, size=17.5, x=1.05, w=7.90):
     """그림이 없는 장 — 도형 대신 한 문장을 크게."""
-    tb = slide.shapes.add_textbox(Inches(1.05), Inches(y), Inches(7.90), Inches(1.5))
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(1.5))
     tf = tb.text_frame
     tf.word_wrap = True
     for i, line in enumerate(text.split("\n")):
@@ -200,6 +201,22 @@ ROSTER = [
 ]
 
 
+def add_roster_compact(slide, y=4.92):
+    """표 아래에 전체 명단을 작은 글씨 한 덩어리로. 표가 구조를, 이 줄이 실체를 준다."""
+    body = "  ·  ".join(f"{n}" for _, _, _, n in [])
+    tb = slide.shapes.add_textbox(Inches(0.62), Inches(y), Inches(8.76), Inches(1.65))
+    tf = tb.text_frame; tf.word_wrap = True
+    for k, (name, n, colr, names) in enumerate(ROSTER):
+        pgh = tf.paragraphs[0] if k == 0 else tf.add_paragraph()
+        r1 = pgh.add_run(); r1.text = f"{name}  "
+        r1.font.size, r1.font.bold, r1.font.name = Pt(9.5), True, "Arial"
+        r1.font.color.rgb = RGBColor.from_string(colr.lstrip("#").upper())
+        r2 = pgh.add_run(); r2.text = names.replace("\n", "  ")
+        r2.font.size, r2.font.name = Pt(9.5), "Arial"
+        r2.font.color.rgb = RGBColor(0x4b, 0x55, 0x63)
+        pgh.space_after = Pt(1.5)
+
+
 def add_roster(slide):
     """계열 머리글 + 명단. 두 단으로 나눠 앉힌다 (표·도형 없이 글자만)."""
     left = ROSTER[:3]
@@ -221,6 +238,53 @@ def add_roster(slide):
                 rr.font.size, rr.font.name = Pt(11), "Arial"
                 rr.font.color.rgb = RGBColor(0x37, 0x41, 0x51)
             y += 0.24 * nlines + 0.30
+
+
+def add_fig_label(slide, text, x, y, w):
+    """`< Arrhenius plot >` 꼴의 그림 이름표. 레퍼런스 덱(2026-06-15)의 관례."""
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(0.28))
+    tf = tb.text_frame; tf.word_wrap = False
+    pgh = tf.paragraphs[0]; pgh.alignment = PP_ALIGN.CENTER
+    r = pgh.add_run(); r.text = f"< {text} >"
+    r.font.size, r.font.name, r.font.bold = Pt(13), "Arial", False
+    r.font.color.rgb = RGBColor(0x1f, 0x29, 0x37)
+
+
+def add_table(slide, rows, x, y, w, size=11.5, first_col_w=None, head_fill="EEF2F7"):
+    """레퍼런스 덱 양식의 표 — 머리행 옅은 채움 + 굵게, 본문은 얇은 가로줄만.
+
+    `[r]…[/r]` / `[b]…[/b]` 색 마크업을 셀 안에서도 쓸 수 있다.
+    """
+    nr, nc = len(rows), len(rows[0])
+    rh = max(0.225, 0.0235 * size)
+    h = rh + 1.06 * rh * 0 + rh * (nr - 1) + 0.035
+    gf = slide.shapes.add_table(nr, nc, Inches(x), Inches(y), Inches(w), Inches(h))
+    tbl = gf.table
+    tbl.first_row = True
+    tbl.horz_banding = False
+    if first_col_w:
+        tbl.columns[0].width = Inches(first_col_w)
+        rest = (w - first_col_w) / (nc - 1)
+        for c in range(1, nc):
+            tbl.columns[c].width = Inches(rest)
+    for ri, row in enumerate(rows):
+        tbl.rows[ri].height = Inches(rh)
+        for ci, val in enumerate(row):
+            cell = tbl.cell(ri, ci)
+            cell.margin_left = cell.margin_right = Inches(0.07)
+            cell.margin_top = cell.margin_bottom = Inches(0.02)
+            tf = cell.text_frame
+            pgh = tf.paragraphs[0]
+            pgh.alignment = PP_ALIGN.LEFT if ci == 0 else PP_ALIGN.CENTER
+            for txt, col in _split_marked(str(val)):
+                r = pgh.add_run(); r.text = txt
+                r.font.size, r.font.name = Pt(size), "Arial"
+                r.font.bold = (ri == 0) or (col is not None)
+                r.font.color.rgb = col or (RGBColor(0x1f, 0x29, 0x37) if ri == 0
+                                           else RGBColor(0x37, 0x41, 0x51))
+            cell.fill.solid()
+            cell.fill.fore_color.rgb = RGBColor.from_string(head_fill if ri == 0 else "FFFFFF")
+    return y + h
 
 
 def add_lines(slide, rows, x=1.05, y=2.75, w=7.9, size=13, lead=0.34, bold_prefix=True):
@@ -307,7 +371,17 @@ SPEC = {
           header="91 compounds across seven families — chosen to span the chemistry",
           bullets=["Oxides for [b]strong bonds[/b]; halides because the host has Cl; nitrides and sulfides as controls.",
                    "⚠ The list leans toward [r]well-known stable compounds[/r] — that turns out to matter later."],
-          roster=True,
+          table=dict(rows=[
+                    ['family', 'n', 'why it is in the list', 'examples'],
+                    ['oxides', '37', 'strong M–O bonds, expected to resist oxidation', 'Ag2O  Al2O3  B2O3  BaO …'],
+                    ['chlorides', '19', 'host already contains Cl', 'AlCl3  BaCl2  CaCl2  CrCl3 …'],
+                    ['sulfides', '10', 'same anion as the host — control', 'Al2S3  CaS  Ga2S3  GeS2 …'],
+                    ['fluorides', '10', 'strongest bonds, worst Li mobility risk', 'AlF3  CaF2  LaF3  LiF …'],
+                    ['bromides', '5', 'larger halide — lattice-size control', 'AlBr3  CaBr2  LiBr  MgBr2 …'],
+                    ['nitrides', '5', 'high charge anion — charge-compensation control', 'AlN  Ca3N2  GaN  Li3N …'],
+                    ['iodides', '4', 'largest halide — mobility control', 'AlI3  LiI  MgI2  NaI'],
+                 ], y=2.60, w=8.76, size=11.5, first_col_w=1.35),
+          roster_compact=True,
           cap="Grouped by the dominant anion. Order inside a family carries no meaning — this is the input list, not a shortlist."),
  7:  dict(gloss='Cation: the metal we substitute in  ·  Coverage: how many compounds of that element we ran',
           src='Our roster, drawn on the table',
@@ -343,12 +417,12 @@ SPEC = {
           header="Let a fast model decide which structures are even plausible",
           bullets=["A machine-learned potential relaxes in [b]minutes instead of hours[/b], so we can afford all of them.",
                    "Structures that collapse or refuse to converge drop out here."],
+          pics=[S+"step3_survival.png"],
+          fig_label="how far each structure moved",
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.42),
           statement="This stage answers one question: does the structure hold together?",
-          stmt_y=3.05, stmt_size=18,
-          lines=["What we get :: relative energies inside [b]one consistent convention[/b] — enough to compare candidates.",
-                 "[r]What we do not get[/r] :: formation energies, hull distances, or anything comparable to a database value.",
-                 "Why that is fine :: nothing downstream needs an absolute number — only an ordering."],
-          lines_y=4.30, lines_size=14, lines_lead=0.62),
+          stmt_y=5.42, stmt_size=15.5,
+          ),
  11: dict(gloss='Representative: the one structure carried forward  ·  Convergence: the optimiser actually finished',
           src='Our calculation  ·  stability band',
           title="STEP 4 — Picking one",
@@ -364,11 +438,12 @@ SPEC = {
           header="A short heat-and-relax tests whether the structure survives",
           bullets=["Plain relaxation only finds the [r]nearest[/r] minimum; real synthesis explores much further.",
                    "So we heat briefly, then relax again — everything measured next depends on [b]bond lengths[/b]."],
-          statement="500 K for 50 picoseconds, then relax again.\nLong enough to cross a small barrier, short enough to afford for everyone.",
-          stmt_y=3.15, stmt_size=17,
-          lines=["Why it matters :: Li pathways and stiffness both shift when bond lengths shift.",
-                 "[r]What it is not[/r] :: an equilibrium structure, a synthesis history, or a conductivity measurement."],
-          lines_y=4.85, lines_size=14, lines_lead=0.62),
+          pics=[S+"step5_anneal_gain.png"],
+          fig_label="energy gained by shaking the structure",
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.42),
+          statement="500 K for 50 picoseconds, then relax again — long enough to cross a small barrier.",
+          stmt_y=5.42, stmt_size=15.5,
+          ),
  13: dict(gloss='Bond-valence map: a cheap estimate of how comfortable an ion is at a point  ·  Percolation: a low-energy path that spans the crystal',
           src='Our calculation  ·  Li landscape',
           title="STEP 6 — The Li path",
@@ -394,6 +469,7 @@ SPEC = {
           bullets=["At each voltage we ask whether the material would rather stay whole or [r]split into other phases[/r].",
                    "We get the onset [b]and the products[/b] — an insulating one behaves nothing like a conducting one."],
           pics=[S+"step8_oxidation_windows.png"],
+          fig_label="stability window of every candidate",
           cap="Our calculation: the voltage range over which each candidate is not driven to decompose. "
               "Late transition metals lose the window entirely. 0 K bulk thermodynamics — this says decomposition is allowed, not how fast."),
  16: dict(gloss='Proxy: something cheap that correlates with what you want  ·  Adhesion: how strongly two materials stick across an interface',
@@ -413,13 +489,19 @@ SPEC = {
           src='Evidence inventory',
           title="What exists",
           header="Broad in structures, thin in the expensive evidence",
-          lines=["[b]Computed[/b] :: candidate structures · fast relaxation · short anneal · static Li-path maps · "
-                 "stiffness and equation of state · bulk oxidation windows and decomposition products",
-                 "[r]Not computed[/r] :: a real concentration series · repeats at a fixed site · long conductivity dynamics · "
-                 "explicit interfaces and adhesion · DFT confirmation across the whole pool"],
-          lines_y=2.95, lines_size=14, lines_lead=1.25,
-          statement="A missing calculation stays missing.\nA proxy can reorder the queue; it cannot take the place of the answer.",
-          stmt_y=5.30, stmt_size=18),
+          table=dict(rows=[
+                    ['what', 'how many of 270', 'status'],
+                    ['candidate structures', '270', '[b]computed[/b]'],
+                    ['fast relaxation', '270', '[b]computed[/b]'],
+                    ['short anneal', '270', '[b]computed[/b]'],
+                    ['static Li-path map', '270', '[b]computed[/b]'],
+                    ['stiffness / EOS', '270', '[b]computed[/b]'],
+                    ['oxidation window', '270', '[b]computed[/b]'],
+                    ['conductivity from dynamics', '0', '[r]not run[/r]'],
+                    ['cathode interface / adhesion', '0', '[r]not run[/r]'],
+                 ], y=2.62, w=6.05, size=12, first_col_w=3.05),
+          statement="A missing calculation\nstays missing.\n\nA proxy can reorder the queue;\nit cannot take the place\nof the answer.",
+          stmt_x=6.95, stmt_y=2.95, stmt_size=14.5, stmt_w=2.55),
  18: dict(gloss='Exact formula: the atom counts in the simulated cell  ·  Placement: which site the dopant actually took',
           src='Our calculation  ·  label spread',
           title="Result 1 — Identity",
@@ -427,6 +509,15 @@ SPEC = {
           bullets=["[b]59 of 90[/b] species kept one exact formula across our three runs; [r]31 did not[/r].",
                    "Where the site moved the value moved too — averaging the three [r]mixes different materials[/r]."],
           pics=[S+"result1_same_name_different_value.png"],
+          fig_label="spread of the three runs, species by species",
+          pic_zone=dict(x=0.55, y=2.50, w=8.90, h=2.28),
+          table=dict(rows=[
+                    ['axis', 'unit', 'within one species', 'across species', 'ratio', 'read as'],
+                    ['relative stability', 'eV/atom', '0.037', '0.174', '0.21', '[b]chemistry dominates[/b]'],
+                    ["Young's modulus", 'GPa', '6.553', '5.919', '1.11', '[r]placement dominates[/r]'],
+                    ['Pugh ratio G/B', '—', '0.119', '0.200', '0.59', '[b]chemistry dominates[/b]'],
+                    ['Li-path proxy', '—', '0.037', '0.013', '2.83', '[r]placement dominates[/r]'],
+                 ], y=5.10, w=8.76, size=11, first_col_w=1.85),
           cap="Our calculation: each grey bar is one species, each dot one run. The bar is as tall as the gap between "
               "a dozen different species — which means placement, not chemistry, is driving that axis."),
  19: dict(gloss='Valence band: the highest filled electronic states  ·  Pinned: set by one element regardless of what else changes',
@@ -437,6 +528,16 @@ SPEC = {
                    "Late transition metals are the clear loss: [r]the window collapses[/r] rather than shifting."],
           pics=[L+"banik2022_substitutions_oxidative_stability_argyrodite/fig_4.png",
                 S+"result2_onset_by_chemistry.png"],
+          fig_label=["valence band edge of the host", "onset by dopant chemistry"],
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=1.92),
+          table=dict(rows=[
+                    ['dopant chemistry', 'n', 'median onset (V)', 'range (V)', 'windows lost'],
+                    ['main-group', '21', '2.140', '1.72 – 2.36', '0'],
+                    ['alk.earth', '17', '2.140', '2.06 – 2.14', '0'],
+                    ['alkali', '10', '2.140', '2.06 – 2.14', '0'],
+                    ['TM', '33', '2.024', '1.72 – 2.36', '[r]5[/r]'],
+                    ['lanthanide', '9', '1.920', '1.89 – 2.12', '0'],
+                 ], y=4.72, w=8.76, size=10.5, first_col_w=2.10),
           cap="Left: Banik et al. (2022), Fig. 4 — the valence-band edge of Li₆PS₅Cl is sulfur. "
               "Right: our onsets grouped by cation chemistry. Most sit pinned at the host value; we cannot yet attribute the exceptions to an element."),
  20: dict(gloss='Blocking fraction: how much of the Li path the dopant occupies  ·  Trade-off: a gain on one axis paid for on another',
@@ -621,15 +722,31 @@ def main():
                 x, y, w, h = fit(iw, ih, bx, ZONE["y"], cw, ZONE["h"])
                 slide.shapes.add_picture(p, Inches(x), Inches(y), Inches(w), Inches(h))
         if spec.get("pics"):
-            add_pics(slide, spec["pics"])
+            add_pics(slide, spec["pics"], zone=spec.get("pic_zone", ZONE))
         if spec.get("roster"):
             add_roster(slide)
-        if spec.get("lines"):
+        if spec.get("roster_compact"):
+            add_roster_compact(slide)
+        if spec.get("table"):
+            t = spec["table"]
+            add_table(slide, t["rows"], t.get("x", 0.62), t.get("y", 2.55),
+                      t.get("w", 8.76), size=t.get("size", 11.5),
+                      first_col_w=t.get("first_col_w"))
+        if spec.get("fig_label"):
+            labs = spec["fig_label"]
+            labs = [labs] if isinstance(labs, str) else labs
+            pics = [sh for sh in slide.shapes if sh.__class__.__name__ == "Picture"]
+            for lab, sh in zip(labs, pics):
+                add_fig_label(slide, lab, sh.left / 914400,
+                              sh.top / 914400 + sh.height / 914400 + 0.02,
+                              sh.width / 914400)
+        if spec.get("lines"):  # None 이면 건너뛴다
             add_lines(slide, spec["lines"], y=spec.get("lines_y", 2.75),
                       size=spec.get("lines_size", 13), lead=spec.get("lines_lead", 0.34))
         if spec.get("statement"):
             add_statement(slide, spec["statement"], y=spec.get("stmt_y", 3.6),
-                          size=spec.get("stmt_size", 17.5))
+                          size=spec.get("stmt_size", 17.5),
+                          x=spec.get("stmt_x", 1.05), w=spec.get("stmt_w", 7.90))
         if spec.get("cap"):
             add_caption(slide, spec["cap"])
         for j, floor in (() if i == COVER else ((1, 15.0), (5, 12.75))):   # 제목·구역 헤더는 한 줄 유지
@@ -688,6 +805,23 @@ def selftest():
     chk("음성: 표지 띠가 부제 위에서 끝난다", COVER_BAND[1] < 5.5)
     chk("음성: 표지 띠가 푸터를 안 건드린다", COVER_BAND[1] < 7.0)
     chk("음성: 표지에는 그림 지시가 없다", not SPEC.get(COVER, {}).get("pics"))
+    # 음성 ⑪ — 표가 캡션·푸터를 침범하면 안 된다
+    bad_t = [(n, round(sp_["table"].get("y", 2.55)
+                       + max(0.225, 0.0235 * sp_["table"].get("size", 11.5))
+                       * len(sp_["table"]["rows"]) + 0.035, 2))
+             for n, sp_ in SPEC.items() if sp_.get("table")
+             if sp_["table"].get("y", 2.55) + 0.30 + 0.265 * (len(sp_["table"]["rows"]) - 1) > CAP_Y]
+    chk(f"음성: 표가 캡션 줄을 넘지 않음 ({bad_t})", not bad_t)
+    # 음성 ⑫ — 그림 라벨 수가 그림 수보다 많으면 안 된다
+    bad_l = [n for n, sp_ in SPEC.items()
+             if sp_.get("fig_label") and not isinstance(sp_["fig_label"], str)
+             and len(sp_["fig_label"]) > len(sp_.get("pics", [])) + len(sp_.get("extra_pics", []))
+             and not sp_.get("keep_pics")]
+    chk(f"음성: 그림보다 라벨이 많은 장 없음 ({bad_l})", not bad_l)
+    # 음성 ⑬ — 문장 상자가 슬라이드(10 in)를 벗어나면 안 된다
+    bad_s = [(n, sp_.get("stmt_x", 1.05) + sp_.get("stmt_w", 7.90)) for n, sp_ in SPEC.items()
+             if sp_.get("statement") and sp_.get("stmt_x", 1.05) + sp_.get("stmt_w", 7.90) > 9.55]
+    chk(f"음성: 문장 상자 슬라이드 이탈 0건 ({bad_s})", not bad_s)
     # 음성 ⑩ — 용어 띠·출처 라벨이 너무 길면 머리말을 덮는다 (상자 5.26 in · 8.6 pt)
     gl = [(n, len(_MARK.sub(r"\2", sp_["gloss"]))) for n, sp_ in SPEC.items()
           if sp_.get("gloss") and len(_MARK.sub(r"\2", sp_["gloss"])) > 190]
