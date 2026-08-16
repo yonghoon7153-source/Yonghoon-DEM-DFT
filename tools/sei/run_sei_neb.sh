@@ -123,18 +123,32 @@ TARGETS=("$@"); [ ${#TARGETS[@]} -eq 0 ] && TARGETS=("${ORDER[@]}")
 
 # ★ P0-2 (Codex) — vacancy 끝점을 먼저 이완한다. 미이완 끝점이 경로 최고점이 되면
 #   NEB 은 끝점을 고정하므로 내리막만 남아 Ea=0 이 나온다 (li3p 사고의 미해결 절반).
+# ⛔⛔ 2026-08-16 — 완료 판정이 `JOB DONE` 이었다. QE 는 **nstep 을 소진해도** JOB DONE 과
+#   'End of BFGS Geometry Optimization' 을 똑같이 찍는다. 그래서 cc333 끝점(50/50 스텝
+#   소진, max|F| 0.0035 vs 문턱 1e-3)이 "이미 완료" 로 건너뛰어졌다. 수렴의 유일한 증거는
+#   **'Begin final coordinates'** 다 — QE 는 힘 기준을 만족했을 때만 그 블록을 찍는다.
+# EPSUF: 이어달리기용 디렉터리 접미사 (예: EPSUF=_r2 → ep_initial_r2). 기본은 없음.
 if [ "$MODE" = endpoints ]; then
   PW=${PW:-/data/apps/qe-7.4.1-gpu/bin/pw.x}
+  EPSUF=${EPSUF:-}
   [ -x "$PW" ] || { ts "⛔ pw.x 없음: $PW"; exit 1; }
   for t in "${TARGETS[@]}"; do
     for ep in ep_initial ep_final; do
-      d="$WORK/$t/$ep"
+      d="$WORK/$t/${ep}${EPSUF}"
       [ -f "$d/relax.in" ] || { ts "⛔ 없음: $d/relax.in — build_neb_inputs.py 먼저"; continue; }
-      grep -aq "JOB DONE" "$d/relax.out" 2>/dev/null && { ts "  ✓ $t/$ep 이미 완료"; continue; }
-      ts "  ▶ $t/$ep relax"
+      if grep -aq "Begin final coordinates" "$d/relax.out" 2>/dev/null; then
+        ts "  ✓ $t/${ep}${EPSUF} 이미 **수렴**"; continue; fi
+      if grep -aq "The maximum number of steps has been reached" "$d/relax.out" 2>/dev/null; then
+        ts "  ▪ $t/${ep}${EPSUF} 스텝 소진분이 있다 — 이 디렉터리를 덮어쓰고 다시 돈다"; fi
+      ts "  ▶ $t/${ep}${EPSUF} relax"
       ( cd "$d" && $MPIRUN -np 1 --oversubscribe "$PW" -in relax.in > relax.out 2>&1 )
-      if grep -aq "JOB DONE" "$d/relax.out"; then ts "  ✅ $t/$ep"; else
-        ts "  ✗ $t/$ep 실패 — 꼬리:"; tail -6 "$d/relax.out"; fi
+      if grep -aq "Begin final coordinates" "$d/relax.out"; then
+        ts "  ✅ $t/${ep}${EPSUF} 수렴"
+      elif grep -aq "The maximum number of steps has been reached" "$d/relax.out"; then
+        ts "  ▪ $t/${ep}${EPSUF} **스텝 소진 — 수렴 아님.** nstep 을 늘려 이어달릴 것"
+        grep -a "Total force" "$d/relax.out" | tail -2
+      else
+        ts "  ✗ $t/${ep}${EPSUF} 실패 — 꼬리:"; tail -6 "$d/relax.out"; fi
     done
   done
   ts "끝점 이완 끝 — build_neb_inputs.py 를 **다시 돌려** 이완 좌표를 승계시킬 것"
