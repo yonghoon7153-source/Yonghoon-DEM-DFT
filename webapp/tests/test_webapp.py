@@ -901,6 +901,35 @@ def test_oxidation_onset_carries_its_composition_family():
     assert [d for d, r in rows.items() if r["ox_family_confounded"]] == ["B2O3"]
 
 
+def test_default_cascade_does_not_ship_the_superseded_ranking():
+    """경고 배너는 접근 정책이 아니다 — archive/diagnostic 행은 초기 DOM 에 없어야 한다.
+
+    ⛔ 2026-08-16 — 기본 `/cascade` 가 47종 rank·score 배열(`var RANKED`)과 90종 테마
+      조합 랭킹(`var TDOP`)을 통째로 싣고 있었다. 보안이 아니라 **정책 위반**이다:
+      manifest 상 각각 archive_only · diagnostic_only 인데 기본 화면이 "승인된 ranking
+      0종" 이라고 쓰면서 순위표를 같이 내보냈다.
+    """
+    c = A.app.test_client()
+    h = c.get("/cascade").get_data(as_text=True)
+    assert h.count('"dopant":') == 0, "기본 화면에 후보 행이 있다"
+    assert '"rank": 1.0' not in h, "47종 rank 배열이 초기 DOM 에 있다"
+    assert h.count("disorder_std") < 10, "90종 테마 배열이 초기 DOM 에 있다"
+    assert "보관함 열기" in h and "진단 화면 열기" in h, "opt-in 경로가 화면에 없다"
+
+    # 값을 지운 게 아니다 — 쿼리를 주면 그대로 나온다
+    ha = c.get("/cascade?archive=1").get_data(as_text=True)
+    assert '"rank": 1.0' in ha and '"dopant": "Sc2O3"' in ha, "보관함에서도 안 나온다"
+    assert ha.count("disorder_std") < 10, "archive 가 diagnostic 까지 열어 준다"
+
+    hd = c.get("/cascade?view=diagnostic").get_data(as_text=True)
+    assert hd.count("disorder_std") > 10, "진단 화면에서 테마 행이 안 나온다"
+    assert '"rank": 1.0' not in hd, "diagnostic 이 archive 까지 열어 준다"
+
+    # diagnostic 라우트는 여전히 opt-in 403
+    assert c.get("/cascade/diagnostic").status_code == 403
+    assert c.get("/cascade/diagnostic?view=diagnostic").status_code == 200
+
+
 def test_g3_species_pass_is_split_from_attribution():
     """경고만 붙이고 species-level pass 를 유지하면 fail-open 이다 (Codex f9 P0-3)."""
     f = json.loads((ROOT / "db/properties/cascade_screening_funnel.json")

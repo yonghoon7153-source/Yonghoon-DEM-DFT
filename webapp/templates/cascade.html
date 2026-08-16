@@ -350,6 +350,15 @@
       <th onclick="sortT(this,4)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Δe</th><th onclick="sortT(this,5)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">ox_V</th>
       <th onclick="sortT(this,6)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">red_V</th><th onclick="sortT(this,7)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">E (GPa)</th>
       <th onclick="sortT(this,8)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pugh B/G</th><th onclick="sortT(this,9)" tabindex="0" role="button" onkeydown="_kbd(event)" aria-sort="none">Pareto</th></tr></thead><tbody>
+    {% if casc.ranked.archive_gated %}
+    <tr><td colspan="10" style="padding:14px;text-align:center">
+      <div style="color:var(--red);font-weight:700">🗄 보관함 — 기본 화면에서 내보내지 않는다</div>
+      <div class="muted" style="font-size:.82rem;margin:6px 0 8px">
+        역사 47종 rank·score 는 <span class="mono">archive_only</span> 산출물이다.
+        승인된 current ranking 은 <b>0종</b> — 이 표는 결과가 아니라 2026-06-29 취합 경계의 기록이다.</div>
+      <a class="btn" href="/cascade?archive=1#board">보관함 열기 (superseded 47종) →</a>
+    </td></tr>
+    {% endif %}
     {% for r in (casc.ranked.data or []) %}
     <tr>
       <td class="num">{{ r.rank|int }}</td>
@@ -754,6 +763,14 @@
   </div>
   <div class="card">
     <h3>⚗️ 조합 랭킹 <span class="muted" style="font-weight:400;font-size:.8rem">선택 테마 norm의 기하평균 · 전 {{ casc.themes.dopants|length }}개 도펀트 · 헤더 클릭 = 정렬</span></h3>
+    {% if casc.themes.diagnostic_gated %}
+    <div class="callout cal-danger" style="font-size:.84rem">
+      <b>🔒 acquisition 전용 — 기본 화면에서 내보내지 않는다</b><br>
+      90종 조합 랭킹은 <span class="mono">diagnostic_only</span> 다 (도펀트명 + norm 점수 + BVS 열).
+      승인된 current ranking 은 <b>0종</b>이고, 이 표는 다음 계산을 고르기 위한 진단물이다.
+      <div style="margin-top:8px"><a class="btn" href="/cascade?view=diagnostic#theme">진단 화면 열기 →</a></div>
+    </div>
+    {% endif %}
     <div id="combine-hint" class="muted" style="font-size:.84rem;padding:10px 0">위에서 테마를 골라줘 — <b>2개 이상</b>이면 조합 랭킹 테이블, <b>정확히 2개</b>면 산점도(X·Y=각 테마 norm, 점 크기=combined, Pareto=링)까지 떠.</div>
     <div class="chart" id="theme-scatter" hidden></div>
     <div id="combine-tbl-wrap"></div>
@@ -1068,7 +1085,7 @@
 <script>window.MO_DB={{ mo_db|tojson }};</script>
 <script src="{{ url_for('static', filename='js/mo.js') }}?v={{ asset_version }}"></script>
 <script>
-var RANKED = {{ (casc.ranked.data or [])|tojson }};
+var RANKED = {{ (casc.ranked.data or [])|tojson }};   // ?archive=1 없으면 []
 var GCOL = {{ gcol|tojson }};
 
 // 📄 litdb digest 모달 — 실패하면 false 를 안 돌려서 <a href="/literature?open=..."> 폴백이 살아난다

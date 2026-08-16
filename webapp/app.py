@@ -259,7 +259,23 @@ def compare():
 
 @app.route("/cascade")
 def cascade_page():
-    casc = D.load_cascade()
+    """감사 화면. **역사 47종 랭킹은 `?archive=1` 없이는 DOM 에 넣지 않는다.**
+
+    ⛔ 2026-08-16 (Codex f9 webapp P0-5) — 경고 배너를 붙여도 47종 rank·score 배열이
+      `var RANKED` 로 초기 DOM 에 통째로 실려 나갔다. manifest 상 그 산출물은
+      `archive_only` 인데 기본 화면이 정책을 어기고 있었다. 보안 문제가 아니라
+      **사이트가 "승인된 ranking 0종" 이라고 쓰면서 순위표를 같이 내보내는** 자기모순이다.
+      `/cascade/diagnostic` 이 이미 `?view=diagnostic` 로 닫혀 있는 것과 같은 규칙을 쓴다.
+    """
+    casc = dict(D.load_cascade())
+    archive = request.args.get("archive") == "1"
+    diagnostic = request.args.get("view") == "diagnostic"
+    # 값을 지우지 않는다 — 이 응답에서만 뺀다. 쿼리를 주면 그대로 나간다.
+    if not archive:
+        casc["ranked"] = {**(casc.get("ranked") or {}), "data": [], "archive_gated": True}
+    if not diagnostic and casc.get("themes"):
+        # 90종 조합 랭킹은 diagnostic_only 다 (도펀트명 + norm 점수 + BVS 열까지 실린다).
+        casc["themes"] = {**casc["themes"], "dopants": [], "diagnostic_gated": True}
     ranked = casc.get("ranked", {}).get("data", [])
     ver = casc.get("verified") or {}
     comp = ver.get("compounds")
@@ -275,7 +291,7 @@ def cascade_page():
     # 계보 패널의 논문 링크는 실제 digest 가 있는 것만 — 없는 slug 는 링크를 죽인다
     have = {p["id"] for p in D.list_papers()}
     return render_template("cascade.html", active="cascade", casc=casc,
-                           stats=stats, deep_map=deep_map,
+                           stats=stats, deep_map=deep_map, archive=archive, diagnostic=diagnostic,
                            lineage=D.METHOD_LINEAGE, lit_have=have,
                            mo_db=D.load_molecular_orbitals())
 
