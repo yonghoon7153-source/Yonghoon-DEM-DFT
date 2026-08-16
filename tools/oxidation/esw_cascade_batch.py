@@ -160,7 +160,12 @@ def main():
                 ox = min((s["V"] for s in neg), default=None)
                 ocv = min((s["V"] for s in neu), default=None)
                 def rxn_at(v): return min(steps, key=lambda s: abs(s["V"]-v))["rxn"] if v is not None else None
+                # ⚠ els 는 **합집합** chemsys 다. 원래 조성 원소를 따로 남겨야
+                #   "합집합으로 쟀다" 를 사후에 판별할 수 있다 (2026-08-16 실측: 안 남겨서
+                #   chemsys_note 가 0건이 나왔다 — 조건이 항상 참이 됐다).
                 results[name] = {"dopant": dop, "elements": els,
+                    "composition_elements": sorted(comp),
+                    "chemsys_is_union_with_host": sorted(comp) != sorted(els),
                     "phase_set_id": psid, "n_entries": len(entries), "db_version": db_version,
                     "reduction_limit_V": red, "oxidation_limit_V": ox,
                     "ocv_self_decomposition_V": ocv,
@@ -182,7 +187,7 @@ def main():
         h = host_by_psid.get(v.get("phase_set_id"))
         if h and h.get("oxidation_limit_V") is not None and v.get("oxidation_limit_V") is not None:
             v["host_ox_V_same_phase_set"] = h["oxidation_limit_V"]
-            if host_els_for_group and not host_els_for_group <= set(v.get("elements") or []):
+            if v.get("chemsys_is_union_with_host"):
                 v["chemsys_note"] = ("후보 조성에 host 원소가 없어 합집합 chemsys 로 쟀다 "
                                      "— x=0.25 에서 도펀트가 그 원소를 전부 치환한 경우")
             v["delta_ox_vs_host_V"] = round(v["oxidation_limit_V"] - h["oxidation_limit_V"], 4)

@@ -945,6 +945,68 @@ G4 감사 패널은 **B₂O₃·Cr₂O₃·Ga₂O₃·In₂O₃·Sc₂O₃·Y₂
 3. Codex 가 참조한 `cascade_audit_gate_completeness.csv`·`plot_cascade_audit_2026_08.py`·
    5개 audit figure 는 **repo 에 없다**(로컬 미푸시). 넘겨주면 내 manifest 와 병합한다.
 
+## ★★★ G3 가 닫혔다 — method-comparable 0 → 270/270 (2026-08-16)
+
+`blocked_method_contract` 는 **마지막 blocked 게이트**였다. 원인은 "임의로 골랐는데 안 적었다" 가
+아니라 **"규칙은 균일한데 그 규칙이 해석된 결과를 안 저장했다"** 였다.
+
+### 무엇이 없었나
+
+`esw_cascade_batch.py` 는 처음부터 균일한 규칙을 썼다 — `get_entries_in_chemsys(els,
+thermo_types=["GGA_GGA+U"])`, **제외 필터 없음**. 저장한 것은 값과 반응식 문자열뿐이라,
+**어떤 entry 집합**을 썼는지와 **MP 스냅샷 버전**이 사라졌다. 그래서 90종에 onset 기록이
+다 있는데도 candidate–host 비교가 0종이었다.
+
+### 무엇을 했나
+
+| 조치 | 결과 |
+|---|---|
+| chemsys 마다 정렬된 MP entry ID 전체 + `phase_set_id = sha256(...)[:16]` + entry 수 + **db 버전** 저장 | phase_set **84개** · MP db **2026.04.13** |
+| host 를 **각 후보의 chemsys 안에서** 같은 실행에 계산 | in-chemsys host 84개 |
+| chemsys 를 **후보 ∪ host** 로 잡음 | 비교불가 9 → **0** |
+| 각 후보에 `host_ox_V_same_phase_set` · `delta_ox_vs_host_V` · `method_comparable` 부착 | **270/270** |
+
+### ★ 나온 답 두 개
+
+**① host onset 이 84개 phase set 전부에서 정확히 2.140 V.** 예외 0건.
+도펀트 원소를 뭘 넣어도 host 분해 경로가 안 바뀐다 — 지금까지 써온 "후보 − 2.140" 비교가
+**사후적으로 정당화됐다.** 반대였으면 상위 28종 수치를 통째로 다시 매겨야 했다.
+
+**② 같은 phase set 안의 Δox_V 분포** (이제 처음으로 인용 가능한 형태):
+
+| Δ | 건수 |
+|---|---|
+| **> 0** (host 보다 좋아짐) | **28** |
+| = 0 (변화 없음) | **102** |
+| **< 0** (나빠짐) | **140** |
+
+절반 이상이 host 보다 **나빠지고**, 38%는 아무 변화가 없다. 좋아지는 28건도 5개 값에 뭉쳐 있다.
+
+### 부수 발견 — x=0.25 에서 Cl 이 통째로 사라지는 9건
+
+`TiF₄ · ZrBr₄ · ZrF₄` 챔피언의 실측 조성이 `Li25 P3 S20 F4 Ti1` 처럼 **Cl 0개**다.
+셀의 Cl 이 4개뿐이라, Cl 자리를 치환하는 도펀트는 x=0.25 에서 **Cl 을 전부 없앤다.**
+그러면 host(`Li24P4S20Cl4`)가 그 chemsys 의 부분집합이 아니다 — 버그가 아니라 화학이다.
+합집합 chemsys 로 묶어 해결했고, **그 9건의 후보 onset 은 안 변했다**(TiF₄ 2.024 · ZrBr₄/ZrF₄ 1.878).
+비교를 성립시키면서 값은 안 흔들렸다.
+
+### 게이트 분모 표가 이렇게 바뀐다
+
+| gate | 기록 | method 유효 | status |
+|---|---|---|---|
+| G1 | 90 | 88 | recovered_diagnostic |
+| **G3** | 90 | **0 → 90** | ~~blocked_method_contract~~ → **recovered_diagnostic** |
+| G4 | 90 | 88 | historical_only |
+| G5 | 90 | 86 | recovered_diagnostic |
+
+⚠ **승인 랭킹은 여전히 0종이다.** G3 가 풀렸을 뿐, **G4 순환**(blocking 이 BVS 를 덮어씀)과
+**G5 로스터 의존**(median 컷)은 그대로다. "재랭킹을 막는 건 결측이 아니라 게이트 정의" 라는
+진단에서 **G3 항목만 빠진다.**
+
+⚠ 그리고 남은 것 하나: `clrich` 변형이 섞여 있다. `Al2O3_x020_chain_Cl_x200` 이 2.354 로
+나오는데 그건 Cl-rich 변형이지 plain champion 이 아니다. **같은 phase set 이어도 조성이 다른
+것을 나란히 놓는** 문제는 별개이며 아직 안 닫혔다.
+
 ## TODO (2026-08-14 발표 이후, 우선순위 순)
 
 1. ~~`09e_ehull` 로 G1 재건~~ → **불가 확인 (2026-08-13 심야)**. 위 절 참조 — 거리가 아니라
