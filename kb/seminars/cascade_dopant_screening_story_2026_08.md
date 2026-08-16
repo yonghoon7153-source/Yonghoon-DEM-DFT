@@ -190,12 +190,13 @@ Division of Materials Science & Engineering, Hanyang University
 > ■ Prior work (3): Site-resolved screening already exists
 > • One cation is placed on three candidate sites, and the site is chosen by energy.
 > &nbsp;&nbsp;(Li site · La site · Zr site → the lowest defect energy wins)
-> • Here [파랑]a whole compound enters[/], so a cation site and an anion site are chosen together.
-> &nbsp;&nbsp;(site × charge recipe → several structures per compound)
+> • Here the unit is [파랑]a precursor compound[/], the way doping is actually done.
+> &nbsp;&nbsp;(Li₂S + P₂S₅ + LiCl  +  MgO → ball-mill → anneal)
+> &nbsp;&nbsp;(a cation and an anion enter together → both sites chosen at once)
 
 우상단 출처 — *Adv. Energy Mater.*, 14, 2304025 (2024). / *Chem. Mater.*, 27, 4040 (2015).
 `< 45 dopants × 3 sites in a garnet >`　`해설` one cation at a time
-`< 91 compounds in our sulfide host >`　`해설` a whole compound at a time
+`< 91 compounds in our sulfide host >`　`해설` one precursor at a time
 `[표]` study / host / what is varied / n / mechanical axis
 하단 — Lee 2024: *J. Mater. Chem. A*, 12, 7272.　Xiao 2019: *Joule*, 3, 1252.
 　　　 Left figure: Anderson et al. (2024) Fig. 3d, plotting defect energies from Miara et al. (2015).
@@ -216,9 +217,13 @@ Division of Materials Science & Engineering, Hanyang University
 왼쪽 연구는 **양이온 하나**를 바꿉니다. 아래 두 번째 연구는 **이미 화학식 안에 있는
 원소**를 다른 걸로 바꿔요. 둘 다 격자 안의 한 원소를 교체하는 겁니다.
 
-저희는 **화합물 하나를 통째로 넣습니다.** MgO를 넣는다는 건 Mg 하나가 아니라 Mg랑 O가
-같이 들어간다는 뜻이고, 그러면 양이온 자리와 음이온 자리를 **동시에** 정해야 하고 전하도
-맞춰야 합니다. 오른쪽 그림이 그 결과예요.
+저희는 **전구체를 하나 더 넣습니다.** 이게 실제 합성이랑 같은 단위예요. LPSCl 은
+Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는데, 도핑할 때는 그 혼합물에
+**전구체를 하나 더 얹습니다.** 문헌에서도 GaF₃ 를 넣거나 CuBr₂ 를 넣는 식이고요.
+
+그러면 **원소 하나가 아니라 화합물 하나가 들어갑니다.** MgO 를 넣으면 Mg 랑 O 가 같이
+들어가는 거고, 그러면 양이온 자리와 음이온 자리를 **동시에** 정해야 하고 전하도 맞춰야
+합니다. 오른쪽 그림이 그 결과예요.
 
 그리고 표 **맨 오른쪽 칸.** 기계 물성 축은 넷 중 저희만 있습니다.
 
@@ -230,6 +235,13 @@ Division of Materials Science & Engineering, Hanyang University
 
 💡 이 장이 발표의 포지셔닝이다. **"아무도 안 했다"고 말하면 질문 한 방에 무너진다.**
    "했는데 무엇을 바꾸느냐가 다르다" 가 방어 가능한 주장이고, 실제로도 그렇다.
+
+💡 프리커서 프레이밍의 근거 (질문 오면) — 우리 litdb 실물:
+   · GaF₃ 도핑: 전구체 Li₂S · P₂S₅ · LiCl **+ GaF₃**  (`liyaru_gaf3_codoping_argyrodite`)
+   · CuBr₂ 도핑: Li₂S + P₂S₅ + LiCl **+ CuBr₂** → ball-milling → 소결
+     ("dual-dopant 단일전구체 전략", `li2025_cubr2_dualdoping_argyrodite`)
+   즉 **실험에서 도핑의 단위는 원소가 아니라 화합물**이다. 우리 스크리닝 단위가
+   자의적인 선택이 아니라 합성 관행을 따른 것이라는 근거가 된다.
 
 ⚠ 인용 규율 — 왼쪽 그림은 **Anderson 2024 Fig. 3d** 이고 그 안의 값은 **Miara 2015** 다.
    둘 다 적어야 출처가 맞다. Miara 원본은 아직 우리 litdb 에 digest 가 없다
