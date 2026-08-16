@@ -50,8 +50,8 @@ by_objective:
 overall_recoverable:
   n: 12276
   degenerate_frac: 0.5386933854675791
-  mean_abs_err: 0.036340831956126696
-  mean_abs_err_lam_pe: 0.022261172830929196
+  mean_abs_err: 0.03634083195612669
+  mean_abs_err_lam_pe: 0.022261172830929203
   mean_abs_err_lam_ne: 0.025862690236537103
   mean_abs_err_lli: 0.012311406601877703
   pe_ne_antisym_frac: 0.5483870967741935

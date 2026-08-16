@@ -1,0 +1,42 @@
+analysis_schema_version: 1
+analysis_spec_id: 0c843c8907be6cec8ff85daa828c9d8c8da5dd0f1586c8bb660e4c126b6712c4
+raw_inputs:
+  fits_sha256: 6c5301cd4f24fa81244fad24f8e3bca52b5130528b6d96866312742861eabd1d
+  curves_sha256: null
+  run_manifest_sha256: 3fa4106ac916dc3bc6d817ccff2a5d2c16a36418579077f280ad623c0724bb69
+generator:
+  git_commit: dec589a2ad4ab6af9b263ba1e6f76285f556aec5
+  source_digest: 739453aaf9c07be3
+  git_dirty: false
+  env:
+    python: 3.11.15
+    platform: Linux-6.18.5-fc-v20-x86_64-with-glibc2.39
+    machine: x86_64
+    numpy: 2.4.6
+    scipy: 1.17.1
+    pandas: 3.0.5
+    joblib: 1.5.3
+    pyarrow: 25.0.1
+    pybamm: 26.7.1.0
+    matplotlib: 3.11.1
+    yaml: 6.0.3
+    pybammsolvers: 0.9.0
+    casadi: 3.7.2
+parameters:
+  tol: 0.02
+  gap_thresh: 0.06
+  gap_atol: 1.0e-09
+  population: recoverable(alpha_true >= 1 - atol) / all 두 벌 모두 기록
+  noise: 0.0
+  noise_unit: sigma[V] of independent Gaussian voltage noise
+  p22_center:
+  - 0.13
+  - 0.13
+  - 0.17
+  p22_radius: 0.021
+  p22_metric: unscaled_euclidean_fractional_coordinates
+  p22_empty_radius_policy: nearest_fallback
+  selected_condition_ids_sha256: f4e633ebe62924a6e79a1a0505a85840b39b9b8ea090ee9ff258fe6686d1a1a9
+derived_outputs:
+  objective_comparison.yaml: 8d74ed1e173c92704bd2042be8fbac3c81eafe635f6055b17c33ff78943c8ab9
+  degeneracy_summary.yaml: 6f2ef37b73c3781c7cbf549e23d64d6ca310f4ca53c505a1720baf4688bf459c

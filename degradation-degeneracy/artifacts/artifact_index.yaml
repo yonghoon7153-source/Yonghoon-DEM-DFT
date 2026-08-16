@@ -11,21 +11,21 @@ runs:
     curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
   grid_fit_v4:
     artifact_kind: fit
-    payload_index_sha256: 1742058273bbe2493b4ef16a9947bbbdcf1b8d9f6d05bfb3bde8809c5c59a30d
+    payload_index_sha256: 9729032d22e900256999211da680479a54098c9ec75a8683bb650ad7ffbe3d54
     source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
     run_dir: results/grid_fit_v4
     fits_sha256: 18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46
     curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
   halfcell_fit_v4:
     artifact_kind: fit
-    payload_index_sha256: db56468838641f354e435e51a44b3c8adb5a1ebc8705529234e31ab97f2de7a6
+    payload_index_sha256: f7da756fee4490bd7580b877b90e7f3187f23869959af9529d5f22128c137090
     source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
     run_dir: results/halfcell_fit_v4
     fits_sha256: 6c5301cd4f24fa81244fad24f8e3bca52b5130528b6d96866312742861eabd1d
     curves_sha256: b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8
   paired_fixed5_v4:
     artifact_kind: fit
-    payload_index_sha256: 061bafa062ac7caf2ff9b25777c717fc2abd0057b41177a3d678653c9d935b23
+    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
     source_commit: c0f1daa0d92a7625c3602799c81db04b5e2e5783
     run_dir: results/paired_fixed5_v4
     fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
