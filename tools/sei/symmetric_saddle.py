@@ -50,28 +50,63 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 ENDPOINT_TOL_EV = 0.020
 
 
-def read_relaxed(outp):
-    """relax.out 의 마지막 `Begin final coordinates` 블록 → [(sym, [x,y,z]), ...] (angstrom)."""
-    if not os.path.isfile(outp):
-        return None, f"없음: {outp}"
-    t = open(outp, encoding="utf-8", errors="replace").read()
-    if "JOB DONE" not in t:
-        return None, f"아직 안 끝났다 (JOB DONE 없음): {outp}"
-    i = t.rfind("Begin final coordinates")
-    if i < 0:
-        return None, f"final coordinates 블록 없음: {outp}"
-    blk = t[i:t.find("End final coordinates", i)]
-    m = re.search(r"ATOMIC_POSITIONS\s*\(?(\w+)", blk)
+def _pos_block(txt, start):
+    """start 부터의 첫 ATOMIC_POSITIONS 블록 → [(sym,[x,y,z])] (angstrom 만)."""
+    m = re.search(r"ATOMIC_POSITIONS\s*\(?(\w+)", txt[start:])
     if not m or m.group(1).lower() != "angstrom":
-        return None, f"ATOMIC_POSITIONS 단위가 angstrom 이 아니다: {outp}"
+        return None
+    s = start + m.end()
     rows = []
-    for l in blk[blk.index(m.group(0)) + len(m.group(0)):].splitlines()[1:]:
-        p = l.split()
-        if len(p) >= 4 and re.match(r"^[A-Z][a-z]?\d*$", p[0]):
-            rows.append((p[0], [float(p[1]), float(p[2]), float(p[3])]))
+    for l in txt[s:].splitlines()[1:]:
+        q = l.split()
+        if len(q) >= 4 and re.match(r"^[A-Z][a-z]?\d*$", q[0]):
+            rows.append((q[0], [float(q[1]), float(q[2]), float(q[3])]))
         elif rows:
             break
-    return (rows, None) if rows else (None, f"좌표를 못 읽었다: {outp}")
+    return rows or None
+
+
+def last_force(txt):
+    """마지막 `Total force = X` [Ry/au]. 없으면 None."""
+    f = re.findall(r"Total force\s*=\s*([\d.eE+-]+)", txt)
+    return float(f[-1]) if f else None
+
+
+def read_relaxed(outp, allow_unconverged=False):
+    """이완 좌표를 읽는다 → (rows, err, info).
+
+    ⚠ 2026-08-16 — 옛 판은 `Begin final coordinates` 만 봤다. 그런데 QE 는 BFGS 가
+    **수렴했을 때만** 그 블록을 찍는다. cc333 끝점은 nstep 한도에서 끝나(16h41m)
+    그 블록이 없고, 힘이 0.018 Ry/au (문턱 1e-3 의 **18배**) 에서 진동만 했다.
+    그런 산출물을 조용히 '이완됨' 으로 쓰면 안 되고, 그렇다고 좌표가 없는 것도 아니다.
+    → 마지막 BFGS 스텝의 ATOMIC_POSITIONS 로 후퇴하되 **미수렴을 명시**한다.
+    """
+    if not os.path.isfile(outp):
+        return None, f"없음: {outp}", {}
+    t = open(outp, encoding="utf-8", errors="replace").read()
+    if "JOB DONE" not in t:
+        return None, f"아직 안 끝났다 (JOB DONE 없음): {outp}", {}
+    info = {"last_total_force_Ry_au": last_force(t),
+            "max_steps_reached": "The maximum number of steps has been reached" in t}
+    i = t.rfind("Begin final coordinates")
+    if i >= 0:
+        rows = _pos_block(t, i)
+        info["converged"] = True
+        if rows:
+            return rows, None, info
+    # ── 미수렴 후퇴 ──
+    info["converged"] = False
+    j = t.rfind("ATOMIC_POSITIONS")
+    rows = _pos_block(t, j) if j >= 0 else None
+    if rows is None:
+        return None, f"좌표를 못 읽었다: {outp}", info
+    if not allow_unconverged:
+        return None, (f"⛔ 이완이 수렴하지 않았다: {outp}\n"
+                      f"      마지막 Total force = {info['last_total_force_Ry_au']} Ry/au "
+                      f"(= {(info['last_total_force_Ry_au'] or 0)*25.711:.2f} eV/Å)"
+                      + (", nstep 한도 도달" if info["max_steps_reached"] else "") + "\n"
+                      f"      좌표는 있다 — 미수렴을 감수하고 쓰려면 --allow_unconverged"), info
+    return rows, None, info
 
 
 def final_energy(outp):
@@ -104,7 +139,7 @@ def min_image(d, cell):
     return best
 
 
-def build(work, tag, force=False):
+def build(work, tag, force=False, allow_unconverged=False):
     d = os.path.join(work, tag)
     meta_p = os.path.join(d, "meta.json")
     meta = json.load(open(meta_p, encoding="utf-8")) if os.path.isfile(meta_p) else {}
@@ -112,11 +147,12 @@ def build(work, tag, force=False):
     ini_out = os.path.join(d, "ep_initial", "relax.out")
     fin_out = os.path.join(d, "ep_final", "relax.out")
     ini_in = os.path.join(d, "ep_initial", "relax.in")
-    first, e1 = read_relaxed(ini_out)
-    last, e2 = read_relaxed(fin_out)
+    first, e1, i1 = read_relaxed(ini_out, allow_unconverged)
+    last, e2, i2 = read_relaxed(fin_out, allow_unconverged)
     if first is None or last is None:
         return 1, (f"⛔ {tag}: 이완된 끝점이 필요하다.\n   {e1 or ''}\n   {e2 or ''}\n"
                    f"   먼저: bash tools/sei/run_sei_neb.sh endpoints {tag}")
+    unconv = [n for n, i in (("ep_initial", i1), ("ep_final", i2)) if not i.get("converged")]
     if [s for s, _ in first] != [s for s, _ in last]:
         return 1, f"⛔ {tag}: 두 끝점의 원자 목록이 다르다 — 같은 계가 아니다"
 
@@ -191,6 +227,10 @@ def build(work, tag, force=False):
         "second_largest_displacement_A": round(others, 4),
         "endpoints_symmetry_equivalent": sym,
         "symmetry_basis": basis,
+        "endpoints_converged": not unconv,
+        "unconverged_endpoints": unconv,
+        "endpoint_last_force_Ry_au": {"ep_initial": i1.get("last_total_force_Ry_au"),
+                                      "ep_final": i2.get("last_total_force_Ry_au")},
         "endpoint_energy_diff_eV": (round(de, 6) if de is not None else None),
         "symmetry_warning": warn,
         "supercell": meta.get("supercell"), "min_cell_A": meta.get("min_cell_A"),
@@ -205,7 +245,10 @@ def build(work, tag, force=False):
     return 0, (f"✓ {tag}: 안장 입력 생성 → {sd}/relax.in\n"
                f"   뛰는 원자 #{j} {mid[j][0]} · 홉 {dmax:.3f} Å "
                f"(다음으로 큰 변위 {others:.3f} Å)\n"
-               f"   대칭 근거: {basis}\n"
+               + ((f"   ⛔ 끝점 미수렴: {' · '.join(unconv)} — "
+                   f"마지막 힘 {i1.get('last_total_force_Ry_au')}/{i2.get('last_total_force_Ry_au')} Ry/au "
+                   f"(문턱 1e-3). 장벽이 그만큼 오염된다\n") if unconv else "")
+               + f"   대칭 근거: {basis}\n"
                + (f"   {warn}\n" if warn else "")
                + f"   셀 {meta.get('supercell')} · 최소변 {meta.get('min_cell_A')} Å\n"
                f"   실행:  cd {sd} && mpirun -np <N> pw.x -in relax.in > relax.out")
@@ -335,6 +378,28 @@ def selftest():
     rc, msg = build(td, "noout")
     chk(rc == 1 and "이완된 끝점이 필요하다" in msg, "[음성] 끝점 미이완이면 거부한다")
 
+    # ★ cc333 실제 상황: JOB DONE 인데 final coordinates 없음 (nstep 한도)
+    d0 = mk("unconv", True, A, B)
+    for n in ("ep_initial", "ep_final"):
+        fp = os.path.join(d0, n, "relax.out")
+        s0 = open(fp).read()
+        body = s0[s0.index("ATOMIC_POSITIONS"):s0.index("End final coordinates")]
+        open(fp, "w").write(
+            "     The maximum number of steps has been reached.\n"
+            "     End of BFGS Geometry Optimization\n" + body +
+            "     Total force =     0.018069     Total SCF correction =     0.000028\n"
+            "!    total energy              =    -100.0000 Ry\nJOB DONE.\n")
+    rc, msg = build(td, "unconv")
+    chk(rc == 1 and "수렴하지 않았다" in msg, "[핵심] 미수렴 끝점을 기본값으로 거부한다")
+    chk("0.46 eV/Å" in msg or "eV/Å" in msg, "[핵심] 잔여 힘을 eV/Å 로도 알려준다")
+    rc, msg = build(td, "unconv", allow_unconverged=True)
+    chk(rc == 0 and "끝점 미수렴" in msg, "[핵심] --allow_unconverged 면 진행하되 경고한다")
+    mm = json.load(open(os.path.join(td, "unconv", "saddle", "saddle_meta.json")))
+    chk(mm.get("endpoints_converged") is False and mm.get("unconverged_endpoints"),
+        "[핵심] 미수렴 사실이 saddle_meta 에 박힌다")
+    chk(abs(mm["endpoint_last_force_Ry_au"]["ep_initial"] - 0.018069) < 1e-9,
+        "[핵심] 잔여 힘 값을 기록한다")
+
     d = mk("notdone", True, A, B)
     p = os.path.join(d, "ep_final", "relax.out")
     _s = open(p).read()                      # ⚠ 같은 truncate-before-read 함정
@@ -373,11 +438,14 @@ def main():
     ap.add_argument("--tag", default="li3nd")
     ap.add_argument("--collect", action="store_true", help="돌린 뒤 Ea 를 뽑는다")
     ap.add_argument("--force", action="store_true", help="비대칭인데도 강행 (권장 안 함)")
+    ap.add_argument("--allow_unconverged", action="store_true",
+                    help="끝점 이완이 수렴 안 했어도 마지막 스텝 좌표로 진행 (결과에 명시된다)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
-    rc, msg = (collect(a.work, a.tag) if a.collect else build(a.work, a.tag, a.force))
+    rc, msg = (collect(a.work, a.tag) if a.collect
+           else build(a.work, a.tag, a.force, a.allow_unconverged))
     print(msg)
     return rc
 
