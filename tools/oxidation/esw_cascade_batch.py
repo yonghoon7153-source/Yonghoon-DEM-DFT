@@ -79,9 +79,25 @@ def main():
     if a.host:
         from pymatgen.core import Composition as _C
         hc = _C(a.host)
-        by_sys[tuple(sorted({str(e) for e in hc.elements}))].append(
-            ("__HOST__", a.host, {str(e): float(hc[e]) for e in hc.elements}))
-        print(f"host 를 같은 실행에 포함: {a.host}")
+        host_comp = {str(e): float(hc[e]) for e in hc.elements}
+        host_els = set(host_comp)
+        # ★ 2026-08-16 — host 를 **모든 chemsys 안에서** 잰다.
+        #   후보는 host 원소 + 도펀트 원소라 chemsys 가 더 크다. host 를 자기 chemsys
+        #   에서만 재면 "후보 2.356 vs host 2.140" 이 **서로 다른 phase set 끼리 뺀 값**이
+        #   된다 — G3 의 method-comparable 0 이 정확히 그 상태였다.
+        #   같은 hull 안에서 host 도 재면 그 차가 처음으로 같은 집합 안의 차가 된다.
+        #   hull 은 chemsys 당 한 번만 당기므로 추가 비용은 profile 계산 하나뿐이다.
+        n_added = 0
+        for sys_els in list(by_sys):
+            if host_els <= set(sys_els):
+                by_sys[sys_els].append((f"__HOST__@{'-'.join(sorted(sys_els))}",
+                                        a.host, dict(host_comp)))
+                n_added += 1
+        if tuple(sorted(host_els)) not in by_sys:
+            by_sys[tuple(sorted(host_els))].append(("__HOST__", a.host, dict(host_comp)))
+            n_added += 1
+        print(f"host {a.host} 를 chemsys {n_added}개 안에서 함께 잰다 "
+              f"(같은 phase set 안의 후보-host 차를 만들기 위해)")
 
     for sys_els, items in by_sys.items():
         els = list(sys_els)
@@ -133,6 +149,25 @@ def main():
             except Exception as e:
                 results[name] = {"dopant": dop, "phase_set_id": psid, "error": str(e)[:120]}
 
+    # ── 같은 phase set 안의 host 값을 각 후보에 붙인다 ────────────────────────
+    host_by_psid = {}
+    for k, v in results.items():
+        if k.startswith("__HOST__") and "oxidation_limit_V" in v:
+            host_by_psid[v.get("phase_set_id")] = v
+    n_comparable = 0
+    for k, v in results.items():
+        if k.startswith("__HOST__") or "error" in v:
+            continue
+        h = host_by_psid.get(v.get("phase_set_id"))
+        if h and h.get("oxidation_limit_V") is not None and v.get("oxidation_limit_V") is not None:
+            v["host_ox_V_same_phase_set"] = h["oxidation_limit_V"]
+            v["delta_ox_vs_host_V"] = round(v["oxidation_limit_V"] - h["oxidation_limit_V"], 4)
+            v["method_comparable"] = True
+            n_comparable += 1
+        else:
+            v["host_ox_V_same_phase_set"] = None
+            v["delta_ox_vs_host_V"] = None
+            v["method_comparable"] = False
     host = results.get("__HOST__")
     json.dump({"method": "grand-potential ESW (get_element_profile, MP GGA_GGA+U); per cascade champion",
                "source_csv": a.csv,
@@ -142,11 +177,19 @@ def main():
                    "규칙: chemsys 전체 · thermo_types=GGA_GGA+U · 제외 없음."),
                "phase_sets": phase_sets,
                "host": host, "host_composition": a.host,
+               "hosts_by_phase_set": host_by_psid,
+               "n_method_comparable": n_comparable,
+               "method_comparable_definition": (
+                   "후보와 host 를 **같은 phase_set_id**(같은 chemsys · 같은 MP 스냅샷 · "
+                   "같은 entry 목록) 안에서 재서 delta_ox_vs_host_V 를 만든 건수. "
+                   "이 값이 아니면 onset 차를 '후보 고유 효과' 로 읽을 수 없다."),
                "results": results}, open(a.out, "w"), indent=2)
     print(f"\n-> {a.out}")
     print(f"   phase_set {len(phase_sets)}개 · "
           f"entry 총 {sum(v['n_entries'] for v in phase_sets.values())} · "
           f"MP db {sorted({str(v['db_version']) for v in phase_sets.values()})}")
+    print(f"   ★ method-comparable {n_comparable}/{sum(1 for k in results if not k.startswith('__HOST__'))}"
+          f"  (같은 phase set 안에서 host 와 뺀 건수)")
     if host and "oxidation_limit_V" in host:
         print(f"   host {a.host}: ox {host['oxidation_limit_V']} V "
               f"(phase_set {host.get('phase_set_id')})")
