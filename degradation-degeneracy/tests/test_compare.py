@@ -2976,3 +2976,39 @@ def test_report_labels_error_column_as_max_mode(tmp_path):
     text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
     assert "max-mode" in text, "오차 열 라벨이 max-mode 임을 밝히지 않는다"
+
+
+def test_input_digest_resolves_against_repo_root_not_cwd(tmp_path, monkeypatch):
+    """★ 15차-3 발견 — 봉인 입력을 **CWD 기준으로 먼저** 찾으면 격리 검증이 빈다.
+
+    `src/io.py` 의 재해시는 `cand = Path(path_s)` 로 CWD 상대 경로를 먼저 보고,
+    없을 때만 `repo_root` 로 갔다. 그런데 `scripts/archive_results.sh` 의 격리
+    복원 검증은 **cwd = 원본 저장소**에서 돈다. 따라서 저장소 상대 봉인 입력
+    (`configs/base.yaml`·`.cache/halfcell/*`·`results/*/curves.parquet`)은 복원본이
+    아니라 **원본 저장소 파일**로 대조됐다 — 묶음에서 그 파일이 빠지거나 깨져도
+    통과한다. F71/8-3 이 막으려던 실패 모드 그대로다.
+
+    실측(v4): 격리 root 의 half-cell meta 를 위조해도 `ok=True` 였다.
+    봉인 키는 F65 로 **저장소 root 상대**임이 보장되므로 root 로만 풀어야 한다.
+    """
+    import yaml
+
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path, repo_root=tmp_path)
+    assert validate_provenance(d, repo_root=tmp_path)["ok"]
+
+    man = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    key = next(k for k in man["input_sha256"] if k.endswith("base.yaml"))
+    good = (tmp_path / key).read_bytes()
+
+    # CWD 에는 **정상** 사본, root 아래에는 **위조본** — 격리 검증이라면 잡아야 한다
+    decoy = tmp_path / "cwd_decoy"
+    (decoy / Path(key)).parent.mkdir(parents=True, exist_ok=True)
+    (decoy / key).write_bytes(good)
+    (tmp_path / key).write_bytes(good + b"\n# forged\n")
+    monkeypatch.chdir(decoy)
+
+    v = validate_provenance(d, repo_root=tmp_path)
+    assert "입력_digest_재해시" in v["fail"], (
+        "CWD 의 정상 사본이 root 의 위조본을 가렸다 — 격리 검증이 비어 있다")

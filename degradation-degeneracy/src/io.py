@@ -1532,8 +1532,13 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
             if not dig:
                 bad.append(f"{path_s}: digest 없음")
                 continue
+            # ★ 15차-3 — 봉인 키는 F65 로 **저장소 root 상대**임이 보장된다.
+            #   예전에는 CWD 상대 경로를 먼저 보고 없을 때만 root 로 갔는데,
+            #   격리 복원 검증은 cwd = 원본 저장소에서 돌기 때문에 복원본이
+            #   아니라 **원본 파일**이 대조됐다 (실측: 격리 root 의 half-cell
+            #   meta 를 위조해도 ok=True). root 로만 푼다 — 없으면 fail-closed.
             cand = Path(path_s)
-            if not cand.is_absolute() and not cand.exists():
+            if not cand.is_absolute():
                 cand = root / path_s
             if not cand.exists():
                 bad.append(f"{path_s}: 파일 없음")
