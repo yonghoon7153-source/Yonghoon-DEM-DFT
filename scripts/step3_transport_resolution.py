@@ -34,8 +34,26 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from step3_sigma import solve_sigma_z                            # noqa: E402
 
-SID_AM, SID_SE = 1, 6
+SID_AM, SID_SE, SID_SDCP = 1, 6, 5
 SIGMA_ION_SE = 3.0e-3                                            # S/cm (Cronau, se_material)
+SIGMA_E_AM = 0.010                                               # S/cm (AM_S, SIGMA_DEFAULT)
+SIGMA_E_SDCP = 250.0                                             # S/cm (USER anchor 2026-07-16)
+SDCP_D_UM = 0.30
+
+
+def sdcp_point_cells(centres, vox, origin, length_um, n):
+    """**생산 규약 재현** — SDCP 는 입자당 점 하나이고 그 점이 든 셀 **하나**만 찍힌다.
+
+    `seed_sdcp` singles 모드가 입자당 점 1개를 내고, `step3_sigma` 첨가제 경로는 `add_fid` 가
+    없으면 `np.floor((pts-lo)/vox)` 로 셀 하나를 찍는다 (섬유만 선분 스탬프를 받는다).
+    ⇒ 한 입자가 차지하는 부피가 **vox³** 이 되어 참부피 π/6·d³ 의 4.53× (vox 0.4) 가 된다.
+    이 함수는 그 규약을 RVE 에서 **그대로** 재현해 σ 영향을 재기 위한 것이다 (CL-25).
+    """
+    rel = np.asarray(centres, float) - np.asarray(origin, float)
+    m = ((rel >= 0) & (rel < length_um)).all(1)
+    ijk = np.floor(rel[m] / vox).astype(int)
+    ijk = ijk[((ijk >= 0) & (ijk < n)).all(1)]
+    return ijk
 
 
 def rasterize_spheres(vox, origin, length_um, spheres):
