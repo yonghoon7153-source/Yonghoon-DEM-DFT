@@ -300,8 +300,13 @@ def selftest():
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--work", default=os.environ.get("WORK", ROOTS),
-                    help="작업 루트. 콜론/쉼표로 **여러 개**를 준다 (기본은 ROOTS 전부)")
+    # ⛔⛔ 2026-08-16 — 기본값이 `os.environ.get("WORK", ROOTS)` 였다. run_sei_neb.sh 는
+    #   자기가 모는 **단일** 루트를 WORK 로 export 하므로, 호출부에서 --work 를 빼도
+    #   collect 가 환경변수로 그 단일 루트를 그대로 물려받아 db 를 축소했다.
+    #   두 이름은 뜻이 다르다: WORK = 러너의 작업 루트 1개 · NEBW = 회수 대상 루트 목록.
+    #   → WORK 폴백을 없앤다. 여러 루트를 주려면 NEBW 나 --work 를 명시할 것.
+    ap.add_argument("--work", default=ROOTS,
+                    help="회수할 루트. 콜론/쉼표로 여러 개 (기본 ROOTS 전부 · 환경변수 NEBW)")
     ap.add_argument("--allow-shrink", action="store_true",
                     help="루트가 줄어드는 쓰기를 허용한다 (기본은 거부 — 사고 방지)")
     ap.add_argument("--selftest", action="store_true")

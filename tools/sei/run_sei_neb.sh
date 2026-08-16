@@ -195,18 +195,27 @@ for t in "${TARGETS[@]}"; do
   #    li2s 는 다른 경로로 neb.out 이 남아 있어 "이미 수렴" 으로 건너뛰었다.
   #    CI 가 지문에서 빠져 있어 protocol_hash 가드도 안 걸린다 (그게 P0-5 의 대가였다).
   #    → 옛 .ci_stage 와 새 ci_scheme 가 다르면 **건너뛰지 않는다**.
-  OLDCIS=$(cat .ci_stage 2>/dev/null || echo "")
+  # ⛔⛔ 2026-08-16 (2차) — `.ci_stage` 사이드카는 **옛 코드가 이미 오염시켜 놨다**:
+  #   스킵 판정 앞에서 무조건 써서, no-CI 결과가 든 폴더에 "auto" 가 적혀 있었다.
+  #   그래서 대조를 붙여도 OLDCIS=auto=CIS 라 또 건너뛰었다.
+  #   → 사이드카를 믿지 않는다. **파일 자신**을 읽는다:
+  #     neb.out 의 CI_scheme = 실제로 돈 것 · neb.in 의 CI_scheme = 지금 돌리려는 것.
+  #     (collect_neb.py 도 같은 규약으로 out 을 먼저 읽는다 — 그래서 v2/li2s 가
+  #      neb.in 이 auto 인데도 no-CI 로 보고됐다.)
+  _ci_of(){ sed -n "s/.*CI_scheme[[:space:]]*=[[:space:]]*'\{0,1\}\([A-Za-z0-9._-]*\).*/\1/p" "$1" 2>/dev/null | head -1; }
+  OUTCI=$(_ci_of neb.out); INCI=$(_ci_of neb.in)
   CIS=$(python3 -c "import json;print(json.load(open('meta.json')).get('ci_scheme',''))" 2>/dev/null)
+  [ -z "$INCI" ] && INCI="$CIS"
   if grep -aq "neb: convergence achieved" neb.out 2>/dev/null; then
-    if [ -n "$OLDCIS" ] && [ -n "$CIS" ] && [ "$OLDCIS" != "$CIS" ]; then
-      ts "  ▶ CI 단계가 바뀌었다 ($OLDCIS → $CIS) — 옛 neb.out 을 재사용하지 않고 다시 돌린다"
-      mv neb.out "neb.out.${OLDCIS}" 2>/dev/null || true
-    elif [ "$CIS" = "no-CI" ]; then
+    if [ -n "$OUTCI" ] && [ -n "$INCI" ] && [ "$OUTCI" != "$INCI" ]; then
+      ts "  ▶ neb.out 은 CI=$OUTCI 로 돈 것이고 지금 입력은 CI=$INCI — 재사용하지 않고 다시 돌린다"
+      mv neb.out "neb.out.${OUTCI}" 2>/dev/null || true
+    elif [ "$INCI" = "no-CI" ]; then
       ts "  ✓ no-CI 수렴 — 2단계(CI)로 가려면:  bash tools/sei/run_sei_neb.sh ci $t"
       [ -n "$CIS" ] && echo "$CIS" > .ci_stage
       cd - >/dev/null; continue
     else
-      ts "  ✓ 이미 수렴 — 건너뜀 (CI 단계 $CIS)"
+      ts "  ✓ 이미 수렴 — 건너뜀 (neb.out 이 CI=$OUTCI 로 돌았다)"
       [ -n "$CIS" ] && echo "$CIS" > .ci_stage
       cd - >/dev/null; continue
     fi
