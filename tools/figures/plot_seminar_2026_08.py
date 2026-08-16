@@ -94,7 +94,7 @@ GROUP_OF = {"Li":"alkali","Na":"alkali","Ag":"TM","Mg":"alk.earth","Ca":"alk.ear
 
 
 def fig_periodic():
-    """계열 = 색상(hue), 화합물 수 = 채도(intensity). 순위가 아니라 커버리지 지도."""
+    """계열별 단색 — 채도 인코딩은 흐려 보여서 되돌렸다(2026-08-16). 숫자가 개수를 진다."""
     import re
     from matplotlib.colors import to_rgb
     rows = _all_rows()
@@ -104,51 +104,25 @@ def fig_periodic():
         for m in re.findall(r"[A-Z][a-z]?", x):
             if m not in ("O", "S", "F", "Cl", "Br", "I", "N"):
                 cnt[m] = cnt.get(m, 0) + 1
-    hi = max(cnt.values())
 
     _rc()
-    fig, ax = plt.subplots(figsize=(13.0, 5.6))
-    BW, GAP = 1.0, 0.09
+    fig, ax = plt.subplots(figsize=(13.0, 5.4))
+    BW, GAP = 1.0, 0.10
     for el, (c, r) in PT.items():
-        g = GROUP_OF.get(el, "TM")
-        base = to_rgb(GROUP_C[g])
-        n = cnt.get(el, 0)
-        t = 0.16 + 0.62 * (n / hi) ** 0.62                 # 개수 → 채도
-        fill = tuple(1 - t * (1 - ch) for ch in base)
+        base = to_rgb(GROUP_C[GROUP_OF.get(el, "TM")])
+        fill = tuple(1 - 0.30 * (1 - ch) for ch in base)          # 계열 단색
         x0, y0 = c * (BW + GAP), -r * (BW + GAP)
         ax.add_patch(Rectangle((x0, y0), BW, BW, facecolor=fill,
-                               edgecolor=base, lw=1.4, zorder=2))
-        ax.text(x0 + BW / 2, y0 + BW * 0.60, el, ha="center", va="center",
-                fontsize=19, weight="bold", color=hs.INK, zorder=3)
-        ax.text(x0 + BW / 2, y0 + BW * 0.24, str(n), ha="center", va="center",
-                fontsize=12.5, color=hs.INK if n >= hi * .6 else hs.MUT, zorder=3)
-
-    # 범례 — 계열 (아래 한 줄)
-    ly = -8.05 * (BW + GAP)
+                               edgecolor=base, lw=2.0, zorder=2))
+    ly = -8.00 * (BW + GAP)
     x = 1.0 * (BW + GAP)
     for g, col in GROUP_C.items():
         base = to_rgb(col)
-        ax.add_patch(Rectangle((x, ly), 0.55, 0.55,
-                               facecolor=tuple(1 - .55 * (1 - ch) for ch in base),
-                               edgecolor=base, lw=1.5))
-        ax.text(x + 0.78, ly + 0.28, g, fontsize=14, va="center", color=hs.INK)
-        x += 3.5
-
-    # 채도 눈금 — 주기율표 가운데 빈 자리에 앉힌다
-    sx, sy = 16.9 * (BW + GAP), ly
-    ax.text(sx, sy + 1.05, "shade  =  compounds per element",
-            fontsize=13, color=hs.MUT)
-    for k, n in enumerate((1, 2, 3, 5, 7)):
-        base = to_rgb(GROUP_C["TM"])
-        t = 0.16 + 0.62 * (n / hi) ** 0.62
-        ax.add_patch(Rectangle((sx + k * 0.72, sy), 0.64, 0.55,
-                               facecolor=tuple(1 - t * (1 - ch) for ch in base),
-                               edgecolor="#cbd5e1", lw=1.0))
-        ax.text(sx + k * 0.72 + 0.32, sy + 0.28, str(n), ha="center", va="center",
-                fontsize=12, color=hs.INK)
-
-    ax.set_xlim(0.45, 20.6 * (BW + GAP))
-    ax.set_ylim(-8.55 * (BW + GAP), -0.55 * (BW + GAP))
+        ax.add_patch(Rectangle((x, ly), 0.58, 0.58,
+                               facecolor=tuple(1 - .30 * (1 - ch) for ch in base),
+                               edgecolor=base, lw=2.0))
+    ax.set_xlim(0.45, 20.9 * (BW + GAP))
+    ax.set_ylim(-8.50 * (BW + GAP), -0.55 * (BW + GAP))
     ax.axis("off")
     return _save(fig, "roster_periodic_table.png")
 
@@ -171,12 +145,8 @@ def fig_site_choice():
         mean = st.mean(des); col = GOOD if mean < 0 else BAD
         ax.plot([rad, rad], [min(des), max(des)], color=col, lw=1.4, alpha=.45, zorder=3)
         ax.scatter([rad], [mean], s=64, color=col, zorder=4, edgecolors="white", lw=1.0)
-        ax.annotate(m, (rad, mean), textcoords="offset points", xytext=(0, 9),
-                    ha="center", fontsize=11, color=hs.INK)
-    ax.text(.30, 2.55, "sits on a Li site", fontsize=15, color=BAD, weight="bold")
-    ax.text(.30, -1.72, "replaces P in the framework", fontsize=15, color=GOOD, weight="bold")
     ax.set_xlabel("Shannon ionic radius of the dopant cation  (6-coordinate, Å)")
-    ax.set_ylabel("energy difference between the two sites  (eV per dopant)")
+    ax.set_ylabel("P framework site   ←     ΔE  (eV per dopant)     →   Li site")
     _bare(ax, grid="y")
     return _save(fig, "step1_site_choice.png")
 
@@ -196,14 +166,10 @@ def fig_anion_site():
     cols = [hs.ELEM["S"], hs.ELEM["S"], hs.ELEM["Cl"]]
     for i, (k, v) in enumerate(items):
         ax.barh(-i, v, height=.56, color=cols[i % len(cols)], alpha=.85, zorder=3)
-        ax.text(v + 1.2, -i, str(v), va="center", fontsize=15, weight="bold", color=hs.INK)
-        ax.text(-1.5, -i, SITE_LABEL.get(k, k), va="center", ha="right", fontsize=14, color=hs.INK)
     ax.set_xlim(0, max(cnt.values()) * 1.22); ax.set_ylim(-len(items) + .4, .6)
     ax.set_yticks([])
     ax.set_xlabel("number of generated candidates that placed the dopant anion there")
     _bare(ax, grid="x")
-    ax.text(.99, .06, "the generator chose the site — it was not a variable we set",
-            transform=ax.transAxes, ha="right", fontsize=12.5, color=hs.MUT)
     return _save(fig, "step2_anion_site.png")
 
 
@@ -231,12 +197,8 @@ def fig_stability_band():
         ax.scatter([i] * len(v), v, s=15, color=hs.ELEM["P"], zorder=3, alpha=.9, edgecolors="none")
     ax.set_xticks([]); ax.set_xlim(-2, len(order) + 1)
     ax.set_xlabel(f"{len(order)} dopant species  ·  sorted by mean  ·  names omitted on purpose")
-    ax.set_ylabel("relative stability against the undoped host  (eV / atom)")
+    ax.set_ylabel("more stable   ←     relative stability vs host  (eV / atom)")
     _bare(ax, grid="y")
-    ax.text(.015, .06, "more stable than the host  ↓", transform=ax.transAxes,
-            fontsize=12.5, color=hs.MUT)
-    ax.text(.30, .20, "on this axis the three runs of one species agree —\nthe bars are short next to the range across species",
-            transform=ax.transAxes, ha="left", va="bottom", fontsize=13, color=GOOD, weight="bold")
     return _save(fig, "step4_stability_band.png")
 
 
@@ -255,18 +217,10 @@ def fig_label_spread():
         ax.plot([i, i], [v[0], v[-1]], color=NEUTRAL, lw=1.2, zorder=2)
         ax.scatter([i] * len(v), v, s=17, color=hs.ELEM["P"], zorder=3, alpha=.9, edgecolors="none")
     y = hi - 5.5; mid = len(order) // 2
-    ax.annotate("", xy=(mid - 6, y), xytext=(mid + 7, y),
-                arrowprops=dict(arrowstyle="<->", color=BAD, lw=2.0))
-    ax.text(mid + .5, y + 1.2, "one species, three runs  =  as wide as thirteen different species",
-            ha="center", va="bottom", fontsize=14, color=BAD, weight="bold")
     ax.set_ylim(lo, hi); ax.set_xlim(-2, len(order) + 1); ax.set_xticks([])
     ax.set_xlabel(f"{len(order)} dopant species  ·  sorted by mean  ·  names omitted on purpose")
     ax.set_ylabel("Young's modulus  E  (GPa)")
     _bare(ax, grid="y")
-    ax.text(.015, .04, f"spread within one species  {within:.1f} GPa      "
-                       f"spread across species  {between:.1f} GPa"
-                       + (f"      ({off} off scale)" if off else ""),
-            transform=ax.transAxes, fontsize=12, color=hs.MUT)
     return _save(fig, "result1_same_name_different_value.png")
 
 
@@ -290,14 +244,8 @@ def fig_oxidation_windows():
         ax.plot([red, ox], [i, i], color=col, lw=2.4, solid_capstyle="butt",
                 alpha=.55 if win > 0.05 else 1.0, zorder=3)
     ax.axvline(2.14, color=hs.INK, ls="--", lw=1.3, zorder=4)
-    ax.text(2.17, len(rows) * .97, "undoped host oxidises here", fontsize=13, color=hs.INK, va="top")
-    n_col = sum(1 for r in rows if r[3] <= 0.05)
-    ax.annotate(f"{n_col} candidates lose the window entirely",
-                xy=(1.86, n_col / 2), xytext=(1.16, len(rows) * .22),
-                fontsize=14, color=BAD, weight="bold", va="center",
-                arrowprops=dict(arrowstyle="->", color=BAD, lw=1.8))
     ax.set_yticks([]); ax.set_ylim(-2, len(rows) + 1)
-    ax.set_xlabel("voltage vs Li/Li⁺  (V)   —   bar = the range where the material is not driven to decompose")
+    ax.set_xlabel("voltage vs Li/Li⁺  (V)      dashed line = undoped host onset")
     ax.set_ylabel(f"{len(rows)} candidates  ·  sorted by window width")
     _bare(ax, grid="x")
     return _save(fig, "step8_oxidation_windows.png")
@@ -321,7 +269,6 @@ def fig_oxidation_by_group():
                    edgecolors="white", lw=.8, zorder=3)
         ax.plot([i - .28, i + .28], [st.mean(v)] * 2, color=hs.INK, lw=2.2, zorder=4)
     ax.axhline(2.14, color=hs.MUT, ls="--", lw=1.2, zorder=2)
-    ax.text(len(order) - .45, 2.155, "undoped host", fontsize=12.5, color=hs.MUT, ha="right")
     ax.set_xticks(range(len(order))); ax.set_xticklabels(order, fontsize=13.5)
     ax.set_ylabel("oxidation onset  (V vs Li/Li⁺)")
     ax.set_xlabel("chemistry of the dopant cation")
@@ -347,11 +294,8 @@ def fig_tradeoff():
     lo, hi = min(xs), max(xs)
     ax.plot([lo, hi], [a + b * lo, a + b * hi], color=BAD, lw=2.0, ls="--", zorder=4)
     ax.set_xlabel("more stable  ←     relative stability against the host  (eV / atom)")
-    ax.set_ylabel("fraction of Li sites the dopant blocks\n(higher = worse for conduction)")
+    ax.set_ylabel("more Li traffic blocked   →\nfraction of Li sites occupied")
     _bare(ax, grid="both")
-    ax.text(.985, .96, f"the more a dopant stabilises the lattice,\nthe more Li traffic it blocks   (r = {r:.2f})",
-            transform=ax.transAxes, va="top", ha="right", fontsize=14, color=BAD, weight="bold")
-    ax.text(.98, .06, f"{n} species", transform=ax.transAxes, ha="right", fontsize=12, color=hs.MUT)
     return _save(fig, "result3_stability_vs_traffic.png")
 
 
@@ -378,10 +322,6 @@ def fig_screen_survival():
     ax.set_xlabel("how far the cell volume moved during relaxation  (%)")
     ax.set_ylabel("number of candidate structures")
     _bare(ax, grid="y")
-    ax.annotate(f"{len(drop)} of {len(vals):,} structures\nend up here",
-                xy=(30, len(drop) * 0.30), xytext=(38, max(len(keep) // 7, 60)),
-                fontsize=13.5, color=BAD, weight="bold",
-                arrowprops=dict(arrowstyle="->", color=BAD, lw=1.8))
     return _save(fig, "step3_survival.png")
 
 
@@ -402,10 +342,6 @@ def fig_anneal_gain():
     ax.set_xlabel("energy change caused by the short anneal  (meV per cell)")
     ax.set_ylabel("number of structures")
     _bare(ax, grid="y")
-    ax.text(.02, .96, "every structure found a lower-energy arrangement\nonce it was allowed to move",
-            transform=ax.transAxes, va="top", fontsize=14, color=GOOD, weight="bold")
-    ax.text(.98, .52, "the plain relaxation had stopped\nat the nearest minimum",
-            transform=ax.transAxes, va="top", ha="right", fontsize=13, color=hs.MUT)
     return _save(fig, "step5_anneal_gain.png")
 
 
@@ -430,10 +366,6 @@ def fig_coverage():
         y = -i
         ax.barh(y, n_slot, height=.52, color="#eef1f5", zorder=2)
         ax.barh(y, v, height=.52, color=(GOOD if good else BAD), alpha=.85, zorder=3)
-        ax.text(-4, y, name, ha="right", va="center", fontsize=13.5, color=hs.INK)
-        lbl = f"{v}" if v else "none"
-        ax.text(n_slot + 6, y, lbl, va="center", fontsize=13,
-                color=(hs.INK if good and v else BAD), weight="bold" if not v else "normal")
     ax.set_xlim(-108, n_slot * 1.12)
     ax.set_ylim(-len(items) + .4, .7)
     ax.set_yticks([])
@@ -467,6 +399,9 @@ def selftest():
     chk(f"음성: 라벨에 내부 코드명 없음 ({leaked})", not leaked)
     # 음성 ② — 제목을 달면 안 된다 (슬라이드가 제목을 진다)
     chk("음성: set_title 미사용", "set_title" not in body)
+    # 음성 ⑥ — 그림 안에 문장을 넣지 않는다 (슬라이드가 문구를 진다, 2026-08-16 지시)
+    chk("음성: ax.text 미사용", "ax.text(" not in body)
+    chk("음성: ax.annotate 미사용", "ax.annotate(" not in body)
     # 음성 ③ — 필요한 원본 데이터가 있어야 한다
     need = ["cascade_v23_all.csv", "site_preference_raw_78.csv", "oxidation_stability_cascade_v2.csv"]
     miss = [f for f in need if not os.path.exists(os.path.join(DB, f))]

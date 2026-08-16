@@ -32,7 +32,7 @@ HEADER_N = 14
 COVER = 1
 COVER_BAND = (3.85, 5.15)
 #: 내용 영역 (인치)
-ZONE = dict(x=0.55, y=2.50, w=8.90, h=3.62)   # 아래 0.3 in 은 `< 그림이름 >` 자리
+ZONE = dict(x=0.55, y=2.50, w=8.90, h=3.28)   # 아래 0.3 in 은 `< 그림이름 >` 자리
 CAP_Y = 6.46
 MUT = RGBColor(0x6b, 0x7d, 0x8f)
 FIG = "/home/user/Yonghoon-DEM-DFT/"
@@ -201,6 +201,43 @@ ROSTER = [
 ]
 
 
+def add_roster_boxes(slide, x0=0.60, y0=2.50, w=8.80, h=3.95):
+    """계열별 박스 — 옅은 채움 + 계열색 머리글. 부록 전용(전체 91종)."""
+    from pptx.enum.shapes import MSO_SHAPE
+    left = ROSTER[:4]
+    right = ROSTER[4:]
+    colw = (w - 0.30) / 2
+    for ci, group in enumerate((left, right)):
+        y = y0
+        for name, n, colr, names in group:
+            nl = names.count("\n") + 1
+            bh = 0.34 + 0.205 * nl + 0.14
+            bx = x0 + ci * (colw + 0.30)
+            box = slide.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE,
+                                         Inches(bx), Inches(y), Inches(colw), Inches(bh))
+            box.adjustments[0] = 0.055
+            rgb = RGBColor.from_string(colr.lstrip("#").upper())
+            box.fill.solid()
+            box.fill.fore_color.rgb = RGBColor(*[int(255 - 0.10 * (255 - c)) for c in rgb])
+            box.line.color.rgb = rgb
+            box.line.width = Pt(1.25)
+            box.shadow.inherit = False
+            tf = box.text_frame
+            tf.word_wrap = True
+            tf.margin_left = tf.margin_right = Inches(0.14)
+            tf.margin_top = Inches(0.08); tf.margin_bottom = Inches(0.05)
+            pgh = tf.paragraphs[0]
+            r1 = pgh.add_run(); r1.text = f"{name}   {n}"
+            r1.font.size, r1.font.bold, r1.font.name = Pt(12), True, "Arial"
+            r1.font.color.rgb = rgb
+            for line in names.split("\n"):
+                q = tf.add_paragraph()
+                rr = q.add_run(); rr.text = line
+                rr.font.size, rr.font.name = Pt(10.5), "Arial"
+                rr.font.color.rgb = RGBColor(0x37, 0x41, 0x51)
+            y += bh + 0.16
+
+
 def add_roster_compact(slide, y=4.92):
     """표 아래에 전체 명단을 작은 글씨 한 덩어리로. 표가 구조를, 이 줄이 실체를 준다."""
     body = "  ·  ".join(f"{n}" for _, _, _, n in [])
@@ -238,6 +275,18 @@ def add_roster(slide):
                 rr.font.size, rr.font.name = Pt(11), "Arial"
                 rr.font.color.rgb = RGBColor(0x37, 0x41, 0x51)
             y += 0.24 * nlines + 0.30
+
+
+def add_fig_note(slide, text, x, y, w, size=11.5):
+    """그림에서 뺀 해설 한 줄. 그림 안에 글을 넣지 않는 대신 여기에 둔다."""
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(0.30))
+    tf = tb.text_frame; tf.word_wrap = True
+    pgh = tf.paragraphs[0]; pgh.alignment = PP_ALIGN.CENTER
+    for txt, col in _split_marked(text):
+        r = pgh.add_run(); r.text = txt
+        r.font.size, r.font.name = Pt(size), "Arial"
+        r.font.color.rgb = col or RGBColor(0x4b, 0x55, 0x63)
+        r.font.bold = col is not None
 
 
 def add_fig_label(slide, text, x, y, w):
@@ -373,17 +422,18 @@ SPEC = {
                    "⚠ The list leans toward [r]well-known stable compounds[/r] — that turns out to matter later."],
           table=dict(rows=[
                     ['family', 'n', 'why it is in the list', 'examples'],
-                    ['oxides', '37', 'strong M–O bonds, expected to resist oxidation', 'Ag2O  Al2O3  B2O3  BaO …'],
-                    ['chlorides', '19', 'host already contains Cl', 'AlCl3  BaCl2  CaCl2  CrCl3 …'],
-                    ['sulfides', '10', 'same anion as the host — control', 'Al2S3  CaS  Ga2S3  GeS2 …'],
-                    ['fluorides', '10', 'strongest bonds, worst Li mobility risk', 'AlF3  CaF2  LaF3  LiF …'],
-                    ['bromides', '5', 'larger halide — lattice-size control', 'AlBr3  CaBr2  LiBr  MgBr2 …'],
-                    ['nitrides', '5', 'high charge anion — charge-compensation control', 'AlN  Ca3N2  GaN  Li3N …'],
-                    ['iodides', '4', 'largest halide — mobility control', 'AlI3  LiI  MgI2  NaI'],
+                    ['oxides', '37', 'strong M–O bonds, expected to resist oxidation', 'Ag₂O  Al₂O₃  B₂O₃  BaO …'],
+                    ['chlorides', '19', 'host already contains Cl', 'AlCl₃  BaCl₂  CaCl₂  CrCl₃ …'],
+                    ['sulfides', '10', 'same anion as the host — control', 'Al₂S₃  CaS  Ga₂S₃  GeS₂ …'],
+                    ['fluorides', '10', 'strongest bonds, worst Li mobility risk', 'AlF₃  CaF₂  LaF₃  LiF …'],
+                    ['bromides', '5', 'larger halide — lattice-size control', 'AlBr₃  CaBr₂  LiBr  MgBr₂ …'],
+                    ['nitrides', '5', 'high charge anion — charge-compensation control', 'AlN  Ca₃N₂  GaN  Li₃N …'],
+                    ['iodides', '4', 'largest halide — mobility control', 'AlI₃  LiI  MgI₂  NaI'],
                  ], y=2.60, w=8.76, size=11.5, first_col_w=1.35),
-          roster_compact=True,
           cap="Grouped by the dominant anion. Order inside a family carries no meaning — this is the input list, not a shortlist."),
- 7:  dict(gloss='Cation: the metal we substitute in  ·  Coverage: how many compounds of that element we ran',
+ 7:  dict(fig_label='candidate elements on the periodic table',
+          fig_note='the small number is how many compounds of that element were run',
+          gloss='Cation: the metal we substitute in  ·  Coverage: how many compounds of that element we ran',
           src='Our roster, drawn on the table',
           title="Where they sit",
           header="36 cation elements, from alkali metals to lanthanides",
@@ -393,7 +443,8 @@ SPEC = {
           cap="Our own roster. Colour marks the chemical family only — it is not a score and not a ranking."),
 
  # ④ 9단계
- 8:  dict(gloss='Sublattice: the set of equivalent positions one element occupies  ·  Aliovalent: a different charge from the ion it replaces',
+ 8:  dict(fig_note='large cations take Li sites; small group-14 ions replace P',
+          gloss='Sublattice: the set of equivalent positions one element occupies  ·  Aliovalent: a different charge from the ion it replaces',
           src='Our calculation  ·  site preference',
           title="STEP 1 — Where it sits",
           header="A dopant name is not yet a structure",
@@ -402,7 +453,8 @@ SPEC = {
           pics=[S+"step1_site_choice.png"],
           cap="Our calculation: which sublattice each cation prefers, plotted against its ionic radius. "
               "Big cations end up on Li sites; small group-14 ions replace P. Bars are the spread across our three runs."),
- 9:  dict(gloss='Configuration: one specific arrangement of atoms in the cell  ·  Generator: the code that enumerates candidate structures',
+ 9:  dict(fig_note='[r]the generator chose the site — it was not a variable we set[/r]',
+          gloss='Configuration: one specific arrangement of atoms in the cell  ·  Generator: the code that enumerates candidate structures',
           src='Our calculation  ·  where the anion landed',
           title="STEP 2 — Building it",
           header="Every allowed site becomes its own candidate structure",
@@ -411,7 +463,8 @@ SPEC = {
           pics=[S+"step2_anion_site.png"],
           cap="Our calculation: where the dopant's anion actually landed across the campaign. "
               "Three sublattices absorbed it in comparable numbers, so the site was never fixed by design."),
- 10: dict(gloss='Relaxation: moving atoms until the forces vanish  ·  Machine-learned potential: a fast stand-in for quantum-mechanical forces',
+ 10: dict(fig_note='[r]100 of 3,615 structures moved past 25 % and were dropped[/r]',
+          gloss='Relaxation: moving atoms until the forces vanish  ·  Machine-learned potential: a fast stand-in for quantum-mechanical forces',
           src='Method note',
           title="STEP 3 — Cheap relaxation",
           header="Let a fast model decide which structures are even plausible",
@@ -419,11 +472,12 @@ SPEC = {
                    "Structures that collapse or refuse to converge drop out here."],
           pics=[S+"step3_survival.png"],
           fig_label="how far each structure moved",
-          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.42),
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.20),
           statement="This stage answers one question: does the structure hold together?",
           stmt_y=5.42, stmt_size=15.5,
           ),
- 11: dict(gloss='Representative: the one structure carried forward  ·  Convergence: the optimiser actually finished',
+ 11: dict(fig_note='[b]on this axis the three runs agree — the bars are short[/b]',
+          gloss='Representative: the one structure carried forward  ·  Convergence: the optimiser actually finished',
           src='Our calculation  ·  stability band',
           title="STEP 4 — Picking one",
           header="One structure per candidate goes forward — and that is a choice",
@@ -432,7 +486,8 @@ SPEC = {
           pics=[S+"step4_stability_band.png"],
           cap="Our calculation: relative stability against the undoped host, with the spread across our three runs. "
               "Here the runs agree, so a representative structure is defensible on this axis."),
- 12: dict(gloss='Anneal: a brief run at high temperature  ·  Local minimum: the nearest stable arrangement, not necessarily the right one',
+ 12: dict(fig_note='[b]every structure found a lower-energy arrangement once it could move[/b]',
+          gloss='Anneal: a brief run at high temperature  ·  Local minimum: the nearest stable arrangement, not necessarily the right one',
           src='Method note',
           title="STEP 5 — Shaking it",
           header="A short heat-and-relax tests whether the structure survives",
@@ -440,11 +495,12 @@ SPEC = {
                    "So we heat briefly, then relax again — everything measured next depends on [b]bond lengths[/b]."],
           pics=[S+"step5_anneal_gain.png"],
           fig_label="energy gained by shaking the structure",
-          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.42),
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=2.20),
           statement="500 K for 50 picoseconds, then relax again — long enough to cross a small barrier.",
           stmt_y=5.42, stmt_size=15.5,
           ),
- 13: dict(gloss='Bond-valence map: a cheap estimate of how comfortable an ion is at a point  ·  Percolation: a low-energy path that spans the crystal',
+ 13: dict(fig_note='[r]valleys are low-energy regions, not verified channels[/r]',
+          gloss='Bond-valence map: a cheap estimate of how comfortable an ion is at a point  ·  Percolation: a low-energy path that spans the crystal',
           src='Our calculation  ·  Li landscape',
           title="STEP 6 — The Li path",
           header="Map the energy landscape a lithium ion would have to cross",
@@ -453,7 +509,8 @@ SPEC = {
           pics=[S+"step6_li_landscape.png"],
           cap="Our calculation: the static landscape, undoped versus B₂O₃-doped. "
               "⚠ Valleys are low-energy regions, not verified channels — this flags risk, it does not measure conductivity."),
- 14: dict(gloss='Equation of state: energy as the cell volume changes  ·  Stack pressure: the force holding the cell together',
+ 14: dict(fig_note='[r]a single case — not a pool-wide DFT validation[/r]',
+          gloss='Equation of state: energy as the cell volume changes  ·  Stack pressure: the force holding the cell together',
           src='Our calculation  ·  checked against DFT',
           title="STEP 7 — Squeezing it",
           header="In a solid-state cell the mechanics are part of the performance",
@@ -462,7 +519,8 @@ SPEC = {
           pics=[S+"step7_equation_of_state.png"],
           cap="Our calculation: one equation-of-state case checked against DFT. "
               "⚠ A single-case check — the campaign-wide elastic numbers are model values compared within one convention."),
- 15: dict(gloss='Oxidation onset: the voltage at which decomposition becomes favourable  ·  Window: the voltage range where nothing is driven to decompose',
+ 15: dict(fig_note='[r]five candidates lose the window entirely — all late transition metals[/r]',
+          gloss='Oxidation onset: the voltage at which decomposition becomes favourable  ·  Window: the voltage range where nothing is driven to decompose',
           src='Our calculation  ·  90 candidates',
           title="STEP 8 — The window",
           header="Raising the voltage pulls Li out — we compute where it breaks",
@@ -502,7 +560,8 @@ SPEC = {
                  ], y=2.62, w=6.05, size=12, first_col_w=3.05),
           statement="A missing calculation\nstays missing.\n\nA proxy can reorder the queue;\nit cannot take the place\nof the answer.",
           stmt_x=6.95, stmt_y=2.95, stmt_size=14.5, stmt_w=2.55),
- 18: dict(gloss='Exact formula: the atom counts in the simulated cell  ·  Placement: which site the dopant actually took',
+ 18: dict(fig_note='[r]one species over three runs spans as much E as thirteen species[/r]',
+          gloss='Exact formula: the atom counts in the simulated cell  ·  Placement: which site the dopant actually took',
           src='Our calculation  ·  label spread',
           title="Result 1 — Identity",
           header="The same dopant name did not mean the same material",
@@ -510,7 +569,7 @@ SPEC = {
                    "Where the site moved the value moved too — averaging the three [r]mixes different materials[/r]."],
           pics=[S+"result1_same_name_different_value.png"],
           fig_label="spread of the three runs, species by species",
-          pic_zone=dict(x=0.55, y=2.50, w=8.90, h=2.28),
+          pic_zone=dict(x=0.55, y=2.50, w=8.90, h=1.98),
           table=dict(rows=[
                     ['axis', 'unit', 'within one species', 'across species', 'ratio', 'read as'],
                     ['relative stability', 'eV/atom', '0.037', '0.174', '0.21', '[b]chemistry dominates[/b]'],
@@ -529,7 +588,7 @@ SPEC = {
           pics=[L+"banik2022_substitutions_oxidative_stability_argyrodite/fig_4.png",
                 S+"result2_onset_by_chemistry.png"],
           fig_label=["valence band edge of the host", "onset by dopant chemistry"],
-          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=1.92),
+          pic_zone=dict(x=0.55, y=2.48, w=8.90, h=1.70),
           table=dict(rows=[
                     ['dopant chemistry', 'n', 'median onset (V)', 'range (V)', 'windows lost'],
                     ['main-group', '21', '2.140', '1.72 – 2.36', '0'],
@@ -540,7 +599,9 @@ SPEC = {
                  ], y=4.72, w=8.76, size=10.5, first_col_w=2.10),
           cap="Left: Banik et al. (2022), Fig. 4 — the valence-band edge of Li₆PS₅Cl is sulfur. "
               "Right: our onsets grouped by cation chemistry. Most sit pinned at the host value; we cannot yet attribute the exceptions to an element."),
- 20: dict(gloss='Blocking fraction: how much of the Li path the dopant occupies  ·  Trade-off: a gain on one axis paid for on another',
+ 20: dict(fig_label='stability against blocked Li traffic',
+          fig_note='[r]the more a dopant stabilises the lattice, the more Li traffic it blocks (r = −0.63)[/r]',
+          gloss='Blocking fraction: how much of the Li path the dopant occupies  ·  Trade-off: a gain on one axis paid for on another',
           src='Our data  ·  Xiao 2019',
           title="Result 3 — The trade",
           header="What stabilises the lattice also blocks the traffic",
@@ -641,7 +702,132 @@ SPEC = {
           lines_y=2.80, lines_size=13.5, lines_lead=0.58,
           statement="A proxy may decide what to compute next.\nIt may not stand in for the result.",
           stmt_y=5.80, stmt_size=17),
+ 28: dict(gloss="Roster: the full input list, before anything is judged  ·  Family: grouped by the dominant anion",
+          src="master_batch roster · 91 compounds",
+          roster_boxes=True,
+          cap="All 91 planned compounds, grouped by family. Order inside a family carries no meaning."),
 }
+
+# ── 어체 통일 (2026-08-16) ────────────────────────────────────────────────────
+# 모티브: 2026-01-13 연구세미나 덱 (Hong Rim Shin). 그 덱의 규칙은 셋이다.
+#   · 제목 = 그 장에서 하는 일의 이름 (문장 아님, 동명사·명사구)
+#   · ■ 헤더 = `주제 (n): 구체적 대상` — 번호를 붙여 계열을 만든다
+#   · • 불릿 = 마침표로 끝나는 선언문. `To <목적>, <대상> was <동사>.` 가 기본형
+# 아래 표가 SPEC 의 title/header/bullets 를 덮어쓴다.
+VOICE = {
+ 2:  ("Failure modes in sulfide solid electrolytes",
+      "Motivation (1): Electrochemical and mechanical degradation are coupled",
+      ["Cathode-side oxidation, contact loss, cracking and dendrite growth [r]proceed together[/r].",
+       "A modifier that improves one axis can [r]degrade another[/r] without appearing there."]),
+ 3:  ("Selecting the modification lever",
+      "Motivation (2): Lattice doping can be screened before synthesis",
+      ["Coating and anode engineering act at [r]interfaces[/r], which are hard to build and to predict.",
+       "To survey a wide chemical space at low cost, [b]lattice doping was chosen[/b] as the variable."]),
+ 4:  ("Screening strategies in the literature",
+      "Prior work (1): Broad spaces are narrowed before accurate methods",
+      ["Xiao et al. reduced 104,082 coating candidates to three by [b]sequential physical gates[/b].",
+       "Kahle et al. kept the candidates and instead [b]raised the level of theory[/b] stage by stage."]),
+ 5:  ("Adopted design principle",
+      "Prior work (2): The ordering was adopted; the thresholds were not",
+      ["Published thresholds were tuned for coatings, and [r]a sulfide host fails all of them[/r].",
+       "The transferable rule: [b]a cheap stage reorders the queue[/b], it never certifies a material."]),
+ 6:  ("Candidate chemistry space",
+      "Candidate set (1): 91 compounds across seven anion families",
+      ["Oxides were included for [b]strong M–O bonding[/b]; halides because the host contains Cl.",
+       "Sulfides, nitrides and heavy halides were included as [b]anion-family controls[/b]."]),
+ 7:  ("Elemental coverage of the candidate set",
+      "Candidate set (2): 36 cation elements, alkali metals to lanthanides",
+      ["Coverage is dense among transition metals and [r]sparse in the heavy main group[/r].",
+       "The list is [r]biased toward well-characterised stable compounds[/r] — see Result 1."]),
+ 8:  ("Substitution site and charge compensation",
+      "Step 1: The substitution site is enumerated before a structure is built",
+      ["The Li, P, S and Cl sublattices are distinct; an oxide needs [b]a cation and an anion site[/b].",
+       "Aliovalent substitution moves Li, and [r]more than one recipe balances the charge[/r]."]),
+ 9:  ("Candidate structure generation",
+      "Step 2: Each allowed placement becomes a separate structure",
+      ["To cover the placement space, [b]several structures per compound[/b] were generated.",
+       "The winning site is [r]an output of the generator[/r], not a variable that was controlled."]),
+ 10: ("Low-cost structure relaxation",
+      "Step 3: A machine-learned potential screens structures before DFT",
+      ["To relax thousands of structures within budget, [b]a fast interatomic potential was used[/b].",
+       "Energies are [r]relative within one convention[/r] — not formation energies or hull distances."]),
+ 11: ("Representative structure selection",
+      "Step 4: One converged structure per candidate is carried forward",
+      ["Structures were kept if they converged and the cell volume [b]stayed within 25 %[/b].",
+       "Candidate counts differ per compound, so [r]this selection is not a ranking of elements[/r]."]),
+ 12: ("Thermal perturbation of the selected structure",
+      "Step 5: A short anneal tests whether the arrangement survives",
+      ["To escape the nearest local minimum, [b]each structure was heated briefly and relaxed again[/b].",
+       "The trajectory is [r]not an equilibrium structure and not a conductivity measurement[/r]."]),
+ 13: ("Static lithium transport pathway",
+      "Step 6: The Li energy landscape is mapped on the annealed geometry",
+      ["To flag transport risk without dynamics, [b]a bond-valence landscape was computed[/b].",
+       "Low-energy valleys are [r]structural pathways, not diffusion coefficients[/r]."]),
+ 14: ("Mechanical response of the doped lattice",
+      "Step 7: Stiffness and compressibility are obtained from finite strains",
+      ["To assess particle contact under stack pressure, [b]elastic moduli were computed[/b].",
+       "The DFT comparison shown here is [r]a single case, not a pool-wide validation[/r]."]),
+ 15: ("Electrochemical stability window",
+      "Step 8: The oxidation onset from a grand-potential construction",
+      ["To locate decomposition, [b]the Li chemical potential was scanned as a voltage axis[/b].",
+       "The result is [r]0 K bulk thermodynamics[/r] — not a rate, and not a passivation prediction."]),
+ 16: ("Calculations that were not performed",
+      "Step 9: Two designed stages produced no evidence",
+      ["[r]Conductivity from dynamics[/r] — days per candidate; Step 6 stands in as a proxy.",
+       "[r]The cathode interface[/r] — not attempted; the figure shows what such a screen looks like."]),
+ 17: ("Inventory of available evidence",
+      "Result summary: The screen is broad in structure and thin in transport",
+      ["Structures, relaxation, anneal, Li maps, mechanics and oxidation windows [b]all exist[/b].",
+       "Conductivity, explicit interfaces and pool-wide DFT confirmation [r]do not exist[/r]."]),
+ 18: ("Effect of structural identity on the measured value",
+      "Result 1: The dopant name did not define a controlled comparison",
+      ["Across the three runs, [b]59 of 90 species[/b] kept one exact formula and [r]31 did not[/r].",
+       "Where the site moved the value moved with it, so [r]averaging mixes different materials[/r]."]),
+ 19: ("Dependence of oxidation onset on dopant chemistry",
+      "Result 2: Sulfur sets the limit; shifts away from it are conditional",
+      ["The valence-band edge is [b]sulfur[/b], so sulfur is oxidised first regardless of the dopant.",
+       "Late transition metals are the clear loss: [r]the window collapses rather than shifting[/r]."]),
+ 20: ("Trade-off between stability and lithium transport",
+      "Result 3: Lattice stabilisation and Li mobility oppose each other",
+      ["Across our candidates the two axes [r]correlate negatively[/r] — the trend is not noise.",
+       "The same trade-off appears in the literature for [b]an unrelated material set[/b]."]),
+ 21: ("Design of the next campaign",
+      "Future work (1): Control is strengthened before scale is increased",
+      ["To separate chemistry from placement, [b]the formula and site will be frozen[/b] before repeats.",
+       "Real low concentrations require [b]larger cells[/b]; only boundary cases are promoted upward."]),
+ 22: ("Use of the data for machine learning",
+      "Future work (2): The data schedules calculations, not replaces them",
+      ["90 candidates give [b]about 4,000 pairs[/b] — not computable, but rankable for prioritisation.",
+       "Trained on today's data a model would also learn our [r]placement noise[/r]; Result 1 comes first."]),
+ 23: ("Discussion",
+      "Open questions for the group",
+      ["What exists is [b]a map of where the comparison is reliable[/b], not a shortlist.",
+       "The next decision is [b]which expensive calculation reduces uncertainty the most[/b]."]),
+ 24: ("Experimental counterpart in a garnet electrolyte",
+      "Appendix A1: The same survey performed by synthesis",
+      ["59 dopants were synthesised and measured — [b]the closest experimental analogue[/b].",
+       "32 of our 36 cation elements also appear in that study."]),
+ 25: ("Mapping of talk steps onto the executed workflow",
+      "Appendix A2: Nine questions, and where each one was answered",
+      ["Each talk step is named by [b]the question it answers[/b]; folders are named by what ran.",
+       "Two designed stages produced no evidence and are marked [r]not run[/r]."]),
+ 26: ("Interpretation of the three campaign labels",
+      "Appendix A3: The labels are neither concentrations nor repeats",
+      ["All three collapsed to the [r]same substitution[/r] in a small cell — no concentration axis.",
+       "Regrouping by exact formula gives [b]59 same-formula[/b] and [r]31 changed-formula[/r] species."]),
+ 27: ("Boundaries of each computational method",
+      "Appendix A4: Every method named by the question it can answer",
+      ["The left column is [b]what the method answers[/b]; the right is what it is assumed to answer.",
+       "Every entry on the right is a calculation that [r]has not been run[/r]."]),
+}
+VOICE[28] = ("Full candidate roster",
+             "Appendix A5: All 91 compounds, grouped by anion family",
+             ["Every compound that entered the campaign is listed — [b]this is the denominator[/b].",
+              "As₂S₃ was planned but [r]stopped during structure generation[/r]."])
+
+for _n, (_t, _h, _b) in VOICE.items():
+    SPEC.setdefault(_n, {}).update(title=_t, header=_h, bullets=_b)
+
 # 텍스트만 손보고 내용 영역은 그대로 두는 장
 KEEP_ZONE = set()
 
@@ -695,6 +881,16 @@ def main():
         else:
             clear_zone(slide)
 
+        # 머리말 기하 — 2026-01-13 덱 배치에 맞춘다 (제목 전폭 · 정의는 구분선 아래 우측)
+        if len(slide.shapes) <= 13:
+            print(f"      ⚠ 머리말 도형이 {len(slide.shapes)}개뿐 — 기하 조정 건너뜀")
+            continue
+        slide.shapes[1].left, slide.shapes[1].width = Inches(0.57), Inches(8.90)
+        slide.shapes[1].top, slide.shapes[1].height = Inches(0.26), Inches(0.50)
+        slide.shapes[2].left, slide.shapes[2].top = Inches(5.02), Inches(0.94)
+        slide.shapes[2].width, slide.shapes[2].height = Inches(4.46), Inches(0.42)
+        slide.shapes[10].left, slide.shapes[10].top = Inches(5.78), Inches(1.40)
+        slide.shapes[10].width = Inches(3.70)
         if spec.get("gloss"):
             set_text(slide.shapes[2], spec["gloss"])
         if spec.get("src"):
@@ -725,8 +921,8 @@ def main():
             add_pics(slide, spec["pics"], zone=spec.get("pic_zone", ZONE))
         if spec.get("roster"):
             add_roster(slide)
-        if spec.get("roster_compact"):
-            add_roster_compact(slide)
+        if spec.get("roster_boxes"):
+            add_roster_boxes(slide)
         if spec.get("table"):
             t = spec["table"]
             add_table(slide, t["rows"], t.get("x", 0.62), t.get("y", 2.55),
@@ -740,6 +936,13 @@ def main():
                 add_fig_label(slide, lab, sh.left / 914400,
                               sh.top / 914400 + sh.height / 914400 + 0.02,
                               sh.width / 914400)
+            notes = spec.get("fig_note")
+            if notes:
+                notes = [notes] if isinstance(notes, str) else notes
+                for nt, sh in zip(notes, pics):
+                    add_fig_note(slide, nt, sh.left / 914400,
+                                 sh.top / 914400 + sh.height / 914400 + 0.30,
+                                 sh.width / 914400)
         if spec.get("lines"):  # None 이면 건너뛴다
             add_lines(slide, spec["lines"], y=spec.get("lines_y", 2.75),
                       size=spec.get("lines_size", 13), lead=spec.get("lines_lead", 0.34))
@@ -829,7 +1032,7 @@ def selftest():
     sc = [(n, len(sp_["src"])) for n, sp_ in SPEC.items() if sp_.get("src") and len(sp_["src"]) > 76]
     chk(f"음성: 출처 라벨 길이 초과 0건 ({sc})", not sc)
     # 음성 ⑦ — 제목/헤더/불릿이 한 줄 상자를 넘치면 안 된다 (2026-08-16 mock 렌더 실측 한도)
-    LIM = dict(title=26, header=66)
+    LIM = dict(title=52, header=72)
     _plain = lambda t: _MARK.sub(r"\2", t)
     over = [(n, k, len(_plain(sp_[k]))) for n, sp_ in SPEC.items() for k, lim in LIM.items()
             if sp_.get(k) and len(_plain(sp_[k])) > lim]

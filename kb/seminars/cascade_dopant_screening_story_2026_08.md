@@ -1,5 +1,5 @@
 ---
-title: LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v4 · 덱과 1:1)
+title: LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v5 · 덱과 1:1)
 date: 2026-08-16
 updated: 2026-08-16
 tags: [seminar, cascade, screening, doping, lpscl]
@@ -13,601 +13,695 @@ claimType: empirical
 evidenceScope: multi-source-mixed
 ---
 
-# LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v4)
+# LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v5)
 
-덱: `docs/Research_Seminar_2026_08_cascade_story_v4.pptx` (27장 · 그림 20 · 표 4)
-**슬라이드 번호와 이 대본의 번호가 1:1로 맞는다.**
-본문 23장 + 부록 4장. 장당 40–70초, 본문 약 21분.
+덱: `docs/Research_Seminar_2026_08_cascade_story_v5.pptx` (28장 · 그림 22 · 표 4)
+**슬라이드 번호와 이 대본의 번호가 1:1로 맞는다.** 본문 23장 + 부록 5장, 본문 약 21분.
 
-흐름은 8절 — ① 왜(2–3) ② 남들은(4–5) ③ 후보군(6–7) ④ 9단계(8–16)
-⑤ 결과(17–20) ⑥ 다음 판(21) ⑦ ML(22) ⑧ discussion(23) · 부록(24–27)
+각 장 머리의 `> ■`·`> •` 은 **슬라이드에 실제로 인쇄된 문장**이다 (읽는 게 아니라 근거).
+그 아래 한국어가 말할 내용.
 
-슬라이드 글씨 색 규칙: **빨강 = 한계·못 한 것**, **파랑 = 강조·우리 기여**.
-말할 때 그 색 부분에서 한 박자 쉬면 청중이 따라온다.
+어체는 2026-01-13 연구세미나 덱을 모티브로 맞췄다 —
+제목은 그 장에서 하는 일의 이름, ■ 헤더는 `주제 (n): 대상`, • 불릿은 마침표로 끝나는 선언문.
 
-기호 · `[그림]` 슬라이드에 들어간 그림 · `💬` 말로만 · `💡` 넣으면 좋은 보조 제안(빼도 성립)
+색 규칙: 슬라이드의 **빨강 = 한계·못 한 것**, **파랑 = 강조·우리 기여**.
+빨간 글씨에서 한 박자 쉰다. 그냥 읽고 넘어가면 청중은 결과만 가져간다.
 
----
-
-## ① 왜 이걸 하나
-
-### 1 — 표지 · Why screen dopants for LPSCl?
+기호 · `< >` 그림 이름표 · `해설` 그림 밑 한 줄 · `💬` 말로만 · `💡` 보조 제안
+### 1 — (표지)
 
 **[30초]**
 
-안녕하세요. 오늘은 Li₆PS₅Cl이라는 황화물 고체전해질에 원소를 하나씩 넣어 보면서
-쓸 만한 게 뭔지를 계산으로 훑은 얘기를 하겠습니다.
+안녕하세요. Li₆PS₅Cl 이라는 황화물 고체전해질에 원소를 하나씩 넣어 보면서, 쓸 만한 게
+뭔지를 계산으로 훑은 내용을 말씀드리겠습니다.
 
-순서는 세 덩어리예요. 앞은 왜 이걸 해야 했는지, 가운데는 어떤 순서로 좁혀 갔는지,
-뒤는 뭘 알게 됐고 다음에 뭘 할 건지입니다. 수식은 안 쓰겠습니다.
+발표는 세 덩어리입니다. 왜 이걸 했는지, 어떤 순서로 좁혔는지, 무엇을 알게 됐고 다음에
+무엇을 할 것인지. 수식은 쓰지 않겠습니다.
 
 ---
 
-### 2 — The problem
 
-`[그림]` Kang et al., *Chem. Commun.* (2026), Fig. 16 — 우리 그룹 리뷰.
+## ① 왜 이걸 하나
+
+### 2 — Failure modes in sulfide solid electrolytes
+
+> ■ Motivation (1): Electrochemical and mechanical degradation are coupled
+> • Cathode-side oxidation, contact loss, cracking and dendrite growth proceed together.
+> • A modifier that improves one axis can degrade another without appearing there.
+
+**[60초]**
+
+먼저 이 그림 한 장을 보고 가겠습니다. 가운데가 셀이고 위가 양극, 아래가 음극입니다.
+
+황화물 전해질은 이온이 아주 잘 다닙니다. 액체 전해질에 견줄 정도예요. 그런데 문제가
+한 축이 아닙니다. 왼쪽 붉은 쪽이 전기화학입니다. 양극에서 전해질이 산화돼 분해되고,
+양극에서 나온 것들이 전해질을 다시 공격합니다. 오른쪽 파란 쪽은 역학입니다. 충방전마다
+부피가 변해 입자 접촉이 떨어지고, 균열이 생기고, 음극 쪽에서는 덴드라이트가 뚫습니다.
+
+이 둘이 서로를 키웁니다. 분해되면 접촉이 나빠지고, 접촉이 나빠지면 남은 자리로 전류가
+몰려 다시 분해됩니다.
+
+💬 이건 저희 계산이 아니라 문헌에서 정리한 문제 지도입니다. 오늘 저희가 계산한 건
+이 지도에서 한 칸입니다.
+
+---
+
+### 3 — Selecting the modification lever
+
+> ■ Motivation (2): Lattice doping can be screened before synthesis
+> • Coating and anode engineering act at interfaces, which are hard to build and to predict.
+> • To survey a wide chemical space at low cost, lattice doping was chosen as the variable.
 
 **[65초]**
 
-이 그림 한 장 먼저 보고 가겠습니다. 가운데가 셀이고, 위가 양극, 아래가 음극이에요.
+방금 그림에 답이 들어 있습니다. 초록 상자 세 개가 실제로 쓰이는 레버입니다. 양극 입자
+코팅, 음극 공정, 그리고 전해질 자체의 조성 개질.
 
-황화물 전해질은 이온이 정말 잘 다닙니다. 액체만큼 다녀요. 그런데 **문제가 한 축이
-아닙니다.** 왼쪽 빨간 쪽이 전기화학이에요. 양극에서 전해질이 산화돼 분해되고, 양극에서
-나온 것들이 전해질을 또 공격합니다. 오른쪽 파란 쪽은 완전히 다른 얘기고요. 충방전할
-때마다 부피가 변해서 입자 접촉이 떨어지고, 금이 가고, 음극 쪽에선 덴드라이트가 뚫습니다.
+앞의 둘은 계면에서 벌어지는 일입니다. 만들기도 어렵고 미리 계산하기는 더 어렵습니다.
+반면 도핑은 격자 안의 일이라 **합성 전에 컴퓨터로 훑을 수 있습니다.** 그래서 세 번째를
+골랐습니다.
 
-그리고 이 둘이 따로 노는 게 아니라 서로 부추깁니다. 분해되면 접촉이 나빠지고, 접촉이
-나빠지면 남은 자리로 전류가 몰려서 또 분해되고요.
+다만 대가가 있습니다. 원소를 하나 넣으면 산화만 바뀌는 게 아니라 Li 경로도, 딱딱함도
+같이 바뀝니다. 축이 하나가 아닙니다. 그리고 후보 91개에 자리와 전하 보상 방법을 곱하면
+구조가 수천 개가 됩니다.
 
-💬 이건 저희 계산 결과가 아니라 문헌에서 정리한 문제 지도입니다. 오늘 저희가 계산한 건
-여기서 딱 한 칸이에요. 그 얘기를 뒤에서 다시 하겠습니다.
-
----
-
-### 3 — The lever, and the cost
-
-`[그림 없음]` 같은 Kang 그림의 **초록 박스 세 개**를 말로 가리키면서 시작하세요.
-(원한다면 2장을 한 번 더 띄우고 그 위에 형광펜을 얹어도 됩니다.)
-
-**[65초]**
-
-방금 그림에 답이 이미 들어 있습니다. 초록색 박스 세 개가 사람들이 실제로 당기는
-레버예요. 양극 입자를 코팅하거나, 음극 쪽을 손보거나, **전해질 자체에 원소를 넣거나.**
-
-앞의 둘은 계면에서 벌어지는 일입니다. 만들기도 어렵고, 미리 계산으로 보기는 더
-어려워요. 반면 도핑은 격자 안의 일이라 **합성하기 전에 컴퓨터로 훑을 수가 있습니다.**
-
-그런데 대가가 있어요. 원소를 하나 넣으면 산화만 바뀌는 게 아니라 Li가 다니는 길도,
-딱딱함도 같이 바뀝니다. 축이 하나가 아니에요. 그리고 후보 91개에 자리 여러 개, 전하
-맞추는 방법 여러 개를 곱하면 구조가 수천 개가 됩니다.
-
-그래서 질문이 "뭐가 제일 좋냐"가 아니라 **"비싼 계산을 어디에 쓸 거냐"**가 됩니다.
-
-💡 여기서 한 번 끊고 "이게 오늘 발표 내내 깔려 있는 질문입니다"라고 못 박으면 뒤가 편합니다.
+그래서 질문이 "무엇이 가장 좋은가"가 아니라 **"비싼 계산을 어디에 쓸 것인가"**가 됩니다.
+이게 오늘 발표 내내 깔려 있는 질문입니다.
 
 ---
+
 
 ## ② 남들은 어떻게 하나
 
-### 4 — How others do it
+### 4 — Screening strategies in the literature
 
-`[그림 2장]` 왼쪽 Xiao *Joule* 3 (2019) 1252, Fig. 1 / 오른쪽 Kahle *EES* 13 (2020) 928, Fig. 1.
+> ■ Prior work (1): Broad spaces are narrowed before accurate methods
+> • Xiao et al. reduced 104,082 coating candidates to three by sequential physical gates.
+> • Kahle et al. kept the candidates and instead raised the level of theory stage by stage.
 
 **[65초]**
 
-다들 똑같은 일을 합니다. 넓은 공간을 **먼저 줄이고** 나서 정확한 방법에 돈을 씁니다.
-다만 줄이는 방식이 두 갈래예요.
+문헌도 같은 일을 합니다. 넓은 공간을 먼저 줄이고 나서 정확한 방법에 자원을 씁니다.
+다만 줄이는 방식이 두 갈래입니다.
 
-왼쪽 Xiao는 **후보를 자릅니다.** 십만 종에서 시작해서 밴드갭으로 자르고, 안정한 것만
-남기고, 전기화학 창을 보고, 양극·전해질이랑 안 싸우는지 보고. 십만이 육만, 천육백,
-삼백... 마지막에 세 종이 남아요.
+왼쪽 Xiao 는 **후보를 자릅니다.** 십만 종에서 밴드갭, 상 안정성, 전기화학 창, 반응성
+순서로 걸러 마지막에 세 종을 남깁니다.
 
-오른쪽 Kahle은 반대로 **후보를 안 자르고 정밀도를 올립니다.** 위에서는 구조만 보고,
-아래로 갈수록 비싼 방법을 쓰다가 맨 아래에서만 진짜 first-principles MD를 돌려요.
+오른쪽 Kahle 은 반대입니다. **후보를 자르지 않고 정밀도를 올립니다.** 위에서는 구조만
+보고, 아래로 갈수록 비싼 방법을 쓰다가 맨 아래에서만 first-principles MD 를 돌립니다.
 
-공통점은 하나입니다. **비싼 계산은 마지막에, 살아남은 소수한테만.**
+공통점은 하나입니다. 비싼 계산은 마지막에, 살아남은 소수에만.
 
-💡 청중이 십만이라는 숫자에 놀랍니다. "저희는 십만이 아니라 91개입니다"를 여기서 미리
-한 번 말해 두면 뒤에서 스케일 오해가 안 생겨요.
+💡 십만이라는 숫자에서 청중이 놀랍니다. "저희는 91 개입니다"를 여기서 한 번 짚어 두면
+뒤에서 스케일 오해가 없습니다.
 
 ---
 
-### 5 — What we took
+### 5 — Adopted design principle
 
-`[그림]` Sendek *EES* 10 (2017) 306, Fig. 1.
+> ■ Prior work (2): The ordering was adopted; the thresholds were not
+> • Published thresholds were tuned for coatings, and a sulfide host fails all of them.
+> • The transferable rule: a cheap stage reorders the queue, it never certifies a material.
 
 **[55초]**
 
-이건 세 번째 갈래인데, 계산 대신 데이터를 씁니다. 만 이천 종을 물리 조건으로 한 번
-거른 다음, **실측 전도도가 있는 40종으로 학습한 분류기**를 나머지에 돌려요.
+세 번째 갈래는 계산 대신 데이터를 씁니다. Sendek 은 만 이천 종을 물리 조건으로 거른
+다음, **실측 전도도가 있는 40 종으로 학습한 분류기**를 나머지에 적용했습니다.
 
-저희가 이 세 논문에서 가져온 건 **문턱값이 아닙니다.** 그 문턱들은 코팅 물질용이라
-황화물 host는 다 떨어져요.
+저희가 이 논문들에서 가져온 것은 **문턱값이 아닙니다.** 그 문턱은 코팅 물질용이라
+황화물 host 는 전부 탈락합니다.
 
-가져온 건 순서입니다. **싼 단계는 다음 계산 순서를 바꾸는 거지, 물질을 확정하는 게
-아니다.** 이게 오늘 발표의 규칙이고, 뒤에서 결과를 말할 때도 계속 이 선을 지키겠습니다.
+가져온 것은 순서입니다. 싼 단계는 다음 계산의 순서를 바꾸는 것이지 물질을 확정하지
+않는다. 이게 오늘의 규칙이고, 결과를 말할 때도 이 선을 지키겠습니다.
 
-💬 Sendek 논문에서 하나 더 배웠는데, 이 사람들은 "정확도 90%"라고 안 씁니다. 좋은
-재료가 워낙 드물어서 전부 나쁨이라고 찍어도 정확도가 높게 나오거든요. 대신 "무작위보다
-몇 배 잘 맞혔나"로 씁니다. 나중에 저희가 ML 붙일 때 그대로 따라 할 겁니다.
+💬 Sendek 은 "정확도 90 %"라고 쓰지 않습니다. 좋은 재료가 드물어 전부 나쁨이라고 찍어도
+정확도가 높게 나오니까요. 대신 무작위 대비 몇 배로 보고합니다. 저희도 그렇게 할 겁니다.
 
 ---
+
 
 ## ③ 후보군
 
-### 6 — What we put in
+### 6 — Candidate chemistry space
 
-`[표]` 계열 / 개수 / 왜 넣었나 / 예시 — 아래에 91종 전체 명단.
+> ■ Candidate set (1): 91 compounds across seven anion families
+> • Oxides were included for strong M–O bonding; halides because the host contains Cl.
+> • Sulfides, nitrides and heavy halides were included as anion-family controls.
+
+`[표]` family / n / why it is in the list / examples
 
 **[60초]**
 
-저희가 넣은 후보 전체입니다. 91개, 계열은 일곱 개예요. 표의 세 번째 칸이 **왜 넣었나**입니다.
+넣은 후보 전부입니다. 91 개, 계열은 일곱입니다. 표의 세 번째 칸이 **왜 넣었나**입니다.
 
-산화물이 37개로 제일 많습니다. 산소 결합이 세니까 산화 방어에 유리할 거라고 기대한 거고요.
-염화물이 19개인데, host에 이미 Cl이 있으니까 자연스러운 선택이었습니다. 나머지는 황화물,
-불화물, 브롬, 질화물, 요오드 — 이건 상당 부분 **대조군** 성격이에요. 산화물만 넣으면
-"산화물이라서 좋은 건지 그냥 원소가 좋은 건지"를 못 가르니까요.
+산화물이 37 개로 가장 많습니다. M–O 결합이 세니 산화 방어에 유리할 것으로 봤습니다.
+염화물 19 개는 host 에 이미 Cl 이 있어 자연스러운 선택이었고요. 나머지 — 황화물, 불화물,
+브롬, 질화물, 요오드 — 는 상당 부분 **대조군**입니다. 산화물만 넣으면 "산화물이라서
+좋은 건지 원소가 좋은 건지"를 가를 수 없습니다.
 
-그리고 이건 발표 후반에 다시 나올 얘기인데, 이 목록이 **이미 잘 알려진 안정한 화합물
-쪽으로 치우쳐 있습니다.** 그게 나중에 예상 못 한 결과를 하나 낳습니다.
-
-💡 이 장은 청중이 눈으로 훑는 시간이 필요합니다. 말을 조금 천천히 하고, 마지막 문장에서
-한 번 쉬어 주세요.
+그리고 후반에 다시 나올 얘기인데, 이 목록은 **이미 잘 알려진 안정한 화합물 쪽으로
+치우쳐 있습니다.** 이게 예상 못 한 결과를 하나 낳습니다.
 
 ---
 
-### 7 — Where they sit
+### 7 — Elemental coverage of the candidate set
 
-`[그림]` 우리 주기율표 (`docs/figures/seminar/roster_periodic_table.png`)
+> ■ Candidate set (2): 36 cation elements, alkali metals to lanthanides
+> • Coverage is dense among transition metals and sparse in the heavy main group.
+> • The list is biased toward well-characterised stable compounds — see Result 1.
 
-**[55초]**
+`< candidate elements on the periodic table >`
+`해설` the small number is how many compounds of that element were run
 
-같은 목록을 주기율표에 얹으면 이렇게 됩니다. 양이온 원소로는 36종이에요.
+**[50초]**
 
-칸 안의 작은 숫자가 **그 원소의 화합물을 몇 개 돌렸는지**입니다. Li가 7이면 Li₂O, Li₂S,
-Li₃N, LiCl, LiF, LiBr, LiI 이렇게 일곱 개를 돌렸다는 뜻이고요.
+같은 목록을 주기율표에 올리면 이렇게 됩니다. 양이온 원소로 36 종입니다.
 
-보시면 전이금속은 촘촘한데 무거운 주족 쪽은 비어 있습니다. 이건 의도라기보다 **어떤
-화합물이 잘 알려져 있느냐**를 따라간 결과예요.
+칸 안의 작은 숫자가 그 원소의 화합물을 몇 개 돌렸는지입니다. Li 가 7 이면 Li₂O, Li₂S,
+Li₃N, LiCl, LiF, LiBr, LiI 일곱 개를 돌렸다는 뜻입니다.
 
-⚠ 색은 화학 계열 구분일 뿐입니다. 점수도 아니고 순위도 아닙니다. 이 발표에서 승인된
-순위는 아직 없어요.
+전이금속은 촘촘하고 무거운 주족은 비어 있습니다. 의도라기보다 **어떤 화합물이 잘
+알려져 있느냐**를 따라간 결과입니다.
+
+⚠ 색은 화학 계열 구분입니다. 점수도 순위도 아닙니다.
 
 ---
+
 
 ## ④ 어떻게 했나 — 9단계
 
-> 이 파트는 **숫자를 말하지 않습니다.** 각 장은 "이 단계가 무슨 질문에 답하는가" 하나만.
-> 그리고 슬라이드 빨간 글씨는 전부 **"이건 못 한다"**입니다. 거기서 한 박자 쉬세요.
+### 8 — Substitution site and charge compensation
 
-### 8 — STEP 1. Where it sits
-
-`[그림]` 우리 계산 — 이온 반지름 vs 어느 자리 선호
+> ■ Step 1: The substitution site is enumerated before a structure is built
+> • The Li, P, S and Cl sublattices are distinct; an oxide needs a cation and an anion site.
+> • Aliovalent substitution moves Li, and more than one recipe balances the charge.
+`해설` large cations take Li sites; small group-14 ions replace P
 
 **[60초]**
 
-첫 질문은 "이 원소를 격자 어디에 넣을 수 있느냐"입니다.
+첫 단계의 질문은 "이 원소를 격자 어디에 넣을 수 있는가"입니다.
 
-Li₆PS₅Cl에는 Li 자리, P 자리, S 자리, Cl 자리가 따로 있어요. 산화물을 넣는다고 하면
-금속은 양이온 자리로, 산소는 음이온 자리로 가야 하는데, **어느 자리로 갈지가 미리
-정해져 있지 않습니다.**
+Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣으면 금속은 양이온 자리로,
+산소는 음이온 자리로 가야 하는데 **어느 자리로 갈지가 미리 정해져 있지 않습니다.**
 
-그림이 그걸 보여줍니다. 가로가 이온 반지름이고 세로가 두 자리 사이의 에너지 차이예요.
-**작은 이온은 아래쪽** — Si, Ge, Sn 같은 4가 이온은 P를 밀어내고 골격에 들어갑니다.
-**큰 이온은 위쪽** — Ba, Ag, Sr 같은 건 Li 자리로 갑니다. 크기가 거의 다 정해요.
+그림이 그걸 보여줍니다. 가로가 이온 반지름, 세로가 두 자리 사이의 에너지 차이입니다.
+작은 이온은 아래 — Si, Ge, Sn 같은 4가 이온은 P 를 밀어내고 골격에 들어갑니다.
+큰 이온은 위 — Ba, Ag, Sr 은 Li 자리로 갑니다. 크기가 거의 다 정합니다.
 
-그리고 하나 더 있습니다. 2가 이온을 1가 자리에 넣으면 전하가 안 맞으니까 어디선가 Li를
-빼거나 넣어야 하는데, **그 방법이 하나가 아닙니다.** 이게 뒤에 결과 1로 돌아옵니다.
+그리고 2가 이온을 1가 자리에 넣으면 전하가 안 맞아 Li 를 빼거나 넣어야 하는데,
+**그 방법이 하나가 아닙니다.** 이게 결과 1 로 돌아옵니다.
 
 ---
 
-### 9 — STEP 2. Building it
+### 9 — Candidate structure generation
 
-`[그림]` 우리 계산 — 도펀트 음이온이 실제로 앉은 자리
+> ■ Step 2: Each allowed placement becomes a separate structure
+> • To cover the placement space, several structures per compound were generated.
+> • The winning site is an output of the generator, not a variable that was controlled.
+`해설` the generator chose the site — it was not a variable we set
 
 **[50초]**
 
 그래서 두 번째 단계에서는 후보 하나당 **구조를 여러 개** 만듭니다. 자리 조합마다 하나,
-전하 맞추는 방법마다 하나씩요.
+전하 보상 방법마다 하나씩입니다.
 
 그림이 실제로 어디에 앉았는지입니다. PS₄ 모서리의 황, 자유 황화물, 할라이드 자리 —
-세 군데가 비슷한 수로 나눠 가졌어요.
+세 부격자가 비슷한 수로 나눠 가졌습니다.
 
-여기서 짚고 갈 게 있습니다. **어느 자리가 이길지는 저희가 정한 게 아니라 생성기가
-정한 결과입니다.** 통제한 변수가 아니에요. 지금은 그냥 넘어가겠습니다.
+여기서 짚고 갑니다. **어느 자리가 이길지는 생성기가 정한 결과이지 저희가 통제한 변수가
+아닙니다.**
 
 ---
 
-### 10 — STEP 3. Cheap relaxation
+### 10 — Low-cost structure relaxation
 
-`[그림]` 우리 계산 — 이완 중 부피가 얼마나 움직였나 (`step3_survival.png`)
+> ■ Step 3: A machine-learned potential screens structures before DFT
+> • To relax thousands of structures within budget, a fast interatomic potential was used.
+> • Energies are relative within one convention — not formation energies or hull distances.
+
+`< how far each structure moved >`
+`해설` 100 of 3,615 structures moved past 25 % and were dropped
 
 **[50초]**
 
-원자를 억지로 밀어 넣으면 결합 길이가 엉망입니다. 그래서 힘이 0이 될 때까지 움직여
-줘요. 구조 최적화입니다.
+원자를 억지로 밀어 넣으면 결합 길이가 엉망입니다. 그래서 힘이 0 이 될 때까지 움직여
+줍니다. 구조 최적화입니다.
 
-여기서 **기계학습 퍼텐셜**을 씁니다. DFT로 하면 후보 하나당 몇 시간인데 이건 몇 분이에요.
-그러니까 수천 개를 다 돌릴 수 있습니다.
+여기서 기계학습 퍼텐셜을 씁니다. DFT 로 하면 후보 하나당 몇 시간인데 이건 몇 분입니다.
+그래서 수천 개를 전부 돌릴 수 있습니다.
 
-이 단계가 답하는 질문은 딱 하나입니다. **이 구조가 버티느냐.** 무너지거나 수렴을
-못 하는 애들이 여기서 떨어져 나갑니다.
+이 단계가 답하는 질문은 하나입니다. **이 구조가 버티는가.** 그림에서 붉은 쪽이
+25 % 넘게 부푼 구조들이고, 3,615 개 중 100 개가 여기서 떨어졌습니다.
 
-⚠ 그리고 여기서 나온 에너지는 **같은 규약 안에서의 상대값**입니다. 생성에너지도 아니고
-데이터베이스 값이랑 뺄 수도 없어요. 근데 그래도 됩니다 — 뒤에서 필요한 건 절대값이
-아니라 순서니까요.
+⚠ 여기서 나온 에너지는 같은 규약 안의 상대값입니다. 생성에너지도 아니고 데이터베이스
+값과 뺄 수도 없습니다. 다만 뒤에서 필요한 건 절대값이 아니라 순서라 문제가 없습니다.
 
 ---
 
-### 11 — STEP 4. Picking one
+### 11 — Representative structure selection
 
-`[그림]` 우리 계산 — 안정성과 실행 간 흩어짐
+> ■ Step 4: One converged structure per candidate is carried forward
+> • Structures were kept if they converged and the cell volume stayed within 25 %.
+> • Candidate counts differ per compound, so this selection is not a ranking of elements.
+`해설` on this axis the three runs agree — the bars are short
 
 **[55초]**
 
-구조를 여러 개 만들었으니 이제 하나를 골라야 합니다. 기준은 두 개예요. 수렴이 됐는가,
-그리고 부피가 이상하게 튀지 않았는가. 부피가 확 부는 건 물리가 아니라 계산이 잘못 간
-신호일 때가 많거든요.
+이제 후보 하나당 대표 구조를 하나 고릅니다. 기준은 둘입니다. 수렴했는가, 그리고 부피가
+25 % 안에 있는가. 부피가 크게 부는 건 물리가 아니라 계산이 잘못 간 신호일 때가 많습니다.
 
-그림에서 세로 막대가 **같은 종을 세 번 돌렸을 때의 흩어짐**입니다. 이 축에서는 막대가
-짧아요. 종끼리의 차이에 비하면 실행 간 차이가 작다는 뜻이고, 그러면 대표 하나를 골라도
-됩니다.
+그림의 세로 막대가 같은 종을 세 번 돌렸을 때의 흩어짐입니다. 이 축에서는 막대가 짧습니다.
+종끼리의 차이에 비하면 실행 간 차이가 작다는 뜻이고, 그러면 대표 하나를 골라도 됩니다.
 
-⚠ 다만 후보 개수가 화합물마다 달라요. 어떤 건 다섯 개 중에 고르고 어떤 건 오십 개 중에
-골랐습니다. 그러니까 **이건 원소 순위가 아닙니다.**
+⚠ 다만 후보 개수가 화합물마다 다릅니다. 다섯 개 중에 고른 것도 있고 오십 개 중에 고른
+것도 있습니다. **이건 원소 순위가 아닙니다.**
 
 ---
 
-### 12 — STEP 5. Shaking it
+### 12 — Thermal perturbation of the selected structure
 
-`[그림]` 우리 계산 — 어닐이 에너지를 얼마나 내렸나 (`step5_anneal_gain.png`)
+> ■ Step 5: A short anneal tests whether the arrangement survives
+> • To escape the nearest local minimum, each structure was heated briefly and relaxed again.
+> • The trajectory is not an equilibrium structure and not a conductivity measurement.
+
+`< energy gained by shaking the structure >`
+`해설` every structure found a lower-energy arrangement once it could move
 
 **[55초]**
 
-구조 최적화는 **가장 가까운** 골짜기로 굴러떨어지는 겁니다. 처음 앉힌 자리 근처만
-봐요. 그런데 실제 합성은 열을 받으면서 훨씬 넓게 돌아다니다가 자리를 잡거든요.
+구조 최적화는 가장 가까운 골짜기로 굴러떨어지는 것입니다. 처음 앉힌 자리 근처만 봅니다.
+실제 합성은 열을 받으며 훨씬 넓게 돌아다니다 자리를 잡습니다.
 
-그래서 잠깐 흔들어 줍니다. 500 K에서 50 피코초. 작은 언덕 하나 넘을 만큼은 되고,
-후보 전체에 돌릴 만큼은 싼 조건이에요. 그러고 다시 이완합니다.
+그래서 짧게 흔들어 줍니다. 500 K 에서 50 피코초. 작은 언덕 하나를 넘을 만큼은 되고
+후보 전체에 돌릴 만큼은 쌉니다. 그러고 다시 이완합니다.
 
-왜 이걸 하냐면, **다음에 볼 것들이 전부 결합 길이에 민감해서**입니다. Li가 다니는 길도,
-딱딱함도 원자 간 거리가 조금만 달라지면 확 바뀌어요.
+그림이 그 결과입니다. 전부 왼쪽 — 음의 값입니다. **모든 구조가 움직일 기회를 주니까 더
+낮은 배치를 찾았습니다.** 그만큼 처음 이완이 가까운 최소에 멈춰 있었다는 뜻입니다.
 
-⚠ 50 피코초는 실제 합성 시간이 아닙니다. 평형 구조라고 주장할 수 없고, 이걸 전도도
-계산이라고 부를 수도 없습니다.
+⚠ 50 피코초는 합성 시간이 아닙니다. 평형 구조라고 주장할 수 없고, 전도도 계산도
+아닙니다.
 
 ---
 
-### 13 — STEP 6. The Li path
+### 13 — Static lithium transport pathway
 
-`[그림]` 우리 계산 — 무도핑 vs B₂O₃ 도핑의 Li 지형
+> ■ Step 6: The Li energy landscape is mapped on the annealed geometry
+> • To flag transport risk without dynamics, a bond-valence landscape was computed.
+> • Low-energy valleys are structural pathways, not diffusion coefficients.
+`해설` valleys are low-energy regions, not verified channels
 
 **[65초]**
 
-이온 전도체니까 결국 제일 궁금한 건 "Li가 잘 다니느냐"입니다.
+이온 전도체이니 결국 궁금한 건 "Li 가 잘 다니는가"입니다.
 
-제대로 하려면 MD를 돌려서 실제로 얼마나 움직이는지 재야 하는데, 그건 후보 하나당
-며칠이에요. 그래서 이 단계에서는 **지도만 그립니다.**
+제대로 하려면 MD 로 실제 이동을 재야 하는데 후보 하나당 며칠입니다. 그래서 이 단계에서는
+**지도만 그립니다.**
 
-결정 안을 촘촘한 격자로 쪼개고, 각 점마다 "여기 Li가 있으면 주변 결합이 얼마나
-어긋나는가"를 계산합니다. 그러면 그림처럼 골짜기와 언덕이 나와요. 파란 골짜기가 Li가
-편한 데고, 붉은 고원이 넘기 힘든 데입니다. 그다음 **낮은 골짜기가 결정 이쪽 끝에서
-저쪽 끝까지 이어지는지**를 봅니다.
+결정 안을 촘촘한 격자로 쪼개고 각 점마다 "여기 Li 가 있으면 주변 결합이 얼마나
+어긋나는가"를 계산합니다. 그러면 그림처럼 골짜기와 고원이 나옵니다. 파란 골짜기가 Li 가
+편한 곳, 붉은 고원이 넘기 힘든 곳입니다. 그다음 **낮은 골짜기가 결정 이쪽 끝에서 저쪽
+끝까지 이어지는지**를 봅니다. 그리고 도펀트가 그 길목에 앉아 통행을 막는지도 셉니다.
 
-그리고 하나 더 봐요. 우리가 넣은 도펀트가 그 길목에 앉아서 통행을 막고 있진 않은지.
+⚠ 이건 구조적 경로입니다. 확산계수도 전도도도 아닙니다. 골짜기가 이어져 있어도 실제로
+잘 다닌다는 보장은 없습니다.
 
-⚠ 이건 **구조적 경로**입니다. 확산계수도 전도도도 아니에요. 골짜기가 이어져 있어도
-실제로 잘 다닌다는 보장은 없습니다. 위험을 표시하는 지표지 측정값이 아닙니다.
-
-💡 여기가 질문이 제일 많이 나오는 장입니다. "Li 길이 넓다"는 표현을 쓰실 거면
-**"Li가 넘어야 하는 언덕이 낮고, 그 낮은 구간이 끊기지 않는다"**로 한 번 풀어 주세요.
+💡 질문이 가장 많이 나오는 장입니다. "Li 길이 넓다"는 표현을 쓰실 거면
+"Li 가 넘어야 하는 언덕이 낮고, 그 낮은 구간이 끊기지 않는다"로 풀어 주세요.
 
 ---
 
-### 14 — STEP 7. Squeezing it
+### 14 — Mechanical response of the doped lattice
 
-`[그림]` 우리 계산 — 상태방정식 한 사례를 DFT와 대조
+> ■ Step 7: Stiffness and compressibility are obtained from finite strains
+> • To assess particle contact under stack pressure, elastic moduli were computed.
+> • The DFT comparison shown here is a single case, not a pool-wide validation.
+`해설` a single case — not a pool-wide DFT validation
 
 **[55초]**
 
-전고체전지는 액체가 없으니까 입자끼리 직접 붙어 있어야 합니다. 그래서 **기계 물성이
-성능에 바로 들어와요.**
+전고체전지는 액체가 없어 입자끼리 직접 붙어야 합니다. 그래서 기계 물성이 성능에 바로
+들어옵니다.
 
-너무 딱딱하면 압력을 걸어도 입자가 안 붙고 틈이 남습니다. 너무 물러도 문제고요. 그리고
-충방전하면서 부피가 변할 때, 잘 늘어나면 균열이 덜 생기고 잘 깨지면 금이 갑니다.
+너무 딱딱하면 압력을 걸어도 입자가 붙지 않고 틈이 남습니다. 너무 무르면 층이 흐릅니다.
+그리고 충방전으로 부피가 변할 때 잘 늘어나면 균열이 덜하고 잘 깨지면 금이 갑니다.
 
-그래서 부피를 조금씩 바꿔 가며 에너지를 재고, 여러 방향으로 살짝 변형시켜서 딱딱함과
-연성을 구합니다. 그림이 그중 한 사례를 DFT로 맞대 본 거예요.
+그래서 부피를 조금씩 바꿔 에너지를 재고, 여러 방향으로 작은 변형을 줘 딱딱함과 연성을
+구합니다. 그림이 그중 한 사례를 DFT 로 맞대 본 것입니다.
 
-⚠ **한 건 검증입니다.** 91종 전부를 DFT로 확인한 게 아닙니다. 나머지는 같은 규약 안에서
-서로 비교한 모델 값이에요.
-
-💬 앞에서 본 스크리닝 논문들에는 이 축이 아예 없습니다. 저희가 추가한 부분이에요.
+⚠ **한 건 검증입니다.** 91 종 전부를 DFT 로 확인한 것이 아닙니다.
 
 ---
 
-### 15 — STEP 8. The window
+### 15 — Electrochemical stability window
 
-`[그림]` 우리 계산 — 후보 90종의 전압 창
+> ■ Step 8: The oxidation onset from a grand-potential construction
+> • To locate decomposition, the Li chemical potential was scanned as a voltage axis.
+> • The result is 0 K bulk thermodynamics — not a rate, and not a passivation prediction.
+
+`< stability window of every candidate >`
+`해설` five candidates lose the window entirely — all late transition metals
 
 **[65초]**
 
-앞의 문제 지도에서 첫 칸이 "양극 쪽에서 전해질이 산화된다"였죠. 그걸 여기서 봅니다.
+앞의 문제 지도에서 첫 칸이 "양극 쪽 산화"였습니다. 그걸 여기서 봅니다.
 
-원리는 간단해요. 전압을 올린다는 건 전기화학적으로 Li를 빼내는 것과 같습니다. 그래서
-Li를 조금씩 빼면서 매 지점마다 **"이 조성이 그냥 있는 게 이득인가, 다른 상들로 쪼개지는
-게 이득인가"**를 계산합니다. 쪼개지는 게 이득이 되기 시작하는 전압이 산화 한계고요.
+전압을 올린다는 건 전기화학적으로 Li 를 빼내는 것과 같습니다. 그래서 Li 를 조금씩 빼면서
+매 지점마다 "이 조성이 그대로 있는 게 유리한가, 다른 상들로 쪼개지는 게 유리한가"를
+계산합니다. 쪼개지는 쪽이 유리해지는 전압이 산화 한계입니다.
 
-그림에서 막대 하나가 후보 하나입니다. 막대의 길이가 **"아무 일도 안 일어나는 전압 구간"**
-이에요. 점선이 도펀트 없는 원래 host가 산화되는 지점이고요.
+그림에서 막대 하나가 후보 하나이고, 막대 길이가 **아무 일도 일어나지 않는 전압 구간**
+입니다. 점선이 도펀트 없는 host 의 산화 지점입니다.
 
-여기서 눈에 띄는 게 아래쪽 빨간 애들입니다. **창이 아예 사라진 후보들**이에요. 대부분
-후기 전이금속인데, 얘들은 산화 한계가 옮겨지는 게 아니라 통째로 붕괴합니다.
+아래쪽 붉은 다섯 개가 **창이 아예 사라진 후보**입니다. 전부 후기 전이금속인데, 이건
+한계가 옮겨진 게 아니라 붕괴입니다.
 
-⚠ 그리고 이건 **0 K 벌크 열역학**입니다. 분해가 가능하다는 것만 말하지, 얼마나 빨리
-분해되는지도, 분해층이 덮고 멈추는지도 말하지 않습니다.
+⚠ 이건 0 K 벌크 열역학입니다. 분해가 가능하다는 것만 말하지, 얼마나 빨리 분해되는지도
+분해층이 덮고 멈추는지도 말하지 않습니다.
 
-💡 "그럼 실험 CV에서 왜 3 V 넘게 버티냐"가 반드시 나옵니다. 답은 "열역학은 분해가
-가능하다고 하지만 실제로는 분해층이 덮어서 느려지기 때문"입니다. 미리 넣어 두세요.
+💡 "실험 CV 에서는 왜 3 V 넘게 버티나"가 반드시 나옵니다. 답은 "열역학은 가능하다고
+하지만 실제로는 분해층이 덮어 느려지기 때문"입니다.
 
 ---
 
-### 16 — STEP 9. What we skipped
+### 16 — Calculations that were not performed
 
-`[그림]` Sundar *Adv. Sci.* (2025), Fig. 2 — 같은 코팅을 네 계면에서 각각 계산한 주기율표 4장.
+> ■ Step 9: Two designed stages produced no evidence
+> • Conductivity from dynamics — days per candidate; Step 6 stands in as a proxy.
+> • The cathode interface — not attempted; the figure shows what such a screen looks like.
 
 **[70초]**
 
-여기서 솔직하게 말씀드릴 게 있습니다. **설계에는 들어 있었는데 못 돌린 계산이 둘
-있습니다.**
+솔직하게 말씀드릴 부분입니다. **설계에 있었는데 돌리지 못한 계산이 둘 있습니다.**
 
-하나는 **진짜 전도도**예요. Step 6은 지도만 그린 거라, 위에 올라온 후보들한테는 MD를
-돌려서 실제 확산을 재려고 했습니다. 후보 하나당 며칠 걸리는 계산인데 결국 못 돌렸어요.
-그래서 오늘 전도도 얘기는 **전부 구조 프록시**입니다.
+하나는 진짜 전도도입니다. Step 6 은 지도만 그린 것이라 상위 후보에는 MD 를 돌려 실제
+확산을 재려 했습니다. 후보 하나당 며칠 걸리는 계산인데 결국 못 돌렸습니다. 그래서 오늘
+전도도 얘기는 전부 구조 프록시입니다.
 
-또 하나는 **계면**입니다. 도핑한 전해질이 양극이랑 만나면 무슨 일이 나는지 — 아예 손도
-못 댔습니다.
+또 하나는 계면입니다. 도핑한 전해질이 양극과 만나면 무슨 일이 나는지 — 손도 못 댔습니다.
 
-이 그림이 그게 왜 중요한지 보여줍니다. 같은 산화물 코팅을 네 군데 계면에서 각각 계산한
-건데, 주기율표 네 장이 **서로 다르게 칠해져 있어요.** 전해질 쪽에서 진초록이던 원소가
-음극 쪽에서는 허옇습니다. 같은 물질인데 어디서 보느냐에 따라 답이 바뀌는 거죠.
+이 그림이 그게 왜 중요한지 보여줍니다. 같은 산화물 코팅을 네 계면에서 각각 계산한 건데,
+주기율표 네 장이 서로 다르게 칠해져 있습니다. 전해질 쪽에서 진초록이던 원소가 음극
+쪽에서는 허옇습니다. **같은 물질인데 어디서 보느냐에 따라 답이 바뀝니다.**
 
-저희는 저 네 장 중에 **한 장도 안 그렸습니다.**
-
-💡 이 장이 발표 신뢰도를 좌우합니다. 못 한 걸 먼저 말하면 뒤의 결과가 더 믿기고,
-숨기면 질문 하나에 다 무너져요.
+저희는 저 네 장 중 한 장도 그리지 않았습니다.
 
 ---
 
+
 ## ⑤ 결과
 
-### 17 — What exists
+### 17 — Inventory of available evidence
 
-`[표]` 항목 / 270 중 몇 개 / 상태 — 오른쪽에 한 문장.
+> ■ Result summary: The screen is broad in structure and thin in transport
+> • Structures, relaxation, anneal, Li maps, mechanics and oxidation windows all exist.
+> • Conductivity, explicit interfaces and pool-wide DFT confirmation do not exist.
+
+`[표]` what / how many of 270 / status
 
 **[50초]**
 
-정리하면 이렇습니다. 표 왼쪽 여섯 줄이 **파란 글씨 — 있는 것**이고, 아래 두 줄이
-**빨간 글씨 — 없는 것**입니다.
+정리하면 이렇습니다. 표 위쪽 여섯 줄이 **파란 글씨, 있는 것**입니다. 구조, 이완, 어닐,
+Li 지도, 기계 물성, 산화 창 — 270 슬롯 전부 있습니다.
 
-구조, 이완, 어닐, Li 지도, 기계 물성, 산화 창과 분해산물 — 여기까지는 전부 파일로
-있습니다. 반면 진짜 전도도, 명시적 계면, 그리고 전체 풀에 대한 DFT 확인 — 이건 없어요.
+아래 두 줄이 **붉은 글씨, 없는 것**입니다. 진짜 전도도와 계면 — 0 입니다.
 
-그리고 **없는 건 없는 겁니다.** 프록시가 대신 채워 주지 않아요. 프록시는 다음 계산 순서를
-바꿀 수 있지만 답을 대신할 수는 없습니다.
+그리고 없는 건 없는 겁니다. 프록시가 순서를 바꿀 수는 있어도 답을 대신할 수는 없습니다.
 
-💡 이 장은 짧게 지나가되, 마지막 문장은 또박또박 말하세요. 뒤의 결과 세 장을 어디까지
+💡 이 장은 짧게 지나가되 마지막 문장은 또박또박 말하세요. 뒤의 결과 세 장을 어디까지
 읽어야 하는지가 여기서 정해집니다.
 
 ---
 
-### 18 — Result 1. Identity
+### 18 — Effect of structural identity on the measured value
 
-`[그림]` 우리 계산 — 같은 종의 세 실행이 얼마나 벌어지나
+> ■ Result 1: The dopant name did not define a controlled comparison
+> • Across the three runs, 59 of 90 species kept one exact formula and 31 did not.
+> • Where the site moved the value moved with it, so averaging mixes different materials.
+
+`< spread of the three runs, species by species >`
+`해설` one species over three runs spans as much E as thirteen species
+
+`[표]` axis / unit / within one species / across species / ratio / read as
 
 **[70초]**
 
-첫 번째 결과이자 제일 뼈아픈 결과입니다.
+첫 번째 결과이자 가장 뼈아픈 결과입니다.
 
-저희가 후보 하나를 세 가지 조건으로 돌렸어요. 처음엔 이걸 "농도 세 점"이라고 생각했는데,
-셀이 작아서 세 조건이 전부 같은 치환량으로 반올림돼 있었습니다. 농도 축이 아니었어요.
+후보 하나를 세 조건으로 돌렸습니다. 처음엔 이걸 농도 세 점이라고 생각했는데, 셀이 작아
+세 조건이 전부 같은 치환량으로 반올림돼 있었습니다. 농도 축이 아니었습니다.
 
-더 중요한 건 그다음입니다. 90종 중에 **59종만 세 조건의 화학식이 같고, 31종은 조건마다
-화학식이 달랐습니다.** 전하 보상을 어떻게 하느냐에 따라 Li 개수가 달라지면서요. 그러니까
-"WO₃를 넣은 결과" 세 개를 평균 냈는데 사실 **서로 다른 조성 세 개**를 평균한 셈입니다.
+더 중요한 건 그다음입니다. 90 종 중 **59 종만 세 조건의 화학식이 같고 31 종은 조건마다
+화학식이 달랐습니다.** 전하 보상 방법이 달라지며 Li 개수가 바뀐 겁니다. 그러니까 세 개를
+평균 냈는데 사실 서로 다른 조성 세 개를 평균한 셈입니다.
 
-그림이 그 크기를 보여줍니다. 회색 막대 하나가 한 종의 세 실행이 벌어진 폭이에요. 그
-막대 하나가 **서로 다른 열세 종을 담을 만큼 넓습니다.**
+그림이 그 크기입니다. 회색 막대 하나가 한 종의 세 실행이 벌어진 폭인데, **막대 하나가
+서로 다른 열세 종을 담을 만큼 넓습니다.**
 
-아래 표가 축별로 정리한 건데, 맨 오른쪽 칸을 봐 주세요. **안정성과 Pugh 비는 파랑 —
-화학이 이깁니다.** 그런데 **탄성률과 Li 길 지표는 빨강 — 자리가 이겨요.** 즉 축마다
-다릅니다. 전부 못 믿는 게 아니라 **어느 축을 못 믿는지**를 알게 된 겁니다.
-
-💬 이건 실수 얘기로만 끝나는 게 아니라, 다음 계산을 어떻게 설계해야 하는지를 정해 줍니다.
-뒤에서 다시 나옵니다.
+아래 표에서 맨 오른쪽 칸을 봐 주세요. **안정성과 Pugh 비는 파랑 — 화학이 이깁니다.**
+그런데 **탄성률과 Li 길 지표는 빨강 — 자리가 이깁니다.** 전부 못 믿는 게 아니라 어느
+축을 못 믿는지를 알게 된 겁니다.
 
 ---
 
-### 19 — Result 2. Oxidation
+### 19 — Dependence of oxidation onset on dopant chemistry
 
-`[그림 2장]` 왼쪽 Banik (2022) Fig. 4 / 오른쪽 우리 계산 — 양이온 화학군별 산화 한계
+> ■ Result 2: Sulfur sets the limit; shifts away from it are conditional
+> • The valence-band edge is sulfur, so sulfur is oxidised first regardless of the dopant.
+> • Late transition metals are the clear loss: the window collapses rather than shifting.
+
+`< valence band edge of the host >`
+
+`< onset by dopant chemistry >`
+
+`[표]` dopant chemistry / n / median onset (V) / range (V) / windows lost
 
 **[65초]**
 
-두 번째는 산화입니다. 왼쪽 그림이 배경이에요.
+두 번째는 산화입니다. 왼쪽 그림이 배경입니다.
 
-가장 위에 차 있는 전자 상태 — 그러니까 제일 먼저 뺏길 전자가 **황**에서 옵니다. Cl은
-그보다 아래에 있어요. 그래서 뭘 넣든 **먼저 산화되는 건 여전히 황**입니다. 이게 문헌에서
-확립된 얘기고 저희 계산도 같은 답을 줍니다.
+가장 위에 차 있는 전자 — 그러니까 먼저 뺏길 전자가 **황**에서 옵니다. Cl 은 그보다
+아래입니다. 그래서 무엇을 넣든 **먼저 산화되는 건 여전히 황**입니다. 문헌에서 확립된
+얘기이고 저희 계산도 같은 답을 줍니다.
 
-오른쪽이 저희 결과입니다. 양이온 화학군별로 산화 한계를 찍은 건데, 대부분이 점선 —
-그러니까 원래 host 값 — 근처에 몰려 있어요. 예상대로입니다.
+오른쪽이 저희 결과입니다. 대부분이 점선 근처, 즉 host 값에 몰려 있습니다. 표를 보시면
+주족·알칼리토·알칼리는 중앙값이 셋 다 2.140 으로 **host 와 같습니다.**
 
-눈에 띄는 건 **후기 전이금속**입니다. 얘들은 아래로 뚝 떨어져요. 표 맨 오른쪽 칸이
-"창을 아예 잃은 개수"인데, **전이금속만 5**고 나머지는 전부 0입니다. 이건 "조금
-옮겨졌다"가 아니라 **손해**예요.
+눈에 띄는 건 전이금속입니다. 표 맨 오른쪽 "창을 잃은 개수"가 **전이금속만 5**이고 나머지는
+전부 0 입니다. 조금 옮겨진 게 아니라 손해입니다.
 
-주족·알칼리토·알칼리는 중앙값이 셋 다 2.140 — 도펀트 없는 host랑 **똑같습니다.**
+⚠ 위로 올라간 예외 몇 개는 **아직 특정 원소 덕이라고 말하지 못합니다.** 같은 자리라도
+전하 보상 방법에 따라 부호가 뒤집힙니다. 결과 1 이 정확히 그 얘기였습니다.
 
-⚠ 반대로 위로 올라간 예외들도 몇 개 있는데, 저희는 **그걸 아직 특정 원소 덕이라고 말하지
-못합니다.** 같은 자리에 넣어도 전하 보상을 어떻게 하느냐에 따라 부호가 뒤집히거든요.
-결과 1이 정확히 그 얘기였습니다.
-
-💡 여기서 예전에 "B₂O₃가 산화 한계를 0.18 V 올린다"고 말한 적이 있는데 철회했다고
-덧붙이면 발표가 훨씬 단단해집니다. 자기 결과를 철회하는 게 손해처럼 보이지만, 이 발표
-결론이 정확히 "자리를 고정 안 하면 원소 효과를 말할 수 없다"라서 오히려 제일 센 근거예요.
+💡 예전에 "B₂O₃ 가 산화 한계를 0.18 V 올린다"고 말한 적이 있고 그건 철회했다고 덧붙이면
+발표가 단단해집니다. 이 발표의 결론이 "자리를 고정하지 않으면 원소 효과를 말할 수 없다"
+라서 오히려 가장 센 근거가 됩니다.
 
 ---
 
-### 20 — Result 3. The trade
+### 20 — Trade-off between stability and lithium transport
 
-`[그림 2장]` 왼쪽 우리 계산 — 안정성 vs Li 통행 / 오른쪽 Xiao (2019) Fig. 7
+> ■ Result 3: Lattice stabilisation and Li mobility oppose each other
+> • Across our candidates the two axes correlate negatively — the trend is not noise.
+> • The same trade-off appears in the literature for an unrelated material set.
+
+`< stability against blocked Li traffic >`
+`해설` the more a dopant stabilises the lattice, the more Li traffic it blocks (r = −0.63)
 
 **[60초]**
 
-세 번째는 좀 더 일반적인 얘기입니다. **공짜가 없더라**는 것.
+세 번째는 더 일반적인 얘기입니다. **공짜가 없더라**는 것.
 
-왼쪽이 저희 후보들이에요. 가로가 host 대비 얼마나 안정한지, 세로가 도펀트가 Li 길을
-얼마나 막는지입니다. **격자를 안정시키는 도펀트일수록 Li 길을 더 막습니다.** 추세가
-분명해요.
+왼쪽이 저희 후보입니다. 가로가 host 대비 안정성, 세로가 도펀트가 Li 자리를 얼마나
+막는지입니다. **격자를 안정시키는 도펀트일수록 Li 길을 더 막습니다.** 상관이 −0.63 이고
+추세가 분명합니다.
 
-오른쪽은 남의 데이터인데 같은 얘기를 합니다. Xiao가 411개 산화물에서 잰 건데, 가로가
-Li 함량, 세로가 산화 한계예요. **Li가 많을수록 산화에 약합니다.** 그런데 Li가 많아야
-이온이 잘 다니고요.
+오른쪽은 남의 데이터인데 같은 얘기를 합니다. Xiao 가 411 개 산화물에서 잰 건데, Li 가
+많을수록 산화에 약합니다. 그런데 Li 가 많아야 이온이 잘 다니고요.
 
-재료도 다르고 축도 다른데 **모양이 같습니다.** 하나 얻으면 하나 잃는 구조예요.
+재료도 축도 다른데 **모양이 같습니다.** 하나 얻으면 하나 잃는 구조입니다.
 
-💬 그래서 오늘 결론이 "몇 번이 1등"이 아닌 겁니다. 이 그림 위에서는 1등이라는 게 정의가
-안 돼요. 어느 축을 얼마나 포기할 건지를 먼저 정해야 합니다.
+💬 그래서 오늘 결론이 "몇 번이 1 등"이 아닙니다. 이 그림 위에서는 1 등이 정의되지
+않습니다. 어느 축을 얼마나 포기할지를 먼저 정해야 합니다.
 
 ---
 
+
 ## ⑥ 다음 판
 
-### 21 — Next round
+### 21 — Design of the next campaign
 
-`[그림]` 우리 계산 — 무도핑 host의 골격·Li 경로·BV 채널
+> ■ Future work (1): Control is strengthened before scale is increased
+> • To separate chemistry from placement, the formula and site will be frozen before repeats.
+> • Real low concentrations require larger cells; only boundary cases are promoted upward.
 
 **[65초]**
 
-그래서 다음 판은 이렇게 하려고 합니다. 크게 셋이에요.
+다음 판은 셋입니다.
 
-첫째, **자리와 화학식을 고정합니다.** 지금은 한 후보 안에 자리도 섞이고 전하 보상도
-섞여 있어요. 같은 자리, 같은 처방으로 맞춘 다음에 원소만 바꿔야 원소 효과를 말할 수
-있습니다. 결과 1이 그대로 다음 실험 설계가 되는 겁니다.
+첫째, **자리와 화학식을 고정합니다.** 지금은 한 후보 안에 자리도 전하 보상도 섞여
+있습니다. 같은 자리, 같은 처방으로 맞춘 뒤 원소만 바꿔야 원소 효과를 말할 수 있습니다.
+결과 1 이 그대로 다음 실험 설계가 됩니다.
 
-둘째, **셀을 키웁니다.** 지금 셀이 작아서 치환량이 하나로 뭉개졌으니까, 큰 셀에서 목표
-농도를 정수로 구현하면 그때 진짜 농도 축이 생겨요. 비싸지지만 후보를 좁힌 다음에 하면
-됩니다.
+둘째, **셀을 키웁니다.** 큰 셀에서 목표 농도를 정수로 구현하면 그때 진짜 농도 축이
+생깁니다. 비싸지지만 후보를 좁힌 다음에 하면 됩니다.
 
-셋째, **경계에 걸린 후보만 위로 올립니다.** 확실히 좋거나 확실히 나쁜 애들은 더 볼
-필요가 없어요.
+셋째, **경계에 걸린 후보만 위로 올립니다.** 확실히 좋거나 확실히 나쁜 건 더 볼 필요가
+없습니다.
 
-💬 그리고 아까 목록이 안정한 화합물 쪽으로 치우쳐 있다고 했죠. 실제로 열역학 안정성으로
-걸러 봤더니 **아무도 안 떨어졌습니다.** 기준을 잘못 잡은 줄 알았는데 아니었어요. 게이트가
+💬 그리고 목록이 안정한 화합물 쪽으로 치우쳐 있다고 했죠. 실제로 열역학 안정성으로
+걸러 봤더니 **아무도 안 떨어졌습니다.** 기준이 잘못된 줄 알았는데 아니었습니다. 게이트가
 일을 하게 하려면 위험한 후보도 목록에 넣어야 합니다.
 
 ---
 
+
 ## ⑦ ML
 
-### 22 — ML & co-doping
+### 22 — Use of the data for machine learning
 
-`[그림]` Sendek (2017) Fig. 4
+> ■ Future work (2): The data schedules calculations, not replaces them
+> • 90 candidates give about 4,000 pairs — not computable, but rankable for prioritisation.
+> • Trained on today's data a model would also learn our placement noise; Result 1 comes first.
 
 **[60초]**
 
-이 데이터의 진짜 쓸모는 순위표가 아니라 **학습 데이터**라고 생각합니다.
+이 데이터의 진짜 쓸모는 순위표가 아니라 **학습 데이터**라고 봅니다.
 
-지금 후보마다 산화 창, 안정성, 기계 물성, Li 길이 한 세트로 있어요. 이게 수십 종 있으면
-"어떤 원소 성질이 어떤 축을 움직이나"를 학습시킬 수 있습니다.
+후보마다 산화 창, 안정성, 기계 물성, Li 길이 한 세트로 있습니다. 이게 수십 종 있으면
+어떤 원소 성질이 어떤 축을 움직이는지 학습시킬 수 있습니다.
 
-왜 필요하냐면 **두 원소를 같이 넣는 경우** 때문이에요. 후보가 90개면 둘씩 조합이
-사천 가지가 넘습니다. 절대 다 계산 못 해요. 그런데 단일 도펀트로 학습한 모델이 있으면
+왜 필요하냐면 **두 원소를 같이 넣는 경우** 때문입니다. 후보가 90 개면 둘씩 조합이 사천
+가지가 넘습니다. 전부 계산할 수 없습니다. 그런데 단일 도펀트로 학습한 모델이 있으면
 유망한 것부터 계산할 수 있습니다.
 
-⚠ 다만 순서를 지켜야 합니다. **지금 데이터로 학습하면 결과 1에서 말한 자리 섞임까지
-같이 배웁니다.** 그러면 모델이 원소 효과가 아니라 저희 생성기 버릇을 배우는 거예요.
-자리 고정이 먼저고 학습이 다음입니다.
+⚠ 다만 순서를 지켜야 합니다. **지금 데이터로 학습하면 결과 1 의 자리 섞임까지 같이
+배웁니다.** 그러면 모델이 원소 효과가 아니라 저희 생성기 버릇을 배웁니다. 자리 고정이
+먼저이고 학습이 다음입니다.
 
-💬 그리고 그림에서 세로축 확률만 보면 안 됩니다. 가로축이 훈련 데이터에서 얼마나 멀리
-떨어져 있느냐인데, 멀리서 자신 있게 틀리는 게 이런 모델의 전형적인 실패예요.
+💬 그림에서 세로축 확률만 보면 안 됩니다. 가로축이 훈련 데이터에서 얼마나 멀리 떨어져
+있느냐인데, 멀리서 자신 있게 틀리는 게 이런 모델의 전형적인 실패입니다.
 
 ---
+
 
 ## ⑧ Discussion
 
 ### 23 — Discussion
 
-`[그림 없음 · 질문 넷]`
+> ■ Open questions for the group
+> • What exists is a map of where the comparison is reliable, not a shortlist.
+> • The next decision is which expensive calculation reduces uncertainty the most.
 
 **[60초]**
 
-정리하면, 이번에 얻은 건 **후보 하나가 아니라 비교가 어디서 흔들리는지에 대한 지도**입니다.
-그리고 지금 없는 건 shortlist인데, 저는 그걸 발표하기보다 제대로 얻고 싶습니다.
+정리하면, 이번에 얻은 것은 후보 하나가 아니라 **비교가 어디서 흔들리는지에 대한
+지도**입니다. 그리고 지금 없는 것은 shortlist 인데, 저는 그걸 발표하기보다 제대로
+얻고 싶습니다.
 
-여쭤보고 싶은 게 넷 있습니다.
+여쭙고 싶은 게 넷 있습니다.
 
-하나. 다음에 뭘 먼저 할까요. 자리를 고정한 농도 시리즈일지, 첫 계면 계산일지.
+하나. 다음에 무엇을 먼저 할까요. 자리를 고정한 농도 시리즈일지, 첫 계면 계산일지.
 
-둘. "제일 좋다"를 뭐로 정의할까요. 가장 좋은 한 구조인지, 다시 만들어도 살아남는 후보인지.
+둘. "가장 좋다"를 무엇으로 정의할까요. 가장 좋은 한 구조인지, 다시 만들어도 살아남는
+후보인지.
 
 셋. 몇 번 반복해야 충분할까요. 자리 몇 개, 시드 몇 개.
 
-넷. 이게 제일 궁금한데요. 계면을 안 본 상태에서 벌크 결과만으로 실험에 후보를 넘기는 게
-의미가 있는지, 아니면 계면까지 봐야 넘길 수 있는지.
+넷. 이게 가장 궁금한데요. 계면을 보지 않은 상태에서 벌크 결과만으로 실험에 후보를
+넘기는 게 의미가 있는지, 아니면 계면까지 봐야 넘길 수 있는지.
 
 감사합니다.
 
 ---
 
+
 ## 부록 (질문 나올 때만)
 
-### 24 — Appendix. The twin
+### 24 — Experimental counterpart in a garnet electrolyte
 
-Anderson *Adv. Energy Mater.* 14 (2024) 2304025, Fig. 1.
+> ■ Appendix A1: The same survey performed by synthesis
+> • 59 dopants were synthesised and measured — the closest experimental analogue.
+> • 32 of our 36 cation elements also appear in that study.
 
-LLZO에 도펀트 59종을 **실제로 합성해서** 전도도랑 전기화학 창을 다 측정한 연구입니다.
-저희 계산판의 실험 버전이고 체급도 비슷해요. 저희 양이온 36종 중 32종이 이 표 안에
-있습니다. 노란 칸이 이 논문에서 처음 시도한 원소고요.
+**[질문 시에만]**
 
-💬 이 사람들도 **어느 자리에 들어가는지를 계산으로 먼저 정하고** 실험했습니다.
-자리 문제가 실험에서도 그만큼 크다는 뜻이에요.
+LLZO 에 도펀트 59 종을 **실제로 합성해** 전도도와 전기화학 창을 전부 측정한 연구입니다.
+저희 계산판의 실험 버전이고 체급도 비슷합니다. 저희 양이온 36 종 중 32 종이 이 표 안에
+있습니다. 노란 칸이 이 논문에서 처음 시도한 원소입니다.
 
-### 25 — Appendix. The steps
+💬 이 사람들도 **어느 자리에 들어가는지를 계산으로 먼저 정하고** 실험했습니다. 자리 문제가
+실험에서도 그만큼 크다는 뜻입니다.
+
+---
+
+### 25 — Mapping of talk steps onto the executed workflow
+
+> ■ Appendix A2: Nine questions, and where each one was answered
+> • Each talk step is named by the question it answers; folders are named by what ran.
+> • Two designed stages produced no evidence and are marked not run.
+
+**[질문 시에만]**
 
 본문에서 아홉 개 질문으로 묶었지만 실제 실행 폴더는 더 잘게 나뉩니다. 이 표가 둘을
-연결합니다. 9번 두 칸이 빨간 건 설계에는 있었지만 **안 돌린** 것입니다.
+연결합니다. 9 번이 붉은 건 설계에는 있었지만 돌리지 않은 것입니다.
 
-### 26 — Appendix. The labels
+---
+
+### 26 — Interpretation of the three campaign labels
+
+> ■ Appendix A3: The labels are neither concentrations nor repeats
+> • All three collapsed to the same substitution in a small cell — no concentration axis.
+> • Regrouping by exact formula gives 59 same-formula and 31 changed-formula species.
+
+**[질문 시에만]**
 
 세 라벨이 왜 농도도 반복도 아닌지의 상세입니다. 셋 다 작은 셀에서 같은 치환량으로
-뭉개졌고, 화학식 기준으로 다시 묶으면 59종은 같고 31종은 다릅니다.
-앞으로는 **화학식·자리를 고정하고 시드만 바꾸는 반복**과, **셀 크기를 바꿔 만드는 농도 축**을
-분리해야 합니다.
+뭉개졌고, 화학식 기준으로 다시 묶으면 59 종은 같고 31 종은 다릅니다.
 
-### 27 — Appendix. The methods
+앞으로는 **화학식·자리를 고정하고 시드만 바꾸는 반복**과, **셀 크기를 바꿔 만드는 농도
+축**을 분리해야 합니다.
 
-발표에서 쓴 방법을 "무슨 질문에 답하는가"로 정리한 표입니다.
-화살표 왼쪽이 그 방법이 답하는 것, 오른쪽이 사람들이 답한다고 오해하는 것.
-오른쪽은 전부 **아직 안 돌린 계산**입니다.
+---
+
+### 27 — Boundaries of each computational method
+
+> ■ Appendix A4: Every method named by the question it can answer
+> • The left column is what the method answers; the right is what it is assumed to answer.
+> • Every entry on the right is a calculation that has not been run.
+
+**[질문 시에만]**
+
+발표에서 쓴 방법을 "무슨 질문에 답하는가"로 정리한 표입니다. 화살표 왼쪽이 그 방법이
+답하는 것, 오른쪽이 사람들이 답한다고 오해하는 것입니다. 오른쪽은 전부 아직 돌리지 않은
+계산입니다.
+
+---
+
+### 28 — Full candidate roster
+
+> ■ Appendix A5: All 91 compounds, grouped by anion family
+> • Every compound that entered the campaign is listed — this is the denominator.
+> • As₂S₃ was planned but stopped during structure generation.
+
+**[질문 시에만]**
+
+캠페인에 들어간 91 개 화합물 전부입니다. 계열별로 상자에 넣었습니다. **이게 분모입니다.**
+발표에서 말한 비율은 전부 이 목록 기준입니다.
+
+As₂S₃ 하나는 계획에는 있었지만 구조 생성 단계에서 멈췄습니다.
 
 ---
 
 ## 발표 전 점검
 
-- **빨간 글씨에서 쉰다.** 슬라이드의 빨강은 전부 "이건 못 한다"입니다. 그냥 읽고 넘어가면
-  청중이 한계를 못 듣고 결과만 가져갑니다.
-- **파란 글씨는 우리가 한 것.** 여기선 목소리를 조금 올리세요.
-- 16장(못 한 것)과 17장(있는 것/없는 것)은 **묶어서** 하나의 호흡으로 가는 게 좋습니다.
-- 8~15장은 같은 레이아웃이 반복됩니다. 리듬이 생기니까 각 장 40~55초로 짧게 끊으세요.
-- 부록은 안 넘깁니다. 질문이 나올 때만.
-- 예상 질문 3순위: ① Li 길이 뭔가요(13장) ② 실험 창은 왜 더 넓나요(15장)
-  ③ 그래서 뭘 쓰면 되나요(20·23장 — "지금은 못 정합니다"가 정답입니다)
+- 빨간 글씨에서 쉰다. 파란 글씨에서 목소리를 올린다.
+- 16장(못 한 것)과 17장(있는 것/없는 것)은 한 호흡으로 묶는다.
+- 8~16장은 레이아웃이 반복된다. 리듬이 생기니 장당 50~60초로 짧게 끊는다.
+- 부록은 넘기지 않는다. 질문이 나올 때만.
+- 예상 질문 3순위: ① Li 길이 뭔가(13장) ② 실험 창은 왜 더 넓나(15장)
+  ③ 그래서 뭘 쓰면 되나(20·23장 — "지금은 못 정합니다"가 정답)
 
-## Origin 용 CSV (표 원본)
-
-덱의 표 넷은 전부 CSV 로도 있습니다. Origin 에서 다시 그리고 싶으면 이걸 쓰세요.
+## Origin 용 CSV
 
 | 슬라이드 | CSV |
 |---|---|
@@ -617,5 +711,6 @@ LLZO에 도펀트 59종을 **실제로 합성해서** 전도도랑 전기화학 
 | 19 결과 2 | `db/properties/seminar_table_oxidation_by_group.csv` |
 | 18 그림 원자료 | `db/properties/cascade_label_spread_E_young.csv` |
 
-그림 원본은 `tools/figures/plot_seminar_2026_08.py` 하나에서 전부 나옵니다 —
-`python3 tools/figures/plot_seminar_2026_08.py` 로 재생성.
+그림은 전부 `python3 tools/figures/plot_seminar_2026_08.py` 로 재생성.
+**그림 안에는 글을 넣지 않는다** — 문구는 슬라이드의 `< >` 이름표와 그 밑 해설 줄이 진다
+(도구 selftest 가 `ax.text`·`ax.annotate` 사용을 위반으로 잡는다).
