@@ -52,7 +52,7 @@ esw={}
 _raw=open(_csv("db/properties/oxidation_stability_cascade.csv")).read().splitlines()
 _h=next(i for i,l in enumerate(_raw) if l.startswith("dopant,"))
 for r in csv.DictReader(io.StringIO("\n".join(_raw[_h:]))):
-    esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]))
+    esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]))  # PLAIN variant 전용 csv
 D=[]
 for d in ch:
     if d not in esw: continue

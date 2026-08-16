@@ -690,5 +690,14 @@
       56
     ],
     "note": "3점 평균 순위 대비 몇 종이 jump 계단 이상 움직이는가. 크면 '평균' 이라는 집계 선택 자체가 순위를 만든다는 뜻이다."
+  },
+  "citation_warning": {
+    "superseded_commit": "9afe33c3",
+    "why": "`9afe33c3` 시점의 이 파일은 **틀린 수치**를 담고 있다 — raw `dopant` 로 묶어 81종만 봤고(실제 90종), 조성 불일치 22(실제 31), 교차 칸 0(실제 7), G1 열이 screen_de_per_atom(실제 rerank_de_post_anneal, 비 0.083 vs 0.205). 그 커밋을 출처로 인용하면 본문 숫자와 원장이 어긋난다.",
+    "cite_instead": "이 파일의 현재 커밋 (2026-08-16 재감사 정정본)",
+    "affected_documents": [
+      "Research_Seminar_2026_08_cascade_9afe33c3_design_audit — P3·P6·P13·P21·P22·P34 의 `9afe33c3:db/properties/cascade_label_scatter_audit.json` 참조. **본문 숫자는 이미 정정본 기준(90/59/31·0.205·2.807)이라 맞고, 출처 커밋만 어긋난다.**"
+    ],
+    "same_for": "9afe33c3:tools/cascade/audit_label_scatter.py (그 시점 도구도 raw 그룹핑)"
   }
 }

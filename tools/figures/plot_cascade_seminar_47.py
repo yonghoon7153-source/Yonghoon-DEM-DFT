@@ -576,7 +576,7 @@ def conditional_pareto_flags(rows: list[dict]) -> dict[str, bool]:
             if weakly_better and strictly_better:
                 dominated = True
                 break
-        flags[row["dopant"]] = not dominated
+        flags[row["dopant"]] = not dominated   # 47종 pool 행 — base_species 뿐 (접미사 없음)
     front = {dopant for dopant, value in flags.items() if value}
     if front != EXPECTED_CONDITIONAL_PARETO:
         raise AssertionError(f"unexpected conditional Pareto set: {sorted(front)}")

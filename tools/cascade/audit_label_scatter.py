@@ -39,6 +39,9 @@ try:
 except Exception:
     pass
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from cascade_ids import base_species          # noqa: E402  — 그룹핑 정본
+
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 CSV = os.path.join(ROOT, "db", "properties", "cascade_v23_all.csv")
 
@@ -79,11 +82,6 @@ def site_kind(row):
     """치환 '자리 종류' — 세부 Wyckoff 가 아니라 어느 부격자를 건드렸나."""
     return (str(row.get("cation_site", "")).split("_")[0],
             str(row.get("anion_site", "")).split("_")[0])
-
-
-def base_species(dopant_label):
-    """`WO3+Clrich` → `WO3`. generator 변형 접미사를 떼고 **화학종**으로 묶는다."""
-    return (dopant_label or "").split("+", 1)[0]
 
 
 def group_champions(rows, rank="1", by_base=True):

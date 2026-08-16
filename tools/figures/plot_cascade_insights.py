@@ -106,7 +106,7 @@ import io
 _raw=open(ESWCSV).read().splitlines()
 _h=next(i for i,l in enumerate(_raw) if l.startswith("dopant,"))
 for r in csv.DictReader(io.StringIO("\n".join(_raw[_h:]))):
-    esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]),fnum(r["window_V"]))
+    esw[r["dopant"]]=(fnum(r["ox_V"]),fnum(r["red_V"]),fnum(r["window_V"]))  # PLAIN variant 전용 csv
 
 D=[]
 for d in ch:

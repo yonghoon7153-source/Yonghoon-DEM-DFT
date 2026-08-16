@@ -54,6 +54,10 @@ try:
 except Exception:
     pass
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+    os.path.abspath(__file__))), "cascade"))
+from cascade_ids import base_species          # noqa: E402  — 그룹핑 정본
+
 def fnum(s):
     try: return float(s)
     except: return None
@@ -66,7 +70,7 @@ VARIANT_SUFFIX = "+Clrich"
 
 def classify_family(dopant_label, charge_comp):
     """(family, dopant_base, consistent) — 모르는 charge_comp 는 plain 으로 넘기지 않는다."""
-    base = dopant_label[:-len(VARIANT_SUFFIX)] if dopant_label.endswith(VARIANT_SUFFIX) else dopant_label
+    base = base_species(dopant_label)          # 그룹핑은 tools/cascade/cascade_ids.py 정본
     fam = FAMILY_BY_CHARGE_COMP.get(charge_comp)
     if fam is None:
         return "unknown", base, False
