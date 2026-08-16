@@ -296,6 +296,10 @@ Step 1에서 후보 하나당 구조를 여러 개 만들었으니, 이제 골�
 그리고 하나 더 봅니다. 우리가 넣은 도펀트가 그 길목에 앉아서 통행을 막고 있진 않은지.
 도펀트 주변 몇 옹스트롬 안에 원래 Li 길이 얼마나 들어가 있는지를 세는 겁니다.
 
+`[그림] docs/figures/bv_structure_panels_comp1.png` — **우리 그림.** 무도핑 comp1 의 지도라
+"이게 어떻게 생긴 건지"를 보여주는 용도로 딱 맞습니다. 노란 영역을 '통로'라고 단정하지 말고
+**정적 저에너지 영역**이라고 부르세요.
+
 > 이 단계가 말해 주지 않는 것 — 이건 **구조적 경로**입니다. 확산계수도 전도도도 아닙니다.
 > 길이 뚫려 있어도 실제로 잘 다닌다는 보장은 없습니다.
 
@@ -337,6 +341,10 @@ Step 1에서 후보 하나당 구조를 여러 개 만들었으니, 이제 골�
 눌리는지, 그리고 여러 방향으로 살짝 변형시켜서 딱딱함과 잘 늘어나는 정도를 구합니다.
 
 앞의 스크리닝 논문들엔 이 축이 아예 없습니다. 저희가 추가한 부분이에요.
+
+`[그림] docs/figures/cascade/b2o3_eos_dft_vs_modelc.png` — **우리 그림.** 한 사례를 DFT 로
+맞대 본 검증 예시입니다. ⚠ 말할 때 반드시 "이건 한 건 검증이고 90종 전부를 DFT 로 확인한 게
+아닙니다" 를 붙이세요. 안 붙이면 전수 DFT 로 오해받습니다.
 
 > 이 단계가 말해 주지 않는 것 — 단결정 이상적 물성입니다. 실제 분말 압축체의 거동은 아닙니다.
 
@@ -428,7 +436,8 @@ MD를 돌려서 실제 확산을 재려고 했어요. 후보 하나당 온도 �
 `[그림] litdb/figures/banik2022_substitutions_oxidative_stability_argyrodite/fig_4.png`
 원 캡션: *"Electronic structure of Li₆PS₅Cl. a) Schematic of pDOS showing major contribution of free S²⁻
 and non-bonding sulfur states from the PS₄³⁻ unit in the valence band edge…"*
-출처: Banik, …, Mo, Zeier, *J. Am. Chem. Soc.* / ACS (2022), Fig. 4.
+출처: Banik et al. (Zeier & Mo groups), 2022, Fig. 4 — ⚠ PDF에 DOI 미인쇄. 슬라이드에는
+"Banik et al. (2022), Fig. 4" 까지만 적고 저널명을 추측해 넣지 마세요.
 
 **[대본 · 70초]**
 
@@ -456,10 +465,18 @@ and non-bonding sulfur states from the PS₄³⁻ unit in the valence band edge�
 
 ### 19 — 결과 3. bulk로 말할 수 있는 것과 없는 것
 
-`[그림] litdb/figures/xiao2019_cathode_coating_screening/fig_7.png`
+**그림 2단 배치 — 왼쪽·오른쪽이 서로 다른 얘기를 합니다.**
+
+`[왼쪽] litdb/figures/xiao2019_cathode_coating_screening/fig_7.png`
 원 캡션: *"Correlation between Oxidation Limit and Li Atomic Fraction in Polyanionic Oxides.
 (A) Oxidation limit versus Li atomic fraction for the 411 polyanionic oxides…"*
 출처: Xiao et al., *Joule* 3 (2019) 1252, Fig. 7.
+
+`[오른쪽] litdb/figures/sundar2025_oxide_coating_screening_lpscl/fig_2.png`
+원 캡션: *"Heatmaps showing the reactivity of various interfaces… In each heatmap, the coating refers to
+the binary oxide of the corresponding element. In each scale bar, dark green colors indicate less
+reactive interfaces…"*
+출처: Sundar et al., *Adv. Sci.* (2025), DOI 10.1002/advs.202513191, Fig. 2.
 
 **[대본 · 65초]**
 
@@ -471,6 +488,12 @@ and non-bonding sulfur states from the PS₄³⁻ unit in the valence band edge�
 
 저희 데이터에서도 같은 긴장이 보입니다. 산화 창이 좋아 보이는 후보가 Li 길에서는
 불리하고요.
+
+오른쪽은 한 발 더 나갑니다. 같은 산화물 코팅을 **네 군데 계면에서 각각** 계산한 건데,
+주기율표 네 장이 서로 다르게 칠해져 있어요. 전해질 쪽에서 초록색이던 원소가 음극 쪽에서는
+허옇습니다. **같은 물질인데 어느 계면에서 보느냐에 따라 답이 바뀐다**는 거죠.
+
+저희는 그 네 장 중에 **한 장도 안 그렸습니다.** 계면을 아예 안 봤으니까요.
 
 그래서 오늘 발표의 결론은 "몇 번이 1등이다"가 아닙니다. 지금 저희 계산이 정직하게 말할 수
 있는 건 **어떤 후보가 어느 축에서 위험한지**까지고, 그 이상은 못 갑니다. 왜냐면
@@ -602,14 +625,22 @@ Ag Al B Ba Ca Co Cr Cu Fe Ga Gd Ge Hf In La Li Mg Mn Mo Na Nb Nd Ni Sb Sc Si Sm 
 3. Xiao, Miara, Wang, Ceder, *Joule* 3 (2019) 1252 — Fig. 1, Fig. 7
 4. Sendek et al., *Energy Environ. Sci.* 10 (2017) 306 — Fig. 1
 5. Anderson et al., *Adv. Energy Mater.* 14 (2024) 2304025 — Fig. 1
-6. Banik et al., ACS (2022) — Fig. 4
-7. (질문 대비) Fujimura et al., *Adv. Energy Mater.* 3 (2013) 980
+6. Banik et al. (Zeier & Mo groups), 2022 — Fig. 4 · ⚠ PDF에 DOI 미인쇄
+7. Sundar et al., *Adv. Sci.* (2025), DOI 10.1002/advs.202513191 — Fig. 2
+8. (질문 대비) Fujimura et al., *Adv. Energy Mater.* 3 (2013) 980
+
+우리 그림 2장: `docs/figures/bv_structure_panels_comp1.png` (Step 5) ·
+`docs/figures/cascade/b2o3_eos_dft_vs_modelc.png` (Step 7)
 
 ---
 
 ## 슬라이드 만들 때 메모
 
-- 본문 22장 중 그림이 들어가는 건 7장(2·3·4·5·6·7·18·19). 나머지는 글자 적게, 도식 위주.
+- **용어 띠**: 각 슬라이드 상단에 그 장에서 처음 나오는 용어 2개만 한 줄로 정의해 깔면
+  처음 듣는 청중이 안 흘립니다 (예: `Anneal: short finite-temperature perturbation ·
+  Local basin: nearby energy minimum`). 슬라이드는 영어, 말은 한국어.
+- 본문 22장 중 그림이 들어가는 건 10장(2·3·4·5·6·7·12·14·18·19).
+  그중 8장은 문헌 그림, 2장(12·14)은 **우리 그림**입니다. 나머지는 글자 적게, 도식 위주.
 - Step 1~9는 **같은 레이아웃 반복**이 좋습니다. 위: 이 단계의 질문 한 줄 / 가운데: 도식 /
   아래 회색 작은 글씨: "이 단계가 말해 주지 않는 것".
 - 9단계 진행 띠(가로 9칸)를 Step 장마다 상단에 두고 현재 칸만 진하게 — 청중이 위치를 안 잃습니다.
