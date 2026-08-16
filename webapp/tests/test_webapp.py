@@ -901,6 +901,20 @@ def test_oxidation_onset_carries_its_composition_family():
     assert [d for d, r in rows.items() if r["ox_family_confounded"]] == ["B2O3"]
 
 
+def test_g3_species_pass_is_split_from_attribution():
+    """경고만 붙이고 species-level pass 를 유지하면 fail-open 이다 (Codex f9 P0-3)."""
+    f = json.loads((ROOT / "db/properties/cascade_screening_funnel.json")
+                   .read_text(encoding="utf-8"))
+    gs = f["gates"] if isinstance(f.get("gates"), list) else f["gate_blocks"]
+    a = [g for g in gs if g["id"] == "G3"][0]["attribution_audit"]
+    assert a["g2_survivors"] == 43
+    assert a["algorithmic_g3"] == {"pass": 25, "fail": 18}      # 역사 count 는 보존
+    assert a["attribution_audit"] == {"supported_pass": 24, "fail": 18, "unresolved": 1}
+    assert a["unresolved_species"] == ["B2O3"]
+    # 깔때기 기계적 count 는 안 움직여야 한다 (해석만 바뀐 것)
+    assert [len(f["pool"])] == [47]
+
+
 def test_b2o3_page_does_not_claim_a_same_composition_validation():
     """도펀트 라벨만으로 두 조성을 validation 으로 잇지 않는다 (Codex f9 P0-3)."""
     j = D.CASCADE_JOIN_STATUS["b2o3"]

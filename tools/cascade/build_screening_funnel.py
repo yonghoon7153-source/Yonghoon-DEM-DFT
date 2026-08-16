@@ -607,6 +607,25 @@ def main():
     steps, survivors = run_sequence(rows, gates, REPRESENTATIVE_ORDER, standalone_kill_n)
     step_by_gid = {s["gate"]: s for s in steps}
 
+    # ── G3 귀속 감사 (Codex f9 P0-3) ─────────────────────────────────────────
+    #   경고만 붙이고 species-level pass 를 유지하면 fail-open 이다. 알고리즘 count 는
+    #   보존하되(역사 감사), 현재 과학적 판정은 pass/fail/unresolved 셋으로 나눈다.
+    _g2 = [r for r in rows if gates["G2"]["predicate"](r)]
+    _g3p = [r for r in _g2 if gates["G3"]["predicate"](r)]
+    _unres = sorted(r["dopant"] for r in _g3p if r.get("ox_family_confounded"))
+    gates["G3"]["_attribution_audit"] = {
+        "g2_survivors": len(_g2),
+        "algorithmic_g3": {"pass": len(_g3p), "fail": len(_g2) - len(_g3p)},
+        "attribution_audit": {"supported_pass": len(_g3p) - len(_unres),
+                              "fail": len(_g2) - len(_g3p),
+                              "unresolved": len(_unres)},
+        "unresolved_species": _unres,
+        "why": ("unresolved 는 method-comparability 문제가 아니다 — 43행 모두 같은 실행의 "
+                "phase set 안에서 host 와 비교된다. 문제는 **종 수준 효과 귀속**이다: "
+                "이 종의 챔피언 3슬롯이 전부 chain generator 산물이고 plain 챔피언이 없다. "
+                "역사 count(알고리즘 pass)는 archive 로 보존하고 현재 판정은 NA/not assessed 다."),
+    }
+
     gate_blocks = []
     for gid in REPRESENTATIVE_ORDER:
         g = gates[gid]
@@ -637,6 +656,7 @@ def main():
             "threshold": g["threshold"],
             "concentration_convention": g.get("concentration_convention"),
             "composition_family_caveat": g.get("composition_family_caveat"),
+            "attribution_audit": g.get("_attribution_audit"),
             "threshold_basis": g["threshold_basis"],
             "literature_analog": g["literature_analog"],
             "engine": g["engine"],

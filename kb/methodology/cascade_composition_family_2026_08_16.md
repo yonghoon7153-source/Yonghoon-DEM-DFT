@@ -3,11 +3,11 @@ title: 캐스케이드 챔피언 슬롯의 조성족 섞임 — Cl-rich 변형�
 date: 2026-08-16
 updated: 2026-08-16
 tags: [cascade, esw, oxidation, composition, provenance, b2o3, correction]
-status: 확정 — 270 슬롯 전수 분류, 도구 3건·db 4건 반영
+status: 확정(2회 정정) — 270 슬롯 전수 분류 + Codex f9 리뷰 반영. 효과 귀속은 **열림**
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-16
-verifiedBy: 우리 repo 전수 재현 (pinned ESW 270행 + cascade CSV 3615행 + b2o3_esw.json 교차)
+verifiedBy: Codex 동결 리뷰 f9adc9d2 (P0 3건·P1 2건 정정 반영) + 우리 repo 전수 재현
 explored: false
 authoredBy: agent
 effort: high
@@ -18,96 +18,165 @@ evidenceScope: multi-source-primary
 ## 요약
 
 캐스케이드의 **챔피언 슬롯은 (도펀트, 농도라벨) 하나당 하나**이고, 그 슬롯은
-`combined_score` 최대값이 가져간다. 그런데 후보 풀에는 **같은 도펀트의 두 설계 변형**이
-같이 들어 있다:
+`combined_score` 최대값이 가져간다. 후보 풀에는 **같은 도펀트의 두 generator 변형**이
+같이 들어 있어서, 270 슬롯 중 **17개는 이름표만 같고 조성이 다르다**.
 
-| 변형 | `charge_compensation` | 음이온 | Li | 조성 예 (B2O3) |
+⛔ **`compound_set_chain` 은 "S 하나를 Cl 로 바꾼 것" 이 아니다** (2026-08-16 Codex P0-1 정정).
+조성 벡터를 전수 대조하면 17행 중 **10행만** plain 형제와 정확히 `ΔLi=−1·ΔS=−1·ΔCl=+1` 이고,
+나머지 **7행**은 **치환 자리부터 다르다**:
+
+| 종 | 슬롯 | plain 후보 | chain 챔피언 | 추가 불일치 |
+|---|---:|---|---|---|
+| B₂O₃ | 3 | `Li28B2P2S17Cl4O3` · **P_4b** | `Li17B2P4S16Cl5O3` · **Li_24g** | Li −11 · P +2 · 자리 |
+| MoO₃ | 2 | `Li23MoP3S17Cl4O3` · **P_4b** | `Li17MoP4S16Cl5O3` · **Li_24g** | Li −6 · P +1 · 자리 |
+| WO₃ | 2 | `Li23WP3S17Cl4O3` · **P_4b** | `Li17WP4S16Cl5O3` · **Li_24g** | Li −6 · P +1 · 자리 |
+
+그래서 `composition_family` 는 **원인 변수가 아니라 generator provenance 라벨**이다.
+Al/Mo/W 세 종을 하나의 Cl 대비로 묶을 수 없고, 같은-자리 clean contrast 는 **Al 하나**뿐이다.
+
+⚠ **plain 도 순수 도펀트 효과가 아니다.** host 대비 O/S 치환·자리 선택·Li 전하보상이
+함께 바뀐다. `unconfounded` 가 뜻하는 범위는 "추가 chain 개입이 없다" 까지이고,
+쓸 말은 `dopant effect` 가 아니라 **`recipe-level host contrast`** 다.
+
+## 전수 결과 — 둘 다 사후 기술통계다
+
+```
+host(2.140 V) 초과 비율 (전체 챔피언)
+  plain  : 17/253 =  6.719%
+  chain  : 11/17  = 64.706%     → 9.63배   ← 원계수에서 한 번만 반올림
+```
+
+⛔ **9.7 이 아니라 9.63** (2026-08-16 Codex P1-1 정정). 앞 판은 6.7 과 64.7 을 **먼저 반올림한 뒤**
+나눠 9.7 을 만들었다.
+
+⛔ 그리고 이 분모에는 **chain 후보가 존재하지도 않았던 237 슬롯**이 들어 있다.
+chain 후보가 실제 있던 **33 슬롯**(11종)만 보면 (Codex P1-2):
+
+```
+chain 챔피언 host 초과 : 11/17
+plain 챔피언 host 초과 :  4/16
+                        → 2.59배
+```
+
+**둘 다 인과 효과가 아니다.** 챔피언은 `combined_score` 최대값으로 **사후 선택**됐고,
+농도 라벨 x002/x005/x010 은 독립 반복이 아니다(실측 x 는 셋 다 0.25).
+
+| 종 | plain ox_V | chain ox_V | 변환 | 판정 |
 |---|---|---|---|---|
-| plain  | `compound_set`       | S17 Cl4 | Li18 | `Li28P2S17Cl4B2O3` |
-| Cl-rich| `compound_set_chain` | S16 **Cl5** | Li17 | `Li17B2P4S16Cl5O3` |
+| Al2O3 | 2.140 (=host) | 2.354 | **exact** | chain 에서만 초과 — 유일한 같은-자리 대비 |
+| MoO3  | 2.140 (=host) | 2.356 | multi | 자리·Li/P 도 다름 |
+| WO3   | 2.140 (=host) | 2.356 | multi | 자리·Li/P 도 다름 |
+| **B2O3** | **없음** | 2.317 | multi | plain 챔피언 자체가 없다 |
+| Sc2O3 | 2.356 | 2.339 | exact | plain 도 초과 — 무관 |
+| Y2O3  | 2.282 | 2.282 | exact | 축퇴 — 무관 |
 
-Cl-rich 는 **S 하나를 Cl 로 바꾼 것**이다. 그래서 270 슬롯 중 **17개는 이름표만 같고
-조성이 다르다**. 그 17행의 `delta_ox_vs_host_V` 는 host(`Li6PS5Cl`) 와의 차이므로
-**도펀트 효과가 아니라 (도펀트 + 음이온 치환)의 합**이다.
+### 2.35 V 군의 반응식 (Codex D — 기술적 관찰까지만)
 
-## 전수 결과
+- 2.340–2.370 V 군: **21/21 이 P₂S₇ 생성**
+- 정확히 2.140 V 군: **102/102 가 Li₃PS₄ 생성**, P₂S₇ 0/102
+
+onset plateau 가 서로 다른 분해 assemblage 분기에 대응한다는 **기술적 관찰**로는 쓸 수 있다.
+다만 고전압군에 plain 15행 + chain 6행이 섞여 있고 plain Sc₂O₃ 도 2.356 V 다 →
+**P₂S₇ 도 2.356 V 도 Cl-rich 지문이 아니고 Cl 인과의 증거도 아니다.**
+
+## 제일 비싼 파급: B₂O₃ 의 부호가 뒤집힌다 — 다만 원인은 미확정
+
+B₂O₃ 는 우리 **DFT-deep 2종 중 하나**(다른 하나 Nd₂O₃)다. 그런데:
+
+| 대상 | 조성 | onset | host(2.14) 대비 | phase_set_id |
+|---|---|---|---|---|
+| **DFT-deep 셀** (`b2o3_esw.json`) | `Li58P8S41Cl16B2O3` | **2.03 V** | **−0.11 (악화)** | **없음** |
+| 캐스케이드 챔피언 (pinned) | `Li17B2P4S16Cl5O3` | **2.317 V** | **+0.177 (개선)** | `257d50d8c59cde8f` |
+
+⛔ **앞 판의 "같은 방법·같은 chemsys·346 entries 이므로 순전히 조성 차이" 는 철회했다**
+(2026-08-16 Codex P0-2). legacy 기록에는 entry ID 목록도 `phase_set_id` 도 MP 스냅샷 버전도
+제외상 목록도 **없다**. entry 개수와 chemsys 가 같다는 것은 **정렬된 entry-ID 집합이
+같다는 증거가 아니다.** 게다가 legacy baseline 라벨은 `LPSCl1.6` 이고 cascade host 는
+Li₆PS₅Cl 계열이라 host 조성이 같은지도 확인되지 않았다.
+
+- ⛔ 금지: "B₂O₃ 가 산화 onset 을 +0.177 V 올린다" · "같은 방법에서 순전히 조성 차이로 부호가 뒤집힌다"
+- ✅ 허용: "서로 다른 두 B₂O₃ 함유 조성 기록에서 host 대비 onset 부호가 반대로 보인다.
+  명목 방법과 chemsys 는 비슷하지만 **legacy phase-set identity 가 없어** 원인을 조성 하나로
+  확정할 수 없다."
+- 닫는 법: 두 조성과 각자의 host 를 **하나의 pinned entry set** 에서 다시 계산 (MP 질의만 필요)
+
+### 종 수준 G3 통과도 쪼갰다 (Codex P0-3)
+
+경고만 붙이고 species-level pass 를 유지하면 fail-open 이다:
 
 ```
-host(2.140 V) 초과 비율
-  plain  : 17/253 =  6.7%
-  Cl-rich: 11/17  = 64.7%     → 9.7배
+G2 생존         43
+알고리즘 G3     pass 25 / fail 18          ← 역사 count, archive 로 보존
+귀속 감사       supported-pass 24 / fail 18 / unresolved 1 (B2O3)
 ```
 
-| 종 | plain ox_V | Cl-rich ox_V | 판정 |
-|---|---|---|---|
-| Al2O3 | 2.140 (=host) | 2.354 | ⛔ Cl-rich 에서만 개선 |
-| MoO3  | 2.140 (=host) | 2.356 | ⛔ Cl-rich 에서만 개선 |
-| WO3   | 2.140 (=host) | 2.356 | ⛔ Cl-rich 에서만 개선 |
-| **B2O3** | **없음** | 2.317 | ⛔⛔ plain 챔피언 자체가 없다 (3점 전부 +Clrich) |
-| Sc2O3 | 2.356 | 2.339 | plain 도 개선 — 무관 |
-| Y2O3  | 2.282 | 2.282 | 축퇴 — 무관 |
-| MgO·ZnO | 2.140 | 2.140 | 둘 다 개선 없음 |
-| Nd2O3·Sm2O3 | 1.920 / 1.989 | 1.987 / 2.034 | 둘 다 host 미만 |
-
-Cl-rich 11건이 개선 쪽인데 그 onset 이 **도펀트와 거의 무관하게** 뭉친다
-(Al 2.354 · Mo 2.356 · W 2.356 — 화학적으로 완전히 다른 셋이 같은 값).
-"이건 도펀트가 아니라 음이온 치환이 만든 값" 이라는 **정황**이지 증명은 아니다 — 아래 참조.
-
-## 제일 비싼 파급: B2O3 의 부호가 뒤집힌다
-
-B2O3 는 우리 **DFT-deep 2종 중 하나**(다른 하나 Nd2O3)다. 그런데:
-
-| 대상 | 조성 | grand-potential onset | host(2.14) 대비 |
-|---|---|---|---|
-| **DFT-deep 셀** (`b2o3_esw.json`) | `Li58P8S41Cl16B2O3` | **2.03 V** | **−0.11 V (악화)** |
-| 캐스케이드 챔피언 (pinned) | `Li17B2P4S16Cl5O3` | **2.317 V** | **+0.177 V (개선)** |
-
-둘 다 grand-potential ESW · MP GGA_GGA+U · chemsys `B-Cl-Li-O-P-S` · **346 entries**,
-host 값도 양쪽 2.14 로 일치한다 → **방법 차이가 아니라 순전히 조성 차이**이고 **부호가 반대**다.
-
-세미나 표에서 B2O3 만 `dft_deep=1` 이면서 onset 이 Cl-rich 유래였다.
-"우리가 DFT 로 깊이 본 종이 산화 창을 넓힌다" 는 문장은 **두 조성을 이어붙인 것**이라
-성립하지 않는다.
-
-- ⛔ 금지: "B2O3 가 산화 onset 을 +0.177 V 올린다"
-- ✅ 허용: "Cl-rich chain 변형 `Li17B2P4S16Cl5O3` 의 onset 은 2.317 V 로 host(2.14 V)보다 높다.
-  DFT-deep 셀 `Li58P8S41Cl16B2O3` 의 onset 은 2.03 V 로 host 보다 낮다."
+`unresolved` 는 method-comparability 문제가 아니다 — 43행 모두 같은 phase set 안에서
+host 와 비교된다. **종 수준 효과 귀속**이 안 닫힌 것이다.
 
 ## 안 무너지는 것
 
-- **최종 생존자 WO3** 는 pool ox_V 가 **plain 챔피언 값(2.140)** 이다 — 오염 아님.
-- Y2O3 는 두 족의 onset 이 **같아서**(2.282) 라벨이 아무 혼동을 만들지 않는다 (`degenerate`).
-- 47종 pool 중 오염은 **B2O3 단 1건** (`ox_family_confounded=1`). 43 plain · 3 degenerate.
-- G3 통과/탈락 집계와 캐스케이드 깔때기 숫자는 그대로다 — 바뀐 건 **B2O3 한 행의 해석**이다.
+- **최종 생존자 WO₃** 는 pool ox_V 가 **plain 챔피언 값(2.140)** 이다 — 오염 아님.
+- Y₂O₃ 는 두 족의 onset 이 **같아서**(2.282) 라벨이 아무 혼동을 만들지 않는다 (`degenerate`).
+- 47종 pool 중 오염은 **B₂O₃ 단 1건** (`ox_family_confounded=1`). 43 plain · 3 degenerate.
+- 깔때기 기계적 count 는 그대로다 (`47 → 47 → 43 → 25 → 11 → 1`) — 바뀐 건 **해석**이다.
+- **G3 phase-set 비교 270/270 은 유효하다.** 이번 정정은 그 위층(효과 귀속)에 대한 것이지
+  `phase_set_id` 폐쇄를 되돌리지 않는다.
 
-## 반영 (도구 3 · db 4)
+## 반영 (도구 5 · db 6 · webapp 4)
 
 | 대상 | 조치 |
 |---|---|
-| `tools/oxidation/esw_cascade_batch.py` | `classify_family()` + `annotate_families()`; 정상 실행에 상시 포함, MP 없이 기존 출력에 입히는 `--annotate`, `--selftest` 28건(음성 9건) |
-| `tools/cascade/build_screening_funnel.py` | G3 에 `composition_family_caveat` (G1·G5 엔 이미 있었는데 **정작 산화 게이트엔 없었다**), pool 행에 `ox_composition_family` 옮겨싣기 |
-| `tools/figures/plot_cascade_seminar_47.py` | `ox_composition_family()` 해석 + CSV 3열 추가 + 그림 각주 2개 + **오염 집합이 `['B2O3']` 에서 바뀌면 실패하는 assert** |
-| `db/.../oxidation_stability_cascade_v3_pinned.json` | 행마다 `composition_family`·`delta_ox_vs_host_V_confounded`·`comparable_to_plain_champions`, 최상위 `composition_family_audit` + `dft_deep_composition_collision` |
-| `db/properties/b2o3_esw.json` | `composition_collision_2026_08_16` |
-| `db/.../cascade_seminar_oxidation_transport_47.csv` · `_scorecard_47.csv` | `ox_composition_family` 등 3열 |
-| `db/properties/cascade_screening_funnel.json` | pool 행 3필드 + G3 caveat |
+| `tools/oxidation/esw_cascade_batch.py` | `classify_family()` + **`classify_transform()`**(조성 벡터 전수 대조) + `annotate_families()`; MP 없이 입히는 `--annotate`, `--selftest` **41건** |
+| `tools/cascade/build_screening_funnel.py` | G3 `composition_family_caveat` + pool 행 3필드 + **`attribution_audit`**(pass 24 / fail 18 / unresolved 1) |
+| `tools/cascade/build_cascade_audit_manifest.py` | v3 pinned·b2o3_esw **원장 등록** + metric contract 에 3층 분리를 데이터로 |
+| `tools/figures/plot_cascade_seminar_47.py` | `ox_composition_family()` + CSV 3열 + 그림 각주 2개 |
+| `tools/cascade/build_cascade_themes.py` | stale `method-comparable 0` 문구 제거 |
+| `db/.../oxidation_stability_cascade_v3_pinned.json` | 행마다 `composition_family`·`matched_transform_status`·`matched_plain_candidate`·`substitution_site`·`contrast_scope`·`isolated_dopant_effect`, 최상위 `composition_family_audit`(+`matched_transform`, `eligible_slots_only`) + `dft_deep_composition_collision` |
+| `db/properties/b2o3_esw.json` | `composition_collision_2026_08_16` — **"순전히 조성 차이" 철회** |
+| `webapp/data.py` | `CASCADE_JOIN_STATUS`(composition/phase_set/method match 3분리) · stale 0 제거 |
+| `webapp/templates/composition.html` | B₂O₃ 페이지에 **두 조성식·두 onset 나란히 + 빨간 카드** ("같은 조성의 검증이 아니다") |
+| `webapp/templates/cascade.html` · `cascade_diagnostic.html` | 3층 분리 문구 · chain 전체를 S→Cl 로 단정하던 문장 교체 |
+| `webapp/tests/test_webapp.py` | **69건** — 조성족·변환 10/7·비율 9.63/2.59·B₂O₃ join·귀속 24/18/1 잠금, `WO3 if present else Sc2O3` fallback 제거 |
 
-판별자는 **CSV 의 `charge_compensation`** 이다. `dopant` 라벨의 `+Clrich` 접미사는
-거울일 뿐이라 둘이 어긋나면 `family_label_inconsistent` 로 남긴다 (현재 0건).
-모르는 `charge_compensation` 값은 **plain 으로 흘려보내지 않고** `unknown` 으로 떨어뜨린다.
+판별자는 **CSV 의 `charge_compensation`**(generator provenance)이고, `dopant` 라벨의
+`+Clrich` 접미사는 거울일 뿐이라 어긋나면 `family_label_inconsistent` 로 남긴다(현재 0건).
+모르는 값은 **plain 으로 흘리지 않고** `unknown` 으로 떨어뜨린다.
+다만 **provenance 만으로는 부족하다** — `matched_transform_status` 로 조성 벡터를 같이 본다.
 
 ## 반증·한계
 
-- **분해를 못 한다.** Cl-rich 행의 Δ 를 (Cl 치환분) + (도펀트분) 으로 나누려면
-  **도펀트 없는 Cl-rich 기준**(`Li_x P4 S16 Cl5`)을 같은 phase set 안에서 재야 하는데,
-  그건 **어느 phase set 에도 없다**. 현재 판정은 "섞였다" 까지이고 "Cl 때문이다" 는 아직 아니다.
-  → 남은 일: host 처럼 Cl-rich 기준도 모든 chemsys 안에서 같이 재는 실행 1회(MP만 필요, DFT 불필요).
-- Al/Mo/W 의 Cl-rich onset 이 2.354–2.356 로 뭉치는 건 **정황**이다. 다만 plain Sc2O3 도
-  2.356 이라 그 값이 Cl-rich 전용 지문은 아니다. onset 반응식을 보면 2.35 군은 `P2S7`,
-  2.140 군은 `Li3PS4` 가 생성물인데 — 그 해석은 **하지 않았다**(반응식 몇 개만 읽은 것).
+- **분해를 못 한다.** chain 행의 Δ 를 (Cl 치환분) + (도펀트분) 으로 나누려면 최소 2×2 설계가
+  같은 `phase_set_id` 안에 있어야 한다:
+  ```
+  H_plain = Li24P4S20Cl4        ← 4 f.u. host
+  H_Cl    = Li23P4S19Cl5        ← S²⁻ 하나를 Cl⁻ 로, 중성 유지 위해 Li⁺ 하나 빠짐
+  D_plain = Li18M2P4S17Cl4O3
+  D_Cl    = Li17M2P4S16Cl5O3
+  interaction = [f(D_Cl)−f(D_plain)] − [f(H_Cl)−f(H_plain)]
+  ```
+  이게 **어느 phase set 에도 없다.** B/Mo/W 는 기존 plain 과 chain 의 자리·P/Li 가 달라
+  matched `D_plain`/`D_Cl` 을 **새로 만들어야** 한다. 최소로는 chain 17행이 속한
+  **10개 unique phase set** 마다 H·C·D·DC 를 같은 pinned entry set 에서 계산한다.
+- `constrained_esw_cl_scan.json` 에 도펀트 없는 host 의 Cl 스캔(LPSCl 0.5→2.0)이 있고
+  0.5–1.6 구간에서 onset 이 **0.000 V** 움직인다. 다만 **LiS4·SCl3·Li5PS4Cl2 제외 phase set**
+  이라 host 가 2.256 (캐스케이드는 2.140) — **절대값 이식 금지**, 참고용이다.
+  (LPSCl2.0 = `Li5PS4Cl2` 인데 그 화합물 자체가 경쟁상에서 빠져 있어 2.385 는 못 믿는다.)
 - 이 카드는 **산화 onset 축만** 본다. de(G1)·E/GB(G5) 는 3점 평균이라 조성족이 **행 안에서**
-  섞여 있고(그건 funnel 의 G1·G5 caveat 에 이미 적혀 있다), 그쪽 파급은 재지 않았다.
-- x 라벨(x002/x005/x010)이 농도가 아니라는 기존 경고는 그대로다 — 실측은 셋 다 x=0.25.
+  섞여 있고, 그쪽 파급은 재지 않았다.
+- x 라벨(x002/x005/x010)은 농도가 아니다 — 실측은 셋 다 x=0.25.
+
+## 내가 틀린 것 (2026-08-16, Codex 리뷰 `f9adc9d2`)
+
+| # | 틀린 서술 | 정정 |
+|---|---|---|
+| ① | "chain = S 하나가 Cl 로 치환" (family 전체) | **10/17 만 exact.** 7행은 치환 자리(P_4b→Li_24g)·Li/P 까지 다름 |
+| ② | "같은 방법이므로 B₂O₃ 는 순전히 조성 차이" | legacy 에 `phase_set_id`·entry_ids·MP 버전 없음 — **미확정** |
+| ③ | 9.7배 | **9.63배** (pct 를 먼저 반올림한 이중 반올림) |
+| ④ | 9.63배를 그대로 인용 | 분모에 chain 후보 없던 237 슬롯 포함 — eligible 33 슬롯이면 **2.59배** |
+| ⑤ | selftest `raises()` 가 `except Exception` | 오타로 죽어도 통과했다 — 예외 type·메시지 확인으로 |
+
+①은 Al₂O₃ 한 케이스(정확히 맞는다)에서 family 전체로 일반화한 것이다.
+`cation_site` 열을 이미 출력해 보고도 놓쳤다.
 
 ## 출처
 
