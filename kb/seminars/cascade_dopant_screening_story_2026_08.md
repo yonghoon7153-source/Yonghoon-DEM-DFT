@@ -30,6 +30,28 @@ evidenceScope: multi-source-mixed
 기호 · `< >` 그림 이름표 · `해설` 그림 밑 한 줄 · `💬` 말로만 · `💡` 보조 제안
 ### 1 — (표지)
 
+**표지 문구 확정 (2026-08-16 사용자 결정)** — 2026-06-15 덱 커버 양식을 그대로 따른다.
+
+```
+[상단 네이비 바]                                    August 2026   ← 우측 상단, 14 pt
+Research Seminar                                  ← 파란 굵게 26 pt · 고정 헤더
+Technical Report on DFT Screening:                ← 검정, 보고 유형 + 방법
+Dopants in Li₆PS₅Cl                               ← 검정, 대상
+
+Yonghoon An
+Division of Materials Science & Engineering, Hanyang University
+(E-mail : yonghoon71@hanyang.ac.kr)
+
+[캠퍼스 일러스트]                      [한양대 로고]
+```
+
+- `Research Seminar` 는 **고정 헤더**다. 매번 바뀌는 건 아래 두 줄뿐 — 그래서 시리즈로 읽힌다.
+- `Simulation → Screening` 한 단어만 바꿨다. 6/15 덱과 나란히 놓으면 같은 계열로 보인다.
+- 풀 크기(91)는 **커버에 넣지 않는다.** 숫자가 바뀌면 커버까지 고쳐야 하고, 본문에서 이미 세 번 나온다.
+- 커버 자산: `docs/figures/seminar/cover_campus.jpg` · `cover_logo.png`
+  (2026-06-15 덱에서 추출 — 같은 발표자 시리즈이므로 그대로 재사용)
+
+
 **[30초]**
 
 안녕하세요. Li₆PS₅Cl 이라는 황화물 고체전해질에 원소를 하나씩 넣어 보면서, 쓸 만한 게
