@@ -46,7 +46,7 @@ Caches the MP hull per chemsys so dopants sharing a chemsys pull once.
   도펀트 없는 Cl-rich 기준(Li_x P4 S16 Cl5)을 같은 phase set 안에서 재야 하고,
   그건 아직 어느 phase set 에도 없다 (`missing_baseline` 로 기록).
 """
-import argparse, csv, json, os, math, hashlib, sys
+import argparse, collections, csv, json, os, math, hashlib, sys
 from collections import defaultdict
 
 try:
@@ -73,15 +73,52 @@ def classify_family(dopant_label, charge_comp):
     label_says_variant = dopant_label.endswith(VARIANT_SUFFIX)
     return fam, base, (label_says_variant == (fam != "plain"))
 
+#: chain 변형이 plain 대비 만족해야 하는 **정확한** 조성 변환. 하나라도 어긋나면
+#: 그건 S→Cl 치환이 아니라 다른 recipe 다 (Codex P0-1, 2026-08-16: 17행 중 7행).
+CHAIN_TRANSFORM = {"Li": -1.0, "S": -1.0, "Cl": +1.0}
+
+
+def _comp(row):
+    return {k[len("composition_"):]: float(row[k] or 0)
+            for k in row if k.startswith("composition_")}
+
+
+def classify_transform(chain_row, plain_rows, tol=1e-9):
+    """chain 후보가 plain 형제와 **정확히** ΔLi=-1·ΔS=-1·ΔCl=+1 인가.
+
+    → ("exact", 짝 이름) | ("multi_transform", 가장 가까운 plain) | ("no_plain_candidate", None)
+
+    ⛔ 이 판정은 조성 벡터 전체를 본다. 라벨(`+Clrich`)이나 charge_compensation 만으로는
+       "S 하나가 Cl 로 바뀐 것" 이라고 말할 수 없다 — B2O3·MoO3·WO3 는 치환 자리(P_4b vs
+       Li_24g)와 Li/P 화학량론까지 함께 다르다.
+    """
+    if not plain_rows:
+        return "no_plain_candidate", None
+    c = _comp(chain_row)
+    els = set(c) | {e for p in plain_rows for e in _comp(p)}
+    for p in plain_rows:
+        pc = _comp(p)
+        if all(abs((c.get(e, 0.0) - pc.get(e, 0.0)) - CHAIN_TRANSFORM.get(e, 0.0)) < tol
+               for e in els):
+            return "exact", p.get("name")
+    return "multi_transform", plain_rows[0].get("name")
+
+
 def annotate_families(results, csv_path, host_family="plain", eps=1e-9):
     """results 를 제자리에서 표시하고 감사 블록을 돌려준다.
 
-    못 하는 것: 이름이 CSV 에 없는 결과는 **추정하지 않는다** — 그냥 실패시킨다.
+    못 하는 것
+      · 이름이 CSV 에 없는 결과는 **추정하지 않는다** — 그냥 실패시킨다.
+      · 조성족은 provenance(어느 generator 가 만들었나)이지 **원인 변수가 아니다.**
+        여기서 세는 비율은 전부 사후 기술통계다 — 인과 효과 크기로 인용하면 안 된다.
+      · chain 후보가 없는 슬롯까지 분모에 넣은 비(9.6배)와, chain 후보가 실제 있던
+        슬롯만 본 비(2.59배)는 다른 양이다. 둘 다 싣되 둘 다 non-causal 이다.
     """
-    by_name = {}
+    by_name, all_rows = {}, []
     with open(csv_path, encoding="utf-8") as fh:
         for r in csv.DictReader(fh):
             by_name[r.get("name", "")] = r
+            all_rows.append(r)
     cand = [k for k in results if not k.startswith("__HOST__")]
     missing = [k for k in cand if k not in by_name]
     if missing:
@@ -89,21 +126,52 @@ def annotate_families(results, csv_path, host_family="plain", eps=1e-9):
 
     fams = defaultdict(list)
     inconsistent = []
+    plain_by_base = defaultdict(list)
+    for r in all_rows:
+        if r.get("charge_compensation") == "compound_set":
+            plain_by_base[classify_family(r.get("dopant", ""), "compound_set")[1]].append(r)
+
     for k in cand:
         row = by_name[k]
         fam, base, ok = classify_family(row.get("dopant", ""), row.get("charge_compensation", ""))
         v = results[k]
         v["composition_family"] = fam
         v["dopant_base"] = base
+        v["generator_variant"] = row.get("charge_compensation", "")
         v["charge_compensation"] = row.get("charge_compensation", "")
+        v["substitution_site"] = row.get("cation_site", "")
+        v["anion_site"] = row.get("anion_site", "")
         v["family_label_consistent"] = ok
         confounded = (fam != host_family)
         v["delta_ox_vs_host_V_confounded"] = confounded
-        v["delta_confound"] = (
-            "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. "
-            "onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다."
-            if confounded else None)
         v["comparable_to_plain_champions"] = not confounded
+        # ── 변환 판정 (Codex P0-1) ────────────────────────────────────────────
+        # chain 이라고 다 "S 하나가 Cl 로" 가 아니다. 조성 벡터를 전수 대조한다.
+        if fam == "Clrich":
+            st, pair = classify_transform(row, plain_by_base.get(base, []))
+            v["matched_transform_status"] = st
+            v["matched_plain_candidate"] = pair
+            v["matched_plain_site"] = (
+                next((r.get("cation_site") for r in plain_by_base.get(base, [])
+                      if r.get("name") == pair), None))
+            v["contrast_scope"] = "multi_intervention_recipe_vs_host"
+            v["delta_confound"] = (
+                "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. "
+                + ("plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, "
+                   "그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다."
+                   if st == "exact" else
+                   "plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 "
+                   "아니다. 여러 개입이 동시에 들어간 recipe 대비다."
+                   if st == "multi_transform" else
+                   "plain 형제 자체가 없어 짝지을 대비가 없다."))
+        else:
+            v["matched_transform_status"] = None
+            v["matched_plain_candidate"] = None
+            v["contrast_scope"] = "primary_recipe_vs_host"
+            # ⛔ plain 도 host 대비 O/S 치환·자리 선택·Li 전하보상이 함께 바뀐다.
+            #   "unconfounded" 가 의미하는 범위는 **추가 chain 개입이 없다** 까지다.
+            v["delta_confound"] = None
+        v["isolated_dopant_effect"] = False
         if not ok:
             inconsistent.append(k)
         fams[fam].append(k)
@@ -113,12 +181,33 @@ def annotate_families(results, csv_path, host_family="plain", eps=1e-9):
         hi = sum(1 for k in keys
                  if results[k].get("delta_ox_vs_host_V") is not None
                  and results[k]["delta_ox_vs_host_V"] > eps)
+        # ⛔ pct 는 표시용이다. 비율은 **원계수에서 한 번만** 반올림한다 —
+        #   6.7 과 64.7 을 먼저 반올림하고 나누면 9.6 이 9.7 이 된다 (Codex P1-1).
         return {"n": n, "n_raises_onset": hi, "pct": round(100.0 * hi / n, 1) if n else None}
 
+    def ratio_of(a, b):
+        if not a["n"] or not b["n"] or not b["n_raises_onset"]:
+            return None
+        return round((a["n_raises_onset"] / a["n"]) / (b["n_raises_onset"] / b["n"]), 2)
+
     plain_r, var_r = rate(fams.get("plain", [])), rate(fams.get("Clrich", []))
-    ratio = None
-    if plain_r["pct"] and var_r["pct"] is not None:      # plain 0% 면 비율을 만들지 않는다
-        ratio = round(var_r["pct"] / plain_r["pct"], 1)
+    ratio = ratio_of(var_r, plain_r)
+
+    # ── eligible-slot 대비 (Codex P1-2) ──────────────────────────────────────
+    # 위 비의 분모에는 chain 후보가 **존재하지도 않았던** 슬롯이 들어 있다.
+    # chain 후보가 실제 있던 (base, 농도라벨) 슬롯만 남기면 대비가 훨씬 작아진다.
+    def slot(r):
+        return (classify_family(r.get("dopant", ""), r.get("charge_compensation", ""))[1],
+                r.get("concentration_label", ""))
+    eligible = {slot(r) for r in all_rows if r.get("charge_compensation") == "compound_set_chain"}
+    e_keys = [k for k in cand if slot(by_name[k]) in eligible]
+    e_plain = rate([k for k in e_keys if results[k]["composition_family"] == "plain"])
+    e_chain = rate([k for k in e_keys if results[k]["composition_family"] == "Clrich"])
+
+    tr = collections.Counter(results[k].get("matched_transform_status")
+                             for k in cand if results[k]["composition_family"] == "Clrich")
+    unmatched = sorted(k for k in cand
+                       if results[k].get("matched_transform_status") == "multi_transform")
 
     ox_by = defaultdict(lambda: defaultdict(list))
     for k in cand:
@@ -141,20 +230,49 @@ def annotate_families(results, csv_path, host_family="plain", eps=1e-9):
             only_variant.append(base)
 
     return {
-        "discriminator": "cascade CSV charge_compensation (compound_set=plain · compound_set_chain=Clrich)",
+        "discriminator": ("cascade CSV charge_compensation "
+                          "(compound_set=plain · compound_set_chain=Clrich). "
+                          "**provenance label 이지 원인 변수가 아니다.**"),
         "why": ("(도펀트, 농도라벨) 슬롯을 combined_score 최대값이 가져가는데 후보 풀에 두 설계 "
-                "변형이 같이 있어서, 슬롯 일부를 plain 이 아닌 Cl-rich 조성이 차지했다. "
+                "변형이 같이 있어서, 슬롯 일부를 plain 이 아닌 chain generator 조성이 차지했다. "
                 "이름표는 같지만 조성이 다르다."),
         "host_family": host_family,
         "counts": {f: len(v) for f, v in sorted(fams.items())},
         "family_label_inconsistent": inconsistent,
-        "onset_raise_rate": {"plain": plain_r, "Clrich": var_r, "enrichment_ratio": ratio},
+        "matched_transform": {
+            "definition": "chain 후보가 같은 base 의 plain 후보와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 인가",
+            "counts": {k: v for k, v in sorted(tr.items(), key=lambda x: str(x[0]))},
+            "multi_transform_rows": unmatched,
+            "note": ("⛔ 'chain = S 하나가 Cl 로 치환' 은 **전체 family 설명으로 거짓**이다 "
+                     "(Codex P0-1). multi_transform 행은 치환 자리(P_4b vs Li_24g)와 "
+                     "Li/P 화학량론까지 함께 다르다 — 여러 개입이 동시에 들어갔다."),
+        },
+        "onset_raise_rate": {
+            "plain": plain_r, "Clrich": var_r, "enrichment_ratio": ratio,
+            "eligible_slots_only": {
+                "definition": ("chain 후보가 실제로 존재한 (base, 농도라벨) 슬롯의 챔피언만. "
+                               "위 전체 비의 분모에는 chain 후보가 없던 슬롯이 들어 있다."),
+                "n_slots": len(eligible),
+                "plain": e_plain, "Clrich": e_chain,
+                "ratio": ratio_of(e_chain, e_plain),
+            },
+            "caveat": ("⛔ 두 비 모두 **사후 기술통계**다. 챔피언은 combined_score 최대값으로 "
+                       "사후 선택됐고 농도 라벨은 독립 반복이 아니다(실측 x 는 셋 다 0.25). "
+                       "어느 쪽도 Cl 의 물리 효과 크기로 인용하지 않는다."),
+        },
         "species_improving_only_as_variant": only_variant,
         "species_with_no_plain_champion": no_plain,
-        "missing_baseline": ("도펀트 없는 Cl-rich 기준(Li_x P4 S16 Cl5)이 **어느 phase set 에도 없다**. "
-                             "그게 없으면 Cl-rich 행의 Δ 를 (Cl 치환분)+(도펀트분) 으로 분해할 수 없다."),
-        "allowed_statement": ("Cl-rich 행은 plain 챔피언과 나란히 놓지 않는다. 인용할 때는 조성식을 "
-                              "같이 적고 '도펀트 효과' 라고 부르지 않는다."),
+        "missing_baseline": (
+            "도펀트 없는 Cl-only host 기준이 **캐스케이드 phase set 안에 없다**. "
+            "4 f.u. host 는 Li24P4S20Cl4 이고, S²⁻ 하나를 Cl⁻ 로 바꾸며 중성을 유지하면 "
+            "Li23P4S19Cl5 다. 최소 설계는 H_plain·H_Cl·D_plain·D_Cl 네 칸을 같은 "
+            "phase_set_id 에서 재는 것이고, 그래야 main effect 와 interaction 이 분리된다. "
+            "(constrained_esw_cl_scan.json 의 Cl 스캔은 LiS4 제외 phase set 이라 "
+            "절대값 이식 불가 — 참고용이다.)"),
+        "allowed_statement": ("chain 행은 plain 챔피언과 나란히 놓지 않는다. 인용할 때는 조성식과 "
+                              "치환 자리를 같이 적고 '도펀트 효과' 라고 부르지 않는다. "
+                              "plain 도 host 대비 여러 원자가 함께 바뀌므로 "
+                              "'recipe-level host contrast' 라고 쓴다."),
     }
 
 def main():
@@ -387,10 +505,17 @@ def selftest():
             fail += 1
             try: print(f"  ✗ {name}")
             except Exception: print(f"  FAIL {name}")
-    def raises(fn):
-        try: fn(); return False
-        except SystemExit: return True
-        except Exception: return True
+    def raises(fn, want="", exc=SystemExit):
+        """⛔ 앞 판은 `except Exception: return True` 였다 — **오타로 죽어도 통과**했다
+        (Codex F). 기대하는 예외 type 과 메시지 조각을 둘 다 확인한다."""
+        try:
+            fn()
+        except exc as e:
+            return (want in str(e)) if want else True
+        except Exception as e:
+            print(f"    (예상 밖 예외 {type(e).__name__}: {str(e)[:60]})")
+            return False
+        return False
 
     # ── 분류기 ────────────────────────────────────────────────────────────
     chk("plain 분류",      classify_family("B2O3", "compound_set") == ("plain", "B2O3", True))
@@ -406,8 +531,12 @@ def selftest():
     chk("빈 charge_comp 도 unknown", classify_family("B2O3", "")[0] == "unknown")
 
     tmp = pathlib.Path(tempfile.mkdtemp())
+    _seq = [0]
     def write_csv(rows):
-        p = tmp / "c.csv"
+        # ⚠ 파일명을 고정하면 뒤 테스트가 앞 테스트의 CSV 를 덮어써서 서로를 망친다
+        #   (실제로 당했다 — 멱등 검사가 엉뚱한 CSV 를 읽고 SystemExit).
+        _seq[0] += 1
+        p = tmp / f"c{_seq[0]}.csv"
         with open(p, "w", encoding="utf-8", newline="") as fh:
             w = csv.writer(fh)
             w.writerow(["name", "dopant", "charge_compensation"])
@@ -429,7 +558,13 @@ def selftest():
         "__HOST__": {"oxidation_limit_V": 2.14},
     }
     # 음성 ③: CSV 에 이름이 없는 결과(C_x050 vs C_x020)는 추정하지 말고 실패해야 한다
-    chk("음성: CSV 미등재 이름이면 실패", raises(lambda: annotate_families(dict(res), csvp)))
+    chk("음성: CSV 미등재 이름이면 실패",
+        raises(lambda: annotate_families(dict(res), csvp), want="CSV 에 없는"))
+    # 음성 ⑩: raises() 자체가 fail-open 이면 안 된다 — 아무 예외나 통과시키면 실패
+    chk("음성: raises() 는 엉뚱한 예외를 통과시키지 않는다",
+        raises(lambda: (_ for _ in ()).throw(ValueError("boom"))) is False)
+    chk("음성: raises() 는 메시지가 다르면 통과시키지 않는다",
+        raises(lambda: annotate_families(dict(res), csvp), want="전혀 다른 문구") is False)
 
     res["C_x020"] = res.pop("C_x050")
     audit = annotate_families(res, csvp)
@@ -451,7 +586,60 @@ def selftest():
     chk("plain 초과율 1/2", (r["plain"]["n_raises_onset"], r["plain"]["n"]) == (1, 2))
     chk("Clrich 초과율 3/3", (r["Clrich"]["n_raises_onset"], r["Clrich"]["n"]) == (3, 3))
     chk("enrichment 2.0x", r["enrichment_ratio"] == 2.0)
-    chk("missing_baseline 명시", "Cl-rich" in audit["missing_baseline"])
+    chk("missing_baseline 에 Cl-only host 조성", "Li23P4S19Cl5" in audit["missing_baseline"])
+    # ── 반올림 순서 (Codex P1-1) ──────────────────────────────────────────
+    # 실제 캐스케이드 수: plain 17/253, chain 11/17. pct 를 먼저 반올림하면 9.7 이 된다.
+    csvr = write_csv([(f"P{i}", "R2O3", "compound_set") for i in range(253)]
+                     + [(f"C{i}", "R2O3+Clrich", "compound_set_chain") for i in range(17)])
+    resr = {}
+    for i in range(253):
+        resr[f"P{i}"] = {"oxidation_limit_V": 2.2, "host_ox_V_same_phase_set": 2.14,
+                         "delta_ox_vs_host_V": 0.06 if i < 17 else 0.0}
+    for i in range(17):
+        resr[f"C{i}"] = {"oxidation_limit_V": 2.3, "host_ox_V_same_phase_set": 2.14,
+                         "delta_ox_vs_host_V": 0.16 if i < 11 else 0.0}
+    ar = annotate_families(resr, csvr)["onset_raise_rate"]
+    chk("반올림: 원계수에서 한 번만 → 9.63", abs(ar["enrichment_ratio"] - 9.63) < 1e-9)
+    chk("음성: pct 를 먼저 반올림한 9.7 이 아니다", ar["enrichment_ratio"] != 9.7)
+
+    # ── 변환 판정 (Codex P0-1) ────────────────────────────────────────────
+    def wcsv_comp(rows):
+        _seq[0] += 1
+        q = tmp / f"t{_seq[0]}.csv"
+        with open(q, "w", encoding="utf-8", newline="") as fh:
+            w = csv.writer(fh)
+            w.writerow(["name", "dopant", "charge_compensation", "cation_site",
+                        "concentration_label", "composition_Li", "composition_S",
+                        "composition_Cl", "composition_P"])
+            for r in rows: w.writerow(r)
+        return str(q)
+    # exact: ΔLi=-1 ΔS=-1 ΔCl=+1, 나머지 동일
+    csvt = wcsv_comp([
+        ("Ap", "X2O3", "compound_set", "Li_24g", "x002", 18, 17, 4, 4),
+        ("Ac", "X2O3+Clrich", "compound_set_chain", "Li_24g", "x002", 17, 16, 5, 4),
+        ("Bp", "Y2O3", "compound_set", "P_4b", "x002", 28, 17, 4, 2),
+        ("Bc", "Y2O3+Clrich", "compound_set_chain", "Li_24g", "x002", 17, 16, 5, 4),
+    ])
+    rt = {n: {"oxidation_limit_V": 2.3, "host_ox_V_same_phase_set": 2.14,
+              "delta_ox_vs_host_V": 0.16} for n in ("Ap", "Ac", "Bp", "Bc")}
+    at = annotate_families(rt, csvt)
+    chk("exact 변환 판정", rt["Ac"]["matched_transform_status"] == "exact")
+    chk("exact 는 짝 이름을 남긴다", rt["Ac"]["matched_plain_candidate"] == "Ap")
+    # 음성 ⑪: 자리·화학량론이 다르면 exact 라고 하면 안 된다 (B2O3·MoO3·WO3 실제 케이스)
+    chk("음성: 자리/Li/P 가 다르면 multi_transform",
+        rt["Bc"]["matched_transform_status"] == "multi_transform")
+    chk("음성: multi_transform 을 S→Cl 로 설명하지 않는다",
+        "S→Cl 대비가 아니다" in (rt["Bc"]["delta_confound"] or ""))
+    chk("변환 집계", at["matched_transform"]["counts"].get("exact") == 1
+        and at["matched_transform"]["counts"].get("multi_transform") == 1)
+    chk("multi_transform 행 목록", at["matched_transform"]["multi_transform_rows"] == ["Bc"])
+    chk("plain 은 contrast_scope=primary_recipe_vs_host",
+        rt["Ap"]["contrast_scope"] == "primary_recipe_vs_host")
+    chk("음성: plain 도 isolated_dopant_effect 가 아니다",
+        rt["Ap"]["isolated_dopant_effect"] is False)
+    # eligible-slot 대비 (Codex P1-2)
+    el = at["onset_raise_rate"]["eligible_slots_only"]
+    chk("eligible 슬롯 수", el["n_slots"] == 2)
 
     # 멱등: 두 번 돌려도 같은 감사 결과
     audit2 = annotate_families(res, csvp)

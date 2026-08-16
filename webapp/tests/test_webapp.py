@@ -895,7 +895,46 @@ def test_oxidation_onset_carries_its_composition_family():
     rows = {r["dopant"]: r for r in seminar["data"]}
     assert rows["B2O3"]["ox_composition_family"] == "Clrich"
     assert rows["B2O3"]["plain_champion_exists"] == 0
-    assert rows["WO3" if "WO3" in rows else "Sc2O3"]["ox_family_confounded"] == 0
+    # ⛔ 'WO3 가 있으면 WO3, 없으면 Sc2O3' 는 무엇을 검사하는지 불분명하다 (Codex 지적).
+    #   여섯 종을 명시하고, 오염은 B2O3 하나뿐임을 그 집합 안에서 확인한다.
+    assert set(rows) == {"B2O3", "Cr2O3", "Ga2O3", "In2O3", "Sc2O3", "Y2O3"}
+    assert [d for d, r in rows.items() if r["ox_family_confounded"]] == ["B2O3"]
+
+
+def test_chain_family_is_not_described_as_one_s_to_cl_swap():
+    """17행을 하나의 S→Cl 치환군으로 말하면 거짓이다 (Codex P0-1). 10 exact / 7 multi."""
+    pinned = json.loads((ROOT / "db/properties/oxidation_stability_cascade_v3_pinned.json")
+                        .read_text(encoding="utf-8"))
+    mt = pinned["composition_family_audit"]["matched_transform"]
+    assert mt["counts"] == {"exact": 10, "multi_transform": 7}
+    bases = sorted({r.split("_")[0] for r in mt["multi_transform_rows"]})
+    assert bases == ["B2O3", "MoO3", "WO3"]
+    for k, v in pinned["results"].items():
+        if v.get("composition_family") == "Clrich":
+            assert v["matched_transform_status"] in ("exact", "multi_transform",
+                                                     "no_plain_candidate")
+            assert v["contrast_scope"] == "multi_intervention_recipe_vs_host"
+        elif v.get("composition_family") == "plain":
+            assert v["contrast_scope"] == "primary_recipe_vs_host"
+            assert v["isolated_dopant_effect"] is False   # plain 도 순수 도펀트 효과 아님
+
+    rate = pinned["composition_family_audit"]["onset_raise_rate"]
+    assert rate["enrichment_ratio"] == 9.63, "원계수에서 한 번만 반올림 (9.7 은 이중 반올림)"
+    el = rate["eligible_slots_only"]
+    assert (el["n_slots"], el["ratio"]) == (33, 2.59)
+    assert "사후 기술통계" in rate["caveat"]
+
+    # B2O3 충돌은 '순전히 조성 차이' 로 닫지 않는다
+    col = pinned["dft_deep_composition_collision"]["B2O3"]
+    assert col["dft_deep_cell"]["phase_set_id"] is None
+    assert col["validation_link_status"] == "different_composition"
+    b2 = json.loads((ROOT / "db/properties/b2o3_esw.json").read_text(encoding="utf-8"))
+    assert b2["composition_collision_2026_08_16"]["phase_set_match"] == "unverified"
+
+    # 화면 문구도 같이 (chain 전체를 단순 치환으로 단정하면 안 된다)
+    h = _cascade_html()
+    assert "10행" in h and "7행" in h, "exact/multi 분리가 화면에 없다"
+    assert "9.7배" not in h, "이중 반올림 9.7 이 화면에 남아 있다"
 
 
 def test_audit_generator_runs_without_windows_fonts():

@@ -193,15 +193,22 @@
       (270/270 쌍) 이 됐다. host onset 은 84개 phase set 전부에서 <b>2.140 V</b> 로 예외가 없다.
       회수 270 반응 중 <b>124건</b>에 LiS4 가 들어 있고, LiS4 를 빼면 host onset 이
       2.140 → 2.256 V 로 움직인다 — 그건 그대로 남아 있는 민감도다.
-      <div style="margin-top:6px"><b>남은 것: 조성족 섞임.</b> 챔피언 슬롯을
-        <span class="mono">combined_score</span> 최대값이 가져가는데 풀에 plain(<span class="mono">compound_set</span>)
-        과 Cl-rich(<span class="mono">compound_set_chain</span>, S 하나가 Cl 로 치환) 두 변형이 같이 있어
-        <b>270 중 17 슬롯이 Cl-rich 조성</b>이다. host 초과율이 plain 6.7% vs Cl-rich 64.7%
-        (<b>9.7배</b>), Al₂O₃·MoO₃·WO₃ 는 plain 챔피언이 정확히 host(2.140)이고 Cl-rich 형제만 넘는다.
-        <b>B₂O₃ 는 plain 챔피언 자체가 없다</b> — 그래서 표의 2.317 V(+0.177)는 도펀트 효과가 아니라
-        (도펀트 + 음이온 치환)의 합이다. DFT-deep B₂O₃ 셀(<span class="mono">Li58P8S41Cl16B2O3</span>)의
-        onset 은 <b>2.03 V 로 host 아래</b>라 <b>부호가 반대</b>다.
-        분해하려면 도펀트 없는 Cl-rich 기준을 같은 phase set 에서 재야 하는데 아직 없다.</div>
+      <div style="margin-top:6px"><b>남은 것: 효과 귀속(attribution).</b> 챔피언 슬롯을
+        <span class="mono">combined_score</span> 최대값이 가져가는데 풀에 두 generator 변형
+        (<span class="mono">compound_set</span> / <span class="mono">compound_set_chain</span>)이
+        같이 있어 <b>270 중 17 슬롯이 chain recipe 조성</b>이다.
+        <b>⛔ 이 17행이 하나의 S→Cl 치환군이 아니다</b> — plain 형제와 정확히
+        ΔLi=−1·ΔS=−1·ΔCl=+1 인 건 <b>10행</b>뿐이고, 나머지 <b>7행</b>(B₂O₃×3·MoO₃×2·WO₃×2)은
+        치환 자리(<span class="mono">P_4b</span> → <span class="mono">Li_24g</span>)와 Li/P
+        화학량론까지 함께 다르다. host 초과율은 plain 17/253 vs chain 11/17 (<b>9.63배</b>)이고,
+        chain 후보가 실제 있던 33슬롯만 보면 plain 4/16 vs chain 11/17 (<b>2.59배</b>)로 줄어든다 —
+        <b>둘 다 사후 기술통계이지 인과 효과가 아니다</b>(챔피언은 사후 선택, 농도 라벨은 독립 반복 아님).
+        <b>B₂O₃ 는 plain 챔피언 자체가 없다.</b>
+        <span class="mono">Li58P8S41Cl16B2O3</span>(DFT-deep, 2.03 V)와
+        <span class="mono">Li17B2P4S16Cl5O3</span>(cascade, 2.317 V)은 <b>다른 조성</b>이고,
+        legacy 쪽에 <span class="mono">phase_set_id</span>가 없어 부호 반전의 원인을 조성 하나로
+        확정할 수 없다. 분해하려면 H=Li₂₄P₄S₂₀Cl₄ · C=Li₂₃P₄S₁₉Cl₅ · D_plain · D_Cl 네 칸을
+        같은 phase set 에서 재야 한다 — 아직 없다.</div>
       <div style="margin-top:6px"><b>G5</b> 는 <b>method 유효 86</b> 이다 — presence 로 세면 88 이지만
       비물리 탄성(B_hill·G_hill ≤ 0)을 거르면 AlBr₃·MgI₂·Na₂S 가 부분으로 내려간다.</div>
     </div>

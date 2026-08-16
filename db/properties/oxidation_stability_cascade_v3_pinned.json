@@ -30926,7 +30926,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ag2O_x050_cLi48haS4a_s01": {
       "dopant": "Ag2O",
@@ -30957,7 +30964,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ag2O_x100_cLi48haS4a_s03": {
       "dopant": "Ag2O",
@@ -30988,7 +31002,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ag-Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31039,8 +31060,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Al2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Al2O3_x050_cLi24gaS16e_s02": {
       "dopant": "Al2O3",
@@ -31071,7 +31100,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Al2O3_x100_chain_Cl_x200_cLi24gaS16e_s00": {
       "dopant": "Al2O3+Clrich",
@@ -31101,8 +31137,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Al2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31153,7 +31197,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Al2S3_x050_cLi24gaCl4d_s02": {
       "dopant": "Al2S3",
@@ -31183,7 +31234,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Al2S3_x100_cLi24gaS4a_s02": {
       "dopant": "Al2S3",
@@ -31213,7 +31271,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlCl3_x020_cLi24gaCl4d_s00": {
       "dopant": "AlCl3",
@@ -31243,7 +31308,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlCl3_x050_cLi24gaCl4d_s00": {
       "dopant": "AlCl3",
@@ -31273,7 +31345,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlCl3_x100_cLi24gaS4a_s03": {
       "dopant": "AlCl3",
@@ -31303,7 +31382,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31354,7 +31440,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlBr3_x050_cLi24gaS4a_s03": {
       "dopant": "AlBr3",
@@ -31385,7 +31478,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlBr3_x100_cLi24gaS4a_s03": {
       "dopant": "AlBr3",
@@ -31416,7 +31516,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Br-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31468,7 +31575,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlF3_x050_s03": {
       "dopant": "AlF3",
@@ -31499,7 +31613,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlF3_x100_s03": {
       "dopant": "AlF3",
@@ -31530,7 +31651,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Cl-F-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31582,7 +31710,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlI3_x050_s02": {
       "dopant": "AlI3",
@@ -31613,7 +31748,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlI3_x100_s02": {
       "dopant": "AlI3",
@@ -31644,7 +31786,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Cl-I-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31696,7 +31845,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlN_x050_s00": {
       "dopant": "AlN",
@@ -31727,7 +31883,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "AlN_x100_s00": {
       "dopant": "AlN",
@@ -31758,7 +31921,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Al-Cl-Li-N-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31809,8 +31979,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "B2O3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "B2O3_x050_chain_Cl_x200_cLi24gaS4a_s01": {
       "dopant": "B2O3+Clrich",
@@ -31840,8 +32018,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "B2O3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "B2O3_x100_chain_Cl_x200_cLi24gaS16e_s00": {
       "dopant": "B2O3+Clrich",
@@ -31871,8 +32057,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "B2O3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@B-Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -31923,7 +32117,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "BaCl2_x050_cLi24gaCl4d_s02": {
       "dopant": "BaCl2",
@@ -31953,7 +32154,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "BaCl2_x100_cLi24gaCl4d_s02": {
       "dopant": "BaCl2",
@@ -31983,7 +32191,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ba-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32034,7 +32249,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "BaO_x050_cLi24gaS4a_s00": {
       "dopant": "BaO",
@@ -32065,7 +32287,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "BaO_x100_cLi24gaS16e_s01": {
       "dopant": "BaO",
@@ -32096,7 +32325,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ba-Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32148,7 +32384,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ca3N2_x050_s00": {
       "dopant": "Ca3N2",
@@ -32179,7 +32422,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ca3N2_x100_s00": {
       "dopant": "Ca3N2",
@@ -32210,7 +32460,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ca-Cl-Li-N-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32262,7 +32519,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaBr2_x050_cLi24gaCl4d_s03": {
       "dopant": "CaBr2",
@@ -32293,7 +32557,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaBr2_x100_cLi24gaS4a_s02": {
       "dopant": "CaBr2",
@@ -32324,7 +32595,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Br-Ca-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32375,7 +32653,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaCl2_x050_cLi24gaCl4d_s00": {
       "dopant": "CaCl2",
@@ -32405,7 +32690,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaCl2_x100_cLi24gaCl4d_s00": {
       "dopant": "CaCl2",
@@ -32435,7 +32727,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaS_x020_cLi24gaS16e_s00": {
       "dopant": "CaS",
@@ -32465,7 +32764,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaS_x050_cLi24gaS4a_s00": {
       "dopant": "CaS",
@@ -32495,7 +32801,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaS_x100_cLi24gaS16e_s00": {
       "dopant": "CaS",
@@ -32525,7 +32838,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ca-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32576,7 +32896,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaF2_x050_s04": {
       "dopant": "CaF2",
@@ -32607,7 +32934,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaF2_x100_s01": {
       "dopant": "CaF2",
@@ -32638,7 +32972,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ca-Cl-F-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32690,7 +33031,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaO_x050_cLi24gaS16e_s03": {
       "dopant": "CaO",
@@ -32721,7 +33069,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CaO_x100_cLi24gaS4a_s00": {
       "dopant": "CaO",
@@ -32752,7 +33107,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Ca-Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32804,7 +33166,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CoO_x050_cLi24gaS4a_s00": {
       "dopant": "CoO",
@@ -32835,7 +33204,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CoO_x100_cLi24gaS4a_s00": {
       "dopant": "CoO",
@@ -32866,7 +33242,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Co-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -32918,7 +33301,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Cr2O3_x050_cLi24gaS4a_s02": {
       "dopant": "Cr2O3",
@@ -32949,7 +33339,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Cr2O3_x100_cLi24gaS16e_s04": {
       "dopant": "Cr2O3",
@@ -32980,7 +33377,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CrO3_x020_cLi24gaS16e_s01": {
       "dopant": "CrO3",
@@ -33011,7 +33415,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CrO3_x050_cLi24gaS4a_s03": {
       "dopant": "CrO3",
@@ -33042,7 +33453,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CrO3_x100_cLi24gaS4a_s03": {
       "dopant": "CrO3",
@@ -33073,7 +33491,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Cr-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33124,7 +33549,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CrCl3_x050_cLi24gaS4a_s04": {
       "dopant": "CrCl3",
@@ -33154,7 +33586,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "CrCl3_x100_cLi24gaCl4d_s00": {
       "dopant": "CrCl3",
@@ -33184,7 +33623,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Cr-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33235,7 +33681,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Cu2O_x050_cLi24gaS16e_s03": {
       "dopant": "Cu2O",
@@ -33266,7 +33719,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Cu2O_x100_cLi48haS16e_s03": {
       "dopant": "Cu2O",
@@ -33297,7 +33757,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Cu-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33349,7 +33816,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Fe2O3_x050_cLi24gaS4a_s01": {
       "dopant": "Fe2O3",
@@ -33380,7 +33854,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Fe2O3_x100_cLi24gaS16e_s04": {
       "dopant": "Fe2O3",
@@ -33411,7 +33892,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Fe-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33462,7 +33950,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "FeCl3_x050_cLi24gaCl4d_s02": {
       "dopant": "FeCl3",
@@ -33492,7 +33987,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "FeCl3_x100_cLi24gaS4a_s04": {
       "dopant": "FeCl3",
@@ -33522,7 +34024,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Fe-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33573,7 +34082,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ga2O3_x050_cLi24gaS4a_s04": {
       "dopant": "Ga2O3",
@@ -33604,7 +34120,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ga2O3_x100_cLi24gaS4a_s04": {
       "dopant": "Ga2O3",
@@ -33635,7 +34158,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Ga-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33686,7 +34216,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ga2S3_x050_cLi24gaS16e_s02": {
       "dopant": "Ga2S3",
@@ -33716,7 +34253,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ga2S3_x100_cLi24gaS16e_s02": {
       "dopant": "Ga2S3",
@@ -33746,7 +34290,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GaCl3_x020_cLi24gaS4a_s04": {
       "dopant": "GaCl3",
@@ -33776,7 +34327,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GaCl3_x050_cLi24gaS4a_s04": {
       "dopant": "GaCl3",
@@ -33806,7 +34364,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GaCl3_x100_cLi24gaS4a_s04": {
       "dopant": "GaCl3",
@@ -33836,7 +34401,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Ga-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -33887,7 +34459,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GaN_x050_s03": {
       "dopant": "GaN",
@@ -33918,7 +34497,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GaN_x100_s03": {
       "dopant": "GaN",
@@ -33949,7 +34535,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Ga-Li-N-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34001,7 +34594,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Gd2O3_x050_cLi24gaS4a_s00": {
       "dopant": "Gd2O3",
@@ -34032,7 +34632,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Gd2O3_x100_cLi24gaS4a_s00": {
       "dopant": "Gd2O3",
@@ -34063,7 +34670,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Gd-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34115,7 +34729,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GeO2_x050_cP4baS4a_s03": {
       "dopant": "GeO2",
@@ -34146,7 +34767,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GeO2_x100_cP4baS4a_s03": {
       "dopant": "GeO2",
@@ -34177,7 +34805,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Ge-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34228,7 +34863,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GeS2_x050_cP4baS16e_s03": {
       "dopant": "GeS2",
@@ -34258,7 +34900,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "GeS2_x100_cP4baS4a_s03": {
       "dopant": "GeS2",
@@ -34288,7 +34937,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Ge-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34338,7 +34994,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "HfCl4_x050_cLi24gaCl4d_s00": {
       "dopant": "HfCl4",
@@ -34368,7 +35031,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "HfCl4_x100_cLi24gaCl4d_s00": {
       "dopant": "HfCl4",
@@ -34398,7 +35068,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Hf-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34449,7 +35126,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "HfO2_x050_cLi24gaS16e_s01": {
       "dopant": "HfO2",
@@ -34480,7 +35164,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "HfO2_x100_cLi24gaS16e_s01": {
       "dopant": "HfO2",
@@ -34511,7 +35202,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Hf-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34563,7 +35261,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "In2O3_x050_cLi24gaS16e_s02": {
       "dopant": "In2O3",
@@ -34594,7 +35299,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "In2O3_x100_cLi24gaS4a_s03": {
       "dopant": "In2O3",
@@ -34625,7 +35337,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-In-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34677,7 +35396,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "La2O3_x050_cLi24gaS4a_s04": {
       "dopant": "La2O3",
@@ -34708,7 +35434,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "La2O3_x100_cLi24gaS16e_s01": {
       "dopant": "La2O3",
@@ -34739,7 +35472,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-La-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34790,7 +35530,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LaCl3_x050_cLi24gaCl4d_s01": {
       "dopant": "LaCl3",
@@ -34820,7 +35567,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LaCl3_x100_cLi24gaCl4d_s04": {
       "dopant": "LaCl3",
@@ -34850,7 +35604,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-La-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -34901,7 +35662,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LaF3_x050_s00": {
       "dopant": "LaF3",
@@ -34932,7 +35700,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LaF3_x100_s00": {
       "dopant": "LaF3",
@@ -34963,7 +35738,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-La-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35014,7 +35796,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li2O_x050_cLi48haS16e_s00": {
       "dopant": "Li2O",
@@ -35044,7 +35833,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li2O_x100_cLi24gaS4a_s03": {
       "dopant": "Li2O",
@@ -35074,7 +35870,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35123,7 +35926,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li2S_x050_cLi24gaS4a_s02": {
       "dopant": "Li2S",
@@ -35152,7 +35962,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li2S_x100_cLi48haCl4d_s03": {
       "dopant": "Li2S",
@@ -35181,7 +35998,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiCl_x020_cLi48haS4a_s00": {
       "dopant": "LiCl",
@@ -35210,7 +36034,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiCl_x050_cLi24gaCl4d_s02": {
       "dopant": "LiCl",
@@ -35239,7 +36070,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiCl_x100_cLi24gaS4a_s00": {
       "dopant": "LiCl",
@@ -35268,7 +36106,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35317,7 +36162,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li3N_x050_cLi24gaS16e_s02": {
       "dopant": "Li3N",
@@ -35347,7 +36199,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Li3N_x100_cLi24gaS16e_s04": {
       "dopant": "Li3N",
@@ -35377,7 +36236,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-N-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35427,7 +36293,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiBr_x050_cLi48haCl4d_s00": {
       "dopant": "LiBr",
@@ -35457,7 +36330,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiBr_x100_cLi48haCl4d_s00": {
       "dopant": "LiBr",
@@ -35487,7 +36367,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Br-Cl-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35537,7 +36424,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiF_x050_cLi48haCl4d_s01": {
       "dopant": "LiF",
@@ -35567,7 +36461,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiF_x100_cLi24gaCl4d_s01": {
       "dopant": "LiF",
@@ -35597,7 +36498,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35647,7 +36555,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiI_x050_cLi24gaCl4d_s04": {
       "dopant": "LiI",
@@ -35677,7 +36592,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "LiI_x100_cLi24gaCl4d_s00": {
       "dopant": "LiI",
@@ -35707,7 +36629,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-I-Li-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35758,7 +36687,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Mg3N2_x050_s02": {
       "dopant": "Mg3N2",
@@ -35789,7 +36725,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Mg3N2_x100_s02": {
       "dopant": "Mg3N2",
@@ -35820,7 +36763,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Mg-N-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35872,7 +36822,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgBr2_x050_cLi24gaCl4d_s03": {
       "dopant": "MgBr2",
@@ -35903,7 +36860,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgBr2_x100_cLi24gaCl4d_s04": {
       "dopant": "MgBr2",
@@ -35934,7 +36898,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Br-Cl-Li-Mg-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -35985,7 +36956,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgCl2_x050_cLi24gaCl4d_s01": {
       "dopant": "MgCl2",
@@ -36015,7 +36993,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgCl2_x100_cLi24gaCl4d_s01": {
       "dopant": "MgCl2",
@@ -36045,7 +37030,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgS_x020_cLi24gaS16e_s04": {
       "dopant": "MgS",
@@ -36075,7 +37067,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgS_x050_cLi24gaS16e_s01": {
       "dopant": "MgS",
@@ -36105,7 +37104,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgS_x100_cLi24gaCl4d_s00": {
       "dopant": "MgS",
@@ -36135,7 +37141,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Mg-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36186,7 +37199,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgF2_x050_s04": {
       "dopant": "MgF2",
@@ -36217,7 +37237,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgF2_x100_s04": {
       "dopant": "MgF2",
@@ -36248,7 +37275,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-Mg-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36300,7 +37334,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgI2_x050_s00": {
       "dopant": "MgI2",
@@ -36331,7 +37372,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgI2_x100_s02": {
       "dopant": "MgI2",
@@ -36362,7 +37410,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-I-Li-Mg-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36413,8 +37468,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "MgO_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgO_x050_chain_Cl_x200_cLi24gaS16e_s02": {
       "dopant": "MgO+Clrich",
@@ -36444,8 +37507,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "MgO_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MgO_x100_cLi24gaS4a_s02": {
       "dopant": "MgO",
@@ -36476,7 +37547,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Mg-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36528,7 +37606,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MnO_x050_cLi24gaS16e_s03": {
       "dopant": "MnO",
@@ -36559,7 +37644,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MnO_x100_cLi24gaS16e_s03": {
       "dopant": "MnO",
@@ -36590,7 +37682,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Mn-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36642,7 +37741,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MoO3_x050_chain_Cl_x200_cLi24gaS16e_s04": {
       "dopant": "MoO3+Clrich",
@@ -36672,8 +37778,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "MoO3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "MoO3_x100_chain_Cl_x200_cLi24gaS16e_s04": {
       "dopant": "MoO3+Clrich",
@@ -36703,8 +37817,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "MoO3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Mo-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36756,7 +37878,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Na2O_x050_cLi24gaS16e_s00": {
       "dopant": "Na2O",
@@ -36787,7 +37916,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Na2O_x100_cLi48haS4a_s02": {
       "dopant": "Na2O",
@@ -36818,7 +37954,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Na-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36869,7 +38012,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Na2S_x050_cLi24gaCl4d_s00": {
       "dopant": "Na2S",
@@ -36899,7 +38049,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Na2S_x100_cLi24gaCl4d_s00": {
       "dopant": "Na2S",
@@ -36929,7 +38086,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Na-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -36980,7 +38144,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_48h",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NaI_x050_cLi24gaCl4d_s04": {
       "dopant": "NaI",
@@ -37011,7 +38182,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NaI_x100_cLi24gaCl4d_s04": {
       "dopant": "NaI",
@@ -37042,7 +38220,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-I-Li-Na-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37094,7 +38279,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Nb2O5_x050_cP4baS16e_s02": {
       "dopant": "Nb2O5",
@@ -37125,7 +38317,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Nb2O5_x100_cP4baS4a_s02": {
       "dopant": "Nb2O5",
@@ -37156,7 +38355,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Nb-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37207,7 +38413,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NbCl5_x050_cP4baS4a_s03": {
       "dopant": "NbCl5",
@@ -37237,7 +38450,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NbCl5_x100_cP4baS4a_s03": {
       "dopant": "NbCl5",
@@ -37267,7 +38487,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Nb-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37317,8 +38544,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Nd2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Nd2O3_x050_cLi24gaS16e_s01": {
       "dopant": "Nd2O3",
@@ -37349,7 +38584,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Nd2O3_x100_cLi24gaS16e_s01": {
       "dopant": "Nd2O3",
@@ -37380,7 +38622,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Nd-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37431,7 +38680,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NdCl3_x050_cLi24gaCl4d_s01": {
       "dopant": "NdCl3",
@@ -37461,7 +38717,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NdCl3_x100_cLi24gaCl4d_s01": {
       "dopant": "NdCl3",
@@ -37491,7 +38754,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Nd-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37542,7 +38812,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NdF3_x050_s01": {
       "dopant": "NdF3",
@@ -37573,7 +38850,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NdF3_x100_s01": {
       "dopant": "NdF3",
@@ -37604,7 +38888,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-Nd-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37656,7 +38947,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NiO_x050_cLi24gaS16e_s02": {
       "dopant": "NiO",
@@ -37687,7 +38985,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "NiO_x100_cLi24gaS4a_s01": {
       "dopant": "NiO",
@@ -37718,7 +39023,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-Ni-O-P-S": {
       "dopant": "Li24P4S20Cl4",
@@ -37770,7 +39082,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sb2O5_x050_cP4baS16e_s01": {
       "dopant": "Sb2O5",
@@ -37801,7 +39120,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sb2O5_x100_cP4baS16e_s01": {
       "dopant": "Sb2O5",
@@ -37832,7 +39158,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Sb": {
       "dopant": "Li24P4S20Cl4",
@@ -37883,7 +39216,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sb2S3_x050_cP4baS16e_s03": {
       "dopant": "Sb2S3",
@@ -37913,7 +39253,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sb2S3_x100_cP4baCl4d_s04": {
       "dopant": "Sb2S3",
@@ -37943,7 +39290,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Sb": {
       "dopant": "Li24P4S20Cl4",
@@ -37994,7 +39348,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sc2O3_x050_cLi24gaS16e_s02": {
       "dopant": "Sc2O3",
@@ -38025,7 +39386,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sc2O3_x100_chain_Cl_x200_cLi24gaS16e_s03": {
       "dopant": "Sc2O3+Clrich",
@@ -38055,8 +39423,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Sc2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Sc": {
       "dopant": "Li24P4S20Cl4",
@@ -38107,7 +39483,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ScCl3_x050_cLi24gaS4a_s04": {
       "dopant": "ScCl3",
@@ -38137,7 +39520,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ScCl3_x100_cLi24gaCl4d_s04": {
       "dopant": "ScCl3",
@@ -38167,7 +39557,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Sc": {
       "dopant": "Li24P4S20Cl4",
@@ -38218,7 +39615,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ScF3_x050_s01": {
       "dopant": "ScF3",
@@ -38249,7 +39653,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ScF3_x100_s01": {
       "dopant": "ScF3",
@@ -38280,7 +39691,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-P-S-Sc": {
       "dopant": "Li24P4S20Cl4",
@@ -38332,7 +39750,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SiO2_x050_cP4baS4a_s04": {
       "dopant": "SiO2",
@@ -38363,7 +39788,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SiO2_x100_cP4baS16e_s04": {
       "dopant": "SiO2",
@@ -38394,7 +39826,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Si": {
       "dopant": "Li24P4S20Cl4",
@@ -38445,7 +39884,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SiS2_x050_cP4baS4a_s03": {
       "dopant": "SiS2",
@@ -38475,7 +39921,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SiS2_x100_cP4baCl4d_s00": {
       "dopant": "SiS2",
@@ -38505,7 +39958,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Si": {
       "dopant": "Li24P4S20Cl4",
@@ -38555,8 +40015,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Sm2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sm2O3_x050_cLi24gaS16e_s04": {
       "dopant": "Sm2O3",
@@ -38587,7 +40055,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Sm2O3_x100_cLi24gaS16e_s04": {
       "dopant": "Sm2O3",
@@ -38618,7 +40093,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Sm": {
       "dopant": "Li24P4S20Cl4",
@@ -38669,7 +40151,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SmCl3_x050_cLi24gaCl4d_s04": {
       "dopant": "SmCl3",
@@ -38699,7 +40188,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SmCl3_x100_cLi24gaCl4d_s00": {
       "dopant": "SmCl3",
@@ -38729,7 +40225,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Sm": {
       "dopant": "Li24P4S20Cl4",
@@ -38780,7 +40283,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SnO2_x050_cP4baS16e_s01": {
       "dopant": "SnO2",
@@ -38811,7 +40321,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SnO2_x100_cP4baS4a_s04": {
       "dopant": "SnO2",
@@ -38842,7 +40359,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Sn": {
       "dopant": "Li24P4S20Cl4",
@@ -38893,7 +40417,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SnS2_x050_cP4baS16e_s03": {
       "dopant": "SnS2",
@@ -38923,7 +40454,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SnS2_x100_cP4baCl4d_s01": {
       "dopant": "SnS2",
@@ -38953,7 +40491,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Sn": {
       "dopant": "Li24P4S20Cl4",
@@ -39003,7 +40548,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SrCl2_x050_cLi24gaCl4d_s03": {
       "dopant": "SrCl2",
@@ -39033,7 +40585,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SrCl2_x100_cLi24gaS4a_s00": {
       "dopant": "SrCl2",
@@ -39063,7 +40622,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Sr": {
       "dopant": "Li24P4S20Cl4",
@@ -39114,7 +40680,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SrO_x050_cLi24gaS4a_s01": {
       "dopant": "SrO",
@@ -39145,7 +40718,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "SrO_x100_cLi24gaS4a_s01": {
       "dopant": "SrO",
@@ -39176,7 +40756,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Sr": {
       "dopant": "Li24P4S20Cl4",
@@ -39228,7 +40815,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ta2O5_x050_cP4baS4a_s02": {
       "dopant": "Ta2O5",
@@ -39259,7 +40853,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Ta2O5_x100_cP4baS4a_s02": {
       "dopant": "Ta2O5",
@@ -39290,7 +40891,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Ta": {
       "dopant": "Li24P4S20Cl4",
@@ -39341,7 +40949,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TaCl5_x050_cP4baS4a_s02": {
       "dopant": "TaCl5",
@@ -39371,7 +40986,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TaCl5_x100_cP4baS4a_s02": {
       "dopant": "TaCl5",
@@ -39401,7 +41023,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Ta": {
       "dopant": "Li24P4S20Cl4",
@@ -39451,7 +41080,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiCl4_x050_cP4baCl4d_s03": {
       "dopant": "TiCl4",
@@ -39481,7 +41117,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiCl4_x100_cP4baS4a_s01": {
       "dopant": "TiCl4",
@@ -39511,7 +41154,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Ti": {
       "dopant": "Li24P4S20Cl4",
@@ -39562,7 +41212,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiF4_x050_s02": {
       "dopant": "TiF4",
@@ -39593,7 +41250,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiF4_x100_s02": {
       "dopant": "TiF4",
@@ -39624,7 +41288,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-P-S-Ti": {
       "dopant": "Li24P4S20Cl4",
@@ -39676,7 +41347,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiO2_x050_cP4baS4a_s01": {
       "dopant": "TiO2",
@@ -39707,7 +41385,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "TiO2_x100_cP4baS4a_s01": {
       "dopant": "TiO2",
@@ -39738,7 +41423,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Ti": {
       "dopant": "Li24P4S20Cl4",
@@ -39790,7 +41482,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "V2O5_x050_cP4baS4a_s03": {
       "dopant": "V2O5",
@@ -39821,7 +41520,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "V2O5_x100_cP4baS16e_s03": {
       "dopant": "V2O5",
@@ -39852,7 +41558,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-V": {
       "dopant": "Li24P4S20Cl4",
@@ -39903,8 +41616,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "WO3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "WO3_x050_chain_Cl_x200_cLi24gaS16e_s01": {
       "dopant": "WO3+Clrich",
@@ -39934,8 +41655,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 **치환 자리·Li/P 화학량론까지 다르다** — 단순 S→Cl 대비가 아니다. 여러 개입이 동시에 들어간 recipe 대비다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": "multi_transform",
+      "matched_plain_candidate": "WO3_x020_cP4baS16e_s00",
+      "matched_plain_site": "P_4b",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "WO3_x100_cP4baS16e_s01": {
       "dopant": "WO3",
@@ -39966,7 +41695,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-W": {
       "dopant": "Li24P4S20Cl4",
@@ -40018,7 +41754,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Y2O3_x050_cLi24gaS16e_s01": {
       "dopant": "Y2O3",
@@ -40049,7 +41792,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "Y2O3_x100_chain_Cl_x200_cLi24gaS4a_s03": {
       "dopant": "Y2O3+Clrich",
@@ -40079,8 +41829,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "Y2O3_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Y": {
       "dopant": "Li24P4S20Cl4",
@@ -40131,7 +41889,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "YCl3_x050_cP4baCl4d_s03": {
       "dopant": "YCl3",
@@ -40161,7 +41926,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "YCl3_x100_cP4baCl4d_s03": {
       "dopant": "YCl3",
@@ -40191,7 +41963,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Y": {
       "dopant": "Li24P4S20Cl4",
@@ -40242,7 +42021,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "YF3_x050_cP4baCl4d_s02": {
       "dopant": "YF3",
@@ -40273,7 +42059,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "YF3_x100_cLi24gaCl4d_s00": {
       "dopant": "YF3",
@@ -40304,7 +42097,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-P-S-Y": {
       "dopant": "Li24P4S20Cl4",
@@ -40355,8 +42155,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "ZnO_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZnO_x050_chain_Cl_x200_cLi24gaS4a_s00": {
       "dopant": "ZnO+Clrich",
@@ -40386,8 +42194,16 @@
       "charge_compensation": "compound_set_chain",
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": true,
-      "delta_confound": "host 는 plain(Li6PS5Cl) 인데 이 행은 Cl-rich chain 변형(S 하나가 Cl 로 치환)이다. onset 차는 도펀트 효과와 음이온 치환 효과의 **합**이라 분해되지 않는다.",
-      "comparable_to_plain_champions": false
+      "delta_confound": "host 는 plain 이고 이 행은 compound_set_chain generator 산물이다. plain 형제와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이라 조성 대비는 짝지어지지만, 그래도 onset 차는 (도펀트 + 추가 치환)의 합이라 분해되지 않는다.",
+      "comparable_to_plain_champions": false,
+      "generator_variant": "compound_set_chain",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": "exact",
+      "matched_plain_candidate": "ZnO_x020_cLi24gaS16e_s00",
+      "matched_plain_site": "Li_24g",
+      "contrast_scope": "multi_intervention_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZnO_x100_cLi24gaS16e_s04": {
       "dopant": "ZnO",
@@ -40418,7 +42234,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Zn": {
       "dopant": "Li24P4S20Cl4",
@@ -40470,7 +42293,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrBr4_x050_cP4baCl4d_s00": {
       "dopant": "ZrBr4",
@@ -40501,7 +42331,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrBr4_x100_cP4baCl4d_s00": {
       "dopant": "ZrBr4",
@@ -40532,7 +42369,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Br-Cl-Li-P-S-Zr": {
       "dopant": "Li24P4S20Cl4",
@@ -40583,7 +42427,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrCl4_x050_cP4baCl4d_s03": {
       "dopant": "ZrCl4",
@@ -40613,7 +42464,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrCl4_x100_cLi24gaCl4d_s04": {
       "dopant": "ZrCl4",
@@ -40643,7 +42501,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-P-S-Zr": {
       "dopant": "Li24P4S20Cl4",
@@ -40694,7 +42559,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrF4_x050_cLi24gaCl4d_s04": {
       "dopant": "ZrF4",
@@ -40725,7 +42597,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrF4_x100_cP4baCl4d_s01": {
       "dopant": "ZrF4",
@@ -40756,7 +42635,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "Cl_4d",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-F-Li-P-S-Zr": {
       "dopant": "Li24P4S20Cl4",
@@ -40808,7 +42694,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "P_4b",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrO2_x050_cLi24gaS16e_s01": {
       "dopant": "ZrO2",
@@ -40839,7 +42732,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_16e",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "ZrO2_x100_cLi24gaS4a_s01": {
       "dopant": "ZrO2",
@@ -40870,7 +42770,14 @@
       "family_label_consistent": true,
       "delta_ox_vs_host_V_confounded": false,
       "delta_confound": null,
-      "comparable_to_plain_champions": true
+      "comparable_to_plain_champions": true,
+      "generator_variant": "compound_set",
+      "substitution_site": "Li_24g",
+      "anion_site": "S_4a",
+      "matched_transform_status": null,
+      "matched_plain_candidate": null,
+      "contrast_scope": "primary_recipe_vs_host",
+      "isolated_dopant_effect": false
     },
     "__HOST__@Cl-Li-O-P-S-Zr": {
       "dopant": "Li24P4S20Cl4",
@@ -40895,14 +42802,31 @@
     }
   },
   "composition_family_audit": {
-    "discriminator": "cascade CSV charge_compensation (compound_set=plain · compound_set_chain=Clrich)",
-    "why": "(도펀트, 농도라벨) 슬롯을 combined_score 최대값이 가져가는데 후보 풀에 두 설계 변형이 같이 있어서, 슬롯 일부를 plain 이 아닌 Cl-rich 조성이 차지했다. 이름표는 같지만 조성이 다르다.",
+    "discriminator": "cascade CSV charge_compensation (compound_set=plain · compound_set_chain=Clrich). **provenance label 이지 원인 변수가 아니다.**",
+    "why": "(도펀트, 농도라벨) 슬롯을 combined_score 최대값이 가져가는데 후보 풀에 두 설계 변형이 같이 있어서, 슬롯 일부를 plain 이 아닌 chain generator 조성이 차지했다. 이름표는 같지만 조성이 다르다.",
     "host_family": "plain",
     "counts": {
       "Clrich": 17,
       "plain": 253
     },
     "family_label_inconsistent": [],
+    "matched_transform": {
+      "definition": "chain 후보가 같은 base 의 plain 후보와 정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 인가",
+      "counts": {
+        "exact": 10,
+        "multi_transform": 7
+      },
+      "multi_transform_rows": [
+        "B2O3_x020_chain_Cl_x200_cLi24gaS4a_s01",
+        "B2O3_x050_chain_Cl_x200_cLi24gaS4a_s01",
+        "B2O3_x100_chain_Cl_x200_cLi24gaS16e_s00",
+        "MoO3_x050_chain_Cl_x200_cLi24gaS16e_s04",
+        "MoO3_x100_chain_Cl_x200_cLi24gaS16e_s04",
+        "WO3_x020_chain_Cl_x200_cLi24gaS16e_s01",
+        "WO3_x050_chain_Cl_x200_cLi24gaS16e_s01"
+      ],
+      "note": "⛔ 'chain = S 하나가 Cl 로 치환' 은 **전체 family 설명으로 거짓**이다 (Codex P0-1). multi_transform 행은 치환 자리(P_4b vs Li_24g)와 Li/P 화학량론까지 함께 다르다 — 여러 개입이 동시에 들어갔다."
+    },
     "onset_raise_rate": {
       "plain": {
         "n": 253,
@@ -40914,7 +42838,23 @@
         "n_raises_onset": 11,
         "pct": 64.7
       },
-      "enrichment_ratio": 9.7
+      "enrichment_ratio": 9.63,
+      "eligible_slots_only": {
+        "definition": "chain 후보가 실제로 존재한 (base, 농도라벨) 슬롯의 챔피언만. 위 전체 비의 분모에는 chain 후보가 없던 슬롯이 들어 있다.",
+        "n_slots": 33,
+        "plain": {
+          "n": 16,
+          "n_raises_onset": 4,
+          "pct": 25.0
+        },
+        "Clrich": {
+          "n": 17,
+          "n_raises_onset": 11,
+          "pct": 64.7
+        },
+        "ratio": 2.59
+      },
+      "caveat": "⛔ 두 비 모두 **사후 기술통계**다. 챔피언은 combined_score 최대값으로 사후 선택됐고 농도 라벨은 독립 반복이 아니다(실측 x 는 셋 다 0.25). 어느 쪽도 Cl 의 물리 효과 크기로 인용하지 않는다."
     },
     "species_improving_only_as_variant": [
       "Al2O3",
@@ -40924,32 +42864,42 @@
     "species_with_no_plain_champion": [
       "B2O3"
     ],
-    "missing_baseline": "도펀트 없는 Cl-rich 기준(Li_x P4 S16 Cl5)이 **어느 phase set 에도 없다**. 그게 없으면 Cl-rich 행의 Δ 를 (Cl 치환분)+(도펀트분) 으로 분해할 수 없다.",
-    "allowed_statement": "Cl-rich 행은 plain 챔피언과 나란히 놓지 않는다. 인용할 때는 조성식을 같이 적고 '도펀트 효과' 라고 부르지 않는다."
+    "missing_baseline": "도펀트 없는 Cl-only host 기준이 **캐스케이드 phase set 안에 없다**. 4 f.u. host 는 Li24P4S20Cl4 이고, S²⁻ 하나를 Cl⁻ 로 바꾸며 중성을 유지하면 Li23P4S19Cl5 다. 최소 설계는 H_plain·H_Cl·D_plain·D_Cl 네 칸을 같은 phase_set_id 에서 재는 것이고, 그래야 main effect 와 interaction 이 분리된다. (constrained_esw_cl_scan.json 의 Cl 스캔은 LiS4 제외 phase set 이라 절대값 이식 불가 — 참고용이다.)",
+    "allowed_statement": "chain 행은 plain 챔피언과 나란히 놓지 않는다. 인용할 때는 조성식과 치환 자리를 같이 적고 '도펀트 효과' 라고 부르지 않는다. plain 도 host 대비 여러 원자가 함께 바뀌므로 'recipe-level host contrast' 라고 쓴다."
   },
   "dft_deep_composition_collision": {
-    "note": "composition_family_audit 의 파급 중 가장 비싼 한 건. 이 블록은 --annotate 가 덮지 않는다 (감사 블록과 별개 키).",
+    "note": "composition_family_audit 의 파급 중 가장 비싼 한 건. --annotate 가 덮지 않는 별개 키.",
     "B2O3": {
       "cascade_champion": {
         "composition": "Li17B2P4S16Cl5O3",
         "family": "Clrich",
+        "generator_variant": "compound_set_chain",
+        "substitution_site": "Li_24g",
+        "matched_transform_status": "multi_transform",
         "ox_V": 2.317,
-        "delta_vs_host_V": 0.177
+        "delta_vs_host_V": 0.177,
+        "phase_set_id": "257d50d8c59cde8f"
       },
       "dft_deep_cell": {
         "composition": "Li58P8S41Cl16B2O3",
-        "family": "plain-derived (128-atom modelc champion)",
         "ox_V": 2.03,
         "delta_vs_host_V": -0.11,
+        "phase_set_id": null,
+        "entry_ids": null,
+        "mp_version": null,
+        "baseline_label": "LPSCl1.6",
         "source": "db/properties/b2o3_esw.json"
       },
       "host_ox_V": 2.14,
-      "verdict": "같은 방법·같은 chemsys(346 entries)·같은 host 값 — 차이는 순전히 조성. 부호가 반대다."
+      "verdict": "부호가 반대인 것은 관측됐다. 원인을 조성 하나로 확정할 수 **없다** — legacy 기록에 phase_set_id·entry_ids·MP 버전이 없어 같은 경쟁상 집합이었다는 증거가 없다 (2026-08-16 Codex P0-2 로 앞 판 '순전히 조성 차이' 철회).",
+      "validation_link_status": "different_composition",
+      "join_rule": "dopant 라벨(B2O3)만으로 두 기록을 validation 으로 잇지 않는다. composition_formula + composition_hash + method_id + phase_set_id 가 모두 일치할 때만 같은 대상이다."
     },
     "Nd2O3": {
       "checked": true,
       "ox_V": 1.92,
       "family": "plain",
+      "matched_transform_status": null,
       "verdict": "충돌 없음 — 표의 onset 이 plain 챔피언 값이다"
     }
   }

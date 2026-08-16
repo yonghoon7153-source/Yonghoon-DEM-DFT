@@ -36,15 +36,18 @@
   "cascade_champion_composition": "Li17 B2 P4 S16 Cl5 O3 (=B2O3+Clrich, compound_set_chain 변형)",
   "cascade_champion_ox_V": 2.317,
   "host_ox_V": 2.14,
-  "same_method": "둘 다 grand-potential ESW · MP GGA_GGA+U · chemsys B-Cl-Li-O-P-S · 346 entries. cascade 쪽 phase_set_id 257d50d8c59cde8f (MP db 2026.04.13). host 값 2.14 가 양쪽에서 일치하므로 방법 차이가 아니라 조성 차이다.",
-  "sign_flip": "DFT 셀은 host 대비 **-0.11 V (악화)**, cascade Cl-rich 챔피언은 **+0.177 V (개선)**",
-  "why_it_matters": "세미나 표에서 B2O3 만 dft_deep=1 이면서 onset 이 Cl-rich 유래였다. '우리가 DFT 로 깊이 본 종이 산화 창을 넓힌다' 는 문장은 이 두 조성을 이어붙인 것이라 성립하지 않는다.",
-  "forbidden_statement": "B2O3 가 산화 onset 을 +0.177 V 올린다 (DFT 로 검증된 조성은 오히려 -0.11 V)",
-  "allowed_statement": "Cl-rich chain 변형 Li17B2P4S16Cl5O3 의 grand-potential onset 은 2.317 V 로 host(2.14 V)보다 높다. DFT-deep 셀 Li58P8S41Cl16B2O3 의 onset 은 2.03 V 로 host 보다 낮다.",
+  "retraction_2026_08_16": "⛔ 앞 판은 '둘 다 chemsys B-Cl-Li-O-P-S · 346 entries · host 2.14 일치이므로 방법이 아니라 순전히 조성 차이' 라고 적었다. **철회한다** (Codex P0-2). 이 파일에는 entry ID 목록도 phase_set_id 도 MP 스냅샷 버전도 제외상 목록도 없다. entry 개수와 chemsys 가 같다는 것은 **정렬된 entry-ID 집합이 같다는 증거가 아니다.** 게다가 이쪽 baseline 라벨은 'LPSCl1.6' 이고 cascade host 는 Li6PS5Cl 계열이라 host 조성 자체가 같은지도 확인되지 않았다.",
+  "method_status": "unverified — phase_set_id · entry_ids · MP version 없음",
+  "phase_set_match": "unverified",
+  "composition_match": false,
+  "forbidden_statement": "① 'B2O3 가 산화 onset 을 +0.177 V 올린다' ② '같은 방법에서 순전히 조성 차이로 부호가 뒤집힌다' — ②는 legacy phase set 을 pin 하기 전엔 못 쓴다.",
+  "allowed_statement": "서로 다른 두 B2O3 함유 조성 기록에서 host 대비 onset 부호가 반대로 보인다. 명목 방법과 chemsys 는 비슷하지만 legacy phase-set identity 가 없어 원인을 조성 하나로 확정할 수 없다.",
+  "what_would_close_it": "두 조성(Li58P8S41Cl16B2O3, Li17B2P4S16Cl5O3)과 각자의 host 를 **하나의 pinned entry set** 에서 다시 계산한다. MP 질의만 필요하다.",
   "cross_ref": [
    "db/properties/oxidation_stability_cascade_v3_pinned.json (composition_family_audit)",
    "db/properties/cascade_seminar_oxidation_transport_47.csv (ox_composition_family)",
-   "kb/methodology/cascade_composition_family_2026_08_16.md"
+   "kb/methodology/cascade_composition_family_2026_08_16.md",
+   "docs/reviews/cascade_f9adc9d2_codex_review_2026_08_16.md"
   ]
  }
 }
