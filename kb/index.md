@@ -229,7 +229,7 @@
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_source_ledger.md` — Research Seminar — Slide Source Ledger
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_terminology_symbols.md` — Research Seminar — 용어·기호 규약
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
-- `kb/seminars/cascade_dopant_screening_story_2026_08.md` — LPSCl 도펀트 스크리닝 — 연구세미나 대본 (story 판) ○미열람
+- `kb/seminars/cascade_dopant_screening_story_2026_08.md` — LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v3 · 덱과 1:1) ○미열람
 - `kb/seminars/cascade_final_release_review_2026_08_11.md` — 최종 release 감사 보고 — Research_Seminar_2026_08_cascade_final (28장)
 - `kb/seminars/cascade_release_speaker_script_v2_ko.md` — 발표 대본 v2 — Research_Seminar_2026_08_cascade_release (29장, A3b 레이더 포함)
 - `kb/seminars/cascade_seminar_2026_08_build_v3.md` — 🎤 Research Seminar **BUILD SHEET v3** — 사진만 붙이면 끝나는 판
