@@ -901,6 +901,23 @@ def test_oxidation_onset_carries_its_composition_family():
     assert [d for d, r in rows.items() if r["ox_family_confounded"]] == ["B2O3"]
 
 
+def test_b2o3_page_does_not_claim_a_same_composition_validation():
+    """도펀트 라벨만으로 두 조성을 validation 으로 잇지 않는다 (Codex f9 P0-3)."""
+    j = D.CASCADE_JOIN_STATUS["b2o3"]
+    assert j["validation_link_status"] == "different_composition"
+    assert j["composition_match"] is False
+    assert j["phase_set_match"] == "unverified"
+    assert j["dft_deep_ox_V"] < j["host_ox_V"] < j["cascade_ox_V"], "부호 충돌이 사라졌다"
+    c = A.app.test_client()
+    h = c.get("/composition/b2o3").get_data(as_text=True)
+    assert "Li58P8S41Cl16B2O3" in h and "Li17B2P4S16Cl5O3" in h, "두 조성식이 나란히 없다"
+    assert "같은 조성의 검증이 아니다" in h
+    assert "그 <b>DFT 심층검증</b>이에요" not in h, "옛 validation 문구가 남아 있다"
+    # Nd2O3 는 plain 챔피언이라 이 경고를 달면 안 된다
+    hn = c.get("/composition/modelc_nd_doped").get_data(as_text=True)
+    assert "같은 조성의 검증이 아니다" not in hn
+
+
 def test_chain_family_is_not_described_as_one_s_to_cl_swap():
     """17행을 하나의 S→Cl 치환군으로 말하면 거짓이다 (Codex P0-1). 10 exact / 7 multi."""
     pinned = json.loads((ROOT / "db/properties/oxidation_stability_cascade_v3_pinned.json")

@@ -224,6 +224,7 @@ def composition(cid):
         # ⚠ ICOHP JSON 과 COHP 곡선 CSV 는 독립이다 (comp2 는 곡선만 있다) — 따로 넘긴다
         cohp_curves=D.cohp_curves_for(cid), elf_curves=D.elf_curves_for(cid),
         cascade_dopant=dop, cascade_meta=D.CASCADE_META,
+        cascade_join=D.CASCADE_JOIN_STATUS.get(cid),
         cascade_rows=D.cascade_rows_for(dop) if dop else None,
         canonical=D.canonical_values(cid),
         canonical_status=D.canonical_status_for(cid), MM=D.metric_meta(),

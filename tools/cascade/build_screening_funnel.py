@@ -1023,7 +1023,7 @@ def main():
             f"'큐레이션된 {NP}종 도펀트 후보를 문헌(Xiao/Sendek/Kahle) 표준 게이트 순서로 재표현하면 "
             "어디서 몇 종이 떨어지는지를 보인 뷰'."
             + ("  ⛔ 그리고 이 판(_v2)은 **미검증 진단물**이다 — 막는 것은 결측이 아니라 "
-               "**게이트 정의**다: G3 는 record-complete 90 / method-comparable 0 "
+               "**게이트 정의**다: G3 는 phase-set comparable 270/270 이지만 효과 귀속 0/17 "
                "(phase_set_id 미기록), G4 는 blocking 이 BVS 를 덮어쓰는 순환, "
                "G5 는 로스터 상대 median 이다. 순위·통과 수를 결과로 인용하면 안 된다."
                if _SUF else

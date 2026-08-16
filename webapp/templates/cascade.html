@@ -313,7 +313,7 @@
       <tr><td>47종 리더보드 · Pareto</td><td><span class="badge err">superseded</span></td>
           <td>⛔ 결과로 인용 금지. 계산이 덜 끝난 시점의 <b>취합 경계</b>였다</td></tr>
       <tr><td>89종 재랭킹 · 깔때기</td><td><span class="badge warn">diagnostic</span></td>
-          <td>⛔ 미검증 진단물. G3 method-comparable 0 · G4 순환 · G5 로스터 상대</td></tr>
+          <td>⛔ 미검증 진단물. G3 효과 귀속 0/17 (phase-set 비교는 270/270 닫힘) · G4 순환 · G5 로스터 상대</td></tr>
       <tr><td>DFT 심층검증</td><td><span class="badge ok">{{ deep_map|length }}건</span></td>
           <td>✅ {{ deep_map.keys()|join(' · ') }} — 조성 페이지의 DFT 값만이 실제 신뢰선</td></tr>
     </tbody></table></div>
@@ -941,7 +941,7 @@
     <div class="callout cal-danger" style="margin:0 0 12px;font-size:.84rem">
       <b>이 탭의 랭킹·깔때기는 결과가 아니라 진단물이다.</b> 아직 검증 절차를 거치지 않았고
       게이트 정의가 안 닫혔다 — <b>원고·발표에 순위로 인용하지 말 것.</b>
-      원자료(270 champion)와 ESW 는 <b>record-complete 90</b> 이지만 ESW 는 <b>method-comparable 0</b> 이다 (phase_set_id 미기록). 내려받아 쓰되 <b>'그대로 사용 가능' 이 아니다.</b>
+      원자료(270 champion)와 ESW 는 <b>record-complete 90</b> 이고 ESW 의 <b>phase-set 비교는 270/270 닫혔다</b>(phase_set_id 기록). 다만 <b>효과 귀속은 0/17</b> 이다 — chain generator 17행 중 10행만 plain 형제와 정확 대응이고 7행은 치환 자리까지 다르다. 내려받아 쓰되 <b>'그대로 사용 가능' 이 아니다.</b>
     </div>
     <div class="callout cal-warning" style="margin:0 0 12px">
       <div class="cal-b" style="font-size:.82rem">

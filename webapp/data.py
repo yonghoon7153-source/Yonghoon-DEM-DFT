@@ -936,11 +936,15 @@ CASCADE_V2_META = {
     "status": {
         # 축별 완성도를 다르게 표시한다 — 89종 파생을 90종 최종판처럼 보이게 하지 않는다.
         "raw":       ("complete",   "90종 원자료 (champions · litransport) — 270 champion 전수 회수"),
-        "oxidation": ("partial",    "**record-complete 90 / method-comparable 0.** 기록은 90종 전부 있고 "
-                                    "옛 141건과 ox_V 차이 0 이지만, 파생표가 phase_set_id 를 떨어뜨렸고 "
-                                    "plain/Cl-rich 지지가 섞여 있어 **같은 method 로 비교한 것이 0종**이다. "
-                                    "회수 270 반응 중 124건에 LiS4 가 들어 있고, LiS4 를 빼면 host onset 이 "
-                                    "2.140 → 2.256 V 로 움직인다 — 'complete · 그대로 사용 가능' 이 아니다"),
+        # ★ 2026-08-16 — phase_set_id 를 싣고 host 를 같은 실행에서 재면서 method 비교는
+        #   270/270 으로 닫혔다. 대신 **효과 귀속**이 열려 있다 (Codex f9 재감사).
+        "oxidation": ("partial",    "**record-complete 90 · phase-set comparable 270/270 · 효과 귀속 0/17.** "
+                                    "candidate 와 host 를 같은 실행·같은 pinned entry set 에서 재고 "
+                                    "phase_set_id 를 기록해 method 비교는 닫혔다. 그러나 챔피언 270행 중 "
+                                    "17행이 compound_set_chain generator 산물이고 그중 10행만 plain 형제와 "
+                                    "정확히 ΔLi=-1·ΔS=-1·ΔCl=+1 이다 — 7행(B₂O₃·MoO₃·WO₃)은 치환 자리와 "
+                                    "Li/P 까지 다르다. 회수 270 반응 중 124건에 LiS4 가 있고 빼면 host onset 이 "
+                                    "2.140 → 2.256 V — 'complete · 그대로 사용 가능' 이 아니다"),
         "ranked":    ("incomplete", "89 of 90 — 완결성은 사실상 해결(완전 88 · 부분 1 MgI₂). "
                                     "AlI₃ 만 champion(rank_combined==1) 에 gate 입력이 없다. "
                                     "⛔ 남은 blocker 는 결측이 아니라 **점수의 타당성**이다 — score_blockers 참조"),
@@ -1138,6 +1142,45 @@ CASCADE_META = {
 }
 # 조성 노드 ↔ 캐스케이드 도펀트 (스크리닝 히트의 DFT 심층검증)
 CASCADE_DOPANT = {"modelc_nd_doped": "Nd2O3", "b2o3": "B2O3"}
+
+# ⛔⛔ 2026-08-16 (Codex f9 재감사 P0-3) — **도펀트 이름은 조성이 아니다.**
+#   위 표는 조성 페이지와 캐스케이드 챔피언을 라벨로 잇는다. B2O3 에서 그 둘은
+#   서로 다른 조성이다:
+#       DFT-deep 페이지  Li58 P8 S41 Cl16 B2 O3   onset 2.03  V (host 아래)
+#       cascade 챔피언   Li17 B2 P4 S16 Cl5 O3    onset 2.317 V (host 위)
+#   그래서 "스크리닝이 고른 조성의 DFT 심층검증" 이라고 쓰면 거짓이다. 링크는 남기되
+#   (다음 계산 대상 선정에 쓰인다) **validation 이라고 부르지 않는다.**
+#   validation 으로 인정하려면 composition_formula + composition_hash + method_id +
+#   phase_set_id 가 모두 일치해야 한다.
+CASCADE_JOIN_STATUS = {
+    "b2o3": {
+        "validation_link_status": "different_composition",
+        "composition_match": False,
+        "phase_set_match": "unverified",
+        "method_family_match": "reported",
+        "dft_deep_formula": "Li58P8S41Cl16B2O3",
+        "dft_deep_ox_V": 2.03,
+        "cascade_formula": "Li17B2P4S16Cl5O3",
+        "cascade_ox_V": 2.317,
+        "cascade_generator_variant": "compound_set_chain",
+        "cascade_substitution_site": "Li_24g",
+        "host_ox_V": 2.14,
+        "why": ("도펀트 라벨만 같고 조성이 다르다. legacy DFT 기록에는 phase_set_id·entry_ids·"
+                "MP 버전이 없어 같은 경쟁상 집합이었다는 증거도 없다 — 부호 반전은 관측됐지만 "
+                "원인을 조성 하나로 확정할 수 없다."),
+    },
+    "modelc_nd_doped": {
+        "validation_link_status": "same_family_unverified",
+        "composition_match": None,
+        "phase_set_match": "unverified",
+        "method_family_match": "reported",
+        "cascade_formula": "Li18Nd2P4S17Cl4O3",
+        "cascade_ox_V": 1.92,
+        "cascade_generator_variant": "compound_set",
+        "why": ("chain 변형이 아니라 plain 챔피언이라 조성족 혼동은 없다. 다만 DFT 셀과 "
+                "캐스케이드 조성이 같다는 것도 아직 조성식 대조로 확인하지 않았다."),
+    },
+}
 
 
 def load_cascade() -> dict:
@@ -3155,7 +3198,7 @@ def dashboard_highlights() -> list:
         hi.append({"t": "도핑 스크리닝 — 승인된 current ranking 0종",
                    "v": f"역사 47종 스냅샷 1위: {top['dopant']} ⚠ superseded",
                    "n": ("2026-06-29 취합 경계의 순위다 — 완주분은 90종이고 재랭킹은 게이트 정의"
-                         "(G3 method-comparable 0 · G4 순환 · G5 로스터 상대)가 닫힌 뒤에 한다. "
+                         "(G3 효과 귀속 0/17 · G4 순환 · G5 로스터 상대)가 닫힌 뒤에 한다. "
                          "DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐 · UMA 절대값은 상대비교 전용")})
     # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
     #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
