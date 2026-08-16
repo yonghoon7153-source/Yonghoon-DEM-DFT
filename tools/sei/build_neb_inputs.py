@@ -311,7 +311,10 @@ def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
     #        지문이 그대로였다(todo #27 이 오면 바로 물릴 함정).
     payload = {"tag": tag, "ecutwfc": ECUTWFC, "ecutrho": ECUTRHO, "q": q,
                "images": a.images, "path_thr": a.path_thr, "kpts": list(kpts),
-               "nat": nat, "min_l": a.min_l,
+               "nat": nat, "min_l": a.min_l, "min_l_basis": a.min_l_basis,
+               "cell_perp_widths_A": [round(x, 3) for x in perp],
+               "min_perp_width_A": round(min(perp), 3),
+               "min_cell_A_is_vector_length": True,
                "cell": [round(float(x), 6) for v in cell for x in v],
                "smearing": smear, "degauss": degauss,
                "electronic_class": (ecls or {}).get("class"),
@@ -342,9 +345,30 @@ def build(tag, path, disp, a, pool):
                     "skip": f"이완본 없음({why}) — run_sei_dft.sh 먼저. "
                             f"(비이완으로 강행하려면 --allow_unrelaxed · li3p Ea=0 사고 참조)"}
         relaxed_out = why                      # 성공 시 why 자리에 출처 경로가 온다
+    # ⛔⛔ 2026-08-16 — 옛 판은 **격자벡터 길이**로 슈퍼셀을 골랐다. 그런데 공공-공공
+    #   주기 상호작용을 정하는 건 벡터 길이가 아니라 **주기면 사이 수직 거리**
+    #   d_i = V / |a_j × a_k| 다. 비직교 셀에서 둘은 크게 다르다:
+    #     li3nd 2×2×2 : 벡터 10.37 Å → 실제 이미지 거리 **8.47 Å**  (min_l 10 을 통과했지만 미달)
+    #     li2s  3×3×3 : 벡터 12.10 Å → 실제 **9.88 Å**              (역시 미달)
+    #   같은 규칙을 통과한 두 상의 실제 이미지 거리가 1.17배 달랐다 — 규칙이 재려던 걸
+    #   안 재고 있었다. 이제 수직 폭으로 고른다.
+    #   ⚠ 그래서 같은 --min_l 값이라도 옛 판보다 큰 셀이 나온다 (의도된 변화).
+    #   옛 동작이 필요하면 --min_l_basis vector.
     L = at0.cell.lengths()
-    rep = tuple(max(1, int(np.ceil(a.min_l / x))) for x in L)
+    if a.min_l_basis == "perp":
+        C = np.asarray(at0.cell.array, float)
+        V = abs(float(np.linalg.det(C)))
+        base = [V / float(np.linalg.norm(np.cross(C[(i + 1) % 3], C[(i + 2) % 3])))
+                for i in range(3)]
+    else:
+        base = list(L)
+    rep = tuple(max(1, int(np.ceil(a.min_l / x))) for x in base)
     at = at0.repeat(rep)
+    # 실제로 확보된 수직 폭을 meta 에 싣는다 (벡터 길이와 헷갈리지 않게)
+    _C = np.asarray(at.cell.array, float)
+    _V = abs(float(np.linalg.det(_C)))
+    perp = [_V / float(np.linalg.norm(np.cross(_C[(i + 1) % 3], _C[(i + 2) % 3])))
+            for i in range(3)]
     els = sorted(set(at.get_chemical_symbols()))
     miss = [e for e in els if e not in pool]
     if miss:
@@ -635,7 +659,11 @@ def main():
     ap.add_argument("--work", default=WORK)
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--min_l", type=float, default=10.0,
-                    help="셀 축 최소 길이 [Å] — 공공-공공 주기 상호작용을 줄인다")
+                    help="공공-공공 주기 거리의 최소값 [Å] (기본 기준 = 주기면 수직 폭)")
+    ap.add_argument("--min_l_basis", choices=("perp", "vector"), default="perp",
+                    help="min_l 을 무엇으로 재나. perp = 주기면 수직 거리(기본, 물리적으로 "
+                         "옳다) · vector = 격자벡터 길이(2026-08-16 이전 동작, 비직교 셀에서 "
+                         "이미지 거리를 과대평가한다)")
     ap.add_argument("--images", type=int, default=7, help="NEB 이미지 수 (끝 2개 포함)")
     ap.add_argument("--nstep", type=int, default=100)
     ap.add_argument("--path_thr", type=float, default=0.05, help="경로 수렴 [eV/Å]")

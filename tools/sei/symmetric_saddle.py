@@ -48,6 +48,8 @@ ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)
 #: 끝점 에너지 축퇴 문턱 [eV] — 이보다 크면 대칭 홉으로 안 본다.
 #:  0.229 eV 장벽 대비 20 meV 는 9% — 그 이상 어긋나면 중점이 안장점이라는 전제가 흔들린다.
 ENDPOINT_TOL_EV = 0.020
+#: 고정 대상 원자가 끝점 사이에서 움직여도 되는 한계 [Å] — 넘으면 Ea 오염 (리뷰 F2)
+FROZEN_SHIFT_TOL_A = 0.05
 
 
 def _pos_block(txt, start):
@@ -152,6 +154,38 @@ def min_image(d, cell):
     return best
 
 
+def _symmetry_gate(meta, ini_out, fin_out):
+    """대칭 근거를 판정한다 → (basis, warn, |ΔE|, meta의 sym).
+
+    ⛔ build 와 build_frozen 이 **같은 게이트**를 타야 한다. 리뷰 F1: 고정셸 경로가
+    이 검사를 통째로 건너뛰어, 모듈 docstring 이 "거부한다" 고 적은 비대칭 홉이
+    그냥 통과했다. 중점법의 전제(안장 = 중점)는 두 경로에 똑같이 필요하다.
+    """
+    sym = meta.get("endpoints_symmetry_equivalent")
+    e1 = final_energy(ini_out) if os.path.isfile(ini_out) else None
+    e2 = final_energy(fin_out) if os.path.isfile(fin_out) else None
+    de = abs(e2 - e1) if (e1 is not None and e2 is not None) else None
+    if sym is True:
+        return "meta.endpoints_symmetry_equivalent=true (spglib orbit)", None, de, sym
+    if de is not None and de <= ENDPOINT_TOL_EV:
+        return (f"measured endpoint degeneracy |ΔE| = {de*1000:.1f} meV "
+                f"≤ {ENDPOINT_TOL_EV*1000:.0f} meV",
+                ("⚠ spglib 판정(meta)이 없어 **끝점 에너지 축퇴**로만 통과했다. 이는 필요조건이지 "
+                 "충분조건이 아니다 — 같은 홉이 더 작은 셀에서 대칭 동등으로 확인됐는지 함께 볼 것."),
+                de, sym)
+    return None, None, de, sym
+
+
+def _symmetry_refusal(tag, sym, de):
+    return (f"⛔ {tag}: 대칭 근거가 없다 — 중점법을 쓸 수 없다.\n"
+            f"   meta.endpoints_symmetry_equivalent = {sym!r}\n"
+            f"   끝점 에너지 차 |ΔE| = "
+            + (f"{de*1000:.1f} meV (> {ENDPOINT_TOL_EV*1000:.0f} meV 문턱)" if de is not None
+               else "측정 불가") + "\n"
+            f"   비대칭 홉은 안장점이 중점에 없다. full NEB 을 쓸 것.\n"
+            f"   (정말 강행하려면 --force — 근거를 db 에 남길 것)")
+
+
 def build(work, tag, force=False, allow_unconverged=False):
     d = os.path.join(work, tag)
     meta_p = os.path.join(d, "meta.json")
@@ -169,33 +203,9 @@ def build(work, tag, force=False, allow_unconverged=False):
     if [s for s, _ in first] != [s for s, _ in last]:
         return 1, f"⛔ {tag}: 두 끝점의 원자 목록이 다르다 — 같은 계가 아니다"
 
-    # ── 대칭 게이트 ────────────────────────────────────────────────────────
-    #  ⛔ 비대칭 홉이면 안장점이 중점에 없다. 두 근거 중 하나면 통과시키되 **어느 쪽인지 적는다**:
-    #    (a) meta 의 spglib orbit 판정 (`endpoints_symmetry_equivalent: true`)
-    #    (b) **측정된 끝점 에너지 축퇴** — 이완된 두 끝점 에너지가 같다
-    #  (b) 를 넣은 이유 (2026-08-16): cc333 은 build 가 "끝점 미이완" 으로 조기 반환해
-    #  meta.json 이 아예 없다. 그렇다고 재생성하면 .ep_hash 가 달라져 이미 돌린 끝점
-    #  relax 를 버린다. 그리고 (b) 는 메타데이터가 아니라 **실측**이라 더 낫다.
-    #  ⚠ 다만 (b) 는 필요조건이지 충분조건이 아니다 — 대칭 비동등한 두 자리가 우연히
-    #    같은 에너지일 수 있다. (b) 만으로 통과하면 경고를 남긴다.
-    sym = meta.get("endpoints_symmetry_equivalent")
-    e_ini, e_fin = final_energy(ini_out), final_energy(fin_out)
-    de = (abs(e_fin - e_ini) if (e_ini is not None and e_fin is not None) else None)
-    basis, warn = None, None
-    if sym is True:
-        basis = "meta.endpoints_symmetry_equivalent=true (spglib orbit)"
-    elif de is not None and de <= ENDPOINT_TOL_EV:
-        basis = f"measured endpoint degeneracy |ΔE| = {de*1000:.1f} meV ≤ {ENDPOINT_TOL_EV*1000:.0f} meV"
-        warn = ("⚠ spglib 판정(meta)이 없어 **끝점 에너지 축퇴**로만 통과했다. 이는 필요조건이지 "
-                "충분조건이 아니다 — 같은 홉이 더 작은 셀에서 대칭 동등으로 확인됐는지 함께 볼 것.")
+    basis, warn, de, sym = _symmetry_gate(meta, ini_out, fin_out)
     if basis is None and not force:
-        return 1, (f"⛔ {tag}: 대칭 근거가 없다 — 중점법을 쓸 수 없다.\n"
-                   f"   meta.endpoints_symmetry_equivalent = {sym!r}\n"
-                   f"   끝점 에너지 차 |ΔE| = "
-                   + (f"{de*1000:.1f} meV (> {ENDPOINT_TOL_EV*1000:.0f} meV 문턱)" if de is not None
-                      else "측정 불가") + "\n"
-                   f"   비대칭 홉은 안장점이 중점에 없다. full NEB 을 쓸 것.\n"
-                   f"   (정말 강행하려면 --force — 근거를 db 에 남길 것)")
+        return 1, _symmetry_refusal(tag, sym, de)
     if basis is None:
         basis = "⛔ --force (대칭 근거 없음)"
 
@@ -267,7 +277,7 @@ def build(work, tag, force=False, allow_unconverged=False):
                f"   실행:  cd {sd} && mpirun -np <N> pw.x -in relax.in > relax.out")
 
 
-def collect(work, tag, radius=None):
+def collect(work, tag, radius=None, allow_unconverged=False):
     d = os.path.join(work, tag)
     if radius:
         base = os.path.join(d, f"frozen_R{radius:g}")
@@ -279,6 +289,21 @@ def collect(work, tag, radius=None):
     for p in (ep, sd):
         if not os.path.isfile(p):
             return 1, f"⛔ 없음: {p}"
+    # ⛔ 리뷰 F5 — 옛 판은 JOB DONE 도 수렴도 안 봤다. 아직 도는 중인 relax.out 에서
+    #   깔끔한 Ea 가 나왔다(실측 재현). 에너지 줄이 있으면 무조건 읽었기 때문이다.
+    bad = []
+    for name, p in (("endpoint", ep), ("saddle", sd)):
+        txt = open(p, encoding="utf-8", errors="replace").read()
+        if "JOB DONE" not in txt:
+            bad.append(f"{name}: 아직 안 끝났다 (JOB DONE 없음)")
+            continue
+        if "Begin final coordinates" not in txt:
+            f = last_force(txt)
+            bad.append(f"{name}: 이완 미수렴 (마지막 힘 {f} Ry/au"
+                       + (f" = {f*25.711:.2f} eV/Å" if f else "") + ")")
+    if bad and not allow_unconverged:
+        return 1, ("⛔ 회수 거부 — 아래를 감수하려면 --allow_unconverged:\n   "
+                   + "\n   ".join(bad))
     e_end, e_sad = final_energy(ep), final_energy(sd)
     if e_end is None or e_sad is None:
         return 1, "⛔ 총에너지를 못 읽었다"
@@ -299,10 +324,13 @@ def collect(work, tag, radius=None):
                    else "symmetric-midpoint constrained relax (2 SCF relaxations, not NEB)"),
         "relax_radius_A": radius,
         "supercell": meta.get("supercell"), "min_cell_A": meta.get("min_cell_A"),
+        "converged": not bad,
+        "convergence_notes": bad,
         "caveat": ("대칭 홉 전제. 절대값 인용 전에 다른 셀에서 같은 방법으로 한 번 더 재고 "
                    "차이를 볼 것 — 이 도구의 용도가 그 비교다."),
     }
-    return 0, (f"{tag} ({out['root']}, 셀 {out['supercell']}, 최소변 {out['min_cell_A']} Å)\n"
+    return 0, ((f"⚠ {' · '.join(bad)}\n" if bad else "")
+               + f"{tag} ({out['root']}, 셀 {out['supercell']}, 최소변 {out['min_cell_A']} Å)\n"
                f"  E_endpoint = {e_end:.6f} eV\n"
                f"  E_saddle   = {e_sad:.6f} eV\n"
                f"  ── Ea      = {ea:.4f} eV ──\n"
@@ -335,6 +363,17 @@ def build_frozen(work, tag, radius, force=False):
     for f in (ini_in, fin_in):
         if not os.path.isfile(f):
             return 1, f"⛔ 없음: {f} — build_neb_inputs.py 로 끝점 입력부터 만들 것"
+
+    # ⛔ 리뷰 F1 — build 와 **같은** 대칭 게이트를 탄다 (중점=안장 전제가 동일하므로)
+    meta_p = os.path.join(d, "meta.json")
+    meta = json.load(open(meta_p, encoding="utf-8")) if os.path.isfile(meta_p) else {}
+    basis, warn, de, sym = _symmetry_gate(
+        meta, os.path.join(d, "ep_initial", "relax.out"),
+        os.path.join(d, "ep_final", "relax.out"))
+    if basis is None and not force:
+        return 1, _symmetry_refusal(tag, sym, de)
+    if basis is None:
+        basis = "⛔ --force (대칭 근거 없음)"
 
     first = parse_input_positions(ini_in)
     last = parse_input_positions(fin_in)
@@ -384,20 +423,34 @@ def build_frozen(work, tag, radius, force=False):
     tail = src[src.index("K_POINTS"):]
     outd = os.path.join(d, f"frozen_R{radius:g}")
 
+    mid = [(s, [first[i][1][k] + disp[i][k] / 2.0 for k in range(3)])
+           for i, (s, _) in enumerate(first)]
+
+    # ⛔⛔ 리뷰 F2 — 고정 원자는 **두 파일에서 같은 좌표**여야 한다.
+    #   옛 판은 끝점에 first[i], 안장에 mid[i] 를 썼다. 변위가 0 이 아닌 원거리 원자는
+    #   두 계산에서 서로 다른 위치에 못박히고, 이완으로 풀 수도 없으니 그 차이가
+    #   **그대로 Ea 에 들어간다**. 실측 재현: 0.4 Å 강체 오프셋이 게이트를 통과했다.
+    #   → 고정 원자는 양쪽 다 mid[i] 를 쓴다(= 두 끝점의 평균, 대칭점).
+    frozen_shift = max((dn[i] for i in range(len(dn)) if freeze[i]), default=0.0)
+    if frozen_shift > FROZEN_SHIFT_TOL_A and not force:
+        return 1, (f"⛔ 고정 대상 원자가 끝점 사이에서 {frozen_shift:.3f} Å 움직인다 "
+                   f"(문턱 {FROZEN_SHIFT_TOL_A} Å) — 국소 홉이 아니거나 반경이 너무 작다.\n"
+                   f"   고정 원자를 한 좌표에 못박으면 그 차이가 Ea 에 직접 들어간다. "
+                   f"--relax_radius 를 키울 것 (--force 로 강행 가능)")
+
     def emit(sub, rows, fix_moving):
         os.makedirs(os.path.join(outd, sub), exist_ok=True)
         h = head.replace(f"prefix          = '{tag}_ep_initial'",
                          f"prefix          = '{tag}_frozen_{sub}'")
         L = [h.rstrip("\n"), "", "ATOMIC_POSITIONS angstrom"]
         for i, (s, p) in enumerate(rows):
-            # 원거리 = 완전 고정 · 뛰는 원자는 안장에서만 고정
-            fx = "  0 0 0" if (freeze[i] or (fix_moving and i == j)) else ""
-            L.append(f"  {s:3s} %16.10f %16.10f %16.10f{fx}" % tuple(p))
+            frz = freeze[i]
+            # 고정 원자는 **양쪽 동일 좌표**(mid) · 자유 원자는 각 상태의 좌표
+            pos = mid[i][1] if frz else p
+            fx = "  0 0 0" if (frz or (fix_moving and i == j)) else ""
+            L.append(f"  {s:3s} %16.10f %16.10f %16.10f{fx}" % tuple(pos))
         L += ["", tail.rstrip("\n")]
         open(os.path.join(outd, sub, "relax.in"), "w").write("\n".join(L) + "\n")
-
-    mid = [(s, [first[i][1][k] + disp[i][k] / 2.0 for k in range(3)])
-           for i, (s, _) in enumerate(first)]
     emit("endpoint", first, fix_moving=False)
     emit("saddle", mid, fix_moving=True)
 
@@ -409,6 +462,14 @@ def build_frozen(work, tag, radius, force=False):
         "moving_atom_index_0based": j, "moving_atom_symbol": first[j][0],
         "hop_distance_A": round(dmax, 4), "second_largest_displacement_A": round(others, 4),
         "cell_perp_widths_A": [round(x, 3) for x in widths],
+        "min_perp_width_A": round(dmin, 3),
+        "cell_vector_lengths_A": [round(_norm(v), 3) for v in cell],
+        "supercell": meta.get("supercell"),
+        "min_cell_A": meta.get("min_cell_A"),
+        "symmetry_basis": basis,
+        "symmetry_warning": warn,
+        "endpoint_energy_diff_eV": (round(de, 6) if de is not None else None),
+        "max_frozen_atom_shift_A": round(frozen_shift, 4),
         "started_from": "relax.in (ideal) — relax.out 의 표류 구조를 승계하지 않는다",
         "contract": ("끝점과 안장이 **같은 중심·반경·자유집합**을 쓴다. "
                      "다른 셀과 비교하려면 그 셀도 같은 radius 로 이 도구를 돌릴 것. "
@@ -423,7 +484,9 @@ def build_frozen(work, tag, radius, force=False):
                f"   반경 {radius} Å · 자유 {n_free}/{len(first)}원자 "
                f"(자유도 {3*n_free} / {3*len(first)}, {100*n_free/len(first):.0f}%)\n"
                f"   중심 = 홉 중점 · 홉 {dmax:.3f} Å (2위 변위 {others:.3f}) · "
-               f"셀 수직폭 {[round(x,1) for x in widths]} Å\n"
+               f"고정원자 최대 이동 {frozen_shift:.3f} Å\n"
+               f"   셀 수직폭 {[round(x,1) for x in widths]} Å (최소 {dmin:.2f}) · "
+               f"슈퍼셀 {meta.get('supercell')} · 대칭근거 {basis}\n"
                f"   ⚠ 끝점·안장이 같은 자유집합을 쓴다. **다른 셀도 같은 radius 로** 돌릴 것.\n"
                f"   실행 (순서대로, 같은 노드):\n"
                f"     cd {outd}/endpoint && mpirun -np <N> pw.x -in relax.in > relax.out\n"
@@ -575,13 +638,113 @@ def selftest():
 
     # collect
     sd = os.path.join(td, "good", "saddle")
+    # ⚠ F5 가드가 생겨서 fixture 도 **끝난 relax** 여야 한다 (JOB DONE + final coordinates).
+    #   옛 fixture 는 둘 다 없었는데 통과했다 — 그게 F5 가 잡은 결함이다.
     open(os.path.join(sd, "relax.out"), "w").write(
+        "Begin final coordinates\nATOMIC_POSITIONS angstrom\n"
+        "  Li  0.0 0.0 0.0\nEnd final coordinates\n"
         "     Total force =     0.000123\n"
         "!    total energy              =    -99.9832 Ry\nJOB DONE.\n")
     rc, msg = collect(td, "good")
     chk(rc == 0 and "Ea" in msg, "collect 가 Ea 를 낸다")
     ea = json.loads(msg.split("JSON: ")[1])["Ea_eV"]
     chk(abs(ea - (0.0168 * 13.605693122994)) < 1e-3, f"Ea 가 ΔE 와 맞는다 ({ea:.4f} eV)")
+
+    # ══ 고정셸 경로 (리뷰 F3 — 이 170줄이 selftest 에 하나도 없었다) ══════════
+    import math as _m
+    CELL = [[14.0, 0, 0], [0, 14.0, 0], [0, 0, 14.0]]
+
+    def mkf(tag, sym, ini, fin, cell=CELL, e_fin="-100.0000"):
+        d = os.path.join(td, tag)
+        for n in ("ep_initial", "ep_final"):
+            os.makedirs(os.path.join(d, n), exist_ok=True)
+        json.dump({"endpoints_symmetry_equivalent": sym, "supercell": [3, 3, 3],
+                   "min_cell_A": 15.56}, open(os.path.join(d, "meta.json"), "w"))
+        hdr = ("&CONTROL\n    calculation     = 'relax'\n"
+               f"    prefix          = '{tag}_ep_initial'\n/\n"
+               "&SYSTEM\n    ibrav           = 0\n/\n\nATOMIC_SPECIES\n  Li 6.94 li.UPF\n\n")
+        k = ("K_POINTS automatic\n  2 2 2 0 0 0\n\nCELL_PARAMETERS angstrom\n"
+             + "".join("  %16.10f %16.10f %16.10f\n" % tuple(v) for v in cell))
+        for n, rows, en in (("ep_initial", ini, "-100.0000"), ("ep_final", fin, e_fin)):
+            body = "ATOMIC_POSITIONS angstrom\n" + "".join(
+                f"  {s:3s} {x:16.10f} {y:16.10f} {z:16.10f}\n" for s, (x, y, z) in rows)
+            open(os.path.join(d, n, "relax.in"), "w").write(hdr + body + "\n" + k)
+            open(os.path.join(d, n, "relax.out"), "w").write(
+                "Begin final coordinates\n" + body + "End final coordinates\n"
+                f"!    total energy              =    {en} Ry\nJOB DONE.\n")
+        return d
+
+    # 뛰는 Li 하나 + 근거리 이웃 + 원거리 원자들
+    # 자유 원자 ≥ 8 가드를 만족하도록 근거리를 현실적으로 채운다
+    NEAR = [("Li", (7.0, 0.0, 0.0)), ("Li", (0.0, 3.0, 0.0)), ("Li", (0.0, -3.0, 0.0)),
+            ("Li", (1.8, 2.5, 0.0)), ("Li", (1.8, -2.5, 0.0)), ("Li", (1.8, 0.0, 2.5)),
+            ("Li", (1.8, 0.0, -2.5)), ("Li", (3.0, 3.0, 0.0))]
+    FAR = [("Li", (0.0, 0.0, 6.5)), ("Li", (6.5, 6.5, 6.5))]
+    A2 = [("Li", (0.0, 0.0, 0.0))] + NEAR + FAR
+    B2 = [("Li", (3.667, 0.0, 0.0))] + NEAR + FAR
+    mkf("fz", True, A2, B2)
+    rc, msg = build_frozen(td, "fz", 4.0)
+    chk(rc == 0, "[고정셸] 대칭 홉이면 입력을 만든다")
+    fd = os.path.join(td, "fz", "frozen_R4")
+    chk(os.path.isfile(os.path.join(fd, "endpoint", "relax.in"))
+        and os.path.isfile(os.path.join(fd, "saddle", "relax.in")),
+        "[고정셸] endpoint·saddle 둘 다 생긴다")
+
+    def rows_of(f):
+        L = open(f).read().splitlines()
+        i = [n for n, l in enumerate(L) if l.startswith("ATOMIC_POSITIONS")][0]
+        out = []
+        for l in L[i + 1:]:
+            q = l.split()
+            if len(q) >= 4 and re.match(r"^[A-Z][a-z]?$", q[0]):
+                out.append((q[0], [float(x) for x in q[1:4]], "0 0 0" in l))
+            elif out:
+                break
+        return out
+    E = rows_of(os.path.join(fd, "endpoint", "relax.in"))
+    S = rows_of(os.path.join(fd, "saddle", "relax.in"))
+    chk(len(E) == len(S) == 1 + len(NEAR) + len(FAR), "[고정셸] 원자 수 보존")
+    chk([r[2] for r in E][1:] == [r[2] for r in S][1:],
+        "[고정셸] 고정/자유 집합이 endpoint·saddle 에서 동일하다")
+    # ★ F2 회귀: 고정 원자는 두 파일에서 **같은 좌표**
+    same = all(abs(a[1][k] - b[1][k]) < 1e-9 for a, b in zip(E, S) if a[2]
+               for k in range(3))
+    chk(same, "[핵심 F2] 고정 원자가 endpoint·saddle 에서 같은 좌표다")
+    chk(sum(1 for r in E if r[2]) >= 1, "[고정셸] 원거리 원자가 실제로 고정된다")
+    chk(not E[0][2] and S[0][2], "[고정셸] 뛰는 원자는 끝점에서 자유·안장에서 고정")
+    fm = json.load(open(os.path.join(fd, "frozen_meta.json")))
+    chk(fm.get("supercell") == [3, 3, 3] and fm.get("min_perp_width_A"),
+        "[핵심 F4] frozen_meta 에 셀 식별정보가 있다")
+    chk(fm.get("symmetry_basis") and fm.get("max_frozen_atom_shift_A") is not None,
+        "[F4] 대칭근거·고정원자 이동량을 기록한다")
+
+    # ── 음성 ──
+    mkf("fz_asym", False, A2, B2, e_fin="-99.0000")
+    rc, msg = build_frozen(td, "fz_asym", 4.0)
+    chk(rc == 1 and "대칭 근거가 없다" in msg, "[핵심 F1] 고정셸도 비대칭 홉을 거부한다")
+
+    rc, msg = build_frozen(td, "fz", 8.0)          # 14 Å 셀의 절반 = 7 Å
+    chk(rc == 1 and "수직폭의 절반" in msg, "[음성] 반경이 셀 절반을 넘으면 거부")
+
+    rc, msg = build_frozen(td, "fz", 0.5)          # 자유 원자 거의 없음
+    chk(rc == 1, "[음성] 반경이 너무 작으면 거부")
+
+    # ★ F2 회귀 (음성): 원거리 원자가 끝점 사이에서 움직이면 거부
+    FARM = [("Li", (0.0, 0.0, 6.5)), ("Li", (6.9, 6.5, 6.5))]   # 원거리 하나가 0.4 Å 이동
+    mkf("fz_shift", True, [("Li", (0.0, 0.0, 0.0))] + NEAR + FAR,
+        [("Li", (3.667, 0.0, 0.0))] + NEAR + FARM)
+    rc, msg = build_frozen(td, "fz_shift", 4.0)
+    chk(rc == 1 and "고정 대상 원자가" in msg,
+        "[핵심 F2] 고정 대상이 움직이면 거부한다 (Ea 오염 방지)")
+
+    # ★ F5 회귀: 안 끝난 relax.out 에서 Ea 를 만들지 않는다
+    for sub in ("endpoint", "saddle"):
+        open(os.path.join(fd, sub, "relax.out"), "w").write(
+            "!    total energy              =    -100.0000 Ry\n")   # JOB DONE 없음
+    rc, msg = collect(td, "fz", 4.0)
+    chk(rc == 1 and "JOB DONE" in msg, "[핵심 F5] 아직 도는 중이면 회수를 거부한다")
+    rc, msg = collect(td, "fz", 4.0, allow_unconverged=True)
+    chk(rc == 0 and "Ea" in msg, "[F5] --allow_unconverged 면 경고와 함께 회수")
 
     shutil.rmtree(td, ignore_errors=True)
     print("selftest", "PASS" if ok else "FAIL")
@@ -603,10 +766,15 @@ def main():
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.relax_radius is not None and a.relax_radius <= 0:
+        # ⛔ 리뷰 F6 — 진리값으로 분기하면 0 이 전이완(수일짜리)으로 조용히 샌다
+        print("⛔ --relax_radius 는 0 보다 커야 한다 (고정셸 반경 [Å]). "
+              "전이완을 원하면 이 옵션을 아예 빼라")
+        return 2
     if a.relax_radius and not a.collect:
         rc, msg = build_frozen(a.work, a.tag, a.relax_radius, a.force)
     elif a.collect:
-        rc, msg = collect(a.work, a.tag, a.relax_radius)
+        rc, msg = collect(a.work, a.tag, a.relax_radius, a.allow_unconverged)
     else:
         rc, msg = build(a.work, a.tag, a.force, a.allow_unconverged)
     print(msg)
