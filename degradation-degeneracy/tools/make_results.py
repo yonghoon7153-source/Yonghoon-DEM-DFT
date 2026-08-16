@@ -150,7 +150,8 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
     thr = (g or {}).get("gap_thresh", 0.06)
     if "n_near_exact_equal" not in v or "max_true_pe_ne_gap" not in v:
         # 구버전 artifact — 구성을 모른다. 지어내지 않고 모른다고 쓴다.
-        return {"headline": f"이 {n}점의 참값 구성은 이 artifact 에 기록되어 있지 않다",
+        return {"known": False,
+                "headline": f"이 {n}점의 참값 구성은 이 artifact 에 기록되어 있지 않다",
                 "detail": "구버전 `verdict_22p` 라 구성을 인용하려면 재생성이 필요하다",
                 "wide": f"wide-gap(≥{_pp(thr, 0)}) 포함 여부를 확인할 수 없으므로"}
     k = int(v["n_near_exact_equal"])
@@ -165,7 +166,7 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
     wide = (f"여기에 wide-gap(≥{_pp(thr, 0)})은 **하나도 없으므로**" if mx < thr
             else f"여기에 wide-gap(≥{_pp(thr, 0)})이 섞여 있으나 n={n} 의 국소 "
                  f"표본이므로")
-    return {"headline": headline, "detail": detail, "wide": wide}
+    return {"known": True, "headline": headline, "detail": detail, "wide": wide}
 
 
 def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
@@ -508,14 +509,22 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         try:
             from tools.compare_cases import _scored as _scored_fn
             from tools.compare_objectives import run_compare as _rc
-            cmp_res = _rc(in_dir, write=False,
-                          df=_scored_fn(in_dir / "fits.parquet", 0.02))
+            _scored_df = _scored_fn(in_dir / "fits.parquet", 0.02)
+            cmp_res = _rc(in_dir, write=False, df=_scored_df)
             # figures 는 계산 산출물이 아니라 그림 경로 목록 — 저장본에서만 온다
             if isinstance(saved_cmp, dict) and saved_cmp.get("figures"):
                 cmp_res["figures"] = saved_cmp["figures"]
             if (in_dir / "objective_comparison.yaml").exists() \
                     and not _numbers_equal(saved_cmp, cmp_res):
                 stale.append("objective_comparison.yaml")
+            # ★ 17차 사전 — 22p 근방의 참값 구성은 **렌더 전용 파생값**이다.
+            #   verdict_22p 의 반환에 넣었더니 봉인된 objective_comparison.yaml
+            #   과 key 집합이 달라져 F87 이 stale 을 올렸다(v4 재생성에서 인용
+            #   금지 배너 실측). 그러므로 **stale 대조가 끝난 뒤에** 주입한다.
+            from tools.compare_objectives import p22_truth_composition as _p22c
+            for _o, _v in (cmp_res.get("verdict_22p") or {}).items():
+                if isinstance(_v, dict) and "error" not in _v:
+                    _v.update(_p22c(_scored_df, _o, _v.get("noise", 0.0)))
         except Exception as e:  # noqa: BLE001
             cmp_res = saved_cmp
             stale.append(f"objective_comparison.yaml (재계산 실패: {e})")
@@ -947,7 +956,11 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         #   근방은 참 격차가 **작을 뿐**이고, 그것만으로도 논지는 성립한다.
         _v22 = (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {}
         _c22 = _p22_composition(_v22, gaps.get("pocv_dvdq"))
-        P.append(f"22p 근방 격자점은 **참 격차가 작다** — {_c22['detail']}. "
+        _intro = (f"22p 근방 격자점은 **참 격차가 작다** — {_c22['detail']}."
+                  if _c22["known"] else
+                  f"22p 근방 격자점의 참값 구성은 이 artifact 에 기록되어 있지 "
+                  f"않다 — {_c22['detail']}.")
+        P.append(f"{_intro} "
                  f"거기서 복원값이 비슷하게 나오는 건 아무 증거가 못 된다. "
                  f"물어야 할 것은 반대 방향이다 — **참값이 뚜렷이 다를 때도 "
                  f"fitting이 둘을 같다고 말하는가.**\n")

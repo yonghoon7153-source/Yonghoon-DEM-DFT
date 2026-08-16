@@ -121,6 +121,40 @@ def to_markdown(tbl: pd.DataFrame) -> str:
 
 # ---------------------------------------------------------------- 22p 판정
 
+def _near_22p(df: pd.DataFrame, objective: str, noise: float, radius: float):
+    """22p 근방 표본 선택 — `verdict_22p` 와 구성 helper 가 **같은 표본**을 봐야 한다."""
+    sub = df[df["objective"] == objective]
+    if "noise" in sub.columns:
+        sub = sub[sub["noise"] == noise]
+    if sub.empty:
+        return None, None
+    d = np.sqrt(sum((sub[k] - v) ** 2 for k, v in EXP_22P.items()))
+    near = sub[d <= radius]
+    if near.empty:                       # 격자에 정확히 없으면 최근접 1점
+        near = sub.loc[[d.idxmin()]]
+    return near, d
+
+
+def p22_truth_composition(df: pd.DataFrame, objective: str = "pocv_dvdq",
+                          noise: float = 0.0, radius: float = 0.021) -> dict:
+    """22p 근방 표본의 **참값 구성** — 보고서 렌더 전용 파생값.
+
+    ★ 16차 발견 4 (17차 사전). 보고서가 "절반은 PE=NE, wide-gap 은 하나도
+    없다" 를 문자열 상수로 박아 두면 반경·step·noise 를 바꾸는 순간
+    provenance 통과 배지를 단 채 거짓을 말한다. 구성은 데이터에서 나와야 한다.
+
+    ★ 그런데 이 값을 `verdict_22p` 의 반환에 넣으면 안 된다 — 그러면 봉인된
+    `objective_comparison.yaml` 의 key 집합과 재계산본이 달라져 F87 이 정당하게
+    stale 을 올리고(실제로 v4 재생성에서 인용 금지 배너가 떴다), 8시간 재실행
+    없이는 되돌릴 수 없다. 렌더 시점에 fits 정본에서 따로 뽑는다.
+    """
+    near, _ = _near_22p(df, objective, noise, radius)
+    if near is None:
+        return {}
+    return {"n_near_exact_equal": int((near["pe_ne_gap_true"] == 0).sum()),
+            "max_true_pe_ne_gap": float(near["pe_ne_gap_true"].max())}
+
+
 def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
                 noise: float = 0.0, radius: float = 0.021) -> dict:
     """22p 실험 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 복원 성적.
@@ -128,16 +162,9 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
     ★ 이 프로젝트의 질문에 직접 답하는 함수다.
     격자 간격이 0.02이므로 반경 0.021이면 인접 격자점까지 포함한다.
     """
-    sub = df[df["objective"] == objective]
-    if "noise" in sub.columns:
-        sub = sub[sub["noise"] == noise]
-    if sub.empty:
+    near, d = _near_22p(df, objective, noise, radius)
+    if near is None:
         return {"error": f"조건 없음 (objective={objective}, noise={noise})"}
-
-    d = np.sqrt(sum((sub[k] - v) ** 2 for k, v in EXP_22P.items()))
-    near = sub[d <= radius]
-    if near.empty:                       # 격자에 정확히 없으면 최근접 1점
-        near = sub.loc[[d.idxmin()]]
 
     rec = bool(near["recoverable"].all()) if "recoverable" in near.columns else True
     out = {
@@ -153,12 +180,6 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
         "pe_ne_antisym_frac": float(near["pe_ne_antisym"].mean()),
         "recovered_pe_ne_gap": float(near["pe_ne_gap_recovered"].mean()),
         "true_pe_ne_gap": float(near["pe_ne_gap_true"].mean()),
-        # ★ 16차 발견 4 (17차 사전) — 근방 표본의 **참값 구성**. 보고서가
-        #   "절반은 PE=NE, wide-gap 은 하나도 없다" 를 문자열 상수로 박아
-        #   두면 격자·반경이 달라지는 순간 provenance 통과 배지를 단 채
-        #   거짓을 말한다. 구성은 데이터에서 나와야 한다.
-        "n_near_exact_equal": int((near["pe_ne_gap_true"] == 0).sum()),
-        "max_true_pe_ne_gap": float(near["pe_ne_gap_true"].max()),
     }
     if "degenerate_corrected" in near.columns:
         out["degenerate_frac_corrected"] = float(near["degenerate_corrected"].mean())

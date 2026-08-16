@@ -3103,16 +3103,8 @@ def test_gap_section_intro_does_not_claim_all_22p_points_are_equal(tmp_path):
         "격차 절 도입부가 22p 근방이 모두 PE=NE 라는 거짓 전제를 다시 말한다"
 
 
-def test_verdict_22p_reports_truth_composition():
-    """★ 근방 표본의 참값 구성은 **데이터에서** 나와야 한다.
-
-    보고서가 "절반은 PE=NE, 절반은 2%p", "wide-gap 은 하나도 없다" 를 문자열
-    상수로 박아두면 다른 격자·반경에서 그대로 거짓이 된다. verdict_22p 가
-    구성을 직접 보고하게 만든다.
-    """
-    from tools.compare_objectives import verdict_22p
-
-    # 근방에 PE=NE 1점 + 격차 4%p 1점만 두는 격자 (반경 안에 들어오게 배치)
+def _p22_frame():
+    """근방에 PE=NE 1점 + 격차 4%p 1점만 두는 격자 (반경 안에 들어오게 배치)."""
     rows = []
     for i, (pe, ne) in enumerate([(0.13, 0.13), (0.13, 0.09)]):
         rows.append({
@@ -3121,11 +3113,68 @@ def test_verdict_22p_reports_truth_composition():
             "lli_hat": 0.17, "lam_pe_hat": pe, "lam_ne_hat": ne,
             "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
         })
-    v = verdict_22p(_scored(pd.DataFrame(rows)), "pocv_dvdq", radius=0.05)
+    return pd.DataFrame(rows)
 
-    assert v["n_near"] == 2
-    assert v["n_near_exact_equal"] == 1, v
-    assert v["max_true_pe_ne_gap"] == pytest.approx(0.04), v
+
+def test_p22_truth_composition_comes_from_data():
+    """★ 근방 표본의 참값 구성은 **데이터에서** 나와야 한다.
+
+    보고서가 "절반은 PE=NE, 절반은 2%p", "wide-gap 은 하나도 없다" 를 문자열
+    상수로 박아두면 다른 격자·반경에서 그대로 거짓이 된다.
+    """
+    from tools.compare_objectives import p22_truth_composition
+
+    c = p22_truth_composition(_scored(_p22_frame()), "pocv_dvdq", radius=0.05)
+
+    assert c["n_near_exact_equal"] == 1, c
+    assert c["max_true_pe_ne_gap"] == pytest.approx(0.04), c
+
+
+def test_p22_composition_stays_out_of_sealed_comparison_schema():
+    """★ 17차 사전 — 렌더 전용 파생값을 봉인 YAML schema 에 넣으면 안 된다.
+
+    구성을 `verdict_22p` 반환에 넣었더니, 봉인된 `objective_comparison.yaml`
+    (v4, 그 key 가 없던 시절) 과 재계산본의 **key 집합**이 달라져 F87 이
+    정당하게 stale 을 올렸다 — v4 보고서 재생성에서 인용 금지 배너가 실제로
+    떴다. 8시간 재실행 없이는 되돌릴 수 없는 종류의 실수다.
+
+    fixture 로는 못 잡는 결함이다(같은 코드가 저장본을 쓰면 항상 일치한다).
+    그래서 **schema 자체**를 검사한다.
+    """
+    from tools.compare_objectives import verdict_22p
+
+    v = verdict_22p(_scored(_p22_frame()), "pocv_dvdq", radius=0.05)
+
+    for k in ("n_near_exact_equal", "max_true_pe_ne_gap"):
+        assert k not in v, (
+            f"`{k}` 가 verdict_22p 반환에 들어갔다 — 봉인된 "
+            f"objective_comparison.yaml 과 key 집합이 달라져 stale 이 뜬다")
+
+
+def test_report_renders_p22_composition_without_going_stale(tmp_path):
+    """★ 위 제약을 지키면서도 보고서에는 구성이 나와야 한다.
+
+    저장본(`objective_comparison.yaml`)이 구성 key 를 갖고 있지 않아도
+    보고서는 fits 정본에서 뽑아 렌더하고, stale·인용 금지 배너는 뜨지 않는다.
+    """
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    # 구성은 **fits 정본에서** 뽑히므로 fits.parquet 이 있어야 경로가 태워진다
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)          # 저장본을 봉인 — 구성 key 는 여기 없다
+    text = build(d, tmp_path / "RESULTS.md", repo_root=tmp_path).read_text(encoding="utf-8")
+
+    # (이 fixture 는 manifest·run_spec 이 없어 인용 금지 배너 자체는 항상 뜬다.
+    #  검사 대상은 **파생 stale 이 추가로 뜨는가** 다.)
+    assert "파생_stale_objective_comparison.yaml" not in text, \
+        "렌더 전용 구성 주입이 봉인 대조를 깨뜨렸다"
+    assert "PE=NE 가 " in text, "구성이 보고서에 렌더되지 않았다"
 
 
 def test_conclusion_22p_composition_is_not_hardcoded():
