@@ -678,7 +678,11 @@ def test_threshold_caveat_always_in_conclusion(tmp_path):
     run_compare(d, d)
     text = build(d, tmp_path / "R.md", repo_root=tmp_path).read_text(encoding="utf-8")
 
-    head = text[:text.index("## 목적함수 4종 비교")]      # 결론 구간만
+    # ★ 18차 발견 2 — 제목의 종수는 이제 표에서 나온다 (하드코딩 4 였다)
+    import re as _re
+    _m = _re.search(r"^## 목적함수 \d+종 비교$", text, _re.M)
+    assert _m, "목적함수 비교 절 제목을 못 찾았다"
+    head = text[:_m.start()]                              # 결론 구간만
     assert "임계 설정에 의존한다" in head
     assert "격차 오차가 필요한데" in head
 
@@ -2889,6 +2893,11 @@ def _gap_cmp_res():
             "gap_collapse_frac": 1 / 245, "false_split_frac": 0.6326530612244898,
             "mean_true_gap_wide": 0.099, "mean_recovered_gap_wide": 0.104,
             "shrinkage": 1.06, "likelihood_ratio_equal": 90.0,
+            # ★ 18차 발견 1 — 이 key 가 없으면 임계 의존 문단 자체가 렌더되지
+            #   않아, "관측 가능한 범위" 문장 검사가 **분기를 안 태우고** 통과했다.
+            "collapse_requires_gap_err": 0.04, "gap_err_median": 0.026,
+            "gap_err_p99": 0.057, "collapse_margin_median": -0.082,
+            "collapse_margin_max": -0.011, "n_wide_gap_toward_collapse": 121,
             "lr_sensitivity_min": 2.47, "lr_sensitivity_max": 113.7,
             "lr_sensitivity_median": 16.83, "lr_is_local_spike": True,
         }},
@@ -2938,7 +2947,9 @@ def test_conclusion_unrecoverable_is_domain_not_physics():
 
     txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 2952}))
     assert "원리적으로 복원 불가" not in txt, "물리 명제로 읽히는 표현이 남아 있다"
-    assert "feasible domain" in txt or "표현 가능" in txt, txt[-600:]
+    # ★ 18차 발견 3 — `feasible domain` 토큰을 요구하던 assertion 을 바꾼다.
+    #   실제 판정은 α-window eligibility criterion 이다.
+    assert "eligibility" in txt, txt[-600:]
 
 
 def test_conclusion_numbering_is_sequential():
@@ -3607,3 +3618,191 @@ def test_sensitivity_says_when_the_two_same_definitions_coincide():
     assert "66" in txt, txt
 
     assert _same_def_overlap_note(same + diff, tol=0.05, gap_thresh=0.06) == ""
+
+
+# ── 18차 발견 1 — collapse_measurable 은 붕괴 관측 가능성을 증명하지 않는다 ──
+
+def test_collapse_measurable_is_gone():
+    """★ 18차 발견 1 — 부호와 행별 필요량을 버린 지표다.
+
+    `|recovered − true|` 의 p99 를 모든 행 공통 `gap_thresh − tol` 과 비교했다.
+    붕괴에는 (a) `true − recovered > 0` 방향과 (b) 행마다 다른 필요 감소량
+    `true − tol` 이 필요한데 둘 다 버린다. 반례: true 0.10 → recovered 0.20 은
+    붕괴와 **정반대** 방향인데 절대오차 0.10 으로 measurable 판정을 받는다.
+    게다가 같은 결과에서 뽑은 오차분포로 그 결과의 낮은 사건률을 방어하므로
+    논리도 순환적이다.
+    """
+    from tools.compare_objectives import gap_analysis
+
+    df = pd.DataFrame({"objective": ["x"], "noise": [0.0], "recoverable": [True],
+                       "pe_ne_gap_true": [0.10], "pe_ne_gap_recovered": [0.20]})
+    g = gap_analysis(df, "x")
+
+    assert "collapse_measurable" not in g, g
+    assert g["gap_collapse_frac"] == 0.0
+
+
+def test_collapse_margin_is_signed_and_row_wise():
+    """★ 대체 지표 — 부호 있는 행별 여유(margin)를 기술통계로만 낸다.
+
+    margin = (참 격차 − 복원 격차) − (참 격차 − tol)
+           = tol − 복원 격차
+    즉 복원 격차가 tol 아래로 얼마나 더 내려가야 붕괴인가. 양수면 이미 붕괴.
+    """
+    from tools.compare_objectives import gap_analysis
+
+    df = pd.DataFrame({
+        "objective": ["x"] * 3, "noise": [0.0] * 3, "recoverable": [True] * 3,
+        "pe_ne_gap_true": [0.10, 0.10, 0.10],
+        "pe_ne_gap_recovered": [0.20, 0.05, 0.01],   # 반대방향 / 근접 / 붕괴
+    })
+    g = gap_analysis(df, "x")
+
+    # 복원 0.20 → margin −0.18, 0.05 → −0.03, 0.01 → +0.01
+    assert g["collapse_margin_median"] == pytest.approx(-0.03), g
+    assert g["collapse_margin_max"] == pytest.approx(0.01), g
+    assert g["n_wide_gap_toward_collapse"] == 2, g   # 격차가 줄어든 행 수
+
+
+def test_conclusion_does_not_claim_collapse_was_observable():
+    """★ 발견 1 — "붕괴가 원리적으로 관측 가능한 범위" 문장을 삭제한다."""
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 1476}))
+
+    assert "관측 가능한 범위" not in txt, txt[txt.index("2. "):][:800]
+    assert "상당 부분" not in txt, "핵심 결론과 표 범례가 서로 다른 강도를 쓴다"
+
+
+# ── 18차 발견 2·3·7·8·9·10 ─────────────────────────────────────────────────
+
+def test_conclusion_unrecoverable_uses_eligibility_criterion_only():
+    """★ 18차 발견 3 — `classify_recoverability()` 는 `alpha_true >= 1-atol` 만 본다.
+
+    configured box bounds 도, β 도, 물리 feasible domain 도 검사하지 않는다.
+    `α/bounds feasible domain 밖` 은 그 판정보다 넓은 주장이다.
+    """
+    from tools.make_results import _conclusion
+
+    txt = "\n".join(_conclusion(_gap_cmp_res(), {"n_rows_recoverable": 1476}))
+
+    assert "feasible domain" not in txt, txt[-700:]
+    assert "eligibility" in txt, txt[-700:]
+
+
+def test_multistart_random_only_note_branches_on_warm_start():
+    """★ 18차 발견 2 — no-warm 실행에 warm-start 인과 설명이 붙는다.
+
+    paired 정본은 `--no-warm-start` 라 restart 0 은 warm solution 이 아니라
+    `base_init` 이다. 그런데 `multistart_random_only` 블록의 존재만 보고
+    warm 전용 설명을 냈다.
+    """
+    from tools.make_results import _random_only_note
+
+    warm = _random_only_note(warm_start=True)
+    nowarm = _random_only_note(warm_start=False)
+
+    assert "매끄러운 해를 초기값으로" in warm, warm
+    assert "매끄러운 해를 초기값으로" not in nowarm, nowarm
+    assert "base_init" in nowarm or "결정론적" in nowarm, nowarm
+
+
+def test_objective_section_heading_counts_the_rendered_objectives():
+    """★ 발견 2 — paired 는 2종인데 제목이 "4종" 이다."""
+    from tools.make_results import _objective_section_heading
+
+    assert _objective_section_heading(2) == "## 목적함수 2종 비교"
+    assert _objective_section_heading(4) == "## 목적함수 4종 비교"
+
+
+def test_p_spread_zero_is_not_equated_with_a_single_restart():
+    """★ 18차 발견 7 — 여러 restart 가 같은 p 로 수렴해도 spread 는 0 이다."""
+    from tools.make_results import _agree_frac_note
+
+    for adaptive in (True, False):
+        txt = _agree_frac_note(adaptive)
+        assert "하나뿐\"이라는 뜻" not in txt, txt
+        assert "같은 파라미터에 수렴" in txt, txt
+
+
+def test_sensitivity_range_names_which_panel_it_came_from():
+    """★ 18차 발견 8 — 범위는 `lt_tol` 패널에서만 계산된다.
+
+    보고서는 exact-zero 패널도 함께 싣고 그 최대값은 다르다. 한 범위를 전체
+    민감도 범위처럼 쓰면 안 된다.
+    """
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    cmp_res["gap_analysis"]["pocv_dvdq"]["lr_sensitivity_max_exact_zero"] = 165.4
+    txt = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+
+    assert "`<tol` 정의" in txt or "lt_tol" in txt, txt[txt.index("2. "):][:1200]
+    assert "165.4" in txt, txt[txt.index("2. "):][:1200]
+
+
+def test_p22_wide_judgment_uses_the_shared_boundary_rule():
+    """★ 18차 발견 9 — p22 최대 격차 판정만 raw `<` 를 쓴다.
+
+    `0.05999999999999999` 가 임계 0.06 일 때 다른 분석과 다른 문장이 나온다.
+    """
+    from tools.make_results import _p22_composition
+
+    v = {"n_near": 8, "n_near_exact_equal": 4,
+         "max_true_pe_ne_gap": 0.29 - 0.23,        # 0.05999999999999997
+         "n_near_composition": 8}
+    c = _p22_composition(v, {"gap_thresh": 0.06})
+
+    assert "하나도 없" not in c["wide"], (
+        f"nominal 6%p 를 wide-gap 부재로 판정했다: {c['wide']}")
+
+
+def test_p22_composition_flags_the_empty_radius_fallback():
+    """★ 발견 9 — radius 안에 점이 없으면 밖의 최근접 1점으로 대체된다.
+
+    그런데 renderer 는 항상 "radius 안의 조건" 이라고 쓴다.
+    """
+    from tools.compare_objectives import p22_truth_composition
+
+    far = pd.DataFrame([{
+        "cond_id": "f0", "objective": "pocv_dvdq", "noise": 0.0,
+        "lli": 0.02, "lam_pe": 0.02, "lam_ne": 0.02,
+        "lli_hat": 0.02, "lam_pe_hat": 0.02, "lam_ne_hat": 0.02,
+        "r": 0.75, "a_pe": 1.0, "a_ne": 1.0, "reference": "grid",
+    }])
+    c = p22_truth_composition(_scored(far), "pocv_dvdq", radius=0.001)
+
+    assert c["p22_radius_fallback"] is True, c
+
+
+def test_hessian_does_not_assert_saddle_points(tmp_path):
+    """★ 18차 발견 10 — eps 미수렴 상태에서 saddle 과 수치 artifact 를 못 가른다."""
+    text = _built_with_hessian(tmp_path)
+
+    i = text.index("곡률 진단")
+    seg = text[i:i + 3000]
+    assert "안장점**에서 곡률을 잰 것" not in seg, seg[:1500]
+    assert "구분하지 않습니다" in seg, seg[:1500]
+    assert "입증되지 않은" in seg, seg[:1500]
+
+
+def test_reproduction_scope_is_rendered_from_what_was_emitted(tmp_path):
+    """★ 18차 발견 4 — "재현 범위" 가 고정 boilerplate 였다.
+
+    paired 는 sweep·half-cell 절도 명령도 없는데 그 설정을 복원한다고 썼고,
+    main 은 Hessian 명령을 뺐으면서 뒤 문장에서는 **비기본 eps** 만 빠진 축인
+    것처럼 읽혔다. 실제로 출력한 명령이 재현하는 절만 열거해야 한다.
+    """
+    from tools.make_results import _reproduction_scope_note
+
+    bare = _reproduction_scope_note(has_wsweep=False, has_halfcell=False,
+                                    has_hessian=False, warm_start=False)
+    assert "sweep" not in bare, bare
+    assert "half-cell" not in bare, bare
+
+    full = _reproduction_scope_note(has_wsweep=True, has_halfcell=True,
+                                    has_hessian=True, warm_start=True)
+    assert "sweep" in full and "half-cell" in full, full
+    # Hessian 절이 있으면 **기본 eps 포함 전체**가 명령에서 빠졌다고 말해야 한다
+    assert "Hessian 절" in full, full
+    assert "비기본" not in full, "기본 Hessian 도 빠졌는데 비기본만 빠진 것처럼 쓴다"

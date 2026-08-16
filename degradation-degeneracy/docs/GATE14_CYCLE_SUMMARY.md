@@ -1,13 +1,28 @@
 # 14차 게이트 사이클 요약 — 리뷰 5라운드 → 본 실행 → 15차 판정
 
 > 이 문서는 2026-08-11 ~ 08-13 사이에 일어난 일을 한 곳에 모은 **사람용 요약**이다.
->
-> **수치의 정본은 `artifacts/*/` 의 `fits.parquet`·`objective_comparison.yaml`·
-> `degeneracy_summary.yaml`·`artifact_index.yaml` 이다.** `docs/RESULTS*.md` 는
-> 15·16차가 지적한 표기·해석 오류를 고쳐 **빈 격리 root 에서 재생성**했고
-> (16차 P0 8항목 충족), 승격 여부는 17차 리뷰 판정을 기다린다.
-> 발견 원장은 `docs/08_REVIEW_RESPONSE.md` §16~21. 여기 적힌 숫자는 사본이므로
-> 인용 근거로 쓰지 말 것.
+
+---
+
+## ⛔ 이 문서의 수치는 superseded 다 (2026-08-16)
+
+⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS]
+
+**정본은 `docs/RESULTS.md` · `docs/RESULTS_PAIRED_FIXED5.md` 다.** 이 문서가
+예전에 "수치의 정본" 으로 지목한 `artifacts/*/objective_comparison.yaml` 은
+**17차 발견 1(2%p 경계 부동소수점) 이전 값**을 담고 있어 더 이상 정본이 아니다.
+
+| 이 문서에 적힌 값 | 정정 |
+|---|---|
+| 작은 격차 `36/98` · 사건률 비 `90.0` | **`24/66` · `89.09`** |
+| 전체 격자 `61/156` · `3.69` | **`34/93` · `3.45`** |
+| "격자의 52% 는 α/bounds feasible domain 밖" | **현재 grid-reference 의 α-window eligibility criterion 미통과** |
+| 넓은 격차 붕괴 `1/245` | 불변 |
+
+아래 본문은 **당시 기록**이며 인용 근거가 아니다. 발견 원장은
+`docs/08_REVIEW_RESPONSE.md` §16~24.
+
+---
 
 ---
 
@@ -141,6 +156,8 @@ bias-corrected failure 는 0.144309 → 0.945122 로 크게 악화한다.
 
 ### 4.2 붕괴율과 우도비 — 조건부 값이다
 
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
+
 | 모집단 (noise=0, 33p) | 작은 격차에서 "같다" | 넓은 격차 붕괴 | 사건률 비 |
 |---|---:|---:|---:|
 | grid-recoverable | 36/98 = 36.7% | **1/245 = 0.41%** | **90.0** |
@@ -182,6 +199,8 @@ error > 2%p** 에서 `1/8` 이다. 조건을 바꾸면 값이 달라진다:
 reference-specific pipeline 비교**로만 말할 수 있다.
 
 ### 4.5 모집단 — 분모를 정확히 쓴다
+
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
 
 | 분모 | recoverable 부분집단 |
 |---|---:|
@@ -255,6 +274,8 @@ reference-specific pipeline 비교**로만 말할 수 있다.
 
 ### 렌더링·해석 — 보고서 재생성으로 반영
 
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
+
 - [ ] paired 정본 수치를 `61.9% → 87.2%` 로 통일
 - [ ] `0%` 를 `1/245 (0.41%)` 로, **count 우선** 렌더링
 - [ ] LR 90 옆에 전체 격자 LR 3.69 와 52% 선택 효과 병기
@@ -286,6 +307,8 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 ---
 
 ## 8. **보고서 수정 후** 쓸 수 있는 문안 (현재형 아님)
+
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
 
 > 아래 문안은 `RESULTS*.md` 재생성·대조가 끝난 뒤에 쓴다. 지금 그대로 인용하면
 > 안 된다 (현재 보고서에는 정수 반올림 `0%` 와 비대칭 headline 이 남아 있다).
@@ -326,6 +349,8 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 
 ## 9. 이 문서 자체의 정정 이력
 
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
+
 `cb32179` 초판에 오류가 있어 15차-2 적대적 교차검토가 14건을 지적했고, 전부
 산출물 실측으로 확인해 반영했다.
 
@@ -352,6 +377,8 @@ LR 모집단 문제(52% 조건부 선택)와 22p 임계 민감도는 **계산이
 ---
 
 ## 10. 15·16차 반영 이후 (2026-08-16)
+
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] — 이 절의 수치·해석은 superseded 다 (상단 정정표 참조, 정본 `docs/RESULTS.md`).
 
 계산은 다시 하지 않았다 (`c0f1daa0` / `d50295f980ccaa81` 봉인 그대로). 보고서
 생성 코드와 validator 만 고치고 **빈 격리 root** 에서 재생성했다.

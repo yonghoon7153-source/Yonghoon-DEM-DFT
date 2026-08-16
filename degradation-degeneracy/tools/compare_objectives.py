@@ -148,17 +148,24 @@ def gap_is_zero(x):
 # ---------------------------------------------------------------- 22p 판정
 
 def _near_22p(df: pd.DataFrame, objective: str, noise: float, radius: float):
-    """22p 근방 표본 선택 — `verdict_22p` 와 구성 helper 가 **같은 표본**을 봐야 한다."""
+    """22p 근방 표본 선택 — `verdict_22p` 와 구성 helper 가 **같은 표본**을 봐야 한다.
+
+    거리는 `EXP_22P` 중심에서 (lam_pe, lam_ne, lli) fractional coordinate 의
+    **unscaled Euclidean distance** 다. radius 안에 점이 없으면 radius **밖**의
+    최근접 1점으로 대체하는데(★ 18차 발견 9), 그때 renderer 가 "radius 안의
+    조건" 이라고 쓰면 거짓이므로 대체 여부를 함께 돌려준다.
+    """
     sub = df[df["objective"] == objective]
     if "noise" in sub.columns:
         sub = sub[sub["noise"] == noise]
     if sub.empty:
-        return None, None
+        return None, None, False
     d = np.sqrt(sum((sub[k] - v) ** 2 for k, v in EXP_22P.items()))
     near = sub[d <= radius]
-    if near.empty:                       # 격자에 정확히 없으면 최근접 1점
+    fallback = bool(near.empty)
+    if fallback:                         # 격자에 정확히 없으면 최근접 1점
         near = sub.loc[[d.idxmin()]]
-    return near, d
+    return near, d, fallback
 
 
 def p22_truth_composition(df: pd.DataFrame, objective: str = "pocv_dvdq",
@@ -174,12 +181,13 @@ def p22_truth_composition(df: pd.DataFrame, objective: str = "pocv_dvdq",
     stale 을 올리고(실제로 v4 재생성에서 인용 금지 배너가 떴다), 8시간 재실행
     없이는 되돌릴 수 없다. 렌더 시점에 fits 정본에서 따로 뽑는다.
     """
-    near, _ = _near_22p(df, objective, noise, radius)
+    near, _, fallback = _near_22p(df, objective, noise, radius)
     if near is None:
         return {}
     # ★ 17차 발견 9 — exact-equal 정의를 gap 경계 규약과 공유하고, 표본 크기를
     #   함께 실어 renderer 가 verdict 와 **같은 표본**인지 대조할 수 있게 한다.
     return {"n_near_composition": int(len(near)),
+            "p22_radius_fallback": fallback,
             "n_near_exact_equal": int(gap_is_zero(near["pe_ne_gap_true"]).sum()),
             "max_true_pe_ne_gap": float(near["pe_ne_gap_true"].max())}
 
@@ -191,7 +199,7 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
     ★ 이 프로젝트의 질문에 직접 답하는 함수다.
     격자 간격이 0.02이므로 반경 0.021이면 인접 격자점까지 포함한다.
     """
-    near, d = _near_22p(df, objective, noise, radius)
+    near, d, fallback = _near_22p(df, objective, noise, radius)
     if near is None:
         return {"error": f"조건 없음 (objective={objective}, noise={noise})"}
 
@@ -202,6 +210,8 @@ def verdict_22p(df: pd.DataFrame, objective: str = "pocv_dvdq",
         #   기록하지 않으면 renderer 가 기본값을 다시 써서 다른 표본의 n_near 와
         #   구성 문장이 한 문단에 섞인다.
         "radius": float(radius),
+        # ★ 18차 발견 9 — radius 밖 최근접 1점으로 대체됐는지 (protocol 사실)
+        "radius_fallback": bool(fallback),
         "n_near": int(len(near)),
         "nearest_distance": float(d.min()),
         "recoverable": rec,
@@ -228,14 +238,13 @@ def gap_sensitivity(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
     """★ F28 — 우도비·붕괴율의 임계 2차원 민감도.
 
     단일 (gap_thresh, tol) 조합의 값은 인용할 수 없다는 것이 리뷰의 결론이었다.
-    실측(pocv_dvdq, noise=0, 복원가능군)에서 우도비는
+    사건률 비는 특정 임계 조합에서만 치솟는 성질이 있어, 이웃 칸에서 한 자릿수인
+    값을 대표값으로 인용하면 사후선택이 된다. 그래서 표 전체를 같이 낸다 —
+    한 칸만 떼어 쓰지 못하게 하는 것이 목적이다.
 
-        참격차 ≥2/4/6%p  →   2.3 / 4.5 / 46.4
-        복원동일 <1/2/3%p →  22.3 / 46.4 / 15.2
-
-    처럼 특정 지점에서만 치솟는다. 이웃 임계에서 한 자릿수인 값을 46:1로
-    인용하면 사후선택이 된다. 그래서 표 전체를 같이 낸다 — 한 칸만 떼어
-    쓰지 못하게 하는 것이 목적이다.
+    ★ 18차 발견 11 — 여기 있던 경험 수치는 **경계 규약 수정(17차 발견 1) 이전**
+    값이라 지웠다. 현행 값은 보고서와 `objective_comparison.yaml` 에서 읽을 것.
+    docstring 에 실측을 고정하면 그 자체가 stale 인용원이 된다.
     """
     sub = df[df["objective"] == objective]
     if noise is not None and "noise" in sub.columns:
@@ -327,12 +336,19 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
     if len(wide):
         w_gr = wide["pe_ne_gap_recovered"]
         gap_err = (w_gr - wide["pe_ne_gap_true"]).abs()
-        # ★ 임계값 의존성을 함께 낸다 (리뷰 지적).
-        #   붕괴로 세려면 격차를 gap_thresh 아래에서 tol 아래로 끌어내려야 하므로,
-        #   **최소 (gap_thresh − tol) 만큼의 격차 오차**가 필요하다.
-        #   그 값이 실측 격차 오차 분포보다 크면, 낮은 붕괴율은 측정이 아니라
-        #   "오차 스케일 < 임계 간격"의 재진술이다.
+        # ★ 18차 발견 1 — `collapse_measurable` 을 **삭제**했다.
+        #
+        #   옛 지표는 `|recovered − true|` 의 p99 를 모든 행에 공통인
+        #   `gap_thresh − tol` 과 비교했다. 붕괴에는 (a) `true − recovered > 0`
+        #   **방향**과 (b) 행마다 다른 필요 감소량 `true − tol` 이 필요한데 둘 다
+        #   버린다. 반례: true 0.10 → recovered 0.20 은 붕괴와 정반대 방향인데
+        #   절대오차 0.10 으로 "관측 가능" 판정을 받았다. 게다가 같은 결과에서
+        #   뽑은 오차분포로 그 결과의 낮은 사건률을 방어하므로 순환 논리였다.
+        #
+        #   대체: **부호 있는 행별 여유**만 기술통계로 낸다. 판정하지 않는다.
+        #     margin = tol − recovered_gap   (양수면 이미 붕괴, 음수면 그만큼 부족)
         required = float(gap_thresh - tol)
+        margin = tol - w_gr
         out.update({
             # ★ 참값이 다른데 같다고 말하는 비율
             "gap_collapse_frac": float(gap_lt(w_gr, tol).mean()),
@@ -343,7 +359,12 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
             "collapse_requires_gap_err": required,
             "gap_err_median": float(gap_err.median()),
             "gap_err_p99": float(gap_err.quantile(0.99)),
-            "collapse_measurable": bool(gap_err.quantile(0.99) >= required),
+            # 부호 있는 행별 여유 — 기술통계 전용 (판정 아님)
+            "collapse_margin_median": float(margin.median()),
+            "collapse_margin_max": float(margin.max()),
+            # 복원 격차가 참 격차보다 **줄어든** 행 수 (붕괴 방향)
+            "n_wide_gap_toward_collapse":
+                int((wide["pe_ne_gap_true"] - w_gr > 0).sum()),
         })
     if len(same):
         out["false_split_frac"] = float(
@@ -373,6 +394,16 @@ def gap_analysis(df: pd.DataFrame, objective: str, noise: float | None = 0.0,
             out["lr_sensitivity_median"] = float(np.median(finite))
             # ★ F34 — ∞를 조용히 빼면 변동폭이 좁아 보인다. 개수를 같이 낸다.
             out["lr_sensitivity_n_infinite"] = int(n_inf)
+            # ★ 18차 발견 8 — 위 범위는 `lt_tol` 패널에서만 나온 값이다.
+            #   보고서는 exact-zero 패널도 함께 싣고 그쪽 최대값이 다르다.
+            #   한 범위를 전체 민감도 범위처럼 쓰지 못하게 따로 기록한다.
+            _ez = [r["likelihood_ratio"]
+                   for r in gap_sensitivity(df, objective, noise,
+                                            recoverable_only=recoverable_only)
+                   if r["same_def"] == "exact_zero"
+                   and np.isfinite(r["likelihood_ratio"])]
+            if _ez:
+                out["lr_sensitivity_max_exact_zero"] = float(max(_ez))
             # ★ F34 — "local"은 **이웃 임계 한 칸**과 비교해야 한다. 전체 중앙값과
             #   비교하면 global outlier 판정이지 local spike 판정이 아니다.
             look = {(round(r["gap_thresh"], 6), round(r["tol"], 6)): r for r in sens}

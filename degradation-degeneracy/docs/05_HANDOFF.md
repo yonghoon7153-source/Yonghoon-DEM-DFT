@@ -13,6 +13,9 @@
 
 ## ⛔ 철회 안내 (2026-08-16) — 이 문서의 **결론 절은 인용하지 마세요**
 
+<!-- retraction-claims: ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS] -->
+> ⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS]
+
 이 문서는 **2026-08-07 시점의 환경 설명서**입니다. 환경·명령·코드 구조 설명은
 지금도 유효하지만, **§8-0 과 §12 의 결론 수치·해석은 13~17차 적대적 게이트
 리뷰에서 철회되었습니다.**
@@ -314,7 +317,7 @@ PyBaMM을 GPU화하는 것(Phase 7-1, 실패 예상)과는 난이도가 전혀 �
 
 ## 8-0. 결론 — 2026-08-07 당시의 답 (⛔ 철회됨, 역사 기록)
 
-> **⛔ 철회** — 이 절의 세 결론은 모두 이후 라운드에서 철회·정정되었습니다.
+> **⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[STALE_GAP_NUMBERS]** — 이 절의 세 결론은 모두 이후 라운드에서 철회·정정되었습니다.
 > 상단 철회 안내표를 먼저 보시고, 현행 답은 `docs/RESULTS.md` 를 쓰세요.
 > 아래는 **무엇을 어떻게 잘못 읽었는지** 를 남기기 위한 역사 기록입니다.
 
@@ -428,7 +431,7 @@ Phase 0~3이 "정답을 아는 시험문제 3,069개를 출제"한 것이고, Ph
 
 #### ★ Phase 4에서 확인된 정정 — LAM·LLI 환산식
 
-> **⛔ 철회** — "원리적으로 복원 불가" 는 과장입니다. 실제 분류는 `src/scoring.py` 의 `alpha_true >= 1 − atol`, 즉 **현재 grid-reference 의 α-window eligibility rule** 밖이라는 판정이며, bounds 전체의 표현 가능성도 다른 reference 의 불가능성도 검사하지 않습니다. 정본: `docs/RESULTS.md`.
+> **⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[STALE_GAP_NUMBERS]** — "원리적으로 복원 불가" 는 과장입니다. 실제 분류는 `src/scoring.py` 의 `alpha_true >= 1 − atol`, 즉 **현재 grid-reference 의 α-window eligibility rule** 밖이라는 판정이며, bounds 전체의 표현 가능성도 다른 reference 의 불가능성도 검사하지 않습니다. 정본: `docs/RESULTS.md`.
 
 **이 부분은 원본 코드와 결론이 달라졌습니다.** 합성 데이터에 정답이 있으니
 "어느 식이 정답을 복원하는가"를 직접 검증할 수 있었고, 그 결과입니다.
@@ -540,7 +543,7 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 
 ### Phase 6 — 목적함수 4종 비교 ★ 최종 산출물
 
-> **⛔ 철회** — PE-NE 상쇄 `68% → 48%` 를 실제 개선으로 읽으면 안 됩니다. 이 열은 **raw 오차 부호가 반대인 비율**일 뿐이고, 목적함수마다 전역 편향의 부호가 다르면 그 차이가 그대로 잡힙니다 — 편향을 중심화하면 목적함수 간 순서가 뒤집힙니다. 정본: `docs/RESULTS.md`.
+> **⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[STALE_GAP_NUMBERS]** — PE-NE 상쇄 `68% → 48%` 를 실제 개선으로 읽으면 안 됩니다. 이 열은 **raw 오차 부호가 반대인 비율**일 뿐이고, 목적함수마다 전역 편향의 부호가 다르면 그 차이가 그대로 잡힙니다 — 편향을 중심화하면 목적함수 간 순서가 뒤집힙니다. 정본: `docs/RESULTS.md`.
 
 **이게 이 프로젝트의 답입니다.** 같은 격자에 목적함수만 바꿔 적용해서,
 34p의 dQ/dV 추가가 실제로 얼마나 효과가 있는지 정량화합니다.
@@ -590,7 +593,7 @@ Case 1은 초기에 훨씬 나빴는데(LAM 오차 0.054/0.126) 원인이 세 �
 
 #### ★ 22p 질문에 직접 답하는 지표 — 전극 격차 복원력
 
-> **⛔ 철회** — `46 : 1` 은 posterior 가 아니라 **동일가중 합성격자의 조건부 사건률 비**이고, 모집단(복원가능군 vs 전체)과 임계 설정에 강하게 의존합니다. 경계 규약을 고친 현재 값은 복원가능군 89.09, 전체 격자 3.45 입니다. "실제로 비슷하게 열화했다" 는 이 자료로 판정할 수 없습니다. 정본: `docs/RESULTS.md`.
+> **⛔ 철회[LR_POSTERIOR] ⛔ 철회[STALE_GAP_NUMBERS] ⛔ 철회[ANTISYM_AS_IMPROVEMENT]** — `46 : 1` 은 posterior 가 아니라 **동일가중 합성격자의 조건부 사건률 비**이고, 모집단(복원가능군 vs 전체)과 임계 설정에 강하게 의존합니다. 경계 규약을 고친 현재 값은 복원가능군 89.09, 전체 격자 3.45 입니다. "실제로 비슷하게 열화했다" 는 이 자료로 판정할 수 없습니다. 정본: `docs/RESULTS.md`.
 
 Phase 6을 짜다가 발견한 함정입니다. **22p 근방 격자점은 참값 자체가
 `LAM_PE = LAM_NE`입니다.** 그러니 "그 근방에서 복원이 잘 됐다"는 22p를 옹호하는
@@ -662,7 +665,7 @@ gap_collapse_frac = 1%     shrinkage = 1.06     false_split_frac = 62%
 
 ### 최종적으로 답하게 되는 질문 5개 — **답이 나왔습니다**
 
-> **⛔ 철회** — 이 표의 답 5개는 2026-08-07 시점의 것이며 이후 라운드에서 모두 정정되었습니다: "원리적으로 복원 불가"(→ α-window eligibility rule), "22p 근방은 참값이 애초에 PE=NE"(→ 거짓, PE=NE 4/8), "46:1"(→ 조건부 사건률 비, 모집단 의존), "PE-NE 상쇄 68→48 은 실제 개선"(→ raw 부호 비율). 현행 답은 `docs/RESULTS.md` 를 보세요.
+> **⛔ 철회[LR_POSTERIOR] ⛔ 철회[P22_ALL_EQUAL] ⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[ANTISYM_AS_IMPROVEMENT] ⛔ 철회[REFERENCE_SOLE_CAUSE] ⛔ 철회[HESSIAN_EPS_ORDER] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND] ⛔ 철회[STALE_GAP_NUMBERS]** — 이 표의 답 5개는 2026-08-07 시점의 것이며 이후 라운드에서 모두 정정되었습니다: "원리적으로 복원 불가"(→ α-window eligibility rule), "22p 근방은 참값이 애초에 PE=NE"(→ 거짓, PE=NE 4/8), "46:1"(→ 조건부 사건률 비, 모집단 의존), "PE-NE 상쇄 68→48 은 실제 개선"(→ raw 부호 비율). 현행 답은 `docs/RESULTS.md` 를 보세요.
 
 | | 질문 | 답 (2026-08-07, fine 격자) |
 |---|---|---|
@@ -922,7 +925,18 @@ git add artifacts && git commit -m "backup: ..." && git push -u origin claude/zi
 
 ---
 
-## 10. 결과를 읽을 때 지켜야 할 규칙
+## 10. 결과를 읽을 때 지켜야 할 규칙 (일부 ⛔ 철회)
+
+> **⛔ 철회[PRINCIPALLY_UNRECOVERABLE] ⛔ 철회[SYNTHETIC_IS_LOWER_BOUND]
+> ⛔ 철회[HESSIAN_EPS_ORDER]** — 아래 표의 세 칸은 이후 라운드에서 철회됐습니다.
+>
+> | 규칙 | 옛 설명 | 현재 |
+> |---|---|---|
+> | F1 | "원리적으로 정답이 안 나온다" | **현재 grid-reference 의 α-window eligibility criterion**(`alpha_true >= 1 − atol`)을 통과하지 못한다는 판정일 뿐입니다. box bounds 도 β 도 물리적 표현 가능성도 검사하지 않습니다 |
+> | F7 | 합성 결과는 degeneracy 의 **하한**이고 실제는 더 나쁘다 | 방향은 그럴듯하지만 **입증되지 않았습니다.** 실제 셀에서 더 나쁘다는 것을 이 자료로 보일 수 없습니다 |
+> | F23 | 의미 있는 것은 **같은 eps 에서의 순서**뿐 | 순서가 eps 에 안정적이라는 근거도 확인되지 않았습니다. 조건수는 절대값도 순서도 인용하지 마세요 |
+>
+> 정본은 `docs/RESULTS.md` 입니다.
 
 적대적 리뷰에서 나온 것들입니다. 상세는 `docs/06_REVIEW_DECISIONS.md`에 있고,
 **코드가 이미 이대로 계산합니다** — 아래는 왜 그런지에 대한 설명입니다.

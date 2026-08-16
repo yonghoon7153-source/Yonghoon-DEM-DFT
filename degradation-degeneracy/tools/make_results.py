@@ -39,7 +39,7 @@ def _cnt(frac, n, digits: int = 2) -> str:
     """★ 15차 발견 2 — **사건 수를 먼저** 쓰고 percent 는 괄호에 넣는다.
 
     `_pct(1/245, 0)` 은 `0%` 로 반올림한다. 실제로는 245조건 중 1건이고,
-    0건이었다면 우도비가 90.0 이 아니라 무한대여야 한다 — 보고서가 스스로
+    0건이었다면 사건률 비가 유한값이 아니라 무한대여야 한다 — 보고서가 스스로
     모순된 숫자를 실었다. count/denominator 를 잃지 않는 표기로 바꾼다.
     """
     if frac is None or pd.isna(frac) or n is None:
@@ -178,14 +178,15 @@ def _agree_frac_note(adaptive: bool) -> str:
             "`agree_frac`과 `p_spread`는 인용하지 마세요. ")
     if adaptive:
         return head + ("adaptive 조기 종료 때문에 `agree_frac`은 restart를 5까지 간 "
-                       "조건에서 **정의상 0**이고, `p_spread = 0`은 \"해가 일치\"가 "
-                       "아니라 \"최적 J에 도달한 restart가 하나뿐\"이라는 뜻입니다. "
-                       "위 표가 그 자리를 대신합니다.\n")
+                       "조건에서 **정의상 0**이고, `p_spread = 0`은 qualifying restart 가 "
+                       "하나였거나 **여러 restart 가 같은 파라미터에 수렴한** 경우 "
+                       "모두 가능하므로 단독으로 해석하지 마세요. 위 표가 그 자리를 "
+                       "대신합니다.\n")
     return head + ("이 실행은 adaptive 를 끄고 restart 예산을 **고정**했으므로 조기 "
                    "종료는 없습니다. 그럼에도 두 값은 `j_tol`·`p_tol` 판정에 그대로 "
-                   "의존하고, `p_spread = 0`은 \"해가 일치\"가 아니라 \"최적 J 에 "
-                   "도달한 restart 가 하나뿐\"이라는 뜻입니다. 위 표가 그 자리를 "
-                   "대신합니다.\n")
+                   "의존하고, `p_spread = 0`은 qualifying restart 가 하나였거나 "
+                   "**여러 restart 가 같은 파라미터에 수렴한** 경우 모두 가능하므로 "
+                   "단독으로 해석하지 마세요. 위 표가 그 자리를 대신합니다.\n")
 
 
 def _unrecoverable_note() -> str:
@@ -238,6 +239,59 @@ def _same_def_overlap_note(sens, tol: float, gap_thresh: float) -> str:
             f"정의가 갈리는 것은 `동일 판정` 임계를 3%p 이상으로 넓힐 때부터다.\n")
 
 
+def _random_only_note(warm_start: bool) -> str:
+    """★ 18차 발견 2 — no-warm 실행에 warm-start 인과를 설명하면 안 된다.
+
+    `multistart_random_only` 블록의 **존재**만 보고 warm 전용 문장을 냈다.
+    `--no-warm-start` 실행에서 restart 0 은 warm solution 이 아니라
+    `base_init`(결정론적 초기값)이다 (`src/fitting.py`).
+    """
+    if warm_start:
+        return ("> 아래 표는 **무작위 restart끼리만** 비교한 것입니다(F21b). "
+                "dQ/dV 목적함수는 첫 restart에 매끄러운 해를 초기값으로 받으므로, "
+                "그것을 포함하면 최적 J에 닿는 restart가 정의상 하나뿐이 되어 "
+                "항상 multimodal로 찍힙니다.\n")
+    return ("> 아래 표는 **무작위 restart끼리만** 비교한 것입니다(F21b). "
+            "이 실행은 warm start 를 껐으므로 restart 0 은 **결정론적 "
+            "`base_init`** 입니다 — 목적함수마다 같은 초기값에서 출발하는 그 "
+            "restart 를 빼고 무작위 restart 만 견줍니다.\n")
+
+
+def _objective_section_heading(n_objectives: int) -> str:
+    """★ 18차 발견 2 — 제목의 종수를 **표에서** 센다 (paired 는 2종이다)."""
+    return f"## 목적함수 {int(n_objectives)}종 비교"
+
+
+def _reproduction_scope_note(has_wsweep: bool, has_halfcell: bool,
+                             has_hessian: bool, warm_start: bool) -> str:
+    """★ 18차 발견 4 — 재현 범위를 **실제로 출력한 명령**에서 만든다.
+
+    이전 판은 고정 boilerplate 라, sweep·half-cell 절이 없는 paired 보고서도
+    그 설정을 복원한다고 썼고, Hessian 은 명령 전체가 빠졌는데 "비기본 eps" 만
+    미출력 축인 것처럼 읽혔다.
+    """
+    covered = ["fit(objective·restart·clean/noisy·adaptive·warm start·"
+               "reference·bounds preset)"]
+    missing = []
+    if has_wsweep:
+        covered.append("weight sweep(w_grid·stride·restart)")
+        missing.append("sweep 의 bounds·reference·tol·optimizer method")
+    if has_halfcell:
+        covered.append("half-cell 기준 곡선(method) 과 Case 1↔2 비교")
+    note = ("> **재현 범위**: 위 명령은 이 산출물의 서명된 "
+            + " · ".join(covered) + " 설정을 복원합니다.")
+    if has_hessian:
+        missing.append("**Hessian 절 전체**(기본 eps 포함 — 명령을 싣지 않습니다)")
+    if not warm_start:
+        note += (" 이 실행은 warm start 를 끄고 restart 예산을 고정했으므로 "
+                 "그 축도 명령에 포함돼 있습니다.")
+    if missing:
+        note += (" 아직 명령으로 내보내지 않는 축은 " + " · ".join(missing)
+                 + " 입니다 — 해당 절은 `manifest.yaml` 의 `run_spec` 을 직접 "
+                   "보고 맞춰야 합니다.")
+    return note + "\n"
+
+
 def _p22_composition(v: dict, g: dict | None = None) -> dict:
     """★ 16차 발견 4 (17차 사전) — 22p 근방 표본의 **참값 구성**을 문장으로.
 
@@ -270,7 +324,10 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
         headline = f"이 {n}점은 참값이 모두 같은 격자점이 아니다"
         detail = (f"PE=NE 가 {k}/{n}, |ΔLAM|>0 이 {n - k}/{n} 이고 "
                   f"최대 참 격차가 {_pp(mx)} 다")
-    wide = (f"여기에 wide-gap(≥{_pp(thr, 0)})은 **하나도 없으므로**" if mx < thr
+    # ★ 18차 발견 9 — 여기만 raw `<` 를 쓰고 있었다. 공통 규약을 쓴다.
+    from tools.compare_objectives import gap_ge as _gap_ge
+    wide = (f"여기에 wide-gap(≥{_pp(thr, 0)})은 **하나도 없으므로**"
+            if not bool(_gap_ge(mx, thr))
             else f"여기에 wide-gap(≥{_pp(thr, 0)})이 섞여 있으나 n={n} 의 국소 "
                  f"표본이므로")
     return {"known": True, "headline": headline, "detail": detail, "wide": wide}
@@ -375,8 +432,17 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             fact += "\n\n   **이 값을 '두 전극이 실제로 비슷하다'로 읽을 수 없다.** 세 가지 때문이다.\n"
             if lo is not None:
                 spike = g.get("lr_is_local_spike")
+                # ★ 18차 발견 8 — 이 범위는 `<tol` 패널에서만 계산된다. 보고서는
+                #   exact-zero 패널도 함께 싣고 그쪽 최대값이 다르므로, 한 범위를
+                #   전체 민감도 범위처럼 쓰면 안 된다.
+                _ez = g.get("lr_sensitivity_max_exact_zero")
+                _ez_txt = (f" (이 범위는 첫 `<tol` 정의 패널의 값이다 — exact-zero "
+                           f"정의 패널은 별도로 최대 {_ez:.1f} 였다)"
+                           if _ez is not None else
+                           " (이 범위는 첫 `<tol` 정의 패널의 값이다)")
                 fact += (f"\n   1. **임계 의존** — 같은 데이터에서 (참격차, 동일판정) 임계를 "
-                         f"흔들면 사건률 비가 {lo:.1f}~{hi:.1f}(중앙값 {med:.1f})로 움직인다. "
+                         f"흔들면 사건률 비가 {lo:.1f}~{hi:.1f}(중앙값 {med:.1f})로 움직인다"
+                         f"{_ez_txt}. "
                          + ("현재 조합은 이웃보다 유독 높은 **국소 봉우리**다 — 이 값을 "
                             "대표값으로 인용하면 사후선택이 된다. "
                             if spike else "")
@@ -399,11 +465,22 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
                      f"최소 {_pp(g['collapse_requires_gap_err'], 0)}의 격차 오차가 필요한데, "
                      f"실측 격차 오차는 중앙값 {_pp(g['gap_err_median'])}·"
                      f"99분위 {_pp(g['gap_err_p99'])}다. ")
-            fact += ("붕괴가 원리적으로 관측 가능한 범위이긴 하나, 낮은 붕괴율의 상당 부분은 "
-                     "**오차 스케일이 임계 간격보다 작다**는 사실에서 온다."
-                     if g.get("collapse_measurable", True) else
-                     "즉 낮은 붕괴율은 **이 임계 설정에서 붕괴가 관측되기 어렵다**는 사실의 "
-                     "재진술에 가깝고, 사건률 비도 그만큼 임계 의존적이다.")
+            # ★ 18차 발견 1 — "붕괴가 원리적으로 관측 가능한 범위" 는 삭제했다.
+            #   같은 결과에서 뽑은 오차분포로 그 결과의 낮은 사건률을 방어하는
+            #   순환 논리였고, 부호·행별 필요량을 버린 지표에 기대고 있었다.
+            #   남기는 것은 **부호 있는 행별 여유의 기술통계**뿐이다.
+            if "collapse_margin_median" in g:
+                fact += (f"부호를 살려 행별로 보면 복원 격차가 판정 임계까지 "
+                         f"남긴 여유(= tol − 복원 격차)는 중앙값 "
+                         f"{_pp(g['collapse_margin_median'])}·최대 "
+                         f"{_pp(g['collapse_margin_max'])} 이고, 넓은 격차 "
+                         f"{g.get('n_wide_gap_true', '?')}조건 중 격차가 줄어든 "
+                         f"방향은 {g.get('n_wide_gap_toward_collapse', '?')}조건이다. "
+                         f"이 값들은 **기술통계일 뿐, 붕괴가 관측 가능했다는 "
+                         f"근거가 아니다** — 같은 결과에서 뽑은 오차분포로 그 "
+                         f"결과의 낮은 사건률을 방어할 수 없다. 낮은 사건률의 "
+                         f"견고성은 아래 임계 민감도 표와 모집단 제한으로만 "
+                         f"판단할 것.")
         lines.append(fact)
 
     v = cmp_res.get("verdict_22p", {}).get(base, {})
@@ -437,16 +514,21 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     ur = cmp_res.get("unrecoverable_frac", 0.0)
     # ★ 15차 발견 9 — "원리적으로 복원 불가" 는 실제 셀·다른 reference·다른
     #   parameterization 까지 확장되는 물리 명제로 읽힌다. 지금 판정하는 것은
-    #   **선택한 grid-reference fitter 의 α/bounds feasible domain** 이다.
+    #   **선택한 grid-reference 의 α-window eligibility criterion** 이다.
+    #   ★ 18차 발견 3 — `classify_recoverability()` 는 `alpha_true >= 1 − atol`
+    #   두 개만 본다. configured box bounds 도 β 도 물리 feasible domain 도
+    #   보지 않으므로 `α/bounds feasible domain` 은 그보다 넓은 주장이다.
     lines.append(
         f"{_next_no(lines)}. **생성성공 격자의 {_pct(ur)}는 선택한 grid-reference "
-        f"fitter 의 현재 α/bounds feasible domain 밖**이다 (참값 α<1 → 재구성 창이 "
-        f"reference 범위를 벗어나 truth 가 **표현 가능**하지 않다). 위 숫자는 모두 "
+        f"의 현재 α-window eligibility criterion 을 통과하지 못한다**"
+        f"(`src/scoring.py`: `alpha_true >= 1 − atol`). 이 판정은 설정된 box "
+        f"bounds 도, β 도, 물리적 표현 가능성도 검사하지 않는다 — 두 α 값 "
+        f"하나만 본다. 위 숫자는 모두 "
         f"그 안쪽 **목적함수당 {int((summary.get('n_rows_recoverable') or 0) / max(len(tbl.index), 1))}조건** "
         f"에서만 센 값이며(파일의 objective-condition 행 합계는 "
         f"{summary.get('n_rows_recoverable', '?')}), 바깥을 섞으면 목적함수 간 "
-        f"차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 현재 표현식의 정의역 "
-        f"판정이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 "
+        f"차이가 묻힌다. 이는 데이터의 물리 속성이 아니라 **현재 채점 규칙의 "
+        f"자격 판정**이다. **단 위 2번의 전체 생성성공 격자 값(population=all)은 이 "
         f"안쪽 바깥을 함께 센 예외다.** " + _denominator_note(cmp_res))
     return lines
 
@@ -1020,7 +1102,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
              "정보를 만들 수도, 없앨 수도 있다.\n")
 
     # ── 비교표 ──
-    P.append("## 목적함수 4종 비교\n")
+    P.append(_objective_section_heading(len(tbl.index)) + "\n")
     P.append("복원가능군(F1)만, 노이즈 전체 합산.\n")
     P.append(to_markdown(tbl) + "\n")
     # ★ F29 — 복원가능군 제외가 결론을 만드는지 보이려면 전체군을 나란히 둔다.
@@ -1195,12 +1277,15 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                  "peak 연산을 포함해 비매끄러운데 절대 step `eps` 하나를 모든 파라미터에 "
                  "씁니다 — 34p 조건수 중앙값이 eps=1e-3/1e-4/1e-5에서 12.8/229/17381로 "
                  "움직입니다. 수렴하지 않았다는 뜻입니다. ② `min_eigval_positive`가 "
-                 "100%가 아닌 만큼은 최적점이 아니라 **안장점**에서 곡률을 잰 것인데 "
+                 "100%가 아닌 만큼은 양의 정부호 국소 최소점임이 **입증되지 "
+                 "않은** 지점이고, 그것이 실제 saddle 인지 유한차분·비매끄러움 "
+                 "artifact 인지 현재 자료로는 **구분하지 않습니다**. 그런데도 "
                  "flat score와 결합 판정은 그대로 집계됩니다. ③ `α_PE·α_NE 결합`은 "
                  "**같은 부호**를 세는데, 22p 가설(한쪽 과대·다른쪽 과소)은 α에서 부호가 "
                  "**반대**입니다 — 지표가 묻는 질문이 가설과 다릅니다.\n")
-        P.append("최적점에서 목적함수의 2차 미분입니다. 아래는 진단 참고로만 두고, "
-                 "결론이나 optimizer 방어 문장에 쓰지 않습니다.\n")
+        P.append("optimizer 가 반환한 해에서 목적함수의 2차 미분입니다 — 그 점이 "
+                 "정상점(stationary)임은 검증되지 않았습니다. 아래는 진단 참고로만 "
+                 "두고, 결론이나 optimizer 방어 문장에 쓰지 않습니다.\n")
         P.append("| objective | n | 조건수(중앙값) | flat score | 최소고윳값>0 | α_PE·α_NE 결합 |")
         P.append("|---|---|---|---|---|---|")
         for o in (list(OBJ_ORDER_LOCAL) + sorted(set(hess_by_obj) - set(OBJ_ORDER_LOCAL))):
@@ -1249,8 +1334,12 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
                              f"조건수를 \"정보가 더 많다\"의 단독 근거로 쓰지 마세요.")
         except Exception:  # noqa: BLE001
             pass
-        P.append("- **최소고윳값>0** — 100%가 아니면 그만큼은 최적점이 아니라 **안장점**에서 "
-                 "곡률을 잰 것입니다. 그 조건들의 조건수는 해석하지 마세요.")
+        # ★ 18차 발견 10 — eps 미수렴·stationarity 미검증 상태에서 saddle 과
+        #   수치 artifact 를 구분할 수 없다. 단정하지 않는다.
+        P.append("- **최소고윳값>0** — 100%가 아니면 그만큼은 양의 정부호 국소 "
+                 "최소점임이 입증되지 않은 지점입니다. 실제 saddle 인지 "
+                 "유한차분·비매끄러움 효과인지는 **구분하지 않습니다**. 그 "
+                 "조건들의 조건수는 해석하지 마세요.")
         # ★ 15차 부수 발견 — 위 :172 는 이 지표가 22p 가설과 부호 규약이 달라
         #   근거가 못 된다고 올바르게 경고해 놓고, 여기서 다시 "직접 증거" 라고
         #   썼다. 자기모순이라 후자를 삭제한다.
@@ -1279,10 +1368,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         P.append("같은 조건을 여러 초기값에서 다시 풀었을 때 어떻게 갈리는지를 봅니다. "
                  "**두 실패 모드는 처방이 정반대**라 반드시 나눠야 합니다.\n")
         if fair:
-            P.append("> 아래 표는 **무작위 restart끼리만** 비교한 것입니다(F21b). "
-                     "dQ/dV 목적함수는 첫 restart에 매끄러운 해를 초기값으로 받으므로, "
-                     "그것을 포함하면 최적 J에 닿는 restart가 정의상 하나뿐이 되어 "
-                     "항상 multimodal로 찍힙니다.\n")
+            P.append(_random_only_note(_mspec0.get("warm_start") is not False))
             # ★ F4 검정력 편향 — restart 0을 빼고 2개 미만이 남으면 그 조건은 제외되는데,
             #   adaptive 조기 종료로 restart 수가 조건마다 달라 목적함수별 n이 어긋난다.
             ns = {k: v.get("n") for k, v in ms_rows.items() if v.get("n")}
@@ -1511,13 +1597,10 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ★ 14차 4차 발견 4 — 재현 범위를 문서가 스스로 한정한다. 위 명령은 이
     #   artifact 의 서명값에서 만들지만, 아직 명령으로 내보내지 않는 축이 있다.
     #   "전 절 재현"이라고 읽히면 비기본 실행에서 다른 수치가 나온다.
-    P.append("> **재현 범위**: 위 명령은 이 산출물의 서명된 fit·sweep·half-cell "
-             "설정(objective·restart·clean/noisy·adaptive·warm start·reference·"
-             "bounds preset·half-cell method·sweep w_grid/stride)을 복원합니다. "
-             "아직 명령으로 내보내지 않는 축은 sweep 의 bounds/reference/tol·"
-             "optimizer method 와 비기본 `eps` 의 추가 Hessian 입니다 — 이 "
-             "artifact 들이 기본값으로 돌았다면 그대로 재현되고, 아니면 해당 "
-             "절은 `manifest.yaml` 의 `run_spec` 을 직접 보고 맞춰야 합니다.\n")
+    P.append(_reproduction_scope_note(
+        has_wsweep=bool(wsweep), has_halfcell=bool(case),
+        has_hessian=bool(hess_by_obj),
+        warm_start=_mspec0.get("warm_start") is not False))
     P.append("관련 문서: `docs/06_REVIEW_DECISIONS.md`(해석 규칙), "
              "`docs/07_LAM_LLI.md`(열화모드 정의), `docs/GPU_NOTES.md`(GPU 판정)\n")
 
