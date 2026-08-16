@@ -1,0 +1,72 @@
+{
+ "kit": "kit_ps_7_3",
+ "len_um": 20.0,
+ "se_d_um": 1.0,
+ "rows": [
+  {
+   "vox": 0.4,
+   "feature_per_dx": 2.5,
+   "sigma_ion_origins": [
+    0.000158834,
+    0.00015873,
+    0.000164313,
+    0.000160307
+   ],
+   "sigma_ion_mean": 0.000160546,
+   "origin_spread_pct": 3.52,
+   "phi_se_mean": 0.2403,
+   "n_cells": 125000
+  },
+  {
+   "vox": 0.3,
+   "feature_per_dx": 3.333,
+   "sigma_ion_origins": [
+    0.000168126,
+    0.000161663,
+    0.000171,
+    0.000169471
+   ],
+   "sigma_ion_mean": 0.000167565,
+   "origin_spread_pct": 5.78,
+   "phi_se_mean": 0.2396,
+   "n_cells": 300763,
+   "inc_pct": 4.37
+  },
+  {
+   "vox": 0.25,
+   "feature_per_dx": 4.0,
+   "sigma_ion_origins": [
+    0.000168009,
+    0.000170478,
+    0.000173388,
+    0.00016973
+   ],
+   "sigma_ion_mean": 0.000170401,
+   "origin_spread_pct": 3.2,
+   "phi_se_mean": 0.2404,
+   "n_cells": 512000,
+   "inc_pct": 1.69
+  },
+  {
+   "vox": 0.2,
+   "feature_per_dx": 5.0,
+   "sigma_ion_origins": [
+    0.00017223,
+    0.000168815,
+    0.00017293,
+    0.000172916
+   ],
+   "sigma_ion_mean": 0.000171723,
+   "origin_spread_pct": 2.44,
+   "phi_se_mean": 0.2404,
+   "n_cells": 1000000,
+   "inc_pct": 0.776
+  }
+ ],
+ "verdict": {
+  "tol_pct": 3.0,
+  "converged_from_feature_per_dx": 4.0,
+  "max_origin_spread_pct": 5.78,
+  "note": "origin-평균의 증분이 tol 안에 드는 최소 feature/dx.  ⚠ **단일 origin 은 이 tol 을 만족하지 않는다** — origin 폭이 그보다 크다.  단일 origin σ 를 이 tol 로 인용하지 말 것."
+ }
+}

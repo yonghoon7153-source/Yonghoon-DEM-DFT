@@ -1141,6 +1141,29 @@
       "provenance": "Codex CDX-02 에 대한 반대 검사, 이 세션에서 통제 합성 실험으로 실행",
       "codex_review": "CDX-2026-08-13",
       "reviews_work_dated": "2026-08-13"
+    },
+    {
+      "id": "CL-30",
+      "date": "2026-08-16",
+      "status": "live",
+      "kind": "hypothesis",
+      "claim": "STEP3 **수송**의 해상도 규칙 — origin-평균 σ_ion 은 **SE Ø/dx ≳ 4** 에서 ±3 % 안에 들지만, **단일 origin 은 격자 위상에 최대 5.8 % 흔들린다**",
+      "measured": {
+        "metric": "해석적 구 RVE(20 µm³, kit_ps_7_3 중앙 크롭)의 σ_ion, half-cell origin ×4 앙상블",
+        "value": "SE Ø/dx 2.5 → 3.3 → 4.0 → 5.0 에서 origin-평균 1.6055 → 1.6757 → 1.7040 → 1.7172 e-4 S/cm (증분 +4.37 → +1.69 → **+0.78 %**); origin 폭 3.52 / 5.78 / 3.20 / 2.44 %",
+        "unit": "S/cm"
+      },
+      "asserted": "역학의 `d_h/dx ≳ 3.5` 에 대응하는 **수송용 규칙**이 이제 있다.  그리고 origin 앙상블 없이 격자 추세를 읽으면 위상 잡음을 물리로 오독한다",
+      "h0": "σ_ion 은 격자 위상(origin)에 무관하다 — 단일 origin 으로 격자 추세를 읽어도 된다",
+      "h1": "단일 origin σ 는 위상에 흔들려 격자 추세와 뒤섞인다",
+      "h0_predicts": "origin 폭 = 0 %",
+      "h1_predicts": "origin 폭 > 2 %",
+      "resolution": 0.5,
+      "bridge": "같은 해석적 구 집합을 half-cell 만 옮겨 다시 래스터한다 — 기하·조성·φ_SE 가 전부 같고(0.2396~0.2404) 격자 **위상**만 다르다.  참값은 정의상 origin 무관이므로 남는 폭은 전부 이산화 것이다.",
+      "shared_input": "네 origin 이 같은 스캐폴드 CSV 의 같은 구 집합을 쓴다 — 시드도 크롭도 같다.",
+      "verdict": "h1 채택 (관측 폭 2.44~5.78 %, h0 예측과 분해능의 5~12배 차).\n★ **이것이 목적지의 병목이었다**: 역학에는 d_h/dx ≳ 3.5 가 있는데 수송에는 규칙이 없어서, σ 가 격자와 움직일 때 결함인지 미해상인지 가를 근거가 없었다.\n★ **GPU 불요** — `solve_sigma_z` 가 sid 배열을 직접 받아, 킷 스캐폴드의 해석적 구를 원하는 vox 로 바로 래스터해 풀 수 있다.  기하가 해석적이라 참값이 격자 무관이고 남는 변화는 전부 이산화 것이다.\n⚠ 범위: **AM+SE 만**인 RVE 이고 첨가제가 없다.  ⇒ 이 규칙은 **해상된 상**에만 적용된다.  VGCF(0.37 셀)·SDCP(0.75 셀)는 이 규칙의 적용 대상이 아니라 **애초에 격자에 올릴 수 없는 크기**다 (CL-25).\n⚠ 시사점 하나: 같은 0.3 → 0.25 구간에서 이 RVE 는 **+1.7 %** 인데 실침대 SBE 의 σ_ion 절대값은 **+27.0 %** 움직였다.  SE 해상도만으로는 설명되지 않는 크기다 ⇒ 첨가제(또는 MPM 침대 기하)가 지배한다는 CL-25 방향과 정합.  단 침대가 달라 직접 비교는 아니다.\n⚠ 미실행: σ_e(탄소망) 축은 이 방법으로 못 잰다 — 탄소가 서브복셀이라 RVE 에 올릴 수 없다.  그것이 1D 하이브리드가 필요한 자리다.",
+      "provenance": "scripts/step3_transport_resolution.py (selftest 6/6), docs/data/step3_transport_resolution_kit_ps_7_3.json",
+      "codex_review": "CDX-2026-08-13 ① (origin 앙상블) 의 CPU 대응판"
     }
   ],
   "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."
