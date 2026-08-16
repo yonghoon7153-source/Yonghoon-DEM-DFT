@@ -128,6 +128,31 @@ def read_relaxed(outp, allow_unconverged=False):
     return rows, None, info
 
 
+#: 안장 판정 문턱 — 구속 해제 후 이동 원자에 **홉 방향으로** 남은 힘 [Ry/au].
+#:  relax 의 forc_conv_thr(1e-3)과 같은 눈금을 쓴다. 대칭점이면 0 이어야 하므로
+#:  남은 값은 수치잡음 + 대칭 깨짐이다.
+SADDLE_FORCE_TOL_RY_AU = 1.0e-3
+#: ±δ 탐침 변위 [Å] — 안장이면 양쪽 다 에너지가 **내려가야** 한다.
+PROBE_DELTA_A = 0.10
+
+
+def atom_forces(outp):
+    """QE 출력의 마지막 `Forces acting on atoms` 블록 → [[fx,fy,fz], ...] (Ry/au)."""
+    t = open(outp, encoding="utf-8", errors="replace").read()
+    i = t.rfind("Forces acting on atoms")
+    if i < 0:
+        return None
+    out = []
+    for l in t[i:].splitlines()[1:]:
+        m = re.search(r"atom\s+\d+\s+type\s+\d+\s+force\s*=\s*"
+                      r"([-\d.eE+]+)\s+([-\d.eE+]+)\s+([-\d.eE+]+)", l)
+        if m:
+            out.append([float(m.group(k)) for k in (1, 2, 3)])
+        elif out:
+            break
+    return out or None
+
+
 def final_energy(outp):
     """relax.out 의 마지막 총에너지 [eV]. Ry → eV."""
     t = open(outp, encoding="utf-8", errors="replace").read()
@@ -594,6 +619,8 @@ def build_frozen(work, tag, radius, force=False):
         "dof_free": 3 * n_free, "dof_total": 3 * len(first),
         "moving_atom_index_0based": j, "moving_atom_symbol": first[j][0],
         "hop_distance_A": round(dmax, 4), "second_largest_displacement_A": round(others, 4),
+        "_cell": [[round(x, 8) for x in v] for v in cell],
+        "_hop_vector": [round(x, 8) for x in disp[j]],
         "lambda1_A": round(lam1, 3),
         "max_radius_A": round(lam1 / 2.0, 3),
         "cell_face_heights_A": [round(x, 3) for x in widths],
@@ -674,6 +701,163 @@ def _det3(m):
     return (m[0][0]*(m[1][1]*m[2][2]-m[1][2]*m[2][1])
             - m[0][1]*(m[1][0]*m[2][2]-m[1][2]*m[2][0])
             + m[0][2]*(m[1][0]*m[2][1]-m[1][1]*m[2][0]))
+
+
+def verify_saddle(work, tag, radius):
+    """②③ **판정** — 안장인지 아닌지를 숫자로 닫는다.
+
+    닫힘 조건 (셋 다 만족해야 `saddle_verified: true`)
+      ③-1  구속 해제 raw force 의 **홉 방향** 성분 |F·u| ≤ 1e-3 Ry/au   → 정류점
+      ③-2  같은 힘의 **횡방향** 성분도 같은 문턱 이하                   → off-axis 아님
+      ②    E(+δ) < E(saddle) **그리고** E(−δ) < E(saddle)              → 최댓점(안장)
+
+    하나라도 어긋나면 `saddle_verified: false` 와 어긋난 항목을 돌려준다.
+    ⚠ 이걸 통과해도 남는 것: 대표 1건에 3–5 image CI-NEB 또는 dimer 교차검증.
+      이 검사는 **중점이 안장이다** 를 확인하지, 그 경로가 최소에너지 경로임을 보장하지 않는다.
+    """
+    outd = os.path.join(work, tag, f"frozen_R{radius:g}")
+    fmp = os.path.join(outd, "frozen_meta.json")
+    if not os.path.isfile(fmp):
+        return None, f"⛔ 없음: {fmp}"
+    fm = json.load(open(fmp, encoding="utf-8"))
+    j = fm["moving_atom_index_0based"]
+    hop = fm.get("_hop_vector")
+    if not hop:
+        return None, "⛔ frozen_meta 에 홉 벡터가 없다"
+    n = _norm(hop)
+    u = [x / n for x in hop]
+
+    need = {"rawforce": "scf.out", "probe_plus": "scf.out", "probe_minus": "scf.out",
+            "saddle": "relax.out"}
+    miss = [f"{k}/{v}" for k, v in need.items()
+            if not os.path.isfile(os.path.join(outd, k, v))]
+    if miss:
+        return None, ("⛔ 아직 안 돈 것: " + ", ".join(miss)
+                      + f"\n   먼저: --emit_check 로 입력을 만들고 각각 pw.x 를 돌릴 것")
+
+    F = atom_forces(os.path.join(outd, "rawforce", "scf.out"))
+    if not F or len(F) <= j:
+        return None, "⛔ rawforce/scf.out 에서 원자별 힘을 못 읽었다"
+    f = F[j]
+    f_along = sum(f[k] * u[k] for k in range(3))
+    f_perp = _norm([f[k] - f_along * u[k] for k in range(3)])
+
+    e_s = final_energy(os.path.join(outd, "saddle", "relax.out"))
+    e_p = final_energy(os.path.join(outd, "probe_plus", "scf.out"))
+    e_m = final_energy(os.path.join(outd, "probe_minus", "scf.out"))
+
+    fails = []
+    if abs(f_along) > SADDLE_FORCE_TOL_RY_AU:
+        fails.append(f"③-1 홉 방향 잔여 힘 {abs(f_along):.2e} > {SADDLE_FORCE_TOL_RY_AU:.0e} Ry/au "
+                     f"— 정류점이 아니다")
+    if f_perp > SADDLE_FORCE_TOL_RY_AU:
+        fails.append(f"③-2 횡방향 힘 {f_perp:.2e} > {SADDLE_FORCE_TOL_RY_AU:.0e} Ry/au "
+                     f"— off-axis 안장이거나 대칭이 깨졌다")
+    if None in (e_s, e_p, e_m):
+        fails.append("② 탐침 에너지를 못 읽었다")
+    else:
+        if e_p >= e_s:
+            fails.append(f"② E(+δ) {e_p:.6f} ≥ E(saddle) {e_s:.6f} — 그 방향으로 올라간다")
+        if e_m >= e_s:
+            fails.append(f"② E(−δ) {e_m:.6f} ≥ E(saddle) {e_s:.6f} — 그 방향으로 올라간다")
+
+    out = {
+        "saddle_verified": not fails,
+        "raw_force_along_hop_Ry_au": round(f_along, 8),
+        "raw_force_perp_Ry_au": round(f_perp, 8),
+        "force_tol_Ry_au": SADDLE_FORCE_TOL_RY_AU,
+        "probe_delta_A": PROBE_DELTA_A,
+        "E_saddle_eV": (round(e_s, 6) if e_s is not None else None),
+        "E_plus_eV": (round(e_p, 6) if e_p is not None else None),
+        "E_minus_eV": (round(e_m, 6) if e_m is not None else None),
+        "dE_plus_meV": (round((e_p - e_s) * 1000, 2) if None not in (e_p, e_s) else None),
+        "dE_minus_meV": (round((e_m - e_s) * 1000, 2) if None not in (e_m, e_s) else None),
+        "failures": fails,
+        "still_required_after_this": (
+            "대표 (셀, 반경) 1건에 3–5 image CI-NEB 또는 dimer 교차검증. "
+            "이 검사는 중점이 안장임을 확인하지, 그 경로가 최소에너지 경로임을 보장하지 않는다."),
+        "note_if_pos": ("raw force 는 **구속을 뺀** scf 에서 읽었다. relax.out 의 Total force 는 "
+                        "if_pos 가 성분을 마스킹해 이 검증에 쓸 수 없다 (QE INPUT_PW)."),
+    }
+    json.dump(out, open(os.path.join(outd, "saddle_verification.json"), "w", encoding="utf-8"),
+              ensure_ascii=False, indent=1)
+    return out, None
+
+
+def emit_check(work, tag, radius):
+    """② ③ 을 **닫는** 입력 3개를 만든다 (안장 relax 가 끝난 뒤 실행).
+
+    왜 이게 필요한가
+      ③ `if_pos 0 0 0` 은 QE 가 그 원자의 힘 성분을 **마스킹**한다(INPUT_PW). 그래서
+         안장 relax 의 `Total force` 로는 구속된 원자의 잔여 힘을 검증할 수 없다 —
+         0 으로 찍히는 게 당연하고, 그걸 근거로 쓰면 순환이다.
+      ② "끝점이 대칭 동등" 은 중점이 **홉 방향 정류점**이라는 데까지만 준다.
+         정말 안장이려면 그 방향으로 **양쪽 다 에너지가 내려가야** 한다.
+
+    만드는 것 (전부 scf 단일점 — relax 아님)
+      rawforce/  안장 좌표 · **구속 전부 해제** → 이동 원자의 raw force
+      probe_plus/ · probe_minus/  안장에서 홉 방향 ±δ → 에너지가 양쪽 다 낮아야 안장
+
+    판정은 --collect 가 한다. 이 함수는 입력만 만든다.
+    """
+    d = os.path.join(work, tag)
+    outd = os.path.join(d, f"frozen_R{radius:g}")
+    fmp = os.path.join(outd, "frozen_meta.json")
+    sad = os.path.join(outd, "saddle", "relax.out")
+    if not os.path.isfile(fmp):
+        return 1, f"⛔ 없음: {fmp} — 먼저 --relax_radius {radius:g} 로 입력을 만들 것"
+    if not os.path.isfile(sad):
+        return 1, f"⛔ 없음: {sad} — 안장 relax 를 먼저 돌릴 것"
+    fm = json.load(open(fmp, encoding="utf-8"))
+    rows, err, info = read_relaxed(sad)
+    if rows is None:
+        return 1, f"⛔ 안장 좌표를 못 읽었다: {err}"
+
+    j = fm["moving_atom_index_0based"]
+    cell = fm.get("_cell")
+    hop = fm.get("_hop_vector")
+    if not hop:
+        return 1, "⛔ frozen_meta 에 홉 벡터가 없다 — 입력을 다시 만들 것"
+    n = _norm(hop)
+    u = [x / n for x in hop]                      # 홉 방향 단위벡터
+
+    src = open(os.path.join(outd, "saddle", "relax.in"), encoding="utf-8").read()
+    head = src[:src.index("ATOMIC_POSITIONS")]
+    tail = src[src.index("K_POINTS"):]
+
+    def emit_scf(sub, rows2, note):
+        os.makedirs(os.path.join(outd, sub), exist_ok=True)
+        h = (head.replace("calculation     = 'relax'", "calculation     = 'scf'")
+                 .replace(f"prefix          = '{tag}_frozen_saddle'",
+                          f"prefix          = '{tag}_chk_{sub}'"))
+        L = [h.rstrip("\n"), "", "ATOMIC_POSITIONS angstrom"]
+        # ⛔ 구속을 **전부 뺀다** — if_pos 가 없어야 raw force 가 나온다
+        for s, q in rows2:
+            L.append(f"  {s:3s} %16.10f %16.10f %16.10f" % tuple(q))
+        L += ["", tail.rstrip("\n")]
+        open(os.path.join(outd, sub, "scf.in"), "w", encoding="utf-8").write("\n".join(L) + "\n")
+        open(os.path.join(outd, sub, "WHY.txt"), "w", encoding="utf-8").write(note + "\n")
+
+    emit_scf("rawforce", rows,
+             "안장 좌표 그대로, 구속 전부 해제. 이동 원자의 raw force 를 본다.\n"
+             f"판정: 홉 방향 성분 |F·u| ≤ {SADDLE_FORCE_TOL_RY_AU} Ry/au 여야 정류점이다.\n"
+             "      횡방향 성분이 크면 off-axis 안장이거나 대칭이 깨졌다.")
+    for sgn, sub in ((+1, "probe_plus"), (-1, "probe_minus")):
+        r2 = [(s, list(q)) for s, q in rows]
+        r2[j] = (r2[j][0], [r2[j][1][k] + sgn * PROBE_DELTA_A * u[k] for k in range(3)])
+        emit_scf(sub, r2,
+                 f"안장에서 이동 원자를 홉 방향 {sgn:+d}·{PROBE_DELTA_A} Å 옮긴 단일점.\n"
+                 "판정: 안장이면 E(±δ) 가 **둘 다** E(saddle) 보다 낮아야 한다.\n"
+                 "      한쪽만 낮으면 안장이 아니라 경사면 위 점이다.")
+
+    return 0, (f"✓ {tag}: ②③ 검증 입력 3개 생성 → {outd}/\n"
+               f"   rawforce · probe_plus · probe_minus  (전부 scf 단일점, 구속 없음)\n"
+               f"   홉 방향 u = [{u[0]:.4f}, {u[1]:.4f}, {u[2]:.4f}] · δ = {PROBE_DELTA_A} Å\n"
+               f"   실행:\n"
+               + "".join(f"     cd {outd}/{s} && mpirun -np <N> pw.x -in scf.in > scf.out\n"
+                         for s in ("rawforce", "probe_plus", "probe_minus"))
+               + f"   판정:  python3 tools/sei/symmetric_saddle.py --work {work} --tag {tag} "
+                 f"--relax_radius {radius:g} --collect")
 
 
 def selftest():
