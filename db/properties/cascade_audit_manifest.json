@@ -227,7 +227,7 @@
   "_note": "행이 있다 ≠ 비교 가능하다. G3 는 record-complete 90 인데 phase-set comparable 270/270 이지만 효과 귀속은 0/17 이다 (chain generator 17행 중 exact 대응 10 · multi-transform 7)."
  },
  "render_provenance": {
-  "figure_font": "Liberation Sans (Arial metric-compatible)",
+  "figure_font": "DejaVu Sans",
   "note": "옛 판은 C:/Windows/Fonts/arial.ttf 하나에 묶여 있어 Linux 에서 도구가 아예 안 돌았다. 지금은 Arial → Liberation Sans(메트릭 호환) → DejaVu Sans 폴백이다. 폰트가 다르면 PNG 해시가 달라지므로 재생성 시 원장을 같이 갱신해야 한다."
  },
  "artifacts": [
@@ -439,9 +439,9 @@
     "LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다",
     "structural realization 0/11"
    ],
-   "sha256": "5e6e572726b8f2cbd3f3a91e9656435002e297ebc09ae451f3692dc22db4e689",
-   "bytes": 374821,
-   "sha256_lf": "5e6e572726b8f2cbd3f3a91e9656435002e297ebc09ae451f3692dc22db4e689"
+   "sha256": "8ad80d3b75e068e764fa16ba3b6b0a997644bf7b0fe400011f25c7e4ce516309",
+   "bytes": 403528,
+   "sha256_lf": "8ad80d3b75e068e764fa16ba3b6b0a997644bf7b0fe400011f25c7e4ce516309"
   },
   {
    "artifact_id": "cascade-v23-b2o3_esw",
