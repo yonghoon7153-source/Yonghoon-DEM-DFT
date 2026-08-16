@@ -217,6 +217,50 @@ structural_realization_validated  = 0/11
 approved_current_ranking          = 0종            ← 유지
 ```
 
+## 사다리와 LiS₄ 제외판 — 두 번째로 서술이 무너졌다 (2026-08-16)
+
+### ③ `baseline = 0` 은 **한 계단짜리** 문장이었다
+
+`--ladder 4` 로 도펀트 없는 host 에서 −Li−S+Cl 을 반복했다:
+
+```
+ladder0  Li24 S20 Cl4   2.140   4 Li3PS4 + LiS4        + 4 LiCl
+ladder1  Li23 S19 Cl5   2.140   4 Li3PS4 + 0.75 LiS4   + 5 LiCl
+ladder2  Li22 S18 Cl6   2.140   4 Li3PS4 + 0.50 LiS4   + 6 LiCl
+ladder3  Li21 S17 Cl7   2.140   4 Li3PS4 + 0.25 LiS4   + 7 LiCl
+ladder4  Li20 S16 Cl8   2.356   2 P2S7   + 0.50 LiS4   + 8 LiCl   ← 점프
+```
+
+**도펀트 없는 host 도 Cl 을 네 번 넣으면 정확히 +0.216 이 나온다.** 그러니까
+`baseline_cl_recipe_contrast = 0` 은 "Cl 이 아무 일도 안 한다" 가 아니라
+**"첫 계단에서는 안 움직인다"** 였다. Al/Mo/W 의 상호작용은 **도펀트가 조성을 분기 경계
+쪽으로 밀어 놓은 것**이고, 같은 점프를 host 혼자서도 도달한다.
+
+⛔ 그리고 **ladder4 에도 LiS₄ 가 남아 있다** — 순수 host 사다리조차 "LiS₄ 소멸" 을 반증한다.
+
+전환 지점은 Li 가 아니라 **S17 → S16** 에서 일치한다
+(ladder3 S17 = 2.140 · ladder4 S16 = 2.356 / Al·Mo·W 도 D_plain S17 = 2.140 · D_Cl S16 = 점프).
+⚠ 다만 **B₂O₃·Sc₂O₃ 는 안 맞는다** — 또 일반화하지 않는다. 관찰까지다.
+
+### ④ LiS₄ 를 빼면 숫자가 안 버틴다
+
+| 종 | conditional (LiS₄ 포함) | (LiS₄ 제외) |
+|---|---|---|
+| **WO₃** | +0.216 | **+0.000** ← 사라짐 |
+| Al₂O₃ | +0.214 | **+0.098** ← 절반 이하 |
+| MoO₃ | +0.216 | **+0.129** |
+| Sc₂O₃ | −0.017 | −0.046 |
+| B₂O₃ | +0.283 | +0.283 (불변) |
+| La·Nd·Sm·Mg·Y·Zn | 동일 | 동일 |
+
+`plain_dopant` 도 움직인다 (WO₃ +0.000 → −0.016 · Sm₂O₃ −0.151 → −0.267).
+
+> **conditional contrast 자체가 phase roster 에 의존한다.** 부호는 대체로 유지되지만
+> 크기가 반토막이고 WO₃ 는 아예 0 이 된다. 인용할 때 **roster 를 반드시 같이 적는다.**
+
+Codex 가 "기전을 headline 으로 쓰려면 LiS₄ 제외판이 필수" 라고 한 것이 정확했다.
+→ **기전은 appendix hypothesis 로 유지.** 본문 결론 금지.
+
 ## 반증·한계
 
 - **조성 수준 operational contrast 다.** grand-potential ESW 는 조성만 받으므로 그 조성이
@@ -252,6 +296,9 @@ approved_current_ranking          = 0종            ← 유지
 | ⑥ | `main(Cl)=0` → "Cl 효과 0 · 귀속 폐쇄" | **marginal main effect 가 아니라 undoped baseline contrast.** 조건부(D_Cl−D_plain)는 Al +0.214·B +0.283·Mo/W +0.216 |
 | ⑦ | "11/11 종에서 0" | 같은 host 두 조성을 **11개 확장 roster 에서 반복** — 독립 표본 아님 |
 | ⑧ | LiS₄→P₂S₇ 기전 | **Al 하나를 일반화.** Mo/W 는 LiS₄ 잔존, B/Sc 는 시작 분기가 다름 |
+| ⑨ | "undoped Cl recipe 는 onset 을 안 움직인다" | **한 계단짜리 문장.** 사다리 4계단이면 host 혼자서도 +0.216 |
+| ⑩ | 전환이 Li 18→17 | 사다리는 **S17→S16** 에서 전환 (Al·Mo·W 도 일치, B·Sc 는 불일치) |
+| ⑪ | conditional contrast 를 고정값처럼 인용 | **phase roster 의존.** LiS₄ 빼면 WO₃ +0.216→0.000, Al₂O₃ 절반 |
 
 ①은 Al₂O₃ 한 케이스(정확히 맞는다)에서 family 전체로 일반화한 것이다.
 `cation_site` 열을 이미 출력해 보고도 놓쳤다.
