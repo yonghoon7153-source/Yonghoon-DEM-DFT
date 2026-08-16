@@ -42902,5 +42902,80 @@
       "matched_transform_status": null,
       "verdict": "충돌 없음 — 표의 onset 이 plain 챔피언 값이다"
     }
+  },
+  "attribution_closed_2026_08_16": {
+    "status": "closed",
+    "by": "db/properties/oxidation_matched_factorial.json (matched 2x2, 11 species, 11 phase sets)",
+    "result": "main(Cl) = +0.000 in all 11 — Cl 치환 단독 효과는 0 이다. 따라서 composition_family_audit 의 9.63배·2.59배는 **Cl 효과가 아니다**.",
+    "supersedes": "composition_family_audit.missing_baseline 의 '기준이 없다' 는 이제 해소됐다. 그 필드는 역사 기록으로 남기고, 현재 판정은 이 블록이다.",
+    "per_species": {
+      "Al2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.0,
+        "interaction_V": 0.214,
+        "total_D_Cl_vs_host_V": 0.214
+      },
+      "B2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": -0.106,
+        "interaction_V": 0.283,
+        "total_D_Cl_vs_host_V": 0.177
+      },
+      "La2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": -0.247,
+        "interaction_V": 0.032,
+        "total_D_Cl_vs_host_V": -0.215
+      },
+      "MgO": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.0,
+        "interaction_V": 0.0,
+        "total_D_Cl_vs_host_V": 0.0
+      },
+      "MoO3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.0,
+        "interaction_V": 0.216,
+        "total_D_Cl_vs_host_V": 0.216
+      },
+      "Nd2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": -0.22,
+        "interaction_V": 0.067,
+        "total_D_Cl_vs_host_V": -0.153
+      },
+      "Sc2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.216,
+        "interaction_V": -0.017,
+        "total_D_Cl_vs_host_V": 0.199
+      },
+      "Sm2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": -0.151,
+        "interaction_V": 0.045,
+        "total_D_Cl_vs_host_V": -0.106
+      },
+      "WO3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.0,
+        "interaction_V": 0.216,
+        "total_D_Cl_vs_host_V": 0.216
+      },
+      "Y2O3": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.142,
+        "interaction_V": 0.0,
+        "total_D_Cl_vs_host_V": 0.142
+      },
+      "ZnO": {
+        "main_Cl_V": 0.0,
+        "main_dopant_V": 0.0,
+        "interaction_V": 0.0,
+        "total_D_Cl_vs_host_V": 0.0
+      }
+    },
+    "still_open": "자리 점유·구조 실현 가능성 · legacy b2o3_esw 의 phase-set identity · LiS4 포함/제외 민감도(2.140 vs 2.256)"
   }
 }

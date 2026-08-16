@@ -5463,5 +5463,60 @@
       "n_entries": 548,
       "oxidation_onset_rxn": "Li21ZnP4S18Cl5O -> 3.75 Li3PS4 + 0.25 Li3PO4 + 0.5 LiS4 + ZnS + 5 LiCl + 3.5 Li"
     }
+  },
+  "verdict_2026_08_16": {
+    "headline": "main(Cl) = +0.000 in **all 11 species**. 도펀트 없이 S 하나를 Cl 로 바꾸는 것만으로는 산화 onset 이 전혀 안 움직인다 — 'Cl-rich 가 산화를 개선한다' 는 **반증됐다**.",
+    "reproduces_cascade": "각 종의 total(D_Cl − H_plain) 이 캐스케이드 chain 챔피언의 delta_ox_vs_host_V 와 소수점까지 일치한다 (Al2O3 +0.214 · B2O3 +0.177 · MoO3 +0.216 · WO3 +0.216). 같은 값을 재현하면서 분해했다는 뜻이다.",
+    "three_classes": {
+      "interaction_only": {
+        "species": [
+          "Al2O3",
+          "MoO3",
+          "WO3"
+        ],
+        "reading": "main(dopant)=0.000 · main(Cl)=0.000 · interaction=+0.214~0.216. 도펀트만도 Cl 만도 아무 효과가 없고 **둘이 같이 있어야만** 오른다. 어느 한쪽도 원인으로 지목할 수 없다."
+      },
+      "dopant_only": {
+        "species": [
+          "Sc2O3",
+          "Y2O3"
+        ],
+        "reading": "main(dopant) +0.216 / +0.142, interaction ~0 — Cl 없이도 오른다. 진짜 도펀트 효과.",
+        "note": "Sc2O3 는 interaction 이 -0.017 로 약하게 음수 — Cl 치환이 오히려 조금 깎는다."
+      },
+      "dopant_lowers": {
+        "species": [
+          "B2O3",
+          "La2O3",
+          "Nd2O3",
+          "Sm2O3"
+        ],
+        "reading": "main(dopant) 음수 — 도펀트가 onset 을 **내린다**. B2O3 는 -0.106, 란탄족은 -0.15~-0.25."
+      },
+      "inert": {
+        "species": [
+          "MgO",
+          "ZnO"
+        ],
+        "reading": "네 칸 전부 2.140 — 아무 일도 일어나지 않는다."
+      }
+    },
+    "b2o3": {
+      "why_it_matters": "한 번도 존재한 적 없던 같은-자리 D_plain(B2O3) = Li18B2P4S17Cl4O3 가 **2.034 V** 로 host 아래다. 캐스케이드의 +0.177 은 chain 변형의 추가 개입(+0.283)이 도펀트 자체의 -0.106 을 덮은 것이다.",
+      "independent_support": "legacy DFT-deep 셀 Li58P8S41Cl16B2O3 가 2.03 V 였다 — **다른 조성인데 같은 방향·거의 같은 값**이다. 이는 방증이지 동일성 증명이 아니다. 두 조성을 한 pinned entry set 에서 재는 것은 여전히 안 했다.",
+      "resolves": "db/properties/b2o3_esw.json 의 부호 충돌을 **해소하지는 않지만** 방향을 정한다: B2O3 도핑 자체는 onset 을 내린다."
+    },
+    "mechanism": {
+      "observation": "2.140 은 LiS4 에 pin 된 값이다. H_plain(Li24)·H_Cl(Li23)·D_plain(Al2O3, Li18) 모두 생성물에 LiS4 가 있고 2.140 이다. D_Cl(Li17)에서 LiS4 가 사라지고 P2S7 이 나타나면서 2.354 로 뛴다.",
+      "reading": "연속적인 Cl 효과가 아니라 **이산적인 hull 분기 전환**이다 — 조성이 Li-poor 해져 LiS4 가 더는 sink 노릇을 못 하는 지점에서 분기가 바뀐다. Codex D 관찰(2.340-2.370 V 군 21/21 이 P2S7, 2.140 군 102/102 가 Li3PS4)과 맞물린다.",
+      "limits": "반응식 몇 개를 읽은 관찰이다. Li 문턱이 정확히 어디인지, 다른 도펀트에서도 같은지는 재지 않았다. 그리고 LiS4 를 제외하면 host 가 2.256 으로 움직이는 민감도가 그대로 남는다."
+    },
+    "what_this_does_not_close": [
+      "조성 수준 열역학 대비다 — 자리 점유·구조 실현 가능성은 계산 밖이다",
+      "캐스케이드 B2O3·MoO3·WO3 의 기존 plain 챔피언은 P_4b 자리라 여기 D_plain(Li_24g)과 다른 물건이다",
+      "보편적 원소 효과가 아니라 이 구조 생성 규약 안의 대비다",
+      "legacy b2o3_esw 와 캐스케이드를 한 pinned entry set 에서 재는 일은 여전히 안 했다",
+      "LiS4 포함/제외 phase-roster 민감도(2.140 vs 2.256)는 그대로 열려 있다"
+    ]
   }
 }

@@ -34,7 +34,7 @@
 - `kb/methodology/b2o3_analysis_plan.md` — B₂O₃-doped champion — 추가 분석 plan (배위·결합·testable)
 - `kb/methodology/b2o3_doping_chemistry.md` — B2O3 Doping in LPSCl1.6 (BO-LPSC) — Chemistry Framework
 - `kb/methodology/beta_gate_seed_policy.md` — 확산영역 게이트(β)와 시드 정책 — 언제 시드를 더 넣어도 되나
-- `kb/methodology/cascade_composition_family_2026_08_16.md` — 캐스케이드 챔피언 슬롯의 조성족 섞임 — Cl-rich 변형이 이름표만 같은 채 앉아 있다 ○미열람
+- `kb/methodology/cascade_composition_family_2026_08_16.md` — 캐스케이드 조성족 섞임과 효과 귀속 — Cl 단독 효과는 0 이고 개선은 상호작용이다 ○미열람
 - `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` — cascade 273 캠페인 해부 — 왜 풀이 47인가 (코드 계보 실측) ○미열람
 - `kb/methodology/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
 - `kb/methodology/computational_methods_canonical.md` — 계산 방법 Canonical — 단일 기준 (2026-07-23 재정리)
