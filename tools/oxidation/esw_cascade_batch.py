@@ -69,9 +69,30 @@ def main():
     print(f"{len(champs)} champions with composition")
 
     # ---- group by chemsys, pull each hull once ----
+    # ★ 2026-08-16 — chemsys 를 **후보 ∪ host** 로 잡는다.
+    #   x=0.25 에서 셀의 Cl 이 4개뿐이라, Cl 자리를 치환하는 도펀트(TiF4·ZrBr4·ZrF4)는
+    #   **Cl 을 전부 없앤다**: 실측 조성 Li25 P3 S20 F4 Ti1 — Cl 0개.
+    #   그러면 host(Li24P4S20Cl4)가 그 chemsys 의 부분집합이 아니라 같은 phase set 에
+    #   못 들어가고, 후보-host 비교가 성립하지 않는다 (9/270 이 그 경우였다).
+    #   합집합으로 잡으면 host 가 항상 들어가고, 두 값이 같은 hull 에서 나온다.
+    #   ⚠ 대부분의 후보는 이미 host 원소를 포함하므로 합집합 = 자기 chemsys (변화 없음).
+    #     바뀌는 건 Cl 을 전부 치환한 그 9건뿐이고, 그쪽은 Cl 상이 hull 에 추가되므로
+    #     **후보 자신의 onset 도 달라질 수 있다** — 그게 같은 집합 안의 값이라 옳다.
+    host_els_for_group = set()
+    if a.host:
+        from pymatgen.core import Composition as _C0
+        host_els_for_group = {str(e) for e in _C0(a.host).elements}
     by_sys = defaultdict(list)
+    n_union = 0
     for name, dop, comp in champs:
-        by_sys[tuple(sorted(comp))].append((name, dop, comp))
+        els = set(comp)
+        if host_els_for_group and not host_els_for_group <= els:
+            els = els | host_els_for_group
+            n_union += 1
+        by_sys[tuple(sorted(els))].append((name, dop, comp))
+    if n_union:
+        print(f"  ⚠ {n_union}건은 host 원소가 조성에 없어 **합집합 chemsys** 로 묶었다 "
+              f"(도펀트가 Cl 을 전부 치환한 경우)")
 
     results = {}
     phase_sets = {}
@@ -161,6 +182,9 @@ def main():
         h = host_by_psid.get(v.get("phase_set_id"))
         if h and h.get("oxidation_limit_V") is not None and v.get("oxidation_limit_V") is not None:
             v["host_ox_V_same_phase_set"] = h["oxidation_limit_V"]
+            if host_els_for_group and not host_els_for_group <= set(v.get("elements") or []):
+                v["chemsys_note"] = ("후보 조성에 host 원소가 없어 합집합 chemsys 로 쟀다 "
+                                     "— x=0.25 에서 도펀트가 그 원소를 전부 치환한 경우")
             v["delta_ox_vs_host_V"] = round(v["oxidation_limit_V"] - h["oxidation_limit_V"], 4)
             v["method_comparable"] = True
             n_comparable += 1
