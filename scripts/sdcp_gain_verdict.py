@@ -94,6 +94,22 @@ def verdict(arms):
                            f'않는다 (fail-closed).  payload 가 cg_info/cg_resid 를 싣도록 '
                            f'고치고 다시 돌릴 것',
                     no_convergence_info=unknown)
+    # ── 데이터 무결성 게이트 (2026-08-16, 심층 리뷰 ③) ────────────────────────────────
+    #   ⚠ 이것은 §5 판정 순서의 **변경이 아니라 전제 집행**이다.  §5 는 "8 팔 factorial" 과
+    #     "그 외 모든 인자 고정" 을 stipulate 한다 — 그 전제가 깨진 데이터는 §5 가 말하는
+    #     그 데이터가 아니므로 판정 대상이 아니다.  (같은 origin 8 벌은 가짜 정밀도를 낳는다.)
+    for k in ('SBE', 'DBE'):
+        _sh = [tuple(r['origin_shift_um']) for r in arms[k] if r.get('origin_shift_um')]
+        if _sh and len(set(_sh)) != len(_sh):
+            return dict(out, decision='HOLD',
+                        reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
+                               f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다')
+    for fld in ('vox', 'bridge_um', 'fibre_stamp'):
+        _v = {r.get(fld) for k in arms for r in arms[k] if r.get(fld) is not None}
+        if len(_v) > 1:
+            return dict(out, decision='HOLD',
+                        reason=f'고정 인자 `{fld}` 가 팔마다 다르다 ({sorted(map(str, _v))}) — '
+                               f'prereg §5 는 그 외 모든 인자 고정을 요구한다')
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
     if not st['SBE'] or not st['DBE'] or st['SBE']['n'] != st['DBE']['n']:
@@ -108,6 +124,23 @@ def verdict(arms):
     se_ratio_pct = 100.0 * math.hypot(st['SBE']['se'] / st['SBE']['mean'],
                                       st['DBE']['se'] / st['DBE']['mean'])
     out['se_ratio_pct'] = round(se_ratio_pct, 4)
+    #  ── 보조 통계: **쌍대응** SE (심층 리뷰 ③④) ───────────────────────────────────────
+    #    팔은 origin 으로 쌍이 맞고 두 침대가 강한 공통모드를 갖는다 (실측 r = +0.963).
+    #    위 hypot 은 두 팔을 독립으로 보므로 비의 SE 를 **5.1 배 과대**평가한다 (보수 방향).
+    #    ⚠ **게이트는 그대로 hypot 을 쓴다** — 그것이 런 전에 커밋된 조작적 정의다 (prereg §4).
+    #      쌍별 값은 **보조 출력**일 뿐이고, 게이트 승격은 v3 prereg 에서 등록한다.
+    _pa = [d['sigma_e'] / s['sigma_e']
+           for s, d in zip(sorted(arms['SBE'], key=lambda r: r['file']),
+                           sorted(arms['DBE'], key=lambda r: r['file']))
+           if s.get('sigma_e') and d.get('sigma_e')]
+    if len(_pa) > 1:
+        _m = sum(_pa) / len(_pa)
+        _sd = math.sqrt(sum((v - _m) ** 2 for v in _pa) / (len(_pa) - 1))
+        out['ratio_paired_mean'] = round(_m, 6)
+        out['se_ratio_paired_pct'] = round(100.0 * _sd / math.sqrt(len(_pa)) / _m, 4)
+        out['ratio_arms'] = [round(v, 6) for v in _pa]
+        out['se_note'] = ('게이트는 prereg §4 의 hypot 을 쓴다 (보수적).  쌍별 SE 는 참고용 — '
+                          '점예측 일치 서술에 쓰지 말 것')
     if se_ratio_pct > SE_MAX_PCT:
         return dict(out, decision='HOLD',
                     reason=f'비의 표준오차 {se_ratio_pct:.2f} %p > {SE_MAX_PCT} — '
