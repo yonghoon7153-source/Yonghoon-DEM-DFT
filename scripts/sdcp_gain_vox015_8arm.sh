@@ -24,8 +24,17 @@ set -uo pipefail
 VOX="${VOX:-0.15}"
 BRIDGE_UM="${BRIDGE_UM:-0.48}"          # prereg §5 — 격자와 무관하게 고정
 ARMS="${ARMS:-8}"
+#  ★ SDCP **부피-보존 구 스탬프** (2026-08-16, prereg v2 판정 h1 의 대응).
+#    빈 값이면 현행 점 스탬프 = 사전등록 v2 판별 런과 같은 규약.
+#    `SDCP_SPHERE_D=0.30` 을 주면 참 직경 구로 굽는다 — 태그와 OUTDIR 이 갈려 섞이지 않는다.
+SDCP_SPHERE_D="${SDCP_SPHERE_D:-}"
 SCR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}}"
+SD_FLAG=""; SD_TAG=""
+if [ -n "$SDCP_SPHERE_D" ]; then
+  SD_FLAG=" --step3-sdcp-sphere-d $SDCP_SPHERE_D"; SD_TAG="_sph"
+  echo "[p2] ★ SDCP **부피-보존 구 스탬프** Ø$SDCP_SPHERE_D µm (점 스탬프가 아니다)"
+fi
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}}"
 mkdir -p "$OUTDIR"
 
 if [ -z "${VIRTUAL_ENV:-}" ] && [ -z "${MPM_NO_VENV:-}" ]; then
@@ -100,13 +109,14 @@ PY
 
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "_$TAG.sh" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$RUN/_$TAG.sh"; } > "$RUN/$TAG.sh"
   rm -f "$RUN/_$TAG.sh"
   # ★ fail-closed — 세 인자가 **실제로** 주입됐는지 확인 (조용히 빠지면 팔이 오염된다)
-  for NEEDLE in "--step3-vox $VOX" "--step3-origin-shift $SH" "--step3-bridge-um $BRIDGE_UM"; do
+  for NEEDLE in "--step3-vox $VOX" "--step3-origin-shift $SH" "--step3-bridge-um $BRIDGE_UM" \
+                ${SDCP_SPHERE_D:+"--step3-sdcp-sphere-d $SDCP_SPHERE_D"}; do
     grep -q -- "$NEEDLE" "$RUN/$TAG.sh" || { echo "[p2] ABORT — 미주입: $NEEDLE"; return 1; }
   done
   echo "[p2] ── $TAG  shift=($SH)  σ_VGCF=$SIGMA"
@@ -122,8 +132,8 @@ for SH in "${SHIFTS[@]}"; do
     [ -d "$K" ] || { echo "[p2] ABORT — $K 없음 (~/sdcp 에서 돌릴 것)"; exit 2; }
     #  ★ fail-fast — 한 팔이 실패하면 **전체를 멈춘다**.  실패한 팔을 빼고 계속하면
     #    팔 수가 달라져 앙상블이 오염된다 (판정기가 HOLD 를 내겠지만 GPU 시간을 버린다).
-    if ! run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}_a${i}"; then
-      echo "[p2] ABORT — 팔 p2_${K#kit_}_a${i} 실패.  원인을 고치고 다시 돌릴 것"
+    if ! run_arm "$(cd "$K" && pwd)" "$SH" "p2_${K#kit_}${SD_TAG}_a${i}"; then
+      echo "[p2] ABORT — 팔 p2_${K#kit_}${SD_TAG}_a${i} 실패.  원인을 고치고 다시 돌릴 것"
       echo "     (이미 끝난 팔은 $OUTDIR 에 남아 있어 다음 실행에서 SKIP 된다)"
       exit 1
     fi
