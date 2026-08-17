@@ -905,6 +905,12 @@ def main():
                 raise SystemExit(f'ABORT — --step3-origin-shift 는 축마다 [0, vox) 여야 한다 '
                                  f'(받은 {_osh.tolist()}, vox {a.step3_vox}).  그 밖이면 '
                                  f'위상 이동이 아니라 격자 자체가 달라진다')
+            #  ⚠ periodic × origin-shift 는 **미검증 조합** — 리뷰 ② 픽스처에서 여분층이
+            #    seam 을 조용히 끊었다 (σ 9.08e-4 → 6.0e-4 = 정확히 3e-3/5).  현행 캠페인은
+            #    비주기라 불활성이지만, 조합이 켜지면 소리 없이 틀리므로 fail-closed.
+            if getattr(a, 'periodic', False) and _osh.any():
+                raise SystemExit('ABORT — --periodic 과 --step3-origin-shift 병용은 미검증 '
+                                 '(여분층이 seam 을 끊는다, 리뷰 ② 재현).  둘 중 하나만 쓸 것')
             _lo3 = tuple(-_osh)
             #  방어적 초기화 — STEP3 가 예외로 건너뛰어도 매니페스트 조립이 죽지 않게.
             #  (실사고: STEP3 를 try 가 삼킨 뒤 매니페스트에서 NameError 로 다시 터졌다.)

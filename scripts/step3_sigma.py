@@ -280,13 +280,17 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         _sph_ijk = None
         if sdcp_sphere_d_um:
             _d = float(sdcp_sphere_d_um)
-            if _d / vox < 2.0:
+            _p5 = add_pts[add_phase == 5]
+            #  ⚠ 게이트는 SDCP 가 **실재할 때만** 발화한다 (리뷰 ② LOW: 옛 판은 phase-5 가
+            #    0개인 침대(SBE)에서도 vox 만 거칠면 막았다 — no-op 인데 막을 이유가 없다).
+            if len(_p5) and _d / vox < 2.0:
                 raise ValueError(
-                    f'부피-보존 구 스탬프: d/vox = {_d / vox:.2f} < 2 — 이 격자에서는 구 '
-                    f'래스터가 입자를 통째로 잃는다 (vox 0.4 실측 87.5 % 소실).  '
+                    f'부피-보존 구 스탬프: d/vox = {_d / vox:.2f} < 2 거부.  '
+                    f'⚠ 근거 정정(리뷰 ②): 전소실 절벽은 √3 ≈ 1.732 (실측: 1.5 에서 소실 '
+                    f'1.24 %, 1.74~2.0 에서 0 %) — 2.0 을 유지하는 진짜 이유는 per-입자 '
+                    f'부피 산포가 [0.48, 1.91]× 로 커서다 (배치-평균은 무편향).  '
                     f'vox ≤ {_d / 2:.3f} µm 를 쓰거나 점 스탬프로 남길 것')
             _r = _d / 2.0
-            _p5 = add_pts[add_phase == 5]
             if len(_p5):
                 _off = int(np.ceil(_r / vox)) + 1
                 _rg = np.arange(-_off, _off + 1)
