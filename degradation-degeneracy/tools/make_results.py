@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import logging
 import sys
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -119,6 +120,68 @@ def _next_no(lines: list[str]) -> int:
     번호가 3 다음 5 로 건너뛰었다. `N. ` 로 시작하는 줄만 센다."""
     import re
     return sum(1 for x in lines if re.match(r"^\d+\. ", x)) + 1
+
+
+@dataclass(frozen=True)
+class P22RenderFacts:
+    """22p 문장을 만드는 데 필요한 **불변 fact 묶음** (★ 18차 Q4 2층).
+
+    세 층을 분리한다.
+
+      canonical derived metric   `objective_comparison.yaml` 에 봉인되는 수치
+      render-only presentation   sealed fits 에서 즉시 재계산되는 표시용 값
+      provenance/status          어느 artifact·spec 이 문장을 만들었는가
+
+    이전 판은 렌더 시점에 `cmp_res['verdict_22p']` 를 `.update()` 해서 앞의 두
+    층을 한 dict 에 섞었다. 그 dict 를 다시 저장하는 코드가 생기는 순간 봉인
+    schema 가 오염된다 — 17차에 실제로 인용 금지 배너를 냈던 경로다. 그래서
+    canonical dict 는 **읽기만** 하고, 문장 재료는 여기로 복사해 얼린다.
+    """
+
+    objective: str
+    noise: float
+    radius: float
+    radius_fallback: bool
+    n_near: int
+    gap_thresh: float = 0.06
+    n_near_exact_equal: int | None = None
+    max_true_pe_ne_gap: float | None = None
+
+    @property
+    def known(self) -> bool:
+        """참값 구성을 아는가 (구버전 artifact 면 지어내지 않는다)."""
+        return (self.n_near_exact_equal is not None
+                and self.max_true_pe_ne_gap is not None)
+
+    @classmethod
+    def build(cls, verdict: dict, composition: dict | None,
+              gap: dict | None = None) -> "P22RenderFacts":
+        """canonical verdict + render-only 구성 → 얼린 fact.
+
+        ★ 17차 발견 9 의 불변식(구성과 verdict 가 같은 표본인가)을 **fact 생성
+        시점**으로 끌어올린다. 예전에는 문장을 만들다가 뒤늦게 터졌다.
+        """
+        comp = composition or {}
+        n = int(verdict.get("n_near", 0))
+        n_comp = comp.get("n_near_composition")
+        if n_comp is not None and int(n_comp) != n:
+            raise ValueError(
+                f"22p 구성이 verdict 와 다른 표본이다 (구성 n={n_comp}, "
+                f"verdict n={n}) — selection protocol(radius·noise·objective)이 "
+                f"어긋났다")
+        return cls(
+            objective=str(verdict.get("objective", "pocv_dvdq")),
+            noise=float(verdict.get("noise", 0.0)),
+            radius=float(verdict.get("radius", 0.021)),
+            radius_fallback=bool(verdict.get("radius_fallback")
+                                 or comp.get("p22_radius_fallback")),
+            n_near=n,
+            gap_thresh=float((gap or {}).get("gap_thresh", 0.06)),
+            n_near_exact_equal=(None if comp.get("n_near_exact_equal") is None
+                                else int(comp["n_near_exact_equal"])),
+            max_true_pe_ne_gap=(None if comp.get("max_true_pe_ne_gap") is None
+                                else float(comp["max_true_pe_ne_gap"])),
+        )
 
 
 def _denominator_note(cmp_res: dict) -> str:
@@ -292,7 +355,7 @@ def _reproduction_scope_note(has_wsweep: bool, has_halfcell: bool,
     return note + "\n"
 
 
-def _p22_composition(v: dict, g: dict | None = None) -> dict:
+def _p22_composition(v, g: dict | None = None) -> dict:
     """★ 16차 발견 4 (17차 사전) — 22p 근방 표본의 **참값 구성**을 문장으로.
 
     이전 판은 "절반은 PE=NE, 절반은 |ΔLAM|=2%p", "wide-gap 은 하나도 없다" 를
@@ -300,23 +363,20 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
     바꾸면 provenance 통과 배지를 단 채 거짓을 말한다. 전부 verdict_22p 가
     보고한 count 에서 만든다.
     """
-    n = int(v.get("n_near", 0))
-    thr = (g or {}).get("gap_thresh", 0.06)
-    if "n_near_exact_equal" not in v or "max_true_pe_ne_gap" not in v:
+    # ★ Q4 2층 — dict 를 받으면 그 자리에서 얼린 fact 로 승격한다 (호출부
+    #   호환용). 이미 P22RenderFacts 면 그대로 쓴다.
+    f = v if isinstance(v, P22RenderFacts) else P22RenderFacts.build(v, v, g)
+    n = f.n_near
+    thr = f.gap_thresh
+    if not f.known:
         # 구버전 artifact — 구성을 모른다. 지어내지 않고 모른다고 쓴다.
         return {"known": False,
                 "headline": f"이 {n}점의 참값 구성은 이 artifact 에 기록되어 있지 않다",
                 "detail": "구버전 `verdict_22p` 라 구성을 인용하려면 재생성이 필요하다",
                 "wide": f"wide-gap(≥{_pp(thr, 0)}) 포함 여부를 확인할 수 없으므로"}
-    # ★ 17차 발견 9 — 구성이 verdict 와 다른 표본에서 나왔으면 렌더를 멈춘다.
-    #   조용히 섞으면 provenance green 인 문서가 두 표본의 숫자를 한 문장에 넣는다.
-    n_comp = v.get("n_near_composition")
-    if n_comp is not None and int(n_comp) != n:
-        raise ValueError(
-            f"22p 구성이 verdict 와 다른 표본이다 (구성 n={n_comp}, verdict n={n}) "
-            f"— selection protocol(radius·noise·objective)이 어긋났다")
-    k = int(v["n_near_exact_equal"])
-    mx = float(v["max_true_pe_ne_gap"])
+    # (표본 일치 불변식은 P22RenderFacts.build 에서 이미 강제된다 — 17차 발견 9)
+    k = f.n_near_exact_equal
+    mx = f.max_true_pe_ne_gap
     if k >= n:
         headline = f"이 {n}점은 참값이 모두 LAM_PE = LAM_NE 다"
         detail = f"PE=NE 가 {k}/{n} 이고 최대 참 격차가 {_pp(mx)} 다"
@@ -333,7 +393,8 @@ def _p22_composition(v: dict, g: dict | None = None) -> dict:
     return {"known": True, "headline": headline, "detail": detail, "wide": wide}
 
 
-def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
+def _conclusion(cmp_res: dict, summary: dict, fits=None,
+                p22_facts: dict | None = None) -> list[str]:
     """핵심 결론 3줄 — 숫자에서 직접 만든다."""
     tbl = pd.DataFrame(cmp_res["table"]).set_index("objective")
     lines = []
@@ -487,7 +548,8 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
     if v and "error" not in v:
         anti = v.get("pe_ne_antisym_frac", 0)
         gap_t, gap_r = v.get("true_pe_ne_gap"), v.get("recovered_pe_ne_gap")
-        comp = _p22_composition(v, g)
+        # ★ Q4 2층 — 얼린 fact 가 있으면 그것만 쓴다 (canonical v 는 읽기 전용)
+        comp = _p22_composition((p22_facts or {}).get(base) or v, g)
         # ★ 15차 발견 7 — 이 값은 artifact·목적함수·noise·반경·임계에 모두
         #   조건부다. count 를 먼저 쓰고 조건을 문장에 박는다.
         lines.append(
@@ -697,6 +759,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     #   지금까지는 실패하면 stale 로만 새고, 통과했을 때 "검증 범위에 wsweep 이
     #   들어 있었는가" 를 문서만 보고 확인할 수 없었다.
     wsweep_prov: dict | None = None
+    #: ★ Q4 2층 — objective → P22RenderFacts (canonical 과 분리된 층)
+    p22_facts: dict = {}
 
     saved_summary = _load(in_dir / "degeneracy_summary.yaml") or {}
     manifest = _load(in_dir / "manifest.yaml") or {}
@@ -727,11 +791,16 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
             #   과 key 집합이 달라져 F87 이 stale 을 올렸다(v4 재생성에서 인용
             #   금지 배너 실측). 그러므로 **stale 대조가 끝난 뒤에** 주입한다.
             from tools.compare_objectives import p22_truth_composition as _p22c
+            # ★ 18차 Q4 2층 — canonical dict 는 **읽기만** 한다. 렌더 재료는
+            #   얼린 fact 로 따로 만든다 (예전엔 여기서 `.update()` 했다).
+            #   ★ 17차 발견 9 — **기록된** radius 를 쓴다 (기본값 재사용 금지)
             for _o, _v in (cmp_res.get("verdict_22p") or {}).items():
                 if isinstance(_v, dict) and "error" not in _v:
-                    # ★ 17차 발견 9 — **기록된** radius 를 쓴다 (기본값 재사용 금지)
-                    _v.update(_p22c(_scored_df, _o, _v.get("noise", 0.0),
-                                    _v.get("radius", 0.021)))
+                    _comp = _p22c(_scored_df, _o, _v.get("noise", 0.0),
+                                  _v.get("radius", 0.021))
+                    p22_facts[_o] = P22RenderFacts.build(
+                        {**_v, "objective": _o}, _comp,
+                        (cmp_res.get("gap_analysis") or {}).get(_o))
         except Exception as e:  # noqa: BLE001
             cmp_res = saved_cmp
             stale.append(f"objective_comparison.yaml (재계산 실패: {e})")
@@ -1064,7 +1133,7 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
 
     # ── 결론 ──
     P.append("## 핵심 결론\n")
-    for line in _conclusion(cmp_res, summary, fits):
+    for line in _conclusion(cmp_res, summary, fits, p22_facts):
         P.append(line + "\n")
     # ★ 14차 발견 6 — 비대칭 pipeline 보고서는 목적함수 간 비교(결론 2)의
     #   인용 정본이 어디인지 스스로 밝혀야 한다. "paired 재실행이 필요하다"는
@@ -1133,12 +1202,13 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
     # ★ 16차 발견 4 — "최근접 8점이 모두 LAM_PE = LAM_NE" 는 사실이 아니다.
     #   0.02 step 에서 (0.13, 0.13, 0.17) 의 8 corner 는 PE=NE 4개 + |PE-NE|=2%p
     #   4개이고 평균 참 격차가 1%p 다 (그 값을 같은 줄에 쓰면서 모순이었다).
-    _v22b = (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {}
+    _v22b = (p22_facts.get("pocv_dvdq")
+             or (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {})
     _c22b = _p22_composition(_v22b, (cmp_res.get("gap_analysis") or {}).get("pocv_dvdq"))
     P.append(f"> ⚠ **{_c22b['headline']}.** {_c22b['detail']}. "
              f"{_c22b['wide']} 22p 판정에 쓸 수 있는 것은 "
              f"\"참 격차가 큰 조건이 붕괴하는가\" 가 아니라 국소 "
-             f"n={_v22b.get('n_near', '?')} 표본의 복원 성적뿐이다 "
+             f"n={getattr(_v22b, 'n_near', None) or (_v22b.get('n_near', '?') if isinstance(_v22b, dict) else '?')} 표본의 복원 성적뿐이다 "
              f"(그 질문의 답은 결론 2 다).\n")
     # ★ 16차 발견 6 — 이 열도 행별 max-mode 절대오차의 평균이다
     P.append("| objective | 근방 조건 | recovery failure | 평균 max-mode \\|err\\| | "
@@ -1165,7 +1235,8 @@ def build(in_dir, out_path="docs/RESULTS.md", repo_root=".") -> Path:
         # ★ 16차 발견 4 의 잔여 — 결론과 22p 절은 고쳤는데 이 도입부가 여전히
         #   "근방은 애초에 PE=NE" 라고 단정해 같은 문서 안에서 자기모순이었다.
         #   근방은 참 격차가 **작을 뿐**이고, 그것만으로도 논지는 성립한다.
-        _v22 = (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {}
+        _v22 = (p22_facts.get("pocv_dvdq")
+                or (cmp_res.get("verdict_22p") or {}).get("pocv_dvdq") or {})
         _c22 = _p22_composition(_v22, gaps.get("pocv_dvdq"))
         _intro = (f"22p 근방 격자점은 **참 격차가 작다** — {_c22['detail']}."
                   if _c22["known"] else

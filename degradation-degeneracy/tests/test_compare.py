@@ -4063,3 +4063,90 @@ def test_freshness_gate_ignores_figure_paths(tmp_path):
 
     got = verify_derived_freshness(d)
     assert got["ok"] is True, got
+
+
+# ── 18차 Q4 2층 — immutable P22RenderFacts ──────────────────────────────────
+
+def test_p22_render_facts_is_immutable():
+    """★ Q4 2층 — 렌더 fact 는 만들어진 뒤 바뀌면 안 된다.
+
+    지금까지는 `cmp_res['verdict_22p']` 를 렌더 단계에서 `.update()` 했다 —
+    canonical derived metric 층과 render-only presentation 층이 한 dict 에
+    섞여, 어느 값이 봉인 대상인지 코드만 보고는 알 수 없었다.
+    """
+    import dataclasses
+
+    from tools.make_results import P22RenderFacts
+
+    f = P22RenderFacts(objective="pocv_dvdq", noise=0.0, radius=0.021,
+                       radius_fallback=False, n_near=8, n_near_exact_equal=4,
+                       max_true_pe_ne_gap=0.02, gap_thresh=0.06)
+    with pytest.raises(dataclasses.FrozenInstanceError):
+        f.n_near = 99
+
+
+def test_p22_render_facts_rejects_a_mismatched_sample():
+    """★ 17차 발견 9 의 불변식을 fact 생성 시점으로 끌어올린다."""
+    from tools.make_results import P22RenderFacts
+
+    verdict = {"objective": "pocv_dvdq", "noise": 0.0, "radius": 0.021,
+               "radius_fallback": False, "n_near": 8}
+    comp = {"n_near_composition": 6, "n_near_exact_equal": 3,
+            "max_true_pe_ne_gap": 0.02}
+    with pytest.raises(ValueError, match="표본"):
+        P22RenderFacts.build(verdict, comp, {"gap_thresh": 0.06})
+
+
+def test_p22_render_facts_carries_the_selection_protocol():
+    """★ radius·noise·fallback 이 fact 에 실려야 문장이 protocol 을 말할 수 있다."""
+    from tools.make_results import P22RenderFacts
+
+    f = P22RenderFacts.build(
+        {"objective": "pocv_dvdq", "noise": 0.0, "radius": 0.05,
+         "radius_fallback": True, "n_near": 1},
+        {"n_near_composition": 1, "n_near_exact_equal": 1,
+         "max_true_pe_ne_gap": 0.0},
+        {"gap_thresh": 0.06})
+
+    assert f.radius == 0.05 and f.radius_fallback is True
+    assert f.known is True
+
+
+def test_build_does_not_mutate_the_canonical_comparison_dict(tmp_path, monkeypatch):
+    """★ Q4 2층 — `build()` 가 canonical 층을 건드리면 안 된다.
+
+    렌더 전용 구성 key 가 `cmp_res['verdict_22p']` 안에 들어가면, 그 dict 를
+    그대로 다시 저장하는 코드가 생기는 순간 봉인 schema 가 오염된다 (17차에
+    실제로 인용 금지 배너를 냈던 경로다).
+    """
+    import tools.compare_objectives as co
+    from tools.compare_objectives import run_compare
+    from tools.make_results import build
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+
+    seen: list = []
+    orig = co.run_compare
+
+    def spy(*a, **kw):
+        out = orig(*a, **kw)
+        if kw.get("write") is False:
+            seen.append(out)
+        return out
+
+    monkeypatch.setattr(co, "run_compare", spy)
+    build(d, tmp_path / "R.md", repo_root=tmp_path)
+
+    assert seen, "재계산 경로를 타지 않았다 — 테스트가 무의미하다"
+    for res in seen:
+        for o, v in (res.get("verdict_22p") or {}).items():
+            for k in ("n_near_composition", "n_near_exact_equal",
+                      "max_true_pe_ne_gap", "p22_radius_fallback"):
+                assert k not in v, (
+                    f"canonical verdict_22p[{o}] 에 렌더 전용 key `{k}` 가 주입됐다")
