@@ -165,7 +165,14 @@ for d in [rd] + nested_runs(rd):
           + ("통과" if v["ok"] else "실패 — " + ", ".join(v["fail"][:4])))
     if not v["ok"]:
         bad.append(tag)
-sys.exit(1 if bad else 0)
+# ★ 19차 사전 — 이 heredoc 은 read-only 검증이다. interpreter teardown 이
+#   간헐적으로 SIGABRT 를 내 (pyarrow 적재 상태, 원인 미규명 — smoke 실측
+#   flake) 정상 검증이 exit 134 로 실패 처리됐다. 다른 read-only validator
+#   (스모크 8단계)와 같은 처방: flush 후 os._exit 로 teardown 을 건너뛴다.
+import os
+sys.stdout.flush()
+sys.stderr.flush()
+os._exit(1 if bad else 0)
 PYEOF
     then :; else ok=0; echo "  격리 복원 검증 실패"; fi
     rm -rf "$iso"
