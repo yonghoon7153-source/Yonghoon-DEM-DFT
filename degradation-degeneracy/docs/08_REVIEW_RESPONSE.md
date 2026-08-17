@@ -1417,3 +1417,73 @@ spec_id 를 재계산해 저장본 `_analysis.analysis_spec_id` 와 대조한다
 
 전체 테스트 **363 passed** · strict smoke 통과(clean `7b17bde`) + 재실행 0 fail
 · 코드 identity `f2ff3092d3cdf610` · 계산 산출물 불변.
+
+---
+
+## 26. 18차 Q4 방어 3층 구축 (1층 → 2층 → 3층 순서 준수)
+
+리뷰가 "리팩터링부터 하면 잘못된 protocol 문구를 새 구조에 그대로 옮길 위험이
+있다" 며 지정한 순서를 그대로 따랐다.
+
+### 26.1 1층 — 문서 전체 characterization matrix (`tests/test_report_matrix.py`)
+
+helper 를 부르지 않는다. 완전한 artifact 조합에서 `build()` 로 문서를 통째로
+만들고 **문서만 보고** 검사한다 — 지금까지 놓친 것들이 전부 "helper 는 옳은데
+그 조합에서 안 불렀다" 였기 때문이다.
+
+조합 4종(main adaptive/warm 전체 · paired fixed/no-warm 최소 · fixed+sweep ·
+adaptive+Hessian) × 5축(protocol 문구 · heading 종수 · 절↔명령 상호 함의 ·
+재현 범위 · 철회 명제 6종 부재) = **40 케이스**.
+
+### 26.2 2층 — immutable `P22RenderFacts`
+
+`build()` 가 `cmp_res['verdict_22p']` 를 `.update()` 하던 것을 없앴다. canonical
+derived metric 층과 render-only presentation 층을 한 dict 에 섞으면, 그 dict 를
+다시 저장하는 코드가 생기는 순간 봉인 schema 가 오염된다 (17차에 실제로 인용
+금지 배너를 낸 경로다). `@dataclass(frozen=True)` 로 얼리고, 표본 일치
+불변식(17차 발견 9)을 **fact 생성 시점**으로 끌어올렸다.
+
+### 26.3 3층 — property test (`tests/test_p22_properties.py`)
+
+radius·noise·격자 step·offset·임계 부동소수점 표현을 흔들며 불변식만 본다
+(P1 표본 일치 · P2 경계 규약 · P3 fallback 정직 · P4 단조성 · P5 문장-사실 대응).
+
+**property test 가 실제 결함을 찾았다.** `_near_22p` 의 반경 비교만 raw `<=`
+였다 — 17차 발견 1 과 같은 부류로, nominal 경계 위의 점이
+`(0.13+0.01)-0.13 = 0.010000000000000009 > 0.01` 처럼 표현 오차로 반경 **밖**
+으로 떨어지고 최악의 경우 fallback 까지 유발했다. `GAP_ATOL` 로 흡수했다.
+v4 실측 영향은 없다 (`n_near=8`, `fallback=False` 그대로).
+
+### 26.4 뮤테이션 검증 — 새 테스트가 처음부터 통과하면 믿지 않는다
+
+1·3층 모두 전부 통과해서, CLAUDE.md 규칙대로 성공으로 보지 않고 뮤테이션을
+돌렸다. **fixture 결함 3건**이 거기서 나왔다.
+
+| 뮤테이션 | 결과 | 드러난 것 |
+|---|---|---|
+| M1 warm 인과 무조건 출력 | 처음엔 **안 물었다** | fits 에 random restart 가 1개뿐이라 `multistart_random_only` 절이 아예 안 떠서 **warm 축이 통째로 미실행** |
+| M2 제목 "4종" 하드코딩 | 4 fail | — |
+| M3 재현범위 boilerplate | 6 fail | — |
+| M4 adaptive 설명 무조건 | 2 fail | — |
+| M5 hessian 명령 부활 | 2 fail | — |
+| M6 feasible domain 부활 | 4 fail | — |
+| M7 canonical dict 변이 부활 | 1 fail | — |
+| M8 표본 불일치 검사 제거 | 1 fail | — |
+| M9 경계 atol 제거 | 10 fail | — |
+| M10 fallback 항상 False | 처음엔 **안 물었다** | 격자에 중심점이 항상 있어 empty-radius fallback 미발생 → P1·P3 축 미실행 |
+| M11 구성 기본 radius 어긋남 | 처음엔 **안 물었다** | 기본값 일치 property 부재 |
+| M12 반경 `<=` → `<` | 처음엔 **안 물었다** | 거리 == radius 인 점이 없어 경계 미실행 → §26.3 실제 결함 발견으로 이어짐 |
+
+같은 라운드에서 "테스트가 축을 안 태운다" 가 **세 번** 나왔다. 뮤테이션 없이는
+40·143개 통과를 그대로 믿었을 것이다.
+
+### 26.5 검증
+
+전체 테스트 **550 passed** (+183) · strict smoke 통과 · 계산 산출물 불변 ·
+v4 보고서 재생성 불필요(반경 수정이 렌더 결과를 바꾸지 않음).
+
+### 26.6 남은 것
+
+- 4층 active-doc lint 는 §24.3 에서 이미 강화 (claim ID · fenced-code parser ·
+  동의어 · positive assertion). `RESULTS*.md` 두 종을 lint 대상에 넣는 것은 미착수
+- A · A' · B · C (Hessian provenance + smoke 커버리지) · E · F 미착수
