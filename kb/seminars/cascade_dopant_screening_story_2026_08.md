@@ -190,16 +190,20 @@ Division of Materials Science & Engineering, Hanyang University
 > ■ Prior work (3): Site-resolved screening already exists
 > • One cation is placed on three candidate sites, and the site is chosen by energy.
 > &nbsp;&nbsp;(Li site · La site · Zr site → the lowest defect energy wins)
-> • Here the unit is [파랑]a precursor compound[/], the way doping is actually done.
-> &nbsp;&nbsp;(Li₂S + P₂S₅ + LiCl  +  MgO → ball-mill → anneal)
-> &nbsp;&nbsp;(a cation and an anion enter together → both sites chosen at once)
+> • A dopant enters as [파랑]a precursor, not an element[/], so a cation and an anion are placed at once.
 
 우상단 출처 — *Adv. Energy Mater.*, 14, 2304025 (2024). / *Chem. Mater.*, 27, 4040 (2015).
 `< 45 dopants × 3 sites in a garnet >`　`해설` one cation at a time
 `< 91 compounds in our sulfide host >`　`해설` one precursor at a time
 `[표]` study / host / what is varied / n / mechanical axis
 하단 — Lee 2024: *J. Mater. Chem. A*, 12, 7272.　Xiao 2019: *Joule*, 3, 1252.
-　　　 Left figure: Anderson et al. (2024) Fig. 3d, plotting defect energies from Miara et al. (2015).
+　　　 Left: Anderson et al. (2024) Fig. 3d — defect energies taken from Miara et al. (2015), as stated in that caption.
+
+⚠ **그림 crop 주의 (2026-08-17 정정)** — Anderson Fig. 3 은 세로 4패널이다.
+   (a) Total LLZO wt % · (b) Cubic LLZO wt % · (c) Bond valence mismatch · (d) Defect energy.
+   우리가 쓸 것은 **(d) 뿐**이고 원본 높이의 **0.762 ~ 1.0** 구간이다.
+   앞 판은 0.695 에서 잘라 **(c) 의 x축 라벨 띠가 같이 들어가** 두 줄로 보였다 — 그래서
+   "출처가 이 그림 맞나" 하는 의심이 생겼다. 재크롭 완료.
 
 **[70초]**
 
