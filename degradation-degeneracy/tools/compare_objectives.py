@@ -683,12 +683,38 @@ def verify_derived_freshness(run_dir, tol: float = 0.02) -> dict:
                 fail.append(f"{path}: {a} ≠ {b}")
 
     walk(saved, now)
-    # self-description 이 실제 fits 를 가리키는가
-    anchor = (saved.get("_analysis") or {}).get("fits_sha256")
+    # ★ 19차 사전 발견 1 — saved→now 한 방향만 돌면, 새 코드가 계산하는 key 가
+    #   **빠진** 부분집합-stale 저장본(더 오래된 schema)이 통과한다. 역방향으로
+    #   key 존재만 다시 대조한다 (값 대조는 위에서 끝났다).
+    def walk_keys(a, b, path=""):
+        if isinstance(a, dict):
+            for k, v in a.items():
+                if isinstance(k, str) and k.startswith("_"):
+                    continue
+                if not isinstance(b, dict) or k not in b:
+                    fail.append(f"{path}.{k}: 저장본에 없다 (옛 schema)")
+                    continue
+                walk_keys(v, b[k], f"{path}.{k}")
+        elif isinstance(a, (list, tuple)) and isinstance(b, (list, tuple)) \
+                and len(a) == len(b):
+            for i, (x, y) in enumerate(zip(a, b)):
+                walk_keys(x, y, f"{path}[{i}]")
+
+    walk_keys(now, saved)
+    # self-description 이 실제 fits 와 **현행 spec** 을 가리키는가
+    a = saved.get("_analysis") or {}
+    anchor = a.get("fits_sha256")
     if anchor:
         from src.io import file_digest
         if anchor != file_digest(fits_p, full=True):
             fail.append("_analysis.fits_sha256: 이 fits 가 아니다")
+    # ★ 19차 사전 발견 2 — spec 이 다르면 숫자가 우연히 맞아도 stale 이다
+    if a.get("analysis_spec_id"):
+        want = analysis_spec_id(analysis_parameters(
+            _scored(fits_p, tol), tol=tol))
+        if a["analysis_spec_id"] != want:
+            fail.append(f"_analysis.analysis_spec_id: 저장 {a['analysis_spec_id'][:12]} "
+                        f"≠ 현행 {want[:12]}")
     return {"ok": not fail, "fail": fail[:20]}
 
 

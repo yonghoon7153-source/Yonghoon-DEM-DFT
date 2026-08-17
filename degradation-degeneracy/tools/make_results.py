@@ -494,8 +494,13 @@ def _conclusion(cmp_res: dict, summary: dict, fits=None) -> list[str]:
             f"3. **22p 조건(LAM_PE≈LAM_NE≈13%, LLI≈17%) 근방의 recovery failure 는 "
             f"{_cnt(v['degenerate_frac'], v['n_near'])}** "
             f"(목적함수 `{base}`, noise={v.get('noise', 0):g}, "
-            f"radius={v.get('radius', 0.021):g} 안의 최근접 {v['n_near']} grid 조건, "
-            f"raw max-mode 오차 > {_pp(g.get('tol', 0.02), 0) if g else '2%p'} 임계) "
+            # ★ 19차 사전 발견 3 — fallback 이면 "radius 안" 은 거짓이다.
+            #   radius 밖 최근접 1점으로 대체됐음을 그대로 쓴다.
+            + (f"radius={v.get('radius', 0.021):g} 안에 조건이 없어 radius **밖** "
+               f"최근접 {v['n_near']}점으로 대체, "
+               if v.get('radius_fallback') else
+               f"radius={v.get('radius', 0.021):g} 안의 최근접 {v['n_near']} grid 조건, ")
+            + f"raw max-mode 오차 > {_pp(g.get('tol', 0.02), 0) if g else '2%p'} 임계) "
             f" — 행별 max-mode 절대오차의 평균 {_pp(v['mean_abs_err'])}, "
             f"raw PE/NE 오차 반대부호 비율 {_pct(anti)}, "
             f"참 PE-NE 격차 {_pp(gap_t)} → 복원 격차 {_pp(gap_r)}. "

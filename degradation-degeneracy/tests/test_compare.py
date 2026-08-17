@@ -3960,3 +3960,84 @@ def test_archive_gate_blocks_a_run_whose_derived_yaml_is_stale(tmp_path):
     bad = subprocess.run(cmd, cwd=root, capture_output=True, text=True)
     assert bad.returncode != 0, bad.stdout
     assert "n_small_gap_true" in bad.stdout + bad.stderr
+
+
+# ── 19차 사전 자체 발견 — freshness 게이트 비대칭 + fallback 렌더 미분기 ─────
+
+def _freshness_fixture(tmp_path):
+    from tools.compare_objectives import run_compare
+
+    d = tmp_path / "res"
+    d.mkdir()
+    df = pd.concat([_gap_fits(collapse=True), _fits(objectives=("pocv_dvdq",))],
+                   ignore_index=True)
+    _scored(df).to_parquet(d / "degeneracy_map.parquet", index=False)
+    df.to_parquet(d / "fits.parquet", index=False)
+    run_compare(d, d)
+    return d
+
+
+def test_freshness_gate_catches_a_subset_stale_yaml(tmp_path):
+    """★ 19차 사전 발견 1 — walk 가 saved→now 한 방향만 돌았다.
+
+    새 코드가 계산하는 key 가 **빠진** 저장본(= 더 오래된 schema)이 공유 key 의
+    숫자만 맞으면 통과했다. v4.1 재보관 직후 실측으로 증명한 구멍이다.
+    """
+    import yaml
+
+    from tools.compare_objectives import verify_derived_freshness
+
+    d = _freshness_fixture(tmp_path)
+    p = d / "objective_comparison.yaml"
+    y = yaml.safe_load(p.read_text(encoding="utf-8"))
+    del y["gap_analysis"]["pocv_dvdq"]["collapse_margin_median"]
+    p.write_text(yaml.safe_dump(y, allow_unicode=True, sort_keys=False),
+                 encoding="utf-8")
+
+    got = verify_derived_freshness(d)
+    assert got["ok"] is False, "부분집합-stale 이 게이트를 통과했다"
+    assert any("collapse_margin_median" in w for w in got["fail"]), got
+
+
+def test_freshness_gate_checks_the_analysis_spec_id(tmp_path):
+    """★ 19차 사전 발견 2 — spec 이 다른 파일은 숫자가 맞아도 stale 이다."""
+    import yaml
+
+    from tools.compare_objectives import verify_derived_freshness
+
+    d = _freshness_fixture(tmp_path)
+    p = d / "objective_comparison.yaml"
+    y = yaml.safe_load(p.read_text(encoding="utf-8"))
+    y["_analysis"]["analysis_spec_id"] = "0" * 64
+    p.write_text(yaml.safe_dump(y, allow_unicode=True, sort_keys=False),
+                 encoding="utf-8")
+
+    got = verify_derived_freshness(d)
+    assert got["ok"] is False, got
+    assert any("analysis_spec_id" in w for w in got["fail"]), got
+
+
+def test_conclusion_22p_says_fallback_instead_of_inside_radius():
+    """★ 19차 사전 발견 3 — 18차 발견 9 의 부분 마감.
+
+    `radius_fallback` 을 **기록**만 하고 renderer 는 무조건 "radius 안의 최근접
+    N grid 조건" 이라고 썼다. fallback 이면 그 문장은 거짓이다.
+    """
+    from tools.make_results import _conclusion
+
+    cmp_res = _gap_cmp_res()
+    base = {"n_near": 1, "degenerate_frac": 0.0, "mean_abs_err": 0.01,
+            "pe_ne_antisym_frac": 0.0, "true_pe_ne_gap": 0.0,
+            "recovered_pe_ne_gap": 0.0, "noise": 0.0, "radius": 0.021,
+            "n_near_composition": 1, "n_near_exact_equal": 1,
+            "max_true_pe_ne_gap": 0.0}
+    cmp_res["verdict_22p"] = {"pocv_dvdq": dict(base, radius_fallback=True)}
+    fb = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+    seg = fb[fb.index("3. **22p"):]
+
+    assert "안의 최근접" not in seg, "fallback 인데 'radius 안' 이라고 쓴다"
+    assert "밖" in seg and ("최근접 1" in seg or "대체" in seg), seg[:500]
+
+    cmp_res["verdict_22p"] = {"pocv_dvdq": dict(base, radius_fallback=False)}
+    ok = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
+    assert "안의 최근접" in ok[ok.index("3. **22p"):]
