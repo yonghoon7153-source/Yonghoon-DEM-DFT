@@ -271,22 +271,14 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
             ijk = np.floor((add_pts - lo) / vox).astype(int)
             ok = ((ijk >= 0) & (ijk < n)).all(1)
             ijk, ph = ijk[ok], add_phase[ok]
-        for code, s in ((2, 3), (3, 4), (5, 5), (4, 7), (6, 8)):   # phase → sid (4=PTFE: sensitivity-
-            m = ph == code                                  #   only; 6=SWCNT sheath A14 → sid 8)
-            if m.any():
-                sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
-        # ── ★★ 입자 첨가제의 **부피-보존 구 스탬프** (2026-08-16, prereg v2 판정 h1 의 대응) ──
-        #   왜: SDCP 는 Ø0.30 µm 인데 위 경로는 **입자당 셀 하나**를 찍는다.  그러면 한 입자가
-        #   `vox³` 를 차지해 참부피 π/6·d³ 대비
-        #        4.53× (vox 0.4) · 1.91 (0.3) · 1.11 (0.25) · **0.24 (0.15)**
-        #   이 된다 — 굵은 격자에서는 부풀고 고운 격자에서는 **쪼그라든다**.
-        #   실측(prereg v2, 8 팔, vox 0.15): σ_e 비 1.0163 → h1 채택 = **이득이 표현 부피를
-        #   따라간다**.  ⇒ 지금까지 SDCP 를 **제 부피로 시뮬한 적이 한 번도 없다**.
-        #   ⇒ `sdcp_sphere_d_um` 을 주면 점이 아니라 **참 직경의 구**로 굽는다.
-        #   ⚠ 유효 조건: d/vox ≳ 2.  그 아래에서는 구 래스터가 입자를 통째로 잃는다
-        #     (실측 vox 0.4 에서 87.5 % 소실) — 그래서 fail-closed 로 거부한다.
-        #     vox 0.15 에서 d/vox = 2.0 → 부피 오차 0.8 %, 소실 0 % (실측).
-        if sdcp_sphere_d_um and add_pts is not None and len(add_pts):
+        # ── SDCP 구 스탬프 셀을 **미리** 구해 둔다 (아래 루프의 제자리에서 쓴다) ──────────
+        #   ⚠⚠ 실사고 2026-08-16: 처음엔 이 계산을 루프 **뒤에** 놓았다.  그러면 SDCP 가
+        #     PTFE(sid 7)·SWCNT(sid 8)를 **덮어버린다** — 점 스탬프에서는 그 둘이 뒤에 와서
+        #     SDCP 를 덮는다 (루프 순서가 곧 우선순위다).  PTFE 는 **절연체**라 SDCP 가 그
+        #     셀을 먹으면 σ_e 가 부풀어 **가짜 이득**이 난다.  규약을 바꾸는 것이 목적이
+        #     아니라 **부피만** 고치는 것이므로 우선순위는 점 스탬프와 **같아야 한다**.
+        _sph_ijk = None
+        if sdcp_sphere_d_um:
             _d = float(sdcp_sphere_d_um)
             if _d / vox < 2.0:
                 raise ValueError(
@@ -294,24 +286,31 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                     f'래스터가 입자를 통째로 잃는다 (vox 0.4 실측 87.5 % 소실).  '
                     f'vox ≤ {_d / 2:.3f} µm 를 쓰거나 점 스탬프로 남길 것')
             _r = _d / 2.0
-            _sel = add_phase == 5                                  # phase 5 = SDCP
-            _pts5 = add_pts[_sel]
-            if len(_pts5):
+            _p5 = add_pts[add_phase == 5]
+            if len(_p5):
                 _off = int(np.ceil(_r / vox)) + 1
-                _rng = np.arange(-_off, _off + 1)
-                _dx, _dy, _dz = np.meshgrid(_rng, _rng, _rng, indexing='ij')
-                _base = np.floor((_pts5 - lo) / vox).astype(int)
-                _ctr = (_base + 0.5) * vox + lo                    # 그 점이 든 셀의 중심
-                for a_, b_, c_ in zip(_dx.ravel(), _dy.ravel(), _dz.ravel()):
-                    _q = _base + (a_, b_, c_)
+                _rg = np.arange(-_off, _off + 1)
+                _ax, _ay, _az = np.meshgrid(_rg, _rg, _rg, indexing='ij')
+                _b = np.floor((_p5 - lo) / vox).astype(int)
+                _acc = []
+                for a_, b_, c_ in zip(_ax.ravel(), _ay.ravel(), _az.ravel()):
+                    _q = _b + (a_, b_, c_)
                     _ok = ((_q >= 0) & (_q < n)).all(1)
                     if not _ok.any():
                         continue
-                    _cc = _ctr[_ok] + (np.array([a_, b_, c_]) * vox)
-                    _in = ((_cc - _pts5[_ok]) ** 2).sum(1) <= _r * _r
+                    _cc = (_q[_ok] + 0.5) * vox + lo                 # 셀 중심 (절대 좌표)
+                    _in = ((_cc - _p5[_ok]) ** 2).sum(1) <= _r * _r
                     if _in.any():
-                        _w = _q[_ok][_in]
-                        sid[_w[:, 0], _w[:, 1], _w[:, 2]] = 5
+                        _acc.append(_q[_ok][_in])
+                if _acc:
+                    _sph_ijk = np.unique(np.vstack(_acc), axis=0)
+        for code, s in ((2, 3), (3, 4), (5, 5), (4, 7), (6, 8)):   # phase → sid (4=PTFE: sensitivity-
+            if code == 5 and _sph_ijk is not None:          #   only; 6=SWCNT sheath A14 → sid 8)
+                sid[_sph_ijk[:, 0], _sph_ijk[:, 1], _sph_ijk[:, 2]] = s   # ★ 제자리 = 같은 우선순위
+                continue
+            m = ph == code
+            if m.any():
+                sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
     return sid, pid
 
 
@@ -1485,6 +1484,31 @@ def _selftest():
     ok &= e; print(f"seam-pnm:  PNM(n_pores={_pnm_n.get('n_pores')}) 은 주기화 못 하는 것을 "
                    f"**표시**한다: {_pnm_n.get('boundary')} → {_pnm_p.get('boundary')}"
                    f"  {'OK' if e else 'FAIL'}")
+    # ── SDCP 구 스탬프 (2026-08-16) — **우선순위가 점 스탬프와 같아야** 한다 ──────────
+    #   실사고: 처음 판은 구 스탬프를 상 루프 **뒤에** 놓아 SDCP 가 PTFE(sid 7, 절연체)와
+    #   SWCNT(sid 8)를 덮었다.  점 스탬프에서는 그 둘이 루프 뒤에 와서 SDCP 를 덮는다
+    #   (루프 순서가 곧 우선순위다).  PTFE 셀을 도체로 바꾸면 σ_e 가 부풀어 **가짜 이득**이
+    #   난다 — 규약을 바꾸는 것이 목적이 아니라 **부피만** 고치는 것이므로 우선순위는 같아야 한다.
+    _pr = True
+    for _oph in (4, 6, 2):
+        _C1 = np.array([[1.0, 1.0, 1.0]])
+        _pp = np.vstack([_C1, _C1]); _ph2 = np.array([5, _oph], np.int8)
+        _s1, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _ph2,
+                           (0, 0, 0), (3., 3., 3.), 0.15)
+        _s2, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _ph2,
+                           (0, 0, 0), (3., 3., 3.), 0.15, sdcp_sphere_d_um=0.30)
+        _i = tuple((np.array([1., 1., 1.]) / 0.15).astype(int))
+        _pr &= (_s1[_i] == _s2[_i])
+    ok &= _pr
+    print(f"sdcp-prio: 구 스탬프 우선순위 == 점 스탬프  {'OK' if _pr else 'FAIL'}")
+    _rf = False
+    try:
+        rasterize(np.zeros((0, 3)), np.zeros(0), None, np.array([[1., 1., 1.]]),
+                  np.array([5], np.int8), (0, 0, 0), (3., 3., 3.), 0.4, sdcp_sphere_d_um=0.30)
+    except ValueError:
+        _rf = True
+    ok &= _rf
+    print(f"sdcp-gate: d/vox < 2 는 거부한다  {'OK' if _rf else 'FAIL'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
