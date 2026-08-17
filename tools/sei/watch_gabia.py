@@ -898,10 +898,20 @@ def _fz():
     outd = os.path.join(base, f"frozen_R{FZ_R}")
     cmd = (f"python3 tools/sei/symmetric_saddle.py --work {FZ_WORK} "
            f"--tag {FZ_TAG} --relax_radius {FZ_R}")
-    print(f"④b cc333 고정셸 ②③ 검증 — Codex 투입금지를 푸는 경로 (R={FZ_R} Å · λ₁/2=7.78)")
+    # ⛔⛔ 2026-08-17 — li3nd 에서 **고정셸은 폐기됐다.** Li 하나가 뛸 때 Nd 부격자가
+    #   1.1 Å 재배열해서 "뛰는 원자 외에는 가만있다" 는 전제가 깨진다
+    #   (kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md 결론 ①).
+    #   → cc333 은 full NEB 으로 갈아탔고, 그 진행은 위 ④ 패널이 이미 본다.
+    #   패널을 지우지는 않는다: FZWORK/FZTAG 를 바꾸면 **다른 계**에는 아직 쓸 수 있다.
+    #   기본 대상(cc333/li3nd)에서 고정셸 산출물이 없고 neb.in 이 있으면 한 줄로 접는다.
     if not os.path.isdir(base):
-        print(f"   · 루트 없음: {base}")
+        print(f"④b 고정셸 파이프라인 — 루트 없음: {base}")
         return
+    if not os.path.isdir(outd) and os.path.isfile(os.path.join(base, "neb.in")):
+        print(f"④b 고정셸 — {FZ_TAG} 는 **폐기**(Nd 부격자 1.1 Å 재배열로 전제 깨짐). "
+              f"full NEB 은 ④ 참조")
+        return
+    print(f"④b cc333 고정셸 ②③ 검증 — Codex 투입금지를 푸는 경로 (R={FZ_R} Å · λ₁/2=7.78)")
     # ── [0/4] 전제: 끝점이 **수렴**했나 (2026-08-16) ─────────────────────────
     #   symmetric_saddle 은 여기 기하를 고정셸의 바탕으로 쓴다. 미수렴 기하로 시작하면
     #   고정 원자가 제 위치가 아니라 장벽에 계통 편향이 실린다. nstep 소진을 "끝남" 으로
