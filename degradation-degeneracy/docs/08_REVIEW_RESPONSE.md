@@ -1359,3 +1359,61 @@ boolean 과 "붕괴가 원리적으로 관측 가능한 범위" 문장을 삭제
 `analysis_manifest.yaml` 추가 + 네 v4 계열 보존 index 재생성)은 **아직 하지
 않았다** — `artifacts/` 바이트를 바꾸는 작업이라 사용자 판단을 받고 진행한다.
 raw `fits`/`curves`/`manifest`/`_inputs`/`wsweep` 는 byte-identical 로 보존한다.
+
+---
+
+## 25. 19차 사전 자체 리뷰 (fable-5 내부 실행) — 발견 4건
+
+외부 리뷰어를 돌릴 수 없어 내부 적대 리뷰로 18차 대응과 v4.1 재보관을
+재검토했다. 4건을 찾아 모두 RED-first 로 닫았다.
+
+### 25.1 freshness 게이트가 한 방향만 순회 — 부분집합-stale 통과
+
+`verify_derived_freshness` 의 walk 가 saved→now 만 돌았다. **새 코드가
+계산하는 key 가 빠진** 저장본(더 오래된 schema)이 공유 key 숫자만 맞으면
+통과했다. 실측: 재보관 직후 묶음에서 `collapse_margin_median` 을 지워도
+`ok=True`. 역방향 key 대조를 추가했다.
+
+### 25.2 게이트가 `analysis_spec_id` 를 대조하지 않음
+
+spec 이 다른 파일이 숫자만 우연히 맞으면 통과했다. 현행 파라미터에서
+spec_id 를 재계산해 저장본 `_analysis.analysis_spec_id` 와 대조한다.
+
+### 25.3 18차 발견 9 의 부분 마감 — fallback 을 기록만 하고 렌더는 무분기
+
+`radius_fallback` 을 verdict 에 **기록**했지만 renderer 는 여전히 무조건
+"radius 안의 최근접 N grid 조건" 이라고 썼다 — fallback 이면 거짓 문장이다.
+결론 3 이 플래그로 분기한다 (v4 는 fallback=False 라 렌더 결과 불변 —
+따라서 committed 보고서 재생성은 불필요하고, 보고서의 report generator
+좌표는 `739453aaf9c07be3` 그대로가 정확한 기록이다).
+
+16차 발견 4(결론만 고치고 절 도입부 방치)와 같은 실패 모드 — "한 발견을 한
+지점에서만 고침" — 이 자체 리뷰에서도 또 나왔다는 사실을 기록해 둔다.
+
+### 25.4 수정 과정에서 만든 두 결함 (즉시 실측으로 드러남)
+
+1. **F87 제외 집합 미공유** — 양방향 walk 를 넣자 smoke 의 **정상** 승격이
+   `.figures.weight_curve: 저장본에 없다` 로 막혔다. `figures` 는 그림 경로
+   목록이지 과학 수치가 아니다. 두 walk 가 F87 과 같은 제외 집합
+   (provenance·provenance_ok·공통_run_spec·figures)을 쓴다.
+2. **격리 복원 검증 heredoc 의 SIGABRT teardown flake 노출** — smoke 반복에서
+   wrapper 승격이 2/4 실패했다. 실패 지점은 항상 같은 heredoc 이고 프로세스가
+   출력 없이 죽었다(pyarrow 적재 상태 teardown SIGABRT, 원인 미규명 — 15차
+   실측과 동일 서명). read-only 검증이므로 smoke 8단계의 기존 처방과 같이
+   flush 후 `os._exit(rc)`. 수정 전 2/4 실패 → 수정 후 wrapper 단독 6/6 ·
+   전체 smoke 연속 2회 0 fail.
+
+### 25.5 통과 확인한 렌즈 (발견 없음)
+
+| 렌즈 | 결과 |
+|---|---|
+| v4.1 재보관 raw byte-identity | payload digest 전수 대조 변경 0건 (§24 와 동일) |
+| artifact_index 4계열 보존 + `source_commit=c0f1daa0` | 통과 |
+| 보관된 `analysis_manifest` generator 좌표 | `dec589a` / `739453aaf9c07be3` / dirty=False — 정확 |
+| 강화된 게이트 vs 보관 v4.1 세 묶음 | 3/3 통과 (spec_id 일치) |
+| v4.1 묶음 격리 복원 → compare 없이 직접 report | 인용 금지 배너 0 |
+
+### 25.6 검증
+
+전체 테스트 **363 passed** · strict smoke 통과(clean `7b17bde`) + 재실행 0 fail
+· 코드 identity `f2ff3092d3cdf610` · 계산 산출물 불변.
