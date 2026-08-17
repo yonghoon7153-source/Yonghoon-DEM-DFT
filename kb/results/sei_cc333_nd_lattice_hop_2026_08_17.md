@@ -37,6 +37,8 @@ evidenceScope: single-source
 |---|---|---|
 | ccpath 홉 (2×2×2, 31원자) | Li#24 · **3.667 Å** | `ep_*/relax.in` = 갓 지은 입력 |
 | cc333 홉 (3×3×3, 107원자) | Li#32 · **3.667 Å** (나머지 106개 0.000) | 〃 |
+| 〃 (도구 자체 보고) | `최근접 Li–Li 홉 3.667 Å · 홉 shell c-c` | `build_neb_inputs.py` 재빌드 |
+| 끝점 입력 재현 | `diff` 동일 — 원본 빌드와 바이트 일치 | `relax.in.asbuilt` 대조 |
 | cc333 이어달리기 입력 (`_r2`) | Li#32 4.203 · Nd 1.08–1.24 (107/107 이동) | **1차 이완 후 좌표** — 홉 정의 아님 |
 | 격자 상수 | 10.37/2 = 5.185 · 15.56/3 = 5.187 Å | λ₁ 실측, **같은 격자** |
 | ccpath λ₁/2 | 5.19 Å > 홉 3.667 | min-image 모호 아님 |
@@ -104,14 +106,21 @@ cc333 의 4.203 과 일치하는 것도 같은 뜻이다.
 
 ## 4. 부수 발견 (별개로 처리 필요)
 
-- **`meta.json` 부재** — `/data/work/runs/sei_neb_v2_cc333/**/meta.json` 이 하나도 없다.
-  `symmetric_saddle.py` 는 없으면 조용히 `{}` 를 써서 `sym=None` 이 된다.
-  이번엔 배위로 손수 확인했지만, 앞으로도 중점법은 계속 막힌다.
-  → 끝점 생성 시 **spglib orbit 판정을 meta 에 찍는 단계**가 빠져 있다.
+- **~~`meta.json` 부재~~ ✅ 해소 (2026-08-17)** — meta 가 없던 것은 build 가
+  "끝점 미이완" 으로 **조기 반환**해서였다(아래 항목이 원인). 재빌드에서
+  `대칭 Fm-3m · Li 자리 2종 ['c','b'] · 끝점 대칭 동등` 이 정상 판정돼 meta 가 찍혔다.
+- **⛔ `build_neb_inputs.py` 가 이어달리기(`_r2`)를 몰랐다 — 이번 정체의 진짜 원인.**
+  `ep_initial/relax.out` 만 봤는데 1차 패스는 스텝 소진이라
+  `Begin final coordinates` 가 없다 → **수렴본을 옆에 두고 "끝점 미이완" 으로 조기 반환.**
+  meta.json 부재도, symmetric_saddle 이 막힌 것도 전부 여기서 파생됐다.
+  → `symmetric_saddle.endpoint_dir()` 를 import 하도록 수정 (commit `b18b74b3`).
 - **gabia 도구 지연** — gabia `~/Yonghoon-DEM-DFT` 가 `74d21958` 에 머물러
   `endpoint_dir()` 이 없는 판이었다. 그래서 **watch 는 수렴본(`_r2`)을 보고
   도구는 미수렴 원본을 보는** 상태였고, "끝점 이완이 수렴하지 않았다" 로 잘못 막혔다.
   → gabia 에서 도구 돌리기 전 `git pull` 을 관례로.
+- **전하 규약** — `li3nd 는 metal 이라 vacancy_charge 를 neutral(tot_charge=0) 로 강제`.
+  요청한 `minus1` 이 게이트에서 무시됐고 **그게 맞다**(금속에 jellium 은 틀림).
+  ccpath 도 같은 게이트를 탔기에 `.ep_hash` 가 일치해 끝점 승계가 성립했다.
 - **`build_frozen()` 이 위치를 `relax.in` 에서 읽는다** — `build()` 는 `relax.out`(이완본).
   이번 판정은 어느 쪽으로 읽어도 같았지만 **되는 케이스에서는 답이 갈릴 수 있다.**
   설계 의도 확인 필요.
