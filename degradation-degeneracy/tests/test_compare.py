@@ -4041,3 +4041,25 @@ def test_conclusion_22p_says_fallback_instead_of_inside_radius():
     cmp_res["verdict_22p"] = {"pocv_dvdq": dict(base, radius_fallback=False)}
     ok = "\n".join(_conclusion(cmp_res, {"n_rows_recoverable": 1476}))
     assert "안의 최근접" in ok[ok.index("3. **22p"):]
+
+
+def test_freshness_gate_ignores_figure_paths(tmp_path):
+    """★ 19차 사전 — `figures` 는 그림 경로 목록이지 과학 수치가 아니다.
+
+    F87 `_numbers_equal` 은 처음부터 제외했는데 freshness 게이트가 그 집합을
+    공유하지 않아, **정상** artifact 의 승격이 figures 차이로 막혔다
+    (smoke 실측: `.figures.weight_curve: 저장본에 없다`).
+    """
+    import yaml
+
+    from tools.compare_objectives import verify_derived_freshness
+
+    d = _freshness_fixture(tmp_path)
+    p = d / "objective_comparison.yaml"
+    y = yaml.safe_load(p.read_text(encoding="utf-8"))
+    y["figures"] = {"weight_curve": "figures/other_path.png"}
+    p.write_text(yaml.safe_dump(y, allow_unicode=True, sort_keys=False),
+                 encoding="utf-8")
+
+    got = verify_derived_freshness(d)
+    assert got["ok"] is True, got

@@ -657,12 +657,15 @@ def verify_derived_freshness(run_dir, tol: float = 0.02) -> dict:
     now = run_compare(run_dir, write=False, df=_scored(fits_p, tol), tol=tol)
 
     fail = []
+    # ★ F87 과 같은 비교 제외 집합 — 그림 경로·provenance 는 과학 수치가 아니다.
+    #   (19차 사전: `figures` 를 빼먹어 smoke 의 정상 승격이 게이트에 막혔다)
+    _SKIP_KEYS = ("provenance", "provenance_ok", "공통_run_spec", "figures")
 
     def walk(a, b, path=""):
         if isinstance(a, dict):
             for k, v in a.items():
-                if isinstance(k, str) and k.startswith("_"):
-                    continue           # 주석·self-description 은 대조 대상 아님
+                if isinstance(k, str) and (k.startswith("_") or k in _SKIP_KEYS):
+                    continue           # 주석·self-description·그림 경로 제외
                 if not isinstance(b, dict) or k not in b:
                     fail.append(f"{path}.{k}: 재계산본에 없다")
                     continue
@@ -689,7 +692,7 @@ def verify_derived_freshness(run_dir, tol: float = 0.02) -> dict:
     def walk_keys(a, b, path=""):
         if isinstance(a, dict):
             for k, v in a.items():
-                if isinstance(k, str) and k.startswith("_"):
+                if isinstance(k, str) and (k.startswith("_") or k in _SKIP_KEYS):
                     continue
                 if not isinstance(b, dict) or k not in b:
                     fail.append(f"{path}.{k}: 저장본에 없다 (옛 schema)")
