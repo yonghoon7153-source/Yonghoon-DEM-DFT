@@ -26,6 +26,8 @@ import glob as _glob
 import json
 import math
 import os
+import pathlib
+import sys
 
 BETA_OK = (0.80, 1.20)
 MSD_MIN_A2 = 3.0            # 창 끝 MSD 하한 — 이보다 작으면 자리 이탈을 못 한 것
@@ -99,9 +101,81 @@ def _curve(d, mto=False):
     return d.get("times_ps"), d.get("msd_Li_A2")
 
 
+
+def selftest():
+    """판정 로직 검증. **음성 경로가 핵심이다** — 못 잰 것을 통과로 읽지 않는지.
+
+    이 selftest 가 생긴 이유(2026-08-17): lpsocl 작은 셀 3런이 MSD 배열 없이
+    β 세 칸 전부 '—' 였는데 마지막 줄이 `✅ 3개 전부 확산 영역 — D/Ea 인용 가능`
+    이었다. 양성만 보는 검사는 이걸 못 잡는다.
+    """
+    import io as _io
+    import json as _json
+    import contextlib as _ctx
+    import tempfile as _tf
+    n_ok = n_bad = 0
+
+    def chk(cond, msg):
+        nonlocal n_ok, n_bad
+        if cond:
+            n_ok += 1
+            print(f"  ✓ {msg}")
+        else:
+            n_bad += 1
+            print(f"  ✗ {msg}")
+
+    def run(files_json, *argv):
+        """임시 msd.json 들을 만들고 main() 을 돌려 **출력 전체**를 돌려준다."""
+        d = _tf.mkdtemp()
+        for i, obj in enumerate(files_json):
+            sub = pathlib.Path(d) / f"T600_s{i}" / "cfg"
+            sub.mkdir(parents=True)
+            (sub / "msd.json").write_text(_json.dumps(obj), encoding="utf-8")
+        buf = _io.StringIO()
+        old = sys.argv
+        sys.argv = ["x", "--glob", f"{d}/*/**/msd.json", *argv]
+        try:
+            with _ctx.redirect_stdout(buf):
+                main()
+        finally:
+            sys.argv = old
+        return buf.getvalue()
+
+    # 이상적인 확산 곡선 MSD = 6Dt (β = 1)
+    t = [round(0.5 * k, 2) for k in range(1, 201)]          # 0.5 … 100 ps
+    lin = {"times_ps": t, "msd_Li_A2": [0.7 * u for u in t], "D_Li_cm2_s": 1.2e-5}
+    # 케이지: MSD = c + m t 로 절편이 큰 것 (β < 1)
+    cage = {"times_ps": t, "msd_Li_A2": [12.0 + 0.7 * u for u in t], "D_Li_cm2_s": 1.2e-5}
+    # ⛔ 문제의 모양: D 는 있는데 MSD 배열이 없다
+    nomsd = {"D_Li_cm2_s": 7.4e-6}
+
+    out = run([lin, lin])
+    chk("✅ 2개 전부 확산 영역" in out, "[양성] 확산 곡선 2개 → ✅")
+
+    out = run([nomsd, nomsd, nomsd])
+    chk("✅" not in out,
+        "[음성·핵심] MSD 배열이 없으면 ✅ 를 찍지 않는다 (fail-open 회귀)")
+    chk("아무것도 판정하지 않았다" in out,
+        "[음성] 전부 못 쟀으면 그렇게 말한다")
+    chk("3/3" in out, "[음성] 못 잰 개수를 센다")
+
+    out = run([lin, nomsd])
+    chk("✅" not in out, "[음성] 하나만 못 재도 ✅ 로 뭉개지 않는다")
+    chk("1/2" in out, "[음성] 섞여 있으면 못 잰 쪽만 센다")
+
+    out = run([cage, cage])
+    chk("입증하지 못했다" in out, "[양성] 절편 큰 곡선은 케이지로 잡는다")
+    chk("✅" not in out, "[음성] 케이지인데 ✅ 가 같이 찍히지 않는다")
+
+    print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
+    return 1 if n_bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--glob", required=True, help="msd.json 글롭 (따옴표로 감쌀 것)")
+    ap.add_argument("--glob", help="msd.json 글롭 (따옴표로 감쌀 것)")
+    ap.add_argument("--selftest", action="store_true",
+                    help="서버·데이터 없이 판정 로직만 검증 (음성 경로 포함)")
     ap.add_argument("--mto", action="store_true",
                     help="다중 시간원점 곡선(msd_Li_A2_mto)으로 본다. "
                          "케이지/sub-diffusion 을 가르는 c 행 판별을 MTO 에 거는 것이 "
@@ -117,6 +191,10 @@ def main():
                     help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
     a = ap.parse_args()
+    if a.selftest:
+        return selftest()
+    if not a.glob:
+        ap.error('--glob 이 필요하다 (또는 --selftest)')
 
     # ⚠⚠ 2026-08-11 — `recursive=True` 가 빠져 있었다. 그러면 `**` 가 재귀가 아니라
     #   **한 단계**로만 동작해서, 캠페인이 실제로 쓰는 경로
@@ -203,6 +281,11 @@ def main():
     #   β 로 '구제' 판정을 하면 안 된다. 창마다 게이트의 신뢰도가 다르다.
     print(f"{'case':34s} {'D(cm2/s)':>10s} {'beta':>6s} {'MSD@hi':>8s}  판정")
     bad = []
+    #: ⛔⛔ 2026-08-17 fail-open — MSD 배열이 없는 런은 `continue` 로 건너뛰고 bad 에도
+    #:   안 들어가서, **아무것도 못 쟀는데** 마지막 줄이 "✅ 전부 확산 영역 — D/Ea
+    #:   인용 가능" 으로 찍혔다 (lpsocl 작은 셀 3런이 그랬다: β 세 칸이 전부 '—' 인데 ✅).
+    #:   못 잰 것은 통과가 아니다. 따로 세서 총평이 ✅ 로 못 가게 막는다.
+    unmeasured = []
     for f in files:
         d = json.load(open(f))
         t, y = _curve(d, a.mto)
@@ -214,6 +297,7 @@ def main():
               if v is None or v != v else sp.format(v))
         if not t or not y:
             print(f"{tag:34s} {_f(D, '{:10.3e}')} {'—':>6s} {'—':>8s}  ⚠ MSD 배열 없음")
+            unmeasured.append((tag, "MSD 배열 없음 — β 를 재지 못했다"))
             continue
         b = loglog_slope(t, y, lo, hi)
         msd_hi = max((v for u, v in zip(t, y) if u <= hi), default=float("nan"))
@@ -390,8 +474,21 @@ def main():
         print("   처방: ① --scan 으로 c 판별 ② 표본(이온 수·시간원점)을 늘린다 "
               "③ 그래도 c 가 크면 그 온도를 Arrhenius 에서 뺀다")
         print("   ⚠ ③ 은 캠페인 규약(600/800/1000 3점)의 예외다 — 근거를 db 에 남길 것.")
-    else:
+    elif not unmeasured:
         print(f"✅ {len(files)}개 전부 확산 영역 — D/Ea 인용 가능.")
+
+    if unmeasured:
+        # ⛔ 못 잰 것과 통과한 것을 **한 줄로 합치지 않는다**. 합치면 "3개 중 3개 확산"
+        #   처럼 읽혀서, 게이트를 통과했다고 믿고 D 를 인용하게 된다.
+        print(f"⛔ **{len(unmeasured)}/{len(files)} 개는 β 를 아예 재지 못했다 — 통과가 아니다.**")
+        for tag, why in unmeasured:
+            print(f"   {tag}: {why}")
+        print("   msd.json 에 times_ps/msd_A2 배열이 없다 (D 만 저장된 옛 판이거나 "
+              "MSD 저장 단계가 빠진 런).")
+        print("   → 그 런의 D 는 **이 게이트를 통과한 값이 아니다.** 배열을 다시 만들거나"
+              " (tools/ionic/ 의 MSD 산출 단계 재실행) 다른 런으로 비교할 것.")
+        if len(unmeasured) == len(files):
+            print("   ⚠ 전부 못 쟀다 — 이 실행은 **아무것도 판정하지 않았다**.")
 
 
 if __name__ == "__main__":
