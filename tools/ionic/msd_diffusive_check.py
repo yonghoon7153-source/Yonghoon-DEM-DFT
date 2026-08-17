@@ -152,6 +152,9 @@ def selftest():
     out = run([lin, lin])
     chk("✅ 2개 전부 확산 영역" in out, "[양성] 확산 곡선 2개 → ✅")
 
+    # STO 는 있는데 MTO 만 없는 것 — 처방이 정반대라 문구가 갈려야 한다
+    stoonly = {"times_ps": t, "msd_Li_A2": [0.7 * u for u in t], "D_Li_cm2_s": 7.4e-6}
+
     out = run([nomsd, nomsd, nomsd])
     chk("✅" not in out,
         "[음성·핵심] MSD 배열이 없으면 ✅ 를 찍지 않는다 (fail-open 회귀)")
@@ -162,6 +165,16 @@ def selftest():
     out = run([lin, nomsd])
     chk("✅" not in out, "[음성] 하나만 못 재도 ✅ 로 뭉개지 않는다")
     chk("1/2" in out, "[음성] 섞여 있으면 못 잰 쪽만 센다")
+
+    out = run([stoonly, stoonly], "--mto")
+    chk("MTO 곡선 없음" in out,
+        "[음성] STO 만 있는데 --mto 를 주면 **그렇게** 말한다 (‘배열 없음’ 아님)")
+    chk("--mto` 를 빼면" in out or "--mto" in out,
+        "[음성] 다음에 뭘 하면 되는지 알려준다")
+    chk("✅" not in out, "[음성] MTO 못 재고 ✅ 로 넘어가지 않는다")
+    out = run([stoonly, stoonly])
+    chk("✅ 2개 전부 확산 영역" in out,
+        "[양성] 같은 파일을 --mto 없이 주면 **바로 잰다** (재계산 불필요 확인)")
 
     out = run([cage, cage])
     chk("입증하지 못했다" in out, "[양성] 절편 큰 곡선은 케이지로 잡는다")
@@ -296,8 +309,17 @@ def main():
         _f = (lambda v, sp: "—".rjust(len(sp.format(0)))
               if v is None or v != v else sp.format(v))
         if not t or not y:
-            print(f"{tag:34s} {_f(D, '{:10.3e}')} {'—':>6s} {'—':>8s}  ⚠ MSD 배열 없음")
-            unmeasured.append((tag, "MSD 배열 없음 — β 를 재지 못했다"))
+            # ⚠ 2026-08-17 — "MSD 배열 없음" 은 **틀린 진단이었다.** lpsocl 작은 셀은
+            #   msd_Li_A2/times_ps 를 갖고 있었고, 없는 건 `--mto` 가 찾는
+            #   msd_Li_A2_mto 뿐이었다. 두 경우는 처방이 완전히 다르다:
+            #     · MTO 만 없다 → --mto 를 빼면 **지금 바로** 잴 수 있다 (재계산 0)
+            #     · 정말 아무것도 없다 → MSD 산출 단계를 다시 돌려야 한다
+            #   같은 문구로 뭉개면 "재계산해야 한다" 로 읽혀 하루를 버린다.
+            sto = bool(d.get("msd_Li_A2") and d.get("times_ps"))
+            why = ("MTO 곡선 없음 (STO 배열은 있다) — `--mto` 를 빼면 잴 수 있다"
+                   if a.mto and sto else "MSD 배열 없음 — β 를 재지 못했다")
+            print(f"{tag:34s} {_f(D, '{:10.3e}')} {'—':>6s} {'—':>8s}  ⚠ {why.split(' —')[0]}")
+            unmeasured.append((tag, why))
             continue
         b = loglog_slope(t, y, lo, hi)
         msd_hi = max((v for u, v in zip(t, y) if u <= hi), default=float("nan"))
