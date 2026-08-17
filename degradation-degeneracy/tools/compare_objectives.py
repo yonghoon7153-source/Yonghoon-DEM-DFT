@@ -161,7 +161,11 @@ def _near_22p(df: pd.DataFrame, objective: str, noise: float, radius: float):
     if sub.empty:
         return None, None, False
     d = np.sqrt(sum((sub[k] - v) ** 2 for k, v in EXP_22P.items()))
-    near = sub[d <= radius]
+    # ★ 19차 property test 발견 — 반경 비교만 raw `<=` 였다. 17차 발견 1 과
+    #   같은 부류다: nominal 경계 위의 점이 `(0.13+0.01)-0.13 =
+    #   0.010000000000000009 > 0.01` 처럼 표현 오차로 반경 **밖**으로 떨어져,
+    #   최악의 경우 fallback 까지 유발했다. 같은 atol 로 흡수한다.
+    near = sub[d <= radius + GAP_ATOL]
     fallback = bool(near.empty)
     if fallback:                         # 격자에 정확히 없으면 최근접 1점
         near = sub.loc[[d.idxmin()]]
