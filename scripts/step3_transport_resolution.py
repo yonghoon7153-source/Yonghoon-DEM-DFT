@@ -72,10 +72,15 @@ def rasterize_spheres(vox, origin, length_um, spheres, lattice_shift=None):
     sh = np.zeros(3) if lattice_shift is None else np.asarray(lattice_shift, float)
     if (sh < 0).any() or (sh >= vox).any():
         raise ValueError(f'lattice_shift 는 축마다 [0, vox) 여야 한다 (받은 {sh.tolist()})')
-    n = int(round(length_um / vox)) + (1 if sh.any() else 0)
-    sid = np.zeros((n, n, n), np.int8)
-    g0 = (np.arange(n) + 0.5) * vox
-    X, Y, Z = np.meshgrid(g0 - sh[0], g0 - sh[1], g0 - sh[2], indexing='ij')
+    #  ⚠⚠ 2026-08-16 (심층 리뷰 ①, MED-6): 옛 판은 **한 축이라도** 이동하면 세 축 **모두**
+    #    +1 셀을 줬다.  σ_eff 분모가 nx·ny·vox² 이므로 그것만으로 −3.9 % (@vox 0.4) 편향이
+    #    생긴다 = "순수 위상 앙상블" 이 아니었다.  ⇒ **이동한 축만** +1, 그리고 호출자가
+    #    `area_um2` 로 물리 단면적을 넘긴다 (solve_sigma_z 의 override).
+    n3 = [int(round(length_um / vox)) + (1 if sh[k] > 0 else 0) for k in range(3)]
+    sid = np.zeros(tuple(n3), np.int8)
+    n = max(n3)                                          # 아래 경계 클립용 (축별로 다시 본다)
+    ax = [(np.arange(n3[k]) + 0.5) * vox - sh[k] for k in range(3)]
+    X, Y, Z = np.meshgrid(ax[0], ax[1], ax[2], indexing='ij')
     o = np.asarray(origin, float)
     for cen, rad, code in spheres:
         rel = np.asarray(cen, float) - o
@@ -83,7 +88,7 @@ def rasterize_spheres(vox, origin, length_um, spheres, lattice_shift=None):
         m = ((rel + r[:, None] > 0) & (rel - r[:, None] < length_um)).all(1)
         for p, rr in zip(rel[m], r[m]):
             i0 = np.maximum(((p - rr) / vox).astype(int), 0)
-            i1 = np.minimum(((p + rr) / vox).astype(int) + 2, n)
+            i1 = np.minimum(((p + rr) / vox).astype(int) + 2, np.array(n3))
             if (i0 >= i1).any():
                 continue
             sx, sy, sz = (slice(i0[k], i1[k]) for k in range(3))
@@ -106,11 +111,13 @@ def resolution_sweep(spheres, base_origin, length_um, voxes, feature_d_um=1.0, n
         vals, phi, unc, res = [], [], [], []
         for sh in shifts:
             sid = rasterize_spheres(vox, base_origin, length_um, spheres, lattice_shift=sh)
-            r_ = solve_sigma_z(sid, sig, vox)
+            #  ★ 물리 단면적을 명시 — 이동으로 낀 빈 열이 분모에 들어가지 않게 (리뷰 ① HIGH-1)
+            r_ = solve_sigma_z(sid, sig, vox, area_um2=length_um * length_um)
             vals.append(float(r_['sigma_eff']))
             unc.append(bool(r_.get('unconverged')) or int(r_.get('cg_info', 0) or 0) != 0)
             res.append(float(r_.get('resid', 0.0) or 0.0))
-            phi.append(float((sid == SID_SE).mean()))
+            #  φ 도 물리 부피 기준 (셀 수 평균은 이동 팔에서 분모가 커져 낮게 나온다)
+            phi.append(float((sid == SID_SE).sum()) * vox ** 3 / length_um ** 3)
         vals = np.array(vals)
         rows.append({'vox': float(vox), 'feature_per_dx': float(f'{feature_d_um / vox:.3f}'),
                      'sigma_ion_origins': [float(f'{v:.6g}') for v in vals],

@@ -387,7 +387,8 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
 
 
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
-                  z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False):
+                  z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
+                  area_um2=None):
     """Effective through-plane (z) σ of the voxel σ-id grid.  Finite volume, harmonic-mean face
     conductance g = (2σaσb/(σa+σb))·vox (cubic voxels: face area vox² / distance vox), collector
     plate φ=1 at the bed bottom, φ=0 plate at the bed top, lateral Neumann.
@@ -536,7 +537,16 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     # total current through the bottom plate: I = Σ g_b·(1 − φ)
     I = float(np.sum(_gb * (1.0 - phi[_Ab]))) if _Ab is not None else 0.0
     # σ_eff = I·L/(A·ΔV): L = plate gap (µm), A = nx·ny·vox² → σ_eff in the σ-table unit (S/cm)
-    sigma_eff = max(0.0, I * (z_plate - z_b) / (nx * ny * vox * vox))
+    # ⚠⚠ 2026-08-16 (심층 리뷰 ①, HIGH-1): 기본 A = nx·ny·vox² 는 **격자 전체** 면적이다.
+    #   origin 을 측면으로 밀면 축마다 셀이 하나 늘어 **빈 반셀 열**이 분모에 끼고 σ 가
+    #   계통적으로 nx/(nx+1) 만큼 낮아진다 (균질 블록 픽스처가 36/37 을 소수 8자리로 적중;
+    #   실침대 상한 −0.30 %/축, 침대 벽면 채움에 의존).
+    #   ⇒ **물리 단면적을 아는 호출자는 `area_um2` 로 넘겨라.**  기본값은 종전 그대로라
+    #     진행 중 캠페인의 규약은 바뀌지 않는다 (팔간 일관성 보존).
+    #   ⚠ 이 편향은 같은 팔의 두 침대에 **공통 곱 인자**라 SBE/DBE **비에서는 소거**된다
+    #     (보정 Δ 1.6e-6) — 절대값을 인용할 때만 문제다.
+    _A = float(area_um2) if area_um2 else (nx * ny * vox * vox)
+    sigma_eff = max(0.0, I * (z_plate - z_b) / _A)
     out = {'sigma_eff': float(sigma_eff), 'n_dof': n_dof, 'n_floating_dropped': n_float,
            # ★ n_dof 는 **합집합**(한쪽 플레이트에라도 닿음).  아래 둘을 병기해 이름을 정직하게.
            'n_plate_reachable_dof': n_plate_reachable_dof,      # ≡ n_dof (legacy: either_plate)
