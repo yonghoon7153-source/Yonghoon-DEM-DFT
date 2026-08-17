@@ -1,0 +1,81 @@
+{
+ "_what": "prereg v2 판별 런 원자료 — σ 값을 원격 로그에서 그대로 전재 (payload 140MB×16 은 원격 보관)",
+ "_prereg": "docs/reviews/sdcp_gain_prereg_v2_20260816.md",
+ "_host": "esp-Z590-AORUS-MASTER (RTX 3090, gpu_host_env_20260816_1410.txt)",
+ "_convention": {
+  "vox_um": 0.15,
+  "bridge_um_fixed": 0.48,
+  "fibre_stamp": "segment",
+  "sigma_vgcf_dia_preserving": 78.5398,
+  "arms": "a0..a7 = {0,0.075}³ factorial; a1=z a2=y a3=yz a4=x a5=xz a6=xy a7=xyz",
+  "_precision": "payload 저장 정밀도 .4g — 아래 값은 그 정밀도까지만 확정"
+ },
+ "point_stamp": {
+  "outdir_remote": "~/sdcp/prereg_v2_vox015/",
+  "sigma_e_SBE": [
+   0.07302,
+   0.07298,
+   0.07181,
+   0.07263,
+   0.0726,
+   0.07313,
+   0.07252,
+   0.07252
+  ],
+  "sigma_e_DBE": [
+   0.07427,
+   0.07408,
+   0.07298,
+   0.07369,
+   0.07382,
+   0.07416,
+   0.07383,
+   0.07385
+  ],
+  "sigma_ion_SBE": [
+   0.0005703,
+   0.0005694,
+   0.0005692,
+   0.0005682,
+   0.000569,
+   0.0005681,
+   0.0005679,
+   0.0005669
+  ],
+  "sigma_ion_DBE": [
+   0.0005688,
+   0.0005679,
+   0.0005678,
+   0.0005667,
+   0.0005675,
+   0.0005667,
+   0.0005666,
+   0.0005655
+  ],
+  "cg_info_note": "a1..a7 = 0 (payload 기록); a0 두 팔은 cg_info 필드 도입(8a198fd8) 전 실행 — payload 에는 없고 로그 resid 1.0e-08 로만 확정",
+  "verdict": {
+   "ratio": 1.016294,
+   "se_ratio_pct_hypot": 0.2784,
+   "decision": "h1",
+   "paired_se_pct": 0.055,
+   "paired_note": "쌍별 SE 는 사후 보조 통계 (리뷰 ③) — 등록 통계량은 hypot.  관측은 h1 점예측 1.015 에서 쌍별 2.3σ = 점-일치 서술 금지"
+  }
+ },
+ "sphere_stamp_PARTIAL_DEFECT": {
+  "_warning": "⚠ 우선순위 결함 포함 코드(c0a9dcc8)의 런 — CL-34 hold, 인용 금지.  대조 팔 대기",
+  "outdir_remote": "~/sdcp/prereg_v2_vox015_sph/",
+  "sigma_e_SBE": [
+   0.07302,
+   0.07298,
+   0.07181,
+   0.07263
+  ],
+  "sigma_e_DBE": [
+   0.08224,
+   0.08219,
+   0.08087,
+   0.08152
+  ],
+  "note_negative_control": "SBE 팔이 점-스탬프와 4유효숫자 동일 = 구 스탬프는 phase-5 부재 시 no-op"
+ }
+}
