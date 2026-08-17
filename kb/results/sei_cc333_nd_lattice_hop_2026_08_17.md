@@ -6,6 +6,8 @@ tags: [sei, neb, li3nd, cc333, symmetric-saddle, cell-convergence]
 status: 진행
 confidence: medium
 verificationStatus: verified
+verifiedAt: 2026-08-17
+verifiedBy: self
 explored: false
 authoredBy: agent
 effort: high
