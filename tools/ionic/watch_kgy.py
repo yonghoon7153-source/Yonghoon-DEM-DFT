@@ -398,6 +398,19 @@ def selftest_long():
             "닫기 계획이 3단계 그대로")
         chk(sum(len(p[1]) * len(p[2]) for p in CLOSE_PLAN) == 12,
             "총 12런 (new 6 + 3x3x1 3 + long 3)")
+        # 로그 꼬리 — 경고에 묻히지 않는지 (실제로 묻혔다)
+        _lg = os.path.join(_t, "arr6close.log")
+        open(_lg, "w").write(
+            "[08-18 04:10:00]   ▶ lpsocl_new  T=600 K  seed=2  prod=200 ps\n"
+            "/x/ase/md/langevin.py:102: FutureWarning: blah\n"
+            "  warnings.warn(msg, FutureWarning)\n")
+        chk(_progress_tail(_lg, 2) == ["[08-18 04:10:00]   ▶ lpsocl_new  T=600 K  seed=2  prod=200 ps"],
+            "[핵심] 경고를 건너뛰고 진행줄을 고른다")
+        open(_lg, "w").write("warning only\nanother warning\n")
+        chk(_progress_tail(_lg, 2) == ["warning only", "another warning"],
+            "[음성] 진행줄이 하나도 없으면 원본 tail 로 (숨기지 않는다)")
+        chk(_progress_tail(os.path.join(_t, "없는파일.log")) == [],
+            "[음성] 없는 로그는 빈 목록 (죽지 않는다)")
     finally:
         globals()["ARR6"] = _save
 
@@ -429,6 +442,23 @@ CLOSE_PLAN = [
 ]
 
 
+def _progress_tail(path, n=2):
+    """로그에서 **러너 진행줄**만 n 줄. 경고에 묻히지 않게.
+
+    ⚠ ASE Langevin 이 매 런마다 FutureWarning 2줄을 뱉어서, 그냥 tail 하면
+      화면이 늘 그 경고다 (2026-08-18 실측 — 진행 상황이 아예 안 보였다).
+      러너의 ts() 는 `[MM-DD HH:MM:SS] ` 로 시작하고 단계 머리는 `═══` 다.
+      맞는 줄이 하나도 없으면 원본 tail 로 돌아간다 (숨기는 것보단 낫다).
+    """
+    try:
+        lines = open(path, errors="ignore").read().splitlines()
+    except OSError:
+        return []
+    hit = [l for l in lines
+           if re.match(r"^\[\d\d-\d\d \d\d:\d\d:\d\d\]", l) or l.lstrip().startswith("═══")]
+    return (hit or lines)[-n:]
+
+
 def _msd_of(label, T, sd):
     """<ARR6>/<label>/T<T>_s<sd>/**/msd.json 하나. 없으면 None."""
     g = sorted(glob.glob(os.path.join(ARR6, label, f"T{T}_s{sd}", "**", "msd.json"),
@@ -453,11 +483,8 @@ def section_cell():
     if os.path.isfile(CLOSE_LOG):
         age = (NOW - datetime.fromtimestamp(os.path.getmtime(CLOSE_LOG))).total_seconds() / 60
         print(f"   로그 {age:.0f}분 전 갱신  ({CLOSE_LOG})")
-        try:
-            for ln in open(CLOSE_LOG, errors="ignore").read().splitlines()[-2:]:
-                print(f"   │ {ln[:96]}")
-        except OSError:
-            pass
+        for ln in _progress_tail(CLOSE_LOG, 2):
+            print(f"   │ {ln[:96]}")
     elif not up and not ndrv:
         # ⚠ 락이 잡혀 있으면 러너가 세 덩어리를 전부 조용히 건너뛴다 — 그걸 여기서 말한다.
         print("   ⛔ 미착수 (로그 없음). 걸기 전에 `flock -n /tmp/arr6.lock true` 로")
