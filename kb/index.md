@@ -132,7 +132,7 @@
 - `kb/results/sdcp_slab_plateau_broken_2026_08_03.md` — SDCP 슬랩 plateau 를 깼다 — 원인은 계가 아니라 Broyden 이력 (2026-08-03)
 - `kb/results/section1_system_design.md` — Section 1 (Deep Dive) — 시스템 설계의 과학적 논리
 - `kb/results/section2_bader_cross_comp.md` — Section 2 — Bader Charge Cross-Composition: 4 Trends + 3 Anomaly Fingerprints + Br Effect on PS₄
-- `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 재정의 — 셀 수렴 대조군이 아니라 Nd 격자 재배열 동반 홉 ○미열람
+- `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 — 같은 c-c 홉이 맞다. 3×3×3 에서 Nd 격자 재배열이 풀린다 ○미열람
 - `kb/results/session_handoff_2026_07_22.md` — 세션 핸드오프 — 2026-07-21 밤 → 07-22 새벽
 - `kb/results/session_timelog_2026_06_04.md` — Session Timelog — 2026-06-04/05 (multi-track)
 - `kb/results/site_preference_findings_2026_06_19.md` — Dopant site preference (antisite-swap, all-UMA) — 81-system screen
