@@ -554,7 +554,17 @@ def build(tag, path, disp, a, pool):
              "cell": [round(float(x), 6) for v in at.cell.array for x in v],
              "pps": {e: pool[e] for e in els}}, sort_keys=True).encode()).hexdigest()[:12]
         sigp = os.path.join(epd, ".ep_hash")
-        outp = os.path.join(epd, "relax.out")
+        # ⛔⛔ 2026-08-17 — 끝점 이완 **이어달리기**는 `ep_initial_r2/` 처럼 새 디렉터리에
+        #   들어간다(미수렴 원본을 덮지 않으려고). 이 함수는 `ep_initial/relax.out` 만 봤고,
+        #   그건 스텝을 소진한 1차 패스라 `Begin final coordinates` 가 없다 →
+        #   **수렴본을 옆에 두고 "끝점 미이완" 으로 조기 반환**했다. cc333 이 정확히 그 상태.
+        #   판정 규칙은 symmetric_saddle.endpoint_dir() 하나뿐이다 — 복사하지 말고 쓴다.
+        from symmetric_saddle import endpoint_dir as _epdir   # noqa: E402
+        srcd = _epdir(d, name)
+        outp = os.path.join(srcd, "relax.out")
+        if srcd != epd and os.path.isfile(outp):
+            print(f"   ↳ {tag}/{name}: 이어달리기 수렴본을 승계한다 "
+                  f"({os.path.basename(srcd)}/relax.out)")
         got = None
         old_sig = open(sigp).read().strip() if os.path.isfile(sigp) else ""
         if os.path.isfile(outp) and old_sig and old_sig != ep_sig:
