@@ -1503,3 +1503,61 @@ def test_comment_post_and_get_agree(tmp_path, monkeypatch):
     get = c.get("/api/comments/" + rel).get_json()
     assert post["paper"] == get["paper"], (post.get("paper"), get.get("paper"))
     assert post["paper"]["cmt"].startswith("@ ")
+
+
+def test_docnote_edit_keeps_history(tmp_path, monkeypatch):
+    """메모 고치기 — 옛 글이 **지워지지 않고** history 에 쌓여야 한다."""
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    rel = "kb/concepts/bvse.md"
+    r = D.add_file_comment(rel, "첫 판단", anchor="softBV")
+    cid = r["item"]["id"]
+
+    e = D.edit_file_comment(rel, cid, "다시 보니 R0 출처가 다름")
+    assert e.get("ok"), e
+    it = e["item"]
+    assert it["text"] == "다시 보니 R0 출처가 다름"
+    assert it["history"][0]["text"] == "첫 판단", "옛 글이 남아야 한다"
+    assert it["edited_at"]
+    assert it["id"] == cid and it["anchor"] == "softBV", "id·자리는 안 바뀐다 (딥링크 유지)"
+
+    # 두 번 고치면 이력이 두 판
+    D.edit_file_comment(rel, cid, "세 번째")
+    it = D.file_comments(rel)[0]
+    assert [h["text"] for h in it["history"]] == ["첫 판단", "다시 보니 R0 출처가 다름"]
+
+    # 검색(⌘K)은 **지금 글**로 걸린다 — 옛 글이 label 에 남으면 안 된다.
+    # ⚠ 개념 메모는 paper_comment_search(litdb 전용)가 아니라 search_index 담당이다.
+    labels = [i["label"] for i in D.search_index() if i["t"] == "메모"]
+    assert any("세 번째" in x for x in labels)
+    assert not any("첫 판단" in x for x in labels)
+
+
+def test_docnote_edit_negative(tmp_path, monkeypatch):
+    """음성 경로 — 틀린 입력을 잡아내는지."""
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    rel = "kb/concepts/bvse.md"
+    cid = D.add_file_comment(rel, "원본", anchor="a")["item"]["id"]
+    assert D.edit_file_comment(rel, "없는id", "x").get("error"), "없는 id 는 거절"
+    assert D.edit_file_comment("kb/concepts/없는문서.md", cid, "x").get("error"), "없는 파일은 거절"
+    assert D.edit_file_comment(rel, cid, "   ").get("error"), "빈 글은 거절"
+    # 같은 글로 고치면 이력을 늘리지 않는다 (헛 판 쌓임 방지)
+    r = D.edit_file_comment(rel, cid, "원본")
+    assert r.get("unchanged") and not r["item"].get("history")
+    assert D.file_comments(rel)[0]["text"] == "원본", "실패해도 원본이 안 망가진다"
+
+
+def test_docnote_edit_over_http(tmp_path, monkeypatch):
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    A.app.config["TESTING"] = True
+    c = A.app.test_client()
+    rel = "litdb/papers/anderson2024_llzo_comprehensive_dopant_screening.md"
+    cid = c.post("/api/comments/" + rel,
+                 json={"text": "처음", "anchor": "닻"}).get_json()["item"]["id"]
+    r = c.patch("/api/comments/" + rel, json={"id": cid, "text": "고침"})
+    assert r.status_code == 200
+    d = r.get_json()
+    assert d["item"]["text"] == "고침"
+    assert d["paper"]["cmt"].startswith("@ "), "PATCH 도 색인을 같이 준다"
+    assert "고침" in d["paper"]["cmt"] and "처음" not in d["paper"]["cmt"]
+    assert c.patch("/api/comments/" + rel,
+                   json={"id": "없는거", "text": "x"}).status_code == 400

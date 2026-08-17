@@ -4210,6 +4210,36 @@ def add_file_comment(rel: str, text: str, who: str = "", anchor: str = "") -> di
         return {"ok": True, "item": item, "n": len(lst)}
 
 
+def edit_file_comment(rel: str, cid: str, text: str) -> dict:
+    """메모·코멘트 글 고치기. **옛 글을 지우지 않고 history 에 쌓는다.**
+
+    왜 이력을 남기나: 이 글들은 판단 기록이라, 나중에 "내가 그때 뭐라고 봤더라" 가
+    질문이 된다. 덮어쓰면 그 답이 사라진다. 자리(anchor)·시각(at)·id 는 그대로 둔다
+    — 그래야 딥링크와 검색 색인이 안 끊긴다.
+
+    이 함수가 못 하는 것: anchor(붙인 자리)는 못 바꾼다. 자리를 옮기려면 지우고 다시 단다.
+    """
+    rel = (rel or "").lstrip("/")
+    text = " ".join((text or "").split("\n")).strip()
+    if not text:
+        return {"error": "내용이 비어 있어요"}
+    with _comments_locked():
+        d = _load_comments()
+        lst = d.get(rel) or []
+        for c in lst:
+            if c.get("id") != cid:
+                continue
+            if c.get("text") == text:
+                return {"ok": True, "item": c, "n": len(lst), "unchanged": True}
+            c.setdefault("history", []).append(
+                {"text": c.get("text", ""), "at": c.get("edited_at") or c.get("at", "")})
+            c["text"] = text[:2000]
+            c["edited_at"] = _dt.datetime.now().strftime("%Y-%m-%d %H:%M")
+            _save_comments(d)
+            return {"ok": True, "item": c, "n": len(lst)}
+    return {"error": "그 메모를 못 찾았어요"}
+
+
 def del_file_comment(rel: str, cid: str) -> dict:
     rel = (rel or "").lstrip("/")
     with _comments_locked():

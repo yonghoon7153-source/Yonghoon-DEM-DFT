@@ -515,9 +515,12 @@ def _paper_cmt_index(rel):
     return {"slug": slug, "cmt": D.paper_comment_search().get(slug, "")}
 
 
-@app.route("/api/comments/<path:rel>", methods=["GET", "POST"])
+@app.route("/api/comments/<path:rel>", methods=["GET", "POST", "PATCH"])
 def api_comments(rel):
-    """파일 코멘트 읽기/달기 (Notion 식 💬). 대상은 실존 repo 파일만."""
+    """파일 코멘트 읽기/달기/고치기 (Notion 식 💬 · 📝). 대상은 실존 repo 파일만.
+
+    PATCH `{id, text}` = 글 고치기. 옛 글은 지우지 않고 item.history 에 쌓인다.
+    """
     if request.method == "GET":
         return jsonify({"rel": rel, "items": D.file_comments(rel),
                         "paper": _paper_cmt_index(rel)})
@@ -525,6 +528,12 @@ def api_comments(rel):
     if g:
         return g
     d = request.get_json(silent=True) or {}
+    if request.method == "PATCH":
+        r = D.edit_file_comment(rel, str(d.get("id", "")), str(d.get("text", "")))
+        if r.get("error"):
+            return jsonify(r), 400
+        r["paper"] = _paper_cmt_index(rel)
+        return jsonify(r)
     # anchor = 본문 여백 메모가 붙은 자리(고른 글/문단 앞머리). 그림 코멘트는 빈 값.
     r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")),
                            str(d.get("anchor", "")))

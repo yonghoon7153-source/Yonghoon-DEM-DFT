@@ -1196,3 +1196,14 @@ mark.dn-hl{background:#fef3c7;color:inherit;border-bottom:2px solid #f59e0b;
   padding-left:8px;margin-bottom:6px}
 .ntext{font-size:.84rem;line-height:1.6;white-space:pre-wrap;word-break:break-word}
 .nk.active{outline:2px solid currentColor}
+/* 메모 고치기 (2026-08-17) */
+.dn-edit{border:none;background:none;color:var(--muted);cursor:pointer;
+  font-size:.74rem;line-height:1;padding:2px 3px;margin-left:auto}
+.dn-edit:hover{color:#2563eb}
+.dn-del{margin-left:0}          /* ✎ 가 auto 를 가져갔으므로 ✕ 는 붙여 둔다 */
+.dn-edited{color:#2563eb;font-size:.62rem}
+.dn-card .dn-text{border-radius:4px;padding:1px 2px;margin:0 -2px}
+.dn-card:not(.dn-editing) .dn-text:hover{background:rgba(37,99,235,.07);cursor:text}
+.dn-card.dn-editing{border-left-color:#2563eb;cursor:default;z-index:3}
+.dn-card.dn-editing .dn-text{white-space:normal;background:none}
+.dn-act{gap:6px}

@@ -21,7 +21,13 @@
  *     그 경우 문단 전체를 옅게 표시하고 메모에 고른 글을 인용해 둔다.
  *   · 같은 글이 문서에 여러 번 나오면 **첫 번째**에 붙는다 — 구분하지 못한다.
  *   · 그림에는 안 붙는다 (그림은 comments.js 의 💬 가 담당 — 두 벌로 갈리면 안 된다).
- *   · 메모를 고치지 못한다. 지우고 다시 쓴다 (기록이 남는 편이 낫다).
+ *   · **붙인 자리(anchor)는 못 고친다.** 글만 고쳐진다 — 자리를 옮기려면 지우고 다시 단다.
+ *     (자리를 고치면 딥링크·검색 색인이 가리키던 곳과 어긋난다.)
+ *
+ * 고치기 (2026-08-17 추가)
+ *   글을 누르거나 ✎ 를 누르면 제자리에서 고친다. 옛 글은 **지우지 않고**
+ *   서버가 item.history 에 쌓는다 — 이 글들은 판단 기록이라 "그때 뭐라고 봤더라" 가
+ *   나중에 질문이 된다.
  */
 (function (global) {
   "use strict";
@@ -102,12 +108,62 @@
   /* ── 여백 쪽: 카드 ─────────────────────────────────────────────────────── */
 
   function cardHtml(nt, lost) {
+    var nh = (nt.history || []).length;
     return '<div class="dn-card' + (lost ? " dn-lost" : "") + '" data-nid="' + esc(nt.id) + '">' +
       '<div class="dn-meta">' + (lost ? '<span class="dn-lostmark" title="붙여 둔 글을 본문에서 못 찾았어요 — 문서가 바뀐 듯해요">⚠ 자리 잃음</span> ' : "") +
       esc(nt.at) + (nt.who ? " · " + esc(nt.who) : "") +
+      (nt.edited_at ? ' <span class="dn-edited" title="' + esc(nt.edited_at) + ' 에 고침'
+        + (nh ? " · 옛 글 " + nh + "판 보관" : "") + '">✎ 수정됨</span>' : "") +
+      '<button type="button" class="dn-edit" title="고치기">✎</button>' +
       '<button type="button" class="dn-del" title="지우기">✕</button></div>' +
       (nt.anchor ? '<div class="dn-quote">' + esc(nt.anchor) + "</div>" : "") +
-      '<div class="dn-text">' + esc(nt.text) + "</div></div>";
+      '<div class="dn-text" title="눌러서 고치기">' + esc(nt.text) + "</div></div>";
+  }
+
+  /* ── 고치기 (제자리) ───────────────────────────────────────────────────── */
+
+  function editing() { return cur && cur.gut && cur.gut.querySelector(".dn-card.dn-editing"); }
+
+  function openEdit(card) {
+    if (!card || card.classList.contains("dn-editing")) return;
+    closeEdit();
+    var box = card.querySelector(".dn-text");
+    if (!box) return;
+    card.classList.add("dn-editing");
+    card._old = box.innerHTML;
+    var nt = (cur.notes || []).filter(function (n) { return n.id === card.dataset.nid; })[0];
+    box.innerHTML = '<textarea class="dn-in" rows="3"></textarea>' +
+      '<div class="dn-act"><button type="button" class="btn sm dn-editcancel">취소</button>' +
+      '<button type="button" class="btn sm dn-save">저장</button></div>';
+    var ta = box.querySelector(".dn-in");
+    ta.value = nt ? nt.text : "";
+    layout();
+    ta.focus();
+    ta.setSelectionRange(ta.value.length, ta.value.length);
+  }
+
+  function closeEdit() {
+    var card = editing();
+    if (!card) return;
+    var box = card.querySelector(".dn-text");
+    if (box && card._old != null) box.innerHTML = card._old;
+    card.classList.remove("dn-editing");
+    card._old = null;
+    layout();
+  }
+
+  function patch(nid, text) {
+    if (!norm(text)) return;
+    fetch("/api/comments/" + encodeURI(cur.rel), {
+      method: "PATCH", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id: nid, text: text })
+    }).then(function (r) { return r.json().then(function (d) { return { ok: r.ok, d: d }; }); })
+      .then(function (x) {
+        if (!x.ok) { alert("⛔ " + (x.d.error || "저장 실패")); return; }
+        if (global.syncPaperCmtIndex) global.syncPaperCmtIndex(x.d);
+        load();
+      })
+      .catch(function () { alert("⛔ 통신 실패"); });
   }
 
   function render() {
@@ -145,7 +201,9 @@
       var t = el ? el.getBoundingClientRect().top - gr.top : 0;
       return { c: c, t: t };
     });
-    if (stale && !cur._refind) {          // render() → layout() 되돌이를 막는 빗장
+    // ⚠ 고치는 중에는 다시 그리지 않는다 — render() 가 여백을 통째로 새로 그려서
+    //   쓰던 글이 날아간다. 자리 찾기는 저장/취소 뒤로 미룬다.
+    if (stale && !cur._refind && !editing()) {   // render() → layout() 되돌이 빗장
       cur._refind = true;
       setTimeout(function () { if (cur) { cur._refind = false; render(); } }, 0);
       return;
@@ -321,12 +379,24 @@
   document.addEventListener("click", function (e) {
     if (!cur) return;
     if (e.target.closest(".dn-cancel")) { killDraft(); return; }
+    if (e.target.closest(".dn-editcancel")) { closeEdit(); return; }
     if (e.target.closest(".dn-save")) {
+      // 저장 버튼은 새 메모(.dn-draft)와 고치기(.dn-card.dn-editing)가 같이 쓴다
+      var ec = e.target.closest(".dn-card");
+      if (ec) { patch(ec.dataset.nid, ec.querySelector(".dn-in").value); closeEdit(); return; }
       var d = e.target.closest(".dn-draft");
       save(d.querySelector(".dn-in").value, cur.draftAnchor);
       killDraft();
       return;
     }
+    if (e.target.closest(".dn-edit")) {
+      openEdit(e.target.closest(".dn-card")); return;
+    }
+    // 글을 누르면 바로 고치기 (1저자 요청 2026-08-17 "메모 다시 누르면 수정도")
+    if (e.target.closest(".dn-text") && !e.target.closest(".dn-in")) {
+      openEdit(e.target.closest(".dn-card")); return;
+    }
+    if (e.target.closest(".dn-card.dn-editing")) return;   // 고치는 중엔 점프 금지
     var del = e.target.closest(".dn-del");
     if (del) {
       var nid = del.closest(".dn-card").dataset.nid;
@@ -350,10 +420,11 @@
   /* Esc 는 **모달보다 먼저** 잡는다 — 초안을 쓰다 Esc 를 누르면 모달이 닫혀 글이
    * 통째로 날아갔다. capture 단계에서 초안만 접고 전파를 끊는다. */
   document.addEventListener("keydown", function (e) {
-    if (!cur) return;
-    if (e.key === "Escape" && cur.gut && cur.gut.querySelector(".dn-draft")) {
+    if (!cur || e.key !== "Escape") return;
+    if (cur.gut && cur.gut.querySelector(".dn-draft")) {
       e.stopPropagation(); e.preventDefault(); killDraft(); return;
     }
+    if (editing()) { e.stopPropagation(); e.preventDefault(); closeEdit(); }
   }, true);
 
   document.addEventListener("keydown", function (e) {
@@ -362,8 +433,9 @@
     if (!ta) return;
     if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
       e.preventDefault();
-      save(ta.value, cur.draftAnchor);
-      killDraft();
+      var card = ta.closest(".dn-card");
+      if (card) { patch(card.dataset.nid, ta.value); closeEdit(); }
+      else { save(ta.value, cur.draftAnchor); killDraft(); }
     }
   });
 
