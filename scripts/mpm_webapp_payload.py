@@ -431,6 +431,12 @@ def main():
     ap.add_argument('--no-step3', action='store_true', help='skip the STEP3 σ_e network solve')
     ap.add_argument('--step3-bridge-um', type=float, default=0.0,
                     help='AM 접촉 브리지 반경을 **물리 단위**로 고정 (µm).  0 = 현행 1.2·vox (격자에 묶임). 격자 수렴 시험에서 탄소 효과와 브리지 효과를 분리하려면 고정할 것 (CL-21)')
+    ap.add_argument('--step3-sdcp-sphere-d', type=float, default=0.0, metavar='D_UM',
+                    help='SDCP 를 **참 직경 D_UM 의 구**로 스탬프한다 (기본 0 = 현행 점 스탬프). '
+                         '점 스탬프는 입자당 셀 하나라 부피가 격자에 19 배 흔들린다 '
+                         '(0.24× @0.15 ~ 4.53× @0.4).  구 스탬프는 2.4 %% 안이다.  '
+                         '⚠ d/vox ≥ 2 필요 — 그 아래는 fail-closed 로 거부한다.  '
+                         'prereg v2 판정(h1) 의 대응, CL-33')
     ap.add_argument('--step3-origin-shift', type=float, nargs=3, default=None,
                     metavar=('SX', 'SY', 'SZ'),
                     help='STEP3 격자 origin 을 축마다 [0, vox) 만큼 민다 (µm).  격자 **위상**만 '
@@ -907,8 +913,13 @@ def main():
             if _osh.any():
                 print(f'  STEP3: ★ origin 이동 {_osh.tolist()} µm (위상만; 침대 손실 없음)',
                       flush=True)
+            if getattr(a, 'step3_sdcp_sphere_d', 0) > 0:
+                print(f'  STEP3: ★ SDCP **부피-보존 구 스탬프** Ø{a.step3_sdcp_sphere_d} µm '
+                      f'(d/vox = {a.step3_sdcp_sphere_d / a.step3_vox:.2f}) — 점 스탬프는 '
+                      f'참부피의 {a.step3_vox ** 3 / (3.14159265 / 6 * a.step3_sdcp_sphere_d ** 3):.2f}배', flush=True)
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox,
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
+                                       sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
                                        add_kind=(_kind_all[_m] if _kind_all is not None
                                                  and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
@@ -1629,6 +1640,8 @@ def main():
             # ★ origin 앙상블 (prereg sdcp_gain_prereg_20260816 §4) — **일어난 일**을 적는다.
             #   앙상블 팔을 나중에 대조하려면 각 payload 가 자기 위상을 알고 있어야 한다.
             'origin_shift_um': [float(x) for x in _osh],
+            'sdcp_stamp': ('sphere' if getattr(a, 'step3_sdcp_sphere_d', 0) > 0 else 'point'),
+            'sdcp_sphere_d_um': float(getattr(a, 'step3_sdcp_sphere_d', 0.0)),
             'plate_z_grid_um': ([float(_zb3), float(_zt3)]
                                 if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).

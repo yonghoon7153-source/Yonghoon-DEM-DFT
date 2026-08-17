@@ -190,6 +190,7 @@ def _solve_cg(L, b):
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
+              sdcp_sphere_d_um=0.0,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
@@ -274,6 +275,43 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
             m = ph == code                                  #   only; 6=SWCNT sheath A14 → sid 8)
             if m.any():
                 sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
+        # ── ★★ 입자 첨가제의 **부피-보존 구 스탬프** (2026-08-16, prereg v2 판정 h1 의 대응) ──
+        #   왜: SDCP 는 Ø0.30 µm 인데 위 경로는 **입자당 셀 하나**를 찍는다.  그러면 한 입자가
+        #   `vox³` 를 차지해 참부피 π/6·d³ 대비
+        #        4.53× (vox 0.4) · 1.91 (0.3) · 1.11 (0.25) · **0.24 (0.15)**
+        #   이 된다 — 굵은 격자에서는 부풀고 고운 격자에서는 **쪼그라든다**.
+        #   실측(prereg v2, 8 팔, vox 0.15): σ_e 비 1.0163 → h1 채택 = **이득이 표현 부피를
+        #   따라간다**.  ⇒ 지금까지 SDCP 를 **제 부피로 시뮬한 적이 한 번도 없다**.
+        #   ⇒ `sdcp_sphere_d_um` 을 주면 점이 아니라 **참 직경의 구**로 굽는다.
+        #   ⚠ 유효 조건: d/vox ≳ 2.  그 아래에서는 구 래스터가 입자를 통째로 잃는다
+        #     (실측 vox 0.4 에서 87.5 % 소실) — 그래서 fail-closed 로 거부한다.
+        #     vox 0.15 에서 d/vox = 2.0 → 부피 오차 0.8 %, 소실 0 % (실측).
+        if sdcp_sphere_d_um and add_pts is not None and len(add_pts):
+            _d = float(sdcp_sphere_d_um)
+            if _d / vox < 2.0:
+                raise ValueError(
+                    f'부피-보존 구 스탬프: d/vox = {_d / vox:.2f} < 2 — 이 격자에서는 구 '
+                    f'래스터가 입자를 통째로 잃는다 (vox 0.4 실측 87.5 % 소실).  '
+                    f'vox ≤ {_d / 2:.3f} µm 를 쓰거나 점 스탬프로 남길 것')
+            _r = _d / 2.0
+            _sel = add_phase == 5                                  # phase 5 = SDCP
+            _pts5 = add_pts[_sel]
+            if len(_pts5):
+                _off = int(np.ceil(_r / vox)) + 1
+                _rng = np.arange(-_off, _off + 1)
+                _dx, _dy, _dz = np.meshgrid(_rng, _rng, _rng, indexing='ij')
+                _base = np.floor((_pts5 - lo) / vox).astype(int)
+                _ctr = (_base + 0.5) * vox + lo                    # 그 점이 든 셀의 중심
+                for a_, b_, c_ in zip(_dx.ravel(), _dy.ravel(), _dz.ravel()):
+                    _q = _base + (a_, b_, c_)
+                    _ok = ((_q >= 0) & (_q < n)).all(1)
+                    if not _ok.any():
+                        continue
+                    _cc = _ctr[_ok] + (np.array([a_, b_, c_]) * vox)
+                    _in = ((_cc - _pts5[_ok]) ** 2).sum(1) <= _r * _r
+                    if _in.any():
+                        _w = _q[_ok][_in]
+                        sid[_w[:, 0], _w[:, 1], _w[:, 2]] = 5
     return sid, pid
 
 
