@@ -431,6 +431,11 @@ def main():
     ap.add_argument('--no-step3', action='store_true', help='skip the STEP3 σ_e network solve')
     ap.add_argument('--step3-bridge-um', type=float, default=0.0,
                     help='AM 접촉 브리지 반경을 **물리 단위**로 고정 (µm).  0 = 현행 1.2·vox (격자에 묶임). 격자 수렴 시험에서 탄소 효과와 브리지 효과를 분리하려면 고정할 것 (CL-21)')
+    ap.add_argument('--step3-rasterize-only', default='', metavar='OUT_JSON',
+                    help='래스터까지만 하고 **상별 셀 수 원장**을 JSON 으로 쓰고 종료한다 '
+                         '(솔브 없음 = 순수 CPU 수 분).  구 스탬프와 함께 주면 점 스탬프 대비 '
+                         '추가 셀의 **원래 상**까지 diff — CL-34 우선순위 결함 크기를 '
+                         'GPU 대조 팔 없이 잰다 (심층 리뷰 ③ 제안)')
     ap.add_argument('--step3-sdcp-sphere-d', type=float, default=0.0, metavar='D_UM',
                     help='SDCP 를 **참 직경 D_UM 의 구**로 스탬프한다 (기본 0 = 현행 점 스탬프). '
                          '점 스탬프는 입자당 셀 하나라 부피가 격자에 19 배 흔들린다 '
@@ -928,6 +933,53 @@ def main():
                                        sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
                                        add_kind=(_kind_all[_m] if _kind_all is not None
                                                  and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
+            # ── ★ rasterize-only 원장 (2026-08-16, 심층 리뷰 ③ 제안) ─────────────────────
+            #   왜: CL-34 의 "우선순위 결함이 σ_e 를 얼마나 부풀렸나" 를 **솔브 없이** 잰다.
+            #   두 스탬프 순서(제자리 vs 루프-뒤)로 각각 구워 상별 셀 수를 diff 하면
+            #   SDCP 가 PTFE/SWCNT 에서 뺏은 셀이 **직접** 나온다 — 대조 팔(GPU 1.5 h) 불요.
+            #   ⇒ 순수 CPU 수 분.  돌고 있는 GPU 런과 자원 충돌 없음.
+            if getattr(a, 'step3_rasterize_only', False):
+                import json as _rj
+                _led = {'vox_um': a.step3_vox, 'origin_shift_um': [float(x) for x in _osh],
+                        'bridge_um': _bru, 'sdcp_sphere_d_um': float(
+                            getattr(a, 'step3_sdcp_sphere_d', 0.0) or 0.0),
+                        'grid_shape': [int(x) for x in sid3.shape],
+                        'cells_by_sid': {int(k): int(v) for k, v in
+                                         zip(*np.unique(sid3, return_counts=True))},
+                        'vol_by_sid_um3': {}}
+                for _k, _v in _led['cells_by_sid'].items():
+                    _led['vol_by_sid_um3'][int(_k)] = float(_v) * a.step3_vox ** 3
+                #  ★ 같은 입력으로 **반대 순서** 도 구워 diff 한다 (결함판 재현 = 규약 비교)
+                if _led['sdcp_sphere_d_um'] > 0:
+                    _alt, _ = _s3.rasterize(
+                        _am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox, se_pts=_septs,
+                        add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
+                        add_kind=(_kind_all[_m] if _kind_all is not None
+                                  and len(_kind_all) == len(_fid_all) else None))
+                    #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)
+                    _sph_only = (sid3 == 5) & (_alt != 5)
+                    _stolen = {}
+                    for _k in np.unique(_alt[_sph_only]):
+                        _stolen[int(_k)] = int((_alt[_sph_only] == _k).sum())
+                    _led['sphere_extra_cells'] = int(_sph_only.sum())
+                    _led['sphere_extra_from_sid'] = _stolen
+                    _led['defect_would_steal'] = {
+                        int(k): int(v) for k, v in _stolen.items() if k in (7, 8)}
+                    _led['_note'] = ('sphere_extra_from_sid = 구 스탬프가 점 스탬프 대비 '
+                                     '**추가로** 차지한 셀의 원래 상.  그 중 sid 7(PTFE)·'
+                                     '8(SWCNT) 이 결함판에서 SDCP 가 **덮었을** 셀이다 — '
+                                     '수정판은 그 둘을 양보하므로 diff 가 곧 결함의 크기다.')
+                _rj.dump(_led, open(a.step3_rasterize_only, 'w'), ensure_ascii=False, indent=1)
+                print(f'  STEP3 rasterize-only 원장 → {a.step3_rasterize_only}', flush=True)
+                for _k in sorted(_led['cells_by_sid']):
+                    print(f'    sid {_k} ({_s3.SID_NAME.get(_k, "pore" if _k == 0 else "?")}): '
+                          f'{_led["cells_by_sid"][_k]:,} 셀 = '
+                          f'{_led["vol_by_sid_um3"][_k]:,.1f} µm³', flush=True)
+                if 'defect_would_steal' in _led:
+                    print(f'    ★ 구 추가 셀 {_led["sphere_extra_cells"]:,} · '
+                          f'그 중 결함판이 뺏었을 PTFE/SWCNT = {_led["defect_would_steal"]}',
+                          flush=True)
+                raise SystemExit(0)
             _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
                               0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
