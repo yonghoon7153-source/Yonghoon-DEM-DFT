@@ -377,6 +377,30 @@ def selftest_long():
     chk("복귀" in long_verdict(0.9)[1] and "뺀다" in long_verdict(0.7)[1],
         "처방이 판정과 반대로 붙지 않았다")
     print("selftest PASS" if ok else "selftest FAIL")
+    # ── 닫기 캠페인 패널 (2026-08-18) ─────────────────────────────────────
+    #  ⚠ 음성 경로가 핵심 — 안 돈 런을 '됐다'로 세면 화면 보고 다음 단계로 넘어간다.
+    import tempfile as _tf
+    _t = _tf.mkdtemp()
+    _save = globals()["ARR6"]
+    globals()["ARR6"] = _t
+    try:
+        chk(_msd_of("lpsocl_new", 600, "2") is None, "[음성] 없는 런은 None (있다고 안 한다)")
+        os.makedirs(os.path.join(_t, "lpsocl_new", "T600_s2", "cfg"))
+        chk(_msd_of("lpsocl_new", 600, "2") is None,
+            "[음성] 폴더만 있고 msd.json 이 없으면 여전히 None")
+        open(os.path.join(_t, "lpsocl_new", "T600_s2", "cfg", "msd.json"), "w").write("{}")
+        chk(_msd_of("lpsocl_new", 600, "2") is not None, "[양성] msd.json 이 생기면 잡는다")
+        chk(_msd_of("lpsocl_new", 1000, "2") is None,
+            "[음성] 온도가 다르면 안 잡는다 (T600 을 T1000 으로 세지 않는다)")
+        chk(_msd_of("lpsocl_long", 600, "2") is None,
+            "[음성] 라벨이 다르면 안 잡는다 (new 를 long 으로 세지 않는다)")
+        chk({p[0] for p in CLOSE_PLAN} == {"lpsocl_new", "lpsocl_3x3x1", "lpsocl_long"},
+            "닫기 계획이 3단계 그대로")
+        chk(sum(len(p[1]) * len(p[2]) for p in CLOSE_PLAN) == 12,
+            "총 12런 (new 6 + 3x3x1 3 + long 3)")
+    finally:
+        globals()["ARR6"] = _save
+
     return 0 if ok else 1
 
 # ═══ ⑦ lpsocl 3×3×1 셀 확대 — β 실패가 상자 탓인지 시험 ═══════════════════════
@@ -392,62 +416,81 @@ CELL = os.environ.get("CELLDIR") or os.path.join(H, "work", "runs", "arrhenius_6
 CELL_LOG = os.environ.get("CELLLOG") or os.path.join(H, "logs", "lpsocl_3x3x1.log")
 
 
+ARR6 = os.environ.get("ARR6ROOT") or os.path.join(H, "work", "runs", "arrhenius_6pt")
+CLOSE_LOG = os.environ.get("CLOSELOG") or os.path.join(H, "logs", "arr6close.log")
+#: 닫기 캠페인 3단계 — (라벨, 온도들, 시드들, prod ps, 무엇을 답하나)
+CLOSE_PLAN = [
+    ("lpsocl_new",   (600, 1000), ("2", "3", "4"), 200,
+     "판정① 확정(작은 셀 MTO) + 2단계 짝"),
+    ("lpsocl_3x3x1", (1000,),     ("2", "3", "4"), 200,
+     "억제비 R(1000) vs R(600)=1.64±0.14"),
+    ("lpsocl_long",  (600,),      ("2", "3", "4"), 800,
+     "(B) 멱함수 vs (C) 느린 전이"),
+]
+
+
+def _msd_of(label, T, sd):
+    """<ARR6>/<label>/T<T>_s<sd>/**/msd.json 하나. 없으면 None."""
+    g = sorted(glob.glob(os.path.join(ARR6, label, f"T{T}_s{sd}", "**", "msd.json"),
+                         recursive=True))
+    return g[0] if g else None
+
+
 def section_cell():
-    print("⑦ lpsocl 3×3×1 셀 확대 — β 실패가 상자 탓인지 시험 (558원자 · 3시드 · 200 ps)")
-    up = any(ln.split(":")[0] == "lp331" for ln in sh("tmux ls").splitlines() if ln.strip())
+    print("⑦ lpsocl 상자·기구 닫기 — 3단계 (kb/results/lpsocl_box_size_600K_2026_08_18.md)")
+    print("   ✅ 이미 닫힌 것 (600 K, STO·시드평균·창 2–50):")
+    print("      β̄ 0.82(5.67 Å) vs 0.80(17.02 Å) — 위반 3.15× 를 없애도 **β 불변**")
+    print("      D  7.78e-6 → 1.280e-5 — **1.64±0.14×** (상자는 모양이 아니라 속도를 눌렀다)")
+    print("   ⚠ 남은 것: ① 소효과(~0.1) 미배제 — 작은 셀 MTO 0.70(1시드)과의 긴장")
+    print("              ② 1.64× 가 T 에 상수인가 (상수면 Ea 상쇄, 아니면 +90 meV 붕괴)")
+
+    up = any(ln.split(":")[0] == "arr6close" for ln in sh("tmux ls").splitlines() if ln.strip())
     ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
     gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
              "--format=csv,noheader,nounits").strip().splitlines()
-    # ⚠ 여유율은 **그 셀 자신의 MSD** 로 잰다 (2026-08-18 Fable 리뷰 F 지적) —
-    #   옛 판은 큰 셀 여유를 작은 셀 MSD(25.8)로 나눠 0.36× 로 후하게 찍었다.
-    #   큰 셀은 D 가 1.65× 라 자기 MSD@50 이 41.7 Å² → 41.7/72.4 = 0.58×. 결론 불변.
-    print(f"   유한크기: 원본 최소 수직폭 5.67 Å → (d/2)² 8.04 Å² · 자기 MSD 25.3 → **3.15× 초과**")
-    print(f"             3×3×1  최소 수직폭 17.02 Å → (d/2)² 72.4 Å² · 자기 MSD 41.7 → **0.58× 여유**")
-    seeds = {}
-    for d in sorted(glob.glob(os.path.join(CELL, "T600_s*"))):
-        sd = os.path.basename(d).split("_s")[-1]
-        f = next(iter(sorted(glob.glob(os.path.join(d, "**", "msd.json"), recursive=True))), None)
-        if f:
-            seeds[sd] = f
-    if not os.path.isdir(CELL) and not up:
-        print("   · 미착수. 걸려면:")
-        print("     tmux new -d -s lp331 \"cd ~/Yonghoon-DEM-DFT && ONLY=lpsocl_3x3x1 \\")
-        print("       EXTRA_SYS='lpsocl_3x3x1|db/structures/lpsocl_relaxV0_3x3x1.xyz' \\")
-        print("       TEMP_PROD='600:200' LPSOCL_EXTRA='' SEEDS='2 3 4' \\")
-        print("       bash tools/ionic/run_arrhenius_6pt.sh 2>&1 | tee -a ~/logs/lpsocl_3x3x1.log\"")
-        return
-    st = "▶ 진행 중" if (up or ndrv) else ("✅ 완료" if seeds else "⚠ 시작 안 됨")
-    print(f"   상태 {st} · tmux lp331 {'있음' if up else '없음'} · 드라이버 {ndrv} · GPU {gpu[0] if gpu else '?'}")
-    if os.path.isfile(CELL_LOG):
-        age = (NOW - datetime.fromtimestamp(os.path.getmtime(CELL_LOG))).total_seconds() / 60
-        print(f"   로그 마지막 갱신 {age:.0f}분 전  ({CELL_LOG})")
+    print(f"   상태: tmux arr6close {'있음' if up else '**없음**'} · 드라이버 {ndrv} · "
+          f"GPU {gpu[0] if gpu else '?'}")
+    if os.path.isfile(CLOSE_LOG):
+        age = (NOW - datetime.fromtimestamp(os.path.getmtime(CLOSE_LOG))).total_seconds() / 60
+        print(f"   로그 {age:.0f}분 전 갱신  ({CLOSE_LOG})")
         try:
-            for ln in open(CELL_LOG, errors="ignore").read().splitlines()[-2:]:
-                print(f"   │ {ln[:100]}")
+            for ln in open(CLOSE_LOG, errors="ignore").read().splitlines()[-2:]:
+                print(f"   │ {ln[:96]}")
         except OSError:
             pass
-    if seeds:
-        bs = []
-        for sd in sorted(seeds):
-            b = beta(seeds[sd])
-            bs.append((sd, b))
-        print("   β(창 2–50) 시드별: " + " · ".join(
-            f"s{sd} {('%.3f' % b) if b is not None else '—'}" for sd, b in bs))
-        print("   ⚠ 위는 **시드별 진단값**이다 — 판정량은 시드 평균곡선의 β̄ (규약).")
-    # ⛔⛔ 2026-08-18 판정 완료 — 옛 규칙("β̄ ≥ 0.80 → 상자 원인 확정")은 **대조군이 깨뜨렸다**.
-    #   같은 잣대(STO·시드평균·창 2–50)로 작은 셀 0.82 vs 3×3×1 0.80: 유한크기 위반
-    #   3.21× 를 없애도 β 는 안 움직였다. 대신 **D 가 1.65×** 움직였다 (0.467→0.768 Å²/ps).
-    #   여기 적혀 있던 "작은 셀 β̄ = 0.77 (확정)" 은 다른 잣대의 값이라 지웠다 —
-    #   0.615(옛 ladder 앙상블)·0.77(출처 미상)·0.82(arrhenius_6pt STO) 가 **다른 런
-    #   세트의 값**인데 같은 이름을 달고 있었다. 잣대 없는 β 인용이 이 혼선의 원인.
-    print("   ★ 판정 완료 (2026-08-18) — kb/results/lpsocl_box_size_600K_2026_08_18.md")
-    print("     · 상자는 β 의 원인이 아니다 (0.82 → 0.80, 위반 3.21× 제거에도 불변)")
-    print("     · 대신 **D 1.65×** (7.78e-6 → 1.280e-5) — 상자는 모양이 아니라 속도를 눌렀다")
-    print("     · modelc·b2o3 재계산 **안 한다** (셋을 같은 5.67 Å 상자에 유지)")
-    print("   ▶ 남은 질문: 1.65× 가 T 에 상수인가 (상수면 Ea 상쇄) — 3×3×1 @ 800/1000 K")
-    print("     6런이 답한다. 착수는 Fable 리뷰 뒤 결정 (kb 카드 4절).")
-    print("   ⚠ 비교는 반드시 같은 잣대로: 대조군에 MTO 가 없으면 **양쪽 다 STO** —")
-    print("     STO 시드별 β 산포(0.71–0.96)는 물리가 아니라 시간원점 잡음이다.")
+    elif not up and not ndrv:
+        # ⚠ 락이 잡혀 있으면 러너가 세 덩어리를 전부 조용히 건너뛴다 — 그걸 여기서 말한다.
+        print("   ⛔ 미착수 (로그 없음). 걸기 전에 `flock -n /tmp/arr6.lock true` 로")
+        print("      락이 비었는지 볼 것 — 잡혀 있으면 스크립트가 아무것도 안 돌고 끝난다.")
+
+    for label, temps, seeds, prod, why in CLOSE_PLAN:
+        done, betas = 0, []
+        for T in temps:
+            for sd in seeds:
+                f = _msd_of(label, T, sd)
+                if not f:
+                    continue
+                done += 1
+                b = beta(f)
+                betas.append(f"T{T}s{sd} {('%.2f' % b) if b is not None else '—'}")
+        tot = len(temps) * len(seeds)
+        mark = "✅" if done == tot else ("▶" if done else "·")
+        print(f"   {mark} {label:14s} {done}/{tot} 런 ({prod} ps)  — {why}")
+        if betas:
+            print("        β(STO 2–50): " + " · ".join(betas[:6]))
+
+    n1 = sum(1 for T in (600, 1000) for sd in ("2", "3", "4")
+             if _msd_of("lpsocl_new", T, sd))
+    if n1 >= 3:
+        print("   ★ [1/3] 판정① 닫는 한 줄 — **β̄(MTO)** 가 0.70 대면 상자 효과 있음(카드 재작성),")
+        print("     0.8 이상이면 mto_pilot 0.70 이 단일시드 우연이었고 판정① 확정:")
+        print("     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+        print(f"       --glob '{ARR6}/lpsocl_new/T600_s*/**/msd.json'")
+    if sum(1 for sd in ("2", "3", "4") if _msd_of("lpsocl_3x3x1", 1000, sd)) >= 3:
+        print("   ★ [2/3] 억제비 — 두 셀 1000 K 를 **같은 잣대**로 재고 R(600)=1.64 와 비교:")
+        print(f"     ... --scan --average --glob '{ARR6}/lpsocl_new/T1000_s*/**/msd.json'")
+        print(f"     ... --scan --average --glob '{ARR6}/lpsocl_3x3x1/T1000_s*/**/msd.json'")
+    print("   ⚠ β 를 인용할 땐 잣대를 같이 — db/properties/lpsocl_beta_registry.json")
 
 
 if "--selftest" in sys.argv:
