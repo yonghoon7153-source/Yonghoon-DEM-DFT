@@ -12,7 +12,7 @@ explored: false
 authoredBy: agent
 effort: high
 claimType: empirical
-evidenceScope: multi-source
+evidenceScope: multi-source-primary
 ---
 
 # LPSOCl 600 K 상자 크기 — β 는 안 움직이고 D 만 1.65× 움직인다
