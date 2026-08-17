@@ -113,7 +113,7 @@
 - `kb/results/lpscl_structural_analysis_v3.md` — LPSCl vs LPSCl1.6 — 구조/결합 정밀 분석 (v3, DFT V0)
 - `kb/results/lpscl_vs_lpscl16_FULL_report_2026_06_17.md` — LPSCl (comp1) vs LPSCl1.6 (modelC) — 종합 비교 보고
 - `kb/results/lpscl_vs_lpscl16_v3_comparison.md` — LPSCl vs LPSCl1.6 — v3 완성형 비교 (Pipeline v2 §8)
-- `kb/results/lpsocl_box_size_600K_2026_08_18.md` — LPSOCl 600 K 상자 크기 — β 는 안 움직이고 D 만 1.65× 움직인다 ○미열람
+- `kb/results/lpsocl_box_size_600K_2026_08_18.md` — LPSOCl 600 K 상자 크기 — D 는 1.65× 눌렸고, β 탈락의 원인은 아니다 (STO 잣대) ○미열람
 - `kb/results/mlip_md_diffusive_gate_2026_08_01.md` — MLIP-MD 확산영역 게이트 — 저이동도 계의 Ea 는 전부 인용 보류 (2026-08-01)
 - `kb/results/nd2o3_FINAL_summary_2026_06_24.md` — Nd₂O₃-doped LPSCl1.6 — **최종 종합 (FINAL capstone)**
 - `kb/results/nd2o3_O_effect_transfer_2026_06_24.md` — Nd₂O₃-LPSCl1.6 — **O 효과 중심** 정리 (transfer용)

@@ -1,0 +1,77 @@
+{
+  "_what": "lpsocl 600 K beta 레지스트리 — 잣대(런 세트 x 곡선 x 창 x 시드 집합) 없이 beta 를 부르는 사고의 재발 방지",
+  "_why": "2026-08-18: 0.615 / 0.77 / 0.82 세 값이 각기 다른 런 세트-잣대의 값인데 같은 이름('lpsocl 600 K beta')을 달고 CSV 헤더/JSON/watch 하드코딩/kb 카드 네 곳에 흩어져 있었다. 그 흩어짐이 '0.77 확정' 오인용의 원인 (Fable 리뷰 F). beta 를 인용할 때는 이 파일의 entry id 로 부른다.",
+  "_rules": [
+    "판정량은 시드 평균곡선의 beta-bar (시드별 beta 의 산술평균이 아니다)",
+    "확정 판정은 MTO 곡선으로만 (STO 는 시간원점 잡음 ±0.2 실측)",
+    "창은 캠페인 규약 2-50 ps 고정",
+    "quote: none 인 항목은 어디에도 인용하지 않는다"
+  ],
+  "entries": [
+    {
+      "id": "ladder_ensemble_STO",
+      "beta": 0.615,
+      "run_set": "kgy lpsocl_md ladder+reseed s2/s3/s4(+s5) (4 seeds x 200 ps)",
+      "curve": "STO seed-ensemble mean",
+      "window_ps": [2, 50],
+      "verdict": "gate FAIL",
+      "quote": "historical-only",
+      "recorded": "db/properties/msd_3sys_200ps_origin.csv header (2026-08-04)"
+    },
+    {
+      "id": "arr6pt_smallcell_STO",
+      "beta": 0.82,
+      "run_set": "arrhenius_6pt/lpsocl T600_s2/s3/s4 (3 seeds x 200 ps, 5.67 A cell)",
+      "curve": "STO seed-mean curve",
+      "window_ps": [2, 50],
+      "per_seed_STO": [0.96, 0.83, 0.71],
+      "verdict": "gate PASS (STO) - MTO 미확정이라 잠정",
+      "quote": "provisional",
+      "recorded": "db/properties/msd_trend_verdict_arrhenius6pt.json (2026-08-11) + kb/results/lpsocl_box_size_600K_2026_08_18.md"
+    },
+    {
+      "id": "mto_pilot_s2_MTO",
+      "beta": 0.70,
+      "run_set": "kgy mto_pilot lpsocl 600 K s2 (1 seed, save_traj)",
+      "curve": "MTO",
+      "window_ps": [2, 50],
+      "note": "같은 런의 STO 는 0.90 - 방향까지 반대. c 단조증가(3.05->7.02), m -24.5%, 홉 7.3/이온(문턱 10 미달)",
+      "verdict": "gate FAIL (MTO) - 단 1시드",
+      "quote": "evidence-only",
+      "recorded": "kb/questions/lpsocl_low_beta_mechanism.md (2026-08-12)"
+    },
+    {
+      "id": "box331_STO",
+      "beta": 0.80,
+      "run_set": "arrhenius_6pt/lpsocl_3x3x1 T600_s2/s3/s4 (3 seeds x 200 ps, 17.02 A cell)",
+      "curve": "STO seed-mean curve",
+      "window_ps": [2, 50],
+      "per_seed_STO": [0.81, 0.73, 0.87],
+      "verdict": "gate PASS (경계 정확히 0.80)",
+      "quote": "provisional",
+      "recorded": "kb/results/lpsocl_box_size_600K_2026_08_18.md"
+    },
+    {
+      "id": "box331_MTO",
+      "beta": 0.81,
+      "run_set": "arrhenius_6pt/lpsocl_3x3x1 T600_s2/s3/s4 (3 seeds x 200 ps, 17.02 A cell)",
+      "curve": "MTO seed-mean curve",
+      "window_ps": [2, 50],
+      "per_seed_MTO": [0.81, 0.80, 0.81],
+      "verdict": "gate PASS - 시드 산포 0.006 으로 단단",
+      "quote": "citable-as-ratio-context",
+      "recorded": "kb/results/lpsocl_box_size_600K_2026_08_18.md"
+    },
+    {
+      "id": "orphan_0p77",
+      "beta": 0.77,
+      "run_set": "UNKNOWN - 출처 미상",
+      "curve": "UNKNOWN",
+      "window_ps": null,
+      "note": "watch_kgy.py 에 '2026-08-16 확정' 으로 하드코딩돼 있던 값 (2026-08-18 제거). 재구성 가설: arr6pt 시드별 STO (0.83+0.71)/2 = 0.770 정확 일치 - s2(0.96) 완료 전 2시드 시점의 '시드 beta 평균'(규약 위반 추정량). kgy 로그 타임스탬프로만 검증 가능.",
+      "verdict": "재현 불가",
+      "quote": "none",
+      "recorded": "kb/results/lpsocl_box_size_600K_2026_08_18.md '이 카드가 말하지 않는 것'"
+    }
+  ]
+}

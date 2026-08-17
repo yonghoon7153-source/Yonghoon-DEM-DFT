@@ -8,6 +8,7 @@
 "# Transfer: wrapped base64 relay from both machines; lpsocl part md5 c864169a0eccfaa7e054d8ff44358e86."
 "# GATE: only lpsocl 600 K FAILS (beta 0.61 < 0.8; hop statistics, not MSD size). modelc/b2o3 600 K now PASS"
 "#   on 3-seed means (0.87/0.81) - the single-seed borderline verdicts are superseded. D at lpsocl 600 K: DO NOT QUOTE."
+"# SCOPE NOTE (2026-08-18): the GATE/DO-NOT-QUOTE above applies to the OLD ladder ensemble only. The arrhenius_6pt re-run (T600_s2/s3/s4) passes the STO gate (seed-mean beta 0.82). Ruler-tagged beta values: db/properties/lpsocl_beta_registry.json."
 "# LPSCl1.6 600K: slope 0.6201 A^2/ps, intercept 2.336 A^2, R2 0.9714, beta 0.868, D 1.0336e-05 cm2/s, gate PASS, traj 199 ps"
 "# LPSCl1.6 800K: slope 1.6922 A^2/ps, intercept -2.267 A^2, R2 0.9783, beta 0.934, D 2.8203e-05 cm2/s, gate PASS, traj 99 ps"
 "# LPSCl1.6 1000K: slope 2.8243 A^2/ps, intercept 1.952 A^2, R2 0.9941, beta 0.924, D 4.7072e-05 cm2/s, gate PASS, traj 99 ps"

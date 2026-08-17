@@ -398,8 +398,11 @@ def section_cell():
     ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
     gpu = sh("nvidia-smi --query-gpu=utilization.gpu,memory.used "
              "--format=csv,noheader,nounits").strip().splitlines()
-    print(f"   유한크기: 원본 최소 수직폭 5.67 Å → (d/2)² 8.04 Å² · MSD 25.8 → **3.21× 초과**")
-    print(f"             3×3×1  최소 수직폭 17.02 Å → (d/2)² 72.4 Å² · MSD 25.8 → **0.36× 여유**")
+    # ⚠ 여유율은 **그 셀 자신의 MSD** 로 잰다 (2026-08-18 Fable 리뷰 F 지적) —
+    #   옛 판은 큰 셀 여유를 작은 셀 MSD(25.8)로 나눠 0.36× 로 후하게 찍었다.
+    #   큰 셀은 D 가 1.65× 라 자기 MSD@50 이 41.7 Å² → 41.7/72.4 = 0.58×. 결론 불변.
+    print(f"   유한크기: 원본 최소 수직폭 5.67 Å → (d/2)² 8.04 Å² · 자기 MSD 25.3 → **3.15× 초과**")
+    print(f"             3×3×1  최소 수직폭 17.02 Å → (d/2)² 72.4 Å² · 자기 MSD 41.7 → **0.58× 여유**")
     seeds = {}
     for d in sorted(glob.glob(os.path.join(CELL, "T600_s*"))):
         sd = os.path.basename(d).split("_s")[-1]
