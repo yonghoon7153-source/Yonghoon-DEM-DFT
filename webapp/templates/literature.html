@@ -160,6 +160,7 @@
     <div class="modal-head"><h3 id="ptitle" class="mono" style="font-size:.85rem"></h3>
       <span style="display:flex;gap:6px;align-items:center">
         <span id="pfigbadge" class="muted" style="font-size:.74rem"></span>
+        <span id="pnotebadge" class="muted" style="font-size:.74rem"></span>
         {# 그림 목록이 digest 맨 끝이라 긴 논문은 한참 굴려야 닿는다 — 한 번에 점프.
            한 번 더 누르면 읽던 자리(본문 위)로 되돌아온다. 단축키 F / Esc 는 닫기. #}
         <button class="btn sm" id="pfigjump" style="display:none"
@@ -169,6 +170,7 @@
   </div>
 </div>
 <script src="/static/js/figref.js?v={{ asset_version }}"></script>
+<script src="/static/js/docnote.js?v={{ asset_version }}"></script>
 <script>
 var curTrack='all', curQ='', curPI='', curTP='', sortMode=false, origOrder=null;
 // ⚠ 즐겨찾기는 서버에 안 올린다 — 개인 표시라 브라우저에만 둔다(localStorage).
@@ -217,6 +219,7 @@ function figHits(idx, q){
     if(names.length<8){
       var k=(p.split(' ')[0]||'');
       names.push(!k ? '그림'            // 키를 못 찾은 경우(figures.json 이 바뀐 뒤 등)
+        : k==='@' ? '본문 메모'          // digest 여백 메모 (docnote.js) — 그림이 아니다
         : (k[0]==='t'?'Table ':(k[0]==='s'?'Scheme ':'Fig '))+k.slice(1).toUpperCase());
     }
   });
@@ -244,8 +247,11 @@ function apply(){
     var cb = c.querySelector('.cmtmatch');
     if(cb){
       cb.style.display = inCmt ? '' : 'none';
-      if(inCmt){ cb.textContent = '💬 코멘트 ' + ck.n;
-                 cb.title = ck.names.join(', ') + ' 에 내가 적어 둔 코멘트에서 찾았어요'; }
+      if(inCmt){
+        // 본문 여백 메모만 걸렸으면 📝 로 — 그림 코멘트와 섞어 부르면 어디를 열지 모른다
+        var onlyNote = ck.names.length && ck.names.every(function(x){return x==='본문 메모';});
+        cb.textContent = (onlyNote?'📝 메모 ':'💬 코멘트 ') + ck.n;
+        cb.title = ck.names.join(', ') + ' 에 내가 적어 둔 글에서 찾았어요 (제목에는 없음)'; }
     }
     var okTP = !curTP || (curTP==='__fav'
                  ? favSet().has(c.dataset.id||'')
@@ -323,6 +329,9 @@ function openPaper(id){
               +'곳'+(nc?' · 내가 단 코멘트 '+nc+'건':' · 코멘트 없음');
       document.getElementById('pfigjump').style.display='';
     }
+    // 여백 메모 — figref 가 본문을 다 손본 **뒤에** 달아야 형광펜이 안 지워진다.
+    // rel 은 서버가 준 것을 쓴다 (papers/ ↔ talks/ 를 화면이 알 수 없다).
+    if(window.mountDocNotes && d.rel) mountDocNotes(b, d.rel, document.getElementById('pmbox'));
   });
 }
 paintFav();

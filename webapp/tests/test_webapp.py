@@ -1413,3 +1413,93 @@ if __name__ == "__main__":
             print(f"  ⛔ {name} (예외) {type(e).__name__}: {str(e)[:300]}")
     print(f"\n{'✅ 전부 통과' if not fails else f'⛔ 실패 {fails}건'}")
     sys.exit(1 if fails else 0)
+
+
+# ── 여백 메모 (docnote) ────────────────────────────────────────────────────
+#  2026-08-17 1저자 요청: "오른쪽클릭하면 word 처럼 옆에 메모", "search 에서 잡히게",
+#  "메모 섹션에서 링크 걸어서 그 메모가 써져있는 페이지로".
+#  전부 **한 번 틀릴 수 있는 지점**이라 음성 경로를 같이 건다.
+def test_docnote_roundtrip(tmp_path, monkeypatch):
+    """메모를 달면 → 검색 색인에 뜨고 → 딥링크가 그 메모를 가리켜야 한다."""
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    rel = "litdb/papers/anderson2024_llzo_comprehensive_dopant_screening.md"
+    r = D.add_file_comment(rel, "우리 §20.3 오타 얘기와 같은 건", anchor="Rh · Ho 는 애초에 논문 문제가")
+    assert r.get("ok"), r
+    nid = r["item"]["id"]
+    assert r["item"]["anchor"] == "Rh · Ho 는 애초에 논문 문제가"
+
+    # ① /literature 카드 색인에 '@' 키로 들어간다 (그림 코멘트와 구분되는 키)
+    idx = D.paper_comment_search()["anderson2024_llzo_comprehensive_dopant_screening"]
+    assert idx.startswith("@ "), idx[:40]
+    assert "오타" in idx and "애초에" in idx, "메모 글과 붙인 자리가 **둘 다** 색인돼야 한다"
+
+    # ② 딥링크가 그 메모 id 를 달고 나간다
+    c = [x for x in D.comment_all() if x["id"] == nid][0]
+    assert D.note_url(c) == f"/literature?open=anderson2024_llzo_comprehensive_dopant_screening&note={nid}"
+
+    # ③ 날짜별로 묶인다
+    g = D.notes_by_date()
+    assert any(any(i["id"] == nid for i in grp["items"]) for grp in g)
+
+
+def test_docnote_negative(tmp_path, monkeypatch):
+    """음성 경로 — 틀린 입력을 잡아내는지."""
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    # 없는 파일에는 못 단다 (경로 탈출·유령 키 방어)
+    assert D.add_file_comment("litdb/papers/__없는논문__.md", "x", anchor="y").get("error")
+    # anchor 없는 코멘트는 anchor 키 자체가 없어야 한다 (옛 기록과 같은 모양)
+    D.add_file_comment("db/properties/electronic.json", "그냥 코멘트")
+    c = [x for x in D.comment_all() if x["rel"] == "db/properties/electronic.json"][0]
+    assert not c["anchor"]
+    # → 딥링크에 note= 가 붙으면 안 된다 (붙일 자리가 없다)
+    assert "note=" not in D.note_url(c)
+    # 그림도 아니고 문서도 아닌 파일은 /files 로 간다
+    assert D.comment_origin("db/properties/electronic.json")["kind"] == "파일"
+    # 4칸이 아닌 figures 경로를 논문으로 오인하면 안 된다
+    assert D.comment_origin("litdb/figures/slug/sub/x.png")["kind"] == "파일"
+    # papers 밑이어도 .md 가 아니면 논문이 아니다
+    assert D.comment_origin("litdb/papers/x.png")["kind"] == "파일"
+
+
+def test_notes_page_renders(tmp_path, monkeypatch):
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    D.add_file_comment("kb/concepts/bvse.md", "여기 R0 값 출처 확인", anchor="softBV")
+    A.app.config["TESTING"] = True
+    h = A.app.test_client().get("/notes").get_data(as_text=True)
+    assert "여기 R0 값 출처 확인" in h
+    assert "/concept/bvse?note=" in h, "메모 카드가 그 자리로 가는 딥링크여야 한다"
+
+
+def test_note_target_gate_is_narrower_than_file_serving():
+    """메모 게이트를 넓히다가 **다운로드 화이트리스트**까지 넓히면 안 된다.
+
+    safe_repo_path 는 /api/file 이 쓰는 경로다 — 여기 kb/ 가 들어가면 배포판에서
+    kb 전체를 내려받을 수 있게 된다. 두 게이트가 갈려 있는지 못으로 박는다.
+    """
+    doc = "litdb/papers/anderson2024_llzo_comprehensive_dopant_screening.md"
+    assert D.safe_note_target(doc) is not None, "메모는 digest 에 달려야 한다"
+    assert D.safe_repo_path(doc) is None, "그런데 /api/file 로는 여전히 못 준다"
+    assert D.safe_note_target("kb/concepts/bvse.md") is not None
+    assert D.safe_repo_path("kb/concepts/bvse.md") is None
+    # 음성: 경로 탈출·하위폴더·비-md·화이트리스트 밖
+    assert D.safe_note_target("kb/concepts/../../etc/passwd") is None
+    assert D.safe_note_target("litdb/papers/sub/x.md") is None
+    assert D.safe_note_target("litdb/papers/x.png") is None
+    assert D.safe_note_target("kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md") is None
+    assert D.safe_note_target("CLAUDE.md") is None
+
+
+def test_comment_post_and_get_agree(tmp_path, monkeypatch):
+    """POST 응답과 GET 응답이 **같은 색인**을 실어야 한다.
+
+    앞 판은 POST 에만 paper 색인이 없어서, 화면이 POST 결과로 검색 색인을
+    갱신하려 하면 조용히 헛돌았다 (뒤따르는 GET 이 덮어 증상만 가렸다).
+    """
+    monkeypatch.setattr(D, "COMMENTS_PATH", tmp_path / "file_comments.json")
+    A.app.config["TESTING"] = True
+    c = A.app.test_client()
+    rel = "litdb/papers/anderson2024_llzo_comprehensive_dopant_screening.md"
+    post = c.post("/api/comments/" + rel, json={"text": "메모", "anchor": "닻"}).get_json()
+    get = c.get("/api/comments/" + rel).get_json()
+    assert post["paper"] == get["paper"], (post.get("paper"), get.get("paper"))
+    assert post["paper"]["cmt"].startswith("@ ")

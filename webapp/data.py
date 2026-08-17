@@ -2706,16 +2706,17 @@ def search_index() -> list:
     for p in list_papers():
         idx.append({"t": "논문", "label": p["title"][:70], "sub": p["type"][:40],
                     "url": f"/literature?open={p['id']}", "kw": f"{p['id']} {p['track']}"})
-    # 내가 적어 둔 코멘트 (1저자 요청 2026-08-06: "그 comment 도 검색에서 걸리게").
-    # 그림 코멘트는 그 논문을 열고, 나머지는 /files 에서 그 파일만 걸러 보여준다.
+    # 내가 적어 둔 코멘트·메모 (1저자 요청 2026-08-06 "그 comment 도 검색에서 걸리게",
+    # 2026-08-17 "메모 내용들도 search 에서 잡히게"). 링크 규칙은 comment_origin 한 곳.
+    # ⚠ 여백 메모는 **붙인 자리(anchor)도 kw 에** 넣는다 — 형광펜 친 문장으로도 찾는다.
+    idx.append({"t": "페이지", "label": "메모", "sub": "날짜별 메모·코멘트 모음",
+                "url": "/notes", "kw": "notes memo 메모 코멘트"})
     for c in comment_all():
-        rel, seg = c["rel"], c["rel"].split("/")
-        if rel.startswith("litdb/figures/") and len(seg) == 4:
-            url = f"/literature?open={seg[2]}"
-        else:
-            url = "/files?q=" + _urlquote(seg[-1])
-        idx.append({"t": "코멘트", "label": c["text"][:70],
-                    "sub": f"💬 {seg[-1]} · {c['at']}", "url": url, "kw": rel})
+        anc = c.get("anchor") or ""
+        idx.append({"t": "메모" if anc else "코멘트",
+                    "label": c["text"][:70],
+                    "sub": ("📝 " if anc else "💬 ") + f"{c['where']} · {c['at']}",
+                    "url": c["url"], "kw": f"{c['rel']} {anc}"})
     return idx
 
 
@@ -3369,6 +3370,39 @@ def _att_kind(rel: str) -> str:
     if e.endswith(".pdf"):
         return "pdf"
     return "file"
+
+
+#: 여백 메모(docnote.js)를 **달 수 있는** 문서. 읽는 문서에만 붙는다.
+#: ⚠ safe_repo_path(파일 **서빙**용 화이트리스트)를 넓히지 않는다 — 그건
+#:   /api/file 다운로드 경로라, 메모를 달려고 넓히면 배포판이 kb 전체를
+#:   내려받을 수 있게 된다. 게이트를 나누는 게 맞다 (2026-08-17).
+_NOTE_DOC_DIRS = ("litdb/papers/", "litdb/talks/", "kb/concepts/")
+
+
+def safe_note_target(rel: str) -> Path | None:
+    """메모를 달아도 되는 파일이면 실제 경로, 아니면 None.
+
+    ① 기존 코멘트 대상(docs · db · litdb/figures) — safe_repo_path 그대로
+    ② 우리가 화면에서 읽는 문서(_NOTE_DOC_DIRS 바로 밑의 .md) — 하위 폴더 불가
+
+    이 함수가 못 하는 것: 파일 내용을 보지 않는다. 존재·위치만 본다.
+    """
+    rel = (rel or "").lstrip("/")
+    p = safe_repo_path(rel)
+    if p is not None:
+        return p
+    if not rel.endswith(".md"):
+        return None
+    for d in _NOTE_DOC_DIRS:
+        if not rel.startswith(d):
+            continue
+        if "/" in rel[len(d):]:          # 하위 폴더는 허용 안 함 (`..` 우회 차단의 일부)
+            return None
+        q = (ROOT / rel).resolve()
+        base = (ROOT / d).resolve()
+        if q.is_relative_to(base) and q.is_file():
+            return q
+    return None
 
 
 def safe_repo_path(rel: str) -> Path | None:
@@ -4137,10 +4171,16 @@ def file_comments(rel: str) -> list[dict]:
     return _load_comments().get((rel or "").lstrip("/"), [])
 
 
-def add_file_comment(rel: str, text: str, who: str = "") -> dict:
-    """코멘트 추가. ⚠ 실존하는 repo 파일에만 — 경로 탈출·유령 키를 막는다."""
+def add_file_comment(rel: str, text: str, who: str = "", anchor: str = "") -> dict:
+    """코멘트 추가. ⚠ 실존하는 repo 파일에만 — 경로 탈출·유령 키를 막는다.
+
+    anchor = **본문 여백 메모**(docnote.js)가 붙은 자리의 글 지문. 고른 글이 있으면
+      그 글, 없으면 문단 앞머리다. 좌표가 아니라 글로 잡는 이유: digest 는 다시
+      렌더될 때마다 DOM 이 새로 생기고 문단 번호도 편집으로 밀린다 — 글로 잡으면
+      문단이 밀려도 따라간다. 그림 코멘트는 빈 값이라 예전 기록과 그대로 섞인다.
+    """
     rel = (rel or "").lstrip("/")
-    if safe_repo_path(rel) is None:
+    if safe_note_target(rel) is None:
         return {"error": "그 파일을 찾을 수 없어요"}
     text = " ".join((text or "").split("\n"))
     text = (text or "").strip()
@@ -4162,6 +4202,9 @@ def add_file_comment(rel: str, text: str, who: str = "") -> dict:
                 "text": text[:2000],
                 "at": _dt.datetime.now().strftime("%Y-%m-%d %H:%M"),
                 "who": (who or "").strip()[:40]}
+        anc = " ".join((anchor or "").split())[:160]
+        if anc:
+            item["anchor"] = anc      # ⚠ 없을 땐 키 자체를 안 넣는다 (옛 기록과 같은 모양)
         lst.append(item)
         _save_comments(d)
         return {"ok": True, "item": item, "n": len(lst)}
@@ -4202,14 +4245,70 @@ def comment_index() -> dict[str, str]:
 
 
 def comment_all() -> list[dict]:
-    """코멘트 전체를 최근순으로 (⌘K 색인·목록용). rel·text·at 만."""
+    """코멘트·메모 전체를 최근순으로 (⌘K 색인 · /notes 목록용).
+
+    `anchor` 가 있으면 **본문 여백 메모**(docnote.js), 없으면 파일·그림 코멘트다.
+    출처(kind·where·url)를 여기서 한 번만 정해 둔다 — 화면마다 rel 을 다시 파싱하면
+    규칙이 갈라진다(⌘K 와 /notes 가 서로 다른 링크를 주는 식으로).
+    """
     out = []
     for rel, items in _load_comments().items():
+        meta = comment_origin(rel)
         for c in items:
             out.append({"rel": rel, "text": c.get("text", ""),
-                        "at": c.get("at", ""), "id": c.get("id", "")})
+                        "at": c.get("at", ""), "id": c.get("id", ""),
+                        "anchor": c.get("anchor", ""), **meta})
     out.sort(key=lambda x: x["at"], reverse=True)
     return out
+
+
+def comment_origin(rel: str) -> dict:
+    """rel → {kind, where, url}. 코멘트가 **어디에 달렸는지**의 단일 출처.
+
+    kind: '논문' (digest 본문·그림) · '개념' (kb/concepts) · '파일' (그 밖)
+    """
+    seg = (rel or "").split("/")
+    if rel.startswith("litdb/figures/") and len(seg) == 4:
+        return {"kind": "논문", "where": seg[2], "url": f"/literature?open={seg[2]}"}
+    if (len(seg) == 3 and seg[0] == "litdb"
+            and seg[1] in ("papers", "talks") and seg[2].endswith(".md")):
+        s = seg[2][:-3]
+        return {"kind": "논문", "where": s, "url": f"/literature?open={s}"}
+    if len(seg) == 3 and seg[0] == "kb" and seg[1] == "concepts" and seg[2].endswith(".md"):
+        c = seg[2][:-3]
+        return {"kind": "개념", "where": c, "url": f"/concept/{c}"}
+    return {"kind": "파일", "where": seg[-1],
+            "url": "/files?q=" + _urlquote(seg[-1])}
+
+
+def note_url(c: dict) -> str:
+    """메모 한 건의 **딥링크** — 그 문서를 열고 그 메모 자리까지 데려간다.
+
+    여백 메모만 `?note=<id>` 를 붙인다(docnote.js 가 그걸 읽는다). 파일·그림
+    코멘트는 붙일 자리가 없어 문서만 연다.
+    """
+    u = c.get("url") or "/"
+    if not c.get("anchor"):
+        return u
+    return u + ("&" if "?" in u else "?") + "note=" + _urlquote(str(c.get("id", "")))
+
+
+def notes_by_date() -> list[dict]:
+    """메모·코멘트를 **날짜별로 묶어** 최신 날짜부터 (Notion 식 목록).
+
+    ⚠ 같은 날 안에서는 시각 역순이다 — 하루 안에서도 나중에 쓴 게 위로 와야
+      "방금 쓴 것" 을 찾는다.
+    이 함수가 못 하는 것: 날짜가 없는 옛 기록은 '날짜 없음' 한 묶음으로 밀어 둔다.
+    """
+    groups: dict[str, list[dict]] = {}
+    for c in comment_all():
+        c["deep"] = note_url(c)
+        day = (c.get("at") or "")[:10] or "날짜 없음"
+        groups.setdefault(day, []).append(c)
+    for v in groups.values():
+        v.sort(key=lambda x: x.get("at", ""), reverse=True)
+    return [{"date": d, "items": groups[d], "n": len(groups[d])}
+            for d in sorted(groups, reverse=True)]
 
 
 def _fig_keys(slug: str) -> dict[str, str]:
@@ -4223,10 +4322,19 @@ def _fig_keys(slug: str) -> dict[str, str]:
 
 
 def paper_comment_search() -> dict[str, str]:
-    """slug → 그 논문 **그림에 달아 둔 코멘트**를 이어붙인 검색용 문자열.
+    """slug → 그 논문에 달아 둔 **내 글**을 이어붙인 검색용 문자열.
+
+    두 갈래를 한 색인에 담는다:
+      · 그림 코멘트   `litdb/figures/<slug>/<file>` → 키 = 그림 키(f3 · t1 …)
+      · 본문 여백 메모 `litdb/papers|talks/<slug>.md` → 키 = `@` (docnote.js)
 
     캡션 색인(paper_figure_search)과 같은 형식 "<key> <글>" ¦ 이어붙이기 —
-    /literature 검색이 "몇 장에서, 어느 그림에서 걸렸나"를 그대로 표시할 수 있다.
+    /literature 검색이 "몇 장에서, 어디서 걸렸나"를 그대로 표시할 수 있다.
+
+    ⚠ 여백 메모는 **메모 글 + 붙인 자리(anchor)** 를 둘 다 넣는다. 형광펜 친 문장으로
+      검색해도 걸려야 하기 때문 — 그게 Word 메모를 쓰는 실제 방식이다.
+    ⚠ 메모 한 건씩 따로 넣는다(그림처럼 파일 단위로 뭉치지 않는다). 안 그러면
+      검색 결과의 "메모 N건" 이 파일 수가 돼서 실제 건수와 어긋난다.
     """
     cm = _load_comments()
     if not cm:
@@ -4234,18 +4342,25 @@ def paper_comment_search() -> dict[str, str]:
     parts: dict[str, list[str]] = {}
     keys: dict[str, dict[str, str]] = {}
     for rel, items in cm.items():
-        if not items or not rel.startswith("litdb/figures/"):
+        if not items:
             continue
         seg = rel.split("/")
-        if len(seg) != 4:
-            continue
-        slug, fname = seg[2], seg[3]
-        if slug not in keys:
-            keys[slug] = _fig_keys(slug)
-        k = keys[slug].get(fname, "")
-        txt = " ".join(" ".join((c.get("text") or "").split()) for c in items)[:300]
-        if txt:
-            parts.setdefault(slug, []).append(f"{k} {txt}")
+        if rel.startswith("litdb/figures/") and len(seg) == 4:
+            slug, fname = seg[2], seg[3]
+            if slug not in keys:
+                keys[slug] = _fig_keys(slug)
+            k = keys[slug].get(fname, "")
+            txt = " ".join(" ".join((c.get("text") or "").split()) for c in items)[:300]
+            if txt:
+                parts.setdefault(slug, []).append(f"{k} {txt}")
+        elif (len(seg) == 3 and seg[0] == "litdb"
+              and seg[1] in ("papers", "talks") and seg[2].endswith(".md")):
+            slug = seg[2][:-3]
+            for c in items:
+                txt = " ".join((c.get("text") or "").split())
+                anc = " ".join((c.get("anchor") or "").split())
+                if txt or anc:
+                    parts.setdefault(slug, []).append(f"@ {txt} {anc}"[:400])
     return {s: "¦".join(v).lower()[:9000] for s, v in parts.items()}
 
 def md_to_html(md: str) -> str:

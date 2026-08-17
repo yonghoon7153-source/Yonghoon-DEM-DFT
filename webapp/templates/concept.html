@@ -11,12 +11,22 @@
     <h1>{{ term.term if term else cid }}</h1>
     {% if term %}<div class="sub">{{ term.full }} · <span class="badge b-fam">{{ term.cat }}</span></div>{% endif %}
   </div>
-  <button class="btn sm" onclick="window.print()">🖨 인쇄/PDF</button>
+  <div style="display:flex;gap:8px;align-items:center">
+    <span id="pnotebadge" class="muted" style="font-size:.74rem"></span>
+    <button class="btn sm" onclick="window.print()">🖨 인쇄/PDF</button>
+  </div>
 </div>
 
 <div class="concept-wrap">
   <article class="doc concept" id="concept-body">{{ fallback_html|safe }}</article>
 </div>
+
+{# 여백 메모 (1저자 요청 2026-08-17: "glossary 더보기에도 그 기능을") — 본문에서
+   오른쪽 클릭하면 오른쪽 여백에 메모가 붙는다. 저장은 kb/concepts/<cid>.md 에.
+   ⚠ 이 스크립트는 아래 재렌더 IIFE **밖**에 둔다: marked 가 없어 서버 fallback
+     HTML 이 그대로 남는 경우에도 메모가 살아야 한다 (그 경로가 실제로 쓰인다). #}
+<script src="/static/js/comments.js?v={{ asset_version }}"></script>
+<script src="/static/js/docnote.js?v={{ asset_version }}"></script>
 
 
 {# ── 첨부 (2026-08-05, v2) — 본문이 언급한 그림·데이터 + 사용자 업로드 ─────
@@ -389,6 +399,22 @@
     }
   };
   window.attClose = function(){ if (modal) modal.style.display = 'none'; };
+})();
+</script>
+
+<script>
+/* 여백 메모 달기 — 본문 재렌더(marked·katex·mermaid)가 다 끝난 **뒤**에 건다.
+   ⚠ 그 셋은 setTimeout 재시도라 언제 끝나는지 모른다. 그래서 늦게 걸고,
+     그 뒤에 또 갈아끼워져도 docnote 의 layout() 이 자리를 다시 찾는다(자가복구). */
+(function(){
+  function go(){
+    var box = document.getElementById('concept-body');
+    if (box && window.mountDocNotes)
+      mountDocNotes(box, {{ ('kb/concepts/' ~ cid ~ '.md')|tojson }},
+                    document.querySelector('.concept-wrap'));
+  }
+  if (document.readyState === 'complete') setTimeout(go, 300);
+  else window.addEventListener('load', function(){ setTimeout(go, 300); });
 })();
 </script>
 

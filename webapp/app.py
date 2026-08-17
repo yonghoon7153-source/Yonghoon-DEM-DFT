@@ -504,9 +504,15 @@ def _paper_cmt_index(rel):
       코멘트를 읽을 때마다 그 논문의 최신 색인을 같이 실어 보내 화면이 스스로 맞추게 한다.
     """
     seg = rel.split("/")
-    if not rel.startswith("litdb/figures/") or len(seg) != 4:
+    slug = None
+    if rel.startswith("litdb/figures/") and len(seg) == 4:
+        slug = seg[2]                                   # litdb/figures/<slug>/<file>
+    elif (len(seg) == 3 and seg[0] == "litdb"
+          and seg[1] in ("papers", "talks") and seg[2].endswith(".md")):
+        slug = seg[2][:-3]                              # litdb/papers/<slug>.md — 본문 여백 메모
+    if slug is None:
         return None
-    return {"slug": seg[2], "cmt": D.paper_comment_search().get(seg[2], "")}
+    return {"slug": slug, "cmt": D.paper_comment_search().get(slug, "")}
 
 
 @app.route("/api/comments/<path:rel>", methods=["GET", "POST"])
@@ -519,8 +525,16 @@ def api_comments(rel):
     if g:
         return g
     d = request.get_json(silent=True) or {}
-    r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")))
-    return (jsonify(r), 400) if r.get("error") else jsonify(r)
+    # anchor = 본문 여백 메모가 붙은 자리(고른 글/문단 앞머리). 그림 코멘트는 빈 값.
+    r = D.add_file_comment(rel, str(d.get("text", "")), str(d.get("who", "")),
+                           str(d.get("anchor", "")))
+    if r.get("error"):
+        return jsonify(r), 400
+    # ⚠ GET 과 **같은 모양**으로 돌려준다. 앞 판은 POST 에만 paper 색인이 빠져 있어
+    #   화면이 POST 응답으로 색인을 갱신하려 하면 조용히 아무 일도 안 났다
+    #   (뒤따르는 GET 이 덮어 줘서 증상이 안 보였을 뿐이다).
+    r["paper"] = _paper_cmt_index(rel)
+    return jsonify(r)
 
 
 @app.route("/api/comments/<path:rel>", methods=["DELETE"])
@@ -546,6 +560,20 @@ def api_file_rename():
     d = request.get_json(silent=True) or {}
     r = D.rename_upload(str(d.get("rel", "")), str(d.get("name", "")))
     return (jsonify(r), 400) if r.get("error") else jsonify(r)
+
+
+@app.route("/notes")
+def notes_page():
+    """메모·코멘트를 **날짜별로** 모아 보는 화면 (1저자 요청 2026-08-17).
+
+    여백 메모(📝)는 읽던 문서 옆에 흩어져 있어서, 나중에 "그때 뭐라고 적었더라"
+    를 찾으려면 문서를 하나씩 열어야 했다. 날짜로 묶어 두면 그날 무엇을 읽고
+    무엇을 판단했는지가 한 화면에 남는다.
+    """
+    groups = D.notes_by_date()
+    return render_template("notes.html", active="notes", groups=groups,
+                           total=sum(g["n"] for g in groups),
+                           q=request.args.get("q", "").strip())
 
 
 @app.route("/files")
@@ -587,7 +615,10 @@ def api_paper(pid):
         abort(404)
     html = md_html(p.read_text(encoding="utf-8", errors="ignore"))
     # 크로핑된 논문 그림 — 본문의 "Fig. 5e" 를 브라우저에서 링크로 바꿔 여백에 띄운다.
-    return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid)})
+    # ⚠ rel 을 같이 준다 — 여백 메모(docnote.js)가 이 경로에 붙는다. papers/ 인지
+    #   talks/ 인지는 **서버만 안다**. 화면이 papers/ 로 찍으면 발표덱 메모가 조용히 실패한다.
+    return jsonify({"id": pid, "html": html, "figures": D.paper_figures(pid),
+                    "rel": str(p.relative_to(D.ROOT)).replace("\\", "/")})
 
 
 @app.route("/seminar/deck")

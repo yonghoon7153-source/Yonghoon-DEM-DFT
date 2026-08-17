@@ -45,7 +45,10 @@
 
   /* /literature 카드의 검색 색인(data-cmt)을 방금 단 코멘트로 갱신.
    * 그 값은 페이지가 그려질 때 서버가 구워 넣은 것이라, 새로고침 전엔 방금 쓴 글로
-   * 검색해도 💬 배지가 안 떴다 (1저자 신고 2026-08-06). 서버가 최신 색인을 같이 준다. */
+   * 검색해도 💬 배지가 안 떴다 (1저자 신고 2026-08-06). 서버가 최신 색인을 같이 준다.
+   *
+   * ⚠ docnote.js(본문 여백 메모)도 **이 함수를 쓴다** — window.syncPaperCmtIndex 로
+   *   내보낸다. 색인 갱신 규칙이 두 벌이 되면 한쪽만 고쳐져 검색이 어긋난다. */
   function syncPaperIndex(d) {
     if (!d || !d.paper || !d.paper.slug) return;
     var sel = window.CSS && CSS.escape ? CSS.escape(d.paper.slug)
@@ -93,6 +96,7 @@
     load(box, rel);
   };
   global.paintCommentBadge = paintBadge;
+  global.syncPaperCmtIndex = syncPaperIndex;   // docnote.js 와 **같은** 색인 갱신을 쓴다
 
   /* 이벤트는 문서에 한 번만 — 패널이 다시 그려져도 계속 먹는다 */
   document.addEventListener("click", function (e) {

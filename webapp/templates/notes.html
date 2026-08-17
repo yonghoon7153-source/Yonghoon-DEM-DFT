@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}메모 · DFT{% endblock %}
+{% block content %}
+{# 날짜별 메모 모음 (1저자 요청 2026-08-17). 여백 메모 📝 와 파일·그림 코멘트 💬 를
+   같은 창고(db/file_comments.json)에서 읽어 **날짜로 묶어** 최신부터 쌓는다.
+   ⚠ 필터는 전부 브라우저에서 — 서버 왕복 없이 즉시 걸러야 "찾아보는" 맛이 난다. #}
+<div class="page-header">
+  <div><h1>메모</h1>
+    <div class="sub">문서 옆에 적어 둔 메모(📝)와 파일·그림 코멘트(💬) — 날짜별 · 최신순 ·
+      총 <b>{{ total }}</b>건</div></div>
+</div>
+
+<div class="card" style="padding:14px 16px">
+  <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+    <label class="sr-only" for="nq">메모 검색</label>
+    <input class="search" id="nq" style="flex:1 1 280px"
+           placeholder="메모 내용 · 붙인 글 · 문서 이름으로 검색…" value="{{ q }}"
+           oninput="napply()">
+    <span class="nk-chips" style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" class="btn sm nk active" data-k="" onclick="setKind(this)">전체</button>
+      <button type="button" class="btn sm nk" data-k="📝" onclick="setKind(this)" title="문서 본문 옆 여백 메모">📝 메모</button>
+      <button type="button" class="btn sm nk" data-k="💬" onclick="setKind(this)" title="파일·그림 코멘트">💬 코멘트</button>
+    </span>
+  </div>
+  <div class="muted" style="font-size:.72rem;margin-top:8px">
+    메모는 읽던 문서에서 <b>오른쪽 클릭</b>으로 답니다 — digest 본문, 개념 문서(Glossary 더보기).
+    카드를 누르면 적어 둔 그 자리로 갑니다.
+  </div>
+</div>
+
+{% if not groups %}
+<div class="card"><div class="muted">아직 메모가 없어요 — 논문 digest 나 개념 문서를 열고
+  본문에서 오른쪽 클릭해 보세요.</div></div>
+{% endif %}
+
+{% for g in groups %}
+<section class="ndaygrp" data-date="{{ g.date }}">
+  <div class="nday">
+    <span class="nday-d">{{ g.date }}</span>
+    <span class="nday-n muted">{{ g.n }}건</span>
+    <span class="nday-line"></span>
+  </div>
+  <div class="nlist">
+    {% for c in g['items'] %}
+    {# 카드 전체가 링크 — 누르면 그 문서를 열고 **메모가 붙은 그 자리**로 간다
+       (여백 메모는 ?note=<id>, 파일 코멘트는 문서까지). #}
+    <a class="ncard {{ 'n-note' if c.anchor else 'n-cmt' }}" href="{{ c.deep }}"
+       data-s="{{ (c.text ~ ' ' ~ c.anchor ~ ' ' ~ c.where ~ ' ' ~ c.rel)|lower }}"
+       data-k="{{ '📝' if c.anchor else '💬' }}"
+       title="{{ c.rel }} — 눌러서 그 자리로">
+      <div class="ncard-h">
+        <span class="ntag">{{ '📝' if c.anchor else '💬' }}</span>
+        <span class="nwhere">{{ c.kind }} · {{ c.where }}</span>
+        <span class="nat muted">{{ c.at }}</span>
+      </div>
+      {% if c.anchor %}<div class="nquote">{{ c.anchor }}</div>{% endif %}
+      <div class="ntext">{{ c.text }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endfor %}
+
+<div class="card" id="nores" style="display:none"><div class="muted">찾는 메모가 없어요.</div></div>
+
+<script>
+var curK='';
+function setKind(b){
+  curK = b.dataset.k;
+  document.querySelectorAll('.nk').forEach(function(x){x.classList.remove('active');});
+  b.classList.add('active');
+  napply();
+}
+/* 카드를 거르고, **비어 버린 날짜 묶음은 통째로 숨긴다** — 안 그러면 날짜 머리만
+   줄줄이 남아서 결과가 있는 것처럼 보인다. */
+function napply(){
+  var q=(document.getElementById('nq').value||'').toLowerCase().trim(), n=0;
+  document.querySelectorAll('.ndaygrp').forEach(function(g){
+    var seen=0;
+    g.querySelectorAll('.ncard').forEach(function(c){
+      var okQ = !q || (c.dataset.s||'').indexOf(q)>=0;
+      var okK = !curK || c.dataset.k===curK;
+      var show = okQ && okK;
+      c.style.display = show?'':'none';
+      if(show){seen++; n++;}
+    });
+    g.style.display = seen?'':'none';
+    var nn=g.querySelector('.nday-n'); if(nn) nn.textContent = seen+'건';
+  });
+  document.getElementById('nores').style.display = n?'none':'';
+}
+napply();
+</script>
+{% endblock %}
