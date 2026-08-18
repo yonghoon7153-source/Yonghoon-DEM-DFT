@@ -1207,3 +1207,29 @@ mark.dn-hl{background:#fef3c7;color:inherit;border-bottom:2px solid #f59e0b;
 .dn-card.dn-editing{border-left-color:#2563eb;cursor:default;z-index:3}
 .dn-card.dn-editing .dn-text{white-space:normal;background:none}
 .dn-act{gap:6px}
+
+/* ── 사이드바 접기 (2026-08-18) ───────────────────────────────────────────
+   1저자 요청: "누르면 해당 부분 들어가고 화면 꽉차게".
+   ⚠ 두 가지를 **같이** 풀어야 진짜 꽉 찬다 — margin-left 만 지우면 max-width:1240px
+     때문에 가운데에 그대로 갇힌다 (실제로 그 상태였다). */
+.rail-btn{position:fixed;top:12px;left:calc(var(--sidebar-w) - 40px);z-index:60;
+  width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--border);border-radius:8px;background:var(--surface);
+  color:var(--dim);cursor:pointer;transition:left .18s ease,background .14s,color .14s;
+  box-shadow:0 1px 3px rgba(16,24,40,.08)}
+.rail-btn:hover{background:var(--bg);color:var(--navy)}
+.rail-btn svg{width:16px;height:16px;display:block}
+body.rail .rail-btn{left:10px}
+body.rail .sidebar{transform:translateX(-100%)}
+.sidebar{transition:transform .18s ease}
+body.rail .content{margin-left:0;max-width:none;padding-left:56px}
+/* 접힌 상태에서 왼쪽 가장자리에 커서를 대면 살짝 보여준다 (Notion 식 peek) */
+.rail-peek{display:none}
+/* ⚠ z-index 는 사이드바(40) **아래**여야 한다. 위에 두면 드러난 사이드바의 왼쪽
+   14px 클릭이 이 투명 띠에 먹힌다 — 메뉴 첫 글자를 못 누른다. */
+body.rail .rail-peek{display:block;position:fixed;top:0;left:0;width:14px;height:100vh;z-index:35}
+body.rail .rail-peek:hover ~ .sidebar,body.rail .sidebar:hover{transform:translateX(0);
+  box-shadow:var(--shadow-lg)}
+@media(max-width:860px){.rail-btn,.rail-peek{display:none}
+  body.rail .content{padding-left:18px}}
+@media print{.rail-btn,.rail-peek{display:none}}

@@ -1561,3 +1561,29 @@ def test_docnote_edit_over_http(tmp_path, monkeypatch):
     assert "고침" in d["paper"]["cmt"] and "처음" not in d["paper"]["cmt"]
     assert c.patch("/api/comments/" + rel,
                    json={"id": "없는거", "text": "x"}).status_code == 400
+
+
+def test_sidebar_rail_toggle_present_and_layered():
+    """사이드바 접기 — 버튼·토글·peek 이 모든 페이지에 있고, 층위가 맞아야 한다.
+
+    ⚠ peek 띠의 z-index 가 사이드바(40)보다 높으면 드러난 사이드바의 왼쪽 14px
+      클릭이 투명 띠에 먹혀 메뉴를 못 누른다 (2026-08-18 설계 중 실측).
+    """
+    import re
+    A.app.config["TESTING"] = True
+    c = A.app.test_client()
+    for url in ("/", "/glossary", "/notes", "/literature"):
+        h = c.get(url).get_data(as_text=True)
+        assert 'id="railbtn"' in h, url
+        assert "function toggleRail" in h, url
+
+    css = (D.ROOT / "webapp" / "static" / "css" / "style.css").read_text(encoding="utf-8")
+    z_side = int(re.search(r"\.sidebar\{[^}]*z-index:(\d+)", css, re.S).group(1))
+    z_peek = int(re.search(r"\.rail-peek\{[^}]*z-index:(\d+)", css, re.S).group(1))
+    assert z_peek < z_side, f"peek({z_peek}) 가 사이드바({z_side}) 위에 있으면 클릭을 먹는다"
+
+    # ★ 꽉 차려면 margin-left 와 max-width 를 **둘 다** 풀어야 한다.
+    #   margin 만 지우면 max-width:1240px 때문에 가운데에 갇힌다.
+    rail = re.search(r"body\.rail \.content\{([^}]*)\}", css).group(1)
+    assert "margin-left:0" in rail, rail
+    assert "max-width:none" in rail, rail

@@ -33,10 +33,10 @@ SLIDE_IDX = 7                      # v6 덱의 8장 (0-based)
 
 #: 슬라이드에 인쇄되는 문장 — 대본(kb/seminars/…)의 8장과 **1:1**이어야 한다.
 HEAD = "Candidate set (2): 36 cation elements, coloured by their best score"
-SUB1 = "Late transition metals sit together in [r]red[/r] — that block is the oxidation-window loss."
-SUB2 = "Read the [b]block pattern[/b], not the ranking — doubling the pool left both ends unchanged."
+SUB1 = "Late transition metals (Fe–Cu) form the [r]red[/r] block — their oxidation window is the narrowest."
+SUB2 = "[b]Group trends[/b] are robust, individual rankings are not — doubling the set kept both ends."
 LABEL = "best score per element, 89-species pool (2026-08-13)"
-NOTE = "[r]no approved ranking yet[/r] — the block structure is what this figure supports"
+NOTE = "[r]no approved ranking yet[/r] — this figure supports the group trend, not the order"
 GLOSS = ("Cation: the metal we substitute in  ·  Coverage: how many compounds of that element "
          "were scored  ·  de: stability against the host")
 
@@ -129,8 +129,8 @@ def selftest():
 
     # 음성 ③ — 같은 단서를 두 번 인쇄하지 않는다 (앞 판은 세 번이었다)
     chk(sum(("rank" in t.lower()) for t in (SUB2, NOTE)) <= 2, "순위 단서가 2회 이하")
-    chk("block" in SUB2.lower() and "block" in NOTE.lower(),
-        "소불릿과 그림 밑 줄이 같은 것(block)을 가리킨다")
+    chk("trend" in SUB2.lower() and "trend" in NOTE.lower(),
+        "소불릿과 그림 밑 줄이 같은 것(group trend)을 가리킨다")
 
     # ★ 글자폭 — 상자를 넘으면 두 줄로 감겨 아래(그림)를 밀거나 잘린다.
     #   v6 8장의 용어줄이 정확히 그래서 `of that eleme` 에서 끊겼다. 이제 못으로 박는다.
