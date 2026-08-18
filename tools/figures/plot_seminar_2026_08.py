@@ -506,7 +506,8 @@ def fig_stability_band():
                label=f"band wider than {BAND_WIDE:.2f} eV / atom  ({len(wide)} of {len(order)})"),
     ], loc="lower right", frameon=False, fontsize=10.5, handletextpad=.6)
     # ⬇ 방향 표시 — y 라벨 안에 화살표를 넣으면 회전 때문에 방향이 뒤집혀 보인다.
-    ax.annotate("more stable", xy=(-0.115, 0.10), xytext=(-0.115, 0.42),
+    #   ⚠ x 를 y 라벨에 너무 붙이면 둘이 닿는다 (−0.115 에서 실제로 닿았다). 벌린다.
+    ax.annotate("more stable", xy=(-0.175, 0.10), xytext=(-0.175, 0.42),
                 xycoords="axes fraction", textcoords="axes fraction",
                 rotation=90, ha="center", va="center", fontsize=10.5, color=hs.MUT,
                 arrowprops=dict(arrowstyle="->", color=hs.MUT, lw=1.1))
