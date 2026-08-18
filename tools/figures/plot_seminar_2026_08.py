@@ -188,11 +188,30 @@ def fig_site_choice():
     _rc()
     fig, ax = plt.subplots(figsize=(11.6, 5.2))
     ax.axhline(0, color=hs.INK, lw=1.2, zorder=2)
+    # ⚠ 원소 이름표는 **칸 라벨**이라 '그림 안 글씨 금지' 규칙의 예외다 (fig_periodic 과 같다).
+    #   문장은 넣지 않는다. 1저자 요청 2026-08-18: "원소 이름들 같은것도 옆에 안 거슬리게".
+    labels = []
     for m, v in by.items():
         rad = v[0][0]; des = [d for _, d in v]
         mean = st.mean(des); col = GOOD if mean < 0 else BAD
         ax.plot([rad, rad], [min(des), max(des)], color=col, lw=1.4, alpha=.45, zorder=3)
         ax.scatter([rad], [mean], s=64, color=col, zorder=4, edgecolors="white", lw=1.0)
+        # 막대 **바깥**에 붙인다 — 위로 뻗은 것은 위에, 아래로 뻗은 것은 아래에.
+        # 이러면 점·오차막대를 가리지 않고, 부호가 다른 이웃끼리는 저절로 갈라진다
+        # (Sn↓/Ni↑ 는 반지름이 같은 0.690 인데 이 규칙만으로 안 겹친다).
+        up = mean >= 0
+        labels.append([rad, (max(des) + 0.13) if up else (min(des) - 0.13), m, col, up])
+    # 같은 반지름·같은 부호로 여전히 겹치는 짝만 손으로 민다 (Co/Sc 0.745)
+    labels.sort(key=lambda a: (a[0], a[1]))
+    for i in range(1, len(labels)):
+        x0, y0, _, _, u0 = labels[i - 1]
+        x1, y1, _, _, u1 = labels[i]
+        if abs(x1 - x0) < 0.025 and u0 == u1 and abs(y1 - y0) < 0.30:
+            labels[i][1] = y0 + (0.30 if u1 else -0.30)
+    for x, y, m, col, up in labels:
+        ax.text(x, y, m, ha="center", va="bottom" if up else "top",
+                fontsize=8.5, color=col, alpha=.85, zorder=5,
+                fontweight="bold", clip_on=False)
     ax.set_xlabel("Shannon ionic radius of the dopant cation  (6-coordinate, Å)")
     ax.set_ylabel("P framework site   ←     ΔE  (eV per dopant)     →   Li site")
     _bare(ax, grid="y")
@@ -448,8 +467,13 @@ def selftest():
     # 음성 ② — 제목을 달면 안 된다 (슬라이드가 제목을 진다)
     chk("음성: set_title 미사용", "set_title" not in body)
     # 음성 ⑥ — 그림 안에 문장을 넣지 않는다 (슬라이드가 문구를 진다, 2026-08-16 지시)
-    _outside = body.split("# ── 2. 어느 자리를 고르는가", 1)[1]
-    chk("음성: fig_periodic 밖에서 ax.text 미사용", "ax.text(" not in _outside)
+    # ⚠ ax.text 예외는 **칸/점 라벨**뿐이다 (원소 기호). fig_periodic 과 fig_site_choice
+    #   두 곳만 허용하고, 그 밖에서는 여전히 금지한다 — 그림 안에 문장을 넣지 않는 규칙.
+    _outside = body.split("# ── 3. 음이온이 실제로 앉은 자리", 1)[1]
+    chk("음성: 라벨 허용 두 곳 밖에서 ax.text 미사용", "ax.text(" not in _outside)
+    _site = body.split("def fig_site_choice", 1)[1].split("# ── 3.", 1)[0]
+    chk("음성: fig_site_choice 의 ax.text 는 원소 기호만 (문장 없음)",
+        'ax.text(x, y, m,' in _site and _site.count("ax.text(") == 1)
     chk("음성: ax.annotate 미사용", "ax.annotate(" not in body)
     # 음성 ③ — 필요한 원본 데이터가 있어야 한다
     need = ["cascade_v23_all.csv", "site_preference_raw_78.csv", "oxidation_stability_cascade_v2.csv"]

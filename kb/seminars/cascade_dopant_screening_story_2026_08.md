@@ -358,26 +358,45 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 ---
 
-### 9 — Substitution site and charge compensation
+### 9 — Substitution site and charge compensation  ✅ 확정 (2026-08-18)
 
 > ■ Step 1: The substitution site is enumerated before a structure is built
-> • The Li, P, S and Cl sublattices are distinct; an oxide needs a cation and an anion site.
-> • Aliovalent substitution moves Li, and more than one recipe balances the charge.
-`해설` large cations take Li sites; small group-14 ions replace P
+> • Li, P, S and Cl are separate sublattices — an oxide has to take [파랑]one cation and one anion site[/].
+> • An aliovalent dopant changes the Li content, and [빨강]more than one way balances the charge[/].
+
+`< site preference vs ionic radius >`
+`해설` large cations go to Li sites, small group-14 ions replace P — [파랑]size decides it[/]
+하단 용어 — Sublattice: the set of equivalent positions one element occupies ·
+　　　　　　 Aliovalent: a dopant whose charge differs from the ion it replaces
+
+⚠ **그림에 원소 기호를 붙였다 (2026-08-18)** — 26종 전부. 막대 **바깥**(위로 뻗은 것은 위,
+   아래로 뻗은 것은 아래)에 놓아 점·오차막대를 안 가린다. 부호가 다른 이웃은 저절로
+   갈라진다(Sn↓/Ni↑ 는 반지름이 같은 0.690 인데 안 겹친다). 같은 부호·같은 반지름인
+   Co/Sc 만 손으로 민다.
 
 **[60초]**
 
-첫 단계의 질문은 "이 원소를 격자 어디에 넣을 수 있는가"입니다.
+첫 단계의 질문은 **"이 원소를 격자 어디에 넣을 수 있는가"** 입니다.
 
 Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣으면 금속은 양이온 자리로,
 산소는 음이온 자리로 가야 하는데 **어느 자리로 갈지가 미리 정해져 있지 않습니다.**
+전구체 하나를 넣는다는 게 자리를 **두 개** 정하는 일이 됩니다.
 
 그림이 그걸 보여줍니다. 가로가 이온 반지름, 세로가 두 자리 사이의 에너지 차이입니다.
-작은 이온은 아래 — Si, Ge, Sn 같은 4가 이온은 P 를 밀어내고 골격에 들어갑니다.
-큰 이온은 위 — Ba, Ag, Sr 은 Li 자리로 갑니다. 크기가 거의 다 정합니다.
+0 보다 위면 Li 자리, 아래면 P 골격입니다.
 
-그리고 2가 이온을 1가 자리에 넣으면 전하가 안 맞아 Li 를 빼거나 넣어야 하는데,
-**그 방법이 하나가 아닙니다.** 이게 결과 1 로 돌아옵니다.
+아래로 내려간 게 셋뿐이에요 — **Si, Ge, Sn.** 전부 4가이고 작습니다. P 를 밀어내고
+골격에 들어가죠. 나머지는 전부 위, 즉 **Li 자리**입니다. 오른쪽 끝 Ba 가 +2.7 로 제일
+확실하고요. **크기가 거의 다 정합니다.**
+
+그리고 여기서 두 번째 문제가 나옵니다. 2가 이온을 1가 자리에 넣으면 전하가 안 맞습니다.
+Li 를 빼거나 넣어서 맞춰야 하는데 **그 방법이 하나가 아닙니다.** 같은 화합물, 같은 자리인데
+보상 방법만 달라도 다른 구조가 되죠. 이게 **결과 1 로 돌아옵니다.**
+
+💬 **말로만 (질문 오면)** — 막대는 세 번 돌린 것의 폭입니다. Fe 처럼 폭이 넓은 건
+   자리 선호가 약하다는 뜻이지 계산이 튄 게 아니에요.
+💡 Sn 이 Ni 와 반지름이 같은데(0.690) 방향이 반대인 게 눈에 띄면 좋은 질문거리다 —
+   크기만이 아니라 **원자가**도 본다는 증거다 (Sn⁴⁺ vs Ni²⁺).
 
 ---
 
