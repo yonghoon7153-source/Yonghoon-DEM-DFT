@@ -100,18 +100,28 @@
   "source": "~/sdcp/prereg_v2_vox015/p2_{SBE,DBE}_a{0..7}.json",
   "verdict": "h1 (비 1.016294, unpaired SE 0.2784 %p)"
  },
- "sphere_stamp_4arm_partial": {
+ "sphere_stamp_8arm": {
+  "_what": "같은 8 팔을 `--step3-sdcp-sphere-d 0.30` 으로 다시 — SDCP 를 참 직경 구로 래스터.  격자·브리지·σ_VGCF·침대쌍 전부 위 `_fixed` 와 동일하고 **SDCP 스탬프 규약만** 다르다.",
+  "_not_a_hypothesis_test": "⚠ 사전등록 v2 (`sdcp_gain_prereg_v2_20260816.md`) 는 **점 스탬프** 규약에 대해 등록됐다.  같은 문턱을 구 스탬프에 적용해 나온 `h0` 출력은 **값 측정**이지 두 번째 등록 가설검정이 아니다 (prereg §7 — 창을 옮기면 무효).  구 스탬프의 사전등록은 아직 없다.",
   "sigma_e_S_cm": {
    "SBE": [
     0.07302,
     0.07298,
     0.07181,
-    0.07263
+    0.07263,
+    0.0726,
+    0.07313,
+    0.07252,
+    0.07252
    ],
    "DBE": [
     0.08224,
     0.08219,
     0.08087,
+    0.08152,
+    0.08152,
+    0.08182,
+    0.08113,
     0.08152
    ]
   },
@@ -120,17 +130,46 @@
     0.0005703,
     0.0005694,
     0.0005692,
-    0.0005682
+    0.0005682,
+    null,
+    null,
+    null,
+    null
    ],
    "DBE": [
     0.0005661,
     0.0005653,
     0.000565,
-    0.000564
+    0.000564,
+    null,
+    null,
+    null,
+    null
    ]
   },
-  "source": "~/sdcp/prereg_v2_vox015_sph/p2_{SBE,DBE}_sph_a{0..3}.json",
-  "status": "CL-34 hold — 우선순위 결함 포함본, 대조 팔 대기",
-  "note": "SBE 값이 점-스탬프와 4유효숫자 동일 = 음성 대조 (SDCP 부재 시 no-op)"
+  "aggregate_from_collect_run": {
+   "sigma_e_mean_SBE": 0.072651,
+   "sigma_e_mean_DBE": 0.081601,
+   "ratio": 1.123191,
+   "se_unpaired_hypot_pct_pt": 0.2891,
+   "se_paired_pct_pt": 0.098,
+   "per_arm_ratio": [
+    1.1263,
+    1.1262,
+    1.1262,
+    1.1224,
+    1.1229,
+    1.1188,
+    1.1187,
+    1.1241
+   ],
+   "arm_ratio_spread_pct": 0.677,
+   "cg_info": "8/8 = 0 (전부 수렴)",
+   "sigma_ion_ratio_approx": 0.993
+  },
+  "_provenance_of_each_number": "SBE 8 값 = 점-스탬프와 **셀 단위로 동일** (음성 대조, `phase_ledger_grid.json` 에서 상별 셀수 전부 일치 확인) → 위 리스트는 측정값이다.  DBE 팔 0~3 = `p2_DBE_sph_a{0..3}.json` 실측.  **DBE 팔 4~7 은 collect 표의 팔별 비(소수 4자리) × SBE 로 되짚은 값**이며 원본 JSON 은 원격 호스트에만 있다.",
+  "_recompute_caveat": "⚠ 위 리스트로 SE 를 다시 계산하면 unpaired 0.325 · paired 0.111 %p 가 나온다 — 되짚기의 4자리 반올림이 산포를 부풀린 것이다.  **전정밀도로 계산한 collect 런의 0.2891 / 0.098 이 정본**이다.  평균과 비는 되짚기로도 소수 6자리까지 재현된다 (0.072651 / 0.081601 / 1.123191).",
+  "source": "~/sdcp/prereg_v2_vox015_sph/p2_{SBE,DBE}_sph_a{0..7}.json",
+  "status": "CL-34 live (우선순위 결함 = 실측 0 셀로 해소, 8/8 팔 완주)"
  }
 }

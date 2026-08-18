@@ -1,0 +1,41 @@
+{
+ "_what": "상별 부피 원장 — `--step3-rasterize-only` (솔브 없음, CPU) 로 실침대를 격자에 올리고 `count(sid)·vox³` 를 셌다.  CL-25 의 '단입자 산술 4.53배' 를 **실측**으로 대체한다.",
+ "_why": "CL-25 는 셀 vox³ 를 Ø0.30 구 부피로 나눈 **단입자 산술**이었고, 실침대의 셀 충돌·상 overwrite 를 못 본다.  그 캐비엇('실침대는 이보다 낮을 수 있다')을 닫으려면 세는 수밖에 없다.",
+ "_how": "scripts/sdcp_phase_ledger.sh (VOXES=\"0.4 0.3 0.25 0.15\") → scripts/sdcp_phase_ledger_report.py.  솔브를 안 하므로 GPU 불요 — kgy CPU 호스트에서 돌렸다.",
+ "_fixed": {
+  "bed": "실 DBE 침대 (case 260714_145738_778fa4, 레시피 DBE)",
+  "sdcp_particles": 138988,
+  "sdcp_diameter_um": 0.30,
+  "sdcp_true_volume_um3_each": 0.014137166941154068,
+  "bridge_um": 0.48,
+  "fibre_stamp": "segment"
+ },
+ "sdcp_point_stamp_vs_grid": [
+  {"vox_um": 0.40, "sdcp_cells": 132368, "represented_um3": 8471.552,
+   "measured_ratio_to_true": 4.311, "single_particle_arithmetic": 4.527, "delta_pct": -4.8},
+  {"vox_um": 0.30, "sdcp_cells": 135770, "represented_um3": 3665.790,
+   "measured_ratio_to_true": 1.866, "single_particle_arithmetic": 1.910, "delta_pct": -2.3},
+  {"vox_um": 0.25, "sdcp_cells": 137033, "represented_um3": 2141.141,
+   "measured_ratio_to_true": 1.090, "single_particle_arithmetic": 1.105, "delta_pct": -1.4},
+  {"vox_um": 0.15, "sdcp_cells": 138455, "represented_um3": 467.285,
+   "measured_ratio_to_true": 0.238, "single_particle_arithmetic": 0.239, "delta_pct": -0.4}
+ ],
+ "_reading": "단입자 산술은 실침대의 **약한 상한**이다 — 격자가 거칠수록 두 SDCP 점이 같은 셀에 떨어지거나 다른 상에 덮여 −0.4 %(0.15) → −4.8 %(0.4) 만큼 낮게 나온다.  방향·크기 모두 예상대로이고, CL-25 의 결론(표현 부피가 vox 와 함께 19배 변한다)은 4.311 → 0.238 = **18.1배**로 그대로 살아남는다.",
+ "sphere_stamp_vox015": {
+  "sdcp_cells": 573943,
+  "represented_um3": 1937.058,
+  "ratio_to_true": 0.986,
+  "note": "구 스탬프가 SDCP 부피를 제자리로 돌려놓은 첫 **실침대** 측정 (오차 1.4 %).  점 스탬프 0.238 배 대비 4.14배."
+ },
+ "sphere_stamp_priority_defect": {
+  "extra_cells_over_point_stamp": {"_from_sid": {"pore/SE/AM 등": "정당 구부피", "PTFE(7)": 0, "SWCNT(8)": 0}},
+  "verdict": "**정확히 0 셀**.  `mpm_webapp_payload.py:869` 의 `_cond_ph = (2,3,5,6,4) if a.sigma_ptfe > 0 else (2,3,5,6)` — 기본 설정에서 PTFE 는 격자에 스탬프되지 않고(σ_PTFE 기본 0), DBE 침대에 SWCNT(sid 8)도 없다.  덮을 대상 자체가 없었다.  ⇒ CL-34 의 hold 사유 ① 해소, GPU 대조 팔 불요.",
+  "still_a_real_bug": "⚠ 그래도 코드 결함은 실재했고 고친 것이 맞다 — `--sigma-ptfe > 0` 민감도 런이나 SWCNT 침대(A14)에서는 발화한다.  회귀 selftest `sdcp-prio` 상주."
+ },
+ "sbe_negative_control_vox015": {
+  "cells_by_sid": {"0_pore": 6522785, "1_AM_S": 24165389, "3_VGCF": 2290933, "6_SE": 21683333},
+  "sphere_extra_cells": 0,
+  "verdict": "구 스탬프 8팔과 점 스탬프 8팔의 SBE 상별 셀 수가 **전부 동일**.  SDCP 가 없는 침대에서 구 스탬프는 no-op 이다 — 리뷰 ③ 의 '4유효숫자 σ 일치' 를 셀 단위로 승격."
+ },
+ "_caveat": "⚠ 이 원장은 **래스터만** 이다.  σ 에 대한 영향은 솔브 팔이 준다 (raw_sigma.json).  다만 '몇 개의 셀이 어느 상이 되었나' 는 여기서 정확히 나온다 — 상계가 아니다.\n⚠ 거친 격자(0.4/0.3/0.25)는 SDCP 셀 수만 전사했다.  다른 상의 셀 수는 원격 호스트 로그에만 있다."
+}
