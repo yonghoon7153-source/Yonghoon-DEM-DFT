@@ -47,8 +47,21 @@ RETRACTED = {
     "STALE_GAP_NUMBERS": re.compile(r"36/98|61/156|3\.69|(?<![\d.])90\.0(?![\d])"),
 }
 
-#: 인용 가능한 현행 문서 — 표시 없는 철회 명제가 있으면 실패
+#: 손으로 쓴 현행 문서 — 표시 없는 철회 명제가 있으면 실패
 ACTIVE_DOCS = ["05_HANDOFF.md", "GATE14_CYCLE_SUMMARY.md"]
+
+#: **생성물** 정본 — 마커가 아니라 positive assertion 으로 지킨다.
+#: ★ 18차 Q4 4층. 생성 코드에는 회귀가 붙어 있지만, 커밋된 산출물 자체가
+#: 최신 생성기로 만들어졌는지는 아무도 안 봤다. 옛 보고서를 커밋해 두고
+#: 코드만 고치면 저장소의 정본은 여전히 철회된 문장을 말한다.
+GENERATED_DOCS = ["RESULTS.md", "RESULTS_PAIRED_FIXED5.md"]
+
+#: 생성물 정본에 **반드시** 있어야 하는 provenance 앵커
+REQUIRED_ANCHORS = (
+    "artifact producer git/source_digest",
+    "report generator git/source_digest/dirty",
+    "앵커 fits_sha256",
+)
 
 #: 정본 링크 — 현행 문서는 정본을 가리켜야 한다 (positive assertion)
 CANON = "docs/RESULTS.md"
@@ -117,3 +130,56 @@ def test_active_doc_has_no_unmarked_retracted_claim(name):
     assert not bad, (
         "철회 표시(⛔ 철회[CLAIM_ID]) 없는 절에 철회된 주장이 남아 있다:\n  "
         + "\n  ".join(bad))
+
+
+@pytest.mark.parametrize("name", GENERATED_DOCS)
+def test_generated_report_has_no_retracted_claim(name):
+    """★ 18차 Q4 4층 — 커밋된 정본 보고서에 철회 명제가 있으면 안 된다.
+
+    생성 코드 회귀(`tests/test_report_matrix.py`)는 **새로 만든** 문서를 본다.
+    저장소에 커밋돼 있는 파일이 그 코드로 만들어졌는지는 별개 문제다.
+    """
+    path = DOCS / name
+    if not path.exists():
+        pytest.skip(f"{name} 없음")
+    text = path.read_text(encoding="utf-8")
+
+    bad = []
+    for claim_id, rx in RETRACTED.items():
+        if claim_id == "STALE_GAP_NUMBERS":
+            continue          # 수치는 아래 별도 검사에서 본다
+        m = rx.search(text)
+        if m:
+            bad.append(f"[{claim_id}] {m.group(0)!r}")
+    assert not bad, f"{name} 에 철회된 주장이 남아 있다: {bad}"
+
+
+@pytest.mark.parametrize("name", GENERATED_DOCS)
+def test_generated_report_carries_its_provenance_anchors(name):
+    """★ positive assertion — 정본은 자기 근거를 밝혀야 한다."""
+    path = DOCS / name
+    if not path.exists():
+        pytest.skip(f"{name} 없음")
+    text = path.read_text(encoding="utf-8")
+
+    missing = [a for a in REQUIRED_ANCHORS if a not in text]
+    assert not missing, f"{name} 에 provenance 앵커가 없다: {missing}"
+    assert "인용 금지" not in text, (
+        f"{name} 가 인용 금지 배너를 단 채 커밋돼 있다")
+
+
+@pytest.mark.parametrize("name", GENERATED_DOCS)
+def test_generated_report_uses_the_current_gap_numbers(name):
+    """★ 커밋된 정본이 **경계 규약 수정 이후** 값을 쓰는가.
+
+    17차 발견 1 이전 값(`36/98`·`90.0`·`61/156`·`3.69`)이 남아 있으면 그
+    파일은 옛 생성기 산출물이다.
+    """
+    path = DOCS / name
+    if not path.exists():
+        pytest.skip(f"{name} 없음")
+    text = path.read_text(encoding="utf-8")
+
+    m = RETRACTED["STALE_GAP_NUMBERS"].search(text)
+    assert not m, (f"{name} 가 경계 수정 이전 수치를 쓴다: {m.group(0)!r} — "
+                   f"봉인 fits 에서 score → compare → report 를 다시 돌릴 것")
