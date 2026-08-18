@@ -1582,3 +1582,79 @@ compare 단계에서 조기 종료해 **가드에 닿지도 않는다**. 경로 
 
 18차 리뷰가 지정한 항목은 **전부 닫혔다**. `artifacts/README.md` 의 v4 목록
 갱신만 미착수다.
+
+---
+
+## 28. 19차 심층 자체 리뷰 — 게이트 재점검 + 발견 2건
+
+외부 리뷰어를 돌릴 수 없어 내부 적대 리뷰로 18차 release gate 13항목을 증거와
+함께 재점검했다.
+
+### 28.1 발견 1 — 커밋된 정본의 generator 좌표가 stale 이었다
+
+커밋된 `RESULTS*.md` 는 `3c77a94`/`739453aaf9c07be3` 생성물인데 HEAD 는 그
+뒤로 여러 렌더 경로(P22RenderFacts 리팩터, radius fallback 분기 등)를 바꿨다.
+즉 문서가 "이 코드가 나를 만들었다" 고 적은 좌표가 사실이 아니었다.
+
+**봉인 fits 에서 HEAD 코드로 재생성해 diff 를 떴다.**
+
+```
+diff 줄수: 4  (양쪽 보고서 모두)
+  생성: <타임스탬프>
+  report generator git/source_digest/dirty: …
+```
+
+**과학 내용은 바이트 동일**이다 — 그 사이 변경들이 v4 렌더 결과를 바꾸지
+않았음이 증명됐다. 정본을 HEAD 생성물로 교체해 좌표를 사실로 만들었다
+(`d4f43d1` / `e5fa9749fd899e3d`).
+
+4층 lint 가 이걸 못 잡은 이유도 분명하다 — 철회 문구·앵커·수치만 보고
+**generator 좌표의 최신성**은 안 본다. 매 코드 변경마다 재생성을 강제하면
+소음이 크므로, 잡는 방법은 lint 가 아니라 "승격 직전 재생성 후 diff" 절차다.
+
+### 28.2 발견 2 — A' staging 이 아무 봉인 json 이나 집었다
+
+`_sealed_halfcell_staging` 의 `*_*.json` glob 은 half-cell 캐시가 아닌 봉인
+입력까지 집었다. 그러면 정작 캐시가 없는데도 staging 이 non-None 이 되어
+"봉인 입력을 찾지 못했다" 경고가 안 뜨고 조용히 캐시 미스로 **재계산**된다 —
+A' 의 목적이 그대로 무너진다. 실제 캐시 이름 규칙으로 좁혔다.
+
+좁히자마자 기존 A' 테스트가 깨졌다 — fixture 가 `k_ocp_v` 같은 비현실적
+이름을 쓰고 있었고 glob 이 넓어서 통과하던 것이다. 실물 이름으로 고치고,
+**실제 v4 묶음의 이름**과 규칙이 맞는지 보는 회귀를 따로 넣었다.
+
+### 28.3 통과 확인한 렌즈
+
+| 렌즈 | 결과 |
+|---|---|
+| 보관 v4.1 vs **현행 코드** semantic 게이트 | grid·paired 3/3 통과 |
+| `merge_chunks` 예외를 삼키는 호출자 | 없음 (`src/grid.py:533`, `src/fitting.py:960` 모두 전파) |
+| smoke 반복 안정성 | 5회 중 1회 실패(서명 미포착) → 이후 **3회 연속 clean** |
+
+### 28.4 18차 release gate 13항목 — 증거
+
+| # | 항목 | 증거 |
+|---|---|---|
+| 1 | `collapse_measurable` 제거 | 코드에 남은 1건은 **삭제 사실 주석** (`compare_objectives.py:343`) |
+| 2 | paired no-warm 설명·objective heading | `## 목적함수 2종 비교` 1건 · warm 인과 문구 **0건** |
+| 3 | 52% → α-window eligibility | 두 보고서 모두 `feasible domain` **0건** |
+| 4 | 동적 reproduction-scope | matrix 축 4 통과 (뮤테이션 M3 6 fail) |
+| 5 | `p_spread`·민감도 범위·p22 radius/fallback | 문구 수정 + property 143 케이스 |
+| 6 | HANDOFF archival | claim ID 마커 + lint 4항목 통과 |
+| 7 | GATE14 summary superseded | 정정표 + 절별 마커 |
+| 8 | full-document protocol matrix | 40 케이스 통과 (뮤테이션 6종 검출) |
+| 9 | `P22RenderFacts` + analysis schema | frozen dataclass + `analysis_manifest.yaml` |
+| 10 | 봉인 fits 재생성 | `score → compare → report`, 재fit 없음 |
+| 11 | derived semantic 게이트 | 승격 전 3/3 통과 |
+| 12 | v4.1 index 4계열 보존 | `runs` 4개 (`c0f1daa0` 유지) |
+| 13 | raw byte-identical | payload digest 전수 대조 **변경 0건** |
+
+### 28.5 검증
+
+전체 테스트 **575 passed** · strict smoke 3회 연속 통과 · 정본 재생성본
+인용 금지 배너 0 / provenance 통과 · 계산 산출물 불변.
+
+### 28.6 남은 것
+
+`artifacts/README.md` 의 v4 목록 갱신 하나. 18차 리뷰가 지정한 코드·문서
+항목은 전부 닫혔다.

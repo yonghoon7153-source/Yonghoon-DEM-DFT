@@ -4,10 +4,10 @@
 
 > ✅ provenance 검증 통과 — `manifest_존재`, `config_hash`, `clean_worktree`, `필수_입력_존재`, `run_spec_schema`, `sig_version`, `optimizer_정책`, `producer_곡선일치`, `목적함수_순서`, `입력봉인_교차일치`, `입력_스냅샷`, `곡선_producer_재검`, `코드_identity`, `시작_provenance`, `start_파일_존재`, `attempt_파일_존재`, `attempt_파일_일치`, `start_파일_일치`, `실행중_코드불변`, `시작종료_서명일치`, `_참고_코드재계산불가`, `입력_digest_재해시`, `run_signature_기록`, `run_signature_재계산`, `채점파일_정본`, `출력봉인_재계산`, `조건집합_서명일치`, `출력_완전성`, `출력_격자완전성`, `행별_서명`, `단일_서명`, `manifest와_일치`, `restart_출처`, `비교입력_grid`, `비교입력_halfcell`, `wsweep_provenance`, `파생_case_comparison.yaml`
 
-생성: 2026-08-16 09:06 UTC  
+생성: 2026-08-18 01:50 UTC  
 입력: `results/grid_fit_v4`  
 artifact producer git/source_digest: `c0f1daa0d92a7625c3602799c81db04b5e2e5783` / `d50295f980ccaa81`  
-report generator git/source_digest/dirty: `3c77a94650628c1c093560af08ffda64d2120baf` / `739453aaf9c07be3` / `False`  
+report generator git/source_digest/dirty: `d4f43d1ab4bb2ff709a3984f4247fe7afc1e991b` / `e5fa9749fd899e3d` / `False`  
 앵커 fits_sha256: `18ebb8e7b32ef879ea0badfd2d72d64446aa0b01b4aba6c9db692cf224926b46`  
 앵커 curves_sha256(sealed): `b69dc7bee0bb2e32aba73b6ace91255d964bceb41f9361886de7275bf48aa8b8`  
 (대조: `artifacts/artifact_index.yaml` — 두 값이 같은 묶음이 이 보고서의 근거다)  
