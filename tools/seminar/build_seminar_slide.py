@@ -94,6 +94,21 @@ SLIDES = {
            "24g / 48h / 4b: Wyckoff labels for the sublattice positions"),
     drop=[10],
  ),
+ 11: dict(
+    idx=10, out="Slide11_lowcost_relaxation.pptx",
+    figs=["docs/figures/seminar/step3_survival.png",
+          "docs/figures/seminar/step3_screen_axes.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Low-cost structure relaxation",
+    head="Step 3: A machine-learned potential screens structures before DFT",
+    sub1="Thousands of structures had to be relaxed, so a [b]machine-learned potential[/b] did it, not DFT.",
+    sub2="The gate is [b]geometry, not energy[/b] — an energy cut would have kept every structure we dropped.",
+    label="how far each structure moved  ·  the same structures on both screening axes",
+    note="[r]100 of 3,615 collapsed past 25 %[/r] — and they are not the high-energy ones",
+    gloss=("Relaxation: moving atoms until the forces vanish  ·  "
+           "MLIP: a fast stand-in trained on DFT forces"),
+    drop=[10],
+ ),
 }
 
 
@@ -199,7 +214,9 @@ def selftest():
         sl = src.slides[S["idx"]]
         for i in S.get("drop", []):
             t = sl.shapes[i].text_frame.text if sl.shapes[i].has_text_frame else ""
-            chk(len(t) < 60 and ("Our" in t or "·" in t),
+            # 지울 것은 **오른쪽 위 이탤릭 주석**이다 — 짧고, 문장이 아니다.
+            # 낱말 목록으로 잡으면 장마다 새 낱말이 나온다(‘Method note’). 길이로 본다.
+            chk(0 < len(t) < 60 and t.count(".") == 0,
                 f"{n}장 지울 shape[{i}] 이 짧은 주석이다 ('{t[:30]}')")
         # 용어줄은 "낱말: 뜻 · 낱말: 뜻" 꼴이다. 낱말을 목록으로 두면 장마다 고쳐야 하므로
         # **모양**으로 본다 — 콜론과 가운뎃점이 있고, 문장이 아니라 정의 나열.

@@ -476,28 +476,52 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 
 ---
 
-### 11 — Low-cost structure relaxation
+### 11 — Low-cost structure relaxation  ✅ 확정 (2026-08-18)
 
 > ■ Step 3: A machine-learned potential screens structures before DFT
-> • To relax thousands of structures within budget, a fast interatomic potential was used.
-> • Energies are relative within one convention — not formation energies or hull distances.
+> • Thousands of structures had to be relaxed, so a [파랑]machine-learned potential[/] did it, not DFT.
+> • The gate is [파랑]geometry, not energy[/] — an energy cut would have kept every structure we dropped.
 
-`< how far each structure moved >`
-`해설` 100 of 3,615 structures moved past 25 % and were dropped
+`< how far each structure moved  ·  the same structures on both screening axes >`
+`해설` [빨강]100 of 3,615 collapsed past 25 %[/] — and they are not the high-energy ones
+하단 용어 — Relaxation: moving atoms until the forces vanish ·
+　　　　　　 MLIP: a fast stand-in trained on DFT forces
 
-**[50초]**
+⭐ **오른쪽 그림이 이 장의 핵심 근거다 (2026-08-18 신설).** 앞 판은 히스토그램 하나뿐이라
+   "왜 부피로 자르나, 에너지로 자르면 되지 않나" 라는 당연한 반문에 답이 없었다. 실측:
+   · |ΔV| > 25 % 로 떨어뜨린 **100 개**와 에너지 상위 100 개는 **겹치는 것이 0 개**
+   · 떨어진 것들의 에너지 중앙값이 오히려 **더 낮다** (−0.619 vs −0.480 eV/atom)
+   ⇒ 에너지만 봤으면 **오히려 좋아 보여서 통과**했을 구조들이다. 부피 게이트가 독립적으로 일한다.
+⚠ 세로축은 **이 스크린 안에서만** 비교 가능한 상대에너지다. 생성에너지도 hull 거리도 아니다.
+⚠ 앞 판 슬라이드의 문제 — 빨간 줄이 `were droppe / d` 로 단어 중간에서 잘렸고,
+   본문 밖에 문장 하나(`This stage answers one question…`)가 떠 있었다. 둘 다 정리.
 
-원자를 억지로 밀어 넣으면 결합 길이가 엉망입니다. 그래서 힘이 0 이 될 때까지 움직여
-줍니다. 구조 최적화입니다.
+**[65초]**
 
-여기서 기계학습 퍼텐셜을 씁니다. DFT 로 하면 후보 하나당 몇 시간인데 이건 몇 분입니다.
-그래서 수천 개를 전부 돌릴 수 있습니다.
+세 번째 단계입니다. 구조가 삼천 개가 넘으니 **DFT 로는 못 돌립니다.** 그래서 기계학습
+퍼텐셜을 씁니다. DFT 힘을 학습한 모델이라 훨씬 빠르고, 구조를 이완시키는 데는 충분해요.
 
-이 단계가 답하는 질문은 하나입니다. **이 구조가 버티는가.** 그림에서 붉은 쪽이
-25 % 넘게 부푼 구조들이고, 3,615 개 중 100 개가 여기서 떨어졌습니다.
+왼쪽이 그 결과입니다. 가로가 **이완하는 동안 셀 부피가 얼마나 움직였나**, 세로가 구조 수예요.
+대부분 10–20 % 안에서 자리를 잡았습니다. 그런데 오른쪽 꼬리에 **25 % 를 넘어간 것들**이
+있어요. 이건 이완이 아니라 **구조가 무너진 겁니다.** 3,615 개 중 **100 개**를 여기서 뺐습니다.
 
-⚠ 여기서 나온 에너지는 같은 규약 안의 상대값입니다. 생성에너지도 아니고 데이터베이스
-값과 뺄 수도 없습니다. 다만 뒤에서 필요한 건 절대값이 아니라 순서라 문제가 없습니다.
+그러면 당연히 이런 질문이 나옵니다 — **"에너지로 자르면 되지 않나?"**
+
+오른쪽 그림이 그 답입니다. 가로는 같고, 세로가 이번엔 **에너지**입니다. 붉은 점이 방금
+뺀 100 개예요. **세로로 보면 파란 무리 한가운데 있습니다.** 에너지로는 평범해요. 오히려
+중앙값은 **더 낮습니다.**
+
+⭐ 점선이 **같은 개수를 에너지로 잘랐다면 어디였을지** 보여주는 선인데, 맨 위에 있죠.
+   두 방법이 잡는 게 **완전히 다릅니다.** 겹치는 게 **하나도 없어요.**
+   그러니까 **에너지만 봤으면 이 백 개는 오히려 좋아 보여서 그대로 통과했을 겁니다.**
+
+⚠ 그리고 단서 하나. 세로축 에너지는 **이 스크린 안에서만** 비교되는 값입니다.
+생성에너지도 hull 거리도 아니에요. "이게 몇 eV 니까 안정하다" 로 읽으시면 안 됩니다.
+
+💬 **말로만 (질문 오면)**
+· 25 % 는 물리 상수가 아니라 **저희가 정한 선**입니다. 분포에 꼬리가 끊기는 자리라 골랐어요.
+· 이완 자체는 3,615 개 **전부 수렴**했습니다. 수렴 실패로 뺀 건 없습니다.
+· 여기서 뺀 100 개는 "나쁜 물질" 이 아니라 **"이 모델로는 구조를 못 믿겠는 것"** 입니다.
 
 ---
 

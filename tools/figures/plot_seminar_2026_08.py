@@ -307,6 +307,46 @@ def fig_site_grid():
     return _save(fig, "step2_site_grid.png")
 
 
+# ── 3b. 부피 게이트가 에너지와 독립인가 ──────────────────────────────────────
+def fig_screen_axes():
+    """|ΔV|/V₀ vs 상대에너지 — **부피 게이트가 에너지로는 못 잡는 것을 잡는다.**
+
+    왜 이 그림인가 (2026-08-18) — 11장이 히스토그램 하나뿐이라 "왜 부피로 자르나,
+    에너지로 자르면 되지 않나" 라는 당연한 반문에 답이 없었다. 실측이 답한다:
+      · |ΔV| > 25 % 로 떨어뜨린 **100 개**와, 에너지 상위 100 개는 **겹치는 것이 0 개**다
+      · 떨어진 것들의 에너지 중앙값은 오히려 **더 낮다** (−0.619 vs −0.480 eV/atom)
+      → 에너지만 봤으면 **오히려 좋아 보여서 통과**했을 구조들이다
+
+    ⚠ 세로축은 **이 스크린 안에서만** 비교 가능한 상대에너지다. 생성에너지도
+      hull 거리도 아니다 — 절대값으로 인용 금지 (슬라이드 불릿이 그 단서를 진다).
+    """
+    xs, ys = [], []
+    for r in _all_rows():
+        try:
+            xs.append(abs(float(r["screen_dV_over_V0"])) * 100)
+            ys.append(float(r["screen_de_per_atom"]))
+        except (ValueError, KeyError, TypeError):
+            continue
+    CUT = 25.0
+    keep = [(x, y) for x, y in zip(xs, ys) if x <= CUT]
+    drop = [(x, y) for x, y in zip(xs, ys) if x > CUT]
+    _rc()
+    fig, ax = plt.subplots(figsize=(9.2, 4.6))
+    ax.scatter([x for x, _ in keep], [y for _, y in keep], s=7, alpha=.28,
+               color=GOOD, lw=0, zorder=2, label=f"carried forward ({len(keep):,})")
+    ax.scatter([x for x, _ in drop], [y for _, y in drop], s=20, alpha=.9,
+               color=BAD, lw=0, zorder=4, label=f"distorted too far ({len(drop)})")
+    ax.axvline(CUT, color=hs.INK, lw=1.2, ls="--", zorder=3)
+    # 에너지로 잘랐다면 어디였을지 — 같은 개수만큼 위에서 자른 선
+    thr = sorted(ys, reverse=True)[len(drop) - 1]
+    ax.axhline(thr, color=hs.MUT, lw=1.1, ls=":", zorder=3)
+    ax.set_xlabel("how far the cell volume moved during relaxation  (%)")
+    ax.set_ylabel("relative energy per atom  (eV, this screen only)")
+    ax.legend(loc="lower left", frameon=False, fontsize=10, markerscale=1.6)
+    _bare(ax, grid="y")
+    return _save(fig, "step3_screen_axes.png")
+
+
 # ── 3. 음이온이 실제로 앉은 자리 ───────────────────────────────────────────────
 SITE_LABEL = {"S_16e": "sulfur in the PS₄ corner", "S_4a": "free sulfide", "Cl_4d": "halide site"}
 CATION_LABEL = {"Li_24g": "Li 24g", "Li_48h": "Li 48h", "P_4b": "P 4b (framework)"}
@@ -541,7 +581,7 @@ def fig_coverage():
     return _save(fig, "evidence_coverage.png")
 
 
-FIGS = [fig_periodic, fig_site_choice, fig_anion_site, fig_site_grid, fig_stability_band,
+FIGS = [fig_periodic, fig_site_choice, fig_anion_site, fig_site_grid, fig_screen_axes, fig_stability_band,
         fig_label_spread, fig_oxidation_windows, fig_oxidation_by_group, fig_tradeoff,
         fig_screen_survival, fig_anneal_gain, fig_coverage]
 
