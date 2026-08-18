@@ -86,9 +86,10 @@ SLIDES = {
     title="Candidate structure generation",
     head="Step 2: Each allowed placement becomes a separate structure",
     sub1="One compound became [b]30 structures[/b] on average, and 3,615 in total.",
-    sub2="The winning site is [r]an output of the generator[/r], not a variable that was set.",
+    sub2="No site was assumed — every allowed placement was [b]built[/b], and the ranking picked the winner.",
     label="where the anion landed  ·  structures per site pair",
-    note="all nine site pairs were populated — [r]the site was never fixed by design[/r]",
+    # 색 정정 (1저자 2026-08-18): 편향 없이 골랐다는 **강점**이므로 파랑이다.
+    note="all nine site pairs were populated — [b]the site was never fixed by design[/b]",
     gloss=("Configuration: one specific arrangement of atoms in the cell  ·  "
            "24g / 48h / 4b: Wyckoff labels for the sublattice positions"),
     drop=[10],
