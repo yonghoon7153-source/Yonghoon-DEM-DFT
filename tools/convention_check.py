@@ -131,6 +131,7 @@ BRIT_US = {
     "normalisation": "normalization", "analyse": "analyze", "analysed": "analyzed",
     "behaviour": "behavior", "neighbour": "neighbor", "neighbours": "neighbors",
     "optimise": "optimize", "optimised": "optimized", "favour": "favor",
+    "optimiser": "optimizer", "normaliser": "normalizer", "analyser": "analyzer",
     "centre": "center", "modelling": "modeling", "labelled": "labeled",
     "sulphur": "sulfur", "catalogue": "catalog", "ageing": "aging",
     "defence": "defense", "fibre": "fiber", "utilise": "utilize",

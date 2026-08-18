@@ -68,6 +68,34 @@ def _save(fig, name):
     return p
 
 
+_SUBS = str.maketrans("0123456789", "₀₁₂₃₄₅₆₇₈₉")
+
+
+def formula(s):
+    """`V2O5` → `V₂O₅`. 덱 다른 그림(roster·anion site)과 표기를 맞춘다.
+
+    ⚠ 조성식 전용이다 — `x005` 같은 **라벨**에 쓰면 안 된다(숫자가 내려가 버린다).
+    """
+    return s.translate(_SUBS)
+
+
+def _write_csv(name, cols, rows, header=()):
+    """Origin 재작도용 CSV 를 db/properties/ 에 떨군다 (하우스 규칙: 데이터 그림은 CSV 동반).
+
+    header 는 `#` 주석 줄들 — **열 이름만으로 안 되는 단서**(기준계·라벨 함정 등)를 여기 적는다.
+    이 파일의 `_read()` 가 `#` 를 걸러내므로 우리 도구끼리도 그대로 읽힌다.
+    """
+    p = os.path.join(DB, name)
+    with io.open(p, "w", encoding="utf-8", newline="") as f:
+        for h in header:
+            f.write(h.rstrip() + "\n")
+        w = csv.writer(f)
+        w.writerow(cols)
+        w.writerows(rows)
+    print(f"  ✓ {name}")
+    return p
+
+
 def _read(path, comment_prefix="#"):
     lines = [l for l in io.open(path, encoding="utf-8-sig") if not l.lstrip().startswith(comment_prefix)]
     return list(csv.DictReader(lines))
@@ -403,19 +431,113 @@ def _by_species(col, rank="1"):
     return {k: v for k, v in by.items() if len(v) >= 3}
 
 
+#: 대표 구조 선택이 흔들린다고 볼 폭 (eV/atom). 물리 상수가 아니라 **표시용 기준**이다 —
+#: 폭 분포의 꼬리가 여기서 갈린다(중앙 0.037, 88종 중 6종만 초과).
+BAND_WIDE = 0.10
+
+
 def fig_stability_band():
+    """종마다 세 챔피언 구조가 host 상대 안정성에서 얼마나 벌어지나.
+
+    ⛔⛔ **세 점은 '같은 것을 세 번 돌린 재현 산포' 가 아니다** (2026-08-18 3회째 적발).
+      `concentration_label` 은 x002/x005/x010 인데 `concentration` 열은 270행 **전부 0.25**다.
+      세 챔피언이 실제로 다른 것은 **치환 자리와 시드**다. 예: ZrO₂ 는
+        x020 → P_4b / S_4a  (s03)
+        x050 → Li_24g / S_16e (s01)
+        x100 → Li_24g / S_4a  (s01)
+      ⇒ "runs agree" 라고 쓰면 안 된다. 맞는 말은 **"이긴 구조의 자리가 달라져도 이 축은
+        거의 안 움직인다"** 이고, 그게 오히려 더 센 진술이다.
+      근거: kb/results/site_preference_bar_meaning_2026_08_18.md §4b
+
+    그림에 담은 것 (2026-08-18 보강)
+      · 폭 > BAND_WIDE 인 종은 **빨강 + 이름표** — 대표 하나로 뭉개면 안 되는 곳을 보여준다.
+        (순위 주장이 아니다. 세로 위치가 아니라 **폭**으로 고른 것이다.)
+      · 오른쪽 패널 = 폭의 분포. "막대가 짧다" 를 주장이 아니라 **분포로** 보인다.
+      · 범례 한 줄이 세 점의 정체를 진다 — 위 ⛔ 를 화면에서 막는 마지막 방어선.
+
+    이 그림이 **못 하는 것**
+      · 순위가 아니다. 세로 위치로 종을 고르면 안 된다 (승인된 ranking 0종).
+      · 세 점이 자리·시드 중 무엇 때문에 갈렸는지 구분하지 않는다 — 둘이 섞여 있다.
+    """
     sp = _by_species("rerank_de_post_anneal")
     order = sorted(sp, key=lambda k: st.mean(sp[k].values()))
+    width = {k: max(sp[k].values()) - min(sp[k].values()) for k in order}
+    wide = [k for k in order if width[k] > BAND_WIDE]
     _rc()
-    fig, ax = plt.subplots(figsize=(11.6, 4.6))
+    fig, (ax, axh) = plt.subplots(
+        1, 2, figsize=(12.6, 4.9), gridspec_kw=dict(width_ratios=[4.4, 1.0], wspace=0.28))
+
     for i, k in enumerate(order):
         v = sorted(sp[k].values())
-        ax.plot([i, i], [v[0], v[-1]], color=NEUTRAL, lw=1.1, zorder=2)
-        ax.scatter([i] * len(v), v, s=15, color=hs.ELEM["P"], zorder=3, alpha=.9, edgecolors="none")
+        hot = k in wide
+        ax.plot([i, i], [v[0], v[-1]], color=BAD if hot else NEUTRAL,
+                lw=1.9 if hot else 1.1, zorder=4 if hot else 2)
+        ax.scatter([i] * len(v), v, s=22 if hot else 15,
+                   color=BAD if hot else hs.ELEM["P"], zorder=5 if hot else 3,
+                   alpha=.95 if hot else .9, edgecolors="none")
+    # 이름표는 **가로**로 — 세로로 세우면 인접한 둘(WO₃·MoO₃)이 서로 파고든다.
+    #   그래도 x 가 붙어 있으면 겹치므로 앞 이름과의 간격을 보고 한 층 올린다.
+    prev_i, prev_lvl = -99, 0
+    for i, k in enumerate(order):
+        if k not in wide:
+            continue
+        lvl = 1 - prev_lvl if i - prev_i < 6 else 0
+        ax.annotate(formula(k), (i, max(sp[k].values())), xytext=(0, 9 + 15 * lvl),
+                    textcoords="offset points", ha="center", va="bottom",
+                    fontsize=10, color=BAD)
+        prev_i, prev_lvl = i, lvl
+
     ax.set_xticks([]); ax.set_xlim(-2, len(order) + 1)
-    ax.set_xlabel(f"{len(order)} dopant species  ·  sorted by mean  ·  names omitted on purpose")
-    ax.set_ylabel("more stable   ←     relative stability vs host  (eV / atom)")
+    ax.set_ylim(min(min(v.values()) for v in sp.values()) - 0.06,
+                max(max(v.values()) for v in sp.values()) + 0.30)
+    ax.set_xlabel(f"{len(order)} dopant species  ·  sorted by mean  ·  "
+                  f"names shown only where the band is wide")
+    ax.set_ylabel("relative stability vs host  (eV / atom)")
+    # 세 점의 정체 — 범례로 화면에 박아 둔다 ('세 번 돌린 것' 오독 방지)
+    from matplotlib.lines import Line2D
+    ax.legend(handles=[
+        Line2D([], [], color=hs.ELEM["P"], marker="o", ls="none", ms=5,
+               label="3 top-ranked structures per species (different site / seed)"),
+        Line2D([], [], color=BAD, marker="o", ls="-", ms=5, lw=1.9,
+               label=f"band wider than {BAND_WIDE:.2f} eV / atom  ({len(wide)} of {len(order)})"),
+    ], loc="lower right", frameon=False, fontsize=10.5, handletextpad=.6)
+    # ⬇ 방향 표시 — y 라벨 안에 화살표를 넣으면 회전 때문에 방향이 뒤집혀 보인다.
+    ax.annotate("more stable", xy=(-0.115, 0.10), xytext=(-0.115, 0.42),
+                xycoords="axes fraction", textcoords="axes fraction",
+                rotation=90, ha="center", va="center", fontsize=10.5, color=hs.MUT,
+                arrowprops=dict(arrowstyle="->", color=hs.MUT, lw=1.1))
     _bare(ax, grid="y")
+
+    # ── 오른쪽: 폭의 분포 ("막대가 짧다" 를 분포로 보인다) ───────────────────
+    ws = sorted(width.values())
+    axh.hist(ws, bins=[i * 0.02 for i in range(11)], orientation="horizontal",
+             color=hs.ELEM["P"], alpha=.75, zorder=3)
+    axh.axhline(BAND_WIDE, color=BAD, ls="--", lw=1.3, zorder=4)
+    axh.axhline(st.median(ws), color=hs.INK, ls=":", lw=1.3, zorder=4)
+    axh.annotate(f"median {st.median(ws):.3f}", (axh.get_xlim()[1], st.median(ws)),
+                 xytext=(-4, 5), textcoords="offset points", ha="right",
+                 fontsize=9.5, color=hs.INK)
+    axh.set_ylim(0, 0.215)          # 0.20 이면 최대(0.180) 막대가 위 테두리에 붙어 잘려 보인다
+    axh.set_ylabel("band width  (eV / atom)")
+    axh.set_xlabel("species")
+    _bare(axh, grid="x")
+
+    _write_csv("seminar_table_stability_band.csv",
+               ["species", "de_min_eV_per_atom", "de_max_eV_per_atom",
+                "de_mean_eV_per_atom", "band_width_eV_per_atom", "band_wide_flag"],
+               [[k, f"{min(sp[k].values()):.4f}", f"{max(sp[k].values()):.4f}",
+                 f"{st.mean(sp[k].values()):.4f}", f"{width[k]:.4f}",
+                 "wide" if k in wide else ""] for k in order],
+               header=[
+                "# Step 4 — representative structure selection (seminar 2026-08)",
+                "# de = rerank_de_post_anneal, host-relative stability (NOT hull distance).",
+                "# The three values per species are the three top-ranked structures whose folder",
+                "#   labels read x020/x050/x100 (or x002/x005/x010 in concentration_label).",
+                "# !! THOSE LABELS ARE NOT CONCENTRATIONS — the `concentration` column is 0.25 for",
+                "#    all 270 rows. The three differ by substitution SITE and SEED, not by doping",
+                "#    level, and they are NOT repeat runs of the same structure.",
+                "# band_width = max - min. wide flag = width > %.2f eV/atom." % BAND_WIDE,
+               ])
     return _save(fig, "step4_stability_band.png")
 
 
@@ -623,7 +745,10 @@ def selftest():
     #   쓰는 함수를 여기 목록으로 못 박는다. 앞 판은 파일 위치로 갈랐는데(주석 기준 split),
     #   새 그림을 그 뒤에 추가하니 정당한 라벨이 위반으로 잡혔다 — 목록이 맞다.
     import re
-    LABEL_OK = {"fig_periodic", "fig_site_choice", "fig_site_grid", "fig_anion_site"}
+    LABEL_OK = {"fig_periodic", "fig_site_choice", "fig_site_grid", "fig_anion_site",
+            # 폭이 넓은 6종의 **이름표** — 순위가 아니라 "여기선 대표 하나로 못 뭉갠다"
+            # 를 가리키는 범주 라벨이다 (2026-08-18).
+            "fig_stability_band"}
     _fns = re.split(r"\ndef ", body)
     _bad = []
     for _f in _fns[1:]:

@@ -508,8 +508,8 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 그러면 당연히 이런 질문이 나옵니다 — **"에너지로 자르면 되지 않나?"**
 
 오른쪽 그림이 그 답입니다. 가로는 같고, 세로가 이번엔 **에너지**입니다. 붉은 점이 방금
-뺀 100 개예요. **세로로 보면 파란 무리 한가운데 있습니다.** 에너지로는 평범해요. 오히려
-중앙값은 **더 낮습니다.**
+뺀 100 개예요. **세로로 보면 파란 무리 한가운데 있습니다.** 에너지로는 평범합니다.
+**같은 도펀트끼리 비교하면 남은 것들과 구분이 안 됩니다.**
 
 ⭐ 점선이 **같은 개수를 에너지로 잘랐다면 어디였을지** 보여주는 선인데, 맨 위에 있죠.
    두 방법이 잡는 게 **완전히 다릅니다.** 겹치는 게 **하나도 없어요.**
@@ -522,26 +522,72 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 · 25 % 는 물리 상수가 아니라 **저희가 정한 선**입니다. 분포에 꼬리가 끊기는 자리라 골랐어요.
 · 이완 자체는 3,615 개 **전부 수렴**했습니다. 수렴 실패로 뺀 건 없습니다.
 · 여기서 뺀 100 개는 "나쁜 물질" 이 아니라 **"이 모델로는 구조를 못 믿겠는 것"** 입니다.
+· **"왜 떨어진 쪽 에너지가 더 낮나?"** — 조성이 섞여서 그렇습니다. 100 개가 101종 중
+  **14종**에서만 나오고, 그 종들이 원래 낮아요. **도펀트 중앙값을 빼면 +0.010 vs +0.000**
+  으로 사실상 같습니다. (`kb/results/screen_volume_vs_energy_2026_08_18.md`)
+· **부풀어서가 아니라 쪼그라들어서** 떨어졌습니다 — 100 개 전부 수축, 중앙 −26.8 %.
+  그중 **30 개가 B₂O₃** 이고 B₂O₃ 는 30/30 전멸입니다.
+· 남는 약한 상관(r −0.26)은 **"더 멀리 내려간 것이 더 낮은 데서 끝난다"** 는 최적화의
+  성질이지 물질의 성질이 아닙니다.
 
 ---
 
-### 12 — Representative structure selection
+### 12 — Representative structure selection  ✅ 확정 (2026-08-18, 2판)
 
-> ■ Step 4: One converged structure per candidate is carried forward
-> • Structures were kept if they converged and the cell volume stayed within 25 %.
-> • Candidate counts differ per compound, so this selection is not a ranking of elements.
-`해설` on this axis the three runs agree — the bars are short
+> ■ Step 4: One structure per candidate is kept for the full calculations
+> • To carry one structure per compound, the [파랑]top-ranked configuration[/] was kept.
+> • Candidate counts differ per compound, so [빨강]this selection is not a ranking of elements[/].
+
+`< spread of the three top-ranked structures per species >`
+`해설` median spread [파랑]0.04 eV / atom[/]; [빨강]6 of 88 exceed 0.10[/] — there the choice is real
+하단 용어 — Representative: the one structure kept for the next steps ·
+　　　　　　 Convergence: the optimizer actually finished
+
+⛔⛔ **앞 판이 틀렸다 (2026-08-18) — 같은 함정 3회째.** 캡션이
+   *"with the spread across our three runs. Here the runs agree"* 였는데, 세 점은
+   **재현 산포가 아니다.** `concentration` 열은 rank-1 270행 **전부 0.25**이고
+   폴더 라벨 x020/x050/x100(= `concentration_label` x002/x005/x010)만 다르다.
+   세 챔피언이 실제로 다른 것은 **치환 자리와 시드**다:
+```
+ZrO2_x020_cP4baS4a_s03        P_4b  / S_4a    de −0.623
+ZrO2_x050_cLi24gaS16e_s01     Li_24g/ S_16e   de −0.803
+ZrO2_x100_cLi24gaS4a_s01      Li_24g/ S_4a    de −0.732
+```
+   ⇒ 맞는 진술은 **"이긴 구조의 자리가 달라져도 이 축은 거의 안 움직인다"** 이고,
+     이쪽이 "runs agree" 보다 **더 센 말**이다. 근거·규칙:
+     `kb/results/site_preference_bar_meaning_2026_08_18.md` §4b
+⚠ v6 원본의 화면 결함 둘 — 용어줄이 헤더 위에 올라타 `the optimiser act…` 로 잘렸고
+   (영국식 철자까지), 아래 이탤릭이 `a representative structure i / s` 로 낱말 중간에서
+   감겼다. 빌더(`build_seminar_slide.py 12`)가 둘 다 정리한다.
+⚠ 앞 판 소불릿 1 은 25 % 부피 게이트를 **다시** 말했다 — 11장과 중복이라 뺐다.
 
 **[55초]**
 
-이제 후보 하나당 대표 구조를 하나 고릅니다. 기준은 둘입니다. 수렴했는가, 그리고 부피가
-25 % 안에 있는가. 부피가 크게 부는 건 물리가 아니라 계산이 잘못 간 신호일 때가 많습니다.
+이제 후보 하나당 **대표 구조를 하나** 고릅니다. 종합 점수 1등을 가져갑니다. 이 다음부터는
+계산이 무거워지니까, 한 화합물에 서른 개씩 들고 갈 수가 없어요.
 
-그림의 세로 막대가 같은 종을 세 번 돌렸을 때의 흩어짐입니다. 이 축에서는 막대가 짧습니다.
-종끼리의 차이에 비하면 실행 간 차이가 작다는 뜻이고, 그러면 대표 하나를 골라도 됩니다.
+그림을 보시면 종마다 점이 셋, 세로 막대로 이어져 있습니다. **이 셋은 같은 걸 세 번 돌린
+게 아닙니다.** 서로 **다른 구조**예요 — 치환 자리도 다르고 시드도 다릅니다. 예를 들어
+ZrO₂ 는 하나는 P 자리, 둘은 Li 자리에 앉은 구조가 1등이 됐습니다.
 
-⚠ 다만 후보 개수가 화합물마다 다릅니다. 다섯 개 중에 고른 것도 있고 오십 개 중에 고른
-것도 있습니다. **이건 원소 순위가 아닙니다.**
+⭐ 그러니까 이 막대가 짧다는 건 이런 뜻입니다. **어느 구조가 이겼든 host 대비 안정성은
+거의 같은 자리에 떨어진다.** 중앙값으로 **0.04 eV/atom** 이에요. 그래서 대표 하나를 골라도
+이 축에서는 결론이 안 바뀝니다.
+
+⚠ 다만 오른쪽 분포에서 보시듯 **꼬리가 있습니다.** 88 종 중 **6 종**은 폭이 0.10 을 넘어요.
+빨갛게 이름을 붙여 뒀습니다 — ZrO₂, V₂O₅, ZrF₄, WO₃, YF₃, MoO₃. **이것들은 대표를 고르는
+게 실제로 선택입니다.** 뒤 결과에서 이 여섯이 나오면 그 점을 같이 말해야 합니다.
+
+⚠ 그리고 후보 개수가 화합물마다 다릅니다. 다섯 개 중에 고른 것도, 오십 개 중에 고른 것도
+있어요. **이건 원소 순위가 아닙니다.**
+
+💬 **말로만 (질문 오면)**
+· 폭 최대는 **ZrO₂ 0.180 eV/atom**, 최소는 NaI 0.002 입니다.
+· 세 라벨(x020/x050/x100)은 **농도가 아닙니다.** 실제 농도는 셋 다 0.25 예요.
+  이름만 남은 겁니다 — 농도 시리즈로 읽으시면 안 됩니다.
+· 세로축은 host 상대 Δe 이지 **hull 거리가 아닙니다.**
+
+⛔ **말하지 말 것** — "세 번 돌려도 같더라", "재현성이 좋다". 재현 실험이 아니다.
 
 ---
 

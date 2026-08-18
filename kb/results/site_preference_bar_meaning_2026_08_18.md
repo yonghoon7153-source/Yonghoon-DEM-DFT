@@ -144,6 +144,26 @@ MgO_x100_cLi24gaS4a_s02            ← 자리가 다름
 | cascade multi_category_v23 | x002 / x005 / x010 | **전부 0.25** — 시리즈 무효 |
 | cascade v23_all | x020 / x050 / x100 | **전부 0.25** — 농도 아님 |
 
+## 4c. ⛔ **3회째** — 같은 함정이 12장(Step 4)에서 또 (2026-08-18)
+
+세미나 12장 캡션이 *"with the spread across our three runs. **Here the runs agree**, so a
+representative structure is defensible"* 였다. **세 점은 재현 산포가 아니다.** rank-1 270행의
+`concentration` 은 **전부 0.25**이고, 세 챔피언이 다른 것은 **자리와 시드**다:
+
+```
+ZrO2_x020_cP4baS4a_s03        P_4b  / S_4a    de −0.623
+ZrO2_x050_cLi24gaS16e_s01     Li_24g/ S_16e   de −0.803
+ZrO2_x100_cLi24gaS4a_s01      Li_24g/ S_4a    de −0.732
+```
+
+⇒ 맞는 진술은 **"이긴 구조의 자리가 달라져도 host 상대 안정성은 거의 안 움직인다"**
+  (폭 중앙값 **0.037**, 최대 0.180, 88종 중 **6종**만 0.10 초과)이고, 이쪽이 "runs agree"
+  보다 **더 센 말**이다 — 재현이 아니라 **구조 선택에 대한 둔감성**을 말하므로.
+
+⚠ 이 함정이 세 번 다 **캡션·대본 문장**에서 나왔다. 데이터가 틀린 적은 없다.
+  ⇒ 방어선을 그림 안으로 옮겼다 — `fig_stability_band` 의 **범례가 직접**
+    `3 top-ranked structures per species (different site / seed)` 라고 말한다.
+
 ⚠ 그리고 site_preference 쪽도 **라벨 = 실제 농도가 아니다** (`Y2O3_x005` = 47원자에 Y 2개
 = P 자리의 33 %). "세 도핑 수준" 까지만 말하고 숫자는 인용하지 않는다.
 

@@ -109,6 +109,25 @@ SLIDES = {
            "MLIP: a fast stand-in trained on DFT forces"),
     drop=[10],
  ),
+ 12: dict(
+    idx=11, out="Slide12_representative_structure.pptx",
+    figs=["docs/figures/seminar/step4_stability_band.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Representative structure selection",
+    # ⛔ 앞 판 문구는 "carried forward" 였다 (1저자: kept 로). 그리고 v6 원본은
+    #   용어줄이 헤더 위에 올라타 잘려 있었다 — 이 빌더가 맨 아래로 내린다.
+    head="Step 4: One structure per candidate is kept for the full calculations",
+    sub1="To carry one structure per compound, the [b]top-ranked configuration[/b] was kept.",
+    # ⛔⛔ 앞 판 캡션은 "the spread across our three runs ... the runs agree" 였다. **틀렸다.**
+    #   세 점은 재현 산포가 아니라 **자리·시드가 다른 세 구조**다 (concentration 열 전부 0.25).
+    #   kb/results/site_preference_bar_meaning_2026_08_18.md §4b — 같은 함정 3회째.
+    sub2="Candidate counts differ per compound, so [r]this selection is not a ranking of elements[/r].",
+    label="spread of the three top-ranked structures per species",
+    note="median spread [b]0.04 eV / atom[/b]; [r]6 of 88 exceed 0.10[/r] — there the choice is real",
+    gloss=("Representative: the one structure kept for the next steps  ·  "
+           "Convergence: the optimizer actually finished"),
+    drop=[10],
+ ),
 }
 
 

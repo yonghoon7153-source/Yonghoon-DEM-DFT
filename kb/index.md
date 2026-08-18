@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 217
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 218
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -63,7 +63,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (78)
+## results/ (79)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -127,6 +127,7 @@
 - `kb/results/presentation_script_LPSCl_vs_LPSCl16_2026_06_18.md` — 발표·보고용 스크립트 — LPSCl vs LPSCl1.6 (16 슬라이드, 상세판)
 - `kb/results/redox_orbital_control_PS4_vs_BS3_2026_07_08.md` — 왜 P–S만 끊기고 B–S/P–O는 사는가 — σ\* 궤도 제어 (환원분해의 미시 메커니즘)
 - `kb/results/report_mechanical_electronic_2026_06_21.md` — 보고용 정리 (2026-06-21) — 역학·전자밀도 descriptor + 구조 + 시각화 가능성
+- `kb/results/screen_volume_vs_energy_2026_08_18.md` — 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유 — 조성 섞임이지 구조가 아니다 ○미열람
 - `kb/results/sdcp_linio2_binding_report.md` — SDCP Binder Anchoring on LiNiO₂ (104)
 - `kb/results/sdcp_master_summary_2026_07_16.md` — SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)
 - `kb/results/sdcp_ptfe_site_screen_summary_2026_08_11.md` — 자리 선호 스크리닝 — UMA 로 무엇을 봤고, 왜 값이 안 나왔고, VASP 에 무엇을 넘겼나
