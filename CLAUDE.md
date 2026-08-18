@@ -78,7 +78,11 @@
      PTFE 는 애초에 스탬프되지 않고(`sigma_ptfe` 기본 0) DBE 에 SWCNT 가 없다.
      그래도 코드 결함은 실재해 고쳤다 (selftest `sdcp-prio` 상주).
 
-   ★ **다음**: ① 구 스탬프 × vox {0.25, 0.2, 0.15} 격자 수렴 (GPU) ② 게이트 ⑤ 8팔 factorial
+   ★ **다음**: ① 구 스탬프 격자 수렴 (GPU) — ⚠ **더 고운 쪽으로만 된다**: 게이트가
+   `d/vox ≥ 2` 라 Ø0.30 SDCP 는 **vox ≤ 0.15** 에서만 구 스탬프가 허용된다
+   (`step3_sigma.py:286`).  {0.25, 0.2} 는 원리적으로 불가 — 스윕은 {0.15, 0.125, 0.10}
+   이고 셀 수가 ×1.73 · ×3.38 로 뛴다 (사전 CPU rasterize 로 dof 부터 잴 것).
+   ② 게이트 ⑤ 8팔 factorial
    ③ CL-31 통제 RVE 에 VGCF 팔 추가 (CPU) ④ shift-팔 전용 오염 4건 (collector `_bot_mask` ·
    pore 좌표 불일치 · τ_geo crop · `step4_dyn` 이 `origin_shift_um` 무시).
 

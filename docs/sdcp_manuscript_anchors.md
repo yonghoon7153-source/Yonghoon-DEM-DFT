@@ -23,6 +23,14 @@
 - **S12: SDCP 단독 = dough 형성 불가** → PTFE fibrillation web이 필수 → **비교셋 = SBE(PTFE) vs DBE(PTFE+SDCP)**, SDCP-단독 런은 비물리
 - **Fig3a: DBE에서 PTFE 분산 균일화** (SBE F-map 응집 → DBE 균일) — SDCP가 PTFE 뭉침을 억제 = 우리 fibrillation/분산 축과 연결 후보
 - Fig3c-d: elastic recovery 0.69→0.82 / Fig4: R_ele 59.7→48.5 Ωcm², c-AFM 저저항 면적↑ / Fig6-7: 1000cyc@2C 안정, 저압(5MPa)서 격차 최대
+- ⚠⚠ **R_ele 59.7→48.5 의 정체가 미확정 (2026-08-18, CL-38 hold)** — σ_e 검증 앵커로 쓰려면
+  먼저 이 양이 ①캐소드 벌크 **전자** ASR 인지 ②전해질(**이온**) 저항인지 ③Fig 6e `R_int` 의
+  **pristine 판**(=전극-계면 저항)인지 확정해야 한다.  ①이면 우리 σ_e 절대값이 ~600배 과대이고,
+  ②면 우리 σ_ion 이 4.7배 과대인 데다 **부호가 반대**이며, ③이면 σ_e 가 아니라 collector R_int
+  축의 앵커다.  **필요한 것 = Fig 4 캡션/methods 의 R_ele 정의 · pristine/cycled 라벨 ·
+  SBE/DBE 두께와 로딩**(아래 "wt% 조성은 methods 텍스트(미제공)" 와 같은 블로커).
+  ⚠ `docs/step3_sigma_network.md` 가 이 값을 **Bazzoun 2026** 것으로 오기했었다 (2026-08-18 수정) —
+  자기 매뉴스크립트를 외부 교차검증으로 착각하면 안 된다.
 - **Fig4(e) 'Electrochemical modeling' 빈 패널 + Fig7(c,d) placeholder** — 우리 3D 구조+연결성(econn) 시각화의 목표 슬롯
 
 ## 모델 반영 상태 (2026-07-09)

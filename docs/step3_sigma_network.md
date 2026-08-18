@@ -79,8 +79,13 @@ GeoDict-계 논문의 Fig-2(d)/(f) 축과 방법론 동급 (voxel FV) — 단 �
   S/cm, 200nm).  벌크 R ~0.002 Ω·cm² ≪ R_int → **계면이 병목, primer가 그걸 ×3.7 연다**.
 - **문헌 검증 (2026-07-10 WebSearch)**: ① 액체 LIB의 carbon-coated Al 계면 ASR은 0.014–0.03
   Ω·cm² (코팅 후) — 우리 값보다 3-4자릿수 작음 = **액체계 잣대는 부적용**.  ② 고체계 계면은
-  수십~수백 Ω·cm²가 정상 스케일 (garnet/Li 950→75 표면처리; Bazzoun 우리-동일계 R_ele 59.7→48.5
-  Ω·cm²) → **manuscript 30-110은 sulfide-ASSB EIS 계면저항 자릿수에 정합** ✓.  ③ dry-공정 ASSB
+  수십~수백 Ω·cm²가 정상 스케일 (garnet/Li 950→75 표면처리) → **manuscript 30-110은
+  sulfide-ASSB EIS 계면저항 자릿수에 정합** ✓.
+  ⚠ **출처 정정 2026-08-18**: 옛 문장은 "Bazzoun 우리-동일계 R_ele 59.7→48.5 Ω·cm²" 라고 적었으나
+  **Bazzoun 2026 은 그 값을 보고하지 않는다** (`docs/lit_bazzoun2026_dem_fem_rnm.md`·
+  `docs/data/bazzoun2026_sigma_ionic.csv` 에 부재; Bazzoun 은 이온 축만 — 펠릿 1.02 mS/cm,
+  σ_eff 0.137/0.101/0.065).  59.7→48.5 는 **우리 매뉴스크립트 Fig 4(e) 자신의 값**이다
+  (CL-38).  외부 문헌 교차검증으로 쓰면 **자기인용을 외부 앵커로 착각**하게 된다.  ③ dry-공정 ASSB
   carbon-coated Al: R_int **5-10× 감소** 보고 — manuscript의 110→30 (×3.7)과 방향·자릿수 일치 ✓.
   ⚠ 명시: Fig6e는 **사이클 후**(열화 포함) 값 — pristine 계면은 더 낮음; "primer = 열화 억제"
   성분이 큼 (조건 라벨 유지).
