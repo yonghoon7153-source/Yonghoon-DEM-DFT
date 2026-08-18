@@ -335,7 +335,7 @@ def fig_screen_axes():
     ax.scatter([x for x, _ in keep], [y for _, y in keep], s=7, alpha=.28,
                color=GOOD, lw=0, zorder=2, label=f"carried forward ({len(keep):,})")
     ax.scatter([x for x, _ in drop], [y for _, y in drop], s=20, alpha=.9,
-               color=BAD, lw=0, zorder=4, label=f"distorted too far ({len(drop)})")
+               color=BAD, lw=0, zorder=4, label=f"dropped, > 25 % ({len(drop)})")
     ax.axvline(CUT, color=hs.INK, lw=1.2, ls="--", zorder=3)
     # 에너지로 잘랐다면 어디였을지 — 같은 개수만큼 위에서 자른 선
     thr = sorted(ys, reverse=True)[len(drop) - 1]
@@ -522,7 +522,7 @@ def fig_screen_survival():
     bins = list(range(0, 62, 2))
     ax.hist(keep, bins=bins, color=GOOD, alpha=.85, zorder=3, label="carried forward")
     ax.hist([min(v, 60) for v in drop], bins=bins, color=BAD, alpha=.92, zorder=4,
-            label="distorted too far — dropped here")
+            label="dropped (> 25 %)")
     ax.axvline(25, color=hs.INK, ls="--", lw=1.5, zorder=5)
     ax.legend(frameon=False, fontsize=13, loc="upper right", bbox_to_anchor=(1.0, .78))
     ax.set_xlabel("how far the cell volume moved during relaxation  (%)")

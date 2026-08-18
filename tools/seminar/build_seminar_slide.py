@@ -102,9 +102,9 @@ SLIDES = {
     title="Low-cost structure relaxation",
     head="Step 3: Machine-learned potential screening before DFT",
     sub1="To relax 3,615 structures within budget, a [b]machine-learned potential[/b] was used.",
-    sub2="Structures were removed by [b]geometry, not by energy[/b]; an energy cut would have kept all 100.",
+    sub2="Structures were removed by [b]geometry, not by energy[/b].",
     label="how far each structure moved  ·  the same structures on both screening axes",
-    note="[r]100 of 3,615 moved past 25 %[/r]; an energy cut of the same size overlaps with none of them.",
+    note="[r]100 of 3,615 changed by more than 25 %[/r]; by energy they look ordinary.",
     gloss=("Relaxation: moving atoms until the forces vanish  ·  "
            "MLIP: a fast stand-in trained on DFT forces"),
     drop=[10],
