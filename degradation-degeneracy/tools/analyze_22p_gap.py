@@ -20,6 +20,14 @@ v4 본 격자는 `0.0:0.20:0.02` 라 값이 전부 짝수 백분위여서 22p �
 
     python tools/analyze_22p_gap.py --in results/fit_22p_v1
     python tools/analyze_22p_gap.py --in results/fit_22p_v1 --plot out.png
+
+★ 기준 곡선(grid ↔ half-cell)을 비교할 때는 `--restrict-to` 로 **모집단을
+  맞춰야 한다.** `src/scoring.py` 는 reference != "grid" 이면 recoverable 을
+  True 로 고정하므로, 그냥 나란히 놓으면 남는 차이가 기준 효과인지 난이도가
+  다른 모집단인지 구분되지 않는다 (`tools/compare_cases.py` 의 경고와 같다).
+
+    python tools/analyze_22p_gap.py --in results/fit_22p_fine_hc \
+           --restrict-to results/fit_22p_fine
 """
 
 from __future__ import annotations
@@ -78,7 +86,18 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
 
 
 def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
-        plot: str | None = None) -> dict:
+        plot: str | None = None, restrict_to=None) -> dict:
+    """`restrict_to` — **모집단을 맞추는** 기준 실행 (보통 grid 기준 fit 디렉터리).
+
+    `src/scoring.py` 는 `reference != "grid"` 이면 `recoverable` 을 True 로
+    **고정**한다 (전 범위 half-cell 테이블은 창이 부족할 일이 없다는 물리
+    가정). 그래서 같은 조건 집합을 돌려도 half-cell 쪽 표본이 grid 쪽보다
+    크다. 그 상태로 두 기준을 나란히 놓으면 남는 차이가 기준 효과인지
+    **난이도가 다른 모집단**인지 구분되지 않는다 — `compare_cases.py` 가
+    맨 앞에서 경고하는 함정과 같다.
+
+    `restrict_to` 를 주면 `공통 cond_id ∩ 그쪽에서 복원가능` 으로 좁힌다.
+    """
     from tools.compare_cases import _scored
 
     in_dir = Path(in_dir)
@@ -90,6 +109,33 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     df = df.copy()
     df["lam_mean"] = (df["lam_pe"] + df["lam_ne"]) / 2
     df["gap_true"] = (df["lam_pe"] - df["lam_ne"]).abs()
+
+    restriction = None
+    if restrict_to is not None:
+        ref_dir = Path(restrict_to)
+        ref = _scored(ref_dir / "fits.parquet", tol)
+        ref = ref[ref["objective"] == objective]
+        if ref.empty:
+            raise SystemExit(
+                f"--restrict-to {ref_dir}: 목적함수 {objective} 행이 없습니다")
+        # `isin` 이 이미 이쪽에 없는 cond_id 를 걸러내므로 교집합은 불필요하다
+        # (M24 로 확인 — 넣고 빼도 결과가 같은 죽은 코드였다).
+        keep = set(ref.loc[ref["recoverable"], "cond_id"])
+        before = int(len(df))
+        dropped = sorted(set(df["cond_id"]) - keep)
+        df = df[df["cond_id"].isin(keep)].copy()
+        # 모집단은 기준 실행이 정한다 — 이쪽의 recoverable 열은 더 이상 안 본다
+        df["recoverable"] = True
+        restriction = {
+            "run_dir": str(ref_dir),
+            "정의": "공통 cond_id ∩ 기준 실행에서 recoverable",
+            "n_kept": int(len(df)),
+            "n_dropped": before - int(len(df)),
+            "n_dropped_conditions": len(dropped),
+            "dropped_examples": [str(c) for c in dropped[:5]],
+        }
+        if df.empty:
+            raise SystemExit(f"--restrict-to {ref_dir}: 남는 조건이 없습니다")
 
     rec = df[df["recoverable"]] if "recoverable" in df.columns else df
 
@@ -118,10 +164,16 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         "wide": {"n": int(len(wide)),
                  "정의": "noise=0 · 복원가능군 (평균·LLI 전부)"},
     }
+    if restriction is not None:
+        out["restricted_to"] = restriction
 
     print("=" * 74)
     print(f" 22p 동작점에서 두 전극을 가를 수 있는가  (objective={objective})")
     print("=" * 74)
+    if restriction is not None:
+        print(f"\n※ 모집단을 {restriction['run_dir']} 의 복원가능군에 맞췄다 "
+              f"(유지 {restriction['n_kept']}행 · 제외 {restriction['n_dropped']}행).")
+        print("   기준 곡선끼리 비교하려면 이렇게 맞춘 뒤에만 나란히 놓을 수 있다.")
     print(f"\n전체 {len(df)}행 중 복원가능군 {len(rec)}행 "
           f"({100 * len(rec) / len(df):.0f}%)\n")
 
@@ -233,11 +285,16 @@ def main() -> None:
     ap.add_argument("--objective", default="pocv_dvdq")
     ap.add_argument("--tol", type=float, default=0.02)
     ap.add_argument("--plot", default=None)
+    ap.add_argument("--restrict-to", dest="restrict_to", default=None,
+                    help="모집단을 맞출 기준 실행 디렉터리 (보통 grid 기준 fit). "
+                         "half-cell 기준은 recoverable 이 True 로 고정되므로 "
+                         "이걸 주지 않고 두 기준을 비교하면 안 된다.")
     ap.add_argument("--log-level", default="WARNING")
     args = ap.parse_args()
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
-    run(args.in_dir, args.objective, args.tol, args.plot)
+    run(args.in_dir, args.objective, args.tol, args.plot,
+        restrict_to=args.restrict_to)
 
 
 if __name__ == "__main__":

@@ -4215,3 +4215,119 @@ def test_gap_table_bins_at_one_percent_point_resolution():
     assert bins == ["1%p", "3%p"], bins
     by = {r["참 격차"]: r["n"] for r in t.to_dict("records")}
     assert by["1%p"] == 1 and by["3%p"] == 2, by
+
+
+# ── 22p 분석의 기준 곡선 비교 — 모집단을 맞춰야 한다 ────────────────────────
+#
+# ★ 19차 자체 발견 (half-cell 다리를 돌리기 **전에** 잡았다).
+#   `src/scoring.py` 는 reference != "grid" 이면 `recoverable` 을 True 로
+#   **고정**한다 (전 범위 테이블이라 창이 부족할 일이 없다는 물리 가정).
+#   `analyze_22p_gap.run()` 은 `df[df["recoverable"]]` 로 표본을 잡으므로,
+#   같은 조건 집합을 돌려도 half-cell 쪽 표본이 grid 쪽보다 훨씬 커진다.
+#   그 상태로 "half-cell 기준이 격차를 더 잘 가른다"고 쓰면 그건 기준 효과가
+#   아니라 **난이도가 다른 모집단**을 비교한 것이다 — `compare_cases.py` 가
+#   맨 앞 docstring 에서 경고하는 바로 그 함정이다.
+
+def _p22_run_dir(tmp, name, df):
+    d = Path(tmp) / name
+    d.mkdir(parents=True, exist_ok=True)
+    df.to_parquet(d / "fits.parquet", index=False)
+    return d
+
+
+def test_analyze_22p_populations_differ_between_references(tmp_path):
+    """★ 19차 자체 — 제약 없이 두 기준을 돌리면 모집단부터 다르다 (증거)."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    rg = run(gd, "pocv_dvdq")
+    rh = run(hd, "pocv_dvdq")
+
+    assert rh["n_recoverable"] > rg["n_recoverable"], (
+        "fixture 가 모집단 차이를 못 만든다 — 이 함정을 재현하지 못한다")
+
+
+def test_analyze_22p_restrict_to_matches_the_grid_population(tmp_path):
+    """★ 19차 자체 — `--restrict-to` 로 grid 복원가능군에 맞춰야 비교가 성립."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    rg = run(gd, "pocv_dvdq")
+    rh = run(hd, "pocv_dvdq", restrict_to=gd)
+
+    assert rh["n_recoverable"] == rg["n_recoverable"]
+    assert rh["near"]["n"] == rg["near"]["n"]
+    assert rh["wide"]["n"] == rg["wide"]["n"]
+
+
+def test_analyze_22p_restrict_to_drops_conditions_absent_from_the_reference(tmp_path):
+    """★ 19차 자체 — 공통 cond_id 로도 좁혀야 한다 (한쪽에만 있는 조건 제거)."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    extra = h.iloc[:4].copy()
+    extra["cond_id"] = ["only_in_hc_%d" % k for k in range(len(extra))]
+    h = pd.concat([h, extra], ignore_index=True)
+
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    free = run(hd, "pocv_dvdq")
+    rh = run(hd, "pocv_dvdq", restrict_to=gd)
+    rg = run(gd, "pocv_dvdq")
+
+    assert free["n_rows_total"] == len(h), "제약 없이는 전부 본다"
+    # 좁힌 뒤에는 grid 복원가능군과 정확히 같다 — 한쪽에만 있던 4조건 포함해
+    # 전부 빠져야 그 수가 맞는다
+    assert rh["n_rows_total"] == rg["n_recoverable"]
+    assert rh["restricted_to"]["n_dropped"] == len(h) - rg["n_recoverable"]
+
+
+def test_analyze_22p_records_the_restriction_in_its_result(tmp_path):
+    """★ 19차 자체 — 무엇으로 좁혔는지가 결과에 남아야 인용할 수 있다."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    rh = run(hd, "pocv_dvdq", restrict_to=gd)
+    r = rh.get("restricted_to")
+    assert r, "restrict_to 를 줬는데 결과에 기록이 없다"
+    assert str(gd) in str(r.get("run_dir"))
+    assert r["n_kept"] == rh["n_recoverable"]
+    # 제약 없이 돌린 결과에는 그 key 가 없어야 한다 (없는 걸 있다고 하면 안 된다)
+    assert "restricted_to" not in run(gd, "pocv_dvdq")
+
+
+def test_analyze_22p_restrict_to_overrides_this_runs_recoverability(tmp_path):
+    """★ 19차 자체 (M25) — 모집단은 **기준 실행**이 정한다.
+
+    `--restrict-to` 를 준 뒤에도 이쪽 실행의 `recoverable` 열을 그대로 쓰면,
+    기준이 복원가능이라 한 조건을 이쪽이 다시 빼서 모집단이 또 어긋난다.
+    half-cell fixture 는 어차피 전부 True 라 이 결함을 못 잡는다 — grid 실행을
+    (전부 True 인) half-cell 실행에 맞춰야 비로소 드러난다.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    plain = run(gd, "pocv_dvdq")
+    assert plain["n_recoverable"] < plain["n_rows_total"], \
+        "fixture 에 복원불가 행이 없다 — 이 결함을 재현하지 못한다"
+
+    widened = run(gd, "pocv_dvdq", restrict_to=hd)
+    assert widened["n_recoverable"] == widened["n_rows_total"] == len(g)
