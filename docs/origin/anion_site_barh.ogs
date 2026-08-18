@@ -1,0 +1,54 @@
+// anion_site_barh.ogs — 세미나 10장 왼쪽 (음이온 자리 가로 막대) BML 포맷
+// 쓰는 법: 그래프 창을 활성화한 뒤 Script Window 에 통째로 붙여넣고 Enter.
+// 이 스크립트가 하는 것: 레이어 크기 · 축 색/두께/틱 · 틱 라벨 폰트 · 위/오른쪽 축 정리.
+// 이 스크립트가 **못 하는 것**: 막대 색(막대마다 다름) · 값 라벨 · 격자선 · 막대 두께
+//   → 가이드 4절의 GUI 단계로. LabTalk 로 안정적으로 안 되는 것들이다.
+
+// ── 레이어 (single panel 12 x 9 cm) ─────────────────────────────────────────
+layer.unit = 3;
+layer.width = 12;
+layer.height = 9;
+page.margincontrol = 1;
+
+// ── X 축 (값 축 — 가로 막대이므로 여기가 개수) ──────────────────────────────
+layer.x.color = color(64,64,64);
+layer.x.thickness = 1;
+layer.x.ticks = 10;              // 2(major out) + 8(minor out)
+layer.x.ticklength = 6;
+layer.x.tickthickness = 1;
+layer.x.mticklength = 3;
+layer.x.mtickthickness = 1;
+layer.x.label.font = font(arial);
+layer.x.label.pt = 28;
+layer.x.label.color = color(64,64,64);
+layer.x.from = 0;
+layer.x.to = 120;
+layer.x.inc = 20;
+
+// ── Y 축 (카테고리 축 — 눈금 없이 이름표만) ─────────────────────────────────
+layer.y.color = color(64,64,64);
+layer.y.thickness = 1;
+layer.y.ticks = 0;               // 카테고리 축에 눈금은 군더더기다
+layer.y.label.font = font(arial);
+layer.y.label.pt = 28;
+layer.y.label.color = color(64,64,64);
+
+// ── 위 / 오른쪽 축: 선만, 틱·라벨 없음 ──────────────────────────────────────
+layer.x2.showAxes = 3;
+layer.x2.color = color(64,64,64);
+layer.x2.thickness = 1;
+layer.x2.ticks = 0;
+layer.x2.showLabels = 0;
+
+layer.y2.showAxes = 3;
+layer.y2.color = color(64,64,64);
+layer.y2.thickness = 1;
+layer.y2.ticks = 0;
+layer.y2.showLabels = 0;
+
+// ── 축 제목 ────────────────────────────────────────────────────────────────
+label -xb number of generated candidates that placed the dopant anion there;
+label -yl ;                      // 카테고리 이름표가 곧 설명 — 제목 비움
+
+// ── 기본 막대색 (막대마다 다른 색은 GUI: Pattern > Fill Color > By Points) ──
+set %C -c color(192,86,33);      // #C05621  황 자리 기본색

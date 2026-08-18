@@ -320,9 +320,12 @@ def fig_anion_site():
     items = sorted(cnt.items(), key=lambda kv: -kv[1])
     _rc()
     fig, ax = plt.subplots(figsize=(9.6, 4.4))
-    cols = [hs.ELEM["S"], hs.ELEM["S"], hs.ELEM["Cl"]]
+    # ⛔ 2026-08-18 — 색이 **순위 자리**로 칠해지고 있었다(`cols[i % 3]`). 그래서
+    #   할라이드 자리가 황 색, 황 자리 하나가 염소 색이었다 — 화학과 반대다.
+    #   원소로 칠한다. 황 부격자 둘은 같은 계열의 진하기 차이로 구분한다.
+    SITE_COLOR = {"S_4a": hs.ELEM["S"], "S_16e": "#dd8f5f", "Cl_4d": hs.ELEM["Cl"]}
     for i, (k, v) in enumerate(items):
-        ax.barh(-i, v, height=.56, color=cols[i % len(cols)], alpha=.85, zorder=3)
+        ax.barh(-i, v, height=.56, color=SITE_COLOR.get(k, hs.MUT), alpha=.9, zorder=3)
     ax.set_xlim(0, max(cnt.values()) * 1.22); ax.set_ylim(-len(items) + .4, .6)
     # ⚠ 2026-08-18 — set_yticks([]) 로 **부격자 이름이 통째로 빠져** 있었다. 막대 셋이
     #   무엇인지 화면만 봐서는 알 수 없었다. 범주 라벨은 축 라벨이지 '그림 안 문장' 이 아니다.

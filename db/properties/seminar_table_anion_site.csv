@@ -1,7 +1,11 @@
-"# Slide 10 (left) - where the dopant anion landed, champion rows only.",,
-"# Source: cascade_v23_all.csv, rows with rank_combined == 1.",,
-# n_candidates = number of generated candidates that placed the dopant anion on that sublattice.,,
-wyckoff_site,sublattice_label,n_candidates
-Cl_4d,halide site,98
-S_4a,free sulfide,89
-S_16e,sulfur in the PS₄ corner,83
+"# Slide 10 (left) - where the dopant anion landed, champion rows only.",,,
+"# Source: cascade_v23_all.csv, rows with rank_combined == 1.",,,
+# n_candidates = number of generated candidates that placed the dopant anion on that sublattice.,,,
+# ** Row order is Origin input order: row 1 is drawn at the BOTTOM of a horizontal bar. **,,,
+"# ** bar_color follows CHEMISTRY, not rank. ** The two sulfur sublattices share a hue;",,,
+#    only the halide site differs. An earlier version colored by rank position and had,,,
+#    the halide site in the sulfur color - do not copy colors from the old PNG.,,,
+wyckoff_site,sublattice_label,n_candidates,bar_color
+S_16e,sulfur in the PS₄ corner,83,#DD8F5F
+S_4a,free sulfide,89,#C05621
+Cl_4d,halide site,98,#65A30D
