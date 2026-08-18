@@ -1776,6 +1776,10 @@ def main():
             'bridge_um': float(_bru) if _bru is not None else None,
             'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
             'sigma_sdcp_S_cm': float(getattr(a, 'sigma_sdcp', 0.0) or 0.0),
+            # ★ 2026-08-18 (CL-49) — PTFE 스탬프 팔도 고정 인자다.  0 = 생산(미스탬프),
+            #   > 0 = 진단 팔(phase-4 를 격자에 찍어 탄소망을 끊는다).  기록 없으면 게이트가
+            #   못 잡는다 (H5 와 같은 실수 방지).
+            'sigma_ptfe_S_cm': float(getattr(a, 'sigma_ptfe', 0.0) or 0.0),
             'plate_z_grid_um': ([float(_zb3), float(_zt3)]
                                 if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).

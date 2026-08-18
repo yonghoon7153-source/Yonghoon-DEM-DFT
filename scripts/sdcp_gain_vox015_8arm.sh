@@ -49,6 +49,15 @@ if [ "${SDCP_YIELD_VGCF:-0}" = "1" ]; then
   YV_FLAG=" --step3-sdcp-yield-to-vgcf"; YV_TAG="_yvgcf"
   echo "[p2] ★ **진단 팔** — SDCP 가 VGCF 셀에 양보 (σ-치환 채널 OFF).  생산 규약 아님"
 fi
+#  ★ PTFE 스탬프 감도 팔 (2026-08-18, CL-49 · CL-46 편차 검증) — **생산 규약이 아니다.**
+#    `SIGMA_PTFE=1e-16` 이면 payload 가 phase-4 점을 격자에 찍는다 (`_cond_ph` 게이트).
+#    PTFE 는 상 루프에서 VGCF·SDCP **뒤**라 그 셀을 덮는다 = 탄소망을 실제로 끊는다.
+#    1e-16 = 실질 절연이되 `> 0` 게이트를 여는 최소값 (문헌 벌크 PTFE σ ~1e-16 S/cm).
+PT_FLAG=""; PT_TAG=""
+if [ -n "${SIGMA_PTFE:-}" ]; then
+  PT_FLAG=" --sigma-ptfe $SIGMA_PTFE"; PT_TAG="_ptfe${SIGMA_PTFE//./}"
+  echo "[p2] ★ **진단 팔** — PTFE 를 격자에 스탬프 (σ_PTFE=$SIGMA_PTFE).  생산 규약 아님 (CL-49)"
+fi
 # ★ 스윕 팔에서 끌 것 (리뷰 ① H7): 팔당 σ_e 솔브 1회가 아니라 **7~8회**가 돈다.
 #   `--no-step4`(2×dof 연성계) · `--no-thermal` · `--no-trackb`(기하 τ) · `--no-field`.
 #   ⚠ `_res3w`/`_res3b`(collector wetted/bare)는 끄는 플래그가 **없어** 2회는 남는다 —
@@ -67,7 +76,7 @@ LEAN_FLAGS=""
 #  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
 #    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${LEAN_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${LEAN_TAG}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -176,7 +185,7 @@ PY
 
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$LEAN_FLAGS" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$LEAN_FLAGS" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "_$TAG.sh" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$RUN/_$TAG.sh"; } > "$RUN/$TAG.sh"

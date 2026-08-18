@@ -58,6 +58,8 @@ def _read(path):
             #    (플래그 이전 payload 는 정의상 생산 규약이므로).  None 으로 두면 아래 게이트가
             #    None 을 건너뛰어 진단 팔과 생산 팔이 **섞여도 안 잡힌다** = H5 와 같은 no-op.
             'sdcp_yield_to_vgcf': bool(man.get('sdcp_yield_to_vgcf', False)),
+            #  ★ 2026-08-18 (CL-49) — PTFE 스탬프 팔.  같은 정규화 규칙 (없으면 0.0 = 생산).
+            'sigma_ptfe_S_cm': float(man.get('sigma_ptfe_S_cm', 0.0) or 0.0),
             'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
             'sigma_sdcp_S_cm': man.get('sigma_sdcp_S_cm'),
             'backend': (man.get('backend_last_solve') or {}).get('backend'),
@@ -122,7 +124,8 @@ def verdict(arms):
                         reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
                                f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다')
     for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend', 'sdcp_yield_to_vgcf'):
+                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend', 'sdcp_yield_to_vgcf',
+                'sigma_ptfe_S_cm'):
         _v = {r.get(fld) for k in arms for r in arms[k] if r.get(fld) is not None}
         if len(_v) > 1:
             return dict(out, decision='HOLD',
@@ -198,7 +201,7 @@ def _selftest():
     #    검증된 적이 없었다 — 프로덕션에서 `bridge_um` 이 no-op 이었던 것과 같은 뿌리다.
     _FIX = dict(vox=0.15, bridge_um=0.48, fibre_stamp='segment', sdcp_stamp='point',
                 sdcp_sphere_d_um=0.0, sigma_vgcf_S_cm=78.5398, sigma_sdcp_S_cm=250.0,
-                backend='gpu', sdcp_yield_to_vgcf=False)
+                backend='gpu', sdcp_yield_to_vgcf=False, sigma_ptfe_S_cm=0.0)
 
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
@@ -268,6 +271,15 @@ def _selftest():
         _old = _read(_p)
     chk(f'⑬ 옛 payload 의 없는 필드는 False 로 정규화 ({_old["sdcp_yield_to_vgcf"]!r})',
         _old['sdcp_yield_to_vgcf'] is False)
+    #  ⑭ PTFE 스탬프 팔(CL-49)이 생산 팔과 섞이면 잡는다 + 옛 payload 는 0.0 정규화
+    _mix4 = mk(base, [v * 1.08 for v in base])
+    for _r in _mix4['DBE']:
+        _r['sigma_ptfe_S_cm'] = 1e-16
+    v14 = verdict(_mix4)
+    chk(f'⑭ PTFE 스탬프 팔 × 생산 팔 혼합은 HOLD ({v14["decision"]})',
+        v14['decision'] == 'HOLD' and 'sigma_ptfe_S_cm' in (v14.get('reason') or ''))
+    chk(f'⑭b 옛 payload 의 없는 sigma_ptfe 는 0.0 정규화 ({_old["sigma_ptfe_S_cm"]!r})',
+        _old['sigma_ptfe_S_cm'] == 0.0)
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
