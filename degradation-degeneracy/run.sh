@@ -294,15 +294,11 @@ case "$MODE" in
 
   report)     # Phase 6 — 비교표 + 그림 + RESULTS.md
     D="${IN_DIR:-$OUT}"
-    python tools/compare_objectives.py --in "$D" --log-level "$LOG_LEVEL"
-    # --compare 를 주면 기준 곡선 비교(Case 1 vs Case 2) 절도 함께 만든다
-    if [[ -n "$COMPARE_DIR" ]]; then
-      python tools/compare_cases.py --grid "$D" --halfcell "$COMPARE_DIR"         --log-level "$LOG_LEVEL"
-    fi
     # ★ 18차 C 부수 발견 — `--mode report` 의 기본 출력은 **커밋된 정본**
     #   `docs/RESULTS.md` 다. scratch 실행(테스트·임시 디렉터리)이 그대로
     #   정본을 덮어썼다 (이 회차에 실제로 당했다). 정본 artifact 가 아니면
-    #   기본 경로로 쓰지 않는다.
+    #   기본 경로로 쓰지 않는다. 경로 결정은 **compare 실행 전에** 한다 —
+    #   그래야 실행 없이 검사할 수 있다.
     REPORT_OUT="${REPORT_OUT:-}"
     if [[ -z "$REPORT_OUT" ]]; then
       case "$D" in
@@ -311,6 +307,15 @@ case "$MODE" in
            echo "  ℹ 정본 경로가 아닌 입력($D)이라 보고서를 $REPORT_OUT 에 씁니다."
            echo "    정본을 갱신하려면 REPORT_OUT=docs/RESULTS.md 를 명시하세요." ;;
       esac
+    fi
+    if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+      echo "--mode report --in $D --out $REPORT_OUT"
+      exit 0
+    fi
+    python tools/compare_objectives.py --in "$D" --log-level "$LOG_LEVEL"
+    # --compare 를 주면 기준 곡선 비교(Case 1 vs Case 2) 절도 함께 만든다
+    if [[ -n "$COMPARE_DIR" ]]; then
+      python tools/compare_cases.py --grid "$D" --halfcell "$COMPARE_DIR"         --log-level "$LOG_LEVEL"
     fi
     exec python tools/make_results.py --in "$D" --out "$REPORT_OUT" --log-level "$LOG_LEVEL"
     ;;

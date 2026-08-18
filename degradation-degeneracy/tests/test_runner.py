@@ -125,11 +125,25 @@ def test_report_mode_does_not_overwrite_the_canonical_doc_from_a_scratch_run(tmp
 
     scratch = tmp_path / "scratch_run"
     scratch.mkdir()
+
+    # ★ 부작용만 보면 축이 안 태워진다 — 빈 입력이면 report 가 조기 종료해
+    #   가드에 닿지도 않고 테스트가 통과한다 (뮤테이션으로 발각). **해석된
+    #   출력 경로**를 직접 본다.
     r = subprocess.run(["bash", str(root / "run.sh"), "--mode", "report",
                         "--in", str(scratch)],
                        cwd=root, capture_output=True, text=True,
-                       env={**os.environ})
+                       env={**os.environ, "RUN_SH_DRY": "1"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    line = next(ln for ln in r.stdout.splitlines() if ln.startswith("--mode report"))
+    assert "--out docs/RESULTS.md" not in line, (
+        f"scratch 입력인데 정본 경로로 쓰려 한다: {line}")
+    assert str(scratch) in line, line
 
-    # 입력이 비어 있으므로 실패해도 좋다 — 검사 대상은 **정본을 건드렸는가** 다
-    assert canon.read_bytes() == before if before is not None else True, (
-        "scratch 실행이 커밋된 docs/RESULTS.md 를 덮어썼다\n" + r.stdout[-500:])
+    # 정본 경로 입력이면 기존대로 정본에 쓴다
+    r2 = subprocess.run(["bash", str(root / "run.sh"), "--mode", "report",
+                         "--in", "results/grid_fit_v4"],
+                        cwd=root, capture_output=True, text=True,
+                        env={**os.environ, "RUN_SH_DRY": "1"})
+    assert "--out docs/RESULTS.md" in r2.stdout, r2.stdout
+
+    assert canon.read_bytes() == before if before is not None else True
