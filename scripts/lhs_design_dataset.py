@@ -48,7 +48,48 @@ FACTORS = list(RANGES)
 END_ACTIVE = {0.0: ['d_am_s_um', 'd_se_um', 'am_pct'],
               1.0: ['d_am_p_um', 'd_se_um', 'am_pct']}
 #  내부 블록의 ps 범위 — 0/1 은 끝점 블록이 담당하므로 여기서는 열어 둔다
-PS_INTERIOR = (0.05, 0.95)
+PS_INTERIOR = (0.10, 0.90)      # 정수 설계에서는 1:9 … 9:1 이 내부다 (0:10/10:0 은 끝점 블록)
+
+#  ── ★ 정수 격자 (2026-08-18 지시 "정수로 설계하는게 좋을거 같은데") ─────────────────
+#    실물성 근거: 12.93 µm 분말을 주문할 수는 없다.  실제로 고를 수 있는 눈금에 설계를 얹는다.
+#    d_SE 만 0.5 눈금인 이유 — 범위가 0.5–2 라 정수로 자르면 {1, 2} 두 수준밖에 안 남는다.
+#    ps 눈금 0.1 = 랩이 이미 쓰는 `0:10 · 3:7 · 5:5 · 7:3 · 10:0` 표기와 정확히 일치한다.
+STEP = {'d_am_p_um': 1.0, 'd_am_s_um': 1.0, 'ps_frac': 0.1, 'd_se_um': 0.5, 'am_pct': 1.0}
+
+
+def levels_of(name, ps_range=None):
+    """그 인자가 실제로 고를 수 있는 값들 (정수 격자)."""
+    lo, hi = RANGES[name]
+    if name == 'ps_frac' and ps_range is not None:
+        lo, hi = ps_range
+    st = STEP[name]
+    k = int(round((hi - lo) / st))
+    return [round(lo + i * st, 6) for i in range(k + 1)]
+
+
+def _balanced(n, L, rng):
+    """L 수준에 n 점을 **균형** 배정 (각 수준이 floor/ceil(n/L) 번) 후 섞는다.
+    ⇒ 연속 LHS 의 '층마다 정확히 하나' 를 이산 격자로 옮긴 것."""
+    base, rem = divmod(n, L)
+    idx = np.array([i for i in range(L) for _ in range(base + (1 if i < rem else 0))])
+    return rng.permutation(idx)
+
+
+def lhs_grid(n, level_lists, rng, restarts=400):
+    """정수 격자 위의 maximin LHS → 각 인자의 **수준 인덱스** 배열 (n, k)."""
+    k = len(level_lists)
+    best, best_d = None, -1.0
+    for _ in range(int(restarts)):
+        I = np.stack([_balanced(n, len(level_lists[j]), rng) for j in range(k)], 1)
+        #  거리는 **단위공간**에서 잰다 (수준 수가 인자마다 달라 인덱스로 재면 왜곡된다)
+        U = np.stack([I[:, j] / max(len(level_lists[j]) - 1, 1) for j in range(k)], 1)
+        d2 = ((U[:, None, :] - U[None, :, :]) ** 2).sum(-1)
+        d2[np.diag_indices(n)] = np.inf
+        m = float(np.sqrt(d2.min()))
+        if m > best_d:
+            best, best_d = I, m
+    return best
+
 
 #  ── 고정 상수 (인자가 아니다 — 2026-08-18 지시) ──────────────────────────────────
 #    면용량 2 mAh/cm² = wall effect 가 거의 안 나오는 최소 단위 · RVE 50×50 µm.
@@ -88,26 +129,38 @@ def _scale(u, names, ps_range=None):
     return out
 
 
-def build(n_interior=60, n_end=10, seed=0, restarts=400):
+def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
     rng = np.random.default_rng(seed)
     rows = []
 
     # ── 블록 A: 내부(양상 공존) 5-인자 ────────────────────────────────────────
-    uA = lhs(n_interior, len(FACTORS), rng, restarts)
-    sA = _scale(uA, FACTORS, ps_range=PS_INTERIOR)
-    for i in range(n_interior):
-        rows.append({'block': 'bimodal', **{f: float(sA[f][i]) for f in FACTORS}})
+    if grid:
+        LV = [levels_of(f, PS_INTERIOR) for f in FACTORS]
+        IA = lhs_grid(n_interior, LV, rng, restarts)
+        for i in range(n_interior):
+            rows.append({'block': 'bimodal',
+                         **{f: float(LV[j][IA[i, j]]) for j, f in enumerate(FACTORS)}})
+    else:
+        uA = lhs(n_interior, len(FACTORS), rng, restarts)
+        sA = _scale(uA, FACTORS, ps_range=PS_INTERIOR)
+        for i in range(n_interior):
+            rows.append({'block': 'bimodal', **{f: float(sA[f][i]) for f in FACTORS}})
 
     # ── 블록 B/C: 단일모달 끝점 — **죽은 크기 인자에 좌표를 주지 않는다** ─────
     for ps, active in END_ACTIVE.items():
-        uB = lhs(n_end, len(active), rng, restarts)
-        sB = _scale(uB, active)
+        if grid:
+            LVb = [levels_of(f) for f in active]
+            IB = lhs_grid(n_end, LVb, rng, restarts)
+            get = lambda i, f: float(LVb[active.index(f)][IB[i, active.index(f)]])
+        else:
+            sB = _scale(lhs(n_end, len(active), rng, restarts), active)
+            get = lambda i, f: float(sB[f][i])
         for i in range(n_end):
             r = {'block': 'mono_AM_P' if ps == 1.0 else 'mono_AM_S', 'ps_frac': float(ps)}
             for f in FACTORS:
                 if f == 'ps_frac':
                     continue
-                r[f] = float(sB[f][i]) if f in active else float('nan')
+                r[f] = get(i, f) if f in active else float('nan')
             rows.append(r)
 
     # ── 파생 (DEM 입력 + 기존 ML 설계층 호환) ────────────────────────────────
@@ -127,6 +180,7 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400):
                          ('d_se_um', 'r_SE_um')):
             r[dst] = r[src] / 2.0                       # ← LIGGGHTS 입력은 **반경**
         r['ps_label'] = (f'{round(p * 10):d}:{10 - round(p * 10):d}')   # 7:3 식 표기
+        #  ★ 정수 격자(ps 눈금 0.1)에서는 이 라벨이 **반올림이 아니라 정확**하다
         r['size_ratio_P_over_S'] = (dP / dS) if (dP == dP and dS == dS) else float('nan')
         r['size_ratio_AM_over_SE'] = r['d_am_um'] / r['d_se_um']
         #  ── 고정 상수와 그로부터 나오는 유한크기 점검 ────────────────────────────
@@ -166,10 +220,28 @@ def diagnostics(rows):
     d2[np.diag_indices(len(U))] = np.inf
     #  1-D 균일: 각 인자를 5 구간으로 나눠 최소 점유 (층화 LHS 면 균등해야 한다)
     occ = [int(np.histogram(U[:, j], bins=5, range=(0, 1))[0].min()) for j in range(len(FACTORS))]
+    #  ★ 정수 격자에서는 **중복 설계점**이 생길 수 있다 (연속 LHS 에는 없던 실패 모드).
+    #    같은 조성을 두 번 돌리는 것은 예산 낭비이고, 학습기에는 가짜 정밀도로 보인다.
+    keys = [tuple(round(r[f], 6) for f in FACTORS) for r in rows if r['block'] == 'bimodal']
+    dup = len(keys) - len(set(keys))
+    #  수준별 점유 (균형 배정이 실제로 됐는지)
+    lv = {}
+    for f in FACTORS:
+        L = levels_of(f, PS_INTERIOR)
+        c = {v: 0 for v in L}
+        for r in rows:
+            if r['block'] == 'bimodal':
+                c[round(r[f], 6)] = c.get(round(r[f], 6), 0) + 1
+        lv[f] = f'{len(L)}수준 · 점유 {min(c.values())}–{max(c.values())}'
+    #  ⚠ `min_bin_occupancy_of_5` 는 **연속 모드용** 지표다.  정수 격자에서는 수준 위치가
+    #    5 등분 경계와 안 맞아 빈 구간이 생긴다 (예: d_se 4수준 → 5구간 중 하나는 구조적으로 0).
+    #    ⇒ 정수 모드의 정본은 `levels` 의 **수준 점유**다.
     return {'n_bimodal': int(len(A)),
             'max_abs_offdiag_corr': round(float(np.abs(off).max()), 4),
             'min_pairwise_dist_unit': round(float(np.sqrt(d2.min())), 4),
-            'min_bin_occupancy_of_5': occ}
+            'min_bin_occupancy_of_5_CONTINUOUS_ONLY': occ,
+            'duplicate_design_points': int(dup),
+            'levels': lv}
 
 
 def _selftest():
@@ -199,12 +271,16 @@ def _selftest():
     #  ⑤ 반경 = 직경/2 (DEM 입력 규약)
     chk('⑤ r_* = d_*/2 (LIGGGHTS 입력은 반경)',
         all(abs(r['r_SE_um'] * 2 - r['d_se_um']) < 1e-12 for r in rows))
-    #  ⑥ LHS 층화 — 각 인자가 n 개 층에 정확히 하나씩 (1-D 균일)
+    #  ⑥ LHS 층화 — 각 인자가 n 개 층에 정확히 하나씩 (1-D 균일).
+    #    ⚠ 이것은 **연속 LHS 의 성질**이다.  정수 격자에서는 수준 수 < n 이라 각 수준이
+    #      복제되므로 성립할 수 없다 — 이산 대응물은 ⑩b(수준 점유 균형)다.
+    #      ⇒ 이 검사는 연속 경로에 건다 (그 경로를 살려 두는 한 회귀로 유효하다).
+    bic = [r for r in build(40, 8, 0, 60, grid=False) if r['block'] == 'bimodal']
     U = np.array([[(r[f] - RANGES[f][0]) / (RANGES[f][1] - RANGES[f][0]) for f in FACTORS]
-                  for r in bi])
-    strat = all(sorted((U[:, j] * len(bi)).astype(int)) == list(range(len(bi)))
+                  for r in bic])
+    strat = all(sorted((U[:, j] * len(bic)).astype(int)) == list(range(len(bic)))
                 for j in range(len(FACTORS)) if FACTORS[j] != 'ps_frac')
-    chk('⑥ 각 인자가 n 개 층에 정확히 하나씩 (층화 LHS)', strat)
+    chk('⑥ (연속 모드) 각 인자가 n 개 층에 정확히 하나씩 — 이산 대응물은 ⑩b', strat)
     #  ⑦ 재현성 — 같은 seed 는 같은 설계
     chk('⑦ 같은 seed = 같은 설계 (재현 가능)',
         build(40, 8, 0, 60)[7]['d_am_p_um'] == rows[7]['d_am_p_um'])
@@ -212,6 +288,24 @@ def _selftest():
     dg = diagnostics(rows)
     chk(f"⑧ 최대 |비대각 상관| < 0.35 ({dg['max_abs_offdiag_corr']})",
         dg['max_abs_offdiag_corr'] < 0.35)
+    #  ── ★ 정수 격자 회귀 (2026-08-18) ─────────────────────────────────────
+    g = build(40, 8, 1, 60, grid=True)
+    def onstep(v, st):
+        return abs(v / st - round(v / st)) < 1e-9
+    chk('⑨ 모든 크기·조성 값이 지정 눈금 위에 있다 (d 1 µm · SE 0.5 µm · AM 1 %)',
+        all(onstep(r[f], STEP[f]) for r in g for f in FACTORS if not np.isnan(r[f])))
+    chk('⑨b ps 가 0.1 눈금 → `ps_label` 이 반올림이 아니라 **정확**하다',
+        all(abs(r['ps_frac'] * 10 - round(r['ps_frac'] * 10)) < 1e-9 for r in g))
+    dgg = diagnostics(g)
+    chk(f"⑩ 중복 설계점 0 ({dgg['duplicate_design_points']}건)",
+        dgg['duplicate_design_points'] == 0)
+    chk('⑩b 수준 점유가 균형이다 (최대−최소 ≤ 1)',
+        all(int(v.split('점유 ')[1].split('–')[1]) - int(v.split('점유 ')[1].split('–')[0]) <= 1
+            for v in dgg['levels'].values()))
+    #  ⑪ 연속 모드도 여전히 된다 (되돌릴 길을 남긴다)
+    c = build(20, 4, 0, 40, grid=False)
+    chk('⑪ --continuous 경로 보존 (눈금 밖 값이 나온다)',
+        any(not onstep(r['d_am_p_um'], 1.0) for r in c if not np.isnan(r['d_am_p_um'])))
     print(f'\nlhs_design_dataset selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -223,6 +317,8 @@ if __name__ == '__main__':
     ap.add_argument('--n-end', type=int, default=10, help='단일모달 끝점 블록 각각의 점 수')
     ap.add_argument('--seed', type=int, default=0)
     ap.add_argument('--restarts', type=int, default=400, help='maximin 무작위 재시작')
+    ap.add_argument('--continuous', action='store_true',
+                    help='정수 격자를 끄고 연속 LHS (기본은 **정수 격자** — 2026-08-18 지시)')
     ap.add_argument('--as-radius', action='store_true',
                     help='지시 범위를 **반경**으로 해석 (기본은 직경 — docstring 근거)')
     ap.add_argument('--out', default='')
@@ -231,7 +327,7 @@ if __name__ == '__main__':
     if a.selftest:
         raise SystemExit(_selftest())
 
-    rows = build(a.n, a.n_end, a.seed, a.restarts)
+    rows = build(a.n, a.n_end, a.seed, a.restarts, grid=not a.continuous)
     if a.as_radius:                                   # 범위를 반경으로 읽으면 직경이 2배
         for r in rows:
             for d, rr in (('d_am_p_um', 'r_AM_P_um'), ('d_am_s_um', 'r_AM_S_um'),
