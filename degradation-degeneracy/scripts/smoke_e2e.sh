@@ -62,7 +62,11 @@ SMOKE_START_DIRTY="$DIRTY"
 
 step() { printf '\n\033[1m── %s ──\033[0m\n' "$1"; }
 ok()   { printf '   ✅ %s\n' "$1"; }
-bad()  { printf '   ❌ %s\n' "$1"; fail=$((fail+1)); }
+# ★ 실패 이름을 모아 둔다 — 끝 요약이 건수만 내면, 로그를 tail 로 보거나
+#   CI 가 마지막 줄만 남길 때 **어느 검사가 깨졌는지 영영 모른다**. 실제로
+#   한 번 실패했는데 그 이유로 사후 진단이 불가능했다 (재현도 4회 실패).
+FAILED_CHECKS=()
+bad()  { printf '   ❌ %s\n' "$1"; fail=$((fail+1)); FAILED_CHECKS+=("$1"); }
 
 rm -rf "$BASE"
 mkdir -p "$BASE"
@@ -594,4 +598,5 @@ if [[ "$fail" -eq 0 ]]; then
   exit 0
 fi
 printf '\033[1m❌ 실패 %d건 — 본 실행을 시작하지 말 것\033[0m\n' "$fail"
+for _c in "${FAILED_CHECKS[@]}"; do printf '\033[31m   · %s\033[0m\n' "$_c"; done
 exit 1
