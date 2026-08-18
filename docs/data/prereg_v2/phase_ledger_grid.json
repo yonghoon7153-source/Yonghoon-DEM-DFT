@@ -5,20 +5,44 @@
  "_fixed": {
   "bed": "실 DBE 침대 (case 260714_145738_778fa4, 레시피 DBE)",
   "sdcp_particles": 138988,
-  "sdcp_diameter_um": 0.30,
-  "sdcp_true_volume_um3_each": 0.014137166941154068,
+  "sdcp_diameter_um": 0.3,
+  "sdcp_true_volume_um3_each": 0.014137166941154067,
   "bridge_um": 0.48,
   "fibre_stamp": "segment"
  },
  "sdcp_point_stamp_vs_grid": [
-  {"vox_um": 0.40, "sdcp_cells": 132368, "represented_um3": 8471.552,
-   "measured_ratio_to_true": 4.311, "single_particle_arithmetic": 4.527, "delta_pct": -4.8},
-  {"vox_um": 0.30, "sdcp_cells": 135770, "represented_um3": 3665.790,
-   "measured_ratio_to_true": 1.866, "single_particle_arithmetic": 1.910, "delta_pct": -2.3},
-  {"vox_um": 0.25, "sdcp_cells": 137033, "represented_um3": 2141.141,
-   "measured_ratio_to_true": 1.090, "single_particle_arithmetic": 1.105, "delta_pct": -1.4},
-  {"vox_um": 0.15, "sdcp_cells": 138455, "represented_um3": 467.285,
-   "measured_ratio_to_true": 0.238, "single_particle_arithmetic": 0.239, "delta_pct": -0.4}
+  {
+   "vox_um": 0.4,
+   "sdcp_cells": 132368,
+   "represented_um3": 8471.552,
+   "measured_ratio_to_true": 4.311,
+   "single_particle_arithmetic": 4.527,
+   "delta_pct": -4.8
+  },
+  {
+   "vox_um": 0.3,
+   "sdcp_cells": 135770,
+   "represented_um3": 3665.79,
+   "measured_ratio_to_true": 1.866,
+   "single_particle_arithmetic": 1.91,
+   "delta_pct": -2.3
+  },
+  {
+   "vox_um": 0.25,
+   "sdcp_cells": 137033,
+   "represented_um3": 2141.141,
+   "measured_ratio_to_true": 1.09,
+   "single_particle_arithmetic": 1.105,
+   "delta_pct": -1.4
+  },
+  {
+   "vox_um": 0.15,
+   "sdcp_cells": 138455,
+   "represented_um3": 467.285,
+   "measured_ratio_to_true": 0.238,
+   "single_particle_arithmetic": 0.239,
+   "delta_pct": -0.4
+  }
  ],
  "_reading": "단입자 산술은 실침대의 **약한 상한**이다 — 격자가 거칠수록 두 SDCP 점이 같은 셀에 떨어지거나 다른 상에 덮여 −0.4 %(0.15) → −4.8 %(0.4) 만큼 낮게 나온다.  방향·크기 모두 예상대로이고, CL-25 의 결론(표현 부피가 vox 와 함께 19배 변한다)은 4.311 → 0.238 = **18.1배**로 그대로 살아남는다.",
  "sphere_stamp_vox015": {
@@ -28,14 +52,213 @@
   "note": "구 스탬프가 SDCP 부피를 제자리로 돌려놓은 첫 **실침대** 측정 (오차 1.4 %).  점 스탬프 0.238 배 대비 4.14배."
  },
  "sphere_stamp_priority_defect": {
-  "extra_cells_over_point_stamp": {"_from_sid": {"pore/SE/AM 등": "정당 구부피", "PTFE(7)": 0, "SWCNT(8)": 0}},
+  "extra_cells_over_point_stamp": {
+   "_from_sid": {
+    "pore/SE/AM 등": "정당 구부피",
+    "PTFE(7)": 0,
+    "SWCNT(8)": 0
+   }
+  },
   "verdict": "**정확히 0 셀**.  `mpm_webapp_payload.py:869` 의 `_cond_ph = (2,3,5,6,4) if a.sigma_ptfe > 0 else (2,3,5,6)` — 기본 설정에서 PTFE 는 격자에 스탬프되지 않고(σ_PTFE 기본 0), DBE 침대에 SWCNT(sid 8)도 없다.  덮을 대상 자체가 없었다.  ⇒ CL-34 의 hold 사유 ① 해소, GPU 대조 팔 불요.",
   "still_a_real_bug": "⚠ 그래도 코드 결함은 실재했고 고친 것이 맞다 — `--sigma-ptfe > 0` 민감도 런이나 SWCNT 침대(A14)에서는 발화한다.  회귀 selftest `sdcp-prio` 상주."
  },
  "sbe_negative_control_vox015": {
-  "cells_by_sid": {"0_pore": 6522785, "1_AM_S": 24165389, "3_VGCF": 2290933, "6_SE": 21683333},
+  "cells_by_sid": {
+   "0_pore": 6522785,
+   "1_AM_S": 24165389,
+   "3_VGCF": 2290933,
+   "6_SE": 21683333
+  },
   "sphere_extra_cells": 0,
   "verdict": "구 스탬프 8팔과 점 스탬프 8팔의 SBE 상별 셀 수가 **전부 동일**.  SDCP 가 없는 침대에서 구 스탬프는 no-op 이다 — 리뷰 ③ 의 '4유효숫자 σ 일치' 를 셀 단위로 승격."
  },
- "_caveat": "⚠ 이 원장은 **래스터만** 이다.  σ 에 대한 영향은 솔브 팔이 준다 (raw_sigma.json).  다만 '몇 개의 셀이 어느 상이 되었나' 는 여기서 정확히 나온다 — 상계가 아니다.\n⚠ 거친 격자(0.4/0.3/0.25)는 SDCP 셀 수만 전사했다.  다른 상의 셀 수는 원격 호스트 로그에만 있다."
+ "_caveat": "⚠ 이 원장은 **래스터만** 이다.  σ 에 대한 영향은 솔브 팔이 준다 (raw_sigma.json).  다만 \"몇 개의 셀이 어느 상이 되었나\" 는 여기서 정확히 나온다 — 상계가 아니다.\n★ 2026-08-18: 거친 격자(0.4/0.3/0.25)의 **다른 상 셀 수도 전사 완료** (`_raw_ledgers`) — 옛 캐비엇(\"SDCP 셀 수만 전사했다\") 해소.",
+ "_raw_ledgers": "docs/data/prereg_v2/phase_ledger/ledger_*.json — kgy 로그 **전사** (10개 전부 상별 셀 합 = 격자 총 셀 수와 정확히 일치 = 전사 검사 통과).  재현: python3 scripts/sdcp_phase_ledger_report.py --dir docs/data/prereg_v2/phase_ledger",
+ "sdcp_phase_displacement": {
+  "_what": "SBE − DBE 상별 셀 수 차 = \"SDCP 가 있는 침대에서 각 상이 이만큼 적다\".  심층 리뷰 ③ 이 \"dof 원장은 σ-치환 채널을 원리적으로 못 본다\" 고 한 바로 그 채널을 상별로 갈라 본다.",
+  "_caveat": "① Σ(밀려난 셀) = SDCP 셀 수는 **항등식**이다 (두 침대의 격자 총 셀 수가 같다) — 전사 검사일 뿐 증거가 아니다.  ② SBE·DBE 는 **따로 압밀한 다른 침대**라 차에는 래스터 overwrite 와 압밀 재배치가 섞여 있다.  ③ 그래서 우연 기대치(그 상의 부피분율)로 나눈 enrichment 를 같이 본다.",
+  "by_grid": [
+   {
+    "key": "v04_pt",
+    "vox_um": 0.4,
+    "sdcp_cells": 132368,
+    "sum_identity_ok": true,
+    "phases": {
+     "pore": {
+      "cells": 3986,
+      "share_pct": 3.01,
+      "chance_pct": 2.58,
+      "enrichment": 1.167
+     },
+     "AM_S": {
+      "cells": 15582,
+      "share_pct": 11.77,
+      "chance_pct": 42.04,
+      "enrichment": 0.28
+     },
+     "VGCF": {
+      "cells": 52643,
+      "share_pct": 39.77,
+      "chance_pct": 25.39,
+      "enrichment": 1.567
+     },
+     "SE": {
+      "cells": 60157,
+      "share_pct": 45.45,
+      "chance_pct": 29.99,
+      "enrichment": 1.515
+     }
+    },
+    "sigma_vgcf_rescaled_S_cm": 11.045,
+    "sigma_sdcp_over_vgcf": 22.64,
+    "sigma_substitution_intensity": 9.002,
+    "measured_gain_pct": 42.15
+   },
+   {
+    "key": "v03_pt",
+    "vox_um": 0.3,
+    "sdcp_cells": 135770,
+    "sum_identity_ok": true,
+    "phases": {
+     "pore": {
+      "cells": 9088,
+      "share_pct": 6.69,
+      "chance_pct": 3.87,
+      "enrichment": 1.728
+     },
+     "AM_S": {
+      "cells": 14773,
+      "share_pct": 10.88,
+      "chance_pct": 43.31,
+      "enrichment": 0.251
+     },
+     "VGCF": {
+      "cells": 34034,
+      "share_pct": 25.07,
+      "chance_pct": 15.56,
+      "enrichment": 1.611
+     },
+     "SE": {
+      "cells": 77875,
+      "share_pct": 57.36,
+      "chance_pct": 37.26,
+      "enrichment": 1.54
+     }
+    },
+    "sigma_vgcf_rescaled_S_cm": 19.635,
+    "sigma_sdcp_over_vgcf": 12.73,
+    "sigma_substitution_intensity": 3.192,
+    "measured_gain_pct": 16.21
+   },
+   {
+    "key": "v025_pt",
+    "vox_um": 0.25,
+    "sdcp_cells": 137033,
+    "sum_identity_ok": true,
+    "phases": {
+     "pore": {
+      "cells": 15579,
+      "share_pct": 11.37,
+      "chance_pct": 5.59,
+      "enrichment": 2.033
+     },
+     "AM_S": {
+      "cells": 13586,
+      "share_pct": 9.91,
+      "chance_pct": 43.86,
+      "enrichment": 0.226
+     },
+     "VGCF": {
+      "cells": 25090,
+      "share_pct": 18.31,
+      "chance_pct": 11.19,
+      "enrichment": 1.636
+     },
+     "SE": {
+      "cells": 82778,
+      "share_pct": 60.41,
+      "chance_pct": 39.35,
+      "enrichment": 1.535
+     }
+    },
+    "sigma_vgcf_rescaled_S_cm": 28.274,
+    "sigma_sdcp_over_vgcf": 8.84,
+    "sigma_substitution_intensity": 1.619,
+    "measured_gain_pct": 8.49
+   },
+   {
+    "key": "v015_pt",
+    "vox_um": 0.15,
+    "sdcp_cells": 138455,
+    "sum_identity_ok": true,
+    "phases": {
+     "pore": {
+      "cells": 35831,
+      "share_pct": 25.88,
+      "chance_pct": 11.93,
+      "enrichment": 2.169
+     },
+     "AM_S": {
+      "cells": 9784,
+      "share_pct": 7.07,
+      "chance_pct": 44.21,
+      "enrichment": 0.16
+     },
+     "VGCF": {
+      "cells": 9967,
+      "share_pct": 7.2,
+      "chance_pct": 4.19,
+      "enrichment": 1.718
+     },
+     "SE": {
+      "cells": 82873,
+      "share_pct": 59.86,
+      "chance_pct": 39.67,
+      "enrichment": 1.509
+     }
+    },
+    "sigma_vgcf_rescaled_S_cm": 78.54,
+    "sigma_sdcp_over_vgcf": 3.18,
+    "sigma_substitution_intensity": 0.229,
+    "measured_gain_pct": 1.63
+   },
+   {
+    "key": "v015_sph",
+    "vox_um": 0.15,
+    "sdcp_cells": 573943,
+    "sum_identity_ok": true,
+    "phases": {
+     "pore": {
+      "cells": 143886,
+      "share_pct": 25.07,
+      "chance_pct": 11.93,
+      "enrichment": 2.101
+     },
+     "AM_S": {
+      "cells": 58387,
+      "share_pct": 10.17,
+      "chance_pct": 44.21,
+      "enrichment": 0.23
+     },
+     "VGCF": {
+      "cells": 40279,
+      "share_pct": 7.02,
+      "chance_pct": 4.19,
+      "enrichment": 1.675
+     },
+     "SE": {
+      "cells": 331391,
+      "share_pct": 57.74,
+      "chance_pct": 39.67,
+      "enrichment": 1.456
+     }
+    },
+    "sigma_vgcf_rescaled_S_cm": 78.54,
+    "sigma_sdcp_over_vgcf": 3.18,
+    "sigma_substitution_intensity": 0.223,
+    "measured_gain_pct": null
+   }
+  ],
+  "_reading": "★ **구조적(격자 불변) 사실 두 가지** — enrichment 로 읽는다:\n  · SE enrichment = 1.52 / 1.54 / 1.54 / 1.51 (점) · 1.46 (구) — 표현 부피가 18배 변하는 내내 **거의 안 움직인다**.  SDCP 는 SE 자리에 우연보다 ~1.5배 자주 앉는다.\n  · AM_S enrichment = 0.28 → 0.16 — SDCP 는 AM 내부를 **피한다** (당연하지만 이제 수로 있다).\n  · VGCF enrichment = 1.57 → 1.72 — 완만히 오를 뿐 거의 평평하다.\n★★ **격자와 함께 크게 움직이는 것은 몫이지 선호가 아니다**: VGCF 몫 39.8 → 7.2 % (5.5배) 인데 enrichment 는 1.57 → 1.72 로 평평하다 ⇒ 움직인 것은 **VGCF 자신의 표현 부피** (25.4 → 4.2 %) 다.  이것이 DR3-06 (1-셀 굵기 관) 의 직접 증거다.\n★★★ **σ-치환 강도가 이득과 같이 움직인다** (몫 × σ 대비):\n  vox 0.4 → 9.00 / 이득 +42.15 %  ·  0.3 → 3.19 / +16.21 %  ·  0.25 → 1.62 / +8.49 %  ·  0.15 → 0.23 / +1.63 %\n  이득/강도 = 4.68 / 5.08 / 5.24 / 7.11, log-log 기울기 0.884 (R² 0.9992).\n  ⚠⚠ **인과가 아니다** — n=4 이고 움직인 노브가 **vox 하나뿐**이라 vox 에 단조인 두 양은 무엇이든 이렇게 붙는다 (가짜 상호연결·SDCP 표현부피·SE 충전도 전부 vox 에 단조).  이것은 \"크기가 맞는 후보 기전\" 이지 측정된 기여가 아니다.\n  판별 팔 = **σ-매칭 SDCP 음성 대조**: 같은 vox 에서 σ_SDCP := σ_VGCF(vox) 로 두고 푼다.  이득이 살아남으면 = 새 도체 부피, 무너지면 = σ-치환.  솔브 2회(SBE/DBE)면 된다.\n★ **CL-33/34 는 이 교란이 가장 작은 격자에 있다**: vox 0.15 에서 VGCF 몫 7.2 %(점)·7.0 %(구), σ 대비 3.2× → 강도 0.23·0.22 = vox 0.4 의 **1/39**.  구 스탬프 추가 435,488 셀의 **81.9 % 가 SE(57.1 %)+pore(24.8 %)** = 절연 → 도체 전환(새 도체 부피)이고 VGCF 재활용은 7.0 % 뿐이다.  ⇒ +12.3 % 측정의 대부분은 σ-치환이 아니다."
+ }
 }

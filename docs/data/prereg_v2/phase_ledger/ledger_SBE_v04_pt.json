@@ -1,0 +1,15 @@
+{
+ "_source": "kgy 로그 전사 (esp-Z590, ~/sdcp/phase_ledger) — rasterize-only, 솔브 없음",
+ "vox_um": 0.4,
+ "grid_shape": [
+  125,
+  125,
+  184
+ ],
+ "cells_by_sid": {
+  "0": 74208,
+  "1": 1208677,
+  "3": 729862,
+  "6": 862253
+ }
+}

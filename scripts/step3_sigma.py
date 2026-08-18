@@ -190,7 +190,7 @@ def _solve_cg(L, b):
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
-              sdcp_sphere_d_um=0.0,
+              sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
@@ -317,13 +317,32 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                         _acc.append(_q[_ok][_in])
                 if _acc:
                     _sph_ijk = np.unique(np.vstack(_acc), axis=0)
+        # ── σ-치환 판별 팔 (2026-08-18, CL-43) — SDCP 가 VGCF 셀에 **양보**한다 ───────────
+        #   왜: 상별 원장이 SDCP 셀의 39.8 %(vox 0.4) ~ 7.2 %(0.15) 가 **원래 VGCF 셀**임을
+        #   보였다.  그 셀은 dof(도체 셀 수) 가 안 변하고 **σ 만** 11.0 → 250 (거친 격자에서
+        #   22.6배) 로 올라간다 = "새 도체 부피" 가 아니라 **기존 도체의 σ 업그레이드**.
+        #   dof 원장으로는 원리적으로 안 보이는 채널이라(심층 리뷰 ③) 이 팔로 **끈다**.
+        #   ⚠ 이것은 **진단 전용**이다 — 생산 규약은 여전히 SDCP 가 VGCF 를 덮는 쪽이다
+        #     (실물에서 SDCP 는 탄소 위에 코팅되므로 그 셀의 σ 가 오르는 것 자체는 물리다;
+        #      문제는 **크기가 격자의 함수**라는 것이지 존재가 아니다).
+        #   ⚠ 양보해도 그 셀은 **여전히 도체**(VGCF σ)라 연결성이 끊기지 않는다 — 그래서
+        #     이 팔은 "부피" 채널을 죽이지 않고 "σ 업그레이드" 채널만 죽인다.
+        _yield_vgcf = bool(sdcp_yield_to_vgcf)
         for code, s in ((2, 3), (3, 4), (5, 5), (4, 7), (6, 8)):   # phase → sid (4=PTFE: sensitivity-
             if code == 5 and _sph_ijk is not None:          #   only; 6=SWCNT sheath A14 → sid 8)
-                sid[_sph_ijk[:, 0], _sph_ijk[:, 1], _sph_ijk[:, 2]] = s   # ★ 제자리 = 같은 우선순위
+                q = _sph_ijk
+                if _yield_vgcf:
+                    q = q[sid[q[:, 0], q[:, 1], q[:, 2]] != 3]
+                if len(q):
+                    sid[q[:, 0], q[:, 1], q[:, 2]] = s      # ★ 제자리 = 같은 우선순위
                 continue
             m = ph == code
             if m.any():
-                sid[ijk[m, 0], ijk[m, 1], ijk[m, 2]] = s
+                q = ijk[m]
+                if code == 5 and _yield_vgcf:
+                    q = q[sid[q[:, 0], q[:, 1], q[:, 2]] != 3]
+                if len(q):
+                    sid[q[:, 0], q[:, 1], q[:, 2]] = s
     return sid, pid
 
 
@@ -1539,6 +1558,34 @@ def _selftest():
     ok &= not _rf_exc
     print(f"sdcp-gate-fail-closed: 거부가 Exception 이 아니다 (blanket except 통과)  "
           f"{'OK' if not _rf_exc else 'FAIL — 호출자가 삼킨다'}")
+    # ── σ-치환 판별 팔 (CL-43) — `sdcp_yield_to_vgcf` ────────────────────────────────
+    #   ① VGCF 와 겹친 SDCP 셀은 sid 3 으로 남고, ② 안 겹친 SDCP 셀은 그대로 sid 5 이며,
+    #   ③ 기본값(False)은 **비트 단위로 옛 거동**이어야 한다 (생산 규약 불변).
+    _C1 = np.array([[1.0, 1.0, 1.0]]); _C2 = np.array([[2.0, 2.0, 2.0]])
+    _pp = np.vstack([_C1, _C1, _C2]); _phy = np.array([2, 5, 5], np.int8)   # 2=VGCF, 5=SDCP
+    _i1 = tuple((np.array([1., 1., 1.]) / 0.15).astype(int))
+    _i2 = tuple((np.array([2., 2., 2.]) / 0.15).astype(int))
+    for _sd in (0.0, 0.30):                                    # 점 스탬프 · 구 스탬프 둘 다
+        _sA, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _phy,
+                           (0, 0, 0), (3., 3., 3.), 0.15, sdcp_sphere_d_um=_sd)
+        _sB, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _phy,
+                           (0, 0, 0), (3., 3., 3.), 0.15, sdcp_sphere_d_um=_sd,
+                           sdcp_yield_to_vgcf=True)
+        _e1 = (_sA[_i1] == 5) and (_sB[_i1] == 3)              # ① 겹친 셀: 덮음 → 양보
+        _e2 = (_sA[_i2] == 5) and (_sB[_i2] == 5)              # ② 안 겹친 셀: 둘 다 SDCP
+        _e3 = int((_sB == 5).sum()) < int((_sA == 5).sum())    # SDCP 셀이 실제로 줄었다
+        ok &= (_e1 and _e2 and _e3)
+        print(f"sdcp-yield-vgcf ({'구' if _sd else '점'}): 겹친 셀만 VGCF 로 남는다  "
+              f"{'OK' if (_e1 and _e2 and _e3) else 'FAIL'}")
+    #  ★ 기본값 회귀 — 이 인자를 안 주면 배열이 **완전히 동일**해야 한다
+    _sD1, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _phy,
+                        (0, 0, 0), (3., 3., 3.), 0.15, sdcp_sphere_d_um=0.30)
+    _sD2, _ = rasterize(np.zeros((0, 3)), np.zeros(0), None, _pp, _phy,
+                        (0, 0, 0), (3., 3., 3.), 0.15, sdcp_sphere_d_um=0.30,
+                        sdcp_yield_to_vgcf=False)
+    _ed = bool((_sD1 == _sD2).all())
+    ok &= _ed
+    print(f"sdcp-yield-default: 기본값은 옛 거동과 셀 단위 동일  {'OK' if _ed else 'FAIL'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

@@ -54,6 +54,10 @@ def _read(path):
             #    폴백을 잡는다 (step3_sigma._solve_cg 는 print 만 하고 내려간다).
             'sdcp_stamp': man.get('sdcp_stamp'),
             'sdcp_sphere_d_um': man.get('sdcp_sphere_d_um'),
+            #  ★ 2026-08-18 (CL-43) — σ-치환 진단 팔.  **없으면 False 로 정규화**한다
+            #    (플래그 이전 payload 는 정의상 생산 규약이므로).  None 으로 두면 아래 게이트가
+            #    None 을 건너뛰어 진단 팔과 생산 팔이 **섞여도 안 잡힌다** = H5 와 같은 no-op.
+            'sdcp_yield_to_vgcf': bool(man.get('sdcp_yield_to_vgcf', False)),
             'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
             'sigma_sdcp_S_cm': man.get('sigma_sdcp_S_cm'),
             'backend': (man.get('backend_last_solve') or {}).get('backend'),
@@ -118,7 +122,7 @@ def verdict(arms):
                         reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
                                f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다')
     for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend'):
+                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend', 'sdcp_yield_to_vgcf'):
         _v = {r.get(fld) for k in arms for r in arms[k] if r.get(fld) is not None}
         if len(_v) > 1:
             return dict(out, decision='HOLD',
@@ -194,7 +198,7 @@ def _selftest():
     #    검증된 적이 없었다 — 프로덕션에서 `bridge_um` 이 no-op 이었던 것과 같은 뿌리다.
     _FIX = dict(vox=0.15, bridge_um=0.48, fibre_stamp='segment', sdcp_stamp='point',
                 sdcp_sphere_d_um=0.0, sigma_vgcf_S_cm=78.5398, sigma_sdcp_S_cm=250.0,
-                backend='gpu')
+                backend='gpu', sdcp_yield_to_vgcf=False)
 
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
@@ -247,6 +251,23 @@ def _selftest():
     v11 = verdict(_mix2)
     chk(f'⑪ 점 팔 × 구 팔 혼합은 HOLD ({v11["decision"]})',
         v11['decision'] == 'HOLD' and 'sdcp_stamp' in (v11.get('reason') or ''))
+    #  ⑫ σ-치환 진단 팔(CL-43)이 생산 팔과 섞이면 잡는다 — **DBE 만** 켠 것이 전형적 실수다
+    _mix3 = mk(base, [v * 1.08 for v in base])
+    for _r in _mix3['DBE']:
+        _r['sdcp_yield_to_vgcf'] = True
+    v12 = verdict(_mix3)
+    chk(f'⑫ σ-치환 진단 팔 × 생산 팔 혼합은 HOLD ({v12["decision"]})',
+        v12['decision'] == 'HOLD' and 'sdcp_yield_to_vgcf' in (v12.get('reason') or ''))
+    #  ⑬ ★ 정규화 회귀 — 옛 payload 는 이 필드가 **없다**.  없음을 None 으로 두면 위 게이트가
+    #     건너뛰어 ⑫ 가 통과해 버린다.  없음 → False 로 읽는지 `_read` 로 직접 확인한다.
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _p = os.path.join(_td, 'p2_SBE_old.json')
+        json.dump({'step3': {'sigma_e_S_cm': 1.0, 'n_dof': 1, 'cg_info': 0},
+                   'manifest': {'vox_um': 0.15}}, open(_p, 'w'))
+        _old = _read(_p)
+    chk(f'⑬ 옛 payload 의 없는 필드는 False 로 정규화 ({_old["sdcp_yield_to_vgcf"]!r})',
+        _old['sdcp_yield_to_vgcf'] is False)
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

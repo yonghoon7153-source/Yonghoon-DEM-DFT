@@ -442,6 +442,14 @@ def main():
                          '(0.24× @0.15 ~ 4.53× @0.4).  구 스탬프는 2.4 %% 안이다.  '
                          '⚠ d/vox ≥ 2 필요 — 그 아래는 fail-closed 로 거부한다.  '
                          'prereg v2 판정(h1) 의 대응, CL-33')
+    ap.add_argument('--step3-sdcp-yield-to-vgcf', action='store_true',
+                    help='★ **진단 전용** (CL-43, prereg v3 STEP 5) — SDCP 가 이미 VGCF 인 셀에는 '
+                         '안 찍고 **양보**한다.  상별 원장이 SDCP 셀의 39.8 %% (vox 0.4) ~ 7.2 %% '
+                         '(0.15) 가 원래 VGCF 셀임을 보였다: 그 셀은 도체 셀 수(dof)가 안 변하고 '
+                         'σ 만 11.0 → 250 으로 올라간다 = **새 도체 부피가 아니라 기존 도체의 '
+                         'σ 업그레이드**.  이 플래그로 그 채널만 끈다 (양보해도 그 셀은 VGCF 라 '
+                         '여전히 도체 = 연결성은 안 끊긴다).  ⚠ 생산 규약은 바꾸지 않는다 — '
+                         '기본값은 옛 거동과 셀 단위 동일 (selftest sdcp-yield-default)')
     ap.add_argument('--step3-origin-shift', type=float, nargs=3, default=None,
                     metavar=('SX', 'SY', 'SZ'),
                     help='STEP3 격자 origin 을 축마다 [0, vox) 만큼 민다 (µm).  격자 **위상**만 '
@@ -932,9 +940,14 @@ def main():
                 print(f'  STEP3: ★ SDCP **부피-보존 구 스탬프** Ø{a.step3_sdcp_sphere_d} µm '
                       f'(d/vox = {a.step3_sdcp_sphere_d / a.step3_vox:.2f}) — 점 스탬프는 '
                       f'참부피의 {a.step3_vox ** 3 / (3.14159265 / 6 * a.step3_sdcp_sphere_d ** 3):.2f}배', flush=True)
+            _yv3 = bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False))
+            if _yv3:
+                print('  STEP3: ★ **진단 팔** — SDCP 가 VGCF 셀에 양보한다 (σ-치환 채널 OFF, '
+                      'CL-43).  ⚠ 생산 규약 아님', flush=True)
             sid3, pid3 = _s3.rasterize(_am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox,
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
                                        sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
+                                       sdcp_yield_to_vgcf=_yv3,
                                        add_kind=(_kind_all[_m] if _kind_all is not None
                                                  and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
             # ── ★ rasterize-only 원장 (2026-08-16, 심층 리뷰 ③ 제안) ─────────────────────
@@ -945,7 +958,8 @@ def main():
             if getattr(a, 'step3_rasterize_only', False):
                 import json as _rj
                 _led = {'vox_um': a.step3_vox, 'origin_shift_um': [float(x) for x in _osh],
-                        'bridge_um': _bru, 'sdcp_sphere_d_um': float(
+                        'bridge_um': _bru, 'sdcp_yield_to_vgcf': _yv3,
+                        'sdcp_sphere_d_um': float(
                             getattr(a, 'step3_sdcp_sphere_d', 0.0) or 0.0),
                         'grid_shape': [int(x) for x in sid3.shape],
                         'cells_by_sid': {int(k): int(v) for k, v in
@@ -958,6 +972,7 @@ def main():
                     _alt, _ = _s3.rasterize(
                         _am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox, se_pts=_septs,
                         add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
+                        sdcp_yield_to_vgcf=_yv3,          # 양쪽을 같은 규약으로 (like-for-like diff)
                         add_kind=(_kind_all[_m] if _kind_all is not None
                                   and len(_kind_all) == len(_fid_all) else None))
                     #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)
@@ -1704,6 +1719,9 @@ def main():
             'origin_shift_um': [float(x) for x in _osh],
             'sdcp_stamp': ('sphere' if getattr(a, 'step3_sdcp_sphere_d', 0) > 0 else 'point'),
             'sdcp_sphere_d_um': float(getattr(a, 'step3_sdcp_sphere_d', 0.0)),
+            # ★ 2026-08-18 (CL-43) — 진단 팔은 **매니페스트에 남아야** 한다.  안 그러면
+            #   σ-치환 OFF 팔과 생산 팔이 섞여도 고정-인자 게이트가 못 잡는다 (H5 와 같은 실수).
+            'sdcp_yield_to_vgcf': bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False)),
             # ★★ 2026-08-18 (심층 리뷰 ① H5) — `bridge_um` 이 **매니페스트에 없었다**.
             #   그래서 `sdcp_gain_verdict.py:107` 의 고정-인자 게이트가 이 필드에 대해
             #   항상 None 을 보고 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가

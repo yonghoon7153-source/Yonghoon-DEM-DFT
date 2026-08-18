@@ -41,6 +41,14 @@ fi
 BR_TAG="_b${BRIDGE_UM/./}"
 #  σ_VGCF 를 명시로 고정한 런은 **다른 실험**이다 — 디렉터리를 갈라 SKIP 이 섞이지 않게.
 SG_TAG=""; [ -n "${SIGMA_VGCF_OVERRIDE:-}" ] && SG_TAG="_sg${SIGMA_VGCF_OVERRIDE//./}"
+#  ★ σ-치환 진단 팔 (2026-08-18, CL-43/44 · prereg v3 §4b) — SDCP 가 VGCF 셀에 양보한다.
+#    **생산 규약이 아니다.**  디렉터리·태그를 갈라 SKIP 캐시가 생산 팔과 섞이지 않게 한다
+#    (판정기 게이트가 잡긴 하지만, 애초에 안 섞이는 것이 낫다 — H4 와 같은 이유).
+YV_FLAG=""; YV_TAG=""
+if [ "${SDCP_YIELD_VGCF:-0}" = "1" ]; then
+  YV_FLAG=" --step3-sdcp-yield-to-vgcf"; YV_TAG="_yvgcf"
+  echo "[p2] ★ **진단 팔** — SDCP 가 VGCF 셀에 양보 (σ-치환 채널 OFF).  생산 규약 아님"
+fi
 # ★ 스윕 팔에서 끌 것 (리뷰 ① H7): 팔당 σ_e 솔브 1회가 아니라 **7~8회**가 돈다.
 #   `--no-step4`(2×dof 연성계) · `--no-thermal` · `--no-trackb`(기하 τ) · `--no-field`.
 #   ⚠ `_res3w`/`_res3b`(collector wetted/bare)는 끄는 플래그가 **없어** 2회는 남는다 —
@@ -48,7 +56,7 @@ SG_TAG=""; [ -n "${SIGMA_VGCF_OVERRIDE:-}" ] && SG_TAG="_sg${SIGMA_VGCF_OVERRIDE
 #   기본은 빈 값 = 기존 거동 유지.  스윕은 `LEAN=1` 로 켠다.
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${LEAN:+_lean}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${LEAN:+_lean}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -157,7 +165,7 @@ PY
 
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$LEAN_FLAGS" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$LEAN_FLAGS" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "_$TAG.sh" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$RUN/_$TAG.sh"; } > "$RUN/$TAG.sh"

@@ -20,6 +20,10 @@
 #   tail -f next.log
 #
 # 개별 실행:  STEPS="1" bash …   ·   STEPS="2 3" bash …   ·   STEPS="4" bash …
+#
+#   ★ STEPS="5" — σ-치환 판별 팔 (2026-08-18 추가, prereg v3 §4b · CL-44).  **기본에 없다.**
+#     2·3·4 와 독립이고 GPU 2 솔브(arm 0 두 침대)면 끝난다.  상별 원장(CL-43)이 특정한
+#     "SDCP 가 VGCF 셀의 σ 를 업그레이드하는" 채널만 끄고 이득이 남는지 본다.
 set -uo pipefail
 
 SCR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -167,6 +171,56 @@ if _has 4; then
     D="prereg_v2_vox${V/./}_sph_b048_lean"
     [ -d "$D" ] && { echo "── $D"; python3 "$SCR/sdcp_gain_verdict.py" --dir "$D" --collect-only; }
   done
+fi
+
+# ════════════════════════════════════════════════════════════════════════════
+# STEP 5 — σ-치환 채널을 끈다 (GPU, arm 0).  **기본 STEPS 에 없다 — 따로 켠다**
+#   STEPS="5" bash ~/dem-sk/scripts/sdcp_next_1234.sh
+#   prereg v3 §4b · CL-44 (런 전 등록).  2·3·4 와 **독립**이라 순서 상관 없다.
+# ════════════════════════════════════════════════════════════════════════════
+if _has 5; then
+  _hdr "STEP 5 — SDCP 가 VGCF 셀에 양보 (σ-치환 채널 OFF, GPU arm 0)"
+  echo "  왜: 상별 원장(CL-43)이 SDCP 셀의 7.2 %(vox 0.15) ~ 39.8 %(0.4) 가 **원래 VGCF 셀**"
+  echo "      임을 셀 단위로 보였다.  그 셀은 dof 가 안 변하고 σ 만 11.0 → 250 으로 오른다"
+  echo "      = 새 도체 부피가 아니라 **기존 도체의 σ 업그레이드**.  그 채널만 끈다."
+  echo "  묻는 것: G = R − 1 이 0.1263 근처로 남는가(h1 = 새 부피) 0 으로 무너지는가(h0 = σ-치환)."
+  echo "  ⚠ 문턱 h0 0.030 · h1 0.110 · 분해능 0.020 — 중간대는 MIXED 로 적는다 (prereg §4b)."
+  echo "  ★ 음성 대조: SBE 는 phase-5 가 0 개라 이 플래그가 **no-op** — σ_e 가 STEP 2a 와"
+  echo "     같아야 한다 (0.07302).  다르면 플래그가 SDCP 밖을 건드린 것이므로 **중단**."
+  VOX=0.15 SDCP_SPHERE_D="$SPH" ARMS=1 LEAN=1 SDCP_YIELD_VGCF=1 \
+    bash "$SCR/sdcp_gain_vox015_8arm.sh" || { echo "[next] STEP 5 실패"; exit 1; }
+  _hdr "STEP 5 대조 (arm 0 쌍대응)"
+  python3 - <<'PY'
+import glob, json, os
+def read(p):
+    j = json.load(open(p, encoding='utf-8'))
+    s = j.get('step3') or (j.get('mpm_metrics') or {}).get('step3') or {}
+    m = s.get('manifest') or {}
+    return s.get('sigma_e_eff_S_cm'), m.get('sdcp_yield_to_vgcf'), s.get('cg_info')
+rows = {}
+for d in sorted(glob.glob('prereg_v2_vox015_sph*')):
+    for p in sorted(glob.glob(os.path.join(d, 'p2_*_a0.json'))):
+        se, yv, cg = read(p)
+        rows.setdefault(('yield' if yv else 'prod'),
+                        {})['SBE' if '_SBE_' in os.path.basename(p) else 'DBE'] = (se, cg, d)
+for k in ('prod', 'yield'):
+    v = rows.get(k)
+    if not v or 'SBE' not in v or 'DBE' not in v:
+        print(f'  {k}: 한쪽 팔만 (또는 없음) — {v}'); continue
+    (ss, cs, ds), (sd, cd, dd) = v['SBE'], v['DBE']
+    R = sd / ss if ss else float('nan')
+    print(f'  {k:6s}  SBE {ss:.6g}  DBE {sd:.6g}  R {R:.4f}  G {R - 1:+.4f}'
+          + ('  ⚠미수렴' if (cs or cd) else ''))
+if 'prod' in rows and 'yield' in rows and all('SBE' in rows[k] for k in ('prod', 'yield')):
+    a, b = rows['prod']['SBE'][0], rows['yield']['SBE'][0]
+    same = (a is not None and b is not None and abs(a - b) <= 1e-12 * max(abs(a), 1.0))
+    print(f'\n  ★ 음성 대조 (SBE no-op): {a} vs {b}  '
+          + ('OK — 완전 동일' if same else '⚠⚠ **다르다 → 중단**.  플래그가 SDCP 밖을 건드렸다'))
+print('\n★ 읽는 법 (prereg v3 §4b, 문턱은 런 전 등록):')
+print('  G ≥ 0.110 → h1  = 이득의 주된 원천은 **새 도체 부피** (SE·pore → 도체)')
+print('  G ≤ 0.030 → h0  = 이득의 주된 원천은 **σ-치환** (VGCF 셀의 σ 업그레이드)')
+print('  그 사이   → MIXED — 두 채널이 같은 자릿수.  어느 쪽으로도 반올림하지 않는다.')
+PY
 fi
 
 _hdr "끝.  결과를 붙여줄 것 — 판정은 사람이 본 뒤에."
