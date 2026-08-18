@@ -183,3 +183,59 @@ def test_generated_report_uses_the_current_gap_numbers(name):
     m = RETRACTED["STALE_GAP_NUMBERS"].search(text)
     assert not m, (f"{name} 가 경계 수정 이전 수치를 쓴다: {m.group(0)!r} — "
                    f"봉인 fits 에서 score → compare → report 를 다시 돌릴 것")
+
+
+# ── artifacts/README 가 실제 보관 상태와 어긋나지 않는가 ────────────────────
+
+def test_artifacts_readme_lists_every_indexed_bundle():
+    """★ 19차 — README 의 상태표가 **이미 없는 v1/v2** 만 가리키고 있었다.
+
+    `artifact_index.yaml` 이 무엇이 근거인지의 authority 인데, README 는
+    2026-08-07 상태에서 멈춰 v4 계열을 한 줄도 안 적었다. 문서가 stale 이면
+    저장소를 여는 사람이 폐기된 묶음을 근거로 착각한다 (17차 발견 8 과 같은
+    실패 모드가 artifacts/ 쪽에 남아 있었다).
+    """
+    import yaml
+
+    root = DOCS.parent
+    idx = root / "artifacts" / "artifact_index.yaml"
+    readme = root / "artifacts" / "README.md"
+    if not idx.exists() or not readme.exists():
+        pytest.skip("artifacts/ 없음")
+
+    runs = (yaml.safe_load(idx.read_text(encoding="utf-8")) or {}).get("runs") or {}
+    text = readme.read_text(encoding="utf-8")
+
+    missing = [n for n in runs if n not in text]
+    assert not missing, (
+        f"artifact_index 에 있는 묶음이 README 에 없다: {missing}")
+
+
+def test_artifacts_readme_marks_unindexed_bundles_as_history():
+    """★ 인덱스에 없는데 디스크에 남은 묶음은 **이력**임을 명시해야 한다.
+
+    복원은 되지만 근거가 아니다. 표시가 없으면 인용될 수 있다.
+    """
+    import yaml
+
+    root = DOCS.parent
+    arts = root / "artifacts"
+    idx = arts / "artifact_index.yaml"
+    readme = arts / "README.md"
+    if not idx.exists() or not readme.exists():
+        pytest.skip("artifacts/ 없음")
+
+    runs = set((yaml.safe_load(idx.read_text(encoding="utf-8")) or {}).get("runs") or {})
+    # ★ 옛 묶음(v1/v2)에는 `payload_sha256.yaml` 이 없다 — 그것으로 걸러내면
+    #   정작 "이력으로 표시해야 할" 묶음이 전부 빠져 축이 안 태워진다(skip).
+    on_disk = {p.name for p in arts.iterdir()
+               if p.is_dir() and any(p.glob("*.parquet"))}
+    unindexed = sorted(on_disk - runs)
+    if not unindexed:
+        pytest.skip("인덱스 밖 묶음 없음")
+
+    text = readme.read_text(encoding="utf-8")
+    bad = [n for n in unindexed if n not in text]
+    assert not bad, f"인덱스 밖 묶음이 README 에 언급조차 없다: {bad}"
+    assert "이력" in text or "history" in text.lower(), \
+        "인덱스 밖 묶음을 이력으로 표시하는 문구가 없다"

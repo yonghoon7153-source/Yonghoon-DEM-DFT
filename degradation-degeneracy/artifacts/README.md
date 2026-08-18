@@ -27,25 +27,67 @@ python -c "import sys; from src.io import validate_provenance; from pathlib impo
            print(validate_provenance(Path('$iso')/'results/<run>', repo_root='$iso'))"
 ```
 
-## 지금 들어 있는 것의 상태 (2026-08-07)
+## 지금 들어 있는 것 (2026-08-18)
 
-| 묶음 | provenance 검증 | 비고 |
-|---|---|---|
-| `grid_fine_v1` | ❌ 불가 | F51 이전 실행 — 시작 기록(`manifest_start.yaml`)이 없다 |
-| `grid_fine_v2` | ❌ 불가 | 〃 |
-| `halfcell_v1` | ❌ 불가 | 〃 + dirty worktree 실행 |
+**무엇이 근거인지의 authority 는 `artifact_index.yaml` 이다.** 디스크에 있어도
+인덱스에 없으면 근거가 아니다.
 
-세 묶음 모두 **인용 가능한 상태가 아니다.** 이유는 두 가지다.
+### 인덱스에 있는 묶음 — v4.1
+
+| 묶음 | kind | 계산 commit | 상태 |
+|---|---|---|---|
+| `grid_curves_v4` | grid_producer | `c0f1daa0` | ✅ 검증 통과 |
+| `grid_fit_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
+| `halfcell_fit_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
+| `paired_fixed5_v4` | fit | `c0f1daa0` | ✅ 검증 통과 |
+
+`source_commit` 은 **계산을 시작한 코드**의 commit 이다 (보관 시점 HEAD 가
+아니다).
+
+#### v4 → v4.1: 파생만 다시 만들었다
+
+17차 발견 1(2%p 경계 부동소수점)로 파생 수치가 바뀌어, **봉인 fits 에서
+파생만 재계산해 다시 보관**했다. 재fit 은 없다.
+
+- **raw 파일 변경 0건** — `fits.parquet`·`curves.parquet`·`manifest*.yaml`·
+  `attempts/`·`_inputs/`·`wsweep/`·`failed.csv` (payload digest 전수 대조)
+- 파생 변경 — `objective_comparison.yaml` 의 `36/98`·`90.0` → `24/66`·`89.09`
+  (전체 격자 `34/93`·`3.45`)
+- **신규** `analysis_manifest.yaml` — 파생 분석의 provenance. raw 계산
+  `manifest.yaml` 과 **분리**한다 (거기에 덧붙이면 후대 분석 코드를 원래
+  계산에 거짓 귀속하게 된다)
+- `objective_comparison.yaml` 자체에 `_analysis` self-description
+  (`schema_version`·`analysis_spec_id`·`fits_sha256`) — 이 파일을 **직접 읽는**
+  소비자가 어느 fits 에서 어느 규약으로 나온 값인지 알 수 있어야 한다
+
+파생이 최신 의미를 담는지는 보관 **전에** 게이트가 본다:
+
+```bash
+python -m tools.check_derived_fresh results/<run>     # 승격 직전 자동 실행
+python -m tools.check_derived_fresh artifacts/<run>   # 보관본 사후 재검사
+```
+
+`payload_sha256.yaml` 은 stale bytes 도 충실히 해시한다 — 바이트 무결성은
+파생이 최신인지 증명하지 못한다. 그래서 별도 게이트가 필요하다 (18차 발견 6).
+
+### 인덱스 밖 묶음 — **이력**일 뿐이다
+
+| 묶음 | 상태 |
+|---|---|
+| `grid_fine_v1` | ❌ 검증 불가 — F51 이전 실행, 시작 기록(`manifest_start.yaml`) 없음 |
+| `grid_fine_v2` | ❌ 〃 |
+| `halfcell_v1` | ❌ 〃 + dirty worktree 실행 |
+
+복원은 되지만 **인용 근거가 아니다.** 이유는 두 가지다.
 
 1. **실행 자체가 옛 파이프라인이다.** F26(`p_ini` 버그) · F51(시작 provenance) ·
    F58(half-cell 캐시 봉인) 이전이라, 재검증에 필요한 기록이 애초에 없다.
 2. **묶는 방식도 옛 기준이었다.** 초판 `archive_results.sh` 는 "재생성 비용"만
    보고 `curves.parquet` 을 버렸는데, 검증기는 봉인된 입력을 **다시 해시**한다
-   (F56). 재생성한 curves는 바이트가 달라 digest가 맞지 않는다 —
+   (F56). 재생성한 curves 는 바이트가 달라 digest 가 맞지 않는다 —
    재생성으로 대체할 수 없다.
 
-즉 이 세 묶음은 **이력**으로만 남긴다. 논문·보고서 인용은 F55~F62 적용 후의
-재실행 산출물로만 한다. `docs/RESULTS.md` 상단 배너가 이 판정을 자동으로 찍는다.
+`docs/RESULTS.md` 상단 배너가 이 판정을 자동으로 찍는다.
 
 ## 무엇이 들어가는가
 
