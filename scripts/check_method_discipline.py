@@ -774,11 +774,60 @@ def check_claims_ledger(path=LEDGER, verbose=True):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+def check_argparse_help(verbose=True):
+    """규칙 H — `--help` 가 살아 있어야 한다.
+
+    ★ 실사고 2026-08-18: `mpm_webapp_payload.py --help` 가 **완전히 죽어 있었다**
+    (`ValueError: unsupported format character ')'`).  argparse 는 help 문자열에
+    `% params` 를 적용하므로 홑 `%` 하나가 **모든** 옵션 문서를 못 쓰게 만든다.
+    우리 help 는 "왜 이 플래그가 있나" 를 담는 1차 문서라 이것이 죽으면 규약이 사라진다.
+    조용한 실패라 아무도 몰랐다 — 그래서 검사로 만든다.
+
+    검사는 **정적**이다 (모듈을 import 하지 않는다): AST 로 add_argument 의 help 를 꺼내
+    `% params` 를 흉내 낸다.  `%%` · `%(default)s` 는 정상이다.
+    """
+    errs, warns = [], []
+    root = os.path.join(ROOT, 'scripts')
+    probe = {'default': 0, 'prog': 'x', 'type': 'x', 'choices': 'x',
+             'const': 'x', 'metavar': 'x', 'dest': 'x'}
+    n = 0
+    for fname in _shadow_scan_files():
+        try:
+            tree = ast.parse(open(os.path.join(root, fname), encoding='utf-8').read())
+        except SyntaxError:
+            continue
+        for node in ast.walk(tree):
+            if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
+                    and node.func.attr == 'add_argument'):
+                continue
+            opt = next((a.value for a in node.args
+                        if isinstance(a, ast.Constant) and isinstance(a.value, str)
+                        and a.value.startswith('-')), '?')
+            for kw in node.keywords:
+                if kw.arg != 'help':
+                    continue
+                try:
+                    h = ast.literal_eval(kw.value)
+                except Exception:                      # noqa: BLE001 — f-string 등은 검사 밖
+                    continue
+                n += 1
+                try:
+                    h % probe
+                except Exception as ex:                # noqa: BLE001
+                    errs.append(f'{fname}:{node.lineno} `{opt}` help 가 argparse 를 깨뜨린다 '
+                                f'({ex}) — 홑 `%` 를 `%%` 로.  **이 파일의 --help 가 통째로 죽는다**')
+    if verbose:
+        print(f'  {"OK" if not errs else "✗"}      argparse help {n}건 — `% params` 통과 '
+              f'({len(errs)} 오류)')
+    return errs, warns
+
+
 def run_all(verbose=True):
     errs, warns = [], []
     for title, fn in (('규칙 A — 규약·격자·주기 패리티 (D4)', check_convention_parity),
                       ('규칙 B — 판별력 있는 rung (D2)', check_oblique_rungs),
                       ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger),
+                      ('규칙 H — argparse help 가 살아 있는가', check_argparse_help),
                       ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
         if verbose:
             print(f'\n{title}')
@@ -995,6 +1044,25 @@ def _selftest():
         check_claim(dict(good, status='retired', superseded_by='CL-21')) == [])
     chk('G-3: superseded_by 없는 live 는 그대로 통과',
         check_claim(dict(good, status='live')) == [])
+
+    # ── 규칙 H (2026-08-18) — 검사기 자신이 깨진 help 를 **정말** 잡는가 ────────────────
+    #   실사고: `mpm_webapp_payload --help` 가 홑 `%` 하나로 완전히 죽어 있었고 아무도 몰랐다.
+    #   이 두 줄은 검사가 이빨 빠지는 것을 막는다 (탐지 + 과잉차단 없음).
+    _probe = {'default': 0, 'prog': 'x', 'type': 'x', 'choices': 'x',
+              'const': 'x', 'metavar': 'x', 'dest': 'x'}
+
+    def _help_ok(h):
+        try:
+            h % _probe
+            return True
+        except Exception:                              # noqa: BLE001
+            return False
+    chk('H-1: 홑 `%` 가 든 help 는 거부 (argparse 가 실제로 죽는 형태)',
+        not _help_ok('격자 수렴 ≤0.014 %).  다음 문장'))
+    chk('H-2: `%%` 와 `%(default)s` 는 통과 (과잉차단 없음)',
+        _help_ok('오차 ≤0.014 %% (기본 %(default)s)'))
+    chk('H-3: 리포 전체가 지금 통과한다 (0 오류)',
+        check_argparse_help(verbose=False)[0] == [])
 
     print(f'\ncheck_method_discipline v3 selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

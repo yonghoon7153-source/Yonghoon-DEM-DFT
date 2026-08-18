@@ -154,22 +154,34 @@ if _has 4; then
   echo "  ⚠ 라벨: 이것은 **격자 규약 민감도**이지 격자 수렴 증명이 아니다 (DR3-05/06)."
   echo "  ⚠ vox ≤ 0.125 팔의 σ_ion·τ_pore·BV 반응면·STEP4 격자는 **인용 금지** — SE 점"
   echo "     스탬프가 미충전이다 (λ 3.0 → 1.72 → 0.88, DR3-07).  σ_e 는 무해."
+  echo "  ★ 2026-08-18 — 이 스윕은 이제 **LEAN=2 (σ_e 전용)** 로 돈다.  vox 0.125 첫 시도가"
+  echo "     이온계 조립 중 OOM 으로 죽었고(전자 45.1 M dof 위에 이온 36.7 M dof, 가용 22 GB),"
+  echo "     그 σ_ion·pore-τ 는 DR3-07 로 **어차피 인용 금지**다 (실측 τ 1,415 → 4.97e9)."
+  echo "     ⇒ 출력은 새 디렉터리 *_lean2 로 간다.  이미 끝난 LEAN=1 팔을 재활용하려면"
+  echo "     (σ_e 는 --no-ion 과 무관하므로 안전):"
+  echo "       for V in $SWEEP_VOX; do D=prereg_v2_vox\${V/./}_sph_b048; \\"
+  echo "         [ -d \"\${D}_lean\" ] && { mkdir -p \"\${D}_lean2\"; cp -n \"\${D}_lean\"/p2_*.json \"\${D}_lean2\"/; }; done"
   for V in $SWEEP_VOX; do
     AVAIL=$(free -g 2>/dev/null | awk '/^Mem:/{print $7}')
     echo
     echo "[next] ── vox $V  (가용 RAM ${AVAIL:-?} GB)"
-    if [ -n "${AVAIL:-}" ] && [ "$AVAIL" -lt 24 ] && [ "$V" = "0.1" ]; then
-      echo "[next] ⚠ vox 0.1 은 호스트 RAM ~40 GB 를 쓴다 (COO int64 조립).  가용 $AVAIL GB."
-      echo "        STEP 1 의 dof 실측으로 다시 판단할 것 — 여기서는 멈춘다."
+    #  ★ 문턱은 **STEP 1 의 dof 실측**에서 나온다 (추정이 아니다):
+    #    vox 0.125 전도 dof 45.4 M → 호스트 ≈ 17.5 GB · vox 0.1 은 86.8 M → ≈ 33.5 GB.
+    #    --no-ion 이라 이온계(15 GB)는 더 이상 안 얹힌다.  여유 20 % 를 얹어 요구한다.
+    NEED=0; [ "$V" = "0.125" ] && NEED=22; [ "$V" = "0.1" ] && NEED=40
+    if [ -n "${AVAIL:-}" ] && [ "$NEED" -gt 0 ] && [ "$AVAIL" -lt "$NEED" ]; then
+      echo "[next] ⚠ vox $V 는 호스트 RAM ~$NEED GB 가 필요하다 (STEP 1 dof 실측 기준)."
+      echo "        가용 $AVAIL GB — 여기서 멈춘다 (죽는 것보다 안 시작하는 것이 낫다)."
       exit 1
     fi
-    VOX="$V" SDCP_SPHERE_D="$SPH" ARMS=8 LEAN=1 bash "$SCR/sdcp_gain_vox015_8arm.sh" \
+    VOX="$V" SDCP_SPHERE_D="$SPH" ARMS=8 LEAN=2 bash "$SCR/sdcp_gain_vox015_8arm.sh" \
       || { echo "[next] STEP 4 (vox $V) 실패 — 멈춘다 (끝난 팔은 남아 SKIP 된다)"; exit 1; }
   done
   _hdr "STEP 4 수집"
   for V in $SWEEP_VOX; do
-    D="prereg_v2_vox${V/./}_sph_b048_lean"
-    [ -d "$D" ] && { echo "── $D"; python3 "$SCR/sdcp_gain_verdict.py" --dir "$D" --collect-only; }
+    for D in "prereg_v2_vox${V/./}_sph_b048_lean2" "prereg_v2_vox${V/./}_sph_b048_lean"; do
+      [ -d "$D" ] && { echo "── $D"; python3 "$SCR/sdcp_gain_verdict.py" --dir "$D" --collect-only; }
+    done
   done
 fi
 
@@ -192,30 +204,47 @@ if _has 5; then
   _hdr "STEP 5 대조 (arm 0 쌍대응)"
   python3 - <<'PY'
 import glob, json, os
+#  ★★ 2026-08-18 버그 수정 — 옛 판은 `prereg_v2_vox015_sph*` 를 전부 긁어 **σ_VGCF 가 다른**
+#    STEP 2b 디렉터리(_sg113097_)까지 'prod' 로 집어삼켰다.  그래서 음성 대조가 SBE
+#    0.1019(σ 113) vs 0.07302(σ 78.5) 를 비교하고 "다르다 → 중단" 이라는 **거짓 경보**를 냈다.
+#    ⇒ σ_VGCF 로 짝을 짓는다.  같은 σ 안에서만 prod ↔ yield 를 비교한다.
 def read(p):
     j = json.load(open(p, encoding='utf-8'))
     s = j.get('step3') or (j.get('mpm_metrics') or {}).get('step3') or {}
     m = s.get('manifest') or {}
-    return s.get('sigma_e_eff_S_cm'), m.get('sdcp_yield_to_vgcf'), s.get('cg_info')
+    return (s.get('sigma_e_eff_S_cm'), bool(m.get('sdcp_yield_to_vgcf')),
+            s.get('cg_info'), m.get('sigma_vgcf_S_cm'))
 rows = {}
 for d in sorted(glob.glob('prereg_v2_vox015_sph*')):
     for p in sorted(glob.glob(os.path.join(d, 'p2_*_a0.json'))):
-        se, yv, cg = read(p)
-        rows.setdefault(('yield' if yv else 'prod'),
-                        {})['SBE' if '_SBE_' in os.path.basename(p) else 'DBE'] = (se, cg, d)
-for k in ('prod', 'yield'):
-    v = rows.get(k)
-    if not v or 'SBE' not in v or 'DBE' not in v:
-        print(f'  {k}: 한쪽 팔만 (또는 없음) — {v}'); continue
-    (ss, cs, ds), (sd, cd, dd) = v['SBE'], v['DBE']
+        se, yv, cg, sg = read(p)
+        key = (round(float(sg), 4) if sg is not None else None, 'yield' if yv else 'prod')
+        rows.setdefault(key, {})['SBE' if '_SBE_' in os.path.basename(p) else 'DBE'] = (se, cg, d)
+G = {}
+for (sg, k) in sorted(rows, key=lambda t: (t[0] is None, t[0] or 0, t[1])):
+    v = rows[(sg, k)]
+    if 'SBE' not in v or 'DBE' not in v:
+        print(f'  σ_VGCF {sg}  {k:6s}: 한쪽 팔만 — {sorted(v)}'); continue
+    (ss, cs, _), (sd, cd, _) = v['SBE'], v['DBE']
     R = sd / ss if ss else float('nan')
-    print(f'  {k:6s}  SBE {ss:.6g}  DBE {sd:.6g}  R {R:.4f}  G {R - 1:+.4f}'
-          + ('  ⚠미수렴' if (cs or cd) else ''))
-if 'prod' in rows and 'yield' in rows and all('SBE' in rows[k] for k in ('prod', 'yield')):
-    a, b = rows['prod']['SBE'][0], rows['yield']['SBE'][0]
-    same = (a is not None and b is not None and abs(a - b) <= 1e-12 * max(abs(a), 1.0))
-    print(f'\n  ★ 음성 대조 (SBE no-op): {a} vs {b}  '
-          + ('OK — 완전 동일' if same else '⚠⚠ **다르다 → 중단**.  플래그가 SDCP 밖을 건드렸다'))
+    G[(sg, k)] = (R - 1, ss, sd, bool(cs or cd))
+    print(f'  σ_VGCF {str(sg):>9}  {k:6s}  SBE {ss:.6g}  DBE {sd:.6g}  R {R:.6f}  G {R - 1:+.5f}'
+          + ('  ⚠미수렴 — 인용 금지' if (cs or cd) else ''))
+#  같은 σ_VGCF 안에서만 짝을 짓는다
+for sg in sorted({k[0] for k in G if k[0] is not None}):
+    if (sg, 'prod') in G and (sg, 'yield') in G:
+        gp, sp, _, bp = G[(sg, 'prod')]
+        gy, sy, _, by = G[(sg, 'yield')]
+        same = abs(sp - sy) <= 1e-12 * max(abs(sp), 1.0)
+        print(f'\n  ★ 음성 대조 (SBE no-op) @σ_VGCF {sg}: {sp} vs {sy}  '
+              + ('OK — 완전 동일' if same
+                 else '⚠⚠ **다르다 → 중단**.  플래그가 SDCP 밖을 건드렸다'))
+        drop = (gp - gy) / gp * 100 if gp else float('nan')
+        print(f'  ★ G  {gp:+.5f} (생산)  →  {gy:+.5f} (σ-치환 OFF)   이득 감소 {drop:.1f} %'
+              + ('   ⚠미수렴 포함' if (bp or by) else ''))
+        v = 'h1' if abs(gy - 0.110) <= 0.040 and abs(gy - 0.030) > 0.040 else (
+            'h0' if abs(gy - 0.030) <= 0.040 and abs(gy - 0.110) > 0.040 else 'MIXED/BOTH')
+        print(f'  ★ prereg §4b 판정 = **{v}**  (h0 0.030 · h1 0.110 · 분해능 0.020, |Δ| > 2×분해능면 기각)')
 print('\n★ 읽는 법 (prereg v3 §4b, 문턱은 런 전 등록):')
 print('  G ≥ 0.110 → h1  = 이득의 주된 원천은 **새 도체 부피** (SE·pore → 도체)')
 print('  G ≤ 0.030 → h0  = 이득의 주된 원천은 **σ-치환** (VGCF 셀의 σ 업그레이드)')

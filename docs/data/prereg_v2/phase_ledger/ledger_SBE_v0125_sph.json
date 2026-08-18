@@ -1,0 +1,17 @@
+{
+ "_source": "kgy 로그 전사 (esp-Z590, ~/sdcp/phase_ledger) — rasterize-only, 솔브 없음.  prereg v3 STEP 1",
+ "vox_um": 0.125,
+ "grid_shape": [
+  400,
+  400,
+  588
+ ],
+ "cells_by_sid": {
+  "0": 13203441,
+  "1": 41759310,
+  "3": 2763663,
+  "6": 36353586
+ },
+ "sphere_extra_from_sid": {},
+ "sphere_extra_cells": 0
+}

@@ -32,6 +32,11 @@ import se_material  # single source of truth for σ_ion(SE) + its temperature co
 
 _VC = None
 
+
+class _SkipRequested(Exception):
+    """사용자가 명시 플래그로 **끈** 것.  실패(`failed`)와 구분해서 잡는다 —
+    `except Exception` 이 삼켜 "skipped (…)" 로 찍히면 원장에 거짓 진단이 남는다."""
+
 # ── T1-e ─ 이온상 혼합-온도 판정 (SE 만 스케일하면 상 분율이 왜곡된다) ─────────────
 # --temp-c 는 σ_ion(SE) 하나만 Kraft-2017 Arrhenius 로 올린다.  이온을 나르는 상이 SE 뿐이면
 # 그것으로 충분하지만, SDCP(σ_ion>0, Li-hopping 폴리머)가 베드에 있으면 그 σ 는 T_ref 에 남아
@@ -530,12 +535,22 @@ def main():
                          '3,374→7,088 it 로 자라고 AMG 는 218→261 로 평평하다 — 2.7M dof 어림 '
                          'Jacobi ≈1.3만 it = maxiter 30,000 의 절반.  속도 이득은 작다(1.4–1.5×, '
                          '2.7M 외삽 ≈2.4×) — 벽시계의 진짜 치료는 --step3-gpu 다.  σ_eff 는 '
-                         '전처리에 불변(rtol 1e-8 서 ≤0.014 %).  ⚠ A/B 두 팔은 **같은 전처리**여야 '
+                         '전처리에 불변(rtol 1e-8 서 ≤0.014 %%).  ⚠ A/B 두 팔은 **같은 전처리**여야 '
                          '한다 — manifest backend.precond 에 남고 비교기가 검사한다.  '
                          'pyamg 부재 시 Jacobi 폴백.')
     ap.add_argument('--i0-a-m2', type=float, default=2.0,
                     help='STEP4 exchange current density i0 (A/m², NCM|LPSCl 계면) — ⚠F1 literature hook '
                          '(Newman-typical 1-5 A/m²).  Sets the linearised BV conductance g=i0·F/RT.')
+    ap.add_argument('--no-ion', action='store_true',
+                    help='STEP3 **이온 솔브를 건너뛴다** (σ_e 전용 스윕용).  2026-08-18 신설 — '
+                         'vox 0.125 격자 스윕이 여기서 OOM 으로 죽었고(36.7 M dof 이온계가 45.1 M '
+                         'dof 전자계 위에 얹힌다), DR3-07 로 vox ≤ 0.125 의 σ_ion 은 **어차피 인용 '
+                         '금지**다 (SE 점 스탬프 미충전).  Track-B 도 같이 없어진다.  '
+                         '⚠ 상태는 `disabled` 로 남는다 — `not_solvable`(SE 미퍼콜)과 구분된다')
+    ap.add_argument('--no-pore', action='store_true',
+                    help='STEP3 **pore-τ·PNM 을 건너뛴다** (σ_e 전용 스윕용).  vox 0.125 에서 '
+                         'τ 가 1,415 → 4.97e9 로 터졌고(closed-from-top 28.5 → 99.2 %%) DR3-07 이 '
+                         '예언한 그대로다 — 인용 금지 값에 300 s·10 GB 를 쓰지 않는다')
     ap.add_argument('--no-step4', action='store_true',
                     help='skip the STEP4 reaction-current solve (저율 충전 반응전류 분포, slide-20 물리)')
     ap.add_argument('--save-step4-grid', default='',
@@ -1295,14 +1310,32 @@ def main():
                     return {'z_um': _zz, 'phi': [float(f'{v:.5g}') for v in _pz]}
                 # IONIC network on the SAME grid (paper Fig-2d/f axis): SE + SDCP conduct Li⁺
                 # (user principle — SDCP is NOT an ion insulator), AM/carbon/PTFE block.
+                # ★★ 2026-08-18 — `--no-ion`.  두 가지를 동시에 푼다:
+                #   ① **OOM** — vox 0.125 스윕이 여기서 죽었다 (`Killed`, 36.7 M dof 이온계를 조립하는
+                #      중).  전자계(45.1 M dof)가 이미 잡고 있는 메모리 위에 얹히고, 호스트 RAM 62 GB
+                #      중 가용이 22 GB 까지 내려간 상태였다.  전자 σ_e 만 필요한 스윕에서 이온계는
+                #      **순수 낭비**다.
+                #   ② **DR3-07 이 예언한 대로** vox ≤ 0.125 의 σ_ion·τ_pore 는 인용 금지다 — 실제로
+                #      pore-τ 가 1,415 (0.15) → **4.97e9** (0.125), closed-from-top 28.5 % → 99.2 % 로
+                #      터졌다.  쓸 수 없는 값을 위해 죽을 이유가 없다.
+                #   ⚠ 기본은 끄지 않는다 (생산 payload 는 이온망이 있어야 한다).
                 _t1 = _time.time()
                 # idx8 SWCNT = 기본 SE-투명(σ_i=σ_ion_se): 실제 skin 2-10nm sub-voxel → 1-voxel
                 # 스탬프가 이온망을 끊으면 차단 40-200× 과대표현(trade-off 상한 이중계상).
                 # --swcnt-ion-block = 상한 시나리오 opt-in (σ_i=0 → 해당 복셀 이온 dof·BV면 소멸).
                 _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0,
                                    0.0 if a.swcnt_ion_block else a.sigma_ion_se])
-                _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
-                                           z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
+                #  ⚠ **끈 것과 못 푼 것을 구분한다** — n_dof=0 스텁으로 아래 분기를 건너뛰되
+                #    상태는 `disabled` 로 남긴다.  `not_solvable`(SE 미퍼콜) 로 적으면 거짓말이다.
+                if a.no_ion:
+                    _s3mark('ionic', 'disabled', '--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 '
+                                                 'σ_ion 은 어차피 인용 금지)')
+                    print('  STEP3: --no-ion — 이온 솔브 건너뜀 (σ_e 전용).  '
+                          'σ_ion·τ_full·Track-B 는 이 payload 에 **없다**', flush=True)
+                    _res3i = {'n_dof': 0}
+                else:
+                    _res3i = _s3.solve_sigma_z(sid3, _sig3i, a.step3_vox, return_field=True,
+                                               z_top_um=_zt3, z_bot_um=_zb3, periodic_xy=a.periodic)
                 if _res3i['n_dof']:
                     _sharei = _s3.phase_current_share(_res3i, sid3, _sig3i)
                     if not a.no_field:                      # IONIC field (SE+SDCP {5,6}) — Li⁺ |J| cloud,
@@ -1467,7 +1500,8 @@ def main():
                             step3['trackb'] = {**_tb, 'error': f'{type(_e_tb).__name__}: {_e_tb}'}
                             print(f'  ⚠ Track-B failed ({type(_e_tb).__name__}: {_e_tb}) — '
                                   'step3.trackb.error 기록, STEP3 결과는 유지')
-                elif not a.no_trackb:
+                elif not a.no_trackb and not a.no_ion:
+                    #  ⚠ `and not a.no_ion` — 끈 것을 "SE 미퍼콜" 로 적으면 거짓 진단이 원장에 남는다.
                     # 심화리뷰 minor: 이온 n_dof=0 (SE 미퍼콜 퇴화) — trackb 키가 아예 없으면
                     # exporter 가 "구세대 trackb 부재 → 재실행" 으로 오진한다.  재실행해도 같으니
                     # 원인을 스텁으로 명시 (§F1 정직 null 관례)
@@ -1552,7 +1586,17 @@ def main():
                 # descriptor (frame[4] cross-check) — ASSB Li⁺ 수송은 SE 접촉망(σ_ion 위)이 담당,
                 # 이 τ를 수송 폼/PyBaMM τ에 대입 금지 (audit #2 이중계산 함정).  PTFE는 e/ion
                 # 격자에 미스탬프(양쪽 절연) → 여기서 solid로 스탬프해 기공 과대계상 방지.
+                if a.no_pore:
+                    #  ★ 2026-08-18 — vox ≤ 0.125 에서 pore-τ 는 **인용 금지**(DR3-07)이고 실제로
+                    #    터졌다 (τ 1,415 @0.15 → 4.97e9 @0.125, closed-from-top 28.5 → 99.2 %).
+                    #    쓸 수 없는 값을 위해 300 s 와 10 GB 를 쓸 이유가 없다.  상태는 남긴다.
+                    _s3mark('pore', 'disabled', '--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 '
+                                                'pore-τ 는 어차피 인용 금지)')
+                    _s3mark('pnm', 'disabled', '--no-pore (σ_e 전용 스윕)')
+                    print('  STEP3: --no-pore — pore-τ·PNM 건너뜀 (σ_e 전용)', flush=True)
                 try:
+                    if a.no_pore:
+                        raise _SkipRequested('--no-pore')
                     _t6 = _time.time()
                     _ppts = ((se[phase == 4] - _off) * UM
                              if (phase is not None and (phase == 4).any()) else None)
@@ -1594,6 +1638,8 @@ def main():
                           f" · τ {step3['pore'].get('tau')}"
                           + (f"  ⚠{_rp['reason']}" if _rp.get('reason') else '')
                           + f"  ({_time.time()-_t6:.0f}s)")
+                except _SkipRequested:                       # 사용자가 끈 것 — 실패로 적지 않는다
+                    pass
                 except Exception as _e6:                     # pore-τ 실패가 STEP3 결과를 못 물귀신하게 격리
                     print(f'  ⚠ pore-τ skipped ({type(_e6).__name__}: {_e6}) — STEP3 결과는 유지')
                 # ★ STEP4-v1 — 저율 충전 **반응전류 분포** (랩 slide-20 물리): 전자망(집전체 급전)과

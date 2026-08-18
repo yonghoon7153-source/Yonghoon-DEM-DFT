@@ -54,9 +54,20 @@ fi
 #   ⚠ `_res3w`/`_res3b`(collector wetted/bare)는 끄는 플래그가 **없어** 2회는 남는다 —
 #     그리고 그 둘은 shift 팔에서 `_bot_mask` 가 origin 을 안 더해 어차피 틀린 값이다.
 #   기본은 빈 값 = 기존 거동 유지.  스윕은 `LEAN=1` 로 켠다.
+#   ★★ 2026-08-18 — `LEAN=2` (**σ_e 전용**) 신설.  vox 0.125 스윕이 이온계 조립 중
+#     `Killed` 로 죽었다 (전자 45.1 M dof 위에 이온 36.7 M dof).  그리고 DR3-07 대로
+#     vox ≤ 0.125 의 σ_ion·pore-τ 는 **어차피 인용 금지**다 — 실측으로 pore-τ 가
+#     1,415 → 4.97e9 로 터졌다.  ⇒ 스윕에서는 둘 다 끈다.
+#     ⚠ `LEAN=1` 의 뜻은 **바꾸지 않는다** — 이미 그 값으로 돈 팔(STEP 2/3/5)의 규약을
+#       소급해 흔들지 않기 위해서다.  스윕만 2 를 쓴다.
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${LEAN:+_lean}}"
+[ "${LEAN:-0}" = "2" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"; \
+  echo "[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ 도 끈다 (OOM 회피 + DR3-07 인용 금지)"; }
+#  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
+#    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
+LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${LEAN_TAG}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
