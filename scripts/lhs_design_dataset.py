@@ -147,6 +147,39 @@ FIXED = {'rve_um': 50.0, 'loading_mAh_cm2': 2.0}
 #  ⇒ 면용량 2.0 → 두께 ≈ 39 µm.  DEM 이 실제 두께를 낼 것이고 이 값은 **사전 점검용**이다.
 THICK_PER_LOADING_UM = 19.64
 
+#  ── ★ 물리 파생 (2026-08-18 적대 리뷰 R0) ────────────────────────────────────────
+#    덱 실측값 — 밀도는 스케일되지 않는다 (input_real_*.liggghts).
+RHO_AM_KGM3, RHO_SE_KGM3 = 4800.0, 2000.0
+EPS_TYPICAL = 0.16              # 코퍼스 중앙 porosity (사전 점검용 가정, DEM 이 실값을 낸다)
+PRESSURE_MPA = 300.0            # 코퍼스 규약 — 리뷰 HIGH-E: 컬럼에 없으면 범위인지 편향인지 모른다
+E_SE_GPA = 1.35                 # DEM 유효 SE 탄성계수 (CLAUDE.md 확정값)
+PHI_C_SE = 0.195                # SE 퍼콜 문턱 (CLAUDE.md FROZEN φc_S; φc_P = 0.200)
+N_AM_P_MIN = 30                 # 이보다 적으면 coverage_AM_P·ps_frac 이 실현되지 않는다
+
+
+def phi_of(am_pct, eps=EPS_TYPICAL):
+    """중량 % → (φ_AM, φ_SE) 전체 부피 기준."""
+    va, vs = am_pct / RHO_AM_KGM3, (100.0 - am_pct) / RHO_SE_KGM3
+    f = va / (va + vs)
+    return (1.0 - eps) * f, (1.0 - eps) * (1.0 - f)
+
+
+_PHI_AM_REF = phi_of(81.6)[0]   # 코퍼스 회귀가 잡힌 조성 (AM:SE = 81.6:18.4)
+
+
+def thickness_of(am_pct, loading):
+    """★ 두께는 상수가 아니다 (리뷰 MED-J).  면용량 고정이면 두께 ∝ 1/φ_AM 이므로
+    am_pct 70 → 95 에서 **51.7 → 28.7 µm (1.8배)** 로 변한다.  옛 판이 39.28 을 모든 행에
+    박아 `thick_over_d_am_max` 와 `finite_size_flag` 를 **틀리게** 만들고 있었다."""
+    return THICK_PER_LOADING_UM * loading * (_PHI_AM_REF / phi_of(am_pct)[0])
+
+
+def n_particles(d_um, phi, rve_um, thick_um):
+    """그 상의 입자 개수 추정 (구 부피 기준)."""
+    if not d_um or d_um != d_um or d_um <= 0:
+        return float('nan')
+    return phi * (rve_um * rve_um * thick_um) / ((np.pi / 6.0) * d_um ** 3)
+
 
 def lhs(n, k, rng, restarts=200):
     """maximin LHS (numpy 전용).  각 인자를 n 등분해 층마다 정확히 한 점 = 1-D 균일 보장,
@@ -215,27 +248,53 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
         r['case_id'] = f'lhs{seed:02d}_{k:03d}'
         p = r['ps_frac']
         dP, dS = r['d_am_p_um'], r['d_am_s_um']
-        #  기존 ML 설계층은 AM 크기 노브가 **하나**(`d_am`)다 → ps 가중 평균으로 하위호환 열을
-        #  같이 낸다.  ⚠ 이것은 요약이고, 새 데이터셋의 정본은 d_am_p/d_am_s **두 열**이다.
-        if np.isnan(dP):
-            r['d_am_um'] = dS
-        elif np.isnan(dS):
-            r['d_am_um'] = dP
-        else:
-            r['d_am_um'] = (1.0 - p) * dS + p * dP
+        #  ⚠ 2026-08-18 리뷰 HIGH-H: 옛 `d_am_um`(ps 가중 **산술평균**)을 **버렸다**.
+        #    코퍼스의 `d_am` 은 `max(d_P, d_S)` 라 같은 이름이 다른 물리량이었고
+        #    (중앙 1.41배 · 최대 6.09배), 게다가 ps 는 부피분율인데 산술평균 가중치로 써서
+        #    차원도 안 맞았다.  ⇒ 아래에서 `d_am_max_um`(코퍼스 규약)과
+        #    `sv_inv_um`(Sauter 역수, 패킹 물리)을 **각각** 낸다.
         for src, dst in (('d_am_p_um', 'r_AM_P_um'), ('d_am_s_um', 'r_AM_S_um'),
                          ('d_se_um', 'r_SE_um')):
             r[dst] = r[src] / 2.0                       # ← LIGGGHTS 입력은 **반경**
         r['ps_label'] = (f'{round(p * 10):d}:{10 - round(p * 10):d}')   # 7:3 식 표기
         #  ★ 정수 격자(ps 눈금 0.1)에서는 이 라벨이 **반올림이 아니라 정확**하다
         r['size_ratio_P_over_S'] = (dP / dS) if (dP == dP and dS == dS) else float('nan')
-        r['size_ratio_AM_over_SE'] = r['d_am_um'] / r['d_se_um']
-        #  ── 고정 상수와 그로부터 나오는 유한크기 점검 ────────────────────────────
+        r['size_ratio_AM_over_SE'] = None            # 아래에서 d_am_max_um 확정 후 채운다
+        #  ★ 코퍼스 규약의 `d_am` = max(d_P, d_S) — 신규 행을 코퍼스에 붙일 때 **이 열**을
+        #    맞춰야 한다 (리뷰 HIGH-H: 산술평균과 중앙 1.41배 · 최대 6.09배 어긋난다).
+        r['d_am_max_um'] = (dS if np.isnan(dP) else (dP if np.isnan(dS) else max(dP, dS)))
+        #  ★★ Sauter 역수 — **끝점에서 저절로 잘 정의된다** (리뷰 §2 처방).
+        #    S_v ∝ φ_AM·(ps/d_P + (1−ps)/d_S) 이고 ps=0 이면 d_P 가, ps=1 이면 d_S 가
+        #    가중치 0 으로 사라진다 ⇒ NaN·센티넬·블록분리 없이 80 행이 한 모델에 들어간다.
+        #    (코퍼스는 ps=0 행에 `d_am=0` 센티넬을 박아 40/291 행이 오염돼 있다.)
+        r['sv_inv_um'] = ((0.0 if np.isnan(dP) else p / dP)
+                          + (0.0 if np.isnan(dS) else (1.0 - p) / dS))
+        #  ── 고정 상수와 물리 파생 ────────────────────────────────────────────────
         r.update(FIXED)
-        r['thickness_est_um'] = FIXED['loading_mAh_cm2'] * THICK_PER_LOADING_UM
-        dmax = r['d_am_um'] if np.isnan(dP) else dP          # 가장 큰 입자가 상자를 정한다
+        r['pressure_MPa'] = PRESSURE_MPA          # 리뷰 HIGH-E
+        r['e_se_gpa'] = E_SE_GPA
+        fa, fs = phi_of(r['am_pct'])
+        r['phi_am_est'], r['phi_se_est'] = fa, fs
+        #  ★ SE 퍼콜 사전판정 (리뷰 BLOCKER-C).  φ_SE = 0.195 는 am_pct ≈ 88.8 wt% 다.
+        r['se_percolation'] = ('OK' if fs > 0.20 else
+                               ('marginal' if fs > PHI_C_SE else 'BELOW_phic'))
+        th = thickness_of(r['am_pct'], FIXED['loading_mAh_cm2'])
+        r['thickness_est_um'] = th
+        #  ★ 입자 수 (rve 50 기준) — coverage_AM_P 와 ps 실현 가능성의 직접 지표
+        r['n_am_p_est'] = n_particles(dP, fa * p, FIXED['rve_um'], th)
+        r['n_am_s_est'] = n_particles(dS, fa * (1.0 - p), FIXED['rve_um'], th)
+        r['n_se_est'] = n_particles(r['d_se_um'], fs, FIXED['rve_um'], th)
+        r['n_total_est'] = float(np.nansum([r['n_am_p_est'], r['n_am_s_est'], r['n_se_est']]))
+        #  ★ N_AM_P ≥ 30 을 만족하려면 상자가 얼마나 커야 하나 (N ∝ rve²)
+        _np_ = r['n_am_p_est']
+        r['rve_min_um'] = (float('nan') if (_np_ != _np_ or _np_ <= 0)
+                           else FIXED['rve_um'] * float(np.sqrt(N_AM_P_MIN / _np_)))
+        r['rve_recommended_um'] = (FIXED['rve_um'] if r['rve_min_um'] != r['rve_min_um']
+                                   else max(FIXED['rve_um'], r['rve_min_um']))
+        dmax = r['d_am_max_um']                              # 가장 큰 입자가 상자를 정한다
         r['rve_over_d_am_max'] = FIXED['rve_um'] / dmax           # 측면 상자 / 최대 입자
-        r['thick_over_d_am_max'] = r['thickness_est_um'] / dmax   # 두께 / 최대 입자
+        r['thick_over_d_am_max'] = th / dmax                      # 두께 / 최대 입자
+        r['size_ratio_AM_over_SE'] = dmax / r['d_se_um']
         #  ⚠ 측면은 **벽이 아니라 주기경계**다 (생산 덱 `boundary p p f`) — 측면 유한크기는
         #    wall effect 가 아니라 **상관길이 효과**이고, 디스크립터 계산 시 x,y 를
         #    최소상거리로 다뤄야 한다.  z(두께)만 진짜 유한크기다.
@@ -248,12 +307,30 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
             f.append('lateral')
         if r['thick_over_d_am_max'] < 3.0:
             f.append('thin')
+        #  ★ 리뷰 BLOCKER-B: 대립이 한 자릿수면 `coverage_AM_P` 도 명목 `ps_frac` 도
+        #    실현되지 않는다 (입자 하나가 ps 의 30 % 를 차지하는 행이 실재).
+        if _np_ == _np_ and _np_ < N_AM_P_MIN:
+            f.append('n_am_p_low' if _np_ >= 10 else 'n_am_p_CRIT')
+        if r['se_percolation'] != 'OK':
+            f.append('se_' + r['se_percolation'])
         r['finite_size_flag'] = '+'.join(f)
     return rows
 
 
-DESCRIPTORS = ['porosity_pct', 'coverage_AM_P_pct', 'coverage_AM_S_pct',
-               'coverage_AM_total_pct', 'tortuosity']
+#  ★★ 타깃 이름에 **규약을 박는다** (리뷰 HIGH-F).  리포 실측 모호폭:
+#    coverage Hertz 22.25 % vs physics/Tabor 60.53 % (**2.7배**) — 섞으면 CLAUDE.md 가 기록한
+#    σ_ionic T1 "FALSE-REVERT"(91건 전부 1.4배 과대예측)가 그대로 재발한다.
+#    tortuosity Laplace 3.53 vs Dijkstra 1.29 (**2.73배**, 같은 케이스).
+#    porosity ε_sphere vs ε_union (**1.251 %p** 오프셋).
+#  ★ 그리고 **porosity 는 회귀 타깃에서 뺀다** — CLAUDE.md 정본 처방:
+#    "porosity 는 회귀 말고 ε = C − φ_SE − φ_AM 로 계산 (raw DEM 닫힘 1.0000±0.0000 =
+#     정확한 항등식 → φ 너머 정보 0)".  φ 둘을 배우고 빼면 된다 (추가 런 0건).
+#    ε_sphere 는 **기록**은 하되 타깃 목록에는 안 넣는다.
+DESCRIPTORS = ['phi_se', 'phi_am',                       # ← 회귀 타깃 (porosity 는 이 둘에서 유도)
+               'coverage_AM_P_hertz_pct', 'coverage_AM_S_hertz_pct',
+               'coverage_AM_total_hertz_pct',
+               'tortuosity_dijkstra_SE',
+               'porosity_sphere_pct_RECORD_ONLY']
 
 
 def diagnostics(rows):
@@ -398,14 +475,17 @@ if __name__ == '__main__':
     if a.as_radius:                                   # 범위를 반경으로 읽으면 직경이 2배
         for r in rows:
             for d, rr in (('d_am_p_um', 'r_AM_P_um'), ('d_am_s_um', 'r_AM_S_um'),
-                          ('d_se_um', 'r_SE_um'), ('d_am_um', None)):
+                          ('d_se_um', 'r_SE_um'), ('d_am_max_um', None)):
                 if rr:
                     r[rr] = r[d]
                 r[d] = r[d] * 2.0
     cols = (['case_id', 'block', 'd_am_p_um', 'd_am_s_um', 'ps_frac', 'ps_label', 'd_se_um',
-             'am_pct', 'rve_um', 'loading_mAh_cm2', 'thickness_est_um',
-             'd_am_um', 'r_AM_P_um', 'r_AM_S_um', 'r_SE_um',
+             'am_pct', 'rve_um', 'loading_mAh_cm2', 'pressure_MPa', 'e_se_gpa',
+             'thickness_est_um', 'phi_am_est', 'phi_se_est', 'se_percolation',
+             'd_am_max_um', 'sv_inv_um', 'r_AM_P_um', 'r_AM_S_um', 'r_SE_um',
              'size_ratio_P_over_S', 'size_ratio_AM_over_SE',
+             'n_am_p_est', 'n_am_s_est', 'n_se_est', 'n_total_est',
+             'rve_min_um', 'rve_recommended_um',
              'rve_over_d_am_max', 'thick_over_d_am_max', 'finite_size_flag'] + DESCRIPTORS)
     for r in rows:
         for d in DESCRIPTORS:
@@ -442,8 +522,29 @@ if __name__ == '__main__':
           f"(코퍼스 최빈 rve50/d12 = 4.17 · rve40/d12 = 3.33)")
     print(f"  두께 /d_AM_max    : {min(r['thick_over_d_am_max'] for r in rows):.2f} – "
           f"{max(r['thick_over_d_am_max'] for r in rows):.2f}")
-    print(f"  ⚠ 유한크기 플래그 {len(fl)}/{len(rows)} 행 — **거부가 아니라 라벨**이다 "
-          f"(Ø15 µm 입자에 39 µm 전극이면 실제로 2.6층이다).  "
-          f"학습 시 이 열을 공변량으로 남겨 두면 유한크기 효과를 흡수할 수 있다.")
+    import collections as _c
+    cnt = _c.Counter(t for r in rows for t in (r['finite_size_flag'].split('+') if
+                                               r['finite_size_flag'] else []))
+    print(f"\n  ⚠ 플래그 {len(fl)}/{len(rows)} 행 — 내역:")
+    _why = {'lateral': '측면 상자 < 3.3 입자',
+            'thin': '두께 < 3 입자',
+            'n_am_p_low': 'N_AM_P 10–30 (coverage_AM_P 표집오차 큼)',
+            'n_am_p_CRIT': '★ N_AM_P < 10 — coverage_AM_P·명목 ps 가 **실현 불가**',
+            'se_marginal': 'φ_SE 가 φc 바로 위 (0.195–0.20)',
+            'se_BELOW_phic': f'★ φ_SE < {PHI_C_SE} — **SE 퍼콜 실패 예상** '
+                             f'(am_pct > 88.8 wt%; τ 가 정의 안 될 수 있다)'}
+    for k, v in cnt.most_common():
+        print(f"      {k:14s} {v:>3} 행   {_why.get(k, '')}")
+    _np = [r['n_am_p_est'] for r in rows if r['n_am_p_est'] == r['n_am_p_est']]
+    print(f"  입자 수 추정: N_AM_P 최소 {min(_np):.1f} · 중앙 {sorted(_np)[len(_np)//2]:.0f} | "
+          f"총 입자 최대 {max(r['n_total_est'] for r in rows):,.0f}")
+    _big = [r for r in rows if r['rve_recommended_um'] > FIXED['rve_um'] + 1e-9]
+    if _big:
+        print(f"  ★ N_AM_P ≥ {N_AM_P_MIN} 를 만족하려면 {len(_big)} 행이 더 큰 상자를 요구한다 "
+              f"(권장 rve 최대 {max(r['rve_recommended_um'] for r in _big):.0f} µm).  "
+              f"`rve_recommended_um` 열 참조 — **결정은 사람이 한다** (예산 문제다).")
+    print("  ⚠ 플래그는 **거부가 아니라 라벨**이다.  학습 시 공변량으로 남기면 "
+          "유한크기 효과를 흡수한다 — 단 `n_am_p_CRIT` 와 `se_BELOW_phic` 는 "
+          "**타깃 자체가 안 나올 수 있는** 행이라 성격이 다르다.")
     print('\n⚠ 디스크립터 열은 **비어 있다** — DEM 이 채운다: ' + ', '.join(DESCRIPTORS))
     sys.stdout.flush()
