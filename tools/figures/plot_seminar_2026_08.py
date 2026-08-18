@@ -192,7 +192,7 @@ def fig_site_choice():
     ⚠ 원소 기호와 이 함수의 ax.text 는 **점 라벨**이라 '그림 안 글씨 금지' 예외다.
     """
     rows = _read(os.path.join(DB, "site_preference_raw_78.csv"))
-    by, site = {}, {}
+    by, site, unconv = {}, {}, {}
     for r in rows:
         try:
             rad, de = float(r["ionic_radius_6coord_A"]), float(r["dE_per_dopant_eV"])
@@ -200,6 +200,11 @@ def fig_site_choice():
             continue
         by.setdefault(r["M"], []).append((rad, de))
         site.setdefault(r["M"], set()).add(r.get("preferred_site", ""))
+        # ⚠ 미수렴 점(3/78) — 원본 헤더: "M@P did not reach fmax; dE is an UPPER bound,
+        #   the SIGN stays trustworthy for large cations". 지우지 않고 **표시**한다:
+        #   지우면 Ag 평균이 +1.94 → +2.44 로 뛰어 그림이 실제보다 확실해 보인다.
+        if r.get("converged") != "y":
+            unconv.setdefault(r["M"], []).append(de)
     _rc()
     fig, ax = plt.subplots(figsize=(11.6, 5.2))
     ax.axhline(0, color=hs.INK, lw=1.2, zorder=2)
@@ -215,6 +220,9 @@ def fig_site_choice():
         ax.scatter([rad], [mean], s=64, zorder=4, lw=1.4 if flips else 1.0,
                    facecolors="white" if flips else col,
                    edgecolors=col if flips else "white")
+        for du in unconv.get(m, []):
+            ax.scatter([rad], [du], s=34, marker="s", zorder=4.5,
+                       facecolors="none", edgecolors=hs.MUT, lw=1.1)
         up = mean >= 0
         labels.append([rad, (max(des) + 0.13) if up else (min(des) - 0.13), m, col, up])
     labels.sort(key=lambda a: (a[0], a[1]))
@@ -234,6 +242,8 @@ def fig_site_choice():
         Line2D([], [], marker="o", ls="", mfc=GOOD, mec="white", ms=8, label="P framework"),
         Line2D([], [], marker="o", ls="", mfc="white", mec=MIX, mew=1.4, ms=8,
                label="changes with x"),
+        Line2D([], [], marker="s", ls="", mfc="none", mec=hs.MUT, mew=1.1, ms=7,
+               label="not converged (upper bound)"),
     ], loc="lower right", frameon=False, fontsize=10, handletextpad=.4)
     ax.set_xlabel("Shannon ionic radius of the dopant cation  (6-coordinate, Å)")
     ax.set_ylabel("P framework site   ←     ΔE  (eV per dopant)     →   Li site")

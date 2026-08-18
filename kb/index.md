@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 216
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 217
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -63,7 +63,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (77)
+## results/ (78)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -136,6 +136,7 @@
 - `kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md` — cc333 — 같은 c-c 홉이 맞다. 3×3×3 에서 Nd 격자 재배열이 풀린다 ○미열람
 - `kb/results/session_handoff_2026_07_22.md` — 세션 핸드오프 — 2026-07-21 밤 → 07-22 새벽
 - `kb/results/session_timelog_2026_06_04.md` — Session Timelog — 2026-06-04/05 (multi-track)
+- `kb/results/site_preference_bar_meaning_2026_08_18.md` — 자리 선호 그림의 막대는 시드가 아니라 도핑 수준이다 — 그리고 6종은 자리가 바뀐다 ○미열람
 - `kb/results/site_preference_findings_2026_06_19.md` — Dopant site preference (antisite-swap, all-UMA) — 81-system screen
 - `kb/results/site_thermodynamics_explained.md` — Site Distribution Thermodynamics — 왜 각 comp가 그 분포로 가장 안정한가?
 - `kb/results/slide2_lit_summary_revised_2026_06_21.md` — Slide 2 (Literature summary) — 개정 (2026-06-21)

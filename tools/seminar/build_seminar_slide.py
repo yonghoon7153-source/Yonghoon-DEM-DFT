@@ -65,9 +65,9 @@ SLIDES = {
     sub1="Li, P, S and Cl are separate sublattices — an oxide has to take [b]one cation and one anion site[/b].",
     sub2="An aliovalent dopant changes the Li content, and [r]more than one way balances the charge[/r].",
     label="site preference vs ionic radius",
-    note="large cations go to Li sites, small group-14 ions replace P — [b]size decides it[/b]",
-    gloss=("Sublattice: the set of equivalent positions one element occupies  ·  "
-           "Aliovalent: a dopant whose charge differs from the ion it replaces"),
+    note="only Si always takes the P framework; 19 of 26 always take Li — [r]6 switch with the doping level[/r]",
+    gloss=("Sublattice: the equivalent positions one element occupies  ·  Aliovalent: a do"
+           "pant of different charge  ·  bars = three doping levels, not repeat runs"),
     drop=[10],
  ),
 }

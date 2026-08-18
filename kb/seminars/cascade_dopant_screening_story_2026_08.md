@@ -358,23 +358,29 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 ---
 
-### 9 — Substitution site and charge compensation  ✅ 확정 (2026-08-18)
+### 9 — Substitution site and charge compensation  ✅ 확정 (2026-08-18, 2판)
 
 > ■ Step 1: The substitution site is enumerated before a structure is built
 > • Li, P, S and Cl are separate sublattices — an oxide has to take [파랑]one cation and one anion site[/].
 > • An aliovalent dopant changes the Li content, and [빨강]more than one way balances the charge[/].
 
 `< site preference vs ionic radius >`
-`해설` large cations go to Li sites, small group-14 ions replace P — [파랑]size decides it[/]
-하단 용어 — Sublattice: the set of equivalent positions one element occupies ·
-　　　　　　 Aliovalent: a dopant whose charge differs from the ion it replaces
+`해설` only Si always takes the P framework; 19 of 26 always take Li — [빨강]6 switch with the doping level[/]
+하단 용어 — Sublattice: the equivalent positions one element occupies  ·  Aliovalent: a dopant of different charge  ·  bars = three doping levels, not repeat runs
 
-⚠ **그림에 원소 기호를 붙였다 (2026-08-18)** — 26종 전부. 막대 **바깥**(위로 뻗은 것은 위,
-   아래로 뻗은 것은 아래)에 놓아 점·오차막대를 안 가린다. 부호가 다른 이웃은 저절로
-   갈라진다(Sn↓/Ni↑ 는 반지름이 같은 0.690 인데 안 겹친다). 같은 부호·같은 반지름인
-   Co/Sc 만 손으로 민다.
+⛔⛔ **2026-08-18 정정 — 앞 대본이 틀렸다.** 자세한 근거는
+   `kb/results/site_preference_bar_meaning_2026_08_18.md`. 요지 셋:
+   ① 막대는 **시드 재현이 아니라 세 도핑 수준**이다. 덱 캡션 "spread across our three
+      runs" 는 틀렸다. 그래서 0 을 걸치는 막대는 잡음이 아니라 **자리가 바뀐다는 실측**이다.
+   ② "아래로 내려간 게 셋 — Si, Ge, Sn" 도 틀렸다. **전 농도 P 는 Si 하나**이고
+      Ge·Sn 은 바뀌는 쪽이다. 정산: **Li 19 · P 1 · 바뀜 6**(B·Al·Cr·Ge·Ni·Sn).
+   ③ 미수렴 3건(Al x002 · Ag x002 · Ag x010)은 **지우지 않고 표시**했다(속 빈 회색 사각).
+      dE 가 상한이라 지우면 Ag 평균이 +1.94 → +2.44 로 뛰어 실제보다 확실해 보인다.
+⛔ **`x = 0.02 / 0.05 / 0.10` 숫자를 말하지 말 것.** 그건 폴더 라벨이다. 실측된 한 건은
+   `Y2O3_x005` = 47원자에 Y 2개 = **P 자리의 33 %**. 다른 캠페인(cascade)에서는 같은
+   라벨이 **전부 actual 0.25** 라 농도시리즈가 무효였던 전례도 있다. "세 도핑 수준" 으로만.
 
-**[60초]**
+**[65초]**
 
 첫 단계의 질문은 **"이 원소를 격자 어디에 넣을 수 있는가"** 입니다.
 
@@ -383,20 +389,32 @@ Li₆PS₅Cl 에는 Li, P, S, Cl 자리가 각각 있습니다. 산화물을 넣
 전구체 하나를 넣는다는 게 자리를 **두 개** 정하는 일이 됩니다.
 
 그림이 그걸 보여줍니다. 가로가 이온 반지름, 세로가 두 자리 사이의 에너지 차이입니다.
-0 보다 위면 Li 자리, 아래면 P 골격입니다.
+0 보다 위면 Li 자리, 아래면 P 골격이고요. **막대는 세 도핑 수준의 폭입니다** —
+같은 계산을 세 번 돌린 게 아니라, 도핑을 묽게·중간·진하게 넣어 본 겁니다.
 
-아래로 내려간 게 셋뿐이에요 — **Si, Ge, Sn.** 전부 4가이고 작습니다. P 를 밀어내고
-골격에 들어가죠. 나머지는 전부 위, 즉 **Li 자리**입니다. 오른쪽 끝 Ba 가 +2.7 로 제일
-확실하고요. **크기가 거의 다 정합니다.**
+먼저 크기 얘기부터 하면, 오른쪽 큰 것들 — Ba, Na, Ag, Sr — 은 전부 위, **Li 자리**입니다.
+Ba 가 +2.7 로 제일 확실하고요. 왼쪽 아래로 내려간 건 **Si 하나뿐**입니다. 4가이고 작아서
+P 를 밀어내고 골격에 들어갑니다.
+
+그런데 **가운데가 재미있습니다.** 속이 빈 것들 보이시죠. 이 여섯 개 — B, Al, Cr, Ge, Ni,
+Sn — 은 **도핑을 얼마나 넣느냐에 따라 자리가 바뀝니다.** B 를 보면 묽을 때는 Li 자리인데
+진해지면 P 로 갑니다. Sn 은 아예 왔다갔다 하고요.
+
+⭐ 그러니까 **자리는 그 원소의 고정된 성질이 아닙니다.** 26 종 중 19 종은 늘 Li, 하나는
+늘 P, 그리고 **여섯은 조건에 따라 다릅니다.** 이게 스크리닝을 자리마다 따로 돌려야 하는
+이유예요.
 
 그리고 여기서 두 번째 문제가 나옵니다. 2가 이온을 1가 자리에 넣으면 전하가 안 맞습니다.
 Li 를 빼거나 넣어서 맞춰야 하는데 **그 방법이 하나가 아닙니다.** 같은 화합물, 같은 자리인데
 보상 방법만 달라도 다른 구조가 되죠. 이게 **결과 1 로 돌아옵니다.**
 
-💬 **말로만 (질문 오면)** — 막대는 세 번 돌린 것의 폭입니다. Fe 처럼 폭이 넓은 건
-   자리 선호가 약하다는 뜻이지 계산이 튄 게 아니에요.
-💡 Sn 이 Ni 와 반지름이 같은데(0.690) 방향이 반대인 게 눈에 띄면 좋은 질문거리다 —
-   크기만이 아니라 **원자가**도 본다는 증거다 (Sn⁴⁺ vs Ni²⁺).
+💬 **말로만 (질문 오면)**
+· 속 빈 **회색 사각**은 이완이 안 끝난 점입니다(3/78). 지우지 않고 남겼어요 —
+  그 값이 상한이라 빼면 그림이 실제보다 확실해 보입니다.
+· Y 는 전 농도에서 Li 자리입니다(+0.47 → +2.31 → +2.51, 단조). 문헌(Wang 2025)은
+  Y 를 P(4b)로 보는데 **부호가 반대**고, 아직 결정 실험이 안 끝났습니다.
+· Sn 과 Ni 는 반지름이 같은데(0.690) 방향이 반대입니다 — 크기만이 아니라 **원자가**도
+  본다는 뜻이에요 (Sn⁴⁺ vs Ni²⁺).
 
 ---
 
