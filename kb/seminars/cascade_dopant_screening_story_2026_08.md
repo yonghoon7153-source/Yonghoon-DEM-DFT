@@ -293,7 +293,7 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 ### 8 — Candidate set on the periodic table
 
-> ■ Candidate set (2): 36 cation elements, coloured by their best score
+> ■ Candidate set (2): 36 cation elements, colored by their best score
 > • Late transition metals (Fe–Cu) form the [빨강]red[/] block — their oxidation window is the narrowest.
 > • [파랑]Group trends[/] are robust, the exact order is not — the same elements stay at both ends.
 

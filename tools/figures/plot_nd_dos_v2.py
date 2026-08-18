@@ -7,7 +7,7 @@ broadening (post-hoc convolution) for a smooth publication curve, writes the
 smoothed CSV, and renders a 2-panel DOS/PDOS figure.
 
 Gap annotation uses the EIGENVALUE gap (k661, from db modelc_nd_doped.json),
-while the curve itself is the k441 DOS — both are labelled on the figure.
+while the curve itself is the k441 DOS — both are labeled on the figure.
 """
 import numpy as np
 from scipy.ndimage import gaussian_filter1d

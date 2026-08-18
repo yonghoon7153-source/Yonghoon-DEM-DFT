@@ -23,6 +23,7 @@
   python3 tools/convention_check.py --selftest # 자체 시험 (음성 경로 포함)
 """
 import re
+import re as _re
 import sys
 from pathlib import Path
 
@@ -100,6 +101,12 @@ def scan(path: Path):
         for k in KB_HIT.findall(line):
             if k != KB_CANON:
                 warn.append((rel, i, f"kB {k} → {KB_CANON} 권고 (상대차 1e-7, 무해)"))
+        # 영국식 철자 — **문자열 리터럴 안**만 본다 (화면에 나가는 글)
+        if rel.startswith(("tools/seminar", "tools/figures")):
+            for q in _re.findall(r"[\"']([^\"']{4,})[\"']", line):
+                for w in BRIT_RE.findall(q):
+                    warn.append((rel, i, f"영국식 철자 '{w}' → '{BRIT_US[w.lower()]}' "
+                                         f"(발표 영어는 미국식 통일)"))
         if RAW_DOPANT_GROUP.search(line):
             # 사유 주석이 블록 위쪽에 붙는 일이 흔해 앞을 넉넉히 본다 (4줄은 짧았다)
             ctx = "\n".join(text.splitlines()[max(0, i - 9):i + 2])
@@ -110,6 +117,22 @@ def scan(path: Path):
                              "(변형 구별이 목적이면 variant_key() + 사유 주석)",
                              line.strip()))
     return viol, warn
+
+
+#: 발표·그림에 나가는 영어는 **미국식 철자**로 통일한다 (1저자 지적 2026-08-18:
+#:   "계속 유럽체 하는데 coloured 처럼 이런거 조심해"). 슬라이드 한 장에 colour/color
+#:   가 섞이면 그 자체가 눈에 띈다. 주석은 검사하지 않는다 — 화면에 안 나가므로.
+BRIT_US = {
+    "coloured": "colored", "colour": "color", "colours": "colors",
+    "colouring": "coloring", "normalise": "normalize", "normalised": "normalized",
+    "normalisation": "normalization", "analyse": "analyze", "analysed": "analyzed",
+    "behaviour": "behavior", "neighbour": "neighbor", "neighbours": "neighbors",
+    "optimise": "optimize", "optimised": "optimized", "favour": "favor",
+    "centre": "center", "modelling": "modeling", "labelled": "labeled",
+    "sulphur": "sulfur", "catalogue": "catalog", "ageing": "aging",
+    "defence": "defense", "fibre": "fiber", "utilise": "utilize",
+}
+BRIT_RE = _re.compile(r"\b(" + "|".join(sorted(BRIT_US, key=len, reverse=True)) + r")\b", _re.I)
 
 
 def check(root=None):

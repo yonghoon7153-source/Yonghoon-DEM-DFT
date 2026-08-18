@@ -32,7 +32,7 @@ FIGREL = "docs/figures/seminar/roster_periodic_table.png"   # M.add_pics 는 rep
 SLIDE_IDX = 7                      # v6 덱의 8장 (0-based)
 
 #: 슬라이드에 인쇄되는 문장 — 대본(kb/seminars/…)의 8장과 **1:1**이어야 한다.
-HEAD = "Candidate set (2): 36 cation elements, coloured by their best score"
+HEAD = "Candidate set (2): 36 cation elements, colored by their best score"
 SUB1 = "Late transition metals (Fe–Cu) form the [r]red[/r] block — their oxidation window is the narrowest."
 SUB2 = "[b]Group trends[/b] are robust, the exact order is not — the same elements stay at both ends."
 LABEL = "best score per element, 89-species pool (2026-08-13)"

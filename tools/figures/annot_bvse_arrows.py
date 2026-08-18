@@ -3,10 +3,10 @@
 BVSE low-channel figure (docs/figures/deck_extracted/bvse_channels.png).
 
 Arrows only: no legend, no labels, no S/Cl markers, no x/check marks (the
-speaker explains the colours verbally). The baked-in "low-BVSE channel: X %"
+speaker explains the colors verbally). The baked-in "low-BVSE channel: X %"
 captions stay. White halos so the arrows read against the blue point cloud.
 
-Colour scheme (explained verbally):
+Color scheme (explained verbally):
   blue  (solid)  intra-cage hop (fast local)        - both panels
   red   (dashed) inter-cage bottleneck = Ea         - LPSCl (left), blocked
   green (solid)  inter-cage opens / percolates       - LPSCl1.6 (right)
@@ -24,7 +24,7 @@ BLUE, RED, GREEN = "#1f77b4", "#d62728", "#2ca02c"
 
 
 def arrow(ax, p0, p1, color, dashed=False, lw=3.2):
-    for col, w in (("white", lw + 3.5), (color, lw)):       # white halo, then colour
+    for col, w in (("white", lw + 3.5), (color, lw)):       # white halo, then color
         ax.annotate("", xy=p1, xytext=p0,
                     arrowprops=dict(arrowstyle="-|>", color=col, lw=w,
                                     mutation_scale=28, shrinkA=0, shrinkB=0,

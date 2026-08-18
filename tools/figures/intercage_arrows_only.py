@@ -3,11 +3,11 @@
 
 Takes the Li-density heatmap (docs/figures/elf_licl/Li_density_core_spread_
 comp1_modelc.png) and overlays ONLY blue/green/red migration arrows — no text
-boxes, no extra markers. The baked-in site dots (orange = free S2- cage centre,
+boxes, no extra markers. The baked-in site dots (orange = free S2- cage center,
 green = Cl inter-cage gateway) and the panel titles stay (they are part of the
 base PNG; removing them needs the raw density, which lives on gabia).
 
-Colour meaning (told in chat, not on the figure):
+Color meaning (told in chat, not on the figure):
   blue  (solid)        intra-cage hop      fast local motion inside a cage core
   red   (dashed)       inter-cage gap      LPSCl: dark gap, blocked -> high Ea
   green (solid, chain) inter-cage bridge   LPSCl1.6: connected -> percolates

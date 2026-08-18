@@ -145,7 +145,7 @@ def main():
     lv = np.linspace(0.005, min(0.60, float(F[F < pmfmod.F_CAP].max())), 120)
     pct = pmfmod.cluster_curve(F, lv)
     dFp, _sl = pmfmod.transition_level(lv, pct)
-    rpm = pmfmod.analyse(F, cell, a.T, cap=dFp)
+    rpm = pmfmod.analyze(F, cell, a.T, cap=dFp)
     print(f"ΔE_perc(BV) {rbv['E_perc']:.4f} eV · ΔF_perc(PMF,{a.T:.0f} K) {dFp:.4f} eV")
 
     # ⚠ 상자 잡기 (2026-08-05 수정): 두 경로를 한 상자에 넣으면 안 된다.

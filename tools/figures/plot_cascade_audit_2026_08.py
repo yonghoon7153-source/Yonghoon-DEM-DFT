@@ -232,7 +232,7 @@ def _read_recovered() -> tuple[dict, list[dict], dict]:
 def _materialize_recovered_v2() -> dict[str, dict]:
     """Copy the reviewed side-by-side v2 artifacts from the recovery branch.
 
-    They remain status-labelled as recovered/incomplete.  Materializing them
+    They remain status-labeled as recovered/incomplete.  Materializing them
     only makes the full 90-species evidence downloadable in dftweb; it does not
     promote the 89-row ranking or legacy transport proxy to canonical status.
     """

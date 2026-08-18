@@ -175,7 +175,7 @@ def main():
              "Yellow surface = the boundary of the region a Li probe can occupy below the "
              "percolation threshold (empty-lattice bond-valence map, eV above minimum).\n"
              "Purple polyhedra = PS₄/PS₃O units · spheres = S / Cl / O · small grey = Li · "
-             "coloured line = the min-energy percolation path. Ranking of Ea between "
+             "colored line = the min-energy percolation path. Ranking of Ea between "
              "compositions is set by MLIP-MD, not by this map.",
              ha="center", fontsize=8.8, color=MUT)
     fig.tight_layout(rect=[0, 0.06, 1, 0.95])

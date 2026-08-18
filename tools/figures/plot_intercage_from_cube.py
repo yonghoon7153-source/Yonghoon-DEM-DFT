@@ -13,7 +13,7 @@ default. Overlays blue/green/red migration arrows.
 Edit ARROWS_L / ARROWS_R below (fractional panel coords, y up) to nudge the
 arrows onto the actual bright cores / dark gaps. numpy + matplotlib only.
 
-Arrow colour meaning:
+Arrow color meaning:
   blue  (solid)  intra-cage hop (fast local)
   red   (dashed) inter-cage gap blocked (comp1) -> high Ea
   green (solid)  inter-cage bridge, percolates (modelc)
@@ -76,7 +76,7 @@ def read_cube(path):
 
 
 def draw_arrow(ax, x0, y0, x1, y1, color, dashed, lw=4, scale=26):
-    for col, w, z in (("white", lw + 3, 4), (color, lw, 5)):  # white halo then colour
+    for col, w, z in (("white", lw + 3, 4), (color, lw, 5)):  # white halo then color
         ax.annotate("", xy=(x1, y1), xytext=(x0, y0), zorder=z,
                     arrowprops=dict(arrowstyle="-|>", color=col, lw=w,
                                     mutation_scale=scale, shrinkA=0, shrinkB=0,
@@ -115,7 +115,7 @@ def panel(ax, spec, arrows, gamma, show_sites, all_intra, core_thr, core_dist,
         if len(fS):
             ax.scatter(fS[:, 0], fS[:, 1], s=120, c="#ff8c00",
                        edgecolors="white", linewidths=1.5, zorder=7,
-                       label="free S$^{2-}$ (cage centre)")
+                       label="free S$^{2-}$ (cage center)")
         if len(cl):
             ax.scatter(cl[:, 0], cl[:, 1], s=120, c=GREEN, marker="s",
                        edgecolors="white", linewidths=1.5, zorder=7,

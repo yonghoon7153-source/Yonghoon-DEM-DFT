@@ -166,7 +166,7 @@ def draw_structure(ax, cart, atoms, cages, cell, e, seg, htype, disp, axis,
     hs = [plt.Line2D([], [], ls="", marker="X", ms=9, mfc=c, mec="white", label=t)
           for c, t in (("#dc2626", "inter-cage bottleneck"), ("#2563eb", "intra-cage"))]
     hs += [plt.Line2D([], [], ls="", marker="o", ms=8, mfc="none",
-                      mec="#3E8E41", label="cage centre (free S²⁻/Cl⁻)")]
+                      mec="#3E8E41", label="cage center (free S²⁻/Cl⁻)")]
     ax.legend(handles=hs, fontsize=8.5, loc="lower left", ncol=3, frameon=True,
               framealpha=0.92, edgecolor="none", borderpad=0.4)
     ax.set_xlim(*xlim); ax.set_ylim(*ylim); ax.set_aspect("equal")
