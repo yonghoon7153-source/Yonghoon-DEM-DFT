@@ -1,0 +1,57 @@
+// site_grid_heatmap.ogs — 세미나 10장 오른쪽 (자리 조합 격자) BML 포맷
+// 쓰는 법: 히트맵 그래프 창을 활성화한 뒤 Script Window 에 붙여넣고 Enter.
+// 이 스크립트가 하는 것: 레이어 크기 · 축 색/두께 · 눈금 제거 · 라벨 폰트 · 범위 고정.
+// 이 스크립트가 **못 하는 것** (전부 가이드 4절의 GUI 단계):
+//   · 컬러맵 4색 지정      · 칸 안 숫자(Label 탭)   · 칸 안 % (Text 객체 9개)
+//   · 칸 경계 흰 선        · 눈금 이름표(Custom)    · 컬러바 제목
+//   ⚠ 특히 **라벨 글자색을 칸 값에 따라 바꾸는 것은 Origin 에 기능이 없다** — 손으로.
+
+// ── 레이어 ─────────────────────────────────────────────────────────────────
+layer.unit = 3;
+layer.width = 12;
+layer.height = 9;
+page.margincontrol = 1;
+
+// ── X 축 (음이온 자리 — 범주축이라 눈금 없음) ───────────────────────────────
+layer.x.color = color(64,64,64);
+layer.x.thickness = 1;
+layer.x.ticks = 0;
+layer.x.label.font = font(arial);
+layer.x.label.pt = 28;
+layer.x.label.color = color(64,64,64);
+layer.x.from = 0.5;
+layer.x.to = 3.5;
+layer.x.inc = 1;
+
+// ── Y 축 (양이온 자리) ─────────────────────────────────────────────────────
+layer.y.color = color(64,64,64);
+layer.y.thickness = 1;
+layer.y.ticks = 0;
+layer.y.label.font = font(arial);
+layer.y.label.pt = 28;
+layer.y.label.color = color(64,64,64);
+layer.y.from = 0.5;
+layer.y.to = 3.5;
+layer.y.inc = 1;
+
+// ⚠ Y 를 뒤집는다 — Matrix 행 1(Li 24g)이 **맨 위**로 가야 그림과 같아진다.
+//   안 하면 위아래가 뒤집혀 Li 48h 가 위로 온다.
+layer.y.type = 0;
+layer.yAxis.reverse = 1;
+
+// ── 위 / 오른쪽 축: 선만 ───────────────────────────────────────────────────
+layer.x2.showAxes = 3;
+layer.x2.color = color(64,64,64);
+layer.x2.thickness = 1;
+layer.x2.ticks = 0;
+layer.x2.showLabels = 0;
+
+layer.y2.showAxes = 3;
+layer.y2.color = color(64,64,64);
+layer.y2.thickness = 1;
+layer.y2.ticks = 0;
+layer.y2.showLabels = 0;
+
+// ── 축 제목 ────────────────────────────────────────────────────────────────
+label -xb Anion site  (where the dopant's O / halide went);
+label -yl Cation site  (where the dopant metal went);

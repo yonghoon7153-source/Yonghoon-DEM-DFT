@@ -1,0 +1,20 @@
+"# Slide 10 (right) - Origin Matrix Book input, 3 rows x 3 cols. Values only, no headers below.",,
+# Row order = TOP to BOTTOM as drawn:  Li 24g / P 4b (framework) / Li 48h,,
+# Col order = LEFT to RIGHT as drawn:  free sulfide / sulfur in the PS4 corner / halide site,,
+"# ** counts are STRUCTURES, not compounds ** (3,615 total from 90 compounds).",,
+# Paste the 3x3 block under MATRIX below straight into a Matrix Book.,,
+MATRIX,,
+1050,810,600
+375,270,180
+120,105,105
+,,
+"LABELS (row, col, count, percent-of-all)",,,
+1,1,1050,29 % of all
+1,2,810,22 % of all
+1,3,600,17 % of all
+2,1,375,10 % of all
+2,2,270,7 % of all
+2,3,180,5 % of all
+3,1,120,3 % of all
+3,2,105,3 % of all
+3,3,105,3 % of all
