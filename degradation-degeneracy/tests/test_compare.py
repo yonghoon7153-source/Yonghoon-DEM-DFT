@@ -4178,8 +4178,8 @@ def test_gap_table_bins_by_nominal_gap_and_counts_collapse():
     assert by["4%p"]["붕괴(복원<2%p)"].startswith("1/3")
     assert by["0%p"]["n"] == 2
     assert by["0%p"]["붕괴(복원<2%p)"].startswith("1/2")
-    # 참 격차 0 에서는 shrinkage 가 정의되지 않는다 (0 으로 나눈다)
-    assert by["0%p"]["shrinkage"] == "—"
+    # 참 격차 0 에서는 비가 정의되지 않는다 (0 으로 나눈다)
+    assert by["0%p"]["복원/참 중앙값"] == "—"
 
 
 def test_gap_table_uses_the_shared_boundary_rule():
@@ -4331,3 +4331,22 @@ def test_analyze_22p_restrict_to_overrides_this_runs_recoverability(tmp_path):
 
     widened = run(gd, "pocv_dvdq", restrict_to=hd)
     assert widened["n_recoverable"] == widened["n_rows_total"] == len(g)
+
+
+def test_gap_table_ratio_column_is_not_called_shrinkage():
+    """★ 19차 자체 — 실측에서 이 값은 **1보다 크다**. "shrinkage" 는 거짓 이름.
+
+    촘촘한 격자 실측에서 복원/참 중앙값이 전 구간 1.09~1.99 였다 — 복원 격차가
+    참 격차보다 **크다**. 열 이름이 "shrinkage" 면 읽는 쪽이 부호를 반대로
+    읽는다. 이름은 방향을 주장하지 말고 무엇을 나눈 값인지만 말해야 한다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = [{"lam_pe": 0.14, "lam_ne": 0.13,          # 참 1%p
+             "pe_ne_gap_recovered": 0.02, "cond_id": "r0"}]   # 복원 2%p
+    t = gap_table(pd.DataFrame(rows), tol=0.02)
+
+    assert "shrinkage" not in t.columns, list(t.columns)
+    col = [c for c in t.columns if "복원/참" in c]
+    assert col, list(t.columns)
+    assert t.iloc[0][col[0]] == "2.00", t.to_dict("records")

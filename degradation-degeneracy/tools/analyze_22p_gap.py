@@ -79,8 +79,11 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
             "붕괴(복원<2%p)": f"{int(collapsed.sum())}/{len(sub)}"
                               f" ({100 * collapsed.mean():.1f}%)",
             "복원 격차 중앙값": _fmt_pp(sub["gap_hat"].median()),
-            "shrinkage": ("—" if b == 0 else
-                          f"{float((sub['gap_hat'] / sub['gap_true']).median()):.2f}"),
+            # ★ 이름이 방향을 주장하면 안 된다. 촘촘한 격자 실측에서 이 값은
+            #   전 구간 1보다 컸다 (복원 격차가 참보다 **크다**) — "shrinkage"
+            #   라고 부르면 읽는 쪽이 부호를 반대로 읽는다.
+            "복원/참 중앙값": ("—" if b == 0 else
+                            f"{float((sub['gap_hat'] / sub['gap_true']).median()):.2f}"),
         })
     return pd.DataFrame(rows)
 
