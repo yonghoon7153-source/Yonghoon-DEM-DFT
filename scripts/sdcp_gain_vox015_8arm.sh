@@ -39,6 +39,8 @@ fi
 #   새 라벨로 보고했다.  판정기의 고정-인자 게이트는 팔들이 **같이 낡았으면** 통과한다.
 #   ⇒ 설정을 디렉터리 이름에 넣는다 (`sr01_grid_converge_e.sh:34` 가 이미 쓰는 규약).
 BR_TAG="_b${BRIDGE_UM/./}"
+#  σ_VGCF 를 명시로 고정한 런은 **다른 실험**이다 — 디렉터리를 갈라 SKIP 이 섞이지 않게.
+SG_TAG=""; [ -n "${SIGMA_VGCF_OVERRIDE:-}" ] && SG_TAG="_sg${SIGMA_VGCF_OVERRIDE//./}"
 # ★ 스윕 팔에서 끌 것 (리뷰 ① H7): 팔당 σ_e 솔브 1회가 아니라 **7~8회**가 돈다.
 #   `--no-step4`(2×dof 연성계) · `--no-thermal` · `--no-trackb`(기하 τ) · `--no-field`.
 #   ⚠ `_res3w`/`_res3b`(collector wetted/bare)는 끄는 플래그가 **없어** 2회는 남는다 —
@@ -46,7 +48,7 @@ BR_TAG="_b${BRIDGE_UM/./}"
 #   기본은 빈 값 = 기존 거동 유지.  스윕은 `LEAN=1` 로 켠다.
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${LEAN:+_lean}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${LEAN:+_lean}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -121,6 +123,18 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
 
   # 이 vox 의 직경-보존 σ_VGCF 를 다시 뽑는다 (격자마다 다르다 — 기존 러너와 같은 규약)
   local SIGMA
+  #  ★★ 2026-08-18 (심층 리뷰 ① H1 / DR3-05) — σ_VGCF 를 **명시로 못 박는 통로**.
+  #    직경-보존 재척도는 `σ = 100·πd²/(4·vox²)` 라 vox 의 함수다 (0.15 → 78.540 ·
+  #    0.125 → 113.097 · 0.10 → 176.715).  그런데 σ_SDCP 는 250 고정이므로 격자 스윕이
+  #    **탄소 백본 대비 SDCP 의 상대 전도도를 2.25배 같이 바꾼다** = 격자 축과 재료 축이
+  #    섞인다 (CL-19 가 retired 된 것과 같은 구조).  이 override 로 두 축을 가른다:
+  #      · `SIGMA_VGCF_OVERRIDE=113.097` + VOX=0.15  → σ 만 이동 (dR/dlnσ_VGCF 측정)
+  #      · `SIGMA_VGCF_OVERRIDE=0`                   → VGCF 를 전기적으로 죽인다
+  #        (셀은 남아 부피를 막는다 — `_cond_ph` 가 phase 2 를 항상 스탬프한다)
+  if [ -n "${SIGMA_VGCF_OVERRIDE:-}" ]; then
+    SIGMA="$SIGMA_VGCF_OVERRIDE"
+    echo "[p2] ★ σ_VGCF **명시 고정** $SIGMA S/cm (직경-보존 재척도 우회)"
+  else
   #  ⚠ 2026-08-16 실사고: `P2_SCR` 를 이 heredoc 에 안 넘겨 KeyError 로 전 팔이 실패했다.
   #    (fail-closed 는 작동했다 — 쓰레기 대신 0 팔을 냈다.)  두 변수를 **여기서** 넘긴다.
   SIGMA=$(cd "$RUN" && P2_SCR="$SCR" STEP3_VOX="$VOX" python3 - <<'PY'
@@ -139,6 +153,7 @@ sys.stderr.write(f'  [p2] vox {VOX}: σ_VGCF 100 → {se:.6g}\n')
 print(f'{se:.6g}')
 PY
   ) || return 1
+  fi
 
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
