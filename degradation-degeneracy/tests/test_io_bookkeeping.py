@@ -12,6 +12,7 @@ from __future__ import annotations
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from src.io import (append_failed, load_completed, load_failed, mark_completed,
                     merge_chunks, save_chunk)
@@ -293,3 +294,136 @@ def test_tracked_dirty_is_conservative_for_excluded_paths(tmp_path):
         "제외 경로는 digest 에 들어가면 안 된다"
     assert git_info(tmp_path)["git_dirty"] is True, \
         "tracked 변경은 제외 경로라도 dirty 로 센다 (보수적, 의도)"
+
+
+# ── 18차 E — artifacts/ 의 Git blob ↔ fresh checkout raw-byte round-trip ────
+
+def test_e_artifact_bytes_survive_a_fresh_checkout(tmp_path):
+    """★ 18차 E — 묶음은 **검증 대상 바이트 그대로** 나와야 한다.
+
+    `.gitattributes` 의 `artifacts/** -text` 가 실제로 지켜지는지는 지금까지
+    한 번도 회귀로 고정되지 않았다. `failed.csv` 는 `csv.writer` 가 CRLF 로
+    쓰는데, EOL 정규화가 걸리면 다른 clone 에서 복원한 바이트가
+    `payload_sha256.yaml`·`입력_digest_재해시` 와 어긋나 "clone 한 사람이
+    검증할 수 있는가" 라는 archive 의 목적 자체가 깨진다.
+
+    Git blob 을 **정규화 없이** 꺼내(`git cat-file`) 작업본과 바이트 대조한다.
+    """
+    import hashlib
+    import subprocess
+
+    root = Path(__file__).resolve().parent.parent
+    arts = root / "artifacts"
+    if not arts.is_dir():
+        pytest.skip("artifacts/ 없음")
+
+    # CRLF 를 실제로 담고 있는 파일을 우선 고른다 (없으면 전수에서 표본)
+    prefix = subprocess.run(["git", "rev-parse", "--show-prefix"], cwd=root,
+                            capture_output=True, text=True,
+                            check=True).stdout.strip()
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "artifacts"], cwd=root,
+        capture_output=True, text=True, check=True).stdout.split("\0")
+    tracked = [t for t in tracked if t]
+    assert tracked, "artifacts/ 에 tracked 파일이 없다"
+
+    crlf = [t for t in tracked
+            if (root / t).is_file() and b"\r\n" in (root / t).read_bytes()[:200000]]
+    sample = (crlf[:5] or tracked[:5])
+
+    bad = []
+    for rel in sample:
+        work = (root / rel).read_bytes()
+        blob = subprocess.run(["git", "cat-file", "-p", f"HEAD:{prefix}{rel}"],
+                              cwd=root, capture_output=True, check=True).stdout
+        if hashlib.sha256(work).hexdigest() != hashlib.sha256(blob).hexdigest():
+            bad.append(rel)
+    assert not bad, (
+        "작업본과 Git blob 의 바이트가 다르다 (EOL 정규화가 걸렸다): " + str(bad))
+
+    assert crlf, ("artifacts/ 에 CRLF 를 담은 파일이 하나도 없어 이 회귀가 "
+                  "실제 위험을 태우지 못한다 — failed.csv 계열을 확인할 것")
+
+
+def test_e_gitattributes_keeps_artifacts_untouched():
+    """★ E — `git check-attr` 로 정규화 규칙 자체를 고정한다."""
+    import subprocess
+
+    root = Path(__file__).resolve().parent.parent
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "artifacts"], cwd=root,
+        capture_output=True, text=True, check=True).stdout.split("\0")
+    tracked = [t for t in tracked if t]
+    if not tracked:
+        pytest.skip("artifacts/ 없음")
+
+    out = subprocess.run(["git", "check-attr", "text", "eol", "--", *tracked[:20]],
+                         cwd=root, capture_output=True, text=True, check=True).stdout
+    offending = [ln for ln in out.splitlines()
+                 if ln.endswith(": text: set") or ": eol: lf" in ln]
+    assert not offending, (
+        "artifacts/ 파일에 EOL 정규화 속성이 붙어 있다:\n" + "\n".join(offending[:5]))
+
+
+# ── 18차 F — 청크 경계에서 승자가 모호하면 fail-fast ────────────────────────
+
+def _write_chunk(d: Path, idx: int, pid: int, rows: list[dict], mtime_ns=None):
+    import os
+
+    import pandas as pd
+
+    sub = d / "chunks"
+    sub.mkdir(parents=True, exist_ok=True)
+    p = sub / f"chunk_{idx:05d}_{pid}.parquet"
+    pd.DataFrame(rows).to_parquet(p, index=False)
+    if mtime_ns is not None:
+        os.utime(p, ns=(mtime_ns, mtime_ns))
+    return p
+
+
+def test_f_merge_fails_fast_when_the_newest_chunk_is_ambiguous(tmp_path):
+    """★ 18차 F — 같은 조건이 두 청크에 **다른 내용**으로 있고 mtime 이 같으면
+    "어느 쪽이 최신인가" 가 결정 불가다.
+
+    지금은 이름순 tie-break 로 조용히 하나를 고른다. 그런데 `chunk_idx` 는
+    프로세스마다 독립이라 이름 순서에 시간 의미가 없다 — 즉 **아무 근거 없이**
+    한쪽 곡선을 버린다. 그 선택이 downstream fit 의 입력을 바꾼다.
+    """
+    from src.io import merge_chunks
+
+    t = 1_700_000_000_000_000_000
+    _write_chunk(tmp_path, 0, 111, [{"cond_id": "c1", "v": 1.0}], mtime_ns=t)
+    _write_chunk(tmp_path, 0, 222, [{"cond_id": "c1", "v": 2.0}], mtime_ns=t)
+
+    with pytest.raises(RuntimeError, match="청크 경계"):
+        merge_chunks(tmp_path)
+
+
+def test_f_identical_duplicates_across_chunks_are_not_an_error(tmp_path):
+    """★ F — 내용이 같으면 어느 쪽을 골라도 결과가 같다. 막지 않는다."""
+    import pandas as pd
+
+    from src.io import merge_chunks
+
+    t = 1_700_000_000_000_000_000
+    _write_chunk(tmp_path, 0, 111, [{"cond_id": "c1", "v": 1.0}], mtime_ns=t)
+    _write_chunk(tmp_path, 0, 222, [{"cond_id": "c1", "v": 1.0}], mtime_ns=t)
+
+    out = merge_chunks(tmp_path)
+    assert out is not None
+    assert len(pd.read_parquet(out)) == 1
+
+
+def test_f_unambiguous_newer_chunk_still_wins(tmp_path):
+    """★ F — mtime 이 실제로 다르면 기존 동작(최신 승) 그대로다."""
+    import pandas as pd
+
+    from src.io import merge_chunks
+
+    t = 1_700_000_000_000_000_000
+    _write_chunk(tmp_path, 0, 111, [{"cond_id": "c1", "v": 1.0}], mtime_ns=t)
+    _write_chunk(tmp_path, 0, 222, [{"cond_id": "c1", "v": 2.0}],
+                 mtime_ns=t + 1_000_000_000)
+
+    df = pd.read_parquet(merge_chunks(tmp_path))
+    assert list(df["v"]) == [2.0]

@@ -410,6 +410,39 @@ def merge_chunks(out_dir: str | Path, name: str = "curves.parquet",
 
     kk = [k for k in keys if k in df.columns]
     if kk:
+        # ★ 18차 F — 승자가 **모호하면** 조용히 고르지 않는다.
+        #
+        #   `chunk_files` 는 mtime 순으로 정렬하고 동률이면 이름으로 tie-break
+        #   하는데, 이름의 `chunk_idx` 는 **프로세스마다 독립**이라 시간 의미가
+        #   없다. 즉 같은 조건이 두 청크에 다른 내용으로 있고 mtime 까지 같으면,
+        #   아무 근거 없이 한쪽 곡선을 버리면서 그 사실이 아무 데도 안 남는다.
+        #   그 선택이 downstream fit 의 입력을 바꾼다.
+        mt = {i: f.stat().st_mtime_ns for i, f in enumerate(files)}
+        dup = df[df.duplicated(kk, keep=False)]
+        ambiguous = []
+        for kv, g in dup.groupby(kk, sort=False):
+            chunks = sorted(set(g["_chunk"]))
+            if len(chunks) < 2:
+                continue
+            top = max(chunks, key=lambda c: mt[c])
+            tied = [c for c in chunks if mt[c] == mt[top]]
+            if len(tied) < 2:
+                continue                      # 최신이 유일 → 기존 규칙대로
+            cols = [c for c in g.columns if c != "_chunk"]
+            blocks = {c: g[g["_chunk"] == c][cols]
+                      .sort_values(cols).to_csv(index=False) for c in tied}
+            if len(set(blocks.values())) > 1:  # 내용이 실제로 다르다
+                ambiguous.append((kv, [files[c].name for c in tied]))
+        if ambiguous:
+            head = "; ".join(f"{kv} ← {names}" for kv, names in ambiguous[:5])
+            raise RuntimeError(
+                f"청크 경계에서 최신본을 결정할 수 없습니다 ({len(ambiguous)}건): "
+                f"{head}. 같은 조건이 여러 청크에 **다른 내용**으로 있는데 "
+                f"mtime 이 같아 순서가 없습니다 (chunk_idx 는 프로세스마다 "
+                f"독립이라 이름 정렬에 시간 의미가 없습니다). 재실행할 청크를 "
+                f"지우고 다시 만드십시오 — 조용히 한쪽을 고르면 그 선택이 "
+                f"downstream fit 입력을 바꿉니다.")
+
         # 키별 최신 청크만 유지 (부분 행이 아니라 블록 단위로 선택)
         newest = df.groupby(kk)["_chunk"].transform("max")
         df = df[df["_chunk"] == newest].reset_index(drop=True)

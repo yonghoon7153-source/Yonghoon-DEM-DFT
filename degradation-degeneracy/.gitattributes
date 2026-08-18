@@ -31,4 +31,7 @@
 #   failed.csv 는 csv.writer 가 CRLF 로 쓴다. eol=lf 로 정규화되면 다른 clone
 #   에서 복원한 바이트가 payload_sha256.yaml·입력_digest_재해시 와 어긋나
 #   "clone 한 사람이 검증할 수 있는가" 라는 archive 의 목적이 깨진다.
-artifacts/** -text
+# ★ 18차 E — `eol` 은 앞줄들(`*.md text eol=lf` 등)에서 상속되는데,
+#   git 문서상 `eol` 지정은 **text 를 사실상 켜는** 효과가 있다.
+#   `-text` 가 이기지만 그 의존은 미묘하므로 `!eol` 로 명시 해제한다.
+artifacts/** -text !eol
