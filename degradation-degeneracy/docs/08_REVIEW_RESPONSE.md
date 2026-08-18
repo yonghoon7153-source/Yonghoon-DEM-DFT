@@ -1487,3 +1487,98 @@ v4 보고서 재생성 불필요(반경 수정이 렌더 결과를 바꾸지 않
 - 4층 active-doc lint 는 §24.3 에서 이미 강화 (claim ID · fenced-code parser ·
   동의어 · positive assertion). `RESULTS*.md` 두 종을 lint 대상에 넣는 것은 미착수
 - A · A' · B · C (Hessian provenance + smoke 커버리지) · E · F 미착수
+
+---
+
+## 27. 18차 잔여 전량 마감 — 4층 lint · A · A' · B · C · E · F
+
+### 27.1 4층 — 생성물 정본 lint
+
+`tests/test_docs_lint.py` 에 `GENERATED_DOCS`(`RESULTS.md`,
+`RESULTS_PAIRED_FIXED5.md`)를 추가했다. 손으로 쓴 문서와 달리 마커가 아니라
+**positive assertion** 으로 지킨다: 철회 명제 부재 · provenance 앵커 3종 존재 ·
+인용 금지 배너 부재 · 경계 수정 **이후** 수치 사용.
+
+생성 코드 회귀(1층 matrix)는 *새로 만든* 문서를 본다. 저장소에 **커밋돼 있는**
+파일이 그 코드로 만들어졌는지는 별개 문제였고, 지금까지 아무도 안 봤다.
+
+### 27.2 A — 분리 배치에서 Hessian 이 곡선을 못 찾아 죽었다
+
+`resolve_curves()` 가 세 경로를 본다: `--curves` → `<in>/curves.parquet` →
+봉인 `_inputs/<digest12>_curves.parquet`. 셋 다 없으면 raw `FileNotFoundError`
+대신 무엇이 필요한지 말하고 멈춘다. **v4 가 그 배치이므로 문서가 제시하던
+Hessian 재현 명령은 애초에 돌지 않았다** — 리뷰 지적 그대로 RED 로 재현했다.
+
+### 27.3 A' — half-cell 기준을 live config·live cache 로 만들었다
+
+봉인 스냅샷의 `base.yaml` 과 half-cell 캐시를 정규 이름으로 펼쳐 그것만 쓴다
+(스냅샷은 `<digest12>_<이름>` 이라 캐시 키 조회가 안 된다). 봉인 입력이 없으면
+경고하고 인용 불가임을 남긴다.
+
+### 27.4 B — 채점 산출물 변이 제거
+
+`degeneracy_summary.yaml` 덮어쓰기를 없애고 `hessian_summary.yaml` sidecar 로
+분리했다. sidecar 안에 **인용 범위 밖**임과 곡선 출처를 함께 적는다. 부수로
+"같은 eps 에서 목적함수끼리만 비교할 것"(18차 발견 7 에서 철회) 도 제거했다.
+
+### 27.5 C — `run.sh --mode all` 옵션 전파 + smoke 커버리지
+
+`--objective`·`--n-restarts`·`--clean`·`--no-adaptive`·`--no-warm-start`·noise 축을
+전부 전파한다. `RUN_SH_DRY=1` 로 실제 실행 없이 합성된 하위 명령을 검사한다.
+Hessian 은 인용 범위 밖 부록이라 기본 체인에서 뺐다.
+
+smoke 8단계 신설: 분리배치 Hessian 실행 · `degeneracy_summary.yaml` 불변 ·
+sidecar 기록 · `score → hessian → report` 순서에 stale 없음 (4/4 통과).
+처음엔 9단계로 넣었다가 보관 음성 테스트가 fixture 를 소모해 실패 — 보관 앞으로
+옮겼다.
+
+**부수 발견 (이 회차에 실제로 당했다).** `--mode report` 의 기본 출력이 커밋된
+정본 `docs/RESULTS.md` 다. 중단된 테스트가 임시 디렉터리에서 돌다가 report
+단계에서 정본을 scratch 수치로 덮어썼다. 입력이 정본 경로(`results/…`)가 아니면
+run 디렉터리에 쓰도록 가드를 넣었다.
+
+### 27.6 E — artifacts byte round-trip + `eol` 상속 해제
+
+Git blob 을 `git cat-file` 로 정규화 없이 꺼내 작업본과 바이트 대조한다
+(CRLF 를 담은 파일 우선, 그런 파일이 하나도 없으면 그것도 실패로 본다).
+검사 중 `git check-attr` 이 artifacts 에도 `eol: lf` 를 보고하는 것을 확인 —
+`-text` 가 이기지만 git 문서상 `eol` 지정은 text 를 사실상 켜므로 `!eol` 로
+명시 해제했다 (`eol: unspecified` 확인).
+
+### 27.7 F — 청크 경계 fail-fast
+
+같은 조건이 두 청크에 **다른 내용**으로 있고 mtime 이 같으면, 이름순
+tie-break 로 조용히 하나를 골랐다. `chunk_idx` 는 프로세스마다 독립이라 이름
+정렬에 시간 의미가 없다 — 아무 근거 없이 한쪽 곡선을 버리고 그 선택이
+downstream fit 입력을 바꾼다. 내용이 실제로 다를 때만 멈춘다 (동일 내용이면
+통과, mtime 이 다르면 기존 최신-승 유지).
+
+### 27.8 뮤테이션 검증 — 네 번째 "축 미실행"
+
+| 뮤테이션 | 결과 |
+|---|---|
+| M13 정본 보고서에 옛 수치 주입 | 1 fail |
+| M14 provenance 앵커 제거 | 1 fail |
+| M15 봉인 스냅샷 해석 제거 | 5 fail |
+| M16 sidecar 미기록 | 2 fail |
+| M17 half-cell live cache 회귀 | 1 fail |
+| M18 청크 fail-fast 제거 | 1 fail |
+| M19 `-text` 제거 | 1 fail |
+| M20 `--objective` 전파 제거 | 1 fail |
+| M21 정본 가드 무력화 | 처음엔 **안 물었다** |
+
+M21: 부작용(정본 파일이 바뀌었는가)만 보면, 빈 scratch 입력에서는 report 가
+compare 단계에서 조기 종료해 **가드에 닿지도 않는다**. 경로 결정을 compare
+앞으로 옮기고, 회귀가 부작용 대신 **해석된 출력 경로**를 보게 고쳤다.
+
+이 라운드에서 "테스트가 축을 안 태운다" 가 M1·M10·M12 에 이어 **네 번째**다.
+
+### 27.9 검증
+
+전체 테스트 **572 passed** · strict smoke 통과 (8단계 Hessian 4/4 포함) ·
+계산 산출물 불변 · v4 보고서 재생성 불필요.
+
+### 27.10 남은 것
+
+18차 리뷰가 지정한 항목은 **전부 닫혔다**. `artifacts/README.md` 의 v4 목록
+갱신만 미착수다.
