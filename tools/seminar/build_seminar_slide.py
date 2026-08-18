@@ -121,7 +121,7 @@ SLIDES = {
     # ⛔⛔ 앞 판 캡션은 "the spread across our three runs ... the runs agree" 였다. **틀렸다.**
     #   세 점은 재현 산포가 아니라 **자리·시드가 다른 세 구조**다 (concentration 열 전부 0.25).
     #   kb/results/site_preference_bar_meaning_2026_08_18.md §4b — 같은 함정 3회째.
-    sub2="Candidate counts differ per compound, so [r]this selection is not a ranking of elements[/r].",
+    sub2="Candidate counts differ [b]15 to 150[/b] per compound, so [r]this selection is not a ranking of elements[/r].",
     label="spread of the three top-ranked structures per species",
     note="median spread [b]0.04 eV / atom[/b]; [r]6 of 88 exceed 0.10[/r] — there the choice is real",
     gloss=("Representative: the one structure kept for the next steps  ·  "

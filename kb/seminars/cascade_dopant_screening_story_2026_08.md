@@ -536,7 +536,7 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 
 > ■ Step 4: One structure per candidate is kept for the full calculations
 > • To carry one structure per compound, the [파랑]top-ranked configuration[/] was kept.
-> • Candidate counts differ per compound, so [빨강]this selection is not a ranking of elements[/].
+> • Candidate counts differ [파랑]15 to 150[/] per compound, so [빨강]this selection is not a ranking of elements[/].
 
 `< spread of the three top-ranked structures per species >`
 `해설` median spread [파랑]0.04 eV / atom[/]; [빨강]6 of 88 exceed 0.10[/] — there the choice is real

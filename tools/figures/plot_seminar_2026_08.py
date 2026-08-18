@@ -546,6 +546,66 @@ def fig_stability_band():
     return _save(fig, "step4_stability_band.png")
 
 
+def fig_pool_size_bias():
+    """후보를 많이 뽑을수록 **챔피언만** 올라간다 — 두 번째 소불릿의 그림 근거.
+
+    왜 이 그림인가 (2026-08-18) — 12장 소불릿 2 (*"this selection is not a ranking of
+    elements"*)가 **말로만** 있었다. 크기를 재 보니 경고가 아니라 차단 사유였고
+    (`kb/results/champion_pool_size_bias_2026_08_18.md`), 그 근거가 화면에 없었다.
+
+    읽는 법 — 선 둘이 **반대로 간다.**
+      · 빨강(챔피언 = 최대) 올라감 : 많이 뽑으면 꼬리가 길어질 뿐이다
+      · 회색(중앙값) 내려감       : 후보가 많은 종이 실제로 더 좋은 게 아니다
+    두 선이 갈라지는 폭이 곧 best-of-N 편향이다.
+
+    이 그림이 **못 하는 것**
+      · 보정하지 않는다. "이만큼 틀렸다" 만 보이고 고친 순위를 주지 않는다.
+      · combined_score 의 가중치·정규화가 타당한지는 검사하지 않는다.
+    """
+    pool = {}
+    for r in _all_rows():
+        if not r.get("combined_score"):
+            continue
+        try:
+            pool.setdefault(base_species(r["dopant"]), []).append(float(r["combined_score"]))
+        except ValueError:
+            continue
+    ns = [len(v) for v in pool.values()]
+    top = [max(v) for v in pool.values()]
+    mid = [st.median(v) for v in pool.values()]
+
+    def _fit(x, y):
+        mx, my = st.mean(x), st.mean(y)
+        b = sum((a - mx) * (c - my) for a, c in zip(x, y)) / sum((a - mx) ** 2 for a in x)
+        return b, my - b * mx
+
+    _rc()
+    fig, ax = plt.subplots(figsize=(5.4, 4.9))
+    for xs, ys, col, lab, s in ((ns, top, BAD, "best of the pool", 26),
+                                (ns, mid, hs.MUT, "typical structure", 20)):
+        ax.scatter(xs, ys, s=s, color=col, alpha=.55, lw=0, zorder=3, label=lab)
+        b, a = _fit(xs, ys)
+        lo, hi = min(xs), max(xs)
+        ax.plot([lo, hi], [a + b * lo, a + b * hi], color=col, lw=2.2, zorder=4)
+    ax.set_xlabel("candidate structures generated")
+    ax.set_ylabel("combined score")
+    ax.legend(loc="lower right", frameon=False, fontsize=10.5, markerscale=1.6)
+    _bare(ax, grid="y")
+
+    _write_csv("seminar_scatter_pool_size_bias.csv",
+               ["species", "n_structures", "champion_score", "median_score"],
+               [[k, len(v), f"{max(v):.4f}", f"{st.median(v):.4f}"]
+                for k, v in sorted(pool.items(), key=lambda kv: len(kv[1]))],
+               header=[
+                "# Step 4 — pool size vs score (seminar 2026-08).",
+                "# n_structures = how many candidate structures that species produced (15-150).",
+                "# The two Y columns move in OPPOSITE directions with n: champion r=+0.32,",
+                "#   median r=-0.21. That gap is the best-of-N sampling bias, not chemistry.",
+                "# Origin: XY scatter, two Y series, add a linear fit line to each.",
+               ])
+    return _save(fig, "step4_pool_size_bias.png")
+
+
 # ── 5. 결과 1 — 같은 이름, 다른 값 ─────────────────────────────────────────────
 def fig_label_spread():
     sp = _by_species("elastic_E_young_GPa")
