@@ -533,8 +533,17 @@ mkdir -p "$ARCH_TMP"
 cp -a "$GFIT" "$BASE/keep_run"
 # ★ 12차 — **wrapper 경로**로 정상 승격까지 검사한다 (예전 smoke 는 하위 bundle
 #   도구만 직접 불러 wrapper·artifact index 회귀를 고정하지 못했다).
-ARCHIVE_DEST="$ARCH_TMP" ./scripts/archive_results.sh "$GFIT" >/dev/null 2>&1 \
-  && ok "archive wrapper 정상 승격" || bad "archive wrapper 승격 실패"
+# ★ 실패하면 wrapper 출력을 보여준다. 예전에는 >/dev/null 2>&1 로 버려서,
+#   이 검사가 깨져도 **왜** 깨졌는지 알 방법이 없었다 (끝에서 $BASE 까지
+#   지워지므로 사후 조사도 불가능). 진단 정보를 버리지 않는다.
+_ARCH_LOG="$BASE/_archive_wrapper.log"
+if ARCHIVE_DEST="$ARCH_TMP" ./scripts/archive_results.sh "$GFIT" >"$_ARCH_LOG" 2>&1; then
+  ok "archive wrapper 정상 승격"
+else
+  bad "archive wrapper 승격 실패"
+  printf '\033[31m      ── wrapper 출력 (마지막 25줄) ──\033[0m\n'
+  tail -25 "$_ARCH_LOG" | sed 's/^/      /'
+fi
 "$PY" - "$ARCH_TMP" "$GFIT" <<'PYEOF'
 import sys
 from pathlib import Path
@@ -577,7 +586,15 @@ rm -rf "$GFIT" && mv "$BASE/keep_run" "$GFIT"   # 변조본 폐기, 원본 복�
 
 # ────────────────────────────────────────────────────────────────── 마무리
 [[ -d "$STASH" ]] && cp -a "$STASH/." "$CACHE_DIR/" 2>/dev/null; rm -rf "$STASH"
-[[ "${KEEP:-0}" == "1" ]] || rm -rf "$BASE"
+# ★ 실패했으면 $BASE 를 남긴다 — 지워버리면 무엇이 깨졌는지 조사할 수 없다.
+#   (KEEP=1 이면 성공해도 남긴다.)
+if [[ "${KEEP:-0}" == "1" ]]; then
+  printf '   (KEEP=1 — %s 를 남겼다)\n' "$BASE"
+elif [[ "$fail" -ne 0 ]]; then
+  printf '   (실패했으므로 %s 를 남겼다 — 조사 후 지우세요)\n' "$BASE"
+else
+  rm -rf "$BASE"
+fi
 
 # ★ 19차 — 실행 중 워킹트리가 바뀌었는가 (원인을 직접 말한다)
 SMOKE_END_DIGEST="$("$PY" -c 'from src.io import source_digest; print(source_digest())' 2>/dev/null || echo unknown)"
