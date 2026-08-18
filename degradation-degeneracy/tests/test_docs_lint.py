@@ -239,3 +239,80 @@ def test_artifacts_readme_marks_unindexed_bundles_as_history():
     assert not bad, f"인덱스 밖 묶음이 README 에 언급조차 없다: {bad}"
     assert "이력" in text or "history" in text.lower(), \
         "인덱스 밖 묶음을 이력으로 표시하는 문구가 없다"
+
+
+# ── 문서 ↔ 정본 대조 (자체 리뷰 F-1 재발 방지) ────────────────────────────
+#
+# ★ 19차 자체 리뷰에서 `docs/09_22P_GAP.md` §7.6 의 grid 행이 half-cell 행을
+#   그대로 복제한 **조작 값**으로 실려 있었다 (8칸 전부 정본 불일치). 사람이
+#   손으로 옮긴 표는 아무도 검사하지 않았고, 정본 txt 가 커밋조차 안 돼 있어
+#   외부 리뷰어도 대조할 수 없었다. 이제 정본이 저장소에 있으므로 **기계가
+#   대조한다** — 문서에 손으로 쓴 수치가 정본과 어긋나면 여기서 깨진다.
+
+import re as _re
+
+_CANON = Path(__file__).resolve().parent.parent / "docs" / "22p_gap"
+_DOC = Path(__file__).resolve().parent.parent / "docs" / "09_22P_GAP.md"
+
+#: §0 표의 (기준, 목적함수, noise) → 정본 파일 stem
+_P22_ROWS = {
+    ("grid", "pocv_dvdq", "0"): "dense_pocv_dvdq",
+    ("grid", "pocv_dvdq_dqdv", "0"): "dense_pocv_dvdq_dqdv",
+    ("half-cell", "pocv_dvdq", "0"): "dense_pocv_dvdq_hc",
+    ("half-cell", "pocv_dvdq_dqdv", "0"): "dense_pocv_dvdq_dqdv_hc",
+    ("grid", "pocv_dvdq", "0.005"): "seed_pocv_dvdq",
+    ("grid", "pocv_dvdq_dqdv", "0.005"): "seed_pocv_dvdq_dqdv",
+    ("half-cell", "pocv_dvdq", "0.005"): "seed_pocv_dvdq_hc",
+    ("half-cell", "pocv_dvdq_dqdv", "0.005"): "seed_pocv_dvdq_dqdv_hc",
+}
+
+
+def _canon_facts(stem: str) -> dict:
+    """정본 출력에서 ①' 의 (참 격차 0 붕괴, ≥4%p 누적) 을 뽑는다."""
+    txt = (_CANON / f"{stem}.txt").read_text(encoding="utf-8")
+    near = txt.split("①'")[1].split("\n② ")[0]
+    m = _re.search(r"^\s*0%p\s+(\d+)\s+(\d+)/(\d+)", near, _re.M)
+    assert m, f"{stem}: ①' 의 참 격차 0 행을 못 찾음"
+    n, k = int(m.group(1)), int(m.group(2))
+    assert int(m.group(3)) == n, f"{stem}: 분모 불일치"
+    cum = _re.search(r"동작점 근방\(①'\)\s+≥4%p:\s*(\d+)/(\d+)", txt.split("④")[1])
+    assert cum, f"{stem}: ④ 누적 ≥4%p 를 못 찾음"
+    return {"gap0_n": n, "gap0_collapse": k, "false_split": n - k,
+            "ge4_k": int(cum.group(1)), "ge4_n": int(cum.group(2))}
+
+
+def test_p22_canon_outputs_are_committed():
+    """★ 인용 규칙이 가리키는 정본이 저장소에 있어야 한다.
+
+    자체 리뷰: 문서가 `docs/22p_gap/*.txt` 를 정본이라 선언했는데 그 파일이
+    커밋된 적이 없어, 외부 리뷰어가 **어떤 수치도** 대조할 수 없었다.
+    """
+    assert _CANON.is_dir(), "docs/22p_gap 이 없다 — 정본 미커밋"
+    missing = [s for s in sorted(set(_P22_ROWS.values()))
+               if not (_CANON / f"{s}.txt").exists()]
+    assert not missing, f"§0 표가 근거로 삼는 정본 출력이 없다: {missing}"
+
+
+def test_p22_headline_table_matches_the_canon_outputs():
+    """★ §0 표의 8행이 정본과 셈 단위까지 맞아야 한다 (F-1 재발 방지)."""
+    head = _DOC.read_text(encoding="utf-8").split("## 1. 질문")[0]
+
+    checked = 0
+    for (ref, obj, noise), stem in _P22_ROWS.items():
+        c = _canon_facts(stem)
+        row = _re.search(
+            r"^\|\s*(?:\*\*)?" + _re.escape(ref) + r"(?:\*\*)?\s*\|\s*(?:\*\*)?`"
+            + _re.escape(obj) + r"`(?:\*\*)?\s*\|\s*" + _re.escape(noise)
+            + r"\s*\|([^|]*)\|([^|]*)\|", head, _re.M)
+        assert row, f"§0 표에서 ({ref}, {obj}, noise={noise}) 행을 못 찾음"
+        fs, col = row.group(1), row.group(2)
+
+        want_fs = f"{c['false_split']}/{c['gap0_n']}"
+        assert want_fs in fs, (
+            f"({ref},{obj},{noise}) 거짓 분리: 문서 '{fs.strip()}' vs "
+            f"정본 {want_fs} ({stem}.txt: 붕괴 {c['gap0_collapse']}/{c['gap0_n']})")
+        want_col = f"{c['ge4_k']}/{c['ge4_n']}"
+        assert want_col in col, (
+            f"({ref},{obj},{noise}) 붕괴: 문서 '{col.strip()}' vs 정본 {want_col}")
+        checked += 1
+    assert checked == 8, checked

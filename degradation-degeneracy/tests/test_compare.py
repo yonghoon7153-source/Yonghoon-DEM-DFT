@@ -4652,3 +4652,29 @@ def test_analyze_22p_records_code_identity_of_both_legs(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "code identity" in out or "source_digest" in out, \
         "두 다리 digest 불일치가 출력에 없다"
+
+
+def test_analyze_22p_breaks_down_the_gap_zero_cell(tmp_path, capsys):
+    """★ §5.3 미해결 추적 — 참 격차 0 칸이 균질한지 봐야 한다.
+
+    dense 격자에서 gap-0 81조건 중 fine 에 있던 15조건은 거짓 분리 80%,
+    나머지 66조건은 15.2% 였다. **22p 동작점 자신이 그 15조건 안에 있다** —
+    이질성이 진짜라면 81조건 평균(6.2%)은 동작점의 값이 아니다. 축별로
+    쪼개 볼 수 있어야 판단이 가능하다.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    g["r"] = 0.5
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    r = run(gd, "pocv_dvdq", breakdown=True)
+    bd = r.get("gap0_breakdown")
+    assert bd, "참 격차 0 칸의 축별 분해가 없다"
+    assert "lli" in bd and "lam" in bd, bd
+    # 각 축 항목은 (n, 거짓 분리 수) 를 담아야 한다
+    for axis in ("lli", "lam"):
+        for key, v in bd[axis].items():
+            assert {"n", "false_split"} <= set(v), (axis, key, v)
+    out = capsys.readouterr().out
+    assert "참 격차 0 칸 분해" in out
