@@ -16,10 +16,19 @@
 
 ★ 시트가 비워 둔 칸을 채운다: 목표 두께 · plate 높이 · **입자수 P/S/SE**.
 
-⚠⚠ **가장 위험한 칸은 `생성 구역`이다.**  그 값은 `Sim_설정 높이`로 나눈 것인데, 덱의
-   `region reg_mix block ... z_lo z_hi` 와 **반드시 같아야** 한다.  업로드된 `input_real_1`
-   은 `0.005 → 0.30` (높이 0.295) 인데 시트는 0.5 를 쓴다 — 그대로 두면 실현 부피분율이
-   **1.69배** 어긋나고, 그러면 로딩(=면용량)이 틀린다.  `--h-set` 로 덱 값을 넣을 것.
+★ 시트 포뮬러 확인 (사용자 2026-08-18): `생성구역 = F30/(E30*D30*C30)`
+   = Sim_실제필요부피 / (Sim_설정높이 × Sim_RVE_Y × Sim_RVE_X).  **이 구현과 동일하다.**
+   E30 은 케이스마다 다르다 — 8 mAh 면 0.5 (→ 0.257), 6 mAh 면 0.30 (→ 0.3208 ≈ 덱의 0.321).
+
+⚠⚠ **그런데 그 확인에서 −1.6 % 계통 편차가 나온다 (`z_lo` 오프셋).**
+   덱: `region reg_mix block 0.0 0.05 0.0 0.05 **0.005** 0.30` ⇒ **실제 높이 0.295**.
+   시트는 E30 = **0.30** 으로 나눠 0.3208 (=덱의 0.321) 을 준다.
+   그런데 LIGGGHTS 는 `volumefraction_region` 을 **실제 region 부피**(0.295)에 곱한다:
+       삽입 부피 = 0.321 × 0.0025 × 0.295 = 2.3674e-4 m³
+       필요 부피 =                          2.4063e-4 m³   ⇒ **−1.62 %**
+   ⇒ 실현 로딩(=면용량·두께)이 모든 케이스에서 **1.6 % 낮게** 나온다.  상대 비교에서는
+     상쇄되지만 절대 면용량에는 남는다.  **고치려면 `z_hi − z_lo` 로 나눌 것** (0.295 →
+     생성구역 0.3263).  이 도구는 `--z-lo`/`--z-hi` 로 그것을 쓴다.
 
   python3 scripts/dem_input_values.py --verify-sheet
   python3 scripts/dem_input_values.py --design docs/data/lhs_design_20260818.csv \\
@@ -150,19 +159,29 @@ if __name__ == '__main__':
                     help='목표 면용량 mAh/cm² (기본 = 설계 CSV 의 loading_mAh_cm2)')
     ap.add_argument('--eps', type=float, default=EPS_ASSUMED)
     ap.add_argument('--h-set', type=float, default=H_SET_M_DEFAULT,
-                    help='⚠ 덱의 reg_mix z-span 과 **같아야** 한다 (생성 구역이 그것으로 나뉜다)')
+                    help='Sim 설정높이 (시트 E30).  ⚠ --z-lo/--z-hi 를 주면 그쪽이 이긴다')
+    ap.add_argument('--z-lo', type=float, default=None,
+                    help='덱 `region reg_mix` 의 z_lo (기본 0.005) — 이것을 빼야 실현 로딩이 맞는다')
+    ap.add_argument('--z-hi', type=float, default=None, help='덱 region 의 z_hi')
     ap.add_argument('--verify-sheet', action='store_true')
     a = ap.parse_args()
     if a.verify_sheet or not a.design:
         raise SystemExit(verify_sheet())
 
+    #  ★ z_lo 오프셋 — LIGGGHTS 는 **실제 region 부피**에 분율을 곱한다.  시트가 z_hi 로만
+    #    나누면 실현 부피가 (z_hi−z_lo)/z_hi 만큼 모자란다 (덱 실측 −1.62 %).
+    h_eff = a.h_set
+    if a.z_hi is not None:
+        h_eff = a.z_hi - (a.z_lo if a.z_lo is not None else 0.0)
+        print(f'[i] region z {a.z_lo}–{a.z_hi} ⇒ **실제 높이 {h_eff:g} m** 로 나눈다 '
+              f'(시트가 z_hi 만 쓰면 {100 * (h_eff / a.z_hi - 1):+.2f} % 어긋난다)')
     rows = list(csv.DictReader(open(a.design, encoding='utf-8')))
     out = []
     for r in rows:
         load = a.load if a.load is not None else _f(r, 'loading_mAh_cm2')
         o = sheet(_f(r, 'am_pct'), load, _f(r, 'rve_um'),
                   _f(r, 'd_am_p_um'), _f(r, 'd_am_s_um'), _f(r, 'd_se_um'),
-                  _f(r, 'ps_frac'), eps=a.eps, h_set=a.h_set)
+                  _f(r, 'ps_frac'), eps=a.eps, h_set=h_eff)
         out.append({'case_id': r['case_id'], 'block': r['block'],
                     'am_pct': _f(r, 'am_pct'), 'ps_frac': _f(r, 'ps_frac'),
                     'd_am_p_um': r['d_am_p_um'], 'd_am_s_um': r['d_am_s_um'],
@@ -183,20 +202,23 @@ if __name__ == '__main__':
     vf = np.array([o['insert_volfrac'] for o in out])
     th = np.array([o['thickness_target_um'] for o in out])
     print(f"\n{len(out)} 행 요약 (면용량 {out[0]['loading_mAh_cm2']:g} mAh/cm² · "
-          f"ε {a.eps} · Sim 설정높이 {a.h_set} m)")
+          f"ε {a.eps} · 삽입 region 실제높이 {h_eff:g} m)")
     print(f"  목표 두께      {th.min():>8.1f} – {th.max():>8.1f} µm  (중앙 {np.median(th):.1f})")
     print(f"  생성 구역      {vf.min():>8.4f} – {vf.max():>8.4f}     (중앙 {np.median(vf):.4f})")
     print(f"  전체 입자수    {nt.min():>8,.0f} – {nt.max():>8,.0f}    (중앙 {np.median(nt):,.0f} · "
           f"합 {nt.sum():,.0f})")
     hr = np.array([o['h_set_recommended_m'] for o in out])
     print(f"  ★ 권장 설정높이 {hr.min():.3f} – {hr.max():.3f} m (중앙 {np.median(hr):.3f}) — "
-          f"생성 구역을 {VOLFRAC_TARGET} 로 맞춘 값.  현재 {a.h_set} m 를 쓰면 분율이 "
-          f"{np.median(vf):.3f} 라 입자가 그 높이를 낙하한다 = settling 이 길어진다")
+          f"생성 구역을 {VOLFRAC_TARGET} 로 맞춘 값 (= z_hi − z_lo).  "
+          f"현재 {h_eff:g} m 에서 분율 중앙 {np.median(vf):.3f}")
     hi = [o for o in out if o['insert_volfrac'] > 0.5]
     if hi:
         print(f"  ⚠ 생성 구역 > 0.5 인 행 {len(hi)}개 — `insert/pack` 이 못 채울 수 있다.  "
               f"`--h-set` 를 키우고 덱의 reg_mix 도 같이 키울 것")
-    print("  ⚠⚠ `생성 구역` 은 **덱의 `region reg_mix` z-span** 으로 나눈 값이다.  "
-          "둘이 다르면 실현 로딩(=면용량)이 그 비만큼 틀린다 — 업로드된 input_real_1 은 "
-          "0.005→0.30 (높이 0.295) 인데 시트 기본은 0.5 다.")
+    if a.z_hi is None:
+        print("  ⚠⚠ `--z-lo/--z-hi` 를 안 줬다.  덱의 `region reg_mix` 는 z_lo 가 0 이 아니라서"
+              " (실측 0.005), z_hi 로만 나누면 실현 로딩이 그만큼 모자란다 (덱 실측 −1.62 %).")
+    else:
+        print(f"  ✓ region z {a.z_lo}–{a.z_hi} 실제 높이 {h_eff:g} m 로 나눴다 — "
+              f"z_lo 오프셋 반영됨 (안 하면 {100 * (a.z_hi / h_eff - 1):+.2f} % 로딩 부족)")
     sys.stdout.flush()
