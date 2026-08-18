@@ -3,7 +3,7 @@
 # Two columns of different length - blanks at the bottom of the shorter one are normal.,
 "# In Origin: select BOTH columns > Plot > Statistics > Histogram, then set Bin Size = 2.",
 "# ** Do NOT use this file with a Column chart, and do NOT use the pre-binned file with Histogram. **",
-dV_pct_carried_forward,dV_pct_dropped
+dV_pct_kept,dV_pct_dropped
 0.000,25.030
 0.000,25.034
 0.000,25.034

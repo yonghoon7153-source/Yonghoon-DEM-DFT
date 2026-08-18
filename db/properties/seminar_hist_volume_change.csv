@@ -1,9 +1,9 @@
 # Slide: Step 3 - histogram of |dV|/V0 during MLIP relaxation.,,,,
 "# Source: cascade_v23_all.csv, column screen_dV_over_V0, absolute value x 100.",,,,
 # Bin width 2 %. Plot bin_center vs the two count columns as an overlaid column chart.,,,,
-"# Cut at 25 %: carried forward 3515, dropped 100.",,,,
+"# Cut at 25 %: kept 3515, dropped 100.",,,,
 "# ** These are STRUCTURES (3,615 total), not compounds. **",,,,
-bin_low_pct,bin_high_pct,bin_center_pct,n_carried_forward,n_dropped
+bin_low_pct,bin_high_pct,bin_center_pct,n_kept,n_dropped
 0,2,1.0,275,0
 2,4,3.0,83,0
 4,6,5.0,139,0

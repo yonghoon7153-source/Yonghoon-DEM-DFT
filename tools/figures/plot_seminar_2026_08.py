@@ -333,7 +333,7 @@ def fig_screen_axes():
     _rc()
     fig, ax = plt.subplots(figsize=(9.2, 4.6))
     ax.scatter([x for x, _ in keep], [y for _, y in keep], s=7, alpha=.28,
-               color=GOOD, lw=0, zorder=2, label=f"carried forward ({len(keep):,})")
+               color=GOOD, lw=0, zorder=2, label=f"kept ({len(keep):,})")
     ax.scatter([x for x, _ in drop], [y for _, y in drop], s=20, alpha=.9,
                color=BAD, lw=0, zorder=4, label=f"dropped, > 25 % ({len(drop)})")
     ax.axvline(CUT, color=hs.INK, lw=1.2, ls="--", zorder=3)
@@ -520,7 +520,7 @@ def fig_screen_survival():
     _rc()
     fig, ax = plt.subplots(figsize=(10.8, 4.7))
     bins = list(range(0, 62, 2))
-    ax.hist(keep, bins=bins, color=GOOD, alpha=.85, zorder=3, label="carried forward")
+    ax.hist(keep, bins=bins, color=GOOD, alpha=.85, zorder=3, label="kept")
     ax.hist([min(v, 60) for v in drop], bins=bins, color=BAD, alpha=.92, zorder=4,
             label="dropped (> 25 %)")
     ax.axvline(25, color=hs.INK, ls="--", lw=1.5, zorder=5)

@@ -483,7 +483,7 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 > • Structures were removed by [파랑]geometry, not by energy[/].
 
 `< how far each structure moved  ·  the same structures on both screening axes >`
-`해설` [빨강]100 of 3,615 changed by more than 25 %[/]; by energy they look ordinary.
+`해설` [빨강]100 of 3,615 changed by more than 25 %[/]; their energies look like the rest.
 하단 용어 — Relaxation: moving atoms until the forces vanish ·
 　　　　　　 MLIP: a fast stand-in trained on DFT forces
 

@@ -1,7 +1,7 @@
 // volume_change_hist.ogs — Step 3 부피변화 분포 (구간화 CSV → Column chart) BML 포맷
 // 쓰는 법: 그래프 창 활성화 → Script Window 에 붙여넣고 Enter.
 // 전제: seminar_hist_volume_change.csv 를 넣고 bin_center_pct 를 X 로,
-//       n_carried_forward · n_dropped 를 Y 로 하는 Column chart 를 이미 만든 상태.
+//       n_kept · n_dropped 를 Y 로 하는 Column chart 를 이미 만든 상태.
 // 이 스크립트가 **못 하는 것**: 막대 채움색·겹침·25 % 점선 → 아래 GUI 단계로.
 
 layer.unit = 3;
@@ -48,5 +48,5 @@ label -xb how far the cell volume moved during relaxation  (%);
 label -yl number of candidate structures;
 
 // ── 계열 색 ────────────────────────────────────────────────────────────────
-range r1 = 1!1;  set r1 -c color(37,99,235);    // #2563EB  carried forward
+range r1 = 1!1;  set r1 -c color(37,99,235);    // #2563EB  kept
 range r2 = 1!2;  set r2 -c color(190,18,60);    // #BE123C  dropped
