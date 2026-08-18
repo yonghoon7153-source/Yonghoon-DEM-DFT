@@ -69,7 +69,7 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02,
     참 격차 0.5%p 인 조건이 "참 격차 0" 칸에 섞이면 거짓 분리율이 통째로
     오염되므로, 안 맞으면 **멈춘다**.
     """
-    from tools.compare_objectives import gap_is_zero, gap_lt
+    from tools.compare_objectives import gap_lt
 
     g = df.copy()
     g["gap_true"] = (g["lam_pe"] - g["lam_ne"]).abs()
@@ -107,6 +107,25 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02,
                             f"{float((sub['gap_hat'] / sub['gap_true']).median()):.2f}"),
         })
     return pd.DataFrame(rows)
+
+
+def _leg_digest(d: Path) -> str | None:
+    """실행 디렉터리의 manifest 에서 code identity(source_digest)를 읽는다.
+
+    ★ 자체 리뷰(sig 렌즈) — dense 비교의 grid 다리는 src 8fe84240, hc 다리는
+      7250c6e6 에서 생산됐는데 이 도구가 어느 쪽 manifest 도 읽지 않아
+      무언급으로 지나갔다. 이번엔 두 커밋 사이 src/ diff 가 비어 무해했지만,
+      다음에 fit 코드가 낀 두 다리를 비교하면 조용히 통과한다.
+    """
+    import yaml
+    mp = Path(d) / "manifest.yaml"
+    if not mp.exists():
+        return None
+    try:
+        man = yaml.safe_load(mp.read_text(encoding="utf-8")) or {}
+    except Exception:  # noqa: BLE001 — 못 읽으면 unknown 으로 보고만 한다
+        return None
+    return (man.get("run_spec") or {}).get("source_digest") or man.get("source_digest")
 
 
 def _as_dirs(x) -> list[Path]:
@@ -164,6 +183,17 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     in_dirs = _as_dirs(in_dir)
     df = _pooled(in_dirs, objective, tol, "--in")
 
+    # ★ 자체 리뷰 F-B — 실패한 fit(NaN hat)은 gap_lt(NaN, tol)=False 로
+    #   "붕괴 아님" = "전극을 갈랐다" 쪽에 집계된다. 실패가 많을수록 지표가
+    #   좋아지는 방향의 오염이므로 멈춘다.
+    bad = df["pe_ne_gap_recovered"].isna()
+    if bad.any():
+        ex = sorted(df.loc[bad, "cond_id"].astype(str))[:5]
+        raise SystemExit(
+            f"복원 격차가 NaN 인 행이 {int(bad.sum())}건 있습니다 (예: {ex}). "
+            f"실패한 fit 이 섞이면 붕괴율이 좋은 쪽으로 왜곡됩니다 — "
+            f"해당 조건의 fit 로그를 확인하세요.")
+
     df = df.copy()
     df["lam_mean"] = (df["lam_pe"] + df["lam_ne"]) / 2
     df["gap_true"] = (df["lam_pe"] - df["lam_ne"]).abs()
@@ -175,6 +205,15 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         # `isin` 이 이미 이쪽에 없는 cond_id 를 걸러내므로 교집합은 불필요하다
         # (M24 로 확인 — 넣고 빼도 결과가 같은 죽은 코드였다).
         keep = set(ref.loc[ref["recoverable"], "cond_id"])
+        # ★ 자체 리뷰 F-A — 기준의 복원가능 조건이 이쪽에 없으면 멈춘다.
+        #   중단·resume 실패한 부분 fit 을 넣으면 "모집단을 맞췄다"는 머리말
+        #   아래에서 진부분집합이 조용히 비교되던 경로다 (fail-closed 위반).
+        missing = sorted(keep - set(df["cond_id"]))
+        if missing:
+            raise SystemExit(
+                f"--restrict-to: 기준 실행의 복원가능 조건 {len(missing)}개가 "
+                f"이쪽 실행에 없습니다 (예: {missing[:5]}). 부분 fit(중단된 "
+                f"실행)인지 확인하세요 — 이대로 비교하면 모집단이 다릅니다.")
         before = int(len(df))
         dropped = sorted(set(df["cond_id"]) - keep)
         df = df[df["cond_id"].isin(keep)].copy()
@@ -226,6 +265,11 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     if restriction is not None:
         out["restricted_to"] = restriction
 
+    identity = {str(d): _leg_digest(d) for d in in_dirs}
+    if restrict_to is not None:
+        identity.update({str(d): _leg_digest(d) for d in _as_dirs(restrict_to)})
+    out["code_identity"] = identity
+
     print("=" * 74)
     print(f" 22p 동작점에서 두 전극을 가를 수 있는가  (objective={objective})")
     print("=" * 74)
@@ -236,6 +280,12 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         print(f"\n※ 모집단을 {restriction['run_dir']} 의 복원가능군에 맞췄다 "
               f"(유지 {restriction['n_kept']}행 · 제외 {restriction['n_dropped']}행).")
         print("   기준 곡선끼리 비교하려면 이렇게 맞춘 뒤에만 나란히 놓을 수 있다.")
+    digests = {v for v in identity.values() if v}
+    if len(digests) > 1:
+        print("\n⚠ 두 다리의 code identity(source_digest) 가 다릅니다: "
+              + ", ".join(sorted(digests))
+              + "\n  fit 코드(src/·run.sh)가 그 사이 안 바뀌었는지 git diff 로 "
+                "확인하고, 인용 시 이 사실을 명시하세요.")
     print(f"\n전체 {len(df)}행 중 복원가능군 {len(rec)}행 "
           f"({100 * len(rec) / len(df):.0f}%)\n")
 
@@ -270,7 +320,9 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     exact = df[(df["lli"].sub(0.17).abs() < 1e-9)
                & (df["lam_pe"].sub(0.13).abs() < 1e-9)
                & (df["lam_ne"].sub(0.13).abs() < 1e-9)]
-    print(f"\n③ 22p 조건 그 자체 (0.13, 0.13, 0.17) — n={len(exact)}")
+    # ③ 은 의도적으로 **전 noise 층**을 보여준다 (행마다 noise 라벨이 붙는다).
+    #   ①/①'/② 가 --noise 로 한 층만 볼 때도 ③ 은 안 걸러진다 — 머리말에 밝힌다.
+    print(f"\n③ 22p 조건 그 자체 (0.13, 0.13, 0.17) — n={len(exact)} (전 noise 층)")
     for _, r in exact.iterrows():
         print(f"   noise={r['noise']:<6g} 복원 LAM_PE={r['lam_pe_hat']:.4f} "
               f"LAM_NE={r['lam_ne_hat']:.4f} LLI={r['lli_hat']:.4f} "
@@ -295,21 +347,36 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
                 line.append(f"≥{100*thr:.0f}%p: n=0")
                 continue
             k = int(_lt(s2["pe_ne_gap_recovered"], tol).sum())
-            line.append(f"≥{100*thr:.0f}%p: {k}/{len(s2)} ({100*k/len(s2):.1f}%)")
+            # ★ 자체 리뷰(통계 렌즈) — seed 스윕을 모으면 행 수 ≠ 독립 표본 수
+            #   (306행 = 51조건 × 6 seed). 조건 수를 병기해야 rule of three 를
+            #   행 수에 적용하는 과신(0.98% vs 조건 단위 ~5.9%)을 막는다.
+            n_cond = int(s2[["lli", "lam_pe", "lam_ne"]].drop_duplicates().shape[0])
+            tail = f" [조건 {n_cond}]" if n_cond < len(s2) else ""
+            line.append(f"≥{100*thr:.0f}%p: {k}/{len(s2)} ({100*k/len(s2):.1f}%){tail}")
             out.setdefault("cumulative", {}).setdefault(label, {})[
-                f">={100*thr:.0f}pp"] = {"k": k, "n": int(len(s2))}
+                f">={100*thr:.0f}pp"] = {"k": k, "n": int(len(s2)),
+                                         "n_conditions": n_cond}
         print(f"   {label:<16s} " + "  ·  ".join(line))
     print("   ⚠ 동일가중 합성격자의 **조건부 사건률**이다 — 실제 셀 posterior 가 아니다.")
+    if len(in_dirs) > 1:
+        print("   ⚠ 여러 실행을 모았다 — 신뢰구간·rule of three 는 행 수가 아니라 "
+              "[조건 N] 을 독립 단위로 계산할 것.")
 
     if plot:
-        _plot(wide, tight, plot, objective, tol)
+        _plot(wide, tight, plot, objective, tol, noise=noise)
         print(f"\n그림: {plot}")
     print()
     return out
 
 
+def _scatter_label(noise: float) -> str:
+    # ★ 자체 리뷰 F-D — "noise 0" 하드코딩이었다. gap_table 라벨 버그(F tol)와
+    #   같은 유형: 출력이 인용 근거가 되므로 라벨은 실제 값을 말해야 한다.
+    return f"all (noise {noise:g}, recoverable)"
+
+
 def _plot(wide: pd.DataFrame, tight: pd.DataFrame, path: str,
-          objective: str, tol: float) -> None:
+          objective: str, tol: float, noise: float = 0.0) -> None:
     import matplotlib
     matplotlib.use("Agg")
     import matplotlib.pyplot as plt
@@ -326,7 +393,7 @@ def _plot(wide: pd.DataFrame, tight: pd.DataFrame, path: str,
 
     ax.scatter(wide["gap_true"] * 100, wide["gap_hat"] * 100 if "gap_hat" in wide
                else wide["pe_ne_gap_recovered"] * 100,
-               s=16, c="#9aa5b1", alpha=.55, label="all (noise 0, recoverable)")
+               s=16, c="#9aa5b1", alpha=.55, label=_scatter_label(noise))
     if len(tight):
         ax.scatter(tight["gap_true"] * 100,
                    tight["pe_ne_gap_recovered"] * 100,

@@ -4520,3 +4520,135 @@ def test_analyze_22p_passes_the_bin_width_through(tmp_path):
         run(gd, "pocv_dvdq")
     r = run(gd, "pocv_dvdq", bin_w=0.005)          # 맞는 폭이면 통과
     assert r["wide"]["n"] > 0
+
+
+# ── 19차 자체 리뷰 (fable5 · 4렌즈) 발견 — RED 부터 ─────────────────────────
+
+def test_analyze_22p_refuses_when_reference_conditions_are_missing(tmp_path):
+    """★ 자체 리뷰 F-A — 기준의 복원가능 조건이 이쪽에 없으면 멈춰야 한다.
+
+    실측 반례: ref 복원가능 10조건 중 target 에 7조건만 있는 부분 fit 을 넣으면
+    머리말이 "모집단을 맞췄다" 라고 말하면서 실제로는 진부분집합으로 조용히
+    진행했다. 중단·resume 실패한 실행이 정확히 이 모양을 만든다.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    # target 에서 ref 복원가능 조건 일부를 제거한다
+    sc = _scored(g)
+    rec_ids = sorted(sc.loc[sc["recoverable"], "cond_id"])[:3]
+    h = h[~h["cond_id"].isin(rec_ids)]
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+
+    with pytest.raises(SystemExit, match="없"):
+        run(hd, "pocv_dvdq", restrict_to=gd)
+
+
+def test_analyze_22p_refuses_nan_recovered_gaps(tmp_path):
+    """★ 자체 리뷰 F-B — 실패한 fit(NaN hat)이 "분리 성공" 쪽으로 집계된다.
+
+    실측 반례: 참 격차 6%p 3조건 중 1조건이 NaN 이면 붕괴율이 2/2=100% 가
+    아니라 2/3=66.7% 로 찍혔다 — 실패가 많을수록 지표가 좋아지는 방향.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    g.loc[g.index[0], "lam_pe_hat"] = float("nan")
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    with pytest.raises(SystemExit, match="NaN|nan"):
+        run(gd, "pocv_dvdq")
+
+
+def test_analyze_22p_exact_block_labels_all_noise_layers(tmp_path, capsys):
+    """★ 자체 리뷰 F-C — ③ 은 전 noise 층을 보여준다. 머리말이 밝혀야 한다."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    run(gd, "pocv_dvdq", noise=0.005)
+    out = capsys.readouterr().out
+    assert "③" in out
+    assert "전 noise 층" in out, out[out.index("③"):out.index("③") + 200]
+
+
+def test_analyze_22p_scatter_label_states_the_noise_level():
+    """★ 자체 리뷰 F-D — 산점도 범례가 "noise 0" 으로 박혀 있었다."""
+    from tools.analyze_22p_gap import _scatter_label
+
+    assert _scatter_label(0.0) == "all (noise 0, recoverable)"
+    assert _scatter_label(0.005) == "all (noise 0.005, recoverable)"
+
+
+def test_analyze_22p_forwards_noise_to_the_plot(tmp_path, monkeypatch):
+    """★ 자체 리뷰 F-D — run() 이 --noise 를 _plot 까지 전달해야 한다."""
+    import tools.analyze_22p_gap as A
+
+    seen = {}
+    monkeypatch.setattr(A, "_plot",
+                        lambda *a, **kw: seen.update(noise=kw.get("noise", a[5] if len(a) > 5 else None)))
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    A.run(gd, "pocv_dvdq", noise=0.005, plot=str(tmp_path / "x.png"))
+    assert seen.get("noise") == 0.005, seen
+
+
+def test_analyze_22p_cumulative_reports_condition_clusters_when_pooled(tmp_path, capsys):
+    """★ 자체 리뷰 F-3(통계) — seed 스윕을 모으면 행 수 ≠ 독립 표본 수.
+
+    306행 = 51조건 × 6 seed 인데 ④ 가 행 수만 보여주면 rule of three 를
+    독립 표본처럼 적용하게 된다 (실제로 문서가 그렇게 했다 — 0.98% 는
+    조건 단위 보수 상한 ~5.9% 의 6배 과신). 모을 때는 조건 수를 병기한다.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=0)
+    b = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=1)
+    # 전 조건을 복원가능으로 — 기본 fixture 는 복원가능군에 큰 격차가 없어
+    # ④ 누적이 비어 버린다. 복원가능 = α=(1−lam)/r ≥ 1 이므로 r 을 작게 준다.
+    g["r"] = 0.5
+    b["r"] = 0.5
+    b["cond_id"] = b["cond_id"] + "_s1"           # 같은 (lli,pe,ne), 다른 seed
+    da = _p22_run_dir(tmp_path, "s0", g)
+    db = _p22_run_dir(tmp_path, "s1", b)
+
+    r = run([da, db], "pocv_dvdq")
+    cum = r.get("cumulative", {})
+    assert cum, "④ 누적이 비어 있다"
+    for label, thrs in cum.items():
+        for thr, v in thrs.items():
+            assert "n_conditions" in v, (label, thr, v)
+            assert v["n_conditions"] * 2 == v["n"], (label, thr, v)
+    out = capsys.readouterr().out
+    assert "조건" in out.split("④")[1], "④ 출력에 조건 수 병기가 없다"
+
+
+def test_analyze_22p_records_code_identity_of_both_legs(tmp_path, capsys):
+    """★ 자체 리뷰 F-11(sig) — 두 다리의 source_digest 를 대조·기록해야 한다.
+
+    실측: dense 비교의 grid 다리는 src 8fe84240, hc 다리는 7250c6e6 에서
+    생산됐는데 분석기는 어느 쪽 manifest 도 읽지 않아 무언급으로 지나갔다.
+    """
+    import yaml as _yaml
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    h = _hc_fits(g, shift=0.001)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+    hd = _p22_run_dir(tmp_path, "hc", h)
+    (gd / "manifest.yaml").write_text(_yaml.safe_dump(
+        {"run_spec": {"source_digest": "aaaa000000000001"}}), encoding="utf-8")
+    (hd / "manifest.yaml").write_text(_yaml.safe_dump(
+        {"run_spec": {"source_digest": "bbbb000000000002"}}), encoding="utf-8")
+
+    r = run(hd, "pocv_dvdq", restrict_to=gd)
+    ident = r.get("code_identity")
+    assert ident, "code_identity 기록이 없다"
+    assert "bbbb000000000002" in str(ident) and "aaaa000000000001" in str(ident)
+    out = capsys.readouterr().out
+    assert "code identity" in out or "source_digest" in out, \
+        "두 다리 digest 불일치가 출력에 없다"
