@@ -1,0 +1,7 @@
+"# Slide 10 (left) - where the dopant anion landed, champion rows only.",,
+"# Source: cascade_v23_all.csv, rows with rank_combined == 1.",,
+# n_candidates = number of generated candidates that placed the dopant anion on that sublattice.,,
+wyckoff_site,sublattice_label,n_candidates
+Cl_4d,halide site,98
+S_4a,free sulfide,89
+S_16e,sulfur in the PS₄ corner,83

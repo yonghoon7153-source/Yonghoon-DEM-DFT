@@ -428,14 +428,19 @@ Sn — 은 **도핑을 얼마나 넣느냐에 따라 자리가 바뀝니다.** B
 > • One compound became [파랑]30 structures[/] on average, and 3,615 in total.
 > • The winning site is [빨강]an output of the generator[/], not a variable that was set.
 
-`< where the anion landed  ·  structures per site pair >`
+`< where the anion landed  ·  structures per site pair (cation ↓ / anion →) >`
+`[표]` (양이온 자리 × 음이온 자리) 3×3 — 오른쪽
 `해설` all nine site pairs were populated — [빨강]the site was never fixed by design[/]
 하단 용어 — Configuration: one specific arrangement of atoms in the cell ·
 　　　　　　 24g / 48h / 4b / 4a / 16e / 4d: Wyckoff labels for the sublattice positions
 
-⚠ **그림 두 장 (2026-08-18)** — 왼쪽은 음이온이 앉은 자리(3 막대), 오른쪽은
-   **(양이온 자리 × 음이온 자리) 9칸 격자**다. 왼쪽만 있으면 "음이온 얘기" 로만 읽혀서
-   Step 2 의 요점(자리 조합을 훑었다)이 안 보였다.
+⚠ **왼쪽 그림 + 오른쪽 표 (2026-08-18)** — 왼쪽은 음이온이 앉은 자리(3 막대),
+   오른쪽은 **(양이온 자리 × 음이온 자리) 3×3 표**다. 왼쪽만 있으면 "음이온 얘기" 로만
+   읽혀서 Step 2 의 요점(자리 조합을 훑었다)이 안 보였다.
+   ⚠ 9칸은 **표로 넣는다** — 숫자 아홉 개짜리를 히트맵으로 그리면 파이썬 그림 티가 난다
+     (1저자 판단). 덱 표 양식(`add_table`)이 나머지 장과도 통일된다.
+   ⚠ Origin 재작도용 CSV: `db/properties/seminar_table_anion_site.csv` (왼쪽 막대) ·
+     `seminar_table_site_grid.csv` (오른쪽 표, 행·열 합계 포함).
 ⚠ 왼쪽 막대의 **부격자 이름이 빠져 있었다** (`set_yticks([])`). 막대 셋이 무엇인지
    화면만 봐서는 알 수 없었다 — 범주 라벨은 축 라벨이지 '그림 안 문장' 이 아니다. 복구함.
 
@@ -447,7 +452,7 @@ Sn — 은 **도핑을 얼마나 넣느냐에 따라 자리가 바뀝니다.** B
 **얼마나 불어나냐면** — 화합물 하나가 평균 **30 개** 구조가 됐고, 다 합치면 **3,615 개**
 입니다. 적은 건 15 개, 많은 건 150 개고요.
 
-오른쪽 격자를 봐 주세요. 세로가 양이온이 앉은 자리, 가로가 음이온이 앉은 자리입니다.
+오른쪽 표를 봐 주세요. 세로가 양이온이 앉은 자리, 가로가 음이온이 앉은 자리입니다.
 **아홉 칸이 전부 채워져 있습니다.** Li 24g 에 free sulfide 조합이 1,050 개로 제일 많고,
 Li 48h 는 100 개 남짓으로 적지만 **비어 있는 칸은 없습니다.** 자리 조합을 실제로 다
 훑었다는 뜻이에요.
@@ -459,7 +464,7 @@ Li 48h 는 100 개 남짓으로 적지만 **비어 있는 칸은 없습니다.**
 변수가 아닙니다.** 앞 장에서 본 것처럼 자리가 농도에 따라 바뀌기도 하니까, 미리
 정해 놓고 들어갈 수가 없었습니다.
 
-💬 **말로만** — 격자 숫자는 **구조 수**이지 화합물 수가 아닙니다. 화합물은 90 종이에요.
+💬 **말로만** — 표의 숫자는 **구조 수**이지 화합물 수가 아닙니다. 화합물은 90 종이에요.
 
 ---
 
@@ -937,6 +942,8 @@ As₂S₃ 하나는 계획에는 있었지만 구조 생성 단계에서 멈췄�
 |---|---|
 | 6 후보군 | `db/properties/seminar_table_roster.csv` |
 | 8 주기율표 근거 | `db/properties/seminar_table_tm_split.csv` |
+| 9 자리 선호 | `db/properties/seminar_table_site_preference.csv` |
+| 10 음이온 자리 · 자리 격자 | `db/properties/seminar_table_anion_site.csv` · `seminar_table_site_grid.csv` |
 | 풀 정산 91→89 | `db/properties/cascade_pool_accounting.csv` |
 | 17 있는 것/없는 것 | `db/properties/seminar_table_evidence.csv` |
 | 18 결과 1 | `db/properties/seminar_table_label_spread.csv` |

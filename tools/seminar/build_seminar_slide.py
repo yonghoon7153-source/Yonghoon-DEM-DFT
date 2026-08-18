@@ -78,17 +78,23 @@ SLIDES = {
  ),
  10: dict(
     idx=9, out="Slide10_structure_generation.pptx",
-    figs=["docs/figures/seminar/step2_anion_site.png",
-          "docs/figures/seminar/step2_site_grid.png"],
-    zone=dict(x=0.55, y=2.42, w=8.90, h=3.34),
+    figs=["docs/figures/seminar/step2_anion_site.png"],
+    zone=dict(x=0.55, y=2.46, w=4.55, h=3.20),
+    # y 는 왼쪽 그림의 세로 중앙에 맞춘 값이다 (그림이 비율맞춤으로 앉는 자리 기준)
+    table=dict(x=5.32, y=3.47, w=4.13, size=12, first_col_w=1.45, rows=[
+        ["", "free S", "PS₄ corner", "halide"],
+        ["Li 24g", "[b]1050[/b]", "810", "600"],
+        ["P 4b", "375", "270", "180"],
+        ["Li 48h", "120", "105", "105"],
+    ]),
     title="Candidate structure generation",
     head="Step 2: Each allowed placement becomes a separate structure",
     sub1="One compound became [b]30 structures[/b] on average, and 3,615 in total.",
     sub2="The winning site is [r]an output of the generator[/r], not a variable that was set.",
-    label="where the anion landed  ·  structures per site pair",
+    label="where the anion landed  ·  structures per site pair (cation ↓ / anion →)",
     note="all nine site pairs were populated — [r]the site was never fixed by design[/r]",
     gloss=("Configuration: one specific arrangement of atoms in the cell  ·  "
-           "24g / 48h / 4b / 4a / 16e / 4d: Wyckoff labels for the sublattice positions"),
+           "24g / 48h / 4b: Wyckoff labels for the sublattice positions"),
     drop=[10],
  ),
 }
@@ -134,6 +140,12 @@ def build(n):
         sl.shapes[i]._element.getparent().remove(sl.shapes[i]._element)
 
     M.add_pics(sl, S["figs"] if "figs" in S else [S["fig"]], zone=S["zone"])
+    # 표는 그림 옆/아래에 — 3×3 처럼 **숫자 아홉 개**짜리는 히트맵보다 표가 낫다
+    # (1저자 판단 2026-08-18: 파이썬 그림 티가 나느니 덱 표 양식으로).
+    if "table" in S:
+        t = S["table"]
+        M.add_table(sl, t["rows"], t["x"], t["y"], t["w"],
+                    size=t.get("size", 11.5), first_col_w=t.get("first_col_w"))
     M.add_fig_label(sl, S["label"], 0.55, 5.96, 8.90)
     M.add_fig_note(sl, S["note"], 0.55, 6.30, 8.90, size=11.5)
 
