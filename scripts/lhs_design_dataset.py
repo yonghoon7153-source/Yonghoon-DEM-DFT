@@ -40,7 +40,19 @@ RANGES = {
     'd_am_p_um': (5.0, 15.0),      # 대립 (poly NCM 2차입자)
     'd_am_s_um': (1.0, 5.0),       # 소립 (single-crystal)
     'ps_frac':   (0.0, 1.0),       # 바이모달 비율 = AM_P 몫 (0 = 소립만, 1 = 대립만)
-    'd_se_um':   (0.5, 2.0),       # 전해질
+    #  ★★ 2026-08-18 — 하한을 0.5 → **1.0** 으로 올렸다 (지시: 입자 20만 이하).
+    #    이유는 계산이 아니라 **측정**이다.  덱 실측(input_real_1)으로 규약이 확정된 뒤
+    #    격자 11,880 조합의 N_total 을 전수 계산해 보니:
+    #        d_se 0.5 → N 100,625 – 908,115   20만 이하 **16.7 %**
+    #        d_se 1.0 → N  12,671 – 191,918   20만 이하 **100 %**   ← 딱 경계
+    #        d_se 1.5 → N   3,829 – 119,919   100 %
+    #        d_se 2.0 → N   1,677 – 102,393   100 %
+    #    ★ 그리고 제약이 **d_se 에만** 걸린다 — 나머지 네 인자는 수준별 생존률이
+    #      79 % 로 **완전히 균일**하다 ⇒ d_se 하한만 올리면 다른 축은 **전혀 안 일그러진다**.
+    #    ⚠ rve 50 · 로딩 2 에서 d_se 1.0 이 **하한이다** (0.9 면 ~23만으로 넘는다).
+    #    ⚠ 잃는 것: 코퍼스에 2건뿐인 sub-µm SE 축.  살리려면 그 축만 작은 RVE 서브블록으로
+    #      (rve 24 · d_am_p ≤ 7 µm 면 20만 아래) — 본 설계를 일그러뜨리지 않는 방법이다.
+    'd_se_um':   (1.0, 2.0),       # 전해질
     'am_pct':    (70.0, 95.0),     # 활물질 함량 wt%
 }
 FACTORS = list(RANGES)
@@ -150,11 +162,14 @@ THICK_PER_LOADING_UM = 19.64
 #  ── ★ 물리 파생 (2026-08-18 적대 리뷰 R0) ────────────────────────────────────────
 #    덱 실측값 — 밀도는 스케일되지 않는다 (input_real_*.liggghts).
 RHO_AM_KGM3, RHO_SE_KGM3 = 4800.0, 2000.0
-EPS_TYPICAL = 0.16              # 코퍼스 중앙 porosity (사전 점검용 가정, DEM 이 실값을 낸다)
+EPS_TYPICAL = 0.183             # ★ 실측 보정: 덱 mesh STL(6 mAh, step 2.93e6) plate_z =
+#   0.116811 m = 116.8 µm, 고체만 높이 96.2 µm ⇒ ε = 0.176.  코퍼스 회귀(19.64 µm/mAh)가
+#   함축하는 0.183 과 0.9 % 안에서 일치한다.  옛 0.16 은 근거 없는 어림이었다.
 PRESSURE_MPA = 300.0            # 코퍼스 규약 — 리뷰 HIGH-E: 컬럼에 없으면 범위인지 편향인지 모른다
 E_SE_GPA = 1.35                 # DEM 유효 SE 탄성계수 (CLAUDE.md 확정값)
 PHI_C_SE = 0.195                # SE 퍼콜 문턱 (CLAUDE.md FROZEN φc_S; φc_P = 0.200)
 N_AM_P_MIN = 30                 # 이보다 적으면 coverage_AM_P·ps_frac 이 실현되지 않는다
+N_TOTAL_CAP = 200_000           # 지시 2026-08-18 — 이보다 많으면 안 돌아간다
 
 
 def phi_of(am_pct, eps=EPS_TYPICAL):
@@ -446,6 +461,10 @@ def _selftest():
     mc_new, _ = _score(_unit(lhs_grid(40, LV, np.random.default_rng(7), 400), LV))
     chk(f'⑩c 상관-인지 기준이 순수 maximin 보다 낫다 ({mc_new:.3f} < {mc_pure:.3f})',
         mc_new < mc_pure)
+    #  ⑫ ★ 입자수 상한 — 모든 행이 N_TOTAL_CAP 이하 (지시 2026-08-18)
+    chk(f'⑫ 모든 행이 입자 {N_TOTAL_CAP:,} 이하 '
+        f"(최대 {max(r['n_total_est'] for r in g):,.0f})",
+        all(r['n_total_est'] <= N_TOTAL_CAP for r in g))
     #  ⑪ 연속 모드도 여전히 된다 (되돌릴 길을 남긴다)
     c = build(20, 4, 0, 40, grid=False)
     chk('⑪ --continuous 경로 보존 (눈금 밖 값이 나온다)',
@@ -538,6 +557,9 @@ if __name__ == '__main__':
     _np = [r['n_am_p_est'] for r in rows if r['n_am_p_est'] == r['n_am_p_est']]
     print(f"  입자 수 추정: N_AM_P 최소 {min(_np):.1f} · 중앙 {sorted(_np)[len(_np)//2]:.0f} | "
           f"총 입자 최대 {max(r['n_total_est'] for r in rows):,.0f}")
+    over = [r for r in rows if r['n_total_est'] > N_TOTAL_CAP]
+    print(f"  ★ 입자수 상한 {N_TOTAL_CAP:,} — 초과 행 **{len(over)}** 개 "
+          f"(최대 {max(r['n_total_est'] for r in rows):,.0f})")
     _big = [r for r in rows if r['rve_recommended_um'] > FIXED['rve_um'] + 1e-9]
     if _big:
         print(f"  ★ N_AM_P ≥ {N_AM_P_MIN} 를 만족하려면 {len(_big)} 행이 더 큰 상자를 요구한다 "
