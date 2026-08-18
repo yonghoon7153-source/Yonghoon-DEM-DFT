@@ -54,7 +54,10 @@ PS_INTERIOR = (0.10, 0.90)      # 정수 설계에서는 1:9 … 9:1 이 내부�
 #    실물성 근거: 12.93 µm 분말을 주문할 수는 없다.  실제로 고를 수 있는 눈금에 설계를 얹는다.
 #    d_SE 만 0.5 눈금인 이유 — 범위가 0.5–2 라 정수로 자르면 {1, 2} 두 수준밖에 안 남는다.
 #    ps 눈금 0.1 = 랩이 이미 쓰는 `0:10 · 3:7 · 5:5 · 7:3 · 10:0` 표기와 정확히 일치한다.
-STEP = {'d_am_p_um': 1.0, 'd_am_s_um': 1.0, 'ps_frac': 0.1, 'd_se_um': 0.5, 'am_pct': 1.0}
+#    am_pct 눈금 5 (2026-08-18 지시) — 70/75/80/85/90/95 = 6수준.  1 눈금(26수준)이면
+#    60점에 수준당 2–3개라 **수준별 반복이 거의 없어** 조성 효과가 다른 인자와 섞이기 쉽다.
+#    5 눈금이면 수준당 10개 = 조성 축을 **블록처럼** 읽을 수 있고, 실제 배합도 5 % 단위다.
+STEP = {'d_am_p_um': 1.0, 'd_am_s_um': 1.0, 'ps_frac': 0.1, 'd_se_um': 0.5, 'am_pct': 5.0}
 
 
 def levels_of(name, ps_range=None):
@@ -75,20 +78,64 @@ def _balanced(n, L, rng):
     return rng.permutation(idx)
 
 
-def lhs_grid(n, level_lists, rng, restarts=400):
-    """정수 격자 위의 maximin LHS → 각 인자의 **수준 인덱스** 배열 (n, k)."""
+#  설계행렬이 넘으면 안 되는 |비대각 상관| — 이 값을 넘으면 인자 효과가 서로 섞인다.
+CORR_MAX = 0.25
+
+
+def _unit(I, level_lists):
+    """수준 인덱스 → 단위공간 [0,1] (수준 수가 인자마다 달라 인덱스로 재면 왜곡된다)."""
+    return np.stack([I[:, j] / max(len(level_lists[j]) - 1, 1)
+                     for j in range(I.shape[1])], 1)
+
+
+def _score(U):
+    """(최대 |비대각 상관|, 최소 쌍거리)."""
+    C = np.corrcoef(U.T)
+    mc = float(np.abs(C[~np.eye(U.shape[1], dtype=bool)]).max())
+    d2 = ((U[:, None, :] - U[None, :, :]) ** 2).sum(-1)
+    d2[np.diag_indices(len(U))] = np.inf
+    return mc, float(np.sqrt(d2.min()))
+
+
+def lhs_grid(n, level_lists, rng, restarts=400, corr_max=CORR_MAX, sweeps=60):
+    """정수 격자 위의 LHS → 수준 인덱스 배열 (n, k).
+
+    ★★ 2026-08-18 — 옛 판은 **maximin(최소 쌍거리)만** 최적화했다.  상관은 이긴 배치가
+    우연히 갖는 값이었고, 격자가 고울 때는 그럭저럭 낮았지만(0.15) **거칠어지자 튀었다**:
+    am_pct 눈금을 1→5 로 바꾸자 재시작을 60→8000 으로 늘려도 max|corr| 이
+    0.23 / 0.21 / **0.37** / 0.21 로 **재시작과 무관하게 오르내렸다** (실측).
+    ⇒ 최적화 대상이 우리가 신경 쓰는 양이 아니었다.  두 단계로 고친다:
+      ① 무작위 재시작을 **벌점 목적함수**로 고른다 — 상관이 문턱을 넘으면 크게 깎는다
+      ② 이긴 배치를 **열 내부 스왑**으로 다듬는다 (열 안에서만 바꾸므로 수준 균형은 불변)
+    """
     k = len(level_lists)
-    best, best_d = None, -1.0
+    best, best_obj, best_sc = None, -1e18, None
     for _ in range(int(restarts)):
         I = np.stack([_balanced(n, len(level_lists[j]), rng) for j in range(k)], 1)
-        #  거리는 **단위공간**에서 잰다 (수준 수가 인자마다 달라 인덱스로 재면 왜곡된다)
-        U = np.stack([I[:, j] / max(len(level_lists[j]) - 1, 1) for j in range(k)], 1)
-        d2 = ((U[:, None, :] - U[None, :, :]) ** 2).sum(-1)
-        d2[np.diag_indices(n)] = np.inf
-        m = float(np.sqrt(d2.min()))
-        if m > best_d:
-            best, best_d = I, m
-    return best
+        mc, md = _score(_unit(I, level_lists))
+        obj = md - 10.0 * max(0.0, mc - corr_max)        # 상관 초과분에 큰 벌점
+        if obj > best_obj:
+            best, best_obj, best_sc = I, obj, (mc, md)
+    #  ② 스왑 다듬기 — 한 열에서 두 행의 수준을 맞바꾼다.  열 안의 값 집합이 그대로라
+    #     **수준 균형(=이산 LHS 성질)이 정의상 보존**된다.
+    I = best.copy()
+    for _ in range(int(sweeps)):
+        improved = False
+        for _try in range(n * k):
+            j = int(rng.integers(k))
+            a, b = rng.integers(n, size=2)
+            if a == b or I[a, j] == I[b, j]:
+                continue
+            I[[a, b], j] = I[[b, a], j]
+            mc, md = _score(_unit(I, level_lists))
+            obj = md - 10.0 * max(0.0, mc - corr_max)
+            if obj > best_obj + 1e-12:
+                best_obj, best_sc, improved = obj, (mc, md), True
+            else:
+                I[[a, b], j] = I[[b, a], j]              # 되돌린다
+        if not improved:
+            break
+    return I
 
 
 #  ── 고정 상수 (인자가 아니다 — 2026-08-18 지시) ──────────────────────────────────
@@ -289,8 +336,11 @@ def _selftest():
         build(40, 8, 0, 60)[7]['d_am_p_um'] == rows[7]['d_am_p_um'])
     #  ⑧ 상관이 낮다 (설계행렬이 교락되지 않았다)
     dg = diagnostics(rows)
-    chk(f"⑧ 최대 |비대각 상관| < 0.35 ({dg['max_abs_offdiag_corr']})",
-        dg['max_abs_offdiag_corr'] < 0.35)
+    #  ★★ 문턱을 0.35 → 0.30 으로 **조인다** (2026-08-18).  옛 판(maximin 만 최적화)은
+    #    am_pct 눈금이 거칠어지자 0.37 까지 튀었다 — 그 회귀를 잡으려면 문턱이 그 아래여야 한다.
+    #    현행 기준(상관 벌점 + 열내부 스왑)은 n 40/60 × seed 0–5 에서 전부 ≤ 0.247 이었다.
+    chk(f"⑧ 최대 |비대각 상관| < 0.30 ({dg['max_abs_offdiag_corr']})",
+        dg['max_abs_offdiag_corr'] < 0.30)
     #  ── ★ 정수 격자 회귀 (2026-08-18) ─────────────────────────────────────
     g = build(40, 8, 1, 60, grid=True)
     def onstep(v, st):
@@ -305,6 +355,20 @@ def _selftest():
     chk('⑩b 수준 점유가 균형이다 (최대−최소 ≤ 1)',
         all(int(v.split('점유 ')[1].split('–')[1]) - int(v.split('점유 ')[1].split('–')[0]) <= 1
             for v in dgg['levels'].values()))
+    #  ⑩c ★ 기준이 **상관을 실제로 본다** — 순수 maximin 대비 개선되는가.
+    #      (옛 결함의 직접 회귀: maximin 만 쓰면 상관이 운에 맡겨진다)
+    rng_ = np.random.default_rng(7)
+    LV = [levels_of(f, PS_INTERIOR) for f in FACTORS]
+    pure, pure_d = None, -1.0                                # 순수 maximin 재현
+    for _ in range(400):
+        Ic = np.stack([_balanced(40, len(LV[j]), rng_) for j in range(len(LV))], 1)
+        _, md = _score(_unit(Ic, LV))
+        if md > pure_d:
+            pure, pure_d = Ic, md
+    mc_pure, _ = _score(_unit(pure, LV))
+    mc_new, _ = _score(_unit(lhs_grid(40, LV, np.random.default_rng(7), 400), LV))
+    chk(f'⑩c 상관-인지 기준이 순수 maximin 보다 낫다 ({mc_new:.3f} < {mc_pure:.3f})',
+        mc_new < mc_pure)
     #  ⑪ 연속 모드도 여전히 된다 (되돌릴 길을 남긴다)
     c = build(20, 4, 0, 40, grid=False)
     chk('⑪ --continuous 경로 보존 (눈금 밖 값이 나온다)',
