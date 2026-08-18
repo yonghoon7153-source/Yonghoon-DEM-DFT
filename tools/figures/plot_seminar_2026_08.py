@@ -475,20 +475,24 @@ def fig_stability_band():
         ax.scatter([i] * len(v), v, s=22 if hot else 15,
                    color=BAD if hot else hs.ELEM["P"], zorder=5 if hot else 3,
                    alpha=.95 if hot else .9, edgecolors="none")
-    # 이름표는 **가로**로 — 세로로 세우면 인접한 둘(WO₃·MoO₃)이 서로 파고든다.
-    #   그래도 x 가 붙어 있으면 겹치므로 앞 이름과의 간격을 보고 한 층 올린다.
-    prev_i, prev_lvl = -99, 0
-    for i, k in enumerate(order):
-        if k not in wide:
-            continue
-        lvl = 1 - prev_lvl if i - prev_i < 6 else 0
-        ax.annotate(formula(k), (i, max(sp[k].values())), xytext=(0, 9 + 15 * lvl),
-                    textcoords="offset points", ha="center", va="bottom",
-                    fontsize=10, color=BAD)
-        prev_i, prev_lvl = i, lvl
+    # 이름표는 **가로**로, 그리고 **위·아래를 번갈아** 붙인다 (1저자 2026-08-18).
+    #   세로로 세우면 인접한 둘(WO₃·MoO₃)이 파고들고, 전부 위에 붙이면 층을 올려도
+    #   x 가 붙은 쌍은 여전히 닿는다. 반대쪽에 놓으면 애초에 만날 수가 없다.
+    #   같은 쪽 이웃(두 칸 건너)이 그래도 가까우면 그때만 한 층 더 민다.
+    prev_x = {1: -99, -1: -99}
+    for j, i in enumerate(i for i, k in enumerate(order) if k in wide):
+        k = order[i]
+        side = 1 if j % 2 == 0 else -1                 # +1 = 위, −1 = 아래
+        lvl = 1 if i - prev_x[side] < 6 else 0
+        y = max(sp[k].values()) if side > 0 else min(sp[k].values())
+        ax.annotate(formula(k), (i, y), xytext=(0, side * (9 + 15 * lvl)),
+                    textcoords="offset points", ha="center",
+                    va="bottom" if side > 0 else "top", fontsize=10, color=BAD)
+        prev_x[side] = i
 
     ax.set_xticks([]); ax.set_xlim(-2, len(order) + 1)
-    ax.set_ylim(min(min(v.values()) for v in sp.values()) - 0.06,
+    # 이름표가 위·아래 양쪽으로 나가므로 **양쪽 다** 여유를 준다 (아래쪽이 없으면 잘린다)
+    ax.set_ylim(min(min(v.values()) for v in sp.values()) - 0.15,
                 max(max(v.values()) for v in sp.values()) + 0.30)
     ax.set_xlabel(f"{len(order)} dopant species  ·  sorted by mean  ·  "
                   f"names shown only where the band is wide")
