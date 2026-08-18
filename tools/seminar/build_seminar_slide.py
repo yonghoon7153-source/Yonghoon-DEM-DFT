@@ -25,6 +25,12 @@
   python3 tools/seminar/build_slide08_periodic.py --selftest
   python3 tools/seminar/build_slide08_periodic.py
 
+⚠ PowerPoint 자동서식 주의 (2026-08-18 실측)
+  빌더가 쓴 것은 평범한 run 이라 그대로 나온다. 그런데 **PowerPoint 안에서 다시 타이핑**하면
+  `A 2+ dopant` 의 `2+` 가 위첨자로 올라가 **A²⁺**(원소 A 의 2가 이온)처럼 보인다.
+  → 이 파일에서 만든 슬라이드는 **복사해 붙이고, 그 줄을 다시 치지 않는다.**
+     (1저자 판단 2026-08-18: 문구는 `A 2+` 로 유지하고 입력 쪽에서 처리한다.)
+
 이 도구가 못 하는 것
   · 점수를 다시 매기지 않는다. 그림은 plot_seminar_2026_08.fig_periodic 이 만든다.
   · 원본 덱(v6)을 고치지 않는다 — 단독 파일만 만든다. 덱 반영은 사람이 붙여넣는다.
@@ -63,7 +69,7 @@ SLIDES = {
     title="Substitution site and charge compensation",
     head="Step 1: The substitution site is enumerated before a structure is built",
     sub1="Li, P, S and Cl are separate sublattices — an oxide has to take [b]one cation and one anion site[/b].",
-    sub2="Mg²⁺ on a Li⁺ site leaves extra charge — [r]each way of balancing it is a different structure[/r].",
+    sub2="A 2+ dopant on a Li site leaves extra charge — [r]each way of balancing it is a different structure[/r].",
     label="site preference vs ionic radius",
     note="only Si always takes the P framework; 19 of 26 always take Li — [r]6 switch with the doping level[/r]",
     gloss=("Sublattice: equivalent positions of one element  ·  Charge compensation: adding "
@@ -171,14 +177,6 @@ def selftest():
         chk("Sublattice" in sl.shapes[2].text_frame.text
             or "Cation" in sl.shapes[2].text_frame.text,
             f"{n}장 옮길 shape[2] 가 용어줄이다")
-
-    # ★ PowerPoint 자동서식 함정 (2026-08-18 실측) — "A 2+ dopant" 를 넣었더니 관사 A 뒤의
-    #   `2+` 가 위첨자로 올라가 **A²⁺**, 즉 "원소 A 의 2가 이온" 처럼 읽혔다.
-    #   관사 + 전하 표기는 붙여 쓰지 않는다. 실제 원소로 쓰는 편이 안전하다.
-    for n, S in sorted(SLIDES.items()):
-        for tag in ("head", "sub1", "sub2", "note"):
-            chk(not _re.search(r"\b[Aa]n? \d\s*[+-]", S[tag]),
-                f"{n}장 {tag}: 관사 뒤 전하 표기 없음 (PowerPoint 가 위첨자로 올린다)")
 
     # 음성 — 영국식 철자가 슬라이드 문장에 섞이면 안 된다 (1저자 지적 2026-08-18)
     allt = " ".join(plain(v) for S in SLIDES.values() for k, v in S.items()
