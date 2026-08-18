@@ -76,6 +76,21 @@ SLIDES = {
            "or removing Li to keep the cell neutral  ·  bars = three doping levels, not repeat runs"),
     drop=[10],
  ),
+ 10: dict(
+    idx=9, out="Slide10_structure_generation.pptx",
+    figs=["docs/figures/seminar/step2_anion_site.png",
+          "docs/figures/seminar/step2_site_grid.png"],
+    zone=dict(x=0.55, y=2.42, w=8.90, h=3.34),
+    title="Candidate structure generation",
+    head="Step 2: Each allowed placement becomes a separate structure",
+    sub1="One compound became [b]30 structures[/b] on average, and 3,615 in total.",
+    sub2="The winning site is [r]an output of the generator[/r], not a variable that was set.",
+    label="where the anion landed  ·  structures per site pair",
+    note="all nine site pairs were populated — [r]the site was never fixed by design[/r]",
+    gloss=("Configuration: one specific arrangement of atoms in the cell  ·  "
+           "24g / 48h / 4b / 4a / 16e / 4d: Wyckoff labels for the sublattice positions"),
+    drop=[10],
+ ),
 }
 
 
@@ -118,7 +133,7 @@ def build(n):
     for i in sorted(S.get("drop", []), reverse=True):
         sl.shapes[i]._element.getparent().remove(sl.shapes[i]._element)
 
-    M.add_pics(sl, [S["fig"]], zone=S["zone"])
+    M.add_pics(sl, S["figs"] if "figs" in S else [S["fig"]], zone=S["zone"])
     M.add_fig_label(sl, S["label"], 0.55, 5.96, 8.90)
     M.add_fig_note(sl, S["note"], 0.55, 6.30, 8.90, size=11.5)
 
@@ -150,9 +165,12 @@ def selftest():
     src = Presentation(SRC)
 
     for n, S in sorted(SLIDES.items()):
-        chk(os.path.exists(os.path.join(ROOT, S["fig"])), f"{n}장 그림이 있다")
-        # 음성 — add_pics 는 repo 루트 기준. 경로가 틀리면 **조용히 건너뛴다**
-        chk(S["fig"].startswith("docs/"), f"{n}장 그림 경로가 repo 루트 기준")
+        figs = S["figs"] if "figs" in S else [S["fig"]]
+        for f in figs:
+            chk(os.path.exists(os.path.join(ROOT, f)),
+                f"{n}장 그림이 있다 ({os.path.basename(f)})")
+            # 음성 — add_pics 는 repo 루트 기준. 경로가 틀리면 **조용히 건너뛴다**
+            chk(f.startswith("docs/"), f"{n}장 그림 경로가 repo 루트 기준")
 
         # 대본과 1:1 — 헤더·이름표·소불릿까지
         chk(S["head"] in body, f"{n}장 헤더가 대본에도 있다")
@@ -174,9 +192,11 @@ def selftest():
             t = sl.shapes[i].text_frame.text if sl.shapes[i].has_text_frame else ""
             chk(len(t) < 60 and ("Our" in t or "·" in t),
                 f"{n}장 지울 shape[{i}] 이 짧은 주석이다 ('{t[:30]}')")
-        chk("Sublattice" in sl.shapes[2].text_frame.text
-            or "Cation" in sl.shapes[2].text_frame.text,
-            f"{n}장 옮길 shape[2] 가 용어줄이다")
+        # 용어줄은 "낱말: 뜻 · 낱말: 뜻" 꼴이다. 낱말을 목록으로 두면 장마다 고쳐야 하므로
+        # **모양**으로 본다 — 콜론과 가운뎃점이 있고, 문장이 아니라 정의 나열.
+        _t2 = sl.shapes[2].text_frame.text
+        chk(":" in _t2 and "·" in _t2 and len(_t2) > 40,
+            f"{n}장 옮길 shape[2] 가 용어줄이다 ('{_t2[:34]}…')")
 
     # 음성 — 영국식 철자가 슬라이드 문장에 섞이면 안 된다 (1저자 지적 2026-08-18)
     allt = " ".join(plain(v) for S in SLIDES.values() for k, v in S.items()

@@ -251,8 +251,50 @@ def fig_site_choice():
     return _save(fig, "step1_site_choice.png")
 
 
+# ── 2b. 자리 조합이 실제로 몇 가지였나 ────────────────────────────────────────
+def fig_site_grid():
+    """(양이온 자리 × 음이온 자리) 격자에 구조가 몇 개씩 들어갔나.
+
+    왜 이 그림인가 (2026-08-18) — 10장 불릿이 "several structures per compound were
+    generated" 라고만 해서 **얼마나·어떻게** 가 비어 있었다. 이 격자는 그 답이다:
+      · 9칸이 **전부 채워져** 있다 = 자리 조합을 실제로 훑었다
+      · 칸마다 수가 다르다 = 어떤 조합은 애초에 가능한 화합물이 적다
+    ⚠ 칸 숫자는 **셀 라벨**이라 '그림 안 글씨 금지' 예외다 (fig_periodic 과 같다).
+    ⚠ 이 수는 구조 수이지 화합물 수가 아니다. 화합물 90종에서 구조 3,615개가 나왔고
+      화합물당 중앙값은 30개다.
+    """
+    from collections import Counter as _C
+    rows = _all_rows()
+    cn = _C((r.get("cation_site"), r.get("anion_site")) for r in rows
+            if r.get("cation_site") and r.get("anion_site"))
+    cats = sorted({k[0] for k in cn}, key=lambda c: -sum(v for k, v in cn.items() if k[0] == c))
+    ans = sorted({k[1] for k in cn}, key=lambda a: -sum(v for k, v in cn.items() if k[1] == a))
+    _rc()
+    fig, ax = plt.subplots(figsize=(8.2, 4.0))
+    hi = max(cn.values())
+    cmap = hs.score_cmap()
+    for i, c in enumerate(cats):
+        for j, a in enumerate(ans):
+            v = cn.get((c, a), 0)
+            col = cmap(0.5 + 0.5 * (v / hi))          # 중립~teal 쪽만 쓴다 (좋고 나쁨이 아니다)
+            ax.add_patch(plt.Rectangle((j, -i), .94, .94, facecolor=col,
+                                       edgecolor="white", lw=2, zorder=2))
+            ax.text(j + .47, -i + .47, str(v), ha="center", va="center", zorder=3,
+                    fontsize=14, fontweight="bold", color=hs.on_fill(col))
+    ax.set_xlim(-.06, len(ans)); ax.set_ylim(-len(cats) + .94 - .06, 1.0)
+    ax.set_xticks([j + .47 for j in range(len(ans))])
+    ax.set_xticklabels([SITE_LABEL.get(a, a) for a in ans], fontsize=11)
+    ax.set_yticks([-i + .47 for i in range(len(cats))])
+    ax.set_yticklabels([CATION_LABEL.get(c, c) for c in cats], fontsize=11)
+    ax.tick_params(length=0)
+    for sp in ax.spines.values():
+        sp.set_visible(False)
+    return _save(fig, "step2_site_grid.png")
+
+
 # ── 3. 음이온이 실제로 앉은 자리 ───────────────────────────────────────────────
 SITE_LABEL = {"S_16e": "sulfur in the PS₄ corner", "S_4a": "free sulfide", "Cl_4d": "halide site"}
+CATION_LABEL = {"Li_24g": "Li 24g", "Li_48h": "Li 48h", "P_4b": "P 4b (framework)"}
 
 
 def fig_anion_site():
@@ -267,7 +309,13 @@ def fig_anion_site():
     for i, (k, v) in enumerate(items):
         ax.barh(-i, v, height=.56, color=cols[i % len(cols)], alpha=.85, zorder=3)
     ax.set_xlim(0, max(cnt.values()) * 1.22); ax.set_ylim(-len(items) + .4, .6)
-    ax.set_yticks([])
+    # ⚠ 2026-08-18 — set_yticks([]) 로 **부격자 이름이 통째로 빠져** 있었다. 막대 셋이
+    #   무엇인지 화면만 봐서는 알 수 없었다. 범주 라벨은 축 라벨이지 '그림 안 문장' 이 아니다.
+    ax.set_yticks([-i for i in range(len(items))])
+    ax.set_yticklabels([SITE_LABEL.get(k, k) for k, _ in items], fontsize=11.5)
+    for i, (_, v) in enumerate(items):
+        ax.annotate(str(v), (v, -i), xytext=(6, 0), textcoords="offset points",
+                    va="center", fontsize=11, color=hs.MUT)
     ax.set_xlabel("number of generated candidates that placed the dopant anion there")
     _bare(ax, grid="x")
     return _save(fig, "step2_anion_site.png")
@@ -475,7 +523,7 @@ def fig_coverage():
     return _save(fig, "evidence_coverage.png")
 
 
-FIGS = [fig_periodic, fig_site_choice, fig_anion_site, fig_stability_band,
+FIGS = [fig_periodic, fig_site_choice, fig_anion_site, fig_site_grid, fig_stability_band,
         fig_label_spread, fig_oxidation_windows, fig_oxidation_by_group, fig_tradeoff,
         fig_screen_survival, fig_anneal_gain, fig_coverage]
 
@@ -502,12 +550,27 @@ def selftest():
     # 음성 ⑥ — 그림 안에 문장을 넣지 않는다 (슬라이드가 문구를 진다, 2026-08-16 지시)
     # ⚠ ax.text 예외는 **칸/점 라벨**뿐이다 (원소 기호). fig_periodic 과 fig_site_choice
     #   두 곳만 허용하고, 그 밖에서는 여전히 금지한다 — 그림 안에 문장을 넣지 않는 규칙.
-    _outside = body.split("# ── 3. 음이온이 실제로 앉은 자리", 1)[1]
-    chk("음성: 라벨 허용 두 곳 밖에서 ax.text 미사용", "ax.text(" not in _outside)
-    _site = body.split("def fig_site_choice", 1)[1].split("# ── 3.", 1)[0]
-    chk("음성: fig_site_choice 의 ax.text 는 원소 기호만 (문장 없음)",
-        'ax.text(x, y, m,' in _site and _site.count("ax.text(") == 1)
-    chk("음성: ax.annotate 미사용", "ax.annotate(" not in body)
+    # ★ 그림 안에 **문장**을 넣지 않는다. 예외는 **칸·점·막대 라벨**뿐이고, 그 라벨을
+    #   쓰는 함수를 여기 목록으로 못 박는다. 앞 판은 파일 위치로 갈랐는데(주석 기준 split),
+    #   새 그림을 그 뒤에 추가하니 정당한 라벨이 위반으로 잡혔다 — 목록이 맞다.
+    import re
+    LABEL_OK = {"fig_periodic", "fig_site_choice", "fig_site_grid", "fig_anion_site"}
+    _fns = re.split(r"\ndef ", body)
+    _bad = []
+    for _f in _fns[1:]:
+        _name = _f.split("(", 1)[0].strip()
+        if ("ax.text(" in _f or "ax.annotate(" in _f) and _name not in LABEL_OK:
+            _bad.append(_name)
+    chk(f"음성: 라벨 허용 함수 밖에서 그림 안 글씨 없음 ({_bad})", not _bad)
+    # 음성 — 허용 함수 안에서도 **문장**은 금지 (라벨은 짧다). 40자 넘는 리터럴을 잡는다.
+    _long = []
+    for _f in _fns[1:]:
+        if _f.split("(", 1)[0].strip() not in LABEL_OK:
+            continue
+        for _m in re.finditer(r"ax\.(?:text|annotate)\(([^\n]*)", _f):
+            for _q in re.findall(r'"([^"]{40,})"', _m.group(1)):
+                _long.append(_q[:36])
+    chk(f"음성: 라벨이 문장으로 길어지지 않았다 ({_long})", not _long)
     # 음성 ③ — 필요한 원본 데이터가 있어야 한다
     need = ["cascade_v23_all.csv", "site_preference_raw_78.csv", "oxidation_stability_cascade_v2.csv"]
     miss = [f for f in need if not os.path.exists(os.path.join(DB, f))]
