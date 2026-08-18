@@ -85,7 +85,11 @@ def _eval_ocp(fn, xs: np.ndarray) -> np.ndarray:
 
 
 def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
-                              branch: str = "delithiation") -> HalfCellReference:
+                              branch: str = "delithiation",
+                              pe_offset_mv: float = 0.0,
+                              ne_offset_mv: float = 0.0,
+                              pe_stretch: float = 1.0,
+                              ne_stretch: float = 1.0) -> HalfCellReference:
     """★ 진짜 full-range half-cell OCV — 파라미터셋의 OCP 함수를 직접 평가한다.
 
     시뮬레이션 추출본은 셀이 실제로 지나간 구간(PE y 0.251~0.928)만 담지만,
@@ -100,6 +104,16 @@ def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
 
     branch: Si는 히스테리시스가 있어 가지를 골라야 한다. grid 곡선이 최종 방전
             스텝에서 추출되므로 기본값은 "delithiation"(방전 중 음극은 탈리튬화).
+
+    ★ 왜곡 인자 (`method="ocpbias"` 전용 — 모델 오차 민감도 시험)
+      `*_offset_mv`  OCP 전압에 더하는 계통 오프셋 (mV). 기준전극 보정 오차·
+                     로트 차이에 해당한다.
+      `*_stretch`    화학량론 축 배율. 우리 모델이 전극의 사용 구간을 실제와
+                     다르게 알고 있는 경우다 (실측에서 가장 큰 오차원).
+
+      **truth 는 건드리지 않는다** — 왜곡은 fitting 이 쓰는 기준 곡선에만
+      들어간다. 그래야 "우리 모델이 틀렸을 때 결론이 얼마나 버티는가" 를
+      묻는 것이 된다. 기본값(0·1.0)이면 왜곡 없는 `ocp` 와 배열이 같다.
     """
     import pybamm
 
@@ -126,6 +140,16 @@ def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
     x_gr = np.interp(u_grid, u_gr[::-1], x[::-1], left=1.0, right=0.0)
     x_si = np.interp(u_grid, u_si[::-1], x[::-1], left=1.0, right=0.0)
     z = (q_gr * x_gr + q_si * x_si) / (q_gr + q_si)
+
+    # ── 계통 왜곡 (ocpbias) — 기준 곡선에만, truth 에는 없다 ──
+    if pe_offset_mv:
+        u_pe = u_pe + pe_offset_mv / 1000.0
+    if ne_offset_mv:
+        u_grid = u_grid + ne_offset_mv / 1000.0
+    if pe_stretch != 1.0:
+        x = np.clip(x * float(pe_stretch), 0.0, 1.0)
+    if ne_stretch != 1.0:
+        z = np.clip(z * float(ne_stretch), 0.0, 1.0)
 
     y_s, u_p = _dedupe_sorted(x, u_pe)
     z_s, u_n = _dedupe_sorted(z, u_grid)
@@ -195,6 +219,14 @@ def compute_halfcell_reference(cfg: dict, v_lo: float = 2.0, v_hi: float = 4.4,
 #:   일치해야 하며, 여기 없는 인자를 추가하면 그 인자는 서명에서 빠진다.
 RECIPE_DEFAULTS = {
     "ocp": {"n_points": 400, "branch": "delithiation"},
+    # ★ 모델 오차 민감도용 — `ocp` 를 **건드리지 않는다**. 왜곡 인자를 `ocp`
+    #   recipe 에 끼우면 recipe_hash 가 바뀌어 기존 half-cell 묶음(v4)의
+    #   F74 검증이 통째로 깨진다. 별도 method 라 기존 identity 는 그대로다.
+    #   이름에 밑줄·숫자를 쓰지 않는다 — hessian 의 봉인 staging 정규식이
+    #   `<16hex>_<method>_<12hex>` 에서 method 를 `[a-z]+` 로 본다.
+    "ocpbias": {"n_points": 400, "branch": "delithiation",
+                "pe_offset_mv": 0.0, "ne_offset_mv": 0.0,
+                "pe_stretch": 1.0, "ne_stretch": 1.0},
     "sim": {"v_lo": 2.0, "v_hi": 4.4, "c_rate": 0.02},
 }
 
@@ -294,7 +326,7 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
             return HalfCellReference.from_dict(
                 json.loads(path.read_text(encoding="utf-8")))
 
-    ref = (compute_halfcell_from_ocp(cfg, **kw) if method == "ocp"
+    ref = (compute_halfcell_from_ocp(cfg, **kw) if method in ("ocp", "ocpbias")
            else compute_halfcell_reference(cfg, **kw))
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(ref.as_dict()), encoding="utf-8")
