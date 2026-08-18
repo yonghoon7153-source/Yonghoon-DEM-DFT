@@ -50,6 +50,15 @@ END_ACTIVE = {0.0: ['d_am_s_um', 'd_se_um', 'am_pct'],
 #  내부 블록의 ps 범위 — 0/1 은 끝점 블록이 담당하므로 여기서는 열어 둔다
 PS_INTERIOR = (0.05, 0.95)
 
+#  ── 고정 상수 (인자가 아니다 — 2026-08-18 지시) ──────────────────────────────────
+#    면용량 2 mAh/cm² = wall effect 가 거의 안 나오는 최소 단위 · RVE 50×50 µm.
+#    ★ 인자에서 빼는 것이 이득이다: 기존 ML 설계층은 `rve` 와 `loading` 을 **자유 노브**로
+#      두는데(ml_design_structure.FREE_KNOBS), 그 둘을 고정하면 5 인자에 예산을 다 쓴다.
+FIXED = {'rve_um': 50.0, 'loading_mAh_cm2': 2.0}
+#  두께는 로딩의 함수다 — 코퍼스 291건 원점회귀 (3σ 제거 후) **19.64 µm per mAh/cm²**
+#  ⇒ 면용량 2.0 → 두께 ≈ 39 µm.  DEM 이 실제 두께를 낼 것이고 이 값은 **사전 점검용**이다.
+THICK_PER_LOADING_UM = 19.64
+
 
 def lhs(n, k, rng, restarts=200):
     """maximin LHS (numpy 전용).  각 인자를 n 등분해 층마다 정확히 한 점 = 1-D 균일 보장,
@@ -120,6 +129,22 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400):
         r['ps_label'] = (f'{round(p * 10):d}:{10 - round(p * 10):d}')   # 7:3 식 표기
         r['size_ratio_P_over_S'] = (dP / dS) if (dP == dP and dS == dS) else float('nan')
         r['size_ratio_AM_over_SE'] = r['d_am_um'] / r['d_se_um']
+        #  ── 고정 상수와 그로부터 나오는 유한크기 점검 ────────────────────────────
+        r.update(FIXED)
+        r['thickness_est_um'] = FIXED['loading_mAh_cm2'] * THICK_PER_LOADING_UM
+        dmax = r['d_am_um'] if np.isnan(dP) else dP          # 가장 큰 입자가 상자를 정한다
+        r['rve_over_d_am_max'] = FIXED['rve_um'] / dmax           # 측면 상자 / 최대 입자
+        r['thick_over_d_am_max'] = r['thickness_est_um'] / dmax   # 두께 / 최대 입자
+        #  ⚠ 플래그는 **거부가 아니라 라벨**이다 — 이 코너가 물리적으로 얇다는 사실 자체가
+        #    데이터의 일부다 (실제 39 µm 전극에 Ø15 µm 입자면 정말 2.6층이다).
+        #    기준: 코퍼스 최빈 구성이 rve50/d12 = 4.17, rve40/d12 = 3.33 이므로 3.3 을
+        #    "우리가 이미 돌려 본 하한" 으로 잡는다 (새 기준을 발명하지 않는다).
+        f = []
+        if r['rve_over_d_am_max'] < 3.3:
+            f.append('lateral')
+        if r['thick_over_d_am_max'] < 3.0:
+            f.append('thin')
+        r['finite_size_flag'] = '+'.join(f)
     return rows
 
 
@@ -215,8 +240,10 @@ if __name__ == '__main__':
                     r[rr] = r[d]
                 r[d] = r[d] * 2.0
     cols = (['case_id', 'block', 'd_am_p_um', 'd_am_s_um', 'ps_frac', 'ps_label', 'd_se_um',
-             'am_pct', 'd_am_um', 'r_AM_P_um', 'r_AM_S_um', 'r_SE_um',
-             'size_ratio_P_over_S', 'size_ratio_AM_over_SE'] + DESCRIPTORS)
+             'am_pct', 'rve_um', 'loading_mAh_cm2', 'thickness_est_um',
+             'd_am_um', 'r_AM_P_um', 'r_AM_S_um', 'r_SE_um',
+             'size_ratio_P_over_S', 'size_ratio_AM_over_SE',
+             'rve_over_d_am_max', 'thick_over_d_am_max', 'finite_size_flag'] + DESCRIPTORS)
     for r in rows:
         for d in DESCRIPTORS:
             r.setdefault(d, '')                       # DEM 이 채울 빈 칸
@@ -243,5 +270,17 @@ if __name__ == '__main__':
               f"{f_(r['d_am_s_um']):>7} {r['ps_frac']:>6.2f} {r['d_se_um']:>6.2f} "
               f"{r['am_pct']:>6.1f} {f_(r['size_ratio_P_over_S']):>6}")
     print('\n설계 진단 (내부 블록):', json.dumps(diagnostics(rows), ensure_ascii=False))
+    fl = [r for r in rows if r['finite_size_flag']]
+    print(f"\n고정 상수: RVE {FIXED['rve_um']:.0f}×{FIXED['rve_um']:.0f} µm · 면용량 "
+          f"{FIXED['loading_mAh_cm2']:.1f} mAh/cm² → 두께 ≈ {rows[0]['thickness_est_um']:.0f} µm "
+          f"(코퍼스 291건 회귀 {THICK_PER_LOADING_UM:.2f} µm per mAh/cm²)")
+    print(f"  측면 RVE/d_AM_max : {min(r['rve_over_d_am_max'] for r in rows):.2f} – "
+          f"{max(r['rve_over_d_am_max'] for r in rows):.2f}   "
+          f"(코퍼스 최빈 rve50/d12 = 4.17 · rve40/d12 = 3.33)")
+    print(f"  두께 /d_AM_max    : {min(r['thick_over_d_am_max'] for r in rows):.2f} – "
+          f"{max(r['thick_over_d_am_max'] for r in rows):.2f}")
+    print(f"  ⚠ 유한크기 플래그 {len(fl)}/{len(rows)} 행 — **거부가 아니라 라벨**이다 "
+          f"(Ø15 µm 입자에 39 µm 전극이면 실제로 2.6층이다).  "
+          f"학습 시 이 열을 공변량으로 남겨 두면 유한크기 효과를 흡수할 수 있다.")
     print('\n⚠ 디스크립터 열은 **비어 있다** — DEM 이 채운다: ' + ', '.join(DESCRIPTORS))
     sys.stdout.flush()
