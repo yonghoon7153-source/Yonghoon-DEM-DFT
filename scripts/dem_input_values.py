@@ -146,6 +146,48 @@ def verify_sheet(tol=6e-3):
     return 1 if bad else 0
 
 
+#  ── ★★ 실측 검증 — `particledistribution/discrete` 가중치는 **질량분율**이다 ────────
+#    `volumefraction_region` 이 입자수를 정하므로 그 규약을 틀리면 조성이 통째로 어긋난다.
+#    업로드된 덱 `input_real_1` (6 mAh · 0:10 · r_AM_S 2 · r_SE 0.5 · volfrac 0.321) 을
+#    코퍼스 실측 입자수와 대조해 세 가설을 갈랐다:
+#
+#      가설            N_AM 예측    실현 AM wt%   실측 4,587 대비
+#      개수분율          7,040        99.85 %      +53.5 %   ⛔
+#      부피분율          5,765        91.41 %      +25.7 %   ⛔
+#      **질량분율**      **4,584**    **81.60 %**  **−0.07 %**  ✓✓
+#
+#    ⇒ **질량분율 확정** (오차 0.07 %).  그리고 같은 대조가 두 번째 규약도 확정한다:
+#    region 부피를 `z_hi − z_lo = 0.295` 로 쓰면 4,584(−0.07 %), `z_hi = 0.30` 으로 쓰면
+#    4,662(+1.64 %) — **실측이 0.295 쪽**이다.  즉 LIGGGHTS 는 **실제 region 부피**를 쓰고,
+#    시트가 z_hi 로만 나누는 것은 로딩을 1.6 % 깎는다 (앞의 z_lo 오프셋이 데이터로 확인됨).
+_DECK_CHECK = dict(load=6.0, am_pct=100 * 80 / 98, rve_um=50.0, d_s=4.0, d_se=1.0,
+                   volfrac=0.321, z_lo=0.005, z_hi=0.30, n_am_measured=4587)
+
+
+def verify_deck(tol=3e-3):
+    """실측 입자수로 가중치 규약과 region 부피 규약을 **동시에** 검증."""
+    c = _DECK_CHECK
+    h = c['z_hi'] - c['z_lo']
+    v_tar = c['volfrac'] * (c['rve_um'] * 1e-6 * SC_R) ** 2 * h          # 삽입 목표 부피 m³
+    v_am1 = 4 / 3 * math.pi * (c['d_s'] / 2 * 1e-6 * SC_R) ** 3          # AM 1개 부피
+    va = c['am_pct'] / 100 / RHO_AM
+    f_v_am = va / (va + (1 - c['am_pct'] / 100) / RHO_SE)                # 질량→부피 분율
+    n_pred = f_v_am * v_tar / v_am1
+    err = n_pred / c['n_am_measured'] - 1
+    ok = abs(err) < tol
+    print(f"덱 실측 대조 (input_real_1, volfrac {c['volfrac']}, region z {c['z_lo']}–{c['z_hi']})")
+    print(f"  {'✓' if ok else '✗'} N_AM  예측 {n_pred:,.0f}  실측 {c['n_am_measured']:,}"
+          f"   ({100 * err:+.2f} %)   ← 가중치 **질량분율** · region 부피 **z_hi − z_lo**")
+    #  반례 두 개도 같이 보여 준다 (이 검사가 실제로 가리는지)
+    v_bar = 0.816 * v_am1 + 0.184 * (4 / 3 * math.pi * (c['d_se'] / 2 * 1e-6 * SC_R) ** 3)
+    print(f"    (개수분율이면 {0.816 * v_tar / v_bar:,.0f} = {100 * (0.816 * v_tar / v_bar / c['n_am_measured'] - 1):+.1f} % · "
+          f"부피분율이면 {0.816 * v_tar / v_am1:,.0f} = {100 * (0.816 * v_tar / v_am1 / c['n_am_measured'] - 1):+.1f} %)")
+    v_wrong = c['volfrac'] * (c['rve_um'] * 1e-6 * SC_R) ** 2 * c['z_hi']
+    print(f"    (region 을 z_hi={c['z_hi']} 로 쓰면 {f_v_am * v_wrong / v_am1:,.0f} = "
+          f"{100 * (f_v_am * v_wrong / v_am1 / c['n_am_measured'] - 1):+.2f} % — **실측이 0.295 쪽**)")
+    return 0 if ok else 1
+
+
 def _f(r, k):
     v = r.get(k, '')
     return float(v) if v not in ('', None) else float('nan')
@@ -164,7 +206,11 @@ if __name__ == '__main__':
                     help='덱 `region reg_mix` 의 z_lo (기본 0.005) — 이것을 빼야 실현 로딩이 맞는다')
     ap.add_argument('--z-hi', type=float, default=None, help='덱 region 의 z_hi')
     ap.add_argument('--verify-sheet', action='store_true')
+    ap.add_argument('--verify-deck', action='store_true',
+                    help='실측 입자수로 가중치·region 규약 검증')
     a = ap.parse_args()
+    if a.verify_deck:
+        raise SystemExit(verify_deck())
     if a.verify_sheet or not a.design:
         raise SystemExit(verify_sheet())
 
