@@ -331,6 +331,25 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 즉 이 그림에서 신뢰할 수 있는 건 **화학군 단위의 패턴**이지 개별 순서가 아닙니다.
 
+💡 **"late transition metals" 을 쓴 근거** (`db/properties/seminar_table_tm_split.csv`)
+
+| d-블록 구간 | n | 평균 점수 |
+|---|---|---|
+| early (3–6족) | 11 | **0.609** |
+| Mn (7족) | 1 | 0.459 |
+| late (8–11족) | 5 | 0.338 |
+| **late 3d 만 (Fe–Cu)** | 4 | **0.312** |
+
+· **`transition metals` 라고만 쓰면 틀린다** — 전체 1·2등이 Sc 0.83 · Cr 0.82 로 둘 다
+  전이금속이다. 갈리는 지점이 전이금속 **안**이라 `late` 가 문장의 핵심어다.
+· `3d transition metals` 도 안 된다 — Sc·Ti·V·Cr 이 전부 3d 다.
+· Cu 0.26 · Ni 0.29 · Co 0.32 · Fe 0.38 이 **36개 원소 전체의 최하위 4**다. 그다음이 Ti 0.41.
+
+⚠ **Ag 를 조심할 것.** Ag 도 11족(late)인데 **0.44** 로 중간이다. 그래서 슬라이드가
+  `late transition metals` 로 끝내지 않고 **`(Fe–Cu)` 로 범위를 박았다** — 주장이 정확한
+  범위는 **3d 행**이다. 질문이 오면: "Ag 는 4d 라 다릅니다. 3d 행에서 8족부터 떨어집니다."
+⚠ Mn(7족) 0.46 은 경계다. 그림에서도 붉지 않고 살구색이라 문장과 안 어긋난다.
+
 💡 청중이 반드시 "그래서 Sc 를 쓰면 되나요"라고 묻습니다. 답은 "그 순위는 아직 승인 안
 했습니다. 결과 1 을 보시면 왜 그런지 나옵니다"입니다. 미리 준비해 두세요.
 
@@ -852,6 +871,8 @@ As₂S₃ 하나는 계획에는 있었지만 구조 생성 단계에서 멈췄�
 | 슬라이드 | CSV |
 |---|---|
 | 6 후보군 | `db/properties/seminar_table_roster.csv` |
+| 8 주기율표 근거 | `db/properties/seminar_table_tm_split.csv` |
+| 풀 정산 91→89 | `db/properties/cascade_pool_accounting.csv` |
 | 17 있는 것/없는 것 | `db/properties/seminar_table_evidence.csv` |
 | 18 결과 1 | `db/properties/seminar_table_label_spread.csv` |
 | 19 결과 2 | `db/properties/seminar_table_oxidation_by_group.csv` |

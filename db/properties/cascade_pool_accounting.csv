@@ -1,0 +1,13 @@
+"# 91 planned -> 89 scored. Two species drop, for DIFFERENT reasons.",,,,,
+# Source: db/properties/cascade_v23_ranked_v2.csv (89 rows) counted by anion family;,,,,,
+#   plan from tools/doping/master_batch_273.sh (PHASE_1A 37 + PHASE_1B 54).,,,,,
+#   AlI3 rationale: kb/methodology/cascade_pipeline_anatomy_2026_08_13.md 'AlI3 - 90번째를 넣는 유일한 경로',,,,,
+anion_family,n_planned,n_scored,dropped_species,dropped_at_stage,drop_reason
+oxides,37,37,,,
+chlorides,19,19,,,
+sulfides,11,10,As2S3,stage-01 structure generation,n_structures = 0 - the calculation never started
+fluorides,10,10,,,
+bromides,5,5,,,
+nitrides,5,5,,,
+iodides,4,3,AlI3,scoring / champion selection,elastic-EOS-BVS missing on the rank_combined==1 row (present on rank 2); using rank 2 would make AlI3 the only species picked from a different placement
+TOTAL,91,89,As2S3 | AlI3,,
