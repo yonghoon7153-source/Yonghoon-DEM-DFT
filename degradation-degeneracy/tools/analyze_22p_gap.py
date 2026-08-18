@@ -162,7 +162,7 @@ def _pooled(dirs: list[Path], objective: str, tol: float, what: str) -> pd.DataF
 
 def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         plot: str | None = None, restrict_to=None, noise: float = 0.0,
-        bin_w: float = 0.01) -> dict:
+        bin_w: float = 0.01, breakdown: bool = False) -> dict:
     """`in_dir` 은 디렉터리 하나 또는 **여러 개**(seed 스윕을 모을 때).
 
     `noise` — ①·①'·② 가 볼 잡음 수준. 기본 0. **noise 0 에서는 잡음 실현이
@@ -179,7 +179,15 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     맨 앞에서 경고하는 함정과 같다.
 
     `restrict_to` 를 주면 `공통 cond_id ∩ 그쪽에서 복원가능` 으로 좁힌다.
+
+    `breakdown` — ①' 의 **참 격차 0 칸**을 LLI·LAM 축으로 쪼개 본다. 이 칸은
+    거짓 분리율의 분모이자 §0 결론의 절반인데, 균질하다는 보장이 없다.
+    실제로 조밀 격자에서 촘촘 격자와 겹치는 15조건은 80%, 나머지 66조건은
+    15% 로 갈렸고 **22p 동작점 자신이 앞쪽 무리에 있다** — 평균만 인용하면
+    동작점의 값을 잘못 말하게 된다.
     """
+    from tools.compare_objectives import gap_is_zero, gap_lt
+
     in_dirs = _as_dirs(in_dir)
     df = _pooled(in_dirs, objective, tol, "--in")
 
@@ -316,6 +324,24 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     print(t2.to_string(index=False))
     out["wide"]["table"] = t2.to_dict("records")
 
+    # ── 참 격차 0 칸의 축별 분해 (--breakdown) ─────────────────────────
+    if breakdown and len(near):
+        z = near[gap_is_zero(near["lam_pe"] - near["lam_ne"])].copy()
+        z["_split"] = ~gap_lt(z["pe_ne_gap_recovered"], tol)
+        bd: dict = {"n": int(len(z)), "정의": f"①' ∩ 참 격차 0 ∩ noise {noise:g}",
+                    "lli": {}, "lam": {}}
+        print(f"\n★ 참 격차 0 칸 분해 — n={len(z)} "
+              f"(거짓 분리 {int(z['_split'].sum())}/{len(z)})")
+        for axis, col in (("lli", "lli"), ("lam", "lam_pe")):
+            print(f"   {axis:>4s} | " + "  ".join(
+                f"{k:g}:{int(v['_split'].sum())}/{len(v)}"
+                for k, v in sorted(z.groupby(col))))
+            bd[axis] = {f"{k:g}": {"n": int(len(v)),
+                                   "false_split": int(v["_split"].sum())}
+                        for k, v in sorted(z.groupby(col))}
+        print("   ⚠ 축마다 비율이 크게 다르면 평균은 동작점의 값이 아니다.")
+        out["gap0_breakdown"] = bd
+
     # ── ③ 22p 조건 자체 ────────────────────────────────────────────────
     exact = df[(df["lli"].sub(0.17).abs() < 1e-9)
                & (df["lam_pe"].sub(0.13).abs() < 1e-9)
@@ -429,12 +455,16 @@ def main() -> None:
     ap.add_argument("--gap-bin", dest="bin_w", type=float, default=0.01,
                     help="참 격차 bin 폭. 격자 간격과 맞아야 한다 "
                          "(0.005 격자면 0.005). 안 맞으면 멈춘다.")
+    ap.add_argument("--breakdown", action="store_true",
+                    help="참 격차 0 칸을 LLI·LAM 축으로 쪼개 본다 — 이 칸이 "
+                         "균질한지(평균이 동작점의 값인지) 확인용.")
     ap.add_argument("--log-level", default="WARNING")
     args = ap.parse_args()
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     run(args.in_dir, args.objective, args.tol, args.plot,
-        restrict_to=args.restrict_to, noise=args.noise, bin_w=args.bin_w)
+        restrict_to=args.restrict_to, noise=args.noise, bin_w=args.bin_w,
+        breakdown=args.breakdown)
 
 
 if __name__ == "__main__":
