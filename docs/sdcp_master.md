@@ -166,7 +166,9 @@ side chain:  ring–CH₂–O–CH₂CH₂–CH(CH₃)–SO₃H
 - **Fig 3a**: DBE에서 **PTFE 분산 균일화** (SBE F-map 응집 → DBE 균일 점) — SDCP가 PTFE 뭉침 억제
   (우리 fibrillation/분산 축과 연결 후보)
 - 역학: elastic recovery 0.69→0.82 (nanoindent, Fig3c-d)
-- 전기: R_ele 59.7→48.5 Ω·cm² (EIS Fig4c), c-AFM 저저항 면적↑ (Fig4b)
+- 전기: R_ele 59.7→48.5 Ω·cm² (**대칭셀** EIS Fig4c — 사용자 확인 2026-08-18), c-AFM 저저항 면적↑ (Fig4b)
+  ⚠ **σ_e 검증 앵커가 아니다** (CL-38): 대칭셀 EIS = AC·셀 수준이고 우리 σ_e = DC 관통 전자 전도도라 **다른 양**이다.  SBE/DBE 복합체 σ_e 의 실험 앵커는 여전히 없다.  이 값의 자리는 Fig 6e `R_int` 의 pristine 짝(A11 백로그).
+- **★ ADD_E_SET (2026-08-18 갱신)**: 첨가제 탄성계수 정본 = **PTFE 1.80 · SDCP 9.00 GPa** (ν 0.30 / 0.35).  옛 코드값 PTFE 0.30 · SDCP 23.6, AFM 맵 판독 PTFE 5.6 · SDCP 23.6.  출처 = 사용자 지정, **근거 미기재 (채울 것)**.  ⚠ E 는 STEP3 σ 에 직접 안 들어가지만 **MPM 압밀 기하**를 바꾼다 ⇒ 옛/새 물성 침대의 σ 를 나란히 비교 금지.  진행 중 SBE/DBE 트랙은 재압밀을 안 하므로 영향 없음.  정본 = docs/sdcp_manuscript_anchors.md ADD_E_SET 절.
 - 셀: 1000cyc@2C 유지 (SBE는 100→62 감쇠, Fig6d); **저압 5MPa에서 격차 최대** (Fig7); R_int 사이클후
   110/46/30 (SBE/DBE/@C-SUS, Fig6e); SBE만 contact-loss+crack (Fig6f)
 - **Fig 4(e) "Electrochemical modeling" 빈 패널 + Fig 7(c,d) placeholder** = 우리 기여 목표 슬롯

@@ -135,6 +135,25 @@ _STATE_REQUIRED = ('x', 'F', 'mu_p', 'la_p', 'yld_p', 'pvol_p', 'coh_p', 'dg_acc
 # meta keys that MUST match bit-for-bit between the saved run and the restarting run
 _STATE_HARD_META = ('n_grid', 'nz', 'lateral_box', 'periodic')
 
+# ── ★★ ADD_E_SET — 첨가제 탄성계수 **단일 출처** (2026-08-18) ───────────────────────
+#   정본 서술: docs/sdcp_manuscript_anchors.md ★ADD_E_SET 절 · 원장 CL-42.
+#   ⚠ 왜 상수로 뺐나: 같은 값이 **CFL dt 가드**(main 안)와 **ADD 표**(seed 안) 두 곳에
+#     하드코딩돼 있었다.  한쪽만 고치면 dt 가드가 실제 물성보다 낮은 강성으로 계산돼
+#     **조용히 CFL 이 터진다** (터지는 시점은 값을 올릴 때라 그때는 원인을 못 찾는다).
+#     ⇒ 여기서만 정의하고 두 곳이 이것을 읽는다 (작업규율 ① "이 리포에 이미 있나").
+#   ⚠ 출처: 사용자 지정 2026-08-18.  **근거 문헌/측정 미기재** — 인용 전에 채울 것.
+#     이전 세대: PTFE 0.30 · SDCP 23.6 (AFM S6 맵 판독은 PTFE 5.6 · SDCP 23.6).
+#   ⚠ E 는 STEP3 σ 에 **직접** 안 들어가지만 MPM 압밀 기하를 바꾼다 ⇒ 옛/새 물성으로
+#     압밀한 침대의 σ 를 나란히 비교 금지 (침대는 `_add_meta['E_anchor']` 로 자기 세대를 안다).
+ADD_E_SET_ID = 'ADD_E_SET_20260818'
+ADD_E_NU = {                    # 상: (E GPa, ν)
+    'VGCF':   (10.00, 0.30),
+    'SuperP': (0.50,  0.30),
+    'PTFE':   (1.80,  0.30),    # 2026-08-18: 0.30 → 1.80
+    'SDCP':   (9.00,  0.35),    # 2026-08-18: 23.6 → 9.00
+    'SWCNT':  (0.50,  0.30),
+}
+
 
 def state_fingerprint(am_pos, am_r_pristine):
     """Stable short fingerprint of the FROZEN AM scaffold GEOMETRY in BOX-frame coordinates.
@@ -1478,8 +1497,11 @@ def main(argv):
     if _has_am_mat:
         _M = max(_M, LA_AM + 2.0 * MU_AM)
     if args.add_recipe:                                     # additive stiffness can EXCEED the SE stack
-        _rc_up = args.add_recipe.upper()                    # (VGCF E=10 rode the old margin; SDCP E=23.6
-        for _anm, _aE, _anu in (('VGCF', 10.0, 0.30), ('SDCP', 23.6, 0.35)):   # would blow the CFL) → cap dt
+        _rc_up = args.add_recipe.upper()                    # (VGCF E=10 rode the old margin; 옛 SDCP E=23.6
+        #  ★ 값은 아래 ADD 표와 **같아야 한다** — 2026-08-18 에 PTFE 0.30→1.8 · SDCP 23.6→9.0
+        #    (ADD_E_SET).  새 값에서는 셋 다 SE 스택(M ≈ 26.2) 아래라 이 가드가 dt 를 물지 않지만,
+        #    표만 고치고 여기를 안 고치면 **다음에 값이 오를 때 조용히 CFL 이 터진다**.
+        for _anm, (_aE, _anu) in ADD_E_NU.items():          # ★ 단일 출처 (ADD_E_SET, 파일 상단)
             if _anm in _rc_up:
                 _mu_a, _la_a = lame(_aE, _anu)
                 _M = max(_M, _la_a + 2.0 * _mu_a)
@@ -2062,11 +2084,11 @@ def main(argv):
                 #   buckling proxy _vgcf_curl; PTFE 0.4 = tangled drawn web);
                 #   vol_cv>0 → initial node-volume spread (drawn d∝√(V/L)); nuc_frac → fraction nucleating on carbon
                 #   (CBD); branch_frac → ② spawn thinner secondary fibrils; bridge_frac → ④ steer toward a 2nd carbon.
-                'VGCF':   (10.0, 0.30, 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
-                'SuperP': (0.50, 0.30, 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
-                'PTFE':   (0.30, 0.30, 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # drawn web + CBD + AM-wrap
-                'SDCP':   (23.6, 0.35, 1.00, 5, 'particle', 0.0,      0.0,  0.0, 0.0, 0.0, 0.0),   # ★E=23.6 GPa MANUSCRIPT-ANCHORED (AFM S6; LPSCl급 강성) — 0.3µm particles (S3), σ_y=1.0 UN-anchored rigid-proxy §F1 (stiff conjugated polymer, no PTFE-like flow; ≫press → behaves rigid); ρ 1.3 still proxy (methods 대기)
-                'SWCNT':  (0.50, 0.30, 0.10, 6, 'sheath',  0.0,       0.0,  0.0, 0.0, 0.0, 0.0),   # ★A14 (#275 koo2026) conformal sheath — E/σ_y = SuperP-class SOFT PROXY §F1: the film-effective
+                'VGCF':   (*ADD_E_NU['VGCF'], 2.00, 2, 'fibre',  _ad.VGCF_L, _vgcf_curl, 0.0, 0.0, 0.0, 0.0),   # press-dependent buckling waviness (--vgcf-curl / _press_curl)
+                'SuperP': (*ADD_E_NU['SuperP'], 0.10, 3, 'cblack', 0.0,        0.0,  0.0, 0.0, 0.0, 0.0),   # carbon black
+                'PTFE':   (*ADD_E_NU['PTFE'], 0.05, 4, 'fibre',  _ad.PTFE_L, _ptfe_curl, 0.6, 0.6, 0.5, 0.5),   # ★E=1.8 GPa (ADD_E_SET 2026-08-18) — 이전 0.30 (벌크-PTFE 급)
+                'SDCP':   (*ADD_E_NU['SDCP'], 1.00, 5, 'particle', 0.0,      0.0,  0.0, 0.0, 0.0, 0.0),   # ★E=9.0 GPa (ADD_E_SET 2026-08-18) — 이전 23.6 (AFM S6 맵 판독).  0.3µm particles (S3), σ_y=1.0 UN-anchored rigid-proxy §F1 (stiff conjugated polymer, no PTFE-like flow; ≫press → behaves rigid); ρ 1.3 still proxy (methods 대기)
+                'SWCNT':  (*ADD_E_NU['SWCNT'], 0.10, 6, 'sheath',  0.0,       0.0,  0.0, 0.0, 0.0, 0.0),   # ★A14 (#275 koo2026) conformal sheath — E/σ_y = SuperP-class SOFT PROXY §F1: the film-effective
                 #   transverse modulus of a few-layer CNT skin (~2-10nm = OUR inference from tube Ø 2nm;
                 #   koo2026 publishes no sheath thickness) is UN-anchored (single-tube AXIAL ~1 TPa is the
                 #   wrong axis for a wrapped skin under radial press); ≤0.5wt% + add_pvs volume-pin → compaction
@@ -2308,7 +2330,9 @@ def main(argv):
                 if code == 5:                                # SDCP: dispersed anchored particles (manuscript)
                     _add_meta[nm]['morphology'] = (f'agglomerate_{_aggd:.1f}um_S2' if _aggd > 0.0
                                                    else 'particle_0.3um_S3')     # mixing-dependent dispersion state
-                    _add_meta[nm]['E_anchor'] = 'AFM_S6_23.6GPa'
+                    #  ★ 침대가 **자기가 어떤 물성 세트로 압밀됐는지** 를 들고 다녀야 옛/새
+                    #    침대를 조용히 섞지 않는다 (2026-08-18).  이전 침대는 'AFM_S6_23.6GPa'.
+                    _add_meta[nm]['E_anchor'] = 'ADD_E_SET_20260818_9.0GPa'
                     _add_meta[nm]['variant'] = 'neutral' if args.sdcp_neutral else 'doped'
                     _add_meta[nm]['coh_sdcp'] = float(_coh)
                     _add_meta[nm]['agg_d_um'] = round(float(_aggd), 2)           # 0 = milled S3 singles
@@ -2319,8 +2343,9 @@ def main(argv):
                         _add_meta[nm]['n_per_agglomerate'] = int(_seedinfo.get('n_agg_design', 0))
                         _add_meta[nm]['agg_pack_assumed'] = float(_ad.SDCP_AGG_PACK)   # §F1 hook — S2 anchors SIZE only
                         _add_meta[nm]['agg_mechanics'] = 'primary_E_anchor_assembly_uncalibrated'
-                        #   E=23.6 GPa is the PRIMARY's AFM anchor; agglomerate-scale inter-primary bonding
-                        #   is represented only by the un-calibrated bulk coh_sdcp hook (§F1)
+                        #   E=9.0 GPa (ADD_E_SET 2026-08-18) is the PRIMARY's anchor; agglomerate-scale
+                        #   inter-primary bonding is represented only by the un-calibrated bulk
+                        #   coh_sdcp hook (§F1).  옛 침대는 23.6 (AFM S6 맵 판독) 로 압밀됐다.
                     else:                                                        # clump active only in singles mode
                         _add_meta[nm]['clump'] = int(_clump)                     # (agg_d wins over clump by design)
                     _add_meta[nm]['anchor_status'] = 'INVALID_WRONG_MONOMER_recompute_pending'   # 2026-07-10: 이전 E_bind(−4.8/−3.0)는

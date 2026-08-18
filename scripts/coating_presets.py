@@ -46,7 +46,7 @@ COATING_PRESETS = {
     'SDCP': {                                             # 자기도핑 전도성 바인더 (우리 A4′)
         'label': 'SDCP (S-PEDOT 자기도핑)', 'cei_suppress': None, 'r_ct_factor': None,
         'sigma_ion_mod': 0.80, 'sigma_e_mod': 5.1, 'seed_morph': 'particle',   # 매뉴스크립트 FigS3 = 분산 singles('coat'는 레거시)
-        'anchor': 'A4′ 완비: σ_e×5.1·σ_ion×0.80·E23.6GPa (manuscript; ★pellet-COMPOSITE 비율 — phase σ 아님); E_bind DFT 잔여',
+        'anchor': 'A4′ 완비: σ_e×5.1·σ_ion×0.80·E 9.0GPa (σ 비는 manuscript pellet-COMPOSITE — phase σ 아님; E 는 ADD_E_SET 2026-08-18, 옛 23.6); E_bind DFT 잔여',
         'shape': 'N/A (전도 이종상, 화학 CEI 아님)'},
     'SWCNT': {                                            # 연속 SWCNT sheath (우리 A14)
         'label': 'SWCNT sheath', 'cei_suppress': None, 'r_ct_factor': None,
