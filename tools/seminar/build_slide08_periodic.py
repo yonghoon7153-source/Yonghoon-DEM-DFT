@@ -34,9 +34,9 @@ SLIDE_IDX = 7                      # v6 덱의 8장 (0-based)
 #: 슬라이드에 인쇄되는 문장 — 대본(kb/seminars/…)의 8장과 **1:1**이어야 한다.
 HEAD = "Candidate set (2): 36 cation elements, coloured by their best score"
 SUB1 = "Late transition metals (Fe–Cu) form the [r]red[/r] block — their oxidation window is the narrowest."
-SUB2 = "[b]Group trends[/b] are robust, individual rankings are not — doubling the set kept both ends."
+SUB2 = "[b]Group trends[/b] are robust, the exact order is not — the same elements stay at both ends."
 LABEL = "best score per element, 89-species pool (2026-08-13)"
-NOTE = "[r]no approved ranking yet[/r] — this figure supports the group trend, not the order"
+NOTE = "[r]no approved ranking yet[/r] — the same elements stayed top and bottom when the set doubled (47 → 89)"
 GLOSS = ("Cation: the metal we substitute in  ·  Coverage: how many compounds of that element "
          "were scored  ·  de: stability against the host")
 
@@ -129,8 +129,10 @@ def selftest():
 
     # 음성 ③ — 같은 단서를 두 번 인쇄하지 않는다 (앞 판은 세 번이었다)
     chk(sum(("rank" in t.lower()) for t in (SUB2, NOTE)) <= 2, "순위 단서가 2회 이하")
-    chk("trend" in SUB2.lower() and "trend" in NOTE.lower(),
-        "소불릿과 그림 밑 줄이 같은 것(group trend)을 가리킨다")
+    # ⚠ 소불릿은 **주장**, 그림 밑 줄은 그 **근거**다. 같은 말을 두 번 쓰면 안 되고,
+    #   근거 쪽에 숫자(47 → 89)가 있어야 질문을 막는다.
+    chk("both ends" in SUB2 and ("47" in NOTE and "89" in NOTE),
+        "소불릿=주장 · 그림밑=근거(47→89 숫자 포함)")
 
     # ★ 글자폭 — 상자를 넘으면 두 줄로 감겨 아래(그림)를 밀거나 잘린다.
     #   v6 8장의 용어줄이 정확히 그래서 `of that eleme` 에서 끊겼다. 이제 못으로 박는다.

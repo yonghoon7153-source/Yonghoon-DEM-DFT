@@ -295,10 +295,10 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 > ■ Candidate set (2): 36 cation elements, coloured by their best score
 > • Late transition metals (Fe–Cu) form the [빨강]red[/] block — their oxidation window is the narrowest.
-> • [파랑]Group trends[/] are robust, individual rankings are not — doubling the set kept both ends.
+> • [파랑]Group trends[/] are robust, the exact order is not — the same elements stay at both ends.
 
 `< best score per element, 89-species pool (2026-08-13) >`
-`해설` [빨강]no approved ranking yet[/] — this figure supports the group trend, not the order
+`해설` [빨강]no approved ranking yet[/] — the same elements stayed top and bottom when the set doubled (47 → 89)
 
 ⚠ **풀 교체 (2026-08-18)** — 색을 **89종 풀**(`cascade_v23_ranked_v2.csv`)로 다시 그렸다.
    앞 판은 47종(2026-06-29)이었다. 바꾼 근거는 **패턴이 안 바뀐다는 실측**이다:
@@ -315,19 +315,22 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 같은 목록을 주기율표에 올리면 이렇게 됩니다. 양이온 원소로 36 종입니다.
 
-칸 색이 그 원소의 화합물 중 **가장 좋았던 종합 점수**입니다. 초록이 높고 빨강이 낮습니다.
-아래 작은 숫자는 host 대비 안정성이고요.
+칸 색이 **그 원소의 화합물 중 가장 좋았던 종합 점수**입니다. 청록이 높고 붉은 쪽이
+낮습니다. 아래 작은 숫자는 host 대비 안정성이고요.
 
-⚠ 먼저 단서를 하나 달겠습니다. **아직 승인된 순위가 없습니다.** 그러니까 "Sc 가 1등"
-처럼 읽으시면 안 됩니다.
+가운데를 봐 주세요. **Fe, Co, Ni, Cu 가 통째로 붉습니다.** 이 넷이 36 개 원소 전체에서
+제일 낮아요. 전이금속이라서 나쁜 게 아닙니다 — 오히려 1등과 2등이 **Sc 와 Cr** 로 둘 다
+전이금속이에요. 갈리는 지점이 전이금속 **안**입니다. 왼쪽 early 쪽은 평균 0.61 인데
+오른쪽 late 쪽은 0.34 예요.
 
-💬 **말로만 (질문 오면)** — 풀을 47종에서 89종으로 두 배 늘려 다시 매겨 봤는데
-   **상위10도 최하위10도 집합이 그대로**였습니다. 점수만 평균 0.05 올라가고요.
-   그래서 개별 순서는 못 믿어도 **덩어리는 믿을 수 있다**고 말씀드리는 겁니다.
+이유는 **산화 창**입니다. d 오비탈이 차면서 환원이 쉬워지니까 버티는 전압 범위가 좁아집니다.
+그래서 뒤에 나올 결과 2 — 후기 전이금속에서 산화 창이 붕괴한다 — 와 **같은 얘기**입니다.
+반대로 Sc, Y, Gd 같은 3가 양이온과 In, Ga 쪽이 청록입니다.
 
-대신 **덩어리로 읽으시면 됩니다.** 가운데 Fe, Co, Ni, Cu 가 통째로 빨갛죠. 이게 우연이
-아니라 뒤에 나올 결과 2 — **후기 전이금속에서 산화 창이 붕괴한다** — 와 같은 얘기입니다.
-반대로 Sc, Y, Gd 같은 3가 양이온과 In, Ga 쪽이 초록입니다.
+⚠ 단서를 하나 달겠습니다. **아직 승인된 순위가 없습니다.** 그러니까 "Sc 가 1등"처럼
+읽으시면 안 됩니다. 대신 **덩어리는 믿으셔도 됩니다.** 후보를 47 종에서 89 종으로
+**두 배 늘려서 다시 매겨 봤는데, 위에 있던 원소도 아래에 있던 원소도 그대로**였어요.
+점수만 평균 0.05 올라가고 순서는 안 흔들렸습니다.
 
 즉 이 그림에서 신뢰할 수 있는 건 **화학군 단위의 패턴**이지 개별 순서가 아닙니다.
 
