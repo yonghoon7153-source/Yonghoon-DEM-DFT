@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 218
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-18 · managed-files: 219
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -63,7 +63,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (79)
+## results/ (80)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -96,6 +96,7 @@
 - `kb/results/bvse_3system_conclusions_2026_07_21.md` — BVSE 3-시스템 결론 — LPSCl1.6 / LPSOCl(+O) / +B₂O₃ (2026-07-21 확정)
 - `kb/results/bvse_cubic_approx_2026_07_16.md` — BVSE 큐빅 근사 — "이상화 셀" 지적 대응 + LPSOCl 첫 BVSE (2026-07-16)
 - `kb/results/cascade_v23_literature_grounding_2026_06_25.md` — Cascade v23 — 문헌 기반 검증·novelty·reconciliation (2026-06-25)
+- `kb/results/champion_pool_size_bias_2026_08_18.md` — 챔피언 점수는 후보를 몇 개 뽑았느냐에 지배된다 — best-of-N 편향이 종간 산포보다 크다 ○미열람
 - `kb/results/deck_ionic_section_additions.md` — Slides 4–7 (Ionic conductivity) — 추가 슬라이드 콘텐츠 (2026-06-21)
 - `kb/results/doping_273_qa_log.md` — 273 Doping Cascade — QA Log
 - `kb/results/dualx_blocking_2026_06_29.md` — dual-x 도핑 농도 스크리닝: Li-channel blocking_fraction (x=0.0625 vs 0.25)
