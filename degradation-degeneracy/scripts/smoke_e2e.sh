@@ -80,7 +80,7 @@ _dcache="$(ls .cache/discharged_state/*.json 2>/dev/null | head -1)"
 if [[ -n "$_dcache" ]]; then
   cp "$_dcache" "$_dcache.bak"
   "$PY" - "$_dcache" <<'PYEOF'
-import json, sys
+import os, json, sys
 p = sys.argv[1]
 d = json.load(open(p, encoding="utf-8"))
 d["solver"] = {"name": "casadi", "rtol": 1e-3}      # 다른 recipe 로 위장
@@ -107,7 +107,7 @@ step "1. PyBaMM 합성 격자 (producer artifact)"
   && ok "curves_manifest.yaml (F70 producer 기록)" \
   || bad "producer 기록이 없다 (F70)"
 "$PY" - "$CURVES" <<'PYEOF'
-import sys
+import os, sys
 from src.io import validate_curves_provenance
 # ★ 11차 발견 3 — 실패라벨 재검은 producer 가 서명한 replay_recipe 로 하므로
 #   호출자가 cfg 를 줄 필요가 없다. 실패 2건 격자라 이 경로가 실제로 돈다.
@@ -121,7 +121,8 @@ missing = need - set(v["checks"])
 print(f"   {'✅' if v['ok'] and not missing else '❌'} producer 독립 검증 (F74): "
       + ("통과 (실패라벨 재검 포함)" if v["ok"] and not missing
          else f"실패 — {v['fail']} / 누락 {sorted(missing)}"))
-sys.exit(0 if v["ok"] and not missing else 1)
+sys.stdout.flush(); sys.stderr.flush()
+os._exit(0 if v["ok"] and not missing else 1)
 PYEOF
 [[ $? -eq 0 ]] || bad "producer 검증 실패"
 
@@ -171,7 +172,7 @@ ls "$CACHE_DIR"/*_ocp_*.meta.yaml >/dev/null 2>&1 \
 #      재계산이 불가능하므로 fail-closed 여야 한다)
 _meta="$(ls "$CACHE_DIR"/*_ocp_*.meta.yaml | head -1)"
 "$PY" - "$_meta" <<'PYEOF'
-import sys
+import os, sys
 import yaml
 p = sys.argv[1]
 m = yaml.safe_load(open(p, encoding="utf-8"))
@@ -180,7 +181,7 @@ m["env"] = {**(m.get("env") or {}), "pybamm": "0.0.0-other"}
 yaml.safe_dump(m, open(p, "w", encoding="utf-8"), allow_unicode=True)
 PYEOF
 "$PY" - "$_meta" <<'PYEOF'
-import sys
+import os, sys
 from pathlib import Path
 from src.config import load_config
 from src.halfcell import validate_halfcell_cache
@@ -191,13 +192,14 @@ need = {"코드_identity", "runtime_identity"}
 missing = need - set(v["fail"])
 print(f"   {'✅' if not missing else '❌'} stale meta → validator 거부 "
       + (f"({sorted(need)})" if not missing else f"— {sorted(missing)} 통과함"))
-sys.exit(0 if not missing else 1)
+sys.stdout.flush(); sys.stderr.flush()
+os._exit(0 if not missing else 1)
 PYEOF
 [[ $? -eq 0 ]] || bad "stale meta 를 validator 가 거부하지 않았다 (12차 발견 4)"
 "$PY" -m src.halfcell --config configs/base.yaml --method ocp \
       --log-level WARNING >/dev/null
 "$PY" - "$_meta" <<'PYEOF'
-import sys
+import os, sys
 import yaml
 from src.io import env_fingerprint, source_digest
 m = yaml.safe_load(open(sys.argv[1], encoding="utf-8"))
@@ -205,7 +207,8 @@ ok = (m.get("source_digest") == source_digest()
       and (m.get("env") or {}).get("pybamm") == env_fingerprint()["pybamm"])
 print(f"   {'✅' if ok else '❌'} stale 캐시 → 미스로 재계산되어 meta 갱신 "
       "(12차 발견 4 자기치유)")
-sys.exit(0 if ok else 1)
+sys.stdout.flush(); sys.stderr.flush()
+os._exit(0 if ok else 1)
 PYEOF
 [[ $? -eq 0 ]] || bad "stale 캐시가 재계산되지 않았다"
 "$PY" -m src.halfcell --config configs/base.yaml --method ocp --force --verify \
@@ -238,7 +241,8 @@ for d in sys.argv[1:]:
           + ("통과" if not left else f"실패 — {left}")
           + (f"  (dirty 라 {sorted(SKIP)} 제외)" if SKIP and v["fail"] else ""))
     bad += 0 if not left else 1
-sys.exit(1 if bad else 0)
+sys.stdout.flush(); sys.stderr.flush()
+os._exit(1 if bad else 0)
 PYEOF
 [[ $? -eq 0 ]] || bad "provenance 검증 실패"
 
@@ -249,7 +253,7 @@ step "6. 공정 paired 실행 — 33p/34p 쌍 (F66/F81)"
          --no-adaptive --no-warm-start \
          --nproc "$NPROC" --log-level WARNING >/dev/null
 "$PY" - "$BASE/paired" <<'PYEOF'
-import json, sys
+import os, json, sys
 import numpy as np
 import pandas as pd
 import yaml
@@ -304,14 +308,16 @@ assert "공정 paired 비교" in text, "paired 보고서에 protocol 안내가 �
 head = text[:2000]
 if "인용 금지" not in head:
     print("   ✅ paired 보고서 생성 (n_restarts=3, pairwise 메타 키 포함)")
-    sys.exit(0)
+    sys.stdout.flush(); sys.stderr.flush()
+    os._exit(0)
 names = set(re.findall(r"`([^`]+)`", head.split("인용하지")[0]))
 allowed = {"clean_worktree", "코드_identity"} \
     if os.environ.get("SMOKE_DIRTY") == "1" else set()
 extra = {n for n in names if n not in allowed and not n.startswith("_")}
 if extra:
     print(f"   ❌ paired 보고서 배너 — 허용 외 실패: {sorted(extra)}")
-    sys.exit(1)
+    sys.stdout.flush(); sys.stderr.flush()
+    os._exit(1)
 print("   ⚠ dirty 완화로 paired 배너 허용")
 PYEOF
 [[ $? -eq 0 ]] || bad "paired 보고서 생성 실패 (10차 발견 3)"
@@ -337,7 +343,7 @@ ok "채점"
          --log-level WARNING >/dev/null 2>&1 \
   && ok "weight sweep (run.sh wrapper, w∈{0,1})" || bad "weight sweep 실패"
 "$PY" - "$GFIT/wsweep" <<'PYEOF'
-import sys
+import os, sys
 import yaml
 from pathlib import Path
 y = yaml.safe_load((Path(sys.argv[1]) / "weight_sweep.yaml").read_text(encoding="utf-8"))
@@ -364,7 +370,8 @@ text = build(sys.argv[1], sys.argv[2]).read_text(encoding="utf-8")
 head = text[:2000]
 if "인용 금지" not in head:
     print("   ✅ 인용 금지 배너 없음 — 전 구간 provenance 통과")
-    sys.exit(0)
+    sys.stdout.flush(); sys.stderr.flush()
+    os._exit(0)
 # ★ F81 — 예전 분기는 첫 1,200자에 clean_worktree 만 보이면 **다른 실패가 함께
 #   있어도** 성공 처리했다. 실패 검사 이름을 파싱해, ALLOW_DIRTY 에서 허용되는
 #   집합(clean_worktree·코드_identity)만 있는지 본다.
@@ -374,14 +381,15 @@ allowed = {"clean_worktree", "코드_identity"} \
 extra = {n for n in names if n not in allowed and not n.startswith("_")}
 if extra:
     print(f"   ❌ 배너가 떴다 — 허용 외 실패: {sorted(extra)}")
-    sys.exit(1)
+    sys.stdout.flush(); sys.stderr.flush()
+    os._exit(1)
 print("   ⚠ dirty 완화로 배너 허용 (실패가 clean_worktree·코드_identity 뿐)")
 PYEOF
 [[ $? -eq 0 ]] || bad "보고서에 인용 금지 배너가 떴다"
 
 # ★ F81 — 파생 YAML 변조가 보고서에서 걸리는가 (재계산 렌더 + stale 배너)
 "$PY" - "$GFIT" "$BASE/R_tamper.md" <<'PYEOF'
-import shutil, sys
+import os, shutil, sys
 import yaml
 from pathlib import Path
 from tools.make_results import build
@@ -498,7 +506,7 @@ PYEOF
 [[ $? -eq 0 ]] || bad "격리 복원본이 검증을 통과하지 못했다"
 
 "$PY" - "$ISO" "$HFIT" <<'PYEOF'
-import sys
+import os, sys
 from pathlib import Path
 from src.scoring import run_scoring
 iso, run = Path(sys.argv[1]), sys.argv[2]
@@ -545,7 +553,7 @@ else
   tail -25 "$_ARCH_LOG" | sed 's/^/      /'
 fi
 "$PY" - "$ARCH_TMP" "$GFIT" <<'PYEOF'
-import sys
+import os, sys
 from pathlib import Path
 import yaml
 dest, run = Path(sys.argv[1]), Path(sys.argv[2])
@@ -566,7 +574,7 @@ PYEOF
 [[ $? -eq 0 ]] || bad "artifact_index 검사 실패 (12차 발견 5)"
 _before="$(sha256sum "$ARCH_TMP/$(basename "$GFIT")/payload_sha256.yaml" | cut -d' ' -f1)"
 "$PY" - "$GFIT" <<'PYEOF'
-import sys
+import os, sys
 from pathlib import Path
 import pandas as pd
 f = Path(sys.argv[1]) / "fits.parquet"

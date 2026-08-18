@@ -316,3 +316,49 @@ def test_p22_headline_table_matches_the_canon_outputs():
             f"({ref},{obj},{noise}) 붕괴: 문서 '{col.strip()}' vs 정본 {want_col}")
         checked += 1
     assert checked == 8, checked
+
+
+# ── 종료 시 SIGABRT flake 방지 (게이트 신뢰성) ────────────────────────────
+#
+# ★ smoke 가 간헐적으로(4~6회 중 1회) 실패했다. 잡아 보니 검사는 전부 ✅ 인데
+#   인터프리터 **종료 중**에 죽었다:
+#       ✅ results/_smoke/grid_fit: 통과
+#       ✅ results/_smoke/halfcell_fit: 통과
+#       terminate called without an active exception
+#       ./scripts/smoke_e2e.sh: line 242: 7374 Aborted
+#   PyBaMM/CasADi 가 끌어오는 C++ 런타임이 teardown 에서 std::terminate 를
+#   부르는 전형적 패턴이다. 결과는 옳은데 exit code 만 오염된다 — 10시간짜리
+#   본 실행을 지키는 게이트가 이유 없이 빨개지고, 반복 실행으로 초록을 뽑는
+#   습관이 들면 게이트 자체가 무의미해진다.
+#
+#   처방: heredoc 은 `sys.exit()` 대신 **flush 후 `os._exit()`** 로 끝낸다
+#   (teardown 을 건너뛴다). 두 곳에만 발라져 있던 것을 전부로 넓혔다.
+
+_SCRIPTS = [Path(__file__).resolve().parent.parent / "scripts" / n
+            for n in ("smoke_e2e.sh", "archive_results.sh")]
+
+
+def test_shell_heredocs_do_not_use_sys_exit():
+    """★ 무거운 import 를 한 heredoc 이 sys.exit 로 끝나면 teardown abort 에 노출."""
+    offenders = []
+    for sc in _SCRIPTS:
+        for i, line in enumerate(sc.read_text(encoding="utf-8").splitlines(), 1):
+            if _re.match(r"\s*sys\.exit\(", line):
+                offenders.append(f"{sc.name}:{i}: {line.strip()}")
+    assert not offenders, (
+        "heredoc 종료가 sys.exit 다 — PyBaMM/CasADi teardown 에서 SIGABRT 가 나면 "
+        "검사가 전부 통과해도 게이트가 빨개진다. flush 후 os._exit 를 쓸 것:\n  "
+        + "\n  ".join(offenders))
+
+
+def test_os_exit_calls_flush_first():
+    """★ `os._exit` 는 버퍼를 안 비운다 — 앞줄에서 flush 해야 출력이 안 잘린다."""
+    bad = []
+    for sc in _SCRIPTS:
+        lines = sc.read_text(encoding="utf-8").splitlines()
+        for i, line in enumerate(lines):
+            if "os._exit(" in line and not line.strip().startswith("#"):
+                window = "\n".join(lines[max(0, i - 3):i + 1])
+                if "flush()" not in window:
+                    bad.append(f"{sc.name}:{i + 1}: {line.strip()}")
+    assert not bad, "os._exit 앞 3줄 안에 flush() 가 없다:\n  " + "\n  ".join(bad)

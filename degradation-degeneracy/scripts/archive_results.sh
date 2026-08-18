@@ -102,7 +102,7 @@ for run in "${RUNS[@]}"; do
   #   출력만 하고 계속 진행해, stale 원본으로 만든 묶음이 기존 정상 묶음을
   #   덮어썼다 (리뷰 실측: wrapper exit 0 + 마지막 정상 archive 소실).
   if ! "$PY" - "$run" <<'PYEOF'
-import json, sys
+import os, json, sys
 from pathlib import Path
 from src.io import validate_curves_provenance, validate_provenance
 from tools.archive_bundle import artifact_kind
@@ -112,7 +112,8 @@ v = (validate_curves_provenance(run) if artifact_kind(run) == "grid_producer"
 (run / "provenance.json").write_text(
     json.dumps(v, ensure_ascii=False, indent=2), encoding="utf-8")
 print(f"  원본 provenance: {'통과' if v['ok'] else '실패 — ' + ', '.join(v['fail'][:4])}")
-sys.exit(0 if v["ok"] else 1)
+sys.stdout.flush(); sys.stderr.flush()
+os._exit(0 if v["ok"] else 1)
 PYEOF
   then
     echo "  → 원본이 인용 가능한 상태가 아니라 보관하지 않습니다 (기존 묶음 유지)"
@@ -150,7 +151,7 @@ PYEOF
     iso="$(mktemp -d)"
     if "$PY" -m tools.archive_bundle restore "$cand" --repo-root "$iso" >/dev/null 2>&1 \
        && "$PY" - "$iso" "$run" <<'PYEOF' | sed 's/^/  /'
-import sys
+import os, sys
 from pathlib import Path
 from src.io import validate_curves_provenance, validate_provenance
 from tools.archive_bundle import artifact_kind, nested_runs
@@ -228,7 +229,7 @@ done
 #   "무엇이 근거인가"를 흐리면 안 된다.
 if [[ "${#promoted[@]}" -gt 0 ]]; then
 "$PY" - "$DEST" "${promoted[@]}" <<'PYEOF'
-import hashlib, subprocess, sys
+import os, hashlib, subprocess, sys
 from pathlib import Path
 import yaml
 from src.io import file_digest
