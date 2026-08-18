@@ -189,6 +189,9 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
         dmax = r['d_am_um'] if np.isnan(dP) else dP          # 가장 큰 입자가 상자를 정한다
         r['rve_over_d_am_max'] = FIXED['rve_um'] / dmax           # 측면 상자 / 최대 입자
         r['thick_over_d_am_max'] = r['thickness_est_um'] / dmax   # 두께 / 최대 입자
+        #  ⚠ 측면은 **벽이 아니라 주기경계**다 (생산 덱 `boundary p p f`) — 측면 유한크기는
+        #    wall effect 가 아니라 **상관길이 효과**이고, 디스크립터 계산 시 x,y 를
+        #    최소상거리로 다뤄야 한다.  z(두께)만 진짜 유한크기다.
         #  ⚠ 플래그는 **거부가 아니라 라벨**이다 — 이 코너가 물리적으로 얇다는 사실 자체가
         #    데이터의 일부다 (실제 39 µm 전극에 Ø15 µm 입자면 정말 2.6층이다).
         #    기준: 코퍼스 최빈 구성이 rve50/d12 = 4.17, rve40/d12 = 3.33 이므로 3.3 을
