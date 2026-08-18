@@ -4150,3 +4150,48 @@ def test_build_does_not_mutate_the_canonical_comparison_dict(tmp_path, monkeypat
                       "max_true_pe_ne_gap", "p22_radius_fallback"):
                 assert k not in v, (
                     f"canonical verdict_22p[{o}] 에 렌더 전용 key `{k}` 가 주입됐다")
+
+
+# ── 22p 격차 스윕 분석 ──────────────────────────────────────────────────────
+
+def test_gap_table_bins_by_nominal_gap_and_counts_collapse():
+    """★ 22p 분석 — 참 격차를 nominal 격자값으로 묶고 붕괴를 센다.
+
+    참 격차는 0.02 step 격자의 뺄셈이라 표현 오차가 섞인다. 반올림 없이
+    그대로 group 하면 같은 nominal 격차가 여러 bin 으로 흩어진다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = []
+    # 참 격차 4%p 세 조건 — 하나만 붕괴(복원 격차 < 2%p)
+    for k, hat in enumerate((0.001, 0.05, 0.04)):
+        rows.append({"lam_pe": 0.15, "lam_ne": 0.11, "pe_ne_gap_recovered": hat,
+                     "cond_id": f"a{k}"})
+    # 참 격차 0 두 조건 — 하나 붕괴
+    for k, hat in enumerate((0.0, 0.03)):
+        rows.append({"lam_pe": 0.13, "lam_ne": 0.13, "pe_ne_gap_recovered": hat,
+                     "cond_id": f"b{k}"})
+    t = gap_table(pd.DataFrame(rows), tol=0.02)
+
+    by = {r["참 격차"]: r for r in t.to_dict("records")}
+    assert by["4%p"]["n"] == 3
+    assert by["4%p"]["붕괴(복원<2%p)"].startswith("1/3")
+    assert by["0%p"]["n"] == 2
+    assert by["0%p"]["붕괴(복원<2%p)"].startswith("1/2")
+    # 참 격차 0 에서는 shrinkage 가 정의되지 않는다 (0 으로 나눈다)
+    assert by["0%p"]["shrinkage"] == "—"
+
+
+def test_gap_table_uses_the_shared_boundary_rule():
+    """★ 붕괴 판정도 공통 경계 규약을 써야 한다 (17차 발견 1).
+
+    복원 격차가 **정확히 nominal 2%p** 면 "2%p 미만" 이 아니다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = [{"lam_pe": 0.19, "lam_ne": 0.07,
+             "pe_ne_gap_recovered": 0.15 - 0.13,   # 0.019999999999999997
+             "cond_id": "c0"}]
+    t = gap_table(pd.DataFrame(rows), tol=0.02)
+
+    assert t.iloc[0]["붕괴(복원<2%p)"].startswith("0/1"), t.to_dict("records")
