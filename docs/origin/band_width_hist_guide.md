@@ -147,6 +147,39 @@ host 상대 안정성 최대−최소다. **재현 산포가 아니다** (세 �
 
 ---
 
+## 축 제목이 흰 종이 밖으로 나갈 때 (2026-08-18 실측)
+
+레이어를 5.2 cm 로 줄이면 **페이지는 안 따라 줄지 않는데**, `page.margincontrol = 1`
+(tight)로 페이지를 레이어에 딱 맞춰 버리면 이번엔 **축 제목이 잘려 나간다.**
+12 cm 짜리에서는 여백이 충분해 안 보이던 문제다.
+
+**해법 — 페이지를 먼저 정하고 레이어를 그 안에 앉힌다.** `.ogs` 가 이렇게 한다:
+
+```
+page.unit = 2;        // cm
+page.width  = 8.2;
+page.height = 11.5;
+
+layer.unit = 3;       // cm
+layer.left = 2.4;     // ← 왼쪽 2.4 cm 가 y 제목 자리
+layer.top  = 0.6;
+layer.width  = 5.2;
+layer.height = 9;     // ← 아래 11.5 − 0.6 − 9 = 1.9 cm 가 x 제목 자리
+```
+
+GUI 로 하려면:
+
+```
+Format ▸ Page...  ▸ Dimensions 탭  → Unit cm, Width 8.2, Height 11.5
+Format ▸ Layer... ▸ Size 탭        → Left 2.4, Top 0.6, Width 5.2, Height 9
+```
+
+⚠ 그리고 **내보낼 때** `File ▸ Export Graphs` 의 `Margin` 을 **Tight 가 아니라 Page** 로
+   둔다. Tight 로 내보내면 방금 만든 제목 자리를 다시 잘라낸다.
+
+⚠ 눈금 글씨 28 pt 는 **12 cm 패널 기준(BML)** 이다. 5.2 cm 에서는 상대적으로 커 보이는데,
+   슬라이드에서 작게 들어가는 패널이라 그게 맞다. 줄이지 말 것.
+
 ## 이 안내가 **못 하는 것**
 
 - 왼쪽 큰 패널(88종 밴드 + 이름표)은 다루지 않는다. 그건 종마다 세로선 하나라
