@@ -78,20 +78,16 @@ SLIDES = {
  ),
  10: dict(
     idx=9, out="Slide10_structure_generation.pptx",
-    figs=["docs/figures/seminar/step2_anion_site.png"],
-    zone=dict(x=0.55, y=2.46, w=4.55, h=3.20),
-    # y 는 왼쪽 그림의 세로 중앙에 맞춘 값이다 (그림이 비율맞춤으로 앉는 자리 기준)
-    table=dict(x=5.32, y=3.47, w=4.13, size=12, first_col_w=1.45, rows=[
-        ["", "free S", "PS₄ corner", "halide"],
-        ["Li 24g", "[b]1050[/b]", "810", "600"],
-        ["P 4b", "375", "270", "180"],
-        ["Li 48h", "120", "105", "105"],
-    ]),
+    # ⚠ 3×3 을 **표가 아니라 그림**으로 둔다 (1저자 지정 2026-08-18: confusion matrix 양식).
+    #   칸 안에 수 + 비율 두 줄, 컬러바, 축 제목 — 표보다 '어느 조합이 두꺼운가' 가 즉시 보인다.
+    figs=["docs/figures/seminar/step2_anion_site.png",
+          "docs/figures/seminar/step2_site_grid.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
     title="Candidate structure generation",
     head="Step 2: Each allowed placement becomes a separate structure",
     sub1="One compound became [b]30 structures[/b] on average, and 3,615 in total.",
     sub2="The winning site is [r]an output of the generator[/r], not a variable that was set.",
-    label="where the anion landed  ·  structures per site pair (cation ↓ / anion →)",
+    label="where the anion landed  ·  structures per site pair",
     note="all nine site pairs were populated — [r]the site was never fixed by design[/r]",
     gloss=("Configuration: one specific arrangement of atoms in the cell  ·  "
            "24g / 48h / 4b: Wyckoff labels for the sublattice positions"),

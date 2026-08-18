@@ -253,42 +253,57 @@ def fig_site_choice():
 
 # ── 2b. 자리 조합이 실제로 몇 가지였나 ────────────────────────────────────────
 def fig_site_grid():
-    """(양이온 자리 × 음이온 자리) 격자에 구조가 몇 개씩 들어갔나.
+    """(양이온 자리 × 음이온 자리) 격자에 구조가 몇 개씩 들어갔나 — confusion-matrix 양식.
 
     왜 이 그림인가 (2026-08-18) — 10장 불릿이 "several structures per compound were
     generated" 라고만 해서 **얼마나·어떻게** 가 비어 있었다. 이 격자는 그 답이다:
       · 9칸이 **전부 채워져** 있다 = 자리 조합을 실제로 훑었다
       · 칸마다 수가 다르다 = 어떤 조합은 애초에 가능한 화합물이 적다
-    ⚠ 칸 숫자는 **셀 라벨**이라 '그림 안 글씨 금지' 예외다 (fig_periodic 과 같다).
-    ⚠ 이 수는 구조 수이지 화합물 수가 아니다. 화합물 90종에서 구조 3,615개가 나왔고
-      화합물당 중앙값은 30개다.
+    양식은 1저자가 지정한 confusion matrix 꼴 — 칸 안에 **수 + 비율** 두 줄, 컬러바,
+    축 제목. 값 라벨은 `--selftest` 의 LABEL_OK 예외다(문장이 아니라 셀 라벨).
+
+    ⚠ 이 수는 **구조 수**이지 화합물 수가 아니다. 화합물 90종에서 구조 3,615개가 나왔고
+      화합물당 중앙값은 30개다. 왼쪽 막대 그림(step2_anion_site)은 champion 행만 세므로
+      분모가 다르다 — 두 숫자를 나란히 인용하면 안 된다.
     """
     from collections import Counter as _C
+    from matplotlib.colors import LinearSegmentedColormap as _LSC
     rows = _all_rows()
     cn = _C((r.get("cation_site"), r.get("anion_site")) for r in rows
             if r.get("cation_site") and r.get("anion_site"))
     cats = sorted({k[0] for k in cn}, key=lambda c: -sum(v for k, v in cn.items() if k[0] == c))
     ans = sorted({k[1] for k in cn}, key=lambda a: -sum(v for k, v in cn.items() if k[1] == a))
+    tot = sum(cn.values())
+    cmap = _LSC.from_list("bml_seq", ["#f7fafc", "#bcd7ea", "#5b93c4", "#16365c"])
     _rc()
-    fig, ax = plt.subplots(figsize=(8.2, 4.0))
-    hi = max(cn.values())
-    cmap = hs.score_cmap()
+    fig, ax = plt.subplots(figsize=(8.0, 4.6))
+    M = [[cn.get((c, a), 0) for a in ans] for c in cats]
+    im = ax.imshow(M, cmap=cmap, vmin=0, vmax=max(cn.values()), aspect="auto")
     for i, c in enumerate(cats):
         for j, a in enumerate(ans):
             v = cn.get((c, a), 0)
-            col = cmap(0.5 + 0.5 * (v / hi))          # 중립~teal 쪽만 쓴다 (좋고 나쁨이 아니다)
-            ax.add_patch(plt.Rectangle((j, -i), .94, .94, facecolor=col,
-                                       edgecolor="white", lw=2, zorder=2))
-            ax.text(j + .47, -i + .47, str(v), ha="center", va="center", zorder=3,
-                    fontsize=14, fontweight="bold", color=hs.on_fill(col))
-    ax.set_xlim(-.06, len(ans)); ax.set_ylim(-len(cats) + .94 - .06, 1.0)
-    ax.set_xticks([j + .47 for j in range(len(ans))])
+            fg = hs.on_fill(cmap(v / max(cn.values())))
+            ax.text(j, i - 0.16, f"{v:,}", ha="center", va="center",
+                    fontsize=16, fontweight="bold", color=fg)
+            ax.text(j, i + 0.19, f"{100 * v / tot:.0f} % of all", ha="center", va="center",
+                    fontsize=10, color=fg, alpha=.85)
+    ax.set_xticks(range(len(ans)))
     ax.set_xticklabels([SITE_LABEL.get(a, a) for a in ans], fontsize=11)
-    ax.set_yticks([-i + .47 for i in range(len(cats))])
+    ax.set_yticks(range(len(cats)))
     ax.set_yticklabels([CATION_LABEL.get(c, c) for c in cats], fontsize=11)
+    ax.set_xlabel("Anion site  (where the dopant's O / halide went)", fontsize=11.5)
+    ax.set_ylabel("Cation site  (where the dopant metal went)", fontsize=11.5)
     ax.tick_params(length=0)
+    ax.set_xticks([x - .5 for x in range(1, len(ans))], minor=True)
+    ax.set_yticks([y - .5 for y in range(1, len(cats))], minor=True)
+    ax.grid(which="minor", color="white", lw=2.5)
+    ax.tick_params(which="minor", length=0)
     for sp in ax.spines.values():
         sp.set_visible(False)
+    cb = fig.colorbar(im, ax=ax, fraction=0.030, pad=0.02)
+    cb.set_label("structures generated", fontsize=10.5)
+    cb.ax.tick_params(labelsize=9.5)
+    cb.outline.set_visible(False)
     return _save(fig, "step2_site_grid.png")
 
 
