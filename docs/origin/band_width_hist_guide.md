@@ -147,35 +147,44 @@ host 상대 안정성 최대−최소다. **재현 산포가 아니다** (세 �
 
 ---
 
-## 축 제목이 흰 종이 밖으로 나갈 때 (2026-08-18 실측)
+## ⛔ 축 제목이 안 보인다 — 진단과 해법 (2026-08-18, 두 번 헛짚고 잡음)
 
-레이어를 5.2 cm 로 줄이면 **페이지는 안 따라 줄지 않는데**, `page.margincontrol = 1`
-(tight)로 페이지를 레이어에 딱 맞춰 버리면 이번엔 **축 제목이 잘려 나간다.**
-12 cm 짜리에서는 여백이 충분해 안 보이던 문제다.
+### 증상 구분이 먼저다
 
-**해법 — 페이지를 먼저 정하고 레이어를 그 안에 앉힌다.** `.ogs` 가 이렇게 한다:
+| 어디서 안 보이나 | 원인 | 해법 |
+|---|---|---|
+| **Origin 창에서는 보이는데** 붙여넣기·내보내기에서 없다 | 제목이 **흰 종이 밖(회색)** 에 있다. 복사는 종이만 가져간다 | 아래 ① |
+| Origin 창에서도 없다 | 제목 개체 자체가 없다 | `label -xb species;` / `label -yl …` 다시 실행 |
 
-```
-page.unit = 2;        // cm
-page.width  = 8.2;
-page.height = 11.5;
+우리가 밟은 것은 **위쪽**이다. 레이어를 12 → 5.2 cm 로 줄이면 종이는 따라 줄지 않고,
+`page.margincontrol = 1`(tight)을 걸면 이번엔 종이가 **레이어에만** 맞아 제목이 밖으로 밀린다.
 
-layer.unit = 3;       // cm
-layer.left = 2.4;     // ← 왼쪽 2.4 cm 가 y 제목 자리
-layer.top  = 0.6;
-layer.width  = 5.2;
-layer.height = 9;     // ← 아래 11.5 − 0.6 − 9 = 1.9 cm 가 x 제목 자리
-```
-
-GUI 로 하려면:
+### ① 종이를 라벨까지 포함해 키운다 — 전용 기능이 있다
 
 ```
-Format ▸ Page...  ▸ Dimensions 탭  → Unit cm, Width 8.2, Height 11.5
-Format ▸ Layer... ▸ Size 탭        → Left 2.4, Top 0.6, Width 5.2, Height 9
+Graph ▸ Fit Page to Layers...
 ```
 
-⚠ 그리고 **내보낼 때** `File ▸ Export Graphs` 의 `Margin` 을 **Tight 가 아니라 Page** 로
-   둔다. Tight 로 내보내면 방금 만든 제목 자리를 다시 잘라낸다.
+이 대화상자가 **라벨을 포함해서** 페이지를 다시 잡는다. 여백(Margin)을 조금 주고 OK.
+그림이 종이 안으로 들어오면 끝이다.
+
+### ② 그래도 남으면 손으로
+
+```
+Format ▸ Page...   ▸ Dimensions  → Unit cm, Width 9, Height 12
+Format ▸ Layer...  ▸ Size        → Left 2.4, Top 0.6, Width 5.2, Height 9
+```
+
+레이어를 종이 안쪽으로 들여놓아 왼쪽 2.4 cm(y 제목) · 아래 2.4 cm(x 제목) 자리를 만든다.
+
+⛔ **LabTalk 로 `page.width` / `page.height` 를 대입하지 말 것.** 버전에 따라 안 먹는다
+   (2026-08-18 실패). `.ogs` 에서 뺐다 — 페이지는 GUI 로만 만진다.
+
+### ③ 가져갈 때
+
+- PowerPoint 로: 그래프 창 제목줄 **우클릭 ▸ Copy Page** → 붙여넣기
+- 파일로: `File ▸ Export Graphs` 의 `Margin` 을 **Tight 가 아니라 Page**
+  (Tight 로 내보내면 방금 만든 제목 자리를 다시 잘라낸다)
 
 ⚠ 눈금 글씨 28 pt 는 **12 cm 패널 기준(BML)** 이다. 5.2 cm 에서는 상대적으로 커 보이는데,
    슬라이드에서 작게 들어가는 패널이라 그게 맞다. 줄이지 말 것.
