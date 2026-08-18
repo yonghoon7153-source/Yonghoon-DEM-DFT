@@ -4195,3 +4195,23 @@ def test_gap_table_uses_the_shared_boundary_rule():
     t = gap_table(pd.DataFrame(rows), tol=0.02)
 
     assert t.iloc[0]["붕괴(복원<2%p)"].startswith("0/1"), t.to_dict("records")
+
+
+def test_gap_table_bins_at_one_percent_point_resolution():
+    """★ 촘촘한 격자(0.01 step) 대비 — bin 폭이 0.02 면 홀수 격차가 뭉개진다.
+
+    `(gap/0.02).round()*2` 는 3%p 를 4%p bin 으로, 1%p 를 2%p bin 으로 보낸다.
+    0.02 step 격자에서는 티가 안 나지만 0.01 step 에서는 표가 거짓이 된다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = []
+    for k, (pe, ne) in enumerate([(0.14, 0.13), (0.15, 0.12), (0.16, 0.13)]):
+        rows.append({"lam_pe": pe, "lam_ne": ne,
+                     "pe_ne_gap_recovered": 0.05, "cond_id": f"f{k}"})
+    t = gap_table(pd.DataFrame(rows), tol=0.02)
+    bins = [r["참 격차"] for r in t.to_dict("records")]
+
+    assert bins == ["1%p", "3%p"], bins
+    by = {r["참 격차"]: r["n"] for r in t.to_dict("records")}
+    assert by["1%p"] == 1 and by["3%p"] == 2, by

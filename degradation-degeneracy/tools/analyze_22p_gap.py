@@ -56,8 +56,11 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
     g = df.copy()
     g["gap_true"] = (g["lam_pe"] - g["lam_ne"]).abs()
     g["gap_hat"] = g["pe_ne_gap_recovered"]
-    # 격자 step 이 0.02 라 참 격차는 0.02 배수다 — 표현 오차를 흡수해 묶는다
-    g["gap_bin"] = (g["gap_true"] / 0.02).round().astype(int) * 2   # %p 단위
+    # ★ bin 폭은 **0.01(1%p)** 이다. 0.02 로 묶으면 촘촘한 격자(0.01 step)의
+    #   홀수 격차가 이웃 짝수 bin 으로 넘어가 표가 거짓이 된다 (3%p → 4%p).
+    #   0.02 step 격자에서는 결과가 같으므로 손해가 없다. 표현 오차는
+    #   반올림으로 흡수한다.
+    g["gap_bin"] = (g["gap_true"] / 0.01).round().astype(int)       # %p 단위
 
     rows = []
     for b, sub in g.groupby("gap_bin", sort=True):
@@ -95,7 +98,13 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
                 & (rec["lam_mean"].sub(P22["lam_mean"]).abs() < 1e-9)
                 & (rec["noise"] == 0)]
 
-    # ── ② 넓힌 표본 — LLI 3종 · 평균 전체 · noise 0 ──────────────────────
+    # ── ①' 동작점 **근방** — 좁히면 n 이 작고 넓히면 동작점이 아니다.
+    #      그 사이를 메우는 중간 층 (★ 첫 실행에서 ① 이 n=5 였다).
+    near = rec[(rec["lli"].sub(P22["lli"]).abs() <= 0.021)
+               & (rec["lam_mean"].sub(P22["lam_mean"]).abs() <= 0.021)
+               & (rec["noise"] == 0)]
+
+    # ── ② 넓힌 표본 — LLI 전부 · 평균 전체 · noise 0 ──────────────────────
     wide = rec[rec["noise"] == 0]
 
     out = {
@@ -104,6 +113,8 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         "n_recoverable": int(len(rec)),
         "tight": {"n": int(len(tight)),
                   "정의": "LLI=0.17 · 평균 LAM=0.13 · noise=0 · 복원가능군"},
+        "near": {"n": int(len(near)),
+                 "정의": "|LLI−0.17|≤2%p · |평균 LAM−0.13|≤2%p · noise=0 · 복원가능군"},
         "wide": {"n": int(len(wide)),
                  "정의": "noise=0 · 복원가능군 (평균·LLI 전부)"},
     }
@@ -124,6 +135,16 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         print("   조건 없음 — 격자에 그 동작점이 없다")
     print(f"\n   ⚠ n={len(tight)} 로 작다. 아래 넓힌 표본과 **함께** 볼 것.\n")
 
+    print("①' 동작점 근방 — |LLI−17%| ≤ 2%p · |평균 LAM−13%| ≤ 2%p · noise 0")
+    print("   (① 과 ② 사이 — 동작점을 크게 벗어나지 않으면서 n 을 키운다)\n")
+    if len(near):
+        tn = gap_table(near, tol)
+        print(tn.to_string(index=False))
+        out["near"]["table"] = tn.to_dict("records")
+    else:
+        print("   조건 없음")
+    print()
+
     print("② 넓힌 표본 — noise 0 · 복원가능군 (평균 LAM·LLI 전부)")
     print("   (n 은 크지만 22p 동작점이 아닌 조건이 섞인다)\n")
     t2 = gap_table(wide, tol)
@@ -142,6 +163,27 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
               f" | recoverable={bool(r.get('recoverable', True))}")
     out["exact_22p"] = exact[["noise", "lam_pe_hat", "lam_ne_hat", "lli_hat",
                               "pe_ne_gap_recovered"]].to_dict("records")
+
+    # ── ④ 누적 사건률 — 인용 가능한 한 줄이 표에서 바로 나오게 ───────────
+    from tools.compare_objectives import gap_lt as _lt
+    print("\n④ 누적 — '참 격차가 이만큼 이상인데 같다고 답한' 비율")
+    for label, sub in (("동작점 근방(①')", near), ("넓힌 표본(②)", wide)):
+        if not len(sub):
+            continue
+        g = sub.copy()
+        g["gap_true"] = (g["lam_pe"] - g["lam_ne"]).abs()
+        line = []
+        for thr in (0.04, 0.06, 0.08):
+            s2 = g[g["gap_true"] >= thr - 1e-9]
+            if not len(s2):
+                line.append(f"≥{100*thr:.0f}%p: n=0")
+                continue
+            k = int(_lt(s2["pe_ne_gap_recovered"], tol).sum())
+            line.append(f"≥{100*thr:.0f}%p: {k}/{len(s2)} ({100*k/len(s2):.1f}%)")
+            out.setdefault("cumulative", {}).setdefault(label, {})[
+                f">={100*thr:.0f}pp"] = {"k": k, "n": int(len(s2))}
+        print(f"   {label:<16s} " + "  ·  ".join(line))
+    print("   ⚠ 동일가중 합성격자의 **조건부 사건률**이다 — 실제 셀 posterior 가 아니다.")
 
     if plot:
         _plot(wide, tight, plot, objective, tol)
