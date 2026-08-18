@@ -154,7 +154,11 @@ def test_aprime_halfcell_uses_the_sealed_config_and_cache(tmp_path, monkeypatch)
     snap = run / "_inputs"
     # 봉인된 base.yaml 과 half-cell 캐시를 스냅샷에 놓는다
     (snap / "26fe6c7cc2a2_base.yaml").write_text("dummy: 1\n", encoding="utf-8")
-    (snap / "aaaaaaaaaaaa_k_ocp_v.json").write_text("{}", encoding="utf-8")
+    # ★ 19차 심층 — 실제 봉인 캐시 이름 규칙을 써야 한다. 예전 fixture 는
+    #   아무 이름이나 썼고, staging glob 이 넓어서 그래도 통과했다.
+    _stem = "a8e262f7d6aa4beb_ocp_b5009f515fb8"
+    (snap / f"636a425ace2d_{_stem}.json").write_text("{}", encoding="utf-8")
+    (snap / f"116a14dcf77d_{_stem}.meta.yaml").write_text("r: 1\n", encoding="utf-8")
 
     seen: dict = {}
 
@@ -181,3 +185,71 @@ def test_aprime_halfcell_uses_the_sealed_config_and_cache(tmp_path, monkeypatch)
         "half-cell 기준을 live cache 로 만들었다 (cache_dir 미지정)"
     assert "hessian_sealed_hc_" in str(seen["cache_dir"]), \
         f"봉인 스냅샷이 아닌 곳을 캐시로 썼다: {seen['cache_dir']}"
+
+
+# ── 19차 심층 리뷰 자체 발견 — A' staging 이 너무 넓게 집는다 ────────────────
+
+def test_aprime_staging_only_takes_halfcell_cache_files(tmp_path):
+    """★ 19차 심층 — `*_*.json` 은 **아무 봉인 json** 이나 집는다.
+
+    half-cell 캐시가 아닌 봉인 입력(json)이 하나라도 있으면 staging 이
+    non-None 이 되어, 정작 캐시는 없는데도 "봉인 입력을 찾지 못했다" 경고가
+    안 뜨고 조용히 캐시 미스로 **재계산**된다. 봉인 recipe 를 쓴다는 A' 의
+    목적이 무너진다.
+    """
+    from src.hessian import _sealed_halfcell_staging
+
+    run = _fit_run(tmp_path, split=True)
+    snap = run / "_inputs"
+    (snap / "abcdef012345_grid_spec.json").write_text("{}", encoding="utf-8")
+
+    assert _sealed_halfcell_staging(run) is None, \
+        "half-cell 캐시가 없는데 staging 을 만들었다"
+
+
+def test_aprime_staging_picks_the_halfcell_cache_when_present(tmp_path):
+    """★ 19차 심층 — 실제 캐시 이름(`<16hex>_<method>_<16hex>`)이면 집는다."""
+    from src.hessian import _sealed_halfcell_staging
+
+    run = _fit_run(tmp_path, split=True)
+    snap = run / "_inputs"
+    stem = "a8e262f7d6aa4beb_ocp_b5009f515fb8"
+    (snap / f"636a425ace2d_{stem}.json").write_text("{}", encoding="utf-8")
+    (snap / f"116a14dcf77d_{stem}.meta.yaml").write_text("r: 1\n", encoding="utf-8")
+    (snap / "abcdef012345_grid_spec.json").write_text("{}", encoding="utf-8")
+
+    staging = _sealed_halfcell_staging(run)
+    assert staging is not None
+    names = sorted(p.name for p in staging.iterdir())
+    assert names == [f"{stem}.json", f"{stem}.meta.yaml"], names
+
+
+def test_aprime_staging_matches_the_real_v4_artifact_names():
+    """★ 19차 심층 — 이름 규칙이 **실제 v4 묶음**과 맞는지 직접 확인한다.
+
+    fixture 이름만 맞추면 패턴이 현실과 어긋나도 통과한다. 묶음 안에서는
+    평문 이름(`<baseline>_<method>_<recipe>.json`)이고, 복원되면 앞에
+    `<digest12>_` 가 붙는다 — staging 패턴은 그 복원형을 본다. 여기서는
+    **평문 부분**이 규칙과 맞는지 실물로 고정한다.
+    """
+    import re
+    import subprocess
+
+    root = Path(__file__).resolve().parent.parent
+    listing = subprocess.run(
+        ["git", "ls-files", "artifacts/halfcell_fit_v4"], cwd=root,
+        capture_output=True, text=True, check=True).stdout.split()
+    names = [Path(x).name for x in listing if "/inputs/" in x]
+    if not names:
+        pytest.skip("halfcell 묶음의 봉인 입력 목록을 찾지 못했다")
+
+    stem = re.compile(r"^[0-9a-f]{8,32}_[a-z]+_[0-9a-f]{8,32}\.(json|meta\.yaml)$")
+    hits = [n for n in names if stem.match(n)]
+    assert hits, f"실제 묶음의 half-cell 캐시 이름이 규칙과 안 맞는다: {names}"
+
+    # 복원형(`<digest12>_<평문>`)도 staging 패턴에 걸려야 한다
+    from src.hessian import _sealed_halfcell_staging  # noqa: F401  (경로 확인용)
+    restored = re.compile(r"^[0-9a-f]{12}_([0-9a-f]{8,32}_[a-z]+_[0-9a-f]{8,32})"
+                          r"\.(json|meta\.yaml)$")
+    for n in hits:
+        assert restored.match("aabbccddeeff_" + n), n

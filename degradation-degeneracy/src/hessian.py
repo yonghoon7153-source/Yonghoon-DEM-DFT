@@ -170,6 +170,7 @@ def _sealed_halfcell_staging(in_dir) -> "Path | None":
     곡선으로 곡률을 잰다. 스냅샷 파일명은 `<digest12>_<원래이름>` 이라
     캐시 키 조회가 안 되므로 원래 이름으로 복사해 둔다.
     """
+    import re
     import shutil
     import tempfile
     from pathlib import Path
@@ -177,12 +178,20 @@ def _sealed_halfcell_staging(in_dir) -> "Path | None":
     snap = Path(in_dir) / "_inputs"
     if not snap.is_dir():
         return None
-    cached = [p for p in snap.glob("*_*.json")] + \
-             [p for p in snap.glob("*_*.meta.yaml")]
+    # ★ 19차 심층 발견 — `*_*.json` 은 **아무 봉인 json** 이나 집었다. half-cell
+    #   캐시가 없어도 staging 이 non-None 이 되어 "봉인 입력을 찾지 못했다"
+    #   경고가 안 뜨고, 조용히 캐시 미스로 재계산됐다 — A' 의 목적이 무너진다.
+    #   실제 캐시 이름 규칙(`<16hex>_<method>_<16hex>`)으로 좁힌다.
+    #   (해시 길이는 baseline/recipe 쪽이 각각 다르므로 범위로 둔다)
+    key = re.compile(r"^[0-9a-f]{12}_([0-9a-f]{8,32}_[a-z]+_[0-9a-f]{8,32})"
+                     r"\.(json|meta\.yaml)$")
+    cached = [(p, key.match(p.name)) for p in sorted(snap.iterdir())
+              if p.is_file()]
+    cached = [(p, m) for p, m in cached if m]
     if not cached:
         return None
     staging = Path(tempfile.mkdtemp(prefix="hessian_sealed_hc_"))
-    for p in cached:
+    for p, m in cached:
         shutil.copy2(p, staging / p.name.split("_", 1)[1])
     return staging
 
