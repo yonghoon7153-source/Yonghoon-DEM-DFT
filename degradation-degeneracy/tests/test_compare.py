@@ -4350,3 +4350,39 @@ def test_gap_table_ratio_column_is_not_called_shrinkage():
     col = [c for c in t.columns if "복원/참" in c]
     assert col, list(t.columns)
     assert t.iloc[0][col[0]] == "2.00", t.to_dict("records")
+
+
+def test_gap_table_label_states_the_actual_threshold():
+    """★ 19차 자체 — `--tol 0.04` 인데 열 이름이 "복원<2%p" 로 찍힌다.
+
+    실측: half-cell 다리를 tol 0.04 로 돌린 출력이 tol 0.02 와 **다른 수치**를
+    내면서 머리글은 그대로 "붕괴(복원<2%p)" 였다. 이 .txt 가 문서의 인용 근거로
+    커밋되므로, 라벨이 실제 판정선과 어긋나면 읽는 쪽이 잘못된 선을 인용한다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = [{"lam_pe": 0.19, "lam_ne": 0.13,          # 참 6%p
+             "pe_ne_gap_recovered": 0.03, "cond_id": "t0"}]   # 복원 3%p
+    df = pd.DataFrame(rows)
+
+    t2 = gap_table(df, tol=0.02)
+    t4 = gap_table(df, tol=0.04)
+
+    assert "붕괴(복원<2%p)" in t2.columns, list(t2.columns)
+    assert "붕괴(복원<4%p)" in t4.columns, list(t4.columns)
+    # 판정도 실제로 달라야 한다 (복원 3%p 는 2%p 선은 넘고 4%p 선은 못 넘는다)
+    assert t2.iloc[0]["붕괴(복원<2%p)"].startswith("0/1")
+    assert t4.iloc[0]["붕괴(복원<4%p)"].startswith("1/1")
+
+
+def test_analyze_22p_cumulative_header_states_the_threshold(tmp_path, capsys):
+    """★ 19차 자체 — ④ 누적 머리말도 실제 판정선을 밝혀야 한다."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    run(gd, "pocv_dvdq", tol=0.04)
+    out = capsys.readouterr().out
+    assert "④ 누적" in out
+    assert "판정선 4%p" in out, out[-800:]

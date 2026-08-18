@@ -11,7 +11,7 @@ v4 본 격자는 `0.0:0.20:0.02` 라 값이 전부 짝수 백분위여서 22p �
 `configs/grid_22p.yaml` 은 22p 를 격자에 정확히 넣고 평균 LAM 을 0.13 에
 고정한 채 |ΔLAM| 을 0 → 12%p 로 쓴다. 이 도구는 그 스윕을 읽어
 
-  · 참 격차별 **붕괴율** (복원 격차 < tol) 과 shrinkage
+  · 참 격차별 **붕괴율** (복원 격차 < tol) 과 복원/참 비
   · 22p 동작점(LLI 0.17 · 평균 LAM 0.13 · noise 0) 만의 값
   · 평균·LLI·noise 를 넓혀 n 을 키운 값
 
@@ -70,14 +70,19 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
     #   반올림으로 흡수한다.
     g["gap_bin"] = (g["gap_true"] / 0.01).round().astype(int)       # %p 단위
 
+    # ★ 라벨은 **실제 판정선**을 말해야 한다. 예전엔 "복원<2%p" 로 박혀 있어서
+    #   `--tol 0.04` 로 돌린 출력이 다른 수치를 내면서도 머리글은 2%p 라고
+    #   했다. 이 출력이 문서의 인용 근거로 커밋되므로 어긋나면 안 된다.
+    collapse_col = f"붕괴(복원<{100 * tol:.0f}%p)"
+
     rows = []
     for b, sub in g.groupby("gap_bin", sort=True):
         collapsed = gap_lt(sub["gap_hat"], tol)
         rows.append({
             "참 격차": f"{b}%p",
             "n": int(len(sub)),
-            "붕괴(복원<2%p)": f"{int(collapsed.sum())}/{len(sub)}"
-                              f" ({100 * collapsed.mean():.1f}%)",
+            collapse_col: f"{int(collapsed.sum())}/{len(sub)}"
+                          f" ({100 * collapsed.mean():.1f}%)",
             "복원 격차 중앙값": _fmt_pp(sub["gap_hat"].median()),
             # ★ 이름이 방향을 주장하면 안 된다. 촘촘한 격자 실측에서 이 값은
             #   전 구간 1보다 컸다 (복원 격차가 참보다 **크다**) — "shrinkage"
@@ -221,7 +226,8 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
 
     # ── ④ 누적 사건률 — 인용 가능한 한 줄이 표에서 바로 나오게 ───────────
     from tools.compare_objectives import gap_lt as _lt
-    print("\n④ 누적 — '참 격차가 이만큼 이상인데 같다고 답한' 비율")
+    print(f"\n④ 누적 — '참 격차가 이만큼 이상인데 같다고 답한' 비율"
+          f"  (판정선 {100 * tol:.0f}%p)")
     for label, sub in (("동작점 근방(①')", near), ("넓힌 표본(②)", wide)):
         if not len(sub):
             continue
