@@ -283,6 +283,98 @@
    "owner": "claude",
    "opened_in": "docs/session_20260811_progress.md",
    "note": "STEP3 `_solve_cg` 는 대각(Jacobi) 전처리 CG 만 쓴다 (rtol 1e-8, maxiter 30000). 전자 채널은 탄소(~1e3 S/cm)↔SE(~1e-9) 대비가 1e12 라 조건수가 극단적이고, **실측: 2,713,168 dof 전자 솔브가 CPU 에서 3,485 s (58분)**, resid 1.0e-8 로 정상 수렴. cupy 있으면 GPU 로 가지만 이 박스엔 없다. ★ pyamg 는 **이미 의존성**이고 STEP4 가 쓴다 — STEP3 에 AMG 전처리를 붙이면 같은 계·같은 tol 로 수렴만 빨라질 후보다 (jump-coefficient 문제에 SA-AMG 가 잘 듣는지는 미검증). ⚠ 다만 솔버를 바꾸면 A/B 두 팔이 같은 솔버여야 하므로 진행 중 실험에는 적용 금지 — SR-01 끝난 뒤 별도로 검증할 것. 당장의 완화책은 cupy 설치인데, 그것도 **두 팔이 같은 backend** 여야 유효하다 (sr01_stamp_compare 가 backend 불일치를 경고하도록 배선해 둠).\n\n[2026-08-11 측정·배선] pyamg SA-AMG 를 `--step3-amg` (기본 OFF = 현행 Jacobi 경로와 bitwise 동일) 로 배선.  **배선 前 측정**(scripts/sr03_precond_bench.py — STEP3 의 실제 solve_sigma_z 를 돌리며 전처리만 교체, 합성 침대 σ 대비 1e5, rtol 1e-8):\n  dof      61,592 / 144,888 / 486,963\n  Jacobi   3,374 / 5,074 / 7,088 it — 3.9 / 15.6 / 74.9 s\n  AMG        218 /   222 /   261 it — 4.5 / 11.3 / 51.0 s (빌드 포함)\n  속도      0.87× / 1.38× / 1.47×\n★ 값은 속도가 아니라 **반복수 절벽 회피**다: AMG 는 dof 7.9배에 218→261(평평), Jacobi 는 3,374→7,088(겉보기 dof^0.36, 구간지수 0.48→0.28 로 일정치 않아 외삽은 어림). 2.7 M dof 어림 Jacobi ≈1.3만 it = maxiter 30,000 의 절반 → 더 미세한 vox/더 높은 대비면 미수렴('σ UNRELIABLE') 여지.\n⚠ 속도 이득은 **작다** (1.4–1.5×, 2.7M 외삽 ≈2.4×).  벽시계의 진짜 치료는 GPU(cupy)다 — '58분→몇분'으로 팔면 안 된다.  (실 arm A 3,485 s 는 위 합성 스케일링의 4.4배 = 실침대가 더 어렵다는 뜻이고 그렇다면 AMG 이득도 더 클 **것으로 보이나** 추론이지 측정 아님.)\n★ 해-불변 확인(채택 조건): 같은 계를 두 전처리로 풀어 **σ_eff** 비교 — rtol 1e-8 서 0.0007–0.014 %, rtol 1e-10 서 0.0001 %.  출하 경로(플래그) 기준 0.0020 %. ‖Δφ‖_rel 은 1e-3 까지 벌어지나 전류를 안 나르는 약결합 영역이라 σ 로 안 넘어온다.\n★ A/B 가드 추가: `LAST_BACKEND['precond']` 를 manifest 에 남기고 `sr01_stamp_compare.precond_of` 가 두 팔 불일치를 경고 (backend 만 보면 cpu/cpu 인데 Jacobi↔AMG 인 경우가 통과해 버린다).  옛 payload(키 없음)는 조용히 통과.\n회귀: step3_sigma --selftest 에 amg-off(기본 OFF) + amg-inv(고대비 격자 해-불변) 2건 추가; sr01_stamp_compare selftest 31→35.\n남은 것: **실침대 재확인**(합성 침대 결과다) + GPU V-cycle 미러 필요성 측정. ⚠ SR-01 A/B 진행 중에는 두 팔이 같은 전처리여야 하므로 켜지 말 것. ⚠ status=open 을 유지한다 — 배선은 됐지만 **기본 OFF** 라 production 경로는 여전히 Jacobi 다.  실침대 재확인 + 채택 판단 뒤에 닫는다."
+  },
+  {
+   "id": "DR3-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "SDCP 구-스탬프 게이트가 fail-OPEN — 호출자의 blanket except 가 삼켜 exit 0 + 쓰레기 캐시",
+   "claimed_fixed_sha": "fa1145d1",
+   "evidence_tests": [
+    "scripts/step3_sigma.py::selftest-sdcp-gate-fail-closed"
+   ],
+   "note": "`step3_sigma.py:286` 게이트가 `ValueError` 였는데 `mpm_webapp_payload.py:1645` 의 blanket `except Exception` 이 잡아 step3.status=failed 만 적고 payload 를 정상적으로 쓰고 **exit 0** 으로 끝났다.  연쇄: ① 러너 fail-fast 미발화 ② `[ -s \"$OUT\" ] && SKIP` 이 쓰레기 JSON 을 **영구 캐시** ③ SBE 는 SDCP 0개라 게이트가 안 열려 **정상 완주** ⇒ \"SBE 8팔 완주 + DBE 8팔 조용히 실패\" 로 GPU 수 시간 낭비.  바로 옆 `--fibre` 실패 경로는 이미 `SystemExit`(BaseException)를 써서 통과하고 있었다 — 비대칭이 곧 결함.  수정: SystemExit 로 승격.  회귀는 \"거부가 Exception 계열이 **아님**\" 을 직접 검사한다 (거부 여부만 보면 재발을 못 잡는다)."
+  },
+  {
+   "id": "DR3-02",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_rve.md",
+   "title": "통제 RVE 구 팔에 d/vox≥2 게이트 부재 — 거친 격자에서 SDCP 입자의 78/48/19 %가 셀 0개",
+   "claimed_fixed_sha": "fa1145d1",
+   "evidence_tests": [
+    "scripts/sdcp_stamp_confound.py::selftest-5-sphere-gate"
+   ],
+   "note": "생산(`step3_sigma.py:286`)은 fail-closed 인데 `sdcp_stamp_confound.build` 는 안 막았다.  실측(5,659 입자): vox 0.4 → 78.7 % · 0.3 → 47.8 % · 0.25 → 19.3 % · 0.2 → 1.0 % · 0.15 → 0.0 % 가 셀 0개.  ⚠ **총 부피비는 0.96~1.01 로 멀쩡해 보인다** (살아남은 입자가 1 셀씩 먹어 상쇄) — 부피비 검증을 통과한 이유다.  ⇒ CL-31 의 \"참 구 이득 5~6 % 로 평평\" 무효 (합법 격자가 vox 0.15 하나뿐이라 평평성을 주장할 점이 없다), CL-34 의 \"통제 RVE 와 2배 어긋난다\" 도 철회."
+  },
+  {
+   "id": "DR3-03",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_rve.md",
+   "title": "통제 RVE build() 가 sid.shape[0] 로 세 축 클립 — 비정수 L/vox × 한-축 이동에서 IndexError",
+   "claimed_fixed_sha": "fa1145d1",
+   "evidence_tests": [
+    "scripts/sdcp_stamp_confound.py::selftest-4-axis-clip"
+   ],
+   "note": "`rasterize_spheres` 는 **이동한 축만** +1 셀을 주므로 sh=(h,0,0) 이면 격자가 (134,133,133) 인데 옛 코드는 y·z 를 134 로 클립해 범위 밖 인덱스를 통과시켰다.  재현: `--len-um 20 --vox 0.15` → `IndexError: index 133 is out of bounds for axis 1 with size 133`.  ⇒ CL-31 이 \"진행중\" 이라 적은 vox 0.2/0.15 팔은 애초에 돌 수 없었다.  docstring 기본 `--len-um 12` 는 12/0.15=80 이 정수라 우연히 안 죽었고, 옛 selftest 는 `build()` 를 **한 번도 부르지 않아** 원리적으로 못 잡았다."
+  },
+  {
+   "id": "DR3-04",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "판정기의 bridge_um 고정-인자 게이트가 no-op (매니페스트에 키 부재) = 가짜 보증",
+   "claimed_fixed_sha": "fa1145d1",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py::selftest-9-10-11-fixed-factors"
+   ],
+   "note": "`sdcp_gain_verdict.py:50` 이 `man.get(\"bridge_um\")` 을 읽는데 payload 매니페스트에 그 키가 **없었다** (`_bru` 는 rasterize-only 원장에만 실림) ⇒ 고정-인자 루프가 항상 빈 집합을 봐서 **한 번도 발화하지 않았다**.  prereg §5 가 명시적으로 \"브리지를 물리 단위로 못 박는다\" 고 선언한 바로 그 인자다.  수정: 매니페스트에 bridge_um·sigma_vgcf_S_cm·sigma_sdcp_S_cm 추가 · 고정 인자에 sdcp_stamp·backend 추가 · **필드가 없으면 HOLD** 하는 게이트 신설 · 픽스처가 실제 매니페스트 필드를 전부 싣도록 교체.  ⚠ 부작용: 2026-08-16/17 판별 런은 이 필드가 없어 **재판정 시 HOLD** — 팔이 갈렸다는 뜻이 아니라 기록이 없다는 뜻이다 (러너의 grep fail-closed 가 주입은 확인)."
+  },
+  {
+   "id": "DR3-05",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "격자 스윕이 σ_VGCF 스윕과 섞인다 — 직경-보존 재척도가 vox 의 함수 (78.5→113.1→176.7)",
+   "evidence_tests": [],
+   "note": "σ_VGCF = 100·πd²/(4·vox²) 라 vox {0.15, 0.125, 0.10} 에서 78.54 / 113.10 / 176.72 로 2.25배 움직이는데 σ_SDCP 는 250 고정이다.  우리가 재는 비는 \"이 탄소 백본 위에 SDCP 를 얹으면 얼마나 더 흐르나\" 이므로 **정의상 σ_VGCF 의 함수**다 (CL-11: σ_VGCF ÷9.054 → σ_e ÷6.617, 지수 0.858).  ⇒ 이대로면 \"vox 를 조였더니 비가 움직였다\" 를 격자 수렴으로 읽을 수 없다 — CL-19(게이트 ⑤ 대각선 비교)가 retired 된 것과 **같은 구조**.  값싼 디리스크: vox 0.15 고정 · σ_VGCF 만 78.54 → 113.10 인 SBE/DBE 1쌍(GPU ~1–2 h)으로 dR/dlnσ_VGCF 를 직접 재고 스윕을 사후 보정."
+  },
+  {
+   "id": "DR3-06",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "VGCF 는 1-셀 굵기 관이라 기하가 격자 불변이 아니다 — 표현부피 13.83× → 1.91×",
+   "evidence_tests": [],
+   "note": "`fibre_segment_raster.segment_cells` 는 직경과 무관하게 1 복셀 관을 굽는다.  `diameter_preserving_sigma` 는 **단면 보정만** 하고(그 docstring 자신이 명시) 부피·표면적·SDCP 와의 래스터 접촉면은 안 고친다.  ⇒ SDCP 의 이득 기전이 \"탄소 백본 조각을 잇는다\" 인데 스윕 안에서 **백본의 굵기와 접촉면이 같이 변한다**.  σ 를 고정해도 이 축은 남는다.  ⇒ 정직한 라벨: 이 스윕은 \"격자 수렴\" 이 아니라 **\"격자 규약 민감도\"** 다."
+  },
+  {
+   "id": "DR3-07",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "SE 점 스탬프가 vox ≤ 0.125 에서 미충전 — 그 팔의 σ_ion·τ·BV 반응면·STEP4 는 폐기",
+   "evidence_tests": [],
+   "note": "SE 점 6,790 만 개를 `np.floor` 로 셀당 하나씩 찍는데 점밀도 λ 가 vox³ 에 비례한다: vox 0.15 λ≈3.0 (미충전 ~5 %) → 0.125 λ≈1.72 (~18 %) → 0.10 λ≈0.88 (**~42 %**).  **σ_e 에는 무해**하다 (전자 σ 표에서 SE 와 기공이 둘 다 0.0 이라 동등).  그러나 그 팔들의 σ_ion·τ_pore·BV 반응면·STEP4 격자는 인용 금지 — 지금 라벨을 붙여야 나중에 아무도 안 쓴다."
+  },
+  {
+   "id": "DR3-08",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/deep_review_20260818_voxsweep.md",
+   "title": "격자 스윕의 첫 병목은 VRAM 이 아니라 호스트 RAM (COO 조립 int64)",
+   "evidence_tests": [],
+   "note": "vox 0.15 실측(전도 dof 26.5 M)에서 투영: VRAM ≈ 140 B/dof · 호스트 ≈ 415 B/dof.  vox 0.125 → 44.5 M dof (VRAM 6.2 · 호스트 20.9 GB) · 0.10 → 85 M dof (11.9 · **40.0 GB**) · 0.075 → 198 M dof (27.7 · 93.1 GB, **양쪽 OOM**).  ⚠ prereg §3 의 \"87M 셀 ≈ 12.8 GB → RTX 3090 24 GB 에 들어간다\" 는 **CPU 조립 수치를 VRAM 예산으로 읽은 것**이고, 이 혼동은 vox 0.10 에서 정확히 반대로 배신한다 (VRAM 은 넉넉한데 호스트가 40 GB).  무너지는 순서: solve_reaction_current(2×dof, LEAN=1 로 회피) → 호스트 조립 RAM → CG 반복수 절벽(GPU 경로는 AMG 불가, 반복수 미기록) → VRAM.  ⇒ **GPU 전에 `VOXES=\"0.125 0.1\" sdcp_phase_ledger.sh` 로 실제 dof 를 먼저 잴 것** (CPU 수 분, 솔브 없음)."
   }
  ]
 }
