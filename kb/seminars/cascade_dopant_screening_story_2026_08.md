@@ -362,11 +362,11 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 > ■ Step 1: The substitution site is enumerated before a structure is built
 > • Li, P, S and Cl are separate sublattices — an oxide has to take [파랑]one cation and one anion site[/].
-> • An aliovalent dopant changes the Li content, and [빨강]more than one way balances the charge[/].
+> • A 2+ dopant on a Li site leaves extra charge — [빨강]each way of balancing it is a different structure[/].
 
 `< site preference vs ionic radius >`
 `해설` only Si always takes the P framework; 19 of 26 always take Li — [빨강]6 switch with the doping level[/]
-하단 용어 — Sublattice: the equivalent positions one element occupies  ·  Aliovalent: a dopant of different charge  ·  bars = three doping levels, not repeat runs
+하단 용어 — Sublattice: equivalent positions of one element  ·  Charge compensation: adding or removing Li to keep the cell neutral  ·  bars = three doping levels, not repeat runs
 
 ⛔⛔ **2026-08-18 정정 — 앞 대본이 틀렸다.** 자세한 근거는
    `kb/results/site_preference_bar_meaning_2026_08_18.md`. 요지 셋:
@@ -404,9 +404,12 @@ Sn — 은 **도핑을 얼마나 넣느냐에 따라 자리가 바뀝니다.** B
 늘 P, 그리고 **여섯은 조건에 따라 다릅니다.** 이게 스크리닝을 자리마다 따로 돌려야 하는
 이유예요.
 
-그리고 여기서 두 번째 문제가 나옵니다. 2가 이온을 1가 자리에 넣으면 전하가 안 맞습니다.
-Li 를 빼거나 넣어서 맞춰야 하는데 **그 방법이 하나가 아닙니다.** 같은 화합물, 같은 자리인데
-보상 방법만 달라도 다른 구조가 되죠. 이게 **결과 1 로 돌아옵니다.**
+그리고 여기서 두 번째 문제가 나옵니다. Mg 처럼 **2가 이온을 1가인 Li 자리에** 넣으면
+플러스가 하나 남습니다. 셀을 중성으로 맞추려면 Li 를 하나 빼야 하는데, **어느 Li 를 뺄지가
+정해져 있지 않습니다.** 방법마다 **다른 구조**가 되고요.
+
+⭐ 그러니까 후보 하나가 구조 하나가 아닙니다. **자리 조합 × 전하 보상 방법** 만큼
+불어납니다. 다음 장이 그 얘기고, 이게 **결과 1 로 돌아옵니다.**
 
 💬 **말로만 (질문 오면)**
 · 속 빈 **회색 사각**은 이완이 안 끝난 점입니다(3/78). 지우지 않고 남겼어요 —

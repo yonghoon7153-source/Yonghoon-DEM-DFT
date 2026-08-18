@@ -63,11 +63,11 @@ SLIDES = {
     title="Substitution site and charge compensation",
     head="Step 1: The substitution site is enumerated before a structure is built",
     sub1="Li, P, S and Cl are separate sublattices — an oxide has to take [b]one cation and one anion site[/b].",
-    sub2="An aliovalent dopant changes the Li content, and [r]more than one way balances the charge[/r].",
+    sub2="A 2+ dopant on a Li site leaves extra charge — [r]each way of balancing it is a different structure[/r].",
     label="site preference vs ionic radius",
     note="only Si always takes the P framework; 19 of 26 always take Li — [r]6 switch with the doping level[/r]",
-    gloss=("Sublattice: the equivalent positions one element occupies  ·  Aliovalent: a do"
-           "pant of different charge  ·  bars = three doping levels, not repeat runs"),
+    gloss=("Sublattice: equivalent positions of one element  ·  Charge compensation: adding "
+           "or removing Li to keep the cell neutral  ·  bars = three doping levels, not repeat runs"),
     drop=[10],
  ),
 }
