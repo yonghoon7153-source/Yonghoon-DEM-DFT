@@ -295,10 +295,10 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 > ■ Candidate set (2): 36 cation elements, coloured by their best score
 > • Late transition metals sit together in red — that block is the oxidation-window loss.
-> • ⚠ Read the block pattern, not the ranking — the ranking is not approved yet.
+> • Read the [파랑]block pattern[/], not the ranking — doubling the pool left both ends unchanged.
 
 `< best score per element, 89-species pool (2026-08-13) >`
-`해설` read the block pattern, not the order — the ranking is not approved
+`해설` [빨강]no approved ranking yet[/] — the block structure is what this figure supports
 
 ⚠ **풀 교체 (2026-08-18)** — 색을 **89종 풀**(`cascade_v23_ranked_v2.csv`)로 다시 그렸다.
    앞 판은 47종(2026-06-29)이었다. 바꾼 근거는 **패턴이 안 바뀐다는 실측**이다:
