@@ -1,10 +1,19 @@
 # 22p 동작점 **seed 스윕**용 격자 — 잡음 실현을 여러 번 뽑기 위한 것
 #
 # ★ 왜 별도 config 인가
-#   `grid_22p_dense.yaml` 은 `noise: [0.0]` 이다. **noise 0 에서는 잡음 실현이
-#   없으므로 `--noise-seed` 를 바꿔도 곡선이 똑같다** — 거기서 seed 를 돌리는
-#   것은 계산만 두 배로 하고 정보는 0 이다. seed 가 의미를 갖는 건 noise > 0
-#   에서뿐이고, 이 config 가 그 층을 만든다.
+#   `grid_22p_dense.yaml` 은 `noise: [0.0]` 이다. noise 0 에서는 잡음 실현이
+#   없으므로 **곡선**은 seed 와 무관하게 똑같다. 이 config 는 잡음이 있는 층을
+#   만들어, 측정 잡음 실현까지 반복하게 한다.
+#
+#   ★ 정정 (실측): "noise 0 이면 seed 를 바꿔도 **결과**가 똑같다"고 처음에
+#     적었는데 **틀렸다**. multistart 의 난수 seed 가 `sha1(cond_id)[:8]` 이고
+#     `cond_id` 가 Condition 의 `seed` 필드(= noise_seed 유도)를 포함하므로
+#     (`src/fitting.py:763`), `--noise-seed` 를 바꾸면 잡음이 0 이어도
+#     **최적화 재시작 지점**이 바뀌어 답이 달라진다. 실측으로 같은 조건
+#     (0.13,0.13,0.17)·noise 0 에서 복원 격차가 1.3~2.4%p 로 흩어졌고 6개 중
+#     1개가 판정선 2%p 를 넘었다. 즉 noise 0 seed 스윕은 **최적화 변동**을,
+#     noise>0 seed 스윕은 **둘의 합**을 잰다. 둘 다 유효하다.
+#     자세한 것은 `docs/09_22P_GAP.md` §5.5.
 #
 # ★ 무엇을 묻는가
 #   `docs/09_22P_GAP.md` §0 의 결론(half-cell + pocv_dvdq_dqdv 가 두 오류를
