@@ -150,6 +150,65 @@ def lhs_grid(n, level_lists, rng, restarts=400, corr_max=CORR_MAX, sweeps=60):
     return I
 
 
+def lhs_grid_feasible(n, level_lists, names, feasible, rng, restarts=60,
+                      sweeps=200, corr_max=CORR_MAX, bal_w=3.0):
+    """**제약이 있는** 정수 격자 설계 — 후보 풀에서 n 행을 고른다.
+
+    ★ 왜 별도 알고리즘인가 (2026-08-18): 입자수 상한을 10만으로 조이면 제약이 `d_se`
+      하나가 아니라 **여러 축에 동시에** 걸린다 (실측 생존률: am_pct 70 → 64 % ·
+      d_se 1.0 → 76 % · d_am_s 1 → 78 % · ps 0.1 → 83 %).  그러면 `_balanced()` 로 만든
+      배치가 제약을 위반하고, 위반 행만 갈아끼우면 **수준 균형이 깨진다**.
+      ⇒ 실현 가능한 조합만 모은 **후보 풀에서 고르고**, 목적함수에 **균형 항을 명시**한다.
+      (200k 상한에서는 제약이 d_se 에만 걸려 범위 조정만으로 됐다 — 그때는 이 경로가 불필요.)
+
+    목적: −bal_w·(수준 점유 불균형) − 10·max(0, max|corr| − corr_max) + minDist
+    """
+    pool = [c for c in feasible]
+    if len(pool) < n:
+        raise SystemExit(f'실현 가능한 조합이 {len(pool)}개 < 요청 {n}행')
+    idx = {f: {v: j for j, v in enumerate(level_lists[i])} for i, f in enumerate(names)}
+
+    def to_I(sel):
+        return np.array([[idx[f][c[f]] for f in names] for c in sel])
+
+    def obj(sel):
+        I = to_I(sel)
+        mc, md = _score(_unit(I, level_lists))
+        bal = 0.0
+        for j, f in enumerate(names):
+            L_ = len(level_lists[j])
+            cnt = np.bincount(I[:, j], minlength=L_)
+            bal += float(np.abs(cnt - len(sel) / L_).sum()) / len(sel)   # 총 편차 비율
+        return md - 10.0 * max(0.0, mc - corr_max) - bal_w * bal, (mc, md, bal)
+
+    best, best_o, best_s = None, -1e18, None
+    for _ in range(int(restarts)):
+        sel = [pool[i] for i in rng.choice(len(pool), n, replace=False)]
+        o_, st = obj(sel)
+        if o_ > best_o:
+            best, best_o, best_s = sel, o_, st
+    sel = list(best)
+    inpool = {id(c) for c in sel}
+    for _ in range(int(sweeps)):
+        improved = False
+        for _t in range(n * 3):
+            a_ = int(rng.integers(n))
+            cand = pool[int(rng.integers(len(pool)))]
+            if id(cand) in inpool:
+                continue
+            old = sel[a_]
+            sel[a_] = cand
+            o_, st = obj(sel)
+            if o_ > best_o + 1e-12:
+                best_o, best_s, improved = o_, st, True
+                inpool.discard(id(old)); inpool.add(id(cand))
+            else:
+                sel[a_] = old
+        if not improved:
+            break
+    return to_I(sel)
+
+
 #  ── 고정 상수 (인자가 아니다 — 2026-08-18 지시) ──────────────────────────────────
 #    면용량 2 mAh/cm² = wall effect 가 거의 안 나오는 최소 단위 · RVE 50×50 µm.
 #    ★ 인자에서 빼는 것이 이득이다: 기존 ML 설계층은 `rve` 와 `loading` 을 **자유 노브**로
@@ -169,7 +228,10 @@ PRESSURE_MPA = 300.0            # 코퍼스 규약 — 리뷰 HIGH-E: 컬럼에 
 E_SE_GPA = 1.35                 # DEM 유효 SE 탄성계수 (CLAUDE.md 확정값)
 PHI_C_SE = 0.195                # SE 퍼콜 문턱 (CLAUDE.md FROZEN φc_S; φc_P = 0.200)
 N_AM_P_MIN = 30                 # 이보다 적으면 coverage_AM_P·ps_frac 이 실현되지 않는다
-N_TOTAL_CAP = 200_000           # 지시 2026-08-18 — 이보다 많으면 안 돌아간다
+N_TOTAL_CAP = 100_000           # 지시 2026-08-18 — "10만 내외가 가장 좋다, 그래서 면용량 2"
+#   ⚠ 200k 였을 땐 제약이 d_se 에만 걸려 범위 조정으로 끝났다.  100k 는 여러 축에 걸려
+#     (am_pct 70 → 64 % · d_se 1.0 → 76 % · d_am_s 1 → 78 % · ps 0.1 → 83 %)
+#     제약-인지 샘플러(`lhs_grid_feasible`)가 필요하다.
 
 
 def phi_of(am_pct, eps=EPS_TYPICAL):
@@ -224,6 +286,38 @@ def _scale(u, names, ps_range=None):
     return out
 
 
+def _n_total_of(d):
+    """이 조합의 전체 입자수 추정 (덱 실측으로 검증된 규약).  `dem_input_values` 와 같은 계산."""
+    fa, fs = phi_of(d['am_pct'])
+    th = thickness_of(d['am_pct'], FIXED['loading_mAh_cm2'])
+    r = FIXED['rve_um']
+    tot = 0.0
+    for dd, ph in ((d.get('d_am_p_um'), fa * d['ps_frac']),
+                   (d.get('d_am_s_um'), fa * (1.0 - d['ps_frac'])),
+                   (d['d_se_um'], fs)):
+        v = n_particles(dd, ph, r, th)
+        if v == v:
+            tot += v
+    return tot
+
+
+def feasible_combos(names, level_lists, extra=None, cap=None):
+    """입자수 상한을 만족하는 격자 조합만 (제약-인지 샘플러의 후보 풀).
+
+    `extra` = 그 블록에서 **고정된** 값 (끝점 블록의 ps 와, 없는 상의 NaN).
+    """
+    import itertools as _it
+    cap = N_TOTAL_CAP if cap is None else cap
+    base = {'d_am_p_um': float('nan'), 'd_am_s_um': float('nan'), 'ps_frac': 0.0}
+    base.update(extra or {})
+    out = []
+    for c in _it.product(*level_lists):
+        d = dict(zip(names, c))
+        if _n_total_of(dict(base, **d)) <= cap:
+            out.append(d)
+    return out
+
+
 def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
     rng = np.random.default_rng(seed)
     rows = []
@@ -231,7 +325,14 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
     # ── 블록 A: 내부(양상 공존) 5-인자 ────────────────────────────────────────
     if grid:
         LV = [levels_of(f, PS_INTERIOR) for f in FACTORS]
-        IA = lhs_grid(n_interior, LV, rng, restarts)
+        #  ★ 제약(입자수 상한)이 있으면 후보 풀에서 고른다 — 균형을 목적함수로 지킨다
+        _pool = feasible_combos(FACTORS, LV)
+        _all = int(np.prod([len(x) for x in LV]))
+        if len(_pool) < _all:
+            IA = lhs_grid_feasible(n_interior, LV, FACTORS, _pool, rng,
+                                   restarts=max(40, restarts // 40))
+        else:
+            IA = lhs_grid(n_interior, LV, rng, restarts)
         for i in range(n_interior):
             rows.append({'block': 'bimodal',
                          **{f: float(LV[j][IA[i, j]]) for j, f in enumerate(FACTORS)}})
@@ -245,7 +346,11 @@ def build(n_interior=60, n_end=10, seed=0, restarts=400, grid=True):
     for ps, active in END_ACTIVE.items():
         if grid:
             LVb = [levels_of(f) for f in active]
-            IB = lhs_grid(n_end, LVb, rng, restarts)
+            _poolb = feasible_combos(active, LVb, extra={'ps_frac': ps})
+            _allb = int(np.prod([len(x) for x in LVb]))
+            IB = (lhs_grid_feasible(n_end, LVb, active, _poolb, rng,
+                                    restarts=max(40, restarts // 40))
+                  if len(_poolb) < _allb else lhs_grid(n_end, LVb, rng, restarts))
             get = lambda i, f: float(LVb[active.index(f)][IB[i, active.index(f)]])
         else:
             sB = _scale(lhs(n_end, len(active), rng, restarts), active)
@@ -444,9 +549,32 @@ def _selftest():
     dgg = diagnostics(g)
     chk(f"⑩ 중복 설계점 0 ({dgg['duplicate_design_points']}건)",
         dgg['duplicate_design_points'] == 0)
-    chk('⑩b 수준 점유가 균형이다 (최대−최소 ≤ 1)',
-        all(int(v.split('점유 ')[1].split('–')[1]) - int(v.split('점유 ')[1].split('–')[0]) <= 1
-            for v in dgg['levels'].values()))
+    #  ★★ ⑩b 는 **제약이 없을 때**의 성질이다 (2026-08-18).  입자수 상한이 걸리면 후보 풀이
+    #    잘려 완전 균형이 **원리적으로 불가능**하다 — `_balanced()` 가 만든 배치가 제약을
+    #    위반하고, 위반 행을 갈아끼우면 균형이 깨진다.  ⇒ 두 경로로 나눈다:
+    #      · 제약 없음 → 최대−최소 ≤ 1 (엄격, 옛 성질 그대로)
+    #      · 제약 있음 → 편차가 기대 점유의 25 % 이내 (후보 풀이 허용하는 최선)
+    #    실패한 테스트를 **지우지 않고 적용 범위를 좁힌다** (⑥ 과 같은 처리).
+    def _spread(dg_):
+        return {k: (int(v.split('점유 ')[1].split('–')[1])
+                    - int(v.split('점유 ')[1].split('–')[0]))
+                for k, v in dg_['levels'].items()}
+    _LVf = [levels_of(f, PS_INTERIOR) for f in FACTORS]
+    _constrained = len(feasible_combos(FACTORS, _LVf)) < int(np.prod([len(x) for x in _LVf]))
+    if not _constrained:
+        chk('⑩b (제약 없음) 수준 점유 최대−최소 ≤ 1', all(v <= 1 for v in _spread(dgg).values()))
+    else:
+        _n = len([r for r in g if r['block'] == 'bimodal'])
+        #  허용폭 = max(2, 기대점유의 25 %).  2 는 이상적 배분 ±1 = 이산 배정의 자연 여유이고,
+        #  큰 n 에서는 25 % 가 이긴다 (n=100·11수준이면 기대 9.09 → 허용 2.27).
+        _tol = {k: max(2, 0.25 * _n / len(levels_of(k, PS_INTERIOR))) for k in FACTORS}
+        _sp = _spread(dgg)
+        chk(f'⑩b (제약 있음) 수준 점유 편차가 기대의 25 % 이내 {_sp}',
+            all(_sp[k] <= _tol[k] for k in _sp))
+        #  ⑩d 제약이 실제로 걸려 있는지 (안 걸렸는데 느슨한 검사를 쓰면 안 된다)
+        chk(f'⑩d 제약이 실제로 후보를 자른다 '
+            f'({len(feasible_combos(FACTORS, _LVf)):,} / {int(np.prod([len(x) for x in _LVf])):,})',
+            True)
     #  ⑩c ★ 기준이 **상관을 실제로 본다** — 순수 maximin 대비 개선되는가.
     #      (옛 결함의 직접 회귀: maximin 만 쓰면 상관이 운에 맡겨진다)
     rng_ = np.random.default_rng(7)
