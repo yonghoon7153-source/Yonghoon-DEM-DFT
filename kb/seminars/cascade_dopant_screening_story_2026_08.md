@@ -478,12 +478,12 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 
 ### 11 — Low-cost structure relaxation  ✅ 확정 (2026-08-18)
 
-> ■ Step 3: A machine-learned potential screens structures before DFT
-> • Thousands of structures had to be relaxed, so a [파랑]machine-learned potential[/] did it, not DFT.
-> • The gate is [파랑]geometry, not energy[/] — an energy cut would have kept every structure we dropped.
+> ■ Step 3: Machine-learned potential screening before DFT
+> • To relax 3,615 structures within budget, a [파랑]machine-learned potential[/] was used.
+> • Structures were removed by [파랑]geometry, not by energy[/]; an energy cut would have kept all 100.
 
 `< how far each structure moved  ·  the same structures on both screening axes >`
-`해설` [빨강]100 of 3,615 collapsed past 25 %[/] — and they are not the high-energy ones
+`해설` [빨강]100 of 3,615 moved past 25 %[/]; an energy cut of the same size overlaps with none of them.
 하단 용어 — Relaxation: moving atoms until the forces vanish ·
 　　　　　　 MLIP: a fast stand-in trained on DFT forces
 
