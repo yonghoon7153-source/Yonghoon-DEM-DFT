@@ -253,25 +253,41 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 ---
 
-### 7 — Candidate chemistry space
+### 7 — Candidate chemistry space  ✅ 확정 (2026-08-18)
 
 > ■ Candidate set (1): 91 compounds across seven anion families
-> • Oxides were included for strong M–O bonding; halides because the host contains Cl.
-> • Sulfides, nitrides and heavy halides were included as anion-family controls.
+> • Each candidate is one precursor compound, chosen along two axes —
+> &nbsp;&nbsp;[파랑]cations from +1 to +6[/], anions across seven families (strong M–O → soft, bulky I⁻).
+> • Only compounds that already exist can go in — a safe list, and that matters later.
 
-`[표]` family / n / why it is in the list / examples
+`[표]` family / n / role in the design / examples
 
-**[60초]**
+⚠ **소불릿은 계열 설명이 아니라 선정 논리다** (2026-08-18 1저자 판정). 앞 장에서
+  "precursor, not an element" 를 이미 말했으므로 여기서 되풀이하지 않고 **축 두 개**만
+  남긴다. 계열별 사유는 표의 세 번째 칸이 담당한다 — 소불릿에 또 쓰면 표를 두 번 읽힌다.
+⚠ **두 번째 줄에 빨강을 쓰지 않는다.** "나쁜 결과" 가 아니라 차분한 설계 한계라,
+  칠하면 실제보다 세게 읽힌다. 이 장은 명세 슬라이드라 강조색 하나(파랑)로 충분하다.
+⚠ 표 합계 = 37+19+11+10+5+5+4 = **91**. 황화물은 **계획 11** 이다.
+  실제 완주는 10 (As₂S₃ 가 stage-01 에서 `n_structures = 0`). 이 장은 *넣은 것*의
+  명세라 11 이 맞고, **빠지는 건 funnel/결과 장에서** 한 문장으로 짚는다.
 
-넣은 후보 전부입니다. 91 개, 계열은 일곱입니다. 표의 세 번째 칸이 **왜 넣었나**입니다.
+**[45초]**
 
-산화물이 37 개로 가장 많습니다. M–O 결합이 세니 산화 방어에 유리할 것으로 봤습니다.
-염화물 19 개는 host 에 이미 Cl 이 있어 자연스러운 선택이었고요. 나머지 — 황화물, 불화물,
-브롬, 질화물, 요오드 — 는 상당 부분 **대조군**입니다. 산화물만 넣으면 "산화물이라서
-좋은 건지 원소가 좋은 건지"를 가를 수 없습니다.
+후보를 어떻게 골랐는지 말씀드리겠습니다. 축이 두 개입니다.
 
-그리고 후반에 다시 나올 얘기인데, 이 목록은 **이미 잘 알려진 안정한 화합물 쪽으로
-치우쳐 있습니다.** 이게 예상 못 한 결과를 하나 낳습니다.
+**양이온은 산화수를 +1부터 +6까지** 훑었습니다. 산화수가 달라지면 전하를 맞추는 방법이
+달라지니까, 이걸 안 훑으면 한쪽 전하만 보게 됩니다. **음이온은 계열 일곱 개**로,
+결합이 제일 센 산화물부터 제일 무르고 큰 요오드까지 폈고요.
+
+표가 그 결과입니다. 산화물이 37 개로 가장 많고, 나머지는 상당 부분 **대조군**이에요.
+산화물만 넣으면 "산화물이라서 좋은 건지 그 원소가 좋은 건지" 를 가를 수가 없습니다.
+
+하나 미리 말씀드리면 — **이미 존재하는 화합물만 넣을 수 있습니다.** 세상에 없는 걸
+전구체로 쓸 수는 없으니까요. 그래서 목록이 **안전하고 익숙한 것들로 채워져 있고**,
+이게 뒤에서 결과로 돌아옵니다.
+
+💡 마지막 줄의 "세상에 없는 걸 전구체로 쓸 수는 없다" 를 빼지 말 것 — 편향이 게으름이
+   아니라 **전구체를 단위로 잡은 것의 필연적 대가**라는 게 드러나야 방어가 된다.
 
 ---
 
