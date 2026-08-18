@@ -534,14 +534,14 @@ Li 48h 쪽은 100 개 남짓으로 적습니다. 그런데 **빈 칸이 없어�
 
 ### 12 — Representative structure selection  ✅ 확정 (2026-08-18, 2판)
 
-> ■ Step 4: One structure per candidate is kept for the full calculations
-> • To carry one structure per compound, the [파랑]top-ranked configuration[/] was kept.
-> • Candidate counts differ [파랑]15 to 150[/] per compound, so [빨강]this selection is not a ranking of elements[/].
+> ■ Step 4: One structure per compound is kept for the full calculations
+> • The [파랑]combined score[/], not energy alone, picked which configuration was kept.
+> • Each compound produced [파랑]15 to 150[/] candidates, so [빨강]this selection is not a ranking of elements[/].
 
 `< spread of the three top-ranked structures per species >`
-`해설` median spread [파랑]0.04 eV / atom[/]; [빨강]6 of 88 exceed 0.10[/] — there the choice is real
+`해설` median spread [파랑]0.04 eV / atom[/]; for the [빨강]6 of 88 above 0.10[/], the choice of structure matters
 하단 용어 — Representative: the one structure kept for the next steps ·
-　　　　　　 Convergence: the optimizer actually finished
+　　　　　　 Combined score: several properties folded into one number
 
 ⛔⛔ **앞 판이 틀렸다 (2026-08-18) — 같은 함정 3회째.** 캡션이
    *"with the spread across our three runs. Here the runs agree"* 였는데, 세 점은
@@ -586,6 +586,8 @@ ZrO₂ 는 하나는 P 자리, 둘은 Li 자리에 앉은 구조가 1등이 됐�
 · 세 라벨(x020/x050/x100)은 **농도가 아닙니다.** 실제 농도는 셋 다 0.25 예요.
   이름만 남은 겁니다 — 농도 시리즈로 읽으시면 안 됩니다.
 · 세로축은 host 상대 Δe 이지 **hull 거리가 아닙니다.**
+· **"90종이라더니 왜 88이냐"** — 90 중 rank-1 에 어닐 후 재순위 값이 있는 게 89,
+  그중 세 라벨이 다 있는 게 88 입니다. 빠진 건 **MgI₂ 하나**(x005 없음)예요.
 · **"후보 개수가 왜 문제인가?"** — 종마다 **15 ~ 150 개**로 열 배 차이가 납니다. 그것도
   성능이 아니라 화학이 정해요(2가 도펀트는 보상법이 둘, 앉을 부격자가 많으면 조합이 늘죠).
   많이 뽑으면 최댓값이 그냥 올라갑니다. 실측: 후보 수와 **챔피언** 점수는 r **+0.32**,

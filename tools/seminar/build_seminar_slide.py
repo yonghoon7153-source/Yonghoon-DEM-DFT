@@ -116,16 +116,24 @@ SLIDES = {
     title="Representative structure selection",
     # ⛔ 앞 판 문구는 "carried forward" 였다 (1저자: kept 로). 그리고 v6 원본은
     #   용어줄이 헤더 위에 올라타 잘려 있었다 — 이 빌더가 맨 아래로 내린다.
-    head="Step 4: One structure per candidate is kept for the full calculations",
-    sub1="To carry one structure per compound, the [b]top-ranked configuration[/b] was kept.",
+    # ⚠ "per candidate" 는 틀렸다 — 11장에서 candidate = **구조**(3,615개)로 썼다.
+    #   "one structure per candidate" 는 "구조당 구조 하나" 로 읽힌다. compound 다.
+    head="Step 4: One structure per compound is kept for the full calculations",
+    # ⚠ 앞 판 sub1 은 헤더와 같은 말이었다("한 개 남기려고 한 개를 남겼다").
+    #   **무엇이 정했는지**로 바꾼다 — 10장 ⛔("제일 안정한 게 이겼다" 는 틀림,
+    #   챔피언이 최저 에너지인 경우 9건 중 1건)를 화면에서 미리 막는다.
+    sub1="The [b]combined score[/b], not energy alone, picked which configuration was kept.",
     # ⛔⛔ 앞 판 캡션은 "the spread across our three runs ... the runs agree" 였다. **틀렸다.**
     #   세 점은 재현 산포가 아니라 **자리·시드가 다른 세 구조**다 (concentration 열 전부 0.25).
     #   kb/results/site_preference_bar_meaning_2026_08_18.md §4b — 같은 함정 3회째.
-    sub2="Candidate counts differ [b]15 to 150[/b] per compound, so [r]this selection is not a ranking of elements[/r].",
+    sub2="Each compound produced [b]15 to 150[/b] candidates, so [r]this selection is not a ranking of elements[/r].",
     label="spread of the three top-ranked structures per species",
-    note="median spread [b]0.04 eV / atom[/b]; [r]6 of 88 exceed 0.10[/r] — there the choice is real",
+    # ⚠ em-dash 금지(1/13 덱은 0개). "the choice is real" 도 무슨 선택인지 안 보였다.
+    note="median spread [b]0.04 eV / atom[/b]; for the [r]6 of 88 above 0.10[/r], the choice of structure matters",
+    # ⚠ 앞 판은 "Convergence" 를 풀어 놨는데 **슬라이드에 그 낱말이 없다**(소불릿에서 빠짐).
+    #   화면에 있는 낱말만 푼다.
     gloss=("Representative: the one structure kept for the next steps  ·  "
-           "Convergence: the optimizer actually finished"),
+           "Combined score: several properties folded into one number"),
     drop=[10],
  ),
 }
