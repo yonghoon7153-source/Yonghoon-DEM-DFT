@@ -197,6 +197,10 @@ if [[ -d ".venv" && -z "${VIRTUAL_ENV:-}" ]]; then
 fi
 
 export PYTHONPATH="${REPO_ROOT}:${PYTHONPATH:-}"
+
+#: ★ 19차 — `docs/RESULTS.md` 를 쓸 자격이 있는 **정본 실행**의 이름.
+#:   다른 실행은 `docs/RESULTS_<run>.md` 로 간다 (정본 덮어쓰기 방지).
+CANONICAL_RUN="${CANONICAL_RUN:-grid_fit_v4}"
 export MPLBACKEND="Agg"          # headless 강제
 
 # ---------------------------------------------------------------- dispatch
@@ -301,8 +305,19 @@ case "$MODE" in
     #   그래야 실행 없이 검사할 수 있다.
     REPORT_OUT="${REPORT_OUT:-}"
     if [[ -z "$REPORT_OUT" ]]; then
+      # ★ 19차 — `results/` 아래여도 **정본 실행이 아니면** 정본을 덮으면 안 된다.
+      #   예전 가드는 경로 패턴만 봐서 `results/fit_22p_v1` 같은 새 실행이
+      #   그대로 `docs/RESULTS.md` 를 덮어썼다 (22p 격자 안내 중 발견).
+      _run_name="$(basename "$D")"
       case "$D" in
-        results/*|./results/*) REPORT_OUT="docs/RESULTS.md" ;;
+        results/*|./results/*)
+          if [[ "$_run_name" == "$CANONICAL_RUN" ]]; then
+            REPORT_OUT="docs/RESULTS.md"
+          else
+            REPORT_OUT="docs/RESULTS_${_run_name}.md"
+            echo "  ℹ 정본 실행($CANONICAL_RUN)이 아니라 보고서를 $REPORT_OUT 에 씁니다."
+            echo "    정본을 갱신하려면 REPORT_OUT=docs/RESULTS.md 를 명시하세요."
+          fi ;;
         *) REPORT_OUT="$D/RESULTS.md"
            echo "  ℹ 정본 경로가 아닌 입력($D)이라 보고서를 $REPORT_OUT 에 씁니다."
            echo "    정본을 갱신하려면 REPORT_OUT=docs/RESULTS.md 를 명시하세요." ;;

@@ -147,3 +147,38 @@ def test_report_mode_does_not_overwrite_the_canonical_doc_from_a_scratch_run(tmp
     assert "--out docs/RESULTS.md" in r2.stdout, r2.stdout
 
     assert canon.read_bytes() == before if before is not None else True
+
+
+def test_report_out_defaults_to_a_per_run_name_for_non_canonical_runs(tmp_path):
+    """★ 19차 — `results/` 아래 **다른 실행**도 정본 경로로 쓰려 했다.
+
+    가드는 "정본 경로가 아니면 run 디렉터리에" 였는데, `results/fit_22p_v1`
+    처럼 정본 경로 **패턴에는 맞지만 정본이 아닌** 실행이 그대로
+    `docs/RESULTS.md` 를 덮어쓴다. 22p 격자 실행을 안내하다 발견했다.
+    """
+    import os
+    import subprocess
+    from pathlib import Path
+
+    root = Path(__file__).resolve().parent.parent
+
+    def out_for(run):
+        r = subprocess.run(["bash", str(root / "run.sh"), "--mode", "report",
+                            "--in", run], cwd=root, capture_output=True,
+                           text=True, env={**os.environ, "RUN_SH_DRY": "1"})
+        assert r.returncode == 0, r.stdout + r.stderr
+        line = next(ln for ln in r.stdout.splitlines()
+                    if ln.startswith("--mode report"))
+        return line.split("--out ", 1)[1].strip()
+
+    # 정본 실행은 그대로 정본에 쓴다
+    assert out_for("results/grid_fit_v4") == "docs/RESULTS.md"
+    # 다른 실행은 실행 이름을 딴 경로로
+    assert out_for("results/fit_22p_v1") == "docs/RESULTS_fit_22p_v1.md"
+    # 명시하면 그대로 따른다
+    r = subprocess.run(["bash", str(root / "run.sh"), "--mode", "report",
+                        "--in", "results/fit_22p_v1"], cwd=root,
+                       capture_output=True, text=True,
+                       env={**os.environ, "RUN_SH_DRY": "1",
+                            "REPORT_OUT": "docs/RESULTS_22P.md"})
+    assert "--out docs/RESULTS_22P.md" in r.stdout, r.stdout

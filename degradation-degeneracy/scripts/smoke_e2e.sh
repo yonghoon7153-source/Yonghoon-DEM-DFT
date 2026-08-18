@@ -53,6 +53,13 @@ if [[ "$DIRTY" == "1" && "${ALLOW_DIRTY:-0}" != "1" ]]; then
 fi
 export SMOKE_DIRTY="$DIRTY"
 
+# ★ 19차 — smoke 가 도는 **중에** 워킹트리가 바뀌면 하위 실행(wsweep 등)이
+#   dirty 를 만나 거부되는데, 실패 메시지는 validator 목록만 내서 원인이
+#   "누가 파일을 건드렸다" 라는 걸 알 수 없다. 실제로 이 원인을 찾는 데
+#   smoke 를 5번 돌렸다. 시작 시점 identity 를 기록해 두고 끝에서 대조한다.
+SMOKE_START_DIGEST="$("$PY" -c 'from src.io import source_digest; print(source_digest())' 2>/dev/null || echo unknown)"
+SMOKE_START_DIRTY="$DIRTY"
+
 step() { printf '\n\033[1m── %s ──\033[0m\n' "$1"; }
 ok()   { printf '   ✅ %s\n' "$1"; }
 bad()  { printf '   ❌ %s\n' "$1"; fail=$((fail+1)); }
@@ -567,6 +574,17 @@ rm -rf "$GFIT" && mv "$BASE/keep_run" "$GFIT"   # 변조본 폐기, 원본 복�
 # ────────────────────────────────────────────────────────────────── 마무리
 [[ -d "$STASH" ]] && cp -a "$STASH/." "$CACHE_DIR/" 2>/dev/null; rm -rf "$STASH"
 [[ "${KEEP:-0}" == "1" ]] || rm -rf "$BASE"
+
+# ★ 19차 — 실행 중 워킹트리가 바뀌었는가 (원인을 직접 말한다)
+SMOKE_END_DIGEST="$("$PY" -c 'from src.io import source_digest; print(source_digest())' 2>/dev/null || echo unknown)"
+SMOKE_END_DIRTY="$("$PY" -c 'from src.io import git_info; print(1 if git_info(".")["git_dirty"] else 0)' 2>/dev/null || echo 1)"
+if [[ "$SMOKE_START_DIGEST" != "$SMOKE_END_DIGEST" || "$SMOKE_START_DIRTY" != "$SMOKE_END_DIRTY" ]]; then
+  printf '\n\033[33m⚠ 실행 중에 워킹트리(RUN_SCOPE)가 바뀌었습니다.\n'
+  printf '   시작: digest=%s dirty=%s\n' "$SMOKE_START_DIGEST" "$SMOKE_START_DIRTY"
+  printf '   종료: digest=%s dirty=%s\n' "$SMOKE_END_DIGEST" "$SMOKE_END_DIRTY"
+  printf '   하위 실행이 clean_worktree·코드_identity 로 거부됐다면 원인은 이것입니다\n'
+  printf '   (제품 결함이 아니라 동시 편집). smoke 중에는 저장소를 건드리지 마세요.\033[0m\n'
+fi
 
 printf '\n'
 [[ "$DIRTY" == "1" ]] && printf \
