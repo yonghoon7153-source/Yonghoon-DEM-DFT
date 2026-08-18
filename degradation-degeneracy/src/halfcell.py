@@ -465,8 +465,18 @@ def main() -> None:
     ap.add_argument("--v-lo", type=float, default=2.0)
     ap.add_argument("--v-hi", type=float, default=4.4)
     ap.add_argument("--c-rate", type=float, default=0.02)
-    ap.add_argument("--method", default="ocp", choices=["ocp", "sim"],
+    ap.add_argument("--method", default="ocp", choices=["ocp", "ocpbias", "sim"],
                     help="ocp=OCP 함수 직접 평가(전 범위) | sim=시뮬레이션 추출")
+    # ★ ocpbias 전용 왜곡 (모델 오차 민감도). 라이브러리에만 넣고 CLI 에
+    #   안 붙였더니 스윕을 돌릴 방법이 없었다 — 실측으로 8회분을 헛돌렸다.
+    ap.add_argument("--pe-offset-mv", type=float, default=None,
+                    help="PE OCP 전압 오프셋 (mV, method=ocpbias)")
+    ap.add_argument("--ne-offset-mv", type=float, default=None,
+                    help="NE OCP 전압 오프셋 (mV, method=ocpbias)")
+    ap.add_argument("--pe-stretch", type=float, default=None,
+                    help="PE 화학량론 축 배율 (method=ocpbias)")
+    ap.add_argument("--ne-stretch", type=float, default=None,
+                    help="NE 화학량론 축 배율 (method=ocpbias)")
     ap.add_argument("--force", action="store_true")
     ap.add_argument("--verify", action="store_true",
                     help="캐시를 recipe로 **다시 계산해** 배열까지 대조한다 (F74). "
@@ -479,8 +489,24 @@ def main() -> None:
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     cfg = load_config(args.config)
     validate_config(cfg)
-    kw = ({} if args.method == "ocp"
-          else {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate})
+    if args.method == "ocp":
+        kw = {}
+    elif args.method == "ocpbias":
+        # None 은 recipe_of 가 걸러 기본값(0·1.0)을 쓴다
+        kw = {k: v for k, v in (("pe_offset_mv", args.pe_offset_mv),
+                                ("ne_offset_mv", args.ne_offset_mv),
+                                ("pe_stretch", args.pe_stretch),
+                                ("ne_stretch", args.ne_stretch)) if v is not None}
+    else:
+        kw = {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate}
+    # ★ 왜곡을 줬는데 method 가 ocpbias 가 아니면 **조용히 무시된다** — 그러면
+    #   왜곡 없는 기준으로 민감도를 쟀다고 착각한다. 멈춘다.
+    if args.method != "ocpbias" and any(
+            v is not None for v in (args.pe_offset_mv, args.ne_offset_mv,
+                                    args.pe_stretch, args.ne_stretch)):
+        raise SystemExit("왜곡 인자는 --method ocpbias 에서만 쓸 수 있습니다 "
+                         "(지금 --method %s). 그대로 두면 왜곡 없는 기준으로 "
+                         "민감도를 쟀다고 착각하게 됩니다." % args.method)
     ref = get_halfcell_reference(cfg, force=args.force, method=args.method, **kw)
     print(json.dumps(ref.coverage(), indent=2))
 
@@ -488,7 +514,8 @@ def main() -> None:
         import numpy as np
         path = halfcell_cache_path(cfg, method=args.method, **kw)
         v = validate_halfcell_cache(cfg, path)
-        fresh = (compute_halfcell_from_ocp(cfg, **kw) if args.method == "ocp"
+        fresh = (compute_halfcell_from_ocp(cfg, **kw)
+                 if args.method in ("ocp", "ocpbias")
                  else compute_halfcell_reference(cfg, **kw))
         # ★ 10차 — rtol 을 0 으로 **고정**한다. 기본 rtol=1e-5 는 4V 전압에서
         #   ~40µV 의 슬랙이라 미세 변조가 통과한다. 같은 recipe 재생성은

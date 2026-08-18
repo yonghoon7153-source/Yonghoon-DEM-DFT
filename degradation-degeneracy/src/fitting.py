@@ -1063,7 +1063,7 @@ def main() -> None:
     ap.add_argument("--no-adaptive", dest="adaptive", action="store_false",
                     help="적응적 조기 종료를 끈다 — 모든 조건이 정확히 "
                          "--n-restarts 번 돈다 (공정 비교용). 기본은 켜짐")
-    ap.add_argument("--halfcell-method", default="ocp", choices=["ocp", "sim"],
+    ap.add_argument("--halfcell-method", default="ocp", choices=["ocp", "ocpbias", "sim"],
                     help="half-cell 기준 캐시의 생성 방식 (F64: 서명에 들어간다)")
     ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
                     help="dQ/dV 목적함수에 매끄러운 해를 초기값으로 물려주지 않는다 "

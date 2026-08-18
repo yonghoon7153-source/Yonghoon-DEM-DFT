@@ -180,3 +180,58 @@ def test_ocpbias_method_name_matches_the_sealed_cache_pattern():
     import re
 
     assert re.fullmatch(r"[a-z]+", "ocpbias"), "method 이름에 밑줄·숫자 금지"
+
+
+def test_halfcell_cli_exposes_the_bias_knobs():
+    """★ 왜곡을 라이브러리에만 넣고 CLI 에 안 붙이면 쓸 수가 없다.
+
+    실측: `python -m src.halfcell --method ocpbias --pe-offset-mv 10` 이
+    "알 수 없는 인자" 로 죽어 민감도 스윕 8회분이 통째로 헛돌았다.
+    """
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    out = subprocess.run([_s.executable, "-m", "src.halfcell", "--help"],
+                         cwd=root, capture_output=True, text=True).stdout
+    for flag in ("--pe-offset-mv", "--ne-offset-mv", "--pe-stretch", "--ne-stretch"):
+        assert flag in out, f"{flag} 가 CLI 에 없다\n{out}"
+    assert "ocpbias" in out, "method 선택지에 ocpbias 가 없다"
+
+
+def test_run_sh_passes_halfcell_method_to_fit():
+    """★ run.sh 가 --halfcell-method 를 fit 까지 넘겨야 한다.
+
+    src/fitting.py 는 이미 인자를 받는데 run.sh 가 안 받아서, 왜곡 기준으로
+    fit 을 돌릴 방법이 없었다 (실측: "알 수 없는 인자: --halfcell-method").
+    """
+    import subprocess
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    r = subprocess.run(
+        ["bash", "run.sh", "--mode", "fit", "--in", "results/x", "--out", "results/y",
+         "--reference", "halfcell", "--halfcell-method", "ocpbias"],
+        cwd=root, capture_output=True, text=True,
+        env={**__import__("os").environ, "RUN_SH_DRY": "1"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "--halfcell-method ocpbias" in r.stdout, r.stdout
+
+
+def test_fitting_cli_accepts_ocpbias_method():
+    """★ M39 로 발견 — run.sh dry-run 은 src.fitting 을 안 태운다.
+
+    run.sh 가 `--halfcell-method ocpbias` 를 조립해도 fitting.py 의 choices 에
+    ocpbias 가 없으면 실행 순간 죽는다. 실측으로 그랬다:
+      fitting.py: error: argument --halfcell-method: invalid choice: 'ocpbias'
+    dry-run 테스트만으로는 이 층이 안 잡혀서 별도로 고정한다.
+    """
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    out = subprocess.run([_s.executable, "-m", "src.fitting", "--help"],
+                         cwd=root, capture_output=True, text=True).stdout
+    assert "ocpbias" in out, f"fitting CLI 가 ocpbias 를 안 받는다\n{out}"

@@ -90,6 +90,9 @@ MODE
 fitting
   --objective LIST       pocv | pocv_dvdq | pocv_dvdq_dqdv | dqdv_only (콤마 다중)
                          기본: objectives.yaml 의 4종 전부
+  --halfcell-method M    ocp (기본) | ocpbias — half-cell 기준 곡선 생성 method.
+                         ocpbias 는 OCP 에 계통 왜곡을 넣어 모델 오차 민감도를
+                         잰다 (왜곡 크기는 python -m src.halfcell 로 캐시 생성 시 지정)
   --bounds PRESET        expanded (기본) | original_33p
                          original_33p 는 33p 원본 bound. alpha 하한 1.00이
                          "LAM = 용량손실"을 강제하는지 비교하는 용도
@@ -167,6 +170,7 @@ while [[ $# -gt 0 ]]; do
     --clean)         CLEAN="true"; shift ;;
     --limit)         LIMIT="$2"; shift 2 ;;
     --reference)     REFERENCE="$2"; shift 2 ;;
+    --halfcell-method) HALFCELL_METHOD="$2"; shift 2 ;;
     --w-grid)        W_GRID="$2"; shift 2 ;;
     --w-stride)      W_STRIDE="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
@@ -264,10 +268,19 @@ case "$MODE" in
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
     FIT_ARGS+=(--reference "$REFERENCE")
+    # ★ half-cell 기준 곡선의 생성 method. 기본 ocp, 민감도 시험은 ocpbias.
+    #   src/fitting.py 는 진작 받고 있었는데 run.sh 가 안 넘겨서 쓸 수 없었다.
+    [[ -n "${HALFCELL_METHOD:-}" ]] && FIT_ARGS+=(--halfcell-method "$HALFCELL_METHOD")
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
     [[ "$RESUME" == "true" ]] && FIT_ARGS+=(--resume)
     [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)
     [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
+    # ★ fit 의 인자 조립도 실행 없이 검사할 수 있어야 한다 (report·all 과 대칭).
+    #   없어서 --halfcell-method 전파를 회귀로 고정할 방법이 없었다.
+    if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+      echo "${FIT_ARGS[*]}"
+      exit 0
+    fi
     exec python -m src.fitting "${FIT_ARGS[@]}"
     ;;
 
