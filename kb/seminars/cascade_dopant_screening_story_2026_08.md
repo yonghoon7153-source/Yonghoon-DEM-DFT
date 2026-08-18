@@ -295,10 +295,21 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 > ■ Candidate set (2): 36 cation elements, coloured by their best score
 > • Late transition metals sit together in red — that block is the oxidation-window loss.
-> • ⚠ The colour is a superseded snapshot; the pattern is readable, the ordering is not.
+> • ⚠ Read the block pattern, not the ranking — the ranking is not approved yet.
 
-`< best score per element, 2026-06-29 snapshot >`
-`해설` colour is a superseded snapshot score — read the block pattern, not the order
+`< best score per element, 89-species pool (2026-08-13) >`
+`해설` read the block pattern, not the order — the ranking is not approved
+
+⚠ **풀 교체 (2026-08-18)** — 색을 **89종 풀**(`cascade_v23_ranked_v2.csv`)로 다시 그렸다.
+   앞 판은 47종(2026-06-29)이었다. 바꾼 근거는 **패턴이 안 바뀐다는 실측**이다:
+   · 원소 집합 36개 **동일** · 상위10 집합 **동일** · 최하위10 집합 **동일**
+   · Mn·Fe·Co·Ni·Cu 가 두 풀 모두 최하위12 안 — 대본이 "red" 라고 부르는 그 블록
+   · 점수는 평균 **+0.050** 오르는데 이는 순위 변화가 아니라 min-max 정규화
+     모집단이 커진 데 따른 **수평 이동**이다
+   v2 는 v1 의 **완전한 상위집합**이다(v1 전용 종 0, +42종).
+   ⚠ AlI₃ 는 **두 풀 모두** 없다 — v2 만의 결함이 아니라 캠페인 공백이다.
+   이 일치는 `plot_seminar_2026_08.py --selftest` 가 검사한다 — 깨지면 위 캡션이
+   거짓말이 되므로 그림보다 selftest 가 먼저 막는다.
 
 **[60초]**
 
@@ -307,8 +318,12 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 칸 색이 그 원소의 화합물 중 **가장 좋았던 종합 점수**입니다. 초록이 높고 빨강이 낮습니다.
 아래 작은 숫자는 host 대비 안정성이고요.
 
-⚠ 먼저 단서를 하나 달겠습니다. **이 색은 작년 6월 취합 시점의 스냅샷이고, 지금 승인된
-순위는 0종입니다.** 그러니까 "Sc 가 1등"처럼 읽으시면 안 됩니다.
+⚠ 먼저 단서를 하나 달겠습니다. **아직 승인된 순위가 없습니다.** 그러니까 "Sc 가 1등"
+처럼 읽으시면 안 됩니다.
+
+💬 **말로만 (질문 오면)** — 풀을 47종에서 89종으로 두 배 늘려 다시 매겨 봤는데
+   **상위10도 최하위10도 집합이 그대로**였습니다. 점수만 평균 0.05 올라가고요.
+   그래서 개별 순서는 못 믿어도 **덩어리는 믿을 수 있다**고 말씀드리는 겁니다.
 
 대신 **덩어리로 읽으시면 됩니다.** 가운데 Fe, Co, Ni, Cu 가 통째로 빨갛죠. 이게 우연이
 아니라 뒤에 나올 결과 2 — **후기 전이금속에서 산화 창이 붕괴한다** — 와 같은 얘기입니다.

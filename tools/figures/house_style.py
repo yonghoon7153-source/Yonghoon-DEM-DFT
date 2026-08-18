@@ -77,12 +77,15 @@ def gap_band(ax, vbm=0.0, cbm=None, gap=None, label=True, y=None, fontsize=12):
 #   ③ 양 끝이 house 색과 무관했다. crimson(#be123c)·teal(#0d9488) 로 맞춘다.
 #  ⚠ 낮은 쪽은 **빨강을 유지**한다 — 대본이 "late transition metals sit together
 #    in red" 라고 말한다. 색을 바꾸면 대본이 깨진다.
+#  ⚠ 2026-08-18 2판 — 1저자 요청으로 **전체를 한 단계 연하게**. 채도를 낮추니
+#    모든 칸에서 INK 가 읽혀 흰 글씨가 사라졌다(on_fill 이 알아서 처리한다).
+#    낮은 쪽은 여전히 붉게 읽혀야 하므로 색상(hue)은 유지하고 명도만 올렸다.
 _SCORE_STOPS = [
-    (0.00, "#a4133c"),   # deep crimson — 낮은 점수
-    (0.28, "#e07a5f"),   # terracotta
-    (0.50, "#ead7bb"),   # warm sand (중립)
-    (0.72, "#5fa8a0"),
-    (1.00, "#0d9488"),   # teal — 높은 점수
+    (0.00, "#cf5c72"),   # soft crimson — 낮은 점수 (여전히 '빨간 블록')
+    (0.28, "#eeab92"),   # pale terracotta
+    (0.50, "#f4ead8"),   # pale sand (중립)
+    (0.72, "#9bcbc3"),
+    (1.00, "#63b3a9"),   # soft teal — 높은 점수
 ]
 
 

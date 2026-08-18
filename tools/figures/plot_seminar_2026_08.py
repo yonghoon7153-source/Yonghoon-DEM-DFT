@@ -93,19 +93,36 @@ GROUP_OF = {"Li":"alkali","Na":"alkali","Ag":"TM","Mg":"alk.earth","Ca":"alk.ear
             "La":"lanthanide","Nd":"lanthanide","Sm":"lanthanide","Gd":"lanthanide"}
 
 
-def fig_periodic():
+#: 점수 풀 — (csv, 컬러바 라벨). v2 가 기본이다 (2026-08-18).
+POOLS = {
+    "v2": ("cascade_v23_ranked_v2.csv", "composite score  (89-species pool, 2026-08-13)"),
+    "v1": ("cascade_v23_ranked.csv", "composite score  (47-species pool, 2026-06-29)"),
+}
+
+
+def fig_periodic(pool="v2"):
     """주기율표 성능 지도 — 원본(plot_cascade_summary.py) 양식을 발표용으로 다시 그린다.
 
-    ⚠ 색·숫자는 **2026-06-29 취합 스냅샷의 composite score** 다. 승인된 current ranking 은
-      0종이므로 순위로 인용하면 안 된다 — 슬라이드 캡션이 그 단서를 진다.
+    ⚠ **순위로 인용하면 안 된다.** 승인된 current ranking 은 0종이다 (감사표
+      db/properties/cascade_audit_artifact_status.csv: v1=superseded,
+      v2=recovered_diagnostic). 슬라이드 캡션이 그 단서를 진다.
+
+    풀 선택 (2026-08-18)
+      기본을 **v2(89종)** 로 바꿨다. v2 는 v1 의 **완전한 상위집합**이고(v1 전용 종 0),
+      원소 36개가 같으며, 두 풀의 블록 패턴이 일치한다 — selftest 가 그걸 검사한다.
+      v1 대비 점수가 평균 +0.050 오르는데, 이는 순위 변화가 아니라 min-max 정규화
+      모집단이 커진 데 따른 **수평 이동**이다.
+      ⚠ AlI3 는 **두 풀 모두** 없다 — v2 만의 결함이 아니라 캠페인 공백이다.
+
     ⚠ 이 함수의 ax.text 는 **칸 라벨**(원소 기호·숫자)이라 '그림 안 글씨 금지' 규칙의 예외다.
       문장은 넣지 않는다.
     """
+    csv_name, cb_label = POOLS[pool]
     import csv as _csv
     from matplotlib.patches import Rectangle as _R
     import matplotlib.pyplot as _plt
     D = []
-    for r in _read(os.path.join(DB, "cascade_v23_ranked.csv")):
+    for r in _read(os.path.join(DB, csv_name)):
         try:
             D.append(dict(dop=r["dopant"], comp=float(r["score"]),
                           de=float(r["de"]) if r.get("de") else 0.0))
@@ -148,10 +165,12 @@ def fig_periodic():
     ax.set_xlim(0.4, 16.4); ax.set_ylim(-8.05, 0.10); ax.axis("off")
     sm = _plt.cm.ScalarMappable(cmap=cmap, norm=_plt.Normalize(lo, hi))
     cb = fig.colorbar(sm, ax=ax, fraction=0.022, pad=0.01)
-    cb.set_label("composite score  (2026-06-29 snapshot)", fontsize=12)
+    cb.set_label(cb_label, fontsize=12)
     cb.ax.tick_params(labelsize=10)
     # ⚠ 파일명에 **빌드 날짜**를 박되 컬러바 라벨은 **데이터 날짜**를 유지한다.
     #   둘은 다른 것이고, 섞으면 6월 점수가 8월 결과로 읽힌다 (오늘 β 0.77 사고와 같은 종류).
+    if pool != "v2":
+        return _save(fig, f"roster_periodic_table_pool_{pool}.png")
     _save(fig, "roster_periodic_table_build_2026-08-18.png")
     return _save(fig, "roster_periodic_table.png")
 
@@ -438,6 +457,39 @@ def selftest():
     chk(f"음성: 원본 데이터 결측 0건 ({miss})", not miss)
     # 음성 ④ — 주기율표에 없는 원소를 그리려 하면 안 된다
     chk("음성: PT 좌표 중복 없음", len(set(PT.values())) == len(PT))
+    # ★ 슬라이드가 기대는 주장 — "풀을 두 배로 키워도 **블록 패턴**은 안 바뀐다".
+    #   캡션이 "read the block pattern, not the order" 라고 말하는 근거가 이것이다.
+    #   풀을 바꿨는데 이게 깨지면 그 캡션이 거짓말이 되므로 여기서 막는다 (2026-08-18).
+    import csv as _c, io as _io, re as _re
+    _AN = {"O", "S", "F", "Cl", "Br", "I", "N"}
+
+    def _best(fn):
+        try:
+            _rows = [l for l in open(os.path.join(DB, fn)) if not l.startswith("#")]
+        except OSError:
+            return {}
+        b = {}
+        for x in _c.DictReader(_io.StringIO("".join(_rows))):
+            try:
+                sc = float(x["score"])
+            except (KeyError, ValueError):
+                continue
+            for el in _re.findall(r"[A-Z][a-z]?", base_species(x["dopant"])):
+                if el not in _AN and (el not in b or sc > b[el]):
+                    b[el] = sc
+        return b
+
+    _b1, _b2 = _best(POOLS["v1"][0]), _best(POOLS["v2"][0])
+    chk("두 풀의 원소 집합이 같다", bool(_b1) and set(_b1) == set(_b2))
+    _lo1 = set(sorted(_b1, key=lambda k: _b1[k])[:10])
+    _lo2 = set(sorted(_b2, key=lambda k: _b2[k])[:10])
+    chk(f"두 풀의 최하위10 집합이 같다 (차이 {sorted(_lo1 ^ _lo2)})", _lo1 == _lo2)
+    _late = {"Mn", "Fe", "Co", "Ni", "Cu"}
+    chk("후기전이금속 5종이 두 풀 모두 최하위12 안에 있다 (대본이 'red' 라고 부르는 블록)",
+        all(_late <= set(sorted(b, key=lambda k: b[k])[:12]) for b in (_b1, _b2)))
+    # 음성 — 풀 정의가 비거나 같은 파일을 가리키면 비교가 무의미하다
+    chk("음성: 두 풀이 서로 다른 파일이다", POOLS["v1"][0] != POOLS["v2"][0])
+    chk("음성: v2 가 v1 의 상위집합이다 (v1 전용 원소 0)", not (set(_b1) - set(_b2)))
     # 음성 ⑤ — 화학군 색이 전부 정의돼야 한다
     chk("음성: GROUP_OF 값이 전부 GROUP_C 에 있다",
         set(GROUP_OF.values()) <= set(GROUP_C))
