@@ -362,7 +362,7 @@ Li₂S 랑 P₂S₅ 랑 LiCl 을 섞어서 볼밀하고 소성해서 만드는�
 
 > ■ Step 1: The substitution site is enumerated before a structure is built
 > • Li, P, S and Cl are separate sublattices — an oxide has to take [파랑]one cation and one anion site[/].
-> • A 2+ dopant on a Li site leaves extra charge — [빨강]each way of balancing it is a different structure[/].
+> • Mg²⁺ on a Li⁺ site leaves extra charge — [빨강]each way of balancing it is a different structure[/].
 
 `< site preference vs ionic radius >`
 `해설` only Si always takes the P framework; 19 of 26 always take Li — [빨강]6 switch with the doping level[/]
