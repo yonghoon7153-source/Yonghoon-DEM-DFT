@@ -4386,3 +4386,137 @@ def test_analyze_22p_cumulative_header_states_the_threshold(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "④ 누적" in out
     assert "판정선 4%p" in out, out[-800:]
+
+
+# ── seed 스윕 — 여러 실행을 모아 본다 ──────────────────────────────────────
+#
+# ★ 19차 자체. 결정적 칸(참 격차 0)이 n=15 다. `noise_seed` 만 바꿔 같은 조건을
+#   여러 번 돌린 뒤 **모아서** 세야 표본이 커진다. 모을 때 두 가지가 필요하다:
+#   (1) 여러 디렉터리를 받아 이어붙이고, (2) 같은 cond_id 가 겹치면 **멈춘다**
+#   — seed 를 안 바꾸고 돌리면 완전히 같은 행이 두 배로 늘어 n 만 부풀고
+#   새 정보는 0 이다. 조용히 통과하면 "n=300" 이 거짓이 된다.
+
+def test_analyze_22p_pools_several_run_directories(tmp_path):
+    """★ 19차 자체 — 여러 실행 디렉터리를 모아 하나의 표본으로 센다."""
+    from tools.analyze_22p_gap import run
+
+    a = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=0)
+    b = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=1)
+    b["cond_id"] = b["cond_id"] + "_s1"          # 다른 seed → 다른 cond_id
+    da = _p22_run_dir(tmp_path, "s0", a)
+    db = _p22_run_dir(tmp_path, "s1", b)
+
+    one = run(da, "pocv_dvdq")
+    both = run([da, db], "pocv_dvdq")
+
+    assert both["n_rows_total"] == 2 * one["n_rows_total"]
+    assert both["near"]["n"] > one["near"]["n"], "모아도 동작점 표본이 안 늘었다"
+    assert [str(da), str(db)] == [str(x) for x in both["in_dirs"]]
+
+
+def test_analyze_22p_refuses_to_pool_overlapping_cond_ids(tmp_path):
+    """★ 19차 자체 — seed 를 안 바꾸면 같은 행이 두 배가 된다. 멈춰야 한다."""
+    from tools.analyze_22p_gap import run
+
+    a = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=0)
+    da = _p22_run_dir(tmp_path, "s0", a)
+    db = _p22_run_dir(tmp_path, "s0dup", a)      # cond_id 가 완전히 같다
+
+    with pytest.raises(SystemExit, match="cond_id"):
+        run([da, db], "pocv_dvdq")
+
+
+def test_analyze_22p_pools_the_restriction_reference_too(tmp_path):
+    """★ 19차 자체 — 모집단 기준도 같은 수의 실행을 모아야 짝이 맞는다."""
+    from tools.analyze_22p_gap import run
+
+    a = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=0)
+    b = _fits(objectives=("pocv_dvdq",), n_lli=5, seed=1)
+    b["cond_id"] = b["cond_id"] + "_s1"
+    ga = _p22_run_dir(tmp_path, "g0", a)
+    gb = _p22_run_dir(tmp_path, "g1", b)
+    ha = _p22_run_dir(tmp_path, "h0", _hc_fits(a, shift=0.001))
+    hb = _p22_run_dir(tmp_path, "h1", _hc_fits(b, shift=0.001))
+
+    g = run([ga, gb], "pocv_dvdq")
+    h = run([ha, hb], "pocv_dvdq", restrict_to=[ga, gb])
+
+    assert h["n_rows_total"] == g["n_recoverable"]
+
+
+# ── bin 폭과 격자 간격이 안 맞으면 표가 거짓이 된다 ────────────────────────
+
+def test_gap_table_refuses_data_that_does_not_fit_the_bin_width():
+    """★ 19차 자체 — 0.005 격자를 기본 bin(0.01)으로 묶으면 조용히 틀린다.
+
+    실측: gap 0.005 → 0%p bin, 0.015 → 2%p bin (numpy 은 half-to-even).
+    참 격차 0.5%p 인 조건이 **"참 격차 0"** 칸에 들어가면 거짓 분리율이
+    통째로 오염된다. 조용히 통과시키면 안 된다.
+    """
+    from tools.analyze_22p_gap import gap_table
+
+    rows = [{"lam_pe": 0.135, "lam_ne": 0.13,        # 참 0.5%p
+             "pe_ne_gap_recovered": 0.01, "cond_id": "h0"}]
+    with pytest.raises(SystemExit, match="gap-bin|bin"):
+        gap_table(pd.DataFrame(rows), tol=0.02)
+
+
+def test_gap_table_accepts_a_matching_bin_width():
+    """★ 19차 자체 — 맞는 bin 폭을 주면 0.5%p 해상도로 묶는다."""
+    from tools.analyze_22p_gap import gap_table
+
+    rows = []
+    for k, (pe, ne) in enumerate([(0.135, 0.13), (0.145, 0.13)]):   # 0.5, 1.5%p
+        rows.append({"lam_pe": pe, "lam_ne": ne,
+                     "pe_ne_gap_recovered": 0.03, "cond_id": f"h{k}"})
+    t = gap_table(pd.DataFrame(rows), tol=0.02, bin_w=0.005)
+
+    assert [r["참 격차"] for r in t.to_dict("records")] == ["0.5%p", "1.5%p"]
+
+
+def test_gap_table_default_bin_still_reads_whole_percent_grids():
+    """★ 가드가 기존 0.01·0.02 격자를 막으면 안 된다 (회귀)."""
+    from tools.analyze_22p_gap import gap_table
+
+    rows = [{"lam_pe": 0.19, "lam_ne": 0.07,          # 12%p, 부동소수 오차 포함
+             "pe_ne_gap_recovered": 0.11, "cond_id": "w0"},
+            {"lam_pe": 0.15, "lam_ne": 0.13,          # 2%p
+             "pe_ne_gap_recovered": 0.02, "cond_id": "w1"}]
+    t = gap_table(pd.DataFrame(rows), tol=0.02)
+    assert [r["참 격차"] for r in t.to_dict("records")] == ["2%p", "12%p"]
+
+
+def test_analyze_22p_can_target_a_nonzero_noise_level(tmp_path):
+    """★ 19차 자체 — ①/①'/② 가 `noise == 0` 에 박혀 있었다.
+
+    noise 0 에서는 잡음 실현이 없으므로 `--noise-seed` 를 바꿔도 결과가
+    **똑같다** — seed 스윕이 무의미하다. seed 가 의미를 갖는 건 noise > 0
+    에서뿐이고, 그러려면 분석기가 그 층을 볼 수 있어야 한다.
+    """
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    z = run(gd, "pocv_dvdq")                       # 기본 noise 0
+    n5 = run(gd, "pocv_dvdq", noise=0.005)
+
+    assert z["noise"] == 0.0 and n5["noise"] == 0.005
+    assert n5["wide"]["n"] > 0, "noise 0.005 층이 비어 있다"
+    assert n5["wide"]["n"] == z["wide"]["n"], "fixture 는 두 층 크기가 같다"
+    # 같은 크기지만 **다른 행**이어야 한다
+    assert n5["wide"]["table"] != z["wide"]["table"]
+
+
+def test_analyze_22p_passes_the_bin_width_through(tmp_path):
+    """★ 19차 자체 — `--gap-bin` 이 run() 을 거쳐 gap_table 까지 가야 한다."""
+    from tools.analyze_22p_gap import run
+
+    g = _fits(objectives=("pocv_dvdq",), n_lli=5)
+    g["lam_pe"] = g["lam_pe"] + 0.005              # 축 전체를 0.005 격자로 옮긴다
+    gd = _p22_run_dir(tmp_path, "grid", g)
+
+    with pytest.raises(SystemExit, match="gap-bin|bin"):
+        run(gd, "pocv_dvdq")
+    r = run(gd, "pocv_dvdq", bin_w=0.005)          # 맞는 폭이면 통과
+    assert r["wide"]["n"] > 0

@@ -54,21 +54,37 @@ def _fmt_pp(x) -> str:
         else f"{100 * float(x):.1f}%p"
 
 
-def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
+#: 격차가 bin 중심에서 이만큼(bin 폭 대비) 넘게 떨어져 있으면 격자 불일치로 본다
+_BIN_FIT_ATOL = 0.05
+
+
+def gap_table(df: pd.DataFrame, tol: float = 0.02,
+              bin_w: float = 0.01) -> pd.DataFrame:
     """참 격차 구간별 복원 성적.
 
     붕괴 = 참 격차가 있는데 복원 격차 < tol → "두 전극이 같다" 고 답한 것.
+
+    `bin_w` 는 **격자 간격과 맞아야 한다.** 0.01 로 묶는데 0.005 격자를 넣으면
+    numpy 의 half-to-even 때문에 0.005 → 0%p, 0.015 → 2%p 로 조용히 어긋난다.
+    참 격차 0.5%p 인 조건이 "참 격차 0" 칸에 섞이면 거짓 분리율이 통째로
+    오염되므로, 안 맞으면 **멈춘다**.
     """
     from tools.compare_objectives import gap_is_zero, gap_lt
 
     g = df.copy()
     g["gap_true"] = (g["lam_pe"] - g["lam_ne"]).abs()
     g["gap_hat"] = g["pe_ne_gap_recovered"]
-    # ★ bin 폭은 **0.01(1%p)** 이다. 0.02 로 묶으면 촘촘한 격자(0.01 step)의
-    #   홀수 격차가 이웃 짝수 bin 으로 넘어가 표가 거짓이 된다 (3%p → 4%p).
-    #   0.02 step 격자에서는 결과가 같으므로 손해가 없다. 표현 오차는
-    #   반올림으로 흡수한다.
-    g["gap_bin"] = (g["gap_true"] / 0.01).round().astype(int)       # %p 단위
+
+    q = np.asarray(g["gap_true"], dtype=float) / bin_w
+    off = np.abs(q - np.round(q))
+    if len(off) and off.max() > _BIN_FIT_ATOL:
+        bad = float(g["gap_true"].iloc[int(np.argmax(off))])
+        raise SystemExit(
+            f"참 격차 {bad:.4f} 가 bin 폭 {bin_w} 의 배수가 아닙니다 "
+            f"(어긋남 {off.max():.2f} bin). 그대로 묶으면 표가 거짓이 됩니다 — "
+            f"격자 간격에 맞는 --gap-bin 을 주세요 (예: 0.005 격자면 0.005).")
+
+    g["gap_bin"] = np.round(q).astype(int)          # bin_w 단위
 
     # ★ 라벨은 **실제 판정선**을 말해야 한다. 예전엔 "복원<2%p" 로 박혀 있어서
     #   `--tol 0.04` 로 돌린 출력이 다른 수치를 내면서도 머리글은 2%p 라고
@@ -79,7 +95,7 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
     for b, sub in g.groupby("gap_bin", sort=True):
         collapsed = gap_lt(sub["gap_hat"], tol)
         rows.append({
-            "참 격차": f"{b}%p",
+            "참 격차": f"{100 * b * bin_w:g}%p",
             "n": int(len(sub)),
             collapse_col: f"{int(collapsed.sum())}/{len(sub)}"
                           f" ({100 * collapsed.mean():.1f}%)",
@@ -93,9 +109,48 @@ def gap_table(df: pd.DataFrame, tol: float = 0.02) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
+def _as_dirs(x) -> list[Path]:
+    return [Path(x)] if isinstance(x, (str, Path)) else [Path(p) for p in x]
+
+
+def _pooled(dirs: list[Path], objective: str, tol: float, what: str) -> pd.DataFrame:
+    """여러 실행의 채점 결과를 이어붙인다 (seed 스윕용).
+
+    ★ 같은 `cond_id` 가 둘 이상 나오면 **멈춘다**. `noise_seed` 를 안 바꾸고
+      돌리면 완전히 같은 행이 그대로 두 배가 되어 n 만 부풀고 새 정보는 0 이다.
+      조용히 통과시키면 "n=300" 이 거짓이 된다.
+    """
+    from tools.compare_cases import _scored
+
+    frames = []
+    for d in dirs:
+        f = _scored(d / "fits.parquet", tol)
+        f = f[f["objective"] == objective]
+        if f.empty:
+            raise SystemExit(f"{what} {d}: 목적함수 {objective} 행이 없습니다")
+        frames.append(f.assign(_run_dir=str(d)))
+
+    df = pd.concat(frames, ignore_index=True)
+    dup = df["cond_id"].duplicated()
+    if dup.any():
+        ex = sorted(df.loc[dup, "cond_id"].unique())[:5]
+        raise SystemExit(
+            f"{what}: 실행들 사이에 같은 cond_id 가 {int(dup.sum())}건 겹칩니다 "
+            f"(예: {ex}). seed 스윕이라면 실행마다 --noise-seed 를 다르게 주세요 "
+            f"— 안 그러면 같은 행이 중복돼 n 만 부풀고 새 정보는 없습니다.")
+    return df
+
+
 def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
-        plot: str | None = None, restrict_to=None) -> dict:
-    """`restrict_to` — **모집단을 맞추는** 기준 실행 (보통 grid 기준 fit 디렉터리).
+        plot: str | None = None, restrict_to=None, noise: float = 0.0,
+        bin_w: float = 0.01) -> dict:
+    """`in_dir` 은 디렉터리 하나 또는 **여러 개**(seed 스윕을 모을 때).
+
+    `noise` — ①·①'·② 가 볼 잡음 수준. 기본 0. **noise 0 에서는 잡음 실현이
+    없으므로 `--noise-seed` 를 바꿔도 결과가 똑같다** — seed 스윕은 noise > 0
+    에서만 의미가 있고, 그때 이 인자로 그 층을 지목한다.
+
+    `restrict_to` — **모집단을 맞추는** 기준 실행 (보통 grid 기준 fit 디렉터리).
 
     `src/scoring.py` 는 `reference != "grid"` 이면 `recoverable` 을 True 로
     **고정**한다 (전 범위 half-cell 테이블은 창이 부족할 일이 없다는 물리
@@ -106,13 +161,8 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
 
     `restrict_to` 를 주면 `공통 cond_id ∩ 그쪽에서 복원가능` 으로 좁힌다.
     """
-    from tools.compare_cases import _scored
-
-    in_dir = Path(in_dir)
-    df = _scored(in_dir / "fits.parquet", tol)
-    df = df[df["objective"] == objective]
-    if df.empty:
-        raise SystemExit(f"목적함수 {objective} 행이 없습니다")
+    in_dirs = _as_dirs(in_dir)
+    df = _pooled(in_dirs, objective, tol, "--in")
 
     df = df.copy()
     df["lam_mean"] = (df["lam_pe"] + df["lam_ne"]) / 2
@@ -120,12 +170,8 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
 
     restriction = None
     if restrict_to is not None:
-        ref_dir = Path(restrict_to)
-        ref = _scored(ref_dir / "fits.parquet", tol)
-        ref = ref[ref["objective"] == objective]
-        if ref.empty:
-            raise SystemExit(
-                f"--restrict-to {ref_dir}: 목적함수 {objective} 행이 없습니다")
+        ref_dirs = _as_dirs(restrict_to)
+        ref = _pooled(ref_dirs, objective, tol, "--restrict-to")
         # `isin` 이 이미 이쪽에 없는 cond_id 를 걸러내므로 교집합은 불필요하다
         # (M24 로 확인 — 넣고 빼도 결과가 같은 죽은 코드였다).
         keep = set(ref.loc[ref["recoverable"], "cond_id"])
@@ -135,7 +181,9 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
         # 모집단은 기준 실행이 정한다 — 이쪽의 recoverable 열은 더 이상 안 본다
         df["recoverable"] = True
         restriction = {
-            "run_dir": str(ref_dir),
+            "run_dir": str(ref_dirs[0]) if len(ref_dirs) == 1
+                       else [str(d) for d in ref_dirs],
+            "n_runs": len(ref_dirs),
             "정의": "공통 cond_id ∩ 기준 실행에서 recoverable",
             "n_kept": int(len(df)),
             "n_dropped": before - int(len(df)),
@@ -143,34 +191,37 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
             "dropped_examples": [str(c) for c in dropped[:5]],
         }
         if df.empty:
-            raise SystemExit(f"--restrict-to {ref_dir}: 남는 조건이 없습니다")
+            raise SystemExit(f"--restrict-to {ref_dirs}: 남는 조건이 없습니다")
 
     rec = df[df["recoverable"]] if "recoverable" in df.columns else df
 
     # ── ① 22p 동작점만 (LLI 0.17 · 평균 LAM 0.13 · noise 0) ─────────────
     tight = rec[(rec["lli"].sub(P22["lli"]).abs() < 1e-9)
                 & (rec["lam_mean"].sub(P22["lam_mean"]).abs() < 1e-9)
-                & (rec["noise"] == 0)]
+                & (rec["noise"] == noise)]
 
     # ── ①' 동작점 **근방** — 좁히면 n 이 작고 넓히면 동작점이 아니다.
     #      그 사이를 메우는 중간 층 (★ 첫 실행에서 ① 이 n=5 였다).
     near = rec[(rec["lli"].sub(P22["lli"]).abs() <= 0.021)
                & (rec["lam_mean"].sub(P22["lam_mean"]).abs() <= 0.021)
-               & (rec["noise"] == 0)]
+               & (rec["noise"] == noise)]
 
     # ── ② 넓힌 표본 — LLI 전부 · 평균 전체 · noise 0 ──────────────────────
-    wide = rec[rec["noise"] == 0]
+    wide = rec[rec["noise"] == noise]
 
     out = {
-        "objective": objective, "tol": tol,
+        "objective": objective, "tol": tol, "noise": noise, "bin_w": bin_w,
+        "in_dirs": [str(d) for d in in_dirs],
+        "n_runs": len(in_dirs),
         "n_rows_total": int(len(df)),
         "n_recoverable": int(len(rec)),
         "tight": {"n": int(len(tight)),
-                  "정의": "LLI=0.17 · 평균 LAM=0.13 · noise=0 · 복원가능군"},
+                  "정의": f"LLI=0.17 · 평균 LAM=0.13 · noise={noise:g} · 복원가능군"},
         "near": {"n": int(len(near)),
-                 "정의": "|LLI−0.17|≤2%p · |평균 LAM−0.13|≤2%p · noise=0 · 복원가능군"},
+                 "정의": f"|LLI−0.17|≤2%p · |평균 LAM−0.13|≤2%p · noise={noise:g}"
+                         " · 복원가능군"},
         "wide": {"n": int(len(wide)),
-                 "정의": "noise=0 · 복원가능군 (평균·LLI 전부)"},
+                 "정의": f"noise={noise:g} · 복원가능군 (평균·LLI 전부)"},
     }
     if restriction is not None:
         out["restricted_to"] = restriction
@@ -178,6 +229,9 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     print("=" * 74)
     print(f" 22p 동작점에서 두 전극을 가를 수 있는가  (objective={objective})")
     print("=" * 74)
+    if len(in_dirs) > 1:
+        print(f"\n※ 실행 {len(in_dirs)}개를 모았다 (seed 스윕): "
+              + ", ".join(str(d) for d in in_dirs))
     if restriction is not None:
         print(f"\n※ 모집단을 {restriction['run_dir']} 의 복원가능군에 맞췄다 "
               f"(유지 {restriction['n_kept']}행 · 제외 {restriction['n_dropped']}행).")
@@ -185,29 +239,30 @@ def run(in_dir, objective: str = "pocv_dvdq", tol: float = 0.02,
     print(f"\n전체 {len(df)}행 중 복원가능군 {len(rec)}행 "
           f"({100 * len(rec) / len(df):.0f}%)\n")
 
-    print("① 22p 동작점만 — LLI 0.17 · 평균 LAM 0.13 · noise 0")
+    print(f"① 22p 동작점만 — LLI 0.17 · 평균 LAM 0.13 · noise {noise:g}")
     print(f"   (평균을 고정했으므로 '격차 때문인지 총 열화량 때문인지' 가 안 섞인다)\n")
     if len(tight):
-        t1 = gap_table(tight, tol)
+        t1 = gap_table(tight, tol, bin_w)
         print(t1.to_string(index=False))
         out["tight"]["table"] = t1.to_dict("records")
     else:
         print("   조건 없음 — 격자에 그 동작점이 없다")
     print(f"\n   ⚠ n={len(tight)} 로 작다. 아래 넓힌 표본과 **함께** 볼 것.\n")
 
-    print("①' 동작점 근방 — |LLI−17%| ≤ 2%p · |평균 LAM−13%| ≤ 2%p · noise 0")
+    print(f"①' 동작점 근방 — |LLI−17%| ≤ 2%p · |평균 LAM−13%| ≤ 2%p"
+          f" · noise {noise:g}")
     print("   (① 과 ② 사이 — 동작점을 크게 벗어나지 않으면서 n 을 키운다)\n")
     if len(near):
-        tn = gap_table(near, tol)
+        tn = gap_table(near, tol, bin_w)
         print(tn.to_string(index=False))
         out["near"]["table"] = tn.to_dict("records")
     else:
         print("   조건 없음")
     print()
 
-    print("② 넓힌 표본 — noise 0 · 복원가능군 (평균 LAM·LLI 전부)")
+    print(f"② 넓힌 표본 — noise {noise:g} · 복원가능군 (평균 LAM·LLI 전부)")
     print("   (n 은 크지만 22p 동작점이 아닌 조건이 섞인다)\n")
-    t2 = gap_table(wide, tol)
+    t2 = gap_table(wide, tol, bin_w)
     print(t2.to_string(index=False))
     out["wide"]["table"] = t2.to_dict("records")
 
@@ -290,20 +345,29 @@ def main() -> None:
     import argparse
 
     ap = argparse.ArgumentParser(description="22p 동작점 격차 복원력 분석")
-    ap.add_argument("--in", dest="in_dir", required=True)
+    ap.add_argument("--in", dest="in_dir", required=True, nargs="+",
+                    help="fit 디렉터리. 여러 개 주면 모아서 센다 (seed 스윕). "
+                         "실행마다 --noise-seed 가 달라야 한다 — 같으면 "
+                         "cond_id 가 겹쳐 멈춘다.")
     ap.add_argument("--objective", default="pocv_dvdq")
     ap.add_argument("--tol", type=float, default=0.02)
     ap.add_argument("--plot", default=None)
-    ap.add_argument("--restrict-to", dest="restrict_to", default=None,
+    ap.add_argument("--restrict-to", dest="restrict_to", default=None, nargs="+",
                     help="모집단을 맞출 기준 실행 디렉터리 (보통 grid 기준 fit). "
                          "half-cell 기준은 recoverable 이 True 로 고정되므로 "
                          "이걸 주지 않고 두 기준을 비교하면 안 된다.")
+    ap.add_argument("--noise", type=float, default=0.0,
+                    help="①·①'·② 가 볼 잡음 수준 (기본 0). seed 스윕은 "
+                         "noise>0 에서만 의미가 있다.")
+    ap.add_argument("--gap-bin", dest="bin_w", type=float, default=0.01,
+                    help="참 격차 bin 폭. 격자 간격과 맞아야 한다 "
+                         "(0.005 격자면 0.005). 안 맞으면 멈춘다.")
     ap.add_argument("--log-level", default="WARNING")
     args = ap.parse_args()
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
     run(args.in_dir, args.objective, args.tol, args.plot,
-        restrict_to=args.restrict_to)
+        restrict_to=args.restrict_to, noise=args.noise, bin_w=args.bin_w)
 
 
 if __name__ == "__main__":
