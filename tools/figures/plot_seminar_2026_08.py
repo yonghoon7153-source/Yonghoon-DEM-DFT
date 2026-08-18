@@ -177,31 +177,46 @@ def fig_periodic(pool="v2"):
 
 # ── 2. 어느 자리를 고르는가 ────────────────────────────────────────────────────
 def fig_site_choice():
+    """자리 선호 vs 이온 반지름.
+
+    ⚠⚠ 2026-08-18 정정 — 세 점은 **시드가 아니라 도핑 농도**다 (라벨 x002/x005/x010).
+      ⛔ 라벨을 **실제 x 로 읽지 말 것.** 실측된 한 건: `Y2O3_x005` = 47원자 셀에 Y 2개
+        = 4.3 at% = P 자리의 33 % (kb/results/site_preference_findings_2026_06_19.md).
+        다른 캠페인(cascade multi_category_v23)은 같은 라벨을 쓰면서 actual_x 가 셋 다
+        0.25 라 농도시리즈가 **무효**였다(hard_dopant_handling_protocol.md).
+        이 캠페인은 그게 아니다 — 26종 중 25종이 세 농도에서 dE 가 다르다(폭 중앙값 1.53 eV).
+      앞 판 캡션이 "spread across our three runs" 라고 했는데 **틀렸다.** 막대는 재현
+      산포가 아니라 **농도 의존성**이다. 그래서 막대가 0 을 걸치는 것은 잡음이 아니라
+      "농도에 따라 자리가 바뀐다" 는 실측이다 (1저자 지적: "B같은경우에는 P 경우도
+      Li 경우도 있어"). 26종 중 **6종**(Al·B·Cr·Ge·Ni·Sn)이 그렇다.
+    ⚠ 원소 기호와 이 함수의 ax.text 는 **점 라벨**이라 '그림 안 글씨 금지' 예외다.
+    """
     rows = _read(os.path.join(DB, "site_preference_raw_78.csv"))
-    by = {}
+    by, site = {}, {}
     for r in rows:
         try:
             rad, de = float(r["ionic_radius_6coord_A"]), float(r["dE_per_dopant_eV"])
         except (ValueError, KeyError):
             continue
         by.setdefault(r["M"], []).append((rad, de))
+        site.setdefault(r["M"], set()).add(r.get("preferred_site", ""))
     _rc()
     fig, ax = plt.subplots(figsize=(11.6, 5.2))
     ax.axhline(0, color=hs.INK, lw=1.2, zorder=2)
-    # ⚠ 원소 이름표는 **칸 라벨**이라 '그림 안 글씨 금지' 규칙의 예외다 (fig_periodic 과 같다).
-    #   문장은 넣지 않는다. 1저자 요청 2026-08-18: "원소 이름들 같은것도 옆에 안 거슬리게".
+    MIX = "#b45309"          # 농도에 따라 자리가 바뀌는 종 — 앰버, 속 빈 마커
     labels = []
     for m, v in by.items():
         rad = v[0][0]; des = [d for _, d in v]
-        mean = st.mean(des); col = GOOD if mean < 0 else BAD
-        ax.plot([rad, rad], [min(des), max(des)], color=col, lw=1.4, alpha=.45, zorder=3)
-        ax.scatter([rad], [mean], s=64, color=col, zorder=4, edgecolors="white", lw=1.0)
-        # 막대 **바깥**에 붙인다 — 위로 뻗은 것은 위에, 아래로 뻗은 것은 아래에.
-        # 이러면 점·오차막대를 가리지 않고, 부호가 다른 이웃끼리는 저절로 갈라진다
-        # (Sn↓/Ni↑ 는 반지름이 같은 0.690 인데 이 규칙만으로 안 겹친다).
+        mean = st.mean(des)
+        flips = len(site.get(m, set())) > 1
+        col = MIX if flips else (GOOD if mean < 0 else BAD)
+        ax.plot([rad, rad], [min(des), max(des)], color=col, lw=1.4,
+                alpha=.55 if flips else .45, zorder=3)
+        ax.scatter([rad], [mean], s=64, zorder=4, lw=1.4 if flips else 1.0,
+                   facecolors="white" if flips else col,
+                   edgecolors=col if flips else "white")
         up = mean >= 0
         labels.append([rad, (max(des) + 0.13) if up else (min(des) - 0.13), m, col, up])
-    # 같은 반지름·같은 부호로 여전히 겹치는 짝만 손으로 민다 (Co/Sc 0.745)
     labels.sort(key=lambda a: (a[0], a[1]))
     for i in range(1, len(labels)):
         x0, y0, _, _, u0 = labels[i - 1]
@@ -210,8 +225,16 @@ def fig_site_choice():
             labels[i][1] = y0 + (0.30 if u1 else -0.30)
     for x, y, m, col, up in labels:
         ax.text(x, y, m, ha="center", va="bottom" if up else "top",
-                fontsize=8.5, color=col, alpha=.85, zorder=5,
+                fontsize=8.5, color=col, alpha=.9, zorder=5,
                 fontweight="bold", clip_on=False)
+    # 범례 — 마커만. 설명 문장은 슬라이드 캡션이 진다.
+    from matplotlib.lines import Line2D
+    ax.legend(handles=[
+        Line2D([], [], marker="o", ls="", mfc=BAD, mec="white", ms=8, label="Li site"),
+        Line2D([], [], marker="o", ls="", mfc=GOOD, mec="white", ms=8, label="P framework"),
+        Line2D([], [], marker="o", ls="", mfc="white", mec=MIX, mew=1.4, ms=8,
+               label="changes with x"),
+    ], loc="lower right", frameon=False, fontsize=10, handletextpad=.4)
     ax.set_xlabel("Shannon ionic radius of the dopant cation  (6-coordinate, Å)")
     ax.set_ylabel("P framework site   ←     ΔE  (eV per dopant)     →   Li site")
     _bare(ax, grid="y")
