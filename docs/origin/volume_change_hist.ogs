@@ -1,0 +1,52 @@
+// volume_change_hist.ogs — Step 3 부피변화 분포 (구간화 CSV → Column chart) BML 포맷
+// 쓰는 법: 그래프 창 활성화 → Script Window 에 붙여넣고 Enter.
+// 전제: seminar_hist_volume_change.csv 를 넣고 bin_center_pct 를 X 로,
+//       n_carried_forward · n_dropped 를 Y 로 하는 Column chart 를 이미 만든 상태.
+// 이 스크립트가 **못 하는 것**: 막대 채움색·겹침·25 % 점선 → 아래 GUI 단계로.
+
+layer.unit = 3;
+layer.width = 12;
+layer.height = 9;
+page.margincontrol = 1;
+
+// ── X 축: 부피 변화 (%) ────────────────────────────────────────────────────
+layer.x.color = color(64,64,64);
+layer.x.thickness = 1;
+layer.x.ticks = 10;              // major out + minor out
+layer.x.ticklength = 6;
+layer.x.tickthickness = 1;
+layer.x.mticklength = 3;
+layer.x.label.font = font(arial);
+layer.x.label.pt = 28;
+layer.x.label.color = color(64,64,64);
+layer.x.from = 0;
+layer.x.to = 62;
+layer.x.inc = 10;
+
+// ── Y 축: 구조 수 ──────────────────────────────────────────────────────────
+layer.y.color = color(64,64,64);
+layer.y.thickness = 1;
+layer.y.ticks = 10;
+layer.y.ticklength = 6;
+layer.y.tickthickness = 1;
+layer.y.mticklength = 3;
+layer.y.label.font = font(arial);
+layer.y.label.pt = 28;
+layer.y.label.color = color(64,64,64);
+layer.y.from = 0;
+layer.y.to = 520;
+layer.y.inc = 100;
+
+// ── 위 / 오른쪽 축: 선만 ───────────────────────────────────────────────────
+layer.x2.showAxes = 3; layer.x2.color = color(64,64,64);
+layer.x2.thickness = 1; layer.x2.ticks = 0; layer.x2.showLabels = 0;
+layer.y2.showAxes = 3; layer.y2.color = color(64,64,64);
+layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
+
+// ── 축 제목 (열 이름이 그대로 올라오는 것을 덮는다) ─────────────────────────
+label -xb how far the cell volume moved during relaxation  (%);
+label -yl number of candidate structures;
+
+// ── 계열 색 ────────────────────────────────────────────────────────────────
+range r1 = 1!1;  set r1 -c color(37,99,235);    // #2563EB  carried forward
+range r2 = 1!2;  set r2 -c color(190,18,60);    // #BE123C  dropped
