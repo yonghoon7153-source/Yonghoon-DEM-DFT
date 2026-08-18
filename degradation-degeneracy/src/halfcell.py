@@ -501,6 +501,18 @@ def main() -> None:
         kw = {"v_lo": args.v_lo, "v_hi": args.v_hi, "c_rate": args.c_rate}
     # ★ 왜곡을 줬는데 method 가 ocpbias 가 아니면 **조용히 무시된다** — 그러면
     #   왜곡 없는 기준으로 민감도를 쟀다고 착각한다. 멈춘다.
+    # ★ 왜곡 0 인 ocpbias 캐시는 ocp 와 배열이 같아 쓸 데가 없는데, 만들어
+    #   두면 fit 쪽에서 --halfcell-arg 를 잊었을 때 **조용히 읽히는 미끼**가
+    #   된다 (그러면 민감도 0 을 보고한다). 미끼 자체를 만들지 않는다.
+    if args.method == "ocpbias" and not any(
+            v not in (None, 0.0) for v in (args.pe_offset_mv, args.ne_offset_mv)) \
+            and not any(v not in (None, 1.0) for v in (args.pe_stretch,
+                                                       args.ne_stretch)):
+        raise SystemExit("왜곡이 0 인 ocpbias 는 ocp 와 배열이 같습니다 — 만들 "
+                         "이유가 없고, 만들어두면 fit 이 --halfcell-arg 를 잊었을 "
+                         "때 이 캐시를 조용히 읽습니다.\n"
+                         "  왜곡을 주거나(--pe-offset-mv 10), 대조라면 "
+                         "--method ocp 를 쓰세요.")
     if args.method != "ocpbias" and any(
             v is not None for v in (args.pe_offset_mv, args.ne_offset_mv,
                                     args.pe_stretch, args.ne_stretch)):

@@ -235,3 +235,177 @@ def test_fitting_cli_accepts_ocpbias_method():
     out = subprocess.run([_s.executable, "-m", "src.fitting", "--help"],
                          cwd=root, capture_output=True, text=True).stdout
     assert "ocpbias" in out, f"fitting CLI 가 ocpbias 를 안 받는다\n{out}"
+
+
+# ── 왜곡 값이 **fit 까지** 가야 한다 (배선 2차 구멍) ────────────────────────
+#
+# ★ CLI 를 붙인 직후 경로를 손으로 따라가 발견. fitting 은 half-cell 캐시
+#   경로를 `halfcell_cache_path(base_cfg, method=halfcell_method)` 로 —
+#   **왜곡 인자 없이** — 계산한다 (src/fitting.py:591·711). 그런데 왜곡은
+#   recipe_hash 에 들어가므로 경로를 바꾼다. 따라서
+#   `--method ocpbias --pe-offset-mv 10` 으로 만든 캐시는 fitting 이 절대
+#   들여다보지 않는 파일이 되고, fitting 은 왜곡 0 인 기본 ocpbias 경로를 읽는다.
+#
+#   실패 방식이 최악이다: 대조(0mV)를 먼저 돌려 기본 경로를 채워두면 이후
+#   **모든** 왜곡 실행이 그 대조 캐시를 읽어 민감도 0 을 보고한다. 스윕 전체가
+#   "모델 오차는 이 결론을 안 흔든다" 는 거짓말이 되고, 파일·해시·서명은 전부
+#   정합하므로 F74 도 안 울린다.
+#
+#   막는 방법 두 가지를 같이 넣는다.
+#     (a) 왜곡 값을 fit 까지 관통시킨다 (`--halfcell-arg k=v`).
+#     (b) 왜곡 없는 ocpbias 는 `ocp` 와 배열이 같으므로 **쓸 이유가 없다** —
+#         기본값 그대로의 ocpbias 는 양쪽에서 거절한다. 그러면 (a) 를 잊었을 때
+#         조용히 대조를 읽는 대신 멈춘다. 대조는 `--method ocp` 로 돌린다.
+
+def test_fitting_cli_takes_the_perturbation_values():
+    """★ (a) — fit 쪽에 왜곡 값을 넘길 문법이 있어야 한다."""
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    out = subprocess.run([_s.executable, "-m", "src.fitting", "--help"],
+                         cwd=root, capture_output=True, text=True).stdout
+    assert "--halfcell-arg" in out, f"왜곡 값을 fit 에 넘길 방법이 없다\n{out}"
+
+
+def test_halfcell_kw_from_cli_selects_the_perturbed_cache_path():
+    """★ (a) 의 핵심 — 파싱된 값이 **다른 캐시 경로**를 골라야 한다.
+
+    이게 깨지면 fitting 이 대조 캐시를 읽고 민감도 0 을 보고한다.
+    """
+    from src.fitting import parse_halfcell_kw
+    from src.halfcell import halfcell_cache_path
+
+    kw = parse_halfcell_kw(["pe_offset_mv=10", "pe_stretch=0.97"])
+    assert kw == {"pe_offset_mv": 10.0, "pe_stretch": 0.97}, kw
+
+    cfg = _base_cfg()
+    assert halfcell_cache_path(cfg, None, "ocpbias", **kw) \
+        != halfcell_cache_path(cfg, None, "ocpbias"), \
+        "왜곡 값이 경로에 반영되지 않았다 — fitting 이 대조 캐시를 읽는다"
+
+
+def test_parse_halfcell_kw_rejects_malformed_and_unknown_keys():
+    """★ 조용히 무시되는 오타는 '왜곡을 줬다고 믿는' 실행을 만든다."""
+    import pytest as _pt
+
+    from src.fitting import parse_halfcell_kw
+
+    with _pt.raises(SystemExit):
+        parse_halfcell_kw(["pe_offset_mv"])          # = 없음
+    with _pt.raises(SystemExit):
+        parse_halfcell_kw(["pe_offset_mv=abc"])      # 숫자 아님
+    with _pt.raises(SystemExit):
+        parse_halfcell_kw(["pe_offset_volts=1"])     # recipe 에 없는 키
+
+
+def test_fitting_refuses_ocpbias_without_perturbation_values():
+    """★ (b) — 왜곡 없는 ocpbias 로 fit 하려 하면 **입력을 보기도 전에** 멈춘다."""
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    r = subprocess.run(
+        [_s.executable, "-m", "src.fitting", "--in", "results/__nonexistent__",
+         "--reference", "halfcell", "--halfcell-method", "ocpbias"],
+        cwd=root, capture_output=True, text=True)
+    assert r.returncode != 0
+    both = r.stdout + r.stderr
+    assert "--halfcell-arg" in both, f"거절 이유가 왜곡 값 누락이 아니다\n{both}"
+
+
+def test_run_sh_passes_halfcell_arg_to_fit():
+    """★ (a) — run.sh 도 관통시켜야 한다. 여러 개를 줄 수 있어야 한다."""
+    import os as _os
+    import subprocess
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    r = subprocess.run(
+        ["bash", "run.sh", "--mode", "fit", "--in", "results/x", "--out", "results/y",
+         "--reference", "halfcell", "--halfcell-method", "ocpbias",
+         "--halfcell-arg", "pe_offset_mv=10", "--halfcell-arg", "pe_stretch=0.97"],
+        cwd=root, capture_output=True, text=True,
+        env={**_os.environ, "RUN_SH_DRY": "1"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    assert "--halfcell-arg pe_offset_mv=10" in r.stdout, r.stdout
+    assert "--halfcell-arg pe_stretch=0.97" in r.stdout, r.stdout
+
+
+def test_halfcell_cli_refuses_a_no_op_ocpbias_cache():
+    """★ (b) 의 나머지 절반 — 대조 캐시를 **애초에 만들지 못하게** 한다.
+
+    기본값 그대로의 ocpbias 캐시가 디스크에 없으면, (a) 를 잊은 fit 은 캐시
+    부재로 F63 에 걸려 멈춘다. 즉 함정의 미끼 자체를 없앤다.
+    """
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    for extra in ([], ["--pe-offset-mv", "0", "--pe-stretch", "1.0"]):
+        r = subprocess.run(
+            [_s.executable, "-m", "src.halfcell", "--config", "configs/base.yaml",
+             "--method", "ocpbias", *extra],
+            cwd=root, capture_output=True, text=True)
+        assert r.returncode != 0, f"왜곡 0 인 ocpbias 가 통과했다 (extra={extra})"
+        assert "ocp" in (r.stdout + r.stderr)
+
+
+def test_fitting_looks_up_the_perturbed_cache_path(tmp_path):
+    """★ 위 두 테스트가 못 잡는 층 — **fitting 안에서** 경로를 계산하는 곳.
+
+    변이 시험(M40)으로 확인: `halfcell_cache_path(..., **halfcell_kw)` 에서
+    kwargs 를 빼도 위의 경로 테스트들은 전부 통과한다. 그 상태가 바로 왜곡을
+    줬는데 왜곡 0 캐시를 읽는 실행이다. 여기서는 캐시가 없을 때 F63 이 부르는
+    **경로 이름**으로 fitting 이 무엇을 찾았는지 못 박는다.
+    """
+    import pytest as _pt
+
+    import src.fitting as F
+    from src.halfcell import halfcell_cache_path
+
+    cfg = _base_cfg()
+    kw = {"pe_offset_mv": 10.0}
+    want = halfcell_cache_path(cfg, None, "ocpbias", **kw)
+    plain = halfcell_cache_path(cfg, None, "ocpbias")
+    assert want.name != plain.name
+
+    from tests.test_fitting import _tiny_curves
+    in_dir = _tiny_curves(tmp_path / "in", n=16, n_cond=2)
+
+    # F63(캐시 없음)이 경로를 말해주게 하려면 두 경로 모두 **없어야** 한다.
+    # 있으면 밀어두고 끝나면 되돌린다 — 저장소 .cache 를 건드리지 않는다.
+    moved = []
+    for q in (want, plain, want.with_name(want.stem + ".meta.yaml"),
+              plain.with_name(plain.stem + ".meta.yaml")):
+        if q.exists():
+            b = q.with_suffix(q.suffix + ".pytest-aside")
+            q.rename(b)
+            moved.append((b, q))
+
+    try:
+        _run_and_check(F, in_dir, tmp_path, kw, want, plain)
+    finally:
+        for b, q in moved:
+            b.rename(q)
+
+
+def _run_and_check(F, in_dir, tmp_path, kw, want, plain):
+    import pytest as _pt
+
+    with _pt.raises(RuntimeError) as e:
+        F.run_fit(in_dir, tmp_path / "out",
+                  {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                              "peak_weight": 1.0},
+                   "scaling": {"method": "reference_rmse"}},
+                  {"a": {"w_pocv": 1.0}},
+                  {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+                   "ub": [2.0, 1.0, 2.0, 1.0]},
+                  "expanded", 1, nproc=1, reference="halfcell",
+                  halfcell_method="ocpbias", halfcell_kw=kw)
+    msg = str(e.value)
+    assert want.name in msg, f"왜곡 캐시를 안 찾았다\n{msg}"
+    assert plain.name not in msg, f"왜곡 0 캐시를 찾고 있다\n{msg}"

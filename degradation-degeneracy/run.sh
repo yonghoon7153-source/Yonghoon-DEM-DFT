@@ -90,6 +90,8 @@ MODE
 fitting
   --objective LIST       pocv | pocv_dvdq | pocv_dvdq_dqdv | dqdv_only (콤마 다중)
                          기본: objectives.yaml 의 4종 전부
+  --halfcell-arg K=V     ocpbias 왜곡 값 (반복 가능). 캐시를 만들 때 준 값과
+                         같아야 한다. 예: --halfcell-arg pe_offset_mv=10
   --halfcell-method M    ocp (기본) | ocpbias — half-cell 기준 곡선 생성 method.
                          ocpbias 는 OCP 에 계통 왜곡을 넣어 모델 오차 민감도를
                          잰다 (왜곡 크기는 python -m src.halfcell 로 캐시 생성 시 지정)
@@ -146,6 +148,7 @@ EOF
 # ---------------------------------------------------------------- parse
 IN_DIR=""
 COMPARE_DIR=""
+HALFCELL_ARGS=()          # --halfcell-arg 는 여러 번 올 수 있다 (set -u 대비)
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --mode)          MODE="$2"; shift 2 ;;
@@ -171,6 +174,7 @@ while [[ $# -gt 0 ]]; do
     --limit)         LIMIT="$2"; shift 2 ;;
     --reference)     REFERENCE="$2"; shift 2 ;;
     --halfcell-method) HALFCELL_METHOD="$2"; shift 2 ;;
+    --halfcell-arg)  HALFCELL_ARGS+=("$2"); shift 2 ;;
     --w-grid)        W_GRID="$2"; shift 2 ;;
     --w-stride)      W_STRIDE="$2"; shift 2 ;;
     --backend)       BACKEND="$2"; shift 2 ;;
@@ -271,6 +275,11 @@ case "$MODE" in
     # ★ half-cell 기준 곡선의 생성 method. 기본 ocp, 민감도 시험은 ocpbias.
     #   src/fitting.py 는 진작 받고 있었는데 run.sh 가 안 넘겨서 쓸 수 없었다.
     [[ -n "${HALFCELL_METHOD:-}" ]] && FIT_ARGS+=(--halfcell-method "$HALFCELL_METHOD")
+    # ★ 왜곡 값. 이게 fit 까지 안 가면 fitting 은 왜곡 0 캐시 경로를 읽어
+    #   민감도 0 을 조용히 보고한다 (recipe_hash 가 경로에 들어가므로).
+    for _hca in "${HALFCELL_ARGS[@]:-}"; do
+      [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
+    done
     [[ -n "$LIMIT" ]] && FIT_ARGS+=(--limit "$LIMIT")
     [[ "$RESUME" == "true" ]] && FIT_ARGS+=(--resume)
     [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)

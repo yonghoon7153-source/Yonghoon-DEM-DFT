@@ -448,6 +448,50 @@ def _fit_one(task: dict) -> list[dict]:
     return rows
 
 
+def halfcell_path_for(cfg: dict, method: str, kw: dict | None):
+    """half-cell 캐시 경로를 계산하는 **단 한 곳**.
+
+    ★ fitting 은 경로를 두 번 계산한다 — 시작 봉인 때(원본 base config 로)와
+      읽을 때(스냅샷 config 로). 그 이중 계산은 F72 가 일부러 넣은 교차 검사라
+      없애지 않는다. 다만 예전에는 두 곳이 각자 `halfcell_cache_path(...)` 를
+      불렀고, **한쪽에만 왜곡 인자를 넣으면** 경로가 갈렸다. 갈린 채로도
+      두 번째가 첫 번째와 다르다는 검사에 걸려 죽긴 하지만, 애초에 갈릴 수
+      없게 한 곳으로 모은다. 검사가 보는 것은 여전히 '어느 config 에서 왔는가'다.
+    """
+    from src.halfcell import halfcell_cache_path
+
+    return halfcell_cache_path(cfg, method=method, **(kw or {}))
+
+
+def parse_halfcell_kw(items) -> dict:
+    """`--halfcell-arg k=v` 목록 → recipe kwargs.
+
+    ★ 왜곡 값이 fit 까지 안 오면 fitting 은 왜곡 **0** 인 기본 ocpbias 캐시
+      경로를 읽는다 (recipe_hash 가 경로에 들어가므로). 그러면 민감도 스윕이
+      전부 "변화 없음" 을 보고하고, 파일·해시·서명은 전부 정합해 F74 도
+      안 울린다. 값은 여기서 받아 경로 계산까지 그대로 흘린다.
+    """
+    from src.halfcell import RECIPE_DEFAULTS
+
+    kw: dict = {}
+    for item in items or []:
+        if "=" not in item:
+            raise SystemExit(f"--halfcell-arg 는 key=value 형식입니다: {item!r}")
+        k, _, v = item.partition("=")
+        k, v = k.strip(), v.strip()
+        try:
+            kw[k] = float(v)
+        except ValueError:
+            raise SystemExit(f"--halfcell-arg 값이 숫자가 아닙니다: {item!r}") from None
+    # 오타를 조용히 무시하면 "왜곡을 줬다" 고 믿는 대조 실행이 된다
+    known = set().union(*(set(d) for d in RECIPE_DEFAULTS.values()))
+    unknown = sorted(set(kw) - known)
+    if unknown:
+        raise SystemExit(f"recipe 에 없는 --halfcell-arg 키: {unknown} "
+                         f"(가능: {sorted(known)})")
+    return kw
+
+
 def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             bounds_preset: str, n_restarts: int, nproc: int,
             use_noisy: bool = True, limit: int | None = None,
@@ -455,7 +499,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
             resume: bool = False, subset: set | None = None,
             warm_start: bool = True, adaptive: bool = True,
             method: str = "Nelder-Mead",
-            halfcell_method: str = "ocp") -> dict:
+            halfcell_method: str = "ocp",
+            halfcell_kw: dict | None = None) -> dict:
     """grid 결과 전체에 fitting 수행 → fits.parquet.
 
     subset: 이 cond_id 집합만 fitting (Phase 6 가중치 sweep의 층화 표본용).
@@ -496,7 +541,8 @@ def run_fit(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: dict,
         return _run_fit_locked(in_dir, out_dir, obj_cfg, objectives, bounds,
                                bounds_preset, n_restarts, nproc, use_noisy,
                                limit, base_config, reference, resume, subset,
-                               warm_start, adaptive, method, halfcell_method)
+                               warm_start, adaptive, method, halfcell_method,
+                               halfcell_kw)
     finally:
         release_run_lock(out_dir, ".fit.lock")
 
@@ -508,7 +554,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                     resume: bool = False, subset: set | None = None,
                     warm_start: bool = True, adaptive: bool = True,
                     method: str = "Nelder-Mead",
-                    halfcell_method: str = "ocp") -> dict:
+                    halfcell_method: str = "ocp",
+                    halfcell_kw: dict | None = None) -> dict:
     """run_fit 본체. 호출자가 이미 .fit.lock 을 보유한 상태여야 한다."""
     import os
     import time
@@ -586,9 +633,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     _hc_pre, _hc_meta, _hc_recipe = None, None, None
     if reference == "halfcell":
         from src.config import load_config as _lc
-        from src.halfcell import halfcell_cache_path as _hcp
         from src.halfcell import halfcell_meta_path as _hmp
-        _hc_pre = _hcp(_lc(_bc_orig), method=halfcell_method)
+        _hc_pre = halfcell_path_for(_lc(_bc_orig), halfcell_method, halfcell_kw)
         _hc_meta = _hmp(_hc_pre)
         # ★ F63 — 캐시가 없으면 **여기서** 멈춘다.
         #   F58 이 "읽기 전에 봉인"으로 바꾸면서, 캐시가 없는 fresh clone 은
@@ -602,7 +648,9 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
                 f"half-cell 기준 캐시가 없습니다: {_hc_pre}\n"
                 f"  먼저 준비 단계를 실행하세요:\n"
                 f"    python -m src.halfcell --config "
-                f"{base_config or 'configs/base.yaml'} --method {halfcell_method}\n"
+                f"{base_config or 'configs/base.yaml'} --method {halfcell_method}"
+                + "".join(f" --{k.replace('_', '-')} {v}"
+                          for k, v in sorted((halfcell_kw or {}).items())) + "\n"
                 f"  (fitting 안에서 만들면 '무엇을 읽었는가'를 봉인할 수 없습니다 — F63)")
         # recipe 내용은 **스냅샷에서** 읽는다 (F72 — 8차 발견 3: 선읽은 메모리
         # 값이 run_spec 에 박혀, seal 직전 교체 시 SOLVER_A/B 불일치가 통과했다)
@@ -707,8 +755,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         # ★ F72 — 캐시도 **스냅샷에서** 읽는다. get_halfcell_reference() 는 경로를
         #   다시 계산해 원본을 읽으므로, 봉인과 읽기 사이가 다시 벌어진다.
         #   여기서는 이미 F63 이 존재를 보장했으므로 바이트를 그대로 로드한다.
-        from src.halfcell import HalfCellReference, halfcell_cache_path
-        hc_used = halfcell_cache_path(base_cfg, method=halfcell_method)
+        from src.halfcell import HalfCellReference
+        hc_used = halfcell_path_for(base_cfg, halfcell_method, halfcell_kw)
         if str(hc_used) != str(_hc_pre):
             raise RuntimeError(
                 f"half-cell 캐시 경로가 시작 봉인과 다릅니다: {_hc_pre} vs {hc_used}")
@@ -1065,11 +1113,32 @@ def main() -> None:
                          "--n-restarts 번 돈다 (공정 비교용). 기본은 켜짐")
     ap.add_argument("--halfcell-method", default="ocp", choices=["ocp", "ocpbias", "sim"],
                     help="half-cell 기준 캐시의 생성 방식 (F64: 서명에 들어간다)")
+    ap.add_argument("--halfcell-arg", dest="halfcell_arg", action="append", default=[],
+                    metavar="KEY=VALUE",
+                    help="ocpbias 왜곡 값 (반복 가능). 예: --halfcell-arg "
+                         "pe_offset_mv=10 --halfcell-arg pe_stretch=0.97. "
+                         "**캐시를 만들 때 준 값과 같아야 한다** — 다르면 그 "
+                         "경로에 캐시가 없어 멈춘다")
     ap.add_argument("--no-warm-start", dest="warm_start", action="store_false",
                     help="dQ/dV 목적함수에 매끄러운 해를 초기값으로 물려주지 않는다 "
                          "(F20 비교 실험용). 기본은 물려준다")
     ap.add_argument("--log-level", default="INFO")
     args = ap.parse_args()
+    halfcell_kw = parse_halfcell_kw(args.halfcell_arg)
+    # ★ 왜곡 없는 ocpbias 는 `ocp` 와 배열이 같다 (test_ocpbias_with_zero_
+    #   perturbation_equals_ocp). 즉 여기 오는 유일한 이유는 --halfcell-arg 를
+    #   **잊은** 것이고, 그대로 두면 왜곡 0 캐시를 읽어 민감도 0 을 보고한다.
+    #   입력을 보기도 전에 멈춘다. 대조 실행은 --halfcell-method ocp 로.
+    if args.halfcell_method == "ocpbias" and not halfcell_kw:
+        raise SystemExit(
+            "--halfcell-method ocpbias 인데 --halfcell-arg 가 없습니다. 왜곡 0 인 "
+            "ocpbias 는 ocp 와 완전히 같은 곡선이라, 이대로 두면 왜곡 없는 기준으로 "
+            "민감도를 쟀다고 착각하게 됩니다.\n"
+            "  왜곡 실행: --halfcell-arg pe_offset_mv=10 (캐시 생성 때와 같은 값)\n"
+            "  대조 실행: --halfcell-method ocp")
+    if args.halfcell_method != "ocpbias" and halfcell_kw:
+        raise SystemExit(f"--halfcell-arg 는 --halfcell-method ocpbias 에서만 "
+                         f"쓸 수 있습니다 (지금 {args.halfcell_method}).")
 
     logging.basicConfig(level=args.log_level,
                         format="%(asctime)s %(levelname)s %(name)s: %(message)s")
@@ -1100,6 +1169,7 @@ def main() -> None:
         adaptive=args.adaptive,
         method=str(fcfg.get("method", "Nelder-Mead")),   # F66b: config를 실제로 읽는다
         halfcell_method=args.halfcell_method,
+        halfcell_kw=halfcell_kw,
     )
     print(json.dumps(summary, ensure_ascii=False, indent=2))
 
