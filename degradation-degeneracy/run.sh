@@ -299,17 +299,57 @@ case "$MODE" in
     if [[ -n "$COMPARE_DIR" ]]; then
       python tools/compare_cases.py --grid "$D" --halfcell "$COMPARE_DIR"         --log-level "$LOG_LEVEL"
     fi
-    exec python tools/make_results.py --in "$D" --log-level "$LOG_LEVEL"
+    # ★ 18차 C 부수 발견 — `--mode report` 의 기본 출력은 **커밋된 정본**
+    #   `docs/RESULTS.md` 다. scratch 실행(테스트·임시 디렉터리)이 그대로
+    #   정본을 덮어썼다 (이 회차에 실제로 당했다). 정본 artifact 가 아니면
+    #   기본 경로로 쓰지 않는다.
+    REPORT_OUT="${REPORT_OUT:-}"
+    if [[ -z "$REPORT_OUT" ]]; then
+      case "$D" in
+        results/*|./results/*) REPORT_OUT="docs/RESULTS.md" ;;
+        *) REPORT_OUT="$D/RESULTS.md"
+           echo "  ℹ 정본 경로가 아닌 입력($D)이라 보고서를 $REPORT_OUT 에 씁니다."
+           echo "    정본을 갱신하려면 REPORT_OUT=docs/RESULTS.md 를 명시하세요." ;;
+      esac
+    fi
+    exec python tools/make_results.py --in "$D" --out "$REPORT_OUT" --log-level "$LOG_LEVEL"
     ;;
 
-  all)        # Phase 6 — grid -> fit -> score -> hessian -> report
+  all)        # grid -> fit -> score -> report
+    # 18차 C — 예전에는 사용자가 준 protocol 옵션(--objective·--n-restarts·
+    #   --clean·--no-adaptive·--no-warm-start·noise 축)을 하위 단계로 넘기지
+    #   않아, all 이 기본 protocol 로 돌면서 그 사실이 아무 데도 안 적혔다.
+    # 18차 발견 7 — Hessian 은 인용 범위 밖 부록이라 기본 체인에서 뺀다.
     D="$OUT"
     RESUME_FLAG=()
     [[ "$RESUME" == "true" ]] && RESUME_FLAG=(--resume)
-    "$0" --mode grid --config "$CONFIG" --nproc "$NPROC" --out "$D" "${RESUME_FLAG[@]}"
-    "$0" --mode fit --in "$D" --nproc "$NPROC" --bounds "$BOUNDS_PRESET" --reference "$REFERENCE" "${RESUME_FLAG[@]}"
+
+    GRID_ARGS=(--mode grid --config "$CONFIG" --nproc "$NPROC" --out "$D")
+    [[ "${NOISE_SET:-false}" == "true" ]] && GRID_ARGS+=(--noise "$NOISE")
+    [[ -n "${NOISE_SEED:-}" ]] && GRID_ARGS+=(--noise-seed "$NOISE_SEED")
+    GRID_ARGS+=("${RESUME_FLAG[@]}")
+
+    FIT_ARGS=(--mode fit --in "$D" --nproc "$NPROC"
+              --bounds "$BOUNDS_PRESET" --reference "$REFERENCE")
+    [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
+    [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
+    [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)
+    [[ "$ADAPTIVE" == "false" ]] && FIT_ARGS+=(--no-adaptive)
+    [[ "$WARM_START" == "false" ]] && FIT_ARGS+=(--no-warm-start)
+    FIT_ARGS+=("${RESUME_FLAG[@]}")
+
+    # 전파를 실제 실행 없이 검사할 수 있게 한다 (회귀: tests/test_runner.py)
+    if [[ "${RUN_SH_DRY:-0}" == "1" ]]; then
+      echo "${GRID_ARGS[*]}"
+      echo "${FIT_ARGS[*]}"
+      echo "--mode score --in $D"
+      echo "--mode report --in $D"
+      exit 0
+    fi
+
+    "$0" "${GRID_ARGS[@]}"
+    "$0" "${FIT_ARGS[@]}"
     "$0" --mode score --in "$D"
-    "$0" --mode hessian --in "$D"
     exec "$0" --mode report --in "$D"
     ;;
 

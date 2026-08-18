@@ -392,8 +392,49 @@ finally:
 PYEOF
 [[ $? -eq 0 ]] || bad "파생 변조 검출 실패"
 
-# ───────────────────────────────────── 8. 보관 → 빈 격리 root 복원 → 검증 → 재채점
-step "8. 보관 → 격리 복원 → 검증 → 재채점"
+# ─────────────────────────────── 8. Hessian: 분리배치 해석 + 채점 산출물 불변 (18차 C)
+step "8. Hessian — 분리배치 곡선 해석 · 채점 산출물 불변"
+
+# 분리 배치 재현: fit 디렉터리에서 곡선을 치우고 **봉인 스냅샷**만 남긴다
+HDIR="$BASE/hess"
+rm -rf "$HDIR"; cp -a "$GFIT" "$HDIR"
+rm -f "$HDIR/curves.parquet"
+if [[ ! -d "$HDIR/_inputs" ]] || ! ls "$HDIR/_inputs"/*_curves.parquet >/dev/null 2>&1; then
+  bad "smoke fixture 에 봉인 곡선 스냅샷이 없다 (18차 A 를 검사할 수 없다)"
+else
+  _ds_before="$("$PY" -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" "$HDIR/degeneracy_summary.yaml" 2>/dev/null || echo none)"
+
+  # A — 분리 배치에서 곡선을 스스로 찾아 돈다
+  if "$PY" -m src.hessian --in "$HDIR" --n-sample 3 >/dev/null 2>&1; then
+    ok "분리배치 Hessian (봉인 _inputs 곡선 자동 해석, 18차 A)"
+  else
+    bad "분리배치 Hessian 실패 — 봉인 곡선을 해석하지 못했다 (18차 A)"
+  fi
+
+  # B — 채점 산출물을 변이시키지 않는다
+  _ds_after="$("$PY" -c "import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],'rb').read()).hexdigest())" "$HDIR/degeneracy_summary.yaml" 2>/dev/null || echo none)"
+  [[ "$_ds_before" == "$_ds_after" ]] \
+    && ok "Hessian 이 degeneracy_summary.yaml 을 건드리지 않음 (18차 B)" \
+    || bad "Hessian 이 채점 산출물을 변이시켰다 (18차 B)"
+
+  [[ -f "$HDIR/hessian_summary.yaml" ]] \
+    && ok "Hessian sidecar 기록" || bad "hessian_summary.yaml 이 없다"
+
+  # C — score → hessian → report 순서에서 보고서가 stale 로 찍히지 않는다
+  "$PY" -m tools.compare_objectives --in "$HDIR" --out "$HDIR" >/dev/null 2>&1
+  if "$PY" tools/make_results.py --in "$HDIR" --out "$BASE/R_hess.md" >/dev/null 2>&1; then
+    if grep -q "파생_stale_degeneracy_summary.yaml" "$BASE/R_hess.md"; then
+      bad "score→hessian→report 순서가 보고서를 stale 로 만들었다 (18차 B·C)"
+    else
+      ok "score → hessian → report 순서에 stale 없음 (18차 C)"
+    fi
+  else
+    bad "Hessian 뒤 보고서 생성 실패"
+  fi
+fi
+
+# ───────────────────────────────────── 9. 보관 → 빈 격리 root 복원 → 검증 → 재채점
+step "9. 보관 → 격리 복원 → 검증 → 재채점"
 "$PY" -m tools.archive_bundle bundle "$HFIT" "$BASE/art" >/dev/null \
   && ok "bundle (halfcell)" || bad "bundle 실패"
 "$PY" -m tools.archive_bundle bundle "$GFIT" "$BASE/art_g" >/dev/null \
