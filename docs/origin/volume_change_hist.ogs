@@ -44,7 +44,7 @@ layer.y2.showAxes = 3; layer.y2.color = color(64,64,64);
 layer.y2.thickness = 1; layer.y2.ticks = 0; layer.y2.showLabels = 0;
 
 // ── 축 제목 (열 이름이 그대로 올라오는 것을 덮는다) ─────────────────────────
-label -xb how far the cell volume moved during relaxation  (%);
+label -xb cell volume change during relaxation  (%);
 label -yl number of candidate structures;
 
 // ── 계열 색 ────────────────────────────────────────────────────────────────

@@ -102,7 +102,10 @@ def scan(path: Path):
             if k != KB_CANON:
                 warn.append((rel, i, f"kB {k} → {KB_CANON} 권고 (상대차 1e-7, 무해)"))
         # 영국식 철자 — **문자열 리터럴 안**만 본다 (화면에 나가는 글)
-        if rel.startswith(("tools/seminar", "tools/figures")):
+        #   `brit-ok: <사유>` 주석이 그 줄이나 바로 윗줄에 있으면 건너뛴다. 철자를
+        #   **찾아내는 쪽** 코드(검출 단어 목록)가 스스로에게 걸리는 것을 막는다.
+        if rel.startswith(("tools/seminar", "tools/figures")) and not BRIT_OK.search(
+                line + "\n" + (text.splitlines()[i - 2] if i >= 2 else "")):
             for q in _re.findall(r"[\"']([^\"']{4,})[\"']", line):
                 for w in BRIT_RE.findall(q):
                     warn.append((rel, i, f"영국식 철자 '{w}' → '{BRIT_US[w.lower()]}' "
@@ -133,6 +136,8 @@ BRIT_US = {
     "defence": "defense", "fibre": "fiber", "utilise": "utilize",
 }
 BRIT_RE = _re.compile(r"\b(" + "|".join(sorted(BRIT_US, key=len, reverse=True)) + r")\b", _re.I)
+#: 철자 검사를 끄는 표시 — 사유를 뒤에 적는다 (`# brit-ok: 검출용 단어 목록`).
+BRIT_OK = _re.compile(r"brit-ok\s*:")
 
 
 def check(root=None):
@@ -215,6 +220,29 @@ def selftest():
             hit = any("raw `dopant`" in v[2] for v in scan(f)[0])
             ok &= (hit == want)
             print(("  ✓ " if hit == want else "  ✗ ") + f"[raw-dopant] {nm}")
+
+    # ── ⑤ 영국식 철자 (2026-08-18) ────────────────────────────────────────
+    #   이 규칙은 rel 경로가 tools/figures|seminar 로 시작할 때만 돈다 → 임시
+    #   디렉터리로는 못 시험한다. 진짜 경로에 잠깐 파일을 놓고 반드시 지운다.
+    probe = REPO / "tools" / "figures" / "_conv_probe_tmp.py"
+    try:
+        for nm, body, want in (
+            ("문자열 안 영국식을 잡는다", 'ax.set_xlabel("coloured by site")', True),
+            ("음성: 미국식은 통과", 'ax.set_xlabel("colored by site")', False),
+            ("음성: 주석은 안 본다 (화면에 안 나감)", '# coloured 라고 쓰지 말 것', False),
+            ("음성: brit-ok 가 같은 줄에 있으면 통과",
+             'W = ("coloured", "colour")  # brit-ok: 검출용 단어 목록', False),
+            ("음성: brit-ok 가 윗줄에 있어도 통과",
+             '# brit-ok: 검출용 단어 목록\nW = ("coloured", "colour")', False),
+            ("brit-ok 가 두 줄 위면 다시 잡는다",
+             '# brit-ok: 사유\nx = 1\nW = ("coloured", "colour")', True),
+        ):
+            probe.write_text(body + "\n", encoding="utf-8")
+            hit = any("영국식 철자" in w[2] for w in scan(probe)[1])
+            ok &= (hit == want)
+            print(("  ✓ " if hit == want else "  ✗ ") + f"[영국식 철자] {nm}")
+    finally:
+        probe.unlink(missing_ok=True)
 
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1

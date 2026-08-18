@@ -331,7 +331,16 @@ def fig_screen_axes():
     keep = [(x, y) for x, y in zip(xs, ys) if x <= CUT]
     drop = [(x, y) for x, y in zip(xs, ys) if x > CUT]
     _rc()
-    fig, ax = plt.subplots(figsize=(9.2, 4.6))
+    # ⚠ 슬라이드에서 Origin 판 히스토그램과 **나란히** 놓인다 (2026-08-18). 이 그림은
+    #   기본값(14/12)으로는 왼쪽 Origin 판보다 작아 보인다. 한 단계만 올린다.
+    #   ⚠ 크게 올리면 안 된다 — bbox_inches="tight" 라 라벨이 캔버스를 먹어 플롯이
+    #     쪼그라든다 (24 pt 로 올렸다가 실제로 그랬다).
+    #   ⚠ 축 라벨을 길게 쓰면 폰트를 안 올려도 같은 일이 난다 — 세로 라벨이 축보다
+    #     길어지면 캔버스가 위아래로 늘어나 플롯이 가운데서 쪼그라든다. 짧게 쓴다
+    #     ("this screen only" 단서는 슬라이드 불릿이 진다).
+    plt.rcParams.update({"font.size": 16, "axes.labelsize": 17,
+                         "xtick.labelsize": 15, "ytick.labelsize": 15})
+    fig, ax = plt.subplots(figsize=(9.2, 5.6))
     ax.scatter([x for x, _ in keep], [y for _, y in keep], s=7, alpha=.28,
                color=GOOD, lw=0, zorder=2, label=f"kept ({len(keep):,})")
     ax.scatter([x for x, _ in drop], [y for _, y in drop], s=20, alpha=.9,
@@ -340,11 +349,13 @@ def fig_screen_axes():
     # 에너지로 잘랐다면 어디였을지 — 같은 개수만큼 위에서 자른 선
     thr = sorted(ys, reverse=True)[len(drop) - 1]
     ax.axhline(thr, color=hs.MUT, lw=1.1, ls=":", zorder=3)
-    ax.set_xlabel("how far the cell volume moved during relaxation  (%)")
-    ax.set_ylabel("relative energy per atom  (eV, this screen only)")
-    ax.legend(loc="lower left", frameon=False, fontsize=10, markerscale=1.6)
+    ax.set_xlabel("cell volume change during relaxation  (%)")
+    ax.set_ylabel("relative energy per atom  (eV)")
+    ax.legend(loc="lower left", frameon=False, fontsize=15, markerscale=2.4)
     _bare(ax, grid="y")
-    return _save(fig, "step3_screen_axes.png")
+    out = _save(fig, "step3_screen_axes.png")
+    _rc()                      # 다음 그림을 위해 기본값 복구
+    return out
 
 
 # ── 3. 음이온이 실제로 앉은 자리 ───────────────────────────────────────────────
@@ -525,7 +536,7 @@ def fig_screen_survival():
             label="dropped (> 25 %)")
     ax.axvline(25, color=hs.INK, ls="--", lw=1.5, zorder=5)
     ax.legend(frameon=False, fontsize=13, loc="upper right", bbox_to_anchor=(1.0, .78))
-    ax.set_xlabel("how far the cell volume moved during relaxation  (%)")
+    ax.set_xlabel("cell volume change during relaxation  (%)")
     ax.set_ylabel("number of candidate structures")
     _bare(ax, grid="y")
     return _save(fig, "step3_survival.png")

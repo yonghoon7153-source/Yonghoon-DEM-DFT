@@ -227,8 +227,8 @@ def selftest():
     # 음성 — 영국식 철자가 슬라이드 문장에 섞이면 안 된다 (1저자 지적 2026-08-18)
     allt = " ".join(plain(v) for S in SLIDES.values() for k, v in S.items()
                     if isinstance(v, str))
-    brit = [w for w in ("coloured", "colour", "centre", "labelled", "analyse",
-                        "behaviour", "normalise") if w in allt.lower()]
+    brit = [w for w in ("coloured", "colour", "centre", "labelled", "analyse",   # brit-ok: 검출용 단어 목록
+                        "behaviour", "normalise") if w in allt.lower()]          # brit-ok: 검출용 단어 목록
     chk(not brit, f"음성: 영국식 철자 없음 ({brit})")
 
     print(f"\nselftest: {ok} passed, {fail} failed")
