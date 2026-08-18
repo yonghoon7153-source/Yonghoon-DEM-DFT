@@ -121,7 +121,7 @@ def fig_periodic():
                 best[m] = x
 
     lo = min(x["comp"] for x in D); hi = max(x["comp"] for x in D)
-    cmap = _plt.cm.RdYlGn
+    cmap = hs.score_cmap()          # RdYlGn 대체 — 적록색맹·인쇄·house 색 (house_style)
     _rc()
     fig, ax = _plt.subplots(figsize=(14.5, 6.6))
     for el, (c, r) in PT.items():
@@ -129,14 +129,17 @@ def fig_periodic():
             x = best[el]
             t = (x["comp"] - lo) / (hi - lo)
             col = cmap(t)
-            dark = t < 0.16 or t > 0.84          # 진한 빨강·초록 위에서는 흰 글씨
+            # ⚠ 글자색을 칸 색에서 정한다 (2026-08-18). 앞 판은 늘 INK 라 진한 칸
+            #   (Sc·Cr·Cu·Gd)의 기호와 점수가 슬라이드에서 안 읽혔다.
+            fg = hs.on_fill(col)
+            sub = fg if fg != hs.INK else "#4b5563"
             ax.add_patch(_R((c, -r), 0.92, 0.92, facecolor=col, edgecolor="#374151", lw=0.9))
             ax.text(c + 0.46, -r + 0.63, el, ha="center", va="center",
-                    fontsize=15, fontweight="bold", color=hs.INK)
+                    fontsize=15, fontweight="bold", color=fg)
             ax.text(c + 0.46, -r + 0.34, f"{x['comp']:.2f}", ha="center", va="center",
-                    fontsize=11, color=hs.INK)
+                    fontsize=11, color=fg)
             ax.text(c + 0.46, -r + 0.13, f"de {x['de']:+.1f}", ha="center", va="center",
-                    fontsize=8, color=("#f8fafc" if dark else "#4b5563"))
+                    fontsize=8, color=sub)
         else:
             ax.add_patch(_R((c, -r), 0.92, 0.92, facecolor="#f1f5f9",
                             edgecolor="#cbd5e1", lw=0.7))
@@ -147,6 +150,9 @@ def fig_periodic():
     cb = fig.colorbar(sm, ax=ax, fraction=0.022, pad=0.01)
     cb.set_label("composite score  (2026-06-29 snapshot)", fontsize=12)
     cb.ax.tick_params(labelsize=10)
+    # ⚠ 파일명에 **빌드 날짜**를 박되 컬러바 라벨은 **데이터 날짜**를 유지한다.
+    #   둘은 다른 것이고, 섞으면 6월 점수가 8월 결과로 읽힌다 (오늘 β 0.77 사고와 같은 종류).
+    _save(fig, "roster_periodic_table_build_2026-08-18.png")
     return _save(fig, "roster_periodic_table.png")
 
 

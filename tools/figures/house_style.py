@@ -68,3 +68,44 @@ def gap_band(ax, vbm=0.0, cbm=None, gap=None, label=True, y=None, fontsize=12):
         ax.text((vbm + hi) / 2, yy, f"gap {hi - vbm:.3f} eV", ha="center",
                 fontsize=fontsize, color=GAPTEXT, fontweight="bold")
     return ax
+
+
+# ── 점수 지도용 컬러맵 (2026-08-18) ──────────────────────────────────────────
+#  RdYlGn 을 대체한다. 세 가지 이유:
+#   ① 채도가 너무 높아 슬라이드에서 촌스럽고, 인쇄하면 초록이 뭉갠다.
+#   ② 적록색맹이 양 끝을 못 가른다 — 이 그림은 **양 끝이 곧 메시지**다.
+#   ③ 양 끝이 house 색과 무관했다. crimson(#be123c)·teal(#0d9488) 로 맞춘다.
+#  ⚠ 낮은 쪽은 **빨강을 유지**한다 — 대본이 "late transition metals sit together
+#    in red" 라고 말한다. 색을 바꾸면 대본이 깨진다.
+_SCORE_STOPS = [
+    (0.00, "#a4133c"),   # deep crimson — 낮은 점수
+    (0.28, "#e07a5f"),   # terracotta
+    (0.50, "#ead7bb"),   # warm sand (중립)
+    (0.72, "#5fa8a0"),
+    (1.00, "#0d9488"),   # teal — 높은 점수
+]
+
+
+def score_cmap():
+    """낮음(crimson) → 중립(sand) → 높음(teal) 발산형 컬러맵."""
+    from matplotlib.colors import LinearSegmentedColormap
+    return LinearSegmentedColormap.from_list(
+        "bml_score", [(p, c) for p, c in _SCORE_STOPS])
+
+
+def on_fill(rgba):
+    """그 배경 위에 **읽히는** 글자색. 밝으면 INK, 어두우면 흰색.
+
+    ⚠ 2026-08-18 실측 — 앞 판은 칸 색과 무관하게 늘 INK 를 썼다. 그래서 진한
+      칸(Sc·Cr·Cu·Gd)의 원소 기호와 점수가 슬라이드에서 안 읽혔다. 밝기 문턱을
+      눈대중으로 잡으면 경계에서 또 틀리므로 상대휘도(WCAG)로 계산한다.
+      문턱 0.179 는 임의값이 아니라 **흰 글씨와 검은 글씨의 대비가 같아지는 점**이다:
+      (L+0.05)² = 1.05×0.05  →  L = 0.179.
+    """
+    r, g, b = rgba[0], rgba[1], rgba[2]
+
+    def _lin(c):
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+    lum = 0.2126 * _lin(r) + 0.7152 * _lin(g) + 0.0722 * _lin(b)
+    return "#f8fafc" if lum < 0.179 else INK
