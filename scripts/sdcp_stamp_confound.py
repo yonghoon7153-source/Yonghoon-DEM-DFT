@@ -50,18 +50,41 @@ def build(vox, origin, length_um, am, se, sdcp_c, mode, lattice_shift=None):
     sid = rasterize_spheres(vox, origin, length_um, [(se[0], se[1], SID_SE),
                                                      (am[0], am[1], SID_AM)],
                             lattice_shift=sh)
-    n = sid.shape[0]
+    #  ★★ 2026-08-18 (심층 리뷰 ② B1) — **축별** 크기로 클립한다.
+    #    옛 판은 `n = sid.shape[0]` 하나로 세 축을 전부 클립했다.  `rasterize_spheres` 는
+    #    **이동한 축만** +1 셀을 주므로(step3_transport_resolution.py:79) sh=(h,0,0) 이면
+    #    격자가 (134, 133, 133) 인데 y·z 를 134 로 클립해 **범위 밖 인덱스가 통과**한다.
+    #    재현: `--len-um 20 --vox 0.15`, sh=(0.075,0,0) →
+    #      IndexError: index 133 is out of bounds for axis 1 with size 133
+    #    ⇒ CL-31 이 "진행중" 이라 적어둔 vox 0.2/0.15 팔은 **오늘 그대로 죽는다**.
+    #    (docstring 기본 `--len-um 12` 는 12/0.15=80 이 정수라 우연히 안 죽어 selftest 가 놓쳤다.)
+    n3 = np.array(sid.shape)
     if mode == 'sphere':
+        #  ★★ 생산 게이트 미러 (리뷰 ② B2) — 옛 판에는 **게이트가 없었다**.
+        #    셀-중심-in-구 래스터는 d/vox 가 작으면 입자를 통째로 잃는다.  실측(입자 5,659):
+        #      vox 0.4  d/vox 0.75 → 셀0 입자 **78.7 %** (부피/참 0.961 — 총 부피는 멀쩡해 보인다)
+        #      vox 0.3  1.00 → **47.8 %** (0.991) · vox 0.25 1.20 → **19.3 %** (1.006)
+        #      vox 0.2  1.50 →   1.0 % (1.000) · vox 0.15 2.00 → **0.0 %** (0.979)
+        #    ⇒ 총 부피비가 1 근처라 **눈에 안 띈다** — 살아남은 입자가 정확히 1 셀씩 먹어
+        #      상쇄하기 때문이다.  그러나 공간 분포는 "입자의 78 % 를 무작위로 지운 것" 이다.
+        #    생산(step3_sigma.py:286)이 fail-closed 로 막는 영역을 여기서만 열어두면
+        #      두 도구가 **다른 것을 재고도 같은 이름으로 보고**하게 된다.
+        if len(sdcp_c) and SDCP_D_UM / vox < 2.0:
+            raise ValueError(
+                f'구 스탬프 d/vox = {SDCP_D_UM / vox:.2f} < 2 거부 (생산 게이트와 동일).  '
+                f'이 격자에서는 입자의 상당수가 셀 0 개가 된다 — 총 부피비는 1 근처라 '
+                f'멀쩡해 보이지만 공간 분포가 틀린다.  vox ≤ {SDCP_D_UM / 2:.3f} µm 를 쓸 것')
         r = np.full(len(sdcp_c), SDCP_D_UM / 2.0)
         add = rasterize_spheres(vox, origin, length_um, [(sdcp_c, r, SID_SDCP)],
                                 lattice_shift=sh)
         sid[add == SID_SDCP] = SID_SDCP
     elif mode == 'point':
         #  격자 위상 이동 = 셀 경계가 −s 만큼 밀린 것과 같다 → floor((p−origin+s)/vox)
+        #  ⚠ 사전 창(`rel < length_um + sh`)은 지웠다 — 축별 클립이 유일한 판정자여야
+        #    구 경로(rasterize_spheres 도 n3 로 클립)와 **같은 입자 집합**이 된다.
         rel = np.asarray(sdcp_c, float) - np.asarray(origin, float) + sh
-        m = ((rel >= 0) & (rel < length_um + sh)).all(1)
-        ijk = np.floor(rel[m] / vox).astype(int)
-        ijk = ijk[((ijk >= 0) & (ijk < n)).all(1)]
+        ijk = np.floor(rel / vox).astype(int)
+        ijk = ijk[((ijk >= 0) & (ijk < n3)).all(1)]
         if len(ijk):
             sid[ijk[:, 0], ijk[:, 1], ijk[:, 2]] = SID_SDCP
     return sid
@@ -76,35 +99,57 @@ def run(am, se, sdcp_c, base_origin, length_um, voxes, n_origin=8):
     for vox in voxes:
         import itertools as _it
         shifts = [np.array(t) for t in _it.product((0.0, vox / 2.0), repeat=3)][:n_origin]
-        res = {}
+        res, gate = {}, None
         for mode in ('none', 'sphere', 'point'):
-            vals, vol = [], []
-            for sh in shifts:
-                sid = build(vox, base_origin, length_um, am, se, sdcp_c, mode,
-                            lattice_shift=sh)
-                vals.append(float(solve_sigma_z(sid, sig, vox)['sigma_eff']))
-                vol.append(float((sid == SID_SDCP).sum()) * vox ** 3)
-            res[mode] = (np.array(vals), float(np.mean(vol)))
-        rows.append({
+            vals, vol, unc = [], [], []
+            try:
+                for sh in shifts:
+                    sid = build(vox, base_origin, length_um, am, se, sdcp_c, mode,
+                                lattice_shift=sh)
+                    r_ = solve_sigma_z(sid, sig, vox, area_um2=length_um * length_um)
+                    vals.append(float(r_['sigma_eff']))
+                    vol.append(float((sid == SID_SDCP).sum()) * vox ** 3)
+                    #  ★ 미수렴을 **버리지 않는다** (리뷰 ② H2) — 옆 도구
+                    #    `step3_transport_resolution.py:117` 는 이미 이것을 읽는데 여기만 빠졌다.
+                    unc.append(bool(r_.get('unconverged'))
+                               or int(r_.get('cg_info', 0) or 0) != 0)
+            except ValueError as _e:                       # 구 게이트 (d/vox < 2)
+                gate = str(_e)
+                res[mode] = None
+                continue
+            res[mode] = {'sig': np.array(vals), 'vol': float(np.mean(vol)) if vol else 0.0,
+                         'unconverged': bool(any(unc))}
+        row = {
             'vox': float(vox),
             'sdcp_d_per_dx': float(f'{SDCP_D_UM / vox:.3f}'),
-            'sigma_e_none': float(f'{res["none"][0].mean():.6g}'),
-            'sigma_e_sphere': float(f'{res["sphere"][0].mean():.6g}'),
-            'sigma_e_point': float(f'{res["point"][0].mean():.6g}'),
-            'origin_spread_point_pct': float(
-                f'{(res["point"][0].max() / max(res["point"][0].min(), 1e-30) - 1) * 100:.3g}'),
-            'vol_sphere_um3': float(f'{res["sphere"][1]:.4g}'),
-            'vol_point_um3': float(f'{res["point"][1]:.4g}'),
-            'vol_point_over_true': float(f'{res["point"][1] / (len(sdcp_c) * V_true):.3f}'),
-            'vol_sphere_over_true': float(f'{res["sphere"][1] / (len(sdcp_c) * V_true):.3f}'),
-        })
-    for r in rows:
-        base = r['sigma_e_none']
-        r['gain_sphere_pct'] = float(f'{(r["sigma_e_sphere"] / base - 1) * 100:.4g}') if base > 0 \
-            else None
-        r['gain_point_pct'] = float(f'{(r["sigma_e_point"] / base - 1) * 100:.4g}') if base > 0 \
-            else None
-        r['point_over_sphere'] = float(f'{r["sigma_e_point"] / max(r["sigma_e_sphere"], 1e-30):.4g}')
+            'sphere_gate_rejected': gate,
+            'unconverged_any': bool(any(v['unconverged'] for v in res.values() if v)),
+        }
+        for mode in ('none', 'sphere', 'point'):
+            v = res.get(mode)
+            row[f'sigma_e_{mode}'] = float(f'{v["sig"].mean():.6g}') if v else None
+            #  ★ origin 폭을 **세 팔 모두** 보고한다 (리뷰 ② H5) — 옛 판은 point 만 봐서
+            #    "구 팔이 격자에 안정" 을 이 도구로 검증할 수 없었다.
+            row[f'origin_spread_{mode}_pct'] = float(
+                f'{(v["sig"].max() / max(v["sig"].min(), 1e-30) - 1) * 100:.3g}') if v else None
+            if mode != 'none':
+                row[f'vol_{mode}_um3'] = float(f'{v["vol"]:.4g}') if v else None
+                row[f'vol_{mode}_over_true'] = float(
+                    f'{v["vol"] / (len(sdcp_c) * V_true):.3f}') if v else None
+        #  ★ 이득은 **쌍대응**으로 — 같은 origin 끼리 나눈 뒤 평균/SE (리뷰 ② H4).
+        #    옛 판은 ratio-of-means 를 4자리로 인용했는데 불확실도가 없었다.  실침대
+        #    캠페인(CL-33/34)은 이미 쌍대응 SE 를 정본으로 못박았다 — 같은 규율을 여기에도.
+        b = res.get('none')
+        for mode in ('sphere', 'point'):
+            v = res.get(mode)
+            if not (b and v):
+                row[f'gain_{mode}_pct'], row[f'gain_{mode}_se_pct_pt'] = None, None
+                continue
+            g = (v['sig'] / np.maximum(b['sig'], 1e-30) - 1.0) * 100.0
+            row[f'gain_{mode}_pct'] = float(f'{g.mean():.4g}')
+            row[f'gain_{mode}_se_pct_pt'] = float(
+                f'{g.std(ddof=1) / np.sqrt(len(g)):.3g}') if len(g) > 1 else None
+        rows.append(row)
     return rows
 
 
@@ -150,6 +195,48 @@ def _selftest():
         lost[0.4] > 0.7)
     chk(f'③b vox 0.15 (Ø/dx = 2) 에서는 아무도 안 잃는다 ({lost[0.15]:.0%})', lost[0.15] == 0.0)
     _ = R
+
+    # ── ④ **재현 회귀** (심층 리뷰 ② B1) — `build()` 를 실제로 부른다.
+    #    옛 selftest 는 build() 를 한 번도 호출하지 않아 이 결함을 원리적으로 못 잡았다.
+    #    L/vox 가 정수가 아니고 한 축만 이동하면 축별 격자 크기가 갈리는데 옛 판은
+    #    `sid.shape[0]` 하나로 세 축을 클립해 범위 밖 인덱스를 통과시켰다.
+    rng = np.random.default_rng(0)
+    L, VOX = 20.0, 0.15                                  # 20/0.15 = 133.33 (비정수)
+    o = np.zeros(3)
+    _am = (rng.uniform(0, L, (12, 3)), np.full(12, 2.0))
+    _se = (rng.uniform(0, L, (60, 3)), np.full(60, 0.5))
+    _c = rng.uniform(0, L, (4000, 3))
+    _sids = {}
+    try:
+        for _s in ([0., 0., 0.], [VOX / 2, 0., 0.], [0., VOX / 2, 0.], [0., 0., VOX / 2]):
+            _sids[tuple(_s)] = build(VOX, o, L, _am, _se, _c, 'point',
+                                     lattice_shift=np.array(_s))
+        chk('④ build(point) 가 비정수 L/vox × 한-축 이동에서 IndexError 를 안 낸다', True)
+    except IndexError as _e:
+        chk(f'④ build(point) IndexError: {_e}', False)
+    #  ④b 축별 격자 크기가 실제로 갈린다 (그래야 ④ 가 의미 있는 회귀다)
+    chk('④b sh=(h,0,0) 에서 격자가 (134,133,133) 로 갈린다',
+        _sids.get((VOX / 2, 0., 0.), np.zeros((1, 1, 1))).shape == (134, 133, 133))
+    #  ④c 점 팔의 SDCP **표본**이 팔마다 흔들리지 않는다 (CDX-R2-01 재발 방지)
+    _cnt = {k: int((v == SID_SDCP).sum()) for k, v in _sids.items()}
+    chk(f'④c 네 팔의 점-스탬프 SDCP 셀 수 산포 ≤ 0.5 % ({sorted(_cnt.values())})',
+        (max(_cnt.values()) - min(_cnt.values())) <= 0.005 * max(_cnt.values()))
+
+    # ── ⑤ **재현 회귀** (리뷰 ② B2) — 구 팔이 생산 게이트를 가진다.
+    #    실측: vox 0.4 에서 입자의 78.7 % 가 셀 0 개인데 **총 부피비는 0.961** 이라
+    #    눈에 안 띈다 (살아남은 입자가 1 셀씩 먹어 상쇄).  ⇒ 부피비로는 못 잡는다.
+    _rej = False
+    try:
+        build(0.4, o, L, _am, _se, _c, 'sphere')
+    except ValueError:
+        _rej = True
+    chk('⑤ 구 팔이 vox 0.4 (d/vox 0.75) 를 거부한다 (생산 게이트 미러)', _rej)
+    _ok15 = False
+    try:
+        build(0.15, o, L, _am, _se, _c[:200], 'sphere'); _ok15 = True
+    except ValueError:
+        pass
+    chk('⑤b vox 0.15 (d/vox = 2.0) 는 통과한다', _ok15)
     print(f'\nsdcp_stamp_confound selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -181,12 +268,22 @@ if __name__ == '__main__':
     print('σ_e: AM 0.010 · SDCP 250 S/cm · SE/기공 전자절연\n')
     rows = run((am_c, am_r), (se_c, se_r), sdcp_c, base, a.len_um, a.vox)
     print(f'{"vox":>6} {"Ø/dx":>6} {"부피 점/참":>10} {"σ_e AM만":>11} {"σ_e +구":>11} '
-          f'{"σ_e +점":>11} {"이득 구%":>9} {"이득 점%":>9} {"점/구":>7}')
+          f'{"σ_e +점":>11} {"이득 구%±SE":>15} {"이득 점%±SE":>15}')
     for r in rows:
+        def _g(k):
+            v, s = r.get(f'gain_{k}_pct'), r.get(f'gain_{k}_se_pct_pt')
+            return '  (게이트 거부)' if v is None else f'{v:>8.2f} ± {s if s else 0:<4.2f}'
+        _sp = r['sigma_e_sphere']
         print(f'{r["vox"]:>6} {r["sdcp_d_per_dx"]:>6.2f} {r["vol_point_over_true"]:>10.2f} '
-              f'{r["sigma_e_none"]:>11.5g} {r["sigma_e_sphere"]:>11.5g} '
-              f'{r["sigma_e_point"]:>11.5g} {r["gain_sphere_pct"]:>9.2f} '
-              f'{r["gain_point_pct"]:>9.2f} {r["point_over_sphere"]:>7.3f}')
+              f'{r["sigma_e_none"]:>11.5g} '
+              f'{("%11.5g" % _sp) if _sp is not None else "          —"} '
+              f'{r["sigma_e_point"]:>11.5g} {_g("sphere"):>15} {_g("point"):>15}')
+        if r['sphere_gate_rejected']:
+            print(f'        ⚠ 구 팔 거부: {r["sphere_gate_rejected"][:88]}')
+        if r['unconverged_any']:
+            print('        ⚠⚠ 미수렴 팔이 있다 — 이 행의 σ 를 인용하지 말 것')
+    print('\n⚠ 이득은 **쌍대응**(같은 origin 끼리 나눈 뒤 평균)이고 ± 는 8팔 표준오차다.  '
+          '\n⚠ 이 RVE 에는 VGCF 도 AM-AM 브리지도 없다 — 실침대와 같은 망이 아니다 (CL-31 캐비엇).')
     if a.out:
         json.dump({'kit': a.kit, 'len_um': a.len_um, 'n_sdcp': n_sdcp,
                    'sdcp_vol_pct': a.sdcp_vol_pct, 'rows': rows},

@@ -854,6 +854,10 @@ def main():
                     f'({type(_e).__name__}: {_e}).  점-스탬프로 진행하면 요청과 **다른 규약**을 '
                     f'재게 된다.  --fibre 를 고치거나 --step3-fibre-stamp point 를 명시할 것.')
 
+    #  ★ 방어 기본값 — 아래 try 가 이들을 대입하기 **전에** 죽으면 매니페스트 조립(:1690~)이
+    #    NameError 를 낸다 (2026-08-16 에 `_zt3` 로 실제로 겪었다).  매니페스트가 읽는 이름은
+    #    전부 여기서 먼저 정의한다.
+    _bru = None; _osh = np.zeros(3); _zt3 = _zb3 = None; _afid = None
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
     joule_field = None                                       # #29 STEP3 Joule 발열밀도 q∝|J|²/σ hot-spot 점군
@@ -1700,6 +1704,14 @@ def main():
             'origin_shift_um': [float(x) for x in _osh],
             'sdcp_stamp': ('sphere' if getattr(a, 'step3_sdcp_sphere_d', 0) > 0 else 'point'),
             'sdcp_sphere_d_um': float(getattr(a, 'step3_sdcp_sphere_d', 0.0)),
+            # ★★ 2026-08-18 (심층 리뷰 ① H5) — `bridge_um` 이 **매니페스트에 없었다**.
+            #   그래서 `sdcp_gain_verdict.py:107` 의 고정-인자 게이트가 이 필드에 대해
+            #   항상 None 을 보고 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
+            #   명시적으로 "브리지를 물리 단위로 못 박는다" 고 선언한 바로 그 인자다.
+            #   (`_bru` 는 rasterize-only 원장(:944)에만 실려 있었다.)
+            'bridge_um': float(_bru) if _bru is not None else None,
+            'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
+            'sigma_sdcp_S_cm': float(getattr(a, 'sigma_sdcp', 0.0) or 0.0),
             'plate_z_grid_um': ([float(_zb3), float(_zt3)]
                                 if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).

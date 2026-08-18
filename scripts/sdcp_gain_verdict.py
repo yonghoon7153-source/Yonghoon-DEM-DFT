@@ -48,11 +48,24 @@ def _read(path):
             'origin_shift_um': man.get('origin_shift_um'),
             'vox': man.get('vox_um') or s.get('vox_um'),
             'bridge_um': man.get('bridge_um'),
+            #  ★ 2026-08-18 (리뷰 ① H5/M1) — 고정 인자를 넓힌다.  `bridge_um` 은 매니페스트에
+            #    없어서 게이트가 no-op 이었고(payload 에서 이번에 추가), 스탬프 규약과 재료
+            #    계수는 애초에 검사 대상이 아니었다.  `backend` 는 CuPy 실패 시 조용한 CPU
+            #    폴백을 잡는다 (step3_sigma._solve_cg 는 print 만 하고 내려간다).
+            'sdcp_stamp': man.get('sdcp_stamp'),
+            'sdcp_sphere_d_um': man.get('sdcp_sphere_d_um'),
+            'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
+            'sigma_sdcp_S_cm': man.get('sigma_sdcp_S_cm'),
+            'backend': (man.get('backend_last_solve') or {}).get('backend'),
             'fibre_stamp': man.get('fibre_stamp')}
 
 
 def collect(d):
     rows = [_read(p) for p in sorted(glob.glob(os.path.join(d, 'p2_*.json')))]
+    #  ★ 2026-08-18 (리뷰 ① M1) — 옛 판은 `_SBE_`/`_DBE_` 로만 갈랐다.  구 팔 파일명
+    #    `p2_DBE_sph_a0` 도 `_DBE_` 를 포함하므로 점 팔과 구 팔이 **한 디렉터리에 섞이면
+    #    조용히 합쳐진다**.  매니페스트의 `sdcp_stamp` 가 정본이므로 그것도 고정 인자에
+    #    넣었지만(아래 게이트), 애초에 섞이지 않게 파일명 축도 본다.
     arms = {'SBE': [r for r in rows if '_SBE_' in r['file']],
             'DBE': [r for r in rows if '_DBE_' in r['file']]}
     return rows, arms
@@ -104,12 +117,23 @@ def verdict(arms):
             return dict(out, decision='HOLD',
                         reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
                                f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다')
-    for fld in ('vox', 'bridge_um', 'fibre_stamp'):
+    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
+                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend'):
         _v = {r.get(fld) for k in arms for r in arms[k] if r.get(fld) is not None}
         if len(_v) > 1:
             return dict(out, decision='HOLD',
                         reason=f'고정 인자 `{fld}` 가 팔마다 다르다 ({sorted(map(str, _v))}) — '
                                f'prereg §5 는 그 외 모든 인자 고정을 요구한다')
+    #  ★ 그리고 **없는 것**도 잡는다 (리뷰 ① H5): `bridge_um` 이 매니페스트에 없던 시절에는
+    #    위 루프가 항상 빈 집합을 봐서 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
+    #    명시적으로 못 박으라고 한 인자가 기록조차 안 됐다면 그것은 통과가 아니라 HOLD 다.
+    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp'):
+        _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
+        if _miss:
+            return dict(out, decision='HOLD',
+                        reason=f'고정 인자 `{fld}` 가 매니페스트에 **없는** 팔이 {len(_miss)}개 '
+                               f'({_miss[0]} …) — 기록되지 않은 인자는 고정을 확인할 수 없다.  '
+                               f'옛 payload 로 돈 팔이면 다시 돌릴 것')
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
     if not st['SBE'] or not st['DBE'] or st['SBE']['n'] != st['DBE']['n']:
@@ -165,12 +189,20 @@ def _selftest():
         (ok := ok + 1) if c else fail.append(n)
         print(('  PASS  ' if c else '  FAIL  ') + n)
 
-    def mk(sbe, dbe, cg=0, resid=1e-8):
-        return {'SBE': [{'file': f'p2_SBE_a{i}.json', 'sigma_e': v, 'cg_info': cg,
-                         'cg_resid': resid, 'unconverged': False}
+    #  ★ 픽스처는 **실제 매니페스트가 싣는 필드를 전부** 가져야 한다 (2026-08-18, 리뷰 ① H5).
+    #    옛 픽스처는 고정-인자 필드를 아예 안 실었고, 그래서 그 게이트가 픽스처에서
+    #    검증된 적이 없었다 — 프로덕션에서 `bridge_um` 이 no-op 이었던 것과 같은 뿌리다.
+    _FIX = dict(vox=0.15, bridge_um=0.48, fibre_stamp='segment', sdcp_stamp='point',
+                sdcp_sphere_d_um=0.0, sigma_vgcf_S_cm=78.5398, sigma_sdcp_S_cm=250.0,
+                backend='gpu')
+
+    def mk(sbe, dbe, cg=0, resid=1e-8, **over):
+        f = dict(_FIX, **over)
+        return {'SBE': [dict(f, file=f'p2_SBE_a{i}.json', sigma_e=v, cg_info=cg,
+                             cg_resid=resid, unconverged=False)
                         for i, v in enumerate(sbe)],
-                'DBE': [{'file': f'p2_DBE_a{i}.json', 'sigma_e': v, 'cg_info': cg,
-                         'cg_resid': resid, 'unconverged': False}
+                'DBE': [dict(f, file=f'p2_DBE_a{i}.json', sigma_e=v, cg_info=cg,
+                             cg_resid=resid, unconverged=False)
                         for i, v in enumerate(dbe)]}
 
     base = [1.0000, 1.0020, 0.9980, 1.0010, 0.9990, 1.0005, 0.9995, 1.0000]
@@ -194,6 +226,27 @@ def _selftest():
         vb['decision'] == 'HOLD' and 'no_convergence_info' in vb)
     chk('⑦ 문턱이 prereg 값과 같다 (코드가 사전등록이다)',
         (H0_MIN_RATIO, H1_RATIO, SE_MAX_PCT) == (1.05, 1.015, 1.17))
+    #  ★★ 2026-08-18 (리뷰 ① H5) — 고정-인자 게이트의 **회귀**.  프로덕션에서 `bridge_um`
+    #    이 매니페스트에 없어 이 게이트가 한 번도 발화하지 않았는데, 옛 픽스처가 그 필드를
+    #    아예 안 실어 selftest 도 그 사실을 못 봤다.  두 방향을 다 건다.
+    _mix = mk(base, [v * 1.08 for v in base])
+    _mix['DBE'][3]['bridge_um'] = 0.30                       # 한 팔만 다른 브리지
+    v9 = verdict(_mix)
+    chk(f'⑨ 고정 인자가 팔마다 다르면 HOLD ({v9["decision"]})',
+        v9['decision'] == 'HOLD' and 'bridge_um' in (v9.get('reason') or ''))
+    _drop = mk(base, [v * 1.08 for v in base])
+    for _r in _drop['SBE'] + _drop['DBE']:
+        _r['bridge_um'] = None                               # 옛 payload = 기록 자체가 없음
+    v10 = verdict(_drop)
+    chk(f'⑩ ★ 고정 인자가 매니페스트에 **없으면** HOLD (가짜 보증 재발 방지): {v10["decision"]}',
+        v10['decision'] == 'HOLD' and 'bridge_um' in (v10.get('reason') or ''))
+    #  ⑪ 점 팔과 구 팔이 한 디렉터리에 섞이면 잡는다 (리뷰 ① M1)
+    _mix2 = mk(base, [v * 1.08 for v in base])
+    for _r in _mix2['DBE']:
+        _r['sdcp_stamp'], _r['sdcp_sphere_d_um'] = 'sphere', 0.30
+    v11 = verdict(_mix2)
+    chk(f'⑪ 점 팔 × 구 팔 혼합은 HOLD ({v11["decision"]})',
+        v11['decision'] == 'HOLD' and 'sdcp_stamp' in (v11.get('reason') or ''))
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

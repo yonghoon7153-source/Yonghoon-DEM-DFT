@@ -284,7 +284,16 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
             #  ⚠ 게이트는 SDCP 가 **실재할 때만** 발화한다 (리뷰 ② LOW: 옛 판은 phase-5 가
             #    0개인 침대(SBE)에서도 vox 만 거칠면 막았다 — no-op 인데 막을 이유가 없다).
             if len(_p5) and _d / vox < 2.0:
-                raise ValueError(
+                #  ★★ 2026-08-18 (심층 리뷰 ① B2) — `ValueError` 였다.  그런데 호출자
+                #    `mpm_webapp_payload.py:1645` 의 blanket `except Exception` 이 그것을
+                #    **삼켜** step3.status='failed' 만 적고 payload 를 정상적으로 쓰고
+                #    **exit 0** 으로 끝냈다.  ⇒ 러너의 fail-fast 가 발화하지 않고,
+                #    쓰레기 JSON 이 `[ -s "$OUT" ] && SKIP` 로 **영구 캐시**된다.
+                #    게다가 SBE 는 `len(_p5)==0` 이라 게이트가 안 열려 **정상 완주**하므로
+                #    "SBE 8팔 완주 + DBE 8팔 조용히 실패" 로 GPU 수 시간을 버린다.
+                #    `SystemExit` 는 BaseException 이라 그 except 를 **통과**한다 —
+                #    바로 옆 `--fibre` 실패 경로가 이미 그 규약을 쓰고 있었다 (:852, :883).
+                raise SystemExit(
                     f'부피-보존 구 스탬프: d/vox = {_d / vox:.2f} < 2 거부.  '
                     f'⚠ 근거 정정(리뷰 ②): 전소실 절벽은 √3 ≈ 1.732 (실측: 1.5 에서 소실 '
                     f'1.24 %, 1.74~2.0 에서 0 %) — 2.0 을 유지하는 진짜 이유는 per-입자 '
@@ -1515,14 +1524,21 @@ def _selftest():
         _pr &= (_s1[_i] == _s2[_i])
     ok &= _pr
     print(f"sdcp-prio: 구 스탬프 우선순위 == 점 스탬프  {'OK' if _pr else 'FAIL'}")
-    _rf = False
+    _rf = _rf_exc = False
     try:
         rasterize(np.zeros((0, 3)), np.zeros(0), None, np.array([[1., 1., 1.]]),
                   np.array([5], np.int8), (0, 0, 0), (3., 3., 3.), 0.4, sdcp_sphere_d_um=0.30)
-    except ValueError:
+    except SystemExit:
         _rf = True
+    except Exception:                                   # noqa: BLE001 — 이것이 곧 회귀다
+        _rf_exc = True
     ok &= _rf
     print(f"sdcp-gate: d/vox < 2 는 거부한다  {'OK' if _rf else 'FAIL'}")
+    #  ★ 회귀 (리뷰 ① B2): 거부가 **`Exception` 계열이면 안 된다** — 호출자의 blanket
+    #    `except Exception` 이 삼켜 fail-open 이 된다.  BaseException(SystemExit)이어야 한다.
+    ok &= not _rf_exc
+    print(f"sdcp-gate-fail-closed: 거부가 Exception 이 아니다 (blanket except 통과)  "
+          f"{'OK' if not _rf_exc else 'FAIL — 호출자가 삼킨다'}")
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
