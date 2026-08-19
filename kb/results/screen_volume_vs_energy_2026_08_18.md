@@ -220,7 +220,16 @@ baseline = relax_structure(read(args.base), calc, fmax=…, steps=…, cell_rela
 Li2S  +0.00 %      LiCl  −0.59 %      LiBr  −1.10 %      Li3N  −1.56 %
 ```
 
-⇒ 최대 어긋남 1.6 %p. **기준 셀은 정상이다.** (참고: 입력 CIF
+⚠ **2026-08-19 저녁 보류** — 이 논증은 파이프라인 전수 정독 뒤 약해졌다.
+`preflight.py:84–89` 가 *"UMA 가 LPSCl 을 canonical 대비 **25–35 % 부풀린다**"* 고 적어 놨다
+(v4.5.5 에서 검사 문턱을 5 %→35 % 로 넓힌 사유). 그게 사실이면 Li₂S·LiCl 은 host 와
+사실상 같은 물질이라 **기준과 같이 부풀어** 0 이 나오므로, 아래 대조는 영점이 물리적으로
+맞다는 증거가 못 된다. 반대 증거로 `uma_relax_check` 는 DFT 이완 modelC 를 +0.92 % 로
+놔뒀다. **가르는 판**: gabia 의 `<캐스케이드>/00_preflight/preflight_report.json` 안
+`baseline_relax.detail.dV_rel` 을 읽으면 끝난다(GPU 0시간, 270개 다 있다).
+자세한 것은 `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` §C.
+
+⇒ 최대 어긋남 1.6 %p. (참고: 입력 CIF
 `db/structures/lpscl_F43m_24G_canonical.cif` 는 a = 10.2493 Å, 20.705 Å³/atom 로
 실험 Li₆PS₅Cl(a = 9.859)보다 부피가 12 % 크지만, **그 CIF 는 이완돼서 기준이 되므로**
 그 값 자체는 `dV` 에 안 들어간다.)

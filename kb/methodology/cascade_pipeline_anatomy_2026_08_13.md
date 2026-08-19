@@ -1096,3 +1096,129 @@ thermo_types=["GGA_GGA+U"])`, **제외 필터 없음**. 저장한 것은 값과 
 - `eos_B0_GPa` 는 681 중 **622행**만 찼다 — EOS 적합 59건 실패. 발표에서 EOS 수를
   681 로 말하면 안 된다.
 - `sigma_300K_S_cm_NE` · `wad_J_m2_mean` 은 **0행** — Stage 10·11 미실행. 17장 문구와 일치.
+
+## ★★★★ 전수 정독 (2026-08-19) — doping 파이프라인 31개 파일
+
+1저자 지적("코드 확실하게 정독한 거 맞지")에 따라 unified 브랜치 `tools/doping/` 를
+전부 읽었다. 앞 절(Stage↔Step 대조)은 **실행 경로만** 본 것이라 아래를 놓쳤다.
+
+### A. 주석이 코드와 다른 곳 — 넷 (전부 읽는 사람을 속인다)
+
+| 어디 | 주석이 말하는 것 | 코드가 하는 것 |
+|---|---|---|
+| `tier_cascade.sh` 머리 Stage map | 04 = BVSE · 05 = light anneal(300 K, 20 ps) | **04 = anneal(500 K, 50 ps)** · 05 = BVSE |
+| `tier_cascade.sh` Stage 08 | "clamped-ion Cij" | 변형마다 **이온을 이완**한다(FIRE, fmax 0.05) = relaxed-ion |
+| `run_compound_batch.sh` 머리 | 억셉터는 "Li-interstitial 경로 미구현, 전하 불균형" | `add_li_interstitials()` 로 **구현돼 있다** (B₂O₃ 는 Li 4개 삽입) |
+| `bvse_proxy.py` 모듈 docstring | `proxy = std × (1−\|mean−1\|)` → **std 클수록 좋다** | `(1−\|mean−1\|) × (1−std)` → **std 클수록 나쁘다.** 부호가 반대다 |
+
+(`substitute_compound.li_vacancies_needed()` 도 "interstitial 미구현" 이라 적혀 있고
+**아무도 안 부른다** — 죽은 함수다. 실제 계산은 `substitute_compound_at_sites` 안에 있다.)
+
+### B. ⛔ 진짜 결함 넷 — 전부 데이터에 지문이 남는다
+
+**B-1. `Li_24g` 와 `Li_48h` 는 같은 구조다.**
+`substitute_struct.find_host_indices_for_site()` 는 *"Li 24g 와 48h 를 가르려면 입력 파일의
+Wyckoff 메타데이터가 필요한데 항상 있지는 않다"* 며 **두 라벨 모두 Li 전체를 돌려준다.**
+`HOST_SITES` 의 전하(+1)·반지름(0.76)·`RADIUS_TOL`(0.60)도 둘이 동일하고, 씨드도 같으므로
+`Li_24g_s00` 과 `Li_48h_s00` 은 **원자 좌표까지 같은 구조**다.
+
+실측 (330쌍 전수):
+
+```
+|Δde| 중앙 1.5e-06 eV/atom      ← 이완 수치잡음. 물리 차이가 아니다
+|Δde| > 1e-3 : 45/330           ← 같은 출발점에서 다른 분지로 간 것(MLIP 이완 카오스)
+|Δde| > 0.1  :  8/330
+```
+
+라벨이 생긴 도펀트 12종은 전부 **1가**(Li·Na·Cu·Ag) — `LITERATURE_SITES` 가 그 넷에만
+`['Li_24g','Li_48h']` 를 적어 놨기 때문이다.
+
+**영향**: winner 681개 중 **66 슬롯이 두 라벨을 다 승자로 뽑았다(132행)** → 같은 구조에
+anneal·BVSE·EOS·elastic 을 두 번 돌렸고, 챔피언은 *중복 둘 중 좋은 쪽*으로 뽑혔다.
+그리고 10장 그림 `step2_site_grid.png` 의 *"9칸이 전부 채워져 있다 = 자리 조합을 훑었다"*
+는 **6칸이 진짜고 3칸(Li 48h 행, 330개)은 복사본**이다.
+
+**B-2. `li_mobility_score` 가 파일에 안 들어간다 — 그래서 랭킹의 30 %가 죽었다.**
+`bvse_proxy.py` 는 JSON 을 **먼저 쓰고**(267–273행) 그 다음에 `li_mobility_score` 를
+계산한다(278–282행). 다시 쓰지 않는다. ⇒ `cascade_v23_all.csv` 에서 **0/3,615**.
+
+`combine_rankings.py` 는 그 열을 읽어 `normalize()` 에 넘기는데, 전부 None 이면
+**상수 0.5** 를 돌려준다. 가중치는 `0.4·안정성 + 0.3·탄성 + 0.3·이동도` 다.
+
+지문 — `combined_score` 3,615행 **전부** `[0.1500, 0.8500]` 안에 있다.
+0.4·0 + 0.3·0 + 0.3·0.5 = 0.15, 0.4·1 + 0.3·1 + 0.15 = 0.85. 정확히 일치한다.
+
+⇒ **모든 종의 챔피언(`rank_combined == 1`)이 안정성 + 영률 둘로만 뽑혔다.**
+`esw_cascade_batch.py` 도 *"슬롯은 combined_score 최대값이 가져간다"* 고 적고 그대로 쓴다 —
+우리 47/90종 리더보드·계면·ESW 가 전부 이 선택을 물려받았다.
+(우리가 발표하는 `cascade_v23_ranked.csv` 의 점수식 `0.30 ox + 0.25 stable + 0.20 soft +
+0.15 ductile + 0.10 window` 는 **다른 식**이라 그 자체는 무사하다. 문제는 그 식에
+들어가는 **행이 이미 이동도-맹목으로 골라진 챔피언**이라는 것이다.)
+
+**B-3. Type C(공동도핑) 스윕이 조용히 무너졌다.**
+`halide_rich_swap()` 의 ValueError 는 **try 밖**이다(Type A 만 감싸져 있다). 그리고
+`compound_summary.json` 은 루프가 **다 끝난 뒤에** 쓴다 ⇒ 뒤쪽 조합 하나가 죽으면
+**앞에서 이미 만든 구조까지 통째로 버려진다.** 게다가 `2>&1 | tail -3 || true` 가 에러를 삼킨다.
+
+M₂O₃ 는 1 unit 이 O 3개라 `anion_site=S_4a`(자리 4개)에 3개가 들어가 S 가 1개만 남고,
+Cl 과잉 0.4 는 `n_swap=2` 를 요구해 죽는다. MgO·ZnO 는 O 가 1개라 3개가 남아 산다.
+
+```
+MgO · ZnO         excess 0.2 / 0.4 / 0.6 / 0.8   (각 120행)
+나머지 9종        excess 0.2 만                  (각 30행)
+```
+
+⇒ **공동도핑 축은 설계의 1/4 만 존재한다.** 11종 × 4단계 = 44 조합 중 **17개만** 돌았다.
+
+**B-4. `--method cluster` 블록은 죽은 코드다.**
+`run_compound_batch.sh:174` 가 `--method cluster` 를 넘기는데
+`substitute_compound.py:578` 의 argparse 는 `choices=['spread','random','first']` 다 →
+즉시 종료, `|| true` 가 삼킨다. (`select_substitution_sites` 자체는 cluster 를 지원한다 —
+argparse 만 막는다.) CSV 에 **중복 name 0건**인 것이 증거다.
+⇒ "Type A cluster method (전구체 국소배위 모사)" 10종 × 3농도가 **한 번도 안 돌았다.**
+
+### C. ⚠ 부피 게이트 — 앞 절 6b 의 결론을 **보류**한다
+
+`preflight.py:84–89` 가 이렇게 적어 놨다:
+
+> `|ΔV/V0| < 35 %` … **UMA 가 LPSCl 을 canonical 셀 대비 25–35 % 부풀린다**(Wang 2025
+> sulfide PES softening). 구조 결함이 아니라 UMA 편향이다.
+> *v4.5.5 fix: was 5 % → false-failed on every UMA cascade.*
+
+이게 사실이면 기준 셀이 **26–28 Å³/atom** 에 있고, `screen_dV_over_V0` 는 부피가 아니라
+**"이 구조가 아직 argyrodite 같아서 UMA 가 똑같이 부풀렸는가"** 를 재는 값이 된다.
+−13 % 중앙, −33 % 꼬리가 전부 그것으로 설명된다.
+
+⛔ 그러면 6b 의 null 대조 논증이 약해진다 — Li₂S·LiCl 은 host 와 사실상 같은 물질이라
+**기준과 같이 부풀어서** 0 이 나온다. 영점이 물리적으로 맞다는 증거가 되지 못한다.
+
+**반대 증거**: `uma_relax_check.py` 실측에서 UMA 는 DFT 이완 `modelC` 를 **+0.92 %**,
+`b2o3_relaxV0` 를 **−0.00 %** 로 놔뒀다. 25–35 % 팽창이 사실이면 modelC 도 부풀어야 한다.
+
+**가르는 판 — GPU 0 시간.** Stage 00 이 270 캐스케이드마다
+`$OUT/00_preflight/preflight_report.json` 에 `baseline_relax.detail.dV_rel` 을 **이미 적어 놨다.**
+gabia 에서 그 파일 하나만 읽으면 끝난다. (읽기 전까지 6b 의 "기준 셀은 정상이다" 는
+**미확정**으로 둔다.)
+
+### D. 나머지 확인 사항
+
+- `select_winners.py` 에 필터가 **넷**이다 — 내가 앞 절에서 셋만 셌다. 넷째는
+  `outlier_flag`(`dV>30 %` **또는** `|Δe|>5 eV/atom`). 그래서 "Top-1 이 2,834행을 뺐다" 는
+  **상한**이다(errored·outlier 몫이 섞여 있다).
+- winner 선정 지표는 `min(de_per_atom_vs_baseline)`. 스크립트가 `group_metric_spread` 를
+  **이미 기록한다** — best-of-N 편향을 재는 계기가 산출물에 들어 있는데 우리가 안 썼다.
+- `eos_ensemble` 은 rattle 5개 중 **r² 최대 하나를 고른다**(또 다른 best-of-N). 시드별 B0
+  산포는 `ensemble` 에 있는데 우리 CSV 는 선택값만 들고 있다.
+- `preflight.check_positive_controls` 가 적어 놓기를, UMA 는 Nd₂O₃/Al₂O₃/MgO 에 대해
+  ΔE/atom **−0.5 ~ −0.9 eV** 를 주는데 문헌 범위는 ±0.03 eV 다 — **20~30배**. 허용범위를
+  넓혀서 통과시켰다.
+- ⛔ **cascade BVSE 는 우리 BVSE 와 파라미터가 다르다.** `bvse_proxy.py` 는
+  Li–S R0 **1.94**(b **0.40**) · Li–Cl **1.91** 을 쓴다. 우리 정본은 S **2.105** · Cl **2.249**,
+  b 0.37 (CLAUDE.md). 그리고 `migration_volume_fraction` 은 20³–25³ 격자에서
+  **BVS ∈ [0.8, 1.2] 인 점의 비율**이지, 우리의 "iso 준위 아래 채널 %" 도 퍼콜레이션도 아니다.
+  ⇒ **cascade Li-수송 수치를 우리 comp1_v3 BVSE 옆에 나란히 쓰면 안 된다.**
+- `run_md_sigma.py`(미실행)는 자유절편 회귀는 맞지만 창이 `fit_start:끝`(50 ps)이고
+  prod 50 ps 다 — 우리 규약(2–50 ps, prod 200 ps)과 다르다. 언젠가 켜면 먼저 맞출 것.
+- `fetch_mp_structure.py` 가 mp-985592 를 **준안정 다형**이라고 스스로 적어 놨다.
+- `site_preference.py` VALIDATION_SET 에 *"was fabricated Lee2025 ref"* 로 **날조 인용을
+  찾아 지운 기록**이 있다.
