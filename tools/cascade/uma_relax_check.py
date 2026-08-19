@@ -34,24 +34,67 @@ FMAX = 0.05
 STEPS = 1500
 
 
-def guard_gpu():
-    """pw.x 가 돌고 있으면 멈춘다 — 같이 띄우면 VRAM 이 터진다 (CLAUDE.md 규약)."""
-    try:
-        # ⛔ `pgrep -f` 는 **명령줄 전체**를 본다 — 커밋 메시지에 "pw.x" 라고 적기만 해도
-        #   자기 셸이 걸린다 (2026-08-19 실측, selftest 가 잡았다). 프로세스 **이름**으로 본다.
-        r = subprocess.run(["pgrep", "-x", "pw.x"], capture_output=True, text=True)
-        if r.stdout.strip():
-            raise SystemExit("⛔ pw.x 가 돌고 있다 — UMA 와 동시 실행 금지 (VRAM). 끝나고 실행할 것")
-    except FileNotFoundError:
-        pass
+#: 같은 GPU 를 쓰는 QE 바이너리. ⚠ `neb.x` 를 빠뜨리면 SEI NEB 와 부딪친다
+#: (2026-08-19 — 앞 판이 pw.x 만 봐서 cc333 neb.x 를 못 봤다).
+QE_BINS = ("pw.x", "neb.x", "cp.x", "ph.x")
 
 
-def relax(path, device="cuda"):
+def running_qe():
+    """지금 도는 QE 프로세스 이름 목록. 없으면 빈 리스트."""
+    out = []
+    for b in QE_BINS:
+        try:
+            # ⛔ `pgrep -f` 는 **명령줄 전체**를 본다 — 커밋 메시지에 "pw.x" 라고 적기만 해도
+            #   자기 셸이 걸린다 (2026-08-19 실측, selftest 가 잡았다). 프로세스 **이름**으로 본다.
+            r = subprocess.run(["pgrep", "-x", b], capture_output=True, text=True)
+            if r.stdout.strip():
+                out.append(b)
+        except FileNotFoundError:
+            return []
+    return out
+
+
+def guard_gpu(allow_share=False):
+    """QE 가 돌고 있으면 멈춘다 — 같이 띄우면 VRAM 이 터진다 (CLAUDE.md 규약).
+
+    `allow_share=True` 는 **사용자가 명시로 허용했을 때만** 쓴다. 조용히 넘어가지 않고
+    무엇과 같이 도는지 찍는다 (2026-08-19 1저자 승인: "같이 돌려도 될거야, oom 나면 stop").
+    """
+    busy = running_qe()
+    if not busy:
+        return
+    if allow_share:
+        print(f"⚠ QE 가 돌고 있다: {', '.join(busy)} — 사용자 허용으로 **같이** 실행한다. "
+              f"OOM 나면 이쪽을 죽일 것 (nvidia-smi 로 여유 확인 권장)")
+        return
+    raise SystemExit(f"⛔ {', '.join(busy)} 가 돌고 있다 — UMA 와 동시 실행 금지 (VRAM). "
+                     f"끝나고 실행하거나 --allow_gpu_share 를 줄 것")
+
+
+def drop_li(atoms, n_drop, seed=0):
+    """Li 를 n_drop 개 뺀다 (결정론적: 인덱스 순 균등 간격).
+
+    왜 (2026-08-19): gabia 실측에서 UMA 가 **만석 Li₆** canonical 셀만 +32.7 % 부풀리고
+    Li 결손계(modelC Li₅.₄, b2o3)는 안 부푼다. "만석 Li 부격자가 원인" 가설을 가르려면
+    같은 셀에서 Li 만 빼 보면 된다. 전하 보상은 **안 한다** — UMA 는 전하를 모른다.
+    """
+    import numpy as np
+    li = [i for i, s in enumerate(atoms.get_chemical_symbols()) if s == "Li"]
+    if n_drop <= 0 or n_drop >= len(li):
+        raise ValueError(f"Li {len(li)}개에서 {n_drop}개는 못 뺀다")
+    step = len(li) / float(n_drop)
+    take = {li[int(round(k * step)) % len(li)] for k in range(n_drop)}
+    return atoms[[i for i in range(len(atoms)) if i not in take]]
+
+
+def relax(path, device="cuda", n_drop_li=0):
     from ase.io import read
     from ase.optimize import FIRE
     from ase.filters import FrechetCellFilter
     from fairchem.core import pretrained_mlip, FAIRChemCalculator
     a = read(path)
+    if n_drop_li:
+        a = drop_li(a, n_drop_li)
     v0, n = a.get_volume(), len(a)
     pred = pretrained_mlip.get_predict_unit("uma-s-1p1", device=device)
     a.calc = FAIRChemCalculator(pred, task_name="omat")
@@ -59,7 +102,7 @@ def relax(path, device="cuda"):
     opt = FIRE(FrechetCellFilter(a), logfile=None)
     opt.run(fmax=FMAX, steps=STEPS)
     v1 = a.get_volume()
-    return {"file": str(path), "natoms": n,
+    return {"file": str(path), "natoms": n, "n_drop_li": int(n_drop_li),
             "V0_A3": round(v0, 2), "V1_A3": round(v1, 2),
             "dV_pct": round(100.0 * (v1 / v0 - 1.0), 2),
             "V_per_atom_before": round(v0 / n, 3), "V_per_atom_after": round(v1 / n, 3),
@@ -89,11 +132,47 @@ def selftest():
             "[양성] modelC host 는 P 5 — 2× 하면 10, b2o3 의 8 보다 둘 많다")
     except ImportError:
         print("  ⚠ ase 없음 — 구조 시험 건너뜀")
-    # 음성 — pw.x 가 돌면 막아야 한다 (여기선 안 도니 통과해야 정상)
+    # drop_li — 양성 + 음성
     try:
-        guard_gpu(); chk(True, "[음성] pw.x 가 없으면 guard 가 통과시킨다")
+        from ase.io import read as _rd
+        c = _rd(ROOT / "db" / "structures" / "comp1_V0_k444.cif")
+        nli = c.get_chemical_symbols().count("Li")
+        d = drop_li(c, 1)
+        chk(len(d) == len(c) - 1 and d.get_chemical_symbols().count("Li") == nli - 1,
+            f"[양성] drop_li(1) 이 Li 를 정확히 하나 뺀다 ({nli}→{d.get_chemical_symbols().count('Li')})")
+        chk(drop_li(c, 3).get_chemical_symbols().count("P") == c.get_chemical_symbols().count("P"),
+            "[양성] Li 만 빠지고 P 는 그대로다")
+        a1 = drop_li(c, 2).get_positions(); a2 = drop_li(c, 2).get_positions()
+        chk(a1.shape == a2.shape and (a1 == a2).all(), "[양성] 결정론적이다 (두 번 불러 같다)")
+        for bad in (0, -1, nli, nli + 5):
+            try:
+                drop_li(c, bad); chk(False, f"[음성] drop_li({bad}) 를 막지 못했다")
+            except ValueError:
+                pass
+        chk(True, "[음성] 0·음수·전체이상 Li 삭제는 ValueError 로 막는다")
+    except ImportError:
+        print("  ⚠ ase 없음 — drop_li 시험 건너뜀")
+    # guard — 양성 + 음성
+    chk("neb.x" in QE_BINS and "pw.x" in QE_BINS,
+        "[양성] guard 가 neb.x 도 본다 (pw.x 만 보면 SEI NEB 를 놓친다)")
+    try:
+        guard_gpu(); chk(True, "[음성] QE 가 없으면 guard 가 통과시킨다")
     except SystemExit:
-        chk(False, "[음성] pw.x 가 없는데 guard 가 막았다")
+        chk(False, "[음성] QE 가 없는데 guard 가 막았다")
+    # ★ 음성 — QE 가 돌면 **막아야** 한다. running_qe 를 가짜로 채워 확인한다.
+    _real = globals()["running_qe"]
+    try:
+        globals()["running_qe"] = lambda: ["neb.x"]
+        try:
+            guard_gpu(); chk(False, "[음성] QE 가 도는데 guard 가 통과시켰다")
+        except SystemExit:
+            chk(True, "[음성] QE 가 돌면 guard 가 막는다")
+        try:
+            guard_gpu(allow_share=True); chk(True, "[양성] --allow_gpu_share 면 통과시킨다")
+        except SystemExit:
+            chk(False, "[양성] 허용했는데도 막았다")
+    finally:
+        globals()["running_qe"] = _real
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -103,18 +182,23 @@ def main():
     ap.add_argument("--structs", nargs="+", default=[
         "db/structures/b2o3_relaxV0.cif", "db/structures/modelC_DFT_EOS_V0.cif"])
     ap.add_argument("--device", default="cuda")
+    ap.add_argument("--drop_li", type=int, default=0,
+                    help="이완 전에 Li 를 이만큼 뺀다 (만석-Li 가설 검증용)")
+    ap.add_argument("--allow_gpu_share", action="store_true",
+                    help="QE 가 돌아도 실행 (사용자 명시 허용 시에만)")
     ap.add_argument("--out", default=str(OUT))
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
     a = ap.parse_args()
-    guard_gpu()
+    guard_gpu(a.allow_gpu_share)
     rows = []
     for s in a.structs:
         p = s if os.path.isabs(s) else str(ROOT / s)
         print(f"── {s}")
-        r = relax(p, a.device)
+        r = relax(p, a.device, a.drop_li)
         rows.append(r)
-        print(f"   V {r['V0_A3']} → {r['V1_A3']} Å³   **ΔV {r['dV_pct']:+.2f} %**   "
+        print(f"   {('Li−%d  ' % a.drop_li) if a.drop_li else ''}"
+              f"V {r['V0_A3']} → {r['V1_A3']} Å³   **ΔV {r['dV_pct']:+.2f} %**   "
               f"({r['steps']} steps, {'수렴' if r['converged'] else '미수렴'}, {r['seconds']:.0f}s)")
     Path(a.out).write_text(json.dumps({
         "what": "UMA-s-1p1(omat) re-relaxation of DFT-relaxed structures. "
