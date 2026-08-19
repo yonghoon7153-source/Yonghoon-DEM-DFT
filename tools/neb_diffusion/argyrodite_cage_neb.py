@@ -217,9 +217,14 @@ def band_health(E):
     below = float(inner.min()) - max(0.0, float(rel[-1]))
     if below < -0.05:
         probs.append(f"중간 이미지가 끝점보다 {below:.3f} eV 낮다 — 끝점이 국소 최소가 아니다")
-    if float(rel[-1]) > 0.15:
-        probs.append(f"두 끝점 에너지 차가 {1000*float(rel[-1]):+.0f} meV — 등가 자리가 아니다")
-    return probs, {"spike_eV": round(spike, 4),
+    # ⚠ 끝점 비등가는 **결함이 아니다.** 무질서 argyrodite 에서 두 Li 자리가 다른 것은
+    #   정상이고, 그래서 Ea(정) ≠ Ea(역) 이 된다. 문제로 세지 않고 **주석으로만** 남긴다
+    #   (2026-08-19 자기리뷰 — 처음엔 실패로 셌다).
+    notes = []
+    if abs(float(rel[-1])) > 0.15:
+        notes.append(f"두 끝점 차 {1000*float(rel[-1]):+.0f} meV — 등가 자리가 아니다"
+                     f"(비대칭 hop, 정상일 수 있음). Ea 는 정·역 둘 다 보고할 것")
+    return probs, {"spike_eV": round(spike, 4), "notes": notes,
                    "second_highest_eV": round(others, 4),
                    "min_interior_rel_eV": round(float(inner.min()), 4)}
 
@@ -331,6 +336,8 @@ def one_run(args):
         print("   ⛔ 이 값은 믿으면 안 된다:")
         for q in probs:
             print(f"      · {q}")
+    for q in health.get("notes", []):
+        print(f"   ⓘ {q}")
     return rec
 
 
