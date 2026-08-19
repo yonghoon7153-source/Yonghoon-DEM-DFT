@@ -580,8 +580,235 @@ def _selftest():
     # ★ 음성: 없는 루트를 조용히 통과시키지 않는다
     chk(audit_raw(td / "nope") == 1, "없는 루트 → 종료코드 1")
     shutil.rmtree(td, ignore_errors=True)
+    # ── --volume_gate 쪽 (2026-08-19) ────────────────────────────────────────
+    fake = [{"dopant": "X2O3", "screen_dV_over_V0": v, "tier2_lattice_angle_dev_deg": "0.5",
+             "tier2_lattice_aspect_ratio": "1.02"} for v in ("-0.30", "-0.29", "-0.28")]
+    fake += [{"dopant": "Li2S", "screen_dV_over_V0": v, "tier2_lattice_angle_dev_deg": "0.4",
+              "tier2_lattice_aspect_ratio": "1.01"} for v in ("0.00", "-0.01", "0.01")]
+    st = vg_stats(fake)
+    chk(st["by_species"]["X2O3"]["dropped_abs25"] == 3,
+        "[양성] −29 % 계열은 현행 25 % 게이트에 전멸한다")
+    chk(st["by_species"]["X2O3"]["dropped_resid"] == 0,
+        "[양성] 같은 계열이 종내잔차 게이트에서는 전원 생존 (계통 이동은 벌하지 않는다)")
+    # ★ 음성 1 — 무해 도펀트를 실수로 떨어뜨리면 안 된다
+    chk(st["by_species"]["Li2S"]["dropped_abs25"] == 0,
+        "[음성] ΔV≈0 인 Li2S 를 떨어뜨리지 않는다")
+    # ★ 음성 2 — 종 안에서 혼자 튀는 놈은 잔차 게이트가 **잡아야** 한다
+    fake2 = fake + [{"dopant": "X2O3", "screen_dV_over_V0": "-0.02",
+                     "tier2_lattice_angle_dev_deg": "0.5", "tier2_lattice_aspect_ratio": "1.02"}]
+    chk(vg_stats(fake2)["by_species"]["X2O3"]["dropped_resid"] == 1,
+        "[음성] 종 안에서 혼자 27 %p 벗어난 씨드는 잔차 게이트가 잡는다")
+    # ★ 음성 3 — 셀이 찌그러진 것을 모양 게이트가 놓치면 안 된다
+    fake3 = [dict(fake[0], tier2_lattice_angle_dev_deg="9.0")] + fake[1:]
+    chk(vg_stats(fake3)["by_species"]["X2O3"]["dropped_shape"] == 1,
+        "[음성] 각도 9° 로 찌그러진 셀은 모양 게이트가 잡는다")
+    chk(vg_stats(fake)["by_species"]["X2O3"]["dropped_shape"] == 0,
+        "[양성] 등방 수축(각도 정상)은 모양 게이트가 통과시킨다")
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
+
+
+# ── 부피 게이트 재검토 (2026-08-19) ───────────────────────────────────────────
+# 왜: 세미나 Step 3 의 `|ΔV| ≤ 25 %` 가 B₂O₃ plain 을 30/30 떨어뜨렸는데, 같은 치환의
+#   우리 DFT 구조는 원자당 −2 % 밖에 안 움직였다. 1저자 질문("우리 b2o3 dft 는 어떻게
+#   살아남았나")에서 시작해 게이트 정의를 원본까지 따라갔다.
+#
+#   ⛔ 앞서 두 번 **틀린 진단**을 냈다. 기록으로 남긴다:
+#     (1) "생성기가 출발 셀을 25 % 부풀린다" — 아니다. V0 는 출발 셀이 아니다.
+#     (2) "기준 셀 자체가 원자당 ~24 Å³ 로 크다"  — 아니다. 아래 null 대조가 반박한다.
+#   실제 정의 (origin/claude/unified-2026-05-15:tools/doping/run_uma_screening.py):
+#     dV = (V_doped/n_doped) / (V_base/n_base) − 1,   두 V 모두 **UMA 이완 후**
+#     base = db/structures/lpscl_F43m_24G_canonical.cif (52원자, a=10.2493 Å,
+#            20.705 Å³/atom **이완 전**) 를 cell_relax=True 로 이완한 것.
+#   ⇒ 정의는 대칭이고 건전하다. 남은 문제는 정의가 아니라 **셀 크기**다:
+#     SUPERCELL=1,1,1 (52원자 = 4 f.u.) 이라 n_units=max(1,round(4·x))=1 →
+#     x 라벨 0.02/0.05/0.10 이 전부 0.25 로 뭉갠다. 4 f.u. 중 1 f.u. 치환이다.
+#
+#: 현행 게이트 (select_winners.py Stage 03)
+VG_ABS_CUT = 0.25
+#: ③ 대안 A — 종내 잔차. 계통적 수축(화학)은 봐주고 **씨드 하나만 튀는 것**(이완 실패)을 잡는다.
+VG_RESID_MAD_K = 6.0
+#: ③ 대안 B — 모양. 등방 치밀화는 물리, 전단·찌그러짐은 깨진 것.
+VG_ANGLE_DEV_MAX = 5.0     # deg, 입방에서 벗어난 정도
+VG_ASPECT_MAX = 1.25       # 축비
+
+
+def _mad(xs, med):
+    """중앙절대편차. 0 이면 (전원 동일) 하한을 준다 — 0 으로 나누지 않기 위해."""
+    m = statistics.median([abs(x - med) for x in xs])
+    return max(m, 0.005)
+
+
+def vg_stats(rows, by_variant=False):
+    """세 게이트를 같은 행 집합에 걸어 **종별 탈락 수**를 센다.
+
+    rows: dopant · screen_dV_over_V0 · tier2_lattice_angle_dev_deg ·
+          tier2_lattice_aspect_ratio 를 가진 dict 목록.
+    by_variant=True 는 `variant_key` (raw 라벨) 로 묶는다. **왜 base 가 아닌가**:
+      `B2O3` (P_4b 치환) 와 `B2O3+Clrich` (Li_24g + Cl 과잉) 는 원자 배치가 다른
+      **다른 치환**이라 부피 반응도 다르다 — 합치면 30/30 전멸이 30/60 으로 희석돼
+      게이트가 무엇을 죽였는지 안 보인다. 판정·순위 인용은 base 쪽을 쓴다.
+    """
+    from cascade_ids import base_species, variant_key
+    key = variant_key if by_variant else base_species
+    by = {}
+    for r in rows:
+        v = fnum(r.get("screen_dV_over_V0"))
+        if v is None:
+            continue
+        by.setdefault(key(r.get("dopant")), []).append((v, r))
+    out = {}
+    for sp, items in sorted(by.items()):
+        vs = [v for v, _ in items]
+        med = statistics.median(vs)
+        mad = _mad(vs, med)
+        d_abs = d_res = d_shp = 0
+        for v, r in items:
+            if abs(v) > VG_ABS_CUT:
+                d_abs += 1
+            if abs(v - med) > VG_RESID_MAD_K * mad:
+                d_res += 1
+            ang, asp = fnum(r.get("tier2_lattice_angle_dev_deg")), fnum(
+                r.get("tier2_lattice_aspect_ratio"))
+            if (ang is not None and ang > VG_ANGLE_DEV_MAX) or (
+                    asp is not None and asp > VG_ASPECT_MAX):
+                d_shp += 1
+        out[sp] = {"n": len(items), "median_dV_pct": round(100 * med, 2),
+                   "mad_pct": round(100 * mad, 2),
+                   "min_dV_pct": round(100 * min(vs), 2),
+                   "max_dV_pct": round(100 * max(vs), 2),
+                   "dropped_abs25": d_abs, "dropped_resid": d_res,
+                   "dropped_shape": d_shp}
+    return {"by_species": out}
+
+
+def volume_gate(all_csv=None):
+    """②재정량 ③대안 ④재채점을 한 번에 찍고 JSON 으로 남긴다."""
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parent))
+    src = Path(all_csv or (PROP / "cascade_v23_all.csv"))
+    if not src.exists():
+        print(f"⛔ 없다: {src}")
+        return 1
+    rows = read_csv_rows(src)
+    st = vg_stats(rows)["by_species"]
+    vs = [fnum(r["screen_dV_over_V0"]) for r in rows
+          if fnum(r.get("screen_dV_over_V0")) is not None]
+    n = len(vs)
+    tot = {k: sum(v[k] for v in st.values())
+           for k in ("dropped_abs25", "dropped_resid", "dropped_shape")}
+
+    # null 대조 — 화학적으로 host 와 사실상 같은 도펀트. 기준이 맞으면 ΔV≈0 이어야 한다.
+    NULL = ("Li2S", "LiCl", "LiBr", "Li3N")
+    nulls = {k: st[k]["median_dV_pct"] for k in NULL if k in st}
+
+    print(f"── 부피 게이트 재검토  ({src.name}, {n}행, {len(st)}종)")
+    print(f"   정의: dV = (V_doped/n) ÷ (V_base/n) − 1, 둘 다 UMA 이완 후 (대칭)")
+    print(f"   전체 중앙 {100*statistics.median(vs):+.2f} %  "
+          f"[{100*min(vs):+.1f} … {100*max(vs):+.1f}]")
+    print(f"\n② null 대조 (기준의 영점) — 화학적으로 host 와 같은 도펀트:")
+    for k, v in nulls.items():
+        print(f"     {k:6s} 중앙 dV {v:+6.2f} %")
+    print(f"   ⇒ |중앙| 최대 {max(abs(v) for v in nulls.values()):.2f} %p — "
+          f"**기준 셀은 어긋나지 않았다.** 앞선 '기준이 24 Å³' 진단은 철회.")
+    print(f"\n③ 게이트별 탈락 (같은 {n}행):")
+    for k, lab in (("dropped_abs25", f"현행 |ΔV|>{100*VG_ABS_CUT:.0f} %"),
+                   ("dropped_resid", f"대안A 종내잔차 >{VG_RESID_MAD_K:.0f}·MAD"),
+                   ("dropped_shape", f"대안B 모양 (각도>{VG_ANGLE_DEV_MAX:.0f}° 또는 "
+                                     f"축비>{VG_ASPECT_MAX})")):
+        print(f"     {lab:44s} {tot[k]:5d} / {n}  ({100*tot[k]/n:.2f} %)")
+    # ④ 는 **변형 단위**로 본다 — base 로 묶으면 B2O3(30/30 전멸)가
+    #   B2O3+Clrich(0/30)와 합쳐져 30/60 으로 희석되어 아무것도 안 보인다.
+    sv = vg_stats(rows, by_variant=True)["by_species"]
+    wiped = sorted((k for k, v in sv.items() if v["dropped_abs25"] == v["n"]),
+                   key=lambda k: sv[k]["median_dV_pct"])
+    # 겹침 — 현행 게이트가 "이완 실패"를 실제로 잡고 있나. 잡는다면 대안과 겹쳐야 한다.
+    flags = {"abs": set(), "resid": set(), "shape": set()}
+    from cascade_ids import variant_key as _vk
+    grp = {}
+    for i, r in enumerate(rows):
+        v = fnum(r.get("screen_dV_over_V0"))
+        if v is not None:
+            grp.setdefault(_vk(r.get("dopant")), []).append((i, v, r))
+    for _k, items in grp.items():
+        med = statistics.median([v for _, v, _ in items])
+        mad = _mad([v for _, v, _ in items], med)
+        for i, v, r in items:
+            if abs(v) > VG_ABS_CUT:
+                flags["abs"].add(i)
+            if abs(v - med) > VG_RESID_MAD_K * mad:
+                flags["resid"].add(i)
+            ang, asp = fnum(r.get("tier2_lattice_angle_dev_deg")), fnum(
+                r.get("tier2_lattice_aspect_ratio"))
+            if (ang is not None and ang > VG_ANGLE_DEV_MAX) or (
+                    asp is not None and asp > VG_ASPECT_MAX):
+                flags["shape"].add(i)
+    ov = {"abs&resid": len(flags["abs"] & flags["resid"]),
+          "abs&shape": len(flags["abs"] & flags["shape"]),
+          "resid&shape": len(flags["resid"] & flags["shape"])}
+    print(f"   겹침: 현행∩대안A {ov['abs&resid']}행 · 현행∩대안B {ov['abs&shape']}행 · "
+          f"대안A∩대안B {ov['resid&shape']}행")
+    print(f"\n④ 재채점 — 현행 게이트에 **전멸**하던 치환 변형 (dropped_abs25 == n):")
+    for k in wiped:
+        v = sv[k]
+        print(f"     {k:12s} n={v['n']:3d}  중앙 {v['median_dV_pct']:+7.2f} %  "
+              f"→ 대안A 탈락 {v['dropped_resid']}  대안B 탈락 {v['dropped_shape']}")
+    if not wiped:
+        print("     (없음)")
+    part = sorted(((v["dropped_abs25"], k) for k, v in sv.items()
+                   if 0 < v["dropped_abs25"] < v["n"]), reverse=True)[:6]
+    print(f"   부분 탈락 상위 (현행 게이트):")
+    for c, k in part:
+        v = sv[k]
+        print(f"     {k:12s} {c:3d}/{v['n']:<3d}  중앙 {v['median_dV_pct']:+7.2f} %  "
+              f"→ 대안A {v['dropped_resid']}  대안B {v['dropped_shape']}")
+    out = PROP / f"cascade_volume_gate_review{_SUF}.json"
+    out.write_text(json.dumps({
+        "what": "Review of the cascade screening volume gate (|dV| <= 25 %).",
+        "definition": ("dV = (V_doped/n_doped) / (V_baseline/n_baseline) - 1, both "
+                       "volumes AFTER UMA relaxation with FrechetCellFilter "
+                       "(cell_relax=True, same fmax/steps). Source: "
+                       "origin/claude/unified-2026-05-15:tools/doping/"
+                       "run_uma_screening.py"),
+        "baseline_structure": {
+            "file": "db/structures/lpscl_F43m_24G_canonical.cif",
+            "n_atoms": 52, "a_angstrom": 10.2493, "V_per_atom_before_relax": 20.705,
+            "note": "This is the INPUT to the baseline relaxation, not the reference "
+                    "itself; the reference is its UMA-relaxed volume."},
+        "retracted_claims": [
+            "The generator inflates the starting cell by ~25 % -- FALSE, the starting "
+            "cell never enters dV.",
+            "The baseline itself is ~24 A^3/atom, ~30 % too large -- FALSE, the "
+            "null-dopant controls below put the zero point within 1.6 %p."],
+        "null_dopant_controls_median_dV_pct": nulls,
+        "cell_size_finding": {
+            "supercell": "1,1,1", "n_atoms": 52, "n_fu": 4,
+            "why_it_matters": "n_units = max(1, round(n_fu * x)) = 1 for every x label, "
+                              "so x=0.02/0.05/0.10 all collapse to x_actual = 0.25. "
+                              "One of four formula units is substituted."},
+        "gates": {
+            "current_abs": {"cut_abs_dV": VG_ABS_CUT, "dropped": tot["dropped_abs25"]},
+            "alt_A_within_species_residual": {
+                "k_mad": VG_RESID_MAD_K, "dropped": tot["dropped_resid"],
+                "rationale": "A systematic shrink shared by every seed of a species is "
+                             "chemistry, not a broken relaxation. Flag the seed that "
+                             "leaves its own species."},
+            "alt_B_shape": {
+                "angle_dev_max_deg": VG_ANGLE_DEV_MAX, "aspect_max": VG_ASPECT_MAX,
+                "dropped": tot["dropped_shape"],
+                "rationale": "Isotropic densification is physical; a sheared or "
+                             "elongated cell is a failed relaxation."},
+            "overlap_rows": ov,
+            "verdict": ("The 25 % gate and the two failure-mode gates are nearly "
+                        "disjoint: the rows it kills are systematic, isotropic "
+                        "contractions shared by every seed of their species, i.e. "
+                        "chemistry, not failed relaxations.")},
+        "wiped_by_current_gate": {k: sv[k] for k in wiped},
+        "by_species": st,
+        "by_variant": sv,
+    }, ensure_ascii=False, indent=2))
+    print(f"\n→ {out}")
+    return 0
 
 
 def main():
@@ -589,12 +816,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--audit_raw", metavar="ROOT",
                     help="캠페인 실행 루트를 훑어 종별 3축 충족 현황을 센다 (gabia)")
+    ap.add_argument("--volume_gate", nargs="?", const="", metavar="ALL_CSV",
+                    help="부피 게이트(|ΔV|≤25 %) 재검토 — 정의·영점·대안·재채점")
     ap.add_argument("--selftest", action="store_true")
     a, _unknown = ap.parse_known_args()
     if a.selftest:
         raise SystemExit(_selftest())
     if a.audit_raw:
         raise SystemExit(audit_raw(a.audit_raw))
+    if a.volume_gate is not None:
+        raise SystemExit(volume_gate(a.volume_gate or None))
 
     rows = load_pool()
     gates = build_gates(rows)

@@ -1,18 +1,18 @@
 ---
 title: 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유 — 조성 섞임이지 구조가 아니다
 date: 2026-08-18
-updated: 2026-08-18
+updated: 2026-08-19
 tags: [cascade, screening, mlip, uma, volume-gate, simpson-paradox, seminar]
 status: 확정
 confidence: high
 verificationStatus: verified
-verifiedAt: 2026-08-18
+verifiedAt: 2026-08-19
 verifiedBy: self
 explored: false
 authoredBy: agent
 effort: high
 claimType: empirical
-evidenceScope: single-source
+evidenceScope: multi-source-primary
 ---
 
 # 부피로 떨어뜨린 100개가 "에너지로는 멀쩡한" 진짜 이유
@@ -179,6 +179,95 @@ Li 54 → 58  (+4)   ← 전하 보상 (2P⁵⁺+3S²⁻ 제거 = +4 → Li 4개
   · UMA 도 −2 % 근처 → **(c) 출발 셀** 확정, 게이트 재검토
   · UMA 가 −29 % → **(b) 엔진** 확정, 더 심각
 
+## 6. ✅ 2026-08-19 — 닫혔다. 정답은 (a) **농도/셀 크기** 다
+
+두 판을 돌렸다. **(b) 엔진과 (c) 출발 셀이 둘 다 반증됐고, 남은 것은 (a) 뿐이다.**
+
+### 6a. (b) 엔진 — 반증
+
+`tools/cascade/uma_relax_check.py` 로 DFT 이완 구조를 UMA 로 다시 이완:
+
+```
+b2o3_relaxV0.cif      ΔV  −0.00 %
+modelC_DFT_EOS_V0.cif ΔV  +0.92 %
+```
+
+**UMA 는 DFT 가 잡아 놓은 셀을 그대로 둔다.** 이 조성에서 과붕괴하지 않는다.
+
+### 6b. (c) 출발 셀 — 반증. ⛔ 내가 두 번 틀렸다
+
+게이트 정의를 원본까지 따라갔다
+(unified-2026-05-15 브랜치의 doping 스크린 스크립트 — 이 브랜치엔 없다:
+git show origin/claude/unified-2026-05-15 -- 의 doping/run_uma_screening.py):
+
+```python
+dV = (desc['volume'] - baseline['volume'] * (desc['n_atoms'] / baseline['n_atoms'])) \
+     / (baseline['volume'] * desc['n_atoms'] / baseline['n_atoms'])
+#  ⇔  dV = (V_doped/n_doped) ÷ (V_base/n_base) − 1
+baseline = relax_structure(read(args.base), calc, fmax=…, steps=…, cell_relax=True)
+```
+
+두 부피 **모두 UMA 이완 후**다. 정의가 대칭이다.
+
+| 철회한 주장 | 왜 틀렸나 |
+|---|---|
+| "생성기가 출발 셀을 25 % 부풀린다" | 출발 셀은 `dV` 에 **들어가지 않는다** |
+| "기준 셀 자체가 원자당 ~24 Å³ 로 30 % 크다" | null 대조가 반박 (아래) |
+
+**null 대조 — 기준의 영점.** 화학적으로 host 와 사실상 같은 도펀트는 `dV ≈ 0` 이어야 한다:
+
+```
+Li2S  +0.00 %      LiCl  −0.59 %      LiBr  −1.10 %      Li3N  −1.56 %
+```
+
+⇒ 최대 어긋남 1.6 %p. **기준 셀은 정상이다.** (참고: 입력 CIF
+`db/structures/lpscl_F43m_24G_canonical.cif` 는 a = 10.2493 Å, 20.705 Å³/atom 로
+실험 Li₆PS₅Cl(a = 9.859)보다 부피가 12 % 크지만, **그 CIF 는 이완돼서 기준이 되므로**
+그 값 자체는 `dV` 에 안 들어간다.)
+
+### 6c. ⭐ 남은 원인 = 셀이 52원자(4 f.u.)뿐이다
+
+```
+tier_cascade.sh (unified 브랜치)   SUPERCELL="${4:-1,1,1}"          → 52원자 = 4 f.u.
+substitute_compound.py:671 (unified 브랜치)
+    n_units = max(1, int(round(n_fu_actual * args.x_compound)))   # 4·0.02 → 0 → max(1,·)=1
+    actual_x = n_units / n_fu_actual                              # = 0.25
+```
+
+⇒ **x 라벨 0.02 / 0.05 / 0.10 이 전부 0.25 로 뭉갠다** (오래 묵은 "농도 셋이 다 0.25"
+미스터리의 근원). plain B₂O₃ 는 4 f.u. 중 1 f.u. 를 갈아치우며 **P 4 → 2** — 골격의
+절반이다. 우리 DFT 는 같은 치환을 128원자에서 하므로 P 10 → 8, 5 분의 1 이다.
+2 % vs 29 % 는 물질이 아니라 **농도 2.5 배**의 차이다.
+
+### 6d. 그래서 게이트는? — 25 % 컷은 **깨진 구조를 안 잡는다**
+
+`python3 tools/cascade/build_screening_funnel.py --volume_gate` (3,615행, 90종):
+
+| 게이트 | 탈락 | 무엇을 잡나 |
+|---|---|---|
+| 현행 `\|ΔV\| > 25 %` | 100 | — |
+| 대안 A 종내잔차 > 6·MAD | 111 | 제 종에서 혼자 튀는 씨드 = 이완 실패 |
+| 대안 B 모양 (각도 > 5° 또는 축비 > 1.25) | 78 | 전단·찌그러짐 = 깨진 셀 |
+
+**겹침: 현행∩A = 0행, 현행∩B = 0행.** 완전히 어긋난다. 현행 게이트가 죽이는 100행은
+전부 *제 종 전체가 같이* 등방 수축한 것들이라 A 도 B 도 이상으로 안 본다. 반대로
+A·B 가 잡는 189행은 현행 게이트를 그대로 통과한다.
+
+재채점 — 현행 게이트에 전멸하던 유일한 변형이 **둘 다에서 전원 생존**한다:
+
+```
+B2O3 (plain)  n=30  중앙 −29.13 %   → 대안A 탈락 0 · 대안B 탈락 0
+Y2O3 15/60 · TiO2 12/30 · Sb2S3 9/45 · Nb2O5 7/30 · TiF4 6/15 · ZrF4 3/30
+   ↑ 부분 탈락 상위 6종도 전부 대안 A·B 탈락 0
+```
+
+⇒ **25 % 는 "무너진 구조" 컷이 아니라 "조성이 많이 바뀐 구조" 컷이다.** 이름과 하는 일이
+다르다. 산출: `db/properties/cascade_volume_gate_review.json`.
+
+**아직 안 한 것**: 대안 게이트로 갈아끼우고 캠페인을 재채점하지 않았다 (B₂O₃ plain 이
+살아 돌아오면 하위 축 30행이 새로 필요하다 — 계산이 붙는다). 그리고 4 f.u. 셀은
+게이트를 바꿔도 남는다 — 진짜 수선은 **1×1×2 이상 셀로 다시 도는 것**이다.
+
 ## 이 카드가 말하지 않는 것
 
 - **무너진 100개가 무엇이 되었는지** — 최종 구조를 열어 보지 않았다. 분해인지,
@@ -187,7 +276,8 @@ Li 54 → 58  (+4)   ← 전하 보상 (2P⁵⁺+3S²⁻ 제거 = +4 → Li 4개
   있으나 이 풀에서 확인하지 않았다. DFT 대조 없음.
 - **de 의 기준계** — host 상대 Δe 다(hull 거리가 아니다,
   `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md`). 절대값 인용 금지.
-- **왜 −13 % 인가** — 위 5절. 원인 미확인.
+- **왜 −13 % 인가** — 6절에서 닫혔다(농도/셀 크기). 다만 종별 수축의 **크기**를
+  DFT 로 검증하지는 않았다 — B₂O₃ 한 종만 대조했다.
 
 ## 재현
 
