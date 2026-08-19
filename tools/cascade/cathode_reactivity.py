@@ -224,8 +224,18 @@ def validate(cathodes, cache_dir):
 
 
 # ── 2단계: 47 코팅 후보 전수 ───────────────────────────────────
-def load_dopants():
-    p = PROP / "cascade_v23_ranked.csv"
+#: 풀 — v1 은 47종(2026-06-29), v2 는 89~90종(2026-08-13). v2 는 v1 의 **완전한 상위집합**
+#: 이라 v2 로 돌리면 v1 행은 resume 이 건너뛴다 (같은 CSV 에 이어 붙는다).
+POOL_CSV = {"v1": "cascade_v23_ranked.csv", "v2": "cascade_v23_ranked_v2.csv"}
+
+
+def load_dopants(pool="v1"):
+    """풀 CSV 에서 도펀트 이름 목록.
+
+    ⚠ 기본이 v1(47종)인 것은 **기존 산출물과의 호환** 때문이다. 새로 돌릴 때는
+      `--pool v2` 를 준다 (2026-08-19: 90종 커버리지 구멍을 메우려고 추가).
+    """
+    p = PROP / POOL_CSV[pool]
     with open(p) as f:
         rows = list(csv.DictReader(l for l in f if not l.startswith("#")))
     return [r["dopant"] for r in rows]

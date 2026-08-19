@@ -128,8 +128,8 @@ def targets(cache_dir):
     return ok
 
 
-def run_all(cache_dir, out_csv):
-    dopants = load_dopants()
+def run_all(cache_dir, out_csv, pool="v1"):
+    dopants = load_dopants(pool)
     cps = [(l, c) for l, c, _ in COUNTERPARTS]
     print(f"코팅 {len(dopants)}종 × [계면 {len(cps)}상대 + hull + H2S]")
 
@@ -193,7 +193,9 @@ def run_all(cache_dir, out_csv):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--targets", action="store_true", help="앵커 재현 검증만")
-    ap.add_argument("--run", action="store_true", help="47종 전수")
+    ap.add_argument("--run", action="store_true", help="풀 전수 (--pool 로 47/90 선택)")
+    ap.add_argument("--pool", default="v1", choices=["v1", "v2"],
+                    help="v1=47종(기본, 기존 산출물 호환) · v2=90종")
     ap.add_argument("--force", action="store_true", help="검증 실패해도 강행")
     ap.add_argument("--cache", default=str(Path.home() / ".cache" / "mp_entries"))
     ap.add_argument("--out", default=str(PROP / "cascade_stability_axes.csv"))
@@ -205,7 +207,7 @@ def main():
     if a.run:
         if not ok and not a.force:
             sys.exit("\n앵커 순서가 예상과 다름 — --force 없이는 전수 실행 안 함.")
-        run_all(a.cache, a.out)
+        run_all(a.cache, a.out, a.pool)
 
 
 if __name__ == "__main__":
