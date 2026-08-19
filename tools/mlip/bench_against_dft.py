@@ -131,12 +131,51 @@ def predict(structs, model="uma-s-1p1", task="omat", device="cuda", batch_note=2
     return E, F, time.time() - t0
 
 
-def evaluate(structs, E_pred, F_pred, coef, elements, label):
+# extxyz 의 라벨 이름은 데이터셋마다 다르다. 우리가 붙이는 이름을 강요하지 말고 찾아서 쓴다.
+# (2026-08-19 kgy 실측: PET-MAD Li₃PS₄ 세트가 `forces` 가 아닌 이름을 쓴다 — raw 오류로 멈췄다)
+FORCE_ALIASES = ("forces", "force", "REF_forces", "ref_forces", "DFT_forces", "dft_forces",
+                 "forces_ref", "F", "gradients")
+ENERGY_ALIASES = ("energy", "REF_energy", "ref_energy", "DFT_energy", "dft_energy",
+                  "free_energy", "TotEnergy", "total_energy", "E")
+
+
+def force_key(atoms):
+    """이 구조의 힘 라벨 이름. 없으면 None. `gradients` 는 부호가 반대라 따로 취급한다."""
+    for k in FORCE_ALIASES:
+        if k in atoms.arrays:
+            return k
+    return None
+
+
+def get_forces_label(atoms, key):
+    """DFT 힘 라벨을 꺼낸다. `gradients` = dE/dR 이므로 부호를 뒤집는다."""
+    v = np.asarray(atoms.arrays[key], float)
+    return -v if key == "gradients" else v
+
+
+def energy_key(atoms):
+    """이 구조의 에너지 라벨 이름. calculator 가 붙어 있으면 'calc'. 없으면 None."""
+    try:
+        atoms.get_potential_energy()
+        return "calc"
+    except Exception:
+        pass
+    for k in ENERGY_ALIASES:
+        if k in atoms.info:
+            return k
+    return None
+
+
+def get_energy_label(atoms, key):
+    return float(atoms.get_potential_energy()) if key == "calc" else float(atoms.info[key])
+
+
+def evaluate(structs, E_pred, F_pred, coef, elements, label, fkey="forces", ekey="calc"):
     """참조 보정된 에너지·힘·상대에너지 지표."""
     ok = [i for i, e in enumerate(E_pred) if e is not None]
     S = [structs[i] for i in ok]
     Ep = np.array([E_pred[i] for i in ok])
-    Ed = np.array([s.get_potential_energy() for s in S])
+    Ed = np.array([get_energy_label(s, ekey) for s in S])
     nat = np.array([len(s) for s in S], float)
     shift = element_matrix(S, elements) @ coef
     dE = (Ep - shift) - Ed                       # 보정 후 잔차 (총에너지)
@@ -144,7 +183,7 @@ def evaluate(structs, E_pred, F_pred, coef, elements, label):
     # 상대에너지 — 첫 구조 기준 (원소별 항은 조성이 같으면 저절로 상쇄된다)
     relp, reld = (Ep - shift) - (Ep - shift)[0], Ed - Ed[0]
     Fp = np.concatenate([F_pred[i].ravel() for i in ok])
-    Fd = np.concatenate([S[k].arrays["forces"].ravel() for k in range(len(S))])
+    Fd = np.concatenate([get_forces_label(S[k], fkey).ravel() for k in range(len(S))])
     dF = Fp - Fd
     # 원소별 힘 오차 — Li 가 우리에게 제일 중요하다
     per_el = {}
@@ -217,6 +256,26 @@ def selftest():
     chk(abs(rrmse([1.1, 2.2], [1.0, 2.0]) - 10.0) < 1e-6,
         "[양성] 10 % 어긋나면 RRMSE 10 %")
     chk(np.isnan(rrmse([0.1], [0.0])), "[음성] 참값이 전부 0 이면 nan (0 나눗셈 안 한다)")
+    # ── 라벨 이름 탐지 (2026-08-19: PET-MAD 세트가 `forces` 를 안 쓴다)
+    lab = Atoms("LiPS", positions=rng.normal(0, 2, (3, 3)), cell=np.eye(3) * 8, pbc=True)
+    chk(force_key(lab) is None, "[음성] 힘 라벨이 없으면 None (0 을 비교하지 않는다)")
+    chk(energy_key(lab) is None, "[음성] 에너지 라벨이 없으면 None")
+    lab.arrays["REF_forces"] = np.ones((3, 3))
+    lab.info["REF_energy"] = -7.5
+    chk(force_key(lab) == "REF_forces", "[양성] 별칭 REF_forces 를 찾는다")
+    chk(energy_key(lab) == "REF_energy", "[양성] 별칭 REF_energy 를 찾는다")
+    chk(abs(get_energy_label(lab, "REF_energy") + 7.5) < 1e-12, "[양성] 별칭 에너지 값이 맞다")
+    chk(np.allclose(get_forces_label(lab, "REF_forces"), 1.0), "[양성] 별칭 힘 값이 맞다")
+    # ★ 음성 — gradients 는 dE/dR 이라 **부호를 뒤집어야** 한다 (안 뒤집으면 힘이 통째로 반대)
+    grad = Atoms("LiPS", positions=rng.normal(0, 2, (3, 3)), cell=np.eye(3) * 8, pbc=True)
+    grad.arrays["gradients"] = np.full((3, 3), 2.0)
+    chk(np.allclose(get_forces_label(grad, "gradients"), -2.0),
+        "[음성] gradients 는 부호를 뒤집는다 (그냥 쓰면 힘이 반대)")
+    # ★ 음성 — 우선순위: forces 가 있으면 별칭보다 forces 를 쓴다
+    both = Atoms("LiPS", positions=rng.normal(0, 2, (3, 3)), cell=np.eye(3) * 8, pbc=True)
+    both.arrays["gradients"] = np.full((3, 3), 2.0)
+    both.arrays["forces"] = np.full((3, 3), 5.0)
+    chk(force_key(both) == "forces", "[음성] forces 가 있으면 별칭에 안 뺏긴다")
     # guard
     try:
         guard_gpu(); chk(True, "[음성] QE 없으면 guard 통과")
@@ -264,15 +323,31 @@ def main():
                 f"   그 뒤 --train ~/work/Li3PS4/train.xyz --test ~/work/Li3PS4/test.xyz")
     te = read(a.test, index=(f":{a.limit}" if a.limit else ":"))
     tr = read(a.train, index=(f":{a.limit}" if a.limit else ":")) if a.train else None
-    # 라벨이 진짜 있는지 — 없으면 조용히 0 을 비교하게 두지 않는다
+    # 라벨이 진짜 있는지 — 없으면 조용히 0 을 비교하게 두지 않는다.
+    # 이름은 데이터셋마다 다르므로 별칭을 찾고, 못 찾으면 **거기 뭐가 있는지 찍어 준다**.
     probe = te[0]
-    if "forces" not in probe.arrays:
-        raise SystemExit(f"⛔ {a.test} 에 forces 라벨이 없다 — 이 도구는 힘을 1순위로 잰다. "
-                         f"extxyz Properties 에 forces:R:3 이 있어야 한다")
-    try:
-        probe.get_potential_energy()
-    except Exception:
-        raise SystemExit(f"⛔ {a.test} 에 energy 라벨이 없다 (extxyz 주석줄의 energy=...)")
+    fkey = force_key(probe)
+    if fkey is None:
+        raise SystemExit(
+            f"⛔ {a.test} 에서 힘 라벨을 못 찾았다 — 이 도구는 힘을 1순위로 잰다.\n"
+            f"   찾아본 이름: {', '.join(FORCE_ALIASES)}\n"
+            f"   이 파일의 per-atom 배열: {sorted(probe.arrays)}\n"
+            f"   구조당 info 키: {sorted(probe.info)}\n"
+            f"   → 맞는 이름이 위에 있으면 FORCE_ALIASES 에 추가한다 (한 줄).")
+    ekey = energy_key(probe)
+    if ekey is None:
+        raise SystemExit(
+            f"⛔ {a.test} 에서 에너지 라벨을 못 찾았다.\n"
+            f"   찾아본 이름: {', '.join(ENERGY_ALIASES)}\n"
+            f"   구조당 info 키: {sorted(probe.info)}")
+    if a.train:
+        ptr = tr[0]
+        if force_key(ptr) != fkey or energy_key(ptr) != ekey:
+            raise SystemExit(f"⛔ train 과 test 의 라벨 이름이 다르다 — 참조 보정이 섞인다.\n"
+                             f"   test: forces={fkey} energy={ekey} / "
+                             f"train: forces={force_key(ptr)} energy={energy_key(ptr)}")
+    print(f"   라벨: forces=`{fkey}` energy=`{ekey}`"
+          + ("  ⚠ gradients = dE/dR 이므로 부호를 뒤집어 쓴다" if fkey == "gradients" else ""))
     elements = sorted({e for s in (tr or []) + te for e in s.get_chemical_symbols()})
     print(f"── {a.model}/{a.task}   원소 {elements}")
     print(f"   test  {len(te)}구조 ({min(len(s) for s in te)}–{max(len(s) for s in te)} 원자)"
@@ -281,7 +356,7 @@ def main():
     print("   test 예측…")
     Ete, Fte, t1 = predict(te, a.model, a.task, a.device)
     ok_te = [i for i, e in enumerate(Ete) if e is not None]
-    dE_te = np.array([Ete[i] - te[i].get_potential_energy() for i in ok_te])
+    dE_te = np.array([Ete[i] - get_energy_label(te[i], ekey) for i in ok_te])
 
     # 참조 보정 — train 에서 적합해 test 에 적용 (자기적합도 같이 낸다)
     coef_self, _, r2_self = fit_reference(dE_te, [te[i] for i in ok_te], elements)
@@ -289,13 +364,13 @@ def main():
         print("   train 예측 (참조 보정 적합용)…")
         Etr, Ftr, t2 = predict(tr, a.model, a.task, a.device)
         ok_tr = [i for i, e in enumerate(Etr) if e is not None]
-        dE_tr = np.array([Etr[i] - tr[i].get_potential_energy() for i in ok_tr])
+        dE_tr = np.array([Etr[i] - get_energy_label(tr[i], ekey) for i in ok_tr])
         coef, _, r2 = fit_reference(dE_tr, [tr[i] for i in ok_tr], elements)
     else:
         coef, r2, t2 = coef_self, r2_self, 0.0
 
-    res = evaluate(te, Ete, Fte, coef, elements, "test")
-    res_self = evaluate(te, Ete, Fte, coef_self, elements, "test(자기적합 — 낙관치)")
+    res = evaluate(te, Ete, Fte, coef, elements, "test", fkey, ekey)
+    res_self = evaluate(te, Ete, Fte, coef_self, elements, "test(자기적합 — 낙관치)", fkey, ekey)
     rec = {
         "what": "MLIP evaluated against a DFT-labelled structure set.",
         "model": a.model, "task": a.task,
