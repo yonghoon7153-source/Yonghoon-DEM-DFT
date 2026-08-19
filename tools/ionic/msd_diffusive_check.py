@@ -433,8 +433,14 @@ def selftest():
     chk(framework_check({"times_ps": tt, "msd_per_elem_A2": {"P": [0.3] * len(tt)}},
                         2.0, 50.0) is None,
         "[음성③] Li 가 없으면 비를 못 내므로 None")
-    chk("녹고" in framework_verdict_text("framework_melting")
-        and "판정 불가" == framework_verdict_text("무엇"),
+    # ⚠ 문구를 바꾸면 여기가 깨져야 한다 — 2026-08-20 에 "녹고 있다" → "확산 쪽으로 간다"
+    #   로 고치면서 이 검사를 안 고쳐 selftest 가 깨진 채로 커밋됐다.
+    #   문구 전체가 아니라 **판정 키가 다 문구를 갖는지**를 본다(문구 수정에 안 부서지게).
+    _keys = ("framework_rigid", "framework_mobile", "framework_melting", "sample_too_thin")
+    chk(all(framework_verdict_text(k) != "판정 불가" and len(framework_verdict_text(k)) > 10
+            for k in _keys),
+        "[양성] 판정 키 4개가 전부 문구를 갖는다")
+    chk("판정 불가" == framework_verdict_text("무엇"),
         "[음성④] 모르는 판정은 '판정 불가' 로 떨어진다")
 
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
