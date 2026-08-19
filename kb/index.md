@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 220
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 221
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -166,10 +166,11 @@
 - `kb/reports/sdcp_preliminary_final_2026_08_03.md` — SDCP 예비 최종 보고서 (2026-08-03)
 - `kb/reports/sdcp_review_action_plan_2026_08_03.md` — SDCP 파이프라인 — 리뷰 2건 통합 실행계획 (2026-08-03)
 
-## projects/ (18)
+## projects/ (19)
 - `kb/projects/MULTI_CATEGORY_BATCH_PLAN_v22.md` — Multi-Category Multi-Compound Batch Plan — Paper #2 (v4.5.18)
 - `kb/projects/MUST_READ_digital_twin_north_star.md` — 🚨🚨🚨 MUST READ — AI 계산 스크리닝 플랫폼 North Star (구: Digital Twin)
 - `kb/projects/PRESENTATION_digital_twin_overview.md` — AI 계산 기반 스크리닝 플랫폼 — 발표용 종합 정리 (구: Digital Twin)
+- `kb/projects/cascade_pipeline_fixes_2026_08_19.md` — cascade 파이프라인 수정 목록 — codex 교차리뷰용 (2026-08-19 전수 정독 산물) ○미열람
 - `kb/projects/cascade_v23_review_2026_07_11.md` — Cascade v23 전체 리뷰 — 의도 지도 · 빠진 것 점검 · 후보군 구축 (2026-07-11)
 - `kb/projects/collab_rietveld_request_2026_07.md` — 협업자 Rietveld 데이터 요청 문안 + stable phase 사용현황 정리 — 2026-07-28
 - `kb/projects/digital_twin_roadmap.md` — 디지털 트윈 + ML Screening 프로젝트 로드맵
