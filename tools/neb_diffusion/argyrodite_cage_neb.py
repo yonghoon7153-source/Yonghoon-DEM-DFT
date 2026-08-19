@@ -214,9 +214,14 @@ def band_health(E):
     others = float(np.sort(inner)[-2]) if len(inner) > 1 else 0.0
     if spike > 1.0 and spike > 3 * max(others, 1e-6):
         probs.append(f"이미지 하나만 {spike:+.2f} eV 로 솟았다(다음이 {others:+.2f}) — 터진 이미지")
-    below = float(inner.min()) - max(0.0, float(rel[-1]))
+    # ⛔ 2026-08-19 실측에서 잡은 **내 버그**. 처음엔 `min(inner) − max(0, rel[-1])` 로 쟀는데
+    #   그러면 **끝점 비대칭**(한쪽이 +256 meV 높은 것)을 "중간이 낮다" 로 오인한다.
+    #   실제 comp1 inter 판에서 중간 최소가 시작점보다 32 meV 낮을 뿐인데 −288 meV 로
+    #   계산돼 멀쩡한 결과에 가짜 경보가 붙었다. **더 낮은 쪽 끝점**과 비교해야 맞다.
+    below = float(inner.min()) - min(0.0, float(rel[-1]))
     if below < -0.05:
-        probs.append(f"중간 이미지가 끝점보다 {below:.3f} eV 낮다 — 끝점이 국소 최소가 아니다")
+        probs.append(f"중간 이미지가 **두 끝점 중 낮은 쪽**보다 {below:.3f} eV 낮다 — "
+                     f"끝점이 국소 최소가 아니다")
     # ⚠ 끝점 비등가는 **결함이 아니다.** 무질서 argyrodite 에서 두 Li 자리가 다른 것은
     #   정상이고, 그래서 Ea(정) ≠ Ea(역) 이 된다. 문제로 세지 않고 **주석으로만** 남긴다
     #   (2026-08-19 자기리뷰 — 처음엔 실패로 셌다).
@@ -229,7 +234,7 @@ def band_health(E):
                    "min_interior_rel_eV": round(float(inner.min()), 4)}
 
 
-def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB):
+def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB, log=None):
     """1단계(밴드) → **수렴했을 때만** 2단계(climbing image).
 
     ⛔ 2026-08-19: 앞 판은 1단계 수렴을 **안 보고** climb 를 켰다. 400스텝 상한에 걸린
@@ -244,14 +249,16 @@ def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB):
     neb = NEB(images, k=SPRING_K, climb=False, method=NEB_METHOD,
               allow_shared_calculator=True)
     neb.interpolate("idpp", apply_constraint=False)
-    opt = FIRE(neb, logfile=None)
+    # ⚠ 한 판이 25분~3시간 간다. logfile=None 이면 밖에서 **수렴 중인지 제자리인지** 알 길이
+    #   없다(2026-08-19 실측 — 한 시간 넘게 깜깜했다). 스텝별 fmax 를 파일로 남긴다.
+    opt = FIRE(neb, logfile=(str(log) if log else None))
     opt.run(fmax=FMAX_NEB, steps=steps)
     conv1, n1 = bool(opt.converged()), int(opt.get_number_of_steps())
     E_band = np.array([im.get_potential_energy() for im in images])
     conv2, n2 = False, 0
     if conv1:
         neb.climb = True
-        opt2 = FIRE(neb, logfile=None)
+        opt2 = FIRE(neb, logfile=(str(log) if log else None))
         opt2.run(fmax=FMAX_CI, steps=steps)
         conv2, n2 = bool(opt2.converged()), int(opt2.get_number_of_steps())
     E = np.array([im.get_potential_energy() for im in images]) if conv1 else E_band
@@ -293,7 +300,9 @@ def one_run(args):
     fin, c2, s2 = relax_positions(fin0, calc)
     E_i, E_f = ini.get_potential_energy(), fin.get_potential_energy()
     print(f"   끝점 이완: {s1}/{s2} steps  ΔE(끝−시작) = {1000*(E_f-E_i):+.1f} meV")
-    images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps)
+    logf = OUTDIR / f"neb_{args.tag or 'run'}.log"
+    print(f"   NEB 진행 로그 → {logf}   (tail -f 로 볼 것)")
+    images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps, log=logf)
     probs, health = band_health(E)
     Ea_f = float(E.max() - E[0])
     Ea_r = float(E.max() - E[-1])
@@ -350,6 +359,18 @@ def selftest():
         print(("  ✓ " if c else "  ✗ ") + m)
         ok &= bool(c)
 
+    # band_health 회귀 — **실측 프로파일**로 못 박는다 (2026-08-19)
+    good = [0.0, -0.032, 0.423, 0.35, 0.528, 0.216, 0.256]   # comp1 inter, 수렴 후 실측
+    pb, hh = band_health(good)
+    chk(not pb, f"[양성] 정상 프로파일에 경보가 없다 (얻은 것 {pb})")
+    chk(any("끝점 차" in n for n in hh["notes"]),
+        "[양성] 끝점 비대칭은 **주석**으로만 나온다 (실패로 세지 않는다)")
+    spiked = [0.0, -0.157, 0.400, 0.066, 0.678, 2.378, 0.818, 0.332, 0.257]  # CI 폭주 실측
+    chk(any("터진 이미지" in q for q in band_health(spiked)[0]),
+        "[음성] 이미지 하나만 솟은 밴드는 잡는다 (미수렴 위 CI 폭주)")
+    low = [0.0, -0.30, 0.1, 0.2, 0.1, -0.25, 0.05]
+    chk(any("낮은 쪽" in q for q in band_health(low)[0]),
+        "[음성] 중간이 두 끝점보다 정말 낮으면 잡는다")
     # 수직폭 — 양성/음성. 60° 셀에서 |a| 를 쓰면 틀린다는 것을 못 박는다.
     cube = np.eye(3) * 10.0
     chk(np.allclose(perp_widths(cube), 10.0), "[양성] 정육면체 수직폭 = 모서리 길이")
