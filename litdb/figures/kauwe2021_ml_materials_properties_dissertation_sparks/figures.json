@@ -1,0 +1,312 @@
+{
+ "slug": "kauwe2021_ml_materials_properties_dissertation_sparks",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "ch2_Kauwe2021_MLguide.pdf",
+  "Sup) ch6_Kauwe2021_extraordinary.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Schematic of a machine learning study in materials science.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    88.9,
+    526.5,
+    233.6
+   ],
+   "w": 1840,
+   "h": 604,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.796
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 7,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Example predicted vs actual material property plots, plotted (left) without and (right) with a marginal histogram. In addition, lines corresponding to ideal predictions (where the predicted values exactly match the actual values) and a linear regression ﬁt (for estimating the correlation between the predicted and actual values) are shown.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    177.9,
+    526.5,
+    287.3
+   ],
+   "w": 903,
+   "h": 456,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 7,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Example residual error plots, plotted (left) against the actual value and (right) as a histogram with a kernel density estimation (kde). A lower error indicates a more accurate model prediction.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    336.0,
+    526.5,
+    434.9
+   ],
+   "w": 903,
+   "h": 414,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.876
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Example loss curve plot of a neural network, showing model performance (loss) evaluated on the train and validation data sets at each epoch throughout the training process. A lower loss indicates a better-performing model.",
+   "rotated_deg": 0,
+   "bbox": [
+    310.0,
+    466.4,
+    526.5,
+    601.3
+   ],
+   "w": 903,
+   "h": 563,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.913
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Example visualization of element prevalence in a data set, shown as a histogram.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    82.3,
+    526.5,
+    284.7
+   ],
+   "w": 1840,
+   "h": 845,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.868
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Example visualization of element prevalence in a data set, shown as a heatmap on a periodic table.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    298.9,
+    470.6,
+    472.3
+   ],
+   "w": 1608,
+   "h": 723,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.5
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 3,
+   "file": "fig_S1.png",
+   "caption": "Fig. 1. The distribution of bulk modulus data is separated into ordinary and extraordinary compounds. The train test split ensures that the top 1% is never trained on. 15% of the non-extraordinary (ordinary) data are included in the test set so we can see whether our model can successfully distinguish between extraordinary and ordinary values.",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    105.0,
+    530.1,
+    348.7
+   ],
+   "w": 928,
+   "h": 1016,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.637
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Fig. 2. Actual versus predicted for logarithmic thermal expansion showing three ways of extrapolations: gap, withheld element, and withheld structure. case of duplicates, we sorted by ICSD number and kept the last entry. The data for these properties are available in a GitHub repository [32]. In the case of Debye temperature, thermal conductivity, shear modulus, and thermal expansion properties we scale the target by applying a base 10 logarithm to more closely match a normal distribution for learning purposes. To test the eﬃcacy of our learning models, we use the train- test scheme shown in Fig. 1. First, we isolate the top 1% of properties, label them as extraordinary, and add them to the test set. Next, we",
+   "rotated_deg": 0,
+   "bbox": [
+    307.5,
+    395.1,
+    530.1,
+    590.0
+   ],
+   "w": 928,
+   "h": 813,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.634
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Fig. 3. (a) The actual vs. predicted values for a ridge regression trained on bulk modulus. (b) The actual values vs. the probability, obtained from a logistic regression, of being extraordinary. All data in the training set has values lower than 300 GPa. Data to the right of the vertical line represent extraordinary compositions. F1 score on the training data. The F1 score represents the harmonic mean of precision and recall: randomly sample 15% of the bottom 99%; these 15% are labeled as ‘ordinary’ and added to complete the test set. The training set is re- presented by the remaining data, and the highest 6% of this data is then assigned ‘extraordinary’ labels to match the same ratio of ordinary and extraordinary labels in the test set. For clarity’s sake, the code to gen- erate the ordinary/extraordinary data is available on GitHub. ⎞ ⎠ F precision recall precision recall 1 2 · ⎜ ⎟ = ",
+   "rotated_deg": 0,
+   "bbox": [
+    81.5,
+    105.0,
+    530.1,
+    291.6
+   ],
+   "w": 1870,
+   "h": 778,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.64
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Fig. 4. All machine learning models are able to successfully identify extra- ordinary compositions from the test set. However, the classiﬁcation models, shown with dotted lines, also have the advantage of signiﬁcantly fewer false positives. Standard deviations (shown via shading) were generated by assigning the bottom 99% train-test split using 5 diﬀerent random seeds. The properties bulk modulus, thermal conductivity, shear modulus, band gap, Debye tem- perature and thermal expansion are represented by their symbols B, κ, G, Eg,",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    105.0,
+    304.5,
+    352.9
+   ],
+   "w": 928,
+   "h": 1034,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.747
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Fig. 5. The precision-recall Area-under-curve (AUC) is computed as the average across all properties. The three extrapolation cases are considered for all gap sizes using four diﬀerent model types, ridge regression (Ridge), logistic regression (Logistic), nearest-neighbor regression (nnr), and nearest-neighbor classiﬁcation (nnc). (left) The entire training data is used (except the gap), (center) the most prevalent element is removed from training, and (right) the most prevalent structure is removed from training. extraordinary candidates for high-Tc superconductivity since these op- erate on a completely diﬀerent (and yet unexplained) mechanism of superconductivity[36]. At the same time, careful examination of poor predictions in the training data set could lead to physical insight into new mechanisms. For example, if a speciﬁc chemistry or class of ma- terial are consistently poorly pr",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    105.0,
+    530.1,
+    255.6
+   ],
+   "w": 1868,
+   "h": 629,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 6,
+   "file": "fig_S6.png",
+   "caption": "Fig. 6. The ranked elemental prevalence of compounds labeled extraordinary in the original AFLOW data versus those screened from the PCD.",
+   "rotated_deg": 0,
+   "bbox": [
+    81.8,
+    293.9,
+    304.5,
+    496.8
+   ],
+   "w": 928,
+   "h": 846,
+   "dpi": 300,
+   "src": "Sup) ch6_Kauwe2021_extraordinary.pdf",
+   "blank": 0.789
+  },
+  {
+   "key": "t1",
+   "kind": "table",
+   "label": "1",
+   "page": 3,
+   "file": "tab_1.png",
+   "caption": "Table 1. List of Accompanying Jupyter Notebooks and the Topics Demonstrated no. notebook contents",
+   "rotated_deg": 0,
+   "bbox": [
+    86.1,
+    83.9,
+    525.5,
+    723.0
+   ],
+   "w": 1832,
+   "h": 2664,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 3,
+   "file": "tab_2.png",
+   "caption": "Table 2. Examples of Using Machine Learning in the Study of Inorganic Materials",
+   "rotated_deg": 0,
+   "bbox": [
+    86.1,
+    83.9,
+    525.5,
+    723.0
+   ],
+   "w": 1832,
+   "h": 2664,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.846
+  },
+  {
+   "key": "t3",
+   "kind": "table",
+   "label": "3",
+   "page": 4,
+   "file": "tab_3.png",
+   "caption": "Table 3. Comparison of Materials Data Repositories with Predominantly Property Information structure information mechanical thermal properties",
+   "rotated_deg": 0,
+   "bbox": [
+    86.1,
+    101.2,
+    525.5,
+    142.8
+   ],
+   "w": 1832,
+   "h": 175,
+   "dpi": 300,
+   "src": "ch2_Kauwe2021_MLguide.pdf",
+   "blank": 0.541
+  }
+ ]
+}

@@ -1,0 +1,492 @@
+{
+ "slug": "lai2025_haml_li_metal_lpscl_interface_doping_seFO",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+  "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 | Comparison of HAML and AIMD in terms of the average time used and acceleration ratio. The tested systems include interface between Li metal and LiFSI, DME mixed solution (Li|LiFSI,DME), interfaces between Li metal and LPSC system (Li|LPSC), Se-doped system (Li|LPSC_Se), F-doped system (Li|LPSC_F), O-doped system (Li|LPSC_O).",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    300.8,
+    226.3
+   ],
+   "w": 1114,
+   "h": 761,
+   "dpi": 300,
+   "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.869
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 | Demonstration of HAML for simulation of Li metal and LiFSI, DME mixed solution interface system. a The relationship between HAML cycles and simulation time. The snapshots of HAML simulations for Li metal and LiFSI, DME",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    546.5,
+    389.2
+   ],
+   "w": 2137,
+   "h": 1440,
+   "dpi": 300,
+   "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.851
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 | Comparison of interface reactions in four researched systems (Li|LPSC, Li|LPSC_Se, Li|LPSC_F, and Li|LPSC_O). Atomic conﬁgurations of Li|LPSC (a), Li|LPSC_Se (b), Li|LPSC_F (c), and Li|LPSC_O (d) interfaces after 280 ps HAML simulations. e The quantitative comparison of interface structure similarities",
+   "rotated_deg": 0,
+   "bbox": [
+    33.7,
+    43.7,
+    516.5,
+    323.5
+   ],
+   "w": 2012,
+   "h": 1167,
+   "dpi": 300,
+   "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.813
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 4,
+   "file": "fig_S1.png",
+   "caption": "Supplementary Figure 1. The initial structure schematic of interface between Li metal",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.7,
+    514.3,
+    388.2
+   ],
+   "w": 1794,
+   "h": 1312,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.946
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Supplementary Figure 2. (a)-(c) The initial structure schematic of Li6PS5Cl|Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.3,
+    517.0,
+    653.2
+   ],
+   "w": 1805,
+   "h": 2442,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.743
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Supplementary Figure 3. Temperatures of HAML simulation on interface between Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    275.0
+   ],
+   "w": 1794,
+   "h": 871,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.909
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Supplementary Figure 4. Temperatures of HAML simulation on interface between Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    317.3,
+    514.3,
+    612.2
+   ],
+   "w": 1794,
+   "h": 1229,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Supplementary Figure 5. Temperatures of HAML simulation on interface between Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    286.2
+   ],
+   "w": 1794,
+   "h": 918,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.901
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Supplementary Figure 6. Temperatures of HAML simulation on interface between Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    326.7,
+    514.3,
+    621.6
+   ],
+   "w": 1794,
+   "h": 1229,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.925
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Supplementary Figure 7. Temperatures of HAML simulation on interface between Li",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.9,
+    514.3,
+    291.2
+   ],
+   "w": 1794,
+   "h": 919,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.906
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Supplementary Figure 8. The difference between the RDFs, Li-P (a), Li-S (b), Li-Cl",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    324.5,
+    514.4,
+    557.0
+   ],
+   "w": 1794,
+   "h": 969,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.941
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Supplementary Figure 9. The HAML calculation process and results in Li6PS5Cl, ran",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    73.3,
+    524.8,
+    351.5
+   ],
+   "w": 1837,
+   "h": 1160,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.858
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 10,
+   "file": "fig_S10.png",
+   "caption": "Supplementary Figure 10. Arrhenius plots of Li+ diffusion coefficient D as a function",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.1,
+    514.4,
+    337.5
+   ],
+   "w": 1794,
+   "h": 1111,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 11,
+   "file": "fig_S11.png",
+   "caption": "Supplementary Figure 11. The HAML calculation process and results in",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    332.3
+   ],
+   "w": 1793,
+   "h": 1110,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.835
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 12,
+   "file": "fig_S12.png",
+   "caption": "Supplementary Figure 12. The HAML calculation process and results in",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.1,
+    514.3,
+    326.2
+   ],
+   "w": 1793,
+   "h": 1081,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.81
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 13,
+   "file": "fig_S13.png",
+   "caption": "Supplementary Figure 13. The HAML calculation process and results in",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.3,
+    514.3,
+    323.8
+   ],
+   "w": 1793,
+   "h": 1062,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.839
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 14,
+   "file": "fig_S14.png",
+   "caption": "Supplementary Figure 14. The bond profiles comparison during the HAML",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    514.3,
+    180.8
+   ],
+   "w": 1793,
+   "h": 479,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.884
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 14,
+   "file": "fig_S15.png",
+   "caption": "Supplementary Figure 15. The average coordination number (average CN)",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    322.6,
+    514.2,
+    439.9
+   ],
+   "w": 1793,
+   "h": 489,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.883
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 15,
+   "file": "tab_S1.png",
+   "caption": "Supplementary Table 1: The total simulation time and real time consumption of",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    75.9,
+    513.2,
+    761.8
+   ],
+   "w": 1785,
+   "h": 2858,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 15,
+   "file": "tab_S2.png",
+   "caption": "Supplementary Table 2: The total simulation time and real time consumption of",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    75.9,
+    513.2,
+    761.8
+   ],
+   "w": 1785,
+   "h": 2858,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 15,
+   "file": "tab_S3.png",
+   "caption": "Supplementary Table 3: The total simulation time and real time consumption of",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    75.9,
+    513.2,
+    761.8
+   ],
+   "w": 1785,
+   "h": 2858,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "tS4",
+   "kind": "table",
+   "label": "S4",
+   "page": 16,
+   "file": "tab_S4.png",
+   "caption": "Supplementary Table 4: The total simulation time and real time consumption of",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    69.5,
+    513.2,
+    680.6
+   ],
+   "w": 1785,
+   "h": 2547,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS5",
+   "kind": "table",
+   "label": "S5",
+   "page": 16,
+   "file": "tab_S5.png",
+   "caption": "Supplementary Table 5: The total simulation time and real time consumption of",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    69.5,
+    513.2,
+    680.6
+   ],
+   "w": 1785,
+   "h": 2547,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.918
+  },
+  {
+   "key": "tS6",
+   "kind": "table",
+   "label": "S6",
+   "page": 16,
+   "file": "tab_S6.png",
+   "caption": "Supplementary Table 6: Products Obtained from HAML Simulation of interface",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    69.5,
+    513.1,
+    680.6
+   ],
+   "w": 1785,
+   "h": 2547,
+   "dpi": 300,
+   "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": 0.918
+  }
+ ]
+}
