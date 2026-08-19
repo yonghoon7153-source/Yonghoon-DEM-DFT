@@ -731,6 +731,105 @@ def build(tag, path, disp, a, pool):
     return info
 
 
+# ── UMA 정찰 (2026-08-19) ────────────────────────────────────────────────────
+def uma_scout(args):
+    """**어느 홉을 DFT 로 잴지** UMA 로 먼저 고른다. 답이 아니라 정찰이다.
+
+    왜 (1저자 지시 "li3nd·li2s 처럼 두세 번 계산 안 하면 된다"):
+      li3nd 는 DFT NEB 를 **세 번** 돌았다 — v2 c–b 6.8일(안 일어나는 홉) +
+      ccpath c–c 6.2일(진짜 경로) + cc333 셀수렴(진행 중). 6.8일이 통째로 낭비였고
+      그 원인은 `pick_hop` docstring 에 이미 적혀 있다: **전역 최단이 전도 경로가 아니다.**
+      그 판정에 필요한 것은 절대 장벽이 아니라 **끝점 비대칭**이고, UMA 로 25분이면 난다.
+
+    무엇을 보고 고르나 (순서대로)
+      ① **끝점 에너지 차** — 공공이 안정 자리에서 불안정 자리로 밀려나는 홉은 안 일어난다
+         (li3nd b–c 가 +2.05 eV 였다). 이게 1순위 배제 기준이다.
+      ② 장벽 — 살아남은 shell 중 최저
+      ③ **셀 수렴** — supercell 을 키워 장벽이 움직이나 (cc333 이 DFT 로 묻고 있는 것)
+
+    ⛔ 이 값은 **논문에 못 쓴다.** UMA 이고 provisional=true 로 찍는다.
+       DFT 는 여기서 고른 shell·셀로 **한 번만** 돌린다.
+    """
+    import numpy as _np, time as _t
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(
+        os.path.abspath(__file__))), "neb_diffusion"))
+    from argyrodite_cage_neb import (perp_widths, build_endpoints, relax_positions,
+                                     run_neb, band_health, load_calc)
+    tags = args.only or ["li3nd", "li2o", "li3p", "li3po4g", "licl"]
+    scs = [tuple(int(x) for x in t.split(",")) for t in args.uma_supercells.split()]
+    out = {"what": "UMA-s-1p1(omat) scout: WHICH hop and WHICH cell to spend DFT on.",
+           "provisional": True,
+           "not_for_publication": "MLIP barriers. DFT runs once on the chosen shell/cell.",
+           "decision_rule": ["1) endpoint |dE| small = vacancy stays in its sublattice",
+                             "2) lowest barrier among survivors",
+                             "3) barrier stable vs supercell"],
+           "runs": []}
+    calc = None
+    for tag in tags:
+        at0, why = load_relaxed(tag, None, args.relaxed_from)
+        if at0 is None:
+            print(f"⛔ {tag}: 이완본 없음 — {why}"); continue
+        nat0 = len(at0); om = orbit_map(at0)
+        # ⛔ spglib 이 없으면 orbit 이 안 나오고 shell 열거가 통째로 빈다. 그러면 이 도구가
+        #   **전역 최단 하나**로 떨어지는데, 그게 정확히 li3nd 에서 6.8일을 버린 그 실수다
+        #   (pick_hop docstring ★★ 참조). 조용히 그리로 가지 않는다.
+        if om is None:
+            print(f"⛔ {tag}: spglib 이 없어 Li orbit 을 못 낸다 → shell 열거 불가. "
+                  f"`pip install spglib` 하거나 --uma_allow_no_symmetry 로 강행할 것 "
+                  f"(강행하면 전역 최단 하나만 재고, 그건 li3nd 6.8일 낭비와 같은 함정이다)")
+            if not args.uma_allow_no_symmetry:
+                continue
+        probe = pick_hop(at0.repeat((2, 2, 2)), nat0, om)
+        shells = list((probe or {}).get("neighbor_shells", {}).keys())[: args.uma_shells]
+        lo = li_orbits(at0)
+        print(f"\n══ {tag}  n={nat0}  {lo or ''}")
+        print(f"   후보 shell {shells or ['(대칭 없음 → 전역 최단 1개, 함정 주의)']}")
+        for sc in scs:
+            at = at0.repeat(sc)
+            W = perp_widths(at.cell)
+            for sh in (shells or [None]):
+                try:
+                    h = pick_hop(at, nat0, om, want_shell=sh)
+                except SystemExit as e:
+                    print(f"   {sh}: {e}"); continue
+                ini0, fin0, j2, hop = build_endpoints(at, h["vac"], h["hop"])
+                if calc is None:
+                    calc = load_calc(args.uma_device)
+                t0 = _t.time()
+                try:
+                    ini, c1, _ = relax_positions(ini0, calc)
+                    fin, c2, _ = relax_positions(fin0, calc)
+                    dE = float(fin.get_potential_energy() - ini.get_potential_energy())
+                    imgs, E, info = run_neb(ini, fin, calc, args.uma_images, args.uma_steps)
+                except Exception as ex:                      # OOM 등 — 죽지 말고 남긴다
+                    print(f"   {sh or 'shortest'} ×{sc}: ⛔ {type(ex).__name__}: {str(ex)[:80]}")
+                    out["runs"].append({"tag": tag, "shell": sh, "supercell": list(sc),
+                                        "error": f"{type(ex).__name__}: {str(ex)[:160]}"})
+                    continue
+                probs, hh = band_health(E)
+                rec = {"tag": tag, "shell": sh or "shortest", "supercell": list(sc),
+                       "n_atoms": len(at), "min_perp_width_A": round(float(W.min()), 3),
+                       "hop_distance_A": round(hop, 4),
+                       "endpoint_dE_eV": round(dE, 4),
+                       "Ea_forward_eV": round(float(E.max() - E[0]), 4),
+                       "Ea_reverse_eV": round(float(E.max() - E[-1]), 4),
+                       "profile_eV_rel": [round(float(x - E[0]), 4) for x in E],
+                       "band_problems": probs, **info, **hh,
+                       "trustworthy": bool(info["ci_converged"] and not probs),
+                       "seconds": round(_t.time() - t0, 1), "provisional": True}
+                out["runs"].append(rec)
+                flag = "⛔ 안 일어나는 홉" if abs(dE) > 0.5 else ("⚠" if abs(dE) > 0.2 else "✅")
+                print(f"   {rec['shell']:8s} ×{sc} n={len(at):4d} d={hop:.3f}Å  "
+                      f"끝점차 {1000*dE:+7.0f} meV {flag}  Ea {rec['Ea_forward_eV']:.3f}/"
+                      f"{rec['Ea_reverse_eV']:.3f} eV  ({rec['seconds']:.0f}s"
+                      f"{'' if rec['trustworthy'] else ', 못 믿음'})")
+                for q in probs:
+                    print(f"        · {q}")
+        Path(args.uma_out).write_text(json.dumps(out, ensure_ascii=False, indent=2))
+    print(f"\n→ {args.uma_out}  ({len(out['runs'])}건)")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--work", default=WORK)
@@ -776,9 +875,23 @@ def main():
                          "금속에 절연체 규약을 걸거나 4f 미해결 상을 강행하게 된다")
     ap.add_argument("--pseudo_list", action="store_true",
                     help="pseudo 전체 목록을 찍는다 (기본은 우리 계 원소만)")
+    ap.add_argument("--uma_scout", action="store_true",
+                    help="DFT 전에 UMA 로 **어느 홉·어느 셀**인지 정찰 (논문값 아님)")
+    ap.add_argument("--uma_shells", type=int, default=4, help="시험할 shell 수")
+    ap.add_argument("--uma_supercells", default="1,1,1 2,2,2")
+    ap.add_argument("--uma_images", type=int, default=5)
+    ap.add_argument("--uma_steps", type=int, default=800)
+    ap.add_argument("--uma_device", default="cuda")
+    ap.add_argument("--uma_out", default="db/properties/sei_neb_uma_scout.json")
+    ap.add_argument("--uma_allow_no_symmetry", action="store_true",
+                    help="spglib 없이 강행 (⚠ 전역 최단만 잰다 — li3nd 함정)")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     a = ap.parse_args()
+
+    # ⭐ UMA 정찰은 pseudo·QE 를 아예 안 본다 — 아래 준비 단계보다 **먼저** 갈라진다.
+    if a.uma_scout:
+        raise SystemExit(uma_scout(a))
 
     pool = find_pseudos(a.pseudo_dir)
     # ⚠ 출력은 기본이 요약이다 (CLAUDE.md). pseudo 100여 종을 매번 찍으면 정작
