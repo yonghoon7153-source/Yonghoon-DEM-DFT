@@ -19,18 +19,27 @@ cd "$(dirname "$0")/../.."
 
 python3 tools/oxidation/interface_reactivity_v2.py --selftest
 
-# ① 시범 3종 — 한 쌍에 몇 초/몇 분인지 먼저 잰다. 여기서 느리면 ②를 나눠 돌린다.
+# ⛔ 상대는 **전이금속 하나짜리**로 (2026-08-19 실측 정정)
+#    · NCM811 은 Ni·Co·Mn 셋을 얹어 chemsys 가 10원소가 되고 **17종에서 MP 가 거절**한다
+#      (`MPRestError: Please specify fewer elements`). LiCoO2·LiNiO2·LiMn2O4 로 나눈다
+#      — 이러면 전 종이 6~8원소라 통과하고, 한 쌍에 12~16초다(NCM811 은 72~78초였다).
+#    · **Li 금속은 여기서 못 잰다.** Li 저장고를 연 grand-potential 은 상대가 순수 Li 면
+#      정규화 분모가 0 이라 ZeroDivisionError 다. Li 음극 쪽은 **닫힌계(0 V)** 로 따로.
+#      (도구가 이제 돌기 전에 막고 이유를 JSONL 에 남긴다.)
+CATHODES=("LiCoO2:LCO" "LiNiO2:LNO" "LiMn2O4:LMO")
+
+# ① 시범 3종 — 한 쌍에 몇 초인지 먼저 잰다.
 python3 tools/oxidation/interface_reactivity_v2.py \
   --batch_from --limit 3 --resume \
-  --cathodes "LiCoO2:LCO" "LiNi0.8Co0.1Mn0.1O2:NCM811" "Li:Li_metal" \
+  --cathodes "${CATHODES[@]}" \
   --voltages 2.5 3.0 3.5 4.0 4.3 \
   --out db/properties/cascade_interface_90.jsonl
 
 echo
-echo "=== 시범 3종 끝. 위 초 단위를 보고 전체를 돌린다 ==="
+echo "=== 시범 3종 끝. 전체 90종 x 3 상대 = 270 쌍 (~15초/쌍 → 1시간 남짓) ==="
 python3 tools/oxidation/interface_reactivity_v2.py \
   --batch_from --resume \
-  --cathodes "LiCoO2:LCO" "LiNi0.8Co0.1Mn0.1O2:NCM811" "Li:Li_metal" \
+  --cathodes "${CATHODES[@]}" \
   --voltages 2.5 3.0 3.5 4.0 4.3 \
   --out db/properties/cascade_interface_90.jsonl
 

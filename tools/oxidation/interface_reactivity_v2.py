@@ -65,6 +65,36 @@ def min_rxn_grand(c1, c2, gpd, pd):
 #:   get_entries_in_chemsys 가 부분 chemsys 를 전부 훑어 사실상 끝나지 않는다.
 #:   종마다 따로 (Li,P,S,Cl,O + 그 도펀트 원소 + 상대 물질 원소) 로 돈다.
 CASCADE_CSV = "db/properties/cascade_v23_all.csv"
+#: MP `get_entries_in_chemsys` 가 받아 주는 원소 수 상한 (실측 2026-08-19:
+#:   9원소 Ag-Cl-Co-Li-Mn-Ni-O-P-S 통과 · 10원소 Al-Br-Cl-Co-Li-Mn-Ni-O-P-S 에서
+#:   `MPRestError: Please specify fewer elements`). 미리 걸러 MP 호출을 아낀다.
+MAX_CHEMSYS = 9
+
+
+def why_skip(e_formula, c_formula, open_elements=("Li",)):
+    """이 (전해질, 상대) 쌍을 **돌리기 전에** 막아야 하는 이유. 없으면 None.
+
+    ⛔ 왜 필요한가 (2026-08-19 실측) — 두 실패가 조용하지 않게 하려고.
+      ① 상대가 **순수 Li 금속**이면 grand-potential 이 정의되지 않는다.
+         pymatgen 이 `grand_potential /= sum(comp[el] for el in comp
+         if el not in chempots)` 로 정규화하는데, Li 저장고를 열어 두면 분모가 0 이라
+         ZeroDivisionError 가 난다. **Li 음극 쪽은 닫힌계(0 V) InterfacialReactivity**
+         로 따로 재야 한다 — 이 도구의 일이 아니다.
+      ② chemsys 가 MAX_CHEMSYS 를 넘으면 MP 가 거절한다. NCM811 처럼 전이금속을
+         셋 얹는 상대가 그렇다 → **LiCoO2 · LiNiO2 · LiMn2O4 처럼 하나씩** 쓴다.
+    """
+    from pymatgen.core import Composition
+    cc = Composition(c_formula)
+    rest = [el.symbol for el in cc.elements if el.symbol not in open_elements]
+    if not rest:
+        return ("상대가 순수 " + "/".join(open_elements) +
+                " 이라 grand-potential 이 정의되지 않는다 "
+                "(정규화 분모 0). 닫힌계 0 V InterfacialReactivity 로 따로 잴 것")
+    n = len(set(el.symbol for el in Composition(e_formula).elements)
+            | set(el.symbol for el in cc.elements) | set(open_elements))
+    if n > MAX_CHEMSYS:
+        return f"chemsys {n} 원소 > {MAX_CHEMSYS} — MP 가 거절한다 (상대를 단일 전이금속으로)"
+    return None
 
 
 def champion_formulas(csv_path):
@@ -130,6 +160,13 @@ def run_batch(a):
             if (sp, clab) in done:
                 continue
             t0 = time.time()
+            skip = why_skip(forms[sp], cstr)
+            if skip:
+                rec = {"species": sp, "cathode": clab, "skipped": skip, "seconds": 0.0}
+                with out.open("a", encoding="utf-8") as f:
+                    f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                print(f"[{i}/{len(todo)}] {sp:10s} vs {clab:8s} SKIP {skip[:56]}")
+                continue
             try:
                 elems = set(Composition(forms[sp]).elements) | set(Composition(cstr).elements)
                 elems.add(Element("Li"))
@@ -177,6 +214,18 @@ def _selftest():
             f"[양성] Ag2O 챔피언에 O 가 있다 ({f.get('Ag2O')})")
     else:
         chk(False, f"[전제] {CASCADE_CSV} 가 있어야 한다")
+    # ── why_skip: 두 실패를 **돌리기 전에** 막는가 ────────────────────────
+    try:
+        chk(why_skip("Li6PS5Cl", "LiCoO2") is None,
+            "[양성] LCO 는 통과 (chemsys 7)")
+        chk("순수" in (why_skip("Li6PS5Cl", "Li") or ""),
+            "[음성] 순수 Li 상대는 막는다 (ZeroDivisionError 예방)")
+        chk("chemsys" in (why_skip("Cl4Li21P4S17Al1Br3", "LiNi0.8Co0.1Mn0.1O2") or ""),
+            "[음성] 10원소 NCM811 조합은 막는다 (MPRestError 예방)")
+        chk(why_skip("Cl4Li21P4S17Al1Br3", "LiNiO2") is None,
+            "[양성] 같은 종도 단일 전이금속 상대면 통과")
+    except ImportError:
+        print("  ⚠ pymatgen 없음 — why_skip 시험 건너뜀 (여기선 정상)")
     with tempfile.TemporaryDirectory() as d:
         p = _os.path.join(d, "empty.csv")
         open(p, "w").write("dopant,rank_combined\nMgO,2\n")
