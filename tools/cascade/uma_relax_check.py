@@ -37,7 +37,9 @@ STEPS = 1500
 def guard_gpu():
     """pw.x 가 돌고 있으면 멈춘다 — 같이 띄우면 VRAM 이 터진다 (CLAUDE.md 규약)."""
     try:
-        r = subprocess.run(["pgrep", "-f", "[p]w.x"], capture_output=True, text=True)
+        # ⛔ `pgrep -f` 는 **명령줄 전체**를 본다 — 커밋 메시지에 "pw.x" 라고 적기만 해도
+        #   자기 셸이 걸린다 (2026-08-19 실측, selftest 가 잡았다). 프로세스 **이름**으로 본다.
+        r = subprocess.run(["pgrep", "-x", "pw.x"], capture_output=True, text=True)
         if r.stdout.strip():
             raise SystemExit("⛔ pw.x 가 돌고 있다 — UMA 와 동시 실행 금지 (VRAM). 끝나고 실행할 것")
     except FileNotFoundError:
