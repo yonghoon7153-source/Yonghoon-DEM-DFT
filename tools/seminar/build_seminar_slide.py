@@ -184,13 +184,33 @@ SLIDES = {
     # 소불릿은 **한 일과 그 결과**만 (1저자 2026-08-19: "EOS 진행해서 B0 와 평형 부피를
     #   구했다 정도만"). 엔진 구분(DFT vs MLIP)은 아래 주석 줄이 진다.
     sub1="To obtain [b]B₀ and the equilibrium volume[/b], an equation of state was fitted.",
-    sub2="Adding Cl softens the lattice, [b]26.2 to 21.7 GPa[/b], although the cell is denser.",
-    label="equation of state, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6",
+    # 결과(26.2 → 21.7 GPa)는 **그림 안에 이미 적혀 있다** — 소불릿으로 또 쓰지 않는다.
+    sub2="",
+    label="equation of state, undoped Li₆PS₅Cl vs Cl-rich LPSCl1.6",
     # ⛔ 여기가 엔진 구분을 지는 자리다. 앞 판은 이 말이 아예 없어 90종 탄성값이
     #   DFT 로 읽혔다 — 캐스케이드 02–08 은 전부 MLIP + FIRE 다.
     note="[r]these two curves are DFT; the screening ran on the machine-learned potential with FIRE relaxation[/r]",
     gloss=("Equation of state: energy as the cell volume changes  ·  "
            "Stack pressure: the force holding the cell together"),
+    drop=[10],
+ ),
+ 16: dict(
+    idx=15, out="Slide16_stability_window.pptx",
+    figs=["docs/figures/seminar/step8_oxidation_windows.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Electrochemical stability window",
+    head="Step 8: The oxidation onset from a grand-potential construction",
+    sub1="To locate decomposition, [b]the Li chemical potential was scanned as a voltage axis[/b].",
+    # ⚠ em-dash 제거 (1/13 덱은 0개).
+    sub2="The result is [r]0 K bulk thermodynamics[/r], not a rate and not a passivation prediction.",
+    label="stability window of every candidate  ·  window width by chemical group",
+    # ⛔ 앞 판은 "five candidates lose the window entirely" 였다. **과장이다** —
+    #   실측 최소가 0.004 V 라 0 이 되는 종은 하나도 없다 (2026-08-19).
+    #   그리고 다섯은 Mn·Fe·Co·Ni 라 "late transition metals"(8장은 Fe–Cu) 와도 안 맞는다.
+    note="[r]five windows collapse below 0.05 V[/r], all 3d metals from Mn to Ni; [b]the group order is clean[/b]",
+    # ⚠ 원본 용어줄에 영국식 'favourable' 이 있었다.
+    gloss=("Oxidation onset: the voltage at which decomposition becomes favorable  ·  "
+           "Window: the voltage range where nothing decomposes"),
     drop=[10],
  ),
 }
@@ -224,7 +244,13 @@ def build(n):
     M.set_text(sl.shapes[1], S["title"])
     M.set_text(sl.shapes[5], S["head"])
     M.set_text(sl.shapes[7], S["sub1"])
-    M.set_text(sl.shapes[9], S["sub2"])
+    # sub2 가 없는 장은 **둘째 불릿을 지운다** (점까지). 15장이 그렇다 — 방법 한 줄이면
+    #   충분하고 결과는 그림·주석이 진다 (1저자 2026-08-19).
+    if S.get("sub2"):
+        M.set_text(sl.shapes[9], S["sub2"])
+    else:
+        for i in (9, 8):
+            sl.shapes[i]._element.getparent().remove(sl.shapes[i]._element)
 
     # ① 용어줄을 **맨 아래로** — 원래 (5.02, 0.94) 라 헤더 불릿 위에 올라타 잘렸다.
     g = sl.shapes[2]
@@ -286,7 +312,7 @@ def selftest():
 
         # 대본과 1:1 — 헤더·이름표·소불릿까지
         chk(S["head"] in body, f"{n}장 헤더가 대본에도 있다")
-        for tag in ("sub1", "sub2"):
+        for tag in [t for t in ("sub1", "sub2") if S.get(t)]:
             key = plain(S[tag]).split(" — ")[0].split(";")[0].strip()
             chk(key in body, f"{n}장 {tag} 가 대본에도 있다 ('{key[:30]}…')")
 
@@ -295,6 +321,8 @@ def selftest():
         for tag, w_in, pt in (("head", 8.49, 17.2), ("sub1", 7.92, 12.8),
                               ("sub2", 7.92, 12.8), ("gloss", 8.86, 8.6),
                               ("note", 8.90, 11.5)):
+            if not S.get(tag):
+                continue
             w = M._text_pt(plain(S[tag]), pt) / 72.0
             chk(w < w_in - 0.15, f"{n}장 {tag} 한 줄에 들어간다 ({w:.2f} < {w_in} in)")
 

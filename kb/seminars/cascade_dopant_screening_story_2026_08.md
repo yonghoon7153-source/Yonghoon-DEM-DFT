@@ -754,9 +754,9 @@ Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다
 
 > ■ Step 7: Stiffness and compressibility are obtained from finite strains
 > • To obtain [파랑]B₀ and the equilibrium volume[/], an equation of state was fitted.
-> • Adding Cl softens the lattice, [파랑]26.2 to 21.7 GPa[/], although the cell is denser.
+(소불릿 하나뿐 — 결과 26.2 → 21.7 GPa 는 **그림 안에 이미 있다.** 둘째 불릿은 지운다.)
 
-`< equation of state, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6 >`
+`< equation of state, undoped Li₆PS₅Cl vs Cl-rich LPSCl1.6 >`
 `해설` [빨강]these two curves are DFT; the screening ran on the machine-learned potential with FIRE relaxation[/]
 하단 용어 — Equation of state: energy as the cell volume changes ·
 　　　　　　 Stack pressure: the force holding the cell together
@@ -809,14 +809,32 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 
 ---
 
-### 16 — Electrochemical stability window
+### 16 — Electrochemical stability window  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 8: The oxidation onset from a grand-potential construction
-> • To locate decomposition, the Li chemical potential was scanned as a voltage axis.
-> • The result is 0 K bulk thermodynamics — not a rate, and not a passivation prediction.
+> • To locate decomposition, [파랑]the Li chemical potential was scanned as a voltage axis[/].
+> • The result is [빨강]0 K bulk thermodynamics[/], not a rate and not a passivation prediction.
 
-`< stability window of every candidate >`
-`해설` five candidates lose the window entirely — all late transition metals
+`< stability window of every candidate  ·  window width by chemical group >`
+`해설` [빨강]five windows collapse below 0.05 V[/], all 3d metals from Mn to Ni; [파랑]the group order is clean[/]
+하단 용어 — Oxidation onset: the voltage at which decomposition becomes favorable ·
+　　　　　　 Window: the voltage range where nothing decomposes
+
+⛔ **앞 판 해설이 과장이었다 (2026-08-19).** *"five candidates lose the window entirely"* —
+   **0 이 되는 종은 하나도 없다.** 실측 최소가 **0.004 V**(Fe₂O₃·FeCl₃)다. 그리고 다섯은
+   **Mn·Fe·Co·Ni** 라 8장의 "late transition metals (Fe–Cu)" 와도 안 맞는다(Mn 이 밖).
+   ⇒ `five windows collapse below 0.05 V, all 3d metals from Mn to Ni`.
+⭐ **오른쪽 패널을 새로 넣었다** — 족별 창 폭. 8장의 "족 추세는 견고하다" 를 이 축에서
+   다시 보인다: alkali **0.898** > alk.earth 0.797 > main-group 0.518 > lanthanide 0.418 >
+   TM **0.310** V (중앙값). 순서가 깨끗하다.
+⚠⚠ **이 장은 이 덱의 세 번째 엔진이다.** grand-potential 창을 **MP GGA/GGA+U hull**
+   위에서 쟀다 — 우리 DFT 도, 스크리닝 MLIP 도 아니다. 15장이 DFT/MLIP 를 갈랐으니
+   여기서 또 갈라 줘야 한다.
+⛔ 캐스케이드 안의 `stage 09f` 는 **진짜 ESW 가 아니다** (`tier_cascade.sh` 원주석:
+   *"NOT a real ESW — real ESW needs Mo 2012 grand canonical method"*). 여기 쓰는 값은
+   그 뒤 별도 배치(`esw_cascade_batch.py`) 산물이다.
+⚠ v6 원본 결함 — 용어줄이 헤더 위에 올라탔고(영국식 `favourable` 까지), 아래 이탤릭이
+   `0 K bulk the / rmodynamics` 로 낱말 중간에서 감겼으며 sub2 에 **em-dash** 가 있었다.
 
 **[65초]**
 
@@ -829,14 +847,33 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 그림에서 막대 하나가 후보 하나이고, 막대 길이가 **아무 일도 일어나지 않는 전압 구간**
 입니다. 점선이 도펀트 없는 host 의 산화 지점입니다.
 
-아래쪽 붉은 다섯 개가 **창이 아예 사라진 후보**입니다. 전부 후기 전이금속인데, 이건
-한계가 옮겨진 게 아니라 붕괴입니다.
+아래쪽 붉은 다섯 개가 **창이 0.05 V 밑으로 무너진 후보**입니다. **MnO·Fe₂O₃·FeCl₃·NiO·CoO**
+— 원소로는 Mn, Fe, Co, Ni 넷이에요. 제일 좁은 게 **0.004 V** 니까 사실상 없는 셈인데,
+정확히 말하면 **0 이 되는 종은 하나도 없습니다.**
+
+⭐ 오른쪽이 그걸 족으로 묶은 겁니다. **알칼리 0.90 V, 알칼리토 0.80, 주족 0.52,
+란타넘족 0.42, 전이금속 0.31.** 순서가 깨끗하게 떨어집니다. 8장에서 "족 추세는 견고하다"
+고 했는데, 이 축에서도 같은 그림이에요.
 
 ⚠ 이건 0 K 벌크 열역학입니다. 분해가 가능하다는 것만 말하지, 얼마나 빨리 분해되는지도
 분해층이 덮고 멈추는지도 말하지 않습니다.
 
+⚠ 그리고 잣대를 하나 더 말씀드려야 합니다. 이 창은 **Materials Project 의 hull** 위에서
+잰 값이에요. 앞 장 EOS 의 DFT 도 아니고 스크리닝의 기계학습 퍼텐셜도 아닙니다.
+**세 번째 엔진**이라 숫자를 옮길 때 어디서 나온 값인지 같이 말해야 합니다.
+
 💡 "실험 CV 에서는 왜 3 V 넘게 버티나"가 반드시 나옵니다. 답은 "열역학은 가능하다고
 하지만 실제로는 분해층이 덮어 느려지기 때문"입니다.
+
+💬 **말로만 (질문 오면)**
+· 창 폭 중앙값은 **0.423 V**, 최대는 1.087 V 입니다. 좁은 다섯은 중앙값의 **10분의 1** 이하예요.
+· host 산화 지점 **2.140 V** 는 84개 phase set **전부에서 정확히 같았습니다** — 도펀트를
+  뭘 넣어도 host 분해 경로가 안 바뀝니다.
+· 90종 중 host 보다 **위**는 8종, **같음**이 38종, **아래**가 44종입니다.
+· Fe₂O₃ 와 FeCl₃ 는 창이 **완전히 같습니다**(1.808 / 1.804). 음이온이 달라도 Fe 의
+  한계 분해 경로가 같아서예요.
+
+⛔ **말하지 말 것** — "창이 사라졌다". 최소가 0.004 V 지 0 이 아니다.
 
 ---
 

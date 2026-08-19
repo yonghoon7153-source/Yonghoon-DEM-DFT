@@ -698,25 +698,92 @@ def _ox_rows():
     return _read(os.path.join(DB, "oxidation_stability_cascade_v2.csv"))
 
 
+#: 창이 이 아래면 "사실상 사라졌다" 로 본다 (V). 물리 상수가 아니라 표시 기준이다 —
+#: 실측 최소가 0.004 V 라 **0 이 되는 종은 없다.** "lose the window entirely" 는 과장이었다.
+ESW_NARROW = 0.05
+
+
 def fig_oxidation_windows():
+    """후보 90종의 산화 안정 창. **족 추세**가 이 그림의 두 번째 얘기다.
+
+    ⚠ 잣대 — grand-potential 창을 **MP GGA/GGA+U hull** 위에서 잰 값이다.
+      우리 DFT 도, 스크리닝의 MLIP 도 아니다. 이 덱에서 **세 번째 엔진**이라
+      슬라이드 주석이 그걸 진다.
+    ⛔ 캐스케이드 안의 `stage 09f` 는 **진짜 ESW 가 아니다**
+      (`tier_cascade.sh` 원주석: *"NOT a real ESW — real ESW needs Mo 2012 grand
+      canonical method"*). 여기 쓰는 값은 그 뒤 별도 배치(`esw_cascade_batch.py`)
+      산물이다 — `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` §핵심.
+
+    이 그림이 **못 하는 것**
+      · 속도를 말하지 않는다. 0 K 벌크 열역학이라 "분해가 허용된다" 까지다.
+      · 부동태(passivation)를 예측하지 않는다 — 실제 셀은 창 밖에서도 돈다.
+    """
     rows = []
     for r in _ox_rows():
         try:
-            rows.append((r["dopant"], float(r["red_V"]), float(r["ox_V"]), float(r["window_V"]), r["group"]))
+            rows.append((r["dopant"], float(r["red_V"]), float(r["ox_V"]),
+                         float(r["window_V"]), r["group"]))
         except (ValueError, KeyError):
             continue
-    rows.sort(key=lambda t: (t[3] > 0.05, t[2]))
+    rows.sort(key=lambda t: (t[3] > ESW_NARROW, t[2]))
+    narrow = [t for t in rows if t[3] <= ESW_NARROW]
     _rc()
-    fig, ax = plt.subplots(figsize=(11.6, 5.4))
+    fig, (ax, axg) = plt.subplots(
+        1, 2, figsize=(12.8, 5.4), gridspec_kw=dict(width_ratios=[4.0, 1.15], wspace=0.05))
+
     for i, (d, red, ox, win, g) in enumerate(rows):
-        col = BAD if win <= 0.05 else GROUP_C.get(g, NEUTRAL)
-        ax.plot([red, ox], [i, i], color=col, lw=2.4, solid_capstyle="butt",
-                alpha=.55 if win > 0.05 else 1.0, zorder=3)
-    ax.axvline(2.14, color=hs.INK, ls="--", lw=1.3, zorder=4)
+        hot = win <= ESW_NARROW
+        ax.plot([red, ox], [i, i], color=BAD if hot else GROUP_C.get(g, NEUTRAL),
+                lw=3.0 if hot else 2.4, solid_capstyle="butt",
+                alpha=1.0 if hot else .55, zorder=4 if hot else 3)
+    # 좁은 다섯은 막대가 점처럼 보인다. ⚠ 행마다 이름을 붙이면 다섯 줄이 서로 겹친다
+    #   (90행 중 연속 5행이라 간격이 없다, 2026-08-19 실측). **한 줄로 모아** 적는다.
+    ax.annotate(" · ".join(formula(d) for d, _, _, _, _ in narrow),
+                (0.985, 0.015), xycoords="axes fraction", ha="right", va="bottom",
+                fontsize=11, color=BAD, fontweight="bold")
+    ax.axvline(2.14, color=hs.INK, ls="--", lw=1.3, zorder=5)
     ax.set_yticks([]); ax.set_ylim(-2, len(rows) + 1)
     ax.set_xlabel("voltage vs Li/Li⁺  (V)      dashed line = undoped host onset")
     ax.set_ylabel(f"{len(rows)} candidates  ·  sorted by window width")
+    from matplotlib.lines import Line2D
+    ax.legend(handles=[Line2D([], [], color=GROUP_C[k], lw=3, label=k)
+                       for k in ("alkali", "alk.earth", "main-group", "lanthanide", "TM")]
+                      + [Line2D([], [], color=BAD, lw=3,
+                                label=f"window below {ESW_NARROW:.2f} V  ({len(narrow)})")],
+              loc="upper left", frameon=False, fontsize=10.5, ncol=2, handlelength=1.6,
+              columnspacing=1.2)
     _bare(ax, grid="x")
+
+    # ── 오른쪽: 족별 창 폭 (8장의 "족 추세는 견고하다" 를 이 축에서 다시 보인다) ──
+    by = {}
+    for _, _, _, win, g in rows:
+        by.setdefault(g, []).append(win)
+    order = sorted(by, key=lambda k: -st.median(by[k]))
+    for i, g in enumerate(order):
+        axg.barh(-i, st.median(by[g]), height=.62, color=GROUP_C.get(g, NEUTRAL),
+                 alpha=.85, zorder=3)
+        axg.scatter(by[g], [-i] * len(by[g]), s=9, color=hs.INK, alpha=.35, lw=0, zorder=4)
+    axg.set_yticks([-i for i in range(len(order))])
+    axg.set_yticklabels([f"{g}  ({len(by[g])})" for g in order], fontsize=10)
+    axg.set_ylim(-len(order) + .35, .65)
+    axg.set_xlabel("window width  (V)")
+    _bare(axg, grid="x")
+
+    _write_csv("seminar_table_esw_windows.csv",
+               ["dopant", "chemical_group", "anion", "red_V", "ox_V", "window_V", "narrow_flag"],
+               [[d, g, "", f"{red:.3f}", f"{ox:.3f}", f"{win:.3f}",
+                 "narrow" if win <= ESW_NARROW else ""] for d, red, ox, win, g in rows],
+               header=[
+                "# Step 8 - electrochemical stability window (seminar 2026-08).",
+                "# Grand-potential window on the MP GGA/GGA+U hull - NOT our DFT and NOT the",
+                "#   screening MLIP. Third engine in this deck; quote the engine with the number.",
+                "# The cascade's own stage 09f is NOT a real ESW (see cascade_pipeline_anatomy).",
+                "# Undoped host oxidation onset = 2.140 V for all 84 phase sets.",
+                "# window_V = ox_V - red_V. Minimum over 90 species is 0.004 V, so NO species",
+                "#   reaches zero - 'loses the window entirely' would be an overstatement.",
+                "# narrow_flag = window <= %.2f V (%d species, all 3d metals Mn..Ni)." % (
+                    ESW_NARROW, len(narrow)),
+               ])
     return _save(fig, "step8_oxidation_windows.png")
 
 
@@ -903,7 +970,9 @@ def selftest():
             # 를 가리키는 범주 라벨이다 (2026-08-18).
             "fig_stability_band",
             # 모식도 — 골짜기·화살표에 붙는 칸 라벨 (2026-08-19)
-            "fig_anneal_scheme"}
+            "fig_anneal_scheme",
+            # 좁은 다섯의 조성식 이름표 (2026-08-19)
+            "fig_oxidation_windows"}
     _fns = re.split(r"\ndef ", body)
     _bad = []
     for _f in _fns[1:]:
