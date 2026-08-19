@@ -71,7 +71,25 @@ CASCADE_CSV = "db/properties/cascade_v23_all.csv"
 MAX_CHEMSYS = 9
 
 
-def why_skip(e_formula, c_formula, open_elements=("Li",)):
+def min_rxn_closed(c1, c2, pd):
+    """닫힌계(0 V) 상호 반응 — Li 저장고를 **안 연다**.
+
+    ⛔ 왜 따로 필요한가 (2026-08-19) — 상대가 **순수 Li 금속**이면 grand-potential 은
+      정의가 안 된다(정규화 분모 0). Li 음극 쪽은 이 닫힌계 쪽으로 재야 하고,
+      그게 Sundar 2025 Fig.2 의 Li-anode 판과 **같은 계산**이다.
+    ⚠ 대신 **전압축이 없다.** 두 모드의 숫자를 같은 표에 섞으면 안 된다.
+    """
+    from pymatgen.analysis.interface_reactions import InterfacialReactivity
+    ir = InterfacialReactivity(c1, c2, pd, use_hull_energy=True)
+    min_e, min_rxn = 1e9, None
+    for k in ir.get_kinks():
+        e = float(k[2])
+        if e < min_e:
+            min_e, min_rxn = e, str(k[3])
+    return min_e, min_rxn
+
+
+def why_skip(e_formula, c_formula, open_elements=("Li",), closed=False):
     """이 (전해질, 상대) 쌍을 **돌리기 전에** 막아야 하는 이유. 없으면 None.
 
     ⛔ 왜 필요한가 (2026-08-19 실측) — 두 실패가 조용하지 않게 하려고.
@@ -86,7 +104,7 @@ def why_skip(e_formula, c_formula, open_elements=("Li",)):
     from pymatgen.core import Composition
     cc = Composition(c_formula)
     rest = [el.symbol for el in cc.elements if el.symbol not in open_elements]
-    if not rest:
+    if not rest and not closed:
         return ("상대가 순수 " + "/".join(open_elements) +
                 " 이라 grand-potential 이 정의되지 않는다 "
                 "(정규화 분모 0). 닫힌계 0 V InterfacialReactivity 로 따로 잴 것")
@@ -160,7 +178,7 @@ def run_batch(a):
             if (sp, clab) in done:
                 continue
             t0 = time.time()
-            skip = why_skip(forms[sp], cstr)
+            skip = why_skip(forms[sp], cstr, closed=a.closed)
             if skip:
                 rec = {"species": sp, "cathode": clab, "skipped": skip, "seconds": 0.0}
                 with out.open("a", encoding="utf-8") as f:
@@ -176,20 +194,31 @@ def run_batch(a):
                 mu0 = li_metal_mu(entries)
                 rec = {"species": sp, "formula": forms[sp], "cathode": clab,
                        "cathode_formula": cstr, "chemsys": chem,
-                       "mu_Li_metal_eV": round(mu0, 4), "by_voltage": {}}
-                for V in a.voltages:
-                    gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
-                    e, rxn = min_rxn_grand(Composition(forms[sp]), Composition(cstr), gpd, pd)
-                    rec["by_voltage"][f"{V:.2f}"] = {"dE_eV_per_atom": round(e, 5),
-                                                     "reaction": rxn}
+                       "mode": "closed_0V" if a.closed else "grand_potential",
+                       "mu_Li_metal_eV": round(mu0, 4)}
+                if a.closed:
+                    e, rxn = min_rxn_closed(Composition(forms[sp]), Composition(cstr), pd)
+                    rec["dE_eV_per_atom"] = round(e, 5)
+                    rec["reaction"] = rxn
+                else:
+                    rec["by_voltage"] = {}
+                    for V in a.voltages:
+                        gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
+                        e, rxn = min_rxn_grand(Composition(forms[sp]), Composition(cstr), gpd, pd)
+                        rec["by_voltage"][f"{V:.2f}"] = {"dE_eV_per_atom": round(e, 5),
+                                                         "reaction": rxn}
                 rec["seconds"] = round(time.time() - t0, 1)
             except Exception as ex:
                 rec = {"species": sp, "cathode": clab, "error": f"{type(ex).__name__}: {ex}",
                        "seconds": round(time.time() - t0, 1)}
             with out.open("a", encoding="utf-8") as f:
                 f.write(json.dumps(rec, ensure_ascii=False) + "\n")
-            bad = "ERR " + rec["error"][:40] if "error" in rec else \
-                  "%+.4f" % min(v["dE_eV_per_atom"] for v in rec["by_voltage"].values())
+            if "error" in rec:
+                bad = "ERR " + rec["error"][:40]
+            elif "dE_eV_per_atom" in rec:
+                bad = "%+.4f (0 V)" % rec["dE_eV_per_atom"]
+            else:
+                bad = "%+.4f" % min(v["dE_eV_per_atom"] for v in rec["by_voltage"].values())
             print(f"[{i}/{len(todo)}] {sp:10s} vs {clab:8s} {bad}  ({rec['seconds']:.0f}s)")
     print(f"\n→ {out}")
 
@@ -220,6 +249,8 @@ def _selftest():
             "[양성] LCO 는 통과 (chemsys 7)")
         chk("순수" in (why_skip("Li6PS5Cl", "Li") or ""),
             "[음성] 순수 Li 상대는 막는다 (ZeroDivisionError 예방)")
+        chk(why_skip("Li6PS5Cl", "Li", closed=True) is None,
+            "[양성] --closed 면 순수 Li 도 통과 (닫힌계엔 그 문제가 없다)")
         chk("chemsys" in (why_skip("Cl4Li21P4S17Al1Br3", "LiNi0.8Co0.1Mn0.1O2") or ""),
             "[음성] 10원소 NCM811 조합은 막는다 (MPRestError 예방)")
         chk(why_skip("Cl4Li21P4S17Al1Br3", "LiNiO2") is None,
@@ -247,6 +278,8 @@ def main():
                     help="캐스케이드 CSV 에서 90종 챔피언을 읽어 **종마다 따로** 돈다")
     ap.add_argument("--resume", action="store_true", help="JSONL 에 이미 있는 쌍은 건너뛴다")
     ap.add_argument("--limit", type=int, help="앞 N 종만 (시범용)")
+    ap.add_argument("--closed", action="store_true",
+                    help="닫힌계 0 V (Li 저장고 안 엶) — **Li 음극 쪽은 이걸 써야 한다**")
     ap.add_argument("--cathodes", nargs="+", default=["LiCoO2", "LiNiO2"],
                     help='comp[:label] cathodes')
     ap.add_argument("--voltages", nargs="+", type=float,
