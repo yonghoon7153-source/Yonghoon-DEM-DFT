@@ -9,6 +9,27 @@
  ],
  "figures": [
   {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 | Schematic of the HAML method. a Schematic illustrating the challenges in understanding the interfaces between Li metal and liquid and solid-state electrolytes. b Schematic depicting the challenges in modeling these interfaces. c Schematic of the HAML, the workflow comprises geometry optimization as well as the iterative cycle of AIMD, MLP training, and MLP-MD.",
+   "rotated_deg": 0,
+   "bbox": [
+    235.0,
+    545.0,
+    563.0,
+    732.0
+   ],
+   "w": 1367,
+   "h": 780,
+   "dpi": 300,
+   "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": null,
+   "note": "manual crop (caption-anchor auto-detect missed: figure sits in right column beside caption)"
+  },
+  {
    "key": "f2",
    "kind": "figure",
    "label": "2",
@@ -47,6 +68,27 @@
    "dpi": 300,
    "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
    "blank": 0.851
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 | HAML simulation of the interface between Li metal and Li6PS5Cl system. a The relationship between HAML cycles and simulation time. b-d The snapshots during the simulation process. e The comparison of bond numbers for P-S, Li-P, Li-S, and Li-Cl bonds at initial time and after 528 ps. f The comparison of radial distribution functions for P-S at initial time and after 528 ps.",
+   "rotated_deg": 0,
+   "bbox": [
+    211.0,
+    446.0,
+    563.0,
+    730.0
+   ],
+   "w": 1467,
+   "h": 1184,
+   "dpi": 300,
+   "src": "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "blank": null,
+   "note": "manual crop (caption-anchor auto-detect missed: figure sits in right column beside caption)"
   },
   {
    "key": "f5",
