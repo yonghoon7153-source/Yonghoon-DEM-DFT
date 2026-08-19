@@ -135,3 +135,76 @@ vox 0.125 CL-41, 11/16 팔 시점 5쌍 평균 **R = 1.14508** (SE 0.107 %p).  8�
 
 ⚠ 추가 완화 2건: porosity floor 29 % 를 강성에 귀속 금지 (같은 SI 가 CBD E = 1–20 kPa 초연질을 주고 압력 축이 없음) ·
 논문 자체 오류 1건 (Fig 7 서열을 "SE 부피 최대" 로 설명하나 자기 Fig 5 가 φ_AM > φ_SE — 실제 이유는 비표면적)
+
+---
+
+# ⚠⚠ 정정 2건 (2026-08-19) — 코팅 논의에서 내가 틀린 것
+
+## 정정 ① "So 2022 JPS coated-particle DEM 을 digest 해야 한다" → **이미 정본에 있다**
+
+`papers/so2022_dem_compaction_coated_particles_assb.md` (236줄, digested 2026-06-26,
+DOI 10.1016/j.jpowsour.2022.231279).  `so2022_dem_contact_model_assb_compaction_sintering`
+(MethodsX = 방법) 과 **한 쌍**이고 데이터 CSV `docs/data/so2022_coated_particles.csv` 까지 있다.
+⇒ **웹서치 결과만 보고 "신규 digest 후보 1순위" 라고 한 것은 틀렸다.**  litdb 를 먼저 봤어야 했다
+(CLAUDE.md 규율: "카드 만들기 전 정본 INDEX 먼저 확인").
+
+## 정정 ② "코팅은 sub-voxel 이라 부피로 못 그린다" → **SE 코팅에는 해당 없다**
+
+사용자가 뜻한 코팅은 **NCM 에 LPSCl + dopant** 다.  LNO/LZO 산화물 나노코팅(5–20 nm)을 전제로
+S/N 표를 짰던 것이고, **SE 코팅은 µm 급**이라 DEM·복셀 **둘 다 해상 가능**하다.
+So 2022 규약: AM 1 µm primary → **5 µm 응집체** · SE 0.5 µm primary → **1.5 µm 응집체**
+⇒ 내 S/N 표의 **t ~ 500 nm, S/N 116 ✅ "확실히 보인다"** 밴드.
+
+## So 2022 (JPS 530, 231279) 가 이미 낸 결과 — 우리가 하려던 것의 선행
+
+| | 입자 혼합 | **SE 코팅(core-shell)** |
+|---|---|---|
+| SE percolation > 90 % 도달 압력 | **360 MPa** | **25 MPa** |
+| AM percolation @25 MPa | ~1.0 | **~0.3** ⚠ |
+| τ_SE (50 → 500 MPa) | 36 → 6 | **10 → 4** |
+| porosity @360 MPa | ~17 % | ~16 % |
+| AM 손상 @500 MPa | ~12 % | ~12 % (같음) |
+
+★ **핵심 = 코팅의 σ_e 차폐**: 저압에서 SE 쉘이 **AM–AM 전자접촉을 차폐**해 전자수송이 끊기고,
+**200 MPa 초과에서 차폐가 사라진다**(쉘 박리/관통 → AM–AM 접촉 형성).
+
+⇒ ⚠ 내가 제안한 **"코팅 = 접촉당 직렬저항"** 모델은 **불충분하다**.  실제는 저압에서 **접촉 자체가
+안 생기고**(위상 변화) 고압에서 쉘이 뚫려 생기는 **압력 의존 스위치**다.  직렬저항으로는 그 전이를 못 낸다.
+
+⚠ 전이 한계: LPS(Li₂S–P₂S₅) + NCM/LiCoO₂ 이고 전달을 **σ 솔버가 아니라 TauFactor τ 로 추정**
+⇒ 절대값 전이 금지, 방법·추세만.
+
+## dopant 축 — 정본에 이미 8편+
+
+`ma2024_sb_doping_lpsc_conductivity` · `li2025_cubr2_dualdoping_argyrodite` ·
+`xu2026_ndo_codoping_argyrodite` · `wang2025_electronic_localization_yo_argyrodite` ·
+`deklerk2016_diffusion_site_disorder_argyrodite` · `zhou2026_high_entropy_lgps_multicationic` ·
+`schlem2020_li3mcl6_cation_site_disorder` · `torii2025_lpscl_mechanical_anisotropy_dft`
+
+⇒ **dopant = σ_SE 값 축** (우리 파이프라인에서 `--sigma-ion-se` 한 줄) ·
+   **코팅 = 그 SE 를 어디에 두느냐 위상 축** (시딩/스탬프 구조).  **완전히 분리돼 있다.**
+
+## ⇒ 우리 자리가 바뀐다 (novelty 재조준)
+
+"코팅을 DEM 으로 그린다" 는 **선행이 있다**.  우리 자리는 **그들이 안 한 것**:
+
+| 그들이 한 것 | **안 한 것 = 우리 자리** |
+|---|---|
+| core-shell SE 코팅 DEM 압밀 | **접촉당 Holm 협착 σ** (그들은 τ 추정) |
+| τ_SE / τ_AM (TauFactor) | **σ_e·σ_ion·k 절대값 삼중항** |
+| percolation · damage | **MPM 소성 형태 + 복셀 FV 이중 이산화** |
+| LPS + NCM/LiCoO₂ | **LPSCl + NMC811 (우리 소재계)** |
+| 압력 스윕 | **dopant σ_SE 축 × 코팅 위상 축 교차** |
+
+★ **깨끗한 검증 표적**: 그들의 "저압 σ_e 차폐 → 고압 해제" 를 **우리 σ_e 솔버(Kirchhoff)로 재현**할 수
+있는가 — τ 추정이 아니라 실제로 풀어서.  이건 frame[4] 형태의 독립 재현이고, 성공하면 우리 접촉망
+솔버가 그들 연속체/τ 추정보다 **무엇을 더 보는지**를 보여준다.
+
+## 코드 리뷰 대상 (착수 전 — 사용자 지시 "다 진행해보고 하기전에 코드 리뷰 받아봐")
+
+1. **SE 코팅 시딩** — `R+t` 가 아니라 **core-shell 다입자**(So 2022 규약: 응집체) 로 갈지.
+   ⚠ DEM 덱의 `density constant 4800` 은 AM 코어 값 — 쉘 밀도가 다르면 질량 규약이 깨진다.
+2. 접착·마찰 민감도 팔 (`coefficientAdhesionStiffness`·`coefficientFriction`) — 기존 노브, 안전.
+3. **σ_e 차폐를 접촉망에서 재현** — 직렬저항이 아니라 **접촉 생성/소멸**로 나오는지.
+4. 옴(`--coat-sigma-b`) ↔ 패러데이(R_ct) 분리 게이트.
+5. 다중 seed 사전등록 (얇은 코팅이면 S/N 1.8; **SE 코팅이면 S/N 100+ 라 이 제약은 완화**).
