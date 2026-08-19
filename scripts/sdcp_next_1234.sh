@@ -176,14 +176,26 @@ if _has 4; then
     #  ★ 문턱은 **STEP 1 의 dof 실측**에서 나온다 (추정이 아니다):
     #    vox 0.125 전도 dof 45.4 M → 호스트 ≈ 17.5 GB · vox 0.1 은 86.8 M → ≈ 33.5 GB.
     #    --no-ion 이라 이온계(15 GB)는 더 이상 안 얹힌다.  여유 20 % 를 얹어 요구한다.
-    NEED=0; [ "$V" = "0.125" ] && NEED=22; [ "$V" = "0.1" ] && NEED=40
-    #  ★ 표에 없는 vox 는 **막지 않고 경고**한다 (문턱을 지어내지 않는다, §F1).
-    #    단 위 정규화 덕에 0.10/0.100 은 이제 0.1 로 들어와 40 GB 게이트를 제대로 받는다.
-    [ "$NEED" -eq 0 ] && echo "[next] ⚠ vox $V 는 RAM 문턱표에 없다 (표: 0.125→22 · 0.1→40 GB)." \
-                              "— 게이트 없이 진행한다.  `free -g` 로 직접 확인할 것"
-    if [ -n "${AVAIL:-}" ] && [ "$NEED" -gt 0 ] && [ "$AVAIL" -lt "$NEED" ]; then
-      echo "[next] ⚠ vox $V 는 호스트 RAM ~$NEED GB 가 필요하다 (STEP 1 dof 실측 기준)."
+    #  ★★ 2026-08-19 개정 — 문턱을 **표 조회에서 스케일링으로** 바꾼다.
+    #    옛 판은 {0.125→22, 0.1→40} 룩업이라 **표에 없는 vox 는 게이트가 통째로 없었다**.
+    #    실사고: vox 0.115 를 가용 16 GB 에서 시작했다가 죽었다 — 필요량 ~28 GB.
+    #    dof ∝ vox⁻³ 이므로 실측 앵커(0.125 → 22 GB)에서 곧바로 스케일된다.  이건
+    #    "문턱을 지어내는 것"이 아니라 **측정된 한 점의 물리적 외삽**이다 (§F1 허용).
+    NEED=$(awk -v v="$V" 'BEGIN{printf "%d", 22*(0.125/v)^3 + 0.5}')
+    [ "$V" = "0.125" ] && NEED=22          # 실측 앵커 (반올림 흔들림 방지)
+    [ "$V" = "0.1" ]   && NEED=43          # = 22·(0.125/0.1)³
+    if [ -n "${AVAIL:-}" ] && [ "$AVAIL" -lt "$NEED" ]; then
+      echo "[next] ⚠ vox $V 는 호스트 RAM ~$NEED GB 가 필요하다 (0.125→22 GB 실측 × (0.125/vox)³)."
       echo "        가용 $AVAIL GB — 여기서 멈춘다 (죽는 것보다 안 시작하는 것이 낫다)."
+      #  ★ 왜 모자란지까지 보여준다.  실사고: 죽은 런이 /dev/shm 을 안 놓고 가서
+      #    shared 가 14 GB 물려 있었는데, `free -g` 의 available 만 보면 원인이 안 보인다.
+      echo "        ── free -g ──"; free -g | sed 's/^/        /'
+      SHR=$(free -g | awk '/^Mem:/{print $5}')
+      if [ -n "${SHR:-}" ] && [ "$SHR" -ge 4 ]; then
+        echo "        ⚠ shared $SHR GB — 죽은 런의 /dev/shm 잔재일 수 있다.  확인·정리:"
+        echo "            df -h /dev/shm; ls -la /dev/shm | head"
+        echo "            (내 것이 확실하면) rm -f /dev/shm/<파일>"
+      fi
       exit 1
     fi
     VOX="$V" SDCP_SPHERE_D="$SPH" ARMS=8 LEAN=2 bash "$SCR/sdcp_gain_vox015_8arm.sh" \
