@@ -547,6 +547,12 @@ def main():
                          'dof 전자계 위에 얹힌다), DR3-07 로 vox ≤ 0.125 의 σ_ion 은 **어차피 인용 '
                          '금지**다 (SE 점 스탬프 미충전).  Track-B 도 같이 없어진다.  '
                          '⚠ 상태는 `disabled` 로 남는다 — `not_solvable`(SE 미퍼콜)과 구분된다')
+    ap.add_argument('--no-collector', action='store_true',
+                    help='STEP3 **집전체 기하 솔브(wetted/bare) 2회를 건너뛴다** (σ_e 전용 스윕용). '
+                         '2026-08-18 신설 — vox 0.125 스윕이 `--no-ion --no-pore` 로도 **여기서** '
+                         'OOM 으로 죽었다 (전자 솔브는 수렴 완료 후 사망).  ⚠ shift 팔에서는 '
+                         '`_bot_mask` 가 origin 이동을 안 더해 이 값이 **어차피 무효**다 → 스윕에서 '
+                         '끄면 손실 0, 시간 ~3배 절약.  ⚠ 상태는 `disabled` 로 남는다')
     ap.add_argument('--no-pore', action='store_true',
                     help='STEP3 **pore-τ·PNM 을 건너뛴다** (σ_e 전용 스윕용).  vox 0.125 에서 '
                          'τ 가 1,415 → 4.97e9 로 터졌고(closed-from-top 28.5 → 99.2 %%) DR3-07 이 '
@@ -1246,51 +1252,63 @@ def main():
                             _ok3 = (_ij[:, 0] >= 0) & (_ij[:, 0] < _nx2) & (_ij[:, 1] >= 0) & (_ij[:, 1] < _ny2)
                             _mm2[_ij[_ok3, 0], _ij[_ok3, 1]] = True
                     return _mm2
-                _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
-                _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
-                                           z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mw, periodic_xy=a.periodic)
-                _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
-                                           z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic)
-                jb_am = None
-                if 'phi' in _res3b:
-                    jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
-                                          nan=0.0, posinf=0.0, neginf=0.0)
-                # R_geom = the interface resistance the GEOMETRY itself creates (bare contact
-                # starving vs film-wetted) — the MODEL'S OWN emergent interface number (an OUTPUT;
-                # 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom = the chemistry/
-                # degradation share the structure model does NOT contain (quantified limit).
-                _swR = float(_res3w['sigma_eff']); _sbR = float(_res3b['sigma_eff'])
-                # _sw/_sb MUST be defined on BOTH paths — the dict below (:wetted/bare_sigma)
-                # reads them unconditionally.  Hoist the clamp above the guard so the
-                # degenerate branch (_rgeom=None) does NOT raise NameError and drop the
-                # whole STEP3/STEP4 output via the broad except.  (fix: guard was crashing
-                # in exactly the corner it targets.)
-                _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
-                # 가드(#9 code-review): 축퇴/실패 solve(σ≤0 or reason)면 R_geom을 계산하지 말 것 —
-                # 1e-30 클램프가 _Lcm/σ ≈ 1e27 Ω·cm² 를 만들어 'MODEL OUTPUT'으로 뱉는 걸 막는다.
-                if _res3b.get('reason') or _res3w.get('reason') or _swR <= 0.0 or _sbR <= 0.0:
-                    _rgeom = None
+                # ★★ 2026-08-18 — `--no-collector`.  이 블록은 σ_e 솔브를 **2회 더** 돈다
+                #   (wetted/bare 집전체 기하).  LEAN 플래그로 못 껐고, vox 0.125 스윕이 **여기서**
+                #   OOM 으로 죽었다 (`p2_DBE_sph_a3`: 전자 솔브는 0.06071 로 수렴 완료 후 사망).
+                #   ⚠ 게다가 shift 팔에서는 `_bot_mask` 가 origin 이동을 안 더해 **어차피 틀린 값**이다
+                #   (러너 주석이 이미 그렇게 적고 있었다).  ⇒ 스윕에서는 끈다: 시간 3배 절약 + OOM 해소.
+                if a.no_collector:
+                    _s3mark('collector_geom', 'disabled',
+                            '--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)')
+                    print('  STEP3: --no-collector — 집전체 기하 솔브 2회 건너뜀 (wetted/bare)', flush=True)
+                    _res3w = _res3b = None
+                    jb_am = None
                 else:
-                    _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
-                step3['collector_geometric'] = {
-                    'mode': 'analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)',
-                    'wetted_sigma_S_cm': float(f'{_sw:.4g}'),
-                    'bare_sigma_S_cm': float(f'{_sb:.4g}'),
-                    'R_geom_ohm_cm2': (None if _rgeom is None else float(f'{_rgeom:.3g}')),
-                    'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
-                                          'bare': (_res3b.get('n_plate_vox') or (None,))[0],
-                                          'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
-                    **({'bare_reason': _res3b['reason']} if _res3b.get('reason') else {}),
-                    **({'wetted_reason': _res3w['reason']} if _res3w.get('reason') else {}),
-                    'note': 'MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); '
-                            'coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); '
-                            'measured R_int − R_geom = chemistry/degradation share'}
-                _cgm = step3['collector_geometric']
-                _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
-                print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
-                      f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
-                      f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
-                      f"R_geom {_rgs} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
+                    _mw, _mb = _bot_mask(0.30), _bot_mask(0.10)
+                    _res3w = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=False,
+                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mw, periodic_xy=a.periodic)
+                    _res3b = _s3.solve_sigma_z(sid3, _sig3, a.step3_vox, return_field=True,
+                                               z_top_um=_zt3, z_bot_um=_zb3, bot_allowed=_mb, periodic_xy=a.periodic)
+                    jb_am = None
+                    if 'phi' in _res3b:
+                        jb_am = np.nan_to_num(_s3.per_particle_current(_res3b, sid3, pid3, _sig3, len(r)),
+                                              nan=0.0, posinf=0.0, neginf=0.0)
+                    # R_geom = the interface resistance the GEOMETRY itself creates (bare contact
+                    # starving vs film-wetted) — the MODEL'S OWN emergent interface number (an OUTPUT;
+                    # 측정 R_int는 결과값이지 설정값이 아님).  measured R_int − R_geom = the chemistry/
+                    # degradation share the structure model does NOT contain (quantified limit).
+                    _swR = float(_res3w['sigma_eff']); _sbR = float(_res3b['sigma_eff'])
+                    # _sw/_sb MUST be defined on BOTH paths — the dict below (:wetted/bare_sigma)
+                    # reads them unconditionally.  Hoist the clamp above the guard so the
+                    # degenerate branch (_rgeom=None) does NOT raise NameError and drop the
+                    # whole STEP3/STEP4 output via the broad except.  (fix: guard was crashing
+                    # in exactly the corner it targets.)
+                    _sw = max(_swR, 1e-30); _sb = max(_sbR, 1e-30)
+                    # 가드(#9 code-review): 축퇴/실패 solve(σ≤0 or reason)면 R_geom을 계산하지 말 것 —
+                    # 1e-30 클램프가 _Lcm/σ ≈ 1e27 Ω·cm² 를 만들어 'MODEL OUTPUT'으로 뱉는 걸 막는다.
+                    if _res3b.get('reason') or _res3w.get('reason') or _swR <= 0.0 or _sbR <= 0.0:
+                        _rgeom = None
+                    else:
+                        _rgeom = max(0.0, _Lcm / _sb - _Lcm / _sw)
+                    step3['collector_geometric'] = {
+                        'mode': 'analytic_gap_v3 (bare gap≤0.10µm / wetted gap≤0.30µm — exact sphere/point z)',
+                        'wetted_sigma_S_cm': float(f'{_sw:.4g}'),
+                        'bare_sigma_S_cm': float(f'{_sb:.4g}'),
+                        'R_geom_ohm_cm2': (None if _rgeom is None else float(f'{_rgeom:.3g}')),
+                        'n_bottom_contacts': {'wetted': (_res3w.get('n_plate_vox') or (None,))[0],
+                                              'bare': (_res3b.get('n_plate_vox') or (None,))[0],
+                                              'canonical_plate': (_res3.get('n_plate_vox') or (None,))[0]},
+                        **({'bare_reason': _res3b['reason']} if _res3b.get('reason') else {}),
+                        **({'wetted_reason': _res3w['reason']} if _res3w.get('reason') else {}),
+                        'note': 'MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); '
+                                'coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); '
+                                'measured R_int − R_geom = chemistry/degradation share'}
+                    _cgm = step3['collector_geometric']
+                    _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
+                    print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
+                          f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
+                          f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
+                          f"R_geom {_rgs} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
                 # ★ φ(z)/T(z) 프로파일 헬퍼 (Oh 2025 primer 논문 Fig 4e 문법 = ΔV=1V 전도 솔브의
                 # 두께방향 전위) — 층별 전도-복셀 평균.  solve 규약: 바닥판 φ=1, 꼭대기 φ=0.
                 # ★ 여기(이온 solve 前)에 두는 이유: 예전엔 `if _res3i['n_dof']:` 안에서 정의돼

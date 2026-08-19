@@ -71,8 +71,11 @@ fi
 #       소급해 흔들지 않기 위해서다.  스윕만 2 를 쓴다.
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
-[ "${LEAN:-0}" = "2" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"; \
-  echo "[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ 도 끈다 (OOM 회피 + DR3-07 인용 금지)"; }
+#     ★ 2026-08-18 2차: `--no-collector` 도 넣는다.  1차 LEAN=2 시도가 **집전체 기하 솔브**
+#       에서 또 죽었다 (p2_DBE_sph_a3: 전자 솔브 0.06071 수렴 후 사망).  그 2회 솔브는
+#       shift 팔에서 `_bot_mask` 가 origin 을 안 더해 **어차피 무효**다 (위 주석 참조).
+[ "${LEAN:-0}" = "2" ] && { LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"; \
+  echo "[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)"; }
 #  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
 #    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
