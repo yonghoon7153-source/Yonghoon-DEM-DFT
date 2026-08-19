@@ -750,14 +750,27 @@ Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다
 
 ---
 
-### 15 — Mechanical response of the doped lattice
+### 15 — Mechanical response of the doped lattice  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 7: Stiffness and compressibility are obtained from finite strains
-> • To assess particle contact under stack pressure, elastic moduli were computed.
-> • The DFT comparison shown here is a single case, not a pool-wide validation.
-`해설` a single case — not a pool-wide DFT validation
+> • Across the pool, [파랑]the same machine-learned potential[/] supplied every elastic modulus.
+> • The curves below are [빨강]DFT on two compositions, not a check of the whole pool[/].
 
-**[55초]**
+`< equation of state by DFT, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6 >`
+`해설` adding Cl softens the lattice, [파랑]26.2 to 21.7 GPa[/]; [빨강]the pool-wide moduli are potential values, not DFT[/]
+하단 용어 — Equation of state: energy as the cell volume changes ·
+　　　　　　 Stack pressure: the force holding the cell together
+
+⭐ **그림 자리를 비워 둔 판이다 (1저자 2026-08-19).** 1/13 덱의 EOS 두 판
+   (Li₆PS₅Cl B₀ 26.2 GPa · Li₅.₄PS₄.₄Cl₁.₆ B₀ 21.7 GPa, −17 %)을 직접 붙이신다.
+⛔ **무엇으로 계산했는지를 명시한다 (1저자 지적).** 앞 판은 "elastic moduli were
+   computed" 라고만 해서 90종 값이 DFT 로 읽혔다. 캐스케이드 02–08 단계는 **전부 같은
+   MLIP** 다 (`cascade_pipeline_anatomy` 표: 02 UMA relax · 04 anneal FIRE ·
+   07 eos · 08 elastic). DFT 는 **따로 돌린 대조군 몇 건**뿐이다.
+⚠ 그러니 이 장에서 **두 종류의 숫자가 섞인다** — 화면의 EOS 곡선은 DFT, 뒤 결과에서
+   90종을 줄 세울 때 쓰는 B₀·Cij 는 **모델 값**이다. 섞어 인용하지 않는다.
+
+**[60초]**
 
 전고체전지는 액체가 없어 입자끼리 직접 붙어야 합니다. 그래서 기계 물성이 성능에 바로
 들어옵니다.
@@ -766,9 +779,29 @@ Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다
 그리고 충방전으로 부피가 변할 때 잘 늘어나면 균열이 덜하고 잘 깨지면 금이 갑니다.
 
 그래서 부피를 조금씩 바꿔 에너지를 재고, 여러 방향으로 작은 변형을 줘 딱딱함과 연성을
-구합니다. 그림이 그중 한 사례를 DFT 로 맞대 본 것입니다.
+구합니다.
 
-⚠ **한 건 검증입니다.** 91 종 전부를 DFT 로 확인한 것이 아닙니다.
+⭐ **여기서 하나 짚고 갑니다. 90 종 전부의 탄성값은 DFT 가 아니라 앞서 쓴 그 기계학습
+   퍼텐셜로 구했습니다.** 3단계에서 구조를 이완시킨 그 모델이에요. 삼천 개 구조에
+   DFT 를 돌릴 수 없으니 같은 모델로 끝까지 갑니다.
+
+그림은 **DFT 로 따로 돌린 두 조성**입니다. 도핑 안 한 Li₆PS₅Cl 이 26.2 GPa, Cl 을 더 넣은
+LPSCl1.6 이 21.7 GPa 예요. **17 % 물러집니다.**
+
+⚠ 그런데 이게 좀 역설입니다. LPSCl1.6 이 부피는 **4.3 % 더 조밀한데** 오히려 더 물러요.
+보통 조밀해지면 단단해지는데 반대죠. Li 공공이 늘면서 Coulomb 응집이 약해진 겁니다.
+
+⚠ **두 건입니다.** 90 종 전부를 DFT 로 확인한 게 아닙니다.
+
+💬 **말로만 (질문 오면)**
+· **"그럼 90종 탄성값은 못 믿나"** — 절대값으로는 인용하지 않습니다. 같은 모델·같은
+  규약 안에서 **서로 비교**하는 데만 씁니다.
+· B₂O₃ 를 넣은 판도 DFT 로 한 건 있습니다 — **24.5 GPa**, 도핑 안 한 modelC(21.7)보다
+  **+2.8 GPa (+13 %)** 로 오히려 단단해집니다. Cl 과 반대 방향이에요.
+· EOS 는 Birch–Murnaghan 3차 적합입니다. B₂O₃ 건은 적합 RMS 0.04 meV, V₀ 2436 Å³.
+· 부피를 ±5 % 범위로 흔들고 **각 부피에서 다시 이완**한 뒤 에너지를 씁니다.
+
+⛔ **말하지 말 것** — "탄성을 DFT 로 검증했다". 두 건 대조지 검증이 아니다.
 
 ---
 

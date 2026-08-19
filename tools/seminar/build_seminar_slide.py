@@ -173,6 +173,25 @@ SLIDES = {
            "Percolation: a low-energy path that spans the crystal"),
     drop=[10],
  ),
+ 15: dict(
+    idx=14, out="Slide15_mechanical_response.pptx",
+    # ⭐ 그림 자리를 **비운다** (1저자 2026-08-19) — 1/13 덱의 EOS 두 판
+    #   (Li₆PS₅Cl 26.2 GPa · LPSCl1.6 21.7 GPa)을 직접 붙이신다.
+    figs=[],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Mechanical response of the doped lattice",
+    head="Step 7: Stiffness and compressibility are obtained from finite strains",
+    # ⛔ 앞 판은 **무엇으로 계산했는지**를 말하지 않았다 (1저자 2026-08-19).
+    #   캐스케이드의 02–08 단계는 전부 같은 MLIP 다 (파이프라인 표 07 eos · 08 elastic).
+    #   DFT 는 따로 돌린 대조군이고, 90종 값은 **모델 값**이다.
+    sub1="Across the pool, [b]the same machine-learned potential[/b] supplied every elastic modulus.",
+    sub2="The curves below are [r]DFT on two compositions, not a check of the whole pool[/r].",
+    label="equation of state by DFT, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6",
+    note="adding Cl softens the lattice, [b]26.2 to 21.7 GPa[/b]; [r]the pool-wide moduli are potential values, not DFT[/r]",
+    gloss=("Equation of state: energy as the cell volume changes  ·  "
+           "Stack pressure: the force holding the cell together"),
+    drop=[10],
+ ),
 }
 
 
@@ -215,7 +234,11 @@ def build(n):
     for i in sorted(S.get("drop", []), reverse=True):
         sl.shapes[i]._element.getparent().remove(sl.shapes[i]._element)
 
-    M.add_pics(sl, S["figs"] if "figs" in S else [S["fig"]], zone=S["zone"])
+    # figs=[] 이면 그림 자리를 **비운다** — 1저자가 다른 덱의 판을 직접 붙일 때 쓴다
+    #   (⚠ add_pics 는 n=0 에서 ZeroDivisionError 다. 여기서 막는다.)
+    _figs = S["figs"] if "figs" in S else [S["fig"]]
+    if _figs:
+        M.add_pics(sl, _figs, zone=S["zone"])
     # 표는 그림 옆/아래에 — 3×3 처럼 **숫자 아홉 개**짜리는 히트맵보다 표가 낫다
     # (1저자 판단 2026-08-18: 파이썬 그림 티가 나느니 덱 표 양식으로).
     if "table" in S:
