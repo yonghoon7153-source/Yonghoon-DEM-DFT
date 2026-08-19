@@ -36,6 +36,9 @@ import glob
 import json
 import os
 import sys
+from pathlib import Path      # ⚠ 2026-08-20 — uma_scout 저장부가 이걸 쓰는데 빠져 있었다.
+#   li2o 두 셀을 다 돌고 **결과를 쓰는 줄에서** NameError 로 죽어 li3p/li3po4g/licl 이
+#   아예 안 돌았다. 저장은 계마다 하므로(루프 안), 이 한 줄이면 부분 결과가 살아남는다.
 
 import numpy as np
 
