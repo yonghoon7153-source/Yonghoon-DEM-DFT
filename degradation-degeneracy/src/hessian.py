@@ -162,6 +162,26 @@ def resolve_curves(in_dir, curves=None) -> "Path":
         f"  - --curves <경로>")
 
 
+def _sealed_halfcell_recipe(in_dir) -> tuple[str, dict]:
+    """봉인 manifest 의 `run_spec.halfcell_recipe` 에서 (method, 왜곡인자).
+
+    ★ recipe 는 method 축과 생성 인자를 한 dict 에 담는다. `recipe_of` 는
+      method 를 키로 받지 않으므로 분리해서 돌려준다 — 섞으면 "모르는 인자"
+      로 죽는다. 기록이 없으면 옛 기본값(ocp, 인자 없음)이다.
+    """
+    from pathlib import Path
+
+    import yaml
+
+    man = Path(in_dir) / "manifest.yaml"
+    if not man.is_file():
+        return "ocp", {}
+    doc = yaml.safe_load(man.read_text(encoding="utf-8")) or {}
+    rec = dict(((doc.get("run_spec") or {}).get("halfcell_recipe")) or {})
+    method = str(rec.pop("method", None) or "ocp")
+    return method, rec
+
+
 def _sealed_halfcell_staging(in_dir) -> "Path | None":
     """봉인 스냅샷의 half-cell 캐시를 **정규 이름**으로 펼친 임시 캐시 디렉터리.
 
@@ -236,15 +256,26 @@ def run_hessian(in_dir, out_dir=None, objective: str = "pocv_dvdq",
            if "reference" in fits.columns else "grid"}
     if ref["mode"] == "halfcell":
         # ★ 18차 A' — live config·live cache 대신 **봉인 입력**을 쓴다.
-        from src.halfcell import get_halfcell_reference
+        from src.halfcell import get_halfcell_reference, halfcell_cache_path
         _cfg_path = _sealed_base_config(in_dir)
         _cache = _sealed_halfcell_staging(in_dir)
         if _cfg_path is None or _cache is None:
             log.warning("봉인된 half-cell 입력을 찾지 못해 live 파일을 씁니다 — "
                         "이 결과는 인용할 수 없습니다 (18차 A')")
+        _hc_cfg = load_config(str(_cfg_path) if _cfg_path else "configs/base.yaml")
+        # ★ 13차 자체 리뷰 — method 를 안 넘기면 기본 `ocp` 경로를 찾는다.
+        #   ocpbias·sim 실행의 봉인 캐시는 staging 에 정확히 있는데도 미스가
+        #   되고, 미스는 조용히 재계산되므로 **왜곡 실행의 곡률을 무왜곡
+        #   기준으로** 재게 된다. 봉인 recipe 에서 축을 읽어 그대로 조회한다.
+        _hc_method, _hc_kw = _sealed_halfcell_recipe(in_dir)
+        if _cache is not None:
+            _want = halfcell_cache_path(_hc_cfg, _cache, _hc_method, **_hc_kw)
+            if not _want.exists():
+                log.warning("봉인 staging 에 %s 가 없습니다 — 조용한 재계산이 "
+                            "일어납니다. 이 결과는 인용할 수 없습니다 (18차 A')",
+                            _want.name)
         ref["halfcell"] = get_halfcell_reference(
-            load_config(str(_cfg_path) if _cfg_path else "configs/base.yaml"),
-            cache_dir=_cache).as_dict()
+            _hc_cfg, cache_dir=_cache, method=_hc_method, **_hc_kw).as_dict()
 
     if n_sample and len(fits) > n_sample:
         fits = fits.sample(n=n_sample, random_state=seed)

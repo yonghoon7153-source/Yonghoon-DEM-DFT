@@ -4678,3 +4678,87 @@ def test_analyze_22p_breaks_down_the_gap_zero_cell(tmp_path, capsys):
             assert {"n", "false_split"} <= set(v), (axis, key, v)
     out = capsys.readouterr().out
     assert "참 격차 0 칸 분해" in out
+
+
+# ── half-cell 기준의 필수 입력 검사가 method 를 알아야 한다 ────────────────
+#
+# ★ 13차 게이트 자체 리뷰(TOCTOU 렌즈)가 찾은 것. `validate_provenance` 는
+#   reference=halfcell 이면 봉인 목록에 부분문자열 `"_ocp_"` 가 있기를 요구했다
+#   (src/io.py). half-cell 캐시 파일명이 `<baseline>_<method>_<recipe>.json` 이라
+#   기본 method 에서는 우연히 맞았지만, **method 가 ocp 가 아니면 영원히 못
+#   맞춘다** — `_ocpbias_` 에도 `_sim_` 에도 `"_ocp_"` 는 없다.
+#
+#   실측(격리 재현): `--halfcell-method ocpbias --halfcell-arg pe_offset_mv=10`
+#   으로 만든 정상 artifact 가
+#       필수_입력_존재: 실패 — 필수 입력이 없다: ['_ocp_']
+#   로 거부됐다. score 는 이 검사를 안 보고 지나가므로(봉인 3종만 본다)
+#   **report 단계에서 처음** 터지고, 그때 ⛔ 인용 금지 배너가 박힌다. 즉 모델
+#   오차 민감도 스윕의 산출물은 전부 인용 불가가 된다.
+#
+#   부분문자열 매칭은 애초에 대용품이었다. run_spec 에 실제 캐시 경로
+#   (`halfcell_cache`)가 이미 봉인돼 있으므로 **그 경로 자체**를 요구한다.
+
+def _as_halfcell_artifact(d, method="ocp", recipe_hash="b5009f515fb8"):
+    """완성 artifact 를 half-cell 기준으로 바꿔 놓는다 (봉인 목록까지)."""
+    import yaml
+
+    m = yaml.safe_load((d / "manifest.yaml").read_text(encoding="utf-8"))
+    cache = f".cache/halfcell/a8e262f7d6aa4beb_{method}_{recipe_hash}.json"
+    meta = cache[:-5] + ".meta.yaml"
+    m["input_sha256"] = dict(m["input_sha256"])
+    m["input_sha256"][cache] = "d" * 16
+    m["input_sha256"][meta] = "e" * 16
+    m["run_spec"]["reference"] = "halfcell"
+    m["run_spec"]["halfcell_cache"] = cache
+    m["run_spec"]["halfcell_recipe"] = {"method": method, "n_points": 400,
+                                        "branch": "delithiation"}
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    return m
+
+
+def test_validator_accepts_halfcell_artifacts_of_any_method(tmp_path):
+    """★ ocp 뿐 아니라 ocpbias·sim artifact 도 필수 입력 검사를 통과해야 한다."""
+    from src.io import validate_provenance
+
+    for method in ("ocp", "ocpbias", "sim"):
+        d, _ = _complete_artifact(tmp_path / f"m_{method}")
+        _as_halfcell_artifact(d, method=method)
+        fail = validate_provenance(d)["fail"]
+        assert "필수_입력_존재" not in fail, \
+            f"method={method} artifact 가 거부됐다: {fail}"
+
+
+def test_validator_still_requires_the_sealed_halfcell_cache(tmp_path):
+    """★ 음성 대조 — 선언한 캐시가 봉인 목록에 없으면 여전히 실패해야 한다.
+
+    method 를 읽어 쓰는 것으로 바꾸면서 검사가 헐거워지면 안 된다.
+    """
+    import yaml
+
+    from src.io import validate_provenance
+
+    # ① 봉인 목록에서 캐시를 빼면 실패
+    d, _ = _complete_artifact(tmp_path / "drop")
+    m = _as_halfcell_artifact(d, method="ocpbias")
+    cache = m["run_spec"]["halfcell_cache"]
+    m["input_sha256"] = {k: v for k, v in m["input_sha256"].items() if k != cache}
+    (d / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    assert "필수_입력_존재" in validate_provenance(d)["fail"], \
+        "봉인 안 된 half-cell 캐시가 통과했다"
+
+    # ② recipe 만 있고 meta.yaml 이 안 봉인되면 실패 (F64 — recipe 기록도 입력)
+    d2, _ = _complete_artifact(tmp_path / "nometa")
+    m2 = _as_halfcell_artifact(d2, method="ocpbias")
+    meta = m2["run_spec"]["halfcell_cache"][:-5] + ".meta.yaml"
+    m2["input_sha256"] = {k: v for k, v in m2["input_sha256"].items() if k != meta}
+    (d2 / "manifest.yaml").write_text(yaml.safe_dump(m2), encoding="utf-8")
+    assert "필수_입력_존재" in validate_provenance(d2)["fail"], \
+        "meta.yaml 없이 통과했다"
+
+    # ③ 선언한 method 와 봉인된 파일명이 어긋나면 실패
+    d3, _ = _complete_artifact(tmp_path / "mismatch")
+    m3 = _as_halfcell_artifact(d3, method="ocpbias")
+    m3["run_spec"]["halfcell_recipe"]["method"] = "ocp"   # 선언만 바꾼다
+    (d3 / "manifest.yaml").write_text(yaml.safe_dump(m3), encoding="utf-8")
+    assert "필수_입력_존재" in validate_provenance(d3)["fail"], \
+        "선언 method 와 봉인 파일이 달라도 통과했다"

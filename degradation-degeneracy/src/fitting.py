@@ -1129,9 +1129,10 @@ def main() -> None:
     #   perturbation_equals_ocp). 즉 여기 오는 유일한 이유는 --halfcell-arg 를
     #   **잊은** 것이고, 그대로 두면 왜곡 0 캐시를 읽어 민감도 0 을 보고한다.
     #   입력을 보기도 전에 멈춘다. 대조 실행은 --halfcell-method ocp 로.
-    if args.halfcell_method == "ocpbias" and not halfcell_kw:
+    from src.halfcell import is_noop_bias as _noop
+    if args.halfcell_method == "ocpbias" and _noop("ocpbias", **halfcell_kw):
         raise SystemExit(
-            "--halfcell-method ocpbias 인데 --halfcell-arg 가 없습니다. 왜곡 0 인 "
+            "--halfcell-method ocpbias 인데 실효 왜곡이 0 입니다. 왜곡 0 인 "
             "ocpbias 는 ocp 와 완전히 같은 곡선이라, 이대로 두면 왜곡 없는 기준으로 "
             "민감도를 쟀다고 착각하게 됩니다.\n"
             "  왜곡 실행: --halfcell-arg pe_offset_mv=10 (캐시 생성 때와 같은 값)\n"

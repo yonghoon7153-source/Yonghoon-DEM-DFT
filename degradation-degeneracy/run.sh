@@ -373,6 +373,13 @@ case "$MODE" in
 
     FIT_ARGS=(--mode fit --in "$D" --nproc "$NPROC"
               --bounds "$BOUNDS_PRESET" --reference "$REFERENCE")
+    # ★ all 모드도 half-cell 축을 넘겨야 한다. 안 넘기면 하위 fit 이 method
+    #   기본값 ocp 로 무왜곡 캐시를 읽고 **끝까지 성공**한다 — 어느 가드에도
+    #   안 걸려서, 민감도를 쟀다고 믿는 10시간 실행이 왜곡 0 이 된다.
+    [[ -n "${HALFCELL_METHOD:-}" ]] && FIT_ARGS+=(--halfcell-method "$HALFCELL_METHOD")
+    for _hca in "${HALFCELL_ARGS[@]:-}"; do
+      [[ -n "$_hca" ]] && FIT_ARGS+=(--halfcell-arg "$_hca")
+    done
     [[ -n "$OBJECTIVE" ]] && FIT_ARGS+=(--objective "$OBJECTIVE")
     [[ "$N_RESTARTS" != "auto" ]] && FIT_ARGS+=(--n-restarts "$N_RESTARTS")
     [[ "$CLEAN" == "true" ]] && FIT_ARGS+=(--clean)

@@ -244,6 +244,23 @@ def recipe_of(method: str = "ocp", **kw) -> dict:
     return {"method": method, **r}
 
 
+def is_noop_bias(method: str, **kw) -> bool:
+    """`ocpbias` 인데 실효 왜곡이 0 인가 (= `ocp` 와 같은 곡선인가).
+
+    ★ 13차 자체 리뷰 — 예전 거절은 "인자가 **비었는가**" 만 봤다. 그래서
+      `--halfcell-arg pe_offset_mv=0` 은 통과했고, recipe 는 기본값과 같아져
+      왜곡 0 캐시를 읽었다. `for mv in 0 5 10 20` 스윕의 첫 다리가 정확히
+      이 모양이라, "대조군도 ocpbias 로 돌렸다" 는 흔한 작성법이 조용히
+      무왜곡 결과를 ocpbias 라벨로 만든다. 형식이 아니라 **값**으로 본다.
+    """
+    if method != "ocpbias":
+        return False
+    r = recipe_of(method, **kw)
+    base = RECIPE_DEFAULTS[method]
+    return all(r[k] == base[k] for k in ("pe_offset_mv", "ne_offset_mv",
+                                         "pe_stretch", "ne_stretch"))
+
+
 def recipe_hash(cfg: dict, method: str = "ocp", **kw) -> str:
     """baseline + recipe 를 함께 해시한다 (★ F64)."""
     import hashlib
@@ -296,6 +313,15 @@ def get_halfcell_reference(cfg: dict, cache_dir: str | Path | None = None,
     import yaml
 
     from src.io import env_fingerprint, source_digest
+
+    # ★ 미끼 차단은 CLI 가 아니라 **여기**여야 한다. CLI 에만 두면 라이브러리
+    #   호출로 왜곡 0 캐시가 만들어지고, 그 파일이 있으면 명시적 0 fit 이
+    #   F63 을 통과해 끝까지 완주한다 (실측). 대조는 method="ocp" 로.
+    if is_noop_bias(method, **kw):
+        raise ValueError(
+            "왜곡이 0 인 ocpbias 캐시는 만들지 않습니다 — ocp 와 배열이 같아 "
+            "'왜곡 없는 기준으로 민감도를 쟀다' 는 착각의 통로가 됩니다. "
+            "대조 실행은 method='ocp' 를 쓰세요.")
 
     path = halfcell_cache_path(cfg, cache_dir, method, **kw)
     recipe = recipe_of(method, **kw)
@@ -549,8 +575,23 @@ def main() -> None:
                     f"--method {args.method} --force --verify"
                     if (not args.force and v["fail"] == ["코드_identity"] and same)
                     else "")
-            raise SystemExit(
-                f"--verify 실패: 캐시가 recipe 재생성 결과와 다르다 (F74){hint}")
+            # ★ 13차 자체 리뷰 — 두 실패를 한 문장으로 뭉개면 원인을 오진한다.
+            #   실측: stretch 0.97 은 배열이 **일치**하는데도 "재생성 결과와
+            #   다르다" 로 죽어, 왜곡 계산을 의심하게 만들었다. 실제 원인은
+            #   전범위 coverage 였다.
+            if not same:
+                why = "캐시가 recipe 재생성 결과와 다르다"
+            else:
+                why = f"구조검사 실패: {v['fail']}"
+                if "전범위_coverage" in v["fail"]:
+                    # LLI 환산식이 전 범위 테이블을 전제한다 (F11) — 화학량론
+                    # 축을 줄이는 왜곡은 그 전제를 깬다. 쓸 수 있는 창을 알린다.
+                    why += ("\n  화학량론 수축(stretch<1)은 전 범위 전제를 깨서 "
+                            "여기서 막힌다. 쓸 수 있는 범위는 stretch ≥ 0.9901 "
+                            "(≈1% 이내) 이고, 그보다 큰 모델 오차는 이 축으로 "
+                            "잴 수 없다. 오프셋(mV) 축을 쓰거나 stretch>1 로 "
+                            "같은 크기의 어긋남을 재라.")
+            raise SystemExit(f"--verify 실패: {why} (F74){hint}")
 
     if args.plot:
         import matplotlib

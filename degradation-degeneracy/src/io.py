@@ -1364,7 +1364,9 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
     spec0 = man.get("run_spec") or {}
     ref = str(spec0.get("reference") or man.get("reference") or "grid")
     digs = man.get("input_sha256") or {}
-    need_kinds = ["curves.parquet", "base.yaml", "curves_manifest.yaml"] + (
+    hc_mismatch = ""
+    need_kinds = ["curves.parquet", "base.yaml", "curves_manifest.yaml"]
+    if ref == "halfcell":
         # ★ F64 — recipe 기록(.meta.yaml)도 봉인 대상이다. 배열만 있는 캐시는
         #   "어떤 branch·n_points 로 만들었는가"를 증명하지 못한다.
         #   ★ 파일명은 `<baseline>_<method>_<recipe>.json` 이라 recipe 해시가
@@ -1372,11 +1374,29 @@ def validate_provenance(run_dir, repo_root=None, fits_path=None) -> dict:
         #     실제로 F64 직후 모든 half-cell 실행이 `필수_입력_존재` 에서 막혔고,
         #     e2e smoke 가 이걸 잡았다 (단위 테스트의 fixture 는 이름을 직접
         #     지어서 통과했다).
-        ["_ocp_", ".meta.yaml"] if ref == "halfcell" else [])
+        #   ★ 13차 자체 리뷰 — 그 뒤 부분문자열이 `"_ocp_"` 로 굳었는데, 이건
+        #     **기본 method 에서만 우연히 맞는** 대용품이었다. `_ocpbias_`·
+        #     `_sim_` 캐시에는 `"_ocp_"` 가 없어 정상 artifact 가 영원히
+        #     거부된다 (실측: 모델 오차 민감도 fit 이 `['_ocp_']` 로 FAIL).
+        #     run_spec 에 **실제 쓴 캐시 경로**가 이미 봉인돼 있으므로 그것을
+        #     그대로 요구한다 — 대용품보다 좁고 정확하다.
+        _hc = str(spec0.get("halfcell_cache") or "")
+        _m = str((spec0.get("halfcell_recipe") or {}).get("method") or "")
+        if _hc:
+            _stem = _hc[:-5] if _hc.endswith(".json") else _hc
+            need_kinds += [_hc, _stem + ".meta.yaml"]
+            # 선언(recipe.method)과 봉인된 파일명이 어긋나면 무엇을 읽었는지
+            # 증명되지 않는다 — 경로만 맞추고 method 를 속이는 길을 막는다.
+            if _m and f"_{_m}_" not in _hc:
+                hc_mismatch = f"halfcell_recipe.method={_m} 인데 봉인 캐시는 {_hc}"
+        else:
+            # F64 이전 artifact — 경로 기록이 없다. method 로 유도한다.
+            need_kinds += [f"_{_m or 'ocp'}_", ".meta.yaml"]
     missing_kind = [k for k in need_kinds
                     if not any(k in str(x) for x in digs)]
-    checks["필수_입력_존재"] = (not missing_kind,
-                                f"필수 입력이 없다: {missing_kind}")
+    checks["필수_입력_존재"] = (
+        not missing_kind and not hc_mismatch,
+        hc_mismatch or f"필수 입력이 없다: {missing_kind}")
 
     # ── run_spec 필수 키 ──
     need_keys = ["sig_version", "objectives", "reference", "bounds", "bounds_preset",
