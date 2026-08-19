@@ -1,0 +1,386 @@
+{
+ "slug": "zhang2023_pfib_multiscale_imaging_4d_thick_cathode",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
+  "43193ec8-1s2.0S2542435122005724mmc1.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 4,
+   "file": "fig_1.png",
+   "caption": "Figure 1. 3D quantitative analysis of NMC811 thick electrode via PFIB (A) Schematic image of the emerging PFIB technology developed with different ion sources and high removal efﬁciency. (B) 3D reconstruction of pristine NMC811 thick electrode using the sliced images collected via PFIB. (C and D) The quantiﬁed volume fraction of different components in the reconstructed volume after pore-back correction and segmentation (C) and the spatial distribution of each component along the electrode thickness direction (D). (E) The SEM image and energy-dispersive X-ray spectroscopy (EDX) mapping on a 2D cross-section of NMC811 thick electrode.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.9,
+    502.0
+   ],
+   "w": 2081,
+   "h": 1800,
+   "dpi": 300,
+   "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
+   "blank": 0.651
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 6,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Microstructure degradation quantiﬁcation of NMC811 thick electrode during electrochemical cycling (A and B) Voltage proﬁles and cycling performance of NMC811 thick electrode in half-cell with different voltage cutoffs, between 4.4 and 2.8 V (A), between 4.7 and 2.5 V (B). (C) The reconstructed 3D volume and quantiﬁed cracking volume percentage of NMC811 thick electrode after cycling between 4.4 and 2.8 V (left), between 4.7 and 2.5 V (right) (green, cracks; red, NMC particles). (D) The reconstructed and quantiﬁed contact surface areas between NMC particles and CBD component after cycling between 4.4 and 2.8 V (left), between 4.7 and 2.5 V (right). To avoid particle density variance from different samples, the quantiﬁed number in (C) and (D) is normalized by the total volume or surface area of the particles.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    70.1,
+    550.9,
+    454.6
+   ],
+   "w": 2081,
+   "h": 1603,
+   "dpi": 300,
+   "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
+   "blank": 0.753
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 8,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Thick electrode degradation analysis at the nanoscale via analytical cryogenic TEM (A) Cross-section images of top and bottom locations from the thick NMC811 electrode for FIB lift-out process. (B) TEM images of the top and bottom lamella sample from pristine NMC811 electrode. (C) HRTEM images of the top and bottom lamella sample from NMC811 electrode after cycling between 4.7 and 2.5 V. (D) Atomic resolution HAADF images of the top and bottom lamella sample for single particle bulk and surface region after cycling between 4.7 and 2.5 V (images with red frame, top lamella; images with green frame, bottom lamella).",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    58.0,
+    563.0,
+    738.0
+   ],
+   "w": 2180,
+   "h": 2834
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 10,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Analysis of CEI impact on SOD in thick electrode via computational modeling (A) Sub-volume used in the computational model with CEI variation along the electrode thickness direction. (B) The simulated discharges curves with cutoff voltage at 3.5 V for different CEI thickness and extent of pores clogging. (C) Distribution of lithiation state along the thickness direction for the NMC811 electrode with a cutoff voltage at 3.5 V for different CEI thickness and extent of pores clogging. (D and E) 3D distribution of lithiation state with cutoff voltage at 3.5 V for NMC811 electrode without CEI consideration and with thick CEI, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    45.3,
+    382.4,
+    283.6
+   ],
+   "w": 1379,
+   "h": 994,
+   "dpi": 300,
+   "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
+   "blank": 0.746
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 13,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Transport properties analysis in thick electrode via computational modeling (A) Distribution of lithiation concentration along the thickness direction for NMC811 electrode with cutoff voltage at 3.5 V for different CEI thickness and extent of pores clogging. (B–D) 3D distribution of lithiation concentration with cutoff voltage at 3.5 V for NMC811 electrode without CEI consideration (B), with CEI and CBD clogging (C), and with CEI and full pores clogging (D).",
+   "rotated_deg": 0,
+   "bbox": [
+    51.7,
+    97.6,
+    382.5,
+    396.7
+   ],
+   "w": 1379,
+   "h": 1248,
+   "dpi": 300,
+   "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
+   "blank": 0.685
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 14,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Optimization of CBD network in thick electrode for high voltage cycling stability (A-H) SEM cross-section image of pristine LNMO thick electrode coated by slurry-based method (A) or dry process (B). Components segmentation calculated using the PFIB-SEM data for the pristine LNMO thick electrode coated by slurry-based method (C) or dry process (D). Map of the connected CBD aggregates in the sub-area of the collected PFIB-SEM data for the pristine LNMO thick electrode coated by slurry-based method (E) or dry process (F). Voltage profiles and cycling CE of LNMO thick electrode coated by slurry-based method (G) or dry process (H) in full cell with graphite as the anode.",
+   "rotated_deg": 0,
+   "bbox": [
+    40.0,
+    58.0,
+    563.0,
+    738.0
+   ],
+   "w": 2180,
+   "h": 2834
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 2,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Calculated cell-level specific energy as a function of cathode film thickness with graphite anode (A) or with lithium metal anode (B). A baseline NMC811 material with 200 mAh g−1 specific capacity and 30% cathode porosity was used in the calculation. The N/P ratio is 1.1 and the electrolyte to capacity ratio is 3.0 g/Ah. The thickness for Al and Cu current collector is set to be 16 and 9 µm, respectively. The specific capacity for graphite and lithium metal anode is set to be 372 mAh/g and 3860 mAh/g, respectively. The average working voltage for the full cell is 3.7 V and the cell designed total capacity is 270 Ah. Calculations were performed by using an in house Excel script.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    87.1,
+    514.4,
+    259.7
+   ],
+   "w": 1794,
+   "h": 719,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.923
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 3,
+   "file": "fig_S2.png",
+   "caption": "Figure S2. The PFIB cutting and 3D analysis performed on the raw NMC811 powders. (A) PFIB-SEM cross-section image of NMC811 powder. (B) The quantified volume fraction of cracking normalized by the volume of secondary particles for each sample using the reconstructed volume.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.4,
+    514.4,
+    260.7
+   ],
+   "w": 1794,
+   "h": 807,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.594
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 4,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. The reconstructed 3D volumes of NMC811 thick electrode before and after cycling. (green: cracks, red: NMC particles, dark blue: CBD, light blue: pores).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.2,
+    514.3,
+    682.1
+   ],
+   "w": 1794,
+   "h": 2551,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.705
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 5,
+   "file": "fig_S4.png",
+   "caption": "Figure S4. Microstructural evolution along the thickness direction in the reconstructed volume for the cycled NMC811 electrodes. (A, B) The quantified volume fraction of different components and the spatial distribution of each component along the thickness for the NMC811 electrode after low voltage cycling (A) and high voltage cycling (B).",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.0,
+    531.1,
+    229.9
+   ],
+   "w": 1863,
+   "h": 679,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.576
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 6,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. EDX mapping of the top lamella sample from cycled NMC811 electrode with high voltage cutoff.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.1,
+    514.4,
+    306.9
+   ],
+   "w": 1794,
+   "h": 983,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.346
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. The sub-volume extracted from PFIB data used in the simulations. (A) PFIB-SEM image of the pristine NMC electrode with the whole segmented volume with the active material in red, the CBD in dark blue, the pores in light blue and the cracks in green. The area delimited by the dash line represents the sub-volume used in the modeling study, with its 3-D rendering in (B). (C) The spatial distribution of each phase in this sub-volume along the electrode thickness direction.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    67.0,
+    514.4,
+    307.9
+   ],
+   "w": 1794,
+   "h": 1004,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.581
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Electrolyte wetting process simulation result for the pristine NMC811 electrode. Calculation was performed using the Lattice Boltzmann Method model[S1].",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.8,
+    514.2,
+    261.3
+   ],
+   "w": 1793,
+   "h": 811,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.966
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 9,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Illustration of how the heterogeneous CEI thickness was considered in the sub-volume for the computational modeling.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.6,
+    514.4,
+    275.1
+   ],
+   "w": 1794,
+   "h": 849,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.762
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 10,
+   "file": "fig_S9.png",
+   "caption": "Figure S9. Simulated discharge curves at C/3-rate with electrode of different thicknesses. Each electrode was stochastically generated and selected based on its transport properties to have an optimize candidate for each thickness.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    575.7,
+    275.1
+   ],
+   "w": 2049,
+   "h": 850,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.959
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 11,
+   "file": "fig_S10.png",
+   "caption": "Figure S10. The PFIB cutting and components segmentation performed on the pristine NMC811 thick electrode. (A) SEM cross-section image of pristine NMC811 thick electrode. (B) PFIB large volume serial section of the thick electrode. (C) Components segmentation calculated using the PFIB-SEM data.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    66.0,
+    552.0,
+    184.1
+   ],
+   "w": 1950,
+   "h": 493,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.43
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 12,
+   "file": "tab_S1.png",
+   "caption": "Table S1. Calculated flow tortuosity results, for different NMC811 thick electrodes.",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    72.3,
+    501.2,
+    269.7
+   ],
+   "w": 1735,
+   "h": 823,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.403
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 13,
+   "file": "tab_S2.png",
+   "caption": "Table S2. 4D-resolved electrochemical model equations. Lithium foil electrode Lithium foil current 𝐽𝐿𝑖= 𝐹𝑘𝑎 𝛼𝑎 𝛼𝑎(𝐶𝑒 𝛼𝑐𝑘𝑐",
+   "rotated_deg": 0,
+   "bbox": [
+    85.4,
+    67.3,
+    590.2,
+    702.5
+   ],
+   "w": 2105,
+   "h": 2648,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.051
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 14,
+   "file": "tab_S3.png",
+   "caption": "Table S3. 4D-resolved electrochemical model parameters. Name Symbol Value/Definition Anodic charge transfer coefficient of NMC αa 0.5 Cathodic charge transfer coefficient of Li foil αc 0.5 Anodic charge transfer coefficient of NMC βa 0.5 Cathodic charge transfer coefficient of Li foil βc 0.5 Porosity of the CBD εCBD 0.5 Porosity of the separator εsep 0.6 Overpotential η (V) ΦAM- ΦE-U Electronic conductivity of AM[S2] σAM 5×10-3 S m-1 Electronic conductivity of CBD[S3,S4] σCBD 700 S m-1 Ionic conductivity of the electrolyte[S5] σe (S m-1) 0.00158×Ce×exp(- 5.363×10- 5×(Ce/C0)1.4) Ionic conductivity of the CEI[S6] σCEI 2×10-7 S m-1 Density of AM ρAM 4.65×106 g m-3 AM potential ΦAM (V) CBD potential ΦCBD (V) Electrolyte potential Φe (V) Standard concentration in the electrolyte C0 1000 mol m-3 Li+ concentration Ce (mol m-3) Initial Li+ concentration in the electrolyte Ce,moy 1000 mol m-3 Li ",
+   "rotated_deg": 0,
+   "bbox": [
+    85.1,
+    67.3,
+    508.9,
+    656.1
+   ],
+   "w": 1767,
+   "h": 2454,
+   "dpi": 300,
+   "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
+   "blank": 0.073
+  }
+ ]
+}

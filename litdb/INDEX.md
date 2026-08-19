@@ -300,6 +300,7 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | `papers/sakuda2013_sulfide_mechanical_property.md` | 황화물 SE의 "유리한 기계적 물성" — 상온 가압소결·Young's modulus·이온전도도 — Sakuda (Sci. Rep. 2013) | DEM |
 | `papers/trevisanello2021_sc_pc_ncm_cracking_diffusion.md` | Trevisanello 2021 (Adv. Energy Mater. 11, 2003400) — 다결정 vs 단결정 NCM: 입자 균열·활성표면적·Li 확산 | experiment |
 | `papers/yoo2026_porosity_gradient_dry_electrode.md` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM |
+| `papers/zhang2023_pfib_multiscale_imaging_4d_thick_cathode.md` | **Zhang & Chouchane 2023** (*Joule* 7, 201–220, DOI 10.1016/j.joule.2022.12.001; **UCSD Meng ⨉ LRCS Franco ⨉ Thermo Fisher**) — 후막 NMC811 양극(**80–85 µm · 6 mAh/cm²**)을 **PFIB-SEM(Xe⁺) 으로 전(全)두께 3D 실측**(108×33×72 µm³, 15.2 nm 픽셀, 4상 pore/CBD/NMC/균열 = **29/9/58/4 %**) → 그 복셀을 **INNOV 로 2.3 M 요소 메시화해 COMSOL 3D-분해 Newman(4D) 모델에 그대로 투입**. **★ 우리 litdb 의 "생성-우선" 카드들과 정반대 극(실측-우선)** — §②-1·③-2 가 그 대비축. 실측: **원분말 균열 0.12 % → 압연 pristine 7.13 %**(⇒ **압연이 균열의 주범**), 15 사이클 후 **7.77(+9 %) / 8.85 %(+24 %)**, NMC–CBD **접촉면적 29→26→23 %**, **CEI 분리막쪽 20 nm = 집전체쪽(5 nm)의 4배**(cryo-TEM), flow τ **1.54(사이클 불변)**. 모델: **열화 kinetics 없음** — CEI 는 **처방 저항막**(16구역 5→20 nm + 가우시안 σ=0.15µ), clogging 은 가설(τ×2 는 저자 표현 "arbitrarily chosen"); 균열·접촉손실은 **모델에 없고 이미징 측정만**. 데모: 건식 LNMO **CBD 최대응집체 57 % vs 슬러리 23.6 %** → 100 cyc 유지율 **94 vs 84 %**. **⚠⚠ 액체 전해질 LIB(1M LiPF₆ EC:EMC)** = **이온상 반전**(pore=이온전도체) → chemistry 게이트 **liquid = FORM·METHOD-ONLY**; 전이 가능/불가 수치별 분리표는 카드 §10-A | **exp(PFIB 3D·cryo-STEM) + 4D Newman FEM(COMSOL) + LBM 침윤** |
 
 ## 🏛️ 디지털트윈 전극 계보 — 연세대 DTBL(이용민) 라인 (정본 승격 2026-07-28)
 
@@ -330,3 +331,15 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | slug | 논문 | 축 |
 |---|---|---|
 | `papers/hollmann2025_tabpfn_tabular_foundation_model.md` | **[외부·ML]** Hollmann/Müller/…/Hutter (Freiburg·Prior Labs), "**TabPFN: Accurate predictions on small data with a tabular foundation model**" (*Nature* 637, 2025, open access) — 합성 1억 데이터셋 사전학습 트랜스포머가 임의 소규모 표 데이터를 **ICL 단일 forward-pass로 학습+예측** (≤10k행/500특징). 분류 2.8 s가 4 h-튜닝 CatBoost 능가(ROC AUC 0.939 vs 0.752, 5,140×), 회귀 4.8 s(−RMSE 0.923 vs 0.872, 3,000×); 전체 예측**분포** 출력(다봉 가능)·결측/이상치 견고·fine-tune/생성/밀도추정/임베딩. **🔑 DEM 코퍼스 n=88–132 = 정확히 스위트스폿** — 5-phase Phase 3(설계→전-메트릭 predictor)·STEP4 곡선 서로게이트·R_int(N) BOL→cycling 예측기의 도구 후보; 물리 스케일링 법칙(σ 삼중)의 **대체가 아니라 잔차사냥·스크리닝 보완**. ⚠ 외삽 취약·블랙박스·≤10k 스케일 | **ML 방법론·소데이터 표형 회귀/분류·서로게이트 도구** |
+
+<!-- ↓↓ 2026-08-19 병합: 다른 워크트리(tmp-litdb-58)에서 온 추가분 ↓↓ -->
+## 🏭 건식 후막 양극 — 실패기전 / 셀-레벨 통합관측 (2026-08-19 신설)
+
+> 우리 **SDCP/SBE·DBE 트랙과 같은 계열**(건식 PTFE 피브릴 + VGCF + Ni-rich 층상 + 황화물 argyrodite)의
+> **후막(6.5 mAh cm⁻²급)** 양극을 *셀 통합 관측*(in-situ 압력 · 3전극 EIS/DRT · 사후 XPS/XRD)으로
+> 분해한 카드. 모델(DEM/MPM/FEM) 이 아니라 **frame[4] 외부 실험 앵커** 자리다.
+
+| slug | 논문 | 왜 중요한가 |
+|---|---|---|
+| `papers/wang2026_dryprocess_thick_cathode_failure_ncm94.md` | **Wang & Wang 2026** (J. Mater. Chem. A, DOI 10.1039/d6ta04392e; 난징항공항천대 NUAA + 선전연구원) — 건식 후막 양극(NCM94 80 wt% · 6.5 mAh cm⁻² · 미가압 177.3 µm)의 **실패기전 분해**. **시뮬 0, 순수 실험** | ★★ **① DRT 가 접촉과 화학을 갈라놨다** — Table S2 가 **D1(τ 10⁻⁶–10⁻⁵ s) = 양극 입자 간 고체–고체 접촉저항**(= 우리 Kirchhoff/Holm 항)이라 명시하고 Fig 5c·e 에서 그것이 **한 사이클 내내 안정**, 변하는 것은 D2(계면상 이온수송)·D3·D4(전하이동) ⇒ *"정적 접촉망 + 그 위의 화학층"* 아키텍처의 실험 지지. ★★ **② Fig S3 AFM 3점 Young's modulus 3.056 / 2.248 / 1.263 GPa** = 건식 황화물 복합막의 **실측 유효 강성 1.3–3.1 GPa** (LPSCl 결정 22–24 의 1/10) — 우리 E_eff 1.35(DEM)/1.53(MPM) 이 놓인 자리의 **첫 같은-공정 실측 밴드**(⚠ 막 압입 ≠ 입자 접촉강성, "일치" 표현 금지). ★★ **③ in-situ 스택압**(110 MPa, LTO zero-strain 대극): 충전 중 **−1.95 MPa (1.81 %)**, 방전 후 미복귀, **바닥 −0.30 MPa/cyc 래칫**, 2사이클 누적 비가역 **1.20 %** — SC 단독 양극에서 **충전=수축** ⇒ 우리 A10 `poly-mode` 분기(SC=계면 debond) 지지. ★ **④ R(N) 3항 실측**: R_s 9.4→8.6 · R_ct1 12.5→**55.4** · R_ct2 83.8→**939.7 Ω cm²** (50 cyc @0.1C, ×11.2, 양극 분담 79→94 %). ★ **⑤ 저율이 더 빨리 죽는다**(0.1C 87.1 % vs 0.5C 98.3 %, 50 cyc) = **시간구동 열화** — 우리 STEP5 에 없는 축. ★ **⑥ 사후 SEM 은 멀쩡**(박리·크랙 0)한데 압력·저항은 열화 ⇒ 파손이 **SEM 해상도 아래** = 우리 CZM/접촉원장의 표적이 실재한다는 증거. ⛔ **못 주는 것**: **복합체 σ_e·σ_ion 실측 0**(관심축 ② 못 채움) · **PTFE 함량 스윕 0**(1 wt% 한 점 → Lee 2025 가 여전히 유일 곡선) · **집전체 계면 분리 0** · porosity/로딩/다압력/Heckel 0 · packing·bimodal 0. ⚠⚠ **SE 가 Li₅.₄PS₄.₄Cl₁.₆ (Cl-rich)로 우리 Li₆PS₅Cl 이 아니다** · CAM 은 **NCM94 단결정 2–4 µm monomodal** · **VGCF 1 wt%(우리 3)** · **운전 스택압 200/110 MPa = 문헌 작동압 원장 최상단**(Doux 5·Lee 2·Luan 30 과 다른 영역) · **GITT D_Li 10⁻⁷·⁵ cm² s⁻¹ 는 우리 앵커보다 100–1000× 커 절대값 인용 금지**(특성면적 규약 미공개). ⚠ **논문 내부 오류 정정 필수**: 본문 *"R_ct1 변화 미미"* 는 Table S1 과 모순(**4.4×**) · Fig 2b 범례 71.1 ↔ 본문 71.7 · 초록 70.9 %(3.8 V) ↔ Table S3 74.5 %(3.7 V) · "38.0" ↔ 실제 37.4 · 면적비저항을 "Ω cm⁻²"로 표기 · Fig 6a y라벨(풀셀인데 vs In/LiIn) | exp (시뮬레이션 0) |
+
