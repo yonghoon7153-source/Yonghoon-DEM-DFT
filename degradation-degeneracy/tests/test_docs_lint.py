@@ -409,6 +409,15 @@ _P22_BIAS_ROWS = {
     ("seed_101", "10"): "bias_seed101_pe10mv",
 }
 
+#: restart 예산 검증 — 같은 왜곡(dense PE +2 mV)을 restart 5 vs 20 으로.
+#:   ★ restart 를 늘리자 원점이 회복되고 파탄이 사라졌다. 이 두 행이 "처방이
+#:     실증됐다" 의 근거이자, **restart 5 가 이 연구 전체의 미검증 전제**라는
+#:     경고의 근거다. 값이 틀어지면 두 주장이 동시에 무너진다.
+_P22_RESTART_ROWS = {
+    "5": "bias_pe2mv",
+    "20": "bias_pe2mv_r20",
+}
+
 #: 원점 건강 판정 — a_ne 가 이 범위 밖이면 좌표계가 오염된 것으로 본다.
 #:   건강한 11개 다리: 1.0582~1.0693 · 오염된 3개: 1.0289~1.0312
 _P22_PINI_ANE_OK = (1.05, 1.08)
@@ -559,3 +568,30 @@ def test_p22_doc_records_the_discarded_origin_polluted_legs():
     assert "bias_pe{2,5,10}mv.txt" in doc, "뺀 다리의 정본 파일을 밝히지 않았다"
     for leg in ("2 mV", "5 mV", "10 mV"):
         assert leg in doc, f"뺀 다리 {leg} 가 문서에 언급조차 없다"
+
+
+def test_p22_restart_table_matches_the_canon_outputs():
+    """★ restart 5 ↔ 20 대조가 정본과 맞아야 한다.
+
+    이 두 행은 (a) 원점 결함의 처방이 실증됐다 (b) restart 5 가 연구 전체의
+    미검증 전제다 — 두 주장을 동시에 떠받친다.
+    """
+    doc = _DOC.read_text(encoding="utf-8")
+    assert "restart" in doc, "restart 검증 절이 문서에 없다"
+    body = doc.split("restart 예산을 늘리면")[1].split("####")[0]
+
+    checked = 0
+    for n, stem in _P22_RESTART_ROWS.items():
+        c = _canon_facts(stem)
+        row = _re.search(
+            r"^\|\s*(?:\*\*)?restart\s*" + _re.escape(n)
+            + r"(?:\*\*)?[^|]*\|([^|]*)\|([^|]*)\|([^|]*)\|", body, _re.M)
+        assert row, f"restart {n} 행을 못 찾음"
+        want_fs = f"{c['false_split']}/{c['gap0_n']}"
+        assert want_fs in row.group(2), (
+            f"restart {n} 거짓 분리: 문서 '{row.group(2).strip()}' vs 정본 {want_fs}")
+        want_col = f"{c['ge4_k']}/{c['ge4_n']}"
+        assert want_col in row.group(3), (
+            f"restart {n} 놓침: 문서 '{row.group(3).strip()}' vs 정본 {want_col}")
+        checked += 1
+    assert checked == 2, checked
