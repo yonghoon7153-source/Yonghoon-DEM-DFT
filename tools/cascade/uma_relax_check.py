@@ -87,7 +87,23 @@ def drop_li(atoms, n_drop, seed=0):
     return atoms[[i for i in range(len(atoms)) if i not in take]]
 
 
-def relax(path, device="cuda", n_drop_li=0):
+def rattle(atoms, stdev, seed=0):
+    """모든 원자를 가우시안으로 흔든다 = **대칭을 깬다**.
+
+    왜 (2026-08-19): canonical CIF 는 Li→케이지 거리 표준편차 0.0000 · P–S 표준편차
+    0.00000 인 **완벽 대칭** 구조다. 완벽 대칭점에서는 대칭을 깨는 힘 성분이 대칭에
+    의해 정확히 0 이라 FIRE 가 그 다양체를 못 벗어난다 — 입방 셀에서 남는 자유도가
+    등방 부피뿐이라 "셀을 키우는" 쪽으로만 내려간다(→ 27.478). 살짝 흔들어 주면
+    진짜 최소점(≈19.5)으로 갈 수 있는지가 이 시험이다.
+    """
+    import numpy as np
+    a = atoms.copy()
+    rng = np.random.default_rng(seed)
+    a.positions = a.positions + rng.normal(0.0, stdev, a.positions.shape)
+    return a
+
+
+def relax(path, device="cuda", n_drop_li=0, rattle_A=0.0, seed=0):
     from ase.io import read
     from ase.optimize import FIRE
     from ase.filters import FrechetCellFilter
@@ -95,6 +111,8 @@ def relax(path, device="cuda", n_drop_li=0):
     a = read(path)
     if n_drop_li:
         a = drop_li(a, n_drop_li)
+    if rattle_A:
+        a = rattle(a, rattle_A, seed)
     v0, n = a.get_volume(), len(a)
     pred = pretrained_mlip.get_predict_unit("uma-s-1p1", device=device)
     a.calc = FAIRChemCalculator(pred, task_name="omat")
@@ -103,6 +121,7 @@ def relax(path, device="cuda", n_drop_li=0):
     opt.run(fmax=FMAX, steps=STEPS)
     v1 = a.get_volume()
     return {"file": str(path), "natoms": n, "n_drop_li": int(n_drop_li),
+            "rattle_A": float(rattle_A), "seed": int(seed),
             "V0_A3": round(v0, 2), "V1_A3": round(v1, 2),
             "dV_pct": round(100.0 * (v1 / v0 - 1.0), 2),
             "V_per_atom_before": round(v0 / n, 3), "V_per_atom_after": round(v1 / n, 3),
@@ -152,6 +171,35 @@ def selftest():
         chk(True, "[음성] 0·음수·전체이상 Li 삭제는 ValueError 로 막는다")
     except ImportError:
         print("  ⚠ ase 없음 — drop_li 시험 건너뜀")
+    # rattle — 양성 + 음성
+    try:
+        from ase.io import read as _rd2
+        import numpy as _np
+        cc = _rd2(ROOT / "db" / "structures" / "lpscl_F43m_24G_canonical.cif")
+        r1 = rattle(cc, 0.05, seed=0); r2 = rattle(cc, 0.05, seed=0)
+        chk((r1.positions == r2.positions).all(), "[양성] rattle 이 seed 로 재현된다")
+        chk(not (rattle(cc, 0.05, seed=1).positions == r1.positions).all(),
+            "[음성] seed 가 다르면 다른 흔들림이 나온다")
+        d = _np.linalg.norm(r1.positions - cc.positions, axis=1)
+        chk(0.02 < d.mean() < 0.20, f"[양성] 평균 변위가 stdev 규모다 ({d.mean():.3f} Å)")
+        chk(len(r1) == len(cc) and r1.get_chemical_symbols() == cc.get_chemical_symbols(),
+            "[양성] 원자 수·원소는 안 바뀐다")
+        chk(_np.allclose(_np.array(r1.cell), _np.array(cc.cell)),
+            "[음성] rattle 이 셀을 건드리지 않는다")
+        chk(rattle(cc, 0.0).positions.tolist() == cc.positions.tolist(),
+            "[음성] stdev 0 이면 원본 그대로")
+        # ★ 전제 — canonical 이 정말 완벽 대칭인가 (이 시험의 근거)
+        D = cc.get_all_distances(mic=True); sy = _np.array(cc.get_chemical_symbols())
+        P = _np.where(sy == "P")[0]
+        sd = _np.mean([_np.sort(D[q][sy == "S"])[:4].std() for q in P])
+        chk(sd < 1e-6, f"[전제] canonical 은 P–S 가 완벽 대칭 (표준편차 {sd:.2e})")
+        dd = _rd2(ROOT / "db" / "structures" / "comp1_V0_k444.cif")
+        D2 = dd.get_all_distances(mic=True); sy2 = _np.array(dd.get_chemical_symbols())
+        sd2 = _np.mean([_np.sort(D2[q][sy2 == "S"])[:4].std()
+                        for q in _np.where(sy2 == "P")[0]])
+        chk(sd2 > 1e-3, f"[음성] comp1 은 대칭이 이미 깨져 있다 (표준편차 {sd2:.2e})")
+    except ImportError:
+        print("  ⚠ ase 없음 — rattle 시험 건너뜀")
     # guard — 양성 + 음성
     chk("neb.x" in QE_BINS and "pw.x" in QE_BINS,
         "[양성] guard 가 neb.x 도 본다 (pw.x 만 보면 SEI NEB 를 놓친다)")
@@ -184,6 +232,9 @@ def main():
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--drop_li", type=int, default=0,
                     help="이완 전에 Li 를 이만큼 뺀다 (만석-Li 가설 검증용)")
+    ap.add_argument("--rattle", type=float, default=0.0,
+                    help="이완 전에 원자를 이 표준편차(Å)로 흔든다 — **대칭 깨기**")
+    ap.add_argument("--seed", type=int, default=0)
     ap.add_argument("--allow_gpu_share", action="store_true",
                     help="QE 가 돌아도 실행 (사용자 명시 허용 시에만)")
     ap.add_argument("--out", default=str(OUT))
@@ -195,9 +246,10 @@ def main():
     for s in a.structs:
         p = s if os.path.isabs(s) else str(ROOT / s)
         print(f"── {s}")
-        r = relax(p, a.device, a.drop_li)
+        r = relax(p, a.device, a.drop_li, a.rattle, a.seed)
         rows.append(r)
         print(f"   {('Li−%d  ' % a.drop_li) if a.drop_li else ''}"
+              f"{('rattle %.3g Å  ' % a.rattle) if a.rattle else ''}"
               f"V {r['V0_A3']} → {r['V1_A3']} Å³   **ΔV {r['dV_pct']:+.2f} %**   "
               f"({r['steps']} steps, {'수렴' if r['converged'] else '미수렴'}, {r['seconds']:.0f}s)")
     Path(a.out).write_text(json.dumps({
