@@ -102,6 +102,91 @@ def _curve(d, mto=False):
 
 
 
+# ── 골격(비-Li) MSD ───────────────────────────────────────────────────────
+# 왜 (2026-08-19): Zhang npj 2026 이 **MACE-MP-0 이 LGPS 골격을 1050–1500 K 에서
+#   인위적으로 녹인다**는 걸 잡고 샘플링 온도를 1050 K 로 낮췄다.
+#   우리 아레니우스 상한 1000 K 가 **그 선 바로 아래**다 → 우리 궤적도 확인해야 한다.
+#   골격이 녹으면 Li 의 "확산"은 확산이 아니라 **구조 붕괴**이고, 그 D·Ea 는 못 쓴다.
+# 판정선: 골격 MSD 가 Li MSD 의 이 비율을 넘으면 의심. Li 가 케이지 안에서만 떨 때
+#   골격도 같이 떠는 것은 정상이므로 **비**로 본다 (절대값은 온도에 따라 변한다).
+FRAMEWORK_WARN_RATIO = 0.10
+FRAMEWORK_FAIL_RATIO = 0.25
+LI = "Li"
+# 종별 MSD 가 들어 있을 수 있는 자리 (런 세대마다 다르다)
+ELEM_MSD_PATHS = (("msd_per_elem_A2",), ("msd_data", "msd_per_elem_A2"),
+                  ("msd_A2_per_elem",), ("msd_data", "msd_A2_per_elem"))
+
+
+def _elem_msd(d):
+    """종별 MSD 딕셔너리 {원소: [MSD…]} 를 찾는다. 없으면 None.
+
+    ⚠ **없을 때 조용히 빈 값을 돌려주지 않는다.** 호출자가 '골격이 안 녹았다'로
+      오독하면 이 검사는 없는 것만 못하다 — 없으면 None 이고 그 런은 '판정 불가'다.
+    """
+    for path in ELEM_MSD_PATHS:
+        cur = d
+        for k in path:
+            cur = cur.get(k) if isinstance(cur, dict) else None
+            if cur is None:
+                break
+        if isinstance(cur, dict) and cur:
+            return cur
+    return None
+
+
+def framework_check(d, lo, hi):
+    """골격(비-Li) 원소가 확산하고 있나.
+
+    돌려주는 값: None(종별 MSD 없음) 또는
+      {'t_end','li','frame':{el:{'msd_end','ratio','beta'}}, 'worst_el','worst_ratio','verdict'}
+
+    이 함수가 **못 하는 것**: 종별 MSD 가 파일에 없으면 아무 말도 못 한다.
+      그 경우 궤적(traj.xyz)에서 다시 계산해야 하는데 그건 이 도구 밖이다
+      (`tools/modelc_v3/aimd_mlip.py:compute_msd_per_element`).
+    """
+    em = _elem_msd(d)
+    if not em:
+        return None
+    t = d.get("times_ps") or (d.get("msd_data") or {}).get("times_ps")
+    if not t or LI not in em:
+        return None
+    t = list(t)
+    # 창 끝(hi) 에 가장 가까운 표본
+    k = min(range(len(t)), key=lambda i: abs(t[i] - hi))
+    li_end = float(em[LI][k])
+    frame, worst_el, worst = {}, None, 0.0
+    for el, y in em.items():
+        if el == LI:
+            continue
+        end = float(y[k])
+        ratio = end / li_end if li_end > 0 else float("inf")
+        frame[el] = {"msd_end_A2": end, "ratio_to_Li": ratio,
+                     "beta": loglog_slope(t, y, lo, hi)}
+        if ratio > worst:
+            worst_el, worst = el, ratio
+    if worst_el is None:
+        return None
+    if worst >= FRAMEWORK_FAIL_RATIO:
+        v = "framework_melting"
+    elif worst >= FRAMEWORK_WARN_RATIO:
+        v = "framework_mobile"
+    else:
+        v = "framework_rigid"
+    return {"t_end_ps": t[k], "li_msd_end_A2": li_end, "frame": frame,
+            "worst_el": worst_el, "worst_ratio": worst, "verdict": v}
+
+
+def framework_verdict_text(v):
+    return {
+        "framework_rigid": "⭕ 골격 고정 — Li 만 움직인다. D/Ea 를 쓸 수 있다",
+        "framework_mobile": ("⚠ 골격이 따라 움직인다 — Li 확산에 구조 이완이 섞였다. "
+                             "온도를 낮춰 재확인할 것"),
+        "framework_melting": ("⛔ **골격이 녹고 있다.** 이 온도의 Li 'D' 는 확산이 아니라 "
+                              "구조 붕괴다 — 인용 금지. Zhang npj 2026 이 MACE-MP-0 에서 "
+                              "본 것과 같은 증상 (그들은 샘플링을 1050 K 로 낮췄다)"),
+    }.get(v, "판정 불가")
+
+
 def selftest():
     """판정 로직 검증. **음성 경로가 핵심이다** — 못 잰 것을 통과로 읽지 않는지.
 
@@ -180,6 +265,41 @@ def selftest():
     chk("입증하지 못했다" in out, "[양성] 절편 큰 곡선은 케이지로 잡는다")
     chk("✅" not in out, "[음성] 케이지인데 ✅ 가 같이 찍히지 않는다")
 
+    # ── 골격(비-Li) 검사 ───────────────────────────────────────────────
+    tt = [i * 0.5 for i in range(1, 121)]                       # 0.5 … 60 ps
+    def _lin(slope):  return [slope * x for x in tt]
+    rigid = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
+             "msd_per_elem_A2": {"Li": _lin(1.0), "P": [0.4] * len(tt),
+                                 "S": [0.5] * len(tt), "Cl": [0.9] * len(tt)}}
+    melting = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
+               "msd_per_elem_A2": {"Li": _lin(1.0), "P": _lin(0.02),
+                                   "S": _lin(0.05), "Cl": _lin(0.4)}}
+    noelem = {"times_ps": tt, "msd_Li_A2": _lin(1.0)}
+    nested = {"msd_data": {"times_ps": tt,
+                           "msd_per_elem_A2": {"Li": _lin(1.0), "P": [0.3] * len(tt)}}}
+
+    r = framework_check(rigid, 2.0, 50.0)
+    chk(r and r["verdict"] == "framework_rigid",
+        f"[양성] 평평한 골격은 rigid (worst {r['worst_ratio']:.3f})" if r else "[양성] rigid")
+    chk(r and r["worst_el"] == "Cl", "[양성] 가장 큰 골격 원소를 집어낸다 (Cl)")
+
+    m = framework_check(melting, 2.0, 50.0)
+    chk(m and m["verdict"] == "framework_melting",
+        f"[음성①] 골격이 선형으로 자라면 melting (worst {m['worst_ratio']:.2f})" if m else "[음성①]")
+    chk(m and m["frame"]["Cl"]["beta"] is not None and m["frame"]["Cl"]["beta"] > 0.8,
+        "[음성①] 녹는 골격의 β 가 1 근처로 잡힌다")
+
+    chk(framework_check(noelem, 2.0, 50.0) is None,
+        "[음성②] **종별 MSD 가 없으면 None** — '골격 안 녹았다'로 넘어가지 않는다")
+    chk(framework_check(nested, 2.0, 50.0) is not None,
+        "[양성] msd_data 안에 중첩돼 있어도 찾는다 (런 세대 차이)")
+    chk(framework_check({"times_ps": tt, "msd_per_elem_A2": {"P": [0.3] * len(tt)}},
+                        2.0, 50.0) is None,
+        "[음성③] Li 가 없으면 비를 못 내므로 None")
+    chk("녹고" in framework_verdict_text("framework_melting")
+        and "판정 불가" == framework_verdict_text("무엇"),
+        "[음성④] 모르는 판정은 '판정 불가' 로 떨어진다")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -200,6 +320,11 @@ def main():
                          "독립 시드/config 는 같은 계의 다른 초기속도라 MSD 앙상블 평균이 "
                          "정당하다 — 홉이 적어 자기평균이 안 되는 궤적을 **재계산 없이** "
                          "살리는 유일한 수단.")
+    ap.add_argument("--framework", action="store_true",
+                    help="골격(비-Li) 원소가 녹고 있는지 같이 본다. Zhang npj 2026 이 "
+                         "MACE-MP-0 의 LGPS 골격이 1050 K 부터 인위적으로 녹는 걸 잡았고, "
+                         "우리 아레니우스 상한 1000 K 가 그 바로 아래다. 골격이 녹으면 "
+                         "Li 의 'D' 는 확산이 아니라 구조 붕괴다.")
     ap.add_argument("--scan", action="store_true",
                     help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
@@ -511,6 +636,44 @@ def main():
               " (tools/ionic/ 의 MSD 산출 단계 재실행) 다른 런으로 비교할 것.")
         if len(unmeasured) == len(files):
             print("   ⚠ 전부 못 쟀다 — 이 실행은 **아무것도 판정하지 않았다**.")
+
+    # ── --framework: 골격(비-Li)이 녹고 있나 ────────────────────────────
+    if a.framework:
+        print("\n골격(비-Li) 검사 — Li 만 움직여야 한다")
+        print("  왜: Zhang npj 2026 이 MACE-MP-0 의 LGPS 골격이 **1050–1500 K 에서**")
+        print("      인위적으로 녹는 걸 잡고 샘플링을 1050 K 로 낮췄다.")
+        print("      우리 아레니우스 상한 1000 K 가 그 선 바로 아래다.")
+        print(f"\n{'case':34s} {'worst':>6s} {'ratio':>7s} {'beta':>6s} {'MSD_Li':>8s}  판정")
+        fw_bad, fw_none = [], []
+        for f in files:
+            try:
+                d = json.load(open(f))
+            except (OSError, ValueError):
+                continue
+            tag = case_label(f)
+            r = framework_check(d, lo, hi)
+            if r is None:
+                fw_none.append(tag)
+                print(f"{tag:34s} {'—':>6s} {'—':>7s} {'—':>6s} {'—':>8s}  종별 MSD 없음")
+                continue
+            b = r["frame"][r["worst_el"]]["beta"]
+            mark = {"framework_rigid": "⭕", "framework_mobile": "⚠",
+                    "framework_melting": "⛔"}[r["verdict"]]
+            print(f"{tag:34s} {r['worst_el']:>6s} {r['worst_ratio']:>7.3f} "
+                  f"{('—' if b is None else f'{b:.2f}'):>6s} "
+                  f"{r['li_msd_end_A2']:>8.1f}  {mark} {r['verdict']}")
+            if r["verdict"] != "framework_rigid":
+                fw_bad.append((tag, r))
+        print()
+        for tag, r in fw_bad:
+            print(f"  {tag}: {framework_verdict_text(r['verdict'])}")
+        if fw_none:
+            # ⛔ 종별 MSD 가 없는 것을 "골격 안 녹았다"로 읽으면 이 검사는 없느니만 못하다.
+            print(f"⛔ **{len(fw_none)}/{len(files)} 개는 골격을 아예 보지 못했다 — 통과가 아니다.**")
+            print("   종별 MSD(msd_per_elem_A2)가 파일에 없다. --save_traj 로 남긴 traj 가 있으면")
+            print("   tools/modelc_v3/aimd_mlip.py 의 compute_msd_per_element 로 다시 낼 수 있다.")
+        elif not fw_bad:
+            print(f"✅ {len(files)}개 전부 골격이 고정돼 있다 — 그 온도의 Li D 는 진짜 확산이다.")
 
 
 if __name__ == "__main__":
