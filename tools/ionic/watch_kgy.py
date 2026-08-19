@@ -109,8 +109,14 @@ def beta(mj, lo=2.0, hi=50.0, mto=False):
     """
     try:
         d = json.load(open(mj))
-        y = d.get("msd_Li_A2_mto") if mto else d.get("msd_Li_A2")
-        return _beta_series(d.get("times_ps_mto") or d.get("times_ps"), y, lo, hi)
+        # ⛔ 2026-08-19 자책 — 여기를 `d.get("times_ps_mto") or d.get("times_ps")` 한 줄로
+        #   썼다가 **STO 배열이 MTO 시간격자에 얹혔다**. watch 가 0.35/0.07/0.91 을
+        #   찍었는데 도구는 0.99/1.14/0.62 였다. 격자는 계열마다 따로 고른다.
+        if mto:
+            t, y = d.get("times_ps_mto") or d.get("times_ps"), d.get("msd_Li_A2_mto")
+        else:
+            t, y = d.get("times_ps"), d.get("msd_Li_A2")
+        return _beta_series(t, y, lo, hi)
     except Exception:
         return None
 
@@ -407,8 +413,18 @@ def selftest_long():
         chk(beta(_mj) is not None, "[양성] STO 배열만 있으면 STO β 는 잰다")
         chk(beta(_mj, mto=True) is None,
             "[음성] MTO 배열이 없으면 mto=True 는 None (STO 로 대체하지 않는다)")
-        _sto["msd_Li_A2_mto"] = [1, 2, 5, 10, 20, 50]
-        open(_mj, "w").write(json.dumps(_sto))
+        # ⛔ 회귀 — 두 계열의 **시간격자가 다를 때** 섞이면 안 된다 (2026-08-19 실사고).
+        #   STO 는 β=1(직선), MTO 는 β=2(t²)로 일부러 다르게 심는다. 격자를 섞으면
+        #   둘 다 엉뚱한 값이 나오므로 값으로 검사한다.
+        _mix = {"times_ps": [1, 2, 5, 10, 20, 50], "msd_Li_A2": [1, 2, 5, 10, 20, 50],
+                "times_ps_mto": [2, 4, 8, 16, 32, 64, 100],
+                "msd_Li_A2_mto": [4, 16, 64, 256, 1024, 4096, 10000]}
+        open(_mj, "w").write(json.dumps(_mix))
+        _bs, _bm = beta(_mj), beta(_mj, mto=True)
+        chk(_bs is not None and abs(_bs - 1.0) < 0.02,
+            f"[회귀] 격자가 달라도 STO 는 자기 격자로 (β={_bs}, 기대 1.00)")
+        chk(_bm is not None and abs(_bm - 2.0) < 0.02,
+            f"[회귀] MTO 는 자기 격자로 (β={_bm}, 기대 2.00)")
         chk(beta(_mj, mto=True) is not None, "[양성] MTO 배열이 있으면 잰다")
 
         chk({p[0] for p in CLOSE_PLAN} == {"lpsocl_new", "lpsocl_3x3x1", "lpsocl_long"},
