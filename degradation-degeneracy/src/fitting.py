@@ -631,6 +631,12 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
     _cfg_deps = config_dependencies(_bc_orig)
 
     _hc_pre, _hc_meta, _hc_recipe = None, None, None
+    # ★ 13차 게이트 — Case 1 좌표 원점(p_ini)을 만든 pristine 조건의 id.
+    #   로그에만 있어서 산출물만 보고는 "어느 조건이 원점을 만들었나" 를 물을
+    #   수 없었다. 민감도 문턱이 격자마다 5배 달랐을 때 정확히 이 질문에
+    #   답해야 했다 — multistart 난수 seed 가 cond_id 에서 나오므로, 물리적
+    #   으로 같은 pristine 곡선도 격자마다 다른 국소해로 수렴할 수 있다.
+    p_ini_cond = None
     if reference == "halfcell":
         from src.config import load_config as _lc
         from src.halfcell import halfcell_meta_path as _hmp
@@ -852,6 +858,7 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         #   [1.4849, -0.4102, 1.0507, -0.0507]로 갈렸다 (본 fitting은 후자).
         #   비용도 4번 → 1번으로 준다.
         ref_id = ref_candidates[0]["cond_id"]
+        p_ini_cond = ref_id
         ini_rows = _fit_one({**ref_candidates[0], "p_ini": [1.0, 0.0, 1.0, 0.0]})
         p_ini = {r["objective"]: [float(r[k]) for k in PARAM_NAMES] for r in ini_rows}
         for name, v in p_ini.items():
@@ -906,6 +913,8 @@ def _run_fit_locked(in_dir, out_dir, obj_cfg: dict, objectives: dict, bounds: di
         "n_conditions": len(_cond_ids),
         "selection": _selection,
         "p_ini": p_ini,                           # half-cell 좌표 원점 (grid면 None)
+        "p_ini_cond": p_ini_cond,                 # 그 원점을 만든 pristine 조건
+
         "optimizer": {                            # 실제로 쓴 정책 전부
             "method": method, "adaptive": bool(adaptive),
             "n_restarts": n_restarts, "agree_tol": 1e-3,

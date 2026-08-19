@@ -2319,3 +2319,54 @@ def test_noise_family_verification_does_not_stringify_dataframes(tmp_path, monke
     assert not calls, (
         f"검증 중 DataFrame.__repr__ 이 {len(calls)}회 호출됐다 — "
         f"정렬 키가 값까지 문자열화하고 있다 (15차 발견 D)")
+
+
+# ── Case 1 좌표 원점의 출처를 봉인한다 ──────────────────────────────────
+#
+# ★ 13차 게이트 — 민감도 문턱이 격자마다 5배 달랐다 (dense 2 mV, seed_101
+#   10 mV). 코드·캐시는 동일했고 재실행 대조로 확인했다. 남은 축은 `p_ini`
+#   (Case 1 좌표 원점)인데, 두 격자에서 값이 크게 달랐다:
+#       dense    [1.5333, -0.4307, 1.0312, -0.0279]
+#       seed_101 [1.5128, -0.4215, 1.0629, -0.0597]
+#
+#   원점은 pristine 조건(lli=lam_pe=lam_ne=0, noise=0)을 자체 fitting 해서
+#   만든다. 그 곡선은 두 격자에서 **물리적으로 같다** — 그런데 multistart
+#   난수 seed 가 `sha1(cond_id)` 에서 나오고 cond_id 에는 noise_seed 가
+#   들어가므로, 같은 곡선이 다른 국소해로 수렴할 수 있다. 즉 조건 하나의
+#   최적화 요동이 격자 전체의 좌표계를 정한다.
+#
+#   그런데 그 조건의 cond_id 가 **로그에만 있고 manifest 에 없었다**.
+#   봉인되지 않으면 사후에 "어느 조건이 원점을 만들었나" 를 물을 수 없다 —
+#   지금 그 질문에 답해야 하는데 산출물만 보고는 답이 안 나온다.
+
+def test_run_spec_seals_the_p_ini_anchor_condition(tmp_path):
+    """★ p_ini 를 만든 기준 조건 id 가 run_spec 에 남아야 한다."""
+    import yaml
+
+    from src.fitting import run_fit
+
+    # p_ini 는 half-cell 기준에서만 만든다 (Case 1 좌표 원점) — 캐시 선생성
+    from src.config import load_config
+    from src.halfcell import get_halfcell_reference
+    get_halfcell_reference(load_config("configs/base.yaml"), force=True)
+
+    in_dir = _tiny_curves(tmp_path / "in", n=24, n_cond=3)
+    out = tmp_path / "out"
+    run_fit(in_dir, out,
+            {"objectives": {}, "dqdv": {"window": 7, "polyorder": 2,
+                                        "peak_weight": 1.0},
+             "scaling": {"method": "reference_rmse"}},
+            {"a": {"w_pocv": 1.0}},
+            {"init": [1.0, 0.0, 1.0, 0.0], "lb": [0.5, -1.0, 0.5, -1.0],
+             "ub": [2.0, 1.0, 2.0, 1.0]},
+            "expanded", 1, nproc=1, reference="halfcell")
+
+    m = yaml.safe_load((out / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = m["run_spec"]
+    assert "p_ini_cond" in spec, "원점을 만든 기준 조건이 봉인되지 않았다"
+    assert spec["p_ini_cond"], f"p_ini_cond 가 비었다: {spec['p_ini_cond']!r}"
+    # fits 에 실제로 있는 조건이어야 한다 (임의 문자열이면 증명이 안 된다)
+    import pandas as pd
+    conds = set(pd.read_parquet(out / "fits.parquet")["cond_id"])
+    assert spec["p_ini_cond"] in conds, \
+        f"p_ini_cond={spec['p_ini_cond']} 가 fits 에 없다"

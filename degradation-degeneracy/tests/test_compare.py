@@ -4762,3 +4762,85 @@ def test_validator_still_requires_the_sealed_halfcell_cache(tmp_path):
     (d3 / "manifest.yaml").write_text(yaml.safe_dump(m3), encoding="utf-8")
     assert "필수_입력_존재" in validate_provenance(d3)["fail"], \
         "선언 method 와 봉인 파일이 달라도 통과했다"
+
+
+# ── 원점 진단 도구 (13차 게이트의 열린 질문용) ──────────────────────────
+#
+# ★ 민감도 문턱이 격자마다 5배 달랐다. 코드·캐시는 같았고 재실행 대조로
+#   확인했다. 남은 축이 Case 1 좌표 원점(p_ini)인데, 그것을 다리별로 나란히
+#   놓고 보는 수단이 없었다 — 로그를 눈으로 긁어야 했다.
+#
+#   이 도구가 하는 일은 한 가지다: **원점이 다른 다리끼리의 붕괴율 차이는
+#   왜곡 효과와 좌표계 효과가 섞여 있다**는 것을 표로 드러내는 것.
+
+def _seal_halfcell_recipe(run_dir, *, pe_offset_mv=0.0, p_ini=None, cond=None):
+    """완성 artifact 의 manifest 에 half-cell recipe·원점을 심는다."""
+    import yaml
+
+    m = yaml.safe_load((run_dir / "manifest.yaml").read_text(encoding="utf-8"))
+    spec = m["run_spec"]
+    spec["reference"] = "halfcell"
+    spec["halfcell_recipe"] = {"method": "ocpbias", "n_points": 400,
+                               "branch": "delithiation",
+                               "pe_offset_mv": pe_offset_mv, "ne_offset_mv": 0.0,
+                               "pe_stretch": 1.0, "ne_stretch": 1.0}
+    if p_ini is not None:
+        spec["p_ini"] = {"pocv_dvdq": p_ini}
+    if cond is not None:
+        spec["p_ini_cond"] = cond
+    (run_dir / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+
+def test_pini_diagnostic_reports_origin_and_distortion_per_leg(tmp_path, capsys):
+    """★ 다리별로 원점·왜곡·거짓 분리를 한 표에 모아야 한다."""
+    import sys
+
+    from tools.diagnose_pini_transition import main as diag
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    _seal_halfcell_recipe(a, pe_offset_mv=0.0, p_ini=[1.5, -0.4, 1.03, -0.03],
+                          cond="c_origin_a")
+    b, _ = _complete_artifact(tmp_path / "b")
+    _seal_halfcell_recipe(b, pe_offset_mv=2.0, p_ini=[1.5, -0.4, 1.03, -0.03],
+                          cond="c_origin_a")
+
+    argv = sys.argv
+    sys.argv = ["diag", "--legs", str(a), str(b), "--objective", "pocv_dvdq"]
+    try:
+        diag()
+    finally:
+        sys.argv = argv
+    out = capsys.readouterr().out
+    assert "PE +2 mV" in out, out
+    assert "없음 (대조)" in out, out
+    assert "c_origin_a" in out, "원점 조건이 표에 없다"
+    # 원점이 같으므로 섞임 경고는 뜨면 안 된다
+    assert "원점이 여러 개다" not in out, out
+
+
+def test_pini_diagnostic_warns_when_origins_differ(tmp_path, capsys):
+    """★ 원점이 다른 다리를 나란히 놓으면 **반드시** 경고해야 한다.
+
+    이 경고가 없으면 "격자 A 는 2 mV 에서 무너지고 B 는 안 무너진다" 를
+    왜곡 효과로 읽게 된다 — 실제로 13차에서 그럴 뻔했다.
+    """
+    import sys
+
+    from tools.diagnose_pini_transition import main as diag
+
+    a, _ = _complete_artifact(tmp_path / "a")
+    _seal_halfcell_recipe(a, pe_offset_mv=2.0, p_ini=[1.53, -0.43, 1.03, -0.03],
+                          cond="c_dense")
+    b, _ = _complete_artifact(tmp_path / "b")
+    _seal_halfcell_recipe(b, pe_offset_mv=2.0, p_ini=[1.51, -0.42, 1.06, -0.06],
+                          cond="c_seed101")
+
+    argv = sys.argv
+    sys.argv = ["diag", "--legs", str(a), str(b), "--objective", "pocv_dvdq"]
+    try:
+        diag()
+    finally:
+        sys.argv = argv
+    out = capsys.readouterr().out
+    assert "원점이 여러 개다" in out, f"원점 불일치를 경고하지 않았다\n{out}"
+    assert "섞여" in out, out
