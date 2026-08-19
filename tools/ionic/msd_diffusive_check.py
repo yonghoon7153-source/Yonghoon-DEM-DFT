@@ -109,7 +109,25 @@ def _curve(d, mto=False):
 #   골격이 녹으면 Li 의 "확산"은 확산이 아니라 **구조 붕괴**이고, 그 D·Ea 는 못 쓴다.
 # 판정선: 골격 MSD 가 Li MSD 의 이 비율을 넘으면 의심. Li 가 케이지 안에서만 떨 때
 #   골격도 같이 떠는 것은 정상이므로 **비**로 본다 (절대값은 온도에 따라 변한다).
-FRAMEWORK_WARN_RATIO = 0.10
+#
+# ⛔⛔ 2026-08-20 실측으로 **비(ratio) 단독 판정을 폐기했다.** 세 방향으로 다 틀렸다:
+#   ① 놓침 — b2o3 T800 은 B 의 **β = 1.44**, T1000 은 O 의 **β = 0.91** 인데 비가 각각
+#     0.092 / 0.084 로 문턱 0.10 아래여서 **"⭕ rigid" 로 통과**했다.
+#   ② 헛경보 — b2o3 T400/T500 의 "⚠ mobile" 은 **분모 인공물**이다. 저온이라 Li MSD 가
+#     7–22 Å² 로 작아 비가 자동으로 부푼다(골격 절대 MSD 는 온도에 둔한 진동값).
+#   ③ ★ **표본 크기를 안 봤다** — 이게 제일 컸다. b2o3 는 `Li58B2P8S41Cl16O3` 라
+#     **B 가 2개, O 가 3개**다. 2개짜리 평균에서 B 하나가 한 번 뛰면 MSD 가 계단이 되고
+#     그 구간 로그기울기는 1 을 훌쩍 넘는다 — `kb/concepts/beta-gate.md` 의
+#     "β>1.2 = 드리프트 **또는 단일 대형 사건**" 중 후자다. 실제로 '최악 원소' 로 뽑힌 게
+#     계속 B·O 였고, modelc 에서 뽑힌 Cl·S 는 16·41개였다.
+#     (COM 표류는 원인이 아니다 — ASE Langevin 은 `fixcm=True` 가 기본이고
+#      `kb/reports/paper_first_author_requests_2026_08.md` 에서 이미 배제됐다.)
+# ⇒ **β 가 1차 판별자**(진동이면 MSD 가 평평해 β≈0, 자리를 뜨면 β→1)이고,
+#   **표본이 부족한 원소는 아예 판정에서 뺀다.** 비는 2차 정보로만 남긴다.
+FRAMEWORK_BETA_RIGID = 0.30    # 이 아래 = 진동 (실측: modelc 5온도 −0.08~0.13)
+FRAMEWORK_BETA_MELT = 0.60     # 이 위 = 확산/구조붕괴
+FRAMEWORK_MIN_N = 8            # 이보다 적은 원소는 평균이 의미 없다 → 판정 제외(보고는 한다)
+FRAMEWORK_WARN_RATIO = 0.10    # 2차 — β 가 애매할 때만 본다
 FRAMEWORK_FAIL_RATIO = 0.25
 LI = "Li"
 # 종별 MSD 가 들어 있을 수 있는 자리 (런 세대마다 다르다)
@@ -177,6 +195,7 @@ def elem_msd_from_traj(json_path, save_fs=None, cache=True):
         try:
             d = json.load(open(jp))
             d["msd_per_elem_A2"] = out["msd_per_elem_A2"]
+            d["n_atoms_per_elem"] = out.get("n_atoms_per_elem", {})
             d.setdefault("times_ps", out["times_ps"])
             d["_elem_msd_source"] = f"recomputed from traj.xyz (save_fs={save_fs:g} fs)"
             json.dump(d, open(jp, "w"))
@@ -184,6 +203,25 @@ def elem_msd_from_traj(json_path, save_fs=None, cache=True):
         except (OSError, ValueError) as e:
             print(f"   ⚠ 되쓰기 실패({type(e).__name__}) — 이번만 쓰고 버린다")
     return out
+
+
+def n_per_elem_from_traj(json_path):
+    """traj.xyz **첫 프레임만** 읽어 원소별 원자수를 센다. 없으면 None.
+
+    왜 따로 두나: 2026-08-20 에 `--from_traj` 로 캐시해 둔 json 들은 `n_atoms_per_elem`
+    이전 판이라 개수가 없다. 개수가 없으면 표본 부족 원소를 못 걸러내는데,
+    그걸 위해 118 MB 궤적을 통째로 다시 읽을 이유는 없다 — 첫 프레임이면 충분하다.
+    """
+    traj = pathlib.Path(json_path).parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    try:
+        from ase.io import read as _read
+        at = _read(str(traj), index=0)
+    except BaseException:
+        return None
+    syms = at.get_chemical_symbols()
+    return {e: syms.count(e) for e in sorted(set(syms))}
 
 
 def framework_check(d, lo, hi):
@@ -202,34 +240,57 @@ def framework_check(d, lo, hi):
     t = d.get("times_ps") or (d.get("msd_data") or {}).get("times_ps")
     if not t or LI not in em:
         return None
+    npe = (d.get("n_atoms_per_elem")
+           or (d.get("msd_data") or {}).get("n_atoms_per_elem") or {})
     t = list(t)
     # 창 끝(hi) 에 가장 가까운 표본
     k = min(range(len(t)), key=lambda i: abs(t[i] - hi))
     li_end = float(em[LI][k])
-    frame, worst_el, worst = {}, None, 0.0
+    frame, judged, thin = {}, [], []
     for el, y in em.items():
         if el == LI:
             continue
         end = float(y[k])
-        ratio = end / li_end if li_end > 0 else float("inf")
-        frame[el] = {"msd_end_A2": end, "ratio_to_Li": ratio,
-                     "beta": loglog_slope(t, y, lo, hi)}
-        if ratio > worst:
-            worst_el, worst = el, ratio
-    if worst_el is None:
+        n = int(npe.get(el, 0))
+        rec = {"msd_end_A2": end, "n_atoms": n or None,
+               "ratio_to_Li": (end / li_end if li_end > 0 else float("inf")),
+               "beta": loglog_slope(t, y, lo, hi)}
+        frame[el] = rec
+        # 표본이 적으면 **판정에 넣지 않는다**. 개수를 모르면(옛 파일) 일단 판정에 넣되
+        # 그 사실을 남긴다 — 조용히 빼면 "본 적 없는 원소"가 생긴다.
+        (thin if (n and n < FRAMEWORK_MIN_N) else judged).append(el)
+    if not frame:
         return None
-    if worst >= FRAMEWORK_FAIL_RATIO:
-        v = "framework_melting"
-    elif worst >= FRAMEWORK_WARN_RATIO:
-        v = "framework_mobile"
+    if not judged:
+        v, worst_el = "sample_too_thin", None
     else:
-        v = "framework_rigid"
+        # β 가 1차 판별자 (진동 β≈0 / 자리 이탈 β→1). **β 는 0.05 단위로 양자화**해
+        # 비교한다 — 안 그러면 평평한 곡선들의 β 가 1e-16 수준 부동소수 잡음으로 갈려
+        # 엉뚱한 원소가 '최악' 으로 뽑힌다(2026-08-20 selftest 가 잡았다). 동점은 비로 가른다.
+        def _key(e):
+            b = frame[e]["beta"]
+            return (round((b if b is not None else -9.0) / 0.05), frame[e]["ratio_to_Li"])
+        worst_el = max(judged, key=_key)
+        b = frame[worst_el]["beta"]
+        r = frame[worst_el]["ratio_to_Li"]
+        if b is None:
+            v = "sample_too_thin"
+        elif b >= FRAMEWORK_BETA_MELT or r >= FRAMEWORK_FAIL_RATIO:
+            v = "framework_melting"
+        elif b >= FRAMEWORK_BETA_RIGID:
+            v = "framework_mobile"
+        else:
+            v = "framework_rigid"
+    worst = frame[worst_el]["ratio_to_Li"] if worst_el else float("nan")
+    frame["_judged"], frame["_thin"] = judged, thin
     return {"t_end_ps": t[k], "li_msd_end_A2": li_end, "frame": frame,
             "worst_el": worst_el, "worst_ratio": worst, "verdict": v}
 
 
 def framework_verdict_text(v):
     return {
+        "sample_too_thin": ("⚠ **표본 부족 — 판정 못 한다.** 골격 원소가 전부 "
+                            f"{FRAMEWORK_MIN_N}개 미만이라 MSD 평균이 단일 사건에 휘둘린다"),
         "framework_rigid": "⭕ 골격 고정 — Li 만 움직인다. D/Ea 를 쓸 수 있다",
         "framework_mobile": ("⚠ 골격이 따라 움직인다 — Li 확산에 구조 이완이 섞였다. "
                              "온도를 낮춰 재확인할 것"),
@@ -340,6 +401,27 @@ def selftest():
         f"[음성①] 골격이 선형으로 자라면 melting (worst {m['worst_ratio']:.2f})" if m else "[음성①]")
     chk(m and m["frame"]["Cl"]["beta"] is not None and m["frame"]["Cl"]["beta"] > 0.8,
         "[음성①] 녹는 골격의 β 가 1 근처로 잡힌다")
+
+    # ★★ 표본 크기 — b2o3 의 B 2개 / O 3개가 '최악 원소' 로 뽑히던 실측 결함
+    thin_case = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
+                 "msd_per_elem_A2": {"Li": _lin(1.0), "B": _lin(0.5),   # 2개, 마구 뜀
+                                     "S": [0.5] * len(tt)},            # 41개, 평평
+                 "n_atoms_per_elem": {"Li": 58, "B": 2, "S": 41}}
+    tc = framework_check(thin_case, 2.0, 50.0)
+    chk(tc and tc["worst_el"] == "S",
+        "[음성⑤] ★ 2개짜리 B 가 급등해도 **판정은 41개짜리 S 로** 한다 (표본 부족 제외)")
+    chk(tc and tc["verdict"] == "framework_rigid",
+        "[음성⑤] 그래서 판정은 rigid — 단일 대형 사건에 안 휘둘린다")
+    chk(tc and "B" in (tc["frame"].get("_thin") or []),
+        "[양성] 제외한 원소는 _thin 에 남겨 보고한다 (조용히 버리지 않는다)")
+    allthin = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
+               "msd_per_elem_A2": {"Li": _lin(1.0), "B": _lin(0.5)},
+               "n_atoms_per_elem": {"Li": 58, "B": 2}}
+    at = framework_check(allthin, 2.0, 50.0)
+    chk(at and at["verdict"] == "sample_too_thin",
+        "[음성⑥] 판정 가능한 원소가 하나도 없으면 'sample_too_thin' — rigid 로 넘어가지 않는다")
+    chk("표본 부족" in framework_verdict_text("sample_too_thin"),
+        "[양성] sample_too_thin 문구가 있다")
 
     chk(framework_check(noelem, 2.0, 50.0) is None,
         "[음성②] **종별 MSD 가 없으면 None** — '골격 안 녹았다'로 넘어가지 않는다")
@@ -698,7 +780,9 @@ def main():
         print("  왜: Zhang npj 2026 이 MACE-MP-0 의 LGPS 골격이 **1050–1500 K 에서**")
         print("      인위적으로 녹는 걸 잡고 샘플링을 1050 K 로 낮췄다.")
         print("      우리 아레니우스 상한 1000 K 가 그 선 바로 아래다.")
-        print(f"\n{'case':34s} {'worst':>6s} {'ratio':>7s} {'beta':>6s} {'MSD_Li':>8s}  판정")
+        print(f"  ⚠ 원소 {FRAMEWORK_MIN_N}개 미만은 **판정에서 뺀다** — 2~3개짜리 평균은")
+        print(f"     한 원자가 한 번 뛰면 β 가 1 을 넘는다(단일 대형 사건). 값은 참고로 찍는다.")
+        print(f"\n{'case':34s} {'worst':>7s} {'beta':>6s} {'ratio':>7s} {'MSD_Li':>8s}  판정")
         fw_bad, fw_none = [], []
         for f in files:
             try:
@@ -706,23 +790,42 @@ def main():
             except (OSError, ValueError):
                 continue
             tag = case_label(f)
+            if a.from_traj and _elem_msd(d) and not (
+                    d.get("n_atoms_per_elem")
+                    or (d.get("msd_data") or {}).get("n_atoms_per_elem")):
+                npe = n_per_elem_from_traj(f)
+                if npe:
+                    d["n_atoms_per_elem"] = npe
+                    try:
+                        _d = json.load(open(f)); _d["n_atoms_per_elem"] = npe
+                        json.dump(_d, open(f, "w"))
+                    except (OSError, ValueError):
+                        pass
             r = framework_check(d, lo, hi)
             if r is None and a.from_traj:
                 got = elem_msd_from_traj(f, save_fs=d.get("save_fs"))
                 if got:
                     d.setdefault("times_ps", got["times_ps"])
                     d["msd_per_elem_A2"] = got["msd_per_elem_A2"]
+                    d["n_atoms_per_elem"] = got.get("n_atoms_per_elem", {})
                     r = framework_check(d, lo, hi)
             if r is None:
                 fw_none.append(tag)
                 print(f"{tag:34s} {'—':>6s} {'—':>7s} {'—':>6s} {'—':>8s}  종별 MSD 없음")
                 continue
-            b = r["frame"][r["worst_el"]]["beta"]
+            we = r["worst_el"]
+            b = r["frame"][we]["beta"] if we else None
+            n = r["frame"][we].get("n_atoms") if we else None
             mark = {"framework_rigid": "⭕", "framework_mobile": "⚠",
-                    "framework_melting": "⛔"}[r["verdict"]]
-            print(f"{tag:34s} {r['worst_el']:>6s} {r['worst_ratio']:>7.3f} "
-                  f"{('—' if b is None else f'{b:.2f}'):>6s} "
-                  f"{r['li_msd_end_A2']:>8.1f}  {mark} {r['verdict']}")
+                    "framework_melting": "⛔", "sample_too_thin": "▫"}[r["verdict"]]
+            lab = f"{we}({n})" if we and n else (we or "—")
+            thin = r["frame"].get("_thin") or []
+            note = ("  [제외 " + ",".join(
+                f"{e}({r['frame'][e].get('n_atoms')},β{r['frame'][e]['beta']:.2f})"
+                for e in thin if r['frame'][e]['beta'] is not None) + "]") if thin else ""
+            print(f"{tag:34s} {lab:>7s} {('—' if b is None else f'{b:.2f}'):>6s} "
+                  f"{r['worst_ratio']:>7.3f} "
+                  f"{r['li_msd_end_A2']:>8.1f}  {mark} {r['verdict']}{note}")
             if r["verdict"] != "framework_rigid":
                 fw_bad.append((tag, r))
         print()
