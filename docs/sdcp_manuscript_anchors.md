@@ -193,3 +193,58 @@ Li⁺ tridentate)를 정정 구조(ether-O + methyl-분지 2차 술폰산)에 �
 - metadata: `morphology: particle_0.3um_S3 | agglomerate_3.0um_S2`, `agg_d_um`, `n_per_agglomerate`,
   `agg_pack_assumed`, `agg_mechanics`(E 앵커는 PRIMARY 것 — 응집-스케일 결합은 coh_sdcp hook 무보정),
   `seeding{n_seeded, realized_anchor_frac, survival, n_clusters_*}`, `clump`(singles 모드에서만).
+
+## ★★ σ_VGCF 유효-망 규약 + 절대 σ_e 문헌 앵커 (2026-08-18, 사용자 재가 "그렇게 하자") ★★
+
+정본 원장 = CL-46 (문헌 밴드) · CL-47 (규약 확정) · CL-48/49 (감도 프로브, 런 전 등록).
+**결정: σ_VGCF = 100 S/cm 동결.**  정체는 "재료상수"가 아니라 **유효 망(network) 규약** —
+물리적으로 의미 있는 밴드는 [분말 83, 단섬유 10⁴] S/cm 이고, 100 은 접촉저항이 포함된 쪽 끝이다.
+
+### 앵커 표 (전부 stated/데이터시트 — digitize 아님)
+
+| 양 | 값 | 출처 | 지위 |
+|---|---|---|---|
+| VGCF 단섬유 저항률 (흑연화) | 1e-4 Ω·cm = **10⁴ S/cm** | 4-point probe 문헌 (탄화 1e-3 · 고흑연화 5~6e-5; Endo 5e-5) — **사용자 독립 검증 2026-08-18** | 재료 고유값 |
+| VGCF-H 분말(압분) 저항률 | 0.012~0.02 Ω·cm = **50~83 S/cm** | Showa Denko 카탈로그 | 접촉저항 포함 망 값 |
+| 두 값의 2자릿수 차 | **전부 섬유-섬유 접촉저항** | 사용자 검증 | 민감도의 소재 |
+| 복합양극 pellet σ_e (VGCF 3wt%·PTFE 0.5) | **34 mS/cm** (75 MPa, DCP) | Lee 2025 Nat.Commun 16,4200 (litdb `lee2025_corolling_dryprocess_lpscl_ptfe`) | 같은 재료계 실측 |
+| 〃 PTFE 2 / 5 wt% | 4.5 / **0.011 mS/cm** (3,000× 붕괴) | 〃 Supp Fig 5 | PTFE 차단 크기 |
+| 복합양극 pellet σ_e (C 3wt%, AM 80/85/90) | 38.6 / 54.8 / **65.2 mS/cm** (517 MPa) | Kim 2024 (litdb `kim2024_carbon_volumetric_occupation_se_domain`) | 독립 재확인 |
+| **우리 SBE** (VGCF 3·PTFE 1, vox 0.15 구) | **73 mS/cm** | CL-33/34 arm 0 | 밴드 상단 (PTFE 미차단으로 설명) |
+
+### 규약 논거 (Methods/SI 에 그대로)
+
+복셀 표현은 접촉한 섬유를 **융합**시켜 섬유-섬유 접촉저항을 명시적으로 담지 않는다.  실물
+저항망의 민감도는 fiber resistivity 가 아니라 **contact conductance** 에 몰려 있으므로
+(단섬유 σ 를 넣으면 섬유는 등전위선), 접촉저항을 포함한 **유효값(분말급 100 S/cm)** 이
+정합적 선택이다 — 단섬유 고유값 10⁴ 를 쓰면 접촉저항이 모델·값 양쪽에서 **이중 소거**된다.
+이 lumping 은 DEM 의 E_eff 18배 연화(frame[2])와 같은 인식론이다.
+
+⚠ 범주 비대칭 — σ_SDCP 250 은 **재료 앵커**(S-PEDOT), σ_VGCF 100 은 **유효 망 상수**.
+상별 σ 비교 서술("SDCP 가 3.18× 우세")에는 반드시 "**이 규약 안에서**"를 붙인다.
+
+### SI 문장 초안 (영문)
+
+> The electronic conductivity assigned to the VGCF phase (100 S cm⁻¹) is an **effective
+> network value** corresponding to the measured compressed-powder resistivity of VGCF
+> (0.012 Ω cm ≈ 83 S cm⁻¹), rather than the intrinsic single-fibre value (10⁻⁴ Ω cm ≈
+> 10⁴ S cm⁻¹).  The two differ by two orders of magnitude, the difference being entirely
+> fibre–fibre contact resistance.  Because the voxel representation fuses touching fibres
+> and therefore carries no explicit contact resistance, the contact-inclusive effective
+> value is the consistent choice; adopting the single-fibre value would remove contact
+> resistance twice.  The headline SBE/DBE conductivity ratio is insensitive to this choice
+> (ΔR = 0.004 for a 1.44× change in σ_VGCF; full-band sensitivity arm registered).
+> Consistently, the absolute σ_e of the model SBE (73 mS cm⁻¹) falls at the upper edge of
+> published DC-polarisation values for the same materials system (34 mS cm⁻¹ at
+> VGCF 3 wt%/PTFE 0.5 wt%, and 38.6–65.2 mS cm⁻¹ at carbon 3 wt%); the residual excess is
+> attributed to the model not representing PTFE blocking of the carbon network, an effect
+> measured to suppress σ_e by three orders of magnitude between 0.5 and 5 wt% PTFE.
+> Absolute values are therefore quoted at order-of-magnitude fidelity only; all headline
+> claims are same-bed, same-grid, same-convention **relative** comparisons.
+
+### 남은 단계 (원장과 동일)
+
+- Tier 2 ("밴드 안"): CL-49 (PTFE 스탬프 팔) + STEP 4 격자.
+- Tier 3 (정량 인용): **Lee-조성(80:17:3:0.5) 침대 1건 역보정** — PTFE 스탬프 켠 상태로
+  34 mS/cm 재현하도록 유효 σ_VGCF 를 맞춘다 (frame[4]: 실험에만 보정).  그 전까지 100 동결.
+- CL-48 (σ_VGCF=7854 상한 프로브): h0 이면 "밴드 전 구간 강건" 문장으로 승격.
