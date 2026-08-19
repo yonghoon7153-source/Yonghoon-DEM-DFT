@@ -253,3 +253,121 @@ def test_aprime_staging_matches_the_real_v4_artifact_names():
                           r"\.(json|meta\.yaml)$")
     for n in hits:
         assert restored.match("aabbccddeeff_" + n), n
+
+
+# ── 봉인 recipe 를 staging 만 하고 조회는 기본 method 로 하던 구멍 ──────────
+#
+# ★ 13차 게이트 자체 리뷰(archive 렌즈)가 실측으로 잡았다. `run_hessian` 은
+#   `get_halfcell_reference(cfg, cache_dir=_cache)` 를 **method 없이** 불러
+#   항상 `_ocp_<recipe>` 경로를 찾는다. ocpbias 실행의 봉인 캐시는
+#   `_ocpbias_<recipe>` 라 staging 에 정확히 복사돼 있는데도 **미스**가 되고,
+#   캐시 미스는 예외 없이 조용히 재계산된다 — 즉 왜곡 실행의 곡률을 **무왜곡
+#   기준으로** 잰다. staging 이 non-None 이라 A' 의 "봉인 입력을 찾지 못했다"
+#   경고조차 안 뜬다.
+#
+#   실측 (ocpbias fit 산출물):
+#     staging  : a8e262f7d6aa4beb_ocpbias_582189af471c.json
+#     조회 경로: a8e262f7d6aa4beb_ocp_b5009f515fb8.json   존재? False
+
+def test_aprime_reads_the_sealed_halfcell_recipe(tmp_path):
+    """★ 봉인 manifest 의 recipe 에서 method·왜곡을 읽어와야 한다."""
+    import yaml
+
+    from src.hessian import _sealed_halfcell_recipe
+
+    run = _fit_run(tmp_path, split=True)
+    m = yaml.safe_load((run / "manifest.yaml").read_text(encoding="utf-8"))
+    m.setdefault("run_spec", {})["halfcell_recipe"] = {
+        "method": "ocpbias", "n_points": 400, "branch": "delithiation",
+        "pe_offset_mv": 10.0, "ne_offset_mv": 0.0,
+        "pe_stretch": 1.0, "ne_stretch": 1.0}
+    (run / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    method, kw = _sealed_halfcell_recipe(run)
+    assert method == "ocpbias", method
+    assert kw["pe_offset_mv"] == 10.0, kw
+    # method 는 recipe 의 키가 아니라 별도 축이다 — kw 에 섞이면 recipe_of 가 죽는다
+    assert "method" not in kw, kw
+
+
+def test_aprime_lookup_path_matches_the_staged_ocpbias_cache(tmp_path):
+    """★ 조회 경로가 staging 에 **실제로 있는 파일**이어야 한다.
+
+    이 테스트가 없으면 "staging 은 맞는데 조회는 딴 데" 를 아무도 못 잡는다.
+    """
+    import yaml
+
+    from src.halfcell import halfcell_cache_path
+    from src.hessian import _sealed_halfcell_recipe, _sealed_halfcell_staging
+
+    run = _fit_run(tmp_path, split=True)
+    m = yaml.safe_load((run / "manifest.yaml").read_text(encoding="utf-8"))
+    m.setdefault("run_spec", {})["halfcell_recipe"] = {
+        "method": "ocpbias", "n_points": 400, "branch": "delithiation",
+        "pe_offset_mv": 10.0, "ne_offset_mv": 0.0,
+        "pe_stretch": 1.0, "ne_stretch": 1.0}
+    (run / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    from src.config import load_config
+    cfg = load_config("configs/base.yaml")
+    method, kw = _sealed_halfcell_recipe(run)
+    want = halfcell_cache_path(cfg, None, method, **kw).name
+
+    snap = run / "_inputs"
+    (snap / f"636a425ace2d_{want}").write_text("{}", encoding="utf-8")
+    (snap / f"116a14dcf77d_{want[:-5]}.meta.yaml").write_text("r: 1\n",
+                                                              encoding="utf-8")
+    staging = _sealed_halfcell_staging(run)
+    assert staging is not None
+    assert (staging / want).is_file(), \
+        f"조회 경로 {want} 가 staging 에 없다: {sorted(p.name for p in staging.iterdir())}"
+
+
+def test_aprime_passes_the_sealed_method_to_the_reference_builder(tmp_path,
+                                                                  monkeypatch):
+    """★ 변이 M55 로 발견 — 헬퍼·경로 테스트만으로는 **호출부**가 안 잡힌다.
+
+    `_sealed_halfcell_recipe` 가 ocpbias 를 정확히 돌려줘도, 호출부가 그 값을
+    `get_halfcell_reference` 에 안 넘기면 여전히 기본 ocp 경로를 찾는다.
+    실제로 호출 인자를 가로채 고정한다.
+    """
+    import yaml
+
+    import src.hessian as H
+
+    run = _fit_run(tmp_path, split=True, reference="halfcell")
+    snap = run / "_inputs"
+    (snap / "26fe6c7cc2a2_base.yaml").write_text("dummy: 1\n", encoding="utf-8")
+    _stem = "a8e262f7d6aa4beb_ocpbias_582189af471c"
+    (snap / f"636a425ace2d_{_stem}.json").write_text("{}", encoding="utf-8")
+    (snap / f"116a14dcf77d_{_stem}.meta.yaml").write_text("r: 1\n", encoding="utf-8")
+
+    m = yaml.safe_load((run / "manifest.yaml").read_text(encoding="utf-8"))
+    m.setdefault("run_spec", {})["halfcell_recipe"] = {
+        "method": "ocpbias", "n_points": 400, "branch": "delithiation",
+        "pe_offset_mv": 10.0, "ne_offset_mv": 0.0,
+        "pe_stretch": 1.0, "ne_stretch": 1.0}
+    (run / "manifest.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+
+    seen: dict = {}
+
+    def spy(cfg, cache_dir=None, force=False, method="ocp", **kw):
+        seen["method"] = method
+        seen["kw"] = kw
+
+        class _R:
+            def as_dict(self):
+                return {"x": [0.0, 1.0], "pe": [4.0, 3.0], "ne": [0.1, 0.2]}
+        return _R()
+
+    monkeypatch.setattr("src.halfcell.get_halfcell_reference", spy)
+    try:
+        H.run_hessian(run, n_sample=3)
+    except Exception:  # noqa: BLE001
+        pass
+
+    assert seen, "half-cell 기준 생성 자체가 호출되지 않았다"
+    assert seen["method"] == "ocpbias", \
+        f"봉인 recipe 의 method 를 안 넘겼다 (넘긴 값: {seen['method']})"
+    assert seen["kw"].get("pe_offset_mv") == 10.0, \
+        f"왜곡 인자를 안 넘겼다: {seen['kw']}"

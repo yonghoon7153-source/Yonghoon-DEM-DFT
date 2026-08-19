@@ -362,3 +362,26 @@ def test_os_exit_calls_flush_first():
                 if "flush()" not in window:
                     bad.append(f"{sc.name}:{i + 1}: {line.strip()}")
     assert not bad, "os._exit 앞 3줄 안에 flush() 가 없다:\n  " + "\n  ".join(bad)
+
+
+def test_p22_canon_outputs_are_not_empty():
+    """★ 0바이트 정본이 커밋돼 있으면 '대조 가능' 이 거짓말이 된다.
+
+    13차 자체 리뷰 실측: `dense_pocv_dvdq_dqdv_hc_breakdown.txt` 가 HEAD 에
+    **0바이트**로 커밋돼 있었다 (blob 크기 0). §7.9 의 참 격차 0 칸 분해 표는
+    그 파일을 근거로 내세우는데, 파일에는 아무것도 없었다 — 외부 리뷰어가
+    열면 빈 파일을 본다. 존재 검사만으로는 못 잡는다.
+    """
+    empty = [p.name for p in sorted(_CANON.glob("*.txt"))
+             if not p.read_text(encoding="utf-8").strip()]
+    assert not empty, f"0바이트 정본: {empty}"
+
+
+def test_p22_doc_only_cites_canon_files_that_exist_and_have_content():
+    """★ 문서가 이름을 부른 정본은 전부 실재하고 내용이 있어야 한다."""
+    doc = _DOC.read_text(encoding="utf-8")
+    cited = set(_re.findall(r"22p_gap/([A-Za-z0-9_]+)\.txt", doc))
+    bad = [s for s in sorted(cited)
+           if not (_CANON / f"{s}.txt").is_file()
+           or not (_CANON / f"{s}.txt").read_text(encoding="utf-8").strip()]
+    assert not bad, f"문서가 부르는데 없거나 빈 정본: {bad}"

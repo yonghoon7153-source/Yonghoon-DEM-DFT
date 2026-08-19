@@ -409,3 +409,101 @@ def _run_and_check(F, in_dir, tmp_path, kw, want, plain):
     msg = str(e.value)
     assert want.name in msg, f"왜곡 캐시를 안 찾았다\n{msg}"
     assert plain.name not in msg, f"왜곡 0 캐시를 찾고 있다\n{msg}"
+
+
+# ── 배선 3차 구멍 + 값 수준 거절 (13차 자체 리뷰) ──────────────────────────
+#
+# ★ (1) run.sh `all` 모드는 half-cell 플래그를 **조용히 버렸다**. top-level
+#   파서는 받아들이므로 오류가 없고, 하위 fit 은 method 기본값 ocp 로 기존
+#   무왜곡 캐시를 읽어 **끝까지 성공**한다 — 어느 가드에도 안 걸린다.
+#   실측(RUN_SH_DRY): `--mode all ... --halfcell-method ocpbias --halfcell-arg
+#   pe_offset_mv=10` 의 하위 fit 명령에 두 플래그가 없었다. 10시간짜리 본
+#   실행을 "민감도를 쟀다" 고 믿으며 왜곡 0 으로 태울 수 있는 경로다.
+#   기존 회귀는 fit 모드만 고정해서 이 층을 못 봤다.
+#
+# ★ (2) 왜곡 0 거절이 **형식**만 봤다 — `not halfcell_kw` 는 빈 dict 만 잡는다.
+#   `--halfcell-arg pe_offset_mv=0` 은 통과하고, recipe 는 기본값과 같아져
+#   왜곡 0 캐시를 읽는다. `for mv in 0 5 10 20` 스타일 스윕의 첫 다리가 바로
+#   이 형태다. 값 수준으로 — recipe 기본값과 합쳐 **실효 왜곡이 0 이면** 거절.
+
+def test_run_sh_all_mode_passes_halfcell_flags_to_the_fit_step():
+    """★ (1) — all 모드의 하위 fit 명령에도 두 플래그가 있어야 한다."""
+    import os as _os
+    import subprocess
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    r = subprocess.run(
+        ["bash", "run.sh", "--mode", "all", "--out", "results/x",
+         "--reference", "halfcell", "--halfcell-method", "ocpbias",
+         "--halfcell-arg", "pe_offset_mv=10"],
+        cwd=root, capture_output=True, text=True,
+        env={**_os.environ, "RUN_SH_DRY": "1"})
+    assert r.returncode == 0, r.stdout + r.stderr
+    fit_line = [ln for ln in r.stdout.splitlines() if "--mode fit" in ln]
+    assert fit_line, f"dry-run 에 fit 명령이 없다\n{r.stdout}"
+    assert "--halfcell-method ocpbias" in fit_line[0], fit_line[0]
+    assert "--halfcell-arg pe_offset_mv=10" in fit_line[0], fit_line[0]
+
+
+def test_fitting_refuses_an_effectively_zero_perturbation():
+    """★ (2) — 명시적 0 도 거절해야 한다 (값 수준 판정)."""
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    for arg in ("pe_offset_mv=0", "pe_stretch=1.0"):
+        r = subprocess.run(
+            [_s.executable, "-m", "src.fitting", "--in", "results/__nonexistent__",
+             "--reference", "halfcell", "--halfcell-method", "ocpbias",
+             "--halfcell-arg", arg],
+            cwd=root, capture_output=True, text=True)
+        assert r.returncode != 0, f"{arg} 가 통과했다"
+        both = r.stdout + r.stderr
+        assert "ocp" in both, f"{arg}: 거절 사유가 왜곡 0 이 아니다\n{both}"
+
+
+def test_halfcell_library_refuses_to_build_a_zero_perturbation_cache(tmp_path):
+    """★ (2) 의 나머지 — 미끼 생성 거절이 CLI 에만 있으면 라이브러리로 뚫린다.
+
+    실측: `get_halfcell_reference(cfg, method="ocpbias")` 가 왜곡 0 캐시를
+    거절 없이 만들었다. 그 미끼가 있으면 명시적 0 fit 이 끝까지 완주한다.
+    """
+    import pytest as _pt
+
+    from src.halfcell import get_halfcell_reference
+
+    cfg = _base_cfg()
+    with _pt.raises(ValueError, match="왜곡"):
+        get_halfcell_reference(cfg, cache_dir=tmp_path, method="ocpbias",
+                               force=True)
+    # 왜곡이 있으면 정상 생성된다 (음성 대조)
+    ref = get_halfcell_reference(cfg, cache_dir=tmp_path, method="ocpbias",
+                                 force=True, pe_offset_mv=10.0)
+    assert ref.u_pe is not None
+
+
+def test_verify_failure_message_names_the_actual_cause():
+    """★ --verify 실패 사유가 구조검사인지 배열 불일치인지 구분해야 한다.
+
+    실측(stretch 0.97): `구조검사_실패: ["전범위_coverage"]`·`재생성_배열일치:
+    true` 인데 메시지는 "캐시가 recipe 재생성 결과와 다르다" 였다 — 배열은
+    같은데 다르다고 말한다. 원인을 엉뚱한 데서 찾게 된다.
+    """
+    import subprocess
+    import sys as _s
+    from pathlib import Path as _P
+
+    root = _P(__file__).resolve().parent.parent
+    r = subprocess.run(
+        [_s.executable, "-m", "src.halfcell", "--config", "configs/base.yaml",
+         "--method", "ocpbias", "--pe-stretch", "0.97", "--force", "--verify"],
+        cwd=root, capture_output=True, text=True)
+    assert r.returncode != 0
+    both = r.stdout + r.stderr
+    assert "전범위_coverage" in both, both
+    assert "재생성 결과와 다르다" not in both, \
+        f"배열은 일치하는데 불일치라고 말한다\n{both}"
+    # 측정창을 알려줘야 한다 — 모르면 0.97 이 왜 안 되는지 알 길이 없다
+    assert "0.99" in both, f"쓸 수 있는 stretch 범위 안내가 없다\n{both}"
