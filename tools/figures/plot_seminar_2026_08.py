@@ -795,22 +795,45 @@ def fig_screen_survival():
 
 
 # ── 9. STEP 5 — 흔들었더니 얼마나 내려갔나 ────────────────────────────────────
+#: 어닐 히스토그램 구간 — 그림과 CSV 가 **같은 구간**을 쓰게 한 곳에 둔다.
+#: 50 meV 폭 · −1250 부터 0 까지 (실측 범위 −1197 … −661 을 감싼다).
+ANNEAL_BINS = [-1250 + 50 * i for i in range(26)]
+
+
 def fig_anneal_gain():
+    """짧은 어닐로 내려간 에너지의 분포. **전부 음수**라는 것이 요점이다.
+
+    ⚠ 단위는 **셀당 meV** 다 (원자당 아님). 셀은 host 4배수 ≈ 47원자급.
+    """
     vals = []
     for r in _all_rows():
         try:
             vals.append(float(r["anneal_delta_E_meV"]))
         except (ValueError, KeyError, TypeError):
             continue
-    down = [v for v in vals if v < 0]
     _rc()
     fig, ax = plt.subplots(figsize=(10.4, 4.6))
-    n_, _, _ = ax.hist(vals, bins=44, color=hs.ELEM["P"], alpha=.82, zorder=3)
+    n_, _, _ = ax.hist(vals, bins=ANNEAL_BINS, color=hs.ELEM["P"], alpha=.82, zorder=3)
     ax.axvline(0, color=hs.INK, lw=1.4, zorder=4)
+    ax.set_xlim(-1250, 60)
     ax.set_ylim(0, max(n_) * 1.34)
     ax.set_xlabel("energy change caused by the short anneal  (meV per cell)")
     ax.set_ylabel("number of structures")
     _bare(ax, grid="y")
+
+    # ── Origin 재작도용 — **원값**이 정본이다 (2026-08-18 교훈) ────────────
+    #   구간화한 표를 Origin Histogram 에 넣으면 그걸 **다시** 구간화한다
+    #   (부피변화 때 X 축이 0–500 으로 나온 사고). 그래서 원값을 준다.
+    _write_csv("seminar_raw_anneal_gain.csv", ["anneal_delta_E_meV_per_cell"],
+               [[f"{v:.3f}"] for v in sorted(vals)],
+               header=[
+                "# Step 5 — energy change from the short anneal (seminar 2026-08).",
+                "# RAW values, one per structure (n=%d). Unit: meV PER CELL, not per atom." % len(vals),
+                "# Origin: Plot > Statistical > Histogram, then set Bin Size 50, Begin -1250, End 0.",
+                "# Do NOT feed the binned table below into Histogram - Origin would re-bin it.",
+                "#   Use the binned counts only to CHECK your result:",
+               ] + ["#   %+6d .. %+6d : %3d" % (ANNEAL_BINS[i], ANNEAL_BINS[i + 1], int(n_[i]))
+                    for i in range(len(n_)) if n_[i]])
     return _save(fig, "step5_anneal_gain.png")
 
 
