@@ -5,7 +5,7 @@
 ※ 모집단을 results/fit_22p_dense 의 복원가능군에 맞췄다 (유지 2313행 · 제외 639행).
    기준 곡선끼리 비교하려면 이렇게 맞춘 뒤에만 나란히 놓을 수 있다.
 
-⚠ 두 다리의 code identity(source_digest) 가 다릅니다: 8fe84240ad351594, c2e7d8b9fd11b54e
+⚠ 두 다리의 code identity(source_digest) 가 다릅니다: 8fe84240ad351594, c894eb1205dd62d5
   fit 코드(src/·run.sh)가 그 사이 안 바뀌었는지 git diff 로 확인하고, 인용 시 이 사실을 명시하세요.
 
 전체 2313행 중 복원가능군 2313행 (100%)
