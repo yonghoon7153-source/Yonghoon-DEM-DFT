@@ -198,7 +198,39 @@ def relax_positions(atoms, calc, fmax=FMAX_ENDPOINT, steps=800):
     return atoms, bool(opt.converged()), int(opt.get_number_of_steps())
 
 
-def run_neb(ini, fin, calc, n_images=N_IMAGES, climb_from=FMAX_NEB):
+def band_health(E):
+    """프로파일이 물리적인가. (문제목록, 지표) — **조용히 넘어가지 않는다.**
+
+    2026-08-19 실측에서 잡은 두 병리:
+      · 이미지 하나만 +2.3 eV 로 솟고 나머지는 0 근처 → **터진 이미지**(밴드 미수렴 위에서
+        climb 를 켜면 그 이미지가 능선으로 밀린다)
+      · 중간 이미지가 두 끝점보다 **낮다** → 끝점이 국소 최소가 아니다. 만석 Li 격자에
+        공공을 하나 뚫으면 부격자가 통째로 재배열하려 든다.
+    """
+    rel = np.asarray(E) - E[0]
+    inner = rel[1:-1]
+    probs = []
+    spike = float(inner.max())
+    others = float(np.sort(inner)[-2]) if len(inner) > 1 else 0.0
+    if spike > 1.0 and spike > 3 * max(others, 1e-6):
+        probs.append(f"이미지 하나만 {spike:+.2f} eV 로 솟았다(다음이 {others:+.2f}) — 터진 이미지")
+    below = float(inner.min()) - max(0.0, float(rel[-1]))
+    if below < -0.05:
+        probs.append(f"중간 이미지가 끝점보다 {below:.3f} eV 낮다 — 끝점이 국소 최소가 아니다")
+    if float(rel[-1]) > 0.15:
+        probs.append(f"두 끝점 에너지 차가 {1000*float(rel[-1]):+.0f} meV — 등가 자리가 아니다")
+    return probs, {"spike_eV": round(spike, 4),
+                   "second_highest_eV": round(others, 4),
+                   "min_interior_rel_eV": round(float(inner.min()), 4)}
+
+
+def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB):
+    """1단계(밴드) → **수렴했을 때만** 2단계(climbing image).
+
+    ⛔ 2026-08-19: 앞 판은 1단계 수렴을 **안 보고** climb 를 켰다. 400스텝 상한에 걸린
+       밴드 위에서 CI 를 켜니 그 이미지가 +2.3 eV 로 밀려 올라가 장벽이 통째로 가짜가 됐다.
+       (comp1 intra/inter 둘 다 같은 증상.) 이제 미수렴이면 **CI 를 안 켜고 그렇게 보고한다.**
+    """
     from ase.mep import NEB
     from ase.optimize import FIRE
     images = [ini] + [ini.copy() for _ in range(n_images)] + [fin]
@@ -208,13 +240,20 @@ def run_neb(ini, fin, calc, n_images=N_IMAGES, climb_from=FMAX_NEB):
               allow_shared_calculator=True)
     neb.interpolate("idpp", apply_constraint=False)
     opt = FIRE(neb, logfile=None)
-    opt.run(fmax=climb_from, steps=STEPS_NEB)
-    neb.climb = True                                    # CI-NEB
-    opt2 = FIRE(neb, logfile=None)
-    opt2.run(fmax=FMAX_CI, steps=STEPS_NEB)
-    E = np.array([im.get_potential_energy() for im in images])
-    return images, E, bool(opt2.converged()), int(opt.get_number_of_steps() +
-                                                  opt2.get_number_of_steps())
+    opt.run(fmax=FMAX_NEB, steps=steps)
+    conv1, n1 = bool(opt.converged()), int(opt.get_number_of_steps())
+    E_band = np.array([im.get_potential_energy() for im in images])
+    conv2, n2 = False, 0
+    if conv1:
+        neb.climb = True
+        opt2 = FIRE(neb, logfile=None)
+        opt2.run(fmax=FMAX_CI, steps=steps)
+        conv2, n2 = bool(opt2.converged()), int(opt2.get_number_of_steps())
+    E = np.array([im.get_potential_energy() for im in images]) if conv1 else E_band
+    info = {"band_converged": conv1, "ci_ran": conv1, "ci_converged": conv2,
+            "steps_band": n1, "steps_ci": n2,
+            "band_only_profile_eV": [round(float(x - E_band[0]), 4) for x in E_band]}
+    return images, E, info
 
 
 def one_run(args):
@@ -249,7 +288,8 @@ def one_run(args):
     fin, c2, s2 = relax_positions(fin0, calc)
     E_i, E_f = ini.get_potential_energy(), fin.get_potential_energy()
     print(f"   끝점 이완: {s1}/{s2} steps  ΔE(끝−시작) = {1000*(E_f-E_i):+.1f} meV")
-    images, E, conv, nst = run_neb(ini, fin, calc, args.n_images)
+    images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps)
+    probs, health = band_health(E)
     Ea_f = float(E.max() - E[0])
     Ea_r = float(E.max() - E[-1])
     dt = time.time() - t0
@@ -270,15 +310,27 @@ def one_run(args):
         "energies_eV": [round(float(x), 6) for x in E],
         "profile_eV_rel": [round(float(x - E[0]), 4) for x in E],
         "n_images_total": len(images),
-        "endpoint_converged": [c1, c2], "neb_converged": conv,
-        "neb_steps": nst, "seconds": round(dt, 1),
+        "endpoint_converged": [c1, c2], "seconds": round(dt, 1),
+        **nebinfo, **health,
+        "neb_converged": bool(nebinfo["ci_converged"]),
+        "band_problems": probs,
+        "trustworthy": bool(nebinfo["ci_converged"] and not probs),
         "engine": "uma-s-1p1(omat)", "cell_relaxed": False,
         "neb_method": NEB_METHOD, "spring_k": SPRING_K,
         "fmax": {"endpoint": FMAX_ENDPOINT, "neb": FMAX_NEB, "ci": FMAX_CI},
         "images_file": str(xyz),
     }
+    _ci = ("수렴" if nebinfo["ci_converged"]
+           else ("미수렴" if nebinfo["ci_ran"] else "미실행"))
+    _bd = "수렴" if nebinfo["band_converged"] else "미수렴"
     print(f"   **Ea(정) {Ea_f:.4f} eV**  Ea(역) {Ea_r:.4f} eV   "
-          f"({nst} steps, {'수렴' if conv else '미수렴'}, {dt:.0f}s)")
+          f"(밴드 {nebinfo['steps_band']}스텝 {_bd} · CI {nebinfo['steps_ci']}스텝 {_ci}, "
+          f"{dt:.0f}s)")
+    print(f"   프로파일: {[round(float(x - E[0]), 3) for x in E]}")
+    if probs:
+        print("   ⛔ 이 값은 믿으면 안 된다:")
+        for q in probs:
+            print(f"      · {q}")
     return rec
 
 
@@ -394,6 +446,7 @@ def main():
     ap.add_argument("--pick", type=int, default=0, help="후보 목록에서 몇 번째 (0=최단)")
     ap.add_argument("--pair", help="'i,j' 로 짝을 직접 지정 (재현·앙상블용)")
     ap.add_argument("--n_images", type=int, default=N_IMAGES)
+    ap.add_argument("--neb_steps", type=int, default=STEPS_NEB)
     ap.add_argument("--rmax", type=float, default=5.0)
     ap.add_argument("--cage_margin", type=float, default=0.3)
     ap.add_argument("--min_width", type=float, default=MIN_WIDTH_A)
