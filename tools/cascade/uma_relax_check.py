@@ -103,7 +103,8 @@ def rattle(atoms, stdev, seed=0):
     return a
 
 
-def relax(path, device="cuda", n_drop_li=0, rattle_A=0.0, seed=0):
+def relax(path, device="cuda", n_drop_li=0, rattle_A=0.0, seed=0,
+          fmax=None, steps=None):
     from ase.io import read
     from ase.optimize import FIRE
     from ase.filters import FrechetCellFilter
@@ -114,14 +115,28 @@ def relax(path, device="cuda", n_drop_li=0, rattle_A=0.0, seed=0):
     if rattle_A:
         a = rattle(a, rattle_A, seed)
     v0, n = a.get_volume(), len(a)
+    fmax = FMAX if fmax is None else fmax
+    steps = STEPS if steps is None else steps
     pred = pretrained_mlip.get_predict_unit("uma-s-1p1", device=device)
     a.calc = FAIRChemCalculator(pred, task_name="omat")
     t0 = time.time()
     opt = FIRE(FrechetCellFilter(a), logfile=None)
-    opt.run(fmax=FMAX, steps=STEPS)
+    opt.run(fmax=fmax, steps=steps)
     v1 = a.get_volume()
+    # ⚠ FrechetCellFilter 의 fmax 는 **힘과 응력을 섞은 합성 벡터**다. converged=True 가
+    #   응력 0 을 뜻하지 않는다 (2026-08-19 — 같은 셀이 섭동에 따라 20.5~27.5 로 흩어져
+    #   "그냥 미수렴 아닌가"를 의심하게 됐다). 그래서 **응력을 따로 찍는다.**
+    import numpy as _np
+    st = a.get_stress(voigt=True)                       # eV/Å³
+    p_GPa = float(-_np.mean(st[:3]) * 160.21766208)     # 압력 (양수 = 압축 필요)
+    smax_GPa = float(_np.abs(st).max() * 160.21766208)
+    fmax_atoms = float(_np.linalg.norm(a.get_forces(), axis=1).max())
     return {"file": str(path), "natoms": n, "n_drop_li": int(n_drop_li),
             "rattle_A": float(rattle_A), "seed": int(seed),
+            "fmax_setting": float(fmax), "max_steps": int(steps),
+            "residual_pressure_GPa": round(p_GPa, 4),
+            "max_stress_GPa": round(smax_GPa, 4),
+            "max_atomic_force_eV_A": round(fmax_atoms, 4),
             "V0_A3": round(v0, 2), "V1_A3": round(v1, 2),
             "dV_pct": round(100.0 * (v1 / v0 - 1.0), 2),
             "V_per_atom_before": round(v0 / n, 3), "V_per_atom_after": round(v1 / n, 3),
@@ -235,6 +250,9 @@ def main():
     ap.add_argument("--rattle", type=float, default=0.0,
                     help="이완 전에 원자를 이 표준편차(Å)로 흔든다 — **대칭 깨기**")
     ap.add_argument("--seed", type=int, default=0)
+    ap.add_argument("--fmax", type=float, default=None,
+                    help=f"이완 수렴 기준 (기본 {FMAX}). 조이면 부피가 안정되나 보는 용도")
+    ap.add_argument("--steps", type=int, default=None)
     ap.add_argument("--allow_gpu_share", action="store_true",
                     help="QE 가 돌아도 실행 (사용자 명시 허용 시에만)")
     ap.add_argument("--out", default=str(OUT))
@@ -246,12 +264,14 @@ def main():
     for s in a.structs:
         p = s if os.path.isabs(s) else str(ROOT / s)
         print(f"── {s}")
-        r = relax(p, a.device, a.drop_li, a.rattle, a.seed)
+        r = relax(p, a.device, a.drop_li, a.rattle, a.seed, a.fmax, a.steps)
         rows.append(r)
         print(f"   {('Li−%d  ' % a.drop_li) if a.drop_li else ''}"
               f"{('rattle %.3g Å  ' % a.rattle) if a.rattle else ''}"
               f"V {r['V0_A3']} → {r['V1_A3']} Å³   **ΔV {r['dV_pct']:+.2f} %**   "
-              f"({r['steps']} steps, {'수렴' if r['converged'] else '미수렴'}, {r['seconds']:.0f}s)")
+              f"({r['steps']} steps, {'수렴' if r['converged'] else '미수렴'}, {r['seconds']:.0f}s)\n"
+              f"      잔류압력 {r['residual_pressure_GPa']:+.3f} GPa · 최대응력 "
+              f"{r['max_stress_GPa']:.3f} GPa · 원자력 {r['max_atomic_force_eV_A']:.4f} eV/Å")
     Path(a.out).write_text(json.dumps({
         "what": "UMA-s-1p1(omat) re-relaxation of DFT-relaxed structures. "
                 "Question: does UMA collapse the cell that DFT kept?",
