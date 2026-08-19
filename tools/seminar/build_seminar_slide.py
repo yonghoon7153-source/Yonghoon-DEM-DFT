@@ -156,6 +156,23 @@ SLIDES = {
            "Local minimum: the nearest stable arrangement"),
     drop=[10],
  ),
+ 14: dict(
+    idx=13, out="Slide14_static_pathway.pptx",
+    figs=["docs/figures/seminar/step6_li_landscape.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Static lithium transport pathway",
+    head="Step 6: The Li energy landscape is mapped on the annealed geometry",
+    sub1="To flag transport risk without dynamics, a [b]bond-valence landscape[/b] was computed.",
+    sub2="Low-energy valleys are [r]structural pathways, not diffusion coefficients[/r].",
+    label="Li landscape on the annealed geometry, undoped versus B₂O₃-doped",
+    # ⛔ 출처 명시 (1저자 2026-08-19) — 이 두 판은 **이 발표의 스크리닝 산물이 아니다.**
+    #   comp1/modelc DFT 캠페인에서 따로 완주한 예시 두 계다. 앞 판 캡션은 그 말이
+    #   없어서 90종 후보 중 둘로 읽혔다.
+    note="[r]a worked example from our other DFT study, not a screened candidate[/r]; valleys are low-energy regions, not channels",
+    gloss=("Bond-valence map: a cheap estimate of how comfortable an ion is at a point  ·  "
+           "Percolation: a low-energy path that spans the crystal"),
+    drop=[10],
+ ),
 }
 
 

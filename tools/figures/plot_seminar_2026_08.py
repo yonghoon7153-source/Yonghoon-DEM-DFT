@@ -993,3 +993,92 @@ if __name__ == "__main__":
     print("발표용 그림 생성:")
     for f in FIGS:
         f()
+
+
+# ── 10. STEP 6 — Li 지형 (BVSE) ───────────────────────────────────────────────
+#: BVSE 지도 원본. ⛔ **두 판이 다른 표현이다** — modelc 는 원본 주기셀,
+#: b2o3 는 큐빅 표시상자다 (db/properties/bvse_cubic_approx/bvse_orig_vs_cubic.json:
+#: "the box is a display/sampling window, not a period", 상자 표본편차 ±1.3 %p).
+#: 그래서 이 그림은 **지형의 성격**만 보이고 높이·부피를 조성 간에 비교하지 않는다.
+LANDSCAPE = [
+    ("db/properties/bvse_modelc/modelc_bvse.cube",
+     "LPSCl1.6 (undoped)", "original periodic cell"),
+    ("db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.cube",
+     "B₂O₃-doped", "cubic display box"),
+]
+BVSE_CAP = 3.0          # 위에서 자르는 높이 (valence²) — 낮을수록 Li 가 편한 곳
+
+
+def _read_cube(path):
+    """Gaussian cube → (values[nx,ny,nz], a축 길이 Å, b축 길이 Å).
+
+    이 파서가 **못 하는 것**: 비직교 셀의 기울기를 펴지 않는다. a·b 축 길이만
+    쓰고 격자를 그대로 이미지처럼 다룬다 — 지형 그림용이지 정량용이 아니다.
+    """
+    BOHR = 0.529177210903
+    with io.open(path, encoding="utf-8", errors="ignore") as f:
+        f.readline(); f.readline()
+        nat = int(f.readline().split()[0])
+        vs = []
+        for _ in range(3):
+            p = f.readline().split()
+            vs.append((int(p[0]), [float(x) for x in p[1:4]]))
+        for _ in range(abs(nat)):
+            f.readline()
+        vals = []
+        for line in f:
+            vals.extend(float(x) for x in line.split())
+    n = [v[0] for v in vs]
+    import numpy as np
+    arr = np.array(vals[:n[0] * n[1] * n[2]]).reshape(n)
+    la = np.linalg.norm(vs[0][1]) * n[0] * BOHR
+    lb = np.linalg.norm(vs[1][1]) * n[1] * BOHR
+    return arr, la, lb
+
+
+def fig_li_landscape(ngrid=64):
+    """Step 6 — 두 계의 Li 지형. **높은 고원 = Li 가 다니기 편한 곳**.
+
+    ⛔⛔ **출처가 다르다 (2026-08-19 1저자 지적).** 이 두 판은 이 발표의 스크리닝
+      캠페인(90종·3,615구조) 산물이 **아니다.** comp1/modelc DFT 캠페인에서 따로
+      완주한 **예시 두 계**다 — 그래서 슬라이드 캡션이 그걸 먼저 말한다.
+
+    ⚠ 세 가지 단서 (전부 캡션·용어줄이 진다)
+      · BVSE 는 **경험적 softBV** 값이다. 단위가 valence² 이고 **eV 가 아니다.**
+      · 두 판의 **셀 표현이 다르다** (원본 주기셀 vs 큐빅 표시상자). 높이·넓이를
+        조성 간에 비교하면 안 된다 — 우리 규약이 "정량·순위는 원본 주기셀만" 이다.
+      · 골짜기는 **저에너지 영역**이지 검증된 채널이 아니고, 전도도가 아니다.
+
+    이 함수가 **못 하는 것**: 퍼콜레이션을 판정하지 않는다(그건 percolation onset 값이
+      따로 있다). c 축으로 최소만 취해 눌러 본 그림이라 **경로 연결성은 안 보인다.**
+    """
+    import numpy as np
+    _rc()
+    plt.rcParams.update({"font.size": 15, "axes.labelsize": 16})
+    fig = plt.figure(figsize=(13.4, 5.6))
+    for i, (rel, name, repr_) in enumerate(LANDSCAPE):
+        arr, la, lb = _read_cube(os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), rel))
+        m = arr.min(axis=2) - arr.min()          # c 축 최소 → aboveMin
+        acc = np.clip(BVSE_CAP - m, 0, None)     # 높을수록 Li 가 편하다
+        # 두 격자를 같은 화소 수로 (표시용 재표본 — 값은 안 건드린다)
+        yi = np.linspace(0, m.shape[0] - 1, ngrid)
+        xi = np.linspace(0, m.shape[1] - 1, ngrid)
+        acc = acc[np.round(yi).astype(int)][:, np.round(xi).astype(int)]
+        X, Y = np.meshgrid(np.linspace(0, lb, ngrid), np.linspace(0, la, ngrid))
+
+        ax = fig.add_subplot(1, 2, i + 1, projection="3d")
+        # ⚠ vmax 를 cap 으로 두면 고원이 **흰색**이 돼 사라진다 (afmhot 이 위에서 희다).
+        #   윗머리를 잘라 고원이 주황으로 남게 한다.
+        ax.plot_surface(X, Y, acc, cmap="afmhot", rstride=1, cstride=1,
+                        linewidth=0, edgecolor="none", antialiased=False,
+                        vmin=0, vmax=BVSE_CAP * 1.45)
+        ax.set_zlim(0, BVSE_CAP)
+        ax.set_xlabel("b  (Å)", labelpad=10)
+        ax.set_ylabel("a  (Å)", labelpad=10)
+        ax.set_zlabel("Li accessibility", labelpad=8)
+        ax.tick_params(labelsize=12, pad=1)
+        ax.set_title(f"{name}\n{repr_}", fontsize=15, pad=2, color=hs.INK)
+        ax.view_init(elev=34, azim=-58)
+    _rc()
+    return _save(fig, "step6_li_landscape.png")

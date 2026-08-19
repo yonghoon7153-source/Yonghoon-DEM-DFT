@@ -674,12 +674,28 @@ ZrO₂ 는 하나는 P 자리, 둘은 Li 자리에 앉은 구조가 1등이 됐�
 
 ---
 
-### 14 — Static lithium transport pathway
+### 14 — Static lithium transport pathway  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 6: The Li energy landscape is mapped on the annealed geometry
-> • To flag transport risk without dynamics, a bond-valence landscape was computed.
-> • Low-energy valleys are structural pathways, not diffusion coefficients.
-`해설` valleys are low-energy regions, not verified channels
+> • To flag transport risk without dynamics, a [파랑]bond-valence landscape[/] was computed.
+> • Low-energy valleys are [빨강]structural pathways, not diffusion coefficients[/].
+
+`< Li landscape on the annealed geometry, undoped versus B₂O₃-doped >`
+`해설` [빨강]a worked example from our other DFT study, not a screened candidate[/]; valleys are low-energy regions, not channels
+하단 용어 — Bond-valence map: a cheap estimate of how comfortable an ion is at a point ·
+　　　　　　 Percolation: a low-energy path that spans the crystal
+
+⛔⛔ **출처를 명시한다 (1저자 2026-08-19).** 이 두 판은 **이 발표의 스크리닝 산물이 아니다.**
+   comp1/modelc DFT 캠페인에서 따로 완주한 **예시 두 계**(LPSCl1.6 undoped · B₂O₃-doped)다.
+   앞 판 캡션은 그 말이 없어서 90종 후보 중 둘로 읽혔다. 해설 줄이 그걸 먼저 말한다.
+⚠ **두 판의 셀 표현이 다르다** — modelc 는 원본 주기셀(28×28×140), b2o3 는 큐빅 표시상자
+   (40³). 그래서 **높이·넓이를 조성 간에 비교하면 안 된다** (규약: 정량·순위는 원본
+   주기셀만, 상자 표본편차 ±1.3 %p). 그림 안 소제목이 어느 쪽인지 적는다.
+⚠ BVSE 는 **경험적 softBV** 다 — 단위가 valence² 이고 **eV 가 아니다.**
+⚠ v6 원본의 화면 결함 — 용어줄이 헤더 위에 올라타 `Perc / olation` 으로 끊겼고,
+   아래 이탤릭이 `it does n / ot measure` 로 낱말 중간에서 감겼으며 **em-dash** 가 있었다. 셋 다 정리.
+⚠ 그림 재생성기가 repo 에 **없었다** (v3 때 임시로 만든 판). 이제
+   `plot_seminar_2026_08.py: fig_li_landscape` 가 db 의 cube 두 개에서 다시 그린다.
 
 **[65초]**
 
@@ -689,12 +705,29 @@ ZrO₂ 는 하나는 P 자리, 둘은 Li 자리에 앉은 구조가 1등이 됐�
 **지도만 그립니다.**
 
 결정 안을 촘촘한 격자로 쪼개고 각 점마다 "여기 Li 가 있으면 주변 결합이 얼마나
-어긋나는가"를 계산합니다. 그러면 그림처럼 골짜기와 고원이 나옵니다. 파란 골짜기가 Li 가
-편한 곳, 붉은 고원이 넘기 힘든 곳입니다. 그다음 **낮은 골짜기가 결정 이쪽 끝에서 저쪽
-끝까지 이어지는지**를 봅니다. 그리고 도펀트가 그 길목에 앉아 통행을 막는지도 셉니다.
+어긋나는가"를 계산합니다. 그러면 그림처럼 고원과 구덩이가 나옵니다. **넓은 주황 고원이
+Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다. 그다음 **낮은 골짜기가 결정
+이쪽 끝에서 저쪽 끝까지 이어지는지**를 봅니다. 도펀트가 그 길목에 앉아 통행을 막는지도 셉니다.
+
+⭐ 여기 띄운 두 판은 **이 스크리닝에서 나온 게 아닙니다.** 저희가 따로 끝까지 돌린
+**다른 DFT 계 두 개**예요 — 도핑 안 한 LPSCl1.6 과 B₂O₃ 를 넣은 것입니다. 이 단계가
+무엇을 보는지 **보여 주려고 가져온 예시**고, 90종 후보 중 둘이 아닙니다.
+
+⚠ 그리고 두 판은 **셀 표현이 다릅니다.** 왼쪽은 원본 주기셀, 오른쪽은 큐빅 표시상자예요.
+그래서 **고원 넓이를 둘 사이에 비교하시면 안 됩니다.** 지형의 성격만 보시면 됩니다.
 
 ⚠ 이건 구조적 경로입니다. 확산계수도 전도도도 아닙니다. 골짜기가 이어져 있어도 실제로
 잘 다닌다는 보장은 없습니다.
+
+💬 **말로만 (질문 오면)**
+· 세로축은 **경험적 bond-valence** 값입니다 (valence²). **eV 가 아니에요** — 그래서 축
+  이름을 'accessibility' 로 두고 숫자를 인용하지 않습니다.
+· 정량은 원본 주기셀 값만 씁니다. iso 0.5 에서 채널 부피 **modelc 3.32 % · b2o3 6.73 %**
+  (같은 잣대). 큐빅 상자로 재면 4.37 / 6.2 % 로 ±1.3 %p 흔들립니다.
+· B₂O₃ 의 채널 열림은 **도펀트 주변에 몰려** 있습니다 — 도펀트 중심 상자 23.8 % vs
+  벌크 상자 6.2 %. 그런데 도펀트 없는 벌크도 6.2 % 라 **격자 전체가 같이 열립니다.**
+· c 축으로 눌러 본 그림이라 **경로 연결성은 이 그림으로 판정하지 않습니다.**
+  퍼콜레이션 onset 은 따로 있습니다 (modelc a/b/c = 0.40 / 0.35 / 1.40 val²).
 
 💡 질문이 가장 많이 나오는 장입니다. "Li 길이 넓다"는 표현을 쓰실 거면
 "Li 가 넘어야 하는 언덕이 낮고, 그 낮은 구간이 끊기지 않는다"로 풀어 주세요.
