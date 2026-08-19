@@ -252,8 +252,27 @@ def main():
     guard_gpu(a.allow_gpu_share)
 
     from ase.io import read
+    # ⚠ 없는 파일을 ASE 역추적으로 던지지 않는다 — 무엇이 없고 뭘 해야 하는지 말한다
+    #   (2026-08-19 kgy 실측: 데이터셋을 아직 안 올려서 raw FileNotFoundError 가 났다)
+    for lab, pth in (("--test", a.test), ("--train", a.train)):
+        if pth and not os.path.isfile(pth):
+            raise SystemExit(
+                f"⛔ {lab} 파일이 없다: {pth}\n"
+                f"   이 도구는 **DFT 라벨이 붙은 extxyz**(energy + forces)를 받는다.\n"
+                f"   PET-MAD 의 Li₃PS₄ 세트를 쓸 거면 그 기계에 먼저 올려야 한다:\n"
+                f"     scp Li3PS4.zip <host>:~/work/  &&  unzip ~/work/Li3PS4.zip -d ~/work/\n"
+                f"   그 뒤 --train ~/work/Li3PS4/train.xyz --test ~/work/Li3PS4/test.xyz")
     te = read(a.test, index=(f":{a.limit}" if a.limit else ":"))
     tr = read(a.train, index=(f":{a.limit}" if a.limit else ":")) if a.train else None
+    # 라벨이 진짜 있는지 — 없으면 조용히 0 을 비교하게 두지 않는다
+    probe = te[0]
+    if "forces" not in probe.arrays:
+        raise SystemExit(f"⛔ {a.test} 에 forces 라벨이 없다 — 이 도구는 힘을 1순위로 잰다. "
+                         f"extxyz Properties 에 forces:R:3 이 있어야 한다")
+    try:
+        probe.get_potential_energy()
+    except Exception:
+        raise SystemExit(f"⛔ {a.test} 에 energy 라벨이 없다 (extxyz 주석줄의 energy=...)")
     elements = sorted({e for s in (tr or []) + te for e in s.get_chemical_symbols()})
     print(f"── {a.model}/{a.task}   원소 {elements}")
     print(f"   test  {len(te)}구조 ({min(len(s) for s in te)}–{max(len(s) for s in te)} 원자)"
