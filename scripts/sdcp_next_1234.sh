@@ -150,6 +150,24 @@ fi
 # STEP 4 — 격자 스윕 (비싸다)
 # ════════════════════════════════════════════════════════════════════════════
 if _has 4; then
+  #  ★★ 2026-08-19 — **중복 실행 차단**.  실사고: vox 0.10 을 띄운 뒤 셸이 `[1]+ Done` 을
+  #    찍기에 죽은 줄 알고 vox 0.115 를 또 띄웠는데, `setsid` 로 분리된 **자식 payload 는
+  #    계속 돌고 있었다**.  ("Done" 은 래퍼 셸이 끝난 것이지 자식이 끝난 게 아니다.)
+  #    두 payload 가 각 ~18 GB 를 쥐고 서로를 굶겨 가용 RAM 이 57 → 9 GB 로 내려갔고,
+  #    그 뒤 무엇을 띄워도 죽었다.  ⇒ 같은 사고가 반복되지 않게 **락**을 건다.
+  #    ⚠ 락은 "이미 도는 payload 가 있는가" 를 **실제 프로세스로** 확인한다 (락파일만
+  #    보면 비정상 종료 후 유령 락이 남는다).
+  _RUNNING=$(pgrep -f 'mpm_webapp_payload\.py.*--step3-vox' | tr '\n' ' ')
+  if [ -n "${_RUNNING// /}" ] && [ -z "${ALLOW_CONCURRENT:-}" ]; then
+    echo "[next] ⛔ 이미 도는 payload 가 있다 (PID: $_RUNNING)"
+    echo "        ── 무엇이 도는가 ──"
+    pgrep -af 'mpm_webapp_payload\.py.*--step3-vox' \
+      | awk '{pid=$1; vox=""; out=""; for(i=1;i<=NF;i++){if($i=="--step3-vox")vox=$(i+1); if($i=="--out")out=$(i+1)} printf "        PID %-8s vox %-7s → %s\n", pid, vox, out}'
+    echo "        ⚠ 셸의 \`[1]+ Done\` 은 **래퍼**가 끝난 것이지 자식 payload 가 끝난 게 아니다."
+    echo "        정리:  kill $_RUNNING     (그 뒤 free -g 로 회수 확인)"
+    echo "        정말 동시에 돌리려면:  ALLOW_CONCURRENT=1 …  (⚠ RAM 을 나눠 쓴다)"
+    exit 1
+  fi
   _hdr "STEP 4 — 구 스탬프 격자 스윕 vox $SWEEP_VOX × 8팔 × 2침대 (GPU, 20 h+)"
   echo "  ⚠ 라벨: 이것은 **격자 규약 민감도**이지 격자 수렴 증명이 아니다 (DR3-05/06)."
   echo "  ⚠ vox ≤ 0.125 팔의 σ_ion·τ_pore·BV 반응면·STEP4 격자는 **인용 금지** — SE 점"
