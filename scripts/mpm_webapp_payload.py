@@ -1865,6 +1865,14 @@ def main():
             'se_E_GPa': _mflt(sim_m.get('E_SE_GPa')),
             'se_nu': _mflt(sim_m.get('nu_SE')),
             'se_sigma_y_GPa': _mflt(sim_m.get('sigma_y_GPa')),
+            #  ★ 2026-08-19 (fable 리뷰 ② F4) — **첨가제 E 세대**.  CL-56 이 확인한 축
+            #    (SDCP E 23.6 → 9.0, ADD_E_SET)이 매니페스트·게이트 어디에도 없어서
+            #    E=9.0 팔과 23.6 팔이 섞여도 판정기가 원리적으로 못 잡았다.
+            #    mpm_metrics['additives'] = {이름: {'E_GPa':…, 'E_anchor':…}, …} 를
+            #    {이름: E} 평탄 dict 로 요약해 싣는다 (None-안전 — 계산을 죽이지 않는다).
+            'additive_E_GPa': ({k: _mflt((v or {}).get('E_GPa'))
+                                for k, v in sim_m['additives'].items()}
+                               if isinstance(sim_m.get('additives'), dict) else None),
             'plate_z_grid_um': ([float(_zb3), float(_zt3)]
                                 if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).

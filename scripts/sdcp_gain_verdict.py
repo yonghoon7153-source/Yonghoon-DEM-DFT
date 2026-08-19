@@ -42,7 +42,11 @@ PREREG = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'
 _GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam',
                'temp_c', 'ea_ion_ev', 'mpm_seed',
-               'se_E_GPa', 'se_nu', 'se_sigma_y_GPa')
+               'se_E_GPa', 'se_nu', 'se_sigma_y_GPa',
+               #  ★ fable 리뷰 ② F4 (2026-08-19) — CL-56 축.  SDCP E 23.6 ↔ 9.0 침대가
+               #    섞여도 여태 게이트가 못 봤다.  dict 는 그대로 비교된다 (json 왕복 후
+               #    같은 dict 면 ==; 다르면 아래 "다르면 HOLD" 가 발화).
+               'additive_E_GPa')
 
 #  ⚠ `mpm_seed` 는 **팔마다 달라야 하는 축이 될 수도 있다** (코팅처럼 시딩 자체가 확률적인
 #  경우 = seed 앙상블).  현행 origin 앙상블은 같은 압밀 산물을 재사용하므로 seed 가 고정이고,
@@ -173,7 +177,10 @@ def verdict(arms, seed_ensemble=False):
                 # ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
                 #   σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
                 *(f for f in _GEN_FIELDS if f not in _gen_ex)):
-        _v = {r.get(fld) for k in arms for r in arms[k] if r.get(fld) is not None}
+        #  ★ F4: dict 값(additive_E_GPa)은 set 에 못 들어간다 — 정규 직렬화로 비교.
+        _v = {(json.dumps(r.get(fld), sort_keys=True)
+               if isinstance(r.get(fld), (dict, list)) else r.get(fld))
+              for k in arms for r in arms[k] if r.get(fld) is not None}
         if len(_v) > 1:
             return dict(out, decision='HOLD',
                         reason=f'고정 인자 `{fld}` 가 팔마다 다르다 ({sorted(map(str, _v))}) — '
@@ -251,6 +258,7 @@ def _selftest():
                 backend='gpu', sdcp_yield_to_vgcf=False, sigma_ptfe_S_cm=0.0,
                 # ★ 2026-08-19 (A5) — 세대 인자도 픽스처에 싣는다.  안 실으면 위와 같은
                 #   이유로 새 게이트가 selftest 에서 **검증된 적 없는 코드**가 된다.
+                additive_E_GPa={'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 23.6},
                 sigma_ion_se_S_cm=0.003, sigma_ion_sdcp_S_cm=0.001,
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
@@ -390,6 +398,14 @@ def _selftest():
     v20c = verdict(_se2, seed_ensemble=True)
     chk(f'⑳c --seed-ensemble 이어도 σ_ion 이 다르면 HOLD ({v20c["decision"]})',
         v20c['decision'] == 'HOLD' and 'sigma_ion_se_S_cm' in (v20c.get('reason') or ''))
+    #  ㉑ ★ fable F4 — 첨가제 E 세대(CL-56 축).  SDCP 23.6 침대와 9.0 침대가 섞이면 HOLD.
+    #     (dict 값이라 set 정규화 경로도 함께 검증된다.)
+    _mixE = mk(base, [v * 1.08 for v in base])
+    for _r in _mixE['DBE']:
+        _r['additive_E_GPa'] = {'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 9.0}
+    v21 = verdict(_mixE)
+    chk(f'㉑ ★ 첨가제 E 가 다른 침대 혼합은 HOLD (SDCP 23.6 vs 9.0) ({v21["decision"]})',
+        v21['decision'] == 'HOLD' and 'additive_E_GPa' in (v21.get('reason') or ''))
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
