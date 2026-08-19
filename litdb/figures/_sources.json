@@ -314,14 +314,6 @@
    "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf"
   ]
  },
- "kauwe2021_ml_materials_properties_dissertation_sparks": {
-  "figures": 15,
-  "generated": "2026-08-19",
-  "pdfs": [
-   "ch2_Kauwe2021_MLguide.pdf",
-   "Sup) ch6_Kauwe2021_extraordinary.pdf"
-  ]
- },
  "ke2025_orbital_hybridization_mgclo": {
   "figures": 38,
   "generated": "2026-08-05",
@@ -446,14 +438,6 @@
   "pdfs": [
    "DFT 먹인 논문/31. Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf",
    "DFT 먹인 논문/31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf"
-  ]
- },
- "lai2025_haml_li_metal_lpscl_interface_doping_seFO": {
-  "figures": 24,
-  "generated": "2026-08-19",
-  "pdfs": [
-   "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
-   "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf"
   ]
  },
  "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp": {
@@ -1032,24 +1016,10 @@
   "figures": 42,
   "generated": "2026-08-19",
   "pdfs": [
-   "57. Dry electrode architecture design to push energy density limits at the cell level.pdf"
-  ]
- },
- "zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf": {
-  "figures": 42,
-  "generated": "2026-08-19",
-  "pdfs": [
-   "Zhang2026_Dry_electrode_architecture_design_energy_density_cell_level.pdf",
-   "Sup) Zhang2026_Dry_electrode_architecture_design_energy_density_cell_level.pdf"
-  ]
- },
- "zhang2026_minimum_abinitio_data_mlip_mace_finetune_nep_distill": {
-  "figures": 24,
-  "generated": "2026-08-19",
-  "pdfs": [
-   "61. Zhang2026_Minimum_AbInitio_Data_MLIP.pdf",
-   "61. Sup) Zhang2026_Minimum_AbInitio_Data_MLIP.pdf"
-  ]
+   "57. Dry electrode architecture design to push energy density limits at the cell level.pdf",
+   "57. 41560_2026_1981_MOESM1_ESM.pdf"
+  ],
+  "note": "main-text Figs 1-6 = clip-rendered crops of the figure+caption region (PyMuPDF, 170-220 dpi, verified by eye). SI Figs S1-S29 + Tables S1-S7 adopted from the superseded slug '..._cgmd_ptfe_vgcf' (commit a3505890) before it was removed. All images are CROPPED -> figures.json w/h were refreshed from the files on disk and bbox fields dropped (bbox referred to original PDF coordinates and no longer corresponds)."
  },
  "zhou2026_high_entropy_lgps_multicationic": {
   "figures": 25,

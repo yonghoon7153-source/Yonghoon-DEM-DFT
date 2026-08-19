@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 100편 · 생성 2026-08-19
+> digest 102편 · 생성 2026-08-19
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -23,7 +23,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
-| `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | — |
+| `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
@@ -43,7 +43,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |
 
-## 복합양극 미세구조 · percolation (15편)
+## 복합양극 미세구조 · percolation (16편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -62,8 +62,9 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `tailored_cathode_microstructure_low_pressure_assb` | Tailored Cathode Composite Microstructure Enables Long Cycle Life at Low Pressure for ASSBs — Zhou et al. (ACS Energy Lett. 2025) |  | 2026-06-26 | 🖼 5 |
 | `taufactor_tortuosity_factor_tomography_tool` | TauFactor — voxel 미세구조에서 정상상태 확산(Laplace)을 풀어 tortuosity FACTOR τ 를 직접 계산하는 오픈소스 MATLAB 툴 — Cooper (SoftwareX 2016) | tool (voxel Laplace-solve, post-processing) | 2026-06-26 | 🖼 8 |
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
+| `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (24편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (25편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -89,8 +90,9 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `sangros2019_dem_calendering_lib_electrode` | LIB 전극 calendering(압연)을 DEM으로 — 단일 NMC 입자 탄소성 접촉모델(나노압입 보정) + 바인더 bond 모델 + ~17% 점탄성 회복 — Sangrós Giménez (Powder Technology 2019) | DEM (in-house, 나노압입 실험 보정 + calendering 실측 검증) | 2026-06-26 | 🖼 14 |
 | `sangros2020_lib_electrode_dem_mech_elec_ionic` | LIB 전극의 역학·전기·이온 거동을 DEM으로 — calendering + 바인더 bond 모델 + 삼중 전달 — Sangrós Giménez (Energy Technology 2020) | DEM (+ analytic homogenization, exp 검증) | 2026-06-26 | 🖼 12 |
 | `so2021_dem_mold_pressure_assb_coldpress` | 몰드압력이 ASSB 압밀·이온전도도에 미치는 영향 — 소성변형 포함 3D DEM cold-press 모델 — So (J. Power Sources 2021) | DEM | 2026-06-23 | 🖼 9 |
-| `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | — |
+| `wang2026_dryprocess_thick_cathode_failure_ncm94` | 건식 후막 양극(NCM94 80 wt%, 6.5 mAh cm⁻²)의 실패 기전 — in-situ 압력 + 3전극 EIS/DRT — Wang & Wang (J. Mater. Chem. A 2026) | exp (실험 전용 — 시뮬레이션 0) | 2026-08-19 | 🖼 26 |
 | `wet_processing_resolved_am_ssb_cathode_manufacturing` | ASSB 양극을 습식공정(슬러리→건조→압연)으로 — 실제 형상(resolved, multisphere) AM 입자를 nano-CT에서 추출해 DEM 제조 시뮬 + GeoDict로 σ_ionic·σ_e 산출 — Weitze / Franco (Energy Storage Materials 2024) | DEM (LAMMPS, multisphere resolved-AM; wet-process slurry→dry | 2026-06-26 | 🖼 8 |
+| `zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf` | 건식전극 아키텍처 설계로 셀 수준 에너지밀도 한계를 밀어붙인다 — PTFE 바인더 × 기능화 VGCF 의 메조스케일 결합을 CGMD(LAMMPS, LJ 12-6) 로, 반응 불균일을 operando single-particle XRD 로, 도전망을 PFIB-SEM 3D + COMSOL 로 — Zhang / Stoychev | exp 주도 + CGMD(LAMMPS) + 이미지기반 연속체(COMSOL·TauFactor) | 2026-08-19 | — |
 
 ## 화학-기계 열화 · 계면 (10편)
 
