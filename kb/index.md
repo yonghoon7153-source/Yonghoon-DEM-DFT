@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 222
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 223
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -64,7 +64,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (81)
+## results/ (82)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -144,6 +144,7 @@
 - `kb/results/site_preference_findings_2026_06_19.md` — Dopant site preference (antisite-swap, all-UMA) — 81-system screen
 - `kb/results/site_thermodynamics_explained.md` — Site Distribution Thermodynamics — 왜 각 comp가 그 분포로 가장 안정한가?
 - `kb/results/slide2_lit_summary_revised_2026_06_21.md` — Slide 2 (Literature summary) — 개정 (2026-06-21)
+- `kb/results/uma_force_accuracy_li3ps4_2026_08_19.md` — UMA-s-1p1(omat) 힘 정확도 — Li₃PS₄ DFT 라벨 벤치 (외부 데이터, DFT 0회) ○미열람
 - `kb/results/vgcf_hbn_figure_plan.md` — VGCF/h-BN 원고 — 층수 연구를 어디에 둘 것인가 (2026-07-31 결정)
 - `kb/results/vgcf_hbn_gallery_mechanism_2026_07_30.md` — h-BN@VGCF — 209 meV 층수효과의 정체: confinement 확정 (2026-07-30)
 
@@ -257,4 +258,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 1개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 173개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 178개 (정본 목록: litdb/INDEX.md)
