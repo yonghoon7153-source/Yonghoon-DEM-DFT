@@ -1,0 +1,25 @@
+{
+ "model": "uma-s-1p1",
+ "task": "omat",
+ "tag": "comp1",
+ "timing": {
+  "struct": "db/structures/comp1_V0_k444.xyz",
+  "rows": [
+   {
+    "rep": 1,
+    "n_atoms": 52,
+    "s_per_step": 0.3598723649978638,
+    "us_per_atom_step": 6920.622403805073
+   },
+   {
+    "rep": 2,
+    "n_atoms": 416,
+    "s_per_step": 0.6374755382537842,
+    "us_per_atom_step": 1532.393120802366
+   }
+  ],
+  "verdict": "overhead_bound",
+  "message": "⭕ 원자 8배 → 스텝당 벽시계 1.8배 (원자당 비용 4.5배 싸짐) ⇒ **작은 셀은 오버헤드 지배**. 셀을 키우면 통계가 거의 공짜로 늘어난다",
+  "limitation": "힘 호출만 잰다 — 서모스탯·I/O·MSD 계산은 안 들어간다."
+ }
+}

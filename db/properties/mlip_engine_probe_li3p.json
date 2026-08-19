@@ -1,0 +1,26 @@
+{
+ "model": "uma-s-1p1",
+ "task": "omat",
+ "tag": "li3p",
+ "residual_at_dft_minimum": {
+  "struct": "db/structures/sei_li3p_mp-736.vasp",
+  "n_atoms": 8,
+  "fmax_eV_per_A": 0.020527295273528937,
+  "frms_eV_per_A": 0.014514745870259728,
+  "per_element": {
+   "Li": {
+    "fmax": 0.020527295273528937,
+    "frms": 0.01676018336414221,
+    "n": 6
+   },
+   "P": {
+    "fmax": 1.232676866248153e-05,
+    "frms": 1.2309097427563613e-05,
+    "n": 2
+   }
+  },
+  "verdict": "agrees",
+  "message": "⭕ DFT 최소점에서 MLIP 힘이 거의 0 — 두 PES 가 같은 자리를 본다",
+  "limitation": "참조 구조가 정말 그 DFT 설정의 최소점이어야 한다. 이완이 덜 됐으면 이 잔여력은 MLIP 탓이 아니다."
+ }
+}
