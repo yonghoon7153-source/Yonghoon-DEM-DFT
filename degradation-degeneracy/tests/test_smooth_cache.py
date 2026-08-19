@@ -138,8 +138,14 @@ def test_ocpbias_with_zero_perturbation_equals_ocp():
         np.testing.assert_allclose(getattr(a, k), getattr(b, k), rtol=0, atol=0)
 
 
-def test_ocpbias_offset_shifts_voltage_and_stretch_shifts_stoichiometry():
-    """★ 두 왜곡이 각각 의도한 축을 움직여야 한다."""
+def test_ocpbias_offset_shifts_voltage_and_stretch_remaps_it():
+    """★ 두 왜곡이 각각 의도한 대로 움직여야 한다.
+
+    ★ 갱신 — stretch 의 표현을 바꿨다. 예전에는 화학량론 **축을 잘라서**
+      `y_pe.max()` 가 줄었고 `u_pe` 는 그대로였다. 그 표현은 전 범위 coverage
+      전제(F11)와 충돌해 1% 넘는 왜곡을 못 쟀다. 지금은 정의역을 유지하고
+      전압을 재매핑한다 — 축은 불변, 값이 바뀐다 (아래 stretch 절 참조).
+    """
     import numpy as np
     from src.halfcell import compute_halfcell_from_ocp
 
@@ -150,8 +156,9 @@ def test_ocpbias_offset_shifts_voltage_and_stretch_shifts_stoichiometry():
     np.testing.assert_allclose(off.u_ne, a.u_ne, atol=1e-12)
 
     st = compute_halfcell_from_ocp(cfg, n_points=64, pe_stretch=0.95)
-    assert st.y_pe.max() < a.y_pe.max(), "PE 화학량론이 안 줄었다"
-    np.testing.assert_allclose(st.u_pe, a.u_pe, atol=1e-12)
+    np.testing.assert_allclose(st.y_pe, a.y_pe, rtol=0, atol=0)   # 축 불변
+    assert not np.allclose(st.u_pe, a.u_pe), "PE 전압이 재매핑되지 않았다"
+    np.testing.assert_allclose(st.u_ne, a.u_ne, atol=1e-12)       # NE 는 불변
 
 
 def test_ocpbias_perturbation_changes_the_cache_key():
@@ -487,23 +494,101 @@ def test_halfcell_library_refuses_to_build_a_zero_perturbation_cache(tmp_path):
 def test_verify_failure_message_names_the_actual_cause():
     """★ --verify 실패 사유가 구조검사인지 배열 불일치인지 구분해야 한다.
 
-    실측(stretch 0.97): `구조검사_실패: ["전범위_coverage"]`·`재생성_배열일치:
-    true` 인데 메시지는 "캐시가 recipe 재생성 결과와 다르다" 였다 — 배열은
-    같은데 다르다고 말한다. 원인을 엉뚱한 데서 찾게 된다.
-    """
-    import subprocess
-    import sys as _s
-    from pathlib import Path as _P
+    실측(당시 stretch 0.97): `구조검사_실패: ["전범위_coverage"]`·
+    `재생성_배열일치: true` 인데 메시지는 "캐시가 recipe 재생성 결과와 다르다"
+    였다 — 배열은 같은데 다르다고 말해 원인을 엉뚱한 데서 찾게 했다.
 
-    root = _P(__file__).resolve().parent.parent
-    r = subprocess.run(
-        [_s.executable, "-m", "src.halfcell", "--config", "configs/base.yaml",
-         "--method", "ocpbias", "--pe-stretch", "0.97", "--force", "--verify"],
-        cwd=root, capture_output=True, text=True)
-    assert r.returncode != 0
-    both = r.stdout + r.stderr
-    assert "전범위_coverage" in both, both
-    assert "재생성 결과와 다르다" not in both, \
-        f"배열은 일치하는데 불일치라고 말한다\n{both}"
-    # 측정창을 알려줘야 한다 — 모르면 0.97 이 왜 안 되는지 알 길이 없다
-    assert "0.99" in both, f"쓸 수 있는 stretch 범위 안내가 없다\n{both}"
+    ★ 그 재현 경로(stretch)는 이제 사라졌다 — stretch 가 정의역을 안 자르므로
+      coverage 를 깨지 않는다. 사유 판정을 순수 함수로 빼서 직접 고정한다.
+    """
+    from src.halfcell import verify_failure_reason
+
+    # ① 배열이 다르면 그렇게 말한다
+    assert "재생성 결과와 다르다" in verify_failure_reason([], False)
+    # ② 배열은 같고 구조검사만 실패하면 **구조검사**라고 말한다
+    why = verify_failure_reason(["전범위_coverage"], True)
+    assert "재생성 결과와 다르다" not in why, why
+    assert "전범위_coverage" in why, why
+    assert "F11" in why and "sim" in why, f"원인·대처 안내가 없다\n{why}"
+    # ③ 배열 불일치가 구조검사 실패를 가리지 않는다 (우선순위)
+    assert "재생성 결과와 다르다" in verify_failure_reason(["전범위_coverage"], False)
+
+
+# ── stretch 축을 실제로 잴 수 있게 한다 (13차 자체 리뷰 R7 후속) ──────────
+#
+# ★ 예전 구현은 화학량론 **정의역을 잘랐다**: `x = clip(x*s, 0, 1)`. s<1 이면
+#   y_pe 최대가 0.9999·s 가 되어 전 범위 coverage 검사(≥0.99)에 걸린다. 쓸 수
+#   있는 창이 `s ≥ 0.9901`(≈1% 이내)뿐이라, "실측에서 가장 큰 오차원" 이라 부른
+#   축을 1% 넘게 흔들 수 없었다 — 준비 단계는 성공하고 fit 에서 죽는다.
+#
+#   coverage 전제(F11 — LLI 환산식은 전 범위 테이블에서만 성립)는 옳다. 틀린
+#   것은 왜곡의 표현이었다. stoichiometry window 오차의 물리는 "정의역이
+#   줄어든다"가 아니라 **"같은 z 에서 우리 모델이 다른 전압을 준다"** 이다:
+#       U_biased(y) = U(clip(y·s, 0, 1))
+#   정의역 [0,1] 은 그대로 두고 값만 재매핑한다. coverage 는 유지되고 왜곡
+#   크기에 제한이 없다.
+
+def test_stretch_keeps_the_full_range_domain():
+    """★ stretch 가 정의역을 자르면 안 된다 — coverage 는 왜곡과 무관해야."""
+    import numpy as np
+
+    from src.halfcell import compute_halfcell_from_ocp
+
+    base = compute_halfcell_from_ocp(_base_cfg(), n_points=64)
+    for s in (0.90, 0.97, 1.03, 1.10):
+        r = compute_halfcell_from_ocp(_base_cfg(), n_points=64, pe_stretch=s)
+        np.testing.assert_allclose(r.y_pe, base.y_pe, rtol=0, atol=0)
+        assert r.y_pe.max() >= 0.99, f"pe_stretch={s} 가 정의역을 잘랐다"
+        n = compute_halfcell_from_ocp(_base_cfg(), n_points=64, ne_stretch=s)
+        assert n.z_ne.max() >= 0.99, f"ne_stretch={s} 가 정의역을 잘랐다"
+
+
+def test_stretch_remaps_the_voltage_not_the_axis():
+    """★ 그러면서도 곡선은 실제로 바뀌어야 한다 (무왜곡과 같으면 무의미)."""
+    import numpy as np
+
+    from src.halfcell import compute_halfcell_from_ocp
+
+    base = compute_halfcell_from_ocp(_base_cfg(), n_points=256)
+    st = compute_halfcell_from_ocp(_base_cfg(), n_points=256, pe_stretch=0.90)
+    assert not np.allclose(st.u_pe, base.u_pe), "pe_stretch 가 아무것도 안 했다"
+    # U_biased(y) == U(y·s) — 중간 지점에서 직접 대조
+    y = 0.5
+    want = float(np.interp(y * 0.90, base.y_pe, base.u_pe))
+    got = float(np.interp(y, st.y_pe, st.u_pe))
+    assert abs(got - want) < 2e-3, f"재매핑이 U(y·s) 가 아니다: {got} vs {want}"
+
+    ne = compute_halfcell_from_ocp(_base_cfg(), n_points=256, ne_stretch=0.90)
+    assert not np.allclose(ne.u_ne, base.u_ne), "ne_stretch 가 아무것도 안 했다"
+
+
+def test_stretch_one_is_bit_identical_to_no_stretch():
+    """★ s=1.0 은 불변이어야 한다 — 기존 오프셋 다리의 재현성이 걸려 있다.
+
+    §7.10 의 여섯 다리는 recipe 에 `pe_stretch: 1.0` 을 갖고 있다. 이 구현
+    변경이 s=1 경로를 건드리면 그 캐시들이 다른 배열이 되어 재현이 깨진다.
+    """
+    import numpy as np
+
+    from src.halfcell import compute_halfcell_from_ocp
+
+    a = compute_halfcell_from_ocp(_base_cfg(), n_points=128)
+    b = compute_halfcell_from_ocp(_base_cfg(), n_points=128,
+                                  pe_stretch=1.0, ne_stretch=1.0)
+    for k in ("y_pe", "u_pe", "z_ne", "u_ne"):
+        np.testing.assert_allclose(getattr(a, k), getattr(b, k), rtol=0, atol=0)
+
+
+def test_stretch_survives_the_cache_validator():
+    """★ 끝까지 — 왜곡 캐시가 F74 구조검사(전범위 coverage)를 통과해야 한다."""
+    from src.halfcell import get_halfcell_reference, validate_halfcell_cache
+    from src.halfcell import halfcell_cache_path
+
+    cfg = _base_cfg()
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        get_halfcell_reference(cfg, cache_dir=d, method="ocpbias", force=True,
+                               pe_stretch=0.90)
+        path = halfcell_cache_path(cfg, d, "ocpbias", pe_stretch=0.90)
+        v = validate_halfcell_cache(cfg, path)
+        assert v["ok"], f"stretch 0.90 캐시가 검증에 걸렸다: {v['fail']}"

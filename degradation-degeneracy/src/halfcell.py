@@ -146,10 +146,23 @@ def compute_halfcell_from_ocp(cfg: dict, n_points: int = 400,
         u_pe = u_pe + pe_offset_mv / 1000.0
     if ne_offset_mv:
         u_grid = u_grid + ne_offset_mv / 1000.0
+    # ★ stretch 는 **정의역을 자르지 않는다** (13차 자체 리뷰 R7 후속).
+    #   예전 구현은 `x = clip(x*s, 0, 1)` 로 축 자체를 줄여, s<1 이면 y_pe 최대가
+    #   0.9999·s 가 되어 전 범위 coverage 검사(≥0.99)에 걸렸다 — 쓸 수 있는 창이
+    #   s ≥ 0.9901(≈1% 이내)뿐이라 이 축을 의미 있게 흔들 수 없었다.
+    #
+    #   coverage 전제(F11 — LLI 환산식은 전 범위 테이블에서만 성립)는 옳다.
+    #   틀린 것은 왜곡의 표현이었다. stoichiometry window 오차의 물리는
+    #   "정의역이 줄어든다" 가 아니라 **"같은 화학량론에서 모델이 다른 전압을
+    #   준다"** 이다. 원점 아핀 재매핑으로 쓴다:
+    #       U_biased(y) = U(clip(y·s, 0, 1))
+    #   정의역은 그대로, 값만 바뀐다. 왜곡 크기에 제한이 없다.
     if pe_stretch != 1.0:
-        x = np.clip(x * float(pe_stretch), 0.0, 1.0)
+        u_pe = np.interp(np.clip(x * float(pe_stretch), 0.0, 1.0), x, u_pe)
     if ne_stretch != 1.0:
-        z = np.clip(z * float(ne_stretch), 0.0, 1.0)
+        # (z, u_grid) 는 z 가 **감소**하는 쌍이다 — interp 는 증가 격자를 요구한다
+        _zi, _ui = z[::-1], u_grid[::-1]
+        u_grid = np.interp(np.clip(z * float(ne_stretch), 0.0, 1.0), _zi, _ui)
 
     y_s, u_p = _dedupe_sorted(x, u_pe)
     z_s, u_n = _dedupe_sorted(z, u_grid)
@@ -242,6 +255,25 @@ def recipe_of(method: str = "ocp", **kw) -> dict:
         raise ValueError(f"method={method}가 모르는 인자: {sorted(unknown)}")
     r.update({k: v for k, v in kw.items() if v is not None})
     return {"method": method, **r}
+
+
+def verify_failure_reason(fail: list, arrays_match: bool) -> str:
+    """`--verify` 실패 사유 문장. **두 실패를 뭉개지 않는다.**
+
+    ★ 13차 자체 리뷰 — 예전에는 구조검사 실패든 배열 불일치든 한 문장으로
+      "캐시가 recipe 재생성 결과와 다르다" 를 냈다. 실측으로 배열이 **일치**
+      하는데도(재생성_배열일치: true) 그렇게 말해, 왜곡 계산을 의심하게 만들고
+      진짜 원인(전범위 coverage)을 못 찾게 했다.
+    """
+    if not arrays_match:
+        return "캐시가 recipe 재생성 결과와 다르다"
+    why = f"구조검사 실패: {fail}"
+    if "전범위_coverage" in fail:
+        # LLI 환산식(F11)은 화학량론 전 범위 테이블에서만 성립한다
+        why += ("\n  화학량론 전 범위(0~1) 테이블이 아니다 — LLI 환산식의 전제가"
+                " 깨진다 (F11). 셀이 지나간 구간만 담는 method='sim' 캐시이거나,"
+                " 배열이 잘린 캐시다. method='ocp'/'ocpbias' 로 다시 만들어라.")
+    return why
 
 
 def is_noop_bias(method: str, **kw) -> bool:
@@ -575,23 +607,9 @@ def main() -> None:
                     f"--method {args.method} --force --verify"
                     if (not args.force and v["fail"] == ["코드_identity"] and same)
                     else "")
-            # ★ 13차 자체 리뷰 — 두 실패를 한 문장으로 뭉개면 원인을 오진한다.
-            #   실측: stretch 0.97 은 배열이 **일치**하는데도 "재생성 결과와
-            #   다르다" 로 죽어, 왜곡 계산을 의심하게 만들었다. 실제 원인은
-            #   전범위 coverage 였다.
-            if not same:
-                why = "캐시가 recipe 재생성 결과와 다르다"
-            else:
-                why = f"구조검사 실패: {v['fail']}"
-                if "전범위_coverage" in v["fail"]:
-                    # LLI 환산식이 전 범위 테이블을 전제한다 (F11) — 화학량론
-                    # 축을 줄이는 왜곡은 그 전제를 깬다. 쓸 수 있는 창을 알린다.
-                    why += ("\n  화학량론 수축(stretch<1)은 전 범위 전제를 깨서 "
-                            "여기서 막힌다. 쓸 수 있는 범위는 stretch ≥ 0.9901 "
-                            "(≈1% 이내) 이고, 그보다 큰 모델 오차는 이 축으로 "
-                            "잴 수 없다. 오프셋(mV) 축을 쓰거나 stretch>1 로 "
-                            "같은 크기의 어긋남을 재라.")
-            raise SystemExit(f"--verify 실패: {why} (F74){hint}")
+            raise SystemExit(
+                f"--verify 실패: {verify_failure_reason(v['fail'], bool(same))}"
+                f" (F74){hint}")
 
     if args.plot:
         import matplotlib
