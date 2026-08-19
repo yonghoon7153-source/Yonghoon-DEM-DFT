@@ -161,7 +161,15 @@ if _has 4; then
   echo "     (σ_e 는 --no-ion 과 무관하므로 안전):"
   echo "       for V in $SWEEP_VOX; do D=prereg_v2_vox\${V/./}_sph_b048; \\"
   echo "         [ -d \"\${D}_lean\" ] && { mkdir -p \"\${D}_lean2\"; cp -n \"\${D}_lean\"/p2_*.json \"\${D}_lean2\"/; }; done"
-  for V in $SWEEP_VOX; do
+  for V0 in $SWEEP_VOX; do
+    #  ★★ 2026-08-19 — vox 문자열 **정규화**.  아래 게이트가 `[ "$V" = "0.1" ]` 로 문자열
+    #    비교라, 사용자가 `SWEEP_VOX="0.10"` 을 주면 **NEED=0 이 되어 RAM 게이트가 통째로
+    #    발동하지 않았다** (0.10 ≠ 0.1).  40 GB 요구가 무력화된 채 시작하면 그대로 OOM 이다
+    #    — 이 리포가 가장 싫어하는 "조용한 실패" 형태이고, 실제로 그렇게 죽었을 가능성이 있다.
+    #    디렉터리 이름(`vox${V/./}`)도 vox010 vs vox01 로 갈려 같은 격자의 팔이 두 곳에 흩어진다.
+    #    ⇒ 여기서 한 번 정규화해 아래 전부가 같은 문자열을 본다.
+    V=$(awk -v x="$V0" 'BEGIN{printf "%g", x+0}')
+    [ "$V" = "$V0" ] || echo "[next] vox 표기 정규화: '$V0' → '$V'"
     AVAIL=$(free -g 2>/dev/null | awk '/^Mem:/{print $7}')
     echo
     echo "[next] ── vox $V  (가용 RAM ${AVAIL:-?} GB)"
@@ -169,6 +177,10 @@ if _has 4; then
     #    vox 0.125 전도 dof 45.4 M → 호스트 ≈ 17.5 GB · vox 0.1 은 86.8 M → ≈ 33.5 GB.
     #    --no-ion 이라 이온계(15 GB)는 더 이상 안 얹힌다.  여유 20 % 를 얹어 요구한다.
     NEED=0; [ "$V" = "0.125" ] && NEED=22; [ "$V" = "0.1" ] && NEED=40
+    #  ★ 표에 없는 vox 는 **막지 않고 경고**한다 (문턱을 지어내지 않는다, §F1).
+    #    단 위 정규화 덕에 0.10/0.100 은 이제 0.1 로 들어와 40 GB 게이트를 제대로 받는다.
+    [ "$NEED" -eq 0 ] && echo "[next] ⚠ vox $V 는 RAM 문턱표에 없다 (표: 0.125→22 · 0.1→40 GB)." \
+                              "— 게이트 없이 진행한다.  `free -g` 로 직접 확인할 것"
     if [ -n "${AVAIL:-}" ] && [ "$NEED" -gt 0 ] && [ "$AVAIL" -lt "$NEED" ]; then
       echo "[next] ⚠ vox $V 는 호스트 RAM ~$NEED GB 가 필요하다 (STEP 1 dof 실측 기준)."
       echo "        가용 $AVAIL GB — 여기서 멈춘다 (죽는 것보다 안 시작하는 것이 낫다)."
