@@ -33,7 +33,12 @@ EXP_ANCHOR = {"Li3PO4": "~8 (exp)", "Li2O": "~7.99 (exp)", "LiCl": "~9.4 (exp)",
 #:   반응식은 이미 다 있으니 산물 갭만 **조회**하면 그 구멍이 메워진다. 계산 아님.
 #: 판정 규칙 — 한 반응의 병목은 **산물 중 최소 갭**이다. 하나라도 금속이면 그 층은
 #:   전자를 통과시키므로 자기제한이 안 된다.
-def products_of(rxn):
+#: grand-potential 반응식에서 **저장고 원소는 산물이 아니다** — 균형식 부기로 나올 뿐
+#:   석출상이 아니다. 이걸 세면 "금속 산물" 비율이 부풀려진다 (2026-08-19 실측: 73 → 69 %).
+OPEN_ELEMENTS = ("Li",)
+
+
+def products_of(rxn, drop_open=True):
     """'0.5 A + 0.5 B -> 0.3 C + 0.2 D' → ['C', 'D'] (계수 제거).
 
     이 함수가 **못 하는 것**: 화살표가 없으면 빈 목록을 낸다 (좌변을 산물로
@@ -46,6 +51,8 @@ def products_of(rxn):
     for tok in rxn.split("->", 1)[1].split("+"):
         t = _re.sub(r"^\s*[0-9]*\.?[0-9]+\s+", "", tok.strip())
         if t and _re.match(r"^[A-Z]", t):
+            if drop_open and t in OPEN_ELEMENTS:
+                continue
             out.append(t)
     return out
 
@@ -88,6 +95,10 @@ def _selftest():
         == ["Li3Sc2(PO4)3", "LiScS2", "Li3PO4", "LiCl"],
         "[양성] 계수를 떼고 산물만 뽑는다 (괄호 조성 포함)")
     chk(products_of("Sc2O3 -> Sc2O3") == ["Sc2O3"], "[양성] 무반응식도 산물 하나")
+    chk(products_of("A -> 28 Li + P2S7") == ["P2S7"],
+        "[음성] 저장고 원소 Li 는 산물이 아니다 (grand-potential 부기)")
+    chk(products_of("A -> 28 Li + P2S7", drop_open=False) == ["Li", "P2S7"],
+        "[양성] drop_open=False 면 그대로 (닫힌계용)")
     chk(products_of("0.5 A + 0.5 B") == [],
         "[음성] 화살표가 없으면 빈 목록 (좌변을 산물로 착각하지 않는다)")
     chk(products_of("") == [] and products_of(None) == [],

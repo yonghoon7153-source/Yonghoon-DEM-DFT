@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 219
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 220
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -63,7 +63,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (80)
+## results/ (81)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -102,6 +102,7 @@
 - `kb/results/dualx_blocking_2026_06_29.md` — dual-x 도핑 농도 스크리닝: Li-channel blocking_fraction (x=0.0625 vs 0.25)
 - `kb/results/elastic_0K_protocol_status.md` — 0K Cij DFT Protocol Status (Paper #1)
 - `kb/results/halogen_wad_refutation.md` — Wad Mechanism Refutation — 직관적 설명
+- `kb/results/interface_axes_90_2026_08_19.md` — 계면 축 4종을 90종에 붙였다 — 우리 산화 창은 계면을 예측하지 못한다 ○미열람
 - `kb/results/interface_reactivity_v2_voltage_resolved_2026_06_21.md` — Voltage-resolved SE/cathode interface reactivity (v2) — 2026-06-21
 - `kb/results/ionic_cage_descriptors_comp1_modelc.md` — LPSCl vs LPSCl1.6 — ionic conductivity, NEB-free geometric descriptors
 - `kb/results/ionic_conductivity_full_explained_2026_06_21.md` — 이온전도도 완전 정리 — LPSCl(comp1) vs LPSCl₁.₆(modelc)
