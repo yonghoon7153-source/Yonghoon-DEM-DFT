@@ -437,6 +437,14 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
         #              for Physics. Vanishes correctly at full-contact limit.
         'resistance_model': ('mikic' if contact_mode == 'physics'
                              else 'maxwell'),
+        # ★★ 2026-08-19 — bottom ∩ top.  같은 노드가 양쪽 경계에 속하면 Kirchhoff 계가
+        #   **퇴화**해 (한 노드에 1 V 와 0 V 를 동시에 강제) σ 가 조용히 None 으로 나온다.
+        #   실사고: 얇은 고압 침대(P600, AM z-범위 22.1 µm)에서 `boundary_factor=2.0` 의
+        #   두 밴드(각 2·r_max ≈ 12 µm)가 겹쳐 입자 1개가 양쪽에 속했고, 퍼콜은 0.9951 인데
+        #   `sigma_full_status='not_computed'` 가 나왔다 — 원인이 로그 어디에도 없었다.
+        #   ⇒ **발동 조건**: 침대 두께 < 4·r_max (여기선 ≈24 µm).  생산 침대는 30 µm+ 라
+        #   여태 안 물렸지만, 고압·박막 케이스는 물린다.  숫자를 남겨 조용한 실패를 막는다.
+        'n_boundary_overlap': len(set(bottom_ids) & set(top_ids)),
     }
 
 
@@ -927,7 +935,8 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       plate_z, box_x=0.05, box_y=0.05,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
                       type_map=None, contact_mode='hertzian',
-                      dump_raw_dir=None, dump_tag=None, is_thermal=False, mode=None):
+                      dump_raw_dir=None, dump_tag=None, is_thermal=False, mode=None,
+                      boundary_factor=2.0):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): physical ground truth
