@@ -1,0 +1,159 @@
+{
+  "what": "MLIP evaluated against a DFT-labelled structure set.",
+  "model": "uma-s-1p1",
+  "task": "omat",
+  "test_file": "/home/kgy/work/data/petmad_li3ps4/Li3PS4/test.xyz",
+  "train_file": "/home/kgy/work/data/petmad_li3ps4/Li3PS4/train.xyz",
+  "elements": [
+    "Li",
+    "P",
+    "S"
+  ],
+  "reference_correction": {
+    "note": "E_MLIP - E_DFT fitted as a linear combination of element counts. Absolute energies of two different DFT setups are NOT comparable without this; quoting an uncorrected energy error is meaningless.",
+    "fitted_on": "train",
+    "coefficients_eV_per_atom": {
+      "Li": 0.09312,
+      "P": 0.03104,
+      "S": 0.12416
+    },
+    "fit_R2": 0.620189,
+    "self_fit_R2": 0.508371
+  },
+  "results": {
+    "set": "test",
+    "n_structures": 243,
+    "n_failed": 0,
+    "energy_after_reference_correction": {
+      "MAE_eV_per_atom": 0.01345,
+      "RMSE_eV_per_atom": 0.01847,
+      "max_abs_eV_per_atom": 0.05531,
+      "median_eV_per_atom": 0.00862
+    },
+    "relative_energy": {
+      "RRMSE_pct": 2.38,
+      "RMSE_eV": 0.68819
+    },
+    "forces": {
+      "MAE_eV_per_A": 0.02997,
+      "RMSE_eV_per_A": 0.04458,
+      "max_abs_eV_per_A": 0.47701,
+      "per_element": {
+        "Li": {
+          "MAE": 0.01319,
+          "RMSE": 0.01869,
+          "n_components": 8064
+        },
+        "P": {
+          "MAE": 0.0368,
+          "RMSE": 0.05457,
+          "n_components": 2688
+        },
+        "S": {
+          "MAE": 0.04085,
+          "RMSE": 0.05448,
+          "n_components": 10752
+        }
+      }
+    },
+    "worst5_structures": [
+      {
+        "index": 218,
+        "n_atoms": 16,
+        "dE_eV_per_atom": 0.05531
+      },
+      {
+        "index": 167,
+        "n_atoms": 16,
+        "dE_eV_per_atom": 0.0539
+      },
+      {
+        "index": 147,
+        "n_atoms": 32,
+        "dE_eV_per_atom": 0.04297
+      },
+      {
+        "index": 81,
+        "n_atoms": 32,
+        "dE_eV_per_atom": 0.04111
+      },
+      {
+        "index": 224,
+        "n_atoms": 32,
+        "dE_eV_per_atom": -0.0398
+      }
+    ]
+  },
+  "results_self_fit": {
+    "set": "test(자기적합 — 낙관치)",
+    "n_structures": 243,
+    "n_failed": 0,
+    "energy_after_reference_correction": {
+      "MAE_eV_per_atom": 0.01349,
+      "RMSE_eV_per_atom": 0.01852,
+      "max_abs_eV_per_atom": 0.05703,
+      "median_eV_per_atom": 0.00914
+    },
+    "relative_energy": {
+      "RRMSE_pct": 2.37,
+      "RMSE_eV": 0.68472
+    },
+    "forces": {
+      "MAE_eV_per_A": 0.02997,
+      "RMSE_eV_per_A": 0.04458,
+      "max_abs_eV_per_A": 0.47701,
+      "per_element": {
+        "Li": {
+          "MAE": 0.01319,
+          "RMSE": 0.01869,
+          "n_components": 8064
+        },
+        "P": {
+          "MAE": 0.0368,
+          "RMSE": 0.05457,
+          "n_components": 2688
+        },
+        "S": {
+          "MAE": 0.04085,
+          "RMSE": 0.05448,
+          "n_components": 10752
+        }
+      }
+    },
+    "worst5_structures": [
+      {
+        "index": 218,
+        "n_atoms": 16,
+        "dE_eV_per_atom": 0.05703
+      },
+      {
+        "index": 167,
+        "n_atoms": 16,
+        "dE_eV_per_atom": 0.05562
+      },
+      {
+        "index": 147,
+        "n_atoms": 32,
+        "dE_eV_per_atom": 0.04469
+      },
+      {
+        "index": 81,
+        "n_atoms": 32,
+        "dE_eV_per_atom": 0.04283
+      },
+      {
+        "index": 178,
+        "n_atoms": 32,
+        "dE_eV_per_atom": 0.04121
+      }
+    ]
+  },
+  "seconds": {
+    "test": 84.2,
+    "train": 666.7
+  },
+  "caveats": [
+    "Forces need no reference correction - they are the directly comparable quantity and the one that drives MD and NEB.",
+    "A low mean error does NOT guarantee a correct migration barrier; measure the barrier separately."
+  ]
+}
