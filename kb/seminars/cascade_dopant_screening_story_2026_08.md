@@ -898,7 +898,7 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 
 > ■ Step 9: Two designed stages produced no evidence
 > • [빨강]Conductivity from dynamics[/] was not run; Step 6 stands in as a structural proxy.
-> • [빨강]The cathode interface[/] was not attempted; the figure shows what such a screen looks like.
+> • [빨강]The cathode interface[/] was not attempted; every number in this deck is bulk, not interfacial.
 
 `< Sundar et al., Adv. Sci. 2025, Fig. 2  ·  one coating scored at four different interfaces >`
 `해설` [빨강]we computed none of these four maps[/]; an oxide that looks safe against the electrolyte can still react with Li
@@ -923,6 +923,8 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 전도도 얘기는 전부 구조 프록시입니다.
 
 또 하나는 계면입니다. 도핑한 전해질이 양극과 만나면 무슨 일이 나는지, 손도 못 댔습니다.
+⭐ 그래서 **오늘 보여드린 숫자는 전부 벌크입니다.** host 상대 안정성도, BVSE 지형도,
+탄성도, 산화 창도 — **계면 값은 하나도 없습니다.**
 
 이 그림이 그게 왜 중요한지 보여줍니다. **저희 그림이 아니라 Sundar 그룹이 올해 Advanced
 Science 에 낸 겁니다.** 같은 산화물 코팅을 네 계면에서 각각 계산한 건데, 주기율표 네 장이

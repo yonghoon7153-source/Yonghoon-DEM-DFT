@@ -224,7 +224,10 @@ SLIDES = {
     head="Step 9: Two designed stages produced no evidence",
     # ⚠ em-dash 둘 제거 (1/13 덱은 0개).
     sub1="[r]Conductivity from dynamics[/r] was not run; Step 6 stands in as a structural proxy.",
-    sub2="[r]The cathode interface[/r] was not attempted; the figure shows what such a screen looks like.",
+    # ⚠ 앞 판 뒷절은 **그림 설명**이었다 ("the figure shows what such a screen looks
+    #   like"). 소불릿은 **우리 계산**을 말해야 한다 (1저자 2026-08-19) — 그림 얘기는
+    #   이름표·해설 줄이 이미 진다. 우리 축은 de·BVSE·탄성·ESW 전부 벌크다.
+    sub2="[r]The cathode interface[/r] was not attempted; every number in this deck is bulk, not interfacial.",
     label="Sundar et al., Adv. Sci. 2025, Fig. 2  ·  one coating scored at four different interfaces",
     note="[r]we computed none of these four maps[/r]; an oxide that looks safe against the electrolyte can still react with Li",
     # ⚠ 앞 판은 'Adhesion' 을 풀었는데 슬라이드에 그 낱말이 없다.
