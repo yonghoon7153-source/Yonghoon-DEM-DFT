@@ -967,8 +967,12 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     #    ⚠ 이 변경은 **동작 중립**이다: mode='electronic' 이면 :343 이 True 가 되는데 휴리스틱으로
     #      이미 True 였고, :172/:226/:311/:426 의 'thermal' 비교는 그대로 False 다 (selftest 로 고정).
     _mode = mode if mode is not None else ('thermal' if is_thermal else 'ionic')
+    #  ★★ 2026-08-19 (같은 날 오후, 내 결함) — `boundary_factor` 를 **서명에만 넣고
+    #    여기로 안 넘겼다**.  받아 놓고 무시하는 죽은 인자였고, 호출자는 값을 바꿔도
+    #    n_bottom/n_top 이 그대로라 조용히 기본 2.0 을 쓴다.  A2(`mode=='electronic'`)와
+    #    **정확히 같은 부류**를 내가 몇 시간 만에 재생산했다.  재현 후 수정 (selftest 상주).
     net = build_network(atoms_raw, contacts_raw, target_types, scale,
-                        plate_z, box_x, box_y,
+                        plate_z, box_x, box_y, boundary_factor,
                         mode=_mode,
                         results_dir=results_dir,
                         type_map=type_map, contact_mode=contact_mode)
@@ -1050,6 +1054,10 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
         'n_edges': n_edges,
         'n_bottom': n_bottom,
         'n_top': n_top,
+        #  ★ 2026-08-19 — build_network 가 재는 bottom∩top 겹침을 **여기까지** 올린다.
+        #    안 올리면 호출자는 σ 가 왜 not_computed 인지 알 방법이 없다 (P600 실사고).
+        'n_boundary_overlap': net.get('n_boundary_overlap'),
+        'boundary_factor': boundary_factor,
         'phi_se': round(phi_se, 4),
         'bulk_resistance_fraction': round(bulk_frac, 4),
         'active_fraction': round(active_fraction, 4),
@@ -1385,6 +1393,42 @@ def _selftest_status():
     #     (실덤프 대조도 확인: P100 4.73208 · P300 9.630359, 두 mode 동일)
     chk(f'#A2: mode 를 바꿔도 σ_e 가 **비트 단위 동일** (수치 중립): {_s_el!r} vs {_s_io!r}',
         _s_el == _s_io)
+    # ── boundary_factor 가 **실제로 먹히는가** (2026-08-19, 내가 낸 죽은 인자) ──────────
+    #    서명에만 넣고 build_network 로 안 넘겨서, 호출자가 값을 바꿔도 n_bottom/n_top 이
+    #    그대로였다 = A2 와 같은 부류를 몇 시간 만에 재생산.  숫자로 고정한다.
+    #    ⚠ 픽스처가 **커야** 판별된다: 위 C4 경로는 bottom/top 중 하나라도 **3 미만**이면
+    #      폴백 L1(15/85 %)·L2(관측 z-범위)로 넘어가 boundary_factor 를 통째로 덮는다.
+    #      처음 쓴 5-노드 픽스처는 어느 factor 에서도 폴백에 빠져 "인자가 죽었다" 처럼 보였다
+    #      — 판정 함수가 인증하려는 성질과 무관했던 것(규칙 B)이고, 그 함정을 여기 남긴다.
+    _bA = {i: {'type': 1, 'x': 0., 'y': 0., 'z': float(z), 'radius': 1.}
+           for i, z in enumerate(range(21), 1)}
+    _bC = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1, 'delta': 0.01} for i in range(1, 21)]
+
+    def _bf(f):
+        with _ctx.redirect_stdout(_io.StringIO()):
+            r = run_decomposition(_bA, _bC, [1], 1.0, 20.0, 10., 10.,
+                                  sigma_bulk=SIGMA_AM_ELECTRONIC,
+                                  type_map={1: 'AM_P'}, mode='electronic', boundary_factor=f)
+        return r['n_bottom'], r['n_top'], r.get('n_boundary_overlap')
+    _w, _n = _bf(6.0), _bf(3.0)
+    chk(f'#BF: boundary_factor 가 경계 집합을 실제로 바꾼다 (6.0 → {_w[:2]} · 3.0 → {_n[:2]})',
+        _w[:2] != _n[:2])
+    chk(f'#BF: 넓은 밴드가 더 많이 잡는다 ({_w[0]} > {_n[0]})', _w[0] > _n[0] and _w[1] > _n[1])
+    chk(f'#BF: bottom∩top 겹침이 호출자까지 올라온다 (None 이면 조용한 실패): {_w[2]!r}',
+        _w[2] is not None and _n[2] is not None)
+    #    ★ 폴백 자체도 고정한다 — "작으면 덮인다" 를 모르면 위 실패를 또 오진한다.
+    _tinyA = {i: {'type': 1, 'x': 0., 'y': 0., 'z': float(z), 'radius': 1.}
+              for i, z in enumerate([0., 2., 4., 6., 8.], 1)}
+    _tinyC = [{'id1': i, 'id2': i + 1, 'contact_area': 0.1, 'delta': 0.01} for i in range(1, 5)]
+
+    def _tf(f):
+        with _ctx.redirect_stdout(_io.StringIO()):
+            r = run_decomposition(_tinyA, _tinyC, [1], 1.0, 8.0, 10., 10.,
+                                  sigma_bulk=SIGMA_AM_ELECTRONIC,
+                                  type_map={1: 'AM_P'}, mode='electronic', boundary_factor=f)
+        return r['n_bottom'], r['n_top']
+    chk('#BF: ⚠ 경계가 3 미만이면 폴백(15/85 %)이 factor 를 **덮는다** — 작은 망에서는 무효',
+        _tf(3.0) == _tf(0.5))
 
     print('NETWORK STATUS SELFTEST', 'PASS' if not fail else 'FAIL', f'({ok}/{ok + fail})')
     return 0 if not fail else 1
