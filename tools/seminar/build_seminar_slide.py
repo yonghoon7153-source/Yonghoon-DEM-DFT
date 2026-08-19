@@ -214,6 +214,24 @@ SLIDES = {
            "Window: the voltage range where nothing decomposes"),
     drop=[10],
  ),
+ 17: dict(
+    idx=16, out="Slide17_not_performed.pptx",
+    # ⚠ 이 그림은 **문헌 그림**이다 (Sundar et al., Adv. Sci. 2025, Fig. 2).
+    #   우리 산출물이 아니므로 이름표가 출처를 먼저 말한다.
+    figs=["docs/figures/seminar/step9_interface_maps.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Calculations that were not performed",
+    head="Step 9: Two designed stages produced no evidence",
+    # ⚠ em-dash 둘 제거 (1/13 덱은 0개).
+    sub1="[r]Conductivity from dynamics[/r] was not run; Step 6 stands in as a structural proxy.",
+    sub2="[r]The cathode interface[/r] was not attempted; the figure shows what such a screen looks like.",
+    label="Sundar et al., Adv. Sci. 2025, Fig. 2  ·  one coating scored at four different interfaces",
+    note="[r]we computed none of these four maps[/r]; an oxide that looks safe against the electrolyte can still react with Li",
+    # ⚠ 앞 판은 'Adhesion' 을 풀었는데 슬라이드에 그 낱말이 없다.
+    gloss=("Proxy: something cheap that correlates with what you want  ·  "
+           "Interface energy: how much energy is released when two materials touch"),
+    drop=[10],
+ ),
 }
 
 
@@ -333,8 +351,10 @@ def selftest():
             t = sl.shapes[i].text_frame.text if sl.shapes[i].has_text_frame else ""
             # 지울 것은 **오른쪽 위 이탤릭 주석**이다 — 짧고, 문장이 아니다.
             # 낱말 목록으로 잡으면 장마다 새 낱말이 나온다(‘Method note’). 길이로 본다.
-            chk(0 < len(t) < 60 and t.count(".") == 0,
-                f"{n}장 지울 shape[{i}] 이 짧은 주석이다 ('{t[:30]}')")
+            # ⚠ 17장은 그 자리가 **문헌 인용**("Sundar et al., Adv. Sci. 2025")이라
+            #   마침표가 있다. 인용은 허용하되 **문장은 여전히 막는다**(et al. 필요).
+            ok_t = 0 < len(t) < 60 and (t.count(".") == 0 or "et al" in t)
+            chk(ok_t, f"{n}장 지울 shape[{i}] 이 짧은 주석이다 ('{t[:30]}')")
         # 용어줄은 "낱말: 뜻 · 낱말: 뜻" 꼴이다. 낱말을 목록으로 두면 장마다 고쳐야 하므로
         # **모양**으로 본다 — 콜론과 가운뎃점이 있고, 문장이 아니라 정의 나열.
         _t2 = sl.shapes[2].text_frame.text

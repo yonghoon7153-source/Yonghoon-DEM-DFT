@@ -894,11 +894,25 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 
 ---
 
-### 17 — Calculations that were not performed
+### 17 — Calculations that were not performed  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 9: Two designed stages produced no evidence
-> • Conductivity from dynamics — days per candidate; Step 6 stands in as a proxy.
-> • The cathode interface — not attempted; the figure shows what such a screen looks like.
+> • [빨강]Conductivity from dynamics[/] was not run; Step 6 stands in as a structural proxy.
+> • [빨강]The cathode interface[/] was not attempted; the figure shows what such a screen looks like.
+
+`< Sundar et al., Adv. Sci. 2025, Fig. 2  ·  one coating scored at four different interfaces >`
+`해설` [빨강]we computed none of these four maps[/]; an oxide that looks safe against the electrolyte can still react with Li
+하단 용어 — Proxy: something cheap that correlates with what you want ·
+　　　　　　 Interface energy: how much energy is released when two materials touch
+
+⚠⚠ **이 그림은 우리 것이 아니다** — Sundar et al., *Adv. Sci.* 2025, Fig. 2
+   (`litdb/papers/sundar2025_oxide_coating_screening_lpscl.md`, DOI 10.1002/advs.202513191).
+   이름표가 **출처를 먼저** 말한다. 이 덱에서 유일한 문헌 그림이다.
+⚠ **색은 0.0 이 진초록(무반응), 아래로 갈수록 반응**이다. 그리고 네 판의 **컬러바 범위가
+   다르다** (LPSCl −0.6 · Li음극 −1.0 · LCO −0.10 · LMO −0.16). 같은 초록이라도
+   양극 쪽은 전해질 쪽보다 **5배 약한 반응**이다 — 판끼리 색으로 비교하면 안 된다.
+⚠ v6 원본 결함 — 용어줄이 헤더 위에 올라타 `how strongl / y` 로 끊겼고, 소불릿 둘 다
+   **em-dash** 가 있었으며, 인용이 오른쪽 위와 아래 두 곳에 중복돼 있었다.
 
 **[70초]**
 
@@ -908,13 +922,31 @@ DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어
 확산을 재려 했습니다. 후보 하나당 며칠 걸리는 계산인데 결국 못 돌렸습니다. 그래서 오늘
 전도도 얘기는 전부 구조 프록시입니다.
 
-또 하나는 계면입니다. 도핑한 전해질이 양극과 만나면 무슨 일이 나는지 — 손도 못 댔습니다.
+또 하나는 계면입니다. 도핑한 전해질이 양극과 만나면 무슨 일이 나는지, 손도 못 댔습니다.
 
-이 그림이 그게 왜 중요한지 보여줍니다. 같은 산화물 코팅을 네 계면에서 각각 계산한 건데,
-주기율표 네 장이 서로 다르게 칠해져 있습니다. 전해질 쪽에서 진초록이던 원소가 음극
-쪽에서는 허옇습니다. **같은 물질인데 어디서 보느냐에 따라 답이 바뀝니다.**
+이 그림이 그게 왜 중요한지 보여줍니다. **저희 그림이 아니라 Sundar 그룹이 올해 Advanced
+Science 에 낸 겁니다.** 같은 산화물 코팅을 네 계면에서 각각 계산한 건데, 주기율표 네 장이
+서로 다르게 칠해져 있어요.
 
-저희는 저 네 장 중 한 장도 그리지 않았습니다.
+⭐ 구체적으로 보시면 — **CaO 와 Y₂O₃ 는 Li 음극에 대해 반응이 0 입니다.** 완벽해 보이죠.
+그런데 **전해질 쪽에서는 반응합니다.** 반대로 **Al₂O₃ 는 전해질 쪽에서 −0.044 로 거의 최고**
+인데 **Li 쪽에서는 −0.220 으로 다섯 배**가 됩니다. **같은 물질인데 어디서 보느냐에 따라
+답이 바뀝니다.** 네 판 모두 무난한 건 MgO·ZrO₂·Al₂O₃ 셋뿐이에요.
+
+저희는 저 네 장 중 **한 장도** 그리지 않았습니다.
+
+💬 **말로만 (질문 오면)**
+· 색은 **0.0 이 진초록(무반응)**, 아래로 갈수록 반응입니다. 그리고 **네 판의 컬러바 범위가
+  다릅니다** (전해질 −0.6 / Li음극 −1.0 / LCO −0.10 / LMO −0.16). 같은 초록이라도 양극
+  쪽은 **5배 약한 반응**이에요 — 판끼리 색으로 비교하시면 안 됩니다.
+· 이 논문의 결론 후보는 **MgO·ZrO₂·ZnO** 이고 ALD 로 실제 증착까지 했습니다.
+  ZnO 는 전해질 −0.372, Li 음극 **−0.653 (최악)** 인데 전자전도도 검증용으로 넣은 겁니다.
+· 대상 전해질이 **Li₆PS₅Cl** 이라 우리 host 와 같습니다. 다만 이건 **격자 도핑이 아니라
+  입자 표면 코팅**이에요 — 다른 레버입니다.
+· **"그럼 왜 MD 를 못 돌렸나"** — GPU 시간입니다. 후보 하나당 3온도 × 50 ps 라
+  상위 몇 종만 해도 12시간이 넘습니다.
+
+⛔ **말하지 말 것** — "이 그림이 우리 결과다". 문헌 그림이고, 우리는 네 장 중 하나도 안 그렸다.
 
 ---
 
