@@ -250,6 +250,7 @@ def test_artifacts_readme_marks_unindexed_bundles_as_history():
 #   대조한다** — 문서에 손으로 쓴 수치가 정본과 어긋나면 여기서 깨진다.
 
 import re as _re
+from pathlib import Path as _Path
 
 _CANON = Path(__file__).resolve().parent.parent / "docs" / "22p_gap"
 _DOC = Path(__file__).resolve().parent.parent / "docs" / "09_22P_GAP.md"
@@ -387,14 +388,38 @@ def test_p22_doc_only_cites_canon_files_that_exist_and_have_content():
     assert not bad, f"문서가 부르는데 없거나 빈 정본: {bad}"
 
 
-#: OCP 모델 오차 민감도 표의 (오프셋 라벨) → 정본 stem  (dense 격자, PE 전압축)
+#: OCP 모델 오차 민감도 표 — **원점이 건강한 다리만**.
+#:
+#: ★ 13차 정정. dense 의 PE 2·5·10 mV 는 Case 1 좌표 원점(p_ini)이 오염돼
+#:   있었다 (a_ne ≈ 1.03, 건강한 다리는 1.06). 세 다리 모두 96~100% 파탄했고
+#:   그것을 "2 mV 상전이" 로 읽었는데, 같은 왜곡이 원점이 멀쩡한 seed 격자
+#:   6개에서는 전부 무해했다. 그 세 점은 왜곡 효과가 아니라 **최적화 인공물**
+#:   이므로 표에서 뺀다. 정본 파일은 남긴다 (docs/22p_gap/pini_all.txt 가
+#:   왜 뺐는지의 근거다) — 표가 가리키지 않을 뿐이다.
+#: ★ 변이 M75 로 발견 — 격자 열이 생긴 뒤 라벨("0 mV")이 두 번 나오는데 키가
+#:   mV 뿐이라 **seed_101 행 4개가 대조 밖**이었다. 10 mV 붕괴를 무해로 위조해도
+#:   통과했다. 가장 중요한 수치가 무방비였다. 키에 격자를 넣는다.
 _P22_BIAS_ROWS = {
-    "0": "dense_pocv_dvdq_dqdv_hc",
-    "1": "bias_pe1mv",
-    "1.5": "bias_pe1p5mv",
-    "2": "bias_pe2mv",
-    "5": "bias_pe5mv",
-    "10": "bias_pe10mv",
+    ("dense", "0"): "dense_pocv_dvdq_dqdv_hc",
+    ("dense", "1"): "bias_pe1mv",
+    ("dense", "1.5"): "bias_pe1p5mv",
+    ("seed_101", "0"): "seed101_pocv_dvdq_dqdv_hc",
+    ("seed_101", "2"): "bias_seed101_pe2mv",
+    ("seed_101", "5"): "bias_seed101_pe5mv",
+    ("seed_101", "10"): "bias_seed101_pe10mv",
+}
+
+#: 원점 건강 판정 — a_ne 가 이 범위 밖이면 좌표계가 오염된 것으로 본다.
+#:   건강한 11개 다리: 1.0582~1.0693 · 오염된 3개: 1.0289~1.0312
+_P22_PINI_ANE_OK = (1.05, 1.08)
+
+#: 표에 쓰는 다리는 **원점이 건강해야 한다**. (라벨 → 진단 JSON 의 다리 이름)
+_P22_PINI_LEGS = {
+    ("dense", "0"): "fit_22p_dense_hc",
+    ("dense", "1"): "fit_dense_pe1mv",
+    ("dense", "1.5"): "fit_dense_pe1p5mv",
+    ("seed_101", "5"): "fit_seed101_pe5mv",
+    ("seed_101", "10"): "fit_seed101_pe10mv",
 }
 
 #: 격자 의존성 표 — 같은 왜곡을 seed_101 격자에서 되풀이한 값
@@ -426,29 +451,31 @@ def test_p22_bias_canon_outputs_are_committed():
 
 
 def test_p22_bias_table_matches_the_canon_outputs():
-    """★ 민감도 표의 6행이 정본과 셈 단위까지 맞아야 한다."""
+    """★ 민감도 표의 7행이 정본과 셈 단위까지 맞아야 한다."""
     doc = _DOC.read_text(encoding="utf-8")
     assert "OCP 오차" in doc, "민감도 절이 문서에 없다"
 
     checked = 0
-    for mv, stem in _P22_BIAS_ROWS.items():
+    for (grid, mv), stem in _P22_BIAS_ROWS.items():
         c = _canon_facts(stem)
-        # | 0 mV | ... | k/n (x%) | ... | k/n (x%) | ...
+        # 표는 | 오프셋 | 격자 | 거짓 분리 | 놓침 | ... — 격자까지 맞춰야 한다
         row = _re.search(
-            r"^\|\s*(?:\*\*)?" + _re.escape(mv) + r"\s*mV(?:\*\*)?[^|]*\|([^|]*)\|([^|]*)\|",
+            r"^\|\s*(?:\*\*)?" + _re.escape(mv)
+            + r"\s*mV(?:\*\*)?[^|]*\|\s*" + _re.escape(grid)
+            + r"\s*\|([^|]*)\|([^|]*)\|",
             doc, _re.M)
-        assert row, f"민감도 표에서 {mv} mV 행을 못 찾음"
+        assert row, f"민감도 표에서 ({grid}, {mv} mV) 행을 못 찾음"
         fs, col = row.group(1), row.group(2)
 
         want_fs = f"{c['false_split']}/{c['gap0_n']}"
         assert want_fs in fs, (
-            f"{mv} mV 거짓 분리: 문서 '{fs.strip()}' vs 정본 {want_fs} "
+            f"({grid}, {mv} mV) 거짓 분리: 문서 '{fs.strip()}' vs 정본 {want_fs} "
             f"({stem}.txt: 붕괴 {c['gap0_collapse']}/{c['gap0_n']})")
         want_col = f"{c['ge4_k']}/{c['ge4_n']}"
         assert want_col in col, (
-            f"{mv} mV 놓침: 문서 '{col.strip()}' vs 정본 {want_col}")
+            f"({grid}, {mv} mV) 놓침: 문서 '{col.strip()}' vs 정본 {want_col}")
         checked += 1
-    assert checked == 6, checked
+    assert checked == 7, checked
 
 
 def test_p22_seed_grid_table_matches_the_canon_outputs():
@@ -461,7 +488,8 @@ def test_p22_seed_grid_table_matches_the_canon_outputs():
     assert "seed_101" in doc, "격자 의존성 절이 문서에 없다"
     # ★ §7.10 앞쪽의 dense 전용 표에도 "0 mV" 행이 있다 — 구간을 좁히지 않으면
     #   그쪽을 잡아 엉뚱한 열을 대조한다 (실측으로 그랬다).
-    doc = doc.split("문턱은 격자에 따라 변한다")[1].split("#### 문턱 값에")[0]
+    doc = (doc.split("같은 왜곡이 원점 건강한 격자에서는 무해했다")[1]
+              .split("#### NE stretch")[0])
 
     checked = 0
     for mv, stem in _P22_SEED_ROWS.items():
@@ -496,3 +524,38 @@ def test_p22_axis_comparison_matches_the_canon_output():
         want_col = f"{c['ge4_k']}/{c['ge4_n']}"
         assert want_col in row.group(2), (
             f"{label} 놓침: 문서 '{row.group(2).strip()}' vs 정본 {want_col}")
+
+
+def test_p22_bias_table_only_cites_legs_with_a_healthy_origin():
+    """★ 표에 쓰는 다리는 Case 1 좌표 원점이 건강해야 한다.
+
+    13차에서 dense 의 PE 2·5·10 mV 를 "2 mV 상전이" 의 근거로 표에 넣었는데,
+    셋 다 원점이 오염돼 있었다 (a_ne ≈ 1.03). 같은 왜곡이 원점 멀쩡한 격자
+    6개에서는 무해했으니, 그 수치는 왜곡 효과가 아니라 최적화 인공물이다.
+    **원점을 안 보고 표를 만들면 같은 사고가 반복된다** — 기계로 막는다.
+    """
+    import json
+
+    diag = _CANON / "pini_all.json"
+    assert diag.is_file(), "원점 진단 정본(pini_all.json)이 없다"
+    by_name = {_Path(r["dir"]).name: r
+               for r in json.loads(diag.read_text(encoding="utf-8"))}
+
+    lo, hi = _P22_PINI_ANE_OK
+    for (grid, label), leg in _P22_PINI_LEGS.items():
+        r = by_name.get(leg)
+        assert r, f"({grid}, {label}): 진단 정본에 {leg} 가 없다"
+        a_ne = r["p_ini"][2]
+        assert lo <= a_ne <= hi, (
+            f"({grid}, {label}) 행이 원점 오염 다리({leg})를 가리킨다: a_ne={a_ne} "
+            f"(건강 범위 {lo}~{hi})")
+
+
+def test_p22_doc_records_the_discarded_origin_polluted_legs():
+    """★ 뺀 이유가 문서에 남아야 한다 — 조용히 지우면 은폐다."""
+    doc = _DOC.read_text(encoding="utf-8")
+    assert "원점 오염" in doc, "원점 오염으로 뺀 다리의 사유가 문서에 없다"
+    assert "pini_all.txt" in doc, "판정 근거 정본을 가리키지 않는다"
+    assert "bias_pe{2,5,10}mv.txt" in doc, "뺀 다리의 정본 파일을 밝히지 않았다"
+    for leg in ("2 mV", "5 mV", "10 mV"):
+        assert leg in doc, f"뺀 다리 {leg} 가 문서에 언급조차 없다"
