@@ -59,6 +59,9 @@ TARGETS = {                       # tag → (구조 파일, 표시명)
     "li3nd":   ("db/structures/sei_li3nd_mp-976264.vasp", "Li3Nd"),
 }
 DFT_WORK = "/data/work/runs/sei_dft"      # run_sei_dft.sh 의 vc-relax 산출물 (이완본 출처)
+#: ⚠ Nd 계는 **frozen-4f PP** 로 따로 돌아서 이완본이 다른 뿌리에 있다
+#: (2026-08-19 실측: li3nd 를 sei_dft 에서 찾다 "이완본 없음" — 실제로는 여기 있다).
+DFT_WORK_ALT = "/data/work/runs/sei_dft_frozen4f"
 
 
 def zval(upf):
@@ -766,9 +769,18 @@ def uma_scout(args):
            "runs": []}
     calc = None
     for tag in tags:
-        at0, why = load_relaxed(tag, None, args.relaxed_from)
+        if tag not in TARGETS:
+            print(f"⛔ {tag}: TARGETS 에 없는 태그 — 오타 확인"); continue
+        ref_path = TARGETS[tag][0]      # 조성 검증용 참조(verified-carry). None 이면 안 된다
+        roots = [args.relaxed_from] + ([DFT_WORK_ALT] if args.relaxed_from == DFT_WORK else [])
+        at0 = None; whys = []
+        for rt in roots:                # Nd 계는 frozen-4f 뿌리에 있다 (DFT_WORK_ALT 주석)
+            at0, why = load_relaxed(tag, ref_path, rt)
+            if at0 is not None:
+                print(f"   이완본: {why}"); break
+            whys.append(f"{rt}: {why}")
         if at0 is None:
-            print(f"⛔ {tag}: 이완본 없음 — {why}"); continue
+            print(f"⛔ {tag}: 이완본 없음 — " + " · ".join(whys)); continue
         nat0 = len(at0); om = orbit_map(at0)
         # ⛔ spglib 이 없으면 orbit 이 안 나오고 shell 열거가 통째로 빈다. 그러면 이 도구가
         #   **전역 최단 하나**로 떨어지는데, 그게 정확히 li3nd 에서 6.8일을 버린 그 실수다
