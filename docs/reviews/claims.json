@@ -1627,6 +1627,75 @@
    "provenance": "docs/reviews/coating_delta_gate_20260819.md (측정 원장) · 접촉 덤프 contact_{1910000,1940000,2440000,2870000} + atom_{동일} (세션 업로드본) · scripts/parse_liggghts.py:37 (열 매핑 정본)",
    "shared_input": "코팅 트랙 코드리뷰(2026-08-19) A1.  A3·B1 은 이 측정과 독립적으로 유효하다.",
    "reviews_work_dated": "2026-08-19"
+  },
+  {
+   "id": "CL-53",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "convention",
+   "claim": "**AFM 복합막 E 1.3–3.1 GPa 는 우리 E_eff 의 \"검증\" 이 아니라 *방어선* 이다** — 사용 한계를 못 박는다",
+   "measured": {
+    "metric": "AFM 힘–거리 Young's modulus, 건식 황화물 복합 양극막 3점 (Fig S3)",
+    "value": "**3.056 / 2.248 / 1.263 GPa** (평균 ≈2.19, 산포 **2.4배**).  조성 NCM94:LPSCl:VGCF:PTFE = 80:18:1:1.\n  대조군: 우리 DEM E_eff **1.35** · MPM **1.53** GPa · 결정 LPSCl 우리 DFT E_VRH **22.06** (Torii 27.4 · Deng 22.1) · thiophosphate 유리 실측 ≈20",
+    "unit": "GPa"
+   },
+   "asserted": "**쓸 수 있는 것**: *\"E 사다리의 맨 아래 칸이 실측으로 채워졌고, 우리 연화된 E_eff 1.35/1.53 이 그 밴드 안에 있다\"* — 자릿수·밴드 정합까지.  이것이 **\"18배 연화가 자의적\"** 이라는 비판에 대한 방어선이다.\n⛔ **쓸 수 없는 것**: \"우리 1.35 가 실측 2.19 와 일치/검증됐다\".",
+   "h0": null,
+   "h1": null,
+   "h0_predicts": null,
+   "h1_predicts": null,
+   "resolution": null,
+   "bridge": "두 값은 **범주가 다르다** — AFM 은 *복합 다공막의 국소 압입 응답*이고 우리 E_eff 는 *입자 접촉강성 입력* (frame[2] 의 lumping 파라미터)이다.  ⇒ **CL-47(σ_VGCF 분말↔단섬유 범주오류)과 같은 형태**다.  게다가 논문이 접촉모델·팁반경·ν 를 공개하지 않아 절대값이 방법 의존이고, 3점 산포가 2.4배다.",
+   "verdict": "★ 라벨 규약: 원고·SI·발표에서 **\"자릿수·밴드 정합\"** 이라는 표현까지만 허용.  \"일치\"·\"검증\"·\"교차검증\" 금지.  ⚠ 이 값을 E→porosity floor 사다리(Varkey 식)에 얹지 말 것 — 그 사다리는 *재료* E 축이고 이것은 *막* 응답이다.",
+   "provenance": "litdb `wang2026_dryprocess_thick_cathode_failure_ncm94.md` (건식 후막 NCM94, 실험 전용) · 판단 초안 docs/session_20260819_litdb_pending.md §세 판단",
+   "shared_input": "CL-47 (범주오류 계열) · CL-50 (σ_AM 라벨)",
+   "reviews_work_dated": "2026-08-19"
+  },
+  {
+   "id": "CL-54",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "convention",
+   "claim": "**in-situ 스택압 −1.95 MPa 는 무차원 3개로만 등록한다** — 스택 강성을 모르므로 Δ부피 환산 금지",
+   "measured": {
+    "metric": "in-situ 스택압 (NCM94|LPSCl|LTO, 운전 스택압 110 MPa, LTO = zero-strain 대극)",
+    "value": "충전 중 **−1.95 MPa** = **ΔP/P₀ 1.81 %** · 방전 후 미복귀 · 바닥 래칫 **−0.30 MPa/cyc** · 2사이클 누적 비가역 **1.20 %**",
+    "unit": "MPa · % (무차원 3개가 인용 대상)"
+   },
+   "asserted": "**등록하는 것 = 무차원·강성무관 3개뿐**: ΔP/P₀ 1.81 % · 비가역 1.20 % · 래칫 −0.30 MPa/cyc.\n★ 값어치는 **방향 앵커**다 — SC 단독 양극에서 **충전 = 수축**.  이것이 우리 A10 `--poly-mode` 분기(SC = 계면 debond / poly = 내부 void)를 **셀 레벨에서 지지**한다.",
+   "h0": null,
+   "h1": null,
+   "h0_predicts": null,
+   "h1_predicts": null,
+   "resolution": null,
+   "bridge": "⚠ **Δ부피 환산 금지**: ΔP → Δ부피 는 **스택 강성 k** 를 알아야 하는데 논문이 셀 스택 강성을 보고하지 않는다.  강성을 가정하면 그 가정이 결론이 된다 (§F1).  대극이 LTO(zero-strain)라 **양극 몫만** 본다는 점은 오히려 유리하다.",
+   "verdict": "★ 크기는 안 쓴다.  A10 에서 쓰는 것은 **부호와 상대 크기**뿐이다.  ⚠ 우리 A10 은 Parks poly **+19 % 팽창**(격자 −5.1 %와 부호 반대)을 이미 안고 있으므로, 이 실측(SC 수축)과 **함께 쓰면 poly/SC 가 반대 방향**이라는 서술이 되고 그것이 정확히 `--poly-mode expand-void` 의 근거다.",
+   "provenance": "litdb `wang2026_dryprocess_thick_cathode_failure_ncm94.md` (건식 후막 NCM94, 실험 전용) · 판단 초안 docs/session_20260819_litdb_pending.md §세 판단",
+   "shared_input": "A10 트랙 · docs/real_degrading_electrode_design.md §6 N6-b",
+   "reviews_work_dated": "2026-08-19"
+  },
+  {
+   "id": "CL-55",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "hypothesis",
+   "claim": "**열화가 사이클 구동이 아니라 시간(캘린더) 구동일 수 있다** — 저율이 더 빨리 죽는 실측 1건",
+   "measured": {
+    "metric": "용량 유지율, 같은 사이클 수(50 cyc)에서 율속만 다름 (3.5 V 컷오프)",
+    "value": "**0.1C → 87.1 %** vs **0.5C → 98.3 %** (50 사이클).  즉 **느린 쪽이 11.2 %p 더 나쁘다**",
+    "unit": "% (50 cyc 유지율)"
+   },
+   "asserted": "같은 사이클 수에서 저율이 더 나쁘면, 열화량이 **사이클 수가 아니라 경과 시간**에 비례한다는 뜻이다 (0.1C 는 0.5C 의 5배 시간이 걸린다).  ⇒ 우리 STEP5 rate law 의 **형태**를 바꾼다 — 현행은 사이클 구동(√N 형)인데, 시간 구동이면 축이 t 여야 한다.",
+   "h0": "**사이클 구동** — 열화는 사이클 수에 붙는다.  0.1C 가 나쁜 것은 저율에서 컷오프까지 더 깊이 가서 **상단 SOC 체류가 길어진 것**(교락 b) 또는 셀-간 편차(교락 c)로 설명된다.",
+   "h1": "**시간(캘린더) 구동** — 열화는 경과 시간에 붙는다.  같은 사이클 수에서 5배 오래 걸린 0.1C 가 나쁜 것이 그 직접 귀결이다.",
+   "h0_predicts": "판별 실험(같은 컷오프·같은 DOD 에서 율속 2점 + **휴지(calendar-only) 대조 1점**, 경과 시간을 저율 팔과 맞춤)에서 **휴지 팔의 유지율 손실 ≤ 2 %p** — 즉 사이클을 안 돌면 거의 안 죽는다.",
+   "h1_predicts": "같은 판별 실험에서 **휴지 팔의 손실이 저율 사이클 팔 손실(12.9 %p)의 절반 이상 (≥ 6.5 %p)** — 즉 사이클과 무관하게 시간만으로 죽는다.",
+   "resolution": 2.0,
+   "bridge": "⚠⚠ **가설 등록일 뿐이다** — 근거가 **1편·1조건**이고, 교락 후보를 못 갈랐다: (a) 진짜 캘린더 열화(계면 화학반응이 시간에 비례) (b) 저율에서 **컷오프까지 더 깊이** 가서 상단 SOC 체류가 길어진 것 (c) 셀-간 편차 — 같은 논문의 사이클후 두께가 컷오프 전압 순서를 안 따르고 산포가 6.6 %p 였다 (CL-53 출처 카드 §③).  ⇒ **(b)와 (c)를 배제하지 못한다.**",
+   "verdict": "★ **원고에 쓰지 말 것.**  위 h0/h1 은 **아직 안 돌린 판별 실험**에 대한 사전등록이고, 현재 근거는 **1편·1조건 관측 하나**뿐이다.  STEP5 에 시간축을 넣는 것은 그 실험 뒤다.\n⚠ 판정선 사이(2 ~ 6.5 %p)가 나오면 **둘 다 기각** — 부분 기여로 읽고 두 축을 함께 모델링한다.\n★ 값어치는 **우리에게 없는 축을 지목한 것**이다 — STEP5 는 지금 시간 의존을 표현할 자유도가 없다 (rate law 가 사이클 수 N 에만 붙어 있다).\n⚠ 교락 (c) 셀-간 편차는 이 실험으로도 안 갈린다 — **팔당 n ≥ 3** 이 필요하다 (같은 논문의 사이클후 두께 산포가 6.6 %p 였다).",
+   "provenance": "litdb `wang2026_dryprocess_thick_cathode_failure_ncm94.md` (건식 후막 NCM94, 실험 전용) · 판단 초안 docs/session_20260819_litdb_pending.md §세 판단",
+   "shared_input": "STEP5 rate law · A10 R_int(N)",
+   "reviews_work_dated": "2026-08-19"
   }
  ],
  "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."

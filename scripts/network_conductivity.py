@@ -51,6 +51,8 @@ SIGMA_BULK_DEFAULT = se_material.SIGMA_GRAIN_S_CM_25C  # S/cm (grain interior, i
 
 # NCM electronic conductivity (typical, SOC-dependent)
 SIGMA_AM_ELECTRONIC = 0.05  # S/cm (50 mS/cm, NCM811 grain interior, discharged)
+#: build_network 가 **실제로** 받은 mode (코드리뷰 A2 재현·회귀용).  None = 아직 안 불림.
+LAST_BUILD_MODE = None
 
 # ───────────────────────────────────────────────────────────────────────
 # Grain-boundary (crystallinity) correction for NCM σ_AM — "Trevisanello-spirit"
@@ -169,6 +171,11 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
                                (literature-anchored, 0 free params — see plastic_coverage.py)
     Returns nodes, edges, bottom/top boundary sets.
     """
+    #  ★ 2026-08-19 (코팅 트랙 코드리뷰 A2) — 프로덕션이 실제로 어떤 mode 로 들어왔는지
+    #    기록한다.  `mode == 'electronic'` 리터럴(:343)이 **한 번도 발화한 적 없다**는
+    #    사실이 이 값 없이는 정적으로만 보이고 런타임으로 증명이 안 됐다.
+    global LAST_BUILD_MODE
+    LAST_BUILD_MODE = mode
     if mode == 'thermal':
         target_ids = list(atoms_raw.keys())
     else:
@@ -920,7 +927,7 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
                       plate_z, box_x=0.05, box_y=0.05,
                       sigma_bulk=SIGMA_BULK_DEFAULT, results_dir=None,
                       type_map=None, contact_mode='hertzian',
-                      dump_raw_dir=None, dump_tag=None, is_thermal=False):
+                      dump_raw_dir=None, dump_tag=None, is_thermal=False, mode=None):
     """
     Run full decomposition analysis:
     1. FULL (R_bulk + R_constriction): physical ground truth
@@ -942,9 +949,18 @@ def run_decomposition(atoms_raw, contacts_raw, target_types, scale,
     #   즉 문서화된 AM:SE 열전도비 (K_AM/K_SE ≈ 5.7 · AM-SE 조화평균) 가 열 네트워크에
     #   들어간 적이 없다.  아래 `is_thermal` 사후 패치는 solve_network 의 단상 guard 만
     #   풀어줬을 뿐 **간선 가중치는 이미 1 로 구워진 뒤**였다.
+    #  ★ 2026-08-19 (코팅 트랙 코드리뷰 A2) — **명시 mode**.  옛 판은 `is_thermal` 불리언
+    #    하나뿐이라 전자망 경로가 `mode='ionic'` 으로 들어갔고, 그래서 `build_network:343` 의
+    #    `mode == 'electronic'` 리터럴이 **한 번도 발화하지 않았다** (런타임 재현 확인).
+    #    지금은 그 옆의 type_map 휴리스틱이 σ_AM(r) 분기를 구해내고 있어 **수치는 정상**이지만,
+    #    앞으로 `if mode == 'electronic':` 로 쓰는 게이트는 **조용히 죽는다** — CL-12(thermal
+    #    k_weight 가 프로덕션에서 한 번도 안 돈 건)와 같은 형태다.  ⇒ 라벨을 사실로 만든다.
+    #    ⚠ 이 변경은 **동작 중립**이다: mode='electronic' 이면 :343 이 True 가 되는데 휴리스틱으로
+    #      이미 True 였고, :172/:226/:311/:426 의 'thermal' 비교는 그대로 False 다 (selftest 로 고정).
+    _mode = mode if mode is not None else ('thermal' if is_thermal else 'ionic')
     net = build_network(atoms_raw, contacts_raw, target_types, scale,
                         plate_z, box_x, box_y,
-                        mode=('thermal' if is_thermal else 'ionic'),
+                        mode=_mode,
                         results_dir=results_dir,
                         type_map=type_map, contact_mode=contact_mode)
 
@@ -1125,7 +1141,8 @@ def _run_all_networks(atoms_raw, contacts_raw, target_types, am_types, type_map,
                                            sigma_bulk=SIGMA_AM_ELECTRONIC,
                                            type_map=type_map,
                                            contact_mode=contact_mode,
-                                           dump_raw_dir=dump_raw_dir, dump_tag=tag_el)
+                                           dump_raw_dir=dump_raw_dir, dump_tag=tag_el,
+                                           mode='electronic')   # ★ A2: 라벨을 사실로
             el_status = 'computed' if results_el else 'no_result'
             if not results_el:
                 el_reason = 'run_decomposition returned no result (AM 망 미퍼콜 — 물리적으로 옳은 답)'
@@ -1329,11 +1346,36 @@ def _selftest_status():
         chk('#1: SE-SE 는 두 mode 가 같다 (기준상이라 k_weight=1)',
             abs(_ei[_ss]['R_bulk'] - _et[_ss]['R_bulk']) < 1e-12 * max(1.0, _ei[_ss]['R_bulk']))
         chk('#1: is_thermal 플래그가 mode 에서 직접 선다', _edges_of and True)
-    # run_decomposition 이 mode 를 **실제로 전달하는지** 를 소스가 아니라 서명으로 확인
-    import inspect as _insp
-    _src = _insp.getsource(run_decomposition)
-    chk('#1: run_decomposition 호출에 mode= 가 있다 (없으면 분기가 죽는다)',
-        'mode=(' in _src or "mode='thermal'" in _src)
+    # ── A2 (2026-08-19) — mode 라벨이 **사실인가**.  옛 검사는 `'mode=(' in getsource(...)` 라는
+    #    **소스 문자열 매칭**이었다.  그것은 문자열이 있다는 것만 인증하고 *어떤 값이 흘렀는지*는
+    #    모른다 — 실제로 전자망은 `mode='ionic'` 으로 들어가고 있었는데 그 검사는 PASS 였다
+    #    (규칙 B 가 말하는 "인증하려는 성질과 무관한 판정 함수" 의 실례).  ⇒ 런타임으로 바꾼다.
+    import contextlib as _ctx
+    import io as _io
+    _am = {1: {'type': 1, 'x': 0., 'y': 0., 'z': 0., 'radius': 1.},
+           2: {'type': 1, 'x': 0., 'y': 0., 'z': 2., 'radius': 1.},
+           3: {'type': 1, 'x': 0., 'y': 0., 'z': 4., 'radius': 1.}}
+    _ac = [{'id1': 1, 'id2': 2, 'contact_area': 0.1, 'delta': 0.01},
+           {'id1': 2, 'id2': 3, 'contact_area': 0.1, 'delta': 0.01}]
+
+    def _run(_m):
+        global LAST_BUILD_MODE
+        LAST_BUILD_MODE = None
+        with _ctx.redirect_stdout(_io.StringIO()):
+            r = run_decomposition(_am, _ac, [1], 1.0, 4.0, 10.0, 10.0,
+                                  sigma_bulk=SIGMA_AM_ELECTRONIC,
+                                  type_map={1: 'AM_P'}, mode=_m)
+        return LAST_BUILD_MODE, (None if not r else r.get('sigma_full_mScm'))
+    _m_el, _s_el = _run('electronic')
+    _m_io, _s_io = _run(None)                       # 옛 기본 경로 (is_thermal=False → 'ionic')
+    chk(f"#A2: 전자망 호출이 mode='electronic' 로 도달한다 (옛 판은 'ionic' 이었다): {_m_el!r}",
+        _m_el == 'electronic')
+    chk(f'#A2: 기본 경로는 여전히 ionic (하위호환): {_m_io!r}', _m_io == 'ionic')
+    #   ★ **동작 중립** — 이 수정이 수치를 바꾸면 안 된다.  :343 은 type_map 휴리스틱으로
+    #     이미 True 였으므로 두 mode 의 σ 가 **비트 단위로** 같아야 한다.
+    #     (실덤프 대조도 확인: P100 4.73208 · P300 9.630359, 두 mode 동일)
+    chk(f'#A2: mode 를 바꿔도 σ_e 가 **비트 단위 동일** (수치 중립): {_s_el!r} vs {_s_io!r}',
+        _s_el == _s_io)
 
     print('NETWORK STATUS SELFTEST', 'PASS' if not fail else 'FAIL', f'({ok}/{ok + fail})')
     return 0 if not fail else 1
