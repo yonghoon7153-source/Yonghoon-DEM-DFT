@@ -100,6 +100,16 @@
 ### 4. SDCP complex_doped_v2 DFT relax — k 2×2×1 재실행 수렴 여부
 - k 1×1×1 정체(150 iter, 0.0837 Ry) → 2×2×1로 재시작. accuracy가 0.08을 뚫고
   내려가는지 확인 필요. VRAM 46.9/48 GB로 임계 (OOM 시 diago_david_ndim=2).
+- ⛔ **"메모리 큰 다른 기계로 옮기면 되지 않나" 는 아니다 (2026-08-19 재확인).**
+  `sbatch_phaseB_v3_kisti.sh` 헤더가 이미 진단해 뒀다 — 226원자 스핀분극 DFT+U 는
+  ecutrho 를 내려도 안 된다(파동함수·Davidson 배열은 ecutwfc·nbnd 로 정해짐, 그것만
+  30 GB 대). 해법은 **더 큰 메모리 한 장이 아니라 G-벡터를 여러 랭크로 분산**
+  (`mpirun -np 4 ... -nk 1` → 랭크당 1/4). 옛 `run_stream <gpu>` 판이 처리량만 늘리고
+  메모리는 그대로였던 것과 같은 함정이다.
+  · kgy 실측(2026-08-19): available **32 GB**(total 62, MD 가 25 사용) · 16 코어 ·
+    `which pw.x` 빈 출력 → **경로 아님**. RTX3090 은 VRAM 24 GB 로 gabia 보다 작다.
+  · ⇒ 경로는 **KISTI** (`sbatch_phaseB_v3_kisti.sh`, amd_a100nv_8, GPU 4장).
+  · 2026-08-19 1저자 판단: **이 건은 외주**. 우리 쪽에서 더 안 판다.
 - reference_dft(절대 binding 기준)는 0 ionic step이라 from-scratch 별도 결정 필요.
 
 ### 5. h-BN 시트 굴곡 0.27–0.37 Å (vgcf_hbn_neb.json flag_hbn_corrugation)
