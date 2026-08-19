@@ -1,7 +1,7 @@
 ---
 title: cascade 273 캠페인 해부 — 왜 풀이 47인가 (코드 계보 실측)
 date: 2026-08-13
-updated: 2026-08-13
+updated: 2026-08-19
 tags: [cascade, pipeline, provenance, seminar, esw]
 status: 확정 — 원인 특정됨 (ESW 배치 커버리지). 회수 경로 있음
 confidence: high
@@ -1032,3 +1032,67 @@ thermo_types=["GGA_GGA+U"])`, **제외 필터 없음**. 저장한 것은 값과 
 - `unified_dataset_273.csv` 는 gabia 에만 있다. repo 에 없으므로 이 표의 수치는
   2026-08-13 회수 시점 기준이다.
 - 축 충족 = **열이 비어 있지 않음**이다. 값의 품질(수렴·이상치)은 따로 봐야 한다.
+
+## ★★★ Stage ↔ 발표 Step 대조표 — 코드에서 직접 뽑았다 (2026-08-19)
+
+1저자 지적("step 을 잘 모르는 것 같다, 코드를 보라")에 따라 기억이 아니라
+`tier_cascade.sh` 본문에서 실행 순서를 그대로 뽑았다. **파일 머리의 `Stage map:`
+주석은 낡았다** — 04/05 가 뒤바뀌어 있고 anneal 조건도 다르다. 주석 말고 본문을 볼 것.
+
+| 주석(11–21행) | 실제 코드 |
+|---|---|
+| `04 BVSE proxy` · `05 light anneal (300K, 20 ps)` | **04 = anneal(500 K, 50 ps)** · **05 = BVSE** |
+
+### 실제 실행 순서 (본문 133–351행)
+
+| Stage | 스크립트 | 핵심 인자 | 발표 Step |
+|---|---|---|---|
+| 00 | preflight | | — |
+| 01 | `run_compound_batch.sh` → `substitute_compound.py` | `SUPERCELL=1,1,1` · `N_SEEDS=5` · `EXOTIC=0` | **Step 1–2** |
+| 02 | `run_uma_screening.py` | `--steps 1500`, `cell_relax=True` | **Step 3** |
+| 03 | `select_winners.py` | `--group_by dopant site anion_site_label` `--max_dv 0.25` `--require_converged` | **Step 3 게이트 + Step 4 선별이 한 줄** |
+| 04 | `run_anneal.py` | **500 K · 50 ps · FIRE**(기본 `real`; `ANNEAL_MODE=light` 면 300 K/20 ps) | **Step 5** |
+| 05 | `bvse_proxy.py` | post_relax.xyz · `--grid_resolution 25` | **Step 6** |
+| 06 | `rank_anneal.py` | post-anneal 에너지 재랭크 `--top 30` | — |
+| 07 | `run_mlip_postproc.py` | `--no_anneal --no_elastic --n_eos_seeds 5` → B₀·V₀·BM3 | **Step 7** |
+| 08 | `run_mlip_postproc.py` | `--no_anneal --no_eos` → C_ij·VRH | **Step 7** |
+| 09a–f | combine / collect / train_predictor / dft_inputs / ehull / **esw** | | **Step 8**(=09f) |
+| 10 | σ_Li MD (top-5 × 3T × 50 ps) | | **Step 9** (미실행) |
+| 11 | NCM adhesion v6 | | **Step 9** (미실행) |
+| 12·12b | 최종 collect + ML 재학습 | | — |
+
+### ⛔ 이 대조로 드러난 발표 오류 둘
+
+**① Step 3 의 부피 게이트는 스크린(02)이 아니라 선별(03)에 있다.** 그리고 03 은
+게이트와 "그룹당 Top-1" 을 **동시에** 한다. 실측 (`cascade_v23_all.csv`):
+
+```
+3,615행 (02 전수)
+  −  100행   |ΔV| > 25 %          ← 2.8 %
+  −     0행   수렴 실패            ← 전부 수렴
+  − 2,834행   그룹당 Top-1 탈락    ← **78 %. 여기가 진짜 깔때기다**
+  =   681행   → 04 anneal · 05 BVSE · 08 elastic (전부) / 07 EOS 622행
+```
+
+⇒ **발표는 25 % 게이트를 Step 3 의 주역처럼 말하지만 실제로는 2.8 % 손질이다.**
+5배 축소는 Top-1 선별이 한다. (게이트가 무의미하다는 뜻은 아니다 — 에너지 컷과
+교집합 0 이라는 11장 논지는 그대로다. 규모를 잘못 말하고 있을 뿐이다.)
+
+**② "One structure per compound is kept for the full calculations" 는 순서가 거꾸로다.**
+`--group_by dopant site anion_site_label` 이라 winners 는 **(도펀트 × 양이온자리 ×
+음이온자리)당 하나**다. (도펀트, 농도라벨) 조합당 실측 분포:
+
+```
+1개 45 · 2개 186 · 3개 24 · 4개 39 · 6개 6   (조합 300개, 합 681)
+```
+
+**본 계산(anneal·BVSE·EOS·elastic)은 681개 전부에 돌았고**, compound 당 하나로 좁히는
+것은 **그 뒤 09a 취합**이다. 즉 "하나만 남기고 계산" 이 아니라 "다 계산하고 하나를 고름" —
+이게 `kb/results/champion_pool_size_bias_2026_08_18.md` 의 best-of-N 편향이 성립하는
+바로 그 구조다. 발표 12장이 "세 점은 자리·시드가 다른 세 구조" 라고 이미 반쯤 알고 있다.
+
+### 부수 사실
+
+- `eos_B0_GPa` 는 681 중 **622행**만 찼다 — EOS 적합 59건 실패. 발표에서 EOS 수를
+  681 로 말하면 안 된다.
+- `sigma_300K_S_cm_NE` · `wad_J_m2_mean` 은 **0행** — Stage 10·11 미실행. 17장 문구와 일치.
