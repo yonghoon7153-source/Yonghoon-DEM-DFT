@@ -1065,8 +1065,13 @@ def fig_li_landscape(ngrid=64):
     """
     import numpy as np
     _rc()
-    plt.rcParams.update({"font.size": 15, "axes.labelsize": 16})
-    fig = plt.figure(figsize=(13.4, 5.6))
+    # ⚠ 3D 축은 **자기 안쪽에** 여백을 크게 둔다 — bbox_inches="tight" 로는 안 잘린다.
+    #   그래서 앞 판은 슬라이드 폭 8.9 in 을 다 못 쓰고 가운데 6.7 in 만 찼다 (2026-08-19).
+    #   ① 가로를 늘리고 ② subplots_adjust 로 바깥 여백을 죽이고 ③ box_aspect 로 z 를
+    #   납작하게 해서 세로 낭비를 줄인다.
+    plt.rcParams.update({"font.size": 16, "axes.labelsize": 17})
+    fig = plt.figure(figsize=(15.2, 4.7))
+    fig.subplots_adjust(left=0.01, right=0.99, bottom=0.00, top=0.94, wspace=0.02)
     for i, (rel, name, zc) in enumerate(LANDSCAPE):
         arr, la, lb, lc = _read_cube(os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), rel))
@@ -1083,6 +1088,7 @@ def fig_li_landscape(ngrid=64):
         X, Y = np.meshgrid(np.linspace(0, lb, ngrid), np.linspace(0, la, ngrid))
 
         ax = fig.add_subplot(1, 2, i + 1, projection="3d")
+        ax.set_box_aspect((1, 1, 0.58))
         # ⚠ vmax 를 cap 으로 두면 고원이 **흰색**이 돼 사라진다 (afmhot 이 위에서 희다).
         #   윗머리를 잘라 고원이 주황으로 남게 한다.
         ax.plot_surface(X, Y, acc, cmap="afmhot", rstride=1, cstride=1,
@@ -1092,9 +1098,9 @@ def fig_li_landscape(ngrid=64):
         ax.set_xlabel("b  (Å)", labelpad=10)
         ax.set_ylabel("a  (Å)", labelpad=10)
         ax.set_zlabel("Li accessibility", labelpad=8)
-        ax.tick_params(labelsize=12, pad=1)
+        ax.tick_params(labelsize=13, pad=1)
         ax.set_title(f"{name}\noriginal cell, one {PROJ_DEPTH_A:.0f} Å layer along c",
-                     fontsize=15, pad=2, color=hs.INK)
+                     fontsize=17, pad=0, color=hs.INK)
         ax.view_init(elev=34, azim=-58)
     _rc()
     return _save(fig, "step6_li_landscape.png")
