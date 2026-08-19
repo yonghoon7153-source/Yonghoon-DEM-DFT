@@ -158,7 +158,13 @@ def run_batch(a):
     from pymatgen.core import Composition, Element
     from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
 
-    forms = champion_formulas(a.batch_from)
+    forms = champion_formulas(a.batch_from) if a.batch_from is not True else {}
+    if a.only:
+        # 기준선용 — 캐스케이드 밖의 조성을 같은 기계로 돌린다 (resume·차단 그대로).
+        forms = {}
+        for spec in a.only:
+            lab, _, f = spec.partition(":")
+            forms[lab] = f or lab
     out = Path(a.out if a.out.endswith(".jsonl") else a.out + "l")
     done = set()
     if a.resume and out.exists():
@@ -278,6 +284,9 @@ def main():
                     help="캐스케이드 CSV 에서 90종 챔피언을 읽어 **종마다 따로** 돈다")
     ap.add_argument("--resume", action="store_true", help="JSONL 에 이미 있는 쌍은 건너뛴다")
     ap.add_argument("--limit", type=int, help="앞 N 종만 (시범용)")
+    ap.add_argument("--only", nargs="+",
+                    help='캐스케이드 대신 지정 조성만 — "label:formula" '
+                         '(기준선용: "LPSCl:Li6PS5Cl")')
     ap.add_argument("--closed", action="store_true",
                     help="닫힌계 0 V (Li 저장고 안 엶) — **Li 음극 쪽은 이걸 써야 한다**")
     ap.add_argument("--cathodes", nargs="+", default=["LiCoO2", "LiNiO2"],
@@ -288,7 +297,9 @@ def main():
     if "--selftest" in __import__("sys").argv:
         raise SystemExit(_selftest())
     a = ap.parse_args()
-    if a.batch_from:
+    if a.batch_from or a.only:
+        if a.only and not a.batch_from:
+            a.batch_from = True
         return run_batch(a)
     if not a.electrolytes:
         ap.error("--electrolytes 또는 --batch_from 중 하나는 있어야 한다")
