@@ -990,11 +990,19 @@
   ]
  },
  "zhang2023_pfib_multiscale_imaging_4d_thick_cathode": {
-  "figures": 17,
+  "figures": 19,
   "generated": "2026-08-19",
   "pdfs": [
    "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
    "43193ec8-1s2.0S2542435122005724mmc1.pdf"
+  ]
+ },
+ "zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf": {
+  "figures": 42,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "Zhang2026_Dry_electrode_architecture_design_energy_density_cell_level.pdf",
+   "Sup) Zhang2026_Dry_electrode_architecture_design_energy_density_cell_level.pdf"
   ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {
