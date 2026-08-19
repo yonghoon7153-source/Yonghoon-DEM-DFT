@@ -226,21 +226,30 @@ ESCAPE_GAIN_EV = 0.005   # 이만큼 못 내려가면 더 안 판다
 
 
 def relax_endpoint_deep(atoms, calc, fmax=FMAX_ENDPOINT, steps=800,
-                        tries=4, amp=ESCAPE_AMP_A, seed=0):
+                        tries=4, amp=ESCAPE_AMP_A, seed=0,
+                        track_idx=None, max_track_drift=0.6):
     """이완 → rattle → 재이완 을 되풀이해 **진짜 분지 바닥**을 찾는다.
 
-    돌려주는 값: (atoms, info)  info = {'E','E_first','gain_eV','n_escapes','converged','steps'}
+    돌려주는 값: (atoms, info)
+      info = {'E','E_first','gain_eV','n_escapes','n_rejected','converged','steps','track_drift_A'}
+
+    ⭐ `track_idx` 를 주면 그 원자가 `max_track_drift` 넘게 움직인 후보는 **버린다.**
+      왜 (2026-08-19 실측): 추적 없이 돌렸더니 시작 끝점이 55 meV 낮은 분지로 내려가면서
+      **홉 거리가 3.504 → 4.356 Å 로 바뀌었다.** 더 낮은 최소를 찾은 건 맞지만
+      **그건 다른 홉의 끝점**이라 장벽을 그 이름으로 db 에 넣으면 안 된다.
+      ⇒ "더 낮은 분지" 와 "같은 홉" 을 **동시에** 요구한다.
 
     이 함수가 **못 하는 것**
       · 전역 최소를 보장하지 않는다. rattle 이 넘을 수 있는 안장만 넘는다.
-      · **원자 정체성이 바뀌는 재배열은 못 막는다** — 이동 Li 가 다른 자리로 가버리면
-        그건 다른 홉이다. 호출자가 hop 거리를 다시 재서 확인해야 한다.
+      · track_idx 를 안 주면 홉이 바뀌어도 못 막는다(호출자가 hop_distance 로 확인해야 한다).
       · amp 가 너무 크면 결합을 깬다. 기본 0.12 Å 는 열진동 크기 수준이다.
     """
     rng = np.random.default_rng(seed)
     best, conv, nsteps = relax_positions(atoms, calc, fmax=fmax, steps=steps)
     e_first = e_best = float(best.get_potential_energy())
-    n_esc = 0
+    ref = best.get_positions()[track_idx].copy() if track_idx is not None else None
+    n_esc = n_rej = 0
+    drift = 0.0
     for _ in range(tries):
         cand = best.copy()
         cand.set_positions(cand.get_positions()
@@ -248,12 +257,19 @@ def relax_endpoint_deep(atoms, calc, fmax=FMAX_ENDPOINT, steps=800,
         cand, c2, s2 = relax_positions(cand, calc, fmax=fmax, steps=steps)
         e = float(cand.get_potential_energy())
         nsteps += s2
-        if e < e_best - ESCAPE_GAIN_EV:
-            best, e_best, conv, n_esc = cand, e, c2, n_esc + 1
-        else:
+        if e >= e_best - ESCAPE_GAIN_EV:
             break                      # 한 번 실패하면 더 파도 대개 안 나온다
+        if ref is not None:
+            d = float(np.linalg.norm(cand.get_positions()[track_idx] - ref))
+            if d > max_track_drift:
+                # 더 낮지만 **추적 원자가 자리를 옮겼다** — 다른 홉이므로 채택하지 않는다
+                n_rej += 1
+                continue
+            drift = d
+        best, e_best, conv, n_esc = cand, e, c2, n_esc + 1
     return best, {"E": e_best, "E_first": e_first, "gain_eV": e_first - e_best,
-                  "n_escapes": n_esc, "converged": bool(conv), "steps": int(nsteps)}
+                  "n_escapes": n_esc, "n_rejected": n_rej, "track_drift_A": drift,
+                  "converged": bool(conv), "steps": int(nsteps)}
 
 
 def band_health(E):
@@ -370,9 +386,14 @@ def one_run(args):
         # ⭐ 2026-08-19 — 기본을 **심화 이완**으로 바꿨다. comp1 2×1×1/2×2×1 에서
         #   "중간 이미지가 끝점보다 낮다"가 반복해 잡혔고, 그건 끝점이 얕은 분지에
         #   걸려 멈춘 것이었다. 옛 동작은 --shallow_endpoints 로 남겨 둔다.
-        ini, ep_i = relax_endpoint_deep(ini0, calc, seed=args.seed)
-        fin, ep_f = relax_endpoint_deep(fin0, calc, seed=args.seed + 1)
+        # ⭐ 이동 Li(j2) 를 추적한다 — 탈출이 그 원자를 옮겨 버리면 **다른 홉**이 된다.
+        #   (2026-08-19 실측: 추적 없이 돌렸더니 홉이 3.504 → 4.356 Å 로 바뀌었다.)
+        ini, ep_i = relax_endpoint_deep(ini0, calc, seed=args.seed,
+                                        track_idx=j2, max_track_drift=args.max_ep_drift)
+        fin, ep_f = relax_endpoint_deep(fin0, calc, seed=args.seed + 1,
+                                        track_idx=j2, max_track_drift=args.max_ep_drift)
         s1, s2 = ep_i["steps"], ep_f["steps"]
+    c1, c2 = ep_i["converged"], ep_f["converged"]
     E_i, E_f = ini.get_potential_energy(), fin.get_potential_energy()
     print(f"   끝점 이완: {s1}/{s2} steps  ΔE(끝−시작) = {1000*(E_f-E_i):+.1f} meV")
     if ep_i["n_escapes"] or ep_f["n_escapes"]:
@@ -612,6 +633,25 @@ def selftest():
         chk(info2["n_escapes"] == 0,
             "[음성] 완전한 결정에서는 얕은 분지 탈출이 0회다 (헛돌면 비용만 든다)")
 
+        # ★★ [음성] 추적 원자가 자리를 옮기는 탈출은 **더 낮아도 버려야 한다**
+        #    (2026-08-19 실측: 홉이 3.504 → 4.356 Å 로 바뀐 채 값이 나왔다)
+        _, free = relax_endpoint_deep(dw, DoubleWell(), fmax=0.01, steps=300,
+                                      tries=6, amp=0.5, seed=1)
+        kept, guard = relax_endpoint_deep(dw, DoubleWell(), fmax=0.01, steps=300,
+                                          tries=6, amp=0.5, seed=1,
+                                          track_idx=0, max_track_drift=0.05)
+        chk(free["n_escapes"] >= 1 and guard["n_escapes"] == 0,
+            "[음성] 추적 원자가 0.05 Å 넘게 움직이는 탈출은 채택하지 않는다")
+        chk(guard["n_rejected"] >= 1, "[음성] 버린 횟수를 n_rejected 로 보고한다")
+        chk(kept.get_positions()[0, 0] > 0,
+            "[음성] 가드가 걸리면 원래(얕은) 우물에 남는다 — 홉이 안 바뀐다")
+        # 여유롭게 주면 통과해야 한다 (가드가 항상 막기만 하면 쓸모없다)
+        _, loose = relax_endpoint_deep(dw, DoubleWell(), fmax=0.01, steps=300,
+                                       tries=6, amp=0.5, seed=1,
+                                       track_idx=0, max_track_drift=5.0)
+        chk(loose["n_escapes"] >= 1 and loose["n_rejected"] == 0,
+            "[양성] 허용치가 넉넉하면 탈출을 그대로 채택한다")
+
         # [음성] hop_distance 가 **최소이미지**로 재는지 — 셀을 가로지르면 짧은 길
         a1 = base.copy(); a2 = base.copy()
         L = float(np.array(base.cell)[0, 0])
@@ -640,6 +680,10 @@ def main():
     ap.add_argument("--force", action="store_true", help="좁은 셀도 실행 (수렴시험용)")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--tag")
+    ap.add_argument("--max_ep_drift", type=float, default=0.6,
+                    help="끝점 심화 이완에서 **이동 Li 가 이만큼(Å) 넘게 움직이면 그 탈출을 "
+                         "버린다**. 더 낮은 분지라도 홉이 바뀌면 다른 사건이다 "
+                         "(2026-08-19 실측: 3.504 → 4.356 Å 로 바뀐 적이 있다).")
     ap.add_argument("--seed", type=int, default=0,
                     help="끝점 심화 이완의 rattle 시드")
     ap.add_argument("--shallow_endpoints", action="store_true",
