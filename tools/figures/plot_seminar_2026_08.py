@@ -738,9 +738,11 @@ def fig_oxidation_windows():
     rows.sort(key=lambda t: (t[3] > ESW_NARROW, t[2]))
     narrow = [t for t in rows if t[3] <= ESW_NARROW]
     _rc()
-    # ⛔ 족별 패널은 **파이썬에서 안 그린다** (1저자 2026-08-19: "옆에 그래프는 내가
-    #   csv 로 그릴게"). 여기는 막대 그림만 내고, 족 요약은 CSV 로만 넘긴다.
-    fig, ax = plt.subplots(figsize=(11.6, 5.4))
+    # 족별 패널을 오른쪽에 같이 낸다 (Origin 재작도가 번거로워 파이썬 판으로 간다,
+    #   1저자 2026-08-19). ⚠ wspace 를 좁히면 오른쪽 y 눈금 이름표가 **왼쪽 패널 안으로**
+    #   들어와 점선 라벨과 겹친다 — 이름이 표준어로 길어졌으니 넉넉히 벌린다.
+    fig, (ax, axg) = plt.subplots(
+        1, 2, figsize=(14.0, 5.4), gridspec_kw=dict(width_ratios=[3.5, 1.15], wspace=0.34))
 
     for i, (d, red, ox, win, g) in enumerate(rows):
         hot = win <= ESW_NARROW
@@ -773,11 +775,22 @@ def fig_oxidation_windows():
               columnspacing=1.2)
     _bare(ax, grid="x")
 
-    # ── 족 요약은 CSV 로만 (Origin 에서 1저자가 그린다) ─────────────────────
+    # ── 오른쪽: 족별 창 폭 (8장의 "족 추세는 견고하다" 를 이 축에서 다시 보인다) ──
     by = {}
     for _, _, _, win, g in rows:
         by.setdefault(g, []).append(win)
     order = sorted(by, key=lambda k: -st.median(by[k]))
+    for i, g in enumerate(order):
+        axg.barh(-i, st.median(by[g]), height=.62, color=GROUP_C.get(g, NEUTRAL),
+                 alpha=.85, zorder=3)
+        axg.scatter(by[g], [-i] * len(by[g]), s=9, color=hs.INK, alpha=.35, lw=0, zorder=4)
+    axg.set_yticks([-i for i in range(len(order))])
+    axg.set_yticklabels([f"{GROUP_LABEL.get(g, g)}  ({len(by[g])})" for g in order],
+                        fontsize=10.5)
+    axg.set_ylim(-len(order) + .35, .65)
+    axg.set_xlabel("window width  (V)")
+    _bare(axg, grid="x")
+
     _write_csv("seminar_table_esw_by_group.csv",
                ["chemical_group", "n_species", "window_median_V",
                 "window_q1_V", "window_q3_V", "window_min_V", "window_max_V"],
