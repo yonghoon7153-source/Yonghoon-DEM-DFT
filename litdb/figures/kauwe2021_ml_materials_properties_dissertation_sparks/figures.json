@@ -273,7 +273,7 @@
    "kind": "table",
    "label": "2",
    "page": 3,
-   "file": "tab_2.png",
+   "file": null,
    "caption": "Table 2. Examples of Using Machine Learning in the Study of Inorganic Materials",
    "rotated_deg": 0,
    "bbox": [
@@ -286,7 +286,9 @@
    "h": 2664,
    "dpi": 300,
    "src": "ch2_Kauwe2021_MLguide.pdf",
-   "blank": 0.846
+   "blank": 0.846,
+   "dup_of": "tab_1.png",
+   "note": "크롭이 tab_1.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "t3",

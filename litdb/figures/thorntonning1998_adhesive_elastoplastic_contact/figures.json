@@ -126,7 +126,7 @@
    "kind": "figure",
    "label": "10",
    "page": 8,
-   "file": "fig_10.png",
+   "file": null,
    "caption": "F19. 10. Effect 0f 11m1t1n9 c0ntact pre55ure 0n the c0eff1c1ent 0f re5t1tut10n (0: p)= 3.04 6Pa, 0: p: = 1.0 6Pa, 11: p)= 0.5 6Pa).",
    "bbox": [
     0.0,
@@ -138,7 +138,9 @@
    "h": 1173,
    "dpi": 300,
    "src": "05. A theoretical model for the stick bounce behaviour of adhesive, elastic-plastic spheres.pdf",
-   "blank": 0.976
+   "blank": 0.976,
+   "dup_of": "fig_9.png",
+   "note": "크롭이 fig_9.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   }
  ]
 }

@@ -615,7 +615,7 @@
    "cropped": true
   }
  ],
- "figures_note_si": "SI figure crops (fig_S*) adopted from the parallel session's directory 'zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf' (commit a3505890, 2026-08-19 13:31) -- same paper, superseded slug. Main Figs 1-6 are this session's own crops (verified by eye).",
+ "figures_note_si": "SI figure crops (fig_S*) adopted from the parallel session's directory 'zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf' (commit a3505890, 2026-08-19 13:31) -- same paper. That slug's card and figure directory were MERGED INTO THIS ONE and deleted on 2026-08-19 (user instruction). Main Figs 1-6 are this session's own crops (verified by eye); the 36 SI crops were byte-identical in both directories.",
  "cropped": true,
  "crop_note": "All PNGs are cropped to the figure+caption region. w/h are refreshed from the files on disk; the original per-figure 'bbox' (PDF page coordinates) was dropped because it no longer corresponds after cropping."
 }

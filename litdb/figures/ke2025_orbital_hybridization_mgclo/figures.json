@@ -488,7 +488,7 @@
    "kind": "figure",
    "label": "S20",
    "page": 11,
-   "file": "fig_S20.png",
+   "file": null,
    "caption": "Figure S20. SEM images of the LPSC1.5 electrolyte with different weight ratio of 1%, 2%, and 3%",
    "bbox": [
     84.0,
@@ -500,7 +500,9 @@
    "h": 529,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.295
+   "blank": 0.295,
+   "dup_of": "fig_S19.png",
+   "note": "크롭이 fig_S19.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "fS21",
@@ -697,7 +699,7 @@
    "kind": "table",
    "label": "S3",
    "page": 15,
-   "file": "tab_S3.png",
+   "file": null,
    "caption": "Table S3. Crystallographic data of LPSC1.5-MgClO electrolyte obtained from Rietveld Refinement",
    "bbox": [
     85.1,
@@ -709,7 +711,9 @@
    "h": 2720,
    "dpi": 300,
    "src": "01. sup) S-p and p-p orbital hybridization induced electronic structure reconfiguration toward manipulating redox behavior of Li-Argyrodite electrolyte for enhanced lithium-compatibility.pdf",
-   "blank": 0.927
+   "blank": 0.927,
+   "dup_of": "tab_S2.png",
+   "note": "크롭이 tab_S2.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "tS4",

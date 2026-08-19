@@ -435,7 +435,7 @@
    "kind": "table",
    "label": "S2",
    "page": 15,
-   "file": "tab_S2.png",
+   "file": null,
    "caption": "Supplementary Table 2: The total simulation time and real time consumption of",
    "rotated_deg": 0,
    "bbox": [
@@ -448,14 +448,16 @@
    "h": 2858,
    "dpi": 300,
    "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
-   "blank": 0.923
+   "blank": 0.923,
+   "dup_of": "tab_S1.png",
+   "note": "크롭이 tab_S1.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "tS3",
    "kind": "table",
    "label": "S3",
    "page": 15,
-   "file": "tab_S3.png",
+   "file": null,
    "caption": "Supplementary Table 3: The total simulation time and real time consumption of",
    "rotated_deg": 0,
    "bbox": [
@@ -468,7 +470,9 @@
    "h": 2858,
    "dpi": 300,
    "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
-   "blank": 0.923
+   "blank": 0.923,
+   "dup_of": "tab_S1.png",
+   "note": "크롭이 tab_S1.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "tS4",
@@ -495,7 +499,7 @@
    "kind": "table",
    "label": "S5",
    "page": 16,
-   "file": "tab_S5.png",
+   "file": null,
    "caption": "Supplementary Table 5: The total simulation time and real time consumption of",
    "rotated_deg": 0,
    "bbox": [
@@ -508,14 +512,16 @@
    "h": 2547,
    "dpi": 300,
    "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "dup_of": "tab_S4.png",
+   "note": "크롭이 tab_S4.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "tS6",
    "kind": "table",
    "label": "S6",
    "page": 16,
-   "file": "tab_S6.png",
+   "file": null,
    "caption": "Supplementary Table 6: Products Obtained from HAML Simulation of interface",
    "rotated_deg": 0,
    "bbox": [
@@ -528,7 +534,9 @@
    "h": 2547,
    "dpi": 300,
    "src": "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
-   "blank": 0.918
+   "blank": 0.918,
+   "dup_of": "tab_S4.png",
+   "note": "크롭이 tab_S4.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   }
  ]
 }

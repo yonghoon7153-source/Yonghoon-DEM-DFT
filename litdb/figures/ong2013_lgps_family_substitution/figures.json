@@ -88,7 +88,7 @@
    "kind": "table",
    "label": "2",
    "page": 4,
-   "file": "tab_2.png",
+   "file": null,
    "caption": "Table 2 Relaxed structural parameters for Li10MP2X12 Cation (M) Anion (X) a (˚A) b (˚A) c (˚A) a (\u0006) b (\u0006) g (\u0006) Volume (˚A3) Channel size (˚A) Si O 6.985 6.990 10.649 90.86 89.70 89.88 520 1.43 Ge O 7.151 6.976 10.709 90.47 89.66 89.81 534 1.46 Sn O 7.499 6.821 10.966 89.70 90.12 89.35 561 1.50 Si S 8.566 8.848 12.920 91.90 90.65 90.31 979 1.84 Ge S 8.561 8.847 12.929 91.97 90.63 90.24 979 1.84 Sn S 8.666 8.950 13.133 91.97 90.58 90.08 1018 1.86 Al S 8.722 8.567 13.662 90.69 89.19 89.47 1021 1.92 P S 8.817 8.817 12.660 90.00 90.00 89.78 984 1.87 Si Se 9.040 9.381 13.630 91.89 90.74 90.35 1155 1.97 Ge Se 9.054 9.400 13.690 91.96 90.72 90.31 1164 1.96 Sn Se 9.084 9.434 13.797 92.09 90.70 90.17 1181 1.97",
    "bbox": [
     0.0,
@@ -100,7 +100,9 @@
    "h": 2993,
    "dpi": 284,
    "src": "43. Phase stability, electrochemical stability and ionic conductivity of the Li10±1MP2X12 (M = Ge, Si, Sn, Al or P, and X = O, S or Se) family of superionic conductors.pdf",
-   "blank": 0.899
+   "blank": 0.899,
+   "dup_of": "tab_1.png",
+   "note": "크롭이 tab_1.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "t3",

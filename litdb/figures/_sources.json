@@ -440,6 +440,14 @@
    "DFT 먹인 논문/31. Sup) Influence of Lattice Polarizability on the Ionic Conductivity in the Lithium Superionic Argyrodites Li6PS5X (X = Cl, Br, I).pdf"
   ]
  },
+ "lai2025_haml_li_metal_lpscl_interface_doping_seFO": {
+  "figures": 26,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "ab8568e5-62._Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf",
+   "0b989fa5-62._Sup_Machinelearningaccelerated_mechanistic_exploration_of_interface_modification_in_lithium_metal_anode.pdf"
+  ]
+ },
  "lee2024_multicomponent_argyrodite_mixed_oxidation_mtp": {
   "figures": 19,
   "generated": "2026-08-05",
@@ -688,6 +696,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "DEM 논문/11. A linear model of elasto-plastic and adhesive contact deformation.pdf"
+  ]
+ },
+ "petmad2026_lightweight_universal_interatomic_potential_mad": {
+  "figures": 26,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "34b02e87-63._PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf",
+   "c90694f1-63._Sup_PETMAD_as_a_lightweight_universal_interatomic_potential_for_advanced_materials_modeling.pdf"
   ]
  },
  "qian2026_decanoate_coating_lpscl_moisture_interface": {

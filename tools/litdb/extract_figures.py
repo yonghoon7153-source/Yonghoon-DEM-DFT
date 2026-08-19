@@ -32,6 +32,7 @@ usage — 보통은 이 두 줄이면 끝난다 (inbox 를 훑어 digest 와 자
   litdb/figures/<slug>/figures.json     ← webapp 이 읽는 색인
 """
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -987,6 +988,154 @@ def audit_src():
     return 1 if bad_tot else 0
 
 
+def dup_groups(slug_dir):
+    """한 slug 폴더 안에서 **바이트가 똑같은** PNG 묶음을 찾는다.
+
+    같은 크롭이 서로 다른 번호로 두 번 나오면 그 번호 중 하나(이상)는
+    **실제로 잘린 적이 없다** — 여러 쪽에 걸친 표, 회전된 표, 캡션이 두 번 나오는 배치에서 생긴다.
+    돌려주는 값: [[keep_path, dup_path, ...], ...]
+    첫 번째 = 남길 것 = **자연순(숫자 인식) 최소** — `fig_9` 가 `fig_10` 보다 앞이다
+    (사전순이면 fig_10 이 앞이라 번호가 큰 쪽을 남기는 오류가 난다).
+
+    이 함수가 못 하는 것:
+      · **내용이 같지만 바이트가 다른** 크롭(다시 자른 것, 1픽셀 차이)은 못 잡는다.
+        픽셀 비교나 근사해시(dHash)는 하지 않는다 — 오탐이 진짜를 가린다.
+      · **어느 쪽이 진짜인지는 못 고른다.** 자연순 최소를 남기는 건 결정론적 타이브레이크일 뿐이고,
+        묶음에 그림과 표가 섞이면(예: `fig_11` ≡ `tab_1`) 사람이 봐야 한다 — 그래서 `dedupe` 가
+        지운 쪽에 `dup_of` 를 남긴다.
+    """
+    def natkey(p):
+        return [int(t) if t.isdigit() else t for t in re.split(r"(\d+)", p.name)]
+    by_hash = {}
+    for p in sorted(Path(slug_dir).glob("*.png"), key=natkey):
+        h = hashlib.sha1(p.read_bytes()).hexdigest()
+        by_hash.setdefault(h, []).append(p)
+    return [v for v in by_hash.values() if len(v) > 1]
+
+
+def dedupe(apply_it=False):
+    """바이트 동일 크롭을 지우고 figures.json 에 `dup_of` 표식을 남긴다.
+
+    표식을 남기는 이유: 파일만 지우면 "그 표는 애초에 없었다"로 읽히는데,
+    사실은 **캡션은 찾았고 크롭이 틀린 것**이다. 다시 자를 대상 목록이 사라지면 안 된다.
+    """
+    hit = tot = 0
+    for j in sorted(OUT_ROOT.glob("*/figures.json")):
+        groups = dup_groups(j.parent)
+        if not groups:
+            continue
+        try:
+            m = json.loads(j.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            print(f"⛔ {j.parent.name}: figures.json 을 못 읽는다")
+            continue
+        idx = {r.get("file"): r for r in m.get("figures", [])}
+        hit += 1
+        for grp in groups:
+            keep, dups = grp[0].name, [p.name for p in grp[1:]]
+            tot += len(dups)
+            kl = (idx.get(keep) or {}).get("label", "?")
+            dl = ",".join((idx.get(d) or {}).get("label", "?") for d in dups)
+            print(f"{'삭제' if apply_it else '삭제예정'} {j.parent.name}: "
+                  f"{keep}(label {kl}) 유지 ← {', '.join(dups)} (label {dl})")
+            if not apply_it:
+                continue
+            for d in dups:
+                (j.parent / d).unlink(missing_ok=True)
+                r = idx.get(d)
+                if r is not None:
+                    r["file"] = None
+                    r["dup_of"] = keep
+                    r["note"] = ((r.get("note") or "") + " | "
+                                 f"크롭이 {keep} 와 바이트 동일 → 이 번호는 실제로 잘린 적이 "
+                                 f"없다. 삭제하고 재추출 대상으로 남김.").strip(" |")
+        if apply_it:
+            j.write_text(json.dumps(m, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"\n{'지웠다' if apply_it else '지울 것'}: 중복 {tot}장 / {hit}편"
+          + ("" if apply_it else "  (실제 삭제는 --apply)"))
+    return 0
+
+
+def selftest():
+    """dup_groups/dedupe 자체 점검 — **음성 경로 포함**.
+
+    dup_groups 는 바이트만 보므로 진짜 PNG 가 필요 없다.  임시 폴더에 바이트를 써서 검사한다.
+    이 selftest 가 못 하는 것: 추출 본체(캡션 탐지·영역 산정)는 PDF 가 있어야 하므로 여기서 안 본다.
+    """
+    import tempfile
+    global OUT_ROOT
+    ok = fail = 0
+
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  ⭕ " if cond else "  ⛔ ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    with tempfile.TemporaryDirectory() as td:
+        root = Path(td)
+        # --- 양성: 같은 바이트 3장 → 한 묶음, 이름순 첫 장을 남긴다
+        d1 = root / "paper_a"; d1.mkdir()
+        for n in ("tab_S1.png", "tab_S2.png", "tab_S3.png"):
+            (d1 / n).write_bytes(b"\x89PNG-same")
+        g = dup_groups(d1)
+        chk("양성: 동일 3장 → 묶음 1개", len(g) == 1)
+        chk("양성: 묶음 크기 3", len(g[0]) == 3)
+        chk("양성: 남길 것은 이름순 첫 장(tab_S1)", g[0][0].name == "tab_S1.png")
+
+        # --- 양성: 자연순 — fig_9 가 fig_10 보다 앞 (사전순이면 뒤집힌다)
+        d0 = root / "paper_nat"; d0.mkdir()
+        for n in ("fig_9.png", "fig_10.png"):
+            (d0 / n).write_bytes(b"\x89PNG-nat")
+        chk("양성: 자연순 — fig_9 를 남긴다 (사전순이면 fig_10)",
+            dup_groups(d0)[0][0].name == "fig_9.png")
+
+        # --- 음성 ①: 서로 다른 바이트는 절대 묶이면 안 된다
+        d2 = root / "paper_b"; d2.mkdir()
+        (d2 / "fig_1.png").write_bytes(b"\x89PNG-aaa")
+        (d2 / "fig_2.png").write_bytes(b"\x89PNG-bbb")
+        chk("음성①: 다른 2장 → 묶음 0개", dup_groups(d2) == [])
+
+        # --- 음성 ②: 1바이트만 달라도 안 묶인다 (문서화된 한계 — 근사해시 안 씀)
+        d3 = root / "paper_c"; d3.mkdir()
+        (d3 / "fig_1.png").write_bytes(b"\x89PNG-same")
+        (d3 / "fig_2.png").write_bytes(b"\x89PNG-samf")
+        chk("음성②: 1바이트 차 → 안 묶인다 (한계를 고정)", dup_groups(d3) == [])
+
+        # --- 음성 ③: 1장뿐 / 빈 폴더
+        d4 = root / "paper_d"; d4.mkdir()
+        (d4 / "fig_1.png").write_bytes(b"\x89PNG-solo")
+        chk("음성③: 1장뿐 → 묶음 0개", dup_groups(d4) == [])
+        d5 = root / "paper_e"; d5.mkdir()
+        chk("음성③: 빈 폴더 → 묶음 0개", dup_groups(d5) == [])
+
+        # --- dedupe: --apply 없이는 아무것도 지우면 안 된다 (음성 ④)
+        for d in (d1, d2, d3, d4):
+            (d / "figures.json").write_text(json.dumps({
+                "slug": d.name,
+                "figures": [{"key": p.stem, "kind": "table", "label": p.stem.split("_")[-1],
+                             "file": p.name} for p in sorted(d.glob("*.png"))]},
+                ensure_ascii=False), encoding="utf-8")
+        keep_root, OUT_ROOT = OUT_ROOT, root
+        try:
+            dedupe(apply_it=False)
+            chk("음성④: --apply 없으면 파일이 그대로", len(list(d1.glob("*.png"))) == 3)
+            dedupe(apply_it=True)
+            chk("양성: --apply 로 2장 삭제", sorted(p.name for p in d1.glob("*.png")) == ["tab_S1.png"])
+            chk("음성⑤: 중복 없던 폴더는 안 건드림", len(list(d2.glob("*.png"))) == 2)
+            m = json.loads((d1 / "figures.json").read_text(encoding="utf-8"))
+            marks = [r for r in m["figures"] if r.get("dup_of") == "tab_S1.png"]
+            chk("양성: figures.json 에 dup_of 표식 2개", len(marks) == 2)
+            chk("양성: 지운 항목의 file 은 None (기록은 남는다)",
+                all(r["file"] is None for r in marks))
+            chk("양성: 남긴 항목은 표식이 없다",
+                [r for r in m["figures"] if r["file"] == "tab_S1.png"][0].get("dup_of") is None)
+        finally:
+            OUT_ROOT = keep_root
+
+    print(f"\nselftest: {ok} 통과 / {fail} 실패")
+    return 1 if fail else 0
+
+
 def audit():
     """이미 잘라둔 것 전체 점검 — 53편을 눈으로 다 볼 수는 없으니 **의심스러운 것만** 띄운다.
 
@@ -996,6 +1145,7 @@ def audit():
       · 본문 없이 SI 만              → SI 오분류(원소기호 Si 등) 또는 본문 PDF 누락
       · 거의 백지 (그림만, blank ≥ 0.965) → 영역을 잘못 잡았다 (표는 원래 흰 바탕이라 제외)
       · 극단 세로비 (h/w ≥ 4.5)      → 두 그림을 한 장에 물었을 수 있다
+      · 중복 크롭 (바이트 동일)      → 그 번호 중 하나는 안 잘렸다 (`--dedupe` 로 정리)
     """
     rows, warn = [], 0
     for j in sorted(OUT_ROOT.glob("*/figures.json")):
@@ -1033,6 +1183,10 @@ def audit():
                 and r.get("w") and r["h"] / r["w"] >= 4.5]
         if tall:
             flags.append("극단 세로비 " + ",".join(tall[:4]))
+        dg = dup_groups(j.parent)
+        if dg:
+            flags.append(f"중복 크롭 {sum(len(g) - 1 for g in dg)}장 "
+                         + ",".join(g[0].name for g in dg[:3]) + " (--dedupe)")
         rows.append((slug, len(main), len(si), len(tab), flags))
         warn += bool(flags)
 
@@ -1075,6 +1229,10 @@ def main():
                     help="남의 논문 그림이 섞였는지 점검 (그림의 src ↔ 논문 제목 대조)")
     ap.add_argument("--audit", action="store_true",
                     help="이미 잘라둔 것 전체 점검 (구멍·백지·SI만 등 의심스러운 것만)")
+    ap.add_argument("--dedupe", action="store_true",
+                    help="바이트 동일 중복 크롭을 정리 (기본 미리보기, --apply 로 실제 삭제)")
+    ap.add_argument("--selftest", action="store_true",
+                    help="자체 점검 (양성 + 음성 경로)")
     ap.add_argument("--refresh", action="store_true",
                     help="추출기를 고친 뒤 **장수가 달라지는 논문만** 골라 재추출 (--apply 로 실행)")
     ap.add_argument("--apply", action="store_true", help="--refresh 에서 실제로 덮어쓴다")
@@ -1086,11 +1244,17 @@ def main():
     if a.pdf:                       # [[a,b],[c]] → [a,b,c]
         a.pdf = [x for grp in a.pdf for x in grp]
 
+    if a.selftest:
+        return selftest()
+
     if a.audit_src:
         return audit_src()
 
     if a.audit:
         return audit()
+
+    if a.dedupe:
+        return dedupe(apply_it=a.apply)
 
     if a.refresh:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX

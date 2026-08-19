@@ -536,7 +536,7 @@
    "kind": "table",
    "label": "S3",
    "page": 13,
-   "file": "tab_S3.png",
+   "file": null,
    "caption": "Table S3 Comparison of the areal capacity and cycling performance of the developed all-solid-state batteries with those from previous literature. Areal capacity Cycle Cell structure Ref. (mAh cm-2) performance NCM94/LPSCl/Li-In ~6.5 0.5C 300th 74.5% this work NCM811/LPSCl/Li-In ~2 0.1C 100th 51.5% [1] NCM811/LPSCl/Li4Ti5O12 ~5 0.5C 500th >80% [2] NCM811/LPSCl/Li-In ~3 0.1C 100th 81.2% [3] NCM811/Li7P3S11/Li-In ~5.9 0.3C 300th 94% [4] NCM811/LPSCl/Li ~4 0.1C 100th 67.4% [5]",
    "rotated_deg": 0,
    "bbox": [
@@ -549,7 +549,9 @@
    "h": 2902,
    "dpi": 300,
    "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
-   "blank": 0.928
+   "blank": 0.928,
+   "dup_of": "tab_S1.png",
+   "note": "크롭이 tab_S1.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   }
  ]
 }

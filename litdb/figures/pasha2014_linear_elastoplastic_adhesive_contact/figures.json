@@ -373,7 +373,7 @@
    "kind": "table",
    "label": "1",
    "page": 7,
-   "file": "tab_1.png",
+   "file": null,
    "caption": "Table 1 Properties of ammonium ﬂuorescein particle and silicon wall used in Ning’s [3] simulations",
    "bbox": [
     45.0,
@@ -385,7 +385,9 @@
    "h": 1190,
    "dpi": 300,
    "src": "11. A linear model of elasto-plastic and adhesive contact deformation.pdf",
-   "blank": 0.907
+   "blank": 0.907,
+   "dup_of": "fig_11.png",
+   "note": "크롭이 fig_11.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   },
   {
    "key": "t2",
@@ -430,7 +432,7 @@
    "kind": "table",
    "label": "4",
    "page": 9,
-   "file": "tab_4.png",
+   "file": null,
    "caption": "Table 4 Size distribution of the generated particles",
    "bbox": [
     46.0,
@@ -442,7 +444,9 @@
    "h": 3001,
    "dpi": 298,
    "src": "11. A linear model of elasto-plastic and adhesive contact deformation.pdf",
-   "blank": 0.893
+   "blank": 0.893,
+   "dup_of": "tab_3.png",
+   "note": "크롭이 tab_3.png 와 바이트 동일 → 이 번호는 실제로 잘린 적이 없다. 삭제하고 재추출 대상으로 남김."
   }
  ]
 }
