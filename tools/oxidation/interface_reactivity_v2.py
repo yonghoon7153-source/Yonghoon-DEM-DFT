@@ -60,16 +60,156 @@ def min_rxn_grand(c1, c2, gpd, pd):
     return min_e, min_rxn
 
 
+# ── 캐스케이드 90종 일괄 (2026-08-19 신설) ───────────────────────────────────
+#: ⛔ **한 chemsys 에 다 넣으면 안 된다.** 90종의 원소 합집합이 44개라
+#:   get_entries_in_chemsys 가 부분 chemsys 를 전부 훑어 사실상 끝나지 않는다.
+#:   종마다 따로 (Li,P,S,Cl,O + 그 도펀트 원소 + 상대 물질 원소) 로 돈다.
+CASCADE_CSV = "db/properties/cascade_v23_all.csv"
+
+
+def champion_formulas(csv_path):
+    """rank_combined==1 행에서 **종당 하나**의 조성식을 만든다.
+
+    이 함수가 **못 하는 것**: 어느 라벨(x020/x050/x100)의 챔피언인지 고르지 않는다 —
+      먼저 나온 것을 쓴다. 세 라벨은 실제 농도가 전부 0.25 로 같으므로 조성 자체는
+      비슷하나 **자리·시드가 다르다** (kb/results/site_preference_bar_meaning_2026_08_18.md).
+    """
+    import csv as _csv, io as _io, os as _os, sys as _sys
+    _sys.path.insert(0, _os.path.join(_os.path.dirname(_os.path.dirname(
+        _os.path.abspath(__file__))), "cascade"))
+    from cascade_ids import base_species
+    rows = [r for r in _csv.DictReader(_io.open(csv_path, encoding="utf-8"))
+            if r.get("rank_combined") == "1"]
+    if not rows:
+        return {}
+    cols = [c for c in rows[0] if c.startswith("composition_")]
+    out = {}
+    for r in rows:
+        sp = base_species(r["dopant"])
+        if sp in out:
+            continue
+        parts = []
+        for c in cols:
+            v = r.get(c)
+            if v in ("", None):
+                continue
+            try:
+                n = float(v)
+            except ValueError:
+                continue
+            if n > 0:
+                parts.append(f"{c.split('_')[1]}{n:g}")
+        if parts:
+            out[sp] = "".join(parts)
+    return out
+
+
+def run_batch(a):
+    """종마다 자기 chemsys 로 계면 반응성을 잰다. JSONL 이라 **이어달리기 가능**."""
+    import time
+    from pymatgen.core import Composition, Element
+    from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
+
+    forms = champion_formulas(a.batch_from)
+    out = Path(a.out if a.out.endswith(".jsonl") else a.out + "l")
+    done = set()
+    if a.resume and out.exists():
+        for ln in out.read_text().splitlines():
+            try:
+                done.add((json.loads(ln)["species"], json.loads(ln)["cathode"]))
+            except Exception:
+                pass
+        print(f"[resume] 이미 끝난 (종,상대) 쌍 {len(done)}개는 건너뛴다")
+
+    todo = sorted(forms)[: a.limit] if a.limit else sorted(forms)
+    print(f"종 {len(todo)}개 x 상대 {len(a.cathodes)}개 = {len(todo) * len(a.cathodes)} 쌍")
+    for i, sp in enumerate(todo, 1):
+        for cat in a.cathodes:
+            cstr, _, clab = cat.partition(":")
+            clab = clab or cstr
+            if (sp, clab) in done:
+                continue
+            t0 = time.time()
+            try:
+                elems = set(Composition(forms[sp]).elements) | set(Composition(cstr).elements)
+                elems.add(Element("Li"))
+                chem = sorted(e.symbol for e in elems)
+                entries = get_entries(chem)
+                pd = PhaseDiagram(entries)
+                mu0 = li_metal_mu(entries)
+                rec = {"species": sp, "formula": forms[sp], "cathode": clab,
+                       "cathode_formula": cstr, "chemsys": chem,
+                       "mu_Li_metal_eV": round(mu0, 4), "by_voltage": {}}
+                for V in a.voltages:
+                    gpd = GrandPotentialPhaseDiagram(entries, {Element("Li"): mu0 - V})
+                    e, rxn = min_rxn_grand(Composition(forms[sp]), Composition(cstr), gpd, pd)
+                    rec["by_voltage"][f"{V:.2f}"] = {"dE_eV_per_atom": round(e, 5),
+                                                     "reaction": rxn}
+                rec["seconds"] = round(time.time() - t0, 1)
+            except Exception as ex:
+                rec = {"species": sp, "cathode": clab, "error": f"{type(ex).__name__}: {ex}",
+                       "seconds": round(time.time() - t0, 1)}
+            with out.open("a", encoding="utf-8") as f:
+                f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            bad = "ERR " + rec["error"][:40] if "error" in rec else \
+                  "%+.4f" % min(v["dE_eV_per_atom"] for v in rec["by_voltage"].values())
+            print(f"[{i}/{len(todo)}] {sp:10s} vs {clab:8s} {bad}  ({rec['seconds']:.0f}s)")
+    print(f"\n→ {out}")
+
+
+def _selftest():
+    ok = True
+
+    def chk(c, m):
+        nonlocal ok
+        print(("  ✓ " if c else "  ✗ ") + m)
+        ok &= bool(c)
+
+    import tempfile, os as _os
+    root = _os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))))
+    csvp = _os.path.join(root, CASCADE_CSV)
+    if _os.path.exists(csvp):
+        f = champion_formulas(csvp)
+        chk(len(f) == 90, f"[양성] 챔피언 조성 90종 (얻은 것 {len(f)})")
+        chk(all(("Li" in v and "P" in v and "S" in v) for v in f.values()),
+            "[양성] 모든 조성에 host 원소 Li·P·S 가 있다")
+        chk("Ag2O" in f and "O1" in f["Ag2O"],
+            f"[양성] Ag2O 챔피언에 O 가 있다 ({f.get('Ag2O')})")
+    else:
+        chk(False, f"[전제] {CASCADE_CSV} 가 있어야 한다")
+    with tempfile.TemporaryDirectory() as d:
+        p = _os.path.join(d, "empty.csv")
+        open(p, "w").write("dopant,rank_combined\nMgO,2\n")
+        chk(champion_formulas(p) == {},
+            "[음성] rank_combined==1 이 없으면 빈 dict (엉뚱한 조성을 만들지 않는다)")
+        p2 = _os.path.join(d, "nocomp.csv")
+        open(p2, "w").write("dopant,rank_combined\nMgO,1\n")
+        chk(champion_formulas(p2) == {},
+            "[음성] composition_* 열이 없으면 빈 dict")
+    print("selftest PASS" if ok else "selftest FAIL")
+    return 0 if ok else 1
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--electrolytes", nargs="+", required=True,
+    ap.add_argument("--electrolytes", nargs="+",
                     help='comp:label, e.g. "Li6PS5Cl:LPSCl"')
+    ap.add_argument("--batch_from", nargs="?", const=CASCADE_CSV,
+                    help="캐스케이드 CSV 에서 90종 챔피언을 읽어 **종마다 따로** 돈다")
+    ap.add_argument("--resume", action="store_true", help="JSONL 에 이미 있는 쌍은 건너뛴다")
+    ap.add_argument("--limit", type=int, help="앞 N 종만 (시범용)")
     ap.add_argument("--cathodes", nargs="+", default=["LiCoO2", "LiNiO2"],
                     help='comp[:label] cathodes')
     ap.add_argument("--voltages", nargs="+", type=float,
                     default=[2.5, 3.0, 3.5, 4.0, 4.3])
     ap.add_argument("--out", default="interface_reactivity_v2.json")
+    if "--selftest" in __import__("sys").argv:
+        raise SystemExit(_selftest())
     a = ap.parse_args()
+    if a.batch_from:
+        return run_batch(a)
+    if not a.electrolytes:
+        ap.error("--electrolytes 또는 --batch_from 중 하나는 있어야 한다")
 
     from pymatgen.core import Composition, Element
     from pymatgen.analysis.phase_diagram import PhaseDiagram, GrandPotentialPhaseDiagram
