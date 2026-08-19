@@ -327,6 +327,32 @@ def _selftest_temperature():
         chk('옛 그리드(계약 없음) → present=False (조용한 25 °C 단정 금지 신호)',
             _s4._grid_temperature(p0)['present'] is False)
 
+    #  ★★ 2026-08-19 — **기록 필드가 계산을 죽이면 안 된다**.
+    #    실사고: 매니페스트에 `float(a.temp_c)` 를 넣었는데 `--temp-c` 의 기본이 None 이라
+    #    TypeError 로 죽었다.  하필 죽는 자리가 **σ_e 솔브(2,474 s)가 끝난 뒤**여서 GPU
+    #    시간을 통째로 버렸다.  ⇒ 새로 넣은 기록 필드 전부를 **None 입력**으로 건다.
+    _NONE_SAFE = ('sigma_ion_se', '_sigma_ion_se_ref', 'sigma_ion_sdcp',
+                  'sigma_am_s', 'sigma_am_p', 'temp_c', 'ea_ion_ev')
+    try:
+        _rec = {k: _mflt(None) for k in _NONE_SAFE}
+        _rec['cam'] = None if None is None else str(None)
+        _rec['mpm_seed'] = _mint(None)
+        _rec['se_E_GPa'] = _mflt(None)
+        import json as _js
+        _js.dumps(_rec)                       # 직렬화까지 되어야 payload 가 저장된다
+        _n_ok = all(v is None for v in _rec.values())
+    except Exception as _e:                                        # noqa: BLE001
+        print(f'  FAIL  기록 필드가 None 에서 터진다: {_e}')
+        ok = False
+        _n_ok = False
+    print(('  PASS  ' if _n_ok else '  FAIL  ')
+          + '기록 필드 전부 None-안전 + JSON 직렬화 가능 (계산을 죽이지 않는다)')
+    ok = ok and _n_ok
+    #  ★ 0.0 을 None 으로 접지 않는지도 건다 (`or` 로 쓰면 0 이 사라진다).
+    _z_ok = (_mflt(0.0) == 0.0) and (_mint(0) == 0)
+    print(('  PASS  ' if _z_ok else '  FAIL  ')
+          + f'0 은 0 으로 남는다 (_mflt(0.0)={_mflt(0.0)!r} · _mint(0)={_mint(0)!r})')
+    ok = ok and _z_ok
     print('PAYLOAD TEMPERATURE SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -1821,14 +1847,20 @@ def main():
             #      (= CL-42 ADD_E_SET 사고의 SE 축 재현 경로).
             #   ⇒ 셋 다 **일어난 일**로 여기 남긴다.  `--no-ion` 여부와 **무관하게** 기록한다
             #     (기록 비용은 0 이고, 안 찍히는 것이 바로 위 ⓐ 의 원인이었다).
-            'sigma_ion_se_S_cm': float(a.sigma_ion_se),          # T-스케일링 **적용 후** = 실제 쓴 값
-            'sigma_ion_se_ref_S_cm': float(getattr(a, '_sigma_ion_se_ref', a.sigma_ion_se)),
-            'sigma_ion_sdcp_S_cm': float(a.sigma_ion_sdcp),
-            'sigma_am_s_S_cm': float(a.sigma_am_s),
-            'sigma_am_p_S_cm': float(a.sigma_am_p),
-            'cam': str(a.cam),
-            'temp_c': float(a.temp_c),
-            'ea_ion_ev': float(a.ea_ion_ev),
+            #  ⚠⚠ 2026-08-19 실사고 — 여기를 `float(a.temp_c)` 로 썼다가 **런이 죽었다**.
+            #    `--temp-c` 의 기본은 **None 이고 그것이 의미 있는 값**이다 (온도 기능 OFF =
+            #    과거 출력과 비트 동일, `se_material.scale_sigma_ion:123`).  None 을 float 로
+            #    감싸면 TypeError 다.  더 나쁜 것은 죽는 **자리**였다 — σ_e 솔브(2,474 s)가
+            #    끝난 **뒤** 매니페스트를 쓰다가 죽어서 GPU 시간을 통째로 버렸다.
+            #    ⇒ 기록 필드는 **절대 계산을 죽이면 안 된다**.  전부 None-안전으로.
+            'sigma_ion_se_S_cm': _mflt(a.sigma_ion_se),          # T-스케일링 **적용 후** = 실제 쓴 값
+            'sigma_ion_se_ref_S_cm': _mflt(getattr(a, '_sigma_ion_se_ref', a.sigma_ion_se)),
+            'sigma_ion_sdcp_S_cm': _mflt(a.sigma_ion_sdcp),
+            'sigma_am_s_S_cm': _mflt(a.sigma_am_s),
+            'sigma_am_p_S_cm': _mflt(a.sigma_am_p),
+            'cam': (None if a.cam is None else str(a.cam)),
+            'temp_c': _mflt(a.temp_c),                            # ★ None = 온도 기능 OFF (유효값)
+            'ea_ion_ev': _mflt(a.ea_ion_ev),
             'mpm_seed': _mint(sim_m.get('seed')),
             'se_E_GPa': _mflt(sim_m.get('E_SE_GPa')),
             'se_nu': _mflt(sim_m.get('nu_SE')),
