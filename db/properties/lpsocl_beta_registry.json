@@ -6,7 +6,7 @@
     "확정 판정은 MTO 곡선으로만 (STO 는 시간원점 잡음 ±0.2 실측)",
     "창은 캠페인 규약 2-50 ps 고정",
     "quote: none 인 항목은 어디에도 인용하지 않는다",
-    "⚠ 상자 비교는 **양쪽 같은 공선**으로만 — 작은 셀 MTO 를 큰 셀 STO 와 비교하지 않는다 (2026-08-19 재발 방지). box331 은 현재 MTO 가 없다."
+    "⚠ 상자 비교는 **양쪽 같은 곡선**으로만 — 잣대에 따라 **부호가 뒤집힌다** (2026-08-19 실측: STO Δ −0.02 vs MTO Δ +0.05)."
   ],
   "entries": [
     {
@@ -73,6 +73,26 @@
       "verdict": "gate FAIL (MTO 2-50) - 단 창 스캔은 cage-intercept 시사",
       "quote": "provisional",
       "recorded": "kb/results/lpsocl_box_size_600K_2026_08_18.md (2026-08-19 3판)"
+    },
+    {
+      "id": "box331_MTO_3seed",
+      "beta": 0.81,
+      "run_set": "arrhenius_6pt/lpsocl_3x3x1 T600_s2/s3/s4 (3 seeds x 200 ps, 17.02 A cell)",
+      "curve": "MTO seed-mean curve",
+      "window_ps": [
+        2,
+        50
+      ],
+      "per_seed_MTO": [
+        0.81,
+        0.8,
+        0.81
+      ],
+      "intercept_c_A2": 2.87,
+      "note": "2026-08-19. 대조군에 MTO 배열이 있었다 — 초판의 'MTO 없음' 은 틀렸다. 같은 잣대 비교: 작은 셀 0.76 vs 큰 셀 0.81 => Δ +0.05 (STO 로는 −0.02, 부호 반대). ⚠ 창 스캔은 반대 방향: 큰 셀만 c +128%, m −12.1%, β 0.87 정체 => 도구 '판별 불가'",
+      "verdict": "gate PASS (MTO 2-50) - 단 창 스캔은 sub-diffusion 무늬",
+      "quote": "provisional",
+      "recorded": "kb/results/lpsocl_box_size_600K_2026_08_18.md §2b (2026-08-19)"
     },
     {
       "id": "box331_STO",
