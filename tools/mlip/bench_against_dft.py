@@ -140,15 +140,28 @@ ENERGY_ALIASES = ("energy", "REF_energy", "ref_energy", "DFT_energy", "dft_energ
 
 
 def force_key(atoms):
-    """이 구조의 힘 라벨 이름. 없으면 None. `gradients` 는 부호가 반대라 따로 취급한다."""
+    """이 구조의 힘 라벨 이름. 없으면 None.
+
+    ⚠ **표준 extxyz 는 `arrays` 에 안 들어간다.** ASE 는 `Properties=…:forces:R:3` 을
+    읽으면 SinglePointCalculator 로 보낸다 (energy 도 마찬가지로 info 가 아니라 calc).
+    2026-08-19 kgy 실측: PET-MAD 세트가 정확히 이 경우였고, arrays 만 보던 탐지가
+    "forces 가 없다"고 잘못 말했다. → `calc` 경로를 반드시 같이 본다.
+    `gradients` 는 dE/dR 이라 부호가 반대다.
+    """
     for k in FORCE_ALIASES:
         if k in atoms.arrays:
             return k
-    return None
+    try:
+        atoms.get_forces()
+        return "calc"
+    except Exception:
+        return None
 
 
 def get_forces_label(atoms, key):
     """DFT 힘 라벨을 꺼낸다. `gradients` = dE/dR 이므로 부호를 뒤집는다."""
+    if key == "calc":
+        return np.asarray(atoms.get_forces(), float)
     v = np.asarray(atoms.arrays[key], float)
     return -v if key == "gradients" else v
 
@@ -276,6 +289,17 @@ def selftest():
     both.arrays["gradients"] = np.full((3, 3), 2.0)
     both.arrays["forces"] = np.full((3, 3), 5.0)
     chk(force_key(both) == "forces", "[음성] forces 가 있으면 별칭에 안 뺏긴다")
+    # ★★ 표준 extxyz 경로 — ASE 는 forces/energy 를 arrays/info 가 아니라 **calc** 에 넣는다.
+    #    (2026-08-19 kgy 실측 재현: 이걸 안 보면 라벨이 있는데 "없다"고 말한다)
+    from ase.calculators.singlepoint import SinglePointCalculator
+    spc = Atoms("LiPS", positions=rng.normal(0, 2, (3, 3)), cell=np.eye(3) * 8, pbc=True)
+    spc.calc = SinglePointCalculator(spc, energy=-9.25, forces=np.full((3, 3), 0.3))
+    chk(sorted(spc.arrays) == ["numbers", "positions"],
+        "[음성] extxyz forces 는 arrays 에 없다 — arrays 만 보면 놓친다")
+    chk(force_key(spc) == "calc", "[양성] calculator 에 있는 힘을 찾는다")
+    chk(energy_key(spc) == "calc", "[양성] calculator 에 있는 에너지를 찾는다")
+    chk(np.allclose(get_forces_label(spc, "calc"), 0.3), "[양성] calc 힘 값이 맞다")
+    chk(abs(get_energy_label(spc, "calc") + 9.25) < 1e-12, "[양성] calc 에너지 값이 맞다")
     # guard
     try:
         guard_gpu(); chk(True, "[음성] QE 없으면 guard 통과")
@@ -330,9 +354,11 @@ def main():
     if fkey is None:
         raise SystemExit(
             f"⛔ {a.test} 에서 힘 라벨을 못 찾았다 — 이 도구는 힘을 1순위로 잰다.\n"
-            f"   찾아본 이름: {', '.join(FORCE_ALIASES)}\n"
+            f"   찾아본 이름: {', '.join(FORCE_ALIASES)}  (+ SinglePointCalculator)\n"
             f"   이 파일의 per-atom 배열: {sorted(probe.arrays)}\n"
             f"   구조당 info 키: {sorted(probe.info)}\n"
+            f"   calculator: {type(probe.calc).__name__ if probe.calc else '없음'}"
+            f" · 담긴 값 {sorted(getattr(probe.calc, 'results', {}) or {})}\n"
             f"   → 맞는 이름이 위에 있으면 FORCE_ALIASES 에 추가한다 (한 줄).")
     ekey = energy_key(probe)
     if ekey is None:

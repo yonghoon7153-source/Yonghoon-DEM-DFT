@@ -3859,10 +3859,16 @@ def paper_figures(pid: str) -> list[dict]:
     cc = comment_counts()                  # 그림 카드에 💬N 을 바로 찍기 위해
     out = []
     for f in meta.get("figures", []):
-        p = d / f.get("file", "")
+        # file 이 **없을 수도, None 일 수도** 있다. None 은 중복 크롭을 지우면서
+        # `dup_of` 표식만 남긴 항목이다 (extract_figures.py --dedupe, 2026-08-19).
+        # `.get("file","")` 는 키가 있고 값이 None 이면 None 을 돌려줘 Path / None 으로 터졌다.
+        fn = f.get("file") or ""
+        if not fn:
+            continue
+        p = d / fn
         if not p.is_file():
             continue                       # json 만 남고 png 가 지워진 경우 방어
-        rel = f"litdb/figures/{pid}/{f['file']}"
+        rel = f"litdb/figures/{pid}/{fn}"
         out.append({
             "comments": cc.get(rel, 0),
             "key": f.get("key") or f"f{f.get('label','')}",
@@ -4348,7 +4354,8 @@ def _fig_keys(slug: str) -> dict[str, str]:
         figs = json.loads(j.read_text(encoding="utf-8")).get("figures", [])
     except (OSError, ValueError):
         return {}
-    return {f.get("file", ""): (f.get("key") or "") for f in figs}
+    # file 이 None 인 항목(중복 크롭을 지우고 dup_of 만 남긴 것)은 파일이 없으니 뺀다
+    return {f["file"]: (f.get("key") or "") for f in figs if f.get("file")}
 
 
 def paper_comment_search() -> dict[str, str]:

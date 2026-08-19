@@ -1187,6 +1187,17 @@ def audit():
         if dg:
             flags.append(f"중복 크롭 {sum(len(g) - 1 for g in dg)}장 "
                          + ",".join(g[0].name for g in dg[:3]) + " (--dedupe)")
+        # 항목 둘이 **같은 파일**을 가리키는 경우 — 파일은 하나뿐이라 --dedupe 가 못 잡는다.
+        # (webapp 은 그림을 두 번 그리고 파일명→키 사전에서는 하나가 지워진다)
+        seen_f = {}
+        for r in figs:
+            if r.get("file"):
+                seen_f.setdefault(r["file"], []).append(r.get("key"))
+        shared = {f: ks for f, ks in seen_f.items() if len(ks) > 1}
+        if shared:
+            flags.append("한 파일을 여러 항목이 가리킴 "
+                         + ",".join(f"{f}({'/'.join(map(str, ks))})"
+                                    for f, ks in list(shared.items())[:2]))
         rows.append((slug, len(main), len(si), len(tab), flags))
         warn += bool(flags)
 
