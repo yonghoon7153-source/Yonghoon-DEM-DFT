@@ -122,11 +122,10 @@
   ]
  },
  "deklerk2016_diffusion_site_disorder_argyrodite": {
-  "figures": 12,
-  "generated": "2026-08-05",
+  "figures": 6,
+  "generated": "2026-08-19",
   "pdfs": [
-   "DFT 먹인 논문/32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "DFT 먹인 논문/32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf"
+   "b1606701-cm6b03630_si_001.pdf"
   ]
  },
  "dem_mechanical_stresses_ssb_electrode_cycling": {
@@ -494,10 +493,11 @@
   ]
  },
  "ling2026_dual_thermal_stabilization_fg_cuox": {
-  "figures": 6,
+  "figures": 37,
   "generated": "2026-08-19",
   "pdfs": [
-   "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf"
+   "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "59. Sup) Ling2026_SuppMat.docx (docx 임베디드 이미지 — tools/litdb/docx_to_text.py --media)"
   ]
  },
  "liu2013_cage_methane_adsorption_hydrate_nucleation": {

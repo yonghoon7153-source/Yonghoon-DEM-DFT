@@ -2,183 +2,11 @@
  "slug": "deklerk2016_diffusion_site_disorder_argyrodite",
  "dpi": 300,
  "maxpx": 3000,
- "generated": "2026-08-05",
+ "generated": "2026-08-19",
  "sources": [
-  "DFT 먹인 논문/32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-  "DFT 먹인 논문/32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf"
+  "b1606701-cm6b03630_si_001.pdf"
  ],
  "figures": [
-  {
-   "key": "f1",
-   "kind": "figure",
-   "label": "1",
-   "page": 2,
-   "file": "fig_1.png",
-   "caption": "Figure 1. Crystal structure of HT Li7PS6.15 Colors: yellow for Li-sites (48h), green for phosphorus, blue for bonded sulfur, pink for 4a sites, and red for 4c sites.",
-   "bbox": [
-    318.5,
-    397.3,
-    570.5,
-    585.4
-   ],
-   "w": 1051,
-   "h": 784,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.669
-  },
-  {
-   "key": "f2",
-   "kind": "figure",
-   "label": "2",
-   "page": 3,
-   "file": "fig_2.png",
-   "caption": "Figure 2. Arrhenius plot of the conductivities from MD simulations based on the intercage jump frequency, σJ, and the MSD, σ*.",
-   "bbox": [
-    54.5,
-    316.7,
-    306.5,
-    507.4
-   ],
-   "w": 1050,
-   "h": 796,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.895
-  },
-  {
-   "key": "f3",
-   "kind": "figure",
-   "label": "3",
-   "page": 4,
-   "file": "fig_3.png",
-   "caption": "Figure 3. Li-ion density in the argyrodite unit cell during MD simulations at 450 K of (a) Li7PS6, (b) Li6PS5Cl, and (c) Li6PS5I. Red indicates high Li-ion density, followed by yellow, green, and blue representing lower densities. the doublet jumps, which are also observed by XRD4 and NMR experiments.30 However, no diﬀusion paths between the pairs of 48h sites are visible, and the Li ions in Li6PS5I thus display only local mobility, explaining its low rate of macroscopic Li-ion diﬀusion. In the other compositions, the regions with high Li- ion densities are connected to neighboring high-density regions within a cage, although connections between diﬀerent cages are not clearly visible. However, there are subtle diﬀerences between the Li-ion densities in Li7PS6 and Li6PS5Cl. In Figure 3, the Li ions in Li7PS6 appear to be more localized, as observed by the larger maxima in the Li-ion densi",
-   "bbox": [
-    54.5,
-    63.2,
-    570.5,
-    517.5
-   ],
-   "w": 2151,
-   "h": 1894,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.784
-  },
-  {
-   "key": "f4",
-   "kind": "figure",
-   "label": "4",
-   "page": 5,
-   "file": "fig_4.png",
-   "caption": "Figure 4. Jump statistic plots from MD simulations at 450 K of (a) Li7PS6, (b) Li6PS5Cl, and (c) Li6PS5I. The lines represent the three diﬀerent types of jumps; green for doublet, blue for intracage, and red for intercage. Thicker lines represent larger jump rates. The colored spheres indicate S at site 4c (black), Cl at site 4c (pink), and Li-ion sites (48h) (yellow). least 5 times smaller than the jump rates of the other jump types during the MD simulations. Although all three types of jumps are necessary for macroscopic diﬀusion, this shows that to achieve higher Li-ion conductivities in argyrodites the intercage jump rate should be increased in the ﬁrst place. activation energies between 0.16 and 0.56 eV have been reported for Li6PS5X (X = Cl, Br, or I),12,14,19 strongly depending on the synthesis19 and measurement procedure.14 NMR experiments report activation energies of 0.08 and 0",
-   "bbox": [
-    54.5,
-    63.2,
-    570.5,
-    469.9
-   ],
-   "w": 2151,
-   "h": 1695,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.892
-  },
-  {
-   "key": "f5",
-   "kind": "figure",
-   "label": "5",
-   "page": 6,
-   "file": "fig_5.png",
-   "caption": "Figure 5. Jump statistic plots from MD simulations at 450 K of (a) Li6PS6 and (b) Li7PS5Cl. The lines represent the three diﬀerent types of jumps; green for doublet, blue for intracage, and red for intercage. Thicker lines represent larger jump rates. The colored spheres indicate S at site 4c (black), Cl at site 4c (pink), and Li-ion sites (48h) (yellow). density is observed upon comparison of the RDF’s around the Cl and S ions at 4c sites. Although the peak width and position are equal for Cl and S, the Li density around the S ions is signiﬁcantly larger. Integrating the Li density up to 3.5 Å shows that on average there are ﬁve Li ions in the cage surrounding the Cl ions and seven Li ions surround the S ions. A similar Li distribution is observed for Cl ions at 4a sites, as shown in Figure S3. Therefore, (on average) there is always an empty doublet of 48h sites near the Cl ions, facil",
-   "bbox": [
-    54.5,
-    63.2,
-    570.5,
-    286.6
-   ],
-   "w": 2151,
-   "h": 932,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.862
-  },
-  {
-   "key": "f6",
-   "kind": "figure",
-   "label": "6",
-   "page": 6,
-   "file": "fig_6.png",
-   "caption": "Figure 6. Radial distribution functions representing the Li density as a function of distance around the Cl and S ions at the 4c sites in Li6PS5Cl during the MD simulation at 450 K.",
-   "bbox": [
-    54.5,
-    532.6,
-    306.5,
-    723.2
-   ],
-   "w": 1050,
-   "h": 795,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.94
-  },
-  {
-   "key": "f7",
-   "kind": "figure",
-   "label": "7",
-   "page": 7,
-   "file": "fig_7.png",
-   "caption": "Figure 7. Jump statistic plots from MD simulations at 450 K of Li6PS5Cl with all chloride (a) on site 4a (outside the cages) and (b) on site 4c (inside the cages). The lines represent the three diﬀerent types of jumps: green for doublet, blue for intracage, and red for intercage. Thicker lines represent larger jump rates. The colored spheres indicate S at site 4c (black), Cl at site 4c (pink), and Li-ion sites (48h) (yellow). the MD simulation. Placing all the Cl ions at the 4c sites also leads to a low Li diﬀusivity, however, not because of the intercage jump rate. In contrast, the Cl ions on the 4c sites induce a very high intercage jump rate, but the doublet jump rate decreases drastically and becomes rate-limiting, thereby causing the intercage jumps to become a local motional process. In this case, the Li-ion mobility is limited by the doublet jumps, which thus determines the macros",
-   "bbox": [
-    54.5,
-    63.2,
-    570.5,
-    284.0
-   ],
-   "w": 2151,
-   "h": 921,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.8
-  },
-  {
-   "key": "f8",
-   "kind": "figure",
-   "label": "8",
-   "page": 7,
-   "file": "fig_8.png",
-   "caption": "Figure 8. Jump rates as a function of Cl occupancy of 4c sites in Li6PS5Cl from MD simulations at 450 K.",
-   "bbox": [
-    54.5,
-    549.6,
-    306.5,
-    733.1
-   ],
-   "w": 1050,
-   "h": 766,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.907
-  },
-  {
-   "key": "f9",
-   "kind": "figure",
-   "label": "9",
-   "page": 8,
-   "file": "fig_9.png",
-   "caption": "Figure 9. Arrhenius plot of the conductivities of Li5PS4X2 compounds from MD simulations based on the intercage jump frequency, σJ, and the MSD, σ*.",
-   "bbox": [
-    54.5,
-    63.2,
-    306.5,
-    248.4
-   ],
-   "w": 1050,
-   "h": 773,
-   "dpi": 300,
-   "src": "32. Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
-   "blank": 0.92
-  },
   {
    "key": "fS1",
    "kind": "figure",
@@ -186,6 +14,7 @@
    "page": 2,
    "file": "fig_S1.png",
    "caption": "Figure S1: Li-ion density in the argyrodite unit cell during MD-simulations at 450 K of (a) Li7PSe6 and (b) Li6PS5Br. Red indicates high Li-ion density, followed by yellow, green, and blue representing lower densities.",
+   "rotated_deg": 0,
    "bbox": [
     66.0,
     89.0,
@@ -195,7 +24,7 @@
    "w": 2001,
    "h": 968,
    "dpi": 300,
-   "src": "32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
+   "src": "b1606701-cm6b03630_si_001.pdf",
    "blank": 0.694
   },
   {
@@ -205,6 +34,7 @@
    "page": 2,
    "file": "fig_S2.png",
    "caption": "Figure S2: Jump statistics plots from MD-simulations at 450 K of (a) Li7PSe6 and (b) Li6PS5Br. The lines represent the three diﬀerent types of jumps; green: doublet, blue: intracage, red: intercage, thicker lines represent larger jump rates. The coloured spheres indicate; black: Se/S at 4c, pink: Br at 4c, yellow: Li-ion sites (48h).",
+   "rotated_deg": 0,
    "bbox": [
     66.0,
     432.8,
@@ -214,7 +44,7 @@
    "w": 2001,
    "h": 783,
    "dpi": 300,
-   "src": "32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
+   "src": "b1606701-cm6b03630_si_001.pdf",
    "blank": 0.859
   },
   {
@@ -224,6 +54,7 @@
    "page": 3,
    "file": "fig_S3.png",
    "caption": "Figure S3: Radial distribution functions representing the Li-density as a function of distance around the Cl- and S-ions at the 4a-sites in Li6PS5Cl during the MD-simulation at 450 K.",
+   "rotated_deg": 0,
    "bbox": [
     66.0,
     229.5,
@@ -233,8 +64,68 @@
    "w": 2001,
    "h": 1173,
    "dpi": 300,
-   "src": "32. Sup) Diffusion Mechanism of Li Argyrodite Solid Electrolytes for Li-Ion Batteries and Prediction of Optimized Halogen Doping The Effect of Li Vacancies, Halogens, and Halogen Disorder.pdf",
+   "src": "b1606701-cm6b03630_si_001.pdf",
    "blank": 0.965
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 4,
+   "file": "tab_S1.png",
+   "caption": "Table S1: Conductivities, jump rates and activation energies from MD-simulations at 300 K, the value in brackets is the standard",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "w": 2300,
+   "h": 2990,
+   "dpi": 276,
+   "src": "b1606701-cm6b03630_si_001.pdf",
+   "blank": 0.957
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 5,
+   "file": "tab_S2.png",
+   "caption": "Table S2: Conductivities, jump rates and activation energies from MD-simulations at 450 K, the value in brackets is the standard",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "w": 2300,
+   "h": 2990,
+   "dpi": 276,
+   "src": "b1606701-cm6b03630_si_001.pdf",
+   "blank": 0.954
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 6,
+   "file": "tab_S3.png",
+   "caption": "Table S3: Conductivities, jump rates and activation energies from MD-simulations at 600 K, the value in brackets is the standard",
+   "rotated_deg": 90,
+   "bbox": [
+    6.0,
+    6.0,
+    606.0,
+    786.0
+   ],
+   "w": 2300,
+   "h": 2990,
+   "dpi": 276,
+   "src": "b1606701-cm6b03630_si_001.pdf",
+   "blank": 0.954
   }
  ]
 }

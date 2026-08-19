@@ -94,6 +94,27 @@ def is_caption(text):
     return kind, m.group("label"), bool(m.group("si"))
 
 
+def caption_rotation(page, cap_bbox):
+    """캡션 줄의 **쓰기 방향**으로 회전을 판정. 0 이면 정상, 90 이면 옆으로 누운 표.
+
+    왜 (2026-08-19, de Klerk 2016 SI 에서 잡음): Wiley/ACS SI 는 넓은 표를
+    `sidewaystable` 로 **90° 눕혀** 싣는 일이 잦다. 그러면 캡션 줄의 dir 이
+    (0,−1) 이 되고 bbox 가 **세로로 긴 띠**가 된다(실측 x 113–125 · y 72–720).
+    "캡션 아래가 표" 라는 기하 논리가 통째로 깨져서 표가 **한 장도 안 잘린다**
+    (de Klerk Tables S1–S3 가 정확히 그렇게 누락돼 있었다).
+    """
+    x0, y0, x1, y1 = cap_bbox
+    for b in page.get_text("dict")["blocks"]:
+        for l in b.get("lines", []):
+            bx0, by0, bx1, by1 = l["bbox"]
+            if bx1 < x0 - 2 or bx0 > x1 + 2 or by1 < y0 - 2 or by0 > y1 + 2:
+                continue
+            d = l.get("dir", (1, 0))
+            if abs(d[0]) < 0.5 and abs(d[1]) > 0.5:
+                return 90
+    return 0
+
+
 def text_blocks(page):
     return [b for b in page.get_text("blocks") if b[6] == 0 and b[4].strip()]
 
@@ -261,6 +282,11 @@ def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
     (실측: Zhou 2026 SI 의 Fig S1/S2/S12 는 캡션이 쪽 맨 위 y=76 이고 그림이 그 아래).
     위가 비면 아래로 한 번 더 본다 — 표는 처음부터 아래.
     """
+    if kind == "table" and caption_rotation(page, cap) == 90:
+        # 누운 표는 쪽 전체를 잡는다. 표가 쪽을 거의 다 채우므로 잘라내다 잘릴 위험이
+        # 옆띠를 계산하는 것보다 크다. 방향은 렌더 뒤 PIL 로 세운다.
+        pr = page.rect
+        return (fitz.Rect(pr.x0 + 6, pr.y0 + 6, pr.x1 - 6, pr.y1 - 6), 1, 0)
     if kind == "table":
         r = table_rect(page, cap, tables, stop_y)
         if r is not None and r.height >= 36:
@@ -274,6 +300,17 @@ def region_for(page, cap, kind, blocks, tables=(), min_draw=6, stop_y=1e9):
     if r2 is not None and (ni2 or nd2 >= min_draw):
         return r2, ni2, nd2
     return (r, ni, nd) if r is not None else (r2, ni2, nd2)
+
+
+def _upright(path, deg):
+    """누운 표 PNG 를 세운다. PIL 없으면 **조용히 넘어가지 않고** 알린다."""
+    try:
+        from PIL import Image
+    except Exception:
+        print(f"    ⚠ PIL 없음 — {Path(path).name} 이 {deg}° 누운 채 저장됐다")
+        return
+    im = Image.open(path)
+    im.rotate(-deg, expand=True).save(path, "PNG", optimize=True)
 
 
 def _shrink(path):
@@ -367,6 +404,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                     long_pt = max(rect.width, rect.height)
                     if long_pt > 0:
                         d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
+                rot = caption_rotation(page, tuple(cr)) if kind == "table" else 0
                 pix = page.get_pixmap(clip=rect, dpi=d_eff)
                 br = blank_ratio(pix)
                 if br > keep_blank:
@@ -379,7 +417,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                     found = [f for f in found if f["key"] != key]
                 fn = f"{'tab' if kind == 'table' else 'fig'}_{label.upper()}.png"
                 rec = {"key": key, "kind": kind, "label": label.upper(), "page": pno + 1,
-                       "file": fn, "caption": caption[:900],
+                       "file": fn, "caption": caption[:900], "rotated_deg": rot,
                        "bbox": [round(v, 1) for v in rect],
                        "w": pix.width, "h": pix.height, "px": pix.width * pix.height, "dpi": d_eff,
                        "src": Path(pdf_path).name, "blank": round(br, 3)}
@@ -388,6 +426,8 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
                 if not dry:
                     out_dir.mkdir(parents=True, exist_ok=True)
                     pix.save(out_dir / fn)
+                    if rot:
+                        _upright(out_dir / fn, rot)
                     _shrink(out_dir / fn)
         doc.close()
 
