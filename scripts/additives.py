@@ -87,11 +87,49 @@ def recipe_counts(wt: dict, solid_vol_um3: float, vgcf_d=VGCF_D, vgcf_l=VGCF_L,
     return out
 
 
+#: 등록된 첨가제.  ★ 여기에 없는 이름은 **조용히 버려지지 않는다** (아래 fail-closed).
+KNOWN_ADDITIVES = ('VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT')
+#: 레시피에 정상적으로 올 수 있으나 첨가제가 **아닌** 키 (버려도 되는 것).
+_RECIPE_NON_ADDITIVE = ('AM', 'SE', 'AM_P', 'AM_S', 'CAM', 'binder_none')
+
+
 def additive_wt(wt: dict) -> dict:
     """Pull just the conductive-additive wt% from a recipe dict, ignoring AM/SE.  So
     'AM:SE:VGCF=72:27:1' and 'VGCF=1' both give {'VGCF': 1.0} — the AM:SE in the recipe is
-    NOT used (the real scaffold sets it; see recipe_counts_real)."""
-    return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT') if wt.get(k, 0) > 0}
+    NOT used (the real scaffold sets it; see recipe_counts_real).
+
+    ★★ **fail-closed** (2026-08-19, 코팅 트랙 코드리뷰 A4).  옛 판은 화이트리스트에 없는
+    이름을 **조용히 드랍**하고 런은 EXIT 0 로 끝났다 — `--add-recipe "…:SECOAT=…:2"` 가
+    아무 경고 없이 첨가제 0개로 돌았다는 뜻이다.  이것은 `--fibre` 회귀(2026-08-12,
+    UnboundLocalError 를 except 가 삼켜 선분 스탬프가 조용히 꺼진 건)와 **같은 부류**이고,
+    규칙 F(조용한 강등 금지)가 금지하는 형태다.  ⇒ 모르는 이름은 **거부**한다.
+
+    ⚠ 새 첨가제를 추가하려면 이름 하나로는 부족하다 — `PHASE`·`DENS`·`SEEDER_ID_KIND`,
+    `mpm3d_compaction.ADD`/`ADD_E_NU`, `step3_sigma.SID_NAME`/`POLYLINE_PHASES`/rasterize 상 루프/
+    `am_m`/`ion_m`/`carb`, `mpm_webapp_payload._cond_ph`/`_sig3`/`_sig3i`,
+    `electronic_connectivity.cond_phases` 등 **≥18곳**을 함께 등록해야 한다.
+    ⇒ 여기서 거부되는 것이 하류에서 조용히 사라지는 것보다 낫다.
+    """
+    if not isinstance(wt, dict):
+        raise TypeError(f'additive_wt: dict 가 필요하다 (받은 것: {type(wt).__name__})')
+    unknown = sorted(k for k, v in wt.items()
+                     if k not in KNOWN_ADDITIVES and k not in _RECIPE_NON_ADDITIVE
+                     and _pos(v))
+    if unknown:
+        raise SystemExit(
+            f"ABORT — 모르는 첨가제 이름: {unknown}.  등록된 것: {list(KNOWN_ADDITIVES)}.\n"
+            f"  옛 판은 이것을 조용히 드랍하고 EXIT 0 로 끝났다 (첨가제 0개로 돈 런이 정상으로 보였다).\n"
+            f"  오타면 고치고, 진짜 새 상이면 additives.PHASE/DENS + mpm3d ADD + step3_sigma SID_NAME/\n"
+            f"  rasterize 상 루프 + payload _cond_ph/_sig3 등 ≥18곳에 함께 등록할 것.")
+    return {k: float(wt[k]) for k in KNOWN_ADDITIVES if _pos(wt.get(k, 0))}
+
+
+def _pos(v) -> bool:
+    """값이 '양수' 인가 — 숫자로 못 읽히면 False (옛 `wt.get(k, 0) > 0` 는 문자열에서 TypeError)."""
+    try:
+        return float(v) > 0
+    except (TypeError, ValueError):
+        return False
 
 
 def recipe_counts_real(add_wt: dict, am_vol_um3: float, se_vol_um3: float, vgcf_d=VGCF_D,

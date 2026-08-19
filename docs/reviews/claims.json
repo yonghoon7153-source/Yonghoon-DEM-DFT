@@ -1563,7 +1563,7 @@
    "id": "CL-50",
    "date": "2026-08-19",
    "status": "live",
-   "kind": "label",
+   "kind": "convention",
    "claim": "**σ_AM 은 물성이 아니라 코퍼스 적합 endpoint 다** — 문헌 두 출처가 우리 값의 1/200 을 준다 (CL-47 σ_VGCF 과 같은 범주 오류의 두 번째 사례)",
    "measured": {
     "metric": "σ_AM (NMC 전자전도도) — 우리 LOCKED 값 vs 문헌 인용값",
@@ -1586,7 +1586,7 @@
    "id": "CL-51",
    "date": "2026-08-19",
    "status": "live",
-   "kind": "retraction",
+   "kind": "convention",
    "claim": "**정정 2건 — 우리 문서의 귀속·범위 오류** (Alabdali digest 중 발견)",
    "measured": {
     "metric": "문서 주장 대 원전",
@@ -1609,7 +1609,7 @@
    "id": "CL-52",
    "date": "2026-08-19",
    "status": "live",
-   "kind": "measurement",
+   "kind": "measurement_record",
    "claim": "코팅 코어-쉘을 **단일구(R+t)** 로 그렸을 때 코어가 닿는(δ ≥ 2t) AM–AM 접촉 비율 — 코드 리뷰 A1 의 \"영구 OFF\" 판정을 실측으로 재판정",
    "measured": {
     "metric": "δ(겹침) 분포, 쌍 종류별.  접촉 덤프 4개 + 같은 타임스텝 atom 덤프 4개, GPU 불요",

@@ -617,8 +617,27 @@ def main():
                 keys, vals = s.split('=')
                 keys = keys.split(':'); vals = [float(v) for v in vals.split(':')]
                 return dict(zip(keys, vals))
-            def _awt(wt):                                               # = additives.additive_wt verbatim
-                return {k: float(wt[k]) for k in ('VGCF', 'SuperP', 'PTFE', 'SDCP') if wt.get(k, 0) > 0}
+            #  ★ 2026-08-19 (코드리뷰 A4) — 이 "verbatim 사본" 이 실제로는 어긋나 있었다:
+            #    **SWCNT 가 빠져** 있어서, 이 폴백 경로로 도는 런은 SWCNT 를 조용히 드랍했다.
+            #    (A14 로 SWCNT 를 추가할 때 본체만 고치고 이 사본을 못 고친 것 = 사본의 전형적 실패.)
+            #    이제 이름 목록을 맞추고 **fail-closed** 도 같이 옮긴다 — 본체가 거부하는 입력을
+            #    폴백이 통과시키면 "어느 경로로 돌았나" 에 따라 결과가 달라진다.
+            _KNOWN = ('VGCF', 'SuperP', 'PTFE', 'SDCP', 'SWCNT')
+            _NONADD = ('AM', 'SE', 'AM_P', 'AM_S', 'CAM', 'binder_none')
+
+            def _p(v):
+                try:
+                    return float(v) > 0
+                except (TypeError, ValueError):
+                    return False
+
+            def _awt(wt):                                               # = additives.additive_wt
+                _bad = sorted(k for k, v in wt.items()
+                              if k not in _KNOWN and k not in _NONADD and _p(v))
+                if _bad:
+                    raise SystemExit(f'ABORT — 모르는 첨가제 이름: {_bad}.  등록된 것: {list(_KNOWN)} '
+                                     f'(additives.py 폴백 경로)')
+                return {k: float(wt[k]) for k in _KNOWN if _p(wt.get(k, 0))}
             _DENS = {'AM': 4.80, 'SE': 2.00, 'VGCF': 2.00}              # = additives.DENS subset
         try:
             _wts = _awt(_parse(a.add_recipe))                           # {'VGCF':1.0,...} — AM/SE ignored

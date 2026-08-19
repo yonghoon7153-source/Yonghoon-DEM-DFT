@@ -18,6 +18,27 @@ from __future__ import annotations
 # 각 프리셋: cei_suppress(화학성장 증분 억제배수, ≥1)·r_ct_factor(계면 R_ct 배수, <1=개선)·
 #            sigma_ion_mod·sigma_e_mod(계면/벌크 σ 배수)·seed_morph·anchor(출처)·shape(항상 ASSUMED).
 # ★값 = magnitude 앵커.  None = 앵커 없음(스윕 전용, 날조 금지).
+#
+# ⚠⚠⚠ **NOT WIRED — 이 표를 보고 "코팅이 배선돼 있다" 고 믿지 말 것** (2026-08-19 코드리뷰).
+#   ★ 정확히 말하면 필드가 아니라 **함수** 단위로 갈린다 (전수 검색, 이 파일 제외):
+#     ✅ 살아 있는 경로 = `get_preset` + `coated_chem_x` (각 외부 호출 2회)
+#          → `b1_chem_fade.py:329-331` · `webapp/app.py:3912-3915`.  **소비되는 필드는
+#            `cei_suppress` 하나뿐**이다.
+#     ⛔ `coated_rint0`   — 외부 호출 **0 회**.  `r_ct_factor` 를 실제로 쓰는 곳은 이 함수
+#          하나인데 그 함수를 아무도 안 부른다 ⇒ **죽은 함수를 통해 죽은 필드**다.
+#     ⛔ `coating_effect` — 외부 호출 0 회.  `sigma_ion_mod` · `sigma_e_mod` · `seed_morph` 는
+#          이 함수가 dict 로 **노출만** 하고, 그 dict 를 받는 곳이 없다.
+#     ⛔ `preset_summary` — 외부 호출 0 회.
+#   ⚠ `seed_morph` 는 값 `'shell'` 에 **대응하는 시더도 없다** (`additives.py` =
+#     seed_coat / seed_sheath / seed_sdcp / seed_fibres / seed_blobs / seed_carbon_black;
+#     `seed_coat(shell_um=…)` 가 의미상 가장 가깝지만 그 매핑을 하는 코드가 없다).
+#   ⚠ grep 주의: `sigma_e_mod` 로 검색하면 5건이 잡히는데 전부 `se_material.sigma_e_modelled`
+#     = **다른 식별자**의 부분일치다.  실사용 아님.
+#   ⇒ 네 필드는 **설계 자리표시자(placeholder)** 다.  배선하려면 소비처를 먼저 만들고,
+#     그때 이 배너를 갱신한다 (아래 `_selftest` 의 NOT-WIRED 검사가 강제한다).
+#   ⚠ 특히 `r_ct_factor` 는 **STEP3 옴 경로가 아니라 STEP4 패러데이 경로**(step4_dyn.Kinetics
+#     i0 / asr_film)에 들어가야 한다 — 두 경로를 섞으면 같은 물리를 두 번 센다.
+#     (LPSCl 코팅 = 이온전도체 → 복셀 옴 / LNO·LZO 산화물 = 표면화학 → R_ct.  분기를 못 박을 것.)
 COATING_PRESETS = {
     'none': {
         'label': 'bare NCM (무코팅)', 'cei_suppress': 1.0, 'r_ct_factor': 1.0,
@@ -145,6 +166,39 @@ def _selftest() -> int:
     eff = coating_effect('LNO', bare_chem_x=1.30)
     assert abs(eff['chem_x_coated'] - 1.02) < 1e-9 and eff['r_ct_factor'] == 1.0 / 20.0 and 'note' in eff
     assert coating_effect('SDCP')['chem_x_coated'] is None      # bare 안 주면 None
+    # ── NOT-WIRED 검사 (2026-08-19) ─────────────────────────────────────────────
+    #   위 배너가 **조용히 낡는 것**을 막는다.  누군가 `coated_rint0`/`coating_effect`/
+    #   `preset_summary` 를 배선하면 여기서 실패하고, 그때 배너를 갱신하게 된다.
+    #   ⚠ 반대 방향(배선을 지우는 것)은 이 검사가 못 잡는다 — 그건 그 소비처의 회귀다.
+    import os as _os
+    import re as _re
+    _root = _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
+    _me = _os.path.abspath(__file__)
+    _dead = {'coated_rint0': 0, 'coating_effect': 0, 'preset_summary': 0}
+    _live = {'coated_chem_x': 0, 'get_preset': 0}
+    _pat = _re.compile(r'\b(' + '|'.join(list(_dead) + list(_live)) + r')\s*\(')
+    for _dp, _dn, _fs in _os.walk(_root):
+        if any(x in _dp for x in ('/.git', '/__pycache__', '/node_modules', '/litdb')):
+            continue
+        for _f in _fs:
+            if not _f.endswith('.py'):
+                continue
+            _p = _os.path.join(_dp, _f)
+            if _os.path.abspath(_p) == _me:
+                continue
+            try:
+                _t = open(_p, encoding='utf-8', errors='replace').read()
+            except OSError:
+                continue
+            for _m in _pat.findall(_t):
+                (_dead if _m in _dead else _live)[_m] += 1
+    for _k, _v in _dead.items():
+        if _v:
+            fails.append(f'배너가 낡았다 — `{_k}` 가 이제 외부에서 {_v}회 호출된다 '
+                         f'(NOT WIRED 배너를 갱신할 것)')
+    for _k, _v in _live.items():
+        if not _v:
+            fails.append(f'회귀 — `{_k}` 외부 호출이 사라졌다 (cei_suppress 경로가 끊겼다)')
     print('selftest OK' if not fails else 'selftest FAIL: ' + '; '.join(fails))
     print(preset_summary())
     return 1 if fails else 0

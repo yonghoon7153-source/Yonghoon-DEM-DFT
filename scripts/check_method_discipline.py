@@ -822,9 +822,65 @@ def check_argparse_help(verbose=True):
     return errs, warns
 
 
+#: 규칙 I — 본체 ↔ 폴백 사본이 어긋나면 안 된다.
+#:   (모듈경로, 심볼)  ↔  (사본파일, 그 안의 리터럴 이름)
+_COPY_PARITY = (
+    ('scripts/additives.py', 'KNOWN_ADDITIVES',
+     'scripts/mpm_input_from_case.py', '_KNOWN'),
+)
+
+
+def check_copy_parity(verbose=True):
+    """규칙 I — "verbatim 사본" 은 실제로 verbatim 이어야 한다.
+
+    ★ 실사고 2026-08-19: `mpm_input_from_case.py` 의 ImportError 폴백에 있는
+    `_awt` 가 스스로 *"= additives.additive_wt verbatim"* 이라 적어 놓고 **SWCNT 를
+    빠뜨리고 있었다** (A14 로 SWCNT 를 추가할 때 본체만 고쳤다).  그 경로로 도는 런은
+    SWCNT 를 조용히 드랍했다 — 규칙 F 가 잡는 "조용한 강등" 과 같은 부류인데,
+    F 는 import 그림자만 보므로 이 형태는 통과했다.
+
+    ⚠ 이 검사는 **이름 목록의 일치**만 본다.  로직이 갈라지는 것은 못 잡는다 —
+    사본을 두는 것 자체가 부채라는 사실은 변하지 않는다.
+    """
+    import ast as _ast
+    errs, warns = [], []
+    for src_f, src_name, cp_f, cp_name in _COPY_PARITY:
+        vals = {}
+        for f, n in ((src_f, src_name), (cp_f, cp_name)):
+            p = os.path.join(ROOT, f)
+            try:
+                tree = _ast.parse(open(p, encoding='utf-8').read())
+            except (OSError, SyntaxError) as exc:
+                errs.append(f'I_COPY_UNREADABLE| {f} 를 못 읽는다 ({exc})')
+                vals[n] = None
+                continue
+            got = None
+            for node in _ast.walk(tree):
+                if isinstance(node, _ast.Assign) and any(
+                        isinstance(t, _ast.Name) and t.id == n for t in node.targets):
+                    try:
+                        got = tuple(_ast.literal_eval(node.value))
+                    except (ValueError, SyntaxError):
+                        got = None
+            vals[n] = got
+            if got is None:
+                errs.append(f'I_COPY_MISSING| {f} 에서 `{n}` 리터럴을 못 찾았다 — '
+                            f'이름이 바뀌었으면 _COPY_PARITY 를 갱신할 것')
+        a, b = vals.get(src_name), vals.get(cp_name)
+        if a is not None and b is not None:
+            if a != b:
+                errs.append(f'I_COPY_DRIFT| **사본 표류** — {src_f}:{src_name} = {list(a)} 인데 '
+                            f'{cp_f}:{cp_name} = {list(b)}.  폴백 경로로 돈 런은 '
+                            f'{sorted(set(a) ^ set(b))} 를 조용히 다르게 처리한다')
+            elif verbose:
+                print(f'  ✓ {src_name} ↔ {cp_name} 일치 ({len(a)}개)')
+    return errs, warns
+
+
 def run_all(verbose=True):
     errs, warns = [], []
-    for title, fn in (('규칙 A — 규약·격자·주기 패리티 (D4)', check_convention_parity),
+    for title, fn in (('규칙 I — 본체 ↔ 폴백 사본 패리티', check_copy_parity),
+                      ('규칙 A — 규약·격자·주기 패리티 (D4)', check_convention_parity),
                       ('규칙 B — 판별력 있는 rung (D2)', check_oblique_rungs),
                       ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger),
                       ('규칙 H — argparse help 가 살아 있는가', check_argparse_help),
