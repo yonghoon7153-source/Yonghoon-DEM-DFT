@@ -223,7 +223,20 @@ PY
     grep -q -- "$NEEDLE" "$SHF" || { echo "[p2] ABORT — 미주입: $NEEDLE"; return 1; }
   done
   echo "[p2] ── $TAG  shift=($SH)  σ_VGCF=$SIGMA"
-  ( cd "$RUN" && bash "$(basename "$SHF")" ) || { echo "[p2] $TAG FAILED"; return 1; }
+  #  ★★ 2026-08-19 — **피크 호스트 RAM 을 실측**한다.  vox 0.10 이 가용 57 GB 에서
+  #    조립 중 OOM 으로 죽었는데(로그가 `STEP3 solve:` 전에 아무 에러 없이 끊김 =
+  #    OOM killer 의 SIGKILL), 러너의 RAM 문턱(0.1 → 40 GB)은 **dof 투영에서 나온 추정**이라
+  #    실제 피크를 몰랐다.  ⇒ 추정을 실측으로 바꾼다.  `/usr/bin/time -v` 가 있으면
+  #    "Maximum resident set size" 를 찍고, 없으면 조용히 그냥 돈다 (기능은 안 막는다).
+  #    ⚠ 이 값은 **한 팔의 피크**다.  팔은 순차 실행이므로 동시 합산이 아니다.
+  local TIMEV="" RSSLOG="$RUN/.peak_rss_${TAG}.txt"
+  [ -x /usr/bin/time ] && TIMEV="/usr/bin/time -v -o $RSSLOG"
+  ( cd "$RUN" && $TIMEV bash "$(basename "$SHF")" ) || { echo "[p2] $TAG FAILED"; return 1; }
+  if [ -s "$RSSLOG" ]; then
+    local PK
+    PK=$(awk -F': *' '/Maximum resident set size/{print $2}' "$RSSLOG")
+    [ -n "$PK" ] && echo "[p2] ▸ $TAG 피크 호스트 RSS = $(awk -v k="$PK" 'BEGIN{printf "%.1f", k/1048576}') GB"
+  fi
   [ -s "$RUN/$(basename "$OUT")" ] && mv "$RUN/$(basename "$OUT")" "$OUT"
 }
 
