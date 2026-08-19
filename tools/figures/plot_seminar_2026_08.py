@@ -546,6 +546,71 @@ def fig_stability_band():
     return _save(fig, "step4_stability_band.png")
 
 
+def fig_anneal_scheme():
+    """짧은 어닐이 무엇을 하는지 — **모식도**. 데이터가 아니다.
+
+    왜 이 그림인가 (2026-08-19) — 13장이 히스토그램 하나뿐이라 "왜 전부 음수인가" 가
+    설명 없이 결과만 있었다. 이완이 **가장 가까운 골짜기**에서 멈춘다는 그림 하나면
+    막대가 전부 왼쪽인 이유가 즉시 보인다.
+
+    ⚠ 축에 눈금을 넣지 않는다 — 모식도임을 화면에서 알 수 있어야 한다.
+      숫자는 오른쪽 히스토그램(실측)이 진다.
+    ⚠ 이 함수의 ax.text/annotate 는 **칸 라벨**이라 '그림 안 문장 금지' 의 예외다
+      (LABEL_OK 등록). 문장은 넣지 않는다.
+
+    이 그림이 **못 하는 것**
+      · 실제 에너지 지형이 아니다. 골 깊이·장벽 높이는 임의다.
+      · 어닐이 **전역** 최소를 찾는다고 말하지 않는다. 더 낮은 곳을 찾을 뿐이다.
+    """
+    _rc()
+    fig, ax = plt.subplots(figsize=(6.4, 4.6))
+    # 비대칭 이중우물 — 왼쪽 얕은 골 · 가운데 장벽 · 오른쪽 깊은 골.
+    #   ⚠ 앞 판은 사인 합을 썼는데 최소가 **비탈에** 잡혀 장벽이 사라졌다 (2026-08-19).
+    #     닫힌 꼴 (x²−1)² − 0.35x 는 최소 둘·장벽 하나가 보장된다.
+    xs = [-1.58 + i / 400.0 * 3.16 for i in range(401)]   # 벽이 너무 치솟지 않게 자른다
+    def E(x):
+        return (x * x - 1) ** 2 - 0.35 * x
+    ys = [E(x) for x in xs]
+    ax.plot(xs, ys, color=hs.INK, lw=2.4, zorder=3)
+
+    def _well(a, b):
+        return min(((x, E(x)) for x in xs if a <= x <= b), key=lambda p: p[1])
+    x1, y1 = _well(-1.6, -0.4)        # 이완이 멈춘 얕은 골
+    x2, y2 = _well(0.4, 1.6)          # 어닐 뒤 더 깊은 골
+    xb, yb = max(((x, E(x)) for x in xs if x1 < x < x2), key=lambda p: p[1])
+
+    ax.scatter([x1], [y1], s=150, color=hs.MUT, zorder=6, edgecolors="white", lw=1.6)
+    ax.scatter([x2], [y2], s=170, color=GOOD, zorder=6, edgecolors="white", lw=1.6)
+    ax.annotate("after relaxation", (x1, y1), xytext=(0, -32), textcoords="offset points",
+                ha="center", fontsize=12.5, color=hs.MUT)
+    ax.annotate("after the anneal", (x2, y2), xytext=(0, -32), textcoords="offset points",
+                ha="center", fontsize=12.5, color=GOOD, fontweight="bold")
+    # 장벽을 넘는 화살표 — ⚠ `ax.annotate("", ...)` 로 쓰면 안 된다. selftest 의
+    #   '그림 안 문장' 검사가 빈 문자열 뒤의 **코드**를 라벨로 읽는다 (2026-08-19).
+    from matplotlib.patches import FancyArrowPatch
+    ax.add_patch(FancyArrowPatch((x1, y1 + .10), (x2, y2 + .10),
+                                 arrowstyle="-|>", mutation_scale=20, color=BAD,
+                                 lw=2.4, connectionstyle="arc3,rad=-0.55", zorder=5))
+    ax.annotate("500 K, 50 ps", ((x1 + x2) / 2, yb + 0.42), ha="center", va="bottom",
+                fontsize=13, color=BAD, fontweight="bold")
+    # ΔE — 오른쪽 히스토그램이 재는 값
+    XA = 1.90
+    ax.add_patch(FancyArrowPatch((XA, y1), (XA, y2), arrowstyle="<->", mutation_scale=14,
+                                 color=hs.INK, lw=1.6, zorder=5))
+    ax.plot([x1, XA], [y1, y1], color=hs.MUT, lw=0.9, ls=":", zorder=2)
+    ax.plot([x2, XA], [y2, y2], color=hs.MUT, lw=0.9, ls=":", zorder=2)
+    ax.annotate("ΔE", (XA, (y1 + y2) / 2), xytext=(8, 0), textcoords="offset points",
+                va="center", fontsize=14, color=hs.INK, fontweight="bold")
+
+    #   ⚠ 아래 여백을 넉넉히 — 오른쪽 골이 더 깊어서 그 이름표가 x 축 제목과 겹쳤다.
+    ax.set_xlim(-1.72, 2.35); ax.set_ylim(min(ys) - 0.92, max(ys) + 0.30)
+    ax.set_xticks([]); ax.set_yticks([])
+    ax.set_xlabel("atomic arrangement")
+    ax.set_ylabel("energy")
+    _bare(ax)
+    return _save(fig, "step5_anneal_scheme.png")
+
+
 def fig_pool_size_bias():
     """후보를 많이 뽑을수록 **챔피언만** 올라간다 — 두 번째 소불릿의 그림 근거.
 
@@ -813,7 +878,9 @@ def selftest():
     LABEL_OK = {"fig_periodic", "fig_site_choice", "fig_site_grid", "fig_anion_site",
             # 폭이 넓은 6종의 **이름표** — 순위가 아니라 "여기선 대표 하나로 못 뭉갠다"
             # 를 가리키는 범주 라벨이다 (2026-08-18).
-            "fig_stability_band"}
+            "fig_stability_band",
+            # 모식도 — 골짜기·화살표에 붙는 칸 라벨 (2026-08-19)
+            "fig_anneal_scheme"}
     _fns = re.split(r"\ndef ", body)
     _bad = []
     for _f in _fns[1:]:
@@ -822,14 +889,35 @@ def selftest():
             _bad.append(_name)
     chk(f"음성: 라벨 허용 함수 밖에서 그림 안 글씨 없음 ({_bad})", not _bad)
     # 음성 — 허용 함수 안에서도 **문장**은 금지 (라벨은 짧다). 40자 넘는 리터럴을 잡는다.
+    #   ⚠ 정규식으로 하면 안 된다 (2026-08-19 오탐). `ax.annotate("x", (a, b), ha="c")`
+    #     에서 따옴표를 순서대로 짝지으면 **두 리터럴 사이의 코드**가 리터럴로 잡힌다
+    #     (`, (x2, y2), xytext=(0, -30), textcoo` 가 40자 위반으로 떴다). ast 로 본다.
+    import ast
     _long = []
-    for _f in _fns[1:]:
-        if _f.split("(", 1)[0].strip() not in LABEL_OK:
+    for _fn in ast.walk(ast.parse(body)):
+        if not isinstance(_fn, ast.FunctionDef) or _fn.name not in LABEL_OK:
             continue
-        for _m in re.finditer(r"ax\.(?:text|annotate)\(([^\n]*)", _f):
-            for _q in re.findall(r'"([^"]{40,})"', _m.group(1)):
-                _long.append(_q[:36])
+        for _n in ast.walk(_fn):
+            if not (isinstance(_n, ast.Call) and isinstance(_n.func, ast.Attribute)
+                    and _n.func.attr in ("text", "annotate")):
+                continue
+            for _a in _n.args:            # 위치 인자만 — 키워드(ha·color…)는 라벨이 아니다
+                if isinstance(_a, ast.Constant) and isinstance(_a.value, str) \
+                        and len(_a.value) > 40:
+                    _long.append(_a.value[:36])
     chk(f"음성: 라벨이 문장으로 길어지지 않았다 ({_long})", not _long)
+    # 양성 — 위 검사가 진짜 긴 라벨을 잡는지 (오탐만 없애고 기능을 죽이면 안 된다)
+    _probe = ('def fig_periodic():\n'
+              '    ax.annotate("this is a full sentence that must be caught by the guard",'
+              ' (1, 2), ha="center")\n')
+    _hit = [a.value for f in ast.walk(ast.parse(_probe))
+            if isinstance(f, ast.FunctionDef) and f.name in LABEL_OK
+            for n in ast.walk(f)
+            if isinstance(n, ast.Call) and isinstance(n.func, ast.Attribute)
+            and n.func.attr in ("text", "annotate")
+            for a in n.args
+            if isinstance(a, ast.Constant) and isinstance(a.value, str) and len(a.value) > 40]
+    chk("양성: 40자 넘는 라벨은 실제로 잡힌다", len(_hit) == 1)
     # 음성 ③ — 필요한 원본 데이터가 있어야 한다
     need = ["cascade_v23_all.csv", "site_preference_raw_78.csv", "oxidation_stability_cascade_v2.csv"]
     miss = [f for f in need if not os.path.exists(os.path.join(DB, f))]

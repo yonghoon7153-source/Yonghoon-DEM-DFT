@@ -601,28 +601,55 @@ ZrO₂ 는 하나는 P 자리, 둘은 Li 자리에 앉은 구조가 1등이 됐�
 
 ---
 
-### 13 — Thermal perturbation of the selected structure
+### 13 — Thermal perturbation of the selected structure  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 5: A short anneal tests whether the arrangement survives
-> • To escape the nearest local minimum, each structure was heated briefly and relaxed again.
-> • The trajectory is not an equilibrium structure and not a conductivity measurement.
+> • To escape the nearest local minimum, each structure was [파랑]heated briefly and relaxed again[/].
+> • The trajectory is [빨강]not an equilibrium structure and not a conductivity measurement[/].
 
-`< energy gained by shaking the structure >`
-`해설` every structure found a lower-energy arrangement once it could move
+`< what a short anneal does  ·  the energy it recovered >`
+`해설` [파랑]681 of 681[/] found a lower arrangement, median [파랑]0.81 eV per cell[/]; the top ten of the ranking did not change
+하단 용어 — Anneal: a brief run at high temperature ·
+　　　　　　 Local minimum: the nearest stable arrangement
 
-**[55초]**
+⭐ **왼쪽에 모식도를 넣었다 (2026-08-19, 1저자 요청).** 앞 판은 히스토그램 하나뿐이라
+   "왜 막대가 전부 왼쪽인가" 에 결과만 있고 설명이 없었다. 이중우물 그림 하나면
+   "이완은 가장 가까운 골에서 멈춘다" 가 즉시 보이고, 조건(500 K · 50 ps)도 그림이 진다.
+   `tools/figures/plot_seminar_2026_08.py: fig_anneal_scheme` — **모식도지 데이터가 아니다**
+   (축에 눈금 없음, 골 깊이·장벽 높이 임의).
+⚠ v6 원본의 화면 결함 — 용어줄이 헤더 위에 올라탔고, 아래 문장이
+   `a small barri / er` 로 낱말 중간에서 감겼으며 **em-dash** 가 있었다. 셋 다 정리.
+   그 문장의 조건(500 K, 50 ps)은 이제 **모식도가 진다.**
+
+**[60초]**
 
 구조 최적화는 가장 가까운 골짜기로 굴러떨어지는 것입니다. 처음 앉힌 자리 근처만 봅니다.
-실제 합성은 열을 받으며 훨씬 넓게 돌아다니다 자리를 잡습니다.
+실제 합성은 열을 받으며 훨씬 넓게 돌아다니다 자리를 잡고요.
 
-그래서 짧게 흔들어 줍니다. 500 K 에서 50 피코초. 작은 언덕 하나를 넘을 만큼은 되고
-후보 전체에 돌릴 만큼은 쌉니다. 그러고 다시 이완합니다.
+왼쪽 그림이 그 얘기입니다. 회색 점이 이완이 끝난 자리예요. 바로 옆에 **더 깊은 골**이
+있는데 사이에 언덕이 있어서 못 넘어갑니다. 이완만으로는 절대 못 가요.
 
-그림이 그 결과입니다. 전부 왼쪽 — 음의 값입니다. **모든 구조가 움직일 기회를 주니까 더
-낮은 배치를 찾았습니다.** 그만큼 처음 이완이 가까운 최소에 멈춰 있었다는 뜻입니다.
+그래서 짧게 흔들어 줍니다. **500 K 에서 50 피코초.** 작은 언덕 하나를 넘을 만큼은 되고
+후보 전체에 돌릴 만큼은 쌉니다. 그러고 다시 이완하면 파란 점, 더 낮은 자리입니다.
+그 차이가 ΔE 고요.
+
+오른쪽이 실측입니다. **681 개 전부 왼쪽 — 음의 값입니다.** 하나도 예외가 없어요.
+중앙값이 **셀당 0.81 eV**. 그만큼 처음 이완이 가까운 최소에 멈춰 있었다는 뜻입니다.
+
+⭐ 그럼 이게 순위를 바꿨느냐 — **아래쪽은 바꿨고 위쪽은 안 바꿨습니다.** 어닐 전후로
+   순위가 중앙값 **두 칸** 움직이는데, **상위 10 종은 그대로 열 종**이었어요. 그래서 이
+   단계는 결론을 뒤집는 게 아니라 **중간 순위를 정리하는** 역할입니다.
 
 ⚠ 50 피코초는 합성 시간이 아닙니다. 평형 구조라고 주장할 수 없고, 전도도 계산도
 아닙니다.
+
+💬 **말로만 (질문 오면)**
+· ΔE 범위는 **−0.66 ~ −1.20 eV/cell** 입니다. 681 개 **전부 수렴**했고요.
+· 부피도 같이 줄었습니다 — 중앙 **−3.6 %**, 최대 −9.7 %. 3단계 25 % 게이트에 비하면 작아요.
+· 순위가 제일 많이 움직인 건 **LiF 31 칸**, 다음이 Li₂O 27 칸입니다. 셋 다 host 원소만
+  든 화합물이라 원래 자리가 애매한 것들이에요.
+· 이 어닐은 **전역 최소를 찾는 게 아닙니다.** 더 낮은 곳을 찾을 뿐이고, 얼마나 더 낮은
+  곳이 남았는지는 모릅니다.
 
 ---
 

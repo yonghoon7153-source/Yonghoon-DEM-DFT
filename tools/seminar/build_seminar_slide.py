@@ -136,6 +136,26 @@ SLIDES = {
            "Combined score: several properties folded into one number"),
     drop=[10],
  ),
+ 13: dict(
+    idx=12, out="Slide13_thermal_perturbation.pptx",
+    # ⭐ 모식도를 **왼쪽에** 둔다 (1저자 2026-08-19). 앞 판은 히스토그램 하나뿐이라
+    #   "왜 막대가 전부 왼쪽인가" 가 결과만 있고 설명이 없었다.
+    figs=["docs/figures/seminar/step5_anneal_scheme.png",
+          "docs/figures/seminar/step5_anneal_gain.png"],
+    zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
+    title="Thermal perturbation of the selected structure",
+    head="Step 5: A short anneal tests whether the arrangement survives",
+    sub1="To escape the nearest local minimum, each structure was [b]heated briefly and relaxed again[/b].",
+    sub2="The trajectory is [r]not an equilibrium structure and not a conductivity measurement[/r].",
+    label="what a short anneal does  ·  the energy it recovered",
+    # ⚠ 앞 판 아래 문장("500 K for 50 picoseconds, then relax again — long enough…")은
+    #   ① em-dash 가 있었고 ② `a small barri / er` 로 낱말 중간에서 감겼다.
+    #   조건은 이제 **왼쪽 모식도가 진다** — 이 줄은 실측만 말한다.
+    note="[b]681 of 681[/b] found a lower arrangement, median [b]0.81 eV per cell[/b]; the top ten of the ranking did not change",
+    gloss=("Anneal: a brief run at high temperature  ·  "
+           "Local minimum: the nearest stable arrangement"),
+    drop=[10],
+ ),
 }
 
 
