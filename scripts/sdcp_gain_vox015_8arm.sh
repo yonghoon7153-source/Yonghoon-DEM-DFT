@@ -186,13 +186,22 @@ PY
   ) || return 1
   fi
 
+  #  ★★ 2026-08-19 — 팔 스크립트를 **프로세스별 이름 + 원자적 쓰기**로.
+  #    실사고: STEP 4 런에서 `--out p2_SBE_sph_a0.json` 이 토큰 한가운데서 잘려
+  #    (`line 9: 2_SBE_sph_a0.json: command not found`) payload 가 **정상 완주한 뒤** 죽었다.
+  #    옛 판은 두 런이 같은 `$RUN/$TAG.sh` 를 공유했다 — 한쪽이 쓰는 도중 다른 쪽이 읽으면
+  #    **반쯤 쓰인 파일**을 실행한다.  `$$` 로 갈라 놓으면 그 경합이 원리적으로 사라지고,
+  #    `mv` 로 원자화하면 부분 파일을 볼 수 없다.  (⚠ 근본 원인 미확정이지만 이 수정은
+  #    원인이 무엇이든 이 실패 형태를 없앤다.)
+  local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
       --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$LEAN_FLAGS" \
-      --tag "$TAG" --out-name "$(basename "$OUT")" > "_$TAG.sh" ) || return 1
+      --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
-    echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$RUN/_$TAG.sh"; } > "$RUN/$TAG.sh"
-  rm -f "$RUN/_$TAG.sh"
+    echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
+    && mv -f "$SHF.part" "$SHF"
+  rm -f "$SHF.body"
   # ★★ 2026-08-19 fail-closed — **생성된 스크립트 자체가 온전한가**.
   #   실사고: `--out p2_SBE_sph_a0.json` 토큰이 줄바꿈으로 **한가운데서 잘렸다**
   #   (line 8 이 `--out p` 로 끝나고 line 9 가 `2_SBE_sph_a0.json`).  bash 문법으로는
@@ -200,21 +209,21 @@ PY
   #   `command not found` 로 죽는다 = 40 분을 버리고 팔이 실패한다.
   #   ⇒ 돌기 **전에** --out 토큰이 한 줄에 붙어 있는지 본다.  잘린 파일은 지우지 않고 남긴다.
   _ON="$(basename "$OUT")"
-  if ! grep -q -- "--out $_ON" "$RUN/$TAG.sh"; then
+  if ! grep -q -- "--out $_ON" "$SHF"; then
     echo "[p2] ABORT — 생성된 $TAG.sh 에서 \`--out $_ON\` 토큰이 온전하지 않다 (줄바꿈에 잘렸나?)."
-    echo "     파일을 남겨 둔다: $RUN/$TAG.sh"
-    echo "     ── 문제 줄 ──"; grep -n -- '--out' "$RUN/$TAG.sh" | sed 's/^/     /'
-    echo "     ── 줄 길이 ──"; awk '{printf "     %d: %d chars\n", NR, length($0)}' "$RUN/$TAG.sh"
+    echo "     파일을 남겨 둔다: $SHF"
+    echo "     ── 문제 줄 ──"; grep -n -- '--out' "$SHF" | sed 's/^/     /'
+    echo "     ── 줄 길이 ──"; awk '{printf "     %d: %d chars\n", NR, length($0)}' "$SHF"
     return 1
   fi
-  bash -n "$RUN/$TAG.sh" || { echo "[p2] ABORT — 생성된 $TAG.sh 가 bash 문법 오류"; return 1; }
+  bash -n "$SHF" || { echo "[p2] ABORT — 생성된 $TAG.sh 가 bash 문법 오류"; return 1; }
   # ★ fail-closed — 세 인자가 **실제로** 주입됐는지 확인 (조용히 빠지면 팔이 오염된다)
   for NEEDLE in "--step3-vox $VOX" "--step3-origin-shift $SH" "--step3-bridge-um $BRIDGE_UM" \
                 ${SDCP_SPHERE_D:+"--step3-sdcp-sphere-d $SDCP_SPHERE_D"}; do
-    grep -q -- "$NEEDLE" "$RUN/$TAG.sh" || { echo "[p2] ABORT — 미주입: $NEEDLE"; return 1; }
+    grep -q -- "$NEEDLE" "$SHF" || { echo "[p2] ABORT — 미주입: $NEEDLE"; return 1; }
   done
   echo "[p2] ── $TAG  shift=($SH)  σ_VGCF=$SIGMA"
-  ( cd "$RUN" && bash "$TAG.sh" ) || { echo "[p2] $TAG FAILED"; return 1; }
+  ( cd "$RUN" && bash "$(basename "$SHF")" ) || { echo "[p2] $TAG FAILED"; return 1; }
   [ -s "$RUN/$(basename "$OUT")" ] && mv "$RUN/$(basename "$OUT")" "$OUT"
 }
 
