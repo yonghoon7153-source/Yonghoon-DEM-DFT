@@ -1696,6 +1696,29 @@
    "provenance": "litdb `wang2026_dryprocess_thick_cathode_failure_ncm94.md` (건식 후막 NCM94, 실험 전용) · 판단 초안 docs/session_20260819_litdb_pending.md §세 판단",
    "shared_input": "STEP5 rate law · A10 R_int(N)",
    "reviews_work_dated": "2026-08-19"
+  },
+  {
+   "id": "CL-56",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "convention",
+   "claim": "**격자 스윕 전체가 옛 SDCP E 앵커(23.6 GPa) 침대 위에 있다** — ADD_E_SET(9.0 GPa) 이전 세대",
+   "measured": {
+    "metric": "침대 생성 시점과 첨가제 E 앵커 (파일시스템 직접 확인)",
+    "value": "`kit_DBE/run_VGCF3_PTFE0.5_SDCP0.5_20260812_211730_76402/mpm_metrics.json` (**2026-08-12 21:30**)\n  additives E_GPa: VGCF 10.0 · PTFE 0.3 · **SDCP 23.6**\n  E_anchor: SDCP = **\"AFM_S6_23.6GPa\"** (VGCF·PTFE 는 null)\n  E_SE 1.53 · σ_y 0.30 (생산값, 정상)\n  SBE 침대도 같은 날 (`run_VGCF3_PTFE1_20260812_204806_75857`, 08-12 21:02)\n★ ADD_E_SET 은 **2026-08-18** 에 SDCP E 를 23.6 → **9.0 GPa** 로 바꿨다 (2.6배 연화)",
+    "unit": "GPa · 날짜"
+   },
+   "asserted": "vox 0.15 · 0.125 · 0.115 세 격자가 **같은 08-12 침대**를 재사용한다.\n✅ **격자 비교 결론은 안전하다** — 침대가 하나이므로 격자 효과에 침대 효과가 안 섞인다.  CL-41 의 R = 1.14381 도 유효하다.\n⚠ **그러나 절대 이득 수치는 옛 E 앵커 위의 값**이다.  현행 앵커로 옮기려면 **STEP 2(압밀)부터** 다시 돌아야 한다 — σ 축 노브처럼 STEP3 만 다시 푸는 것으로는 안 된다.",
+   "h0": null,
+   "h1": null,
+   "h0_predicts": null,
+   "h1_predicts": null,
+   "resolution": null,
+   "bridge": "SDCP E 는 MPM 압밀에 들어가 SDCP 가 얼마나 눌리고 주변 SE/AM 을 어떻게 밀어내는지를 바꾼다 ⇒ 침대 기하가 바뀌고 그것이 σ_e 를 바꾼다.\n★ 단 **1차 효과는 E 에 둔감할 가능성이 높다**: 이득의 주된 원천은 \"새 도체 부피\" 인데(STEP 5 = h1, σ-치환 채널을 꺼도 6.4 %만 준다), 그 부피는 `--step3-sdcp-sphere-d 0.30` 의 **참직경 구 스탬프**가 정하지 MPM 변형이 정하지 않는다.  ⇒ E 의 영향은 **SDCP 가 주변을 밀어낸 2차 기하**에만 남는다.  ⚠ 그 크기는 **미측정**이다.",
+   "verdict": "★ **지금 수치에 붙일 단서 한 줄**: \"이 값들은 SDCP E = 23.6 GPa (AFM_S6) 침대에서 얻었다.\"  원고·발표에서 SDCP 물성표에 9.0 을 적으면서 σ_e 를 23.6 침대에서 인용하면 **표와 결과가 어긋난다**.\n⇒ 둘 중 하나: (a) 물성표를 23.6 으로 맞추고 그 근거를 적는다 (b) 침대를 9.0 으로 다시 만든다.\n★ 경계짓는 최소 실험: **E=9.0 침대 1건 × vox 0.15 × origin 1팔** 로 σ_e 를 재고 23.6 판과 비교.  차이가 팔-폭(0.68 %) 안이면 무시 가능으로 닫힌다.\n⚠ 부수 확인: `run_*` 가 6개로 보였으나 4개는 스크립트(`run_mpm.sh`·`run_a1_anchors.sh`)이고 `se_dump.npy` 를 가진 진짜 침대는 **킷당 1개**다.  러너 폴백이 `[ -f .../se_dump.npy ]` 로 거르므로 침대 선택에 모호함은 없다 — 이 축의 우려는 **취소**한다.",
+   "provenance": "kgy 파일시스템 직접 확인 (mpm_metrics.json 의 additives.E_GPa · E_anchor · mtime) · CLAUDE.md ADD_E_SET 2026-08-18 · CL-42",
+   "shared_input": "CL-41 (격자 스윕) · CL-33/34 (vox 0.15 헤드라인) · CL-42 (ADD_E_SET 세대 사고)",
+   "reviews_work_dated": "2026-08-19"
   }
  ],
  "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."
