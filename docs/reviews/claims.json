@@ -1558,6 +1558,52 @@
    "provenance": "CL-46 이 특정한 편차 방향(PTFE 미차단)을 런 전에 등록",
    "shared_input": null,
    "reviews_work_dated": "2026-08-18"
+  },
+  {
+   "id": "CL-50",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "label",
+   "claim": "**σ_AM 은 물성이 아니라 코퍼스 적합 endpoint 다** — 문헌 두 출처가 우리 값의 1/200 을 준다 (CL-47 σ_VGCF 과 같은 범주 오류의 두 번째 사례)",
+   "measured": {
+    "metric": "σ_AM (NMC 전자전도도) — 우리 LOCKED 값 vs 문헌 인용값",
+    "value": "우리 Stage 22.5 **LOCKED σ_S = 10 · σ_P = 5 mS/cm** (= 1e-2 · 5e-3 S/cm)\n  · Alabdali 2023 (JPS 580, 233427) 입력 σ_AM(NMC622) = **0.005 S/m = 5e-5 S/cm** (= 0.05 mS/cm) ⇒ 우리 σ_S 의 **1/200**, σ_P 의 1/100\n  · Wang 2018 NMC bulk **5e-5 S/cm** — 같은 자릿수, **독립 출처**\n  · 우리 코드의 STEP3 기본 σ_AM_S = 0.010 S/cm (`mpm_webapp_payload.py:601`)",
+    "unit": "S/cm"
+   },
+   "asserted": "우리 σ_AM 은 **재료 물성값이 아니다.**  CLAUDE.md 가 이미 그렇게 적고 있다 — A1 CLOSED 2026-06-30: \"corpus-fit endpoints (~9.1/4.1 rounded)\" 이고 Trevisanello 2021 은 **NCM(r) GB 방향만** 지지하지 이 크기를 지지하지 않는다.  이번에 새로 확정된 것은 **문헌 밴드의 위치**다: 독립 두 출처가 5e-5 S/cm 를 주므로 괴리는 우연이나 한 출처의 특이값이 아니라 **계통**이다.",
+   "h0": null,
+   "h1": null,
+   "h0_predicts": null,
+   "h1_predicts": null,
+   "resolution": null,
+   "bridge": "왜 200배가 나는가 (기전 후보, **미판별**): ⓐ 문헌값은 *리튬화 상태·소결 펠릿*의 bulk σ 이고 우리 코퍼스는 *충전 상단*에 맞춰졌을 수 있다 (Amin & Chiang 2016 이 SOC 로 2자릿수 스윙을 보고한다) ⓑ 우리 격자는 **입자 내부 전자경로를 해상하지 않고** 접촉/계면 저항이 없는 융합 셀로 그리므로, 유효 σ_AM 이 그 결손을 lumping 한다 (= CL-47 의 σ_VGCF 와 **정확히 같은 인식론**, frame[2] DEM E_eff 18배 연화와도 같은 자리) ⓒ Stage 22.5 의 endpoint 는 σ_e **코퍼스에 적합**된 값이라 애초에 재료값이 아니다.",
+   "verdict": "★ **라벨 정정만 확정.  값은 바꾸지 않는다.**\n· 살아 있는 것: σ_S=10 / σ_P=5 는 **그 코퍼스 안에서 유효한 적합 endpoint** — Stage 22.5 의 LOOCV 0.9531 은 그 값 위에서 얻은 것이고 무효가 아니다.\n· 죽은 것: 이 값을 **NMC 의 전자전도도**로 소개하는 문장.  원고·SI·발표에서 금지.\n· ⚠ **미측정**: σ_AM 을 문헌값(5e-5)으로 바꾸면 STEP3 σ_e 가 얼마나 움직이는지 **한 번도 재지 않았다**.  CL-48(σ_VGCF 단섬유 프로브)과 같은 형태의 감도 프로브가 필요하다.  ⚠ 그 프로브는 **σ_e 절대값 트랙**(CL-46)에 직접 영향을 준다 — 지금 우리 절대값이 문헌 밴드 34–65 mS/cm 근처인 것이 σ_AM 을 200배 크게 잡은 덕일 가능성을 배제하지 못한다.\n· 표기 규약: 상별 σ 를 비교할 때 **\"이 규약 안에서\"** 를 반드시 붙인다 — σ_SDCP 250 = 재료 앵커 · σ_VGCF 100 = 유효 망 상수(CL-47) · σ_AM 10/5 = 적합 endpoint(CL-50).",
+   "provenance": "litdb `alabdali2023_cgmd_wet_manufacturing_ssb_cathode.md` §입력 σ 표 (stated) · CLAUDE.md σ_electronic Stage 22.5 절 (A1 CLOSED 2026-06-30) · `scripts/mpm_webapp_payload.py:600-601` (STEP3 기본값)",
+   "shared_input": "CL-47 (σ_VGCF 유효-망 상수) 과 **같은 범주 오류**.  CL-46 (절대 σ_e 문헌 앵커) 의 해석에 직접 걸린다.",
+   "reviews_work_dated": "2026-08-19 (Alabdali digest + 코팅·도핑 코드리뷰)"
+  },
+  {
+   "id": "CL-51",
+   "date": "2026-08-19",
+   "status": "live",
+   "kind": "retraction",
+   "claim": "**정정 2건 — 우리 문서의 귀속·범위 오류** (Alabdali digest 중 발견)",
+   "measured": {
+    "metric": "문서 주장 대 원전",
+    "value": "① CLAUDE.md A10: \"Alabdali LIGGGHTS ±6% 반경진동 선례\" → 그 출처는 `dem_mechanical_stresses_ssb_electrode_cycling` (ESM 2024) 이고, `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` (JPS 580, 233427) 가 **아니다** — 후자는 LAMMPS · 사이클 없음 · ±6% 없음 · 응력 출력 없음.\n② `docs/positioning_vs_geodict.md`: \"GeoDict 사용 논문들은 **전부** 구조를 예측 못 한다\" → **반례 2편**.  Franco 그룹(Amiens/ARTISTIC)은 CGMD/DEM 으로 공정에서 구조를 예측한 뒤 GeoDict 으로 특성화한다 = **우리와 같은 2층 구조** (Alabdali 2023 · Weitze 2024).",
+    "unit": "n/a"
+   },
+   "asserted": "둘 다 **문서에서 수정 완료** (2026-08-19).  ①은 출처 문자열 교체, ②는 \"도구의 한계를 사용자 집단의 한계로 확대\" 한 부분을 철회하고 논문 significance 초안을 **취소선 + 재작성 지시**로 강등.",
+   "h0": null,
+   "h1": null,
+   "h0_predicts": null,
+   "h1_predicts": null,
+   "resolution": null,
+   "bridge": "②의 살아 있는 부분: GeoDict **자체**는 특성화 도구라 구조를 줘야 한다 (표 23행 유효). 죽은 부분: \"그것을 쓰는 연구는 예측하지 않는다\".  ⇒ 차별점을 **\"예측한다\"** 가 아니라 **무엇을 예측하느냐**(그들=습식 슬러리→건조→압연 / 우리=건식 냉간가압, 절대압·Heckel 축)와 **수송 깊이**(접촉망 Holm-협착 σ · σ 삼중항)로 다시 쓴다.",
+   "verdict": "★ **인용 금지 문장 2개** (원고·발표·SI): \"Alabdali(JPS 2023)의 ±6% 반경진동 선례\" · \"우리만 공정에서 구조를 예측한다\" 류.  ⚠ 반대로 **우리에게 없는 것도 명시할 것**: 슬러리 유변학·건조 등 공정 사슬의 상류 절반은 우리에게 없다.",
+   "provenance": "litdb `alabdali2023_cgmd_wet_manufacturing_ssb_cathode.md` §2·§11·§C-0 · Weitze 카드 §1 인용문 · 수정 커밋 (CLAUDE.md:632, docs/positioning_vs_geodict.md)",
+   "shared_input": null,
+   "reviews_work_dated": "2026-08-19"
   }
  ],
  "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."

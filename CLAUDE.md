@@ -629,7 +629,10 @@ selftest +4 전체 PASS.  **SC/PC 앵커 (41건 적대검증 완료)**: `docs/nc
 현행 기본값=측정 아님 명기), SC=1.5e-15–1e-14 밴드; **i0 SC/PC 정량 부재 확인 → 값 미지정, 스윕 전용.**
 **★ A10 v1 구현+실전+리뷰 (2026-07-22)**: `docs/a10_cycle_chemomech_design.md` — 앵커(Bucci
 G_c 2.8±1.8·ΔV≈3% 개시·Γ<1000 게이트; Parks poly +19% 팽창=격자 −5.1%와 부호 반대; Kang&Shin
-R_int(N) 4.4×/1.5× 검증타깃; Alabdali LIGGGHTS ±6% 반경진동 선례).  `scripts/cycle_contact_ledger.py`
+R_int(N) 4.4×/1.5× 검증타깃; **[출처 정정 2026-08-19]** LIGGGHTS ±6% 반경진동 선례 =
+`litdb/papers/dem_mechanical_stresses_ssb_electrode_cycling.md` (ESM 2024) — ⚠ 옛 표기의
+"Alabdali" 는 `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` (JPS 580, 233427) 로 읽히는데
+**그 논문이 아니다**: 그쪽은 LAMMPS 이고 사이클도 ±6%도 응력 출력도 없다).  `scripts/cycle_contact_ledger.py`
 (옵션 A 접촉-원장 후처리): 사이클당 AM 수축→접촉 개구 Bucci CZM 판정→f_broken/A_rel/R_ct몫/
 σ_rel/Γ* 궤적, CYCLE-STEP 1~5 스텝화.  **첫 실런(WSL 100cyc): mono R_ct 1.05× vs bimodal 1.51×**
 (Kang&Shin U-NCA 1.5×/B-NCA 4.4× 방향·즉시파단·Γ* 393vs1100 판별 = 3앵커 동시 정합; 헤드라인 =

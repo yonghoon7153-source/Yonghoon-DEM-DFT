@@ -332,6 +332,16 @@ def _selftest_temperature():
 
 
 
+def _mflt(v):
+    """metrics 값 → float, 없으면 None.  ★ 0.0 을 None 으로 만들면 안 되므로 `or` 금지."""
+    return None if v is None else float(v)
+
+
+def _mint(v):
+    """metrics 값 → int, 없으면 None (seed 0 이 유효값이라 `or` 금지)."""
+    return None if v is None else int(v)
+
+
 def finite_belt(obj, path='$', found=None):
     """payload 안의 NaN/Inf 를 None 으로 바꾸고 **바꾼 경로를 돌려준다** → (clean, paths).
 
@@ -1798,6 +1808,31 @@ def main():
             #   > 0 = 진단 팔(phase-4 를 격자에 찍어 탄소망을 끊는다).  기록 없으면 게이트가
             #   못 잡는다 (H5 와 같은 실수 방지).
             'sigma_ptfe_S_cm': float(getattr(a, 'sigma_ptfe', 0.0) or 0.0),
+            # ★★ 2026-08-19 (코팅·도핑 리뷰 A5) — **σ_ion 축과 침대 세대가 게이트 밖에 있었다.**
+            #   ⓐ `sigma_ion_table_S_cm`(:1397) 은 매니페스트 **밖**이라 `sdcp_gain_verdict._read`
+            #      가 못 보고, 게다가 `if _res3i['n_dof']:` 안이라 **`--no-ion`(LEAN=2 = 현행
+            #      스윕의 기본 모드)에서는 아예 기록되지 않는다**.  ⇒ 도핑 팔과 생산 팔이 한
+            #      디렉터리에 섞여도 고정-인자 게이트가 통과시킨다 (CL-43/CL-49 에서 두 번 고친
+            #      no-op 이 σ_ion 축에 그대로 남아 있었다).
+            #   ⓑ `sigma_table_S_cm`(:1084)·`cam_preset`(:1092) 도 매니페스트 **밖** = 미게이트인데
+            #      σ_AM 은 σ_e 솔브에 **직접** 들어간다.
+            #   ⓒ SE 본체의 압밀 물성(E/ν/σ_y)과 seed 는 어디에도 안 찍혔다.  도펀트가 이걸
+            #      바꾼다고 판단해 건드리면 **침대가 새 세대**가 되는데 탐지 장치가 없다
+            #      (= CL-42 ADD_E_SET 사고의 SE 축 재현 경로).
+            #   ⇒ 셋 다 **일어난 일**로 여기 남긴다.  `--no-ion` 여부와 **무관하게** 기록한다
+            #     (기록 비용은 0 이고, 안 찍히는 것이 바로 위 ⓐ 의 원인이었다).
+            'sigma_ion_se_S_cm': float(a.sigma_ion_se),          # T-스케일링 **적용 후** = 실제 쓴 값
+            'sigma_ion_se_ref_S_cm': float(getattr(a, '_sigma_ion_se_ref', a.sigma_ion_se)),
+            'sigma_ion_sdcp_S_cm': float(a.sigma_ion_sdcp),
+            'sigma_am_s_S_cm': float(a.sigma_am_s),
+            'sigma_am_p_S_cm': float(a.sigma_am_p),
+            'cam': str(a.cam),
+            'temp_c': float(a.temp_c),
+            'ea_ion_ev': float(a.ea_ion_ev),
+            'mpm_seed': _mint(sim_m.get('seed')),
+            'se_E_GPa': _mflt(sim_m.get('E_SE_GPa')),
+            'se_nu': _mflt(sim_m.get('nu_SE')),
+            'se_sigma_y_GPa': _mflt(sim_m.get('sigma_y_GPa')),
             'plate_z_grid_um': ([float(_zb3), float(_zt3)]
                                 if (_zb3 is not None and _zt3 is not None) else None),
             # ★ 시각화 의존성이 없어 메쉬가 빠졌으면 **기록**한다 (조용한 강등 금지).
