@@ -1,0 +1,11 @@
+# Step 8 - ESW window width by chemical group (seminar 2026-08).
+# Rows are already sorted by median, widest first - keep that order in Origin.
+# Origin: horizontal Bar of window_median_V. To show the spread, add the raw
+#   points from seminar_table_esw_windows.csv (column window_V, grouped).
+# The order is the point: alkali > alkaline earth > p-block > lanthanides > TM.
+chemical_group,n_species,window_median_V,window_q1_V,window_q3_V,window_min_V,window_max_V
+alkali metals,10,0.898,0.374,0.898,0.343,0.898
+alkaline earth,17,0.797,0.374,0.898,0.343,0.898
+p-block,21,0.518,0.374,0.768,0.139,0.984
+lanthanides,9,0.418,0.402,0.501,0.370,0.720
+transition metals,33,0.310,0.165,0.633,0.004,1.087

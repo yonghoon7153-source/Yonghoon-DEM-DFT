@@ -203,6 +203,7 @@ SLIDES = {
     sub1="To locate decomposition, [b]the Li chemical potential was scanned as a voltage axis[/b].",
     # ⚠ em-dash 제거 (1/13 덱은 0개).
     sub2="The result is [r]0 K bulk thermodynamics[/r], not a rate and not a passivation prediction.",
+    # 오른쪽 족별 그림은 1저자가 Origin 으로 그린다 (CSV: seminar_table_esw_by_group.csv).
     label="stability window of every candidate  ·  window width by chemical group",
     # ⛔ 앞 판은 "five candidates lose the window entirely" 였다. **과장이다** —
     #   실측 최소가 0.004 V 라 0 이 되는 종은 하나도 없다 (2026-08-19).

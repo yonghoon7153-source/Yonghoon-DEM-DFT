@@ -41,6 +41,13 @@ BAD, GOOD = "#be123c", "#2563eb"          # 덱 불릿 색 규칙과 같은 값
 NEUTRAL = "#94a3b8"
 GROUP_C = {"alkali": "#0d9488", "alk.earth": "#65a30d", "main-group": "#0284c7",
            "TM": "#7c3aed", "lanthanide": "#c05621"}
+#: 화면에 나가는 이름 — 위 키는 **내부 약칭**이다 (1저자 2026-08-19: "너만 아는 표시").
+#:   `alk.earth`·`TM` 은 우리끼리 쓰는 줄임말이고, `main-group` 은 엄밀히는 1·2족까지
+#:   포함하는 말이라 그 둘과 나란히 놓으면 틀린다 → 실제 집합(B·Al·Si·Ga·Ge·In·Sn·Sb)
+#:   그대로인 **p-block** 을 쓴다. CSV 는 원래 키를 유지한다(대조 가능해야 하므로).
+GROUP_LABEL = {"alkali": "alkali metals", "alk.earth": "alkaline earth",
+               "main-group": "p-block", "lanthanide": "lanthanides",
+               "TM": "transition metals"}
 
 
 def _rc():
@@ -701,6 +708,9 @@ def _ox_rows():
 #: 창이 이 아래면 "사실상 사라졌다" 로 본다 (V). 물리 상수가 아니라 표시 기준이다 —
 #: 실측 최소가 0.004 V 라 **0 이 되는 종은 없다.** "lose the window entirely" 는 과장이었다.
 ESW_NARROW = 0.05
+#: 도펀트 없는 host 의 산화 지점 (V vs Li/Li⁺). 84개 phase set **전부에서 정확히 같다**
+#: — 도펀트를 뭘 넣어도 host 분해 경로가 안 바뀐다 (cascade_pipeline_anatomy §958–972).
+HOST_ONSET_V = 2.14
 
 
 def fig_oxidation_windows():
@@ -728,8 +738,9 @@ def fig_oxidation_windows():
     rows.sort(key=lambda t: (t[3] > ESW_NARROW, t[2]))
     narrow = [t for t in rows if t[3] <= ESW_NARROW]
     _rc()
-    fig, (ax, axg) = plt.subplots(
-        1, 2, figsize=(12.8, 5.4), gridspec_kw=dict(width_ratios=[4.0, 1.15], wspace=0.05))
+    # ⛔ 족별 패널은 **파이썬에서 안 그린다** (1저자 2026-08-19: "옆에 그래프는 내가
+    #   csv 로 그릴게"). 여기는 막대 그림만 내고, 족 요약은 CSV 로만 넘긴다.
+    fig, ax = plt.subplots(figsize=(11.6, 5.4))
 
     for i, (d, red, ox, win, g) in enumerate(rows):
         hot = win <= ESW_NARROW
@@ -741,12 +752,20 @@ def fig_oxidation_windows():
     ax.annotate(" · ".join(formula(d) for d, _, _, _, _ in narrow),
                 (0.985, 0.015), xycoords="axes fraction", ha="right", va="bottom",
                 fontsize=11, color=BAD, fontweight="bold")
-    ax.axvline(2.14, color=hs.INK, ls="--", lw=1.3, zorder=5)
+    ax.axvline(HOST_ONSET_V, color=hs.INK, ls="--", lw=1.3, zorder=5)
+    # 점선이 무슨 값인지 **선 위에** 적는다 (1저자 2026-08-19) — x 라벨의
+    #   "dashed line = undoped host onset" 만으로는 값이 안 보였다.
+    #   ⚠ 맨 위(y=1.0)에 두면 오른쪽 테두리에 잘린다 — 위쪽 막대가 2.35 까지 가서
+    #     라벨이 축 밖으로 나간다. 중간 높이(0.32)는 선 오른쪽이 비어 있다.
+    ax.annotate(f"LPSCl\n{HOST_ONSET_V:.2f} V", (HOST_ONSET_V, 0.32),
+                xycoords=("data", "axes fraction"), xytext=(7, 0),
+                textcoords="offset points", ha="left", va="center",
+                fontsize=11, color=hs.INK, fontweight="bold", linespacing=1.35)
     ax.set_yticks([]); ax.set_ylim(-2, len(rows) + 1)
-    ax.set_xlabel("voltage vs Li/Li⁺  (V)      dashed line = undoped host onset")
+    ax.set_xlabel("voltage vs Li/Li⁺  (V)")
     ax.set_ylabel(f"{len(rows)} candidates  ·  sorted by window width")
     from matplotlib.lines import Line2D
-    ax.legend(handles=[Line2D([], [], color=GROUP_C[k], lw=3, label=k)
+    ax.legend(handles=[Line2D([], [], color=GROUP_C[k], lw=3, label=GROUP_LABEL[k])
                        for k in ("alkali", "alk.earth", "main-group", "lanthanide", "TM")]
                       + [Line2D([], [], color=BAD, lw=3,
                                 label=f"window below {ESW_NARROW:.2f} V  ({len(narrow)})")],
@@ -754,20 +773,26 @@ def fig_oxidation_windows():
               columnspacing=1.2)
     _bare(ax, grid="x")
 
-    # ── 오른쪽: 족별 창 폭 (8장의 "족 추세는 견고하다" 를 이 축에서 다시 보인다) ──
+    # ── 족 요약은 CSV 로만 (Origin 에서 1저자가 그린다) ─────────────────────
     by = {}
     for _, _, _, win, g in rows:
         by.setdefault(g, []).append(win)
     order = sorted(by, key=lambda k: -st.median(by[k]))
-    for i, g in enumerate(order):
-        axg.barh(-i, st.median(by[g]), height=.62, color=GROUP_C.get(g, NEUTRAL),
-                 alpha=.85, zorder=3)
-        axg.scatter(by[g], [-i] * len(by[g]), s=9, color=hs.INK, alpha=.35, lw=0, zorder=4)
-    axg.set_yticks([-i for i in range(len(order))])
-    axg.set_yticklabels([f"{g}  ({len(by[g])})" for g in order], fontsize=10)
-    axg.set_ylim(-len(order) + .35, .65)
-    axg.set_xlabel("window width  (V)")
-    _bare(axg, grid="x")
+    _write_csv("seminar_table_esw_by_group.csv",
+               ["chemical_group", "n_species", "window_median_V",
+                "window_q1_V", "window_q3_V", "window_min_V", "window_max_V"],
+               [[GROUP_LABEL.get(g, g), len(by[g]),
+                 f"{st.median(by[g]):.3f}",
+                 f"{sorted(by[g])[len(by[g]) // 4]:.3f}",
+                 f"{sorted(by[g])[(3 * len(by[g])) // 4]:.3f}",
+                 f"{min(by[g]):.3f}", f"{max(by[g]):.3f}"] for g in order],
+               header=[
+                "# Step 8 - ESW window width by chemical group (seminar 2026-08).",
+                "# Rows are already sorted by median, widest first - keep that order in Origin.",
+                "# Origin: horizontal Bar of window_median_V. To show the spread, add the raw",
+                "#   points from seminar_table_esw_windows.csv (column window_V, grouped).",
+                "# The order is the point: alkali > alkaline earth > p-block > lanthanides > TM.",
+               ])
 
     _write_csv("seminar_table_esw_windows.csv",
                ["dopant", "chemical_group", "anion", "red_V", "ox_V", "window_V", "narrow_flag"],
