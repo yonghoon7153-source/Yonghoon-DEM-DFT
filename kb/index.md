@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 225
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-19 · managed-files: 226
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -64,7 +64,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (82)
+## results/ (83)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -124,6 +124,7 @@
 - `kb/results/nd_anode_cathode_sei_formation_2026_06_24.md` — 음극향·양극향 SEI 이점 — **formation energy로 본 산물 선택** (Nd₂O₃-LPSCl1.6)
 - `kb/results/nd_oxidation_onset_honest_2026_06_24.md` — Nd₂O₃ 도핑 — 산화안정성 cost vs SEI passivation 이점 (정직한 정리)
 - `kb/results/nd_xps_literature_basis_2026_06_30.md` — Nd 3d XPS — 왜 DFT로 못 구하고 문헌(실험)값을 쓰는가 + 확실한 출처
+- `kb/results/neb_cell_size_trend_2026_08_20.md` — NEB 셀 크기 추세 — 작은 셀이 장벽을 1.3~3.3배 부풀린다 (UMA 정찰 6홉/4화합물) ○미열람
 - `kb/results/oxidation_stability_VBM_vs_grandpotential_report_2026_06_18.md` — 보고서 — 산화안정성: VBM/UPS가 아니라 Grand-Potential 분해창으로 평가 (LPSCl vs LPSCl1.6)
 - `kb/results/paper_figure_plan_v3.md` — Paper Figure / Table Plan — LPSCl vs LPSCl1.6 v3
 - `kb/results/presentation_script_BVSE_ionic_2026_06_19.md` — 발표 스크립트 — 이온전도성: BVSE로 본 anti-site Cl 효과 (DFT 슬라이드)
