@@ -1,0 +1,125 @@
+{
+ "slug": "ling2026_dual_thermal_stabilization_fg_cuox",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "FIGURE 1 Dual thermal-stabilization strategy for LPSC-based ASSLMBs. (a) Schematic illustration of the dual thermal-stabilization design for LPSC-based ASSLMBs. (b) Thermal diffusivities and electronic conductivities of different inorganic electrolytes and 2D materials. (c) DFT-calculated oxygen adsorption energies for cathode components.",
+   "bbox": [
+    47.6,
+    35.8,
+    564.2,
+    336.4
+   ],
+   "w": 2153,
+   "h": 1253,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.729
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "FIGURE 2 Enhanced thermal diffusion behavior of LPSC-FG. (a) Schematic illustration of the in-plane thermal transport measurement setup for LPSC-based films. (b) Steady-state temperatures at designated positions (1#–5#) across LPSC and LPSC-FG films under unilateral heating. (c) In-plane and axial thermal diffusivities of LPSC and LPSC-FG. (d) Schematic illustration of the COMSOL simulation model for LPSC, (e) simulated heat flux distribution, and (f) simulated steady-state temperature distribution under a current density of 16 A m−2. (g) Schematic illustration of the COMSOL simulation model for LPSC-FG, (h) simulated heat flux distribution, and (i) simulated steady-state temperature distribution under a current density of 16 A m−2.",
+   "bbox": [
+    47.6,
+    35.7,
+    564.2,
+    440.3
+   ],
+   "w": 2153,
+   "h": 1687,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.529
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "FIGURE 3 Dendrite-regulating mechanism of FG-interlayer in LPSC. (a) CCD comparison of LPSC and LPSC-FG electrolytes. (b, c) BSEM images of the Li dendrite morphologies in (b) LPSC and (c) LPSC-FG, with the insets showing the dendrite growth location in the respective electrolyte. (d) TOF-SIMS depth profiles of LiF−, Li2P−, and LiS−on the cycled FG-interlayer surface, with the inset showing the 3D spatial distribution of LiF−. (e, f) Young’s modulus changes at the lithiated interfaces of (e) LPSC and (f) FG-interlayer. (g) Statistics of bond numbers at different temperatures from AIMD simulations at the same simulation time. (h, i) Representative AIMD snapshots of (h) Li|LPSC and (i) Li|FG|LPSC interfaces.",
+   "bbox": [
+    47.6,
+    35.3,
+    564.2,
+    454.3
+   ],
+   "w": 2153,
+   "h": 1746,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.679
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 7,
+   "file": "fig_4.png",
+   "caption": "FIGURE 4 Oxygen-scavenging mechanism in LPSC-based composite cathodes. (a) Schematic illustration of abuse tests for overcharged composite cathodes with different compositions. (b, c) Optical images of (b) mechanical abuse and (c) thermal abuse tests for the composite cathodes. (d) Quantitative comparison of gas evolution from composite cathodes during DSC–MS measurement. (e) Interfacial capacitance analysis of composite cathodes. (f) XPS data statistics of composite cathodes after combustion. (g, h) SEM and corresponding EDS mappings of (g) VGCF-containing and (h) CuO1−x-containing composite cathodes before and after combustion. Dashed circles with white color represent the selected positions of NCM particles.",
+   "bbox": [
+    47.6,
+    34.9,
+    564.2,
+    431.3
+   ],
+   "w": 2153,
+   "h": 1652,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.527
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 8,
+   "file": "fig_5.png",
+   "caption": "FIGURE 5 Electrochemical performance and thermal safety characteristics of Li-In||Ni90 cells. (a) Long-term cycling performance of Li-In||Ni90 cells with different thermal safety modifications at 25◦C and 1 C. (b) Charge–discharge voltage profiles of the long-cycled cells. (c) Rate performance of Li-In||Ni90 cells with different thermal safety modifications at 25◦C from 0.1 C to 3 C. (d) Capacities of pristine and FG-CuO1−x-modified cells at different elevated temperatures (30◦C–90◦C). The gray areas represent the heating processes. (e) Temperature–time curves of pristine and FG-CuO1−x-modified pouch cells at 100% SOC during the ARC tests. (f) Comparison of long-term cycling stability with reported ASSLMBs [7, 18, 34–49].",
+   "bbox": [
+    47.6,
+    34.9,
+    564.2,
+    465.3
+   ],
+   "w": 2153,
+   "h": 1794,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.871
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 9,
+   "file": "fig_6.png",
+   "caption": "FIGURE 6 Extension of the thermal safety modification strategy to the LZCO-based ASSLMBs. (a) Schematic illustration of the LPSC/LZCO-based ASSLMB with dual thermal stabilization. (b) In-plane and axial thermal diffusivities of LZCO and LZCO-FG. (c) Quantitative comparison of gas evolution from LZCO-based composite cathodes during DSC–MS measurement. (d) Long-term cycling performance of pristine LPSC/LZCO-based ASSLMB and the FG-CuO1−x modified cell at 25◦C. (e) Radar diagrams of pristine LPSC, modified-LPSC, and modified-LPSC/LZCO systems based on six parameters. stability than its pristine counterpart. The cell exhibits an initial capacity of 152.9 mAh g−1 and a capacity retention of 92.5% after 500 cycles, further confirming the applicability of the dual thermal-stabilization strategy in sulfide electrolyte systems. induced by the dual modifications also contributes to improved cyclin",
+   "bbox": [
+    47.6,
+    35.1,
+    564.2,
+    321.8
+   ],
+   "w": 2153,
+   "h": 1195,
+   "dpi": 300,
+   "src": "59. Ling2026_Dual_Thermal_Stabilization_ASSLMB.pdf",
+   "blank": 0.811
+  }
+ ]
+}
