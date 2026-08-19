@@ -385,3 +385,52 @@ def test_p22_doc_only_cites_canon_files_that_exist_and_have_content():
            if not (_CANON / f"{s}.txt").is_file()
            or not (_CANON / f"{s}.txt").read_text(encoding="utf-8").strip()]
     assert not bad, f"문서가 부르는데 없거나 빈 정본: {bad}"
+
+
+#: OCP 모델 오차 민감도 표의 (오프셋 라벨) → 정본 stem
+_P22_BIAS_ROWS = {
+    "0": "dense_pocv_dvdq_dqdv_hc",
+    "1": "bias_pe1mv",
+    "1.5": "bias_pe1p5mv",
+    "2": "bias_pe2mv",
+    "5": "bias_pe5mv",
+    "10": "bias_pe10mv",
+}
+
+
+def test_p22_bias_canon_outputs_are_committed():
+    """★ 민감도 표가 근거로 삼는 정본이 저장소에 있어야 한다.
+
+    자체 리뷰(R11): §0 표만 기계 대조 대상이라, 앞으로 들어올 민감도 표는
+    §7.6 복제-행 사고(문서 `:11-15` 배너가 자인하는 그 사고)를 막을 장치가
+    없는 사각지대였다. 표가 생기는 시점에 함께 닫는다.
+    """
+    missing = [s for s in sorted(set(_P22_BIAS_ROWS.values()))
+               if not (_CANON / f"{s}.txt").exists()]
+    assert not missing, f"민감도 표가 근거로 삼는 정본이 없다: {missing}"
+
+
+def test_p22_bias_table_matches_the_canon_outputs():
+    """★ 민감도 표의 6행이 정본과 셈 단위까지 맞아야 한다."""
+    doc = _DOC.read_text(encoding="utf-8")
+    assert "OCP 오차" in doc, "민감도 절이 문서에 없다"
+
+    checked = 0
+    for mv, stem in _P22_BIAS_ROWS.items():
+        c = _canon_facts(stem)
+        # | 0 mV | ... | k/n (x%) | ... | k/n (x%) | ...
+        row = _re.search(
+            r"^\|\s*(?:\*\*)?" + _re.escape(mv) + r"\s*mV(?:\*\*)?[^|]*\|([^|]*)\|([^|]*)\|",
+            doc, _re.M)
+        assert row, f"민감도 표에서 {mv} mV 행을 못 찾음"
+        fs, col = row.group(1), row.group(2)
+
+        want_fs = f"{c['false_split']}/{c['gap0_n']}"
+        assert want_fs in fs, (
+            f"{mv} mV 거짓 분리: 문서 '{fs.strip()}' vs 정본 {want_fs} "
+            f"({stem}.txt: 붕괴 {c['gap0_collapse']}/{c['gap0_n']})")
+        want_col = f"{c['ge4_k']}/{c['ge4_n']}"
+        assert want_col in col, (
+            f"{mv} mV 놓침: 문서 '{col.strip()}' vs 정본 {want_col}")
+        checked += 1
+    assert checked == 6, checked
