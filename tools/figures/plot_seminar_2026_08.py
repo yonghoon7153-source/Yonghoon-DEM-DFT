@@ -996,21 +996,31 @@ if __name__ == "__main__":
 
 
 # ── 10. STEP 6 — Li 지형 (BVSE) ───────────────────────────────────────────────
-#: BVSE 지도 원본. ⛔ **두 판이 다른 표현이다** — modelc 는 원본 주기셀,
-#: b2o3 는 큐빅 표시상자다 (db/properties/bvse_cubic_approx/bvse_orig_vs_cubic.json:
-#: "the box is a display/sampling window, not a period", 상자 표본편차 ±1.3 %p).
-#: 그래서 이 그림은 **지형의 성격**만 보이고 높이·부피를 조성 간에 비교하지 않는다.
+#: BVSE 지도 원본 — **둘 다 원본 주기셀**이다 (2026-08-19 1저자 지적으로 교체).
+#:   앞 판은 b2o3 쪽에 **큐빅 표시상자**(40³)를 썼는데, 그 상자는 주기가 아니라
+#:   표시·표본 창이라 지형에 인공물이 생긴다 (bvse_cubic_approx/bvse_orig_vs_cubic.json:
+#:   "the box is a display/sampling window, not a period", 표본편차 ±1.3 %p).
+#:   b2o3 원본셀 지도를 이 기회에 repo 에 넣었다:
+#:     python3 tools/comp1_v3/compute_bvse_map.py --cif db/structures/b2o3_relaxV0.cif \
+#:       --workdir db/properties/bvse_b2o3 --grid 28 --prefix b2o3_orig
+#:     python3 tools/comp1_v3/npy_to_cube.py --npy .../b2o3_orig_bvse_map.npy \
+#:       --cif db/structures/b2o3_relaxV0.cif --out .../b2o3_orig_bvse.cube
+#: (cube, 이름, 눌러 볼 구간의 중심 z [Å]) — b2o3 는 **도펀트가 든 층**을 본다
+#:   (B 원자 z = 25.0 · 32.5 Å). modelc 는 같은 층이 5번 쌓인 것이라 아무 층이나 같다.
 LANDSCAPE = [
-    ("db/properties/bvse_modelc/modelc_bvse.cube",
-     "LPSCl1.6 (undoped)", "original periodic cell"),
-    ("db/properties/bvse_b2o3/b2o3_paper3_bvse_boundary.cube",
-     "B₂O₃-doped", "cubic display box"),
+    ("db/properties/bvse_modelc/modelc_bvse.cube", "LPSCl1.6 (undoped)", 3.5),
+    ("db/properties/bvse_b2o3/b2o3_orig_bvse.cube", "B₂O₃-doped", 25.0),
 ]
 BVSE_CAP = 3.0          # 위에서 자르는 높이 (valence²) — 낮을수록 Li 가 편한 곳
+#: c 축으로 눌러 보는 **깊이**를 두 계에서 같게 맞춘다 (Å) — 원시주기 한 겹.
+#:   ⚠ 셀이 각각 5× · 10× 적층이라 c 길이가 35 / 70 Å 로 다르다. 전체로 min 을 취하면
+#:     ① 깊이가 두 배인 쪽이 **표본이 많아서** 더 열려 보이고 ② 다섯 겹을 눌러 버려
+#:     지형이 통째로 뭉개진다 (2026-08-19 실측: b2o3 판이 평평해졌다). 한 겹만 본다.
+PROJ_DEPTH_A = 7.0
 
 
 def _read_cube(path):
-    """Gaussian cube → (values[nx,ny,nz], a축 길이 Å, b축 길이 Å).
+    """Gaussian cube → (values[nx,ny,nz], a·b·c 축 길이 Å).
 
     이 파서가 **못 하는 것**: 비직교 셀의 기울기를 펴지 않는다. a·b 축 길이만
     쓰고 격자를 그대로 이미지처럼 다룬다 — 지형 그림용이지 정량용이 아니다.
@@ -1033,7 +1043,8 @@ def _read_cube(path):
     arr = np.array(vals[:n[0] * n[1] * n[2]]).reshape(n)
     la = np.linalg.norm(vs[0][1]) * n[0] * BOHR
     lb = np.linalg.norm(vs[1][1]) * n[1] * BOHR
-    return arr, la, lb
+    lc = np.linalg.norm(vs[2][1]) * n[2] * BOHR
+    return arr, la, lb, lc
 
 
 def fig_li_landscape(ngrid=64):
@@ -1056,10 +1067,14 @@ def fig_li_landscape(ngrid=64):
     _rc()
     plt.rcParams.update({"font.size": 15, "axes.labelsize": 16})
     fig = plt.figure(figsize=(13.4, 5.6))
-    for i, (rel, name, repr_) in enumerate(LANDSCAPE):
-        arr, la, lb = _read_cube(os.path.join(
+    for i, (rel, name, zc) in enumerate(LANDSCAPE):
+        arr, la, lb, lc = _read_cube(os.path.join(
             os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), rel))
-        m = arr.min(axis=2) - arr.min()          # c 축 최소 → aboveMin
+        nz = arr.shape[2]
+        half = max(1, int(round(nz * PROJ_DEPTH_A / lc / 2)))
+        k = int(round(nz * zc / lc))
+        sl = np.take(arr, range(k - half, k + half), axis=2, mode="wrap")
+        m = sl.min(axis=2) - arr.min()               # 한 겹만 눌러서 aboveMin
         acc = np.clip(BVSE_CAP - m, 0, None)     # 높을수록 Li 가 편하다
         # 두 격자를 같은 화소 수로 (표시용 재표본 — 값은 안 건드린다)
         yi = np.linspace(0, m.shape[0] - 1, ngrid)
@@ -1078,7 +1093,8 @@ def fig_li_landscape(ngrid=64):
         ax.set_ylabel("a  (Å)", labelpad=10)
         ax.set_zlabel("Li accessibility", labelpad=8)
         ax.tick_params(labelsize=12, pad=1)
-        ax.set_title(f"{name}\n{repr_}", fontsize=15, pad=2, color=hs.INK)
+        ax.set_title(f"{name}\noriginal cell, one {PROJ_DEPTH_A:.0f} Å layer along c",
+                     fontsize=15, pad=2, color=hs.INK)
         ax.view_init(elev=34, azim=-58)
     _rc()
     return _save(fig, "step6_li_landscape.png")
