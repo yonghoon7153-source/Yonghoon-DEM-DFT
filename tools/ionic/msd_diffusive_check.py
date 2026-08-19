@@ -134,15 +134,67 @@ def _elem_msd(d):
     return None
 
 
+def elem_msd_from_traj(json_path, save_fs=None, cache=True):
+    """`msd.json` 옆의 `traj.xyz` 에서 **종별 MSD 를 다시 계산**한다. 없으면 None.
+
+    왜 (2026-08-20 실측): 캠페인이 쓰는 `msd.json` 은 **Li 만** 저장한다. 31런을 검사했더니
+    31런 전부 종별 MSD 가 없었고, `aimd_results.json` 은 94 바이트짜리 빈 파일이었다.
+    그런데 `--save_traj` 로 남긴 `traj.xyz` 가 10런에 살아 있다 — 거기서 뽑으면 **재계산 0**이다.
+
+    산식은 `tools/modelc_v3/aimd_mlip.py:compute_msd_per_element` 를 **그대로 빌려 쓴다**
+    (복사하면 규약이 갈라진다 — convention_check 대상).
+
+    ⚠ 시간축은 `save_fs`(프레임 간격) 가 정해준다. json 에 있으면 그걸 쓰고, 없으면
+      **캠페인 기본 100 fs 를 가정하고 그 사실을 찍는다** — 조용히 가정하지 않는다.
+    """
+    import importlib.util
+    jp = pathlib.Path(json_path)
+    traj = jp.parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    if save_fs is None:
+        save_fs, assumed = 100.0, True
+    else:
+        assumed = False
+    src = pathlib.Path(__file__).resolve().parents[1] / "modelc_v3" / "aimd_mlip.py"
+    if not src.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("_aimd", src)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+    except BaseException:
+        return None
+    print(f"   … {traj.parent.name}/traj.xyz 에서 종별 MSD 계산"
+          + (f" (save_fs={save_fs:g} fs **가정**)" if assumed else f" (save_fs={save_fs:g} fs)"))
+    try:
+        out = mod.compute_msd_per_element(traj, dt_save_fs=save_fs)
+    except BaseException as e:
+        print(f"   ⚠ 실패: {type(e).__name__} {e}")
+        return None
+    if cache:
+        # 118 MB 를 매번 다시 읽지 않도록 json 에 되써 둔다 (다음 실행은 즉시)
+        try:
+            d = json.load(open(jp))
+            d["msd_per_elem_A2"] = out["msd_per_elem_A2"]
+            d.setdefault("times_ps", out["times_ps"])
+            d["_elem_msd_source"] = f"recomputed from traj.xyz (save_fs={save_fs:g} fs)"
+            json.dump(d, open(jp, "w"))
+            print(f"   … {jp.name} 에 저장 (다음부터는 즉시)")
+        except (OSError, ValueError) as e:
+            print(f"   ⚠ 되쓰기 실패({type(e).__name__}) — 이번만 쓰고 버린다")
+    return out
+
+
 def framework_check(d, lo, hi):
     """골격(비-Li) 원소가 확산하고 있나.
 
     돌려주는 값: None(종별 MSD 없음) 또는
       {'t_end','li','frame':{el:{'msd_end','ratio','beta'}}, 'worst_el','worst_ratio','verdict'}
 
-    이 함수가 **못 하는 것**: 종별 MSD 가 파일에 없으면 아무 말도 못 한다.
-      그 경우 궤적(traj.xyz)에서 다시 계산해야 하는데 그건 이 도구 밖이다
-      (`tools/modelc_v3/aimd_mlip.py:compute_msd_per_element`).
+    이 함수가 **못 하는 것**: 종별 MSD 가 없으면 아무 말도 못 한다(None).
+      궤적에서 뽑는 것은 `elem_msd_from_traj()` 가 하고, 호출자가 `--from_traj` 로 켠다.
+      **traj.xyz 도 없는 런은 원리적으로 판정 불가**다 — 새로 돌려야 한다.
     """
     em = _elem_msd(d)
     if not em:
@@ -325,6 +377,9 @@ def main():
                          "MACE-MP-0 의 LGPS 골격이 1050 K 부터 인위적으로 녹는 걸 잡았고, "
                          "우리 아레니우스 상한 1000 K 가 그 바로 아래다. 골격이 녹으면 "
                          "Li 의 'D' 는 확산이 아니라 구조 붕괴다.")
+    ap.add_argument("--from_traj", action="store_true",
+                    help="--framework 에서 종별 MSD 가 json 에 없으면 옆의 traj.xyz 에서 "
+                         "다시 계산한다(재계산 0, 읽기만). 결과는 json 에 되써 둔다.")
     ap.add_argument("--scan", action="store_true",
                     help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
@@ -652,6 +707,12 @@ def main():
                 continue
             tag = case_label(f)
             r = framework_check(d, lo, hi)
+            if r is None and a.from_traj:
+                got = elem_msd_from_traj(f, save_fs=d.get("save_fs"))
+                if got:
+                    d.setdefault("times_ps", got["times_ps"])
+                    d["msd_per_elem_A2"] = got["msd_per_elem_A2"]
+                    r = framework_check(d, lo, hi)
             if r is None:
                 fw_none.append(tag)
                 print(f"{tag:34s} {'—':>6s} {'—':>7s} {'—':>6s} {'—':>8s}  종별 MSD 없음")
@@ -670,8 +731,9 @@ def main():
         if fw_none:
             # ⛔ 종별 MSD 가 없는 것을 "골격 안 녹았다"로 읽으면 이 검사는 없느니만 못하다.
             print(f"⛔ **{len(fw_none)}/{len(files)} 개는 골격을 아예 보지 못했다 — 통과가 아니다.**")
-            print("   종별 MSD(msd_per_elem_A2)가 파일에 없다. --save_traj 로 남긴 traj 가 있으면")
-            print("   tools/modelc_v3/aimd_mlip.py 의 compute_msd_per_element 로 다시 낼 수 있다.")
+            print("   종별 MSD(msd_per_elem_A2)가 파일에 없다.")
+            print("   → **`--from_traj` 를 붙이면** 옆의 traj.xyz 에서 다시 뽑는다(재계산 0, 읽기만).")
+            print("      traj.xyz 도 없는 런은 원리적으로 골격 검사를 못 한다 — 새로 돌려야 한다.")
         elif not fw_bad:
             print(f"✅ {len(files)}개 전부 골격이 고정돼 있다 — 그 온도의 Li D 는 진짜 확산이다.")
 

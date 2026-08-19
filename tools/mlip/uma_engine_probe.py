@@ -376,8 +376,20 @@ def main():
 
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     p = OUT_DIR / f"mlip_engine_probe_{a.tag}.json"
+    # ⚠⚠ 2026-08-20 실측 — 옛 코드는 통째로 덮어썼다. 같은 --tag 로 --conservative 를
+    #   돌린 뒤 --timing 을 돌리면 **보존성 결과가 조용히 사라진다**(실제로 날아갔다).
+    #   모드마다 따로 돌리는 게 정상 사용법이므로, 있는 파일에 **합친다**.
+    if p.exists():
+        try:
+            old = json.loads(p.read_text(encoding="utf-8"))
+            if isinstance(old, dict):
+                for k, v in old.items():
+                    out.setdefault(k, v)      # 이번에 잰 절은 새 값이 이긴다
+        except (OSError, ValueError):
+            print(f"⚠ 기존 {p.name} 을 못 읽어 새로 쓴다 (덮어씀)")
     p.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"\n→ {p}")
+    have = [k for k in ("conservativeness", "timing", "residual_at_dft_minimum") if k in out]
+    print(f"\n→ {p}   (담긴 절: {', '.join(have) or '없음'})")
     return 0
 
 
