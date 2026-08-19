@@ -1,0 +1,1698 @@
+{
+  "note": "softBV BVSE on interface decomposition products. perc_onset_val2 = lowest above-min BVSE whose sub-threshold region percolates through the cell. LOWER = Li moves more easily.",
+  "caveat": "Empirical softBV (valence^2), NOT eV and NOT a NEB barrier. Use ORDER only. Crystalline bulk - the real interphase may be amorphous.",
+  "softBV_R0": {
+    "S": 2.105,
+    "Cl": 2.249,
+    "O": 1.466,
+    "b": 0.37
+  },
+  "iso_levels_val2": [
+    0.25,
+    0.5,
+    1.0,
+    2.0
+  ],
+  "skipped_with_reason": {
+    "Sc2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sc": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr2CoO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CrO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr2S3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Gd2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Gd2SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "GdNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "In2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "In2S3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "In": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Y2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Y2SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "YNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co3(BO3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "O2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiB3": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "NbBO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co3O4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "WS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "W": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "WO3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ga2CoO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ga2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ga2S3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li2Ga7": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "NbGaO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Al2CoO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Al2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiAl": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "NbAlO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nb2O5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NbS3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ta2O5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "TaS3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ta": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CrPO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CrCl3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr2(SO4)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MoS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mo": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sm2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sm2SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SmNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ScOF": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiF": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "ScNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mg(CoO2)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MgS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiMg149": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "MgNb2O6": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ca2Co3O8": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ca4Nb2O9": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co(SbO3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sb2S3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sb": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co23O32": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li3AlF6": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "Al": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LaF3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LaPS4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LaSF": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "La": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LaNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiYF4": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "YOF": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "YPS4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Y": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "HfO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Hf": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "V2CoO6": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "V2O5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "VS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NbVO5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nd2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nd2SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NdNbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SiO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Si": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaF2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li2Ca": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "CaNb2O6": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NdF3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NdSF": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nd": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ZnO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ZnS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiZn3": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "SnO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SnS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sn": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li2ZrF6": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "ZrO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li4ZrF8": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "ZrS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Zr(PS3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ZrS3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Zr": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn2CoO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn2P": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn4Nb2O9": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "La2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "La2SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ag2O": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoAgO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AgO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ag2S": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ag": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "GeO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "GeS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ge": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SrO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sr6(CoO3)5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SrS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sr": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Sr4Nb2O9": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BaO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ba2CoO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BaCl2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BaS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ba": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li2TiF6": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "TiO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoF2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ti(PS3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "TiS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "TiS3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ti": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MgO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiMg": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Mg4Nb2O9": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ti2O": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Na3CoO3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Na2CoO3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NaCl": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Na2S": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Na": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Na3NbO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Fe2O3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "FeS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "FeS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Fe": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Zr3O": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co9S8": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ni3S2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ni": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cu2O": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co21Cu3O32": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CuO": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cu7S4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cu": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AgCl": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ag2Cl3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SCl": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SO2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoP4O11": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "S": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co(NiS2)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ni3S4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ni(PO3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiCl2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn(PO3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnP4O11": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co3S4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlPO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Al(PO3)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Al2(SO4)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnAl2O4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiSO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnSO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiBr": "softBV R0 없음: Br — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "SBr": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "PCl5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiPF6": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "LiSO3F": "softBV R0 없음: F — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "P2O3F4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "PF5": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiI": "softBV R0 없음: I — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "I": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ICl": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "N2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BPO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "P2S7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn2P2O7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlCl3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiBr2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnCl2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlSCl7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "PBr7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlF3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiI2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NiP4O11": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlPI8": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnB4O7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BaP4O11": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "BaSO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaSO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ca3(PO4)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaCl2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ca2P2O7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ca2P6O17": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaNi(PO3)4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaP4O11": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaMn(PO3)4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CaBr2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnF2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr(PO3)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "MnCr2O4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mn3(PO4)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CrS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Cr5S8": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Co2CuS4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CuCl2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CoCuS4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CuS": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "CuS2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Fe(PO3)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "FeSCl7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Fe(PO3)2": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "FeNi35S32": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "FeSO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "GaPO4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ga(PO3)3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "GaCl3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ni9S8": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li3P": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "LiAg3": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "AlP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "AlN": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "B6P": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li7PN4": "softBV R0 없음: N — 그냥 돌리면 그 원소를 음이온으로 안 세고 조용히 틀린 답이 나온다",
+    "LiCaP": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Li2Co12P7": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Cr3P": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li2CuP": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "LiFeP": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "LiGa": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "GdP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "LiGe": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "HfP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li3LaP2": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "LiMgP": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Mg2PN3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Mo3P": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NaI": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nb7P4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Nb5P3": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "NdP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li5Ni9P7": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Li3Sb": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "ScP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "SmP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Li5Sn2": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "LiSn": "음이온이 없다 (금속간 화합물) — BVSE 가 정의되지 않는다",
+    "Ta2P": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "TaP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "Ti7P4": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "TiP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "V12P7": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "YP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다",
+    "ZrP": "Li 가 없다 — 이 층은 애초에 Li 를 못 나른다"
+  },
+  "products": {
+    "Ba4LiNb3O12": {
+      "material_id": "mp-774715",
+      "natoms": 80,
+      "grid": [
+        24,
+        42,
+        60
+      ],
+      "perc_onset_val2": 0.019,
+      "iso_channel_pct": {
+        "0.25": 34.702,
+        "0.5": 46.938,
+        "1.0": 57.626,
+        "2.0": 68.261
+      },
+      "Li_site_BVS_mean": 0.94,
+      "seconds": 0.6
+    },
+    "Li(CoO2)2": {
+      "material_id": "mp-773076",
+      "natoms": 56,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.168,
+      "iso_channel_pct": {
+        "0.25": 7.407,
+        "0.5": 13.831,
+        "1.0": 22.512,
+        "2.0": 34.578
+      },
+      "Li_site_BVS_mean": 1.173,
+      "seconds": 0.3
+    },
+    "Li(MnS2)2": {
+      "material_id": "mp-1045435",
+      "natoms": 14,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 4.204,
+      "iso_channel_pct": {
+        "0.25": 0.231,
+        "0.5": 0.477,
+        "1.0": 1.186,
+        "2.0": 2.995
+      },
+      "Li_site_BVS_mean": 1.292,
+      "seconds": 0.4
+    },
+    "Li(TiS2)2": {
+      "material_id": "mp-1045384",
+      "natoms": 14,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 1.675,
+      "iso_channel_pct": {
+        "0.25": 0.376,
+        "0.5": 1.201,
+        "1.0": 1.837,
+        "2.0": 5.31
+      },
+      "Li_site_BVS_mean": 2.062,
+      "seconds": 0.3
+    },
+    "Li2(TaS2)3": {
+      "material_id": "mp-755664",
+      "natoms": 22,
+      "grid": [
+        24,
+        24,
+        53
+      ],
+      "perc_onset_val2": 1.99,
+      "iso_channel_pct": {
+        "0.25": 0.177,
+        "0.5": 0.462,
+        "1.0": 1.327,
+        "2.0": 4.805
+      },
+      "Li_site_BVS_mean": 1.778,
+      "seconds": 0.4
+    },
+    "Li2CoGe3O8": {
+      "material_id": "mp-769597",
+      "natoms": 56,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.143,
+      "iso_channel_pct": {
+        "0.25": 11.777,
+        "0.5": 19.213,
+        "1.0": 28.385,
+        "2.0": 41.001
+      },
+      "Li_site_BVS_mean": 1.143,
+      "seconds": 0.9
+    },
+    "Li2CoO3": {
+      "material_id": "mp-1314570",
+      "natoms": 24,
+      "grid": [
+        24,
+        40,
+        24
+      ],
+      "perc_onset_val2": 0.132,
+      "iso_channel_pct": {
+        "0.25": 9.158,
+        "0.5": 16.372,
+        "1.0": 27.695,
+        "2.0": 43.121
+      },
+      "Li_site_BVS_mean": 1.083,
+      "seconds": 0.3
+    },
+    "Li2CrO4": {
+      "material_id": "mp-756967",
+      "natoms": 14,
+      "grid": [
+        24,
+        25,
+        32
+      ],
+      "perc_onset_val2": 0.022,
+      "iso_channel_pct": {
+        "0.25": 42.771,
+        "0.5": 49.552,
+        "1.0": 57.292,
+        "2.0": 64.802
+      },
+      "Li_site_BVS_mean": 0.953,
+      "seconds": 0.3
+    },
+    "Li2HfO3": {
+      "material_id": "mp-755352",
+      "natoms": 12,
+      "grid": [
+        24,
+        24,
+        25
+      ],
+      "perc_onset_val2": 0.129,
+      "iso_channel_pct": {
+        "0.25": 20.319,
+        "0.5": 32.75,
+        "1.0": 47.806,
+        "2.0": 60.882
+      },
+      "Li_site_BVS_mean": 0.905,
+      "seconds": 0.3
+    },
+    "Li2Mn(SO4)2": {
+      "material_id": "mp-758969",
+      "natoms": 104,
+      "grid": [
+        24,
+        24,
+        36
+      ],
+      "perc_onset_val2": 0.439,
+      "iso_channel_pct": {
+        "0.25": 8.931,
+        "0.5": 13.6,
+        "1.0": 19.541,
+        "2.0": 29.784
+      },
+      "Li_site_BVS_mean": 1.22,
+      "seconds": 0.4
+    },
+    "Li2MnP2O7": {
+      "material_id": "mp-770967",
+      "natoms": 48,
+      "grid": [
+        24,
+        28,
+        34
+      ],
+      "perc_onset_val2": 0.035,
+      "iso_channel_pct": {
+        "0.25": 35.692,
+        "0.5": 43.886,
+        "1.0": 51.541,
+        "2.0": 59.695
+      },
+      "Li_site_BVS_mean": 0.959,
+      "seconds": 0.3
+    },
+    "Li2MoO4": {
+      "material_id": "mp-1202737",
+      "natoms": 126,
+      "grid": [
+        24,
+        36,
+        36
+      ],
+      "perc_onset_val2": 0.027,
+      "iso_channel_pct": {
+        "0.25": 41.532,
+        "0.5": 51.765,
+        "1.0": 62.577,
+        "2.0": 70.824
+      },
+      "Li_site_BVS_mean": 0.992,
+      "seconds": 1.1
+    },
+    "Li2O": {
+      "material_id": "mp-755894",
+      "natoms": 12,
+      "grid": [
+        39,
+        24,
+        45
+      ],
+      "perc_onset_val2": 0.013,
+      "iso_channel_pct": {
+        "0.25": 47.013,
+        "0.5": 55.432,
+        "1.0": 62.93,
+        "2.0": 69.915
+      },
+      "Li_site_BVS_mean": 0.698,
+      "seconds": 0.3
+    },
+    "Li2S": {
+      "material_id": "mp-1125",
+      "natoms": 12,
+      "grid": [
+        24,
+        40,
+        46
+      ],
+      "perc_onset_val2": 0.185,
+      "iso_channel_pct": {
+        "0.25": 9.266,
+        "0.5": 13.705,
+        "1.0": 21.476,
+        "2.0": 33.297
+      },
+      "Li_site_BVS_mean": 1.053,
+      "seconds": 0.3
+    },
+    "Li2SO4": {
+      "material_id": "mp-558382",
+      "natoms": 14,
+      "grid": [
+        24,
+        24,
+        30
+      ],
+      "perc_onset_val2": 0.307,
+      "iso_channel_pct": {
+        "0.25": 5.683,
+        "0.5": 9.387,
+        "1.0": 14.363,
+        "2.0": 23.461
+      },
+      "Li_site_BVS_mean": 1.042,
+      "seconds": 0.3
+    },
+    "Li2WO4": {
+      "material_id": "mp-18933",
+      "natoms": 56,
+      "grid": [
+        24,
+        27,
+        27
+      ],
+      "perc_onset_val2": 0.054,
+      "iso_channel_pct": {
+        "0.25": 15.438,
+        "0.5": 25.383,
+        "1.0": 36.46,
+        "2.0": 49.771
+      },
+      "Li_site_BVS_mean": 1.126,
+      "seconds": 0.3
+    },
+    "Li3B7O12": {
+      "material_id": "mp-16828",
+      "natoms": 44,
+      "grid": [
+        24,
+        29,
+        31
+      ],
+      "perc_onset_val2": 0.099,
+      "iso_channel_pct": {
+        "0.25": 21.621,
+        "0.5": 28.916,
+        "1.0": 36.045,
+        "2.0": 44.369
+      },
+      "Li_site_BVS_mean": 1.101,
+      "seconds": 0.3
+    },
+    "Li3BO3": {
+      "material_id": "mp-27275",
+      "natoms": 28,
+      "grid": [
+        60,
+        24,
+        60
+      ],
+      "perc_onset_val2": 0.032,
+      "iso_channel_pct": {
+        "0.25": 36.199,
+        "0.5": 44.072,
+        "1.0": 52.748,
+        "2.0": 60.829
+      },
+      "Li_site_BVS_mean": 0.857,
+      "seconds": 0.3
+    },
+    "Li3CuS2": {
+      "material_id": "mp-766506",
+      "natoms": 48,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.728,
+      "iso_channel_pct": {
+        "0.25": 6.134,
+        "0.5": 9.664,
+        "1.0": 16.399,
+        "2.0": 32.205
+      },
+      "Li_site_BVS_mean": 1.623,
+      "seconds": 0.6
+    },
+    "Li3NbO4": {
+      "material_id": "mp-36086",
+      "natoms": 8,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.095,
+      "iso_channel_pct": {
+        "0.25": 26.121,
+        "0.5": 36.408,
+        "1.0": 49.074,
+        "2.0": 61.003
+      },
+      "Li_site_BVS_mean": 0.391,
+      "seconds": 0.3
+    },
+    "Li3PO4": {
+      "material_id": "mp-2878",
+      "natoms": 32,
+      "grid": [
+        24,
+        30,
+        51
+      ],
+      "perc_onset_val2": 0.091,
+      "iso_channel_pct": {
+        "0.25": 25.556,
+        "0.5": 36.688,
+        "1.0": 46.612,
+        "2.0": 56.296
+      },
+      "Li_site_BVS_mean": 1.123,
+      "seconds": 0.4
+    },
+    "Li3PS4": {
+      "material_id": "mp-2646995",
+      "natoms": 8,
+      "grid": [
+        24,
+        24,
+        28
+      ],
+      "perc_onset_val2": 0.891,
+      "iso_channel_pct": {
+        "0.25": 7.292,
+        "0.5": 10.429,
+        "1.0": 16.307,
+        "2.0": 25.0
+      },
+      "Li_site_BVS_mean": 1.535,
+      "seconds": 0.3
+    },
+    "Li3Sc2(PO4)3": {
+      "material_id": "mp-774742",
+      "natoms": 80,
+      "grid": [
+        24,
+        24,
+        41
+      ],
+      "perc_onset_val2": 0.039,
+      "iso_channel_pct": {
+        "0.25": 31.148,
+        "0.5": 39.804,
+        "1.0": 48.814,
+        "2.0": 58.316
+      },
+      "Li_site_BVS_mean": 0.969,
+      "seconds": 0.3
+    },
+    "Li3VO4": {
+      "material_id": "mp-581162",
+      "natoms": 32,
+      "grid": [
+        24,
+        30,
+        51
+      ],
+      "perc_onset_val2": 0.027,
+      "iso_channel_pct": {
+        "0.25": 34.183,
+        "0.5": 43.617,
+        "1.0": 52.81,
+        "2.0": 63.617
+      },
+      "Li_site_BVS_mean": 1.083,
+      "seconds": 0.3
+    },
+    "Li4GeS4": {
+      "material_id": "mp-30249",
+      "natoms": 36,
+      "grid": [
+        24,
+        30,
+        55
+      ],
+      "perc_onset_val2": 0.242,
+      "iso_channel_pct": {
+        "0.25": 5.182,
+        "0.5": 9.212,
+        "1.0": 15.98,
+        "2.0": 25.737
+      },
+      "Li_site_BVS_mean": 1.5,
+      "seconds": 0.3
+    },
+    "Li4MoO5": {
+      "material_id": "mp-675020",
+      "natoms": 10,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.287,
+      "iso_channel_pct": {
+        "0.25": 13.014,
+        "0.5": 21.926,
+        "1.0": 37.225,
+        "2.0": 52.532
+      },
+      "Li_site_BVS_mean": 0.859,
+      "seconds": 0.3
+    },
+    "Li4P2O7": {
+      "material_id": "mp-554577",
+      "natoms": 52,
+      "grid": [
+        60,
+        24,
+        44
+      ],
+      "perc_onset_val2": 0.031,
+      "iso_channel_pct": {
+        "0.25": 39.258,
+        "0.5": 46.089,
+        "1.0": 53.191,
+        "2.0": 60.934
+      },
+      "Li_site_BVS_mean": 1.003,
+      "seconds": 0.4
+    },
+    "Li4SiO4": {
+      "material_id": "mp-1223129",
+      "natoms": 126,
+      "grid": [
+        24,
+        46,
+        60
+      ],
+      "perc_onset_val2": 0.037,
+      "iso_channel_pct": {
+        "0.25": 28.288,
+        "0.5": 38.587,
+        "1.0": 48.937,
+        "2.0": 58.75
+      },
+      "Li_site_BVS_mean": 1.091,
+      "seconds": 0.5
+    },
+    "Li4SnS4": {
+      "material_id": "mp-1195718",
+      "natoms": 36,
+      "grid": [
+        24,
+        30,
+        54
+      ],
+      "perc_onset_val2": 0.362,
+      "iso_channel_pct": {
+        "0.25": 7.593,
+        "0.5": 12.325,
+        "1.0": 20.123,
+        "2.0": 31.173
+      },
+      "Li_site_BVS_mean": 1.432,
+      "seconds": 0.4
+    },
+    "Li4TiO4": {
+      "material_id": "mp-1177252",
+      "natoms": 72,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.01,
+      "iso_channel_pct": {
+        "0.25": 49.805,
+        "0.5": 57.899,
+        "1.0": 65.271,
+        "2.0": 72.692
+      },
+      "Li_site_BVS_mean": 0.902,
+      "seconds": 0.4
+    },
+    "Li4TiS4": {
+      "material_id": "mp-861182",
+      "natoms": 9,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.446,
+      "iso_channel_pct": {
+        "0.25": 14.627,
+        "0.5": 20.703,
+        "1.0": 29.716,
+        "2.0": 39.265
+      },
+      "Li_site_BVS_mean": 0.872,
+      "seconds": 0.3
+    },
+    "Li4WO5": {
+      "material_id": "mp-690542",
+      "natoms": 10,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.189,
+      "iso_channel_pct": {
+        "0.25": 13.903,
+        "0.5": 22.613,
+        "1.0": 37.674,
+        "2.0": 52.633
+      },
+      "Li_site_BVS_mean": 0.812,
+      "seconds": 0.3
+    },
+    "Li5(NbS2)7": {
+      "material_id": "mp-767171",
+      "natoms": 52,
+      "grid": [
+        24,
+        24,
+        32
+      ],
+      "perc_onset_val2": 1.908,
+      "iso_channel_pct": {
+        "0.25": 0.228,
+        "0.5": 0.423,
+        "1.0": 1.834,
+        "2.0": 5.675
+      },
+      "Li_site_BVS_mean": 1.729,
+      "seconds": 0.5
+    },
+    "Li5B7S13": {
+      "material_id": "mp-532413",
+      "natoms": 100,
+      "grid": [
+        27,
+        27,
+        24
+      ],
+      "perc_onset_val2": 0.846,
+      "iso_channel_pct": {
+        "0.25": 5.201,
+        "0.5": 7.762,
+        "1.0": 11.991,
+        "2.0": 17.638
+      },
+      "Li_site_BVS_mean": 1.395,
+      "seconds": 0.3
+    },
+    "Li5TaO5": {
+      "material_id": "mp-770469",
+      "natoms": 22,
+      "grid": [
+        24,
+        24,
+        40
+      ],
+      "perc_onset_val2": 0.018,
+      "iso_channel_pct": {
+        "0.25": 35.538,
+        "0.5": 47.969,
+        "1.0": 59.167,
+        "2.0": 67.865
+      },
+      "Li_site_BVS_mean": 0.927,
+      "seconds": 0.3
+    },
+    "Li6MnS4": {
+      "material_id": "mp-756490",
+      "natoms": 22,
+      "grid": [
+        33,
+        33,
+        24
+      ],
+      "perc_onset_val2": 1.013,
+      "iso_channel_pct": {
+        "0.25": 10.801,
+        "0.5": 15.561,
+        "1.0": 24.357,
+        "2.0": 35.751
+      },
+      "Li_site_BVS_mean": 1.532,
+      "seconds": 0.5
+    },
+    "Li6Zr2O7": {
+      "material_id": "mp-5418",
+      "natoms": 30,
+      "grid": [
+        24,
+        24,
+        41
+      ],
+      "perc_onset_val2": 0.089,
+      "iso_channel_pct": {
+        "0.25": 27.642,
+        "0.5": 40.943,
+        "1.0": 55.119,
+        "2.0": 65.904
+      },
+      "Li_site_BVS_mean": 0.929,
+      "seconds": 0.4
+    },
+    "Li8Nb2O9": {
+      "material_id": "mp-28030",
+      "natoms": 76,
+      "grid": [
+        24,
+        36,
+        60
+      ],
+      "perc_onset_val2": 0.218,
+      "iso_channel_pct": {
+        "0.25": 18.646,
+        "0.5": 29.936,
+        "1.0": 43.567,
+        "2.0": 58.588
+      },
+      "Li_site_BVS_mean": 1.044,
+      "seconds": 1.0
+    },
+    "Li9Cr3P8O29": {
+      "material_id": "mp-26975",
+      "natoms": 98,
+      "grid": [
+        24,
+        24,
+        34
+      ],
+      "perc_onset_val2": 0.051,
+      "iso_channel_pct": {
+        "0.25": 27.267,
+        "0.5": 35.366,
+        "1.0": 43.73,
+        "2.0": 54.35
+      },
+      "Li_site_BVS_mean": 0.893,
+      "seconds": 0.3
+    },
+    "LiAl5O8": {
+      "material_id": "mp-530399",
+      "natoms": 56,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.943,
+      "iso_channel_pct": {
+        "0.25": 1.591,
+        "0.5": 3.385,
+        "1.0": 12.442,
+        "2.0": 27.431
+      },
+      "Li_site_BVS_mean": 1.334,
+      "seconds": 0.6
+    },
+    "LiAlO2": {
+      "material_id": "mp-3427",
+      "natoms": 16,
+      "grid": [
+        24,
+        24,
+        29
+      ],
+      "perc_onset_val2": 0.03,
+      "iso_channel_pct": {
+        "0.25": 30.454,
+        "0.5": 38.733,
+        "1.0": 49.306,
+        "2.0": 62.123
+      },
+      "Li_site_BVS_mean": 1.0,
+      "seconds": 0.3
+    },
+    "LiAlS2": {
+      "material_id": "mp-1106183",
+      "natoms": 16,
+      "grid": [
+        24,
+        25,
+        30
+      ],
+      "perc_onset_val2": 1.13,
+      "iso_channel_pct": {
+        "0.25": 2.0,
+        "0.5": 3.967,
+        "1.0": 8.978,
+        "2.0": 18.133
+      },
+      "Li_site_BVS_mean": 1.637,
+      "seconds": 0.3
+    },
+    "LiCl": {
+      "material_id": "mp-1185319",
+      "natoms": 4,
+      "grid": [
+        24,
+        24,
+        39
+      ],
+      "perc_onset_val2": 0.457,
+      "iso_channel_pct": {
+        "0.25": 9.896,
+        "0.5": 15.242,
+        "1.0": 19.56,
+        "2.0": 24.519
+      },
+      "Li_site_BVS_mean": 1.341,
+      "seconds": 0.3
+    },
+    "LiCo(PO3)3": {
+      "material_id": "mp-26991",
+      "natoms": 56,
+      "grid": [
+        24,
+        25,
+        25
+      ],
+      "perc_onset_val2": 0.145,
+      "iso_channel_pct": {
+        "0.25": 16.833,
+        "0.5": 24.713,
+        "1.0": 35.78,
+        "2.0": 47.647
+      },
+      "Li_site_BVS_mean": 0.973,
+      "seconds": 0.3
+    },
+    "LiCoO2": {
+      "material_id": "mp-849273",
+      "natoms": 16,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.347,
+      "iso_channel_pct": {
+        "0.25": 4.355,
+        "0.5": 9.042,
+        "1.0": 18.012,
+        "2.0": 36.024
+      },
+      "Li_site_BVS_mean": 0.788,
+      "seconds": 0.3
+    },
+    "LiCr3O8": {
+      "material_id": "mp-554940",
+      "natoms": 24,
+      "grid": [
+        24,
+        35,
+        35
+      ],
+      "perc_onset_val2": 0.128,
+      "iso_channel_pct": {
+        "0.25": 11.588,
+        "0.5": 18.582,
+        "1.0": 29.003,
+        "2.0": 43.588
+      },
+      "Li_site_BVS_mean": 0.993,
+      "seconds": 0.3
+    },
+    "LiCrO2": {
+      "material_id": "mp-756362",
+      "natoms": 16,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.165,
+      "iso_channel_pct": {
+        "0.25": 7.002,
+        "0.5": 15.611,
+        "1.0": 29.89,
+        "2.0": 48.987
+      },
+      "Li_site_BVS_mean": 1.009,
+      "seconds": 0.3
+    },
+    "LiCrP2O7": {
+      "material_id": "mp-26139",
+      "natoms": 44,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.67,
+      "iso_channel_pct": {
+        "0.25": 14.945,
+        "0.5": 20.587,
+        "1.0": 30.917,
+        "2.0": 45.067
+      },
+      "Li_site_BVS_mean": 0.831,
+      "seconds": 0.8
+    },
+    "LiCrS2": {
+      "material_id": "mp-4226",
+      "natoms": 4,
+      "grid": [
+        24,
+        24,
+        41
+      ],
+      "perc_onset_val2": 0.5,
+      "iso_channel_pct": {
+        "0.25": 11.031,
+        "0.5": 15.104,
+        "1.0": 18.839,
+        "2.0": 23.454
+      },
+      "Li_site_BVS_mean": 0.516,
+      "seconds": 0.3
+    },
+    "LiFe(PO3)4": {
+      "material_id": "mp-2912291",
+      "natoms": 36,
+      "grid": [
+        28,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.062,
+      "iso_channel_pct": {
+        "0.25": 24.888,
+        "0.5": 33.408,
+        "1.0": 41.592,
+        "2.0": 50.942
+      },
+      "Li_site_BVS_mean": 1.013,
+      "seconds": 0.3
+    },
+    "LiFeCl4": {
+      "material_id": "mp-1210931",
+      "natoms": 24,
+      "grid": [
+        24,
+        26,
+        47
+      ],
+      "perc_onset_val2": 7.406,
+      "iso_channel_pct": {
+        "0.25": 0.044,
+        "0.5": 0.181,
+        "1.0": 0.515,
+        "2.0": 1.753
+      },
+      "Li_site_BVS_mean": 2.392,
+      "seconds": 0.8
+    },
+    "LiFePO4": {
+      "material_id": "mp-756958",
+      "natoms": 28,
+      "grid": [
+        24,
+        41,
+        40
+      ],
+      "perc_onset_val2": 0.021,
+      "iso_channel_pct": {
+        "0.25": 42.83,
+        "0.5": 51.707,
+        "1.0": 58.041,
+        "2.0": 64.914
+      },
+      "Li_site_BVS_mean": 0.966,
+      "seconds": 0.5
+    },
+    "LiGa(PO3)4": {
+      "material_id": "mp-1211020",
+      "natoms": 72,
+      "grid": [
+        24,
+        26,
+        36
+      ],
+      "perc_onset_val2": 0.047,
+      "iso_channel_pct": {
+        "0.25": 31.82,
+        "0.5": 39.797,
+        "1.0": 46.172,
+        "2.0": 54.808
+      },
+      "Li_site_BVS_mean": 0.968,
+      "seconds": 0.3
+    },
+    "LiGa5O8": {
+      "material_id": "mp-531523",
+      "natoms": 28,
+      "grid": [
+        24,
+        24,
+        34
+      ],
+      "perc_onset_val2": 0.311,
+      "iso_channel_pct": {
+        "0.25": 5.157,
+        "0.5": 11.846,
+        "1.0": 26.757,
+        "2.0": 44.914
+      },
+      "Li_site_BVS_mean": 1.225,
+      "seconds": 0.4
+    },
+    "LiGaCl4": {
+      "material_id": "mp-28341",
+      "natoms": 24,
+      "grid": [
+        24,
+        26,
+        47
+      ],
+      "perc_onset_val2": 5.493,
+      "iso_channel_pct": {
+        "0.25": 0.065,
+        "0.5": 0.16,
+        "1.0": 0.515,
+        "2.0": 1.834
+      },
+      "Li_site_BVS_mean": 2.35,
+      "seconds": 0.7
+    },
+    "LiGaO2": {
+      "material_id": "mp-8002",
+      "natoms": 4,
+      "grid": [
+        24,
+        24,
+        42
+      ],
+      "perc_onset_val2": 0.028,
+      "iso_channel_pct": {
+        "0.25": 27.625,
+        "0.5": 41.109,
+        "1.0": 53.766,
+        "2.0": 62.703
+      },
+      "Li_site_BVS_mean": 0.297,
+      "seconds": 0.3
+    },
+    "LiGaS2": {
+      "material_id": "mp-3647",
+      "natoms": 16,
+      "grid": [
+        24,
+        25,
+        30
+      ],
+      "perc_onset_val2": 1.339,
+      "iso_channel_pct": {
+        "0.25": 2.156,
+        "0.5": 4.011,
+        "1.0": 8.7,
+        "2.0": 18.256
+      },
+      "Li_site_BVS_mean": 1.698,
+      "seconds": 0.3
+    },
+    "LiGdO2": {
+      "material_id": "mp-754162",
+      "natoms": 16,
+      "grid": [
+        24,
+        25,
+        26
+      ],
+      "perc_onset_val2": 0.013,
+      "iso_channel_pct": {
+        "0.25": 55.5,
+        "0.5": 62.397,
+        "1.0": 68.705,
+        "2.0": 74.872
+      },
+      "Li_site_BVS_mean": 0.901,
+      "seconds": 0.5
+    },
+    "LiInS2": {
+      "material_id": "mp-1188392",
+      "natoms": 16,
+      "grid": [
+        24,
+        26,
+        30
+      ],
+      "perc_onset_val2": 0.616,
+      "iso_channel_pct": {
+        "0.25": 6.731,
+        "0.5": 11.667,
+        "1.0": 21.709,
+        "2.0": 34.637
+      },
+      "Li_site_BVS_mean": 1.608,
+      "seconds": 0.4
+    },
+    "LiMnO2": {
+      "material_id": "mp-556415",
+      "natoms": 16,
+      "grid": [
+        24,
+        24,
+        26
+      ],
+      "perc_onset_val2": 0.182,
+      "iso_channel_pct": {
+        "0.25": 9.215,
+        "0.5": 21.848,
+        "1.0": 38.889,
+        "2.0": 55.288
+      },
+      "Li_site_BVS_mean": 1.001,
+      "seconds": 0.4
+    },
+    "LiMnPO4": {
+      "material_id": "mp-857356",
+      "natoms": 56,
+      "grid": [
+        24,
+        48,
+        60
+      ],
+      "perc_onset_val2": 0.02,
+      "iso_channel_pct": {
+        "0.25": 44.647,
+        "0.5": 52.112,
+        "1.0": 58.403,
+        "2.0": 64.983
+      },
+      "Li_site_BVS_mean": 0.926,
+      "seconds": 0.4
+    },
+    "LiNb3O8": {
+      "material_id": "mp-3368",
+      "natoms": 48,
+      "grid": [
+        24,
+        36,
+        60
+      ],
+      "perc_onset_val2": 0.286,
+      "iso_channel_pct": {
+        "0.25": 6.52,
+        "0.5": 13.434,
+        "1.0": 28.152,
+        "2.0": 47.176
+      },
+      "Li_site_BVS_mean": 0.938,
+      "seconds": 0.7
+    },
+    "LiNbGeO5": {
+      "material_id": "mp-6456",
+      "natoms": 32,
+      "grid": [
+        24,
+        27,
+        28
+      ],
+      "perc_onset_val2": 0.04,
+      "iso_channel_pct": {
+        "0.25": 24.813,
+        "0.5": 32.727,
+        "1.0": 43.673,
+        "2.0": 56.702
+      },
+      "Li_site_BVS_mean": 0.984,
+      "seconds": 0.3
+    },
+    "LiNbO2": {
+      "material_id": "mp-3924",
+      "natoms": 8,
+      "grid": [
+        24,
+        24,
+        60
+      ],
+      "perc_onset_val2": 0.021,
+      "iso_channel_pct": {
+        "0.25": 30.451,
+        "0.5": 44.699,
+        "1.0": 57.216,
+        "2.0": 65.133
+      },
+      "Li_site_BVS_mean": 0.349,
+      "seconds": 0.3
+    },
+    "LiNbO3": {
+      "material_id": "mp-675069",
+      "natoms": 70,
+      "grid": [
+        24,
+        26,
+        60
+      ],
+      "perc_onset_val2": 0.407,
+      "iso_channel_pct": {
+        "0.25": 13.539,
+        "0.5": 22.217,
+        "1.0": 36.562,
+        "2.0": 53.819
+      },
+      "Li_site_BVS_mean": 0.898,
+      "seconds": 1.5
+    },
+    "LiNi(PO3)3": {
+      "material_id": "mp-1176610",
+      "natoms": 56,
+      "grid": [
+        24,
+        24,
+        25
+      ],
+      "perc_onset_val2": 0.145,
+      "iso_channel_pct": {
+        "0.25": 16.514,
+        "0.5": 24.347,
+        "1.0": 34.389,
+        "2.0": 47.056
+      },
+      "Li_site_BVS_mean": 0.987,
+      "seconds": 0.3
+    },
+    "LiO8": {
+      "material_id": "mp-1235185",
+      "natoms": 9,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.181,
+      "iso_channel_pct": {
+        "0.25": 10.974,
+        "0.5": 16.493,
+        "1.0": 23.553,
+        "2.0": 31.424
+      },
+      "Li_site_BVS_mean": 0.972,
+      "seconds": 0.3
+    },
+    "LiPO3": {
+      "material_id": "mp-1202801",
+      "natoms": 100,
+      "grid": [
+        24,
+        58,
+        60
+      ],
+      "perc_onset_val2": 0.043,
+      "iso_channel_pct": {
+        "0.25": 35.029,
+        "0.5": 41.657,
+        "1.0": 49.169,
+        "2.0": 57.153
+      },
+      "Li_site_BVS_mean": 1.002,
+      "seconds": 0.5
+    },
+    "LiSb3O8": {
+      "material_id": "mp-29892",
+      "natoms": 24,
+      "grid": [
+        24,
+        29,
+        53
+      ],
+      "perc_onset_val2": 0.32,
+      "iso_channel_pct": {
+        "0.25": 2.662,
+        "0.5": 10.692,
+        "1.0": 25.125,
+        "2.0": 43.879
+      },
+      "Li_site_BVS_mean": 1.145,
+      "seconds": 0.6
+    },
+    "LiSbO2": {
+      "material_id": "mp-755703",
+      "natoms": 8,
+      "grid": [
+        26,
+        26,
+        24
+      ],
+      "perc_onset_val2": 0.022,
+      "iso_channel_pct": {
+        "0.25": 29.401,
+        "0.5": 46.721,
+        "1.0": 70.044,
+        "2.0": 75.801
+      },
+      "Li_site_BVS_mean": 0.935,
+      "seconds": 0.6
+    },
+    "LiSbO3": {
+      "material_id": "mp-770932",
+      "natoms": 10,
+      "grid": [
+        30,
+        24,
+        44
+      ],
+      "perc_onset_val2": 0.027,
+      "iso_channel_pct": {
+        "0.25": 27.607,
+        "0.5": 39.937,
+        "1.0": 53.292,
+        "2.0": 62.762
+      },
+      "Li_site_BVS_mean": 0.515,
+      "seconds": 0.3
+    },
+    "LiScO2": {
+      "material_id": "mp-5840",
+      "natoms": 8,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 0.022,
+      "iso_channel_pct": {
+        "0.25": 35.684,
+        "0.5": 46.202,
+        "1.0": 55.802,
+        "2.0": 65.987
+      },
+      "Li_site_BVS_mean": 0.302,
+      "seconds": 0.3
+    },
+    "LiScS2": {
+      "material_id": "mp-1001786",
+      "natoms": 4,
+      "grid": [
+        24,
+        24,
+        42
+      ],
+      "perc_onset_val2": 0.65,
+      "iso_channel_pct": {
+        "0.25": 12.14,
+        "0.5": 19.097,
+        "1.0": 23.09,
+        "2.0": 27.753
+      },
+      "Li_site_BVS_mean": 0.468,
+      "seconds": 0.3
+    },
+    "LiTaO3": {
+      "material_id": "mp-754345",
+      "natoms": 10,
+      "grid": [
+        33,
+        33,
+        24
+      ],
+      "perc_onset_val2": 0.042,
+      "iso_channel_pct": {
+        "0.25": 23.228,
+        "0.5": 30.475,
+        "1.0": 40.308,
+        "2.0": 54.932
+      },
+      "Li_site_BVS_mean": 0.238,
+      "seconds": 0.3
+    },
+    "LiVO2": {
+      "material_id": "mp-1276026",
+      "natoms": 16,
+      "grid": [
+        24,
+        28,
+        28
+      ],
+      "perc_onset_val2": 0.163,
+      "iso_channel_pct": {
+        "0.25": 13.664,
+        "0.5": 23.836,
+        "1.0": 39.822,
+        "2.0": 56.601
+      },
+      "Li_site_BVS_mean": 0.912,
+      "seconds": 0.4
+    },
+    "LiVO3": {
+      "material_id": "mp-703230",
+      "natoms": 20,
+      "grid": [
+        24,
+        31,
+        31
+      ],
+      "perc_onset_val2": 0.024,
+      "iso_channel_pct": {
+        "0.25": 41.216,
+        "0.5": 47.815,
+        "1.0": 55.411,
+        "2.0": 65.184
+      },
+      "Li_site_BVS_mean": 1.003,
+      "seconds": 0.3
+    },
+    "LiYS2": {
+      "material_id": "mp-33363",
+      "natoms": 8,
+      "grid": [
+        24,
+        24,
+        24
+      ],
+      "perc_onset_val2": 1.256,
+      "iso_channel_pct": {
+        "0.25": 7.248,
+        "0.5": 10.713,
+        "1.0": 16.775,
+        "2.0": 27.503
+      },
+      "Li_site_BVS_mean": 0.472,
+      "seconds": 0.3
+    },
+    "NaLiS": {
+      "material_id": "mp-8452",
+      "natoms": 6,
+      "grid": [
+        24,
+        24,
+        39
+      ],
+      "perc_onset_val2": 0.074,
+      "iso_channel_pct": {
+        "0.25": 30.538,
+        "0.5": 37.687,
+        "1.0": 44.694,
+        "2.0": 51.318
+      },
+      "Li_site_BVS_mean": 0.792,
+      "seconds": 0.3
+    }
+  }
+}
