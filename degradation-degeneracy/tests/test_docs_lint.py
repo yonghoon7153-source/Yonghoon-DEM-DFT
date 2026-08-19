@@ -387,7 +387,7 @@ def test_p22_doc_only_cites_canon_files_that_exist_and_have_content():
     assert not bad, f"문서가 부르는데 없거나 빈 정본: {bad}"
 
 
-#: OCP 모델 오차 민감도 표의 (오프셋 라벨) → 정본 stem
+#: OCP 모델 오차 민감도 표의 (오프셋 라벨) → 정본 stem  (dense 격자, PE 전압축)
 _P22_BIAS_ROWS = {
     "0": "dense_pocv_dvdq_dqdv_hc",
     "1": "bias_pe1mv",
@@ -395,6 +395,21 @@ _P22_BIAS_ROWS = {
     "2": "bias_pe2mv",
     "5": "bias_pe5mv",
     "10": "bias_pe10mv",
+}
+
+#: 격자 의존성 표 — 같은 왜곡을 seed_101 격자에서 되풀이한 값
+#:   ★ dense 에서 2 mV 가 상전이를 일으켰는데 seed_101 에서는 5 mV 까지
+#:     아무 일도 안 난다. "문턱 = 2 mV" 를 격자 불변인 것처럼 적으면 거짓이다.
+_P22_SEED_ROWS = {
+    "0": "seed101_pocv_dvdq_dqdv_hc",
+    "2": "bias_seed101_pe2mv",
+    "5": "bias_seed101_pe5mv",
+    "10": "bias_seed101_pe10mv",
+}
+
+#: 축 비교 — 전압 오프셋 vs 화학량론 window
+_P22_AXIS_ROWS = {
+    "stretch 0.95": "bias_pest095",
 }
 
 
@@ -434,3 +449,50 @@ def test_p22_bias_table_matches_the_canon_outputs():
             f"{mv} mV 놓침: 문서 '{col.strip()}' vs 정본 {want_col}")
         checked += 1
     assert checked == 6, checked
+
+
+def test_p22_seed_grid_table_matches_the_canon_outputs():
+    """★ 격자 의존성 표가 정본과 맞아야 한다.
+
+    이 표의 존재 이유는 "문턱 2 mV" 가 **격자 불변이 아님**을 문서에 못 박는
+    것이다. 값이 틀어지면 그 경고 자체가 거짓이 되므로 기계로 고정한다.
+    """
+    doc = _DOC.read_text(encoding="utf-8")
+    assert "seed_101" in doc, "격자 의존성 절이 문서에 없다"
+    # ★ §7.10 앞쪽의 dense 전용 표에도 "0 mV" 행이 있다 — 구간을 좁히지 않으면
+    #   그쪽을 잡아 엉뚱한 열을 대조한다 (실측으로 그랬다).
+    doc = doc.split("문턱은 격자에 따라 변한다")[1].split("#### 문턱 값에")[0]
+
+    checked = 0
+    for mv, stem in _P22_SEED_ROWS.items():
+        c = _canon_facts(stem)
+        row = _re.search(
+            r"^\|\s*(?:\*\*)?" + _re.escape(mv)
+            + r"\s*mV(?:\*\*)?[^|]*\|([^|]*)\|([^|]*)\|([^|]*)\|([^|]*)\|",
+            doc, _re.M)
+        assert row, f"격자 표에서 {mv} mV 행을 못 찾음"
+        seed_fs, seed_col = row.group(3), row.group(4)   # 3·4열이 seed_101 쪽
+        want_fs = f"{c['false_split']}/{c['gap0_n']}"
+        assert want_fs in seed_fs, (
+            f"{mv} mV seed_101 거짓 분리: 문서 '{seed_fs.strip()}' vs 정본 {want_fs}")
+        want_col = f"{c['ge4_k']}/{c['ge4_n']}"
+        assert want_col in seed_col, (
+            f"{mv} mV seed_101 놓침: 문서 '{seed_col.strip()}' vs 정본 {want_col}")
+        checked += 1
+    assert checked == 4, checked
+
+
+def test_p22_axis_comparison_matches_the_canon_output():
+    """★ stretch 축 행도 정본과 맞아야 한다 (전압축과 비교하는 근거)."""
+    doc = _DOC.read_text(encoding="utf-8")
+    for label, stem in _P22_AXIS_ROWS.items():
+        c = _canon_facts(stem)
+        row = _re.search(r"^\|[^|]*" + _re.escape(label) + r"[^|]*\|([^|]*)\|([^|]*)\|",
+                         doc, _re.M)
+        assert row, f"축 비교 표에서 '{label}' 행을 못 찾음"
+        want_fs = f"{c['false_split']}/{c['gap0_n']}"
+        assert want_fs in row.group(1), (
+            f"{label} 거짓 분리: 문서 '{row.group(1).strip()}' vs 정본 {want_fs}")
+        want_col = f"{c['ge4_k']}/{c['ge4_n']}"
+        assert want_col in row.group(2), (
+            f"{label} 놓침: 문서 '{row.group(2).strip()}' vs 정본 {want_col}")
