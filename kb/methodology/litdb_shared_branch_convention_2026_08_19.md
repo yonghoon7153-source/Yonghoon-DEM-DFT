@@ -11,7 +11,7 @@ verifiedBy: user
 explored: false
 authoredBy: agent
 effort: low
-claimType: procedural
+claimType: prescriptive
 evidenceScope: multi-source-primary
 ---
 
@@ -24,7 +24,8 @@ evidenceScope: multi-source-primary
 
 **DEM 세션(`claude/stoic-knuth-NObVQ`)이 자기 브랜치에서 작업하지만
 litdb 커밋은 `claude/friendly-meitner-lldvar` 로 푸시한다.** 그쪽 문서
-(`docs/session_20260819_litdb_pending.md`)의 규약 원문:
+(그 브랜치의 docs/ 아래 session_20260819_litdb_pending 문서 — **이 브랜치엔 없다**:
+`git show origin/claude/stoic-knuth-NObVQ -- 로 읽는다`)의 규약 원문:
 
 > **커밋·푸시는 `claude/friendly-meitner-lldvar` 로만** (litdb 단일 서랍 규약).
 > 이 리포 `litdb/` 는 동결 스냅샷.
