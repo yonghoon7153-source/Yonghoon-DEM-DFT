@@ -68,6 +68,8 @@ SPRING_K = 0.1
 #: ⚠ ASE 3.29 는 기본 탄젠트가 'aseneb'(비권장, 밴드가 자주 망가짐)라고 스스로 경고한다.
 #: 명시적으로 improvedtangent 를 쓴다 (Henkelman 2000). 재현성을 위해 기록도 남긴다.
 NEB_METHOD = "improvedtangent"
+#: 이웃 이미지 간 에너지 도약 한계. 물리적 밴드는 매끄럽다 — 이보다 뛰면 이미지가 터진 것.
+MAX_IMAGE_JUMP_EV = 0.8
 
 
 # ── 기하 ─────────────────────────────────────────────────────────────────────
@@ -212,8 +214,14 @@ def band_health(E):
     probs = []
     spike = float(inner.max())
     others = float(np.sort(inner)[-2]) if len(inner) > 1 else 0.0
-    if spike > 1.0 and spike > 3 * max(others, 1e-6):
-        probs.append(f"이미지 하나만 {spike:+.2f} eV 로 솟았다(다음이 {others:+.2f}) — 터진 이미지")
+    # ⭐ 판정은 **이웃 이미지 간 도약**으로 한다. 처음엔 "최고/차고 비율 > 3" 으로 짰는데
+    #   실측 폭주 판(최고 2.378 / 차고 0.818, 비율 2.9×)이 아슬하게 빠져나갔다.
+    #   물리적 밴드는 매끄럽다 — 이미지 간격 ~0.5 Å 에서 0.5 eV 장벽이면 이미지당 ~0.17 eV 다.
+    #   폭주는 불연속으로 나타난다(실측 +1.70, +2.31 eV). 0.8 eV 를 문턱으로 둔다.
+    jump = float(np.abs(np.diff(rel)).max()) if len(rel) > 1 else 0.0
+    if jump > MAX_IMAGE_JUMP_EV:
+        probs.append(f"이웃 이미지 사이가 {jump:.2f} eV 뛴다(문턱 {MAX_IMAGE_JUMP_EV}) — "
+                     f"밴드가 불연속이다. 최고 {spike:+.2f} / 차고 {others:+.2f}")
     # ⛔ 2026-08-19 실측에서 잡은 **내 버그**. 처음엔 `min(inner) − max(0, rel[-1])` 로 쟀는데
     #   그러면 **끝점 비대칭**(한쪽이 +256 meV 높은 것)을 "중간이 낮다" 로 오인한다.
     #   실제 comp1 inter 판에서 중간 최소가 시작점보다 32 meV 낮을 뿐인데 −288 meV 로
@@ -229,7 +237,8 @@ def band_health(E):
     if abs(float(rel[-1])) > 0.15:
         notes.append(f"두 끝점 차 {1000*float(rel[-1]):+.0f} meV — 등가 자리가 아니다"
                      f"(비대칭 hop, 정상일 수 있음). Ea 는 정·역 둘 다 보고할 것")
-    return probs, {"spike_eV": round(spike, 4), "notes": notes,
+    return probs, {"spike_eV": round(spike, 4), "max_image_jump_eV": round(jump, 4),
+                   "notes": notes,
                    "second_highest_eV": round(others, 4),
                    "min_interior_rel_eV": round(float(inner.min()), 4)}
 
@@ -366,8 +375,14 @@ def selftest():
     chk(any("끝점 차" in n for n in hh["notes"]),
         "[양성] 끝점 비대칭은 **주석**으로만 나온다 (실패로 세지 않는다)")
     spiked = [0.0, -0.157, 0.400, 0.066, 0.678, 2.378, 0.818, 0.332, 0.257]  # CI 폭주 실측
-    chk(any("터진 이미지" in q for q in band_health(spiked)[0]),
-        "[음성] 이미지 하나만 솟은 밴드는 잡는다 (미수렴 위 CI 폭주)")
+    chk(any("불연속" in q for q in band_health(spiked)[0]),
+        "[음성] 폭주 밴드(intra 실측, 도약 1.70 eV)를 잡는다")
+    spiked2 = [0.0, -0.124, -0.239, -0.008, -0.001, 2.307, -0.250, -0.211, 0.255]
+    chk(any("불연속" in q for q in band_health(spiked2)[0]),
+        "[음성] 폭주 밴드(inter 실측, 도약 2.31 eV)도 잡는다")
+    chk(band_health(good)[1]["max_image_jump_eV"] < MAX_IMAGE_JUMP_EV,
+        f"[양성] 정상 밴드의 최대 도약은 문턱 아래 "
+        f"({band_health(good)[1]['max_image_jump_eV']:.3f} < {MAX_IMAGE_JUMP_EV})")
     low = [0.0, -0.30, 0.1, 0.2, 0.1, -0.25, 0.05]
     chk(any("낮은 쪽" in q for q in band_health(low)[0]),
         "[음성] 중간이 두 끝점보다 정말 낮으면 잡는다")
