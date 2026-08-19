@@ -193,6 +193,21 @@ PY
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$RUN/_$TAG.sh"; } > "$RUN/$TAG.sh"
   rm -f "$RUN/_$TAG.sh"
+  # ★★ 2026-08-19 fail-closed — **생성된 스크립트 자체가 온전한가**.
+  #   실사고: `--out p2_SBE_sph_a0.json` 토큰이 줄바꿈으로 **한가운데서 잘렸다**
+  #   (line 8 이 `--out p` 로 끝나고 line 9 가 `2_SBE_sph_a0.json`).  bash 문법으로는
+  #   유효해서(두 개의 명령) `bash -n` 도 통과하고, payload 는 **정상 완주한 뒤** 다음 줄에서
+  #   `command not found` 로 죽는다 = 40 분을 버리고 팔이 실패한다.
+  #   ⇒ 돌기 **전에** --out 토큰이 한 줄에 붙어 있는지 본다.  잘린 파일은 지우지 않고 남긴다.
+  _ON="$(basename "$OUT")"
+  if ! grep -q -- "--out $_ON" "$RUN/$TAG.sh"; then
+    echo "[p2] ABORT — 생성된 $TAG.sh 에서 \`--out $_ON\` 토큰이 온전하지 않다 (줄바꿈에 잘렸나?)."
+    echo "     파일을 남겨 둔다: $RUN/$TAG.sh"
+    echo "     ── 문제 줄 ──"; grep -n -- '--out' "$RUN/$TAG.sh" | sed 's/^/     /'
+    echo "     ── 줄 길이 ──"; awk '{printf "     %d: %d chars\n", NR, length($0)}' "$RUN/$TAG.sh"
+    return 1
+  fi
+  bash -n "$RUN/$TAG.sh" || { echo "[p2] ABORT — 생성된 $TAG.sh 가 bash 문법 오류"; return 1; }
   # ★ fail-closed — 세 인자가 **실제로** 주입됐는지 확인 (조용히 빠지면 팔이 오염된다)
   for NEEDLE in "--step3-vox $VOX" "--step3-origin-shift $SH" "--step3-bridge-um $BRIDGE_UM" \
                 ${SDCP_SPHERE_D:+"--step3-sdcp-sphere-d $SDCP_SPHERE_D"}; do
