@@ -26,7 +26,11 @@ DESIGN / TRUST (docs/step3_sigma_network.md):
                                   ⚠ scale transplant: those endpoints are coefficients of a MACROSCOPIC
                                   effective form; using them as a voxel **phase** σ has an unknown
                                   multiplier (§F1 → null).  Treat as an order-of-magnitude hook.
-      VGCF 100 · SuperP 10      ⚠ literature order-of-magnitude hooks (graphitic fibre / CB compact)
+      VGCF 100 · SuperP 10      ⚠ VGCF 100 은 **유효 망 값** (분말 저항률 0.012 Ω·cm ≈ 83 S/cm 급;
+                                  단섬유는 1e4 S/cm — 차이 = 섬유-섬유 접촉저항, CL-47).  복셀 융합이
+                                  접촉저항을 0 으로 만들므로 이 낮은 σ 가 그 결손을 뭉뚱그린다 —
+                                  ⚠ 재료상수가 아니라 규약이다.  단섬유값 대입 = 등전위 섬유 + 완전
+                                  접촉 = 이중 완전화 (감도 프로브 CL-48 전용, 생산 금지)
                                   ⚠ voxel_conductivity.py(레거시·미사용)는 500/100 — 생산 정본은 이 100/10
       SDCP 250                  USER anchor (2026-07-16; 진성호계 S-PEDOT, interim 150 대체 — code L43).
                                   ⚠ the pellet ×5.1 anchor is COMPOSITE-level — do NOT paste onto a phase σ;

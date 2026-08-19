@@ -16,7 +16,7 @@
   |---|---|---|
   | AM_S | 0.010 | ✅ A1-locked (Trevisanello 10 mS/cm) |
   | AM_P | 0.005 | ✅ A1-locked (5 mS/cm) |
-  | VGCF | 100 | ⚠ §F1 자릿수 hook (graphitic fibre 문헌 10²-10³) |
+  | VGCF | 100 | ⚠ **유효 망(network) 값** — 분말(압축분체) 저항률 0.012 Ω·cm ≈ 83 S/cm 급.  단섬유는 1e-4 Ω·cm = **1e4 S/cm** (탄화 1e-3 · 흑연화 1e-4 · 고흑연화 5e-5, 사용자 검증 2026-08-18).  두 자릿수 차이 = 전부 **섬유-섬유 접촉저항**인데 우리 복셀은 닿은 섬유를 융합시켜 접촉저항이 0 이므로, 이 유효값이 그 결손을 σ 로 뭉뚱그린다 (CL-47).  재료상수 아님 — wt%·접촉밀도의 함수 |
   | SuperP | 10 | ⚠ §F1 자릿수 hook (CB compact 1-50) |
   | SDCP | **250** | **사용자 지정 앵커 (2026-07-16; interim 150 대체)** — 진성호계 S-PEDOT 자릿수.
       (⚠pellet ×5.1은 composite-수준 — phase σ 아님, +52% σ_e는 network solve EMERGENT; doped/neutral 분리는 후속) |
