@@ -34,12 +34,17 @@
   · 케이지 배정은 **최근접 자유음이온**이다. 경계 Li 는 애매할 수 있다 —
     `cage_margin` 으로 애매한 짝을 걸러낸다.
   · 협동 이동(다중 Li 동시)을 못 본다. 단일 Li 경로만 본다.
+  · ⚠ **b2o3 형(P 를 골격에서 빼낸 계)에서는 케이지 개념이 묽어진다.** P 10→8 로 PS₄ 둘이
+    사라지며 그 황이 자유 음이온이 되어 케이지 중심이 28개(자유 S 12 + Cl 16)가 된다.
+    Li 58개를 28 케이지에 나누면 케이지당 ~2 로, argyrodite 의 3–6 과 다르다.
+    골격 자체는 온전하다(P 배위수 전부 4) — **막지는 않되, 케이지당 Li 수를 같이 찍는다.**
+    이 계의 intra/inter 구분은 다른 셋보다 약하게 해석할 것.
 
   python3 tools/neb_diffusion/argyrodite_cage_neb.py --selftest
   # 셀 수렴 시험 (comp1, cubic)
   python3 tools/neb_diffusion/argyrodite_cage_neb.py \
       --struct db/structures/comp1_V0_k444.cif --kind inter \
-      --supercell 1 1 1 --force --tag conv_111
+      --supercell 1 1 1 --tag conv_111        # comp1 은 수직폭 10.06 이라 --force 불필요
 """
 import argparse, json, os, sys, time
 from pathlib import Path
@@ -108,6 +113,17 @@ def cage_assign(atoms):
     centers = np.concatenate([freeS, HAL]).astype(int)
     if len(centers) == 0:
         raise ValueError("케이지 중심(자유 음이온)이 없다 — PS_BOND 를 확인할 것")
+    # 2026-08-19 자기리뷰. 처음엔 "자유 S 가 P 보다 많으면 골격이 깨진 것" 으로 막았는데
+    # **그게 틀렸다** — comp1(정상, 자유 S 4 = P 4)까지 막혔다. b2o3 의 자유 S 12개도
+    # 버그가 아니라 치환의 실제 결과다(P 10→8 로 PS₄ 두 개가 사라지며 그 황이 풀렸다).
+    # 진짜 판정은 **P 배위수**다: 모든 P 가 음이온 4개와 결합해야 골격이 온전하다.
+    bondedP = [(D[q][np.isin(sym, ["S", "O", "Se"])] < PS_BOND).sum() for q in P] \
+        if len(P) else []
+    bad = [int(x) for x in bondedP if x != 4]
+    if bad:
+        raise ValueError(f"P 배위수가 4 가 아닌 것이 {len(bad)}개 있다 {bad[:5]} — "
+                         f"PS₄ 골격이 온전하지 않아 '자유 음이온 = 케이지 중심' 규약이 "
+                         f"성립하지 않는다. PS_BOND({PS_BOND} Å) 를 의심하거나 구조를 볼 것")
     D = atoms.get_all_distances(mic=True)
     sub = D[np.ix_(Li, centers)]
     assign = np.argmin(sub, axis=1)
@@ -293,6 +309,34 @@ def selftest():
         chk(abs(perp_widths(at.cell).min() - 10.06) < 0.05,
             f"[양성] comp1 수직폭 10.06 Å (얻은 것 {perp_widths(at.cell).min():.2f})")
         cen, Li, asg, _ = cage_assign(at)
+        # ★ 양성 — 네 계 전부 P 배위수 4 라 통과해야 한다 (자기리뷰에서 가드를 한 번 잘못 걸었다)
+        for nm, ff in (("modelC", "modelC_DFT_EOS_V0.cif"), ("lpsocl", "lpsocl_relaxV0.xyz"),
+                       ("b2o3", "b2o3_relaxV0.cif")):
+            try:
+                cc2, ll2, _, _ = cage_assign(read(ROOT / "db" / "structures" / ff))
+                chk(True, f"[양성] {nm} 통과 (케이지 {len(cc2)} · Li {len(ll2)}, "
+                          f"케이지당 {len(ll2)/len(cc2):.1f})")
+            except ValueError as e:
+                chk(False, f"[음성] {nm} 을 막았다: {str(e)[:50]}")
+        # ★ 음성 — PS₄ 를 실제로 깨면 막아야 한다.
+        #   ⚠ P 를 빼는 것으로는 안 깨진다(남은 P 는 여전히 S 4개) — 자기리뷰에서
+        #   이 음성시험을 한 번 잘못 짰다. **결합한 S 를 빼야** 그 P 가 3배위가 된다.
+        broken = read(ROOT / "db" / "structures" / "comp1_V0_k444.cif")
+        _sy = np.array(broken.get_chemical_symbols()); _D = broken.get_all_distances(mic=True)
+        _p0 = int(np.where(_sy == "P")[0][0])
+        _s0 = int([k for k in np.where(_sy == "S")[0] if _D[_p0, k] < PS_BOND][0])
+        del broken[_s0]
+        try:
+            cage_assign(broken); chk(False, "[음성] PS₄ 가 깨진 구조를 통과시켰다")
+        except ValueError as e:
+            chk("배위수" in str(e), "[음성] PS₄ 를 깨면(결합 S 제거) 사유와 함께 막는다")
+        # ★ 양성 — P 를 통째로 빼는 것은 **깨진 게 아니다**(남은 PS₄ 는 온전).
+        okp = read(ROOT / "db" / "structures" / "comp1_V0_k444.cif")
+        del okp[int(np.where(np.array(okp.get_chemical_symbols()) == "P")[0][0])]
+        try:
+            cage_assign(okp); chk(True, "[양성] P 하나 제거는 통과 — 남은 PS₄ 는 온전하다")
+        except ValueError:
+            chk(False, "[양성] P 제거를 잘못 막았다")
         chk(len(cen) == 8 and len(Li) == 24,
             f"[양성] 케이지 8개(자유 S 4 + Cl 4) · Li 24 (얻은 것 {len(cen)}, {len(Li)})")
         # ★ 음성 — PS4 의 S 를 케이지 중심으로 세면 안 된다
