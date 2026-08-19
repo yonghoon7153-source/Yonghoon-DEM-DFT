@@ -96,16 +96,21 @@ def arrhenius(D):
     return -((n * sxy - sx * sy) / den) * kB
 
 
-def beta(mj, lo=2.0, hi=50.0):
+def beta(mj, lo=2.0, hi=50.0, mto=False):
     """msd.json → 창 [lo,hi] 의 log-log 기울기. 확산이면 ~1.
 
     ⚠ 이 화면이 예전에 '3-seed 완성 → open_items #1 닫을 조건 충족' 이라고 찍었는데,
       정작 6/6 이 케이지(β 0.17–0.79)라 **그 Ea 를 쓰면 안 되는** 상태였다(2026-08-01).
       Ea 를 보여줄 거면 게이트도 같은 화면에서 보여줘야 한다.
+
+    ⛔ `mto=True` 를 쓰는 이유 (2026-08-19): **잣대에 따라 부호가 뒤집힌다.**
+      작은 셀 vs 3×3×1 Δβ̄ 가 STO 로는 −0.02, MTO 로는 **+0.05** 였다.
+      확정 판정은 MTO 로만 한다 (db/properties/lpsocl_beta_registry.json 규칙).
     """
     try:
         d = json.load(open(mj))
-        return _beta_series(d.get("times_ps"), d.get("msd_Li_A2"), lo, hi)
+        y = d.get("msd_Li_A2_mto") if mto else d.get("msd_Li_A2")
+        return _beta_series(d.get("times_ps_mto") or d.get("times_ps"), y, lo, hi)
     except Exception:
         return None
 
@@ -394,6 +399,18 @@ def selftest_long():
             "[음성] 온도가 다르면 안 잡는다 (T600 을 T1000 으로 세지 않는다)")
         chk(_msd_of("lpsocl_long", 600, "2") is None,
             "[음성] 라벨이 다르면 안 잡는다 (new 를 long 으로 세지 않는다)")
+        # ⛔ 2026-08-19 — beta(mto=True) 가 MTO 배열이 없을 때 **STO 로 조용히 대체하면**
+        #   잣대 불일치가 화면에서 안 보인다 (그 착각이 판정①을 한 번 뒤집었다).
+        _mj = os.path.join(_t, "probe_msd.json")
+        _sto = {"times_ps": [1, 2, 5, 10, 20, 50], "msd_Li_A2": [1, 2, 5, 10, 20, 50]}
+        open(_mj, "w").write(json.dumps(_sto))
+        chk(beta(_mj) is not None, "[양성] STO 배열만 있으면 STO β 는 잰다")
+        chk(beta(_mj, mto=True) is None,
+            "[음성] MTO 배열이 없으면 mto=True 는 None (STO 로 대체하지 않는다)")
+        _sto["msd_Li_A2_mto"] = [1, 2, 5, 10, 20, 50]
+        open(_mj, "w").write(json.dumps(_sto))
+        chk(beta(_mj, mto=True) is not None, "[양성] MTO 배열이 있으면 잰다")
+
         chk({p[0] for p in CLOSE_PLAN} == {"lpsocl_new", "lpsocl_3x3x1", "lpsocl_long"},
             "닫기 계획이 3단계 그대로")
         chk(sum(len(p[1]) * len(p[2]) for p in CLOSE_PLAN) == 12,
@@ -467,12 +484,15 @@ def _msd_of(label, T, sd):
 
 
 def section_cell():
-    print("⑦ lpsocl 상자·기구 닫기 — 3단계 (kb/results/lpsocl_box_size_600K_2026_08_18.md)")
-    print("   ✅ 이미 닫힌 것 (600 K, STO·시드평균·창 2–50):")
-    print("      β̄ 0.82(5.67 Å) vs 0.80(17.02 Å) — 위반 3.15× 를 없애도 **β 불변**")
-    print("      D  7.78e-6 → 1.280e-5 — **1.64±0.14×** (상자는 모양이 아니라 속도를 눌렀다)")
-    print("   ⚠ 남은 것: ① 소효과(~0.1) 미배제 — 작은 셀 MTO 0.70(1시드)과의 긴장")
-    print("              ② 1.64× 가 T 에 상수인가 (상수면 Ea 상쇄, 아니면 +90 meV 붕괴)")
+    print("⑦ lpsocl 상자·기구 닫기 — 3단계 (kb/results/lpsocl_box_size_600K_2026_08_18.md §2b)")
+    print("   ✅ 판정② 확정 — 상자는 **속도**를 눌렀다 (600 K, 두 잣대 모두):")
+    print("      D 억제비  MTO 1.46×(시드평균곡선) · 1.70×(시드별 평균) · STO 1.64±0.14×")
+    print("   ⛔ 판정① **양쪽 다 미확정** (2026-08-19 3판) — 두 진단이 엇갈린다:")
+    print("      창 2–50 MTO  β̄ 0.76(작은) vs 0.81(큰)  Δ +0.05 ± 0.018 (p≈0.13)")
+    print("      창 스캔      작은 셀 β→0.98·c −64 % (케이지) / 큰 셀 β 0.87 정체·c +128 % (판별 불가)")
+    print("      ⇒ 눌린 쪽이 늦은 창에서 오히려 회복한다. 800 ps 가 가른다.")
+    print("   ⚠ 남은 것: ① 큰 셀 c 증가가 통계 부족인지 진짜인지 (→ lpsocl_long 800 ps)")
+    print("              ② 억제비가 T 에 상수인가 (상수면 Ea 상쇄, 아니면 +90 meV 붕괴)")
 
     up = any(ln.split(":")[0] == "arr6close" for ln in sh("tmux ls").splitlines() if ln.strip())
     ndrv = len([x for x in sh("pgrep -f '[d]isorder_ensemble_diffusion.py'").split() if x])
@@ -498,25 +518,34 @@ def section_cell():
                 if not f:
                     continue
                 done += 1
-                b = beta(f)
-                betas.append(f"T{T}s{sd} {('%.2f' % b) if b is not None else '—'}")
+                b, bm = beta(f), beta(f, mto=True)
+                # ⛔ STO 만 찍으면 잣대 불일치가 화면에서 안 보인다 (2026-08-19). 둘 다.
+                betas.append(f"T{T}s{sd} {('%.2f' % b) if b is not None else '—'}"
+                             f"/{('%.2f' % bm) if bm is not None else '—'}")
         tot = len(temps) * len(seeds)
         mark = "✅" if done == tot else ("▶" if done else "·")
         print(f"   {mark} {label:14s} {done}/{tot} 런 ({prod} ps)  — {why}")
         if betas:
-            print("        β(STO 2–50): " + " · ".join(betas[:6]))
+            print("        β(2–50) STO/MTO: " + " · ".join(betas[:6]))
 
     n1 = sum(1 for T in (600, 1000) for sd in ("2", "3", "4")
              if _msd_of("lpsocl_new", T, sd))
     if n1 >= 3:
-        print("   ★ [1/3] 판정① 닫는 한 줄 — **β̄(MTO)** 가 0.70 대면 상자 효과 있음(카드 재작성),")
-        print("     0.8 이상이면 mto_pilot 0.70 이 단일시드 우연이었고 판정① 확정:")
-        print("     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
-        print(f"       --glob '{ARR6}/lpsocl_new/T600_s*/**/msd.json'")
+        print("   ✔ [1/3] 완료 (2026-08-19) — 작은 셀 MTO β̄ 0.76 (0.79/0.77/0.73), 큰 셀 0.81.")
+        print("     mto_pilot 0.70 은 방향은 맞았고 크기가 절반이었다. 카드 §2b 에 반영됨.")
     if sum(1 for sd in ("2", "3", "4") if _msd_of("lpsocl_3x3x1", 1000, sd)) >= 3:
-        print("   ★ [2/3] 억제비 — 두 셀 1000 K 를 **같은 잣대**로 재고 R(600)=1.64 와 비교:")
-        print(f"     ... --scan --average --glob '{ARR6}/lpsocl_new/T1000_s*/**/msd.json'")
-        print(f"     ... --scan --average --glob '{ARR6}/lpsocl_3x3x1/T1000_s*/**/msd.json'")
+        print("   ★ [2/3] 억제비가 T 에 상수인가 — 1000 K 를 **MTO 로** 재고 R(600)=1.46 과 비교:")
+        print("     (⛔ --mto 를 빼지 말 것. 600 K 에서 STO/MTO 부호가 뒤집혔다)")
+        print("     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+        print(f"       --glob '{ARR6}/lpsocl_new/T1000_s*/**/msd.json'")
+        print("     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+        print(f"       --glob '{ARR6}/lpsocl_3x3x1/T1000_s*/**/msd.json'")
+    if sum(1 for sd in ("2", "3", "4") if _msd_of("lpsocl_long", 600, sd)) >= 3:
+        print("   ★ [3/3] 판정① 가르기 — 800 ps 로 큰 셀의 c 증가가 통계 부족인지 본다:")
+        print("     늦은 창(100–400·200–800)에서 c 가 **멈추면** 느린 전이(창만 일렀다),")
+        print("     계속 커지면 진짜 sub-diffusion 이고 그 셀 D 인용 금지가 맞다:")
+        print("     python3 tools/ionic/msd_diffusive_check.py --scan --average --mto \\")
+        print(f"       --glob '{ARR6}/lpsocl_long/T600_s*/**/msd.json'")
     print("   ⚠ β 를 인용할 땐 잣대를 같이 — db/properties/lpsocl_beta_registry.json")
 
 
