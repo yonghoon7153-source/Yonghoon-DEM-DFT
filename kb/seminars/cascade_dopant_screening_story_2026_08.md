@@ -753,20 +753,22 @@ Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다
 ### 15 — Mechanical response of the doped lattice  ✅ 확정 (2026-08-19, 2판)
 
 > ■ Step 7: Stiffness and compressibility are obtained from finite strains
-> • Across the pool, [파랑]the same machine-learned potential[/] supplied every elastic modulus.
-> • The curves below are [빨강]DFT on two compositions, not a check of the whole pool[/].
+> • To obtain [파랑]B₀ and the equilibrium volume[/], an equation of state was fitted.
+> • Adding Cl softens the lattice, [파랑]26.2 to 21.7 GPa[/], although the cell is denser.
 
-`< equation of state by DFT, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6 >`
-`해설` adding Cl softens the lattice, [파랑]26.2 to 21.7 GPa[/]; [빨강]the pool-wide moduli are potential values, not DFT[/]
+`< equation of state, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6 >`
+`해설` [빨강]these two curves are DFT; the screening ran on the machine-learned potential with FIRE relaxation[/]
 하단 용어 — Equation of state: energy as the cell volume changes ·
 　　　　　　 Stack pressure: the force holding the cell together
 
 ⭐ **그림 자리를 비워 둔 판이다 (1저자 2026-08-19).** 1/13 덱의 EOS 두 판
    (Li₆PS₅Cl B₀ 26.2 GPa · Li₅.₄PS₄.₄Cl₁.₆ B₀ 21.7 GPa, −17 %)을 직접 붙이신다.
-⛔ **무엇으로 계산했는지를 명시한다 (1저자 지적).** 앞 판은 "elastic moduli were
-   computed" 라고만 해서 90종 값이 DFT 로 읽혔다. 캐스케이드 02–08 단계는 **전부 같은
-   MLIP** 다 (`cascade_pipeline_anatomy` 표: 02 UMA relax · 04 anneal FIRE ·
+⛔ **엔진 구분을 명시한다 (1저자 지적).** 앞 판은 "elastic moduli were computed" 라고만
+   해서 90종 값이 DFT 로 읽혔다. 캐스케이드 02–08 단계는 **전부 같은 MLIP + FIRE** 다
+   (`cascade_pipeline_anatomy` 표: 02 UMA relax · 04 anneal 500 K·50 ps FIRE ·
    07 eos · 08 elastic). DFT 는 **따로 돌린 대조군 몇 건**뿐이다.
+   ⇒ 소불릿은 **한 일과 결과**만 말하고, 엔진 구분은 **아래 주석 줄**이 진다
+     (1저자 지정 2026-08-19). 소불릿에 방법론을 얹으면 문장이 무거워진다.
 ⚠ 그러니 이 장에서 **두 종류의 숫자가 섞인다** — 화면의 EOS 곡선은 DFT, 뒤 결과에서
    90종을 줄 세울 때 쓰는 B₀·Cij 는 **모델 값**이다. 섞어 인용하지 않는다.
 
@@ -781,17 +783,19 @@ Li 가 편한 곳**이고, 짙게 파인 곳이 못 들어가는 자리입니다
 그래서 부피를 조금씩 바꿔 에너지를 재고, 여러 방향으로 작은 변형을 줘 딱딱함과 연성을
 구합니다.
 
-⭐ **여기서 하나 짚고 갑니다. 90 종 전부의 탄성값은 DFT 가 아니라 앞서 쓴 그 기계학습
-   퍼텐셜로 구했습니다.** 3단계에서 구조를 이완시킨 그 모델이에요. 삼천 개 구조에
-   DFT 를 돌릴 수 없으니 같은 모델로 끝까지 갑니다.
+방법은 이렇습니다. 셀을 ±5 % 로 압축·팽창시켜 놓고 **각 부피에서 다시 이완**한 뒤
+에너지를 잽니다. 그 E(V) 를 Birch–Murnaghan 으로 맞추면 최소점이 **평형 부피 V₀**,
+그 자리의 곡률이 **bulk modulus B₀** 입니다.
 
-그림은 **DFT 로 따로 돌린 두 조성**입니다. 도핑 안 한 Li₆PS₅Cl 이 26.2 GPa, Cl 을 더 넣은
-LPSCl1.6 이 21.7 GPa 예요. **17 % 물러집니다.**
+그림이 그 결과예요. 도핑 안 한 Li₆PS₅Cl 이 26.2 GPa, Cl 을 더 넣은 LPSCl1.6 이 21.7 GPa
+입니다. **17 % 물러집니다.**
 
 ⚠ 그런데 이게 좀 역설입니다. LPSCl1.6 이 부피는 **4.3 % 더 조밀한데** 오히려 더 물러요.
 보통 조밀해지면 단단해지는데 반대죠. Li 공공이 늘면서 Coulomb 응집이 약해진 겁니다.
 
-⚠ **두 건입니다.** 90 종 전부를 DFT 로 확인한 게 아닙니다.
+⚠ 그리고 아래 주석에 적어 뒀는데, **이 두 곡선은 DFT 입니다.** 스크리닝 쪽 90 종은
+DFT 가 아니라 앞서 쓴 그 **기계학습 퍼텐셜 + FIRE** 로 돌렸어요. 삼천 개 구조에 DFT 를
+돌릴 수 없으니 같은 모델로 끝까지 갑니다. **두 종류 숫자를 섞어 인용하시면 안 됩니다.**
 
 💬 **말로만 (질문 오면)**
 · **"그럼 90종 탄성값은 못 믿나"** — 절대값으로는 인용하지 않습니다. 같은 모델·같은

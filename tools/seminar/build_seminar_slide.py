@@ -181,13 +181,14 @@ SLIDES = {
     zone=dict(x=0.55, y=2.44, w=8.90, h=3.28),
     title="Mechanical response of the doped lattice",
     head="Step 7: Stiffness and compressibility are obtained from finite strains",
-    # ⛔ 앞 판은 **무엇으로 계산했는지**를 말하지 않았다 (1저자 2026-08-19).
-    #   캐스케이드의 02–08 단계는 전부 같은 MLIP 다 (파이프라인 표 07 eos · 08 elastic).
-    #   DFT 는 따로 돌린 대조군이고, 90종 값은 **모델 값**이다.
-    sub1="Across the pool, [b]the same machine-learned potential[/b] supplied every elastic modulus.",
-    sub2="The curves below are [r]DFT on two compositions, not a check of the whole pool[/r].",
-    label="equation of state by DFT, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6",
-    note="adding Cl softens the lattice, [b]26.2 to 21.7 GPa[/b]; [r]the pool-wide moduli are potential values, not DFT[/r]",
+    # 소불릿은 **한 일과 그 결과**만 (1저자 2026-08-19: "EOS 진행해서 B0 와 평형 부피를
+    #   구했다 정도만"). 엔진 구분(DFT vs MLIP)은 아래 주석 줄이 진다.
+    sub1="To obtain [b]B₀ and the equilibrium volume[/b], an equation of state was fitted.",
+    sub2="Adding Cl softens the lattice, [b]26.2 to 21.7 GPa[/b], although the cell is denser.",
+    label="equation of state, undoped Li₆PS₅Cl versus Cl-rich LPSCl1.6",
+    # ⛔ 여기가 엔진 구분을 지는 자리다. 앞 판은 이 말이 아예 없어 90종 탄성값이
+    #   DFT 로 읽혔다 — 캐스케이드 02–08 은 전부 MLIP + FIRE 다.
+    note="[r]these two curves are DFT; the screening ran on the machine-learned potential with FIRE relaxation[/r]",
     gloss=("Equation of state: energy as the cell volume changes  ·  "
            "Stack pressure: the force holding the cell together"),
     drop=[10],
