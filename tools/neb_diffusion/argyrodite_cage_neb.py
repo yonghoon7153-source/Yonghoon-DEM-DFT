@@ -93,6 +93,19 @@ def mic_vec(atoms, i, j):
     return f @ c
 
 
+def hop_distance(ini, fin, j2):
+    """두 끝점에서 **이동 Li(j2) 가 실제로 옮겨간 거리** (최소이미지).
+
+    끝점을 더 깊이 이완하면 부격자가 재배열해 **의도한 홉이 아니게 될 수 있다.**
+    그때 장벽은 다른 사건의 값이므로, 이완 전후로 이 거리를 비교해야 한다.
+    """
+    c = np.array(ini.cell)
+    d = fin.positions[j2] - ini.positions[j2]
+    f = np.linalg.solve(c.T, d)
+    f -= np.round(f)
+    return float(np.linalg.norm(f @ c))
+
+
 def cage_assign(atoms):
     """(케이지중심 인덱스, Li 인덱스, Li→케이지 배정, Li–중심 거리).
 
@@ -200,6 +213,49 @@ def relax_positions(atoms, calc, fmax=FMAX_ENDPOINT, steps=800):
     return atoms, bool(opt.converged()), int(opt.get_number_of_steps())
 
 
+# ── 끝점 심화 이완 ───────────────────────────────────────────────────────────
+# 왜 (2026-08-19 실측). comp1 2×1×1/2×2×1 에서 band_health 가 같은 병을 잡았다:
+#   "중간 이미지가 두 끝점 중 낮은 쪽보다 −0.244 eV 낮다 — 끝점이 국소 최소가 아니다."
+# 만석 Li 격자에 공공을 하나 뚫으면 부격자가 통째로 재배열하려 드는데, FIRE 는
+# **얕은 분지 바닥에서 fmax 를 만족해 멈춘다.** 그 위에서 NEB 를 돌리면
+#   ① 장벽이 통째로 틀리고 (기준선이 잘못됨)
+#   ② 중간 이미지가 끝점보다 낮아 프로파일이 물리적으로 말이 안 된다.
+# 처방: 이완 → 흔들기 → 재이완 을 되풀이해 **더 낮은 분지가 없을 때까지** 내려간다.
+ESCAPE_AMP_A = 0.12      # 흔들기 진폭 (Å). 결합을 깨지 않으면서 얕은 안장은 넘는 크기
+ESCAPE_GAIN_EV = 0.005   # 이만큼 못 내려가면 더 안 판다
+
+
+def relax_endpoint_deep(atoms, calc, fmax=FMAX_ENDPOINT, steps=800,
+                        tries=4, amp=ESCAPE_AMP_A, seed=0):
+    """이완 → rattle → 재이완 을 되풀이해 **진짜 분지 바닥**을 찾는다.
+
+    돌려주는 값: (atoms, info)  info = {'E','E_first','gain_eV','n_escapes','converged','steps'}
+
+    이 함수가 **못 하는 것**
+      · 전역 최소를 보장하지 않는다. rattle 이 넘을 수 있는 안장만 넘는다.
+      · **원자 정체성이 바뀌는 재배열은 못 막는다** — 이동 Li 가 다른 자리로 가버리면
+        그건 다른 홉이다. 호출자가 hop 거리를 다시 재서 확인해야 한다.
+      · amp 가 너무 크면 결합을 깬다. 기본 0.12 Å 는 열진동 크기 수준이다.
+    """
+    rng = np.random.default_rng(seed)
+    best, conv, nsteps = relax_positions(atoms, calc, fmax=fmax, steps=steps)
+    e_first = e_best = float(best.get_potential_energy())
+    n_esc = 0
+    for _ in range(tries):
+        cand = best.copy()
+        cand.set_positions(cand.get_positions()
+                           + rng.normal(0.0, amp, cand.get_positions().shape))
+        cand, c2, s2 = relax_positions(cand, calc, fmax=fmax, steps=steps)
+        e = float(cand.get_potential_energy())
+        nsteps += s2
+        if e < e_best - ESCAPE_GAIN_EV:
+            best, e_best, conv, n_esc = cand, e, c2, n_esc + 1
+        else:
+            break                      # 한 번 실패하면 더 파도 대개 안 나온다
+    return best, {"E": e_best, "E_first": e_first, "gain_eV": e_first - e_best,
+                  "n_escapes": n_esc, "converged": bool(conv), "steps": int(nsteps)}
+
+
 def band_health(E):
     """프로파일이 물리적인가. (문제목록, 지표) — **조용히 넘어가지 않는다.**
 
@@ -305,10 +361,29 @@ def one_run(args):
 
     calc = load_calc(args.device)
     t0 = time.time()
-    ini, c1, s1 = relax_positions(ini0, calc)
-    fin, c2, s2 = relax_positions(fin0, calc)
+    if args.shallow_endpoints:
+        ini, c1, s1 = relax_positions(ini0, calc)
+        fin, c2, s2 = relax_positions(fin0, calc)
+        ep_i = {"gain_eV": 0.0, "n_escapes": 0, "converged": c1, "steps": s1}
+        ep_f = {"gain_eV": 0.0, "n_escapes": 0, "converged": c2, "steps": s2}
+    else:
+        # ⭐ 2026-08-19 — 기본을 **심화 이완**으로 바꿨다. comp1 2×1×1/2×2×1 에서
+        #   "중간 이미지가 끝점보다 낮다"가 반복해 잡혔고, 그건 끝점이 얕은 분지에
+        #   걸려 멈춘 것이었다. 옛 동작은 --shallow_endpoints 로 남겨 둔다.
+        ini, ep_i = relax_endpoint_deep(ini0, calc, seed=args.seed)
+        fin, ep_f = relax_endpoint_deep(fin0, calc, seed=args.seed + 1)
+        s1, s2 = ep_i["steps"], ep_f["steps"]
     E_i, E_f = ini.get_potential_energy(), fin.get_potential_energy()
     print(f"   끝점 이완: {s1}/{s2} steps  ΔE(끝−시작) = {1000*(E_f-E_i):+.1f} meV")
+    if ep_i["n_escapes"] or ep_f["n_escapes"]:
+        print(f"   ⭐ 얕은 분지 탈출: 시작 {ep_i['n_escapes']}회({1000*ep_i['gain_eV']:+.0f} meV) · "
+              f"끝 {ep_f['n_escapes']}회({1000*ep_f['gain_eV']:+.0f} meV)")
+        print(f"      → 옛 방식이었으면 이만큼 높은 끝점 위에서 NEB 를 돌렸다는 뜻이다.")
+    # 심화 이완이 **홉 자체를 바꿔버리지 않았는지** 확인한다 (다른 자리로 도망가면 다른 홉이다).
+    d_after = hop_distance(ini, fin, j2)
+    if abs(d_after - hop) > 0.5:
+        print(f"   ⚠ 심화 이완 뒤 홉 거리가 {hop:.3f} → {d_after:.3f} Å 로 바뀌었다 — "
+              f"**같은 홉이 아닐 수 있다.** --shallow_endpoints 로 대조할 것")
     logf = OUTDIR / f"neb_{args.tag or 'run'}.log"
     print(f"   NEB 진행 로그 → {logf}   (tail -f 로 볼 것)")
     images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps, log=logf)
@@ -477,6 +552,75 @@ def selftest():
             f"[음성] modelC 원본 셀은 {MIN_WIDTH_A} Å 기준에 걸린다 (걸려야 정상)")
     except ImportError:
         print("  ⚠ ase 없음 — 구조 시험 건너뜀")
+
+    # ── 끝점 심화 이완 (EMT 로 검증 — UMA 없이 돈다) ──────────────────────
+    try:
+        from ase.build import bulk
+        from ase.calculators.emt import EMT
+        rng = np.random.default_rng(3)
+        base = bulk("Cu", "fcc", a=3.6, cubic=True) * (2, 2, 2)
+
+        # ★★ [양성] **탈출이 실제로 발동하는지**를 이중우물로 확인한다.
+        #    EMT/Cu 만으로는 rattle 이 넘을 얕은 분지가 없어 gain 이 늘 0 이었고,
+        #    그건 "통과했지만 아무것도 보증 못 하는" 양성이다 (2026-08-19 자체 지적).
+        from ase.calculators.calculator import Calculator
+        from ase import Atoms as _A
+
+        class DoubleWell(Calculator):
+            """원자 0 의 x 에 이중우물. 최소 x=±W, x<0 쪽이 TILT 만큼 깊다."""
+            implemented_properties = ["energy", "forces"]
+            W, K, TILT = 0.15, 60.0, 0.20
+
+            def calculate(self, atoms=None, properties=None, system_changes=None):
+                Calculator.calculate(self, atoms, properties, system_changes)
+                p = atoms.get_positions()
+                x = p[0, 0]
+                u = x * x - self.W ** 2
+                e = self.K * u * u + self.TILT * x + 0.5 * (p[:, 1:] ** 2).sum()
+                f = np.zeros_like(p)
+                f[0, 0] = -(self.K * 4.0 * x * u + self.TILT)
+                f[:, 1:] = -p[:, 1:]
+                self.results = {"energy": float(e), "forces": f}
+
+        # 얕은 쪽(x>0) 에서 출발 → 한 번 이완은 거기 갇히고, 심화 이완은 깊은 쪽으로 넘어야 한다
+        dw = _A("H2", positions=[[+0.15, 0, 0], [3.0, 0, 0]], cell=[9, 9, 9], pbc=True)
+        one, _, _ = relax_positions(dw, DoubleWell(), fmax=0.01, steps=300)
+        e_one = float(one.get_potential_energy())
+        deep, info = relax_endpoint_deep(dw, DoubleWell(), fmax=0.01, steps=300,
+                                         tries=6, amp=0.5, seed=1)
+        chk(one.get_positions()[0, 0] > 0,
+            "[음성] 한 번 이완은 얕은 우물(x>0)에 갇힌다 — 갇혀야 시험이 성립한다")
+        chk(info["n_escapes"] >= 1,
+            f"[양성] ★ 심화 이완이 **실제로 탈출한다** ({info['n_escapes']}회, "
+            f"gain {1000*info['gain_eV']:+.0f} meV)")
+        chk(deep.get_positions()[0, 0] < 0,
+            "[양성] 탈출 뒤 깊은 우물(x<0)에 앉는다")
+        chk(info["E"] < e_one - 1e-6, "[양성] 탈출한 에너지가 한 번 이완보다 낮다")
+        chk(info["E_first"] >= info["E"] - 1e-9, "[양성] gain 은 음수가 될 수 없다")
+
+        # [음성] 흔들어 놓은 실제 결정에서도 한 번 이완보다 높아지지 않는다
+        shaken = base.copy()
+        shaken.set_positions(shaken.get_positions()
+                             + rng.normal(0, 0.25, shaken.get_positions().shape))
+        one2, _, _ = relax_positions(shaken, EMT(), fmax=0.05, steps=200)
+        _, info1 = relax_endpoint_deep(shaken, EMT(), fmax=0.05, steps=200, seed=1)
+        chk(info1["E"] <= float(one2.get_potential_energy()) + 1e-9,
+            "[음성] 심화 이완이 한 번 이완보다 높아지는 일은 없다")
+
+        # [음성] **이미 바닥인 구조에서는 헛돌지 않는다** — 탈출 0회여야 한다
+        flat, info2 = relax_endpoint_deep(base, EMT(), fmax=0.05, steps=200, seed=2)
+        chk(info2["n_escapes"] == 0,
+            "[음성] 완전한 결정에서는 얕은 분지 탈출이 0회다 (헛돌면 비용만 든다)")
+
+        # [음성] hop_distance 가 **최소이미지**로 재는지 — 셀을 가로지르면 짧은 길
+        a1 = base.copy(); a2 = base.copy()
+        L = float(np.array(base.cell)[0, 0])
+        a2.positions[0] = a1.positions[0] + np.array([L - 0.7, 0.0, 0.0])
+        chk(abs(hop_distance(a1, a2, 0) - 0.7) < 1e-6,
+            "[음성] 셀을 가로지르는 이동을 L−0.7 이 아니라 0.7 Å 로 잰다")
+    except ImportError:
+        print("  ⚠ ase 없음 — 심화 이완 시험 건너뜀")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -496,6 +640,11 @@ def main():
     ap.add_argument("--force", action="store_true", help="좁은 셀도 실행 (수렴시험용)")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--tag")
+    ap.add_argument("--seed", type=int, default=0,
+                    help="끝점 심화 이완의 rattle 시드")
+    ap.add_argument("--shallow_endpoints", action="store_true",
+                    help="옛 동작 — 끝점을 한 번만 이완한다(심화 이완 끔). "
+                         "심화 이완이 홉을 바꿔버린 것 같을 때 대조용.")
     ap.add_argument("--out", default=str(OUTDIR / "argyrodite_cage_neb.json"))
     if "--selftest" in sys.argv:
         raise SystemExit(selftest())
