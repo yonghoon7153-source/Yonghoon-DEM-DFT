@@ -22,11 +22,12 @@
     550.9,
     502.0
    ],
-   "w": 2081,
-   "h": 1800,
+   "w": 2037,
+   "h": 1659,
    "dpi": 300,
    "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
-   "blank": 0.651
+   "blank": 0.651,
+   "cropped": true
   },
   {
    "key": "f2",
@@ -42,11 +43,12 @@
     550.9,
     454.6
    ],
-   "w": 2081,
-   "h": 1603,
+   "w": 2039,
+   "h": 1461,
    "dpi": 300,
    "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
-   "blank": 0.753
+   "blank": 0.753,
+   "cropped": true
   },
   {
    "key": "f3",
@@ -62,8 +64,9 @@
     563.0,
     738.0
    ],
-   "w": 2180,
-   "h": 2834
+   "w": 1446,
+   "h": 2516,
+   "cropped": true
   },
   {
    "key": "f4",
@@ -79,11 +82,12 @@
     382.4,
     283.6
    ],
-   "w": 1379,
-   "h": 994,
+   "w": 1349,
+   "h": 968,
    "dpi": 300,
    "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
-   "blank": 0.746
+   "blank": 0.746,
+   "cropped": true
   },
   {
    "key": "f5",
@@ -99,11 +103,12 @@
     382.5,
     396.7
    ],
-   "w": 1379,
-   "h": 1248,
+   "w": 1339,
+   "h": 1217,
    "dpi": 300,
    "src": "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
-   "blank": 0.685
+   "blank": 0.685,
+   "cropped": true
   },
   {
    "key": "f6",
@@ -119,8 +124,9 @@
     563.0,
     738.0
    ],
-   "w": 2180,
-   "h": 2834
+   "w": 1919,
+   "h": 2516,
+   "cropped": true
   },
   {
    "key": "fS1",
@@ -136,11 +142,12 @@
     514.4,
     259.7
    ],
-   "w": 1794,
-   "h": 719,
+   "w": 1655,
+   "h": 677,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.923
+   "blank": 0.923,
+   "cropped": true
   },
   {
    "key": "fS2",
@@ -156,11 +163,12 @@
     514.4,
     260.7
    ],
-   "w": 1794,
-   "h": 807,
+   "w": 1588,
+   "h": 739,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.594
+   "blank": 0.594,
+   "cropped": true
   },
   {
    "key": "fS3",
@@ -176,11 +184,12 @@
     514.3,
     682.1
    ],
-   "w": 1794,
-   "h": 2551,
+   "w": 1169,
+   "h": 2511,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.705
+   "blank": 0.705,
+   "cropped": true
   },
   {
    "key": "fS4",
@@ -196,11 +205,12 @@
     531.1,
     229.9
    ],
-   "w": 1863,
-   "h": 679,
+   "w": 1816,
+   "h": 645,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.576
+   "blank": 0.576,
+   "cropped": true
   },
   {
    "key": "fS5",
@@ -216,11 +226,12 @@
     514.4,
     306.9
    ],
-   "w": 1794,
-   "h": 983,
+   "w": 1764,
+   "h": 957,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.346
+   "blank": 0.346,
+   "cropped": true
   },
   {
    "key": "fS6",
@@ -236,11 +247,12 @@
     514.4,
     307.9
    ],
-   "w": 1794,
-   "h": 1004,
+   "w": 1646,
+   "h": 968,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.581
+   "blank": 0.581,
+   "cropped": true
   },
   {
    "key": "fS7",
@@ -256,11 +268,12 @@
     514.2,
     261.3
    ],
-   "w": 1793,
-   "h": 811,
+   "w": 1018,
+   "h": 777,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.966
+   "blank": 0.966,
+   "cropped": true
   },
   {
    "key": "fS8",
@@ -276,11 +289,12 @@
     514.4,
     275.1
    ],
-   "w": 1794,
-   "h": 849,
+   "w": 1631,
+   "h": 757,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.762
+   "blank": 0.762,
+   "cropped": true
   },
   {
    "key": "fS9",
@@ -296,11 +310,12 @@
     575.7,
     275.1
    ],
-   "w": 2049,
-   "h": 850,
+   "w": 1272,
+   "h": 814,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.959
+   "blank": 0.959,
+   "cropped": true
   },
   {
    "key": "fS10",
@@ -316,11 +331,12 @@
     552.0,
     184.1
    ],
-   "w": 1950,
-   "h": 493,
+   "w": 1699,
+   "h": 462,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.43
+   "blank": 0.43,
+   "cropped": true
   },
   {
    "key": "tS1",
@@ -336,11 +352,12 @@
     501.2,
     269.7
    ],
-   "w": 1735,
-   "h": 823,
+   "w": 1700,
+   "h": 794,
    "dpi": 300,
    "src": "43193ec8-1s2.0S2542435122005724mmc1.pdf",
-   "blank": 0.403
+   "blank": 0.403,
+   "cropped": true
   },
   {
    "key": "tS2",

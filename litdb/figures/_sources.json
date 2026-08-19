@@ -7,6 +7,13 @@
    "DFT 먹인 논문/33. Sup) Boosting Solid-State Diffusivity and Conductivity in Lithium Superionic Argyrodites by Halide Substitution.pdf"
   ]
  },
+ "alabdali2023_cgmd_wet_manufacturing_ssb_cathode": {
+  "figures": 4,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "4be01023-60._Threedimensional_physical_modeling_of_the_wet_manufacturing_process_of_solidstate_battery_electrodes.pdf"
+  ]
+ },
  "anderson2024_llzo_comprehensive_dopant_screening": {
   "figures": 25,
   "generated": "2026-08-05",
@@ -945,6 +952,14 @@
    "DFT 먹인 논문/52. Sup) Electronic Localization Enables Long-Cycling Sulfides-Based All-Solid-State Lithium Batteries.pdf"
   ]
  },
+ "wang2026_dryprocess_thick_cathode_failure_ncm94": {
+  "figures": 26,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf"
+  ]
+ },
  "wet_processing_resolved_am_ssb_cathode_manufacturing": {
   "figures": 8,
   "generated": "2026-08-05",
@@ -1011,6 +1026,13 @@
   "pdfs": [
    "f6cbcf21-61_Coupling_of_multiscale_imaging_analysis_and_computational_modeling_for_understanding_thick_cathode_degradation_mechanisms.pdf",
    "43193ec8-1s2.0S2542435122005724mmc1.pdf"
+  ]
+ },
+ "zhang2026_dryprocess_electrode_architecture_cell_level": {
+  "figures": 42,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "57. Dry electrode architecture design to push energy density limits at the cell level.pdf"
   ]
  },
  "zhang2026_dryprocess_electrode_architecture_cgmd_ptfe_vgcf": {

@@ -1,0 +1,555 @@
+{
+ "slug": "wang2026_dryprocess_thick_cathode_failure_ncm94",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-19",
+ "sources": [
+  "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+  "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1 (a) XRD patterns of the components of the cathode dry-processed ﬁlm; XPS spectra of the cathode dry-processed ﬁlm before cycling: (b) P 2p and (c) S 2p; (d) SEM image of the NCM94 cathode particles utilized; (e) surface and (f) cross-sectional SEM images of the unpressed ﬁlm before cycling.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    258.2
+   ],
+   "w": 1771,
+   "h": 864,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.62,
+   "cropped": true
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Fig. 2 Electrochemical performance at diﬀerent upper cut-oﬀvoltages for ASSBs with a 6.5 mA h cm−2 cathode under 200 MPa stack pressure at 30 °C: (a) rate capability curves; (b) long-term cycling performance at 0.5C; (c) long-term cycling performance at 0.1C; (d) polarization overpotential curves.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    298.3
+   ],
+   "w": 1442,
+   "h": 1033,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.891,
+   "cropped": true
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Fig. 3 GITT proﬁles and corresponding Li+ diﬀusion coeﬃcients for ASSBs with a 6.5 mA h cm−2 cathode under 200 MPa stack pressure at 30 °C, tested at diﬀerent upper cut-oﬀvoltages: (a) 2–3.5 V, (b) 2–3.6 V, (c) 2–3.7 V and (d) 2–3.8 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    429.6,
+    558.8,
+    704.0
+   ],
+   "w": 1536,
+   "h": 1122,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.895,
+   "cropped": true
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 6,
+   "file": "fig_4.png",
+   "caption": "Fig. 4 Nyquist plots at various cycle numbers and the corresponding equivalent circuit for an ASSB with a 6.5 mA h cm−2 cathode, tested between 2 and 3.5 V under 200 MPa at 30 °C.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    527.6,
+    298.1,
+    696.7
+   ],
+   "w": 1064,
+   "h": 676,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.911,
+   "cropped": true
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 7,
+   "file": "fig_5.png",
+   "caption": "Fig. 5 Results for the NCM94jLPSCljREjLPSCljLi–In three-electrode ASSB: (a) a complete charge–discharge voltage proﬁle for one cycle; cathode-side Nyquist plots at diﬀerent states of charge (SOCs) during (b) charging and (d) discharging; corresponding DRT results during (c) charging and (e) discharging.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    358.2
+   ],
+   "w": 2002,
+   "h": 1271,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.905,
+   "cropped": true
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 8,
+   "file": "fig_6.png",
+   "caption": "Fig. 6 Results for the NCM94jLPSCljLTO ASSB: (a) voltage proﬁles for two charge–discharge cycles and (b) the corresponding in situ pressure evolution proﬁle.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    44.6,
+    558.8,
+    226.3
+   ],
+   "w": 1728,
+   "h": 721,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.93,
+   "cropped": true
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 8,
+   "file": "fig_7.png",
+   "caption": "Fig. 7 (a) XRD patterns of the dry-processed cathode ﬁlms before and after 300 cycles at 0.5C, tested at diﬀerent upper cut-oﬀvoltages. (b–i) XPS spectra of the cathode ﬁlms after 50 cycles at 0.1C under diﬀerent voltages—3.5 V: (b) P 2p and (c) S 2p; 3.6 V: (d) P 2p and (e) S 2p; 3.7 V: (f) P 2p and (g) S 2p; 3.8 V: (h) P 2p and (i) S 2p.",
+   "rotated_deg": 0,
+   "bbox": [
+    36.5,
+    336.2,
+    558.8,
+    696.7
+   ],
+   "w": 1743,
+   "h": 1473,
+   "dpi": 300,
+   "src": "5ed000af-58._Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.843,
+   "cropped": true
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Fig. S1. Magnified XRD patterns (20-36°) of the dry-processed cathode film and its constituent materials.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.3,
+    514.3,
+    355.2
+   ],
+   "w": 1448,
+   "h": 1144,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.933,
+   "cropped": true
+  },
+  {
+   "key": "fS2",
+   "kind": "figure",
+   "label": "S2",
+   "page": 5,
+   "file": "fig_S2.png",
+   "caption": "Fig. S2. EDX elemental maps corresponding to the surface SEM image of the dry- processed cathode film before cycling: (a) Ni, (b) S, (c) P. 5",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    375.5,
+    511.3,
+    730.5
+   ],
+   "w": 1729,
+   "h": 1414,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.552,
+   "cropped": true
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Fig. S3. (a) Optical micrograph of the dry-processed cathode film surface indicating the selected AFM measurement sites; corresponding AFM results obtained at (b) point 1, (c) point 2 and (d) point 3.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.6,
+    514.3,
+    308.4
+   ],
+   "w": 1359,
+   "h": 969,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.688,
+   "cropped": true
+  },
+  {
+   "key": "fS4",
+   "kind": "figure",
+   "label": "S4",
+   "page": 6,
+   "file": "fig_S4.png",
+   "caption": "Fig. S4. Charge-discharge voltage profiles for ASSBs with a 6.5 mAh cm-2 cathode under 200 MPa and 0.5 C at 30 ℃, tested to different upper cut-off voltages: (a) 2-3.5 V, (b) 2-3.6 V, (c) 2-3.7 V, (d) 2-3.8 V. 6",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    352.1,
+    514.3,
+    703.7
+   ],
+   "w": 1559,
+   "h": 1428,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.885,
+   "cropped": true
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Fig. S5. DQ/DV curves for ASSBs with a 6.5 mAh cm-2 cathode under 200 MPa and 0.5 C at 30 ℃, tested to different upper cut-off voltages: (a) 2-3.5 V, (b) 2-3.6 V, (c) 2- 3.7 V, (d) 2-3.8 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    71.4,
+    514.3,
+    352.7
+   ],
+   "w": 1348,
+   "h": 1142,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.884,
+   "cropped": true
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Fig. S6. Charge-discharge voltage profiles for ASSBs with a 6.5 mAh cm-2 cathode under 200 MPa and 0.1 C at 30 ℃, tested to different upper cut-off voltages: (a) 2-3.5 V, (b) 2-3.6 V, (c) 2-3.7 V, (d) 2-3.8 V. 7",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    398.9,
+    514.3,
+    703.7
+   ],
+   "w": 1569,
+   "h": 1233,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.872,
+   "cropped": true
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Fig. S7. DQ/DV curves for ASSBs with a 6.5 mAh cm-2 cathode under 200 MPa and 0.1 C at 30 ℃, tested to different upper cut-off voltages: (a) 2-3.5 V, (b) 2-3.6 V, (c) 2- 3.7 V, (d) 2-3.8 V.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    118.2,
+    514.3,
+    399.5
+   ],
+   "w": 1335,
+   "h": 1130,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.886,
+   "cropped": true
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Fig. S8. (a) NCM94|LPSCl|RE|LPSCl|Li-In three-electrode ASSB configuration and (b) a corresponding photograph of the actual ASSB.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    445.7,
+    514.3,
+    694.9
+   ],
+   "w": 1677,
+   "h": 1001,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.652,
+   "cropped": true
+  },
+  {
+   "key": "fS9",
+   "kind": "figure",
+   "label": "S9",
+   "page": 9,
+   "file": "fig_S9.png",
+   "caption": "Fig. S9. Characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.5 V: (a) Surface SEM image; (b) BSE image and the corresponding EDX elemental maps for (c) Ni, (d) S, (e) Cl and (f) P.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.7,
+    514.3,
+    464.3
+   ],
+   "w": 1661,
+   "h": 1577,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.231,
+   "cropped": true
+  },
+  {
+   "key": "fS10",
+   "kind": "figure",
+   "label": "S10",
+   "page": 9,
+   "file": "fig_S10.png",
+   "caption": "Fig. S10. Cross-sectional characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.5 V: (a) SEM image and (b) BSE image.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    508.1,
+    514.3,
+    711.1
+   ],
+   "w": 1723,
+   "h": 795,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.486,
+   "cropped": true
+  },
+  {
+   "key": "fS11",
+   "kind": "figure",
+   "label": "S11",
+   "page": 10,
+   "file": "fig_S11.png",
+   "caption": "Fig. S11. Characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.6 V: (a) Surface SEM image; (b) BSE image and the corresponding EDX elemental maps for (c) Ni, (d) S, (e) Cl and (f) P.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.7,
+    514.3,
+    464.3
+   ],
+   "w": 1661,
+   "h": 1582,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.23,
+   "cropped": true
+  },
+  {
+   "key": "fS12",
+   "kind": "figure",
+   "label": "S12",
+   "page": 10,
+   "file": "fig_S12.png",
+   "caption": "Fig. S12. Cross-sectional characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.6 V: (a) SEM image and (b) BSE image. 10",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    508.1,
+    514.3,
+    718.9
+   ],
+   "w": 1723,
+   "h": 827,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.506,
+   "cropped": true
+  },
+  {
+   "key": "fS13",
+   "kind": "figure",
+   "label": "S13",
+   "page": 11,
+   "file": "fig_S13.png",
+   "caption": "Fig. S13. Characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.7 V: (a) Surface SEM image; (b) BSE image and the corresponding EDX elemental maps for (c) Ni, (d) S, (e) Cl and (f) P.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.7,
+    514.3,
+    464.3
+   ],
+   "w": 1666,
+   "h": 1580,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.229,
+   "cropped": true
+  },
+  {
+   "key": "fS14",
+   "kind": "figure",
+   "label": "S14",
+   "page": 11,
+   "file": "fig_S14.png",
+   "caption": "Fig. S14. Cross-sectional characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.7 V: (a) SEM image and (b) BSE image. 11",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    508.1,
+    514.3,
+    718.9
+   ],
+   "w": 1723,
+   "h": 827,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.505,
+   "cropped": true
+  },
+  {
+   "key": "fS15",
+   "kind": "figure",
+   "label": "S15",
+   "page": 12,
+   "file": "fig_S15.png",
+   "caption": "Fig. S15. Characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.8 V: (a) Surface SEM image; (b) BSE image and the corresponding EDX elemental maps for (c) Ni, (d) S, (e) Cl and (f) P.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    69.7,
+    514.3,
+    464.3
+   ],
+   "w": 1666,
+   "h": 1586,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.228,
+   "cropped": true
+  },
+  {
+   "key": "fS16",
+   "kind": "figure",
+   "label": "S16",
+   "page": 12,
+   "file": "fig_S16.png",
+   "caption": "Fig. S16. Cross-sectional characterization of the dry-processed cathode film after 300 cycles at 0.5 C to 3.8 V: (a) SEM image and (b) BSE image. 12",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    508.1,
+    514.3,
+    718.9
+   ],
+   "w": 1723,
+   "h": 834,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.505,
+   "cropped": true
+  },
+  {
+   "key": "tS1",
+   "kind": "table",
+   "label": "S1",
+   "page": 13,
+   "file": "tab_S1.png",
+   "caption": "Table S1 Fitted impedance parameters at various cycle numbers for a ASSB with a 6.5 mAh cm-2 cathode, tested between 2-3.5 V under 200 MPa at 30 ℃. Cathode 1st 10th 20th 30th 40th 50th Rs (Ω cm–2) 9.4 8.6 8.5 8.9 8.6 8.6 Rct1 (Ω cm–2) 12.5 36.1 36.5 29.4 42.7 55.4 Rct2 (Ω cm–2) 83.8 108.0 134.1 218.7 307.1 939.7",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    73.3,
+    513.3,
+    769.6
+   ],
+   "w": 1785,
+   "h": 2902,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.928
+  },
+  {
+   "key": "tS2",
+   "kind": "table",
+   "label": "S2",
+   "page": 13,
+   "file": "tab_S2.png",
+   "caption": "Table S2 Assignment of kinetic processes to the peaks in the DRT results. Peak τ (s) Kinetic Processes D1 10-6 ~ 10-5 Interparticle contact within the cathode D2 10-5 ~ 10-2 Ionic transport within the cathode interphase D3 D4 10-2 ~ 100 Charge transfer at the cathode surface",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    73.3,
+    510.3,
+    769.6
+   ],
+   "w": 1773,
+   "h": 2902,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.93
+  },
+  {
+   "key": "tS3",
+   "kind": "table",
+   "label": "S3",
+   "page": 13,
+   "file": "tab_S3.png",
+   "caption": "Table S3 Comparison of the areal capacity and cycling performance of the developed all-solid-state batteries with those from previous literature. Areal capacity Cycle Cell structure Ref. (mAh cm-2) performance NCM94/LPSCl/Li-In ~6.5 0.5C 300th 74.5% this work NCM811/LPSCl/Li-In ~2 0.1C 100th 51.5% [1] NCM811/LPSCl/Li4Ti5O12 ~5 0.5C 500th >80% [2] NCM811/LPSCl/Li-In ~3 0.1C 100th 81.2% [3] NCM811/Li7P3S11/Li-In ~5.9 0.3C 300th 94% [4] NCM811/LPSCl/Li ~4 0.1C 100th 67.4% [5]",
+   "rotated_deg": 0,
+   "bbox": [
+    85.0,
+    73.3,
+    513.3,
+    769.6
+   ],
+   "w": 1785,
+   "h": 2902,
+   "dpi": 300,
+   "src": "a1c02008-58._Sup_Failure_mechanisms_of_dryprocessed_thick_cathodes_in_sulfide_solidstate_batteries_a_mechanistic_investigation.pdf",
+   "blank": 0.928
+  }
+ ]
+}
