@@ -661,6 +661,49 @@ Li 추출 격리 · 판정 바닥 max(30 meV, 쌍 편차) · 검열(못 잼)과 
 
 ---
 
+### R. 🟡 **litdb 인덱스 미편입 5편 + MLIP 3부작 비교표 — kgy 벤치 결과 나오면 한 번에 쓴다** (2026-08-19 신설)
+
+- **상태**: digest·그림은 **전부 커밋·푸시 완료** (`e375c69d` · `1bac12aa` · `4ab86d6f`,
+  파일 수 디스크=원격 일치 확인). 남은 것은 **인덱스/비교표 편입 하나뿐**이다.
+- `python3 tools/litdb/build_index.py --check` 가 잡는 5편 (전부 **dft 축**):
+
+  | slug | 왜 아직 안 넣었나 |
+  |---|---|
+  | `petmad2026_lightweight_universal_interatomic_potential_mad` | UMA 힘 MAE 확정 대기 |
+  | `zhang2026_minimum_abinitio_data_mlip_mace_finetune_nep_distill` | 〃 |
+  | `lai2025_haml_li_metal_lpscl_interface_doping_seFO` | 〃 (γ 게이트 축) |
+  | `kauwe2021_ml_materials_properties_dissertation_sparks` | 위 셋과 같은 ML 축 |
+  | `lee2026_mechanical_halogen_argyrodite_drycoating` | 이전부터 미편입 |
+
+  `comparison_vs_ours.md` 도 **같은 5편**이 미편입 (DFT 71/76).
+  각 digest 안에 `## INDEX·비교표에 넣을 항목 (수동 병합 대기)` 초안이 이미 있다.
+- **왜 한 번에 쓰나** — 다섯이 한 논지로 얽혀 있다:
+  PET-MAD ↔ Zhang npj 가 둘 다 **"필요한 ab initio 구조 = O(10²)"** 로 수렴하고,
+  Lai 는 거기서 **"벌크·수송 = 파인튜닝 노선 / 계면 반응 = HAML(γ 게이트) 노선"** 으로 갈린다.
+  ⇒ 세 카드의 비교표에 **UMA 힘 MAE 실측값**이 공통으로 들어가야 하므로,
+  값이 확정되기 전에 쓰면 곧바로 다시 고쳐야 한다.
+- **막고 있는 것 (2026-08-19 23:5x 현재 kgy 에서 실행 중)**:
+  `tools/mlip/bench_against_dft.py --train …/Li3PS4/train.xyz --test …/test.xyz --tag li3ps4_uma`
+  → `db/properties/mlip_bench_li3ps4_uma.json`
+- **시범(n=20) 예비값** ⚠ *본 실행 전까지 인용 금지* — 힘 MAE **26.3 meV/Å**(Li 11.8 / P 31.0 / S 36.1),
+  보정 후 에너지 MAE 9.9 meV/atom, 상대에너지 RRMSE 2.3 %, 참조보정 R² 0.764.
+  같은 test set 공표값: **PET-MAD 기저 63.9 · LoRA(N=1940) 39.2 · bespoke(N=1940) 35.6 meV/Å**.
+  ⇒ 사실이면 **학습 안 한 UMA 가 이 데이터로 1940개 학습한 전용 모델보다 힘이 정확하다**.
+  ⚠ 못 믿는 이유 셋: ① `--limit 20` 은 **앞에서 20개를 자르므로** α/β/γ 3상·온도 16점 중
+  한 슬라이스에 몰렸을 수 있다 ② 20개로 원소 3개 적합이라 R² 가 느슨하다
+  ③ 보정계수(Li +0.094 / P +0.031 / S +0.125 eV)는 **PBE↔PBEsol 차이를 흡수한 항**이라
+  그 자체를 물리로 읽으면 안 된다.
+- **닫히면 따라오는 것**: preflight 이 알리바이로 쓰던 **"UMA sulfide PES softening"** 의 근거가
+  사라진다 ⇒ NEB 0.528 vs MD 0.253 격차의 남은 후보는 **경로 선택**.
+  ⚠ 단 이 벤치는 **응력(라벨 없음)과 장벽을 안 잰다** — 격차를 이걸로 닫을 수는 없고,
+  "UMA 힘이 틀려서"라는 설명 하나만 지운다.
+- **재발 항목이다** — #7(2026-08-06 "digest 156편 중 67편 미편입") 과 같은 종류.
+  그때 닫은 방식은 `build_index.py` 신설이었는데, `INDEX.md` 는 **사람 큐레이션**이라
+  도구가 자동 생성하지 않는다 ⇒ **에이전트가 digest 를 만들 때마다 이 구멍이 다시 생긴다.**
+  구조적으로 닫으려면 `--check` 를 커밋 훅이나 세션 마감 절차에 넣어야 한다 (미결).
+
+---
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |
