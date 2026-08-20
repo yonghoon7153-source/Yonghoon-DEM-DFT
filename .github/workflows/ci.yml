@@ -17,6 +17,12 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ['3.10', '3.12']
+        # The runner is UTC.  The lab is not: a fixture built with
+        # `datetime.timestamp()` landed nine hours in the past under UTC+9, so
+        # the running/finished tests passed here and failed on the
+        # researcher's own machine.  One zone each side of UTC keeps that
+        # class of bug in CI instead of on their desk.
+        tz: ['UTC', 'Asia/Seoul', 'America/Los_Angeles']
     steps:
       - uses: actions/checkout@v4
 
@@ -38,6 +44,7 @@ jobs:
         run: python -m pytest
         env:
           PYTHONPATH: packages/wrdkit/src:apps/api
+          TZ: ${{ matrix.tz }}
 
       - name: Lint
         run: |

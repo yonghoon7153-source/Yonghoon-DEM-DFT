@@ -178,6 +178,8 @@ export interface ProfileSeries {
   voltage: number[]
   run_id: number
   label: string
+  /** Why this one curve is not in the requested unit, when it is not. */
+  basis_fallback_reason?: string | null
 }
 
 export interface ProfileResponse {
@@ -186,6 +188,8 @@ export interface ProfileResponse {
   requested_basis: Basis
   resolved_cell: ResolvedCell
   series: ProfileSeries[]
+  /** True when the curves are not all in the same unit. */
+  mixed_basis?: boolean
 }
 
 export interface KneeResult {

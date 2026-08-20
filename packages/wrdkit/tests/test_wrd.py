@@ -136,3 +136,45 @@ def test_metadata_records_a_content_hash(synthetic_bytes, synthetic_wrd):
     import hashlib
 
     assert synthetic_wrd.metadata.sha256 == hashlib.sha256(synthetic_bytes).hexdigest()
+
+
+def test_ticks_are_independent_of_the_machine_timezone():
+    """계측기는 벽시계를 그대로 tick 으로 쓴다 — 변환에 시간대가 끼면 안 된다.
+
+    `datetime.timestamp()` 를 쓰면 naive 값을 로컬로 읽고 UTC 로 바꾸므로,
+    UTC+9 랩에서 픽스처가 9시간 과거로 기록된다. 그러면 running 으로 쓴
+    셀이 finished 로 파싱되고, CI(UTC)는 통과하는데 연구자 기계에서만
+    깨진다.
+    """
+    import datetime
+    import os
+    import time
+
+    moment = datetime.datetime(2026, 3, 4, 22, 47, 31)
+    original = os.environ.get("TZ")
+    seen = set()
+    try:
+        for zone in ("UTC", "Asia/Seoul", "America/Los_Angeles"):
+            os.environ["TZ"] = zone
+            time.tzset()
+            seen.add(synthetic.ticks_at(moment))
+    finally:
+        if original is None:
+            os.environ.pop("TZ", None)
+        else:
+            os.environ["TZ"] = original
+        time.tzset()
+
+    assert len(seen) == 1, "같은 벽시계가 시간대마다 다른 tick 이 됐다"
+
+
+def test_a_wall_clock_survives_the_round_trip_through_a_file():
+    """파일에 쓴 시각이 파서를 거쳐 같은 벽시계로 돌아온다."""
+    import datetime
+
+    moment = datetime.datetime(2026, 3, 4, 22, 47, 31)
+    ticks = synthetic.ticks_at(moment)
+    raw = synthetic.build_wrd(
+        synthetic.make_cycles(1, 5, start_ticks=ticks), start_ticks=ticks)
+    parsed = read_wrd_bytes(raw)
+    assert parsed.metadata.start_time.replace(microsecond=0) == moment

@@ -117,7 +117,16 @@ export function Compare() {
   // Label the axis from what came back, never from what was asked for.
   const shownBasis: Basis =
     mode === 'profiles' ? (profileCompare.data?.basis ?? basis) : (cycleCompare.data?.basis ?? basis)
-  const capacityAxis = basisAxis(shownBasis) + (fellBack.length ? ' · 단위 혼재' : '')
+
+  // Falling back is not the same as mixing.  When every selected cell lacks a
+  // mass they all come back in raw mAh — one unit, one axis, a comparison that
+  // is still valid.  Warning "단위 혼재" there tells the user not to trust a
+  // plot that is perfectly trustworthy, so the server's own verdict decides.
+  const mixedBasis =
+    mode === 'profiles'
+      ? (profileCompare.data?.mixed_basis ?? false)
+      : (cycleCompare.data?.mixed_basis ?? false)
+  const capacityAxis = basisAxis(shownBasis) + (mixedBasis ? ' · 단위 혼재' : '')
 
   const yLabel =
     mode === 'profiles'
@@ -224,12 +233,22 @@ export function Compare() {
               <>
                 {fellBack.length ? (
                   <div style={{ padding: '12px 14px 0' }}>
-                    <Alert kind="warn">
-                      {basisUnit(basis)} 로 표시할 수 없어 원값으로 그린 셀이 있습니다 —{' '}
-                      {fellBack
-                        .map((item) => `${item.name} (${basisUnit(item.basis)})`)
-                        .join(', ')}
-                      . 축 단위가 셀마다 다르므로 곡선 높이를 그대로 비교하지 마세요.
+                    <Alert kind={mixedBasis ? 'warn' : 'info'}>
+                      {mixedBasis ? (
+                        <>
+                          {basisUnit(basis)} 로 표시할 수 없어 원값으로 그린 셀이 있습니다 —{' '}
+                          {fellBack
+                            .map((item) => `${item.name} (${basisUnit(item.basis)})`)
+                            .join(', ')}
+                          . 축 단위가 셀마다 다르므로 곡선 높이를 그대로 비교하지 마세요.
+                        </>
+                      ) : (
+                        <>
+                          선택한 셀에 {basisUnit(basis)} 로 바꿀 정보가 없어 전부{' '}
+                          {basisUnit(shownBasis)} 로 그렸습니다. 단위는 같으므로 비교는
+                          유효합니다 — 질량·면적을 넣으면 정규화됩니다.
+                        </>
+                      )}
                     </Alert>
                   </div>
                 ) : null}

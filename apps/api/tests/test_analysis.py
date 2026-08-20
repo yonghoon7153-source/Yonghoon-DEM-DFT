@@ -324,3 +324,45 @@ def test_profile_rejects_an_unknown_branch(client, loaded):
     response = client.get(f"/api/samples/{loaded}/profile",
                           params={"cycles": "3", "branches": "dis"})
     assert response.status_code == 422
+
+
+# --- 갱신이 심은 회귀: 비교 축 단위 -----------------------------------------
+
+def test_compare_profiles_labels_the_axis_from_the_curves_it_drew(client, loaded):
+    """건너뛴 샘플이 축 단위를 정하면 안 된다.
+
+    질량이 있는 A 뒤에 아무것도 없는 B 를 요청하면, 옛 코드는 B 가 건너뛰어지는
+    길에 fallback_cell 을 덮어써서 A 의 mAh/g 곡선에 'mAh' 라벨을 붙였다.
+    """
+    empty = client.post("/api/samples", json={"name": "빈 셀"}).json()["id"]
+    body = client.get("/api/compare/profiles",
+                      params={"sample_ids": f"{loaded},{empty}", "cycle": 3,
+                              "basis": "mAh/g", "branches": "discharge"}).json()
+    assert body["series"], "질량이 있는 셀의 곡선이 나와야 한다"
+    assert {s["basis"] for s in body["series"]} == {body["basis"]}, \
+        "최상위 단위가 실제 곡선의 단위와 다르다"
+    assert body["basis"] == "mAh/g"
+    assert body["mixed_basis"] is False
+
+
+def test_a_uniform_fallback_is_not_reported_as_mixed_units(client, sample_id, wrd_bytes):
+    """전부 같은 단위로 떨어지면 혼재가 아니다 — 비교는 유효하다."""
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("a.wrd", wrd_bytes, "application/octet-stream")})
+    body = client.get("/api/compare/profiles",
+                      params={"sample_ids": str(sample_id), "cycle": 3,
+                              "basis": "mAh/g", "branches": "discharge"}).json()
+    assert body["series"]
+    assert body["mixed_basis"] is False
+    assert len({s["basis"] for s in body["series"]}) == 1
+
+
+def test_both_compare_endpoints_share_one_selection_cap(client):
+    """한쪽은 422, 다른 쪽은 조용히 잘림 — 같은 상한이어야 한다."""
+    ids = ",".join(str(n) for n in range(1, 33))
+    cycles = client.get("/api/compare/cycles",
+                        params={"sample_ids": ids, "metric": "discharge_capacity"})
+    profiles = client.get("/api/compare/profiles",
+                          params={"sample_ids": ids, "cycle": 3})
+    assert cycles.status_code == 422
+    assert profiles.status_code == 422, "profiles 가 조용히 30개로 잘랐다"

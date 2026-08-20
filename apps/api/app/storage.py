@@ -8,8 +8,10 @@ rather than a duplicate.
 
 from __future__ import annotations
 
+import contextlib
 import json
 import os
+import tempfile
 import zipfile
 from pathlib import Path
 
@@ -47,9 +49,16 @@ def _write_atomically(target: Path, write) -> None:
     atomic on the same filesystem, so a reader sees either the old file or the
     complete new one.
     """
-    temporary = target.with_name(f".{target.name}.tmp")
+    # A unique temporary name, not a fixed one.  Two requests can miss the
+    # cache for the same run at the same moment (a profile and an export, say);
+    # with a shared ``.name.tmp`` they write into one file, and whichever
+    # renames second publishes a blend of both -- or fails outright, because
+    # the first one's ``unlink`` already took the path out from under it.
+    handle_fd, temporary_name = tempfile.mkstemp(
+        dir=str(target.parent), prefix=f".{target.name}.", suffix=".tmp")
+    temporary = Path(temporary_name)
     try:
-        with open(temporary, "wb") as handle:
+        with os.fdopen(handle_fd, "wb") as handle:
             write(handle)
             handle.flush()
             os.fsync(handle.fileno())
@@ -118,20 +127,69 @@ def load_columns(run_id: int, expect_sha256: str | None = None
             drop_run_cache(run_id)
             return None
     try:
-        with np.load(target, allow_pickle=False) as archive:
-            return {name: archive[name] for name in archive.files}
+        # Open the file here rather than handing ``np.load`` a path.  When the
+        # archive is truncated, ``np.load`` raises while constructing -- so the
+        # ``with`` it would have managed never runs, and the descriptor it
+        # opened stays alive.  On Windows an open descriptor blocks unlink, so
+        # the recovery below fails with PermissionError and the run 500s for
+        # good.  Owning the handle means it closes on the way out either way.
+        with open(target, "rb") as handle, \
+                np.load(handle, allow_pickle=False) as archive:
+            columns = {name: archive[name] for name in archive.files}
     except (zipfile.BadZipFile, OSError, ValueError, KeyError, EOFError):
         drop_run_cache(run_id)
         return None
 
+    meta = cached_meta(run_id)
+    if meta is None:
+        # ``drop_run_cache`` removes meta.json first precisely so a cache it
+        # could not finish deleting is not trusted afterwards.  An archive that
+        # cannot say which file it came from is not evidence of anything.
+        drop_run_cache(run_id)
+        return None
+    if not _columns_match_meta(columns, meta):
+        # Same file, wrong contents: an interrupted publish, or a cache written
+        # by an older parser that named or sized its columns differently.  The
+        # sha check above cannot see this, and slicing a CycleRecord range into
+        # arrays of the wrong length shows a different part of the run without
+        # saying so.
+        drop_run_cache(run_id)
+        return None
+    return columns
+
+
+def _columns_match_meta(columns: dict[str, np.ndarray], meta: dict) -> bool:
+    """Does the archive hold what ``meta.json`` says it holds?"""
+    expected_names = meta.get("columns")
+    if expected_names is not None and set(expected_names) != set(columns):
+        return False
+    expected_rows = meta.get("row_count")
+    if expected_rows is None:
+        return True
+    return all(len(array) == expected_rows for array in columns.values())
+
 
 def drop_run_cache(run_id: int) -> None:
+    """Throw the cache away.  Never raise -- the caller can always re-parse.
+
+    Deleting can genuinely fail: on Windows another handle on the archive
+    blocks unlink, and a read-only mount refuses outright.  Raising here would
+    turn a recoverable cache miss into a 500 on every profile and export of
+    that run, which is strictly worse than leaving a stale directory behind.
+    So the failure is swallowed, and ``meta.json`` is removed first: without
+    it :func:`load_columns` cannot confirm the archive's identity, so the
+    leftover is never trusted even if its bytes survive.
+    """
     directory = run_dir(run_id)
     if not directory.exists():
         return
-    for child in directory.iterdir():
-        child.unlink()
-    directory.rmdir()
+    with contextlib.suppress(OSError):
+        (directory / "meta.json").unlink(missing_ok=True)
+    for child in sorted(directory.iterdir()):
+        with contextlib.suppress(OSError):
+            child.unlink()
+    with contextlib.suppress(OSError):
+        directory.rmdir()
 
 
 def reparse(sha256: str) -> WrdFile:

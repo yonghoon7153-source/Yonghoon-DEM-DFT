@@ -68,17 +68,34 @@ DOTNET_UNIX_EPOCH_TICKS = 621_355_968_000_000_000
 
 
 def ticks_at(moment) -> int:
-    """.NET ticks for a ``datetime``.
+    """.NET ticks for a ``datetime``, read literally.
 
     Tests that exercise the running/finished classification need a file whose
     samples are *recent*, because a long silence is what tells the classifier
     a cell is no longer running.
+
+    The conversion must not go through ``moment.timestamp()``.  That reads a
+    naive value as *local* time and returns a UTC epoch, so in a UTC+9 lab the
+    fixture lands nine hours in the past and a cell written as "running" parses
+    as finished -- the suite then passes in CI (UTC) and fails on the
+    researcher's own machine.  Smart Interface writes the instrument PC's wall
+    clock, with no zone attached, so the honest conversion is the literal one:
+    treat the naive value as the number it is.
     """
-    return DOTNET_UNIX_EPOCH_TICKS + int(moment.timestamp() * TICKS_PER_SECOND)
+    import datetime as _datetime
+
+    delta = moment - _datetime.datetime(1970, 1, 1)
+    return DOTNET_UNIX_EPOCH_TICKS + int(delta.total_seconds() * TICKS_PER_SECOND)
 
 
 def ticks_ago(seconds: float) -> int:
-    """.NET ticks for a moment ``seconds`` in the past."""
+    """.NET ticks for a moment ``seconds`` in the past, on this machine's clock.
+
+    ``datetime.now()`` rather than ``utcnow()``: the reader turns ticks back
+    into a naive wall clock, and the API compares that against
+    ``datetime.now()``.  Both sides have to be the same clock or the age is
+    off by the UTC offset.
+    """
     import datetime as _datetime
 
     return ticks_at(_datetime.datetime.now() - _datetime.timedelta(seconds=seconds))

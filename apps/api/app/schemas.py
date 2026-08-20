@@ -252,6 +252,8 @@ class ProfileSeriesOut(BaseModel):
     voltage: list[float]
     run_id: int
     label: str
+    #: Why this one curve is not in the requested unit, when it is not.
+    basis_fallback_reason: str | None = None
 
 
 class ProfileOut(BaseModel):
@@ -260,6 +262,9 @@ class ProfileOut(BaseModel):
     requested_basis: str
     resolved_cell: ResolvedCellOut
     series: list[ProfileSeriesOut]
+    #: True when the curves are not all in the same unit, so one axis label
+    #: cannot describe them and the client has to annotate each curve.
+    mixed_basis: bool = False
 
 
 class ReportOut(BaseModel):

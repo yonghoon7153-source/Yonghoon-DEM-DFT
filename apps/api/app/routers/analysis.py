@@ -11,7 +11,7 @@ import json
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
-from wrdkit import Basis, basis_label, c_rate
+from wrdkit import Basis, ResolvedCell, basis_label, c_rate
 
 from ..db import get_session
 from ..deps import get_run, get_sample, resolved_cell_out, validate_basis
@@ -28,6 +28,12 @@ from ..services import (
     sample_cycle_records,
 )
 from ..settings import settings
+
+#: How many cells one comparison may hold.  Both compare endpoints share it:
+#: /compare/cycles used to 422 past thirty while /compare/profiles silently
+#: dropped everything after the thirtieth, so selecting thirty-one cells gave
+#: an error on one tab and a quietly incomplete plot on the other.
+_COMPARE_LIMIT = 30
 
 router = APIRouter(prefix="/api", tags=["analysis"])
 
@@ -393,8 +399,9 @@ def compare_cycles(
         raise HTTPException(422, "sample_ids must be comma-separated integers") from exc
     if not ids:
         raise HTTPException(422, "no sample ids given")
-    if len(ids) > 30:
-        raise HTTPException(422, "compare at most 30 samples at a time")
+    if len(ids) > _COMPARE_LIMIT:
+        raise HTTPException(
+            422, f"compare at most {_COMPARE_LIMIT} samples at a time")
 
     series = []
     for sample_id in ids:
@@ -477,15 +484,19 @@ def compare_profiles(
         raise HTTPException(422, "sample_ids must be comma-separated integers") from exc
     requested_branches = _parse_branches(branches)
 
+    if len(ids) > _COMPARE_LIMIT:
+        raise HTTPException(
+            422, f"at most {_COMPARE_LIMIT} cells can be compared at once "
+                 f"({len(ids)} requested)")
+
     limit = max_points or settings.default_plot_points
     series: list[ProfileSeriesOut] = []
-    fallback_cell = resolve_cell(None)
-    for sample_id in ids[:30]:
+    drawn_cells: list[ResolvedCell] = []
+    for sample_id in ids:
         sample = session.get(Sample, sample_id)
         if sample is None:
             continue
         cell = resolve_cell(sample)
-        fallback_cell = cell
         record = next((r for r in sample_cycle_records(session, sample)
                        if r.cycle_number == cycle and r.complete), None)
         if record is None:
@@ -493,17 +504,32 @@ def compare_profiles(
         run = next((r for r in sample.runs if r.id == record.run_id), None)
         if run is None:
             continue
+        drew = False
         for branch in requested_branches:
             payload = profile_series(run, record, branch, cell, basis, max_points=limit)
             if payload["points"]:
+                drew = True
                 series.append(ProfileSeriesOut(
                     **payload, run_id=run.id,
-                    label=f"{sample.name} · cycle {cycle} {branch}"))
+                    label=f"{sample.name} · cycle {cycle} {branch}",
+                    basis_fallback_reason=(
+                        cell.missing_for(basis)
+                        if payload["basis"] != basis else None)))
+        if drew:
+            drawn_cells.append(cell)
 
-    used = effective_basis(fallback_cell, basis)
+    # Derived from the curves actually drawn, not from whichever sample the
+    # loop happened to look at last.  Ask A (has mass) then B (has none) and
+    # the old code labelled A's mAh/g axis "mAh", because B overwrote the
+    # fallback cell on its way to being skipped.
+    used_bases = {s.basis for s in series if s.basis}
+    mixed = len(used_bases) > 1
+    used = next(iter(used_bases)) if len(used_bases) == 1 else basis
+    # One cell's mass and area only describe the plot when one cell is in it.
+    shown_cell = drawn_cells[0] if len(drawn_cells) == 1 else resolve_cell(None)
     return ProfileOut(basis=used, basis_label=basis_label(used),
-                      requested_basis=basis,
-                      resolved_cell=resolved_cell_out(fallback_cell), series=series)
+                      requested_basis=basis, mixed_basis=mixed,
+                      resolved_cell=resolved_cell_out(shown_cell), series=series)
 
 
 @router.get("/dashboard")

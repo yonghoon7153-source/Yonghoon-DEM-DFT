@@ -44,7 +44,11 @@ _ROLE_HINTS: tuple[tuple[str, str], ...] = (
     ("lco", Role.ACTIVE), ("lfp", Role.ACTIVE), ("lmo", Role.ACTIVE),
     ("lmr", Role.ACTIVE), ("lni", Role.ACTIVE), ("graphite", Role.ACTIVE),
     ("silicon", Role.ACTIVE), ("sio", Role.ACTIVE), ("am", Role.ACTIVE),
-    ("cam", Role.ACTIVE),
+    ("cam", Role.ACTIVE), ("lto", Role.ACTIVE),
+    # Anode shorthands.  Leaving these unrecognised is not neutral: an
+    # unclassified anode drops out of the active mass, and mAh/g comes back
+    # too high with nothing on screen to say so.
+    ("si", Role.ACTIVE), ("gr", Role.ACTIVE), ("hard carbon", Role.ACTIVE),
     # solid / liquid electrolytes and their common names
     ("lpscl", Role.ELECTROLYTE), ("li6ps5cl", Role.ELECTROLYTE),
     ("li3ps4", Role.ELECTROLYTE), ("argyrodite", Role.ELECTROLYTE),
@@ -57,6 +61,7 @@ _ROLE_HINTS: tuple[tuple[str, str], ...] = (
     ("ketjen", Role.CONDUCTIVE), ("cnt", Role.CONDUCTIVE),
     ("carbon black", Role.CONDUCTIVE), ("acetylene", Role.CONDUCTIVE),
     ("cb", Role.CONDUCTIVE), ("cnf", Role.CONDUCTIVE),
+    ("graphene", Role.CONDUCTIVE),
     # binders
     ("ptfe", Role.BINDER), ("pvdf", Role.BINDER), ("nbr", Role.BINDER),
     ("sbr", Role.BINDER), ("cmc", Role.BINDER), ("binder", Role.BINDER),
@@ -66,6 +71,14 @@ _ROLE_HINTS: tuple[tuple[str, str], ...] = (
 
 _TOKENS = re.compile(r"[^a-z0-9]+")
 
+#: What may follow a hint and still be the same substance: a stoichiometric
+#: tail.  Digits cover "NCM811" and "SiO2"; x/y/z cover the variable
+#: subscripts chemists write when the ratio is not fixed -- "SiOx",
+#: "LiNixMnyCozO2".  Restricting the tail to digits alone dropped the whole
+#: SiOx family back to `other`, which is not a loud failure: it silently
+#: leaves the anode out of the active mass and inflates mAh/g.
+_FORMULA_TAIL = set("0123456789xyz")
+
 
 def _hint_matches(needle: str, lowered: str, tokens: list[str]) -> bool:
     """Is *needle* really this substance, or only buried inside another word?
@@ -74,17 +87,22 @@ def _hint_matches(needle: str, lowered: str, tokens: list[str]) -> bool:
     inside "cer-am-ic", "amorphous" and "foam", so "LPS glass-ceramic" comes
     back as active material and joins the mAh/g denominator with no warning --
     the exact silent corruption ADR 0007 forbids.  So a one-word hint has to
-    be a whole token, optionally followed by digits, because "NCM811" and
-    "SiO2" are the same substance as "NCM" and "SiO".  Hints that already
-    contain a space or hyphen ("super p", "carbon black") are long enough to
-    be unambiguous and stay substring matches.
+    be a whole token, optionally followed by a stoichiometric tail.  Hints
+    that already contain a space or hyphen ("super p", "carbon black") are
+    long enough to be unambiguous and stay substring matches.
+
+    The tail must not swallow a real word: "amorphous" starts with "am" but
+    "orphous" is not a formula, so it stays `other`.
     """
     if _TOKENS.search(needle):
         return needle in lowered
     for token in tokens:
-        if token == needle or (token.startswith(needle)
-                               and token[len(needle):].isdigit()):
+        if token == needle:
             return True
+        if token.startswith(needle):
+            tail = token[len(needle):]
+            if tail and all(character in _FORMULA_TAIL for character in tail):
+                return True
     return False
 
 

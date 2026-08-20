@@ -226,3 +226,39 @@ class TestZeroWeightComponents:
         cell = CellSpec(total_mass_mg=31.6, composition=composition).resolve()
         assert cell.active_mass_g == 0 or cell.active_mass_g is None
         assert cell.divisor("mAh/g") is None   # unusable, and says so
+
+
+# --- 토큰 경계 규칙 ---------------------------------------------------------
+#
+# `am` 부분 문자열 오탐을 막으려고 접미사를 숫자로만 제한했더니, SiOx 계열이
+# 통째로 other 로 떨어졌다. 조용한 실패다 — 음극이 활물질 질량에서 빠지고
+# mAh/g 만 높게 나온다. 양방향을 함께 고정한다.
+
+def test_stoichiometric_tails_stay_the_same_substance():
+    """SiOx 와 SiO2 와 SiO 는 같은 물질이다."""
+    for name in ("SiO", "SiO2", "SiOx", "SiOx-C", "NCM", "NCM811", "NCM622"):
+        assert infer_role(name) == Role.ACTIVE, name
+
+
+def test_a_real_word_starting_with_a_hint_is_not_that_hint():
+    """`am` 은 amorphous 안에서 발화하면 안 된다 — 분모로 조용히 들어간다."""
+    for name in ("amorphous", "foam", "LPS glass-ceramic", "ceramic", "grease"):
+        assert infer_role(name) != Role.ACTIVE, name
+
+
+def test_common_anodes_are_recognised():
+    """미인식 음극은 활물질 질량에서 빠져 mAh/g 를 부풀린다."""
+    for name in ("Si", "Si-C", "Gr", "Graphite", "LTO", "Hard carbon"):
+        assert infer_role(name) == Role.ACTIVE, name
+
+
+def test_graphene_is_a_conductive_additive_not_the_anode():
+    """`Gr` 은 흑연이지만 graphene 은 도전재다."""
+    assert infer_role("graphene") == Role.CONDUCTIVE
+    assert infer_role("SiC") == Role.OTHER
+
+
+def test_siox_blend_puts_only_the_anode_in_the_denominator():
+    """회귀의 실제 피해: 분모가 전극 전체가 되는지."""
+    blend = parse_composition("SiOx:Super P:CMC = 90:5:5")
+    assert blend.active_wt_percent == 90.0
