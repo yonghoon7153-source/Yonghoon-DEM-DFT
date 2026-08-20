@@ -39,11 +39,32 @@ def same(a, b):
         return False
 
 
+def _pt(v):
+    """점 스탬프 표기 정규화 — `''`(요청)과 `0.0`(기록)은 **같은 뜻**이다.
+
+    ⚠ 2026-08-20 실사고: 이 정규화가 없어서 옛 점-원장(`sdcp_sphere_d_um: 0.0`)이 점 스탬프
+      요청(`L_SDD=""`)과 불일치로 판정돼 **전부 재계산**됐다.  "구를 안 쓴다" 를 두 가지로
+      적어 두고 검사기가 그것을 다른 설정으로 읽은 것 = 오늘 고쳐 온 부류의 내 재발.
+    """
+    if v is None or v == '':
+        return None
+    try:
+        return None if float(v) == 0.0 else float(v)
+    except (TypeError, ValueError):
+        return v
+
+
 def matches(rec, vox, bridge, sdcp_d):
     """→ (일치?, 다른 항목 목록)."""
-    want = (('vox_um', vox), ('bridge_um', bridge), ('sdcp_sphere_d_um', sdcp_d))
-    bad = [f'{k}: 기록 {rec.get(k)!r} vs 요청 {v!r}' for k, v in want
-           if not same(rec.get(k), v)]
+    want = (('vox_um', vox, False), ('bridge_um', bridge, False),
+            ('sdcp_sphere_d_um', sdcp_d, True))
+    bad = []
+    for k, v, zero_absent in want:
+        a, b = (rec.get(k), v)
+        if zero_absent:
+            a, b = _pt(a), _pt(b)
+        if not same(a, b):
+            bad.append(f'{k}: 기록 {rec.get(k)!r} vs 요청 {v!r}')
     return (not bad), bad
 
 
@@ -78,6 +99,16 @@ def _selftest():
         not matches({'vox_um': 0.15, 'bridge_um': 0.3}, '0.15', '0.3000004', '')[0])
     chk('⑨ 같은 값의 다른 표기는 여전히 일치 (0.30 vs 0.3)',
         matches({'vox_um': 0.15, 'bridge_um': 0.30}, '0.15', '0.3', '')[0])
+
+    #  ⑩ ★★ 2026-08-20 실사고 — 점 스탬프 표기 두 가지가 **같은 뜻**이다.
+    #     옛 원장은 `sdcp_sphere_d_um: 0.0`, 셸의 점 스탬프 요청은 `L_SDD=""`.
+    #     정규화가 없어 전부 "설정이 다르다" 로 재계산됐다.
+    chk('⑩ ★ 점 원장 0.0 ↔ 요청 "" 는 같다 (재계산 유발 금지)',
+        matches({'vox_um': 0.15, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.0},
+                '0.15', '0.48', '')[0])
+    chk('⑩ 그래도 구 요청과는 여전히 다르다 (fail-closed 유지)',
+        not matches({'vox_um': 0.15, 'bridge_um': 0.48, 'sdcp_sphere_d_um': 0.0},
+                    '0.15', '0.48', '0.30')[0])
 
     print(f'\nsdcp_phase_ledger_match selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

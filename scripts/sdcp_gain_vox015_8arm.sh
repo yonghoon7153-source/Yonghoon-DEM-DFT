@@ -107,8 +107,18 @@ src = open('$SCR/mpm_webapp_payload.py', encoding='utf-8').read()
 assert '--step3-origin-shift' in src, 'origin 이동 CLI 가 없다 — 8 팔을 돌릴 수 없다'
 print('  [p2] origin 이동 CLI 확인')
 " || exit 2
-PYTHONUTF8=1 python3 "$SCR/check_method_discipline.py" >/dev/null 2>&1 \
-  || { echo "ABORT — 방법론 규율 검사 실패.  먼저 통과시킬 것"; exit 2; }
+#  ⚠ 2026-08-20 — 실패 **이유를 버리지 않는다**.  옛 코드는 `>/dev/null 2>&1` 이라
+#    "먼저 통과시킬 것" 만 찍고 무엇이 걸렸는지 알 수 없었다 (kgy 실사고).
+_DISC_LOG="$(mktemp)"
+if ! PYTHONUTF8=1 python3 "$SCR/check_method_discipline.py" >"$_DISC_LOG" 2>&1; then
+  echo "ABORT — 방법론 규율 검사 실패.  먼저 통과시킬 것"
+  echo "──── 실패한 항목 ────"
+  grep -E '^(ERR|✗|  ✗|[A-Z]_[A-Z]+\|)' "$_DISC_LOG" | head -20
+  tail -5 "$_DISC_LOG"
+  echo "──── 전체 로그: $_DISC_LOG ────"
+  exit 2
+fi
+rm -f "$_DISC_LOG"
 echo "[p2] 규율 검사 통과"
 #  ★ 미정의 이름 게이트 (실사고 2026-08-16): 판별 런이 SE 점 6,792 만 개를 읽은 **뒤**
 #    `NameError: _zt3` 로 죽었다.  런이 실제로 쓰는 파일만 정적으로 먼저 본다.
