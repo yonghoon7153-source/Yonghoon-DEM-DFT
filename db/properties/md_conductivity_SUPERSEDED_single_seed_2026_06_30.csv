@@ -3,7 +3,9 @@
 # These D/Ea are one trajectory per temperature. The sigma ratio they reconstruct
 #   (18.51/13.94 = 1.33x) was RETRACTED by the fully symmetric 3-seed x 3-T reseed
 #   (SEMIFINAL 2026-07-09) -> per-T sigma ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12
-#   = statistically EQUIVALENT transport. The old 1.33x rested on the single-seed 800 K
+#   = NOT DISTINGUISHED. [2026-08-20] 'equivalent transport' as the stated reason is retracted --
+#   the framework gate on the 3-seed claim is NOT ASSESSED (high-T raw trajectories not retained).
+#   The retraction of 1.33x itself still stands. The old 1.33x rested on the single-seed 800 K
 #   pair (b2o3 3.009 high-outlier vs modelc 2.054 low-outlier); reseeded means 2.163 vs 2.845.
 # CANONICAL replacement: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07).
 # CLAUDE.md discipline: the sigma_300K/sigma_273K columns are Nernst-Einstein (Haven=1)

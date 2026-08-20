@@ -1,7 +1,11 @@
 # ===== SUPERSEDED (2026-07-09, SEMIFINAL) - SINGLE-SEED. DO NOT QUOTE. =====
 # The 1.33x sigma ratio this table decomposes was RETRACTED: the fully symmetric
 #   3-seed x 3-T reseed gives per-T sigma ratios 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12
-#   = scatter AROUND 1.0 = statistically EQUIVALENT transport (no b2o3 gain to decompose).
+#   = scatter around 1.0 = NOT DISTINGUISHED (no b2o3 gain to decompose).
+#   [2026-08-20] The retraction of 1.33x still stands. But 'equivalent transport' as the stated
+#   reason is itself retracted: the framework (non-Li) gate on the 3-seed claim is NOT ASSESSED
+#   (high-T raw trajectories not retained). Equality of an unassessed pair is not equivalence.
+#   See the SCOPE LIMIT block in b2o3_vs_lpscl16_conductivity.csv.
 # The D0 premise is inverted too: reseeded D0 = 4.625e-04 (b2o3) vs 4.791e-04 (LPSCl1.6)
 #   = 0.965x, i.e. b2o3 D0 is slightly LOWER, not 1.236x higher.
 # CANONICAL: db/properties/b2o3_vs_lpscl16_conductivity.csv (FINAL 2026-07-07).

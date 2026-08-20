@@ -35,13 +35,30 @@ with open("b2o3_vs_lpscl16_conductivity.csv","w",newline="") as f:
         for T in (600,800,1000):
             w.writerow([lab,T]+[f"{v:.4e}" for v in S[k]['D'][T]])
     for line in [
-      "# ===== FINAL (2026-07-07). SUPERSEDES all single-seed tables (0.2234 Ea, 1.33x sigma, D0-decomposition). =====",
-      "# Ea EQUAL: 0.199+/-0.034 vs 0.197+/-0.032 (dEa +0.002+/-0.047).",
-      "# sigma ratio per T: 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12 -> scatter AROUND 1.0 = statistically EQUIVALENT transport.",
+      "# ===== 2026-07-07 aggregate. SUPERSEDES all single-seed tables (0.2234 Ea, 1.33x sigma, D0-decomposition). =====",
+      "# NOT DISTINGUISHED: dEa = +0.002 eV; seed-combination spread +/-0.047 eV covers it (0.199+/-0.034 vs 0.197+/-0.032).",
+      "#   ^ +/-0.047 is the SD of the 3x3x3 seed-combination distribution -- NOT a confidence interval, NOT a standard error.",
+      "# sigma ratio per T: 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12 (scatters around 1.0).",
       "# The old 1.33x rested on the single-seed 800K pair (b2o3 3.009 high-outlier vs modelc 2.054 low-outlier); reseeded means: 2.163 vs 2.845.",
-      "# FRAME for the paper: O-substitution normally LOWERS sigma in oxysulfides; here BVSE channel opening (+45% in-plane) offsets the O-penalty",
-      "#   -> conductivity PRESERVED (not boosted). Robust b2o3 gains live in mechanics (+13% bulk) and the covalent B-S network.",
+      "# CONTEXT: O-substitution normally LOWERS sigma in oxysulfides; BVSE channel opening (+45% in-plane) is a candidate offset.",
+      "#   Robust b2o3 gains live in mechanics (+13% bulk) and the covalent B-S network.",
       "# absolute sigma = MLIP Nernst-Einstein upper bound; RT extrapolation NOT reportable (Ea error x ~5 amplification at 300K).",
+      "#",
+      "# ============================ SCOPE LIMIT (2026-08-20) ============================",
+      "# GATE: the framework (non-Li) MSD gate on this claim is NOT ASSESSED -- required_artifact_set_incomplete.",
+      "#   The high-T raw trajectories (800/1000 K x s2/s3/s4 = 6 runs, kgy 2026-07-06/07) were NOT retained:",
+      "#   run_highT_reseed.sh did not pass --save_traj. The non-Li structural state is therefore UNEVALUATED.",
+      "# FORBIDDEN phrasings (retracted 2026-08-20, codex freeze audit):",
+      "#   'statistically EQUIVALENT transport' / 'conductivity PRESERVED' / 'equivalent sigma' / any ranking or mechanism claim.",
+      "#   Equality of an unassessed pair is not equivalence -- it is a failure to distinguish.",
+      "# ALLOWED sentence (verbatim):",
+      "#   Under the same 3-seed x 3-temperature aggregation the dEa was +0.002 eV, and the seed-combination",
+      "#   spread of +/-0.047 eV did not distinguish the two estimates. The non-Li structural state was not",
+      "#   evaluated because the high-temperature raw trajectories were not retained.",
+      "# LINEAGE: numeric reproduction = exact (Ea 0.199438, D0 4.62463e-04 from the 9 per-seed D).",
+      "#   lineage binding = UNWIRED -- this script hardcodes D instead of reading upstream msd.json.",
+      "# See kb/projects/decision_registry_design_2026_08_20.md and db/properties/canonical_registry.json.",
+      "# =================================================================================",
     ]: w.writerow([line])
 print("wrote b2o3_vs_lpscl16_conductivity.csv")
 
@@ -78,8 +95,8 @@ for i,T in enumerate(Ts):
 axB.set_xticks(xb); axB.set_xticklabels([f"{T} K" for T in Ts])
 axB.set_ylabel("$\\sigma$  (mS/cm, MLIP N-E)"); axB.set_ylim(0,3200)
 axB.grid(axis="y",alpha=0.22,lw=0.6); axB.set_axisbelow(True); axB.legend(fontsize=9, loc="upper left")
-axB.set_title("$\\sigma$ ratio scatters around 1.0  →  equivalent transport", fontsize=10.5, fontweight="bold")
-fig.suptitle("FINAL ionic transport — fully symmetric 3-seed $\\times$ 3-T:  equal E$_a$, equivalent $\\sigma$  (O-penalty offset by channel opening)",
+axB.set_title("$\\sigma$ ratio scatters around 1.0  →  not distinguished", fontsize=10.5, fontweight="bold")
+fig.suptitle("Ionic transport — 3-seed $\\times$ 3-T:  E$_a$ not distinguished ($\\Delta$ = +0.002, spread $\\pm$0.047 eV)  ·  framework gate NOT ASSESSED",
              fontsize=11.3, fontweight="bold", y=1.01)
 fig.tight_layout(); fig.savefig("b2o3_vs_lpscl16_arrhenius_3seed.png", dpi=200, bbox_inches="tight")
 print("wrote b2o3_vs_lpscl16_arrhenius_3seed.png")
