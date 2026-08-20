@@ -27,6 +27,9 @@ export function Upload() {
   //: 셀이 수십 개가 되면 드롭다운에서 눈으로 찾는 것이 느리다.  타이핑으로
   //: 좁힌다.
   const [sampleQuery, setSampleQuery] = useState('')
+  //: 파일 하나가 셀 하나인 실험이 많다 (컷오프만 바꾼 열네 개짜리 묶음 같은).
+  //: 그럴 때 이름을 열네 번 타이핑하게 두지 않는다.
+  const [nameFromFile, setNameFromFile] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
   const samples = useAsync(() => api.listSamples(), [results.length])
@@ -71,9 +74,29 @@ export function Upload() {
         return
       }
 
+      // 같은 이름을 두 번 만들지 않도록, 이번 드롭에서 만든 것을 기억한다.
+      const madeHere = new Map<string, number>()
+
       for (const file of list) {
         try {
-          const run = await api.uploadRun(file, sampleId)
+          let target = sampleId
+          if (nameFromFile) {
+            const wanted = cellNameFor(file.name)
+            const existing =
+              madeHere.get(wanted) ??
+              (samples.data ?? []).find((s) => s.name === wanted)?.id
+            if (existing) {
+              target = existing
+            } else {
+              const created = await api.createSample({
+                name: wanted,
+                ...(groupId === null ? {} : { group_id: groupId }),
+              })
+              madeHere.set(wanted, created.id)
+              target = created.id
+            }
+          }
+          const run = await api.uploadRun(file, target)
           setResults((current) => [{ file: file.name, run }, ...current])
         } catch (cause) {
           setResults((current) => [
@@ -87,7 +110,7 @@ export function Upload() {
       }
       setBusy(false)
     },
-    [targetSample, newSampleName],
+    [targetSample, newSampleName, groupId, nameFromFile, samples.data],
   )
 
   return (
@@ -134,14 +157,32 @@ export function Upload() {
               </Field>
 
               <div className="grid cols-2" style={{ gap: 10, margin: '10px 0 12px' }}>
-                <Field label="② 새 셀 만들기" hint="이름만 입력">
+                <Field
+                  label="② 새 셀 만들기"
+                  hint={nameFromFile ? '파일마다 셀 하나' : '이름만 입력'}
+                >
                   <input
                     type="text"
                     value={newSampleName}
                     placeholder="No_1_dry_0.0316g"
-                    disabled={targetSample !== null}
+                    disabled={targetSample !== null || nameFromFile}
                     onChange={(event) => setNewSampleName(event.target.value)}
                   />
+                  <label className="tiny" style={{ display: 'block', marginTop: 6 }}>
+                    <input
+                      type="checkbox"
+                      checked={nameFromFile}
+                      onChange={(event) => {
+                        setNameFromFile(event.target.checked)
+                        if (event.target.checked) {
+                          setNewSampleName('')
+                          setTargetSample(null)
+                        }
+                      }}
+                      style={{ marginRight: 6 }}
+                    />
+                    파일 이름을 셀 이름으로
+                  </label>
                 </Field>
                 <Field
                   label="② 또는 기존 셀에 연결"
@@ -403,4 +444,15 @@ function OrphanRun({
       <div className="sep" />
     </div>
   )
+}
+
+
+/** 파일 이름에서 셀 이름을 만든다.
+
+    `.wrd` 를 떼고, 뒤에 붙은 분할 번호(`_011`, `_012`)도 뗀다.  긴 실험은
+    Smart Interface 가 그렇게 쪼개는데, 그 조각들은 한 셀의 이어지는 파일이지
+    서로 다른 셀이 아니다 — 떼지 않으면 한 실험이 셀 두 개로 갈라진다. */
+export function cellNameFor(fileName: string): string {
+  const stem = fileName.replace(/\.wrd$/i, '')
+  return stem.replace(/_\d{2,4}$/, '') || stem
 }

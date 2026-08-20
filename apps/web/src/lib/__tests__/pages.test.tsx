@@ -30,7 +30,7 @@ vi.hoisted(() => {
 import { Compare } from '../../pages/Compare'
 import { Dashboard } from '../../pages/Dashboard'
 import { SampleDetail } from '../../pages/SampleDetail'
-import { Upload } from '../../pages/Upload'
+import { cellNameFor, Upload } from '../../pages/Upload'
 import type { Cycle, DashboardRow, ResolvedCell, Run, Sample } from '../types'
 
 // -- fetch double ----------------------------------------------------------
@@ -682,6 +682,48 @@ describe('업로드 그룹', () => {
     expect(created[0]).toMatchObject({ name: '중Ni-02', group_id: 4 })
   })
 
+  it('파일 이름 체크박스: 파일마다 셀 하나가 생긴다', async () => {
+    const created: unknown[] = []
+    installUpload(created)
+    renderUpload()
+
+    await userEvent.click(
+      await screen.findByRole('checkbox', { name: /파일 이름을 셀 이름으로/ }),
+    )
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: '그룹' }), '4')
+
+    const picker = document.querySelector('input[type="file"]') as HTMLInputElement
+    await userEvent.upload(picker, [
+      new File([new Uint8Array([1])], '3.6V_1_16.4mg.wrd'),
+      new File([new Uint8Array([2])], '3.8V_1_18.5mg.wrd'),
+    ])
+
+    await waitFor(() => expect(created).toHaveLength(2))
+    expect(created).toEqual([
+      { name: '3.6V_1_16.4mg', group_id: 4 },
+      { name: '3.8V_1_18.5mg', group_id: 4 },
+    ])
+  })
+
+  it('분할 파일은 한 셀로 모인다', async () => {
+    const created: unknown[] = []
+    installUpload(created)
+    renderUpload()
+
+    await userEvent.click(
+      await screen.findByRole('checkbox', { name: /파일 이름을 셀 이름으로/ }),
+    )
+    const picker = document.querySelector('input[type="file"]') as HTMLInputElement
+    await userEvent.upload(picker, [
+      new File([new Uint8Array([1])], 'No_1_dry_60oC_011.wrd'),
+      new File([new Uint8Array([2])], 'No_1_dry_60oC_012.wrd'),
+    ])
+
+    // 두 조각은 한 실험이다 — 셀이 두 개 생기면 사이클이 갈라진다.
+    await waitFor(() => expect(created).toHaveLength(1))
+    expect(created[0]).toMatchObject({ name: 'No_1_dry_60oC' })
+  })
+
   it('이름을 쳐서 좁힐 수 있다', async () => {
     installUpload([])
     renderUpload()
@@ -695,5 +737,27 @@ describe('업로드 그룹', () => {
         '중Ni-01',
       ]),
     )
+  })
+})
+
+// --- 파일 이름을 셀 이름으로 -------------------------------------------------
+
+describe('파일 이름 → 셀 이름', () => {
+  it('.wrd 를 떼고, 분할 번호도 뗀다', () => {
+    expect(cellNameFor('3.6V_1_16.4mg.wrd')).toBe('3.6V_1_16.4mg')
+    expect(cellNameFor('4.0V_post_formation_18.9mg.WRD')).toBe('4.0V_post_formation_18.9mg')
+    // 긴 실험의 조각들은 한 셀이다 — 떼지 않으면 실험이 둘로 갈라진다.
+    expect(cellNameFor('No_1_dry_0.0316g_0.2C_60oC_011.wrd')).toBe('No_1_dry_0.0316g_0.2C_60oC')
+    expect(cellNameFor('No_1_dry_0.0316g_0.2C_60oC_012.wrd')).toBe('No_1_dry_0.0316g_0.2C_60oC')
+  })
+
+  it('질량처럼 숫자로 끝나도 잘라내지 않는다', () => {
+    // "_1" 은 두 자리 미만이라 분할 번호가 아니다.
+    expect(cellNameFor('3.6V_1.wrd')).toBe('3.6V_1')
+    expect(cellNameFor('cell_16.4mg.wrd')).toBe('cell_16.4mg')
+  })
+
+  it('이름이 통째로 사라지지 않는다', () => {
+    expect(cellNameFor('_011.wrd')).toBe('_011')
   })
 })
