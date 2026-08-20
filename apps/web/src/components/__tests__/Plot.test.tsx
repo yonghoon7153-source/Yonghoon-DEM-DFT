@@ -29,7 +29,7 @@ vi.mock('uplot', () => {
   return { default: FakePlot }
 })
 
-import { Plot, PlotLegend } from '../Plot'
+import { Plot, PlotLegend, pointAt, splitAxisLabel } from '../Plot'
 import type { PlotMarker } from '../Plot'
 
 /** jsdom has no layout, so the plot would stay under its 80px width floor. */
@@ -153,5 +153,122 @@ describe('app.css series tokens', () => {
       expect(value, `--series-${index} (dark)`).toBeDefined()
       expect(value, `--series-${index} (dark)`).not.toBe(hex)
     })
+  })
+})
+
+// --- 커서 판독기 --------------------------------------------------------------
+
+describe('splitAxisLabel', () => {
+  it('축 이름과 단위를 나눈다', () => {
+    expect(splitAxisLabel('면적용량 (mAh cm⁻²)')).toEqual({
+      name: '면적용량',
+      unit: 'mAh cm⁻²',
+    })
+  })
+
+  it('단위가 없는 축은 이름만 남는다', () => {
+    expect(splitAxisLabel('사이클')).toEqual({ name: '사이클', unit: '' })
+  })
+})
+
+describe('pointAt', () => {
+  // 병합 축 위에서 한 계열은 대부분 null 이다 (mergeX 참고).  커서가 닿은
+  // 인덱스에 값이 없다고 판독을 포기하면, 프로파일 그래프에서는 거의 언제나
+  // 빈 팝업이 뜬다.
+  const DATA = [
+    [0, 1, 2, 3, 4],
+    [10, null, null, 40, null],
+  ]
+
+  it('커서가 닿은 자리에 값이 있으면 그대로 읽는다', () => {
+    expect(pointAt(DATA, 1, 3)).toEqual({ x: 3, y: 40 })
+  })
+
+  it('값이 없으면 가장 가까운 실제 표본으로 물러난다 — 그 표본의 x 와 함께', () => {
+    // 2번 인덱스는 비어 있다.  1번(값 없음) → 3번(값 있음) 순으로 밖으로 걷되,
+    // 보고하는 x 는 병합 축의 2 가 아니라 그 표본이 실제로 놓인 3 이어야 한다.
+    expect(pointAt(DATA, 1, 2)).toEqual({ x: 3, y: 40 })
+  })
+
+  it('앞쪽을 먼저 본다 — 같은 거리면 왼쪽 표본', () => {
+    expect(pointAt([[0, 1, 2], [5, null, 7]], 1, 1)).toEqual({ x: 0, y: 5 })
+  })
+
+  it('표본이 하나도 없는 계열은 null 이다 — 없는 값을 지어내지 않는다', () => {
+    expect(pointAt([[0, 1], [null, null]], 1, 0)).toBeNull()
+  })
+})
+
+/** uPlot 인스턴스 중 판독기가 만지는 부분만. */
+function fakeCursor(data: (number | null)[][], idx: number, left = 120, top = 40) {
+  return {
+    data,
+    cursor: { left, top, idx },
+    width: 600,
+    over: { getBoundingClientRect: () => ({ left: 0, top: 0, width: 600, height: 300 }) },
+  }
+}
+
+type CursorHooks = {
+  hooks: {
+    setSeries: ((u: unknown, i: number | null) => void)[]
+    setCursor: ((u: unknown) => void)[]
+  }
+}
+
+describe('커서 판독기', () => {
+  let restoreWidth: (() => void) | undefined
+
+  beforeEach(() => {
+    built.length = 0
+    restoreWidth = installWidth()
+  })
+
+  afterEach(() => restoreWidth?.())
+
+  function hover(idx: number, focus: number | null) {
+    const options = built.at(-1)?.options as unknown as CursorHooks
+    const u = fakeCursor(
+      [
+        [0, 1, 2],
+        [3.0, 4.2, 4.4],
+      ],
+      idx,
+    )
+    act(() => options.hooks.setSeries[0]?.(u, focus))
+    act(() => options.hooks.setCursor[0]?.(u))
+  }
+
+  it('축 이름과 단위를 붙여 x·y 를 적는다', () => {
+    render(<Plot series={SERIES} xLabel="사이클" yLabel="면적용량 (mAh cm⁻²)" />)
+    hover(1, 1)
+
+    const tip = document.querySelector('.plot-tip') as HTMLElement
+    expect(tip).not.toBeNull()
+    expect(tip.textContent).toContain('사이클')
+    expect(tip.textContent).toContain('1')
+    expect(tip.textContent).toContain('4.200 mAh cm⁻²')
+  })
+
+  it('어느 계열에도 붙지 않았으면 y 를 적지 않는다 — 커서 높이는 측정값이 아니다', () => {
+    render(<Plot series={SERIES} xLabel="사이클" yLabel="전압 (V)" />)
+    hover(1, null)
+
+    const tip = document.querySelector('.plot-tip') as HTMLElement
+    expect(tip).not.toBeNull()
+    expect(tip.textContent).toContain('사이클')
+    expect(tip.textContent).not.toContain('V')
+  })
+
+  it('그래프를 벗어나면 사라진다', () => {
+    render(<Plot series={SERIES} xLabel="사이클" yLabel="전압 (V)" />)
+    hover(1, 1)
+    expect(document.querySelector('.plot-tip')).not.toBeNull()
+
+    // uPlot 은 마우스가 나가면 커서를 -10 으로 보낸다.
+    const options = built.at(-1)?.options as unknown as CursorHooks
+    const gone = fakeCursor([[0], [1]], 0, -10, -10)
+    act(() => options.hooks.setCursor[0]?.(gone))
+    expect(document.querySelector('.plot-tip')).toBeNull()
   })
 })

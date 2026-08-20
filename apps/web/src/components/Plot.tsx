@@ -11,7 +11,7 @@ import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 
 import { useElementWidth } from '../lib/hooks'
-import { SERIES_COLORS, seriesColor } from '../lib/format'
+import { num, SERIES_COLORS, seriesColor } from '../lib/format'
 
 export interface PlotSeries {
   label: string
@@ -131,15 +131,90 @@ function useChartColors(): ReturnType<typeof readChartColors> {
   return colors
 }
 
+/** Split `"면적용량 (mAh cm⁻²)"` into its name and its unit.
+ *
+ * The axis label already carries the unit, and the cursor readout has to show
+ * the same one -- a bare number next to a crosshair is the one thing that gets
+ * copied into a slide with the wrong unit attached. */
+export function splitAxisLabel(label: string): { name: string; unit: string } {
+  const parts = label.match(/^(.*?)\s*\(([^()]*)\)\s*$/)
+  if (!parts) return { name: label.trim(), unit: '' }
+  return { name: (parts[1] ?? '').trim(), unit: (parts[2] ?? '').trim() }
+}
+
+/** One column of uPlot's aligned data -- a plain array or a typed array. */
+type PlotColumn = { readonly length: number; readonly [index: number]: number | null | undefined }
+
+/** The nearest real sample of one series to a merged-axis index.
+ *
+ * On the merged axis a series is mostly nulls (see `mergeX`), so the index the
+ * cursor lands on usually has no value for the series under the mouse.  The
+ * search walks outward and reports that sample's own x, so the pair shown in
+ * the readout is a measurement that exists rather than a point interpolated
+ * along the drawn line. */
+export function pointAt(
+  data: ArrayLike<PlotColumn>,
+  seriesIdx: number,
+  idx: number,
+): { x: number; y: number } | null {
+  const xs = data[0]
+  const ys = data[seriesIdx]
+  if (!xs || !ys) return null
+  const take = (i: number) => {
+    if (i < 0 || i >= ys.length) return null
+    const y = ys[i]
+    const x = xs[i]
+    if (y === null || y === undefined || x === null || x === undefined) return null
+    if (!Number.isFinite(y) || !Number.isFinite(x)) return null
+    return { x, y }
+  }
+  // A series with no sample anywhere near would otherwise scan the whole axis
+  // on every mouse move; 4000 indices is far past what any eye is aiming at.
+  const LIMIT = 4000
+  for (let step = 0; step <= LIMIT; step += 1) {
+    const before = idx - step
+    const after = idx + step
+    if (before < 0 && after >= ys.length) break
+    const hit = take(before) ?? (step === 0 ? null : take(after))
+    if (hit) return hit
+  }
+  return null
+}
+
+/** What the cursor is pointing at, in plot pixels and in data units. */
+interface Readout {
+  left: number
+  top: number
+  /** Draw to the left of the cursor -- there is no room on the right. */
+  flip: boolean
+  label: string | null
+  color: string | null
+  x: number
+  y: number | null
+}
+
+/** Keep the tip clear of the cursor itself. */
+const TIP_GAP = 14
+/** Roughly how wide the tip gets; used only to decide which side to flip to. */
+const TIP_WIDTH = 150
+
 const AXIS_FONT = '11px Pretendard, system-ui, sans-serif'
 const LABEL_FONT = '600 11px Pretendard, system-ui, sans-serif'
+
+/** Stable identity for the common `markers={[]}` case.
+ *
+ * The plot is rebuilt whenever its options change, and the cursor readout
+ * re-renders this component on every mouse move.  A `[]` default literal would
+ * be a new array on each of those renders, so the plot would be destroyed and
+ * built again mid-hover and the crosshair would never survive a mouse move. */
+const NO_MARKERS: PlotMarker[] = []
 
 export function Plot({
   series,
   xLabel,
   yLabel,
   height = 340,
-  markers = [],
+  markers = NO_MARKERS,
   yRange,
   legend = false,
 }: Props) {
@@ -147,8 +222,20 @@ export function Plot({
   const plotRef = useRef<uPlot | null>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
   const colors = useChartColors()
+  const [readout, setReadout] = useState<Readout | null>(null)
+  //: uPlot 이 정한 "커서에 가장 가까운 계열".  setSeries 로만 바뀐다.
+  const focusRef = useRef<number | null>(null)
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
+
+  // Callers build these inline, so their identity changes on every render of
+  // the parent; the plot only needs to be rebuilt when the values differ.
+  const markerKey = markers.map((m) => `${m.x}|${m.label}|${m.color ?? ''}`).join(';')
+  const rangeKey = yRange ? `${yRange[0]}|${yRange[1]}` : ''
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const steadyMarkers = useMemo(() => markers, [markerKey])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const steadyRange = useMemo(() => yRange, [rangeKey])
 
   const data = useMemo(() => {
     if (!visible.length) return null
@@ -176,8 +263,8 @@ export function Plot({
       scales: {
         x: { time: false },
         y: {
-          range: yRange
-            ? (_u, min, max) => [yRange[0] ?? min, yRange[1] ?? max]
+          range: steadyRange
+            ? (_u, min, max) => [steadyRange[0] ?? min, steadyRange[1] ?? max]
             : undefined,
         },
       },
@@ -219,13 +306,53 @@ export function Plot({
           points: { show: item.points ?? false, size: 4 },
         })),
       ],
-      hooks: markers.length
-        ? {
-            draw: [
-              (u) => {
+      hooks: {
+        // 커서가 어느 계열에 붙었는지는 uPlot 이 focus.prox 로 이미 정한다.
+        // 그 판단을 다시 구현하지 않고 그대로 받아 쓴다.
+        setSeries: [
+          (_u, seriesIdx) => {
+            focusRef.current = seriesIdx
+          },
+        ],
+        setCursor: [
+          (u) => {
+            const { left, top, idx } = u.cursor
+            if (left === undefined || top === undefined || left < 0 || top < 0) {
+              setReadout(null)
+              return
+            }
+            if (idx === null || idx === undefined) {
+              setReadout(null)
+              return
+            }
+            const focus = focusRef.current
+            const item = focus === null || focus === undefined ? undefined : visible[focus - 1]
+            const point =
+              focus === null || focus === undefined ? null : pointAt(u.data, focus, idx)
+            // 팝업은 우리 껍데기 안에 그리고, uPlot 의 그림 영역은 그 안에서
+            // 축 라벨만큼 밀려 있다.  두 사각형의 차이가 그 오프셋이다.
+            const over = u.over?.getBoundingClientRect?.()
+            const shell = wrapRef.current?.getBoundingClientRect?.()
+            const dx = over && shell ? over.left - shell.left : 0
+            const dy = over && shell ? over.top - shell.top : 0
+            const axisX = u.data[0]?.[idx]
+            setReadout({
+              left: dx + left,
+              top: dy + top,
+              flip: left > (over?.width ?? u.width) - TIP_WIDTH,
+              label: visible.length > 1 ? (item?.label ?? null) : null,
+              color: item ? seriesToken(item.color, (focus as number) - 1) : null,
+              x: point ? point.x : Number(axisX),
+              y: point ? point.y : null,
+            })
+          },
+        ],
+        draw: steadyMarkers.length
+          ? [
+              (u: uPlot) => {
                 const ctx = u.ctx
                 ctx.save()
-                for (const marker of markers) {
+                for (const marker of steadyMarkers) {
                   const x = u.valToPos(marker.x, 'x', true)
                   if (!Number.isFinite(x)) continue
                   ctx.strokeStyle = marker.color ?? colors.warn
@@ -248,18 +375,35 @@ export function Plot({
                 }
                 ctx.restore()
               },
-            ],
-          }
-        : undefined,
+            ]
+          : undefined,
+      },
     }
 
     plotRef.current?.destroy()
+    focusRef.current = null
+    setReadout(null)
     plotRef.current = new uPlot(options, data, node)
     return () => {
       plotRef.current?.destroy()
       plotRef.current = null
     }
-  }, [data, visible, width, height, xLabel, yLabel, markers, yRange, legend, colors])
+  }, [
+    data,
+    visible,
+    width,
+    height,
+    xLabel,
+    yLabel,
+    steadyMarkers,
+    steadyRange,
+    legend,
+    colors,
+    wrapRef,
+  ])
+
+  const xAxis = splitAxisLabel(xLabel)
+  const yAxis = splitAxisLabel(yLabel)
 
   return (
     <div ref={wrapRef} className="plot-shell">
@@ -274,6 +418,48 @@ export function Plot({
           그릴 데이터가 없습니다
         </div>
       )}
+
+      {/* 커서 옆 판독기.  십자선만으로는 "여기가 몇 사이클의 몇 mAh/g 인지" 를
+          눈대중으로 축까지 따라가야 한다.  pointer-events 를 끄지 않으면 팝업이
+          제 밑의 커서를 가려 uPlot 이 마우스를 잃는다. */}
+      {readout ? (
+        <div
+          className="plot-tip"
+          style={{
+            left: readout.left,
+            top: readout.top,
+            transform: readout.flip
+              ? `translate(calc(-100% - ${TIP_GAP}px), -50%)`
+              : `translate(${TIP_GAP}px, -50%)`,
+          }}
+        >
+          {readout.label ? (
+            <div className="tip-head">
+              <span
+                className="swatch"
+                style={readout.color ? { background: readout.color } : undefined}
+              />
+              <span className="truncate">{readout.label}</span>
+            </div>
+          ) : null}
+          <div className="tip-row">
+            <span>{xAxis.name}</span>
+            <b>
+              {num(readout.x)}
+              {xAxis.unit ? ` ${xAxis.unit}` : ''}
+            </b>
+          </div>
+          {readout.y === null ? null : (
+            <div className="tip-row">
+              <span>{yAxis.name}</span>
+              <b>
+                {num(readout.y)}
+                {yAxis.unit ? ` ${yAxis.unit}` : ''}
+              </b>
+            </div>
+          )}
+        </div>
+      ) : null}
     </div>
   )
 }

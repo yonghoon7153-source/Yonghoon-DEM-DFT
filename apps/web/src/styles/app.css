@@ -569,7 +569,54 @@ tbody tr:last-child td { border-bottom: none; }
 .bar-cell .bar > i.low { background: var(--neg); }
 
 /* -------------------------------------------------------------- plots */
-.plot-shell { padding: var(--s2) var(--s1) 0; }
+.plot-shell { position: relative; padding: var(--s2) var(--s1) 0; }
+
+/* --- 커서 판독기 ------------------------------------------------------------ */
+
+/* 십자선 옆에 x·y 를 그대로 적는다.  pointer-events 를 끄는 것이 핵심이다 --
+   켜져 있으면 팝업이 제 밑의 커서를 가로채 uPlot 이 마우스를 잃고, 팝업이
+   따라오다 멈춘다. */
+.plot-tip {
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  min-width: 92px;
+  max-width: 220px;
+  padding: 5px 8px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--surface);
+  box-shadow: 0 4px 14px rgb(16 24 40 / 12%);
+  font-size: 11px;
+  line-height: 1.45;
+  white-space: nowrap;
+}
+.plot-tip .tip-head {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 2px;
+  font-weight: 600;
+  color: var(--ink);
+}
+.plot-tip .tip-head .swatch {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  background: var(--ink-3);
+}
+.plot-tip .tip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: var(--ink-3);
+}
+.plot-tip .tip-row b {
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
 .uplot { font-family: var(--sans) !important; }
 .u-legend { display: none !important; }
 
