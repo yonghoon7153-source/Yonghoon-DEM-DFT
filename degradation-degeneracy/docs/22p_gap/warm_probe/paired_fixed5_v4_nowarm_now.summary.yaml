@@ -1,0 +1,216 @@
+tolerance: 0.02
+n_rows_total: 6138
+n_rows_recoverable: 2952
+unrecoverable_frac: 0.5190615835777126
+by_objective:
+  pocv_dvdq:
+    n: 1476
+    degenerate_frac: 0.6158536585365854
+    mean_abs_err: 0.02422026846713852
+    mean_abs_err_lam_pe: 0.018812650524494615
+    mean_abs_err_lam_ne: 0.01288714408476667
+    mean_abs_err_lli: 0.015921960366730478
+    pe_ne_antisym_frac: 0.6788617886178862
+    degenerate_frac_corrected: 0.14159891598915988
+    alpha_wall_frac: 0.10975609756097561
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv:
+    n: 1476
+    degenerate_frac: 0.8739837398373984
+    mean_abs_err: 0.06533641084413915
+    mean_abs_err_lam_pe: 0.05683236728265373
+    mean_abs_err_lam_ne: 0.030218334460748113
+    mean_abs_err_lli: 0.044983953703994536
+    pe_ne_antisym_frac: 0.35636856368563685
+    degenerate_frac_corrected: 0.9478319783197832
+    alpha_wall_frac: 0.07181571815718157
+    bound_active_frac: 0.0
+overall_recoverable:
+  n: 2952
+  degenerate_frac: 0.7449186991869918
+  mean_abs_err: 0.044778339655638835
+  mean_abs_err_lam_pe: 0.03782250890357418
+  mean_abs_err_lam_ne: 0.02155273927275739
+  mean_abs_err_lli: 0.030452957035362504
+  pe_ne_antisym_frac: 0.5176151761517616
+  degenerate_frac_corrected: 0.5447154471544715
+  alpha_wall_frac: 0.09078590785907859
+  bound_active_frac: 0.0
+by_objective_noise:
+  pocv_dvdq|noise=0.0:
+    n: 492
+    degenerate_frac: 0.5934959349593496
+    mean_abs_err: 0.023088111246227675
+    mean_abs_err_lam_pe: 0.018938490021761185
+    mean_abs_err_lam_ne: 0.011345590617362301
+    mean_abs_err_lli: 0.016062057183713452
+    pe_ne_antisym_frac: 0.717479674796748
+    degenerate_frac_corrected: 0.11178861788617886
+    alpha_wall_frac: 0.09959349593495935
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.001:
+    n: 492
+    degenerate_frac: 0.6178861788617886
+    mean_abs_err: 0.02405991804313992
+    mean_abs_err_lam_pe: 0.01851950206824259
+    mean_abs_err_lam_ne: 0.012885029877329248
+    mean_abs_err_lli: 0.015854699315037787
+    pe_ne_antisym_frac: 0.6788617886178862
+    degenerate_frac_corrected: 0.12601626016260162
+    alpha_wall_frac: 0.10772357723577236
+    bound_active_frac: 0.0
+  pocv_dvdq|noise=0.005:
+    n: 492
+    degenerate_frac: 0.6361788617886179
+    mean_abs_err: 0.02551277611204796
+    mean_abs_err_lam_pe: 0.018979959483480073
+    mean_abs_err_lam_ne: 0.014430811759608468
+    mean_abs_err_lli: 0.015849124601440195
+    pe_ne_antisym_frac: 0.6402439024390244
+    degenerate_frac_corrected: 0.18699186991869918
+    alpha_wall_frac: 0.12195121951219512
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.0:
+    n: 492
+    degenerate_frac: 0.8780487804878049
+    mean_abs_err: 0.06603978571556286
+    mean_abs_err_lam_pe: 0.057537413525229585
+    mean_abs_err_lam_ne: 0.029046238932836515
+    mean_abs_err_lli: 0.04546006847699638
+    pe_ne_antisym_frac: 0.3861788617886179
+    degenerate_frac_corrected: 0.943089430894309
+    alpha_wall_frac: 0.07520325203252033
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.001:
+    n: 492
+    degenerate_frac: 0.8861788617886179
+    mean_abs_err: 0.06651802094297438
+    mean_abs_err_lam_pe: 0.05800824157717754
+    mean_abs_err_lam_ne: 0.03231668196222334
+    mean_abs_err_lli: 0.04569582482812556
+    pe_ne_antisym_frac: 0.36585365853658536
+    degenerate_frac_corrected: 0.943089430894309
+    alpha_wall_frac: 0.06097560975609756
+    bound_active_frac: 0.0
+  pocv_dvdq_dqdv|noise=0.005:
+    n: 492
+    degenerate_frac: 0.8577235772357723
+    mean_abs_err: 0.06345142587388017
+    mean_abs_err_lam_pe: 0.05495144674555409
+    mean_abs_err_lam_ne: 0.02929208248718449
+    mean_abs_err_lli: 0.04379596780686165
+    pe_ne_antisym_frac: 0.3170731707317073
+    degenerate_frac_corrected: 0.9573170731707317
+    alpha_wall_frac: 0.07926829268292683
+    bound_active_frac: 0.0
+restart_conditioned:
+  n_restarts=5:
+    n: 2952
+    agree_frac: 0.0006775067750677507
+    median_p_spread_nearJ: 0.0
+_F4_주의: '이 블록의 두 지표는 그대로 인용하지 말 것. (1) agree_frac: adaptive 조기 종료로 n_restarts>2인 조건은
+  ''앞 두 번이 안 맞아서 계속 간'' 조건이라 정의상 0이 된다 — 측정이 아니다. (2) p_spread_nearJ=0은 ''해가 일치''가
+  아니라 ''최적 J에 도달한 restart가 하나뿐''이라는 뜻이다. 해석은 아래 multistart 블록(flat_valley / multimodal)을
+  볼 것.'
+coverage_gap:
+  max_lam_pe_at_low_lli: 0.08
+  max_lam_pe_overall: 0.2
+  _주의: 완방 프레임 guard 때문에 저LLI 영역에 고LAM_PE 조건이 없다. 고LAM_PE 결론은 고LLI 동반 조건에서만 검증된 것.
+_채점원본:
+  fits: results/paired_fixed5_v4_nowarm_now/fits.parquet
+  canonical: true
+  fits_sha256: 264e91fda4f45a6666b0c9205768d0d7925dab4a0150c59a5114af98f6ac34ef
+  봉인상태: 정상
+  인용가능: true
+multistart:
+  pocv_dvdq:
+    n: 1476
+    flat_valley_frac: 0.05623306233062331
+    multimodal_frac: 0.5663956639566395
+    unique_min_frac: 0.37737127371273715
+    median_p_spread_all: 0.48622420211211315
+    median_n_restarts: 5.0
+  pocv_dvdq_dqdv:
+    n: 1476
+    flat_valley_frac: 0.009485094850948509
+    multimodal_frac: 0.9613821138211383
+    unique_min_frac: 0.029132791327913278
+    median_p_spread_all: 0.42754993736434876
+    median_n_restarts: 5.0
+  _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지 degeneracy가
+    아니다 — 초기값을 주면 사라진다 (F20).
+multistart_random_only:
+  pocv_dvdq:
+    n: 1476
+    flat_valley_frac: 0.04065040650406504
+    multimodal_frac: 0.592140921409214
+    unique_min_frac: 0.36720867208672087
+    median_p_spread_all: 0.475216870111996
+    median_n_restarts: 4.0
+  pocv_dvdq_dqdv:
+    n: 1476
+    flat_valley_frac: 0.008130081300813009
+    multimodal_frac: 0.9695121951219512
+    unique_min_frac: 0.022357723577235773
+    median_p_spread_all: 0.41496897836183744
+    median_n_restarts: 4.0
+  _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지 degeneracy가
+    아니다 — 초기값을 주면 사라진다 (F20).
+  random_only_적용: true
+  평균_제외_restart수: 1.0
+  n_conditions_per_objective:
+    pocv_dvdq: 1476
+    pocv_dvdq_dqdv: 1476
+  pairwise:
+    pocv_dvdq__vs__pocv_dvdq_dqdv:
+      n_common: 1476
+      n_paired: 1476
+      비교가능: true
+      summary:
+        pocv_dvdq:
+          n: 1476
+          flat_valley_frac: 0.04065040650406504
+          multimodal_frac: 0.592140921409214
+          unique_min_frac: 0.36720867208672087
+          median_p_spread_all: 0.475216870111996
+          median_n_restarts: 4.0
+        pocv_dvdq_dqdv:
+          n: 1476
+          flat_valley_frac: 0.008130081300813009
+          multimodal_frac: 0.9695121951219512
+          unique_min_frac: 0.022357723577235773
+          median_p_spread_all: 0.41496897836183744
+          median_n_restarts: 4.0
+        _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지
+          degeneracy가 아니다 — 초기값을 주면 사라진다 (F20).
+  n_common_conditions: 1476
+  n_paired_conditions: 1476
+  제외율_목적함수별:
+    pocv_dvdq: 0.0
+    pocv_dvdq_dqdv: 0.0
+  비교가능: true
+  _주의_전역교집합: '`n_paired_conditions`·`비교가능`은 **모든 목적함수 동시** 교집합이라 33p↔34p 비교에는 과도하게
+    엄격하다. 두 목적함수를 비교할 때는 `pairwise` 블록의 해당 항목을 쓸 것 (F44b).'
+  _선택편향: paired subset은 무작위 표본이 아니다 — adaptive 조기 종료를 겪지 않은(=모든 목적함수가 끝까지 간) 조건만 남는다.
+    목적함수별 제외율이 0%~0%로 크게 다르다는 것이 그 증거다. 여기서 잰 비율을 격자 전체로 일반화하지 말 것.
+  paired:
+    pocv_dvdq:
+      n: 1476
+      flat_valley_frac: 0.04065040650406504
+      multimodal_frac: 0.592140921409214
+      unique_min_frac: 0.36720867208672087
+      median_p_spread_all: 0.475216870111996
+      median_n_restarts: 4.0
+    pocv_dvdq_dqdv:
+      n: 1476
+      flat_valley_frac: 0.008130081300813009
+      multimodal_frac: 0.9695121951219512
+      unique_min_frac: 0.022357723577235773
+      median_p_spread_all: 0.41496897836183744
+      median_n_restarts: 4.0
+    _해석: flat_valley = degeneracy의 직접 증거 (같은 J, 다른 해). multimodal = 최적화 난이도이지 degeneracy가
+      아니다 — 초기값을 주면 사라진다 (F20).
+  _주의: ★ 목적함수 간 비교는 이 블록을 쓸 것 — source == 'random'인 restart만 남긴다. 위 multistart 블록은
+    warm start 지점과 공통 결정론적 초기값을 포함하므로, warm start를 받은 목적함수(w_dqdv≠0)가 인위적으로 multimodal
+    쪽으로 쏠린다. 단 `비교가능`이 false면 목적함수마다 남은 무작위 restart 수가 달라(adaptive 조기 종료) 검정력이 다르므로
+    그대로 비교하지 말 것 — `paired` 블록(공통 cond_id + 동일 restart 수)만 목적함수 간 비교에 쓸 수 있다.
