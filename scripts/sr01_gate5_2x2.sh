@@ -154,8 +154,10 @@ print(f'  ratio_pt  = {r_pt:.4f}  (+{(r_pt - 1) * 100:.2f} %)   ← 현행 생�
 print(f'  ratio_seg = {r_sg:.4f}  (+{(r_sg - 1) * 100:.2f} %)   ← 직경-보존 선분')
 print(f'  I = ln(ratio_seg) − ln(ratio_pt) = {I:+.4f}')
 if r_pt > 1:
-    print(f'  f_artifact = 1 − ln(r_seg)/ln(r_pt) = {1 - math.log(r_sg) / math.log(r_pt):+.3f}'
-          '   (이득 중 래스터가 만든 몫)')
+    print(f'  ⚠철회 f_artifact = 1 − ln(r_seg)/ln(r_pt) = '
+          f'{1 - math.log(r_sg) / math.log(r_pt):+.3f}'
+          '   (옛 해석 "이득 중 래스터가 만든 몫" 은 **CL-24 로 철회** — vox 0.4 전제에서만'
+          ' 성립했다.  진단용 수치로만 보고 인용하지 말 것)')
 print()
 print('  사전등록 (docs/reviews/sr01_gate5_prereg_20260813.md, 분해능 0.03):')
 print(f'    h0 물리 기전   ratio_seg = 1.51   |Δ| = {abs(r_sg - 1.51):.4f}')

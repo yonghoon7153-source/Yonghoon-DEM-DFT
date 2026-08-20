@@ -1155,7 +1155,12 @@ def _selftest():                                                   # noqa: C901
         chk('★음성 대조 — 사본이 어긋나면 잡는다',
             not all(abs(float(_a[k]) - float(_drift[k])) < 1e-9 for k in DESIGN_FEATURES))
     except Exception as _e:                                        # noqa: BLE001
-        print(f'  ‥ predictor_engine 미가용 — 유도식 대조 생략 ({type(_e).__name__})')
+        #  ★★ 2026-08-20 (Codex CDX-IJ-06) — **fail-open 금지.**  옛 판은 여기서 조용히
+        #    건너뛰고 `64/64 PASS` 를 냈다 — 하필 **오프라인 사본이 실제로 쓰이는 환경**
+        #    (predictor_engine 미가용)에서 그 사본의 패리티를 인증하지 못한 채 녹색이었다.
+        #    "확인 못 했다" 와 "확인했고 괜찮다" 는 다르다 (판정기 fail-closed 와 같은 원칙).
+        chk(f'★사본 패리티를 인증할 수 없다 — predictor_engine 미가용 '
+            f'({type(_e).__name__}).  이 환경에서는 UNVERIFIED = 실패로 센다', False)
     os.unlink(cp)
 
     print(' [9] 부검(diagnose) — "스위치된 타깃" vs "본래 확률적" 구별')

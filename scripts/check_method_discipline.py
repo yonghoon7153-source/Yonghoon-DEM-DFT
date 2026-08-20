@@ -933,6 +933,74 @@ def _smoke_fixture(d):
     return am, se_p, ph_p, fid_p, dia_p
 
 
+def smoke_assert_payload(out, label, errs, warns):
+    """규칙 J 의 **사후 단언**만 떼어낸 것 — 가짜 payload 로 음성 대조를 걸 수 있게.
+
+    ★ 2026-08-20 (Codex CDX-IJ-05): 이 단언들이 실제로 무는지 증명하려면 계산 없이
+      status 만 적은 producer 를 먹여 봐야 한다.  `check_entrypoint_smoke` 안에 인라인으로
+      두면 그 실험을 할 수 없어 밖으로 뺐다.  `errs`/`warns` 에 append 하고 bad 여부를 돌려준다.
+    """
+    import json as _json
+    try:
+        with open(out, encoding='utf-8') as f:
+            s3 = ((_json.load(f).get('mpm_metrics') or {}).get('step3') or {})
+    except Exception as e:                              # noqa: BLE001
+        errs.append(f'J_PAYLOAD| {label}: payload 를 읽을 수 없다 ({e})')
+        return None
+    comps = ((s3.get('manifest') or {}).get('components') or {})
+    if not comps:
+        errs.append(f'J_NO_MANIFEST| {label}: STEP3 manifest components 가 비었다 — '
+                    f'"돌았다" 를 증명할 수 없다')
+        return None
+    #  ★★ 2026-08-20 (Codex CDX-IJ-05) — status 문자열만 보면 **계산 없는 자가보고**가
+    #    통과한다 (독립 fake producer 가 `electronic=complete` 한 줄만 적고 통과했고,
+    #    전부 `disabled` 로 적어도 통과했다).  ⇒ ⓐ 팔별 **기대 상태 맵**을 고정하고
+    #    ⓑ 실제 **수치**(σ_e 유한·양수, dof>0)를 본다.
+    _EXPECT = {'electronic': 'complete', 'thermal': 'complete',
+               'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
+    bad = {k: (v or {}).get('status') for k, v in comps.items()
+           if (v or {}).get('status') not in ('complete', 'disabled')}
+    _wrong = {k: (comps.get(k) or {}).get('status')
+              for k, want in _EXPECT.items()
+              if (comps.get(k) or {}).get('status') != want}
+    if bad or _wrong:
+        errs.append(f'J_COMPONENT| {label}: 기대 상태와 다르다 — 미완료 {bad} · '
+                    f'기대 불일치 {_wrong} (기대 {_EXPECT})')
+    _se = s3.get('sigma_e_eff_S_cm')
+    _nd = s3.get('n_dof')
+    _num = []
+    if not (isinstance(_se, (int, float)) and _se == _se and 0 < float(_se) < 1e9):
+        _num.append(f'sigma_e_eff_S_cm={_se!r}')
+    if not (isinstance(_nd, int) and _nd > 0):
+        _num.append(f'n_dof={_nd!r}')
+    if _num:
+        errs.append(f'J_NUMBERS| {label}: **status 는 complete 인데 수치가 없다** '
+                    f'{_num} — 자가보고만으로 통과하면 안 된다 (CDX-IJ-05)')
+    #  ★ 2026-08-20 — 판정기의 **고정-인자 기록**이 기본 경로에서 실제로 채워지는가.
+    #    두 사고가 여기서 났다: `backend` 를 없는 키로 읽어 항상 None(→ 게이트 무발화,
+    #    오늘 고친 뒤엔 거짓 HOLD) · `bridge_um` 이 기본 실행에서 None(→ 거짓 HOLD).
+    #    둘 다 **매니페스트를 눈으로 안 봤기 때문**에 생겼다 — 스모크가 대신 본다.
+    #    ★ 키 위치를 여기서 **다시 적지 않는다** — 그것이 두 사고의 원인이었다.
+    #      판정기 자신의 리더(`sdcp_gain_verdict._read`)를 불러 **그것이 보는 값**을 본다.
+    try:
+        if os.path.join(ROOT, 'scripts') not in sys.path:
+            sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+        import sdcp_gain_verdict as _sgv
+        _rec = _sgv._read(out)
+        _blank = [k for k in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp',
+                              'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
+                              'sdcp_sphere_d_um', 'sdcp_yield_to_vgcf',
+                              'sigma_ptfe_S_cm')
+                  if _rec.get(k) is None]
+        if _blank:
+            errs.append(f'J_MANIFEST| {label}: **판정기의 리더가** 고정 인자를 '
+                        f'기본 경로에서 못 읽는다 {_blank} — 그 게이트는 무발화이거나 '
+                        f'거짓 HOLD 를 낸다 (2026-08-20 실사고 2건이 정확히 이것)')
+    except Exception as _e:                            # noqa: BLE001
+        warns.append(f'J_READER| {label}: 판정기 리더 대조 생략 ({type(_e).__name__}: {_e})')
+    return (bad, comps)
+
+
 def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
     errs, warns = [], []
     import json as _json
@@ -969,43 +1037,10 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                 errs.append(f'J_SKIPPED| {label}: **STEP3 가 조용히 죽었다** (exit 0 인데) — '
                             f'{_ln[0].strip()}')
                 continue
-            try:
-                with open(out, encoding='utf-8') as f:
-                    s3 = ((_json.load(f).get('mpm_metrics') or {}).get('step3') or {})
-            except Exception as e:                              # noqa: BLE001
-                errs.append(f'J_PAYLOAD| {label}: payload 를 읽을 수 없다 ({e})')
+            _res = smoke_assert_payload(out, label, errs, warns)
+            if _res is None:
                 continue
-            comps = ((s3.get('manifest') or {}).get('components') or {})
-            if not comps:
-                errs.append(f'J_NO_MANIFEST| {label}: STEP3 manifest components 가 비었다 — '
-                            f'"돌았다" 를 증명할 수 없다')
-                continue
-            bad = {k: (v or {}).get('status') for k, v in comps.items()
-                   if (v or {}).get('status') not in ('complete', 'disabled')}
-            if bad:
-                errs.append(f'J_COMPONENT| {label}: 완료되지 않은 component {bad}')
-            #  ★ 2026-08-20 — 판정기의 **고정-인자 기록**이 기본 경로에서 실제로 채워지는가.
-            #    두 사고가 여기서 났다: `backend` 를 없는 키로 읽어 항상 None(→ 게이트 무발화,
-            #    오늘 고친 뒤엔 거짓 HOLD) · `bridge_um` 이 기본 실행에서 None(→ 거짓 HOLD).
-            #    둘 다 **매니페스트를 눈으로 안 봤기 때문**에 생겼다 — 스모크가 대신 본다.
-            #    ★ 키 위치를 여기서 **다시 적지 않는다** — 그것이 두 사고의 원인이었다.
-            #      판정기 자신의 리더(`sdcp_gain_verdict._read`)를 불러 **그것이 보는 값**을 본다.
-            try:
-                if os.path.join(ROOT, 'scripts') not in sys.path:
-                    sys.path.insert(0, os.path.join(ROOT, 'scripts'))
-                import sdcp_gain_verdict as _sgv
-                _rec = _sgv._read(out)
-                _blank = [k for k in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp',
-                                      'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
-                                      'sdcp_sphere_d_um', 'sdcp_yield_to_vgcf',
-                                      'sigma_ptfe_S_cm')
-                          if _rec.get(k) is None]
-                if _blank:
-                    errs.append(f'J_MANIFEST| {label}: **판정기의 리더가** 고정 인자를 '
-                                f'기본 경로에서 못 읽는다 {_blank} — 그 게이트는 무발화이거나 '
-                                f'거짓 HOLD 를 낸다 (2026-08-20 실사고 2건이 정확히 이것)')
-            except Exception as _e:                            # noqa: BLE001
-                warns.append(f'J_READER| {label}: 판정기 리더 대조 생략 ({type(_e).__name__}: {_e})')
+            bad, comps = _res
             if verbose and not bad:
                 _st = ', '.join('%s=%s' % (k, (v or {}).get('status'))
                                 for k, v in comps.items())
@@ -1302,6 +1337,30 @@ def _selftest():
         check_entrypoint_smoke(verbose=False)[0] == [])
     chk('J-2: ★ 음성 대조 — `_kind_all` hoist 를 지우면 **잡는다**',
         smoke_negative_control(verbose=False)[0] == [])
+    #  ── J-3 (2026-08-20, Codex CDX-IJ-05) — **계산 없는 자가보고**를 잡는가 ──────────────
+    #     Codex 가 독립 fake producer 로 통과시킨 두 변형을 그대로 상주 음성 대조로 만든다.
+    import json as _j3
+    import tempfile as _t3
+
+    def _fake(comps, s3extra=None):
+        _d = _t3.mkdtemp()
+        _p = os.path.join(_d, 'fake.json')
+        with open(_p, 'w', encoding='utf-8') as _f:
+            _j3.dump({'mpm_metrics': {'step3': dict(
+                {'manifest': {'components': comps}}, **(s3extra or {}))}}, _f)
+        _e, _w = [], []
+        smoke_assert_payload(_p, 'fake', _e, _w)
+        return _e
+    chk('J-3a: ★ electronic=complete 한 줄만 적은 가짜 producer 를 잡는다',
+        _fake({'electronic': {'status': 'complete'}}) != [])
+    chk('J-3b: ★ 전부 disabled 로 적은 변형을 잡는다',
+        _fake({k: {'status': 'disabled'} for k in
+               ('electronic', 'ionic', 'thermal', 'pore', 'pnm')}) != [])
+    chk('J-3c: ★ 상태는 맞는데 **수치가 없는** 변형을 잡는다 (자가보고)',
+        any('J_NUMBERS' in x for x in _fake(
+            {'electronic': {'status': 'complete'}, 'thermal': {'status': 'complete'},
+             'ionic': {'status': 'disabled'}, 'pore': {'status': 'disabled'},
+             'pnm': {'status': 'disabled'}})))
 
     print(f'\ncheck_method_discipline v3 selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

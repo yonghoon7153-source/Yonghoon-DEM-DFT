@@ -23,8 +23,17 @@ import os
 
 SID = {0: 'pore', 1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP',
        6: 'SE', 7: 'PTFE', 8: 'SWCNT'}
-SDCP_D = 0.30
+SDCP_D = 0.30                                 # 공칭 기본 (row 에 기록이 없을 때만 쓰는 폴백)
 V_TRUE = math.pi / 6.0 * SDCP_D ** 3          # 0.014137 µm³
+
+#  ⚠⚠ 2026-08-20 (Codex CDX-IJ-07) — 옛 판은 **전역 SDCP_D 로만** V_TRUE 를 계산했다.
+#    `SDCP_D=0.45` 로 만든 원장을 읽으면 참부피가 (0.45/0.30)³ = 3.375배 틀리고, 보고서는
+#    표현부피/참부피를 그만큼 **과대**로 찍는다 (실측: 0.238732 vs 정확값 0.0707355).
+#    ⇒ **row 별 `sdcp_sphere_d_um` 을 쓴다.**  기록이 없는(점 스탬프·옛) row 만 폴백.
+def _v_true(r):
+    d = r.get('sdcp_sphere_d_um')
+    d = float(d) if d else SDCP_D
+    return math.pi / 6.0 * d ** 3, d
 
 SID_SDCP, SID_VGCF = 5, 3
 VGCF_D_UM = 0.15                 # 공칭 Ø (dia_rel 실측 min=med=max=1.0, cv=0)
@@ -57,9 +66,11 @@ def report(led, n_sdcp_pts=None):
                          f"{c[k] * vox ** 3:>12,.1f} µm³  {100.0 * c[k] / tot:>6.3f} %")
         if 5 in c and n_sdcp_pts:
             v = c[5] * vox ** 3
+            _vt, _d = _v_true(r)
+            _dnote = '' if r.get('sdcp_sphere_d_um') else '  ⚠ row 에 직경 기록 없음 → 기본 0.30 가정'
             lines.append(f"     ★ SDCP 표현부피 / 참부피 = "
-                         f"{v / (n_sdcp_pts * V_TRUE):.3f}  "
-                         f"(단입자 산술 {vox ** 3 / V_TRUE:.2f} 와 비교 — 차이가 곧 "
+                         f"{v / (n_sdcp_pts * _vt):.3f}  (Ø {_d} µm{_dnote})  "
+                         f"(단입자 산술 {vox ** 3 / _vt:.2f} 와 비교 — 차이가 곧 "
                          f"셀 충돌·상 overwrite 몫)")
         if 'sphere_extra_from_sid' in r:
             ex = {int(k): v for k, v in r['sphere_extra_from_sid'].items()}

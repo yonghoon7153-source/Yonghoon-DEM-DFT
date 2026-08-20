@@ -89,9 +89,17 @@ REQUIRED_BY_STATUS = {
 #:   기계 판).  ⚠ 이 파일 목록이 비면 규칙이 조용히 사라지므로 selftest 가 비었는지도 본다.
 CLAIMS_DEFAULT = os.path.join('docs', 'reviews', 'claims.json')
 
+#: ⚠⚠ 2026-08-20 (Codex CDX-IJ-04) — 초판 범위는 **md/html/js 뿐**이라 두 곳이 새고 있었다:
+#:   · `docs/seminar/seminar_deck.json` — 웹앱 `/api/seminar/slides`(`webapp/app.py`)가 **직접
+#:     서빙**하는 활성 산출물인데 `+52%`·`+5.6%` 를 현행 결론으로 말한다.
+#:   · `scripts/sr01_gate5_2x2.sh` — 철회된 `f_artifact` 를 여전히 출력한다.
+#:   그런데 스윕은 "누수 0" 을 냈다 = false-green.  ⇒ **사용자에게 노출되는 산출물**을 전부 넣는다
+#:   (JSON 덱·러너 셸·덱 생성기).  scripts/*.py 는 넣지 않는다 — 그쪽 등장은 대부분 철회를
+#:   설명하는 주석이고, 필요하면 줄-근처 표지 규칙으로 개별 통과한다.
 BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
                   'webapp/templates/*.html', 'webapp/static/js/*.js',
-                  'scripts/seminar_deck/*.js')
+                  'scripts/seminar_deck/*.js',
+                  'docs/**/*.json', 'webapp/**/*.json', 'scripts/*.sh')
 
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).

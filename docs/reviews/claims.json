@@ -1787,6 +1787,12 @@
    "claim": "CL-24",
    "why": "같은 철회 이온 이득의 표기 변형 (부호가 뒤집힌다)",
    "allowed_in": []
+  },
+  {
+   "pattern": "+52.0%",
+   "claim": "CL-24",
+   "why": "공백 없는 표기 변형 (Codex CDX-IJ-04 음성 대조에서 미검출)",
+   "allowed_in": []
   }
  ],
  "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명).",

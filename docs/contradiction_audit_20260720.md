@@ -1,5 +1,9 @@
 # 코드/md 모순점 감사 (2026-07-20)
 
+> ⛔ **HISTORICAL — 2026-07-20 시점의 감사.  고치지 않고 보존한다.**
+> 안의 SDCP 수치(`+52.0%` · `+45.4%` · `3.002`)는 **2026-08-13 적대 리뷰로 철회**됐다
+> (`docs/reviews/claims.json` CL-24).  **원고·발표·인용 금지.**
+
 워크플로 codebase-contradiction-audit(28 agents) 산출. 21개 검사 → 15개 REAL 확정. 각 후보 적대검증 통과분만.
 
 # Prioritized Fix List — Verified Contradictions

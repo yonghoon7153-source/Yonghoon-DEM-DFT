@@ -1,4 +1,5 @@
 {
+ "_RETRACTED": "⛔ HISTORICAL — 2026-08-06 에 발표된 덱의 기록이다.  안의 SDCP 수치(+52.0 % · +5.6 % · +18 % · σ_e 3.002 S/cm)는 2026-08-13 적대 리뷰로 **철회**됐다: 전부 vox 0.4 µm 점-스탬프 격자의 산물이고, 같은 규약을 조이면 σ_e 이득은 +42.15 → +8.49 % 로 내려가며 σ_ion 이득은 **부호가 뒤집힌다**(+7.42 → −0.92 %). 현재 말할 수 있는 것은 구-스탬프 규약의 측정 서술뿐이다 (vox 0.15 R=1.1232 · 0.125 R=1.1438, 미수렴).  정본 = CLAUDE.md SR-01 · docs/reviews/claims.json (CL-15/CL-24/CL-34/CL-41).  ⇒ 이 덱을 그대로 재발표하지 말 것.  (배너 2026-08-20, Codex CDX-IJ-04 — 웹앱 /api/seminar/slides 가 이 파일을 직접 서빙한다.)",
  "deck": "docs/seminar/seminar_20260806_DEM_MPM_SDCP_section.pptx",
  "n_slides": 14,
  "slides": [

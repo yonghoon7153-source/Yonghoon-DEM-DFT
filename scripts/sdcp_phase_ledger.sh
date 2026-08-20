@@ -47,13 +47,29 @@ run_one() {   # $1=kit  $2=vox  $3=sphere_d("" 면 점 스탬프)
   #     이 러너에는 전파되지 않았다; 보고서 `sdcp_phase_ledger_report.py` 도 원장 안의
   #     bridge_um/sdcp_sphere_d_um 을 읽지 않아 사후 게이트도 없다).
   #   기본값(0.48/0.30)일 때는 접미사를 붙이지 않아 **기존 원장 파일명이 그대로 유효**하다.
-  local CFG=""
-  [ "$BRIDGE_UM" != "0.48" ] && CFG="${CFG}_b${BRIDGE_UM/./}"
-  [ -n "$SD" ] && [ "$SD" != "0.30" ] && CFG="${CFG}_d${SD/./}"
+  # ⚠⚠ 2026-08-20 (Codex CDX-IJ-07) — 표시 문자열 ${x/./} 은 **단사가 아니다**:
+  #   0.3 → `b03` 이고 03(=3.0) → `b03` 이라 서로 다른 설정이 같은 캐시를 가리킨다.
+  #   ⇒ ① awk `%g` 로 **값을 정규화**한 뒤 태그를 만든다 (0.3→"0.3", 03→"3" 로 갈린다)
+  #     ② 그리고 SKIP 하기 전에 **저장된 JSON 이 같은 설정으로 만들어졌는지 대조**한다
+  #        (태그는 사람이 읽기 위한 것이고, 동일성 판정은 기록된 값이 한다).
+  local _bn _dn CFG=""
+  _bn=$(awk -v x="$BRIDGE_UM" 'BEGIN{printf "%g", x+0}')
+  [ "$_bn" != "0.48" ] && CFG="${CFG}_b${_bn/./}"
+  if [ -n "$SD" ]; then
+    _dn=$(awk -v x="$SD" 'BEGIN{printf "%g", x+0}')
+    [ "$_dn" != "0.3" ] && CFG="${CFG}_d${_dn/./}"
+  fi
   SDF=""; TAG="${K#kit_}_v${VOX/./}_pt${CFG}"
   [ -n "$SD" ] && { SDF=" --step3-sdcp-sphere-d $SD"; TAG="${K#kit_}_v${VOX/./}_sph${CFG}"; }
   local OUT="$OUTDIR/ledger_${TAG}.json"
-  [ -s "$OUT" ] && { echo "  SKIP $TAG"; return 0; }
+  #  ★ SKIP 전 **기록 대조** — 파일명이 같아도 안의 설정이 다르면 재사용하지 않는다.
+  if [ -s "$OUT" ]; then
+    if L_OUT="$OUT" L_VOX="$VOX" L_BR="$_bn" L_SDD="${_dn:-}" \
+       python3 "$SCR/sdcp_phase_ledger_match.py"; then
+      echo "  SKIP $TAG  (기록 대조 일치)"; return 0
+    fi
+    echo "  ⚠ $TAG — 파일은 있으나 기록된 설정이 다르다 → **재계산**"
+  fi
 
   local SIGMA
   SIGMA=$(cd "$RUN" && P2_SCR="$SCR" STEP3_VOX="$VOX" python3 - <<'PY'

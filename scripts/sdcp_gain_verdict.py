@@ -75,12 +75,20 @@ def _read(path):
             #    폴백을 잡는다 (step3_sigma._solve_cg 는 print 만 하고 내려간다).
             'sdcp_stamp': man.get('sdcp_stamp'),
             'sdcp_sphere_d_um': man.get('sdcp_sphere_d_um'),
-            #  ★ 2026-08-18 (CL-43) — σ-치환 진단 팔.  **없으면 False 로 정규화**한다
-            #    (플래그 이전 payload 는 정의상 생산 규약이므로).  None 으로 두면 아래 게이트가
-            #    None 을 건너뛰어 진단 팔과 생산 팔이 **섞여도 안 잡힌다** = H5 와 같은 no-op.
-            'sdcp_yield_to_vgcf': bool(man.get('sdcp_yield_to_vgcf', False)),
-            #  ★ 2026-08-18 (CL-49) — PTFE 스탬프 팔.  같은 정규화 규칙 (없으면 0.0 = 생산).
-            'sigma_ptfe_S_cm': float(man.get('sigma_ptfe_S_cm', 0.0) or 0.0),
+            #  ★★ 2026-08-20 정정 (Codex CDX-IJ-01) — **부재를 기본값으로 접지 않는다.**
+            #    옛 판은 `bool(man.get(..., False))` · `float(man.get(..., 0.0) or 0.0)` 이라
+            #    기록이 **없어도 False/0.0** 이 나왔다.  missing 게이트는 `None` 만 보므로
+            #    이 두 필드에서는 **원리적으로 발화할 수 없었다** — FA-02 의 6필드 수정 중
+            #    4/6 만 실제로 닫혔고 이 둘은 계속 `h0` 였다 (Codex 가 실제 JSON 16개에서
+            #    키를 지워 재현).  ⚠ 내 회귀 ㉒ 는 `_read()` 를 **건너뛰고** 내부 row 에 None 을
+            #    직접 넣어서 이것을 놓쳤다 = "실제 경로를 안 타는 테스트" 부류의 재발.
+            #    ⇒ 부재는 `None` 으로 보존하고 판단은 게이트가 한다 (fail-closed).
+            #    ⚠ 대가: 플래그 이전 세대(08-18 이전) payload 는 이제 HOLD 다.  현행 payload 는
+            #      두 필드를 **항상** 기록하므로(`mpm_webapp_payload` 매니페스트) 실사용엔 영향 없다.
+            'sdcp_yield_to_vgcf': (None if man.get('sdcp_yield_to_vgcf') is None
+                                   else bool(man.get('sdcp_yield_to_vgcf'))),
+            'sigma_ptfe_S_cm': (None if man.get('sigma_ptfe_S_cm') is None
+                                else float(man.get('sigma_ptfe_S_cm'))),
             'sigma_vgcf_S_cm': man.get('sigma_vgcf_S_cm'),
             'sigma_sdcp_S_cm': man.get('sigma_sdcp_S_cm'),
             #  ★★ 2026-08-19 (코팅·도핑 리뷰 A5) — 도핑 축과 침대 세대.  **정규화하지 않는다**:
@@ -353,8 +361,10 @@ def _selftest():
         json.dump({'step3': {'sigma_e_S_cm': 1.0, 'n_dof': 1, 'cg_info': 0},
                    'manifest': {'vox_um': 0.15}}, open(_p, 'w'))
         _old = _read(_p)
-    chk(f'⑬ 옛 payload 의 없는 필드는 False 로 정규화 ({_old["sdcp_yield_to_vgcf"]!r})',
-        _old['sdcp_yield_to_vgcf'] is False)
+    #  ⚠ 2026-08-20 (CDX-IJ-01) — 계약이 **뒤집혔다**.  옛 계약("없으면 False")은 missing
+    #    게이트를 원리적으로 무력화했다.  이제 부재는 `None` 으로 보존한다.
+    chk(f'⑬ 옛 payload 의 없는 필드는 None 으로 **보존** ({_old["sdcp_yield_to_vgcf"]!r})',
+        _old['sdcp_yield_to_vgcf'] is None)
     #  ⑭ PTFE 스탬프 팔(CL-49)이 생산 팔과 섞이면 잡는다 + 옛 payload 는 0.0 정규화
     _mix4 = mk(base, [v * 1.08 for v in base])
     for _r in _mix4['DBE']:
@@ -362,8 +372,8 @@ def _selftest():
     v14 = verdict(_mix4)
     chk(f'⑭ PTFE 스탬프 팔 × 생산 팔 혼합은 HOLD ({v14["decision"]})',
         v14['decision'] == 'HOLD' and 'sigma_ptfe_S_cm' in (v14.get('reason') or ''))
-    chk(f'⑭b 옛 payload 의 없는 sigma_ptfe 는 0.0 정규화 ({_old["sigma_ptfe_S_cm"]!r})',
-        _old['sigma_ptfe_S_cm'] == 0.0)
+    chk(f'⑭b 옛 payload 의 없는 sigma_ptfe 는 None 으로 **보존** ({_old["sigma_ptfe_S_cm"]!r})',
+        _old['sigma_ptfe_S_cm'] is None)
     #  ── 2026-08-19 (코팅·도핑 코드리뷰 A5) — 도핑 축 · 침대 세대 ───────────────────────
     #  ⑮ 도펀트 팔(σ_ion 만 다름)이 생산 팔과 섞이면 잡는다.  ⚠ 이것이 리뷰가 지목한
     #     "CL-43/CL-49 에서 두 번 고친 no-op 이 σ_ion 축에는 아직 살아 있다" 의 회귀다.
@@ -433,10 +443,44 @@ def _selftest():
     #     고정-인자 루프는 None 을 skip 하므로, 그 인자를 **아무 팔도 기록하지 않은 세대**면
     #     검사가 통과해 버린다.  실측으로 여섯 필드가 전부 그랬다 (HOLD 가 아니라 h0).
     #     한 필드씩 지워 **전부** HOLD 가 되는지 본다 — 목록에서 하나가 빠지면 이 검사가 죽는다.
+    #     ⚠⚠ 2026-08-20 (Codex CDX-IJ-01) — **이 검사를 다시 짰다.**  옛 판은 내부 row 에
+    #     `None` 을 직접 넣어 `_read()` 를 **건너뛰었고**, 그래서 `_read` 가 부재를 기본값으로
+    #     접던 두 필드(`sdcp_yield_to_vgcf`→False · `sigma_ptfe_S_cm`→0.0)에서 결함을 놓쳤다
+    #     (6필드 중 4개만 실제로 닫혀 있었다).  ⇒ 이제 **실제 JSON 파일을 쓰고 collect() 를 거쳐**
+    #     한 키씩 지운다 = 생산과 같은 경로.  ("실제 경로를 안 타는 테스트" 부류의 재발 차단.)
+    import tempfile as _tf22
+    _man22 = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
+              'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
+              'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
+              'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+              'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
+                                     'fallback_reason': None, 'precond': 'jacobi'}}
+
+    def _write_dir(_d, drop=None):
+        """8팔 × 2침대를 **실제 payload JSON** 으로 쓴다.  `drop` 키는 매니페스트에서 뺀다."""
+        for _k, _vals in (('SBE', base), ('DBE', [v * 1.12 for v in base])):
+            for _i, _v in enumerate(_vals):
+                _m = {kk: vv for kk, vv in _man22.items() if kk != drop}
+                if drop == 'backend':
+                    _m.pop('backend_last_solve', None)
+                _m['origin_shift_um'] = [0.0, 0.0, _i * 0.01]
+                with open(os.path.join(_d, f'p2_{_k}_sph_a{_i}.json'), 'w',
+                          encoding='utf-8') as _f:
+                    json.dump({'mpm_metrics': {'step3': {
+                        'sigma_e_eff_S_cm': _v, 'cg_info': 0, 'cg_resid': 1e-8,
+                        'unconverged': False, 'manifest': _m}}}, _f)
+
+    with _tf22.TemporaryDirectory() as _d22:
+        _write_dir(_d22)
+        _v22ok = verdict(collect(_d22)[1])
+        chk(f'㉒ 기준선 — 기록 완비 파일 16개는 판정이 난다 ({_v22ok["decision"]})',
+            _v22ok['decision'] in ('h0', 'h1', 'BOTH_REJECTED'))
     for _f in ('sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sdcp_sphere_d_um',
                'backend', 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm'):
-        _v22 = verdict(mk(base, [v * 1.08 for v in base], **{_f: None}))
-        chk(f'㉒ 기록 없는 고정 인자 `{_f}` 는 HOLD ({_v22["decision"]})',
+        with _tf22.TemporaryDirectory() as _d22:
+            _write_dir(_d22, drop=_f)
+            _v22 = verdict(collect(_d22)[1])
+        chk(f'㉒ **실제 JSON** 에서 `{_f}` 키를 지우면 HOLD ({_v22["decision"]})',
             _v22['decision'] == 'HOLD' and _f in (_v22.get('reason') or ''))
 
     #  ㉓ ★★ 2026-08-20 — `_read` 가 **매니페스트에 실제로 있는 키**를 읽는가.
