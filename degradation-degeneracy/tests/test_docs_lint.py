@@ -1379,3 +1379,41 @@ def test_stage3_contract_declares_what_it_cannot_do():
     ]
     missing = [why for key, why in need if key not in tail]
     assert not missing, "계약 §8 이 빠뜨린 한계: " + "; ".join(missing)
+
+
+_BRANCHES = DOCS.parent.parent / "BRANCHES.md"
+
+
+def test_branch_map_records_no_volatile_commit_counts():
+    """★ 세 번째다 — `BRANCHES.md` 가 자기 규칙을 스스로 어겼다.
+
+    20차 리뷰 발견 13-2 가 이 문서의 stale 커밋 수(88→89→90)를 지적했고,
+    그래서 문서 자신이 "뒤처진 커밋 수는 여기 적지 않는다" 는 규칙을 달았다.
+    그런데 21차 발견 9 를 정정하면서 `0 234` 를 다시 적었고, 22차 요청문을
+    쓰는 사이에 `240` 이 돼 또 stale 이 됐다. 이 문서를 고치는 커밋 자체가
+    그 수를 바꾸므로 **사람이 지킬 수 없는 규칙**이다 → 기계로 옮긴다.
+
+    불변인 사실만 남긴다: `--is-ancestor` exit 0 · 왼쪽 카운트 0 ·
+    고유 커밋 0개. 오른쪽 카운트는 재현 명령으로 그 자리에서 센다.
+    """
+    if not _BRANCHES.is_file():
+        pytest.skip("BRANCHES.md 없음")
+    lines = _BRANCHES.read_text(encoding="utf-8").splitlines()
+
+    # `0 234` / `0/234` 처럼 **양쪽 다 숫자인** 카운트 쌍만 잡는다.
+    # `0/518`(측정 건수)·`5/81` 같은 실측 분수는 이 문서에 없고, 있어도
+    # rev-list 문맥에서만 본다.
+    pair = re.compile(r"(?<!\d)0\s*[ /]\s*(\d{2,})(?!\d)")
+    bad = []
+    for i, ln in enumerate(lines, 1):
+        if "rev-list" not in ln and "--count" not in ln and "커밋" not in ln:
+            continue
+        if ln.lstrip().startswith(("#", "for ", "[ ", "BR=", "n=", "git ")):
+            continue                      # 재현 명령 블록 자체는 대상이 아니다
+        m = pair.search(ln)
+        if m:
+            bad.append(f"BRANCHES.md:{i}  {m.group(0)!r} — {ln.strip()[:70]}")
+    assert not bad, (
+        "휘발성 커밋 수가 다시 박혔다 (20차 발견 13-2 · 21차 재발):\n  "
+        + "\n  ".join(bad)
+        + "\n  불변인 사실만 적어라 — is-ancestor exit 0 · 왼쪽 0 · 고유 커밋 0개.")

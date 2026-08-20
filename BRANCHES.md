@@ -15,14 +15,19 @@
 > 초판은 "`main` 이 다른 브랜치와 연결도 안 돼 있다" 고 썼다. **틀렸다.**
 > `origin/main` 의 `Initial commit` 은 이 저장소 **37개 원격 브랜치 전부의
 > 공통 조상**이다 (아래 재현 명령 2). 이 브랜치 기준으로
-> `git rev-list --left-right --count origin/main...HEAD` 는 `0 234` 이고
-> `merge-base --is-ancestor` 는 exit 0 이다.
+> `git rev-list --left-right --count origin/main...HEAD` 의 **왼쪽이 0** 이고
+> `merge-base --is-ancestor` 는 exit 0 이다. (오른쪽 수는 적지 않는다 — 이
+> 문서를 고치는 커밋이 그 수를 바꾼다. 22차 요청문을 쓰는 사이에도
+> 234 → 240 으로 움직였다. 20차 발견 13-2 가 지적한 실패 형태를 이 줄이
+> 그대로 반복하고 있었고, 이제
+> `test_branch_map_records_no_volatile_commit_counts` 가 막는다.)
 >
 > **왜 틀렸나**: 초판을 쓴 작업 클론이 **shallow** 였다
-> (`git rev-parse --is-shallow-repository` → `true`, 경계 `b7d61881`,
-> HEAD 에서 155커밋만 보였다). 뿌리가 경계 밖이라 `git merge-base` 가 빈
-> 결과를 냈고, 그것을 "공통 조상이 없다" 로 읽었다. `git fetch --unshallow`
-> 후 같은 명령이 리뷰어와 같은 값을 낸다 (235커밋, merge-base `bf0dd1a3`).
+> (`git rev-parse --is-shallow-repository` → `true`, 경계 `b7d61881`.
+> 진단 시점에 HEAD 에서 155커밋만 보였다 — 이건 그 시점의 관측 기록이다).
+> 뿌리가 경계 밖이라 `git merge-base` 가 빈 결과를 냈고, 그것을 "공통 조상이
+> 없다" 로 읽었다. `git fetch --unshallow` 후 같은 명령이 리뷰어와 같은 값을
+> 낸다 — merge-base `bf0dd1a3`, 왼쪽 카운트 0.
 >
 > **교훈**: 이 문서의 모든 그래프 주장은 **full clone 에서만** 재현된다.
 > 아래 명령을 돌리기 전에 shallow 여부를 먼저 확인하라.
