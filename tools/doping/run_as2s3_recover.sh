@@ -27,6 +27,15 @@ if [ "${1:-}" = "--selftest" ]; then
     ok=1
     say() { echo "  $1 $2"; if [ "$1" = "✗" ]; then ok=0; fi; return 0; }
     R=$(cd "$(dirname "$0")/../.." && pwd)
+    # ⛔ 2026-08-21 실측: (base) 에서 돌려 preflight 가 fairchem 없음으로 즉사했다.
+    #   selftest 가 그걸 미리 못 잡아서 사용자가 죽는 걸 보고 알았다 — 여기서 잡는다.
+    if python3 -c "import fairchem" 2>/dev/null; then
+        say "✓" "fairchem import 가능 (env: ${CONDA_DEFAULT_ENV:-?})"
+    elif command -v conda >/dev/null 2>&1 && conda env list 2>/dev/null | grep -qE '^uma\s'; then
+        say "✓" "현재 env 엔 fairchem 이 없지만 uma env 가 있다 — 본문이 자동 재진입한다"
+    else
+        say "✗" "fairchem 도 uma env 도 없다 — 이 상태로 돌리면 stage-00 에서 죽는다"
+    fi
     grep -q "'As': \[+5, +3\]" "$R/tools/doping/substitute_compound.py" \
         && say "✓" "ALTERNATIVE_VALENCES 에 As 가 들어 있다" \
         || say "✗" "As 수정이 없다 — 이 스크립트를 돌리면 또 0개가 나온다"
@@ -58,6 +67,21 @@ echo "[$(ts)] 전하 중성 사전 검사"
 python3 tools/doping/check_valence_coverage.py --compounds As2S3 --verbose || {
     echo "[$(ts)] ⛔ As2S3 가 중성 불가 — ALTERNATIVE_VALENCES 를 먼저 고칠 것"; exit 1; }
 
+# ⛔ 2026-08-21 실측: (base) 에서 돌려 stage-00 preflight 가
+#   "fairchem import failed: No module named 'fairchem'" 로 즉사했다.
+#   UMA 는 (uma) env 에만 있다. 여기서 먼저 잡고, 가능하면 스스로 갈아탄다.
+if ! python3 -c "import fairchem" 2>/dev/null; then
+    echo "[$(ts)] fairchem 없음 (현재 env: ${CONDA_DEFAULT_ENV:-?}) — uma env 로 재진입 시도"
+    if command -v conda >/dev/null 2>&1 && conda env list 2>/dev/null | grep -qE '^uma\s'; then
+        echo "[$(ts)] conda run -n uma 로 재실행한다"
+        exec conda run --no-capture-output -n uma bash "$0" "$@"
+    fi
+    echo "[$(ts)] ⛔ uma env 를 못 찾았다. 직접 활성화 후 다시 돌려라:"
+    echo "         conda activate uma && bash tools/doping/run_as2s3_recover.sh"
+    exit 1
+fi
+echo "[$(ts)] fairchem OK (env: ${CONDA_DEFAULT_ENV:-?})"
+
 if command -v nvidia-smi >/dev/null 2>&1; then
     read -r U T <<<"$(nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader,nounits | head -1 | tr -d ',')"
     echo "[$(ts)] GPU $U / $T MiB (여유 $((T-U)) MiB)"
@@ -86,8 +110,27 @@ print(len(json.loads(p.read_text()).get("structures", [])) if p.exists() else 0)
 PY
 )
     echo "[$(ts)] As2S3 $TAG 끝 (rc=$rc) · 생성 구조 $N 개"
-    [ "$N" = "0" ] && { echo "[$(ts)] ⛔ 또 0개다 — 전하 문제가 아니라 **다른 원인**이다."
-                        echo "     자리 반지름 필터(site_preference_filter)나 시드 실패를 봐야 한다."; }
+    # ⚠ 0개의 사유를 지어내지 않는다. **어느 단계에서 죽었는지** 먼저 본다.
+    #   (첫 판은 preflight 실패인데도 "자리 반지름 필터나 시드 실패" 라고 찍어 오도했다.)
+    if [ "$N" = "0" ]; then
+        PF=$OUT/00_preflight/preflight_report.json
+        if [ -s "$PF" ] && ! grep -aq '"passed": *true' "$PF" 2>/dev/null; then
+            echo "[$(ts)] ⛔ stage-00 preflight 에서 죽었다 — 구조 생성까지 가지도 못했다."
+            grep -a '\[✗\]' "$OUT/../run.log" 2>/dev/null | tail -3 | sed 's/^/     /'
+            python3 - "$PF" <<'PYX' 2>/dev/null | sed 's/^/     /'
+import json, sys
+d = json.load(open(sys.argv[1]))
+for c in d.get("checks", []):
+    if not c.get("passed", True):
+        print(f"실패: {c.get('name')} — {c.get('detail', '')}")
+PYX
+        elif [ -d "$OUT/01_structures" ]; then
+            echo "[$(ts)] ⛔ stage-01 까지 갔는데 구조가 0개다 — 전하는 통과했으니"
+            echo "     자리 반지름 필터(site_preference_filter)나 시드 실패를 봐야 한다."
+        else
+            echo "[$(ts)] ⛔ 0개인데 stage-01 폴더도 없다 — 그 전 단계에서 죽었다. 로그를 볼 것."
+        fi
+    fi
     [ "$rc" -ne 0 ] && RC_ALL=1
 done
 
