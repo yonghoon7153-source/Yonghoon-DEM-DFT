@@ -34,10 +34,42 @@ Excel 로 옮기고 Origin 에서 다시 그리는 과정을 없애는 것이 �
 
 ## 빠른 시작
 
+### Linux · macOS
+
 ```bash
+git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+cd Yonghoon-DEM-DFT
 make setup     # 클론 직후 1회 (git 설정 + 의존성 + bml 등록)
 bml            # 최신으로 맞추고 실행 → http://localhost:5003
 ```
+
+### Windows (WSL)
+
+WSL 안에서 합니다. 세 가지를 먼저 해야 합니다 — Ubuntu 가 `python3-venv` 를
+기본으로 넣어 주지 않고, Node 저장소 버전이 낮고, git 이 CRLF 로 체크아웃하면
+WSL 의 bash 가 스크립트를 실행하지 못합니다.
+
+```bash
+# 1. 패키지
+sudo apt update && sudo apt install -y python3 python3-venv python3-pip git curl wslu
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt install -y nodejs
+
+# 2. 줄바꿈 (이걸 빠뜨리면 "bad interpreter" 가 납니다)
+git config --global core.autocrlf input
+
+# 3. 저장소는 WSL 안에 — /mnt/c 에 두면 10배 느리고 자동 새로고침이 안 됩니다
+cd ~ && git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+cd Yonghoon-DEM-DFT && make setup
+
+bml            # → http://localhost:5003 (Windows 기본 브라우저가 열립니다)
+```
+
+막히면 **`bml doctor`** 가 환경을 점검하고 무엇을 어떻게 고칠지 알려 줍니다.
+전체 설명: [`docs/guides/wsl-setup.md`](docs/guides/wsl-setup.md)
+
+PowerShell 에서 바로 치고 싶으면 `tools/bml.cmd` 를 Windows PATH 에 두면 됩니다.
+
+### 명령
 
 `bml` 한 줄이 `git pull --rebase --autostash` → 의존성 확인 → 빌드 → 실행을
 순서대로 한다. 두 사람이 같은 브랜치를 쓰므로 pull 을 빠뜨리지 않는 것이
@@ -50,10 +82,9 @@ bml            # 최신으로 맞추고 실행 → http://localhost:5003
 | `bml stop` | 내리기 |
 | `bml status` | 실행 상태 + 브랜치/미커밋/ahead·behind |
 | `bml check` | 커밋 전 검사 |
+| `bml doctor` | 환경 점검 (WSL 포함) |
 
-설치와 자세한 설명: [`docs/guides/bml-command.md`](docs/guides/bml-command.md)
-Windows/WSL: [`docs/guides/wsl-setup.md`](docs/guides/wsl-setup.md) —
-`bml doctor` 가 환경을 점검하고 무엇을 고칠지 알려 준다.
+자세한 설명: [`docs/guides/bml-command.md`](docs/guides/bml-command.md)
 
 `make` 를 직접 쓸 수도 있다 — `make serve` (한 포트), `make dev` (핫 리로드),
 둘 다 http://localhost:5003 이다.

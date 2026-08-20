@@ -20,7 +20,12 @@
 4. **모르면 `None` 을 반환하고 이유를 적는다.** 추정값을 실측값처럼 내보내지
    않는다. `KneeResult.reason`, `ResolvedCell.missing_for()`, `CellReport.evidence`
    가 그 패턴이다.
-5. **파싱 계층에 도메인 가정을 심지 않는다.** `wrdkit/nrbf.py` 와 `wrdkit/wrd.py`
+5. **셸 스크립트는 LF 로만 저장한다.** 두 사람 중 한쪽이 Windows/WSL 이다.
+   CRLF 로 체크아웃된 스크립트는 WSL 의 bash 에서
+   `bad interpreter: No such file or directory` 로 죽는데, 그 메시지에 줄바꿈
+   얘기가 없어 원인을 찾기 어렵다. `.gitattributes` 가 강제하지만, 새 스크립트를
+   만들 때도 신경 쓴다 (`.cmd`/`.bat` 만 예외로 CRLF).
+6. **파싱 계층에 도메인 가정을 심지 않는다.** `wrdkit/nrbf.py` 와 `wrdkit/wrd.py`
    는 파일이 선언한 대로만 읽는다. 컬럼 목록은 파일에서 읽고 하드코딩하지 않는다.
 
 ## 1. 구조
@@ -148,6 +153,10 @@ make wiki-lint    # docs/ 위키 정합성
 `bml` 은 `tools/bml` 이고 `make setup` 이 PATH 에 등록한다. pull 을 먼저 하는
 순서를 강제하려고 만든 것이므로, 실행할 일이 있으면 `make dev` 대신 `bml` 을
 쓴다. 설명은 `docs/guides/bml-command.md`.
+
+환경이 이상하면 **먼저 `bml doctor`** 를 돌린다. WSL 여부, 저장소가 `/mnt/c` 에
+있는지, `python3-venv` 유무, node 버전, CRLF, PATH, 포트를 점검하고 고치는
+명령까지 출력한다. Windows/WSL 준비 절차는 `docs/guides/wsl-setup.md`.
 
 새 기능은 이 순서로 붙인다:
 

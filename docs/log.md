@@ -12,3 +12,6 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] update | 셀 상태 판정을 가중 근거 방식으로 — 실측 파일 오판 수정
 ## [2026-08-20] update | GUI 재설계 — 스파크라인, metric band, 한국어 판정 문구
 ## [2026-08-20] create | 에이전트 하네스 — 스킬 6종, 커맨드 6종, 훅 2종, CI
+## [2026-08-20] create | localhost:5003 단일 주소 — API 와 빌드된 웹앱을 한 포트에서
+## [2026-08-20] create | bml 실행기 — pull → 의존성 → 빌드 → 실행 순서를 강제
+## [2026-08-20] create | WSL 지원 — bml doctor, .gitattributes 로 LF 고정, PowerShell 래퍼
