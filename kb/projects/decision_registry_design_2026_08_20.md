@@ -339,6 +339,12 @@ optional stopping 금지를 **3개로 분리**) · `elastic-relaxed-ion`(argyrod
 - `beta-estimator-mto` — estimator 와 문턱 **둘 다** 재승인.
 - `com-drift-closed` — ⭐ **좁힌다**: "특정 `fixcm=True` run family 에서 **총 COM 표류**
   배제". **species-relative drift 가설은 open 으로 남긴다.**
+  ⚠ 2026-08-20 재실행 로그에서 확인한 추가 약화 요인 — **ASE 자신이 그 근거를 경고한다**:
+  *"The implementation of `fixcm=True` in `Langevin` does not strictly sample the correct
+  NVT distributions … `fixcm` is deprecated since ASE 3.28.0"*. COM 표류 억제 자체는
+  여전히 하지만, 우리 배제 근거가 "ASE 가 fixcm 으로 닫아준다" 였으므로 **근거가 두
+  방향에서 약해진다**(codex R5 의 species-relative + ASE 의 분포 정확도). 재승인 시
+  이 문구를 근거 목록에 포함할 것.
 - `monroe-newman-closed` — "sole design criterion 으로 쓰지 않음" 으로 축소 + 사람 승인.
 
 ### 9-4. species-relative drift는 β 게이트가 대신할 수 없다 (codex R5)
