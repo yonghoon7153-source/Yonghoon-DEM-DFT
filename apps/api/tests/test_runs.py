@@ -249,3 +249,54 @@ def test_a_failed_parse_does_not_leave_half_written_cycles(client, sample_id,
     for run in runs:
         if run["parse_error"]:
             assert run["cycle_count"] == 0, "실패한 run 이 사이클을 들고 있다"
+
+
+def test_a_later_upload_does_not_collide_with_a_pinned_run(client, sample_id,
+                                                           wrd_bytes, finished_wrd_bytes):
+    """수동으로 고정한 구간을 자동 배정이 침범하면 안 된다.
+
+    PATCH 한 번은 겹침을 막았지만, 그 뒤에 *더 이른* 파일을 올리면 renumber 가
+    수동 예약을 모른 채 1번부터 배정한다 — 같은 사이클 번호가 두 run 에 생기고,
+    "3번 사이클" 이 조회 순서에 따라 달라진다.
+    """
+    # 나중에 시작한 파일을 먼저 올려서 손으로 고정한다.
+    pinned = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                         files={"file": ("z_099.wrd", wrd_bytes,
+                                         "application/octet-stream")}).json()
+    assert pinned["cycle_count"] > 2
+
+    pin = 5
+    assert client.patch(f"/api/runs/{pinned['id']}",
+                        json={"cycle_offset": pin}).status_code == 200
+
+    # 그 뒤에 *더 이른* 파일을 올린다 — 정렬상 앞에 서므로 자동 배정이 1번부터
+    # 잡으려 하고, 고정 구간(6-13)과 겹친다.
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("a_001.wrd", finished_wrd_bytes,
+                                "application/octet-stream")})
+
+    runs = client.get("/api/runs", params={"sample_id": sample_id}).json()
+    spans = [(r["cycle_offset"] + 1, r["cycle_offset"] + r["cycle_count"])
+             for r in runs if r["cycle_count"]]
+    spans.sort()
+    for (a_start, a_end), (b_start, _) in zip(spans, spans[1:]):
+        assert a_end < b_start, f"사이클 번호가 겹친다: {spans}"
+
+    # 고정한 값은 그대로여야 한다 — 사용자의 지시다.
+    still = next(r for r in runs if r["id"] == pinned["id"])
+    assert still["cycle_offset"] == pin
+    assert still["cycle_offset_source"] == "manual"
+
+
+def test_cycle_numbers_are_unique_across_a_samples_runs(client, sample_id,
+                                                        wrd_bytes, finished_wrd_bytes):
+    """같은 셀 안에서 사이클 번호는 유일해야 한다 — 조회 경로 전체의 전제다."""
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("b_002.wrd", finished_wrd_bytes,
+                                "application/octet-stream")})
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("a_001.wrd", wrd_bytes, "application/octet-stream")})
+    numbers = [c["cycle"] for c in
+               client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]]
+    assert len(numbers) == len(set(numbers)), "사이클 번호가 중복된다"
+    assert numbers == sorted(numbers)

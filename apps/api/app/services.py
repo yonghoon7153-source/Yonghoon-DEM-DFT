@@ -137,12 +137,37 @@ def renumber_sample_runs(session: Session, sample_id: int | None) -> None:
     runs = list(session.exec(select(Run).where(Run.sample_id == sample_id)).all())
     runs.sort(key=lambda r: run_order_key(r.start_time, r.original_name, r.id))
 
+    # A hand-set offset is a reservation, not a suggestion.  Reserve those
+    # ranges before placing anything automatic: otherwise an *earlier* file
+    # uploaded later takes 1-8 while a run pinned at 6-13 keeps its pin, and
+    # cycles 6-8 exist twice.  Which one answers "cycle 6" then depends on
+    # query order, so the reference cycle and every profile pick can change
+    # between two identical requests.
+    reserved = sorted(
+        (run.cycle_offset, run.cycle_offset + run.cycle_count)
+        for run in runs
+        if run.cycle_offset_source == "manual" and run.cycle_count
+    )
+
+    def first_free(start: int, length: int) -> int:
+        """Lowest offset at or after *start* where *length* cycles fit."""
+        if not length:
+            return start
+        moved = True
+        while moved:
+            moved = False
+            for low, high in reserved:
+                if start < high and low < start + length:
+                    start = high
+                    moved = True
+        return start
+
     running_total = 0
     for run in runs:
         if run.cycle_offset_source == "manual":
             offset = run.cycle_offset
         else:
-            offset = running_total
+            offset = first_free(running_total, run.cycle_count)
         if run.cycle_offset != offset:
             run.cycle_offset = offset
             session.add(run)
