@@ -1,199 +1,207 @@
 {
-  "what": "UMA-s-1p1(omat) CI-NEB for a single Li vacancy hop in bulk argyrodite. Cell is NEVER relaxed - see module docstring.",
-  "caveat": "Single arrangement, single path. NOT a percolation barrier. Absolute values are MLIP, not DFT.",
-  "runs": [
-    {
-      "tag": "inter_211_deepep",
-      "struct": "db/structures/comp1_V0_k444.cif",
-      "supercell": [
-        2,
-        1,
-        1
-      ],
-      "n_atoms": 104,
-      "n_atoms_neb": 103,
-      "perp_widths_A": [
-        20.11,
-        10.055,
-        10.055
-      ],
-      "min_perp_width_A": 10.055,
-      "kind": "inter",
-      "pair": [
-        20,
-        29
-      ],
-      "pair_distance_A": 3.5044,
-      "hop_distance_A": 3.5044,
-      "n_hop_candidates": 48,
-      "Ea_forward_eV": 0.4322,
-      "Ea_reverse_eV": 0.4367,
-      "dE_endpoints_meV": -4.54,
-      "energies_eV": [
-        -429.646672,
-        -429.913522,
-        -429.664192,
-        -429.214502,
-        -430.108713,
-        -429.399915,
-        -429.725935,
-        -429.825651,
-        -429.651213
-      ],
-      "profile_eV_rel": [
-        0.0,
-        -0.2669,
-        -0.0175,
-        0.4322,
-        -0.462,
-        0.2468,
-        -0.0793,
-        -0.179,
-        -0.0045
-      ],
-      "n_images_total": 9,
-      "endpoint_converged": [
-        true,
-        true
-      ],
-      "seconds": 3151.5,
-      "band_converged": false,
-      "ci_ran": false,
-      "ci_converged": false,
-      "steps_band": 400,
-      "steps_ci": 0,
-      "band_only_profile_eV": [
-        0.0,
-        -0.2669,
-        -0.0175,
-        0.4322,
-        -0.462,
-        0.2468,
-        -0.0793,
-        -0.179,
-        -0.0045
-      ],
-      "spike_eV": 0.4322,
-      "max_image_jump_eV": 0.8942,
-      "notes": [],
-      "second_highest_eV": 0.2468,
-      "min_interior_rel_eV": -0.462,
-      "neb_converged": false,
-      "band_problems": [
-        "이웃 이미지 사이가 0.89 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +0.43 / 차고 +0.25",
-        "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.458 eV 낮다 — 끝점이 국소 최소가 아니다"
-      ],
-      "trustworthy": false,
-      "engine": "uma-s-1p1(omat)",
-      "cell_relaxed": false,
-      "neb_method": "improvedtangent",
-      "spring_k": 0.1,
-      "fmax": {
-        "endpoint": 0.03,
-        "neb": 0.05,
-        "ci": 0.03
-      },
-      "images_file": "/data/work/repo/db/properties/neb_inter_211_deepep.xyz"
-    },
-    {
-      "tag": "inter_211_shallow",
-      "struct": "db/structures/comp1_V0_k444.cif",
-      "supercell": [
-        2,
-        1,
-        1
-      ],
-      "n_atoms": 104,
-      "n_atoms_neb": 103,
-      "perp_widths_A": [
-        20.11,
-        10.055,
-        10.055
-      ],
-      "min_perp_width_A": 10.055,
-      "kind": "inter",
-      "pair": [
-        20,
-        29
-      ],
-      "pair_distance_A": 3.5044,
-      "hop_distance_A": 3.5044,
-      "n_hop_candidates": 48,
-      "Ea_forward_eV": 1.6116,
-      "Ea_reverse_eV": 1.6715,
-      "dE_endpoints_meV": -59.86,
-      "energies_eV": [
-        -429.591419,
-        -429.85778,
-        -429.397998,
-        -428.352883,
-        -427.979808,
-        -429.00931,
-        -429.569082,
-        -429.883188,
-        -429.651281
-      ],
-      "profile_eV_rel": [
-        0.0,
-        -0.2664,
-        0.1934,
-        1.2385,
-        1.6116,
-        0.5821,
-        0.0223,
-        -0.2918,
-        -0.0599
-      ],
-      "n_images_total": 9,
-      "endpoint_converged": [
-        true,
-        true
-      ],
-      "seconds": 2745.3,
-      "band_converged": false,
-      "ci_ran": false,
-      "ci_converged": false,
-      "steps_band": 400,
-      "steps_ci": 0,
-      "band_only_profile_eV": [
-        0.0,
-        -0.2664,
-        0.1934,
-        1.2385,
-        1.6116,
-        0.5821,
-        0.0223,
-        -0.2918,
-        -0.0599
-      ],
-      "band_tail": {
-        "n": 12,
-        "first": 0.4251,
-        "last": 0.6066,
-        "rising_frac": 0.82,
-        "verdict": "rising"
-      },
-      "spike_eV": 1.6116,
-      "max_image_jump_eV": 1.0451,
-      "notes": [],
-      "second_highest_eV": 1.2385,
-      "min_interior_rel_eV": -0.2918,
-      "neb_converged": false,
-      "band_problems": [
-        "이웃 이미지 사이가 1.05 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +1.61 / 차고 +1.24",
-        "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.232 eV 낮다 — 끝점이 국소 최소가 아니다"
-      ],
-      "trustworthy": false,
-      "engine": "uma-s-1p1(omat)",
-      "cell_relaxed": false,
-      "neb_method": "improvedtangent",
-      "spring_k": 0.1,
-      "fmax": {
-        "endpoint": 0.03,
-        "neb": 0.05,
-        "ci": 0.03
-      },
-      "images_file": "/data/work/repo/db/properties/neb_inter_211_shallow.xyz"
-    }
-  ]
+ "what": "UMA-s-1p1(omat) CI-NEB for a single Li vacancy hop in bulk argyrodite. Cell is NEVER relaxed - see module docstring.",
+ "caveat": "Single arrangement, single path. NOT a percolation barrier. Absolute values are MLIP, not DFT.",
+ "runs": [
+  {
+   "tag": "inter_211_deepep",
+   "struct": "db/structures/comp1_V0_k444.cif",
+   "supercell": [
+    2,
+    1,
+    1
+   ],
+   "n_atoms": 104,
+   "n_atoms_neb": 103,
+   "perp_widths_A": [
+    20.11,
+    10.055,
+    10.055
+   ],
+   "min_perp_width_A": 10.055,
+   "kind": "inter",
+   "pair": [
+    20,
+    29
+   ],
+   "pair_distance_A": 3.5044,
+   "hop_distance_A": 3.5044,
+   "n_hop_candidates": 48,
+   "Ea_forward_eV": 0.4322,
+   "Ea_reverse_eV": 0.4367,
+   "dE_endpoints_meV": -4.54,
+   "energies_eV": [
+    -429.646672,
+    -429.913522,
+    -429.664192,
+    -429.214502,
+    -430.108713,
+    -429.399915,
+    -429.725935,
+    -429.825651,
+    -429.651213
+   ],
+   "profile_eV_rel": [
+    0.0,
+    -0.2669,
+    -0.0175,
+    0.4322,
+    -0.462,
+    0.2468,
+    -0.0793,
+    -0.179,
+    -0.0045
+   ],
+   "n_images_total": 9,
+   "endpoint_converged": [
+    true,
+    true
+   ],
+   "seconds": 3151.5,
+   "band_converged": false,
+   "ci_ran": false,
+   "ci_converged": false,
+   "steps_band": 400,
+   "steps_ci": 0,
+   "band_only_profile_eV": [
+    0.0,
+    -0.2669,
+    -0.0175,
+    0.4322,
+    -0.462,
+    0.2468,
+    -0.0793,
+    -0.179,
+    -0.0045
+   ],
+   "spike_eV": 0.4322,
+   "max_image_jump_eV": 0.8942,
+   "notes": [],
+   "second_highest_eV": 0.2468,
+   "min_interior_rel_eV": -0.462,
+   "neb_converged": false,
+   "band_problems": [
+    "이웃 이미지 사이가 0.89 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +0.43 / 차고 +0.25",
+    "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.458 eV 낮다 — 끝점이 국소 최소가 아니다"
+   ],
+   "trustworthy": false,
+   "engine": "uma-s-1p1(omat)",
+   "cell_relaxed": false,
+   "neb_method": "improvedtangent",
+   "spring_k": 0.1,
+   "fmax": {
+    "endpoint": 0.03,
+    "neb": 0.05,
+    "ci": 0.03
+   },
+   "images_file": "/data/work/repo/db/properties/neb_inter_211_deepep.xyz",
+   "_do_not_cite": "협동 이동 지배 — Ea 는 값이 아니다 (_VERDICT_2026_08_20 참조)"
+  },
+  {
+   "tag": "inter_211_shallow",
+   "struct": "db/structures/comp1_V0_k444.cif",
+   "supercell": [
+    2,
+    1,
+    1
+   ],
+   "n_atoms": 104,
+   "n_atoms_neb": 103,
+   "perp_widths_A": [
+    20.11,
+    10.055,
+    10.055
+   ],
+   "min_perp_width_A": 10.055,
+   "kind": "inter",
+   "pair": [
+    20,
+    29
+   ],
+   "pair_distance_A": 3.5044,
+   "hop_distance_A": 3.5044,
+   "n_hop_candidates": 48,
+   "Ea_forward_eV": 1.6116,
+   "Ea_reverse_eV": 1.6715,
+   "dE_endpoints_meV": -59.86,
+   "energies_eV": [
+    -429.591419,
+    -429.85778,
+    -429.397998,
+    -428.352883,
+    -427.979808,
+    -429.00931,
+    -429.569082,
+    -429.883188,
+    -429.651281
+   ],
+   "profile_eV_rel": [
+    0.0,
+    -0.2664,
+    0.1934,
+    1.2385,
+    1.6116,
+    0.5821,
+    0.0223,
+    -0.2918,
+    -0.0599
+   ],
+   "n_images_total": 9,
+   "endpoint_converged": [
+    true,
+    true
+   ],
+   "seconds": 2745.3,
+   "band_converged": false,
+   "ci_ran": false,
+   "ci_converged": false,
+   "steps_band": 400,
+   "steps_ci": 0,
+   "band_only_profile_eV": [
+    0.0,
+    -0.2664,
+    0.1934,
+    1.2385,
+    1.6116,
+    0.5821,
+    0.0223,
+    -0.2918,
+    -0.0599
+   ],
+   "band_tail": {
+    "n": 12,
+    "first": 0.4251,
+    "last": 0.6066,
+    "rising_frac": 0.82,
+    "verdict": "rising"
+   },
+   "spike_eV": 1.6116,
+   "max_image_jump_eV": 1.0451,
+   "notes": [],
+   "second_highest_eV": 1.2385,
+   "min_interior_rel_eV": -0.2918,
+   "neb_converged": false,
+   "band_problems": [
+    "이웃 이미지 사이가 1.05 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +1.61 / 차고 +1.24",
+    "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.232 eV 낮다 — 끝점이 국소 최소가 아니다"
+   ],
+   "trustworthy": false,
+   "engine": "uma-s-1p1(omat)",
+   "cell_relaxed": false,
+   "neb_method": "improvedtangent",
+   "spring_k": 0.1,
+   "fmax": {
+    "endpoint": 0.03,
+    "neb": 0.05,
+    "ci": 0.03
+   },
+   "images_file": "/data/work/repo/db/properties/neb_inter_211_shallow.xyz",
+   "_do_not_cite": "협동 이동 지배 — Ea 는 값이 아니다 (_VERDICT_2026_08_20 참조)"
+  }
+ ],
+ "_VERDICT_2026_08_20": "⛔ 이 파일의 Ea 는 **값이 아니다 — 인용 금지.** 두 런(deepep/shallow) 모두 trustworthy=false 이고, 그 이유가 '더 돌리면 된다' 가 아니라 **이 홉이 애초에 단일 Li 사건이 아니기 때문**이다. 근거 셋이 두 런에서 같이 나온다: ① 중간 이미지가 두 끝점 중 낮은 쪽보다 -0.232 eV 낮다(경로가 끝점보다 낮은 배치를 지난다) ② 밴드가 발산한다(shallow 는 fmax 0.425→0.607, 상승 82 %) ③ 이완 뒤 홉 거리가 3.504 → 4.37 A 로 벌어지는데 **심화 이완을 껐다 켰다 해도 똑같다**(4.369 vs 4.356) = 이웃 Li 가 같이 움직인다. 이 도구는 docstring 에 '협동 이동(다중 Li 동시)을 못 본다' 를 명시하고 있고 이 경우가 그것이다.",
+ "_VERDICT_NOT_A_FAILURE": "⭕ 실패가 아니라 결과다 — '이 홉(comp1 inter, pair 20-29, d=3.504 A)은 단일 Li 로 일어나지 않는다' 는 **기전 정보**다. 같은 홉을 --neb_steps 를 늘려 재시도하지 말 것. comp1 유효 장벽의 정본은 MD 축(li_transport.json, Ea 0.253 eV, UMA 멀티시드)이고 NEB 는 처음부터 기전 확인용이었다.",
+ "_SEE": [
+  "kb/methodology/computational_methods_canonical.md §6b (축 6: 그 홉이 애초에 단일 Li 사건인가)",
+  "kb/reviews/codex_B_neb_md_tools_2026_08_20.md §5 B-R7a (대조 실행 판정)"
+ ]
 }
