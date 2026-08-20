@@ -22,6 +22,7 @@
 | [codex-review-request](reviews/codex-review-request.md) | Codex 에게 붙여넣는 전수 리뷰 과제 + 종결 절차 |
 | [codex-review-round2](reviews/codex-review-round2.md) | Codex 2차 리뷰 과제 — 갱신 검증 + 2차 대상 20건 |
 | [codex-review-round3](reviews/codex-review-round3.md) | Codex 3차 리뷰 과제 — 2차 갱신 검증 |
+| [codex-review-knee](reviews/codex-review-knee.md) | knee 판정 집중 리뷰 과제 — 상수 과적합·세 직선 승격 편향 |
 | [2026-08-20-internal-audit](reviews/2026-08-20-internal-audit.md) | Claude 쪽 전수 감사(확정 65건) + Codex 교차표 |
 | [2026-08-20-codex-review](reviews/2026-08-20-codex-review.md) | Codex 독립 리뷰 원문 (확정 33건) |
 
