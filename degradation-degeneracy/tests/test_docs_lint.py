@@ -1239,3 +1239,69 @@ def test_warm_pairs_agree_row_by_row_on_the_first_objective():
         qa = a["by_objective_sha256"]["pocv_dvdq_dqdv"]["sha256"]
         qb = b["by_objective_sha256"]["pocv_dvdq_dqdv"]["sha256"]
         assert qa != qb, f"{nowarm}/{warm}: 34p 투영이 동일하다 — warm 이 무효였다는 뜻"
+
+
+#: 교차-digest 짝 중 **전 열·전 행이 동일**하다고 주장하는 짝.
+#: 실측(2026-08-20, 행 수준 투영): `cbe040612aa4415a` 로 완전히 같다.
+_XDIGEST_EXACT = [("fit_22p_seed_404_hc_warm_now", "fit_22p_seed_404_hc")]
+
+
+def _projection(leg: str) -> dict:
+    import yaml
+    return yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+
+
+@pytest.mark.parametrize("a,b", _XDIGEST_EXACT)
+def test_cross_digest_exact_pair_reproduces_row_for_row(a, b):
+    """★ LEG_INVENTORY §22 의 "교차-digest 완전 재현" 을 **행 수준으로** 올린다.
+
+    §22 는 aggregate 네 값(거짓 분리·bias·중앙값·원점)이 같다는 근거로
+    "`7250c6e6` → `a72c0f3a` 사이의 `fitting.py +98` · `halfcell.py +144` 가
+    이 경로의 수치를 전혀 안 바꿨다" 고 썼다. aggregate 일치는 조건별 일치가
+    아니므로(21차 Q2) 그 문장은 원래 근거보다 강했다.
+
+    행 수준 투영이 생기면서 이제 **전 행·전 열** 을 비교할 수 있다. 실측:
+
+        fit_22p_seed_404_hc          (7250c6e6)  cbe040612aa4415a
+        fit_22p_seed_404_hc_warm_now (a72c0f3a)  cbe040612aa4415a
+
+    1280행 × 20열이 자리별로 같다 — truth·hats·J·restart source 까지.
+    이것이 §22 주장의 **실제 근거**다.
+
+    ⚠ 범위: "이 다리의 경로에서 불활성" 이지 "그 코드 구간이 어디서나 무해" 가
+      아니다. 무왜곡 404 half-cell · warm=True 한 조건집합에서의 관측이다.
+      21차 발견 5 가 지적한 5 mV 짝은 여기 없다 — 그쪽은 warm 축도 함께 달라
+      애초에 exact 짝이 아니다.
+    """
+    pa, pb = _projection(a), _projection(b)
+    da = _warm_manifest(a)["run_spec"]["source_digest"]
+    db = _warm_manifest(b)["run_spec"]["source_digest"]
+    assert da != db, f"{a}/{b}: digest 가 같다 — 이 목록의 전제가 깨졌다"
+    assert pa["analysis_spec_sha256"] == pb["analysis_spec_sha256"]
+    assert pa["n_rows"] == pb["n_rows"], f"행 수가 다르다 {pa['n_rows']}/{pb['n_rows']}"
+    assert pa["projection_sha256"] == pb["projection_sha256"], (
+        f"{a}({da[:8]}) vs {b}({db[:8]}): 행 수준 재현이 깨졌다\n"
+        f"  {pa['projection_sha256'][:16]} vs {pb['projection_sha256'][:16]}\n"
+        f"  LEG_INVENTORY §22 의 '교차-digest 완전 재현' 근거가 사라진다.")
+
+
+@pytest.mark.parametrize("a,b", _XDIGEST_PAIRS)
+def test_cross_digest_pairs_agree_row_by_row_on_the_first_objective(a, b):
+    """★ 21차 Q2 — 교차-digest 짝의 33p 일치도 **조건별**로 확인한다.
+
+    기존 회귀는 aggregate `degenerate_frac` 만 봤다. 총 비율이 같아도 조건들이
+    서로 뒤바뀌었을 수 있다. 33p 부분 투영 digest 로 올린다.
+
+    ⚠ 이것이 무엇을 말하고 무엇을 말하지 않는가 (21차 발견 5):
+      **말한다** — 이 짝의 연쇄 1번째는 digest 가 달라도 행 단위로 동일하다.
+      **말하지 않는다** — 그 digest 구간이 34p 경로에도 무해했다는 것.
+      warm 인과나 "paired 밖에서도 계통적" 의 근거로 쓸 수 없다.
+    """
+    pa, pb = _projection(a), _projection(b)
+    assert pa["analysis_spec_sha256"] == pb["analysis_spec_sha256"]
+    ka = pa["by_objective_sha256"]["pocv_dvdq"]
+    kb = pb["by_objective_sha256"]["pocv_dvdq"]
+    assert ka["n_rows"] == kb["n_rows"], f"{a}/{b}: 33p 행 수가 다르다"
+    assert ka["sha256"] == kb["sha256"], (
+        f"{a} vs {b}: 33p 가 조건별로는 갈렸다 — 총 비율만 같았다\n"
+        f"  {ka['sha256'][:16]} vs {kb['sha256'][:16]}")

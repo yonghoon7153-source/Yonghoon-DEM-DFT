@@ -2012,3 +2012,39 @@ git add docs/22p_gap/warm_probe/*.projection.*
 
 투영이 붙기 전까지 warm-probe 다리들의 상태는 리뷰 Q4 분류로
 **`recorded_only`** 다 — 진단·설계 근거로는 쓰되 인용 정본이 아니다.
+
+### 30.6 8다리 전량 재계산 검증 통과 — 그리고 §22 가 행 수준으로 올라갔다
+
+원자료가 있는 기계에서 `row_projection.py --all` 실측 (2026-08-20):
+
+```
+✅ fit_22p_seed_404_hc            1280행  cbe040612aa4415a  재계산 일치 True
+✅ fit_22p_seed_404_hc_nowarm     1280행  2a2ac3072afe8bca  재계산 일치 True
+✅ fit_22p_seed_404_hc_warm_now   1280행  cbe040612aa4415a  재계산 일치 True
+✅ fit_seed404_pe5mv              1280행  e984cd337be13d47  재계산 일치 True
+✅ fit_seed404_pe5mv_nowarm       1280행  7b3e57bdf07ca9ce  재계산 일치 True
+✅ paired_fixed5_v4               6138행  ad598fe77e75afec  재계산 일치 True
+✅ paired_fixed5_v4_nowarm_now    6138행  8382ff247e2b5410  재계산 일치 True
+✅ paired_fixed5_v4_warm          6138행  267558a1d3088e4e  재계산 일치 True
+```
+
+**여덟 다리 전부 봉인 summary 가 원자료에서 자리별로 재현된다.** 발견 6 이
+"확인할 수 없다" 고 적은 세 줄 중 첫 줄(`봉인 fits 를 직접 재계산한 summary ==
+커밋된 summary`)이 닫혔다.
+
+그리고 예상하지 않은 것이 하나 나왔다:
+
+```
+fit_22p_seed_404_hc          (7250c6e6)  cbe040612aa4415a
+fit_22p_seed_404_hc_warm_now (a72c0f3a)  cbe040612aa4415a   ← 완전 동일
+```
+
+digest 가 다른 두 다리의 **1280행 × 20열이 바이트 단위로 같다.**
+`LEG_INVENTORY.md` §22 는 이 주장을 aggregate 네 값으로만 세웠는데 — 그리고
+aggregate 일치는 조건별 일치가 아니라는 것이 21차 Q2 의 지적이었다 — 이제
+행 수준 근거가 붙었다. §22 에 정정 블록을 넣고 회귀
+`test_cross_digest_exact_pair_reproduces_row_for_row` 로 고정했다.
+
+범위는 좁게 적는다: **이 다리의 경로에서 불활성**이지 그 코드 구간이 어디서나
+무해하다는 뜻이 아니다. 5 mV 짝은 여기 해당하지 않는다 (warm 축이 함께 다르다
+— 발견 5).
