@@ -5,7 +5,9 @@
 > 이식하고, 아무 머신에서나 **명령 한 줄로** 같은 환경이 재현되게 만들어 뒀습니다.
 > 물리 수식과 파라미터는 그대로입니다. 바꾼 것은 아래 §5에 전부 적어 뒀습니다.
 
-작성일: 2026-08-05 / **최종 갱신: 2026-08-07** / 대상 브랜치: `claude/zip-git-gpu-setup-vdqdtd`
+작성일: 2026-08-05 / **최종 갱신: 2026-08-07** / 작성 시점 브랜치: `claude/zip-git-gpu-setup-vdqdtd`
+(2026-08-20 기준 그 브랜치는 현재 작업 브랜치에 **완전히 흡수**됐다 — 고유 커밋 0개.
+지금의 작업 브랜치는 루트 `CLAUDE.md` 하드룰 1, 전체 지도는 루트 `BRANCHES.md`.)
 
 > **2026-08-07 기준 상태**: Phase 0~7이 전부 끝났고 fine 격자 채점 결과가 나왔습니다.
 
@@ -905,7 +907,7 @@ scipy savgol_filter   387 µs
 
 ```bash
 ./scripts/archive_results.sh          # results/ → artifacts/ 로 복사
-git add artifacts && git commit -m "backup: ..." && git push -u origin claude/zip-git-gpu-setup-vdqdtd
+git add artifacts && git commit -m "backup: ..." && git push -u origin "$(git rev-parse --abbrev-ref HEAD)"
 ```
 
 | 들어가는 것 | 이유 |

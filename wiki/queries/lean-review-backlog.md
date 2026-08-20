@@ -2,7 +2,7 @@
 title: Lean Review Backlog (실행 보류 중인 중복 정리)
 description: "Duplication candidates found by the lean ladder, deferred because refactoring changes source_digest during an open gate-review round"
 created: 2026-08-11
-updated: 2026-08-11
+updated: 2026-08-20
 type: query
 tags: [design, tooling, gate-review]
 sources: [raw/repositories/2026-08-11-agent-harness-repos.md]
@@ -23,11 +23,16 @@ evidenceScope: single-source
 
 ## 왜 보류인가
 
-리팩터링은 `src/` 를 건드리므로 `source_digest` 가 바뀐다. 지금은 13차 게이트
-리뷰가 커밋 `c9970ebc` 를 대상으로 열려 있고, GO 가 나오면 **그 코드 상태로**
-10시간 파이프라인을 돌린다. 리뷰 중에 identity 를 바꾸면 "리뷰받은 코드"와
-"실행한 코드"가 갈린다 ([[provenance-fail-closed-verification]] 원칙 1).
-→ **리뷰 라운드가 닫힌 직후**가 적기다.
+리팩터링은 `src/` 를 건드리므로 `source_digest` 가 바뀐다. 리뷰 중에 identity 를
+바꾸면 "리뷰받은 코드"와 "실행한 코드"가 갈리고, 이미 생산된 artifact 는
+fail-closed 로 무효화된다 ([[provenance-fail-closed-verification]] 원칙 1).
+→ **리뷰 라운드가 닫힌 직후, 다음 실행 전**이 적기다.
+
+- **[2026-08-11]** 13차 리뷰가 `c9970ebc` 대상으로 열려 있어 보류.
+- **[2026-08-20]** 그 라운드는 닫혔고 본 실행도 끝났다. **그런데 보류는 유지된다** —
+  이제는 다른 이유다: 모델 오차 민감도 스윕이 진행 중이라 그 다리들이 **같은
+  `source_digest` 위에서 비교돼야** 한다. 스윕이 끝나 다리 집합이 닫히는 시점이
+  다음 적기다. 이 항목이 영구 부채가 되지 않게, 그때 다시 이 페이지를 연다.
 
 ## 후보 1 — env 결정축 비교가 3곳에 중복 (사다리 2: 이미 있나)
 

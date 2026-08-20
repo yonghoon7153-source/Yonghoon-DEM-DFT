@@ -10,15 +10,21 @@ Checks (SCHEMA.md conventions):
   6. index.md lists every page, lists nothing that doesn't exist, and its
      "Total pages" count is accurate
   7. raw file sha256 matches body (immutability check)
-  8. the study path covers every page
-  9. orphan pages — zero inbound wikilinks from other pages (warning)
- 10. stale pages — `updated` older than STALE_DAYS (warning)
- 11. confidence:high pages without a Bias Check / 불확실성 section (note)
- 12. enum keys carry allowed values (claimType, evidenceScope, effort,
+  8. orphan pages — zero inbound wikilinks from other pages (warning)
+  9. stale pages — `updated` older than STALE_DAYS (warning)
+ 10. confidence:high pages without a Bias Check / 불확실성 section (note)
+ 11. enum keys carry allowed values (claimType, evidenceScope, effort,
      research-question status) — checked only when present
- 13. description frontmatter, if present, is quoted (v1.8 rule)
- 14. evidenceScope single-source with confidence high (warning — 근거 폭이 상한)
- 15. verified pages with verifiedAt older than STALE_DAYS (warning — re-verify)
+ 12. description frontmatter, if present, is quoted (v1.8 rule)
+ 13. evidenceScope single-source with confidence high (warning — 근거 폭이 상한)
+ 14. verified pages with verifiedAt older than STALE_DAYS (warning — re-verify)
+ 15. no wiki page hardcodes a git branch name — the branch rule lives in the
+     root CLAUDE.md only (2026-08-20: 5 wiki files had drifted to a dead branch)
+
+The kit's study-path coverage check was dropped on 2026-08-20: it only ran when
+`guides/llm-wiki-study-path.md` existed, and this is a project wiki, not a
+learning wiki, so that file never existed and the check never ran. A check that
+silently does nothing is worse than no check — it reads as coverage.
 
 Usage: python3 tools/lint.py
 Exit code 0 = no errors (warnings allowed), 1 = errors found.
@@ -144,14 +150,23 @@ for f in raws:
         errors.append(f'{pathlib.Path(f).name}: sha256 mismatch '
                       f'(declared {str(fm.get("sha256"))[:12]}…, actual {h[:12]}…)')
 
-sp_path = BASE / 'guides/llm-wiki-study-path.md'
-if sp_path.exists():
-    sp = sp_path.read_text()
-    for stem in pages:
-        if stem != 'llm-wiki-study-path' and stem not in sp:
-            errors.append(f'study-path: page not covered: {stem}')
+# 15. branch names are not wiki content — the rule lives in the root CLAUDE.md.
+#     Hardcoding it here drifts silently: on 2026-08-20 five wiki files (and
+#     three more outside the wiki) still named a branch that had been fully
+#     absorbed 88 commits earlier. `raw/` is exempt
+#     (immutable snapshots legitimately record the branch they were taken on).
+#     `.claude/` and `.github/` paths are not branch names — the lookbehind
+#     drops them.
+BRANCH_RE = re.compile(r'(?<![.\w/])claude/[A-Za-z0-9][A-Za-z0-9-]*')
+for f in [BASE / n for n in ('SCHEMA.md', 'CLAUDE.md', 'AGENTS.md', 'README.md',
+                             'index.md')] + sorted(pages.values()):
+    if not f.exists():
+        continue
+    for hit in sorted(set(BRANCH_RE.findall(f.read_text()))):
+        errors.append(f'{f.name}: hardcoded branch name `{hit}` — '
+                      f'루트 CLAUDE.md 의 브랜치 하드룰을 참조하라 (drift 방지)')
 
-# 9. orphans — no inbound links from any other page
+# 8. orphans — no inbound links from any other page
 inbound = {s: 0 for s in pages}
 for src, targets in outbound.items():
     for t in targets:
@@ -160,7 +175,7 @@ for stem, n in sorted(inbound.items()):
     if n == 0:
         warnings.append(f'{stem}: orphan (no inbound wikilinks from other pages)')
 
-# 10. stale — updated older than STALE_DAYS
+# 9. stale — updated older than STALE_DAYS
 today = datetime.date.today()
 for stem, fm in fm_by_page.items():
     try:
@@ -170,7 +185,7 @@ for stem, fm in fm_by_page.items():
     except ValueError:
         errors.append(f'{stem}: unparseable `updated` date: {fm.get("updated")}')
 
-# 15. verified but verification itself is stale
+# 14. verified but verification itself is stale
 for stem, fm in fm_by_page.items():
     if fm.get('verificationStatus') != 'verified':
         continue
@@ -181,7 +196,7 @@ for stem, fm in fm_by_page.items():
     except ValueError:
         pass  # missing/bad verifiedAt already an error above
 
-# 11. bias-check coverage for confidence:high (note, not warning)
+# 10. bias-check coverage for confidence:high (note, not warning)
 no_bias = [s for s, fm in fm_by_page.items()
            if fm.get('confidence') == 'high'
            and not re.search(r'불확실성|Bias Check|반대해석|한계', pages[s].read_text())]

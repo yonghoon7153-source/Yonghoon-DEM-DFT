@@ -2,8 +2,10 @@
 description: 현재 diff 에 최소주의 사다리 적용 — 중복·재구현만 겨냥, 검증 코드는 carve-out
 ---
 
-현재 변경분에 최소주의 사다리를 적용한다. 대상: $ARGUMENTS (비우면 마지막
-커밋들의 diff, `git diff origin/claude/zip-git-gpu-setup-vdqdtd...HEAD`)
+현재 변경분에 최소주의 사다리를 적용한다. 대상: $ARGUMENTS (비우면 upstream 대비
+diff — `git diff "origin/$(git rev-parse --abbrev-ref HEAD)...HEAD"`. 브랜치 이름을
+박아 두지 않는다: 루트 `CLAUDE.md` 하드룰 1이 정본이고, 박아 두면 브랜치가 바뀔 때
+조용히 실패한다)
 
 ponytail 의 decision ladder 를 이 저장소에 맞춰 **방향을 좁힌** 것이다. 이 저장소는
 13라운드 리뷰가 검증 코드를 계속 **늘리라고** 요구해 왔으므로, 사다리를 검증

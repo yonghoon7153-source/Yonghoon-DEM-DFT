@@ -9,7 +9,7 @@ description: 외부 자료를 raw source 로 저장하고 위키 페이지로 �
 `wiki/SCHEMA.md` 의 규칙을 따른다. 절차:
 
 1. **목적 확인 (Collection Purpose Gate)**: 사용자에게 딱 한 번 묻는다 — "이 자료를 왜 수집하나요? 어디에 쓸 예정인가요?" 답을 받은 뒤 진행한다.
-2. **Raw 저장**: 본문을 가능한 한 원형 그대로 `wiki/wiki/raw/articles/YYYY-MM-DD-{slug}.md` (논문이면 `wiki/raw/papers/`, 전사면 `wiki/raw/transcripts/`, 레포 감사면 `wiki/raw/repositories/`) 에 저장한다. frontmatter 는 `source_url`, `ingested`, `sha256` — 해시는 frontmatter 이후 본문(선행 빈 줄 제거)의 sha256. 수집 목적은 raw 파일 본문 상단에 한 줄 기록한다.
+2. **Raw 저장**: 본문을 가능한 한 원형 그대로 `wiki/raw/articles/YYYY-MM-DD-{slug}.md` (논문이면 `wiki/raw/papers/`, 전사면 `wiki/raw/transcripts/`, 레포 감사면 `wiki/raw/repositories/`) 에 저장한다. frontmatter 는 `source_url`, `ingested`, `sha256` — 해시는 frontmatter 이후 본문(선행 빈 줄 제거)의 sha256. 수집 목적은 raw 파일 본문 상단에 한 줄 기록한다.
 3. **중복 확인**: `wiki/index.md` 를 읽고 이미 있는 페이지와 겹치는지 확인한다. 겹치면 새 페이지 대신 기존 페이지를 갱신한다 (`updated` bump).
 4. **RQ 라우팅**: `wiki/questions/` 의 열린 research-question 카드(status: open|active)를 훑고, 이 자료가 근거를 주면 해당 카드의 Evidence For/Against 와 Status Log 에 추가한다 (`updated` bump).
 5. **논문이면 (DOI/arXiv/저널)**: 기본은 일반 컴파일. 프로젝트가 이 논문의 수치·정의를 verbatim 반복 참조할 것 같으면 **Paper Ingest Mode 를 사용자에게 제안**한다 (`wiki/guides/paper-ingest-mode.md`) — 승인 전에는 실행 금지, 승인 후에도 필요한 좌표만.

@@ -49,19 +49,9 @@ print(f'\nconfidence:         {dist("confidence")}')
 print(f'verificationStatus: {dist("verificationStatus")}')
 print(f'explored:           {dist("explored")}')
 
-# study path progress — parse checklist lines "- Stage N: [ ] a · [ ] b"
-sp_path = BASE / 'guides/llm-wiki-study-path.md'
-if sp_path.exists():
-    print('\n학습 진도 (explored: true 기준):')
-    for line in sp_path.read_text().splitlines():
-        m = re.match(r'^- (Stage \d+): (.+)$', line)
-        if not m:
-            continue
-        stage = m.group(1)
-        stems = [s for s in re.findall(r'\[ \] ([\w-]+)', m.group(2)) if s in pages]
-        done = sum(1 for s in stems if pages[s][1].get('explored') == 'true')
-        bar = '█' * done + '░' * (len(stems) - done)
-        print(f'  {stage}: {bar} {done}/{len(stems)}')
+# (킷의 study-path 진도 바는 2026-08-20 제거 — `guides/llm-wiki-study-path.md`
+#  가 있을 때만 그리는데 이 위키는 학습용이 아니라 프로젝트 위키라 그 파일이
+#  존재한 적이 없다. lint 의 study-path 커버리지 검사도 같이 걷어냈다.)
 
 # verify queue
 unverified = sorted(s for s, (_, fm) in pages.items()

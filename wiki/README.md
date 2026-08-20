@@ -18,8 +18,9 @@ Karpathy LLM Wiki 패턴 킷(`llm-wiki-kit_260730`, 커맨드스페이스 구요
 
 ## 킷 원본과 다른 점 (이 환경 적응)
 
-1. **배치**: 별도 저장소가 아니라 이 모노레포 root `wiki/`. 커밋은 작업 브랜치
-   (`claude/zip-git-gpu-setup-vdqdtd`)로만 push 한다.
+1. **배치**: 별도 저장소가 아니라 이 모노레포 root `wiki/`. 커밋은 **루트
+   `CLAUDE.md` 하드룰 1이 지정한 작업 브랜치**로만 push 한다 (브랜치 이름을 위키에
+   적지 않는 이유는 `SCHEMA.md` Git 절).
 2. **커맨드 이름**: repo root `.claude/commands/` 에 `wiki-` 접두로 설치
    (/wiki-ingest /wiki-inbox /wiki-query /wiki-verify /wiki-lint /wiki-status /wiki-wrap)
    — 연구 파이프라인 쪽 이름(/verify 등)과의 혼동 방지.
