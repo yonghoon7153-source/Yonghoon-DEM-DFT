@@ -654,3 +654,126 @@ def test_p22_unmeasured_list_credits_every_leg_that_was_run():
 
     stale = [s for s in _P22_STALE_DENIALS if s in block]
     assert not stale, f"표와 모순되던 옛 문장이 되살아났다: {stale}"
+
+
+# ── warm-start 분리 실험: 문서 수치를 봉인 summary 에 결속 ────────────────────
+_WARM = Path(__file__).resolve().parent.parent / "docs" / "22p_gap" / "warm_probe"
+
+#: §20.4 재정정 표가 인용하는 (다리, 목적함수) → 그 값이 있어야 할 곳.
+_WARM_CLAIMS = [
+    ("paired_fixed5_v4", "pocv_dvdq"), ("paired_fixed5_v4", "pocv_dvdq_dqdv"),
+    ("paired_fixed5_v4_nowarm_now", "pocv_dvdq"),
+    ("paired_fixed5_v4_nowarm_now", "pocv_dvdq_dqdv"),
+    ("paired_fixed5_v4_warm", "pocv_dvdq"),
+    ("paired_fixed5_v4_warm", "pocv_dvdq_dqdv"),
+]
+
+#: **같은 digest** 에서 warm 만 다른 짝 → 연쇄 1번째는 동일해야 한다.
+#: ★ 초판에 `fit_seed404_pe5mv` 를 넣었다가 이 테스트에 잡혔다 — 그 다리는
+#:   옛 digest(`d842894`)라 same-digest 짝이 아니다. warm 축만 분리하려면
+#:   digest 가 같아야 한다는 것을 테스트가 먼저 강제했다.
+_WARM_PAIRS = [("paired_fixed5_v4_nowarm_now", "paired_fixed5_v4_warm"),
+               ("fit_22p_seed_404_hc_nowarm", "fit_22p_seed_404_hc_warm_now")]
+
+#: digest 가 다른 짝 — warm 축 귀속에는 못 쓰지만, 1번째가 그래도 같다는 것은
+#: 그 digest 구간이 수치적으로 무해하다는 별도 증거다 (LEG_INVENTORY §22).
+_XDIGEST_PAIRS = [("fit_seed404_pe5mv_nowarm", "fit_seed404_pe5mv"),
+                  ("fit_22p_seed_404_hc_warm_now", "fit_22p_seed_404_hc")]
+
+
+def _warm_summary(leg: str) -> dict:
+    import yaml
+    return yaml.safe_load((_WARM / f"{leg}.summary.yaml").read_text(encoding="utf-8"))
+
+
+def _warm_manifest(leg: str) -> dict:
+    import yaml
+    return yaml.safe_load((_WARM / f"{leg}.manifest.yaml").read_text(encoding="utf-8"))
+
+
+def test_warm_probe_summaries_are_committed():
+    """★ 20차 리뷰 후속 — §20.4 재정정이 인용하는 다리는 봉인돼 있어야 한다.
+
+    원자료(`fits.parquet`)는 `results/` 에만 있어 git 밖이다. summary·manifest
+    조차 없으면 §20.4 재정정 전체가 자기신고가 된다 (원칙 2 위반).
+    """
+    missing = [l for l, _ in _WARM_CLAIMS if not (_WARM / f"{l}.summary.yaml").is_file()]
+    assert not missing, f"§20.4 가 인용하는 다리의 summary 가 없다: {missing}"
+
+
+def test_warm_probe_numbers_match_the_review_response():
+    """★ 문서에 적힌 `degenerate_frac` 이 봉인 summary 와 같아야 한다.
+
+    손으로 옮겨 적은 수치가 stale 해지는 것이 이 저장소의 반복 실패 모드다
+    (§20.4 자신이 그 사고의 기록이다). 기계로 묶는다.
+    """
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+    bad = []
+    for leg, obj in _WARM_CLAIMS:
+        val = _warm_summary(leg)["by_objective"][obj]["degenerate_frac"]
+        if f"{val:.6f}" not in doc:
+            bad.append(f"{leg}/{obj} = {val:.6f} 가 문서에 없다")
+    assert not bad, "§20.4 수치가 봉인본과 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_warm_probe_records_the_protocol_axes():
+    """★ regime 3축(warm·adaptive·restart)이 manifest 에 남아 있어야 한다.
+
+    20차 리뷰 발견 3 의 핵심 — 같은 수치도 protocol 이 다르면 다른 뜻이다.
+    `paired_fixed5_v4` 가 `warm_start=False` 라는 사실이 §20.4 재정정의 출발점이다.
+    """
+    for leg, _ in _WARM_CLAIMS:
+        rs = _warm_manifest(leg).get("run_spec") or {}
+        assert rs.get("warm_start") is not None, f"{leg}: warm_start 미기록"
+        assert (rs.get("optimizer") or {}).get("adaptive") is not None, \
+            f"{leg}: optimizer.adaptive 미기록"
+        assert rs.get("n_restarts"), f"{leg}: n_restarts 미기록"
+    assert (_warm_manifest("paired_fixed5_v4")["run_spec"]["warm_start"]) is False, \
+        "정본이 warm=False 라는 §20.4 재정정의 전제가 깨졌다"
+
+
+def test_warm_only_moves_the_second_objective_in_the_chain():
+    """★ 이 실험의 sanity check — 연쇄 1번째는 warm 영향을 받으면 안 된다.
+
+    `--objective pocv_dvdq,pocv_dvdq_dqdv` 에서 warm start 는 앞 목적함수의 해를
+    뒤로 넘긴다. 1번째는 넘겨받을 것이 없으므로 warm 여부와 무관해야 한다.
+    이것이 깨지면 "34p 변화는 warm 때문" 이라는 §20.4 재정정의 귀속이 무너진다.
+
+    실측 (같은 digest, warm 만 다름):
+      paired  33p 0.615854 = 0.615854 · 34p 0.873984 → 0.628726
+      404 hc  33p 0.800000 = 0.800000 · 34p 0.640625 → 0.184375
+    """
+    for nowarm, warm in _WARM_PAIRS:
+        mn, mw = _warm_manifest(nowarm)["run_spec"], _warm_manifest(warm)["run_spec"]
+        assert mn["source_digest"] == mw["source_digest"], (
+            f"{nowarm} vs {warm}: digest 가 달라 warm 축이 분리되지 않는다")
+        assert mn["warm_start"] is False and mw["warm_start"] is True
+
+        a = _warm_summary(nowarm)["by_objective"]["pocv_dvdq"]["degenerate_frac"]
+        b = _warm_summary(warm)["by_objective"]["pocv_dvdq"]["degenerate_frac"]
+        assert a == b, (
+            f"{nowarm} vs {warm}: 연쇄 1번째(pocv_dvdq)가 움직였다 "
+            f"({a:.6f} vs {b:.6f}) — warm 귀속이 성립하지 않는다")
+
+        c = _warm_summary(nowarm)["by_objective"]["pocv_dvdq_dqdv"]["degenerate_frac"]
+        d = _warm_summary(warm)["by_objective"]["pocv_dvdq_dqdv"]["degenerate_frac"]
+        assert d < c, f"{warm}: warm 이 34p 를 개선하지 않았다 ({c:.6f} → {d:.6f})"
+
+
+def test_cross_digest_pairs_still_agree_on_the_first_objective():
+    """★ digest 가 달라도 연쇄 1번째가 같다 — 그 구간이 수치적으로 무해하다는 증거.
+
+    warm 축 귀속에는 쓸 수 없는 짝이지만(코드가 섞인다), 1번째 목적함수가
+    소수점 6자리까지 일치한다는 것은 그 digest 구간이 fit 수치를 안 바꿨다는
+    독립 증거다. `fit_22p_seed_404_hc`(7250c6e6) ↔ `_warm_now`(a72c0f3a) 는
+    34p 까지 일치한다 — LEG_INVENTORY §22 의 교차-digest 완전 재현.
+    """
+    for a, b in _XDIGEST_PAIRS:
+        da = _warm_manifest(a)["run_spec"]["source_digest"]
+        db = _warm_manifest(b)["run_spec"]["source_digest"]
+        assert da != db, f"{a} vs {b}: digest 가 같다 — 이 목록의 전제가 깨졌다"
+        va = _warm_summary(a)["by_objective"]["pocv_dvdq"]["degenerate_frac"]
+        vb = _warm_summary(b)["by_objective"]["pocv_dvdq"]["degenerate_frac"]
+        assert va == vb, (
+            f"{a}({da[:8]}) vs {b}({db[:8]}): 연쇄 1번째가 digest 간에 갈렸다 "
+            f"({va:.6f} vs {vb:.6f}) — 그 구간이 수치를 바꿨다는 뜻이다")
