@@ -1,0 +1,52 @@
+# 규율 검사 — 세 검사기를 **기계가** 돌린다.
+#
+# ★ 왜 (Codex ⑨ · CLAUDE.md 작업 규율 ④): 우리는 정본·원장·금지어를 강제하는 검사기를 셋
+#   갖고 있는데 **전부 수동**이었다.  그래서 2026-08-12 에 반증된 값이 08-19 신규 문서에서
+#   재주장되고, 독립 리뷰가 그것을 낡은 정본에 대조해 "일치" 로 통과시켰다.  사람이 기억해서
+#   돌리는 검사는 잊히는 순간 없는 것과 같다.
+#
+# ⚠ 이 워크플로는 **GPU·솔브를 돌리지 않는다** — 초소형 픽스처 스모크(규칙 J)와 정적 검사뿐이라
+#   수 분이면 끝난다.  실험 런은 여전히 kgy 에서 사람이 돌린다.
+name: discipline
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # 검사기가 `claimed_fixed_sha` 가 **이 리포에 실재하는 커밋인지** 본다 →
+          # 얕은 클론이면 옛 SHA 를 못 찾아 거짓 실패한다.
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 의존성 (검사기가 실제로 쓰는 것만)
+        run: python -m pip install --quiet numpy scipy
+
+      - name: 원장 자기일관성 + 철회값 스윕 (selftest)
+        run: python scripts/check_review_findings.py --selftest
+
+      - name: 원장 자기일관성 + 철회값 스윕 (리포 실물)
+        run: python scripts/check_review_findings.py
+
+      - name: 방법 규율 A~J (selftest — 음성 대조 포함)
+        run: python scripts/check_method_discipline.py --selftest
+
+      - name: 방법 규율 A~J (리포 실물 — 규칙 J 는 엔트리포인트를 실제로 돌린다)
+        run: python scripts/check_method_discipline.py
+
+      - name: 사전등록 판정기 (selftest)
+        run: python scripts/sdcp_gain_verdict.py --selftest
+
+      - name: 상별 부피 원장 캐시 매칭 (selftest)
+        run: python scripts/sdcp_phase_ledger_match.py --selftest

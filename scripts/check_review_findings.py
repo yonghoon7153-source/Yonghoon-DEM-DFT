@@ -96,10 +96,16 @@ CLAIMS_DEFAULT = os.path.join('docs', 'reviews', 'claims.json')
 #:   그런데 스윕은 "누수 0" 을 냈다 = false-green.  ⇒ **사용자에게 노출되는 산출물**을 전부 넣는다
 #:   (JSON 덱·러너 셸·덱 생성기).  scripts/*.py 는 넣지 않는다 — 그쪽 등장은 대부분 철회를
 #:   설명하는 주석이고, 필요하면 줄-근처 표지 규칙으로 개별 통과한다.
+#: ⚠⚠ 2026-08-20 (CDXIJ-9 **잔여**) — zip 안은 스윕이 못 봤다.  `docs/seminar/*.pptx` 두 덱이
+#:   슬라이드에 `+52.0 %`·`+5.6 %`·`48.2` 를 표지 없이 달고 있는데 스윕은 "누수 0" 을 냈다 =
+#:   CDXIJ-4 와 **같은 false-green, 매체만 다르다**.  웹앱 UI 와 덱 생성기를 fail-closed 로
+#:   막아도 **체크인된 바이너리 자체**는 열면 그대로 보인다 — 그리고 발표에 쓰이는 것은 그쪽이다.
+#:   ⇒ 리더 층(`_ban_read_lines`)을 둬서 Office zip 을 문단당 한 줄로 펼친다.
 BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
                   'webapp/templates/*.html', 'webapp/static/js/*.js',
                   'scripts/seminar_deck/*.js',
-                  'docs/**/*.json', 'webapp/**/*.json', 'scripts/*.sh')
+                  'docs/**/*.json', 'webapp/**/*.json', 'scripts/*.sh',
+                  'docs/**/*.pptx')
 
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
@@ -167,6 +173,127 @@ def _ban_files(repo_root):
     return sorted(set(out))
 
 
+#: Office zip 으로 취급할 확장자 (내용이 XML 파트라 평문 읽기로는 안 보인다).
+BAN_ZIP_EXT = ('.pptx', '.docx')
+#: zip 안에서 사용자에게 **보이는** 파트만 읽는다 (테마·마스터는 안 읽는다 — 화면에 안 뜬다).
+BAN_ZIP_PARTS = ('ppt/slides/slide', 'ppt/notesSlides/notesSlide', 'word/document')
+
+
+def _office_paragraphs(xml):
+    """Office XML 한 파트 → 문단 문자열 리스트.
+
+    ⚠ **run 은 붙여서 잇는다** (`''.join`).  pptx 는 한 낱말을 여러 `<a:t>` run 으로 쪼개는
+      것이 기본 동작이라 (맞춤법 검사·서식 흔적) 공백으로 이으면 `+52.` / `0 %` 같은 분할이
+      검사를 그냥 통과한다.  문단 경계(`</a:p>` · `</w:p>`)만 줄로 가른다.
+    """
+    import re as _re
+    import html as _html
+    out = []
+    for para in _re.split(r'</a:p>|</w:p>', xml):
+        runs = _re.findall(r'<(?:a|w):t[^>]*>(.*?)</(?:a|w):t>', para, _re.S)
+        if runs:
+            out.append(_html.unescape(''.join(runs)))
+    return out
+
+
+def _ban_read_lines(path):
+    """검사용 텍스트 줄 → list, 또는 못 읽으면 None.
+
+    평문은 그대로.  Office zip 은 **보이는 파트만** 풀어 `slide3| …` 처럼 출처를 붙인
+    문단 줄로 펼친다 (그래야 보고가 몇 번째 슬라이드인지 말한다).  파트 순서를 지키므로
+    슬라이드 1 이 배너면 `_has_banner` 의 머리 줄 규칙이 자연히 적용된다.
+    """
+    if os.path.splitext(path)[1].lower() not in BAN_ZIP_EXT:
+        try:
+            with open(path, encoding='utf-8', errors='replace') as f:
+                return f.read().split('\n')
+        except OSError:
+            return None
+    import zipfile as _zf
+    import re as _re
+    try:
+        z = _zf.ZipFile(path)
+    except Exception:                                              # noqa: BLE001
+        return None
+    names = set(z.namelist())
+
+    def _txt(member, tag, out):
+        if member not in names:
+            return
+        try:
+            xml = z.read(member).decode('utf-8', 'replace')
+        except Exception:                                          # noqa: BLE001
+            return
+        for para in _office_paragraphs(xml):
+            out.append(f'{tag}| {para}')
+
+    #  ⚠⚠ **정규식으로 읽지 않는다.**  실사고 (2026-08-20): `r:id` 를 문자열로 찾았더니, 접두사가
+    #    다르게 직렬화된 슬라이드 하나를 **조용히 빠뜨렸다** — 그리고 하필 그것이 배너였다.
+    #    빠진 장은 스윕에도 안 걸리므로 **덱이 검사를 숨길 수 있는 구멍**이다 (fail-open).
+    #    ⇒ 네임스페이스 정규명으로 파싱하고, 그래도 안 잡힌 슬라이드 파트는 `orphan:` 으로
+    #      **끌어와 검사**한다 (fail-closed).
+    _R_NS = '{http://schemas.openxmlformats.org/officeDocument/2006/relationships}id'
+
+    def _rels(part):
+        """part 의 rels → {rId: 대상 멤버 경로}."""
+        import xml.etree.ElementTree as _ET
+        d, base = part.rsplit('/', 1)
+        m = f'{d}/_rels/{base}.rels'
+        if m not in names:
+            return {}
+        try:
+            root = _ET.fromstring(z.read(m))
+        except Exception:                                          # noqa: BLE001
+            return {}
+        out = {}
+        for el in root:
+            rid, tgt = el.get('Id'), el.get('Target')
+            if rid and tgt and el.get('TargetMode') != 'External':
+                out[rid] = _os_norm(d, tgt)
+        return out
+
+    lines = []
+    #  ⚠⚠ **발표 순서 ≠ zip 멤버 이름 순서.**  실사고 (2026-08-20): 배너 슬라이드를 맨 앞에
+    #    끼웠더니 python-pptx 가 `slide21.xml` 로 저장했고, 이름순으로 읽던 옛 판은 그것을
+    #    **맨 뒤**로 놓아 배너를 못 봤다.  게다가 보고가 `#slide12` 라고 말하는데 그 번호는
+    #    파일 이름이지 **화면에서 12번째** 라는 뜻이 아니었다 — 사람이 열어 보면 다른 장이다.
+    #    ⇒ `presentation.xml` 의 `sldIdLst` 로 **진짜 순서**를 푼다.  노트도 그 슬라이드에 붙인다.
+    if 'ppt/presentation.xml' in names:
+        import xml.etree.ElementTree as _ET
+        rel = _rels('ppt/presentation.xml')
+        order = []
+        try:
+            root = _ET.fromstring(z.read('ppt/presentation.xml'))
+            for lst_el in root.iter():
+                if lst_el.tag.endswith('}sldIdLst'):
+                    order = [rel.get(el.get(_R_NS)) for el in lst_el]
+                    break
+        except Exception:                                          # noqa: BLE001
+            pass
+        seen_parts = set()
+        for pos, member in enumerate([m for m in order if m], 1):
+            seen_parts.add(member)
+            _txt(member, f'slide{pos}', lines)
+            for tgt in _rels(member).values():
+                if 'notesSlide' in tgt:
+                    _txt(tgt, f'slide{pos}-notes', lines)
+        #  순서에서 못 찾은 슬라이드 파트도 반드시 읽는다 — 안 그러면 검사를 숨길 수 있다.
+        for n in sorted(x for x in names
+                        if x.startswith('ppt/slides/slide') and x.endswith('.xml')
+                        and x not in seen_parts):
+            _txt(n, f'orphan-{n.rsplit("/", 1)[-1][:-4]}', lines)
+    else:
+        for n in sorted(n for n in names
+                        if n.endswith('.xml') and any(n.startswith(p) for p in BAN_ZIP_PARTS)):
+            _txt(n, n.rsplit('/', 1)[-1][:-4], lines)
+    return lines
+
+
+def _os_norm(base_dir, target):
+    """rels 의 상대 대상(`../notesSlides/x.xml`)을 zip 멤버 경로로."""
+    return os.path.normpath(os.path.join(base_dir, target)).replace(os.sep, '/')
+
+
 def _has_banner(lines):
     """파일 전체 면제 여부.  **표지 + 원장 지목**을 둘 다 요구한다 (IJ-04)."""
     head = '\n'.join(lines[:BAN_BANNER_HEAD_LINES])
@@ -181,6 +308,7 @@ def ban_sweep(repo_root, claims_path=None, files=None):
     배너가 있음(이력 문서) ⓒ 그 줄 ±2 줄에 철회 표지가 있음(철회를 밝히고 인용).
     """
     import fnmatch as _fn
+    import re as _re_mod
     claims_path = claims_path or os.path.join(repo_root, CLAIMS_DEFAULT)
     bans, err = load_bans(claims_path)
     probs = []
@@ -191,10 +319,8 @@ def ban_sweep(repo_root, claims_path=None, files=None):
         rel = os.path.relpath(path, repo_root).replace(os.sep, '/')
         if rel in BAN_ALLOW_ALWAYS:
             continue
-        try:
-            with open(path, encoding='utf-8', errors='replace') as f:
-                lines = f.read().split('\n')
-        except OSError:
+        lines = _ban_read_lines(path)
+        if lines is None:
             continue
         banner = _has_banner(lines)
         for b in bans:
@@ -213,7 +339,10 @@ def ban_sweep(repo_root, claims_path=None, files=None):
                 near = '\n'.join(lines[lo:i + BAN_NEAR_LINES + 1])
                 if any(m in near for m in BAN_NEAR_MARKS):
                     continue
-                probs.append(f'BAN| {rel}:{i + 1} — 철회값 "{pat}" 이 표지 없이 살아 있다 '
+                #  Office zip 은 줄번호가 뜻이 없다 — 리더가 붙인 파트 태그(`slide7`)를 쓴다.
+                _m = _re_mod.match(r'([A-Za-z0-9-]+)\| ', ln)
+                _at = f'{rel}#{_m.group(1)}' if _m else f'{rel}:{i + 1}'
+                probs.append(f'BAN| {_at} — 철회값 "{pat}" 이 표지 없이 살아 있다 '
                              f'({b.get("claim", "?")}: {b.get("why", "")[:70]})')
     return probs, len(files), len(bans)
 
@@ -499,6 +628,53 @@ def _selftest():
                 _f.write('# 제목\n\n결과는 +52.00% 이고 이온은 +5.60% 다\n')
             _p5, _, _ = ban_sweep(_d, _claims, files=[_var])
             ok('20b) ★ 표기 변형(+52.00% · +5.60%)도 잡는다', _p5 != [])
+
+            #  ── 2026-08-20 (CDXIJ-9 잔여) — **zip 안**을 정말 보는가.  세 가지 음성 대조:
+            #     ⓐ 표지 없는 슬라이드를 잡고 **몇 번 슬라이드인지 말한다**
+            #     ⓑ 슬라이드 1 배너면 면제 (이력 덱을 죽이지 않는다)
+            #     ⓒ ★ run 이 쪼개져도 잡는다 — pptx 가 한 낱말을 여러 `<a:t>` 로 가르는 것이
+            #        기본 동작이라, 이 대조가 없으면 스윕이 조용히 통과한다.
+            import zipfile as _zft
+
+            def _mkppt(dst, slides):
+                with _zft.ZipFile(dst, 'w') as _z:
+                    for _i, _runs in enumerate(slides, 1):
+                        _t = ''.join(f'<a:t>{r}</a:t>' for r in _runs)
+                        _z.writestr(f'ppt/slides/slide{_i}.xml',
+                                    f'<p:sld xmlns:a="x"><a:p>{_t}</a:p></p:sld>')
+
+            _d1 = os.path.join(_d, 'deck_bad.pptx')
+            _mkppt(_d1, [['제목 슬라이드'], [f'헤드라인 {_pat} 달성']])
+            _p6, _, _ = ban_sweep(_d, _claims, files=[_d1])
+            ok('22a) ★ 음성 대조 — pptx 슬라이드 안의 철회값을 잡고 슬라이드를 지목한다',
+               any(_pat in x and 'slide2' in x for x in _p6))
+
+            _d2 = os.path.join(_d, 'deck_ok.pptx')
+            _mkppt(_d2, [['⛔ HISTORICAL — 이 덱은 이력이다.  정본: docs/reviews/claims.json (CL-24)'],
+                         [f'헤드라인 {_pat} 달성']])
+            _p7, _, _ = ban_sweep(_d, _claims, files=[_d2])
+            ok('22b) 슬라이드 1 이 원장을 지목하는 배너면 덱 전체 면제', _p7 == [])
+
+            #  `+52.0 %` 를 pptx 가 실제로 쪼개는 방식대로 run 3개로 가른다
+            _d3 = os.path.join(_d, 'deck_split.pptx')
+            _sp = [_pat[:len(_pat) // 2], _pat[len(_pat) // 2:]]
+            _mkppt(_d3, [['제목'], ['헤드라인 '] + _sp + [' 달성']])
+            _p8, _, _ = ban_sweep(_d, _claims, files=[_d3])
+            ok('22c) ★ run 이 쪼개져 있어도 잡는다 (문단 안에서 run 을 붙여 읽는다)',
+               any(_pat in x for x in _p8))
+
+            #  ⓓ ★ **순서에 없는 슬라이드도 읽는다.**  실사고: 배너를 끼웠더니 접두사가 다르게
+            #     직렬화돼 순서 해석에서 빠졌고, 빠진 장은 스윕에도 안 걸렸다 = 덱이 검사를
+            #     숨길 수 있었다.  여기서는 `sldIdLst` 를 아예 비워 그 상황을 만든다.
+            _d4 = os.path.join(_d, 'deck_orphan.pptx')
+            with _zft.ZipFile(_d4, 'w') as _z:
+                _z.writestr('ppt/presentation.xml',
+                            '<p:presentation xmlns:p="y"><p:sldIdLst/></p:presentation>')
+                _z.writestr('ppt/slides/slide1.xml',
+                            f'<p:sld xmlns:a="x"><a:p><a:t>헤드라인 {_pat}</a:t></a:p></p:sld>')
+            _p9, _, _ = ban_sweep(_d, _claims, files=[_d4])
+            ok('22d) ★ 발표 순서에 없는(고아) 슬라이드도 검사한다 — 덱이 검사를 숨길 수 없다',
+               any(_pat in x and 'orphan' in x for x in _p9))
 
     ok('21) ★ 리포 전체가 지금 깨끗하다 (누수 0)',
        ban_sweep(here, _claims)[0] == [])
