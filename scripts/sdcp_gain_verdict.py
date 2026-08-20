@@ -188,7 +188,18 @@ def verdict(arms, seed_ensemble=False):
     #  ★ 그리고 **없는 것**도 잡는다 (리뷰 ① H5): `bridge_um` 이 매니페스트에 없던 시절에는
     #    위 루프가 항상 빈 집합을 봐서 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
     #    명시적으로 못 박으라고 한 인자가 기록조차 안 됐다면 그것은 통과가 아니라 HOLD 다.
-    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp'):
+    #    ★★ 2026-08-20 (전수 감사 코드 #2) — 이 목록이 4개뿐이라 **구멍이 6개** 있었다:
+    #      `sigma_vgcf_S_cm`·`sigma_sdcp_S_cm`·`sdcp_sphere_d_um`·`backend`·
+    #      `sdcp_yield_to_vgcf`·`sigma_ptfe_S_cm` 는 위 고정-인자 루프에는 있지만 (None 은
+    #      skip) 여기에도 `_GEN_FIELDS` 에도 없어, **양쪽 침대 8팔이 전부 기록 없는 세대**면
+    #      그대로 판정이 났다 (실측: 8팔 전부 None → HOLD 가 아니라 `h0`).  게다가 앞 넷은
+    #      `_GEN_FIELDS` 밖이라 **섞여 있어도** 통과했다.  러너 자신이 "옛 팔은 OUTDIR= 로
+    #      이어 쓰라" 고 안내하므로 이 경로는 가정이 아니라 권장 시나리오다.
+    #      ⇒ 현행 payload 는 이 여섯을 **항상** 기록한다 (`mpm_webapp_payload.py` 매니페스트)
+    #        — 없으면 옛 세대이고, 옛 세대는 고정을 확인할 수 없으므로 HOLD 다 (H5 와 같은 논리).
+    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp',
+                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sdcp_sphere_d_um',
+                'backend', 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm'):
         _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
         if _miss:
             return dict(out, decision='HOLD',
@@ -406,6 +417,16 @@ def _selftest():
     v21 = verdict(_mixE)
     chk(f'㉑ ★ 첨가제 E 가 다른 침대 혼합은 HOLD (SDCP 23.6 vs 9.0) ({v21["decision"]})',
         v21['decision'] == 'HOLD' and 'additive_E_GPa' in (v21.get('reason') or ''))
+    #  ㉒ ★★ 2026-08-20 (전수 감사 코드 #2) — **기록이 없으면 게이트가 no-op** 부류의 잔존.
+    #     고정-인자 루프는 None 을 skip 하므로, 그 인자를 **아무 팔도 기록하지 않은 세대**면
+    #     검사가 통과해 버린다.  실측으로 여섯 필드가 전부 그랬다 (HOLD 가 아니라 h0).
+    #     한 필드씩 지워 **전부** HOLD 가 되는지 본다 — 목록에서 하나가 빠지면 이 검사가 죽는다.
+    for _f in ('sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sdcp_sphere_d_um',
+               'backend', 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm'):
+        _v22 = verdict(mk(base, [v * 1.08 for v in base], **{_f: None}))
+        chk(f'㉒ 기록 없는 고정 인자 `{_f}` 는 HOLD ({_v22["decision"]})',
+            _v22['decision'] == 'HOLD' and _f in (_v22.get('reason') or ''))
+
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

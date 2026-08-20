@@ -382,18 +382,34 @@ def seed_sheath(n_seg, box_um, dx_um, rng, am=None, in_am=None, wrap_frac=1.0,
 
 def _fib_sphere_samples(am_c, am_r, n_samp, seed=0):
     """Area-weighted Fibonacci samples on AM sphere surfaces → (pts[(n,3)], sphere_idx[(n,)]).
-    Same ground-truth convention as the SE-dump coverage check (CLAUDE.md 2026-06-17)."""
+    Same ground-truth convention as the SE-dump coverage check (CLAUDE.md 2026-06-17).
+
+    ⚠ 2026-08-20 (전수 감사 코드 하위 α) — `seed` 는 **받기만 하고 쓰지 않았다**.  Fibonacci
+      나선은 결정론적이라 seed 를 바꿔도 표본이 **완전히 동일**했고, 그래서
+      `sheath_ion_tradeoff(seed=…)` 를 스윕해도 앙상블이 아니라 같은 값 n 벌이 나온다
+      (= 가짜 정밀도, `sdcp_gain_verdict` 의 "중복 origin" 게이트가 막는 바로 그 부류).
+      ⇒ 이제 seed 가 나선의 **위상(방위각 오프셋)과 극 오프셋**을 흔든다.  seed=0 은
+      옛 거동과 **비트 단위로 같다** (오프셋 0) — 기존 산출물이 바뀌지 않는다.
+    """
     C, R = np.asarray(am_c, np.float64), np.asarray(am_r, np.float64)
     w = R ** 2; w = w / w.sum()
     per = np.maximum(8, np.round(w * n_samp).astype(int))
     ga = np.pi * (3.0 - np.sqrt(5.0))                          # golden angle
+    #  seed=0 → (0, 0) = 옛 경로 그대로.  그 외에는 구마다 다른 위상을 준다.
+    if int(seed) == 0:
+        _ph = np.zeros(len(C)); _dz = np.zeros(len(C))
+    else:
+        _rng = np.random.default_rng(int(seed))
+        _ph = _rng.uniform(0.0, 2.0 * np.pi, len(C))
+        _dz = _rng.uniform(-0.5, 0.5, len(C))                  # ±½ 격자칸 극 오프셋
     pts, idx = [], []
     for j in range(len(C)):
         m = per[j]
         i = np.arange(m, dtype=np.float64)
-        z = 1.0 - 2.0 * (i + 0.5) / m
+        z = 1.0 - 2.0 * (i + 0.5 + _dz[j]) / m
+        z = np.clip(z, -1.0, 1.0)
         rr = np.sqrt(np.maximum(0.0, 1.0 - z * z))
-        th = ga * i
+        th = ga * i + _ph[j]
         d = np.column_stack([rr * np.cos(th), rr * np.sin(th), z])
         pts.append(C[j] + d * R[j])
         idx.append(np.full(m, j, np.int32))

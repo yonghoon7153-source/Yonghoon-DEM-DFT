@@ -867,7 +867,8 @@ def main():
     def _s3mark(comp, status, reason=''):
         """STEP3 component 의 상태를 남긴다.  **결손을 조용히 두지 않는다.**
 
-        status ∈ complete | not_solvable(물리적으로 정의 안 됨=정상) | failed(예외)
+        status ∈ complete | unconverged(솔브는 돌았으나 CG 가 수렴 안 함 — 값을 쓰면 안 된다)
+                 | not_solvable(물리적으로 정의 안 됨=정상) | failed(예외)
                  | disabled(사용자가 끔) | skipped(선행 부재) | missing(표시 자체가 없음)
 
         ★ RC7-05 (Codex 7회차): backend 는 모듈 전역 `LAST_BACKEND` 하나뿐이라 manifest 가
@@ -1119,7 +1120,14 @@ def main():
                               f"{_jhs['hot_frac_50']:.3f} (작을수록 집중) · conc {_jhs['conc_ratio']:.1f}× — 어디서 발열 몰리나")
                 _share = _s3.phase_current_share(_res3, sid3, _sig3)
                 _sname = _s3.SID_NAME
-                _s3mark('electronic', 'complete')
+                #  ★ 2026-08-20 (전수 감사 코드 하위 γ) — **미수렴을 `complete` 로 적지 않는다.**
+                #    판정기(`sdcp_gain_verdict`)는 `cg_info`/`unconverged` 를 직접 보므로
+                #    prereg 는 안전했지만, manifest 의 component status 만 읽는 소비자는
+                #    "완료" 로 오독한다 (선언과 실행이 갈라지는 바로 그 자리).
+                _s3mark('electronic',
+                        'unconverged' if _res3.get('unconverged') else 'complete',
+                        (f"cg_info={_res3.get('cg_info')} resid={_res3.get('cg_resid')}"
+                         if _res3.get('unconverged') else ''))
                 step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
                          'vox_um': a.step3_vox, 'n_dof': _res3['n_dof'],
                          'k_plates': list(_res3.get('k_plates', ())),

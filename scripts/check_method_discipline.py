@@ -824,9 +824,15 @@ def check_argparse_help(verbose=True):
 
 #: 규칙 I — 본체 ↔ 폴백 사본이 어긋나면 안 된다.
 #:   (모듈경로, 심볼)  ↔  (사본파일, 그 안의 리터럴 이름)
+#:   ⚠ 등록부가 좁으면 규칙이 조용히 반만 산다 — 2026-08-20 감사에서 `_KNOWN` 한 쌍만
+#:   등록돼 있고 같은 폴백 블록의 `_NONADD` 는 빠져 있었다 (fable F5 · 코드 감사 δ).
+#:   `_DENS` 는 **의도적으로 제외**한다: 폴백 사본은 `additives.DENS` 의 3키 부분집합이라
+#:   리터럴 동일성으로 볼 대상이 아니다 (`mpm_input_from_case.py` 주석이 그렇게 명시).
 _COPY_PARITY = (
     ('scripts/additives.py', 'KNOWN_ADDITIVES',
      'scripts/mpm_input_from_case.py', '_KNOWN'),
+    ('scripts/additives.py', '_RECIPE_NON_ADDITIVE',
+     'scripts/mpm_input_from_case.py', '_NONADD'),
 )
 
 
@@ -877,6 +883,150 @@ def check_copy_parity(verbose=True):
     return errs, warns
 
 
+# ─────────────────────────────────────────────────────────────────────────────────
+# 규칙 J — 생산 엔트리포인트 **최소-픽스처 스모크** (2026-08-20)
+#
+# 왜: 규칙 H 는 `--help` 가 사는지(파서)만 본다.  이 부류의 사고 3건은 전부 **기본 경로**
+#   에서 났다 —
+#     ① `_kind_all` 조건부 바인딩 → `--fibre` 없는 모든 킷에서 STEP3 통째로 사망 (08-12~20)
+#     ② `float(a.temp_c)` → `--temp-c` 기본 None 에서 2,474 s GPU 솔브 뒤 TypeError
+#     ③ `60bd849e` → `--fibre` 로드 실패를 except 가 삼켜 선분 스탬프가 **조용히** 점으로
+#   셋 다 "옵션 입력이 붙은/빠진 조합"이고, 셋 다 **정적 검사로는 안 보인다**
+#   (`check_undefined_names.py`(pyflakes) 가 ① 을 통과시킴을 실측 확인).
+#   ⇒ 유일하게 증명 가능한 방법은 **실제로 돌려 보는 것**이다.
+#
+# 비용: 픽스처가 63구 × n_vox 48 × step3_vox 1.5 라 팔당 ~4 s (실측).  두 팔 ~8 s.
+# 단언: exit 0 **이 아니라** — 그것이 바로 ① 이 통과한 이유다 —
+#   `mpm_metrics.step3.manifest.components` 의 모든 항목이 `complete`/`disabled` 이고
+#   `_step3` 가 `failed` 가 아닐 것.  로그의 `STEP3 skipped` 도 실패로 본다.
+_SMOKE_VOX, _SMOKE_NVOX = '1.0', '64'
+
+
+def _smoke_fixture(d):
+    """→ (am_csv, se_npy, phase_npy, fid_npy, dia_npy).  numpy 없으면 (am_csv, None…)."""
+    import itertools
+    am = os.path.join(d, 'am.csv')
+    rows = ['# type,x,y,z,r  (규칙 J 스모크 픽스처 — 관통하는 AM 기둥)']
+    for ix, iy in itertools.product(range(3), range(3)):
+        for k in range(7):
+            rows.append('2,%.6f,%.6f,%.6f,%.6f'
+                        % (0.018 + 0.007 * ix, 0.018 + 0.007 * iy, 0.004 + 0.0055 * k, 0.0040))
+    with open(am, 'w', encoding='utf-8') as f:
+        f.write('\n'.join(rows) + '\n')
+    try:
+        import numpy as _np
+    except Exception:                                          # noqa: BLE001
+        return am, None, None, None, None
+    #  SE 점구름 + 상 + 섬유 id — `--fibre` 팔용.  길이가 서로 **정확히** 같아야 한다
+    #  (그 길이 검사 자체가 ① 의 쌍둥이 결함이 있던 자리다).
+    g = _np.linspace(0.012, 0.046, 9)
+    z = _np.linspace(0.0045, 0.040, 9)
+    pts = _np.array([[x, y, zz] for x in g for y in g for zz in z], _np.float64)
+    ph = _np.ones(len(pts), _np.int32)                          # 1 = SE
+    ph[::7] = 2                                                 # 2 = VGCF (전도 첨가제)
+    fid = _np.full(len(pts), -1, _np.int32)
+    fid[ph == 2] = _np.arange(int((ph == 2).sum())) // 4         # 4점씩 한 섬유
+    dia = _np.ones(len(pts), _np.float64)
+    se_p, ph_p = os.path.join(d, 'se.npy'), os.path.join(d, 'phase.npy')
+    fid_p, dia_p = os.path.join(d, 'fibre.npy'), os.path.join(d, 'fibre_dia.npy')
+    _np.save(se_p, pts); _np.save(ph_p, ph); _np.save(fid_p, fid); _np.save(dia_p, dia)
+    return am, se_p, ph_p, fid_p, dia_p
+
+
+def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
+    errs, warns = [], []
+    import json as _json
+    import subprocess as _sp
+    import tempfile as _tf
+    pay = payload or os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py')
+    if not os.path.exists(pay):
+        return ['J_NO_ENTRYPOINT| mpm_webapp_payload.py 가 없다'], warns
+    with _tf.TemporaryDirectory() as d:
+        am, se_p, ph_p, fid_p, dia_p = _smoke_fixture(d)
+        arms = [('plain  (--fibre 없음 = 첨가제 없는 킷)',
+                 ['--scaffold', am, '--se-proxy'])]
+        if se_p:
+            arms.append(('fibre  (--phase/--fibre 있음 = 첨가제 킷)',
+                         ['--scaffold', am, '--se', se_p, '--phase', ph_p,
+                          '--fibre', fid_p, '--fibre-dia', dia_p]))
+        else:
+            warns.append('J_NO_NUMPY| numpy 부재 — `--fibre` 팔을 건너뛴다')
+        for label, extra in arms:
+            out = os.path.join(d, 'p_%d.json' % len(errs))
+            cmd = [sys.executable, pay, *extra, '--n-vox', _SMOKE_NVOX,
+                   '--step3-vox', _SMOKE_VOX, '--no-ion', '--no-pore', '--out', out]
+            try:
+                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d)
+            except Exception as e:                              # noqa: BLE001
+                errs.append(f'J_RUN| {label}: 실행 자체가 실패 ({type(e).__name__}: {e})')
+                continue
+            log = (r.stdout or '') + (r.stderr or '')
+            if r.returncode != 0:
+                errs.append(f'J_EXIT| {label}: exit {r.returncode} — {log.strip()[-200:]}')
+                continue
+            if 'STEP3 skipped' in log:
+                _ln = [x for x in log.split('\n') if 'STEP3 skipped' in x]
+                errs.append(f'J_SKIPPED| {label}: **STEP3 가 조용히 죽었다** (exit 0 인데) — '
+                            f'{_ln[0].strip()}')
+                continue
+            try:
+                with open(out, encoding='utf-8') as f:
+                    s3 = ((_json.load(f).get('mpm_metrics') or {}).get('step3') or {})
+            except Exception as e:                              # noqa: BLE001
+                errs.append(f'J_PAYLOAD| {label}: payload 를 읽을 수 없다 ({e})')
+                continue
+            comps = ((s3.get('manifest') or {}).get('components') or {})
+            if not comps:
+                errs.append(f'J_NO_MANIFEST| {label}: STEP3 manifest components 가 비었다 — '
+                            f'"돌았다" 를 증명할 수 없다')
+                continue
+            bad = {k: (v or {}).get('status') for k, v in comps.items()
+                   if (v or {}).get('status') not in ('complete', 'disabled')}
+            if bad:
+                errs.append(f'J_COMPONENT| {label}: 완료되지 않은 component {bad}')
+            elif verbose:
+                _st = ', '.join('%s=%s' % (k, (v or {}).get('status'))
+                                for k, v in comps.items())
+                print(f'  ✓ {label} — {_st}')
+    return errs, warns
+
+
+#: 규칙 J 의 **음성 대조** — 이 한 줄(2026-08-20 hoist)을 지우면 ① 이 그대로 재현된다.
+#: 사본에서만 지우고 원본은 건드리지 않는다.  needle 이 안 맞으면 그것 자체가 실패다
+#: (검사가 무엇을 지웠는지 모르는 채 통과하면 규칙 D 의 "발동한 적 없는 검사" 가 된다).
+_J_NEEDLE = ("    _kind_all = None\n"
+             "    if getattr(a, 'fibre', '') and phase is not None:")
+_J_MUTANT = "    if getattr(a, 'fibre', '') and phase is not None:"
+
+
+def smoke_negative_control(verbose=True):
+    """→ (문제 목록, 경고).  규칙 J 가 **정말** ① 부류를 잡는지 돌연변이로 확인."""
+    import shutil as _sh
+    import tempfile as _tf
+    src_dir = os.path.join(ROOT, 'scripts')
+    pay = os.path.join(src_dir, 'mpm_webapp_payload.py')
+    with open(pay, encoding='utf-8') as f:
+        src = f.read()
+    if _J_NEEDLE not in src:
+        return (['J_NEG_STALE| 음성 대조의 needle(`_kind_all = None` hoist)이 소스에 없다 — '
+                 '고침이 사라졌거나 코드가 바뀌었다.  둘 다 사람이 봐야 한다'], [])
+    with _tf.TemporaryDirectory() as d:
+        dst = os.path.join(d, 'scripts')
+        _sh.copytree(src_dir, dst)
+        with open(os.path.join(dst, 'mpm_webapp_payload.py'), 'w', encoding='utf-8') as f:
+            f.write(src.replace(_J_NEEDLE, _J_MUTANT, 1))
+        e, _ = check_entrypoint_smoke(verbose=False,
+                                      payload=os.path.join(dst, 'mpm_webapp_payload.py'))
+    caught = [x for x in e if x.startswith('J_SKIPPED') and 'plain' in x]
+    if not caught:
+        return (['J_NEG_BLIND| ★ 규칙 J 가 돌연변이를 **못 잡았다** — `_kind_all` hoist 를 '
+                 f'지웠는데 plain 팔이 통과했다 (얻은 오류: {e or "없음"}).  검사가 '
+                 '무의미하다'], [])
+    if verbose:
+        print(f'  ✓ 음성 대조 — 돌연변이(plain 팔)를 잡았다: {caught[0][:110]}')
+    return [], []
+
+
 def run_all(verbose=True):
     errs, warns = [], []
     for title, fn in (('규칙 I — 본체 ↔ 폴백 사본 패리티', check_copy_parity),
@@ -884,6 +1034,8 @@ def run_all(verbose=True):
                       ('규칙 B — 판별력 있는 rung (D2)', check_oblique_rungs),
                       ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger),
                       ('규칙 H — argparse help 가 살아 있는가', check_argparse_help),
+                      ('규칙 J — 생산 엔트리포인트 스모크 (기본 경로가 정말 도는가)',
+                       check_entrypoint_smoke),
                       ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
         if verbose:
             print(f'\n{title}')
@@ -1119,6 +1271,15 @@ def _selftest():
         _help_ok('오차 ≤0.014 %% (기본 %(default)s)'))
     chk('H-3: 리포 전체가 지금 통과한다 (0 오류)',
         check_argparse_help(verbose=False)[0] == [])
+
+    # ── 규칙 J (2026-08-20) — 생산 엔트리포인트 스모크 ────────────────────────────────
+    #   J-2 가 이 규칙의 존재 이유다: "지금 리포가 통과한다" 만으로는 검사기가 **정말**
+    #   잡는지 증명되지 않는다 (규칙 D 의 교훈).  고쳐 둔 hoist 한 줄을 사본에서 지우고
+    #   실제로 돌려, 08-12~20 의 그 사고가 재현되고 **검사가 그것을 잡는지** 본다.
+    chk('J-1: 두 팔(±--fibre)이 지금 통과한다 (STEP3 manifest 가 complete)',
+        check_entrypoint_smoke(verbose=False)[0] == [])
+    chk('J-2: ★ 음성 대조 — `_kind_all` hoist 를 지우면 **잡는다**',
+        smoke_negative_control(verbose=False)[0] == [])
 
     print(f'\ncheck_method_discipline v3 selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

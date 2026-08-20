@@ -40,8 +40,18 @@ run_one() {   # $1=kit  $2=vox  $3=sphere_d("" 면 점 스탬프)
   if [ -e "$KIT/latest_run" ]; then RUN="$(cd "$KIT/latest_run" && pwd)"
   else RUN=""; for d in "$KIT"/run_*; do [ -f "$d/se_dump.npy" ] && RUN="$(cd "$d" && pwd)"; done; fi
   [ -n "$RUN" ] || { echo "  ABORT — $K 압밀 런 없음"; return 1; }
-  SDF=""; TAG="${K#kit_}_v${VOX/./}_pt"
-  [ -n "$SD" ] && { SDF=" --step3-sdcp-sphere-d $SD"; TAG="${K#kit_}_v${VOX/./}_sph"; }
+  # ★★ 2026-08-20 (전수 감사 코드 #3) — **설정을 캐시 키에 넣는다** (H4 의 미전파 사본).
+  #   옛 TAG 는 `{kit}_v{vox}_{pt|sph}` 뿐이라 `BRIDGE_UM`·`SDCP_D` 가 어디에도 없었다.
+  #   ⇒ `BRIDGE_UM=0.30 bash scripts/sdcp_phase_ledger.sh` 를 돌리면 0.48 로 만든 옛 원장이
+  #     전부 `SKIP` 으로 **새 라벨을 달고 재사용**된다 (σ 러너에서는 2026-08-18 에 고쳤는데
+  #     이 러너에는 전파되지 않았다; 보고서 `sdcp_phase_ledger_report.py` 도 원장 안의
+  #     bridge_um/sdcp_sphere_d_um 을 읽지 않아 사후 게이트도 없다).
+  #   기본값(0.48/0.30)일 때는 접미사를 붙이지 않아 **기존 원장 파일명이 그대로 유효**하다.
+  local CFG=""
+  [ "$BRIDGE_UM" != "0.48" ] && CFG="${CFG}_b${BRIDGE_UM/./}"
+  [ -n "$SD" ] && [ "$SD" != "0.30" ] && CFG="${CFG}_d${SD/./}"
+  SDF=""; TAG="${K#kit_}_v${VOX/./}_pt${CFG}"
+  [ -n "$SD" ] && { SDF=" --step3-sdcp-sphere-d $SD"; TAG="${K#kit_}_v${VOX/./}_sph${CFG}"; }
   local OUT="$OUTDIR/ledger_${TAG}.json"
   [ -s "$OUT" ] && { echo "  SKIP $TAG"; return 0; }
 

@@ -383,15 +383,30 @@ def derive_features(d_se, d_am, am_pct, ps_frac, rve, loading):
         from predictor_engine import derive_features as _df
         return _df(d_se, d_am, am_pct, ps_frac, rve, loading)
     except Exception:                                 # noqa: BLE001 — 오프라인 사본
-        return {'d_se': d_se, 'd_am': d_am, 'am_pct': am_pct, 'ps_frac': ps_frac,
-                'rve': rve, 'loading': loading,
-                'd_ratio': d_se / d_am if d_am > 0 else 0.1,
-                'am_loading': am_pct * loading / 100,
-                'se_density_proxy': (100 - am_pct) / max(d_se, 0.1),
-                'layer_count': loading * 30 / max(d_se, 0.1),
-                'size_ratio_inv': d_am / d_se if d_se > 0 else 10,
-                'am_se_interaction': am_pct * (1 - ps_frac) / 100,
-                'log_d_se': math.log(max(d_se, 0.1))}
+        return _derive_features_offline(d_se, d_am, am_pct, ps_frac, rve, loading)
+
+
+def _derive_features_offline(d_se, d_am, am_pct, ps_frac, rve, loading):
+    """`predictor_engine` 이 없는 환경(numpy/webapp 미가용)용 **사본**.
+
+    ⚠⚠ 2026-08-20 (전수 감사 코드 #4) — 이 함수를 **따로 이름 붙인 이유**:
+      옛 코드는 사본을 `derive_features` 의 `except` 안에 인라인으로 두고, selftest 는
+      `predictor_engine.derive_features` 와 `derive_features` 를 비교했다.  그런데
+      `derive_features` 는 import 가 되면 **원본으로 위임**한다 → 검사가 도는 유일한
+      환경(import 성공)에서 그 비교는 **원본 vs 원본 = 항등식**이었고, 정작 검증하려던
+      사본은 **한 번도 검사된 적이 없다**.  ("사본이 원본과 같은지는 selftest 가 대조한다"
+      는 주석이 그래서 근거 없는 상태 단정이었다.)
+    ⇒ 이제 selftest 는 `predictor_engine.derive_features` ↔ **이 함수**를 직접 비교한다.
+    """
+    return {'d_se': d_se, 'd_am': d_am, 'am_pct': am_pct, 'ps_frac': ps_frac,
+            'rve': rve, 'loading': loading,
+            'd_ratio': d_se / d_am if d_am > 0 else 0.1,
+            'am_loading': am_pct * loading / 100,
+            'se_density_proxy': (100 - am_pct) / max(d_se, 0.1),
+            'layer_count': loading * 30 / max(d_se, 0.1),
+            'size_ratio_inv': d_am / d_se if d_se > 0 else 10,
+            'am_se_interaction': am_pct * (1 - ps_frac) / 100,
+            'log_d_se': math.log(max(d_se, 0.1))}
 
 
 FREE_KNOBS = ['d_se', 'd_am', 'am_pct', 'ps_frac', 'rve', 'loading']
@@ -1128,9 +1143,17 @@ def _selftest():                                                   # noqa: C901
         _a = _pdf(1.3, 5.0, 78.0, 0.7, 60.0, 3.2)
         chk('★DESIGN_FEATURES 가 predictor_engine.INPUT_FEATURES 와 동일 (규약 공유)',
             DESIGN_FEATURES == list(_PIF))
-        chk('★유도식이 predictor_engine 과 일치 (재구현 표류 없음)',
-            all(abs(float(_a[k]) - float(derive_features(1.3, 5.0, 78.0, 0.7, 60.0, 3.2)[k]))
-                < 1e-9 for k in DESIGN_FEATURES))
+        #  ★★ 2026-08-20 — **오프라인 사본을 직접** 비교한다.  옛 판은 `derive_features`
+        #    (= import 되면 원본으로 위임)와 비교해 **항등식**이었고, 사본은 검사된 적이 없다.
+        _b = _derive_features_offline(1.3, 5.0, 78.0, 0.7, 60.0, 3.2)
+        chk('★오프라인 사본이 predictor_engine 원본과 일치 (재구현 표류 없음)',
+            all(abs(float(_a[k]) - float(_b[k])) < 1e-9 for k in DESIGN_FEATURES))
+        chk('★사본이 13 특징을 빠짐없이 낸다 (키 누락 = 조용한 강등)',
+            set(_b) >= set(DESIGN_FEATURES))
+        #  음성 대조 — 검사가 **정말** 표류를 잡는가 (규칙 D 의 교훈).
+        _drift = dict(_b, log_d_se=_b['log_d_se'] + 1.0)
+        chk('★음성 대조 — 사본이 어긋나면 잡는다',
+            not all(abs(float(_a[k]) - float(_drift[k])) < 1e-9 for k in DESIGN_FEATURES))
     except Exception as _e:                                        # noqa: BLE001
         print(f'  ‥ predictor_engine 미가용 — 유도식 대조 생략 ({type(_e).__name__})')
     os.unlink(cp)

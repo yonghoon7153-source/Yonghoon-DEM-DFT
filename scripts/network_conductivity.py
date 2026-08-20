@@ -161,9 +161,16 @@ def build_network(atoms_raw, contacts_raw, target_types, scale,
                   plate_z, box_x=0.05, box_y=0.05, boundary_factor=2.0,
                   mode='ionic', type_map=None, results_dir=None,
                   contact_mode='hertzian'):
+    # ⚠ `results_dir` 는 **읽히지 않는다** (2026-08-20 전수 감사 코드 하위 α).
+    #   옛 docstring 은 "ionic 모드는 percolation_sets.json 으로 경계를 잡는다" 고 약속했지만
+    #   본문 어디서도 그 파일을 열지 않는다 — 경계는 **항상 z-규칙**(아래 `boundary_factor`)
+    #   이다.  호출부(`:977`·`:1135`)가 실값을 넘기고 있어 "쓰이는 것처럼" 보인다.
+    #   수치 오염은 없다(계약 표류다).  인자를 지우면 호출부 두 곳이 깨지므로 남기되,
+    #   **약속을 사실에 맞춘다** — 되살리려면 여기서 실제로 읽고 z-규칙과의 우선순위를
+    #   명시할 것.
     """
     Build resistor network from DEM data.
-    mode='ionic': SE-SE network only (uses percolation_sets.json for boundaries)
+    mode='ionic': SE-SE network only
     mode='electronic': AM-AM network only
     mode='thermal': ALL contacts (AM-AM, AM-SE, SE-SE)
     contact_mode='hertzian'  : use LIGGGHTS-reported contact_area directly (DEM-native)
