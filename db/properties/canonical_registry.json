@@ -17,7 +17,8 @@
   "2026-08-07d": "Codex 4라운드 반영. ★ comp2 MD_Ea 항목이 **의미가 섞여 있었다** — 값 0.275 는 ordered single-champion baseline 인데 method_id/group 에 disorder-ensemble 을 붙여 뒀다. 둘을 별개 metric 으로 분리: MD_Ea_eV_ordered(0.2754597563, comp2_md_arrhenius.json) · MD_Ea_eV_disorder(0.1512±0.0676, comp2_disorder_ensemble.json d=0.50, n_config=3). d=1.00 은 게이트 FAIL 이라 등재하지 않는다. ⚠ 교훈: validator 가 provisional 무출처를 허용해 이 의미 오류를 못 잡았다 — 수치 대조는 method/value 의미 일치를 보증하지 않는다.",
   "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다.",
   "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
-  "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다."
+  "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다.",
+  "2026-08-20a": "codex 2차 리뷰 P0-4 반영. b2o3 두 Ea 항목의 framework_beta_800_1000K 게이트를 **계보 오류로 철회**하고 not_assessed(artifact_missing) 로 정정. beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 3-seed reseed Ea 0.199 의 게이트 근거가 될 수 없다. 최종 9개 궤적은 run_highT_reseed.sh 가 --save_traj 를 안 넘겨 **부재** — 재실행 없이는 이 게이트가 닫히지 않는다. 보류 자체는 유지(미평가는 통과가 아니다). 설계 근거: kb/projects/decision_registry_design_2026_08_20.md"
  },
  "entries": [
   {
@@ -261,7 +262,7 @@
     "cite_until_framework_gate_resolved",
     "single_seed_ratio"
    ],
-   "note": "⛔ 2026-08-20 인용 보류. 골격(비-Li) MSD 게이트를 처음 돌렸더니 **800/1000 K 에서 beta 0.59/0.63** 이다(같은 온도 modelc 는 0.03/0.08). 그 두 온도가 아레니우스 3점 중 2점이라 Ea 를 그대로 못 쓴다. ⚠ 결론이 아니라 보류다 — gate_detail.why_not_conclusive 참조. codex 교차검증(codex_B) 뒤 확정한다. ⚠ 보류 대상은 **이 Ea(아레니우스 3점)** 이다. 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 **이번 발견(800/1000 K)에 직접 걸리지 않는다** — 별건으로 판정할 것 (kb/open_items.md #11).  [이전 note] modelc 와의 차이는 dEa = +0.002 +/- 0.047 — 같은 CSV 가 '구분 안 됨'이라고 적고 있다. 순위를 매기지 말 것.",
+   "note": "⛔ 2026-08-20 (2차 정정) 인용 보류는 유지하되 **사유가 바뀌었다**. 이전 사유였던 골격 beta 0.59/0.63 은 **이 값(3-seed reseed Ea 0.199)을 만든 궤적이 아니라 다른 run family(b2o3_full, single-seed legacy)에서 잰 것**이다 — 계보 오류였다 (codex 2차 P0-4). 정정된 사유: **이 값에 대한 골격 게이트는 미평가(not_assessed)** 이며, 최종 9개 궤적이 --save_traj 미전달로 디스크에 없어 **재실행 없이는 평가할 수 없다**. 미평가는 통과가 아니므로 ranking·absolute_claim 은 계속 금지, 비교(dEa = +0.002 +/- 0.047 '구분 안 됨')와 공개감사는 허용. ⚠ 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 별건 (kb/open_items.md #11). [이전 note 는 gate_detail.verdict / lineage.retraction 에 보존]",
    "updated": "2026-08-20",
    "blocking_gate": "framework_beta_800_1000K",
    "gate_detail": {
@@ -283,7 +284,18 @@
     },
     "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
     "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
-    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2"
+    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
+    "lineage": {
+     "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
+     "value_produced_by": "3-seed x 3-T reseed 2026-07-06/07 (kgy highT_reseed + 600K reseed)",
+     "lineage_match": false,
+     "retraction": "⛔ 2026-08-20 철회 — 이 게이트 수치(beta 0.59/0.63)는 **이 값을 만든 궤적에서 잰 것이 아니다**. 서로 다른 run family 를 연결했다 (codex 2차 리뷰 P0-4). 수치는 감사 추적용으로 보존하되, 이 항목의 게이트 판정 근거로 쓰지 않는다.",
+     "final_trajectories_status": "absent",
+     "final_trajectories_reason": "tools/modelc_v3/run_highT_reseed.sh (L32-39) 가 --save_traj 를 넘기지 않는다. disorder_ensemble_diffusion.py L238 이 그 플래그로 traj.xyz 쓰기를 감싸므로 최종 9개 궤적이 디스크에 없다. → 소급 골격 검사는 **재실행 없이는 불가능**하다.",
+     "gate_outcome": "not_assessed",
+     "gate_outcome_reason": "artifact_missing — pending 이 아니다. 입력이 부재하므로 평가 자체가 성립하지 않는다.",
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (F9 · §5-2 L0-L4 DAG)"
+    }
    }
   },
   {
@@ -370,7 +382,18 @@
     },
     "verdict": "800/1000 K 에서 비-Li 부격자가 기어간다(creep). 그 두 온도가 아레니우스 3점 중 2점이다. 600 K 도 시드마다 갈린다(P n=8 에서 0.55/0.22/0.20).",
     "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
-    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2"
+    "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
+    "lineage": {
+     "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
+     "value_produced_by": "single-seed 600/800/1000 K (lpsocl_md_arrhenius.json anchors_same_window_singleseed)",
+     "lineage_match": null,
+     "retraction": "⚠ 2026-08-20 — 이 항목은 single-seed 라 b2o3_full 과 **계보가 일치할 가능성이 있으나 확인되지 않았다**. run_id 배선 전까지 게이트를 이 값에 묶지 않는다.",
+     "final_trajectories_status": "absent",
+     "final_trajectories_reason": "tools/modelc_v3/run_highT_reseed.sh (L32-39) 가 --save_traj 를 넘기지 않는다. disorder_ensemble_diffusion.py L238 이 그 플래그로 traj.xyz 쓰기를 감싸므로 최종 9개 궤적이 디스크에 없다. → 소급 골격 검사는 **재실행 없이는 불가능**하다.",
+     "gate_outcome": "not_assessed",
+     "gate_outcome_reason": "lineage_unverified — 궤적 동일성이 확인되지 않았다.",
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (F9 · §5-2 L0-L4 DAG)"
+    }
    },
    "note": "⛔ 2026-08-20 인용 보류. 골격(비-Li) MSD 게이트를 처음 돌렸더니 **800/1000 K 에서 beta 0.59/0.63** 이다(같은 온도 modelc 는 0.03/0.08). 그 두 온도가 아레니우스 3점 중 2점이라 Ea 를 그대로 못 쓴다. ⚠ 결론이 아니라 보류다 — gate_detail.why_not_conclusive 참조. codex 교차검증(codex_B) 뒤 확정한다. ⚠ 보류 대상은 **이 Ea(아레니우스 3점)** 이다. 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 **이번 발견(800/1000 K)에 직접 걸리지 않는다** — 별건으로 판정할 것 (kb/open_items.md #11)."
   },
