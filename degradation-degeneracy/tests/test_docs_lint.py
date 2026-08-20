@@ -595,3 +595,62 @@ def test_p22_restart_table_matches_the_canon_outputs():
             f"restart {n} 놓침: 문서 '{row.group(3).strip()}' vs 정본 {want_col}")
         checked += 1
     assert checked == 2, checked
+
+
+#: §7.10 "무엇을 재지 않았나" 가 다루는 축 → 그 축을 돌렸다면 남았을 정본.
+#: 정본이 있으면 그 축은 **쟀다** 이고, 목록은 그것을 정본 이름으로 인정해야 한다.
+_P22_MEASURED_AXES = {
+    "PE 화학량론 window": ("bias_pest095",),
+    "NE 화학량론 window": ("bias_nest095",),
+    "NE 전압 오프셋": ("bias_ne2mv",),
+    "양극 동시 왜곡": ("bias_both2mv",),
+    "잡음 층": ("bias_seed101_pe2mv_n005", "bias_seed101_pe5mv_n005",
+                "bias_seed101_pe10mv_n005"),
+}
+
+#: 갱신되지 않은 채 남아 있던 원문장들. 다시 들어오면 표와 모순된다.
+_P22_STALE_DENIALS = (
+    "다리는 아직 안 돌렸다",
+    "안 돌렸다. PE 단독 축 하나다",
+    "여섯 다리 전부 noise 0 이다",
+    "화학량론 축(stretch)은 아직 안 쟀다",
+)
+
+
+def test_p22_unmeasured_list_credits_every_leg_that_was_run():
+    """★ 20차 사전 자체발견 — "안 쟀다" 목록이 표와 정면으로 모순됐다.
+
+    `19856e7e` 가 §7.10 에 "무엇을 재지 않았나" 를 썼을 때는 셋 다 참이었다.
+    그 뒤 `8ce869f0`(NE 축·공통 모드) · `1542688d`(stretch·seed) ·
+    `58f53bb4`(§7.10 재작성) 가 그 다리들을 **실제로 돌려 표에 실었는데**
+    목록은 갱신되지 않았다. 결과: 같은 절 안에서 50줄 위 표가
+    `PE stretch 0.95` · `NE +2 mV` · `PE+2 · NE+2` 수치를 인용하면서
+    아래에서는 "다리는 아직 안 돌렸다" 고 말한다. 심지어 stretch 표는
+    본문에서 `"무엇을 재지 않았나" 참조` 로 그 문단을 가리킨다.
+
+    이 실패 모드는 다리가 늘 때마다 재발한다 — 목록은 사람이 지워야 하는데
+    표를 추가하는 커밋은 목록을 보지 않는다. 그래서 **정본 존재**로 묶는다.
+
+    부정 키워드 사냥("안 쟀다" 라는 말이 있는가)은 처음 시도했다가 버렸다 —
+    축 이름이 "쟀다" 쪽 표에 나오기만 해도 걸려서 정상 문서를 막았다.
+    대신 **양성 결속**을 쓴다: 정본이 있으면 그 정본 이름이 이 절에 있어야
+    한다. 이러면 축을 새로 돌린 사람이 목록을 갱신해야만 통과한다.
+    """
+    doc = _DOC.read_text(encoding="utf-8")
+    assert "#### 무엇을 재지 않았나" in doc, "§7.10 의 '무엇을 재지 않았나' 절이 없다"
+    block = doc.split("#### 무엇을 재지 않았나")[1].split("\n## ")[0]
+
+    bad = []
+    for axis, stems in _P22_MEASURED_AXES.items():
+        ran = [s for s in stems if (_CANON / f"{s}.txt").exists()]
+        if not ran:
+            continue                      # 아직 안 돌린 축 — 목록에 없어도 된다
+        missing = [s for s in ran if f"{s}.txt" not in block]
+        if missing:
+            bad.append(f"{axis}: 정본 {missing} 이 있는데 이 절이 인용하지 않는다")
+    assert not bad, (
+        "「무엇을 재지 않았나」가 이미 돌린 다리를 반영하지 않았다:\n  "
+        + "\n  ".join(bad))
+
+    stale = [s for s in _P22_STALE_DENIALS if s in block]
+    assert not stale, f"표와 모순되던 옛 문장이 되살아났다: {stale}"
