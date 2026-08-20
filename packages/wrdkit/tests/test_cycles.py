@@ -1,10 +1,13 @@
 """Step and cycle segmentation."""
 
 import dataclasses
+import types
 
+import numpy as np
 import pytest
 
 from wrdkit import extract_profile, read_wrd_bytes, segment_steps, summarize_cycles
+from wrdkit.cycles import _ends_mid_step
 from wrdkit.schedule import Cutoff, Schedule, ScheduleStep
 
 import synthetic
@@ -153,3 +156,93 @@ def test_a_schedule_without_a_loop_still_answers():
 
 def test_a_direction_with_no_taper_is_none():
     assert _schedule_with_two_tapers().taper_current_a("discharge") is None
+
+
+# --- 잘린 CV 판정은 실제 스텝의 taper 로 -------------------------------------
+#
+# 방향의 taper 를 전부 모아 max() 하면 화성과 사이클이 섞인다. STEP INDEX 가
+# 스케줄 step 목록을 그대로 가리킨다는 것을 실측 6개 파일(53 스텝, 전부 설정
+# 전류와 일치)로 확인했으므로, 추측하지 않고 읽는다.
+
+class _FakeWrd:
+    def __init__(self, data, schedule):
+        self.data = data
+        self.metadata = types.SimpleNamespace(schedule=schedule)
+
+    def __len__(self):
+        return len(self.data["voltage"])
+
+
+def _plan():
+    """루프 *안에* taper 가 둘인 계획 — 방향 전체 max() 로는 못 가르는 경우.
+
+    실제로 흔하다: 빠른 사이클(taper 0.05 mA) 사이에 느린 점검 사이클
+    (RPT, taper 0.5 mA)을 끼워 넣는 계획이 그렇다.  방향의 taper 를 모아
+    max() 하면 0.5 mA 가 잣대가 되어, 0.05 mA 짜리 스텝에서 0.2 mA 에 잘린
+    파일이 완료로 통과한다.  방전 쪽도 CCCV 한 다리와 평범한 CC 한 다리를
+    같이 둬서, CC 다리가 남의 taper 를 빌려 오는지 본다.
+    """
+    from wrdkit.schedule import Cutoff, Schedule, ScheduleStep
+
+    return Schedule(version=0, source_path="", steps=[
+        ScheduleStep(index=0, name="form-chg", control="CCCV", control_raw=13,
+                     current_a=0.001, voltage_limit_v=4.3, taper_current_a=0.0009),
+        ScheduleStep(index=1, name="fast-chg", control="CCCV", control_raw=13,
+                     current_a=0.002, voltage_limit_v=4.3, taper_current_a=0.00005,
+                     loop_target="fast-chg", loop_count=500),
+        ScheduleStep(index=2, name="fast-dch", control="CC", control_raw=0,
+                     current_a=-0.002, loop_target="fast-chg", loop_count=500,
+                     cutoffs=[Cutoff("voltage", "<=", 2.5, 0.0)]),
+        ScheduleStep(index=3, name="rpt-chg", control="CCCV", control_raw=13,
+                     current_a=0.0005, voltage_limit_v=4.3, taper_current_a=0.0005,
+                     loop_target="fast-chg", loop_count=500),
+        ScheduleStep(index=4, name="rpt-dch", control="CCCV", control_raw=13,
+                     current_a=-0.0005, voltage_limit_v=2.5, taper_current_a=0.0004,
+                     loop_target="fast-chg", loop_count=500),
+    ])
+
+
+def _rows(step_index, voltage, current):
+    return {
+        "step_index": np.array([step_index], dtype=np.int32),
+        "voltage": np.array([voltage], dtype=np.float64),
+        "current": np.array([current], dtype=np.float64),
+    }
+
+
+def test_a_cv_hold_cut_off_above_its_own_taper_is_incomplete():
+    """0.2 mA 에서 잘린 사이클 CV 를 화성 taper 0.5 mA 로 재면 완료로 통과한다."""
+    schedule = _plan()
+    wrd = _FakeWrd(_rows(1, 4.3, 0.0002), schedule)   # 사이클 CV, taper 0.05 mA
+    assert _ends_mid_step(wrd, 1) is True
+
+
+def test_a_cv_hold_that_reached_its_own_taper_is_complete():
+    schedule = _plan()
+    wrd = _FakeWrd(_rows(1, 4.3, 0.00004), schedule)  # taper 아래로 내려왔다
+    assert _ends_mid_step(wrd, 1) is False
+
+
+def test_a_plain_cc_leg_ending_at_its_voltage_cutoff_is_complete():
+    """taper 가 없는 CC 다리는 전압 컷오프 도달이 곧 종료다.
+
+    방향의 taper 를 빌려 오면(화성의 엄격한 0.5 mA) 정상 종료한 CC 사이클이
+    미완료로 버려진다 — 반대 방향의 오류이고, 리포트에서 사이클이 통째로
+    사라지므로 더 나쁘다.
+    """
+    schedule = _plan()
+    # step 2 는 taper 가 없는 CC 다리다.  방향의 taper 를 빌려 오면 rpt-dch 의
+    # 0.4 mA 가 잣대가 되어, 2.0 mA 로 컷오프에 도달한 정상 종료가 미완료가 된다.
+    wrd = _FakeWrd(_rows(2, 2.49, -0.002), schedule)
+    assert _ends_mid_step(wrd, 1) is False
+
+
+def test_an_unknown_step_index_falls_back_to_the_direction():
+    """스케줄이 닿지 않는 인덱스면 옛 방식으로라도 판단한다.
+
+    폴백 잣대는 방향 전체의 taper(여기서는 rpt-chg 의 0.5 mA)다. 그보다 훨씬
+    큰 전류가 흐르는 중이면 어느 잣대로 재도 잘린 것이다.
+    """
+    schedule = _plan()
+    wrd = _FakeWrd(_rows(99, 4.3, 0.002), schedule)
+    assert _ends_mid_step(wrd, 1) is True

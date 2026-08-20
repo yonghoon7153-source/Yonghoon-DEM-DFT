@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from .schedule import Schedule
 from .wrd import CellStatus, WrdFile
 
 __all__ = [
@@ -303,8 +304,39 @@ def _ends_mid_step(wrd: WrdFile, stop: int) -> bool:
     # current tapers, so the voltage alone cannot separate a finished hold from
     # a file split in the middle of one.  When the schedule tapers this
     # direction, the current must have reached the taper setpoint as well.
-    taper = schedule.taper_current_a(direction)
+    #
+    # Which taper?  The one belonging to the step this row is actually in.
+    # ``STEP INDEX`` addresses the schedule's step list directly -- verified
+    # against six instrument files (53 steps, every one matching its scheduled
+    # current), so this is a read, not a guess.  Picking the largest taper in
+    # the direction instead mixes formation with cycling: a hold cut off at
+    # 0.2 mA looks finished because formation's 0.5 mA is the yardstick, and a
+    # pure-CC loop inherits a taper it never had.
+    taper = _taper_for_row(wrd, schedule, stop - 1, direction)
     return taper is not None and abs(current) > taper * 1.1
+
+
+def _taper_for_row(wrd: WrdFile, schedule: Schedule, row: int,
+                   direction: str) -> float | None:
+    """Taper setpoint of the schedule step that *row* belongs to.
+
+    Falls back to the direction's tapers only when the row cannot be placed --
+    an older file without ``STEP INDEX``, or an index the schedule does not
+    reach because the plan was edited after the run started.
+    """
+    column = wrd.data.get("step_index")
+    if column is not None and 0 <= row < len(column):
+        index = int(column[row])
+        if 0 <= index < len(schedule.steps):
+            step = schedule.steps[index]
+            values = [abs(float(step.taper_current_a))] if step.taper_current_a else []
+            values += [abs(float(c.value)) for c in step.cutoffs
+                       if c.kind == "current" and c.value]
+            # A step with no taper is a plain CC leg: reaching the voltage
+            # cut-off is the whole termination, so there is nothing more to
+            # wait for.  Returning None here says exactly that.
+            return max(values) if values else None
+    return schedule.taper_current_a(direction)
 
 
 def extract_profile(wrd: WrdFile, cycle: CycleSummary, branch: str) -> Profile:

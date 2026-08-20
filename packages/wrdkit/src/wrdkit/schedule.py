@@ -268,8 +268,16 @@ class Schedule:
         return None
 
     def _looped_step_names(self) -> set[str]:
-        """Names of the steps inside the largest loop of the schedule."""
-        best: tuple[int, set[str]] = (0, set())
+        """Names of the steps inside the largest loop of the schedule.
+
+        Ties on the count take the *wider* span.  Smart Interface usually
+        records the jump on the one step that closes the loop, but a plan can
+        carry the same count on every step in the body -- and then the first
+        one seen describes a one-step loop.  Keeping that narrow answer left
+        the rest of the loop looking like formation, so the cycling taper and
+        current were read off the wrong steps.
+        """
+        best: tuple[int, int, set[str]] = (0, 0, set())
         by_name = {s.name: i for i, s in enumerate(self.steps)}
         for i, step in enumerate(self.steps):
             if not step.loop_target or step.loop_count <= 1:
@@ -277,9 +285,11 @@ class Schedule:
             start = by_name.get(step.loop_target)
             if start is None or start > i:
                 continue
-            if step.loop_count > best[0]:
-                best = (step.loop_count, {s.name for s in self.steps[start:i + 1]})
-        return best[1]
+            span = i + 1 - start
+            if (step.loop_count, span) > (best[0], best[1]):
+                best = (step.loop_count, span,
+                        {s.name for s in self.steps[start:i + 1]})
+        return best[2]
 
     def nominal_capacity_ah(self, c_rate: float | None = None) -> float | None:
         """Capacity the operator dialled in, back-calculated from the current.
