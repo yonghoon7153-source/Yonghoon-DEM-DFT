@@ -69,6 +69,8 @@ echo "alias bml='$HOME/경로/Yonghoon-DEM-DFT/tools/bml'" >> ~/.zshrc
 | `bml status` | 지금 뭐가 돌고 있는지 + 브랜치/미커밋/ahead·behind |
 | `bml pull` | 실행 없이 최신화만 |
 | `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs) |
+| `bml doctor` | 환경 점검 — 안 되면 여기부터 |
+| `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |
 | `bml logs` | 서버 로그 따라가기 |
 | `bml help` | 도움말 |
 
@@ -116,6 +118,21 @@ WORKBENCH_PORT=6001 bml
 3. **빌드** — `apps/web/src` 가 `dist` 보다 새로울 때만 다시 빌드합니다.
 4. **실행** — 이미 떠 있으면 새로 띄우지 않고 그 주소를 알려 줍니다.
 
+## 실패하면 이유를 알려 줍니다
+
+서버가 안 뜨면 트레이스백을 그대로 쏟지 않고, 무엇이 원인이고 무엇을 치면
+되는지 한 줄로 말합니다:
+
+```
+! 서버가 시작하자마자 멈췄습니다.
+
+  원인  가상환경의 async 패키지(sniffio/anyio)가 서로 안 맞습니다.
+  해결  bml repair
+```
+
+알아보는 상황: 의존성 깨짐 · 패키지 누락 · 포트 점유 · DB 스키마 불일치 ·
+앱 로딩 실패. 그 밖의 경우에는 로그 마지막 25줄을 보여 줍니다.
+
 ## 자주 나오는 상황
 
 **포트 5003 이 사용 중이라고 나옵니다**
@@ -131,8 +148,9 @@ WORKBENCH_PORT=6001 bml
   터미널을 여세요. 급하면 `./tools/bml` 로 직접 실행해도 됩니다.
 
 **서버가 안 뜹니다**
-: `bml logs` 로 마지막 로그를 봅니다. 빌드 실패면 `bml check` 가 원인을
-  보여 줍니다.
+: 실패 메시지에 원인과 해결 명령이 함께 나옵니다. 그래도 모르겠으면
+  `bml doctor` → `bml repair` 순으로 시도하세요. 빌드 실패면 `bml check` 가
+  원인을 보여 줍니다.
 
 **데이터는 어디 있나요**
 : `data/uploads/` 에 올린 `.wrd` 원본, `data/runs/` 에 파싱 캐시,

@@ -192,6 +192,26 @@ setx BML_WSL_DISTRO Ubuntu
 **`ensurepip is not available`** / venv 생성 실패
 : `sudo apt install -y python3-venv`.
 
+**서버는 뜨는데 화면이 안 나오거나 요청마다 500 이 납니다**
+: 로그에 `AttributeError: module 'sniffio' has no attribute
+  'AsyncLibraryNotFoundError'` 같은 게 보이면 가상환경의 async 패키지가 서로
+  안 맞는 것입니다. `.venv` 를 새로 만들면 됩니다:
+
+```bash
+bml repair
+```
+
+  `data/` 는 건드리지 않으므로 올려 둔 `.wrd` 와 DB 는 그대로입니다.
+  `bml doctor` 도 이 상태를 잡아냅니다 — "가상환경이 깨져 있습니다" 라고 나옵니다.
+
+**로그에 `no such column` 이 보입니다**
+: DB 스키마가 코드보다 오래됐습니다. 대부분은 자동 마이그레이션이 처리하지만,
+  안 되면 DB 만 치우면 됩니다 (원본 `.wrd` 는 남습니다):
+
+```bash
+mv data/workbench.db data/workbench.db.bak && bml
+```
+
 **브라우저가 안 열립니다**
 : 주소를 직접 여세요 — `http://localhost:5003`.
   `sudo apt install wslu` 하면 자동으로 열립니다.

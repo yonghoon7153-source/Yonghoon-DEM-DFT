@@ -10,6 +10,7 @@
 #   bml pull       실행 없이 최신으로만 맞춘다
 #   bml logs       실행 로그 보기
 #   bml doctor     환경 점검 (WSL 포함) — 안 되면 여기부터
+#   bml repair     파이썬 환경을 새로 만든다 (의존성이 꼬였을 때)
 #   bml install    이 명령을 PATH 에 등록한다 (1회)
 #
 # 두 사람이 같은 브랜치를 쓰므로, 실행 전에 항상 pull --rebase --autostash 를
@@ -106,6 +107,149 @@ wait_for_url() {
   return 1
 }
 
+#: Log lines that mean the server will never come up, so waiting is pointless.
+_FATAL='Traceback|Error loading ASGI app|address already in use|ModuleNotFoundError|Address already in use'
+
+wait_for_server() {
+  # Wait for the server, but give up the moment the log says it is doomed.
+  # `setsid` detaches the process, so $! is not the server's pid and cannot be
+  # watched -- the log is the reliable signal.
+  local url="$1" log="$2" tries="${3:-60}" spun=0
+  for _ in $(seq "$tries"); do
+    if curl -fsS -o /dev/null --max-time 2 "$url" 2>/dev/null; then
+      [ "$spun" -eq 1 ] && printf '\r%*s\r' 40 ''
+      return 0
+    fi
+    if [ -f "$log" ] && grep -qE "$_FATAL" "$log" 2>/dev/null; then
+      [ "$spun" -eq 1 ] && printf '\r%*s\r' 40 ''
+      return 2
+    fi
+    # A silent wait reads as a hang; show that something is happening.
+    if [ -t 1 ]; then
+      printf '\r  %s기다리는 중…%s' "$DIM" "$OFF"
+      spun=1
+    fi
+    sleep 0.5
+  done
+  [ "$spun" -eq 1 ] && printf '\r%*s\r' 40 ''
+  return 1
+}
+
+#: Turn a log into one sentence and one command.  A 25-line traceback is not
+#: an answer -- the reader has to know which line matters and what to do.
+explain_log() {
+  local log="$1"
+  [ -s "$log" ] || return 1
+
+  if grep -qE "module 'sniffio' has no attribute|module 'anyio' has no attribute" "$log"; then
+    say "  ${B}원인${OFF}  가상환경의 async 패키지(sniffio/anyio)가 서로 안 맞습니다."
+    say "  ${B}해결${OFF}  ${GREEN}bml repair${OFF}"
+    return 0
+  fi
+  if grep -qE "ModuleNotFoundError|ImportError" "$log"; then
+    local missing
+    missing="$(grep -oE "No module named '[^']+'" "$log" | tail -1)"
+    say "  ${B}원인${OFF}  패키지가 빠졌습니다${missing:+ (${missing})}."
+    say "  ${B}해결${OFF}  ${GREEN}bml repair${OFF}"
+    return 0
+  fi
+  if grep -qiE "address already in use" "$log"; then
+    say "  ${B}원인${OFF}  포트 ${PORT} 를 이미 다른 프로세스가 쓰고 있습니다."
+    say "  ${B}해결${OFF}  ${GREEN}bml stop${OFF} 후 다시, 또는 ${GREEN}WORKBENCH_PORT=6001 bml${OFF}"
+    return 0
+  fi
+  if grep -q "Error loading ASGI app" "$log"; then
+    say "  ${B}원인${OFF}  앱을 찾지 못했습니다 — 저장소가 온전하지 않을 수 있습니다."
+    say "  ${B}해결${OFF}  ${GREEN}bml doctor${OFF}"
+    return 0
+  fi
+  if grep -qE "sqlite3.OperationalError|no such column" "$log"; then
+    say "  ${B}원인${OFF}  DB 스키마가 코드보다 오래됐습니다."
+    say "  ${B}해결${OFF}  ${GREEN}mv data/workbench.db data/workbench.db.bak && bml${OFF}"
+    say "  ${DIM}      (업로드한 .wrd 원본은 data/uploads/ 에 그대로 있습니다)${OFF}"
+    return 0
+  fi
+  return 1
+}
+
+report_failure() {
+  local log="$1" reason="$2"
+  warn "$reason"
+  say ""
+
+  if explain_log "$log"; then
+    say ""
+    say "${DIM}자세한 로그: bml logs${OFF}"
+    return 0
+  fi
+
+  if [ -s "$log" ]; then
+    say "${DIM}--- 로그 마지막 25줄 ---${OFF}"
+    tail -25 "$log" | sed 's/^/  /'
+    say "${DIM}------------------------${OFF}"
+  else
+    say "${DIM}로그가 비어 있습니다: $log${OFF}"
+  fi
+  say ""
+  say "다음을 확인해 보세요:"
+  say "  bml doctor      환경 점검"
+  say "  bml repair      파이썬 환경 재설치"
+  say "  bml stop        남은 프로세스 정리 후 다시 bml"
+}
+
+cmd_repair() {
+  step "파이썬 환경을 새로 만듭니다"
+  say "  ${DIM}업로드한 데이터(data/)는 건드리지 않습니다.${OFF}"
+
+  rm -rf "$REPO/.venv" "$STAMP"
+  # --clear so a half-built venv left by an interrupted run cannot survive.
+  python3 -m venv --clear "$REPO/.venv" \
+    || die "venv 생성 실패 — sudo apt install -y python3-venv"
+  local py="$REPO/.venv/bin/python"
+
+  say "  ${DIM}pip 갱신…${OFF}"
+  "$py" -m pip install --quiet --upgrade pip setuptools wheel || die "pip 갱신 실패"
+  say "  ${DIM}wrdkit…${OFF}"
+  "$py" -m pip install --quiet -e "$REPO/packages/wrdkit" || die "wrdkit 설치 실패"
+  say "  ${DIM}API 의존성…${OFF}"
+  "$py" -m pip install --quiet -r "$REPO/apps/api/requirements.txt" \
+    || die "API 의존성 설치 실패"
+
+  if ! python_ready; then
+    # A poisoned wheel cache survives a fresh venv, because pip reuses it.
+    # Reinstalling the async stack from the network is the one thing left to
+    # try before handing the problem back.
+    warn "런타임 점검 실패 — async 스택을 캐시 없이 다시 받습니다."
+    "$py" -m pip install --quiet --upgrade --force-reinstall --no-cache-dir \
+      anyio sniffio || true
+  fi
+
+  if python_ready; then
+    printf '%s' "$(deps_fingerprint)" > "$STAMP"
+    ok "파이썬 환경 정상."
+    say "  ${DIM}이제 'bml' 로 실행하세요.${OFF}"
+  else
+    warn "재설치했는데도 런타임 점검을 통과하지 못했습니다:"
+    python_problem | tail -12 | sed 's/^/  /'
+    say ""
+    say "  ${DIM}설치된 버전:${OFF}"
+    "$py" -m pip list 2>/dev/null | grep -iE '^(anyio|sniffio|fastapi|starlette|uvicorn) ' \
+      | sed 's/^/    /'
+    say ""
+    say "  ${DIM}시스템 패키지가 섞였을 수 있습니다. 확인:${OFF}"
+    say "    grep include-system-site-packages $REPO/.venv/pyvenv.cfg"
+    say "    ${DIM}(false 여야 합니다)${OFF}"
+    return 1
+  fi
+}
+
+cmd_repair_web() {
+  step "node_modules 를 새로 만듭니다"
+  rm -rf "$REPO/apps/web/node_modules" "$REPO/apps/web/dist" "$STAMP"
+  ( cd "$REPO/apps/web" && npm install --no-audit --no-fund ) || die "npm install 실패"
+  ok "web 환경 정상."
+}
+
 is_wsl() {
   [ -n "${WSL_DISTRO_NAME:-}" ] && return 0
   grep -qiE 'microsoft|wsl' /proc/sys/kernel/osrelease 2>/dev/null
@@ -174,8 +318,28 @@ deps_fingerprint() {
 }
 
 python_ready() {
+  # Importing is not enough.  A stale sniffio imports fine and then breaks on
+  # the first request, so the check runs the async path the server actually
+  # uses: anyio -> sniffio.current_async_library().
   "$(python_bin)" - <<'PY' >/dev/null 2>&1
+import asyncio
+
 import fastapi, numpy, sqlmodel, uvicorn, wrdkit  # noqa: F401
+from anyio.to_thread import run_sync
+
+asyncio.run(run_sync(lambda: None))
+PY
+}
+
+python_problem() {
+  # The same check, but let the error through so it can be reported.
+  "$(python_bin)" - 2>&1 <<'PY'
+import asyncio
+
+import fastapi, numpy, sqlmodel, uvicorn, wrdkit  # noqa: F401
+from anyio.to_thread import run_sync
+
+asyncio.run(run_sync(lambda: None))
 PY
 }
 
@@ -276,7 +440,28 @@ cmd_stop() {
     fi
   done
 
-  sleep 0.5
+  sleep 0.8
+
+  # Claiming success without checking is how "내렸습니다" gets followed by
+  # "포트가 사용 중" one command later.
+  local still=""
+  for port in "$PORT" "$API_PORT"; do
+    port_busy "$port" && still="$still $port"
+  done
+
+  if [ -n "$still" ]; then
+    warn "포트가 아직 잡혀 있습니다:$still"
+    if is_wsl; then
+      say "  ${DIM}WSL 미러 네트워크에서는 Windows 쪽 프로그램의 포트도 이렇게 보이며,${OFF}"
+      say "  ${DIM}WSL 안에서는 종료할 수 없습니다. Windows 에서 확인하세요:${OFF}"
+      say "    ${DIM}PowerShell:  Get-NetTCPConnection -LocalPort $PORT | Select OwningProcess${OFF}"
+      say "  ${DIM}또는 다른 포트를 쓰세요:  WORKBENCH_PORT=6001 bml${OFF}"
+    else
+      say "  ${DIM}다른 프로그램이 쓰고 있습니다. WORKBENCH_PORT=6001 bml 로 옮길 수 있습니다.${OFF}"
+    fi
+    return 1
+  fi
+
   if [ $stopped -eq 1 ]; then ok "내렸습니다."; else say "${DIM}돌고 있는 게 없습니다.${OFF}"; fi
 }
 
@@ -302,15 +487,18 @@ start_serve() {
     printf '%s' "$!" > "$PID_FILE"
   )
 
-  if wait_for_url "$URL/api/health"; then
-    ok "실행 중 → ${B}${URL}${OFF}"
-    say "${DIM}  멈추려면: bml stop   ·  로그: bml logs${OFF}"
-    open_browser "$URL"
-  else
-    warn "서버가 응답하지 않습니다. 마지막 로그:"
-    tail -20 "$LOG" | sed 's/^/  /'
-    exit 1
-  fi
+  case "$(wait_for_server "$URL/api/health" "$LOG"; echo $?)" in
+    0)
+      # setsid detaches the process, so record what is actually holding the
+      # port -- that is what `bml stop` needs to kill.
+      port_owner "$PORT" > "$PID_FILE" 2>/dev/null || true
+      ok "실행 중 → ${B}${URL}${OFF}"
+      say "${DIM}  멈추려면: bml stop   ·  로그: bml logs${OFF}"
+      open_browser "$URL"
+      ;;
+    2) report_failure "$LOG" "서버가 시작하자마자 멈췄습니다."; exit 1 ;;
+    *) report_failure "$LOG" "30초 동안 서버가 응답하지 않았습니다."; exit 1 ;;
+  esac
 }
 
 start_dev() {
@@ -334,14 +522,16 @@ start_dev() {
     printf '%s' "$!" > "$DEV_PID_FILE"
   )
 
-  if wait_for_url "$URL"; then
+  if wait_for_server "$URL" "$RUN_DIR/vite.log"; then
+    port_owner "$PORT" > "$DEV_PID_FILE" 2>/dev/null || true
+    port_owner "$API_PORT" > "$PID_FILE" 2>/dev/null || true
     ok "개발 서버 → ${B}${URL}${OFF}   ${DIM}(API :${API_PORT})${OFF}"
     say "${DIM}  파일을 고치면 자동 반영됩니다  ·  멈추려면: bml stop${OFF}"
     open_browser "$URL"
   else
-    warn "뜨지 않았습니다. 로그:"
-    tail -20 "$RUN_DIR/vite.log" 2>/dev/null | sed 's/^/  /'
-    tail -20 "$LOG" | sed 's/^/  /'
+    report_failure "$RUN_DIR/vite.log" "개발 서버가 뜨지 않았습니다."
+    say "${DIM}--- API 로그 ---${OFF}"
+    tail -15 "$LOG" 2>/dev/null | sed 's/^/  /'
     exit 1
   fi
 }
@@ -478,6 +668,20 @@ cmd_doctor() {
     else
       ok "python3-venv 사용 가능"
     fi
+
+    if [ -x "$REPO/.venv/bin/python" ]; then
+      if python_ready; then
+        ok "가상환경 런타임 정상"
+      else
+        printf '%s✕%s 가상환경이 깨져 있습니다 — 서버는 뜨지만 요청마다 500 이 납니다.\n' \
+          "$RED" "$OFF"
+        python_problem | tail -4 | sed 's/^/    /'
+        say "  ${DIM}해결: ${OFF}${GREEN}bml repair${OFF}"
+        problems=$((problems + 1))
+      fi
+    else
+      say "  ${DIM}가상환경 없음 — 첫 bml 실행 때 만들어집니다.${OFF}"
+    fi
   else
     printf '%s✕%s python3 이 없습니다.  ${DIM}sudo apt install -y python3 python3-venv python3-pip${OFF}\n' "$RED" "$OFF"
     problems=$((problems + 1))
@@ -569,6 +773,7 @@ case "${1:-serve}" in
   check|test)        cmd_check ;;
   logs|log)          tail -f "$LOG" ;;
   doctor|diag)       cmd_doctor ;;
+  repair|fix)        shift; [ "${1:-}" = "web" ] && cmd_repair_web || cmd_repair ;;
   install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
   help|-h|--help)    cmd_help ;;
   *) die "모르는 명령: $1   ('bml help' 참고)" ;;

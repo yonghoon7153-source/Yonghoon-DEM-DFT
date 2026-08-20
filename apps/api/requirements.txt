@@ -4,3 +4,11 @@ sqlmodel>=0.0.22
 python-multipart>=0.0.9
 numpy>=1.24
 openpyxl>=3.1
+
+# Pinned explicitly because a stale sniffio in the environment makes anyio
+# raise `AttributeError: module 'sniffio' has no attribute
+# AsyncLibraryNotFoundError` on the first request -- the server starts, then
+# every endpoint 500s, which reads like an application bug rather than a
+# broken install.
+anyio>=4.4
+sniffio>=1.3

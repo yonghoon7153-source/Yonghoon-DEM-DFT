@@ -15,3 +15,5 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] create | localhost:5003 단일 주소 — API 와 빌드된 웹앱을 한 포트에서
 ## [2026-08-20] create | bml 실행기 — pull → 의존성 → 빌드 → 실행 순서를 강제
 ## [2026-08-20] create | WSL 지원 — bml doctor, .gitattributes 로 LF 고정, PowerShell 래퍼
+## [2026-08-20] fix | 서버 실패 시 트레이스백 대신 원인과 해결 명령을 보여 준다
+## [2026-08-20] create | bml repair — 깨진 가상환경 재설치, anyio/sniffio 최소 버전 고정

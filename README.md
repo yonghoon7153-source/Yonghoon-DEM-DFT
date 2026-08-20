@@ -106,6 +106,7 @@ PowerShell 에서 바로 치고 싶으면 `tools/bml.cmd` 를 Windows PATH 에 �
 | `bml status` | 실행 상태 + 브랜치/미커밋/ahead·behind |
 | `bml check` | 커밋 전 검사 |
 | `bml doctor` | 환경 점검 (WSL 포함) |
+| `bml repair` | 파이썬 환경 재설치 (의존성이 꼬였을 때) |
 
 자세한 설명: [`docs/guides/bml-command.md`](docs/guides/bml-command.md)
 
