@@ -1602,11 +1602,15 @@ def test_claim_registry_is_complete_in_both_directions():
         if not f.is_file():
             continue
         txt = f.read_text(encoding="utf-8")
-        for m in re.finditer(r"철회\[([A-Z0-9_]+)\]|<!--\s*QUARANTINE:([A-Z0-9_]+)", txt):
-            cid = m.group(1) or m.group(2)
-            if cid == "CLAIM_ID":            # 원장 헤더의 설명용 자리표시자
-                continue
-            seen.setdefault(cid, []).append(rel)
+        # ★ QUARANTINE 마커는 **파서와 같은 규칙**으로 센다 — 줄 전체가 마커일
+        #   때만 진짜 울타리다. 그러지 않으면 코드블록 안의 설명용 인용
+        #   (`<!-- QUARANTINE:<claim> -->`)이 미등록 ID 로 잡힌다.
+        for ln in txt.splitlines():
+            m = _Q_OPEN.match(ln.strip())
+            if m:
+                seen.setdefault(m.group(1), []).append(rel)
+        for m in re.finditer(r"철회\[([A-Z0-9_]+)\]", txt):
+            seen.setdefault(m.group(1), []).append(rel)
     unknown = {k: sorted(set(v)) for k, v in seen.items() if k not in reg}
     assert not unknown, (
         "문서가 쓰는 claim ID 가 원장에 없다 — 금지어 검사를 전혀 안 받는다:\n  "
@@ -1828,3 +1832,47 @@ def test_random_only_multimodality_is_recomputable_from_the_restart_projection(l
     assert not bad, (
         f"{leg}: restart 투영에서 재계산한 random-only 분류가 봉인과 다르다:\n  "
         + "\n  ".join(bad))
+
+
+def test_all_projections_share_one_compute_provenance():
+    """★ 22차 자체 발견 — 8다리가 두 생성기 판으로 갈려 있었다.
+
+    비교 집합의 다리들이 서로 다른 분석기로 만들어지면, 다리 간 digest 비교
+    (`test_cross_digest_exact_pair_reproduces_row_for_row` 등)가 "같은 규격으로
+    만든 것을 비교한다" 는 전제를 잃는다.
+
+    실제로 갈렸다: 7다리 `b46389d0`, `paired_fixed5_v4` `5711f104`. 확인해 보니
+    **차이는 `main()` 의 출력 문구뿐**이었고 계산 함수는 바이트 동일이었다.
+    그러나 리뷰어는 sha 만 보고 그것을 알 수 없다.
+
+    그래서 provenance 를 **계산 경로만** 해시하도록 바꾸고(`compute_sha256`),
+    비교 집합 전체가 하나로 같은지를 여기서 강제한다. 표시 코드를 고쳐도
+    이 테스트는 깨지지 않고, **계산이 바뀌면 반드시 깨진다.**
+
+    `analysis_spec_sha256`(무엇을 만들기로 했는가)도 함께 본다 — 둘 다 같아야
+    "같은 규격을, 같은 코드로" 가 성립한다.
+    """
+    import collections
+    import yaml
+
+    seen: dict[str, dict[str, list[str]]] = collections.defaultdict(
+        lambda: collections.defaultdict(list))
+    for y in sorted(_WARM.glob("*.projection.yaml")):
+        m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        a = m.get("analyzer") or {}
+        seen["compute_sha256"][a.get("compute_sha256")].append(m["leg_id"])
+        seen["analysis_spec_sha256"][m.get("analysis_spec_sha256")].append(m["leg_id"])
+        seen["src_scoring_py_sha256"][a.get("src_scoring_py_sha256")].append(m["leg_id"])
+
+    bad = []
+    for field, groups in seen.items():
+        if None in groups:
+            bad.append(f"{field}: 기록이 없는 다리 {groups[None]}")
+        if len(groups) > 1:
+            detail = " / ".join(f"{k}: {len(v)}다리 {v[:3]}…" if len(v) > 3
+                                else f"{k}: {v}" for k, v in groups.items())
+            bad.append(f"{field} 가 갈렸다 — {detail}")
+    assert not bad, (
+        "비교 집합의 분석기 provenance 가 하나가 아니다:\n  " + "\n  ".join(bad)
+        + "\n  원자료가 있는 기계에서 `python docs/22p_gap/row_projection.py --all` "
+          "로 전부 다시 만들어라.")

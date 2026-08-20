@@ -1462,7 +1462,7 @@ boolean 과 "붕괴가 원리적으로 관측 가능한 범위" 문장을 삭제
 | 한계 | 수정 |
 |---|---|
 | fenced code 안의 `#` 를 heading 으로 오인 | `_strip_fences()` 로 코드 블록 제외 |
-| 절에 마커 하나면 그 절 전체 면제 | **claim ID 별 마커** `⛔ 철회[CLAIM_ID]` |
+| 절에 마커 하나면 그 절 전체 면제 | **claim ID 별 마커** — `⛔ 철회` 뒤 대괄호에 claim ID |
 | 단일 문구 regex | 동의어 포함 (`원리적으로 정답이 안 나`, `feasible domain 밖` 등) |
 | Hessian 순위·합성 하한 rule 부재 | `HESSIAN_EPS_ORDER`, `SYNTHETIC_IS_LOWER_BOUND`, `STALE_GAP_NUMBERS` 추가 |
 | — | 정본 링크에 대한 **positive assertion** 추가 |
@@ -2163,3 +2163,126 @@ aggregate 일치는 조건별 일치가 아니라는 것이 21차 Q2 의 지적�
 **말하지 않는 것**: fitting 자체가 기계 독립이라는 뜻은 아니다. 두 기계가 쓴
 `fits.parquet` 은 **같은 파일**이다 (sha256 일치). 재실행의 재현성은 별개
 문제이고, 21차 발견 5 가 지적한 runtime drift 는 그쪽에 걸린다.
+
+## 31. 22차 게이트 리뷰 회답 — 발견 1·5·6·7·8 + 계약 v2
+
+> 리뷰 대상 `db19a7b1` · 판정 **NO-GO** (21차 10건 미완결 + 계약 구현 불가).
+> `source_digest` 는 `a72c0f3a485c19bb` 그대로.
+
+### 31.1 발견 1 — 21차 실험은 union 이 아니라 slot 교체였다
+
+가장 큰 정정이다. §20.4·계약 v1·21차 회답이 전부 이 틀린 전제 위에 있었다.
+근거는 코드와 **우리가 커밋한 투영** 둘 다다 (§20.4 재재정정 참조).
+
+무엇이 바뀌나: 34p 개선을 "warm 후보가 좋다" 로만 읽을 수 없고 **"`base_init`
+이 34p 에서 나쁜 후보였다"** 와 구별되지 않는다. 계약 §3 이 후보 정책을 세
+가지로 나눠 이름 붙였고, 21차 실험은 `legacy_slot_replace` 다.
+
+회귀 `test_warm_replaces_the_deterministic_slot_it_does_not_add_one` 은 문장이
+아니라 **실제 후보 배열**(`restart_sources`·총 후보 수·`base_init` 소멸)을
+고정한다.
+
+### 31.2 발견 5 — 투영 v2
+
+| 리뷰 지적 | 대응 |
+|---|---|
+| 실제 fits SHA 를 계산하지 않고 manifest 값을 복사 | 읽은 바이트를 해시해 **summary·manifest 와 삼중 대조** |
+| `재계산_검증` 이 `by_objective` 숫자만 부분 순회 | 봉인 summary **전체**를 재귀 비교 (key 집합·`by_objective_noise`·`overall_recoverable`·`restart_conditioned`·`multistart*`·문자열·불리언) |
+| restart trace 지표를 재계산하지 않음 | `multistart` 블록 재계산 경로 추가 |
+| per-restart 자료 없음 | `<leg>.restarts.csv.gz` — `(cond_id, objective, i, source, J, p0..p3, warm)` |
+| 분석기 provenance 없음 | `analyzer` 블록 |
+| malformed 입력을 조용히 통과 | 중복 키·비유한값·읽기 실패 시 **즉시 실패** |
+
+**전면 대조가 곧바로 구멍을 드러냈다**: `multistart`·`multistart_random_only`
+는 `summarize()` 산물이 아니라 `run_scoring` 이 `restarts_json` 에서 붙이는
+블록이다. 초판 재계산은 그 둘을 통째로 못 봤고, **발견 3 의 근거가 바로 그
+블록**이었다.
+
+그리고 restart 투영으로 random-only 다봉성을 **원자료 없이** 재계산해 봉인값과
+마지막 자리까지 맞췄다 (회귀
+`test_random_only_multimodality_is_recomputable_from_the_restart_projection`).
+
+8다리 전량 실측 (원자료 보유 기계):
+
+```
+전체 True · by_obj True · fits삼중 True · 봉인일치 True  ×8
+투영 내용 digest 일치 ×8 · restart 투영 digest 일치 ×8
+```
+
+### 31.3 발견 6 — gzip 바이트 주장의 범위
+
+리뷰어 환경(Python 3.14.0 · zlib-ng 1.3.1)에서 재압축하면 `357,509 →
+359,210` 으로 갈린다. **압축 전 SHA 는 동일**하다. 우리 두 환경이 같았던 것은
+둘 다 zlib 1.3 이어서였다. 정본 앵커를 압축 전 canonical TSV SHA 로 한정했다 —
+설계는 원래 그랬고, 틀렸던 것은 **주장의 범위**다.
+
+### 31.4 발견 7 — 원장의 세 구멍, 그리고 fence 가 잡은 진짜 버그
+
+(a) `MV_1P5`·`THRESH_FREE`·`FPR_AS_FDR` 이 문서에 있는데 원장에 없었다 →
+추가 + **파일→원장 방향** 완전성 검사.
+
+(b) fence 균형 검사를 넣자마자 **이미 일어난 사고**를 잡았다:
+
+```
+08_REVIEW_RESPONSE.md:1831  | `<!-- QUARANTINE:ID -->` … | 옛 문장을 …
+   ↑ §29.1 설명 표의 인용이 여는 울타리로 파싱됐다
+   → 1831줄 이후 문서 전체가 금지어 검사에서 빠져 있었고
+   → 그 안에 금지어 4개가 살아 있었다
+```
+
+파서를 **"줄 전체가 마커 하나일 때만"** 으로 고쳤다. 리뷰가 예측한 실패 모드가
+예측대로 이미 발생해 있었다.
+
+(c) wiki 가 원장 관할 밖이었다 → `_CLAIM_SCOPE` 에 포함. 활성 잔여 6곳 정리
+(09 2건 · 08 3건 · `LEG_INVENTORY` 2건 · wiki 1건).
+
+**★ 원장 regex 도 세 번 틀렸다.** `3/51` 이 실측 붕괴 건수를, `THRESH_FREE` 의
+두 패턴이 **배너가 명시적으로 유지한다고 적은 문장**을 잡았다 (§0 의 "판정선을
+어디에 두든 고칠 수 없다" 는 정반대 주장이다). 원장이 참인 문장을 금지하면
+문서를 거짓으로 만든다 — "금지어는 인접 단어가 아니라 **철회된 의미**에
+묶어라" 를 원장 헤더 규칙으로 박았다.
+
+### 31.5 발견 8 — `/lean-review`
+
+upstream 조회 실패 시 `origin/HEAD` 로 자동 대체하던 것을 없애고 **중단**한다.
+회귀는 attached+upstream / attached+no-upstream / detached / 명시 base 네
+상태를 진짜 git 저장소로 만들어 검증한다.
+
+### 31.6 자체 발견 — 분석기 provenance 가 갈려 있었다
+
+8다리 검산 중 `row_projection_py_sha256` 이 두 값으로 갈린 것을 발견했다
+(7다리 `b46389d0` · `paired_fixed5_v4` `5711f104`). 확인해 보니 **차이는
+`main()` 의 출력 문구뿐**이고 계산 함수 여섯 개는 바이트 동일이었다. 그러나
+리뷰어는 sha 만 보고 그것을 알 수 없다 — 비교 집합의 "같은 규격으로 만들었다"
+전제가 흔들린다.
+
+파일 전체 대신 **계산 경로만** 해시하도록 바꿨다 (`compute_sha256` — 계산
+함수 여섯 개의 source + `COLUMNS`·`RESTART_COLUMNS`·`ANALYSIS_SPEC`). 표시
+코드를 고쳐도 안 흔들리고, 계산이 바뀌면 반드시 흔들린다.
+`analysis_spec_sha256` 이 **무엇을 만들기로 했는가**라면 이것은 **무엇이
+만들었는가**다. 회귀 `test_all_projections_share_one_compute_provenance` 가
+비교 집합 전체의 동일성을 강제한다.
+
+### 31.7 계약 v2
+
+발견 1·2·3·4 와 Q1~Q6 을 반영해 전면 개정했다 —
+`docs/22p_gap/STAGE3_CONTRACT.md`. 요지:
+
+| 절 | 무엇이 바뀌었나 |
+|---|---|
+| §0 | v1 의 union 오분류 정정 |
+| §2 | 예산을 **목적함수별**로 (33p 예산이 34p warm 후보를 끌고 간다) · `warm_provider_map` · `realized_candidate_map_sha256` · `N` 의 정의 1회 |
+| §2.1 | 하위호환을 **version-dispatched read-only** 로 완화 (Q3 — v1 의 전면 거부는 과했다) |
+| §2.2 | adaptive diagnostic arm 의 표현 가능한 schema |
+| §3 | 후보 정책 3종. `equal-cost` → **`equal_start_count`** (시작점 수가 같아도 `n_eval` 이 다르다) |
+| §4 | pair id 를 **행 단위**로 · `pairing_design_id` · unit cube bank · **exact ordered bounds digest** (Q1) |
+| §6 | plateau 를 진짜 truth-free 로 — `degenerate` 전이·`p` 이동·restart-source 승자 구성을 gate 에서 빼고 민감도 표로. **sentinel panel** 도입 (Q2) |
+| §7 | primary = grid reference 의 optimizer-controlled paired contrast + **transition table** (Q4) |
+| §9 | 재실행 목록에 seed 별 0 mV control·grid sentinel·비-PE 다리·hard/noisy sentinel·후보 정책 arm 추가. **12시간 추정 폐기** (Q5) |
+| §10 | 보존 단위 (Q6) |
+
+### 31.8 남은 것
+
+계약 §2·§4·§6 은 **정의만 있고 구현이 없다.** 리뷰 순서로 11번(문서·회귀
+재심사)이 지금이고, 12번(RUN_SCOPE 변경 → `source_digest` 변화 → 재실행)은
+그 뒤다. 비용은 재산정 전까지 승인 요청하지 않는다 (§9.3).

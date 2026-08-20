@@ -218,6 +218,38 @@ def _add_multistart_blocks(df, summary: dict) -> None:
         "마세요 — 출처를 저장하는 현재 코드로 재fit해야 복구됩니다 (F25/F31).")
 
 
+#: 산출물을 실제로 만드는 것들. 여기 없는 것(예: `main()` 의 출력 문구)이
+#: 바뀌어도 투영 내용은 안 바뀐다.
+_COMPUTE_NAMES = ("_cell", "_restart_list", "_restart_facts",
+                  "_add_multistart_blocks", "_analyzer_provenance", "build")
+
+
+def _compute_sha256() -> str:
+    """계산 경로의 source + 출력 규격 상수만 해시한다.
+
+    표시 코드 변경이 provenance 를 흔들지 않게 하고, 반대로 계산이 바뀌면
+    반드시 흔들리게 한다. `analysis_spec_sha256` 이 **무엇을 만들기로 했는가**
+    라면 이것은 **무엇이 만들었는가** 다.
+    """
+    import ast
+
+    src = Path(__file__).resolve().read_text(encoding="utf-8")
+    tree = ast.parse(src)
+    parts = []
+    for node in tree.body:
+        if isinstance(node, ast.FunctionDef) and node.name in _COMPUTE_NAMES:
+            parts.append(f"{node.name}\n{ast.get_source_segment(src, node)}")
+    parts.append(json.dumps({"COLUMNS": COLUMNS,
+                             "RESTART_COLUMNS": RESTART_COLUMNS,
+                             "ANALYSIS_SPEC": ANALYSIS_SPEC},
+                            sort_keys=True, ensure_ascii=False))
+    missing = set(_COMPUTE_NAMES) - {p.split("\n", 1)[0] for p in parts[:-1]}
+    if missing:
+        raise SystemExit(f"✗ 계산 함수를 못 찾았다: {sorted(missing)} — "
+                         f"이름을 바꿨다면 _COMPUTE_NAMES 도 고쳐라")
+    return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()[:16]
+
+
 def _analyzer_provenance() -> dict:
     """★ 22차 발견 5 — 투영이 **무엇으로 만들어졌는지** 스스로 밝힌다.
 
@@ -230,7 +262,12 @@ def _analyzer_provenance() -> dict:
         return hashlib.sha256(p.read_bytes()).hexdigest()[:16] if p.is_file() else ""
 
     out = {
-        "row_projection_py_sha256": _sha(Path(__file__).resolve()),
+        # ★ 22차 자체 발견 — 파일 전체 sha 를 provenance 로 쓰면 **출력 문구만
+        #   고쳐도** 다리마다 값이 갈린다. 실제로 8다리가 두 판으로 갈렸고,
+        #   차이는 `main()` 의 표시 코드뿐이었다 (계산 함수는 바이트 동일).
+        #   리뷰어는 sha 만 보고 그것을 알 수 없다 → **계산 경로만** 해시한다.
+        "compute_sha256": _compute_sha256(),
+        "row_projection_py_sha256": _sha(Path(__file__).resolve()),   # 참고용(전체 파일)
         "src_scoring_py_sha256": _sha(REPO / "src" / "scoring.py"),
         "python": _sys.version.split()[0],
         "platform": platform.platform(),

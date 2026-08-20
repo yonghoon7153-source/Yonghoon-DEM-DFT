@@ -15,13 +15,14 @@ restart_projection_sha256: 84333ad3c19625ca7dcd2f1bb8a0f1c78cc4296dd46deef4bb17d
 n_restart_rows: 30690
 analysis_spec_sha256: 732d438f077c4301adafc0aadad8ba020a9f722735f5d03fdab1b0aa05e445c2
 analyzer:
-  row_projection_py_sha256: 5711f1040bf18cc0
+  compute_sha256: 46492235fd5862f2
+  row_projection_py_sha256: 5081fca2b47db348
   src_scoring_py_sha256: 69e69cb046f4b4ae
-  python: 3.12.3
-  platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
+  python: 3.11.15
+  platform: Linux-6.18.5-fc-v20-x86_64-with-glibc2.39
   pandas: 3.0.5
   pyarrow: 25.0.1
-  numpy: 2.5.2
+  numpy: 2.4.6
   yaml: 6.0.3
 analysis_spec:
   projection_version: 1
