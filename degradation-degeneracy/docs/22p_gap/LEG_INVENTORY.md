@@ -796,3 +796,106 @@ EOF
 마지막 줄이 중요하다. 404 시험에서 1번째 목적함수는 warm 여부와 무관하게
 **15자리까지 동일**했다. 여기서도 `pocv_dvdq` 가 `0.619241` 그대로여야 하고,
 아니라면 이 비교의 전제가 깨진 것이다.
+
+---
+
+# 6차 갱신 (2026-08-20) — §24.1 실행: 차이가 +25.27%p → +1.29%p 로 줄었다
+
+## 27. 결과
+
+```
+paired_fixed5_v4       pocv_dvdq       degen=0.619241  corr=0.144309  mae=0.024227
+paired_fixed5_v4       pocv_dvdq_dqdv  degen=0.871951  corr=0.945122  mae=0.065287
+paired_fixed5_v4_warm  pocv_dvdq       degen=0.615854  corr=0.141599  mae=0.024220
+paired_fixed5_v4_warm  pocv_dvdq_dqdv  degen=0.628726  corr=0.243902  mae=0.023653
+```
+
+| | `pocv_dvdq` | `pocv_dvdq_dqdv` | 차이 |
+|---|---|---|---|
+| **warm=False** (정본) | 0.619241 | 0.871951 | **+25.27%p** |
+| **warm=True** (신규) | 0.615854 | 0.628726 | **+1.29%p** |
+
+**결론 1 철회를 떠받치던 +25.27%p 가 warm 을 켜면 +1.29%p 로 줄어든다.**
+부수 지표도 같은 방향이다 — `dqdv` 의 `mae` 0.065287 → 0.023653 (2.8배 개선),
+`degenerate_frac_corrected` 0.945122 → 0.243902 (3.9배 개선).
+
+모집단은 **정확히 일치**한다: 양쪽 다 `n_rows_total 6138`,
+`n_rows_recoverable 2952`, `unrecoverable_frac 0.519062`. 비교 대상이 같은
+조건 집합이라는 뜻이다.
+
+## 28. ⚠ 그런데 사전 기준 4번에 걸렸다 — 이 결과는 아직 깨끗하지 않다
+
+§26 에 실행 전 못박은 기준:
+
+> `dvdq`(1번째)가 움직인다 → **이상** — 연쇄 1번째는 warm 영향이 없어야 한다
+> (§23.1 에서 15자리 동일이었다). 멈추고 원인부터 찾는다.
+
+실측: `0.619241` → `0.615854` (Δ **−0.0034**, 1,476조건 중 약 5조건).
+`mae` 도 `0.024227` → `0.024220` 으로 6번째 자리에서 움직였다.
+404 시험에서는 1번째 목적함수가 **15자리까지 동일**했는데 여기서는 아니다.
+
+**원인은 digest 간격이다.** 404 비교는 `7250c6e6`→`a72c0f3a` 였고 그 구간이
+수치적으로 무해함을 완전 재현으로 증명했다(§22). 이번 비교는
+`d50295f9`(`c0f1daa0`, v4 본 실행) → `a72c0f3a` 로, **그 사이 RUN_SCOPE 가 크게
+바뀌었다** (ocpbias 전체, stretch 재설계, p_ini_cond 봉인, 진단 도구 …).
+
+즉 `paired_fixed5_v4_warm` 은 **warm 만 다른 것이 아니라 코드도 다르다.**
+
+### 28.1 크기 비교는 warm 쪽을 강하게 시사한다 — 그러나 증명은 아니다
+
+| 축 | 변화량 |
+|---|---|
+| `dvdq` (warm 영향 없어야 함 → 순수 코드 드리프트 추정치) | **0.0034** |
+| `dqdv` (warm + 코드) | **0.2432** |
+
+코드 드리프트가 `dvdq` 에서 0.0034 인데 `dqdv` 에서 0.2432 를 만들려면 **70배**
+차이가 나야 한다. `dqdv` 가 multimodal 96% 라 교란에 훨씬 민감한 것은 사실이라
+불가능하지는 않지만, warm 이 지배적이라고 보는 편이 자연스럽다.
+
+**그래도 "자연스럽다" 는 증거가 아니다.** 이 저장소의 규율대로 빠진 대조를 채운다.
+
+## 29. 빠진 대조 — 현재 digest 에서 warm 을 끈 다리
+
+`paired_fixed5_v4` 를 **현재 코드에서 그대로 재현**하면 코드 축이 소거된다.
+인자는 §26 에서 `RUN_SH_DRY=1` 로 이미 대조해 뒀다 (`--no-warm-start` 만 추가):
+
+```bash
+./run.sh --mode fit --in results/grid_curves_v4 \
+  --out results/paired_fixed5_v4_nowarm_now --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --no-adaptive --reference grid --bounds expanded --no-warm-start
+./run.sh --mode score --in results/paired_fixed5_v4_nowarm_now
+```
+
+15~20분. 끝나면 세 다리를 한 줄씩 비교한다:
+
+```bash
+python3 - <<'EOF'
+import yaml
+for n in ("paired_fixed5_v4", "paired_fixed5_v4_nowarm_now", "paired_fixed5_v4_warm"):
+    d = yaml.safe_load(open(f"results/{n}/degeneracy_summary.yaml"))["by_objective"]
+    for o in ("pocv_dvdq", "pocv_dvdq_dqdv"):
+        print(f"{n:30} {o:16} degen={d[o]['degenerate_frac']:.6f} "
+              f"mae={d[o]['mean_abs_err']:.6f}")
+EOF
+```
+
+### 판정 (다시, 실행 전에 고정)
+
+| 관측 | 해석 |
+|---|---|
+| `nowarm_now` 가 정본(0.619241 / 0.871951)을 **재현** | 코드 축은 무해 → **+25.27%p → +1.29%p 축소는 전적으로 warm 때문** |
+| `nowarm_now` 의 `dqdv` 가 0.87 이 아니라 0.6대 | 코드 변경이 `dqdv` 를 바꿨다 — **더 큰 문제**. v4 정본 전체의 재현성 문제로 격상 |
+| `nowarm_now` 의 `dvdq` 만 0.6158 로 오고 `dqdv` 는 0.87 유지 | 코드는 `dvdq` 에만 영향 → warm 효과는 여전히 유효 |
+
+## 30. 지금 시점에서 문서에 쓸 수 있는 것
+
+§20.4 를 **아직 고치지 않는다.** §29 가 끝나야 무엇을 고칠지 정해진다.
+다만 다음은 이미 확정이다:
+
+- **`paired_fixed5_v4` 는 warm=False regime 산물이다** (manifest 실측).
+  §20.4 가 그 사실을 밝히지 않는다 — regime 표기는 지금 추가해도 된다.
+- **같은 조건 집합에서 warm 을 켜면 `dqdv` 가 크게 개선된다** (0.872 → 0.629).
+  코드 축이 섞였지만 방향과 크기는 관측됐다.
+- §20.4 의 기존 유보("multimodal 97% 라 optimizer 가 그 목적함수를 못 푸는
+  효과가 섞여 있다")는 **정확했다.** warm start 가 바로 그 optimizer 축이다.
