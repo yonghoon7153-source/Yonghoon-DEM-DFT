@@ -54,6 +54,10 @@ class Sample(SQLModel, table=True):
     notes: str = ""
 
     # -- cell spec: the inputs that turn mAh into mAh/g and mAh/cm2 --------
+    #: The blend, as JSON: [{"name", "wt_percent", "role"}, ...].  Components
+    #: recorded at 0 wt% are kept -- "this batch had no PTFE" is a deliberate
+    #: record, not a blank.  Drives `active_wt_percent` unless that was typed.
+    composition_json: str = ""
     total_mass_mg: Optional[float] = None
     current_collector_mass_mg: Optional[float] = None
     active_wt_percent: Optional[float] = None

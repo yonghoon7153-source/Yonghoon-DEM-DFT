@@ -74,6 +74,22 @@ function cssVar(name: string, fallback: string): string {
   return value || fallback
 }
 
+/** Resolve `var(--token)` to a real colour.
+ *
+ * uPlot strokes a canvas, and a canvas has no cascade: handing it
+ * `var(--discharge)` silently produces an invisible line.  Series colours are
+ * therefore resolved here rather than at the call site, so a caller can use a
+ * theme token like everywhere else in the app. */
+function resolveColor(color: string | undefined, fallback: string): string {
+  if (!color) return fallback
+  const token = color.match(/^var\(\s*(--[\w-]+)\s*(?:,\s*(.+?))?\s*\)$/)
+  if (!token) return color
+  return cssVar(token[1]!, token[2]?.trim() ?? fallback)
+}
+
+const AXIS_FONT = '11px Pretendard, system-ui, sans-serif'
+const LABEL_FONT = '600 11px Pretendard, system-ui, sans-serif'
+
 export function Plot({
   series,
   xLabel,
@@ -100,14 +116,18 @@ export function Plot({
     const node = nodeRef.current
     if (!node || !data || width < 80) return
 
-    const text = cssVar('--text-dim', '#5b6878')
-    const grid = cssVar('--border', '#dfe3ea')
+    const text = cssVar('--ink-3', '#7d8797')
+    const grid = cssVar('--line', '#e5e7eb')
 
     const options: uPlot.Options = {
       width,
       height,
       legend: { show: legend },
-      cursor: { drag: { x: true, y: true, uni: 20 }, focus: { prox: 24 } },
+      cursor: {
+        drag: { x: true, y: true, uni: 20 },
+        focus: { prox: 24 },
+        points: { size: 6, width: 1.5 },
+      },
       scales: {
         x: { time: false },
         y: {
@@ -116,32 +136,38 @@ export function Plot({
             : undefined,
         },
       },
+      padding: [12, 14, 0, 0],
       axes: [
         {
           label: xLabel,
-          labelSize: 30,
+          labelSize: 28,
+          labelGap: 4,
           stroke: text,
-          grid: { stroke: grid, width: 1 },
-          ticks: { stroke: grid, width: 1 },
-          font: '11px system-ui, sans-serif',
-          labelFont: '12px system-ui, sans-serif',
+          // A dotted grid stays behind the data instead of competing with it.
+          grid: { stroke: grid, width: 1, dash: [1, 3] },
+          ticks: { stroke: grid, width: 1, size: 4 },
+          font: AXIS_FONT,
+          labelFont: LABEL_FONT,
+          gap: 4,
         },
         {
           label: yLabel,
-          labelSize: 44,
+          labelSize: 40,
+          labelGap: 4,
           stroke: text,
-          grid: { stroke: grid, width: 1 },
-          ticks: { stroke: grid, width: 1 },
-          font: '11px system-ui, sans-serif',
-          labelFont: '12px system-ui, sans-serif',
-          size: 62,
+          grid: { stroke: grid, width: 1, dash: [1, 3] },
+          ticks: { stroke: grid, width: 1, size: 4 },
+          font: AXIS_FONT,
+          labelFont: LABEL_FONT,
+          size: 58,
+          gap: 4,
         },
       ],
       series: [
         {},
         ...visible.map((item, index) => ({
           label: item.label,
-          stroke: item.color ?? seriesColor(index),
+          stroke: resolveColor(item.color, seriesColor(index)),
           width: item.width ?? 1.6,
           dash: item.dash,
           spanGaps: item.spanGaps ?? true,
@@ -157,7 +183,7 @@ export function Plot({
                 for (const marker of markers) {
                   const x = u.valToPos(marker.x, 'x', true)
                   if (!Number.isFinite(x)) continue
-                  ctx.strokeStyle = marker.color ?? cssVar('--danger', '#c92a2a')
+                  ctx.strokeStyle = marker.color ?? cssVar('--warn', '#b54708')
                   ctx.lineWidth = 1.25
                   ctx.setLineDash([5, 4])
                   ctx.beginPath()
@@ -165,10 +191,15 @@ export function Plot({
                   ctx.lineTo(x, u.bbox.top + u.bbox.height)
                   ctx.stroke()
                   ctx.setLineDash([])
-                  ctx.fillStyle = marker.color ?? cssVar('--danger', '#c92a2a')
-                  ctx.font = '11px system-ui, sans-serif'
+                  const color = marker.color ?? cssVar('--warn', '#b54708')
+                  ctx.font = LABEL_FONT
                   ctx.textAlign = 'left'
-                  ctx.fillText(marker.label, x + 4, u.bbox.top + 12)
+                  // A plate behind the label keeps it readable over the data.
+                  const textWidth = ctx.measureText(marker.label).width
+                  ctx.fillStyle = cssVar('--surface', '#ffffff')
+                  ctx.fillRect(x + 3, u.bbox.top + 2, textWidth + 8, 16)
+                  ctx.fillStyle = color
+                  ctx.fillText(marker.label, x + 7, u.bbox.top + 14)
                 }
                 ctx.restore()
               },
@@ -190,8 +221,12 @@ export function Plot({
       {data ? (
         <div ref={nodeRef} />
       ) : (
-        <div className="empty" style={{ height }}>
-          그릴 데이터가 없습니다.
+        <div
+          className="empty"
+          style={{ height, display: 'grid', placeContent: 'center', padding: 0 }}
+        >
+          <div className="icon">⌁</div>
+          그릴 데이터가 없습니다
         </div>
       )}
     </div>
@@ -217,8 +252,12 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
           title={item.hidden ? '표시' : '숨기기'}
         >
           <span
-            className="swatch"
-            style={{ background: item.color ?? seriesColor(index) }}
+            className={`swatch${item.dash ? ' dashed' : ''}`}
+            style={
+              item.dash
+                ? { color: item.color ?? seriesColor(index), background: 'transparent' }
+                : { background: item.color ?? seriesColor(index) }
+            }
           />
           {item.label}
         </button>

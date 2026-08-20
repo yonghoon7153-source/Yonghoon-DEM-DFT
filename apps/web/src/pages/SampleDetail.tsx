@@ -5,14 +5,18 @@ import { Link, useParams } from 'react-router-dom'
 
 import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
+import { CompositionEditor } from '../components/CompositionEditor'
 import { CyclePicker } from '../components/CyclePicker'
 import { CycleTable } from '../components/CycleTable'
 import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../components/Plot'
 import { KneeDetail, ReportCard } from '../components/ReportCard'
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import {
+  Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton,
+} from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
+import { ko } from '../lib/i18n'
 import type { Basis, Run, Sample } from '../lib/types'
 
 type LifeMetric = 'discharge' | 'efficiency' | 'retention' | 'hysteresis'
@@ -41,18 +45,12 @@ export function SampleDetail() {
 
   const sampleState = useAsync(() => api.getSample(sampleId), [sampleId])
   const sample = override ?? sampleState.data
+  const stamp = sample?.updated_at
 
-  const cycleState = useAsync(
-    () => api.sampleCycles(sampleId, { basis }),
-    [sampleId, basis, sample?.updated_at],
-  )
-  const reportState = useAsync(
-    () => api.sampleReport(sampleId, { basis }),
-    [sampleId, basis, sample?.updated_at],
-  )
+  const cycleState = useAsync(() => api.sampleCycles(sampleId, { basis }), [sampleId, basis, stamp])
+  const reportState = useAsync(() => api.sampleReport(sampleId, { basis }), [sampleId, basis, stamp])
   const runsState = useAsync(() => api.listRuns({ sample_id: sampleId }), [sampleId])
 
-  // Memoised so the derived selections below do not re-run on every render.
   const cycles = useMemo(() => cycleState.data?.cycles ?? [], [cycleState.data])
   const selected = useMemo(() => {
     if (chosen) return chosen
@@ -67,7 +65,7 @@ export function SampleDetail() {
         cycles: selected.join(','),
         branches: branches.join(','),
       }),
-    [sampleId, basis, selected.join(','), branches.join(','), sample?.updated_at],
+    [sampleId, basis, selected.join(','), branches.join(','), stamp],
     { enabled: selected.length > 0 && branches.length > 0 },
   )
 
@@ -75,16 +73,14 @@ export function SampleDetail() {
     const series = profileState.data?.series ?? []
     const cycleOrder = [...new Set(series.map((s) => s.cycle))]
     return series.map((item) => {
-      const colorIndex = cycleOrder.indexOf(item.cycle)
+      const label = `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`
       return {
-        label: `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`,
+        label,
         x: item.capacity,
         y: item.voltage,
-        color: seriesColor(colorIndex),
+        color: seriesColor(cycleOrder.indexOf(item.cycle)),
         dash: item.branch === 'charge' ? [5, 3] : undefined,
-        hidden: hidden.includes(
-          `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`,
-        ),
+        hidden: hidden.includes(label),
       }
     })
   }, [profileState.data, hidden])
@@ -112,8 +108,9 @@ export function SampleDetail() {
         label: LIFE_METRICS.find((m) => m.value === lifeMetric)!.label,
         x: points.map((p) => p.x),
         y: points.map((p) => p.y),
-        color: seriesColor(0),
+        color: lifeMetric === 'discharge' ? 'var(--discharge)' : seriesColor(2),
         points: points.length < 120,
+        width: 1.8,
       },
     ]
   }, [cycles, lifeMetric])
@@ -121,7 +118,7 @@ export function SampleDetail() {
   const kneeMarkers: PlotMarker[] = useMemo(() => {
     const result = reportState.data?.knee?.results.find((r) => r.method === kneeMethod)
     if (!result?.detected || result.cycle === null) return []
-    return [{ x: result.cycle, label: `knee ${Math.round(result.cycle)}` }]
+    return [{ x: result.cycle, label: `급감 ${Math.round(result.cycle)}` }]
   }, [reportState.data, kneeMethod])
 
   if (sampleState.loading && !sample) {
@@ -135,7 +132,9 @@ export function SampleDetail() {
     return (
       <main className="page">
         <Alert kind="error">{sampleState.error ?? '셀을 찾을 수 없습니다.'}</Alert>
-        <Link to="/samples">셀 라이브러리로</Link>
+        <p>
+          <Link to="/samples">셀 라이브러리로</Link>
+        </p>
       </main>
     )
   }
@@ -149,40 +148,34 @@ export function SampleDetail() {
           ? '용량 유지율 (%)'
           : '쿨롱효율 (%)'
 
+  const conditions = [
+    sample.group_name,
+    sample.test_date,
+    sample.cathode_detail || sample.cathode_type,
+    sample.process,
+    sample.resolved_cell.composition_compact_label,
+    sample.c_rate ? `${sample.c_rate}C` : null,
+    sample.temperature_c !== null ? `${sample.temperature_c}°C` : null,
+    sample.cutoff_lower_v && sample.cutoff_upper_v
+      ? `${sample.cutoff_lower_v}–${sample.cutoff_upper_v} V`
+      : null,
+  ].filter(Boolean)
+
   return (
     <main className="page">
       <div className="page-head">
-        <div>
-          <h1>{sample.name}</h1>
-          <div className="sub">
-            {[
-              sample.group_name,
-              sample.test_date,
-              sample.cathode_detail || sample.cathode_type,
-              sample.process,
-              sample.c_rate ? `${sample.c_rate}C` : null,
-              sample.temperature_c !== null ? `${sample.temperature_c}°C` : null,
-              sample.cutoff_lower_v && sample.cutoff_upper_v
-                ? `${sample.cutoff_lower_v}–${sample.cutoff_upper_v} V`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(' · ') || '조건 미입력'}
-          </div>
+        <div style={{ minWidth: 0 }}>
+          <h1 className="truncate">{sample.name}</h1>
+          <div className="sub">{conditions.join('  ·  ') || '조건 미입력'}</div>
         </div>
         <span className="spacer" />
         <div className="row">
           <BasisSelect value={basis} onChange={setBasis} cell={sample.resolved_cell} />
-          <a
-            className="badge plain"
-            style={{ padding: '6px 12px' }}
-            href={api.exportCyclesUrl(sample.id, { basis })}
-          >
+          <a className="link-btn" href={api.exportCyclesUrl(sample.id, { basis })}>
             사이클 CSV
           </a>
           <a
-            className="badge plain"
-            style={{ padding: '6px 12px' }}
+            className="link-btn"
             href={api.exportProfilesUrl(sample.id, {
               basis,
               cycles: selected.join(','),
@@ -192,8 +185,7 @@ export function SampleDetail() {
             프로파일 CSV
           </a>
           <a
-            className="badge plain"
-            style={{ padding: '6px 12px' }}
+            className="link-btn"
             href={api.exportWorkbookUrl(sample.id, { basis, cycles: selected.join(',') })}
           >
             XLSX
@@ -202,26 +194,32 @@ export function SampleDetail() {
       </div>
 
       {cycleState.data?.basis_fallback_reason ? (
-        <Alert kind="warn">
-          {cycleState.data.requested_basis} 로 표시할 수 없어 mAh 로 보여 줍니다 —{' '}
-          {cycleState.data.basis_fallback_reason}. 오른쪽 셀 스펙에서 값을 채우면 바로
-          바뀝니다.
-        </Alert>
+        <div style={{ marginBottom: 12 }}>
+          <Alert kind="warn">
+            {cycleState.data.requested_basis} 로 표시할 수 없어 mAh 로 보여 줍니다 —{' '}
+            {ko.basisReason(cycleState.data.basis_fallback_reason)}. 오른쪽 셀 스펙에서 값을
+            채우면 바로 바뀝니다.
+          </Alert>
+        </div>
       ) : null}
 
-      <div className="col" style={{ gap: 14 }}>
-        <Card title="셀 상태">
+      <div className="col" style={{ gap: 12 }}>
+        <Card title="셀 상태" tight>
           {reportState.loading && !reportState.data ? (
-            <Spinner />
+            <div style={{ padding: 16 }}>
+              <Spinner />
+            </div>
           ) : reportState.error ? (
-            <Alert kind="error">{reportState.error}</Alert>
+            <div style={{ padding: 16 }}>
+              <Alert kind="error">{reportState.error}</Alert>
+            </div>
           ) : reportState.data ? (
             <ReportCard report={reportState.data} />
           ) : null}
         </Card>
 
         <div className="split">
-          <div className="col" style={{ gap: 14 }}>
+          <div className="col" style={{ gap: 12 }}>
             <Card
               title="충방전 프로파일"
               actions={
@@ -246,7 +244,7 @@ export function SampleDetail() {
               }
               tight
             >
-              <div style={{ padding: '12px 14px 0' }}>
+              <div className="toolbar">
                 <CyclePicker
                   cycles={cycles}
                   value={selected}
@@ -264,7 +262,7 @@ export function SampleDetail() {
                     series={profileSeries}
                     xLabel={basisAxis(profileState.data?.basis ?? basis)}
                     yLabel="전압 (V)"
-                    height={380}
+                    height={400}
                   />
                   <PlotLegend
                     series={profileSeries}
@@ -302,17 +300,19 @@ export function SampleDetail() {
                 series={lifeSeries}
                 xLabel="사이클"
                 yLabel={lifeYLabel}
-                height={300}
+                height={280}
                 markers={kneeMarkers}
               />
             </Card>
 
             <Card
               title={`사이클 표 · ${cycles.length}개`}
-              actions={<span className="tiny faint">행을 누르면 프로파일에 추가됩니다</span>}
+              actions={<span className="tiny faint">행을 누르면 프로파일에 추가·제거됩니다</span>}
               tight
             >
-              {cycles.length ? (
+              {cycleState.loading && !cycleState.data ? (
+                <TableSkeleton rows={6} columns={9} />
+              ) : cycles.length ? (
                 <CycleTable
                   cycles={cycles}
                   basis={cycleState.data?.basis ?? basis}
@@ -327,15 +327,25 @@ export function SampleDetail() {
                   }
                 />
               ) : (
-                <Empty title="사이클이 없습니다">
+                <Empty title="사이클이 없습니다" icon="＋">
                   이 셀에 <Link to="/upload">.wrd 파일을 올려</Link> 주세요.
                 </Empty>
               )}
             </Card>
           </div>
 
-          <div className="col" style={{ gap: 14 }}>
-            <Card title="셀 스펙">
+          <div className="rail">
+            <Card title="전극 조성" padSmall>
+              <CompositionEditor
+                sample={sample}
+                onSaved={(updated) => {
+                  setOverride(updated)
+                  sampleState.reload()
+                }}
+              />
+            </Card>
+
+            <Card title="질량 · 면적" padSmall>
               <CellSpecPanel
                 sample={sample}
                 onSaved={(updated) => {
@@ -345,9 +355,9 @@ export function SampleDetail() {
               />
             </Card>
 
-            <Card title="분석 설정">
-              <div className="col" style={{ gap: 10 }}>
-                <Field label="기준 사이클" hint="유지율·초기 CE 기준">
+            <Card title="분석 설정" padSmall>
+              <div className="col" style={{ gap: 9 }}>
+                <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준">
                   <input
                     type="number"
                     min={1}
@@ -355,14 +365,12 @@ export function SampleDetail() {
                     onChange={async (event) => {
                       const value = Number(event.target.value)
                       if (value >= 1) {
-                        setOverride(
-                          await api.updateSample(sample.id, { reference_cycle: value }),
-                        )
+                        setOverride(await api.updateSample(sample.id, { reference_cycle: value }))
                       }
                     }}
                   />
                 </Field>
-                <Field label="상태 판정" hint="auto 는 파일 근거로 자동 판정">
+                <Field label="상태 판정" hint="자동은 파일 근거로 판정">
                   <select
                     value={sample.declared_state}
                     onChange={async (event) =>
@@ -382,7 +390,7 @@ export function SampleDetail() {
             </Card>
 
             {reportState.data?.knee ? (
-              <Card title="용량 급감 지점">
+              <Card title="용량 급감 지점" padSmall>
                 <KneeDetail
                   report={reportState.data}
                   selected={kneeMethod}
@@ -391,20 +399,18 @@ export function SampleDetail() {
               </Card>
             ) : null}
 
-            <Card title={`파일 · ${runsState.data?.length ?? 0}개`} tight>
-              <div style={{ padding: 12 }}>
-                {runsState.data?.length ? (
-                  <div className="col" style={{ gap: 10 }}>
-                    {runsState.data.map((run) => (
-                      <RunRow key={run.id} run={run} onChanged={() => runsState.reload()} />
-                    ))}
-                  </div>
-                ) : (
-                  <Empty title="연결된 파일이 없습니다">
-                    <Link to="/upload">업로드</Link>
-                  </Empty>
-                )}
-              </div>
+            <Card title={`파일 · ${runsState.data?.length ?? 0}개`} padSmall>
+              {runsState.data?.length ? (
+                <div className="col" style={{ gap: 10 }}>
+                  {runsState.data.map((run) => (
+                    <RunRow key={run.id} run={run} onChanged={() => runsState.reload()} />
+                  ))}
+                </div>
+              ) : (
+                <Empty title="연결된 파일이 없습니다" icon="↑">
+                  <Link to="/upload">업로드</Link>
+                </Empty>
+              )}
             </Card>
           </div>
         </div>
@@ -416,39 +422,51 @@ export function SampleDetail() {
 function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
   const [busy, setBusy] = useState(false)
   const steps = run.schedule?.steps ?? []
+  const schedule = run.schedule ?? {}
 
   return (
-    <div className="col" style={{ gap: 4, fontSize: 12 }}>
-      <div className="row" style={{ justifyContent: 'space-between' }}>
-        <strong className="nowrap" title={run.original_name}>
+    <div className="col" style={{ gap: 5 }}>
+      <div className="row" style={{ justifyContent: 'space-between', gap: 8 }}>
+        <strong className="truncate small" title={run.original_name}>
           {run.original_name}
         </strong>
-        <span className="faint tiny">{bytes(run.size_bytes)}</span>
+        <span className="tiny faint nowrap">{bytes(run.size_bytes)}</span>
       </div>
-      <div className="dim tiny">
-        {run.device_model} ch{run.channel} · {dateTime(run.start_time)} →{' '}
-        {dateTime(run.end_time)}
-      </div>
-      <div className="dim tiny mono">
-        {run.row_count.toLocaleString()} 샘플 · {run.complete_cycle_count}/
-        {run.cycle_count} 사이클 · offset {run.cycle_offset}
-        {run.cycle_offset_source === 'manual' ? ' (수동)' : ''}
-      </div>
-      {run.schedule?.upper_cutoff_v ? (
-        <div className="dim tiny">
-          {run.schedule.lower_cutoff_v}–{run.schedule.upper_cutoff_v} V
-          {run.schedule.c_rate ? ` · ${run.schedule.c_rate}C` : ''}
-          {run.schedule.planned_cycles ? ` · 계획 ${run.schedule.planned_cycles} 사이클` : ''}
-          {run.schedule.nominal_capacity_mah
-            ? ` · 공칭 ${num(run.schedule.nominal_capacity_mah)} mAh`
-            : ''}
-        </div>
-      ) : null}
+
+      <KeyValues
+        rows={[
+          ['장비', `${run.device_model} ch${run.channel ?? '—'}`],
+          ['기간', `${dateTime(run.start_time)} → ${dateTime(run.end_time)}`],
+          ['샘플', run.row_count.toLocaleString()],
+          [
+            '사이클',
+            `${run.complete_cycle_count}/${run.cycle_count}${
+              run.cycle_offset ? ` · offset ${run.cycle_offset}` : ''
+            }${run.cycle_offset_source === 'manual' ? ' (수동)' : ''}`,
+          ],
+          ...(schedule.upper_cutoff_v
+            ? ([
+                ['컷오프', `${schedule.lower_cutoff_v}–${schedule.upper_cutoff_v} V`],
+                [
+                  '프로토콜',
+                  [
+                    schedule.c_rate ? `${schedule.c_rate}C` : null,
+                    schedule.planned_cycles ? `${schedule.planned_cycles} 사이클` : null,
+                    schedule.nominal_capacity_mah
+                      ? `공칭 ${num(schedule.nominal_capacity_mah)} mAh`
+                      : null,
+                  ]
+                    .filter(Boolean)
+                    .join(' · '),
+                ],
+              ] as [string, string][])
+            : []),
+        ]}
+      />
+
       {steps.length ? (
         <details>
-          <summary className="tiny dim" style={{ cursor: 'pointer' }}>
-            스케줄 {steps.length} 스텝
-          </summary>
+          <summary>스케줄 {steps.length} 스텝</summary>
           <div className="step-list" style={{ marginTop: 4 }}>
             {steps.map((step) => (
               <div key={step.index}>
@@ -459,14 +477,17 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
           </div>
         </details>
       ) : null}
-      <div className="row">
+
+      <div className="row" style={{ gap: 4 }}>
         <a className="tiny" href={api.exportRawUrl(run.id)}>
           raw CSV
         </a>
+        <span className="spacer" />
         <button
           type="button"
-          className="ghost sm tiny"
+          className="ghost sm"
           disabled={busy}
+          title="원본에서 다시 읽습니다"
           onClick={async () => {
             setBusy(true)
             try {
@@ -481,7 +502,7 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
         </button>
         <button
           type="button"
-          className="ghost sm tiny"
+          className="danger sm"
           disabled={busy}
           onClick={async () => {
             if (!window.confirm(`${run.original_name} 을(를) 목록에서 지울까요?`)) return
@@ -497,7 +518,7 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
           삭제
         </button>
       </div>
-      <div className="sep" />
+      <div className="sep" style={{ margin: '2px 0' }} />
     </div>
   )
 }

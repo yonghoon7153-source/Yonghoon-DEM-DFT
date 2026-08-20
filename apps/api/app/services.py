@@ -14,8 +14,9 @@ from datetime import datetime, timezone
 import numpy as np
 from sqlmodel import Session, select
 
-from wrdkit import (Basis, CellSpec, CycleSummary, ResolvedCell, WrdFile, lttb,
-                    normalize_capacity, summarize_cycles)
+from wrdkit import (Basis, CellSpec, Composition, CycleSummary, ResolvedCell,
+                    WrdFile, lttb, normalize_capacity, parse_composition,
+                    summarize_cycles)
 from wrdkit.cycles import Profile, extract_profile
 from wrdkit.health import CellReport, build_report
 from wrdkit.knee import KneeAnalysis
@@ -31,10 +32,41 @@ _SEQUENCE_SUFFIX = re.compile(r"_(\d{2,4})\.wrd$", re.IGNORECASE)
 # --------------------------------------------------------------------------
 # cell spec
 # --------------------------------------------------------------------------
+def sample_composition(sample: Sample | None) -> Composition:
+    """The stored blend, or an empty one."""
+    if sample is None or not sample.composition_json:
+        return Composition()
+    try:
+        return Composition.from_json(json.loads(sample.composition_json))
+    except (ValueError, TypeError):
+        return Composition()
+
+
+def apply_composition(sample: Sample, components: list | None,
+                      text: str | None, explicit_wt_percent: bool) -> None:
+    """Store a composition and let it drive the active weight percent.
+
+    A researcher who typed ``active_wt_percent`` in the same request meant it,
+    so the composition does not overwrite that.
+    """
+    if components is not None:
+        composition = Composition.from_json(
+            [c if isinstance(c, dict) else c.model_dump() for c in components])
+    elif text is not None:
+        composition = parse_composition(text)
+    else:
+        return
+
+    sample.composition_json = json.dumps(composition.to_json(), ensure_ascii=False)
+    if not explicit_wt_percent:
+        sample.active_wt_percent = composition.active_wt_percent
+
+
 def cell_spec_from_sample(sample: Sample | None) -> CellSpec:
     if sample is None:
         return CellSpec()
     return CellSpec(
+        composition=sample_composition(sample),
         active_mass_mg=sample.active_mass_mg,
         total_mass_mg=sample.total_mass_mg,
         current_collector_mass_mg=sample.current_collector_mass_mg,
@@ -67,13 +99,17 @@ def sequence_number(name: str) -> int | None:
 def run_order_key(start_time: datetime | None, name: str, run_id: int | None):
     """Sort files the way the experiment actually ran.
 
-    Acquisition start time decides; the ``_012`` suffix the instrument appends
-    breaks ties (two files can share a start time when a run is restarted),
-    and the row id breaks any remaining tie deterministically.
+    Acquisition start time decides, truncated to the second: two continuation
+    files of one experiment are hours apart, so truncation never reorders
+    them, but it stops a sub-second difference from outranking the ``_012``
+    suffix the instrument appends -- and that suffix is the *stated* order.
+    The row id breaks any remaining tie deterministically.
     """
+    moment = start_time or datetime.min
     return (
-        start_time or datetime.min,
+        moment.replace(microsecond=0),
         sequence_number(name) or 0,
+        moment,
         run_id if run_id is not None else 1 << 62,
     )
 

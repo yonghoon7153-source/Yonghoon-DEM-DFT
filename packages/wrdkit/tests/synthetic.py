@@ -67,6 +67,23 @@ TICKS_PER_SECOND = 10_000_000
 DOTNET_UNIX_EPOCH_TICKS = 621_355_968_000_000_000
 
 
+def ticks_at(moment) -> int:
+    """.NET ticks for a ``datetime``.
+
+    Tests that exercise the running/finished classification need a file whose
+    samples are *recent*, because a long silence is what tells the classifier
+    a cell is no longer running.
+    """
+    return DOTNET_UNIX_EPOCH_TICKS + int(moment.timestamp() * TICKS_PER_SECOND)
+
+
+def ticks_ago(seconds: float) -> int:
+    """.NET ticks for a moment ``seconds`` in the past."""
+    import datetime as _datetime
+
+    return ticks_at(_datetime.datetime.now() - _datetime.timedelta(seconds=seconds))
+
+
 class Writer:
     """Byte assembler with the MS-NRBF primitives."""
 
@@ -278,14 +295,16 @@ def make_cycles(n_cycles: int = 3, points_per_branch: int = 40, *,
                 capacity_mah: float = 5.0, current_a: float = 1.0e-3,
                 v_low: float = 1.9, v_high: float = 3.6,
                 fade_per_cycle: float = 0.02,
-                interval_s: float = 10.0, rest_points: int = 3) -> list[Sample]:
+                interval_s: float = 10.0, rest_points: int = 3,
+                start_ticks: int | None = None) -> list[Sample]:
     """A synthetic CC charge/discharge run with a linear capacity fade.
 
     The current range label deliberately switches from ``1A`` to ``10mA`` after
     the first cycle so the variable row width is exercised.
     """
     samples: list[Sample] = []
-    date = DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND
+    date = (start_ticks if start_ticks is not None
+            else DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND)
     test_ticks = 0
     tick_step = int(interval_s * TICKS_PER_SECOND)
     total_step = 0

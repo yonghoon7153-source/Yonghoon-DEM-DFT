@@ -16,7 +16,9 @@ from contextlib import asynccontextmanager  # noqa: E402
 from fastapi import FastAPI  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 
+from wrdkit import PRESETS as COMPOSITION_PRESETS  # noqa: E402
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
+from wrdkit.composition import Role  # noqa: E402
 
 from .db import init_db  # noqa: E402
 from .routers import analysis, exports, groups, runs, samples  # noqa: E402
@@ -74,4 +76,12 @@ def meta() -> dict:
             {"value": "curvature", "label": "Maximum curvature"},
         ],
         "default_plot_points": settings.default_plot_points,
+        "composition_presets": list(COMPOSITION_PRESETS),
+        "component_roles": [
+            {"value": Role.ACTIVE, "label": "활물질 (AM)"},
+            {"value": Role.ELECTROLYTE, "label": "고체전해질 (SE)"},
+            {"value": Role.CONDUCTIVE, "label": "도전재"},
+            {"value": Role.BINDER, "label": "바인더"},
+            {"value": Role.OTHER, "label": "기타"},
+        ],
     }

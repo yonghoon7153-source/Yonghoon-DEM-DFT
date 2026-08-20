@@ -31,9 +31,26 @@ class GroupOut(BaseModel):
     run_count: int = 0
 
 
+class ComponentIn(BaseModel):
+    """One ingredient of the electrode film."""
+
+    name: str
+    wt_percent: float = 0.0
+    role: str = "other"
+
+
+class ComponentOut(ComponentIn):
+    pass
+
+
 class CellSpecIn(BaseModel):
     """The inputs that turn mAh into mAh/g and mAh/cm2."""
 
+    #: The blend, component by component.  Takes precedence over
+    #: ``composition_text`` when both are sent.
+    composition: Optional[list[ComponentIn]] = None
+    #: The shorthand a researcher types: ``AM:SE:VGCF:PTFE = 80:17:3:0``.
+    composition_text: Optional[str] = None
     total_mass_mg: Optional[float] = None
     current_collector_mass_mg: Optional[float] = None
     active_wt_percent: Optional[float] = None
@@ -67,6 +84,8 @@ class SampleIn(CellSpecIn):
 class SampleUpdate(BaseModel):
     """Every field optional -- a PATCH only touches what it names."""
 
+    composition: Optional[list[ComponentIn]] = None
+    composition_text: Optional[str] = None
     name: Optional[str] = None
     group_id: Optional[int] = None
     test_date: Optional[str] = None
@@ -98,6 +117,11 @@ class SampleUpdate(BaseModel):
 
 class ResolvedCellOut(BaseModel):
     active_mass_g: Optional[float] = None
+    active_wt_percent: Optional[float] = None
+    composition: list[ComponentOut] = Field(default_factory=list)
+    composition_label: str = ""
+    composition_compact_label: str = ""
+    composition_problems: list[str] = Field(default_factory=list)
     area_cm2: Optional[float] = None
     volume_cm3: Optional[float] = None
     loading_mg_cm2: Optional[float] = None
@@ -128,6 +152,8 @@ class SampleOut(BaseModel):
     diameter_mm: Optional[float]
     thickness_um: Optional[float]
     nominal_specific_capacity_mah_g: Optional[float]
+    composition: list[ComponentOut] = Field(default_factory=list)
+    composition_label: str = ""
     temperature_c: Optional[float]
     pressure_mpa: Optional[float]
     cutoff_upper_v: Optional[float]

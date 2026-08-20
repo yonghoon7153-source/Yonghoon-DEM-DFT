@@ -8,7 +8,7 @@ from sqlmodel import Session
 from wrdkit import BASES, ResolvedCell, basis_label
 
 from .models import ExperimentGroup, Run, Sample
-from .schemas import ResolvedCellOut
+from .schemas import ComponentOut, ResolvedCellOut
 
 
 def get_sample(session: Session, sample_id: int) -> Sample:
@@ -39,8 +39,14 @@ def validate_basis(basis: str) -> str:
 
 
 def resolved_cell_out(cell: ResolvedCell) -> ResolvedCellOut:
+    composition = cell.composition or None
     return ResolvedCellOut(
         active_mass_g=cell.active_mass_g,
+        active_wt_percent=cell.active_wt_percent,
+        composition=[ComponentOut(**c) for c in (composition.to_json() if composition else [])],
+        composition_label=cell.composition_label,
+        composition_compact_label=cell.composition_compact_label,
+        composition_problems=cell.composition_problems,
         area_cm2=cell.area_cm2,
         volume_cm3=cell.volume_cm3,
         loading_mg_cm2=cell.loading_mg_cm2,

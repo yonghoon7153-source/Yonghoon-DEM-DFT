@@ -450,7 +450,19 @@ def dashboard(session: Session = Depends(get_session),
         report = build_cell_report(session, sample)
         used = effective_basis(cell, basis)
         knee = report.knee.primary if report.knee else None
+
+        # A retention percentage says where the cell is; the shape says how it
+        # got there.  A handful of points draws that inside a table cell and
+        # keeps the payload small with fifty cells listed.
+        complete = [r for r in sample_cycle_records(session, sample) if r.complete]
+        trend = _trend(complete, report.reference.cycle if report.reference else None)
+
         rows.append({
+            "trend": trend["values"],
+            "trend_first_cycle": trend["first_cycle"],
+            "trend_last_cycle": trend["last_cycle"],
+            "knee_trend_index": _trend_index(
+                trend, knee.cycle if knee and knee.detected else None),
             "sample_id": sample.id,
             "sample_name": sample.name,
             "group_id": sample.group_id,
@@ -474,5 +486,48 @@ def dashboard(session: Session = Depends(get_session),
             "knee_method": knee.method if knee and knee.detected else None,
             "basis": used,
             "loading_mg_cm2": cell.loading_mg_cm2,
+            "composition_label": cell.composition_compact_label,
         })
     return {"basis": basis, "basis_label": basis_label(basis), "rows": rows}
+
+
+#: Points in a dashboard sparkline.  Enough to show a knee, small enough that
+#: fifty cells stay a modest payload.
+_TREND_POINTS = 28
+
+
+def _trend(records: list[CycleRecord], reference_cycle: int | None) -> dict:
+    """Retention against the reference cycle, thinned to a drawable series."""
+    usable = [r for r in records if r.discharge_capacity_mah > 0]
+    if not usable:
+        return {"values": [], "first_cycle": None, "last_cycle": None}
+
+    reference = next(
+        (r for r in usable if r.cycle_number == reference_cycle), usable[0])
+    base = reference.discharge_capacity_mah or usable[0].discharge_capacity_mah
+    if not base:
+        return {"values": [], "first_cycle": None, "last_cycle": None}
+
+    if len(usable) <= _TREND_POINTS:
+        picked = usable
+    else:
+        step = (len(usable) - 1) / (_TREND_POINTS - 1)
+        picked = [usable[round(i * step)] for i in range(_TREND_POINTS)]
+
+    return {
+        "values": [round(100.0 * r.discharge_capacity_mah / base, 2) for r in picked],
+        "first_cycle": picked[0].cycle_number,
+        "last_cycle": picked[-1].cycle_number,
+    }
+
+
+def _trend_index(trend: dict, cycle: float | None) -> int | None:
+    """Where a cycle number falls inside the thinned sparkline series."""
+    first, last = trend["first_cycle"], trend["last_cycle"]
+    values = trend["values"]
+    if cycle is None or first is None or last is None or len(values) < 2 or last == first:
+        return None
+    position = (cycle - first) / (last - first) * (len(values) - 1)
+    if position < 0 or position > len(values) - 1:
+        return None
+    return round(position)

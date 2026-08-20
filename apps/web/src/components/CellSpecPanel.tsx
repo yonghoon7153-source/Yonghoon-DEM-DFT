@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react'
 
 import { api } from '../lib/api'
 import { num } from '../lib/format'
+import { ko } from '../lib/i18n'
 import type { Sample } from '../lib/types'
 import { Alert, Field, NumberField } from './ui'
 
@@ -77,7 +78,7 @@ export function CellSpecPanel({
     <div className="col">
       {error ? <Alert kind="error">{error}</Alert> : null}
 
-      <div className="grid cols-2" style={{ gap: 10 }}>
+      <div className="grid cols-2" style={{ gap: 9 }}>
         <NumberField
           label="전극 총 질량"
           hint="mg"
@@ -86,8 +87,8 @@ export function CellSpecPanel({
           min={0}
         />
         <NumberField
-          label="활물질 함량"
-          hint="wt%"
+          label="활물질 함량 직접 입력"
+          hint="wt% · 조성보다 우선"
           value={draft.active_wt_percent}
           onChange={set('active_wt_percent')}
           min={0}
@@ -153,12 +154,12 @@ export function CellSpecPanel({
         <Derived
           label="활물질 질량"
           value={cell.active_mass_g ? `${num(cell.active_mass_g * 1000)} mg` : null}
-          note={cell.notes.active_mass}
+          note={cell.notes.active_mass && ko.cellNote(cell.notes.active_mass)}
         />
         <Derived
           label="면적"
           value={cell.area_cm2 ? `${num(cell.area_cm2)} cm²` : null}
-          note={cell.notes.area}
+          note={cell.notes.area && ko.cellNote(cell.notes.area)}
         />
         <Derived
           label="로딩"
@@ -167,7 +168,7 @@ export function CellSpecPanel({
         <Derived
           label="공칭 용량"
           value={cell.nominal_capacity_mah ? `${num(cell.nominal_capacity_mah)} mAh` : null}
-          note={cell.notes.nominal_capacity}
+          note={cell.notes.nominal_capacity && ko.cellNote(cell.notes.nominal_capacity)}
         />
       </dl>
 
@@ -175,14 +176,14 @@ export function CellSpecPanel({
         <div className="tiny faint">
           사용 불가 기준:{' '}
           {Object.entries(cell.unavailable)
-            .map(([basis, reason]) => `${basis} (${reason})`)
+            .map(([basis, reason]) => `${basis} — ${ko.basisReason(reason)}`)
             .join(' · ')}
         </div>
       ) : null}
       {Object.entries(cell.notes).length ? (
         <div className="tiny faint">
           {Object.entries(cell.notes)
-            .map(([key, note]) => `${NOTE_LABELS[key] ?? key}: ${note}`)
+            .map(([key, note]) => `${NOTE_LABELS[key] ?? key}: ${ko.cellNote(note)}`)
             .join(' · ')}
         </div>
       ) : null}

@@ -6,8 +6,8 @@
  */
 
 import type {
-  CompareResponse, CycleTable, DashboardRow, Facets, Group, ProfileResponse,
-  Report, Run, Sample,
+  CompareResponse, CycleTable, DashboardRow, Facets, Group, Meta,
+  ProfileResponse, Report, Run, Sample,
 } from './types'
 
 export class ApiError extends Error {
@@ -62,13 +62,7 @@ function json(method: string, body: unknown): RequestInit {
 
 export const api = {
   health: () => request<{ status: string; wrdkit: string }>('/api/health'),
-  meta: () =>
-    request<{
-      bases: { value: string; label: string }[]
-      states: string[]
-      knee_methods: { value: string; label: string }[]
-      default_plot_points: number
-    }>('/api/meta'),
+  meta: () => request<Meta>('/api/meta'),
 
   // -- groups --------------------------------------------------------------
   listGroups: () => request<Group[]>('/api/groups'),

@@ -15,9 +15,11 @@ from typing import Iterable
 
 import numpy as np
 
+from .composition import Composition
+
 __all__ = [
     "CellSpec", "ResolvedCell", "Basis", "BASES", "basis_label",
-    "normalize_capacity", "c_rate", "areal_loading",
+    "normalize_capacity", "c_rate", "areal_loading", "retention",
 ]
 
 
@@ -60,6 +62,11 @@ class CellSpec:
 
     Area likewise comes from ``area_cm2`` or from ``diameter_mm`` (the
     ``13pi`` punch in the file names).
+
+    ``composition`` records the whole blend (AM : SE : conductive : binder).
+    It supplies ``active_wt_percent`` when that was not set directly, and --
+    more importantly -- it makes the provenance of the denominator visible:
+    "80 wt% because the electrode is AM:SE:VGCF = 80:17:3", not just "80".
     """
 
     active_mass_mg: float | None = None
@@ -70,6 +77,20 @@ class CellSpec:
     diameter_mm: float | None = None
     thickness_um: float | None = None
     nominal_specific_capacity_mah_g: float | None = None
+    composition: Composition | None = None
+
+    @property
+    def effective_active_wt_percent(self) -> float | None:
+        """The active weight fraction the maths will use, and nothing else.
+
+        An explicit ``active_wt_percent`` wins, because a researcher who typed
+        a number meant it; otherwise the composition supplies one.
+        """
+        if self.active_wt_percent is not None:
+            return self.active_wt_percent
+        if self.composition and not self.composition.is_empty():
+            return self.composition.active_wt_percent
+        return None
 
     def resolve(self) -> "ResolvedCell":
         notes: dict[str, str] = {}
@@ -83,12 +104,19 @@ class CellSpec:
             if electrode_mg <= 0:
                 notes["active_mass"] = "current collector mass exceeds total mass"
             else:
-                fraction = (self.active_wt_percent or 100.0) / 100.0
+                wt_percent = self.effective_active_wt_percent
+                fraction = (100.0 if wt_percent is None else wt_percent) / 100.0
                 mass_g = electrode_mg * fraction / 1000.0
                 parts = [f"{electrode_mg:g} mg"]
                 if self.current_collector_mass_mg:
                     parts.append(f"(after {self.current_collector_mass_mg:g} mg collector)")
-                parts.append(f"x {fraction * 100:g} wt%")
+                if wt_percent is None:
+                    parts.append("x 100 wt% (no composition given - assuming the whole "
+                                 "electrode is active material)")
+                else:
+                    parts.append(f"x {fraction * 100:g} wt%")
+                    if self.active_wt_percent is None and self.composition:
+                        parts.append(f"from {self.composition.label()}")
                 notes["active_mass"] = " ".join(parts)
 
         area: float | None = None
@@ -112,12 +140,20 @@ class CellSpec:
                 f"{mass_g * 1000:.4g} mg x {self.nominal_specific_capacity_mah_g:g} mAh/g"
             )
 
+        composition = self.composition
+        if composition and composition.problems():
+            notes["composition"] = "; ".join(composition.problems())
+
         return ResolvedCell(
             active_mass_g=mass_g,
             area_cm2=area,
             volume_cm3=volume,
             nominal_capacity_mah=nominal,
             nominal_specific_capacity_mah_g=self.nominal_specific_capacity_mah_g,
+            active_wt_percent=self.effective_active_wt_percent,
+            composition=composition,
+            composition_label=composition.label() if composition else "",
+            composition_problems=composition.problems() if composition else [],
             notes=notes,
         )
 
@@ -131,7 +167,16 @@ class ResolvedCell:
     volume_cm3: float | None = None
     nominal_capacity_mah: float | None = None
     nominal_specific_capacity_mah_g: float | None = None
+    active_wt_percent: float | None = None
+    composition: Composition | None = None
+    composition_label: str = ""
+    composition_problems: list[str] = field(default_factory=list)
     notes: dict[str, str] = field(default_factory=dict)
+
+    @property
+    def composition_compact_label(self) -> str:
+        """The blend on one line, with 0 wt% components left out."""
+        return self.composition.label(skip_zero=True) if self.composition else ""
 
     @property
     def loading_mg_cm2(self) -> float | None:

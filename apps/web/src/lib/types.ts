@@ -5,8 +5,21 @@ export type CellState = 'running' | 'finished' | 'unknown'
 export type DeclaredState = 'auto' | 'running' | 'finished'
 export type Branch = 'charge' | 'discharge'
 
+export type ComponentRole = 'active' | 'electrolyte' | 'conductive' | 'binder' | 'other'
+
+export interface Component {
+  name: string
+  wt_percent: number
+  role: ComponentRole
+}
+
 export interface ResolvedCell {
   active_mass_g: number | null
+  active_wt_percent: number | null
+  composition: Component[]
+  composition_label: string
+  composition_compact_label: string
+  composition_problems: string[]
   area_cm2: number | null
   volume_cm3: number | null
   loading_mg_cm2: number | null
@@ -48,6 +61,8 @@ export interface Sample {
   diameter_mm: number | null
   thickness_um: number | null
   nominal_specific_capacity_mah_g: number | null
+  composition: Component[]
+  composition_label: string
   temperature_c: number | null
   pressure_mpa: number | null
   cutoff_upper_v: number | null
@@ -252,6 +267,12 @@ export interface DashboardRow {
   knee_method: string | null
   basis: Basis
   loading_mg_cm2: number | null
+  composition_label: string
+  /** Retention against the reference cycle, thinned for a sparkline. */
+  trend: number[]
+  trend_first_cycle: number | null
+  trend_last_cycle: number | null
+  knee_trend_index: number | null
 }
 
 export interface CompareSeries {
@@ -271,6 +292,20 @@ export interface CompareResponse {
   basis: Basis
   y_label: string
   series: CompareSeries[]
+}
+
+export interface CompositionPreset {
+  label: string
+  text: string
+}
+
+export interface Meta {
+  bases: { value: Basis; label: string }[]
+  states: string[]
+  knee_methods: { value: string; label: string }[]
+  default_plot_points: number
+  composition_presets: CompositionPreset[]
+  component_roles: { value: ComponentRole; label: string }[]
 }
 
 export interface Facets {

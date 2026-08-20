@@ -7,6 +7,11 @@ import type { ResolvedCell } from '../../lib/types'
 
 const cell: ResolvedCell = {
   active_mass_g: null,
+  active_wt_percent: null,
+  composition: [],
+  composition_label: '',
+  composition_compact_label: '',
+  composition_problems: [],
   area_cm2: 1.327,
   volume_cm3: null,
   loading_mg_cm2: null,
@@ -26,7 +31,8 @@ describe('BasisSelect', () => {
     render(<BasisSelect value="mAh" onChange={() => {}} cell={cell} />)
     const specific = screen.getByRole('button', { name: 'mAh/g' })
     expect(specific).toBeDisabled()
-    expect(specific).toHaveAttribute('title', expect.stringContaining('active mass not set'))
+    // The reason is rendered in Korean for the operator, not passed through raw.
+    expect(specific).toHaveAttribute('title', '사용 불가 — 활물질 질량이 없습니다')
   })
 
   it('leaves an available basis selectable', async () => {

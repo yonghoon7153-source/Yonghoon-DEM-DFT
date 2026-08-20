@@ -1,0 +1,103 @@
+import { describe, expect, it } from 'vitest'
+
+import { ko } from '../i18n'
+
+describe('knee reasons', () => {
+  it('translates a detected segmented knee, keeping the numbers', () => {
+    expect(
+      ko.kneeReason('fade rate steepens 6.90x at cycle 22 (-0.179 -> -1.233 %/cycle)'),
+    ).toBe('22번 사이클에서 열화율이 6.90배로 급해집니다 (-0.179 → -1.233 %/cycle)')
+  })
+
+  it('translates a threshold crossing', () => {
+    expect(ko.kneeReason('retention crossed 80% at cycle 36.1')).toBe(
+      '유지율이 36.1번 사이클에서 80% 를 통과했습니다',
+    )
+  })
+
+  it('translates the slope-ratio criterion', () => {
+    expect(
+      ko.kneeReason(
+        'fade rate reached 2x the early-life rate (-0.216 vs -0.081 %/cycle) at cycle 13',
+      ),
+    ).toContain('13번 사이클에서 열화율이 초기의 2배에 도달')
+  })
+
+  it('translates a non-detection', () => {
+    expect(ko.kneeReason('capacity is not fading')).toBe('용량이 감소하지 않습니다')
+    expect(ko.kneeReason('needs at least 9 cycles, has 5')).toBe(
+      '사이클이 5개뿐입니다 (9개 이상 필요)',
+    )
+  })
+
+  it('passes an unrecognised sentence through rather than dropping it', () => {
+    expect(ko.kneeReason('some future criterion said no')).toBe(
+      'some future criterion said no',
+    )
+  })
+})
+
+describe('state evidence', () => {
+  it('translates a truncated final cycle', () => {
+    expect(ko.evidence('cycle 45 is cut off mid-step')).toBe(
+      '45번 사이클이 스텝 도중에 잘렸습니다',
+    )
+  })
+
+  it('translates a stale record that ends mid-cycle', () => {
+    const text = ko.evidence(
+      'nothing logged for 5.5 months even though the record ends mid-cycle - ' +
+        'the test stopped, or it continued in a file that is not here',
+    )
+    expect(text).toContain('5.5개월')
+    expect(text).toContain('여기 없는 파일')
+  })
+
+  it('translates a fresh record', () => {
+    expect(ko.evidence('last sample is 2.1 h old, under two cycle times (7.4 h)')).toBe(
+      '마지막 샘플이 2.1시간 전입니다 (사이클 2회분(7.4시간) 이내)',
+    )
+  })
+
+  it('translates the signal and target labels', () => {
+    expect(ko.signal('partial cycle')).toBe('잘린 사이클')
+    expect(ko.stateTarget('running')).toBe('구동 중')
+  })
+})
+
+describe('cell notes', () => {
+  it('translates a composition-derived mass, keeping the blend label', () => {
+    expect(ko.cellNote('31.6 mg x 80 wt% from AM:SE:VGCF = 80:17:3')).toBe(
+      '31.6 mg × 80 wt% — AM:SE:VGCF = 80:17:3',
+    )
+  })
+
+  it('translates the assumption made when no composition is given', () => {
+    expect(
+      ko.cellNote(
+        '31.6 mg x 100 wt% (no composition given - assuming the whole electrode is active material)',
+      ),
+    ).toContain('전극 전체를 활물질로 가정')
+  })
+
+  it('translates a collector subtraction', () => {
+    expect(ko.cellNote('31.6 mg (after 8.4 mg collector) x 80 wt%')).toBe(
+      '31.6 mg (집전체 8.4 mg 제외) × 80 wt%',
+    )
+  })
+})
+
+describe('basis and composition problems', () => {
+  it('explains why a basis is unavailable', () => {
+    expect(ko.basisReason('active mass not set')).toBe('활물질 질량이 없습니다')
+  })
+
+  it('translates composition problems', () => {
+    expect(ko.compositionProblem('weight percentages add up to 102, not 100')).toBe(
+      'wt% 합이 102 입니다 (100 이 아님)',
+    )
+    expect(ko.compositionProblem('the active material is 0 wt%')).toBe(
+      '활물질이 0 wt% 입니다',
+    )
+  })
+})

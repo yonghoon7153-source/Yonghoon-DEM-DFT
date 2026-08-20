@@ -82,11 +82,12 @@ export function basisUnit(basis: string): string {
   }
 }
 
-/** Colour-blind-safe qualitative palette, ordered so neighbours stay distinct. */
+/** Qualitative palette, ordered so adjacent series stay distinguishable and
+ *  no pair collides under the common forms of colour blindness. */
 export const SERIES_COLORS = [
-  '#1864ab', '#d9480f', '#2b8a3e', '#862e9c', '#c2255c',
-  '#0b7285', '#e67700', '#495057', '#5c7cfa', '#f06595',
-  '#37b24d', '#f59f00', '#7048e8', '#1098ad', '#a61e4d',
+  '#1d4ed8', '#ea580c', '#059669', '#7c3aed', '#db2777',
+  '#0891b2', '#ca8a04', '#4b5563', '#2563eb', '#e11d48',
+  '#15803d', '#b45309', '#6d28d9', '#0e7490', '#9f1239',
 ]
 
 export function seriesColor(index: number): string {

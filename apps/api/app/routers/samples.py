@@ -12,8 +12,8 @@ from wrdkit import BASES
 from ..db import get_session
 from ..deps import get_sample, resolved_cell_out, validate_basis
 from ..models import CycleRecord, ExperimentGroup, Run, Sample
-from ..schemas import SampleIn, SampleOut, SampleUpdate
-from ..services import resolve_cell
+from ..schemas import ComponentOut, SampleIn, SampleOut, SampleUpdate
+from ..services import apply_composition, resolve_cell, sample_composition
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
@@ -27,11 +27,14 @@ def _out(session: Session, sample: Sample) -> SampleOut:
     if sample.group_id:
         group = session.get(ExperimentGroup, sample.group_id)
         group_name = group.name if group else None
+    composition = sample_composition(sample)
     return SampleOut(
-        **sample.model_dump(),
+        **sample.model_dump(exclude={"composition_json"}),
         group_name=group_name,
         run_count=len(runs),
         cycle_count=cycles,
+        composition=[ComponentOut(**c) for c in composition.to_json()],
+        composition_label=composition.label(),
         resolved_cell=resolved_cell_out(resolve_cell(sample)),
     )
 
@@ -102,7 +105,10 @@ def create_sample(payload: SampleIn, session: Session = Depends(get_session)):
         raise HTTPException(422, "sample name cannot be empty")
     if payload.declared_state not in VALID_STATES:
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
-    sample = Sample(**payload.model_dump())
+    values = payload.model_dump(exclude={"composition", "composition_text"})
+    sample = Sample(**values)
+    apply_composition(sample, payload.composition, payload.composition_text,
+                      explicit_wt_percent=payload.active_wt_percent is not None)
     session.add(sample)
     session.commit()
     session.refresh(sample)
@@ -119,7 +125,9 @@ def update_sample(sample_id: int, payload: SampleUpdate,
                   session: Session = Depends(get_session)):
     """Correcting a mass here re-normalises every reading instantly (ADR 0001)."""
     sample = get_sample(session, sample_id)
-    values = payload.model_dump(exclude_unset=True, exclude={"clear"})
+    sent = payload.model_dump(exclude_unset=True)
+    values = payload.model_dump(exclude_unset=True,
+                                exclude={"clear", "composition", "composition_text"})
     if "declared_state" in values and values["declared_state"] not in VALID_STATES:
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
     if "reference_cycle" in values and values["reference_cycle"] is not None:
@@ -127,9 +135,17 @@ def update_sample(sample_id: int, payload: SampleUpdate,
             raise HTTPException(422, "reference_cycle must be 1 or greater")
     for key, value in values.items():
         setattr(sample, key, value)
+    # Clearing happens first so a request that drops a hand-typed wt% and
+    # sends a composition in the same breath ends with the composition's
+    # value stored, not a null.
     for field in payload.clear:
-        if hasattr(sample, field):
+        if field == "composition":
+            sample.composition_json = ""
+        elif hasattr(sample, field):
             setattr(sample, field, None)
+    if "composition" in sent or "composition_text" in sent:
+        apply_composition(sample, payload.composition, payload.composition_text,
+                          explicit_wt_percent="active_wt_percent" in sent)
     sample.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
     session.add(sample)
     session.commit()

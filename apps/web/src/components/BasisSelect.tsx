@@ -1,3 +1,4 @@
+import { ko } from '../lib/i18n'
 import type { Basis, ResolvedCell } from '../lib/types'
 
 const OPTIONS: { value: Basis; label: string }[] = [
@@ -34,7 +35,7 @@ export function BasisSelect({
             type="button"
             className={value === option.value ? 'on' : ''}
             disabled={disabled}
-            title={disabled ? `사용 불가 — ${missing}` : undefined}
+            title={disabled ? `사용 불가 — ${ko.basisReason(missing!)}` : undefined}
             onClick={() => onChange(option.value)}
           >
             {option.label}

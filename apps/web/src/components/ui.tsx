@@ -3,18 +3,20 @@
 import type { ReactNode } from 'react'
 
 import { basisUnit, num } from '../lib/format'
-import type { Basis, CellState } from '../lib/types'
+import type { Basis, CellState, Component } from '../lib/types'
 
 export function Card({
   title,
   actions,
   children,
   tight,
+  padSmall,
 }: {
   title?: ReactNode
   actions?: ReactNode
   children: ReactNode
   tight?: boolean
+  padSmall?: boolean
 }) {
   return (
     <section className="card">
@@ -25,9 +27,14 @@ export function Card({
           {actions}
         </header>
       )}
-      <div className={tight ? 'body tight' : 'body'}>{children}</div>
+      <div className={tight ? 'body tight' : padSmall ? 'body pad-sm' : 'body'}>{children}</div>
     </section>
   )
+}
+
+/** Hairline-separated readout. Use for the numbers that answer the question. */
+export function MetricBand({ children }: { children: ReactNode }) {
+  return <div className="metric-band">{children}</div>
 }
 
 export function Metric({
@@ -36,18 +43,25 @@ export function Metric({
   unit,
   note,
   muted,
+  accent,
 }: {
   label: string
   value: ReactNode
   unit?: string
   note?: ReactNode
   muted?: boolean
+  accent?: boolean
 }) {
+  const className = ['value', muted ? 'muted' : '', accent ? 'accent' : '']
+    .filter(Boolean)
+    .join(' ')
   return (
     <div className="metric">
-      <div className="label">{label}</div>
-      <div className={muted ? 'value muted' : 'value'}>
-        {value}
+      <div className="label" title={label}>
+        {label}
+      </div>
+      <div className={className}>
+        <span>{value}</span>
         {unit ? <span className="unit">{unit}</span> : null}
       </div>
       {note ? <div className="note">{note}</div> : null}
@@ -60,19 +74,23 @@ export function CapacityMetric({
   value,
   basis,
   note,
+  accent,
 }: {
   label: string
   value: number | null | undefined
   basis: Basis
   note?: ReactNode
+  accent?: boolean
 }) {
+  const missing = value === null || value === undefined
   return (
     <Metric
       label={label}
       value={num(value)}
-      unit={basisUnit(basis)}
+      unit={missing ? undefined : basisUnit(basis)}
       note={note}
-      muted={value === null || value === undefined}
+      muted={missing}
+      accent={accent}
     />
   )
 }
@@ -93,11 +111,55 @@ export function StateBadge({
   cycle?: number | null
 }) {
   return (
-    <span className={`badge ${state}`} title={confidence ? `근거 신뢰도: ${confidence}` : undefined}>
+    <span
+      className={`badge ${state}`}
+      title={confidence ? `근거 신뢰도: ${confidence}` : undefined}
+    >
       {state === 'running' ? <span className="pulse" /> : null}
       {STATE_TEXT[state]}
       {state === 'running' && cycle ? ` · ${cycle}번째 진행` : ''}
     </span>
+  )
+}
+
+const ROLE_COLORS: Record<string, string> = {
+  active: 'var(--accent)',
+  electrolyte: 'var(--pos)',
+  conductive: 'var(--ink-3)',
+  binder: 'var(--warn)',
+  other: 'var(--ink-4)',
+}
+
+/** The electrode blend, one chip per component. Zeros stay, dimmed. */
+export function CompositionChips({
+  components,
+  showZero = true,
+}: {
+  components: Component[]
+  showZero?: boolean
+}) {
+  const shown = showZero ? components : components.filter((c) => c.wt_percent > 0)
+  if (!shown.length) return <span className="faint tiny">조성 미입력</span>
+  return (
+    <div className="chip-row">
+      {shown.map((component, index) => (
+        <span
+          key={`${component.name}-${index}`}
+          className={[
+            'chip',
+            component.wt_percent <= 0 ? 'zero' : '',
+            component.role === 'active' ? 'active' : '',
+          ]
+            .filter(Boolean)
+            .join(' ')}
+          title={component.role}
+        >
+          <span className="dot" style={{ background: ROLE_COLORS[component.role] ?? 'var(--ink-4)' }} />
+          {component.name}
+          <span className="pct">{component.wt_percent}</span>
+        </span>
+      ))}
+    </div>
   )
 }
 
@@ -110,6 +172,29 @@ export function Spinner({ label }: { label?: string }) {
   )
 }
 
+/** Placeholder rows that keep the layout from jumping while data loads. */
+export function TableSkeleton({ rows = 5, columns = 6 }: { rows?: number; columns?: number }) {
+  return (
+    <div style={{ padding: '12px 16px' }}>
+      {Array.from({ length: rows }, (_, row) => (
+        <div key={row} className="row" style={{ gap: 12, marginBottom: 9 }}>
+          {Array.from({ length: columns }, (_, column) => (
+            <div
+              key={column}
+              className="skeleton"
+              style={{
+                height: 12,
+                flex: column === 0 ? 2 : 1,
+                opacity: 1 - row * 0.13,
+              }}
+            />
+          ))}
+        </div>
+      ))}
+    </div>
+  )
+}
+
 export function Alert({
   kind = 'info',
   children,
@@ -117,12 +202,26 @@ export function Alert({
   kind?: 'info' | 'warn' | 'error'
   children: ReactNode
 }) {
-  return <div className={`alert ${kind}`}>{children}</div>
+  return (
+    <div className={`alert ${kind}`}>
+      <span aria-hidden="true">{kind === 'error' ? '✕' : kind === 'warn' ? '!' : 'i'}</span>
+      <span>{children}</span>
+    </div>
+  )
 }
 
-export function Empty({ title, children }: { title: string; children?: ReactNode }) {
+export function Empty({
+  title,
+  icon,
+  children,
+}: {
+  title: string
+  icon?: string
+  children?: ReactNode
+}) {
   return (
     <div className="empty">
+      {icon ? <div className="icon">{icon}</div> : null}
       <div className="big">{title}</div>
       {children}
     </div>
@@ -180,5 +279,19 @@ export function NumberField({
         }}
       />
     </Field>
+  )
+}
+
+/** Key/value list for dense metadata panels. */
+export function KeyValues({ rows }: { rows: [string, ReactNode][] }) {
+  return (
+    <dl className="kv">
+      {rows.map(([key, value]) => (
+        <div key={key}>
+          <span className="k">{key}</span>
+          <span className="v">{value}</span>
+        </div>
+      ))}
+    </dl>
   )
 }

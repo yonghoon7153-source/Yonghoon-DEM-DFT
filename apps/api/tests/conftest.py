@@ -39,16 +39,34 @@ def client():
     SQLModel.metadata.drop_all(engine)
 
 
+#: One synthetic cycle is 30+3+30+3 points at 10 s -- about 11 minutes.
+_CYCLE_SECONDS = 66 * 10
+
+
 @pytest.fixture
 def wrd_bytes() -> bytes:
-    """A synthetic 8-cycle file that ends mid-cycle, like a live one."""
-    samples = synthetic.make_cycles(n_cycles=8, points_per_branch=30)
-    return synthetic.build_wrd(samples[:-20])
+    """A synthetic 8-cycle file that ends mid-cycle, minutes ago.
+
+    Recency is part of the running/finished evidence, so a fixture meant to
+    look like a live cell has to carry fresh timestamps.
+    """
+    start = synthetic.ticks_ago(8 * _CYCLE_SECONDS)
+    samples = synthetic.make_cycles(n_cycles=8, points_per_branch=30,
+                                    start_ticks=start)
+    return synthetic.build_wrd(samples[:-20], start_ticks=start)
 
 
 @pytest.fixture
 def finished_wrd_bytes() -> bytes:
-    return synthetic.build_wrd(synthetic.make_cycles(n_cycles=8, points_per_branch=30))
+    """A complete 8-cycle file that ran *before* ``wrd_bytes``.
+
+    The two are used together as ``_011`` and ``_012`` of one experiment, so
+    this one has to start earlier for the cycle numbering to continue.
+    """
+    start = synthetic.ticks_ago(20 * _CYCLE_SECONDS)
+    return synthetic.build_wrd(
+        synthetic.make_cycles(n_cycles=8, points_per_branch=30, start_ticks=start),
+        start_ticks=start)
 
 
 @pytest.fixture
