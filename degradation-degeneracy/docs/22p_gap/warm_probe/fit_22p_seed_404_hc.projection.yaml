@@ -13,10 +13,10 @@ by_objective_sha256:
 restart_projection_file: fit_22p_seed_404_hc.restarts.csv.gz
 restart_projection_sha256: b8ddc9f9ea52720e5488cf37bda3fd37e3f417c6a70ac1ebc57e4f363b4b1944
 n_restart_rows: 5686
-analysis_spec_sha256: 732d438f077c4301adafc0aadad8ba020a9f722735f5d03fdab1b0aa05e445c2
+analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
 analyzer:
-  compute_sha256: 46492235fd5862f2
-  row_projection_py_sha256: 5081fca2b47db348
+  compute_sha256: eaa44727ca271c2c
+  row_projection_py_sha256: 0b5579a7d0d757e2
   src_scoring_py_sha256: 69e69cb046f4b4ae
   python: 3.12.3
   platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
@@ -25,34 +25,61 @@ analyzer:
   numpy: 2.5.2
   yaml: 6.0.3
 analysis_spec:
-  projection_version: 1
-  columns:
-  - cond_id
-  - objective
-  - noise
-  - lli
-  - lam_pe
-  - lam_ne
-  - lli_hat
-  - lam_pe_hat
-  - lam_ne_hat
-  - J
-  - abs_err_max
-  - degenerate
-  - recoverable
-  - n_restarts
-  - n_restarts_agree
-  - warm_started
-  - converged
-  - any_bound_active
-  - best_restart_source
-  - restart_sources
-  sort_key:
-  - cond_id
-  - objective
+  schema_version: 3
+  row_projection:
+    columns:
+    - cond_id
+    - objective
+    - noise
+    - lli
+    - lam_pe
+    - lam_ne
+    - lli_hat
+    - lam_pe_hat
+    - lam_ne_hat
+    - J
+    - abs_err_max
+    - degenerate
+    - recoverable
+    - n_restarts
+    - n_restarts_agree
+    - warm_started
+    - converged
+    - any_bound_active
+    - best_restart_source
+    - restart_sources
+    sort_key:
+    - cond_id
+    - objective
+    digest: sha256 of the uncompressed canonical TSV
+  restart_projection:
+    columns:
+    - cond_id
+    - objective
+    - i
+    - source
+    - J
+    - p0
+    - p1
+    - p2
+    - p3
+    - warm
+    sort_key:
+    - cond_id
+    - objective
+    - i
+    digest: sha256 of the uncompressed canonical TSV
+  summary_comparison:
+    skip_top_level_keys:
+    - _채점원본
+    - _F4_주의
+    type_policy: exact
+  fits_binding:
+    actual_bytes: true
+    manifest: true
+    summary: true
   float_repr: python repr (shortest round-trip)
   line_sep: \n
-  digest: sha256 of the uncompressed canonical text
   score_path: 'src.scoring: add_error_columns → classify_recoverability → clean_bias
     → apply_bias_correction → summarize'
   tolerance: 0.02
