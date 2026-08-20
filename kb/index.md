@@ -37,7 +37,7 @@
 - `kb/methodology/cascade_composition_family_2026_08_16.md` — 캐스케이드 조성족 섞임 — 보편적 Cl 개선은 반증, 원소 수준 인과는 여전히 열림 ○미열람
 - `kb/methodology/cascade_pipeline_anatomy_2026_08_13.md` — cascade 273 캠페인 해부 — 왜 풀이 47인가 (코드 계보 실측) ○미열람
 - `kb/methodology/coating_descriptor_catalog.md` — 황화물 코팅 소재 Descriptor Catalog
-- `kb/methodology/computational_methods_canonical.md` — 계산 방법 Canonical — 단일 기준 (2026-07-23 재정리)
+- `kb/methodology/computational_methods_canonical.md` — 계산 방법 Canonical — 단일 기준 (2026-07-23 재정리 · **2026-08-20 축 4개 추가**)
 - `kb/methodology/defect_cell_size_metric_2026_08_16.md` — 점결함 셀 크기의 정본 지표 — λ₁(최단 격자 병진), 면 높이 아님 ○미열람
 - `kb/methodology/dopant_screening_funnel_2026_06_13.md` — Dopant screening funnel provenance + multi-cation motif generalization
 - `kb/methodology/dopant_site_preference_literature.md` — Dopant Site Preference — Literature-Anchored Heuristic Assignments (v4.5.26)
