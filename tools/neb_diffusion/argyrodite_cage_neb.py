@@ -29,8 +29,9 @@
 
    실측 차이가 판정을 뒤집는다 — Li₃Nd 2×2×2 면높이 **8.469 → λ₁ 10.372** (10 Å 통과).
    면 높이는 **보수적 하한**으로만 쓰고 "실제 이미지 거리" 라고 부르지 않는다.
-   산식은 `tools/sei/build_neb_inputs.py:shortest_translation` 을 **그대로 빌려 쓴다**
-   (복사하면 규약이 갈라진다). 둘 다 찍되 **게이트는 λ₁ 로** 건다.
+   산식은 `tools/sei/build_neb_inputs.py:shortest_translation` **하나만** 쓴다 —
+   **fallback 재구현 금지**(import 실패 = hard fail, 2026-08-20 Codex 2차).
+   둘 다 찍되 **게이트는 λ₁ 로** 건다.
 
 이 도구가 **못 하는 것**
   · DFT 가 아니다. UMA-s-1p1(omat) 이다. 절대 장벽을 DFT/실험과 등가로 인용 금지.
@@ -94,25 +95,24 @@ def perp_widths(cell):
 
 
 def lambda1(cell, R=3):
-    """최단 비영 격자 병진 λ₁ = min |n₁a+n₂b+n₃c| [Å] — **점결함 이미지 거리의 정본 지표.**
+    """최단 비영 격자 병진 λ₁ [Å] — **점결함 이미지 거리의 정본 지표.**
 
-    산식 원본은 `tools/sei/build_neb_inputs.py:shortest_translation` 이고, 여기서는
-    그 모듈을 **불러 쓴다** (복사하면 규약이 갈라진다 — convention_check 대상).
-    불러오기가 실패하면 같은 정의로 계산하되 그 사실을 호출자가 알 수 있게 한다.
+    ⛔⛔ 2026-08-20 (Codex 2차) — **fallback 을 없앴다.** 앞 판은 canonical import 가
+      실패하면 `except BaseException` 으로 같은 수식을 여기서 다시 구현했는데,
+      그게 **규약 역행을 허용하는 가장 전형적인 구조**다(두 구현이 갈라져도 아무도 모른다).
+      이제 import 실패는 **hard fail** 이다 — 정본을 못 읽으면 계산을 하지 않는다.
     """
-    try:
-        import importlib.util
-        src = ROOT / "tools" / "sei" / "build_neb_inputs.py"
-        spec = importlib.util.spec_from_file_location("_bni", src)
-        mod = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(mod)
-        return float(mod.shortest_translation(cell, R=R))
-    except BaseException:
-        import itertools
-        c = np.asarray(cell, float)
-        return float(min(np.linalg.norm(np.array(n) @ c)
-                         for n in itertools.product(range(-R, R + 1), repeat=3)
-                         if n != (0, 0, 0)))
+    import importlib.util
+    src = ROOT / "tools" / "sei" / "build_neb_inputs.py"
+    if not src.exists():
+        raise RuntimeError(
+            f"⛔ λ₁ 정본 구현을 못 찾았다: {src}\n"
+            f"   fallback 으로 여기서 다시 구현하지 않는다 — 두 구현이 갈라지면 "
+            f"규약 역행이 조용히 통과한다 (2026-08-20 Codex 리뷰).")
+    spec = importlib.util.spec_from_file_location("_bni_lambda1", src)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)                     # 실패하면 그대로 올린다
+    return float(mod.shortest_translation(cell, R=R))
 
 
 def mic_vec(atoms, i, j):
@@ -698,6 +698,19 @@ def selftest():
         _cub = np.eye(3) * 10.06
         chk(abs(lambda1(_cub) - perp_widths(_cub).min()) < 1e-6,
             "[양성] 직교 셀에서는 둘이 일치한다 (comp1 계열에서 판정이 안 바뀐 이유)")
+        # ★★ codex 2차 반례 — 고정 R=3 은 기운 셀에서 틀린다 (2.492 vs 실제 0.402)
+        _skew = np.array([[10.0, 0, 0], [2.49, 0.1, 0], [0, 0, 10.0]])
+        chk(abs(lambda1(_skew) - 0.402) < 0.01,
+            f"[음성] ★ 기운 셀 λ₁ = {lambda1(_skew):.4f} (고정 R=3 이면 2.492 로 틀린다)")
+        # fallback 재구현이 없다는 것 자체를 고정한다
+        import inspect as _insp
+        # docstring 은 빼고 **코드 본문만** 본다 — 설명문에 'except BaseException' 이 나온다
+        _srcL = _insp.getsource(lambda1)
+        _body = _srcL.split('"""')[-1] if _srcL.count('"""') >= 2 else _srcL
+        chk("itertools" not in _body and "np.linalg.norm" not in _body,
+            "[음성] ★ lambda1 이 λ₁ 을 **재구현하지 않는다** (fallback 되살리면 깨진다)")
+        chk("RuntimeError" in _body,
+            "[음성] ★ 정본을 못 읽으면 **hard fail** 한다 (조용히 다른 값을 내지 않는다)")
     except ImportError:
         print("  ⚠ ase 없음 — 구조 시험 건너뜀")
 

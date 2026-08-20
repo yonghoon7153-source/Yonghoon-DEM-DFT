@@ -297,7 +297,7 @@ def load_relaxed(tag, path, relaxed_from):
     return at, outp
 
 
-def shortest_translation(cell, R=3):
+def shortest_translation(cell, R=3, _grow=True):
     """최단 비영 격자 병진 λ₁ = min |n₁a+n₂b+n₃c| [Å].
 
     ⛔⛔ 2026-08-16 (Codex 리뷰 P0) — **점결함의 최근접 주기 이미지는 여기 있다.**
@@ -310,16 +310,42 @@ def shortest_translation(cell, R=3):
       lpsocl 1×1×1 면높이 5.672 → **λ₁  6.940**
 
     즉 "기존 셀이 10 Å 에 미달한다" 는 서술은 틀렸다. 면 높이는 **보수적 하한**으로만 쓴다.
+
+    ⛔⛔ 2026-08-20 (Codex 2차) — **고정 R 은 기운 셀에서 틀린다.** 반례:
+        a=(10,0,0) · b=(2.49,0.1,0) · c=(0,0,10)
+        R=3 탐색 → 2.492 Å      실제 λ₁ = **0.402 Å** at n=(−1,4,0)
+    ⇒ **R 을 넓히며 답이 안정될 때까지 키운다**(연속 두 R 에서 같은 값이면 종료).
+      `_grow=False` 로 끄면 옛 고정-R 동작이지만 **진단 목적 외에는 쓰지 않는다.**
+    ⚠ 이것도 exact 알고리즘(LLL/Fincke–Pohst)이 아니라 **수렴 확인이 붙은 탐색**이다.
+      극단적으로 병든 셀에서는 여전히 틀릴 수 있고, 그때는 R_MAX 에 걸려 경고를 낸다.
     """
     import itertools
     import numpy as _np
     C = _np.asarray(cell, float)
-    best = float("inf")
-    for n in itertools.product(range(-R, R + 1), repeat=3):
-        if n == (0, 0, 0):
-            continue
-        best = min(best, float(_np.linalg.norm(n[0]*C[0] + n[1]*C[1] + n[2]*C[2])))
-    return best
+
+    def _scan(rad):
+        best = float("inf")
+        for n in itertools.product(range(-rad, rad + 1), repeat=3):
+            if n == (0, 0, 0):
+                continue
+            best = min(best, float(_np.linalg.norm(_np.asarray(n, float) @ C)))
+        return best
+
+    if not _grow:
+        return _scan(R)
+    R_MAX = 24
+    prev = _scan(R)
+    r = R
+    while r < R_MAX:
+        r *= 2
+        cur = _scan(r)
+        if abs(cur - prev) < 1e-9:
+            return cur                      # 두 반경에서 같다 → 수렴
+        prev = cur
+    import warnings
+    warnings.warn(f"shortest_translation: R={R_MAX} 까지 키워도 값이 안 굳었다 "
+                  f"(λ₁≈{prev:.4f}). 셀이 심하게 기울었을 수 있다 — 직접 확인할 것.")
+    return prev
 
 
 def cell_metrics(cell):

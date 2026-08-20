@@ -264,27 +264,49 @@ def framework_check(d, lo, hi):
     if not judged:
         v, worst_el = "sample_too_thin", None
     else:
-        # β 가 1차 판별자 (진동 β≈0 / 자리 이탈 β→1). **β 는 0.05 단위로 양자화**해
-        # 비교한다 — 안 그러면 평평한 곡선들의 β 가 1e-16 수준 부동소수 잡음으로 갈려
-        # 엉뚱한 원소가 '최악' 으로 뽑힌다(2026-08-20 selftest 가 잡았다). 동점은 비로 가른다.
-        def _key(e):
-            b = frame[e]["beta"]
-            return (round((b if b is not None else -9.0) / 0.05), frame[e]["ratio_to_Li"])
-        worst_el = max(judged, key=_key)
-        b = frame[worst_el]["beta"]
-        r = frame[worst_el]["ratio_to_Li"]
-        if b is None:
-            v = "sample_too_thin"
-        elif b >= FRAMEWORK_BETA_MELT or r >= FRAMEWORK_FAIL_RATIO:
-            v = "framework_melting"
-        elif b >= FRAMEWORK_BETA_RIGID:
-            v = "framework_mobile"
+        # ⛔⛔ 2026-08-20 (codex 리뷰) — **대표 원소 하나만 판정하던 것을 폐기한다.**
+        #   앞 판은 β 를 0.05 로 양자화해 '최악' 원소를 고른 뒤 **그 원소만** 판정했다.
+        #   그러면 양자화가 같은 통에 넣은 원소끼리 비(ratio) 로 대표가 갈리고,
+        #   진짜로 fail 인 원소가 판정에서 빠진다. codex 반례를 그대로 재현했다:
+        #       P β=0.610 ratio=0.010   (β ≥ 0.60 ⇒ melting)
+        #       S β=0.590 ratio=0.020   ← 양자화가 같은 통, 비가 커서 대표로 뽑힘
+        #       판정 = mobile   ⛔ P 가 판정에서 빠졌다
+        #   ⇒ **원소마다 severity 를 내고 전체 max 로 판정한다.** 대표 표시는 그 뒤 문제다.
+        def _sev(e):
+            b, r = frame[e]["beta"], frame[e]["ratio_to_Li"]
+            if b is None:
+                return 0
+            if b >= FRAMEWORK_BETA_MELT or r >= FRAMEWORK_FAIL_RATIO:
+                return 2
+            if b >= FRAMEWORK_BETA_RIGID or r >= FRAMEWORK_WARN_RATIO:
+                return 1
+            return 0
+        sev = {e: _sev(e) for e in judged}
+        top = max(sev.values())
+        v = {0: "framework_rigid", 1: "framework_mobile", 2: "framework_melting"}[top]
+        # 대표는 **표시용**이고 판정과 분리돼 있다. 고르는 규칙이 경우마다 다르다:
+        #   · fail 이 있으면(top≥1) **유발 원소 중 β 최대** — 무엇이 판정을 만들었나를 보여준다.
+        #   · 전부 rigid 면 β 는 1e-15 급 부동소수 잡음이라 **비(ratio) 로 고른다.**
+        #     (β 로 고르면 잡음이 대표를 정한다 — selftest 가 그걸 잡았다.)
+        drivers = [e for e in judged if sev[e] == top]
+        if top >= 1:
+            worst_el = max(drivers, key=lambda e: (frame[e]["beta"] if frame[e]["beta"] is not None
+                                                   else -9.0, frame[e]["ratio_to_Li"]))
         else:
-            v = "framework_rigid"
-    worst = frame[worst_el]["ratio_to_Li"] if worst_el else float("nan")
-    frame["_judged"], frame["_thin"] = judged, thin
+            worst_el = max(judged, key=lambda e: frame[e]["ratio_to_Li"])
+            drivers = []          # rigid 면 유발 원소가 없다
+        if all(frame[e]["beta"] is None for e in judged):
+            v, worst_el = "sample_too_thin", None
+    if judged and worst_el is not None:
+        for e in judged:
+            frame[e]["severity"] = _sev(e)
+        frame_fail = [e for e in judged if frame[e].get("severity", 0) >= 1]
+    else:
+        frame_fail = []
     return {"t_end_ps": t[k], "li_msd_end_A2": li_end, "frame": frame,
-            "worst_el": worst_el, "worst_ratio": worst, "verdict": v}
+            "judged": judged, "thin": thin, "drivers": frame_fail,
+            "worst_el": worst_el, "verdict": v,
+            "worst_ratio": (frame[worst_el]["ratio_to_Li"] if worst_el else None)}
 
 
 def framework_verdict_text(v):
@@ -400,6 +422,25 @@ def selftest():
     chk(r and r["worst_el"] == "Cl", "[양성] 가장 큰 골격 원소를 집어낸다 (Cl)")
 
     m = framework_check(melting, 2.0, 50.0)
+    # ★★ codex 반례 회귀시험 (2026-08-20) — **대표 원소만 판정하면 여기서 깨진다.**
+    #   양자화가 같은 통에 넣은 두 원소 중 비가 큰 쪽이 대표로 뽑히고, 진짜 fail 인
+    #   쪽(P β=0.61)이 판정에서 빠졌다. 이제 전 원소 severity 의 max 로 판정한다.
+    _pw = lambda b, a50: [a50 * (x / 50.0) ** b for x in tt]
+    cx = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
+          "msd_per_elem_A2": {"Li": _lin(1.0), "P": _pw(0.61, 0.5), "S": _pw(0.59, 1.0)},
+          "n_atoms_per_elem": {"Li": 24, "P": 8, "S": 41}}
+    rcx = framework_check(cx, 2.0, 50.0)
+    chk(rcx["verdict"] == "framework_melting",
+        f"[음성] ★ codex 반례 — P(β0.61) 가 대표가 아니어도 melting 으로 잡는다 "
+        f"(대표 {rcx['worst_el']}, 유발 {rcx['drivers']})")
+    chk("P" in rcx["drivers"], "[음성] 판정을 유발한 원소를 drivers 로 보고한다")
+    # 비만으로도 fail 이 잡혀야 한다 (β 가 낮아도)
+    rr = framework_check({"times_ps": tt, "msd_Li_A2": _lin(1.0),
+                          "msd_per_elem_A2": {"Li": _lin(1.0), "S": _pw(0.05, 15.0)},
+                          "n_atoms_per_elem": {"Li": 24, "S": 41}}, 2.0, 50.0)
+    chk(rr["verdict"] == "framework_melting",
+        "[음성] β 가 낮아도 비가 크면 잡는다 (두 축 OR)")
+
     chk(m and m["verdict"] == "framework_melting",
         f"[음성①] 골격이 선형으로 자라면 melting (worst {m['worst_ratio']:.2f})" if m else "[음성①]")
     chk(m and m["frame"]["Cl"]["beta"] is not None and m["frame"]["Cl"]["beta"] > 0.8,
@@ -415,8 +456,10 @@ def selftest():
         "[음성⑤] ★ 2개짜리 B 가 급등해도 **판정은 41개짜리 S 로** 한다 (표본 부족 제외)")
     chk(tc and tc["verdict"] == "framework_rigid",
         "[음성⑤] 그래서 판정은 rigid — 단일 대형 사건에 안 휘둘린다")
-    chk(tc and "B" in (tc["frame"].get("_thin") or []),
-        "[양성] 제외한 원소는 _thin 에 남겨 보고한다 (조용히 버리지 않는다)")
+    chk(tc and "B" in (tc.get("thin") or []),
+        "[양성] 제외한 원소는 thin 에 남겨 보고한다 (조용히 버리지 않는다)")
+    chk(tc and "B" in tc["frame"],
+        "[양성] 제외해도 frame 에는 값이 남는다 (참고로 볼 수 있어야 한다)")
     allthin = {"times_ps": tt, "msd_Li_A2": _lin(1.0),
                "msd_per_elem_A2": {"Li": _lin(1.0), "B": _lin(0.5)},
                "n_atoms_per_elem": {"Li": 58, "B": 2}}
