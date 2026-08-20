@@ -13,8 +13,10 @@ if _WRDKIT_SRC.exists() and str(_WRDKIT_SRC) not in sys.path:
 
 from contextlib import asynccontextmanager  # noqa: E402
 
-from fastapi import FastAPI  # noqa: E402
+from fastapi import FastAPI, HTTPException  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
+from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from wrdkit import PRESETS as COMPOSITION_PRESETS  # noqa: E402
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
@@ -86,3 +88,68 @@ def meta() -> dict:
             {"value": Role.OTHER, "label": "기타"},
         ],
     }
+
+
+# --------------------------------------------------------------------------
+# Serving the built frontend
+#
+# `make serve` (and `bml`) run one process on one port: the API under /api,
+# the compiled web app everywhere else.  One URL to remember, no CORS, and no
+# node process on the lab machine.  During development Vite serves the app
+# instead and proxies /api here, so `mount_web` finds no build and only
+# installs the "not built yet" notice.
+# --------------------------------------------------------------------------
+def mount_web(target: FastAPI, dist: Path) -> bool:
+    """Serve a built frontend from *dist*.  Returns whether one was found.
+
+    Kept a function rather than module-level code so the routing can be
+    tested against a temporary build directory.
+    """
+    if not (dist / "index.html").is_file():
+
+        @target.get("/", include_in_schema=False)
+        def no_build() -> dict:
+            """Say what to do, rather than 404 on the address people typed."""
+            return {
+                "status": "api only",
+                "detail": (
+                    "The web app has not been built. Run `bml` (or `make serve`) "
+                    "to build and serve it on one port, or `bml dev` for the "
+                    "development servers. The API is live at /api."
+                ),
+                "expected_build": str(dist),
+                "port": settings.port,
+            }
+
+        return False
+
+    root = dist.resolve()
+    if (dist / "assets").is_dir():
+        target.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+
+    @target.get("/{path:path}", include_in_schema=False)
+    def spa(path: str) -> FileResponse:
+        """Serve a built file, falling back to index.html for client routes.
+
+        The browser routes /samples/1 itself, so a deep link must return
+        index.html rather than a 404 -- but only for paths that are neither a
+        real file nor an API call.
+        """
+        if path == "api" or path.startswith("api/"):
+            # Without this an API typo would render the app and look like it
+            # worked; a 404 says what actually happened.
+            raise HTTPException(404, "no such endpoint")
+
+        if path:
+            # resolve() before the containment check: ../../etc/passwd must not
+            # escape the build directory.
+            candidate = (root / path).resolve()
+            if candidate.is_file() and candidate.is_relative_to(root):
+                return FileResponse(candidate)
+
+        return FileResponse(root / "index.html")
+
+    return True
+
+
+mount_web(app, settings.web_dist)

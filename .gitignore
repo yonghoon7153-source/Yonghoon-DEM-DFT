@@ -24,6 +24,9 @@ node_modules/
 apps/web/dist/
 *.tsbuildinfo
 
+# bml 실행 상태 (pid, 로그, 의존성 스탬프)
+.bml/
+
 # 데이터베이스
 *.db
 *.db-journal

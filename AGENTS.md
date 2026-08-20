@@ -133,12 +133,21 @@ make sync && make check && git push
 ## 4. 작업 흐름
 
 ```bash
-make sync         # 세션 시작 — pull --rebase --autostash
-make dev          # API(8000) + web(5173) 동시 실행
+bml               # 최신화 + 실행 → http://localhost:5003  (가장 흔한 진입점)
+bml dev           # 같은 주소, 핫 리로드
+bml stop          # 내리기
+bml check         # 커밋 전 검사 전부
+
+make sync         # pull --rebase --autostash 만
+make serve        # 한 포트로 실행 (bml 이 쓰는 것)
 make test         # pytest + vitest + tsc
 make check        # test + lint (커밋 전 필수)
 make wiki-lint    # docs/ 위키 정합성
 ```
+
+`bml` 은 `tools/bml` 이고 `make setup` 이 PATH 에 등록한다. pull 을 먼저 하는
+순서를 강제하려고 만든 것이므로, 실행할 일이 있으면 `make dev` 대신 `bml` 을
+쓴다. 설명은 `docs/guides/bml-command.md`.
 
 새 기능은 이 순서로 붙인다:
 

@@ -1,0 +1,397 @@
+#!/usr/bin/env bash
+#
+# bml — Battery Lab Workbench 한 줄 실행기
+#
+#   bml            최신으로 맞추고 웹앱을 띄운다 (http://localhost:5003)
+#   bml dev        같은 주소, 핫 리로드 (코드 고칠 때)
+#   bml stop       띄운 것들을 내린다
+#   bml status     지금 뭐가 돌고 있는지 + 저장소 상태
+#   bml check      커밋 전 검사 (테스트·타입·린트·문서)
+#   bml pull       실행 없이 최신으로만 맞춘다
+#   bml logs       실행 로그 보기
+#   bml install    이 명령을 PATH 에 등록한다 (1회)
+#
+# 두 사람이 같은 브랜치를 쓰므로, 실행 전에 항상 pull --rebase --autostash 를
+# 먼저 한다. 작업 중이던 변경은 자동으로 넣었다 빼주므로 커밋하지 않아도 된다.
+
+set -uo pipefail
+
+# --- 저장소 위치 (심볼릭 링크로 설치돼도 원본을 찾는다) --------------------
+resolve() {
+  # Follow symlinks and always return an absolute path.  `bml install` writes
+  # this value into a symlink, so a relative result would produce a link that
+  # only works from the directory it was created in.
+  local target="$1"
+  while [ -L "$target" ]; do
+    local link
+    link="$(readlink "$target")"
+    case "$link" in
+      /*) target="$link" ;;
+      *)  target="$(cd -P "$(dirname "$target")" && pwd)/$link" ;;
+    esac
+  done
+  printf '%s/%s' "$(cd -P "$(dirname "$target")" && pwd)" "$(basename "$target")"
+}
+
+SCRIPT="$(resolve "${BASH_SOURCE[0]}")"
+REPO="$(cd -P "$(dirname "$SCRIPT")/.." && pwd)"
+
+PORT="${WORKBENCH_PORT:-5003}"
+API_PORT="${WORKBENCH_API_PORT:-8000}"
+URL="http://localhost:${PORT}"
+RUN_DIR="$REPO/.bml"
+LOG="$RUN_DIR/server.log"
+PID_FILE="$RUN_DIR/server.pid"
+DEV_PID_FILE="$RUN_DIR/dev.pid"
+STAMP="$RUN_DIR/deps.stamp"
+
+mkdir -p "$RUN_DIR"
+
+# --- 출력 -------------------------------------------------------------------
+if [ -t 1 ]; then
+  B=$'\033[1m'; DIM=$'\033[2m'; GREEN=$'\033[32m'; YELLOW=$'\033[33m'
+  RED=$'\033[31m'; BLUE=$'\033[34m'; OFF=$'\033[0m'
+else
+  B=""; DIM=""; GREEN=""; YELLOW=""; RED=""; BLUE=""; OFF=""
+fi
+
+say()  { printf '%s\n' "$*"; }
+step() { printf '%s▸%s %s\n' "$BLUE" "$OFF" "$*"; }
+ok()   { printf '%s✓%s %s\n' "$GREEN" "$OFF" "$*"; }
+warn() { printf '%s!%s %s\n' "$YELLOW" "$OFF" "$*"; }
+die()  { printf '%s✕%s %s\n' "$RED" "$OFF" "$*" >&2; exit 1; }
+
+# --- 파이썬 ------------------------------------------------------------------
+python_bin() {
+  if [ -x "$REPO/.venv/bin/python" ]; then
+    printf '%s' "$REPO/.venv/bin/python"
+  else
+    command -v python3 || die "python3 을 찾을 수 없습니다."
+  fi
+}
+
+# --- 프로세스 ----------------------------------------------------------------
+alive() { [ -n "${1:-}" ] && kill -0 "$1" 2>/dev/null; }
+
+running_pid() {
+  local file="$1"
+  [ -f "$file" ] || return 1
+  local pid
+  pid="$(cat "$file" 2>/dev/null)"
+  alive "$pid" && printf '%s' "$pid"
+}
+
+port_owner() {
+  # lsof 가 없는 환경도 있어서 두 가지 방법을 쓴다.
+  if command -v lsof >/dev/null 2>&1; then
+    lsof -ti "tcp:$1" -sTCP:LISTEN 2>/dev/null | head -1
+  elif command -v ss >/dev/null 2>&1; then
+    ss -lptnH "sport = :$1" 2>/dev/null | grep -o 'pid=[0-9]*' | head -1 | cut -d= -f2
+  fi
+}
+
+port_busy() { [ -n "$(port_owner "$1")" ]; }
+
+wait_for_url() {
+  local url="$1" tries="${2:-40}"
+  for _ in $(seq "$tries"); do
+    if curl -fsS -o /dev/null --max-time 2 "$url" 2>/dev/null; then return 0; fi
+    sleep 0.5
+  done
+  return 1
+}
+
+open_browser() {
+  local url="$1"
+  if [ -n "${BML_NO_OPEN:-}" ]; then return 0; fi
+  if command -v xdg-open >/dev/null 2>&1; then (xdg-open "$url" >/dev/null 2>&1 &)
+  elif command -v open >/dev/null 2>&1; then (open "$url" >/dev/null 2>&1 &)
+  fi
+}
+
+# --- 최신화 ------------------------------------------------------------------
+sync_repo() {
+  git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1 || die "git 저장소가 아닙니다: $REPO"
+
+  local branch
+  branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD)"
+  step "최신으로 맞추는 중 (${branch})"
+
+  if ! git -C "$REPO" remote get-url origin >/dev/null 2>&1; then
+    warn "origin 이 없어 pull 을 건너뜁니다."
+    return 0
+  fi
+
+  # --autostash 덕분에 작업 중 변경이 있어도 안전하다.
+  if git -C "$REPO" pull --rebase --autostash 2>&1 | sed 's/^/  /'; then
+    :
+  else
+    warn "pull 실패 — 네트워크나 충돌을 확인하세요. 로컬 상태로 계속합니다."
+    if [ -d "$REPO/.git/rebase-merge" ] || [ -d "$REPO/.git/rebase-apply" ]; then
+      die "rebase 가 진행 중입니다. 충돌을 해결하고 'git rebase --continue' 하세요."
+    fi
+  fi
+
+  local behind
+  behind="$(git -C "$REPO" rev-list --count 'HEAD..@{upstream}' 2>/dev/null || echo 0)"
+  [ "$behind" != "0" ] && warn "업스트림보다 ${behind} 커밋 뒤에 있습니다."
+
+  local recent
+  recent="$(git -C "$REPO" log --oneline -3 --format='  %C(dim)%h%C(reset) %s' --color=always 2>/dev/null)"
+  [ -n "$recent" ] && { say "${DIM}최근 커밋${OFF}"; say "$recent"; }
+}
+
+# --- 의존성 ------------------------------------------------------------------
+deps_fingerprint() {
+  cat "$REPO/apps/api/requirements.txt" \
+      "$REPO/packages/wrdkit/pyproject.toml" \
+      "$REPO/apps/web/package-lock.json" 2>/dev/null | cksum | awk '{print $1}'
+}
+
+python_ready() {
+  "$(python_bin)" - <<'PY' >/dev/null 2>&1
+import fastapi, numpy, sqlmodel, uvicorn, wrdkit  # noqa: F401
+PY
+}
+
+ensure_deps() {
+  local current previous need_py=0 need_web=0
+  current="$(deps_fingerprint)"
+  previous="$(cat "$STAMP" 2>/dev/null || echo none)"
+
+  [ -d "$REPO/apps/web/node_modules" ] || need_web=1
+  python_ready || need_py=1
+
+  if [ "$previous" = "none" ]; then
+    # First run on this machine.  A missing stamp means "never checked", not
+    # "dependencies changed" -- if everything already imports, record what is
+    # installed and move on rather than reinstalling for several minutes.
+    if [ $need_py -eq 0 ] && [ $need_web -eq 0 ]; then
+      printf '%s' "$current" > "$STAMP"
+      return 0
+    fi
+  elif [ "$current" != "$previous" ]; then
+    need_py=1
+    need_web=1
+  fi
+
+  [ $need_py -eq 0 ] && [ $need_web -eq 0 ] && return 0
+
+  if [ "$previous" = "none" ]; then
+    step "의존성 설치 — 처음이라 1~3분 걸립니다"
+  else
+    step "의존성이 바뀌어 다시 설치합니다"
+  fi
+
+  if [ $need_py -eq 1 ]; then
+    local py
+    py="$(python_bin)"
+    if [ ! -x "$REPO/.venv/bin/python" ] && [ -z "${VIRTUAL_ENV:-}" ]; then
+      say "  ${DIM}가상환경 생성 (.venv)${OFF}"
+      python3 -m venv "$REPO/.venv" || die "venv 생성 실패"
+      py="$REPO/.venv/bin/python"
+    fi
+    say "  ${DIM}python 패키지 설치…${OFF}"
+    "$py" -m pip install --quiet --upgrade pip >/dev/null 2>&1
+    "$py" -m pip install --quiet -e "$REPO/packages/wrdkit" \
+      || die "wrdkit 설치 실패 — 'pip install -e packages/wrdkit' 로 원인을 보세요."
+    "$py" -m pip install --quiet -r "$REPO/apps/api/requirements.txt" \
+      || die "API 의존성 설치 실패"
+    ok "python 준비 완료"
+  fi
+
+  if [ $need_web -eq 1 ]; then
+    say "  ${DIM}npm 패키지 설치…${OFF}"
+    ( cd "$REPO/apps/web" && npm install --silent --no-audit --no-fund ) \
+      || die "npm install 실패"
+    ok "web 준비 완료"
+  fi
+
+  printf '%s' "$current" > "$STAMP"
+}
+
+# --- 빌드 --------------------------------------------------------------------
+web_needs_build() {
+  local dist="$REPO/apps/web/dist/index.html"
+  [ -f "$dist" ] || return 0
+  # 소스가 빌드보다 새로우면 다시 빌드한다.
+  [ -n "$(find "$REPO/apps/web/src" "$REPO/apps/web/index.html" \
+           "$REPO/apps/web/vite.config.ts" -newer "$dist" -print -quit 2>/dev/null)" ]
+}
+
+build_web() {
+  if web_needs_build; then
+    step "프론트엔드 빌드"
+    ( cd "$REPO/apps/web" && npm run build >/dev/null 2>&1 ) || die "빌드 실패 — 'bml check' 로 원인을 보세요."
+    ok "빌드 완료"
+  else
+    ok "빌드 최신"
+  fi
+}
+
+# --- 실행 --------------------------------------------------------------------
+cmd_stop() {
+  local stopped=0
+  for file in "$PID_FILE" "$DEV_PID_FILE"; do
+    local pid
+    if pid="$(running_pid "$file")"; then
+      kill "$pid" 2>/dev/null
+      # 프로세스 그룹째 내린다 (uvicorn reload, vite 는 자식을 만든다).
+      kill -- "-$pid" 2>/dev/null
+      stopped=1
+    fi
+    rm -f "$file"
+  done
+
+  for port in "$PORT" "$API_PORT"; do
+    local owner
+    owner="$(port_owner "$port")"
+    if [ -n "$owner" ]; then
+      kill "$owner" 2>/dev/null && stopped=1
+    fi
+  done
+
+  sleep 0.5
+  if [ $stopped -eq 1 ]; then ok "내렸습니다."; else say "${DIM}돌고 있는 게 없습니다.${OFF}"; fi
+}
+
+start_serve() {
+  if port_busy "$PORT"; then
+    if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
+      ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
+      open_browser "$URL"
+      return 0
+    fi
+    die "포트 ${PORT} 를 다른 프로그램이 쓰고 있습니다. 'bml stop' 하거나 WORKBENCH_PORT 로 바꾸세요."
+  fi
+
+  build_web
+  step "서버 시작 (포트 ${PORT})"
+  (
+    cd "$REPO"
+    WORKBENCH_PORT="$PORT" \
+    PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" \
+    setsid nohup "$(python_bin)" -m uvicorn app.main:app \
+      --host 127.0.0.1 --port "$PORT" --app-dir "$REPO/apps/api" \
+      > "$LOG" 2>&1 < /dev/null &
+    printf '%s' "$!" > "$PID_FILE"
+  )
+
+  if wait_for_url "$URL/api/health"; then
+    ok "실행 중 → ${B}${URL}${OFF}"
+    say "${DIM}  멈추려면: bml stop   ·  로그: bml logs${OFF}"
+    open_browser "$URL"
+  else
+    warn "서버가 응답하지 않습니다. 마지막 로그:"
+    tail -20 "$LOG" | sed 's/^/  /'
+    exit 1
+  fi
+}
+
+start_dev() {
+  if port_busy "$PORT" || port_busy "$API_PORT"; then
+    die "포트 ${PORT} 또는 ${API_PORT} 가 사용 중입니다. 'bml stop' 을 먼저 하세요."
+  fi
+
+  step "개발 서버 시작 (핫 리로드)"
+  (
+    cd "$REPO"
+    PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" \
+    setsid nohup "$(python_bin)" -m uvicorn app.main:app \
+      --reload --host 127.0.0.1 --port "$API_PORT" --app-dir "$REPO/apps/api" \
+      > "$LOG" 2>&1 < /dev/null &
+    printf '%s' "$!" > "$PID_FILE"
+  )
+  (
+    cd "$REPO/apps/web"
+    WORKBENCH_PORT="$PORT" WORKBENCH_API_PORT="$API_PORT" \
+    setsid nohup npm run dev > "$RUN_DIR/vite.log" 2>&1 < /dev/null &
+    printf '%s' "$!" > "$DEV_PID_FILE"
+  )
+
+  if wait_for_url "$URL"; then
+    ok "개발 서버 → ${B}${URL}${OFF}   ${DIM}(API :${API_PORT})${OFF}"
+    say "${DIM}  파일을 고치면 자동 반영됩니다  ·  멈추려면: bml stop${OFF}"
+    open_browser "$URL"
+  else
+    warn "뜨지 않았습니다. 로그:"
+    tail -20 "$RUN_DIR/vite.log" 2>/dev/null | sed 's/^/  /'
+    tail -20 "$LOG" | sed 's/^/  /'
+    exit 1
+  fi
+}
+
+cmd_status() {
+  say "${B}Battery Lab Workbench${OFF}  ${DIM}$REPO${OFF}"
+  say ""
+
+  if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
+    ok "실행 중 → $URL"
+  elif port_busy "$PORT"; then
+    warn "포트 ${PORT} 는 사용 중인데 워크벤치가 아닙니다."
+  else
+    say "${DIM}멈춰 있습니다. 'bml' 로 시작하세요.${OFF}"
+  fi
+
+  say ""
+  local branch dirty ahead behind
+  branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+  dirty="$(git -C "$REPO" status --porcelain 2>/dev/null | wc -l | tr -d ' ')"
+  ahead="$(git -C "$REPO" rev-list --count '@{upstream}..HEAD' 2>/dev/null || echo ?)"
+  behind="$(git -C "$REPO" rev-list --count 'HEAD..@{upstream}' 2>/dev/null || echo ?)"
+  say "브랜치      ${branch}"
+  say "미커밋      ${dirty}개"
+  say "업스트림    ahead ${ahead} / behind ${behind}"
+  [ "$behind" != "0" ] && [ "$behind" != "?" ] && warn "'bml pull' 로 먼저 맞추세요."
+
+  if command -v "$(python_bin)" >/dev/null 2>&1; then
+    say ""
+    "$(python_bin)" "$REPO/tools/wiki_status.py" 2>/dev/null | tail -n +2 | head -20
+  fi
+}
+
+cmd_check() {
+  step "검사"
+  local py="$(python_bin)"
+  ( cd "$REPO" && PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" "$py" -m pytest ) || exit 1
+  ( cd "$REPO/apps/web" && npm run typecheck && npx vitest run && npm run lint ) || exit 1
+  ( cd "$REPO" && "$py" -m ruff check packages apps/api ) || exit 1
+  ( cd "$REPO" && python3 tools/wiki_lint.py ) || exit 1
+  ok "전부 통과."
+}
+
+cmd_install() {
+  local target="${1:-$HOME/.local/bin}"
+  mkdir -p "$target"
+  ln -sf "$SCRIPT" "$target/bml"
+  ok "설치: $target/bml"
+  case ":$PATH:" in
+    *":$target:"*) say "${DIM}PATH 에 이미 있습니다. 'bml' 로 바로 쓰세요.${OFF}" ;;
+    *)
+      warn "PATH 에 없습니다. 셸 설정에 아래 한 줄을 추가하세요:"
+      say "  export PATH=\"$target:\$PATH\""
+      say "${DIM}  bash → ~/.bashrc  ·  zsh → ~/.zshrc  (추가 후 새 터미널)${OFF}"
+      ;;
+  esac
+}
+
+cmd_help() {
+  # The header comment block is the help text; print it until the first
+  # non-comment line so the two can never drift apart.
+  awk 'NR > 1 { if ($0 !~ /^#/) exit; sub(/^# ?/, ""); print }' "$SCRIPT"
+}
+
+# --- 진입점 ------------------------------------------------------------------
+case "${1:-serve}" in
+  serve|start|up|"") sync_repo; ensure_deps; start_serve ;;
+  dev)               sync_repo; ensure_deps; start_dev ;;
+  stop|down)         cmd_stop ;;
+  restart)           cmd_stop; sync_repo; ensure_deps; start_serve ;;
+  pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
+  status|st)         cmd_status ;;
+  check|test)        cmd_check ;;
+  logs|log)          tail -f "$LOG" ;;
+  install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
+  help|-h|--help)    cmd_help ;;
+  *) die "모르는 명령: $1   ('bml help' 참고)" ;;
+esac

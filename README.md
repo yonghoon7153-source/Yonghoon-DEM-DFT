@@ -35,9 +35,26 @@ Excel 로 옮기고 Origin 에서 다시 그리는 과정을 없애는 것이 �
 ## 빠른 시작
 
 ```bash
-make setup     # 클론 직후 1회 (git 설정 + 의존성)
-make dev       # API :8000, 웹 :5173
+make setup     # 클론 직후 1회 (git 설정 + 의존성 + bml 등록)
+bml            # 최신으로 맞추고 실행 → http://localhost:5003
 ```
+
+`bml` 한 줄이 `git pull --rebase --autostash` → 의존성 확인 → 빌드 → 실행을
+순서대로 한다. 두 사람이 같은 브랜치를 쓰므로 pull 을 빠뜨리지 않는 것이
+중요하다.
+
+| | |
+|---|---|
+| `bml` | 최신화 + 실행 (http://localhost:5003) |
+| `bml dev` | 같은 주소, 핫 리로드 |
+| `bml stop` | 내리기 |
+| `bml status` | 실행 상태 + 브랜치/미커밋/ahead·behind |
+| `bml check` | 커밋 전 검사 |
+
+설치와 자세한 설명: [`docs/guides/bml-command.md`](docs/guides/bml-command.md)
+
+`make` 를 직접 쓸 수도 있다 — `make serve` (한 포트), `make dev` (핫 리로드),
+둘 다 http://localhost:5003 이다.
 
 터미널만으로도 쓸 수 있다:
 

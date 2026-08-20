@@ -8,10 +8,16 @@ VENV := .venv
 VENV_PY := $(VENV)/bin/python
 WEB := apps/web
 
+# The one address to remember: http://localhost:5003
+# `make serve` listens here directly; `make dev` puts Vite here and proxies
+# /api to PORT_API behind it.
+PORT ?= 5003
+PORT_API ?= 8000
+
 .DEFAULT_GOAL := help
-.PHONY: help setup setup-git sync venv install-api install-web dev api web \
-        test test-py test-web lint lint-py lint-web check wiki-lint wiki-status \
-        clean fmt
+.PHONY: help setup setup-git sync venv install-api install-web install-bml \
+        dev serve api web build test test-py test-web lint lint-py lint-web \
+        check wiki-lint wiki-status clean fmt
 
 help: ## 사용 가능한 타겟
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -41,17 +47,29 @@ install-api: venv ## Python 의존성 설치
 install-web: ## 프론트엔드 의존성 설치
 	cd $(WEB) && npm install
 
-dev: ## API(8000) + web(5173) 동시 실행
+install-bml: ## `bml` 명령을 PATH 에 등록 (1회)
+	./tools/bml install
+
+dev: ## 개발 서버 — http://localhost:5003 (핫 리로드)
+	@echo "→ http://localhost:$(PORT)"
 	@trap 'kill 0' EXIT; \
 	$(MAKE) api & \
 	$(MAKE) web & \
 	wait
 
-api: ## FastAPI 개발 서버
-	$(VENV_PY) -m uvicorn app.main:app --reload --port 8000 --app-dir apps/api
+serve: build ## 한 포트로 실행 — http://localhost:5003 (node 불필요)
+	@echo "→ http://localhost:$(PORT)"
+	WORKBENCH_PORT=$(PORT) $(VENV_PY) -m uvicorn app.main:app \
+	  --host 127.0.0.1 --port $(PORT) --app-dir apps/api
+
+build: ## 프론트엔드 프로덕션 빌드 (apps/web/dist)
+	cd $(WEB) && npm run build
+
+api: ## FastAPI 개발 서버 (Vite 프록시 뒤)
+	$(VENV_PY) -m uvicorn app.main:app --reload --port $(PORT_API) --app-dir apps/api
 
 web: ## Vite 개발 서버
-	cd $(WEB) && npm run dev
+	cd $(WEB) && WORKBENCH_PORT=$(PORT) WORKBENCH_API_PORT=$(PORT_API) npm run dev
 
 test: test-py test-web ## 전체 테스트
 

@@ -93,3 +93,8 @@ EIS 가 안정적으로 들어온 다음의 일이다.
 2. raw 단위만 저장한다 (ADR 0001).
 3. 못 하는 것은 이유와 함께 `None` 을 돌려준다.
 4. 실측 파일로 물리 검증을 한다.
+
+## 관련
+
+- [[bml-command]] — 개발 중에는 `bml dev` 로 띄우면 고칠 때마다 바로 반영된다
+- `.claude/skills/adding-an-analysis/SKILL.md` — 새 분석을 붙이는 절차
