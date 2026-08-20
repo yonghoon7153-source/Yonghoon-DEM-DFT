@@ -513,10 +513,14 @@ def build(leg: str) -> dict:
         verdict["by_objective_일치"] = None
         verdict["불일치"] = ["봉인 summary 가 없다"]
 
+    man_path = WARM / f"{leg}.manifest.yaml"
+
     meta = {
-        # 2 = 22차 리뷰 발견 5 대응 (실제 fits 바이트 SHA · 전체 semantic 대조 ·
-        #     restart 수준 투영 · 분석기 provenance). 1 은 그 셋이 없다.
-        "projection_schema": 2,
+        # 3 = 23차 발견 5 대응 — ANALYSIS_SPEC 이 산출물과 정합(2 는 spec 이
+        #     1 이라 어긋났다) · 타입 exact 대조 · restart fail-closed ·
+        #     봉인 원본 digest. 2 는 실제 fits 바이트 SHA·전체 대조·restart
+        #     투영까지, 1 은 그 셋이 없다.
+        "projection_schema": 3,
         "leg_id": leg,
         "projection_file": out_csv.name,
         "n_rows": int(len(proj)),
@@ -529,13 +533,20 @@ def build(leg: str) -> dict:
         "analyzer": _analyzer_provenance(),
         "analysis_spec": ANALYSIS_SPEC,
         "재계산_검증": verdict,
+        # ★ 23차 발견 5 — 투영 YAML 에 봉인 원본의 digest 가 없어, 회귀가
+        #   "생성 당시 기록된 boolean" 을 다시 믿는 수밖에 없었다. 원본을
+        #   해시해 남기면 리뷰어가 그 boolean 이 **어느 파일에 대한 것인지**
+        #   독립 검산할 수 있다.
+        "summary_sha256": (hashlib.sha256(sealed_path.read_bytes()).hexdigest()
+                           if sealed_path.is_file() else None),
+        "manifest_sha256": (hashlib.sha256(man_path.read_bytes()).hexdigest()
+                            if man_path.is_file() else None),
         "_주의": ("이 투영은 원자료가 아니다. 감사·대조용 축약이며, 여기 없는 열"
                   "(restarts_json 전체, p_spread, 경계 플래그 세부)은 담기지 않는다. "
                   "완전 복원에는 results/<leg>/ 원본이 필요하다."),
     }
 
     # manifest 가 있으면 fits 봉인·code identity 를 함께 못박는다
-    man_path = WARM / f"{leg}.manifest.yaml"
     if man_path.is_file():
         man = yaml.safe_load(man_path.read_text(encoding="utf-8")) or {}
         rs = man.get("run_spec") or {}
