@@ -11,7 +11,7 @@ verifiedBy: "당일 실행·검증 결과를 그대로 옮김 (91 tests · lint 
 explored: false
 authoredBy: agent
 effort: low
-claimType: process
+claimType: prescriptive
 evidenceScope: single-source
 ---
 
