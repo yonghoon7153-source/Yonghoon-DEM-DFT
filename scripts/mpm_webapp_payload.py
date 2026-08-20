@@ -509,7 +509,11 @@ def main():
                     help='σ_e AM_S (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.010 / nca: 0.010)')
     ap.add_argument('--sigma-am-p', type=float, default=None,
                     help='σ_e AM_P (S/cm) — 미지정 시 --cam 프리셋 (nmc811: 0.005 / nca: 0.010)')
-    ap.add_argument('--sigma-vgcf', type=float, default=100.0, help='σ_e VGCF (S/cm) — lit order ⚠hook')
+    ap.add_argument('--sigma-vgcf', type=float, default=100.0,
+                    help='σ_e VGCF (S/cm).  ⚠ NOT a material property — this is an EFFECTIVE '
+                         'NETWORK constant (CL-47): voxel fusion deletes fibre-fibre contact '
+                         'resistance, so 100 lumps that missing loss (powder 83, single fibre '
+                         '1e4 S/cm).  Same epistemology as the DEM E_eff 18x softening.')
     ap.add_argument('--sigma-superp', type=float, default=10.0, help='σ_e SuperP (S/cm) — lit order ⚠hook')
     ap.add_argument('--sigma-sdcp', type=float, default=250.0,
                     help='σ_e SDCP material (S/cm) — 250 = USER-provided anchor UPDATE (2026-07-16, '
