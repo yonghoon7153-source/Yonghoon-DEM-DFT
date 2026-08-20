@@ -21,3 +21,5 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] create | tools/tests/test_bml_ownership.sh — 소유 판정 회귀 테스트 13건
 ## [2026-08-20] fix | 한 폴더 두 프로젝트 사고 방지 — pull 전에 멈추고 worktree 안내
 ## [2026-08-20] fix | 테스트 의존성을 requirements-dev.txt 로 통일 (CI·Makefile·bml)
+## [2026-08-20] fix | bml 이 pull 로 자기 자신을 갈아치우다 깨지던 문제 — main() + 재실행
+## [2026-08-20] fix | 다른 폴더의 워크벤치를 구분하고, 포트 주인을 pid·명령줄로 밝힌다

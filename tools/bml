@@ -42,6 +42,9 @@ REPO="$(cd -P "$(dirname "$SCRIPT")/.." && pwd)"
 #: 어느 브랜치가 워크벤치인지 한 곳에만 적어 둔다.
 WORKBENCH_BRANCH="${WORKBENCH_BRANCH:-claude/battery-charge-discharge-webapp-dq4ja3}"
 
+#: classify_process 가 "다른 폴더의 워크벤치" 를 만나면 그 폴더를 여기 남긴다.
+OTHER_CHECKOUT=""
+
 PORT="${WORKBENCH_PORT:-5003}"
 API_PORT="${WORKBENCH_API_PORT:-8000}"
 # WSL2 forwards localhost from Windows by default, so 127.0.0.1 is right and
@@ -176,6 +179,24 @@ classify_process() {
   # A uvicorn naming our tree is ours wherever it was started from.
   case "$cmd" in *uvicorn*"$REPO"*) return 0 ;; esac
 
+  # A workbench started from *another* checkout of this same project.  It is
+  # not a stranger, but it is not ours either: its data/ is a different
+  # directory, so silently replacing it would look like the uploads vanished.
+  # Report it separately so the caller can name the folder and let the user
+  # choose.
+  case "$cmd" in
+    *--app-dir*)
+      local appdir root
+      appdir="${cmd##*--app-dir }"
+      appdir="${appdir%% *}"
+      root="${appdir%/apps/api}"
+      if [ "$root" != "$appdir" ] && [ -d "$root/packages/wrdkit/src/wrdkit" ]; then
+        OTHER_CHECKOUT="$root"
+        return 3
+      fi
+      ;;
+  esac
+
   # `uvicorn app.main:app` on its own is not evidence: that module path is the
   # FastAPI tutorial's, so half the world's side projects answer to it.  Claim
   # it only when the process is also sitting in our API directory.
@@ -193,7 +214,26 @@ classify_process() {
   return 1
 }
 
-#: 0 = ours, 1 = someone else's, 2 = cannot tell.
+#: 포트를 잡고 있는 프로세스를 사람이 읽을 수 있게 한 줄로.
+#:
+#: "다른 프로그램이 쓰고 있습니다" 만으로는 사용자가 다음에 뭘 해야 할지 알 수
+#: 없다.  pid 와 명령줄을 보여 주면 대개 한눈에 정체가 드러난다.
+describe_port_owner() {
+  local pid cmd cwd
+  pid="$(port_owner "$1")"
+  [ -n "$pid" ] || return 1
+
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)"
+  [ -n "$cmd" ] || cmd="$(ps -p "$pid" -o args= 2>/dev/null)"
+  cwd="$(readlink -f "/proc/$pid/cwd" 2>/dev/null)"
+
+  say "  ${DIM}      pid ${pid}${OFF}"
+  [ -n "$cmd" ] && say "  ${DIM}      $(printf '%.140s' "$cmd")${OFF}"
+  [ -n "$cwd" ] && say "  ${DIM}      실행 위치: ${cwd}${OFF}"
+}
+
+#: 0 = ours, 1 = someone else's, 2 = cannot tell, 3 = another checkout of this
+#: same project (folder left in OTHER_CHECKOUT).
 #: The third answer matters: refusing to start because we *assumed* the port
 #: belongs to a stranger is as wrong as killing a stranger's process.
 owns_port() {
@@ -452,6 +492,11 @@ sync_repo() {
     return 0
   fi
 
+  # pull 이 이 스크립트 자신을 갈아치울 수 있으므로, 전후를 비교할 수 있게
+  # 먼저 지문을 떠 둔다.
+  local script_before
+  script_before="$(cksum < "$SCRIPT" 2>/dev/null)"
+
   # --autostash 덕분에 작업 중 변경이 있어도 안전하다.
   if git -C "$REPO" pull --rebase --autostash 2>&1 | sed 's/^/  /'; then
     :
@@ -469,6 +514,16 @@ sync_repo() {
   local recent
   recent="$(git -C "$REPO" log --oneline -3 --format='  %C(dim)%h%C(reset) %s' --color=always 2>/dev/null)"
   [ -n "$recent" ] && { say "${DIM}최근 커밋${OFF}"; say "$recent"; }
+
+  # 방금 받은 것 중에 이 스크립트가 있었다면, 지금 돌고 있는 것은 옛 버전이다.
+  # 새 것으로 다시 시작한다 — 안 그러면 "고쳤다는 걸 받았는데 왜 증상이
+  # 똑같냐" 가 된다.  BML_REEXECED 가 무한 재실행을 막는다.
+  if [ "$script_before" != "$(cksum < "$SCRIPT" 2>/dev/null)" ] \
+     && [ -z "${BML_REEXECED:-}" ]; then
+    ok "bml 이 갱신됐습니다 — 새 버전으로 다시 시작합니다."
+    export BML_REEXECED=1
+    exec "$SCRIPT" ${BML_ARGV+"${BML_ARGV[@]}"}
+  fi
 }
 
 # --- 의존성 ------------------------------------------------------------------
@@ -642,30 +697,53 @@ cmd_stop() {
 
 start_serve() {
   if port_busy "$PORT"; then
-    server_state
-    local state=$?
-
-    if [ $state -eq 0 ]; then
-      ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
-      open_browser "$URL"
-      return 0
-    fi
-
-    # Replacing a process is only safe when it is ours.  A port that answers
-    # 500 could just as easily be someone else's broken service, and killing
-    # it would be a far worse outcome than refusing to start.
+    # 소유부터 가린다.  "정상 응답하니 이미 돌고 있다" 로 먼저 판단하면, 다른
+    # 폴더의 워크벤치를 우리 것인 양 브라우저로 열어 준다 — 그쪽은 data/ 가
+    # 다르므로 사용자 눈에는 올려 둔 .wrd 가 통째로 사라진 것으로 보인다.
+    #
+    # 갈아끼우는 것도 우리 것임을 확인한 뒤에만 한다.  500 을 뱉는 포트가
+    # 남의 망가진 서비스일 수도 있고, 그걸 죽이는 쪽이 안 뜨는 것보다 훨씬
+    # 나쁜 결과다.
     owns_port "$PORT"
     local owner=$?
+
+    if [ $owner -eq 3 ]; then
+      # 같은 프로젝트지만 다른 폴더의 워크벤치다.  자동으로 갈아끼우지 않는다 —
+      # 두 폴더는 data/ 가 서로 달라서, 조용히 바꾸면 올려 둔 파일이 사라진
+      # 것처럼 보인다.  어디에 있는지 말해 주고 사용자가 고르게 한다.
+      say ""
+      say "  ${B}원인${OFF}  포트 ${PORT} 를 ${B}다른 폴더의 워크벤치${OFF}가 쓰고 있습니다."
+      say "  ${DIM}      ${OTHER_CHECKOUT}${OFF}"
+      describe_port_owner "$PORT"
+      say ""
+      say "  ${DIM}두 폴더는 data/ 가 서로 다릅니다 — 올린 .wrd 도 따로입니다.${OFF}"
+      say "  ${B}선택${OFF}  그쪽을 계속 쓴다   ${GREEN}cd ${OTHER_CHECKOUT} && bml${OFF}"
+      say "        이쪽으로 옮긴다   ${GREEN}${OTHER_CHECKOUT}/tools/bml stop${OFF} 후 ${GREEN}bml${OFF}"
+      say "        둘 다 띄운다      ${GREEN}WORKBENCH_PORT=5004 bml${OFF}"
+      exit 1
+    fi
 
     if [ $owner -eq 1 ]; then
       say ""
       say "  ${B}원인${OFF}  포트 ${PORT} 를 bml 이 아닌 다른 프로그램이 쓰고 있습니다."
+      describe_port_owner "$PORT"
       if is_wsl; then
         say "  ${DIM}      WSL 미러 네트워크에서는 Windows 쪽 프로그램도 이렇게 보입니다.${OFF}"
         say "  ${DIM}      PowerShell:  Get-NetTCPConnection -LocalPort ${PORT} | Select OwningProcess${OFF}"
       fi
       say "  ${B}해결${OFF}  ${GREEN}WORKBENCH_PORT=6001 bml${OFF}"
       exit 1
+    fi
+
+    server_state
+    local state=$?
+
+    if [ $state -eq 0 ]; then
+      # 우리 것이거나(0), 누구 것인지 모르지만 우리 API 로 정상 응답한다(2).
+      # 어느 쪽이든 다시 띄울 이유가 없다.
+      ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
+      open_browser "$URL"
+      return 0
     fi
 
     if [ $owner -eq 2 ]; then
@@ -1023,22 +1101,41 @@ if [ -n "${BML_SOURCE_ONLY:-}" ]; then
   return 0 2>/dev/null || exit 0
 fi
 
-# 워크벤치 체크아웃일 때만 상태 폴더를 만든다.  guard_workbench_checkout 가
-# 잡아 주기 전에 bml 이 남의 저장소에 .bml 을 남기는 일을 막는다.
-[ -z "$(workbench_missing)" ] && need_run_dir
+main() {
+  # sync_repo 가 재실행할 때 쓸 원래 인자.
+  BML_ARGV=()
+  [ $# -gt 0 ] && BML_ARGV=("$@")
 
-case "${1:-serve}" in
-  serve|start|up|"") sync_repo; ensure_deps; start_serve ;;
-  dev)               sync_repo; ensure_deps; start_dev ;;
-  stop|down)         cmd_stop ;;
-  restart)           cmd_stop; sync_repo; ensure_deps; start_serve ;;
-  pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
-  status|st)         cmd_status ;;
-  check|test)        cmd_check ;;
-  logs|log)          tail -f "$LOG" ;;
-  doctor|diag)       cmd_doctor ;;
-  repair|fix)        shift; [ "${1:-}" = "web" ] && cmd_repair_web || cmd_repair ;;
-  install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
-  help|-h|--help)    cmd_help ;;
-  *) die "모르는 명령: $1   ('bml help' 참고)" ;;
-esac
+  # 워크벤치 체크아웃일 때만 상태 폴더를 만든다.  guard_workbench_checkout 가
+  # 잡아 주기 전에 bml 이 남의 저장소에 .bml 을 남기는 일을 막는다.
+  [ -z "$(workbench_missing)" ] && need_run_dir
+
+  case "${1:-serve}" in
+    serve|start|up|"") sync_repo; ensure_deps; start_serve ;;
+    dev)               sync_repo; ensure_deps; start_dev ;;
+    stop|down)         cmd_stop ;;
+    restart)           cmd_stop; sync_repo; ensure_deps; start_serve ;;
+    pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
+    status|st)         cmd_status ;;
+    check|test)        cmd_check ;;
+    logs|log)          tail -f "$LOG" ;;
+    doctor|diag)       cmd_doctor ;;
+    repair|fix)        shift; [ "${1:-}" = "web" ] && cmd_repair_web || cmd_repair ;;
+    install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
+    help|-h|--help)    cmd_help ;;
+    *) die "모르는 명령: $1   ('bml help' 참고)" ;;
+  esac
+}
+
+# 이 한 줄이 파일의 마지막이어야 한다.
+#
+# bml 은 pull 을 먼저 하는데, 그 pull 이 바로 이 파일을 갈아치운다.  bash 는
+# 스크립트를 통째로 읽지 않고 파일 오프셋을 기억했다가 다음 명령을 읽을 때
+# 그 자리로 되돌아간다.  그래서 실행 중에 파일이 바뀌면 새 파일의 엉뚱한 바이트
+# 위치에 착지해 줄 중간부터 실행한다 — 옛 코드와 새 코드가 섞여 돌고, 이미
+# 고친 버그가 되살아난 것처럼 보인다 (실제로 그렇게 옛 에러 메시지가 나왔다).
+#
+# main 을 함수로 두면 본문 전체가 실행 전에 파싱돼 메모리에 남고, 중괄호 묶음은
+# 하나의 복합 명령이라 exit 까지 함께 파싱된다.  따라서 main 이 끝나면 파일을
+# 다시 읽지 않고 그대로 종료한다.  여기 뒤에 아무것도 두지 말 것.
+{ main "$@"; exit $?; }

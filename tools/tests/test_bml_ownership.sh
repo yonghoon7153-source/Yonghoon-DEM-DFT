@@ -85,6 +85,49 @@ expect_stranger "이름만 비슷한 경로" \
 
 expect_stranger "평범한 웹서버" "nginx: master process /usr/sbin/nginx" "/"
 
+# --- 같은 프로젝트의 다른 폴더 ----------------------------------------------
+#
+# 자동으로 갈아끼우면 안 된다.  폴더가 다르면 data/ 도 다르므로, 조용히 바꾸면
+# 올려 둔 .wrd 가 사라진 것처럼 보인다.  0(우리 것)도 1(남의 것)도 아닌 3 으로
+# 따로 답하고, 부르는 쪽이 폴더 이름을 보여 주며 사용자에게 고르게 한다.
+other="$(mktemp -d)"
+mkdir -p "$other/packages/wrdkit/src/wrdkit" "$other/apps/api"
+classify_process \
+  "$other/.venv/bin/python -m uvicorn app.main:app --app-dir $other/apps/api" \
+  "$other"
+verdict=$?
+if [ "$verdict" -eq 3 ] && [ "$OTHER_CHECKOUT" = "$other" ]; then
+  pass=$((pass + 1))
+  printf '  ok   다른 폴더의 워크벤치: 3 으로 구분하고 폴더를 알려준다\n'
+else
+  fail=$((fail + 1))
+  printf '  FAIL 다른 폴더의 워크벤치를 구분하지 못했다 (verdict=%s, folder=%s)\n' \
+    "$verdict" "${OTHER_CHECKOUT:-없음}"
+fi
+
+# 워크벤치 표식이 없으면 --app-dir 가 있어도 그냥 남의 것이다.
+OTHER_CHECKOUT=""
+notrepo="$(mktemp -d)"
+mkdir -p "$notrepo/apps/api"
+expect_stranger "app-dir 는 있지만 워크벤치가 아닌 폴더" \
+  "/usr/bin/python3 -m uvicorn app.main:app --app-dir $notrepo/apps/api" "$notrepo"
+rm -rf "$other" "$notrepo"
+
+# --- 구조 불변식 -------------------------------------------------------------
+#
+# bml 은 pull 로 자기 자신을 갈아치운다.  bash 는 파일 오프셋을 기억했다가
+# 되돌아가 읽으므로, 마지막 줄 뒤에 코드가 남아 있으면 새 파일의 엉뚱한
+# 바이트에 착지해 옛 코드와 새 코드가 섞여 돈다.  실제로 그렇게 이미 고친
+# 버그가 되살아났다.  마지막 줄을 고정한다.
+last="$(grep -v '^[[:space:]]*$' "$HERE/../bml" | tail -1)"
+if [ "$last" = '{ main "$@"; exit $?; }' ]; then
+  pass=$((pass + 1))
+  printf '  ok   구조: bml 의 마지막 줄이 main+exit 묶음이다\n'
+else
+  fail=$((fail + 1))
+  printf '  FAIL 구조: bml 의 마지막 줄이 바뀌었다 — 자기 갱신 중 깨진다\n       %s\n' "$last"
+fi
+
 # vite 라도 우리 apps/web 에서 돈 게 아니면 남의 것이다.
 expect_stranger "남의 vite" "node /home/someone/site/node_modules/.bin/vite" "/home/someone/site"
 
