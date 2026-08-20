@@ -71,13 +71,67 @@ def test_md_ea_beta_gate_blocks_canonical():
     """
     reg = C.load_registry()
     for e in reg["entries"]:
-        if e.get("blocking_gate"):
+        if C.gate_blocks_canonical(e):
             assert e.get("status") != "canonical", \
-                f"{e['metric']}/{e['system']} 이 게이트({e['blocking_gate']}) 미통과인데 canonical 이다"
+                (f"{e['metric']}/{e['system']} 이 게이트({e['blocking_gate']}, "
+                 f"{C.gate_outcome(e)}) 인데 canonical 이다")
     lp = [e for e in reg["entries"]
           if (e["metric"], e["system"]) == ("MD_Ea_eV", "lpsocl")]
     assert lp and lp[0]["status"] != "canonical", "LPSOCl Ea 가 다시 canonical 로 올라왔다"
     assert lp[0].get("gate_detail", {}).get("beta_600K", 1.0) < 0.8, "β 근거가 사라졌다"
+
+
+def test_gate_outcome_vocabulary():
+    """게이트 판정 어휘가 한 곳(canonical.gate_outcome)에서만 나온다.
+
+    ⛔ 2026-08-20 codex 동결감사 — 옛 테스트는 `blocking_gate` 존재 = 미통과라는
+       **옛 의미를 잠그고 있었다**. b2o3 골격 게이트는 미평가(not_assessed)이지
+       실패가 아닌데, 그 구분이 없으면 정정을 해도 기계 경로가 되돌린다.
+       미평가/통과/실패/비해당/미기재를 전부 fixture 로 고정한다.
+    """
+    mk = lambda g, out=...: ({"blocking_gate": g} if out is ... else
+                             {"blocking_gate": g,
+                              "gate_detail": {"lineage": {"gate_outcome": out}}})
+
+    assert C.gate_outcome({}) is None,                       "게이트가 없으면 None"
+    assert C.gate_outcome(mk("g")) == "fail",                "판정 미기재는 보수적으로 fail"
+    for out in ("not_assessed", "pass", "fail", "inapplicable"):
+        assert C.gate_outcome(mk("g", out)) == out,          f"{out} 이 그대로 안 나온다"
+    assert C.gate_outcome(mk("g", "nonsense")) == "fail",    "모르는 값은 fail 로 떨어져야"
+    # current_assessment.result 경로도 같은 답을 줘야 한다 (registry 두 표기 병존)
+    assert C.gate_outcome({"blocking_gate": "g", "gate_detail": {
+        "lineage": {"current_assessment": {"result": "not_assessed"}}}}) == "not_assessed"
+
+    # 정본 차단: 실패와 미평가는 막고, 통과·비해당은 안 막는다
+    assert C.gate_blocks_canonical(mk("g", "fail")) is True
+    assert C.gate_blocks_canonical(mk("g", "not_assessed")) is True,  "미평가는 통과가 아니다"
+    assert C.gate_blocks_canonical(mk("g", "pass")) is False
+    assert C.gate_blocks_canonical(mk("g", "inapplicable")) is False
+    assert C.gate_blocks_canonical({}) is False
+
+    # 문구: 미평가를 '미통과' 라고 쓰면 안 된다 (F2 재발 방지의 핵심)
+    na = C.gate_prefix(mk("framework_beta_800_1000K", "not_assessed"))
+    assert "미평가" in na and "미통과" not in na, f"미평가 문구가 틀렸다: {na}"
+    assert "미통과" in C.gate_prefix(mk("g", "fail"))
+    assert C.gate_prefix({}) == ""
+
+
+def test_b2o3_framework_gate_is_not_assessed():
+    """b2o3 두 Ea 항목의 골격 게이트는 미평가다 — 실패로 되돌아가면 실패한다.
+
+    근거: high-T raw trajectory 6런(800/1000 K x s2/s3/s4)이 --save_traj 누락으로
+    미보존이라 평가 자체가 성립하지 않는다 (F9). 이 테스트는 그 상태가 조용히
+    'fail' 로 바뀌는 회귀를 잡는다.
+    """
+    reg = C.load_registry()
+    hits = [e for e in reg["entries"]
+            if e.get("system") == "b2o3"
+            and e.get("blocking_gate") == "framework_beta_800_1000K"]
+    assert len(hits) == 2, f"b2o3 골격 게이트 항목이 2개가 아니다 ({len(hits)})"
+    for e in hits:
+        assert C.gate_outcome(e) == "not_assessed", \
+            f"{e['metric']}/b2o3 게이트가 {C.gate_outcome(e)} 다 — 미평가여야 한다"
+        assert e.get("status") != "canonical", "미평가인데 canonical 이다"
     # 순위·레이더 집합에서 자동으로 빠져야 한다
     assert "lpsocl" not in C.canonical_map(reg, "MD_Ea_eV", group="md-ea-multiseed-v1")
 
@@ -200,8 +254,14 @@ def test_dashboard_ea_card_is_protocol_honest():
     txt = " ".join(cards[0][k] for k in ("t", "v", "n"))
     assert "0.224" not in cards[0]["v"], "단일시드 0.224 가 다시 카드 값으로 올라왔다"
     assert "멀티시드" in txt
-    # 오차막대가 겹치는 modelc/b2o3 를 두고 '최저'를 주장하면 안 된다
-    assert "구분 안 됨" in cards[0]["v"], "겹치는 오차막대인데 순위를 주장한다"
+    # 순위를 주장하면 안 되는 두 경우 — (a) 오차막대가 겹친다 (b) 비교 상대가 비교군에서
+    # 빠졌다. (b) 는 2026-08-20 codex 동결감사 — b2o3 를 게이트 미평가로 내리자 묶음에
+    # modelc 만 남았고 카드가 그 하나를 "최저" 라고 쓰면서 바로 아래에서는 "구분 안 된다"
+    # 고 말했다. 화면 한 장 안의 자기모순이다.
+    v = cards[0]["v"]
+    assert ("구분 안 됨" in v) or ("순위 보류" in v), \
+        f"순위를 주장하면 안 되는 상태인데 주장한다: {v}"
+    assert "최저" not in v or "순위 보류" in v, f"단독으로 남은 값을 '최저' 라고 쓴다: {v}"
 
 
 def test_gap_card_excludes_legacy_group():

@@ -188,6 +188,55 @@ def registry(path=None, root=None) -> dict:
     return _CACHE["reg"]
 
 
+#: 게이트 판정 어휘 — **단일 출처**. 화면·API·validator·테스트가 전부 여기를 읽는다.
+#: ⛔ 2026-08-20 (codex 동결감사) — 이전에는 `blocking_gate` 가 있으면 무조건 "미통과"
+#:   였고, 그 사본이 data.py·compare.html·canonical.py·test_webapp.py 네 곳에 흩어져
+#:   있었다. b2o3 골격 게이트는 **미평가(not_assessed)** 이지 실패가 아닌데 네 곳 모두
+#:   실패로 읽었다 — F2(화면 ≠ db)의 재발이다. 어휘와 판정을 한 함수로 모은다.
+GATE_OUTCOMES = ("not_assessed", "pass", "fail", "inapplicable")
+
+_GATE_LABEL = {
+    "not_assessed": "게이트 미평가(실패 판정이 아니다)",
+    "pass":         "게이트 통과",
+    "fail":         "게이트 미통과",
+    "inapplicable": "게이트 비해당",
+    None:           "게이트 미통과",      # 결과 미기재 = 옛 항목. 보수적으로 실패로 읽는다
+}
+
+
+def gate_outcome(e: dict):
+    """canonical entry 의 게이트 판정. 게이트가 없으면 None.
+
+    반환: "not_assessed" | "pass" | "fail" | "inapplicable" | None(게이트 없음)
+
+    ⛔ 못 하는 것: 게이트를 **평가하지 않는다**. entry 에 기록된 판정을 읽을 뿐이다.
+       판정 자체는 산출 도구(msd_diffusive_check --framework 등) 소관이다.
+    """
+    if not e.get("blocking_gate"):
+        return None
+    lin = (e.get("gate_detail") or {}).get("lineage") or {}
+    out = lin.get("gate_outcome") or (lin.get("current_assessment") or {}).get("result")
+    if out in GATE_OUTCOMES:
+        return out
+    return "fail"       # 게이트는 걸렸는데 판정 기록이 없다 → 보수적으로 실패
+
+
+def gate_blocks_canonical(e: dict) -> bool:
+    """이 게이트 상태에서 status=canonical 이 허용되는가(의 반대).
+
+    미평가도 **통과가 아니므로** 정본을 막는다 — 다만 사유 문구가 다르다.
+    """
+    return gate_outcome(e) in ("fail", "not_assessed")
+
+
+def gate_prefix(e: dict) -> str:
+    """툴팁·배지 앞에 붙는 게이트 문구. 게이트가 없으면 빈 문자열."""
+    o = gate_outcome(e)
+    if o is None:
+        return ""
+    return f"{_GATE_LABEL.get(o, _GATE_LABEL[None])}: {e['blocking_gate']}. "
+
+
 def validate(reg: dict, root=None) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []
@@ -209,9 +258,11 @@ def validate(reg: dict, root=None) -> list:
         #   β=0.615 가 Fickian 게이트(0.8–1.2)를 못 넘어 kb/open_items.md 가 인용 보류로
         #   묶어 둔 값이었다. 첫 판에서 이 대조를 빠뜨려 canonical 로 올렸고 Codex 가 잡았다.
         #   → 수치 대조와 **별개 축**으로 검사한다.
-        if e.get("status") == "canonical" and e.get("blocking_gate"):
-            bad.append((e, f"게이트 미통과({e['blocking_gate']})인데 status=canonical 이다 "
-                           f"— 값이 맞아도 정본이 될 수 없다"))
+        if e.get("status") == "canonical" and gate_blocks_canonical(e):
+            _o = gate_outcome(e)
+            bad.append((e, f"{_GATE_LABEL.get(_o, _GATE_LABEL[None])}({e['blocking_gate']})인데 "
+                           f"status=canonical 이다 — 값이 맞아도 정본이 될 수 없다"
+                           + (" (미평가는 통과가 아니다)" if _o == "not_assessed" else "")))
         sp, sk = e.get("source_path"), e.get("source_key")
         if not sp or not sk:
             # 출처가 없어도 되는 상태 = 애초에 "검증되지 않았다"고 화면에 밝히는 상태들.

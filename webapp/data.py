@@ -783,26 +783,12 @@ _STATUS_BADGE = {
 }
 
 
-#: 게이트 문구는 **판정 결과별로 다르다.** blocking_gate 의 존재만 보고 "미통과" 라고
-#: 쓰면 미평가(not_assessed)를 실패로 오역한다 — b2o3 골격 게이트가 정확히 그 상태다
-#: (게이트 입력인 high-T 궤적 6개가 --save_traj 미전달로 미보존이라 평가 자체가 성립 안 함).
-#: 화면이 db 와 다른 말을 하는 F2 유형의 재발이라 한 함수로 모은다 (사본 금지).
-#: codex 3차 리뷰 2026-08-20.
-_GATE_OUTCOME_LABEL = {
-    "not_assessed": "게이트 미평가(실패 판정이 아니다)",
-    "fail":         "게이트 미통과",
-    "pass":         "게이트 통과",
-    "inapplicable": "게이트 비해당",
-}
-
-
+#: 게이트 문구는 canonical.gate_prefix() 가 **단일 출처**다 (2026-08-20 codex 동결감사).
+#:   이전에는 이 파일에 사본이 있었고 compare.html·canonical.py·test_webapp.py 가 각자
+#:   옛 의미("blocking_gate 있으면 미통과")를 들고 있었다. 어휘를 한 곳으로 모은다.
 def _gate_prefix(e: dict) -> str:
-    """canonical entry 의 게이트 상태를 사람 문구로. 없으면 빈 문자열."""
-    g = e.get("blocking_gate")
-    if not g:
-        return ""
-    outcome = ((e.get("gate_detail") or {}).get("lineage") or {}).get("gate_outcome")
-    return f"{_GATE_OUTCOME_LABEL.get(outcome, '게이트 미통과')}: {g}. "
+    import canonical as _C
+    return _C.gate_prefix(e)
 
 
 def canonical_status_for(cid: str) -> dict:
@@ -3365,8 +3351,25 @@ def dashboard_highlights() -> list:
         u0 = ent.get(lo[1], {}).get("uncertainty") or 0.0
         tied = [cid for v, cid in rows[1:]
                 if abs(v - lo[0]) <= (u0 + (ent.get(cid, {}).get("uncertainty") or 0.0))]
-        head = ("구분 안 됨: " + " ≈ ".join(_fmt(c) for c in [lo[1]] + tied)
-                if tied else f"{_fmt(lo[1])} 최저")
+        # ⛔ 2026-08-20 (codex 동결감사) — **상대가 비교군에서 빠지면 '최저' 는 무의미하다.**
+        #   b2o3 를 게이트 미평가로 내리자 이 묶음에 modelc 만 남았고, 카드는 그 하나를
+        #   "최저" 라고 쓰면서 바로 아래 설명에서는 "둘은 구분 안 된다" 고 말했다.
+        #   화면 한 장 안의 자기모순이다. 보류된 멤버를 세어 순위 주장을 아예 막는다.
+        import canonical as _Cg
+        _GRP = "md-ea-multiseed-v1"
+        held = sorted(cid for (k_, cid), e_ in CANONICAL_ENTRY.items()
+                      if k_ == "MD_Ea_eV" and e_.get("comparison_group") == _GRP
+                      and cid not in em)
+        _held_txt = " · ".join(
+            f"{L.get(c, c)}({_Cg.gate_outcome(CANONICAL_ENTRY.get(('MD_Ea_eV', c), {})) or '보류'})"
+            for c in held)
+        if held:
+            head = ("순위 보류 — " + " · ".join(_fmt(c) for _, c in rows)
+                    + f"  [비교 상대 {_held_txt} 가 비교군에서 빠졌다]")
+        elif tied:
+            head = "구분 안 됨: " + " ≈ ".join(_fmt(c) for c in [lo[1]] + tied)
+        else:
+            head = f"{_fmt(lo[1])} 최저"
         hi.append({
             "d": "2026-08-07", "t": "이온 전도 Ea (UMA) — **멀티시드 묶음 안에서만 비교**",
             "v": head,
@@ -3375,7 +3378,12 @@ def dashboard_highlights() -> list:
                    "예전엔 단일 궤적 앵커(modelc 0.224)와 4-seed 값(lpsocl 0.287)을 한 줄에 세우고 "
                    "'멀티시드 판정'이라 적었다(2026-08-07 수정). "
                    "modelc vs b2o3 는 db 가 직접 **Δ=+0.002±0.047** 이라 적고 있으니 "
-                   "둘 사이 순위를 주장하면 안 된다. comp1 은 멀티시드 실행이 없어 **빠져 있다**. "
+                   "둘 사이 순위를 주장하면 안 된다 — ⚠ 그 ±0.047 은 신뢰구간도 표준오차도 아니라 "
+                   "**3×3×3 시드조합 분포의 표준편차**다. comp1 은 멀티시드 실행이 없어 **빠져 있다**. "
+                   "★ **b2o3 도 2026-08-20 에 빠졌다** — 골격(비-Li) 게이트가 **미평가**다"
+                   "(실패가 아니다). 게이트 입력인 high-T 궤적 6런(800·1000 K × 3시드)이 "
+                   "--save_traj 누락으로 미보존이라 평가 자체가 성립하지 않는다. 재실행 없이는 "
+                   "안 닫힌다. 그래서 이 카드는 남은 하나를 '최저' 라고 쓰지 않고 **순위 보류**다. "
                    "★ **LPSOCl(0.287)도 빠졌다** — 600 K 의 β=0.615 가 Fickian 게이트(0.8–1.2)를 "
                    "못 넘어 kb/open_items.md 가 인용 보류로 묶어 둔 값인데, 레지스트리 첫 판에서 "
                    "그 대조를 빠뜨려 정본으로 올렸던 걸 Codex 재검증이 잡았다(2026-08-07). "

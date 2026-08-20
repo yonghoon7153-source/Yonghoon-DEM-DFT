@@ -51,7 +51,9 @@ function statusBadge(m){
   let t=m.note||'';
   if(m.status==='unreviewed_drift')t='원자료가 바뀌었는데 아직 검토 전이다. 순위·차트·레이더에서 제외됨.';
   if(m.status==='source_error')t='원자료를 못 읽었다 — 이 값은 stale 일 수 있다. 자동판정 제외.';
-  if(m.blocking_gate)t=('게이트 미통과: '+m.blocking_gate+'. ')+t;
+  // 게이트 문구는 **서버가 만든 것만** 쓴다 (canonical.gate_prefix). 여기서 다시
+  // 조립하면 미평가(not_assessed)를 실패로 오역한다 — 2026-08-20 codex 동결감사.
+  if(m.gate_text)t=m.gate_text+t;
   return '<span class="badge" style="color:'+s[1]+';background:'+s[2]+
          '" title="'+_cmpEsc(t)+'">'+s[0]+'</span>';
 }

@@ -260,12 +260,20 @@ def compare():
     prov = {f"{k}|{c}": r for (k, c), r in D.CANONICAL_PROVISIONAL.items()}
     # ★ 2026-08-07 (리뷰 P1): 부제는 "같은 방법끼리만 유효"인데 구현은 값이 있으면 그냥 그렸다.
     #   비교 묶음(comparison_group)과 상태를 같이 내려보내 **차트·레이더가 강제**하게 한다.
+    # ⛔ 2026-08-20 (codex 동결감사) — 게이트 **판정**을 같이 내려보낸다. 이전에는
+    #   blocking_gate 자체가 안 실려서 화면에서 상태가 사라졌고, 템플릿 JS 에는
+    #   "blocking_gate 있으면 미통과" 라는 옛 의미가 남아 있어 필드를 다시 연결하는
+    #   순간 회귀할 상태였다. 문구는 서버(canonical.gate_prefix)가 만든다 — 단일 출처.
+    import canonical as _C
     meta = {f"{k}|{c}": {"group": e.get("comparison_group"),
                          "status": e.get("status"),
                          "method": e.get("method_id"),
                          "n_seed": e.get("n_seed"),
                          "u": e.get("uncertainty"),
                          "src": e.get("source_path"),
+                         "gate": e.get("blocking_gate"),
+                         "gate_outcome": _C.gate_outcome(e),
+                         "gate_text": _C.gate_prefix(e),
                          "note": e.get("note")}
             for (k, c), e in D.CANONICAL_ENTRY.items() if k and c}
     return render_template("compare.html", bvse=bvse, active="compare", b=b,
