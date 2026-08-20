@@ -44,6 +44,25 @@ def test_raw_csv_drops_the_tick_columns_it_replaced(synthetic_wrd):
     assert "voltage" in header and "i_range" in header
 
 
+def test_raw_csv_labels_the_capacity_and_energy_units(synthetic_wrd):
+    header = _rows(raw_csv_string(synthetic_wrd))[0]
+    assert "charge_q (Ah)" in header
+    assert "discharge_q (Ah)" in header
+    assert "charge_e (Wh)" in header
+
+
+def test_raw_csv_labels_a_coulomb_file_differently(synthetic_bytes):
+    """UnitCoulomb decides the unit per file; identical headers hide a x3600."""
+    from wrdkit import read_wrd_bytes
+
+    coulomb = read_wrd_bytes(synthetic_bytes, source_name="coulomb.wrd")
+    coulomb.metadata.unit_coulomb = True
+    header = _rows(raw_csv_string(coulomb))[0]
+    assert "charge_q (C)" in header
+    assert "charge_e (J)" in header
+    assert "charge_q (Ah)" not in header
+
+
 def test_cycles_csv_labels_the_basis(synthetic_wrd, cell):
     rows = _rows(cycles_csv_string(summarize_cycles(synthetic_wrd), cell,
                                    basis=Basis.SPECIFIC))

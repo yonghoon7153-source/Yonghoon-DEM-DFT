@@ -25,7 +25,7 @@ from typing import Any
 
 import numpy as np
 
-from .nrbf import NrbfObject, NrbfStream, read_stream, resolve
+from .nrbf import NrbfError, NrbfObject, NrbfStream, read_stream, resolve
 from .schedule import TICKS_PER_SECOND, Schedule, read_schedule
 
 __all__ = ["WrdError", "WrdColumn", "WrdMetadata", "WrdFile", "read_wrd", "CellStatus"]
@@ -214,7 +214,7 @@ def _member(stream: NrbfStream, obj: NrbfObject | None, name: str) -> Any:
     C# auto-properties serialize as ``<Name>k__BackingField``; plain fields
     (e.g. on ``System.UnitySerializationHolder``) keep their own name.
     """
-    if obj is None:
+    if not isinstance(obj, NrbfObject):
         return None
     members = obj.members
     key = f"<{name}>k__BackingField"
@@ -224,7 +224,7 @@ def _member(stream: NrbfStream, obj: NrbfObject | None, name: str) -> Any:
 
 
 def _list_items(stream: NrbfStream, obj: NrbfObject | None) -> list[Any]:
-    if obj is None:
+    if not isinstance(obj, NrbfObject):
         return []
     items = resolve(stream, obj.members.get("_items")) or []
     size = obj.members.get("_size") or 0
@@ -299,7 +299,14 @@ def _scan_rows(buf: bytes, start: int, layout: _Layout
         lengths: list[int] = []
         ok = True
         for str_off in string_offsets:
-            length = buf[pos + str_off + (size - layout.fixed_size)]
+            # With more than one string column the earlier strings push this
+            # prefix past ``fixed_size``, so the loop guard above does not
+            # cover it; a short tail must stop the scan, not raise IndexError.
+            prefix = pos + str_off + (size - layout.fixed_size)
+            if prefix >= total:
+                ok = False
+                break
+            length = buf[prefix]
             if length & 0x80:
                 # A multi-byte 7-bit prefix means >=128 chars: far longer than
                 # any current-range label, so this is not a data row.
@@ -356,6 +363,22 @@ def _run_dtype(layout: _Layout, shape: tuple[int, ...]) -> tuple[np.dtype, dict[
     return record, string_starts
 
 
+def _decode_utf8(values: np.ndarray) -> list[str]:
+    """Decode one fixed-width bytes column of a run.
+
+    numpy's ``S`` -> ``U`` cast is ASCII-only, so a perfectly legal label such
+    as ``100µA`` would crash the whole parse; it also drops trailing ``NUL``
+    bytes, which here are content rather than padding because the field width
+    comes from the row's own 7-bit length prefix.
+    """
+    width = values.dtype.itemsize
+    raw = values.tobytes()
+    try:
+        return [raw[i:i + width].decode("utf-8") for i in range(0, len(raw), width)]
+    except UnicodeDecodeError as exc:
+        raise WrdError(f"string column is not valid UTF-8: {exc}") from exc
+
+
 def _read_block(buf: bytes, offsets: list[int], shapes: list[tuple[int, ...]],
                 layout: _Layout, columns: list[WrdColumn]) -> dict[str, np.ndarray]:
     """Materialise the scanned rows into one numpy array per column."""
@@ -385,7 +408,7 @@ def _read_block(buf: bytes, offsets: list[int], shapes: list[tuple[int, ...]],
         for name in record.names:
             values = block[name]
             if values.dtype.kind == "S":
-                out[name][start:end] = values.astype(str)
+                out[name][start:end] = _decode_utf8(values)
             else:
                 out[name][start:end] = values
         # A zero-length string column has no field in the record dtype.
@@ -413,22 +436,37 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
     if len(buf) < 32 or buf[0] != 0:
         raise WrdError("not a .wrd file: missing NRBF serialization header")
 
-    file_stream = read_stream(buf, 0)
+    # NrbfError is a sibling of WrdError, not a subclass, so an unwrapped one
+    # escapes every caller that guards the library boundary on "unreadable
+    # .wrd" -- a truncated upload became a 500 instead of a 422.
+    try:
+        file_stream = read_stream(buf, 0)
+    except NrbfError as exc:
+        raise WrdError(f"not a readable .wrd: {exc}") from exc
     file_header = file_stream.root
-    if file_header is None or "DataFileHeader" not in file_header.class_name:
+    if not isinstance(file_header, NrbfObject):
         raise WrdError(
-            f"unexpected root object {file_header and file_header.class_name!r}; "
+            f"unexpected root object of type {type(file_header).__name__}; "
+            "expected WbcsFile.Data.DataFileHeader"
+        )
+    if "DataFileHeader" not in file_header.class_name:
+        raise WrdError(
+            f"unexpected root object {file_header.class_name!r}; "
             "expected WbcsFile.Data.DataFileHeader"
         )
 
-    data_stream = read_stream(buf, file_stream.end_offset)
+    try:
+        data_stream = read_stream(buf, file_stream.end_offset)
+    except NrbfError as exc:
+        raise WrdError(f"not a readable .wrd: {exc}") from exc
     data_header = data_stream.root
-    if data_header is None or "DataHeader" not in data_header.class_name:
+    if not isinstance(data_header, NrbfObject) or "DataHeader" not in data_header.class_name:
         raise WrdError("missing WbcsFile.Data.DataHeader stream")
 
     report = _member(file_stream, file_header, "StartReport")
     format_obj = _member(file_stream, file_header, "Format")
-    data_format = format_obj.members.get("value__", 0) if format_obj else 0
+    data_format = (format_obj.members.get("value__", 0)
+                   if isinstance(format_obj, NrbfObject) else 0)
 
     start_dt = _member(file_stream, file_header, "StartTime")
     declared_rows = data_header.members.get("<DataCount>k__BackingField")

@@ -34,9 +34,11 @@ export function ReportCard({ report }: { report: Report }) {
           </span>
         ) : null}
         <span className="spacer" />
-        <details style={{ maxWidth: '100%' }}>
-          <summary>판정 근거 {report.evidence.length}건</summary>
-        </details>
+        {/* A count, not a control: the evidence list itself expands from the
+            <details> at the bottom of the card.  This used to be a second
+            <details> with the same label and an empty body, so it looked
+            clickable and opened onto nothing. */}
+        <span className="badge plain">판정 근거 {report.evidence.length}건</span>
       </div>
 
       {!report.reference_available && report.retention_note ? (

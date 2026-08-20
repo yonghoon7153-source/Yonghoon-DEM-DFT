@@ -14,6 +14,7 @@ from pathlib import Path
 from . import __version__
 from .cycles import extract_profile, summarize_cycles
 from .export import write_cycles_csv, write_profiles_csv, write_raw_csv
+from .health import DEFAULT_REFERENCE_CYCLE
 from .normalize import BASES, Basis, CellSpec
 from .wrd import WrdError, read_wrd
 
@@ -80,14 +81,28 @@ def _print_info(path: Path) -> int:
     print(f"\ncycles      {len(cycles)} in file ({len(complete)} complete)")
     if complete:
         first, last = complete[0], complete[-1]
-        print(f"  cycle {first.cycle_number}: {first.discharge_capacity_mah:.4f} mAh "
-              f"discharge, CE {first.coulombic_efficiency:.2f}%")
-        print(f"  cycle {last.cycle_number}: {last.discharge_capacity_mah:.4f} mAh "
-              f"discharge, CE {last.coulombic_efficiency:.2f}%")
-        if first.discharge_capacity_mah:
-            keep = 100 * last.discharge_capacity_mah / first.discharge_capacity_mah
-            print(f"  retention {keep:.1f}% over {len(complete)} cycles")
+        for cycle in (first, last):
+            print(f"  cycle {cycle.cycle_number}: {cycle.discharge_capacity_mah:.4f} mAh "
+                  f"discharge, CE {_ce(cycle.coulombic_efficiency)}")
+        # ADR 0004: retention is anchored at cycle 3, because cycles 1-2 are
+        # formation and lose several percent by design.  Anchoring at the first
+        # complete cycle would report that formation loss as degradation and
+        # disagree with what the web app shows for the same file.
+        reference = next((c for c in complete
+                          if c.cycle_number >= DEFAULT_REFERENCE_CYCLE), None)
+        if reference is not None and reference.discharge_capacity_mah:
+            keep = 100 * last.discharge_capacity_mah / reference.discharge_capacity_mah
+            print(f"  retention {keep:.1f}% vs cycle {reference.cycle_number}"
+                  f" ({len(complete)} complete cycles)")
+        else:
+            print(f"  retention n/a: no complete cycle {DEFAULT_REFERENCE_CYCLE}"
+                  " or later in this file")
     return 0
+
+
+def _ce(value: float | None) -> str:
+    """Coulombic efficiency is ``None`` when a cycle charged nothing measurable."""
+    return "n/a" if value is None else f"{value:.2f}%"
 
 
 def _convert(args) -> int:
@@ -150,7 +165,16 @@ def _select_cycles(cycles, spec: str | None):
             wanted.update(range(int(start), int(stop) + 1))
         else:
             wanted.add(int(part))
-    return [c for c in cycles if c.cycle_number in wanted]
+    matched = [c for c in cycles if c.cycle_number in wanted]
+    # A truncated cycle exports a curve that looks like a sudden capacity drop
+    # and is indistinguishable from a finished one in the CSV, so an explicit
+    # selection drops it too -- the API export does the same.
+    skipped = [c.cycle_number for c in matched if not c.complete]
+    if skipped:
+        numbers = ", ".join(str(n) for n in skipped)
+        print(f"wrdkit: cycle {numbers} is incomplete (truncated) and was skipped",
+              file=sys.stderr)
+    return [c for c in matched if c.complete]
 
 
 def _cycles(args) -> int:

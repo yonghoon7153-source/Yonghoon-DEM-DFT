@@ -99,6 +99,11 @@ export function Dashboard() {
             aria-label="그룹 필터"
           >
             <option value="">모든 그룹</option>
+            {groups.error ? (
+              <option value="" disabled>
+                그룹을 불러오지 못했습니다
+              </option>
+            ) : null}
             {groups.data?.map((group) => (
               <option key={group.id} value={group.id}>
                 {group.name} ({group.sample_count})
@@ -242,7 +247,21 @@ function DashboardTable({ rows, basis }: { rows: DashboardRow[]; basis: Basis })
                 {row.reported_cycle ?? '—'}
                 <span className="faint"> / {row.cycles_complete}</span>
               </td>
-              <td style={{ fontWeight: 600 }}>{num(row.discharge_capacity)}</td>
+              <td style={{ fontWeight: 600 }}>
+                {num(row.discharge_capacity)}
+                {/* The server normalises row by row and falls back to raw mAh
+                    when a cell has no mass or area, so one column header cannot
+                    speak for every row. */}
+                {row.basis && row.basis !== basis ? (
+                  <span
+                    className="badge warn"
+                    style={{ marginLeft: 4 }}
+                    title="질량·면적이 없어 원값으로 표시합니다"
+                  >
+                    {basisUnit(row.basis)}
+                  </span>
+                ) : null}
+              </td>
               <td className="bar-cell">
                 {pct(row.retention_pct, 1)}
                 {row.retention_pct !== null ? (

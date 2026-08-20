@@ -170,9 +170,13 @@ class _Reader:
 
     def primitive(self, kind: int) -> Any:
         if kind == 3:  # Char, stored as 1-4 UTF-8 bytes
+            if self.pos >= len(self.buf):
+                raise NrbfError(f"truncated stream at offset {self.pos}")
             first = self.buf[self.pos]
             width = 1 if first < 0x80 else 2 if first < 0xE0 else 3 if first < 0xF0 else 4
             raw = self.buf[self.pos:self.pos + width]
+            if len(raw) != width:
+                raise NrbfError(f"truncated stream at offset {self.pos}")
             self.pos += width
             return raw.decode("utf-8", "replace")
         if kind == 5:  # Decimal, serialized as its invariant string form
@@ -192,6 +196,10 @@ class _Reader:
         if char is None:
             return [self.primitive(kind) for _ in range(count)]
         size = struct.calcsize("<" + char)
+        # unpack_from raises struct.error, which is not a ValueError, so a
+        # truncated array would escape every caller that guards on NrbfError.
+        if count < 0 or len(self.buf) - self.pos < size * count:
+            raise NrbfError(f"truncated stream at offset {self.pos}")
         values = list(struct.unpack_from(f"<{count}{char}", self.buf, self.pos))
         self.pos += size * count
         return values
@@ -227,7 +235,14 @@ class _Reader:
             if member_type is not None and member_type[0] == "primitive":
                 obj.members[name] = self.primitive(member_type[1])
             else:
-                obj.members[name] = self.record()
+                # BinaryFormatter emits a BinaryLibrary lazily, immediately
+                # before the first record that names it, so one can legally sit
+                # in a member value position (MS-NRBF 2.7 memberReference).
+                # Storing that sentinel as the value desyncs every later offset.
+                value = self.record()
+                while value is _Skip:
+                    value = self.record()
+                obj.members[name] = value
 
     def _read_class(self, record_type: int) -> NrbfObject:
         object_id = self.i32()
@@ -252,6 +267,10 @@ class _Reader:
         """Read array items, expanding the run-length null records."""
         while len(out) < total:
             value = self.record()
+            if value is _Skip:
+                # A lazily emitted BinaryLibrary is not an array item; counting
+                # it as one silently drops the array's real last element.
+                continue
             if isinstance(value, _NullRun):
                 out.extend([None] * value.count)
             else:

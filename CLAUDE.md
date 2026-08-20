@@ -87,8 +87,9 @@ pull 이 안 된다" 가 없다. `make sync` 없이 작업을 시작하지 않�
 ### 커밋
 
 - **작게, 자주.** 한 커밋 = 한 가지 변경. 큰 커밋은 rebase 충돌을 크게 만든다.
-- prefix 는 log action 과 동일: `feat:` `fix:` `docs:` `test:` `refactor:`
-  `ingest:` `update:` `create:` `lint:` `verify:`
+- 커밋 prefix: `feat:` `fix:` `docs:` `test:` `refactor:` `ingest:` `update:`
+  `create:` `lint:` `verify:` — `docs/log.md` 의 action 어휘는 이것과 다르며
+  `docs/SCHEMA.md` 를 따른다 (`create` `update` `ingest` `verify` `lint` `fix` `start`).
 - 커밋 메시지에 **모델 이름·세션 링크를 넣지 않는다**.
 - 남의 커밋 위에 이미 push 된 히스토리는 **절대 rewrite 하지 않는다**.
   `git rebase -i`, `git commit --amend`, `git push --force` 는 이미 push 한
@@ -162,7 +163,7 @@ make check        # test + lint (커밋 전 필수)
 make wiki-lint    # docs/ 위키 정합성
 ```
 
-`bml` 은 `tools/bml` 이고 `make setup` 이 PATH 에 등록한다. pull 을 먼저 하는
+`bml` 은 `tools/bml` 이고 `make install-bml` (= `./tools/bml install`) 이 PATH 에 등록한다. pull 을 먼저 하는
 순서를 강제하려고 만든 것이므로, 실행할 일이 있으면 `make dev` 대신 `bml` 을
 쓴다. 설명은 `docs/guides/bml-command.md`.
 

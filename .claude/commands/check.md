@@ -7,6 +7,7 @@ allowed-tools: Bash(make:*), Bash(python3:*), Bash(npx:*), Bash(npm:*)
 
 ```bash
 python3 -m pytest                       # wrdkit + api
+python3 -m ruff check packages apps/api # CI 와 `bml check` 가 같은 검사를 돌린다
 cd apps/web && npm run typecheck && npx vitest run && npm run lint
 python3 tools/wiki_lint.py              # docs 정합성 + CLAUDE/AGENTS parity
 ```

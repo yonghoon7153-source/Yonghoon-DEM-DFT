@@ -1,6 +1,6 @@
 /** Everything about one cell: state, profile, cycle life, files, spec. */
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { BasisSelect } from '../components/BasisSelect'
@@ -42,6 +42,8 @@ export function SampleDetail() {
   const [lifeMetric, setLifeMetric] = useState<LifeMetric>('discharge')
   const [kneeMethod, setKneeMethod] = useState('segmented')
   const [override, setOverride] = useState<Sample | null>(null)
+  const [refDraft, setRefDraft] = useState('')
+  const [settingsError, setSettingsError] = useState<string | null>(null)
 
   const sampleState = useAsync(() => api.getSample(sampleId), [sampleId])
   const sample = override ?? sampleState.data
@@ -115,6 +117,14 @@ export function SampleDetail() {
     ]
   }, [cycles, lifeMetric])
 
+  // The reference cycle is the denominator of retention, initial CE and the
+  // knee search, so it is typed into local state and committed once — a PATCH
+  // per keystroke commits every half-typed number ("2" on the way to "25").
+  const referenceCycle = sample?.reference_cycle
+  useEffect(() => {
+    if (referenceCycle !== undefined) setRefDraft(String(referenceCycle))
+  }, [referenceCycle])
+
   const kneeMarkers: PlotMarker[] = useMemo(() => {
     const result = reportState.data?.knee?.results.find((r) => r.method === kneeMethod)
     if (!result?.detected || result.cycle === null) return []
@@ -160,6 +170,33 @@ export function SampleDetail() {
       ? `${sample.cutoff_lower_v}–${sample.cutoff_upper_v} V`
       : null,
   ].filter(Boolean)
+
+  const commitReference = async () => {
+    const value = Number(refDraft)
+    if (!Number.isFinite(value) || value < 1) {
+      setSettingsError('기준 사이클은 1 이상이어야 합니다.')
+      setRefDraft(String(sample.reference_cycle))
+      return
+    }
+    if (value === sample.reference_cycle) return
+    try {
+      setSettingsError(null)
+      setOverride(await api.updateSample(sample.id, { reference_cycle: value }))
+    } catch (cause) {
+      setSettingsError(cause instanceof Error ? cause.message : String(cause))
+      setRefDraft(String(sample.reference_cycle))
+    }
+  }
+
+  // Deleting, reparsing or renumbering a run changes the cycles without
+  // touching sample.updated_at, which is what everything else refetches on.
+  const runChanged = () => {
+    runsState.reload()
+    cycleState.reload()
+    reportState.reload()
+    profileState.reload()
+    setChosen(null) // a deleted run's cycles must not stay selected
+  }
 
   return (
     <main className="page">
@@ -258,6 +295,13 @@ export function SampleDetail() {
                 </div>
               ) : (
                 <>
+                  {/* useAsync keeps the previous curves on a failure; without
+                      this the stale plot is the only thing on screen. */}
+                  {profileState.error ? (
+                    <div style={{ padding: '12px 16px 0' }}>
+                      <Alert kind="error">{profileState.error}</Alert>
+                    </div>
+                  ) : null}
                   <Plot
                     series={profileSeries}
                     xLabel={basisAxis(profileState.data?.basis ?? basis)}
@@ -357,29 +401,34 @@ export function SampleDetail() {
 
             <Card title="분석 설정" padSmall>
               <div className="col" style={{ gap: 9 }}>
-                <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준">
+                {settingsError ? <Alert kind="error">{settingsError}</Alert> : null}
+                <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준 · Enter 로 적용">
                   <input
                     type="number"
                     min={1}
-                    value={sample.reference_cycle}
-                    onChange={async (event) => {
-                      const value = Number(event.target.value)
-                      if (value >= 1) {
-                        setOverride(await api.updateSample(sample.id, { reference_cycle: value }))
-                      }
+                    value={refDraft}
+                    onChange={(event) => setRefDraft(event.target.value)}
+                    onBlur={() => void commitReference()}
+                    onKeyDown={(event) => {
+                      if (event.key === 'Enter') event.currentTarget.blur()
                     }}
                   />
                 </Field>
                 <Field label="상태 판정" hint="자동은 파일 근거로 판정">
                   <select
                     value={sample.declared_state}
-                    onChange={async (event) =>
-                      setOverride(
-                        await api.updateSample(sample.id, {
-                          declared_state: event.target.value,
-                        }),
-                      )
-                    }
+                    onChange={async (event) => {
+                      try {
+                        setSettingsError(null)
+                        setOverride(
+                          await api.updateSample(sample.id, {
+                            declared_state: event.target.value,
+                          }),
+                        )
+                      } catch (cause) {
+                        setSettingsError(cause instanceof Error ? cause.message : String(cause))
+                      }
+                    }}
                   >
                     <option value="auto">자동</option>
                     <option value="running">구동 중으로 고정</option>
@@ -399,11 +448,18 @@ export function SampleDetail() {
               </Card>
             ) : null}
 
-            <Card title={`파일 · ${runsState.data?.length ?? 0}개`} padSmall>
-              {runsState.data?.length ? (
+            <Card
+              title={`파일 · ${runsState.error ? '—' : `${runsState.data?.length ?? 0}개`}`}
+              padSmall
+            >
+              {runsState.error ? (
+                <Alert kind="error">{runsState.error}</Alert>
+              ) : runsState.loading && !runsState.data ? (
+                <Spinner />
+              ) : runsState.data?.length ? (
                 <div className="col" style={{ gap: 10 }}>
                   {runsState.data.map((run) => (
-                    <RunRow key={run.id} run={run} onChanged={() => runsState.reload()} />
+                    <RunRow key={run.id} run={run} onChanged={runChanged} />
                   ))}
                 </div>
               ) : (
@@ -421,6 +477,7 @@ export function SampleDetail() {
 
 function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const steps = run.schedule?.steps ?? []
   const schedule = run.schedule ?? {}
 
@@ -491,8 +548,11 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
           onClick={async () => {
             setBusy(true)
             try {
+              setError(null)
               await api.reparseRun(run.id)
               onChanged()
+            } catch (cause) {
+              setError(cause instanceof Error ? cause.message : String(cause))
             } finally {
               setBusy(false)
             }
@@ -508,8 +568,11 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
             if (!window.confirm(`${run.original_name} 을(를) 목록에서 지울까요?`)) return
             setBusy(true)
             try {
+              setError(null)
               await api.deleteRun(run.id)
               onChanged()
+            } catch (cause) {
+              setError(cause instanceof Error ? cause.message : String(cause))
             } finally {
               setBusy(false)
             }
@@ -518,6 +581,7 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
           삭제
         </button>
       </div>
+      {error ? <Alert kind="error">{error}</Alert> : null}
       <div className="sep" style={{ margin: '2px 0' }} />
     </div>
   )

@@ -32,6 +32,17 @@ __all__ = [
 
 _UNIX_OFFSET = 62_135_596_800.0
 
+#: Raw columns whose unit is decided per file by the ``UnitCoulomb`` flag,
+#: as ``(flag off, flag on)``.  The raw table dumps them in the file's own
+#: units, so without a tag an Ah file and a C file produce identical headers
+#: and a reader who assumes Ah is off by 3600.
+_FILE_DEPENDENT_UNITS = {
+    "charge_q": ("Ah", "C"),
+    "discharge_q": ("Ah", "C"),
+    "charge_e": ("Wh", "J"),
+    "discharge_e": ("Wh", "J"),
+}
+
 
 def _format_timestamp(seconds: float) -> str:
     try:
@@ -47,7 +58,8 @@ def write_raw_csv(wrd: WrdFile, stream: TextIO, *, columns: Sequence[str] | None
     writer = csv.writer(stream, lineterminator="\n")
 
     derived = ["timestamp", "test_time_s", "step_time_s", "cycle_time_s"]
-    header = derived + [n for n in names if n not in ("date_time", "test_time", "step_time", "cycle_time")]
+    body = [n for n in names if n not in ("date_time", "test_time", "step_time", "cycle_time")]
+    header = derived + [_raw_label(n, wrd) for n in body]
     writer.writerow(header)
 
     timestamps = wrd.timestamps() if "date_time" in data else None
@@ -55,7 +67,6 @@ def write_raw_csv(wrd: WrdFile, stream: TextIO, *, columns: Sequence[str] | None
     step_s = wrd.seconds("step_time") if "step_time" in data else None
     cycle_s = wrd.seconds("cycle_time") if "cycle_time" in data else None
 
-    body = [n for n in header if n not in derived]
     columns_out = [data[n] for n in body]
 
     for i in range(len(wrd)):
@@ -69,6 +80,15 @@ def write_raw_csv(wrd: WrdFile, stream: TextIO, *, columns: Sequence[str] | None
             value = values[i]
             row.append(f"{value:.10g}" if isinstance(value, (float, np.floating)) else value)
         writer.writerow(row)
+
+
+def _raw_label(name: str, wrd: WrdFile) -> str:
+    """Column header for the raw table, carrying the unit when it can vary."""
+    choices = _FILE_DEPENDENT_UNITS.get(name)
+    if choices is None:
+        return name
+    declared = next((c.unit for c in wrd.metadata.columns if c.name == name and c.unit), "")
+    return f"{name} ({declared or choices[1 if wrd.metadata.unit_coulomb else 0]})"
 
 
 def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
@@ -186,6 +206,8 @@ def write_xlsx(path, wrd: WrdFile, cycles: Sequence[CycleSummary],
         ("loading (mg/cm2)", cell.loading_mg_cm2 or ""),
         ("nominal capacity (mAh)", cell.nominal_capacity_mah or ""),
         ("capacity basis", basis),
+        # The raw sheet keeps the file's own units; say which they are.
+        ("raw capacity unit", "C" if metadata.unit_coulomb else "Ah"),
     ]
     if metadata.schedule:
         schedule = metadata.schedule

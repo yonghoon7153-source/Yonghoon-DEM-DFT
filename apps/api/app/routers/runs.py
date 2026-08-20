@@ -28,6 +28,34 @@ from ..settings import settings
 router = APIRouter(prefix="/api/runs", tags=["runs"])
 
 
+def _rewrite_cycle_numbers(session: Session, run: Run) -> None:
+    """Cycle numbers are stored, so shifting the offset means rewriting them."""
+    for record in session.exec(
+            select(CycleRecord).where(CycleRecord.run_id == run.id)).all():
+        record.cycle_number = record.cycle_index + 1 + run.cycle_offset
+        session.add(record)
+
+
+def _attach_to_sample(session: Session, run: Run, sample_id: int) -> None:
+    """Move an unassigned run into a sample, offsets and numbering included.
+
+    Every path that changes which sample a run belongs to has to do all of
+    this; attaching without the offset recomputation leaves two files of one
+    sample numbering their cycles from the same base.
+    """
+    if session.get(Sample, sample_id) is None:
+        raise HTTPException(404, f"sample {sample_id} not found")
+    run.sample_id = sample_id
+    if run.cycle_offset_source != "manual":
+        run.cycle_offset = auto_cycle_offset(session, sample_id, run.start_time,
+                                             run.original_name, exclude_run_id=run.id)
+        run.cycle_offset_source = "auto"
+    _rewrite_cycle_numbers(session, run)
+    session.add(run)
+    session.flush()
+    renumber_sample_runs(session, sample_id)
+
+
 def _out(session: Session, run: Run) -> RunOut:
     sample_name = None
     if run.sample_id:
@@ -62,6 +90,17 @@ async def upload_run(
     Uploading the same bytes twice returns the existing run rather than
     creating a duplicate -- the same file often arrives from two machines.
     """
+    # Starlette has already spooled the body, but reading it turns the whole
+    # upload into one bytes object -- refuse before that allocation.  Rejecting
+    # before the body arrives at all would need middleware, which is outside
+    # this router.
+    if file.size is not None and file.size > settings.max_upload_bytes:
+        raise HTTPException(
+            413,
+            f"file is {file.size / 1e6:.0f} MB; the limit is "
+            f"{settings.max_upload_bytes / 1e6:.0f} MB",
+        )
+
     content = await file.read()
     if not content:
         raise HTTPException(422, "uploaded file is empty")
@@ -76,8 +115,18 @@ async def upload_run(
     existing = session.exec(select(Run).where(Run.sha256 == digest)).first()
     if existing is not None:
         if sample_id is not None and existing.sample_id != sample_id:
-            existing.sample_id = sample_id
-            session.add(existing)
+            if existing.sample_id is not None:
+                # Re-uploading the same bytes must not move a run out of the
+                # sample it already belongs to: the old sample would lose a
+                # file without a word, and both samples' cycle numbering would
+                # shift.  Moving is an explicit request -- PATCH does it.
+                raise HTTPException(
+                    409,
+                    f"run {existing.id} already belongs to sample "
+                    f"{existing.sample_id}; use PATCH /api/runs/{existing.id} "
+                    "to move it",
+                )
+            _attach_to_sample(session, existing, sample_id)
             session.commit()
             session.refresh(existing)
         return _out(session, existing)
@@ -136,6 +185,7 @@ def update_run(run_id: int, payload: RunUpdate,
     """Attach a run to a sample, or correct its cycle offset."""
     run = get_run(session, run_id)
     values = payload.model_dump(exclude_unset=True)
+    previous_sample_id = run.sample_id
 
     if payload.detach_sample:
         run.sample_id = None
@@ -154,15 +204,15 @@ def update_run(run_id: int, payload: RunUpdate,
         run.cycle_offset = values["cycle_offset"]
         run.cycle_offset_source = "manual"
 
-    # Cycle numbers are stored, so shifting the offset means rewriting them.
-    for record in session.exec(
-            select(CycleRecord).where(CycleRecord.run_id == run.id)).all():
-        record.cycle_number = record.cycle_index + 1 + run.cycle_offset
-        session.add(record)
+    _rewrite_cycle_numbers(session, run)
 
     session.add(run)
     session.flush()
     renumber_sample_runs(session, run.sample_id)
+    # The sample the run just left has to close the gap too, or its remaining
+    # files keep offsets that counted the departed run's cycles.
+    if previous_sample_id is not None and previous_sample_id != run.sample_id:
+        renumber_sample_runs(session, previous_sample_id)
     session.commit()
     session.refresh(run)
     return _out(session, run)
@@ -180,34 +230,34 @@ def reparse_run(run_id: int, session: Session = Depends(get_session)):
         raise HTTPException(422, str(exc)) from exc
     persist_parse(session, run, wrd)
     session.add(run)
+    session.flush()
+    # A better parser can change this file's cycle count, which moves every
+    # later file of the same sample.
+    renumber_sample_runs(session, run.sample_id)
     session.commit()
     session.refresh(run)
     return _out(session, run)
 
 
 @router.delete("/{run_id}", status_code=204)
-def delete_run(run_id: int, session: Session = Depends(get_session),
-               delete_original: bool = Query(
-                   False, description="also remove the stored .wrd (irreversible)")):
-    """Remove the run and its cache.  The original is kept unless asked otherwise."""
+def delete_run(run_id: int, session: Session = Depends(get_session)):
+    """Remove the run row and its parse cache.
+
+    The original ``.wrd`` in ``data/uploads/`` stays: it is the one thing
+    nothing can rebuild, and both non-negotiable #2 and ADR 0003 promise it is
+    never removed.  The endpoint used to take ``delete_original=true`` and
+    unlink it, which broke that promise and the reparse recovery path with it.
+    """
     run = get_run(session, run_id)
     for record in session.exec(
             select(CycleRecord).where(CycleRecord.run_id == run.id)).all():
         session.delete(record)
     storage.drop_run_cache(run.id)
-    digest = run.sha256
     sample_id = run.sample_id
     session.delete(run)
     session.flush()
     renumber_sample_runs(session, sample_id)
     session.commit()
-
-    if delete_original:
-        others = session.exec(select(Run).where(Run.sha256 == digest)).first()
-        if others is None:
-            path = storage.upload_path(digest)
-            if path.exists():
-                path.unlink()
 
 
 @router.get("/{run_id}/schedule")

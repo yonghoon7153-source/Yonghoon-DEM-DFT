@@ -48,6 +48,15 @@ def basis_label(basis: str) -> str:
     return _LABELS.get(basis, basis)
 
 
+def _positive(value: float | None) -> float | None:
+    """A mass or an area that is not positive is a typo, not a divisor.
+
+    ``value or None`` would let a negative float through and turn it into a
+    negative mAh/g that reads like a real measurement.
+    """
+    return value if value is not None and value > 0 else None
+
+
 @dataclass
 class CellSpec:
     """What the operator knows about the electrode, in lab units.
@@ -96,15 +105,24 @@ class CellSpec:
         notes: dict[str, str] = {}
 
         mass_g: float | None = None
-        if self.active_mass_mg and self.active_mass_mg > 0:
+        if self.active_mass_mg is not None and self.active_mass_mg <= 0:
+            # A sign typo must not fall through to the total-mass path, where
+            # it would look like the operator never entered a mass at all.
+            notes["active_mass"] = "directly entered active mass is not positive - ignored"
+        elif self.active_mass_mg:
             mass_g = self.active_mass_mg / 1000.0
             notes["active_mass"] = "entered directly"
         elif self.total_mass_mg and self.total_mass_mg > 0:
             electrode_mg = self.total_mass_mg - (self.current_collector_mass_mg or 0.0)
+            wt_percent = self.effective_active_wt_percent
             if electrode_mg <= 0:
                 notes["active_mass"] = "current collector mass exceeds total mass"
+            elif wt_percent is not None and not 0 <= wt_percent <= 100:
+                # -80 or 800 would silently make mAh/g negative or eight times
+                # too small; a fraction outside [0, 100] is not a fraction.
+                notes["active_mass"] = (
+                    f"active wt% {wt_percent:g} is outside [0, 100] - ignored")
             else:
-                wt_percent = self.effective_active_wt_percent
                 fraction = (100.0 if wt_percent is None else wt_percent) / 100.0
                 mass_g = electrode_mg * fraction / 1000.0
                 parts = [f"{electrode_mg:g} mg"]
@@ -190,30 +208,49 @@ class ResolvedCell:
         if basis == Basis.ABSOLUTE:
             return 1.0
         if basis == Basis.SPECIFIC:
-            return self.active_mass_g or None
+            return _positive(self.active_mass_g)
         if basis == Basis.AREAL:
-            return self.area_cm2 or None
+            return _positive(self.area_cm2)
         if basis == Basis.VOLUMETRIC:
-            return self.volume_cm3 or None
+            return _positive(self.volume_cm3)
         if basis == Basis.NORMALIZED:
-            if not self.nominal_capacity_mah:
-                return None
-            return self.nominal_capacity_mah / 100.0
+            nominal = _positive(self.nominal_capacity_mah)
+            return None if nominal is None else nominal / 100.0
         raise ValueError(f"unknown basis {basis!r}")
 
     def available_bases(self) -> list[str]:
         return [b for b in BASES if self.divisor(b)]
 
     def missing_for(self, basis: str) -> str | None:
-        """Human-readable reason a basis cannot be used, if it cannot."""
+        """Human-readable reason a basis cannot be used, if it cannot.
+
+        The reason has to match what is actually absent.  Telling someone the
+        area is missing when the area is set and the thickness is not sends
+        them to re-enter a number that was already right.
+        """
         if self.divisor(basis):
             return None
-        return {
-            Basis.SPECIFIC: "active mass not set",
-            Basis.AREAL: "electrode area not set",
-            Basis.VOLUMETRIC: "electrode area and thickness not set",
-            Basis.NORMALIZED: "active mass and nominal specific capacity not set",
-        }.get(basis, "unavailable")
+        if basis == Basis.SPECIFIC:
+            if self.active_mass_g == 0 and self.active_wt_percent == 0:
+                return "active material is 0 wt% of the composition"
+            return "active mass not set"
+        if basis == Basis.AREAL:
+            return "electrode area not set"
+        if basis == Basis.VOLUMETRIC:
+            # Thickness is not carried here, so it can only be named as the
+            # sole culprit once the area is known to be present.
+            if _positive(self.area_cm2) is not None:
+                return "electrode thickness not set"
+            return "electrode area and thickness not set"
+        if basis == Basis.NORMALIZED:
+            has_mass = _positive(self.active_mass_g) is not None
+            has_nominal = _positive(self.nominal_specific_capacity_mah_g) is not None
+            if has_mass and not has_nominal:
+                return "nominal specific capacity not set"
+            if has_nominal and not has_mass:
+                return "active mass not set"
+            return "active mass and nominal specific capacity not set"
+        return "unavailable"
 
 
 def normalize_capacity(values, cell: ResolvedCell, basis: str):
@@ -249,12 +286,18 @@ def areal_loading(cell: ResolvedCell) -> float | None:
 
 def retention(capacities: Iterable[float | None], reference_index: int = 0
               ) -> list[float | None]:
-    """Capacity retention (%) against one reference cycle."""
+    """Capacity retention (%) against one reference cycle.
+
+    A reference the series does not contain yields ``None`` throughout, not a
+    quiet fallback to the first cycle: cycles 1-2 are formation and lose a few
+    percent by design, so anchoring there would report formation loss as
+    degradation (ADR 0004).
+    """
     values = list(capacities)
     if not values:
         return []
     if not 0 <= reference_index < len(values):
-        reference_index = 0
+        return [None] * len(values)
     reference = values[reference_index]
     if not reference:
         return [None] * len(values)

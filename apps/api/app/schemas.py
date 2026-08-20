@@ -233,7 +233,12 @@ class CycleTableOut(BaseModel):
     basis_label: str
     requested_basis: str
     basis_fallback_reason: str | None = None
+    #: What was asked for, and what the retention column is really anchored to.
+    #: They differ when the reference cycle is not in the record (ADR 0004).
     reference_cycle: int | None = None
+    reference_cycle_used: int | None = None
+    reference_available: bool = True
+    retention_note: str = ""
     resolved_cell: ResolvedCellOut
     cycles: list[CycleOut]
 

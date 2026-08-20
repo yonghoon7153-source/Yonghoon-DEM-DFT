@@ -2,7 +2,7 @@
 
 Typical use::
 
-    from wrdkit import read_wrd, summarize_cycles, CellSpec, Basis
+    from wrdkit import read_wrd, summarize_cycles, CellSpec, Basis, normalize_capacity
 
     wrd = read_wrd("cell.wrd")
     cell = CellSpec(total_mass_mg=31.6, active_wt_percent=80,

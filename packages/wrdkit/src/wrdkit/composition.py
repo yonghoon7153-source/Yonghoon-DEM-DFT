@@ -37,7 +37,7 @@ class Role:
 
 
 #: Substances whose role is unambiguous, so a bare name gets classified.
-#: Matched case-insensitively as a substring of the component name.
+#: Matched case-insensitively; see :func:`_hint_matches` for how.
 _ROLE_HINTS: tuple[tuple[str, str], ...] = (
     # active materials
     ("ncm", Role.ACTIVE), ("nmc", Role.ACTIVE), ("nca", Role.ACTIVE),
@@ -64,6 +64,30 @@ _ROLE_HINTS: tuple[tuple[str, str], ...] = (
 )
 
 
+_TOKENS = re.compile(r"[^a-z0-9]+")
+
+
+def _hint_matches(needle: str, lowered: str, tokens: list[str]) -> bool:
+    """Is *needle* really this substance, or only buried inside another word?
+
+    Short acronyms are the trap.  A bare substring test makes ``am`` fire
+    inside "cer-am-ic", "amorphous" and "foam", so "LPS glass-ceramic" comes
+    back as active material and joins the mAh/g denominator with no warning --
+    the exact silent corruption ADR 0007 forbids.  So a one-word hint has to
+    be a whole token, optionally followed by digits, because "NCM811" and
+    "SiO2" are the same substance as "NCM" and "SiO".  Hints that already
+    contain a space or hyphen ("super p", "carbon black") are long enough to
+    be unambiguous and stay substring matches.
+    """
+    if _TOKENS.search(needle):
+        return needle in lowered
+    for token in tokens:
+        if token == needle or (token.startswith(needle)
+                               and token[len(needle):].isdigit()):
+            return True
+    return False
+
+
 def infer_role(name: str) -> str:
     """Classify a component from its name, defaulting to ``other``.
 
@@ -71,8 +95,9 @@ def infer_role(name: str) -> str:
     material, because that would put it in the mAh/g denominator.
     """
     lowered = name.strip().lower()
+    tokens = [t for t in _TOKENS.split(lowered) if t]
     for needle, role in _ROLE_HINTS:
-        if needle in lowered:
+        if _hint_matches(needle, lowered, tokens):
             return role
     return Role.OTHER
 
@@ -222,6 +247,8 @@ _NAMES_THEN_RATIOS = re.compile(
 )
 # ``AM 80 / SE 17 / VGCF 3`` and ``AM 80, SE 17``.
 _PAIRS = re.compile(r"([A-Za-z0-9가-힣][A-Za-z0-9가-힣 _\-+.]*?)\s*[: ]\s*(\d+(?:\.\d+)?)\s*%?")
+#: A component name has to contain a letter -- "80" is a ratio, not a substance.
+_HAS_LETTER = re.compile(r"[A-Za-z가-힣]")
 
 #: Default names when only a ratio is given.  Order follows how the blend is
 #: written in practice: active first, then electrolyte, conductive, binder.
@@ -257,11 +284,20 @@ def parse_composition(text: str) -> Composition:
         if len(names) == 1 and len(ratios) > 1:
             # "cathode = 80:17:3" -- one label for the whole blend.
             return _positional(ratios)
+        # Names and ratios in unequal numbers means a typo ("AM:SE:VGCF =
+        # 80:17").  Falling through would let the pair reader carve a
+        # component out of the ratio digits themselves; an empty composition
+        # is the honest answer.
+        return Composition()
 
-    pairs = _PAIRS.findall(text)
-    if pairs:
+    pairs = [(name.strip(), value) for name, value in _PAIRS.findall(text)
+             if _HAS_LETTER.search(name)]
+    # A blend has at least two ingredients.  A lone "word number" is far more
+    # often a sample label ("cell 01") than a composition, and inventing a
+    # component from it would persist a number nobody entered.
+    if len(pairs) >= 2:
         return Composition([
-            Component(name.strip(), float(value), infer_role(name))
+            Component(name, float(value), infer_role(name))
             for name, value in pairs
         ])
 

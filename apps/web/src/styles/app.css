@@ -49,6 +49,27 @@
   --charge: #ea580c;
   --discharge: #1d4ed8;
 
+  /* Qualitative series palette.  Ordered so adjacent series stay apart and no
+   * pair collides under the common forms of colour blindness; mirrors
+   * SERIES_COLORS in lib/format.ts, which is the fallback when a token is
+   * missing.  Themed like --charge/--discharge because a canvas line drawn in
+   * a light-mode hex sits at ~2.4:1 on the dark surface. */
+  --series-0: #1d4ed8;
+  --series-1: #ea580c;
+  --series-2: #059669;
+  --series-3: #7c3aed;
+  --series-4: #db2777;
+  --series-5: #0891b2;
+  --series-6: #ca8a04;
+  --series-7: #4b5563;
+  --series-8: #2563eb;
+  --series-9: #e11d48;
+  --series-10: #15803d;
+  --series-11: #b45309;
+  --series-12: #6d28d9;
+  --series-13: #0e7490;
+  --series-14: #9f1239;
+
   --pos: #067647;
   --pos-wash: #e7f6ee;
   --warn: #b54708;
@@ -85,6 +106,25 @@
 
     --charge: #fb923c;
     --discharge: #60a5fa;
+
+    /* The light palette lifted onto the dark surface: the same hue order and
+     * the same light/dark pairing within a hue, but every entry above 3:1
+     * against --surface (the light greys and deep blues were near 2.4:1). */
+    --series-0: #60a5fa;
+    --series-1: #fb923c;
+    --series-2: #34d399;
+    --series-3: #a78bfa;
+    --series-4: #f472b6;
+    --series-5: #22d3ee;
+    --series-6: #facc15;
+    --series-7: #9aa4b2;
+    --series-8: #93c5fd;
+    --series-9: #fb7185;
+    --series-10: #86efac;
+    --series-11: #fdba74;
+    --series-12: #c4b5fd;
+    --series-13: #67e8f9;
+    --series-14: #fda4af;
 
     --pos: #4ade80;
     --pos-wash: #0f2a1c;

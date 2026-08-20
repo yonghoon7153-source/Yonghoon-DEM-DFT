@@ -107,6 +107,89 @@ def test_deleting_a_run_removes_its_cycles(client, wrd_bytes, sample_id):
     assert client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"] == []
 
 
+def _two_file_sample(client, wrd_bytes, finished_wrd_bytes, sample_id):
+    """``_011`` then ``_012`` of one experiment, numbered as one run."""
+    first = _upload(client, finished_wrd_bytes, name="cell_011.wrd",
+                    sample_id=sample_id).json()
+    second = _upload(client, wrd_bytes, name="cell_012.wrd",
+                     sample_id=sample_id).json()
+    assert second["cycle_offset"] == first["cycle_count"]
+    return first, second
+
+
+def test_detaching_a_file_renumbers_the_ones_left_behind(
+        client, wrd_bytes, finished_wrd_bytes, sample_id):
+    """Removing _011 must pull _012 back to cycle 1, or reference cycle 3 is gone."""
+    first, second = _two_file_sample(client, wrd_bytes, finished_wrd_bytes, sample_id)
+
+    detached = client.patch(f"/api/runs/{first['id']}",
+                            json={"detach_sample": True}).json()
+    assert detached["sample_id"] is None
+
+    assert client.get(f"/api/runs/{second['id']}").json()["cycle_offset"] == 0
+    cycles = client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]
+    assert cycles[0]["cycle"] == 1
+
+
+def test_moving_a_file_to_another_sample_renumbers_both(
+        client, wrd_bytes, finished_wrd_bytes, sample_id):
+    first, second = _two_file_sample(client, wrd_bytes, finished_wrd_bytes, sample_id)
+    other = client.post("/api/samples", json={"name": "TEST-02"}).json()["id"]
+
+    moved = client.patch(f"/api/runs/{first['id']}",
+                         json={"sample_id": other}).json()
+    assert moved["sample_id"] == other
+    assert moved["cycle_offset"] == 0
+
+    assert client.get(f"/api/runs/{second['id']}").json()["cycle_offset"] == 0
+    cycles = client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]
+    assert cycles[0]["cycle"] == 1
+
+
+def test_reparse_renumbers_the_files_that_follow(
+        client, wrd_bytes, finished_wrd_bytes, sample_id, monkeypatch):
+    """A parser that finds more cycles in _011 has to push _012 along."""
+    from app import storage
+    from wrdkit import read_wrd_bytes
+
+    import synthetic
+
+    first, second = _two_file_sample(client, wrd_bytes, finished_wrd_bytes, sample_id)
+
+    start = synthetic.ticks_ago(20 * 66 * 10)
+    longer = synthetic.build_wrd(
+        synthetic.make_cycles(n_cycles=first["cycle_count"] + 2,
+                              points_per_branch=30, start_ticks=start),
+        start_ticks=start)
+    monkeypatch.setattr(storage, "reparse",
+                        lambda sha256: read_wrd_bytes(longer,
+                                                      source_name="cell_011.wrd"))
+
+    again = client.post(f"/api/runs/{first['id']}/reparse").json()
+    assert again["cycle_count"] == first["cycle_count"] + 2
+
+    assert (client.get(f"/api/runs/{second['id']}").json()["cycle_offset"]
+            == again["cycle_count"])
+    cycles = client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]
+    numbers = [c["cycle"] for c in cycles]
+    assert numbers == sorted(numbers)
+    assert len(numbers) == len(set(numbers))   # no collisions between files
+
+
+def test_deleting_a_run_keeps_the_original_upload(client, wrd_bytes, sample_id):
+    """Non-negotiable #2 / ADR 0003: nothing can rebuild an original."""
+    from app import storage
+
+    run = _upload(client, wrd_bytes, sample_id=sample_id).json()
+    path = storage.upload_path(run["sha256"])
+    assert path.exists()
+
+    response = client.delete(f"/api/runs/{run['id']}",
+                             params={"delete_original": True})
+    assert response.status_code == 204
+    assert path.exists()
+
+
 def test_uploading_fills_blank_sample_conditions_from_the_schedule(
         client, wrd_bytes, sample_id):
     """The instrument knows the cut-offs; do not ask the user to retype them."""

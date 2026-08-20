@@ -238,17 +238,28 @@ class Schedule:
         Formation is conventionally run at a round fraction of the cycling
         rate.  When there is no formation step to compare against we cannot
         infer anything and return ``None`` rather than guessing.
+
+        The ratio alone does not always identify one pair: 0.2C/0.1C and
+        0.1C/0.05C -- both common on all-solid-state cells -- are the same
+        ratio 2.  Returning the first match would report 0.2C (and, through
+        :meth:`nominal_capacity_ah`, a capacity twice the real one) for half
+        of those schedules, with no sign that it was a guess.  An ambiguous
+        ratio therefore yields ``None``, per the "say you do not know"
+        rule; the user can still enter the rate by hand.
         """
         cycling = self.cycling_current_a
         formation = self.formation_current_a
         if not cycling or not formation:
             return None
         ratio = cycling / formation
-        for rate, form_rate in ((0.2, 0.1), (0.5, 0.1), (1.0, 0.1), (0.1, 0.05),
-                                (0.33, 0.1), (2.0, 0.1)):
-            if abs(ratio - rate / form_rate) < 0.05 * (rate / form_rate):
-                return rate
-        return None
+        matches = {
+            rate for rate, form_rate in ((0.2, 0.1), (0.5, 0.1), (1.0, 0.1), (0.1, 0.05),
+                                         (0.33, 0.1), (2.0, 0.1))
+            if abs(ratio - rate / form_rate) < 0.05 * (rate / form_rate)
+        }
+        if len(matches) != 1:
+            return None
+        return matches.pop()
 
     def describe(self) -> list[str]:
         return [s.describe() for s in self.steps]

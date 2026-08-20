@@ -33,10 +33,13 @@ def _add_missing_columns() -> None:
     "delete your database and re-upload everything".
 
     Only additive changes are handled -- a rename or a type change still needs
-    a real migration, and will surface as a clear error rather than silently
-    losing data.
+    a real migration.  A new column the model requires but SQLite cannot fill
+    on its own raises here, by name, rather than being added as NULL: the
+    response models declare those fields required, so a NULL-filled column
+    turns every list and detail endpoint into a 500 the next time somebody
+    pulls.
     """
-    from sqlalchemy import inspect, text
+    from sqlalchemy import bindparam, inspect, text
 
     inspector = inspect(engine)
     existing_tables = set(inspector.get_table_names())
@@ -49,11 +52,40 @@ def _add_missing_columns() -> None:
             for column in table.columns:
                 if column.name in present:
                     continue
+                backfill = _backfill_value(table.name, column)
                 ddl = f"{column.name} {column.type.compile(engine.dialect)}"
                 default = _sql_default(column)
                 if default is not None:
                     ddl += f" DEFAULT {default}"
                 connection.execute(text(f"ALTER TABLE {table.name} ADD COLUMN {ddl}"))
+                if backfill is not None:
+                    # Bound with the column's own type so a datetime is stored
+                    # the way SQLAlchemy stores every other one.
+                    statement = text(
+                        f"UPDATE {table.name} SET {column.name} = :value "
+                        f"WHERE {column.name} IS NULL"
+                    ).bindparams(bindparam("value", type_=column.type))
+                    connection.execute(statement, {"value": backfill})
+
+
+def _backfill_value(table_name: str, column):
+    """What to write into the existing rows of a newly added column.
+
+    ``created_at``-style fields are the house pattern and they are the ones
+    SQLite cannot fill: a ``default_factory`` is a Python callable, so it
+    compiles to no SQL DEFAULT and every existing row gets NULL.  Evaluating
+    it once here dates the old rows to the migration, which is at least a real
+    datetime -- the alternative is a required field arriving as None and
+    breaking the response model for every row written before the pull.
+    """
+    if column.default is not None and column.default.is_callable:
+        return column.default.arg(None)
+    if column.nullable or column.default is not None or column.primary_key:
+        return None
+    raise RuntimeError(
+        f"{table_name}.{column.name} is required and has no default, so the "
+        f"rows already in the database cannot be filled in automatically; "
+        f"give the field a default or write a migration for it")
 
 
 def _sql_default(column) -> str | None:

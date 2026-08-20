@@ -11,6 +11,7 @@ import io
 import re
 from datetime import datetime
 
+import numpy as np
 from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response, StreamingResponse
 from sqlmodel import Session
@@ -27,13 +28,14 @@ from wrdkit import (
 
 from ..db import get_session
 from ..deps import get_run, get_sample, validate_basis
-from ..models import Sample
+from ..models import Run, Sample
 from ..services import (
     _metadata_stub,
     _rebuild_steps,
     load_wrd_columns,
     records_to_summaries,
     resolve_cell,
+    run_order_key,
     sample_cycle_records,
 )
 from .analysis import _parse_cycles
@@ -121,13 +123,10 @@ def export_sample_workbook(
     if not records:
         raise HTTPException(404, "this sample has no completed cycle yet")
 
-    run = next((r for r in sample.runs if r.id == records[-1].run_id), None)
-    if run is None:
-        raise HTTPException(404, "the sample's files are missing")
-    wrd = WrdFile(_metadata_stub(run), load_wrd_columns(run))
-    wrd.metadata.schedule = None
+    loaded: dict[int, WrdFile] = {}
+    wrd = _sample_wrd(sample, loaded, with_data=include_raw)
 
-    profiles = _collect_profiles(session, sample, cycles, branches)
+    profiles = _collect_profiles(session, sample, cycles, branches, loaded)
     summaries = records_to_summaries(records)
 
     buffer = io.BytesIO()
@@ -147,7 +146,65 @@ def export_sample_workbook(
     )
 
 
-def _collect_profiles(session: Session, sample: Sample, cycles: str, branches: str):
+def _wrd_for(run: Run, loaded: dict[int, WrdFile]) -> WrdFile:
+    """One run's columns, read from the cache at most once per request.
+
+    Every read decompresses the whole ``.npz``.  Loading inside the per-cycle
+    loop made a 500-cycle export decompress the same archive 500 times, and
+    these endpoints default to ``cycles=all`` with no cap.
+    """
+    wrd = loaded.get(run.id)
+    if wrd is None:
+        wrd = WrdFile(_metadata_stub(run), load_wrd_columns(run))
+        loaded[run.id] = wrd
+    return wrd
+
+
+def _sample_wrd(sample: Sample, loaded: dict[int, WrdFile], *,
+                with_data: bool) -> WrdFile:
+    """The whole sample as one file, for the workbook's metadata and raw sheet.
+
+    A long experiment arrives as ``_011.wrd``, ``_012.wrd`` ... and the
+    workbook has a single raw sheet.  Writing only the run that owns the last
+    cycle dropped every earlier file's rows without saying so, while the
+    cycles sheet still covered them all -- a workbook kept as a stand-in for
+    the originals would have been missing half the experiment.
+    """
+    runs = sorted((r for r in sample.runs if r.id is not None),
+                  key=lambda r: run_order_key(r.start_time, r.original_name, r.id))
+    if not runs:
+        raise HTTPException(404, "the sample's files are missing")
+
+    metadata = _metadata_stub(runs[0])
+    metadata.source_name = ", ".join(run.original_name for run in runs)
+    metadata.row_count = sum(run.row_count for run in runs)
+    if not with_data:
+        return WrdFile(metadata, {})
+
+    if len({run.unit_coulomb for run in runs}) > 1:
+        raise HTTPException(
+            409, "this sample's files disagree on the capacity unit "
+                 "(UnitCoulomb), so their raw rows cannot share one sheet; "
+                 "export them one file at a time")
+    parts = [(run, _wrd_for(run, loaded)) for run in runs]
+    if len({tuple(wrd.data) for _, wrd in parts}) > 1:
+        raise HTTPException(
+            409, "this sample's files record different columns, so their raw "
+                 "rows cannot share one sheet; export them one file at a time")
+
+    data = {name: np.concatenate([wrd.data[name] for _, wrd in parts])
+            for name in parts[0][1].data}
+    # test_time restarts at zero in each file, so without this the reader
+    # cannot tell which file a row came from.
+    data["source_file"] = np.concatenate([
+        np.full(len(next(iter(wrd.data.values()))), run.original_name)
+        for run, wrd in parts])
+    metadata.row_count = len(data["source_file"])
+    return WrdFile(metadata, data)
+
+
+def _collect_profiles(session: Session, sample: Sample, cycles: str, branches: str,
+                      loaded: dict[int, WrdFile] | None = None):
     wanted = _parse_cycles(cycles)
     requested = [b.strip() for b in branches.split(",") if b.strip()]
     records = [r for r in sample_cycle_records(session, sample) if r.complete]
@@ -155,12 +212,13 @@ def _collect_profiles(session: Session, sample: Sample, cycles: str, branches: s
         records = [r for r in records if r.cycle_number in wanted]
 
     runs = {run.id: run for run in sample.runs}
+    loaded = {} if loaded is None else loaded
     profiles = []
     for record in records:
         run = runs.get(record.run_id)
         if run is None:
             continue
-        wrd = WrdFile(_metadata_stub(run), load_wrd_columns(run))
+        wrd = _wrd_for(run, loaded)
         summary = records_to_summaries([record])[0]
         summary.steps = _rebuild_steps(wrd, record)
         for branch in requested:

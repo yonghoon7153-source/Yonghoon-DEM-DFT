@@ -82,6 +82,56 @@ def test_rejects_a_truncated_header():
         read_wrd_bytes(b"\x00" * 8)
 
 
+def test_non_ascii_range_labels_survive_the_read():
+    """The spec declares I RANGE as UTF-8; a µA label must not kill the parse."""
+    samples = synthetic.make_cycles(1, 5)
+    for sample in samples:
+        sample.i_range = "100µA"
+    wrd = read_wrd_bytes(synthetic.build_wrd(samples))
+    assert set(wrd["i_range"].tolist()) == {"100µA"}
+
+
+def test_truncated_file_raises_wrd_error_not_nrbf_error():
+    data = synthetic.build_wrd(synthetic.make_cycles(1, 5))
+    with pytest.raises(WrdError):
+        read_wrd_bytes(data[:200])
+
+
+def test_non_object_root_raises_wrd_error():
+    """A valid NRBF stream whose root is a string is not a .wrd."""
+    writer = synthetic.Writer()
+    writer.u8(synthetic.HEADER).i32(1).i32(-1).i32(1).i32(0)
+    writer.u8(synthetic.BINARY_OBJECT_STRING).i32(1).string("x" * 40)
+    writer.u8(synthetic.MESSAGE_END)
+    with pytest.raises(WrdError, match="unexpected root object"):
+        read_wrd_bytes(writer.bytes())
+
+
+class _NotedSample:
+    """A row with a second String column appended after the declared 22."""
+
+    def __init__(self, sample, note: str) -> None:
+        self.sample = sample
+        self.note = note
+
+    def pack(self) -> bytes:
+        return self.sample.pack() + synthetic.Writer().string(self.note).bytes()
+
+
+def test_a_short_tail_stops_the_scan_with_two_string_columns():
+    columns = synthetic.DEFAULT_COLUMNS + [("NOTE", "System.String")]
+    rows = [_NotedSample(s, "ok") for s in synthetic.make_cycles(1, 5)]
+    data = synthetic.build_wrd(rows, columns=columns)
+    # Clip the last row to exactly fixed_size: the row-start guard still passes
+    # but the NOTE length prefix now sits one byte past the buffer.
+    fixed_size = 129
+    data = data[:len(data) - (len(rows[-1].pack()) - fixed_size)]
+
+    wrd = read_wrd_bytes(data)
+    assert len(wrd) == len(rows) - 1
+    assert wrd.metadata.trailing_bytes == fixed_size
+
+
 def test_metadata_records_a_content_hash(synthetic_bytes, synthetic_wrd):
     import hashlib
 

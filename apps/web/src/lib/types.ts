@@ -282,7 +282,10 @@ export interface CompareSeries {
   cathode_type: string
   c_rate: number | null
   temperature_c: number | null
+  /** The basis this series is actually in — empty for non-capacity metrics. */
   basis: string
+  /** Set when this cell could not be normalised and fell back to raw mAh. */
+  basis_fallback_reason?: string | null
   points: { cycle: number; value: number }[]
 }
 
@@ -290,6 +293,9 @@ export interface CompareResponse {
   metric: string
   metric_label: string
   basis: Basis
+  requested_basis?: Basis
+  /** True when the series are not all in the same unit. */
+  mixed_basis?: boolean
   y_label: string
   series: CompareSeries[]
 }

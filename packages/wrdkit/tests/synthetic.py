@@ -149,7 +149,7 @@ def _class_record(writer: Writer, object_id: int, name: str,
 
 
 def _write_file_header(writer: Writer, *, start_ticks: int, base_tick: int,
-                       file_name: str) -> None:
+                       file_name: str, unit_coulomb: bool = False) -> None:
     """Stream 1: WbcsFile.Data.DataFileHeader."""
     writer.u8(HEADER).i32(1).i32(-1).i32(1).i32(0)
     writer.u8(BINARY_LIBRARY).i32(2).string(WBCS_LIBRARY)
@@ -173,7 +173,7 @@ def _write_file_header(writer: Writer, *, start_ticks: int, base_tick: int,
     for object_id, text in ((3, "1.3.0.0"), (4, "WBCS3000S1"), (5, "TEST-SERIAL-0001"),
                             (6, "Potentiostat"), (7, "1.8.9.0"), (8, "1.3.3.0")):
         writer.u8(BINARY_OBJECT_STRING).i32(object_id).string(text)
-    writer.u8(0)                       # UnitCoulomb = false
+    writer.u8(1 if unit_coulomb else 0)   # UnitCoulomb
     writer.u32(base_tick)              # BaseTick
     writer.u8(BINARY_OBJECT_STRING).i32(9).string(file_name)
     writer.raw(struct.pack("<Q", (2 << 62) | start_ticks))   # StartTime, Kind=Local
@@ -278,13 +278,19 @@ class Sample:
 
 def build_wrd(samples: list[Sample], *, start_ticks: int | None = None,
               base_tick: int = 50_000, file_name: str = r"C:\Zive Data\test.wrd",
-              columns: list[tuple[str, str]] | None = None) -> bytes:
-    """Assemble a complete ``.wrd`` byte string."""
+              columns: list[tuple[str, str]] | None = None,
+              unit_coulomb: bool = False) -> bytes:
+    """Assemble a complete ``.wrd`` byte string.
+
+    ``unit_coulomb`` flips the header flag that decides whether the capacity
+    and energy columns are read as Ah/Wh or C/J, so the True branch of
+    ``WrdFile._to_mah`` is reachable without a real coulomb-mode file.
+    """
     if start_ticks is None:
         start_ticks = DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND
     writer = Writer()
     _write_file_header(writer, start_ticks=start_ticks, base_tick=base_tick,
-                       file_name=file_name)
+                       file_name=file_name, unit_coulomb=unit_coulomb)
     _write_data_header(writer, columns or DEFAULT_COLUMNS)
     for sample in samples:
         writer.raw(sample.pack())
@@ -296,62 +302,106 @@ def make_cycles(n_cycles: int = 3, points_per_branch: int = 40, *,
                 v_low: float = 1.9, v_high: float = 3.6,
                 fade_per_cycle: float = 0.02,
                 interval_s: float = 10.0, rest_points: int = 3,
+                cv_points: int = 0, cv_capacity_fraction: float = 0.2,
                 start_ticks: int | None = None) -> list[Sample]:
     """A synthetic CC charge/discharge run with a linear capacity fade.
 
     The current range label deliberately switches from ``1A`` to ``10mA`` after
     the first cycle so the variable row width is exercised.
+
+    ``CHARGE Q`` / ``DISCHARGE Q`` follow the convention the reference file
+    established (``docs/raw/specs/wrd-binary-format.md``): they are running
+    totals that reset **once per cycle**, not once per step, and ``CHARGE Q``
+    stays parked at the cycle's charge capacity while the cell discharges.
+    Writing them per step instead would make "value at the end of the step"
+    and "difference across the step" the same number, and the difference is
+    the only one that survives a multi-step branch.
+
+    ``cv_points`` appends a CV-like taper as a *second* charge step, so the
+    charge branch spans two ``TOTAL STEP`` values sharing one running total --
+    the shape that separates the two readings.  ``cv_capacity_fraction`` of the
+    cycle's capacity is delivered during that hold, so the cycle total is
+    unchanged by turning it on.
     """
     samples: list[Sample] = []
     date = (start_ticks if start_ticks is not None
             else DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND)
     test_ticks = 0
+    cycle_ticks = 0
+    step_ticks = 0
     tick_step = int(interval_s * TICKS_PER_SECOND)
     total_step = 0
+    cycle = 0
+    i_range = "1A"
+
+    def push(*, step_index: int, cell_status: int, voltage: float, current: float,
+             charge_q: float, discharge_q: float) -> None:
+        nonlocal date, test_ticks, cycle_ticks, step_ticks
+        samples.append(Sample(
+            date_ticks=date, test_ticks=test_ticks, step_ticks=step_ticks,
+            cycle_ticks=cycle_ticks, step_index=step_index, total_step=total_step,
+            cycle_index=cycle, cell_status=cell_status, i_range=i_range,
+            voltage=voltage, current=current,
+            charge_q=charge_q, discharge_q=discharge_q,
+            charge_e=charge_q * 3.2, discharge_e=discharge_q * 3.1,
+        ))
+        date += tick_step
+        test_ticks += tick_step
+        cycle_ticks += tick_step
+        step_ticks += tick_step
 
     for cycle in range(n_cycles):
         capacity = capacity_mah * (1.0 - fade_per_cycle * cycle)
         cycle_ticks = 0
-        for branch, status, sign in (("charge", 3, 1.0), ("discharge", 4, -1.0)):
+        charge_q = discharge_q = 0.0
+        i_range = "1A" if cycle == 0 else "10mA"
+        cv_capacity = capacity * cv_capacity_fraction if cv_points else 0.0
+        cc_capacity = capacity - cv_capacity
+
+        total_step += 1
+        step_ticks = 0
+        for point in range(points_per_branch):
+            fraction = point / (points_per_branch - 1)
+            voltage = v_low + (v_high - v_low) * fraction
+            charge_q = cc_capacity * fraction / 1000.0
+            push(step_index=1, cell_status=3, voltage=voltage, current=current_a,
+                 charge_q=charge_q, discharge_q=discharge_q)
+
+        if cv_points:
+            # The hold sits at the cut-off voltage while the current tapers;
+            # the running total carries on from where CC left it.
             total_step += 1
             step_ticks = 0
-            charge_q = discharge_q = 0.0
-            for point in range(points_per_branch):
-                fraction = point / (points_per_branch - 1)
-                if branch == "charge":
-                    voltage = v_low + (v_high - v_low) * fraction
-                    charge_q = capacity * fraction / 1000.0
-                else:
-                    voltage = v_high - (v_high - v_low) * fraction
-                    discharge_q = capacity * fraction / 1000.0
-                samples.append(Sample(
-                    date_ticks=date, test_ticks=test_ticks, step_ticks=step_ticks,
-                    cycle_ticks=cycle_ticks, step_index=1 if branch == "charge" else 2,
-                    total_step=total_step, cycle_index=cycle, cell_status=status,
-                    i_range="1A" if cycle == 0 else "10mA",
-                    voltage=voltage, current=sign * current_a,
-                    charge_q=charge_q, discharge_q=discharge_q,
-                    charge_e=charge_q * 3.2, discharge_e=discharge_q * 3.1,
-                ))
-                date += tick_step
-                test_ticks += tick_step
-                step_ticks += tick_step
-                cycle_ticks += tick_step
+            for point in range(cv_points):
+                # Starts at the CC end value, not one increment past it: the
+                # running total is continuous across the step boundary.
+                fraction = point / max(cv_points - 1, 1)
+                charge_q = (cc_capacity + cv_capacity * fraction) / 1000.0
+                push(step_index=2, cell_status=3, voltage=v_high,
+                     current=current_a * (1.0 - 0.9 * fraction),
+                     charge_q=charge_q, discharge_q=discharge_q)
+            voltage = v_high
 
-            # Every real schedule rests between branches; without it the last
-            # cycle of a file is indistinguishable from a truncated one.
-            total_step += 1
-            for point in range(rest_points):
-                samples.append(Sample(
-                    date_ticks=date, test_ticks=test_ticks,
-                    step_ticks=point * tick_step, cycle_ticks=cycle_ticks,
-                    step_index=3, total_step=total_step, cycle_index=cycle,
-                    cell_status=1, i_range="1A" if cycle == 0 else "10mA",
-                    voltage=voltage, current=0.0,
-                    charge_q=charge_q, discharge_q=discharge_q,
-                    charge_e=charge_q * 3.2, discharge_e=discharge_q * 3.1,
-                ))
-                date += tick_step
-                test_ticks += tick_step
-                cycle_ticks += tick_step
+        # Every real schedule rests between branches; without it the last
+        # cycle of a file is indistinguishable from a truncated one.
+        total_step += 1
+        step_ticks = 0
+        for _ in range(rest_points):
+            push(step_index=3, cell_status=1, voltage=voltage, current=0.0,
+                 charge_q=charge_q, discharge_q=discharge_q)
+
+        total_step += 1
+        step_ticks = 0
+        for point in range(points_per_branch):
+            fraction = point / (points_per_branch - 1)
+            voltage = v_high - (v_high - v_low) * fraction
+            discharge_q = capacity * fraction / 1000.0
+            push(step_index=4, cell_status=4, voltage=voltage, current=-current_a,
+                 charge_q=charge_q, discharge_q=discharge_q)
+
+        total_step += 1
+        step_ticks = 0
+        for _ in range(rest_points):
+            push(step_index=3, cell_status=1, voltage=voltage, current=0.0,
+                 charge_q=charge_q, discharge_q=discharge_q)
     return samples

@@ -47,6 +47,65 @@ def test_a_flat_series_is_not_a_knee():
     assert not analysis.by_method("slope_ratio").detected
 
 
+def test_a_flat_series_has_no_knee_by_any_criterion():
+    """A cell that has not lost a thing must not be given a knee cycle."""
+    cycles = list(range(1, 31))
+    analysis = detect_knee(cycles, [5.0] * 30, reference_cycle=1)
+    assert not analysis.by_method("curvature").detected
+    assert not analysis.primary.detected
+
+
+def test_a_linear_fade_has_no_curvature_knee():
+    cycles = list(range(1, 51))
+    values = [5.0 - 0.01 * (c - 1) for c in cycles]
+    analysis = detect_knee(cycles, values, reference_cycle=1)
+    assert not analysis.by_method("curvature").detected
+    assert not analysis.primary.detected
+
+
+def test_curvature_still_finds_a_planted_knee():
+    """The guards above must not silence the criterion on a real bend."""
+    cycles, values = _piecewise(knee=30)
+    curvature = detect_knee(cycles, values, reference_cycle=1).by_method("curvature")
+    assert curvature.detected
+    assert curvature.cycle == pytest.approx(30, abs=4)
+
+
+def test_a_rising_then_falling_series_is_a_knee():
+    """Activation then collapse: fade begins at the break, so it accelerates."""
+    cycles = list(range(1, 81))
+    values = [5.0 * (1.0 + 0.002 * (c - 1)) if c <= 35
+              else 5.0 * (1.0 + 0.002 * 34 - 0.016 * (c - 35)) for c in cycles]
+    analysis = detect_knee(cycles, values, reference_cycle=1)
+    segmented = analysis.by_method("segmented")
+    assert segmented.detected
+    assert segmented.cycle == pytest.approx(35, abs=3)
+    assert analysis.primary.method == "segmented"
+
+
+def test_a_missing_reference_cycle_does_not_fall_back_to_formation():
+    """Cycle 3 unusable must promote cycle 4, never the formation cycle."""
+    cycles = list(range(1, 41))
+    values = [6.0, 5.2, float("nan")] + [5.0 - 0.01 * (c - 4) for c in range(4, 41)]
+    analysis = detect_knee(cycles, values, reference_cycle=3)
+    assert analysis.reference_cycle == 4
+    assert analysis.reference_capacity_mah == pytest.approx(5.0)
+    assert analysis.search_start_cycle == 4
+    assert analysis.reference_note and "no usable capacity" in analysis.reference_note
+
+
+def test_a_single_glitch_cycle_is_not_an_end_of_life_crossing():
+    """One check-up cycle below 80 % that recovers is not end of life."""
+    cycles = list(range(1, 101))
+    values = [5.0 - 0.0025 * (c - 1) for c in cycles]
+    values[49] = 3.9   # 78 % for one cycle, back to ~97 % the next
+    analysis = detect_knee(cycles, values, reference_cycle=1)
+    threshold = analysis.by_method("threshold")
+    assert not threshold.detected
+    assert "recovered" in threshold.reason
+    assert not analysis.primary.detected
+
+
 def test_threshold_interpolates_the_crossing():
     cycles = [1, 2, 3, 4, 5]
     values = [5.0, 5.0, 5.0, 4.0, 3.0]   # 80% of 5.0 is exactly 4.0

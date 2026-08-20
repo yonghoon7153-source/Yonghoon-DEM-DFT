@@ -38,6 +38,9 @@ MIN_SLOPE_RATIO = 1.5
 #: perfectly flat series produces a slope of ~1e-15 and every criterion finds
 #: a "knee" where its neighbour's noise happens to be twice as large.
 MIN_FADE_RATE = 1e-6
+#: An end-of-life crossing must hold for this many consecutive cycles.  One
+#: cycle below the line is a check-up or a temperature excursion, not EOL.
+SUSTAINED_CROSSING = 2
 
 
 @dataclass
@@ -63,6 +66,9 @@ class KneeAnalysis:
     #: Cycle the knee search started from -- the reference cycle, so that
     #: formation losses never count as degradation.
     search_start_cycle: int = 0
+    #: Set when the requested reference cycle had no usable capacity and the
+    #: baseline moved to a later cycle -- never reported silently.
+    reference_note: str | None = None
     fade_rate_early_pct_per_cycle: float | None = None
     fade_rate_late_pct_per_cycle: float | None = None
     projected_cycle_at_80pct: float | None = None
@@ -103,13 +109,23 @@ def _linear_fit(x: np.ndarray, y: np.ndarray) -> tuple[float, float, float]:
 
 def _threshold_knee(cycles: np.ndarray, retention: np.ndarray,
                     level: float) -> KneeResult:
-    below = np.flatnonzero(retention < level)
+    under = retention < level
+    below = np.flatnonzero(under)
     if not len(below):
         return KneeResult("threshold", None, False,
                           f"capacity never fell below {level:g}% "
                           f"(lowest {retention.min():.1f}%)",
                           {"level": level, "min_retention": float(retention.min())})
-    index = int(below[0])
+    # This is the only criterion fed the raw series, so the moving median never
+    # gets to reject a one-cycle glitch for it; require the crossing to hold.
+    sustained = [c for c in below if bool(under[c:c + SUSTAINED_CROSSING].all())]
+    if not sustained:
+        first = float(cycles[int(below[0])])
+        return KneeResult("threshold", None, False,
+                          f"dipped below {level:g}% at cycle {first:.0f} but recovered",
+                          {"level": level, "min_retention": float(retention.min()),
+                           "first_cycle_below": first})
+    index = int(sustained[0])
     if index == 0:
         crossing = float(cycles[0])
     else:
@@ -166,12 +182,27 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
         return KneeResult("segmented", None, False,
                           "fade does not accelerate after the best break point", detail)
 
-    ratio = slope_after / slope_before if slope_before else float("inf")
+    if slope_before >= -MIN_FADE_RATE:
+        # The guards above leave slope_after fading here, so a flat or rising
+        # pre-break segment means fade *begins* at the break point -- activation
+        # then collapse, common in all-solid-state cells.  Dividing would give a
+        # negative ratio and reject the clearest knee shape there is.
+        ratio = float("inf")
+    else:
+        ratio = slope_after / slope_before
     detail["slope_ratio"] = float(ratio)
     if ratio < MIN_SLOPE_RATIO:
         return KneeResult("segmented", None, False,
                           f"fade accelerates only {ratio:.2f}x "
                           f"(needs {MIN_SLOPE_RATIO:g}x)", detail)
+
+    if not np.isfinite(ratio):
+        return KneeResult(
+            "segmented", breakpoint, True,
+            f"fade begins at cycle {breakpoint:.0f} "
+            f"({slope_before:+.3f} -> {slope_after:.3f} %/cycle)",
+            detail,
+        )
 
     return KneeResult(
         "segmented", breakpoint, True,
@@ -234,10 +265,26 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
         return KneeResult("curvature", None, False, "series too short after edge trimming")
     index = margin + int(np.argmax(interior))
     cycle = float(cycles[index])
+    slope_before, _, _ = _linear_fit(cycles[:index + 1], smoothed[:index + 1])
+    slope_after, _, _ = _linear_fit(cycles[index:], smoothed[index:])
+    detail = {"curvature": float(curvature[index]),
+              "median_curvature": float(np.median(interior)),
+              "slope_before": slope_before, "slope_after": slope_after}
+    # An argmax always exists, so without these guards the criterion the other
+    # three fall back to hands a healthy cell a knee cycle -- the largest
+    # rounding ripple on a flat line, or the kink a single glitch leaves behind.
+    if slope_before > -MIN_FADE_RATE and slope_after > -MIN_FADE_RATE:
+        return KneeResult("curvature", None, False, "capacity is not fading", detail)
+    ratio = (float("inf") if slope_before >= -MIN_FADE_RATE
+             else slope_after / slope_before)
+    detail["slope_ratio"] = float(ratio)
+    if ratio < MIN_SLOPE_RATIO:
+        return KneeResult("curvature", None, False,
+                          f"curvature peaks at cycle {cycle:.0f} but fade "
+                          f"accelerates only {ratio:.2f}x there "
+                          f"(needs {MIN_SLOPE_RATIO:g}x)", detail)
     return KneeResult("curvature", cycle, True,
-                      f"maximum curvature at cycle {cycle:.0f}",
-                      {"curvature": float(curvature[index]),
-                       "median_curvature": float(np.median(interior))})
+                      f"maximum curvature at cycle {cycle:.0f}", detail)
 
 
 def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
@@ -265,10 +312,24 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
         empty = KneeResult("none", None, False, "no complete cycles")
         return KneeAnalysis(empty, [empty], reference_cycle or 0, None, 0)
 
-    if reference_cycle is not None and reference_cycle in set(cycles.astype(int).tolist()):
-        reference_index = int(np.flatnonzero(cycles.astype(int) == reference_cycle)[0])
-    else:
-        reference_index = 0
+    reference_note: str | None = None
+    reference_index = 0
+    if reference_cycle is not None:
+        integer_cycles = cycles.astype(int)
+        matches = np.flatnonzero(integer_cycles == reference_cycle)
+        if len(matches):
+            reference_index = int(matches[0])
+        else:
+            # The requested cycle carried no usable capacity (NaN, or zero), and
+            # index 0 would quietly make a formation cycle the baseline -- every
+            # retention then measured against an inflated denominator.  Mirror
+            # health.py: the earliest surviving cycle at or after the request.
+            position = int(np.searchsorted(integer_cycles, reference_cycle))
+            reference_index = position if position < n else 0
+            reference_note = (
+                f"cycle {reference_cycle} has no usable capacity; "
+                f"using cycle {int(cycles[reference_index])} as the reference"
+            )
     reference_capacity = float(capacities[reference_index])
     retention = 100.0 * capacities / reference_capacity
 
@@ -304,6 +365,7 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
         reference_capacity_mah=reference_capacity,
         n_points=n,
         search_start_cycle=int(search_cycles[0]) if search_n else 0,
+        reference_note=reference_note,
     )
 
     early = min(max(search_n // 4, 3), search_n)

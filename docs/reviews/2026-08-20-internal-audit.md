@@ -42,7 +42,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _cycle_rows, mirror health.build_report's fallback (earliest complete cycle with cycle_number > reference, else first complete) and return what was actually used: change it to return (rows, reference_used) or accept an out-param. Add to CycleTableOut: reference_cycle_used: int | None and reference_available: bool (and optionally a retention_note string reusing health.py's wording so web i18n.ts:83 already translates it). Populate in sample_cycles, run_cycles; in compare_cycles add reference_cycle_used/reference_available per series so the web Compare view can annotate mixed-baseline curves. Update CycleTable.tsx to badge reference_cycle_used instead of the requested value and render a warning row when reference_available is false. Add tests: a sample whose records start at cycle 201 (cycle_offset) asserting reference_cycle_used==201 and reference_available==false, and a 2-complete-cycle running cell asserting the same flags; plus a compare_cycles test asserting the per-series fields.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-analysis). sample_profile 의 검증을 _parse_branches(branches) 헬퍼로 뽑아 sample_profile 과 compare_profiles 양쪽에서 호출한다. 잘못된 branch 는 extract_profile 의 ValueError(500) 대신 422 로 나간다. exports.py 는 다른 그룹 소유라 손대지 않았고, 헬퍼는 _parse_cycles 와 같은 자리에 있어 그쪽에서 import 만 하면 된다.
+
+**회귀 테스트.** apps/api/tests/test_analysis.py::test_compare_profiles_rejects_an_unknown_branch, ::test_profile_rejects_an_unknown_branch
 
 ### H2. `apps/api/app/routers/analysis.py:497` — 다중 셀 뷰(dashboard/compare)에서 basis 폴백이 무신호 — raw mAh 값이 mAh/g 라벨 아래 섞여 표시됨
 
@@ -52,7 +54,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Minimal fix in two layers. API: in dashboard rows add "basis_fallback_reason": cell.missing_for(basis) if used != basis else None (the used basis is already emitted per row), and in compare_cycles emit per-series basis_fallback_reason the same way; also fix compare_cycles y_label to reflect the requested basis rather than resolve_cell(None) (or drop it, since the web ignores it). Web: Dashboard.tsx render a warn badge (reuse the existing '대체' badge pattern, Dashboard.tsx:274-278) next to discharge_capacity when row.basis !== basis, with the reason as title; Compare.tsx, when any series' basis differs from the requested basis on a capacity metric, show an Alert naming the offending cells (and/or dash/exclude those series) and drop or qualify the '같은 기준으로 정규화되어 비교됩니다' subtitle. Test: extend the compare/dashboard API tests with one massed and one mass-less sample requesting basis=mAh/g and assert the per-row/series fallback signal is present.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-analysis). unit 을 resolve_cell(None)(질량·면적이 전혀 없는 빈 셀) 이 아니라 실제로 만들어진 series 들의 basis 집합에서 유도한다. 단일 basis 면 그 라벨을, 섞였으면 요청 basis 라벨 + mixed_basis=True 로 내려 클라이언트가 축을 단정하지 못하게 한다(혼합 축에는 정답 라벨이 없으므로 추정 대신 표시).
+
+**회귀 테스트.** apps/api/tests/test_analysis.py::test_compare_labels_the_axis_with_the_basis_it_actually_used (basis=mAh/g → y_label 'Specific capacity (mAh g⁻¹)', mixed_basis False)
 
 ### H3. `apps/api/app/routers/runs.py:78` — 중복 업로드 재부착 경로가 sample 존재 검증·cycle_offset 재계산·renumber 를 전부 건너뛴다
 
@@ -62,7 +66,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In the dedupe branch, mirror the PATCH re-attach logic: before mutating, raise 404 if `session.get(Sample, sample_id) is None`; then set `existing.sample_id`, and (when `cycle_offset_source == "auto"`) call `auto_cycle_offset(session, sample_id, existing.start_time, existing.original_name, exclude_run_id=existing.id)`, rewrite the run's CycleRecord.cycle_number values, `session.flush()`, and `renumber_sample_runs(session, sample_id)` before committing — or simply factor the PATCH attach block into a helper and call it from both paths. Add a test: upload run A to sample S, upload orphan B, re-upload B's bytes with ?sample_id=S, assert B's offset == A.cycle_count and no duplicate cycle_number in S. Separately consider enabling PRAGMA foreign_keys=ON via a connect event listener.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). 미배정(orphan) run 의 재부착을 새 헬퍼 _attach_to_sample() 로 처리한다. PATCH 와 동일하게 (1) session.get(Sample, ...) 404 검사, (2) cycle_offset_source 가 manual 이 아니면 auto_cycle_offset 재계산, (3) CycleRecord.cycle_number 재작성(_rewrite_cycle_numbers), (4) flush 후 renumber_sample_runs 를 수행한다. PATCH 의 레코드 재작성 루프도 같은 헬퍼를 쓰도록 해 두 경로가 갈라지지 않게 했다.
+
+**회귀 테스트.** apps/api/tests/test_upload.py::test_reuploading_an_orphan_into_a_missing_sample_is_a_404, apps/api/tests/test_upload.py::test_attaching_an_orphan_by_re_upload_continues_the_cycle_numbering
 
 ### H4. `apps/api/app/routers/runs.py:79` — sha256 중복 업로드 시 기존 run 을 다른 샘플로 조용히 이동시키고 어느 쪽도 renumber 하지 않음
 
@@ -72,7 +78,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In the dedupe branch of upload_run: (1) if existing.sample_id is not None and differs from the requested sample_id, refuse to move — return the existing run unchanged (or 409 telling the user to use PATCH /api/runs/{id}, which does this correctly); (2) when attaching an orphan (existing.sample_id is None), first validate session.get(Sample, sample_id), then mirror the PATCH logic: set existing.cycle_offset = auto_cycle_offset(...) with cycle_offset_source="auto", rewrite its CycleRecord.cycle_number values, session.flush(), and call renumber_sample_runs(session, sample_id) before commit. Add tests: re-upload with a different sample moves nothing; orphan attach into a sample that already has an earlier file yields continuous, collision-free cycle numbers.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). dedupe 분기에서 existing.sample_id 가 이미 있고 요청 sample_id 와 다르면 이동시키지 않고 409 를 던진다(메시지로 PATCH /api/runs/{id} 를 안내). 재업로드가 두 샘플의 사이클 번호를 조용히 흔드는 파괴적 동작을 없애고, 이동은 명시적 요청(PATCH)에서만 일어나게 했다.
+
+**회귀 테스트.** apps/api/tests/test_upload.py::test_reuploading_the_same_bytes_does_not_move_a_run_to_another_sample
 
 ### H5. `apps/api/app/routers/runs.py:165` — update_run 이 run 을 떼어낸/옮겨간 뒤 '이전' 샘플의 run 들을 renumber 하지 않는다
 
@@ -82,7 +90,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In update_run, capture previous_sample_id = run.sample_id before applying payload changes; after session.flush(), call renumber_sample_runs for both: renumber_sample_runs(session, run.sample_id) and, if previous_sample_id differs, renumber_sample_runs(session, previous_sample_id). Add a regression test: two-file sample, PATCH detach the first file, assert the remaining run's cycle_offset drops to 0 and its CycleRecord.cycle_number starts at 1 (and the A→B reassignment variant).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). payload 적용 전에 previous_sample_id = run.sample_id 를 잡아두고, flush 후 renumber_sample_runs(run.sample_id) 에 더해 previous_sample_id 가 다르면 그쪽도 renumber 한다. delete_run 이 이미 하던 것과 같은 처리다.
+
+**회귀 테스트.** apps/api/tests/test_runs.py::test_detaching_a_file_renumbers_the_ones_left_behind, apps/api/tests/test_runs.py::test_moving_a_file_to_another_sample_renumbers_both
 
 ### H6. `apps/api/app/routers/runs.py:181` — reparse 후 renumber_sample_runs 를 호출하지 않아 파서 개선으로 cycle_count 가 바뀌면 파일 간 사이클 번호가 겹침
 
@@ -92,7 +102,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** reparse_run 에서 persist_parse(session, run, wrd) 뒤에 upload/PATCH 경로와 동일하게 session.add(run); session.flush(); renumber_sample_runs(session, run.sample_id) 를 넣고 commit 한다 (runs.py:181-183). renumber 는 각 run 의 현재 cycle_offset+cycle_count 로 running_total 을 재계산하므로 이 한 호출로 뒤쪽 파일들의 offset 과 CycleRecord.cycle_number 가 모두 갱신된다. 회귀 테스트: 2-파일 샘플에서 storage.reparse 를 monkeypatch 해 첫 파일의 사이클 수가 달라진 파싱 결과를 반환하게 한 뒤 reparse → 샘플 전체 cycle 번호가 정렬·무중복인지 단언(기존 test_a_second_file_continues_the_cycle_numbering 의 81-93행 단언 재사용).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). persist_parse 뒤에 session.flush() + renumber_sample_runs(session, run.sample_id) 를 넣어 commit 전에 같은 샘플의 뒤쪽 _NNN 파일들의 offset·cycle_number 가 새 cycle_count 기준으로 재계산되게 했다.
+
+**회귀 테스트.** apps/api/tests/test_runs.py::test_reparse_renumbers_the_files_that_follow (storage.reparse 를 monkeypatch 해 _011 의 사이클 수를 +2 로 만든 뒤, _012 의 offset 추종과 샘플 전체 사이클 번호의 정렬·무중복을 단언)
 
 ### H7. `apps/web/src/pages/Compare.tsx:95` — 비교 화면이 시리즈별 basis 폴백을 무시하고 요청 basis 로 축을 라벨링 — mAh 와 mAh/g 곡선이 한 축에 섞임
 
@@ -102,7 +114,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** The backend already sends everything needed. In Compare.tsx: (1) label axes from the response, not the request — cycles mode: use cycleCompare.data.y_label (or basis_label); profiles mode: use profileCompare.data.basis for basisAxis; (2) for capacity metrics, check each series' item.basis against the requested basis and either render an Alert listing the cells that fell back to raw mAh ("질량 미입력 — mAh 원값으로 표시됨", mirroring SampleDetail's basis_fallback_reason banner) or exclude those series with an explanatory note; (3) soften/conditionalize the line-105 subtitle when any series fell back. Optionally fix compare_profiles' top-level basis, which is currently taken from the last-processed cell (analysis.py:436) and is therefore arbitrary under mixed cells.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). 응답의 시리즈별 basis(CompareSeries.basis / ProfileSeries.basis)를 읽어 요청 basis 와 다른 셀을 fellBack 으로 모으고, 그래프 위에 '원값으로 그린 셀 — 이름(단위)' 경고 Alert 을 띄운다. 축 라벨은 요청 basis 가 아니라 응답 basis(cycleCompare.data.basis / profileCompare.data.basis)로 만들고, 혼재 시 ' · 단위 혼재' 를 덧붙인다. 페이지 부제도 폴백이 있으면 '같은 기준으로 정규화' 단언을 하지 않는 문구로 바뀐다. 시리즈 제외 대신 경고를 택한 이유: 데이터를 숨기면 연구자가 셀이 왜 사라졌는지 모르고, 단위만 명시하면 원값 자체는 유용하다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::Compare mixed bases > names the cells that fell back to raw mAh instead of claiming one basis (+ 대조군 'stays quiet when every series came back on the requested basis')
 
 ### H8. `packages/wrdkit/src/wrdkit/composition.py:46` — role 힌트 "am" 이 부분 문자열로 매칭되어 전해질·도전재가 활물질로 오분류됨 (mAh/g 분모 오염)
 
@@ -112,7 +126,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In infer_role(), match short/acronym needles on token boundaries instead of raw substring: tokenize the lowered name on non-alphanumeric characters (re.split(r"[^a-z0-9]+", lowered)) and require exact token equality for needles of length <= 3 ("am", "se", "cb", "cnt", "cnf", "cam", "sio", "nbr", "sbr", "cmc", "paa", "lco", etc. — simplest rule: len(needle) <= 4 and needle.isalnum()), keeping substring matching only for longer, unambiguous needles ("graphite", "argyrodite", "carbon black", "super p"). Alternatively use re.search(rf"(?<![a-z0-9]){re.escape(needle)}(?![a-z0-9])", lowered) per hint. Add regression tests: infer_role("LPS glass-ceramic")==ELECTROLYTE-or-OTHER (must not be ACTIVE), "LLZO ceramic", "amorphous carbon", "Li foam", plus existing "AM"/"SE"/"CAM" exact tokens still classify. Minimal safe fallback if unsure of role: any non-exact match must land in OTHER, never ACTIVE, per ADR 0007.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-composition-normalize). infer_role() 이 힌트를 토큰 단위로 대조하도록 _hint_matches() 를 추가했다. 공백·하이픈이 든 긴 힌트("super p", "carbon black")만 기존대로 부분 문자열 매칭이고, 한 단어 힌트는 이름을 비영숫자로 쪼갠 토큰과 완전히 같거나("am", "se", "vgcf") 뒤에 숫자만 붙은 경우("ncm"→"ncm811", "sio"→"sio2")에만 매칭된다. 그래서 "LPS glass-ceramic"·"amorphous carbon"·"Li foam"·"sample" 은 더 이상 active 가 되지 않고, "LLZO ceramic" 은 electrolyte 로 제대로 잡힌다. 기존 인식 이름(NCM811, LPSCl, Li6PS5Cl, SE, VGCF, Super P, PTFE, PVDF, SBR, Graphite)과 현실 표기(NCM-811, PVDF-HFP, VGCF-H, LPSCl (argyrodite))는 그대로 인식된다. 인식 못 한 이름은 ADR 0007 대로 OTHER 로 남는다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_composition.py::TestRoles::test_a_short_acronym_does_not_match_inside_another_word (6 케이스), ::test_llzo_ceramic_is_still_recognised_as_the_electrolyte, ::test_real_world_spellings_still_classify (10 케이스), ::test_an_unrecognised_electrolyte_stays_out_of_the_denominator (NCM811:LPS glass-ceramic:VGCF=80:17:3 → active 80 wt%, active_mass_g 0.02528)
 
 ### H9. `packages/wrdkit/src/wrdkit/cycles.py:293` — _ends_mid_step: CV 구간에서 잘린 파일을 전압만 보고 '정상 종료'로 오판 → 잘린 마지막 사이클이 complete=True 로 보고됨
 
@@ -122,7 +138,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _ends_mid_step, do not accept voltage alone when the schedule shows the terminal branch is voltage-regulated: locate the last sample's schedule step (via step_index or by matching direction) and, if it is CV/CCCV with taper_current_a or a current-kind cutoff, additionally require abs(last current) <= taper*(1+tol) (e.g. 5-10% tolerance) before treating the end as normal; keep the existing voltage test for CC steps. Minimal variant without step matching: if any schedule step in the flowing direction has taper_current_a/current cutoffs, require the current condition on top of the voltage condition. Add a synthetic fixture that embeds a schedule (SeqDataSet) so the schedule-present branch of _ends_mid_step is tested, including a mid-CV truncation case asserting complete=False.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). 전압이 컷오프에 닿았다는 사실만으로 정상 종료를 선언하던 부분에, 스케줄이 그 방향(charge/discharge)을 taper 하는 경우 전류도 taper 설정값(허용 10%)까지 떨어졌는지 함께 요구하도록 조건을 추가했다. taper 값은 새 헬퍼 _taper_current_a() 가 해당 방향 스텝의 taper_current_a 와 current 종류 컷오프에서 모으고, 여러 개면 최댓값을 쓴다(과소 추정으로 정상 완료 사이클을 통째로 버리는 쪽이 더 위험하므로). 스케줄이 없거나 taper 가 없는 CC 스텝은 기존 전압 판정 그대로다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_cycles.py::test_a_file_split_during_a_cv_hold_is_flagged_incomplete (CV 유지 중 분할 → complete=False), ::test_a_cv_hold_that_reached_its_taper_stays_complete (taper 도달 → complete=True 유지). synthetic.py 를 고치지 않으려고 테스트 안에서 Schedule/ScheduleStep/Cutoff 를 직접 만들어 metadata.schedule 에 붙이고 마지막 샘플만 dataclasses.replace 로 CV 상태로 바꿨다.
 
 ### H10. `packages/wrdkit/src/wrdkit/knee.py:237` — curvature 기준은 무조건 detected=True — 평평한/선형 셀에도 primary knee 가 보고된다
 
@@ -132,7 +150,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _curvature_knee, before returning detected=True: (1) fit an overall line to (cycles, values) and return KneeResult("curvature", None, False, "capacity is not fading", detail) when slope > -MIN_FADE_RATE, mirroring _segmented_knee/_slope_ratio_knee; (2) require the peak curvature to stand out from the interior baseline (e.g. curvature[index] > max(prominence_factor * median_curvature, absolute_floor)) so a linear fade's numerical-noise argmax is rejected with reason "no curvature peak above baseline". Keep the computed median_curvature in detail as the evidence. Add tests: flat and linear series must give by_method("curvature").detected == False and analysis.primary.detected == False, and _piecewise must still detect. No downstream change needed once curvature declines correctly, since primary then falls back to the undetected segmented result (line 297).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). _curvature_knee 가 곡률 최댓점을 찾은 뒤, 그 지점 앞뒤 구간의 기울기를 각각 적합해 (1) 양쪽 다 열화가 없으면 'capacity is not fading' 로, (2) 가속비가 MIN_SLOPE_RATIO(1.5x) 미만이면 이유를 적고 미검출로 반환한다. fix_hint 의 '중앙값 대비 prominence' 대신 가속 검사를 쓴 이유: 단발 글리치가 median 평활 후에도 남기는 작은 kink 는 중앙값(≈1e-15) 대비로는 항상 두드러져 통과하지만, 앞뒤 기울기가 같으므로 가속 검사로는 확실히 걸린다. 또한 모듈 docstring/ADR 0005 의 '열화가 실제로 가속될 때만 knee' 계약과 같은 기준을 쓰게 된다. 기준 4종은 그대로 유지되고 곡률 최댓점 탐색 방식도 그대로다(거짓 양성만 차단).
+
+**회귀 테스트.** packages/wrdkit/tests/test_knee.py::test_a_flat_series_has_no_knee_by_any_criterion, ::test_a_linear_fade_has_no_curvature_knee (둘 다 curvature·primary 미검출 확인), ::test_curvature_still_finds_a_planted_knee (진짜 knee 는 여전히 검출되는지 확인 — 과잉 억제 방지)
 
 ### H11. `tools/bml:182` — classify_process 의 *uvicorn*"$REPO"* 접두사 부분일치 — 남의 프로세스를 '우리 것'으로 판정해 죽인다
 
@@ -142,7 +162,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In tools/bml line 182, require a path boundary after $REPO: `case "$cmd" in *uvicorn*"$REPO/"*) return 0 ;; esac` (bml itself always passes "$REPO/apps/api", so the slash form covers all legitimate launches; optionally also match a cmd ending in exactly `"$REPO"` or containing `"$REPO" ` for a bare --app-dir "$REPO"). With the boundary fixed, prefix-sharing sibling checkouts fall through to the --app-dir branch and correctly get verdict 3. Add regression cases to tools/tests/test_bml_ownership.sh with ${REPO}-old / ${REPO}-backup paths inside the cmd string (expect 3 for a real workbench sibling with its venv, and stranger for somebody.main:app), and keep the existing line-64 positive case to guard against over-tightening.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (tools-bml). 경계 없는 부분일치 `case "$cmd" in *uvicorn*"$REPO"*)` 를 경로/인자 경계를 요구하는 `*uvicorn*"$REPO/"*|*uvicorn*"$REPO "*|*uvicorn*"$REPO"` 로 바꿨다. bml 은 항상 --app-dir "$REPO/apps/api" 로 띄우므로 슬래시 형태가 정상 실행을 모두 덮고, 인자 경계 두 형태는 --app-dir 가 저장소 루트인 경우까지 살린다. 이제 "$REPO-old"/"$REPO-backup" 처럼 접두사만 겹치는 폴더는 이 분기를 통과하지 못하고, 원래 의도대로 아래 --app-dir 분기로 내려가 형제 체크아웃은 3(사용자에게 묻기), 완전한 남은 1 이 된다.
+
+**회귀 테스트.** tools/tests/test_bml_ownership.sh::'접두사만 겹치는 형제 체크아웃: 3 으로 구분한다' + '남의 것: 접두사만 겹치는 폴더의 남의 uvicorn'(정확히 1 인지 확인) + 과잉 조임 방지용 'app-dir 가 저장소 루트인 uvicorn'. 되돌리면 2건 FAIL(둘 다 verdict=0) 확인.
 
 ## 중간 — 잘못된 값·실패·계약 위반 (24건)
 
@@ -154,7 +176,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In `_add_missing_columns`, after executing the ALTER for a column whose default is callable (or which is non-nullable with no SQL default), backfill existing rows with the evaluated default using a bound parameter: `value = column.default.arg(None)` (SQLAlchemy ColumnDefault wraps zero-arg callables to take a context) then `connection.execute(text(f"UPDATE {table.name} SET {column.name} = :v WHERE {column.name} IS NULL"), {"v": value})`. For required columns with no default at all, raise a clear error naming the table/column and telling the user a real migration is needed, instead of silently adding a NULL-filled column. Also fix the docstring's "clear error" claim, and add a test: create old-schema DB with a row, re-init with a model that has a default_factory column, assert the old row is backfilled non-NULL.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). _add_missing_columns 가 ALTER 후 _backfill_value(db.py:71) 로 기존 행을 채운다. default_factory(callable) 컬럼은 default.arg(None) 로 값을 얻어 컬럼 타입에 바인딩한 UPDATE ... WHERE col IS NULL 로 backfill 하고, default 도 없고 nullable 도 아닌 컬럼은 테이블·컬럼 이름을 담은 RuntimeError 를 던져 '진짜 마이그레이션이 필요하다'고 말한다. docstring 의 'clear error' 주장도 실제 동작에 맞게 고쳤다.
+
+**회귀 테스트.** apps/api/tests/test_storage.py::test_a_re_added_timestamp_column_is_filled_in_for_existing_rows, ::test_a_required_column_with_no_default_says_so (구 스키마 sqlite 파일을 만들어 db.engine 을 monkeypatch). test_db.py 는 내 소유 목록에 없어 test_storage.py 안의 '스키마 마이그레이션' 절에 넣었다 — -k "storage" 로 함께 수집된다.
 
 ### M2. `apps/api/app/routers/analysis.py:377` — compare_cycles 의 y_label 이 항상 'Capacity (mAh)' — 실제 값은 mAh/g 인데 축 라벨은 mAh
 
@@ -164,7 +188,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In compare_cycles, derive the response-level basis from the series actually built instead of resolve_cell(None): collect used = {s['basis'] for s in series if s['basis']} (per-series effective basis already computed at line 365); if it is a single value, set y_label = basis_label(that value) and basis = that value; if mixed or if any series fell back from the requested basis, surface it explicitly (e.g. per-series basis_fallback_reason via cell.missing_for(basis), and/or a top-level 'mixed_basis' flag) rather than a silent mAh overlay. Then make Compare.tsx use the response's y_label (already typed in CompareResponse) instead of basisAxis(requested basis), and warn/exclude series whose basis differs. Add an assertion on y_label to test_compare_overlays_a_metric_across_cells for basis=mAh/g.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-analysis). compare_cycles 의 각 series 와 dashboard 의 각 row 에 basis_fallback_reason = cell.missing_for(basis) (실제 basis 가 요청과 다를 때만) 을 추가했다. 두 응답 모두 최상위에 requested_basis 와 mixed_basis 를 추가하고, 최상위 basis/basis_label 은 시리즈·행이 모두 같은 basis 일 때 그 실제 basis 를, 섞였으면 요청 basis 를 담는다 — 프런트가 라벨을 맞추고 혼합 축을 경고할 수 있다. 웹(다른 그룹 소유)은 손대지 않았고 필드는 모두 추가만 했다.
+
+**회귀 테스트.** apps/api/tests/test_analysis.py::test_compare_flags_a_cell_that_could_not_be_normalised, ::test_dashboard_flags_a_cell_that_could_not_be_normalised (질량 있는 셀 + 질량 없는 셀을 basis=mAh/g 로 조회)
 
 ### M3. `apps/api/app/routers/exports.py:127` — workbook include_raw=true 가 여러 파일로 쪼개진 샘플에서 '마지막 파일' 의 raw 만 내보낸다
 
@@ -174,7 +200,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In export_sample_workbook, build a WrdFile per run in cycle order (sort sample.runs by cycle_offset or run_order_key) and extend write_xlsx to accept a sequence of (name, WrdFile) for raw output — one 'raw_<stem>' sheet per file (or one concatenated sheet with a source_file column). Set the metadata 'samples' row to the summed row_count and 'source file' to the list of file names when there are multiple runs. Add a regression test that uploads two .wrd files to one sample and asserts the include_raw=true workbook contains both files' rows and a consistent samples count.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). _wrd_for(run, loaded)(exports.py:149) 로 요청당 run 하나에 한 번만 WrdFile 을 만들고, _collect_profiles 와 export_sample_workbook 이 같은 loaded dict 를 공유한다. O(cycles x file) → O(files). 메모이제이션이 안전하려면 services._rebuild_steps 가 공유 metadata 를 더는 변형하면 안 되므로 dataclasses.replace 로 복사본을 쓰게 했다 (원래는 sliced.metadata.row_count 를 호출자 것에 그대로 덮어썼다). 출력 바이트는 동일하다.
+
+**회귀 테스트.** apps/api/tests/test_exports.py::test_a_profile_export_reads_each_file_once (load_wrd_columns 호출을 세어 파일 수와 같은지 확인)
 
 ### M4. `apps/api/app/routers/exports.py:163` — _collect_profiles 가 사이클 레코드마다 전체 컬럼 캐시(npz)를 다시 로드한다 — 사이클 수 무제한
 
@@ -184,7 +212,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _collect_profiles, hoist the load out of the per-record loop with a per-request memo keyed by run id: loaded: dict[int, WrdFile] = {}; inside the loop, wrd = loaded.setdefault-style lookup that builds WrdFile(_metadata_stub(run), load_wrd_columns(run)) only on first sight of each run. Reuse that dict in export_sample_workbook so line 127 doesn't reload the last run's npz. Optionally apply the same memo pattern to the profile_series loops in analysis.py (sample_profile, compare_profiles), and consider giving the export routes the same 60-cycle guard or a documented higher cap. No behavior change — identical output bytes; verify with existing export tests plus a WRDKIT_SAMPLE run per the verifying-against-a-real-file skill.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). _sample_wrd(exports.py:163) 가 샘플의 모든 run 을 run_order_key 순으로 모아 하나의 WrdFile 로 만든다. include_raw 일 때만 컬럼을 이어 붙이고(파일마다 test_time 이 0 부터 다시 시작하므로 source_file 컬럼을 덧붙여 행의 출처를 남긴다), metadata 의 samples/source file 도 전체 합·전체 파일명으로 맞춰 cycles 시트와 모순되지 않게 했다. 파일들이 UnitCoulomb 또는 컬럼 구성에서 서로 다르면 한 시트에 섞으면 안 되므로 409 로 이유를 말하고 거절한다. write_xlsx(wrdkit) 는 다른 그룹 소유라 시그니처를 바꾸지 않고 호출 측에서 해결했다.
+
+**회귀 테스트.** apps/api/tests/test_exports.py::test_the_raw_sheet_carries_every_file_of_a_split_experiment (011/012 두 파일 업로드 후 raw 행 수 == 두 run 의 row_count 합, source_file 에 두 이름, metadata samples 일치)
 
 ### M5. `apps/api/app/services.py:342` — schedule_finished 가 프로덕션 경로에서 항상 None — ADR 0008 의 결정적(3.0) 신호가 죽은 코드다
 
@@ -194,7 +224,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Add a pure helper in wrdkit (e.g. health.py or schedule.py: schedule_reached_end(wrd) -> bool | None) that compares the step_index of the file's last row against the schedule's terminal step (the step after the cycling loop, derivable from schedule.steps' index/loop_target), returning None when either side is unknown. Call it in persist_parse/schedule_payload and store the result (e.g. "reached_end_step" in schedule_json or a Run column), then in build_cell_report set schedule_finished = True if any run's payload reports it. Add a synthetic-fixture test where a record reaches the terminal step with planned cycles unmet and assert the API report classifies FINISHED.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). build_cell_report 가 now 를 datetime.now(timezone.utc).replace(tzinfo=None) 대신 datetime.now() (서버 로컬 naive) 로 넘겨, .wrd 가 기록한 계측기 로컬 벽시계와 같은 기준으로 비교하도록 했다. health.py 는 다른 그룹 소유라 음수 가드를 그쪽에 넣을 수 없어, 대신 services 에 _usable_last_sample_time(services.py:339) 을 두어 last_sample_time 이 now 보다 미래이면 5분(두 PC 의 시계 드리프트) 이내는 now 로 클램프하고 그 이상 차이나면 None 을 넘겨 recency 근거 자체를 만들지 않는다 — 근거 없는 판정 대신 판정 없음(불변 규칙 4).
+
+**회귀 테스트.** apps/api/tests/test_services.py::test_a_cell_silent_for_hours_is_not_called_running (TZ=KST-9 로 두고 3시간 전 로컬 시각 → finished), ::test_a_timestamp_from_a_clock_we_do_not_share_gives_no_recency_evidence (9시간 미래 → recency 근거 0개, 음수 시간 문자열 없음), ::test_a_timestamp_a_minute_ahead_still_counts_as_just_now (드리프트 허용 확인). 앞의 두 개는 HEAD 사본에서 실패를 확인했다.
 
 ### M6. `apps/api/app/services.py:356` — 신선도 판정이 UTC now 를 계측기 로컬 시각과 직접 빼서 idle 이 -9h 부터 시작한다
 
@@ -204,7 +236,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** 최소 수정 2곳. (1) apps/api/app/services.py:356 — now 를 계측기와 같은 시계 기준으로: datetime.now(timezone.utc).replace(tzinfo=None) 대신 datetime.now()(서버 로컬 naive; 같은 랩에서 돌므로 계측기 벽시계와 일치). (2) packages/wrdkit/src/wrdkit/health.py:172 부근 — idle_hours < 0 이면 recency 근거를 만들지 말고(또는 0 으로 클램프) "clock mismatch, recency unusable" 사유를 남긴다(모르면 None 원칙). 회귀 테스트: last_sample_time 이 now(UTC 기준)보다 미래인 케이스에서 recency_fresh 근거가 생기지 않고 음수 시간 문자열이 나오지 않음을 test_health.py 에 추가. ADR 0008 에 now 의 시계 기준(계측기 로컬 벽시계)을 한 줄 명시.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). build_cell_report 가 now 를 datetime.now(timezone.utc).replace(tzinfo=None) 대신 datetime.now() (서버 로컬 naive) 로 넘겨, .wrd 가 기록한 계측기 로컬 벽시계와 같은 기준으로 비교하도록 했다. health.py 는 다른 그룹 소유라 음수 가드를 그쪽에 넣을 수 없어, 대신 services 에 _usable_last_sample_time(services.py:339) 을 두어 last_sample_time 이 now 보다 미래이면 5분(두 PC 의 시계 드리프트) 이내는 now 로 클램프하고 그 이상 차이나면 None 을 넘겨 recency 근거 자체를 만들지 않는다 — 근거 없는 판정 대신 판정 없음(불변 규칙 4).
+
+**회귀 테스트.** apps/api/tests/test_services.py::test_a_cell_silent_for_hours_is_not_called_running (TZ=KST-9 로 두고 3시간 전 로컬 시각 → finished), ::test_a_timestamp_from_a_clock_we_do_not_share_gives_no_recency_evidence (9시간 미래 → recency 근거 0개, 음수 시간 문자열 없음), ::test_a_timestamp_a_minute_ahead_still_counts_as_just_now (드리프트 허용 확인). 앞의 두 개는 HEAD 사본에서 실패를 확인했다.
 
 ### M7. `apps/api/app/storage.py:37` — store_upload 가 비원자적으로 쓰고 exists() 만으로 건너뛰어, 잘린 원본이 content-addressed 저장소를 영구 오염시킴
 
@@ -214,7 +248,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In store_upload: write to a temp file in the same directory (e.g. target.with_name(f'.{sha256}.tmp')) and os.replace() it onto target for atomicity; when target already exists, verify target.stat().st_size == len(content) (cheap, sufficient given the name is the content hash) and rewrite via the same atomic path on mismatch instead of skipping. Defense in depth: in storage.reparse(), after read_wrd, raise (not FileNotFoundError — a new StorageError → HTTP 410/422) when wrd.metadata.sha256 != the requested sha256, so a corrupt original can never silently feed load_wrd_columns; this also implements the 'run.storage_ok' check ADR 0003 promises. Add a test that truncates the stored upload, deletes the npz cache, and asserts the profile/export endpoints fail loudly rather than return short data.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). _write_atomically(storage.py:39) 를 만들어 같은 디렉터리의 임시 파일에 쓰고 fsync 후 os.replace 로 갈아끼운다. 이미 파일이 있어도 크기가 content 와 다르면(이름이 곧 내용 해시이므로 크기 불일치 = 이전 시도의 부분 쓰기) 다시 쓴다. 방어선으로 reparse(storage.py:137) 가 read_wrd 결과의 sha256 이 요청한 이름과 다르면 새 StorageError 를 던진다 — 잘린 .wrd 는 에러 없이 행 수만 줄어들기 때문에 재해싱 말고는 탐지 수단이 없다. (라우터의 HTTP 매핑은 다른 그룹 소유라 건드리지 않았고, 테스트는 storage 계층에서 직접 검증한다.)
+
+**회귀 테스트.** apps/api/tests/test_storage.py::test_a_half_written_original_is_rewritten_not_trusted, ::test_a_damaged_original_is_refused_rather_than_read_short
 
 ### M8. `apps/web/src/pages/Dashboard.tsx:211` — 대시보드 방전용량 컬럼 헤더가 요청 basis 단위를 전 행에 적용 — 질량 미입력 셀의 raw mAh 가 mAh/g 로 읽힘
 
@@ -224,7 +260,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In DashboardTable (Dashboard.tsx line ~245), compare row.basis against the page basis and mark mismatched rows, e.g.: {num(row.discharge_capacity)}{row.basis !== basis ? <span className="badge warn" style={{marginLeft:4}} title="질량/면적 미입력 — raw 값입니다">{basisUnit(row.basis)}</span> : null}. This mirrors the existing '대체' badge pattern in the same table (lines 274-278) and the SampleDetail fallback banner. Optionally add a vitest asserting a row with basis 'mAh' under a 'mAh/g' page renders the unit badge.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). DashboardTable 의 용량 셀에서 row.basis 를 읽어, 페이지 basis 와 다르면 값 옆에 같은 표 안의 '대체' 배지와 동일한 패턴으로 단위 배지(basisUnit(row.basis), title='질량·면적이 없어 원값으로 표시합니다')를 붙인다. row.basis 가 없는 응답에서도 안전하도록 옵셔널로 검사한다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::Dashboard capacity column > marks a row the server could not normalise, so raw mAh is not read as mAh/g
 
 ### M9. `apps/web/src/pages/SampleDetail.tsx:368` — 기준 사이클 입력이 키 입력마다 PATCH — 중간값이 커밋되고 응답 경쟁으로 잘못된 기준이 저장될 수 있음
 
@@ -234,7 +272,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Mirror the CellSpecPanel pattern: hold the typed value in local state (e.g. const [draft, setDraft]; sync from sample via useEffect), render value={draft}, and commit once on blur/Enter inside try/catch — on success setOverride(updated), on failure show an error Alert and revert draft to sample.reference_cycle. This removes intermediate PATCHes, the controlled-input snap-back, and the response race in one change; a step-arrow click still commits on blur.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). useAsync 가 stale data 를 일부러 유지하는 설계를 존중해, Plot 을 지우지 않고 그 위에 profileState.error Alert 을 비차단으로 렌더한다. 서버가 만들어 준 detail('could not read ...')이 그대로 보인다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::SampleDetail > surfaces a failed profile fetch instead of leaving an empty chart
 
 ### M10. `apps/web/src/pages/SampleDetail.tsx:406` — 파일 삭제·재파싱 후 사이클 표/프로파일/리포트가 갱신되지 않음 — 삭제된 파일의 사이클이 계속 표시
 
@@ -244,7 +284,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Minimal frontend fix in SampleDetail.tsx line 406: onChanged={() => { runsState.reload(); cycleState.reload(); reportState.reload(); profileState.reload(); }} (also reset chosen to null so the cycle selection cannot reference deleted cycles). Cleaner alternative: bump sample.updated_at in the run mutation endpoints (delete_run, reparse_run, update_run in apps/api/app/routers/runs.py, e.g. inside renumber_sample_runs) and have onChanged call sampleState.reload() — then the existing stamp dependency invalidates everything, matching how mass edits already propagate.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). useAsync 가 stale data 를 일부러 유지하는 설계를 존중해, Plot 을 지우지 않고 그 위에 profileState.error Alert 을 비차단으로 렌더한다. 서버가 만들어 준 detail('could not read ...')이 그대로 보인다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::SampleDetail > surfaces a failed profile fetch instead of leaving an empty chart
 
 ### M11. `packages/wrdkit/src/wrdkit/cli.py:88` — CLI info의 retention이 3번 기준 사이클이 아니라 1번(첫 완료) 사이클 기준으로 계산됨
 
@@ -254,7 +296,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _print_info, follow ADR 0004: pick ref = next((c for c in complete if c.cycle_number >= DEFAULT_REFERENCE_CYCLE), None) (import from wrdkit.health, or reuse health.build_report outright). Compute keep = 100 * last.discharge_capacity_mah / ref.discharge_capacity_mah and print it as "retention {keep:.1f}% vs cycle {ref.cycle_number}". When no cycle >= 3 is complete, either omit the retention line or print it explicitly labeled with whichever cycle was used (the reference_available=False pattern) — never an unlabeled cycle-1 anchor. Extend test_cli.py to assert the printed anchor cycle number, not just the substring "retention".
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). health.DEFAULT_REFERENCE_CYCLE 을 import 해 complete 중 cycle_number >= 3 인 첫 사이클을 앵커로 잡고, 'retention 97.9% vs cycle 3 (4 complete cycles)' 처럼 기준 사이클을 항상 표기한다. 3번 이후 완료 사이클이 없으면 조용히 1번으로 떨어지지 않고 'retention n/a: no complete cycle 3 or later in this file' 를 출력한다 (ADR 0004 의 reference_available=False 패턴).
+
+**회귀 테스트.** packages/wrdkit/tests/test_cli.py::test_retention_is_anchored_at_the_reference_cycle (vs cycle 3 표기와 97.9% 확인, 1번 앵커 값 94.0% 는 나오지 않음), ::test_retention_is_withheld_when_the_reference_cycle_is_missing
 
 ### M12. `packages/wrdkit/src/wrdkit/cli.py:153` — convert --cycles 명시 선택 시 미완료(잘린) 사이클의 프로파일이 아무 표시 없이 내보내짐
 
@@ -264,7 +308,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In packages/wrdkit/src/wrdkit/cli.py _select_cycles, apply the complete filter to explicit selections too, mirroring the API: build matched = [c for c in cycles if c.cycle_number in wanted], then split off incomplete ones, print a stderr warning naming the skipped cycle numbers (e.g. "wrdkit: cycle 5 is incomplete (truncated) and was skipped"), and return only the complete ones. Add a test using the synthetic fixture truncated mid-discharge (or synthetic.make_cycles plus a partial last cycle) asserting the truncated cycle's columns are absent from the profiles CSV and the warning is emitted.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). _select_cycles 가 명시 선택에도 complete 필터를 적용하도록 했다(API exports.py 와 동일). 걸러진 사이클 번호는 stderr 에 'wrdkit: cycle 5 is incomplete (truncated) and was skipped' 로 알린다 — 조용히 빠지면 사용자가 요청한 컬럼이 왜 없는지 알 수 없다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_cli.py::test_convert_skips_an_incomplete_cycle_named_explicitly (방전 중간에서 잘린 5번 사이클: 수정 전에는 2.11 mAh 짜리 잘린 곡선이 cycle5_ 컬럼으로 CSV 에 들어감)
 
 ### M13. `packages/wrdkit/src/wrdkit/composition.py:261` — 이름/비율 개수 불일치 시 _PAIRS 폴백이 비율 숫자에서 가짜 성분을 조작 — "비워 두고 추측하지 않는다" 계약 위반
 
@@ -274,7 +320,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** packages/wrdkit/src/wrdkit/composition.py parse_composition 에서: (1) _NAMES_THEN_RATIOS 가 매치됐는데 len(names) != len(ratios) 이고 단일 라벨 케이스(len(names)==1)도 아니면 _PAIRS 로 떨어지지 말고 즉시 Composition() 을 반환한다 (match 블록 끝에 return Composition() 추가). (2) _PAIRS 의 이름 패턴이 순수 숫자를 성분명으로 잡지 못하게 최소 한 글자의 문자([A-Za-z가-힣])를 요구하도록 조인다 — 예: 첫 문자 클래스를 [A-Za-z가-힣] 로 바꾸거나 매치 후 name 이 전부 숫자면 버린다. 불일치 입력("AM:SE:VGCF = 80:17" → 빈 Composition, "NCM811:LPSCl:VGCF:PTFE 78:17:3" → 빈 Composition)과 "cell 01"/"sample 3" 같은 비조성 문자열 케이스를 test_composition.py 에 추가한다. infer_role 의 substring 매칭("am" ⊂ "sample")은 별도 이슈지만 (2)와 함께 단어 경계 매칭 검토 가치가 있다.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-composition-normalize). parse_composition() 에서 _NAMES_THEN_RATIOS 가 매치됐는데 개수가 안 맞으면(단일 라벨 케이스 제외) _PAIRS 로 떨어지지 않고 즉시 빈 Composition 을 반환한다. 추가로 _PAIRS 결과에서 이름에 글자가 하나도 없는 쌍("80" 같은 순수 숫자)을 걸러내고, 쌍이 2개 미만이면 조성이 아니라고 보고 빈 Composition 을 반환한다 — 블렌드는 성분이 둘 이상이고, 홀로 있는 "단어 숫자" 는 조성보다 샘플 라벨("cell 01", "sample 3")일 가능성이 훨씬 높으며, 여기서 성분을 지어내면 아무도 입력하지 않은 숫자가 DB 에 영속화되기 때문이다. 이 마지막 규칙의 대가는 "AM 80" 같은 단일 성분 자유 입력이 이제 빈 결과가 된다는 것인데, 조용한 오염 대신 눈에 보이는 실패라 ADR 0007 의 '추측하지 않는다' 에 부합한다고 판단했다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_composition.py::TestParsing::test_a_missing_ratio_yields_nothing_rather_than_a_shifted_blend ("AM:SE:VGCF = 80:17", "NCM811:LPSCl:VGCF:PTFE 78:17:3"), ::test_a_sample_label_is_not_a_composition ("cell 01", "sample 3"), ::test_a_bare_number_is_never_a_component_name
 
 ### M14. `packages/wrdkit/src/wrdkit/knee.py:171` — segmented: 초기 기울기가 양수면 slope_after/slope_before 비가 음수가 되어 진짜 knee 를 기각한다
 
@@ -284,7 +332,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _segmented_knee, a non-fading (flat or rising) pre-break segment followed by a fading post-break segment is acceleration by definition: before computing the ratio, add `if slope_before >= -MIN_FADE_RATE: ratio = float("inf")` (reaching line 169 with slope_before >= -MIN_FADE_RATE already implies slope_after < -MIN_FADE_RATE via the line-163 guard) and only divide when slope_before < -MIN_FADE_RATE. Add a rise-then-fall regression test (e.g. +0.005%/cycle to cycle 35, then -0.08%/cycle) asserting segmented detects ~35 and stays primary. Optionally revisit _slope_ratio_knee's rising-baseline fallback, whose overall-slope substitute is diluted by the crash itself.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). ratio 계산 전에 slope_before >= -MIN_FADE_RATE 이면(163/165행 가드에 의해 이때 slope_after 는 반드시 열화 중) ratio = inf 로 두어 '절점에서 열화가 시작된다 = 무한 가속' 으로 처리한다. 그 경우 사유 문장도 'fade begins at cycle N (+x -> -y %/cycle)' 로 따로 만들어 '-16.14x' 같은 앞뒤 안 맞는 문장이 나오지 않게 했다. 양쪽 다 음수인 통상 경로는 기존 나눗셈·문장 그대로.
+
+**회귀 테스트.** packages/wrdkit/tests/test_knee.py::test_a_rising_then_falling_series_is_a_knee (사이클 35까지 +0.2%/cy 상승 후 -1.6%/cy 급락 → segmented 가 ~35 검출, primary=segmented)
 
 ### M15. `packages/wrdkit/src/wrdkit/knee.py:271` — 기준 사이클의 용량이 NaN/0 으로 걸러지면 기준이 조용히 formation(1번) 사이클로 떨어진다
 
@@ -294,7 +344,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In detect_knee, when reference_cycle is not None and absent from the filtered cycles, fall back to the first surviving cycle at or after it instead of index 0: e.g. reference_index = int(np.searchsorted(cycles, reference_cycle)) clamped to n-1 (cycles are already sorted), mirroring health.py's later[0]-else-complete[0] rule. Surface the fallback (e.g. a flag or reason on KneeAnalysis) rather than reporting silently, and add a test: series with cycle 3 NaN/0 must not use cycle 1 as reference.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). detect_knee 에서 요청한 reference_cycle 이 걸러진 배열에 없을 때 index 0(=formation) 으로 떨어지지 않고, np.searchsorted 로 '요청값 이상 중 가장 이른 살아남은 사이클' 을 쓴다(health.py:267-271 의 폴백 규칙과 동일). 요청값 이상이 하나도 없으면 health.py 의 complete[0] 폴백과 맞춰 index 0 을 쓴다. 폴백이 일어나면 KneeAnalysis.reference_note 에 'cycle 3 has no usable capacity; using cycle 4 as the reference' 를 남겨 조용히 넘어가지 않게 했다(불변식 4: 모르면 이유를 적는다). 주: reference_note 를 API payload 로 내보내는 건 apps/api/app/services.py:363 knee_payload 라 내 소유가 아니어서 손대지 않았다 — 해당 소유자가 한 줄 추가하면 화면까지 노출된다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_knee.py::test_a_missing_reference_cycle_does_not_fall_back_to_formation (사이클 3만 NaN → reference_cycle=4, reference_capacity=5.0, search_start_cycle=4, reference_note 존재)
 
 ### M16. `packages/wrdkit/src/wrdkit/nrbf.py:230` — 멤버/배열 값 위치에 끼어든 BinaryLibrary 레코드를 값으로 오인해 스트림 전체가 어긋난다
 
@@ -304,7 +356,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** packages/wrdkit/src/wrdkit/nrbf.py에서 _Skip 뒤의 실제 값을 다시 읽는다. _class_values(230행): `obj.members[name] = self.record()`를 `value = self.record()` 후 `while value is _Skip: value = self.record()`로. _collect(254행): `value = self.record()` 뒤에 `if value is _Skip: continue` 추가(len(out) < total 루프라 자연히 재시도됨). 테스트는 packages/wrdkit/tests/test_nrbf.py에 멤버 자리/배열 아이템 자리에 BinaryLibrary가 끼어든 합성 스트림 두 개를 추가해 고정한다.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). _class_values 의 멤버 값 읽기를 `while value is _Skip: value = self.record()` 로 감싸 lazy emit 된 BinaryLibrary 를 건너뛰고 실제 값을 읽게 했고, _collect 에는 `if value is _Skip: continue` 를 넣어 라이브러리 레코드가 배열 아이템으로 세어지지 않게 했다 (len(out) < total 루프라 자연히 다음 레코드를 다시 읽는다). 왜 그런지(BinaryFormatter 가 MS-NRBF 2.7 memberReference 문법대로 라이브러리를 첫 참조 직전에 emit 한다)를 주석으로 남겼다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_nrbf.py::test_binary_library_in_a_member_value_position_is_not_the_value, packages/wrdkit/tests/test_nrbf.py::test_binary_library_between_array_items_is_not_an_item
 
 ### M17. `packages/wrdkit/src/wrdkit/schedule.py:247` — infer_c_rate 의 전류비→C-rate 표가 비단사(ratio 2, 10 이 중복) — 0.05C formation 관행 스케줄은 C-rate·nominal capacity 가 2배 틀린 채 저장됨
 
@@ -314,7 +368,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** 최소 수정: infer_c_rate 에서 ratio 가 표 안에서 복수 후보에 일치하면(현재는 ratio 2) 규칙 4대로 None 을 반환하고, 죽은 항목 (0.1,0.05)를 제거하거나 모호 판정에 흡수한다. 더 나은 수정: 추가 증거로 후보를 판별 — 예: 각 후보 rate 로 역산한 nominal capacity 가 조성/질량 기반 이론용량이나 반올림된 설계값과 맞는 쪽 선택, 또는 formation 루프 수·컷오프 시간 활용. 병행: schedule_payload 의 c_rate 를 estimated 플래그와 함께 내보내 UI 가 '추정' 표기하게 하고, packages/wrdkit/tests 에 infer_c_rate 단위 테스트(고유 ratio, 모호 ratio→None, formation 부재→None)를 추가한다.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). 첫 일치 반환을 후보 집합 수집으로 바꿔, ratio 가 표 안 복수 후보(예: ratio 2 → 0.2C/0.1C 와 0.1C/0.05C)에 맞으면 확정값 대신 None 을 돌려준다 (불변 규칙 4). 죽은 항목 (0.1,0.05)는 지우지 않고 모호 판정에 흡수했다 — 0.1C/0.05C 는 전고체에서 실제로 쓰이는 조합이라, 지우면 '0.2C 확정'이라는 틀린 답이 되살아난다. docstring 에 왜 None 인지(추정이면 nominal_capacity_ah 도 2배 틀림)를 적었다. 서비스 계층의 estimated 플래그 노출은 apps/api/app/services.py 소유가 아니라 손대지 않았다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_schedule.py (신규 파일)::test_an_ambiguous_current_ratio_is_reported_as_unknown, ::test_an_unambiguous_current_ratio_gives_the_c_rate, ::test_a_schedule_without_formation_infers_nothing, ::test_an_unrecognised_ratio_infers_nothing, ::test_the_cycling_current_is_the_looped_one
 
 ### M18. `packages/wrdkit/src/wrdkit/wrd.py:388` — 문자열 컬럼을 UTF-8 이 아니라 ASCII 로 디코드해 non-ASCII 레인지 라벨이 파싱 전체를 죽인다
 
@@ -324,7 +380,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _read_block (packages/wrdkit/src/wrdkit/wrd.py), decode string columns as UTF-8 instead of using the ASCII-only S→U cast: at line 388 replace out[name][start:end] = values.astype(str) with out[name][start:end] = np.char.decode(values, "utf-8") (or a per-element .decode("utf-8") loop over values.tolist()); line 399's out[name].astype(str) then operates on already-decoded str objects and is safe. Add a synthetic-fixture test with i_range="100µA" asserting the label round-trips. Optionally wrap a residual UnicodeDecodeError into WrdError so the API's 422 path applies to malformed encodings.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). _read_block 의 `values.astype(str)`(numpy S→U, ASCII 전용)를 새 헬퍼 _decode_utf8() 호출로 바꿨다. 헬퍼는 필드 뷰를 tobytes() 로 받아 고정폭으로 잘라 각각 `.decode("utf-8")` 한다. fix_hint 의 np.char.decode 대신 이 방식을 쓴 이유는 부수 결함까지 함께 닫기 위해서다 — np.char.decode 도 numpy S dtype 을 거치므로 trailing 0x00 이 조용히 잘리는데, 이 필드 폭은 행 자신의 7-bit 길이 접두사에서 나오므로 마지막 NUL 은 패딩이 아니라 내용이다. 남은 UnicodeDecodeError 는 WrdError("string column is not valid UTF-8: ...") 로 감싸 API 의 422 경로에 걸리게 했다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_wrd.py::test_non_ascii_range_labels_survive_the_read (i_range="100µA" 왕복)
 
 ### M19. `packages/wrdkit/src/wrdkit/wrd.py:416` — NRBF 내부 손상은 WrdError 가 아닌 NrbfError 로 새어나가 API 가 500 을 반환한다
 
@@ -334,7 +392,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** 라이브러리 경계에서 감싸는 것이 스킬 문서의 의미론("읽을 수 없는 .wrd = WrdError")과 일치한다. packages/wrdkit/src/wrdkit/wrd.py 의 read_wrd_bytes 에서 두 read_stream 호출(416, 424행)을 `try: ... except NrbfError as exc: raise WrdError(f"not a readable .wrd: {exc}") from exc` 로 감싼다(파일 상단에 `from .nrbf import NrbfError` 추가). 대안으로 runs.py 87·179행을 `except (WrdError, NrbfError)` 로 바꿔도 되지만, 다른 호출부(storage.reparse 등)까지 일괄 보호하려면 wrd.py 쪽 수정이 최소·안전하다. 테스트: 합성 .wrd 를 200바이트로 자른 입력에 pytest.raises(WrdError) 를 추가.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). read_wrd_bytes 의 두 read_stream 호출을 각각 `except NrbfError as exc: raise WrdError(f"not a readable .wrd: {exc}") from exc` 로 감쌌다 (파일 상단에 NrbfError import 추가). 호출부(runs.py, storage.reparse 등)를 일괄 보호하려면 라이브러리 경계에서 감싸는 쪽이 최소·안전하다는 fix_hint 판단을 따랐고, 다른 그룹 소유인 runs.py 는 건드리지 않았다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_wrd.py::test_truncated_file_raises_wrd_error_not_nrbf_error (정상 합성 .wrd 를 200바이트로 자른 입력)
 
 ### M20. `packages/wrdkit/tests/synthetic.py:318` — 합성 픽스처가 CHARGE Q/DISCHARGE Q 를 스텝(branch)마다 0 으로 리셋 — 검증된 스펙(사이클 단위 누적)과 다른 규약이라 차분 로직의 회귀를 못 잡음
 
@@ -344,7 +404,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In make_cycles (packages/wrdkit/tests/synthetic.py): (1) move the charge_q/discharge_q reset from the branch loop to the cycle loop, and during the discharge branch hold charge_q at the cycle's final charge capacity per the spec, resetting both only at cycle start; (2) split the charge branch into two total_step segments with a continuing charge_q running total (CC then CV-like taper) so step-delta and absolute-read diverge, and add a test asserting cycle charge_capacity_mah equals the true capacity (not CC+total double-count) plus a test asserting CHARGE Q during discharge equals the cycle's charge capacity; (3) optionally add a unit_coulomb: bool = False parameter to build_wrd (line 176) to exercise the header True path.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-fixture). make_cycles 의 charge_q/discharge_q 리셋을 branch 루프에서 cycle 루프로 옮겨, 스펙(docs/raw/specs/wrd-binary-format.md:160-162)대로 사이클마다 한 번만 0 이 되고 방전 구간 내내 CHARGE Q 가 그 사이클의 충전 용량으로 고정된 채 유지되도록 했다(CHARGE E 도 같은 누적값을 따른다). 또한 cv_points/cv_capacity_fraction 파라미터를 추가해 충전 브랜치를 CC + CV 두 개의 TOTAL STEP 으로 쪼갤 수 있게 했다 — 두 스텝이 하나의 누적값을 공유하므로 '스텝 구간 차분'과 '스텝 끝 절대값'이 처음으로 갈라진다(CV 첫 샘플은 CC 끝 값에서 이어지도록 fraction 을 0 부터 시작). 반복되던 브랜치별 샘플 생성은 push() 헬퍼로 묶었고 기본값(cv_points=0)에서는 기존 스텝 구조·용량·에너지가 바이트 수준으로 동일해 기존 테스트 기대값이 하나도 바뀌지 않았다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_synthetic_fixture.py::test_charge_q_resets_once_per_cycle_not_once_per_step, ::test_charge_q_is_parked_at_the_charge_capacity_while_discharging, ::test_a_two_step_charge_counts_each_step_delta_once (회귀 잠금)
 
 ### M21. `tools/bml:643` — web_needs_build 가 src/index.html/vite.config.ts 만 비교 — 의존성만 바뀐 pull 후 낡은 번들을 '빌드 최신'으로 서빙
 
@@ -354,7 +416,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Either add "$REPO/apps/web/package.json" "$REPO/apps/web/package-lock.json" "$REPO/apps/web/tsconfig.json" to the find list in web_needs_build, or in ensure_deps delete dist/index.html (rm -f "$REPO/apps/web/dist/index.html") whenever need_web=1 so the next build_web rebuilds. The ensure_deps invalidation is the tighter fix: it keys the rebuild off the same fingerprint that drove npm install, so the two can never disagree.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (tools-bml). find 목록에 apps/web/package.json, package-lock.json, tsconfig.json 을 추가했다. git pull 은 바뀐 파일의 mtime 을 갱신하므로, 의존성만 올린 커밋을 받으면 package-lock.json 이 dist/index.html 보다 새로워져 재빌드가 돈다. fix_hint 의 대안(ensure_deps 에서 dist 무효화)보다 이쪽을 택한 이유: 판정이 web_needs_build 한 함수에 남아 REPO 를 임시 폴더로 바꿔 순수하게 회귀 테스트할 수 있고(ensure_deps 는 pip/npm 을 실제로 돌려 테스트가 불가능하다), tsconfig.json 처럼 지문에 없는 빌드 입력도 함께 덮는다.
+
+**회귀 테스트.** tools/tests/test_bml_ownership.sh::'빌드 최신: 소스가 dist 보다 오래됐으면 다시 빌드하지 않는다' + '의존성만 바뀐 pull 뒤에도 다시 빌드한다'(임시 REPO 에 가짜 apps/web 트리를 만들고 touch -d 로 mtime 배치). 되돌리면 두 번째가 FAIL 확인.
 
 ### M22. `tools/bml:663` — cmd_stop 이 PID 파일의 pid 를 소유 검증 없이 kill (+ 프로세스 그룹째) — 규칙 8 위반, PID 재사용 시 무관한 프로세스 사살
 
@@ -364,7 +428,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In cmd_stop's pid-file loop, before killing, verify identity: read cmd="$(tr '\0' ' ' < /proc/$pid/cmdline)" and cwd="$(readlink -f /proc/$pid/cwd)", call classify_process "$cmd" "$cwd", and kill only on return 0; otherwise just rm -f the stale pid file (an unreadable cmdline should also mean skip, mirroring owns_port's "a listener we cannot describe is not a listener we may kill"). Apply the same guard before kill -- "-$pid". Also harden owns_port's fallback (line 266-267), which currently treats any alive recorded pid as "ours" when lsof/ss/fuser are missing. Add regression cases to tools/tests/test_bml_ownership.sh for a stale/recycled pid file.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (tools-bml). owns_pid() 를 새로 추가했다 — /proc/$pid/cmdline(없으면 ps -o args=)과 /proc/$pid/cwd 를 읽어 classify_process 로 판정하고, 설명할 수 없는 프로세스는 '우리 것 아님'으로 본다(owns_port 와 같은 원칙). cmd_stop 의 PID 파일 루프를 `if pid="$(running_pid "$file")" && owns_pid "$pid"` 로 바꿔 kill 과 kill -- "-$pid" 를 우리 것일 때만 보내고, 아닐 때는 낡은 파일만 rm -f 한다. fix_hint 대로 owns_port 의 recorded-pid 폴백(lsof/ss/fuser 없는 머신)도 `alive && owns_pid` 로 조였다 — 남의 pid 로 판정되면 0(우리 것)이 아니라 2(알 수 없음)로 떨어져 아무도 죽이지 않는다.
+
+**회귀 테스트.** tools/tests/test_bml_ownership.sh::'남의 pid: 살아 있다는 것만으로는 우리 것이 아니다' + '우리 pid: 우리 venv 로 도는 프로세스는 알아본다'(exec -a 로 명령줄만 흉내, 실제 서버는 안 띄움) + 'cmd_stop: 낡은 PID 파일이 가리키는 남의 프로세스를 살려 둔다'(임시 PID_FILE·미사용 포트로 cmd_stop 을 실제 호출하고 희생자 생존 확인). 되돌리면 cmd_stop 케이스가 FAIL 확인.
 
 ### M23. `tools/bml:806` — port_owner 출력이 비면 PID 파일을 빈 파일로 덮어씀 — lsof/ss/fuser 없는 머신에서 bml stop 이 자기 서버를 못 내림
 
@@ -374,7 +440,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In /home/user/Yonghoon-DEM-DFT/tools/bml, replace the direct redirection with capture-then-conditional-write so an empty answer preserves the pid recorded at launch. Line 806: `pid="$(port_owner "$PORT")"; [ -n "$pid" ] && printf '%s' "$pid" > "$PID_FILE"`. Same pattern for lines 838-839 (DEV_PID_FILE from port $PORT, PID_FILE from $API_PORT). Add a regression case to tools/tests/test_bml_ownership.sh (or a sibling test) that stubs port_owner to empty and asserts the PID file keeps its prior content.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (tools-bml). record_port_owner() 를 추가해 port_owner 결과를 먼저 변수로 받고 비어 있지 않을 때만 파일에 쓴다(셸이 명령 실행 전에 파일을 truncate 하는 문제 제거). start_serve 의 1곳과 start_dev 의 2곳을 이 함수 호출로 바꿨다. 소유자를 알아낼 수 없는 머신에서는 시작 시 기록한 $! 가 그대로 남아 owns_port 의 recorded-pid 폴백과 cmd_stop 이 계속 동작한다.
+
+**회귀 테스트.** tools/tests/test_bml_ownership.sh::'소유자를 알 수 없으면 적어 둔 pid 를 지우지 않는다' + '소유자를 알아내면 실제 pid 로 갱신한다'(port_owner 스텁) + 구조 테스트 '구조: PID 파일 기록이 잘라 쓰는 리다이렉션이 아니다'(소스에서 `port_owner … > "$PID_FILE"` 형태를 금지하고 호출 3곳을 확인 — 헬퍼만 있고 호출부가 되돌아가는 경우를 잡기 위해 추가). 호출부만 되돌리면 이 구조 테스트가 FAIL 확인.
 
 ### M24. `tools/bml:989` — bml doctor 의 CRLF 처방이 `git reset --hard` — 그대로 실행하면 미커밋 작업 전부 소실
 
@@ -384,7 +452,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In tools/bml (lines 987-989), replace the whole-tree reset with a per-file, non-destructive fix using the file list doctor already computed: keep `git config --global core.autocrlf input`, then print (or just run) `sed -i 's/\r$//' <each file in ${crlf[@]}>` — the index already holds LF via .gitattributes, so stripping CR in place converges the working tree with no git-state changes. If a git-based recipe is preferred, prepend `git stash -u` and append `git stash pop`, or use `git checkout -- ${crlf[@]}` limited to the affected files. Apply the same change to docs/guides/wsl-setup.md:78-82 to keep the guide consistent.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (tools-bml). `git rm --cached -r . && git reset --hard` 처방을 지우고, doctor 가 이미 갖고 있는 crlf[] 파일 목록을 돌며 파일별 `sed -i 's/\r$//' "<파일>"` 을 출력하도록 바꿨다. .gitattributes 가 인덱스를 LF 로 잡고 있으므로 작업 트리의 CR 만 지우면 수렴하고, git 상태(인덱스·HEAD·미커밋 변경)는 전혀 건드리지 않는다. autocrlf 설정 줄은 그대로 남겼다. 출력 렌더링과 sed 동작을 실제로 실행해 확인했다.
+
+**회귀 테스트.** tools/tests/test_bml_ownership.sh::'doctor 의 처방에 미커밋 작업을 날리는 명령이 없다'(소스에서 `reset --hard`/`checkout -f`/`clean -*f` 를 주석 밖에서 금지). 옛 처방으로 되돌리면 FAIL 확인.
 
 ## 낮음 — 견고성·문서 정합 (30건)
 
@@ -396,7 +466,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Reword CLAUDE.md:90 (and identically AGENTS.md, to keep parity) to stop claiming identity: e.g. '커밋 prefix: feat: fix: docs: test: refactor: ingest: update: create: lint: verify: — docs/log.md 의 action 어휘는 docs/SCHEMA.md 를 따른다 (create/update/ingest/verify/lint/fix/start).' Optionally tighten wiki_lint's LOG_PATTERN to the SCHEMA action set so future log entries are enforced, and run make wiki-lint to confirm parity still passes.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). '동일' 주장을 없애고 '커밋 prefix: feat: fix: docs: test: refactor: ingest: update: create: lint: verify: — docs/log.md 의 action 어휘는 이것과 다르며 docs/SCHEMA.md 를 따른다 (create update ingest verify lint fix start)' 로 바꿨다. AGENTS.md 미러도 동일. wiki_lint 의 LOG_PATTERN 을 SCHEMA action 집합으로 좁히는 안은 채택하지 않았다 — 어휘 확장 시 로그 기록이 막히는 부작용이 있고, 이번 결함(문서 간 모순)은 문구 정정으로 해소된다.
+
+**회귀 테스트.** make wiki-lint parity 검사로 두 미러가 계속 같음을 강제(오류 0 확인). 어휘 집합 자체에 대한 테스트는 위 이유로 붙이지 않았다.
 
 ### L2. `CLAUDE.md:165` — 'make setup 이 bml 을 PATH 에 등록한다'는 거짓 — setup 타겟에 install-bml 이 없음
 
@@ -406,7 +478,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Smallest fix: correct the sentence in all three mirrors (CLAUDE.md:165, AGENTS.md:165, GEMINI.md:165) to name the actual command, e.g. "`bml` 은 `tools/bml` 이고 `make install-bml` (= `./tools/bml install`) 이 PATH 에 등록한다". Alternative (behavior change): add `install-bml` to the `setup` target's prerequisites at Makefile:26 — but then also keep README/bml-command.md consistent. Prefer the doc fix since README and guides already teach `./tools/bml install`.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). '`make install-bml` (= `./tools/bml install`) 이 PATH 에 등록한다' 로 정정했다. Makefile:26 의 setup 은 setup-git venv install-api install-web 만 돌리므로 문서를 사실에 맞추는 쪽을 택했다 (README·bml-command.md 가 이미 `./tools/bml install` 을 가르치고 있어 setup 타겟을 바꾸면 그쪽과 중복된다). AGENTS.md 에도 동일 적용, GEMINI.md 는 AGENTS.md 심볼릭 링크라 함께 반영된다.
+
+**회귀 테스트.** make wiki-lint 의 CLAUDE/AGENTS parity 검사가 두 미러의 일치를 계속 강제한다(오류 0 확인). setup 타겟 내용에 대한 별도 단정 테스트는 붙이지 않았다 — 문구 수정이라 회귀 대상이 문장 자체다.
 
 ### L3. `Makefile:91` — lint-py 의 `|| true` — 'make check' 는 ruff 위반을 통과시키고 CI 와 bml check 는 실패시키는 드리프트
 
@@ -416,7 +490,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Remove `|| true` from the lint-py recipe at Makefile:91 so it reads `$(VENV_PY) -m ruff check packages apps/api` (keep the `|| true` on `fmt:`, which is intentional). This makes `make check` fail the same way `bml check` and CI do; the repo is currently ruff-clean, so nothing breaks on landing.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). lint-py 레시피에서 `|| true` 를 제거해 `$(VENV_PY) -m ruff check packages apps/api` 가 그대로 실패를 전파하도록 했다 (bml check·CI 와 동일한 게이트). 왜 삼키면 안 되는지, fmt 의 `|| true` 는 왜 의도된 것인지를 타겟 위 주석으로 남겼다. 덧붙여 test-tools 에 새 회귀 테스트 2종을 붙였다.
+
+**회귀 테스트.** tools/tests/test_lint_gate.sh (새 파일, Makefile test-tools 에 연결). Makefile 만 임시 폴더에 복사하고 .venv 를 심볼릭 링크한 뒤 (1) 깨끗한 트리는 통과, (2) F401 을 심으면 exit != 0 을 확인한다 — 작업 트리를 건드리지 않아 다른 그룹과 충돌하지 않는다. `|| true` 를 되돌리면 (2)가 실패함을 확인했다.
 
 ### L4. `README.md:33` — README 가 약속한 '컷오프·온도로 묶어 비교'가 API·UI 어디에도 구현되어 있지 않음
 
@@ -426,7 +502,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Minimal fix: edit README.md line 7 to "날짜·양극재·C-rate 로 묶어 비교" and line 33's 그룹·비교 row to the axes that exist (날짜·양극재·공정·C-rate + 수동 그룹), moving 컷오프·온도 to the '앞으로' section. Alternatively (larger): add cutoff_upper_v/cutoff_lower_v/temperature_c query params to list_samples, add cutoff to /facets, and wire filter controls into Library.tsx — note Library.tsx also omits the c_rate filter the API already supports, worth adding in the same pass.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). 7행을 '날짜·양극재·공정·C-rate 로 묶어 비교', 33행 그룹·비교 항목을 '날짜·양극재(high/mid Ni)·공정·C-rate 로 거르고, 직접 만든 실험 그룹으로 묶어 겹쳐 보기' 로 바꿔 실제 API(list_samples 의 group_id/cathode_type/process/date/c_rate/search)와 UI 능력에 맞췄다. 컷오프·온도 필터링과 Library 의 C-rate 필터는 '앞으로' 절로 옮겨 미구현임을 명시했다.
+
+**회귀 테스트.** 없음 — README 문구와 API 파라미터 집합의 일치를 자동 검사하려면 문서 파서를 새로 만들어야 하고, apps/api 는 다른 그룹 소유라 이번 변경 범위를 넘는다. samples.py:44-52 시그니처와 /facets 응답을 직접 읽어 대조 확인했다.
 
 ### L5. `apps/api/app/routers/analysis.py:93` — nominal 이 없으면 C-rate 분모가 '그 사이클의 방전용량'이라 정전류 시험인데 표의 C-rate 가 퇴화에 따라 계속 상승
 
@@ -436,7 +514,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _cycle_rows (apps/api/app/routers/analysis.py), stop passing each row's own capacity. Minimal change: the function already selects a fixed `reference` record for retention — pass `measured_capacity_mah=reference.discharge_capacity_mah` (the reference-cycle-3 capacity) for every row, so the fallback denominator is constant. Optionally, when cell.nominal_capacity_mah is None and the row's max_discharge_current_a matches the schedule's cycling_current_a, prefer sample.c_rate / the schedule's stored nominal_capacity_mah from schedule_json. Add an API test asserting the c_rate column is constant across a synthetic fading constant-current run.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-analysis). _cycle_rows 가 (rows, reference_info) 튜플을 반환하도록 바꾸고, 폴백을 health.build_report 와 동일하게 '요청 기준 사이클보다 큰 최초의 complete 사이클, 없으면 첫 complete' 로 맞췄다(연속 파일이 formation 에 앵커되지 않게). CycleTableOut 에 reference_cycle_used / reference_available / retention_note 를 추가하고 sample_cycles·run_cycles·compare_cycles(시리즈별)에 실어 실제로 무엇에 기준했는지 응답이 말하게 했다. reference_cycle 은 여전히 '요청값' 이라 둘을 비교하면 대체 여부가 드러난다.
+
+**회귀 테스트.** apps/api/tests/test_analysis.py::test_a_continuation_file_names_the_cycle_it_anchored_on (cycle_offset=200 → used 201, available False), ::test_a_cell_short_of_cycle_three_does_not_pretend_otherwise (2사이클 구동 셀), ::test_the_cycle_table_says_the_reference_cycle_was_there (정상 경로), ::test_compare_carries_the_reference_cycle_per_series
 
 ### L6. `apps/api/app/routers/analysis.py:411` — compare_profiles 가 branches 를 검증하지 않아 오타 한 번에 500 이 난다 (export 프로파일 경로도 동일)
 
@@ -446,7 +526,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Extract the validation from sample_profile into a small helper in apps/api/app/routers/analysis.py, e.g. _parse_branches(branches: str) -> list[str] that splits, strips, and raises HTTPException(422, "branch must be charge or discharge, got ...") on anything else; call it in sample_profile (line 211), compare_profiles (line 411), and exports._collect_profiles (exports.py line 152, import alongside _parse_cycles which is already imported there). Add two tests asserting 422 for branches=chg on /api/compare/profiles and profiles.csv.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-analysis). compare_cycles 의 각 series 와 dashboard 의 각 row 에 basis_fallback_reason = cell.missing_for(basis) (실제 basis 가 요청과 다를 때만) 을 추가했다. 두 응답 모두 최상위에 requested_basis 와 mixed_basis 를 추가하고, 최상위 basis/basis_label 은 시리즈·행이 모두 같은 basis 일 때 그 실제 basis 를, 섞였으면 요청 basis 를 담는다 — 프런트가 라벨을 맞추고 혼합 축을 경고할 수 있다. 웹(다른 그룹 소유)은 손대지 않았고 필드는 모두 추가만 했다.
+
+**회귀 테스트.** apps/api/tests/test_analysis.py::test_compare_flags_a_cell_that_could_not_be_normalised, ::test_dashboard_flags_a_cell_that_could_not_be_normalised (질량 있는 셀 + 질량 없는 셀을 basis=mAh/g 로 조회)
 
 ### L7. `apps/api/app/routers/runs.py:65` — 업로드 크기 제한이 본문 전체를 수신·메모리에 적재한 '후'에야 집행된다
 
@@ -456,7 +538,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Two cheap layers, keeping the existing len(content) check as backstop: (1) in upload_run, before `await file.read()`, check `file.size` (Starlette sets it after parsing) and raise 413 — this avoids the giant bytes allocation even when Content-Length is absent; (2) to avoid receiving the body at all, add a FastAPI dependency (or middleware) that reads request.headers.get("content-length") and raises 413 when it exceeds settings.max_upload_bytes — dependencies resolve before body parsing, so an honest oversized client is refused before the spool. Also soften or fulfill the settings.py:30 comment so the docstring and behavior agree.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). await file.read() 앞에 file.size 기반 413 검사를 넣어, 초과 업로드가 전체 바이트를 RAM 에 올리기 전에 거절되게 했다. 기존 len(content) 검사는 size 가 None 인 경우를 위한 backstop 으로 남겼다. 본문 수신 자체(Starlette 의 SpooledTemporaryFile)를 막으려면 Content-Length 를 보는 미들웨어가 필요한데 main.py 는 내 소유가 아니라 손대지 않았고, 그 한계를 코드 주석에 남겼다.
+
+**회귀 테스트.** apps/api/tests/test_upload.py::test_an_oversized_upload_is_refused_before_the_body_is_read (UploadFile.read 를 예외를 던지도록 monkeypatch 해 '읽기 전 거절'을 강제 검증), test_an_upload_within_the_limit_still_reads
 
 ### L8. `apps/api/app/routers/runs.py:190` — 불변규칙 #2·ADR 0003 모순: API 가 data/uploads/ 원본 .wrd 를 영구 삭제하는 경로를 제공
 
@@ -466,7 +550,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Pick one side and make the docs and code agree. Simplest: remove the delete_original query param from DELETE /api/runs/{run_id} (drop runs.py:190-191 and 205-210), keeping uploads immutable as all three documents promise. If deliberate disk-space cleanup is wanted, instead amend non-negotiable #2 in CLAUDE.md and AGENTS.md (parity contract) and ADR 0003 to state the one exception — explicit user-requested purge via delete_original=true, guarded by the sha256 refcount — and add a test covering both the unlink and the still-referenced-digest skip.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-runs). DELETE /api/runs/{id} 의 delete_original 쿼리 파라미터와 path.unlink() 블록을 제거했다. 코드를 문서 쪽에 맞춘 이유: 불변규칙 2·ADR 0003·samples.py docstring 세 곳이 무조건 보존을 약속하고, 웹 프론트엔드(api.ts deleteRun)는 이 플래그를 보낸 적이 없으며, 원본이 사라지면 reparse 복구 경로가 영구히 끊긴다. DB 레코드·파싱 캐시 삭제와 renumber 는 그대로다. (CLAUDE.md/AGENTS.md/ADR 은 내 소유가 아니라 손대지 않았고, 이 변경은 그 문서들과 일치하는 방향이다.)
+
+**회귀 테스트.** apps/api/tests/test_runs.py::test_deleting_a_run_keeps_the_original_upload (?delete_original=true 를 보내도 data/uploads/<sha256>.wrd 가 남아 있음을 단언)
 
 ### L9. `apps/api/app/routers/samples.py:168` — delete_sample(delete_runs=true) 가 run 의 npz 캐시를 지우지 않아 무한 누적 + rowid 재사용 시 stale 캐시 노출 창
 
@@ -476,7 +562,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In apps/api/app/routers/samples.py, import storage and call storage.drop_run_cache(run.id) inside the delete_runs branch of delete_sample (mirroring runs.py:197), before session.delete(run). Optionally harden load_columns/load_wrd_columns to compare meta.json's sha256 against run.sha256 and treat a mismatch as a cache miss, which closes the rowid-reuse window entirely.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). 삭제 루프에서 session.delete(run) 직전에 storage.drop_run_cache(run.id) 를 호출한다 (runs.py 의 delete_run 과 같은 약속: run 행과 파싱 캐시는 지우고 원본 .wrd 는 남긴다).
+
+**회귀 테스트.** apps/api/tests/test_samples.py::test_deleting_a_sample_with_its_files_drops_their_parse_cache (캐시는 사라지고 업로드 원본은 남는지까지 확인)
 
 ### L10. `apps/api/app/storage.py:62` — npz 캐시를 무결성 검증 없이 신뢰: 손상 npz 는 영구 500, DB 와 어긋난 캐시는 조용한 슬라이스 오정렬
 
@@ -486,7 +574,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In cache_columns, write to a temp file in the same directory and os.replace() onto columns.npz (do the same for meta.json). In load_columns, wrap np.load/extraction in try/except (zipfile.BadZipFile, OSError, ValueError, KeyError): unlink the bad file and return None so load_wrd_columns' existing reparse fallback engages. Optionally have load_wrd_columns compare meta.json sha256/row_count against run.sha256/run.row_count and treat mismatch as a miss. Add a test that truncates columns.npz and asserts the profile endpoint still returns 200 via reparse. Also fix ADR 0003's stale storage_ok reference.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (api-core). _write_atomically(storage.py:39) 를 만들어 같은 디렉터리의 임시 파일에 쓰고 fsync 후 os.replace 로 갈아끼운다. 이미 파일이 있어도 크기가 content 와 다르면(이름이 곧 내용 해시이므로 크기 불일치 = 이전 시도의 부분 쓰기) 다시 쓴다. 방어선으로 reparse(storage.py:137) 가 read_wrd 결과의 sha256 이 요청한 이름과 다르면 새 StorageError 를 던진다 — 잘린 .wrd 는 에러 없이 행 수만 줄어들기 때문에 재해싱 말고는 탐지 수단이 없다. (라우터의 HTTP 매핑은 다른 그룹 소유라 건드리지 않았고, 테스트는 storage 계층에서 직접 검증한다.)
+
+**회귀 테스트.** apps/api/tests/test_storage.py::test_a_half_written_original_is_rewritten_not_trusted, ::test_a_damaged_original_is_refused_rather_than_read_short
 
 ### L11. `apps/web/src/components/Plot.tsx:170` — 시리즈 폴백 팔레트가 라이트 전용 고정 hex 라 다크모드에서 일부 곡선이 거의 안 보임
 
@@ -496,7 +586,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** --charge/--discharge 와 같은 패턴으로 팔레트를 테마화한다: app.css 에 --series-0..14 토큰을 라이트/다크 두 벌 정의하고, format.ts 의 seriesColor 가 'var(--series-N)' 을 반환하게 한 뒤 Plot.tsx 의 resolveColor 가 지금처럼 캔버스용 실색으로 해석하게 하면 최소 변경으로 끝난다(PlotLegend 는 CSS 라 var 그대로 동작). 다크 값은 기존 팔레트를 밝게 올린 대응색(예: #4b5563→#9aa4b2, #1d4ed8→#60a5fa)으로 하고 인접 색 구분성을 유지한다. 라이브 테마 전환까지 고치려면 Plot 의 useEffect 에 matchMedia('(prefers-color-scheme: dark)') 변경 리스너로 갱신되는 테마 상태를 deps 로 추가해 재생성한다.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-components). styles/app.css 에 --series-0..14 토큰을 라이트/다크 두 벌 정의하고(라이트 값은 SERIES_COLORS 와 동일, 다크는 --charge/--discharge 와 같은 방식으로 밝게 올린 대응색: #4b5563→#9aa4b2, #1d4ed8→#60a5fa 등 전부 3:1 이상), Plot.tsx 에 seriesToken() 을 추가해 caller 가 넘긴 팔레트 hex 를 var(--series-N, <원래 hex>) 로 되돌려 기존 resolveColor 경로(캔버스에는 캐스케이드가 없어 실색으로 해석해야 함)를 타게 했다. PlotLegend 스와치도 같은 토큰을 쓴다. fix_hint 는 lib/format.ts 의 seriesColor 를 고치라고 했지만 그 파일은 내 소유가 아니라 호출부가 아니라 수신부(Plot)에서 팔레트 슬롯을 역추적하는 방식으로 처리했다 — 팔레트에 없는 색(호출자 고유 토큰·일회성 색)은 그대로 통과시킨다. 부수 결함(페이지를 연 채 OS 테마가 바뀌면 축/그리드가 낡은 색으로 남음)도 useChartColors() 로 matchMedia('(prefers-color-scheme: dark)') 변경을 구독해 축·그리드·마커 판 색을 다시 읽고 플롯을 재생성하도록 고쳤다. 새 고정 hex 는 CSS 토큰 외에 늘리지 않았다(기존 cssVar 폴백 값만 readChartColors 로 옮김).
+
+**회귀 테스트.** apps/web/src/components/__tests__/Plot.test.tsx::Plot colours > draws a palette colour through its theme token, not the light hex / falls back to the palette index when the caller names no colour / leaves a colour that is not from the palette alone / rebuilds with the new axis colours when the OS scheme flips; PlotLegend > swatches a palette colour with its token so the chip follows the theme; app.css series tokens > defines every palette slot in both schemes, lifted for the dark surface. uPlot 을 vi.mock 으로 대체해 실제로 넘어가는 stroke/axes 색을 검증한다. 수정을 되돌려 확인: 팔레트 매핑 3건이 실패(#4b5563 그대로 전달), 테마 전환 테스트도 hook 을 되돌리면 실패(rebuild 안 됨).
 
 ### L12. `apps/web/src/components/ReportCard.tsx:37` — 툴바의 '판정 근거 N건' details 가 내용 없이 비어 있음
 
@@ -506,7 +598,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Either (a) replace the toolbar <details> with a non-interactive count badge: <span className="badge plain">판정 근거 {report.evidence.length}건</span>, or (b) move the evidence <ul> (currently at lines 154-164) inside the toolbar details and drop the duplicate at the bottom. Option (a) is the minimal one-line change; keep the working bottom details as the single expandable evidence view.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-components). fix_hint (a) 를 따라 툴바의 빈 <details> 를 <span className="badge plain">판정 근거 {n}건</span> 으로 바꿨다. 실제 evidence 목록을 가진 카드 하단 <details>(동작 중)는 그대로 두어 펼침 뷰는 하나만 남는다. 왜 컨트롤이 아니라 카운트인지 주석으로 남겼다.
+
+**회귀 테스트.** apps/web/src/components/__tests__/ReportCard.test.tsx::ReportCard > has no disclosure that opens onto nothing / states the evidence count without pretending to be expandable. 수정을 되돌리면 두 테스트 모두 실패(툴바 details 의 자식이 summary 하나뿐, 카운트가 details 안에 있음).
 
 ### L13. `apps/web/src/pages/Compare.tsx:232` — '모두 선택'이 12개에서 조용히 잘림 — 13개 이상일 때 일부 셀이 비교에서 무통보 누락
 
@@ -516,7 +610,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Minimal fix: change .slice(0, 12) to .slice(0, 30) to match the backend cap, and when samples.data.length > 30 show a one-line Alert/hint ('앞 30개만 선택됨 — 서버 비교 상한') instead of truncating silently. Alternatively keep 12 for readability but rename the action or surface the truncation (e.g. '앞 12개 선택' label or a toast when the list was longer). Either way, document the chosen cap in a code comment referencing the backend limit in apps/api/app/routers/analysis.py.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). 상한을 백엔드와 같은 30(SELECT_ALL_LIMIT, 주석에 analysis.py 근거 명시)으로 올리고, 목록이 30개를 넘어 잘린 경우에만 '앞 30개만 선택했습니다 — 서버 상한' Alert 을 띄운다. 해제/개별 체크 시 표시는 사라진다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::Compare mixed bases > says so when "모두 선택" could not take every cell
 
 ### L14. `apps/web/src/pages/SampleDetail.tsx:255` — 프로파일 fetch 에러가 어디에도 표시되지 않음 — 빈/이전 차트만 남음
 
@@ -526,7 +622,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In SampleDetail.tsx, mirror the reportState pattern: extend the ternary at line 255 to `profileState.loading && !profileState.data ? <Spinner/> : profileState.error ? <div style={{padding:16}}><Alert kind="error">{profileState.error}</Alert></div> : <Plot .../>` — or, to honor useAsync's keep-stale-data design, render a non-blocking `<Alert kind="error">` above the Plot whenever profileState.error is set while still drawing the stale series.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). useAsync 가 stale data 를 일부러 유지하는 설계를 존중해, Plot 을 지우지 않고 그 위에 profileState.error Alert 을 비차단으로 렌더한다. 서버가 만들어 준 detail('could not read ...')이 그대로 보인다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::SampleDetail > surfaces a failed profile fetch instead of leaving an empty chart
 
 ### L15. `apps/web/src/pages/Upload.tsx:183` — fetch 에러가 단정형 빈 상태 문구로 표시됨 — '모두 연결되어 있습니다'가 서버 에러를 가림
 
@@ -536,7 +634,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In Upload.tsx (orphan card body, ~line 171) and SampleDetail.tsx (file card, ~line 403), mirror the Library.tsx:115-119 pattern: `state.error ? <Alert kind="error">{state.error}</Alert> : state.loading && !state.data ? <Spinner/> : state.data?.length ? <list/> : <Empty .../>`. Optionally drop the '· N개' count from the card title while error/loading (e.g. show '—'). Apply the same guard to Compare.tsx cell list (~285) and the Dashboard groups dropdown (Dashboard.tsx:102; a disabled option like '그룹을 불러오지 못했습니다' suffices there). Add a vitest that mocks the fetch to reject and asserts the Alert renders instead of '모두 연결되어 있습니다'.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). 고아 파일 카드를 Library.tsx 패턴(error → Alert, loading&&!data → Spinner, data.length → 목록, else → Empty)으로 바꾸고 카드 제목의 개수도 에러 시 '—' 로 표시한다. 같은 누락이던 SampleDetail 파일 카드, Compare 셀 목록, Dashboard 그룹 드롭다운(비활성 '그룹을 불러오지 못했습니다' 옵션)에도 error 분기를 넣었다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::Upload orphan card > shows the fetch failure instead of asserting that everything is attached
 
 ### L16. `apps/web/src/pages/Upload.tsx:263` — 고아 파일 셀 연결 실패가 완전히 무통보 — catch 없는 async 핸들러로 연결된 것처럼 보임
 
@@ -546,7 +646,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In OrphanRun (Upload.tsx), add local error state and a catch: const [error, setError] = useState<string | null>(null); in onChange wrap the await in try { ... onAttached() } catch (cause) { setError(cause instanceof Error ? cause.message : String(cause)); event.target.value = '' (or make the select controlled and reset to '') } finally { setBusy(false) }; render {error ? <Alert kind="error">{error}</Alert> : null} under the select. Apply the same catch-and-Alert (or a small shared useMutation-style helper) to SampleDetail.tsx handlers at lines 365-370, 376-382, 491-499, 507-516.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (web-pages). OrphanRun 의 select 를 controlled 로 바꾸고 catch 를 추가했다. 실패하면 에러 메시지를 Alert 으로 띄우고 선택값을 '' 로 되돌려, 연결되지 않은 run 이 '연결됨'처럼 보이지 않게 한다. 같은 catch-없음 패턴이던 SampleDetail 의 재파싱·삭제(RunRow 로컬 error state)와 상태 판정 select(settingsError)에도 동일하게 적용했다.
+
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx::Upload orphan card > reports a failed attach rather than leaving the cell name showing
 
 ### L17. `docs/adr/0003-timeseries-on-disk-summaries-in-db.md:26` — ADR 0003 이 말하는 `run.storage_ok` 검사가 코드 어디에도 존재하지 않음
 
@@ -556,7 +658,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Edit docs/adr/0003-timeseries-on-disk-summaries-in-db.md:26-27 to describe the actual mechanism: e.g. "대가: DB 와 디스크가 어긋날 수 있다. 조회 시점에 npz 가 없으면 원본(.wrd)에서 자동 재생성한다 (services.load_wrd_columns → storage.reparse); 원본까지 없으면 FileNotFoundError 로 드러난다." Alternatively, implement the promised surface (a storage_ok property on Run/RunOut checking storage.columns_path(run.id).exists() and storage.upload_path(run.sha256).exists()) — but the one-line doc correction is the minimal fix.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). 결과 절 마지막 항목을 실제 메커니즘으로 고쳤다: '정합성을 미리 검사하는 장치는 없고, 조회 시점에 npz 가 없으면 원본(.wrd)에서 자동 재생성한다 (services.load_wrd_columns → storage.reparse). 원본까지 없으면 FileNotFoundError 로 드러난다.' storage_ok 를 구현하는 대안은 apps/api 를 건드려야 해서(내 소유 밖) 택하지 않았다.
+
+**회귀 테스트.** 없음 — ADR 본문 정정이다. 존재하지 않는 식별자를 문서가 다시 주장하는지를 검사하려면 wiki_lint 에 코드-문서 식별자 대조 기능이 필요한데, 이 결함 하나를 위한 새 검사 축은 과한 변경이라 보류했다.
 
 ### L18. `docs/guides/wsl-setup.md:89` — 온보딩 가이드의 예측이 둘 다 틀림: '그냥 클론하면 빈 폴더' 아님, `Nothing to be done` 메시지는 발생 불가
 
@@ -566,7 +670,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In docs/guides/wsl-setup.md: (a) rewrite lines 88-90 to say a plain clone checks out whatever the remote default branch currently is — today an unrelated JS/Vite project — so Makefile and tools/bml are absent and `make setup` fails with `make: *** No rule to make target 'setup'.  Stop.`; avoid asserting the default is main or empty, since HEAD can drift. (b) Change the line 202 troubleshooting heading to key on the real messages: `make: *** No rule to make target 'setup'` / `tools/bml` 이 없습니다 (keep the existing remedy: `git fetch origin && git checkout claude/battery-charge-discharge-webapp-dq4ja3`, then re-run `ls Makefile tools/bml`). (c) Optionally note at line 100-107 that the `webapp/app.py` test only identifies the friendly-meitner DFT branch, and that `git branch --show-current` is the general way to see which project the folder holds. Mirror any wording that also appears in AGENTS.md/related guides per the parity contract if applicable.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). 88-90행을 '-b 없이 클론하면 원격 기본 브랜치를 받는데 그건 이 워크벤치가 아니고(지금은 무관한 JS/Vite 프로젝트), Makefile·tools/bml 이 없어 make setup 이 `make: *** No rule to make target 'setup'.  Stop.` 으로 죽는다' 로 고쳤다(기본 브랜치는 바뀔 수 있으므로 `git branch --show-current` 로 확인하라고 안내). 문제 해결 절 표제도 실제 메시지로 바꿨다. webapp/app.py 검사는 friendly-meitner 판만 잡아낸다는 한계와 일반적 확인법을 106행 뒤에 한 문단 추가하고, '비어 있거나 main 만 받은 경우' 문구를 '잃을 게 없는 폴더라면' 으로 일반화했다.
+
+**회귀 테스트.** 없음 — 외부 원격 상태·make 오류 메시지에 대한 서술이라 저장소 내 자동 테스트로 고정할 수 없다(원격 기본 브랜치를 조회하는 테스트는 네트워크 의존이고 값이 바뀌면 오히려 거짓 실패를 낸다). 재현으로만 확인: 빈 디렉터리에서 `make setup` → `No rule to make target 'setup'` (exit 2).
 
 ### L19. `packages/wrdkit/src/wrdkit/__init__.py:12` — 패키지 docstring의 'Typical use' 예제가 normalize_capacity를 import하지 않아 복사-실행 시 NameError
 
@@ -576,7 +682,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** packages/wrdkit/src/wrdkit/__init__.py 5행을 `from wrdkit import read_wrd, summarize_cycles, CellSpec, Basis, normalize_capacity`로 수정한다 (한 단어 추가).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). 5행 import 목록에 normalize_capacity 를 추가했다 (이미 __all__ 에 노출되어 있음).
+
+**회귀 테스트.** 없음 — docstring 예제는 doctest 형식이 아니고, 이 한 단어를 검증하려고 doctest 를 켜면 다른 모듈의 비-doctest docstring 까지 수집 대상이 되어 소유 밖 파일에 영향을 준다. 대신 예제가 실제로 도는지 수동으로 확인했다.
 
 ### L20. `packages/wrdkit/src/wrdkit/cli.py:84` — info에서 coulombic_efficiency가 None인 완료 사이클을 만나면 TypeError traceback으로 사망
 
@@ -586,7 +694,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In cli._print_info, guard the CE (and by symmetry any Optional field) before formatting, matching export._fmt / health.py:324: e.g. `ce = f"CE {c.coulombic_efficiency:.2f}%" if c.coulombic_efficiency is not None else "CE n/a"` for both `first` and `last` (cli.py:83-86). Optionally also add TypeError-proofing is NOT the fix — keep the except clause as-is and fix the formatting site. Add a synthetic-fixture test: build a cycle with a single-sample charge step (ΔCHARGE Q = 0) plus a real discharge and trailing rest, assert cli.main(["info", ...]) returns 0 and prints "n/a" rather than tracebacking.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). _ce() 헬퍼(export._fmt 와 같은 패턴)를 두어 CE 가 None 이면 'CE n/a' 를 출력한다. first/last 출력이 같은 코드였으므로 루프로 합쳤다. main 의 except 절은 fix_hint 대로 건드리지 않았다 — TypeError 를 잡는 것은 포맷 결함을 감추는 것이지 고치는 것이 아니다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_cli.py::test_info_survives_a_cycle_with_no_measurable_charge (충전 스텝 ΔCHARGE Q = 0 인 합성 파일; 수정 전에는 raw traceback)
 
 ### L21. `packages/wrdkit/src/wrdkit/export.py:50` — raw CSV의 charge_q/discharge_q/charge_e/discharge_e가 단위 표기 없이 파일 저장 단위(Ah 또는 C, Wh 또는 J) 그대로 덤프됨
 
@@ -596,7 +706,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In write_raw_csv (packages/wrdkit/src/wrdkit/export.py), tag the ambiguous headers from wrd.metadata.unit_coulomb: e.g. append " (C)"/" (J)" when unit_coulomb else " (Ah)"/" (Wh)" to charge_q/discharge_q and charge_e/discharge_e (preferring a non-empty file-declared WrdColumn.unit when metadata.columns is populated), and add a ("capacity unit", "C" or "Ah") row to the xlsx metadata sheet in write_xlsx. Both call sites already have the flag — the API's _metadata_stub carries run.unit_coulomb. Update header assertions in packages/wrdkit/tests/test_export.py and apps/api/tests/test_exports.py, and add a test that unit_coulomb=True changes the header.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-schedule-cli-export). write_raw_csv 헤더에 _raw_label() 로 단위를 붙인다: 파일이 선언한 WrdColumn.unit 이 비어 있지 않으면 그것을, 아니면 metadata.unit_coulomb 에 따라 (Ah)/(C), (Wh)/(J) 를 쓴다. 값 자체는 그대로다(파일 고유 단위 유지). write_xlsx 의 metadata 시트에도 'raw capacity unit' 행을 추가했다. 헤더에서 데이터 컬럼 이름을 되짚던 body 계산은 이름 목록에서 먼저 뽑도록 순서만 바꿨다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_export.py::test_raw_csv_labels_the_capacity_and_energy_units, ::test_raw_csv_labels_a_coulomb_file_differently (unit_coulomb=True 면 (C)/(J) 로 바뀜)
 
 ### L22. `packages/wrdkit/src/wrdkit/knee.py:106` — threshold 기준이 원시 retention 의 단발 글리치 사이클에 영구적으로 EOL 통과를 선언한다
 
@@ -606,7 +718,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _threshold_knee, require the crossing to be sustained rather than momentary: either feed it the already-computed smoothed series (interpolating the crossing on that series), or after finding below[0] verify the retention stays below the level (e.g., the last point, or a majority/2+ consecutive subsequent points, is also below); if the series recovers, return detected=False with a reason like 'dipped below 80% at cycle N but recovered'. Keep the existing interpolation for genuine crossings and add a dip-and-recover regression test; check test_threshold_interpolates_the_crossing still passes (its series ends below the level, so a sustained-crossing rule keeps it green).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). _threshold_knee 가 below[0] 을 그대로 쓰지 않고, SUSTAINED_CROSSING(=2) 사이클 연속으로 임계 아래에 머무는 첫 지점을 고른다(시리즈 끝이라 남은 점이 부족하면 남은 점 전부가 아래여야 한다). 지속되는 교차가 없으면 detected=False 와 'dipped below 80% at cycle N but recovered' 를 반환한다. 원시 시리즈를 그대로 쓰는 이유(평활 시리즈로 바꾸면 교차 사이클 자체가 이동한다)는 유지하고, 기존 보간 로직도 그대로다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_knee.py::test_a_single_glitch_cycle_is_not_an_end_of_life_crossing (사이클 50만 78% 로 떨어졌다 회복 → threshold 미검출, primary 미검출). 기존 ::test_threshold_interpolates_the_crossing 도 그대로 통과(마지막 점이 임계 아래라 지속 교차로 인정).
 
 ### L23. `packages/wrdkit/src/wrdkit/knee.py:169` — segmented knee 가 상승 후 하강(활성화형) 곡선에서 부호를 처리하지 못해 명백한 무릎을 음수 ratio 로 기각
 
@@ -616,7 +730,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _segmented_knee (packages/wrdkit/src/wrdkit/knee.py line 169), only form the ratio when the pre-break slope is a genuine fade: if slope_before >= -MIN_FADE_RATE (flat or rising before the break; guards at lines 163/165 already guarantee slope_after < -MIN_FADE_RATE here), set ratio = float('inf') -- fade begins at the break point, which is unbounded acceleration -- instead of dividing. Adjust the reason string for that branch (e.g. 'fade begins at cycle N (+x -> -y %/cycle)') and add a test with a rising-then-falling series asserting segmented detects the planted knee.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-cycles-knee). ratio 계산 전에 slope_before >= -MIN_FADE_RATE 이면(163/165행 가드에 의해 이때 slope_after 는 반드시 열화 중) ratio = inf 로 두어 '절점에서 열화가 시작된다 = 무한 가속' 으로 처리한다. 그 경우 사유 문장도 'fade begins at cycle N (+x -> -y %/cycle)' 로 따로 만들어 '-16.14x' 같은 앞뒤 안 맞는 문장이 나오지 않게 했다. 양쪽 다 음수인 통상 경로는 기존 나눗셈·문장 그대로.
+
+**회귀 테스트.** packages/wrdkit/tests/test_knee.py::test_a_rising_then_falling_series_is_a_knee (사이클 35까지 +0.2%/cy 상승 후 -1.6%/cy 급락 → segmented 가 ~35 검출, primary=segmented)
 
 ### L24. `packages/wrdkit/src/wrdkit/normalize.py:108` — resolve() 가 wt% 범위를 검사하지 않고 divisor() 가 음수 질량을 유효한 분모로 통과시킴 — 음수/황당 mAh/g 생성
 
@@ -626,7 +742,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In CellSpec.resolve(): (1) when wt_percent is not None and not 0 < wt_percent <= 100, set notes["active_mass"] = f"active wt% {wt_percent:g} is outside (0, 100] - ignored" and leave mass_g None; (2) when active_mass_mg is not None and active_mass_mg <= 0, record notes["active_mass"] = "directly entered active mass is not positive - ignored" instead of silently falling through to the total-mass path. In ResolvedCell.divisor(), replace the truthiness idioms with explicit guards (e.g. `m = self.active_mass_g; return m if m is not None and m > 0 else None`) for SPECIFIC/AREAL/VOLUMETRIC/NORMALIZED. Add ge/gt/le constraints in apps/api/app/schemas.py (wt_percent: ge=0 le=100 on ComponentIn per ADR 0007's parts-allowed stance may need gt only on active_wt_percent; masses/areas gt=0). Add wrdkit tests for wt_percent in {-80, 0, 800} and active_mass_mg=-25 asserting mAh/g is unavailable with a reason in notes.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-composition-normalize). CellSpec.resolve(): (a) active_mass_mg 가 0 이하로 들어오면 total-mass 경로로 조용히 넘어가지 않고 notes["active_mass"]="directly entered active mass is not positive - ignored" 를 남기고 질량을 None 으로 둔다, (b) 유효 wt% 가 [0, 100] 밖이면 notes 에 "active wt% -80 is outside [0, 100] - ignored" 를 남기고 질량을 계산하지 않는다 (0 wt% 는 의도적 기록이므로 범위에 포함해 기존 동작 유지). ResolvedCell.divisor(): `x or None` truthiness 를 _positive() 헬퍼로 바꿔 음수 질량·면적·부피·공칭용량이 분모가 되지 않게 했다 — 그래서 available_bases()/missing_for() 도 자동으로 올바르게 따라온다. apps/api/app/schemas.py 의 ge/le 제약은 소유 밖이라 손대지 않았다(아래 skipped 참조).
+
+**회귀 테스트.** packages/wrdkit/tests/test_normalize.py::test_a_negative_weight_percent_is_ignored_with_a_reason, ::test_a_weight_percent_above_100_is_ignored_with_a_reason, ::test_a_negative_entered_active_mass_does_not_slip_into_the_total_mass_path, ::test_a_negative_mass_is_never_a_divisor
 
 ### L25. `packages/wrdkit/src/wrdkit/normalize.py:211` — missing_for() 가 실제 결핍과 무관한 고정 문구를 반환해 사용자를 엉뚱한 입력으로 유도
 
@@ -636,7 +754,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In ResolvedCell.missing_for(), branch on actual state instead of a fixed map: VOLUMETRIC — collect the genuinely absent inputs (area only if area_cm2 is falsy, thickness otherwise) and join them; NORMALIZED — report only whichever of active mass / nominal specific capacity is actually missing; SPECIFIC — when active_mass_g == 0.0 because the effective active wt% is 0, say "active material is 0 wt% of the composition" rather than "active mass not set". Keep the existing strings for the all-missing case so current behavior is a subset. Update the paired Korean translations in apps/web/src/lib/i18n.ts BASIS_REASONS (add the new variants), and extend packages/wrdkit/tests/test_normalize.py plus apps/web i18n tests to cover the partially-set states.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-composition-normalize). 고정 맵을 ResolvedCell 의 실제 상태 분기로 바꿨다. VOLUMETRIC: 면적이 있으면 "electrode thickness not set", 없으면 기존 문구 유지(두께 보유 여부는 ResolvedCell 이 들고 있지 않아 면적이 없을 때는 구분할 수 없다). NORMALIZED: 질량만 있으면 "nominal specific capacity not set", 공칭만 있으면 "active mass not set", 둘 다 없으면 기존 문구. SPECIFIC: 활물질이 0 wt% 라 질량이 0.0 이면 "active material is 0 wt% of the composition", 그 외에는 기존 "active mass not set". 기존 문구는 모두 전부-결핍 케이스에 그대로 남으므로 apps/api 테스트와 i18n 매핑이 깨지지 않는다. 다만 새로 생긴 세 문구는 apps/web/src/lib/i18n.ts 의 BASIS_REASONS 에 없어 UI 에서 영어 원문으로 표시된다(`?? text` 폴백). i18n.ts 는 내 소유가 아니라 건드리지 않았으니, 담당 그룹이 'electrode thickness not set', 'nominal specific capacity not set', 'active material is 0 wt% of the composition' 세 항목을 추가해야 한다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_normalize.py::test_the_reason_names_what_is_actually_missing, ::test_a_zero_percent_blend_says_so_instead_of_blaming_the_mass, ::test_a_negative_mass_is_never_a_divisor (모든 basis 에서 이유가 비지 않음)
 
 ### L26. `packages/wrdkit/src/wrdkit/normalize.py:257` — retention() 이 범위 밖 reference_index 를 조용히 0(=formation 1번 사이클)으로 클램프
 
@@ -646,7 +766,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In normalize.py retention(), replace the clamp with the same behavior as an unusable reference one line below: `if not 0 <= reference_index < len(values): return [None] * len(values)` (or raise ValueError if a loud failure is preferred). Add a test: `retention([5.0, 4.0], 2) == [None, None]` and a negative-index case, citing ADR 0004 in the docstring.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-composition-normalize). 클램프를 지우고 범위 밖 reference_index 면 [None] * len(values) 를 반환한다. docstring 에 ADR 0004 근거(1~2번은 formation 이라 기준으로 쓰면 설계상 손실을 열화로 세게 된다)를 적었다. health.py 가 이미 하고 있던 동작과 일치한다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_normalize.py::test_retention_never_falls_back_to_the_formation_cycle (retention([5,4], 2) 와 음수 인덱스)
 
 ### L27. `packages/wrdkit/src/wrdkit/nrbf.py:195` — primitive_array 가 잘린 스트림에서 NrbfError 대신 raw struct.error 를 던진다
 
@@ -656,7 +778,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** nrbf.py primitive_array: unpack_from 호출 전에 len(self.buf)-self.pos >= size*count 를 검사하거나 try/except struct.error 로 감싸 NrbfError(f"truncated stream at offset {self.pos}") 로 변환. primitive() 의 Char 경로(kind==3): self.pos >= len(self.buf) 및 len(raw) != width 를 검사해 NrbfError 를 던진다. test_nrbf.py 의 기존 truncation 테스트(41행) 옆에 두 경로의 회귀 테스트 추가. (별개 인접 이슈: runs.py:87 의 except WrdError 는 정상 래핑된 NrbfError 도 놓치므로 except (WrdError, NrbfError) 또는 except ValueError 로 넓히는 것도 고려.)
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). primitive_array 에서 unpack_from 전에 `if count < 0 or len(self.buf) - self.pos < size * count: raise NrbfError(...)` 를 검사한다 (음수 count 도 같은 raw struct.error 를 내므로 함께 막았다). primitive() 의 Char 경로(kind==3)에는 `self.pos >= len(self.buf)` 검사와 `len(raw) != width` 검사를 넣어 버퍼 끝/부분 멀티바이트 문자 모두 NrbfError 가 되게 했다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_nrbf.py::test_rejects_a_truncated_primitive_array, packages/wrdkit/tests/test_nrbf.py::test_rejects_a_char_truncated_at_the_buffer_end[] 와 [\xc2]
 
 ### L28. `packages/wrdkit/src/wrdkit/wrd.py:302` — _scan_rows 가 두 번째 이후 문자열 컬럼의 길이 접두사를 버퍼 밖에서 읽어 IndexError 로 죽는다
 
@@ -666,7 +790,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _scan_rows, bound-check the prefix index before reading: idx = pos + str_off + (size - layout.fixed_size); if idx >= total: ok = False; break; else length = buf[idx]. This turns the out-of-range read into the existing scan-stop path (row_count stops there, trailing_bytes reports the remainder). Add a synthetic-fixture test with a second String column and a tail truncated to exactly fixed_size bytes.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). 접두사 인덱스를 prefix 변수로 뽑고 `if prefix >= total: ok = False; break` 를 추가했다. 범위를 벗어난 읽기가 기존의 정상 중단 경로(row_count 는 거기서 멈추고 trailing_bytes 가 나머지를 보고)로 흘러간다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_wrd.py::test_a_short_tail_stops_the_scan_with_two_string_columns (22 컬럼 + NOTE(String), 마지막 행을 fixed_size=129 바이트로 절단)
 
 ### L29. `packages/wrdkit/src/wrdkit/wrd.py:418` — 루트가 NrbfObject 가 아닌 NRBF 파일에서 의도된 WrdError 대신 AttributeError 가 난다
 
@@ -676,7 +802,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In read_wrd_bytes, replace the root checks with isinstance guards: `if not isinstance(file_header, NrbfObject) or "DataFileHeader" not in file_header.class_name:` (line 418, importing NrbfObject from .nrbf) and likewise `if not isinstance(data_header, NrbfObject) or "DataHeader" not in data_header.class_name:` (line 426); in the error message use `type(file_header).__name__` when it is not an NrbfObject. Line 431 is then safe for the header path but `format_obj.members` should still tolerate a non-object via `getattr(format_obj, "members", {})` or an isinstance check. Add a synthetic-fixture test feeding an NRBF stream with a string root and asserting WrdError. Optionally also catch NrbfError alongside WrdError in apps/api/app/routers/runs.py (or make NrbfError a WrdError subclass) to close the sibling 500 path.
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (wrdkit-parser). file_header / data_header 검사를 isinstance(.., NrbfObject) 가드로 바꾸고, 객체가 아닐 때는 type(...).__name__ 을 쓴 메시지를 낸다. format_obj 도 `isinstance(format_obj, NrbfObject)` 일 때만 members 를 읽는다. 같은 갈래의 AttributeError 를 닫으려고 _member() 와 _list_items() 의 `if obj is None` 도 isinstance 가드로 바꿨다 — report/type_obj/ColumnList 가 문자열·리스트로 나오는 파일에서 동일하게 죽기 때문이고, 규칙 4("모르면 None")와도 맞는다.
+
+**회귀 테스트.** packages/wrdkit/tests/test_wrd.py::test_non_object_root_raises_wrd_error (BinaryObjectString 루트를 가진 유효 NRBF 스트림)
 
 ### L30. `tools/wiki_lint.py:138` — index 등재 검사가 부분 문자열 포함 검사 — 다른 항목에 stem 이 포함돼 있으면 미등재 페이지가 통과
 
@@ -686,7 +814,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In check_index, stop substring-matching the whole file. Extract the set of wikilink targets once — index_links = {m for m in re.findall(r"\[\[([^\]|#]+?)(?:\|[^\]]*)?\]\]", index)} (same regex already used at line 141) — and flag `stem not in index_links`. For ADRs, require a token-bounded match, e.g. re.search(rf"(?<![\w./-]){re.escape(path.name)}(?![\w-])", index), or collect markdown link targets `\(adr/([^)]+)\)` and test membership. Optionally also assert the "Total pages: N" line equals len(pages).
 
-**처리.** _(갱신 라운드에서 기록)_
+**처리.** ✅ 수정 완료 (docs-build). check_index 에서 index.md 전문에 대한 `stem not in index` 를 없앴다. 위키 페이지는 index 안의 [[wikilink]] 타겟 집합(index_links)으로만 등재를 인정하고, ADR 은 이름 경계 정규식 `(?<![\w-])<파일명>(?![\w-])` 으로 판정한다(`adr/` 접두사는 허용, 더 긴 이름의 부분 문자열은 불허). 역방향 검사(없는 페이지 나열)는 같은 index_links 를 재사용한다.
+
+**회귀 테스트.** tools/tests/test_wiki_lint.py (새 파일, Makefile test-tools 에 연결) — 4 케이스: 실제 트리 복사본은 오류 0 / `wsl` ⊂ `wsl-setup` 인 미등재 페이지를 잡음 / 부분 문자열로만 등장하는 미등재 ADR 을 잡음 / 정상 등재 ADR 을 오판하지 않음. 수정 전 wiki_lint.py 로 돌리면 가운데 두 케이스가 실패함을 확인했다.
 
 ## 기각된 주장
 
@@ -710,6 +840,70 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 - apps/web/src/components/Plot.tsx:212 리사이즈마다 uPlot 을 파괴·재생성해 드래그 줌 상태가 소실됨 — The mechanics are correctly described (width in the effect deps at apps/web/src/components/Plot.tsx:217 causes destroy+recreate at 211-212, which resets drag-zoom), but this is polish-level UX behavior, not a defect. (1) Nothing is wrong or corrupted: no memory leak (the auditor concedes destroy is paired), no wrong numbers, no spec/ADR violation — ADR 0006 (docs/adr/0006-frontend-stack.md) frames Plot.tsx as a minimal imperative bridge over uPlot and no doc promises zoom persistence; grep for setSize/zoom/줌 in docs finds no contrary intent. (2) Zoom reset is the wrapper's uniform, consistent behavior on every prop change, not a resize-specific hole: toggling a legend chip (hidden → visible → data), switching the life metric or basis axis, or markers updating all recreate the chart through the same effect (deps: data, visible, markers, yRange, xLabel...). Patching only the width path with setSize() would make zoom survive a resize but still vanish on every other interaction — inconsistent — and blindly preserving scales while the x/y semantics change under them (e.g., basis switch mAh → mAh/g in SampleDetail.tsx) would silently show a wrong zoom window, which is exactly the kind of quiet misreporting this repo treats as the real hazard. Full recreation from current props is the safe, predictable choice. (3) The lost state is transient inspection state by uPlot's own idiom (dblclick resets it); recovery is one drag, and useElementWidth floors the width (hooks.ts:101) so sub-pixel ResizeObserver churn does not fire. The auditor's own severity is 'low', 'ux-state' — i.e., an enhancement suggestion, which per the audit rubric (style-level, correct behavior) is real=false.
 - tools/bml.cmd:30 bash -lc "bml %BML_ARGS%" 인용 — 공백·따옴표 인자는 단어가 쪼개지고, 괄호 인자는 if 블록 파싱을 깨뜨림 — The cmd quoting mechanics described are technically accurate, but the failure is unreachable through any supported code path. bml's entire CLI surface (tools/bml main, lines 1132-1146) is fixed one-word tokens (serve/dev/stop/status/doctor/check/repair web/...), and bml.cmd is documented (docs/guides/wsl-setup.md lines 168-190) solely as a PowerShell convenience for those bare subcommands. The only argument-taking subcommand, `install [dir]`, is documented exclusively for in-WSL use because it symlinks into WSL's ~/.local/bin; no documented workflow passes a path or free-form text through bml.cmd. Scenario 1 requires the user to feed a Windows path ("C:\bin dir") to the WSL-side installer — even with perfect quoting, cmd_install would mkdir a literal junk directory inside WSL and report success, so the wrong outcome is user error, not the quoting. Scenario 2 (paren in arg) fails loudly with a cmd syntax error at parse time — visible breakage on contrived input, not silent corruption. This is defensive-hardening/style level for inputs the wrapper never receives.
 - apps/api/app/services.py:151 연속 파일 cycle_offset 이 잘린 마지막 사이클까지 세어(cycle_count) 파일 경계마다 사이클 번호가 +1 씩 밀리고 경계 사이클이 이중 기록됨 — The mechanical reading is right (offset = sum of cycle_count incl. the incomplete tail, services.py:151/167), but the failure scenario is not reachable on any code path demonstrated in this repo: it requires that a continuation file restarts CYCLE INDEX at 0 AND that its first index-0 block is the remainder of the cycle truncated in the previous file. No real _011/_012 pair has ever been examined; the single validated real file (docs/raw/specs/wrd-binary-format.md — the 19.6 MB _012 file) begins with cycle 0 = FORMATION (steps 0–4), i.e. its record starts at the schedule start, directly contradicting the assumed mid-cycle-remainder model. Meanwhile the proposed fix (sum complete_cycle_count) is worse under the repo's own ADR-0008 model that every continuation file ends mid-cycle: it would collide cycle numbers at every file boundary (the previous file's incomplete fragment is persisted with the same cycle_number), breaking the uniqueness/monotonicity contract tested at apps/api/tests/test_runs.py:93 — and it would not remove the alleged ghost complete=True fragment from the retention/knee series, only renumber it; the actual remedy would be fragment merging, a different change entirely. The remaining downside of the current code, if the assumed model were ever confirmed, is a bounded +1-per-boundary label shift with unique numbers, defended by (a) the _011 fragment always being complete=False (cycles.py:262-265) and excluded from analysis, and (b) the documented manual cycle_offset override (cycle_offset_source="manual", test_runs.py:61-72). The ghost-cycle sub-claim additionally only triggers on a cut-during-charge; a cut-during-discharge remainder has no charge step and stays complete=False. Since the reproduction path cannot be traced without instrument behavior the repo has never observed, this is a speculative concern, not a demonstrated bug.
+
+## 갱신 결과
+
+확정 65건을 **파일 소유가 겹치지 않는 12개 그룹**으로 나눠 병렬 수정했다.
+각 그룹은 수정 후 회귀 테스트를 붙이고, **수정을 잠깐 되돌려 그 테스트가 실제로 실패하는지**
+확인했다 (테스트가 결함을 잡지 못하면 잡은 것이 아니다).
+
+```
+pytest      289 → 293 passed, 14 skipped
+vitest       57 →  75 passed (10 files)
+bml 회귀      17 →  29 passed
+신규 도구 테스트  wiki_lint 4/4 · lint gate 2/2
+ruff · tsc · eslint · wiki-lint   전부 통과
+```
+
+### 보류한 항목 (18건)
+
+고치지 않기로 한 것들이다. 대부분 **파일 소유가 겹쳐** 다른 그룹에 남긴 것이고,
+일부는 근거가 없어 추측으로 채우면 불변 규칙 4번을 어기는 것들이다.
+
+| 위치 | 항목 | 보류 이유 |
+|---|---|---|
+| `apps/api/app/schemas.py:0` | wt%/질량/면적에 ge·gt·le 제약 추가 (fix_hint 4의 부수 제안) | 소유 파일 밖이다(작업 규칙 1). wrdkit 쪽에서 범위 밖 wt% 와 비양수 질량이 더 이상 분모가 되지 않으므로 데이터 오염 경로는 막혔고, API 스키마 제약은 입력 단계에서 더 일찍 거절하기 위한 중복 방어라 apps/api 담당 그룹에 남긴다. |
+| `apps/web/src/lib/i18n.ts:117` | 새 missing_for 문구 3종의 한국어 번역 추가 | 소유 파일 밖이다. 번역이 없어도 `basisReason` 이 원문을 그대로 반환하므로 화면이 깨지지 않고 영어로만 보인다. 추가할 키: 'electrode thickness not set', 'nominal specific capacity not set', 'active material is 0 wt% of the composition'. |
+| `packages/wrdkit/src/wrdkit/composition.py:41` | _ROLE_HINTS 에 'lps'(황화물 전해질) 힌트 추가 | 결함 목록에 없는 기능 확장이고, 최소 수정 원칙에 어긋난다. 토큰 매칭 수정만으로 'LPS glass-ceramic' 은 active 오분류를 벗어나 OTHER 가 되므로 mAh/g 분모 오염은 이미 해소된다(ADR 0007: 모르면 OTHER). |
+| `apps/api/app/routers/exports.py:152` | _collect_profiles 의 branch 검증 누락 (profiles.csv / 워크북 500) | exports.py 는 내 소유 파일이 아니다(소유: analysis.py, schemas.py, test_analysis.py). 검증 로직은 analysis.py 에 _parse_branches 로 이미 뽑아 두었으니 exports 담당이 `from .analysis import _parse_cycles, _parse_branches` 로 한 줄만 바꾸면 된다. 남은 결함: GET /api/export/samples/{id}/profiles.csv?br… |
+| `apps/web/src/pages/Dashboard.tsx:245` | 폴백된 행에 배지 표시 / Compare 의 혼합 축 경고 | apps/web 은 내 소유가 아니다. API 쪽 신호(row.basis_fallback_reason, series.basis_fallback_reason, mixed_basis, requested_basis, reference_cycle_used/reference_available/retention_note)는 모두 추가해 두었으므로 프런트는 읽기만 하면 된다. 필드는 전부 추가만 했고 기존 필드 의미는 유지해 웹 런타임은 깨지지 않는다(단, lib/ty… |
+| `apps/api/app/services.py:368` | schedule_finished 가 프로덕션 경로에서 항상 None — ADR 0008 의 결정적(3.0) 신호가 죽은 코드다 | 고치려면 (a) wrdkit 에 순수 헬퍼(schedule_reached_end), (b) 스케줄을 품은 synthetic 픽스처 — packages/wrdkit/src/wrdkit/*, packages/wrdkit/tests/synthetic.py 모두 내 소유가 아니다. 더 중요한 것은 판정 근거가 없다는 점이다: 데이터의 STEP INDEX 컬럼이 schedule.steps 의 인덱스와 어떻게 대응하는지 저장소 안 어디에도 확인된 근거가 없고(docs… |
+| `apps/api/app/services.py:429` | profile_series 도 요청당 레코드마다 npz 를 다시 로드한다 (finding #5 의 곁가지) | 이 경로의 호출자는 apps/api/app/routers/analysis.py (sample_profile, compare_profiles) 이고 다른 그룹 소유다. 호출자가 캐시 dict 를 넘겨주지 않으면 메모이제이션이 의미가 없고, 인자를 추가해도 지금 트리에서 쓰는 곳이 없어 죽은 파라미터가 된다. 게다가 analysis 라우터에는 60 사이클 상한이 있어 exports 처럼 무제한으로 커지지 않는다. exports 쪽 결함(무제한 x 재로드)만 고… |
+| `apps/api/app/routers/analysis.py:436` | compare_profiles 의 최상위 basis 가 마지막 처리 셀에서 결정됨 (fix_hint 의 optional 항목) | 내 소유 파일이 아니다(API 그룹 담당). 프런트에서는 이 값에 의존하지 않도록 시리즈별 ProfileSeries.basis 로 폴백 셀을 직접 판정해 경고를 띄우므로, 최상위 basis 가 임의값이어도 사용자에게 잘못된 단정이 표시되지 않는다. |
+| `apps/api/app/routers/runs.py:1` | delete_run/reparse_run/update_run 에서 Sample.updated_at 을 올리는 대안 (fix_h | runs.py 는 내 소유가 아니다. 프런트에서 runChanged() 로 cycles/report/profile 을 명시적으로 무효화해 같은 증상을 없앴다. 나중에 백엔드가 updated_at 을 올리게 되면 stamp 의존성으로 한 번 더 재조회될 뿐 동작은 그대로다. |
+| `apps/web/src/pages/Compare.tsx:222` | 폴백 시리즈를 그래프에서 제외 (fix_hint 의 대안 A) | 제외하면 연구자가 셀이 사라진 사실을 모르고 '비교했다'고 믿게 되어, 원래 결함(무통보)과 같은 종류의 오해가 생긴다. 대신 셀 이름과 실제 단위를 명시한 경고 + 축 라벨 정정을 택했다. |
+| `docs/guides/wsl-setup.md:81` | wsl-setup.md 가 같은 파괴적 CRLF 처방(`git reset --hard`)을 반복한다 (fix_hint 의 pa | 내 소유 파일이 아니다(소유: tools/bml, tools/tests/test_bml_ownership.sh). 다른 그룹이 동시에 편집 중일 수 있어 손대지 않았다. tools/bml 쪽 처방은 고쳤으므로 문서만 옛 처방으로 남아 있다 — docs 소유 그룹이 docs/guides/wsl-setup.md:78-82 를 `sed -i 's/\r$//' <파일>` 형태로 같이 바꿔야 parity 가 맞는다. |
+| `tools/bml:710` | owns_pid 가 /proc 과 ps 를 모두 못 읽으면 우리 프로세스도 정지 대상에서 빠진다 | 의도한 트레이드오프다. 규칙 8('우리 것임을 증명한 뒤에만 죽인다')과 owns_port 의 기존 원칙('설명할 수 없는 listener 는 죽이지 않는다')을 따라, 판단이 안 서면 안 죽이는 쪽을 택했다. 이 경우에도 포트 경로(owns_port + lsof/ss/fuser)가 남아 있어 정상 리눅스/WSL 에서는 bml stop 이 그대로 동작한다. |
+| `tools/wiki_lint.py:143` | index.md 의 `Total pages: N` 를 실제 페이지 수와 대조 (fix_hint 의 optional 항목) | 확정 결함이 아니라 제안의 부가 항목이고, 현재 값(3)은 실제 위키 페이지 수와 일치한다. 등재 누락은 이번 수정으로 이미 잡히므로 중복 방어다. 최소 수정 원칙에 따라 보류. |
+| `packages/wrdkit/tests/test_cycles.py:3` | Makefile 의 `|| true` 제거로 드러난 기존 ruff I001 위반 | 내 소유 파일이 아니다(wrdkit 그룹이 동시에 편집 중). HEAD 기준으로는 ruff clean 이었고, 작업 트리에 추가된 `import dataclasses` 때문에 import 정렬이 깨졌다. 게이트가 제 일을 한 것이므로 그대로 두고 보고한다 — 해당 그룹이 `ruff check --fix` 한 줄로 해소하면 된다. 지금 상태로는 `make check` 가 이 한 건 때문에 실패한다. |
+| `apps/api/app/routers/samples.py:44` | 컷오프·온도 쿼리 파라미터와 Library 필터 구현 (README 결함의 큰 대안) | apps/api·apps/web 은 내 소유가 아니고 동시 편집 중이라 충돌한다. 감사 제안도 '최소 수정은 README 문구' 였다. 없는 기능을 있다고 적어둔 문제는 문구를 걷어내고 로드맵으로 옮겨 해소했다. |
+| `apps/api/app/models.py:1` | ADR 0003 이 약속한 `run.storage_ok` 실제 구현 | apps/api 는 내 소유 밖이며, 새 API 표면을 추가하는 것은 문서 정정보다 훨씬 큰 변경이다. ADR 을 현행 동작(조회 시점 지연 재생성)에 맞추는 쪽이 '모르면 추정값을 내보내지 않는다' 는 저장소 원칙과도 맞는다. |
+| `packages/wrdkit/tests/synthetic.py:294` | 기본 픽스처를 CC-CV(cv_points>0)로 바꾸지 않고 옵트인으로 남긴 것 | cv_points 를 기본 활성화하면 사이클당 스텝이 4개에서 5개로 늘어 test_cycles.py:44(`len(steps) == 12`, 모드 순서 4종)의 기대값이 깨진다. test_cycles.py 는 내 소유 파일이 아니고 다른 그룹이 동시에 편집 중이라(실제로 이번 세션에 +43줄 수정됨) 손대면 충돌한다. 대신 (a) 스펙 위반의 본체인 '스텝별 리셋'은 기본 픽스처에서 무조건 고쳤고, (b) 다중 스텝 브랜치가 필요한 회귀 잠금은 새 파일에… |
+| `packages/wrdkit/tests/synthetic.py:315` | 방전 브랜치는 CC 단일 스텝으로 유지 (CCCV 방전으로 쪼개지 않음) | 차분 로직의 회귀는 충전 쪽 2스텝 케이스 하나로 이미 결정적으로 잡힌다(변이 시 정확히 그 테스트만 실패). 방전까지 쪼개면 픽스처 구조가 더 커지고 기존 테스트(test_a_truncated_final_cycle_is_flagged_incomplete 의 samples[:-15] 같은 인덱스 의존 코드)의 표면적만 넓어진다. |
+
+### 이후 라운드로 넘긴 것
+
+Codex 만 찾은 8건과 Opus 재감사에서 새로 확정된 12건은 이번 갱신 범위 밖이다.
+그중 무게가 큰 것:
+
+| 출처 | 위치 | 항목 |
+|---|---|---|
+| Codex #1 | `normalize.py:102` | 활물질 비율을 모르면 전극 **전체**를 활물질로 계산 (ADR 0007 핵심 계약 위반) |
+| Codex #3 | `schemas.py:31` | 물리 입력값 범위·유한성 검증 없음 |
+| Codex #23 | `CompositionEditor.tsx:52` | "조성 지우기" 가 조성을 안 지움 |
+| Codex #25 | `analysis.py:505` | 불연속 사이클을 균등 간격으로 복원해 x축·knee 위치 왜곡 |
+| Codex #26 | `bml:501` | pull 후에도 기존 프로세스가 이전 HEAD 를 서비스 |
+| Opus | `apps/api/app/storage.py:47` | npz 캐시를 제자리에 덮어써서, 재작성 중 읽는 요청이 EOFError 로 500 을 받는다 |
+| Opus | `apps/api/app/routers/runs.py:108` | 업로드 부분 실패 핸들러가 파싱 결과를 그대로 커밋하고 renumber 를 건너뛰어, 되돌릴 수 없는 불일치 레코드를 남긴다 |
+| Opus | `apps/api/app/storage.py:38` | 원본 쓰기가 원자적이지 않아, 중단된 업로드가 남긴 잘린 .wrd 를 이후 어떤 재업로드로도 고칠 수 없다 |
+| Opus | `apps/api/app/routers/groups.py:53` | PATCH /api/groups/{id} 가 보내지 않은 필드를 기본값으로 지운다 — 그룹 라우터에 PATCH 테스트가 아예 없다 |
+| Opus | `apps/api/tests/test_exports.py:59` | 내보내기 테스트가 헤더·행수만 보고 값을 한 번도 검증하지 않는다 — mAh/g 헤더 아래 raw mAh 를 내보내도 통과 |
+| Opus | `apps/api/tests/test_runs.py:110` | '계측기가 아는 것을 다시 묻지 않는다' 경로가 CI 에서 0% 커버 — 이름이 그 기능인 테스트가 반대를 어서션한다 |
+| Opus | `apps/api/tests/test_analysis.py:68` | 미완료 사이클 배제는 /cycles 에만 테스트가 있고 profile·compare·dashboard·CSV·XLSX 5개 경로는 전부 무방비 |
+
+특히 `test_analysis.py:68` 이 무겁다 — 미완료 사이클 배제 가드가 `/cycles` 에만
+테스트가 있고 **profile·compare·dashboard·CSV·XLSX 5개 경로는 전부 무방비**라,
+다섯 군데 가드를 한꺼번에 지워도 CI 가 초록불이다.
 
 ## Codex 교차표
 

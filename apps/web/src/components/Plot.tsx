@@ -6,12 +6,12 @@
  * onto a merged, sorted x axis with nulls where it has no sample.
  */
 
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 
 import { useElementWidth } from '../lib/hooks'
-import { seriesColor } from '../lib/format'
+import { SERIES_COLORS, seriesColor } from '../lib/format'
 
 export interface PlotSeries {
   label: string
@@ -87,6 +87,50 @@ function resolveColor(color: string | undefined, fallback: string): string {
   return cssVar(token[1]!, token[2]?.trim() ?? fallback)
 }
 
+/** Express a qualitative-palette colour as its theme token.
+ *
+ * `SERIES_COLORS` is a light-mode-only constant and callers hand its literal
+ * hex straight in as `series.color`, so on the dark surface the grey and the
+ * deep blues fall to about 2.4:1 -- below the 3:1 a line needs to be seen.
+ * The palette slot is recovered here and rewritten as `var(--series-N, <hex>)`,
+ * which app.css themes the way it themes --charge/--discharge; the literal hex
+ * stays as the fallback, and a colour that is not from the palette (a caller's
+ * own token or a one-off) is passed through untouched. */
+function seriesToken(color: string | undefined, index: number): string {
+  const slot = color
+    ? SERIES_COLORS.indexOf(color.trim().toLowerCase())
+    : index % SERIES_COLORS.length
+  if (slot < 0) return color as string
+  return `var(--series-${slot}, ${SERIES_COLORS[slot]})`
+}
+
+/** Axis, grid and label-plate colours, re-read when the OS scheme flips.
+ *
+ * uPlot bakes colours into canvas draw calls and a canvas has no cascade, so
+ * unlike the rest of the app a plot cannot inherit a token change: it has to be
+ * told, and rebuilt.  Without this a page left open across a light/dark switch
+ * kept the old scheme's axes until the data happened to change. */
+function readChartColors() {
+  return {
+    text: cssVar('--ink-3', '#7d8797'),
+    grid: cssVar('--line', '#e5e7eb'),
+    warn: cssVar('--warn', '#b54708'),
+    surface: cssVar('--surface', '#ffffff'),
+  }
+}
+
+function useChartColors(): ReturnType<typeof readChartColors> {
+  const [colors, setColors] = useState(readChartColors)
+  useEffect(() => {
+    const query = window.matchMedia?.('(prefers-color-scheme: dark)')
+    if (!query?.addEventListener) return
+    const onChange = () => setColors(readChartColors())
+    query.addEventListener('change', onChange)
+    return () => query.removeEventListener('change', onChange)
+  }, [])
+  return colors
+}
+
 const AXIS_FONT = '11px Pretendard, system-ui, sans-serif'
 const LABEL_FONT = '600 11px Pretendard, system-ui, sans-serif'
 
@@ -102,6 +146,7 @@ export function Plot({
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
   const nodeRef = useRef<HTMLDivElement>(null)
+  const colors = useChartColors()
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
 
@@ -116,8 +161,8 @@ export function Plot({
     const node = nodeRef.current
     if (!node || !data || width < 80) return
 
-    const text = cssVar('--ink-3', '#7d8797')
-    const grid = cssVar('--line', '#e5e7eb')
+    const text = colors.text
+    const grid = colors.grid
 
     const options: uPlot.Options = {
       width,
@@ -167,7 +212,7 @@ export function Plot({
         {},
         ...visible.map((item, index) => ({
           label: item.label,
-          stroke: resolveColor(item.color, seriesColor(index)),
+          stroke: resolveColor(seriesToken(item.color, index), seriesColor(index)),
           width: item.width ?? 1.6,
           dash: item.dash,
           spanGaps: item.spanGaps ?? true,
@@ -183,7 +228,7 @@ export function Plot({
                 for (const marker of markers) {
                   const x = u.valToPos(marker.x, 'x', true)
                   if (!Number.isFinite(x)) continue
-                  ctx.strokeStyle = marker.color ?? cssVar('--warn', '#b54708')
+                  ctx.strokeStyle = marker.color ?? colors.warn
                   ctx.lineWidth = 1.25
                   ctx.setLineDash([5, 4])
                   ctx.beginPath()
@@ -191,12 +236,12 @@ export function Plot({
                   ctx.lineTo(x, u.bbox.top + u.bbox.height)
                   ctx.stroke()
                   ctx.setLineDash([])
-                  const color = marker.color ?? cssVar('--warn', '#b54708')
+                  const color = marker.color ?? colors.warn
                   ctx.font = LABEL_FONT
                   ctx.textAlign = 'left'
                   // A plate behind the label keeps it readable over the data.
                   const textWidth = ctx.measureText(marker.label).width
-                  ctx.fillStyle = cssVar('--surface', '#ffffff')
+                  ctx.fillStyle = colors.surface
                   ctx.fillRect(x + 3, u.bbox.top + 2, textWidth + 8, 16)
                   ctx.fillStyle = color
                   ctx.fillText(marker.label, x + 7, u.bbox.top + 14)
@@ -214,7 +259,7 @@ export function Plot({
       plotRef.current?.destroy()
       plotRef.current = null
     }
-  }, [data, visible, width, height, xLabel, yLabel, markers, yRange, legend])
+  }, [data, visible, width, height, xLabel, yLabel, markers, yRange, legend, colors])
 
   return (
     <div ref={wrapRef} className="plot-shell">
@@ -255,8 +300,8 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
             className={`swatch${item.dash ? ' dashed' : ''}`}
             style={
               item.dash
-                ? { color: item.color ?? seriesColor(index), background: 'transparent' }
-                : { background: item.color ?? seriesColor(index) }
+                ? { color: seriesToken(item.color, index), background: 'transparent' }
+                : { background: seriesToken(item.color, index) }
             }
           />
           {item.label}

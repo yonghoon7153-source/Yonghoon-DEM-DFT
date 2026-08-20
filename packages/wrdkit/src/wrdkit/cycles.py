@@ -13,6 +13,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
+from .schedule import Schedule
 from .wrd import CellStatus, WrdFile
 
 __all__ = [
@@ -268,6 +269,24 @@ def summarize_cycles(wrd: WrdFile, *, cycle_offset: int = 0,
     return summaries
 
 
+def _taper_current_a(schedule: Schedule, direction: str) -> float | None:
+    """Current the schedule tapers down to before leaving *direction*, if any.
+
+    The largest of the candidates is used: over-stating the taper only risks
+    accepting a nearly finished hold as complete, while under-stating it would
+    mark genuinely finished cycles truncated and drop them from every report.
+    """
+    values: list[float] = []
+    for step in schedule.steps:
+        if step.direction != direction:
+            continue
+        if step.taper_current_a:
+            values.append(abs(float(step.taper_current_a)))
+        values += [abs(float(c.value)) for c in step.cutoffs
+                   if c.kind == "current" and c.value]
+    return max(values) if values else None
+
+
 def _ends_mid_step(wrd: WrdFile, stop: int) -> bool:
     """True when the file stops part-way through a step.
 
@@ -290,9 +309,21 @@ def _ends_mid_step(wrd: WrdFile, stop: int) -> bool:
     tolerance = 0.01
     if current < 0:
         cutoff = schedule.lower_cutoff_v
-        return not (cutoff is not None and voltage <= cutoff + tolerance)
-    cutoff = schedule.upper_cutoff_v
-    return not (cutoff is not None and voltage >= cutoff - tolerance)
+        direction = "discharge"
+        at_cutoff = cutoff is not None and voltage <= cutoff + tolerance
+    else:
+        cutoff = schedule.upper_cutoff_v
+        direction = "charge"
+        at_cutoff = cutoff is not None and voltage >= cutoff - tolerance
+    if not at_cutoff:
+        return True
+
+    # A CV hold sits *at* the cut-off voltage for its whole length while the
+    # current tapers, so the voltage alone cannot separate a finished hold from
+    # a file split in the middle of one.  When the schedule tapers this
+    # direction, the current must have reached the taper setpoint as well.
+    taper = _taper_current_a(schedule, direction)
+    return taper is not None and abs(current) > taper * 1.1
 
 
 def extract_profile(wrd: WrdFile, cycle: CycleSummary, branch: str) -> Profile:

@@ -9,6 +9,7 @@ from sqlmodel import Session, select
 
 from wrdkit import BASES
 
+from .. import storage
 from ..db import get_session
 from ..deps import get_sample, resolved_cell_out, validate_basis
 from ..models import CycleRecord, ExperimentGroup, Run, Sample
@@ -165,6 +166,11 @@ def delete_sample(sample_id: int, session: Session = Depends(get_session),
             for cycle in session.exec(
                     select(CycleRecord).where(CycleRecord.run_id == run.id)).all():
                 session.delete(cycle)
+            # Same promise as DELETE /api/runs/{id}: the row goes, the parse
+            # cache goes with it (the original .wrd stays).  Without this the
+            # npz -- megabytes per file, and the largest thing we write -- is
+            # orphaned the moment its run id stops resolving.
+            storage.drop_run_cache(run.id)
             session.delete(run)
         else:
             run.sample_id = None

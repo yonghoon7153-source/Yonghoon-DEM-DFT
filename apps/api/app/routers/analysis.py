@@ -70,15 +70,64 @@ def _parse_cycles(spec: str | None) -> set[int] | None:
     return wanted
 
 
+def _parse_branches(branches: str) -> list[str]:
+    """``charge,discharge`` -> the branches it names.
+
+    A typo has to come back as a 422 from every endpoint that takes it; left
+    unchecked it reaches ``extract_profile`` and surfaces as a 500.
+    """
+    parsed = [b.strip() for b in branches.split(",") if b.strip()]
+    for branch in parsed:
+        if branch not in ("charge", "discharge"):
+            raise HTTPException(422, f"branch must be charge or discharge, got {branch!r}")
+    return parsed
+
+
+def _reference_note(requested: int | None, used_cycle: int | None) -> str:
+    """Why retention is not anchored where the caller asked (ADR 0004)."""
+    if used_cycle is None:
+        return "no completed cycle, so retention cannot be measured"
+    if requested is None:
+        return ("no reference cycle is set for this file, so retention is "
+                f"measured from cycle {used_cycle}")
+    return (f"cycle {requested} is not in this record, so retention is "
+            f"measured from cycle {used_cycle}")
+
+
 def _cycle_rows(records: list[CycleRecord], cell, basis: str,
-                reference_cycle: int | None) -> list[CycleOut]:
+                reference_cycle: int | None) -> tuple[list[CycleOut], dict]:
+    """The rows, plus what the retention column was actually anchored to."""
     used = effective_basis(cell, basis)
     reference = None
     if reference_cycle is not None:
         reference = next((r for r in records
                           if r.cycle_number == reference_cycle and r.complete), None)
+    reference_available = reference is not None
     if reference is None:
-        reference = next((r for r in records if r.complete), None)
+        # ADR 0004: a missing reference cycle must not quietly anchor on
+        # formation.  Prefer the earliest complete cycle *after* the requested
+        # one -- a continuation file starting at cycle 201 carries no formation
+        # at all -- and tell the caller which cycle stood in, the same way
+        # health.build_report does.
+        later = [r for r in records
+                 if r.complete and reference_cycle is not None
+                 and r.cycle_number > reference_cycle]
+        reference = (min(later, key=lambda r: r.cycle_number) if later
+                     else next((r for r in records if r.complete), None))
+    reference_info = {
+        "reference_cycle_used": reference.cycle_number if reference else None,
+        "reference_available": reference_available,
+        "retention_note": "" if reference_available else _reference_note(
+            reference_cycle, reference.cycle_number if reference else None),
+    }
+
+    # One fixed denominator for the whole column.  Dividing each row by its own
+    # capacity makes a constant-current protocol look like an accelerating one
+    # as the cell fades (1 mA / 5 mAh = 0.20C -> 1 mA / 2.5 mAh = 0.40C).
+    rate_reference_mah = reference.discharge_capacity_mah if reference else None
+    if not rate_reference_mah:
+        rate_reference_mah = next(
+            (r.discharge_capacity_mah for r in records if r.discharge_capacity_mah), None)
 
     rows: list[CycleOut] = []
     for record in records:
@@ -91,7 +140,7 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
         rate = None
         if record.max_discharge_current_a:
             rate = c_rate(record.max_discharge_current_a, cell,
-                          measured_capacity_mah=record.discharge_capacity_mah or None)
+                          measured_capacity_mah=rate_reference_mah)
         rows.append(CycleOut(
             cycle=record.cycle_number,
             cycle_index=record.cycle_index,
@@ -116,7 +165,7 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
             n_points=record.n_points,
             complete=record.complete,
         ))
-    return rows
+    return rows, reference_info
 
 
 @router.get("/samples/{sample_id}/cycles", response_model=CycleTableOut)
@@ -145,6 +194,7 @@ def sample_cycles(
         records = [r for r in records if r.complete]
 
     used = effective_basis(cell, basis)
+    rows, reference_info = _cycle_rows(records, cell, basis, sample.reference_cycle)
     return CycleTableOut(
         basis=used,
         basis_label=basis_label(used),
@@ -152,7 +202,8 @@ def sample_cycles(
         basis_fallback_reason=cell.missing_for(basis) if used != basis else None,
         reference_cycle=sample.reference_cycle,
         resolved_cell=resolved_cell_out(cell),
-        cycles=_cycle_rows(records, cell, basis, sample.reference_cycle),
+        cycles=rows,
+        **reference_info,
     )
 
 
@@ -173,6 +224,7 @@ def run_cycles(
         records = [r for r in records if r.complete]
     used = effective_basis(cell, basis)
     reference = sample.reference_cycle if sample else None
+    rows, reference_info = _cycle_rows(records, cell, basis, reference)
     return CycleTableOut(
         basis=used,
         basis_label=basis_label(used),
@@ -180,7 +232,8 @@ def run_cycles(
         basis_fallback_reason=cell.missing_for(basis) if used != basis else None,
         reference_cycle=reference,
         resolved_cell=resolved_cell_out(cell),
-        cycles=_cycle_rows(records, cell, basis, reference),
+        cycles=rows,
+        **reference_info,
     )
 
 
@@ -208,10 +261,7 @@ def sample_profile(
         active_wt_percent, nominal_specific_capacity_mah_g, thickness_um))
 
     wanted = _parse_cycles(cycles)
-    requested_branches = [b.strip() for b in branches.split(",") if b.strip()]
-    for branch in requested_branches:
-        if branch not in ("charge", "discharge"):
-            raise HTTPException(422, f"branch must be charge or discharge, got {branch!r}")
+    requested_branches = _parse_branches(branches)
 
     records = [r for r in sample_cycle_records(session, sample) if r.complete]
     if wanted is not None:
@@ -355,7 +405,7 @@ def compare_cycles(
         records = sample_cycle_records(session, sample)
         if complete_only:
             records = [r for r in records if r.complete]
-        rows = _cycle_rows(records, cell, basis, sample.reference_cycle)
+        rows, reference_info = _cycle_rows(records, cell, basis, sample.reference_cycle)
 
         key = {"retention": "retention_pct"}.get(metric, metric)
         points = [
@@ -363,6 +413,7 @@ def compare_cycles(
             for row in rows if getattr(row, key) is not None
         ]
         used = effective_basis(cell, basis)
+        is_capacity = metric.endswith("capacity")
         series.append({
             "sample_id": sample.id,
             "sample_name": sample.name,
@@ -370,11 +421,23 @@ def compare_cycles(
             "cathode_type": sample.cathode_type,
             "c_rate": sample.c_rate,
             "temperature_c": sample.temperature_c,
-            "basis": used if metric.endswith("capacity") else "",
+            "basis": used if is_capacity else "",
+            # A mass-less cell falls back to raw mAh.  Without this the curve
+            # joins the others on one axis with nothing saying it is in a
+            # different unit, and reads as a forty-times-worse cell.
+            "basis_fallback_reason": (cell.missing_for(basis)
+                                      if is_capacity and used != basis else None),
+            **reference_info,
             "points": points,
         })
 
-    unit = basis_label(effective_basis(resolve_cell(None), basis))
+    # Derived from the series that were actually built.  resolve_cell(None) has
+    # no mass or area, so every capacity axis came back labelled "mAh" even when
+    # the points were mAh/g.
+    used_bases = {s["basis"] for s in series if s["basis"]}
+    mixed_basis = len(used_bases) > 1
+    response_basis = next(iter(used_bases)) if len(used_bases) == 1 else basis
+    unit = basis_label(response_basis)
     labels = {
         "discharge_capacity": "Discharge capacity",
         "charge_capacity": "Charge capacity",
@@ -387,7 +450,11 @@ def compare_cycles(
     return {
         "metric": metric,
         "metric_label": labels[metric],
-        "basis": basis,
+        "basis": response_basis,
+        "requested_basis": basis,
+        # True means the curves are not in the same unit; the axis cannot be
+        # labelled for all of them at once, so the client has to annotate.
+        "mixed_basis": mixed_basis,
         "y_label": unit if metric.endswith("capacity") else labels[metric],
         "series": series,
     }
@@ -408,7 +475,7 @@ def compare_profiles(
         ids = [int(part) for part in sample_ids.split(",") if part.strip()]
     except ValueError as exc:
         raise HTTPException(422, "sample_ids must be comma-separated integers") from exc
-    requested_branches = [b.strip() for b in branches.split(",") if b.strip()]
+    requested_branches = _parse_branches(branches)
 
     limit = max_points or settings.default_plot_points
     series: list[ProfileSeriesOut] = []
@@ -491,10 +558,19 @@ def dashboard(session: Session = Depends(get_session),
             "knee_cycle": knee.cycle if knee and knee.detected else None,
             "knee_method": knee.method if knee and knee.detected else None,
             "basis": used,
+            # Without this a mass-less cell's raw mAh sits in the same column
+            # as the other cells' mAh/g, under one mAh/g header.
+            "basis_fallback_reason": cell.missing_for(basis) if used != basis else None,
             "loading_mg_cm2": cell.loading_mg_cm2,
             "composition_label": cell.composition_compact_label,
         })
-    return {"basis": basis, "basis_label": basis_label(basis), "rows": rows}
+
+    used_bases = {row["basis"] for row in rows}
+    response_basis = next(iter(used_bases)) if len(used_bases) == 1 else basis
+    return {"basis": response_basis, "basis_label": basis_label(response_basis),
+            "requested_basis": basis,
+            "mixed_basis": len(used_bases) > 1,
+            "rows": rows}
 
 
 #: Points in a dashboard sparkline.  Enough to show a knee, small enough that

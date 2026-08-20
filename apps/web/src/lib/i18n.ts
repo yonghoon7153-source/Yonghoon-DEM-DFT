@@ -143,12 +143,31 @@ function window_(text: string): string {
     .replace(/^([\d.]+) h$/, '$1시간')
 }
 
+/** Phrases no rule matched.
+ *
+ * Falling through is deliberate — a sentence in English beats a missing one —
+ * but a silent fallthrough is how an English sentence ends up shipped in a
+ * Korean panel for months.  Every unmatched phrase is recorded, and announced
+ * once while developing, so a new backend wording is noticed the first time it
+ * appears rather than the first time somebody complains. */
+const untranslated = new Set<string>()
+
+function passThrough(text: string): string {
+  if (!untranslated.has(text)) {
+    untranslated.add(text)
+    if (typeof process !== 'undefined' && process.env['NODE_ENV'] === 'development') {
+      console.warn(`[i18n] 번역 규칙이 없습니다: ${JSON.stringify(text)}`)
+    }
+  }
+  return text
+}
+
 function apply(rules: Rule[], text: string): string {
   for (const [pattern, render] of rules) {
     const match = text.match(pattern)
     if (match) return render(match)
   }
-  return text
+  return passThrough(text)
 }
 
 export const ko = {
@@ -157,7 +176,9 @@ export const ko = {
   evidence: (text: string) => apply(EVIDENCE, text),
   cellNote: (text: string) => apply(CELL_NOTES, text),
   compositionProblem: (text: string) => apply(COMPOSITION_PROBLEMS, text),
-  basisReason: (text: string) => BASIS_REASONS[text] ?? text,
+  basisReason: (text: string) => BASIS_REASONS[text] ?? passThrough(text),
+  /** Phrases that fell through untranslated, for tests and for the console. */
+  untranslated: () => [...untranslated],
   stateTarget: (text: string) =>
     ({ running: '구동 중', finished: '종료', unknown: '불명' })[text] ?? text,
   signal: (text: string) =>

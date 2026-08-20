@@ -8,8 +8,8 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import asdict
-from datetime import datetime, timezone
+from dataclasses import asdict, replace
+from datetime import datetime, timedelta, timezone
 
 import numpy as np
 from sqlmodel import Session, select
@@ -331,6 +331,28 @@ def records_to_summaries(records: list[CycleRecord]) -> list[CycleSummary]:
     return summaries
 
 
+#: How far ahead of this machine's clock an instrument timestamp may sit and
+#: still be read as "just now".  Two PCs drift by seconds, not by hours.
+_CLOCK_SKEW_TOLERANCE = timedelta(minutes=5)
+
+
+def _usable_last_sample_time(last_sample_time: datetime | None,
+                             now: datetime) -> datetime | None:
+    """Drop a last-sample time whose clock does not match ours.
+
+    A future timestamp makes the record's age negative, which reads as fresh
+    and is printed to the user as "-8.5 h old".  Within the drift of two
+    clocks the honest reading is "just now"; beyond it the two clocks are on
+    different zones or badly set, and no recency verdict can be earned from
+    them -- so none is offered (non-negotiable #4).
+    """
+    if last_sample_time is None or last_sample_time <= now:
+        return last_sample_time
+    if last_sample_time - now <= _CLOCK_SKEW_TOLERANCE:
+        return now
+    return None
+
+
 def build_cell_report(session: Session, sample: Sample, *,
                       knee_options: dict | None = None) -> CellReport:
     """The running/finished readout for a sample, across all its files."""
@@ -348,12 +370,21 @@ def build_cell_report(session: Session, sample: Sample, *,
             last_sample_time = run.end_time
 
     declared = None if sample.declared_state == "auto" else sample.declared_state
+    # ``last_sample_time`` is the wall clock of the PC that ran Smart
+    # Interface, stored naive because the file says nothing about its zone.
+    # Comparing it against a naive *UTC* now subtracts two different clocks:
+    # in a KST lab every file looks nine hours into the future, so a cell that
+    # stopped yesterday still reads "running", and the stale-record signal
+    # ADR 0008 calls decisive arrives nine hours late.  The server runs beside
+    # the instrument, so its own local clock is the matching one.
+    now = datetime.now()
+    last_sample_time = _usable_last_sample_time(last_sample_time, now)
     return build_report(
         summaries,
         reference_cycle=sample.reference_cycle,
         planned_cycles=planned,
         last_sample_time=last_sample_time,
-        now=datetime.now(timezone.utc).replace(tzinfo=None),
+        now=now,
         schedule_finished=schedule_finished,
         declared_state=declared,
         knee_options=knee_options,
@@ -396,7 +427,7 @@ def effective_basis(cell: ResolvedCell, basis: str) -> str:
 # --------------------------------------------------------------------------
 def load_wrd_columns(run: Run) -> dict[str, np.ndarray]:
     """Cached columns for a run, re-parsing the original if the cache is gone."""
-    columns = storage.load_columns(run.id)
+    columns = storage.load_columns(run.id, expect_sha256=run.sha256)
     if columns is not None:
         return columns
     wrd = storage.reparse(run.sha256)
@@ -456,8 +487,11 @@ def _rebuild_steps(wrd: WrdFile, record: CycleRecord):
 
     window = {name: values[record.row_start:record.row_stop]
               for name, values in wrd.data.items()}
-    sliced = WrdFile(wrd.metadata, window)
-    sliced.metadata.row_count = record.row_stop - record.row_start
+    # A copy, not the caller's metadata: a file loaded once and reused for
+    # every cycle of an export would otherwise end up claiming the row count
+    # of whichever cycle was segmented last.
+    sliced = WrdFile(replace(wrd.metadata,
+                             row_count=record.row_stop - record.row_start), window)
     steps = segment_steps(sliced)
     for step in steps:
         step.start += record.row_start

@@ -35,6 +35,16 @@ describe('knee reasons', () => {
       'some future criterion said no',
     )
   })
+
+  it('records the passthrough, so a new backend wording is not silently English', () => {
+    ko.kneeReason('a wording nobody has translated yet')
+    ko.basisReason('some future basis is missing')
+    expect(ko.untranslated()).toContain('a wording nobody has translated yet')
+    expect(ko.untranslated()).toContain('some future basis is missing')
+    // a phrase with a rule must not be reported as missing
+    ko.basisReason('active mass not set')
+    expect(ko.untranslated()).not.toContain('active mass not set')
+  })
 })
 
 describe('state evidence', () => {

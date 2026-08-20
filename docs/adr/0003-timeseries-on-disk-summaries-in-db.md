@@ -23,5 +23,7 @@
 - 셀 목록과 비교 화면은 DB 만 읽는다. 즉시 뜬다.
 - 프로파일 화면만 npz 를 연다. 필요한 사이클 구간만 슬라이스한다.
 - 백업이 단순하다: `data/` 디렉터리 + `workbench.db` 파일.
-- 대가: DB 와 디스크가 어긋날 수 있다. `run.storage_ok` 로 검사하고,
-  npz 가 없으면 원본에서 재생성한다.
+- 대가: DB 와 디스크가 어긋날 수 있다. 정합성을 미리 검사하는 장치는 없고,
+  조회 시점에 npz 가 없으면 원본(`.wrd`)에서 자동 재생성한다
+  (`services.load_wrd_columns` → `storage.reparse`). 원본까지 없으면
+  `FileNotFoundError` 로 드러난다.

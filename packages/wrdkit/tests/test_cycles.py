@@ -1,10 +1,40 @@
 """Step and cycle segmentation."""
 
+import dataclasses
+
 import pytest
 
 from wrdkit import extract_profile, read_wrd_bytes, segment_steps, summarize_cycles
+from wrdkit.schedule import Cutoff, Schedule, ScheduleStep
 
 import synthetic
+
+TAPER_A = 0.26e-3
+
+
+def _cccv_discharge_schedule() -> Schedule:
+    """A CCCV discharge holding 1.9 V until the current tapers to TAPER_A."""
+    return Schedule(version=None, source_path=None, steps=[
+        ScheduleStep(index=0, name="chg", control="CC", control_raw=0,
+                     current_a=1.0e-3,
+                     cutoffs=[Cutoff("voltage", ">=", 3.6, 0.0)]),
+        ScheduleStep(index=1, name="dch", control="CCCV", control_raw=13,
+                     current_a=-1.0e-3, voltage_limit_v=1.9,
+                     taper_current_a=TAPER_A,
+                     cutoffs=[Cutoff("voltage", "<=", 1.9, 0.0),
+                              Cutoff("current", "<=", TAPER_A, 0.0)]),
+    ])
+
+
+def _file_ending_in_cv_hold(current_a: float):
+    """A file whose last sample sits at the cut-off voltage, still discharging."""
+    samples = synthetic.make_cycles(2, 20)
+    while samples[-1].cell_status == 1:   # drop the trailing rest of cycle 2
+        samples.pop()
+    samples[-1] = dataclasses.replace(samples[-1], voltage=1.9, current=current_a)
+    wrd = read_wrd_bytes(synthetic.build_wrd(samples))
+    wrd.metadata.schedule = _cccv_discharge_schedule()
+    return wrd
 
 
 def test_steps_split_on_the_instrument_step_counter(synthetic_wrd):
@@ -47,6 +77,18 @@ def test_a_truncated_final_cycle_is_flagged_incomplete():
     cycles = summarize_cycles(truncated)
     assert cycles[0].complete is True
     assert cycles[-1].complete is False
+
+
+def test_a_file_split_during_a_cv_hold_is_flagged_incomplete():
+    """Voltage alone cannot see the missing taper: it sits at the cut-off."""
+    cycles = summarize_cycles(_file_ending_in_cv_hold(-1.0e-3))
+    assert cycles[0].complete is True
+    assert cycles[-1].complete is False
+
+
+def test_a_cv_hold_that_reached_its_taper_stays_complete():
+    cycles = summarize_cycles(_file_ending_in_cv_hold(-0.2e-3))
+    assert cycles[-1].complete is True
 
 
 def test_profiles_start_from_zero_capacity(synthetic_wrd):

@@ -115,5 +115,21 @@ def test_deleting_a_sample_keeps_its_files_by_default(client, sample_id, wrd_byt
     assert runs[0]["sample_id"] is None
 
 
+def test_deleting_a_sample_with_its_files_drops_their_parse_cache(client, sample_id,
+                                                                  wrd_bytes):
+    from app import storage
+
+    run = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                      files={"file": ("c_012.wrd", wrd_bytes,
+                                      "application/octet-stream")}).json()
+    assert storage.columns_path(run["id"]).exists()
+
+    assert client.delete(f"/api/samples/{sample_id}",
+                         params={"delete_runs": True}).status_code == 204
+    # Nothing can reach that run id again, so the npz would leak for good.
+    assert not storage.columns_path(run["id"]).exists()
+    assert storage.upload_path(run["sha256"]).exists()
+
+
 def test_an_empty_sample_name_is_rejected(client):
     assert client.post("/api/samples", json={"name": "   "}).status_code == 422

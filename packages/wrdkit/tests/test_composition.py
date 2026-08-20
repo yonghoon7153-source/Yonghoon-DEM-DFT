@@ -35,6 +35,22 @@ class TestParsing:
         assert parse_composition("어제 만든 그 전극").is_empty()
         assert parse_composition("").is_empty()
 
+    @pytest.mark.parametrize(
+        "text",
+        ["AM:SE:VGCF = 80:17", "NCM811:LPSCl:VGCF:PTFE 78:17:3"],
+    )
+    def test_a_missing_ratio_yields_nothing_rather_than_a_shifted_blend(self, text):
+        """The old fallback carved a component out of the leftover digits."""
+        assert parse_composition(text).is_empty()
+
+    @pytest.mark.parametrize("text", ["cell 01", "sample 3"])
+    def test_a_sample_label_is_not_a_composition(self, text):
+        assert parse_composition(text).is_empty()
+
+    def test_a_bare_number_is_never_a_component_name(self):
+        composition = parse_composition("80 17 / VGCF 3")
+        assert [c.name for c in composition.components] == []
+
     def test_parts_can_be_rescaled_to_percent(self):
         composition = parse_composition("AM:SE:VGCF = 8:1.7:0.3").normalized()
         assert composition.active_wt_percent == pytest.approx(80.0)
@@ -60,6 +76,39 @@ class TestRoles:
         assert infer_role("Zzz-9") == Role.OTHER
         composition = Composition([Component("Zzz-9", 100)])
         assert composition.active_wt_percent is None
+
+    @pytest.mark.parametrize(
+        "name",
+        ["LPS glass-ceramic", "LLZO ceramic", "amorphous carbon", "Li foam",
+         "sample", "ceramic separator"],
+    )
+    def test_a_short_acronym_does_not_match_inside_another_word(self, name):
+        """"am" buried in "cer-am-ic" would put the electrolyte in mAh/g."""
+        assert infer_role(name) != Role.ACTIVE
+
+    def test_llzo_ceramic_is_still_recognised_as_the_electrolyte(self):
+        assert infer_role("LLZO ceramic") == Role.ELECTROLYTE
+
+    @pytest.mark.parametrize(
+        "name,role",
+        [
+            ("NCM-811", Role.ACTIVE), ("AM 1", Role.ACTIVE),
+            ("SiO2", Role.ACTIVE), ("artificial graphite", Role.ACTIVE),
+            ("LPSCl (argyrodite)", Role.ELECTROLYTE),
+            ("VGCF-H", Role.CONDUCTIVE), ("Super P Li", Role.CONDUCTIVE),
+            ("carbon black", Role.CONDUCTIVE),
+            ("PVDF-HFP", Role.BINDER), ("PTFE binder", Role.BINDER),
+        ],
+    )
+    def test_real_world_spellings_still_classify(self, name, role):
+        assert infer_role(name) == role
+
+    def test_an_unrecognised_electrolyte_stays_out_of_the_denominator(self):
+        composition = parse_composition("NCM811:LPS glass-ceramic:VGCF = 80:17:3")
+        assert composition.active_wt_percent == 80
+        assert composition.components[1].role == Role.OTHER
+        cell = CellSpec(total_mass_mg=31.6, composition=composition).resolve()
+        assert cell.active_mass_g == pytest.approx(0.02528)
 
 
 class TestProblems:

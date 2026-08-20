@@ -5,6 +5,20 @@ import io
 
 import pytest
 
+from app.routers import exports
+
+
+@pytest.fixture
+def two_files(client, sample_id, wrd_bytes, finished_wrd_bytes):
+    """One experiment split the way Smart Interface splits it."""
+    for name, content in (("c_011.wrd", finished_wrd_bytes),
+                          ("c_012.wrd", wrd_bytes)):
+        response = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                               files={"file": (name, content,
+                                               "application/octet-stream")})
+        assert response.status_code in (200, 201), response.text
+    return sample_id
+
 
 @pytest.fixture
 def loaded(client, sample_id, wrd_bytes):
@@ -78,3 +92,39 @@ def test_workbook_has_metadata_cycles_and_profiles(client, loaded):
     labels = [row[0] for row in book["metadata"].iter_rows(values_only=True)]
     assert "active mass (mg)" in labels
     assert "loading (mg/cm2)" in labels
+
+
+def test_the_raw_sheet_carries_every_file_of_a_split_experiment(client, two_files):
+    """Exporting only the last file would drop half the experiment silently."""
+    openpyxl = pytest.importorskip("openpyxl")
+    runs = client.get("/api/runs").json()
+    total_rows = sum(run["row_count"] for run in runs)
+
+    response = client.get(f"/api/export/samples/{two_files}/workbook.xlsx",
+                          params={"cycles": "1", "include_raw": "true"})
+    assert response.status_code == 200
+    book = openpyxl.load_workbook(io.BytesIO(response.content))
+
+    raw = book["raw"]
+    assert raw.max_row == total_rows + 1          # header
+    sources = {row[0] for row in raw.iter_rows(min_col=raw.max_column,
+                                               max_col=raw.max_column,
+                                               min_row=2, values_only=True)}
+    assert sources == {"c_011.wrd", "c_012.wrd"}
+
+    metadata = dict(row[:2] for row in book["metadata"].iter_rows(values_only=True))
+    assert metadata["samples"] == total_rows
+
+
+def test_a_profile_export_reads_each_file_once(client, two_files, monkeypatch):
+    """The cache is one compressed archive per file; re-reading it per cycle
+    turned a long experiment's export into minutes of decompression."""
+    loads = []
+    original = exports.load_wrd_columns
+    monkeypatch.setattr(exports, "load_wrd_columns",
+                        lambda run: (loads.append(run.id), original(run))[1])
+
+    response = client.get(f"/api/export/samples/{two_files}/profiles.csv")
+    assert response.status_code == 200
+    assert sorted(loads) == sorted(set(loads))
+    assert len(loads) == 2

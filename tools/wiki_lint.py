@@ -131,14 +131,18 @@ def check_index(adr_files: list[pathlib.Path], pages: dict[str, pathlib.Path]) -
         errors.append("docs/index.md 없음")
         return
     index = index_path.read_text()
+    # 부분 문자열 검사는 등재를 흉내낸다: 미등재 `wsl.md` 가 기존 `wsl-setup`
+    # 항목 안에 묻혀 통과한다. 이름 경계와 [[wikilink]] 로만 등재를 인정한다.
     for path in adr_files:
-        if path.name not in index:
+        if not re.search(rf"(?<![\w-]){re.escape(path.name)}(?![\w-])", index):
             errors.append(f"docs/index.md: ADR 미등재 {path.name}")
+    index_links = set(re.findall(r"\[\[([^\]|#]+?)(?:\|[^\]]*)?\]\]", index))
+    index_links = {link.strip() for link in index_links}
     for stem in pages:
-        if stem not in index:
+        if stem not in index_links:
             errors.append(f"docs/index.md: 위키 페이지 미등재 {stem}")
 
-    for link in set(re.findall(r"\[\[([^\]|#]+?)(?:\|[^\]]*)?\]\]", index)):
+    for link in index_links:
         if link not in pages:
             errors.append(f"docs/index.md: 없는 페이지를 나열 [[{link}]]")
 

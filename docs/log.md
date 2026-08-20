@@ -26,3 +26,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] create | ADR 0009 — 이 브랜치가 집이다, main 은 별개 (머지하지 않는다)
 ## [2026-08-20] start | 전수 감사 (리뷰→반박→갱신) + Codex 교차검증 준비
 ## [2026-08-20] create | docs/reviews/ — Codex 부트스트랩·리뷰 과제 프롬프트 2종
+## [2026-08-20] fix | 전수 감사 확정 65건 갱신 — 회귀 테스트 동반, 전체 검사 통과

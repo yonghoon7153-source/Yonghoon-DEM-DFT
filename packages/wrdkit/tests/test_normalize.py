@@ -95,3 +95,65 @@ def test_retention_against_a_chosen_reference():
 def test_retention_of_an_empty_or_zero_series():
     assert retention([]) == []
     assert retention([0.0, 1.0]) == [None, None]
+
+
+def test_retention_never_falls_back_to_the_formation_cycle():
+    """ADR 0004: no cycle 3 in the series means no retention, not cycle 1."""
+    assert retention([5.0, 4.0], 2) == [None, None]
+    assert retention([5.0, 4.0], -1) == [None, None]
+
+
+def test_a_negative_weight_percent_is_ignored_with_a_reason():
+    cell = CellSpec(total_mass_mg=31.6, active_wt_percent=-80).resolve()
+    assert cell.active_mass_g is None
+    assert cell.divisor(Basis.SPECIFIC) is None
+    assert "-80" in cell.notes["active_mass"]
+
+
+def test_a_weight_percent_above_100_is_ignored_with_a_reason():
+    cell = CellSpec(total_mass_mg=31.6, active_wt_percent=800).resolve()
+    assert cell.active_mass_g is None
+    assert Basis.SPECIFIC not in cell.available_bases()
+    assert "800" in cell.notes["active_mass"]
+
+
+def test_a_negative_entered_active_mass_does_not_slip_into_the_total_mass_path():
+    cell = CellSpec(active_mass_mg=-25.0, total_mass_mg=31.6,
+                    active_wt_percent=80).resolve()
+    assert cell.active_mass_g is None
+    assert "not positive" in cell.notes["active_mass"]
+
+
+def test_a_negative_mass_is_never_a_divisor():
+    """It would produce a negative mAh/g that reads like a measurement."""
+    from wrdkit.normalize import ResolvedCell
+
+    cell = ResolvedCell(active_mass_g=-0.02528, area_cm2=-1.3,
+                        volume_cm3=-0.016, nominal_capacity_mah=-5.2)
+    for basis in (Basis.SPECIFIC, Basis.AREAL, Basis.VOLUMETRIC, Basis.NORMALIZED):
+        assert cell.divisor(basis) is None
+        assert cell.missing_for(basis) is not None
+    assert cell.available_bases() == [Basis.ABSOLUTE]
+
+
+def test_the_reason_names_what_is_actually_missing():
+    with_area = CellSpec(diameter_mm=13).resolve()
+    assert with_area.missing_for(Basis.VOLUMETRIC) == "electrode thickness not set"
+    assert CellSpec().resolve().missing_for(Basis.VOLUMETRIC) == \
+        "electrode area and thickness not set"
+
+    with_mass = CellSpec(total_mass_mg=31.6, active_wt_percent=80).resolve()
+    assert with_mass.missing_for(Basis.NORMALIZED) == "nominal specific capacity not set"
+    with_nominal = CellSpec(nominal_specific_capacity_mah_g=205.9).resolve()
+    assert with_nominal.missing_for(Basis.NORMALIZED) == "active mass not set"
+    assert CellSpec().resolve().missing_for(Basis.NORMALIZED) == \
+        "active mass and nominal specific capacity not set"
+
+
+def test_a_zero_percent_blend_says_so_instead_of_blaming_the_mass():
+    from wrdkit import parse_composition
+
+    cell = CellSpec(total_mass_mg=31.6,
+                    composition=parse_composition("AM:SE = 0:100")).resolve()
+    assert cell.missing_for(Basis.SPECIFIC) == \
+        "active material is 0 wt% of the composition"

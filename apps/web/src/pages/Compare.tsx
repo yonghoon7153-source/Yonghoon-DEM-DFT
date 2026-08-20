@@ -6,11 +6,16 @@ import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
-import { basisAxis, seriesColor } from '../lib/format'
+import { basisAxis, basisUnit, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { Basis } from '../lib/types'
 
 type Mode = 'cycles' | 'profiles'
+
+/** Matches the server's own limit (apps/api/app/routers/analysis.py: "compare
+ *  at most 30 samples at a time"), so "모두 선택" only ever stops where the
+ *  backend would refuse anyway — and says so when it does. */
+const SELECT_ALL_LIMIT = 30
 
 const METRICS = [
   { value: 'discharge_capacity', label: '방전용량' },
@@ -30,6 +35,7 @@ export function Compare() {
   const [picked, setPicked] = useState<number[]>([])
   const [groupId, setGroupId] = useState<number | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
+  const [truncated, setTruncated] = useState(false)
 
   const groups = useAsync(() => api.listGroups(), [])
   const samples = useAsync(() => api.listSamples({ group_id: groupId }), [groupId])
@@ -88,13 +94,38 @@ export function Compare() {
   const loading = mode === 'cycles' ? cycleCompare.loading : profileCompare.loading
   const error = mode === 'cycles' ? cycleCompare.error : profileCompare.error
 
+  // The backend normalises each cell on its own: one without an active mass comes
+  // back in raw mAh while its neighbours are in mAh/g, and only the per-series
+  // `basis` says so.  Two curves in different units on one axis read as a
+  // forty-times-worse cell, so the fallbacks are named before they mislead.
+  const fellBack = useMemo(() => {
+    const found = new Map<string, string>()
+    if (mode === 'cycles') {
+      if (!metric.endsWith('capacity')) return []
+      for (const item of cycleCompare.data?.series ?? []) {
+        if (item.basis && item.basis !== basis) found.set(item.sample_name, item.basis)
+      }
+    } else {
+      for (const item of profileCompare.data?.series ?? []) {
+        const name = item.label.split(' · ')[0] ?? item.label
+        if (item.basis && item.basis !== basis) found.set(name, item.basis)
+      }
+    }
+    return [...found].map(([name, seriesBasis]) => ({ name, basis: seriesBasis }))
+  }, [mode, metric, basis, cycleCompare.data, profileCompare.data])
+
+  // Label the axis from what came back, never from what was asked for.
+  const shownBasis: Basis =
+    mode === 'profiles' ? (profileCompare.data?.basis ?? basis) : (cycleCompare.data?.basis ?? basis)
+  const capacityAxis = basisAxis(shownBasis) + (fellBack.length ? ' · 단위 혼재' : '')
+
   const yLabel =
     mode === 'profiles'
       ? '전압 (V)'
-      : metric === 'discharge_capacity'
-        ? basisAxis(basis)
+      : metric.endsWith('capacity')
+        ? capacityAxis
         : (METRICS.find((m) => m.value === metric)?.label ?? '')
-  const xLabel = mode === 'profiles' ? basisAxis(basis) : '사이클'
+  const xLabel = mode === 'profiles' ? capacityAxis : '사이클'
 
   return (
     <main className="page">
@@ -102,7 +133,9 @@ export function Compare() {
         <div>
           <h1>비교</h1>
           <div className="sub">
-            여러 셀을 겹쳐 봅니다. 질량이 다른 셀도 같은 기준으로 정규화되어 비교됩니다.
+            {fellBack.length
+              ? '여러 셀을 겹쳐 봅니다. 일부 셀은 이 기준으로 정규화할 수 없어 원값으로 그렸습니다.'
+              : '여러 셀을 겹쳐 봅니다. 질량이 다른 셀도 같은 기준으로 정규화되어 비교됩니다.'}
           </div>
         </div>
         <span className="spacer" />
@@ -189,6 +222,17 @@ export function Compare() {
               </div>
             ) : (
               <>
+                {fellBack.length ? (
+                  <div style={{ padding: '12px 14px 0' }}>
+                    <Alert kind="warn">
+                      {basisUnit(basis)} 로 표시할 수 없어 원값으로 그린 셀이 있습니다 —{' '}
+                      {fellBack
+                        .map((item) => `${item.name} (${basisUnit(item.basis)})`)
+                        .join(', ')}
+                      . 축 단위가 셀마다 다르므로 곡선 높이를 그대로 비교하지 마세요.
+                    </Alert>
+                  </div>
+                ) : null}
                 <Plot series={series} xLabel={xLabel} yLabel={yLabel} height={420} />
                 <PlotLegend
                   series={series}
@@ -229,7 +273,9 @@ export function Compare() {
                 className="sm"
                 onClick={() => {
                   setTouched(true)
-                  setPicked((samples.data ?? []).map((s) => s.id).slice(0, 12))
+                  const all = samples.data ?? []
+                  setPicked(all.slice(0, SELECT_ALL_LIMIT).map((s) => s.id))
+                  setTruncated(all.length > SELECT_ALL_LIMIT)
                 }}
               >
                 모두 선택
@@ -239,12 +285,19 @@ export function Compare() {
                 className="sm ghost"
                 onClick={() => {
                   setTouched(true)
+                  setTruncated(false)
                   setPicked([])
                 }}
               >
                 해제
               </button>
             </div>
+
+            {truncated ? (
+              <Alert kind="warn">
+                앞 {SELECT_ALL_LIMIT}개만 선택했습니다 — 한 번에 비교할 수 있는 서버 상한입니다.
+              </Alert>
+            ) : null}
 
             <div className="col" style={{ gap: 3, maxHeight: 420, overflow: 'auto' }}>
               {samples.data?.map((sample) => (
@@ -258,6 +311,7 @@ export function Compare() {
                     checked={picked.includes(sample.id)}
                     onChange={() => {
                       setTouched(true)
+                      setTruncated(false)
                       setPicked((current) =>
                         current.includes(sample.id)
                           ? current.filter((id) => id !== sample.id)
@@ -282,7 +336,11 @@ export function Compare() {
                   </span>
                 </label>
               ))}
-              {!samples.data?.length ? (
+              {samples.error ? (
+                <Alert kind="error">{samples.error}</Alert>
+              ) : samples.loading && !samples.data ? (
+                <Spinner />
+              ) : !samples.data?.length ? (
                 <div className="tiny faint">셀이 없습니다.</div>
               ) : null}
             </div>

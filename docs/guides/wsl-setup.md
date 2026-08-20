@@ -85,9 +85,12 @@ git rm --cached -r . && git reset --hard
 
 **브랜치를 반드시 지정하세요.** 이 프로젝트의 집은
 `claude/battery-charge-discharge-webapp-dq4ja3` 이고, `main` 은 별개입니다
-(머지하지 않습니다 — [ADR 0009](../adr/0009-branch-is-the-home.md)). 그냥
-클론하면 빈 폴더를 받게 되고, `make setup` 이 `Nothing to be done` 을 뱉고
-`bml` 은 설치되지 않습니다.
+(머지하지 않습니다 — [ADR 0009](../adr/0009-branch-is-the-home.md)). `-b` 없이
+그냥 클론하면 **원격의 기본 브랜치**를 받는데, 그건 이 워크벤치가 아닙니다
+(지금은 관계없는 JS/Vite 프로젝트입니다 — 기본 브랜치는 언제든 바뀔 수 있으니
+무엇을 받았는지는 `git branch --show-current` 로 확인하세요). `Makefile` 도
+`tools/bml` 도 없으므로 `make setup` 은
+`make: *** No rule to make target 'setup'.  Stop.` 으로 죽습니다.
 
 ```bash
 cd ~
@@ -106,6 +109,10 @@ ls Makefile tools/bml     # 둘 다 보여야 정상입니다
 ls ~/Yonghoon-DEM-DFT/webapp/app.py 2>/dev/null && echo "DFT 판입니다 — checkout 금지"
 ```
 
+이 검사는 `claude/friendly-meitner-lldvar` 만 잡아냅니다. 다른 브랜치가 들어
+있을 수도 있으니, 폴더가 무엇을 담고 있는지는
+`git -C ~/Yonghoon-DEM-DFT branch --show-current` 로 보는 것이 확실합니다.
+
 DFT 판이라면 저장소는 그대로 두고 워크벤치만 옆 폴더에 붙입니다. `git worktree`
 는 같은 저장소를 폴더 둘로 나누는 기능이라 다시 받을 필요가 없고, 각 폴더가
 자기 HEAD 를 가지므로 서로를 건드리지 않습니다:
@@ -117,7 +124,8 @@ cd ~/bml
 ls Makefile tools/bml     # 둘 다 보여야 정상입니다
 ```
 
-폴더가 비어 있거나 `main` 만 받은 경우라면 브랜치만 맞추면 됩니다:
+잃을 게 없는 폴더라면(비어 있거나, 이 워크벤치도 DFT 판도 아닌 브랜치를 받았다면)
+브랜치만 맞추면 됩니다:
 
 ```bash
 cd ~/Yonghoon-DEM-DFT
@@ -199,8 +207,10 @@ setx BML_WSL_DISTRO Ubuntu
 
   급하면 언제든 `~/Yonghoon-DEM-DFT/tools/bml` 로 직접 실행됩니다.
 
-**`make: Nothing to be done for 'setup'`** / `tools/bml` 이 없습니다
-: `main` 브랜치를 받았습니다 — 이 프로젝트는 거기 없습니다. 3번의 `git checkout claude/battery-charge-discharge-webapp-dq4ja3` 를 하세요.
+**`make: *** No rule to make target 'setup'.  Stop.`** / `tools/bml` 이 없습니다
+: 다른 브랜치를 받았습니다 — 이 프로젝트는 거기 없습니다 (`-b` 없이 클론하면
+  원격 기본 브랜치가 딸려 옵니다). `git branch --show-current` 로 확인하고,
+  3번의 `git fetch origin && git checkout claude/battery-charge-discharge-webapp-dq4ja3` 를 하세요.
   `ls Makefile tools/bml` 로 확인할 수 있습니다.
 
 **`destination path 'Yonghoon-DEM-DFT' already exists`**

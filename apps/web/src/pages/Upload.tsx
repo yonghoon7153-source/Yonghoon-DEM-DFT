@@ -166,9 +166,19 @@ export function Upload() {
           ) : null}
         </div>
 
-        <Card title={`연결 안 된 파일 · ${orphans.data?.length ?? 0}개`} tight>
+        <Card
+          title={`연결 안 된 파일 · ${orphans.error ? '—' : `${orphans.data?.length ?? 0}개`}`}
+          tight
+        >
           <div style={{ padding: 14 }}>
-            {orphans.data?.length ? (
+            {/* "모두 연결되어 있습니다" is an assertion; a failed fetch knows
+                nothing of the kind, and hiding the error behind it sends the
+                operator away from files that never made it into a cell. */}
+            {orphans.error ? (
+              <Alert kind="error">{orphans.error}</Alert>
+            ) : orphans.loading && !orphans.data ? (
+              <Spinner />
+            ) : orphans.data?.length ? (
               <div className="col" style={{ gap: 12 }}>
                 {orphans.data.map((run) => (
                   <OrphanRun
@@ -245,6 +255,8 @@ function OrphanRun({
   onAttached: () => void
 }) {
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [choice, setChoice] = useState('')
   return (
     <div className="col" style={{ gap: 5 }}>
       <div className="small nowrap" title={run.original_name}>
@@ -255,13 +267,21 @@ function OrphanRun({
       </div>
       <select
         disabled={busy}
-        defaultValue=""
+        value={choice}
         onChange={async (event) => {
-          if (!event.target.value) return
+          const value = event.target.value
+          setChoice(value)
+          if (!value) return
           setBusy(true)
           try {
-            await api.updateRun(run.id, { sample_id: Number(event.target.value) })
+            setError(null)
+            await api.updateRun(run.id, { sample_id: Number(value) })
             onAttached()
+          } catch (cause) {
+            // The select would otherwise keep showing the chosen cell, which
+            // reads as "attached" for a run that is still orphaned.
+            setError(cause instanceof Error ? cause.message : String(cause))
+            setChoice('')
           } finally {
             setBusy(false)
           }
@@ -274,6 +294,7 @@ function OrphanRun({
           </option>
         ))}
       </select>
+      {error ? <Alert kind="error">{error}</Alert> : null}
       <div className="sep" />
     </div>
   )

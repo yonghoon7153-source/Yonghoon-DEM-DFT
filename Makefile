@@ -82,13 +82,18 @@ test-py: ## pytest (wrdkit + api)
 test-web: ## vitest + 타입 체크
 	cd $(WEB) && npm run typecheck && npm run test -- --run
 
-test-tools: ## bml 회귀 테스트 (포트 소유 판정)
+test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, docs lint)
 	bash tools/tests/test_bml_ownership.sh
+	bash tools/tests/test_lint_gate.sh
+	$(PY) tools/tests/test_wiki_lint.py
 
 lint: lint-py lint-web wiki-lint ## 전체 린트
 
+# `|| true` 를 붙이지 않는다. `bml check` 와 CI 는 같은 검사를 하드 실패로 돌리므로,
+# 여기서 삼키면 `make check` 만 통과하고 push 후 CI 가 빨간불이 된다 — 공용 브랜치라
+# 상대가 그 CI 를 물려받는다. (`fmt` 의 `|| true` 는 검증 경로가 아니라 의도된 것)
 lint-py:
-	$(VENV_PY) -m ruff check packages apps/api || true
+	$(VENV_PY) -m ruff check packages apps/api
 
 lint-web:
 	cd $(WEB) && npm run lint
