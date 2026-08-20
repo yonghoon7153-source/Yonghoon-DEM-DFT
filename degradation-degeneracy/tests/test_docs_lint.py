@@ -1305,3 +1305,77 @@ def test_cross_digest_pairs_agree_row_by_row_on_the_first_objective(a, b):
     assert ka["sha256"] == kb["sha256"], (
         f"{a} vs {b}: 33p 가 조건별로는 갈렸다 — 총 비율만 같았다\n"
         f"  {ka['sha256'][:16]} vs {kb['sha256'][:16]}")
+
+
+# ── 단계 3 계약이 인용하는 코드 사실이 살아 있는가 ───────────────────────────
+_CONTRACT = DOCS / "22p_gap" / "STAGE3_CONTRACT.md"
+_SRC = DOCS.parent / "src"
+
+
+def test_stage3_contract_cites_live_code_facts():
+    """★ 21차 순서 4 — 계약의 §0 교란 세 가지는 **현재 코드의 사실**이어야 한다.
+
+    이 문서는 "지금 이렇게 돼 있으니 이렇게 바꾸자" 는 제안서다. 근거로 든
+    코드 사실이 이미 바뀌었거나 애초에 틀렸다면 제안 전체가 근거를 잃는다.
+    그래서 세 교란을 **코드에서 다시 확인**한다.
+
+    ★ 단계 3 을 구현하면 이 테스트는 **깨져야 정상**이다 — 교란이 사라지는
+      것이 구현의 목적이기 때문이다. 그때 계약 §0 을 "이랬었다" 로 고치고
+      이 테스트를 그 시점 기준으로 다시 쓴다. 조용히 통과하면 안 된다.
+    """
+    assert _CONTRACT.is_file(), "STAGE3_CONTRACT.md 가 없다"
+    doc = _CONTRACT.read_text(encoding="utf-8")
+
+    fitting = (_SRC / "fitting.py").read_text(encoding="utf-8").splitlines()
+    grid = (_SRC / "grid.py").read_text(encoding="utf-8")
+
+    # 교란 1 — 원점 fitting 이 조건 task 를 그대로 물려받는다 (warm 플래그 포함)
+    ini = [i for i, ln in enumerate(fitting, 1)
+           if "_fit_one({**ref_candidates[0]" in ln]
+    assert len(ini) == 1, f"원점 fitting 호출을 정확히 하나 못 찾았다: {ini}"
+    line = fitting[ini[0] - 1]
+    assert "warm_start" not in line and "n_restarts" not in line, (
+        f"src/fitting.py:{ini[0]} 이 원점 protocol 을 따로 지정하기 시작했다 — "
+        f"교란 1 이 해소됐다면 계약 §0·§1 을 갱신하라:\n  {line.strip()}")
+    assert f"src/fitting.py:{ini[0]}" in doc, (
+        f"계약이 인용한 줄번호가 낡았다 — 실제는 src/fitting.py:{ini[0]}")
+
+    # 교란 3 — cond_id 가 noise 를 포함하고, restart seed 가 cond_id 에서 나온다
+    assert "noise: float" in grid and "seed: int" in grid, \
+        "Condition 에서 noise/seed 필드가 사라졌다 — 계약 §2.1 갱신 필요"
+    assert "hashlib.sha1(blob.encode()).hexdigest()[:12]" in grid, \
+        "cond_id 해시 방식이 바뀌었다 — 계약 §2.1 갱신 필요"
+    seed_lines = [i for i, ln in enumerate(fitting, 1)
+                  if '"seed": int(hashlib.sha1(cond_id.encode())' in ln]
+    assert len(seed_lines) == 1, f"restart seed 유도를 못 찾았다: {seed_lines}"
+    assert f"src/fitting.py:{seed_lines[0]}" in doc, (
+        f"계약이 인용한 줄번호가 낡았다 — 실제는 src/fitting.py:{seed_lines[0]}")
+
+    # 교란 2 — adaptive 조기 종료가 여전히 예산을 조건별로 줄인다
+    src = "\n".join(fitting)
+    assert "if adaptive and k == 1 and len(results) == 2:" in src, \
+        "adaptive 조기 종료 구조가 바뀌었다 — 계약 §0 교란 2 갱신 필요"
+
+    # §4 plateau tolerance 가 코드의 실제 기본값과 같은가
+    assert "agree_tol: float = 1e-3" in src, \
+        "agree_tol 기본값이 바뀌었다 — 계약 §4 의 tolerance 표 갱신 필요"
+
+
+def test_stage3_contract_declares_what_it_cannot_do():
+    """★ 계약이 자기 한계를 적고 있는가 — 이 저장소가 반복해 틀린 지점이다.
+
+    19~21차에서 철회한 것들의 공통 형태는 "관측을 그 관측이 지지하지 않는
+    범위까지 밀어붙인 것" 이다 (철회[OP_EQUIV]·[NOISE_INERT]·[R20_RX]·
+    [WARM_NO_IMPROVE_ANY]). 설계 문서가 그 습관을 그대로 가져가면 구현이
+    끝난 뒤에 또 철회한다. 그래서 한계 절을 **구조로** 요구한다.
+    """
+    doc = _CONTRACT.read_text(encoding="utf-8")
+    assert "## 8." in doc, "계약에 한계 절(§8)이 없다"
+    tail = doc.split("## 8.")[1]
+    need = [
+        ("noise 인과", "pair_group_id 로도 잡음 지형 축은 분리되지 않는다"),
+        ("plateau", "plateau 가 이 격자·화학·bound 의 성질이라는 한정"),
+        ("2×2", "2×2 가 half-cell 한 격자에서만 성립한다는 한정"),
+    ]
+    missing = [why for key, why in need if key not in tail]
+    assert not missing, "계약 §8 이 빠뜨린 한계: " + "; ".join(missing)
