@@ -5,7 +5,9 @@ updated: 2026-08-20
 tags: [comp1, md, finite-size, governance, artifacts]
 status: 판정완료
 confidence: medium
-verificationStatus: verified-by-sidecar
+verificationStatus: verified
+verifiedAt: 2026-08-20
+verifiedBy: "MSD 사이드카 원본 헤더 3점 재적합 (백업 md_results/ToBeDelete_msd_*_v2.dat). 검증된 것은 아레니우스 산술과 정본 대비 비율까지다 — 1x1x1 동일프로토콜 대조는 미검증(§안 닫힌 것)."
 explored: false
 authoredBy: agent
 effort: medium
