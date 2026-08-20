@@ -148,6 +148,7 @@ function SampleTable({ samples }: { samples: Sample[] }) {
             <th style={{ textAlign: 'left' }}>그룹</th>
             <th>날짜</th>
             <th style={{ textAlign: 'left' }}>양극재</th>
+            <th style={{ textAlign: 'left' }}>조성</th>
             <th>활물질 (mg)</th>
             <th>면적 (cm²)</th>
             <th>로딩 (mg/cm²)</th>
@@ -169,6 +170,9 @@ function SampleTable({ samples }: { samples: Sample[] }) {
                 <td>{sample.test_date ?? '—'}</td>
                 <td className="text dim">
                   {sample.cathode_detail || sample.cathode_type || '—'}
+                </td>
+                <td className="text dim tiny">
+                  {cell.composition_compact_label || '—'}
                 </td>
                 <td>{cell.active_mass_g ? num(cell.active_mass_g * 1000) : '—'}</td>
                 <td>{num(cell.area_cm2)}</td>

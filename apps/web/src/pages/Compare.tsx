@@ -1,6 +1,6 @@
 /** Overlay several cells: cycle-life curves, or the same cycle's profile. */
 
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
@@ -33,6 +33,14 @@ export function Compare() {
 
   const groups = useAsync(() => api.listGroups(), [])
   const samples = useAsync(() => api.listSamples({ group_id: groupId }), [groupId])
+
+  // An empty comparison is never what someone came here for; start with the
+  // cells in view and let them narrow down.
+  const [touched, setTouched] = useState(false)
+  useEffect(() => {
+    if (touched || !samples.data?.length) return
+    setPicked(samples.data.slice(0, 6).map((sample) => sample.id))
+  }, [samples.data, touched])
 
   const ids = picked.join(',')
   const cycleCompare = useAsync(
@@ -174,7 +182,7 @@ export function Compare() {
                 <Alert kind="error">{error}</Alert>
               </div>
             ) : !picked.length ? (
-              <Empty title="비교할 셀을 오른쪽에서 고르세요" />
+              <Empty title="비교할 셀을 오른쪽에서 고르세요" icon="⇢" />
             ) : loading && !series.length ? (
               <div style={{ padding: 20 }}>
                 <Spinner />
@@ -219,11 +227,21 @@ export function Compare() {
               <button
                 type="button"
                 className="sm"
-                onClick={() => setPicked((samples.data ?? []).map((s) => s.id).slice(0, 12))}
+                onClick={() => {
+                  setTouched(true)
+                  setPicked((samples.data ?? []).map((s) => s.id).slice(0, 12))
+                }}
               >
                 모두 선택
               </button>
-              <button type="button" className="sm ghost" onClick={() => setPicked([])}>
+              <button
+                type="button"
+                className="sm ghost"
+                onClick={() => {
+                  setTouched(true)
+                  setPicked([])
+                }}
+              >
                 해제
               </button>
             </div>
@@ -238,20 +256,29 @@ export function Compare() {
                   <input
                     type="checkbox"
                     checked={picked.includes(sample.id)}
-                    onChange={() =>
+                    onChange={() => {
+                      setTouched(true)
                       setPicked((current) =>
                         current.includes(sample.id)
                           ? current.filter((id) => id !== sample.id)
                           : [...current, sample.id],
                       )
-                    }
+                    }}
                     style={{ width: 'auto' }}
                   />
-                  <span>{sample.name}</span>
-                  <span className="spacer" />
-                  <span className="tiny faint">
-                    {sample.cathode_type || '—'}
-                    {sample.c_rate ? ` · ${sample.c_rate}C` : ''}
+                  <span style={{ minWidth: 0 }}>
+                    <span className="truncate" style={{ display: 'block' }}>
+                      {sample.name}
+                    </span>
+                    <span className="tiny faint truncate" style={{ display: 'block' }}>
+                      {[
+                        sample.cathode_type,
+                        sample.resolved_cell.composition_compact_label,
+                        sample.c_rate ? `${sample.c_rate}C` : null,
+                      ]
+                        .filter(Boolean)
+                        .join(' · ')}
+                    </span>
                   </span>
                 </label>
               ))}
