@@ -1,78 +1,68 @@
-/** Tab-separated blocks that paste straight into Origin.
+/** Tab-separated number blocks that paste straight into Origin.
  *
- * Origin reads a pasted block column by column, taking the first rows as the
- * Long Name and Units of each column when you paste onto the worksheet header.
- * Two things decide whether the graph comes out right:
+ * Three rules, each one a thing that went wrong in a worksheet:
  *
- * *Missing is `--`, never blank and never zero.*  Curves have different
- * lengths -- every cycle stops at its own capacity -- so a block of column
- * pairs is ragged, and something has to fill the short columns.  A blank cell
- * is read as 0 by some Origin import paths and a literal 0 by all of them, so
- * the curve dives to the origin at its own end.  `--` is Origin's own missing
- * value token and simply ends the line.
+ * *Numbers only.*  No column names, no unit row.  A pasted header lands in the
+ * data rows of an Origin worksheet, where it has to be cut out again before
+ * anything will plot -- and whoever pressed the button already knows what they
+ * pressed.
  *
- * *Units stay ASCII.*  The screen writes mAh cm⁻² with a real superscript;
- * pasted into a worksheet header that is a font-dependent gamble.  Here the
- * unit is written `mAh/cm2`, which every Origin build reads the same way.
+ * *Two columns.*  A (capacity, voltage) pair per curve laid out side by side is
+ * miserable to plot: Origin has to be told which X belongs to which Y, column
+ * by column, and ten curves is twenty columns.  Stacked into two, it is one
+ * plot command.
+ *
+ * *Missing is `--`, never blank and never zero.*  It is Origin's own missing
+ * value, and a missing value breaks a line.  That is what lifts the pen between
+ * stacked curves instead of flying it back across the plot, and what keeps a
+ * cycle with no efficiency from being drawn at zero.
  */
 
-import type { Basis, Branch, Cycle, ProfileSeries } from './types'
+import type { Cycle, ProfileSeries } from './types'
 
 /** Origin's missing value. */
 export const MISSING = '--'
-
-/** ASCII unit for a capacity basis -- superscripts do not survive a paste. */
-export function plainUnit(basis: Basis | string): string {
-  switch (basis) {
-    case 'mAh/g':
-      return 'mAh/g'
-    case 'mAh/cm2':
-      return 'mAh/cm2'
-    case 'mAh/cm3':
-      return 'mAh/cm3'
-    case '%':
-      return '%'
-    default:
-      return 'mAh'
-  }
-}
 
 function cell(value: number | null | undefined): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return MISSING
   return String(value)
 }
 
-/** Lay columns of differing length side by side, padding with `--`. */
-export function tsvColumns(names: string[], units: string[], columns: string[][]): string {
+/** Lay columns side by side, padding the short ones with `--`. */
+export function tsvColumns(columns: string[][]): string {
   const depth = columns.reduce((most, column) => Math.max(most, column.length), 0)
-  const rows = [names.join('\t'), units.join('\t')]
+  const rows: string[] = []
   for (let row = 0; row < depth; row += 1) {
     rows.push(columns.map((column) => column[row] ?? MISSING).join('\t'))
   }
   return rows.join('\n')
 }
 
-const BRANCH_KO: Record<Branch, string> = { charge: '충전', discharge: '방전' }
-
-/** One (capacity, voltage) column pair per drawn curve.
+/** Every drawn curve stacked into two columns, separated by a `--` row.
  *
- * This is what is on screen, which is what the plot is for: the series arrive
- * already reduced for drawing (LTTB), so the block matches the picture rather
- * than the 20 MB original.  The CSV and XLSX buttons next to it hand over
- * every logged point.
+ * What this gives up is one dataset per curve, so the curves come out sharing a
+ * colour and a legend entry.  To colour them separately the wide layout is what
+ * you want, and the profile CSV button next to this one writes exactly that.
+ *
+ * This copies what is on screen, which is what the plot is for: the series
+ * arrive already reduced for drawing (LTTB), so the block matches the picture
+ * rather than the 20 MB original.  CSV and XLSX hand over every logged point.
  */
-export function profileTsv(series: ProfileSeries[], basis: Basis | string): string {
+export function profileTsv(series: ProfileSeries[]): string {
   if (!series.length) return ''
-  const names: string[] = []
-  const units: string[] = []
-  const columns: string[][] = []
+  const capacity: string[] = []
+  const voltage: string[] = []
   for (const item of series) {
-    const title = `${item.cycle}번 ${BRANCH_KO[item.branch] ?? item.branch}`
-    names.push(`${title} 용량`, `${title} 전압`)
-    units.push(plainUnit(item.basis ?? basis), 'V')
-    columns.push(item.capacity.map(cell), item.voltage.map(cell))
+    if (capacity.length) {
+      capacity.push(MISSING)
+      voltage.push(MISSING)
+    }
+    for (let i = 0; i < item.capacity.length; i += 1) {
+      capacity.push(cell(item.capacity[i]))
+      voltage.push(cell(item.voltage[i]))
+    }
   }
-  return tsvColumns(names, units, columns)
+  return tsvColumns([capacity, voltage])
 }
 
 /** Two columns: cycle number and one value per complete cycle.
@@ -87,37 +77,29 @@ export function profileTsv(series: ProfileSeries[], basis: Basis | string): stri
  */
 export function cycleColumnTsv(
   cycles: Cycle[],
-  name: string,
-  unit: string,
   value: (cycle: Cycle) => number | null | undefined,
 ): string {
   const complete = cycles.filter((cycle) => cycle.complete)
   if (!complete.length) return ''
-  return tsvColumns(
-    ['사이클', name],
-    ['', unit],
-    [complete.map((c) => String(c.cycle)), complete.map((c) => cell(value(c)))],
-  )
+  return tsvColumns([complete.map((c) => String(c.cycle)), complete.map((c) => cell(value(c)))])
 }
 
-/** The cycle-trend curve: discharge capacity in the unit on screen. */
-export function dischargeTsv(cycles: Cycle[], basis: Basis | string): string {
-  return cycleColumnTsv(cycles, '방전용량', plainUnit(basis), (c) => c.discharge_capacity)
+/** The cycle-trend curve: discharge capacity, in whatever unit is on screen. */
+export function dischargeTsv(cycles: Cycle[]): string {
+  return cycleColumnTsv(cycles, (cycle) => cycle.discharge_capacity)
 }
 
 /** Coulombic efficiency, per cycle. */
 export function efficiencyTsv(cycles: Cycle[]): string {
-  return cycleColumnTsv(cycles, '쿨롱효율', '%', (c) => c.coulombic_efficiency)
+  return cycleColumnTsv(cycles, (cycle) => cycle.coulombic_efficiency)
 }
-
 
 /** Put text on the clipboard, with a path for browsers that refuse the API.
  *
  * `navigator.clipboard` needs a secure context, and the workbench is normally
  * reached over plain http on a lab machine (`http://localhost:5003` is secure,
- * `http://192.168.x.x:5003` from the bench laptop is not).  The hidden
- * textarea and `execCommand` are deprecated and still the only thing that
- * works there.
+ * `http://192.168.x.x:5003` from the bench laptop is not).  The hidden textarea
+ * and `execCommand` are deprecated and still the only thing that works there.
  */
 export async function copyText(text: string): Promise<void> {
   if (navigator.clipboard?.writeText && window.isSecureContext) {

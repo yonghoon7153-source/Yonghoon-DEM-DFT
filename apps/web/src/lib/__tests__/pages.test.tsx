@@ -811,12 +811,10 @@ describe('클립보드 복사', () => {
 
     await userEvent.click(await screen.findByRole('button', { name: '사이클 복사' }))
 
-    const [names, units, first] = written[0]!.split('\n')
-    expect(names).toBe('사이클\t방전용량')
-    // 이 픽스처는 mAh 로 떨어진다 (활물질 질량 없음).  복사본은 화면과 같은
-    // 단위여야 한다 — 붙여 넣은 축이 mAh/g 라고 적혀 있으면 그건 거짓말이다.
-    expect(units).toBe('\tmAh')
-    expect(first!.split('\t')[0]).toBe('1')
+    // 이름도 단위도 없이 숫자만 — 붙여 넣은 헤더는 Origin 에서 도로 잘라내야
+    // 하는 두 줄이다.  이 픽스처의 용량은 5.25 mAh (활물질 질량이 없어 mAh 로
+    // 떨어진다).
+    expect(written[0]!.split('\n')).toEqual(['1\t5.25', '2\t5.25', '3\t5.25'])
     expect(await screen.findByRole('button', { name: '복사됨 ✓' })).toBeInTheDocument()
   })
 
@@ -826,8 +824,7 @@ describe('클립보드 복사', () => {
     renderSampleDetail()
 
     await userEvent.click(await screen.findByRole('button', { name: '쿨롱효율 복사' }))
-    expect(written[0]!.split('\n')[0]).toBe('사이클\t쿨롱효율')
-    expect(written[0]!.split('\n')[1]).toBe('\t%')
+    expect(written[0]!.split('\n')[0]).toBe('1\t97.2')
   })
 
   it('복사할 것이 없으면 조용히 성공한 척하지 않는다', async () => {

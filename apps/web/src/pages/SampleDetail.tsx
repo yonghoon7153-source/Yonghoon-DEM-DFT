@@ -295,12 +295,9 @@ export function SampleDetail() {
           <button
             type="button"
             className="link-btn"
-            title={`그려진 충방전 곡선 (용량, 전압) · ${basisUnit(profileState.data?.basis ?? basis)}`}
+            title={`그려진 곡선을 용량·전압 두 열로 — 곡선 사이는 -- 로 끊는다 · ${basisUnit(profileState.data?.basis ?? basis)}`}
             onClick={() =>
-              void copyBlock(
-                '프로파일',
-                profileTsv(profileState.data?.series ?? [], profileState.data?.basis ?? basis),
-              )
+              void copyBlock('프로파일', profileTsv(profileState.data?.series ?? []))
             }
           >
             {copied === '프로파일' ? '복사됨 ✓' : '프로파일 복사'}
@@ -309,9 +306,7 @@ export function SampleDetail() {
             type="button"
             className="link-btn"
             title={`사이클별 방전용량 · ${basisUnit(cycleState.data?.basis ?? basis)}`}
-            onClick={() =>
-              void copyBlock('사이클', dischargeTsv(cycles, cycleState.data?.basis ?? basis))
-            }
+            onClick={() => void copyBlock('사이클', dischargeTsv(cycles))}
           >
             {copied === '사이클' ? '복사됨 ✓' : '사이클 복사'}
           </button>
