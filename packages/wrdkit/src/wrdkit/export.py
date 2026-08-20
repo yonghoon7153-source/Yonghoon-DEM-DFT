@@ -93,9 +93,25 @@ def _raw_label(name: str, wrd: WrdFile) -> str:
 
 def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
                      stream: TextIO, *, basis: str = Basis.ABSOLUTE,
-                     include_absolute: bool = True) -> None:
-    """One row per cycle, capacities expressed in *basis*."""
+                     include_absolute: bool = True,
+                     include_incomplete: bool = False) -> None:
+    """One row per cycle, capacities expressed in *basis*.
+
+    Incomplete cycles are left out by default.  The last cycle of a running
+    cell is cut off mid-step, so its capacity is whatever had accumulated when
+    the file was written -- a number that looks like a measurement and is not
+    one (non-negotiable: never report it).  The API already excluded them; this
+    writer did not, so `wrdkit convert` and the Python API handed out a
+    spreadsheet whose final row understates the cell.
+
+    Pass ``include_incomplete=True`` to keep those rows for inspection.  They
+    come back with their capacity, energy and efficiency columns blank rather
+    than filled, because a partial number in a numeric column is read as a
+    measurement no matter what the ``complete`` column says.
+    """
     cycles = list(cycles)
+    if not include_incomplete:
+        cycles = [c for c in cycles if c.complete]
     writer = csv.writer(stream, lineterminator="\n")
 
     usable = basis if cell.divisor(basis) else Basis.ABSOLUTE
@@ -114,16 +130,21 @@ def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
     del unit
 
     for cycle in cycles:
+        blank = not cycle.complete
         charge = normalize_capacity(cycle.charge_capacity_mah, cell, usable)
         discharge = normalize_capacity(cycle.discharge_capacity_mah, cell, usable)
-        row = [cycle.cycle_number, f"{charge:.6g}", f"{discharge:.6g}",
-               _fmt(cycle.coulombic_efficiency)]
+        row = [cycle.cycle_number,
+               "" if blank else f"{charge:.6g}",
+               "" if blank else f"{discharge:.6g}",
+               "" if blank else _fmt(cycle.coulombic_efficiency)]
         if include_absolute and usable != Basis.ABSOLUTE:
-            row += [f"{cycle.charge_capacity_mah:.6g}", f"{cycle.discharge_capacity_mah:.6g}"]
+            row += ["", ""] if blank else [
+                f"{cycle.charge_capacity_mah:.6g}",
+                f"{cycle.discharge_capacity_mah:.6g}"]
         row += [
-            f"{cycle.charge_energy_wh * 1000:.6g}",
-            f"{cycle.discharge_energy_wh * 1000:.6g}",
-            _fmt(cycle.energy_efficiency),
+            "" if blank else f"{cycle.charge_energy_wh * 1000:.6g}",
+            "" if blank else f"{cycle.discharge_energy_wh * 1000:.6g}",
+            "" if blank else _fmt(cycle.energy_efficiency),
             _fmt(cycle.mean_charge_voltage), _fmt(cycle.mean_discharge_voltage),
             _fmt(cycle.voltage_hysteresis), _fmt(cycle.voltage_max), _fmt(cycle.voltage_min),
             f"{cycle.duration_s / 3600:.4f}", cycle.n_points,

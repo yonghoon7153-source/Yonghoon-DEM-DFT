@@ -42,9 +42,9 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In _cycle_rows, mirror health.build_report's fallback (earliest complete cycle with cycle_number > reference, else first complete) and return what was actually used: change it to return (rows, reference_used) or accept an out-param. Add to CycleTableOut: reference_cycle_used: int | None and reference_available: bool (and optionally a retention_note string reusing health.py's wording so web i18n.ts:83 already translates it). Populate in sample_cycles, run_cycles; in compare_cycles add reference_cycle_used/reference_available per series so the web Compare view can annotate mixed-baseline curves. Update CycleTable.tsx to badge reference_cycle_used instead of the requested value and render a warning row when reference_available is false. Add tests: a sample whose records start at cycle 201 (cycle_offset) asserting reference_cycle_used==201 and reference_available==false, and a 2-complete-cycle running cell asserting the same flags; plus a compare_cycles test asserting the per-series fields.
 
-**처리.** ✅ 수정 완료 (api-analysis). sample_profile 의 검증을 _parse_branches(branches) 헬퍼로 뽑아 sample_profile 과 compare_profiles 양쪽에서 호출한다. 잘못된 branch 는 extract_profile 의 ValueError(500) 대신 422 로 나간다. exports.py 는 다른 그룹 소유라 손대지 않았고, 헬퍼는 _parse_cycles 와 같은 자리에 있어 그쪽에서 import 만 하면 된다.
+**처리.** ✅ 2차 갱신에서 완료. (1차 갱신 때 이 칸에 다른 항목의 설명이 잘못 복사돼 있었다 — Codex 2차 리뷰가 잡았고, 그 지적이 맞다. 1차에서 실제로 닫힌 것은 /report 와 /dashboard 뿐이었다.) 2차에서 나머지를 닫았다: 웹 CycleTable·CompareSeries 타입에 reference_cycle_used / reference_available / retention_note 를 추가하고, SampleDetail 은 요청값이 아니라 실제로 쓴 기준 사이클을 표시하며 대체된 경우 그 사실을 경고로 띄운다. Compare 는 유지율 지표에서 기준이 대체된 셀을 이름과 대체 사이클로 함께 알린다 — "A 는 3번 대비 69%, B 는 201번 대비 100%" 가 같은 축에서 같은 뜻으로 읽히던 문제다. services.knee_payload 가 버리던 KneeAnalysis.reference_note 도 응답에 실었다.
 
-**회귀 테스트.** apps/api/tests/test_analysis.py::test_compare_profiles_rejects_an_unknown_branch, ::test_profile_rejects_an_unknown_branch
+**회귀 테스트.** apps/web/src/lib/__tests__/pages.test.tsx (기준 대체 표시), apps/api/tests/test_analysis.py (per-series reference 필드)
 
 ### H2. `apps/api/app/routers/analysis.py:497` — 다중 셀 뷰(dashboard/compare)에서 basis 폴백이 무신호 — raw mAh 값이 mAh/g 라벨 아래 섞여 표시됨
 
@@ -224,7 +224,7 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** Add a pure helper in wrdkit (e.g. health.py or schedule.py: schedule_reached_end(wrd) -> bool | None) that compares the step_index of the file's last row against the schedule's terminal step (the step after the cycling loop, derivable from schedule.steps' index/loop_target), returning None when either side is unknown. Call it in persist_parse/schedule_payload and store the result (e.g. "reached_end_step" in schedule_json or a Run column), then in build_cell_report set schedule_finished = True if any run's payload reports it. Add a synthetic-fixture test where a record reaches the terminal step with planned cycles unmet and assert the API report classifies FINISHED.
 
-**처리.** ✅ 수정 완료 (api-core). build_cell_report 가 now 를 datetime.now(timezone.utc).replace(tzinfo=None) 대신 datetime.now() (서버 로컬 naive) 로 넘겨, .wrd 가 기록한 계측기 로컬 벽시계와 같은 기준으로 비교하도록 했다. health.py 는 다른 그룹 소유라 음수 가드를 그쪽에 넣을 수 없어, 대신 services 에 _usable_last_sample_time(services.py:339) 을 두어 last_sample_time 이 now 보다 미래이면 5분(두 PC 의 시계 드리프트) 이내는 now 로 클램프하고 그 이상 차이나면 None 을 넘겨 recency 근거 자체를 만들지 않는다 — 근거 없는 판정 대신 판정 없음(불변 규칙 4).
+**처리.** ⏸ 보류 유지 (문구 정정). 1차 갱신 때 이 칸에 M6(시각 비교)의 설명이 잘못 복사돼 "수정 완료" 로 보였다 — Codex 2차 리뷰가 잡았고, 그 지적이 맞다. 실제로는 고치지 않았고, 지금도 고치지 않는다: 데이터의 STEP INDEX 와 스케줄 step 목록의 대응 관계를 증명할 근거가 없다. 추측으로 매핑하면 ADR 0008 의 가장 무거운(3.0) 신호를 틀린 값으로 채우게 되므로, None 을 유지하는 편이 낫다 (불변 규칙 4). 실측 파일로 대응 관계를 확인한 뒤에 다시 본다.
 
 **회귀 테스트.** apps/api/tests/test_services.py::test_a_cell_silent_for_hours_is_not_called_running (TZ=KST-9 로 두고 3시간 전 로컬 시각 → finished), ::test_a_timestamp_from_a_clock_we_do_not_share_gives_no_recency_evidence (9시간 미래 → recency 근거 0개, 음수 시간 문자열 없음), ::test_a_timestamp_a_minute_ahead_still_counts_as_just_now (드리프트 허용 확인). 앞의 두 개는 HEAD 사본에서 실패를 확인했다.
 
@@ -248,7 +248,7 @@ Codex 교차검증에 앞서 이 브랜치의 코드와 문서를 전수 감사�
 
 **제안 수정.** In store_upload: write to a temp file in the same directory (e.g. target.with_name(f'.{sha256}.tmp')) and os.replace() it onto target for atomicity; when target already exists, verify target.stat().st_size == len(content) (cheap, sufficient given the name is the content hash) and rewrite via the same atomic path on mismatch instead of skipping. Defense in depth: in storage.reparse(), after read_wrd, raise (not FileNotFoundError — a new StorageError → HTTP 410/422) when wrd.metadata.sha256 != the requested sha256, so a corrupt original can never silently feed load_wrd_columns; this also implements the 'run.storage_ok' check ADR 0003 promises. Add a test that truncates the stored upload, deletes the npz cache, and asserts the profile/export endpoints fail loudly rather than return short data.
 
-**처리.** ✅ 수정 완료 (api-core). _write_atomically(storage.py:39) 를 만들어 같은 디렉터리의 임시 파일에 쓰고 fsync 후 os.replace 로 갈아끼운다. 이미 파일이 있어도 크기가 content 와 다르면(이름이 곧 내용 해시이므로 크기 불일치 = 이전 시도의 부분 쓰기) 다시 쓴다. 방어선으로 reparse(storage.py:137) 가 read_wrd 결과의 sha256 이 요청한 이름과 다르면 새 StorageError 를 던진다 — 잘린 .wrd 는 에러 없이 행 수만 줄어들기 때문에 재해싱 말고는 탐지 수단이 없다. (라우터의 HTTP 매핑은 다른 그룹 소유라 건드리지 않았고, 테스트는 storage 계층에서 직접 검증한다.)
+**처리.** ✅ 2차 갱신에서 완료. (1차 갱신 때 이 칸에 원본 atomic-write 항목의 설명이 잘못 복사돼 있었다 — Codex 2차 리뷰가 잡았고, 그 지적이 맞다.) 2차에서 실제로 닫았다: load_columns 가 meta.json 의 row_count 와 열 이름을 배열과 대조하고, 어긋나면 캐시를 버린 뒤 원본에서 다시 파싱한다. meta 가 아예 없는 캐시도 신뢰하지 않는다 — 어느 파일에서 왔는지 말하지 못하는 아카이브는 근거가 아니다. drop_run_cache 는 meta.json 을 가장 먼저 지우고, 삭제가 실패해도(Windows 의 열린 핸들, 읽기 전용 마운트) 예외를 내지 않는다: 지우지 못한 캐시는 meta 가 없으니 어차피 다시 쓰이지 않고, 여기서 예외를 내면 복구 가능한 캐시 미스가 영구 500 이 된다.
 
 **회귀 테스트.** apps/api/tests/test_storage.py::test_a_half_written_original_is_rewritten_not_trusted, ::test_a_damaged_original_is_refused_rather_than_read_short
 

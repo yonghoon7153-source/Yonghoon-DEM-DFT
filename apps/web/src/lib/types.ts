@@ -165,6 +165,10 @@ export interface CycleTable {
   requested_basis: Basis
   basis_fallback_reason: string | null
   reference_cycle: number | null
+  /** 실제로 기준으로 쓴 사이클. 요청값과 다를 수 있다 (ADR 0004). */
+  reference_cycle_used?: number | null
+  reference_available?: boolean
+  retention_note?: string
   resolved_cell: ResolvedCell
   cycles: Cycle[]
 }
@@ -274,6 +278,8 @@ export interface DashboardRow {
   composition_label: string
   /** Retention against the reference cycle, thinned for a sparkline. */
   trend: number[]
+  /** 각 점이 실제로 속한 사이클 번호. 균등 간격을 가정하면 안 된다. */
+  trend_cycles?: number[]
   trend_first_cycle: number | null
   trend_last_cycle: number | null
   knee_trend_index: number | null
@@ -290,6 +296,10 @@ export interface CompareSeries {
   basis: string
   /** Set when this cell could not be normalised and fell back to raw mAh. */
   basis_fallback_reason?: string | null
+  /** 이 곡선의 유지율이 실제로 어느 사이클 대비인지. 셀마다 다를 수 있다. */
+  reference_cycle_used?: number | null
+  reference_available?: boolean
+  retention_note?: string
   points: { cycle: number; value: number }[]
 }
 

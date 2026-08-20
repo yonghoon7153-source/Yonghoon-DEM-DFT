@@ -65,10 +65,17 @@ export function Dashboard() {
         .map((row, index) => {
           const first = row.trend_first_cycle!
           const last = row.trend_last_cycle ?? first
+          // Use the cycle numbers the server sent.  Assuming even spacing draws
+          // cycles 3, 4, 100 at 3, 51.5, 100, which bends the fade curve and
+          // moves the knee marker onto a cycle that was never measured.
           const step = row.trend.length > 1 ? (last - first) / (row.trend.length - 1) : 1
+          const x =
+            row.trend_cycles?.length === row.trend.length
+              ? row.trend_cycles
+              : row.trend.map((_, i) => first + i * step)
           return {
             label: row.sample_name,
-            x: row.trend.map((_, i) => first + i * step),
+            x,
             y: row.trend,
             color: seriesColor(index),
             hidden: hiddenSeries.includes(row.sample_name),

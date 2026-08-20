@@ -12,6 +12,8 @@ data/runs/*
 __pycache__/
 *.py[cod]
 .venv/
+# Codex 교차검증 worktree 가 만드는 것 (docs/reviews/codex-session-bootstrap.md)
+.venv-codex/
 venv/
 *.egg-info/
 .pytest_cache/

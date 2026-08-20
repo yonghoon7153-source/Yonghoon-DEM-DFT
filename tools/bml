@@ -58,6 +58,8 @@ URL="http://localhost:${PORT}"
 RUN_DIR="$REPO/.bml"
 LOG="$RUN_DIR/server.log"
 PID_FILE="$RUN_DIR/server.pid"
+#: 떠 있는 서버가 어느 커밋의 코드를 들고 있는지.
+HEAD_FILE="$RUN_DIR/server.head"
 DEV_PID_FILE="$RUN_DIR/dev.pid"
 STAMP="$RUN_DIR/deps.stamp"
 
@@ -818,10 +820,20 @@ start_serve() {
 
     if [ $state -eq 0 ]; then
       # 우리 것이거나(0), 누구 것인지 모르지만 우리 API 로 정상 응답한다(2).
-      # 어느 쪽이든 다시 띄울 이유가 없다.
-      ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
-      open_browser "$URL"
-      return 0
+      # 다만 "돌고 있다" 와 "지금 코드를 돌고 있다" 는 다르다.
+      local serving current
+      serving="$(cat "$HEAD_FILE" 2>/dev/null)"
+      current="$(git -C "$REPO" rev-parse HEAD 2>/dev/null)"
+      if [ $owner -eq 0 ] && [ -n "$serving" ] && [ -n "$current" ] \
+         && [ "$serving" != "$current" ]; then
+        warn "떠 있는 서버가 이전 커밋(${serving:0:8})을 서비스 중입니다 — 새로 띄웁니다."
+        cmd_stop >/dev/null 2>&1 || true
+        sleep 1
+      else
+        ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
+        open_browser "$URL"
+        return 0
+      fi
     fi
 
     if [ $owner -eq 2 ]; then
@@ -863,6 +875,10 @@ start_serve() {
       # setsid detaches the process, so record what is actually holding the
       # port -- that is what `bml stop` needs to kill.
       record_port_owner "$PORT" "$PID_FILE"
+      # 이 서버가 어느 커밋의 코드를 들고 있는지 남긴다.  uvicorn 은 --reload
+      # 없이 뜨므로 pull 을 해도 계속 옛 코드를 서비스하는데, 다음 `bml` 은
+      # "이미 돌고 있습니다" 로 끝나 사용자는 갱신이 반영된 줄 안다.
+      git -C "$REPO" rev-parse HEAD > "$HEAD_FILE" 2>/dev/null || : > "$HEAD_FILE"
       ok "실행 중 → ${B}${URL}${OFF}"
       say "${DIM}  멈추려면: bml stop   ·  로그: bml logs${OFF}"
       open_browser "$URL"

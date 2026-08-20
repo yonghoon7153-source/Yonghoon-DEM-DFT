@@ -114,6 +114,20 @@ export function Compare() {
     return [...found].map(([name, seriesBasis]) => ({ name, basis: seriesBasis }))
   }, [mode, metric, basis, cycleCompare.data, profileCompare.data])
 
+  // 유지율은 "무엇 대비" 가 곡선의 뜻을 정한다.  기준 사이클이 없는 셀은
+  // 서버가 다른 사이클로 대체하는데(ADR 0004), 그 사실이 화면에 없으면
+  // 3번 대비 69% 인 셀과 201번 대비 100% 인 셀이 같은 축에서 같은 뜻으로
+  // 읽힌다 — 열화된 셀이 멀쩡해 보인다.
+  const rebased = useMemo(() => {
+    if (mode !== 'cycles' || !metric.startsWith('retention')) return []
+    return (cycleCompare.data?.series ?? [])
+      .filter((item) => item.reference_available === false)
+      .map((item) => ({
+        name: item.sample_name,
+        cycle: item.reference_cycle_used ?? null,
+      }))
+  }, [mode, metric, cycleCompare.data])
+
   // Label the axis from what came back, never from what was asked for.
   const shownBasis: Basis =
     mode === 'profiles' ? (profileCompare.data?.basis ?? basis) : (cycleCompare.data?.basis ?? basis)
@@ -231,6 +245,19 @@ export function Compare() {
               </div>
             ) : (
               <>
+                {rebased.length ? (
+                  <div style={{ padding: '12px 14px 0' }}>
+                    <Alert kind="warn">
+                      기준 사이클이 없어 다른 사이클을 기준으로 삼은 셀이 있습니다 —{' '}
+                      {rebased
+                        .map((item) =>
+                          item.cycle ? `${item.name} (${item.cycle}번 대비)` : item.name,
+                        )
+                        .join(', ')}
+                      . 곡선마다 100% 의 뜻이 다르므로 유지율을 그대로 비교하지 마세요.
+                    </Alert>
+                  </div>
+                ) : null}
                 {fellBack.length ? (
                   <div style={{ padding: '12px 14px 0' }}>
                     <Alert kind={mixedBasis ? 'warn' : 'info'}>

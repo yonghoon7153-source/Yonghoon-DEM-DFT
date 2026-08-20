@@ -404,6 +404,10 @@ def knee_payload(analysis: KneeAnalysis | None) -> dict | None:
         "fade_rate_early_pct_per_cycle": analysis.fade_rate_early_pct_per_cycle,
         "fade_rate_late_pct_per_cycle": analysis.fade_rate_late_pct_per_cycle,
         "projected_cycle_at_80pct": analysis.projected_cycle_at_80pct,
+        # Which cycle the search was anchored to when the requested one was
+        # absent.  Dropping it made the knee look anchored at cycle 3 for a
+        # continuation file whose numbering starts at 201 (ADR 0004).
+        "reference_note": getattr(analysis, "reference_note", "") or "",
     }
 
 

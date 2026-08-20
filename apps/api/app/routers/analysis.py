@@ -558,6 +558,7 @@ def dashboard(session: Session = Depends(get_session),
 
         rows.append({
             "trend": trend["values"],
+            "trend_cycles": trend["cycles"],
             "trend_first_cycle": trend["first_cycle"],
             "trend_last_cycle": trend["last_cycle"],
             "knee_trend_index": _trend_index(
@@ -608,13 +609,13 @@ def _trend(records: list[CycleRecord], reference_cycle: int | None) -> dict:
     """Retention against the reference cycle, thinned to a drawable series."""
     usable = [r for r in records if r.discharge_capacity_mah > 0]
     if not usable:
-        return {"values": [], "first_cycle": None, "last_cycle": None}
+        return {"values": [], "cycles": [], "first_cycle": None, "last_cycle": None}
 
     reference = next(
         (r for r in usable if r.cycle_number == reference_cycle), usable[0])
     base = reference.discharge_capacity_mah or usable[0].discharge_capacity_mah
     if not base:
-        return {"values": [], "first_cycle": None, "last_cycle": None}
+        return {"values": [], "cycles": [], "first_cycle": None, "last_cycle": None}
 
     if len(usable) <= _TREND_POINTS:
         picked = usable
@@ -624,18 +625,28 @@ def _trend(records: list[CycleRecord], reference_cycle: int | None) -> dict:
 
     return {
         "values": [round(100.0 * r.discharge_capacity_mah / base, 2) for r in picked],
+        # The cycle each point actually belongs to.  Without it the client can
+        # only assume even spacing between the first and last, and cycles
+        # 3, 4, 100 get drawn at 3, 51.5, 100 -- the shape of the fade and the
+        # position of the knee marker both move.  Gaps are normal: a run
+        # continues in a file nobody uploaded, or early cycles were discarded.
+        "cycles": [r.cycle_number for r in picked],
         "first_cycle": picked[0].cycle_number,
         "last_cycle": picked[-1].cycle_number,
     }
 
 
 def _trend_index(trend: dict, cycle: float | None) -> int | None:
-    """Where a cycle number falls inside the thinned sparkline series."""
-    first, last = trend["first_cycle"], trend["last_cycle"]
-    values = trend["values"]
-    if cycle is None or first is None or last is None or len(values) < 2 or last == first:
+    """Where a cycle number falls inside the thinned sparkline series.
+
+    Snapped to the nearest point that is actually in the series rather than
+    interpolated: the series is thinned, so the knee's own cycle may not be one
+    of the points, and interpolating across a gap puts the marker where no
+    measurement exists.
+    """
+    cycles = trend.get("cycles") or []
+    if cycle is None or len(cycles) < 2:
         return None
-    position = (cycle - first) / (last - first) * (len(values) - 1)
-    if position < 0 or position > len(values) - 1:
+    if cycle < cycles[0] or cycle > cycles[-1]:
         return None
-    return round(position)
+    return min(range(len(cycles)), key=lambda i: abs(cycles[i] - cycle))

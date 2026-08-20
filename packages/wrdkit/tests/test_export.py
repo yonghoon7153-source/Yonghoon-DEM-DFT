@@ -122,3 +122,53 @@ def test_xlsx_export_writes_every_sheet(tmp_path, synthetic_wrd, cell):
     book = openpyxl.load_workbook(target)
     assert book.sheetnames == ["metadata", "cycles", "profiles"]
     assert book["cycles"].max_row == 4
+
+
+# --- 미완료 사이클은 기본적으로 나가지 않는다 --------------------------------
+#
+# 구동 중인 셀의 마지막 사이클은 스텝 중간에서 잘려 있다. 그 용량은 파일이
+# 쓰인 순간까지 쌓인 값이라, 측정값처럼 보이지만 측정값이 아니다. API 는 이미
+# 빼고 있었는데 라이브러리 CSV 는 그대로 내보내, wrdkit convert 로 만든
+# 스프레드시트의 마지막 줄이 셀을 실제보다 나쁘게 보이게 했다.
+
+def _two_cycles():
+    from wrdkit.cycles import CycleSummary
+
+    done = CycleSummary(cycle_index=0, cycle_number=1, start=0, stop=10)
+    done.charge_capacity_mah = 5.0
+    done.discharge_capacity_mah = 4.9
+    done.complete = True
+    cut = CycleSummary(cycle_index=1, cycle_number=2, start=10, stop=15)
+    cut.charge_capacity_mah = 1.2      # 아직 쌓이는 중이었다
+    cut.discharge_capacity_mah = 0.0
+    cut.complete = False
+    return [done, cut]
+
+
+def test_a_cut_off_cycle_is_left_out_by_default():
+    import io
+
+    from wrdkit.export import write_cycles_csv
+
+    stream = io.StringIO()
+    write_cycles_csv(_two_cycles(), CellSpec().resolve(), stream)
+    rows = stream.getvalue().strip().split("\n")
+    assert len(rows) == 2, "헤더 + 완료된 사이클 1줄이어야 한다"
+    assert rows[1].startswith("1,")
+
+
+def test_keeping_it_blanks_the_numbers_rather_than_publishing_them():
+    """opt-in 해도 숫자는 비운다 — 숫자 칸의 부분값은 측정값으로 읽힌다."""
+    import io
+
+    from wrdkit.export import write_cycles_csv
+
+    stream = io.StringIO()
+    write_cycles_csv(_two_cycles(), CellSpec().resolve(), stream,
+                     include_incomplete=True)
+    rows = stream.getvalue().strip().split("\n")
+    assert len(rows) == 3
+    cut = rows[2].split(",")
+    assert cut[0] == "2"
+    assert cut[1] == "" and cut[2] == "", "잘린 사이클의 용량이 그대로 나갔다"
+    assert cut[-1] == "no", "complete 칸은 남아 있어야 한다"

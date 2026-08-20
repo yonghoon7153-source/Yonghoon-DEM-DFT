@@ -357,11 +357,29 @@ export function SampleDetail() {
               {cycleState.loading && !cycleState.data ? (
                 <TableSkeleton rows={6} columns={9} />
               ) : cycles.length ? (
+                <>
+                {cycleState.data?.reference_available === false ? (
+                  <div style={{ padding: '0 0 10px' }}>
+                    <Alert kind="warn">
+                      {cycleState.data.retention_note
+                        ? ko.cellNote(cycleState.data.retention_note)
+                        : `기준 사이클 ${cycleState.data.reference_cycle} 번이 없어 ` +
+                          `${cycleState.data.reference_cycle_used} 번을 기준으로 삼았습니다.`}
+                    </Alert>
+                  </div>
+                ) : null}
                 <CycleTable
                   cycles={cycles}
                   basis={cycleState.data?.basis ?? basis}
                   selected={selected}
-                  referenceCycle={cycleState.data?.reference_cycle ?? null}
+                  // 요청한 값이 아니라 서버가 실제로 기준으로 쓴 사이클.
+                  // 3번이 없어 다른 사이클로 대체됐는데 표에는 3번이라고
+                  // 적혀 있으면, 유지율이 무엇 대비인지 알 수 없다 (ADR 0004).
+                  referenceCycle={
+                    cycleState.data?.reference_cycle_used ??
+                    cycleState.data?.reference_cycle ??
+                    null
+                  }
                   onSelect={(cycle) =>
                     setChosen(
                       selected.includes(cycle)
@@ -370,6 +388,7 @@ export function SampleDetail() {
                     )
                   }
                 />
+                </>
               ) : (
                 <Empty title="사이클이 없습니다" icon="＋">
                   이 셀에 <Link to="/upload">.wrd 파일을 올려</Link> 주세요.

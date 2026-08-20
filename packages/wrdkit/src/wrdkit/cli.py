@@ -127,7 +127,8 @@ def _convert(args) -> int:
     if "cycles" in targets:
         target = out_dir / f"{stem}_cycles.csv"
         with target.open("w", newline="", encoding="utf-8-sig") as handle:
-            write_cycles_csv(cycles, cell, handle, basis=args.basis)
+            write_cycles_csv(cycles, cell, handle, basis=args.basis,
+                             include_incomplete=args.all_cycles)
         written.append(target)
 
     if "profiles" in targets:
@@ -181,7 +182,8 @@ def _cycles(args) -> int:
     wrd = read_wrd(Path(args.path))
     cell = _cell_from_args(args).resolve()
     cycles = summarize_cycles(wrd, cycle_offset=args.cycle_offset)
-    write_cycles_csv(cycles, cell, sys.stdout, basis=args.basis)
+    write_cycles_csv(cycles, cell, sys.stdout, basis=args.basis,
+                     include_incomplete=args.all_cycles)
     return 0
 
 
@@ -201,12 +203,18 @@ def main(argv: list[str] | None = None) -> int:
     convert.add_argument("--cycle-offset", type=int, default=0,
                          help="add to cycle numbers when a run spans several files")
     convert.add_argument("--tables", nargs="*", choices=["raw", "cycles", "profiles"])
+    convert.add_argument(
+        "--all-cycles", action="store_true",
+        help="keep the cut-off last cycle (its numbers come out blank)")
     _cell_arguments(convert)
 
     cycles = subparsers.add_parser("cycles", help="print the cycle table as CSV on stdout")
     cycles.add_argument("path")
     cycles.add_argument("--basis", default=Basis.ABSOLUTE, choices=list(BASES))
     cycles.add_argument("--cycle-offset", type=int, default=0)
+    cycles.add_argument(
+        "--all-cycles", action="store_true",
+        help="keep the cut-off last cycle (its numbers come out blank)")
     _cell_arguments(cycles)
 
     args = parser.parse_args(argv)
