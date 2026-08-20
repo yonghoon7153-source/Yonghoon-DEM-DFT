@@ -158,6 +158,41 @@ class Schedule:
             candidates += [c.value for c in step.cutoffs if c.kind == "voltage"]
         return min(candidates) if candidates else None
 
+    def _upper_cutoff_in(self, steps: list[ScheduleStep]) -> float | None:
+        candidates = [s.voltage_limit_v for s in steps if s.voltage_limit_v]
+        for step in steps:
+            if step.direction != "charge":
+                continue
+            candidates += [c.value for c in step.cutoffs if c.kind == "voltage"]
+        return max(candidates) if candidates else None
+
+    @property
+    def formation_upper_cutoff_v(self) -> float | None:
+        """Charge cutoff of the steps that run once, before the loop.
+
+        This is the number a formation study varies, and taking ``max()``
+        across the whole schedule hides it: a plan that forms to 3.8 V and
+        then cycles to 4.4 V reports 4.4 V, and so does the sibling that
+        formed to 4.0 V.  Two experiments whose only difference is the
+        formation cutoff then look identical on screen -- the variable under
+        study is the one that disappears.
+        """
+        looped = self._looped_step_names()
+        formation = [s for s in self.steps if s.name not in looped]
+        if not formation or not looped:
+            return None
+        value = self._upper_cutoff_in(formation)
+        # Only worth reporting when it differs from the cycling cutoff;
+        # otherwise it is the same fact twice.
+        return value if value != self.cycling_upper_cutoff_v else None
+
+    @property
+    def cycling_upper_cutoff_v(self) -> float | None:
+        """Charge cutoff of the looped steps -- the long run's own limit."""
+        looped = self._looped_step_names()
+        steps = [s for s in self.steps if s.name in looped] or self.steps
+        return self._upper_cutoff_in(steps)
+
     @property
     def cycling_current_a(self) -> float | None:
         """Charge current of the looped (i.e. long-run) part of the schedule.

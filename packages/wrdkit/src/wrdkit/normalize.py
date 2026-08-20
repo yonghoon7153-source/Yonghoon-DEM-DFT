@@ -16,6 +16,7 @@ from dataclasses import dataclass, field
 import numpy as np
 
 from .composition import Composition
+from .reference import offset_for
 
 __all__ = [
     "CellSpec", "ResolvedCell", "Basis", "BASES", "basis_label",
@@ -87,6 +88,12 @@ class CellSpec:
     thickness_um: float | None = None
     nominal_specific_capacity_mah_g: float | None = None
     composition: Composition | None = None
+    #: Which electrode the instrument measured against.  A sulfide
+    #: all-solid-state cell is usually built against Li-In, so every voltage
+    #: in the file sits 0.62 V below the vs-Li/Li+ number people publish.
+    reference_electrode: str = ""
+    #: Overrides the table when someone characterised their own reference.
+    reference_offset_v: float | None = None
 
     @property
     def effective_active_wt_percent(self) -> float | None:
@@ -134,6 +141,11 @@ class CellSpec:
 
     def resolve(self) -> ResolvedCell:
         notes: dict[str, str] = {}
+        offset = offset_for(self.reference_electrode, self.reference_offset_v)
+        if offset:
+            notes["reference"] = (
+                f"potentials shown against Li/Li+ by adding {offset:g} V"
+                + (f" ({self.reference_electrode})" if self.reference_electrode else ""))
 
         mass_g: float | None = None
         if self.active_mass_mg is not None and self.active_mass_mg <= 0:
@@ -211,6 +223,8 @@ class CellSpec:
             composition_label=composition.label() if composition else "",
             composition_problems=composition.problems() if composition else [],
             notes=notes,
+            voltage_offset_v=offset,
+            reference_electrode=self.reference_electrode,
         )
 
 
@@ -228,6 +242,18 @@ class ResolvedCell:
     composition_label: str = ""
     composition_problems: list[str] = field(default_factory=list)
     notes: dict[str, str] = field(default_factory=dict)
+    #: Volts to add so a recorded potential reads against Li/Li+.
+    voltage_offset_v: float = 0.0
+    reference_electrode: str = ""
+
+    def potential(self, volts: float | None) -> float | None:
+        """A recorded potential on the Li/Li+ scale.
+
+        Only for potentials.  A *difference* between two potentials (voltage
+        hysteresis) already has the offset on both ends, and an energy must
+        keep the scale it was measured on -- see :mod:`wrdkit.reference`.
+        """
+        return None if volts is None else float(volts) + self.voltage_offset_v
 
     @property
     def composition_compact_label(self) -> str:

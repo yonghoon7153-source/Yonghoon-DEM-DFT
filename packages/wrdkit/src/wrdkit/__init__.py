@@ -43,6 +43,11 @@ from .normalize import (
     retention,
 )
 from .nrbf import NrbfError
+from .reference import (
+    REFERENCE_ELECTRODES,
+    ReferenceElectrode,
+    offset_for,
+)
 from .schedule import Schedule, ScheduleStep
 from .wrd import CellStatus, WrdColumn, WrdError, WrdFile, WrdMetadata, read_wrd, read_wrd_bytes
 
@@ -59,7 +64,7 @@ __all__ = [
     "segment_steps", "summarize_cycles", "extract_profile",
     "CycleSummary", "StepSegment", "Profile",
     # normalisation
-    "CellSpec", "ResolvedCell", "Basis", "BASES", "basis_label",
+    "CellSpec", "ResolvedCell", "REFERENCE_ELECTRODES", "ReferenceElectrode", "offset_for", "Basis", "BASES", "basis_label",
     "normalize_capacity", "c_rate", "areal_loading", "retention",
     # composition
     "Composition", "Component", "Role", "parse_composition", "PRESETS",

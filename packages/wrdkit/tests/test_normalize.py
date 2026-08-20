@@ -194,3 +194,42 @@ def test_a_recognised_blend_uses_only_the_active_fraction():
         total_mass_mg=31.6,
         composition=parse_composition("SiOx:Super P:CMC = 90:5:5")).resolve()
     assert resolved.active_mass_g == 0.02844
+
+
+# --- 기준전극 오프셋 ---------------------------------------------------------
+#
+# 황화물계 전고체는 Li-In 대극으로 만든다. 계측기는 vs Li-In 을 기록하고,
+# 논문은 vs Li/Li+ 로 쓴다. 차이는 0.62 V — 4.40 V 컷오프가 3.78 V 로 찍힌다.
+# 틀렸다고 알아채기엔 너무 그럴듯한 값이다.
+
+def test_a_li_in_cell_reports_potentials_against_lithium():
+    cell = CellSpec(total_mass_mg=18.5, active_wt_percent=80,
+                    reference_electrode="Li-In").resolve()
+    assert cell.voltage_offset_v == 0.62
+    assert round(cell.potential(3.78), 2) == 4.40      # cycling 상한
+    assert round(cell.potential(1.88), 2) == 2.50      # 방전 하한
+    assert "Li-In" in cell.notes["reference"]
+
+
+def test_no_reference_electrode_leaves_the_scale_alone():
+    cell = CellSpec(total_mass_mg=18.5).resolve()
+    assert cell.voltage_offset_v == 0.0
+    assert cell.potential(3.78) == 3.78
+    assert "reference" not in cell.notes
+
+
+def test_a_measured_offset_wins_over_the_table():
+    """자기 기준전극을 직접 특성화했으면 그 값이 답이다."""
+    cell = CellSpec(reference_electrode="Li-In", reference_offset_v=0.58).resolve()
+    assert cell.voltage_offset_v == 0.58
+
+
+def test_an_unknown_reference_name_does_not_invent_an_offset():
+    """모르는 이름에 값을 지어내면 조용히 틀린 전압을 그린다."""
+    cell = CellSpec(reference_electrode="Zzz").resolve()
+    assert cell.voltage_offset_v == 0.0
+
+
+def test_potential_passes_none_through():
+    cell = CellSpec(reference_electrode="Li-In").resolve()
+    assert cell.potential(None) is None

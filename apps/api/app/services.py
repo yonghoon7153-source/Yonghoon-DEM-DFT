@@ -84,6 +84,8 @@ def cell_spec_from_sample(sample: Sample | None) -> CellSpec:
         diameter_mm=sample.diameter_mm,
         thickness_um=sample.thickness_um,
         nominal_specific_capacity_mah_g=sample.nominal_specific_capacity_mah_g,
+        reference_electrode=sample.reference_electrode or "",
+        reference_offset_v=sample.reference_offset_v,
     )
 
 
@@ -234,6 +236,12 @@ def schedule_payload(wrd: WrdFile) -> dict:
         "version": schedule.version,
         "upper_cutoff_v": schedule.upper_cutoff_v,
         "lower_cutoff_v": schedule.lower_cutoff_v,
+        # The variable a formation study actually varies.  upper_cutoff_v takes
+        # the maximum across the whole schedule, so a plan that forms to 3.8 V
+        # and cycles to 4.4 V reports 4.4 V -- and so does its sibling that
+        # formed to 4.0 V.  Two experiments then look identical on screen.
+        "formation_upper_cutoff_v": schedule.formation_upper_cutoff_v,
+        "cycling_upper_cutoff_v": schedule.cycling_upper_cutoff_v,
         "planned_cycles": schedule.planned_cycles,
         "c_rate": schedule.infer_c_rate(),
         "cycling_current_a": schedule.cycling_current_a,
@@ -468,7 +476,8 @@ def _profile_payload(profile: Profile, cell: ResolvedCell, basis: str,
         "basis": used,
         "points": len(capacity),
         "capacity": [round(float(v), 6) for v in capacity],
-        "voltage": [round(float(v), 6) for v in voltage],
+        # 프로파일의 y 축은 전위다 — 기준전극 오프셋을 여기서 적용한다.
+        "voltage": [round(float(v) + cell.voltage_offset_v, 6) for v in voltage],
     }
 
 

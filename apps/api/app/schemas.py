@@ -92,6 +92,10 @@ class CellSpecIn(BaseModel):
     diameter_mm: PositiveLength | None = None
     thickness_um: PositiveLength | None = None
     nominal_specific_capacity_mah_g: PositiveMass | None = None
+    #: "Li" | "Li-In" | "LTO" | "" (기록 그대로)
+    reference_electrode: str | None = None
+    #: 직접 특성화한 오프셋. 표보다 우선한다.
+    reference_offset_v: Finite | None = None
 
 
 class SampleIn(CellSpecIn):
@@ -138,6 +142,10 @@ class SampleUpdate(BaseModel):
     diameter_mm: PositiveLength | None = None
     thickness_um: PositiveLength | None = None
     nominal_specific_capacity_mah_g: PositiveMass | None = None
+    #: "Li" | "Li-In" | "LTO" | "" (기록 그대로)
+    reference_electrode: str | None = None
+    #: 직접 특성화한 오프셋. 표보다 우선한다.
+    reference_offset_v: Finite | None = None
     temperature_c: Finite | None = None
     pressure_mpa: NonNegativeMass | None = None
     cutoff_upper_v: Finite | None = None

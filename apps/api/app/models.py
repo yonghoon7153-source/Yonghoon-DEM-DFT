@@ -65,6 +65,10 @@ class Sample(SQLModel, table=True):
     diameter_mm: float | None = None
     thickness_um: float | None = None
     nominal_specific_capacity_mah_g: float | None = None
+    #: 계측기가 무엇을 기준으로 전압을 기록했는지.  raw 는 그대로 두고
+    #: 조회할 때 vs Li/Li+ 로 환산한다 (ADR 0001 과 같은 원칙).
+    reference_electrode: str = ""
+    reference_offset_v: float | None = None
 
     # -- test conditions; parsed from the schedule unless overridden -------
     temperature_c: float | None = Field(default=None, index=True)

@@ -159,11 +159,15 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
             energy_efficiency=record.energy_efficiency,
             charge_energy_mwh=record.charge_energy_wh * 1000.0,
             discharge_energy_mwh=record.discharge_energy_wh * 1000.0,
-            mean_charge_voltage=record.mean_charge_voltage,
-            mean_discharge_voltage=record.mean_discharge_voltage,
+            # 전위는 옮기고, 차이는 그대로 둔다.  이력(hysteresis)은 두 전위의
+            # 차라 오프셋이 양쪽에서 상쇄된다 — 여기에 또 더하면 있지도 않은
+            # 0.62 V 의 분극을 만들어 낸다.  에너지도 건드리지 않는다
+            # (wrdkit/reference.py 참고).
+            mean_charge_voltage=cell.potential(record.mean_charge_voltage),
+            mean_discharge_voltage=cell.potential(record.mean_discharge_voltage),
             voltage_hysteresis=hysteresis,
-            voltage_max=record.voltage_max,
-            voltage_min=record.voltage_min,
+            voltage_max=cell.potential(record.voltage_max),
+            voltage_min=cell.potential(record.voltage_min),
             retention_pct=retention,
             c_rate=rate,
             temperature_mean=record.temperature_mean,
@@ -339,7 +343,7 @@ def sample_report(
             "charge_capacity_mah": entry.charge_mah,
             "coulombic_efficiency": entry.coulombic_efficiency,
             "energy_efficiency": entry.energy_efficiency,
-            "mean_discharge_voltage": entry.mean_discharge_voltage,
+            "mean_discharge_voltage": cell.potential(entry.mean_discharge_voltage),
             "complete": entry.complete,
         }
 
