@@ -94,6 +94,106 @@
         "ci": 0.03
       },
       "images_file": "/data/work/repo/db/properties/neb_inter_211_deepep.xyz"
+    },
+    {
+      "tag": "inter_211_shallow",
+      "struct": "db/structures/comp1_V0_k444.cif",
+      "supercell": [
+        2,
+        1,
+        1
+      ],
+      "n_atoms": 104,
+      "n_atoms_neb": 103,
+      "perp_widths_A": [
+        20.11,
+        10.055,
+        10.055
+      ],
+      "min_perp_width_A": 10.055,
+      "kind": "inter",
+      "pair": [
+        20,
+        29
+      ],
+      "pair_distance_A": 3.5044,
+      "hop_distance_A": 3.5044,
+      "n_hop_candidates": 48,
+      "Ea_forward_eV": 1.6116,
+      "Ea_reverse_eV": 1.6715,
+      "dE_endpoints_meV": -59.86,
+      "energies_eV": [
+        -429.591419,
+        -429.85778,
+        -429.397998,
+        -428.352883,
+        -427.979808,
+        -429.00931,
+        -429.569082,
+        -429.883188,
+        -429.651281
+      ],
+      "profile_eV_rel": [
+        0.0,
+        -0.2664,
+        0.1934,
+        1.2385,
+        1.6116,
+        0.5821,
+        0.0223,
+        -0.2918,
+        -0.0599
+      ],
+      "n_images_total": 9,
+      "endpoint_converged": [
+        true,
+        true
+      ],
+      "seconds": 2745.3,
+      "band_converged": false,
+      "ci_ran": false,
+      "ci_converged": false,
+      "steps_band": 400,
+      "steps_ci": 0,
+      "band_only_profile_eV": [
+        0.0,
+        -0.2664,
+        0.1934,
+        1.2385,
+        1.6116,
+        0.5821,
+        0.0223,
+        -0.2918,
+        -0.0599
+      ],
+      "band_tail": {
+        "n": 12,
+        "first": 0.4251,
+        "last": 0.6066,
+        "rising_frac": 0.82,
+        "verdict": "rising"
+      },
+      "spike_eV": 1.6116,
+      "max_image_jump_eV": 1.0451,
+      "notes": [],
+      "second_highest_eV": 1.2385,
+      "min_interior_rel_eV": -0.2918,
+      "neb_converged": false,
+      "band_problems": [
+        "이웃 이미지 사이가 1.05 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +1.61 / 차고 +1.24",
+        "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.232 eV 낮다 — 끝점이 국소 최소가 아니다"
+      ],
+      "trustworthy": false,
+      "engine": "uma-s-1p1(omat)",
+      "cell_relaxed": false,
+      "neb_method": "improvedtangent",
+      "spring_k": 0.1,
+      "fmax": {
+        "endpoint": 0.03,
+        "neb": 0.05,
+        "ci": 0.03
+      },
+      "images_file": "/data/work/repo/db/properties/neb_inter_211_shallow.xyz"
     }
   ]
 }
