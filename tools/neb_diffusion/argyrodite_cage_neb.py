@@ -20,10 +20,17 @@
    (Wu 2026 이 26 % 팽창 격자에서 NEB 를 돌린 것을 우리가 지적했다) 셀을 풀면
    장벽이 의미를 잃는다. **DFT V0 셀에서 출발하고 고정한다.**
 
-⚠ 이미지 거리. 60° 셀은 `|a|` 와 실제 이미지 거리가 다르다 — modelC 계열은
-   |a|=6.98 인데 **수직폭 5.70 Å** 다. inter-cage hop 이 ~4 Å 이므로 그대로 쓰면
-   이동 Li 가 자기 이미지와 겹친다. 이 도구는 수직폭을 **항상 같이 찍고**,
-   `--min_width` 아래면 **거부한다**(`--force` 로만 통과).
+⛔⛔ **이미지 거리 지표 정정 (2026-08-20).** 이 도구는 2026-08-19 작성 시
+   **면 높이(수직폭) `V/|a_j×a_k|`** 를 게이트로 썼는데, 그건 2026-08-16 에
+   **Codex 리뷰로 이미 철회된 지표**다 (`kb/methodology/defect_cell_size_metric_2026_08_16.md`).
+   점결함·확산 이온의 자기 이미지는 격자 **평면**이 아니라 격자 **병진** 위에 있다:
+
+     정본 지표 λ₁ = min |n₁a + n₂b + n₃c|   (최단 비영 격자 병진)
+
+   실측 차이가 판정을 뒤집는다 — Li₃Nd 2×2×2 면높이 **8.469 → λ₁ 10.372** (10 Å 통과).
+   면 높이는 **보수적 하한**으로만 쓰고 "실제 이미지 거리" 라고 부르지 않는다.
+   산식은 `tools/sei/build_neb_inputs.py:shortest_translation` 을 **그대로 빌려 쓴다**
+   (복사하면 규약이 갈라진다). 둘 다 찍되 **게이트는 λ₁ 로** 건다.
 
 이 도구가 **못 하는 것**
   · DFT 가 아니다. UMA-s-1p1(omat) 이다. 절대 장벽을 DFT/실험과 등가로 인용 금지.
@@ -44,7 +51,7 @@
   # 셀 수렴 시험 (comp1, cubic)
   python3 tools/neb_diffusion/argyrodite_cage_neb.py \
       --struct db/structures/comp1_V0_k444.cif --kind inter \
-      --supercell 1 1 1 --tag conv_111        # comp1 은 수직폭 10.06 이라 --force 불필요
+      --supercell 1 1 1 --tag conv_111        # comp1 은 λ₁ 10.06 이라 --force 불필요
 """
 import argparse, json, os, sys, time
 from pathlib import Path
@@ -56,7 +63,8 @@ OUTDIR = ROOT / "db" / "properties"
 
 #: cage_jump_descriptors.py 와 같은 값 — P–S 결합 판정 (PS4 는 2.04–2.11 Å)
 PS_BOND = 2.30
-#: 이미지 거리 하한 (수직폭). 4 Å hop 의 2.5배 여유. 아래면 거부한다.
+#: 이미지 거리 하한 — **λ₁ 기준** (defect_cell_size_metric_2026_08_16 정본).
+#: ⚠ 이 게이트를 통과해도 **셀 수렴은 별개**다 (sei_neb.json 의 cell_convergence_status).
 MIN_WIDTH_A = 10.0
 #: NEB 기본값
 N_IMAGES = 7          # 내부 이미지 (끝점 제외)
@@ -74,14 +82,37 @@ MAX_IMAGE_JUMP_EV = 0.8
 
 # ── 기하 ─────────────────────────────────────────────────────────────────────
 def perp_widths(cell):
-    """면간 **수직거리** d_i = V / |a_j × a_k|.
+    """면간 **수직거리** d_i = V / |a_j × a_k| — **보수적 하한으로만 쓴다.**
 
-    ⚠ `|a_i|` 가 아니다. α=β=γ=60° 셀에서 둘은 크게 다르다 (6.98 vs 5.70 Å).
+    ⛔ 이것은 격자 **평면** 사이 거리라 슬랩 분리에 맞는 양이고 **점-이미지 거리가 아니다**
+      (2026-08-16 Codex 리뷰). 게이트는 `lambda1()` 로 건다. 이 함수는 참고 표시용이다.
     """
     c = np.asarray(cell, float)
     V = abs(np.linalg.det(c))
     return np.array([V / np.linalg.norm(np.cross(c[(i + 1) % 3], c[(i + 2) % 3]))
                      for i in range(3)])
+
+
+def lambda1(cell, R=3):
+    """최단 비영 격자 병진 λ₁ = min |n₁a+n₂b+n₃c| [Å] — **점결함 이미지 거리의 정본 지표.**
+
+    산식 원본은 `tools/sei/build_neb_inputs.py:shortest_translation` 이고, 여기서는
+    그 모듈을 **불러 쓴다** (복사하면 규약이 갈라진다 — convention_check 대상).
+    불러오기가 실패하면 같은 정의로 계산하되 그 사실을 호출자가 알 수 있게 한다.
+    """
+    try:
+        import importlib.util
+        src = ROOT / "tools" / "sei" / "build_neb_inputs.py"
+        spec = importlib.util.spec_from_file_location("_bni", src)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return float(mod.shortest_translation(cell, R=R))
+    except BaseException:
+        import itertools
+        c = np.asarray(cell, float)
+        return float(min(np.linalg.norm(np.array(n) @ c)
+                         for n in itertools.product(range(-R, R + 1), repeat=3)
+                         if n != (0, 0, 0)))
 
 
 def mic_vec(atoms, i, j):
@@ -99,8 +130,11 @@ def hop_distance(ini, fin, j2):
     ⚠ 2026-08-20 정정. 처음엔 "심화 이완이 홉을 바꾼다" 고 적었는데 **대조 실행으로 반증됐다** —
     `--shallow_endpoints`(한 번 이완)에서도 똑같이 3.504 → 4.369 Å 가 됐다(심화는 4.356, 차 0.013).
     즉 이건 탈출의 부작용이 아니라 **이완된 홉 거리가 이상격자 거리와 원래 다르다**는 것이고,
-    크게 벌어지면 **이웃 Li 가 같이 움직인다**(협동)는 신호다. 그 경우 단일 Li NEB 자체가
-    성립하지 않으며 밴드 발산·"중간이 끝점보다 낮음" 으로 드러난다.
+    크게 벌어지면 **목표 자리가 그 Li 의 국소 최소가 아니었다**는 신호다 —
+    경로 위에 중간 최소가 있어 **elementary 경로가 아닐** 가능성이 크고,
+    밴드 발산·"중간이 끝점보다 낮음" 이 같이 뜬다.
+    ⚠ 이것을 협동 이동(다중 Li 동시)으로 읽지 않는다 — 초판이 그렇게 썼다가 철회했다
+    (단일 Li 로 전부 설명된다. 협동이 없다는 뜻은 아니고 이 데이터로는 못 가른다).
     """
     c = np.array(ini.cell)
     d = fin.positions[j2] - ini.positions[j2]
@@ -418,12 +452,15 @@ def one_run(args):
     sc = tuple(args.supercell)
     atoms = base.repeat(sc) if sc != (1, 1, 1) else base.copy()
     W = perp_widths(atoms.cell)
+    L1 = lambda1(atoms.cell)                      # ★ 정본 지표 (점결함 이미지 거리)
     print(f"── {Path(args.struct).name}  ×{sc}  n={len(atoms)}  "
-          f"수직폭 ({W[0]:.2f}, {W[1]:.2f}, {W[2]:.2f}) Å  최소 {W.min():.2f}")
-    if W.min() < args.min_width and not args.force:
-        raise SystemExit(f"⛔ 최소 수직폭 {W.min():.2f} Å < {args.min_width} Å — "
-                         f"이동 Li 가 자기 이미지와 겹친다. 슈퍼셀을 키우거나 "
-                         f"--force (수렴시험 목적이면 정당하다)")
+          f"**λ₁ {L1:.2f} Å** (면높이 최소 {W.min():.2f} — 보수적 하한)")
+    if L1 < args.min_width and not args.force:
+        raise SystemExit(
+            f"⛔ λ₁ {L1:.2f} Å < {args.min_width} Å — 이동 Li 가 자기 이미지와 겹친다. "
+            f"슈퍼셀을 키우거나 --force (수렴시험 목적이면 정당하다).\n"
+            f"   (면높이 최소 {W.min():.2f} Å 는 보수적 하한일 뿐 게이트 기준이 아니다 — "
+            f"kb/methodology/defect_cell_size_metric_2026_08_16.md)")
 
     cands = find_hops(atoms, args.kind, rmax=args.rmax, cage_margin=args.cage_margin)
     if not cands:
@@ -489,7 +526,10 @@ def one_run(args):
     rec = {
         "tag": tag, "struct": args.struct, "supercell": list(sc),
         "n_atoms": len(atoms), "n_atoms_neb": len(ini),
+        "lambda1_A": round(float(L1), 3),
+        "cell_size_gate_metric": "lambda1 >= min_width (defect_cell_size_metric_2026_08_16)",
         "perp_widths_A": [round(float(x), 3) for x in W],
+        "perp_widths_note": "보수적 하한 — 점-이미지 거리가 아니다(게이트에 쓰지 않는다)",
         "min_perp_width_A": round(float(W.min()), 3),
         "kind": args.kind, "pair": [i_vac, j_mig],
         "pair_distance_A": round(d, 4), "hop_distance_A": round(hop, 4),
@@ -642,9 +682,22 @@ def selftest():
         except ValueError:
             chk(True, "[음성] Li 없는 구조는 ValueError")
         # ★ 음성 — 좁은 셀 거부 로직 (min_width 비교 자체)
-        chk(perp_widths(read(ROOT / "db" / "structures" /
-                             "modelC_DFT_EOS_V0.cif").cell).min() < MIN_WIDTH_A,
-            f"[음성] modelC 원본 셀은 {MIN_WIDTH_A} Å 기준에 걸린다 (걸려야 정상)")
+        _mc = read(ROOT / "db" / "structures" / "modelC_DFT_EOS_V0.cif").cell
+        chk(lambda1(_mc) < MIN_WIDTH_A,
+            f"[음성] modelC 원본 셀은 λ₁ {lambda1(_mc):.2f} < {MIN_WIDTH_A} Å 로 걸린다")
+        # ★★ 지표 정정 회귀시험 (2026-08-20) — 면 높이로 게이트를 걸면 **판정이 뒤집힌다**
+        _fcc = np.array([[0, 7.3339, 7.3339], [7.3339, 0, 7.3339], [7.3339, 7.3339, 0]])
+        chk(abs(lambda1(_fcc) - 10.372) < 0.01,
+            f"[양성] Li₃Nd 2×2×2 λ₁ = {lambda1(_fcc):.3f} (정본 카드 10.372 와 일치)")
+        chk(abs(perp_widths(_fcc).min() - 8.469) < 0.01,
+            f"[양성] 같은 셀 면높이 = {perp_widths(_fcc).min():.3f} (8.469)")
+        chk(lambda1(_fcc) >= MIN_WIDTH_A and perp_widths(_fcc).min() < MIN_WIDTH_A,
+            "[음성] ★ 면높이로 게이트를 걸면 **통과할 셀을 거부한다** — 지표를 되돌리면 여기서 깨진다")
+        chk(lambda1(_fcc) > perp_widths(_fcc).min(),
+            "[음성] 비직교 셀에서 면높이는 λ₁ 의 하한이다 (역전되면 정의가 틀린 것)")
+        _cub = np.eye(3) * 10.06
+        chk(abs(lambda1(_cub) - perp_widths(_cub).min()) < 1e-6,
+            "[양성] 직교 셀에서는 둘이 일치한다 (comp1 계열에서 판정이 안 바뀐 이유)")
     except ImportError:
         print("  ⚠ ase 없음 — 구조 시험 건너뜀")
 
