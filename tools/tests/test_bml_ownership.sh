@@ -136,21 +136,37 @@ rm -rf "$other" "$notrepo" "$gone"
 # 배치다.  그때 그 서버의 --app-dir 도 "$REPO/" 로 시작하므로, 경로 접두사만
 # 보면 우리 것으로 판정돼 "다른 폴더의 워크벤치" 분기가 아예 실행되지 않는다 —
 # 남의 data/ 를 가진 서버를 우리 것인 양 열어 주거나 죽인다.
+# fixture 는 우리가 만든 것만, 우리 자리에만 만든다.
+#
+# 처음에는 "$REPO/.worktrees/other" 를 만들고 끝에 "$REPO/.worktrees" 를 통째로
+# 지웠다.  그런데 이 저장소의 문서가 권하는 배치가 바로 `git worktree add` 이고,
+# .worktrees 는 그것을 두는 가장 흔한 자리다 — 거기에 링크된 worktree 와 미커밋
+# 작업을 둔 사람이 `bml check` 를 한 번 치면 전부 사라진다.  테스트가 사용자
+# 데이터를 지우는 것은 어떤 검증 가치보다도 비싸다.
+#
+# 그래서 우리 상태 폴더(.bml, gitignore 됨) 안에 유일한 이름으로 만들고, 만든
+# 그 잎사귀만 지운다.
 OTHER_CHECKOUT=""
-nested="$REPO/.worktrees/other"
-mkdir -p "$nested/packages/wrdkit/src/wrdkit" "$nested/apps/api"
-classify_process \
-  "$nested/.venv/bin/python -m uvicorn app.main:app --app-dir $nested/apps/api" \
-  "$nested"
-verdict=$?
-if [ "$verdict" -eq 3 ] && [ "$OTHER_CHECKOUT" = "$nested" ]; then
-  pass=$((pass + 1))
-  printf '  ok   우리 트리 안에 중첩된 다른 checkout 을 구분한다\n'
-else
+mkdir -p "$REPO/.bml"
+nested="$(mktemp -d "$REPO/.bml/nested-checkout-XXXXXX")" || nested=""
+if [ -z "$nested" ] || ! mkdir -p "$nested/packages/wrdkit/src/wrdkit" "$nested/apps/api"; then
   fail=$((fail + 1))
-  printf '  FAIL 중첩 checkout 을 우리 것으로 봤다 (verdict=%s)\n' "$verdict"
+  printf '  FAIL 중첩 checkout fixture 를 만들지 못했다 (검증 못 함)\n'
+else
+  classify_process \
+    "$nested/.venv/bin/python -m uvicorn app.main:app --app-dir $nested/apps/api" \
+    "$nested"
+  verdict=$?
+  if [ "$verdict" -eq 3 ] && [ "$OTHER_CHECKOUT" = "$nested" ]; then
+    pass=$((pass + 1))
+    printf '  ok   우리 트리 안에 중첩된 다른 checkout 을 구분한다\n'
+  else
+    fail=$((fail + 1))
+    printf '  FAIL 중첩 checkout 을 우리 것으로 봤다 (verdict=%s)\n' "$verdict"
+  fi
+  # 만든 잎사귀만. 상위 .bml 은 실행 상태가 들어 있으므로 건드리지 않는다.
+  rm -rf "$nested"
 fi
-rm -rf "$REPO/.worktrees"
 OTHER_CHECKOUT=""
 
 # --- 서버가 어느 커밋을 서비스하는가 -----------------------------------------

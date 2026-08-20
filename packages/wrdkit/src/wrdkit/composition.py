@@ -71,13 +71,24 @@ _ROLE_HINTS: tuple[tuple[str, str], ...] = (
 
 _TOKENS = re.compile(r"[^a-z0-9]+")
 
-#: What may follow a hint and still be the same substance: a stoichiometric
-#: tail.  Digits cover "NCM811" and "SiO2"; x/y/z cover the variable
-#: subscripts chemists write when the ratio is not fixed -- "SiOx",
-#: "LiNixMnyCozO2".  Restricting the tail to digits alone dropped the whole
-#: SiOx family back to `other`, which is not a loud failure: it silently
-#: leaves the anode out of the active mass and inflates mAh/g.
-_FORMULA_TAIL = set("0123456789xyz")
+#: Digits may follow any hint: "NCM811" is NCM, "SiO2" is SiO.
+_DIGITS = set("0123456789")
+
+#: The variable subscripts chemists write when a ratio is not fixed -- SiOx,
+#: LiNixMnyCozO2 -- may follow only the hints that are actually chemical
+#: formulas.  Allowing x/y/z after every hint promoted unknown names to roles:
+#: "AMX" became active material and joined the mAh/g denominator, "SEXY" became
+#: the electrolyte, "CBX" the conductive additive.  That is the silent
+#: corruption ADR 0007 forbids, arriving through the fix for SiOx.
+#:
+#: A two-letter shorthand like `am` or `se` is a label, not a formula, so a
+#: letter after it means a different substance -- not a different
+#: stoichiometry of the same one.
+_FORMULA_TAIL = _DIGITS | set("xyz")
+_TAKES_STOICHIOMETRY = frozenset({
+    "sio", "ncm", "nmc", "nca", "lco", "lmo", "lni", "lto",
+    "li6ps5cl", "li3ps4", "lgps", "llzo", "latp",
+})
 
 
 def _hint_matches(needle: str, lowered: str, tokens: list[str]) -> bool:
@@ -92,16 +103,19 @@ def _hint_matches(needle: str, lowered: str, tokens: list[str]) -> bool:
     long enough to be unambiguous and stay substring matches.
 
     The tail must not swallow a real word: "amorphous" starts with "am" but
-    "orphous" is not a formula, so it stays `other`.
+    "orphous" is not a formula, so it stays `other`.  Nor may it invent a
+    substance: "AMX" is not a stoichiometry of AM, so only the hints that are
+    genuine formulas accept x/y/z (see :data:`_TAKES_STOICHIOMETRY`).
     """
     if _TOKENS.search(needle):
         return needle in lowered
+    allowed = _FORMULA_TAIL if needle in _TAKES_STOICHIOMETRY else _DIGITS
     for token in tokens:
         if token == needle:
             return True
         if token.startswith(needle):
             tail = token[len(needle):]
-            if tail and all(character in _FORMULA_TAIL for character in tail):
+            if tail and all(character in allowed for character in tail):
                 return True
     return False
 

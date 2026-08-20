@@ -9,7 +9,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Annotated, Any
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from wrdkit import BASES, Basis
 
@@ -32,6 +32,20 @@ class GroupUpdate(BaseModel):
     name: str | None = None
     description: str | None = None
     color: str | None = None
+
+    @field_validator("name", "description", "color")
+    @classmethod
+    def _no_explicit_null(cls, value: str | None) -> str | None:
+        """`null` is not the same as leaving a field out.
+
+        Omitting a field means "keep it".  These columns are NOT NULL, so
+        writing None reaches SQLite as an IntegrityError and the client sees a
+        500 for what is really bad input.  Clearing a field is what the empty
+        string is for, and that already works.
+        """
+        if value is None:
+            raise ValueError('send "" to clear this field, or omit it to keep it')
+        return value
 
 
 class GroupOut(BaseModel):
@@ -71,8 +85,20 @@ class ComponentIn(BaseModel):
     role: str = "other"
 
 
-class ComponentOut(ComponentIn):
-    pass
+class ComponentOut(BaseModel):
+    """What comes back, with no input bounds attached.
+
+    Inheriting ``ComponentIn`` looked tidy and made the API unable to show a
+    row it had itself stored before the bounds existed: a composition saved
+    with wt% 150 then failed *output* validation, so GET /samples/{id} 500'd
+    and the one screen that could correct the value refused to open.  Input is
+    where a contract is enforced; output has to be able to describe what is
+    already there.
+    """
+
+    name: str
+    wt_percent: float = 0.0
+    role: str = "other"
 
 
 class CellSpecIn(BaseModel):
@@ -151,7 +177,9 @@ class SampleUpdate(BaseModel):
     cutoff_upper_v: Finite | None = None
     cutoff_lower_v: Finite | None = None
     c_rate: PositiveMass | None = None
-    c_rate_formation: float | None = None
+    # POST 와 같은 제약이어야 한다.  한쪽만 걸어 두면 저장할 때는 막히는
+    # 값이 고칠 때는 통과해, 결국 같은 잘못된 수가 DB 에 들어간다.
+    c_rate_formation: PositiveMass | None = None
     reference_cycle: int | None = None
     declared_state: str | None = None
     #: Send null explicitly to clear a numeric field.

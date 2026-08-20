@@ -136,10 +136,19 @@ export function Compare() {
   // mass they all come back in raw mAh — one unit, one axis, a comparison that
   // is still valid.  Warning "단위 혼재" there tells the user not to trust a
   // plot that is perfectly trustworthy, so the server's own verdict decides.
-  const mixedBasis =
+  //
+  // 필드가 없는 옛 응답(갱신 전 서버가 아직 떠 있는 경우)에서 `?? false` 로
+  // 두면 정반대 안내가 나간다 — 실제로 단위가 섞여 있는데 "전부 같은 단위라
+  // 비교가 유효합니다" 라고 말한다.  없으면 그린 곡선의 단위 집합에서 직접
+  // 유도한다.
+  const seriesBases =
     mode === 'profiles'
-      ? (profileCompare.data?.mixed_basis ?? false)
-      : (cycleCompare.data?.mixed_basis ?? false)
+      ? (profileCompare.data?.series ?? []).map((item) => item.basis)
+      : (cycleCompare.data?.series ?? []).map((item) => item.basis)
+  const derivedMixed = new Set(seriesBases.filter(Boolean)).size > 1
+  const reported =
+    mode === 'profiles' ? profileCompare.data?.mixed_basis : cycleCompare.data?.mixed_basis
+  const mixedBasis = reported ?? derivedMixed
   const capacityAxis = basisAxis(shownBasis) + (mixedBasis ? ' · 단위 혼재' : '')
 
   const yLabel =

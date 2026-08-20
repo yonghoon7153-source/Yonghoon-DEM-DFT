@@ -18,11 +18,19 @@ def instrument_clock(monkeypatch):
     """Run the test as if the lab PC were on KST, as it is in Yongin."""
     if not hasattr(time, "tzset"):
         pytest.skip("changing the process time zone needs a POSIX platform")
+    # Put back whatever was there, not "nothing".  CI runs this suite under a
+    # timezone matrix (TZ=Asia/Seoul, America/Los_Angeles); popping the
+    # variable would leave every later test on UTC, so a zone-sensitive bug
+    # would pass or fail depending on which test ran first.
+    previous = os.environ.get("TZ")
     monkeypatch.setenv("TZ", "KST-9")
     time.tzset()
     yield
     # monkeypatch restores the variable, but only tzset re-reads it.
-    os.environ.pop("TZ", None)
+    if previous is None:
+        os.environ.pop("TZ", None)
+    else:
+        os.environ["TZ"] = previous
     time.tzset()
 
 

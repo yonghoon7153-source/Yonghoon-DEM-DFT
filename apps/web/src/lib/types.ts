@@ -256,6 +256,8 @@ export interface DashboardRow {
   sample_id: number
   sample_name: string
   group_id: number | null
+  group_name?: string
+  group_color?: string
   cathode_type: string
   c_rate: number | null
   temperature_c: number | null

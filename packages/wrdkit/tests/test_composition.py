@@ -246,6 +246,34 @@ def test_a_real_word_starting_with_a_hint_is_not_that_hint():
         assert infer_role(name) != Role.ACTIVE, name
 
 
+def test_a_letter_after_a_short_acronym_is_a_different_substance():
+    """SiOx 를 살리려고 모든 힌트에 x/y/z 를 열었더니 AMX 가 활물질이 됐다.
+
+    두 글자 약어는 화학식이 아니라 이름표다. 뒤에 글자가 붙으면 같은 물질의
+    다른 조성이 아니라 아예 다른 물질이다 — 그런데 활물질로 승격되면 조용히
+    mAh/g 분모에 들어간다.
+    """
+    for name in ("AMX", "AMY", "SEX", "SEXY", "CBX", "CNTX", "GRX", "SIX", "LFPX"):
+        assert infer_role(name) == Role.OTHER, name
+
+
+def test_a_real_formula_still_takes_a_stoichiometric_subscript():
+    """화학식인 힌트만 x/y/z 를 받는다."""
+    assert infer_role("SiOx") == Role.ACTIVE
+    assert infer_role("NCMx") == Role.ACTIVE
+    assert infer_role("LTO2") == Role.ACTIVE      # 숫자는 어느 힌트든 허용
+
+
+def test_the_unknown_promotion_does_not_reach_the_denominator():
+    """오탐의 실제 피해: 미지의 이름이 분모를 만든다."""
+    from wrdkit import CellSpec
+
+    blend = parse_composition("AMX:PTFE = 90:10")
+    assert blend.active_wt_percent is None
+    resolved = CellSpec(total_mass_mg=31.6, composition=blend).resolve()
+    assert resolved.active_mass_g is None, "미지의 성분이 활물질 질량을 만들었다"
+
+
 def test_common_anodes_are_recognised():
     """미인식 음극은 활물질 질량에서 빠져 mAh/g 를 부풀린다."""
     for name in ("Si", "Si-C", "Gr", "Graphite", "LTO", "Hard carbon"):

@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
 import { num } from '../lib/format'
 import { useAsync, useDebounced } from '../lib/hooks'
@@ -194,6 +194,26 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
   const groups = useAsync(() => api.listGroups(), [])
   const [name, setName] = useState('')
   const [error, setError] = useState<string | null>(null)
+  // 그룹을 지우면 그 안의 셀은 남고 "그룹 없음" 이 된다 (FK 는 SET NULL 이 아니라
+  // 모델이 nullable 이다). 그래도 한 번 눌러 사라지면 안 되므로 확인을 받는다.
+  const [confirming, setConfirming] = useState<number | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  async function remove(id: number) {
+    setBusy(true)
+    try {
+      setError(null)
+      await api.deleteGroup(id)
+      setConfirming(null)
+      groups.reload()
+      onChanged()
+    } catch (cause) {
+      setError(String(cause instanceof Error ? cause.message : cause))
+      setConfirming(null)
+    } finally {
+      setBusy(false)
+    }
+  }
 
   async function create() {
     if (!name.trim()) return
@@ -228,8 +248,41 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
           {groups.data.map((group) => (
             <div key={group.id} className="row" style={{ justifyContent: 'space-between' }}>
               <span>{group.name}</span>
-              <span className="tiny faint">
+              <span className="row tiny faint" style={{ gap: 8, alignItems: 'center' }}>
                 셀 {group.sample_count} · 파일 {group.run_count}
+                {confirming === group.id ? (
+                  <>
+                    <button
+                      type="button"
+                      className="danger tiny"
+                      disabled={busy}
+                      onClick={() => void remove(group.id)}
+                    >
+                      지웁니다
+                    </button>
+                    <button
+                      type="button"
+                      className="ghost tiny"
+                      disabled={busy}
+                      onClick={() => setConfirming(null)}
+                    >
+                      취소
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="ghost icon"
+                    aria-label={`${group.name} 그룹 지우기`}
+                    title="그룹만 지웁니다. 안에 있던 셀은 남고 그룹 없음이 됩니다."
+                    onClick={() => {
+                      setError(null)
+                      setConfirming(group.id)
+                    }}
+                  >
+                    <TrashIcon size={13} />
+                  </button>
+                )}
               </span>
             </div>
           ))}

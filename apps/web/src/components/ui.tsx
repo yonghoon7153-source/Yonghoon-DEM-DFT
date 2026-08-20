@@ -295,3 +295,26 @@ export function KeyValues({ rows }: { rows: [string, ReactNode][] }) {
     </dl>
   )
 }
+
+/** 휴지통.  currentColor 를 쓰므로 버튼의 색(위험이면 빨강)을 그대로 따른다. */
+export function TrashIcon({ size = 15 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.4"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M2.5 4h11" />
+      <path d="M6 4V2.8c0-.44.36-.8.8-.8h2.4c.44 0 .8.36.8.8V4" />
+      <path d="M12.4 4l-.5 8.4c-.04.62-.55 1.1-1.17 1.1H5.27c-.62 0-1.13-.48-1.17-1.1L3.6 4" />
+      <path d="M6.6 6.9v3.7M9.4 6.9v3.7" />
+    </svg>
+  )
+}

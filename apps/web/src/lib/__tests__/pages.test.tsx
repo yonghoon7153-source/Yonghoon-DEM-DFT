@@ -564,7 +564,7 @@ describe('대시보드 삭제', () => {
     installDashboard(deleted)
     renderDashboard()
 
-    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+    await userEvent.click(await screen.findByRole('button', { name: '안녕 지우기' }))
 
     expect(screen.getByRole('button', { name: '지웁니다' })).toBeInTheDocument()
     expect(deleted).toEqual([])
@@ -575,7 +575,7 @@ describe('대시보드 삭제', () => {
     installDashboard(deleted)
     renderDashboard()
 
-    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+    await userEvent.click(await screen.findByRole('button', { name: '안녕 지우기' }))
     await userEvent.click(screen.getByRole('button', { name: '취소' }))
 
     expect(screen.queryByRole('button', { name: '지웁니다' })).toBeNull()
@@ -587,7 +587,7 @@ describe('대시보드 삭제', () => {
     installDashboard(deleted)
     renderDashboard()
 
-    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+    await userEvent.click(await screen.findByRole('button', { name: '안녕 지우기' }))
     await userEvent.click(screen.getByRole('button', { name: '지웁니다' }))
 
     await waitFor(() => expect(deleted).toHaveLength(1))

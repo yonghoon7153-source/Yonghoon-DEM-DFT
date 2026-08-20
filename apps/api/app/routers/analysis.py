@@ -570,6 +570,11 @@ def dashboard(session: Session = Depends(get_session),
             "sample_id": sample.id,
             "sample_name": sample.name,
             "group_id": sample.group_id,
+            # The group's own name, so the board can show it without a second
+            # request and can count cells per group without asking the server
+            # again for every chip.
+            "group_name": sample.group.name if sample.group else "",
+            "group_color": sample.group.color if sample.group else "",
             "cathode_type": sample.cathode_type,
             "c_rate": sample.c_rate,
             "temperature_c": sample.temperature_c,

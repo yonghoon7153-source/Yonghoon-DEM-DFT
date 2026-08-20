@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom'
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
-import { Alert, Card, Empty, StateBadge, TableSkeleton } from '../components/ui'
+import { Alert, Card, Empty, StateBadge, TableSkeleton, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
 import { basisUnit, num, pct, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
@@ -32,10 +32,19 @@ export function Dashboard() {
   const [filter, setFilter] = useState<Filter>('all')
   const [hiddenSeries, setHiddenSeries] = useState<string[]>([])
 
+  // 그룹으로 서버에서 거르지 않는다.  칩마다 개수를 보여주려면 전체가 필요하고,
+  // 그룹을 누를 때마다 다시 받아오지 않아도 되므로 전환이 즉시 된다.
   const groups = useAsync(() => api.listGroups(), [])
-  const board = useAsync(() => api.dashboard({ basis, group_id: groupId }), [basis, groupId])
+  const board = useAsync(() => api.dashboard({ basis }), [basis])
 
-  const all = useMemo(() => board.data?.rows ?? [], [board.data])
+  const everything = useMemo(() => board.data?.rows ?? [], [board.data])
+  const all = useMemo(
+    () =>
+      groupId === null
+        ? everything
+        : everything.filter((row) => (row.group_id ?? 0) === groupId),
+    [everything, groupId],
+  )
   const rows = useMemo(
     () => (filter === 'all' ? all : all.filter((row) => row.state === filter)),
     [all, filter],
@@ -137,6 +146,7 @@ export function Dashboard() {
                 </span>
               </button>
             ))}
+
           </div>
           <span className="spacer" />
           {attention.length ? (
@@ -247,6 +257,15 @@ function DashboardTable({
           {rows.map((row) => (
             <tr key={row.sample_id}>
               <td className="text">
+                {row.group_name ? (
+                  <span
+                    className="group-tag"
+                    style={row.group_color ? { background: row.group_color } : undefined}
+                    title={`그룹: ${row.group_name}`}
+                  >
+                    {row.group_name}
+                  </span>
+                ) : null}
                 <Link to={`/samples/${row.sample_id}`} style={{ fontWeight: 550 }}>
                   {row.sample_name}
                 </Link>
@@ -363,14 +382,15 @@ function DashboardTable({
                   </>
                 ) : (
                   <button
-                    className="ghost tiny"
+                    className="ghost icon"
+                    aria-label={`${row.sample_name} 지우기`}
                     title="이 셀을 기록에서 지웁니다 (원본 .wrd 는 남습니다)"
                     onClick={() => {
                       setDeleteError(null)
                       setConfirmDelete(row.sample_id)
                     }}
                   >
-                    지우기
+                    <TrashIcon />
                   </button>
                 )}
               </td>

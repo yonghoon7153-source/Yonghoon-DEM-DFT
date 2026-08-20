@@ -150,6 +150,9 @@ def test_ticks_are_independent_of_the_machine_timezone():
     import os
     import time
 
+    if not hasattr(time, "tzset"):
+        pytest.skip("changing the process time zone needs a POSIX platform")
+
     moment = datetime.datetime(2026, 3, 4, 22, 47, 31)
     original = os.environ.get("TZ")
     seen = set()
