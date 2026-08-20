@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LLM Wiki status — counts, verification coverage, study progress.
+"""LLM Wiki status — counts, verification coverage, verify queue.
 
 Usage: python3 tools/status.py
 """
@@ -23,7 +23,7 @@ pages = {}
 for d in DIRS:
     for f in sorted(glob.glob(str(BASE / d / '*.md'))):
         p = pathlib.Path(f)
-        pages[p.stem] = (d, parse_fm(p.read_text()))
+        pages[p.stem] = (d, parse_fm(p.read_text(encoding='utf-8')))
 
 raws = glob.glob(str(BASE / 'raw/**/*.md'), recursive=True)
 
@@ -61,7 +61,7 @@ if unverified:
     print('  ' + ' · '.join(unverified))
 
 # recent log entries (Karpathy's parseable-log tip)
-log = (BASE / 'log.md').read_text()
+log = (BASE / 'log.md').read_text(encoding='utf-8')
 entries = re.findall(r'^## \[.*$', log, re.M)
 print(f'\n최근 log ({len(entries)} entries, last 5):')
 for e in entries[-5:]:

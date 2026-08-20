@@ -108,4 +108,4 @@ sha256: <hex digest of body after frontmatter, leading blank lines stripped>
 
 ## Git
 커밋 prefix 는 log action 과 동일하되 이 모노레포 컨벤션에 맞춰 scope 를 붙인다: `ingest(wiki):` `update(wiki):` `create(wiki):` `lint(wiki):` `verify(wiki):`.
-push 는 항상 **루트 `CLAUDE.md` 하드룰 1이 지정한 작업 브랜치**로만 한다. 브랜치 이름을 여기 적지 않는다 — 2026-08-20 에 이 위키 5개 파일이 이미 대체된 브랜치 이름을 붙들고 있었다 (lint 검사 16).
+push 는 항상 **루트 `CLAUDE.md` 하드룰 1이 지정한 작업 브랜치**로만 한다. 브랜치 이름을 여기 적지 않는다 — 2026-08-20 에 이 위키 5개 파일이 이미 대체된 브랜치 이름을 붙들고 있었다 (lint `no-hardcoded-branch-name` 검사).

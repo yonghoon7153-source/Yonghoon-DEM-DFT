@@ -9,7 +9,7 @@
 |---|---|
 | `degradation-degeneracy/` | **주 연구 프로젝트** — PyBaMM 합성 truth 로 LLI/LAM fitting degeneracy 판별. 19라운드 적대적 게이트 리뷰 완료, 본 실행 완료 |
 | `wiki/` | mothership LLM Wiki — 지식 지도 (`wiki/README.md`, 규칙은 `wiki/SCHEMA.md`) |
-| `BRANCHES.md` | 브랜치 지도 — 이 모노레포의 38개 브랜치가 각각 무엇이고 어디에 속하는가 |
+| `BRANCHES.md` | 브랜치 지도 — 이 모노레포의 브랜치가 각각 무엇이고 어디에 속하는가 (개수는 적지 않는다 — 휘발성) |
 | `kit_*` `ps_zips` `se_curve` `run_mpm.sh` 등 | DEM/MPM 계열 — **다른 브랜치 소유**. 이 브랜치에서 건드리지 않는다 |
 | `src/` `index.html` `vite.config.js` | 웹 뷰어 (DFT 입력 생성기, 별건) |
 
@@ -19,8 +19,8 @@
    세션 하네스가 다른 이름을 지정하면 **하네스가 우선**이고 이 줄을 같이 고친다.
    브랜치 이름의 정본은 이 줄 하나다 — `wiki/` 와 `.claude/` 는 이름을 옮겨 적지
    말고 이 줄을 참조한다 (2026-08-20: 8곳이 이미 대체된 이름을 붙들고 있었다.
-   위키 쪽은 `wiki/tools/lint.py` 검사 16이 재발을 막는다). 브랜치 전체 지도와
-   통합 판단은 `BRANCHES.md`.
+   위키 쪽은 `wiki/tools/lint.py` 의 `no-hardcoded-branch-name` 검사가
+   재발을 막는다). 브랜치 전체 지도와 통합 판단은 `BRANCHES.md`.
 2. **비밀정보**: 토큰·비밀번호·API 키를 대화나 파일에 넣지 않는다. 자격증명은
    실행 터미널에서만.
 3. **RUN_SCOPE 경계**: degradation-degeneracy 의 code identity(`source_digest`)는

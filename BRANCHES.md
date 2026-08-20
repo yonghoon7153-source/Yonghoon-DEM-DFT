@@ -41,13 +41,20 @@ for b in $BR; do into=""
 
 ```
 claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
-   고유 커밋 0개 / 뒤처짐 88커밋   (merge-base = d8b6a952)
+   고유 커밋 0개                  (merge-base = d8b6a952)
 ```
+
+> **뒤처진 커밋 수는 여기 적지 않는다.** 이 문서를 고치는 커밋 자체가 그 수를
+> 바꾼다 — 실제로 2026-08-20 하루 안에 88 → 89 → 90 으로 세 번 변했고, 20차
+> 게이트 리뷰가 그 stale 값을 발견 13-2 로 지적했다. **불변인 사실은 "고유
+> 커밋 0개"** 뿐이고, 그것이 통합 판단에 필요한 전부다. 나머지는 위 재현
+> 명령으로 그 자리에서 세라.
 
 즉 **통합할 것이 없다.** 옛 브랜치는 조상이고, 지금 브랜치가 그 전부를 담고 있다.
 2026-08-20 이전에는 저장소 문서 8곳이 여전히 옛 이름을 작업 브랜치로 지목하고
 있었다 — 그건 분기가 아니라 **문서 drift** 였고, 브랜치 이름의 정본을 루트
-`CLAUDE.md` 하드룰 1 하나로 모으고 `wiki/tools/lint.py` 검사 15로 재발을 막았다.
+`CLAUDE.md` 하드룰 1 하나로 모으고 `wiki/tools/lint.py` 의
+`no-hardcoded-branch-name` 검사로 재발을 막았다.
 
 ## 완전히 흡수된 브랜치 (고유 커밋 0개)
 
@@ -80,12 +87,16 @@ claude/zip-git-gpu-setup-vdqdtd  →  claude/14-gate-code-review-9qkx05
 
 | 짝 | 고유 커밋 |
 |---|---|
-| `Codex/friendly-meitner-lldvar` ↔ `claude/friendly-meitner-lldvar` | 4 ↔ 496 — 같은 이름인데 갈라졌다. Codex 쪽 4커밋만 확인하면 정리된다 |
-| `Codex/dem-mpm-crosscheck` ↔ `claude/stoic-knuth-NObVQ` | 1 ↔ 253 — 위와 같은 모양. Codex 쪽 1커밋 |
-| `claude/resistor-network-analysis-lKgcS` ↔ `-solver-LDjW6` | 791 ↔ 97 — 저항 네트워크 계열의 실제 분기 |
+| `Codex/friendly-meitner-lldvar` ↔ `claude/friendly-meitner-lldvar` | 같은 이름인데 갈라졌다 |
+| `Codex/dem-mpm-crosscheck` ↔ `claude/stoic-knuth-NObVQ` | 위와 같은 모양 |
+| `claude/resistor-network-analysis-lKgcS` ↔ `-solver-LDjW6` | 저항 네트워크 계열의 실제 분기 |
+
+(고유 커밋 수는 적지 않는다 — 위 재현 명령으로 그 자리에서 센다.)
 
 이 셋은 **이 브랜치의 소관이 아니다** (루트 `CLAUDE.md` 저장소 지도: DEM/MPM 계열은
-다른 브랜치 소유). 여기서 합치지 않는다. 합칠 사람이 볼 수 있게 적어만 둔다.
+다른 브랜치 소유). 여기서 합치지 않는다. **Codex 계열은 독립 유지 대상이며 통합
+대상이 아니다** — Codex 가 그 브랜치를 근거로 판단한다. 합칠 사람이 볼 수 있게
+적어만 둔다.
 
 ## 규칙
 

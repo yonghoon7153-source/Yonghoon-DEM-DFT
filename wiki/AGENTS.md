@@ -31,7 +31,7 @@ CLI (에이전트 무관, repo root 에서): `python3 wiki/tools/lint.py` · `py
 
 ## Git
 
-커밋 prefix 는 log action 과 동일하되 모노레포 컨벤션에 맞춘 scope 를 붙인다: `ingest(wiki):` `update(wiki):` `create(wiki):` `lint(wiki):` `verify(wiki):`. push 는 **루트 `CLAUDE.md` 하드룰 1이 지정한 작업 브랜치**로만 — 브랜치 이름은 여기 적지 않는다 (lint 검사 16).
+커밋 prefix 는 log action 과 동일하되 모노레포 컨벤션에 맞춘 scope 를 붙인다: `ingest(wiki):` `update(wiki):` `create(wiki):` `lint(wiki):` `verify(wiki):`. push 는 **루트 `CLAUDE.md` 하드룰 1이 지정한 작업 브랜치**로만 — 브랜치 이름은 여기 적지 않는다 (lint `no-hardcoded-branch-name` 검사).
 공유 remote(origin)가 있으면 **세션 시작 시 `git pull --rebase`**, 마무리는 `/wrap` 절차가 commit+push 한다. `log.md` 충돌 시 양쪽 항목 모두 보존한다 (append-only).
 
 ## Parity Contract (CLAUDE.md ↔ AGENTS.md)

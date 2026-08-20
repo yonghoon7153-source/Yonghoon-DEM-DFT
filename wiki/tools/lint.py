@@ -76,7 +76,7 @@ for d in DIRS:
 fm_by_page = {}
 outbound = {}
 for stem, p in sorted(pages.items()):
-    text = p.read_text()
+    text = p.read_text(encoding='utf-8')
     m = re.match(r'^---\n(.*?)\n---\n', text, re.S)
     if not m:
         errors.append(f'{p.name}: no frontmatter')
@@ -125,7 +125,7 @@ for stem, p in sorted(pages.items()):
     outbound.setdefault(stem, set()).update(
         l.strip() for l in links if l.strip() in pages and l.strip() != stem)
 
-index = (BASE / 'index.md').read_text()
+index = (BASE / 'index.md').read_text(encoding='utf-8')
 idx_links = set(re.findall(r'\[\[([^\]|#]+?)(?:\|[^\]]*)?\]\]', index))
 for stem in pages:
     if stem not in idx_links:
@@ -139,7 +139,7 @@ if mc and int(mc.group(1)) != len(pages):
 
 raws = glob.glob(str(BASE / 'raw/**/*.md'), recursive=True)
 for f in raws:
-    t = pathlib.Path(f).read_text()
+    t = pathlib.Path(f).read_text(encoding='utf-8')
     m = re.match(r'^---\n(.*?)\n---\n(.*)$', t, re.S)
     if not m:
         errors.append(f'{f}: no raw frontmatter')
@@ -157,12 +157,17 @@ for f in raws:
 #     (immutable snapshots legitimately record the branch they were taken on).
 #     `.claude/` and `.github/` paths are not branch names — the lookbehind
 #     drops them.
-BRANCH_RE = re.compile(r'(?<![.\w/])claude/[A-Za-z0-9][A-Za-z0-9-]*')
+#     20차 리뷰 발견 12: lookbehind 에 `/` 가 있어 `origin/claude/…` 와
+#     `github.com/…/tree/claude/…` 를 놓쳤다. `.` 만 배제하면 `.claude/`
+#     경로는 계속 면제되면서 remote-qualified·URL 형태를 잡는다.
+#     한계: `Codex/` 는 넣지 않는다 — 위키가 도구 이름으로 `Codex/Cursor`
+#     를 쓰므로 오탐이 난다. 이 검사는 `claude/` 계열만 본다.
+BRANCH_RE = re.compile(r'(?<![.\w])claude/[A-Za-z0-9][A-Za-z0-9-]*')
 for f in [BASE / n for n in ('SCHEMA.md', 'CLAUDE.md', 'AGENTS.md', 'README.md',
                              'index.md')] + sorted(pages.values()):
     if not f.exists():
         continue
-    for hit in sorted(set(BRANCH_RE.findall(f.read_text()))):
+    for hit in sorted(set(BRANCH_RE.findall(f.read_text(encoding='utf-8')))):
         errors.append(f'{f.name}: hardcoded branch name `{hit}` — '
                       f'루트 CLAUDE.md 의 브랜치 하드룰을 참조하라 (drift 방지)')
 
@@ -199,7 +204,7 @@ for stem, fm in fm_by_page.items():
 # 10. bias-check coverage for confidence:high (note, not warning)
 no_bias = [s for s, fm in fm_by_page.items()
            if fm.get('confidence') == 'high'
-           and not re.search(r'불확실성|Bias Check|반대해석|한계', pages[s].read_text())]
+           and not re.search(r'불확실성|Bias Check|반대해석|한계', pages[s].read_text(encoding='utf-8'))]
 
 print('=== LINT REPORT ===')
 print(f'pages: {len(pages)} | raw files: {len(raws)}')

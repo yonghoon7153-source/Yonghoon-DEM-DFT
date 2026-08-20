@@ -80,7 +80,7 @@ evidenceScope:
 -
 -
 """
-    path.write_text(fm)
+    path.write_text(fm, encoding='utf-8')
     print(f'created {path.relative_to(BASE)}')
     print('SCHEMA follow-ups:')
     print('  1. tags 를 SCHEMA.md taxonomy 에서 채우기')
