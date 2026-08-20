@@ -1025,14 +1025,21 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         return ['J_NO_ENTRYPOINT| mpm_webapp_payload.py 가 없다'], warns
     with _tf.TemporaryDirectory() as d:
         am, se_p, ph_p, fid_p, dia_p = _smoke_fixture(d)
+        #  ⚠⚠ 2026-08-20 (kgy 실사고) — 두 팔 모두 **`--se` 실 점구름**을 쓴다.
+        #    옛 판은 plain 팔에 `--se-proxy` 를 썼는데 그 경로가 `viz_mpm_morphology_3d` 를
+        #    import 하고 그것이 **matplotlib** 을 끌어온다.  kgy 의 dem-venv 에 matplotlib 이
+        #    없어 규칙 J 가 실패했고, 러너의 규율 게이트가 그것을 보고 **GPU 런을 전부 막았다**.
+        #    ⇒ 그 실패는 **생산 경로의 결함이 아니다** — 생산은 `--se se_dump.npy` 라 그 import
+        #      를 타지 않는다.  픽스처가 생산이 안 가는 길로 갔던 것이 문제다 (오늘의 주제).
+        #    ⇒ 두 팔의 차이를 **`--fibre` 축 하나로** 좁힌다 (그것이 FA-01 이 난 축이다).
+        if not se_p:
+            return (['J_NO_NUMPY| numpy 가 없어 스모크 픽스처를 만들 수 없다 — '
+                     '확인 못 한 것을 통과시키지 않는다 (fail-closed)'], warns)
         arms = [('plain  (--fibre 없음 = 첨가제 없는 킷)',
-                 ['--scaffold', am, '--se-proxy'])]
-        if se_p:
-            arms.append(('fibre  (--phase/--fibre 있음 = 첨가제 킷)',
-                         ['--scaffold', am, '--se', se_p, '--phase', ph_p,
-                          '--fibre', fid_p, '--fibre-dia', dia_p]))
-        else:
-            warns.append('J_NO_NUMPY| numpy 부재 — `--fibre` 팔을 건너뛴다')
+                 ['--scaffold', am, '--se', se_p]),
+                ('fibre  (--phase/--fibre 있음 = 첨가제 킷)',
+                 ['--scaffold', am, '--se', se_p, '--phase', ph_p,
+                  '--fibre', fid_p, '--fibre-dia', dia_p])]
         for label, extra in arms:
             out = os.path.join(d, 'p_%d.json' % len(errs))
             cmd = [sys.executable, pay, *extra, '--n-vox', _SMOKE_NVOX,

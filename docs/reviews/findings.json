@@ -588,6 +588,19 @@
    "evidence_tests": [
     "scripts/sdcp_gain_verdict.py --selftest (㉕a~e 팔 계약·origin-key join·결과 seal)"
    ]
+  },
+  {
+   "id": "CDXIJ-11",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "4d02d467",
+   "title": "규칙 J 의 스모크가 **생산이 안 가는 길**(--se-proxy → matplotlib)로 가서 kgy 의 GPU 런을 전부 막았다",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest (J-1, J-3a~d)"
+   ],
+   "note": "kgy 실측: `J_EXIT| plain … ModuleNotFoundError: matplotlib` → 러너의 규율 게이트가 그것을 보고 STEP 2a·CL-48 프로브를 **ABORT**.  원인은 스모크 픽스처가 plain 팔에 `--se-proxy` 를 썼고 그 분기만 `viz_mpm_morphology_3d`(→ matplotlib)를 import 하기 때문이다.  **생산은 `--se se_dump.npy` 라 그 분기를 안 탄다** ⇒ 실패는 생산 결함이 아니라 픽스처가 다른 길로 간 것 = FA-01 과 같은 부류를 검사기 쪽에서 재생산했다. → 두 팔 모두 `--se` 실 점구름으로 바꿔 차이를 **`--fibre` 축 하나**로 좁혔다 (그것이 FA-01 이 난 축이다).  numpy 부재 시에는 skip 이 아니라 **실패**(fail-closed). ⚠ 교훈: 러너가 규율 게이트를 exit code 로 물고 있으므로, 검사기의 픽스처 선택이 **생산 실행을 막을 수 있다** — 픽스처는 생산 경로만 타야 한다."
   }
  ]
 }
