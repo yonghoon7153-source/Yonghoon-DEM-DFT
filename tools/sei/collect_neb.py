@@ -27,6 +27,20 @@ import os
 import re
 import sys
 
+
+def _bni():
+    """build_neb_inputs 를 지연 로드 — protocol_diff 는 진단에만 쓴다.
+
+    ⛔ 못 불러도 회수는 계속한다. 단 **이월 판정 자체는** 지문 비교로만 하므로
+      import 실패가 이월을 느슨하게 만들지 않는다 (진단 문구만 줄어든다).
+    """
+    import importlib.util
+    src = os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_neb_inputs.py")
+    spec = importlib.util.spec_from_file_location("_bni_diff", src)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
 OUT = "db/properties/sei_neb.json"
 #: NEB 작업 루트 — watch_gabia.py 의 NEBW 와 같은 목록이어야 한다.
 #: ⛔⛔ 2026-08-13 — 옛 판은 `--work` 하나만 받고 그 루트 결과로 파일을 **통째로 덮어썼다**.
@@ -126,6 +140,9 @@ def read_one(d):
     r["global_n_li_orbits"] = meta.get("global_n_li_orbits")
     r["neighbor_shells"] = meta.get("neighbor_shells")
     r["protocol_hash"] = meta.get("protocol_hash")
+    # ⛔ 2026-08-20 (codex 동결감사) — 지문 **원재료**도 회수한다. 이월이 거부됐을 때
+    #   "무엇이 바뀌었나" 를 말하려면 두 payload 를 비교해야 한다 (protocol_diff).
+    r["protocol_payload"] = meta.get("protocol_payload")
     r["supercell"] = meta.get("supercell")
     r["min_cell_A"] = meta.get("min_cell_A")
     if r["Ea_forward_eV"] is not None and r["Ea_backward_eV"] is not None:
@@ -210,6 +227,27 @@ def read_one(d):
     return r
 
 
+def _carry_verdict(old_r, new_r):
+    oh, nh = old_r.get("protocol_hash"), new_r.get("protocol_hash")
+    if not old_r:
+        return None, None                      # 이전 기록 자체가 없다 → 이월할 것도 없음
+    if oh and nh and oh == nh:
+        return True, None
+    if not oh or not nh:
+        return False, (f"지문 비교 불가 (옛 {oh or '없음'} / 새 {nh or '없음'}) — "
+                       f"정체성을 확인할 수 없으면 사람 판정을 물려받지 않는다")
+    diff = []
+    po, pn = old_r.get("protocol_payload"), new_r.get("protocol_payload")
+    if isinstance(po, dict) and isinstance(pn, dict):
+        try:
+            diff = _bni().protocol_diff(po, pn)[:6]
+        except Exception:                       # noqa: BLE001 — 진단 실패가 회수를 막지 않는다
+            diff = []
+    return False, (f"프로토콜이 바뀌었다: {oh} → {nh}"
+                   + (f" (바뀐 것: {'; '.join(diff)})" if diff else
+                      " (payload 미기록이라 무엇이 바뀌었는지는 알 수 없다)"))
+
+
 def selftest():
     """양성 + **음성**. 음성이 없으면 통과해도 아무것도 보증 못 한다."""
     import shutil
@@ -271,6 +309,26 @@ def selftest():
     chk(len(got) == 2 and miss == [f"{td}/nope"], f"콜론·쉼표 목록 + 없는 루트 보고 ({miss})")
     chk(root_label("/a/b/sei_neb_v2_ccpath") == "v2_ccpath"
         and root_label("/a/b/other") == "other", "루트 짧은 이름")
+    # ── ⛔ 해시 결속 이월 (2026-08-20 codex 동결감사 · F8/R7) ───────────────
+    #   키(root/tag)만 맞으면 프로토콜이 바뀐 새 계산에도 옛 사람 판정이 붙었다.
+    #   양성: 지문이 같으면 이월된다 / 음성: 다르면 거부 + **인용 불가로 잠근다**.
+    CARRY_F = "scientific_status"
+    _carry = _carry_verdict          # 회수 본체가 쓰는 **바로 그 함수**를 검사한다
+    chk(_carry({}, {"protocol_hash": "a"})[0] is None, "[경계] 이전 기록이 없으면 이월 대상 자체가 없다")
+    chk(_carry({"protocol_hash": "a", CARRY_F: "x"}, {"protocol_hash": "a"})[0] is True,
+        "[양성] 지문이 같으면 이월한다")
+    v_, w_ = _carry({"protocol_hash": "a", CARRY_F: "x"}, {"protocol_hash": "b"})
+    chk(v_ is False and "a" in (w_ or "") and "b" in (w_ or ""),
+        f"[음성] 지문이 다르면 이월 거부 + 사유에 두 해시 ({w_})")
+    chk(_carry({"protocol_hash": "a", CARRY_F: "x"}, {})[0] is False,
+        "[음성] 새 쪽 지문이 없으면 거부 — 정체성 미확인은 승계 사유가 못 된다")
+    chk(_carry({CARRY_F: "x"}, {"protocol_hash": "b"})[0] is False,
+        "[음성] 옛 쪽 지문이 없어도 거부 (옛 파일이라고 봐주지 않는다)")
+    #   payload 가 있으면 무엇이 바뀌었는지 말해야 한다
+    _v2, _w2 = _carry({"protocol_hash": "a", "protocol_payload": {"kpts": [3, 3, 3]}},
+                      {"protocol_hash": "b", "protocol_payload": {"kpts": [5, 5, 5]}})
+    chk(_v2 is False and "kpts" in (_w2 or ""), f"[음성] 바뀐 키를 지목한다 ({_w2})")
+
     # ── ⛔ 축소 거부 (2026-08-16 사고) ──────────────────────────────────────
     #   run_sei_neb.sh 가 --work 로 루트 하나만 넘겨 db 를 v2 로 되돌렸고,
     #   인용 가능하던 v2_ccpath/li3nd (0.229 eV) 가 사라졌다.
@@ -380,9 +438,25 @@ def main():
             prev_res = (json.load(open(OUT, encoding="utf-8")).get("results") or {})
         except Exception:
             prev_res = {}
-    n_carried = 0
+    # ⛔⛔ 2026-08-20 (codex 동결감사 · F8/R7 · MVP core "hash-bound-carry") —
+    #   **이월 조건에 정체성이 없었다.** 키(root/tag)만 맞으면 프로토콜이 바뀐 새 계산에도
+    #   옛 사람 판정이 그대로 붙었다. protocol_hash 는 회수만 하고 검사에 안 썼다.
+    #   이제 지문이 다르면 이월을 거부한다.
+    #   ⚠ 거부는 "필드를 비운다" 로 끝나면 안 된다 — 사람이 내린 **하향**까지 같이
+    #     사라져 자동 판정이 citable=True 로 올려버릴 수 있다(= 0.229 사고의 재발).
+    #     그래서 거부 시 **보수적으로 잠근다**: citable=False + 사유 기록.
+    n_carried = n_refused = 0
     for k, v in res.items():
         old = prev_res.get(k) or {}
+        okc, why = _carry_verdict(old, v)
+        if okc is False:
+            v["carry_refused"] = {"why": why, "withheld_fields": [f for f in CARRY if f in old]}
+            #  사람 판정을 못 물려받았으므로 **안전한 쪽으로** 잠근다
+            if v.get("citable"):
+                v["citable"] = False
+                v["citable_downgraded_by"] = f"carry_refused — {why}"
+            n_refused += 1
+            continue
         for f in CARRY:
             if f in old and f not in v:
                 v[f] = old[f]
@@ -395,6 +469,9 @@ def main():
                          "scientific_status=provisional_single_cell (사람 판단 우선)")
     if n_carried:
         print(f"   ↻ 사람이 정한 지위 {n_carried}개 항목을 이월했다 (자동 회수가 안 덮어쓴다)")
+    if n_refused:
+        print(f"   ⛔ 이월 거부 {n_refused}건 — 프로토콜 지문이 달라졌다. 해당 결과는 "
+              f"인용 불가로 잠갔다 (results[*].carry_refused 참조). 사람이 다시 판정할 것.")
 
     ok = [r for r in res.values() if r.get("citable")]
     # ⛔⛔ 2026-08-11 자체검토 P0-6 — 옛 코드는 `if ok:` 일 때만 JSON 을 썼다.

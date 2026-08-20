@@ -401,15 +401,44 @@ def cell_metrics(cell):
     return shortest_translation(C), faces
 
 
-def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
-                  ecls=None, pps=None, hop=None, endpoints=None) -> str:
-    """입력 규약 지문 — 프로토콜이 바뀌면 옛 neb.out/tmp/prefix.path 를 재사용하면 안 된다.
+#: λ₁ 구현의 정체성. ASE Minkowski 축약 래퍼 (2026-08-20). 알고리즘이 바뀌면 이 ID 를
+#: 바꾼다 — ASE **판**이 바뀌는 것은 아래 `ase_version` 이 따로 잡는다.
+LAMBDA1_METHOD_ID = "M-2026-08-20-lambda1-exact-3d-ase-minkowski"
+
+#: 지문 스키마 판. 올리면 **기존 런의 이월이 전부 한 번 끊긴다** — 의도된 동작이다
+#: (hash-bound carry 의 취지). 옛 해시와 새 해시를 구분해 진단에 쓴다.
+PROTOCOL_HASH_SCHEMA = 2
+
+
+def protocol_payload(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
+                     ecls=None, pps=None, hop=None, endpoints=None) -> dict:
+    """지문의 **원재료**. 해시가 안 맞을 때 무엇이 바뀌었는지 보여주려면 필요하다.
+
+    ⛔ 2026-08-20 (codex 동결감사) — 이전에는 payload 가 protocol_hash 안의 지역변수라
+      불일치 진단이 "5f78… → a3c2…" 밖에 못 냈다. 무엇이 바뀌었는지 말하려면 두 payload
+      를 비교해야 하므로 밖으로 뺀다.
+    """
+    return _protocol_payload(tag, a, q, kpts, nat, cell, smear, degauss, ecls, pps, hop, endpoints)
+
+
+def protocol_diff(p_old: dict, p_new: dict) -> list:
+    """두 payload 에서 달라진 키. 이월 거부 사유를 사람 말로 만들 때 쓴다."""
+    out = []
+    for k in sorted(set(p_old) | set(p_new)):
+        a_, b_ = p_old.get(k, "<없음>"), p_new.get(k, "<없음>")
+        if a_ != b_:
+            out.append(f"{k}: {a_!r} → {b_!r}")
+    return out
+
+
+def _protocol_payload(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
+                      ecls=None, pps=None, hop=None, endpoints=None) -> dict:
+    """지문 원재료 — 프로토콜이 바뀌면 옛 neb.out/tmp/prefix.path 를 재사용하면 안 된다.
 
     ★ 2026-08-11 (Codex 검토 P0-3) — 같은 WORK 에 새 입력을 쓰면 runner 가 옛 neb.out 의
       'convergence achieved' 만 보고 건너뛴다. 그러면 **새 meta.json 과 옛 에너지가 결합**된다.
       기존 li2s 는 min_cell 8.02 인데 새 기본은 --min_l 10 이라 실제로 일어날 수 있었다.
     """
-    import hashlib
     # ★ 2026-08-11 자체검토 P0-5 / P1-1 — 두 가지를 고쳤다.
     #  P0-5: `ci` 를 지문에서 **뺀다**. 문서화된 2단계(no-CI 수렴 → restart+CI)가
     #        지문을 바꿔 러너에게 거부당했고, 러너 안내대로 prefix.path 를 지우면
@@ -441,7 +470,31 @@ def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
                "smearing": smear, "degauss": degauss,
                "electronic_class": (ecls or {}).get("class"),
                "pseudos": dict(sorted((pps or {}).items())),
-               "endpoints_relaxed": not a.allow_unrelaxed_endpoints}
+               "endpoints_relaxed": not a.allow_unrelaxed_endpoints,
+               # ⛔ 2026-08-20 (codex 동결감사) — λ₁ 은 이제 ASE Minkowski 축약이 낸다.
+               #   구현 정체성(method_id)과 라이브러리 판(ase_version)이 지문에 없으면
+               #   "같은 프로토콜" 이라는 주장이 검증 불가다. ASE 가 축약을 바꾸면 λ₁ 이
+               #   달라질 수 있고 그건 다른 프로토콜이다.
+               "hash_schema": PROTOCOL_HASH_SCHEMA,
+               "lambda1_method_id": LAMBDA1_METHOD_ID,
+               "ase_version": _ase_version()}
+    return payload
+
+
+def _ase_version() -> str:
+    try:
+        import ase
+        return str(ase.__version__)
+    except Exception as exc:                        # noqa: BLE001
+        raise RuntimeError(f"⛔ ASE 판을 못 읽는다 — λ₁ 정본이 ASE 다: {exc!r}") from exc
+
+
+def protocol_hash(tag, a, q, kpts, nat, cell, smear=None, degauss=None,
+                  ecls=None, pps=None, hop=None, endpoints=None) -> str:
+    """입력 규약 지문. 원재료는 protocol_payload() 참조."""
+    import hashlib
+    payload = _protocol_payload(tag, a, q, kpts, nat, cell, smear, degauss,
+                                ecls, pps, hop, endpoints)
     return hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()[:12]
 
 
@@ -749,23 +802,29 @@ def build(tag, path, disp, a, pool):
     body += ["END_ENGINE_INPUT", "END", ""]
     open(os.path.join(d, "neb.in"), "w").write("\n".join(body))
     # ★ 회수기가 대칭 게이트를 켤지 말지 여기서 판단한다 (위 li_orbits 주석 참조).
+    #   지문 인자는 한 번만 만든다 — 해시와 payload 가 **같은 재료**여야 diff 가 의미 있다.
+    _pargs = dict(
+        tag=tag, a=a, q=q, kpts=info["kpts"], nat=nat, cell=at.cell.array,
+        smear=smear, degauss=degauss, ecls=ecls,
+        pps={e: pool[e] for e in els},
+        # ⛔ 홉 정체성 — 이게 없어서 b→c 와 c→c 가 같은 해시를 가졌다
+        hop={"shell": hop.get("shell"), "pair_orbits": hop.get("pair_orbits"),
+             "vac": hop.get("vac"), "hop": hop.get("hop"), "d": hop.get("d")},
+        # 끝점 좌표 자체도 지문에 넣는다 (같은 shell 이어도 다른 쌍일 수 있다)
+        endpoints=_hl.sha256(
+            json.dumps([[s, [round(x, 6) for x in p]] for s, p in first]
+                       + [[s, [round(x, 6) for x in p]] for s, p in last],
+                       sort_keys=True).encode()).hexdigest()[:16])
     _j = json
     _j.dump({"tag": tag, "disp": disp, "supercell": list(rep), "nat": nat,
              "hop_distance_A": hop["d"], "hop_shell": hop.get("shell"),
              "pair_equivalent": hop.get("pair_equivalent"),
              "hop_shell_requested": hop.get("requested_shell"), "nelec": nelec_vac,
-             "protocol_hash": protocol_hash(
-                 tag, a, q, info["kpts"], nat, at.cell.array,
-                 smear=smear, degauss=degauss, ecls=ecls,
-                 pps={e: pool[e] for e in els},
-                 # ⛔ 홉 정체성 — 이게 없어서 b→c 와 c→c 가 같은 해시를 가졌다
-                 hop={"shell": hop.get("shell"), "pair_orbits": hop.get("pair_orbits"),
-                      "vac": hop.get("vac"), "hop": hop.get("hop"), "d": hop.get("d")},
-                 # 끝점 좌표 자체도 지문에 넣는다 (같은 shell 이어도 다른 쌍일 수 있다)
-                 endpoints=_hl.sha256(
-                     json.dumps([[s, [round(x, 6) for x in p]] for s, p in first]
-                                + [[s, [round(x, 6) for x in p]] for s, p in last],
-                                sort_keys=True).encode()).hexdigest()[:16]),
+             "protocol_hash": protocol_hash(**_pargs),
+             # ⛔ 2026-08-20 (codex 동결감사) — 지문의 **원재료**도 남긴다. 해시만 있으면
+             #   이월 거부 사유가 "5f78… → a3c2…" 로 끝나 무엇이 바뀌었는지 말할 수 없다.
+             #   protocol_diff(old, new) 가 이 필드를 먹는다.
+             "protocol_payload": protocol_payload(**_pargs),
              "lambda1_A": round(_lam1, 3),
              "face_heights_A": [round(x, 3) for x in perp],
              "min_face_height_A": round(min(perp), 3),
@@ -1022,6 +1081,25 @@ def _selftest():
     ns2 = argparse.Namespace(images=7, path_thr=0.05, min_l=10.0, min_l_basis="vector",
                              allow_unrelaxed_endpoints=False)
     ck("hash_basis_sensitive", protocol_hash(**{**base, "a": ns2}) != h0, True)
+
+    # ── payload 분리 + 계보 필드 (codex 동결감사 2026-08-20) ─────────────
+    pay = protocol_payload(**base)
+    for k in ("hash_schema", "lambda1_method_id", "ase_version", "lambda1_A"):
+        ck(f"payload_has[{k}]", k in pay, True)
+    ck("payload_method_id", pay["lambda1_method_id"], LAMBDA1_METHOD_ID)
+    ck("payload_ase_nonempty", bool(pay["ase_version"]), True)
+    #   ⭐ 계보 필드가 지문에 **실제로 반영**되는가 — 값을 바꾸면 해시가 달라져야 한다.
+    #   (문자열만 payload 에 얹고 해시는 옛 키만 보는 실수를 잡는 음성 시험)
+    import hashlib as _h, json as _j
+    def _hash_of(d):
+        return _h.sha256(_j.dumps(d, sort_keys=True).encode()).hexdigest()[:12]
+    ck("hash_covers_payload", _hash_of(pay), h0)
+    ck("hash_reacts_to_ase", _hash_of({**pay, "ase_version": "0.0.0"}) != h0, True)
+    ck("hash_reacts_to_method", _hash_of({**pay, "lambda1_method_id": "M-old"}) != h0, True)
+    #   진단: 무엇이 바뀌었는지 말할 수 있어야 한다 (이월 거부 사유)
+    d = protocol_diff(pay, {**pay, "ase_version": "0.0.0"})
+    ck("diff_reports_one", len(d) == 1 and d[0].startswith("ase_version:"), True)
+    ck("diff_empty_when_same", protocol_diff(pay, dict(pay)), [])
 
     if fails:
         print(f"⛔ selftest 실패 {len(fails)}/{n}")
