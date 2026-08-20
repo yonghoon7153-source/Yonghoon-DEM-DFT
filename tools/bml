@@ -190,9 +190,26 @@ classify_process() {
       appdir="${cmd##*--app-dir }"
       appdir="${appdir%% *}"
       root="${appdir%/apps/api}"
-      if [ "$root" != "$appdir" ] && [ -d "$root/packages/wrdkit/src/wrdkit" ]; then
-        OTHER_CHECKOUT="$root"
-        return 3
+      if [ "$root" != "$appdir" ]; then
+        # 폴더에 워크벤치가 그대로 있으면 확실하다.
+        if [ -d "$root/packages/wrdkit/src/wrdkit" ]; then
+          OTHER_CHECKOUT="$root"
+          return 3
+        fi
+        # 없어도 포기하지 않는다.  그 폴더가 다른 브랜치로 넘어간 뒤에도
+        # 서버 프로세스는 계속 살아서 포트를 물고 있다 — 오히려 그때가 원인을
+        # 찾기 가장 어려운 상황이다.  실행 파일이 그 폴더의 venv 인지까지
+        # 맞으면 우리 실행기가 띄운 것으로 본다.
+        #
+        # 여기서 틀려도 프로세스를 죽이지는 않는다.  3 은 "이름을 알려주고
+        # 사용자에게 묻는다" 이지 "갈아끼운다" 가 아니므로, 판단을 조금
+        # 넉넉히 해도 잃을 것이 없다.
+        case "$cmd" in
+          "$root/.venv/"*|*" $root/.venv/"*)
+            OTHER_CHECKOUT="$root"
+            return 3
+            ;;
+        esac
       fi
       ;;
   esac

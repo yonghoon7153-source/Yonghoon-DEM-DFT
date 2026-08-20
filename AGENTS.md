@@ -27,11 +27,14 @@
    만들 때도 신경 쓴다 (`.cmd`/`.bat` 만 예외로 CRLF).
 6. **파싱 계층에 도메인 가정을 심지 않는다.** `wrdkit/nrbf.py` 와 `wrdkit/wrd.py`
    는 파일이 선언한 대로만 읽는다. 컬럼 목록은 파일에서 읽고 하드코딩하지 않는다.
-7. **한 저장소에 프로젝트가 둘이다.** `claude/battery-charge-discharge-webapp-dq4ja3`
-   는 이 워크벤치이고, `claude/friendly-meitner-lldvar` 는 전혀 다른 DFT 판이다
-   (`webapp/app.py`, 포트 5001). **한 작업 폴더에서 두 브랜치를 오가지 않는다** —
-   브랜치를 바꾸면 상대 프로젝트 파일이 사라지고, 그쪽 실행기는 원인 대신
-   `No such file` 만 뱉는다. 폴더는 `git worktree add` 로 나눈다.
+7. **한 저장소에 프로젝트가 둘이고, 이 워크벤치의 집은 브랜치다.**
+   `claude/battery-charge-discharge-webapp-dq4ja3` 가 이 워크벤치이고,
+   `claude/friendly-meitner-lldvar` 는 전혀 다른 DFT 판이다 (`webapp/app.py`,
+   포트 5001). **`main` 에 머지하지 않는다** — 결정 사항이다 (ADR 0009).
+   `main` 이 비어 있는 것은 고칠 결함이 아니므로, 머지를 제안하지 않는다.
+   그리고 **한 작업 폴더에서 두 브랜치를 오가지 않는다** — 브랜치를 바꾸면
+   상대 프로젝트 파일이 사라지고, 그쪽 실행기는 원인 대신 `No such file` 만
+   뱉는다. 폴더는 `git worktree add` 로 나눈다.
 8. **자동으로 죽이는 프로세스는 우리 것임을 증명한 뒤에만 죽인다.** `bml` 은
    포트를 잡고 있는 프로세스가 우리 venv 로 돌고 있거나 우리 트리를 가리킬
    때에만 갈아끼우고, 판단이 안 서면 그냥 멈춘다. 남의 실험이 돌고 있을 수 있다.

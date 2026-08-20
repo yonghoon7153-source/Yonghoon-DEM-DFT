@@ -12,12 +12,13 @@
 | [0006](adr/0006-frontend-stack.md) | React + TypeScript + uPlot | 대용량 곡선을 가볍게 |
 | [0007](adr/0007-electrode-composition.md) | 조성은 성분 목록으로 기록한다 | 활물질 wt% 의 출처를 남긴다 |
 | [0008](adr/0008-cell-state-weighted-evidence.md) | 구동중/종료는 가중 근거로 판정 | 근거를 함께 보여 준다 |
+| [0009](adr/0009-branch-is-the-home.md) | 이 워크벤치의 집은 브랜치다 | `main` 은 별개, 머지하지 않는다 |
 
 파일명: `adr/0001-store-raw-capacity-only.md` · `adr/0002-own-wrd-parser.md` ·
 `adr/0003-timeseries-on-disk-summaries-in-db.md` ·
 `adr/0004-cycle-three-reference.md` · `adr/0005-multi-criterion-knee.md` ·
 `adr/0006-frontend-stack.md` · `adr/0007-electrode-composition.md` ·
-`adr/0008-cell-state-weighted-evidence.md`
+`adr/0008-cell-state-weighted-evidence.md` · `adr/0009-branch-is-the-home.md`
 
 ## 스펙
 

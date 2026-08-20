@@ -105,13 +105,30 @@ else
     "$verdict" "${OTHER_CHECKOUT:-없음}"
 fi
 
-# 워크벤치 표식이 없으면 --app-dir 가 있어도 그냥 남의 것이다.
+# 그 폴더가 이미 다른 브랜치로 넘어갔어도 프로세스는 살아서 포트를 문다 —
+# 오히려 그때가 원인을 찾기 가장 어렵다.  실행 파일이 그 폴더의 venv 면
+# 우리 실행기가 띄운 것으로 본다.  (실제로 그렇게 옛 폴더의 서버가 5003 을
+# 잡고 있었다.)
+OTHER_CHECKOUT=""
+gone="$(mktemp -d)"          # 워크벤치 파일은 없다 (브랜치가 바뀌었다)
+classify_process \
+  "$gone/.venv/bin/python -m uvicorn app.main:app --app-dir $gone/apps/api" "$gone"
+verdict=$?
+if [ "$verdict" -eq 3 ] && [ "$OTHER_CHECKOUT" = "$gone" ]; then
+  pass=$((pass + 1))
+  printf '  ok   폴더는 넘어갔지만 살아 있는 워크벤치 서버를 알아본다\n'
+else
+  fail=$((fail + 1))
+  printf '  FAIL 폴더가 넘어간 워크벤치 서버를 놓쳤다 (verdict=%s)\n' "$verdict"
+fi
+
+# 워크벤치 표식도 없고 그 폴더의 venv 도 아니면 그냥 남의 것이다.
 OTHER_CHECKOUT=""
 notrepo="$(mktemp -d)"
 mkdir -p "$notrepo/apps/api"
 expect_stranger "app-dir 는 있지만 워크벤치가 아닌 폴더" \
   "/usr/bin/python3 -m uvicorn app.main:app --app-dir $notrepo/apps/api" "$notrepo"
-rm -rf "$other" "$notrepo"
+rm -rf "$other" "$notrepo" "$gone"
 
 # --- 구조 불변식 -------------------------------------------------------------
 #

@@ -83,9 +83,11 @@ git rm --cached -r . && git reset --hard
 
 ## 3. 저장소는 WSL 안에 — `/mnt/c` 에 두지 마세요
 
-**브랜치를 반드시 지정하세요.** 작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 에 있고 `main` 은 비어
-있습니다. 그냥 클론하면 빈 폴더를 받게 되고, `make setup` 이
-`Nothing to be done` 을 뱉고 `bml` 은 설치되지 않습니다.
+**브랜치를 반드시 지정하세요.** 이 프로젝트의 집은
+`claude/battery-charge-discharge-webapp-dq4ja3` 이고, `main` 은 별개입니다
+(머지하지 않습니다 — [ADR 0009](../adr/0009-branch-is-the-home.md)). 그냥
+클론하면 빈 폴더를 받게 되고, `make setup` 이 `Nothing to be done` 을 뱉고
+`bml` 은 설치되지 않습니다.
 
 ```bash
 cd ~
@@ -115,7 +117,7 @@ cd ~/bml
 ls Makefile tools/bml     # 둘 다 보여야 정상입니다
 ```
 
-폴더가 비어 있거나 빈 `main` 만 받은 경우라면 브랜치만 맞추면 됩니다:
+폴더가 비어 있거나 `main` 만 받은 경우라면 브랜치만 맞추면 됩니다:
 
 ```bash
 cd ~/Yonghoon-DEM-DFT
@@ -198,7 +200,7 @@ setx BML_WSL_DISTRO Ubuntu
   급하면 언제든 `~/Yonghoon-DEM-DFT/tools/bml` 로 직접 실행됩니다.
 
 **`make: Nothing to be done for 'setup'`** / `tools/bml` 이 없습니다
-: 빈 `main` 브랜치를 받았습니다. 3번의 `git checkout claude/battery-charge-discharge-webapp-dq4ja3` 를 하세요.
+: `main` 브랜치를 받았습니다 — 이 프로젝트는 거기 없습니다. 3번의 `git checkout claude/battery-charge-discharge-webapp-dq4ja3` 를 하세요.
   `ls Makefile tools/bml` 로 확인할 수 있습니다.
 
 **`destination path 'Yonghoon-DEM-DFT' already exists`**

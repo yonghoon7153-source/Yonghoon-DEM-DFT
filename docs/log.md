@@ -23,3 +23,4 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] fix | 테스트 의존성을 requirements-dev.txt 로 통일 (CI·Makefile·bml)
 ## [2026-08-20] fix | bml 이 pull 로 자기 자신을 갈아치우다 깨지던 문제 — main() + 재실행
 ## [2026-08-20] fix | 다른 폴더의 워크벤치를 구분하고, 포트 주인을 pid·명령줄로 밝힌다
+## [2026-08-20] create | ADR 0009 — 이 브랜치가 집이다, main 은 별개 (머지하지 않는다)

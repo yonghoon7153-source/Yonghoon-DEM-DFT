@@ -42,7 +42,10 @@ Excel 로 옮기고 Origin 에서 다시 그리는 과정을 없애는 것이 �
 > | `claude/battery-charge-discharge-webapp-dq4ja3` | 이 워크벤치 | `bml` | 5003 |
 > | `claude/friendly-meitner-lldvar` | DFT 판 (`webapp/app.py`) | `dft` | 5001 |
 >
-> `main` 은 비어 있으니 **반드시 `-b` 로 브랜치를 지정해 클론**하고,
+> **이 워크벤치의 집은 위 브랜치입니다.** `main` 은 이 프로젝트가 아니고,
+> 앞으로도 여기를 `main` 에 머지하지 않습니다 ([ADR 0009](docs/adr/0009-branch-is-the-home.md)).
+> 그러니 `-b` 로 브랜치를 지정해 클론하는 것은 임시 우회가 아니라 정상 절차입니다.
+>
 > **한 폴더에서 두 브랜치를 오가지 마세요.** 브랜치를 바꾸면 상대 프로젝트의
 > 파일이 사라집니다. 둘 다 쓴다면 아래 `git worktree` 방법을 쓰세요.
 
@@ -74,7 +77,7 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt in
 git config --global core.autocrlf input
 
 # 3. 저장소는 WSL 안에 — /mnt/c 에 두면 10배 느리고 자동 새로고침이 안 됩니다
-#    ★ -b 로 브랜치를 지정해야 합니다. main 은 비어 있습니다.
+#    ★ -b 로 브랜치를 지정해야 합니다. 이 프로젝트의 집은 이 브랜치입니다.
 cd ~
 git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
   https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
@@ -104,7 +107,7 @@ cd ~/bml
 ./tools/bml install && bml
 ```
 
-폴더가 비어 있거나 빈 `main` 만 받은 경우라면 잃을 게 없으니 브랜치만 맞추면
+폴더가 비어 있거나 `main` 만 받은 경우라면 잃을 게 없으니 브랜치만 맞추면
 됩니다:
 
 ```bash

@@ -54,8 +54,8 @@ cd ~/bml
 
 ## 설치 (각자 한 번만)
 
-처음부터 받는 경우라면 `main` 이 비어 있으니 **`-b` 로 브랜치를 지정해
-클론**하세요.
+처음부터 받는 경우라면 **`-b` 로 브랜치를 지정해 클론**하세요. 이 프로젝트의
+집은 그 브랜치이고 `main` 은 별개입니다 — 임시 우회가 아니라 정상 절차입니다.
 
 ```bash
 git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
