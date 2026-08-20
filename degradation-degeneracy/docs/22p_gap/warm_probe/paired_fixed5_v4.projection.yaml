@@ -15,7 +15,7 @@ restart_projection_sha256: 84333ad3c19625ca7dcd2f1bb8a0f1c78cc4296dd46deef4bb17d
 n_restart_rows: 30690
 analysis_spec_sha256: 732d438f077c4301adafc0aadad8ba020a9f722735f5d03fdab1b0aa05e445c2
 analyzer:
-  row_projection_py_sha256: b46389d06d6ae495
+  row_projection_py_sha256: 5711f1040bf18cc0
   src_scoring_py_sha256: 69e69cb046f4b4ae
   python: 3.11.15
   platform: Linux-6.18.5-fc-v20-x86_64-with-glibc2.39

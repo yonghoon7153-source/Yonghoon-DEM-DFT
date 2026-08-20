@@ -459,13 +459,22 @@ def main() -> int:
             print(e)
             rc = 1
             continue
-        ok = m["재계산_검증"]["by_objective_일치"]
-        mark = "✅" if ok else ("⚠" if ok is None else "❌")
-        print(f"{mark} {leg}: {m['n_rows']}행 · "
-              f"projection {m['projection_sha256'][:16]} · 재계산 일치 {ok}")
-        for d in (m["재계산_검증"]["불일치"] or [])[:5]:
+        v = m["재계산_검증"]
+        # ★ 22차 자체 발견 — 초판은 `by_objective_일치` 하나만 찍었다. 전체
+        #   semantic 대조나 fits 삼중 대조가 실패해도 화면에는 ✅ 가 떴다.
+        #   **가장 엄격한 판정**을 요약 줄에 올린다.
+        checks = {"전체": v.get("전체_일치"),
+                  "by_obj": v.get("by_objective_일치"),
+                  "fits삼중": v.get("fits_삼중일치"),
+                  "봉인일치": m.get("fits_봉인일치")}
+        ok = all(c is True for c in checks.values())
+        mark = "✅" if ok else ("⚠" if any(c is None for c in checks.values()) else "❌")
+        print(f"{mark} {leg}: {m['n_rows']}행 · restart {m['n_restart_rows']}행 · "
+              f"proj {m['projection_sha256'][:16]} · "
+              + " · ".join(f"{k} {c}" for k, c in checks.items()))
+        for d in (v.get("불일치") or [])[:5]:
             print(f"     {d}")
-        if ok is False:
+        if not ok:
             rc = 1
     return rc
 
