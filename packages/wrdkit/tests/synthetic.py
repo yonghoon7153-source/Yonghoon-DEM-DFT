@@ -166,7 +166,9 @@ def _class_record(writer: Writer, object_id: int, name: str,
 
 
 def _write_file_header(writer: Writer, *, start_ticks: int, base_tick: int,
-                       file_name: str, unit_coulomb: bool = False) -> None:
+                       file_name: str, unit_coulomb: bool = False,
+                       schedule: tuple[SchedStep, ...] | None = None,
+                       schedule_path: str = "") -> None:
     """Stream 1: WbcsFile.Data.DataFileHeader."""
     writer.u8(HEADER).i32(1).i32(-1).i32(1).i32(0)
     writer.u8(BINARY_LIBRARY).i32(2).string(WBCS_LIBRARY)
@@ -184,6 +186,9 @@ def _write_file_header(writer: Writer, *, start_ticks: int, base_tick: int,
         ("<StartTime>k__BackingField", BT_PRIMITIVE, P_DATETIME),
         ("<Format>k__BackingField", BT_CLASS, ("WbcsFile.Data.DataFile+eFormat", 2)),
     ]
+    if schedule is not None:
+        members.append(("<SeqDataSet>k__BackingField", BT_CLASS,
+                        ("WbcsFile.Sch.SeqDataSet", 2)))
     _class_record(writer, 1, "WbcsFile.Data.DataFileHeader", members, library_id=2)
 
     # Member values, in declaration order.
@@ -199,6 +204,10 @@ def _write_file_header(writer: Writer, *, start_ticks: int, base_tick: int,
     _class_record(writer, -11, "WbcsFile.Data.DataFile+eFormat",
                   [("value__", BT_PRIMITIVE, P_INT32)], library_id=2)
     writer.i32(0)
+
+    if schedule is not None:
+        _write_schedule(writer, schedule,
+                        schedule_path or r"C:\Zive Data\Schedule\test.cyc")
 
     writer.u8(MESSAGE_END)
 
@@ -296,7 +305,9 @@ class Sample:
 def build_wrd(samples: list[Sample], *, start_ticks: int | None = None,
               base_tick: int = 50_000, file_name: str = r"C:\Zive Data\test.wrd",
               columns: list[tuple[str, str]] | None = None,
-              unit_coulomb: bool = False) -> bytes:
+              unit_coulomb: bool = False,
+              schedule: tuple[SchedStep, ...] | None = None,
+              schedule_path: str = "") -> bytes:
     """Assemble a complete ``.wrd`` byte string.
 
     ``unit_coulomb`` flips the header flag that decides whether the capacity
@@ -307,7 +318,8 @@ def build_wrd(samples: list[Sample], *, start_ticks: int | None = None,
         start_ticks = DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND
     writer = Writer()
     _write_file_header(writer, start_ticks=start_ticks, base_tick=base_tick,
-                       file_name=file_name, unit_coulomb=unit_coulomb)
+                       file_name=file_name, unit_coulomb=unit_coulomb,
+                       schedule=schedule, schedule_path=schedule_path)
     _write_data_header(writer, columns or DEFAULT_COLUMNS)
     for sample in samples:
         writer.raw(sample.pack())
@@ -422,3 +434,173 @@ def make_cycles(n_cycles: int = 3, points_per_branch: int = 40, *,
             push(step_index=3, cell_status=1, voltage=voltage, current=0.0,
                  charge_q=charge_q, discharge_q=discharge_q)
     return samples
+
+# --- 스케줄 ------------------------------------------------------------------
+#
+# 계측기가 아는 것(컷오프, C-rate, 계획 사이클 수, 샘플링 주기)은 파일 안의
+# 스케줄에 있고, 워크벤치는 그것을 읽어 셀 조건을 채운다.  그 경로가 합성
+# 픽스처로는 한 번도 실행되지 않았다 — 스케줄이 없는 파일로 "None 이 나온다" 만
+# 확인하고 있었으니, apply_schedule_defaults 를 통째로 지워도 테스트는 통과했다.
+#
+# 중첩은 인라인으로 쓴다.  NrbfStream._class_values 가 비-primitive 멤버 자리에서
+# record() 를 부르므로, 멤버 값 자리에 레코드를 그대로 놓을 수 있다.
+
+SCH_LIBRARY = WBCS_LIBRARY
+
+
+@dataclass
+class SchedStep:
+    """One row of the Schedule Editor table, as the fixture writes it."""
+
+    name: str
+    control: int                      # ControlType: 0=CC, 1=CV, 7=Rest, 13=CCCV
+    value: float = 0.0                # current (A)
+    value2: float = 0.0               # CCCV voltage limit (V)
+    value3: float = 0.0               # CCCV taper current (A)
+    loop_count: int = 1
+    turn_step: str = "Next Step"
+    and2: bool = False
+    #: (type, condition, value, seconds) -- type 0=time, 1=voltage, 15=current
+    cutoff1: tuple[int, int, float, float] | None = None
+    cutoff2: tuple[int, int, float, float] | None = None
+    sampling_s: float | None = None
+
+
+#: 실측 파일에서 본 형태를 줄인 것: 화성 2사이클 뒤 사이클링 루프.
+DEFAULT_SCHEDULE: tuple[SchedStep, ...] = (
+    SchedStep("form-chg", control=13, value=0.00025, value2=3.18, value3=0.000125,
+              cutoff1=(15, 1, 0.000125, 0.0), sampling_s=10.0),
+    SchedStep("form-dch", control=0, value=-0.00025,
+              cutoff1=(1, 1, 1.88, 0.0), sampling_s=10.0),
+    SchedStep("cyc-chg", control=13, value=0.00123, value2=3.78, value3=0.000615,
+              cutoff1=(15, 1, 0.000615, 0.0), sampling_s=10.0),
+    SchedStep("cyc-dch", control=0, value=-0.00123,
+              cutoff1=(1, 1, 1.88, 0.0), loop_count=200, turn_step="cyc-chg",
+              sampling_s=10.0),
+)
+
+
+class _Ids:
+    """NRBF object ids, handed out in order."""
+
+    def __init__(self, start: int = 100) -> None:
+        self._next = start
+
+    def take(self) -> int:
+        value = self._next
+        self._next += 1
+        return value
+
+
+def _write_list(writer: Writer, ids: _Ids, item_type: str,
+                write_item, count: int) -> None:
+    """A ``List<T>`` and its backing array, inline."""
+    list_type = ("System.Collections.Generic.List`1[[" + item_type + ", "
+                 + SCH_LIBRARY + "]]")
+    _class_record(writer, ids.take(), list_type, [
+        ("_items", BT_CLASS, (item_type + "[]", 2)),
+        ("_size", BT_PRIMITIVE, P_INT32),
+        ("_version", BT_PRIMITIVE, P_INT32),
+    ], library_id=None)
+    writer.u8(ARRAY_SINGLE_OBJECT).i32(ids.take()).i32(count)
+    for index in range(count):
+        write_item(index)
+    writer.i32(count)      # _size
+    writer.i32(count)      # _version
+
+
+def _write_cutoff(writer: Writer, ids: _Ids,
+                  spec: tuple[int, int, float, float] | None) -> None:
+    kind, condition, value, seconds = spec or (0, 0, 0.0, 0.0)
+    _class_record(writer, ids.take(), "WbcsFile.Sch.CutOff", [
+        ("<Type>k__BackingField", BT_PRIMITIVE, P_INT32),
+        ("<Condition>k__BackingField", BT_PRIMITIVE, P_INT32),
+        ("<Value>k__BackingField", BT_PRIMITIVE, P_DOUBLE),
+        ("<TimeValue>k__BackingField", BT_PRIMITIVE, P_INT64),
+    ], library_id=2)
+    writer.i32(kind).i32(condition).f64(value)
+    writer.i64(int(seconds * TICKS_PER_SECOND))
+
+
+def _write_schedule(writer: Writer, steps: tuple[SchedStep, ...],
+                    source_path: str) -> None:
+    """The ``SeqDataSet`` the reader walks, written inline."""
+    ids = _Ids()
+
+    _class_record(writer, ids.take(), "WbcsFile.Sch.SeqDataSet", [
+        ("<Version>k__BackingField", BT_STRING, None),
+        ("<FileName>k__BackingField", BT_STRING, None),
+        ("<SeqDataList>k__BackingField", BT_CLASS,
+         ("System.Collections.Generic.List`1[[WbcsFile.Sch.SeqData, "
+          + SCH_LIBRARY + "]]", 2)),
+    ], library_id=2)
+    writer.u8(BINARY_OBJECT_STRING).i32(ids.take()).string("1.0")
+    writer.u8(BINARY_OBJECT_STRING).i32(ids.take()).string(source_path)
+
+    def write_sequence(_index: int) -> None:
+        _class_record(writer, ids.take(), "WbcsFile.Sch.SeqData", [
+            ("<SchData>k__BackingField", BT_CLASS, ("WbcsFile.Sch.SchData", 2)),
+        ], library_id=2)
+        _class_record(writer, ids.take(), "WbcsFile.Sch.SchData", [
+            ("<SchStepList>k__BackingField", BT_CLASS,
+             ("System.Collections.Generic.List`1[[WbcsFile.Sch.SchStep, "
+              + SCH_LIBRARY + "]]", 2)),
+        ], library_id=2)
+        _write_list(writer, ids, "WbcsFile.Sch.SchStep", write_step, len(steps))
+
+    def write_step(index: int) -> None:
+        step = steps[index]
+        _class_record(writer, ids.take(), "WbcsFile.Sch.SchStep", [
+            ("<Name>k__BackingField", BT_STRING, None),
+            ("<Control>k__BackingField", BT_CLASS, ("WbcsFile.Sch.Control", 2)),
+            ("<CutOffCondsList>k__BackingField", BT_CLASS,
+             ("System.Collections.Generic.List`1[[WbcsFile.Sch.CutOffConds, "
+              + SCH_LIBRARY + "]]", 2)),
+            ("<SampCondList>k__BackingField", BT_CLASS,
+             ("System.Collections.Generic.List`1[[WbcsFile.Sch.SampCond, "
+              + SCH_LIBRARY + "]]", 2)),
+        ], library_id=2)
+        writer.u8(BINARY_OBJECT_STRING).i32(ids.take()).string(step.name)
+
+        # Control
+        _class_record(writer, ids.take(), "WbcsFile.Sch.Control", [
+            ("<Type>k__BackingField", BT_PRIMITIVE, P_INT32),
+            ("<Value>k__BackingField", BT_PRIMITIVE, P_DOUBLE),
+            ("<Value2>k__BackingField", BT_PRIMITIVE, P_DOUBLE),
+            ("<Value3>k__BackingField", BT_PRIMITIVE, P_DOUBLE),
+            ("<Loop>k__BackingField", BT_CLASS, ("WbcsFile.Sch.Loop", 2)),
+        ], library_id=2)
+        writer.i32(step.control).f64(step.value).f64(step.value2).f64(step.value3)
+        _class_record(writer, ids.take(), "WbcsFile.Sch.Loop", [
+            ("<Count>k__BackingField", BT_PRIMITIVE, P_INT32),
+        ], library_id=2)
+        writer.i32(step.loop_count)
+
+        def write_conds(_i: int) -> None:
+            _class_record(writer, ids.take(), "WbcsFile.Sch.CutOffConds", [
+                ("<TurnStep>k__BackingField", BT_STRING, None),
+                ("<And2>k__BackingField", BT_PRIMITIVE, P_BOOLEAN),
+                ("<CutOff1>k__BackingField", BT_CLASS, ("WbcsFile.Sch.CutOff", 2)),
+                ("<CutOff2>k__BackingField", BT_CLASS, ("WbcsFile.Sch.CutOff", 2)),
+            ], library_id=2)
+            writer.u8(BINARY_OBJECT_STRING).i32(ids.take()).string(step.turn_step)
+            writer.u8(1 if step.and2 else 0)
+            _write_cutoff(writer, ids, step.cutoff1)
+            _write_cutoff(writer, ids, step.cutoff2)
+
+        _write_list(writer, ids, "WbcsFile.Sch.CutOffConds", write_conds, 1)
+
+        def write_samp(_i: int) -> None:
+            _class_record(writer, ids.take(), "WbcsFile.Sch.SampCond", [
+                ("<Enable>k__BackingField", BT_PRIMITIVE, P_BOOLEAN),
+                ("<Type>k__BackingField", BT_PRIMITIVE, P_INT32),
+                ("<TimeValue>k__BackingField", BT_PRIMITIVE, P_INT64),
+            ], library_id=2)
+            writer.u8(1).i32(0)
+            writer.i64(int((step.sampling_s or 0.0) * TICKS_PER_SECOND))
+
+        _write_list(writer, ids, "WbcsFile.Sch.SampCond", write_samp,
+                    1 if step.sampling_s else 0)
+
+    _write_list(writer, ids, "WbcsFile.Sch.SeqData", write_sequence, 1)
+

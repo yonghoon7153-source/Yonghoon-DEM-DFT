@@ -191,12 +191,34 @@ def test_deleting_a_run_keeps_the_original_upload(client, wrd_bytes, sample_id):
 
 
 def test_uploading_fills_blank_sample_conditions_from_the_schedule(
-        client, wrd_bytes, sample_id):
-    """The instrument knows the cut-offs; do not ask the user to retype them."""
+        client, scheduled_wrd_bytes, sample_id):
+    """The instrument knows the cut-offs; do not ask the user to retype them.
+
+    This used to feed a schedule-less file and assert that nothing was filled
+    in — which passes with the feature deleted.  The fixture now carries a
+    schedule, so the assertion is about what actually gets read.
+    """
+    _upload(client, scheduled_wrd_bytes, sample_id=sample_id)
+    sample = client.get(f"/api/samples/{sample_id}").json()
+    assert sample["cutoff_upper_v"] == 3.78
+    assert sample["cutoff_lower_v"] == 1.88
+
+
+def test_a_file_without_a_schedule_invents_nothing(client, wrd_bytes, sample_id):
+    """모르면 비워 둔다 — 없는 스케줄에서 값을 지어내지 않는다."""
     _upload(client, wrd_bytes, sample_id=sample_id)
     sample = client.get(f"/api/samples/{sample_id}").json()
-    # The synthetic fixture carries no schedule, so nothing should be invented.
     assert sample["cutoff_upper_v"] is None
+
+
+def test_what_the_user_typed_is_not_overwritten_by_the_schedule(
+        client, scheduled_wrd_bytes):
+    """사용자 입력은 덮어쓰기(override)다 — 파일이 이기지 않는다."""
+    sample = client.post("/api/samples", json={"name": "손으로 넣은 셀",
+                                               "cutoff_upper_v": 4.4}).json()
+    _upload(client, scheduled_wrd_bytes, sample_id=sample["id"])
+    after = client.get(f"/api/samples/{sample['id']}").json()
+    assert after["cutoff_upper_v"] == 4.4
 
 
 # --- 수동 cycle_offset 은 겹치면 안 된다 -------------------------------------

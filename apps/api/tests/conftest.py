@@ -71,6 +71,21 @@ def finished_wrd_bytes() -> bytes:
 
 
 @pytest.fixture
+def scheduled_wrd_bytes() -> bytes:
+    """A file that carries its schedule, like every real one does.
+
+    Without this the "instrument knows it, do not ask the human" path had no
+    coverage at all: the only test named for it fed a schedule-less file and
+    asserted that nothing was filled in, so deleting the feature outright
+    would have kept the suite green.
+    """
+    start = synthetic.ticks_ago(30 * _CYCLE_SECONDS)
+    return synthetic.build_wrd(
+        synthetic.make_cycles(n_cycles=4, points_per_branch=30, start_ticks=start),
+        start_ticks=start, schedule=synthetic.DEFAULT_SCHEDULE)
+
+
+@pytest.fixture
 def sample_id(client):
     response = client.post("/api/samples", json={
         "name": "TEST-01",
