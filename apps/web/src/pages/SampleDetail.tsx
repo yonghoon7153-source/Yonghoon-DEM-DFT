@@ -12,7 +12,7 @@ import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../component
 import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { api } from '../lib/api'
-import { copyText, cyclesTsv, profileTsv } from '../lib/origin'
+import { copyText, dischargeTsv, efficiencyTsv, profileTsv } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
@@ -291,12 +291,26 @@ export function SampleDetail() {
           >
             XLSX
           </a>
+          {/* 하나에 하나씩.  Origin 은 열 두 개를 받아 하나를 그린다. */}
           <button
             type="button"
             className="link-btn"
-            title={`사이클 표를 ${basisUnit(cycleState.data?.basis ?? basis)} 로 복사 — Origin 에 붙여 넣기`}
+            title={`그려진 충방전 곡선 (용량, 전압) · ${basisUnit(profileState.data?.basis ?? basis)}`}
             onClick={() =>
-              void copyBlock('사이클', cyclesTsv(cycles, cycleState.data?.basis ?? basis))
+              void copyBlock(
+                '프로파일',
+                profileTsv(profileState.data?.series ?? [], profileState.data?.basis ?? basis),
+              )
+            }
+          >
+            {copied === '프로파일' ? '복사됨 ✓' : '프로파일 복사'}
+          </button>
+          <button
+            type="button"
+            className="link-btn"
+            title={`사이클별 방전용량 · ${basisUnit(cycleState.data?.basis ?? basis)}`}
+            onClick={() =>
+              void copyBlock('사이클', dischargeTsv(cycles, cycleState.data?.basis ?? basis))
             }
           >
             {copied === '사이클' ? '복사됨 ✓' : '사이클 복사'}
@@ -304,18 +318,10 @@ export function SampleDetail() {
           <button
             type="button"
             className="link-btn"
-            title={`그려진 곡선을 ${basisUnit(profileState.data?.basis ?? basis)} 로 복사 — Origin 에 붙여 넣기`}
-            onClick={() =>
-              void copyBlock(
-                '프로파일',
-                profileTsv(
-                  profileState.data?.series ?? [],
-                  profileState.data?.basis ?? basis,
-                ),
-              )
-            }
+            title="사이클별 쿨롱효율 (%)"
+            onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(cycles))}
           >
-            {copied === '프로파일' ? '복사됨 ✓' : '프로파일 복사'}
+            {copied === '쿨롱효율' ? '복사됨 ✓' : '쿨롱효율 복사'}
           </button>
         </div>
       </div>

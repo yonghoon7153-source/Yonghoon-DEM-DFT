@@ -6,7 +6,7 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { cyclesTsv, plainUnit, profileTsv, tsvColumns } from '../origin'
+import { dischargeTsv, efficiencyTsv, plainUnit, profileTsv, tsvColumns } from '../origin'
 import type { Cycle, ProfileSeries } from '../types'
 
 function series(overrides: Partial<ProfileSeries> = {}): ProfileSeries {
@@ -105,35 +105,31 @@ describe('profileTsv', () => {
   })
 })
 
-describe('cyclesTsv', () => {
-  it('용량은 선택된 단위로, 효율은 %, 전압은 V', () => {
-    const text = cyclesTsv([cycle()], 'mAh/g')
-    const rows = text.split('\n')
-    expect(rows[0]!.split('\t')).toEqual([
-      '사이클', '방전용량', '충전용량', '쿨롱효율', '유지율',
-      '에너지효율', '평균방전전압', '전압이력',
-    ])
-    expect(rows[1]!.split('\t')).toEqual(['', 'mAh/g', 'mAh/g', '%', '%', '%', 'V', 'V'])
-    expect(rows[2]).toBe('1\t4.9\t5.1\t96.1\t100\t91\t3.7\t0.2')
+describe('사이클 열 두 개', () => {
+  it('방전용량은 화면의 단위로, 사이클 번호와 둘만', () => {
+    const text = dischargeTsv([cycle({ cycle: 3 })], 'mAh/g')
+    expect(text.split('\n')).toEqual(['사이클\t방전용량', '\tmAh/g', '3\t4.9'])
+  })
+
+  it('쿨롱효율은 %', () => {
+    const text = efficiencyTsv([cycle({ cycle: 3 })])
+    expect(text.split('\n')).toEqual(['사이클\t쿨롱효율', '\t%', '3\t96.1'])
   })
 
   it('잘린 사이클은 아예 빼고 준다', () => {
     // 구동 중인 셀의 마지막 사이클은 스텝 도중에 잘려 있다.  그 부분값이 점
     // 하나로 찍히면 그래프가 마지막에 꺾여 내려간다.
-    const text = cyclesTsv([cycle({ cycle: 1 }), cycle({ cycle: 2, complete: false })], 'mAh')
+    const text = dischargeTsv([cycle({ cycle: 1 }), cycle({ cycle: 2, complete: false })], 'mAh')
     const rows = text.split('\n').slice(2)
-    expect(rows).toHaveLength(1)
-    expect(rows[0]!.startsWith('1\t')).toBe(true)
+    expect(rows).toEqual(['1\t4.9'])
   })
 
   it('값이 없는 칸은 -- 다', () => {
-    const text = cyclesTsv([cycle({ voltage_hysteresis: null, retention_pct: null })], 'mAh')
-    const row = text.split('\n')[2]!.split('\t')
-    expect(row[4]).toBe('--')
-    expect(row[7]).toBe('--')
+    expect(efficiencyTsv([cycle({ coulombic_efficiency: null })]).split('\n')[2]).toBe('1\t--')
   })
 
   it('완료된 사이클이 없으면 빈 문자열', () => {
-    expect(cyclesTsv([cycle({ complete: false })], 'mAh')).toBe('')
+    expect(dischargeTsv([cycle({ complete: false })], 'mAh')).toBe('')
+    expect(efficiencyTsv([cycle({ complete: false })])).toBe('')
   })
 })

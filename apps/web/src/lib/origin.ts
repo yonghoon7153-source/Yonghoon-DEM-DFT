@@ -75,39 +75,41 @@ export function profileTsv(series: ProfileSeries[], basis: Basis | string): stri
   return tsvColumns(names, units, columns)
 }
 
-/** One row per complete cycle: capacity, efficiency, voltage.
+/** Two columns: cycle number and one value per complete cycle.
+ *
+ * One button copies one thing.  A block with eight columns in it is a
+ * spreadsheet, not a plot, and picking the two you wanted out of it in Origin
+ * is more work than pressing the button again.
  *
  * Incomplete cycles are left out, not blanked.  A running cell's last cycle is
  * cut off mid-step and its capacity is whatever had accumulated -- pasting it
  * would put a point on the plot that drops for no physical reason.
  */
-export function cyclesTsv(cycles: Cycle[], basis: Basis | string): string {
+export function cycleColumnTsv(
+  cycles: Cycle[],
+  name: string,
+  unit: string,
+  value: (cycle: Cycle) => number | null | undefined,
+): string {
   const complete = cycles.filter((cycle) => cycle.complete)
   if (!complete.length) return ''
-  const unit = plainUnit(basis)
-  const names = [
-    '사이클',
-    '방전용량',
-    '충전용량',
-    '쿨롱효율',
-    '유지율',
-    '에너지효율',
-    '평균방전전압',
-    '전압이력',
-  ]
-  const units = ['', unit, unit, '%', '%', '%', 'V', 'V']
-  const columns: string[][] = [
-    complete.map((c) => String(c.cycle)),
-    complete.map((c) => cell(c.discharge_capacity)),
-    complete.map((c) => cell(c.charge_capacity)),
-    complete.map((c) => cell(c.coulombic_efficiency)),
-    complete.map((c) => cell(c.retention_pct)),
-    complete.map((c) => cell(c.energy_efficiency)),
-    complete.map((c) => cell(c.mean_discharge_voltage)),
-    complete.map((c) => cell(c.voltage_hysteresis)),
-  ]
-  return tsvColumns(names, units, columns)
+  return tsvColumns(
+    ['사이클', name],
+    ['', unit],
+    [complete.map((c) => String(c.cycle)), complete.map((c) => cell(value(c)))],
+  )
 }
+
+/** The cycle-trend curve: discharge capacity in the unit on screen. */
+export function dischargeTsv(cycles: Cycle[], basis: Basis | string): string {
+  return cycleColumnTsv(cycles, '방전용량', plainUnit(basis), (c) => c.discharge_capacity)
+}
+
+/** Coulombic efficiency, per cycle. */
+export function efficiencyTsv(cycles: Cycle[]): string {
+  return cycleColumnTsv(cycles, '쿨롱효율', '%', (c) => c.coulombic_efficiency)
+}
+
 
 /** Put text on the clipboard, with a path for browsers that refuse the API.
  *
