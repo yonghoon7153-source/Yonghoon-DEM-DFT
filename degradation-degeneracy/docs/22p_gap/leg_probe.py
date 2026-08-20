@@ -36,15 +36,25 @@ for d in sorted(Path("results").iterdir()):
         rows.append((d.name, {"digest": f"ERR {str(e)[:20]}"})); continue
     rs = m.get("run_spec") or {}
     rc = rs.get("halfcell_recipe") or {}
+    # ★ 오프셋은 0 이 무왜곡, stretch 는 1 이 무왜곡 — 축마다 기본값이 다르다.
+    #   초판은 둘 다 (0,1) 로 걸러 `pe_offset_mv=1.0` 를 숨겼다 (거짓 "무왜곡").
+    _noop = {"pe_offset_mv": (None, 0, 0.0), "ne_offset_mv": (None, 0, 0.0),
+             "pe_stretch": (None, 1, 1.0), "ne_stretch": (None, 1, 1.0)}
     wob = ",".join(f"{k.replace('_offset_mv','').replace('_stretch','st')}={rc[k]}"
-                   for k in ("pe_offset_mv", "ne_offset_mv", "pe_stretch", "ne_stretch")
-                   if rc.get(k) not in (None, 0, 0.0, 1, 1.0)) or "-"
+                   for k in _noop if rc.get(k) not in _noop[k]) or "-"
+    # ★ Case 1 좌표 원점은 **목적함수마다 다르다** (F26). 초판은 dict 의 첫
+    #   항목을 집어서, `pocv_dvdq_dqdv` 를 인용하는 문서와 다른 값을 냈다
+    #   (fit_dense_pe1p5mv: 문서 1.0652 vs 초판 1.0274 — 같은 다리, 다른 목적함수).
+    #   이제 목적함수별로 전부 찍는다.
     pi = rs.get("p_ini") or m.get("p_ini") or {}
-    a_ne = None
+    a_ne_by_obj = {}
     if isinstance(pi, dict):
-        for v in pi.values():
+        for o, v in pi.items():
             if isinstance(v, (list, tuple)) and len(v) >= 3:
-                a_ne = round(float(v[2]), 4); break
+                a_ne_by_obj[str(o)] = round(float(v[2]), 4)
+    a_ne = a_ne_by_obj.get("pocv_dvdq_dqdv")          # 문서가 인용하는 축
+    a_ne_alt = ",".join(f"{o.replace('pocv_dvdq_dqdv','dqdv').replace('pocv_dvdq','dvdq')}={v}"
+                        for o, v in a_ne_by_obj.items()) or "-"
     rows.append((d.name, {
         "digest": (rs.get("source_digest") or "-")[:16],
         "commit": (rs.get("git_commit") or m.get("git_commit") or "-")[:8],
@@ -57,11 +67,12 @@ for d in sorted(Path("results").iterdir()):
         "ncond": rs.get("n_conditions") or m.get("n_conditions"),
         "a_ne": a_ne,
         "pini_cond": str(rs.get("p_ini_cond") or "-")[:12],
+        "a_ne_all": a_ne_alt[:34],
     }))
 
 H = [("digest", 17), ("commit", 9), ("dirty", 6), ("ref", 9), ("recipe", 9),
      ("wobble", 27), ("rst", 4), ("warm", 6), ("ncond", 6), ("a_ne", 8),
-     ("pini_cond", 13)]
+     ("pini_cond", 13), ("a_ne_all", 35)]
 print(f"{'leg':<34}" + "".join(f"{h:<{w}}" for h, w in H))
 print("-" * (34 + sum(w for _, w in H)))
 for name, r in rows:
