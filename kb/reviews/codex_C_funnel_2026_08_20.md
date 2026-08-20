@@ -1,9 +1,9 @@
 ---
-title: "교차리뷰 C v2 — cascade 깔때기는 잘 작동했나 (codex 1차 판정 반영)"
+title: "교차리뷰 C v2.1 — cascade 깔때기는 잘 작동했나 (codex 2라운드 종료)"
 date: 2026-08-20
 updated: 2026-08-20
 tags: [codex, review, cascade, funnel, screening, gate, volume, doping]
-status: v2 — codex 1차 NO-GO 반영 완료 (재현 검증 끝, 보고 형식 확정)
+status: v2.1 — codex 2라운드 종료 (manifest 지적 철회 · Q3 문구 하향 · 보고 형식 확정)
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -43,7 +43,7 @@ fit outside ±6%: 428   (그중 아래쪽 외삽 427)
 | G5 percentile 은 **nearest order statistic** (선형 아님) | ✅ `int(round(q*(n-1)))` 확인 |
 | G5 sweep "0→11 전 구간" 은 과장 | ✅ 실제 `0/1/1/2/4/11`, q=1.00 은 게이트를 끈 값 |
 | cathode audit 을 "G6" 라 부르면 기존 정의와 충돌 | ✅ **맞다** — 기존 `T9_interface_axes` 에 이미 있다 (§3) |
-| manifest 가 stale (420e… vs 11986…) | ❌ **우리 repo 에서는 재현 안 됨** — `420e218e` / 86,018 B 로 **일치**한다. codex 환경에서 funnel 을 재생성해 바뀐 것으로 보인다 |
+| ~~manifest 가 stale~~ | ✅ **codex 철회** (2026-08-20) — `a4cc9c04` git blob 재검사 결과 funnel 과 manifest 가 `420e218e` / 86,018 B 로 정확히 일치. 앞선 검사가 **임시 감사 폴더에서 재생성된 파일을 원본으로 오인**한 것. 우리 재현과 같은 결론이다 |
 
 ## 0. 깔때기 실측 — **분모를 명시한다**
 
@@ -98,6 +98,12 @@ V_post = V_ref × (1 + screen_dV_over_V0) × (1 + anneal_dV_pct/100),  V_ref = 2
 
 > Stage 04 이후 계산값은 **선택된 구조에 대해** 존재하지만, **post-anneal 수렴과 EOS
 > 최소점의 scan 내 식별은 검증되지 않았다.**
+
+**발표용 (구어체, codex 제안 채택)**:
+
+> Stage 04 이후 계산값은 선택된 구조에 대해서는 존재합니다. 다만 **post-anneal 구조가
+> 충분히 수렴했는지, EOS 최소점이 실제 계산한 부피 구간 안에서 식별됐는지는 아직
+> 검증되지 않았습니다.**
 
 ⚠ 이것은 *"하위 값이 전부 틀렸다"* 가 아니다. **"오염 0 을 증명하지 못했다"** 는 뜻이다.
 v1 은 증명하지 못한 것을 증명했다고 썼다.
@@ -187,7 +193,7 @@ v1 은 "게이트가 정적 boolean 이라 최종 집합이 순서 불변" 을 *
 |---|---|
 | Q1 | G1·G2·cathode audit 을 **메인 funnel 단계에서 뺀다.** 옆에 `non-discriminating` / `contained` / `post-hoc` 배지로 둔다 |
 | Q2 | **G5 를 선발 gate 에서 제거.** 11종도 **"historical conditional set"** 으로만 보고 |
-| Q3 | 하위 계산은 **선택된 구조에 조건부**로 의미가 있다. **species 최적 구조나 대표 물성은 보장하지 않는다** |
+| Q3 | 하위 계산은 **선택된 구조에 대한 잠정값으로 남길 수 있다.** 다만 **post-anneal 수렴은 미검증**이며, **species 최적 구조나 대표 물성을 보장하지 않는다** (v2 초판의 "조건부로 의미가 있다" 는 §1 과 어긋나 낮춤 — codex 2차) |
 | Q4 | 역사 감사·보고 수정에는 **재계산 불필요.** *현재* selection 을 복구할 때만 Stage 02 재수렴 → 재선발 → 바뀐 대표 구조의 하위 계산 갱신 |
 | Q5 | G4 unique 6 = **blocking 5 + BVS 1**. 두 독립 수송 신호의 합치가 **아니다** |
 | Q6 | 게이트를 더 붙이지 않는다. cathode · SE · Li · Li scavenging 을 **적용범위가 적힌 별도 진단축**으로 둔다 |
