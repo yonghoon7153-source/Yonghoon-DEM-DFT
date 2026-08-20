@@ -29,7 +29,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e packages/wrdkit[dev]
-          pip install -r apps/api/requirements.txt httpx
+          pip install -r apps/api/requirements-dev.txt
 
       - name: Tests
         # The real-file checks skip without WRDKIT_SAMPLE; a 20 MB instrument
@@ -76,6 +76,16 @@ jobs:
       # No dependencies: the linter is stdlib-only on purpose, so it runs
       # anywhere the repository is checked out.
       - run: python3 tools/wiki_lint.py
+
+  tools:
+    name: tools
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # `bml` decides whether the process holding its port is its own before
+      # killing it.  Four separate bugs have lived in that judgment, so it is
+      # tested like any other code -- no dependencies, just bash.
+      - run: bash tools/tests/test_bml_ownership.sh
 
   invariants:
     name: repo invariants

@@ -34,8 +34,17 @@ Excel 로 옮기고 Origin 에서 다시 그리는 과정을 없애는 것이 �
 
 ## 빠른 시작
 
-> **브랜치 주의** — 작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 에 있습니다.
-> `main` 은 비어 있으므로 **반드시 `-b` 로 브랜치를 지정해 클론**하세요.
+> **브랜치 주의 — 이 저장소에는 프로젝트가 둘 있습니다.**
+> 브랜치마다 내용이 완전히 다릅니다.
+>
+> | 브랜치 | 내용 | 실행 | 포트 |
+> | --- | --- | --- | --- |
+> | `claude/battery-charge-discharge-webapp-dq4ja3` | 이 워크벤치 | `bml` | 5003 |
+> | `claude/friendly-meitner-lldvar` | DFT 판 (`webapp/app.py`) | `dft` | 5001 |
+>
+> `main` 은 비어 있으니 **반드시 `-b` 로 브랜치를 지정해 클론**하고,
+> **한 폴더에서 두 브랜치를 오가지 마세요.** 브랜치를 바꾸면 상대 프로젝트의
+> 파일이 사라집니다. 둘 다 쓴다면 아래 `git worktree` 방법을 쓰세요.
 
 ### Linux · macOS
 
@@ -76,8 +85,27 @@ cd Yonghoon-DEM-DFT
 bml            # → http://localhost:5003 (Windows 기본 브라우저가 열립니다)
 ```
 
-**이미 `~/Yonghoon-DEM-DFT` 폴더가 있어서 클론이 실패했다면** — 지우지 말고
-브랜치만 맞추면 됩니다:
+**이미 `~/Yonghoon-DEM-DFT` 폴더가 있어서 클론이 실패했다면** — 그 폴더에
+무엇이 들어 있는지부터 보세요. 안에 DFT 판(`webapp/app.py`)이 있다면
+**`git checkout` 을 하면 안 됩니다.** 그 파일들이 통째로 사라집니다.
+
+```bash
+ls ~/Yonghoon-DEM-DFT/webapp/app.py 2>/dev/null && echo "DFT 판입니다 — checkout 금지"
+```
+
+DFT 판이 들어 있다면, 저장소는 그대로 두고 **워크벤치만 옆 폴더에** 붙입니다.
+`git worktree` 는 같은 저장소를 폴더 둘로 나눠 쓰는 기능이라 다시 받을 필요가
+없고, 두 폴더가 각자 HEAD 를 가지므로 서로를 건드리지 않습니다:
+
+```bash
+git -C ~/Yonghoon-DEM-DFT worktree add ~/bml \
+  claude/battery-charge-discharge-webapp-dq4ja3
+cd ~/bml
+./tools/bml install && bml
+```
+
+폴더가 비어 있거나 빈 `main` 만 받은 경우라면 잃을 게 없으니 브랜치만 맞추면
+됩니다:
 
 ```bash
 cd ~/Yonghoon-DEM-DFT

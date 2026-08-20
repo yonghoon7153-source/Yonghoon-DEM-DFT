@@ -22,18 +22,50 @@ pull --rebase --autostash  →  의존성 확인  →  필요하면 빌드  → 
 작업 중이던 변경이 있어도 `--autostash` 가 알아서 넣었다 빼주므로, 커밋하지
 않은 상태에서 그냥 `bml` 을 치면 됩니다.
 
+## 먼저: 이 저장소에는 프로젝트가 둘 있습니다
+
+같은 저장소인데 **브랜치마다 내용이 완전히 다릅니다.**
+
+| 브랜치 | 내용 | 실행 | 포트 |
+| --- | --- | --- | --- |
+| `claude/battery-charge-discharge-webapp-dq4ja3` | 충방전 워크벤치 (`apps/`, `packages/wrdkit`) | `bml` | 5003 |
+| `claude/friendly-meitner-lldvar` | DFT 판 (`webapp/app.py`, `factory/`, `kb/`) | `dft` | 5001 |
+
+그래서 **한 폴더에서 두 브랜치를 오가면 안 됩니다.** 브랜치를 바꾸는 순간
+상대 프로젝트의 파일이 작업 폴더에서 통째로 사라지고, 그쪽 실행기는 원인 대신
+`No such file or directory` 만 뱉습니다. 실제로 한 번 그렇게 DFT 판이 멈췄습니다.
+
+각자 폴더를 주세요. `git worktree` 를 쓰면 저장소는 한 번만 받고 폴더만
+둘로 나눌 수 있습니다:
+
+```bash
+# DFT 판이 이미 ~/Yonghoon-DEM-DFT 에 있다면, 워크벤치는 옆에 따로 놓습니다
+git -C ~/Yonghoon-DEM-DFT worktree add ~/bml \
+  claude/battery-charge-discharge-webapp-dq4ja3
+cd ~/bml
+```
+
+두 폴더는 각자 HEAD 를 가지므로 한쪽에서 pull 해도 다른 쪽은 그대로입니다.
+포트도 5003 / 5001 로 겹치지 않습니다.
+
+`bml` 은 워크벤치가 아닌 폴더에서 실행되면 **pull 하기 전에** 멈추고 위
+방법을 안내합니다. 남의 브랜치를 rebase 하고 나서 알아차리면 이미 늦기
+때문입니다.
+
 ## 설치 (각자 한 번만)
 
-작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 브랜치에 있습니다. `main` 은 비어 있으니 **`-b` 로 지정해
+처음부터 받는 경우라면 `main` 이 비어 있으니 **`-b` 로 브랜치를 지정해
 클론**하세요.
 
 ```bash
 git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
-  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
-cd Yonghoon-DEM-DFT
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git bml
+cd bml
 ./tools/bml install     # ~/.local/bin/bml 로 심볼릭 링크
 bml                     # 의존성·빌드·실행까지 알아서
 ```
+
+DFT 판도 쓰고 있다면 위 "프로젝트가 둘" 절의 `worktree` 방법을 쓰세요.
 
 의존성은 `bml` 이 처음 실행될 때 설치합니다. git 설정까지 한 번에 하려면
 `make setup` 을 써도 됩니다.
@@ -146,6 +178,17 @@ WORKBENCH_PORT=6001 bml
 **`bml: command not found`**
 : PATH 에 `~/.local/bin` 이 없습니다. 위의 `export PATH=...` 를 추가하고 새
   터미널을 여세요. 급하면 `./tools/bml` 로 직접 실행해도 됩니다.
+
+**갑자기 `tools/bml` 이 없다고 합니다**
+: 그 폴더가 다른 브랜치로 넘어갔습니다 (DFT 판을 체크아웃했거나, 누가
+  `git checkout` 을 했거나). 심볼릭 링크는 사라진 파일을 가리키고 있는
+  상태입니다. 위 "프로젝트가 둘" 절대로 폴더를 나눈 뒤
+  `cd ~/bml && ./tools/bml install` 로 링크를 다시 걸어 주세요.
+
+**`bml` 이 "이 폴더에는 다른 프로젝트가 체크아웃돼 있습니다" 라고 멈춥니다**
+: 의도된 정지입니다. 그 폴더는 DFT 판 같은 다른 프로젝트의 작업 폴더이고,
+  거기서 pull 하면 남의 브랜치를 rebase 하게 됩니다. 메시지에 나온
+  `git worktree add` 를 그대로 실행하세요.
 
 **서버가 안 뜹니다**
 : 실패 메시지에 원인과 해결 명령이 함께 나옵니다. 그래도 모르겠으면

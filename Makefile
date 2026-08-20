@@ -42,7 +42,7 @@ venv:
 install-api: venv ## Python 의존성 설치
 	$(VENV_PY) -m pip install --upgrade pip --quiet
 	$(VENV_PY) -m pip install -e packages/wrdkit[dev] --quiet
-	$(VENV_PY) -m pip install -r apps/api/requirements.txt --quiet
+	$(VENV_PY) -m pip install -r apps/api/requirements-dev.txt --quiet
 
 install-web: ## 프론트엔드 의존성 설치
 	cd $(WEB) && npm install
@@ -74,13 +74,16 @@ api: ## FastAPI 개발 서버 (Vite 프록시 뒤)
 web: ## Vite 개발 서버
 	cd $(WEB) && WORKBENCH_PORT=$(PORT) WORKBENCH_API_PORT=$(PORT_API) npm run dev
 
-test: test-py test-web ## 전체 테스트
+test: test-py test-web test-tools ## 전체 테스트
 
 test-py: ## pytest (wrdkit + api)
 	$(VENV_PY) -m pytest packages/wrdkit/tests apps/api/tests -q
 
 test-web: ## vitest + 타입 체크
 	cd $(WEB) && npm run typecheck && npm run test -- --run
+
+test-tools: ## bml 회귀 테스트 (포트 소유 판정)
+	bash tools/tests/test_bml_ownership.sh
 
 lint: lint-py lint-web wiki-lint ## 전체 린트
 

@@ -38,6 +38,10 @@ resolve() {
 SCRIPT="$(resolve "${BASH_SOURCE[0]}")"
 REPO="$(cd -P "$(dirname "$SCRIPT")/.." && pwd)"
 
+#: 이 저장소는 브랜치마다 다른 프로젝트를 담는다 (DFT 판은 다른 브랜치에 있다).
+#: 어느 브랜치가 워크벤치인지 한 곳에만 적어 둔다.
+WORKBENCH_BRANCH="${WORKBENCH_BRANCH:-claude/battery-charge-discharge-webapp-dq4ja3}"
+
 PORT="${WORKBENCH_PORT:-5003}"
 API_PORT="${WORKBENCH_API_PORT:-8000}"
 # WSL2 forwards localhost from Windows by default, so 127.0.0.1 is right and
@@ -51,7 +55,9 @@ PID_FILE="$RUN_DIR/server.pid"
 DEV_PID_FILE="$RUN_DIR/dev.pid"
 STAMP="$RUN_DIR/deps.stamp"
 
-mkdir -p "$RUN_DIR"
+#: 실행 상태를 둘 폴더.  만드는 것은 실제로 쓸 때까지 미룬다 — 워크벤치가 아닌
+#: 체크아웃에서 bml 이 잘못 불려도 남의 저장소에 흔적을 남기지 않기 위해서다.
+need_run_dir() { mkdir -p "$RUN_DIR"; }
 
 # --- 출력 -------------------------------------------------------------------
 if [ -t 1 ]; then
@@ -135,6 +141,58 @@ server_state() {
 #: Is the process on this port one of ours?  If it is, replacing it is what
 #: the user wants; making them run `bml stop` first is friction with no
 #: benefit.  Anything else is left alone.
+#: Given a listener's command line and working directory, decide whether it is
+#: ours.  0 = ours, 1 = someone else's.
+#:
+#: Split out from owns_port so this judgment can be tested without a live
+#: process -- four separate bugs have hidden here, every one of them a case
+#: where a plausible-looking marker was either absent when needed or present
+#: on a stranger.  tools/tests/test_bml_ownership.sh pins all four.
+classify_process() {
+  local cmd="$1" cwd="$2" argv0
+
+  # Match the command line, not /proc/pid/exe: for a virtualenv the latter
+  # resolves the symlink back to the system interpreter, so the venv path --
+  # the one unambiguous marker -- disappears exactly when it is needed.
+  #
+  # Nothing but our own launcher runs our own venv's interpreter, so this is
+  # the one test that is both safe and sufficient.
+  case "$cmd" in *"$REPO/.venv/"*) return 0 ;; esac
+
+  # ...but only `bml` spells that path absolutely.  `make serve` runs
+  # `.venv/bin/python -m uvicorn`, and so does anyone debugging by hand, so
+  # argv[0] arrives relative.  Resolve it against the process's own cwd before
+  # concluding it is a stranger's.
+  argv0="${cmd%% *}"
+  case "$argv0" in
+    /*) ;;
+    # Join textually -- never `readlink -f`.  A venv's bin/python is a symlink
+    # to the system interpreter, so resolving it deletes the very marker being
+    # looked for, the same trap /proc/pid/exe sets.
+    *) [ -n "$cwd" ] && argv0="$cwd/${argv0#./}" ;;
+  esac
+  case "$argv0" in "$REPO"/.venv/*) return 0 ;; esac
+
+  # A uvicorn naming our tree is ours wherever it was started from.
+  case "$cmd" in *uvicorn*"$REPO"*) return 0 ;; esac
+
+  # `uvicorn app.main:app` on its own is not evidence: that module path is the
+  # FastAPI tutorial's, so half the world's side projects answer to it.  Claim
+  # it only when the process is also sitting in our API directory.
+  case "$cmd" in
+    *uvicorn*app.main*)
+      case "$cwd" in "$REPO"/apps/api|"$REPO"/apps/api/*) return 0 ;; esac
+      ;;
+  esac
+
+  case "$cmd" in
+    *vite*|*"npm run dev"*)
+      case "$cwd" in "$REPO"/apps/web|"$REPO"/apps/web/*) return 0 ;; esac
+      ;;
+  esac
+  return 1
+}
+
 #: 0 = ours, 1 = someone else's, 2 = cannot tell.
 #: The third answer matters: refusing to start because we *assumed* the port
 #: belongs to a stranger is as wrong as killing a stranger's process.
@@ -153,24 +211,11 @@ owns_port() {
 
   cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)"
   [ -n "$cmd" ] || cmd="$(ps -p "$pid" -o args= 2>/dev/null)"
+  # A listener we cannot describe is not a listener we may kill.
   [ -n "$cmd" ] || return 2
   cwd="$(readlink -f "/proc/$pid/cwd" 2>/dev/null)"
 
-  # Match the command line, not /proc/pid/exe: for a virtualenv the latter
-  # resolves the symlink back to the system interpreter, so the venv path --
-  # the one unambiguous marker -- disappears exactly when it is needed.
-  case "$cmd" in
-    *"$REPO/.venv/"*) return 0 ;;
-    *uvicorn*"$REPO"*) return 0 ;;
-    *uvicorn*app.main*) return 0 ;;
-  esac
-
-  case "$cmd" in
-    *vite*|*"npm run dev"*)
-      case "$cwd" in "$REPO"/apps/web|"$REPO"/apps/web/*) return 0 ;; esac
-      ;;
-  esac
-  return 1
+  classify_process "$cmd" "$cwd"
 }
 
 wait_for_url() {
@@ -285,9 +330,9 @@ cmd_repair() {
   say "  ${DIM}pip 갱신…${OFF}"
   "$py" -m pip install --quiet --upgrade pip setuptools wheel || die "pip 갱신 실패"
   say "  ${DIM}wrdkit…${OFF}"
-  "$py" -m pip install --quiet -e "$REPO/packages/wrdkit" || die "wrdkit 설치 실패"
+  "$py" -m pip install --quiet -e "$REPO/packages/wrdkit[dev]" || die "wrdkit 설치 실패"
   say "  ${DIM}API 의존성…${OFF}"
-  "$py" -m pip install --quiet -r "$REPO/apps/api/requirements.txt" \
+  "$py" -m pip install --quiet -r "$REPO/apps/api/requirements-dev.txt" \
     || die "API 의존성 설치 실패"
 
   if ! python_ready; then
@@ -354,8 +399,49 @@ open_browser() {
 }
 
 # --- 최신화 ------------------------------------------------------------------
+#: 워크벤치임을 알아보는 표식 파일 중 없는 것들 (전부 있으면 빈 문자열).
+workbench_missing() {
+  local required out=""
+  for required in Makefile packages/wrdkit/src/wrdkit apps/api/app apps/web/src; do
+    [ -e "$REPO/$required" ] || out="$out $required"
+  done
+  printf '%s' "${out# }"
+}
+
+#: 이 폴더가 워크벤치가 아니면, 무엇이 들어 있는지 말하고 멈춘다.
+#:
+#: 이 저장소는 브랜치마다 전혀 다른 프로젝트를 담고 있다.  한 폴더에서 브랜치를
+#: 바꾸면 상대 프로젝트의 파일이 통째로 사라지고, 그쪽 실행기는 원인 대신
+#: "No such file" 만 뱉는다.  pull 전에 잡아야 한다 — 남의 브랜치를 rebase 하고
+#: 나서 알아차리면 이미 늦다.
+guard_workbench_checkout() {
+  local missing branch
+  missing="$(workbench_missing)"
+  [ -z "$missing" ] && return 0
+
+  branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+
+  if [ -z "$(git -C "$REPO" ls-tree -r --name-only HEAD 2>/dev/null | head -1)" ]; then
+    say "${RED}✕${OFF} 이 브랜치(${branch})는 비어 있습니다."
+    say "  ${DIM}작업 브랜치로 옮기세요:${OFF}"
+    say "    git -C \"$REPO\" fetch origin"
+    say "    git -C \"$REPO\" checkout $WORKBENCH_BRANCH"
+    exit 1
+  fi
+
+  say "${RED}✕${OFF} 이 폴더에는 다른 프로젝트가 체크아웃돼 있습니다 (브랜치 ${branch})."
+  say "  ${DIM}없는 워크벤치 파일: ${missing}${OFF}"
+  say ""
+  say "  ${DIM}한 폴더를 두 프로젝트가 나눠 쓰면, 브랜치를 바꿀 때마다 상대 파일이${OFF}"
+  say "  ${DIM}사라집니다. worktree 로 각자 폴더를 주세요 (저장소는 한 번만 받습니다):${OFF}"
+  say "    git -C \"$REPO\" worktree add ~/bml $WORKBENCH_BRANCH"
+  say "    cd ~/bml && ./tools/bml install && bml"
+  exit 1
+}
+
 sync_repo() {
   git -C "$REPO" rev-parse --git-dir >/dev/null 2>&1 || die "git 저장소가 아닙니다: $REPO"
+  guard_workbench_checkout
 
   local branch
   branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD)"
@@ -388,6 +474,7 @@ sync_repo() {
 # --- 의존성 ------------------------------------------------------------------
 deps_fingerprint() {
   cat "$REPO/apps/api/requirements.txt" \
+      "$REPO/apps/api/requirements-dev.txt" \
       "$REPO/packages/wrdkit/pyproject.toml" \
       "$REPO/apps/web/package-lock.json" 2>/dev/null | cksum | awk '{print $1}'
 }
@@ -457,9 +544,9 @@ ensure_deps() {
     fi
     say "  ${DIM}python 패키지 설치…${OFF}"
     "$py" -m pip install --quiet --upgrade pip >/dev/null 2>&1
-    "$py" -m pip install --quiet -e "$REPO/packages/wrdkit" \
+    "$py" -m pip install --quiet -e "$REPO/packages/wrdkit[dev]" \
       || die "wrdkit 설치 실패 — 'pip install -e packages/wrdkit' 로 원인을 보세요."
-    "$py" -m pip install --quiet -r "$REPO/apps/api/requirements.txt" \
+    "$py" -m pip install --quiet -r "$REPO/apps/api/requirements-dev.txt" \
       || die "API 의존성 설치 실패"
     ok "python 준비 완료"
   fi
@@ -712,6 +799,7 @@ cmd_check() {
   ( cd "$REPO/apps/web" && npm run typecheck && npx vitest run && npm run lint ) || exit 1
   ( cd "$REPO" && "$py" -m ruff check packages apps/api ) || exit 1
   ( cd "$REPO" && python3 tools/wiki_lint.py ) || exit 1
+  ( cd "$REPO" && bash tools/tests/test_bml_ownership.sh ) || exit 1
   ok "전부 통과."
 }
 
@@ -763,11 +851,20 @@ cmd_doctor() {
     [ -e "$REPO/$required" ] || missing+=("$required")
   done
   if [ ${#missing[@]} -gt 0 ]; then
-    printf '%s✕%s 저장소에 프로젝트 파일이 없습니다 (없는 것: %s)\n' \
+    printf '%s✕%s 저장소에 워크벤치 파일이 없습니다 (없는 것: %s)\n' \
       "$RED" "$OFF" "${missing[*]}"
-    say "  ${DIM}main 브랜치는 비어 있습니다. 작업 브랜치로 옮기세요:${OFF}"
-    say "    git -C \"$REPO\" fetch origin"
-    say "    git -C \"$REPO\" checkout claude/battery-charge-discharge-webapp-dq4ja3"
+    if [ -z "$(git -C "$REPO" ls-tree -r --name-only HEAD 2>/dev/null | head -1)" ]; then
+      say "  ${DIM}이 브랜치는 비어 있습니다. 작업 브랜치로 옮기세요:${OFF}"
+      say "    git -C \"$REPO\" fetch origin"
+      say "    git -C \"$REPO\" checkout $WORKBENCH_BRANCH"
+    else
+      # 여기서 checkout 을 시키면 안 된다.  이 폴더에 들어 있는 다른 프로젝트가
+      # 통째로 사라진다 — 실제로 그렇게 DFT 판을 날린 적이 있다.
+      say "  ${DIM}이 폴더에는 다른 프로젝트가 들어 있습니다. checkout 하지 마세요 —${OFF}"
+      say "  ${DIM}그쪽 파일이 사라집니다. worktree 로 각자 폴더를 주세요:${OFF}"
+      say "    git -C \"$REPO\" worktree add ~/bml $WORKBENCH_BRANCH"
+      say "    cd ~/bml && ./tools/bml install && bml"
+    fi
     problems=$((problems + 1))
   else
     local branch
@@ -920,6 +1017,16 @@ cmd_help() {
 }
 
 # --- 진입점 ------------------------------------------------------------------
+# Sourcing this file defines the functions without running a command, so the
+# tests can exercise them directly.  Nothing else sets this.
+if [ -n "${BML_SOURCE_ONLY:-}" ]; then
+  return 0 2>/dev/null || exit 0
+fi
+
+# 워크벤치 체크아웃일 때만 상태 폴더를 만든다.  guard_workbench_checkout 가
+# 잡아 주기 전에 bml 이 남의 저장소에 .bml 을 남기는 일을 막는다.
+[ -z "$(workbench_missing)" ] && need_run_dir
+
 case "${1:-serve}" in
   serve|start|up|"") sync_repo; ensure_deps; start_serve ;;
   dev)               sync_repo; ensure_deps; start_dev ;;

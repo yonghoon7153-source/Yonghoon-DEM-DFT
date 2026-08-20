@@ -17,3 +17,7 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] create | WSL 지원 — bml doctor, .gitattributes 로 LF 고정, PowerShell 래퍼
 ## [2026-08-20] fix | 서버 실패 시 트레이스백 대신 원인과 해결 명령을 보여 준다
 ## [2026-08-20] create | bml repair — 깨진 가상환경 재설치, anyio/sniffio 최소 버전 고정
+## [2026-08-20] fix | 포트 소유 판정 — 남의 프로세스를 죽이지 않고, 우리 것은 갈아끼운다
+## [2026-08-20] create | tools/tests/test_bml_ownership.sh — 소유 판정 회귀 테스트 13건
+## [2026-08-20] fix | 한 폴더 두 프로젝트 사고 방지 — pull 전에 멈추고 worktree 안내
+## [2026-08-20] fix | 테스트 의존성을 requirements-dev.txt 로 통일 (CI·Makefile·bml)

@@ -95,8 +95,27 @@ cd Yonghoon-DEM-DFT
 ls Makefile tools/bml     # 둘 다 보여야 정상입니다
 ```
 
-이미 폴더가 있어서 `destination path ... already exists` 가 났다면, 지우지
-말고 브랜치만 맞춥니다:
+이미 폴더가 있어서 `destination path ... already exists` 가 났다면, **그 안에
+무엇이 있는지부터** 보세요. 이 저장소는 브랜치마다 다른 프로젝트를 담고 있어서
+(`claude/friendly-meitner-lldvar` 는 DFT 판입니다), 남의 작업 폴더에
+`git checkout` 을 하면 그쪽 파일이 통째로 사라집니다.
+
+```bash
+ls ~/Yonghoon-DEM-DFT/webapp/app.py 2>/dev/null && echo "DFT 판입니다 — checkout 금지"
+```
+
+DFT 판이라면 저장소는 그대로 두고 워크벤치만 옆 폴더에 붙입니다. `git worktree`
+는 같은 저장소를 폴더 둘로 나누는 기능이라 다시 받을 필요가 없고, 각 폴더가
+자기 HEAD 를 가지므로 서로를 건드리지 않습니다:
+
+```bash
+git -C ~/Yonghoon-DEM-DFT worktree add ~/bml \
+  claude/battery-charge-discharge-webapp-dq4ja3
+cd ~/bml
+ls Makefile tools/bml     # 둘 다 보여야 정상입니다
+```
+
+폴더가 비어 있거나 빈 `main` 만 받은 경우라면 브랜치만 맞추면 됩니다:
 
 ```bash
 cd ~/Yonghoon-DEM-DFT
@@ -183,8 +202,15 @@ setx BML_WSL_DISTRO Ubuntu
   `ls Makefile tools/bml` 로 확인할 수 있습니다.
 
 **`destination path 'Yonghoon-DEM-DFT' already exists`**
-: 폴더가 이미 있습니다. 지우지 말고 3번의 `git fetch` + `git checkout` 으로
+: 폴더가 이미 있습니다. 3번을 보고, **안에 DFT 판이 들어 있으면 checkout 대신
+  `git worktree add` 로 폴더를 나누세요.** 비어 있으면 `git checkout` 으로
   브랜치만 맞추면 됩니다.
+
+**갑자기 `tools/bml` 이 사라졌습니다 / `bml` 이 "다른 프로젝트가 체크아웃돼
+있습니다" 라고 멈춥니다**
+: 그 폴더가 다른 브랜치로 넘어갔습니다. 두 프로젝트가 한 폴더를 나눠 쓰면
+  반드시 이렇게 됩니다. 3번의 `git worktree add` 로 폴더를 나눈 뒤
+  `cd ~/bml && ./tools/bml install` 로 링크를 다시 걸어 주세요.
 
 **`bad interpreter: No such file or directory`**
 : CRLF 입니다. 2번을 하세요.
