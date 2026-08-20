@@ -114,11 +114,40 @@ BAN_ALLOW_ALWAYS = ('docs/reviews/claims.json',
 
 #: 파일 머리 이 줄 수 안에 배너가 있으면 그 파일 전체를 이력 문서로 본다.
 BAN_BANNER_HEAD_LINES = 12
-#: 배너·근처 표지로 인정하는 표시.
+#: 줄-근처 표지로 인정하는 표시 (그 줄만 면제).
 BAN_BANNER_MARKS = ('HISTORICAL', '⛔', '인용 금지', '철회', '반증', 'retired', 'RETIRED',
                     '~~', '폐기', '무효')
+#: ⚠⚠ 2026-08-20 (Codex 재검증 IJ-04) — **파일 전체 면제는 더 좁게.**
+#:   옛 규칙은 위 목록 중 아무 단어나 머리에 있으면 파일을 통째로 면제했다.  Codex 실측:
+#:   *무관한* "HISTORICAL" 한 단어 + 현행 "+52.0%" → 0건.  자기승인(self-authorizing)이다.
+#:   ⇒ 파일 전체 면제는 **원장을 가리킬 때만** 인정한다 (배너가 등록부/클레임을 지목해야 한다).
+#:   줄-근처 면제는 그대로 둔다 (그 줄 하나만 풀어 주므로 남용 여지가 작다).
+BAN_BANNER_ANCHORS = ('claims.json', 'CL-', 'CLAUDE.md', '인용 금지')
 #: 해당 줄 위아래 이 범위에 표지가 있으면 "철회를 밝히고 인용" 으로 본다.
 BAN_NEAR_LINES = 2
+#: ⚠⚠ 2026-08-20 (Codex 재검증 IJ-04, 2차) — 줄-근처 면제도 **철회 전용 어휘**만 인정한다.
+#:   실측: 근처에 *무관한* "HISTORICAL"/"retired" 한 단어만 있어도 면제됐다.  그 둘은 문서
+#:   머리 **배너** 어휘이지 "이 값은 철회됐다" 는 진술이 아니다.  ⇒ 근처 면제에서 뺀다
+#:   (⛔ 도 뺀다 — 그 기호 하나로는 무엇이 철회됐는지 말하지 않는다).
+BAN_NEAR_MARKS = ('인용 금지', '철회', '반증', '폐기', '무효', '~~', 'CL-')
+
+#: 표기 변형 정규화 — NBSP·얇은 공백·JSON `\u0025`(%)·꼬리 0.
+#: Codex 실측 미검출: "+52.00%", NBSP, JSON 이스케이프.
+_BAN_WS = {'\u00a0': ' ', '\u2009': ' ', '\u202f': ' ', '\u2007': ' '}
+
+
+def _ban_norm(text):
+    """스윕 비교용 정규화 — 표기 변형이 검사를 우회하지 못하게."""
+    import re as _re
+    for a, b in _BAN_WS.items():
+        text = text.replace(a, b)
+    text = text.replace('\\u0025', '%').replace('\\u002B', '+')
+    #  숫자의 **꼬리 0** 을 깎는다: +52.00 % → +52 % · +52.0% → +52%
+    text = _re.sub(r'(\d)\.0+(?=\D|$)', r'\1', text)
+    text = _re.sub(r'(\.\d*?)0+(?=\D|$)', r'\1', text)
+    #  숫자와 % 사이 공백 제거 (한쪽 표기로 접는다)
+    text = _re.sub(r'\s+%', '%', text)
+    return text
 
 
 def load_bans(claims_path):
@@ -139,8 +168,10 @@ def _ban_files(repo_root):
 
 
 def _has_banner(lines):
+    """파일 전체 면제 여부.  **표지 + 원장 지목**을 둘 다 요구한다 (IJ-04)."""
     head = '\n'.join(lines[:BAN_BANNER_HEAD_LINES])
-    return any(m in head for m in BAN_BANNER_MARKS)
+    return (any(m in head for m in BAN_BANNER_MARKS)
+            and any(a in head for a in BAN_BANNER_ANCHORS))
 
 
 def ban_sweep(repo_root, claims_path=None, files=None):
@@ -172,14 +203,15 @@ def ban_sweep(repo_root, claims_path=None, files=None):
                 continue
             if any(_fn.fnmatch(rel, g) for g in (b.get('allowed_in') or [])):
                 continue
+            _npat = _ban_norm(pat)
             for i, ln in enumerate(lines):
-                if pat not in ln:
+                if pat not in ln and _npat not in _ban_norm(ln):
                     continue
                 if banner:
                     continue
                 lo = max(0, i - BAN_NEAR_LINES)
                 near = '\n'.join(lines[lo:i + BAN_NEAR_LINES + 1])
-                if any(m in near for m in BAN_BANNER_MARKS):
+                if any(m in near for m in BAN_NEAR_MARKS):
                     continue
                 probs.append(f'BAN| {rel}:{i + 1} — 철회값 "{pat}" 이 표지 없이 살아 있다 '
                              f'({b.get("claim", "?")}: {b.get("why", "")[:70]})')
@@ -249,7 +281,16 @@ def check(findings, repo_root=None):
             if not SHA_RE.match(str(sha)):
                 problems.append(f'{fid}: {key}={sha!r} 가 SHA 형식이 아니다')
             elif repo_root and not _commit_exists(repo_root, sha):
-                problems.append(f'{fid}: {key}={sha} 가 이 리포에 없는 커밋이다')
+                #  ★ 2026-08-20 — 외부 검증자(Codex)는 **자기 worktree** 에서 커밋한다.
+                #    그 SHA 는 우리 리포에 없다.  두 극단이 다 틀렸다: 거부하면 독립 검증을
+                #    원장에 못 적고, 조용히 통과시키면 **기계로 확인 못 한 것을 확인한 척**한다.
+                #    ⇒ `verified_repo` 를 **명시**하면 허용하되, 그 사실이 원장에 남는다
+                #    (기계 확인 불가임을 사람이 읽을 수 있게).  없으면 종전대로 거부.
+                if key == 'verified_sha' and f.get('verified_repo'):
+                    pass
+                else:
+                    problems.append(f'{fid}: {key}={sha} 가 이 리포에 없는 커밋이다'
+                                    f' (외부 검증이면 `verified_repo` 를 적을 것)')
         # ★ evidence 가 가리키는 **파일이 실재**해야 한다 (RC7-04: 유령 evidence 통과)
         for ev in (f.get('evidence_tests') or []):
             path = str(ev).split('::', 1)[0].split()[0] if ev else ''
@@ -424,11 +465,17 @@ def _selftest():
             with open(_bad, 'w', encoding='utf-8') as _f:
                 _f.write(f'# 제목\n\n본문에서 {_pat} 를 현행 사실로 쓴다\n')
             _p1, _, _ = ban_sweep(_d, _claims, files=[_bad])
-            ok('17) ★ 음성 대조 — 표지 없는 철회값을 **정말** 잡는다', len(_p1) == 1)
+            #  ⚠ 2026-08-20: 표기 정규화 후에는 한 줄이 여러 등록 패턴에 걸릴 수 있다
+            #    (`+52.0 %` · `+52 %` · `+52%` 가 전부 `+52%` 로 접힌다).  개수가 아니라
+            #    **그 패턴이 지목됐는지**를 본다.
+            ok('17) ★ 음성 대조 — 표지 없는 철회값을 **정말** 잡는다',
+               any(_pat in x for x in _p1))
 
             _good = os.path.join(_d, 'good.md')
             with open(_good, 'w', encoding='utf-8') as _f:
-                _f.write(f'# 제목\n\n> ⛔ HISTORICAL — 아래는 이력이다\n\n{_pat} 는 옛 값\n')
+                #  ⚠ 2026-08-20: 배너는 **원장을 지목**해야 파일 전체를 면제한다 (IJ-04).
+                _f.write(f'# 제목\n\n> ⛔ HISTORICAL — 아래는 이력이다\n'
+                         f'> 정본: docs/reviews/claims.json (CL-24)\n\n{_pat} 는 옛 값\n')
             _p2, _, _ = ban_sweep(_d, _claims, files=[_good])
             ok('18) 파일 머리 배너가 있으면 통과 (이력 문서를 죽이지 않는다)', _p2 == [])
 
@@ -437,6 +484,22 @@ def _selftest():
                 _f.write(f'# 제목\n\n옛 헤드라인 {_pat} 는 **철회**됐다 (CL-24)\n')
             _p3, _, _ = ban_sweep(_d, _claims, files=[_near])
             ok('19) 같은 줄에 철회 표지가 있으면 통과 (철회를 밝히고 인용)', _p3 == [])
+            #  ── 2026-08-20 (Codex 재검증 IJ-04) — **우회 두 가지를 상주 음성 대조로** ──
+            _self = os.path.join(_d, 'selfauth.md')
+            with open(_self, 'w', encoding='utf-8') as _f:
+                #  머리에 *무관한* HISTORICAL 한 단어만 — 원장을 지목하지 않는다
+                _f.write(f'# 제목\n\nHISTORICAL context of the field\n'
+                         f'\nretired equipment note\n\n{_pat} 는 현행 결론\n')
+            _p4, _, _ = ban_sweep(_d, _claims, files=[_self])
+            ok('20a) ★ 자기승인 배너(원장 미지목)로는 파일 면제가 안 된다',
+               any(_pat in x for x in _p4))
+
+            _var = os.path.join(_d, 'variant.md')
+            with open(_var, 'w', encoding='utf-8') as _f:
+                _f.write('# 제목\n\n결과는 +52.00% 이고 이온은 +5.60% 다\n')
+            _p5, _, _ = ban_sweep(_d, _claims, files=[_var])
+            ok('20b) ★ 표기 변형(+52.00% · +5.60%)도 잡는다', _p5 != [])
+
     ok('21) ★ 리포 전체가 지금 깨끗하다 (누수 0)',
        ban_sweep(here, _claims)[0] == [])
 

@@ -64,7 +64,11 @@ run_one() {   # $1=kit  $2=vox  $3=sphere_d("" 면 점 스탬프)
   local OUT="$OUTDIR/ledger_${TAG}.json"
   #  ★ SKIP 전 **기록 대조** — 파일명이 같아도 안의 설정이 다르면 재사용하지 않는다.
   if [ -s "$OUT" ]; then
-    if L_OUT="$OUT" L_VOX="$VOX" L_BR="$_bn" L_SDD="${_dn:-}" \
+    #  ⚠ 2026-08-20 (Codex 재검증 IJ-07) — matcher 에는 **raw 값**을 넘긴다.
+    #    `%g` 는 기본 6 significant digits 로 먼저 반올림하므로 0.3 과 0.3000004 가
+    #    둘 다 "0.3" 이 되어 캐시가 다시 alias 된다.  정규화값은 **파일명 표시용**이고
+    #    동일성 판정은 raw 로 한다 (matcher 가 1e-12 로 비교).
+    if L_OUT="$OUT" L_VOX="$VOX" L_BR="$BRIDGE_UM" L_SDD="$SD" \
        python3 "$SCR/sdcp_phase_ledger_match.py"; then
       echo "  SKIP $TAG  (기록 대조 일치)"; return 0
     fi

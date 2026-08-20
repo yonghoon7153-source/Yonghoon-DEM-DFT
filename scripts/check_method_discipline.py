@@ -966,13 +966,24 @@ def smoke_assert_payload(out, label, errs, warns):
     if bad or _wrong:
         errs.append(f'J_COMPONENT| {label}: 기대 상태와 다르다 — 미완료 {bad} · '
                     f'기대 불일치 {_wrong} (기대 {_EXPECT})')
+    #  ★★ 2026-08-20 (Codex 재검증 IJ-05) — 값의 **존재**만 보면 여전히 통과한다:
+    #    Codex 가 `sigma_e=1 · n_dof=1 · 기대 상태 전부` 로 통과시켰다.
+    #    ⇒ **계산이 실제로 일어났다는 증거**를 요구한다 — CG 수렴 기록과, complete 로 선언한
+    #      component 의 **산출물**(thermal 이면 k_eff).  픽스처는 결정론적이라 문턱이 안 흔들린다.
     _se = s3.get('sigma_e_eff_S_cm')
     _nd = s3.get('n_dof')
+    _ci, _cr = s3.get('cg_info'), s3.get('cg_resid')
     _num = []
     if not (isinstance(_se, (int, float)) and _se == _se and 0 < float(_se) < 1e9):
         _num.append(f'sigma_e_eff_S_cm={_se!r}')
-    if not (isinstance(_nd, int) and _nd > 0):
-        _num.append(f'n_dof={_nd!r}')
+    if not (isinstance(_nd, int) and _nd > 1000):
+        _num.append(f'n_dof={_nd!r} (픽스처 dof 는 1000 을 넘는다)')
+    if _ci != 0 or not (isinstance(_cr, (int, float)) and 0 < float(_cr) < 1e-6):
+        _num.append(f'CG 증거 없음/미수렴 cg_info={_ci!r} cg_resid={_cr!r}')
+    if (comps.get('thermal') or {}).get('status') == 'complete':
+        _k = (s3.get('thermal') or {}).get('k_eff_W_mK')
+        if not (isinstance(_k, (int, float)) and _k == _k and float(_k) > 0):
+            _num.append(f'thermal=complete 인데 k_eff_W_mK={_k!r}')
     if _num:
         errs.append(f'J_NUMBERS| {label}: **status 는 complete 인데 수치가 없다** '
                     f'{_num} — 자가보고만으로 통과하면 안 된다 (CDX-IJ-05)')
@@ -997,7 +1008,10 @@ def smoke_assert_payload(out, label, errs, warns):
                         f'기본 경로에서 못 읽는다 {_blank} — 그 게이트는 무발화이거나 '
                         f'거짓 HOLD 를 낸다 (2026-08-20 실사고 2건이 정확히 이것)')
     except Exception as _e:                            # noqa: BLE001
-        warns.append(f'J_READER| {label}: 판정기 리더 대조 생략 ({type(_e).__name__}: {_e})')
+        #  ⚠ 2026-08-20 (Codex 재검증 IJ-05) — 옛 판은 warning 이라 **exit 0** 이었다.
+        #    판정기 리더가 터지는 것은 "확인 못 했다" 이고 그것을 성공으로 세면 fail-open 이다.
+        errs.append(f'J_READER| {label}: 판정기 리더가 payload 를 읽다 죽었다 '
+                    f'({type(_e).__name__}: {_e}) — 확인 못 한 것을 통과시키지 않는다')
     return (bad, comps)
 
 
@@ -1351,11 +1365,23 @@ def _selftest():
         _e, _w = [], []
         smoke_assert_payload(_p, 'fake', _e, _w)
         return _e
-    chk('J-3a: ★ electronic=complete 한 줄만 적은 가짜 producer 를 잡는다',
-        _fake({'electronic': {'status': 'complete'}}) != [])
-    chk('J-3b: ★ 전부 disabled 로 적은 변형을 잡는다',
-        _fake({k: {'status': 'disabled'} for k in
-               ('electronic', 'ionic', 'thermal', 'pore', 'pnm')}) != [])
+    #  ⚠ 2026-08-20 (Codex 재검증 IJ-05) — 옛 판은 "오류 목록이 비었는지" 만 봤다.  그러면
+    #    J_COMPONENT 검사를 **지워도** 다른 오류가 대신 남아 통과한다 = 그 검사가 인증되지 않는다.
+    #    ⇒ **예상 diagnostic code 를 고정**한다 (Codex 최소 계약 ④).
+    def _codes(e_):
+        return {x.split('|', 1)[0] for x in e_}
+    chk('J-3a: ★ electronic=complete 한 줄만 적은 가짜 producer 를 J_COMPONENT 로 잡는다',
+        'J_COMPONENT' in _codes(_fake({'electronic': {'status': 'complete'}})))
+    chk('J-3b: ★ 전부 disabled 로 적은 변형을 J_COMPONENT 로 잡는다',
+        'J_COMPONENT' in _codes(_fake({k: {'status': 'disabled'} for k in
+                                       ('electronic', 'ionic', 'thermal', 'pore', 'pnm')})))
+    #  J-3d: Codex 가 **통과시킨** 변형 — 기대 상태 전부 + sigma_e=1 + n_dof=1, 계산 증거 없음
+    chk('J-3d: ★★ 상태·수치가 다 있어도 **CG 증거가 없으면** 잡는다 (Codex 통과 변형)',
+        'J_NUMBERS' in _codes(_fake(
+            {'electronic': {'status': 'complete'}, 'thermal': {'status': 'complete'},
+             'ionic': {'status': 'disabled'}, 'pore': {'status': 'disabled'},
+             'pnm': {'status': 'disabled'}},
+            {'sigma_e_eff_S_cm': 1.0, 'n_dof': 1})))
     chk('J-3c: ★ 상태는 맞는데 **수치가 없는** 변형을 잡는다 (자가보고)',
         any('J_NUMBERS' in x for x in _fake(
             {'electronic': {'status': 'complete'}, 'thermal': {'status': 'complete'},

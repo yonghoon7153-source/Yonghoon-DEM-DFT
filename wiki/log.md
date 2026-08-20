@@ -51,7 +51,8 @@
 selftest 11→23.  실트랜스크립트 검증: 170,145/1,000,000 = 17.0 %, 훅 침묵.
 
 ## [2026-08-12] update | sr01-delta-sigma-sign — ★해결: 점 스탬프가 σ_e 를 ×35.8 과소평가
-kit_ps_7_3 두 팔 GPU 완주.  σ_e 0.005122 → 0.1833 S/cm (×35.79) · 소산 share VGCF 4 % → 95 %
+kit_ps_7_3 두 팔 GPU 완주.  σ_e 0.005122 → 0.1833 S/cm (×35.79 ⚠철회 — CL-15: 규약 차이지
+  과소평가 배수가 아니다) · 소산 share VGCF 4 % → 95 %
 (AM_S/AM_P 39/57 → 3/3) · σ_ion −7.4 % · κ +2.4 %.  H1 확정, H2·H3 기각.
 ⚠ 1 킷 1 베드 · rate-오염 베드라 relative-only · 60 °C.  confidence 는 lint 규칙대로 medium
 (single-source + high 금지).

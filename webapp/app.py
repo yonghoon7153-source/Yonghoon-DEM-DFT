@@ -4007,7 +4007,24 @@ def api_seminar_slides():
                         'hint': 'python3 scripts/seminar_deck_extract.py 로 생성'}), 200
     except Exception as e:                                     # noqa: BLE001
         return jsonify({'ok': False, 'error': f'{type(e).__name__}: {e}'}), 200
+    #  ⚠⚠⚠ 2026-08-20 (Codex 재검증 NEW-DEFECT P1) — 이 덱의 SDCP 수치(+52.0 % · +5.6 % ·
+    #    +18 % · σ_e 3.002 S/cm)는 **2026-08-13 적대 리뷰로 철회**됐다 (claims.json CL-24).
+    #    JSON 안에 `_RETRACTED` 배너를 넣었지만 **UI 가 그것을 렌더하지 않아** 화면에는
+    #    여전히 현행 결론처럼 보였다 = 배너가 파일에만 있고 사용자에겐 안 보이는 상태.
+    #    ⇒ **fail-closed**: 명시적으로 이력 열람을 요청하지 않으면 데이터를 주지 않는다.
+    #      (`?historical=1`).  프런트가 그 파라미터를 안 보내면 화면에 철회 안내가 뜬다.
+    _RETR = ('⛔ 이 덱은 2026-08-06 발표 기록이고, 안의 SDCP 수치(+52.0 % · +5.6 % · +18 % · '
+             'σ_e 3.002 S/cm)는 2026-08-13 적대 리뷰로 **철회**됐습니다.  전부 vox 0.4 µm '
+             '점-스탬프 격자의 산물이고, 격자를 조이면 σ_e 이득은 +42.15 → +8.49 % 로 '
+             '내려가며 σ_ion 이득은 부호가 뒤집힙니다.  현재 말할 수 있는 것은 구-스탬프 '
+             '규약의 측정 서술뿐입니다 (vox 0.15/0.125/0.115 에서 비 1.123/1.144/1.155, '
+             '격자 수렴 미확인).  정본: CLAUDE.md SR-01 · docs/reviews/claims.json.')
+    if (request.args.get('historical') or '') != '1':
+        return jsonify({'ok': False, 'retracted': True, 'error': _RETR,
+                        'hint': '이력으로 열람하려면 ?historical=1 (재발표 금지)'}), 200
     data['ok'] = True
+    data['retracted'] = True
+    data['retracted_banner'] = _RETR
     return jsonify(data)
 
 
@@ -4039,7 +4056,17 @@ def api_seminar_file():
 
 @app.route('/api/seminar/deck')
 def api_seminar_deck():
-    """생성된 pptx 내려받기.  없으면 만드는 법을 안내한다 (조용한 404 금지)."""
+    """생성된 pptx 내려받기.  없으면 만드는 법을 안내한다 (조용한 404 금지).
+
+    ⚠⚠ 2026-08-20 — 이 pptx 는 **철회된 수치**를 담고 있고 파일 안에는 표지가 없다
+      (Codex 재검증 NEW-DEFECT).  ⇒ 같은 fail-closed 규약: `?historical=1` 없이는 안 준다.
+    """
+    if (request.args.get('historical') or '') != '1':
+        return Response(
+            '⛔ 이 덱(2026-08-06)의 SDCP 수치는 2026-08-13 적대 리뷰로 철회됐고, pptx 파일 '
+            '안에는 그 표지가 없습니다.  재발표 금지.  이력으로 받으려면 ?historical=1 를 '
+            '붙이세요.  정본: CLAUDE.md SR-01 · docs/reviews/claims.json (CL-24).',
+            mimetype='text/plain; charset=utf-8', status=403)
     try:
         path = _repo_path(_SEMINAR_DECK)
     except ValueError as e:

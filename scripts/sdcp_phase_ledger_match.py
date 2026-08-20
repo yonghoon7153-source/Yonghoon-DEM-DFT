@@ -70,6 +70,15 @@ def _selftest():
         not matches({'vox_um': 0.15, 'bridge_um': 0.48}, '0.15', '0.48', '0.30')[0])
     chk('⑧ ★ 기록이 아예 없는(옛) 원장은 재사용 금지',
         not matches({'vox_um': 0.15}, '0.15', '0.48', '0.30')[0])
+    #  ⑨ ★★ 2026-08-20 (Codex 재검증 IJ-07) — **근접 수치 alias**.
+    #     `%g`(기본 6자리)로 정규화한 값을 넘기면 0.3 과 0.3000004 가 같은 문자열이 되어
+    #     캐시가 다시 alias 된다.  raw 로 비교하면 갈린다 — 셸이 raw 를 넘기도록 고쳤고,
+    #     여기서 그 계약을 고정한다.
+    chk('⑨ ★ 근접 수치도 raw 로는 갈린다 (0.3 vs 0.3000004)',
+        not matches({'vox_um': 0.15, 'bridge_um': 0.3}, '0.15', '0.3000004', '')[0])
+    chk('⑨ 같은 값의 다른 표기는 여전히 일치 (0.30 vs 0.3)',
+        matches({'vox_um': 0.15, 'bridge_um': 0.30}, '0.15', '0.3', '')[0])
+
     print(f'\nsdcp_phase_ledger_match selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0

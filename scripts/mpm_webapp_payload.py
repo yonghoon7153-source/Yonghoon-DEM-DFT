@@ -1132,11 +1132,17 @@ def main():
                         'unconverged' if _res3.get('unconverged') else 'complete',
                         (f"cg_info={_res3.get('cg_info')} resid={_res3.get('cg_resid')}"
                          if _res3.get('unconverged') else ''))
-                step3 = {'sigma_e_eff_S_cm': float(f"{_res3['sigma_eff']:.4g}"),
+                #  ★★ 2026-08-20 (Codex 재검증 §D-2-가) — **저장 정밀도를 깎지 않는다.**
+                #    옛 판은 σ 를 `.4g`, residual 을 `.2g` 로 **저장**했다.  화면 서식이 아니라
+                #    **파일에 들어가는 값**이라, 판정기가 "raw solver precision 으로 1 % 게이트를
+                #    건다" 고 선언해도 실행이 불가능했다 (원값이 이미 없다).
+                #    실증: vox 0.115 DBE 8팔 중 4팔이 4자리 반올림으로 **같은 값(0.05272)** 이 됐다.
+                #    ⇒ 원값을 그대로 싣는다.  화면 출력은 아래 print 가 따로 `.4g` 로 줄인다.
+                step3 = {'sigma_e_eff_S_cm': float(_res3['sigma_eff']),
                          'vox_um': a.step3_vox, 'n_dof': _res3['n_dof'],
                          'k_plates': list(_res3.get('k_plates', ())),
                          'n_floating_dropped': _res3.get('n_floating_dropped', 0),
-                         'cg_resid': float(f"{_res3['resid']:.2g}"),
+                         'cg_resid': float(_res3['resid']),
                          #  ★ 수렴 판정을 **기계가 읽을 수 있게** 남긴다 (사전등록 §5-1).
                          #    실사고 2026-08-16: 판정기가 없는 필드를 읽어 미수렴 게이트가
                          #    fail-open 이었다 (resid 는 로그에만 있었다).
@@ -1453,14 +1459,14 @@ def main():
                     step3['phi_profile']['note'] = ('ΔV=1V 전도 솔브 층별 전도-복셀 평균 φ '
                                                     '(바닥판 φ=1, 꼭대기 φ=0; Oh2025 Fig4e 문법)')
                     _s3mark('ionic', 'complete')
-                    step3['sigma_ion_eff_S_cm'] = float(f"{_res3i['sigma_eff']:.4g}")
+                    step3['sigma_ion_eff_S_cm'] = float(_res3i['sigma_eff'])
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
                     # T1-a provenance: which temperature convention produced this σ_ion?
                     step3['temperature_provenance'] = dict(_temp_prov)
                     step3['sigma_ion_se_at_T_ref_S_cm'] = a._sigma_ion_se_ref
-                    step3['ion_resid'] = float(f"{_res3i['resid']:.2g}")
+                    step3['ion_resid'] = float(_res3i['resid'])
                     print(f"  STEP3 σ_ion_eff = {step3['sigma_ion_eff_S_cm']:.4g} S/cm  "
                           f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
                           f"share: " + " ".join(f"{k} {100*v:.0f}%"

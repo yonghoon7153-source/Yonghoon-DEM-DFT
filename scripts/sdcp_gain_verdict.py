@@ -55,6 +55,23 @@ _GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
 _SEED_FIELD = 'mpm_seed'
 
 
+
+def _component_backends(man):
+    """→ {component: used} (돌아간 component 만).  하나도 없으면 None → missing 게이트.
+
+    ★ 정본은 `manifest['components'][c]['backend']` 다 (`mpm_webapp_payload._s3mark` 가
+      component 별로 스냅샷한다).  `backend_last_solve` 는 **마지막 solve 하나**뿐이라
+      component 사이의 폴백 차이를 접어 버린다 (2026-08-20 Codex 재현).
+    """
+    comps = (man.get('components') or {})
+    out = {}
+    for name, rec in comps.items():
+        bk = (rec or {}).get('backend')
+        if isinstance(bk, dict) and bk.get('used'):
+            out[name] = bk['used']
+    return out or None
+
+
 def _read(path):
     d = json.load(open(path, encoding='utf-8'))
     s = d.get('step3') or (d.get('mpm_metrics') or {}).get('step3') or {}
@@ -108,8 +125,15 @@ def _read(path):
             #    ⇒ 실제 값 `used` 를 읽는다.  하위호환 별칭 `backend` 도 같은 dict 라 폴백으로 둔다.
             #    ⚠ `precond`(jacobi/amg)는 **게이트하지 않는다** — σ_eff 는 전처리에 불변이다
             #      (rtol 1e-8 에서 ≤0.014 %, step3_sigma docstring).  가르는 것은 gpu↔cpu 다.
-            'backend': (lambda _b: (_b.get('used') if isinstance(_b, dict) else _b))(
-                man.get('backend_last_solve') or man.get('backend') or {}),
+            #  ⚠⚠⚠ 2026-08-20 재수정 (Codex 재검증 NEW-DEFECT P1) — `backend_last_solve` 는
+            #    **마지막 solve 하나**다.  payload 주석 자신이 ":1834 components[c]['backend'] 가
+            #    정본이고 여기는 하위호환 요약" 이라고 적어 뒀는데 내가 요약을 읽고 있었다.
+            #    Codex 재현: SBE electronic=gpu · DBE electronic=**cpu** 인데 양쪽
+            #    `backend_last_solve`(마지막=thermal)가 gpu 라 파싱값이 ['gpu'] 하나로 접혀 **h0**.
+            #    = 이 필드가 잡으라고 만들어진 "조용한 CPU 폴백" 이 정확히 통과한다.
+            #    ⇒ **component 별 `used` 를 전부** 읽어 dict 로 비교한다 (고정-인자 루프가
+            #      json 정규화로 dict 를 비교할 수 있다).  하나도 없으면 None → missing 게이트.
+            'backend': _component_backends(man),
             'fibre_stamp': man.get('fibre_stamp')}
 
 
@@ -449,12 +473,23 @@ def _selftest():
     #     (6필드 중 4개만 실제로 닫혀 있었다).  ⇒ 이제 **실제 JSON 파일을 쓰고 collect() 를 거쳐**
     #     한 키씩 지운다 = 생산과 같은 경로.  ("실제 경로를 안 타는 테스트" 부류의 재발 차단.)
     import tempfile as _tf22
+    #  ★ 2026-08-20 (Codex 재검증) — 픽스처가 **실제 payload 모양**이어야 한다.
+    #    정본 backend 는 `components[c]['backend']` 이고, 이것이 없는 픽스처로는 그 게이트가
+    #    검증되지 않는다 (앞선 두 사고와 같은 뿌리 = 실제 경로를 안 타는 픽스처).
+    def _comps(elec='gpu', therm='gpu'):
+        _bk = lambda u: {'requested': 'gpu', 'used': u,
+                         'fallback_reason': None, 'precond': 'jacobi'}
+        return {'electronic': {'status': 'complete', 'backend': _bk(elec)},
+                'thermal': {'status': 'complete', 'backend': _bk(therm)},
+                'ionic': {'status': 'disabled'}}
+
     _man22 = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
               'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
               'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
-                                     'fallback_reason': None, 'precond': 'jacobi'}}
+                                     'fallback_reason': None, 'precond': 'jacobi'},
+              'components': _comps()}
 
     def _write_dir(_d, drop=None):
         """8팔 × 2침대를 **실제 payload JSON** 으로 쓴다.  `drop` 키는 매니페스트에서 뺀다."""
@@ -463,6 +498,7 @@ def _selftest():
                 _m = {kk: vv for kk, vv in _man22.items() if kk != drop}
                 if drop == 'backend':
                     _m.pop('backend_last_solve', None)
+                    _m.pop('components', None)          # 정본을 지워야 진짜 "기록 없음" 이다
                 _m['origin_shift_um'] = [0.0, 0.0, _i * 0.01]
                 with open(os.path.join(_d, f'p2_{_k}_sph_a{_i}.json'), 'w',
                           encoding='utf-8') as _f:
@@ -496,8 +532,7 @@ def _selftest():
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
-              'backend': {'requested': 'gpu', 'used': 'gpu',
-                          'fallback_reason': None, 'precond': 'jacobi'}}
+              'components': _comps()}
     with _tf23.TemporaryDirectory() as _d23:
         def _mkp(name, man):
             _p = os.path.join(_d23, name)
@@ -507,18 +542,38 @@ def _selftest():
                     'unconverged': False, 'manifest': man}}}, _f)
             return _p
         _r23 = _read(_mkp('p2_DBE_sph_a0.json', _man23))
-        chk(f"㉓ `backend` 를 실제 키(`used`)에서 읽는다 ({_r23['backend']!r})",
-            _r23['backend'] == 'gpu')
+        chk(f"㉓ `backend` 를 **component 정본**에서 읽는다 ({_r23['backend']!r})",
+            _r23['backend'] == {'electronic': 'gpu', 'thermal': 'gpu'})
         #  ★ 음성 대조 — 기록이 **정말** 없으면 여전히 None 이어야 한다 (게이트가 살아야 하므로).
         _r23b = _read(_mkp('p2_DBE_sph_a1.json',
                            {k: v for k, v in _man23.items()
-                            if k not in ('backend_last_solve', 'backend')}))
+                            if k not in ('backend_last_solve', 'backend', 'components')}))
         chk('㉓ 음성 대조 — 기록이 없으면 None (게이트가 살아 있다)',
             _r23b['backend'] is None)
         #  ★ 그리고 그 None 이 **HOLD 로 이어지는지** — 필드만 읽고 게이트가 안 물면 무의미하다.
         _v23 = verdict(mk(base, [v * 1.08 for v in base], backend=None))
         chk(f"㉓ 그 None 이 HOLD 로 이어진다 ({_v23['decision']})",
             _v23['decision'] == 'HOLD' and 'backend' in (_v23.get('reason') or ''))
+
+    #  ㉔ ★★ 2026-08-20 (Codex 재검증 NEW-DEFECT P1) — **component 별 backend 차이**.
+    #     옛 판은 `backend_last_solve`(마지막 solve = thermal) 하나만 읽어, SBE electronic=gpu 인데
+    #     DBE electronic=**cpu** 인 경우를 ['gpu'] 로 접고 **h0** 를 냈다.  이 필드가 잡으라고
+    #     만들어진 "조용한 CPU 폴백" 이 정확히 그 형태다.
+    with _tf22.TemporaryDirectory() as _d24:
+        for _k, _vals, _elec in (('SBE', base, 'gpu'),
+                                 ('DBE', [v * 1.12 for v in base], 'cpu')):
+            for _i, _v in enumerate(_vals):
+                _m = dict(_man22, components=_comps(elec=_elec),
+                          origin_shift_um=[0.0, 0.0, _i * 0.01])
+                with open(os.path.join(_d24, f'p2_{_k}_sph_a{_i}.json'), 'w',
+                          encoding='utf-8') as _f:
+                    json.dump({'mpm_metrics': {'step3': {
+                        'sigma_e_eff_S_cm': _v, 'cg_info': 0, 'cg_resid': 1e-8,
+                        'unconverged': False, 'manifest': _m}}}, _f)
+        _v24 = verdict(collect(_d24)[1])
+    chk(f'㉔ ★ SBE electronic=gpu · DBE electronic=cpu (양쪽 last_solve=gpu) 는 HOLD '
+        f'({_v24["decision"]})',
+        _v24['decision'] == 'HOLD' and 'backend' in (_v24.get('reason') or ''))
 
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))

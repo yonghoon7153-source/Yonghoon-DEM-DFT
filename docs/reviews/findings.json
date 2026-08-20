@@ -454,7 +454,7 @@
   {
    "id": "CDXIJ-1",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
    "claimed_fixed_sha": "a5b02b96",
@@ -462,7 +462,10 @@
    "evidence_tests": [
     "scripts/sdcp_gain_verdict.py --selftest (㉒ 실제 JSON 6/6 + 기준선)"
    ],
-   "note": "`_read` 가 `sdcp_yield_to_vgcf`→bool(...,False) · `sigma_ptfe_S_cm`→float(...,0.0) 로 부재를 기본값으로 접어 missing 게이트(None 만 본다)가 원리적으로 발화 불가였다. ⚠ 내 회귀 ㉒ 는 `_read()` 를 건너뛰고 내부 row 에 None 을 직접 넣어 놓쳤다 = \"실제 경로를 안 타는 테스트\" 재발.  → 부재 보존(fail-closed) + ㉒ 를 실제 JSON 16개 · collect() 경유로 재작성.  Codex 가 실제 파일 mutation 으로 최초 발견."
+   "note": "`_read` 가 `sdcp_yield_to_vgcf`→bool(...,False) · `sigma_ptfe_S_cm`→float(...,0.0) 로 부재를 기본값으로 접어 missing 게이트(None 만 본다)가 원리적으로 발화 불가였다. ⚠ 내 회귀 ㉒ 는 `_read()` 를 건너뛰고 내부 row 에 None 을 직접 넣어 놓쳤다 = \"실제 경로를 안 타는 테스트\" 재발.  → 부재 보존(fail-closed) + ㉒ 를 실제 JSON 16개 · collect() 경유로 재작성.  Codex 가 실제 파일 mutation 으로 최초 발견.  ★ 2026-08-20 **독립 검증(Codex) CONFIRMED-FIXED**: 실제 JSON 16개에서 6키를 하나씩 삭제 → **6/6 HOLD**.  두 정규화 필드도 None 보존 확인.  검증 커밋 675d2a75f9cd @ Codex/dem-mpm-crosscheck (우리 리포에 없는 외부 worktree — 기계 확인 불가, 사람이 읽는 attestation).",
+   "verified_by": "codex",
+   "verified_sha": "675d2a75f9cdbc224381ecc4ac3bee18443e44dd",
+   "verified_repo": "Codex/dem-mpm-crosscheck"
   },
   {
    "id": "CDXIJ-2",
@@ -471,12 +474,12 @@
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
    "title": "판정기가 causal-input 계약·정확한 8팔·origin pairing·prereg 명목값을 강제하지 않는다",
-   "note": "Codex 실측: 2팔씩만 있어도 판정 · origin 필드가 전부 없어도 통과 · SBE/DBE origin 집합이 disjoint(0..7 vs 100..107)여도 h0 · paired 통계가 origin key 가 아니라 **파일명 정렬 zip()** 이라 잘못 짝지어도 SE 0.0 % 로 보고.  또 `_GEN_FIELDS` 가 모든 팔에서 없으면 의도적으로 통과하는데, 같은 디렉터리는 같은 argv·입력·코드 세대의 증거가 아니다.  manifest 의 `schema_version` 을 판정기가 읽지도 않는다. ⇒ 권고(Codex): typed causal-input registry 에서 argparse·manifest·comparator 를 생성하고 미분류 노브는 CI 실패 · canonical 값 digest + 입력 artifact/code SHA · pair_id = bed_digest+origin_shift+fixed_contract_digest 로 join. **미착수** — 이번 라운드에서 손대지 않았다 (설계 변경이라 별건)."
+   "note": "Codex 실측: 2팔씩만 있어도 판정 · origin 필드가 전부 없어도 통과 · SBE/DBE origin 집합이 disjoint(0..7 vs 100..107)여도 h0 · paired 통계가 origin key 가 아니라 **파일명 정렬 zip()** 이라 잘못 짝지어도 SE 0.0 % 로 보고.  또 `_GEN_FIELDS` 가 모든 팔에서 없으면 의도적으로 통과하는데, 같은 디렉터리는 같은 argv·입력·코드 세대의 증거가 아니다.  manifest 의 `schema_version` 을 판정기가 읽지도 않는다. ⇒ 권고(Codex): typed causal-input registry 에서 argparse·manifest·comparator 를 생성하고 미분류 노브는 CI 실패 · canonical 값 digest + 입력 artifact/code SHA · pair_id = bed_digest+origin_shift+fixed_contract_digest 로 join. **미착수** — 이번 라운드에서 손대지 않았다 (설계 변경이라 별건).  ⚠ Codex 재검증 STILL-OPEN — origin pairing 외에 **causal contract** 도 필요하다.  도핑 런 전 최소 4항목을 §K 에 등록했다."
   },
   {
    "id": "CDXIJ-3",
    "severity": "P1",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
    "claimed_fixed_sha": "a5b02b96",
@@ -485,7 +488,10 @@
     "scripts/step3_sigma.py --selftest-temp (all-SE η=1 · 혼합 η<1 · topology 의존)",
     "docs/reviews/claims.json CL-57"
    ],
-   "note": "STEP3 선형성 selftest 는 `sid[:] = 6` = all-SE 만 본다.  라벨이 \"exactly linear in σ_SE\" 라 적용 범위가 안 보였고, 도핑 prereg 초안이 그것을 근거로 삼았다. 독립 재현: η(all-SE)=1.000000 · 직렬 0.179 · 병렬 0.750 · 무작위 20 % SDCP 0.789. ⇒ 트랙이 산술이 아니라 측정이 된다 (CL-57).  라벨에 적용 범위 명시 + 회귀 3건 상주."
+   "note": "STEP3 선형성 selftest 는 `sid[:] = 6` = all-SE 만 본다.  라벨이 \"exactly linear in σ_SE\" 라 적용 범위가 안 보였고, 도핑 prereg 초안이 그것을 근거로 삼았다. 독립 재현: η(all-SE)=1.000000 · 직렬 0.179 · 병렬 0.750 · 무작위 20 % SDCP 0.789. ⇒ 트랙이 산술이 아니라 측정이 된다 (CL-57).  라벨에 적용 범위 명시 + 회귀 3건 상주.  ★ 2026-08-20 **독립 검증(Codex) CONFIRMED-FIXED**: 원래의 DBE 선형성 오류가 수정됨 (회귀 3건 상주).  검증 커밋 675d2a75f9cd @ Codex/dem-mpm-crosscheck (우리 리포에 없는 외부 worktree — 기계 확인 불가, 사람이 읽는 attestation).",
+   "verified_by": "codex",
+   "verified_sha": "675d2a75f9cdbc224381ecc4ac3bee18443e44dd",
+   "verified_repo": "Codex/dem-mpm-crosscheck"
   },
   {
    "id": "CDXIJ-4",
@@ -499,7 +505,7 @@
     "scripts/check_review_findings.py --ban-sweep",
     "scripts/check_review_findings.py --selftest"
    ],
-   "note": "스캔 범위가 md/html/js 뿐이라 `docs/seminar/seminar_deck.json`(webapp `/api/seminar/slides` 가 직접 서빙) 과 `sr01_gate5_2x2.sh`(`f_artifact` 출력) 이 빠졌는데 스윕은 \"누수 0\" 이었다 = false-green.  → json/sh 범위 추가 + `+52.0%`(공백 없는 변형)·`f_artifact` 패턴 추가 → 새로 16건 드러나 전부 처리.  241 → 389 파일. ⚠ **남은 것**: 배너 하나로 파일 전체가 면제되는 self-authorizing 규칙과 exact-string 매칭의 한계는 그대로다 (Codex 권고 = claim_id@revision 에서 생성 + path+digest 면제)."
+   "note": "스캔 범위가 md/html/js 뿐이라 `docs/seminar/seminar_deck.json`(webapp `/api/seminar/slides` 가 직접 서빙) 과 `sr01_gate5_2x2.sh`(`f_artifact` 출력) 이 빠졌는데 스윕은 \"누수 0\" 이었다 = false-green.  → json/sh 범위 추가 + `+52.0%`(공백 없는 변형)·`f_artifact` 패턴 추가 → 새로 16건 드러나 전부 처리.  241 → 389 파일. ⚠ **남은 것**: 배너 하나로 파일 전체가 면제되는 self-authorizing 규칙과 exact-string 매칭의 한계는 그대로다 (Codex 권고 = claim_id@revision 에서 생성 + path+digest 면제).  ⚠ Codex 재검증 STILL-OPEN → **부분 해소 (2026-08-20 2차)**.  ① 자기승인 배너 차단: 파일 전체 면제는 배너가 **원장을 지목**할 때만 (BAN_BANNER_ANCHORS), 줄-근처 면제는 **철회 전용 어휘**만 (BAN_NEAR_MARKS — HISTORICAL/retired/⛔ 제외).  ② 표기 변형 정규화 (NBSP·얇은 공백·JSON \\u0025·꼬리 0 → +52.00% 도 잡힌다).  ③ 두 우회를 상주 음성 대조 20a/20b 로.  ④ **NEW-DEFECT(UI)** 는 별건 CDXIJ-8 로 분리.  ⚠ 조인 뒤 리포에서 **187건**이 새로 드러났고 전부 처리했다 (이력 문서 배너가 원장을 안 가리키고 있었다)."
   },
   {
    "id": "CDXIJ-5",
@@ -512,12 +518,12 @@
    "evidence_tests": [
     "scripts/check_method_discipline.py --selftest (J-3a/b/c 음성 대조)"
    ],
-   "note": "Codex 의 fake producer(`electronic=complete` 한 줄) 와 all-disabled 변형이 둘 다 `([], [])` 로 통과했다.  → 팔별 기대 상태 맵 + 수치 단언(σ_e 유한·양수, dof>0) 추가, 단언부를 `smoke_assert_payload()` 로 분리해 그 세 변형을 상주 음성 대조로. ⚠ **남은 것**: argv 조합이 아직 2개뿐이고 production argv 생성기(`mpm_input_from_case → run_mpm.sh`)는 스모크하지 않는다."
+   "note": "Codex 의 fake producer(`electronic=complete` 한 줄) 와 all-disabled 변형이 둘 다 `([], [])` 로 통과했다.  → 팔별 기대 상태 맵 + 수치 단언(σ_e 유한·양수, dof>0) 추가, 단언부를 `smoke_assert_payload()` 로 분리해 그 세 변형을 상주 음성 대조로. ⚠ **남은 것**: argv 조합이 아직 2개뿐이고 production argv 생성기(`mpm_input_from_case → run_mpm.sh`)는 스모크하지 않는다.  ⚠ Codex 재검증 STILL-OPEN → **부분 해소**.  ① 판정기 리더 예외를 warning → **오류**로 (옛 판은 exit 0) ② 수치 단언에 **계산 증거** 추가 (CG cg_info/cg_resid + thermal k_eff + dof>1000) — Codex 가 통과시킨 `sigma_e=1·n_dof=1` 변형을 J-3d 로 상주 ③ J-3a/b 가 **예상 diagnostic code**(J_COMPONENT)를 요구하도록 (옛 판은 오류 목록이 비었는지만 봐서 그 검사를 지워도 통과했다).  ⚠ **남은 것**: argv 조합이 아직 2개이고 production argv 생성기(`mpm_input_from_case → run_mpm.sh`)는 스모크하지 않는다."
   },
   {
    "id": "CDXIJ-6",
    "severity": "P2",
-   "status": "claimed_fixed",
+   "status": "verified",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
    "claimed_fixed_sha": "a5b02b96",
@@ -525,7 +531,10 @@
    "evidence_tests": [
     "scripts/ml_design_structure.py --selftest (원본 미가용 시 실패)"
    ],
-   "note": "broad except 가 삼켜 `64/64 PASS` 를 냈다 — 하필 오프라인 사본이 실제로 쓰이는 환경에서 그 사본을 인증 못 한 채 녹색.  → UNVERIFIED = 실패.  음성 대조(webapp 없는 사본 트리) 실측 64/65 FAIL, exit 1.  ⚠ **남은 것**: 음성 대조가 사본 **구현**을 변형하는 것이 아니라 이미 계산된 dict 를 바꾼다 (Codex 지적)."
+   "note": "broad except 가 삼켜 `64/64 PASS` 를 냈다 — 하필 오프라인 사본이 실제로 쓰이는 환경에서 그 사본을 인증 못 한 채 녹색.  → UNVERIFIED = 실패.  음성 대조(webapp 없는 사본 트리) 실측 64/65 FAIL, exit 1.  ⚠ **남은 것**: 음성 대조가 사본 **구현**을 변형하는 것이 아니라 이미 계산된 dict 를 바꾼다 (Codex 지적).  ★ 2026-08-20 **독립 검증(Codex) CONFIRMED-FIXED**: predictor_engine 차단 시 **64/65 FAIL, exit 1** — UNVERIFIED=실패가 실제로 집행된다.  검증 커밋 675d2a75f9cd @ Codex/dem-mpm-crosscheck (우리 리포에 없는 외부 worktree — 기계 확인 불가, 사람이 읽는 attestation).",
+   "verified_by": "codex",
+   "verified_sha": "675d2a75f9cdbc224381ecc4ac3bee18443e44dd",
+   "verified_repo": "Codex/dem-mpm-crosscheck"
   },
   {
    "id": "CDXIJ-7",
@@ -538,7 +547,43 @@
    "evidence_tests": [
     "scripts/sdcp_phase_ledger_match.py --selftest (8/8, 태그 충돌 쌍 판별 포함)"
    ],
-   "note": "`${x/./}` 가 0.3↔03 · 0.45↔04.5 를 같은 태그로 접고 `[ -s \"$OUT\" ]` 가 그대로 SKIP. report 는 row 의 `sdcp_sphere_d_um` 대신 전역 SDCP_D=0.30 으로 V_TRUE 를 계산해 d=0.45 원장을 0.238732 로 찍었다 (정확값 0.0707355).  → awk %g 정규화 + SKIP 전 **기록 대조**(신설 matcher, fail-closed) + report 가 row 별 직경 사용."
+   "note": "`${x/./}` 가 0.3↔03 · 0.45↔04.5 를 같은 태그로 접고 `[ -s \"$OUT\" ]` 가 그대로 SKIP. report 는 row 의 `sdcp_sphere_d_um` 대신 전역 SDCP_D=0.30 으로 V_TRUE 를 계산해 d=0.45 원장을 0.238732 로 찍었다 (정확값 0.0707355).  → awk %g 정규화 + SKIP 전 **기록 대조**(신설 matcher, fail-closed) + report 가 row 별 직경 사용.  ⚠ Codex 재검증 STILL-OPEN → **해소**.  `%g`(기본 6자리)가 0.3 과 0.3000004 를 같은 문자열로 접어 근접 alias 가 재현됐다.  ⇒ matcher 에 **raw 값**을 넘기고 `%g` 는 파일명 표시용으로만 (셸 수정) + 근접 alias 회귀 2건 상주 (10/10)."
+  },
+  {
+   "id": "CDXIJ-8",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "2a54a8d4",
+   "title": "판정기가 backend 를 **component 정본이 아니라 마지막 solve** 에서 읽어, 조용한 CPU 폴백을 통과시킨다",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest (㉔ SBE electronic=gpu · DBE electronic=cpu → HOLD)"
+   ],
+   "note": "Codex 재현: SBE `components.electronic.backend=gpu` · DBE `=cpu` 인데 양쪽 `backend_last_solve`(마지막 = thermal)가 gpu 라 파싱값이 `['gpu']` 하나로 접혀 **h0**. = 이 필드가 잡으라고 만들어진 \"CuPy 실패 → 조용한 CPU 폴백\" 이 정확히 통과한다. payload 주석 자신이 \":1834 components[c]['backend'] 가 정본\" 이라 적어 뒀는데 내가 하위호환 **요약**을 읽고 있었다.  → `_component_backends()` 로 component 별 `used` 를 전부 읽어 dict 로 비교.  픽스처도 실제 payload 모양(components 포함)으로 고쳤다 — 옛 픽스처에는 components 가 없어 이 게이트가 검증된 적이 없었다."
+  },
+  {
+   "id": "CDXIJ-9",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "2a54a8d4",
+   "title": "seminar 덱의 철회 배너를 **UI 가 렌더하지 않는다** — 화면과 PPTX 는 여전히 철회값을 현행으로 보여준다",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --ban-sweep",
+    "webapp/app.py /api/seminar/slides · /api/seminar/deck (historical=1 없이는 거부)"
+   ],
+   "note": "내가 `seminar_deck.json` 에 `_RETRACTED` 키를 넣었는데 **파일에만 있고 사용자에겐 안 보였다** — UI 는 오히려 slide 12 를 \"✓ 방어 가능한 결과\" 로 표시하고, 다운로드 PPTX 에는 표지가 아예 없다 (Codex 재검증 NEW-DEFECT).  = \"배너를 달았다\" 와 \"사용자가 본다\" 가 갈린 것 = 오늘의 주제 그 자체.  → 서빙 경로를 **fail-closed** 로: `/api/seminar/slides` 와 pptx 다운로드가 `?historical=1` 없이는 데이터를 주지 않고 철회 안내를 반환한다.  ⚠ **남은 것**: PPTX 파일 자체에는 여전히 표지가 없다 (재생성이 필요하고, 그러면 \"발표된 그대로\" 가 아니게 된다 — 판단 필요)."
+  },
+  {
+   "id": "CDXIJ-10",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "title": "도핑 런 전 최소 계약 4항목 (정확한 팔 계약 · pair identity · 실험 전용 causal contract · 결과 seal)",
+   "note": "Codex §③ 이 IJ-02 의 8권장 중 **도핑 런 전에 반드시 필요한 최소 부분집합**으로 넷을 골랐다: ① bed×factor 마다 정확히 8 origin (non-null·unique·모든 factor 와 baseline 이 **같은 집합**, origin 으로 1:1 join) ② `pair_id = bed/input digest + exact origin + fixed-contract digest` ③ 실험 전용 causal contract (pair 간 `sigma_ion_se_S_cm` **만** 변경 허용, 실제 factor 를 manifest 값으로 검증, geometry/phase/fibre digest·vox/grid/plate/periodic·stamp/bridge/diameter·σ_SDCP·temperature·seed·component backend·solver tolerance·code SHA 고정) ④ 결과 seal (full-precision finite positive σ · ionic complete · CG/residual 통과 · atomic publish).  ⚠ **미착수** — 이것이 닫히기 전에는 도핑 팔을 돌리지 않는다.  현재 판정기는 disjoint origin 집합도 h0 를 내고 paired 통계가 **파일명 정렬 zip** 이다."
   }
  ]
 }

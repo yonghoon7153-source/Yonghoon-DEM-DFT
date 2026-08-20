@@ -467,3 +467,76 @@ CLAUDE.md·docs·wiki·webapp·덱 생성기를 훑어 **표지 없는 철회값
 
 Q-I2(2단계 저장)·Q-I3(SE 규약)에 대한 Codex 회답은 위 박제 문서 §9 에 있고,
 Q-I3 는 이미 §D-2 (가)에 반영했다.
+---
+
+# §K. 【2026-08-20 저녁】 Codex 재검증 회신 — **§D-2 (나) 재개정 + 런 전 최소 계약**
+
+Codex 가 `7246cd5b` 를 다시 감사했다 (원문은 `codex_crosscheck_IJ_20260820.md` 말미에 이어붙였다).
+판정: **CDXIJ-1 · 3 · 6 = CONFIRMED-FIXED** (verified, 검증 커밋 `675d2a75` @ `Codex/dem-mpm-crosscheck`)
+· **2 · 4 · 5 · 7 = STILL-OPEN** · **NEW-DEFECT 2건(P1)**.
+
+## K-1. §D-2 (나) 를 **다시** 좁힌다 — "0 < η < 1" 은 너무 약했다
+
+Codex 지적: 부등식만 등록하면 ⓐ 수동 선형 저항망이면 거의 자동으로 만족하고 ⓑ 유효한
+endpoint 에서 η = 0 · η = 1 도 가능하며 ⓒ **per-origin η 인지 ratio-of-means 인지 정의가 없고**
+ⓓ 거의 어떤 값도 "topology-dependent" 로 사후 설명된다.  ⇒ **점예측 없이도 좁힐 수 있다.**
+
+**개정 (여전히 런 전이다)** — 등록하는 것은 다음 셋이다:
+
+1. **정의 고정**: η 는 **per-origin** 으로 센다.
+   `η_i(f) = (σ_eff,i(f)/σ_eff,i(1) − 1)/(f − 1)`, origin-key 로 짝지은 i = 1…8.
+   (ratio-of-means 는 보고에만 쓰고 판정에 쓰지 않는다.)
+2. **상한을 baseline SE 소산 몫으로** — 각 origin 에서
+   `0 ≤ η_i(f) ≤ w_SE,i(base) ≤ 1`.
+   `w_SE,i` = baseline 이온 솔브의 **SE 상 소산 분담**(`dissipation_share` 이온판).
+   ⇒ 이것은 "SE 가 애초에 나르지 않는 몫만큼은 개선이 전달될 수 없다" 는 물리이고,
+   침대마다 **미리 계산해 등록**할 수 있다 (도핑 팔을 돌리기 전에).
+3. **factor 순서 단조**: `η_i(1.25) ≥ η_i(1.53) ≥ η_i(1.94)`.
+   (개선이 커질수록 전달률이 떨어진다 — 고정 SDCP 경로의 직렬 성분이 상대적으로 커지므로.)
+
+Codex 가 `7246cd5b` 솔버로 검산한 값 (우리 라미네이트와 같은 계):
+
+| 구조 | w_SE(base) | η(1.25) | η(1.53) | η(1.94) |
+|---|---:|---:|---:|---:|
+| all-SE | 1.000 | 1.000 | 1.000 | 1.000 |
+| 직렬 | 0.250 | 0.210526 | 0.178891 | 0.146628 |
+| 병렬 | 0.750 | 0.750 | 0.750 | 0.750 |
+
+⇒ 상한 `η ≤ w_SE` 와 단조 순서가 셋 다에서 성립한다.  **⚠ 미재현** — 우리 쪽에서 아직 안 돌렸다.
+
+**등록 성격**: 독립적인 practical threshold 근거가 없으므로 DBE 팔은 "가설 채택" 이 아니라
+**exploratory deterministic measurement** 로 등록한다 (Codex 권고 채택).
+
+## K-2. (가) SBE oracle 은 **지금은 실행 불가**였다 — 저장 정밀도
+
+Codex: 문서는 "raw solver 값으로 판정" 이라 했는데 생산 payload 는
+`sigma_ion_eff_S_cm` **4자리** · `ion_resid` **2자리**만 저장했다 ⇒ raw gate 를 실행할 수 없다.
+⇒ **payload 저장 정밀도를 full 로 고쳤다** (σ_e · σ_ion · cg_resid · ion_resid).
+화면 출력만 `.4g` 로 줄인다.  ⚠ **옛 payload 에는 원값이 없다** — vox 0.115 DBE 8팔 중 4팔이
+4자리 반올림으로 같은 값(0.05272)이 된 것이 그 실증이다.
+⚠ 남은 판단: 1 % 는 gross-failure gate 로는 되지만 code oracle 로는 느슨하다.
+raw 저장 후 **synthetic all-SE 스케일링 결과와 solver 오차로 더 좁은 허용치를 런 전에 고정**해야 한다.
+
+## K-3. 팔 이름 재개정
+
+`literature-ratio sensitivity scenario` → **`fixed-morphology pellet-EIS conductivity-ratio
+sensitivity scenario`** (pellet → grain 전이를 이름에서 숨기지 않는다).
+manifest 에 함께 박는다: `validation_eligible=false` · `doped_grain_prediction=false` ·
+`transfer=pellet_ratio_to_SE_grain_slot`.
+
+## K-4. ★★ 도핑 런 전 최소 계약 4항목 (CDXIJ-10, **미착수**)
+
+origin-key pairing **하나만으로는 부족**하다는 것이 실측으로 드러났다 (disjoint origin 집합도
+h0, paired SE 0.0 %).  Codex 가 IJ-02 의 8권장 중 고른 최소 부분집합:
+
+1. **정확한 팔 계약** — bed×factor 마다 정확히 8 origin, non-null·unique, 모든 factor 와
+   baseline 이 **같은 집합**, origin 으로 1:1 join.
+2. **pair identity** — `pair_id = bed/input digest + exact origin + fixed-contract digest`.
+3. **실험 전용 causal contract** — pair 간 `sigma_ion_se_S_cm` **만** 변경 허용, 실제 factor 를
+   manifest 값으로 검증, 나머지(geometry·phase/fibre digest·vox/grid/plate/periodic·stamp/
+   bridge/diameter·σ_SDCP·temperature·seed·component backend·solver tolerance·code SHA) 고정.
+4. **결과 seal** — full-precision finite positive σ · ionic complete · CG/residual 통과 ·
+   임시 파일 후 atomic publish.
+
+범용 typed registry·전체 JSON Schema·legacy migration 은 별건으로 미룬다.
+⚠ **이 넷이 닫히기 전에는 도핑 팔을 돌리지 않는다.**

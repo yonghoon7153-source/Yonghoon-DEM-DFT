@@ -223,3 +223,31 @@ prereg·causal-input digest 강제 · ④ D-2 를 SBE all-SE oracle 과 DBE atte
 - **⑨ CI 연결** — `.github` workflow 가 없어 세 checker 는 여전히 **수동 실행**이다.
 - **⑩ front matter SHA 고정** — 리뷰 문서에 `base_sha` 등을 아직 안 박았다.
 - **§8 계수** — `9 → 17` 표기를 고쳤다 (아래).  "정적 검사가 원리적으로 못 본다" 도 완화했다.
+
+
+---
+
+# 2차 재검증 (2026-08-20 저녁) — 대상 `7246cd5b`
+
+Codex 판정: **CDXIJ-1 · 3 · 6 = CONFIRMED-FIXED** (verified, 검증 커밋
+`675d2a75f9cdbc224381ecc4ac3bee18443e44dd` @ `Codex/dem-mpm-crosscheck` — 우리 리포에 없는
+외부 worktree라 기계 확인은 불가하고, 원장에 `verified_repo` 로 그 사실을 남겼다) ·
+**2 · 4 · 5 · 7 = STILL-OPEN** · **NEW-DEFECT 2건(P1)**.
+
+| 항목 | 판정 | 내 처리 |
+|---|---|---|
+| IJ-01 | CONFIRMED-FIXED | — |
+| IJ-02 | STILL-OPEN | 도핑 런 전 **최소 4항목**을 CDXIJ-10 으로 등재 (미착수).  요청서 §K-4 |
+| IJ-03 | CONFIRMED-FIXED | §D-2 (나)를 **다시** 좁혔다 (§K-1) |
+| IJ-04 | STILL-OPEN | **부분 해소** — 자기승인 배너 차단 + 표기 변형 정규화 + 음성 대조 2건.  UI 누수는 CDXIJ-9 로 분리 |
+| IJ-05 | STILL-OPEN | **부분 해소** — 리더 예외=오류 · 계산 증거 요구 · 예상 code 고정 (J-3d).  argv 매트릭스는 잔여 |
+| IJ-06 | CONFIRMED-FIXED | — |
+| IJ-07 | STILL-OPEN | **해소** — matcher 에 raw 값 (`%g` 는 표시용), 근접 alias 회귀 2건 |
+| **NEW-1** | P1 | **CDXIJ-8** — 판정기가 backend 를 component 정본이 아니라 마지막 solve 에서 읽었다 → `_component_backends()` + 회귀 ㉔ |
+| **NEW-2** | P1 | **CDXIJ-9** — 덱 철회 배너를 **UI 가 렌더하지 않았다** → 서빙 경로 fail-closed (`?historical=1`) |
+
+★ 조인 규칙이 리포에서 **187건**을 새로 드러냈고 전부 처리했다 — 이력 문서 배너들이
+원장을 가리키지 않고 있었다 (자기승인 배너의 실제 규모).
+
+**아직 안 한 것**: CDXIJ-10(도핑 런 전 4항목) · Rule J 의 argv 매트릭스와 production 생성기 ·
+PPTX 파일 자체의 표지 · CI 연결 · 리뷰 문서 front matter SHA 고정.
