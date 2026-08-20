@@ -820,6 +820,19 @@ _Q_OPEN = re.compile(r"^<!--\s*QUARANTINE:([A-Z0-9_]+)\s*-->$")
 _Q_CLOSE = re.compile(r"^<!--\s*/QUARANTINE\s*-->$")
 
 
+def _claim_file(rel: str) -> Path:
+    """원장 `files` 항목 → 실제 경로.
+
+    원장은 프로젝트 상대(`docs/…`)와 repo 상대(`wiki/…`)를 섞어 쓴다.
+    ★ 23차 발견 7 대응으로 wiki 를 files 에 넣으면서 필요해졌다.
+    """
+    a = _REPO / rel
+    return a if a.exists() else _REPO_ROOT_FOR_CLAIMS / rel
+
+
+_REPO_ROOT_FOR_CLAIMS = Path(__file__).resolve().parent.parent.parent
+
+
 def _claim_status() -> dict:
     import yaml
     return yaml.safe_load(_CLAIM_STATUS.read_text(encoding="utf-8"))
@@ -854,12 +867,18 @@ def test_claim_status_registry_is_wellformed():
     assert len(ids) == len(set(ids)), f"claim id 중복: {ids}"
     for c in reg["claims"]:
         assert c["status"] in ("retracted", "downgraded"), c
-        assert c["record"] in ("quarantined", "removed"), c
-        assert c["banned"], f"{c['id']}: banned 가 비었다 — 검사할 것이 없다"
+        assert c["record"] in ("quarantined", "removed",
+                               "legacy_section_marker"), c
+        if c["record"] == "legacy_section_marker":
+            # 금지어가 `RETRACTED` dict 에 있다 — 여기서 비어 있는 것이 정상이다.
+            assert not c["banned"], (
+                f"{c['id']}: legacy 인데 banned 가 있다 — 두 곳에 정의하면 갈린다")
+        else:
+            assert c["banned"], f"{c['id']}: banned 가 비었다 — 검사할 것이 없다"
         for pat in c["banned"]:
             re.compile(pat)          # 잘못된 정규식이면 여기서 죽는다
         for f in c["files"]:
-            assert (_REPO / f).is_file(), f"{c['id']}: 대상 파일 없음 {f}"
+            assert _claim_file(f).is_file(), f"{c['id']}: 대상 파일 없음 {f}"
 
 
 def test_retracted_claims_do_not_reappear_in_active_prose():
@@ -877,7 +896,7 @@ def test_retracted_claims_do_not_reappear_in_active_prose():
     bad = []
     for c in reg["claims"]:
         for rel in c["files"]:
-            raw = (_REPO / rel).read_text(encoding="utf-8")
+            raw = _claim_file(rel).read_text(encoding="utf-8")
             active, _ = _active_text(raw)
             for pat in c["banned"]:
                 for m in re.finditer(pat, active):
@@ -902,7 +921,7 @@ def test_every_quarantined_claim_still_has_a_visible_retraction():
             continue
         seen = set()
         for rel in c["files"]:
-            _, fenced = _active_text((_REPO / rel).read_text(encoding="utf-8"))
+            _, fenced = _active_text(_claim_file(rel).read_text(encoding="utf-8"))
             seen |= fenced
         if c["id"] not in seen:
             missing.append(f"{c['id']} — {c['files']}")
@@ -943,7 +962,8 @@ def test_random_only_multimodality_is_identical_across_the_warm_arms():
 
     두 arm 의 `multistart_random_only` 는 같은 결정론적 난수에서 나온 같은
     restart 집합이라 **완전히 같아야 한다.** 실제로 같다. 따라서 warm 이 바꾼
-    것은 다봉성이 아니라 후보 집합에 결정론적 점 하나가 늘어난 것뿐이다.
+    것은 다봉성이 아니라 slot 0 의 결정론적 후보가 교체된 것뿐이다
+    (`base_init` → `warm`, 양 arm 후보 수 5로 동일 — 22차 발견 1).
 
     이 등식이 깨지면 발견 3 의 정정 근거가 사라지므로 회귀로 고정한다.
     """
@@ -1572,17 +1592,37 @@ def test_warm_contrast_reports_the_paired_transition_table():
     assert not missing, f"§20.4 가 전이표 값을 싣지 않았다: {missing}"
 
 
-#: 원장이 관할하는 파일 전체 — 여기 있는 파일의 claim ID 는 원장에 있어야 한다.
-#: ★ 22차 발견 7: wiki 가 빠져 있었고, `wiki/questions/22p-physics-or-degeneracy.md`
-#:   가 철회된 축 순위와 restart 처방을 다시 주장하고 있었다.
-_CLAIM_SCOPE = [
-    "degradation-degeneracy/docs/09_22P_GAP.md",
-    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
-    "degradation-degeneracy/docs/22p_gap/LEG_INVENTORY.md",
-    "degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
-    "wiki/questions/22p-physics-or-degeneracy.md",
-]
 _REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
+#: 원장 관할에서 **명시적으로** 빼는 것. 여기 없으면 전부 관할이다.
+#: ★ 23차 발견 7 — 초판은 파일 5개를 하드코딩했다. 새 claim-bearing 문서가
+#:   생기면 자동으로 들어오지 않아, "양방향 완전성" 이 관할 밖에서는 성립하지
+#:   않았다. 목록을 **제외 기준**으로 뒤집는다 (기본은 포함).
+_CLAIM_SCOPE_EXCLUDE = (
+    "degradation-degeneracy/docs/22p_gap/GATE",   # 게이트 리뷰 요청문 — 왕복 기록
+    "wiki/raw/",                                   # 불변 원본 (SCHEMA.md 3-layer)
+    "wiki/inbox/",                                 # 미처리 대기 큐
+    "degradation-degeneracy/artifacts/",           # 봉인 산출물
+)
+
+
+def _claim_scope() -> list[str]:
+    """`docs/**/*.md` + `wiki/**/*.md` 에서 제외 목록을 뺀 전부.
+
+    하드코딩 목록이 아니라 **발견**이다 — 새 문서가 claim ID 를 쓰기 시작하면
+    자동으로 검사 대상이 된다.
+    """
+    out = []
+    for base in ("degradation-degeneracy/docs", "wiki"):
+        for f in sorted((_REPO_ROOT / base).rglob("*.md")):
+            rel = f.relative_to(_REPO_ROOT).as_posix()
+            if any(rel.startswith(x) for x in _CLAIM_SCOPE_EXCLUDE):
+                continue
+            out.append(rel)
+    return out
+
+
+_CLAIM_SCOPE = _claim_scope()
 
 
 def test_claim_registry_is_complete_in_both_directions():
@@ -1615,6 +1655,27 @@ def test_claim_registry_is_complete_in_both_directions():
     assert not unknown, (
         "문서가 쓰는 claim ID 가 원장에 없다 — 금지어 검사를 전혀 안 받는다:\n  "
         + "\n  ".join(f"{k}: {v}" for k, v in sorted(unknown.items())))
+
+    # ★ 23차 발견 7 두 번째 층 — ID 가 등록돼 있어도, **그 파일이 claim.files 에
+    #   없으면** 금지어 검사는 그 파일을 보지 않는다. 배너만 있고 본문은 자유인
+    #   상태가 파일 단위로 되살아난다. 실제로 `AXIS_RANK`·`R20_RX` 의 files 에
+    #   wiki 가 없어 wiki 가 그 의미를 다시 주장해도 잡히지 않았다.
+    claims = {c["id"]: c for c in _claim_status()["claims"]}
+    gaps = []
+    for cid, rels in sorted(seen.items()):
+        c = claims[cid]
+        if c["record"] == "legacy_section_marker":
+            continue                       # (구) 체계가 절 단위로 본다
+        listed = set(c["files"])
+        for rel in sorted(set(rels)):
+            # 원장의 files 는 프로젝트 상대경로다 (docs/…), scope 는 repo 상대다
+            short = rel.split("degradation-degeneracy/", 1)[-1]
+            if short not in listed and rel not in listed:
+                gaps.append(f"{cid}: {rel} 이 금지어 검사 대상이 아니다 "
+                            f"(files={sorted(listed)})")
+    assert not gaps, (
+        "claim ID 를 쓰는 파일이 그 claim 의 files 에 없다 — "
+        "그 파일에서는 금지어가 자유롭다:\n  " + "\n  ".join(gaps))
 
 
 def test_quarantine_fences_are_structurally_balanced():
@@ -1663,7 +1724,7 @@ def _lean_base_script() -> str:
     return m.group(1)
 
 
-def test_lean_review_base_resolution_in_three_git_states():
+def test_lean_review_base_resolution_in_four_git_states():
     """★ 22차 리뷰 발견 8 — 두 번 틀린 자리라 문서가 아니라 **동작**을 고정한다.
 
     초판: `origin/$(git rev-parse --abbrev-ref HEAD)` — detached 에서
@@ -1876,3 +1937,160 @@ def test_all_projections_share_one_compute_provenance():
         "비교 집합의 분석기 provenance 가 하나가 아니다:\n  " + "\n  ".join(bad)
         + "\n  원자료가 있는 기계에서 `python docs/22p_gap/row_projection.py --all` "
           "로 전부 다시 만들어라.")
+
+
+def test_legacy_and_registry_claim_systems_agree():
+    """★ 23차 자체 발견 — 이 저장소에는 철회 체계가 **둘** 있었다.
+
+    (구) `RETRACTED` dict + 절별 `⛔ 철회[ID]` 마커 — 17~18차, `05_HANDOFF.md`·
+         `GATE14_CYCLE_SUMMARY.md` 담당
+    (신) `CLAIM_STATUS.yaml` + `<!-- QUARANTINE:ID -->` 울타리 — 21차 이후
+
+    둘 다 동작하지만 **서로를 몰랐다.** 22차까지 원장 관할이 파일 5개
+    하드코딩이라 옛 문서가 아예 밖에 있었고, 그래서 이 갈라짐이 안 보였다.
+    관할을 발견 기반(`_claim_scope`)으로 바꾸자마자 8건이 드러났다.
+
+    한쪽에서 claim 이 사라져도 다른 쪽은 조용하다 — 그것이 이 저장소가
+    반복해 온 실패 형태다. 양쪽 집합이 정확히 같은지 검사한다.
+
+    ⚠ 단일 체계로의 이전은 하지 않았다. 옛 문서는 절 단위 마커를 쓰고 새
+      체계는 울타리를 쓰는데, 그 변환은 문서 구조를 바꾸는 별도 작업이다.
+      여기서는 **두 체계가 같은 claim 집합을 본다**는 것만 고정한다.
+    """
+    reg = {c["id"]: c for c in _claim_status()["claims"]}
+    legacy_in_registry = {k for k, c in reg.items()
+                          if c["record"] == "legacy_section_marker"}
+    legacy_in_code = set(RETRACTED)
+
+    only_code = legacy_in_code - legacy_in_registry
+    only_reg = legacy_in_registry - legacy_in_code
+    assert not only_code, (
+        f"`RETRACTED` 에만 있고 원장에 없다: {sorted(only_code)} — "
+        f"원장→파일 검사가 이 ID 를 못 본다")
+    assert not only_reg, (
+        f"원장에만 있고 `RETRACTED` 에 없다: {sorted(only_reg)} — "
+        f"금지어 패턴이 사라졌는데 원장은 여전히 철회됐다고 말한다")
+
+    # legacy claim 의 files 는 (구) 체계가 실제로 보는 문서여야 한다
+    for cid in sorted(legacy_in_registry):
+        files = {Path(f).name for f in reg[cid]["files"]}
+        assert files <= set(ACTIVE_DOCS) | set(GENERATED_DOCS), (
+            f"{cid}: files 가 (구) 체계의 검사 대상 밖이다 — {reg[cid]['files']}")
+
+
+def test_stage3_contract_primary_table_matches_the_no_warm_projection():
+    """★ 23차 P0-6 — 계약 §7.1 의 primary 표가 primary 와 **같은 arm** 인가.
+
+    v2 는 primary 를 no-warm 이라고 정해 놓고 근거 표로 warm arm 을 실었다.
+    두 표는 실제로 크게 다르다 — no-warm 순증 실패 381, warm 19. 어느 쪽을
+    싣느냐가 "34p 가 얼마나 나쁜가" 를 20배 바꾼다.
+
+    문서를 고치는 것만으로는 재발한다 (같은 실수를 v1·v2 가 반복했다).
+    **투영에서 직접 계산해** 문서와 대조한다.
+    """
+    import csv
+    import gzip
+
+    leg = "paired_fixed5_v4_nowarm_now"
+    f = _WARM / f"{leg}.projection.csv.gz"
+    assert f.is_file(), f"{leg} 투영이 없다"
+    with gzip.open(f, "rt", encoding="utf-8") as fh:
+        rows = {(r["cond_id"], r["objective"]): r
+                for r in csv.DictReader(fh, delimiter="\t")}
+
+    cell = {}
+    for (cid, obj), a in rows.items():
+        if obj != "pocv_dvdq" or a["recoverable"] != "1":
+            continue
+        b = rows[(cid, "pocv_dvdq_dqdv")]
+        k = ("fail" if a["degenerate"] == "1" else "pass",
+             "fail" if b["degenerate"] == "1" else "pass")
+        cell[k] = cell.get(k, 0) + 1
+
+    n = sum(cell.values())
+    net = cell[("pass", "fail")] - cell[("fail", "pass")]
+    doc = _CONTRACT.read_text(encoding="utf-8")
+
+    want = [str(cell[("pass", "pass")]), str(cell[("pass", "fail")]),
+            str(cell[("fail", "pass")]), str(cell[("fail", "fail")])]
+    missing = [v for v in want if v not in doc]
+    assert not missing, (
+        f"계약 §7.1 이 no-warm 전이표 값을 싣지 않았다: {missing}\n"
+        f"  실측 pp/pf/fp/ff = {want} (n={n})")
+    assert f"{net} / {n}" in doc or f"({cell[('pass','fail')]} − " in doc, (
+        "primary scalar 의 분자를 문서가 밝히지 않는다")
+    assert f"{net/n:.4f}" in doc, (
+        f"primary scalar Δ = {net/n:.4f} 가 문서에 없다")
+
+
+def test_projection_analyzer_digests_recompute_from_the_current_tree():
+    """★ 23차 발견 5 — 회귀가 YAML 끼리만 비교하면 "다 같이 낡은" 것을 못 잡는다.
+
+    `test_all_projections_share_one_compute_provenance` 는 여덟 YAML 의 hash 가
+    서로 같은지만 본다. 스크립트를 고치고 재생성을 안 하면 여덟이 **사이좋게
+    낡은 채로** 통과한다. 현재 트리에서 직접 재계산해 대조한다.
+
+    이 테스트는 `row_projection.py` 나 `src/scoring.py` 를 고치면 **깨져야
+    정상**이다 — 그때 재생성하라는 신호다.
+    """
+    import importlib.util
+    import yaml
+
+    src = _REPO / "docs" / "22p_gap" / "row_projection.py"
+    assert src.is_file(), "row_projection.py 가 없다"
+    spec = importlib.util.spec_from_file_location("_rp", src)
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)                     # RESULTS 접근 없이 import 가능해야 한다
+
+    want_compute = rp._compute_sha256()
+    want_spec = rp._spec_sha256()
+    want_scoring = hashlib.sha256(
+        (_REPO / "src" / "scoring.py").read_bytes()).hexdigest()[:16]
+
+    stale = []
+    for y in sorted(_WARM.glob("*.projection.yaml")):
+        m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        a = m.get("analyzer") or {}
+        if a.get("compute_sha256") != want_compute:
+            stale.append(f"{m['leg_id']}: compute {a.get('compute_sha256')} "
+                         f"≠ 현재 {want_compute}")
+        if m.get("analysis_spec_sha256") != want_spec:
+            stale.append(f"{m['leg_id']}: analysis_spec ≠ 현재")
+        if a.get("src_scoring_py_sha256") != want_scoring:
+            stale.append(f"{m['leg_id']}: src_scoring ≠ 현재")
+    assert not stale, (
+        "투영이 현재 코드로 만든 것이 아니다 — 원자료가 있는 기계에서 "
+        "`python docs/22p_gap/row_projection.py --all` 로 재생성할 것:\n  "
+        + "\n  ".join(stale[:8]))
+
+
+def test_projection_schema_is_declared_consistently():
+    """★ 23차 발견 5 — 산출물은 `projection_schema: 2` 인데 spec 은 `1` 이었다.
+
+    `analysis_spec_sha256` 이 앵커가 되려면 spec 이 **산출물이 무엇인지**
+    알아야 한다. v1 spec 에는 restart 투영도, 전면 대조 정책도, fits 결속도
+    없었다. 둘이 어긋나면 "규격이 같다" 는 비교가 의미를 잃는다.
+    """
+    import importlib.util
+    import yaml
+
+    src = _REPO / "docs" / "22p_gap" / "row_projection.py"
+    spec_ = importlib.util.spec_from_file_location("_rp2", src)
+    rp = importlib.util.module_from_spec(spec_)
+    spec_.loader.exec_module(rp)
+
+    s = rp.ANALYSIS_SPEC
+    assert s["schema_version"] == 3, s.get("schema_version")
+    for key in ("row_projection", "restart_projection", "summary_comparison",
+                "fits_binding"):
+        assert key in s, f"spec 에 {key} 가 없다"
+    assert s["restart_projection"]["sort_key"] == ["cond_id", "objective", "i"]
+    assert s["summary_comparison"]["type_policy"] == "exact"
+
+    for y in sorted(_WARM.glob("*.projection.yaml")):
+        m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        assert m.get("projection_schema") == s["schema_version"], (
+            f"{m['leg_id']}: 산출물 schema {m.get('projection_schema')} "
+            f"≠ spec {s['schema_version']}")
+        for k in ("summary_sha256", "manifest_sha256"):
+            assert m.get(k), f"{m['leg_id']}: {k} 가 없다 (발견 5)"

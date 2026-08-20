@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import gzip
+import math
 import hashlib
 import json
 import sys
@@ -74,13 +75,32 @@ RESTART_COLUMNS = ["cond_id", "objective", "i", "source", "J",
                    "p0", "p1", "p2", "p3", "warm"]
 
 #: 이 투영이 무엇을 어떻게 만들었는지 — 바뀌면 digest 비교가 의미를 잃는다.
+#: ★ 23차 발견 5 — `projection_schema: 2` 를 산출물에 쓰면서 여기는 `1` 이었다.
+#:   그리고 spec 에 restart 투영·전면 대조·fits 결속이 아예 없었다. 산출물이
+#:   무엇인지 spec 이 모르면 `analysis_spec_sha256` 은 앵커가 아니다.
 ANALYSIS_SPEC = {
-    "projection_version": 1,
-    "columns": COLUMNS,
-    "sort_key": ["cond_id", "objective"],
+    "schema_version": 3,
+    "row_projection": {
+        "columns": COLUMNS,
+        "sort_key": ["cond_id", "objective"],
+        "digest": "sha256 of the uncompressed canonical TSV",
+    },
+    "restart_projection": {
+        "columns": RESTART_COLUMNS,
+        "sort_key": ["cond_id", "objective", "i"],
+        "digest": "sha256 of the uncompressed canonical TSV",
+    },
+    "summary_comparison": {
+        "skip_top_level_keys": ["_채점원본", "_F4_주의"],
+        "type_policy": "exact",      # int↔float·str↔float 를 같다고 보지 않는다
+    },
+    "fits_binding": {
+        "actual_bytes": True,        # 읽은 바이트를 직접 해시
+        "manifest": True,            # manifest.fits_seal 과 대조
+        "summary": True,             # summary._채점원본 과 대조
+    },
     "float_repr": "python repr (shortest round-trip)",
     "line_sep": "\\n",
-    "digest": "sha256 of the uncompressed canonical text",
     "score_path": "src.scoring: add_error_columns → classify_recoverability "
                   "→ clean_bias → apply_bias_correction → summarize",
     "tolerance": 0.02,
@@ -101,15 +121,36 @@ def _cell(v) -> str:
     return str(v)
 
 
+#: restart `source` 로 허용되는 값. 여기 없는 값은 코드가 바뀐 것이다.
+_RESTART_SOURCES = frozenset({"base_init", "warm", "random"})
+
+
 def _restart_list(raw) -> list[dict]:
-    """restarts_json → dict 목록. 깨진 것은 빈 목록이 아니라 예외로 만든다."""
-    if raw is None or isinstance(raw, float):
-        return []
+    """restarts_json → dict 목록. **깨진 것을 조용히 버리지 않는다.**
+
+    ★ 23차 발견 5 — 초판은 `None`·float 를 빈 목록으로 돌리고 non-dict 항목을
+      버렸다. 그러면 restart 가 통째로 없는 행이 "restart 0개" 로 조용히
+      기록되고, 그 행이 aggregate 를 만들었는지 아무도 모른다.
+    """
+    if raw is None or (isinstance(raw, float) and raw != raw):   # NaN
+        raise SystemExit("✗ restarts_json 이 비어 있다 — 이 행은 재계산 불가다")
+    if isinstance(raw, float):
+        raise SystemExit(f"✗ restarts_json 이 float 이다: {raw!r}")
     try:
         rs = json.loads(raw) if isinstance(raw, str) else list(raw)
     except (ValueError, TypeError) as e:                    # noqa: BLE001
         raise SystemExit(f"✗ restarts_json 을 못 읽는다: {e}") from e
-    return [r for r in rs if isinstance(r, dict)]
+    if not isinstance(rs, list) or not rs:
+        raise SystemExit(f"✗ restarts_json 이 비어 있거나 목록이 아니다: {type(rs)}")
+    bad = [r for r in rs if not isinstance(r, dict)]
+    if bad:
+        raise SystemExit(f"✗ restart 항목이 dict 가 아니다: {bad[:2]}")
+    for r in rs:
+        s = str(r.get("source"))
+        if s not in _RESTART_SOURCES:
+            raise SystemExit(f"✗ 모르는 restart source: {s!r} "
+                             f"(허용: {sorted(_RESTART_SOURCES)})")
+    return rs
 
 
 def _restart_facts(raw) -> tuple[str, str]:
@@ -298,9 +339,14 @@ def build(leg: str) -> dict:
     # ★ 22차 리뷰 발견 5 — 초판은 manifest 의 `fits_seal` 을 **복사**했다.
     #   그러면 "내가 읽은 fits 가 봉인된 그 fits 였다" 를 투영 자신이 증명하지
     #   못한다. 실제 바이트를 해시해 manifest·summary 와 **삼중 대조**한다.
-    fits_bytes_sha = hashlib.sha256(fits.read_bytes()).hexdigest()
+    # ★ 23차 발견 5 — 초판은 해시한 뒤 경로를 **다시** 열었다. 그 사이에 파일이
+    #   바뀌면 해시와 내용이 어긋난다. 한 번 읽은 바이트로 둘 다 한다.
+    import io
 
-    df = pd.read_parquet(fits)
+    fits_payload = fits.read_bytes()
+    fits_bytes_sha = hashlib.sha256(fits_payload).hexdigest()
+
+    df = pd.read_parquet(io.BytesIO(fits_payload))
     df = add_error_columns(df, DEFAULT_TOL)
     df = classify_recoverability(df)
     bias = clean_bias(df)
@@ -349,20 +395,46 @@ def build(leg: str) -> dict:
     # 행 투영은 restart **개수**만 담아서, random-only 다봉성을 투영에서
     # 독립 재계산할 수 없다. 발견 3 의 근거가 바로 그 지표이므로 각 restart 의
     # (index, source, J, p) 를 따로 봉인한다.
-    r_lines = ["\t".join(RESTART_COLUMNS)]
+    # ★ 23차 발견 5 — 초판은 렌더링된 **문자열**을 정렬했다. 예산이 10 을 넘는
+    #   순간 `i=10` 이 `i=2` 앞에 와서, spec 이 선언한 정렬키
+    #   `[cond_id, objective, i]` 와 실제 순서가 갈린다. 단계 3 은 예산 40 을
+    #   쓰므로 지금 고친다 — 튜플로 정렬하고 그 다음에 렌더링한다.
+    rrows = []
     for cond, obj, raw in zip(df["cond_id"], df["objective"],
                               df["restarts_json"] if "restarts_json" in df.columns
                               else [None] * len(df)):
         for r in _restart_list(raw):
             pv = list(r.get("p") or [])
-            pv = (pv + [float("nan")] * 4)[:4]
-            r_lines.append("\t".join([
-                str(cond), str(obj), str(r.get("i")), str(r.get("source")),
-                _cell(float(r.get("J"))) if r.get("J") is not None else "",
-                *[_cell(float(x)) for x in pv],
-                "1" if r.get("warm") else "0"]))
-    r_head, r_body = r_lines[0], sorted(r_lines[1:])
-    r_text = "\n".join([r_head, *r_body]) + "\n"
+            # 초판은 짧으면 NaN 으로 채우고 길면 잘랐다 — 둘 다 조용한 손실이다.
+            if len(pv) != 4:
+                raise SystemExit(
+                    f"✗ restart p 의 길이가 4가 아니다: {len(pv)} @ "
+                    f"({cond}, {obj}, i={r.get('i')})")
+            if r.get("J") is None:
+                raise SystemExit(f"✗ restart J 가 없다 @ ({cond}, {obj}, i={r.get('i')})")
+            rrows.append((str(cond), str(obj), int(r.get("i")), str(r.get("source")),
+                          float(r["J"]), *[float(x) for x in pv],
+                          bool(r.get("warm"))))
+    rrows.sort(key=lambda x: (x[0], x[1], x[2]))
+
+    # fail-closed: index 중복 · 비유한값 · main 의 n_restarts 합과의 일치
+    seen_idx: set = set()
+    for row in rrows:
+        key = (row[0], row[1], row[2])
+        if key in seen_idx:
+            raise SystemExit(f"✗ restart index 중복: {key}")
+        seen_idx.add(key)
+        for name, v in zip(RESTART_COLUMNS[4:9], row[4:9]):
+            if not math.isfinite(v):
+                raise SystemExit(f"✗ restart 비유한값 {name}={v!r} @ {key}")
+    n_expect = int(sum(int(x) for x in proj["n_restarts"]))
+    if len(rrows) != n_expect:
+        raise SystemExit(f"✗ restart 행 수가 main 과 안 맞는다: "
+                         f"{len(rrows)} vs n_restarts 합 {n_expect}")
+
+    r_lines = ["\t".join(RESTART_COLUMNS)]
+    r_lines += ["\t".join(_cell(v) for v in row) for row in rrows]
+    r_text = "\n".join(r_lines) + "\n"
     r_sha = hashlib.sha256(r_text.encode("utf-8")).hexdigest()
     r_csv = WARM / f"{leg}.restarts.csv.gz"
     WARM.mkdir(parents=True, exist_ok=True)
@@ -405,9 +477,15 @@ def build(leg: str) -> dict:
             else:
                 for i, (x, y) in enumerate(zip(a, b)):
                     _cmp(x, y, f"{path}[{i}]", out)
-        elif isinstance(a, float) or isinstance(b, float):
-            if isinstance(a, bool) != isinstance(b, bool) or \
-                    repr(float(a)) != repr(float(b)):
+        elif type(a) is not type(b):
+            # ★ 23차 발견 5 — 초판은 한쪽이 float 이면 양쪽을 `float()` 로 바꿔
+            #   비교했다. 그래서 `0.1` 과 문자열 `"0.1"`, 정수 `1` 과 실수 `1.0`
+            #   이 같다고 나왔다. "문자열·불리언까지 자리별 exact" 라는 설명이
+            #   실제보다 강했다. 타입이 다르면 그 자체가 불일치다.
+            out.append(f"{path}: 타입이 다르다 — 봉인 {type(a).__name__}({a!r}) "
+                       f"vs 재계산 {type(b).__name__}({b!r})")
+        elif isinstance(a, float):
+            if repr(a) != repr(b):
                 out.append(f"{path}: 봉인 {a!r} vs 재계산 {b!r}")
         elif a != b:
             out.append(f"{path}: 봉인 {a!r} vs 재계산 {b!r}")
@@ -446,7 +524,7 @@ def build(leg: str) -> dict:
         "by_objective_sha256": per_obj,
         "restart_projection_file": r_csv.name,
         "restart_projection_sha256": r_sha,
-        "n_restart_rows": len(r_body),
+        "n_restart_rows": len(rrows),
         "analysis_spec_sha256": _spec_sha256(),
         "analyzer": _analyzer_provenance(),
         "analysis_spec": ANALYSIS_SPEC,

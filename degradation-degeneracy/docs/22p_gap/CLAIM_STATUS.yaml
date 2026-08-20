@@ -78,7 +78,10 @@ claims:
       의존하지 않는 결론**으로 재사용한 것. 축마다 다리 수가 극단으로 다르고
       (PE 28 다리 vs 나머지 각 1), 비교된 다리들의 원점·예산이 matched 가
       아니다.
-    files: [docs/09_22P_GAP.md]
+    # ★ 23차 발견 7 — wiki 와 LEG_INVENTORY 가 이 ID 를 쓰는데 files 에
+    #   없어 그 두 파일에서는 금지어가 자유로웠다.
+    files: [docs/09_22P_GAP.md, docs/22p_gap/LEG_INVENTORY.md,
+            wiki/questions/22p-physics-or-degeneracy.md]
     banned:
       - 'PE\s*가\s*NE\s*보다\s*(훨씬\s*)?치명적'
       - '전압\s*축이\s*화학량론\s*축보다\s*치명적'
@@ -137,7 +140,7 @@ claims:
       달라졌다. 처방 확증이 아니라 세 축이 엉킨 진단 pilot 이다. 그리고
       `|bias| < 2%p → 무해` 는 파라미터 오차 판정선이지 실패율 동등성 margin
       이 아니다 (같은 오용을 21차 발견 2 가 warm 쪽에서도 지적했다).
-    files: [docs/09_22P_GAP.md]
+    files: [docs/09_22P_GAP.md, wiki/questions/22p-physics-or-degeneracy.md]
     banned:
       - '처방을\s*실측했다'
       - 'restart\s*증량이\s*실증됐다'
@@ -169,7 +172,8 @@ claims:
       "+1.29%p 는 사실상 동률이다". 동등성 주장에는 **사전에 정한** equivalence
       margin 과 조건별 paired 전이표(McNemar 등)가 필요하다. 파라미터 오차
       판정에 쓰는 2%p 를 실패율 동등성 margin 으로 재사용할 수 없다.
-    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
+            docs/09_22P_GAP.md]
     banned:
       - '사실상\s*동률'
 
@@ -270,7 +274,106 @@ claims:
     files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
             docs/22p_gap/STAGE3_CONTRACT.md]
     banned:
-      - '점\s*하나를\s*더한'
-      - '후보\s*하나\s*더'
-      - '결정론적\s*후보\s*하나가?\s*늘'
-      - '후보\s*집합에\s*.{0,12}추가'
+      # ★ 23차 리뷰가 **이 regex 자신의 구멍**을 지적했다. 아래 넷은 실제로
+      #   활성 본문에 남아 빠져나간 형태다 — 조사(를/가)와 어미(더한/늘어난/
+      #   더했을)가 초판 패턴의 인접 단어 가정을 깼다. 21차 NOISE_INERT 때
+      #   배운 것과 같은 교훈이다: **철회된 의미**에 묶어라.
+      - '점\s*하나를?\s*(더한|더했|늘)'
+      - '후보\s*하나를?\s*(더한|더했|추가|늘)'
+      - '(결정론적\s*)?(후보|점)\s*하나가?\s*늘어'
+      - '후보\s*집합에\s*.{0,12}(추가|늘)'
+      - '그\s*추가\s*후보'
+      - '추가된\s*(warm\s*)?후보'
+
+  # ── 옛 절-단위 마커 체계(17~18차)의 claim ── ─────────────────────────────
+  # ★ 23차 자체 발견 — 관할을 발견 기반으로 바꾸자마자 이 8건이 **원장에 없다**
+  #   고 잡혔다. 이 저장소에는 철회 체계가 **둘** 있었다:
+  #     (구) tests/test_docs_lint.py 의 `RETRACTED` dict + 절별 `⛔ 철회[ID]`
+  #          마커 — `05_HANDOFF.md` · `GATE14_CYCLE_SUMMARY.md` 담당
+  #     (신) 이 원장 + `<!-- QUARANTINE:ID -->` 울타리 — 21차 이후
+  #   둘 다 동작하지만 **서로를 모른다.** 한쪽에서 claim 이 사라져도 다른 쪽은
+  #   조용하다. 여기 등록해 양쪽을 묶는다 (`test_legacy_and_registry_claim_systems_agree`).
+  #
+  #   `record: legacy_section_marker` 는 "금지어 패턴이 이 파일이 아니라
+  #   `RETRACTED` dict 에 있다" 는 뜻이다. 울타리도 요구하지 않는다 — 옛 문서는
+  #   절 단위 마커를 쓴다. 단일 체계로의 이전은 단계 3 이후로 미룬다.
+  - id: LR_POSTERIOR
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      우도비 90 을 사후확률처럼 읽은 것 (46:1 등). 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: P22_ALL_EQUAL
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      22p 근방의 참값이 애초에 전부 같다는 서술. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: PRINCIPALLY_UNRECOVERABLE
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      원리적으로 복원 불가 / feasible domain 밖이라는 단정. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: ANTISYM_AS_IMPROVEMENT
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      PE-NE 상쇄 지문이 68%→48% 로 옅어진 것을 개선으로 읽은 것. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: REFERENCE_SOLE_CAUSE
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      기준 곡선만이 원인이라는 단일 인과. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: HESSIAN_EPS_ORDER
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      같은 eps 에서의 Hessian 순서를 결론으로 쓴 것. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: SYNTHETIC_IS_LOWER_BOUND
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      합성 결과가 하한이고 실제는 더 나쁘다는 외삽. 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+
+  - id: STALE_GAP_NUMBERS
+    status: retracted
+    round: 17
+    record: legacy_section_marker
+    무엇: >-
+      경계 규약 수정 이전 수치 (36/98 · 61/156 · 3.69 · 90.0). 금지어 패턴은 `tests/test_docs_lint.py` 의 `RETRACTED` dict 에 있고
+      절별 `⛔ 철회` 마커로 면제된다.
+    files: [docs/05_HANDOFF.md, docs/GATE14_CYCLE_SUMMARY.md]
+    banned: []          # (구) 체계가 검사한다 — 여기서 중복 정의하지 않는다
+

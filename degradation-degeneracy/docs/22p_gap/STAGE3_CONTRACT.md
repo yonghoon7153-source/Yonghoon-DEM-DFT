@@ -1,15 +1,31 @@
-# 단계 3 계약 v2 — protocol 축 분해와 고정 restart bank
+# 단계 3 계약 v3 — protocol 축 분해와 고정 restart bank
 
-> 21차 실행 순서 4 로 v1 을 썼고, **22차 리뷰가 v1 의 출발 전제를 뒤집었다.**
-> 이 문서는 그 뒤 판이다. 구현 전에 다시 심사받는다.
+> v1(21차 순서 4) → **22차가 출발 전제를 뒤집어** v2 → **23차가 v2 의 자기모순
+> 여섯 개를 찾아** v3. 구현 전에 다시 심사받는다.
 >
-> `source_digest` 를 바꾸지 않는다 (`docs/` 는 RUN_SCOPE 밖). 여기 적힌 것을
-> `src/` 에 넣는 순간 **기존 산출물 전부가 재실행 대상**이 된다.
+> v3 가 고친 것: 후보 예산 `N` 의 이중 의미(P0-1) · `pair_group_id` 이름과
+> 후보 ID 범위, `n_pair_groups` 640→320(P0-2) · provider freeze 미봉인(P0-3) ·
+> tolerance 가 수치가 아님(P0-4) · sentinel 목록 부재(P0-5) · primary 표가
+> warm arm 이었고 status 축이 뒤섞임(P0-6) · 소급 재실행 문구와 비용 모델(P0-7).
+>
+> `source_digest` 를 바꾸지 않는다 (`docs/` 는 RUN_SCOPE 밖).
+>
+> **★ 23차 P0-7 정정** — v2 는 여기 "기존 산출물 **전부**가 재실행 대상" 이라고
+> 썼는데 §2.1 의 historical read-only 정책과 모순이다. 정확한 문장:
+>
+> > Stage 3 구현 뒤 **v6 canonical claim 을 지지하거나 v6 resume 에 쓰는**
+> > 산출물은 새 source digest 로 다시 생성한다. 기존 artifact 는 당시
+> > source·protocol 아래의 historical/recorded status 를 유지하며 **소급
+> > 무효화하지 않는다.**
 
 ## 0. v1 이 무엇을 틀렸나 — 후보는 늘지 않았다, 교체됐다
 
-v1 은 21차 warm 실험을 "같은 random 4개에 warm 후보 하나를 더한 union" 으로
-분류했다. **틀렸다** (22차 발견 1, 철회[WARM_UNION]).
+<!-- QUARANTINE:WARM_UNION -->
+> **⛔ 철회[WARM_UNION]** — v1 은 21차 warm 실험을 "같은 random 4개에 warm
+> 후보 하나를 더한 union" 으로 분류했다. **틀렸다** (22차 발견 1).
+<!-- /QUARANTINE -->
+
+실제로는 slot 0 의 결정론적 후보가 **교체**됐다. 양 arm 의 후보 수는 5로 같다.
 
 ```python
 # src/fitting.py — restart 루프는 정확히 n_restarts 번 돈다
@@ -74,18 +90,44 @@ protocol:
   condition_bank_sha256:   <64 hex>
   bank_version:            1
 
-  # 앞 목적함수 → 뒤 목적함수 warm 공급 관계. 암묵 규칙(`w_dqdv != 0`)에
+  # 앞 목적함수 → 뒤 목적함수 warm 공급 **관계**. 암묵 규칙(`w_dqdv != 0`)에
   # 의존하지 않고 명시한다.
   warm_provider_map: {pocv_dvdq_dqdv: pocv_dvdq}
+
+  # ★ 23차 P0-3 — 관계 이름만으로는 **값이 고정되지 않는다.** provider 예산이
+  #   바뀌면 warm 좌표가 통째로 바뀐다 (교란 5). 실제 해를 봉인한다.
+  p_ini_provider_artifact_sha256:      <64 hex>
+  p_ini_provider_solution_map_sha256:  <64 hex>
+  p_ini_values_sha256:                 <64 hex>
+  condition_provider_artifact_sha256:      <64 hex>
+  condition_provider_solution_map_sha256:  <64 hex>
+  provider_protocol_sha256:            <64 hex>
 
   # 실제로 쓴 후보 집합(조건 × 목적함수 × restart 의 source·bank index)의 digest.
   # 계획이 아니라 **실현값**이라 사후 검산의 앵커다.
   realized_candidate_map_sha256: <64 hex>
 ```
 
-**`N` 의 정의를 한 번만 한다**: `*_budget_by_objective` 의 값 `N` 은
-**random bank 에서 뽑는 점의 수**다. `base`·`warm` 은 별도이며 §3 의 mode 가
-정한다. 총 시작점 수는 mode 에 따라 `N+1` 또는 `N+2` 다.
+**★ 23차 P0-1 정정 — `N` 하나로 두 뜻을 겸하면 안 된다.**
+
+v2 는 `N` 을 "random bank 점 수" 로 정의했다. 그런데 §3 의
+`equal_start_count_base_retained` warm arm 은 `bank[:M-1]` 을 쓴다 — 같은
+budget 필드가 mode 에 따라 **다른 random 수**를 뜻한다. 예산을 축으로 쓰는
+실험에서 이것은 치명적이다.
+
+기준을 **총 시작점 예산 `B`** 로 바꾼다. random prefix 길이는 mode 가 정하는
+파생값이고, 필요하면 `random_bank_prefix_len` 으로 **따로** 적는다.
+
+```yaml
+protocol:
+  total_start_budget_by_objective: {pocv_dvdq: 20, pocv_dvdq_dqdv: 20}   # B
+  # 아래는 계획·실현을 모두 남긴다 — 계획만 적으면 사후 검산이 안 된다
+  planned_counts:  {base: 1, warm: 0, random: 19}
+  realized_counts: {base: 1, warm: 0, random: 19}
+  random_bank_prefix_len: 19
+  total_n_eval: <int>
+  wall_time_s: <float>
+```
 
 ### 2.1 하위호환 — version-dispatched read-only (22차 Q3)
 
@@ -120,15 +162,19 @@ adaptive arm 도 bank 를 기록하되 **실현 prefix 를 따로 봉인**하고
 
 ## 3. 후보 정책 — 세 가지를 이름으로 구분한다
 
-`M` = random bank 에서 쓰는 점의 수(= `*_budget_by_objective`).
+**`B`** = 총 시작점 예산 (= `total_start_budget_by_objective`, §2).
 아래는 **앞 목적함수의 warm provider 가 실제로 있는** 목적함수에 대한 정의다.
-provider 가 없는 연쇄 1번째는 어느 mode 에서도 `[base] + bank[:M]` 이다.
+provider 가 없는 연쇄 1번째는 어느 mode 에서도 `[base] + bank[:B-1]` 이다.
 
 | mode | no-warm arm | warm arm | 총 시작점 |
 |---|---|---|---|
-| `legacy_slot_replace` | `[base] + bank[:M]` | `[warm] + bank[:M]` | 양쪽 `M+1` |
-| `equal_start_count_base_retained` | `[base] + bank[:M]` | `[base, warm] + bank[:M-1]` | 양쪽 `M+1` |
-| `union` | `[base] + bank[:M]` | `[base, warm] + bank[:M]` | `M+1` vs `M+2` |
+| `legacy_slot_replace` | `[base] + bank[:B-1]` | `[warm] + bank[:B-1]` | 양쪽 `B` |
+| `equal_start_count_base_retained` | `[base] + bank[:B-1]` | `[base, warm] + bank[:B-2]` | 양쪽 `B` |
+| `union` | `[base] + bank[:B-1]` | `[base, warm] + bank[:B-1]` | `B` vs `B+1` |
+
+`B` 를 기준으로 하면 mode 를 바꿔도 **총 시작점 수의 뜻이 안 변한다.**
+random prefix 길이(`B-1` 또는 `B-2`)는 파생값이며 manifest 의
+`random_bank_prefix_len` 에 실현값으로 적는다.
 
 - **21차 실험 = `legacy_slot_replace`** (§0).
 - v1 의 "equal-cost" 라는 이름은 쓰지 않는다 (22차 발견 1). 시작점 수가 같아도
@@ -151,14 +197,47 @@ index·초기 좌표 digest · 총 후보 수 · 총 `n_eval`.
 v1 은 물리좌표 hash 하나였다. 부족하다.
 
 ```text
-latent_pair_id = H( pairing_design_id,
-                    canonical(lli, lam_pe, lam_ne, lam_pe_type, lam_ne_type),
-                    parameter_order_sha256 )
+pair_group_id = H( pairing_design_sha256,
+                   canonical(lli, lam_pe, lam_ne, lam_pe_type, lam_ne_type),
+                   parameter_order_sha256 )
 
-bank_id = H( latent_pair_id, bank_version, unit_cube_bank_sha256 )
+bank_id       = H( pair_group_id, bank_version, unit_cube_bank_sha256 )
 
-mapped_candidate_id = H( bank_id, exact_bounds_sha256, mapped_parameter_bytes )
+candidate_id  = H( bank_id, exact_bounds_sha256, source, source_payload )
 ```
+
+**★ 23차 P0-2 — 이름을 하나로 통일한다.** v2 는 `latent_pair_id` 와
+`pair_group_id` 를 섞어 썼다. 정본은 **`pair_group_id`** 하나다.
+
+**`pairing_design_id` 를 사람이 쓰는 자유문자로 두지 않는다.** 오타 하나로
+조용히 merge/split 된다. label 과 canonical digest 를 분리한다:
+
+```yaml
+pairing_design_label:  p22_grid_primary        # 사람용 별칭
+pairing_design_sha256: H(canonical_design_spec) # 정본
+```
+
+`canonical_design_spec` 최소 구성:
+
+| 항목 | 왜 |
+|---|---|
+| schema/version, 물리좌표 canonicalization·단위 | float 표현이 갈리면 같은 조건이 다른 ID 가 된다 |
+| varied treatment axis 의 **종류**와 arm 역할 | 값 자체는 pair ID 에서 제외 — 값을 넣으면 arm 이 갈린다 |
+| pair ID 에서 제외하는 축과 **이유** | 제외 결정 자체가 설계다 |
+| parameter order, bounds-equivalence policy | 실제 ordered bounds 값은 candidate/leg identity 에 |
+| objective plan, parameter-coordinate schema | treatment 별 reference/cache bytes 는 leg identity 에 |
+| bank generator/version/seed derivation, dtype·endian·serialization | 재현의 전제 |
+
+**`candidate_id` 는 random 만 다루면 안 된다** (23차 P0-2). 세 source 전부:
+
+| source | `source_payload` |
+|---|---|
+| `base_init` | base 좌표의 exact bytes digest |
+| `warm` | provider objective · provider artifact sha · solution-map sha |
+| `random` | bank index + unit-cube bytes digest |
+
+arm 간 검사는 pair-group 집합·중복도뿐 아니라 **normalized candidate_id 와
+실제 mapped 좌표 digest** 까지 비교한다.
 
 - **treatment·noise·noise_seed·objective 를 제외**한다 — 같은 paired family
   안에서 arm 들이 같은 latent draw 를 받아야 하기 때문이다.
@@ -237,9 +316,32 @@ v1 은 "truth-free" 라고 선언하면서 `degenerate` 전이율을 hard gate �
 | solver 건전성 | 실패·비유한 0건 |
 | sentinel 안정성 | 아래 panel 전체에서 **연속 두 번의 doubling** 이 위 셋을 통과 |
 
-`abs_tol`·`rel_tol` 은 구현 시 사전 등록한다. v1 이 `agree_tol` 과 같다고 쓴
-것은 부정확했다 — 코드의 비교식은 `1e-3 * max(1, |min(J0,J1)|)` 이라 작은 `J`
-에서는 사실상 절대 `1e-3` 이다.
+**★ 23차 P0-4 — `≤1%`·`abs_tol`·`rel_tol` 이 아직 수치가 아니다.** 실행 가능한
+계약이 되려면 값이 있어야 하고, 그 값은 **추측이 아니라 실측**에서 나와야 한다.
+
+**tolerance 를 정하는 절차** (truth 미사용):
+
+1. **objective 별 numerical floor 를 먼저 잰다** — 같은 입력을 반복하거나
+   같은 max-bank prefix 를 재평가해서 `J` 의 재현 산포를 본다. 이것이 그
+   objective 에서 "차이 없음" 의 바닥이다.
+2. 그 floor 위에서 `abs_tol`·`rel_tol` 을 **사전 등록**한다. 33p 와 34p 는
+   `J` scale 이 다르므로 **같은 값을 쓰지 않는다**.
+3. `max(1, |J|)` 를 쓰면 `|J| < 1` 구간이 전부 공통 절대오차가 된다. 코드의
+   `agree_tol` 비교식(`1e-3 * max(1, |min(J0,J1)|)`)이 이미 그렇고, v1 이
+   그것을 상대 tolerance 라고 부른 것은 부정확했다.
+4. 가능하면 **max-N 을 한 번 돌리고 prefix minima 를 offline 계산**한다.
+   그러면 nested 비증가가 구조적으로 보장된다. 별도 N/2N 실행이라면 exact
+   `J_2N ≤ J_N` 대신 `mono_tol` 을 둔다 (부동소수·비결정 경로 때문).
+
+**작은 panel 에서 `≤1%` 는 의미가 없다.** n=60 이면 1% 는 0.6건이라 사실상
+"0건" 규칙인데 계약이 분모·반올림을 안 정했다. 규칙을 나눈다:
+
+| stratum 크기 | 규칙 |
+|---|---|
+| n < 100 | material 개선 **0건** |
+| n ≥ 100 | 비율 ≤ 1% (반올림 없이 `count * 100 <= n`) |
+
+1% 규칙을 쓰고 싶으면 panel 을 100 단위 이상으로 키운다 (§6.4).
 
 ### 6.3 gate 에서 **뺀** 것 (결과 민감도 표로만 보고)
 
@@ -256,9 +358,63 @@ v1 은 "truth-free" 라고 선언하면서 `degenerate` 전이율을 hard gate �
 v1 은 무왜곡 dense half-cell 하나로 전체 예산을 정하려 했다. §12 의
 "이 격자·화학·bound 에만 해당" 한계와 정면으로 충돌한다.
 
-panel 에 반드시 포함: **half-cell / grid** 두 reference · **clean / noisy** ·
-**smooth(33p) / dQdV(34p)** · 대표 **hard·boundary** 조건. 각각에서 필요한 `N`
-을 구하고 **가장 큰 값을 채택**한다.
+**★ 23차 P0-5 — 조건 목록이 없으면 계약이 아니다.** panel 을 `sentinel_panel.yaml`
+로 **파일에 고정**한다. 그리고 구현 smoke 와 budget pilot 을 분리한다.
+
+**구현 smoke** (wiring 확인만 — 예산을 정하지 않는다):
+reference 2 × noise {0, 0.005 한 seed} × objective 2 × condition {interior 1,
+boundary 1}.
+
+**budget sentinel pilot** — reference 마다 다음 archetype 을 사전 지정한다:
+
+| # | archetype | 선택 시점 |
+|---|---|---|
+| 1 | pristine / interior easy | 결과 전 (geometry) |
+| 2 | 22p 근방 scientific target | 결과 전 |
+| 3 | α-window / feasibility edge 이지만 생성 가능 | 결과 전 (geometry) |
+| 4 | parameter·bounds boundary face | 결과 전 (geometry) |
+| 5 | recorded-only 투영에서 **결정론적 rule** 로 고른 hard 조건 | 결과 후 (empirical) |
+
+noise 는 clean + **독립 noisy seed 2개**, objective 는 둘 다.
+최소 구성은 `5 archetype × 2 reference × 3 noise × 2 objective = 60`
+condition-objective 비교다 → n<100 이므로 위 표에 따라 **material 개선 0건**
+을 요구한다. 1% 규칙을 쓰려면 panel 을 키운다.
+
+**hard 의 정의를 둘로 나눈다** (이것이 P0-5 의 핵심이다):
+
+- **geometry hard** — α wall, feasibility edge, 알려진 물리·bounds face.
+  **결과를 보기 전에** 고를 수 있다.
+- **empirical hard** — recorded-only 의 `J`·수렴 진단으로 고른 development set.
+  선택 script 와 투영 SHA 를 봉인하고, **별도 holdout 또는 full-grid 확인**을
+  반드시 붙인다.
+
+새 결과의 truth error 가 큰 조건을 사후에 hard 로 고르면 **같은 자료로 예산을
+튜닝**하는 것이다 (22차 발견 4 와 같은 오류).
+
+계속 인용할 treatment claim 이 있으면 PE 5/10 mV · PE stretch 0.95 ·
+NE +2 mV · both +2 mV 를 **treatment sentinel** 로 따로 넣거나, 해당 claim 을
+`diagnostic` 으로 격하한다. exact 22p 는 계획한 seed 전부를 넣는다.
+
+```yaml
+# docs/22p_gap/sentinel_panel.yaml  (구현 시 생성)
+schema_version: 1
+selection_rule: <geometry rule / empirical script sha>
+conditions: [<exact cond id 또는 물리좌표>]
+reference_and_recipe_sha256: ...
+treatment_and_curves_sha256: ...
+exact_bounds_sha256: ...
+objectives: [pocv_dvdq, pocv_dvdq_dqdv]
+noise_levels_and_seeds: {0.0: [~], 0.005: [s1, s2]}
+candidate_mode: equal_start_count_base_retained
+provider_map_sha256: ...
+budget_ladder: [5, 10, 20, 40]
+max_budget: 40
+tolerances_by_objective: {pocv_dvdq: {abs: ..., rel: ...}, pocv_dvdq_dqdv: {...}}
+material_count_rule: {lt_100: zero, ge_100: pct_1}
+holdout_rule: <empirical hard 를 썼다면 필수>
+```
+
+각 archetype 에서 필요한 `N` 을 구하고 **가장 큰 값을 채택**한다.
 
 `J` 비교는 **같은 condition · 같은 objective · 같은 reference** 의 `N ↔ 2N`
 안에서만 한다. 목적함수 사이의 `J` 는 비교 대상이 아니다.
@@ -282,16 +438,33 @@ panel 에 반드시 포함: **half-cell / grid** 두 reference · **clean / nois
 
 ### 7.1 transition table 이 primary 인 이유 (실측)
 
-`paired_fixed5_v4_warm` 안에서 33p ↔ 34p (recoverable 1,476조건):
+**★ 23차 P0-6 정정 — v2 는 여기 `warm` arm 표를 실었다.** primary 는 no-warm
+인데 근거 표가 warm 이면 estimand 가 어긋난다. primary 와 **같은 arm** 인
+`paired_fixed5_v4_nowarm_now` 의 33p ↔ 34p (recoverable 1,476조건):
 
 | | 34p pass | 34p fail |
 |---|---:|---:|
-| **33p pass** | 381 | **186** |
-| **33p fail** | **167** | 742 |
+| **33p pass** | 131 | **436** |
+| **33p fail** | **55** | 854 |
 
-aggregate 는 `909 → 928`, +19 다. 그런데 **불일치가 353/1476 = 23.9%** 다.
-두 목적함수는 "거의 같은 답" 을 내는 것이 아니라 **네 조건 중 하나에서 서로
-다르게 판정**하면서 총량만 비슷하다. aggregate 하나로 보고하면 이것이 사라진다.
+불일치 `491/1476 = 33.27%`, 34p 순증 실패 `436 − 55 = 381`.
+
+**primary scalar 는 하나로 정의한다** — paired raw-degeneracy risk difference:
+
+```text
+Δ = (pass→fail − fail→pass) / n = (436 − 55) / 1476 = 0.2581
+```
+
+네 칸 전이표는 **같은 estimand 의 필수 분해**이지 두 번째 endpoint 가 아니다.
+endpoint 를 둘로 늘리면 다중성 처리가 필요해진다.
+
+참고로 warm arm 의 같은 표는 `381 / 186 / 167 / 742` (불일치 23.9%, 순증 19)
+다. **둘 다 `recorded_only` 설계 prior 일 뿐 새 primary 결과가 아니다** — 이
+수치로 threshold 나 endpoint 를 고르면 22차 Q4 가 금지한 자기선택이 된다.
+
+두 arm 을 나란히 놓으면 aggregate 가 무엇을 숨기는지 보인다: no-warm 에서는
+34p 가 33p 보다 **훨씬** 나쁘고(순증 381), warm 에서는 거의 비슷하다(순증 19).
+aggregate 하나로 보고하면 이 protocol 의존성이 사라진다.
 
 **통계 한정**: 이 격자는 확률표본이 아니라 결정론적 조건집합이므로 전이 건수는
 **기술통계**다. McNemar p-value 나 모집단 확률로 옮기려면 조건 표집 모형과
@@ -312,7 +485,31 @@ aggregate 는 `909 → 928`, +19 다. 그런데 **불일치가 353/1476 = 23.9%*
 
 ## 8. leg 상태와 index
 
-| `inference_status` | 뜻 | 인용 |
+**★ 23차 P0-6 — 단일 `inference_status` 는 직교하는 축 셋을 섞었다.**
+`recorded_only` 는 **보존** 상태, `diagnostic_only` 는 **과학적 용도**,
+`historical_valid` 는 **검증 세대**다. 한 다리가 동시에 recorded-only 이면서
+confounded 일 수 있는데 단일 필드로는 표현이 안 된다. 셋으로 나눈다:
+
+```yaml
+preservation_status: full_bundle | recorded_projection | missing
+validation_status:   current_validated | historical_validated | unvalidated
+inference_role:      canonical | diagnostic | confounded | superseded | excluded
+```
+
+| 축 | 답하는 질문 |
+|---|---|
+| `preservation_status` | 원자료가 **있는가** |
+| `validation_status` | 그것이 **검증됐는가**, 어느 세대 검증기로 |
+| `inference_role` | 그것을 **어디에 쓸 수 있는가** |
+
+**raw bundle 이 없는 다리를 선택만으로 `historical_valid` 라고 부를 수 없다** —
+검증은 실제 보존·검증 증거가 있을 때만 붙는다. 현재 warm-probe 8다리는
+`preservation_status: recorded_projection` · `validation_status: unvalidated`
+(`validate_provenance` 미실행) · `inference_role: diagnostic` 이다.
+
+참고로 v2 의 단일 축은 다음과 같았다 (이제 쓰지 않는다):
+
+| `inference_status` (v2) | 뜻 | 인용 |
 |---|---|---|
 | `canonical` | 새 protocol 정본 | ✅ |
 | `historical_valid` | 옛 source commit 의 완전 bundle 로 재검증 가능 | 조건부 (regime 병기) |
@@ -330,7 +527,10 @@ schema_version: 2
 legs:
   - leg_id: hc22p_v6_armC_b20
     pairing_design_id: p22_halfcell_2x2_v6
-    n_pair_groups: 640                    # ★ leg scalar pair_group_id 는 없다
+    n_pair_groups: 320                    # ★ leg scalar pair_group_id 는 없다
+    #  ↑ 23차 P0-2 정정: v2 는 640 이라고 썼다. 그 다리는 1,280행 · cond_id
+    #    640 인데, noise 0/0.005 를 pair ID 에서 빼면 물리좌표 조합은 **320**
+    #    이다. 계약 자신의 §4.2 규칙과 안 맞았다 (실측 재현: 재현 명령 참조).
     cond_to_pair_sha256: <64 hex>         #   행 단위 mapping 의 digest
     treatment: null                       # ★ 무왜곡이면 null (v1 예시가 틀렸다)
     source_commit: <40 hex>
@@ -393,8 +593,40 @@ reference·treatment·curves digest·objective order·목적함수별 예산·�
 비용 검산이 된다.
 
 측정 기준값(실측): `paired_fixed5_v4_warm` = 3,069조건 × 2목적함수 ×
-예산상한 5 → **833초** (nproc 28, `adaptive=False`). restart 하나당 약
-`0.027초` (wall, 28병렬).
+예산상한 5 → **833초** (nproc 28, `adaptive=False`).
+
+**★ 23차 P0-7 — 이 값에서 유도한 `0.027초/restart` 는 단일 restart 시간이
+아니다.** 28병렬의 **effective wall-throughput** 이다. 비용 모델은 둘을 나눠
+적는다:
+
+| 축 | 뜻 | 이 실측에서 |
+|---|---|---|
+| wall time | 사람이 기다리는 시간 | 833초 |
+| core-time | CPU 총 사용량 | ≈ 833 × 28 = 23,324 core-초 |
+| wall-throughput | 병렬 포함 처리율 | 30,690 restart / 833초 = 36.8 restart/초 |
+
+nproc 이 다른 기계로 옮기면 wall 은 바뀌고 core-time 은 대체로 유지된다.
+재산정에는 **core-time** 을 쓰고, 일정 추정에만 wall 을 쓴다.
+
+### 9.4 단계 3 부터는 원 fits 에 더 남긴다 (23차 발견 5)
+
+현재 `src/fitting.py` 는 restart 마다 `p` · `J` · `i` · `source` · `warm` 만
+저장한다. 그래서 투영의 random-only 다봉성은 **구현대로 정확히 재현되지만**,
+"수렴한 국소최소의 다봉성" 까지 증명하지는 못한다 — 유한 `J` 를 가진 미수렴
+restart 도 국소최소처럼 세어진다.
+
+단계 3 에서 restart 행에 추가한다:
+
+| 필드 | 왜 |
+|---|---|
+| `converged` | 미수렴 restart 를 국소최소로 세지 않기 위해 |
+| `termination_status` | 왜 멈췄나 (maxiter / xatol / 예외) |
+| `n_eval` | `equal_start_count` 가 계산비용을 같게 만들지 **않는다**는 것을 재는 축 (§3) |
+| `candidate_id` | §4.2 — 어느 후보였나 |
+| `bank_index` | bank 후반부 승리 여부 (§6.3 이 gate 에서 뺀 지표를 여기서 다시 볼 수 있게) |
+
+이 다섯이 들어가야 §6.2 의 solver 건전성 gate 와 §3 의 비용 비교가 실측
+가능해진다.
 
 ## 10. 보존 (22차 Q6)
 

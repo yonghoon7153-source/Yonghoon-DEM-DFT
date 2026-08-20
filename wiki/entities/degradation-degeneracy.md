@@ -46,7 +46,7 @@ evidenceScope: multi-source-primary
     숫자가 어떻게 바뀌었는지는 원장 `docs/08_REVIEW_RESPONSE.md` §20.4 정정
     블록과 `docs/RESULTS*.md` 가 정본이다 (여기에 옮겨 적지 않는다).
   - 산출물이 문서보다 앞서 나가는 것을 막으려고, 철회된 주장은
-    `docs/05_HANDOFF.md` 상단 배너와 절별 `⛔ 철회[CLAIM_ID]` 표시로 고정하고
+    `docs/05_HANDOFF.md` 상단 배너와 절별 `⛔ 철회` + claim ID 표시로 고정하고
     `tests/test_docs_lint.py` 가 그 표시를 강제한다.
   - 진행 중: 모델 오차(half-cell OCP 왜곡) 민감도 스윕. 남은 항목은
     `docs/09_22P_GAP.md` §10 에 7개로 목록화돼 있다.
