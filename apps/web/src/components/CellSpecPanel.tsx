@@ -90,8 +90,8 @@ export function CellSpecPanel({
 
       <div className="grid cols-2" style={{ gap: 9 }}>
         <NumberField
-          label="전극 총 질량"
-          hint="mg"
+          label="전극 총 질량 (집전체 제외)"
+          hint="mg · 이 값에 활물질 wt% 를 곱한다"
           value={draft.total_mass_mg}
           onChange={set('total_mass_mg')}
           min={0}
@@ -101,13 +101,6 @@ export function CellSpecPanel({
           hint="wt% · 조성보다 우선"
           value={draft.active_wt_percent}
           onChange={set('active_wt_percent')}
-          min={0}
-        />
-        <NumberField
-          label="집전체 질량"
-          hint="mg · 빼고 계산"
-          value={draft.current_collector_mass_mg}
-          onChange={set('current_collector_mass_mg')}
           min={0}
         />
         <NumberField
@@ -146,6 +139,38 @@ export function CellSpecPanel({
           min={0}
         />
       </div>
+
+      {/* 집전체 질량은 입력란에서 뺐다 — 이 랩은 "전극 총 질량" 을 이미 집전체를
+          제외한 값으로 쓴다.  다만 예전에 값을 넣어 둔 셀이 있으면 그 차감이
+          화면에 없는 채로 계속 살아 있게 되므로, 있을 때만 보여 주고 지울 수
+          있게 한다.  보이지 않는 차감은 mAh/g 를 조용히 바꾼다. */}
+      {sample.current_collector_mass_mg ? (
+        <Alert kind="warn">
+          이 셀에는 집전체 질량 {sample.current_collector_mass_mg} mg 이 남아 있어 총
+          질량에서 빠지고 있습니다. 총 질량을 이미 집전체 제외로 넣었다면 지우세요.
+          <button
+            type="button"
+            className="ghost tiny"
+            style={{ marginLeft: 8 }}
+            disabled={saving}
+            onClick={async () => {
+              setSaving(true)
+              try {
+                setError(null)
+                onSaved(
+                  await api.updateSample(sample.id, { clear: ['current_collector_mass_mg'] }),
+                )
+              } catch (cause) {
+                setError(String(cause instanceof Error ? cause.message : cause))
+              } finally {
+                setSaving(false)
+              }
+            }}
+          >
+            지우기
+          </button>
+        </Alert>
+      ) : null}
 
       {/* 기준전극.  황화물계 전고체는 Li-In 대극으로 만드는데, 계측기는 그
           기준으로 기록하고 논문은 vs Li/Li+ 로 쓴다 — 차이 0.62 V 는 4.40 V
