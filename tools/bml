@@ -715,6 +715,8 @@ build_web() {
 # --- 실행 --------------------------------------------------------------------
 cmd_stop() {
   local stopped=0
+  # 서버가 없어지면 "어느 커밋을 서비스 중" 이라는 표식도 사실이 아니다.
+  rm -f "$HEAD_FILE"
   for file in "$PID_FILE" "$DEV_PID_FILE"; do
     local pid
     # 파일에 적혀 있고 살아 있다는 것만으로는 죽일 근거가 못 된다.  낡은 PID
@@ -821,12 +823,29 @@ start_serve() {
     if [ $state -eq 0 ]; then
       # 우리 것이거나(0), 누구 것인지 모르지만 우리 API 로 정상 응답한다(2).
       # 다만 "돌고 있다" 와 "지금 코드를 돌고 있다" 는 다르다.
-      local serving current
+      local serving current stale=""
       serving="$(cat "$HEAD_FILE" 2>/dev/null)"
       current="$(git -C "$REPO" rev-parse HEAD 2>/dev/null)"
-      if [ $owner -eq 0 ] && [ -n "$serving" ] && [ -n "$current" ] \
-         && [ "$serving" != "$current" ]; then
-        warn "떠 있는 서버가 이전 커밋(${serving:0:8})을 서비스 중입니다 — 새로 띄웁니다."
+
+      if [ $owner -eq 0 ]; then
+        if [ -z "$serving" ]; then
+          # 이전 버전 bml 이 띄운 서버는 이 표식을 남기지 않는다.  "모르니까
+          # 그대로 둔다" 를 고르면 갱신을 받은 뒤에도 옛 코드가 계속 서비스되고,
+          # 사용자는 고친 것이 반영된 줄 안다 — 실제로 그렇게 삭제 버튼이
+          # 없다는 신고가 들어왔다.  증명하지 못하면 새로 띄운다.
+          stale="어느 커밋인지 알 수 없는"
+        elif [ -n "$current" ] && [ "$serving" != "$current" ]; then
+          stale="이전 커밋(${serving:0:8})의"
+        elif web_needs_build; then
+          # HEAD 가 같아도 프론트 번들이 소스보다 낡을 수 있다 (빌드 전에 죽었거나,
+          # 소스만 건드린 경우).  "이미 돌고 있습니다" 로 끝내면 아래 build_web 이
+          # 아예 실행되지 않는다.
+          stale="옛 화면을 담은"
+        fi
+      fi
+
+      if [ -n "$stale" ]; then
+        warn "떠 있는 서버가 ${stale} 것입니다 — 새로 띄웁니다."
         cmd_stop >/dev/null 2>&1 || true
         sleep 1
       else

@@ -31,3 +31,5 @@ append-only. 형식: `## [YYYY-MM-DD] action | subject`
 ## [2026-08-20] fix | 2차 갱신 — Codex 가 지목한 회귀 8건과 안 닫힌 8건
 ## [2026-08-20] create | 처음 쓰는 사람용 사용법 (docs/guides/getting-started.md)
 ## [2026-08-20] create | Codex 3차 리뷰 과제 — 2차 갱신 검증
+## [2026-08-20] feat | Li-In 기준전극 설정 — 실측 파일로 vs Li/Li+ 환산 검증
+## [2026-08-20] fix | pull 후 옛 화면이 계속 서비스되던 문제 (빌드가 조기 반환 뒤였다)

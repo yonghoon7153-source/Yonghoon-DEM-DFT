@@ -22,6 +22,7 @@ type SpecKey =
   | 'diameter_mm'
   | 'thickness_um'
   | 'nominal_specific_capacity_mah_g'
+  | 'reference_offset_v'
 
 const NOTE_LABELS: Record<string, string> = {
   active_mass: '활물질 질량',
@@ -40,12 +41,18 @@ export function CellSpecPanel({
   const [draft, setDraft] = useState<Record<SpecKey, number | null>>(() => pick(sample))
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  // 문자열이라 숫자 draft 에 섞지 않는다.
+  const [electrode, setElectrode] = useState(sample.reference_electrode ?? '')
 
-  useEffect(() => setDraft(pick(sample)), [sample])
+  useEffect(() => {
+    setDraft(pick(sample))
+    setElectrode(sample.reference_electrode ?? '')
+  }, [sample])
 
-  const dirty = (Object.keys(draft) as SpecKey[]).some(
-    (key) => (draft[key] ?? null) !== (sample[key] ?? null),
-  )
+  const dirty =
+    (Object.keys(draft) as SpecKey[]).some(
+      (key) => (draft[key] ?? null) !== (sample[key] ?? null),
+    ) || electrode !== (sample.reference_electrode ?? '')
 
   async function save() {
     setSaving(true)
@@ -60,6 +67,9 @@ export function CellSpecPanel({
         } else if (value !== sample[key]) {
           body[key] = value
         }
+      }
+      if (electrode !== (sample.reference_electrode ?? '')) {
+        body.reference_electrode = electrode
       }
       if (clear.length) body.clear = clear
       onSaved(await api.updateSample(sample.id, body))
@@ -134,6 +144,30 @@ export function CellSpecPanel({
           value={draft.nominal_specific_capacity_mah_g}
           onChange={set('nominal_specific_capacity_mah_g')}
           min={0}
+        />
+      </div>
+
+      {/* 기준전극.  황화물계 전고체는 Li-In 대극으로 만드는데, 계측기는 그
+          기준으로 기록하고 논문은 vs Li/Li+ 로 쓴다 — 차이 0.62 V 는 4.40 V
+          컷오프를 3.78 V 로 보이게 할 만큼 크고, 틀렸다고 알아채기 어려울 만큼
+          그럴듯하다. 질량과 같은 방식으로 저장은 raw, 표시할 때 환산한다. */}
+      <div className="grid cols-2" style={{ gap: 9, marginTop: 9 }}>
+        <Field label="기준전극" hint="전압 표시 기준">
+          <select
+            value={electrode}
+            onChange={(event) => setElectrode(event.target.value)}
+          >
+            <option value="">기록 그대로 (환산 안 함)</option>
+            <option value="Li">Li 금속 — vs Li/Li⁺</option>
+            <option value="Li-In">Li-In 합금 (+0.62 V) — 황화물계 전고체</option>
+            <option value="LTO">Li₄Ti₅O₁₂ (+1.55 V)</option>
+          </select>
+        </Field>
+        <NumberField
+          label="오프셋 직접 입력"
+          hint="V · 위 선택보다 우선"
+          value={draft.reference_offset_v}
+          onChange={set('reference_offset_v')}
         />
       </div>
 
@@ -233,6 +267,7 @@ function pick(sample: Sample): Record<SpecKey, number | null> {
     diameter_mm: sample.diameter_mm,
     thickness_um: sample.thickness_um,
     nominal_specific_capacity_mah_g: sample.nominal_specific_capacity_mah_g,
+    reference_offset_v: sample.reference_offset_v ?? null,
   }
 }
 

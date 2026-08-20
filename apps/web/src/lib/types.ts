@@ -25,6 +25,9 @@ export interface ResolvedCell {
   loading_mg_cm2: number | null
   nominal_capacity_mah: number | null
   nominal_specific_capacity_mah_g: number | null
+  /** 계측기가 무엇을 기준으로 전압을 기록했는지 ('' = 환산 안 함). */
+  reference_electrode?: string
+  reference_offset_v?: number | null
   available_bases: Basis[]
   unavailable: Record<string, string>
   notes: Record<string, string>
@@ -61,6 +64,9 @@ export interface Sample {
   diameter_mm: number | null
   thickness_um: number | null
   nominal_specific_capacity_mah_g: number | null
+  /** 계측기가 무엇을 기준으로 전압을 기록했는지 ('' = 환산 안 함). */
+  reference_electrode?: string
+  reference_offset_v?: number | null
   composition: Component[]
   composition_label: string
   temperature_c: number | null
