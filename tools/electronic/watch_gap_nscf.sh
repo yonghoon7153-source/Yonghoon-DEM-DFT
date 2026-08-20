@@ -138,13 +138,17 @@ for S in comp1 modelc; do
 
         AGE=$(( ( $(date +%s) - $(stat -c %Y "$F") ) / 60 ))
 
-        # ⛔ 2026-08-20 실측: 옛 실행의 .out 을 **현재 상태로 보고했다.** comp1 이 아직
-        #   scf 초기화 중이라 modelc 차례가 오지도 않았는데, 화면은 지난 판의
-        #   "wrong number of columns" 오류를 지금 난 것처럼 찍었다.
-        #   판별: 입력(.in)은 실행 직전에 매번 새로 만든다 — .out 이 .in 보다 오래됐으면 옛 판이다.
-        IN=$D/$( [ "$STAGE" = scf ] && echo scf.in || echo nscf_gap.in )
-        if [ -f "$IN" ] && [ "$IN" -nt "$F" ]; then
-            echo "   $STAGE: ⏸ 아직 시작 안 함 (남아 있는 .out 은 **옛 판**이라 안 읽는다)"
+        # ⛔ 2026-08-20 실측 (2차). 옛 실행의 .out 을 현재 상태로 보고하는 문제를
+        #   "`.in` 이 `.out` 보다 새로우면 옛 판" 으로 고쳤는데 **그것도 틀렸다.**
+        #   지난 판에서 modelc 는 .in 을 쓰고 **곧바로 실행해서 죽었다** — 그래서
+        #   .out 이 .in 보다 새롭다. 이번 실행은 아직 modelc 차례가 오지도 않았는데
+        #   화면은 여전히 지난 판의 오류를 지금 난 것처럼 찍었다.
+        #   ⇒ 옳은 기준은 **이번 실행이 시작한 시각**이다. 러너는 계마다 실행 직전에
+        #     .in 을 새로 만드니, 모든 .in 중 **가장 새로운 것**이 이번 실행의 진행선이다.
+        #     그보다 오래된 .out 은 무조건 지난 판이다.
+        RUNSTART=$(ls -t "$OUT"/*/scf.in "$OUT"/*/nscf_gap.in 2>/dev/null | head -1)
+        if [ -n "$RUNSTART" ] && [ "$RUNSTART" -nt "$F" ]; then
+            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
             continue
         fi
 
@@ -193,11 +197,22 @@ for S in comp1 modelc; do
         printf "   %s: 반복 %s · accuracy %s → 목표 1e-9" "$STAGE" "$NIT" "${ACC:-–}"
         [ -n "$ACC" ] && awk -v a="$ACC" 'BEGIN{if(a+0<=1e-9) printf "  ✅ 도달"}'
         echo
+        # ⚠ 초반 SCF 는 원래 출렁인다 (mixing_beta 0.3). 반복 2회에서 "제자리 의심" 을
+        #   찍었더니 멀쩡히 도는 계산을 문제처럼 보이게 했다 — 정직하지 않은 경고다.
+        #   4회 이상 쌓였고 **최근 3회 내내** 안 줄 때만 말한다.
         if [ -n "$PREV" ] && [ -n "$ACC" ]; then
-            awk -v p="$PREV" -v a="$ACC" 'BEGIN{
-                if (a+0 >= p+0) print "        ⚠ 직전 반복 대비 안 줄었다 (제자리 의심)";
-                else printf "        직전 %s → 지금 %s (%.1f 자릿수 진척)\n", p, a, log(p/a)/log(10)
-            }'
+            if [ "$NIT" -lt 4 ]; then
+                printf "        직전 %s → 지금 %s  (반복 %s회 — 초반은 출렁인다, 판정 보류)\n" \
+                       "$PREV" "$ACC" "$NIT"
+            else
+                A3=$(grep -a 'estimated scf accuracy' "$F" | tail -3 | awk '{print $(NF-1)}' | tr '\n' ' ')
+                awk -v s="$A3" -v p="$PREV" -v a="$ACC" 'BEGIN{
+                    n=split(s,v," "); mono=1
+                    for(i=2;i<=n;i++) if (v[i]+0 < v[i-1]+0) mono=0
+                    if (n>=3 && mono) print "        ⚠ 최근 3회 내내 안 줄었다 (제자리 — 확인 필요)";
+                    else printf "        직전 %s → 지금 %s (%.1f 자릿수 진척)\n", p, a, log(p/a)/log(10)
+                }'
+            fi
         fi
         if [ -n "$CPUT" ] && [ "$NIT" -gt 1 ]; then
             awk -v t="$CPUT" -v n="$NIT" 'BEGIN{printf "        %.0f s/반복 · cpu 누적 %.1f 분\n", t/n, t/60}'
