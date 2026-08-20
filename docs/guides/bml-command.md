@@ -24,18 +24,19 @@ pull --rebase --autostash  →  의존성 확인  →  필요하면 빌드  → 
 
 ## 설치 (각자 한 번만)
 
-저장소를 클론한 뒤:
+작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 브랜치에 있습니다. `main` 은 비어 있으니 **`-b` 로 지정해
+클론**하세요.
 
 ```bash
-cd <저장소>
-make setup            # git 설정 + 의존성 + bml 등록까지 한 번에
+git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+cd Yonghoon-DEM-DFT
+./tools/bml install     # ~/.local/bin/bml 로 심볼릭 링크
+bml                     # 의존성·빌드·실행까지 알아서
 ```
 
-`bml` 만 따로 등록하려면:
-
-```bash
-./tools/bml install                 # ~/.local/bin/bml 로 심볼릭 링크
-```
+의존성은 `bml` 이 처음 실행될 때 설치합니다. git 설정까지 한 번에 하려면
+`make setup` 을 써도 됩니다.
 
 `~/.local/bin` 이 PATH 에 없다는 경고가 나오면 셸 설정에 한 줄 추가하고 새
 터미널을 엽니다:

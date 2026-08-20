@@ -423,6 +423,28 @@ cmd_doctor() {
     say ""
   fi
 
+  # --- 저장소가 실제로 이 프로젝트인지 --------------------------------------
+  #
+  # main 브랜치는 비어 있다.  그냥 클론하면 파일이 하나도 없는 폴더를 받게 되고,
+  # make 는 "Nothing to be done" 을, 셸은 "bml: command not found" 를 뱉는다.
+  # 둘 다 원인을 말해 주지 않으므로 여기서 짚는다.
+  local missing=()
+  for required in Makefile packages/wrdkit/src/wrdkit apps/api/app apps/web/src; do
+    [ -e "$REPO/$required" ] || missing+=("$required")
+  done
+  if [ ${#missing[@]} -gt 0 ]; then
+    printf '%s✕%s 저장소에 프로젝트 파일이 없습니다 (없는 것: %s)\n' \
+      "$RED" "$OFF" "${missing[*]}"
+    say "  ${DIM}main 브랜치는 비어 있습니다. 작업 브랜치로 옮기세요:${OFF}"
+    say "    git -C \"$REPO\" fetch origin"
+    say "    git -C \"$REPO\" checkout claude/battery-charge-discharge-webapp-dq4ja3"
+    problems=$((problems + 1))
+  else
+    local branch
+    branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
+    ok "프로젝트 파일 정상 (브랜치 ${branch})"
+  fi
+
   # --- 줄바꿈 (WSL 에서 가장 흔한 사고) ---------------------------------------
   #
   # bml 자신이 CRLF 면 애초에 실행되지 않고 "bad interpreter" 만 뜬다.  그래서

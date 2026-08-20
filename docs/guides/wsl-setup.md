@@ -83,10 +83,25 @@ git rm --cached -r . && git reset --hard
 
 ## 3. 저장소는 WSL 안에 — `/mnt/c` 에 두지 마세요
 
+**브랜치를 반드시 지정하세요.** 작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 에 있고 `main` 은 비어
+있습니다. 그냥 클론하면 빈 폴더를 받게 되고, `make setup` 이
+`Nothing to be done` 을 뱉고 `bml` 은 설치되지 않습니다.
+
 ```bash
 cd ~
-git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
 cd Yonghoon-DEM-DFT
+ls Makefile tools/bml     # 둘 다 보여야 정상입니다
+```
+
+이미 폴더가 있어서 `destination path ... already exists` 가 났다면, 지우지
+말고 브랜치만 맞춥니다:
+
+```bash
+cd ~/Yonghoon-DEM-DFT
+git fetch origin
+git checkout claude/battery-charge-discharge-webapp-dq4ja3
 ```
 
 `/mnt/c/...` (Windows 드라이브) 에 두면 파일 접근이 **10배 이상 느리고**,
@@ -99,10 +114,11 @@ cd Yonghoon-DEM-DFT
 ## 4. 설치
 
 ```bash
-make setup
+./tools/bml install     # bml 을 ~/.local/bin 에 등록
 ```
 
-git 설정 · 의존성 · `bml` 등록까지 한 번에 합니다. 처음이라 1~3분 걸립니다.
+의존성 설치는 `bml` 이 처음 실행될 때 알아서 합니다 (1~3분). git 설정까지
+한 번에 하려면 `make setup` 을 써도 됩니다.
 
 `~/.local/bin` 이 PATH 에 없다는 경고가 나오면:
 
@@ -155,8 +171,20 @@ setx BML_WSL_DISTRO Ubuntu
 ## 안 될 때
 
 **`bml: command not found`**
-: PATH 문제입니다. 4번의 `export PATH=...` 를 하고 새 터미널을 여세요.
-  급하면 `~/Yonghoon-DEM-DFT/tools/bml` 로 직접 실행됩니다.
+: 두 가지 중 하나입니다.
+
+  1. **등록이 안 됐습니다** — `cd ~/Yonghoon-DEM-DFT && ./tools/bml install`.
+  2. **PATH 에 없습니다** — 4번의 `export PATH=...` 를 하고 새 터미널을 여세요.
+
+  급하면 언제든 `~/Yonghoon-DEM-DFT/tools/bml` 로 직접 실행됩니다.
+
+**`make: Nothing to be done for 'setup'`** / `tools/bml` 이 없습니다
+: 빈 `main` 브랜치를 받았습니다. 3번의 `git checkout claude/battery-charge-discharge-webapp-dq4ja3` 를 하세요.
+  `ls Makefile tools/bml` 로 확인할 수 있습니다.
+
+**`destination path 'Yonghoon-DEM-DFT' already exists`**
+: 폴더가 이미 있습니다. 지우지 말고 3번의 `git fetch` + `git checkout` 으로
+  브랜치만 맞추면 됩니다.
 
 **`bad interpreter: No such file or directory`**
 : CRLF 입니다. 2번을 하세요.

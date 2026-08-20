@@ -34,14 +34,21 @@ Excel 로 옮기고 Origin 에서 다시 그리는 과정을 없애는 것이 �
 
 ## 빠른 시작
 
+> **브랜치 주의** — 작업은 `claude/battery-charge-discharge-webapp-dq4ja3` 에 있습니다.
+> `main` 은 비어 있으므로 **반드시 `-b` 로 브랜치를 지정해 클론**하세요.
+
 ### Linux · macOS
 
 ```bash
-git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
 cd Yonghoon-DEM-DFT
-make setup     # 클론 직후 1회 (git 설정 + 의존성 + bml 등록)
-bml            # 최신으로 맞추고 실행 → http://localhost:5003
+./tools/bml install     # bml 을 PATH 에 등록 (1회)
+bml                     # 의존성·빌드·실행까지 알아서 → http://localhost:5003
 ```
+
+`bml` 이 처음 실행될 때 가상환경을 만들고 의존성을 설치합니다 (1~3분).
+`make setup` 을 따로 부를 필요가 없습니다.
 
 ### Windows (WSL)
 
@@ -58,10 +65,26 @@ curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt in
 git config --global core.autocrlf input
 
 # 3. 저장소는 WSL 안에 — /mnt/c 에 두면 10배 느리고 자동 새로고침이 안 됩니다
-cd ~ && git clone https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
-cd Yonghoon-DEM-DFT && make setup
+#    ★ -b 로 브랜치를 지정해야 합니다. main 은 비어 있습니다.
+cd ~
+git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+cd Yonghoon-DEM-DFT
 
+# 4. 실행 (의존성·빌드까지 bml 이 알아서 합니다)
+./tools/bml install
 bml            # → http://localhost:5003 (Windows 기본 브라우저가 열립니다)
+```
+
+**이미 `~/Yonghoon-DEM-DFT` 폴더가 있어서 클론이 실패했다면** — 지우지 말고
+브랜치만 맞추면 됩니다:
+
+```bash
+cd ~/Yonghoon-DEM-DFT
+git fetch origin
+git checkout claude/battery-charge-discharge-webapp-dq4ja3
+ls Makefile tools/bml     # 둘 다 보이면 정상입니다
+./tools/bml install && bml
 ```
 
 막히면 **`bml doctor`** 가 환경을 점검하고 무엇을 어떻게 고칠지 알려 줍니다.
