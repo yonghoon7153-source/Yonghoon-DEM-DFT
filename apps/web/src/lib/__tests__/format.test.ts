@@ -1,6 +1,14 @@
 import { describe, expect, it } from 'vitest'
 
-import { basisAxis, basisUnit, num, parseCycleSpec, pct, spread } from '../format'
+import {
+  basisAxis,
+  basisUnit,
+  massFromName,
+  num,
+  parseCycleSpec,
+  pct,
+  spread,
+} from '../format'
 
 describe('num', () => {
   it('keeps significant figures rather than decimal places', () => {
@@ -82,5 +90,35 @@ describe('basis labels', () => {
 
   it('falls back to mAh for an unknown basis', () => {
     expect(basisUnit('mAh/kg')).toBe('mAh')
+  })
+})
+
+describe('massFromName', () => {
+  it('이 랩의 파일 이름에서 전극 질량을 읽는다', () => {
+    expect(massFromName('CAM_LPSCl_4.6V_1_17.5mg')).toBe(17.5)
+    expect(massFromName('CAM_LPSCl_3.8V_post_formation_17.6mg')).toBe(17.6)
+  })
+
+  it('정수 질량과 붙임/띄움을 모두 읽는다', () => {
+    expect(massFromName('cell_18mg')).toBe(18)
+    expect(massFromName('cell_18 mg')).toBe(18)
+    expect(massFromName('cell_18MG')).toBe(18)
+  })
+
+  it('질량이 여럿이면 마지막 것 — 전극 질량이 이름 끝에 온다', () => {
+    expect(massFromName('sep_5mg_cathode_17.5mg')).toBe(17.5)
+  })
+
+  it('mg 가 다른 단위의 일부이면 읽지 않는다', () => {
+    // 없는 값을 지어내느니 아무것도 안 적는 편이 낫다.
+    expect(massFromName('cell_200mAh_4.6V')).toBeNull()
+    expect(massFromName('cell_3.5mgml')).toBeNull()
+    expect(massFromName('4.6V_post_formation')).toBeNull()
+    expect(massFromName('')).toBeNull()
+    expect(massFromName(null)).toBeNull()
+  })
+
+  it('0 mg 은 질량이 아니다', () => {
+    expect(massFromName('blank_0mg')).toBeNull()
   })
 })

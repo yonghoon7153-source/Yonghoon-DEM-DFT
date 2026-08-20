@@ -8,7 +8,7 @@
 import { useEffect, useState } from 'react'
 
 import { api } from '../lib/api'
-import { num } from '../lib/format'
+import { massFromName, num } from '../lib/format'
 import { ko } from '../lib/i18n'
 import type { Sample } from '../lib/types'
 import { Alert, Field, NumberField } from './ui'
@@ -84,6 +84,11 @@ export function CellSpecPanel({
   const set = (key: SpecKey) => (value: number | null) =>
     setDraft((previous) => ({ ...previous, [key]: value }))
 
+  // 파일 이름이 질량을 들고 다닌다 (`..._4.6V_1_17.5mg`).  .wrd 는 그 값을
+  // 모르므로 손으로 넣어야 하는데, 옆에 이름이 말하는 값을 적어 두면 오타가
+  // 모든 mAh/g 를 조용히 바꾸기 전에 눈에 걸린다.
+  const named = massFromName(sample.name)
+
   return (
     <div className="col">
       {error ? <Alert kind="error">{error}</Alert> : null}
@@ -92,6 +97,7 @@ export function CellSpecPanel({
         <NumberField
           label="전극 총 질량 (집전체 제외)"
           hint="mg · 이 값에 활물질 wt% 를 곱한다"
+          note={named === null ? undefined : <span title="셀 이름에 적힌 값">#{named}mg</span>}
           value={draft.total_mass_mg}
           onChange={set('total_mass_mg')}
           min={0}

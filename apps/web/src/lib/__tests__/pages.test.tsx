@@ -761,3 +761,32 @@ describe('파일 이름 → 셀 이름', () => {
     expect(cellNameFor('_011.wrd')).toBe('_011')
   })
 })
+
+// --- 이름에 적힌 질량 ---------------------------------------------------------
+
+describe('셀 상세 질량 힌트', () => {
+  it('이름이 질량을 들고 있으면 입력란 옆에 회색으로 적는다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1'
+          ? sample({ name: 'CAM_LPSCl_4.6V_1_17.5mg' })
+          : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    // 이름이 말하는 값은 참고일 뿐 — 입력란은 그대로 비어 있어야 한다.
+    // 추정값을 실측값처럼 채워 넣으면 mAh/g 가 조용히 지어진다.
+    const field = (await screen.findByText(/전극 총 질량/)).closest('label') as HTMLElement
+    expect(within(field).getByText('#17.5mg')).toBeInTheDocument()
+    expect(within(field).getByRole('spinbutton')).toHaveValue(null)
+  })
+
+  it('이름에 질량이 없으면 아무것도 적지 않는다', async () => {
+    installFetch(sampleDetailHandler(() => undefined))
+    renderSampleDetail()
+
+    const field = (await screen.findByText(/전극 총 질량/)).closest('label') as HTMLElement
+    expect(within(field).queryByText(/^#/)).toBeNull()
+  })
+})

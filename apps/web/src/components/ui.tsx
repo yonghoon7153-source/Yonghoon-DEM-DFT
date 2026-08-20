@@ -231,10 +231,17 @@ export function Empty({
 export function Field({
   label,
   hint,
+  note,
   children,
 }: {
   label: string
   hint?: string
+  /** Read-only aside on the label row -- where a value could have come from.
+   *
+   * Text only, and deliberately not a button: `<label>` takes its control from
+   * the first labelable descendant, so a button here would steal the label from
+   * the input below it. */
+  note?: ReactNode
   children: ReactNode
 }) {
   return (
@@ -242,6 +249,7 @@ export function Field({
       <span>
         {label}
         {hint ? <span className="hint"> · {hint}</span> : null}
+        {note ? <span className="note">{note}</span> : null}
       </span>
       {children}
     </label>
@@ -251,6 +259,7 @@ export function Field({
 export function NumberField({
   label,
   hint,
+  note,
   value,
   onChange,
   step = 'any',
@@ -259,6 +268,7 @@ export function NumberField({
 }: {
   label: string
   hint?: string
+  note?: ReactNode
   value: number | null | undefined
   onChange: (value: number | null) => void
   step?: string | number
@@ -266,7 +276,7 @@ export function NumberField({
   placeholder?: string
 }) {
   return (
-    <Field label={label} hint={hint}>
+    <Field label={label} hint={hint} note={note}>
       <input
         type="number"
         step={step}

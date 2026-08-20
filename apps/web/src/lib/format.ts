@@ -82,6 +82,24 @@ export function basisUnit(basis: string): string {
   }
 }
 
+/** The mass written into a cell's name, in mg.
+ *
+ * This lab names its files with the electrode mass on the end --
+ * `..._4.6V_1_17.5mg`.  That number is the one thing the `.wrd` does not know
+ * (ADR 0003), so it has to be typed in by hand; showing what the name says
+ * next to the field is how a typo gets caught before every mAh/g is wrong.
+ * The last match wins: `..._3.8V_1_18.5mg` has one mass, but a name that
+ * mentions two puts the electrode's own last. */
+export function massFromName(name: string | null | undefined): number | null {
+  if (!name) return null
+  let found: number | null = null
+  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*mg\b/gi)) {
+    const value = Number(match[1])
+    if (Number.isFinite(value) && value > 0) found = value
+  }
+  return found
+}
+
 /** Qualitative palette, ordered so adjacent series stay distinguishable and
  *  no pair collides under the common forms of colour blindness. */
 export const SERIES_COLORS = [

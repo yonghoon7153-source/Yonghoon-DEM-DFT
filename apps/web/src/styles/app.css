@@ -422,6 +422,14 @@ a:hover { text-decoration: underline; }
 label.field { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; }
 label.field > span { color: var(--ink-2); font-weight: 550; }
 label.field .hint { color: var(--ink-4); font-weight: 400; }
+/* 이름에서 읽은 값 — 입력값이 아니라 참고다.  회색으로 둬서 채워진 칸과
+   구별되게 한다. */
+label.field .note {
+  margin-left: 6px;
+  color: var(--ink-4);
+  font-weight: 400;
+  font-variant-numeric: tabular-nums;
+}
 
 input, select, textarea, button { font-family: inherit; font-size: 13px; color: var(--ink); }
 
