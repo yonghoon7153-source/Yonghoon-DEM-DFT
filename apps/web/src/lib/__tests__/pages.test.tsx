@@ -596,3 +596,104 @@ describe('대시보드 삭제', () => {
     await waitFor(() => expect(screen.queryByRole('link', { name: '안녕' })).toBeNull())
   })
 })
+
+// --- 업로드에서 그룹 고르기 ---------------------------------------------------
+//
+// 같은 실험 묶음을 열 개 올리고 나서 셀 화면에 열 번 다시 들어가 그룹을 붙이는
+// 것은 실제로 아무도 안 한다. 올릴 때 정하게 한다.
+
+describe('업로드 그룹', () => {
+  function installUpload(created: unknown[]) {
+    installFetch((url, init) => {
+      if (path(url) === '/api/groups')
+        return [
+          { id: 3, name: '고Ni', description: '', color: '', sample_count: 1, run_count: 0,
+            created_at: '2026-08-20T00:00:00', updated_at: '2026-08-20T00:00:00' },
+          { id: 4, name: '중Ni', description: '', color: '', sample_count: 1, run_count: 0,
+            created_at: '2026-08-20T00:00:00', updated_at: '2026-08-20T00:00:00' },
+        ]
+      if (path(url) === '/api/samples' && init?.method === 'POST') {
+        created.push(JSON.parse(String(init.body)))
+        return sample({ id: 99 })
+      }
+      if (path(url).startsWith('/api/runs/upload')) {
+        return {
+          id: 501, sample_id: 99, original_name: 'a.wrd', sha256: 'a'.repeat(64),
+          size_bytes: 3, row_count: 10, cycle_count: 1, complete_cycle_count: 1,
+          cycle_offset: 0, cycle_offset_source: 'auto', device_model: 'X',
+          serial_no: 'S', channel: 1, app_version: '', firmware_version: '',
+          start_time: '2026-08-20T00:00:00', end_time: '2026-08-20T01:00:00',
+          data_format: 0, unit_coulomb: false, instrument_path: '',
+          schedule_path: '', schedule: null, parse_error: '',
+          parsed_at: '2026-08-20T01:00:00', created_at: '2026-08-20T01:00:00',
+        }
+      }
+      if (path(url) === '/api/samples')
+        return [sample({ id: 1, name: '고Ni-01', group_id: 3 }),
+                sample({ id: 2, name: '중Ni-01', group_id: 4 })]
+      if (path(url) === '/api/runs') return []
+      return []
+    })
+  }
+
+  function renderUpload() {
+    render(
+      <MemoryRouter>
+        <Upload />
+      </MemoryRouter>,
+    )
+  }
+
+  it('그룹을 고르면 기존 셀 목록이 그 그룹으로 좁혀진다', async () => {
+    installUpload([])
+    renderUpload()
+
+    const attach = await screen.findByRole('combobox', { name: /기존 셀에 연결/ })
+    await waitFor(() => expect(within(attach).getAllByRole('option').length).toBe(3))
+
+    await userEvent.selectOptions(
+      screen.getByRole('combobox', { name: /그룹/ }),
+      '3',
+    )
+    await waitFor(() =>
+      expect(within(attach).getAllByRole('option').map((o) => o.textContent)).toEqual([
+        '연결 안 함 (나중에 지정)',
+        '고Ni-01',
+      ]),
+    )
+  })
+
+  it('고른 그룹으로 새 셀이 만들어진다', async () => {
+    const created: unknown[] = []
+    installUpload(created)
+    renderUpload()
+
+    await userEvent.selectOptions(
+      await screen.findByRole('combobox', { name: '그룹' }),
+      '4',
+    )
+    await userEvent.type(screen.getByPlaceholderText('No_1_dry_0.0316g'), '중Ni-02')
+
+    const file = new File([new Uint8Array([1, 2, 3])], 'a.wrd')
+    const picker = document.querySelector('input[type="file"]') as HTMLInputElement
+    await userEvent.upload(picker, file)
+
+    await waitFor(() => expect(created).toHaveLength(1))
+    expect(created[0]).toMatchObject({ name: '중Ni-02', group_id: 4 })
+  })
+
+  it('이름을 쳐서 좁힐 수 있다', async () => {
+    installUpload([])
+    renderUpload()
+
+    const attach = await screen.findByRole('combobox', { name: /기존 셀에 연결/ })
+    await userEvent.type(screen.getByPlaceholderText('이름 일부…'), '중Ni')
+
+    await waitFor(() =>
+      expect(within(attach).getAllByRole('option').map((o) => o.textContent)).toEqual([
+        '연결 안 함 (나중에 지정)',
+        '중Ni-01',
+      ]),
+    )
+  })
+})

@@ -1,6 +1,6 @@
 /** Drop .wrd files, attach them to a cell, and see what the instrument said. */
 
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
@@ -21,9 +21,24 @@ export function Upload() {
   const [results, setResults] = useState<Result[]>([])
   const [targetSample, setTargetSample] = useState<number | null>(null)
   const [newSampleName, setNewSampleName] = useState('')
+  //: 그룹을 여기서 정한다.  나중에 셀 화면에서 하나씩 붙이면, 같은 실험 묶음을
+  //: 열 개씩 올리고 나서 열 번 다시 들어가야 한다.
+  const [groupId, setGroupId] = useState<number | null>(null)
+  //: 셀이 수십 개가 되면 드롭다운에서 눈으로 찾는 것이 느리다.  타이핑으로
+  //: 좁힌다.
+  const [sampleQuery, setSampleQuery] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
 
   const samples = useAsync(() => api.listSamples(), [results.length])
+  const groups = useAsync(() => api.listGroups(), [results.length])
+
+  const matches = useMemo(() => {
+    const all = samples.data ?? []
+    const needle = sampleQuery.trim().toLowerCase()
+    const inGroup = groupId === null ? all : all.filter((s) => s.group_id === groupId)
+    if (!needle) return inGroup
+    return inGroup.filter((s) => s.name.toLowerCase().includes(needle))
+  }, [samples.data, sampleQuery, groupId])
   const orphans = useAsync(() => api.listRuns({ unassigned: true }), [results.length])
 
   const send = useCallback(
@@ -39,7 +54,10 @@ export function Upload() {
           // carries the conditions, but reading them out of it would be
           // guesswork; the schedule inside the file is authoritative and gets
           // applied server-side after upload.
-          const created = await api.createSample({ name: newSampleName.trim() })
+          const created = await api.createSample({
+            name: newSampleName.trim(),
+            ...(groupId === null ? {} : { group_id: groupId }),
+          })
           sampleId = created.id
           setTargetSample(created.id)
           setNewSampleName('')
@@ -88,23 +106,35 @@ export function Upload() {
         <div className="col" style={{ gap: 14 }}>
           <Card title="파일 선택" tight>
             <div style={{ padding: 14 }}>
-              <div className="grid cols-2" style={{ gap: 10, marginBottom: 12 }}>
-                <Field label="기존 셀에 연결">
-                  <select
-                    value={targetSample ?? ''}
-                    onChange={(event) =>
-                      setTargetSample(event.target.value ? Number(event.target.value) : null)
-                    }
-                  >
-                    <option value="">연결 안 함 (나중에 지정)</option>
-                    {samples.data?.map((sample) => (
-                      <option key={sample.id} value={sample.id}>
-                        {sample.name}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-                <Field label="또는 새 셀 만들기" hint="이름만 입력">
+              {/* 그룹을 먼저 고른다.  아래 "기존 셀" 목록도 그 그룹으로 좁혀지고,
+                  새로 만드는 셀은 그 그룹에 들어간다 — 한 실험 묶음을 통째로
+                  올릴 때 나중에 하나씩 붙이지 않아도 된다. */}
+              <Field
+                label="① 그룹"
+                hint="새 셀이 들어갈 곳 · 아래 목록도 좁혀집니다"
+              >
+                <select
+                  value={groupId ?? ''}
+                  aria-label="그룹"
+                  onChange={(event) => {
+                    const next = event.target.value ? Number(event.target.value) : null
+                    setGroupId(next)
+                    // 좁힌 목록에 없는 셀이 골라진 채로 남으면, 화면에는
+                    // 안 보이는 셀에 파일이 붙는다.
+                    setTargetSample(null)
+                  }}
+                >
+                  <option value="">그룹 없음</option>
+                  {groups.data?.map((group) => (
+                    <option key={group.id} value={group.id}>
+                      {group.name}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+
+              <div className="grid cols-2" style={{ gap: 10, margin: '10px 0 12px' }}>
+                <Field label="② 새 셀 만들기" hint="이름만 입력">
                   <input
                     type="text"
                     value={newSampleName}
@@ -112,6 +142,45 @@ export function Upload() {
                     disabled={targetSample !== null}
                     onChange={(event) => setNewSampleName(event.target.value)}
                   />
+                </Field>
+                <Field
+                  label="② 또는 기존 셀에 연결"
+                  hint={
+                    matches.length && sampleQuery.trim()
+                      ? `${matches.length}개 일치`
+                      : '이름을 쳐서 좁힐 수 있습니다'
+                  }
+                >
+                  {/* 라벨은 Field 안의 첫 폼 요소에 붙는다.  검색칸이 먼저 오므로
+                      select 는 자기 라벨을 따로 들어야 이름 없는 컨트롤이 되지
+                      않는다. */}
+                  <input
+                    type="text"
+                    value={sampleQuery}
+                    placeholder="이름 일부…"
+                    aria-label="셀 이름으로 찾기"
+                    disabled={newSampleName.trim() !== ''}
+                    onChange={(event) => {
+                      setSampleQuery(event.target.value)
+                      setTargetSample(null)
+                    }}
+                    style={{ marginBottom: 6 }}
+                  />
+                  <select
+                    value={targetSample ?? ''}
+                    aria-label="기존 셀에 연결"
+                    disabled={newSampleName.trim() !== ''}
+                    onChange={(event) =>
+                      setTargetSample(event.target.value ? Number(event.target.value) : null)
+                    }
+                  >
+                    <option value="">연결 안 함 (나중에 지정)</option>
+                    {matches.map((sample) => (
+                      <option key={sample.id} value={sample.id}>
+                        {sample.name}
+                      </option>
+                    ))}
+                  </select>
                 </Field>
               </div>
 
@@ -227,7 +296,11 @@ function UploadResult({ result }: { result: Result }) {
         {run.device_model} · S/N {run.serial_no} · ch{run.channel} · {bytes(run.size_bytes)}
       </div>
       <div className="small dim mono">
-        {run.row_count.toLocaleString()} 샘플 · {run.complete_cycle_count}/{run.cycle_count}{' '}
+        {/* 화면 한 줄을 그리다 페이지 전체를 날리지 않는다.  파싱이 실패한 run 은
+            이 숫자들이 비어 있을 수 있는데, 그때 보여 줘야 할 것은 바로 그
+            실패다 — 빈 화면이 아니라. */}
+        {(run.row_count ?? 0).toLocaleString()} 샘플 · {run.complete_cycle_count ?? 0}/
+        {run.cycle_count ?? 0}{' '}
         사이클 · {dateTime(run.start_time)} → {dateTime(run.end_time)}
       </div>
       {schedule.upper_cutoff_v ? (
