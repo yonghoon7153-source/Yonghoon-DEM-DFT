@@ -18,11 +18,11 @@ analyzer:
   compute_sha256: 46492235fd5862f2
   row_projection_py_sha256: 5081fca2b47db348
   src_scoring_py_sha256: 69e69cb046f4b4ae
-  python: 3.11.15
-  platform: Linux-6.18.5-fc-v20-x86_64-with-glibc2.39
+  python: 3.12.3
+  platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
   pandas: 3.0.5
   pyarrow: 25.0.1
-  numpy: 2.4.6
+  numpy: 2.5.2
   yaml: 6.0.3
 analysis_spec:
   projection_version: 1
