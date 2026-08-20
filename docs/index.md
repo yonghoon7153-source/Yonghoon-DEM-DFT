@@ -20,7 +20,7 @@
 |---|---|
 | [codex-session-bootstrap](reviews/codex-session-bootstrap.md) | Codex 전용 브랜치·worktree 부트스트랩 프롬프트 |
 | [codex-review-request](reviews/codex-review-request.md) | Codex 에게 붙여넣는 전수 리뷰 과제 + 종결 절차 |
-| 2026-08-20-internal-audit (작성 중) | Claude 쪽 전수 감사 결과 — Codex 와 교차표로 대조 |
+| [2026-08-20-internal-audit](reviews/2026-08-20-internal-audit.md) | Claude 쪽 전수 감사 — 확정 65건(high 12/medium 26/low 27), 기각 17건 |
 
 파일명: `adr/0001-store-raw-capacity-only.md` · `adr/0002-own-wrd-parser.md` ·
 `adr/0003-timeseries-on-disk-summaries-in-db.md` ·
