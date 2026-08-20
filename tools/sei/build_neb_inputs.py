@@ -314,38 +314,72 @@ def shortest_translation(cell, R=3, _grow=True):
     ⛔⛔ 2026-08-20 (Codex 2차) — **고정 R 은 기운 셀에서 틀린다.** 반례:
         a=(10,0,0) · b=(2.49,0.1,0) · c=(0,0,10)
         R=3 탐색 → 2.492 Å      실제 λ₁ = **0.402 Å** at n=(−1,4,0)
-    ⇒ **R 을 넓히며 답이 안정될 때까지 키운다**(연속 두 R 에서 같은 값이면 종료).
-      `_grow=False` 로 끄면 옛 고정-R 동작이지만 **진단 목적 외에는 쓰지 않는다.**
-    ⚠ 이것도 exact 알고리즘(LLL/Fincke–Pohst)이 아니라 **수렴 확인이 붙은 탐색**이다.
-      극단적으로 병든 셀에서는 여전히 틀릴 수 있고, 그때는 R_MAX 에 걸려 경고를 낸다.
+
+    ⛔⛔ 2026-08-20 (Codex 3차) — **R 을 키우는 수렴 탐색도 부적격이다.** 두 R 에서 값이
+    같다고 수렴한 게 아니다 (연속 두 반경이 **둘 다** 최단벡터를 놓치면 조용히 종료한다).
+    실측 반례:
+        a=(10,0,0) · b=(0.5,0.001,0) · c=(0,0,10)
+        R=3 = R=6 = 0.500001 로 **조기 종료**   실제 λ₁ = **0.020 Å** at n=(−1,20,0)
+    같은 이유로 `|nᵢ| ≤ k` 유한 상자 전수검사도 **certificate 가 아니다** — 상자 밖을
+    배제하지 못한다.
+
+    ⇒ **exact 로 간다.** 3차원 격자의 SVP 는 Minkowski 축약으로 정확히 풀린다:
+      기약기저의 첫 벡터가 정의상 최단 비영 벡터다 (Nguyen–Stehlé 2004, dim ≤ 4 에서
+      greedy 가 Minkowski-reduced 를 다항시간에 준다). 우리는 그 알고리즘을 **다시 쓰지
+      않고** ASE 정본 `ase.geometry.minkowski_reduce` 를 얇게 감싼다 — canonical 구현을
+      복제하지 않는다는 같은 규율이 외부 라이브러리에도 적용된다.
+
+    반환: λ₁ [Å] (full precision — 문턱 비교 전에 반올림하지 말 것).
+    정수 계수 n 과 unimodular 변환이 필요하면 `shortest_translation_full()` 을 쓴다.
+
+    ⚠ 이 함수가 **못 하는 것**: (1) 4차원 이상 — 3×3 셀 전용이다. (2) 특이/준특이 셀 —
+      부피비가 EPS 미만이면 계산하지 않고 예외를 던진다(hard fail, 경고 후 계속 아님).
+      (3) 물리적 타당성 판단 — λ₁ 이 작다는 사실만 알려주지 그 셀을 써도 되는지는 말 안 한다.
+      (4) ASE 없이 동작 — import 실패는 fallback 재구현이 아니라 즉사다 (2026-08-19 F6 교훈).
     """
-    import itertools
+    return shortest_translation_full(cell)[0]
+
+
+#: 준특이 셀 판정 문턱 — |det| / (|a||b||c|). 정육면체 1.0, 완전 평평 0.0.
+LAMBDA1_DEGENERACY_EPS = 1e-8
+
+
+def shortest_translation_full(cell):
+    """(λ₁, n, reduced_cell) — exact. n 은 원래 기저에 대한 정수 계수.
+
+    ⛔ 못 하는 것: `shortest_translation` 의 docstring 참조 (같은 한계).
+    """
     import numpy as _np
     C = _np.asarray(cell, float)
+    if C.shape != (3, 3):
+        raise ValueError(f"3x3 셀만 받는다 (받은 것: {C.shape})")
 
-    def _scan(rad):
-        best = float("inf")
-        for n in itertools.product(range(-rad, rad + 1), repeat=3):
-            if n == (0, 0, 0):
-                continue
-            best = min(best, float(_np.linalg.norm(_np.asarray(n, float) @ C)))
-        return best
+    norms = _np.linalg.norm(C, axis=1)
+    if not _np.all(_np.isfinite(C)) or float(_np.min(norms)) <= 0.0:
+        raise ValueError(f"⛔ 셀에 비유한/영 벡터가 있다:\n{C}")
+    ratio = abs(float(_np.linalg.det(C))) / float(_np.prod(norms))
+    if ratio < LAMBDA1_DEGENERACY_EPS:
+        raise ValueError(
+            f"⛔ 준특이 셀이다 — |det|/(|a||b||c|) = {ratio:.3e} < {LAMBDA1_DEGENERACY_EPS:.0e}.\n"
+            f"   이런 셀에서 λ₁ 은 부동소수로 신뢰할 수 없다. 경고 후 계속하지 않는다.\n{C}")
 
-    if not _grow:
-        return _scan(R)
-    R_MAX = 24
-    prev = _scan(R)
-    r = R
-    while r < R_MAX:
-        r *= 2
-        cur = _scan(r)
-        if abs(cur - prev) < 1e-9:
-            return cur                      # 두 반경에서 같다 → 수렴
-        prev = cur
-    import warnings
-    warnings.warn(f"shortest_translation: R={R_MAX} 까지 키워도 값이 안 굳었다 "
-                  f"(λ₁≈{prev:.4f}). 셀이 심하게 기울었을 수 있다 — 직접 확인할 것.")
-    return prev
+    try:
+        from ase.geometry import minkowski_reduce, is_minkowski_reduced
+    except Exception as exc:                       # noqa: BLE001 — 진단을 통째로 보여준다
+        raise RuntimeError(
+            "⛔ ase.geometry.minkowski_reduce 를 못 불렀다 — λ₁ 은 정본 구현으로만 잰다.\n"
+            "   여기서 축약을 재구현하지 않는다 (fallback 금지, 2026-08-19 F6).\n"
+            f"   원인: {exc!r}") from exc
+
+    rcell, op = minkowski_reduce(C)                # rcell = op @ C, op 는 unimodular
+    if not is_minkowski_reduced(rcell):
+        raise RuntimeError(f"⛔ minkowski_reduce 결과가 기약이 아니라고 ASE 가 답한다:\n{rcell}")
+    if abs(abs(round(float(_np.linalg.det(op)))) - 1.0) > 1e-6:
+        raise RuntimeError(f"⛔ 변환이 unimodular 가 아니다 (det={_np.linalg.det(op)})")
+
+    order = _np.argsort(_np.linalg.norm(rcell, axis=1))
+    i = int(order[0])
+    return float(_np.linalg.norm(rcell[i])), tuple(int(v) for v in op[i]), rcell
 
 
 def cell_metrics(cell):
@@ -871,8 +905,103 @@ def uma_scout(args):
     return 0
 
 
+def _selftest():
+    """λ₁ · protocol_hash 회귀. **음성 경로 포함** — 틀린 입력을 잡아내는지까지 본다.
+
+    ⛔ 이 selftest 가 못 하는 것: QE 입력 생성 · pseudo 배치 · 구조 파싱은 안 본다
+      (파일·네트워크가 필요하다). 여기서 고정하는 것은 **순수 기하/해시**뿐이다.
+    """
+    import numpy as _np
+    fails, n, neg = [], 0, 0
+
+    def ck(name, got, exp, tol=1e-6):
+        nonlocal n
+        n += 1
+        if not (isinstance(got, float) and abs(got - exp) <= tol) and got != exp:
+            fails.append(f"{name}: got {got!r} != {exp!r}")
+
+    def ck_raises(name, fn, exc=Exception):
+        nonlocal n, neg
+        n += 1
+        neg += 1
+        try:
+            fn()
+        except exc:
+            return
+        except Exception as e:                      # noqa: BLE001
+            fails.append(f"{name}: 예외 종류가 다르다 — {type(e).__name__}")
+            return
+        fails.append(f"{name}: **예외가 안 났다** (음성 경로 실패)")
+
+    # ── 양성: 알려진 λ₁ ──────────────────────────────────────────────────
+    ck("cubic10", shortest_translation([[10, 0, 0], [0, 10, 0], [0, 0, 10]]), 10.0)
+    ck("ortho", shortest_translation([[7, 0, 0], [0, 9, 0], [0, 0, 11]]), 7.0)
+    #   fcc conventional a=10 → 최단 병진은 면심 (a/√2)
+    ck("fcc10", shortest_translation([[0, 5, 5], [5, 0, 5], [5, 5, 0]]), 7.0710678, 1e-5)
+
+    # ── 음성: 유한-R 탐색이 놓치는 기운 셀 (Codex 2·3차 반례) ────────────
+    #   이 둘이 통과하지 못하면 exact 가 아니다. 옛 구현(고정 R=3 / R 배증 수렴)은 여기서 죽는다.
+    ck("codex2_skew", shortest_translation([[10, 0, 0], [2.49, 0.1, 0], [0, 0, 10]]), 0.401995, 1e-5)
+    ck("codex3_earlystop", shortest_translation([[10, 0, 0], [0.5, 0.001, 0], [0, 0, 10]]), 0.020, 1e-6)
+    #   ↑ 옛 adaptive 는 R=3 과 R=6 에서 **둘 다** 0.500001 을 내고 "수렴" 으로 종료했다.
+    ck("codex3_notfacehgt",
+       shortest_translation([[10, 0, 0], [0.5, 0.001, 0], [0, 0, 10]]) < 0.5, True)
+
+    # ── 음성: 면 높이로 재판정하면 뒤집히는 실측 (2026-08-16 철회 지표) ──
+    li3nd = [[0, 7.3339, 7.3339], [7.3339, 0, 7.3339], [7.3339, 7.3339, 0]]   # fcc 2x2x2 (실측)
+    l1, faces = cell_metrics(li3nd)
+    ck("li3nd_lambda1_ge10", l1 >= 10.0, True)
+    ck("li3nd_facehgt_lt10", min(faces) < 10.0, True)   # 면높이면 오탈락 → 판정 반전 고정
+
+    # ── 정수 계수 · unimodular 불변 ──────────────────────────────────────
+    C = _np.array([[10, 0, 0], [2.49, 0.1, 0], [0, 0, 10]], float)
+    l1c, ncoef, _ = shortest_translation_full(C)
+    ck("coef_reconstructs", float(_np.linalg.norm(_np.asarray(ncoef, float) @ C)), l1c, 1e-9)
+    ck("coef_is_integer", all(isinstance(v, int) for v in ncoef), True)
+    for k, U in enumerate([[[1, 3, 0], [0, 1, 0], [0, 0, 1]],
+                           [[1, 0, 0], [5, 1, 7], [0, 0, 1]],
+                           [[0, 1, 0], [1, 0, 0], [-2, 4, -1]]]):
+        ck(f"unimodular_invariance[{k}]",
+           shortest_translation(_np.asarray(U, float) @ C), l1c, 1e-9)
+
+    # ── 음성: 병든 입력은 **경고가 아니라 즉사** ─────────────────────────
+    ck_raises("degenerate_cell",
+              lambda: shortest_translation([[10, 0, 0], [10, 1e-12, 0], [0, 0, 10]]), ValueError)
+    ck_raises("zero_vector", lambda: shortest_translation([[0, 0, 0], [0, 9, 0], [0, 0, 11]]), ValueError)
+    ck_raises("nan_cell", lambda: shortest_translation([[float("nan"), 0, 0], [0, 9, 0], [0, 0, 11]]), ValueError)
+    ck_raises("wrong_shape", lambda: shortest_translation([[10, 0], [0, 9]]), ValueError)
+
+    # ── protocol_hash: 같은 입력 = 같은 해시, 다른 입력 = 다른 해시 ──────
+    #   ⚠ payload 안의 lambda1_A 는 **의도적으로 3자리 반올림**이다 (부동소수 잡음으로
+    #     지문이 흔들리면 이월이 무의미해진다). "문턱 비교 전 반올림 금지" 는 게이트
+    #     판정에 대한 규칙이고 해시 정규화와는 별개다 — 게이트는 원값을 쓴다.
+    ns = argparse.Namespace(images=7, path_thr=0.05, min_l=10.0, min_l_basis="lambda1",
+                            allow_unrelaxed_endpoints=False)
+    base = dict(tag="x", a=ns, q=-1, kpts=(3, 3, 3), nat=64,
+                cell=[[10, 0, 0], [0, 10, 0], [0, 0, 10]])
+    h0 = protocol_hash(**base)
+    ck("hash_stable", protocol_hash(**base), h0)
+    ck("hash_kpts_sensitive", protocol_hash(**{**base, "kpts": (5, 5, 5)}) != h0, True)
+    ck("hash_charge_sensitive", protocol_hash(**{**base, "q": 0}) != h0, True)
+    ck("hash_cell_sensitive",
+       protocol_hash(**{**base, "cell": [[11, 0, 0], [0, 10, 0], [0, 0, 10]]}) != h0, True)
+    ns2 = argparse.Namespace(images=7, path_thr=0.05, min_l=10.0, min_l_basis="vector",
+                             allow_unrelaxed_endpoints=False)
+    ck("hash_basis_sensitive", protocol_hash(**{**base, "a": ns2}) != h0, True)
+
+    if fails:
+        print(f"⛔ selftest 실패 {len(fails)}/{n}")
+        for f in fails:
+            print("   ✗", f)
+        return 1
+    print(f"✅ selftest {n}/{n} 통과 (λ₁ exact · 예외 요구 {neg}건 · 유한-R 반례 2건 포함)")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--selftest", action="store_true",
+                    help="λ₁ exact · 해시 회귀 검사 (음성 경로 포함). 파일 I/O 없음")
     ap.add_argument("--work", default=WORK)
     ap.add_argument("--pseudo_dir", default="/data/work/pseudo")
     ap.add_argument("--min_l", type=float, default=10.0,
@@ -929,6 +1058,8 @@ def main():
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
     a = ap.parse_args()
+    if a.selftest:
+        return _selftest()
 
     # ⭐ UMA 정찰은 pseudo·QE 를 아예 안 본다 — 아래 준비 단계보다 **먼저** 갈라진다.
     if a.uma_scout:

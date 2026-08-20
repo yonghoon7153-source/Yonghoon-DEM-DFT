@@ -783,6 +783,28 @@ _STATUS_BADGE = {
 }
 
 
+#: 게이트 문구는 **판정 결과별로 다르다.** blocking_gate 의 존재만 보고 "미통과" 라고
+#: 쓰면 미평가(not_assessed)를 실패로 오역한다 — b2o3 골격 게이트가 정확히 그 상태다
+#: (게이트 입력인 high-T 궤적 6개가 --save_traj 미전달로 미보존이라 평가 자체가 성립 안 함).
+#: 화면이 db 와 다른 말을 하는 F2 유형의 재발이라 한 함수로 모은다 (사본 금지).
+#: codex 3차 리뷰 2026-08-20.
+_GATE_OUTCOME_LABEL = {
+    "not_assessed": "게이트 미평가(실패 판정이 아니다)",
+    "fail":         "게이트 미통과",
+    "pass":         "게이트 통과",
+    "inapplicable": "게이트 비해당",
+}
+
+
+def _gate_prefix(e: dict) -> str:
+    """canonical entry 의 게이트 상태를 사람 문구로. 없으면 빈 문자열."""
+    g = e.get("blocking_gate")
+    if not g:
+        return ""
+    outcome = ((e.get("gate_detail") or {}).get("lineage") or {}).get("gate_outcome")
+    return f"{_GATE_OUTCOME_LABEL.get(outcome, '게이트 미통과')}: {g}. "
+
+
 def canonical_status_for(cid: str) -> dict:
     """조성 하나의 metric 별 상태 배지. 정본이면 항목이 없다(배지도 없다)."""
     out = {}
@@ -794,8 +816,7 @@ def canonical_status_for(cid: str) -> dict:
         if not b:
             continue
         why = (f"등록 묶음 [{e['comparison_group']}]. " if e.get("comparison_group") else "") + b[3]
-        if e.get("blocking_gate"):
-            why = f"게이트 미통과: {e['blocking_gate']}. " + why
+        why = _gate_prefix(e) + why
         if e.get("note"):
             why += " " + e["note"]
         out[metric] = {"status": st, "label": b[0], "fg": b[1], "bg": b[2],
@@ -954,8 +975,7 @@ def canonical_status_all() -> dict:
         # ★ 등록 묶음 ID 를 툴팁 맨 앞에 (2026-08-07 Codex 6라운드) — 의미를 나눠 놓고도
         #   그 사실이 화면에 안 보이면 나눈 의미가 없다.
         why = (f"등록 묶음 [{e['comparison_group']}]. " if e.get("comparison_group") else "") + b_[3]
-        if e.get("blocking_gate"):
-            why = f"게이트 미통과: {e['blocking_gate']}. " + why
+        why = _gate_prefix(e) + why
         if e.get("note"):
             why += " " + e["note"]
         out[(metric, system)] = {"status": e.get("status"), "label": b_[0],

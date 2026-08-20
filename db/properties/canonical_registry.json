@@ -18,7 +18,7 @@
   "2026-08-07e": "Codex 5라운드 method_id 수동 감사 반영. gap k 표기 정정(modelc k882 · b2o3 25irr-k · comp1 은 미확인이라 표기 제거). B0 comp1/modelc 을 eos.json 의 PRIMARY_paper_value(_v3) 로 재배선 — prefer=registry 우회 제거. ICOHP modelc 을 직접 원자료(bonds_modelc_k663.json, -5.9997)로. E_VRH 는 원자료가 comp1<->comp2 만 완전비교쌍이라 해 네 조성 단일 묶음을 쪼갰다. ★ validator 28/28 통과가 method_id 의미 일치를 보증하지 않는다는 걸 이 감사가 실증했다.",
   "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
   "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다.",
-  "2026-08-20a": "codex 2차 리뷰 P0-4 반영. b2o3 두 Ea 항목의 framework_beta_800_1000K 게이트를 **계보 오류로 철회**하고 not_assessed(artifact_missing) 로 정정. beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 3-seed reseed Ea 0.199 의 게이트 근거가 될 수 없다. 최종 9개 궤적은 run_highT_reseed.sh 가 --save_traj 를 안 넘겨 **부재** — 재실행 없이는 이 게이트가 닫히지 않는다. 보류 자체는 유지(미평가는 통과가 아니다). 설계 근거: kb/projects/decision_registry_design_2026_08_20.md"
+  "2026-08-20a": "codex 2·3차 리뷰 반영. b2o3 framework_beta_800_1000K 게이트 정정: (1) 옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound 로 보존. (2) 새 판정은 not_assessed(required_artifact_set_incomplete) — 미보존은 9런이 아니라 **high-T 6런**이고 600 K 3런은 PMF 소비 기록이 있다(현존 확인 필요). 재실행 범위 = 6런. (3) single-seed 항목에 high-T 사유를 붙였던 1차 정정은 과교정이라 철회, lineage_match=unverified 로. (4) Ea 계보는 numerically_reproducible — build_final_conductivity.py 가 D 를 하드코딩해 미배선. webapp/data.py 는 blocking_gate 존재만으로 '미통과' 를 찍던 것을 gate_outcome 별 문구로 분기(_gate_prefix)."
  },
  "entries": [
   {
@@ -262,7 +262,7 @@
     "cite_until_framework_gate_resolved",
     "single_seed_ratio"
    ],
-   "note": "⛔ 2026-08-20 (2차 정정) 인용 보류는 유지하되 **사유가 바뀌었다**. 이전 사유였던 골격 beta 0.59/0.63 은 **이 값(3-seed reseed Ea 0.199)을 만든 궤적이 아니라 다른 run family(b2o3_full, single-seed legacy)에서 잰 것**이다 — 계보 오류였다 (codex 2차 P0-4). 정정된 사유: **이 값에 대한 골격 게이트는 미평가(not_assessed)** 이며, 최종 9개 궤적이 --save_traj 미전달로 디스크에 없어 **재실행 없이는 평가할 수 없다**. 미평가는 통과가 아니므로 ranking·absolute_claim 은 계속 금지, 비교(dEa = +0.002 +/- 0.047 '구분 안 됨')와 공개감사는 허용. ⚠ 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 별건 (kb/open_items.md #11). [이전 note 는 gate_detail.verdict / lineage.retraction 에 보존]",
+   "note": "⛔ 2026-08-20 (3차 정정) 인용 보류 유지 · **사유 정정**. 이전 사유였던 골격 beta 0.59/0.63 은 **이 값을 만든 궤적이 아니라 다른 run family(b2o3_full, single-seed legacy)에서 잰 것**이었다 — 계보 오류로 철회 (gate_detail.lineage.old_assessment 에 보존, diagnostic_unbound). 정정된 사유: 골격 게이트 **미평가(not_assessed / required_artifact_set_incomplete)** — high-T 6런(800·1000 K x 3시드)의 궤적이 --save_traj 미전달로 미보존이다. 600 K 3런은 PMF 가 소비한 기록이 있어 **현존 확인만 하면 된다** (재실행 범위는 9런이 아니라 **6런**). 미평가는 통과가 아니므로 ranking·absolute_claim·mechanism 은 계속 금지. 허용: 공개감사 + 비교(dEa = +0.002 +/- 0.047 — 같은 CSV 가 '구분 안 됨'이라 적는다). ⚠ 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 별건 (kb/open_items.md #11).",
    "updated": "2026-08-20",
    "blocking_gate": "framework_beta_800_1000K",
    "gate_detail": {
@@ -287,14 +287,44 @@
     "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
     "lineage": {
      "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
-     "value_produced_by": "3-seed x 3-T reseed 2026-07-06/07 (kgy highT_reseed + 600K reseed)",
+     "value_produced_by": "3-seed x 3-T reseed: 600 K = gabia /data/work/b2o3md/runs/b2o3_600_reseed (200 ps) · 800/1000 K = kgy ~/work/runs/highT_reseed/b2o3 (100 ps)",
      "lineage_match": false,
-     "retraction": "⛔ 2026-08-20 철회 — 이 게이트 수치(beta 0.59/0.63)는 **이 값을 만든 궤적에서 잰 것이 아니다**. 서로 다른 run family 를 연결했다 (codex 2차 리뷰 P0-4). 수치는 감사 추적용으로 보존하되, 이 항목의 게이트 판정 근거로 쓰지 않는다.",
-     "final_trajectories_status": "absent",
-     "final_trajectories_reason": "tools/modelc_v3/run_highT_reseed.sh (L32-39) 가 --save_traj 를 넘기지 않는다. disorder_ensemble_diffusion.py L238 이 그 플래그로 traj.xyz 쓰기를 감싸므로 최종 9개 궤적이 디스크에 없다. → 소급 골격 검사는 **재실행 없이는 불가능**하다.",
-     "gate_outcome": "not_assessed",
-     "gate_outcome_reason": "artifact_missing — pending 이 아니다. 입력이 부재하므로 평가 자체가 성립하지 않는다.",
-     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (F9 · §5-2 L0-L4 DAG)"
+     "old_assessment": {
+      "state": "retracted",
+      "binding": "diagnostic_unbound",
+      "content": "beta_800K S 0.59 (n=41) · beta_1000K Cl 0.63 (n=16)",
+      "why": "⛔ 다른 run family(b2o3_full, single-seed legacy)의 beta 를 multiseed Ea 0.199 에 붙였다 — 계보 오류 (codex 2차 P0-4). 진단으로서는 유효하나 **어떤 값에도 묶이지 않는다**. 감사 추적용으로 보존."
+     },
+     "current_assessment": {
+      "result": "not_assessed",
+      "reason": "required_artifact_set_incomplete",
+      "raw_trajectory_set": {
+       "T600": {
+        "expected": 3,
+        "historically_observed": 3,
+        "evidence": "db/properties/b2o3_pmf_*_T600_origin.csv 가 '1900 frames each ... 4 trajectory/ies summed' 로 소비 기록 (2026-08-05 recompute). 3-seed reseed(s2/s3/s4) + 기존 1런으로 읽힌다.",
+        "present_now": "unverified — gabia 에서 해시 확인 필요"
+       },
+       "T800": {
+        "expected": 3,
+        "retained": 0
+       },
+       "T1000": {
+        "expected": 3,
+        "retained": 0
+       },
+       "retained_reason": "⛔ tools/modelc_v3/run_highT_reseed.sh (L32-39) 가 --save_traj 를 넘기지 않는다. disorder_ensemble_diffusion.py L238 이 그 플래그로 traj.xyz 쓰기를 감싼다 → high-T 6런의 프레임이 디스크에 없다. (같은 결함을 tools/ionic/run_arrhenius_6pt.sh L57-59 가 이미 적어뒀고 그 러너는 L183 에서 --save_traj 를 넘기도록 고쳐졌다 — highT_reseed 만 안 고쳐졌다.)",
+       "rerun_scope": "6런 (800/1000 K x s2/s3/s4). 600 K 3런은 현존 확인되면 재실행 불필요."
+      },
+      "why": "골격(비-Li) 게이트의 입력 집합이 불완전하다 → 평가 자체가 성립하지 않는다. **미평가는 통과도 실패도 아니다.**"
+     },
+     "ea_lineage": {
+      "status": "numerically_reproducible",
+      "not_wired_because": "tools/ionic/build_final_conductivity.py 가 upstream 결과를 읽지 않고 D 를 코드에 써 넣는다 (json.load/read_text 없음) — 값은 per-seed D 9개에서 Ea 0.199438 / D0 4.62463e-04 / sigma_Ea 0.034306 으로 정확히 재현되지만 기계 계보는 미배선이다.",
+      "note": "L1 에 있는 것은 per-seed **D** 이지 per-seed **MSD** 가 아니다 — 골격 게이트는 MSD/궤적을 요구하므로 L1 만으로는 닫히지 않는다."
+     },
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (F9 · §5-2)",
+     "gate_outcome": "not_assessed"
     }
    }
   },
@@ -384,18 +414,19 @@
     "why_not_conclusive": "⚠ 결론이 아니라 보류다. 자기리뷰에서 **이름과 기전을 둘 다 철회**했다: (1) '골격' 이라 부른 것 중 Cl·자유 S 는 우리 cage_assign 규약상 **케이지 음이온**이고 진짜 골격은 PS4 뿐이다 — 신호의 상당분이 알려진 고온 S/Cl 자리교환의 이른 발현일 수 있다. (2) 'D 과대·Ea 과소' 기전도 틀렸다 — Li MSD 는 Li 자신의 변위다. 진짜 위협은 **상태 혼합**(600 K 정렬 상태와 800/1000 K 부분무질서 상태를 한 아레니우스 선으로 잇는 것)이고 편향 방향은 자동으로 정해지지 않는다. (3) 문턱 0.30/0.60·MIN_N 8 은 13~19런 분포에서 정한 자의적 상수다.",
     "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj · kb/reviews/codex_B_neb_md_tools_2026_08_20.md §0·§5(B-R1,B-R2) · kb/methodology/computational_methods_canonical.md §6-2",
     "lineage": {
-     "beta_measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
-     "value_produced_by": "single-seed 600/800/1000 K (lpsocl_md_arrhenius.json anchors_same_window_singleseed)",
-     "lineage_match": null,
-     "retraction": "⚠ 2026-08-20 — 이 항목은 single-seed 라 b2o3_full 과 **계보가 일치할 가능성이 있으나 확인되지 않았다**. run_id 배선 전까지 게이트를 이 값에 묶지 않는다.",
-     "final_trajectories_status": "absent",
-     "final_trajectories_reason": "tools/modelc_v3/run_highT_reseed.sh (L32-39) 가 --save_traj 를 넘기지 않는다. disorder_ensemble_diffusion.py L238 이 그 플래그로 traj.xyz 쓰기를 감싸므로 최종 9개 궤적이 디스크에 없다. → 소급 골격 검사는 **재실행 없이는 불가능**하다.",
-     "gate_outcome": "not_assessed",
-     "gate_outcome_reason": "lineage_unverified — 궤적 동일성이 확인되지 않았다.",
-     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (F9 · §5-2 L0-L4 DAG)"
+     "beta_measured_on": "b2o3_full (single-seed legacy run family)",
+     "value_produced_by": "single-seed 600/800/1000 K (db/properties/lpsocl_md_arrhenius.json /anchors_same_window_singleseed)",
+     "lineage_match": "unverified",
+     "current_assessment": {
+      "result": "not_assessed",
+      "reason": "lineage_unverified",
+      "why": "⚠ beta 를 잰 b2o3_full 과 **같은 계열일 가능성이 높다** (600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치). 다만 run 해시가 확인되지 않았다 → 확인 전까지 게이트를 이 값에 묶지 않는다. ⛔ high-T reseed 궤적 미보존(F9)은 **이 항목의 사유가 아니다** — 그 사유를 여기 붙인 것은 2026-08-20 1차 정정의 과교정이었고 codex 3차에서 철회했다."
+     },
+     "design_ref": "kb/projects/decision_registry_design_2026_08_20.md (§5-2)",
+     "gate_outcome": "not_assessed"
     }
    },
-   "note": "⛔ 2026-08-20 인용 보류. 골격(비-Li) MSD 게이트를 처음 돌렸더니 **800/1000 K 에서 beta 0.59/0.63** 이다(같은 온도 modelc 는 0.03/0.08). 그 두 온도가 아레니우스 3점 중 2점이라 Ea 를 그대로 못 쓴다. ⚠ 결론이 아니라 보류다 — gate_detail.why_not_conclusive 참조. codex 교차검증(codex_B) 뒤 확정한다. ⚠ 보류 대상은 **이 Ea(아레니우스 3점)** 이다. 덱의 '수송 축 1등' 은 근거가 PMF dF_perc 0.1607 eV @600 K (4시드) 라 **이번 발견(800/1000 K)에 직접 걸리지 않는다** — 별건으로 판정할 것 (kb/open_items.md #11)."
+   "note": "⛔ 2026-08-20 (3차 정정) 인용 보류 유지. 골격 게이트는 **미평가(lineage_unverified)** 다 — beta 를 잰 b2o3_full 과 같은 계열로 보이지만(600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치) run 해시가 확인되지 않았다. ⚠ 1차 정정에서 high-T reseed 궤적 미보존 사유를 이 항목에도 붙였던 것은 **과교정**이라 철회했다 — 그 결함은 multiseed 항목의 사유다. single-seed 값 자체의 인용 제한(단일시드 sigma 비 금지 등)은 그대로다."
   },
   {
    "system": "comp1",
