@@ -146,12 +146,12 @@ export interface Cycle {
   run_id: number
   charge_capacity: number | null
   discharge_capacity: number | null
-  charge_capacity_mah: number
-  discharge_capacity_mah: number
+  charge_capacity_mah: number | null
+  discharge_capacity_mah: number | null
   coulombic_efficiency: number | null
   energy_efficiency: number | null
-  charge_energy_mwh: number
-  discharge_energy_mwh: number
+  charge_energy_mwh: number | null
+  discharge_energy_mwh: number | null
   mean_charge_voltage: number | null
   mean_discharge_voltage: number | null
   voltage_hysteresis: number | null

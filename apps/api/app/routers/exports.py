@@ -80,10 +80,12 @@ def export_sample_cycles(
     sample = get_sample(session, sample_id)
     cell = resolve_cell(sample)
     records = sample_cycle_records(session, sample)
-    if complete_only:
-        records = [r for r in records if r.complete]
     summaries = records_to_summaries(records)
-    text = cycles_csv_string(summaries, cell, basis=basis)
+    # 거르는 일은 writer 한 곳에서 한다.  라우터가 미리 걸러 놓고 writer 도
+    # 기본값으로 거르면, complete_only=false 로 달라고 한 행이 두 번째 체에서
+    # 조용히 사라진다 — 요청한 것이 아예 안 나오는데 오류도 없다.
+    text = cycles_csv_string(summaries, cell, basis=basis,
+                             include_incomplete=not complete_only)
     return _csv_response(text, f"{_safe(sample.name)}_cycles.csv")
 
 

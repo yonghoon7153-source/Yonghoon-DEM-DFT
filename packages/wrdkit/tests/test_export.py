@@ -137,10 +137,25 @@ def _two_cycles():
     done = CycleSummary(cycle_index=0, cycle_number=1, start=0, stop=10)
     done.charge_capacity_mah = 5.0
     done.discharge_capacity_mah = 4.9
+    done.charge_energy_wh = 0.019
+    done.discharge_energy_wh = 0.018
+    done.mean_charge_voltage = 3.9
+    done.mean_discharge_voltage = 3.7
+    done.voltage_max = 4.3
+    done.voltage_min = 2.5
     done.complete = True
+
+    # 잘린 사이클도 전압을 들고 있다.  파일이 끝난 순간까지의 평균이고, 아직
+    # 도달하지 못한 극값이다 — 비우지 않으면 그대로 측정값처럼 나간다.
     cut = CycleSummary(cycle_index=1, cycle_number=2, start=10, stop=15)
     cut.charge_capacity_mah = 1.2      # 아직 쌓이는 중이었다
     cut.discharge_capacity_mah = 0.0
+    cut.charge_energy_wh = 0.004
+    cut.discharge_energy_wh = 0.0
+    cut.mean_charge_voltage = 3.6
+    cut.mean_discharge_voltage = 3.5
+    cut.voltage_max = 3.7
+    cut.voltage_min = 3.4
     cut.complete = False
     return [done, cut]
 
@@ -158,7 +173,13 @@ def test_a_cut_off_cycle_is_left_out_by_default():
 
 
 def test_keeping_it_blanks_the_numbers_rather_than_publishing_them():
-    """opt-in 해도 숫자는 비운다 — 숫자 칸의 부분값은 측정값으로 읽힌다."""
+    """opt-in 해도 숫자는 비운다 — 숫자 칸의 부분값은 측정값으로 읽힌다.
+
+    전압도 마찬가지다.  평균 전압은 E/Q 라 잘린 구간의 부분값이고, v_max/v_min
+    은 아직 도달하지 못한 극값이며, 이력은 두 평균의 차다.  남는 것은 파일에
+    무엇이 들어 있는지를 말하는 칸뿐이다 — 사이클 번호, 시간, 점 수, complete.
+    """
+    import csv
     import io
 
     from wrdkit.export import write_cycles_csv
@@ -166,9 +187,17 @@ def test_keeping_it_blanks_the_numbers_rather_than_publishing_them():
     stream = io.StringIO()
     write_cycles_csv(_two_cycles(), CellSpec().resolve(), stream,
                      include_incomplete=True)
-    rows = stream.getvalue().strip().split("\n")
-    assert len(rows) == 3
-    cut = rows[2].split(",")
-    assert cut[0] == "2"
-    assert cut[1] == "" and cut[2] == "", "잘린 사이클의 용량이 그대로 나갔다"
-    assert cut[-1] == "no", "complete 칸은 남아 있어야 한다"
+    rows = list(csv.DictReader(io.StringIO(stream.getvalue())))
+    assert len(rows) == 2
+    cut = rows[1]
+    assert cut["cycle"] == "2"
+    assert cut["complete"] == "no", "complete 칸은 남아 있어야 한다"
+
+    keep = {"cycle", "duration (h)", "points", "complete"}
+    filled = {name: value for name, value in cut.items()
+              if name not in keep and value != ""}
+    assert not filled, f"잘린 사이클의 값이 그대로 나갔다: {filled}"
+
+    # 완료된 사이클은 손대지 않는다.
+    assert rows[0]["cycle"] == "1"
+    assert rows[0]["discharge_capacity (mAh)"] != ""

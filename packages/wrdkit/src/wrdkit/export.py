@@ -130,6 +130,14 @@ def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
     del unit
 
     for cycle in cycles:
+        # 무엇을 비우는가.  잘린 사이클에서 *측정처럼 보이는* 값은 전부 비운다:
+        # 용량과 에너지는 파일이 끝난 순간까지 쌓인 부분값이고, 효율은 그 둘의
+        # 비이며, 평균 전압은 E/Q 라 마찬가지다.  이력은 두 평균의 차라 역시
+        # 부분값이고, v_max/v_min 은 아직 도달하지 못한 극값이다.
+        #
+        # 남기는 것: 사이클 번호, 시간, 점 수, complete 칸.  이것들은 파일에
+        # 무엇이 들어 있는지를 정직하게 말할 뿐 셀의 성능을 주장하지 않는다 —
+        # 진단하려고 opt-in 한 사람이 보려는 것이 바로 그것이다.
         blank = not cycle.complete
         charge = normalize_capacity(cycle.charge_capacity_mah, cell, usable)
         discharge = normalize_capacity(cycle.discharge_capacity_mah, cell, usable)
@@ -145,8 +153,11 @@ def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
             "" if blank else f"{cycle.charge_energy_wh * 1000:.6g}",
             "" if blank else f"{cycle.discharge_energy_wh * 1000:.6g}",
             "" if blank else _fmt(cycle.energy_efficiency),
-            _fmt(cycle.mean_charge_voltage), _fmt(cycle.mean_discharge_voltage),
-            _fmt(cycle.voltage_hysteresis), _fmt(cycle.voltage_max), _fmt(cycle.voltage_min),
+            "" if blank else _fmt(cycle.mean_charge_voltage),
+            "" if blank else _fmt(cycle.mean_discharge_voltage),
+            "" if blank else _fmt(cycle.voltage_hysteresis),
+            "" if blank else _fmt(cycle.voltage_max),
+            "" if blank else _fmt(cycle.voltage_min),
             f"{cycle.duration_s / 3600:.4f}", cycle.n_points,
             "yes" if cycle.complete else "no",
         ]

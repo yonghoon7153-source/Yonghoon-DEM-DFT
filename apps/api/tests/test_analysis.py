@@ -50,6 +50,44 @@ def test_cycle_table_can_include_the_partial_cycle(client, loaded):
     assert body["cycles"][-1]["complete"] is False
 
 
+def test_the_partial_cycle_comes_back_with_its_numbers_blank(client, loaded):
+    """`complete_only=false` 는 "그 행을 보여 달라" 이지 "부분값을 달라" 가 아니다.
+
+    잘린 사이클의 용량은 파일이 끝난 순간까지 쌓인 값이라 셀을 과소평가한다.
+    JSON 의 숫자 칸은 ``complete`` 가 뭐라고 하든 측정값으로 읽히므로, 측정처럼
+    보이는 칸은 전부 비운다 (불변 규칙 4: 모르면 None).
+    """
+    body = client.get(f"/api/samples/{loaded}/cycles",
+                      params={"complete_only": False}).json()
+    partial = body["cycles"][-1]
+    assert partial["complete"] is False
+    for field in ("charge_capacity", "discharge_capacity",
+                  "charge_capacity_mah", "discharge_capacity_mah",
+                  "charge_energy_mwh", "discharge_energy_mwh",
+                  "coulombic_efficiency", "energy_efficiency",
+                  "mean_charge_voltage", "mean_discharge_voltage",
+                  "voltage_hysteresis", "voltage_max", "voltage_min",
+                  "retention_pct"):
+        assert partial[field] is None, field
+
+    # 남는 것: 파일에 무엇이 들어 있는지.  이것들은 셀의 성능을 주장하지 않는다.
+    assert partial["cycle"] == 8
+    assert partial["n_points"] > 0
+    assert partial["duration_h"] > 0
+
+    # 완료된 사이클은 그대로다 — 정책이 표 전체를 비우지 않는다.
+    assert body["cycles"][0]["discharge_capacity_mah"] is not None
+
+
+def test_a_partial_cycle_never_lands_on_a_compare_curve(client, loaded):
+    """비교 그래프의 점 하나가 부분값이면, 곡선이 마지막에 꺾여 내려간다."""
+    body = client.get("/api/compare/cycles",
+                      params={"sample_ids": str(loaded), "complete_only": False}).json()
+    cycles = [point["cycle"] for point in body["series"][0]["points"]]
+    assert 8 not in cycles
+    assert 7 in cycles
+
+
 def test_capacities_carry_the_basis_they_are_in(client, loaded):
     body = client.get(f"/api/samples/{loaded}/cycles",
                       params={"basis": "mAh/g"}).json()

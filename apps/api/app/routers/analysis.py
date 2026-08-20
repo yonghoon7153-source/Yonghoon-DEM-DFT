@@ -137,6 +137,15 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
 
     rows: list[CycleOut] = []
     for record in records:
+        # 잘린 사이클의 파생 수치는 내보내지 않는다.  complete_only=false 는
+        # "그 행을 보여 달라" 이지 "부분값을 측정값으로 달라" 가 아니다 —
+        # JSON 의 숫자 칸은 complete 플래그가 뭐라고 하든 측정값으로 읽힌다.
+        # CSV writer 가 같은 자리를 비우므로 두 출력이 같은 말을 한다.
+        partial = not record.complete
+
+        def kept(value, _partial=partial):
+            return None if _partial else value
+
         hysteresis = None
         if record.mean_charge_voltage is not None and record.mean_discharge_voltage is not None:
             hysteresis = record.mean_charge_voltage - record.mean_discharge_voltage
@@ -151,24 +160,24 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
             cycle=record.cycle_number,
             cycle_index=record.cycle_index,
             run_id=record.run_id,
-            charge_capacity=normalized(record.charge_capacity_mah, cell, used),
-            discharge_capacity=normalized(record.discharge_capacity_mah, cell, used),
-            charge_capacity_mah=record.charge_capacity_mah,
-            discharge_capacity_mah=record.discharge_capacity_mah,
-            coulombic_efficiency=record.coulombic_efficiency,
-            energy_efficiency=record.energy_efficiency,
-            charge_energy_mwh=record.charge_energy_wh * 1000.0,
-            discharge_energy_mwh=record.discharge_energy_wh * 1000.0,
+            charge_capacity=kept(normalized(record.charge_capacity_mah, cell, used)),
+            discharge_capacity=kept(normalized(record.discharge_capacity_mah, cell, used)),
+            charge_capacity_mah=kept(record.charge_capacity_mah),
+            discharge_capacity_mah=kept(record.discharge_capacity_mah),
+            coulombic_efficiency=kept(record.coulombic_efficiency),
+            energy_efficiency=kept(record.energy_efficiency),
+            charge_energy_mwh=kept(record.charge_energy_wh * 1000.0),
+            discharge_energy_mwh=kept(record.discharge_energy_wh * 1000.0),
             # 전위는 옮기고, 차이는 그대로 둔다.  이력(hysteresis)은 두 전위의
             # 차라 오프셋이 양쪽에서 상쇄된다 — 여기에 또 더하면 있지도 않은
             # 0.62 V 의 분극을 만들어 낸다.  에너지도 건드리지 않는다
             # (wrdkit/reference.py 참고).
-            mean_charge_voltage=cell.potential(record.mean_charge_voltage),
-            mean_discharge_voltage=cell.potential(record.mean_discharge_voltage),
-            voltage_hysteresis=hysteresis,
-            voltage_max=cell.potential(record.voltage_max),
-            voltage_min=cell.potential(record.voltage_min),
-            retention_pct=retention,
+            mean_charge_voltage=kept(cell.potential(record.mean_charge_voltage)),
+            mean_discharge_voltage=kept(cell.potential(record.mean_discharge_voltage)),
+            voltage_hysteresis=kept(hysteresis),
+            voltage_max=kept(cell.potential(record.voltage_max)),
+            voltage_min=kept(cell.potential(record.voltage_min)),
+            retention_pct=kept(retention),
             c_rate=rate,
             temperature_mean=record.temperature_mean,
             duration_h=record.duration_s / 3600.0,

@@ -301,7 +301,7 @@ def test_a_later_upload_does_not_collide_with_a_pinned_run(client, sample_id,
     spans = [(r["cycle_offset"] + 1, r["cycle_offset"] + r["cycle_count"])
              for r in runs if r["cycle_count"]]
     spans.sort()
-    for (a_start, a_end), (b_start, _) in zip(spans, spans[1:]):
+    for (_, a_end), (b_start, _) in zip(spans, spans[1:], strict=False):
         assert a_end < b_start, f"사이클 번호가 겹친다: {spans}"
 
     # 고정한 값은 그대로여야 한다 — 사용자의 지시다.

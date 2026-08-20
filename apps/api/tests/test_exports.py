@@ -66,6 +66,27 @@ def test_cycles_csv_uses_the_requested_basis(client, loaded):
     assert len(rows) == 8   # header + 7 complete cycles
 
 
+def test_asking_for_the_partial_cycle_actually_returns_it(client, loaded):
+    """체는 한 곳에만 둔다.
+
+    라우터가 미리 걸러 놓고 writer 도 기본값으로 걸러, ``complete_only=false``
+    로 달라고 한 행이 두 번째 체에서 조용히 사라졌다.  요청한 것이 안 나오는데
+    오류도 없다.
+    """
+    sample_id, _ = loaded
+    rows = _rows(client.get(f"/api/export/samples/{sample_id}/cycles.csv",
+                            params={"complete_only": False}))
+    header = rows[0]
+    assert len(rows) == 9, "헤더 + 완료 7 + 잘린 1"
+
+    cut = dict(zip(header, rows[-1], strict=True))
+    assert cut["cycle"] == "8"
+    assert cut["complete"] == "no"
+    # 숫자 칸은 비어 있다 — CSV 와 JSON 이 같은 말을 해야 한다.
+    assert cut["discharge_capacity (mAh)"] == ""
+    assert cut["v_max (V)"] == ""
+
+
 def test_profiles_csv_has_a_column_pair_per_branch(client, loaded):
     sample_id, _ = loaded
     rows = _rows(client.get(f"/api/export/samples/{sample_id}/profiles.csv",

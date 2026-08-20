@@ -280,12 +280,12 @@ class CycleOut(BaseModel):
     run_id: int
     charge_capacity: float | None
     discharge_capacity: float | None
-    charge_capacity_mah: float
-    discharge_capacity_mah: float
+    charge_capacity_mah: float | None
+    discharge_capacity_mah: float | None
     coulombic_efficiency: float | None
     energy_efficiency: float | None
-    charge_energy_mwh: float
-    discharge_energy_mwh: float
+    charge_energy_mwh: float | None
+    discharge_energy_mwh: float | None
     mean_charge_voltage: float | None
     mean_discharge_voltage: float | None
     voltage_hysteresis: float | None
