@@ -1,0 +1,39 @@
+{
+  "what": "UMA-s-1p1(omat) re-relaxation of DFT-relaxed structures. Question: does UMA collapse the cell that DFT kept?",
+  "settings": {
+    "fmax": 0.05,
+    "max_steps": 1500,
+    "filter": "FrechetCellFilter (cell + positions)"
+  },
+  "how_to_read": [
+    "dV_pct ~ 0  -> UMA agrees with DFT; the cascade's 29 % came from the INFLATED STARTING CELL, not from the material. Volume gate needs review.",
+    "dV_pct ~ -20 % -> UMA over-collapses this composition. Engine problem.",
+    "NOT settled by this test: concentration (our DFT cell is half the cascade concentration)."
+  ],
+  "results": [
+    {
+      "file": "/data/work/repo/db/structures/b2o3_relaxV0.cif",
+      "natoms": 128,
+      "V0_A3": 2436.33,
+      "V1_A3": 2436.26,
+      "dV_pct": -0.0,
+      "V_per_atom_before": 19.034,
+      "V_per_atom_after": 19.033,
+      "steps": 7,
+      "converged": true,
+      "seconds": 7.1
+    },
+    {
+      "file": "/data/work/repo/db/structures/modelC_DFT_EOS_V0.cif",
+      "natoms": 62,
+      "V0_A3": 1204.22,
+      "V1_A3": 1215.32,
+      "dV_pct": 0.92,
+      "V_per_atom_before": 19.423,
+      "V_per_atom_after": 19.602,
+      "steps": 20,
+      "converged": true,
+      "seconds": 6.5
+    }
+  ]
+}

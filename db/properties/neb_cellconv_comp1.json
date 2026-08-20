@@ -1,0 +1,229 @@
+{
+  "what": "UMA-s-1p1(omat) CI-NEB for a single Li vacancy hop in bulk argyrodite. Cell is NEVER relaxed - see module docstring.",
+  "caveat": "Single arrangement, single path. NOT a percolation barrier. Absolute values are MLIP, not DFT.",
+  "runs": [
+    {
+      "tag": "conv_intra_111",
+      "struct": "db/structures/comp1_V0_k444.cif",
+      "supercell": [
+        1,
+        1,
+        1
+      ],
+      "n_atoms": 52,
+      "n_atoms_neb": 51,
+      "perp_widths_A": [
+        10.055,
+        10.055,
+        10.055
+      ],
+      "min_perp_width_A": 10.055,
+      "kind": "intra",
+      "pair": [
+        20,
+        25
+      ],
+      "pair_distance_A": 2.7705,
+      "hop_distance_A": 2.7705,
+      "n_hop_candidates": 24,
+      "Ea_forward_eV": 2.3776,
+      "Ea_reverse_eV": 2.1204,
+      "dE_endpoints_meV": 257.24,
+      "energies_eV": [
+        -212.079413,
+        -212.236921,
+        -211.679597,
+        -212.013401,
+        -211.401164,
+        -209.701796,
+        -211.261697,
+        -211.747134,
+        -211.822178
+      ],
+      "profile_eV_rel": [
+        0.0,
+        -0.1575,
+        0.3998,
+        0.066,
+        0.6782,
+        2.3776,
+        0.8177,
+        0.3323,
+        0.2572
+      ],
+      "n_images_total": 9,
+      "endpoint_converged": [
+        true,
+        true
+      ],
+      "neb_converged": false,
+      "neb_steps": 578,
+      "seconds": 3780.6,
+      "engine": "uma-s-1p1(omat)",
+      "cell_relaxed": false,
+      "neb_method": "improvedtangent",
+      "spring_k": 0.1,
+      "fmax": {
+        "endpoint": 0.03,
+        "neb": 0.05,
+        "ci": 0.03
+      },
+      "images_file": "/data/work/repo/db/properties/neb_conv_intra_111.xyz"
+    },
+    {
+      "tag": "conv_inter_111",
+      "struct": "db/structures/comp1_V0_k444.cif",
+      "supercell": [
+        1,
+        1,
+        1
+      ],
+      "n_atoms": 52,
+      "n_atoms_neb": 51,
+      "perp_widths_A": [
+        10.055,
+        10.055,
+        10.055
+      ],
+      "min_perp_width_A": 10.055,
+      "kind": "inter",
+      "pair": [
+        20,
+        29
+      ],
+      "pair_distance_A": 3.5044,
+      "hop_distance_A": 3.5044,
+      "n_hop_candidates": 24,
+      "Ea_forward_eV": 2.3067,
+      "Ea_reverse_eV": 2.052,
+      "dE_endpoints_meV": 254.68,
+      "energies_eV": [
+        -212.076851,
+        -212.201023,
+        -212.315338,
+        -212.084385,
+        -212.078039,
+        -209.770175,
+        -212.327071,
+        -212.288037,
+        -211.822174
+      ],
+      "profile_eV_rel": [
+        0.0,
+        -0.1242,
+        -0.2385,
+        -0.0075,
+        -0.0012,
+        2.3067,
+        -0.2502,
+        -0.2112,
+        0.2547
+      ],
+      "n_images_total": 9,
+      "endpoint_converged": [
+        true,
+        true
+      ],
+      "neb_converged": false,
+      "neb_steps": 591,
+      "seconds": 3645.2,
+      "engine": "uma-s-1p1(omat)",
+      "cell_relaxed": false,
+      "neb_method": "improvedtangent",
+      "spring_k": 0.1,
+      "fmax": {
+        "endpoint": 0.03,
+        "neb": 0.05,
+        "ci": 0.03
+      },
+      "images_file": "/data/work/repo/db/properties/neb_conv_inter_111.xyz"
+    },
+    {
+      "tag": "conv_inter_211",
+      "struct": "db/structures/comp1_V0_k444.cif",
+      "supercell": [
+        2,
+        1,
+        1
+      ],
+      "n_atoms": 104,
+      "n_atoms_neb": 103,
+      "perp_widths_A": [
+        20.11,
+        10.055,
+        10.055
+      ],
+      "min_perp_width_A": 10.055,
+      "kind": "inter",
+      "pair": [
+        20,
+        29
+      ],
+      "pair_distance_A": 3.5044,
+      "hop_distance_A": 3.5044,
+      "n_hop_candidates": 48,
+      "Ea_forward_eV": 3.3963,
+      "Ea_reverse_eV": 3.4563,
+      "dE_endpoints_meV": -59.92,
+      "energies_eV": [
+        -429.591342,
+        -429.780313,
+        -426.194999,
+        -429.600959,
+        -429.836066,
+        -429.895428,
+        -429.651266
+      ],
+      "profile_eV_rel": [
+        0.0,
+        -0.189,
+        3.3963,
+        -0.0096,
+        -0.2447,
+        -0.3041,
+        -0.0599
+      ],
+      "n_images_total": 7,
+      "endpoint_converged": [
+        true,
+        true
+      ],
+      "seconds": 8149.2,
+      "band_converged": true,
+      "ci_ran": true,
+      "ci_converged": false,
+      "steps_band": 363,
+      "steps_ci": 1200,
+      "band_only_profile_eV": [
+        0.0,
+        -0.3055,
+        0.2838,
+        -0.0661,
+        -0.0537,
+        -0.1635,
+        -0.0599
+      ],
+      "spike_eV": 3.3963,
+      "max_image_jump_eV": 3.5853,
+      "notes": [],
+      "second_highest_eV": -0.0096,
+      "min_interior_rel_eV": -0.3041,
+      "neb_converged": false,
+      "band_problems": [
+        "이웃 이미지 사이가 3.59 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +3.40 / 차고 -0.01",
+        "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.244 eV 낮다 — 끝점이 국소 최소가 아니다"
+      ],
+      "trustworthy": false,
+      "engine": "uma-s-1p1(omat)",
+      "cell_relaxed": false,
+      "neb_method": "improvedtangent",
+      "spring_k": 0.1,
+      "fmax": {
+        "endpoint": 0.03,
+        "neb": 0.05,
+        "ci": 0.03
+      },
+      "images_file": "/data/work/repo/db/properties/neb_conv_inter_211.xyz"
+    }
+  ]
+}

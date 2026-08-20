@@ -1,0 +1,99 @@
+{
+  "what": "UMA-s-1p1(omat) CI-NEB for a single Li vacancy hop in bulk argyrodite. Cell is NEVER relaxed - see module docstring.",
+  "caveat": "Single arrangement, single path. NOT a percolation barrier. Absolute values are MLIP, not DFT.",
+  "runs": [
+    {
+      "tag": "inter_211_deepep",
+      "struct": "db/structures/comp1_V0_k444.cif",
+      "supercell": [
+        2,
+        1,
+        1
+      ],
+      "n_atoms": 104,
+      "n_atoms_neb": 103,
+      "perp_widths_A": [
+        20.11,
+        10.055,
+        10.055
+      ],
+      "min_perp_width_A": 10.055,
+      "kind": "inter",
+      "pair": [
+        20,
+        29
+      ],
+      "pair_distance_A": 3.5044,
+      "hop_distance_A": 3.5044,
+      "n_hop_candidates": 48,
+      "Ea_forward_eV": 0.4322,
+      "Ea_reverse_eV": 0.4367,
+      "dE_endpoints_meV": -4.54,
+      "energies_eV": [
+        -429.646672,
+        -429.913522,
+        -429.664192,
+        -429.214502,
+        -430.108713,
+        -429.399915,
+        -429.725935,
+        -429.825651,
+        -429.651213
+      ],
+      "profile_eV_rel": [
+        0.0,
+        -0.2669,
+        -0.0175,
+        0.4322,
+        -0.462,
+        0.2468,
+        -0.0793,
+        -0.179,
+        -0.0045
+      ],
+      "n_images_total": 9,
+      "endpoint_converged": [
+        true,
+        true
+      ],
+      "seconds": 3151.5,
+      "band_converged": false,
+      "ci_ran": false,
+      "ci_converged": false,
+      "steps_band": 400,
+      "steps_ci": 0,
+      "band_only_profile_eV": [
+        0.0,
+        -0.2669,
+        -0.0175,
+        0.4322,
+        -0.462,
+        0.2468,
+        -0.0793,
+        -0.179,
+        -0.0045
+      ],
+      "spike_eV": 0.4322,
+      "max_image_jump_eV": 0.8942,
+      "notes": [],
+      "second_highest_eV": 0.2468,
+      "min_interior_rel_eV": -0.462,
+      "neb_converged": false,
+      "band_problems": [
+        "이웃 이미지 사이가 0.89 eV 뛴다(문턱 0.8) — 밴드가 불연속이다. 최고 +0.43 / 차고 +0.25",
+        "중간 이미지가 **두 끝점 중 낮은 쪽**보다 -0.458 eV 낮다 — 끝점이 국소 최소가 아니다"
+      ],
+      "trustworthy": false,
+      "engine": "uma-s-1p1(omat)",
+      "cell_relaxed": false,
+      "neb_method": "improvedtangent",
+      "spring_k": 0.1,
+      "fmax": {
+        "endpoint": 0.03,
+        "neb": 0.05,
+        "ci": 0.03
+      },
+      "images_file": "/data/work/repo/db/properties/neb_inter_211_deepep.xyz"
+    }
+  ]
+}
