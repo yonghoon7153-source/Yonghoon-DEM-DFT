@@ -486,7 +486,7 @@ tools/diagnose_pini_transition.py +159  ← 새 진단 도구
 ```bash
 cd ~/work/Yonghoon-DEM-DFT/degradation-degeneracy
 
-# A. 비파괴 진단 — 캐시를 덮어쓰지 않고 "배열이 같은가" 만 본다
+# A. 진단 — "배열이 같은가" 를 본다 (캐시는 이 단계에서 이미 갱신된다, 아래 주의)
 python -m src.halfcell --method ocp --verify
 python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
 ```
@@ -499,10 +499,32 @@ python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
 | `"재생성_배열일치": true` | 배열 동일 — 코드 도장만 낡았다 | B 로 진행 |
 | `"재생성_배열일치": false` | **배열이 달라졌다** | **멈춘다.** runtime 이 물리를 바꿨다는 뜻이고, 기존 24다리 전체의 재현성이 걸린 문제다 |
 
+> **⚠ 정정 — A 는 비파괴가 아니다 (2026-08-20 실측).** 처음에 "덮어쓰지
+> 않는다" 고 적었는데 **틀렸다.** 캐시 로드 경로는 코드 identity 불일치를
+> **미스로 취급해 재계산하고 저장**한다 (자기치유). 실측 로그:
+>
+> ```
+> WARNING: half-cell 캐시가 다른 코드로 계산됨 (c2e7d8b9… ≠ a72c0f3a…)
+>          — 미스로 취급해 재계산: .cache/halfcell/…_ocp_b5009f515fb8.json
+> INFO:    half-cell 기준 캐시 저장: .cache/halfcell/…_ocp_b5009f515fb8.json
+> ```
+>
+> 결과적으로 해는 없다 — 배열이 같고(아래), 기존 다리는 자기 캐시 바이트를
+> `_inputs/` 에 봉인해 두었다. 하지만 **B 단계(`--force`)는 불필요**하다.
+> A 를 돌린 시점에 이미 갱신됐다.
+
+**실측 결과 (두 캐시 모두)**:
+
+```json
+{ "구조검사": true, "구조검사_실패": [], "재생성_배열일치": true }
+```
+
+배열이 비트 단위로 같다 (`rtol=0, atol=1e-9`). 위 git diff 추론이 실측으로
+확인됐다 — `d842894` 와 `a72c0f3a` 는 half-cell 물리가 동일하고, 새 다리는
+기존 24다리와 수치적으로 비교 가능하다.
+
 ```bash
-# B. 도장 갱신 (A 가 true 일 때만)
-python -m src.halfcell --method ocp --force --verify
-python -m src.halfcell --method ocpbias --pe-offset-mv 5 --force --verify
+# B. (불필요 — A 가 이미 갱신했다)
 
 # C. §16 의 (1)~(4) 를 그대로 다시
 ```
