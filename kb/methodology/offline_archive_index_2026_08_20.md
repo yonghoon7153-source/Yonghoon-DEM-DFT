@@ -63,14 +63,40 @@ home_scripts_ · kgy_root_scripts_ · lpsocl_eos_final/
 ⇒ **ELF 평면 재렌더 · VESTA 3D · Bader 재계산이 전부 여기서 가능**하다.
 repo 의 `docs/figures/paper/elf_plane_b2o3_*.png` (라벨 없는 clean 판 5장)가 이 cube 산출물.
 
-### 1-2. `md_results/` — ⚠ highT_reseed 는 **없다**
+### 1-2. ⭐ `md_results/` (761 MB) — **comp1 1×1×1 + 2×2×2 궤적 세트다**
 
-```
-ToBeDelete_md_{600,800,1000}K.traj  ·  같은 이름 _v2 판
-```
+초판은 *"시드 표기 없는 다른 계열"* 로만 적었다. 원자 수를 세어 정정한다 (2026-08-20):
 
-**시드 표기가 없고 `ToBeDelete_` 접두사가 붙어 있다** — 3-seed reseed 가 아니다.
-⇒ **`highT_reseed/b2o3` 궤적은 백업에도 없다** (2026-08-20 확인). F9 의 재실행 판단이 유지된다.
+| 파일 | 원자 | Lattice a | 계 | 프레임 |
+|---|---|---|---|---|
+| `ToBeDelete_md_{600,800,1000}K.{xyz,traj}` | **52** | 10.12 Å | **comp1 1×1×1** | 2500 |
+| `ToBeDelete_md_{600,800,1000}K_v2.{xyz,traj}` | **416** | 20.24 Å | **comp1 2×2×2** | 2500 |
+| `ToBeDelete_msd_*K{,_v2}.dat` | — | — | MSD + D | `T=800K D=2.332e-05 cm²/s R²=0.9884` |
+
+⭐ **같은 계·같은 세 온도의 1×1×1 과 2×2×2 궤적이 둘 다 있다** (52×8 = 416).
+이게 왜 값이 큰가:
+
+1. **codex_A A-R4 가 지적한 "416원자 1런"** 의 **궤적 실물**이다.
+2. **셀 크기 효과를 직접 볼 수 있다** — 같은 계·같은 온도·다른 셀. 우리가 여러 번 논쟁한 축이고
+   문헌(Zhang npj Li₃YCl₆ 소형 vs 대형 σ)과 나란히 놓을 수 있는 유일한 자체 데이터다.
+3. **comp1 골격 게이트를 잴 수 있다.** comp1 은 Li β 0.17–0.79 로 확산 게이트를 떨어진 계인데
+   **골격(비-Li)은 한 번도 안 봤다.** 궤적이 있으므로 `msd_diffusive_check --framework
+   --from_traj` 가 그대로 먹힌다. ⛔ 그때 **`--mto` 를 반드시 쓸 것** (§3 주의).
+
+⚠ **`ToBeDelete_` 접두사가 붙어 있다.** 761 MB 자산에 "지울 것" 딱지가, 그것도 **유일본**
+백업에 붙어 있다. 이름을 바꾸거나 최소한 이 카드가 그 사실을 기록해 둔다.
+
+### 1-2b. ⚠ highT_reseed 는 여전히 **없다**
+
+`md_results` 가 comp1 이므로 **b2o3/modelc 의 800/1000 K reseed 궤적은 백업에도 없다.**
+kgy repo 루트의 `b2o3_traj.xyz`(160원자, c축 87 Å) · `modelc_traj.xyz`(94원자, c축 58 Å)도
+**슬랩**이다(`move_mask` 있음, 진공층) — 벌크 MD 가 아니다.
+⇒ **F9 의 재실행 판단이 유지된다** (2026-08-20, 백업 2벌 + kgy + gabia 전수 확인).
+
+⚠ 확인된 위양성 후보를 기록해 둔다 — 다시 헷갈리지 않도록:
+`kgy ~/work/runs/{iface_roll,interface_campaign}/*_traj.xyz`(계면 캠페인) ·
+`{lpsocl_600_long,mto_pilot}/**/T{500,700,900}/traj.xyz`(다른 온도) ·
+`gabia /root/work/committee_modelc_T*/snapshots.xyz`(committee 스냅숏).
 
 ## 2. ⭐ 백업 B — runs 중심 (2026-06-11)
 
@@ -166,6 +192,11 @@ elastic_static,elastic_mlip_600K,elastic_mlip_600K_clamped_backup}`
    그때의 산출물과 대조해야 한다 (지금은 "있다" 까지만 확인됨).
 4. **깊이 3 까지만 훑었다.** 하위 디렉터리에 더 있을 수 있다.
 5. 확장자 통계의 `stl 407` · `liggghts 211` 은 **DEM 쪽 자산**이라 이 카드 범위 밖이다.
+6. ⛔ **β 를 잴 때 잣대를 밝히지 않으면 이 카드의 궤적들이 무의미해진다.** kgy `arr6close`
+   실측: 같은 궤적에서 **STO β 0.07–0.91 이 널뛰는데 MTO 는 0.73–0.79 로 안정**하다
+   (lpsocl_new T600 s2/s3/s4). 600 K 에서 **STO/MTO 부호가 뒤집힌 사례**도 있다.
+   ⇒ 이 카드의 어느 궤적으로든 β 를 잴 때 **`--mto` 를 빼지 말 것.**
+   레지스트리: `db/properties/lpsocl_beta_registry.json`
 
 ## 관련
 
