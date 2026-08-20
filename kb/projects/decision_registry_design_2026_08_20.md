@@ -52,6 +52,7 @@ evidenceScope: multi-source-primary
 | **assessment sidecar** — `db/governance/assessments.json`, claim 에는 `required_assessment_refs` 만 | ✅ | 옛/새 판정 **병존** |
 | **판례 원장 core 5** — `db/governance/decisions.json`, 전부 `ratification.state=proposed` | ✅ | dangling edge 검사 통과 |
 
+| **판례 core 5 승인** — 1저자 승인으로 `proposed → ratified/active`. 승인은 `decision_digest` 로 **그 시점 내용에 결속**된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인을 요구한다) | ✅ | 음성 selftest 5건 |
 | **`validate_canonical` 이 거버넌스를 검증** — 새 필드를 아예 안 읽어 **자기가 지키는 db 의 정정을 스스로 검증하지 못했다**. `canonical.validate_governance()` 한 벌을 db 도구·테스트가 같이 쓴다 | ✅ | 음성 selftest **13건** |
 
 **codex 동결감사 P0 는 전부 닫혔다.** 남은 것은 확대(§9-2/9-3)와 Phase A 의 나머지

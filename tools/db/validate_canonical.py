@@ -464,6 +464,28 @@ def selftest():
             "lineage": {"lineage_binding": "sorta_wired"}}}])),
         "[음성] lineage_binding 어휘 밖을 잡는다")
 
+    # ── 승인은 **그 시점 내용**에 묶인다 (codex: decision digest 결속) ──────
+    _rat = {"state": "ratified", "actor_id": "y", "role": "scientific_owner",
+            "timestamp": "2026-08-20T00:00:00Z", "commit": "f" * 40}
+    D_RAT = {"id": "D-r", "decision_state": "active", "slot": "s9",
+             "statement": "원문", "ratification": dict(_rat)}
+    D_RAT["ratification"]["decision_digest"] = C.decision_digest(D_RAT)
+    chk(_gov([D_RAT], [], []) == [], "[양성] 승인 + 지문이 맞으면 통과")
+    D_TAMPER = json.loads(json.dumps(D_RAT)); D_TAMPER["statement"] = "몰래 고친 문장"
+    chk(any("승인 이후에 내용이 바뀌었다" in v for v in _gov([D_TAMPER], [], [])),
+        "[음성] ★ 승인 뒤 statement 를 고치면 잡는다 (승인이 상태 문자열이면 못 잡는다)")
+    D_NODIG = json.loads(json.dumps(D_RAT)); del D_NODIG["ratification"]["decision_digest"]
+    chk(any("decision_digest 가 없다" in v for v in _gov([D_NODIG], [], [])),
+        "[음성] 지문 없는 승인을 잡는다")
+    D_SHORT = json.loads(json.dumps(D_RAT)); D_SHORT["ratification"]["commit"] = "bb9f9c5d"
+    D_SHORT["ratification"]["decision_digest"] = C.decision_digest(D_SHORT)
+    chk(any("40-hex 가 아니다" in v for v in _gov([D_SHORT], [], [])),
+        "[음성] 짧은 commit 을 잡는다")
+    D_NOWHO = json.loads(json.dumps(D_RAT)); del D_NOWHO["ratification"]["actor_id"]
+    D_NOWHO["ratification"]["decision_digest"] = C.decision_digest(D_NOWHO)
+    chk(any("actor_id 가 없다" in v for v in _gov([D_NOWHO], [], [])),
+        "[음성] 누가 승인했는지 없으면 잡는다")
+
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")

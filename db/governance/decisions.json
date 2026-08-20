@@ -1,7 +1,7 @@
 {
  "schema": "governance/decisions v2",
  "_purpose": "규약·판례의 기계 원본. kb 카드는 인간용 근거이고 이 파일이 실행 경로가 읽는 것이다.",
- "_status": "⚠ MVP vertical slice — core 5 만 들어 있고 **전부 ratification.state=proposed** 다. agent 는 제안·기술검증까지이고 과학적 승격은 human scientific owner 몫이다 (codex 2차 P0-3). proposed 결정은 조회되지만 강제력이 없고, 그것을 근거로 만든 산출물은 자동으로 diagnostic 으로 강등된다.",
+ "_status": "MVP vertical slice — core 5 가 **ratified/active** 다 (1저자 승인 2026-08-20). 승인은 decision_digest 로 내용에 결속돼 있어, 결정을 고치면 validate 가 재승인을 요구한다. 확대(entry 수리 7 · 재승인 3)는 slice 통과 뒤 별건이다.",
  "_rules": [
   "id: D-YYYY-MM-DD-slug. 정렬·grep 가능.",
   "statement 는 **정의**만 적는다. 구현은 method_ref, 강제 수단은 enforcement, 경험적 문턱은 별개 gate 결정.",
@@ -12,7 +12,8 @@
   "unknown ID 참조는 실패다 (fail-closed). 강등 사유도 자유 문자열이 아니라 등록된 ID 여야 한다."
  ],
  "_history": {
-  "2026-08-20a": "신설. codex 3차 권고대로 12시드가 아니라 **core 5** 로 시작한다. core 4(source-authority · hash-bound-carry · no-fallback · defect-cell-metric)에 no-retro-gate-without-artifact 를 5번째로 편입했다 — b2o3 가 vertical slice 이고 그 slice 가 실증하는 것이 바로 이 결정이기 때문. gap-eigenvalue · uma-li3n-ban 2건은 read-only schema fixture 로만 동봉하며 consumer/preflight 에 연결하지 않으므로 end-to-end 검증에는 세지 않는다."
+  "2026-08-20a": "신설. codex 3차 권고대로 12시드가 아니라 **core 5** 로 시작한다. core 4(source-authority · hash-bound-carry · no-fallback · defect-cell-metric)에 no-retro-gate-without-artifact 를 5번째로 편입했다 — b2o3 가 vertical slice 이고 그 slice 가 실증하는 것이 바로 이 결정이기 때문. gap-eigenvalue · uma-li3n-ban 2건은 read-only schema fixture 로만 동봉하며 consumer/preflight 에 연결하지 않으므로 end-to-end 검증에는 세지 않는다.",
+  "2026-08-20b": "1저자 승인 — core 5 를 proposed → ratified/active 로. 승인은 decision_digest 로 그 시점 내용에 결속된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인이 요구된다). commit bb9f9c5d6534… (원장에는 full 40-hex)."
  },
  "decisions": [
   {
@@ -21,27 +22,88 @@
    "kind": "policy",
    "scope": "reporting.authority",
    "slot": "status_source_of_truth",
-   "applies_to": {"systems": ["*"], "tasks": ["*"], "methods": ["*"],
-                  "use_cases": ["public_audit", "comparison", "ranking", "manuscript"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "*"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ]
+   },
    "title": "canonical DB/manifest 가 log·화면보다 우선한다",
    "statement": "값의 지위는 canonical_registry 와 governance 원장이 정한다. 콘솔 출력·웹 배지·그림 캡션은 그 결과를 표시할 뿐이며, 지위 문구를 스스로 조립하지 않는다.",
-   "decision_state": "proposed",
-   "evidence": ["F2: collect_neb 결산표가 '✅ 인용 가능' 을 찍는데 저장값은 citable:false 였고, 그 화면을 믿고 리뷰 카드 3곳에 오기가 전파됐다 (2026-08-19)",
-                "webapp 이 blocking_gate 존재만으로 '게이트 미통과' 를 찍어 not_assessed 를 실패로 오역했다 (2026-08-20)"],
+   "decision_state": "active",
+   "evidence": [
+    "F2: collect_neb 결산표가 '✅ 인용 가능' 을 찍는데 저장값은 citable:false 였고, 그 화면을 믿고 리뷰 카드 3곳에 오기가 전파됐다 (2026-08-19)",
+    "webapp 이 blocking_gate 존재만으로 '게이트 미통과' 를 찍어 not_assessed 를 실패로 오역했다 (2026-08-20)"
+   ],
    "method_ref": null,
    "card": "kb/projects/decision_registry_design_2026_08_20.md",
    "reopen_criteria": "db 보다 로그가 정확한 실측 사례 1건",
    "enforcement": {
     "require": true,
-    "implemented_by": ["webapp/canonical.py::gate_outcome", "webapp/canonical.py::gate_prefix"],
-    "tombstones": [{"grep": "게이트 미통과.*blocking_gate", "paths": ["webapp/**/*.py", "webapp/**/*.html"],
-                    "allow": ["webapp/canonical.py"],
-                    "reason": "게이트 문구를 평가기 밖에서 조립하지 않는다"}],
-    "fixtures": ["webapp/tests/test_webapp.py::test_gate_outcome_vocabulary"]
+    "implemented_by": [
+     "webapp/canonical.py::gate_outcome",
+     "webapp/canonical.py::gate_prefix"
+    ],
+    "tombstones": [
+     {
+      "grep": "게이트 미통과.*blocking_gate",
+      "paths": [
+       "webapp/**/*.py",
+       "webapp/**/*.html"
+      ],
+      "allow": [
+       "webapp/canonical.py"
+      ],
+      "reason": "게이트 문구를 평가기 밖에서 조립하지 않는다"
+     }
+    ],
+    "fixtures": [
+     "webapp/tests/test_webapp.py::test_gate_outcome_vocabulary"
+    ]
    },
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-20"}],
-   "reviewed_by": [{"actor_type": "agent", "actor_id": "codex", "date": "2026-08-20", "verdict": "conditional_go"}],
-   "ratification": {"state": "proposed", "max_release_status": "diagnostic"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-20"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "codex",
+     "date": "2026-08-20",
+     "verdict": "conditional_go"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-20T00:00:00Z",
+    "commit": "bb9f9c5d653437e57510cadb997f2965b831f0d4",
+    "decision_digest": "sha256:dc88de1ce6b83ae4a416d718f2277feb5c4b2a5e934b2ccae5eb929909ec4b63",
+    "evidence_digest": "sha256:e4d6d19960128ab86ef4c16ebceb1ff02188385de677a0deb81dc9d4bfec43cd",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ],
+    "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
+   }
   },
   {
    "id": "D-2026-08-20-hash-bound-carry",
@@ -49,23 +111,72 @@
    "kind": "policy",
    "scope": "provenance.carry",
    "slot": "human_verdict_inheritance",
-   "applies_to": {"systems": ["*"], "tasks": ["neb", "md"], "methods": ["*"], "use_cases": ["*"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "neb",
+     "md"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "*"
+    ]
+   },
    "title": "protocol/input/endpoint 해시가 일치할 때만 사람 판정을 승계한다",
    "statement": "이전 회수의 사람 판정(과학적 지위·허용 문장·셀 수렴 판단)은 (root, tag) 가 같고 protocol_hash 가 동일할 때만 이월된다. 불일치하거나 한쪽 지문이 없으면 승계하지 않는다.",
-   "decision_state": "proposed",
-   "evidence": ["F8: collect_neb 이 protocol_hash 를 회수만 하고 이월 검사에 쓰지 않아, 키만 맞으면 프로토콜이 바뀐 새 계산에도 옛 판정이 붙었다 (2026-08-20 실측)"],
+   "decision_state": "active",
+   "evidence": [
+    "F8: collect_neb 이 protocol_hash 를 회수만 하고 이월 검사에 쓰지 않아, 키만 맞으면 프로토콜이 바뀐 새 계산에도 옛 판정이 붙었다 (2026-08-20 실측)"
+   ],
    "method_ref": "M-2026-08-20-protocol-hash-v2",
    "card": "kb/projects/decision_registry_design_2026_08_20.md",
    "reopen_criteria": "지문이 달라도 판정이 유효함을 보인 실측 사례",
    "notes": "⚠ 승계 거부는 '필드를 비운다' 로 끝나면 안 된다 — 사람이 내린 **하향**까지 사라져 자동 판정이 citable=True 로 올려버린다. 거부 시 보수적으로 잠근다 (citable=False + carry_refused).",
    "enforcement": {
     "require": true,
-    "implemented_by": ["tools/sei/collect_neb.py::_carry_verdict"],
-    "fixtures": ["tools/sei/collect_neb.py --selftest (양성 1 · 음성 4 · 경계 1)"]
+    "implemented_by": [
+     "tools/sei/collect_neb.py::_carry_verdict"
+    ],
+    "fixtures": [
+     "tools/sei/collect_neb.py --selftest (양성 1 · 음성 4 · 경계 1)"
+    ]
    },
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-20"}],
-   "reviewed_by": [{"actor_type": "agent", "actor_id": "codex", "date": "2026-08-20", "verdict": "conditional_go"}],
-   "ratification": {"state": "proposed", "max_release_status": "diagnostic"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-20"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "codex",
+     "date": "2026-08-20",
+     "verdict": "conditional_go"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-20T00:00:00Z",
+    "commit": "bb9f9c5d653437e57510cadb997f2965b831f0d4",
+    "decision_digest": "sha256:dd04823b1407ff9986f311f9166e060fea171a7e9a87d852f8d2b3e3f1c76bf4",
+    "evidence_digest": "sha256:2e42aade41c16b6bbfb8998ab903608d9f97f14251358e5d252883c22e5077e0",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ],
+    "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
+   }
   },
   {
    "id": "D-2026-08-20-no-fallback",
@@ -73,23 +184,71 @@
    "kind": "policy",
    "scope": "code.canonical_impl",
    "slot": "fallback_policy",
-   "applies_to": {"systems": ["*"], "tasks": ["*"], "methods": ["*"], "use_cases": ["*"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "*"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "*"
+    ]
+   },
    "title": "canonical 구현을 못 부르면 재구현하지 않고 즉사한다",
    "statement": "정본 구현(λ₁·게이트·해시 등)의 import 가 실패하면 같은 수식을 그 자리에서 다시 쓰지 않는다. 예외를 던지고 멈춘다. 외부 라이브러리가 정본인 경우에도 같다.",
-   "decision_state": "proposed",
-   "evidence": ["F6: λ₁ import 실패 시 `except BaseException` 으로 같은 수식을 재구현하는 분기가 있었다 (2026-08-19). 구현이 갈라지면 지표가 조용히 두 개가 된다."],
+   "decision_state": "active",
+   "evidence": [
+    "F6: λ₁ import 실패 시 `except BaseException` 으로 같은 수식을 재구현하는 분기가 있었다 (2026-08-19). 구현이 갈라지면 지표가 조용히 두 개가 된다."
+   ],
    "method_ref": null,
    "card": "kb/projects/decision_registry_design_2026_08_20.md",
    "reopen_criteria": "fallback 이 없으면 복구 불가능한 운영 사례",
    "enforcement": {
     "require": true,
-    "implemented_by": ["tools/sei/build_neb_inputs.py::shortest_translation_full",
-                       "tools/neb_diffusion/argyrodite_cage_neb.py::lambda1"],
-    "fixtures": ["tools/sei/build_neb_inputs.py --selftest (예외 요구 7건)"]
+    "implemented_by": [
+     "tools/sei/build_neb_inputs.py::shortest_translation_full",
+     "tools/neb_diffusion/argyrodite_cage_neb.py::lambda1"
+    ],
+    "fixtures": [
+     "tools/sei/build_neb_inputs.py --selftest (예외 요구 7건)"
+    ]
    },
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-20"}],
-   "reviewed_by": [{"actor_type": "agent", "actor_id": "codex", "date": "2026-08-20", "verdict": "conditional_go"}],
-   "ratification": {"state": "proposed", "max_release_status": "diagnostic"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-20"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "codex",
+     "date": "2026-08-20",
+     "verdict": "conditional_go"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-20T00:00:00Z",
+    "commit": "bb9f9c5d653437e57510cadb997f2965b831f0d4",
+    "decision_digest": "sha256:771f8795a4c57779a61a1b8033a2cfd14a8fa4fb99f106138e55ebe7567177a4",
+    "evidence_digest": "sha256:044eab230bc570f775cb11302a06bdbd558622f49d1b59beb706f9b9486bdc36",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ],
+    "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
+   }
   },
   {
    "id": "D-2026-08-16-defect-cell-metric",
@@ -97,28 +256,87 @@
    "kind": "metric",
    "scope": "neb.cell_metric",
    "slot": "point_defect_image_distance",
-   "applies_to": {"systems": ["*"], "tasks": ["point_defect_neb"], "methods": ["*"],
-                  "use_cases": ["ranking", "manuscript"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "point_defect_neb"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "ranking",
+     "manuscript"
+    ]
+   },
    "title": "점결함 이미지 거리 지표는 λ₁ (최단 비영 격자 병진)",
    "statement": "점결함의 최근접 주기 이미지 거리는 λ₁ = min |n₁a+n₂b+n₃c| 다. 면 높이 V/|aⱼ×a_k| 는 격자 **평면** 사이 거리라 슬랩 분리에 맞는 양이고 점-이미지 거리가 아니며 기저 의존이다 — 보수적 하한으로만 쓴다.",
-   "decision_state": "proposed",
-   "evidence": ["Li₃Nd 2×2×2: 면높이 8.469 vs λ₁ 10.372 — 10 Å 기준에서 판정이 반전된다 (실측)"],
+   "decision_state": "active",
+   "evidence": [
+    "Li₃Nd 2×2×2: 면높이 8.469 vs λ₁ 10.372 — 10 Å 기준에서 판정이 반전된다 (실측)"
+   ],
    "method_ref": "M-2026-08-20-lambda1-exact-3d-ase-minkowski",
    "card": "kb/methodology/defect_cell_size_metric_2026_08_16.md",
-   "supersedes": ["D-2026-08-16-face-height-gate"],
+   "supersedes": [
+    "D-2026-08-16-face-height-gate"
+   ],
    "reopen_criteria": "λ₁ 판정이 실험/상위이론과 어긋나는 실측 1건",
    "notes": "⚠ '10 Å 이상' 경험 문턱은 **이 결정에 포함되지 않는다** — 별개 gate 결정이고 아직 승인 대상이 아니다. 정의(이 결정) · 구현(method_ref) · 문턱(별건)을 분리한다.",
    "enforcement": {
     "require": true,
-    "implemented_by": ["tools/sei/build_neb_inputs.py::shortest_translation"],
-    "tombstones": [{"grep": "perp_widths\\(.*\\)\\.min\\(\\)\\s*<", "paths": ["tools/**/*.py"],
-                    "allow": ["tools/sei/build_neb_inputs.py"],
-                    "reason": "면 높이를 게이트 비교식에 쓰는 코드 금지 (표시는 허용)"}],
-    "fixtures": ["tools/sei/build_neb_inputs.py --selftest (codex2_skew · codex3_earlystop · li3nd 판정반전)"]
+    "implemented_by": [
+     "tools/sei/build_neb_inputs.py::shortest_translation"
+    ],
+    "tombstones": [
+     {
+      "grep": "perp_widths\\(.*\\)\\.min\\(\\)\\s*<",
+      "paths": [
+       "tools/**/*.py"
+      ],
+      "allow": [
+       "tools/sei/build_neb_inputs.py"
+      ],
+      "reason": "면 높이를 게이트 비교식에 쓰는 코드 금지 (표시는 허용)"
+     }
+    ],
+    "fixtures": [
+     "tools/sei/build_neb_inputs.py --selftest (codex2_skew · codex3_earlystop · li3nd 판정반전)"
+    ]
    },
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-16"}],
-   "reviewed_by": [{"actor_type": "agent", "actor_id": "codex", "date": "2026-08-20", "verdict": "definition_go_impl_fixed"}],
-   "ratification": {"state": "proposed", "max_release_status": "diagnostic"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-16"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "codex",
+     "date": "2026-08-20",
+     "verdict": "definition_go_impl_fixed"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-20T00:00:00Z",
+    "commit": "bb9f9c5d653437e57510cadb997f2965b831f0d4",
+    "decision_digest": "sha256:a181f9ef6a0f6d8a8cfe48eff7552ec5a1c8c6afc49209ad0362cd27137d5830",
+    "evidence_digest": "sha256:fdc3485e57910b928cca9b141fa0da39db47ee36086a27abc0ca23e6e454e68e",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ],
+    "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
+   }
   },
   {
    "id": "D-2026-08-16-face-height-gate",
@@ -126,15 +344,36 @@
    "kind": "metric",
    "scope": "neb.cell_metric",
    "slot": "point_defect_image_distance",
-   "applies_to": {"systems": ["*"], "tasks": ["point_defect_neb"], "methods": ["*"], "use_cases": ["*"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "point_defect_neb"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "*"
+    ]
+   },
    "title": "(철회) 점결함 이미지 거리를 면 높이로 잰다",
    "statement": "면 높이 V/|aⱼ×a_k| 의 최소값을 점결함 이미지 거리로 쓴다.",
    "decision_state": "retracted",
    "superseded_by": "D-2026-08-16-defect-cell-metric",
    "why_retracted": "격자 평면 간 거리라 점-이미지 거리가 아니고 기저 의존이다. fcc 에서 1.22배 차이로 판정이 뒤집힌다.",
    "_note": "⭐ 삭제하지 않고 node 로 남긴다 — supersedes 간선이 가리킬 대상이 없으면 첫 registry 부터 dangling edge 가 생긴다 (codex 3차).",
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-15"}],
-   "ratification": {"state": "revoked"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-15"
+    }
+   ],
+   "ratification": {
+    "state": "revoked"
+   }
   },
   {
    "id": "D-2026-08-20-no-retro-gate-without-artifact",
@@ -142,24 +381,73 @@
    "kind": "policy",
    "scope": "gate.inputs",
    "slot": "missing_input_semantics",
-   "applies_to": {"systems": ["*"], "tasks": ["md", "neb"], "methods": ["*"], "use_cases": ["*"]},
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "md",
+     "neb"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "*"
+    ]
+   },
    "title": "게이트 입력이 없으면 결과는 not_assessed 이며 pending 이 아니다",
    "statement": "게이트가 요구하는 artifact 가 부재하면 판정은 not_assessed(required_artifact_set_incomplete) 다. '나중에 재검사' 로 적지 않는다 — 재실행 없이는 닫히지 않기 때문이다. 프로덕션 러너는 궤적 저장을 기본값으로 하거나, 미저장을 산출물에 retro_gate_possible=false 로 박는다.",
-   "decision_state": "proposed",
-   "evidence": ["F9: run_highT_reseed.sh 가 --save_traj 를 넘기지 않아 high-T 6런의 궤적이 없는데, 여러 카드가 '최종 궤적에 재검사' 를 후속 작업으로 적어뒀다 = 실행 불가능한 계획 (2026-08-20 실측)",
-                "같은 결함을 run_arrhenius_6pt.sh L57-59 가 이미 기록하고 자기만 고쳤다 — 정보는 repo 에 있었다"],
+   "decision_state": "active",
+   "evidence": [
+    "F9: run_highT_reseed.sh 가 --save_traj 를 넘기지 않아 high-T 6런의 궤적이 없는데, 여러 카드가 '최종 궤적에 재검사' 를 후속 작업으로 적어뒀다 = 실행 불가능한 계획 (2026-08-20 실측)",
+    "같은 결함을 run_arrhenius_6pt.sh L57-59 가 이미 기록하고 자기만 고쳤다 — 정보는 repo 에 있었다"
+   ],
    "method_ref": null,
    "card": "kb/projects/decision_registry_design_2026_08_20.md",
    "reopen_criteria": "입력 부재 상태를 pending 으로 적는 편이 정확한 사례",
    "enforcement": {
     "require": true,
-    "implemented_by": ["db/governance/assessments.json (A-2026-08-20-b2o3-framework-current)",
-                       "webapp/canonical.py::gate_outcome"],
-    "fixtures": ["webapp/tests/test_webapp.py::test_b2o3_framework_gate_is_not_assessed"]
+    "implemented_by": [
+     "db/governance/assessments.json (A-2026-08-20-b2o3-framework-current)",
+     "webapp/canonical.py::gate_outcome"
+    ],
+    "fixtures": [
+     "webapp/tests/test_webapp.py::test_b2o3_framework_gate_is_not_assessed"
+    ]
    },
-   "proposed_by": [{"actor_type": "agent", "actor_id": "claude", "date": "2026-08-20"}],
-   "reviewed_by": [{"actor_type": "agent", "actor_id": "codex", "date": "2026-08-20", "verdict": "core_5th"}],
-   "ratification": {"state": "proposed", "max_release_status": "diagnostic"}
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-20"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "codex",
+     "date": "2026-08-20",
+     "verdict": "core_5th"
+    }
+   ],
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-20T00:00:00Z",
+    "commit": "bb9f9c5d653437e57510cadb997f2965b831f0d4",
+    "decision_digest": "sha256:44a85c9a6faeb680d0c737056baa6f757fe5a3813a0fc7fbfadefd8c8d6b1183",
+    "evidence_digest": "sha256:3c3b019a9033b5df804036e014f650cb55b94a765e1202ba8a8b1dde03dd68e5",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking",
+     "manuscript"
+    ],
+    "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
+   }
   }
  ]
 }

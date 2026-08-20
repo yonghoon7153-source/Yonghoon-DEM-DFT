@@ -295,6 +295,19 @@ def decisions(root=None) -> dict:
     return {d["id"]: d for d in raw.get("decisions", [])}
 
 
+def decision_digest(d: dict) -> str:
+    """결정 내용의 지문 — `ratification` 을 **뺀** 나머지의 sha256.
+
+    ⛔ 2026-08-20 (codex: "ratification 에 policy 포함 + decision digest 에 결속") —
+      승인이 상태 문자열 하나면, 승인 뒤 statement·enforcement 를 고쳐도 승인이 남는다.
+      승인 시점의 내용을 지문으로 묶어 두면 내용이 바뀐 순간 승인이 **무효로 보인다**.
+    """
+    import hashlib
+    body = {k: v for k, v in d.items() if k != "ratification"}
+    return "sha256:" + hashlib.sha256(
+        json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
+
+
 def validate_governance(reg: dict = None, root=None) -> list:
     """판례·판정 원장의 무결성. 위반 문자열 리스트 (빈 리스트 = 통과).
 
@@ -319,6 +332,21 @@ def validate_governance(reg: dict = None, root=None) -> list:
         if d.get("decision_state") == "active" and not (
                 rat.get("state") == "ratified" and rat.get("role") == "scientific_owner"):
             bad.append(f"결정 {d['id']} 이 사람(scientific_owner) 승인 없이 active 다")
+        # ⭐ 승인은 **그 시점의 내용**에 묶인다. 승인 뒤 내용을 고치면 지문이 어긋난다.
+        if rat.get("state") == "ratified":
+            want = rat.get("decision_digest")
+            if not want:
+                bad.append(f"결정 {d['id']} 이 승인됐는데 decision_digest 가 없다 — "
+                           f"승인 뒤 내용을 고쳐도 티가 안 난다")
+            elif want != decision_digest(d):
+                bad.append(f"결정 {d['id']} 이 **승인 이후에 내용이 바뀌었다** "
+                           f"(digest 불일치) — 재승인이 필요하다")
+            for f in ("actor_id", "timestamp", "commit"):
+                if not rat.get(f):
+                    bad.append(f"결정 {d['id']} 의 승인에 {f} 가 없다")
+            if rat.get("commit") and len(str(rat["commit"])) != 40:
+                bad.append(f"결정 {d['id']} 의 승인 commit 이 40-hex 가 아니다 "
+                           f"(짧은 해시 금지)")
     # slot 유일성 — 같은 slot 에 active 가 둘이면 어느 쪽이 이기는지 알 수 없다
     slots = {}
     for d in dec.values():
