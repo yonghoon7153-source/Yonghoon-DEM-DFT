@@ -1853,7 +1853,14 @@ def main():
             #   항상 None 을 보고 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
             #   명시적으로 "브리지를 물리 단위로 못 박는다" 고 선언한 바로 그 인자다.
             #   (`_bru` 는 rasterize-only 원장(:944)에만 실려 있었다.)
-            'bridge_um': float(_bru) if _bru is not None else None,
+            #  ★ 2026-08-20 — **실효값**을 적는다.  옛 판은 `--step3-bridge-um` 을 안 주면
+            #    `None` 을 적었는데, 판정기의 missing 게이트는 "기록 없음 = 고정 확인 불가"로
+            #    읽어 **기본 브리지로 돈 런이 전부 거짓 HOLD** 가 된다 ("기본값" 과 "미기록" 을
+            #    구분 못 하는 것 = `backend` 사고와 같은 범주 혼동).
+            #    rasterize 의 기본은 `1.2·vox` (`step3_sigma.py` `_ball(... 1.2*vox if bridge_um is None ...)`)
+            #    이므로 그 값을 적으면 매니페스트가 **실제로 쓴 반경**을 말하게 된다.
+            'bridge_um': float(_bru) if _bru is not None else 1.2 * float(a.step3_vox),
+            'bridge_um_explicit': _bru is not None,   # 고정 지시였나 vs 기본값이었나 (구분 보존)
             'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
             'sigma_sdcp_S_cm': float(getattr(a, 'sigma_sdcp', 0.0) or 0.0),
             # ★ 2026-08-18 (CL-49) — PTFE 스탬프 팔도 고정 인자다.  0 = 생산(미스탬프),

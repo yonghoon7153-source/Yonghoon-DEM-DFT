@@ -984,7 +984,29 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                    if (v or {}).get('status') not in ('complete', 'disabled')}
             if bad:
                 errs.append(f'J_COMPONENT| {label}: 완료되지 않은 component {bad}')
-            elif verbose:
+            #  ★ 2026-08-20 — 판정기의 **고정-인자 기록**이 기본 경로에서 실제로 채워지는가.
+            #    두 사고가 여기서 났다: `backend` 를 없는 키로 읽어 항상 None(→ 게이트 무발화,
+            #    오늘 고친 뒤엔 거짓 HOLD) · `bridge_um` 이 기본 실행에서 None(→ 거짓 HOLD).
+            #    둘 다 **매니페스트를 눈으로 안 봤기 때문**에 생겼다 — 스모크가 대신 본다.
+            #    ★ 키 위치를 여기서 **다시 적지 않는다** — 그것이 두 사고의 원인이었다.
+            #      판정기 자신의 리더(`sdcp_gain_verdict._read`)를 불러 **그것이 보는 값**을 본다.
+            try:
+                if os.path.join(ROOT, 'scripts') not in sys.path:
+                    sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+                import sdcp_gain_verdict as _sgv
+                _rec = _sgv._read(out)
+                _blank = [k for k in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp',
+                                      'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
+                                      'sdcp_sphere_d_um', 'sdcp_yield_to_vgcf',
+                                      'sigma_ptfe_S_cm')
+                          if _rec.get(k) is None]
+                if _blank:
+                    errs.append(f'J_MANIFEST| {label}: **판정기의 리더가** 고정 인자를 '
+                                f'기본 경로에서 못 읽는다 {_blank} — 그 게이트는 무발화이거나 '
+                                f'거짓 HOLD 를 낸다 (2026-08-20 실사고 2건이 정확히 이것)')
+            except Exception as _e:                            # noqa: BLE001
+                warns.append(f'J_READER| {label}: 판정기 리더 대조 생략 ({type(_e).__name__}: {_e})')
+            if verbose and not bad:
                 _st = ', '.join('%s=%s' % (k, (v or {}).get('status'))
                                 for k, v in comps.items())
                 print(f'  ✓ {label} — {_st}')

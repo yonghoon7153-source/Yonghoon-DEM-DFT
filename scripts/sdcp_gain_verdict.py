@@ -89,7 +89,19 @@ def _read(path):
             #    돌았는지 **추정할 수 없다** (--temp-c 로도 움직인다).  None 으로 두고 아래
             #    _GEN_FIELDS 세대-혼합 게이트가 잡는다.
             **{f: man.get(f) for f in _GEN_FIELDS},
-            'backend': (man.get('backend_last_solve') or {}).get('backend'),
+            #  ⚠⚠ 2026-08-20 — 옛 판은 `.get('backend')` 를 읽었는데 그 키는 **존재하지 않는다**.
+            #    `step3_sigma.LAST_BACKEND` 는 `{requested, used, fallback_reason, precond}` 이고
+            #    payload 는 그것을 그대로 싣는다 ⇒ 이 필드는 **모든 런에서 항상 None** 이었다.
+            #    · 오늘 이전: 고정-인자 루프가 None 을 skip 해서 아무 일도 안 일어났다 —
+            #      :74 주석이 "CuPy 실패 시 조용한 CPU 폴백을 잡는다" 고 적어 둔 그 검사가
+            #      **한 번도 발화한 적이 없다** (H5 부류의 세 번째 재발, 이번엔 내가 08-18 에 만든 것).
+            #    · 오늘 이후: missing 게이트가 걸려 **모든 디렉터리가 거짓 HOLD** 를 냈다
+            #      (vox 0.115 실측 — 그 덕에 드러났다).
+            #    ⇒ 실제 값 `used` 를 읽는다.  하위호환 별칭 `backend` 도 같은 dict 라 폴백으로 둔다.
+            #    ⚠ `precond`(jacobi/amg)는 **게이트하지 않는다** — σ_eff 는 전처리에 불변이다
+            #      (rtol 1e-8 에서 ≤0.014 %, step3_sigma docstring).  가르는 것은 gpu↔cpu 다.
+            'backend': (lambda _b: (_b.get('used') if isinstance(_b, dict) else _b))(
+                man.get('backend_last_solve') or man.get('backend') or {}),
             'fibre_stamp': man.get('fibre_stamp')}
 
 
@@ -426,6 +438,43 @@ def _selftest():
         _v22 = verdict(mk(base, [v * 1.08 for v in base], **{_f: None}))
         chk(f'㉒ 기록 없는 고정 인자 `{_f}` 는 HOLD ({_v22["decision"]})',
             _v22['decision'] == 'HOLD' and _f in (_v22.get('reason') or ''))
+
+    #  ㉓ ★★ 2026-08-20 — `_read` 가 **매니페스트에 실제로 있는 키**를 읽는가.
+    #     실사고: `backend` 를 `LAST_BACKEND['backend']` 로 읽었는데 그런 키는 없다
+    #     ({requested, used, fallback_reason, precond}) ⇒ 모든 런에서 항상 None →
+    #     고정-인자 루프가 skip → **"CuPy 조용한 CPU 폴백을 잡는다" 는 검사가 무발화**.
+    #     ⚠ 픽스처를 손으로 짜면 같은 오해를 반복하므로, **payload 가 싣는 dict 모양 그대로**
+    #       (`step3_sigma.LAST_BACKEND` 의 키 집합) 쓴다.
+    import tempfile as _tf23
+    _man23 = {'vox_um': 0.115, 'bridge_um': 0.48, 'fibre_stamp': 'point',
+              'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
+              'sigma_vgcf_S_cm': 133.622, 'sigma_sdcp_S_cm': 250.0,
+              'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+              'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
+                                     'fallback_reason': None, 'precond': 'jacobi'},
+              'backend': {'requested': 'gpu', 'used': 'gpu',
+                          'fallback_reason': None, 'precond': 'jacobi'}}
+    with _tf23.TemporaryDirectory() as _d23:
+        def _mkp(name, man):
+            _p = os.path.join(_d23, name)
+            with open(_p, 'w', encoding='utf-8') as _f:
+                json.dump({'mpm_metrics': {'step3': {
+                    'sigma_e_eff_S_cm': 0.05, 'cg_info': 0, 'cg_resid': 1e-8,
+                    'unconverged': False, 'manifest': man}}}, _f)
+            return _p
+        _r23 = _read(_mkp('p2_DBE_sph_a0.json', _man23))
+        chk(f"㉓ `backend` 를 실제 키(`used`)에서 읽는다 ({_r23['backend']!r})",
+            _r23['backend'] == 'gpu')
+        #  ★ 음성 대조 — 기록이 **정말** 없으면 여전히 None 이어야 한다 (게이트가 살아야 하므로).
+        _r23b = _read(_mkp('p2_DBE_sph_a1.json',
+                           {k: v for k, v in _man23.items()
+                            if k not in ('backend_last_solve', 'backend')}))
+        chk('㉓ 음성 대조 — 기록이 없으면 None (게이트가 살아 있다)',
+            _r23b['backend'] is None)
+        #  ★ 그리고 그 None 이 **HOLD 로 이어지는지** — 필드만 읽고 게이트가 안 물면 무의미하다.
+        _v23 = verdict(mk(base, [v * 1.08 for v in base], backend=None))
+        chk(f"㉓ 그 None 이 HOLD 로 이어진다 ({_v23['decision']})",
+            _v23['decision'] == 'HOLD' and 'backend' in (_v23.get('reason') or ''))
 
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
