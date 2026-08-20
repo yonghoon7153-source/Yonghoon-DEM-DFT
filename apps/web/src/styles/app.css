@@ -292,6 +292,23 @@ a:hover { text-decoration: underline; }
 .split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s3); }
 @media (max-width: 1180px) { .split { grid-template-columns: minmax(0, 1fr); } }
 
+/* 사이클 추세와 그 knee 판정은 나란히 둔다.  판정이 레일 아래쪽에 있으면 기준을
+   바꿔 그래프의 세로선이 어디로 갔는지 보려고 스크롤을 오르내려야 한다.
+   `:only-child` 는 knee 가 없을 때 — 그래프가 폭을 다 쓴다. */
+.trend-split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: var(--s3);
+  align-items: start;
+}
+.trend-split > :only-child { grid-column: 1 / -1; }
+@media (max-width: 1500px) {
+  .trend-split { grid-template-columns: minmax(0, 1fr) 268px; }
+}
+@media (max-width: 1080px) {
+  .trend-split { grid-template-columns: minmax(0, 1fr); }
+}
+
 .row { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; }
 .col { display: flex; flex-direction: column; gap: var(--s2); }
 .spacer { flex: 1; }
@@ -803,35 +820,3 @@ button.icon {
   border-radius: 6px;
 }
 button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg); }
-
-/* --- 셀 상세의 고정 머리 ---------------------------------------------------- */
-
-/* 제목과 셀 상태는 스크롤해도 남는다.  아래 표·그래프를 보는 동안 어느 셀의
-   어떤 수치인지 계속 보여야 옆 셀 것과 헷갈리지 않는다.
-
-   45vh 상한이 핵심이다.  고정 블록이 화면을 다 먹으면 정작 스크롤해서 보려던
-   것이 손바닥만 한 창에 남는다. 넘칠 때는 이 블록 안에서 스크롤한다. */
-.pinned-head {
-  position: sticky;
-  top: 0;
-  z-index: 5;
-  max-height: 45vh;
-  overflow: auto;
-  padding-top: var(--s5);
-  margin: calc(var(--s5) * -1) calc(var(--s5) * -1) var(--s4);
-  padding-inline: var(--s5);
-  background: var(--bg);
-  border-bottom: 1px solid var(--line);
-}
-
-.pinned-head .page-head { margin-bottom: var(--s3); }
-
-/* 화면이 낮으면 (노트북 세로, 창 분할) 고정할 값이 스크롤할 값보다 커진다.
-   그때는 고정을 포기하는 편이 낫다. */
-@media (max-height: 620px) {
-  .pinned-head {
-    position: static;
-    max-height: none;
-    overflow: visible;
-  }
-}

@@ -761,28 +761,3 @@ describe('파일 이름 → 셀 이름', () => {
     expect(cellNameFor('_011.wrd')).toBe('_011')
   })
 })
-
-// --- 셀 상세의 고정 머리 -----------------------------------------------------
-
-describe('셀 상세 고정 머리', () => {
-  it('제목과 셀 상태가 같은 고정 블록 안에 있다', async () => {
-    installFetch(sampleDetailHandler(() => undefined))
-    renderSampleDetail()
-
-    const title = await screen.findByRole('heading', { level: 1 })
-    const pinned = title.closest('.pinned-head')
-    expect(pinned).not.toBeNull()
-    // 스크롤해도 남아야 하는 것: 어느 셀인지(제목)와 그 셀의 요약(셀 상태).
-    expect(within(pinned as HTMLElement).getByText('셀 상태')).toBeInTheDocument()
-  })
-
-  it('사이클 표는 고정 블록 밖에 있다 — 스크롤할 대상이다', async () => {
-    installFetch(sampleDetailHandler(() => undefined))
-    renderSampleDetail()
-
-    await screen.findByRole('heading', { level: 1 })
-    const pinned = document.querySelector('.pinned-head') as HTMLElement
-    expect(pinned).not.toBeNull()
-    expect(within(pinned).queryByText('충방전 프로파일')).toBeNull()
-  })
-})

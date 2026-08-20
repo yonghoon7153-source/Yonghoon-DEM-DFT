@@ -200,12 +200,6 @@ export function SampleDetail() {
 
   return (
     <main className="page">
-      {/* 제목과 셀 상태를 화면 위에 붙여 둔다.  아래로 스크롤해 사이클 표와
-          프로파일을 보는 동안 "지금 어느 셀의, 어떤 수치인지" 가 사라지면,
-          숫자를 옆 셀 것과 헷갈리기 쉽다.  다만 이 블록이 화면을 다 먹으면
-          정작 볼 것이 안 보이므로 높이에 상한을 두고, 넘치면 이 블록 안에서
-          스크롤한다. */}
-      <div className="pinned-head">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
           <h1 className="truncate">{sample.name}</h1>
@@ -260,8 +254,6 @@ export function SampleDetail() {
             <ReportCard report={reportState.data} />
           ) : null}
         </Card>
-      </div>
-      </div>
 
         <div className="split">
           <div className="col" style={{ gap: 12 }}>
@@ -330,6 +322,10 @@ export function SampleDetail() {
               )}
             </Card>
 
+            {/* 추세와 knee 판정은 같은 것을 두 방식으로 본다.  판정이 오른쪽
+                레일 아래에 있으면, 기준을 바꿔 그래프의 세로선이 어디로
+                옮겨졌는지 보려고 스크롤을 오르내리게 된다. */}
+            <div className="trend-split">
             <Card
               title="사이클 추세"
               actions={
@@ -356,6 +352,17 @@ export function SampleDetail() {
                 markers={kneeMarkers}
               />
             </Card>
+
+            {reportState.data?.knee ? (
+              <Card title="용량 급감 지점" padSmall>
+                <KneeDetail
+                  report={reportState.data}
+                  selected={kneeMethod}
+                  onSelect={setKneeMethod}
+                />
+              </Card>
+            ) : null}
+            </div>
 
             <Card
               title={`사이클 표 · ${cycles.length}개`}
@@ -465,16 +472,6 @@ export function SampleDetail() {
               </div>
             </Card>
 
-            {reportState.data?.knee ? (
-              <Card title="용량 급감 지점" padSmall>
-                <KneeDetail
-                  report={reportState.data}
-                  selected={kneeMethod}
-                  onSelect={setKneeMethod}
-                />
-              </Card>
-            ) : null}
-
             <Card
               title={`파일 · ${runsState.error ? '—' : `${runsState.data?.length ?? 0}개`}`}
               padSmall
@@ -497,6 +494,7 @@ export function SampleDetail() {
             </Card>
           </div>
         </div>
+      </div>
     </main>
   )
 }
