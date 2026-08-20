@@ -254,6 +254,7 @@ function OrphanRun({
   samples: { id: number; name: string }[]
   onAttached: () => void
 }) {
+  const [confirming, setConfirming] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [choice, setChoice] = useState('')
@@ -294,6 +295,37 @@ function OrphanRun({
           </option>
         ))}
       </select>
+      {confirming ? (
+        <div className="row" style={{ gap: 6, alignItems: 'center' }}>
+          <span className="tiny dim">기록에서 지웁니다. 원본 .wrd 는 남습니다.</span>
+          <button
+            className="danger"
+            disabled={busy}
+            onClick={async () => {
+              setBusy(true)
+              try {
+                setError(null)
+                await api.deleteRun(run.id)
+                onAttached()
+              } catch (cause) {
+                setError(cause instanceof Error ? cause.message : String(cause))
+                setConfirming(false)
+              } finally {
+                setBusy(false)
+              }
+            }}
+          >
+            지웁니다
+          </button>
+          <button className="ghost" disabled={busy} onClick={() => setConfirming(false)}>
+            취소
+          </button>
+        </div>
+      ) : (
+        <button className="ghost tiny" onClick={() => setConfirming(true)}>
+          이 파일 지우기
+        </button>
+      )}
       {error ? <Alert kind="error">{error}</Alert> : null}
       <div className="sep" />
     </div>

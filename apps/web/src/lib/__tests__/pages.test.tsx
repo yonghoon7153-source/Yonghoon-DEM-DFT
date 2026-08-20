@@ -524,3 +524,75 @@ describe('SampleDetail', () => {
     await waitFor(() => expect(cycleCalls.length).toBeGreaterThan(before))
   })
 })
+
+// --- 삭제 --------------------------------------------------------------------
+//
+// 실수로 한 번 눌러 셀이 사라지면 안 되고, 지운 뒤에는 화면이 즉시 따라와야
+// 한다. 원본 .wrd 는 남는다 (불변 규칙 2) — 화면이 그렇게 약속하므로 고정한다.
+
+describe('대시보드 삭제', () => {
+  function installDashboard(deleted: string[]) {
+    installFetch((url, init) => {
+      if (path(url) === '/api/groups') return []
+      if (init?.method === 'DELETE') {
+        deleted.push(path(url))
+        return {}
+      }
+      if (path(url) === '/api/dashboard') {
+        return {
+          basis: 'mAh/g',
+          basis_label: 'mAh g⁻¹',
+          rows: deleted.length
+            ? []
+            : [dashboardRow({ sample_id: 7, sample_name: '안녕', basis: 'mAh/g' })],
+        }
+      }
+      return []
+    })
+  }
+
+  function renderDashboard() {
+    render(
+      <MemoryRouter>
+        <Dashboard />
+      </MemoryRouter>,
+    )
+  }
+
+  it('한 번 눌러서는 지워지지 않는다', async () => {
+    const deleted: string[] = []
+    installDashboard(deleted)
+    renderDashboard()
+
+    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+
+    expect(screen.getByRole('button', { name: '지웁니다' })).toBeInTheDocument()
+    expect(deleted).toEqual([])
+  })
+
+  it('취소하면 아무것도 지우지 않는다', async () => {
+    const deleted: string[] = []
+    installDashboard(deleted)
+    renderDashboard()
+
+    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+    await userEvent.click(screen.getByRole('button', { name: '취소' }))
+
+    expect(screen.queryByRole('button', { name: '지웁니다' })).toBeNull()
+    expect(deleted).toEqual([])
+  })
+
+  it('확인하면 지우고 목록을 다시 읽는다', async () => {
+    const deleted: string[] = []
+    installDashboard(deleted)
+    renderDashboard()
+
+    await userEvent.click(await screen.findByRole('button', { name: '지우기' }))
+    await userEvent.click(screen.getByRole('button', { name: '지웁니다' }))
+
+    await waitFor(() => expect(deleted).toHaveLength(1))
+    expect(deleted[0]).toBe('/api/samples/7')
+    // 지운 뒤 화면이 따라온다 — 지운 셀이 남아 있으면 안 된다.
+    await waitFor(() => expect(screen.queryByRole('link', { name: '안녕' })).toBeNull())
+  })
+})

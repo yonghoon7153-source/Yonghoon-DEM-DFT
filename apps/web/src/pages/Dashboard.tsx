@@ -156,7 +156,7 @@ export function Dashboard() {
         ) : board.loading && !board.data ? (
           <TableSkeleton rows={5} columns={8} />
         ) : rows.length ? (
-          <DashboardTable rows={rows} basis={basis} />
+          <DashboardTable rows={rows} basis={basis} onDeleted={() => board.reload()} />
         ) : all.length ? (
           <Empty title="이 조건에 맞는 셀이 없습니다" icon="⌕">
             다른 상태 탭을 눌러 보세요.
@@ -211,7 +211,19 @@ function retentionClass(value: number | null): string {
   return 'low'
 }
 
-function DashboardTable({ rows, basis }: { rows: DashboardRow[]; basis: Basis }) {
+function DashboardTable({
+  rows,
+  basis,
+  onDeleted,
+}: {
+  rows: DashboardRow[]
+  basis: Basis
+  onDeleted: () => void
+}) {
+  // 실수로 한 번 눌러 셀이 사라지지 않도록, 지우기는 두 번 눌러야 한다.
+  const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState<string | null>(null)
   return (
     <div className="table-wrap tall">
       <table>
@@ -228,6 +240,7 @@ function DashboardTable({ rows, basis }: { rows: DashboardRow[]; basis: Basis })
             <th>기준</th>
             <th>로딩 (mg/cm²)</th>
             <th style={{ textAlign: 'left' }}>조건</th>
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -314,10 +327,62 @@ function DashboardTable({ rows, basis }: { rows: DashboardRow[]; basis: Basis })
                   .filter(Boolean)
                   .join(' · ') || '—'}
               </td>
+              <td style={{ whiteSpace: 'nowrap' }}>
+                {confirmDelete === row.sample_id ? (
+                  <>
+                    <button
+                      className="danger tiny"
+                      disabled={deleting}
+                      onClick={async () => {
+                        setDeleting(true)
+                        try {
+                          setDeleteError(null)
+                          // 원본 .wrd 는 지우지 않는다 (불변 규칙 2).
+                          // 파일은 data/uploads/ 에 남고, 다시 올리면 살아난다.
+                          await api.deleteSample(row.sample_id, true)
+                          setConfirmDelete(null)
+                          onDeleted()
+                        } catch (cause) {
+                          setDeleteError(
+                            cause instanceof Error ? cause.message : String(cause),
+                          )
+                        } finally {
+                          setDeleting(false)
+                        }
+                      }}
+                    >
+                      지웁니다
+                    </button>
+                    <button
+                      className="ghost tiny"
+                      disabled={deleting}
+                      onClick={() => setConfirmDelete(null)}
+                    >
+                      취소
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    className="ghost tiny"
+                    title="이 셀을 기록에서 지웁니다 (원본 .wrd 는 남습니다)"
+                    onClick={() => {
+                      setDeleteError(null)
+                      setConfirmDelete(row.sample_id)
+                    }}
+                  >
+                    지우기
+                  </button>
+                )}
+              </td>
             </tr>
           ))}
         </tbody>
       </table>
+      {deleteError ? (
+        <div style={{ padding: '10px 14px 0' }}>
+          <Alert kind="error">{deleteError}</Alert>
+        </div>
+      ) : null}
     </div>
   )
 }
