@@ -14,9 +14,18 @@ from datetime import datetime, timezone
 import numpy as np
 from sqlmodel import Session, select
 
-from wrdkit import (Basis, CellSpec, Composition, CycleSummary, ResolvedCell,
-                    WrdFile, lttb, normalize_capacity, parse_composition,
-                    summarize_cycles)
+from wrdkit import (
+    Basis,
+    CellSpec,
+    Composition,
+    CycleSummary,
+    ResolvedCell,
+    WrdFile,
+    lttb,
+    normalize_capacity,
+    parse_composition,
+    summarize_cycles,
+)
 from wrdkit.cycles import Profile, extract_profile
 from wrdkit.health import CellReport, build_report
 from wrdkit.knee import KneeAnalysis

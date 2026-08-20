@@ -90,26 +90,26 @@ class Writer:
     def __init__(self) -> None:
         self.parts: list[bytes] = []
 
-    def raw(self, data: bytes) -> "Writer":
+    def raw(self, data: bytes) -> Writer:
         self.parts.append(data)
         return self
 
-    def u8(self, value: int) -> "Writer":
+    def u8(self, value: int) -> Writer:
         return self.raw(struct.pack("<B", value))
 
-    def i32(self, value: int) -> "Writer":
+    def i32(self, value: int) -> Writer:
         return self.raw(struct.pack("<i", value))
 
-    def u32(self, value: int) -> "Writer":
+    def u32(self, value: int) -> Writer:
         return self.raw(struct.pack("<I", value))
 
-    def i64(self, value: int) -> "Writer":
+    def i64(self, value: int) -> Writer:
         return self.raw(struct.pack("<q", value))
 
-    def f64(self, value: float) -> "Writer":
+    def f64(self, value: float) -> Writer:
         return self.raw(struct.pack("<d", value))
 
-    def string(self, text: str) -> "Writer":
+    def string(self, text: str) -> Writer:
         encoded = text.encode("utf-8")
         length = len(encoded)
         while True:

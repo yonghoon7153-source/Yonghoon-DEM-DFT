@@ -16,12 +16,13 @@ from __future__ import annotations
 import csv
 import datetime
 import io
-from typing import Iterable, Sequence, TextIO
+from collections.abc import Iterable, Sequence
+from typing import TextIO
 
 import numpy as np
 
 from .cycles import CycleSummary, Profile
-from .normalize import Basis, ResolvedCell, basis_label, normalize_capacity
+from .normalize import Basis, ResolvedCell, normalize_capacity
 from .wrd import WrdFile
 
 __all__ = [

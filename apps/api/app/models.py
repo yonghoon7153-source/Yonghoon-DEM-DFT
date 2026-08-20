@@ -11,7 +11,6 @@ correcting a mass never requires touching a stored number (ADR 0001).
 # SQLAlchemy's registry.  Keep the typing imports explicit instead.
 
 from datetime import datetime, timezone
-from typing import List, Optional
 
 from sqlmodel import Field, Relationship, SQLModel
 
@@ -25,7 +24,7 @@ class ExperimentGroup(SQLModel, table=True):
 
     __tablename__ = "experiment_group"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
     description: str = ""
     #: Plot colour hint for the web UI; not interpreted by the backend.
@@ -33,19 +32,19 @@ class ExperimentGroup(SQLModel, table=True):
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
 
-    samples: List["Sample"] = Relationship(back_populates="group")
+    samples: list["Sample"] = Relationship(back_populates="group")
 
 
 class Sample(SQLModel, table=True):
     """One cell: what it is made of, and how it should be normalised."""
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    group_id: Optional[int] = Field(default=None, foreign_key="experiment_group.id",
+    group_id: int | None = Field(default=None, foreign_key="experiment_group.id",
                                     index=True)
 
     # -- what was tested ---------------------------------------------------
-    test_date: Optional[str] = Field(default=None, index=True)  # YYYY-MM-DD
+    test_date: str | None = Field(default=None, index=True)  # YYYY-MM-DD
     cathode_type: str = Field(default="", index=True)   # "High-Ni", "Mid-Ni", ...
     cathode_detail: str = ""                            # "NCM811", "NCM622", ...
     anode: str = ""
@@ -58,22 +57,22 @@ class Sample(SQLModel, table=True):
     #: recorded at 0 wt% are kept -- "this batch had no PTFE" is a deliberate
     #: record, not a blank.  Drives `active_wt_percent` unless that was typed.
     composition_json: str = ""
-    total_mass_mg: Optional[float] = None
-    current_collector_mass_mg: Optional[float] = None
-    active_wt_percent: Optional[float] = None
-    active_mass_mg: Optional[float] = None
-    area_cm2: Optional[float] = None
-    diameter_mm: Optional[float] = None
-    thickness_um: Optional[float] = None
-    nominal_specific_capacity_mah_g: Optional[float] = None
+    total_mass_mg: float | None = None
+    current_collector_mass_mg: float | None = None
+    active_wt_percent: float | None = None
+    active_mass_mg: float | None = None
+    area_cm2: float | None = None
+    diameter_mm: float | None = None
+    thickness_um: float | None = None
+    nominal_specific_capacity_mah_g: float | None = None
 
     # -- test conditions; parsed from the schedule unless overridden -------
-    temperature_c: Optional[float] = Field(default=None, index=True)
-    pressure_mpa: Optional[float] = None
-    cutoff_upper_v: Optional[float] = None
-    cutoff_lower_v: Optional[float] = None
-    c_rate: Optional[float] = Field(default=None, index=True)
-    c_rate_formation: Optional[float] = None
+    temperature_c: float | None = Field(default=None, index=True)
+    pressure_mpa: float | None = None
+    cutoff_upper_v: float | None = None
+    cutoff_lower_v: float | None = None
+    c_rate: float | None = Field(default=None, index=True)
+    c_rate_formation: float | None = None
 
     # -- analysis settings -------------------------------------------------
     #: Cycle used for retention and "initial" CE.  3 by default: cycles 1-2
@@ -85,8 +84,8 @@ class Sample(SQLModel, table=True):
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
 
-    group: Optional[ExperimentGroup] = Relationship(back_populates="samples")
-    runs: List["Run"] = Relationship(
+    group: ExperimentGroup | None = Relationship(back_populates="samples")
+    runs: list["Run"] = Relationship(
         back_populates="sample",
         sa_relationship_kwargs={"order_by": "Run.start_time"},
     )
@@ -95,8 +94,8 @@ class Sample(SQLModel, table=True):
 class Run(SQLModel, table=True):
     """One uploaded ``.wrd`` file and what parsing it produced."""
 
-    id: Optional[int] = Field(default=None, primary_key=True)
-    sample_id: Optional[int] = Field(default=None, foreign_key="sample.id", index=True)
+    id: int | None = Field(default=None, primary_key=True)
+    sample_id: int | None = Field(default=None, foreign_key="sample.id", index=True)
 
     original_name: str
     sha256: str = Field(index=True, unique=True)
@@ -106,11 +105,11 @@ class Run(SQLModel, table=True):
     # -- parsed metadata ---------------------------------------------------
     device_model: str = ""
     serial_no: str = ""
-    channel: Optional[int] = None
+    channel: int | None = None
     app_version: str = ""
     firmware_version: str = ""
-    start_time: Optional[datetime] = Field(default=None, index=True)
-    end_time: Optional[datetime] = None
+    start_time: datetime | None = Field(default=None, index=True)
+    end_time: datetime | None = None
     row_count: int = 0
     cycle_count: int = 0
     complete_cycle_count: int = 0
@@ -127,10 +126,10 @@ class Run(SQLModel, table=True):
     cycle_offset_source: str = "auto"  # auto | manual
 
     parse_error: str = ""
-    parsed_at: Optional[datetime] = None
+    parsed_at: datetime | None = None
 
-    sample: Optional[Sample] = Relationship(back_populates="runs")
-    cycles: List["CycleRecord"] = Relationship(
+    sample: Sample | None = Relationship(back_populates="runs")
+    cycles: list["CycleRecord"] = Relationship(
         back_populates="run",
         sa_relationship_kwargs={"cascade": "all, delete-orphan",
                                 "order_by": "CycleRecord.cycle_index"},
@@ -142,7 +141,7 @@ class CycleRecord(SQLModel, table=True):
 
     __tablename__ = "cycle_record"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
     run_id: int = Field(foreign_key="run.id", index=True)
 
     cycle_index: int = Field(index=True)   # as recorded in the file, 0-based
@@ -152,15 +151,15 @@ class CycleRecord(SQLModel, table=True):
     discharge_capacity_mah: float = 0.0
     charge_energy_wh: float = 0.0
     discharge_energy_wh: float = 0.0
-    coulombic_efficiency: Optional[float] = None
-    energy_efficiency: Optional[float] = None
-    mean_charge_voltage: Optional[float] = None
-    mean_discharge_voltage: Optional[float] = None
-    voltage_max: Optional[float] = None
-    voltage_min: Optional[float] = None
-    max_charge_current_a: Optional[float] = None
-    max_discharge_current_a: Optional[float] = None
-    temperature_mean: Optional[float] = None
+    coulombic_efficiency: float | None = None
+    energy_efficiency: float | None = None
+    mean_charge_voltage: float | None = None
+    mean_discharge_voltage: float | None = None
+    voltage_max: float | None = None
+    voltage_min: float | None = None
+    max_charge_current_a: float | None = None
+    max_discharge_current_a: float | None = None
+    temperature_mean: float | None = None
     start_time_s: float = 0.0
     duration_s: float = 0.0
     n_points: int = 0
@@ -170,4 +169,4 @@ class CycleRecord(SQLModel, table=True):
     row_start: int = 0
     row_stop: int = 0
 
-    run: Optional[Run] = Relationship(back_populates="cycles")
+    run: Run | None = Relationship(back_populates="cycles")

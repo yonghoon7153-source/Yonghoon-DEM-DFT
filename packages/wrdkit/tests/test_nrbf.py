@@ -2,8 +2,9 @@
 
 import pytest
 
-import synthetic
 from wrdkit.nrbf import NrbfError, read_stream, resolve
+
+import synthetic
 
 
 def test_reads_the_file_header_stream(synthetic_bytes):

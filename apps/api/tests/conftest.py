@@ -22,12 +22,13 @@ _TMP = tempfile.mkdtemp(prefix="workbench-test-")
 os.environ["WORKBENCH_DATA"] = _TMP
 os.environ["WORKBENCH_DB"] = "sqlite://"
 
-import synthetic  # noqa: E402
 from fastapi.testclient import TestClient  # noqa: E402
+from sqlmodel import SQLModel  # noqa: E402
 
 from app.db import engine, init_db  # noqa: E402
 from app.main import app  # noqa: E402
-from sqlmodel import SQLModel  # noqa: E402
+
+import synthetic  # noqa: E402
 
 
 @pytest.fixture

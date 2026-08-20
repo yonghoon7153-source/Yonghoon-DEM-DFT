@@ -7,8 +7,9 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import synthetic  # noqa: E402
 from wrdkit import read_wrd, read_wrd_bytes  # noqa: E402
+
+import synthetic  # noqa: E402
 
 
 @pytest.fixture(scope="session")

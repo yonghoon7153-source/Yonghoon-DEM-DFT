@@ -15,8 +15,14 @@ from ..db import get_session
 from ..deps import get_run
 from ..models import CycleRecord, Run, Sample
 from ..schemas import RunOut, RunUpdate
-from ..services import (apply_schedule_defaults, auto_cycle_offset, persist_parse,
-                        renumber_sample_runs, schedule_payload, sequence_number)
+from ..services import (
+    apply_schedule_defaults,
+    auto_cycle_offset,
+    persist_parse,
+    renumber_sample_runs,
+    schedule_payload,
+    sequence_number,
+)
 from ..settings import settings
 
 router = APIRouter(prefix="/api/runs", tags=["runs"])

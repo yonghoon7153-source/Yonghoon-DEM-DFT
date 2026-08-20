@@ -26,7 +26,7 @@ from typing import Any
 import numpy as np
 
 from .nrbf import NrbfObject, NrbfStream, read_stream, resolve
-from .schedule import Schedule, TICKS_PER_SECOND, read_schedule
+from .schedule import TICKS_PER_SECOND, Schedule, read_schedule
 
 __all__ = ["WrdError", "WrdColumn", "WrdMetadata", "WrdFile", "read_wrd", "CellStatus"]
 
@@ -260,7 +260,7 @@ class _Layout:
     fixed_size: int  # row size with every string empty
 
     @classmethod
-    def build(cls, columns: list[WrdColumn]) -> "_Layout":
+    def build(cls, columns: list[WrdColumn]) -> _Layout:
         fields: list[tuple[str, str, int]] = []
         strings: list[tuple[str, int]] = []
         offset = 0
@@ -344,7 +344,8 @@ def _run_dtype(layout: _Layout, shape: tuple[int, ...]) -> tuple[np.dtype, dict[
         string_index += 1
     itemsize = max(cursor, layout.fixed_size + sum(shape))
 
-    for name, length in zip((n for n, _ in layout.string_fields), shape):
+    for name, length in zip(
+            (n for n, _ in layout.string_fields), shape, strict=True):
         if length:
             names.append(name)
             formats.append(f"S{length}")
@@ -388,7 +389,7 @@ def _read_block(buf: bytes, offsets: list[int], shapes: list[tuple[int, ...]],
             else:
                 out[name][start:end] = values
         # A zero-length string column has no field in the record dtype.
-        for (name, _), length in zip(layout.string_fields, shape):
+        for (name, _), length in zip(layout.string_fields, shape, strict=True):
             if not length:
                 out[name][start:end] = ""
 

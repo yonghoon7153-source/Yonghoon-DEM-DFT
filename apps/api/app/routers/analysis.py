@@ -15,12 +15,18 @@ from wrdkit import Basis, basis_label, c_rate
 
 from ..db import get_session
 from ..deps import get_run, get_sample, resolved_cell_out, validate_basis
-from ..models import CycleRecord, Run, Sample
-from ..schemas import (CycleOut, CycleTableOut, ProfileOut, ProfileSeriesOut,
-                       ReportOut)
-from ..services import (build_cell_report, cycle_records, effective_basis,
-                        knee_payload, normalized, profile_series, resolve_cell,
-                        sample_cycle_records)
+from ..models import CycleRecord, Sample
+from ..schemas import CycleOut, CycleTableOut, ProfileOut, ProfileSeriesOut, ReportOut
+from ..services import (
+    build_cell_report,
+    cycle_records,
+    effective_basis,
+    knee_payload,
+    normalized,
+    profile_series,
+    resolve_cell,
+    sample_cycle_records,
+)
 from ..settings import settings
 
 router = APIRouter(prefix="/api", tags=["analysis"])

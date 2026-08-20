@@ -117,7 +117,7 @@ def _runs(values: np.ndarray) -> list[tuple[int, int]]:
         return []
     changes = np.flatnonzero(values[1:] != values[:-1]) + 1
     bounds = np.concatenate(([0], changes, [len(values)]))
-    return [(int(a), int(b)) for a, b in zip(bounds[:-1], bounds[1:])]
+    return [(int(a), int(b)) for a, b in zip(bounds[:-1], bounds[1:], strict=True)]
 
 
 def _mode_of(cell_status: np.ndarray, current: np.ndarray) -> str:
@@ -211,7 +211,7 @@ def summarize_cycles(wrd: WrdFile, *, cycle_offset: int = 0,
     for step in steps:
         by_cycle.setdefault(step.cycle_index, []).append(step)
 
-    for position, (start, stop) in enumerate(_runs(cycle_index)):
+    for start, stop in _runs(cycle_index):
         index = int(cycle_index[start])
         window = voltage[start:stop]
         cycle_steps = [s for s in by_cycle.get(index, []) if start <= s.start < stop]

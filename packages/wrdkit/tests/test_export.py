@@ -5,8 +5,15 @@ import io
 
 import pytest
 
-from wrdkit import (Basis, CellSpec, cycles_csv_string, extract_profile,
-                    profiles_csv_string, raw_csv_string, summarize_cycles)
+from wrdkit import (
+    Basis,
+    CellSpec,
+    cycles_csv_string,
+    extract_profile,
+    profiles_csv_string,
+    raw_csv_string,
+    summarize_cycles,
+)
 
 
 @pytest.fixture

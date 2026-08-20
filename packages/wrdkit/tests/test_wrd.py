@@ -3,8 +3,9 @@
 import numpy as np
 import pytest
 
-import synthetic
 from wrdkit import WrdError, read_wrd_bytes
+
+import synthetic
 
 
 def test_row_count_and_no_trailing_bytes(synthetic_wrd):

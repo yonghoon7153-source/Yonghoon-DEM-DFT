@@ -10,8 +10,8 @@ a mass is corrected, and no normalised number is ever persisted.
 from __future__ import annotations
 
 import math
+from collections.abc import Iterable
 from dataclasses import dataclass, field
-from typing import Iterable
 
 import numpy as np
 
@@ -92,7 +92,7 @@ class CellSpec:
             return self.composition.active_wt_percent
         return None
 
-    def resolve(self) -> "ResolvedCell":
+    def resolve(self) -> ResolvedCell:
         notes: dict[str, str] = {}
 
         mass_g: float | None = None

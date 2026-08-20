@@ -10,19 +10,37 @@
 | [0004](adr/0004-cycle-three-reference.md) | 기준 사이클은 3번 | formation 을 열화로 세지 않는다 |
 | [0005](adr/0005-multi-criterion-knee.md) | Knee 는 기준 하나로 정하지 않는다 | 4종 계산 + 근거 제시 |
 | [0006](adr/0006-frontend-stack.md) | React + TypeScript + uPlot | 대용량 곡선을 가볍게 |
+| [0007](adr/0007-electrode-composition.md) | 조성은 성분 목록으로 기록한다 | 활물질 wt% 의 출처를 남긴다 |
+| [0008](adr/0008-cell-state-weighted-evidence.md) | 구동중/종료는 가중 근거로 판정 | 근거를 함께 보여 준다 |
 
 파일명: `adr/0001-store-raw-capacity-only.md` · `adr/0002-own-wrd-parser.md` ·
 `adr/0003-timeseries-on-disk-summaries-in-db.md` ·
 `adr/0004-cycle-three-reference.md` · `adr/0005-multi-criterion-knee.md` ·
-`adr/0006-frontend-stack.md`
+`adr/0006-frontend-stack.md` · `adr/0007-electrode-composition.md` ·
+`adr/0008-cell-state-weighted-evidence.md`
 
 ## 스펙
 
 - [`raw/specs/wrd-binary-format.md`](raw/specs/wrd-binary-format.md) —
   `.wrd` 바이너리 포맷 전체 구조. 파서 구현의 근거.
 
-## 위키
+## 가이드
 
-아직 없음. `python3 tools/new_page.py <type> <slug>` 로 만든다.
+- [[extension-roadmap]] — 충방전 다음에 붙일 분석(dQ/dV, EIS, DRT)과 그 순서
 
-Total pages: 0
+## 에이전트 하네스
+
+`.claude/skills/` 6종 — 이 저장소에서 반복되는 작업의 절차:
+
+| 스킬 | 언제 |
+|---|---|
+| `electrochem-invariants` | 컬럼을 읽거나 용량을 계산하는 코드를 고치기 전 |
+| `adding-an-analysis` | 새 분석(EIS, DRT, dQ/dV)을 붙일 때 |
+| `extending-the-wrd-parser` | 파싱 실패나 처음 보는 enum 을 만났을 때 |
+| `verifying-against-a-real-file` | 숫자를 만드는 작업을 끝냈다고 말하기 전 |
+| `shared-branch-workflow` | 세션 시작, 커밋 전, push 거절 시 |
+| `preparing-for-review` | 외부 리뷰를 요청하기 전 |
+
+`.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
+
+Total pages: 1

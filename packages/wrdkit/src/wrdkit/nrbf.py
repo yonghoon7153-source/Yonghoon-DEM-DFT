@@ -220,7 +220,10 @@ class _Reader:
     def _class_values(self, obj: NrbfObject) -> None:
         info = obj.class_info
         types = info.member_types or [None] * len(info.members)
-        for name, member_type in zip(info.members, types):
+        # A mismatch means the member list and the type list disagree,
+        # i.e. a malformed stream; strict makes that an error rather than
+        # a silent truncation that shifts every following offset.
+        for name, member_type in zip(info.members, types, strict=True):
             if member_type is not None and member_type[0] == "primitive":
                 obj.members[name] = self.primitive(member_type[1])
             else:

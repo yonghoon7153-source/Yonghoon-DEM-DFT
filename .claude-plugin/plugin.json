@@ -1,0 +1,8 @@
+{
+  "name": "battery-lab-workbench",
+  "version": "0.1.0",
+  "description": "WonATech .wrd 배터리 데이터 워크벤치 — 파싱, 정규화, 열화 분석",
+  "skills": "./.claude/skills",
+  "commands": "./.claude/commands",
+  "hooks": "./.claude/settings.json"
+}

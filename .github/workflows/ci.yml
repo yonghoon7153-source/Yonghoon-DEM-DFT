@@ -1,0 +1,112 @@
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  python:
+    name: wrdkit + api
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ['3.10', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+
+      - name: Install
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e packages/wrdkit[dev]
+          pip install -r apps/api/requirements.txt httpx
+
+      - name: Tests
+        # The real-file checks skip without WRDKIT_SAMPLE; a 20 MB instrument
+        # file cannot live in the repository, so CI covers the synthetic
+        # fixture, which is written from the same spec.
+        run: python -m pytest
+        env:
+          PYTHONPATH: packages/wrdkit/src:apps/api
+
+      - name: Lint
+        run: |
+          pip install ruff
+          ruff check packages apps/api
+
+  web:
+    name: web
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npx vitest run
+      - run: npm run build
+
+  docs:
+    name: docs
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      # No dependencies: the linter is stdlib-only on purpose, so it runs
+      # anywhere the repository is checked out.
+      - run: python3 tools/wiki_lint.py
+
+  invariants:
+    name: repo invariants
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: No instrument data committed
+        run: |
+          if git ls-files | grep -E '\.(wrd|wis|cyc)$'; then
+            echo "::error::instrument files must not be committed (see .gitignore)"
+            exit 1
+          fi
+          if git ls-files data/ | grep -vE '\.gitkeep$'; then
+            echo "::error::data/ holds uploads and caches; nothing there belongs in git"
+            exit 1
+          fi
+
+      - name: wrdkit stays free of web and database imports
+        # The science core is used by the API, the CLI and the tests alike.
+        # An import of FastAPI or SQLModel here means a boundary moved.
+        run: |
+          if grep -rnE '^\s*(from|import)\s+(fastapi|sqlmodel|sqlalchemy|starlette)' \
+              packages/wrdkit/src; then
+            echo "::error::wrdkit must not depend on the web or database layer (ADR 0002)"
+            exit 1
+          fi
+
+      - name: No model identifiers in committed artifacts
+        run: |
+          if git ls-files -z | xargs -0 grep -lE 'claude-(opus|sonnet|haiku|fable)-[0-9]' 2>/dev/null; then
+            echo "::error::model identifiers do not belong in the repository"
+            exit 1
+          fi

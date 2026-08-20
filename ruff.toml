@@ -1,0 +1,32 @@
+# Lint configuration for the Python side.
+#
+# The rule set is deliberately small: correctness (E/F/W), import order (I),
+# modern syntax (UP), and the bugbear checks that catch real mistakes.  Style
+# beyond that is left to the reader — a linter that argues about formatting
+# gets silenced, and then it stops catching the bugs too.
+
+line-length = 96
+target-version = "py310"
+extend-exclude = [".venv", "node_modules", "apps/web"]
+
+[lint]
+select = ["E", "F", "W", "I", "UP", "B", "C4", "SIM"]
+ignore = [
+  "E501",    # long lines are caught by review, not by a counter
+  "B008",    # FastAPI's Depends()/Query() in defaults is the framework's idiom
+  "SIM108",  # a ternary is not always clearer than an if/else
+]
+
+[lint.per-file-ignores]
+# Tests read better with the assertion inline and the import order they use.
+"**/tests/**" = ["B011"]
+# The CLI's argparse wiring is long by nature.
+"packages/wrdkit/src/wrdkit/cli.py" = ["C901"]
+
+[lint.isort]
+known-first-party = ["wrdkit", "app"]
+# `synthetic` is a test fixture module imported by path, not a dependency.
+known-local-folder = ["synthetic"]
+
+[format]
+quote-style = "double"

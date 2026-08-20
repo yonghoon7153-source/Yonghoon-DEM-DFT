@@ -15,15 +15,27 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from fastapi.responses import Response, StreamingResponse
 from sqlmodel import Session
 
-from wrdkit import (Basis, WrdFile, cycles_csv_string, extract_profile,
-                    profiles_csv_string, raw_csv_string, write_xlsx)
+from wrdkit import (
+    Basis,
+    WrdFile,
+    cycles_csv_string,
+    extract_profile,
+    profiles_csv_string,
+    raw_csv_string,
+    write_xlsx,
+)
 
 from ..db import get_session
 from ..deps import get_run, get_sample, validate_basis
 from ..models import Sample
-from ..services import (_metadata_stub, _rebuild_steps, effective_basis,
-                        load_wrd_columns, records_to_summaries, resolve_cell,
-                        sample_cycle_records)
+from ..services import (
+    _metadata_stub,
+    _rebuild_steps,
+    load_wrd_columns,
+    records_to_summaries,
+    resolve_cell,
+    sample_cycle_records,
+)
 from .analysis import _parse_cycles
 
 router = APIRouter(prefix="/api/export", tags=["export"])

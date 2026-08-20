@@ -2,8 +2,9 @@
 
 import pytest
 
-import synthetic
 from wrdkit import extract_profile, read_wrd_bytes, segment_steps, summarize_cycles
+
+import synthetic
 
 
 def test_steps_split_on_the_instrument_step_counter(synthetic_wrd):

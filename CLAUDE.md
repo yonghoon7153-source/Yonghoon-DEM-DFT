@@ -31,6 +31,7 @@ packages/wrdkit/        순수 과학 코어 (numpy 만 의존, 웹/DB 무관)
   wrd.py                .wrd → 컬럼별 numpy 배열
   schedule.py           스케줄(스텝/컷오프/루프) 디코딩
   cycles.py             스텝·사이클 분할, 프로파일 추출
+  composition.py        전극 조성(AM:SE:도전재:바인더) 파싱과 활물질 wt%
   normalize.py          질량/면적/비용량 → mAh/g, mAh/cm², C-rate
   knee.py               용량 급감(knee) 검출 4종
   health.py             구동 중/종료 판정 + 대표 지표
@@ -39,6 +40,8 @@ packages/wrdkit/        순수 과학 코어 (numpy 만 의존, 웹/DB 무관)
 apps/api/               FastAPI — 업로드, 저장, 조회, 내보내기
 apps/web/               React + TypeScript + Vite — GUI
 docs/                   llm-wiki (SCHEMA/index/log) + ADR + 포맷 스펙
+.claude/skills/         반복 작업의 절차 6종 — 코드를 고치기 전에 해당 스킬을 읽는다
+.claude/commands/       /sync /check /wrap /adr /verify /status
 tools/                  wiki lint / status / new-page
 data/                   업로드 원본과 파싱 캐시 (git 에 올리지 않는다)
 ```
@@ -116,6 +119,9 @@ make sync && make check && git push
 - **`CELL STATUS`: 1=휴지, 3=충전, 4=방전.** 전류 부호와 일치함을 확인했다.
   스텝 분할은 `TOTAL STEP` (전역 스텝 카운터) 변화로 한다.
 - **평균 전압은 에너지 가중** (`E/Q`) 이다. 단순 산술평균이 아니다.
+- **활물질 wt% 는 조성에서 나온다.** mAh/g 의 분모는 전극 전체가 아니라 활물질
+  질량이다. 이름을 못 알아본 성분은 **절대 활물질로 분류하지 않는다** — 분모에
+  조용히 들어가기 때문이다. 0 wt% 성분은 지우지 말고 기록으로 남긴다.
 - **기준 사이클은 3번**이다. 1~2번은 formation 이라 몇 % 는 설계상 잃는다.
   용량 유지율과 "초기 쿨롱효율" 은 기본적으로 3번 사이클 기준으로 계산한다.
   knee 탐색도 3번부터 시작한다 — formation 손실을 열화로 세면 안 된다.

@@ -14,17 +14,33 @@ Typical use::
 
 from .composition import PRESETS, Component, Composition, Role, parse_composition
 from .cycles import (
-    CycleSummary, Profile, StepSegment, extract_profile, segment_steps,
+    CycleSummary,
+    Profile,
+    StepSegment,
+    extract_profile,
+    segment_steps,
     summarize_cycles,
 )
 from .downsample import lttb, lttb_indices
 from .export import (
-    cycles_csv_string, profiles_csv_string, raw_csv_string, write_cycles_csv,
-    write_profiles_csv, write_raw_csv, write_xlsx,
+    cycles_csv_string,
+    profiles_csv_string,
+    raw_csv_string,
+    write_cycles_csv,
+    write_profiles_csv,
+    write_raw_csv,
+    write_xlsx,
 )
 from .normalize import (
-    BASES, Basis, CellSpec, ResolvedCell, areal_loading, basis_label, c_rate,
-    normalize_capacity, retention,
+    BASES,
+    Basis,
+    CellSpec,
+    ResolvedCell,
+    areal_loading,
+    basis_label,
+    c_rate,
+    normalize_capacity,
+    retention,
 )
 from .nrbf import NrbfError
 from .schedule import Schedule, ScheduleStep

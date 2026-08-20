@@ -4,8 +4,9 @@ import csv
 
 import pytest
 
-import synthetic
 from wrdkit.cli import main
+
+import synthetic
 
 
 @pytest.fixture

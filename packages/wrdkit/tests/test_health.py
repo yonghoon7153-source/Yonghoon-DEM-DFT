@@ -4,9 +4,10 @@ from datetime import datetime, timedelta
 
 import pytest
 
-import synthetic
 from wrdkit import read_wrd_bytes, summarize_cycles
 from wrdkit.health import CellState, build_report
+
+import synthetic
 
 
 def _cycles(n_cycles=8, truncate=False):

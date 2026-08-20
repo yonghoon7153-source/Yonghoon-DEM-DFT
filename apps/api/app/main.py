@@ -25,6 +25,7 @@ from .routers import analysis, exports, groups, runs, samples  # noqa: E402
 from .schemas import basis_choices  # noqa: E402
 from .settings import settings  # noqa: E402
 
+
 @asynccontextmanager
 async def lifespan(_app: FastAPI):
     init_db()

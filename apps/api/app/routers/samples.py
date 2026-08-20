@@ -130,9 +130,9 @@ def update_sample(sample_id: int, payload: SampleUpdate,
                                 exclude={"clear", "composition", "composition_text"})
     if "declared_state" in values and values["declared_state"] not in VALID_STATES:
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
-    if "reference_cycle" in values and values["reference_cycle"] is not None:
-        if values["reference_cycle"] < 1:
-            raise HTTPException(422, "reference_cycle must be 1 or greater")
+    reference = values.get("reference_cycle")
+    if reference is not None and reference < 1:
+        raise HTTPException(422, "reference_cycle must be 1 or greater")
     for key, value in values.items():
         setattr(sample, key, value)
     # Clearing happens first so a request that drops a hand-typed wt% and

@@ -158,7 +158,7 @@ class Composition:
             issues.append("a component name is repeated")
         return issues
 
-    def normalized(self) -> "Composition":
+    def normalized(self) -> Composition:
         """Rescale to 100 % -- for when a notebook records parts, not percent.
 
         Zero-weight components stay at zero and stay in the list.
@@ -191,7 +191,7 @@ class Composition:
         return [asdict(c) for c in self.components]
 
     @classmethod
-    def from_json(cls, payload) -> "Composition":
+    def from_json(cls, payload) -> Composition:
         if not payload:
             return cls()
         components = []
@@ -252,7 +252,7 @@ def parse_composition(text: str) -> Composition:
         if len(names) == len(ratios):
             return Composition([
                 Component(name, ratio, infer_role(name))
-                for name, ratio in zip(names, ratios)
+                for name, ratio in zip(names, ratios, strict=True)
             ])
         if len(names) == 1 and len(ratios) > 1:
             # "cathode = 80:17:3" -- one label for the whole blend.
