@@ -46,7 +46,12 @@ _GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                #  ★ fable 리뷰 ② F4 (2026-08-19) — CL-56 축.  SDCP E 23.6 ↔ 9.0 침대가
                #    섞여도 여태 게이트가 못 봤다.  dict 는 그대로 비교된다 (json 왕복 후
                #    같은 dict 면 ==; 다르면 아래 "다르면 HOLD" 가 발화).
-               'additive_E_GPa')
+               'additive_E_GPa',
+               #  ★★ CDXIJ-10 ③ (2026-08-20) — 입력 artifact 내용 해시와 코드 커밋.
+               #    같은 디렉터리라는 것은 같은 입력·같은 코드의 증거가 아니다 (Codex CDX-IJ-02).
+               #    ⚠ 세대 필드로 둔다 = **섞이면 HOLD**, 전부 없으면(옛 런) 통과.
+               #      존재 자체를 요구하려면 `--require-digest` (도핑 트랙이 쓴다).
+               'input_digest', 'code_sha')
 
 #  ⚠ `mpm_seed` 는 **팔마다 달라야 하는 축이 될 수도 있다** (코팅처럼 시딩 자체가 확률적인
 #  경우 = seed 앙상블).  현행 origin 앙상블은 같은 압밀 산물을 재사용하므로 seed 가 고정이고,
@@ -159,7 +164,8 @@ def _stats(vals):
     return {'n': n, 'mean': m, 'sd': sd, 'se': sd / math.sqrt(n)}
 
 
-def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False):
+def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
+            require_digest=False):
     """prereg §5 판정.  **순서를 바꾸지 말 것.**
 
     `seed_ensemble=True` 는 **`mpm_seed` 하나만** 고정 인자에서 면제한다 (코팅처럼 시딩
@@ -279,6 +285,24 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False):
                     reason=f'사전등록은 침대당 정확히 {int(require_arms)} origin 을 요구한다 — '
                            f'받은 것은 {len(_org["SBE"])}개 (CDXIJ-10 ①)')
     out['n_origin'] = len(_org['SBE'])
+
+    #  ★ CDXIJ-10 ③ — `require_digest` 면 **입력 digest·code SHA 가 있어야** 한다.
+    #    기본은 끔 (옛 격자 팔 호환).  도핑 트랙은 켠다 — 그 실험의 전제가
+    #    "pair 간 σ_ion 만 달랐다" 이고, 그것은 digest 없이는 확인할 수 없다.
+    if require_digest:
+        for _f in ('input_digest', 'code_sha'):
+            _nd = [r['file'] for k in arms for r in arms[k] if not r.get(_f)]
+            if _nd:
+                return dict(out, decision='HOLD',
+                            reason=f'`{_f}` 가 없는 팔 {len(_nd)}개 ({_nd[0]} …) — 같은 '
+                                   f'디렉터리는 같은 입력·같은 코드의 증거가 아니다 '
+                                   f'(CDXIJ-10 ③).  현행 payload 로 다시 돌릴 것')
+        _dirty = [r['file'] for k in arms for r in arms[k]
+                  if str(r.get('code_sha') or '').endswith('+dirty')]
+        if _dirty:
+            return dict(out, decision='HOLD',
+                        reason=f'커밋 안 된 코드로 돈 팔 {len(_dirty)}개 ({_dirty[0]} …) — '
+                               f'`code_sha` 가 `+dirty` 다.  재현 불가한 런은 판정 대상이 아니다')
 
     #  ★ 결과 seal (CDXIJ-10 ④) — `require_ionic` 이면 σ_ion 이 실제로 있어야 한다.
     #    도핑 트랙은 이온축이 결론이므로 `--no-ion`(LEAN=2) 산출물로 판정하면 안 된다.
@@ -658,6 +682,35 @@ def _selftest():
     chk(f'㉕e ★ --require-ionic 인데 σ_ion 이 없으면 HOLD ({_v25e["decision"]})',
         _v25e['decision'] == 'HOLD' and 'σ_ion' in (_v25e.get('reason') or ''))
 
+    #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
+    _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
+    _c6 = mk(base, [v * 1.12 for v in base], **_dig)
+    chk(f'㉖a digest 가 같으면 통과 ({verdict(_c6, require_digest=True)["decision"]})',
+        verdict(_c6, require_digest=True)['decision'] in ('h0', 'h1', 'BOTH_REJECTED'))
+    _c6b = mk(base, [v * 1.12 for v in base], **_dig)
+    for _r in _c6b['DBE']:
+        _r['input_digest'] = 'ffffffffffffffff'      # 다른 침대를 몰래 넣은 경우
+    _v26b = verdict(_c6b)
+    chk(f'㉖b ★ 입력 digest 가 팔마다 다르면 HOLD (다른 침대) ({_v26b["decision"]})',
+        _v26b['decision'] == 'HOLD' and 'input_digest' in (_v26b.get('reason') or ''))
+    _c6c = mk(base, [v * 1.12 for v in base], **_dig)
+    for _r in _c6c['SBE']:
+        _r['code_sha'] = 'deadbee'                   # 다른 코드로 돈 팔
+    _v26c = verdict(_c6c)
+    chk(f'㉖c ★ code SHA 가 다르면 HOLD ({_v26c["decision"]})',
+        _v26c['decision'] == 'HOLD' and 'code_sha' in (_v26c.get('reason') or ''))
+    _v26d = verdict(mk(base, [v * 1.12 for v in base]), require_digest=True)
+    chk(f'㉖d ★ --require-digest 인데 기록이 없으면 HOLD (옛 payload) ({_v26d["decision"]})',
+        _v26d['decision'] == 'HOLD' and 'input_digest' in (_v26d.get('reason') or ''))
+    _c6e = mk(base, [v * 1.12 for v in base], input_digest='abc123def4567890',
+              code_sha='1da6cbd+dirty')
+    _v26e = verdict(_c6e, require_digest=True)
+    chk(f'㉖e ★ 커밋 안 된 코드(+dirty)로 돈 런은 HOLD ({_v26e["decision"]})',
+        _v26e['decision'] == 'HOLD' and 'dirty' in (_v26e.get('reason') or ''))
+    #  ㉖f 음성 대조 — 옛 격자 팔(전부 없음)은 **기본 모드에서 통과해야** 한다.
+    chk('㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)',
+        verdict(mk(base, [v * 1.12 for v in base]))['decision'] == 'h0')
+
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -678,6 +731,9 @@ if __name__ == '__main__':
     #    **이온 산출물**을 명시적으로 강제한다.  기본은 끔 (진단 팔·1팔 프로브 호환).
     ap.add_argument('--require-arms', type=int, default=None,
                     help='침대당 정확히 N origin 을 요구한다 (사전등록 8팔 factorial: 8)')
+    ap.add_argument('--require-digest', action='store_true',
+                    help='입력 artifact digest 와 code SHA 가 모든 팔에 있어야 한다 '
+                         '(도핑 트랙 — "σ_ion 만 바꿨다" 의 유일한 기계 증거)')
     ap.add_argument('--require-ionic', action='store_true',
                     help='σ_ion 이 모든 팔에 있어야 한다 (도핑 트랙 — 이온축이 결론)')
     a = ap.parse_args()
@@ -695,7 +751,8 @@ if __name__ == '__main__':
         print('  (--collect-only — 판정하지 않는다)')
         raise SystemExit(0)
     v = verdict(arms, seed_ensemble=a.seed_ensemble,
-                require_arms=a.require_arms, require_ionic=a.require_ionic)
+                require_arms=a.require_arms, require_ionic=a.require_ionic,
+                require_digest=a.require_digest)
     print(f'\n══ 판정 (prereg §5) ══\n  결정: **{v["decision"]}**\n  근거: {v["reason"]}')
     if 'ratio' in v:
         print(f'  σ_e 비 = {v["ratio"]}   (h0 ≥ {H0_MIN_RATIO} · h1 = {H1_RATIO})')

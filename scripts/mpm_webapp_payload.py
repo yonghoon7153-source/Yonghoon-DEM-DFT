@@ -358,6 +358,48 @@ def _selftest_temperature():
 
 
 
+
+def _sha256_file(path, _chunk=1 << 22):
+    """파일 내용의 sha256 (앞 16 hex).  없거나 못 읽으면 None.
+
+    ★ 2026-08-20 (Codex CDX-IJ-02 → CDXIJ-10 ③) — "pair 간 σ_ion 만 바뀌었다" 를 기계가
+      확인하려면 **입력이 같다** 는 증거가 있어야 한다.  경로·크기·mtime 은 증거가 아니다
+      (같은 이름으로 다른 침대를 놓을 수 있다) — 내용 해시여야 한다.
+    ⚠ 비용: se_dump.npy 가 1~2 GB 라 팔당 수 초.  8팔이면 수십 초 — 솔브(수천 초) 앞에서
+      무시 가능하고, 그 대가로 침대 바뀜이 **조용히** 지나가지 않는다.
+    """
+    import hashlib as _hl
+    if not path or not _os.path.exists(path):
+        return None
+    try:
+        h = _hl.sha256()
+        with open(path, 'rb') as f:
+            for blk in iter(lambda: f.read(_chunk), b''):
+                h.update(blk)
+        return h.hexdigest()[:16]
+    except OSError:
+        return None
+
+
+def _code_sha(script_dir):
+    """이 코드가 어느 커밋인가 (+ dirty 여부).  git 이 없으면 None.
+
+    ⚠ dirty 면 `<sha>+dirty` — 커밋 안 된 수정으로 돈 런은 재현 불가임을 **드러낸다**.
+    """
+    import subprocess as _sp
+    try:
+        sha = _sp.run(['git', '-C', script_dir, 'rev-parse', '--short', 'HEAD'],
+                      capture_output=True, text=True, timeout=10)
+        if sha.returncode != 0:
+            return None
+        st = _sp.run(['git', '-C', script_dir, 'status', '--porcelain'],
+                     capture_output=True, text=True, timeout=20)
+        dirty = bool((st.stdout or '').strip())
+        return sha.stdout.strip() + ('+dirty' if dirty else '')
+    except Exception:                                          # noqa: BLE001
+        return None
+
+
 def _mflt(v):
     """metrics 값 → float, 없으면 None.  ★ 0.0 을 None 으로 만들면 안 되므로 `or` 금지."""
     return None if v is None else float(v)
@@ -894,6 +936,22 @@ def main():
 
     # ★ SR-01: 섬유 id 를 STEP3 **전에** 읽는다 (뷰어용 로드는 훨씬 뒤라 그때는 늦다).
     #   킷 run_mpm.sh 가 이미 --save-fibre 로 저장하므로 배선만 하면 된다.
+    #  ★ CDXIJ-10 ③ — 입력 digest 는 **읽기 직후** 계산한다 (솔브 실패해도 남게).
+    _in_files = {}
+    for _k, _v in (('scaffold', a.scaffold), ('se', a.se), ('phase', a.phase),
+                   ('fibre', getattr(a, 'fibre', '')), ('metrics_json', a.metrics_json),
+                   ('fibre_dia', getattr(a, 'fibre_dia', ''))):
+        _h = _sha256_file(_v) if _v else None
+        if _h:
+            _in_files[_k] = _h
+    _in_dig = None
+    if _in_files:
+        import hashlib as _hl2
+        _in_dig = _hl2.sha256(
+            '|'.join(f'{k}={_in_files[k]}' for k in sorted(_in_files)).encode()
+        ).hexdigest()[:16]
+        print(f'  입력 digest {_in_dig} ({len(_in_files)} 파일) — CDXIJ-10 ③', flush=True)
+
     _fid_all = None
     _afid = None          # STEP3 가 안 돌아도 manifest 가 참조하므로 바깥에서 초기화
     # ⚠⚠ `_kind_all` 도 **반드시 여기서** 초기화한다 (2026-08-20 실사고, 규칙 J).
@@ -1874,6 +1932,13 @@ def main():
             #    구분 못 하는 것 = `backend` 사고와 같은 범주 혼동).
             #    rasterize 의 기본은 `1.2·vox` (`step3_sigma.py` `_ball(... 1.2*vox if bridge_um is None ...)`)
             #    이므로 그 값을 적으면 매니페스트가 **실제로 쓴 반경**을 말하게 된다.
+            #  ★★ CDXIJ-10 ③ (2026-08-20) — **입력 artifact digest + code SHA**.
+            #    "pair 간 σ_ion 만 바꿨다" 를 기계가 확인하려면 입력이 같다는 증거가 필요하다.
+            #    경로·크기·mtime 은 증거가 아니다 (같은 이름으로 다른 침대를 놓을 수 있다).
+            #    ⇒ 실제로 읽은 파일들의 내용 해시를 정렬해 하나로 접는다.
+            'input_digest': _in_dig,
+            'input_files': _in_files,
+            'code_sha': _code_sha(_os.path.dirname(_os.path.abspath(__file__))),
             'bridge_um': float(_bru) if _bru is not None else 1.2 * float(a.step3_vox),
             'bridge_um_explicit': _bru is not None,   # 고정 지시였나 vs 기본값이었나 (구분 보존)
             'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
