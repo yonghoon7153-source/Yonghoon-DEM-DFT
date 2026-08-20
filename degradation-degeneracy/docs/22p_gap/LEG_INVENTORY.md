@@ -443,3 +443,69 @@ python3 docs/22p_gap/leg_probe.py | grep -E '^leg|404'
 
 **주의**: `results/fit_22p_seed_404_hc_nowarm` 은 새 이름이다. 기존
 `fit_22p_seed_404_hc` 를 덮어쓰지 않는다 — 대조가 사라지면 시험이 무의미해진다.
+
+
+## 16.1 첫 시도가 fail-closed 로 막혔다 — 그리고 그게 옳았다
+
+위 명령을 그대로 돌리니 두 다리 모두 fitting 진입 전에 거부됐다:
+
+```
+RuntimeError: half-cell 캐시 검증 실패 (F74):
+  · 코드_identity: 실패 — meta c2e7d8b9fd11b54e ≠ 현재 a72c0f3a485c19bb
+  · 코드_identity: 실패 — meta d842894dbbc2a0f9 ≠ 현재 a72c0f3a485c19bb
+```
+
+디스크의 half-cell 캐시가 **옛 digest 로 만들어졌다.** validator 는 캐시 생성
+이후 코드가 바뀌면 거부한다 — 조용히 옛 배열로 계산하지 않는다.
+
+### 이것이 드러낸 것 (리뷰 발견 14 의 실례)
+
+**기존 22p 다리는 현재 코드에서 재실행할 수 없다.** 캐시를 먼저 재생성해야
+하는데, §9 재현 절에 그 단계가 없다. 재현 명령을 그대로 따라 하면 여기서
+막힌다. 왜곡 다리의 재현 명령이 §9 에 아예 없다는 것도 같은 구멍이다.
+
+### 재생성이 물리를 바꾸는가 — git 으로 먼저 확인했다
+
+`d842894`(8ce869f0) → `a72c0f3a`(HEAD) 사이 RUN_SCOPE 변경은 **두 개뿐**이다:
+
+```
+src/fitting.py                    +9    ← p_ini_cond 봉인 (provenance 전용)
+tools/diagnose_pini_transition.py +159  ← 새 진단 도구
+```
+
+캐시를 만드는 코드는 **전부 불변**이다 — `src/halfcell.py` · `src/baseline.py` ·
+`src/model.py` · `configs/base.yaml` 모두 변경 없음. `fitting.py` 의 9줄도
+`p_ini_cond = ref_id` 를 `run_spec` 에 기록하는 것뿐이라 수치 경로를 안 건드린다.
+
+**따라서 재생성해도 배열은 같아야 하고, 새 다리는 기존 24다리와 수치적으로
+비교 가능하다.** 단 이것은 git diff 근거이고, runtime(numpy·scipy) 이 그 사이
+바뀌었다면 배열이 달라질 수 있다 — 그래서 아래 A 단계로 **먼저 확인**한다.
+
+### 고친 순서
+
+```bash
+cd ~/work/Yonghoon-DEM-DFT/degradation-degeneracy
+
+# A. 비파괴 진단 — 캐시를 덮어쓰지 않고 "배열이 같은가" 만 본다
+python -m src.halfcell --method ocp --verify
+python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
+```
+
+둘 다 **exit 1 로 끝나는 것이 정상**이다 (`코드_identity` 실패). 볼 것은 JSON 의
+한 줄뿐이다:
+
+| 출력 | 뜻 | 다음 |
+|---|---|---|
+| `"재생성_배열일치": true` | 배열 동일 — 코드 도장만 낡았다 | B 로 진행 |
+| `"재생성_배열일치": false` | **배열이 달라졌다** | **멈춘다.** runtime 이 물리를 바꿨다는 뜻이고, 기존 24다리 전체의 재현성이 걸린 문제다 |
+
+```bash
+# B. 도장 갱신 (A 가 true 일 때만)
+python -m src.halfcell --method ocp --force --verify
+python -m src.halfcell --method ocpbias --pe-offset-mv 5 --force --verify
+
+# C. §16 의 (1)~(4) 를 그대로 다시
+```
+
+`--force` 는 캐시를 덮어쓰지만 기존 다리는 안전하다 — 각 다리가 자기 캐시
+바이트를 `_inputs/` 에 content-addressed 로 봉인해 두었다 (F72).
