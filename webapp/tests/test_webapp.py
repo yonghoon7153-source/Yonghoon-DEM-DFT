@@ -182,6 +182,46 @@ def test_governance_graph_has_no_dangling_edges():
     assert corr and all(c["supersedes_assessment_id"] in book for c in corr)
 
 
+def test_artifact_ledger_keeps_verdicts_in_the_ledger():
+    """산출물 판정이 **원장 안에** 있는지 — 파일명·기억에 있으면 실패.
+
+    ⛔ 2026-08-20 실측 배경: comp1 2x2x2 궤적(761 MB)이 밴됐는데 그 판정이
+       `ToBeDelete_` **파일명 접두사와 사람 기억에만** 있었다. kb 검색으로 사유가 안 나왔다.
+       같은 날 F9(궤적 미보존)·요청10(ELF 가 gabia 에만)·gap 실행본 부재까지
+       **같은 유형이 다섯 번** 났다 — 산출물은 있는데 지위가 기계 경로 밖에 있었다.
+    """
+    art = C.artifacts()
+    assert art, "산출물 원장이 비었다"
+
+    assert C.validate_artifacts() == [], "산출물 원장에 무결성 위반이 있다"
+
+    # ① 밴은 사유와 해제조건이 원장 안에 있어야 한다
+    for a in art.values():
+        if a.get("status") == "suspect_banned":
+            assert a.get("ban_evidence"), f"{a['id']}: 밴 사유가 원장 밖에 있다"
+            assert a.get("unban_condition"), f"{a['id']}: 해제조건이 없다 (영구 보류가 된다)"
+
+    # ② canonical 유일본은 이중화 대상으로 표시돼야 한다 (백업이 유일본인 상황)
+    solo = [a for a in art.values()
+            if a.get("status") == "canonical" and a.get("copies") == 1]
+    assert solo, "canonical 유일본이 하나도 없다 — 원장이 현실과 다르다"
+    for a in solo:
+        assert a.get("needs_duplication") is True, f"{a['id']}: 유일본인데 이중화 표시가 없다"
+
+    # ③ repo 밖 산출물은 검증 수준을 밝혀야 한다 (위치만? 내용까지? 해시?)
+    for a in art.values():
+        if (a.get("location") or {}).get("kind") in ("offline_backup", "server"):
+            assert (a.get("verified") or {}).get("level"), \
+                f"{a['id']}: repo 밖인데 verified.level 이 없다"
+
+    # ④ lost 는 수색이 끝났음을 밝혀야 한다 (다시 찾지 않도록)
+    for a in art.values():
+        if a.get("status") == "lost":
+            assert a.get("copies") in (0, None)
+            assert (a.get("verified") or {}).get("level") == "search_exhausted", \
+                f"{a['id']}: lost 인데 수색 종료 표시가 없다 — 같은 곳을 또 뒤지게 된다"
+
+
 def test_lineage_axes_are_independent():
     """재현 가능성과 배선 여부는 **독립 축**이다 (codex R4).
 

@@ -1,0 +1,162 @@
+{
+ "schema": "governance/artifacts v1",
+ "_purpose": "**repo 밖 원자료의 기계 가독 원장.** kb 카드는 사람용 설명이고 이 파일이 실행 경로가 읽는 것이다. 2026-08-20 에 하루 동안 같은 사고가 다섯 번 났다 — 산출물은 있는데 그 위치·지위·판정이 기계 경로 밖(사람 기억·파일명·다른 서버)에 있어서 매번 다시 찾아야 했다.",
+ "_why_this_exists": [
+  "F9  highT_reseed 궤적 미보존 — 결함 기록이 다른 러너 주석에만 있었다",
+  "요청10 ELF 산출물이 gabia 에만 있었다 — CSV 헤더에만 적혀 있었다",
+  "gap comp1·modelc 실행본 부재 + 방법 의심 — 출력이 0 바이트라 확인 불가",
+  "comp1 2x2x2 밴 판정이 **파일명 접두사(ToBeDelete_)와 사람 기억에만** 있었다",
+  "KISTI 원본 소실 — 백업이 유일본이 됐는데 그 사실이 어디에도 없었다"
+ ],
+ "_rules": [
+  "location.kind: repo | offline_backup | server. repo 밖이면 **CI 가 검증하지 못한다** — 그 사실을 status 에 남긴다.",
+  "status: canonical | reference | suspect_banned | superseded | lost. **모르면 suspect 로 둔다** (fail-closed).",
+  "★ 판정은 **파일명이나 사람 기억에 두지 않는다.** ToBeDelete_ 같은 접두사는 판정이 아니라 흔적이다 — 여기 적어야 판정이다.",
+  "copies: 1 이면 유일본이다. 유일본 + status=canonical 이면 **이중화 대상**으로 표시한다.",
+  "verified: 위치·크기만 봤는지, 내용까지 봤는지, 해시를 쟀는지를 구분한다.",
+  "⛔ 이 원장은 **백업이 아니다.** 어디에 있는지를 적을 뿐이고, 매체가 죽으면 내용은 사라진다."
+ ],
+ "_history": {
+  "2026-08-20a": "신설. 오프라인 백업 2벌 + kgy + gabia 전수조사 결과를 기계 가독으로 옮겼다. 사람용 서술은 kb/methodology/offline_archive_index_2026_08_20.md."
+ },
+ "artifacts": [
+  {
+   "id": "A-b2o3-elf-cube",
+   "what": "b2o3 ELF cube (VESTA·평면 재렌더용)",
+   "location": {"kind": "offline_backup", "medium": "T7 Shield (D:) 외장 SSD",
+                "path": "/mnt/d/v100/kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/b2o3_elf.cube",
+                "size_bytes": 116497406},
+   "status": "canonical",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["docs/figures/paper/elf_plane_b2o3_{BS3,PS4,PS2O2,PO}.png",
+                 "db/properties/b2o3_elf_bonds.csv"],
+   "note": "kb/results/b2o3_elf_covalency_2026_07_02.md 가 'cube KISTI, 커밋X' 라 적어둔 그것. 같은 폴더에 b2o3_cdd/rho_scf/rho_atomic/chg cube 와 Bader BvAt0074-0128 (55개).",
+   "verified": {"level": "location_size", "date": "2026-08-20", "hash": null}
+  },
+  {
+   "id": "A-b2o3-gap-run",
+   "what": "b2o3 fixed-occ nscf 실행본 (gap 1.9671 의 출처)",
+   "location": {"kind": "offline_backup", "medium": "T7 Shield (D:)",
+                "path": ".../kgy_b2o3_eos_2026-07-14/b2o3_eos/b2o3_nscf_gap.{in,out}"},
+   "status": "canonical",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/properties/canonical_registry.json → gap_eV/b2o3",
+                 "db/properties/electronic.json"],
+   "verified": {"level": "content", "date": "2026-08-20",
+                "evidence": "occupations='fixed' · calculation='nscf' · nbnd=388 · K_POINTS 7 7 1; .out 이 'highest occupied, lowest unoccupied level (ev): 2.4717 4.4388' 을 찍는다 (정본 일치)"}
+  },
+  {
+   "id": "A-lpsocl-gap-run",
+   "what": "LPSOCl fixed-occ nscf 실행본 (gap 2.2309 의 출처)",
+   "location": {"kind": "server", "host": "kgy",
+                "path": "~/work/lpsocl_v0/03b_nscf_gap.{in,out}"},
+   "status": "canonical",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/properties/canonical_registry.json → gap_eV/lpsocl"],
+   "verified": {"level": "content", "date": "2026-08-20",
+                "evidence": "occupations='fixed' nscf; .out 이 VBM 2.3870 / CBM 4.6179 를 찍는다 (정본 일치)"}
+  },
+  {
+   "id": "A-comp1-modelc-gap-run",
+   "what": "comp1·modelc gap 실행본",
+   "location": {"kind": "lost"},
+   "status": "lost",
+   "copies": 0,
+   "consumers": ["db/properties/canonical_registry.json → gap_eV/comp1 · gap_eV/modelc"],
+   "note": "⛔ 백업 2벌 + kgy + gabia **3중 수색 실패**. 같은 조사에서 b2o3·lpsocl 은 찾았으므로 수색 방법 자체는 유효했다. KISTI 원본도 없다. ⚠ 더 나쁜 것: 백업의 {comp1,modelc}_nscf.in 이 occupations='tetrahedra_opt' 이고 짝 출력이 0 바이트다 — **방법 불일치 의심**(canonical_registry 의 method_integrity_flag 참조). 유일한 해소책은 fixed-occ nscf 재계산.",
+   "verified": {"level": "search_exhausted", "date": "2026-08-20"}
+  },
+  {
+   "id": "A-comp1-supercell-md",
+   "what": "comp1 MD 궤적 세트 — 1x1x1(52원자) + 2x2x2(416원자), 600/800/1000 K, 2500 프레임",
+   "location": {"kind": "offline_backup", "medium": "T7 Shield (D:)",
+                "path": "/mnt/d/v100/kisti_backup_2026-07-14/kgy_md_results_2026-07-14/md_results/ToBeDelete_md_*K{,_v2}.{xyz,traj}",
+                "size_bytes": 798000000},
+   "status": "suspect_banned",
+   "copies": 1,
+   "needs_duplication": false,
+   "ban_evidence": {
+     "source": "1저자 증언 (2026-08-20): 'comp1 2x2x2 는 값이 이상해서 밴했던 것 같다'",
+     "filename_marker": "ToBeDelete_ 접두사",
+     "kb_record": null,
+     "⛔": "**밴 사유가 kb 어디에도 없다.** 판정이 파일명과 사람 기억에만 있었다 — 이 원장이 존재하는 이유가 바로 이것이다."
+   },
+   "unban_condition": "밴 사유를 찾거나 재판정한다. MSD 사이드카(ToBeDelete_msd_*K{,_v2}.dat, 'T=800K D=2.332e-05 cm2/s R2=0.9884')를 db 의 comp1 값과 대조하면 '이상한지' 가 갈린다.",
+   "if_unbanned_would_enable": [
+     "codex_A A-R4 의 '416원자 1런' 궤적 실물",
+     "셀 크기 효과 직접 비교 (같은 계·같은 온도·다른 셀)",
+     "comp1 골격(비-Li) 게이트 — Li β 0.17-0.79 로 떨어진 계인데 골격은 미측정"
+   ],
+   "verified": {"level": "content", "date": "2026-08-20",
+                "evidence": "원자 수 52 / 416, Lattice a = 10.12 / 20.24 Å 로 계·셀 확정"}
+  },
+  {
+   "id": "A-aimd-trajectories",
+   "what": "AIMD 궤적 — comp1_v3/aimd_5fu + modelC_v3/aimd, 각 600/800/1000 K",
+   "location": {"kind": "offline_backup", "medium": "T7 Shield (D:)",
+                "path": "/mnt/d/v100, kisti 백업/runs/{comp1_v3/aimd_5fu,modelC_v3/aimd}/T*/traj.{xyz,traj}"},
+   "status": "reference",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/properties/modelc_pmf_*_T600_origin.csv (traj.traj, 1000 frames)"],
+   "note": "T*_short_12ps 판이 따로 있다 — 문헌의 '20 ps AIMD' 와 같은 체급이고, 우리가 그 길이로도 돌려봤다는 기록이다. ⚠ T800K_seed1_fluke 는 이름이 판정을 담고 있다 — 인용 전 사유 확인.",
+   "verified": {"level": "location_size", "date": "2026-08-20", "hash": null}
+  },
+  {
+   "id": "A-lobster-bader",
+   "what": "LOBSTER (COHPCAR/COOPCAR/COBICAR/bandOverlaps) + Bader BCF.dat",
+   "location": {"kind": "offline_backup", "medium": "T7 Shield (D:)",
+                "path": "/mnt/d/v100, kisti 백업/runs/{modelC_v3,comp1_v3/v3_post/k444_props}/lobster_ext/"},
+   "status": "canonical",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/properties/bonds.json (modelc ICOHP -5.9997)"],
+   "verified": {"level": "location_size", "date": "2026-08-20", "hash": null}
+  },
+  {
+   "id": "A-highT-reseed-traj",
+   "what": "b2o3·modelc high-T reseed 궤적 (800/1000 K × s2/s3/s4 = 12런)",
+   "location": {"kind": "lost"},
+   "status": "lost",
+   "copies": 0,
+   "consumers": ["db/governance/assessments.json → A-2026-08-20-b2o3-framework-current (not_assessed 의 원인)"],
+   "note": "⛔ run_highT_reseed.sh 가 --save_traj 를 안 넘겨 애초에 안 만들어졌다 (F9). 백업 2벌 + kgy + gabia 전수 확인. **2026-08-20 재실행 중** (kgy b2o3 6런 · gabia modelc 6런, --save_traj 켬).",
+   "false_positives_checked": [
+     "kgy ~/work/runs/{iface_roll,interface_campaign}/*_traj.xyz — 계면 캠페인",
+     "kgy ~/work/Yonghoon-DEM-DFT/{b2o3,modelc}_traj.xyz — 슬랩(160/94원자, c축 87/58 Å, move_mask)",
+     "kgy {lpsocl_600_long,mto_pilot}/**/T{500,700,900} — 다른 온도",
+     "gabia /root/work/committee_modelc_T*/snapshots.xyz — committee 스냅숏",
+     "백업 md_results/ToBeDelete_md_* — comp1 (52/416원자)"
+   ],
+   "verified": {"level": "search_exhausted", "date": "2026-08-20"}
+  },
+  {
+   "id": "A-b2o3-full-legacy-traj",
+   "what": "b2o3_full / modelc_full 궤적 (single-seed legacy, 800·1000 K)",
+   "location": {"kind": "server", "host": "gabia",
+                "path": "/data/work/b2o3md/{b2o3_full,modelc_full}/d0.00_cfg0/T{800,1000}/traj.xyz"},
+   "status": "reference",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/governance/assessments.json → A-2026-08-20-b2o3-framework-legacy (β 0.59/0.63 의 출처)"],
+   "note": "⚠ 이 궤적의 β 를 3-seed reseed Ea 0.199 에 붙인 것이 F4(계보 오류)였다. **다른 run family 다.** single-seed 항목(MD_Ea_eV_singleseed)과는 같은 계열일 가능성이 높으나 해시 미확인.",
+   "verified": {"level": "location", "date": "2026-08-20"}
+  },
+  {
+   "id": "A-b2o3-600-reseed-traj",
+   "what": "b2o3 600 K 3-seed reseed 궤적 (200 ps)",
+   "location": {"kind": "server", "host": "gabia",
+                "path": "/data/work/b2o3md/runs/b2o3_600_reseed/s{2,3,4}/d0.00_cfg0/T600/traj.xyz",
+                "size_bytes": 96000000},
+   "status": "canonical",
+   "copies": 1,
+   "needs_duplication": true,
+   "consumers": ["db/properties/b2o3_600K_reseed_errorbar.csv",
+                 "db/properties/b2o3_pmf_*_T600_origin.csv (PMF 는 4궤적 합산 — 분모가 다르다)"],
+   "verified": {"level": "content", "date": "2026-08-20", "evidence": "sha256 3건 확인"}
+  }
+ ]
+}

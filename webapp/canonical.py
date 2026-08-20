@@ -308,6 +308,61 @@ def decision_digest(d: dict) -> str:
         json.dumps(body, sort_keys=True, ensure_ascii=False).encode()).hexdigest()
 
 
+#: 산출물 원장 어휘
+ARTIFACT_STATUS = ("canonical", "reference", "suspect_banned", "superseded", "lost")
+LOCATION_KINDS = ("repo", "offline_backup", "server", "lost")
+
+
+def artifacts(root=None) -> dict:
+    """repo 밖 원자료 원장. {artifact_id: record}. 없으면 빈 dict.
+
+    ⛔ 못 하는 것: **파일이 실제로 거기 있는지 확인하지 않는다** (로컬 마운트·원격 서버라
+      CI 가 닿지 못한다). 어휘·일관성만 검사한다.
+    """
+    base = Path(root) if root else Path(__file__).resolve().parent.parent
+    p = base / "db/governance/artifacts.json"
+    if not p.exists():
+        return {}
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:                        # noqa: BLE001
+        raise RuntimeError(f"⛔ artifacts.json 을 못 읽는다 (fail-closed): {exc!r}") from exc
+    return {a["id"]: a for a in raw.get("artifacts", [])}
+
+
+def validate_artifacts(root=None) -> list:
+    """산출물 원장의 내부 일관성. 위반 문자열 리스트.
+
+    ⛔ 2026-08-20 — 하루에 같은 사고가 다섯 번 났다: 산출물은 있는데 **위치·지위·판정이
+      기계 경로 밖**(사람 기억·파일명 접두사·다른 서버 CSV 헤더)에 있었다.
+      이 검사는 그 판정들이 **원장 안에** 있는지를 본다.
+    """
+    bad = []
+    for a in artifacts(root).values():
+        i = a.get("id", "?")
+        st = a.get("status")
+        if st not in ARTIFACT_STATUS:
+            bad.append(f"산출물 {i} 의 status 가 어휘 밖이다: {st!r}")
+        kind = (a.get("location") or {}).get("kind")
+        if kind not in LOCATION_KINDS:
+            bad.append(f"산출물 {i} 의 location.kind 가 어휘 밖이다: {kind!r}")
+        # ⭐ 밴은 사유가 원장 안에 있어야 한다 — 파일명·기억은 판정이 아니다
+        if st == "suspect_banned" and not a.get("ban_evidence"):
+            bad.append(f"산출물 {i} 가 suspect_banned 인데 ban_evidence 가 없다 — "
+                       f"판정이 원장 밖(파일명·기억)에 있다는 뜻이다")
+        if st == "suspect_banned" and not a.get("unban_condition"):
+            bad.append(f"산출물 {i} 에 unban_condition 이 없다 — 영구 보류가 된다")
+        # 유일본 + canonical 이면 이중화 표시가 있어야 한다
+        if st == "canonical" and a.get("copies") == 1 and not a.get("needs_duplication"):
+            bad.append(f"산출물 {i} 가 canonical 유일본인데 needs_duplication 표시가 없다")
+        if st == "lost" and a.get("copies") not in (0, None):
+            bad.append(f"산출물 {i} 가 lost 인데 copies={a.get('copies')} 다")
+        if kind in ("offline_backup", "server") and not (a.get("verified") or {}).get("level"):
+            bad.append(f"산출물 {i} 가 repo 밖인데 verified.level 이 없다 "
+                       f"(위치만 봤는지 내용까지 봤는지 구분해야 한다)")
+    return bad
+
+
 def validate_governance(reg: dict = None, root=None) -> list:
     """판례·판정 원장의 무결성. 위반 문자열 리스트 (빈 리스트 = 통과).
 
@@ -317,7 +372,7 @@ def validate_governance(reg: dict = None, root=None) -> list:
 
     ⛔ 못 하는 것: 판정의 **과학적 타당성**은 안 본다. 그래프 무결성과 어휘만 본다.
     """
-    bad = []
+    bad = list(validate_artifacts(root))
     dec, book = decisions(root), assessments(root)
 
     # ── 판례 그래프 ──────────────────────────────────────────────────────
