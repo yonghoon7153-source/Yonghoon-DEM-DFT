@@ -452,6 +452,11 @@ L392  if old["scientific_status"]=="provisional_single_cell": r["citable"]=False
 **중복 코드**를 막지만 **규약 역행**은 못 막는다. 무엇을 더 두면 이걸 잡나?
 (후보: 새 도구가 기존 정본 함수를 import 하는지 확인하는 lint · 철회된 지표 이름의 grep 금지목록)
 
+**→ 2026-08-20 저녁, codex 1차 답("실행 가능한 decision registry 가 필요")을 받아
+상세 설계를 별도 카드로 냈다: `kb/projects/decision_registry_design_2026_08_20.md`**
+(판례집 json + policy.py 단일 평가기 + 계보 도장 + preflight/CI, 시드 12건·도입 4단계·
+한계 7건·2차 질문 8건). **구현은 그 카드의 codex 2차 GO 뒤에 시작한다.**
+
 ### B-R12. ⛔ **framework_check 가 fail 원소를 놓친다 — codex 반례를 그대로 재현했다**
 
 내가 어제 "부동소수 잡음이 대표를 정한다" 를 고치려고 **β 를 0.05 로 양자화**했는데,
