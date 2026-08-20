@@ -571,20 +571,27 @@ def test_p22_doc_records_the_discarded_origin_polluted_legs():
 
 
 def test_p22_restart_table_matches_the_canon_outputs():
-    """★ restart 5 ↔ 20 대조가 정본과 맞아야 한다.
+    """★ 예산 상한 5 ↔ 20 대조가 정본과 맞아야 한다.
 
-    이 두 행은 (a) 원점 결함의 처방이 실증됐다 (b) restart 5 가 연구 전체의
-    미검증 전제다 — 두 주장을 동시에 떠받친다.
+    이 두 행이 떠받치는 주장은 **하나뿐**이다 — 상한 5 가 이 연구 전체의
+    미검증 전제라는 것. "처방이 실증됐다" 는 21차 리뷰 발견 8 로 철회했다
+    (원점 예산·조건 예산·adaptive 가 함께 바뀐 n=1 교란 다리다,
+    철회[R20_RX]). 표의 수치 결속만 남긴다.
+
+    ★ 이 테스트는 문서 문구를 고칠 때 먼저 깨졌다 — 앵커가 "restart 20 으로
+      늘리면 파탄이 사라진다" 는 옛 제목과 `restart 5` 라는 행 이름에 걸려
+      있었기 때문이다. 앵커는 새 문구로 옮기되 **검사 자체(정본 대조)는
+      그대로** 둔다.
     """
     doc = _DOC.read_text(encoding="utf-8")
     assert "restart" in doc, "restart 검증 절이 문서에 없다"
-    body = doc.split("restart 예산을 늘리면")[1].split("####")[0]
+    body = doc.split("예산 상한 20 으로 다시 돌렸다")[1].split("####")[0]
 
     checked = 0
     for n, stem in _P22_RESTART_ROWS.items():
         c = _canon_facts(stem)
         row = _re.search(
-            r"^\|\s*(?:\*\*)?restart\s*" + _re.escape(n)
+            r"^\|\s*(?:\*\*)?(?:restart|예산 상한)\s*" + _re.escape(n)
             + r"(?:\*\*)?[^|]*\|([^|]*)\|([^|]*)\|([^|]*)\|", body, _re.M)
         assert row, f"restart {n} 행을 못 찾음"
         want_fs = f"{c['false_split']}/{c['gap0_n']}"
@@ -777,3 +784,191 @@ def test_cross_digest_pairs_still_agree_on_the_first_objective():
         assert va == vb, (
             f"{a}({da[:8]}) vs {b}({db[:8]}): 연쇄 1번째가 digest 간에 갈렸다 "
             f"({va:.6f} vs {vb:.6f}) — 그 구간이 수치를 바꿨다는 뜻이다")
+
+
+# ── 철회 원장: 철회한 결론이 활성 본문에서 되살아나지 않는다 ──────────────────
+_CLAIM_STATUS = (Path(__file__).resolve().parent.parent
+                 / "docs" / "22p_gap" / "CLAIM_STATUS.yaml")
+_REPO = Path(__file__).resolve().parent.parent
+
+#: 보이지 않는 격리 울타리. blockquote 여부로 격리를 판정하지 않는다 —
+#: §20.4 는 정정 블록 **전체**가 인용이라, 인용을 격리로 치면 정정문 자신이
+#: 검사에서 빠진다 (21차 리뷰 발견 8 이 지적한 실패 모드의 재발).
+_Q_OPEN = re.compile(r"<!--\s*QUARANTINE:([A-Z0-9_]+)\s*-->")
+_Q_CLOSE = re.compile(r"<!--\s*/QUARANTINE\s*-->")
+
+
+def _claim_status() -> dict:
+    import yaml
+    return yaml.safe_load(_CLAIM_STATUS.read_text(encoding="utf-8"))
+
+
+def _active_text(text: str) -> tuple[str, set[str]]:
+    """격리 구역을 빈 줄로 치환한 본문과, 울타리가 이름한 claim ID 집합.
+
+    줄 수를 보존하므로 match offset → 원본 줄 번호가 그대로 맞는다.
+    """
+    out, fenced, depth = [], set(), 0
+    for line in text.splitlines():
+        m = _Q_OPEN.search(line)
+        if m:
+            fenced.add(m.group(1))
+            depth += 1
+            out.append("")
+            continue
+        if _Q_CLOSE.search(line):
+            depth = max(0, depth - 1)
+            out.append("")
+            continue
+        out.append("" if depth else line)
+    return "\n".join(out), fenced
+
+
+def test_claim_status_registry_is_wellformed():
+    """원장 자신이 깨지면 아래 검사가 조용히 통과한다 — 먼저 막는다."""
+    reg = _claim_status()
+    assert reg.get("schema_version") == 1
+    ids = [c["id"] for c in reg["claims"]]
+    assert len(ids) == len(set(ids)), f"claim id 중복: {ids}"
+    for c in reg["claims"]:
+        assert c["status"] in ("retracted", "downgraded"), c
+        assert c["record"] in ("quarantined", "removed"), c
+        assert c["banned"], f"{c['id']}: banned 가 비었다 — 검사할 것이 없다"
+        for pat in c["banned"]:
+            re.compile(pat)          # 잘못된 정규식이면 여기서 죽는다
+        for f in c["files"]:
+            assert (_REPO / f).is_file(), f"{c['id']}: 대상 파일 없음 {f}"
+
+
+def test_retracted_claims_do_not_reappear_in_active_prose():
+    """★ 21차 리뷰 발견 8 — 배너를 붙여도 활성 본문이 옛 결론을 되살렸다.
+
+    19~20차에서 7개 결론을 철회하면서 배너만 달았다. 배너 위아래의 본문·표·
+    제목은 그대로 남아 같은 말을 계속했고, 21차 리뷰가 `:75-79` `:95-97`
+    `:351-358` `:649` `:903-917` `:1067-1069` `:1190-1193` `:1361` 여덟 곳을
+    찾아냈다. 사람이 배너를 다는 방식은 이미 두 번 실패했으므로 기계로 막는다.
+
+    검사 대상은 **활성 본문** — `<!-- QUARANTINE:ID -->` 울타리 밖 전부다.
+    옛 문장을 기록으로 남기고 싶으면 울타리 안에 넣으면 된다.
+    """
+    reg = _claim_status()
+    bad = []
+    for c in reg["claims"]:
+        for rel in c["files"]:
+            raw = (_REPO / rel).read_text(encoding="utf-8")
+            active, _ = _active_text(raw)
+            for pat in c["banned"]:
+                for m in re.finditer(pat, active):
+                    line = active[:m.start()].count("\n") + 1
+                    bad.append(f"{rel}:{line} [{c['id']}] {m.group(0)!r}")
+    assert not bad, (
+        "철회한 주장이 활성 본문에 살아 있다 (원장: docs/22p_gap/CLAIM_STATUS.yaml):\n  "
+        + "\n  ".join(bad))
+
+
+def test_every_quarantined_claim_still_has_a_visible_retraction():
+    """★ 양성 결속 — 배너를 지우면 실패한다.
+
+    금지어 검사만 두면 "옛 문장을 통째로 지우기" 로도 통과한다. 이 저장소의
+    철회 원칙은 **기록을 남기는 것**이므로(08_REVIEW_RESPONSE 원장), 울타리가
+    사라지는 것도 회귀로 잡는다.
+    """
+    reg = _claim_status()
+    missing = []
+    for c in reg["claims"]:
+        if c["record"] != "quarantined":
+            continue
+        seen = set()
+        for rel in c["files"]:
+            _, fenced = _active_text((_REPO / rel).read_text(encoding="utf-8"))
+            seen |= fenced
+        if c["id"] not in seen:
+            missing.append(f"{c['id']} — {c['files']}")
+    assert not missing, (
+        "철회 기록(QUARANTINE 울타리)이 사라졌다:\n  " + "\n  ".join(missing))
+
+
+def test_p22_doc_records_the_noise_layer_reversal():
+    """★ 21차 발견 2 — noise=0.005 층에서 34p 가 오히려 나았다.
+
+    "개선은 어디서도 없다" 를 지우는 것만으로는 부족하다. **반례 자체**를
+    문서에 남기지 않으면 다음 판이 같은 말을 다시 쓴다. 그래서 봉인 summary
+    에서 계산한 세 층의 실패 건수를 문서가 그대로 인용하게 묶는다.
+    """
+    nw = _warm_summary("paired_fixed5_v4_nowarm_now")["by_objective_noise"]
+    wm = _warm_summary("paired_fixed5_v4_warm")["by_objective_noise"]
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+
+    rows, bad = [], []
+    for noise in ("0.0", "0.001", "0.005"):
+        a = nw[f"pocv_dvdq|noise={noise}"]
+        b = wm[f"pocv_dvdq_dqdv|noise={noise}"]
+        na, nb = round(a["degenerate_frac"] * a["n"]), round(b["degenerate_frac"] * b["n"])
+        rows.append((noise, na, a["n"], nb, b["n"]))
+        for cell in (f"{na}/{a['n']}", f"{nb}/{b['n']}"):
+            if cell not in doc:
+                bad.append(f"noise={noise}: {cell} 가 §20.4 에 없다")
+    assert not bad, "noise 층 반례가 문서에 없다:\n  " + "\n  ".join(bad)
+
+    # 반례가 실제로 반례인지 — 0.005 에서만 34p 가 낫다.
+    flips = [n for n, na, da, nb, db in rows if nb / db < na / da]
+    assert flips == ["0.005"], (
+        f"반례 층이 바뀌었다: 34p 가 나은 층 = {flips} (문서는 0.005 만 적고 있다)")
+
+
+def test_random_only_multimodality_is_identical_across_the_warm_arms():
+    """★ 21차 발견 3 — "warm 이 다봉성을 없앴다" 는 결과와 반대다.
+
+    두 arm 의 `multistart_random_only` 는 같은 결정론적 난수에서 나온 같은
+    restart 집합이라 **완전히 같아야 한다.** 실제로 같다. 따라서 warm 이 바꾼
+    것은 다봉성이 아니라 후보 집합에 결정론적 점 하나가 늘어난 것뿐이다.
+
+    이 등식이 깨지면 발견 3 의 정정 근거가 사라지므로 회귀로 고정한다.
+    """
+    a = _warm_summary("paired_fixed5_v4_nowarm_now")["multistart_random_only"]
+    b = _warm_summary("paired_fixed5_v4_warm")["multistart_random_only"]
+    for obj in ("pocv_dvdq", "pocv_dvdq_dqdv"):
+        assert a[obj] == b[obj], (
+            f"{obj}: random-only 블록이 arm 사이에 갈렸다\n  nowarm={a[obj]}\n  warm={b[obj]}")
+    assert a["pocv_dvdq_dqdv"]["multimodal_frac"] == 0.9695121951219512
+
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+    assert "0.969512" in doc, "§20.4 가 random-only multimodal 값을 인용하지 않는다"
+
+
+# ── wiki 도구가 비-UTF8 콘솔에서도 살아남는다 (21차 리뷰 발견 10) ─────────────
+_WIKI_TOOLS = Path(__file__).resolve().parent.parent.parent / "wiki" / "tools"
+
+
+@pytest.mark.parametrize("tool", ["status.py", "lint.py"])
+def test_wiki_tools_survive_a_cp949_console(tool):
+    r"""★ 21차 리뷰 발견 10 — 입력만 UTF-8 로 고정한 것으로는 안 닫혔다.
+
+    20차에서 `encoding='utf-8'` 을 **파일 읽기**에 넣고 13-3 을 닫았다고 했다.
+    21차 리뷰어의 Windows 기본 환경에서 `status.py` 는 그래도 죽었다 — 읽기가
+    아니라 **stdout** 이 CP949 였고, 본문의 em dash(U+2014)를 찍는 순간
+    `UnicodeEncodeError` 가 났다.
+
+    실측 (이 저장소에서 재현):
+      수정 전 `PYTHONIOENCODING=cp949 python3 tools/status.py` → exit 1,
+        `'cp949' codec can't encode character '—'`
+      수정 후 → exit 0
+
+    `lint.py` 는 지금 데이터에서는 수정 없이도 통과했다. 같은 구조라 예방으로
+    함께 닫았고, 이 테스트는 **두 도구 모두** 를 비-UTF8 콘솔에서 돌려 고정한다.
+    """
+    import os
+    import subprocess
+    import sys
+
+    if not (_WIKI_TOOLS / tool).is_file():
+        pytest.skip(f"{tool} 없음 — wiki 트리 밖 체크아웃")
+    env = dict(os.environ, PYTHONIOENCODING="cp949")
+    r = subprocess.run([sys.executable, str(_WIKI_TOOLS / tool)],
+                       cwd=str(_WIKI_TOOLS.parent), env=env,
+                       capture_output=True, text=True, encoding="utf-8",
+                       errors="replace")
+    assert r.returncode == 0, (
+        f"{tool} 이 CP949 콘솔에서 죽었다 (exit {r.returncode}):\n"
+        f"{(r.stderr or '')[-800:]}")
+    assert "UnicodeEncodeError" not in (r.stderr or ""), (r.stderr or "")[-800:]

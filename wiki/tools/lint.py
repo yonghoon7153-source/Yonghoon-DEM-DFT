@@ -31,6 +31,17 @@ Exit code 0 = no errors (warnings allowed), 1 = errors found.
 """
 import re, glob, hashlib, pathlib, sys, datetime
 
+# 출력 경로도 UTF-8 로 닫는다. 파일 읽기에 encoding='utf-8' 을 넣은 것만으로는
+# 부족했다 — 21차 리뷰 발견 10: Windows 기본 콘솔(CP949)에서 em dash 를 찍는
+# 순간 UnicodeEncodeError 로 죽는다. 리뷰어는 status.py 에서 실측했고 이쪽도
+# 같은 구조라 함께 닫는다. errors='replace' 는 마지막 안전망 —
+# 콘솔 코드페이지가 UTF-8 을 못 받아도 검사 결과 자체는 나와야 한다.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):      # 파이프 래핑 등 — 무시하고 진행
+        pass
+
 STALE_DAYS = 90
 
 BASE = pathlib.Path(__file__).resolve().parent.parent

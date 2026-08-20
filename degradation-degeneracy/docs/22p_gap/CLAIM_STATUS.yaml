@@ -1,0 +1,202 @@
+# 22p 주장 상태 원장 — 철회·격하된 결론의 **정본 목록**
+#
+# 왜 이 파일이 있나 (21차 리뷰 발견 8):
+#   19~20차에서 여러 결론을 철회하면서 **배너만 붙였다.** 배너 아래·위의 활성
+#   본문은 그대로 남아 같은 결론을 다시 말했고, 21차 리뷰가 7곳을 찾아냈다.
+#   "배너만 추가하는 방식은 다시 실패했다 … 철회된 claim ID 가 결론 구역에
+#   나타나면 실패시키는 구조가 필요하다."
+#
+# 어떻게 동작하나:
+#   `tests/test_docs_lint.py::test_retracted_claims_do_not_reappear_in_active_prose`
+#   이 아래 `banned` 정규식을 각 `files` 의 **활성 본문**에서 찾는다. 하나라도
+#   걸리면 실패한다. 활성 본문 = 격리 구역 밖 전부.
+#
+#   격리 구역은 마크다운에 보이지 않는 HTML 주석 울타리로만 만든다:
+#       <!-- QUARANTINE:CLAIM_ID -->
+#       > **⛔ 철회[CLAIM_ID]** … 옛 문장을 기록으로 인용해도 되는 유일한 자리
+#       <!-- /QUARANTINE -->
+#   인용(blockquote)이라는 사실만으로는 격리가 아니다 — §20.4 처럼 정정 블록
+#   전체가 인용인 경우가 있어, 인용을 격리로 치면 정정문이 검사에서 빠진다.
+#
+#   `record: quarantined` 인 주장은 울타리가 **적어도 하나** 있어야 한다
+#   (양성 결속 — 배너를 지우면 실패한다). `record: removed` 는 옛 문장을
+#   남기지 않고 지운 것이라 울타리가 없어도 된다.
+#
+# 새 철회를 넣는 법: 여기 항목을 추가하고 → 테스트를 돌려 RED 를 눈으로 본 뒤
+# → 문서를 고친다. 순서를 뒤집으면 fixture 가 진실을 가린다 (CLAUDE.md 규율 2).
+schema_version: 1
+
+claims:
+  - id: RULE_OF_THREE
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      `0/518`·`0/306` 을 rule of three 로 확률 상한(0.58%)·군집 보정 상한
+      (3/51 ≈ 5.9%)으로 옮긴 것. 두 계산 모두 iid 베르누이 표집을 전제하는데
+      518건은 결정론적 등간격 격자의 이질적 조건이고 조건당 optimizer draw 가
+      1회다. 유지되는 것은 "이 계산 격자에서 0/518, 0/306" 이라는 기술통계뿐.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      # ★ `3/51` 단독은 쓰면 안 된다 — `203/518`(§7.8 ROC 표) 과 `3/51 (5.9%)`
+      #   (seed_101 10 mV 다리의 실제 붕괴 건수) 를 같이 잡는다. 철회된 것은
+      #   저 건수가 아니라 **그것을 확률 상한으로 옮긴 계산**이므로 ≈ 까지 본다.
+      - 'rule\s*of\s*three'
+      - '0\.58\s*%'
+      - '3/51\s*≈'
+      - '(?<!\d)3/306'      # `13/306`·`30/306` 은 실제 붕괴 건수다 — 잡지 않는다
+      - '보수적\s*상한'
+
+  - id: OP_EQUIV
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "§0 의 거짓 분리율이 동작점에도 그대로 적용된다 / '평균이 동작점을
+      대표하지 못한다' 는 우려는 기각됐다". 축별 쏠림 검정은 **이질성을 검출
+      못했다**는 음성 결과다. `0/9` 의 Wilson 95% 상한이 ~29.9% 라 §0 의 6.2%
+      와도, 30% 와도 양립한다. 사전 equivalence margin 과 검정력이 없다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '동작점에도\s*(그대로\s*)?적용된다'
+      - '우려는\s*기각'
+      - '동작점이\s*나쁜\s*무리에\s*있지\s*않다'
+      - '참\s*격차\s*0\s*칸은\s*균질하다'
+
+  - id: AXIS_RANK
+    status: retracted
+    round: 20
+    record: quarantined
+    무엇: >-
+      "PE 가 NE 보다 치명적 · 전압 축이 화학량론 축보다 치명적" 을 **문턱에
+      의존하지 않는 결론**으로 재사용한 것. 축마다 다리 수가 극단으로 다르고
+      (PE 28 다리 vs 나머지 각 1), 비교된 다리들의 원점·예산이 matched 가
+      아니다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - 'PE\s*가\s*NE\s*보다\s*(훨씬\s*)?치명적'
+      - '전압\s*축이\s*화학량론\s*축보다\s*치명적'
+      - '문턱\s*값에\s*의존하지\s*않는\s*세\s*결론'
+
+  - id: BIAS_MONOTONE
+    status: retracted
+    round: 19
+    record: quarantined
+    무엇: >-
+      "PE 오프셋을 키우면 파탄이 단조 증가하고 2 mV 에서 상전이가 있다".
+      근거였던 dense 세 다리가 Case 1 좌표 원점 오염(`a_ne` 1.03)의 산물이었다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '2\s*mV\s*상전이'
+      - '1\.5\s*(↔|→)\s*2\s*mV'
+
+  - id: NOISE_INERT
+    status: retracted
+    round: 21
+    record: quarantined
+    무엇: >-
+      "잡음은 거의 영향이 없다 / 바닥값은 구조적이다 / 잡음 층에서도 문턱은
+      불변이다". 비교된 두 다리는 조건집합도 optimizer draw 도 matched 가
+      아니다 — `cond_id` 가 noise 를 포함해 noise 층마다 restart 난수가
+      갈린다 (20차 발견 4). 6격자 재분석에서 10 mV 가 noise 0 에서 6/6,
+      noise 0.005 에서 2/6 으로 갈렸으므로 "불변" 은 관측과도 어긋난다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '잡음은\s*거의\s*영향이\s*없다'
+      - '바닥값은\s*측정\s*잡음이\s*아니라'
+      - '잡음을\s*줄여도\s*사라지지\s*않는다'
+      - '문턱\s*불변'
+      - '문턱은\s*불변'
+
+  - id: SEED101_ONLY
+    status: retracted
+    round: 21
+    record: removed          # 옛 문장을 남기지 않고 지웠다 — 사실 오류라 기록 가치가 없다
+    무엇: >-
+      "잡음 층 문턱은 seed_101 만 봤고 다른 격자는 미실행". 단계 C 재분석이
+      커밋된 정본에서 6격자 × 3오프셋 × 2잡음층 = 36 관측을 이미 뽑았다.
+      "미실행" 은 사실이 아니다.
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '다른\s*격자(는)?\s*미실행'
+
+  - id: R20_RX
+    status: retracted
+    round: 21
+    record: quarantined
+    무엇: >-
+      "restart 20 한 다리가 원점 처방을 실증했다 / 파탄이 완전히 사라졌다 /
+      `|bias| < 2%p → 무해` 규칙과 정합한다". 그 다리는 원점 `p_ini` 예산과
+      조건별 예산을 **동시에** 바꿨고 adaptive 가 켜져 있어 실제 실행 횟수도
+      달라졌다. 처방 확증이 아니라 세 축이 엉킨 진단 pilot 이다. 그리고
+      `|bias| < 2%p → 무해` 는 파라미터 오차 판정선이지 실패율 동등성 margin
+      이 아니다 (같은 오용을 21차 발견 2 가 warm 쪽에서도 지적했다).
+    files: [docs/09_22P_GAP.md]
+    banned:
+      - '처방을\s*실측했다'
+      - 'restart\s*증량이\s*실증됐다'
+      - '파탄이\s*완전히\s*사라졌다'
+      - '원점이\s*회복되고\s*파탄이\s*사라졌다'
+      - 'bias\|\s*<\s*2%p\s*→\s*무해'
+
+  - id: WARM_NO_IMPROVE_ANY
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "dQ/dV 추가의 개선은 **어디서도** 관측되지 않았다". aggregate raw
+      degeneracy 에서는 맞지만, 같은 warm 다리의 noise=0.005 층에서 34p 가
+      313/492 → 304/492 로 **1.83%p 낫고**, aggregate `mean_abs_err` 도
+      0.024220 → 0.023653 으로 34p 가 낫다. 방어 가능한 형태는 endpoint 를
+      명시한 "사전 지정한 aggregate raw-degeneracy endpoint 에서는 34p 개선이
+      관측되지 않았다" 까지다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    banned:
+      - '개선은\s*어디서도\s*관측되지\s*않았다'
+      - '개선은\s*어디서도\s*없다'
+
+  - id: WARM_TIE
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "+1.29%p 는 사실상 동률이다". 동등성 주장에는 **사전에 정한** equivalence
+      margin 과 조건별 paired 전이표(McNemar 등)가 필요하다. 파라미터 오차
+      판정에 쓰는 2%p 를 실패율 동등성 margin 으로 재사용할 수 없다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    banned:
+      - '사실상\s*동률'
+
+  - id: WARM_BETTER_VALLEY
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "warm 이 다봉성을 없앤 것이 아니라 같은 지형에서 더 나은 골짜기에 앉게
+      했다 / F20 의 '초기값을 주면 multimodal 이 사라진다' 가 직접 측정됐다".
+      `multistart_random_only` 블록은 두 arm 이 **완전히 동일**하다 (34p
+      multimodal 0.969512, flat_valley 0.008130 양쪽 같음). 같은 random
+      restart 는 그대로 다봉이었고 warm 은 결정론적 후보 하나를 더했을 뿐이다.
+      "더 나은 골짜기" 는 per-condition `J` 비교 없이 truth error 만으로 말할
+      수 없다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md,
+            docs/09_22P_GAP.md]
+    banned:
+      - '더\s*나은\s*골짜기'
+      - '초기값을\s*주면\s*사라진다'
+
+  - id: WARM_SYSTEMATIC
+    status: retracted
+    round: 21
+    record: removed
+    무엇: >-
+      "정본 → nowarm_now 의 차이는 **코드만** 이다" 와 5 mV 교차-digest 짝을
+      "계통적 warm 효과" 의 증거로 쓴 것. 두 다리는 Python·OS·NumPy·SciPy 가
+      함께 바뀌었으므로 code+runtime drift 다. 5 mV 짝은 digest 가 달라
+      (`a72c0f3a` vs `d842894`) warm 인과에 쓸 수 없는 교차-digest 기술
+      비교다.
+    files: [docs/08_REVIEW_RESPONSE.md, docs/22p_gap/LEG_INVENTORY.md]
+    banned:
+      - '\*\*코드만\*\*'
+      - '계통적\s*warm'
+      - 'paired\s*밖에서도\s*계통적'

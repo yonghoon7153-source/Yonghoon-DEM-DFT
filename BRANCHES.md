@@ -5,15 +5,35 @@
 재실행해서 갱신한다.
 
 이 저장소는 이름만 하나의 모노레포이고 실제로는 **서로 무관한 프로젝트 5~6개가
-브랜치로 병렬 존재**한다. `main` 은 비어 있고(GitHub 이 만든 `Initial commit`
-하나뿐, 다른 브랜치와 연결도 안 돼 있다), 모든 실제 작업은 `claude/*` ·
-`Codex/*` · `rescue/*` 브랜치에 있다. 그래서 "브랜치를 다 통합한다"는 조작은
+브랜치로 병렬 존재**한다. `main` 에는 GitHub 이 만든 `Initial commit`
+(`bf0dd1a3`) 하나뿐이고, 모든 실제 작업은 `claude/*` · `Codex/*` · `rescue/*`
+브랜치에 있다. 그래서 "브랜치를 다 통합한다"는 조작은
 **의미가 없을 뿐 아니라 위험하다** — 아래 계열들은 같은 경로 이름을 서로 다른
 내용으로 쓰고 있어서 합치면 충돌만 남는다.
+
+> **★ 정정 (2026-08-20, 21차 게이트 리뷰 발견 9) — `main` 은 고립돼 있지 않다.**
+> 초판은 "`main` 이 다른 브랜치와 연결도 안 돼 있다" 고 썼다. **틀렸다.**
+> `origin/main` 의 `Initial commit` 은 이 저장소 **37개 원격 브랜치 전부의
+> 공통 조상**이다 (아래 재현 명령 2). 이 브랜치 기준으로
+> `git rev-list --left-right --count origin/main...HEAD` 는 `0 234` 이고
+> `merge-base --is-ancestor` 는 exit 0 이다.
+>
+> **왜 틀렸나**: 초판을 쓴 작업 클론이 **shallow** 였다
+> (`git rev-parse --is-shallow-repository` → `true`, 경계 `b7d61881`,
+> HEAD 에서 155커밋만 보였다). 뿌리가 경계 밖이라 `git merge-base` 가 빈
+> 결과를 냈고, 그것을 "공통 조상이 없다" 로 읽었다. `git fetch --unshallow`
+> 후 같은 명령이 리뷰어와 같은 값을 낸다 (235커밋, merge-base `bf0dd1a3`).
+>
+> **교훈**: 이 문서의 모든 그래프 주장은 **full clone 에서만** 재현된다.
+> 아래 명령을 돌리기 전에 shallow 여부를 먼저 확인하라.
 
 ## 재현 명령
 
 ```bash
+# 0. 먼저 shallow 가 아닌지 확인한다 — shallow 면 아래 결과가 전부 거짓말이다
+git rev-parse --is-shallow-repository        # false 여야 한다
+git fetch --unshallow origin                 # true 였다면 이것부터
+
 git fetch origin
 # 흡수 관계 전수 — "A → 포함: B" 는 A 의 커밋이 B 에 전부 들어 있다는 뜻
 BR=$(git branch -r | grep -v HEAD | sed 's|.*origin/||' | grep -v '^main$')
@@ -21,6 +41,12 @@ for b in $BR; do into=""
   for h in $BR; do [ "$b" = "$h" ] && continue
     [ "$(git rev-list --count origin/$h..origin/$b)" = "0" ] && into="$into $h"; done
   [ -n "$into" ] && printf '%-46s → 포함:%s\n' "$b" "$into"; done
+
+# 2. main 이 정말 모든 브랜치의 조상인가 (2026-08-20 실측: 37/37)
+n=0; tot=0
+for b in $BR; do tot=$((tot+1))
+  git merge-base --is-ancestor origin/main origin/$b && n=$((n+1)); done
+echo "origin/main 이 조상인 브랜치: $n / $tot"
 ```
 
 ## 계열

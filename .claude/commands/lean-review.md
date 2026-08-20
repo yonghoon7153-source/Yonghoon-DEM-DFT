@@ -3,9 +3,21 @@ description: 현재 diff 에 최소주의 사다리 적용 — 중복·재구현
 ---
 
 현재 변경분에 최소주의 사다리를 적용한다. 대상: $ARGUMENTS (비우면 upstream 대비
-diff — `git diff "origin/$(git rev-parse --abbrev-ref HEAD)...HEAD"`. 브랜치 이름을
-박아 두지 않는다: 루트 `CLAUDE.md` 하드룰 1이 정본이고, 박아 두면 브랜치가 바뀔 때
-조용히 실패한다)
+diff):
+
+```bash
+# upstream 을 git 에게 묻는다 — 브랜치 이름을 박아 두지 않는다 (루트 CLAUDE.md
+# 하드룰 1 이 정본이고, 박아 두면 브랜치가 바뀔 때 조용히 실패한다).
+base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null) \
+  || base=$(git rev-parse --abbrev-ref --symbolic-full-name origin/HEAD 2>/dev/null) \
+  || { echo "upstream 을 못 찾았다 — 비교 대상을 인자로 줘라"; exit 1; }
+git diff "$base...HEAD"
+```
+
+★ 앞선 판은 `origin/$(git rev-parse --abbrev-ref HEAD)` 를 썼다 (20차 리뷰
+발견 11). detached HEAD 에서 `--abbrev-ref HEAD` 가 문자열 `HEAD` 를 반환해
+`origin/HEAD...HEAD` 가 되고, worktree·분리 체크아웃에서 조용히 엉뚱한 diff 를
+낸다. upstream 은 이름을 조립하지 말고 git 에게 물어야 한다.
 
 ponytail 의 decision ladder 를 이 저장소에 맞춰 **방향을 좁힌** 것이다. 이 저장소는
 13라운드 리뷰가 검증 코드를 계속 **늘리라고** 요구해 왔으므로, 사다리를 검증

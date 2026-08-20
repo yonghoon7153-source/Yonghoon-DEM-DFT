@@ -3,7 +3,16 @@
 
 Usage: python3 tools/status.py
 """
-import re, glob, pathlib
+import re, glob, pathlib, sys
+
+# ★ 21차 리뷰 발견 10 — 파일 읽기를 UTF-8 로 고정한 것만으로는 13-3 이 안 닫혔다.
+# 리뷰어의 Windows 기본 환경에서 이 스크립트는 **출력 중에** CP949
+# UnicodeEncodeError 로 죽었다 (본문의 em dash). 입력이 아니라 stdout 이 문제였다.
+for _s in (sys.stdout, sys.stderr):
+    try:
+        _s.reconfigure(encoding='utf-8', errors='replace')
+    except (AttributeError, ValueError):
+        pass
 
 BASE = pathlib.Path(__file__).resolve().parent.parent
 DIRS = ['concepts', 'entities', 'comparisons', 'queries', 'guides',

@@ -540,8 +540,12 @@ Case 1 vs Case 2 (각 칸 = halfcell / grid):
 
 ⚠ 자기정정: 전체 3,069조건에서는 34p가 33p보다 나아 보였으나(보정 15.1% vs
 31.6%), 공통 1,476조건에서는 raw가 33p 우세(7% vs 10%), 보정이 34p 근소 우세
-(6% vs 5%)로 **raw와 보정의 방향이 다릅니다.** 사실상 동률로 읽는 것이 맞고,
-"기준 곡선이 목적함수의 우열까지 뒤집는다"는 제 추측은 이 표로 지지되지 않습니다.
+(6% vs 5%)로 **raw와 보정의 방향이 다릅니다.** 이 표로는 어느 쪽이 낫다고
+말할 수 없고, "기준 곡선이 목적함수의 우열까지 뒤집는다"는 제 추측도 지지되지
+않습니다. (★ 2026-08-20 정정 — 여기서 두 목적함수를 동등하다고 부른 문장을
+지웁니다. 방향이 갈린다는 관측은 동등성의 근거가 아니고, 동등성을 주장하려면
+사전 equivalence margin 이 필요합니다 — 21차 리뷰 발견 2, 철회[WARM_TIE] 와
+같은 오용입니다.)
 
 ### F40/F44의 실제 paired 수 (3차 리뷰의 미확인 항목)
 
@@ -987,30 +991,67 @@ F49(5차)부터 쌓아 온 코드 identity 봉인이 **가정된 위협이 아�
 >
 > | 비교 | 다른 것 | 33p 변화 | 34p 변화 |
 > |---|---|---:|---:|
-> | 정본 → `nowarm_now` | **코드만** | −0.0034 | **+0.0020** |
-> | `nowarm_now` → `warm` | **warm 만** | **0.0000** | **−0.2453** |
+> | 정본 → `nowarm_now` | **코드 + runtime drift** | −0.0034 | **+0.0020** |
+> | `nowarm_now` → `warm` | **warm 만** (같은 digest·runtime) | **0.0000** | **−0.2453** |
 >
 > 같은 digest 에서 warm 만 바꾸면 **33p 는 소수점 6자리까지 동일**하고
 > (연쇄 1번째라 warm 할 것이 없다 — 설계상 그래야 한다), 34p 만 움직인다.
-> 코드 드리프트는 양쪽 ±0.003 이고 34p 를 오히려 **위로** 민다(0.871951 →
-> 0.873984). 즉 **+25.27%p → +1.29%p 축소는 전적으로 warm-start 때문이다.**
+> 따라서 **이 paired 격자에서 34p 의 362행·24.53%p 변화는 warm-start
+> protocol 에 귀속할 수 있다.**
+>
+> 첫 줄은 warm 축이 아니라 **잡음 대조**다. 그리고 "코드만" 이라고 쓸 수
+> 없다 — 정본 다리와 지금 사이에는 Python·OS·NumPy·SciPy 도 함께 바뀌었다
+> (21차 리뷰 발견 5, 철회[WARM_SYSTEMATIC]). 그 합쳐진 drift 가 ±0.003 이고
+> 34p 를 오히려 **위로** 민다(0.871951 → 0.873984)는 것이 여기서 쓸 수 있는
+> 전부다. 두 번째 줄만 digest·runtime·조건집합·예산이 모두 같은 matched 짝이다.
 >
 > 부수 지표도 같다 — 34p 의 `mean_abs_err` 0.065336 → 0.023653 (2.8배),
 > `degenerate_frac_corrected` 0.947832 → 0.243902 (3.9배).
 >
 > **무엇이 바뀌고 무엇이 안 바뀌는가**
 >
-> - **"두 protocol 모두에서 dQ/dV 추가의 개선은 관측되지 않았다" 는 유지된다.**
->   warm 을 켠 세 번째 protocol 에서도 34p(0.628726)가 33p(0.615854)보다
->   **여전히 근소하게 나쁘다.** 개선은 어디서도 관측되지 않았다.
+> - **"개선 없음" 은 endpoint 를 명시해야만 방어된다.** 쓸 수 있는 형태는
+>   **"사전 지정한 aggregate raw-degeneracy endpoint 에서는 34p 개선이
+>   관측되지 않았다"** 까지다 (warm 에서도 34p 0.628726 > 33p 0.615854).
+>   그 밖으로 넓히면 **틀린다** — 21차 리뷰 발견 2 가 반례 둘을 찾았다
+>   (철회[WARM_NO_IMPROVE_ANY]):
+>
+>   | noise | 33p 실패 | warm 34p 실패 | 34p − 33p |
+>   |---:|---:|---:|---:|
+>   | 0 | 292/492 | 316/492 | +4.88%p (악화) |
+>   | 0.001 | 304/492 | 308/492 | +0.81%p (악화) |
+>   | **0.005** | **313/492** | **304/492** | **−1.83%p (개선)** |
+>
+>   metric 을 바꿔도 방향이 갈린다: aggregate `mean_abs_err` 는 33p 0.024220
+>   vs 34p 0.023653 으로 **34p 가 낫다**. raw degeneracy(0.615854 → 0.628726)
+>   와 corrected degeneracy(0.141599 → 0.243902)에서만 34p 가 나쁘다.
+>   따라서 이 결론은 **metric · 모집단 · noise 층을 명시한 형태로만** 쓴다.
 > - **"61.9% → 87.2% 로 크게 악화" 는 protocol 조건부다.** warm 을 켜면
->   61.6% → 62.9% 로 사실상 동률이다. 이 문장을 인용할 때는 반드시
->   `warm_start=False` 를 병기한다.
-> - **multimodal 비율은 warm 과 무관하다** — 34p 가 nowarm 0.9614 / warm
->   0.9621 로 같다. warm 이 multimodality 를 없앤 것이 아니라, 같은 다봉
->   지형에서 **더 나은 골짜기에 앉게** 했다. F20 의 "multimodal 은 degeneracy
->   가 아니라 최적화 난이도이고 초기값을 주면 사라진다" 가 이 표로 직접
->   측정됐다.
+>   61.6% → 62.9% (+1.29%p)다. 이 문장을 인용할 때는 반드시
+>   `warm_start=False` 를 병기한다. **+1.29%p 를 "차이 없음" 으로 부르지는
+>   않는다** — 동등성 주장에는 사전에 정한 equivalence margin 과 조건별
+>   paired 전이표(`33p pass/fail × 34p pass/fail`, McNemar)가 필요한데 둘 다
+>   없다. 파라미터 오차 판정선 2%p 를 실패율 동등성 margin 으로 재사용할 수
+>   없다 (21차 리뷰 발견 2, 철회[WARM_TIE]).
+> - **warm 은 다봉성을 없애지 않았다.** 목적함수 간 비교에 써야 하는
+>   `multistart_random_only` 블록이 두 arm 에서 **완전히 동일**하다 — 34p
+>   multimodal `0.969512`, flat_valley `0.008130` 이 양쪽 같다. 같은 결정론적
+>   난수에서 나온 같은 4개 random restart 는 그대로 다봉이었고, warm 이 한
+>   일은 후보 집합에 **결정론적 점 하나를 더한 것**이다. (모든 restart 를
+>   세는 `multistart` 블록의 nowarm 0.9614 / warm 0.9621 은 그 추가된 점을
+>   포함하므로 이 판단에 쓰면 안 된다.)
+>
+>   그래서 "warm 이 더 좋은 basin 에 앉혔다" 는 **말할 수 없다** (21차 리뷰
+>   발견 3, 철회[WARM_BETTER_VALLEY]). 그러려면 조건별 `J` 를 비교해서 warm
+>   해가 실제로 **더 낮은 J** 인지, 아니면 J 는 비슷한데 합성 truth 에 더
+>   가까운 다른 basin 일 뿐인지 갈라야 한다. 지금 있는 것은 truth error 뿐이고,
+>   truth 로 optimizer protocol 을 고르면 모의 truth 를 이용한 선택 편향이
+>   된다. F20 의 "초기값을 주면 다봉성이 사라진다" 도 이 표로 측정된 적이
+>   **없다** — 오히려 반대 방향의 관측이다.
+>
+>   > ⚠ 같은 문구가 봉인 summary 의 `multistart._해석` 문자열에도 남아 있다.
+>   > 그 문자열은 `src/` 가 생성하므로 고치면 `source_digest` 가 바뀐다 —
+>   > 단계 3 코드 라운드에서 함께 고친다. 그때까지 그 필드는 인용하지 않는다.
 >
 > 정본 다리: `results/paired_fixed5_v4_warm`,
 > `results/paired_fixed5_v4_nowarm_now` (경위와 원자료는
@@ -1707,3 +1748,160 @@ A' 의 목적이 그대로 무너진다. 실제 캐시 이름 규칙으로 좁�
 
 `artifacts/README.md` 의 v4 목록 갱신 하나. 18차 리뷰가 지정한 코드·문서
 항목은 전부 닫혔다.
+
+## 29. 21차 게이트 리뷰 회답 (1) — 문서 라운드, `source_digest` 불변
+
+> 리뷰 대상 커밋 `f57ecd4d` · 판정 **NO-GO** (주 paired warm 대조는 통과,
+> 정본 승격과 단계 3 착수는 불허). 리뷰가 지정한 실행 순서의 **1번**만
+> 이 라운드에서 닫는다 — "`docs/09_22P_GAP.md` 의 활성 철회 잔여와 §20.4
+> 문구를 먼저 고친다. 이 단계는 source digest 를 바꾸지 않는다."
+>
+> `source_digest` 전후 **`a72c0f3a485c19bb` 동일** — 기존 산출물 무효화 없음.
+
+### 29.1 발견 8 — 배너 방식이 두 번 실패했으므로 기계로 바꿨다
+
+19~20차에서 결론 7개를 철회하면서 **배너만** 달았다. 배너 위아래의 본문·
+표·제목은 그대로 남아 같은 말을 계속했고, 21차 리뷰가 8곳을 찾아냈다.
+사람이 지우는 방식은 실패 모드가 재발형이므로 **원장 + 기계 검사**로 바꾼다.
+
+| 조각 | 무엇 |
+|---|---|
+| `docs/22p_gap/CLAIM_STATUS.yaml` | 철회·격하된 주장의 **정본 목록**. claim ID, 사유, `banned` 정규식, 대상 파일, `record`(quarantined/removed) |
+| `<!-- QUARANTINE:ID -->` … `<!-- /QUARANTINE -->` | 옛 문장을 기록으로 남길 수 있는 **유일한 자리**. 마크다운에 안 보인다 |
+| `test_retracted_claims_do_not_reappear_in_active_prose` | 울타리 **밖** 전부(활성 본문)에서 `banned` 를 찾는다. 걸리면 실패 |
+| `test_every_quarantined_claim_still_has_a_visible_retraction` | 양성 결속 — 배너를 지워도 실패한다 |
+| `test_claim_status_registry_is_wellformed` | 원장이 깨지면 위 둘이 조용히 통과하는 것을 막는다 |
+
+**인용(blockquote)을 격리로 치지 않는다.** §20.4 는 재정정 블록 **전체**가
+인용이라, 인용을 격리로 보면 정정문 자신이 검사에서 빠진다 — 리뷰가 지적한
+바로 그 실패 모드의 재발이다.
+
+이 검사가 처음 돌았을 때 **53건**이 걸렸다. 리뷰가 지목한 8곳보다 많다
+(예: 철회된 `3/51 ≈ 5.9%` 상한을 §7.8·§7.10 이 계속 인용, `2 mV 상전이`가
+두 절에서 되살아남). 전부 닫았다.
+
+정규식 두 개는 **처음에 오탐**을 냈고 고쳤다 — `3/51` 은 `203/518` 과
+seed_101 10 mV 다리의 실제 붕괴 건수 `3/51 (5.9%)` 를 함께 잡았고,
+`3/306` 은 `13/306`·`30/306` 을 잡았다. 철회된 것은 **건수가 아니라 그것을
+확률 상한으로 옮긴 계산**이라 `≈` 까지 본다.
+
+### 29.2 발견 2 — "개선은 어디서도 없다" 는 틀렸다
+
+봉인 summary 에서 직접 뽑은 noise 층 (paired, 같은 digest·같은 예산):
+
+| noise | 33p 실패 | warm 34p 실패 | 34p − 33p |
+|---:|---:|---:|---:|
+| 0 | 292/492 | 316/492 | +4.88%p (악화) |
+| 0.001 | 304/492 | 308/492 | +0.81%p (악화) |
+| **0.005** | **313/492** | **304/492** | **−1.83%p (개선)** |
+
+metric 을 바꿔도 방향이 갈린다 — aggregate `mean_abs_err` 는 33p 0.024220
+vs 34p 0.023653 으로 **34p 가 낫다**. 따라서 방어 가능한 형태는
+**"사전 지정한 aggregate raw-degeneracy endpoint 에서는 34p 개선이 관측되지
+않았다"** 까지다. `+1.29%p` 를 "차이 없음" 으로 부르던 문장도 지웠다 —
+사전 equivalence margin 과 조건별 paired 전이표가 없다 (철회[WARM_TIE]).
+같은 오용이 §14 (2026-05 판)에도 있어 함께 고쳤다.
+
+회귀 `test_p22_doc_records_the_noise_layer_reversal` 은 세 층의 실패 건수를
+봉인 summary 에서 계산해 문서와 대조하고, **반례 층이 0.005 하나뿐**인지도
+확인한다. 문구만 지우면 다음 판이 같은 말을 다시 쓰므로 반례 자체를 묶는다.
+
+### 29.3 발견 3 — multimodality 해석은 결과와 반대였다
+
+목적함수 간 비교에 써야 하는 `multistart_random_only` 블록이 두 arm 에서
+**완전히 동일**하다 — 34p multimodal `0.969512`, flat_valley `0.008130`.
+같은 결정론적 난수의 같은 4개 random restart 는 그대로 다봉이었고, warm 이
+한 일은 후보 집합에 **결정론적 점 하나를 더한 것**이다. 문서가 인용하던
+nowarm 0.9614 / warm 0.9621 은 그 추가 후보를 **포함하는** `multistart`
+블록이라 이 판단에 쓸 수 없었다.
+
+"더 나은 골짜기" 는 조건별 `J` 비교 없이 truth error 만으로 말할 수 없다 —
+철회[WARM_BETTER_VALLEY]. F20 이 이 표로 측정됐다는 서술도 철회한다.
+
+회귀 `test_random_only_multimodality_is_identical_across_the_warm_arms` 가
+두 arm 의 블록 동일성을 고정한다.
+
+> ⚠ 같은 F20 문구가 봉인 summary 의 `multistart._해석` 문자열에도 있다.
+> `src/` 가 생성하므로 고치면 `source_digest` 가 바뀐다 — 단계 3 코드
+> 라운드에서 함께 고친다. 그때까지 그 필드는 인용하지 않는다.
+
+### 29.4 발견 5 — "코드만" 이 아니라 code + runtime drift
+
+`정본 → nowarm_now` 를 "코드만" 이라고 쓴 것을 고쳤다. 그 사이에
+Python·OS·NumPy·SciPy 도 함께 바뀌었다. 그 줄은 warm 축이 아니라 **잡음
+대조**이고, 두 번째 줄(`nowarm_now → warm`)만 digest·runtime·조건집합·예산이
+모두 같은 matched 짝이다. 5 mV 교차-digest 짝을 "계통적 warm 효과" 로 쓰던
+서술도 철회[WARM_SYSTEMATIC].
+
+### 29.5 발견 9 — `origin/main` 반박은 내가 틀렸다
+
+리뷰어 값이 맞다. **원인은 작업 클론이 shallow 였던 것**이다:
+
+```
+수정 전  git rev-parse --is-shallow-repository → true (경계 b7d61881, 155커밋)
+         git merge-base origin/main HEAD       → (빈 출력)
+git fetch --unshallow origin
+수정 후  merge-base --is-ancestor origin/main HEAD → exit 0
+         git merge-base origin/main HEAD           → bf0dd1a3
+         git rev-list --left-right --count ...     → 0  234
+         origin/main 이 조상인 브랜치              → 37 / 37
+```
+
+`BRANCHES.md` 에 정정과 원인을 적고, 재현 명령 맨 앞에 shallow 확인 단계를
+넣었다. 이 문서의 모든 그래프 주장은 full clone 에서만 재현된다.
+
+### 29.6 발견 10 / 20차 발견 11 — 실행 일관성 둘
+
+- `wiki/tools/status.py` 는 **stdout** 이 CP949 일 때 죽었다. 입력에
+  `encoding='utf-8'` 을 넣은 것으로는 안 닫혔다. 실측:
+  수정 전 `PYTHONIOENCODING=cp949 python3 tools/status.py` → exit 1
+  (`'cp949' codec can't encode character '—'`), 수정 후 exit 0.
+  `lint.py` 는 현재 데이터에서 수정 없이도 통과했으나 같은 구조라 함께 닫았다.
+  회귀 `test_wiki_tools_survive_a_cp949_console` 이 두 도구를 비-UTF8
+  콘솔에서 돌린다.
+- `/lean-review` 의 diff 대상이 `origin/$(git rev-parse --abbrev-ref HEAD)`
+  였다. detached HEAD 에서 `--abbrev-ref HEAD` 는 문자열 `HEAD` 를 반환한다.
+  upstream 을 조립하지 말고 `@{upstream}` → `origin/HEAD` 순으로 git 에게
+  묻도록 고쳤다.
+
+### 29.7 뮤테이션 검증 — 새 검사가 진짜 잡는가
+
+새 테스트가 처음부터 통과하면 fixture 가 진실을 가린 신호다 (CLAUDE.md
+규율 2). 다섯 가지를 일부러 깨뜨려 전부 실패하는 것을 확인했다:
+
+| 변이 | 결과 |
+|---|---|
+| 철회 문구를 활성 본문에 되살림 | `reappear_in_active` 실패 |
+| `<!-- QUARANTINE:OP_EQUIV -->` 여는 울타리 삭제 | 2건 실패 (금지어 + 양성 결속) |
+| noise 반례 수치 훼손 (`304/492` → `305/492`) | `noise_layer_reversal` 실패 |
+| `0.969512` 인용 삭제 | `random_only` 실패 |
+| restart 표 수치 훼손 | 기존 `restart_table` 회귀 실패 |
+| `status.py` 의 stdout 수정 제거 | `cp949[status.py]` 실패 |
+
+기존 회귀 `test_p22_restart_table_matches_the_canon_outputs` 는 문구 수정
+과정에서 **먼저 깨졌다** — 앵커가 옛 제목과 `restart 5` 행 이름에 걸려
+있었기 때문이다. 앵커만 새 문구로 옮기고 검사(정본 대조)는 그대로 뒀다.
+
+### 29.8 검증
+
+```
+python -m pytest tests/ -q          → 663 passed
+python3 wiki/tools/lint.py          → ERRORS 0 / WARNINGS 0, exit 0
+source_digest()                     → a72c0f3a485c19bb (수정 전과 동일)
+```
+
+strict smoke 는 이 라운드에서 돌리지 않았다 — `src/ tools/ configs/
+scripts/ run.sh requirements*` 를 한 줄도 건드리지 않았고 `source_digest`
+가 불변이라 계산 경로가 그대로다. 단계 3 코드 라운드에서 다시 돌린다.
+
+### 29.9 남은 것 (리뷰 실행 순서 2~8)
+
+2. 현재 warm raw fits·입력을 완전한 diagnostic bundle 로 보존 (발견 6)
+3. 새 회귀를 row-level digest + normalized run_spec exact equality 로 보강 (발견 7)
+4. 단계 3 schema 에 `p_ini_warm_start` / `condition_warm_start` 분리 (발견 4)
+5. restart bank · freshness gate · index merge
+6. 2×2 half-cell arm + nested bank prefix 를 smoke 에 작은 fixture 로
+7. 한 clean source 에서 budget plateau 측정
+8. claim-supporting 다리만 재실행 → 최종 정본 승격
+
+2~8 은 전부 `source_digest` 를 바꾸므로 **기존 산출물 재실행**이 걸린다.
