@@ -1,0 +1,95 @@
+{
+ "schema": "governance/assessments v1",
+ "_purpose": "게이트 판정의 **단일 원장**. canonical claim 은 판정을 품지 않고 required_assessment_refs 로 참조만 한다. 판정을 값 옆에 써 넣으면 consumer 마다 '현재 판정'을 다르게 고를 수 있다 (codex 동결감사 2026-08-20).",
+ "_rules": [
+  "append-only. 기존 레코드를 고치지 않는다 — 바꾸려면 새 레코드를 추가하고 supersedes_assessment_id 로 잇는다.",
+  "state: active(현재 판정) · retracted(철회) · superseded(후속 판정에 밀림).",
+  "result: pass | fail | not_assessed | inapplicable. **not_assessed 는 실패가 아니다** — 평가가 성립하지 않은 상태다.",
+  "binding: bound(이 claim 에 묶인다) · diagnostic_unbound(진단으로 유효하나 어떤 값에도 안 묶인다).",
+  "kind: gate(게이트 판정) · correction(앞선 판정의 정정 사건 — F10/R9).",
+  "★ 정정도 산출물이다: correction 레코드는 범위·근거·대상 ID 를 갖고, 다른 claim 에 사유를 복사하지 않는다.",
+  "consumer 는 required_assessment_refs 가 가리키는 것 중 state=active 인 것 하나만 읽는다. 2개 이상이면 오류다."
+ ],
+ "_history": {
+  "2026-08-20a": "신설. b2o3 골격 게이트를 vertical slice 로 이관 — 옛 beta 판정(retracted·diagnostic_unbound)과 현재 판정(not_assessed)을 **병존**시키고, canonical_registry 에는 참조만 남겼다. 나머지 게이트(lpsocl·comp1 MD_Ea)는 레거시 경로 유지 — 확대는 slice 통과 뒤 별건이다."
+ },
+ "assessments": [
+  {
+   "assessment_id": "A-2026-08-20-b2o3-framework-legacy",
+   "kind": "gate",
+   "claim_ref": "value:MD_Ea_eV/b2o3",
+   "gate": "framework_beta_800_1000K",
+   "state": "retracted",
+   "binding": "diagnostic_unbound",
+   "result": "fail",
+   "content": "beta_800K S 0.59 (n=41) · beta_1000K Cl 0.63 (n=16); 같은 온도 modelc 는 0.03/0.08",
+   "measured_on": "b2o3_full (single-seed legacy run family, pre-2026-07 reseed)",
+   "method_id": "framework-gate-v1 (beta = dlog MSD/dlogt, non-Li, n>=8, window 2-50 ps)",
+   "retracted_by": "A-2026-08-20-b2o3-framework-correction",
+   "why_retracted": "⛔ 다른 run family 의 beta 를 multiseed Ea 0.199 에 붙였다 — 계보 오류. 진단으로서는 유효하나 어떤 값에도 묶이지 않는다. 감사 추적용으로 보존한다.",
+   "created": "2026-08-20",
+   "source": "tools/ionic/msd_diffusive_check.py --framework --from_traj"
+  },
+  {
+   "assessment_id": "A-2026-08-20-b2o3-framework-correction",
+   "kind": "correction",
+   "claim_ref": "value:MD_Ea_eV/b2o3",
+   "state": "active",
+   "supersedes_assessment_id": "A-2026-08-20-b2o3-framework-legacy",
+   "scope": "이 claim 하나. **다른 항목에 이 사유를 복사하지 않는다.**",
+   "what_was_wrong": "beta 를 잰 궤적과 값을 만든 궤적이 다른데 연결했다 (계보 오류).",
+   "second_error_corrected": "1차 정정이 이 사유를 MD_Ea_eV_singleseed 에도 복사했다 — 과교정이라 철회했다. single-seed 는 b2o3_full 과 같은 계열일 가능성이 높으나 run 해시 미확인이라 lineage_match=unverified 다.",
+   "third_error_corrected": "1차 정정이 'high-T 궤적 9개 전부 부재' 로 적었다 — 실제 미보존은 **6런(800/1000 K x s2/s3/s4)** 이고 600 K 3런은 PMF 소비 기록이 있다. 재실행 범위는 6런이다.",
+   "created": "2026-08-20",
+   "evidence": [
+    "tools/modelc_v3/run_highT_reseed.sh L32-39 (--save_traj 미전달)",
+    "tools/modelc_v3/disorder_ensemble_diffusion.py L238 (그 플래그가 traj.xyz 쓰기를 감싼다)",
+    "tools/ionic/run_arrhenius_6pt.sh L57-59 (같은 결함을 이미 기록) · L183 (그 러너는 고쳐졌다)",
+    "db/properties/b2o3_pmf_profile_T600_origin.csv 헤더 ('4 trajectory/ies summed')"
+   ],
+   "reviewed_by": "codex (2026-08-20 2차·3차·동결감사)"
+  },
+  {
+   "assessment_id": "A-2026-08-20-b2o3-framework-current",
+   "kind": "gate",
+   "claim_ref": "value:MD_Ea_eV/b2o3",
+   "gate": "framework_beta_800_1000K",
+   "state": "active",
+   "binding": "bound",
+   "result": "not_assessed",
+   "reason": "required_artifact_set_incomplete",
+   "input_artifact_ids": [],
+   "raw_trajectory_set": {
+    "ea_ensemble": {
+     "_note": "Ea claim 의 분모는 3-seed 다 (s2/s3/s4). PMF 의 4궤적과 **다른 분모**이므로 섞지 않는다.",
+     "T600": {"expected": 3, "retained": "unverified", "where": "gabia /data/work/b2o3md/runs/b2o3_600_reseed (200 ps)"},
+     "T800": {"expected": 3, "retained": 0, "where": "kgy ~/work/runs/highT_reseed/b2o3 (100 ps)"},
+     "T1000": {"expected": 3, "retained": 0, "where": "kgy ~/work/runs/highT_reseed/b2o3 (100 ps)"}
+    },
+    "pmf_ensemble": {
+     "_note": "PMF(dF_perc)는 legacy 1런 + s2/s3/s4 = 4궤적을 합산했다. use_case 가 달라 별도 분모다.",
+     "T600": {"used": 4, "evidence": "db/properties/b2o3_pmf_*_T600_origin.csv ('1900 frames each ... 4 trajectory/ies summed')"}
+    },
+    "rerun_scope": "6런 (800/1000 K x s2/s3/s4). 600 K 3런은 현존 확인되면 재실행 불필요.",
+    "rerun_status": "2026-08-20 진행 중 — kgy(b2o3 6런) + gabia(modelc 6런), --save_traj 로."
+   },
+   "why": "골격(비-Li) 게이트의 입력 집합이 불완전하다 → 평가 자체가 성립하지 않는다. **미평가는 통과도 실패도 아니다.** 그러므로 ranking·absolute_claim·mechanism 은 계속 금지, 공개감사·비교는 허용.",
+   "decision_ids": ["D-2026-08-20-no-retro-gate-without-artifact"],
+   "created": "2026-08-20",
+   "method_id": "framework-gate-v2"
+  },
+  {
+   "assessment_id": "A-2026-08-20-b2o3-singleseed-framework",
+   "kind": "gate",
+   "claim_ref": "value:MD_Ea_eV_singleseed/b2o3",
+   "gate": "framework_beta_800_1000K",
+   "state": "active",
+   "binding": "bound",
+   "result": "not_assessed",
+   "reason": "lineage_unverified",
+   "why": "⚠ beta 를 잰 b2o3_full 과 **같은 계열일 가능성이 높다** (600/800/1000 K D 가 b2o3_msd.csv 재계산과 일치). 다만 run 해시가 확인되지 않았다 → 확인 전까지 게이트를 이 값에 묶지 않는다. ⛔ high-T reseed 궤적 미보존은 **이 항목의 사유가 아니다** (그것은 multiseed 항목의 사유이며, 여기 복사한 것은 1차 정정의 과교정이었다).",
+   "created": "2026-08-20",
+   "method_id": "framework-gate-v2"
+  }
+ ]
+}

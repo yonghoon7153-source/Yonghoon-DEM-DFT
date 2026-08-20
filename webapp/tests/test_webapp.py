@@ -12,6 +12,7 @@ import io
 import json
 import pytest
 import os
+import pathlib
 import re
 import sys
 from pathlib import Path
@@ -114,6 +115,106 @@ def test_gate_outcome_vocabulary():
     assert "미평가" in na and "미통과" not in na, f"미평가 문구가 틀렸다: {na}"
     assert "미통과" in C.gate_prefix(mk("g", "fail"))
     assert C.gate_prefix({}) == ""
+
+
+def test_assessment_sidecar_is_authoritative(tmp_path, monkeypatch):
+    """게이트 판정은 sidecar 가 권위다 — claim 안의 옛 판정을 보면 안 된다.
+
+    ⛔ 2026-08-20 codex 동결감사 — 판정을 canonical claim 에 두면 consumer 마다
+       '현재 판정' 을 다르게 고를 수 있다. required_assessment_refs 가 있으면
+       gate_detail 은 **보지 않는다**.
+    """
+    book = C.assessments()
+    assert book, "판정 원장이 비었다"
+
+    # ① sidecar 가 claim 안의 값을 이긴다 (일부러 모순되게 넣는다)
+    e = {"metric": "X", "system": "y", "blocking_gate": "g",
+         "required_assessment_refs": ["A-2026-08-20-b2o3-framework-current"],
+         "gate_detail": {"lineage": {"gate_outcome": "pass"}}}       # ← 거짓말
+    assert C.gate_outcome(e) == "not_assessed", "claim 안의 옛 판정을 읽고 있다"
+
+    # ② 없는 판정을 참조하면 fail-closed
+    import pytest as _p
+    with _p.raises(RuntimeError, match="없는 판정"):
+        C.gate_outcome({"blocking_gate": "g", "required_assessment_refs": ["A-nope"]})
+
+    # ③ active 가 1개가 아니면 오류 — 철회본만 가리키면 0개다
+    with _p.raises(RuntimeError, match="active 판정이"):
+        C.gate_outcome({"blocking_gate": "g",
+                        "required_assessment_refs": ["A-2026-08-20-b2o3-framework-legacy"]})
+
+    # ④ 옛 판정과 새 판정이 **병존**한다 (대체가 아니다)
+    legacy = book["A-2026-08-20-b2o3-framework-legacy"]
+    assert legacy["state"] == "retracted" and legacy["binding"] == "diagnostic_unbound", \
+        "옛 beta 판정이 철회+미결속 상태로 보존돼야 한다"
+    assert legacy["result"] == "fail", "옛 판정의 내용까지 지우면 감사가 안 된다"
+
+    # ⑤ correction 사건이 대상을 지목한다 (F10/R9)
+    corr = [a for a in book.values() if a.get("kind") == "correction"]
+    assert corr, "정정 사건 레코드가 없다"
+    for c in corr:
+        assert c.get("supersedes_assessment_id") in book, "정정이 가리키는 대상이 원장에 없다"
+        assert "scope" in c, "정정에 범위가 없다 — 다른 항목에 복사되는 것을 막는 필드다"
+
+    # ⑥ Ea 분모(3)와 PMF 분모(4)가 분리돼 있다
+    cur = book["A-2026-08-20-b2o3-framework-current"]["raw_trajectory_set"]
+    assert cur["ea_ensemble"]["T600"]["expected"] == 3
+    assert cur["pmf_ensemble"]["T600"]["used"] == 4, "PMF 4궤적이 Ea 분모와 섞이면 안 된다"
+
+
+def test_governance_graph_has_no_dangling_edges():
+    """판례 그래프에 매달린 간선이 없어야 한다 (codex 3차).
+
+    supersedes/superseded_by 대상과 assessment 의 decision_ids 가 전부 실재해야 한다.
+    첫 registry 부터 dangling edge 가 생기면 그래프가 거짓말을 시작한다.
+    """
+    root = pathlib.Path(__file__).resolve().parent.parent.parent
+    dec = json.loads((root / "db/governance/decisions.json").read_text(encoding="utf-8"))
+    ids = {d["id"] for d in dec["decisions"]}
+    assert len(ids) == len(dec["decisions"]), "결정 ID 가 중복이다"
+
+    for d in dec["decisions"]:
+        for ref in d.get("supersedes", []):
+            assert ref in ids, f"{d['id']} 의 supersedes 대상 {ref} 가 원장에 없다"
+        sb = d.get("superseded_by")
+        assert sb is None or sb in ids, f"{d['id']} 의 superseded_by {sb} 가 원장에 없다"
+        # agent 는 과학적 승격을 못 한다 (codex 2차 P0-3)
+        rat = d.get("ratification", {})
+        if d.get("decision_state") == "active":
+            assert rat.get("state") == "ratified" and rat.get("role") == "scientific_owner", \
+                f"{d['id']} 이 사람 승인 없이 active 다"
+
+    book = C.assessments()
+    for a in book.values():
+        for ref in a.get("decision_ids", []):
+            assert ref in ids, f"판정 {a['assessment_id']} 이 없는 결정 {ref} 를 가리킨다"
+        sup = a.get("supersedes_assessment_id")
+        assert sup is None or sup in book, f"판정 {a['assessment_id']} 의 대상 {sup} 가 없다"
+
+    # slot 유일성: 같은 slot 에 active 가 2개 이상이면 안 된다
+    from collections import Counter
+    act = Counter(d.get("slot") for d in dec["decisions"] if d.get("decision_state") == "active")
+    dup = [k for k, v in act.items() if v > 1]
+    assert not dup, f"같은 slot 에 active 결정이 여럿이다: {dup}"
+
+
+def test_lineage_axes_are_independent():
+    """재현 가능성과 배선 여부는 **독립 축**이다 (codex R4).
+
+    한 enum(numerically_reproducible)에 넣으면 5단 사다리를 폐기해 놓고 같은 자리에
+    사다리를 다시 만드는 것이 된다.
+    """
+    reg = C.load_registry()
+    e = [x for x in reg["entries"]
+         if x.get("system") == "b2o3" and x.get("metric") == "MD_Ea_eV"][0]
+    lin = e["gate_detail"]["lineage"]
+    assert lin["lineage_binding"] == "unwired", "D 를 하드코딩하는 한 wired 가 아니다"
+    assert lin["numeric_reproduction"] == "exact", "9개 D 에서 Ea 가 정확히 재현된다"
+    assert "numerically_reproducible" not in json.dumps(lin, ensure_ascii=False), \
+        "두 축을 한 enum 으로 되돌렸다"
+    # 판정은 claim 에 남아 있으면 안 된다
+    assert "gate_outcome" not in lin and "current_assessment" not in lin, \
+        "판정이 claim 으로 되돌아왔다 — sidecar 가 단일 원장이다"
 
 
 def test_b2o3_framework_gate_is_not_assessed():

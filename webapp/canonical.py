@@ -204,16 +204,56 @@ _GATE_LABEL = {
 }
 
 
-def gate_outcome(e: dict):
+ASSESSMENTS_PATH = "db/governance/assessments.json"
+
+
+def assessments(root=None) -> dict:
+    """게이트 판정 원장 (append-only sidecar). {assessment_id: record}.
+
+    ⛔ 못 하는 것: 판정을 **만들지 않는다**. 원장을 읽을 뿐이고, 판정 산출은
+       도구(msd_diffusive_check --framework 등) 소관이다.
+    """
+    base = Path(root) if root else Path(__file__).resolve().parent.parent
+    p = base / ASSESSMENTS_PATH
+    if not p.exists():
+        return {}
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:                        # noqa: BLE001
+        raise RuntimeError(f"⛔ {ASSESSMENTS_PATH} 를 못 읽는다 — 판정 원장 없이 지위를 "
+                           f"계산하지 않는다 (fail-closed): {exc!r}") from exc
+    return {a["assessment_id"]: a for a in raw.get("assessments", [])}
+
+
+def gate_outcome(e: dict, root=None):
     """canonical entry 의 게이트 판정. 게이트가 없으면 None.
 
     반환: "not_assessed" | "pass" | "fail" | "inapplicable" | None(게이트 없음)
 
-    ⛔ 못 하는 것: 게이트를 **평가하지 않는다**. entry 에 기록된 판정을 읽을 뿐이다.
-       판정 자체는 산출 도구(msd_diffusive_check --framework 등) 소관이다.
+    우선순위:
+      ① required_assessment_refs → sidecar 의 state=active 레코드 (권위)
+      ② gate_detail.lineage.gate_outcome (레거시 경로 — 아직 이관 안 된 항목)
+      ③ 둘 다 없으면 fail (보수적)
+
+    ⛔ 2026-08-20 (codex 동결감사) — 판정을 canonical claim 안에 두면 consumer 마다
+      '현재 판정' 을 다르게 고를 수 있다. ①이 있으면 ②는 **보지 않는다**.
+    ⛔ 못 하는 것: 게이트를 평가하지 않는다. 기록된 판정을 읽을 뿐이다.
     """
     if not e.get("blocking_gate"):
         return None
+    refs = e.get("required_assessment_refs")
+    if refs:
+        book = assessments(root)
+        missing = [r for r in refs if r not in book]
+        if missing:
+            raise RuntimeError(f"⛔ {e.get('metric')}/{e.get('system')} 이 없는 판정을 "
+                               f"참조한다: {missing} — fail-closed")
+        active = [book[r] for r in refs if book[r].get("state") == "active"]
+        if len(active) != 1:
+            raise RuntimeError(f"⛔ {e.get('metric')}/{e.get('system')} 의 active 판정이 "
+                               f"{len(active)}개다 (1개여야 한다): {refs}")
+        out = active[0].get("result")
+        return out if out in GATE_OUTCOMES else "fail"
     lin = (e.get("gate_detail") or {}).get("lineage") or {}
     out = lin.get("gate_outcome") or (lin.get("current_assessment") or {}).get("result")
     if out in GATE_OUTCOMES:

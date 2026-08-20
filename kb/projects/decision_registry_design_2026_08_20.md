@@ -38,8 +38,22 @@ evidenceScope: multi-source-primary
 | **b2o3 registry 정정** — 옛 β 판정 `retracted + diagnostic_unbound` 보존 / 새 판정 `not_assessed(required_artifact_set_incomplete)` / single-seed 과교정 철회 | ✅ 완료 | `validate_canonical` 28/28 · `kb lint` 0 · `convention_check` 0 |
 | **선행 로스터 selftest** msd_diffusive_check · collect_neb · bench_against_dft · uma_engine_probe · extract_figures | ✅ 전부 PASS | — |
 
-**아직 안 닫힌 P0**: `validate_canonical` 이 새 필드(`gate_outcome` · `lineage_match` ·
-`raw_trajectory_set`)를 **읽지 않는다** → 이번 정정을 검증하지 못한다. Phase A 의 첫 작업.
+### A-2. codex **동결감사** 로 추가로 닫은 것
+
+| 무엇 | 상태 | 근거 |
+|---|---|---|
+| **λ₁ unimodular 검사 실수리** — `abs(round(det))==1` 은 round 를 먼저 해 정수성 검사가 사라졌다 (det=1.4·0.6 통과, 실측). 정수성과 \|det\| 를 따로 + `rcell = op @ cell` 계약 검증 | ✅ | selftest 22→**38** |
+| **scout 에 `lambda1_A`** — 판정에 쓰는 정본 지표가 산출물에 없고 면 높이만 있었다 | ✅ | — |
+| **release 생성기의 옛 주장 제거** — `build_final_conductivity.py` 가 매 실행마다 "EQUIVALENT transport"/"PRESERVED" 를 되살렸다 | ✅ | 재생성 후 수치 동일 확인 |
+| **webapp 단일 resolver** — `canonical.gate_outcome / gate_blocks_canonical / gate_prefix`. 소비처 5곳 이관 | ✅ | 86 passed |
+| **홈 카드 자기모순** — b2o3 를 미평가로 내리자 묶음에 modelc 만 남아 "최저" 라 쓰면서 아래에선 "구분 안 됨" 이라 했다 → **순위 보류** | ✅ | 기존 테스트가 회귀를 잡았다 |
+| **hash-bound carry 실구현** — `collect_neb` 이 `protocol_hash` 를 회수만 하고 이월 검사에 안 썼다 (F8 이 살아 있었다) | ✅ | selftest +6 (음성 4) |
+| **protocol hash 에 ASE 판·method ID + payload 분리** | ✅ | `protocol_diff` 가 바뀐 키를 지목 |
+| **assessment sidecar** — `db/governance/assessments.json`, claim 에는 `required_assessment_refs` 만 | ✅ | 옛/새 판정 **병존** |
+| **판례 원장 core 5** — `db/governance/decisions.json`, 전부 `ratification.state=proposed` | ✅ | dangling edge 검사 통과 |
+
+**아직 안 닫힌 P0**: `validate_canonical` 이 새 필드를 읽지 않는다 → 이번 정정을 스스로
+검증하지 못한다 (webapp 테스트는 잡지만 db 도구는 못 잡는다). Phase A 의 첫 작업.
 
 ## 0. 왜 — 실패 사례 9건이 요구 조건이다
 
@@ -54,7 +68,7 @@ evidenceScope: multi-source-primary
 | F7 | **selftest 실패 채로 푸시 2회** | 기억으로 돌리는 절차 | **R6** 푸시/생성 경로 자동 관문 |
 | F8 | **사람 판정 이월 오염 위험** | 이월 키에 정체성 없음 | **R7** 해시 일치에서만 승계 |
 | **F9** | **게이트 입력이 미보존인데 "나중에 재검사" 로 적어둠** — `run_highT_reseed.sh` 가 `--save_traj` 를 안 넘겨 **high-T 6런(800·1000 K × s2/s3/s4)의 궤적이 없다** | ⚠ **정보는 있었다** — `run_arrhenius_6pt.sh` L57–59 가 *"프레임을 디스크에 안 남겨(--save_traj 없음) 소급 계산도 불가"* 라고 **이미 적어뒀고**, 그 러너는 L183 에서 고쳐졌다. **highT_reseed 만 안 고쳐졌다** | **R8** 산출물이 **소급 가능성**을 스스로 도장 (`retro_gate_possible`). 입력 부재 게이트는 `not_assessed(required_artifact_set_incomplete)` — `pending` 이 아니다 |
-| **F10** | **범위 과잉 일반화 + 과교정** (v2 자체의 실패) — "최종 9개 궤적 부재" 로 적었으나 실제는 **high-T 6/6 미보존**이고 600 K 3런은 PMF 가 소비한 기록이 있다. 그 잘못된 사유를 **single-seed 항목에도 복사**했다 | 정정을 급히 쓸 때 **범위를 재확인하는 관문이 없다.** 정정도 산출물인데 계보 검사를 안 받는다 | **R9** 정정(retraction)도 **assessment 레코드**다 — 범위·근거·해시가 붙어야 하고 다른 항목에 복사되면 안 된다 |
+| **F10** | **범위 과잉 일반화 + 과교정** (v2 자체의 실패) — "최종 9개 궤적 부재" 로 적었으나 실제는 **high-T 6/6 미보존**이고 600 K 3런은 PMF 가 소비한 기록이 있다. 그 잘못된 사유를 **single-seed 항목에도 복사**했다 | 정정을 급히 쓸 때 **범위를 재확인하는 관문이 없다.** 정정도 산출물인데 계보 검사를 안 받는다 | **R9** 정정은 새 decision kind 가 아니라 **assessment correction event** 다 — `supersedes_assessment_id` + `scope` + 근거를 가진 append-only 레코드이고, 다른 항목에 사유를 복사하지 않는다 (codex 3차 확정) |
 
 ⚠ **공통 패턴 (F1–F10, 예외 없음)**: 전부 **"정보가 있는데 기계 경로에 없어서"** 다.
 v2 는 F9 를 *"정보가 정말 없는 유일한 예외"* 로 적었는데 **그것도 틀렸다** — 궤적 파일은
@@ -117,22 +131,27 @@ v2 는 7축을 한 `status` 블록에 몰아넣었다. codex 지적: 축의 **�
 |---|---|---|
 | **Decision** | `decision_state` (proposed/active/superseded/retracted) · `ratification` | 사람 |
 | **Artifact** | `artifact_integrity` (valid/incomplete/invalid) · `retro_gate_possible` | 기계(파일·해시) |
-| **Lineage** | `lineage_status` (missing/prose_only/numerically_reproducible/wired/verified) · `evidence_status` | 기계 + 사람(evidence 확정) |
+| **Lineage** | `lineage_binding` (missing/prose_only/unwired/wired/verified) · `numeric_reproduction` (none/approximate/exact) · `evidence_status` | 기계 + 사람(evidence 확정) |
 | **Assessment** | `gate_outcome` (not_assessed/pass/fail/inapplicable) + `reason` | 기계(sidecar) |
 | **Evaluator** | ⛔ **저장 안 함** — `release_status` · `allowed_uses` 는 **query-time 파생** | — |
 
 - 사람이 실제로 쓰는 축은 **3개**: `decision_state` · `ratification` · `evidence_status`.
   (v2 는 "2개" 라고 썼는데 `evidence_status` 도 사람 몫이라 틀렸다 — codex R4 지적 수용.)
-- `lineage_status` 에 **`numerically_reproducible` 등급을 신설**했다 (codex 3-6):
-  값이 upstream 숫자에서 정확히 재현되지만 **코드가 upstream 을 읽지 않는** 상태.
-  b2o3 Ea 가 정확히 여기다 — `build_final_conductivity.py` 가 D 를 하드코딩한다.
+- ⛔ **v2.1 정정 (codex R4)**: `numerically_reproducible` 을 `lineage_status` enum 에 넣은 것은
+  **5단 사다리를 폐기해 놓고 같은 자리에 사다리를 다시 만든 것**이었다. 재현 가능성과 배선
+  여부는 **독립**이므로 두 축으로 쪼갠다: `lineage_binding: unwired` + `numeric_reproduction: exact`.
+  b2o3 Ea 가 정확히 그 조합이다 — 9개 D 에서 값은 정확히 재현되는데
+  `build_final_conductivity.py` 가 D 를 하드코딩해 기계 계보는 배선돼 있지 않다.
+  ⚠ 그리고 L1 에 있는 것은 per-seed **D** 이지 per-seed **MSD** 가 아니다 — 골격 게이트는
+  궤적을 요구하므로 L1 만으로는 닫히지 않는다.
 - UI 배지는 `evaluate()` 반환값에서만 나온다. 저장된 배지를 읽지 않는다.
 
 **b2o3 Ea 가 새 어휘로** (v1 사다리로는 표현 불가능했던 상태):
 
 ```jsonc
 artifact_integrity: "incomplete"                 // high-T 6런 궤적 미보존
-lineage_status:     "numerically_reproducible"   // wired 아님 (하드코딩)
+lineage_binding:    "unwired"                    // build_final_conductivity 가 D 를 하드코딩
+numeric_reproduction: "exact"                  // 9개 D 에서 Ea 0.199438 정확 재현 (독립 축)
 evidence_status:    "validated"                  // 3-seed x 3-T, 증거는 성숙
 gate_outcome:       "not_assessed"               // reason: required_artifact_set_incomplete
 → (파생) release_status "provisional" · allowed_uses ["public_audit","comparison"]
@@ -235,9 +254,14 @@ canonical claim
 ### 5-4. 사람 판정 이월 (F8/R7)
 
 ```
-이월 허용 ⟺ (root, tag) · protocol_hash · input_hash · endpoint_hash 전부 동일
-불일치 시: 사유를 찍고 사람 판정 필드를 비운 채 carry_refused 기록
+이월 허용 ⟺ (root, tag) 동일 AND protocol_hash 동일 (input/endpoint 는 지문 payload 안)
+불일치·한쪽 부재: "이월 거부 — 5f78… → a3c2… (바뀐 것: kpts [3,3,3] → [5,5,5])" + carry_refused
 ```
+⛔ **구현하며 바꾼 것 (2026-08-20)**: 거부를 *"사람 판정 필드를 비운다"* 로 끝내면 안 된다.
+사람이 내린 **하향까지 같이 사라져** 자동 판정이 `citable=True` 로 올려버린다 — 08-16
+"0.229 가 db 에서 사라진 사고" 가 방향만 바꿔 재발한다. 거부 시 **보수적으로 잠근다**:
+`citable=False` + `carry_refused{why, withheld_fields}`. fail-closed 는 "정보를 지운다" 가
+아니라 **"안전한 쪽으로 떨어뜨린다"** 여야 한다.
 
 ## 6. method manifest (P0 2-5)
 
@@ -322,10 +346,20 @@ manuscript/release 산출 스크립트의 첫 동작이 `preflight --hard`.
 | `hash-bound-carry` | policy | 해시 불일치 시 사람 판정 승계 금지 |
 | `no-fallback` | policy | canonical 구현 import 실패 시 재구현 금지 |
 | `defect-cell-metric` | metric | λ₁ **정의**만 (구현 = §7 매니페스트, 10 Å 문턱은 별건) |
+| `no-retro-gate-without-artifact` | policy | 게이트 입력 부재 → `not_assessed`, `pending` 아님 (F9) |
+
+⭐ **core 4 → core 5** (codex 동결감사 수용) — b2o3 가 vertical slice 이고 그 slice 가
+실증하는 것이 바로 다섯 번째 결정이므로 core 에 넣는 게 정직하다.
 
 `gap-eigenvalue` · `uma-li3n-ban` 2건은 **read-only schema fixture** 로만 동봉한다
 (kind 별 스키마 동작 확인용). ⚠ consumer/preflight 에 연결하지 않으므로
 **end-to-end enforcement 검증에는 안 센다** — codex R3 수용.
+
+⭐ `supersedes` 대상인 옛 결정(`D-2026-08-16-face-height-gate`)도 **실제 node 로 등록**했다
+— 첫 원장부터 dangling edge 가 생기면 그래프가 거짓말을 시작한다 (codex 3차).
+전부 `ratification.state = proposed` 다: **agent 는 과학적 승격을 못 한다**(P0-3).
+`decision_state=active` 로 올리려면 human scientific owner 승인이 필요하고,
+그 전까지 이 결정들을 근거로 만든 산출물은 `diagnostic` 으로 강등된다.
 
 ### 9-2. 확대 대기 — entry 수리 7건
 
