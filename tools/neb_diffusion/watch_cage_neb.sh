@@ -130,9 +130,13 @@ if [ ${#LOGS[@]} -eq 0 ]; then
     echo "   (로그 없음 — 아직 끝점 이완 단계이거나 시작 전. nohup.out 참조)"
 else
     for L in "${LOGS[@]}"; do
-        # 24시간 넘게 안 건드린 로그는 옛 판이므로 한 줄로만
-        if [ -n "$(find "$L" -mmin +1440 2>/dev/null)" ]; then
-            echo "   $(basename "$L" .log)  (24h+ 정지 — 옛 판)"
+        # 오래 안 건드린 로그는 **끝났거나 버려진 판**이다. 한 줄로 접는다.
+        # ⚠ 처음엔 문턱이 24h 였는데, 20시간 전에 끝난 판들이 "⚠ 감소 없음(제자리 의심)"
+        #   경고를 달고 전부 펼쳐져 화면이 시끄러웠다 — 지금 도는 판을 찾기가 어려웠다.
+        #   경고는 **살아있는 판에만** 의미가 있다. 기본 6시간.
+        if [ -n "$(find "$L" -mmin "+${STALE_MIN:-360}" 2>/dev/null)" ]; then
+            _t=$(( ( $(date +%s) - $(stat -c %Y "$L") ) / 60 ))
+            printf "   %-28s (%dh 정지 — 끝났거나 버려진 판)\n" "$(basename "$L" .log)" "$((_t/60))"
             continue
         fi
         NH=$(grep -ac 'Step.*Time.*Energy.*fmax' "$L")
