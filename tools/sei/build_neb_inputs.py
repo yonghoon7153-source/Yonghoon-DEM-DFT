@@ -374,8 +374,18 @@ def shortest_translation_full(cell):
     rcell, op = minkowski_reduce(C)                # rcell = op @ C, op 는 unimodular
     if not is_minkowski_reduced(rcell):
         raise RuntimeError(f"⛔ minkowski_reduce 결과가 기약이 아니라고 ASE 가 답한다:\n{rcell}")
-    if abs(abs(round(float(_np.linalg.det(op)))) - 1.0) > 1e-6:
-        raise RuntimeError(f"⛔ 변환이 unimodular 가 아니다 (det={_np.linalg.det(op)})")
+    # ⛔ 2026-08-20 (codex 동결감사) — 옛 검사는 `abs(round(det)) == 1` 이었다. round 를
+    #   **먼저** 하면 정수성 검사가 사라져 det=1.4 도 det=0.6 도 통과한다(실측).
+    #   unimodular 는 두 조건이다: (a) 성분이 정수 (b) |det| = 1. 따로 본다.
+    op_arr = _np.asarray(op, float)
+    if not _np.allclose(op_arr, _np.round(op_arr), atol=1e-9):
+        raise RuntimeError(f"⛔ 변환 행렬이 정수가 아니다:\n{op_arr}")
+    det_op = float(_np.linalg.det(op_arr))
+    if abs(abs(det_op) - 1.0) > 1e-9:
+        raise RuntimeError(f"⛔ 변환이 unimodular 가 아니다 (|det| = {abs(det_op)} ≠ 1)")
+    # 계약 검증: rcell = op @ cell (ASE 문서). 어긋나면 매핑 해석이 틀린 것이다.
+    if not _np.allclose(op_arr @ C, rcell, rtol=1e-8, atol=1e-8):
+        raise RuntimeError("⛔ rcell = op @ cell 계약이 깨졌다 — ASE 판이 바뀌었을 수 있다")
 
     order = _np.argsort(_np.linalg.norm(rcell, axis=1))
     i = int(order[0])
@@ -883,7 +893,13 @@ def uma_scout(args):
                     continue
                 probs, hh = band_health(E)
                 rec = {"tag": tag, "shell": sh or "shortest", "supercell": list(sc),
-                       "n_atoms": len(at), "min_perp_width_A": round(float(W.min()), 3),
+                       "n_atoms": len(at),
+                       # ⛔ 2026-08-20 (codex 동결감사) — scout 가 **면 높이만** 보고했다.
+                       #   점결함 이미지 거리의 정본 지표는 λ₁ 이다(2026-08-16 확정). 면 높이는
+                       #   보수적 하한이라 남기되, 판정에 쓰는 값이 기록에 없으면 안 된다.
+                       "lambda1_A": round(shortest_translation(at.cell), 3),
+                       "min_perp_width_A": round(float(W.min()), 3),
+                       "_cell_metric": "lambda1 (canonical) · perp_width = conservative lower bound",
                        "hop_distance_A": round(hop, 4),
                        "endpoint_dE_eV": round(dE, 4),
                        "Ea_forward_eV": round(float(E.max() - E[0]), 4),
@@ -963,6 +979,24 @@ def _selftest():
                            [[0, 1, 0], [1, 0, 0], [-2, 4, -1]]]):
         ck(f"unimodular_invariance[{k}]",
            shortest_translation(_np.asarray(U, float) @ C), l1c, 1e-9)
+
+    # ── 음성: unimodular 검사가 진짜 검사인가 (codex 동결감사 2026-08-20) ──
+    #   옛 검사 `abs(round(det))==1` 은 det=1.4 / 0.6 을 통과시켰다. 정수성과 |det| 를
+    #   따로 봐야 한다. ASE 를 못 건드리니 검사 함수를 직접 부딪친다.
+    import numpy as _n2
+
+    def _uni_check(op):
+        a = _n2.asarray(op, float)
+        if not _n2.allclose(a, _n2.round(a), atol=1e-9):
+            raise RuntimeError("정수 아님")
+        if abs(abs(float(_n2.linalg.det(a))) - 1.0) > 1e-9:
+            raise RuntimeError("|det| != 1")
+        return True
+    ck("uni_accepts_identity", _uni_check([[1, 0, 0], [0, 1, 0], [0, 0, 1]]), True)
+    ck("uni_accepts_det_minus1", _uni_check([[0, 1, 0], [1, 0, 0], [0, 0, 1]]), True)
+    ck_raises("uni_rejects_det_1p4", lambda: _uni_check([[1.4, 0, 0], [0, 1, 0], [0, 0, 1]]), RuntimeError)
+    ck_raises("uni_rejects_det_0p6", lambda: _uni_check([[0.6, 0, 0], [0, 1, 0], [0, 0, 1]]), RuntimeError)
+    ck_raises("uni_rejects_int_det2", lambda: _uni_check([[2, 0, 0], [0, 1, 0], [0, 0, 1]]), RuntimeError)
 
     # ── 음성: 병든 입력은 **경고가 아니라 즉사** ─────────────────────────
     ck_raises("degenerate_cell",
