@@ -568,13 +568,14 @@
    "status": "claimed_fixed",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
-   "claimed_fixed_sha": "2a54a8d4",
+   "claimed_fixed_sha": "56dcbca1",
    "title": "seminar 덱의 철회 배너를 **UI 가 렌더하지 않는다** — 화면과 PPTX 는 여전히 철회값을 현행으로 보여준다",
    "evidence_tests": [
-    "scripts/check_review_findings.py --ban-sweep",
+    "scripts/check_review_findings.py --selftest  (22a~22d = pptx 음성 대조 4건)",
+    "scripts/check_review_findings.py            (리포 실물 스윕 누수 0)",
     "webapp/app.py /api/seminar/slides · /api/seminar/deck (historical=1 없이는 거부)"
    ],
-   "note": "내가 `seminar_deck.json` 에 `_RETRACTED` 키를 넣었는데 **파일에만 있고 사용자에겐 안 보였다** — UI 는 오히려 slide 12 를 \"✓ 방어 가능한 결과\" 로 표시하고, 다운로드 PPTX 에는 표지가 아예 없다 (Codex 재검증 NEW-DEFECT).  = \"배너를 달았다\" 와 \"사용자가 본다\" 가 갈린 것 = 오늘의 주제 그 자체.  → 서빙 경로를 **fail-closed** 로: `/api/seminar/slides` 와 pptx 다운로드가 `?historical=1` 없이는 데이터를 주지 않고 철회 안내를 반환한다.  ⚠ **남은 것**: PPTX 파일 자체에는 여전히 표지가 없다 (재생성이 필요하고, 그러면 \"발표된 그대로\" 가 아니게 된다 — 판단 필요)."
+   "note": "내가 `seminar_deck.json` 에 `_RETRACTED` 키를 넣었는데 **파일에만 있고 사용자에겐 안 보였다** — UI 는 오히려 slide 12 를 \"✓ 방어 가능한 결과\" 로 표시하고, 다운로드 PPTX 에는 표지가 아예 없다 (Codex 재검증 NEW-DEFECT).  = \"배너를 달았다\" 와 \"사용자가 본다\" 가 갈린 것 = 오늘의 주제 그 자체.  → 서빙 경로를 **fail-closed** 로.\n★★ **잔여 닫음 (2026-08-20, 56dcbca1).**  판단은 '재생성하면 발표된 그대로가 아니게 된다' 쪽이 아니라 **'그대로 두면 열었을 때 철회값이 현행으로 보인다'** 쪽으로 갔다 — 원본 슬라이드는 한 장도 안 건드리고 **배너 슬라이드를 1번 장으로 앞에 끼우는** 것으로 둘 다 만족한다.\n그런데 더 큰 것이 나왔다: **스윕이 zip 안을 못 봤다** — 두 덱에서 28건이 표지 없이 살아 있었고 그 중 4건은 **발표자 노트**(아무도 안 열어 볼 자리)다.  CDXIJ-4 와 같은 false-green, 매체만 다르다.  ⇒ `_ban_read_lines` 리더 층 + `docs/**/*.pptx` 스캔.\n고치다 잡은 fail-open 하나: 순서를 정규식 `r:id=\"...\"` 로 읽으니 접두사가 다르게 직렬화된 슬라이드를 **조용히 빠뜨렸고 하필 그것이 배너**였다 = 덱이 검사를 숨길 수 있는 구멍.  → 네임스페이스 정규명 파싱 + 고아 파트 강제 검사 (22d)."
   },
   {
    "id": "CDXIJ-10",
@@ -601,6 +602,22 @@
     "scripts/check_method_discipline.py --selftest (J-1, J-3a~d)"
    ],
    "note": "kgy 실측: `J_EXIT| plain … ModuleNotFoundError: matplotlib` → 러너의 규율 게이트가 그것을 보고 STEP 2a·CL-48 프로브를 **ABORT**.  원인은 스모크 픽스처가 plain 팔에 `--se-proxy` 를 썼고 그 분기만 `viz_mpm_morphology_3d`(→ matplotlib)를 import 하기 때문이다.  **생산은 `--se se_dump.npy` 라 그 분기를 안 탄다** ⇒ 실패는 생산 결함이 아니라 픽스처가 다른 길로 간 것 = FA-01 과 같은 부류를 검사기 쪽에서 재생산했다. → 두 팔 모두 `--se` 실 점구름으로 바꿔 차이를 **`--fibre` 축 하나**로 좁혔다 (그것이 FA-01 이 난 축이다).  numpy 부재 시에는 skip 이 아니라 **실패**(fail-closed). ⚠ 교훈: 러너가 규율 게이트를 exit code 로 물고 있으므로, 검사기의 픽스처 선택이 **생산 실행을 막을 수 있다** — 픽스처는 생산 경로만 타야 한다."
+  },
+  {
+   "id": "CDXIJ-12",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "56dcbca1",
+   "title": "규율 검사기 셋이 전부 **수동** — 잊으면 없는 것과 같다 (Codex ⑨)",
+   "evidence_tests": [
+    ".github/workflows/discipline.yml",
+    "scripts/check_review_findings.py --selftest",
+    "scripts/check_method_discipline.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "원장·금지어·방법 규율을 강제하는 검사기가 셋 있는데 **사람이 기억해서** 돌려야 했다.  그래서 2026-08-12 에 반증된 `~9.4 %` 가 08-19 신규 문서에서 재주장되고, 독립 리뷰가 그것을 낡은 정본에 대조해 \"일치\" 로 통과시켰다 (규율 ④ 의 계기).  → push/PR 마다 도는 워크플로.  ⚠ GPU·솔브 없음 — 규칙 J 의 초소형 픽스처 스모크와 정적 검사뿐이라 수 분.  실험 런은 여전히 kgy 에서 사람이 돌린다.  ⚠ `fetch-depth: 0` 필수 — 검사기가 `claimed_fixed_sha` 가 리포에 실재하는 커밋인지 보므로 얕은 클론이면 거짓 실패한다.  ⚠ **아직 검증 안 됨**: 이 워크플로가 GitHub 러너에서 실제로 초록인지는 push 후 확인해야 한다 (로컬에서 네 명령 전부 exit 0 은 확인)."
   }
  ]
 }
