@@ -352,7 +352,7 @@ def band_health(E):
                    "min_interior_rel_eV": round(float(inner.min()), 4)}
 
 
-def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB, log=None):
+def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB, log=None, spring_k=SPRING_K):
     """1단계(밴드) → **수렴했을 때만** 2단계(climbing image).
 
     ⛔ 2026-08-19: 앞 판은 1단계 수렴을 **안 보고** climb 를 켰다. 400스텝 상한에 걸린
@@ -364,7 +364,7 @@ def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB, log=None):
     images = [ini] + [ini.copy() for _ in range(n_images)] + [fin]
     for im in images:
         im.calc = calc
-    neb = NEB(images, k=SPRING_K, climb=False, method=NEB_METHOD,
+    neb = NEB(images, k=spring_k, climb=False, method=NEB_METHOD,
               allow_shared_calculator=True)
     neb.interpolate("idpp", apply_constraint=False)
     # ⚠ 한 판이 25분~3시간 간다. logfile=None 이면 밖에서 **수렴 중인지 제자리인지** 알 길이
@@ -514,7 +514,8 @@ def one_run(args):
               f"'중간이 끝점보다 낮음' 이 같이 뜨는지 볼 것 (2026-08-20 comp1 inter 실측 사례)")
     logf = OUTDIR / f"neb_{args.tag or 'run'}.log"
     print(f"   NEB 진행 로그 → {logf}   (tail -f 로 볼 것)")
-    images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps, log=logf)
+    images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps,
+                                 log=logf, spring_k=args.spring_k)
     split_rec = None
     if args.split:
         images, E, nebinfo, split_rec = run_split_neb(
@@ -554,7 +555,7 @@ def one_run(args):
         "trustworthy": bool(nebinfo["ci_converged"] and not probs),
         **rec_extra,
         "engine": "uma-s-1p1(omat)", "cell_relaxed": False,
-        "neb_method": NEB_METHOD, "spring_k": SPRING_K,
+        "neb_method": NEB_METHOD, "spring_k": float(args.spring_k),
         "fmax": {"endpoint": FMAX_ENDPOINT, "neb": FMAX_NEB, "ci": FMAX_CI},
         "images_file": str(xyz),
     }
@@ -656,7 +657,8 @@ def run_split_neb(images, E, nebinfo, calc, args, logf):
     for k, (a, b) in enumerate(((images[0], mid), (mid, images[-1])), start=1):
         lg = logf.with_name(logf.stem + f"_seg{k}.log")
         print(f"   구간 {k}/2 NEB (이미지 {nseg}) → {lg}")
-        im_k, E_k, info_k = run_neb(a, b, calc, nseg, args.neb_steps, log=lg)
+        im_k, E_k, info_k = run_neb(a, b, calc, nseg, args.neb_steps, log=lg,
+                                    spring_k=getattr(args, "spring_k", SPRING_K))
         Ea_k = float(E_k.max() - E_k[0])
         sub_m, _ = find_intermediate(E_k)
         print(f"      Ea(구간 {k}) = {Ea_k:.4f} eV   밴드 "
@@ -1012,6 +1014,14 @@ def main():
     ap.add_argument("--pick", type=int, default=0, help="후보 목록에서 몇 번째 (0=최단)")
     ap.add_argument("--pair", help="'i,j' 로 짝을 직접 지정 (재현·앙상블용)")
     ap.add_argument("--n_images", type=int, default=N_IMAGES)
+    # ⛔ 2026-08-20 실측: comp1 세 판(intra·inter×2)이 전부 **밴드 불연속**으로 죽었다.
+    #   이웃 이미지 사이 점프가 0.89 / 1.05 / 2.71 eV (문턱 0.8). 끝점은 셋 다 수렴했고
+    #   홉 거리도 안 변했으므로(3.5044→3.5044) "끝점 문제"도 "협동 이동으로 홉이 바뀜"도 아니다.
+    #   밴드가 **찢어진** 것이다 — 이미지가 서로 다른 분지로 떨어졌다.
+    #   찢어진 밴드는 스텝을 늘려도 안 붙는다(실제로 fmax 가 오르는 중이었다).
+    #   손잡이 둘을 노출한다: 이미지 수(경로 표본화)와 스프링 상수(이미지 이탈 억제).
+    ap.add_argument("--spring_k", type=float, default=SPRING_K,
+                    help=f"NEB 스프링 상수 eV/Å² (기본 {SPRING_K}). 밴드가 불연속이면 올려 본다")
     ap.add_argument("--neb_steps", type=int, default=STEPS_NEB)
     ap.add_argument("--rmax", type=float, default=5.0)
     ap.add_argument("--cage_margin", type=float, default=0.3)

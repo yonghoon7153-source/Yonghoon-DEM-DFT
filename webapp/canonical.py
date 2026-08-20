@@ -310,7 +310,10 @@ def decision_digest(d: dict) -> str:
 
 #: 산출물 원장 어휘
 ARTIFACT_STATUS = ("canonical", "reference", "suspect_banned", "superseded", "lost")
-LOCATION_KINDS = ("repo", "offline_backup", "server", "lost")
+# ⚠ 2026-08-20 확장: 사용자 워크스테이션(WSL/로컬 디스크)에만 있는 산출물이 실제로 나왔다
+#   (~/'C:Users안용훈Downloadsbml_kisti' 18 GB — 폴더 이름이 깨져 어떤 수색에도 안 걸렸던 것).
+#   server(원격 계산기)도 offline_backup(외장 매체)도 아니다. 어휘를 늘리는 게 맞다.
+LOCATION_KINDS = ("repo", "offline_backup", "server", "workstation", "lost")
 
 
 def artifacts(root=None) -> dict:

@@ -98,7 +98,8 @@
       "note": "⛔ 백업 2벌 + kgy + gabia **3중 수색 실패**. 같은 조사에서 b2o3·lpsocl 은 찾았으므로 수색 방법 자체는 유효했다. KISTI 원본도 없다. ⚠ 백업의 {comp1,modelc}_nscf.in 은 occupations='tetrahedra_opt' 이고 짝 출력이 0 바이트다. ★ 2026-08-20 정정: 이건 'DOS-threshold 오염' 이 아니라 **방법 비동질**이다 — 정본이 EF 를 함께 적은 것으로 보아 parse_eig_gap.py(고유값, smearing 무관) 재파싱본이다. method_provenance_2026_08_20 참조. 해소책은 그대로 fixed-occ nscf 재계산.",
       "verified": {
         "level": "search_exhausted",
-        "date": "2026-08-20"
+        "date": "2026-08-20",
+        "scope": "오프라인 백업 2벌 + kgy + gabia + bml_kisti(4번째) — 전부 negative"
       },
       "method_provenance_2026_08_20": {
         "finding": "정본 레코드(eigenvalue_gaps_v100_2026_06_16)가 **EF_eV 를 함께 적고 있다** (comp1 3.724 / modelc 3.487). fixed-occ 경로인 extract_gap.py 는 EF 를 아예 안 찍는다 — QE 가 'highest occupied, lowest unoccupied level' 만 내기 때문이다. EF·VBM·CBM·N_EF 를 같이 내는 것은 parse_eig_gap.py 다.",
@@ -110,7 +111,20 @@
         ],
         "resolution": "fixed-occ nscf 재계산 — tools/electronic/run_gap_nscf_gabia.sh (2026-08-20 작성). 재현 목표 comp1 VBM 2.128/CBM 4.194, modelc VBM 2.445/CBM 4.544. irr k-point 수(170 / 68)가 셋업 계보 확인 훅이다.",
         "confidence": "medium — EF 필드의 존재라는 간접 증거다. 원본 .out 이 없어 직접 확인은 불가능하다."
-      }
+      },
+      "search_history": [
+        {
+          "date": "2026-08-20",
+          "location": "WSL(DESKTOP-K1BLBIJ) ~/'C:Users안용훈Downloadsbml_kisti' (18 GB, 228 파일)",
+          "why_new": "폴더 이름이 깨져 있어(Windows 경로가 통째로 디렉터리명이 됨) 3중 수색 목록에 없던 4번째 장소다. v100/KISTI 시절 산출물이라 후보였다.",
+          "result": "negative",
+          "evidence": [
+            "'highest occupied, lowest unoccupied' 문자열 0건 — fixed-occ 출력이 없다",
+            "nscf 파일은 comp5_v108r3 하나뿐 (comp1/modelc 아님)",
+            "*.in 의 occupations 는 smearing 3건, fixed 0건"
+          ]
+        }
+      ]
     },
     {
       "id": "A-comp1-supercell-md",
@@ -301,6 +315,47 @@
         "level": "content",
         "date": "2026-08-20",
         "evidence": "sha256 3건 확인"
+      }
+    },
+    {
+      "id": "A-bml-kisti-wsl",
+      "what": "KISTI/v100 캠페인 로그·좌표 모음 (adhesion_*, auto_restart_modelC, comp5_basin_*, comp12/comp3 ext log 등)",
+      "location": {
+        "kind": "workstation",
+        "host": "DESKTOP-K1BLBIJ",
+        "path": "~/'C:Users안용훈Downloadsbml_kisti'",
+        "size_bytes": 18000000000,
+        "⚠": "폴더 이름이 Windows 경로 통째로 들어간 형태다 (cp/scp 사고). 이름 때문에 2026-08-20 전까지 어떤 수색에도 안 걸렸다."
+      },
+      "status": "reference",
+      "copies": 1,
+      "needs_duplication": true,
+      "consumers": [],
+      "note": "★ **D: 백업의 부분집합이 아니다.** 파일명 168종 중 101종만 백업과 겹친다 — 67종은 여기에만 있다. 그래서 지우면 안 된다. gap 실행본은 여기 없다(수색 negative, A-comp1-modelc-gap-run 참조). 어느 67종이 고유한지는 미조사.",
+      "verified": {
+        "level": "listing",
+        "date": "2026-08-20",
+        "evidence": "228 파일 · 18 GB · 백업과 파일명 교집합 101/168"
+      }
+    },
+    {
+      "id": "A-dem-workspace-img",
+      "what": "DEM 작업환경 통짜 ext4 이미지 (CFDEM · OpenFOAM-5.x · mylammps · YADE · Quantum_espresso · Multiwfn · bader · cp2k · miniconda3)",
+      "location": {
+        "kind": "offline_backup",
+        "medium": "D: (archive)",
+        "path": "D:\\archive\\Linux_Workspace\\linux_disk.img",
+        "size_bytes": 52428800000
+      },
+      "status": "reference",
+      "copies": 1,
+      "needs_duplication": false,
+      "consumers": [],
+      "note": "원래 C:\\Linux_Workspace\\linux_disk.img. 등록된 WSL 배포판 두 개(Ubuntu, Ubuntu-24.04)가 모두 다른 경로를 가리켜 **고아 이미지**로 판정, 2026-08-20 D: 로 이관(robocopy, 크기 52428800000 일치 확인). 마지막 쓰기 2026-02-20. ⚠ 안의 내용(특히 CFDEM/OpenFOAM 케이스 파일과 Quantum_espresso 폴더)은 **미조사**다 — 여기만 있는 자료가 있는지 아직 모른다. ro 마운트로 조사 가능: mount -o loop,ro (파티션 테이블 없는 통짜 ext4).",
+      "verified": {
+        "level": "content",
+        "date": "2026-08-20",
+        "evidence": "ro 마운트 성공, 최상위 디렉터리 육안 확인 (홈 디렉터리 구조)"
       }
     }
   ]
