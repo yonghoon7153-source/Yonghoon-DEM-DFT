@@ -292,22 +292,30 @@ a:hover { text-decoration: underline; }
 .split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s3); }
 @media (max-width: 1180px) { .split { grid-template-columns: minmax(0, 1fr); } }
 
-/* 사이클 추세와 그 knee 판정은 나란히 둔다.  판정이 레일 아래쪽에 있으면 기준을
-   바꿔 그래프의 세로선이 어디로 갔는지 보려고 스크롤을 오르내려야 한다.
-   `:only-child` 는 knee 가 없을 때 — 그래프가 폭을 다 쓴다. */
-.trend-split {
+/* 추세 그래프 바로 아래 줄: knee 판정과 그 판정을 바꾸는 설정.  그래프를
+   좁히는 대신 폭을 그대로 두고, 짝이 되는 두 카드를 밑에 눕혔다.  판정이 레일
+   아래쪽에 있으면 기준을 하나 눌러 보고 그래프의 세로선이 어디로 갔는지
+   확인하려고 스크롤을 오르내려야 한다.
+   `:only-child` 는 knee 가 없을 때 — 설정 카드가 폭을 다 쓰지 않게 한다. */
+.under-trend {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 300px;
+  grid-template-columns: minmax(0, 1fr) 260px;
   gap: var(--s3);
   align-items: start;
 }
-.trend-split > :only-child { grid-column: 1 / -1; }
-@media (max-width: 1500px) {
-  .trend-split { grid-template-columns: minmax(0, 1fr) 268px; }
+.under-trend > :only-child { max-width: 420px; }
+@media (max-width: 900px) {
+  .under-trend { grid-template-columns: minmax(0, 1fr); }
 }
-@media (max-width: 1080px) {
-  .trend-split { grid-template-columns: minmax(0, 1fr); }
+
+/* 네 판정을 가로로 흘린다.  넓으면 한 줄에 넷, 좁으면 2×2 로 접힌다 —
+   설명이 한국어 두 줄이라 210px 밑으로 내려가면 읽히지 않는다. */
+.knee-choices {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 6px;
 }
+.knee-choices .choice { height: 100%; }
 
 .row { display: flex; gap: var(--s2); align-items: center; flex-wrap: wrap; }
 .col { display: flex; flex-direction: column; gap: var(--s2); }

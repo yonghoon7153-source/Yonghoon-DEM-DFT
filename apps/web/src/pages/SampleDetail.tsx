@@ -10,9 +10,7 @@ import { CyclePicker } from '../components/CyclePicker'
 import { CycleTable } from '../components/CycleTable'
 import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../components/Plot'
 import { KneeDetail, ReportCard } from '../components/ReportCard'
-import {
-  Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton,
-} from '../components/ui'
+import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
@@ -33,10 +31,7 @@ export function SampleDetail() {
   const sampleId = Number(params.id)
 
   const [basis, setBasis] = useStickyState<Basis>('workbench.basis', 'mAh/g')
-  const [branches, setBranches] = useState<('charge' | 'discharge')[]>([
-    'charge',
-    'discharge',
-  ])
+  const [branches, setBranches] = useState<('charge' | 'discharge')[]>(['charge', 'discharge'])
   const [chosen, setChosen] = useState<number[] | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
   const [lifeMetric, setLifeMetric] = useState<LifeMetric>('discharge')
@@ -49,8 +44,14 @@ export function SampleDetail() {
   const sample = override ?? sampleState.data
   const stamp = sample?.updated_at
 
-  const cycleState = useAsync(() => api.sampleCycles(sampleId, { basis }), [sampleId, basis, stamp])
-  const reportState = useAsync(() => api.sampleReport(sampleId, { basis }), [sampleId, basis, stamp])
+  const cycleState = useAsync(
+    () => api.sampleCycles(sampleId, { basis }),
+    [sampleId, basis, stamp],
+  )
+  const reportState = useAsync(
+    () => api.sampleReport(sampleId, { basis }),
+    [sampleId, basis, stamp],
+  )
   const runsState = useAsync(() => api.listRuns({ sample_id: sampleId }), [sampleId])
 
   const cycles = useMemo(() => cycleState.data?.cycles ?? [], [cycleState.data])
@@ -198,6 +199,47 @@ export function SampleDetail() {
     setChosen(null) // a deleted run's cycles must not stay selected
   }
 
+  const analysisSettings = (
+    <Card title="분석 설정" padSmall>
+      <div className="col" style={{ gap: 9 }}>
+        {settingsError ? <Alert kind="error">{settingsError}</Alert> : null}
+        <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준 · Enter 로 적용">
+          <input
+            type="number"
+            min={1}
+            value={refDraft}
+            onChange={(event) => setRefDraft(event.target.value)}
+            onBlur={() => void commitReference()}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') event.currentTarget.blur()
+            }}
+          />
+        </Field>
+        <Field label="상태 판정" hint="자동은 파일 근거로 판정">
+          <select
+            value={sample.declared_state}
+            onChange={async (event) => {
+              try {
+                setSettingsError(null)
+                setOverride(
+                  await api.updateSample(sample.id, {
+                    declared_state: event.target.value,
+                  }),
+                )
+              } catch (cause) {
+                setSettingsError(cause instanceof Error ? cause.message : String(cause))
+              }
+            }}
+          >
+            <option value="auto">자동</option>
+            <option value="running">구동 중으로 고정</option>
+            <option value="finished">종료로 고정</option>
+          </select>
+        </Field>
+      </div>
+    </Card>
+  )
+
   return (
     <main className="page">
       <div className="page-head">
@@ -322,10 +364,6 @@ export function SampleDetail() {
               )}
             </Card>
 
-            {/* 추세와 knee 판정은 같은 것을 두 방식으로 본다.  판정이 오른쪽
-                레일 아래에 있으면, 기준을 바꿔 그래프의 세로선이 어디로
-                옮겨졌는지 보려고 스크롤을 오르내리게 된다. */}
-            <div className="trend-split">
             <Card
               title="사이클 추세"
               actions={
@@ -353,56 +391,63 @@ export function SampleDetail() {
               />
             </Card>
 
-            {reportState.data?.knee ? (
-              <Card title="용량 급감 지점" padSmall>
-                <KneeDetail
-                  report={reportState.data}
-                  selected={kneeMethod}
-                  onSelect={setKneeMethod}
-                />
-              </Card>
-            ) : null}
+            {/* 추세 바로 밑, 폭을 맞춰 눕힌다.  판정과 그 판정을 바꾸는
+                설정이 그래프에서 멀면 기준을 하나 눌러 보고 세로선이 어디로
+                옮겨졌는지 확인하려고 스크롤을 오르내리게 된다. */}
+            <div className="under-trend">
+              {reportState.data?.knee ? (
+                <Card title="용량 급감 지점" padSmall>
+                  <KneeDetail
+                    report={reportState.data}
+                    selected={kneeMethod}
+                    onSelect={setKneeMethod}
+                  />
+                </Card>
+              ) : null}
+              {analysisSettings}
             </div>
 
             <Card
               title={`사이클 표 · ${cycles.length}개`}
-              actions={<span className="tiny faint">행을 누르면 프로파일에 추가·제거됩니다</span>}
+              actions={
+                <span className="tiny faint">행을 누르면 프로파일에 추가·제거됩니다</span>
+              }
               tight
             >
               {cycleState.loading && !cycleState.data ? (
                 <TableSkeleton rows={6} columns={9} />
               ) : cycles.length ? (
                 <>
-                {cycleState.data?.reference_available === false ? (
-                  <div style={{ padding: '0 0 10px' }}>
-                    <Alert kind="warn">
-                      {cycleState.data.retention_note
-                        ? ko.cellNote(cycleState.data.retention_note)
-                        : `기준 사이클 ${cycleState.data.reference_cycle} 번이 없어 ` +
-                          `${cycleState.data.reference_cycle_used} 번을 기준으로 삼았습니다.`}
-                    </Alert>
-                  </div>
-                ) : null}
-                <CycleTable
-                  cycles={cycles}
-                  basis={cycleState.data?.basis ?? basis}
-                  selected={selected}
-                  // 요청한 값이 아니라 서버가 실제로 기준으로 쓴 사이클.
-                  // 3번이 없어 다른 사이클로 대체됐는데 표에는 3번이라고
-                  // 적혀 있으면, 유지율이 무엇 대비인지 알 수 없다 (ADR 0004).
-                  referenceCycle={
-                    cycleState.data?.reference_cycle_used ??
-                    cycleState.data?.reference_cycle ??
-                    null
-                  }
-                  onSelect={(cycle) =>
-                    setChosen(
-                      selected.includes(cycle)
-                        ? selected.filter((c) => c !== cycle)
-                        : [...selected, cycle].sort((a, b) => a - b),
-                    )
-                  }
-                />
+                  {cycleState.data?.reference_available === false ? (
+                    <div style={{ padding: '0 0 10px' }}>
+                      <Alert kind="warn">
+                        {cycleState.data.retention_note
+                          ? ko.cellNote(cycleState.data.retention_note)
+                          : `기준 사이클 ${cycleState.data.reference_cycle} 번이 없어 ` +
+                            `${cycleState.data.reference_cycle_used} 번을 기준으로 삼았습니다.`}
+                      </Alert>
+                    </div>
+                  ) : null}
+                  <CycleTable
+                    cycles={cycles}
+                    basis={cycleState.data?.basis ?? basis}
+                    selected={selected}
+                    // 요청한 값이 아니라 서버가 실제로 기준으로 쓴 사이클.
+                    // 3번이 없어 다른 사이클로 대체됐는데 표에는 3번이라고
+                    // 적혀 있으면, 유지율이 무엇 대비인지 알 수 없다 (ADR 0004).
+                    referenceCycle={
+                      cycleState.data?.reference_cycle_used ??
+                      cycleState.data?.reference_cycle ??
+                      null
+                    }
+                    onSelect={(cycle) =>
+                      setChosen(
+                        selected.includes(cycle)
+                          ? selected.filter((c) => c !== cycle)
+                          : [...selected, cycle].sort((a, b) => a - b),
+                      )
+                    }
+                  />
                 </>
               ) : (
                 <Empty title="사이클이 없습니다" icon="＋">
@@ -431,45 +476,6 @@ export function SampleDetail() {
                   sampleState.reload()
                 }}
               />
-            </Card>
-
-            <Card title="분석 설정" padSmall>
-              <div className="col" style={{ gap: 9 }}>
-                {settingsError ? <Alert kind="error">{settingsError}</Alert> : null}
-                <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준 · Enter 로 적용">
-                  <input
-                    type="number"
-                    min={1}
-                    value={refDraft}
-                    onChange={(event) => setRefDraft(event.target.value)}
-                    onBlur={() => void commitReference()}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter') event.currentTarget.blur()
-                    }}
-                  />
-                </Field>
-                <Field label="상태 판정" hint="자동은 파일 근거로 판정">
-                  <select
-                    value={sample.declared_state}
-                    onChange={async (event) => {
-                      try {
-                        setSettingsError(null)
-                        setOverride(
-                          await api.updateSample(sample.id, {
-                            declared_state: event.target.value,
-                          }),
-                        )
-                      } catch (cause) {
-                        setSettingsError(cause instanceof Error ? cause.message : String(cause))
-                      }
-                    }}
-                  >
-                    <option value="auto">자동</option>
-                    <option value="running">구동 중으로 고정</option>
-                    <option value="finished">종료로 고정</option>
-                  </select>
-                </Field>
-              </div>
             </Card>
 
             <Card
