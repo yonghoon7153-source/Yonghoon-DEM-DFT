@@ -103,6 +103,9 @@ def _mdlite(text: str) -> Markup:
     s = _MDL_BOLD.sub(r"<strong>\1</strong>", s)
     s = re.sub(r"\x00(\d+)\x00",
                lambda m: '<code class="mono">%s</code>' % spans[int(m.group(1))], s)
+    # ② 줄바꿈 (2026-08-20) — 대시보드 카드가 여러 문장이면 한 덩어리로 뭉개져 안 읽힌다.
+    #   escape 를 이미 지났으므로 주입 위험 없음. 기존 한 줄짜리 카드에는 영향이 없다.
+    s = s.replace("\n", "<br>")
     return Markup(s)
 
 

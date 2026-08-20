@@ -3344,6 +3344,44 @@ def dashboard_highlights() -> list:
     # comp2 disorder ensemble — ⚠ 단일 config Ea/σ 수치 인용 금지(멀티 config 판정 전, 데이터 규율)
     hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
                "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})
+
+    # ── 2026-08-19~20 MLIP 검증 축 ────────────────────────────────────────────
+    # 왜 대시보드에 올리나: 하루 동안 **모델을 의심하던 가설이 셋 다 죽었다.** 그 결과
+    #   남은 논쟁이 전부 방법론으로 옮겨갔는데, 그게 안 보이면 "UMA 가 문제" 라는 옛 프레임이
+    #   계속 인용된다. 값은 하드코딩하지 않고 db 에서 읽는다(파일이 없으면 카드가 안 뜬다).
+    bench = _load_json(DB / "properties" / "mlip_bench_li3ps4_uma.json")
+    if bench and bench.get("results", {}).get("forces"):
+        f = bench["results"]["forces"]
+        li = f.get("per_element", {}).get("Li", {})
+        hi.append({
+            "t": "UMA 힘 정확도 — **범용이 전용을 이겼다**",
+            "v": f"{f['MAE_eV_per_A']*1000:.1f} meV/Å"
+                 + (f"  ·  Li {li['MAE']*1000:.1f}" if li else ""),
+            "n": "vs 같은 test set: bespoke **35.6** · LoRA 39.2 · PET-MAD 63.9. "
+                 "우리 모델은 **이 데이터를 학습한 적이 없다**. DFT 0회 (PET-MAD 공개 라벨).\n"
+                 "⇒ **\"황화물 PES 연화\" 알리바이 철회.**\n"
+                 "⚠ 힘 축에서만 — 에너지는 bespoke 가 앞선다. **응력·장벽은 안 쟀다.**"})
+
+    scout = _load_json(DB / "properties" / "sei_neb_uma_scout.json")
+    if scout and scout.get("runs"):
+        hi.append({
+            "t": "NEB 셀 크기 — **작은 셀이 장벽을 부풀린다**",
+            "v": "1×1×1 → 2×2×2 에서 **1.3–3.3배 하락**",
+            "n": "6홉 / 4화합물, **예외 0**. li3p 0.287→**0.088** · li2o 0.648→**0.270** · "
+                 "licl 0.686→**0.491** · li3po4g 0.666→**0.463**.\n"
+                 "⇒ `cc333` 의 2.56 eV 는 **미수렴**이다 (수렴하면 0.229 이하여야 정합).\n"
+                 "⇒ `MIN_WIDTH_A=10 Å` 는 **최소 요건이지 수렴 보증이 아니다**.\n"
+                 "⚠ UMA 값 — **장벽 절대값 인용 금지**, 셀 의존성만."})
+
+    hi.append({
+        "t": "⚠ b2o3 아레니우스 — **판정 보류**",
+        "v": "800 K β 0.59 · 1000 K β 0.63",
+        "n": "같은 온도 modelc 는 **0.03 / 0.08**. 비-Li MSD 기울기 β (진동 ≈0 · 이동 →1).\n"
+             "modelc 5온도·LPSOCl 10런은 **전부 정상**, b2o3 만 크다 (S 41·Cl 16 = 소표본 아님).\n"
+             "⛔ **결론 아님** — 자기리뷰에서 이름(골격→케이지 음이온)과 기전(D 과대)을 **둘 다 철회**했다. "
+             "600 K 도 시드마다 갈린다.\n"
+             "⇒ `Ea 0.199±0.034` · \"+B₂O₃ 1등\" 은 codex 교차검증까지 보류."})
+
     return hi
 
 # ─────────────────────────────────────────────────────────────

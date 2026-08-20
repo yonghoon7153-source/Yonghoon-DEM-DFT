@@ -7,7 +7,7 @@ status: 측정완료
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-20
-verifiedBy: gabia UMA 정찰 12런 (tools/sei/build_neb_inputs.py --uma_scout) — 값 파일은 gabia 에서 푸시 대기
+verifiedBy: gabia UMA 정찰 12런 (tools/sei/build_neb_inputs.py --uma_scout) → db/properties/sei_neb_uma_scout.json
 explored: false
 authoredBy: agent
 effort: medium
@@ -17,9 +17,6 @@ evidenceScope: multi-source-primary
 
 # NEB 셀 크기 추세 — 작은 셀이 장벽을 부풀린다
 
-> ⏳ **파일 상태**: 근거 json 은 gabia 에서 생성됐고 **푸시 대기** 중이다.
-> 올라오면 `lint-skip-path` 표식 2곳을 지운다.
->
 > **한 줄**: 같은 홉·같은 엔진에서 `1×1×1 → 2×2×2` 로 키우면 장벽이 **예외 없이 내려간다**
 > (6홉 / 4화합물, **1.32–3.26배**). ⇒ **`sei_neb_v2_cc333`(107원자) 의 2.56 eV 가
 > `ccpath`(31원자) 의 0.229 보다 큰 것은 "미수렴" 말고 설명이 남지 않는다.**
@@ -27,7 +24,7 @@ evidenceScope: multi-source-primary
 
 ## 1. 값 (전수)
 
-`db/properties/sei_neb_uma_scout.json` · UMA-s-1p1(omat) · 중성 공공 · 끝점 **한 번 이완** <!-- lint-skip-path: 2026-08-20 02:43 gabia 에서 생성됐고 푸시 대기 중이다. 올라오면 이 표식을 지운다 -->
+`db/properties/sei_neb_uma_scout.json` · UMA-s-1p1(omat) · 중성 공공 · 끝점 **한 번 이완**
 
 | 계 | 공간군 | 홉 | d (Å) | 1×1×1 | **2×2×2** | 비 | 끝점차 |
 |---|---|---|---|---|---|---|---|
@@ -88,7 +85,7 @@ evidenceScope: multi-source-primary
 
 ## 4. 출처
 
-- 값: `db/properties/sei_neb_uma_scout.json` (12건) <!-- lint-skip-path: 2026-08-20 02:43 gabia 에서 생성됐고 푸시 대기 중이다. 올라오면 이 표식을 지운다 -->
+- 값: `db/properties/sei_neb_uma_scout.json` (12건)
 - 도구: `tools/sei/build_neb_inputs.py --uma_scout` (엔진 조각은 `argyrodite_cage_neb.py` 재사용)
 - 관련: `kb/results/uma_force_accuracy_li3ps4_2026_08_19.md` §5-4 (Li₃P 잔여력)
 - 리뷰: `kb/reviews/codex_B_neb_md_tools_2026_08_20.md` §1-1 · §5(B-R5, B-R6)
