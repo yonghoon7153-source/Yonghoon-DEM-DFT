@@ -380,3 +380,66 @@ warm start 는 앞 목적함수의 **해**를 뒤 목적함수의 초기값으�
 |---|---|
 | seed 왜곡 다리 16개 원점 미검증 | **닫힘** — 24다리 전부 진단. `a_ne` 는 전부 1.0582~1.0693 (오염 영역 ≈1.03 없음) |
 | `fit_22p_seed_404_hc` 이상 | **닫힘** — 인용 축은 정상, 오염은 companion 축. §14 가설 |
+
+---
+
+# 16. 실행 지시 — §14 가설 검증 (404 warm-start)
+
+**이 실행은 반드시 `source_digest = a72c0f3a485c19bb` 에서 해야 한다.** 단계 B
+(코드 수정)가 들어가면 digest 가 바뀌어 기존 24다리와 나란히 놓을 수 없다.
+→ **이 실행을 끝낸 뒤에 단계 B 를 pull 한다.**
+
+## 무엇을 시험하나
+
+§14 가설: `fit_22p_seed_404_hc` 의 companion 목적함수(`pocv_dvdq`) 원점이 홀로
+오염(`a_ne` 1.0273, 다른 다섯 격자는 1.0617)돼 있고, warm start 가 앞 목적함수의
+**해**를 뒤로 넘기므로 404 의 왜곡 다리들이 계속 이상한 국소해에 앉는다.
+
+시험: **목적함수 집합은 그대로 두고 연쇄만 끊는다** (`--no-warm-start`).
+단일 목적함수 실행으로 바꾸면 안 된다 — 13차 자체 리뷰가 그건 cold start 가 되어
+민감도를 과소평가한다고 실측했다 (warm-start 축 교란).
+
+## 명령 (인자 조립은 `RUN_SH_DRY=1` 로 검증했다)
+
+```bash
+cd ~/work/Yonghoon-DEM-DFT/degradation-degeneracy
+
+# (1) 대조 — 무왜곡, 연쇄만 끊는다
+./run.sh --mode fit --in results/grid_22p_seed_404 \
+  --out results/fit_22p_seed_404_hc_nowarm --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --reference halfcell --bounds halfcell --no-warm-start
+./run.sh --mode score --in results/fit_22p_seed_404_hc_nowarm
+
+# (2) 5 mV 왜곡 — 이상치가 나온 바로 그 다리
+./run.sh --mode fit --in results/grid_22p_seed_404 \
+  --out results/fit_seed404_pe5mv_nowarm --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --reference halfcell --bounds halfcell \
+  --halfcell-method ocpbias --halfcell-arg pe_offset_mv=5 --no-warm-start
+./run.sh --mode score --in results/fit_seed404_pe5mv_nowarm
+
+# (3) 원점·붕괴율을 원 다리와 나란히 본다
+python3 tools/diagnose_pini_transition.py --objective pocv_dvdq_dqdv --legs \
+  results/fit_22p_seed_404_hc        results/fit_seed404_pe5mv \
+  results/fit_22p_seed_404_hc_nowarm results/fit_seed404_pe5mv_nowarm \
+  results/fit_seed202_pe5mv          results/fit_seed505_pe5mv \
+  | tee docs/22p_gap/pini_404_nowarm.txt
+
+# (4) companion 축 원점도 본다 (오염이 여기 있었다)
+python3 docs/22p_gap/leg_probe.py | grep -E '^leg|404'
+```
+
+## 판정 기준 (미리 못박는다 — 결과를 보고 정하지 않는다)
+
+| 관측 | 해석 |
+|---|---|
+| `_nowarm` 5 mV 원점이 `a_pe ≈ 1.5032` (다른 다섯 격자 값)로 오고 붕괴가 0/8 로 떨어진다 | **가설 지지** — warm-start 연쇄가 404 를 이상 국소해로 끌었다. 처방에 `--no-warm-start` 또는 연쇄 순서 고정이 들어가야 한다 |
+| `_nowarm` 5 mV 도 여전히 `a_pe ≈ 1.52` 이고 붕괴가 5/8 근방 | **가설 기각** — warm start 무관. 원점 불안정의 원인은 다른 축(restart 예산·난수 seed)이다 |
+| 대조(무왜곡) 다리의 `pocv_dvdq` 원점이 1.0273 → 1.06 대로 바뀐다 | companion 오염이 warm start 산물이었다는 직접 증거 |
+| 대조도 `_nowarm` 에서 결과가 크게 흔들린다 | 이 격자 자체가 최적화적으로 불안정하다 — 격자 수준 문제이고 404 만의 일이 아니다 |
+
+비용: 격자 1개(640조건) × 2다리. 기존 seed 다리가 13 MB 였으므로 비슷한 규모다.
+
+**주의**: `results/fit_22p_seed_404_hc_nowarm` 은 새 이름이다. 기존
+`fit_22p_seed_404_hc` 를 덮어쓰지 않는다 — 대조가 사라지면 시험이 무의미해진다.
