@@ -569,6 +569,11 @@ def main():
     ap.add_argument('--step3-gpu', action='store_true',
                     help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
                          'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
+    ap.add_argument('--step3-maxiter', type=int, default=0,
+                    help='STEP3 CG 최대 반복 (기본 0 = 코드 기본 30000 유지).  조건수가 나쁜 '
+                         '진단 팔(예: --sigma-vgcf 7854 → σ 대비 785,400x)이 rtol 1e-8 에 '
+                         '못 닿아 info=30000 으로 끝날 때 올린다.  ⚠ 규약을 바꾸는 것이 아니라 '
+                         '수렴에 도달시키는 것이다 — 수렴한 값끼리만 비교할 수 있다.')
     ap.add_argument('--step3-amg', action='store_true',
                     help='STEP3 CPU CG 전처리를 Jacobi → AMG (pyamg smoothed-aggregation).  '
                          '값은 반복수 절벽 회피: 합성 침대 실측(61.6k→487k dof)에서 Jacobi 는 '
@@ -1011,6 +1016,10 @@ def main():
                 print(f'  STEP3: ★ SDCP **부피-보존 구 스탬프** Ø{a.step3_sdcp_sphere_d} µm '
                       f'(d/vox = {a.step3_sdcp_sphere_d / a.step3_vox:.2f}) — 점 스탬프는 '
                       f'참부피의 {a.step3_vox ** 3 / (3.14159265 / 6 * a.step3_sdcp_sphere_d ** 3):.2f}배', flush=True)
+            if int(getattr(a, 'step3_maxiter', 0) or 0) > 0:
+                _s3.CG_MAXITER = int(a.step3_maxiter)
+                print(f'  STEP3: CG maxiter {_s3.CG_MAXITER:,} (기본 30,000) — 조건수가 나쁜 '
+                      f'팔을 수렴시키기 위한 것이지 규약 변경이 아니다', flush=True)
             _yv3 = bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False))
             if _yv3:
                 print('  STEP3: ★ **진단 팔** — SDCP 가 VGCF 셀에 양보한다 (σ-치환 채널 OFF, '

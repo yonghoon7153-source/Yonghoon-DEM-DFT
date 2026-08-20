@@ -126,6 +126,13 @@ AMG_SOLVE = False
 #:   SR-03 로 `precond` 추가 — 전처리도 요청과 실제가 갈릴 수 있다(pyamg 부재 → Jacobi).
 LAST_BACKEND = {'requested': None, 'used': None, 'fallback_reason': None, 'precond': None}
 
+#: CG 최대 반복.  ⚠ 2026-08-20 — 옛 판은 30000 **하드코딩**이라, 조건수가 나쁜 진단 팔
+#:   (σ_VGCF=7854 → σ_VGCF/σ_AM = 785,400×) 이 rtol 1e-8 에 못 닿고 `info=30000` 으로
+#:   끝났다 (CL-48 실측: resid 7.7e-08 / 5.8e-08 → payload 가 `σ UNRELIABLE` 로 표시).
+#:   ⇒ payload 가 `--step3-maxiter` 로 올릴 수 있게 전역으로 뺀다.  **기본값은 안 바꾼다**
+#:   (기존 런의 규약을 유지).  GPU 경로는 Jacobi 고정이라 AMG 로는 못 푼다.
+CG_MAXITER = 30000
+
 
 def _amg_M(L):
     """pyamg smoothed-aggregation 전처리 (그래프-라플라시안 특화).  실패하면 None → Jacobi.
@@ -174,9 +181,9 @@ def _solve_cg(L, b):
             bg = cp.asarray(b, dtype=np.float64)
             Mg = cxs.diags(1.0 / cp.asarray(diag))
             try:
-                xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=30000, M=Mg)
+                xg, info = cg_gpu(Lg, bg, tol=1e-8, maxiter=CG_MAXITER, M=Mg)
             except TypeError:                              # newer CuPy renamed tol → rtol/atol
-                xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=30000, M=Mg)
+                xg, info = cg_gpu(Lg, bg, rtol=1e-8, atol=0.0, maxiter=CG_MAXITER, M=Mg)
             LAST_BACKEND.update(used='gpu', precond='jacobi')   # v1: GPU 경로는 Jacobi 유지
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
@@ -188,9 +195,9 @@ def _solve_cg(L, b):
     if Minv is None:
         Minv = sparse.diags(1.0 / diag)
     try:
-        return cg(L, b, rtol=1e-8, maxiter=30000, M=Minv)
+        return cg(L, b, rtol=1e-8, maxiter=CG_MAXITER, M=Minv)
     except TypeError:                                      # scipy < 1.12 has no rtol kwarg
-        return cg(L, b, tol=1e-8, maxiter=30000, M=Minv)
+        return cg(L, b, tol=1e-8, maxiter=CG_MAXITER, M=Minv)
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,

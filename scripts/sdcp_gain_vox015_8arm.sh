@@ -69,6 +69,9 @@ fi
 #     1,415 → 4.97e9 로 터졌다.  ⇒ 스윕에서는 둘 다 끈다.
 #     ⚠ `LEAN=1` 의 뜻은 **바꾸지 않는다** — 이미 그 값으로 돈 팔(STEP 2/3/5)의 규약을
 #       소급해 흔들지 않기 위해서다.  스윕만 2 를 쓴다.
+#  ★ 2026-08-20 — 진단 팔이 코드 수정 없이 payload 플래그를 더할 수 있게.
+#    예: `P2_EXTRA="--step3-maxiter 200000"`.  ⚠ 태그·OUTDIR 에는 안 들어가므로
+#    **규약을 바꾸는 플래그는 여기로 주지 말 것** (섞이면 판정기가 못 잡는다).
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
 #     ★ 2026-08-18 2차: `--no-collector` 도 넣는다.  1차 LEAN=2 시도가 **집전체 기하 솔브**
@@ -206,7 +209,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp segment \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$LEAN_FLAGS" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
