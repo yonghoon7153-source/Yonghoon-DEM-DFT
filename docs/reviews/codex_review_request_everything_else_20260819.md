@@ -18,7 +18,8 @@
 | 코팅 트랙 ⓪단계 | δ 분포 · 압력 분해 · A3 산술 · AM 백본 σ_e | 완료 (CL-52) |
 | 원장 정정 | CL-50~56 (7건) | 기록 완료 |
 | 결함 수정 | **9건** (§D) | 커밋 완료 |
-| **[08-20 추가] 브랜치 전수 감사** | 같은 부류 **8건 더** (§D 계수 9 → **17**) + 철회값 누수 26곳 | **§J** — 이 문서의 주 질문에 직접 답이 되는 재료 |
+| **[08-20 추가] 브랜치 전수 감사** | 같은 부류 **신규 9건** (기존 ≥12 + 신규 9 = **≥21**) + 철회값 누수 26곳 | **§J** — 이 문서의 주 질문에 직접 답이 되는 재료 |
+| **[08-20 추가] Codex 교차검증** | §J 의 두 대응 **모두에서 false-green** (IJ-01·04·05) + D-2 선형 가설 반증(IJ-03) | **§K** — 처리·잔여 목록 |
 
 ---
 
@@ -300,6 +301,12 @@ t ≥ 0.15 는 **B1 ①(SE 좌표 편향, 새 phase 없이)** 가 옳다.
 
 ## J-1. §D-1 목록에 **없던 부류**가 나왔고, 그것이 가장 컸다
 
+> ⚠ **계수 정정 2026-08-20 (Codex §8)** — 초판의 `9 → 17` 은 **기저가 섞인 수**다.
+> 같은 문서 §D 가 이미 "기존 ≥12" 라고 적었고(fable F6), 감사가 센 신규는
+> α3 + β2 + γ3 + δ1 = **9건** 이다 ⇒ 정확히는 **기존 ≥12 + 신규 9 = ≥21**.
+> 아래 표에는 신규 중 `scipy-closing` 무음 생략 1건도 빠져 있다 (그래서 8행).
+> ⇒ **이 문서가 지적한 "선언과 실행의 분리" 가 자기 계수에서 재현됐다.**
+
 | # | 결함 | 부류 | 규모 |
 |---|---|---|---|
 | **10** | `_kind_all` 이 `if getattr(a,'fibre',…)` 블록 **안에서만** 대입되는데 rasterize 호출은 무조건 읽는다 | ★ **조건부 바인딩** (§D-1 에 없던 형태) | **`--fibre` 없는 모든 payload 런에서 STEP3 통째로 사망**, 08-12~20 (8일) |
@@ -317,8 +324,12 @@ t ≥ 0.15 는 **B1 ①(SE 좌표 편향, 새 phase 없이)** 가 옳다.
 run_mpm.sh 는 DONE 마커를 찍고 payload 는 **exit 0** 으로 완주한다.
 SR-01 8팔 캠페인이 `--fibre` 를 넘겨서 무사했기 때문에 8일간 아무도 못 봤다.
 
-⚠ **정적 검사가 원리적으로 못 본다**: 우리 자체 게이트 `check_undefined_names.py`(pyflakes)를
-실제로 돌려 **통과함을 확인**했다.  조건부 바인딩은 pyflakes 의 사정권 밖이다.
+⚠ **우리 정적 게이트가 못 봤다**: `check_undefined_names.py`(pyflakes)를 실제로 돌려
+**통과함을 확인**했다 — 조건부 바인딩은 pyflakes 의 사정권 밖이다.
+> ⚠ 정정 2026-08-20 (Codex §8): 초판은 *"정적 검사가 **원리적으로** 못 본다"* 라고 썼는데
+> **과하다**.  pyflakes 가 놓친다는 실측은 맞지만, CFG 지배관계·확정할당(definite assignment)
+> 분석이나 "함수 입구에서 초기화" 규칙으로 **정적으로 잡을 수 있다**.  못 본 것은 우리가 쓰는
+> 도구이지 정적 분석 일반이 아니다.
 
 ## J-2. ★★ 같은 부류가 **문서로도 간다** — Q-D1 의 답 후보
 
@@ -406,3 +417,41 @@ SR-01 8팔 캠페인이 `--fibre` 를 넘겨서 무사했기 때문에 8일간 �
 - 게이트 전부 녹색: discipline **51/51**(규칙 J 포함) · findings **26/26**(ban-sweep 포함) ·
   verdict **30/30** · network **29/29** · ml_design **68/68** · wiki lint 0/0 · 철회값 누수 **0**.
 - CLAUDE.md 작업 규율에 **④ 정본은 밖으로 강제되지 않으면 새어나간다** 를 추가했다.
+
+
+---
+
+# §K. 【2026-08-20】 Codex 교차검증 결과 — **§J 의 "녹색" 이 아직 아니다**
+
+원문 박제: **`docs/reviews/codex_crosscheck_IJ_20260820.md`** (등재 `findings.json` CDXIJ-1~7).
+Codex 가 `d640d70d` 을 격리 스냅샷에서 독립 감사했고, **§J-3 이 자랑한 두 대응 모두에서
+false-green 을 찾았다.**
+
+| ID | 무엇이 틀렸나 | 처리 |
+|---|---|---|
+| **IJ-01** P1 | FA-02 6필드가 실제 JSON 경로에서 **4/6만** 닫혔다.  두 필드가 부재를 기본값으로 접어 게이트가 원리적으로 발화 불가.  ⚠ **내 회귀가 `_read()` 를 건너뛰어** 놓쳤다 | 부재 보존 + ㉒ 를 실제 JSON 16개·`collect()` 로 재작성 → 6/6 |
+| **IJ-02** P1 | 판정기가 **정확한 8팔·origin-key pairing·prereg 명목값·causal input** 을 강제하지 않는다 (2팔도 판정 · disjoint origin 도 h0 · paired 통계가 **파일명 zip**) | **`open`** — 설계 변경이라 미착수 |
+| **IJ-03** P1 | (도핑 트랙, 짝 문서 §D-2) | CL-57 · 회귀 3건 |
+| **IJ-04** P1 | **ban-sweep 이 false-green** — 웹앱이 서빙하는 `seminar_deck.json` 과 러너 `.sh` 가 범위 밖이었다 | json/sh 범위 + 패턴 2개 추가 → 새로 **16건** 처리.  241 → **389 파일** |
+| **IJ-05** P1 | **규칙 J 가 계산 없는 자가보고를 통과** (fake producer · all-disabled) | 기대 상태 맵 + 수치 단언 + Codex 의 세 변형을 **상주 음성 대조**로 |
+| **IJ-06** P2 | FA-04 selftest 가 원본 미가용 시 fail-open (`64/64 PASS`) | UNVERIFIED = 실패 (음성 대조 64/65 FAIL) |
+| **IJ-07** P2 | 캐시 키 비단사 · report 가 비기본 직경을 **3.375배 과대** | awk 정규화 + **SKIP 전 기록 대조** 신설 + row 별 직경 |
+
+**Q-J1/J2/J3 에 대한 Codex 회답** (박제 §9):
+- **Q-J1** — 규칙 J·ban-sweep 은 (a)(b)(c)의 **대체가 아니라 보완**이다.  Rule J 에 최소
+  `{plain, fibre-point, fibre-segment} × {component on/off}` 와 **production argv 생성기**
+  (`mpm_input_from_case → run_mpm.sh`)를 넣어야 한다.  ⇒ **미착수** (현재 2팔).
+- **Q-J2** — "모든 새 gate/checker 는 음성 대조" 가 맞고, 최소 계약 5가지:
+  정상 witness · invariant 별 fault mutant · **mutation 이 적용됐다는 assertion** ·
+  예상 diagnostic code 고정 · **skip/미실행/대상 0건은 실패**.
+  ⇒ 이번 라운드에 J-3a/b/c 와 IJ-06 음성 대조를 상주시켰다.  "skip = 실패" 도 IJ-06 에 적용.
+- **Q-J3** — 구현자 회귀만으로는 `verified` 불가.  최소 증거 6가지(pre-fix SHA 에서 독립 fixture
+  실패 → claimed-fix SHA 에서 통과 → 다른 oracle/적대 mutant → production argv 확인 → 명령·환경·
+  값·digest 기록 → 독립 커밋/CI attestation).  ⚠ 현재 `check_review_findings.py` 는 무관한 기존
+  파일을 evidence 로 써도 통과하므로 독립성은 CODEOWNERS/branch protection/CI artifact 몫이다.
+  ★ Codex 판정: **FA-01 은 독립 A/B 가 갈렸으므로 `verified` 승격 가능**하나, 그것이 규칙 J 의
+  **일반성**을 인증하지는 않는다 (별도 finding 으로 분리).
+
+**아직 안 한 것** (정직하게): IJ-02 전부 · ban-sweep 의 self-authorizing 배너 · Rule J 의
+argv 매트릭스와 production 생성기 · IJ-06 의 사본 **구현** mutation · **CI 연결**(현재
+`.github` workflow 가 없어 세 checker 는 수동 실행이다) · 리뷰 문서 front matter 의 SHA 고정.

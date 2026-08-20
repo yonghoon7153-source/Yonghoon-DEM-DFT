@@ -2085,12 +2085,47 @@ def _selftest_temp():
         t = np.zeros(9); t[6] = sigma_ion_se_S_cm(T); return t
     r_ref = solve_sigma_z(sid, _sig_i(), 0.4, z_top_um=6 * 0.4, z_bot_um=0.0)['sigma_eff']
     r_60 = solve_sigma_z(sid, _sig_i(60.0), 0.4, z_top_um=6 * 0.4, z_bot_um=0.0)['sigma_eff']
-    chk('σ_eff is exactly linear in σ_SE → σ_eff(60 °C)/σ_eff(25 °C) == x4.785',
+    chk('σ_eff is exactly linear in σ_SE **when the grid is all-SE** → σ_eff(60 °C)/σ_eff(25 °C) == x4.785  (⚠ 혼합상은 아래 η 검사 참조)',
         abs(r_60 / r_ref - se_material.arrhenius_sigma_factor(60.0)) < 1e-9,
         f'{r_ref:.6g} → {r_60:.6g}  (x{r_60/r_ref:.4f})')
     chk('σ_eff(no T) == σ_eff(25 °C) bitwise',
         float(r_ref).hex() == float(solve_sigma_z(sid, _sig_i(25.0), 0.4, z_top_um=6 * 0.4,
                                                   z_bot_um=0.0)['sigma_eff']).hex())
+
+    # ── ⚠⚠ 위 검사의 **적용 범위**를 못 박는다 (2026-08-20, Codex CDX-IJ-03) ─────────────
+    #   위 두 줄은 격자가 **전부 sid 6(SE)** 일 때만 성립한다.  유한체적 라플라스는 상별 σ 에
+    #   1차 동차이므로 **모든 상을 같은 배수로** 곱해야 σ_eff 가 그 배수로 움직인다.
+    #   ⚠ 그런데 실제 DBE 이온망은 **SE(도핑으로 변함) + SDCP(고정)** 가 함께 전도한다.
+    #     한 상만 올리면 응답은 topology 에 따라 **감쇠**된다.
+    #   실사고: 도핑 트랙 사전등록 초안(§D-2)이 이 selftest 의 라벨("exactly linear in σ_SE")을
+    #     보고 "h0 = σ_ion_eff 비가 정확히 ×1.53" 을 등록하려 했다.  **DBE 에서 거짓**이다.
+    #   ⇒ 감쇠계수 η ≡ (σ_eff 비 − 1)/(f − 1) 로 읽는다: all-SE 는 1, 혼합상은 < 1.
+    _F = 1.53
+
+    def _sig_mix(f=1.0):
+        t = np.zeros(9)
+        t[6] = sigma_ion_se_S_cm() * f          # SE — 도핑 팔에서만 변한다
+        t[5] = 1.0e-3                           # SDCP — 고정 (mpm_webapp_payload 기본)
+        return t
+
+    def _eta(sid_):
+        _kw = dict(z_top_um=sid_.shape[2] * 0.4, z_bot_um=0.0)
+        _a = solve_sigma_z(sid_, _sig_mix(1.0), 0.4, **_kw)['sigma_eff']
+        _b = solve_sigma_z(sid_, _sig_mix(_F), 0.4, **_kw)['sigma_eff']
+        return (_b / _a - 1.0) / (_F - 1.0)
+
+    _n = 6
+    _all = np.full((_n, _n, _n), 6, np.int8)
+    _ser = np.full((_n, _n, _n), 6, np.int8); _ser[:, :, _n // 2:] = 5   # 직렬 (z 적층)
+    _par = np.full((_n, _n, _n), 6, np.int8); _par[_n // 2:, :, :] = 5   # 병렬 (x 분할)
+    _e_all, _e_ser, _e_par = _eta(_all), _eta(_ser), _eta(_par)
+    chk('★ all-SE 에서만 η = 1 (= "정확히 선형" 의 적용 범위)',
+        abs(_e_all - 1.0) < 1e-9, f'η = {_e_all:.6f}')
+    chk('★★ SE/SDCP 혼합에서는 η < 1 — **한 상만 올리면 감쇠한다** (CDX-IJ-03)',
+        _e_ser < 0.5 and _e_par < 0.95,
+        f'직렬 η = {_e_ser:.3f} · 병렬 η = {_e_par:.3f}  (all-SE 1.000)')
+    chk('★ 감쇠는 topology 에 의존한다 (직렬 ≪ 병렬) — 단일 배수로 접을 수 없다',
+        _e_ser < _e_par - 0.3, f'{_e_ser:.3f} < {_e_par:.3f}')
     print('TEMP SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 

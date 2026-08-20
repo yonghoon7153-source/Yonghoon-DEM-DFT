@@ -1719,6 +1719,25 @@
    "provenance": "kgy 파일시스템 직접 확인 (mpm_metrics.json 의 additives.E_GPa · E_anchor · mtime) · CLAUDE.md ADD_E_SET 2026-08-18 · CL-42",
    "shared_input": "CL-41 (격자 스윕) · CL-33/34 (vox 0.15 헤드라인) · CL-42 (ADD_E_SET 세대 사고)",
    "reviews_work_dated": "2026-08-19"
+  },
+  {
+   "id": "CL-57",
+   "date": "2026-08-20",
+   "status": "live",
+   "claim": "σ_ion_eff 는 **한 상만** 올리면 그 배수로 안 움직인다 — DBE 혼합 이온망에서 응답이 topology 에 따라 감쇠한다.  ⇒ 도핑 트랙은 산술이 아니라 **실측 대상**이다.",
+   "measured": {
+    "metric": "감쇠계수 η ≡ (σ_eff,new/σ_eff,base − 1)/(f − 1), f = 1.53 (SE 만 ×1.53, SDCP 1.0e-3 고정), 6³ 격자 vox 0.4",
+    "value": "all-SE **η = 1.000000** (비 1.5300) · SE/SDCP 직렬(z 적층) **η = 0.179** (비 1.0948) · 병렬(x 분할) **η = 0.750** (비 1.3975) · 무작위 20 % SDCP **η = 0.789** (비 1.4181).  Codex 가 독립 격리 스냅샷에서 앞 셋을 먼저 냈고, 내가 같은 값을 소수 넷째 자리까지 재현했다.",
+    "unit": "dimensionless"
+   },
+   "asserted": "도핑 사전등록 초안 §D-2 는 h0 = 'σ_ion_eff 비 = σ_SE 비, |편차| ≤ 1 %' 였다.  근거는 `step3_sigma.py` 의 선형성 selftest 인데 **그 검사는 격자가 전부 sid 6(SE)** 일 때만 돈다 (`sid[:] = 6`).  라벨이 'σ_eff is exactly linear in σ_SE' 라 적용 범위가 안 보였다.",
+   "h0": "DBE 도 정확히 f 배 (η = 1)",
+   "h1": "고정 SDCP 경로 때문에 응답이 감쇠 (0 < η < 1), 크기는 topology 의존",
+   "h0_predicts": "η = 1.000 ± 0.01",
+   "h1_predicts": "η < 0.95",
+   "bridge": "유한체적 라플라스는 상별 σ 에 1차 동차라 **모든 상을 같은 배수로** 곱할 때만 σ_eff 가 그 배수로 간다.  한 상만 바꾸면 나머지 상의 저항 분담이 그대로 남아 감쇠한다.",
+   "verdict": "**h1 확정** (관측 η 0.179 ~ 0.789, h0 예측 1.000 과 분해능 밖).  Codex CDX-IJ-03 이 먼저 지적했고 내가 독립 재현했다.\n★★ **이 트랙의 성격이 바뀐다.** 요청서 §C-3 은 '선형성을 넘는 산출물이 없으면 트랙을 하지 말라' 고 물었는데, **있다**: η 는 SE 전도도 향상이 복합 이온망에 얼마나 **전달되는지**를 재는 model-internal response attenuation 이고, morphology 에 의존하므로 산술이 아니다.\n⇒ 팔을 둘로 가른다: **SBE(all-SE 근사) = 코드 oracle** (η = 1 이어야 하고 아니면 결함) · **DBE = 측정** (η 값 자체가 결과).  사전등록도 그렇게 갈라 쓴다.\n⚠ **라벨 주의**: 문헌의 ×1.25/1.53/1.94 는 주로 cold-pressed pellet EIS 이고 코드의 3.0 mS/cm 는 single-crystal grain-interior 앵커다 (Cronau).  입계·밀도·압밀 변화가 섞이므로 팔 이름은 **'literature-ratio sensitivity scenario'** 가 안전하고 'externally predicted doped-grain conductivity' 는 과장이다 (Codex 지적, 채택).\n⚠ STEP4 도 같은 이유로 ×f 가 아니다 — Codex 의 analytic sandwich 파라미터에서 이온 ×1.53 이 총전류를 약 ×1.0551 만 바꾼다 (⚠ **미재현** — 우리 쪽에서 아직 안 돌렸다).\n★ 회귀 상주: `step3_sigma.py --selftest-temp` 에 all-SE η=1 · 혼합 η<1 · topology 의존 3건.  오도했던 라벨('exactly linear in σ_SE')에 **적용 범위**를 명시했다.",
+   "reviews_work_dated": "2026-08-20"
   }
  ],
  "quotation_ban": [

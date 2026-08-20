@@ -104,8 +104,13 @@ BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
 BAN_ALLOW_ALWAYS = ('docs/reviews/claims.json',
+                    # finding 원장도 "무엇을 철회했나" 를 적는 등록부다 (claims.json 과 같은 층).
+                    'docs/reviews/findings.json',
                     'docs/reviews/fable_audit_docs_20260820.md',
-                    'docs/reviews/fable_audit_code_20260820.md')
+                    'docs/reviews/fable_audit_code_20260820.md',
+                    # ⚠ 외부 리뷰 **원문 박제** — 리뷰어가 인용한 철회값이 그대로 있어야 한다
+                    #   (고치면 그 리뷰가 무엇을 보고 판정했는지 알 수 없게 된다).
+                    'docs/reviews/codex_crosscheck_IJ_20260820.md')
 
 #: 파일 머리 이 줄 수 안에 배너가 있으면 그 파일 전체를 이력 문서로 본다.
 BAN_BANNER_HEAD_LINES = 12

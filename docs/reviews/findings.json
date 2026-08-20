@@ -404,12 +404,12 @@
    "status": "claimed_fixed",
    "owner": "claude",
    "opened_in": "docs/reviews/fable_audit_code_20260820.md",
-   "claimed_fixed_sha": "ac0937cf",
+   "claimed_fixed_sha": "a5b02b96",
    "title": "prereg 판정기의 고정-인자 게이트에 \"기록 없음\" 구멍 6필드 (h0 오판 실측 재현)",
    "evidence_tests": [
-    "scripts/sdcp_gain_verdict.py --selftest (㉒ ×6)"
+    "scripts/sdcp_gain_verdict.py --selftest (㉒ 실제 JSON 6/6)"
    ],
-   "note": "sigma_vgcf_S_cm·sigma_sdcp_S_cm·sdcp_sphere_d_um·backend·sdcp_yield_to_vgcf·sigma_ptfe_S_cm 는 고정-인자 루프에는 있지만(None skip) missing-게이트에도 _GEN_FIELDS 에도 없어, 양쪽 침대 8팔이 전부 기록 없는 세대면 HOLD 가 아니라 h0 를 냈다. 러너가 \"옛 팔은 OUTDIR= 로 이어 쓰라\" 고 안내하므로 권장 시나리오다.  H5 의 잔존."
+   "note": "sigma_vgcf_S_cm·sigma_sdcp_S_cm·sdcp_sphere_d_um·backend·sdcp_yield_to_vgcf·sigma_ptfe_S_cm 는 고정-인자 루프에는 있지만(None skip) missing-게이트에도 _GEN_FIELDS 에도 없어, 양쪽 침대 8팔이 전부 기록 없는 세대면 HOLD 가 아니라 h0 를 냈다. 러너가 \"옛 팔은 OUTDIR= 로 이어 쓰라\" 고 안내하므로 권장 시나리오다.  H5 의 잔존.  ⚠⚠ 2026-08-20 Codex CDX-IJ-01: 이 수정은 **4/6 만** 닫혀 있었다 (두 필드가 부재를 기본값으로 접었다).  후속 = CDXIJ-1 에서 6/6 으로 닫고 회귀를 실제 JSON 경로로 재작성했다.  ⇒ 이 항목의 \"고쳤다\" 는 CDXIJ-1 과 함께 읽을 것."
   },
   {
    "id": "FA-03",
@@ -449,7 +449,96 @@
     "scripts/check_review_findings.py --ban-sweep",
     "scripts/check_review_findings.py --selftest (16~21, 음성 대조 포함)"
    ],
-   "note": "claims.json 에 quotation_ban 등록부 신설 + 스윕 규칙.  뷰어 툴팁 5곳·eis.html 이 +52 %/+5.6 % 를 현행 사실로 안내하고 원고 문구까지 달고 있었고, 덱 생성기는 그냥 돌리면 철회값 발표자료를 재생산했다(→ fail-closed).  계기: 08-12 에 반증된 ~9.4 % 가 08-19 신규 문서에서 재주장됐고 독립 리뷰가 낡은 정본에 대조해 \"일치\" 로 통과시켰다."
+   "note": "claims.json 에 quotation_ban 등록부 신설 + 스윕 규칙.  뷰어 툴팁 5곳·eis.html 이 +52 %/+5.6 % 를 현행 사실로 안내하고 원고 문구까지 달고 있었고, 덱 생성기는 그냥 돌리면 철회값 발표자료를 재생산했다(→ fail-closed).  계기: 08-12 에 반증된 ~9.4 % 가 08-19 신규 문서에서 재주장됐고 독립 리뷰가 낡은 정본에 대조해 \"일치\" 로 통과시켰다.  ⚠ 2026-08-20 Codex CDX-IJ-04: \"찾아낸 26곳 정리\" 는 유효하나 **재발 방지는 별건**이다 — 스캔 범위 밖(웹앱이 서빙하는 덱 JSON·러너 셸)에 누수가 남아 있었다.  그 축은 CDXIJ-4 로 분리했다."
+  },
+  {
+   "id": "CDXIJ-1",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "FA-02 의 6필드 수정이 실제 JSON 경로에서 4/6만 닫혀 있었다 (부재→기본값 접힘)",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest (㉒ 실제 JSON 6/6 + 기준선)"
+   ],
+   "note": "`_read` 가 `sdcp_yield_to_vgcf`→bool(...,False) · `sigma_ptfe_S_cm`→float(...,0.0) 로 부재를 기본값으로 접어 missing 게이트(None 만 본다)가 원리적으로 발화 불가였다. ⚠ 내 회귀 ㉒ 는 `_read()` 를 건너뛰고 내부 row 에 None 을 직접 넣어 놓쳤다 = \"실제 경로를 안 타는 테스트\" 재발.  → 부재 보존(fail-closed) + ㉒ 를 실제 JSON 16개 · collect() 경유로 재작성.  Codex 가 실제 파일 mutation 으로 최초 발견."
+  },
+  {
+   "id": "CDXIJ-2",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "title": "판정기가 causal-input 계약·정확한 8팔·origin pairing·prereg 명목값을 강제하지 않는다",
+   "note": "Codex 실측: 2팔씩만 있어도 판정 · origin 필드가 전부 없어도 통과 · SBE/DBE origin 집합이 disjoint(0..7 vs 100..107)여도 h0 · paired 통계가 origin key 가 아니라 **파일명 정렬 zip()** 이라 잘못 짝지어도 SE 0.0 % 로 보고.  또 `_GEN_FIELDS` 가 모든 팔에서 없으면 의도적으로 통과하는데, 같은 디렉터리는 같은 argv·입력·코드 세대의 증거가 아니다.  manifest 의 `schema_version` 을 판정기가 읽지도 않는다. ⇒ 권고(Codex): typed causal-input registry 에서 argparse·manifest·comparator 를 생성하고 미분류 노브는 CI 실패 · canonical 값 digest + 입력 artifact/code SHA · pair_id = bed_digest+origin_shift+fixed_contract_digest 로 join. **미착수** — 이번 라운드에서 손대지 않았다 (설계 변경이라 별건)."
+  },
+  {
+   "id": "CDXIJ-3",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "σ_eff 가 σ_SE 배수만큼 움직인다는 D-2 가설은 DBE 혼합 이온망에서 거짓",
+   "evidence_tests": [
+    "scripts/step3_sigma.py --selftest-temp (all-SE η=1 · 혼합 η<1 · topology 의존)",
+    "docs/reviews/claims.json CL-57"
+   ],
+   "note": "STEP3 선형성 selftest 는 `sid[:] = 6` = all-SE 만 본다.  라벨이 \"exactly linear in σ_SE\" 라 적용 범위가 안 보였고, 도핑 prereg 초안이 그것을 근거로 삼았다. 독립 재현: η(all-SE)=1.000000 · 직렬 0.179 · 병렬 0.750 · 무작위 20 % SDCP 0.789. ⇒ 트랙이 산술이 아니라 측정이 된다 (CL-57).  라벨에 적용 범위 명시 + 회귀 3건 상주."
+  },
+  {
+   "id": "CDXIJ-4",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "ban-sweep 범위 밖 누수 — 웹앱이 서빙하는 덱 JSON 과 러너 셸이 철회값을 현행 사실로 말한다",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --ban-sweep",
+    "scripts/check_review_findings.py --selftest"
+   ],
+   "note": "스캔 범위가 md/html/js 뿐이라 `docs/seminar/seminar_deck.json`(webapp `/api/seminar/slides` 가 직접 서빙) 과 `sr01_gate5_2x2.sh`(`f_artifact` 출력) 이 빠졌는데 스윕은 \"누수 0\" 이었다 = false-green.  → json/sh 범위 추가 + `+52.0%`(공백 없는 변형)·`f_artifact` 패턴 추가 → 새로 16건 드러나 전부 처리.  241 → 389 파일. ⚠ **남은 것**: 배너 하나로 파일 전체가 면제되는 self-authorizing 규칙과 exact-string 매칭의 한계는 그대로다 (Codex 권고 = claim_id@revision 에서 생성 + path+digest 면제)."
+  },
+  {
+   "id": "CDXIJ-5",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "규칙 J 가 계산 없는 자가보고를 통과시켰다 (status 문자열만 봄)",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest (J-3a/b/c 음성 대조)"
+   ],
+   "note": "Codex 의 fake producer(`electronic=complete` 한 줄) 와 all-disabled 변형이 둘 다 `([], [])` 로 통과했다.  → 팔별 기대 상태 맵 + 수치 단언(σ_e 유한·양수, dof>0) 추가, 단언부를 `smoke_assert_payload()` 로 분리해 그 세 변형을 상주 음성 대조로. ⚠ **남은 것**: argv 조합이 아직 2개뿐이고 production argv 생성기(`mpm_input_from_case → run_mpm.sh`)는 스모크하지 않는다."
+  },
+  {
+   "id": "CDXIJ-6",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "FA-04 selftest 가 predictor_engine 미가용 시 fail-open (4검사 생략 후 PASS)",
+   "evidence_tests": [
+    "scripts/ml_design_structure.py --selftest (원본 미가용 시 실패)"
+   ],
+   "note": "broad except 가 삼켜 `64/64 PASS` 를 냈다 — 하필 오프라인 사본이 실제로 쓰이는 환경에서 그 사본을 인증 못 한 채 녹색.  → UNVERIFIED = 실패.  음성 대조(webapp 없는 사본 트리) 실측 64/65 FAIL, exit 1.  ⚠ **남은 것**: 음성 대조가 사본 **구현**을 변형하는 것이 아니라 이미 계산된 dict 를 바꾼다 (Codex 지적)."
+  },
+  {
+   "id": "CDXIJ-7",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
+   "claimed_fixed_sha": "a5b02b96",
+   "title": "원장 캐시 키가 단사가 아니고 report 가 전역 직경을 써 비기본 직경을 3.375배 과대 보고",
+   "evidence_tests": [
+    "scripts/sdcp_phase_ledger_match.py --selftest (8/8, 태그 충돌 쌍 판별 포함)"
+   ],
+   "note": "`${x/./}` 가 0.3↔03 · 0.45↔04.5 를 같은 태그로 접고 `[ -s \"$OUT\" ]` 가 그대로 SKIP. report 는 row 의 `sdcp_sphere_d_um` 대신 전역 SDCP_D=0.30 으로 V_TRUE 를 계산해 d=0.45 원장을 0.238732 로 찍었다 (정확값 0.0707355).  → awk %g 정규화 + SKIP 전 **기록 대조**(신설 matcher, fail-closed) + report 가 row 별 직경 사용."
   }
  ]
 }
