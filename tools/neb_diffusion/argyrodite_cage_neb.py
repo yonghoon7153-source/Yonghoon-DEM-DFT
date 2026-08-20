@@ -515,11 +515,19 @@ def one_run(args):
     logf = OUTDIR / f"neb_{args.tag or 'run'}.log"
     print(f"   NEB 진행 로그 → {logf}   (tail -f 로 볼 것)")
     images, E, nebinfo = run_neb(ini, fin, calc, args.n_images, args.neb_steps, log=logf)
+    split_rec = None
+    if args.split:
+        images, E, nebinfo, split_rec = run_split_neb(
+            images, E, nebinfo, calc, args, logf)
     probs, health = band_health(E)
     Ea_f = float(E.max() - E[0])
     Ea_r = float(E.max() - E[-1])
     dt = time.time() - t0
 
+    if split_rec:
+        rec_extra = {"split": split_rec}
+    else:
+        rec_extra = {}
     tag = args.tag or f"{Path(args.struct).stem}_{args.kind}_{sc[0]}{sc[1]}{sc[2]}"
     xyz = OUTDIR / f"neb_{tag}.xyz"
     write(str(xyz), images)
@@ -544,6 +552,7 @@ def one_run(args):
         "neb_converged": bool(nebinfo["ci_converged"]),
         "band_problems": probs,
         "trustworthy": bool(nebinfo["ci_converged"] and not probs),
+        **rec_extra,
         "engine": "uma-s-1p1(omat)", "cell_relaxed": False,
         "neb_method": NEB_METHOD, "spring_k": SPRING_K,
         "fmax": {"endpoint": FMAX_ENDPOINT, "neb": FMAX_NEB, "ci": FMAX_CI},
@@ -567,6 +576,127 @@ def one_run(args):
     for q in health.get("notes", []):
         print(f"   ⓘ {q}")
     return rec
+
+
+# ── split NEB (inter-cage 처방) ───────────────────────────────────────────────
+def find_intermediate(E):
+    """밴드에서 **내부 국소최소** 위치를 찾는다. 없으면 None.
+
+    반환 (idx, depth_eV) — depth 는 양옆 이웃 중 낮은 쪽 대비 얼마나 파였는지.
+    끝점(0, -1)은 후보가 아니다. 여러 개면 **가장 깊은** 것.
+
+    왜 이걸 쓰나 (2026-08-20)
+      comp1 inter_211_deepep 밴드가
+        [0.0, -0.267, -0.018, 0.432, -0.462, 0.247, -0.079, -0.179, -0.005]
+      였다. 이미지 4 가 **시작점보다 0.462 eV 낮다** — 즉 이 경로는 하나의 홉이 아니라
+      중간에 별개의 안정 자리를 거친다. 그런 밴드에서 max−E[0] 를 '장벽' 이라 부르면
+      틀린다. 중간 자리를 실제 극소로 이완한 뒤 **두 구간으로 쪼개서** 각각 NEB 해야 한다.
+    """
+    import numpy as _np
+    e = _np.asarray(E, float)
+    if len(e) < 5:
+        return None, 0.0
+    best, best_d = None, 0.0
+    for m in range(1, len(e) - 1):
+        if e[m] < e[m - 1] and e[m] < e[m + 1]:
+            d = float(min(e[m - 1], e[m + 1]) - e[m])
+            if d > best_d:
+                best, best_d = m, d
+    return best, best_d
+
+
+def run_split_neb(images, E, nebinfo, calc, args, logf):
+    """중간자리 식별 → 두 구간 NEB. 합성 프로파일·유효 장벽을 함께 돌려준다.
+
+    이 함수가 **못 하는 것**
+      · 중간 자리가 물리적으로 의미 있는 자리인지 판정하지 않는다. 극소이기만 하면 쓴다.
+      · 세 자리 이상을 거치는 경로를 한 번에 못 쪼갠다 (한 번만 쪼갠다).
+        구간 밴드에 또 내부 극소가 뜨면 **그 사실을 기록만** 하고 더 쪼개지 않는다.
+      · 유효 장벽은 합성 프로파일의 최댓값−시작이다. 이건 **경로 상한**이지
+        앙상블 유효 장벽이 아니다.
+    """
+    import numpy as _np
+    m, depth = find_intermediate(E)
+    if m is None:
+        print("   ⓘ --split: 내부 국소최소가 없다 — 쪼갤 게 없어 단일 NEB 로 둔다.")
+        return images, E, nebinfo, {"split_done": False, "reason": "no_interior_minimum"}
+    print(f"   ★ --split: 이미지 {m} 가 내부 극소 (양옆 대비 {1000*depth:+.0f} meV, "
+          f"시작 대비 {1000*(E[m]-E[0]):+.0f} meV) → 중간자리로 잡는다")
+
+    mid0 = images[m].copy()
+    mid0.calc = calc
+    mid, cm, sm = relax_positions(mid0, calc)
+    E_m = mid.get_potential_energy()
+    print(f"   중간자리 이완: {sm} steps {'수렴' if cm else '미수렴'}  "
+          f"E(중간)−E(시작) = {1000*(E_m - E[0]):+.1f} meV")
+    if not cm:
+        print("   ⚠ 중간자리가 이완 수렴하지 않았다 — 아래 두 구간 값은 잠정이다.")
+
+    # 이완이 중간자리를 끝점 중 하나로 굴려버렸으면 쪼갠 의미가 없다.
+    d_i = float(_np.abs(mid.get_positions() - images[0].get_positions()).max())
+    d_f = float(_np.abs(mid.get_positions() - images[-1].get_positions()).max())
+    collapsed = (d_i < 0.3) or (d_f < 0.3)
+    if collapsed:
+        print(f"   ⛔ 이완 뒤 중간자리가 끝점으로 붕괴했다 (max 변위 {d_i:.2f}/{d_f:.2f} Å) "
+              f"— 별개 자리가 아니다. 쪼개지 않는다.")
+        return images, E, nebinfo, {"split_done": False, "reason": "intermediate_collapsed",
+                                    "max_disp_to_endpoints_A": [round(d_i, 3), round(d_f, 3)]}
+
+    nseg = max(3, args.n_images // 2)
+    segs = []
+    for k, (a, b) in enumerate(((images[0], mid), (mid, images[-1])), start=1):
+        lg = logf.with_name(logf.stem + f"_seg{k}.log")
+        print(f"   구간 {k}/2 NEB (이미지 {nseg}) → {lg}")
+        im_k, E_k, info_k = run_neb(a, b, calc, nseg, args.neb_steps, log=lg)
+        Ea_k = float(E_k.max() - E_k[0])
+        sub_m, _ = find_intermediate(E_k)
+        print(f"      Ea(구간 {k}) = {Ea_k:.4f} eV   밴드 "
+              f"{'수렴' if info_k['band_converged'] else '미수렴'} · CI "
+              f"{'수렴' if info_k['ci_converged'] else ('미수렴' if info_k['ci_ran'] else '미실행')}")
+        if sub_m is not None:
+            print(f"      ⚠ 구간 {k} 안에 또 내부 극소(이미지 {sub_m})가 있다 — "
+                  f"세 자리 이상을 거치는 경로다. 이 도구는 더 안 쪼갠다.")
+        segs.append({"segment": k, "Ea_eV": round(Ea_k, 4),
+                     "energies_eV": [round(float(x), 6) for x in E_k],
+                     "profile_eV_rel": [round(float(x - E[0]), 4) for x in E_k],
+                     "further_minimum_at": sub_m,
+                     "band_converged": info_k["band_converged"],
+                     "ci_converged": info_k["ci_converged"],
+                     "steps_band": info_k["steps_band"], "steps_ci": info_k["steps_ci"]})
+        segs[-1]["_images"] = im_k
+
+    # 합성: 구간1 전체 + 구간2의 (중간자리 중복 제거) 나머지
+    im_all = segs[0]["_images"] + segs[1]["_images"][1:]
+    E_all = _np.concatenate([_np.array(segs[0]["energies_eV"]),
+                             _np.array(segs[1]["energies_eV"])[1:]])
+    for s in segs:
+        s.pop("_images")
+    Ea_eff = float(E_all.max() - E_all[0])
+    print(f"   ★★ 합성 유효 장벽 = {Ea_eff:.4f} eV  "
+          f"(구간 {segs[0]['Ea_eV']:.4f} / {segs[1]['Ea_eV']:.4f})")
+    print(f"      ⓘ 이건 **이 경로의 상한**이다. 앙상블 유효 장벽이 아니다.")
+
+    info_all = {
+        "band_converged": bool(segs[0]["band_converged"] and segs[1]["band_converged"]),
+        "ci_ran": True,
+        "ci_converged": bool(segs[0]["ci_converged"] and segs[1]["ci_converged"]),
+        "steps_band": segs[0]["steps_band"] + segs[1]["steps_band"],
+        "steps_ci": segs[0]["steps_ci"] + segs[1]["steps_ci"],
+        "band_only_profile_eV": [round(float(x - E_all[0]), 4) for x in E_all],
+    }
+    split_rec = {
+        "split_done": True,
+        "intermediate_image_index_in_first_band": int(m),
+        "intermediate_depth_eV": round(depth, 4),
+        "intermediate_relaxed": bool(cm), "intermediate_relax_steps": int(sm),
+        "E_intermediate_minus_start_eV": round(float(E_m - E[0]), 4),
+        "segments": segs,
+        "Ea_effective_eV": round(Ea_eff, 4),
+        "Ea_effective_meaning": "합성 프로파일 최댓값 − 시작. 이 경로의 상한이며 앙상블 유효 장벽이 아니다.",
+        "single_neb_Ea_eV_SUPERSEDED": round(float(_np.max(E) - E[0]), 4),
+        "why": "inter-cage 단일 NEB 가 elementary 가 아니었다 (중간 극소). 2026-08-20 처방.",
+    }
+    return im_all, E_all, info_all, split_rec
 
 
 # ── selftest ─────────────────────────────────────────────────────────────────
@@ -829,6 +959,31 @@ def selftest():
     except ImportError:
         print("  ⚠ ase 없음 — 심화 이완 시험 건너뜀")
 
+    # ── split NEB: 중간자리 식별 (음성 경로 포함) ────────────────────────────
+    # 실측 밴드 (comp1 inter_211_deepep) — 이미지 4 가 시작보다 0.462 eV 낮다.
+    real = [0.0, -0.2669, -0.0175, 0.4322, -0.462, 0.2468, -0.0793, -0.179, -0.0045]
+    m, d = find_intermediate(real)
+    chk(m == 4, f"[양성] 실측 inter 밴드의 가장 깊은 내부 극소 = 이미지 4 (얻은 값 {m})")
+    # 양옆은 0.4322(왼) / 0.2468(오) — **낮은 쪽**(오)을 기준으로 잰다 = 0.2468−(−0.462)
+    chk(abs(d - (0.2468 + 0.462)) < 1e-6, f"[양성] 극소 깊이 = 양옆 낮은 쪽 대비 {d:.4f} eV")
+
+    # 단조 증가/감소 밴드에는 내부 극소가 없다
+    chk(find_intermediate([0.0, 0.1, 0.2, 0.3, 0.2, 0.1])[0] is None,
+        "[음성] 단봉(정상 홉) 밴드에서는 쪼갤 자리를 만들지 않는다")
+    chk(find_intermediate([0.0, 0.2, 0.5, 0.9, 1.2])[0] is None,
+        "[음성] 단조 증가 밴드에서 내부 극소를 지어내지 않는다")
+    chk(find_intermediate([0.0, 0.5, 0.0])[0] is None,
+        "[음성] 이미지 5개 미만이면 판정하지 않는다")
+    # 끝점은 후보가 아니다 — 시작이 최저여도 index 0 을 돌려주면 안 된다
+    chk(find_intermediate([0.0, 0.4, 0.8, 0.6, 0.9])[0] == 3,
+        "[음성] 끝점(0/-1)을 중간자리로 잡지 않는다")
+    # 봉우리(국소 최대)를 극소로 오독하면 안 된다
+    chk(find_intermediate([0.0, 0.9, 0.2, 0.9, 0.1])[0] == 2,
+        "[음성] 국소 최대를 극소로 오독하지 않는다")
+    # 극소가 둘이면 더 깊은 쪽
+    chk(find_intermediate([0.0, 0.9, 0.3, 0.9, -0.4, 0.9, 0.2])[0] == 4,
+        "[양성] 극소가 여럿이면 가장 깊은 것을 고른다")
+
     print("selftest PASS" if ok else "selftest FAIL")
     return 0 if ok else 1
 
@@ -846,6 +1001,9 @@ def main():
     ap.add_argument("--cage_margin", type=float, default=0.3)
     ap.add_argument("--min_width", type=float, default=MIN_WIDTH_A)
     ap.add_argument("--force", action="store_true", help="좁은 셀도 실행 (수렴시험용)")
+    ap.add_argument("--split", action="store_true",
+                    help="밴드에 내부 극소가 있으면 그 자리를 이완해 **두 구간 NEB** 로 쪼갠다 "
+                         "(inter-cage 처방: 단일 NEB 가 elementary 가 아니다)")
     ap.add_argument("--device", default="cuda")
     ap.add_argument("--tag")
     ap.add_argument("--max_ep_drift", type=float, default=0.6,

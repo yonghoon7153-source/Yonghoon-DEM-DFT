@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %}판정 원장 · DFT{% endblock %}
+{% block content %}
+{#
+  판정 원장 화면. 세 원장을 한 곳에서 본다:
+    db/governance/decisions.json   판례 (무엇을 규칙으로 삼기로 했나)
+    db/governance/assessments.json 평가 (게이트가 실제로 어떻게 났나 — append-only)
+    db/governance/artifacts.json   산출물 (그 판정의 근거 파일이 어디 있나)
+  ⚠ 이 화면은 값의 옳고 그름을 판정하지 않는다. **판정의 근거와 소재**만 보인다.
+#}
+<div class="page-header">
+  <div><h1>⚖ 판정 원장</h1>
+    <div class="sub">db/governance/{decisions,assessments,artifacts}.json ·
+      판정을 파일명·기억이 아니라 기계가 읽는 경로에 둔다</div></div>
+  <div class="page-actions"><a class="btn" href="/">▦ Dashboard</a></div>
+</div>
+
+{% if problems %}
+<div class="card" style="border-left:4px solid #be123c">
+  <h2>⛔ 원장 검증 실패 {{ problems|length }}건</h2>
+  <ul>{% for p in problems %}<li><code>{{ p }}</code></li>{% endfor %}</ul>
+</div>
+{% else %}
+<div class="card" style="border-left:4px solid #0d9488">
+  <strong>✅ 원장 검증 통과</strong> — 거버넌스·산출물 음성 체크 전부 통과.
+</div>
+{% endif %}
+
+{# ── 위험 요약: 사본이 없거나 하나뿐인 것부터 ───────────────────────────── #}
+<div class="card">
+  <h2>🚨 데이터 위험</h2>
+  <p class="sub">유실은 되돌릴 수 없고, 유일본은 매체 하나가 죽으면 유실이 된다.</p>
+  <p><strong>유실 {{ lost|length }}건</strong>
+     {% if lost %}— {% for a in lost %}<code>{{ a.id }}</code>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
+  <p><strong>유일본(사본 1) {{ single|length }}건</strong>
+     {% if single %}— {% for a in single %}<code>{{ a.id }}</code>{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
+  {% set need = artifacts|selectattr('needs_duplication')|list %}
+  {% if need %}<p>⚠ <strong>복제 필요로 표시된 것 {{ need|length }}건</strong> —
+     {% for a in need %}<code>{{ a.id }}</code>{% if not loop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+</div>
+
+{# ── 산출물 원장 ────────────────────────────────────────────────────────── #}
+<div class="card">
+  <h2>📦 산출물 원장 <span class="sub">({{ artifacts|length }}건 · 위험한 것부터)</span></h2>
+  <table class="tbl">
+    <thead><tr><th>ID</th><th>상태</th><th>사본</th><th>소재</th><th>검증</th><th>무엇</th></tr></thead>
+    <tbody>
+    {% for a in artifacts %}
+      {% set st = a.status %}
+      <tr>
+        <td><code>{{ a.id }}</code></td>
+        <td>
+          {%- if st == 'lost' %}<span style="color:#be123c">⛔ 유실</span>
+          {%- elif st == 'suspect_banned' %}<span style="color:#c05621">⚠ 밴(의심)</span>
+          {%- elif st == 'superseded' %}<span style="color:#6b7280">↩ 대체됨</span>
+          {%- elif st == 'reference' %}<span style="color:#0284c7">◇ 참고</span>
+          {%- elif st == 'canonical' %}<span style="color:#0d9488">✅ 정본</span>
+          {%- else %}{{ st }}{% endif %}
+        </td>
+        <td>{{ a.copies if a.copies is not none else '?' }}</td>
+        <td>{{ a.location.kind if a.location else '?' }}</td>
+        <td>{{ a.verified.level if a.verified else '–' }}</td>
+        <td>{{ a.what }}</td>
+      </tr>
+      {% if a.reassessment_2026_08_20 %}
+        {% set r = a.reassessment_2026_08_20 %}
+        <tr><td colspan="6" style="background:#fef9c3">
+          <strong>재판정:</strong> {{ r.verdict }}<br>
+          <strong>쓸 수 있는 것:</strong> {{ r.allowed_use }}<br>
+          <strong>못 쓰는 것:</strong> {{ r.forbidden_use }}
+        </td></tr>
+      {% endif %}
+      {% if a.status_history %}
+        <tr><td colspan="6" class="sub">이력:
+          {% for h in a.status_history %}{{ h.date }} {{ h.from }} → {{ h.to }} ({{ h.by }}){% if not loop.last %} · {% endif %}{% endfor %}
+        </td></tr>
+      {% endif %}
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ── 판례 ───────────────────────────────────────────────────────────────── #}
+<div class="card">
+  <h2>📜 판례 <span class="sub">({{ decisions|length }}건)</span></h2>
+  <p class="sub">승인은 본문 해시(decision_digest)에 결속된다 — 승인 뒤 본문을 고치면 승인이 무효가 된다.</p>
+  <table class="tbl">
+    <thead><tr><th>ID</th><th>상태</th><th>결속</th><th>내용</th></tr></thead>
+    <tbody>
+    {% for d in decisions %}
+      <tr>
+        <td><code>{{ d.id }}</code></td>
+        <td>{% if d.decision_state == 'active' %}<span style="color:#0d9488">✅ 유효</span>
+            {%- elif d.decision_state == 'retracted' %}<span style="color:#6b7280">↩ 철회</span>
+            {%- else %}{{ d.decision_state }}{% endif %}</td>
+        <td>{% if d._digest_ok %}<span style="color:#0d9488">🔒 일치</span>
+            {%- else %}<span style="color:#be123c">⛔ 본문이 승인 뒤 바뀌었다</span>{% endif %}</td>
+        <td>{{ d.title or d.statement }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{# ── 평가 ───────────────────────────────────────────────────────────────── #}
+<div class="card">
+  <h2>🧪 게이트 평가 <span class="sub">({{ assessments|length }}건 · append-only)</span></h2>
+  <p class="sub"><strong>미평가는 실패가 아니다.</strong> 게이트 입력이 없으면 평가가 성립하지 않는다
+    (D-2026-08-20-no-retro-gate-without-artifact). 옛 판정과 현행 판정은 지우지 않고 <em>함께</em> 남는다.</p>
+  <table class="tbl">
+    <thead><tr><th>대상</th><th>게이트</th><th>판정</th><th>사유</th></tr></thead>
+    <tbody>
+    {% for a in assessments %}
+      <tr>
+        <td><code>{{ a.claim_ref or a.applies_to or '–' }}</code></td>
+        <td>{{ a.gate or a.slot or '–' }}</td>
+        <td>{% set o = a.result or a.gate_outcome or a.outcome %}
+            {%- if o == 'pass' %}<span style="color:#0d9488">✅ 통과</span>
+            {%- elif o == 'fail' %}<span style="color:#be123c">⛔ 실패</span>
+            {%- elif o == 'not_assessed' %}<span style="color:#c05621">◻ 미평가</span>
+            {%- elif o == 'inapplicable' %}<span style="color:#6b7280">– 비해당</span>
+            {%- else %}{{ o or '–' }}{% endif %}
+            {% if a.state == 'retracted' or a.status == 'retracted' %}<span class="sub">(철회된 옛 판정 — 지우지 않고 남긴다)</span>{% endif %}</td>
+        <td>{{ a.reason or a.why_retracted or a.note or '' }}</td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

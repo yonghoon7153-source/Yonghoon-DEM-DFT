@@ -412,6 +412,42 @@ def todo():
                            subtitle="kb/open_items.md · 판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응")
 
 
+@app.route("/governance")
+def governance_page():
+    """판례·평가·산출물 원장을 한 화면에 — **판정이 어디에 근거하는지**를 보여준다.
+
+    ⛔ 이 페이지는 상태를 저장하지 않는다. release_status 와 같은 파생 판정은
+       질의 시각에 계산한다 (D-2026-08-20-source-authority: canonical DB 가 원본).
+    ⚠ 이 페이지가 **못 하는 것**: 값이 맞는지 판정하지 않는다. 판정의 근거·소재만 보인다.
+    """
+    import canonical as _C
+    # ⚠ 이 세 accessor 는 **id 로 키를 잡은 dict** 를 준다 (리스트가 아니다).
+    #   처음에 .get("artifacts", []) 로 읽었더니 화면이 조용히 **빈 표**가 됐다 —
+    #   "원장이 비어 있다" 와 "원장을 잘못 읽었다" 가 화면에서 구분이 안 됐다.
+    def _rows(d):
+        return [{**v, "id": v.get("id", k)} for k, v in d.items()]
+    dec = _rows(_C.decisions())
+    ass = _rows(_C.assessments())
+    art = _rows(_C.artifacts())
+
+    # 산출물은 위험한 것부터 (사본 0 = 유실, 사본 1 = 유일본).
+    risk = {"lost": 0, "suspect_banned": 1, "superseded": 2, "reference": 3, "canonical": 4}
+    art = sorted(art, key=lambda a: (risk.get(a.get("status"), 9),
+                                     a.get("copies", 9), a.get("id", "")))
+    single = [a for a in art if a.get("copies") == 1 and a.get("status") != "lost"]
+    lost = [a for a in art if a.get("status") == "lost"]
+
+    # 승인 후 본문이 바뀐 판례는 승인이 무효다 — 화면에서 즉시 드러나게 한다.
+    for d in dec:
+        want = d.get("ratification", {}).get("decision_digest")
+        d["_digest_ok"] = (want is None) or (want == _C.decision_digest(d))
+
+    return render_template("governance.html", active="governance",
+                           decisions=dec, assessments=ass, artifacts=art,
+                           single=single, lost=lost,
+                           problems=_C.validate_governance() + _C.validate_artifacts())
+
+
 @app.route("/nd-survey")
 def nd_survey_page():
     """Nd 치환 문헌 54편 — 우리 화학과의 거리를 앞세워 보여준다."""

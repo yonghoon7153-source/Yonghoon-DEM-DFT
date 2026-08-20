@@ -1772,3 +1772,64 @@ def test_sidebar_rail_toggle_present_and_layered():
     rail = re.search(r"body\.rail \.content\{([^}]*)\}", css).group(1)
     assert "margin-left:0" in rail, rail
     assert "max-width:none" in rail, rail
+
+
+def test_governance_page_renders_every_ledger_row():
+    """판정 원장 화면 — 세 원장이 **실제로 표에 찍혀야** 한다.
+
+    ⚠ 첫 판이 `_C.artifacts().get("artifacts", [])` 였다. accessor 는 id 로 키를 잡은
+      dict 를 주므로 그 표현은 항상 [] 가 되고, 화면은 200 을 내면서 **빈 표**가 됐다.
+      "원장이 비었다" 와 "원장을 잘못 읽었다" 가 화면에서 구분이 안 됐다 — 그 회귀를 잠근다.
+    """
+    import canonical as C
+    A.app.config["TESTING"] = True
+    h = A.app.test_client().get("/governance").get_data(as_text=True)
+
+    for aid in C.artifacts():
+        assert aid in h, f"산출물 {aid} 이 화면에 없다"
+    for did in C.decisions():
+        assert did in h, f"판례 {did} 가 화면에 없다"
+    for sid in C.assessments():
+        rec = C.assessments()[sid]
+        assert rec.get("claim_ref", "") in h, f"평가 {sid} 의 대상이 화면에 없다"
+
+
+def test_governance_page_negative_vocabulary():
+    """[음성] 미평가를 '실패' 로, 철회된 옛 판정을 현행으로 그리면 안 된다."""
+    A.app.config["TESTING"] = True
+    h = A.app.test_client().get("/governance").get_data(as_text=True)
+    assert "◻ 미평가" in h, "not_assessed 를 미평가로 그려야 한다"
+    assert "미평가는 실패가 아니다" in h
+    assert "철회된 옛 판정" in h, "retracted 를 현행 판정처럼 그리면 안 된다"
+
+
+def test_governance_digest_binding_shown():
+    """승인 뒤 본문이 바뀐 판례는 화면에서 즉시 드러나야 한다 (음성 경로 포함)."""
+    import canonical as C
+    A.app.config["TESTING"] = True
+    h = A.app.test_client().get("/governance").get_data(as_text=True)
+    assert "🔒 일치" in h, "현재 원장은 전부 결속 일치여야 한다"
+    assert "본문이 승인 뒤 바뀌었다" not in h, "지금 깨진 결속은 없어야 한다"
+
+    # [음성] 본문을 한 글자 고치면 digest 가 달라져야 한다 — 화면 문구가 살아있는 검사인지 확인
+    d = dict(list(C.decisions().values())[0])
+    before = C.decision_digest(d)
+    d["title"] = (d.get("title") or "") + " (변조)"
+    assert C.decision_digest(d) != before, "본문을 고쳤는데 digest 가 그대로면 결속이 무의미하다"
+
+
+def test_comp1_supercell_md_reassessed_not_banned():
+    """comp1 2x2x2 재판정 — MSD 사이드카 3점으로 밴을 풀었다 (2026-08-20).
+
+    값이 이상하지 않다는 판정이지 **정본이라는 판정이 아니다.** 둘을 섞으면
+    단일시드 D 를 정본처럼 인용하게 된다 — 그 경계를 잠근다.
+    """
+    import canonical as C
+    a = C.artifacts()["A-comp1-supercell-md"]
+    assert a["status"] == "reference", a["status"]
+    r = a["reassessment_2026_08_20"]
+    assert r["measured_D_cm2_per_s"]["800K"] == 2.332e-05
+    assert 0.28 < r["arrhenius_3pt"]["Ea_eV"] < 0.29
+    assert "정본" in r["forbidden_use"] and "인용 금지" in r["forbidden_use"]
+    assert any("단일 시드" in x or "단일시드" in x for x in r["why_still_not_canonical"])
+    assert "unban_condition" not in a, "밴이 풀렸으면 해제 조건은 남기지 않는다"
