@@ -67,9 +67,24 @@ if [ -d "$OUTROOT" ]; then
   fi
 fi
 
-echo "OUT=$OUTROOT  DEVICE=$DEVICE"
+# ── 계 선택 (2026-08-20) ─────────────────────────────────────────────────────
+#   기본은 둘 다 — b2o3 만 새 런으로 갈면 "새 런 b2o3 vs 옛 런 modelc" 비교가 되어
+#   그것 자체가 계보 혼합이다. 다만 **두 서버에 나눠 돌릴 때**는 갈라야 하므로
+#   SYSTEMS 로 고를 수 있게 한다 (예: kgy 는 b2o3, gabia 는 modelc).
+#   ⚠ 나눠 돌렸으면 **양쪽 결과를 합친 뒤에** Ea 를 재적합할 것. 한쪽만 새 값으로
+#     갈아끼우면 위의 계보 혼합이 그대로 재발한다.
+SYSTEMS=${SYSTEMS:-"b2o3 modelc"}
+for _s in $SYSTEMS; do
+  case "$_s" in b2o3|modelc) : ;;
+    *) echo "⛔ SYSTEMS='$SYSTEMS' 에 모르는 계가 있다: $_s (b2o3|modelc)"; exit 1 ;;
+  esac
+done
+
+echo "OUT=$OUTROOT  DEVICE=$DEVICE  SYSTEMS=$SYSTEMS"
 echo "⚠ 재실행분은 **새 런**이다 — D 와 beta 를 이 궤적들에서 같이 뽑아 Ea 를 다시 적합할 것."
-for SYS in b2o3 modelc; do
+[ "$SYSTEMS" = "b2o3 modelc" ] || \
+  echo "⚠ 계를 갈라 돌린다 ($SYSTEMS) — 나머지 계를 다른 서버에서 돌리고 **합친 뒤** Ea 재적합."
+for SYS in $SYSTEMS; do
   for S in 2 3 4; do
     echo "===================== $SYS  800/1000K  reseed s${S} ====================="
     python3 "$DRIVER" \

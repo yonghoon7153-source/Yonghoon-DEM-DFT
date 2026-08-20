@@ -53,9 +53,13 @@ except Exception as e: print('읽기 실패: %s'%e)" 2>/dev/null)"
   else
     printf "  %-34s · 대기  traj %s\n" "$rel" "$t"
   fi
-done < <(find "$R" -type d -name 'T[0-9]*' 2>/dev/null | sort)
-#        ↑ T<K> 디렉터리는 **파일이 없어도** 낸다 — 드라이버가 폴더를 먼저 만들고 MD 를
-#          시작하므로 그 구간이 '대기'다. 파일 유무로 거르면 대기 분기가 죽은 코드가 된다.
+done < <(find "$R" -type d -name 'T[0-9]*' -path '*/d[0-9]*' 2>/dev/null | sort)
+#        ↑ (a) T<K> 디렉터리는 **파일이 없어도** 낸다 — 드라이버가 폴더를 먼저 만들고 MD 를
+#              시작하므로 그 구간이 '대기'다. 파일 유무로 거르면 대기 분기가 죽은 코드가 된다.
+#          (b) `-path '*/d[0-9]*'` 로 **런 디렉터리만** 잡는다. arrhenius_6pt 는 계층이
+#              `<label>/T<K>_s<N>/d0.00_cfg0/T<K>/` 라서 중간의 `T900_s3` 까지 `T[0-9]*` 에
+#              걸려 같은 런이 '대기' 로 한 번 더 찍혔다(줄 수 2배). 실제 런은 항상
+#              `d<disorder>_cfg<N>` 아래에 있다.
 
 echo "── 합계 ──"
 echo "  완료 $DONE · 진행 $RUNNING · 궤적 $TRAJ"
