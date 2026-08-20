@@ -140,18 +140,19 @@ elastic_static,elastic_mlip_600K,elastic_mlip_600K_clamped_backup}`
 
 | 미결 | 후보 위치 | 확인 방법 |
 |---|---|---|
-| `provenance_open` 4건 (`gap_eV` comp1·modelc·b2o3·lpsocl) — *"fixed-occ nscf 실행본이 repo 에 없다"* | 백업 A `b2o3_eos/` · `lpsocl_eos/` · 백업 B `modelC_v3/dos_pdos/` | 그 폴더에서 `occupations='fixed'` 인 `*.in` 과 짝 `*.out` 을 찾는다 |
+| ✅ `gap_eV/b2o3` | 백업 A `b2o3_eos/b2o3_nscf_gap.{in,out}` | **해소** — VBM 2.4717 / CBM 4.4388 정본 일치 |
+| ✅ `gap_eV/lpsocl` | **kgy** `~/work/lpsocl_v0/03b_nscf_gap.{in,out}` | **해소** — VBM 2.3870 / CBM 4.6179 정본 일치 |
+| ⛔ `gap_eV/comp1` · `gap_eV/modelc` | **어디에도 없음** | 백업 2벌 + kgy + gabia **3중 수색 실패**. KISTI 원본 부재 ⇒ **영구 미해소**로 본다 |
 | ELF cube 커밋 안 됨 | 백업 A `b2o3_eos/b2o3_elf.cube` | VESTA·재렌더 필요 시 여기서 |
 | ICOHP 원자료 | 백업 B LOBSTER 4종 | — |
 | PMF 궤적 원본 | 백업 B `modelC_v3/aimd/T600/traj.traj` | — |
 | clamped vs relaxed-ion 대조 | 백업 B `elastic_*` 두 폴더 | — |
 
-**다음 작업 (제안)**: `provenance_open` 이 제일 값이 크다. 아래 한 줄이면 판별된다.
-
-```bash
-grep -rl "occupations" "/mnt/d/v100/kisti_backup_2026-07-14/kgy_b2o3_eos_2026-07-14/b2o3_eos/"*.in \
-  | xargs grep -l "fixed"
-```
+**2026-08-20 수색 종료.** 4건 중 **2건 해소 · 2건 영구 미해소**로 닫았다.
+⚠ comp1·modelc 를 다시 찾지 말 것 — 백업 2벌·kgy·gabia 를 이미 전수로 훑었고,
+같은 조사에서 b2o3·lpsocl 은 **찾았으므로** 수색 방법 자체는 유효했다.
+가짜 후보 둘을 기록해 둔다: gabia `/root/comp1_cdd_phx/nscf.out`(gap 2.0654, **CDD용 별개
+계산** — 정본 2.066 과 4자리 불일치) · `runs/{comp1,modelc}_eps/nscf.in`(**유전율용**).
 
 ## 4. ⚠ 한계 (지우지 말 것)
 
