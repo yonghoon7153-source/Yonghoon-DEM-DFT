@@ -231,6 +231,15 @@ importlib 간선 누락(8b), 제약 문단 절단이 전부 이 순서에서 잡
 scratchpad 파일로 쓰고 실행) ⓒ Bash 출력 17 %(`| tail`·Grep 로 잘라 받기).
 독립 호출은 한 번에 묶는다 (이 세션 Bash 1,302 회 = 왕복 봉투 비용).
 계기: `python3 scripts/context_meter.py` · 훅이 50 % 초과 시 자동 고지.
+**④ 정본은 밖으로 강제되지 않으면 새어나간다** (2026-08-20 전수 감사에서 추가).  실증:
+08-12 에 반증된 `~9.4 %` 가 **08-19 신규 문서에서 재주장**됐고, 독립 리뷰가 그것을 (역시
+낡은) 정본에 대조해 **"일치" 로 통과**시켰다 — 대조 검증조차 정본 신선도에 종속된다.
+⇒ 두 규칙이 상주한다: **`check_review_findings.py --ban-sweep`**(claims.json 의
+`quotation_ban` 등록부로 CLAUDE.md·docs·wiki·webapp·덱생성기를 훑어 표지 없는 철회값을
+오류로) · **`check_method_discipline.py` 규칙 J**(생산 엔트리포인트를 초소형 픽스처로
+**실제로 돌려** manifest 가 complete 인지 단언 — `--help` 생존만 보던 규칙 H 의 실행판).
+★ **수치를 철회하는 커밋은 같은 커밋에서 원장·파생 문서를 고친다.**  감사 원문 =
+`docs/reviews/fable_audit_{code,docs}_20260820.md`, 등재 = `findings.json` FA-01~05.
 
 ## ★★★ DEM ↔ MPM Complementary Simulation Frame (FINALIZED 2026-06-07) ★★★
 
