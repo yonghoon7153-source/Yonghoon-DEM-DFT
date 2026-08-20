@@ -163,39 +163,23 @@ def test_assessment_sidecar_is_authoritative(tmp_path, monkeypatch):
 
 
 def test_governance_graph_has_no_dangling_edges():
-    """판례 그래프에 매달린 간선이 없어야 한다 (codex 3차).
+    """판례·판정 원장 무결성 — **db 도구와 같은 함수**로 검사한다.
 
-    supersedes/superseded_by 대상과 assessment 의 decision_ids 가 전부 실재해야 한다.
-    첫 registry 부터 dangling edge 가 생기면 그래프가 거짓말을 시작한다.
+    ⛔ 검사 로직을 여기에 사본으로 두면 tools/db/validate_canonical.py 와 갈라진다.
+       위반 종류별 음성 시험은 그쪽 --selftest 가 13건 갖고 있다 (합성 fixture).
+       여기서는 **실제 repo 원장**이 통과하는지만 본다.
     """
-    root = pathlib.Path(__file__).resolve().parent.parent.parent
-    dec = json.loads((root / "db/governance/decisions.json").read_text(encoding="utf-8"))
-    ids = {d["id"] for d in dec["decisions"]}
-    assert len(ids) == len(dec["decisions"]), "결정 ID 가 중복이다"
-
-    for d in dec["decisions"]:
-        for ref in d.get("supersedes", []):
-            assert ref in ids, f"{d['id']} 의 supersedes 대상 {ref} 가 원장에 없다"
-        sb = d.get("superseded_by")
-        assert sb is None or sb in ids, f"{d['id']} 의 superseded_by {sb} 가 원장에 없다"
-        # agent 는 과학적 승격을 못 한다 (codex 2차 P0-3)
-        rat = d.get("ratification", {})
-        if d.get("decision_state") == "active":
-            assert rat.get("state") == "ratified" and rat.get("role") == "scientific_owner", \
-                f"{d['id']} 이 사람 승인 없이 active 다"
-
+    assert C.validate_governance() == [], "실제 원장에 무결성 위반이 있다"
+    # 원장이 비어 있으면 위 단언이 공허하게 참이 된다 — 내용이 있는지 확인한다
+    assert len(C.decisions()) >= 5, "판례 core 5 가 없다"
+    assert len(C.assessments()) >= 3, "판정 원장이 비었다"
+    # 옛/새 판정 병존 · correction 이 대상을 지목 (감사 추적의 핵심)
     book = C.assessments()
-    for a in book.values():
-        for ref in a.get("decision_ids", []):
-            assert ref in ids, f"판정 {a['assessment_id']} 이 없는 결정 {ref} 를 가리킨다"
-        sup = a.get("supersedes_assessment_id")
-        assert sup is None or sup in book, f"판정 {a['assessment_id']} 의 대상 {sup} 가 없다"
-
-    # slot 유일성: 같은 slot 에 active 가 2개 이상이면 안 된다
-    from collections import Counter
-    act = Counter(d.get("slot") for d in dec["decisions"] if d.get("decision_state") == "active")
-    dup = [k for k, v in act.items() if v > 1]
-    assert not dup, f"같은 slot 에 active 결정이 여럿이다: {dup}"
+    legacy = book["A-2026-08-20-b2o3-framework-legacy"]
+    assert legacy["state"] == "retracted" and legacy["binding"] == "diagnostic_unbound"
+    assert legacy["result"] == "fail", "옛 판정의 내용까지 지우면 감사가 안 된다"
+    corr = [a for a in book.values() if a.get("kind") == "correction"]
+    assert corr and all(c["supersedes_assessment_id"] in book for c in corr)
 
 
 def test_lineage_axes_are_independent():

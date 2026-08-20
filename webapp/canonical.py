@@ -277,6 +277,103 @@ def gate_prefix(e: dict) -> str:
     return f"{_GATE_LABEL.get(o, _GATE_LABEL[None])}: {e['blocking_gate']}. "
 
 
+#: lineage 축 어휘 — **두 축은 독립**이다 (codex R4). 한 enum 으로 합치면 사다리가 된다.
+LINEAGE_BINDING = ("missing", "prose_only", "unverified", "unwired", "wired", "verified")
+NUMERIC_REPRO = ("none", "approximate", "exact")
+
+
+def decisions(root=None) -> dict:
+    """판례 원장. {decision_id: record}. 없으면 빈 dict."""
+    base = Path(root) if root else Path(__file__).resolve().parent.parent
+    p = base / "db/governance/decisions.json"
+    if not p.exists():
+        return {}
+    try:
+        raw = json.loads(p.read_text(encoding="utf-8"))
+    except Exception as exc:                        # noqa: BLE001
+        raise RuntimeError(f"⛔ decisions.json 을 못 읽는다 (fail-closed): {exc!r}") from exc
+    return {d["id"]: d for d in raw.get("decisions", [])}
+
+
+def validate_governance(reg: dict = None, root=None) -> list:
+    """판례·판정 원장의 무결성. 위반 문자열 리스트 (빈 리스트 = 통과).
+
+    ⛔ 2026-08-20 (codex 동결감사) — validate_canonical 이 새 필드를 안 읽어 이번 정정을
+      **db 도구가 스스로 검증하지 못했다**. webapp 테스트만 잡는 상태였다.
+      이 함수 하나를 db 도구와 테스트가 **같이** 쓴다 (검사 로직 사본 금지).
+
+    ⛔ 못 하는 것: 판정의 **과학적 타당성**은 안 본다. 그래프 무결성과 어휘만 본다.
+    """
+    bad = []
+    dec, book = decisions(root), assessments(root)
+
+    # ── 판례 그래프 ──────────────────────────────────────────────────────
+    for d in dec.values():
+        for ref in d.get("supersedes", []):
+            if ref not in dec:
+                bad.append(f"결정 {d['id']} 의 supersedes 대상 {ref} 가 원장에 없다 (dangling)")
+        sb = d.get("superseded_by")
+        if sb and sb not in dec:
+            bad.append(f"결정 {d['id']} 의 superseded_by {sb} 가 원장에 없다 (dangling)")
+        rat = d.get("ratification") or {}
+        if d.get("decision_state") == "active" and not (
+                rat.get("state") == "ratified" and rat.get("role") == "scientific_owner"):
+            bad.append(f"결정 {d['id']} 이 사람(scientific_owner) 승인 없이 active 다")
+    # slot 유일성 — 같은 slot 에 active 가 둘이면 어느 쪽이 이기는지 알 수 없다
+    slots = {}
+    for d in dec.values():
+        if d.get("decision_state") == "active":
+            slots.setdefault(d.get("slot"), []).append(d["id"])
+    for slot, ids in slots.items():
+        if len(ids) > 1:
+            bad.append(f"slot '{slot}' 에 active 결정이 {len(ids)}개다: {ids}")
+
+    # ── 판정 원장 ────────────────────────────────────────────────────────
+    for a in book.values():
+        for ref in a.get("decision_ids", []):
+            if ref not in dec:
+                bad.append(f"판정 {a['assessment_id']} 이 없는 결정 {ref} 를 가리킨다")
+        sup = a.get("supersedes_assessment_id")
+        if sup and sup not in book:
+            bad.append(f"판정 {a['assessment_id']} 의 supersedes 대상 {sup} 가 없다")
+        if a.get("kind") == "correction" and "scope" not in a:
+            bad.append(f"정정 {a['assessment_id']} 에 scope 가 없다 — 사유가 다른 항목으로 "
+                       f"번지는 것을 막는 필드다 (F10)")
+        if a.get("kind") == "gate" and a.get("result") not in GATE_OUTCOMES:
+            bad.append(f"판정 {a['assessment_id']} 의 result 가 어휘 밖이다: {a.get('result')!r}")
+
+    # ── canonical entry ↔ 원장 ───────────────────────────────────────────
+    if reg is None:
+        reg = registry(root=root)
+    for e in reg.get("entries", []):
+        tag = f"{e.get('metric')}/{e.get('system')}"
+        refs = e.get("required_assessment_refs") or []
+        if refs and not e.get("blocking_gate"):
+            bad.append(f"{tag} 이 게이트 없이 판정을 참조한다")
+        missing = [r for r in refs if r not in book]
+        if missing:
+            bad.append(f"{tag} 이 없는 판정을 참조한다: {missing}")
+        elif refs:
+            act = [r for r in refs if book[r].get("state") == "active"]
+            if len(act) != 1:
+                bad.append(f"{tag} 의 active 판정이 {len(act)}개다 (1개여야 한다)")
+            for r in refs:
+                if book[r].get("claim_ref") != f"value:{tag}":
+                    bad.append(f"{tag} 이 다른 claim 의 판정을 참조한다: "
+                               f"{r} → {book[r].get('claim_ref')}")
+        lin = (e.get("gate_detail") or {}).get("lineage") or {}
+        if refs and ("gate_outcome" in lin or "current_assessment" in lin):
+            bad.append(f"{tag} 의 claim 안에 판정이 남아 있다 — sidecar 가 단일 원장이다")
+        for k, vocab in (("lineage_binding", LINEAGE_BINDING),
+                         ("numeric_reproduction", NUMERIC_REPRO)):
+            if k in lin and lin[k] not in vocab:
+                bad.append(f"{tag} 의 {k} 가 어휘 밖이다: {lin[k]!r} (허용: {vocab})")
+        if "lineage_status" in lin:
+            bad.append(f"{tag} 이 lineage_status 를 되살렸다 — 재현 가능성과 배선 여부는 "
+                       f"독립 축이다 (lineage_binding / numeric_reproduction)")
+    return bad
+
+
 def validate(reg: dict, root=None) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []

@@ -52,8 +52,17 @@ evidenceScope: multi-source-primary
 | **assessment sidecar** — `db/governance/assessments.json`, claim 에는 `required_assessment_refs` 만 | ✅ | 옛/새 판정 **병존** |
 | **판례 원장 core 5** — `db/governance/decisions.json`, 전부 `ratification.state=proposed` | ✅ | dangling edge 검사 통과 |
 
-**아직 안 닫힌 P0**: `validate_canonical` 이 새 필드를 읽지 않는다 → 이번 정정을 스스로
-검증하지 못한다 (webapp 테스트는 잡지만 db 도구는 못 잡는다). Phase A 의 첫 작업.
+| **`validate_canonical` 이 거버넌스를 검증** — 새 필드를 아예 안 읽어 **자기가 지키는 db 의 정정을 스스로 검증하지 못했다**. `canonical.validate_governance()` 한 벌을 db 도구·테스트가 같이 쓴다 | ✅ | 음성 selftest **13건** |
+
+**codex 동결감사 P0 는 전부 닫혔다.** 남은 것은 확대(§9-2/9-3)와 Phase A 의 나머지
+(JSON Schema validator · 순수 evaluator · `evaluate(subject_ref, use_case, claim_type)` ·
+CI) 이며, 그것은 slice 통과 뒤 별건이다.
+
+⚠ **거버넌스 검증이 잡는 것 13종** (전부 음성 경로로 고정):
+dangling supersedes · 승인 없는 active · slot 중복 active · 없는 결정 참조 ·
+scope 없는 correction · 어휘 밖 result · 없는 판정 참조 · active 0개(철회본만 참조) ·
+남의 claim 판정 참조 · claim 안에 남은 판정 · `lineage_status` 부활 · 어휘 밖
+`lineage_binding` · 게이트 없이 판정 참조.
 
 ## 0. 왜 — 실패 사례 9건이 요구 조건이다
 

@@ -401,6 +401,69 @@ def selftest():
     wd, _ = audit_file(td / "weird.json")
     chk(wd["superseded_unmarked"] == [("a", "a_frozen4f")],
         "낯선 status 는 '표시됨' 으로 봐주지 않는다")
+    # ── 판례·판정 원장 (2026-08-20 codex 동결감사). 음성 경로가 본론이다 ──────
+    gd = td / "gov"
+    (gd / "db" / "governance").mkdir(parents=True, exist_ok=True)
+    (gd / "db" / "properties").mkdir(parents=True, exist_ok=True)
+
+    def _gov(dec, ass, entries=()):
+        (gd / "db/governance/decisions.json").write_text(
+            json.dumps({"decisions": dec}), encoding="utf-8")
+        (gd / "db/governance/assessments.json").write_text(
+            json.dumps({"assessments": ass}), encoding="utf-8")
+        return C.validate_governance({"entries": list(entries)}, root=gd)
+
+    D_OK = {"id": "D-x", "decision_state": "proposed", "slot": "s1",
+            "ratification": {"state": "proposed"}}
+    A_OK = {"assessment_id": "A-x", "kind": "gate", "state": "active",
+            "result": "not_assessed", "claim_ref": "value:M/sys", "decision_ids": ["D-x"]}
+    E_OK = {"metric": "M", "system": "sys", "blocking_gate": "g",
+            "required_assessment_refs": ["A-x"]}
+
+    chk(_gov([D_OK], [A_OK], [E_OK]) == [], "[양성] 온전한 원장은 통과한다")
+    chk(any("dangling" in v for v in _gov(
+        [{**D_OK, "supersedes": ["D-nope"]}], [A_OK], [E_OK])),
+        "[음성] supersedes 가 매달린 간선을 잡는다")
+    chk(any("승인 없이 active" in v for v in _gov(
+        [{**D_OK, "decision_state": "active"}], [A_OK], [E_OK])),
+        "[음성] 사람 승인 없이 active 인 결정을 잡는다")
+    chk(any("slot" in v for v in _gov(
+        [{"id": "D-a", "decision_state": "active", "slot": "s1",
+          "ratification": {"state": "ratified", "role": "scientific_owner"}},
+         {"id": "D-b", "decision_state": "active", "slot": "s1",
+          "ratification": {"state": "ratified", "role": "scientific_owner"}}], [], [])),
+        "[음성] 같은 slot 에 active 가 둘이면 잡는다")
+    chk(any("없는 결정" in v for v in _gov(
+        [D_OK], [{**A_OK, "decision_ids": ["D-nope"]}], [E_OK])),
+        "[음성] 판정이 없는 결정을 가리키면 잡는다")
+    chk(any("scope 가 없다" in v for v in _gov(
+        [D_OK], [A_OK, {"assessment_id": "A-c", "kind": "correction",
+                        "supersedes_assessment_id": "A-x"}], [E_OK])),
+        "[음성] 정정에 scope 가 없으면 잡는다 (사유가 다른 항목으로 번진다)")
+    chk(any("어휘 밖" in v for v in _gov(
+        [D_OK], [{**A_OK, "result": "probably_fine"}], [E_OK])),
+        "[음성] 판정 result 가 어휘 밖이면 잡는다")
+    chk(any("없는 판정" in v for v in _gov(
+        [D_OK], [A_OK], [{**E_OK, "required_assessment_refs": ["A-nope"]}])),
+        "[음성] claim 이 없는 판정을 참조하면 잡는다")
+    chk(any("active 판정이 0개" in v for v in _gov(
+        [D_OK], [{**A_OK, "state": "retracted"}], [E_OK])),
+        "[음성] active 판정이 없으면 잡는다 (철회본만 가리키는 경우)")
+    chk(any("다른 claim" in v for v in _gov(
+        [D_OK], [{**A_OK, "claim_ref": "value:OTHER/zzz"}], [E_OK])),
+        "[음성] 남의 판정을 참조하면 잡는다")
+    chk(any("판정이 남아 있다" in v for v in _gov(
+        [D_OK], [A_OK], [{**E_OK, "gate_detail": {"lineage": {"gate_outcome": "pass"}}}])),
+        "[음성] claim 안에 판정이 남아 있으면 잡는다 (sidecar 가 단일 원장)")
+    chk(any("lineage_status 를 되살렸다" in v for v in _gov(
+        [D_OK], [A_OK], [{**E_OK, "gate_detail": {
+            "lineage": {"lineage_status": "numerically_reproducible"}}}])),
+        "[음성] 두 축을 한 enum 으로 되돌리면 잡는다")
+    chk(any("어휘 밖" in v for v in _gov(
+        [D_OK], [A_OK], [{**E_OK, "gate_detail": {
+            "lineage": {"lineage_binding": "sorta_wired"}}}])),
+        "[음성] lineage_binding 어휘 밖을 잡는다")
+
     import shutil
     shutil.rmtree(td, ignore_errors=True)
     print("selftest PASS" if ok else "selftest FAIL")
@@ -474,7 +537,21 @@ def main():
                     print(f"     {e['system']:18s} {e.get('value')}{u}{ns}{st}")
             print("   ⚠ 순위·최저값·레이더는 **한 [group] 안에서만** 유효하다.")
 
-    if bad:
+    # ── 판례·판정 원장 무결성 (2026-08-20 codex 동결감사) ────────────────────
+    #   ⛔ 이전에는 이 도구가 새 필드(required_assessment_refs · lineage_binding)를 아예
+    #     안 읽어 **자기가 지키는 db 의 정정을 스스로 검증하지 못했다.** webapp 테스트만
+    #     잡는 상태였다. 검사 로직은 webapp/canonical.py 에 한 벌만 두고 여기서 부른다.
+    gov = C.validate_governance(reg)
+    if gov:
+        print(f"\n⛔ 판례·판정 원장 위반 {len(gov)}건")
+        for g in gov:
+            print(f"   {g}")
+    else:
+        nd, na = len(C.decisions()), len(C.assessments())
+        if nd or na:
+            print(f"거버넌스 결정 {nd} · 판정 {na}  ·  그래프 무결성 ✅")
+
+    if bad or gov:
         print("\n판정: ⛔ 실패 — 레지스트리를 고치거나 원자료를 확인할 것")
         return 1
     print("\n판정: ✅ 배선된 항목은 전부 원자료와 일치")
