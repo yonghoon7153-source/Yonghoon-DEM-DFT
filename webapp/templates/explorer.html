@@ -151,4 +151,37 @@ function expSort(idx){
 }
 expApply();  // 기본: '값 있는 조성만' 켜진 상태로 진입 (빈 행 숨김)
 </script>
+{# ── 방법 검증 앵커 (2026-08-20 신설) ────────────────────────────────────────
+   ⚠ 조성 물성 표와 **의도적으로 분리**한다. registry 는 "이 물질의 값이 얼마냐" 이고
+   여기는 "우리 계산기가 얼마나 맞나" 다. 섞으면 'UMA 힘 오차' 가 comp1 의 물성처럼 읽힌다. #}
+{% if anchors %}
+<div class="card" style="margin-top:26px;border-left:4px solid #0d9488">
+  <div style="padding:14px 16px 6px">
+    <h2 style="margin:0;font-size:1.02rem">🔬 방법 검증 앵커 <span class="badge"
+        style="background:#ccfbf1;color:#0f766e;font-weight:400">조성 물성 아님</span></h2>
+    <div class="muted" style="font-size:.84rem;margin-top:5px;line-height:1.6">
+      위 표는 <b>이 물질의 값이 얼마냐</b>이고, 여기는 <b>우리 계산기가 얼마나 맞나</b>다 — 축이 달라서 따로 둔다.
+      <b>재료 비교에 쓰는 수치가 아니다.</b> 각 항목의 <b>한계</b>를 같이 읽을 것.
+    </div>
+  </div>
+  <div class="tbl-scroll">
+  <table class="data-table" style="margin:0">
+    <thead><tr><th>항목</th><th>값</th><th>판정</th><th>읽는 법</th><th>⚠ 한계</th><th>출처</th></tr></thead>
+    <tbody>
+    {% for a in anchors %}
+      <tr>
+        <td style="white-space:nowrap"><b>{{ a.title }}</b></td>
+        <td style="white-space:nowrap;font-variant-numeric:tabular-nums">{{ a.value }}</td>
+        <td style="white-space:nowrap">{{ a.verdict }}</td>
+        <td style="font-size:.85rem;line-height:1.6;max-width:34em">{{ a.note|mdlite }}</td>
+        <td style="font-size:.82rem;line-height:1.6;max-width:28em;color:#9a3412">{{ a.limit|mdlite }}</td>
+        <td style="font-size:.78rem"><code>{{ a.src.split('/')[-1] }}</code></td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}

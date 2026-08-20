@@ -94,7 +94,7 @@
     "ci": 0.03
    },
    "images_file": "/data/work/repo/db/properties/neb_inter_211_deepep.xyz",
-   "_do_not_cite": "협동 이동 지배 — Ea 는 값이 아니다 (_VERDICT_2026_08_20 참조)"
+   "_do_not_cite": "경로가 elementary 가 아니다 (중간 최소 존재) — Ea 는 값이 아니다 (_VERDICT_2026_08_20)"
   },
   {
    "tag": "inter_211_shallow",
@@ -195,13 +195,14 @@
     "ci": 0.03
    },
    "images_file": "/data/work/repo/db/properties/neb_inter_211_shallow.xyz",
-   "_do_not_cite": "협동 이동 지배 — Ea 는 값이 아니다 (_VERDICT_2026_08_20 참조)"
+   "_do_not_cite": "경로가 elementary 가 아니다 (중간 최소 존재) — Ea 는 값이 아니다 (_VERDICT_2026_08_20)"
   }
  ],
- "_VERDICT_2026_08_20": "⛔ 이 파일의 Ea 는 **값이 아니다 — 인용 금지.** 두 런(deepep/shallow) 모두 trustworthy=false 이고, 그 이유가 '더 돌리면 된다' 가 아니라 **이 홉이 애초에 단일 Li 사건이 아니기 때문**이다. 근거 셋이 두 런에서 같이 나온다: ① 중간 이미지가 두 끝점 중 낮은 쪽보다 -0.232 eV 낮다(경로가 끝점보다 낮은 배치를 지난다) ② 밴드가 발산한다(shallow 는 fmax 0.425→0.607, 상승 82 %) ③ 이완 뒤 홉 거리가 3.504 → 4.37 A 로 벌어지는데 **심화 이완을 껐다 켰다 해도 똑같다**(4.369 vs 4.356) = 이웃 Li 가 같이 움직인다. 이 도구는 docstring 에 '협동 이동(다중 Li 동시)을 못 본다' 를 명시하고 있고 이 경우가 그것이다.",
- "_VERDICT_NOT_A_FAILURE": "⭕ 실패가 아니라 결과다 — '이 홉(comp1 inter, pair 20-29, d=3.504 A)은 단일 Li 로 일어나지 않는다' 는 **기전 정보**다. 같은 홉을 --neb_steps 를 늘려 재시도하지 말 것. comp1 유효 장벽의 정본은 MD 축(li_transport.json, Ea 0.253 eV, UMA 멀티시드)이고 NEB 는 처음부터 기전 확인용이었다.",
+ "_VERDICT_2026_08_20": "⛔ 이 파일의 Ea 는 **값이 아니다 — 인용 금지.** 두 런(deepep/shallow) 모두 trustworthy=false 이고, 그 이유가 '더 돌리면 된다' 가 아니라 **이 경로가 elementary 가 아니기 때문**이다. 근거 셋이 두 런에서 같이 나온다: ① **중간 이미지가 두 끝점보다 낮다**(deepep −0.462 / shallow −0.232 eV) = 경로 위에 중간 최소가 있다 ② 밴드가 발산한다(shallow fmax 0.425→0.607, 상승 82 %) ③ 이완 뒤 홉 거리가 3.504 → 4.37 Å 로 벌어지는데 **심화 이완을 껐다 켰다 해도 같다**(4.369 vs 4.356) = 목표 자리가 그 Li 의 최소가 아니다. ⇒ 이동 Li 가 **중간 자리를 거쳐 가는 다단계 과정**이고, 7이미지 단일 밴드로 덮으면 발산한다.",
+ "_VERDICT_NOT_A_FAILURE": "⭕ 실패가 아니라 결과다 — '이 경로(comp1 inter, pair 20-29, d=3.504 A)는 elementary 가 아니다' 는 **기전 정보**이고, **NEB 0.528 vs MD 0.253 격차의 '경로 선택' 가설에 붙는 첫 실측**이다. 같은 홉을 --neb_steps 를 늘려 재시도하지 말 것(발산 중이라 소용없다). 처방은 중간 이미지 배치를 뽑아 이완 → 중간 자리 동정 → **2분할 NEB**. comp1 유효 장벽의 정본은 MD 축(li_transport.json, Ea 0.253 eV)이고 NEB 는 처음부터 기전 확인용이었다.",
  "_SEE": [
-  "kb/methodology/computational_methods_canonical.md §6b (축 6: 그 홉이 애초에 단일 Li 사건인가)",
-  "kb/reviews/codex_B_neb_md_tools_2026_08_20.md §5 B-R7a (대조 실행 판정)"
- ]
+  "kb/methodology/computational_methods_canonical.md §6b (축 6: 그 경로가 elementary 인가)",
+  "kb/reviews/codex_B_neb_md_tools_2026_08_20.md §5 B-R9(b) · B-R7a"
+ ],
+ "_RETRACTED_2026_08_20": "⚠ 이 파일 초판 판정은 원인을 **'협동 이동(다중 Li 동시)'** 이라고 썼다 — **철회한다.** 중간 최소도 홉 거리 변화도 단일 Li 로 설명되고, 협동의 증거는 없다. 협동이 없다는 뜻은 아니며 **이 데이터로는 못 가른다.**"
 }

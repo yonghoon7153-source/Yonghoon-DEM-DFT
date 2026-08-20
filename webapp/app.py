@@ -347,7 +347,8 @@ def elements():
 def explorer():
     # 세부 분석 열 — canonical 앵커(5개)와 **구분해서** 넘긴다 (빈칸이 TODO 가 아니다)
     extra = {"ELF_PS": D.elf_central_min(), "BADER_P": D.bader_charge("P")}
-    return render_template("explorer.html", active="explorer",
+    # 방법 검증 앵커 — 조성 물성 표와 **다른 그룹**이라 따로 넘긴다 (2026-08-20)
+    return render_template("explorer.html", active="explorer", anchors=D.method_anchors(),
                            canonical=D.canonical_table(), canonical_meta=D.CANONICAL_META,
                            canonical_provisional=D.CANONICAL_PROVISIONAL,
                            canonical_status=D.canonical_status_all(), MM=D.metric_meta(),

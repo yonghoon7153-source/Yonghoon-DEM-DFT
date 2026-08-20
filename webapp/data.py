@@ -559,6 +559,122 @@ _BADER_FILES = {"modelc": "bader_ae_modelc_LPSCl16.csv", "b2o3": "bader_ae_b2o3.
 
 
 @lru_cache(maxsize=2)
+# ─────────────────────────────────────────────────────────────
+# 방법 검증 앵커 (2026-08-20 신설) — **조성 물성 표와 섞지 않는다.**
+#   왜 따로인가: canonical_registry 는 "이 물질의 값이 얼마냐" 이고, 여기는
+#   "우리 계산기가 얼마나 맞나" 다. 축이 다르다 — 섞으면 'UMA 힘 오차' 가 comp1 의
+#   물성인 것처럼 읽힌다. 그래서 metric 표에 넣지 않고 별도 섹션으로 뽑는다.
+#   ⚠ 여기 값은 **재료 비교에 쓰는 수치가 아니다.** 전부 한계를 같이 싣는다.
+
+def method_anchors() -> list:
+    """UMA 검증 앵커 목록. 파일이 없으면 그 항목만 빠진다(빈 화면이 되지 않게).
+
+    각 항목: {key, title, value, verdict, note, limit, src}
+    """
+    out = []
+
+    b = _load_json_safe("db/properties/mlip_bench_li3ps4_uma.json")
+    if b:
+        r = (b.get("results") or {})
+        f = (r.get("forces") or {})
+        pe = (f.get("per_element") or {})
+        li = (pe.get("Li") or {}).get("MAE")
+        e = (r.get("energy_after_reference_correction") or {})
+        out.append({
+            "key": "force_mae",
+            "title": "UMA 힘 정확도 (Li₃PS₄ DFT 라벨)",
+            "value": (f"{1000*f['MAE_eV_per_A']:.1f} meV/Å"
+                      + (f"  ·  Li {1000*li:.1f}" if li else "")) if f.get("MAE_eV_per_A") else "—",
+            "verdict": "⭕ 전용 모델보다 정확",
+            "note": (f"같은 test set 공표값: bespoke **35.6** · LoRA 39.2 · PET-MAD 기저 63.9 "
+                     f"(우리는 이 데이터를 **학습한 적이 없다**). test {r.get('n_structures','?')}구조, "
+                     f"실패 {r.get('n_failed','?')}. 보정 후 에너지 "
+                     f"{1000*e.get('MAE_eV_per_atom', 0):.1f} meV/atom."),
+            "limit": ("**힘 축에서만**이다 — 에너지는 전용 모델이 앞선다. **응력·장벽은 안 쟀다.** "
+                      "조성에 **Cl 이 없다**(Li₃PS₄). 상대에너지 RRMSE 는 분모가 크기 차이로 "
+                      "부풀어 약한 지표다 — RMSE 를 볼 것."),
+            "src": "db/properties/mlip_bench_li3ps4_uma.json",
+        })
+
+    for tag in ("comp1", "li3p"):
+        pr = _load_json_safe(f"db/properties/mlip_engine_probe_{tag}.json")
+        if not pr:
+            continue
+        c = pr.get("conservativeness")
+        if c:
+            bd = c.get("by_delta") or {}
+            ds = sorted(bd, key=float)
+            val = " · ".join(f"δ={d} {100*bd[d]['rel_mean']:.2f}%" for d in ds)
+            out.append({
+                "key": f"conservative_{tag}", "title": f"보존성 (힘 = −∇E) — {tag}",
+                "value": val or "—", "verdict": "⭕ 보존적" if c.get("verdict") == "conservative"
+                                                else f"⚠ {c.get('verdict')}",
+                "note": ("δ 를 키우면 편차가 줄어든다 = **에너지 수치잡음**이지 비보존이 아니다. "
+                         "비보존이면 δ 를 키워도 남아야 한다. ⇒ PET-MAD 가 보고한 직접힘 병리"
+                         "(기하최적화 미수렴·종별 온도 분리·MSD 과대)는 UMA 에 안 걸린다."),
+                "limit": c.get("limitation", ""), "src": f"db/properties/mlip_engine_probe_{tag}.json"})
+        t = pr.get("timing")
+        if t:
+            rows = t.get("rows") or []
+            val = " → ".join(f"{x['n_atoms']}원자 {x['us_per_atom_step']:.0f}" for x in rows)
+            out.append({
+                "key": f"timing_{tag}", "title": f"셀 비용 (µs/atom·step) — {tag}",
+                "value": val or "—",
+                "verdict": "⭕ 오버헤드 지배" if t.get("verdict") == "overhead_bound" else "⚠ 연산 지배",
+                "note": (t.get("message", "") + "  ⚠ 단 **상자를 키우면 D 자체가 이동한다**"
+                         "(LPSOCl 600 K 에서 1.65배) — 승격하면 전 조성을 다시 돌려야 한다. "
+                         "1런 = 시드 1개라 멀티시드 규율상 **2–3시드 × 큰 셀**이 맞다."),
+                "limit": t.get("limitation", ""), "src": f"db/properties/mlip_engine_probe_{tag}.json"})
+        rd = pr.get("residual_at_dft_minimum")
+        if rd:
+            out.append({
+                "key": f"residual_{tag}", "title": f"DFT 최소점 잔여력 — {tag}",
+                "value": f"fmax {rd['fmax_eV_per_A']:.4f} · frms {rd['frms_eV_per_A']:.4f} eV/Å",
+                "verdict": {"agrees": "⭕ 두 PES 가 같은 자리", "mild": "⚠ 잔여력 보임",
+                            "disagrees": "⛔ 최소점이 다르다"}.get(rd.get("verdict"), "—"),
+                "note": (rd.get("message", "") + f"  ({rd.get('n_atoms','?')}원자, "
+                         + " · ".join(f"{k} n={v['n']}" for k, v in (rd.get("per_element") or {}).items()) + ")"),
+                "limit": (rd.get("limitation", "") + "  ⚠ 고대칭 소형 셀이면 대칭으로 0 이 되는 "
+                          "원소가 있어 **사실상 일부 원소만** 시험한 것이다. **장벽은 미검증**"
+                          "(Li₃Nd 에서 UMA 는 1.76배 과대였다)."),
+                "src": f"db/properties/mlip_engine_probe_{tag}.json"})
+
+    sc = _load_json_safe("db/properties/sei_neb_uma_scout.json")
+    if sc and sc.get("runs"):
+        by = {}
+        for r in sc["runs"]:
+            if r.get("Ea_forward_eV") is None:
+                continue
+            by.setdefault((r.get("tag"), r.get("shell")), {})[tuple(r.get("supercell") or [])] = r
+        ratios = []
+        for k, v in by.items():
+            a, b2 = v.get((1, 1, 1)), v.get((2, 2, 2))
+            if a and b2 and b2["Ea_forward_eV"] > 0:
+                ratios.append(a["Ea_forward_eV"] / b2["Ea_forward_eV"])
+        if ratios:
+            out.append({
+                "key": "neb_cell_trend", "title": "NEB 셀 크기 추세 (1×1×1 → 2×2×2)",
+                "value": f"{min(ratios):.2f}–{max(ratios):.2f}× 하락  ·  {len(ratios)}홉",
+                "verdict": f"⭕ 예외 {sum(1 for x in ratios if x < 1.0)}/{len(ratios)}",
+                "note": ("셀을 키우면 장벽이 **예외 없이 내려간다**. ⇒ 미수렴 NEB 가 수렴값보다 "
+                         "**위에** 있으면 그건 값이 아니라 미수렴이다. `MIN_WIDTH_A=10 Å` 는 "
+                         "**최소 요건이지 수렴 보증이 아니다**."),
+                "limit": ("⛔ **UMA 장벽 절대값 인용 금지** — 용도는 경로 선택이다. 2점뿐이라 "
+                          "수렴을 못 봤고, 끝점 비대칭이 큰 홉(⚠ 2건)은 끝점을 한 번만 이완한 "
+                          "값이라 따로 재실행 대상이다."),
+                "src": "db/properties/sei_neb_uma_scout.json"})
+    return out
+
+
+def _load_json_safe(rel: str):
+    """repo 상대경로 json 을 읽는다. 없거나 깨지면 None (화면이 통째로 죽지 않게)."""
+    p = ROOT / rel
+    try:
+        return json.loads(p.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+
+
 def elf_central_min() -> dict:
     """조성 → P–S 결합 **중앙 최솟값** ELF.
 
