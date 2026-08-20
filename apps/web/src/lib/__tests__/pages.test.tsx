@@ -790,3 +790,56 @@ describe('셀 상세 질량 힌트', () => {
     expect(within(field).queryByText(/^#/)).toBeNull()
   })
 })
+
+// --- Origin 붙여넣기 -----------------------------------------------------------
+
+describe('클립보드 복사', () => {
+  function installClipboard() {
+    const written: string[] = []
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText: (text: string) => (written.push(text), Promise.resolve()) },
+    })
+    Object.defineProperty(window, 'isSecureContext', { configurable: true, value: true })
+    return written
+  }
+
+  it('사이클 표를 화면에 보이는 단위로 복사한다', async () => {
+    const written = installClipboard()
+    installFetch(sampleDetailHandler(() => undefined))
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: '사이클 복사' }))
+
+    const [names, units, first] = written[0]!.split('\n')
+    expect(names!.split('\t')[0]).toBe('사이클')
+    // 이 픽스처는 mAh 로 떨어진다 (활물질 질량 없음).  복사본은 화면과 같은
+    // 단위여야 한다 — 붙여 넣은 축이 mAh/g 라고 적혀 있으면 그건 거짓말이다.
+    expect(units!.split('\t')[1]).toBe('mAh')
+    expect(first!.split('\t')[0]).toBe('1')
+    expect(await screen.findByRole('button', { name: '복사됨 ✓' })).toBeInTheDocument()
+  })
+
+  it('복사할 것이 없으면 조용히 성공한 척하지 않는다', async () => {
+    installClipboard()
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/cycles'
+          ? {
+              basis: 'mAh',
+              basis_label: 'mAh',
+              requested_basis: 'mAh',
+              basis_fallback_reason: null,
+              reference_cycle: 3,
+              resolved_cell: CELL,
+              cycles: [],
+            }
+          : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: '사이클 복사' }))
+    expect(await screen.findByText('복사할 사이클 데이터가 없습니다')).toBeInTheDocument()
+  })
+})

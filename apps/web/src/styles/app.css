@@ -518,6 +518,10 @@ button.sm { padding: 3px 8px; font-size: 11.5px; }
   border-radius: var(--r1);
   font-size: 12px;
   font-weight: 550;
+  /* 이 클래스는 <a> 와 <button> 에 같이 붙는다.  button 은 글꼴을 물려받지
+     않으므로 이 두 줄이 없으면 복사 버튼만 시스템 글꼴로 튄다. */
+  font-family: inherit;
+  cursor: pointer;
   color: var(--ink-2);
   background: var(--surface);
 }

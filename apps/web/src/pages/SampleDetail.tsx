@@ -12,7 +12,8 @@ import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../component
 import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { api } from '../lib/api'
-import { basisAxis, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
+import { copyText, cyclesTsv, profileTsv } from '../lib/origin'
+import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
 import type { Basis, Run, Sample } from '../lib/types'
@@ -126,6 +127,12 @@ export function SampleDetail() {
     if (referenceCycle !== undefined) setRefDraft(String(referenceCycle))
   }, [referenceCycle])
 
+  // Origin 에 바로 붙여 넣을 블록.  누른 순간 화면에 있는 것을 그대로 복사한다
+  // — 그래서 붙여 넣은 그림이 여기 그림과 같다.  전체 점이 필요하면 옆의
+  // CSV/XLSX 가 있다.  훅이므로 아래 이른 return 들보다 위에 있어야 한다.
+  const [copied, setCopied] = useState<string | null>(null)
+  const [copyError, setCopyError] = useState<string | null>(null)
+
   const kneeMarkers: PlotMarker[] = useMemo(() => {
     const result = reportState.data?.knee?.results.find((r) => r.method === kneeMethod)
     if (!result?.detected || result.cycle === null) return []
@@ -199,6 +206,21 @@ export function SampleDetail() {
     setChosen(null) // a deleted run's cycles must not stay selected
   }
 
+  async function copyBlock(what: string, text: string) {
+    setCopyError(null)
+    if (!text) {
+      setCopyError(`복사할 ${what} 데이터가 없습니다`)
+      return
+    }
+    try {
+      await copyText(text)
+      setCopied(what)
+      window.setTimeout(() => setCopied((current) => (current === what ? null : current)), 1800)
+    } catch (cause) {
+      setCopyError(cause instanceof Error ? cause.message : String(cause))
+    }
+  }
+
   const analysisSettings = (
     <Card title="분석 설정" padSmall>
       <div className="col" style={{ gap: 9 }}>
@@ -269,8 +291,40 @@ export function SampleDetail() {
           >
             XLSX
           </a>
+          <button
+            type="button"
+            className="link-btn"
+            title={`사이클 표를 ${basisUnit(cycleState.data?.basis ?? basis)} 로 복사 — Origin 에 붙여 넣기`}
+            onClick={() =>
+              void copyBlock('사이클', cyclesTsv(cycles, cycleState.data?.basis ?? basis))
+            }
+          >
+            {copied === '사이클' ? '복사됨 ✓' : '사이클 복사'}
+          </button>
+          <button
+            type="button"
+            className="link-btn"
+            title={`그려진 곡선을 ${basisUnit(profileState.data?.basis ?? basis)} 로 복사 — Origin 에 붙여 넣기`}
+            onClick={() =>
+              void copyBlock(
+                '프로파일',
+                profileTsv(
+                  profileState.data?.series ?? [],
+                  profileState.data?.basis ?? basis,
+                ),
+              )
+            }
+          >
+            {copied === '프로파일' ? '복사됨 ✓' : '프로파일 복사'}
+          </button>
         </div>
       </div>
+
+      {copyError ? (
+        <div style={{ marginBottom: 12 }}>
+          <Alert kind="error">{copyError}</Alert>
+        </div>
+      ) : null}
 
       {cycleState.data?.basis_fallback_reason ? (
         <div style={{ marginBottom: 12 }}>
