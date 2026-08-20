@@ -67,7 +67,7 @@
 | docs/sulfide_se_mechanical_anchors.md | concept | Fan §3.5 대조: K_IC→G_c 이중화·입경 닫힌 설계창 |
 | docs/sigma_ionic_physics_derivation.md | concept | σ_ionic 폼 유도·동결 근거 (재적합 금지) |
 | docs/ionic_scaling_law_experiments.md | concept | v12-clean v3 계보 (3 이름 1 모델) |
-| docs/manuscript_sdcp_sigma_e_mechanism.md | synthesis | SDCP σ_e 기전 원고 (+52 % 헤드라인) |
+| docs/manuscript_sdcp_sigma_e_mechanism.md | synthesis | SDCP σ_e 기전 원고 — ⛔ **HISTORICAL** (옛 +52 % 헤드라인은 2026-08-13 철회, CL-24) |
 | docs/project_rint_fullcell_cycling.md | entity | R_int 풀셀/사이클 프로젝트 정본 |
 | docs/step4_v2_design.md | entity | STEP4-v2 갈바노/CV 설계 (PyBaMM 패리티 대기) |
 | docs/a10_cycle_chemomech_design.md | entity | A10 사이클 화학-기계 원장 (poly-mode 정정 포함) |

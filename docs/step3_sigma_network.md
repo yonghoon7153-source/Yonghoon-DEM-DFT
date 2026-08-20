@@ -19,7 +19,8 @@
   | VGCF | 100 | ⚠ **유효 망(network) 값** — 분말(압축분체) 저항률 0.012 Ω·cm ≈ 83 S/cm 급.  단섬유는 1e-4 Ω·cm = **1e4 S/cm** (탄화 1e-3 · 흑연화 1e-4 · 고흑연화 5e-5, 사용자 검증 2026-08-18).  두 자릿수 차이 = 전부 **섬유-섬유 접촉저항**인데 우리 복셀은 닿은 섬유를 융합시켜 접촉저항이 0 이므로, 이 유효값이 그 결손을 σ 로 뭉뚱그린다 (CL-47).  재료상수 아님 — wt%·접촉밀도의 함수 |
   | SuperP | 10 | ⚠ §F1 자릿수 hook (CB compact 1-50) |
   | SDCP | **250** | **사용자 지정 앵커 (2026-07-16; interim 150 대체)** — 진성호계 S-PEDOT 자릿수.
-      (⚠pellet ×5.1은 composite-수준 — phase σ 아님, +52% σ_e는 network solve EMERGENT; doped/neutral 분리는 후속) |
+      (⚠pellet ×5.1은 composite-수준 — phase σ 아님; σ_e 이득은 network solve EMERGENT.
+      ⚠ 옛 "+52%" 는 vox 0.4 점-스탬프 산물로 **철회** (CL-24); doped/neutral 분리는 후속) |
 
 ## 신뢰 모델 (정직)
 - **v1 신뢰 단위 = 상대 비교** (σ표+vox 동일 세팅의 런끼리). 절대 σ_e는 sub-voxel constriction

@@ -80,6 +80,99 @@ REQUIRED_BY_STATUS = {
 }
 
 
+#: ── 철회-문자열 스윕 (2026-08-20) ────────────────────────────────────────────────
+#:   왜: 원장은 SR-01 축에서 실질 정본으로 작동하는데 **정본성이 바깥으로 강제되지 않는다**.
+#:   실증 — 2026-08-12 에 반증된 `~9.4 %` 가 **08-19 신규 문서에서 재주장**됐고, 독립 리뷰가
+#:   그것을 (역시 낡은) 정본에 대조해 "일치"로 **통과**시켰다.  ⇒ 대조 검증조차 정본 신선도에
+#:   종속된다.  발견: `docs/reviews/fable_audit_docs_20260820.md` (a)-1.
+#:   등록부는 `docs/reviews/claims.json` 의 `quotation_ban` (CLAUDE.md ★★ 인용 금지 목록의
+#:   기계 판).  ⚠ 이 파일 목록이 비면 규칙이 조용히 사라지므로 selftest 가 비었는지도 본다.
+CLAIMS_DEFAULT = os.path.join('docs', 'reviews', 'claims.json')
+
+BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
+                  'webapp/templates/*.html', 'webapp/static/js/*.js',
+                  'scripts/seminar_deck/*.js')
+
+#: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
+#: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
+BAN_ALLOW_ALWAYS = ('docs/reviews/claims.json',
+                    'docs/reviews/fable_audit_docs_20260820.md',
+                    'docs/reviews/fable_audit_code_20260820.md')
+
+#: 파일 머리 이 줄 수 안에 배너가 있으면 그 파일 전체를 이력 문서로 본다.
+BAN_BANNER_HEAD_LINES = 12
+#: 배너·근처 표지로 인정하는 표시.
+BAN_BANNER_MARKS = ('HISTORICAL', '⛔', '인용 금지', '철회', '반증', 'retired', 'RETIRED',
+                    '~~', '폐기', '무효')
+#: 해당 줄 위아래 이 범위에 표지가 있으면 "철회를 밝히고 인용" 으로 본다.
+BAN_NEAR_LINES = 2
+
+
+def load_bans(claims_path):
+    """→ (bans, why).  등록부가 없거나 비면 빈 리스트."""
+    if not os.path.exists(claims_path):
+        return [], f'등록부 없음: {claims_path}'
+    with open(claims_path, encoding='utf-8') as f:
+        d = json.load(f)
+    return list(d.get('quotation_ban') or []), ''
+
+
+def _ban_files(repo_root):
+    import glob as _glob
+    out = []
+    for pat in BAN_SCAN_GLOBS:
+        out += _glob.glob(os.path.join(repo_root, pat), recursive=True)
+    return sorted(set(out))
+
+
+def _has_banner(lines):
+    head = '\n'.join(lines[:BAN_BANNER_HEAD_LINES])
+    return any(m in head for m in BAN_BANNER_MARKS)
+
+
+def ban_sweep(repo_root, claims_path=None, files=None):
+    """→ (문제 목록, 검사한 파일 수, 등록부 크기).
+
+    한 출현이 **허용**되려면 셋 중 하나: ⓐ 파일이 allowed_in / 상시허용 목록 ⓑ 파일 머리
+    배너가 있음(이력 문서) ⓒ 그 줄 ±2 줄에 철회 표지가 있음(철회를 밝히고 인용).
+    """
+    import fnmatch as _fn
+    claims_path = claims_path or os.path.join(repo_root, CLAIMS_DEFAULT)
+    bans, err = load_bans(claims_path)
+    probs = []
+    if err:
+        return [err], 0, 0
+    files = files if files is not None else _ban_files(repo_root)
+    for path in files:
+        rel = os.path.relpath(path, repo_root).replace(os.sep, '/')
+        if rel in BAN_ALLOW_ALWAYS:
+            continue
+        try:
+            with open(path, encoding='utf-8', errors='replace') as f:
+                lines = f.read().split('\n')
+        except OSError:
+            continue
+        banner = _has_banner(lines)
+        for b in bans:
+            pat = b.get('pattern')
+            if not pat:
+                continue
+            if any(_fn.fnmatch(rel, g) for g in (b.get('allowed_in') or [])):
+                continue
+            for i, ln in enumerate(lines):
+                if pat not in ln:
+                    continue
+                if banner:
+                    continue
+                lo = max(0, i - BAN_NEAR_LINES)
+                near = '\n'.join(lines[lo:i + BAN_NEAR_LINES + 1])
+                if any(m in near for m in BAN_BANNER_MARKS):
+                    continue
+                probs.append(f'BAN| {rel}:{i + 1} — 철회값 "{pat}" 이 표지 없이 살아 있다 '
+                             f'({b.get("claim", "?")}: {b.get("why", "")[:70]})')
+    return probs, len(files), len(bans)
+
+
 def load(path):
     with open(path, encoding='utf-8') as f:
         data = json.load(f)
@@ -177,10 +270,24 @@ def main(argv=None):
     here = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     ap.add_argument('--ledger', default=os.path.join(here, LEDGER_DEFAULT))
     ap.add_argument('--open', action='store_true', help='열린 항목만 출력')
+    ap.add_argument('--claims', default=os.path.join(here, CLAIMS_DEFAULT))
+    ap.add_argument('--ban-sweep', action='store_true',
+                    help='철회-문자열 스윕만 실행 (claims.json quotation_ban 등록부)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args(argv)
     if a.selftest:
         return _selftest()
+    if a.ban_sweep:
+        bprobs, nfile, nban = ban_sweep(here, a.claims)
+        print(f'── 철회-문자열 스윕 — 등록 {nban} 개 × 파일 {nfile} 개 ──')
+        for p in bprobs:
+            print('   ' + p)
+        if not nban:
+            print('   ⚠ 등록부가 비었다 — 이 규칙은 지금 아무것도 강제하지 않는다')
+            return 1
+        print(('\n★★ 철회값 누수 %d 건 ★★' % len(bprobs)) if bprobs
+              else '\n철회값 누수 없음 ✓')
+        return 1 if bprobs else 0
     if not os.path.exists(a.ledger):
         sys.exit(f'원장 없음: {a.ledger}')
     findings = load(a.ledger)
@@ -288,6 +395,38 @@ def _selftest():
                [dict(base, opened_in='docs/reviews/nope.md')], repo_root=here)))
     else:
         print('  SKIP 14) 원장 파일 없음')
+
+    # ── 철회-문자열 스윕 (2026-08-20) ────────────────────────────────────────────
+    #   ★ 음성 대조가 핵심이다 — 규칙 D 의 교훈("한 번도 발동한 적이 없는 검사")대로,
+    #     "지금 리포가 깨끗하다" 만으로는 검사기가 **정말 잡는지** 증명되지 않는다.
+    import tempfile as _tf
+    _claims = os.path.join(here, CLAIMS_DEFAULT)
+    _bans, _err = load_bans(_claims)
+    ok('16) 등록부가 비어 있지 않다 (비면 이 규칙이 조용히 사라진다)',
+       not _err and len(_bans) >= 5)
+    if _bans:
+        _pat = _bans[0]['pattern']
+        with _tf.TemporaryDirectory() as _d:
+            _bad = os.path.join(_d, 'bad.md')
+            with open(_bad, 'w', encoding='utf-8') as _f:
+                _f.write(f'# 제목\n\n본문에서 {_pat} 를 현행 사실로 쓴다\n')
+            _p1, _, _ = ban_sweep(_d, _claims, files=[_bad])
+            ok('17) ★ 음성 대조 — 표지 없는 철회값을 **정말** 잡는다', len(_p1) == 1)
+
+            _good = os.path.join(_d, 'good.md')
+            with open(_good, 'w', encoding='utf-8') as _f:
+                _f.write(f'# 제목\n\n> ⛔ HISTORICAL — 아래는 이력이다\n\n{_pat} 는 옛 값\n')
+            _p2, _, _ = ban_sweep(_d, _claims, files=[_good])
+            ok('18) 파일 머리 배너가 있으면 통과 (이력 문서를 죽이지 않는다)', _p2 == [])
+
+            _near = os.path.join(_d, 'near.md')
+            with open(_near, 'w', encoding='utf-8') as _f:
+                _f.write(f'# 제목\n\n옛 헤드라인 {_pat} 는 **철회**됐다 (CL-24)\n')
+            _p3, _, _ = ban_sweep(_d, _claims, files=[_near])
+            ok('19) 같은 줄에 철회 표지가 있으면 통과 (철회를 밝히고 인용)', _p3 == [])
+    ok('21) ★ 리포 전체가 지금 깨끗하다 (누수 0)',
+       ban_sweep(here, _claims)[0] == [])
+
     print(f'\ncheck_review_findings selftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1
 

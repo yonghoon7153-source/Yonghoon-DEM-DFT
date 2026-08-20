@@ -886,12 +886,21 @@ def main():
     #   킷 run_mpm.sh 가 이미 --save-fibre 로 저장하므로 배선만 하면 된다.
     _fid_all = None
     _afid = None          # STEP3 가 안 돌아도 manifest 가 참조하므로 바깥에서 초기화
+    # ⚠⚠ `_kind_all` 도 **반드시 여기서** 초기화한다 (2026-08-20 실사고, 규칙 J).
+    #   옛 코드는 아래 `if getattr(a,'fibre',…)` **안에서만** 대입해 놓고 rasterize 호출
+    #   (`add_kind=(_kind_all …)`)에서는 무조건 읽었다.  `--fibre` 없는 런 —
+    #   즉 `mpm_input_from_case.py` 가 `--add-recipe` 없는 킷에 만드는 **모든 plain 침대** —
+    #   에서 UnboundLocalError 가 나고, STEP3 를 감싼 blanket except 가 그것을 삼켜
+    #   `⚠ STEP3 skipped` 한 줄만 남긴 채 **payload 가 exit 0 으로 완주**했다.
+    #   ⇒ σ_e·σ_ion·k·pore-τ·collector·step4_grid 가 통째로 **소실**되는데 런은 성공으로 보인다.
+    #   (2026-08-12 `60bd849e` 이후 활성.  pyflakes(check_undefined_names)는 조건부 바인딩을
+    #    원리적으로 못 본다 — 그래서 규칙 J 스모크가 필요하다.)
+    _kind_all = None
     if getattr(a, 'fibre', '') and phase is not None:
         try:
             _fid_all = np.load(a.fibre)
             # ★ fid 의미(경로/그룹) 동반 파일 — 있으면 그것이 이긴다 (SR-01 후속).
             #   없으면 STEP3 가 phase 화이트리스트로 폴백한다 (옛 산출물 호환).
-            _kind_all = None
             _kp = (a.fibre[:-4] if a.fibre.endswith('.npy') else a.fibre) + '_kind.npy'
             # ⚠ 반드시 `_os` — 이 함수 안에 `import os` 가 있어 `os` 는 **지역명**이고,
             #   그 대입은 여기보다 뒤라 `os.path` 는 UnboundLocalError 다.  2026-08-12 실사고:
@@ -1005,8 +1014,13 @@ def main():
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
                                        sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
                                        sdcp_yield_to_vgcf=_yv3,
+                                       # ⚠ 도메인은 `se` 다 — `_m` 은 se 위의 마스크라
+                                       #   `_kind_all[_m]` 이 성립하려면 len(_kind_all)==len(se).
+                                       #   옛 코드는 `len(_fid_all)` 과 비교해 ⓐ 길이 불일치로
+                                       #   `_fid_all=None` 이 된 뒤에는 TypeError 였고 ⓑ 애초에
+                                       #   비교 대상이 틀렸다 (2026-08-20).
                                        add_kind=(_kind_all[_m] if _kind_all is not None
-                                                 and len(_kind_all) == len(_fid_all) else None))   # SE stamped (sid 6) → ionic solve
+                                                 and len(_kind_all) == len(se) else None))   # SE stamped (sid 6) → ionic solve
             # ── ★ rasterize-only 원장 (2026-08-16, 심층 리뷰 ③ 제안) ─────────────────────
             #   왜: CL-34 의 "우선순위 결함이 σ_e 를 얼마나 부풀렸나" 를 **솔브 없이** 잰다.
             #   두 스탬프 순서(제자리 vs 루프-뒤)로 각각 구워 상별 셀 수를 diff 하면
@@ -1031,7 +1045,7 @@ def main():
                         add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
                         sdcp_yield_to_vgcf=_yv3,          # 양쪽을 같은 규약으로 (like-for-like diff)
                         add_kind=(_kind_all[_m] if _kind_all is not None
-                                  and len(_kind_all) == len(_fid_all) else None))
+                                  and len(_kind_all) == len(se) else None))   # 도메인 = se (위 주석)
                     #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)
                     _sph_only = (sid3 == 5) & (_alt != 5)
                     _stolen = {}

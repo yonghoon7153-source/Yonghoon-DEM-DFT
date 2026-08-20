@@ -1,5 +1,14 @@
 # Research Seminar 2026-08 — 슬라이드 대본 + Defense 준비 (초안 v2)
 
+> ⛔⛔ **HISTORICAL — 2026-08-06 발표 대본.  발표된 그대로 보존한다 (고치지 않는다).**
+> 이 대본의 SDCP 수치(`+52.0 %` · `+5.6 %` · `+18 %` · σ_SDCP 스윕표)는
+> **2026-08-13 적대 리뷰로 전부 철회**됐다 — 전부 **vox 0.4 µm 격자의 산물**이고,
+> 같은 규약을 조이면 σ_e 이득은 +42.15 → +8.49 % 로 계속 내려가고 σ_ion 이득은
+> **부호가 뒤집힌다**(+7.42 → −0.92 %).  현재 말할 수 있는 것은 구-스탬프 규약의
+> **측정 서술** 뿐이다 (vox 0.15 R = 1.1232 · vox 0.125 R = 1.1438, 미수렴).
+> 정본: `CLAUDE.md` SR-01 · `docs/reviews/claims.json` CL-15/CL-24/CL-34/CL-41.
+> ⇒ **이 대본을 그대로 재발표하지 말 것.**  (배너 2026-08-20)
+
 **제목(안)**: *Particle-Resolved Simulation of All-Solid-State Cathodes:
 From Powder Packing to Cycle Life*
 Yonghoon An · Division of Materials Science & Engineering, Hanyang University
@@ -245,7 +254,7 @@ Yonghoon An · Division of Materials Science & Engineering, Hanyang University
 
 | Channel | SBE → DBE |
 |---|---|
-| σ_e | 1.979 → **3.002 mS/cm (+52.0 %)** |
+| σ_e | 1.979 → **3.002 S/cm (+52.0 %)** ⚠ 원 대본은 단위를 `mS/cm` 로 잘못 적었다 — 그 런의 σ_e 는 **S/cm** 다 (CL-38 이 vox 0.4 판을 "1.975 S/cm" 로 기록).  값 자체도 철회됨 |
 | σ_ion | +5.6 % |
 | 반응 계면(BV) 면적 | **+18 %** |
 

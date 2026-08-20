@@ -1,5 +1,11 @@
 # 적대 리뷰 요청 — 2026-08-13 하루치
 
+> ⛔ **HISTORICAL — 이 파일은 작성 시점의 기록이다.  고치지 않고 보존한다.**
+> 안에 있는 SR-01 수치(`+52.0 %` · `+5.6 %` · `+42.15 %` · `×35.79` · `f_artifact 0.147`
+> 등)는 **2026-08-13 적대 리뷰로 철회**됐다 — 정본은 `CLAUDE.md` SR-01 절과
+> `docs/reviews/claims.json` (CL-15 · CL-24).  **원고·발표·인용 금지.**
+> (배너 추가 2026-08-20, 철회-문자열 스윕 `check_review_findings.py --ban-sweep`.)
+
 **대상**: `docs/reviews/claims.json` 의 **CL-11 ~ CL-24 (14건)** + 아래 코드/문서.
 **규약**: 이 리포의 판정 규율(`scripts/check_method_discipline.py` 규칙 A~F, `docs/reviews/`
 prereg 파일들)을 **리뷰에도 적용**한다 — 지적은 반드시 (a) 재현 가능한 근거 (b) h0/h1 이

@@ -1,5 +1,22 @@
 // Research Seminar 2026-08 — Hanyang BML 템플릿 스타일 덱 생성기
 // 대본: docs/seminar_20260806_script.md · 용어: docs/seminar_20260806_glossary.md
+//
+// ⛔⛔ HISTORICAL — 이 생성기는 2026-08-06 에 **발표된 덱**을 재현한다.  그 안의 SDCP 수치
+//   (+52.0 % · +5.6 % · +18 %) 는 2026-08-13 적대 리뷰로 **전부 철회**됐다: 전부 vox 0.4 µm
+//   격자의 산물이고, 같은 규약을 조이면 σ_e 이득은 +42.15 → +8.49 % 로 내려가며 σ_ion 이득은
+//   **부호가 뒤집힌다**(+7.42 → −0.92 %).  정본 = CLAUDE.md SR-01 · docs/reviews/claims.json
+//   (CL-15 · CL-24 · CL-34 · CL-41).
+//   ⇒ **fail-closed**: 그냥 실행하면 철회값 발표자료가 조용히 재생산되므로 거부한다.
+//     당시 덱을 이력으로 재현하려면 `SEMINAR_DECK_HISTORICAL=1` 을 명시할 것.
+//     새 발표용 덱은 이 파일을 고쳐 쓰지 말고 **현재 판정으로 새로 쓴다**.
+//   (가드 추가 2026-08-20 — 감사 docs/reviews/fable_audit_docs_20260820.md (b)-1.)
+if (process.env.SEMINAR_DECK_HISTORICAL !== '1') {
+  console.error(
+    '거부 — 이 덱은 2026-08-13 에 철회된 수치(+52.0 % · +5.6 % · +18 %)를 담고 있다.\n' +
+    '  그대로 만들면 철회값 발표자료가 재생산된다.  정본: CLAUDE.md SR-01 · claims.json.\n' +
+    '  이력 재현이 목적이면  SEMINAR_DECK_HISTORICAL=1 node scripts/seminar_deck/build.js');
+  process.exit(1);
+}
 const pptxgen = require('pptxgenjs');
 const p = new pptxgen();
 p.layout = 'LAYOUT_16x9';            // 10 x 5.625 in

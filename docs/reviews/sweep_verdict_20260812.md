@@ -1,5 +1,11 @@
 # 전수 스윕 판정 — 8 슬라이스 (2026-08-12)
 
+> ⛔ **HISTORICAL — 이 파일은 작성 시점의 기록이다.  고치지 않고 보존한다.**
+> 안에 있는 SR-01 수치(`+52.0 %` · `+5.6 %` · `+42.15 %` · `×35.79` · `f_artifact 0.147`
+> 등)는 **2026-08-13 적대 리뷰로 철회**됐다 — 정본은 `CLAUDE.md` SR-01 절과
+> `docs/reviews/claims.json` (CL-15 · CL-24).  **원고·발표·인용 금지.**
+> (배너 추가 2026-08-20, 철회-문자열 스윕 `check_review_findings.py --ban-sweep`.)
+
 요청서: `method_discipline_sweep_request_20260812.md` · 검사: `scripts/check_method_discipline.py`
 · 원장: `claims.json`.  **모든 수치는 에이전트가 리포 데이터로 직접 재계산해 재현한 것**이다.
 

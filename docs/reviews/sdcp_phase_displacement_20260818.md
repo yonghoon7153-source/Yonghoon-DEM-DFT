@@ -1,5 +1,11 @@
 # SDCP 셀은 어느 상을 밀어냈나 — 상별 원장의 SBE↔DBE 차 (2026-08-18)
 
+> ⛔ **HISTORICAL — 이 파일은 작성 시점의 기록이다.  고치지 않고 보존한다.**
+> 안에 있는 SR-01 수치(`+52.0 %` · `+5.6 %` · `+42.15 %` · `×35.79` · `f_artifact 0.147`
+> 등)는 **2026-08-13 적대 리뷰로 철회**됐다 — 정본은 `CLAUDE.md` SR-01 절과
+> `docs/reviews/claims.json` (CL-15 · CL-24).  **원고·발표·인용 금지.**
+> (배너 추가 2026-08-20, 철회-문자열 스윕 `check_review_findings.py --ban-sweep`.)
+
 정본 원장 = `docs/reviews/claims.json` **CL-43** (측정) · **CL-44** (판별 팔, 런 전 등록).
 원자료 = `docs/data/prereg_v2/phase_ledger/ledger_*.json` (10건, kgy 로그 전사).
 요약 = `docs/data/prereg_v2/phase_ledger_grid.json` §`sdcp_phase_displacement`.

@@ -1721,5 +1721,74 @@
    "reviews_work_dated": "2026-08-19"
   }
  ],
- "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명)."
+ "quotation_ban": [
+  {
+   "pattern": "+52.0 %",
+   "claim": "CL-24",
+   "why": "vox 0.4 점-스탬프 산물.  같은 규약을 조이면 +42.15 → +8.49 % 로 계속 내려간다 — 헤드라인 아님",
+   "allowed_in": []
+  },
+  {
+   "pattern": "+5.6 %",
+   "claim": "CL-24",
+   "why": "같은 런의 이온 이득.  vox 를 조이면 +7.42 → −0.92 % 로 **부호가 뒤집힌다**",
+   "allowed_in": []
+  },
+  {
+   "pattern": "+42.15",
+   "claim": "CL-24",
+   "why": "vox 0.4 격자의 산물 (CL-43 이 σ-치환 강도 39배 변동으로 기전까지 붙였다)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "×35.79",
+   "claim": "CL-15",
+   "why": "선분↔점 배수는 규약 차이지 과소평가 배수가 아니다 — 참값이 점보다 낮을 수도 있다",
+   "allowed_in": []
+  },
+  {
+   "pattern": "f_artifact",
+   "claim": "CL-24",
+   "why": "0.147 인공물 분해 (14.7 % 인공물 / 85.3 % 물리) 는 vox 0.4 전제 위에서만 성립했다",
+   "allowed_in": []
+  },
+  {
+   "pattern": "준정적 답은 ~9.4",
+   "claim": "CL-04",
+   "why": "R1 완주 실측은 ε_sphere 1.13 % (14.5 %p 과압축).  '독립 외삽 3개' 는 1.5중 계상 (CDX-S3b-16)",
+   "allowed_in": []
+  },
+  {
+   "pattern": "9.4 % vs 실험 15.6",
+   "claim": "CL-04",
+   "why": "같은 반증 — 1.13 % vs 15.6 % 가 맞다",
+   "allowed_in": []
+  },
+  {
+   "pattern": "1.14508",
+   "claim": "CL-41",
+   "why": "vox 0.125 의 폐기된 중간값.  확정값은 1.143817",
+   "allowed_in": []
+  },
+  {
+   "pattern": "+52 %",
+   "claim": "CL-24",
+   "why": "같은 철회 헤드라인의 표기 변형",
+   "allowed_in": []
+  },
+  {
+   "pattern": "+52%",
+   "claim": "CL-24",
+   "why": "같은 철회 헤드라인의 표기 변형",
+   "allowed_in": []
+  },
+  {
+   "pattern": "+5.6%",
+   "claim": "CL-24",
+   "why": "같은 철회 이온 이득의 표기 변형 (부호가 뒤집힌다)",
+   "allowed_in": []
+  }
+ ],
+ "_id_policy": "CL-01~CL-09 는 이 리포 계열.  Codex 스윕 추가안(claims_codex_sweep_additions_20260812.json)의 ID 도 CL-09~CL-25 라 **충돌한다** — 병합 시 그쪽을 CDX-* 로 접두어를 붙여 넣는다 (내 CL-09 는 CLP-01 로 이미 개명).",
+ "_quotation_ban_why": "CLAUDE.md SR-01 의 ★★ 인용 금지 목록을 **기계가 읽는 형태**로 옮긴 것. `check_review_findings.py --ban-sweep` 가 CLAUDE.md·docs/**·wiki/**·webapp 템플릿/JS·덱 생성기를 훑어, 파일 머리 배너(HISTORICAL/⛔/인용 금지)도 없고 그 줄 ±2 줄에 철회 표지도 없는 출현을 **오류**로 낸다.  계기 = 2026-08-20 감사: 08-12 에 반증된 9.4 % 가 08-19 신규 문서에서 재주장됐고, 독립 리뷰가 그것을 낡은 정본에 대조해 '일치'로 통과시켰다 (docs/reviews/fable_audit_docs_20260820.md (a)-1).  ⚠ pattern 은 **문맥 포함 문자열**로 쓴다 — 맨 숫자는 오탐이 폭발한다."
 }

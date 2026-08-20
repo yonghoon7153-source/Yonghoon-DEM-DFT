@@ -67,7 +67,8 @@ A 가 건드린 파일: 위 카드 · `INDEX.md`(신설 섹션) · `comparison_v
 
 ## 병행 — kgy STEP 4 (별개)
 
-vox 0.125 CL-41, 11/16 팔 시점 5쌍 평균 **R = 1.14508** (SE 0.107 %p).  8팔 채우면 판정.
+vox 0.125 CL-41, 11/16 팔 시점 5쌍 평균 ~~R = 1.14508~~ (SE 0.107 %p) — **폐기된 중간값**.
+8팔 완주 확정값은 **R = 1.143817** (CL-41).  중간값은 인용하지 않는다.
 `python3 ~/dem-sk/scripts/sdcp_gain_verdict.py --dir prereg_v2_vox0125_sph_b048_lean2 --collect-only`
 
 ---
