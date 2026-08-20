@@ -4,7 +4,7 @@ created: 2026-08-20
 updated: 2026-08-20
 type: guide
 tags: [tooling, workflow]
-sources: [docs/adr/0003-timeseries-on-disk-summaries-in-db.md]
+sources: [docs/adr/0003-timeseries-on-disk-summaries-in-db.md, docs/adr/0009-branch-is-the-home.md]
 confidence: high
 explored: false
 verificationStatus: unverified
@@ -84,7 +84,7 @@ export PATH="$HOME/.local/bin:$PATH"
 **alias 로 쓰고 싶다면** (심볼릭 링크 대신):
 
 ```bash
-echo "alias bml='$HOME/경로/Yonghoon-DEM-DFT/tools/bml'" >> ~/.zshrc
+echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로로
 ```
 
 심볼릭 링크 쪽을 권합니다 — 스크립트가 링크를 따라가 저장소 위치를 스스로
@@ -100,9 +100,10 @@ echo "alias bml='$HOME/경로/Yonghoon-DEM-DFT/tools/bml'" >> ~/.zshrc
 | `bml restart` | 내리고 다시 (pull 포함) |
 | `bml status` | 지금 뭐가 돌고 있는지 + 브랜치/미커밋/ahead·behind |
 | `bml pull` | 실행 없이 최신화만 |
-| `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs) |
+| `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs · bml 회귀) |
 | `bml doctor` | 환경 점검 — 안 되면 여기부터 |
 | `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |
+| `bml repair web` | `node_modules` 와 빌드를 새로 만든다 |
 | `bml logs` | 서버 로그 따라가기 |
 | `bml help` | 도움말 |
 
@@ -143,7 +144,11 @@ WORKBENCH_PORT=6001 bml
 1. **pull** — `git pull --rebase --autostash`. 실패해도 로컬 상태로 계속
    진행하되 경고합니다. rebase 가 걸려 있으면 멈추고 해결하라고 알려 줍니다.
    최근 커밋 3개를 보여 주므로 상대가 뭘 했는지 바로 보입니다.
-2. **의존성** — `requirements.txt` · `pyproject.toml` · `package-lock.json` 의
+   pull 이 `tools/bml` 자신을 갱신했다면 **새 버전으로 다시 시작합니다**
+   (`✓ bml 이 갱신됐습니다 — 새 버전으로 다시 시작합니다`). 안 그러면 방금
+   받은 수정이 이번 실행에는 반영되지 않습니다.
+2. **의존성** — `requirements.txt` · `requirements-dev.txt` ·
+   `pyproject.toml` · `package-lock.json` 의
    해시를 `.bml/deps.stamp` 에 기록해 두고, 바뀌었을 때만 다시 설치합니다.
    상대가 패키지를 추가해도 `bml` 한 번이면 따라잡습니다.
    처음 실행은 1~3분 걸립니다 (가상환경 생성 + 설치).
@@ -168,8 +173,10 @@ WORKBENCH_PORT=6001 bml
 ## 자주 나오는 상황
 
 **포트 5003 이 사용 중이라고 나옵니다**
-: 이전에 띄운 게 남아 있습니다. `bml stop` 후 다시. 다른 프로그램이 쓰고 있다면
-  `WORKBENCH_PORT=6001 bml` 로 옮기세요.
+: `bml` 이 알아서 가려 줍니다. **자기가 띄운 서버**가 죽어 있으면 말없이
+  갈아끼우고, **남의 프로그램**이면 죽이지 않고 pid·명령줄과 함께 멈춥니다
+  (누군가의 실험이 돌고 있을 수 있으니까요). 남의 것이면
+  `WORKBENCH_PORT=6001 bml` 로 옮기면 됩니다.
 
 **pull 이 충돌났습니다**
 : 코드는 양쪽 의도를 확인해 합칩니다. `docs/log.md` 는 append-only 이므로
@@ -182,7 +189,7 @@ WORKBENCH_PORT=6001 bml
 **갑자기 `tools/bml` 이 없다고 합니다**
 : 그 폴더가 다른 브랜치로 넘어갔습니다 (DFT 판을 체크아웃했거나, 누가
   `git checkout` 을 했거나). 심볼릭 링크는 사라진 파일을 가리키고 있는
-  상태입니다. 위 "프로젝트가 둘" 절대로 폴더를 나눈 뒤
+  상태입니다. 위 "프로젝트가 둘" 절의 방법으로 폴더를 나눈 뒤
   `cd ~/bml && ./tools/bml install` 로 링크를 다시 걸어 주세요.
 
 **`bml` 이 "이 폴더에는 다른 프로젝트가 체크아웃돼 있습니다" 라고 멈춥니다**

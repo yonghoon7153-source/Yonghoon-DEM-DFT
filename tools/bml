@@ -5,12 +5,14 @@
 #   bml            최신으로 맞추고 웹앱을 띄운다 (http://localhost:5003)
 #   bml dev        같은 주소, 핫 리로드 (코드 고칠 때)
 #   bml stop       띄운 것들을 내린다
+#   bml restart    내리고 다시 (pull 포함)
 #   bml status     지금 뭐가 돌고 있는지 + 저장소 상태
 #   bml check      커밋 전 검사 (테스트·타입·린트·문서)
 #   bml pull       실행 없이 최신으로만 맞춘다
 #   bml logs       실행 로그 보기
 #   bml doctor     환경 점검 (WSL 포함) — 안 되면 여기부터
 #   bml repair     파이썬 환경을 새로 만든다 (의존성이 꼬였을 때)
+#   bml repair web node_modules 와 빌드를 새로 만든다
 #   bml install    이 명령을 PATH 에 등록한다 (1회)
 #
 # 두 사람이 같은 브랜치를 쓰므로, 실행 전에 항상 pull --rebase --autostash 를
