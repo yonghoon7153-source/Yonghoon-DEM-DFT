@@ -8,8 +8,8 @@ from wrdkit import extract_profile, read_wrd_bytes, segment_steps, summarize_cyc
 
 def test_steps_split_on_the_instrument_step_counter(synthetic_wrd):
     steps = segment_steps(synthetic_wrd)
-    assert [s.mode for s in steps[:3]] == ["charge", "discharge", "rest"]
-    assert len(steps) == 9  # 3 cycles x (charge, discharge, rest)
+    assert [s.mode for s in steps[:4]] == ["charge", "rest", "discharge", "rest"]
+    assert len(steps) == 12  # 3 cycles x (charge, rest, discharge, rest)
 
 
 def test_step_capacity_is_the_delta_across_the_step(synthetic_wrd):

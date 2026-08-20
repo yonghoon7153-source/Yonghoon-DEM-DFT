@@ -33,6 +33,11 @@ __all__ = ["KneeResult", "KneeAnalysis", "detect_knee", "smooth_series"]
 MIN_SEGMENT = 4
 #: Fade must accelerate by at least this factor to count as a knee.
 MIN_SLOPE_RATIO = 1.5
+#: Slopes below this, in %/cycle, are floating-point noise on a flat curve --
+#: 1e-6 %/cycle is 1 % lost over a million cycles.  Without this floor a
+#: perfectly flat series produces a slope of ~1e-15 and every criterion finds
+#: a "knee" where its neighbour's noise happens to be twice as large.
+MIN_FADE_RATE = 1e-6
 
 
 @dataclass
@@ -155,7 +160,7 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
             ((rss_single - rss) / 1.0) / (rss / max(n - 3, 1))
         ) if rss > 0 else float("inf")
 
-    if slope_before >= 0 and slope_after >= 0:
+    if slope_before > -MIN_FADE_RATE and slope_after > -MIN_FADE_RATE:
         return KneeResult("segmented", None, False, "capacity is not fading", detail)
     if slope_after >= slope_before:
         return KneeResult("segmented", None, False,
@@ -187,11 +192,11 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
     baseline_slope, _, _ = _linear_fit(cycles[:baseline_window], values[:baseline_window])
     detail = {"baseline_slope": baseline_slope, "factor": factor,
               "baseline_window": float(baseline_window)}
-    if baseline_slope >= 0:
+    if baseline_slope > -MIN_FADE_RATE:
         # A flat or rising early life gives no rate to compare against; fall
-        # back to the median fade of the whole series.
+        # back to the fade of the whole series.
         overall, _, _ = _linear_fit(cycles, values)
-        if overall >= 0:
+        if overall > -MIN_FADE_RATE:
             return KneeResult("slope_ratio", None, False, "capacity is not fading", detail)
         baseline_slope = overall
         detail["baseline_slope"] = overall
@@ -309,7 +314,7 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
             search_cycles[-early:], search_retention[-early:])[0]
 
         late_slope = analysis.fade_rate_late_pct_per_cycle
-        if late_slope and late_slope < 0 and search_retention[-1] > threshold_pct:
+        if late_slope and late_slope < -MIN_FADE_RATE and search_retention[-1] > threshold_pct:
             analysis.projected_cycle_at_80pct = float(
                 search_cycles[-1] + (threshold_pct - search_retention[-1]) / late_slope
             )

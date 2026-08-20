@@ -8,8 +8,8 @@ from wrdkit import WrdError, read_wrd_bytes
 
 
 def test_row_count_and_no_trailing_bytes(synthetic_wrd):
-    # 3 cycles x (40 charge + 40 discharge + 3 rest)
-    assert len(synthetic_wrd) == 3 * (40 + 40 + 3)
+    # 3 cycles x (40 charge + 3 rest + 40 discharge + 3 rest)
+    assert len(synthetic_wrd) == 3 * (40 + 3 + 40 + 3)
     assert synthetic_wrd.metadata.trailing_bytes == 0
 
 
@@ -58,8 +58,9 @@ def test_coulomb_files_are_converted_to_mah():
     data = synthetic.build_wrd(synthetic.make_cycles(1, 10))
     wrd = read_wrd_bytes(data)
     wrd.metadata.unit_coulomb = True
-    # 1 mAh == 3.6 C, so a coulomb-valued column reads 1/3.6 of the amp-hour one.
-    assert wrd.discharge_mah().max() == pytest.approx(5.0 / 3.6, rel=1e-9)
+    # The column holds 0.005 (5 mAh as Ah).  Read as coulombs that is
+    # 0.005 C = 0.005 / 3.6 mAh.
+    assert wrd.discharge_mah().max() == pytest.approx(0.005 / 3.6, rel=1e-9)
 
 
 def test_operator_cell_data_defaults_are_recognised_as_unset(synthetic_wrd):

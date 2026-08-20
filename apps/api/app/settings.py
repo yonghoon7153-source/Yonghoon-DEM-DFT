@@ -1,0 +1,48 @@
+"""Runtime configuration.  Everything is overridable by environment variable."""
+
+from __future__ import annotations
+
+import os
+from dataclasses import dataclass, field
+from pathlib import Path
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def _path(name: str, default: Path) -> Path:
+    return Path(os.environ.get(name, default)).expanduser().resolve()
+
+
+@dataclass
+class Settings:
+    data_dir: Path = field(default_factory=lambda: _path("WORKBENCH_DATA", REPO_ROOT / "data"))
+    database_url: str = ""
+    #: Rejecting oversized uploads early keeps a stray file from filling the disk.
+    max_upload_bytes: int = int(os.environ.get("WORKBENCH_MAX_UPLOAD_MB", "512")) * 1024 * 1024
+    #: Points per curve sent to the browser; the server downsamples to this.
+    default_plot_points: int = int(os.environ.get("WORKBENCH_PLOT_POINTS", "1200"))
+    cors_origins: tuple[str, ...] = tuple(
+        origin.strip() for origin in os.environ.get(
+            "WORKBENCH_CORS", "http://localhost:5173,http://127.0.0.1:5173"
+        ).split(",") if origin.strip()
+    )
+
+    def __post_init__(self) -> None:
+        if not self.database_url:
+            self.database_url = os.environ.get(
+                "WORKBENCH_DB", f"sqlite:///{self.data_dir / 'workbench.db'}")
+
+    @property
+    def uploads_dir(self) -> Path:
+        return self.data_dir / "uploads"
+
+    @property
+    def runs_dir(self) -> Path:
+        return self.data_dir / "runs"
+
+    def ensure_dirs(self) -> None:
+        self.uploads_dir.mkdir(parents=True, exist_ok=True)
+        self.runs_dir.mkdir(parents=True, exist_ok=True)
+
+
+settings = Settings()
