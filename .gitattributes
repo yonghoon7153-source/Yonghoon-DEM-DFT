@@ -1,0 +1,32 @@
+# Shell scripts and configs must keep LF endings.
+#
+# Windows/WSL is the failure this prevents: git on Windows checks a script out
+# with CRLF, WSL's bash then reads `#!/usr/bin/env bash\r` and reports
+# "bad interpreter: No such file or directory" -- a message that says nothing
+# about line endings and costs an hour to diagnose.
+* text=auto eol=lf
+
+tools/bml           text eol=lf
+*.sh                text eol=lf
+*.py                text eol=lf
+Makefile            text eol=lf
+*.yml               text eol=lf
+*.yaml              text eol=lf
+*.json              text eol=lf
+*.md                text eol=lf
+*.ts                text eol=lf
+*.tsx              text eol=lf
+*.css               text eol=lf
+
+# Windows batch files are the one thing that wants CRLF: cmd.exe mishandles a
+# LF-only file in some code pages, and this one only ever runs on Windows.
+*.cmd               text eol=crlf
+*.bat               text eol=crlf
+
+# Never normalise instrument data or archives.
+*.wrd               binary
+*.wis               binary
+*.cyc               binary
+*.npz               binary
+*.png               binary
+*.xlsx              binary

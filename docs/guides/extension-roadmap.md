@@ -97,4 +97,6 @@ EIS 가 안정적으로 들어온 다음의 일이다.
 ## 관련
 
 - [[bml-command]] — 개발 중에는 `bml dev` 로 띄우면 고칠 때마다 바로 반영된다
+- [[wsl-setup]] — Windows/WSL 에서 개발할 때는 저장소를 `/mnt/c` 밖에 둬야
+  파일 변경 감지가 동작한다
 - `.claude/skills/adding-an-analysis/SKILL.md` — 새 분석을 붙이는 절차

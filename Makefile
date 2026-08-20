@@ -17,7 +17,7 @@ PORT_API ?= 8000
 .DEFAULT_GOAL := help
 .PHONY: help setup setup-git sync venv install-api install-web install-bml \
         dev serve api web build test test-py test-web lint lint-py lint-web \
-        check wiki-lint wiki-status clean fmt
+        check wiki-lint wiki-status clean fmt doctor
 
 help: ## 사용 가능한 타겟
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -49,6 +49,9 @@ install-web: ## 프론트엔드 의존성 설치
 
 install-bml: ## `bml` 명령을 PATH 에 등록 (1회)
 	./tools/bml install
+
+doctor: ## 환경 점검 (WSL 포함)
+	./tools/bml doctor
 
 dev: ## 개발 서버 — http://localhost:5003 (핫 리로드)
 	@echo "→ http://localhost:$(PORT)"

@@ -52,6 +52,8 @@ bml            # 최신으로 맞추고 실행 → http://localhost:5003
 | `bml check` | 커밋 전 검사 |
 
 설치와 자세한 설명: [`docs/guides/bml-command.md`](docs/guides/bml-command.md)
+Windows/WSL: [`docs/guides/wsl-setup.md`](docs/guides/wsl-setup.md) —
+`bml doctor` 가 환경을 점검하고 무엇을 고칠지 알려 준다.
 
 `make` 를 직접 쓸 수도 있다 — `make serve` (한 포트), `make dev` (핫 리로드),
 둘 다 http://localhost:5003 이다.

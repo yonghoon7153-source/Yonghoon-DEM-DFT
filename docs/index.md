@@ -27,6 +27,7 @@
 ## 가이드
 
 - [[bml-command]] — `bml` 한 줄로 최신화 + 실행. 협력자 설치 방법 포함
+- [[wsl-setup]] — Windows/WSL 에서 쓰는 법. 막히는 지점과 해결까지
 - [[extension-roadmap]] — 충방전 다음에 붙일 분석(dQ/dV, EIS, DRT)과 그 순서
 
 ## 에이전트 하네스
@@ -44,4 +45,4 @@
 
 `.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
 
-Total pages: 2
+Total pages: 3

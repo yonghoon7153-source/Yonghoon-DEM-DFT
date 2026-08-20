@@ -9,6 +9,7 @@
 #   bml check      커밋 전 검사 (테스트·타입·린트·문서)
 #   bml pull       실행 없이 최신으로만 맞춘다
 #   bml logs       실행 로그 보기
+#   bml doctor     환경 점검 (WSL 포함) — 안 되면 여기부터
 #   bml install    이 명령을 PATH 에 등록한다 (1회)
 #
 # 두 사람이 같은 브랜치를 쓰므로, 실행 전에 항상 pull --rebase --autostash 를
@@ -38,6 +39,10 @@ REPO="$(cd -P "$(dirname "$SCRIPT")/.." && pwd)"
 
 PORT="${WORKBENCH_PORT:-5003}"
 API_PORT="${WORKBENCH_API_PORT:-8000}"
+# WSL2 forwards localhost from Windows by default, so 127.0.0.1 is right and
+# keeps the server off the network.  Set WORKBENCH_HOST=0.0.0.0 if that
+# forwarding is disabled, or to reach the app from another machine.
+HOST="${WORKBENCH_HOST:-127.0.0.1}"
 URL="http://localhost:${PORT}"
 RUN_DIR="$REPO/.bml"
 LOG="$RUN_DIR/server.log"
@@ -101,9 +106,29 @@ wait_for_url() {
   return 1
 }
 
+is_wsl() {
+  [ -n "${WSL_DISTRO_NAME:-}" ] && return 0
+  grep -qiE 'microsoft|wsl' /proc/sys/kernel/osrelease 2>/dev/null
+}
+
 open_browser() {
   local url="$1"
-  if [ -n "${BML_NO_OPEN:-}" ]; then return 0; fi
+  [ -n "${BML_NO_OPEN:-}" ] && return 0
+
+  if is_wsl; then
+    # xdg-open inside WSL either does nothing or opens a Linux browser that
+    # is not installed.  The Windows browser is what the user is looking at.
+    if command -v wslview >/dev/null 2>&1; then
+      (wslview "$url" >/dev/null 2>&1 &)
+    elif command -v explorer.exe >/dev/null 2>&1; then
+      # explorer.exe returns 1 even on success; ignore its status.
+      (explorer.exe "$url" >/dev/null 2>&1 || true &)
+    elif command -v powershell.exe >/dev/null 2>&1; then
+      (powershell.exe -NoProfile -Command "Start-Process '$url'" >/dev/null 2>&1 &)
+    fi
+    return 0
+  fi
+
   if command -v xdg-open >/dev/null 2>&1; then (xdg-open "$url" >/dev/null 2>&1 &)
   elif command -v open >/dev/null 2>&1; then (open "$url" >/dev/null 2>&1 &)
   fi
@@ -272,7 +297,7 @@ start_serve() {
     WORKBENCH_PORT="$PORT" \
     PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" \
     setsid nohup "$(python_bin)" -m uvicorn app.main:app \
-      --host 127.0.0.1 --port "$PORT" --app-dir "$REPO/apps/api" \
+      --host "$HOST" --port "$PORT" --app-dir "$REPO/apps/api" \
       > "$LOG" 2>&1 < /dev/null &
     printf '%s' "$!" > "$PID_FILE"
   )
@@ -360,6 +385,136 @@ cmd_check() {
   ok "전부 통과."
 }
 
+cmd_doctor() {
+  local problems=0
+  say "${B}환경 점검${OFF}  ${DIM}$REPO${OFF}"
+  say ""
+
+  # --- WSL ------------------------------------------------------------------
+  if is_wsl; then
+    local wsl_version="WSL"
+    grep -qi 'wsl2' /proc/sys/kernel/osrelease 2>/dev/null && wsl_version="WSL2"
+    grep -qi 'microsoft-standard-WSL2' /proc/version 2>/dev/null && wsl_version="WSL2"
+    ok "$wsl_version (${WSL_DISTRO_NAME:-배포판 이름 없음})"
+
+    case "$REPO" in
+      /mnt/[a-z]/*)
+        warn "저장소가 Windows 드라이브($REPO)에 있습니다."
+        say  "  ${DIM}파일 접근이 10배 이상 느리고, bml dev 의 자동 새로고침이 잘 안 됩니다.${OFF}"
+        say  "  ${DIM}WSL 안(~/)으로 옮기길 권합니다:${OFF}"
+        say  "  ${DIM}  git clone <저장소> ~/Yonghoon-DEM-DFT${OFF}"
+        problems=$((problems + 1))
+        ;;
+      *) ok "저장소가 WSL 파일시스템에 있습니다 (빠름)" ;;
+    esac
+
+    if command -v wslview >/dev/null 2>&1; then
+      ok "브라우저 열기: wslview"
+    elif command -v explorer.exe >/dev/null 2>&1; then
+      ok "브라우저 열기: explorer.exe"
+      say "  ${DIM}더 깔끔하게 하려면: sudo apt install wslu${OFF}"
+    else
+      warn "브라우저를 자동으로 못 엽니다. 주소를 직접 여세요: $URL"
+    fi
+
+    local wsl_ip
+    wsl_ip="$(hostname -I 2>/dev/null | awk '{print $1}')"
+    [ -n "$wsl_ip" ] && say "  ${DIM}localhost 가 안 되면 Windows 에서: http://${wsl_ip}:${PORT}${OFF}"
+    say ""
+  fi
+
+  # --- 줄바꿈 (WSL 에서 가장 흔한 사고) ---------------------------------------
+  #
+  # bml 자신이 CRLF 면 애초에 실행되지 않고 "bad interpreter" 만 뜬다.  그래서
+  # 여기서는 나머지 스크립트를 훑는다 — 훅이나 tools/*.py 가 CRLF 면 나중에
+  # 엉뚱한 곳에서 터진다.
+  local crlf=()
+  while IFS= read -r file; do
+    head -1 "$file" 2>/dev/null | grep -q $'\r' && crlf+=("$file")
+  done < <(find "$REPO/tools" "$REPO/.claude/hooks" -type f \
+             \( -name '*.sh' -o -name '*.py' -o -name 'bml' \) 2>/dev/null)
+
+  if [ ${#crlf[@]} -gt 0 ]; then
+    printf '%s✕%s CRLF 줄바꿈인 스크립트가 %d개 있습니다 — WSL 에서 실행되지 않습니다.\n' \
+      "$RED" "$OFF" "${#crlf[@]}"
+    printf '  %s\n' "${crlf[@]}"
+    say "  ${DIM}고치기:${OFF}"
+    say "    git config --global core.autocrlf input"
+    say "    git rm --cached -r . && git reset --hard"
+    problems=$((problems + 1))
+  else
+    ok "줄바꿈 LF (정상)"
+  fi
+
+  # --- python ---------------------------------------------------------------
+  if command -v python3 >/dev/null 2>&1; then
+    ok "python3 $(python3 -V 2>&1 | awk '{print $2}')"
+    if ! python3 -c "import ensurepip" >/dev/null 2>&1; then
+      printf '%s✕%s python3-venv 가 없습니다 (Ubuntu 기본 미포함).\n' "$RED" "$OFF"
+      say "  ${DIM}설치: sudo apt update && sudo apt install -y python3-venv python3-pip${OFF}"
+      problems=$((problems + 1))
+    else
+      ok "python3-venv 사용 가능"
+    fi
+  else
+    printf '%s✕%s python3 이 없습니다.  ${DIM}sudo apt install -y python3 python3-venv python3-pip${OFF}\n' "$RED" "$OFF"
+    problems=$((problems + 1))
+  fi
+
+  # --- node -----------------------------------------------------------------
+  if command -v node >/dev/null 2>&1; then
+    local node_major
+    node_major="$(node -v | sed 's/v\([0-9]*\).*/\1/')"
+    if [ "${node_major:-0}" -ge 18 ] 2>/dev/null; then
+      ok "node $(node -v)"
+    else
+      warn "node $(node -v) — 18 이상이 필요합니다."
+      say "  ${DIM}Ubuntu 기본 저장소는 오래됐습니다. nodesource 를 쓰세요:${OFF}"
+      say "  ${DIM}  curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt install -y nodejs${OFF}"
+      problems=$((problems + 1))
+    fi
+  else
+    printf '%s✕%s node 가 없습니다.\n' "$RED" "$OFF"
+    say "  ${DIM}curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt install -y nodejs${OFF}"
+    problems=$((problems + 1))
+  fi
+
+  command -v git >/dev/null 2>&1 && ok "git $(git --version | awk '{print $3}')" \
+    || { printf '%s✕%s git 이 없습니다.\n' "$RED" "$OFF"; problems=$((problems + 1)); }
+  command -v curl >/dev/null 2>&1 && ok "curl" \
+    || { warn "curl 이 없습니다 — 서버 준비 확인이 느려집니다. sudo apt install -y curl"; }
+
+  # --- PATH -----------------------------------------------------------------
+  case ":$PATH:" in
+    *":$HOME/.local/bin:"*) ok "~/.local/bin 이 PATH 에 있습니다" ;;
+    *)
+      warn "~/.local/bin 이 PATH 에 없습니다 — 'bml' 이 안 잡힙니다."
+      say "  ${DIM}echo 'export PATH=\"\$HOME/.local/bin:\$PATH\"' >> ~/.bashrc && exec bash${OFF}"
+      problems=$((problems + 1))
+      ;;
+  esac
+
+  # --- 포트 -----------------------------------------------------------------
+  if port_busy "$PORT"; then
+    if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
+      ok "포트 $PORT — 워크벤치가 실행 중"
+    else
+      warn "포트 $PORT 를 다른 프로그램이 쓰고 있습니다."
+      say "  ${DIM}WORKBENCH_PORT=6001 bml  로 옮길 수 있습니다.${OFF}"
+    fi
+  else
+    ok "포트 $PORT 사용 가능"
+  fi
+
+  say ""
+  if [ "$problems" -eq 0 ]; then
+    ok "문제 없습니다. 'bml' 로 시작하세요."
+  else
+    warn "$problems 건을 먼저 해결하세요. 자세한 설명: docs/guides/wsl-setup.md"
+    return 1
+  fi
+}
+
 cmd_install() {
   local target="${1:-$HOME/.local/bin}"
   mkdir -p "$target"
@@ -391,6 +546,7 @@ case "${1:-serve}" in
   status|st)         cmd_status ;;
   check|test)        cmd_check ;;
   logs|log)          tail -f "$LOG" ;;
+  doctor|diag)       cmd_doctor ;;
   install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
   help|-h|--help)    cmd_help ;;
   *) die "모르는 명령: $1   ('bml help' 참고)" ;;

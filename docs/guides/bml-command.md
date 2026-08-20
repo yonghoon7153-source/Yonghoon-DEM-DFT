@@ -145,6 +145,7 @@ WORKBENCH_DATA=/srv/battery-data bml
 
 ## 관련
 
+- [[wsl-setup]] — Windows/WSL 에서 쓸 때의 준비와 함정
 - [[extension-roadmap]] — 다음에 붙일 분석
 - `CLAUDE.md` 2장 — 2인 공용 git 규칙 전문
 - `.claude/skills/shared-branch-workflow/SKILL.md` — 에이전트용 같은 규칙
