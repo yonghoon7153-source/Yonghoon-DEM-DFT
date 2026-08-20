@@ -30,7 +30,64 @@ const KNEE_REASONS: Rule[] = [
     /^fade rate never reached ([\d.]+)x the early-life rate$/,
     (m) => `열화율이 초기의 ${m[1]}배에 도달한 적이 없습니다`,
   ],
+  [
+    /^fade rate never stayed at ([\d.]+)x the early-life rate$/,
+    (m) => `열화율이 초기의 ${m[1]}배를 넘은 채로 머무른 적이 없습니다`,
+  ],
+  [
+    /^fade steepens at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\) and eases off again from cycle ([\d.]+) \(([-+\d.]+) %\/cycle\)$/,
+    (m) =>
+      `${m[1]}번 사이클에서 열화가 급해졌다가 (${m[2]} → ${m[3]} %/cycle) ` +
+      `${m[4]}번부터 다시 완만해집니다 (${m[5]} %/cycle)`,
+  ],
+  [
+    /^fade begins at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) => `${m[1]}번 사이클에서 열화가 시작됩니다 (${m[2]} → ${m[3]} %/cycle)`,
+  ],
+  [
+    /^only ([\d.]+)% is lost after cycle ([\d.]+) \(needs ([\d.]+)%\)$/,
+    (m) => `${m[2]}번 이후로 잃는 것이 ${m[1]}% 뿐입니다 (${m[3]}% 이상이어야 knee 로 인정)`,
+  ],
+  [
+    /^the rate does steepen, but only ([\d.]+)% is lost afterwards \(needs ([\d.]+)%\)$/,
+    (m) => `열화율은 급해지지만 그 뒤로 잃는 것이 ${m[1]}% 뿐입니다 (${m[2]}% 이상 필요)`,
+  ],
+  [
+    /^curvature peaks at cycle ([\d.]+) but only ([\d.]+)% is lost afterwards \(needs ([\d.]+)%\)$/,
+    (m) => `${m[1]}번에서 곡률이 가장 크지만 그 뒤로 잃는 것이 ${m[2]}% 뿐입니다 (${m[3]}% 이상 필요)`,
+  ],
+  [
+    /^a bent line fits no better than a straight one$/,
+    () => '꺾은 선이 곧은 선보다 더 잘 맞지 않습니다 — 잡음일 가능성이 큽니다',
+  ],
+  [
+    /^the rate steepens around cycle ([\d.]+), but a line bent there fits no better than a straight one$/,
+    (m) => `${m[1]}번 부근에서 열화율이 급해지지만, 거기서 꺾은 선이 곧은 선보다 잘 맞지 않습니다`,
+  ],
+  [
+    /^curvature peaks at cycle ([\d.]+), but a line bent there fits no better than a straight one$/,
+    (m) => `${m[1]}번에서 곡률이 가장 크지만, 거기서 꺾은 선이 곧은 선보다 잘 맞지 않습니다`,
+  ],
+  [
+    /^neither of the two best break points accelerates the fade$/,
+    () => '가장 잘 맞는 두 절점 어디에서도 열화가 가속되지 않습니다',
+  ],
+  [
+    /^a three-line fit needs at least (\d+) cycles, has (\d+)$/,
+    (m) => `세 직선으로 보려면 사이클이 ${m[1]}개 이상이어야 합니다 (현재 ${m[2]}개)`,
+  ],
+  [/^no three-line break point fits$/, () => '세 직선으로도 맞는 절점이 없습니다'],
   [/^maximum curvature at cycle ([\d.]+)$/, (m) => `${m[1]}번 사이클에서 곡률이 가장 큽니다`],
+  [
+    /^curvature peaks at cycle ([\d.]+) but fade accelerates only ([\d.]+)x there \(needs ([\d.]+)x\)$/,
+    (m) =>
+      `${m[1]}번에서 곡률이 가장 크지만 거기서 가속이 ${m[2]}배뿐입니다 ` +
+      `(${m[3]}배 이상이어야 knee 로 인정)`,
+  ],
+  [
+    /^dipped below ([\d.]+)% at cycle ([\d.]+) but recovered$/,
+    (m) => `${m[2]}번 사이클에서 ${m[1]}% 아래로 내려갔다가 회복했습니다`,
+  ],
   [
     /^fade accelerates only ([\d.]+)x \(needs ([\d.]+)x\)$/,
     (m) => `가속이 ${m[1]}배뿐입니다 (${m[2]}배 이상이어야 knee 로 인정)`,

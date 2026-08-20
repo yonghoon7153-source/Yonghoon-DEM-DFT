@@ -30,6 +30,56 @@ describe('knee reasons', () => {
     )
   })
 
+  // knee.py 가 실제로 내보내는 문장들.  아래 목록은 원형 곡선 12종과 직선 열화
+  // 200개를 돌려 나온 이유를 모아 숫자만 다른 것을 하나로 합친 것이다.
+  // knee.py 의 문구를 바꾸면 여기가 먼저 빨개진다 — 화면이 영어로 나가기 전에.
+  const REASONS = [
+    'a bent line fits no better than a straight one',
+    'capacity is not fading',
+    'capacity never fell below 80% (lowest 100.0%)',
+    'curvature peaks at cycle 10 but fade accelerates only 0.02x there (needs 1.5x)',
+    'curvature peaks at cycle 105, but a line bent there fits no better than a straight one',
+    'curvature peaks at cycle 115 but only 0.3% is lost afterwards (needs 2%)',
+    'dipped below 80% at cycle 164 but recovered',
+    'fade accelerates only 1.00x (needs 1.5x)',
+    'fade begins at cycle 20 (+0.337 -> -0.894 %/cycle)',
+    'fade does not accelerate after the best break point',
+    'fade rate never stayed at 2x the early-life rate',
+    'fade rate reached 2x the early-life rate (-0.228 vs -0.044 %/cycle) at cycle 76',
+    'fade rate steepens 11.77x at cycle 40 (-0.119 -> -1.401 %/cycle)',
+    'fade steepens at cycle 22 (-0.088 -> -4.277 %/cycle) and eases off again from cycle 34 (-0.541 %/cycle)',
+    'maximum curvature at cycle 11',
+    'needs at least 7 cycles, has 3',
+    'neither of the two best break points accelerates the fade',
+    'no complete cycles',
+    'no three-line break point fits',
+    'only 0.4% is lost after cycle 86 (needs 2%)',
+    'retention crossed 80% at cycle 102.6',
+    'series too short after edge trimming',
+    'a three-line fit needs at least 13 cycles, has 10',
+    'the rate does steepen, but only 0.1% is lost afterwards (needs 2%)',
+    'the rate steepens around cycle 124, but a line bent there fits no better than a straight one',
+  ]
+
+  it('translates every reason knee.py can produce', () => {
+    const english: string[] = []
+    for (const reason of REASONS) {
+      const translated = ko.kneeReason(reason)
+      if (translated === reason) english.push(reason)
+    }
+    expect(english).toEqual([])
+  })
+
+  it('keeps the cycle numbers of every reason it translates', () => {
+    for (const reason of REASONS) {
+      const numbers = reason.match(/\d+\.?\d*/g) ?? []
+      const translated = ko.kneeReason(reason)
+      for (const value of numbers) {
+        expect(translated, reason).toContain(value)
+      }
+    }
+  })
+
   it('passes an unrecognised sentence through rather than dropping it', () => {
     expect(ko.kneeReason('some future criterion said no')).toBe(
       'some future criterion said no',
