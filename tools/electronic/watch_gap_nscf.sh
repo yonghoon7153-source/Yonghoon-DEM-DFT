@@ -88,6 +88,17 @@ EOF
     [ "$(grep -ac 'iteration #' "$T/nul.out")" = "1" ] \
         && say "✓" "[음성] NUL 오염 출력도 읽힌다" || say "✗" "NUL 처리 실패"
 
+    # [음성] ★ 옛 실행의 .out 을 현재 상태로 읽으면 안 된다 (2026-08-20 실측 오보고)
+    touch -d '2026-08-20 10:00' "$T/old.out"
+    touch -d '2026-08-20 12:00' "$T/new.in"
+    [ "$T/new.in" -nt "$T/old.out" ] \
+        && say "✓" "[음성] .in 이 .out 보다 새로우면 '아직 시작 안 함' 으로 읽는다" \
+        || say "✗" "옛 .out 을 현재 상태로 읽는다 (오보고 재발)"
+    touch -d '2026-08-20 13:00' "$T/old.out"
+    [ "$T/new.in" -nt "$T/old.out" ] \
+        && say "✗" "실행된 .out 을 '시작 안 함' 으로 오판한다" \
+        || say "✓" "[음성] 실제로 실행된 .out 은 정상 판독한다"
+
     # [음성] accuracy 가 안 줄면 잡아내야 한다
     x=$(printf '0.005\n0.005\n' | tail -2 | head -1); y=0.005
     awk -v a="$x" -v b="$y" 'BEGIN{exit !(a<=b)}' \
@@ -126,6 +137,17 @@ for S in comp1 modelc; do
         [ -s "$F" ] || { [ "$STAGE" = scf ] && echo "   $STAGE: 아직 출력 없음"; continue; }
 
         AGE=$(( ( $(date +%s) - $(stat -c %Y "$F") ) / 60 ))
+
+        # ⛔ 2026-08-20 실측: 옛 실행의 .out 을 **현재 상태로 보고했다.** comp1 이 아직
+        #   scf 초기화 중이라 modelc 차례가 오지도 않았는데, 화면은 지난 판의
+        #   "wrong number of columns" 오류를 지금 난 것처럼 찍었다.
+        #   판별: 입력(.in)은 실행 직전에 매번 새로 만든다 — .out 이 .in 보다 오래됐으면 옛 판이다.
+        IN=$D/$( [ "$STAGE" = scf ] && echo scf.in || echo nscf_gap.in )
+        if [ -f "$IN" ] && [ "$IN" -nt "$F" ]; then
+            echo "   $STAGE: ⏸ 아직 시작 안 함 (남아 있는 .out 은 **옛 판**이라 안 읽는다)"
+            continue
+        fi
+
         if grep -aq 'Error in routine' "$F"; then
             echo "   $STAGE: ⛔ QE 오류"
             grep -a -A2 'Error in routine' "$F" | head -3 | sed 's/^/        /'

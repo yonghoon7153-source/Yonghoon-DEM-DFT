@@ -616,10 +616,18 @@ def run_split_neb(images, E, nebinfo, calc, args, logf):
         앙상블 유효 장벽이 아니다.
     """
     import numpy as _np
+    # ⛔ 2026-08-20: 첫 밴드가 **미수렴**이면 그 위에서 극소를 고르는 건 모래 위에 짓는 것이다.
+    #   FIRE 가 400스텝을 다 쓰고 fmax 가 오히려 오르는 중이면 "이미지 4가 극소" 라는 판독
+    #   자체가 신뢰할 수 없다. 막지는 않되(진단 가치가 있다) **결과에 낙인을 찍는다.**
+    base_unconverged = not nebinfo.get("band_converged")
+    if base_unconverged:
+        print("   ⛔ 쪼개기 전 밴드가 **미수렴**이다 — 중간자리 판독의 근거가 약하다.")
+        print("      아래 값은 진단용이며 **장벽으로 인용하면 안 된다.**")
     m, depth = find_intermediate(E)
     if m is None:
         print("   ⓘ --split: 내부 국소최소가 없다 — 쪼갤 게 없어 단일 NEB 로 둔다.")
-        return images, E, nebinfo, {"split_done": False, "reason": "no_interior_minimum"}
+        return images, E, nebinfo, {"split_done": False, "reason": "no_interior_minimum",
+                                    "base_band_unconverged": base_unconverged}
     print(f"   ★ --split: 이미지 {m} 가 내부 극소 (양옆 대비 {1000*depth:+.0f} meV, "
           f"시작 대비 {1000*(E[m]-E[0]):+.0f} meV) → 중간자리로 잡는다")
 
@@ -640,6 +648,7 @@ def run_split_neb(images, E, nebinfo, calc, args, logf):
         print(f"   ⛔ 이완 뒤 중간자리가 끝점으로 붕괴했다 (max 변위 {d_i:.2f}/{d_f:.2f} Å) "
               f"— 별개 자리가 아니다. 쪼개지 않는다.")
         return images, E, nebinfo, {"split_done": False, "reason": "intermediate_collapsed",
+                                    "base_band_unconverged": base_unconverged,
                                     "max_disp_to_endpoints_A": [round(d_i, 3), round(d_f, 3)]}
 
     nseg = max(3, args.n_images // 2)
@@ -694,6 +703,13 @@ def run_split_neb(images, E, nebinfo, calc, args, logf):
         "Ea_effective_eV": round(Ea_eff, 4),
         "Ea_effective_meaning": "합성 프로파일 최댓값 − 시작. 이 경로의 상한이며 앙상블 유효 장벽이 아니다.",
         "single_neb_Ea_eV_SUPERSEDED": round(float(_np.max(E) - E[0]), 4),
+        "base_band_unconverged": base_unconverged,
+        "citable": bool(not base_unconverged
+                        and segs[0]["ci_converged"] and segs[1]["ci_converged"]),
+        "not_citable_because": (
+            [] if (not base_unconverged and segs[0]["ci_converged"] and segs[1]["ci_converged"])
+            else ([] if not base_unconverged else ["쪼개기 전 밴드가 미수렴 — 중간자리 판독의 근거가 약하다"])
+                 + [f"구간 {s['segment']} CI 미수렴" for s in segs if not s["ci_converged"]]),
         "why": "inter-cage 단일 NEB 가 elementary 가 아니었다 (중간 극소). 2026-08-20 처방.",
     }
     return im_all, E_all, info_all, split_rec
