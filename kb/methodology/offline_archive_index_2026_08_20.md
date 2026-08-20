@@ -31,9 +31,31 @@ evidenceScope: multi-source-primary
 |---|---|---|---|---|
 | **A** | `/mnt/d/v100/kisti_backup_2026-07-14/` | 2026-07-14 | **47 GB** | KISTI 홈 전체 스냅숏 |
 | **B** | `/mnt/d/v100, kisti 백업/` | 2026-06-11 | — | 그 이전 판 (runs 중심) |
+| **C** | `D:\archive\Linux_Workspace\linux_disk.img` | 2026-08-20 이관 | **48.8 GB** | DEM 작업환경 통짜 ext4 (아래 0-1) |
 | — | `/mnt/d/v100/li3n_drag_backup/` | — | 9.7 MB | Li₃N drag DFT 로그 |
 
 물리 매체: **T7 Shield (D:)** 외장 SSD. Windows 경로 `D:\v100\...`.
+
+### 0-1. C — DEM 작업환경 이미지 (2026-08-20 신규)
+
+원래 `C:\Linux_Workspace\linux_disk.img`. 등록된 WSL 배포판 두 개(Ubuntu,
+Ubuntu-24.04)가 **모두 다른 경로**를 가리켜 고아 이미지로 판정, D: 로 이관했다
+(robocopy 실패 0 · 48.828 GB 전량 · 크기 52428800000 일치).
+
+내용 (ro 마운트 육안 확인, 파티션 테이블 없는 통짜 ext4):
+`CFDEM/` · `OpenFOAM-5.x/` · `mylammps/` · `YADE_Install_Guide.txt` ·
+`Quantum_espresso/` · `Multiwfn/` · `bader_lnx_64/` · `cp2k/` · `miniconda3/` ·
+`ParaView-5.11.1/` · `(2026.01.27) 연구세미나_김동석.pdf`. 마지막 쓰기 2026-02-20.
+
+⚠ **내용 조사는 안 했다.** 여기만 있는 DEM 케이스 파일이 있는지 모른다.
+조사법: `sudo mount -o loop,ro <img> /mnt/oldimg`
+⛔ **조사 뒤 반드시 `umount` + `losetup -d`.** 2026-08-20 실측: loop 마운트를 안 풀어서
+원본을 지웠는데도 **C: 48.8 GB 가 회수되지 않았다** (이름만 사라지고 블록은 유지).
+`losetup -a` 가 빈 출력이어야 끝난 것이다.
+
+원장: `db/governance/artifacts.json` → `A-dem-workspace-img`
+
+---
 
 ## 1. ⭐ 백업 A — KISTI 스냅숏 (2026-07-14)
 
@@ -189,6 +211,9 @@ elastic_static,elastic_mlip_600K,elastic_mlip_600K_clamped_backup}`
 
 ## 4. ⚠ 한계 (지우지 말 것)
 
+0. ⛔ **D: 한 매체가 이제 유일본을 둘 들고 있다** (2026-08-20). 백업 A/B(KISTI)에
+   더해 DEM 작업환경 이미지(C, 48.8 GB)까지 여기로 왔다. 이 디스크 하나가 죽으면
+   두 계열이 동시에 사라진다. 이중화 우선순위가 그만큼 올라갔다.
 1. ⛔⛔ **단일 매체이자 유일본이다.** T7 Shield 외장 SSD 한 벌뿐이고 사본이 없다.
    **그리고 2026-08-20 확인 — KISTI 원본은 남아 있지 않다** (1저자). 즉 이 백업은
    *사본*이 아니라 **그 계산들의 마지막 실물**이다. 디스크가 죽으면 b2o3 ELF/CDD/Bader
