@@ -190,3 +190,33 @@ def test_legitimate_edge_values_still_pass(client, payload):
     """0 은 결함이 아니다 — 자립막은 집전체가 없고, PTFE 0 wt% 는 기록이다."""
     response = client.post("/api/samples", json={"name": "OK", **payload})
     assert response.status_code == 201, payload
+
+
+# --- PATCH 는 보낸 것만 건드린다 ---------------------------------------------
+
+def test_patching_a_group_leaves_unmentioned_fields_alone(client):
+    """색만 바꿨는데 설명이 지워지면 안 된다.
+
+    GroupIn 의 기본값은 진짜 값이라, model_dump() 가 "설명을 언급하지 않았다" 를
+    "설명을 빈 문자열로 하라" 로 바꿔 놓았다. 그룹 라우터에는 PATCH 테스트가
+    아예 없어서 아무도 몰랐다.
+    """
+    created = client.post("/api/groups", json={
+        "name": "고Ni 60도", "description": "NCM811 · 60 °C · 0.2C",
+        "color": "#c33"}).json()
+
+    patched = client.patch(f"/api/groups/{created['id']}", json={"color": "#39c"})
+    assert patched.status_code == 200
+    body = patched.json()
+    assert body["color"] == "#39c"
+    assert body["description"] == "NCM811 · 60 °C · 0.2C", "설명이 지워졌다"
+    assert body["name"] == "고Ni 60도", "이름이 지워졌다"
+
+
+def test_patching_a_group_can_still_clear_a_field_on_purpose(client):
+    """빈 문자열을 명시적으로 보내면 지워진다 — 언급 없음과 다르다."""
+    created = client.post("/api/groups", json={
+        "name": "G", "description": "지울 설명"}).json()
+    body = client.patch(f"/api/groups/{created['id']}",
+                        json={"description": ""}).json()
+    assert body["description"] == ""

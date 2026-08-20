@@ -20,6 +20,20 @@ class GroupIn(BaseModel):
     color: str = ""
 
 
+class GroupUpdate(BaseModel):
+    """Every field optional -- a PATCH only touches what it names.
+
+    ``GroupIn`` cannot serve here: its defaults are real values, so
+    ``model_dump()`` turns "you did not mention description" into "set
+    description to the empty string" and a colour-only edit wipes the text
+    somebody wrote.
+    """
+
+    name: str | None = None
+    description: str | None = None
+    color: str | None = None
+
+
 class GroupOut(BaseModel):
     id: int
     name: str

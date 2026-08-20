@@ -152,12 +152,26 @@ async def upload_run(
 
     run.cycle_offset = auto_cycle_offset(session, sample_id, wrd.metadata.start_time,
                                          run.original_name, exclude_run_id=run.id)
+    # Kept because the rollback below detaches ``run`` from the session.
+    run_id_before_parse = run.id
     try:
         persist_parse(session, run, wrd)
     except Exception as exc:  # noqa: BLE001 - surface the failure, keep the upload
-        run.parse_error = str(exc)
-        session.add(run)
-        session.commit()
+        # Roll back before recording anything.  persist_parse stages the run's
+        # metadata and every CycleRecord before it can fail; committing that
+        # session publishes a half-written cycle table and skips the renumber
+        # below, so the sample keeps a run whose cycles overlap its neighbours
+        # and nothing says why.  The original bytes are already on disk under
+        # their hash, so the upload itself is not lost -- only the parse is,
+        # and that is what the error field is for.
+        session.rollback()
+        failed = session.get(Run, run_id_before_parse)
+        if failed is not None:
+            failed.parse_error = str(exc)
+            failed.cycle_count = 0
+            failed.complete_cycle_count = 0
+            session.add(failed)
+            session.commit()
         raise HTTPException(500, f"parsed the header but failed to store: {exc}") from exc
 
     if run.sample_id:
@@ -177,6 +191,28 @@ async def upload_run(
 @router.get("/{run_id}", response_model=RunOut)
 def read_run(run_id: int, session: Session = Depends(get_session)):
     return _out(session, get_run(session, run_id))
+
+
+def _overlapping_run(session: Session, run: Run, offset: int) -> Run | None:
+    """A sibling run whose cycle numbers would collide with *run* at *offset*.
+
+    Cycle numbers are 1-based within a run and shifted by the offset, so a run
+    covers ``offset+1 .. offset+cycle_count``.  Two such ranges may touch but
+    not overlap.
+    """
+    if run.sample_id is None or not run.cycle_count:
+        return None
+    start, end = offset + 1, offset + run.cycle_count
+    siblings = session.exec(
+        select(Run).where(Run.sample_id == run.sample_id, Run.id != run.id)).all()
+    for other in siblings:
+        if not other.cycle_count:
+            continue
+        other_start = other.cycle_offset + 1
+        other_end = other.cycle_offset + other.cycle_count
+        if start <= other_end and other_start <= end:
+            return other
+    return None
 
 
 @router.patch("/{run_id}", response_model=RunOut)
@@ -201,6 +237,17 @@ def update_run(run_id: int, payload: RunUpdate,
     if "cycle_offset" in values and values["cycle_offset"] is not None:
         if values["cycle_offset"] < 0:
             raise HTTPException(422, "cycle_offset cannot be negative")
+        # A hand-set offset is honoured, but not blindly: two runs of one
+        # sample numbering the same cycles makes "cycle 3" ambiguous, and
+        # which one answers depends on query order.  The reference cycle and
+        # every profile pick would then change between two identical requests.
+        clash = _overlapping_run(session, run, values["cycle_offset"])
+        if clash is not None:
+            raise HTTPException(
+                422,
+                f"cycle_offset {values['cycle_offset']} makes this run overlap "
+                f"run {clash.id} ({clash.original_name}), which covers cycles "
+                f"{clash.cycle_offset + 1}-{clash.cycle_offset + clash.cycle_count}")
         run.cycle_offset = values["cycle_offset"]
         run.cycle_offset_source = "manual"
 

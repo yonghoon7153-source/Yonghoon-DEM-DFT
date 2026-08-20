@@ -197,3 +197,55 @@ def test_uploading_fills_blank_sample_conditions_from_the_schedule(
     sample = client.get(f"/api/samples/{sample_id}").json()
     # The synthetic fixture carries no schedule, so nothing should be invented.
     assert sample["cutoff_upper_v"] is None
+
+
+# --- 수동 cycle_offset 은 겹치면 안 된다 -------------------------------------
+
+def test_a_manual_offset_that_overlaps_a_sibling_is_refused(client, sample_id,
+                                                            wrd_bytes, finished_wrd_bytes):
+    """두 run 이 같은 사이클 번호를 쓰면 '3번 사이클' 이 조회 순서에 따라 달라진다.
+
+    자동 배정은 고쳤지만 수동 PATCH 는 검사 없이 그대로 받아들이고 있었다.
+    """
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("a_001.wrd", wrd_bytes, "application/octet-stream")})
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("a_002.wrd", finished_wrd_bytes,
+                                "application/octet-stream")})
+    runs = client.get("/api/runs", params={"sample_id": sample_id}).json()
+    runs.sort(key=lambda r: r["cycle_offset"])
+    first, second = runs[0], runs[-1]
+    assert second["cycle_offset"] > 0, "자동 배정이 먼저 동작해야 한다"
+
+    clash = client.patch(f"/api/runs/{second['id']}", json={"cycle_offset": 0})
+    assert clash.status_code == 422
+    assert "overlap" in clash.json()["detail"].lower()
+
+    # 겹치지 않는 값은 그대로 받아들인다.
+    ok = client.patch(f"/api/runs/{second['id']}",
+                      json={"cycle_offset": first["cycle_count"] + 5})
+    assert ok.status_code == 200
+    assert ok.json()["cycle_offset_source"] == "manual"
+
+
+def test_a_failed_parse_does_not_leave_half_written_cycles(client, sample_id,
+                                                           wrd_bytes, monkeypatch):
+    """저장 중 실패하면 되돌린다 — 반쯤 쓰인 사이클 표를 커밋하지 않는다."""
+    from app import services
+
+    real = services.persist_parse
+
+    def explode(session, run, wrd):
+        real(session, run, wrd)           # 사이클을 stage 한 뒤에
+        raise RuntimeError("disk full")   # 실패한다
+
+    monkeypatch.setattr("app.routers.runs.persist_parse", explode)
+    response = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                           files={"file": ("x.wrd", wrd_bytes,
+                                           "application/octet-stream")})
+    assert response.status_code == 500
+
+    runs = client.get("/api/runs", params={"sample_id": sample_id}).json()
+    for run in runs:
+        if run["parse_error"]:
+            assert run["cycle_count"] == 0, "실패한 run 이 사이클을 들고 있다"

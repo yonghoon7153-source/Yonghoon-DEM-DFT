@@ -111,3 +111,47 @@ describe('basis and composition problems', () => {
     )
   })
 })
+
+// --- 백엔드가 실제로 내는 문구가 전부 번역되는가 ------------------------------
+//
+// 규칙표를 손으로 관리하면 백엔드가 새 문구를 내놓을 때마다 조용히 영어가 샌다.
+// 아래 목록은 wrdkit 의 normalize.resolve() 와 composition.problems() 가
+// 만들어 내는 실제 문자열이다 — 새 사유를 추가하면 여기도 늘려야 한다.
+describe('백엔드 문구 커버리지', () => {
+  const CELL_NOTES = [
+    'entered directly',
+    'current collector mass exceeds total mass',
+    'directly entered active mass is not positive - ignored',
+    '31.6 mg x 80 wt%',
+    '31.6 mg x 80 wt% from AM 80 : SE 20',
+    '26.6 mg (after 5 mg collector) x 80 wt%',
+    '31.6 mg x 100 wt% (no composition given - assuming the whole electrode is active material)',
+    '26.6 mg (after 5 mg collector) x 100 wt% (no composition given - assuming the whole electrode is active material)',
+    'the composition names no active material - none of Zzz, Qqq is a known active material; enter the active wt% to use mAh/g',
+    'the composition names no active material; enter the active wt% to use mAh/g',
+    'π x (13 mm / 2)²',
+    '1.3273 cm² x 60 µm',
+    '25.28 mg x 200 mAh/g',
+  ]
+
+  it.each(CELL_NOTES)('cellNote 가 번역한다: %s', (note) => {
+    const before = ko.untranslated().length
+    const out = ko.cellNote(note)
+    expect(ko.untranslated().length).toBe(before)
+    expect(out).not.toBe(note)
+  })
+
+  const COMPOSITION_PROBLEMS = [
+    'weight percentages add up to 95, not 100',
+    'a component has a negative weight percent',
+    'no component is marked as the active material',
+    'the active material is 0 wt%',
+    'a component name is repeated',
+  ]
+
+  it.each(COMPOSITION_PROBLEMS)('compositionProblem 이 번역한다: %s', (problem) => {
+    const before = ko.untranslated().length
+    expect(ko.compositionProblem(problem)).not.toBe(problem)
+    expect(ko.untranslated().length).toBe(before)
+  })
+})

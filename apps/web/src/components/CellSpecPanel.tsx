@@ -183,7 +183,20 @@ export function CellSpecPanel({
       {Object.entries(cell.notes).length ? (
         <div className="tiny faint">
           {Object.entries(cell.notes)
-            .map(([key, note]) => `${NOTE_LABELS[key] ?? key}: ${ko.cellNote(note)}`)
+            .map(([key, note]) => {
+              // `composition` carries the blend's *problems*, joined by "; ",
+              // and those live in a different rule table.  Sending them through
+              // cellNote matched nothing, so the one note most likely to say
+              // something is wrong was the one shown in English.
+              const text =
+                key === 'composition'
+                  ? note
+                      .split('; ')
+                      .map(ko.compositionProblem)
+                      .join(' · ')
+                  : ko.cellNote(note)
+              return `${NOTE_LABELS[key] ?? key}: ${text}`
+            })
             .join(' · ')}
         </div>
       ) : null}

@@ -111,6 +111,24 @@ const CELL_NOTES: Rule[] = [
     /^([\d.]+) mg x 100 wt% \(no composition given - assuming the whole electrode is active material\)$/,
     (m) => `${m[1]} mg × 100 wt% — 조성이 없어 전극 전체를 활물질로 가정했습니다`,
   ],
+  // 집전체를 뺀 뒤 조성이 없는 조합.  위 두 규칙 어느 쪽에도 맞지 않아
+  // 영어 그대로 나가고 있었다 — 흔한 입력인데도.
+  [
+    /^([\d.]+) mg \(after ([\d.]+) mg collector\) x 100 wt% \(no composition given - assuming the whole electrode is active material\)$/,
+    (m) =>
+      `${m[1]} mg (집전체 ${m[2]} mg 제외) × 100 wt% — 조성이 없어 전극 전체를 활물질로 가정했습니다`,
+  ],
+  [
+    /^the composition names no active material(?: - none of (.+) is a known active material)?; enter the active wt% to use mAh\/g$/,
+    (m) =>
+      '조성에 활물질이 없습니다' +
+      (m[1] ? ` — ${m[1]} 를 활물질로 알아보지 못했습니다` : '') +
+      '. mAh/g 를 쓰려면 활물질 wt% 를 입력하세요',
+  ],
+  [
+    /^directly entered active mass is not positive - ignored$/,
+    () => '직접 입력한 활물질 질량이 0 이하라 무시했습니다',
+  ],
   [/^([\d.]+) cm² x ([\d.]+) µm$/, (m) => `${m[1]} cm² × ${m[2]} µm`],
 ]
 

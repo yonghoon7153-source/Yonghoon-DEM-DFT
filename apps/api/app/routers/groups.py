@@ -10,7 +10,7 @@ from sqlmodel import Session, select
 from ..db import get_session
 from ..deps import get_group
 from ..models import ExperimentGroup, Run, Sample
-from ..schemas import GroupIn, GroupOut
+from ..schemas import GroupIn, GroupOut, GroupUpdate
 
 router = APIRouter(prefix="/api/groups", tags=["groups"])
 
@@ -34,7 +34,7 @@ def list_groups(session: Session = Depends(get_session)):
 def create_group(payload: GroupIn, session: Session = Depends(get_session)):
     if not payload.name.strip():
         raise HTTPException(422, "group name cannot be empty")
-    group = ExperimentGroup(**payload.model_dump())
+    group = ExperimentGroup(**payload.model_dump(exclude_unset=True))
     session.add(group)
     session.commit()
     session.refresh(group)
@@ -47,10 +47,10 @@ def read_group(group_id: int, session: Session = Depends(get_session)):
 
 
 @router.patch("/{group_id}", response_model=GroupOut)
-def update_group(group_id: int, payload: GroupIn,
+def update_group(group_id: int, payload: GroupUpdate,
                  session: Session = Depends(get_session)):
     group = get_group(session, group_id)
-    for key, value in payload.model_dump().items():
+    for key, value in payload.model_dump(exclude_unset=True).items():
         setattr(group, key, value)
     group.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
     session.add(group)

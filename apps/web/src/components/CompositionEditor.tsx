@@ -54,8 +54,14 @@ export function CompositionEditor({
     setError(null)
     try {
       // Sending a composition clears any hand-typed wt% so the blend drives
-      // the denominator again.
-      onSaved(await api.updateSample(sample.id, { ...body, clear: ['active_wt_percent'] }))
+      // the denominator again -- but merge, never overwrite: the "조성 지우기"
+      // button asks to clear `composition`, and a blanket
+      // `clear: ['active_wt_percent']` threw that request away, so the button
+      // reported success and left the blend exactly where it was.
+      const clear = [
+        ...new Set([...((body.clear as string[] | undefined) ?? []), 'active_wt_percent']),
+      ]
+      onSaved(await api.updateSample(sample.id, { ...body, clear }))
       setText('')
     } catch (cause) {
       setError(String(cause instanceof Error ? cause.message : cause))
