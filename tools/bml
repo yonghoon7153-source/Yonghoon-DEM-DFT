@@ -88,15 +88,90 @@ running_pid() {
 }
 
 port_owner() {
-  # lsof 가 없는 환경도 있어서 두 가지 방법을 쓴다.
+  # Which pid is listening.  Three tools, because none of them is guaranteed:
+  # lsof is missing on minimal images, ss is missing on others, fuser lives in
+  # psmisc.  An empty answer means "could not tell", not "nobody".
+  local pid=""
   if command -v lsof >/dev/null 2>&1; then
-    lsof -ti "tcp:$1" -sTCP:LISTEN 2>/dev/null | head -1
-  elif command -v ss >/dev/null 2>&1; then
-    ss -lptnH "sport = :$1" 2>/dev/null | grep -o 'pid=[0-9]*' | head -1 | cut -d= -f2
+    pid="$(lsof -ti "tcp:$1" -sTCP:LISTEN 2>/dev/null | head -1)"
   fi
+  if [ -z "$pid" ] && command -v ss >/dev/null 2>&1; then
+    pid="$(ss -lptnH "sport = :$1" 2>/dev/null | grep -o 'pid=[0-9]*' | head -1 | cut -d= -f2)"
+  fi
+  if [ -z "$pid" ] && command -v fuser >/dev/null 2>&1; then
+    pid="$(fuser -n tcp "$1" 2>/dev/null | tr -s ' ' '\n' | grep -E '^[0-9]+$' | head -1)"
+  fi
+  printf '%s' "$pid"
 }
 
-port_busy() { [ -n "$(port_owner "$1")" ]; }
+port_busy() {
+  # A named owner is definitive, so ask the tools first.
+  [ -n "$(port_owner "$1")" ] && return 0
+
+  # Nothing could name it.  Fall back to asking the kernel by connecting,
+  # which needs no package at all -- but only as a fallback: a listener whose
+  # accept backlog is full refuses new connections, and this test would then
+  # report a busy port as free.  The timeout keeps a filtered port from
+  # hanging the launcher.
+  timeout 2 bash -c "exec 3<>/dev/tcp/127.0.0.1/$1" 2>/dev/null
+}
+
+#: 0 = healthy, 1 = answering but not healthy, 2 = nothing listening.
+#: A broken server answers 500 on every request, which `curl -f` reports the
+#: same way as an empty port -- and those need opposite responses.
+server_state() {
+  # curl already prints 000 on failure via -w, so a `|| echo 000` fallback
+  # concatenates two codes and every comparison below misses.
+  local code
+  code="$(curl -s -o /dev/null -m 2 -w '%{http_code}' "$URL/api/health" 2>/dev/null)"
+  code="$(printf '%s' "$code" | tr -dc '0-9' | tail -c 3)"
+  case "${code:-000}" in
+    200) return 0 ;;
+    000|"") return 2 ;;
+    *)   return 1 ;;
+  esac
+}
+
+#: Is the process on this port one of ours?  If it is, replacing it is what
+#: the user wants; making them run `bml stop` first is friction with no
+#: benefit.  Anything else is left alone.
+#: 0 = ours, 1 = someone else's, 2 = cannot tell.
+#: The third answer matters: refusing to start because we *assumed* the port
+#: belongs to a stranger is as wrong as killing a stranger's process.
+owns_port() {
+  local pid cmd cwd
+  pid="$(port_owner "$1")"
+
+  if [ -z "$pid" ]; then
+    # No tool could name the owner.  Fall back to what we recorded when we
+    # started it ourselves.
+    local recorded
+    recorded="$(cat "$PID_FILE" 2>/dev/null)"
+    [ -n "$recorded" ] && alive "$recorded" && return 0
+    return 2
+  fi
+
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)"
+  [ -n "$cmd" ] || cmd="$(ps -p "$pid" -o args= 2>/dev/null)"
+  [ -n "$cmd" ] || return 2
+  cwd="$(readlink -f "/proc/$pid/cwd" 2>/dev/null)"
+
+  # Match the command line, not /proc/pid/exe: for a virtualenv the latter
+  # resolves the symlink back to the system interpreter, so the venv path --
+  # the one unambiguous marker -- disappears exactly when it is needed.
+  case "$cmd" in
+    *"$REPO/.venv/"*) return 0 ;;
+    *uvicorn*"$REPO"*) return 0 ;;
+    *uvicorn*app.main*) return 0 ;;
+  esac
+
+  case "$cmd" in
+    *vite*|*"npm run dev"*)
+      case "$cwd" in "$REPO"/apps/web|"$REPO"/apps/web/*) return 0 ;; esac
+      ;;
+  esac
+  return 1
+}
 
 wait_for_url() {
   local url="$1" tries="${2:-40}"
@@ -432,22 +507,35 @@ cmd_stop() {
     rm -f "$file"
   done
 
+  # Only ever kill our own processes.  `bml stop` on a machine where something
+  # else happens to hold 5003 must not take that down.
   for port in "$PORT" "$API_PORT"; do
     local owner
     owner="$(port_owner "$port")"
-    if [ -n "$owner" ]; then
+    if [ -n "$owner" ] && owns_port "$port"; then
       kill "$owner" 2>/dev/null && stopped=1
     fi
   done
+  unset owner
 
   sleep 0.8
 
   # Claiming success without checking is how "내렸습니다" gets followed by
   # "포트가 사용 중" one command later.
-  local still=""
+  local still="" foreign=""
   for port in "$PORT" "$API_PORT"; do
-    port_busy "$port" && still="$still $port"
+    if port_busy "$port"; then
+      owns_port "$port"
+      case $? in
+        0) still="$still $port" ;;
+        *) foreign="$foreign $port" ;;
+      esac
+    fi
   done
+
+  if [ -n "$foreign" ]; then
+    say "${DIM}포트$foreign 는 bml 이 아닌 다른 프로그램의 것이라 두었습니다.${OFF}"
+  fi
 
   if [ -n "$still" ]; then
     warn "포트가 아직 잡혀 있습니다:$still"
@@ -467,12 +555,52 @@ cmd_stop() {
 
 start_serve() {
   if port_busy "$PORT"; then
-    if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
+    server_state
+    local state=$?
+
+    if [ $state -eq 0 ]; then
       ok "이미 돌고 있습니다 → ${B}${URL}${OFF}"
       open_browser "$URL"
       return 0
     fi
-    die "포트 ${PORT} 를 다른 프로그램이 쓰고 있습니다. 'bml stop' 하거나 WORKBENCH_PORT 로 바꾸세요."
+
+    # Replacing a process is only safe when it is ours.  A port that answers
+    # 500 could just as easily be someone else's broken service, and killing
+    # it would be a far worse outcome than refusing to start.
+    owns_port "$PORT"
+    local owner=$?
+
+    if [ $owner -eq 1 ]; then
+      say ""
+      say "  ${B}원인${OFF}  포트 ${PORT} 를 bml 이 아닌 다른 프로그램이 쓰고 있습니다."
+      if is_wsl; then
+        say "  ${DIM}      WSL 미러 네트워크에서는 Windows 쪽 프로그램도 이렇게 보입니다.${OFF}"
+        say "  ${DIM}      PowerShell:  Get-NetTCPConnection -LocalPort ${PORT} | Select OwningProcess${OFF}"
+      fi
+      say "  ${B}해결${OFF}  ${GREEN}WORKBENCH_PORT=6001 bml${OFF}"
+      exit 1
+    fi
+
+    if [ $owner -eq 2 ]; then
+      say ""
+      say "  ${B}원인${OFF}  포트 ${PORT} 가 사용 중인데, 무엇이 쓰는지 확인할 수 없습니다."
+      say "  ${DIM}      (lsof/ss/fuser 가 없어서 소유자를 알아낼 수 없습니다)${OFF}"
+      say "  ${B}해결${OFF}  ${GREEN}WORKBENCH_PORT=6001 bml${OFF}"
+      say "  ${DIM}      또는 소유자를 확인할 수 있게: sudo apt install -y lsof${OFF}"
+      exit 1
+    fi
+
+    if [ $state -eq 1 ]; then
+      warn "이전 서버가 떠 있지만 정상 응답하지 않습니다 — 내리고 다시 시작합니다."
+    else
+      warn "이전 bml 서버가 남아 있습니다 — 내리고 다시 시작합니다."
+    fi
+    cmd_stop >/dev/null 2>&1 || true
+
+    sleep 1
+    if port_busy "$PORT"; then
+      die "포트 ${PORT} 가 아직 잡혀 있습니다. WORKBENCH_PORT=6001 bml 로 옮기세요."
+    fi
   fi
 
   build_web
@@ -540,13 +668,25 @@ cmd_status() {
   say "${B}Battery Lab Workbench${OFF}  ${DIM}$REPO${OFF}"
   say ""
 
-  if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
-    ok "실행 중 → $URL"
-  elif port_busy "$PORT"; then
-    warn "포트 ${PORT} 는 사용 중인데 워크벤치가 아닙니다."
-  else
-    say "${DIM}멈춰 있습니다. 'bml' 로 시작하세요.${OFF}"
-  fi
+  server_state
+  case $? in
+    0) ok "실행 중 → $URL" ;;
+    1)
+      warn "서버는 떠 있는데 정상 응답하지 않습니다."
+      say "  ${DIM}해결: ${OFF}${GREEN}bml repair${OFF}${DIM} 후 ${OFF}${GREEN}bml${OFF}"
+      ;;
+    *)
+      if port_busy "$PORT"; then
+        if owns_port "$PORT"; then
+          warn "이전 bml 프로세스가 남아 있습니다 — 'bml' 이 알아서 갈아끼웁니다."
+        else
+          warn "포트 ${PORT} 는 사용 중인데 bml 이 아닙니다."
+        fi
+      else
+        say "${DIM}멈춰 있습니다. 'bml' 로 시작하세요.${OFF}"
+      fi
+      ;;
+  esac
 
   say ""
   local branch dirty ahead behind
@@ -722,12 +862,29 @@ cmd_doctor() {
 
   # --- 포트 -----------------------------------------------------------------
   if port_busy "$PORT"; then
-    if curl -fsS -o /dev/null --max-time 2 "$URL/api/health" 2>/dev/null; then
-      ok "포트 $PORT — 워크벤치가 실행 중"
-    else
-      warn "포트 $PORT 를 다른 프로그램이 쓰고 있습니다."
-      say "  ${DIM}WORKBENCH_PORT=6001 bml  로 옮길 수 있습니다.${OFF}"
-    fi
+    server_state
+    case $? in
+      0) ok "포트 $PORT — 워크벤치가 정상 실행 중" ;;
+      1)
+        warn "포트 $PORT — 서버는 떴는데 정상 응답하지 않습니다."
+        say "  ${DIM}해결: ${OFF}${GREEN}bml repair${OFF}"
+        problems=$((problems + 1))
+        ;;
+      *)
+        owns_port "$PORT"
+        case $? in
+          0) say "  ${DIM}포트 $PORT — 이전 bml 프로세스. 'bml' 이 갈아끼웁니다.${OFF}" ;;
+          1)
+            warn "포트 $PORT 를 bml 이 아닌 다른 프로그램이 쓰고 있습니다."
+            say "  ${DIM}WORKBENCH_PORT=6001 bml  로 옮길 수 있습니다.${OFF}"
+            ;;
+          *)
+            warn "포트 $PORT 가 사용 중인데 소유자를 알 수 없습니다."
+            say "  ${DIM}sudo apt install -y lsof  하면 확인할 수 있습니다.${OFF}"
+            ;;
+        esac
+        ;;
+    esac
   else
     ok "포트 $PORT 사용 가능"
   fi
