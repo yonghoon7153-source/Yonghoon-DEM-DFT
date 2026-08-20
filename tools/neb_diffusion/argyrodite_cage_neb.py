@@ -346,7 +346,67 @@ def run_neb(ini, fin, calc, n_images=N_IMAGES, steps=STEPS_NEB, log=None):
     info = {"band_converged": conv1, "ci_ran": conv1, "ci_converged": conv2,
             "steps_band": n1, "steps_ci": n2,
             "band_only_profile_eV": [round(float(x - E_band[0]), 4) for x in E_band]}
+    info["band_tail"] = fmax_trend(log)
     return images, E, info
+
+
+# ⚠ 2026-08-20 (1저자 지적). "400스텝 미수렴" 만으로는 **느리게 수렴 중인지 발산 중인지**
+#   구분이 안 된다. comp1 2×1×1 은 마지막 4스텝에서 에너지와 fmax 가 **둘 다 상승**하고 있었고
+#   (E −429.268 → −429.215, fmax 0.192 → 0.218), 그 경우 `--neb_steps` 를 늘리는 것은
+#   처방이 아니다. 판정은 아무것도 바꾸지 않고 **꼬리 추세만 보고**한다.
+TAIL_N = 12                    # 추세를 볼 마지막 스텝 수
+TAIL_RISE_FRAC = 0.6           # 이 비율 넘게 오르면 '상승'
+
+
+def fmax_trend(log, n=TAIL_N):
+    """FIRE 로그 꼬리의 fmax 추세. 로그가 없거나 짧으면 None.
+
+    돌려주는 값: {'n','first','last','verdict','rising_frac'}
+      verdict: 'converging'(내려간다) · 'rising'(올라간다 = 스텝을 늘려도 소용없다) ·
+               'flat'(정체 = 상한에 걸린 게 아니라 갇힌 것)
+
+    이 함수가 **못 하는 것**: 발산의 *원인*은 말하지 못한다(끝점 비대칭인지 경로 위상인지).
+      그건 프로파일과 band_health 가 볼 몫이다.
+    """
+    if not log:
+        return None
+    try:
+        lines = [ln.split() for ln in Path(log).read_text(errors="ignore").splitlines()
+                 if ln.startswith("FIRE")]
+    except OSError:
+        return None
+    vals = []
+    for parts in lines[-n:]:
+        try:
+            vals.append(float(parts[-1]))
+        except (ValueError, IndexError):
+            continue
+    if len(vals) < 4:
+        return None
+    ups = sum(1 for a, b in zip(vals, vals[1:]) if b > a)
+    frac = ups / (len(vals) - 1)
+    if frac >= TAIL_RISE_FRAC:
+        v = "rising"
+    elif vals[-1] < vals[0] * 0.98:
+        v = "converging"
+    else:
+        v = "flat"
+    return {"n": len(vals), "first": round(vals[0], 4), "last": round(vals[-1], 4),
+            "rising_frac": round(frac, 2), "verdict": v}
+
+
+def fmax_trend_text(t):
+    if not t:
+        return ""
+    return {
+        "rising": (f"⛔ 마지막 {t['n']}스텝에서 fmax 가 **오르고 있다** "
+                   f"({t['first']} → {t['last']}, 상승 {t['rising_frac']:.0%}) — "
+                   f"**--neb_steps 를 늘려도 소용없다.** 끝점 비대칭이나 경로 위상을 볼 것"),
+        "flat": (f"⚠ 마지막 {t['n']}스텝 fmax 가 **정체**다 ({t['first']} → {t['last']}) — "
+                 f"상한에 걸린 게 아니라 갇힌 것이다"),
+        "converging": (f"⭕ 마지막 {t['n']}스텝 fmax 가 내려가는 중 "
+                       f"({t['first']} → {t['last']}) — 스텝을 늘리면 될 수 있다"),
+    }.get(t["verdict"], "")
 
 
 def one_run(args):
@@ -446,6 +506,10 @@ def one_run(args):
           f"(밴드 {nebinfo['steps_band']}스텝 {_bd} · CI {nebinfo['steps_ci']}스텝 {_ci}, "
           f"{dt:.0f}s)")
     print(f"   프로파일: {[round(float(x - E[0]), 3) for x in E]}")
+    if not nebinfo["band_converged"]:
+        _t = fmax_trend_text(nebinfo.get("band_tail"))
+        if _t:
+            print(f"   {_t}")
     if probs:
         print("   ⛔ 이 값은 믿으면 안 된다:")
         for q in probs:
@@ -658,6 +722,34 @@ def selftest():
         a2.positions[0] = a1.positions[0] + np.array([L - 0.7, 0.0, 0.0])
         chk(abs(hop_distance(a1, a2, 0) - 0.7) < 1e-6,
             "[음성] 셀을 가로지르는 이동을 L−0.7 이 아니라 0.7 Å 로 잰다")
+
+        # ── fmax 꼬리 추세 (2026-08-20) — **판정을 안 바꾸는 순수 보고**
+        import tempfile as _tf, os as _os
+        def _mk(vals):
+            fd, path = _tf.mkstemp(suffix=".log"); _os.close(fd)
+            Path(path).write_text(
+                "".join(f"FIRE:  {i:4d} 00:00:0{i%10}   -429.0{i:04d}   {v:.6f}\n"
+                        for i, v in enumerate(vals)))
+            return path
+        # ★ 실측 재현: comp1 2×1×1 의 마지막 4스텝은 fmax 가 단조 상승했다
+        rise = _mk([0.192, 0.203, 0.211, 0.218, 0.226, 0.231])
+        chk(fmax_trend(rise)["verdict"] == "rising",
+            "[양성] ★ 오르는 꼬리를 'rising' 으로 (comp1 실측 재현)")
+        chk("소용없다" in fmax_trend_text(fmax_trend(rise)),
+            "[양성] rising 이면 '스텝 늘려도 소용없다' 를 말한다")
+        drop = _mk([0.50, 0.44, 0.39, 0.33, 0.28, 0.24])
+        chk(fmax_trend(drop)["verdict"] == "converging",
+            "[음성] 내려가는 꼬리를 rising 으로 오판하지 않는다")
+        flat = _mk([0.300, 0.299, 0.301, 0.300, 0.299, 0.300])
+        chk(fmax_trend(flat)["verdict"] == "flat",
+            "[음성] 정체를 수렴으로도 발산으로도 읽지 않는다")
+        chk(fmax_trend(None) is None and fmax_trend("/nonexistent.log") is None,
+            "[음성] 로그가 없으면 None — 없는 것을 '수렴 중' 으로 말하지 않는다")
+        chk(fmax_trend(_mk([0.3, 0.2])) is None,
+            "[음성] 스텝이 4개 미만이면 판정하지 않는다")
+        chk(fmax_trend_text(None) == "", "[음성] None 이면 빈 문자열 (출력에 안 낀다)")
+        for _p in (rise, drop, flat):
+            _os.unlink(_p)
     except ImportError:
         print("  ⚠ ase 없음 — 심화 이완 시험 건너뜀")
 
