@@ -62,7 +62,23 @@ if [ "${1:-}" = "--selftest" ]; then
         say "✗" "argyrodite_cage_neb.py 를 못 찾음: $R"
     fi
 
-    # 음성 ⑤: 로그 디렉터리가 없으면 tmux 가 조용히 죽는다 — 스크립트가 직접 만드는지
+    # 음성 ⑤: python 을 -u 없이 부르면 진단 print 가 버퍼에 갇힌다 (2026-08-20 실측)
+    grep -q 'python3 -u tools/neb_diffusion/argyrodite_cage_neb.py' "$0" \
+        && say "✓" "python 을 -u(무버퍼)로 부른다" \
+        || say "✗" "-u 가 없다 — tee 로 넘길 때 print 가 로그에 안 나온다"
+    # 실제로 버퍼링이 일어나는지 재현한다 (재현 안 되면 위 검사가 형식적이다)
+    B=$(python3 -c "
+import sys
+print('EARLY', flush=False)
+sys.stderr.write('ERRLINE\n')
+import time; time.sleep(0.2)
+" 2>/dev/null | head -1)
+    [ -z "$B" ] && say "✓" "[음성] 버퍼링 재현 — -u 없으면 stdout 이 늦게 나온다" \
+        || say "✓" "[음성] 이 파이썬은 stdout 을 line-buffer 한다 (환경차 — -u 는 그래도 건다)"
+    U=$(python3 -u -c "print('EARLY')" 2>/dev/null | head -1)
+    [ "$U" = "EARLY" ] && say "✓" "-u 를 주면 즉시 나온다" || say "✗" "-u 가 안 먹는다: '$U'"
+
+    # 음성 ⑥: 로그 디렉터리가 없으면 tmux 가 조용히 죽는다 — 스크립트가 직접 만드는지
     grep -q 'mkdir -p "\$LOGDIR"' "$0" && say "✓" "로그 디렉터리를 스크립트가 직접 만든다" \
         || say "✗" "LOGDIR mkdir 없음 (tmux 조용한 즉사 재발)"
 
@@ -114,7 +130,12 @@ fi
 # ── inter split NEB 착수 ───────────────────────────────────────────────────
 echo "[$(ts)] inter split NEB 착수  struct=$STRUCT  supercell=$SUPERCELL  tag=$TAG"
 echo "[$(ts)] 진행 로그: db/properties/neb_${TAG}{,_seg1,_seg2}.log"
-python3 tools/neb_diffusion/argyrodite_cage_neb.py \
+# ⚠⚠ **`-u` 는 장식이 아니다** (2026-08-20 실측). 이 스크립트는 stdout 을 tee 로 넘기는데,
+#   파이썬은 파이프로 나갈 때 stdout 을 블록 버퍼링한다. 그래서 로그에 fairchem 의
+#   `WARNING:`(stderr, 즉시 나감)만 찍히고 **진단에 필요한 print 가 통째로 안 보였다** —
+#   "후보 N개 · 선택", "끝점 이완", "⚠ 이완 뒤 홉 거리", "얕은 분지 탈출" 전부.
+#   밴드가 발산하는 원인을 찾으려던 순간에 정확히 그 정보가 없었다.
+python3 -u tools/neb_diffusion/argyrodite_cage_neb.py \
     --struct "$STRUCT" --kind inter --supercell $SUPERCELL \
     --split --tag "$TAG" ${EXTRA:-}
 RC=$?
