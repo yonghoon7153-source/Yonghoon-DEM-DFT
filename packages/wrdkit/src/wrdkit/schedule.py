@@ -203,6 +203,35 @@ class Schedule:
             values = [s.sampling_interval_s for s in self.steps if s.sampling_interval_s]
         return min(values) if values else None
 
+    def taper_current_a(self, direction: str) -> float | None:
+        """Current a *direction* tapers down to before the schedule leaves it.
+
+        Scoped to the looped steps when there is a loop.  Taking the largest
+        taper anywhere in the schedule mixes two different numbers: formation
+        often holds down to a much coarser current than cycling does, and a
+        cycling hold cut off at 0.2 mA then looks finished because formation's
+        0.5 mA is the yardstick.  The looped steps are the ones a long run is
+        actually repeating, and a long run is the only kind that gets split
+        across files -- which is when this question is asked at all.
+
+        Within that scope the largest candidate still wins: over-stating the
+        taper risks accepting a nearly finished hold, while under-stating it
+        drops genuinely finished cycles out of every report.
+        """
+        looped = self._looped_step_names()
+        for scope in ([s for s in self.steps if s.name in looped], self.steps):
+            values: list[float] = []
+            for step in scope:
+                if step.direction != direction:
+                    continue
+                if step.taper_current_a:
+                    values.append(abs(float(step.taper_current_a)))
+                values += [abs(float(c.value)) for c in step.cutoffs
+                           if c.kind == "current" and c.value]
+            if values:
+                return max(values)
+        return None
+
     def _looped_step_names(self) -> set[str]:
         """Names of the steps inside the largest loop of the schedule."""
         best: tuple[int, set[str]] = (0, set())

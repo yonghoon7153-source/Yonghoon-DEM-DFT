@@ -73,13 +73,16 @@ git config --global core.autocrlf input
 저장소에 `.gitattributes` 가 있어 새로 클론하면 문제가 없지만, 위 설정을
 해 두면 다른 저장소에서도 안 겪습니다.
 
-**이미 겪었다면:**
+**이미 겪었다면** — `bml doctor` 가 CRLF 인 스크립트를 찾아 주고,
+`bml repair crlf` 가 그 파일들만 LF 로 되돌립니다:
 
 ```bash
-cd ~/Yonghoon-DEM-DFT
-git config core.autocrlf false
-git rm --cached -r . && git reset --hard
+bml doctor          # 어떤 파일이 CRLF 인지 본다
+bml repair crlf     # 찾은 파일만 고친다
 ```
+
+> `git rm --cached -r . && git reset --hard` 는 쓰지 마세요. 줄바꿈과 무관한
+> 커밋하지 않은 작업까지 전부 되돌아가고, 복구할 방법이 없습니다.
 
 ## 3. 저장소는 WSL 안에 — `/mnt/c` 에 두지 마세요
 

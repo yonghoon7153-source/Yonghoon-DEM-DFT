@@ -16,8 +16,8 @@ PORT_API ?= 8000
 
 .DEFAULT_GOAL := help
 .PHONY: help setup setup-git sync venv install-api install-web install-bml \
-        dev serve api web build test test-py test-web lint lint-py lint-web \
-        check wiki-lint wiki-status clean fmt doctor
+        dev serve api web build test test-py test-web test-tools \
+        lint lint-py lint-web check wiki-lint wiki-status clean fmt doctor
 
 help: ## 사용 가능한 타겟
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \

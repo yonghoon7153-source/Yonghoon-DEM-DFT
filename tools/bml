@@ -13,6 +13,7 @@
 #   bml doctor     환경 점검 (WSL 포함) — 안 되면 여기부터
 #   bml repair     파이썬 환경을 새로 만든다 (의존성이 꼬였을 때)
 #   bml repair web node_modules 와 빌드를 새로 만든다
+#   bml repair crlf CRLF 로 체크아웃된 스크립트만 LF 로 되돌린다
 #   bml install    이 명령을 PATH 에 등록한다 (1회)
 #
 # 두 사람이 같은 브랜치를 쓰므로, 실행 전에 항상 pull --rebase --autostash 를
@@ -200,8 +201,12 @@ classify_process() {
   # 경로가 명령줄에 있으면 전부 우리 것으로 판정돼, 아래 --app-dir 분기(3)가
   # 아예 실행되지 않는다 — 남의 data/ 를 가진 서버를 "이미 돌고 있습니다" 로
   # 열어 주거나, 아예 죽인다.  경로 구분자나 인자 경계를 요구한다.
+  # 그런데 "$REPO/" 아래라는 것만으로도 부족하다.  다른 checkout 을
+  # "$REPO/.worktrees/other" 처럼 우리 안에 두는 것은 흔한 배치이고, 그때
+  # 그 서버의 --app-dir 도 "$REPO/" 로 시작한다.  아래 3 번 분기가 볼 기회를
+  # 갖도록, 우리 트리의 apps/api 를 가리킬 때만 우리 것으로 본다.
   case "$cmd" in
-    *uvicorn*"$REPO/"*|*uvicorn*"$REPO "*|*uvicorn*"$REPO") return 0 ;;
+    *uvicorn*"$REPO/apps/api"*|*uvicorn*"$REPO "*|*uvicorn*"$REPO") return 0 ;;
   esac
 
   # A workbench started from *another* checkout of this same project.  It is
@@ -954,6 +959,35 @@ cmd_check() {
   ok "전부 통과."
 }
 
+#: CRLF 로 체크아웃된 스크립트만 LF 로 되돌린다.
+#:
+#: `git rm --cached -r . && git reset --hard` 를 대신하는 것이 목적이다. 그
+#: 처방은 줄바꿈과 무관한 미커밋 작업까지 전부 날리는데, 이 저장소는
+#: --autostash 로 "커밋 안 해도 잃지 않는다" 를 전제로 굴러간다. .gitattributes
+#: 가 인덱스를 이미 LF 로 잡고 있으므로, 걸린 파일의 CR 만 지우면 작업 트리가
+#: 수렴한다 — git 상태는 건드리지 않는다.
+cmd_repair_crlf() {
+  step "줄바꿈 점검"
+  local found=()
+  while IFS= read -r file; do
+    head -1 "$file" 2>/dev/null | grep -q $'\r' && found+=("$file")
+  done < <(find "$REPO/tools" "$REPO/.claude/hooks" -type f \
+             \( -name '*.sh' -o -name '*.py' -o -name 'bml' \) 2>/dev/null)
+
+  if [ ${#found[@]} -eq 0 ]; then
+    ok "CRLF 인 스크립트가 없습니다."
+    return 0
+  fi
+
+  local file
+  for file in "${found[@]}"; do
+    # 원본을 남기지 않고 제자리에서 CR 만 지운다. 내용은 그대로다.
+    sed -i 's/\r$//' "$file" && say "  ${DIM}고침: ${file#"$REPO"/}${OFF}"
+  done
+  ok "${#found[@]}개 파일을 LF 로 되돌렸습니다."
+  say "  ${DIM}다시 겪지 않으려면: git config --global core.autocrlf input${OFF}"
+}
+
 cmd_doctor() {
   local problems=0
   say "${B}환경 점검${OFF}  ${DIM}$REPO${OFF}"
@@ -1045,10 +1079,7 @@ cmd_doctor() {
     # --autostash 로 "커밋 안 해도 잃지 않는다" 를 전제로 굴러가는데 정반대다.
     # .gitattributes 가 인덱스를 이미 LF 로 잡고 있으므로, 걸린 파일의 CR 만
     # 지우면 작업 트리가 수렴한다 — git 상태는 건드리지 않는다.
-    local crlf_file
-    for crlf_file in "${crlf[@]}"; do
-      say "    sed -i 's/\r\$//' \"$crlf_file\""
-    done
+    say "    bml repair crlf"
     problems=$((problems + 1))
   else
     ok "줄바꿈 LF (정상)"
@@ -1201,7 +1232,15 @@ main() {
     check|test)        cmd_check ;;
     logs|log)          tail -f "$LOG" ;;
     doctor|diag)       cmd_doctor ;;
-    repair|fix)        shift; [ "${1:-}" = "web" ] && cmd_repair_web || cmd_repair ;;
+    repair|fix)
+      shift
+      case "${1:-}" in
+        web)  cmd_repair_web ;;
+        crlf) cmd_repair_crlf ;;
+        "")   cmd_repair ;;
+        *)    die "모르는 repair 대상: $1   (web | crlf | 없음)" ;;
+      esac
+      ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
     help|-h|--help)    cmd_help ;;
     *) die "모르는 명령: $1   ('bml help' 참고)" ;;

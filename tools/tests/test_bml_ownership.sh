@@ -130,6 +130,29 @@ expect_stranger "app-dir 는 있지만 워크벤치가 아닌 폴더" \
   "/usr/bin/python3 -m uvicorn app.main:app --app-dir $notrepo/apps/api" "$notrepo"
 rm -rf "$other" "$notrepo" "$gone"
 
+# --- 우리 안에 있는 남의 checkout ---------------------------------------------
+#
+# 다른 checkout 을 "$REPO/.worktrees/other" 처럼 우리 트리 안에 두는 것은 흔한
+# 배치다.  그때 그 서버의 --app-dir 도 "$REPO/" 로 시작하므로, 경로 접두사만
+# 보면 우리 것으로 판정돼 "다른 폴더의 워크벤치" 분기가 아예 실행되지 않는다 —
+# 남의 data/ 를 가진 서버를 우리 것인 양 열어 주거나 죽인다.
+OTHER_CHECKOUT=""
+nested="$REPO/.worktrees/other"
+mkdir -p "$nested/packages/wrdkit/src/wrdkit" "$nested/apps/api"
+classify_process \
+  "$nested/.venv/bin/python -m uvicorn app.main:app --app-dir $nested/apps/api" \
+  "$nested"
+verdict=$?
+if [ "$verdict" -eq 3 ] && [ "$OTHER_CHECKOUT" = "$nested" ]; then
+  pass=$((pass + 1))
+  printf '  ok   우리 트리 안에 중첩된 다른 checkout 을 구분한다\n'
+else
+  fail=$((fail + 1))
+  printf '  FAIL 중첩 checkout 을 우리 것으로 봤다 (verdict=%s)\n' "$verdict"
+fi
+rm -rf "$REPO/.worktrees"
+OTHER_CHECKOUT=""
+
 # --- 구조 불변식 -------------------------------------------------------------
 #
 # bml 은 pull 로 자기 자신을 갈아치운다.  bash 는 파일 오프셋을 기억했다가
@@ -335,14 +358,37 @@ fi
 # 붙여넣는다.  그 안에 `git reset --hard` 가 한 줄 있으면 CRLF 파일 하나를
 # 고치는 대가로 저장소 전체의 미커밋 작업이 말없이 사라진다 — 이 저장소는
 # --autostash 로 "커밋 안 해도 잃지 않는다" 를 전제로 굴러가는데 정반대다.
-destructive="$(grep -nE 'reset --hard|checkout -f|clean -[a-z]*f' "$HERE/../bml" \
-               | grep -vE '^[0-9]+:[[:space:]]*#')"
+#
+# 그리고 tools/bml 만 검사하면 반쪽이다.  사람이 실제로 붙여넣는 처방은
+# 가이드 문서에도 있고, 거기 남아 있으면 피해는 똑같다 — 실제로 bml 은
+# 고쳤는데 wsl-setup.md 에 `git rm --cached -r . && git reset --hard` 가
+# 그대로 남아 있었다.
+destructive=""
+for source in "$HERE/../bml" "$HERE/../../docs/guides/wsl-setup.md" \
+              "$HERE/../../docs/guides/bml-command.md" "$HERE/../../README.md"; do
+  [ -f "$source" ] || continue
+  hit="$(grep -nE 'reset --hard|checkout -f|clean -[a-z]*f|rm --cached' "$source" \
+         | grep -vE '^[0-9]+:[[:space:]]*(#|>)')"
+  [ -n "$hit" ] && destructive="$destructive
+${source##*/}: $hit"
+done
 if [ -z "$destructive" ]; then
   pass=$((pass + 1))
-  printf '  ok   doctor 의 처방에 미커밋 작업을 날리는 명령이 없다\n'
+  printf '  ok   처방(코드·문서)에 미커밋 작업을 날리는 명령이 없다\n'
 else
   fail=$((fail + 1))
-  printf '  FAIL doctor 가 파괴적 명령을 처방한다\n       %s\n' "$destructive"
+  printf '  FAIL 파괴적 명령이 처방돼 있다%s\n' "$destructive"
+fi
+
+# 대신 안전한 대안이 실제로 존재해야 한다 — 문서가 없는 명령을 안내하면
+# 사용자는 결국 옛 처방을 검색해서 쓴다.
+if grep -q 'cmd_repair_crlf' "$HERE/../bml" \
+   && grep -q 'repair crlf' "$HERE/../../docs/guides/wsl-setup.md"; then
+  pass=$((pass + 1))
+  printf '  ok   안전한 대안(bml repair crlf)이 코드와 문서 양쪽에 있다\n'
+else
+  fail=$((fail + 1))
+  printf '  FAIL 문서가 안내하는 CRLF 복구 명령이 코드에 없다\n'
 fi
 
 echo

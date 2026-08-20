@@ -111,3 +111,45 @@ def test_unknown_branch_is_rejected(synthetic_wrd):
     cycles = summarize_cycles(synthetic_wrd)
     with pytest.raises(ValueError, match="branch must be"):
         extract_profile(synthetic_wrd, cycles[0], "float")
+
+
+# --- taper 후보 범위 --------------------------------------------------------
+#
+# 후보를 스케줄 전체에서 max() 로 고르면 formation taper 와 cycling taper 가
+# 섞인다. formation 이 0.5 mA 까지, cycling 이 0.05 mA 까지 내려가는 흔한
+# 조합에서, 0.2 mA 에서 잘린 cycling CV 가 0.5 mA 를 잣대로 삼아 complete 로
+# 통과했다.
+
+def _schedule_with_two_tapers():
+    from wrdkit.schedule import Schedule, ScheduleStep
+
+    return Schedule(version=0, source_path="", steps=[
+        ScheduleStep(index=0, name="form-chg", control="CCCV", control_raw=13,
+                     current_a=0.001, taper_current_a=0.0005),
+        ScheduleStep(index=1, name="form-dch", control="CC", control_raw=0,
+                     current_a=-0.001),
+        ScheduleStep(index=2, name="cyc-chg", control="CCCV", control_raw=13,
+                     current_a=0.002, taper_current_a=0.00005),
+        ScheduleStep(index=3, name="cyc-dch", control="CC", control_raw=0,
+                     current_a=-0.002, loop_target="cyc-chg", loop_count=1000),
+    ])
+
+
+def test_the_taper_comes_from_the_looped_steps_not_the_whole_schedule():
+    schedule = _schedule_with_two_tapers()
+    assert schedule.taper_current_a("charge") == 0.00005, \
+        "formation taper 가 cycling 판정의 잣대가 됐다"
+
+
+def test_a_schedule_without_a_loop_still_answers():
+    from wrdkit.schedule import Schedule, ScheduleStep
+
+    schedule = Schedule(version=0, source_path="", steps=[
+        ScheduleStep(index=0, name="chg", control="CCCV", control_raw=13,
+                     current_a=0.001, taper_current_a=0.0005),
+    ])
+    assert schedule.taper_current_a("charge") == 0.0005
+
+
+def test_a_direction_with_no_taper_is_none():
+    assert _schedule_with_two_tapers().taper_current_a("discharge") is None
