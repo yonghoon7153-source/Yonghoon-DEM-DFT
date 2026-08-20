@@ -811,8 +811,13 @@ _REPO = Path(__file__).resolve().parent.parent
 #: 보이지 않는 격리 울타리. blockquote 여부로 격리를 판정하지 않는다 —
 #: §20.4 는 정정 블록 **전체**가 인용이라, 인용을 격리로 치면 정정문 자신이
 #: 검사에서 빠진다 (21차 리뷰 발견 8 이 지적한 실패 모드의 재발).
-_Q_OPEN = re.compile(r"<!--\s*QUARANTINE:([A-Z0-9_]+)\s*-->")
-_Q_CLOSE = re.compile(r"<!--\s*/QUARANTINE\s*-->")
+#: ★ 22차 자체 발견 — `search` 로 잡으면 **표 셀 안의 설명용 인용**까지 진짜
+#:   울타리가 된다. §29.1 의 설명 표(`| \`<!-- QUARANTINE:ID -->\` … |`)가
+#:   여는 울타리로 파싱돼 `08_REVIEW_RESPONSE.md` 의 1831줄 **이후 전체**가
+#:   금지어 검사에서 조용히 빠져 있었다 (그 안에 금지어 4개가 있었다).
+#:   그래서 **줄 전체가 마커 하나뿐일 때만** 울타리로 본다.
+_Q_OPEN = re.compile(r"^<!--\s*QUARANTINE:([A-Z0-9_]+)\s*-->$")
+_Q_CLOSE = re.compile(r"^<!--\s*/QUARANTINE\s*-->$")
 
 
 def _claim_status() -> dict:
@@ -827,13 +832,13 @@ def _active_text(text: str) -> tuple[str, set[str]]:
     """
     out, fenced, depth = [], set(), 0
     for line in text.splitlines():
-        m = _Q_OPEN.search(line)
+        m = _Q_OPEN.match(line.strip())
         if m:
             fenced.add(m.group(1))
             depth += 1
             out.append("")
             continue
-        if _Q_CLOSE.search(line):
+        if _Q_CLOSE.match(line.strip()):
             depth = max(0, depth - 1)
             out.append("")
             continue
@@ -1188,20 +1193,51 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         if not gz.is_file():
             bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
             continue
+        if m.get("projection_schema") != 2:
+            bad.append(
+                f"{leg}: 투영 스키마가 {m.get('projection_schema')} 다 (2 필요). "
+                f"22차 발견 5 대응 필드(실제 fits SHA·전체 semantic 대조·"
+                f"restart 투영·분석기 provenance)가 없다 — 원자료가 있는 기계에서 "
+                f"`python docs/22p_gap/row_projection.py --all` 을 다시 돌려라")
+            continue
         import gzip
         raw = gzip.decompress(gz.read_bytes())
         got = hashlib.sha256(raw).hexdigest()
         if got != m["projection_sha256"]:
             bad.append(f"{leg}: 투영 내용이 digest 와 다르다 {got[:16]} vs "
                        f"{m['projection_sha256'][:16]}")
-        # 재계산 검증 — 봉인 fits 를 다시 채점해 summary 와 자리별로 맞았는가
-        if m.get("재계산_검증", {}).get("by_objective_일치") is not True:
-            bad.append(f"{leg}: 봉인 summary 재계산 불일치 "
-                       f"{m.get('재계산_검증', {}).get('불일치')}")
-        # summary·manifest 와의 결속
-        seal = (_warm_manifest(leg).get("fits_seal") or {}).get("file_sha256")
-        if m.get("fits_sha256") != seal:
-            bad.append(f"{leg}: 투영이 가리키는 fits 가 manifest 봉인과 다르다")
+
+        # ★ 22차 발견 7 — YAML 의 목적함수별 digest 를 **믿지 말고** TSV 에서
+        #   다시 만든다. metadata 만 대조하면 metadata 가 틀렸을 때 통과한다.
+        lines = raw.decode("utf-8").splitlines()
+        head, body = lines[0], lines[1:]
+        cols = head.split("\t")
+        oi = cols.index("objective")
+        for obj, want in (m.get("by_objective_sha256") or {}).items():
+            sub = [ln for ln in body if ln.split("\t")[oi] == obj]
+            blob = ("\n".join([head, *sub]) + "\n").encode("utf-8")
+            if hashlib.sha256(blob).hexdigest() != want["sha256"]:
+                bad.append(f"{leg}/{obj}: 부분 digest 가 TSV 재계산과 다르다")
+            if len(sub) != want["n_rows"]:
+                bad.append(f"{leg}/{obj}: 행 수 {len(sub)} vs 기록 {want['n_rows']}")
+
+        # ★ 22차 발견 5 — 전체 semantic 대조와 fits 삼중 일치를 요구한다.
+        v = m.get("재계산_검증") or {}
+        if v.get("전체_일치") is not True:
+            bad.append(f"{leg}: 봉인 summary **전체** 재계산 불일치 {v.get('불일치')}")
+        if v.get("fits_삼중일치") is not True:
+            bad.append(f"{leg}: 읽은 fits 바이트 ≠ summary 가 채점한 fits")
+        if m.get("fits_봉인일치") is not True:
+            bad.append(f"{leg}: 읽은 fits 바이트 ≠ manifest 봉인")
+        if not (m.get("analyzer") or {}).get("row_projection_py_sha256"):
+            bad.append(f"{leg}: 분석기 provenance 가 없다")
+        # restart 수준 투영도 있어야 한다 (발견 5 항목 4)
+        rp = m.get("restart_projection_file")
+        if not rp or not (_WARM / rp).is_file():
+            bad.append(f"{leg}: restart 수준 투영이 없다")
+        elif hashlib.sha256(gzip.decompress((_WARM / rp).read_bytes())).hexdigest() \
+                != m.get("restart_projection_sha256"):
+            bad.append(f"{leg}: restart 투영이 digest 와 다르다")
     assert not bad, "행 수준 투영이 자기 근거와 어긋난다:\n  " + "\n  ".join(bad)
 
 
@@ -1370,12 +1406,16 @@ def test_stage3_contract_declares_what_it_cannot_do():
     끝난 뒤에 또 철회한다. 그래서 한계 절을 **구조로** 요구한다.
     """
     doc = _CONTRACT.read_text(encoding="utf-8")
-    assert "## 8." in doc, "계약에 한계 절(§8)이 없다"
-    tail = doc.split("## 8.")[1]
+    # ★ 절 번호에 걸지 않는다 — v2 에서 §8 → §12 로 옮겨가며 테스트가 깨졌다.
+    #   요구하는 것은 "한계 절이 있는가" 이지 "그것이 몇 번인가" 가 아니다.
+    m = re.search(r"^## \d+\.\s*이 계약이 스스로 (못|지키지 못)", doc, re.M)
+    assert m, "계약에 한계 절('이 계약이 스스로 못 하는 것')이 없다"
+    tail = doc[m.start():]
     need = [
-        ("noise 인과", "pair_group_id 로도 잡음 지형 축은 분리되지 않는다"),
+        ("잡음 *지형*", "pair_group_id 로도 잡음 지형 축은 분리되지 않는다"),
         ("plateau", "plateau 가 이 격자·화학·bound 의 성질이라는 한정"),
         ("2×2", "2×2 가 half-cell 한 격자에서만 성립한다는 한정"),
+        ("기술통계", "transition table 이 기술통계라는 한정"),
     ]
     missing = [why for key, why in need if key not in tail]
     assert not missing, "계약 §8 이 빠뜨린 한계: " + "; ".join(missing)
@@ -1417,3 +1457,374 @@ def test_branch_map_records_no_volatile_commit_counts():
         "휘발성 커밋 수가 다시 박혔다 (20차 발견 13-2 · 21차 재발):\n  "
         + "\n  ".join(bad)
         + "\n  불변인 사실만 적어라 — is-ancestor exit 0 · 왼쪽 0 · 고유 커밋 0개.")
+
+
+# ── warm 이 후보를 더하는가 교체하는가 (22차 리뷰 발견 1) ────────────────────
+#: 커밋된 투영에서 실측한 후보 구성. `restart_sources` 는 source 별 개수다.
+#: 22차 리뷰가 반증한 것: warm arm 은 후보가 **하나 늘지 않는다** — slot 0 의
+#: 결정론적 후보가 `base_init` → `warm` 으로 **교체**된다.
+_SLOT_EXPECT = {
+    ("paired_fixed5_v4_nowarm_now", "pocv_dvdq"):      "base_init=1;random=4",
+    ("paired_fixed5_v4_nowarm_now", "pocv_dvdq_dqdv"): "base_init=1;random=4",
+    ("paired_fixed5_v4_warm", "pocv_dvdq"):            "base_init=1;random=4",
+    ("paired_fixed5_v4_warm", "pocv_dvdq_dqdv"):       "random=4;warm=1",
+}
+
+
+def _projection_rows(leg: str) -> list[dict]:
+    import csv
+    import gzip
+    import yaml
+    m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+    raw = gzip.decompress((_WARM / m["projection_file"]).read_bytes())
+    return list(csv.DictReader(raw.decode("utf-8").splitlines(), delimiter="\t"))
+
+
+def test_warm_replaces_the_deterministic_slot_it_does_not_add_one():
+    """★ 22차 리뷰 발견 1 — 21차 실험은 union 이 아니라 slot 교체였다.
+
+    §20.4 초판은 "warm 이 결정론적 계산점을 하나 보탰다" 고 썼고, 계약 §2.5 는
+    그 전제 위에서 후보 수와 비용을 정의했다. **둘 다 틀렸다.**
+
+    `src/fitting.py` 의 restart 루프는 정확히 `n_restarts` 번 돈다:
+
+        n_max = max(1, n_restarts)
+        for k in range(n_max):
+            x0 = init if k == 0 else rng.uniform(lb, ub)
+            src = ("warm" if warm_init else "base_init") if k == 0 else "random"
+
+    즉 slot 0 은 `base_init` **또는** `warm` 이고 총 후보 수는 같다. 커밋된
+    투영이 3,069조건 전부에서 그것을 보인다.
+
+    이 사실이 결론을 바꾼다 — 34p 개선을 "warm 후보가 좋다" 로만 읽을 수 없다.
+    **`base_init` 이 34p 에서 나쁜 후보였다**는 해석과 구별되지 않는다.
+
+    문장 검색이 아니라 **실제 후보 배열**을 고정한다 (발견 1 의 요구).
+    """
+    import collections
+    bad = []
+    for (leg, obj), want in _SLOT_EXPECT.items():
+        rows = [r for r in _projection_rows(leg) if r["objective"] == obj]
+        got = collections.Counter((r["restart_sources"], r["n_restarts"]) for r in rows)
+        if len(got) != 1:
+            bad.append(f"{leg}/{obj}: 후보 구성이 조건마다 다르다 {dict(got)}")
+            continue
+        (src, n), _ = got.most_common(1)[0]
+        if src != want:
+            bad.append(f"{leg}/{obj}: 후보 구성 {src!r} (기대 {want!r})")
+        if int(n) != 5:
+            bad.append(f"{leg}/{obj}: 후보 수 {n} (기대 5)")
+    assert not bad, "후보 배열이 바뀌었다:\n  " + "\n  ".join(bad)
+
+    # 핵심 불변량 — 두 arm 의 총 후보 수가 같다 (union 이 아니다)
+    nw = {r["cond_id"]: r for r in _projection_rows("paired_fixed5_v4_nowarm_now")
+          if r["objective"] == "pocv_dvdq_dqdv"}
+    wm = {r["cond_id"]: r for r in _projection_rows("paired_fixed5_v4_warm")
+          if r["objective"] == "pocv_dvdq_dqdv"}
+    assert set(nw) == set(wm), "두 arm 의 조건 집합이 다르다"
+    diff = [c for c in nw if nw[c]["n_restarts"] != wm[c]["n_restarts"]]
+    assert not diff, (
+        f"후보 수가 조건 {len(diff)}개에서 갈렸다 — union 이면 여기가 갈린다. "
+        f"예: {diff[:3]}")
+
+    # 그리고 base_init 은 warm arm 에서 사라져야 한다
+    assert all("base_init" in r["restart_sources"] for r in nw.values())
+    assert not any("base_init" in r["restart_sources"] for r in wm.values()), \
+        "warm arm 에 base_init 이 남아 있다 — 그러면 교체가 아니라 추가다"
+
+
+def test_warm_contrast_reports_the_paired_transition_table():
+    """★ 22차 리뷰 발견 1·4 — aggregate 차이 하나로 보고하면 안 된다.
+
+    `909 → 928` 은 +19 failures 지만, 조건별로 보면 훨씬 많이 움직였다.
+    투영에서 직접 센 값 (recoverable 1,476조건):
+
+      no-warm 34p → warm 34p :  fail→pass 366 · pass→fail 4 (순 362, 총 370)
+      warm arm 33p → 34p     :  pass→fail 186 · fail→pass 167 → discordance 23.9%
+
+    두 번째가 특히 중요하다 — aggregate 는 +19 인데 **353조건(23.9%)이 서로
+    다르게 판정**된다. "두 목적함수가 비슷하다" 는 서술이 감추는 것이 이것이다.
+
+    문서가 이 전이표를 싣지 않으면 실패한다.
+    """
+    import collections
+    wm_rows = _projection_rows("paired_fixed5_v4_warm")
+    wm = {(r["cond_id"], r["objective"]): r for r in wm_rows}
+
+    rec = sorted({c for (c, o), r in wm.items()
+                  if o == "pocv_dvdq_dqdv" and r["recoverable"] == "1"})
+    assert len(rec) == 1476, len(rec)
+
+    nw34 = {r["cond_id"]: r for r in _projection_rows("paired_fixed5_v4_nowarm_now")
+            if r["objective"] == "pocv_dvdq_dqdv"}
+    t1 = collections.Counter((nw34[c]["degenerate"], wm[(c, "pocv_dvdq_dqdv")]["degenerate"])
+                             for c in rec)
+    t2 = collections.Counter((wm[(c, "pocv_dvdq")]["degenerate"],
+                              wm[(c, "pocv_dvdq_dqdv")]["degenerate"]) for c in rec)
+
+    assert t1[("1", "0")] == 366 and t1[("0", "1")] == 4, dict(t1)
+    disc = t2[("1", "0")] + t2[("0", "1")]
+    assert disc == 353, dict(t2)
+
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+    need = ["366", "353/1476", "23.9%"]
+    missing = [s for s in need if s not in doc]
+    assert not missing, f"§20.4 가 전이표 값을 싣지 않았다: {missing}"
+
+
+#: 원장이 관할하는 파일 전체 — 여기 있는 파일의 claim ID 는 원장에 있어야 한다.
+#: ★ 22차 발견 7: wiki 가 빠져 있었고, `wiki/questions/22p-physics-or-degeneracy.md`
+#:   가 철회된 축 순위와 restart 처방을 다시 주장하고 있었다.
+_CLAIM_SCOPE = [
+    "degradation-degeneracy/docs/09_22P_GAP.md",
+    "degradation-degeneracy/docs/08_REVIEW_RESPONSE.md",
+    "degradation-degeneracy/docs/22p_gap/LEG_INVENTORY.md",
+    "degradation-degeneracy/docs/22p_gap/STAGE3_CONTRACT.md",
+    "wiki/questions/22p-physics-or-degeneracy.md",
+]
+_REPO_ROOT = Path(__file__).resolve().parent.parent.parent
+
+
+def test_claim_registry_is_complete_in_both_directions():
+    """★ 22차 리뷰 발견 7 — 원장→파일만 봤고 파일→원장은 안 봤다.
+
+    그 결과 문서에 `철회[MV_1P5]`·`철회[THRESH_FREE]`·`철회[FPR_AS_FDR]` 이
+    있는데 원장에는 없었다. 등록되지 않은 ID 는 금지어 검사를 **하나도** 받지
+    않으므로, 배너만 있고 본문은 자유로운 상태가 된다 — 발견 8 이 지적한 바로
+    그 구조가 ID 별로 되살아난다.
+
+    양방향으로 닫는다: 문서에 나타난 모든 claim ID 가 원장에 있어야 한다.
+    """
+    reg = {c["id"] for c in _claim_status()["claims"]}
+    seen: dict[str, list[str]] = {}
+    for rel in _CLAIM_SCOPE:
+        f = _REPO_ROOT / rel
+        if not f.is_file():
+            continue
+        txt = f.read_text(encoding="utf-8")
+        for m in re.finditer(r"철회\[([A-Z0-9_]+)\]|<!--\s*QUARANTINE:([A-Z0-9_]+)", txt):
+            cid = m.group(1) or m.group(2)
+            if cid == "CLAIM_ID":            # 원장 헤더의 설명용 자리표시자
+                continue
+            seen.setdefault(cid, []).append(rel)
+    unknown = {k: sorted(set(v)) for k, v in seen.items() if k not in reg}
+    assert not unknown, (
+        "문서가 쓰는 claim ID 가 원장에 없다 — 금지어 검사를 전혀 안 받는다:\n  "
+        + "\n  ".join(f"{k}: {v}" for k, v in sorted(unknown.items())))
+
+
+def test_quarantine_fences_are_structurally_balanced():
+    """★ 22차 리뷰 발견 7 — 닫는 울타리가 빠지면 이후 본문 전체가 격리된다.
+
+    `_active_text` 는 depth 로 세므로, 여는 울타리만 있고 닫는 것이 없으면
+    **그 뒤 문서 전부**가 활성 본문에서 빠진다. 금지어 검사가 조용히 통과한다.
+    검사기 자신의 실패 모드라 구조 검사를 따로 둔다.
+
+    함께 막는 것: 중첩(격리 안의 격리 — 의도가 모호하다), 짝 없는 닫기.
+    """
+    bad = []
+    for rel in _CLAIM_SCOPE:
+        f = _REPO_ROOT / rel
+        if not f.is_file():
+            continue
+        depth, opened = 0, []
+        for i, ln in enumerate(f.read_text(encoding="utf-8").splitlines(), 1):
+            s = ln.strip()
+            o, c = _Q_OPEN.match(s), _Q_CLOSE.match(s)
+            if o:
+                if depth:
+                    bad.append(f"{rel}:{i} 중첩 울타리 (열린 것: {opened[-1]})")
+                depth += 1
+                opened.append(f"{o.group(1)}@{i}")
+            elif c:
+                if not depth:
+                    bad.append(f"{rel}:{i} 짝 없는 닫기")
+                else:
+                    depth -= 1
+                    opened.pop()
+        if depth:
+            bad.append(f"{rel}: 닫히지 않은 울타리 {opened} — 이후 본문 전체가 검사에서 빠진다")
+    assert not bad, "QUARANTINE 울타리 구조 오류:\n  " + "\n  ".join(bad)
+
+
+# ── /lean-review 의 base 결정이 세 git 상태에서 옳은가 (22차 발견 8) ──────────
+_LEAN = _REPO_ROOT / ".claude" / "commands" / "lean-review.md"
+
+
+def _lean_base_script() -> str:
+    """커맨드 문서의 첫 bash 블록 = 실제로 사람이 복붙하는 것."""
+    txt = _LEAN.read_text(encoding="utf-8")
+    m = re.search(r"```bash\n(.*?)```", txt, re.S)
+    assert m, "lean-review.md 에 bash 블록이 없다"
+    return m.group(1)
+
+
+def test_lean_review_base_resolution_in_three_git_states():
+    """★ 22차 리뷰 발견 8 — 두 번 틀린 자리라 문서가 아니라 **동작**을 고정한다.
+
+    초판: `origin/$(git rev-parse --abbrev-ref HEAD)` — detached 에서
+      `--abbrev-ref HEAD` 가 문자열 `HEAD` 를 반환해 `origin/HEAD` 가 된다.
+    2판: upstream 조회 실패 시 `origin/HEAD` 로 **자동 대체** — detached 에서
+      결국 기본 브랜치와 비교한다. 20차 발견 11 이 지적한 증상이 그대로 남았다.
+
+    세 상태를 진짜 git 저장소로 만들어 돌린다:
+      (a) attached + upstream 있음 → upstream 을 쓴다
+      (b) attached + upstream 없음 → 중단 (exit 1)
+      (c) detached HEAD           → 중단 (exit 1)
+    """
+    import subprocess
+    import tempfile
+
+    script = _lean_base_script()
+    # `git diff` 는 실제로 돌릴 필요 없다 — base 결정만 본다.
+    script = script.replace('git diff "$base...HEAD"', 'echo "BASE=$base"')
+
+    def run(cwd: str, arg: str = "") -> subprocess.CompletedProcess:
+        return subprocess.run(["bash", "-c", f"set -- {arg}\n{script}"],
+                              cwd=cwd, capture_output=True, text=True)
+
+    def git(cwd: str, *a: str) -> None:
+        subprocess.run(["git", *a], cwd=cwd, check=True,
+                       capture_output=True, text=True)
+
+    with tempfile.TemporaryDirectory() as tmp:
+        upstream = Path(tmp) / "up"
+        upstream.mkdir()
+        git(str(upstream), "init", "-q", "-b", "main")
+        git(str(upstream), "config", "user.email", "t@t")
+        git(str(upstream), "config", "user.name", "t")
+        (upstream / "a.txt").write_text("1", encoding="utf-8")
+        git(str(upstream), "add", "-A")
+        git(str(upstream), "commit", "-qm", "init")
+
+        work = Path(tmp) / "work"
+        subprocess.run(["git", "clone", "-q", str(upstream), str(work)],
+                       check=True, capture_output=True)
+        git(str(work), "config", "user.email", "t@t")
+        git(str(work), "config", "user.name", "t")
+
+        # (a) attached + upstream
+        r = run(str(work))
+        assert r.returncode == 0, f"(a) 중단됐다: {r.stdout}{r.stderr}"
+        assert "BASE=origin/main" in r.stdout, f"(a) base={r.stdout!r}"
+
+        # (b) attached, upstream 없는 새 브랜치
+        git(str(work), "checkout", "-qb", "feature")
+        r = run(str(work))
+        assert r.returncode == 1, (
+            f"(b) upstream 이 없는데 중단하지 않았다 — {r.stdout!r}")
+        assert "origin/HEAD" not in r.stdout.replace(
+            "origin/HEAD 로 자동 대체하지 않는다", ""), \
+            f"(b) origin/HEAD 로 대체했다: {r.stdout!r}"
+
+        # (c) detached HEAD
+        sha = subprocess.run(["git", "rev-parse", "HEAD"], cwd=str(work),
+                             capture_output=True, text=True, check=True).stdout.strip()
+        git(str(work), "checkout", "-q", sha)
+        r = run(str(work))
+        assert r.returncode == 1, (
+            f"(c) detached 인데 중단하지 않았다 — {r.stdout!r}")
+        assert "BASE=" not in r.stdout, f"(c) base 를 정해 버렸다: {r.stdout!r}"
+
+        # (d) 인자를 주면 그것을 쓴다 (detached 여도)
+        r = run(str(work), "main")
+        assert r.returncode == 0 and "BASE=main" in r.stdout, \
+            f"(d) 명시 base 가 무시됐다: {r.stdout!r}"
+
+
+def _restart_rows(leg: str) -> list[dict]:
+    import csv
+    import gzip
+    import yaml
+    m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+    assert m.get("restart_projection_file"), (
+        f"{leg}: restart 수준 투영이 없다 (스키마 {m.get('projection_schema')}). "
+        f"원자료가 있는 기계에서 `python docs/22p_gap/row_projection.py --all` 재실행 필요")
+    raw = gzip.decompress((_WARM / m["restart_projection_file"]).read_bytes())
+    return list(csv.DictReader(raw.decode("utf-8").splitlines(), delimiter="\t"))
+
+
+def _recompute_random_only_kinds(leg: str) -> dict:
+    """restart 투영만으로 `multistart_random_only` 의 분류를 다시 만든다.
+
+    규칙은 `src/scoring.py::multistart_diagnostics` 를 따른다:
+        random restart 만 남긴다 (source == 'random'), 2개 미만이면 제외
+        near      = |J − J_best| ≤ 1e-3 · max(1, |J_best|)
+        spread_*  = max_j |p_j − p_best,j|
+        n_near ≥ 2 이고 spread_near > 1e-2      → flat_valley
+        n_near == 1 이고 spread_all  > 1e-2     → multimodal
+        그 밖                                    → unique_min
+    """
+    import collections
+    import math
+
+    # ★ 봉인 summary 는 **복원가능군에서만** 센다 (`rec_df = df[df.recoverable]`).
+    #   restart 투영은 전 행을 담으므로 여기서 같은 모집단으로 맞춘다 — 초판은
+    #   이 필터를 빼먹어 n 이 3069 vs 1476 으로 갈렸고 테스트가 잡았다.
+    rec = {(r["cond_id"], r["objective"])
+           for r in _projection_rows(leg) if r["recoverable"] == "1"}
+
+    by: dict = collections.defaultdict(list)
+    for r in _restart_rows(leg):
+        if r["source"] != "random":
+            continue
+        if (r["cond_id"], r["objective"]) not in rec:
+            continue
+        try:
+            J = float(r["J"])
+            p = [float(r[f"p{i}"]) for i in range(4)]
+        except ValueError:
+            continue
+        if not math.isfinite(J) or not all(map(math.isfinite, p)):
+            continue
+        by[(r["cond_id"], r["objective"])].append((J, p))
+
+    out: dict = collections.defaultdict(collections.Counter)
+    for (_c, obj), rs in by.items():
+        if len(rs) < 2:
+            continue
+        j_best, p_best = min(rs, key=lambda t: t[0])
+        d = [max(abs(a - b) for a, b in zip(p, p_best)) for _J, p in rs]
+        near = [abs(J - j_best) <= 1e-3 * max(1.0, abs(j_best)) for J, _p in rs]
+        n_near = sum(near)
+        spread_all = max(d)
+        spread_near = max(x for x, n in zip(d, near) if n)
+        if n_near >= 2 and spread_near > 1e-2:
+            kind = "flat_valley"
+        elif n_near == 1 and spread_all > 1e-2:
+            kind = "multimodal"
+        else:
+            kind = "unique_min"
+        out[obj][kind] += 1
+    return {o: {"n": sum(c.values()),
+                "multimodal_frac": c["multimodal"] / sum(c.values()),
+                "flat_valley_frac": c["flat_valley"] / sum(c.values())}
+            for o, c in out.items()}
+
+
+@pytest.mark.parametrize("leg", ["paired_fixed5_v4_nowarm_now", "paired_fixed5_v4_warm"])
+def test_random_only_multimodality_is_recomputable_from_the_restart_projection(leg):
+    """★ 22차 리뷰 발견 5 항목 4 — 발견 3 의 근거를 투영에서 **직접** 재계산한다.
+
+    행 투영은 restart 개수만 담아서, "random-only 다봉성이 두 arm 에서 같다"
+    (21차 발견 3 의 정정 근거)를 리뷰어가 투영에서 확인할 수 없었다. summary
+    를 믿는 수밖에 없었고, 그건 자기신고다.
+
+    restart 수준 투영이 생겼으므로 `(i, source, J, p)` 에서 분류를 다시 만들어
+    봉인 summary 와 대조한다. 이게 맞으면 발견 3 의 근거가 **원자료 없이도**
+    독립 검산 가능해진다.
+    """
+    got = _recompute_random_only_kinds(leg)
+    sealed = _warm_summary(leg)["multistart_random_only"]
+    bad = []
+    for obj in ("pocv_dvdq", "pocv_dvdq_dqdv"):
+        s, g = sealed[obj], got.get(obj)
+        assert g, f"{leg}/{obj}: 재계산 결과가 비었다"
+        if g["n"] != s["n"]:
+            bad.append(f"{obj}: n {g['n']} vs 봉인 {s['n']}")
+        for k in ("multimodal_frac", "flat_valley_frac"):
+            if abs(g[k] - s[k]) > 1e-12:
+                bad.append(f"{obj}.{k}: 재계산 {g[k]!r} vs 봉인 {s[k]!r}")
+    assert not bad, (
+        f"{leg}: restart 투영에서 재계산한 random-only 분류가 봉인과 다르다:\n  "
+        + "\n  ".join(bad))

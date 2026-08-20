@@ -560,8 +560,14 @@ python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
 | 대조도 크게 흔들린다 → 격자 수준 불안정 | **예 (크게)** | 0/8 → **7/8**, bias −0.53 → **−5.42%p** |
 
 **§14 가설 기각.** warm start 는 404 를 이상 국소해로 끌지 않았다 —
-왜곡 다리의 원점은 warm 여부와 **무관하게 같다**. 404 의 `pocv_dvdq` 원점 오염
+**왜곡 다리**의 원점은 warm 여부와 같다. 404 의 `pocv_dvdq` 원점 오염
 (1.0273)도 warm 산물이 아니라 **그 격자 pristine 조건 fit 자체의 성질**이다.
+
+> ★ 범위 정정 (21차 발견 4 / 22차 발견 4). "원점은 warm 과 무관하다" 를 이
+> 다리 밖으로 넓히면 안 된다 — **무왜곡 대조**(`fit_22p_seed_404_hc_*`)에서는
+> 34p 의 `p_ini` 가 warm 을 끄면 실제로 움직인다
+> (`[1.5185,…] → [1.5097,…]`, §23). 여기서 관측된 것은 "왜곡 다리에서는
+> 안 움직였다" 까지다.
 
 ## 19. 대신 나온 것 — 무왜곡 대조가 warm 을 끄면 무너진다
 
@@ -603,7 +609,7 @@ python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
 
 | 비교 | digest 구간 | 그 사이 RUN_SCOPE 변경 | 판정 |
 |---|---|---|---|
-| 5 mV warm vs nowarm | `d842894` → `a72c0f3a` | `fitting.py` +9 (p_ini_cond 봉인) + 새 진단 도구 | **깨끗** — 수치 경로 불변 |
+| 5 mV warm vs nowarm | `d842894` → `a72c0f3a` | `fitting.py` +9 (p_ini_cond 봉인) + 새 진단 도구 | **교란** — digest 와 warm 이 함께 다르다 (21차 발견 5). 33p 가 행 단위로 같다는 것은 그 구간이 **33p 경로에서** 불활성이었다는 뜻일 뿐, 34p 경로나 warm 인과의 근거가 아니다 |
 | 대조 warm vs nowarm | `7250c6e6` → `a72c0f3a` | `fitting.py` +98, `halfcell.py` +144 (ocpbias 배선·stretch) | **주의** |
 
 두 번째 구간의 변경은 전부 ocpbias 경로 추가이고, 무왜곡 `ocp` 캐시는 배열이

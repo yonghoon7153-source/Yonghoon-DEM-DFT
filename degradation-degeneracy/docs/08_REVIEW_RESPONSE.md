@@ -968,8 +968,11 @@ F49(5차)부터 쌓아 온 코드 identity 봉인이 **가정된 위협이 아�
 > 즉 공정 비교에서 34p 는 "사실상 변화 없음"이 아니라 **recovery failure 가
 > 61.9% → 87.2% 로 크게 악화**했다. 다만 이를 "dQ/dV 의 정보량이 더 나쁘다"로
 > 읽으면 안 된다 — paired 에서 34p 해의 multimodal 비율이 97% 라 optimizer 가
-> 그 목적함수를 못 푸는 효과가 섞여 있다. 방어 가능한 문장은 **"두 protocol
-> 모두에서 dQ/dV 추가의 개선은 관측되지 않았다"** 까지다.
+> 그 목적함수를 못 푸는 효과가 섞여 있다.
+>
+> (★ 여기 있던 "두 protocol 모두에서 개선 미관측" 이라는 포괄 문구는
+> 21차 발견 2 로 철회했다 — 철회[WARM_NO_IMPROVE_ANY]. 방어 가능한 형태는
+> 아래 재정정 블록의 endpoint 한정 서술이다.)
 >
 > ### ⛔ 재정정 (2026-08-20) — +25.27%p 는 `warm_start=False` protocol 값이다
 >
@@ -1036,10 +1039,71 @@ F49(5차)부터 쌓아 온 코드 identity 봉인이 **가정된 위협이 아�
 > - **warm 은 다봉성을 없애지 않았다.** 목적함수 간 비교에 써야 하는
 >   `multistart_random_only` 블록이 두 arm 에서 **완전히 동일**하다 — 34p
 >   multimodal `0.969512`, flat_valley `0.008130` 이 양쪽 같다. 같은 결정론적
->   난수에서 나온 같은 4개 random restart 는 그대로 다봉이었고, warm 이 한
->   일은 후보 집합에 **결정론적 점 하나를 더한 것**이다. (모든 restart 를
->   세는 `multistart` 블록의 nowarm 0.9614 / warm 0.9621 은 그 추가된 점을
+>   난수에서 나온 같은 4개 random restart 는 그대로 다봉이었다. (모든 restart
+>   를 세는 `multistart` 블록의 nowarm 0.9614 / warm 0.9621 은 slot 0 을
 >   포함하므로 이 판단에 쓰면 안 된다.)
+>
+>   ### ⛔ 재재정정 (2026-08-20, 22차 리뷰 발견 1) — 추가가 아니라 **교체**다
+>
+>   여기 있던 서술 — warm 이 결정론적 계산점을 하나 보태기만 했다는 것 — 은
+>   **틀렸다** (철회[WARM_UNION]). `src/fitting.py` 의 restart 루프는 정확히
+>   `n_restarts` 번 돌고 slot 0 이 `base_init` **또는** `warm` 이다:
+>
+>   ```python
+>   n_max = max(1, n_restarts)
+>   for k in range(n_max):
+>       x0 = init if k == 0 else rng.uniform(lb, ub)
+>       src = ("warm" if warm_init else "base_init") if k == 0 else "random"
+>   ```
+>
+>   커밋된 투영의 `restart_sources` 가 그대로 보인다 (3,069조건 전부 동일):
+>
+>   | arm · 목적함수 | 후보 구성 | 총 후보 |
+>   |---|---|---:|
+>   | no-warm 33p | `base_init=1;random=4` | 5 |
+>   | no-warm 34p | `base_init=1;random=4` | 5 |
+>   | warm 33p | `base_init=1;random=4` | 5 |
+>   | **warm 34p** | **`random=4;warm=1`** | **5** |
+>
+>   즉 warm arm 의 34p 에서 **`base_init` 이 사라졌다.** 이 대조가 잰 것은
+>   "warm 후보를 하나 더 주면 어떻게 되는가" 가 아니라 **"slot 0 의 결정론적
+>   후보가 `base_init` 이냐 `warm` 이냐"** 다. 계약 용어로 `legacy_slot_replace`
+>   이고, `union` 도 `equal_start_count` 도 아니다.
+>
+>   무엇이 바뀌나: 34p 개선을 "warm 후보가 좋다" 로만 읽을 수 없다. **`base_init`
+>   이 34p 에서 나쁜 후보였다**는 해석과 구별되지 않는다. 두 해석을 가르려면
+>   `base` 를 유지한 채 warm 을 넣는 arm 이 따로 필요하다 (계약 §2.5).
+>
+>   ### 전이표 — aggregate 하나로 보고하면 안 된다 (22차 발견 4)
+>
+>   커밋된 투영에서 직접 센 값이다 (recoverable 1,476조건).
+>
+>   **(A) no-warm 34p → warm 34p** — slot 0 교체가 무엇을 바꿨나
+>
+>   | | warm pass | warm fail |
+>   |---|---:|---:|
+>   | **no-warm pass** | 182 | **4** |
+>   | **no-warm fail** | **366** | 924 |
+>
+>   순변화는 362행이지만 실제로 상태가 바뀐 것은 **370행**이다. 반대 방향
+>   (pass→fail)이 4건 있다는 사실은 aggregate 에 보이지 않는다.
+>
+>   **(B) warm arm 안에서 33p → 34p** — 이쪽이 결론 1 의 실제 모습이다
+>
+>   | | 34p pass | 34p fail |
+>   |---|---:|---:|
+>   | **33p pass** | 381 | **186** |
+>   | **33p fail** | **167** | 742 |
+>
+>   aggregate 는 `909 → 928`, +19 failures 다. 그런데 조건별 불일치는
+>   **353/1476 = 23.9%** 다. 두 목적함수는 "거의 같은 답" 을 내는 것이 아니라
+>   **네 조건 중 하나에서 서로 다르게 판정**하면서 총량만 비슷한 것이다.
+>
+>   따라서 단계 3 의 primary endpoint 는 aggregate 차이 하나가 아니라
+>   **조건별 paired transition table** 을 포함해야 한다. 다만 이 격자는 확률
+>   표본이 아니라 결정론적 조건집합이므로 전이 건수는 **기술통계**다 —
+>   McNemar p-value 나 모집단 확률로 옮기려면 조건 표집 모형과 독립 반복을
+>   먼저 정의해야 한다 (22차 Q4).
 >
 >   그래서 "warm 이 더 좋은 basin 에 앉혔다" 는 **말할 수 없다** (21차 리뷰
 >   발견 3, 철회[WARM_BETTER_VALLEY]). 그러려면 조건별 `J` 를 비교해서 warm
@@ -1053,7 +1117,7 @@ F49(5차)부터 쌓아 온 코드 identity 봉인이 **가정된 위협이 아�
 >   > 그 문자열은 `src/` 가 생성하므로 고치면 `source_digest` 가 바뀐다 —
 >   > 단계 3 코드 라운드에서 함께 고친다. 그때까지 그 필드는 인용하지 않는다.
 >
-> 정본 다리: `results/paired_fixed5_v4_warm`,
+> 진단 다리 (`recorded_only` — 인용 정본 아님): `results/paired_fixed5_v4_warm`,
 > `results/paired_fixed5_v4_nowarm_now` (경위와 원자료는
 > `docs/22p_gap/LEG_INVENTORY.md` §27~§31).
 >
@@ -1137,7 +1201,7 @@ population_sensitivity  recoverable +0.0054  /  all −0.0257  (direction_flips=
 
 | 항목 | 원문(오류) | 정정 |
 |---|---|---|
-| 결론 1 정본 | 62% → 63% "사실상 변화 없음" | **paired 61.9% → 87.2% (+25.27%p)**. 단 34p multimodal 97% 라 정보량 비교 불가 — 방어 가능한 문장은 "두 protocol 모두 개선 미관측" |
+| 결론 1 정본 | 62% → 63% "사실상 변화 없음" | **paired 61.9% → 87.2% (+25.27%p)**, `warm_start=False` 조건부. 34p multimodal 97% 라 정보량 비교 불가. 방어 가능한 형태는 endpoint 를 명시한 "사전 지정한 aggregate raw-degeneracy endpoint 에서 34p 개선 미관측" 이다 (철회[WARM_NO_IMPROVE_ANY]) |
 | 붕괴율 | 0% / 0건 | **1/245 = 0.41%** (정수 반올림이 만든 0%). 0건이면 LR 이 90 이 아니라 무한대 |
 | LR 90 | 그대로 인용 | **조건부 값**. 전체 격자에서는 `64/604`, **LR 3.69**. 넓은 격차 붕괴 64건 중 63건(98.4%)이 recoverability 필터로 제외 |
 | 22p 12% | 단독 인용 | **1/8**, 그 1건은 최대 mode 오차 2.02248%p 로 임계 2%p 를 0.022%p 초과한 경계 사건 |
@@ -1767,7 +1831,7 @@ A' 의 목적이 그대로 무너진다. 실제 캐시 이름 규칙으로 좁�
 | 조각 | 무엇 |
 |---|---|
 | `docs/22p_gap/CLAIM_STATUS.yaml` | 철회·격하된 주장의 **정본 목록**. claim ID, 사유, `banned` 정규식, 대상 파일, `record`(quarantined/removed) |
-| `<!-- QUARANTINE:ID -->` … `<!-- /QUARANTINE -->` | 옛 문장을 기록으로 남길 수 있는 **유일한 자리**. 마크다운에 안 보인다 |
+| `<!-- QUARANTINE:<claim> -->` … `<!-- /QUARANTINE -->` | 옛 문장을 기록으로 남길 수 있는 **유일한 자리**. 마크다운에 안 보인다. 줄 전체가 마커 하나일 때만 울타리로 인정된다 (§30.8) |
 | `test_retracted_claims_do_not_reappear_in_active_prose` | 울타리 **밖** 전부(활성 본문)에서 `banned` 를 찾는다. 걸리면 실패 |
 | `test_every_quarantined_claim_still_has_a_visible_retraction` | 양성 결속 — 배너를 지워도 실패한다 |
 | `test_claim_status_registry_is_wellformed` | 원장이 깨지면 위 둘이 조용히 통과하는 것을 막는다 |
@@ -1785,7 +1849,7 @@ seed_101 10 mV 다리의 실제 붕괴 건수 `3/51 (5.9%)` 를 함께 잡았고
 `3/306` 은 `13/306`·`30/306` 을 잡았다. 철회된 것은 **건수가 아니라 그것을
 확률 상한으로 옮긴 계산**이라 `≈` 까지 본다.
 
-### 29.2 발견 2 — "개선은 어디서도 없다" 는 틀렸다
+### 29.2 발견 2 — endpoint 한정 없는 "개선 없음" 은 틀렸다
 
 봉인 summary 에서 직접 뽑은 noise 층 (paired, 같은 digest·같은 예산):
 
@@ -1811,11 +1875,14 @@ vs 34p 0.023653 으로 **34p 가 낫다**. 따라서 방어 가능한 형태는
 목적함수 간 비교에 써야 하는 `multistart_random_only` 블록이 두 arm 에서
 **완전히 동일**하다 — 34p multimodal `0.969512`, flat_valley `0.008130`.
 같은 결정론적 난수의 같은 4개 random restart 는 그대로 다봉이었고, warm 이
-한 일은 후보 집합에 **결정론적 점 하나를 더한 것**이다. 문서가 인용하던
+한 일은 slot 0 의 결정론적 후보가 `base_init` → `warm` 으로 **교체**된
+것이다 (★ 이 문단은 초판에 "하나를 더했다" 고 썼고, 22차 리뷰 발견 1 이
+반증했다 — 철회[WARM_UNION]). 문서가 인용하던
 nowarm 0.9614 / warm 0.9621 은 그 추가 후보를 **포함하는** `multistart`
 블록이라 이 판단에 쓸 수 없었다.
 
-"더 나은 골짜기" 는 조건별 `J` 비교 없이 truth error 만으로 말할 수 없다 —
+warm 이 더 좋은 basin 에 앉혔다는 해석은 조건별 `J` 비교 없이 truth error
+만으로 말할 수 없다 —
 철회[WARM_BETTER_VALLEY]. F20 이 이 표로 측정됐다는 서술도 철회한다.
 
 회귀 `test_random_only_multimodality_is_identical_across_the_warm_arms` 가
@@ -1830,7 +1897,7 @@ nowarm 0.9614 / warm 0.9621 은 그 추가 후보를 **포함하는** `multistar
 `정본 → nowarm_now` 를 "코드만" 이라고 쓴 것을 고쳤다. 그 사이에
 Python·OS·NumPy·SciPy 도 함께 바뀌었다. 그 줄은 warm 축이 아니라 **잡음
 대조**이고, 두 번째 줄(`nowarm_now → warm`)만 digest·runtime·조건집합·예산이
-모두 같은 matched 짝이다. 5 mV 교차-digest 짝을 "계통적 warm 효과" 로 쓰던
+모두 같은 matched 짝이다. 5 mV 교차-digest 짝을 paired 밖까지 일반화하던
 서술도 철회[WARM_SYSTEMATIC].
 
 ### 29.5 발견 9 — `origin/main` 반박은 내가 틀렸다
@@ -1926,7 +1993,9 @@ scripts/ run.sh requirements*` 를 한 줄도 건드리지 않았고 `source_dig
   **압축 전 바이트의 sha256** 이 digest (gzip 수준과 무관)
 - 목적함수별 **부분 digest** 도 낸다 → 33p 만 따로 대조할 수 있다
 - `analysis_spec_sha256` 로 규격 자신을 못박는다
-- `gzip(mtime=0)` — 같은 입력이면 파일 바이트까지 같다 (실측 확인)
+- `gzip(mtime=0)` — timestamp 만 고정한다. 같은 zlib 구현끼리는 파일 바이트도
+  같았지만 **보장은 아니다** (22차 발견 6: zlib-ng 1.3.1 에서 다른 바이트).
+  정본 앵커는 압축 전 sha256 이다
 
 그리고 같은 실행에서 **재계산 검증**을 한다 — 봉인 fits 를 `src.scoring` 의
 정규 경로(`add_error_columns → classify_recoverability → clean_bias →
@@ -2049,7 +2118,7 @@ aggregate 일치는 조건별 일치가 아니라는 것이 21차 Q2 의 지적�
 무해하다는 뜻이 아니다. 5 mV 짝은 여기 해당하지 않는다 (warm 축이 함께 다르다
 — 발견 5).
 
-### 30.7 투영이 **교차 기계**에서 바이트까지 재현된다
+### 30.7 투영 digest 가 교차 기계에서 재현된다 (gzip 바이트는 별개 — §30.7.1)
 
 투영 digest 가 감사 앵커로 쓸 수 있으려면, 원자료를 가진 제3자가 같은 값을
 독립적으로 얻어야 한다. 두 기계에서 실측했다.
@@ -2066,9 +2135,30 @@ aggregate 일치는 조건별 일치가 아니라는 것이 21차 Q2 의 지적�
 반대 방향(B 가 A 의 커밋 위에서 재생성)도 같다.
 
 **이것이 말하는 것**: 투영 직렬화와 채점 재계산이 기계에 의존하지 않는다.
-고정 열 순서 · `(cond_id, objective)` 정렬 · `repr` 부동소수 · `gzip(mtime=0)`
-이 의도대로 동작한다. 따라서 `projection_sha256` 은 원자료를 가진 누구든
-독립 검산할 수 있는 앵커다.
+고정 열 순서 · `(cond_id, objective)` 정렬 · `repr` 부동소수가 의도대로
+동작한다. 따라서 `projection_sha256`(= **압축 전** canonical TSV 의 sha256)은
+원자료를 가진 누구든 독립 검산할 수 있는 앵커다.
+
+#### 30.7.1 ★ 정정 (22차 리뷰 발견 6) — `gzip(mtime=0)` 은 바이트 동일을 보장하지 않는다
+
+> **압축 전 digest 는 재현되지만 gzip 파일 바이트는 zlib 구현에 달렸다.**
+> 위 두 기계는 둘 다 zlib 1.3 이었다. 리뷰어 환경(Python 3.14.0 · **zlib-ng
+> 1.3.1**)에서 같은 옵션으로 재압축하면 **다른 바이트**가 나온다:
+>
+> ```
+> committed gzip   357,509 bytes
+> recompressed     359,210 bytes   (first difference offset 44)
+> uncompressed SHA ad598fe77e75afec…  ← 동일
+> ```
+>
+> `mtime=0` 은 timestamp 만 고정하고 deflate 구현 차이는 고정하지 않는다.
+> 우리 컨테이너(zlib 1.3)에서는 재압축 바이트가 같았다 — **환경이 같아서**이지
+> 보장이 아니었다.
+>
+> 방어 가능한 서술은 이것뿐이다: **정본 앵커는 압축 전 canonical TSV 의
+> sha256 이고, 시험한 두 zlib 1.3 환경에서는 gzip 파일까지 같았다.**
+> 설계는 원래 압축 전 digest 를 앵커로 삼았으므로 감사 능력은 그대로다 —
+> 틀렸던 것은 "바이트까지 재현된다" 는 **주장의 범위**다.
 
 **말하지 않는 것**: fitting 자체가 기계 독립이라는 뜻은 아니다. 두 기계가 쓴
 `fits.parquet` 은 **같은 파일**이다 (sha256 일치). 재실행의 재현성은 별개

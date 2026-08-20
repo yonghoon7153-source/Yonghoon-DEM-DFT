@@ -6,18 +6,26 @@ description: 현재 diff 에 최소주의 사다리 적용 — 중복·재구현
 diff):
 
 ```bash
-# upstream 을 git 에게 묻는다 — 브랜치 이름을 박아 두지 않는다 (루트 CLAUDE.md
-# 하드룰 1 이 정본이고, 박아 두면 브랜치가 바뀔 때 조용히 실패한다).
-base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null) \
-  || base=$(git rev-parse --abbrev-ref --symbolic-full-name origin/HEAD 2>/dev/null) \
-  || { echo "upstream 을 못 찾았다 — 비교 대상을 인자로 줘라"; exit 1; }
+# base 결정 순서. **자동 fallback 금지** — 못 찾으면 멈추고 사람에게 묻는다.
+base="${1:-}"                                   # 1) 인자로 준 것이 최우선
+if [ -z "$base" ]; then                         # 2) attached + upstream 있으면 그것
+  base=$(git rev-parse --abbrev-ref --symbolic-full-name '@{upstream}' 2>/dev/null) || base=""
+fi
+if [ -z "$base" ]; then                         # 3) 그 밖에는 중단
+  echo "비교 base 를 못 정했다 (detached HEAD 이거나 upstream 이 없다)."
+  echo "  base 를 인자로 줘라:  /lean-review <ref>"
+  echo "  origin/HEAD 로 자동 대체하지 않는다 — 기본 브랜치와 비교하면"
+  echo "  이 브랜치와 무관한 diff 가 나온다 (20차 발견 11 · 22차 발견 8)."
+  exit 1
+fi
 git diff "$base...HEAD"
 ```
 
-★ 앞선 판은 `origin/$(git rev-parse --abbrev-ref HEAD)` 를 썼다 (20차 리뷰
-발견 11). detached HEAD 에서 `--abbrev-ref HEAD` 가 문자열 `HEAD` 를 반환해
-`origin/HEAD...HEAD` 가 되고, worktree·분리 체크아웃에서 조용히 엉뚱한 diff 를
-낸다. upstream 은 이름을 조립하지 말고 git 에게 물어야 한다.
+★ 두 번 틀렸다. 초판은 `origin/$(git rev-parse --abbrev-ref HEAD)` 였고
+(detached 에서 `--abbrev-ref HEAD` 가 문자열 `HEAD` 를 반환한다 — 20차 발견 11),
+2판은 upstream 조회 실패 시 `origin/HEAD` 로 **자동 대체**했다. 그러면 detached
+checkout 에서 결국 기본 브랜치와 비교한다 — 22차 발견 8. 조립도 대체도 하지
+않고, 못 정하면 **멈춘다**.
 
 ponytail 의 decision ladder 를 이 저장소에 맞춰 **방향을 좁힌** 것이다. 이 저장소는
 13라운드 리뷰가 검증 코드를 계속 **늘리라고** 요구해 왔으므로, 사다리를 검증

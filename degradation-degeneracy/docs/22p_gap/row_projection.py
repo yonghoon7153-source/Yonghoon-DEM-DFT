@@ -68,6 +68,11 @@ COLUMNS = [
     "best_restart_source", "restart_sources",
 ]
 
+#: restart 수준 투영의 열. 여기까지 있어야 random-only 다봉성을 투영에서
+#: **독립 재계산**할 수 있다 (22차 발견 5).
+RESTART_COLUMNS = ["cond_id", "objective", "i", "source", "J",
+                   "p0", "p1", "p2", "p3", "warm"]
+
 #: 이 투영이 무엇을 어떻게 만들었는지 — 바뀌면 digest 비교가 의미를 잃는다.
 ANALYSIS_SPEC = {
     "projection_version": 1,
@@ -96,6 +101,17 @@ def _cell(v) -> str:
     return str(v)
 
 
+def _restart_list(raw) -> list[dict]:
+    """restarts_json → dict 목록. 깨진 것은 빈 목록이 아니라 예외로 만든다."""
+    if raw is None or isinstance(raw, float):
+        return []
+    try:
+        rs = json.loads(raw) if isinstance(raw, str) else list(raw)
+    except (ValueError, TypeError) as e:                    # noqa: BLE001
+        raise SystemExit(f"✗ restarts_json 을 못 읽는다: {e}") from e
+    return [r for r in rs if isinstance(r, dict)]
+
+
 def _restart_facts(raw) -> tuple[str, str]:
     """restarts_json → (최적 J 를 낸 restart 의 source, source 구성).
 
@@ -118,6 +134,115 @@ def _restart_facts(raw) -> tuple[str, str]:
     return (str(best.get("source")), comp)
 
 
+def _add_multistart_blocks(df, summary: dict) -> None:
+    """`multistart` · `multistart_random_only` 를 **restart trace 에서** 다시 만든다.
+
+    ★ 22차 리뷰 발견 5 — `summarize()` 는 이 두 블록을 만들지 않는다.
+      `run_scoring` 이 `restarts_json` 에서 따로 붙인다. 초판 재계산은 그래서
+      두 블록을 통째로 못 봤고, 전면 대조로 바꾸자 "봉인에만 있다" 로 드러났다.
+      **발견 3(random-only 다봉성 동일)의 근거가 바로 이 블록**이므로 재계산
+      대상에서 빠져 있으면 안 된다.
+
+    `src/scoring.py` 의 구성 순서를 그대로 따른다 — 다르게 조립하면 대조가
+    "다르다" 를 낼 뿐 무엇이 다른지 못 가린다.
+    """
+    import itertools
+
+    from src.scoring import multistart_diagnostics, multistart_summary
+
+    rec_df = df[df["recoverable"]] if "recoverable" in df else df
+    ms = multistart_diagnostics(rec_df)
+    if ms.empty:
+        return
+    summary["multistart"] = multistart_summary(ms)
+
+    ms_r = multistart_diagnostics(rec_df, skip_first=True)
+    if ms_r.empty:
+        return
+    blk = multistart_summary(ms_r)
+    summary["multistart_random_only"] = blk
+    ok_random = bool(ms_r["random_only"].all()) if "random_only" in ms_r else False
+    blk["random_only_적용"] = ok_random
+    if "n_nonrandom_dropped" in ms_r:
+        blk["평균_제외_restart수"] = float(ms_r["n_nonrandom_dropped"].mean())
+    if not (ok_random and {"objective", "cond_id"} <= set(ms_r.columns)):
+        return
+
+    sets = {o: set(g["cond_id"]) for o, g in ms_r.groupby("objective")}
+    blk["n_conditions_per_objective"] = {o: len(v) for o, v in sets.items()}
+    key = ms_r.set_index(["objective", "cond_id"])["restart_indices"]
+    objs = sorted(sets)
+    pairs = {}
+    for a, b in itertools.combinations(objs, 2):
+        common = sets[a] & sets[b]
+        pr = {c for c in common if key[(a, c)] == key[(b, c)]}
+        ent = {"n_common": len(common), "n_paired": len(pr),
+               "비교가능": bool(len(pr) >= 30)}
+        if pr:
+            sub = ms_r[ms_r["cond_id"].isin(pr) & ms_r["objective"].isin([a, b])]
+            ent["summary"] = multistart_summary(sub)
+        pairs[f"{a}__vs__{b}"] = ent
+    blk["pairwise"] = pairs
+    common_all = set.intersection(*sets.values()) if sets else set()
+    paired = {c for c in common_all if len({key[(o, c)] for o in objs}) == 1}
+    blk["n_common_conditions"] = len(common_all)
+    blk["n_paired_conditions"] = len(paired)
+    blk["제외율_목적함수별"] = {
+        o: round(1 - len(paired) / len(v), 4) if v else None for o, v in sets.items()}
+    blk["비교가능"] = bool(len(paired) >= 30)
+    blk["_주의_전역교집합"] = (
+        "`n_paired_conditions`·`비교가능`은 **모든 목적함수 동시** "
+        "교집합이라 33p↔34p 비교에는 과도하게 엄격하다. 두 목적함수를 "
+        "비교할 때는 `pairwise` 블록의 해당 항목을 쓸 것 (F44b).")
+    blk["_선택편향"] = (
+        f"paired subset은 무작위 표본이 아니다 — adaptive 조기 종료를 "
+        f"겪지 않은(=모든 목적함수가 끝까지 간) 조건만 남는다. "
+        f"목적함수별 제외율이 "
+        f"{min(blk['제외율_목적함수별'].values()):.0%}~"
+        f"{max(blk['제외율_목적함수별'].values()):.0%}로 크게 다르다는 것이 "
+        f"그 증거다. 여기서 잰 비율을 격자 전체로 일반화하지 말 것.")
+    if paired:
+        blk["paired"] = multistart_summary(ms_r[ms_r["cond_id"].isin(paired)])
+    blk["_주의"] = (
+        "★ 목적함수 간 비교는 이 블록을 쓸 것 — source == 'random'인 restart만 "
+        "남긴다. 위 multistart 블록은 warm start 지점과 공통 결정론적 초기값을 "
+        "포함하므로, warm start를 받은 목적함수(w_dqdv≠0)가 인위적으로 "
+        "multimodal 쪽으로 쏠린다. 단 `비교가능`이 false면 목적함수마다 남은 "
+        "무작위 restart 수가 달라(adaptive 조기 종료) 검정력이 다르므로 "
+        "그대로 비교하지 말 것 — `paired` 블록(공통 cond_id + 동일 restart 수)만 "
+        "목적함수 간 비교에 쓸 수 있다."
+        if ok_random else
+        "⚠ 무효 — 이 fits.parquet은 restart 출처를 저장하지 않은 옛 형식이라 "
+        "보정을 하지 못했습니다. restarts_json이 J 오름차순이라 위치로 "
+        "추정하면 warm이 아니라 best restart를 버립니다. 이 블록을 인용하지 "
+        "마세요 — 출처를 저장하는 현재 코드로 재fit해야 복구됩니다 (F25/F31).")
+
+
+def _analyzer_provenance() -> dict:
+    """★ 22차 발견 5 — 투영이 **무엇으로 만들어졌는지** 스스로 밝힌다.
+
+    투영 digest 가 같아도 생성기가 다르면 같은 뜻이 아니다.
+    """
+    import platform
+    import sys as _sys
+
+    def _sha(p: Path) -> str:
+        return hashlib.sha256(p.read_bytes()).hexdigest()[:16] if p.is_file() else ""
+
+    out = {
+        "row_projection_py_sha256": _sha(Path(__file__).resolve()),
+        "src_scoring_py_sha256": _sha(REPO / "src" / "scoring.py"),
+        "python": _sys.version.split()[0],
+        "platform": platform.platform(),
+    }
+    for mod in ("pandas", "pyarrow", "numpy", "yaml"):
+        try:
+            out[mod] = __import__(mod).__version__
+        except Exception:                                  # noqa: BLE001
+            out[mod] = None
+    return out
+
+
 def build(leg: str) -> dict:
     import pandas as pd
     import yaml
@@ -132,6 +257,11 @@ def build(leg: str) -> dict:
             f"✗ {leg}: 원자료가 없다 — {fits}\n"
             f"  이 스크립트는 fits.parquet 이 **있는 기계**에서 돌려야 한다.\n"
             f"  컨테이너에는 대부분의 다리가 없다 (results/ 는 git 밖이다).")
+
+    # ★ 22차 리뷰 발견 5 — 초판은 manifest 의 `fits_seal` 을 **복사**했다.
+    #   그러면 "내가 읽은 fits 가 봉인된 그 fits 였다" 를 투영 자신이 증명하지
+    #   못한다. 실제 바이트를 해시해 manifest·summary 와 **삼중 대조**한다.
+    fits_bytes_sha = hashlib.sha256(fits.read_bytes()).hexdigest()
 
     df = pd.read_parquet(fits)
     df = add_error_columns(df, DEFAULT_TOL)
@@ -150,6 +280,18 @@ def build(leg: str) -> dict:
 
     proj = df[COLUMNS].sort_values(["cond_id", "objective"], kind="mergesort")
 
+    # ★ 22차 발견 5 — malformed 입력을 조용히 통과시키지 않는다.
+    import math
+    dup = proj.duplicated(subset=["cond_id", "objective"]).sum()
+    if dup:
+        raise SystemExit(f"✗ {leg}: (cond_id, objective) 중복 {dup}행 — 투영 키가 깨졌다")
+    for col in ("J", "abs_err_max", "lli_hat", "lam_pe_hat", "lam_ne_hat"):
+        bad_n = sum(1 for v in proj[col] if not math.isfinite(float(v)))
+        if bad_n:
+            raise SystemExit(f"✗ {leg}: {col} 에 비유한값 {bad_n}행")
+    if (proj["restart_sources"] == "?").any():
+        raise SystemExit(f"✗ {leg}: restarts_json 을 못 읽은 행이 있다")
+
     lines = ["\t".join(COLUMNS)]
     lines += ["\t".join(_cell(v) for v in row)
               for row in proj.itertuples(index=False, name=None)]
@@ -166,42 +308,110 @@ def build(leg: str) -> dict:
         per_obj[str(obj)] = {"n_rows": int(len(g)),
                              "sha256": hashlib.sha256(blob).hexdigest()}
 
+    # ── restart 수준 투영 (22차 발견 5 항목 4) ────────────────────────────
+    # 행 투영은 restart **개수**만 담아서, random-only 다봉성을 투영에서
+    # 독립 재계산할 수 없다. 발견 3 의 근거가 바로 그 지표이므로 각 restart 의
+    # (index, source, J, p) 를 따로 봉인한다.
+    r_lines = ["\t".join(RESTART_COLUMNS)]
+    for cond, obj, raw in zip(df["cond_id"], df["objective"],
+                              df["restarts_json"] if "restarts_json" in df.columns
+                              else [None] * len(df)):
+        for r in _restart_list(raw):
+            pv = list(r.get("p") or [])
+            pv = (pv + [float("nan")] * 4)[:4]
+            r_lines.append("\t".join([
+                str(cond), str(obj), str(r.get("i")), str(r.get("source")),
+                _cell(float(r.get("J"))) if r.get("J") is not None else "",
+                *[_cell(float(x)) for x in pv],
+                "1" if r.get("warm") else "0"]))
+    r_head, r_body = r_lines[0], sorted(r_lines[1:])
+    r_text = "\n".join([r_head, *r_body]) + "\n"
+    r_sha = hashlib.sha256(r_text.encode("utf-8")).hexdigest()
+    r_csv = WARM / f"{leg}.restarts.csv.gz"
+    WARM.mkdir(parents=True, exist_ok=True)
+    with gzip.GzipFile(r_csv, "wb", compresslevel=9, mtime=0) as fh:
+        fh.write(r_text.encode("utf-8"))
+
     out_csv = WARM / f"{leg}.projection.csv.gz"
     WARM.mkdir(parents=True, exist_ok=True)
-    # mtime=0 — 같은 입력이면 gzip 바이트까지 같게 (git noise 방지)
+    # mtime=0 은 timestamp 만 고정한다. **deflate 구현 차이는 고정하지 않는다** —
+    # 22차 리뷰가 zlib-ng 1.3.1 에서 다른 바이트를 실측했다 (zlib 1.3 끼리는 같다).
+    # git noise 를 줄이는 효과는 있지만, 정본 앵커는 아래 `full_sha`(압축 전)다.
     with gzip.GzipFile(out_csv, "wb", compresslevel=9, mtime=0) as fh:
         fh.write(text.encode("utf-8"))
 
-    # ── 재계산 검증: 봉인 summary 와 자리별 대조 ────────────────────────────
+    # ── 재계산 검증: 봉인 summary **전체**와 대조 ──────────────────────────
+    # ★ 22차 발견 5 — 초판은 `by_objective` 아래 **이미 있는 숫자만** 부분
+    #   순회했다. key 집합·`by_objective_noise`·`overall_recoverable`·
+    #   `restart_conditioned`·`multistart*`·문자열·불리언·누락 키를 전부 놓쳤다.
+    #   이제 재귀 비교로 **전 블록**을 본다.
     recomputed = summarize(df, DEFAULT_TOL)
+    _add_multistart_blocks(df, recomputed)
     sealed_path = WARM / f"{leg}.summary.yaml"
     verdict: dict = {"봉인_summary": str(sealed_path.relative_to(REPO))}
+
+    #: 재계산이 만들 수 없는 키 — 채점이 아니라 실행 메타다.
+    _SKIP = {"_채점원본", "_F4_주의"}
+
+    def _cmp(a, b, path: str, out: list) -> None:
+        if isinstance(a, dict) and isinstance(b, dict):
+            ka, kb = set(a) - _SKIP, set(b) - _SKIP
+            for k in sorted(ka - kb):
+                out.append(f"{path}.{k}: 봉인에만 있다")
+            for k in sorted(kb - ka):
+                out.append(f"{path}.{k}: 재계산에만 있다")
+            for k in sorted(ka & kb):
+                _cmp(a[k], b[k], f"{path}.{k}", out)
+        elif isinstance(a, list) and isinstance(b, list):
+            if len(a) != len(b):
+                out.append(f"{path}: 길이 {len(a)} vs {len(b)}")
+            else:
+                for i, (x, y) in enumerate(zip(a, b)):
+                    _cmp(x, y, f"{path}[{i}]", out)
+        elif isinstance(a, float) or isinstance(b, float):
+            if isinstance(a, bool) != isinstance(b, bool) or \
+                    repr(float(a)) != repr(float(b)):
+                out.append(f"{path}: 봉인 {a!r} vs 재계산 {b!r}")
+        elif a != b:
+            out.append(f"{path}: 봉인 {a!r} vs 재계산 {b!r}")
+
     if sealed_path.is_file():
         sealed = yaml.safe_load(sealed_path.read_text(encoding="utf-8"))
-        diffs = []
-        for obj, blk in (sealed.get("by_objective") or {}).items():
-            got = (recomputed.get("by_objective") or {}).get(obj)
-            if got is None:
-                diffs.append(f"{obj}: 재계산에 없음")
-                continue
-            for k, want in blk.items():
-                if isinstance(want, (int, float)) and not isinstance(want, bool):
-                    have = got.get(k)
-                    if have is None or repr(float(have)) != repr(float(want)):
-                        diffs.append(f"{obj}.{k}: 봉인 {want!r} vs 재계산 {have!r}")
-        verdict["by_objective_일치"] = not diffs
+        diffs: list = []
+        _cmp(sealed, recomputed, "summary", diffs)
+        verdict["전체_일치"] = not diffs
+        verdict["by_objective_일치"] = not [d for d in diffs
+                                            if d.startswith("summary.by_objective.")]
         verdict["불일치"] = diffs or None
+        # ★ 삼중 대조 — 읽은 바이트 == summary 가 채점했다는 fits == manifest 봉인
+        s_src = ((sealed.get("_채점원본") or {}).get("fits_sha256"))
+        verdict["fits_sha256_읽은바이트"] = fits_bytes_sha
+        verdict["fits_sha256_summary"] = s_src
+        verdict["fits_삼중일치"] = (s_src == fits_bytes_sha)
+        if s_src and s_src != fits_bytes_sha:
+            verdict["불일치"] = (verdict["불일치"] or []) + [
+                f"읽은 fits 바이트({fits_bytes_sha[:16]})가 summary 가 채점한 "
+                f"fits({s_src[:16]})와 다르다"]
+            verdict["전체_일치"] = False
     else:
+        verdict["전체_일치"] = None
         verdict["by_objective_일치"] = None
         verdict["불일치"] = ["봉인 summary 가 없다"]
 
     meta = {
+        # 2 = 22차 리뷰 발견 5 대응 (실제 fits 바이트 SHA · 전체 semantic 대조 ·
+        #     restart 수준 투영 · 분석기 provenance). 1 은 그 셋이 없다.
+        "projection_schema": 2,
         "leg_id": leg,
         "projection_file": out_csv.name,
         "n_rows": int(len(proj)),
         "projection_sha256": full_sha,
         "by_objective_sha256": per_obj,
+        "restart_projection_file": r_csv.name,
+        "restart_projection_sha256": r_sha,
+        "n_restart_rows": len(r_body),
         "analysis_spec_sha256": _spec_sha256(),
+        "analyzer": _analyzer_provenance(),
         "analysis_spec": ANALYSIS_SPEC,
         "재계산_검증": verdict,
         "_주의": ("이 투영은 원자료가 아니다. 감사·대조용 축약이며, 여기 없는 열"
@@ -214,7 +424,10 @@ def build(leg: str) -> dict:
     if man_path.is_file():
         man = yaml.safe_load(man_path.read_text(encoding="utf-8")) or {}
         rs = man.get("run_spec") or {}
-        meta["fits_sha256"] = ((man.get("fits_seal") or {}).get("file_sha256"))
+        seal = ((man.get("fits_seal") or {}).get("file_sha256"))
+        meta["fits_sha256_manifest_seal"] = seal
+        meta["fits_sha256"] = fits_bytes_sha          # 실제 읽은 바이트
+        meta["fits_봉인일치"] = (seal == fits_bytes_sha)
         meta["source_digest"] = rs.get("source_digest")
         meta["warm_start"] = rs.get("warm_start")
 
