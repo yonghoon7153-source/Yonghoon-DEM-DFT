@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 231
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 232
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -24,7 +24,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (39)
+## methodology/ (40)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -49,6 +49,7 @@
 - `kb/methodology/esp_z590_setup.md` — esp-Z590-AORUS-MASTER Server Setup (new home/lab server)
 - `kb/methodology/esw_grandpotential_staircase_explained.md` — 전기화학 안정성 창(ESW) — 전압별 분해 staircase 완전 해설
 - `kb/methodology/external_review_response_2026_05_16.md` — External Review Response (2026-05-16)
+- `kb/methodology/handoff_2026_08_20_night.md` — 인수인계 2026-08-20 밤 — 밤새 도는 것 · 아침에 볼 것 ○미열람
 - `kb/methodology/hard_dopant_handling_protocol.md` — Hard / Compound Dopant Handling Protocol (doping cascade)
 - `kb/methodology/kisti_setup.md` — KISTI Neuron — Software Installation & Environment Guide
 - `kb/methodology/kserver116_setup.md` — kserver116-27 Server Setup (new lab server)
