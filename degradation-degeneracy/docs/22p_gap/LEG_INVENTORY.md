@@ -624,3 +624,106 @@ python3 tools/diagnose_pini_transition.py --objective pocv_dvdq_dqdv --legs \
   results/fit_22p_seed_404_hc results/fit_22p_seed_404_hc_nowarm \
   results/fit_22p_seed_404_hc_warm_now
 ```
+
+---
+
+# 5차 갱신 (2026-08-20) — §19 확정, 그리고 §20.4 정본으로 번진다
+
+§21 이 요구한 대조 재실행(`warm=True`, 현재 digest)을 돌렸다.
+
+## 22. digest 차이는 수치적으로 무해하다 — 완전 재현
+
+| 다리 | digest | warm | 원점 `p_ini` | 거짓 분리 | ①' bias | 참0 중앙값 |
+|---|---|---|---|---|---|---|
+| `fit_22p_seed_404_hc` | `7250c6e6` | True | `[1.5185, −0.4219, 1.0633, −0.0602]` | 0/8 | −0.53%p | 0.24%p |
+| **`fit_22p_seed_404_hc_warm_now`** | **`a72c0f3a`** | True | **`[1.5185, −0.4219, 1.0633, −0.0602]`** | **0/8** | **−0.53%p** | **0.24%p** |
+| `fit_22p_seed_404_hc_nowarm` | `a72c0f3a` | False | `[1.5097, −0.418, 1.0872, −0.0842]` | 7/8 | −5.42%p | 2.6%p |
+
+**네 값이 전부 일치한다.** `7250c6e6` → `a72c0f3a` 사이의 `fitting.py` +98 ·
+`halfcell.py` +144 (ocpbias 배선·stretch 추가)는 **무왜곡 경로의 수치를 전혀
+바꾸지 않았다.** §21 이 남긴 한계가 닫혔다 — diff 를 읽어서가 아니라 **완전
+재현으로** 증명됐다.
+
+부수 효과: 이것은 이 저장소에서 드문 **교차-digest 완전 재현** 실측이다.
+"코드가 바뀌었으니 비교 불가" 가 항상 참은 아니라는 반례로 남긴다.
+
+## 23. §19 확정 — 7/8 붕괴는 전적으로 warm-start 때문이다
+
+digest 가 무해함이 증명됐으므로, `warm_now`(0/8) vs `nowarm`(7/8) 의 차이는
+**`--no-warm-start` 하나**에 귀속된다. 왜곡이 0 인 대조가 warm 을 끄면 무너진다.
+
+### 23.1 기전 — 연쇄의 **뒤쪽** 목적함수만 움직인다
+
+`degeneracy_summary` 를 목적함수별로 보면 깨끗하게 갈린다:
+
+| | `pocv_dvdq` (연쇄 1번째) | `pocv_dvdq_dqdv` (연쇄 2번째) |
+|---|---|---|
+| warm=True | `degen 0.800000` · `mae 0.032153303097964915` | `degen 0.184375` |
+| warm=False | `degen 0.800000` · `mae 0.032153303097964915` | `degen 0.640625` |
+
+**1번째 목적함수는 15자리까지 동일하다** — 앞이 없으니 warm 할 것이 없다.
+움직인 것은 **2번째뿐이고, +0.457** 이다. F26b 의 "연쇄된 `_fit_one` 한 번"
+구조와 정확히 일치한다.
+
+## 24. ⚠ 이것이 §20.4 정본으로 번진다 — 새 열린 질문
+
+`paired_fixed5_v4` 의 manifest 실측:
+
+```
+warm_start: False   adaptive: False   n_restarts: 5
+```
+
+**결론 1 철회의 근거가 된 그 정본이 warm=False regime 산물이다.**
+`docs/08_REVIEW_RESPONSE.md` §20.4:
+
+```
+paired_fixed5_v4  pocv_dvdq       degen=0.619241
+paired_fixed5_v4  pocv_dvdq_dqdv  degen=0.871951   (+25.27%p)
+```
+
+그런데 §23.1 에서 **warm-start 축 하나가 같은 통계를 +45.7%p 움직였다.**
+결론이 서 있는 효과 크기(+25.27%p)보다 **크다.**
+
+**이것은 정본이 틀렸다는 주장이 아니다.** 두 실행은 격자도 기준도 다르다:
+
+| | `paired_fixed5_v4` | 이번 404 시험 |
+|---|---|---|
+| 조건 수 | 3,069 | 640 |
+| 기준 곡선 | **grid** | **half-cell** |
+| adaptive | False | **True** (기본) |
+| warm | False | 양쪽 다 측정 |
+
+효과가 그대로 옮겨간다고 말할 수 없다. 말할 수 있는 것은:
+
+> **protocol 축(warm-start)이 측정 대상 효과와 같은 크기 이상으로 결과를
+> 움직인다는 것이 직접 측정됐다.** §20.4 가 이미 달아 둔 유보("multimodal
+> 97% 라 optimizer 가 그 목적함수를 못 푸는 효과가 섞여 있다")가 이제
+> **정량적 근거**를 갖는다.
+
+### 24.1 이걸 닫는 방법 — 비싸지 않다
+
+`paired_fixed5_v4` 와 **같은 설정에서 warm 만 켠** 다리 하나면 된다:
+
+```bash
+./run.sh --mode fit --in results/grid_curves_v4 \
+  --out results/paired_fixed5_v4_warm --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --no-adaptive --reference grid
+./run.sh --mode score --in results/paired_fixed5_v4_warm
+```
+
+(원 실행의 정확한 인자는 `results/paired_fixed5_v4/manifest.yaml` 의
+`run_spec` 에서 확인해 맞출 것 — 위는 골자다. 3,069조건이라 404 보다 5배쯤
+걸린다.)
+
+판정: `pocv_dvdq_dqdv` 의 `degenerate_frac` 이 0.871951 에서 크게 내려오면
+§20.4 의 +25.27%p 는 **protocol 산물**이고, 그대로면 목적함수 자체의 성질이다.
+어느 쪽이든 결론 1 철회의 근거 서술을 다시 써야 한다.
+
+## 25. adaptive 도 다시 확인
+
+`warm_now` 실행도 `--n-restarts 5` 를 줬는데 `n_restarts=2 → 238행`,
+`n_restarts=5 → 1042행` 이다 (약 19%). §20 과 같다. `paired_fixed5_v4` 는
+`adaptive: False` 였으므로 그 정본에는 이 축이 없다 — 두 regime 이 **warm 과
+adaptive 둘 다** 다르다는 뜻이고, §24.1 의 재실행은 반드시
+`--no-adaptive` 를 포함해야 한다.
