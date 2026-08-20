@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 229
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 230
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -24,7 +24,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (38)
+## methodology/ (39)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -60,6 +60,7 @@
 - `kb/methodology/md_conductivity_protocol.md` — MD 이온전도도 추출 프로토콜 (논문용 — 고정 설정)
 - `kb/methodology/modelC_v2_slab_fix.md` — modelC v2 Slab Construction — Convention Fix
 - `kb/methodology/nd_vs_O_isolation_campaign_2026_06_18.md` — Nd vs O 분리 — "Nd가 특별한가, O 운반체일 뿐인가" 정량 캠페인
+- `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나 ○미열람
 - `kb/methodology/probe_language_reference.md` — Probe 언어 레퍼런스 — 각 계산이 무엇이고, 어떻게 구하고, 논문/figure에 어떻게 쓰는가
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거

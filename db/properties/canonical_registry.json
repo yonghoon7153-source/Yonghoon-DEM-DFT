@@ -19,7 +19,8 @@
   "2026-08-07f": "Codex 6라운드 종료 + provenance 감사 항목 확대. comp1 뿐 아니라 gap 정본 4종 **전부** fixed-occ nscf 의 입력·출력이 repo 에 없다 — standard_dos 의 *_nscf.in 은 전부 tetrahedra_opt(DOS용)다. ⚠ 5라운드에 modelc method_id 를 k882 로 '정정' 한 것도 그 tetrahedra 파일이 근거였으므로 철회하고 표기를 뺐다 — 정정하면서 같은 종류의 오류를 반복했다. 값 자체는 의심하지 않는다(electronic.json 이 정본 기록). provenance_open 필드로 표시하고 kb/open_items.md 에 감사 항목으로 올린다.",
   "2026-08-07g": "Codex 6라운드 후속 2건. ① provenance_open 문구 정정 — 'fixed-occ 입력이 없다' 가 아니라 **'계통별 실제 실행 입력·출력이 없다'** 가 정확하다. generic 템플릿 nscf_gap.in 은 존재하고 occupations='fixed' 다(방법은 repo 에 있다). 그 템플릿 주석이 modelc 에 6 6 2 를 제시하는 것도 DOS 용 8 8 2 로 정정하면 안 됐다는 근거가 된다. ② lpsocl 의 정본 파일은 electronic.json 이 아니라 lpsocl_dos_gap.json 이다 — 문구를 고쳤다.",
   "2026-08-20a": "codex 2·3차 리뷰 반영. b2o3 framework_beta_800_1000K 게이트 정정: (1) 옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy)에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound 로 보존. (2) 새 판정은 not_assessed(required_artifact_set_incomplete) — 미보존은 9런이 아니라 **high-T 6런**이고 600 K 3런은 PMF 소비 기록이 있다(현존 확인 필요). 재실행 범위 = 6런. (3) single-seed 항목에 high-T 사유를 붙였던 1차 정정은 과교정이라 철회, lineage_match=unverified 로. (4) Ea 계보는 numerically_reproducible — build_final_conductivity.py 가 D 를 하드코딩해 미배선. webapp/data.py 는 blocking_gate 존재만으로 '미통과' 를 찍던 것을 gate_outcome 별 문구로 분기(_gate_prefix).",
-  "2026-08-20b": "게이트 판정을 db/governance/assessments.json (append-only sidecar) 으로 이관. canonical claim 에는 required_assessment_refs 만 남는다 — 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다 (codex 동결감사). 옛 beta 판정(retracted·diagnostic_unbound)과 현재 판정(not_assessed)은 sidecar 에서 **병존**한다. lineage 는 lineage_binding + numeric_reproduction 두 축으로 쪼갰다 — 재현 가능성과 배선 여부는 독립인데 한 enum(numerically_reproducible)에 넣으면 또 사다리가 된다 (codex R4)."
+  "2026-08-20b": "게이트 판정을 db/governance/assessments.json (append-only sidecar) 으로 이관. canonical claim 에는 required_assessment_refs 만 남는다 — 판정을 값 옆에 두면 consumer 마다 '현재 판정' 을 다르게 고른다 (codex 동결감사). 옛 beta 판정(retracted·diagnostic_unbound)과 현재 판정(not_assessed)은 sidecar 에서 **병존**한다. lineage 는 lineage_binding + numeric_reproduction 두 축으로 쪼갰다 — 재현 가능성과 배선 여부는 독립인데 한 enum(numerically_reproducible)에 넣으면 또 사다리가 된다 (codex R4).",
+  "2026-08-20c": "provenance_open 4건(gap_eV)의 **후보 위치를 특정**했다. 오프라인 백업 전수조사에서 kgy_b2o3_eos / kgy_lpsocl_eos / modelC_v3 dos_pdos 폴더가 나왔다. 아직 위치만이고 fixed-occ 입력 확인은 안 했다. 인덱스 카드: kb/methodology/offline_archive_index_2026_08_20.md"
  },
  "entries": [
   {
@@ -37,7 +38,7 @@
    ],
    "updated": "2026-06-16",
    "note": null,
-   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: 정본 파일 electronic.json 이 kpts='170 irr (k888 nscf)' 라 적고, 템플릿 주석도 comp1(cubic) 에 8 8 8 을 제시한다 — k888 은 두 갈래로 뒷받침되나 실행본은 미확보."
+   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. comp1: 정본 파일 electronic.json 이 kpts='170 irr (k888 nscf)' 라 적고, 템플릿 주석도 comp1(cubic) 에 8 8 8 을 제시한다 — k888 은 두 갈래로 뒷받침되나 실행본은 미확보.  ⭐ 2026-08-20: **후보 위치가 특정됐다** — 오프라인 백업 T7 Shield `D:/v100/kisti_backup_2026-07-14/kgy_{b2o3,lpsocl}_eos_2026-07-14/` 및 `D:/v100, kisti 백업/runs/modelC_v3/dos_pdos/`. 그 폴더에서 occupations='fixed' 인 *.in/*.out 쌍이 확인되면 이 항목이 닫힌다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md ⚠ 아직 **위치만** 확인했고 파일 내용은 안 봤다."
   },
   {
    "system": "modelc",
@@ -54,7 +55,7 @@
    ],
    "updated": "2026-06-16",
    "note": null,
-   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 5라운드에 method_id 를 k882 로 '정정' 했는데 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **정정하면서 같은 종류의 오류를 반복했다.** 철회했다. ★ 게다가 템플릿 주석은 modelc(rhombo) 에 **6 6 2** 를 제시한다 — DOS 용 8 8 2 와 다르다. electronic.json 은 kpts='68 irr' 만 적어 k-mesh 를 단정할 수 없다."
+   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. ⚠ 5라운드에 method_id 를 k882 로 '정정' 했는데 근거였던 modelc_nscf.in 이 tetrahedra_opt 였다 — **정정하면서 같은 종류의 오류를 반복했다.** 철회했다. ★ 게다가 템플릿 주석은 modelc(rhombo) 에 **6 6 2** 를 제시한다 — DOS 용 8 8 2 와 다르다. electronic.json 은 kpts='68 irr' 만 적어 k-mesh 를 단정할 수 없다.  ⭐ 2026-08-20: **후보 위치가 특정됐다** — 오프라인 백업 T7 Shield `D:/v100/kisti_backup_2026-07-14/kgy_{b2o3,lpsocl}_eos_2026-07-14/` 및 `D:/v100, kisti 백업/runs/modelC_v3/dos_pdos/`. 그 폴더에서 occupations='fixed' 인 *.in/*.out 쌍이 확인되면 이 항목이 닫힌다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md ⚠ 아직 **위치만** 확인했고 파일 내용은 안 봤다."
   },
   {
    "system": "b2o3",
@@ -71,7 +72,7 @@
    ],
    "updated": "2026-06-16",
    "note": null,
-   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. b2o3: electronic.json 이 kpts='25 irr (fixed-occ nscf)' 로 **fixed-occ 임을 명시**한다 — 넷 중 근거가 제일 강하다."
+   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. b2o3: electronic.json 이 kpts='25 irr (fixed-occ nscf)' 로 **fixed-occ 임을 명시**한다 — 넷 중 근거가 제일 강하다.  ⭐ 2026-08-20: **후보 위치가 특정됐다** — 오프라인 백업 T7 Shield `D:/v100/kisti_backup_2026-07-14/kgy_{b2o3,lpsocl}_eos_2026-07-14/` 및 `D:/v100, kisti 백업/runs/modelC_v3/dos_pdos/`. 그 폴더에서 occupations='fixed' 인 *.in/*.out 쌍이 확인되면 이 항목이 닫힌다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md ⚠ 아직 **위치만** 확인했고 파일 내용은 안 봤다."
   },
   {
    "system": "lpsocl",
@@ -87,7 +88,7 @@
     "dos_threshold_readout"
    ],
    "updated": "2026-07-16",
-   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. lpsocl: ⚠ 정본 파일은 electronic.json 이 아니라 **lpsocl_dos_gap.json** 이다(source_path 참조). 그 method 문구가 'nscf fixed-occ (gap from VBM/CBM eigenvalues, NO smearing)' 라 방법은 명확하나 실행본은 없다."
+   "provenance_open": "⚠ **네 계통의 실제 실행 입력·출력이 repo 에 없다.** 값은 정본 파일이 기록하고 있지만, 정본 규칙(fixed-occupations nscf 고유값)을 만족한 그 실행을 파일로 재현할 수 없다. ★ generic 템플릿 `tools/electronic/standard_dos/nscf_gap.in` 은 존재하고 `occupations='fixed'` 다 — 즉 방법 자체는 repo 에 있다. 없는 건 **계통별 실행본**이다. 계통별로 남은 `*_nscf.in` 은 전부 `occupations='tetrahedra_opt'`(DOS 용)이라 fixed-occ 근거로 쓰면 안 된다. 2026-08-07 Codex 6라운드. → kb/open_items.md 의 별도 데이터 감사 항목. lpsocl: ⚠ 정본 파일은 electronic.json 이 아니라 **lpsocl_dos_gap.json** 이다(source_path 참조). 그 method 문구가 'nscf fixed-occ (gap from VBM/CBM eigenvalues, NO smearing)' 라 방법은 명확하나 실행본은 없다.  ⭐ 2026-08-20: **후보 위치가 특정됐다** — 오프라인 백업 T7 Shield `D:/v100/kisti_backup_2026-07-14/kgy_{b2o3,lpsocl}_eos_2026-07-14/` 및 `D:/v100, kisti 백업/runs/modelC_v3/dos_pdos/`. 그 폴더에서 occupations='fixed' 인 *.in/*.out 쌍이 확인되면 이 항목이 닫힌다. 인덱스: kb/methodology/offline_archive_index_2026_08_20.md ⚠ 아직 **위치만** 확인했고 파일 내용은 안 봤다."
   },
   {
    "system": "comp2",
