@@ -3201,11 +3201,11 @@ def dashboard_highlights() -> list:
     gm = canonical_comparable("gap_eV", "gap-fixedocc-eigenvalue-v1")
     g = sorted(((v, cid) for cid, v in gm.items() if v is not None), reverse=True)
     if g:
-        hi.append({"t": "Band gap", "v": f"{L.get(g[0][1], g[0][1])} {g[0][0]} eV",
+        hi.append({"d": "2026-08-07", "t": "Band gap", "v": f"{L.get(g[0][1], g[0][1])} {g[0][0]} eV",
                    "n": f"+O(LPSOCl)가 전자 절연 최강 · **fixed-occ nscf 고유값 {len(gm)}종 안에서의 순위**다. "
                         "comp2(2.04)는 legacy DOS-문턱 판독이라 같은 축에 안 올린다 "
                         "— DOS 문턱은 ~0.3 eV 과소평가한다."})
-    hi.append({"t": "P–S 골격 vs Li–X 이온", "v": "ICOHP −6.0 ≫ −2.1 eV",
+    hi.append({"d": "2026-07-16", "t": "P–S 골격 vs Li–X 이온", "v": "ICOHP −6.0 ≫ −2.1 eV",
                "n": "강한 공유 골격 + 약한 이온결합 · comp2 Li–Br(−1.93)이 Li–Cl(−2.11)보다 약해 "
                     "격자 연화(E_VRH 22.06→20.03, B_VRH −18.2%) — 단 Pugh B/G는 3.14→2.79로 오히려 "
                     "감소라 '연성 이득'은 아님"})
@@ -3232,7 +3232,7 @@ def dashboard_highlights() -> list:
         head = ("구분 안 됨: " + " ≈ ".join(_fmt(c) for c in [lo[1]] + tied)
                 if tied else f"{_fmt(lo[1])} 최저")
         hi.append({
-            "t": "이온 전도 Ea (UMA) — **멀티시드 묶음 안에서만 비교**",
+            "d": "2026-08-07", "t": "이온 전도 Ea (UMA) — **멀티시드 묶음 안에서만 비교**",
             "v": head,
             "n": " · ".join(_fmt(c) for _, c in rows)
                  + ". ★ 이 카드는 **같은 시드 프로토콜(md-ea-multiseed-v1)** 만 세운다 — "
@@ -3250,7 +3250,7 @@ def dashboard_highlights() -> list:
     # 대시보드에 올리는 이유: 며칠짜리 DFT+U 를 멈춘 판단이고, 그 근거가 두 숫자(2.53 Å, 9 meV)로
     # 끝나기 때문이다. ⚠ UMA 값이다. 절대 E_ads 인용 금지 — 순위·차이만.
     # 상세: kb/projects/sdcp_phaseB_direction_2026_08_06.md
-    hi.append({"t": "SDCP × LiNiO₂(104) — ★ **doped 는 Li 를 뽑고 neutral 은 안 뽑는다**",
+    hi.append({"d": "2026-08-06", "t": "SDCP × LiNiO₂(104) — ★ **doped 는 Li 를 뽑고 neutral 은 안 뽑는다**",
                "v": "Li 변위 2.37 Å vs 0.46 Å (층간격 2.09)",
                "n": "표면 최상단 층을 풀어(freeze_frac 0.85) 216 자세를 재스캔한 결과, 질문 자체가 바뀌었다. "
                     "**doped 상위 4개가 전부 Li 추출** — Li 가 2.37 Å(층간격 2.09 Å 를 넘어 표면 밖) "
@@ -3287,7 +3287,7 @@ def dashboard_highlights() -> list:
     #   넓은갭 절연체에서 30–50% 과소 — 실험값과 나란히 놓지 말고 **순위**로만 쓴다.
     # ⚠ Nd 계 3종은 4f 를 원자가에 넣은 PBE 라 갭이 −0.02 eV 로 닫힌다. 이건 물리가 아니라
     #   방법의 한계다(진단용). Nd 상의 갭은 MP 의 frozen-4f 값을 인용한다.
-    hi.append({"t": "SEI 분해상 밴드갭 — **전자 절연의 약한 고리는 Li₃P**",
+    hi.append({"d": "2026-08-11", "t": "SEI 분해상 밴드갭 — **전자 절연의 약한 고리는 Li₃P**",
                "v": "LiCl 6.26 ▸ Li₃PO₄ 5.91/5.82 ▸ Li₂O 4.99 ▸ Li₂S 3.44 ▸ **Li₃P 0.71 eV**",
                "n": "협업 요청(Li₂O·Li₃PO₄·LiNdO₂·LiCl·Li₂S·Li₃P) 중 갭 축을 gabia 에서 완주했다 "
                     "(9종 × 6단계, 8/9 완주 · licl 은 DOS k-mesh 단계만 재실행 대기). "
@@ -3307,7 +3307,7 @@ def dashboard_highlights() -> list:
                     "화학계를 넘나드는 비교에 못 쓰인다는 게 확인돼 **NEB 3종**(Li₂S·Li₃P·Li₃PO₄)으로 간다. "
                     "상세: kb/projects/sei_products_2026_08_06.md"})
     # 파이프라인 체급 — 발표에서 제일 자주 받는 질문("문헌은 10만종인데 우리는 47종?")의 답.
-    hi.append({"t": "우리 체급 — **문헌의 10만 종은 계산이 아니라 조회다**",
+    hi.append({"d": "2026-08-13", "t": "우리 체급 — **문헌의 10만 종은 계산이 아니라 조회다**",
                "v": "비싼 계산이 돈 대상: Xiao **6/104,082** · 우리 **47/47**",
                "n": "Sendek(12,831→317→21)도 Xiao(104,082→…→66→3)도 출발 풀의 물성은 "
                     "**MP·ICSD 에서 소환**한 값이라 한 종을 더 보는 한계비용이 ≈0 이다. "
@@ -3329,20 +3329,20 @@ def dashboard_highlights() -> list:
     #   그 1위는 2026-06-29 취합 경계의 **역사 47종 스냅샷** 값이고, 승인된 current
     #   ranking 은 0종이다. 이름을 지우지는 않되(다음 계산 대상 선정에 쓰인다) 지위를 박는다.
     if top:
-        hi.append({"t": "도핑 스크리닝 — 승인된 current ranking 0종",
+        hi.append({"d": "2026-08-14", "t": "도핑 스크리닝 — 승인된 current ranking 0종",
                    "v": f"역사 47종 스냅샷 1위: {top['dopant']} ⚠ superseded",
                    "n": ("2026-06-29 취합 경계의 순위다 — 완주분은 90종이고 재랭킹은 게이트 정의"
                          "(G3 효과 귀속 0/17 · G4 순환 · G5 로스터 상대)가 닫힌 뒤에 한다. "
                          "DFT 심층검증은 Nd₂O₃·B₂O₃ 2건뿐 · UMA 절대값은 상대비교 전용")})
     # ⚠ hBN은 db가 수치 인용을 금지한 값 — 경로 전체 폭 7 meV < 이미지당 힘오차 46 meV/Å
     #   (vgcf_hbn_neb.json: "Report as '< 0.01 eV, effectively barrierless'"). 2L2L은 층수 미수렴 상한.
-    hi.append({"t": "VGCF/hBN Li 확산 (CI-NEB) — 기전 판정 완료",
+    hi.append({"d": "2026-07-30", "t": "VGCF/hBN Li 확산 (CI-NEB) — 기전 판정 완료",
                "v": "gallery 2L2L 0.147 eV · 209 meV 는 **confinement** (2026-07-30)",
                "n": "같은 그래핀 1L→2L 이 자유 표면에선 +12 meV(허용오차 ~20 안 = 0), "
                     "갤러리 안에선 −207 meV → 벽 두께는 **갇힌 Li 에만** 작동한다. "
                     "hBN(<0.01)은 수치 분해능 이하 · 3L 미측정이라 0.147 은 '수렴값' 아닌 **2L 값**"})
     # comp2 disorder ensemble — ⚠ 단일 config Ea/σ 수치 인용 금지(멀티 config 판정 전, 데이터 규율)
-    hi.append({"t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
+    hi.append({"d": "2026-08-01", "t": "comp2 disorder ensemble", "v": "d=0.50 anneal+relax 파이프라인 가동",
                "n": "cfg0 3온도 완료 · 멀티 config 판정 대기"})
 
     # ── 2026-08-19~20 MLIP 검증 축 ────────────────────────────────────────────
@@ -3354,7 +3354,7 @@ def dashboard_highlights() -> list:
         f = bench["results"]["forces"]
         li = f.get("per_element", {}).get("Li", {})
         hi.append({
-            "t": "UMA 힘 정확도 — **범용이 전용을 이겼다**",
+            "d": "2026-08-19", "t": "UMA 힘 정확도 — **범용이 전용을 이겼다**",
             "v": f"{f['MAE_eV_per_A']*1000:.1f} meV/Å"
                  + (f"  ·  Li {li['MAE']*1000:.1f}" if li else ""),
             "n": "vs 같은 test set: bespoke **35.6** · LoRA 39.2 · PET-MAD 63.9. "
@@ -3365,7 +3365,7 @@ def dashboard_highlights() -> list:
     scout = _load_json(DB / "properties" / "sei_neb_uma_scout.json")
     if scout and scout.get("runs"):
         hi.append({
-            "t": "NEB 셀 크기 — **작은 셀이 장벽을 부풀린다**",
+            "d": "2026-08-20", "t": "NEB 셀 크기 — **작은 셀이 장벽을 부풀린다**",
             "v": "1×1×1 → 2×2×2 에서 **1.3–3.3배 하락**",
             "n": "6홉 / 4화합물, **예외 0**. li3p 0.287→**0.088** · li2o 0.648→**0.270** · "
                  "licl 0.686→**0.491** · li3po4g 0.666→**0.463**.\n"
@@ -3374,7 +3374,7 @@ def dashboard_highlights() -> list:
                  "⚠ UMA 값 — **장벽 절대값 인용 금지**, 셀 의존성만."})
 
     hi.append({
-        "t": "⚠ 상자 크기가 **D 를 1.65배 움직인다** (LPSOCl 600 K)",
+        "d": "2026-08-18", "t": "⚠ 상자 크기가 **D 를 1.65배 움직인다** (LPSOCl 600 K)",
         "v": "MSD@50ps  25.3 → **41.7 Å²**",
         "n": "3×3×1(558원자·3시드)로 확대. 곡선 **모양**(β)은 그대로인데 **기울기**만 1.64±0.14배.\n"
              "⇒ **D 절대값은 상자 크기에 묶여 있다.** 조성 간 비교도 같은 상자에서만.\n"
@@ -3383,7 +3383,7 @@ def dashboard_highlights() -> list:
              "🔎 초판의 \"상자는 β 의 원인이 아니다\"는 **과주장**이라 교차리뷰로 강도를 낮췄다."})
 
     hi.append({
-        "t": "⚠ 챔피언 점수 = **후보를 몇 개 뽑았느냐**",
+        "d": "2026-08-18", "t": "⚠ 챔피언 점수 = **후보를 몇 개 뽑았느냐**",
         "v": "종별 후보 수 **15 ~ 150** (10배)",
         "n": "후보 수 ↔ 챔피언 score **r = +0.321** · 후보 수 ↔ 중앙값 score r = −0.212.\n"
              "많이 뽑힌 종이 최댓값도 높다 = **best-of-N 인공물**. 그리고 후보 수는 "
@@ -3391,7 +3391,7 @@ def dashboard_highlights() -> list:
              "⛔ 세미나의 \"이건 원소 순위가 아니다\"는 **경고가 아니라 차단 사유**다."})
 
     hi.append({
-        "t": "⚠ b2o3 아레니우스 — **판정 보류**",
+        "d": "2026-08-20", "t": "⚠ b2o3 아레니우스 — **판정 보류**",
         "v": "800 K β 0.59 · 1000 K β 0.63",
         "n": "같은 온도 modelc 는 **0.03 / 0.08**. 비-Li MSD 기울기 β (진동 ≈0 · 이동 →1).\n"
              "modelc 5온도·LPSOCl 10런은 **전부 정상**, b2o3 만 크다 (S 41·Cl 16 = 소표본 아님).\n"
@@ -3399,6 +3399,11 @@ def dashboard_highlights() -> list:
              "600 K 도 시드마다 갈린다.\n"
              "⇒ `Ea 0.199±0.034` · \"+B₂O₃ 1등\" 은 codex 교차검증까지 보류."})
 
+    # ── 최신순 정렬 (1저자 요청 2026-08-20) ────────────────────────────────
+    #   대시보드는 훑는 화면이라 **새로 안 것이 위**에 있어야 한다. 날짜가 없는 카드는
+    #   맨 뒤로 보내되 서로의 상대 순서는 유지한다(안정 정렬) — 임의로 섞이면
+    #   "왜 이 순서지" 를 매번 다시 물어야 한다.
+    hi.sort(key=lambda c: c.get("d") or "", reverse=True)
     return hi
 
 # ─────────────────────────────────────────────────────────────

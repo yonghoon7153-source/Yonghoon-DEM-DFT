@@ -18,7 +18,10 @@
 <div class="card find-card">
   {# ⚠ 카드 본문은 db/JSON·data.py 에서 오는 **마크다운 섞인 평문**이다. 그냥 찍으면
      별표가 그대로 보인다(2026-08-07 1저자 신고). mdlite = escape 후 **굵게**·`코드`만 승격. #}
-  <div class="fc-t">{{ h.t|mdlite }}</div>
+  {# 날짜 배지 (2026-08-20) — 카드가 **최신순**으로 정렬되므로 언제 것인지 보여야
+     "위에 있는 게 왜 위인지" 가 설명된다. 날짜 없는 옛 카드는 배지 없이 뒤에 붙는다. #}
+  <div class="fc-t">{{ h.t|mdlite }}{% if h.d %}<span class="badge"
+       style="margin-left:6px;color:#475569;background:#f1f5f9;font-weight:400">{{ h.d[5:] }}</span>{% endif %}</div>
   <div class="fc-v">{{ h.v|mdlite }}</div>
   <div class="fc-n">{{ h.n|mdlite }}</div>
 </div>
