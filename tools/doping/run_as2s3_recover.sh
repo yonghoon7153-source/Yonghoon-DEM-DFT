@@ -64,8 +64,8 @@ flock -n 9 || { echo "[$(ts)] 이미 도는 중이다 — 중단"; exit 0; }
 
 # 착수 전 사전 검사 — 이걸 통과 못 하면 돌려봐야 0개다
 echo "[$(ts)] 전하 중성 사전 검사"
-python3 tools/doping/check_valence_coverage.py --compounds As2S3 --verbose || {
-    echo "[$(ts)] ⛔ As2S3 가 중성 불가 — ALTERNATIVE_VALENCES 를 먼저 고칠 것"; exit 1; }
+python3 tools/doping/check_valence_coverage.py --compounds ${COMPOUNDS:-As2S3} --verbose || {
+    echo "[$(ts)] ⛔ 중성 불가한 화합물이 있다 — ALTERNATIVE_VALENCES 를 먼저 고칠 것"; exit 1; }
 
 # ⛔ 2026-08-21 실측: (base) 에서 돌려 stage-00 preflight 가
 #   "fairchem import failed: No module named 'fairchem'" 로 즉사했다.
@@ -91,16 +91,21 @@ fi
 BASE=db/structures/lpscl_F43m_24G_canonical.cif
 [ -f "$BASE" ] || { echo "[$(ts)] 기준 구조 없음: $BASE"; exit 1; }
 
+# ⭐ 2026-08-21 — 화합물을 목록으로 받는다. As2S3 는 전하 사전 누락이었고,
+#   AlI3 는 **전하는 멀쩡한데**(Al +3 · 3I −1 = 0) 1등 행의 탄성·EOS·BVS 가 없다.
+#   둘 다 같은 파이프라인을 다시 태우면 채워진다 — 하드코딩할 이유가 없다.
+#     COMPOUNDS="As2S3 AlI3" bash tools/doping/run_as2s3_recover.sh
 RC_ALL=0
+for CMPD in ${COMPOUNDS:-As2S3}; do
 for X in 0.02 0.05 0.10; do
     TAG=$(printf 'x%03d' "$(python3 -c "print(int(round($X*1000)))")")
-    OUT=$OUTROOT/As2S3_$TAG
+    OUT=$OUTROOT/${CMPD}_$TAG
     if [ -f "$OUT/FINAL_RANKING.json" ]; then
-        echo "[$(ts)] As2S3 $TAG: 이미 완료 — 건너뜀"; continue
+        echo "[$(ts)] $CMPD $TAG: 이미 완료 — 건너뜀"; continue
     fi
     mkdir -p "$OUT"
-    echo "[$(ts)] As2S3 $TAG 착수 → $OUT"
-    timeout 86400 env COMPOUND_FILTER=As2S3 X_COMPOUND="$X" \
+    echo "[$(ts)] $CMPD $TAG 착수 → $OUT"
+    timeout 86400 env COMPOUND_FILTER="$CMPD" X_COMPOUND="$X" \
         bash tools/doping/tier_cascade.sh "$BASE" "$OUT" 5 1,1,1 0
     rc=$?
     N=$(python3 - "$OUT" <<'PY' 2>/dev/null || echo "?"
@@ -109,7 +114,7 @@ p = pathlib.Path(sys.argv[1]) / "01_structures" / "structures_summary.json"
 print(len(json.loads(p.read_text()).get("structures", [])) if p.exists() else 0)
 PY
 )
-    echo "[$(ts)] As2S3 $TAG 끝 (rc=$rc) · 생성 구조 $N 개"
+    echo "[$(ts)] $CMPD $TAG 끝 (rc=$rc) · 생성 구조 $N 개"
     # ⚠ 0개의 사유를 지어내지 않는다. **어느 단계에서 죽었는지** 먼저 본다.
     #   (첫 판은 preflight 실패인데도 "자리 반지름 필터나 시드 실패" 라고 찍어 오도했다.)
     if [ "$N" = "0" ]; then
@@ -134,6 +139,7 @@ PYX
     [ "$rc" -ne 0 ] && RC_ALL=1
 done
 
-echo "[$(ts)] 끝. 산출: $OUTROOT/As2S3_x0*/"
+done
+echo "[$(ts)] 끝. 산출: $OUTROOT/{${COMPOUNDS:-As2S3}}_x0*/"
 echo "  ⚠ 정본 표(cascade_v23_*.csv)는 **자동으로 안 고친다.** 결과를 붙여주면 판정한다."
 exit $RC_ALL
