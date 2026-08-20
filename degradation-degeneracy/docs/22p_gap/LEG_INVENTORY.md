@@ -531,3 +531,96 @@ python -m src.halfcell --method ocpbias --pe-offset-mv 5 --verify
 
 `--force` 는 캐시를 덮어쓰지만 기존 다리는 안전하다 — 각 다리가 자기 캐시
 바이트를 `_inputs/` 에 content-addressed 로 봉인해 두었다 (F72).
+
+---
+
+# 4차 갱신 (2026-08-20) — §14 warm-start 가설: **기각**
+
+`--no-warm-start` 로 404 의 대조·5 mV 두 다리를 재실행했다 (각 640조건, 3분).
+판정 기준은 §16 에 **실행 전에** 표로 못박아 두었다.
+
+## 17. 결과
+
+| 다리 | warm | 원점 `p_ini` (dqdv) | 거짓 분리 | ①' 격차 bias |
+|---|---|---|---|---|
+| `fit_22p_seed_404_hc` (대조) | True | `[1.5185, −0.4219, 1.0633, −0.0602]` | 0/8 | −0.53%p |
+| **`fit_22p_seed_404_hc_nowarm`** | **False** | `[1.5097, −0.418, **1.0872**, −0.0842]` | **7/8** | **−5.42%p** |
+| `fit_seed404_pe5mv` (5 mV) | True | `[1.5206, −0.4318, 1.0665, −0.0634]` | 5/8 | +1.25%p |
+| **`fit_seed404_pe5mv_nowarm`** | **False** | `[1.5206, −0.4318, 1.0665, −0.0634]` | 6/8 | −2.52%p |
+| `fit_seed202_pe5mv` (대조군) | True | `[1.5032, −0.4203, 1.0693, −0.0661]` | 0/8 | −0.08%p |
+| `fit_seed505_pe5mv` (대조군) | True | `[1.5032, −0.4203, 1.0693, −0.0661]` | 0/8 | −0.15%p |
+
+## 18. 판정 — 사전 기준 대조
+
+| 사전 기준 | 충족? | 실측 |
+|---|---|---|
+| nowarm 5 mV 원점이 `a_pe ≈ 1.5032` 로 오고 붕괴 0/8 → **가설 지지** | **아니오** | 원점이 `1.5206` 으로 **소수점 4자리까지 동일**, 붕괴 6/8 |
+| nowarm 5 mV 도 `a_pe ≈ 1.52`, 붕괴 5/8 근방 → **가설 기각** | **예** | 정확히 이 경우다 |
+| 대조의 `pocv_dvdq` 원점이 1.0273 → 1.06 대로 이동 | **아니오** | warm·nowarm 모두 `1.0273` 그대로 |
+| 대조도 크게 흔들린다 → 격자 수준 불안정 | **예 (크게)** | 0/8 → **7/8**, bias −0.53 → **−5.42%p** |
+
+**§14 가설 기각.** warm start 는 404 를 이상 국소해로 끌지 않았다 —
+왜곡 다리의 원점은 warm 여부와 **무관하게 같다**. 404 의 `pocv_dvdq` 원점 오염
+(1.0273)도 warm 산물이 아니라 **그 격자 pristine 조건 fit 자체의 성질**이다.
+
+## 19. 대신 나온 것 — 무왜곡 대조가 warm 을 끄면 무너진다
+
+가설을 기각한 실험이 더 큰 것을 냈다. **왜곡이 0 인 대조 다리**가
+`--no-warm-start` 에서 0/8 → **7/8** 로 무너지고 격차 bias 가 −0.53 → **−5.42%p**
+로 열 배가 됐다. 원점의 `a_ne` 도 1.0633 → **1.0872** 로 건강 범위(1.058~1.069)
+밖으로 나갔다.
+
+즉 이 셋업에서 **warm-start 연쇄가 결과를 떠받치고 있다.** 그것을 끄면 왜곡
+없이도 두 전극이 갈린다.
+
+이것이 중요한 이유:
+
+1. **리뷰 발견 3 의 범위가 넓어진다.** 예산 축(restart)만이 아니라 **warm-start
+   연쇄 자체**가 결론을 좌우하는 자유도다. 처방 설계에 반드시 들어가야 한다.
+2. **`paired_fixed5_v4` 는 `warm_start=False` 다** (manifest 실측). §20.4 의 정본
+   비교가 바로 이 regime 에서 나왔다는 뜻이다. 두 regime 의 차이가 이만큼
+   크다면 그 정본의 해석도 다시 봐야 한다.
+3. 원점 의존성은 **목적함수마다 다르다**: `pocv_dvdq` 원점은 warm·nowarm 이
+   같고(대조 1.0273 / 5 mV 1.0624), 움직인 것은 `pocv_dvdq_dqdv` 뿐이며 그것도
+   대조에서만이다. F26b 의 "연쇄된 `_fit_one` 한 번" 구조와 일치한다.
+
+## 20. adaptive 조기 종료가 실제로 작동한다 — 발견 3 직접 확인
+
+두 실행 모두 `--n-restarts 5` 를 줬는데 `restart_conditioned` 는 이렇게 나왔다:
+
+```
+대조 nowarm : n_restarts=2 → n=223,  n_restarts=5 → n=1057
+5 mV nowarm : n_restarts=2 → n=200,  n_restarts=5 → n=1080
+```
+
+**약 17% 의 행이 2회에서 멈췄다.** 리뷰 발견 3 의 "`--n-restarts 20` 이라고 써도
+각 행이 고정 20회를 수행한다는 보장이 없다" 가 실측으로 확인됐다. 따라서
+§7 의 "전부 restart 5" 도 정확히는 **"restart 예산 5 로 지시했다"** 이지
+"각 행이 5회를 돌았다" 가 아니다. 단계 B 의 예산 분리에 `--no-adaptive` 가
+반드시 포함돼야 한다.
+
+## 21. 한계 — 대조 비교는 digest 두 개를 건넌다
+
+| 비교 | digest 구간 | 그 사이 RUN_SCOPE 변경 | 판정 |
+|---|---|---|---|
+| 5 mV warm vs nowarm | `d842894` → `a72c0f3a` | `fitting.py` +9 (p_ini_cond 봉인) + 새 진단 도구 | **깨끗** — 수치 경로 불변 |
+| 대조 warm vs nowarm | `7250c6e6` → `a72c0f3a` | `fitting.py` +98, `halfcell.py` +144 (ocpbias 배선·stretch) | **주의** |
+
+두 번째 구간의 변경은 전부 ocpbias 경로 추가이고, 무왜곡 `ocp` 캐시는 배열이
+**비트 단위로 동일**함을 `--verify` 로 확인했다 (`재생성_배열일치: true`).
+그래도 fit 경로 전체가 수치적으로 동일하다는 것을 증명하지는 않았다.
+
+→ **§19 를 확정하려면 대조를 현재 digest 에서 `warm=True` 로 한 번 더 돌려야
+한다** (3분). 그것이 0/8 을 재현하면 7/8 은 warm 때문이고, 아니면 digest 차이가
+섞인 것이다. 명령:
+
+```bash
+./run.sh --mode fit --in results/grid_22p_seed_404 \
+  --out results/fit_22p_seed_404_hc_warm_now --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --reference halfcell --bounds halfcell
+./run.sh --mode score --in results/fit_22p_seed_404_hc_warm_now
+python3 tools/diagnose_pini_transition.py --objective pocv_dvdq_dqdv --legs \
+  results/fit_22p_seed_404_hc results/fit_22p_seed_404_hc_nowarm \
+  results/fit_22p_seed_404_hc_warm_now
+```
