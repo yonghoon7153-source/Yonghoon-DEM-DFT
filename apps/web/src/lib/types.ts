@@ -1,0 +1,286 @@
+/** Mirrors of the API response shapes.  Keep in sync with apps/api/app/schemas.py. */
+
+export type Basis = 'mAh' | 'mAh/g' | 'mAh/cm2' | 'mAh/cm3' | '%'
+export type CellState = 'running' | 'finished' | 'unknown'
+export type DeclaredState = 'auto' | 'running' | 'finished'
+export type Branch = 'charge' | 'discharge'
+
+export interface ResolvedCell {
+  active_mass_g: number | null
+  area_cm2: number | null
+  volume_cm3: number | null
+  loading_mg_cm2: number | null
+  nominal_capacity_mah: number | null
+  nominal_specific_capacity_mah_g: number | null
+  available_bases: Basis[]
+  unavailable: Record<string, string>
+  notes: Record<string, string>
+}
+
+export interface Group {
+  id: number
+  name: string
+  description: string
+  color: string
+  created_at: string
+  updated_at: string
+  sample_count: number
+  run_count: number
+}
+
+export interface Sample {
+  id: number
+  name: string
+  group_id: number | null
+  group_name: string | null
+  test_date: string | null
+  cathode_type: string
+  cathode_detail: string
+  anode: string
+  electrolyte: string
+  process: string
+  notes: string
+  total_mass_mg: number | null
+  current_collector_mass_mg: number | null
+  active_wt_percent: number | null
+  active_mass_mg: number | null
+  area_cm2: number | null
+  diameter_mm: number | null
+  thickness_um: number | null
+  nominal_specific_capacity_mah_g: number | null
+  temperature_c: number | null
+  pressure_mpa: number | null
+  cutoff_upper_v: number | null
+  cutoff_lower_v: number | null
+  c_rate: number | null
+  c_rate_formation: number | null
+  reference_cycle: number
+  declared_state: DeclaredState
+  created_at: string
+  updated_at: string
+  run_count: number
+  cycle_count: number
+  resolved_cell: ResolvedCell
+}
+
+export interface ScheduleStep {
+  index: number
+  name: string
+  control: string
+  direction: 'charge' | 'discharge' | 'rest' | 'unknown'
+  current_a: number | null
+  voltage_limit_v: number | null
+  taper_current_a: number | null
+  loop_count: number
+  loop_target: string | null
+  sampling_interval_s: number | null
+  cutoffs: { kind: string; condition: string; value: number; seconds: number; text: string }[]
+  text: string
+}
+
+export interface Schedule {
+  source_path?: string | null
+  upper_cutoff_v?: number | null
+  lower_cutoff_v?: number | null
+  planned_cycles?: number | null
+  c_rate?: number | null
+  cycling_current_a?: number | null
+  formation_current_a?: number | null
+  nominal_capacity_mah?: number | null
+  sampling_interval_s?: number | null
+  steps?: ScheduleStep[]
+}
+
+export interface Run {
+  id: number
+  sample_id: number | null
+  sample_name: string | null
+  original_name: string
+  sha256: string
+  size_bytes: number
+  uploaded_at: string
+  device_model: string
+  serial_no: string
+  channel: number | null
+  app_version: string
+  firmware_version: string
+  start_time: string | null
+  end_time: string | null
+  row_count: number
+  cycle_count: number
+  complete_cycle_count: number
+  unit_coulomb: boolean
+  data_format: number
+  instrument_path: string
+  schedule_path: string
+  cycle_offset: number
+  cycle_offset_source: 'auto' | 'manual'
+  parse_error: string
+  schedule: Schedule
+}
+
+export interface Cycle {
+  cycle: number
+  cycle_index: number
+  run_id: number
+  charge_capacity: number | null
+  discharge_capacity: number | null
+  charge_capacity_mah: number
+  discharge_capacity_mah: number
+  coulombic_efficiency: number | null
+  energy_efficiency: number | null
+  charge_energy_mwh: number
+  discharge_energy_mwh: number
+  mean_charge_voltage: number | null
+  mean_discharge_voltage: number | null
+  voltage_hysteresis: number | null
+  voltage_max: number | null
+  voltage_min: number | null
+  retention_pct: number | null
+  c_rate: number | null
+  temperature_mean: number | null
+  duration_h: number
+  n_points: number
+  complete: boolean
+}
+
+export interface CycleTable {
+  basis: Basis
+  basis_label: string
+  requested_basis: Basis
+  basis_fallback_reason: string | null
+  reference_cycle: number | null
+  resolved_cell: ResolvedCell
+  cycles: Cycle[]
+}
+
+export interface ProfileSeries {
+  cycle: number
+  branch: Branch
+  basis: Basis
+  points: number
+  capacity: number[]
+  voltage: number[]
+  run_id: number
+  label: string
+}
+
+export interface ProfileResponse {
+  basis: Basis
+  basis_label: string
+  requested_basis: Basis
+  resolved_cell: ResolvedCell
+  series: ProfileSeries[]
+}
+
+export interface KneeResult {
+  method: 'threshold' | 'segmented' | 'slope_ratio' | 'curvature' | 'none'
+  cycle: number | null
+  detected: boolean
+  reason: string
+  detail: Record<string, number>
+}
+
+export interface KneeAnalysis {
+  primary: KneeResult
+  results: KneeResult[]
+  reference_cycle: number
+  reference_capacity_mah: number | null
+  search_start_cycle: number
+  n_points: number
+  fade_rate_early_pct_per_cycle: number | null
+  fade_rate_late_pct_per_cycle: number | null
+  projected_cycle_at_80pct: number | null
+}
+
+export interface CycleReadout {
+  cycle: number
+  discharge_capacity: number | null
+  charge_capacity: number | null
+  discharge_capacity_mah: number
+  charge_capacity_mah: number
+  coulombic_efficiency: number | null
+  energy_efficiency: number | null
+  mean_discharge_voltage: number | null
+  complete: boolean
+}
+
+export interface Report {
+  sample_id: number
+  sample_name: string
+  state: CellState
+  state_confidence: 'high' | 'medium' | 'low'
+  state_summary: string
+  evidence: { signal: string; detail: string; points_to: string }[]
+  cycles_observed: number
+  cycles_complete: number
+  planned_cycles: number | null
+  in_progress_cycle: number | null
+  reference_cycle_requested: number
+  reference_available: boolean
+  retention_pct: number | null
+  retention_note: string
+  basis: Basis
+  basis_label: string
+  reported: CycleReadout | null
+  reference: CycleReadout | null
+  first_cycle: CycleReadout | null
+  knee: KneeAnalysis | null
+  resolved_cell: ResolvedCell
+}
+
+export interface DashboardRow {
+  sample_id: number
+  sample_name: string
+  group_id: number | null
+  cathode_type: string
+  c_rate: number | null
+  temperature_c: number | null
+  test_date: string | null
+  state: CellState
+  state_confidence: string
+  in_progress_cycle: number | null
+  cycles_complete: number
+  reported_cycle: number | null
+  discharge_capacity: number | null
+  discharge_capacity_mah: number | null
+  retention_pct: number | null
+  reference_cycle: number | null
+  reference_available: boolean
+  initial_coulombic_efficiency: number | null
+  knee_cycle: number | null
+  knee_method: string | null
+  basis: Basis
+  loading_mg_cm2: number | null
+}
+
+export interface CompareSeries {
+  sample_id: number
+  sample_name: string
+  group_id: number | null
+  cathode_type: string
+  c_rate: number | null
+  temperature_c: number | null
+  basis: string
+  points: { cycle: number; value: number }[]
+}
+
+export interface CompareResponse {
+  metric: string
+  metric_label: string
+  basis: Basis
+  y_label: string
+  series: CompareSeries[]
+}
+
+export interface Facets {
+  cathode_type: string[]
+  cathode_detail: string[]
+  process: string[]
+  electrolyte: string[]
+  anode: string[]
+  c_rate: number[]
+  temperature_c: number[]
+  test_date: string[]
+  bases: Basis[]
+}

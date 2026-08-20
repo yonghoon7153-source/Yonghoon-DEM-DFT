@@ -102,11 +102,40 @@ def _readout(cycle: CycleSummary) -> CycleReadout:
     )
 
 
+#: How strongly each observation argues for a state.  These are not votes of
+#: equal weight: a file that ends mid-cycle is only weak evidence of a live
+#: cell, because Smart Interface splits long runs into ``_011``, ``_012`` ...
+#: and every one of those ends mid-cycle too.  A long silence, by contrast, is
+#: decisive -- nothing is running if nothing has been logged in days.
+_WEIGHTS = {
+    "schedule_end": 3.0,
+    "planned_reached": 3.0,
+    "recency_stale": 3.0,
+    "recency_fresh": 2.5,
+    "partial_cycle": 1.0,
+    "planned_incomplete": 0.5,
+}
+
+#: Silence beyond this multiple of a cycle time means the cell is not running.
+_STALE_CYCLE_MULTIPLE = 5.0
+#: Silence within this multiple means it almost certainly is.
+_FRESH_CYCLE_MULTIPLE = 2.0
+#: Fallback when cycle durations are unknown (a file with no complete cycle).
+_FRESH_HOURS = 6.0
+_STALE_HOURS = 48.0
+
+
 def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
               last_sample_time: datetime | None, now: datetime | None,
               schedule_finished: bool | None,
               declared_state: str | None) -> tuple[str, str, list[StateEvidence]]:
-    """Decide running vs finished, and say why."""
+    """Decide running vs finished, and say why.
+
+    Evidence is weighted rather than counted, and the margin between the two
+    sides sets the confidence.  When the signals genuinely disagree the state
+    is reported with low confidence rather than asserted -- the operator can
+    then pin it by hand.
+    """
     evidence: list[StateEvidence] = []
 
     if declared_state in (CellState.RUNNING, CellState.FINISHED):
@@ -115,57 +144,71 @@ def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
         return declared_state, "high", evidence
 
     complete = [c for c in cycles if c.complete]
+    scores = {CellState.RUNNING: 0.0, CellState.FINISHED: 0.0}
+
+    def note(signal: str, detail: str, points_to: str, weight: float) -> None:
+        evidence.append(StateEvidence(signal, detail, points_to))
+        scores[points_to] += weight
 
     if schedule_finished:
-        evidence.append(StateEvidence(
-            "schedule", "the record reaches the step after the cycling loop",
-            CellState.FINISHED))
+        note("schedule", "the record reaches the step after the cycling loop",
+             CellState.FINISHED, _WEIGHTS["schedule_end"])
     if planned_cycles and len(complete) >= planned_cycles:
-        evidence.append(StateEvidence(
-            "cycle count", f"{len(complete)} of {planned_cycles} planned cycles completed",
-            CellState.FINISHED))
-    if cycles and not cycles[-1].complete:
-        evidence.append(StateEvidence(
-            "partial cycle",
-            f"cycle {cycles[-1].cycle_number} is cut off mid-step",
-            CellState.RUNNING))
+        note("cycle count",
+             f"{len(complete)} of {planned_cycles} planned cycles completed",
+             CellState.FINISHED, _WEIGHTS["planned_reached"])
+
+    ends_mid_cycle = bool(cycles) and not cycles[-1].complete
+    if ends_mid_cycle:
+        note("partial cycle",
+             f"cycle {cycles[-1].cycle_number} is cut off mid-step",
+             CellState.RUNNING, _WEIGHTS["partial_cycle"])
     if planned_cycles and len(complete) < planned_cycles:
-        evidence.append(StateEvidence(
-            "cycle count",
-            f"only {len(complete)} of {planned_cycles} planned cycles are present",
-            CellState.RUNNING))
+        note("cycle count",
+             f"only {len(complete)} of {planned_cycles} planned cycles are present",
+             CellState.RUNNING, _WEIGHTS["planned_incomplete"])
 
     if last_sample_time and now:
         idle_hours = (now - last_sample_time).total_seconds() / 3600.0
         typical = _typical_cycle_hours(complete)
-        if typical and idle_hours < 2 * typical:
-            evidence.append(StateEvidence(
-                "recency",
-                f"last sample is {idle_hours:.1f} h old, under two cycle times "
-                f"({typical:.1f} h)",
-                CellState.RUNNING))
-        elif typical and idle_hours > 5 * typical:
-            evidence.append(StateEvidence(
-                "recency",
-                f"no data for {idle_hours:.1f} h, over five cycle times "
-                f"({typical:.1f} h)",
-                CellState.FINISHED))
+        fresh_limit = typical * _FRESH_CYCLE_MULTIPLE if typical else _FRESH_HOURS
+        stale_limit = typical * _STALE_CYCLE_MULTIPLE if typical else _STALE_HOURS
+        window = (f"two cycle times ({typical:.1f} h)" if typical
+                  else f"{_FRESH_HOURS:.0f} h")
+        if idle_hours < fresh_limit:
+            note("recency",
+                 f"last sample is {_hours(idle_hours)} old, under {window}",
+                 CellState.RUNNING, _WEIGHTS["recency_fresh"])
+        elif idle_hours > stale_limit:
+            detail = f"nothing logged for {_hours(idle_hours)}"
+            if ends_mid_cycle:
+                # The honest reading: this file stopped mid-cycle long ago, so
+                # either the test ended or it continued into a file nobody has
+                # uploaded.  Either way the cell is not running now.
+                detail += " even though the record ends mid-cycle - the test " \
+                          "stopped, or it continued in a file that is not here"
+            note("recency", detail, CellState.FINISHED, _WEIGHTS["recency_stale"])
 
-    finished_votes = sum(1 for e in evidence if e.points_to == CellState.FINISHED)
-    running_votes = sum(1 for e in evidence if e.points_to == CellState.RUNNING)
+    running, finished = scores[CellState.RUNNING], scores[CellState.FINISHED]
+    if not running and not finished:
+        evidence.append(StateEvidence(
+            "none", "the file carries no schedule and no partial cycle to judge by",
+            CellState.UNKNOWN))
+        return CellState.UNKNOWN, "low", evidence
 
-    if finished_votes and not running_votes:
-        return CellState.FINISHED, "high" if finished_votes > 1 else "medium", evidence
-    if running_votes and not finished_votes:
-        return CellState.RUNNING, "high" if running_votes > 1 else "medium", evidence
-    if finished_votes or running_votes:
-        state = CellState.FINISHED if finished_votes > running_votes else CellState.RUNNING
-        return state, "low", evidence
+    state = CellState.RUNNING if running > finished else CellState.FINISHED
+    margin = abs(running - finished)
+    confidence = "high" if margin >= 2.5 else "medium" if margin >= 1.0 else "low"
+    return state, confidence, evidence
 
-    evidence.append(StateEvidence(
-        "none", "the file carries no schedule and no partial cycle to judge by",
-        CellState.UNKNOWN))
-    return CellState.UNKNOWN, "low", evidence
+
+def _hours(value: float) -> str:
+    """A duration a human reads at a glance."""
+    if value < 48:
+        return f"{value:.1f} h"
+    if value < 24 * 60:
+        return f"{value / 24:.1f} days"
+    return f"{value / 24 / 30.44:.1f} months"
 
 
 def _typical_cycle_hours(cycles: list[CycleSummary]) -> float | None:
@@ -263,7 +306,12 @@ def _summarize(report: CellReport) -> str:
         else:
             parts.append("running")
     elif report.state == CellState.FINISHED:
-        parts.append(f"finished after {report.cycles_complete} cycles")
+        if report.in_progress_cycle:
+            parts.append(
+                f"not running; the record stops during cycle "
+                f"{report.in_progress_cycle} with {report.cycles_complete} complete")
+        else:
+            parts.append(f"finished after {report.cycles_complete} cycles")
     else:
         parts.append(f"{report.cycles_complete} cycles recorded, state unclear")
 
