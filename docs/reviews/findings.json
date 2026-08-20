@@ -383,6 +383,73 @@
    ],
    "note": "vox 0.15 실측(전도 dof 26.5 M)에서 투영: VRAM ≈ 140 B/dof · 호스트 ≈ 415 B/dof.  vox 0.125 → 44.5 M dof (VRAM 6.2 · 호스트 20.9 GB) · 0.10 → 85 M dof (11.9 · **40.0 GB**) · 0.075 → 198 M dof (27.7 · 93.1 GB, **양쪽 OOM**).  ⚠ prereg §3 의 \"87M 셀 ≈ 12.8 GB → RTX 3090 24 GB 에 들어간다\" 는 **CPU 조립 수치를 VRAM 예산으로 읽은 것**이고, 이 혼동은 vox 0.10 에서 정확히 반대로 배신한다 (VRAM 은 넉넉한데 호스트가 40 GB).  무너지는 순서: solve_reaction_current(2×dof, LEAN=1 로 회피) → 호스트 조립 RAM → CG 반복수 절벽(GPU 경로는 AMG 불가, 반복수 미기록) → VRAM.  ⇒ **GPU 전에 `VOXES=\"0.125 0.1\" sdcp_phase_ledger.sh` 로 실제 dof 를 먼저 잴 것** (CPU 수 분, 솔브 없음).\n\n── 2026-08-18 **실측 + 실제로 죽었다** ──\nSTEP 1(CPU 원장)의 dof 실측: vox 0.125 전도 **45.4 M** (투영 44.5 M, +2 %) · vox 0.10 **86.8 M** (투영 85 M, +2 %) ⇒ **투영 공식이 맞았다** (415 B/dof).\n★ 그리고 vox 0.125 스윕이 **정확히 예언대로 죽었다** — `p2_DBE_sph_a1` 이 `Killed`.  다만 무너진 자리는 전자계가 아니라 **이온계 조립**이었다: 전자 45.1 M dof 가 잡은 위에 이온 36.7 M dof 를 얹었고 가용 RAM 이 22 GB 였다.  ⇒ 무너지는 순서 목록에 **'이온계가 전자계 위에 얹힌다'** 를 추가한다.\n★ 대응 둘: ① `--no-ion`/`--no-pore`(LEAN=2)로 그 두 솔브를 아예 안 돈다 — vox ≤ 0.125 에서는 인용 금지 값이라 손실이 0 이다 (DR3-07).  ② STEP 4 의 RAM 게이트를 **추정이 아니라 dof 실측**으로 다시 세웠다 (0.125 → 22 GB · 0.10 → 40 GB 요구, 미달이면 시작 전에 멈춘다).",
    "claimed_fixed_sha": "b6092ace"
+  },
+  {
+   "id": "FA-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/fable_audit_code_20260820.md",
+   "claimed_fixed_sha": "4c735121",
+   "title": "`--fibre` 없는 모든 payload 런에서 STEP3 가 통째로 조용히 죽어 있었다 (2026-08-12~20)",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest (J-1, J-2 음성 대조)",
+    "scripts/check_method_discipline.py (규칙 J 상주)"
+   ],
+   "note": "`_kind_all` 이 `if getattr(a,\"fibre\",…)` 블록 안에서만 대입되는데 rasterize 호출은 무조건 읽는다 → UnboundLocalError → STEP3 blanket except 가 삼켜 payload 가 exit 0 으로 완주.  첨가제 없는(=`--add-recipe` 미사용) 킷은 `mpm_input_from_case.py:700` 이 `--phase/--fibre` 를 안 넣으므로 전부 해당.  σ_e·σ_ion·k·pore-τ·collector·step4_grid 가 **값이 틀리는 게 아니라 소실**됐다.  도입 `60bd849e`(08-12 07:14).  SR-01 8팔 캠페인은 `--fibre` 를 넘겨 무사 — 그래서 8일간 안 보였다.  pyflakes(check_undefined_names)는 조건부 바인딩을 원리적으로 못 봄(실측 통과 확인).  수정 = hoist + add_kind 도메인을 len(_fid_all) → len(se)."
+  },
+  {
+   "id": "FA-02",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/fable_audit_code_20260820.md",
+   "claimed_fixed_sha": "ac0937cf",
+   "title": "prereg 판정기의 고정-인자 게이트에 \"기록 없음\" 구멍 6필드 (h0 오판 실측 재현)",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest (㉒ ×6)"
+   ],
+   "note": "sigma_vgcf_S_cm·sigma_sdcp_S_cm·sdcp_sphere_d_um·backend·sdcp_yield_to_vgcf·sigma_ptfe_S_cm 는 고정-인자 루프에는 있지만(None skip) missing-게이트에도 _GEN_FIELDS 에도 없어, 양쪽 침대 8팔이 전부 기록 없는 세대면 HOLD 가 아니라 h0 를 냈다. 러너가 \"옛 팔은 OUTDIR= 로 이어 쓰라\" 고 안내하므로 권장 시나리오다.  H5 의 잔존."
+  },
+  {
+   "id": "FA-03",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/fable_audit_code_20260820.md",
+   "claimed_fixed_sha": "ac0937cf",
+   "title": "상별 부피 원장 러너의 SKIP 캐시가 BRIDGE_UM·SDCP_D 를 키에 안 넣는다 (H4 미전파 사본)",
+   "evidence_tests": [
+    "scripts/sdcp_phase_ledger.sh TAG 규칙 (기본값 = 옛 파일명 불변, 비기본 = _b###/_d###)"
+   ],
+   "note": "다른 브리지/직경으로 재실행하면 옛 원장이 새 라벨로 조용히 재사용된다.  현재까지 기본값만 써서 실해는 없으나 덫은 장전 상태였다.  보고서도 ledger 안의 bridge_um/sdcp_sphere_d_um 을 안 읽어 사후 게이트가 없었다."
+  },
+  {
+   "id": "FA-04",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/fable_audit_code_20260820.md",
+   "claimed_fixed_sha": "ac0937cf",
+   "title": "\"사본 일치는 selftest 가 대조한다\" 가 동어반복 — 오프라인 사본이 한 번도 검사된 적 없다",
+   "evidence_tests": [
+    "scripts/ml_design_structure.py --selftest (오프라인 사본 직접 대조 + 음성 대조)"
+   ],
+   "note": "derive_features 는 predictor_engine 이 import 되면 그것으로 위임하는데 검사는 원본 ↔ derive_features 를 비교했다 = 항등식.  사본을 _derive_features_offline 로 분리해 직접 대조."
+  },
+  {
+   "id": "FA-05",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/fable_audit_docs_20260820.md",
+   "claimed_fixed_sha": "4c735121",
+   "title": "철회값이 살아 있는 UI·덱 생성기·교육 문서로 새고 있었다 (26곳) — 정본성이 바깥으로 강제되지 않음",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --ban-sweep",
+    "scripts/check_review_findings.py --selftest (16~21, 음성 대조 포함)"
+   ],
+   "note": "claims.json 에 quotation_ban 등록부 신설 + 스윕 규칙.  뷰어 툴팁 5곳·eis.html 이 +52 %/+5.6 % 를 현행 사실로 안내하고 원고 문구까지 달고 있었고, 덱 생성기는 그냥 돌리면 철회값 발표자료를 재생산했다(→ fail-closed).  계기: 08-12 에 반증된 ~9.4 % 가 08-19 신규 문서에서 재주장됐고 독립 리뷰가 낡은 정본에 대조해 \"일치\" 로 통과시켰다."
   }
  ]
 }
