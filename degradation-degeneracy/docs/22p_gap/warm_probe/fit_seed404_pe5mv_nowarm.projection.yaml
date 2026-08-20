@@ -1,3 +1,4 @@
+projection_schema: 2
 leg_id: fit_seed404_pe5mv_nowarm
 projection_file: fit_seed404_pe5mv_nowarm.projection.csv.gz
 n_rows: 1280
@@ -9,7 +10,19 @@ by_objective_sha256:
   pocv_dvdq_dqdv:
     n_rows: 640
     sha256: 40b01cef320ce2529842c6c169ea1773600401307da248710ebddb79494fa60e
+restart_projection_file: fit_seed404_pe5mv_nowarm.restarts.csv.gz
+restart_projection_sha256: 6ed339e6452415b4a86ea438bb9f852a5c35f5c4804bbd01c20b72c848a6e5b2
+n_restart_rows: 5800
 analysis_spec_sha256: 732d438f077c4301adafc0aadad8ba020a9f722735f5d03fdab1b0aa05e445c2
+analyzer:
+  row_projection_py_sha256: b46389d06d6ae495
+  src_scoring_py_sha256: 69e69cb046f4b4ae
+  python: 3.12.3
+  platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
+  pandas: 3.0.5
+  pyarrow: 25.0.1
+  numpy: 2.5.2
+  yaml: 6.0.3
 analysis_spec:
   projection_version: 1
   columns:
@@ -44,10 +57,16 @@ analysis_spec:
   tolerance: 0.02
 재계산_검증:
   봉인_summary: docs/22p_gap/warm_probe/fit_seed404_pe5mv_nowarm.summary.yaml
+  전체_일치: true
   by_objective_일치: true
   불일치: null
+  fits_sha256_읽은바이트: 599be8127f80182820a2c0a48bade6525c66bd9bde0f09fd4ae48146a031035d
+  fits_sha256_summary: 599be8127f80182820a2c0a48bade6525c66bd9bde0f09fd4ae48146a031035d
+  fits_삼중일치: true
 _주의: 이 투영은 원자료가 아니다. 감사·대조용 축약이며, 여기 없는 열(restarts_json 전체, p_spread, 경계 플래그 세부)은
   담기지 않는다. 완전 복원에는 results/<leg>/ 원본이 필요하다.
+fits_sha256_manifest_seal: 599be8127f80182820a2c0a48bade6525c66bd9bde0f09fd4ae48146a031035d
 fits_sha256: 599be8127f80182820a2c0a48bade6525c66bd9bde0f09fd4ae48146a031035d
+fits_봉인일치: true
 source_digest: a72c0f3a485c19bb
 warm_start: false
