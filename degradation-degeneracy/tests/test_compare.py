@@ -434,6 +434,22 @@ def test_warm_start_passes_smooth_solution_to_dqdv_objectives(monkeypatch):
     assert seen[0] == seen[1] == task["init"], "--no-warm-start인데 물려받았다"
     assert all(not r["warm_started"] for r in rows)
 
+    # ★ 21차 리뷰 Q2 항목 1 — "연쇄 **1번째**는 warm 경로에 닿지 않는다" 를
+    #   목적함수 **순서와 무관하게** 고정한다. 위 두 단언은 `pocv_dvdq` 가 먼저
+    #   오는 한 가지 배치만 본다. §20.4 의 warm 귀속("33p 가 6자리까지 동일한 것은
+    #   설계상 그래야 하는 일")은 이 순서가 아니라 **연쇄 위치** 에 걸려 있다.
+    #   dQ/dV 목적함수를 맨 앞에 두면 `_has_dqdv` 는 True 인데 `seed_p` 가 아직
+    #   None 이라 여전히 기본 초기값을 써야 한다.
+    for order in (["pocv_dvdq", "pocv_dvdq_dqdv"], ["pocv_dvdq_dqdv", "pocv_dvdq"]):
+        seen.clear()
+        objs = {k: task["objectives"][k] for k in order}
+        rows = F._fit_one({**task, "objectives": objs, "warm_start": True})
+        assert seen[0] == task["init"], (
+            f"순서 {order}: 연쇄 1번째({order[0]})가 warm seed 를 받았다 — "
+            f"§20.4 의 warm 귀속이 무너진다")
+        assert rows[0]["warm_started"] is False, (
+            f"순서 {order}: 1번째가 warm_started=True 로 기록됐다")
+
 
 def test_results_doc_reports_multistart_and_warns_about_old_metrics(tmp_path):
     """★ F21 — flat_valley/multimodal이 문서에 실리고, 옛 지표에 경고가 붙는가."""

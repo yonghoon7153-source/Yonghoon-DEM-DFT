@@ -16,6 +16,7 @@
 
 from __future__ import annotations
 
+import hashlib
 import re
 from pathlib import Path
 
@@ -679,8 +680,20 @@ _WARM_CLAIMS = [
 #: ★ 초판에 `fit_seed404_pe5mv` 를 넣었다가 이 테스트에 잡혔다 — 그 다리는
 #:   옛 digest(`d842894`)라 same-digest 짝이 아니다. warm 축만 분리하려면
 #:   digest 가 같아야 한다는 것을 테스트가 먼저 강제했다.
-_WARM_PAIRS = [("paired_fixed5_v4_nowarm_now", "paired_fixed5_v4_warm"),
-               ("fit_22p_seed_404_hc_nowarm", "fit_22p_seed_404_hc_warm_now")]
+#: ★★ 두 번째로, 21차 리뷰 발견 4 를 새 run_spec 회귀가 **독립 재현**하면서
+#:   half-cell 짝(`fit_22p_seed_404_hc_*`)이 여기서 빠졌다. 그 짝은 warm 이
+#:   `p_ini` 까지 바꿔 단일 축 짝이 아니다 → `_CONFOUNDED_PAIRS` 로 옮겼다.
+_WARM_PAIRS = [("paired_fixed5_v4_nowarm_now", "paired_fixed5_v4_warm")]
+
+#: warm 을 켰지만 **다른 축도 함께 움직인** 짝. 인과 귀속에 쓸 수 없다.
+#: 목록에서 조용히 사라지거나 `_WARM_PAIRS` 로 승격되는 것을 막기 위해
+#: "정말 교란돼 있는가" 를 양성으로 검사한다 (아래 테스트).
+_CONFOUNDED_PAIRS = [
+    ("fit_22p_seed_404_hc_nowarm", "fit_22p_seed_404_hc_warm_now",
+     "half-cell 은 pristine 기준의 `p_ini` 도 같은 warm 플래그로 계산한다 "
+     "(`src/fitting.py:862`) → 원점이 함께 이동한다. adaptive 도 켜져 있어 "
+     "실제 예산 분포까지 달라진다 (2회 종료 223 → 238)."),
+]
 
 #: digest 가 다른 짝 — warm 축 귀속에는 못 쓰지만, 1번째가 그래도 같다는 것은
 #: 그 digest 구간이 수치적으로 무해하다는 별도 증거다 (LEG_INVENTORY §22).
@@ -748,8 +761,12 @@ def test_warm_only_moves_the_second_objective_in_the_chain():
 
     실측 (같은 digest, warm 만 다름):
       paired  33p 0.615854 = 0.615854 · 34p 0.873984 → 0.628726
-      404 hc  33p 0.800000 = 0.800000 · 34p 0.640625 → 0.184375
+
+    ★ 404 half-cell 짝은 여기서 뺐다 (21차 발견 4). 33p 등식은 그 짝에서도
+      성립하지만 warm 이 `p_ini` 까지 바꾸므로 **단일 축 짝이 아니다** —
+      `_CONFOUNDED_PAIRS` 와 그 전용 테스트로 옮겼다.
     """
+    assert _WARM_PAIRS, "matched warm 짝이 하나도 없다"
     for nowarm, warm in _WARM_PAIRS:
         mn, mw = _warm_manifest(nowarm)["run_spec"], _warm_manifest(warm)["run_spec"]
         assert mn["source_digest"] == mw["source_digest"], (
@@ -972,3 +989,253 @@ def test_wiki_tools_survive_a_cp949_console(tool):
         f"{tool} 이 CP949 콘솔에서 죽었다 (exit {r.returncode}):\n"
         f"{(r.stderr or '')[-800:]}")
     assert "UnicodeEncodeError" not in (r.stderr or ""), (r.stderr or "")[-800:]
+
+
+# ── warm-probe 감사 강화: run_spec exact match · 봉인 결속 · 행 수준 digest ──
+#   21차 리뷰 발견 7 — 기존 회귀 5건이 "주장한 변이보다 좁다".
+
+#: 같은 digest·같은 조건집합의 warm 짝에서 **달라도 되는** manifest 키.
+#: 여기 없는 키가 다르면 그 짝은 더 이상 "warm 한 축만 다른" 짝이 아니다.
+_PAIR_ALLOWED_DIFF = (
+    "timestamp", "elapsed_s", "attempt_id", "attempts_dir",
+    "fits_parquet", "fits_seal", "run_signature",
+    "warm_start", "run_spec.warm_start",
+    # git_commit 은 **source_digest 가 같을 때만** 허용한다 (아래에서 강제).
+    "git_commit", "git_commit_short", "run_spec.git_commit",
+    "start_provenance",
+)
+
+
+def _flat(o, p=""):
+    """중첩 dict/list → {점으로 이은 경로: 잎값}."""
+    if isinstance(o, dict):
+        for k, v in o.items():
+            yield from _flat(v, f"{p}.{k}" if p else str(k))
+    elif isinstance(o, list) and o and isinstance(o[0], (dict, list)):
+        for i, v in enumerate(o):
+            yield from _flat(v, f"{p}[{i}]")
+    else:
+        yield p, o
+
+
+def _allowed(key: str) -> bool:
+    return any(key == a or key.startswith(a + ".") or key.startswith(a + "[")
+               for a in _PAIR_ALLOWED_DIFF)
+
+
+@pytest.mark.parametrize("nowarm,warm", _WARM_PAIRS)
+def test_warm_pair_manifests_differ_only_by_the_warm_axis(nowarm, warm):
+    """★ 21차 발견 7 항목 5 / Q2 항목 2 — normalized run_spec exact equality.
+
+    기존 protocol 회귀는 `warm_start` 가 **non-null 인지**만 봤다.
+    `adaptive=False→True`, `n_restarts=5→20`, 조건집합 해시 변경, 목적함수
+    순서 변경을 전부 통과시켰다. 그 상태로는 "warm 만 다른 짝" 이라는 §20.4
+    귀속의 전제를 테스트가 지키지 않는다.
+
+    여기서는 두 manifest 를 평탄화해 **화이트리스트 밖 차이를 전부 거부**한다.
+    화이트리스트는 실행 부산물(시각·경과·attempt id·출력 경로·fits 봉인·
+    run_signature)과 warm 축 자신뿐이다.
+
+    `git_commit` 은 예외적으로 허용하되 **`source_digest` 가 같을 때만** —
+    두 다리 사이에 문서 커밋이 끼어 있어도 계산 경로는 같아야 한다.
+    """
+    a, b = _warm_manifest(nowarm), _warm_manifest(warm)
+    fa, fb = dict(_flat(a)), dict(_flat(b))
+
+    da = (a.get("run_spec") or {}).get("source_digest")
+    db = (b.get("run_spec") or {}).get("source_digest")
+    assert da and da == db, (
+        f"{nowarm} vs {warm}: source_digest 가 다르다 ({da} vs {db}) — "
+        f"git_commit 차이를 허용할 근거가 사라진다")
+
+    assert fa.get("warm_start") is False and fb.get("warm_start") is True, (
+        f"{nowarm}/{warm}: warm 축이 False→True 가 아니다")
+
+    bad = [f"{k}: {fa.get(k)!r} ≠ {fb.get(k)!r}"
+           for k in sorted(set(fa) | set(fb))
+           if fa.get(k) != fb.get(k) and not _allowed(k)]
+    assert not bad, (
+        f"{nowarm} vs {warm}: warm 외의 축이 함께 움직였다 — "
+        f"이 짝으로는 warm 효과를 귀속할 수 없다:\n  " + "\n  ".join(bad))
+
+
+@pytest.mark.parametrize("leg", sorted({l for l, _ in _WARM_CLAIMS}))
+def test_warm_probe_summary_fits_digest_matches_the_manifest_seal(leg):
+    """★ 21차 발견 7 항목 4 — summary 의 fits digest ↔ manifest 봉인 결속.
+
+    리뷰어가 손으로 대조해 준 등식이다. 테스트가 없으면 다음 판에서 한쪽만
+    갱신돼도 아무도 모른다. summary 는 "내가 이 fits 를 채점했다" 고 적고
+    manifest 는 "내가 이 fits 를 만들었다" 고 적는데, 둘이 갈리면 문서 수치의
+    출처가 사라진다.
+    """
+    s = (_warm_summary(leg).get("_채점원본") or {}).get("fits_sha256")
+    m = (_warm_manifest(leg).get("fits_seal") or {}).get("file_sha256")
+    assert s and m, f"{leg}: fits digest 기록이 없다 (summary {s!r} / manifest {m!r})"
+    assert s == m, (
+        f"{leg}: 채점한 fits 와 봉인된 fits 가 다르다\n"
+        f"  summary  {s}\n  manifest {m}")
+
+
+#: §20.4 재정정 표의 (행 라벨 조각 → 다리). 표는 다리·digest·warm·33p·34p·차이 6열.
+_S204_ROWS = {
+    "paired_fixed5_v4` (정본)": "paired_fixed5_v4",
+    "paired_fixed5_v4_nowarm_now": "paired_fixed5_v4_nowarm_now",
+    "paired_fixed5_v4_warm": "paired_fixed5_v4_warm",
+}
+
+
+def test_warm_probe_numbers_are_bound_to_keyed_table_cells():
+    """★ 21차 발견 7 항목 1 — 문자열이 문서 "어딘가" 있는지로는 부족하다.
+
+    기존 회귀는 `f"{val:.6f}" not in doc` 였다. 목적함수 라벨·행 라벨·warm
+    라벨을 서로 바꿔도 같은 숫자가 문서 어딘가에 남아 있으면 통과한다.
+    실제로 이 표는 **어느 다리의 어느 목적함수인가**가 결론의 전부다.
+
+    그래서 표를 **행 라벨로 찾아 열 위치로 읽는다**. 33p 는 4번째 칸,
+    34p 는 5번째 칸이어야 한다.
+    """
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+    rows = [ln for ln in doc.splitlines() if ln.lstrip().startswith("> |")]
+
+    checked = {}
+    for label, leg in _S204_ROWS.items():
+        hit = [r for r in rows if label in r]
+        assert len(hit) == 1, f"§20.4 표에서 '{label}' 행을 정확히 하나 못 찾았다: {len(hit)}"
+        cells = [c.strip() for c in hit[0].lstrip("> ").strip("|").split("|")]
+        assert len(cells) == 6, f"{leg}: 표 열 수가 6이 아니다 ({len(cells)}): {cells}"
+
+        s = _warm_summary(leg)["by_objective"]
+        want33 = f"{s['pocv_dvdq']['degenerate_frac']:.6f}"
+        want34 = f"{s['pocv_dvdq_dqdv']['degenerate_frac']:.6f}"
+        assert want33 in cells[3], (
+            f"{leg}: 33p 칸이 봉인값과 다르다 — 문서 {cells[3]!r} vs 봉인 {want33}")
+        assert want34 in cells[4], (
+            f"{leg}: 34p 칸이 봉인값과 다르다 — 문서 {cells[4]!r} vs 봉인 {want34}")
+
+        want_warm = str(_warm_manifest(leg)["run_spec"]["warm_start"])
+        assert want_warm in cells[2], (
+            f"{leg}: warm 칸이 manifest 와 다르다 — 문서 {cells[2]!r} vs {want_warm}")
+        checked[leg] = (want33, want34)
+
+    assert len(checked) == 3, checked
+
+
+@pytest.mark.parametrize("nowarm,warm,why", _CONFOUNDED_PAIRS)
+def test_confounded_pairs_really_are_confounded(nowarm, warm, why):
+    """★ 21차 발견 4 — half-cell 짝은 "warm 한 축" 이 아니다. 양성으로 못박는다.
+
+    이 짝을 `_WARM_PAIRS` 에 두면 warm 인과 귀속에 쓰이게 된다. 실제로는
+    `src/fitting.py:862` 가 pristine 기준의 `p_ini` 도 **같은 warm 플래그로**
+    계산하므로 원점이 함께 움직인다:
+
+        no-warm  [1.509716, -0.418050, 1.087242, -0.084175]
+        warm     [1.518503, -0.421892, 1.063315, -0.060152]
+
+    `0.640625 → 0.184375` 은 (1) pristine `p_ini` warm 연쇄 (2) 조건별 warm
+    초기값 (3) adaptive 실현 예산 변화가 합쳐진 **total protocol effect** 다.
+
+    단순히 목록에서 빼면 다음 판이 "왜 뺐더라" 하고 되돌린다. 그래서 **교란이
+    실재한다는 것 자체**를 검사한다 — 교란이 사라지면(예: 단계 3 에서
+    `p_ini_warm_start` 를 분리해 원점을 고정하면) 이 테스트가 실패하고,
+    그때 `_WARM_PAIRS` 로 승격하면 된다.
+    """
+    a, b = _warm_manifest(nowarm), _warm_manifest(warm)
+    assert (a["run_spec"]["source_digest"] == b["run_spec"]["source_digest"]), \
+        f"{nowarm}/{warm}: digest 가 다르다 — 교란 판정 이전의 문제다"
+
+    pa = (a.get("run_spec") or {}).get("p_ini") or {}
+    pb = (b.get("run_spec") or {}).get("p_ini") or {}
+    moved = [k for k in set(pa) | set(pb) if pa.get(k) != pb.get(k)]
+    assert moved, (
+        f"{nowarm} vs {warm}: `p_ini` 가 더 이상 함께 움직이지 않는다.\n"
+        f"  교란이 사라졌다면 이 짝을 `_WARM_PAIRS` 로 승격하고 여기서 빼라.\n"
+        f"  사유 기록: {why}")
+
+
+def test_warm_probe_row_projections_are_committed_and_self_consistent():
+    """★ 21차 발견 6·7 항목 3 / Q2 항목 3 — aggregate 일치는 조건별 일치가 아니다.
+
+    지금까지 리뷰어가 확인할 수 있던 것은 "문서 숫자 == summary 숫자" 뿐이다.
+    조건별 결과와 restart trace 가 그 aggregate 를 **실제로 만들었는지**,
+    봉인 fits 를 다시 채점하면 같은 값이 나오는지는 확인할 수 없었다.
+    원자료는 다리당 수십 MB 라 git 에 못 넣으므로, 리뷰가 제시한 대안인
+    **compact keyed projection + full digest** 를 커밋한다.
+
+    만드는 법 (원자료가 있는 기계에서):
+
+        python docs/22p_gap/row_projection.py --all
+
+    이 테스트는 그 산출물이 없으면 **실패한다** (skip 하지 않는다). 없는 상태가
+    바로 "citation-ready 가 아니다" 라는 리뷰 판정이고, 조용히 넘어가면 그
+    판정이 문서에서 사라진다.
+    """
+    import yaml
+
+    need = sorted({l for l, _ in _WARM_CLAIMS}
+                  | {l for p in _WARM_PAIRS for l in p}
+                  | {l for a, b, _ in _CONFOUNDED_PAIRS for l in (a, b)}
+                  | {l for p in _XDIGEST_PAIRS for l in p})
+    missing = [l for l in need if not (_WARM / f"{l}.projection.yaml").is_file()]
+    assert not missing, (
+        "행 수준 투영이 없는 다리 (원자료가 있는 기계에서 "
+        "`python docs/22p_gap/row_projection.py --all` 을 돌려 커밋할 것):\n  "
+        + "\n  ".join(missing))
+
+    bad = []
+    for leg in need:
+        m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+        gz = _WARM / m["projection_file"]
+        if not gz.is_file():
+            bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
+            continue
+        import gzip
+        raw = gzip.decompress(gz.read_bytes())
+        got = hashlib.sha256(raw).hexdigest()
+        if got != m["projection_sha256"]:
+            bad.append(f"{leg}: 투영 내용이 digest 와 다르다 {got[:16]} vs "
+                       f"{m['projection_sha256'][:16]}")
+        # 재계산 검증 — 봉인 fits 를 다시 채점해 summary 와 자리별로 맞았는가
+        if m.get("재계산_검증", {}).get("by_objective_일치") is not True:
+            bad.append(f"{leg}: 봉인 summary 재계산 불일치 "
+                       f"{m.get('재계산_검증', {}).get('불일치')}")
+        # summary·manifest 와의 결속
+        seal = (_warm_manifest(leg).get("fits_seal") or {}).get("file_sha256")
+        if m.get("fits_sha256") != seal:
+            bad.append(f"{leg}: 투영이 가리키는 fits 가 manifest 봉인과 다르다")
+    assert not bad, "행 수준 투영이 자기 근거와 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_warm_pairs_agree_row_by_row_on_the_first_objective():
+    """★ 21차 Q2 항목 3 — "aggregate fraction 동일 ≠ 조건별 동일".
+
+    warm 귀속의 핵심 sanity check 는 연쇄 1번째가 **한 조건도 빠짐없이** 같다는
+    것이다. 총 비율만 같고 조건들이 서로 뒤바뀌어도 기존 회귀는 통과했다.
+    여기서는 33p 부분 투영의 sha256 을 통째로 비교한다.
+    """
+    import yaml
+
+    need = [l for p in _WARM_PAIRS for l in p]
+    missing = [l for l in need if not (_WARM / f"{l}.projection.yaml").is_file()]
+    assert not missing, (
+        "warm 짝의 행 수준 투영이 없다 — "
+        "`python docs/22p_gap/row_projection.py --all` 후 커밋할 것: " + str(missing))
+
+    for nowarm, warm in _WARM_PAIRS:
+        a = yaml.safe_load((_WARM / f"{nowarm}.projection.yaml").read_text(encoding="utf-8"))
+        b = yaml.safe_load((_WARM / f"{warm}.projection.yaml").read_text(encoding="utf-8"))
+        assert a["analysis_spec_sha256"] == b["analysis_spec_sha256"], (
+            f"{nowarm}/{warm}: 투영 규격이 달라 digest 를 비교할 수 없다")
+
+        pa = a["by_objective_sha256"]["pocv_dvdq"]
+        pb = b["by_objective_sha256"]["pocv_dvdq"]
+        assert pa["n_rows"] == pb["n_rows"], (
+            f"{nowarm}/{warm}: 33p 행 수가 다르다 {pa['n_rows']} vs {pb['n_rows']}")
+        assert pa["sha256"] == pb["sha256"], (
+            f"{nowarm} vs {warm}: 33p 가 **조건별로는** 갈렸다 — 총 비율만 같았다.\n"
+            f"  {pa['sha256'][:16]} vs {pb['sha256'][:16]}\n"
+            f"  연쇄 1번째는 warm 경로에 닿지 않으므로 행 단위로 동일해야 한다.")
+
+        # 34p 는 반대로 **달라야** 한다 — 같으면 warm 이 아무것도 안 한 것이다.
+        qa = a["by_objective_sha256"]["pocv_dvdq_dqdv"]["sha256"]
+        qb = b["by_objective_sha256"]["pocv_dvdq_dqdv"]["sha256"]
+        assert qa != qb, f"{nowarm}/{warm}: 34p 투영이 동일하다 — warm 이 무효였다는 뜻"

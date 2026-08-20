@@ -1905,3 +1905,110 @@ scripts/ run.sh requirements*` 를 한 줄도 건드리지 않았고 `source_dig
 8. claim-supporting 다리만 재실행 → 최종 정본 승격
 
 2~8 은 전부 `source_digest` 를 바꾸므로 **기존 산출물 재실행**이 걸린다.
+
+## 30. 21차 게이트 리뷰 회답 (2) — 행 수준 감사와 회귀 강화
+
+> 리뷰 실행 순서 **2·3** 과 **발견 4·6·7**, Q2 를 닫는다. `source_digest` 는
+> 여전히 `a72c0f3a485c19bb` — RUN_SCOPE 를 건드리지 않았다.
+
+### 30.1 발견 6 — 원자료 없이 감사할 수 있게 만들었다
+
+리뷰가 확인할 수 있던 것은 "문서 숫자 == summary 숫자" 뿐이었다. 원자료
+(`fits.parquet`)는 다리당 수십 MB 라 git 에 못 넣는다. 리뷰가 제시한 대안인
+**compact keyed projection + full digest** 를 만든다:
+
+`docs/22p_gap/row_projection.py` (RUN_SCOPE 밖 — `leg_probe.py` 와 같은 이유)
+
+- 열: `cond_id · objective · noise · truth(3) · hats(3) · J · abs_err_max ·
+  degenerate · recoverable · 예산(2) · warm_started · converged ·
+  any_bound_active · best_restart_source · restart_sources`
+- 정렬 `(cond_id, objective)` · 부동소수 `repr` (왕복 보장) · 탭 구분 ·
+  **압축 전 바이트의 sha256** 이 digest (gzip 수준과 무관)
+- 목적함수별 **부분 digest** 도 낸다 → 33p 만 따로 대조할 수 있다
+- `analysis_spec_sha256` 로 규격 자신을 못박는다
+- `gzip(mtime=0)` — 같은 입력이면 파일 바이트까지 같다 (실측 확인)
+
+그리고 같은 실행에서 **재계산 검증**을 한다 — 봉인 fits 를 `src.scoring` 의
+정규 경로(`add_error_columns → classify_recoverability → clean_bias →
+apply_bias_correction → summarize`)로 **다시 채점**해서 커밋된 summary 와
+자리별로 대조한다. 이것이 Q3 의 "복원 후 score → analyze 가 같은 값을 내는가"
+에 대한 답이다.
+
+컨테이너에 원자료가 있는 유일한 다리로 실측했다:
+
+```
+✅ paired_fixed5_v4: 6138행 · projection ad598fe77e75afec · 재계산 일치 True
+   357 KB (gz) · 재실행 시 바이트 동일
+```
+
+나머지 7다리는 원자료가 로컬에만 있다. **회귀 2건이 그 산출물이 없으면
+실패하도록** 걸어 뒀다 (skip 하지 않는다) — 없는 상태가 곧 리뷰의
+"citation-ready 아님" 판정이고, 조용히 넘어가면 그 판정이 사라진다.
+
+### 30.2 발견 4 — half-cell 짝은 warm "한 축" 이 아니었다 (회귀가 독립 재현)
+
+새로 넣은 `test_warm_pair_manifests_differ_only_by_the_warm_axis` 는 두
+manifest 를 평탄화해 **화이트리스트 밖 차이를 전부 거부**한다. 화이트리스트는
+실행 부산물(시각·경과·attempt id·출력 경로·fits 봉인·`run_signature`)과 warm
+축뿐이며, `git_commit` 은 **`source_digest` 가 같을 때만** 허용한다.
+
+이 테스트를 처음 돌리자 half-cell 짝에서 걸렸다:
+
+```
+p_ini.pocv_dvdq_dqdv:
+  [1.509716, -0.418050, 1.087242, -0.084175]
+≠ [1.518503, -0.421892, 1.063315, -0.060152]
+```
+
+리뷰 발견 4 를 **리뷰 문서를 보지 않고 재현한 것**이다. 대응은 화이트리스트
+확장이 아니라 분류 변경이다:
+
+- `_WARM_PAIRS` 에서 뺐다 → 격자 짝 하나만 남는다 (그쪽은 `p_ini=null`,
+  warm 외 차이 0)
+- `_CONFOUNDED_PAIRS` 로 옮기고 **교란이 실재하는지를 양성으로 검사**한다.
+  목록에서 조용히 빼면 다음 판이 되돌린다. 단계 3 에서 원점을 고정해 교란이
+  사라지면 이 테스트가 실패하고, 그때 승격하면 된다.
+- `LEG_INVENTORY.md` §23 에 정정 블록 — `0.640625 → 0.184375` 은 (1) pristine
+  `p_ini` warm 연쇄 (2) 조건별 warm 초기값 (3) adaptive 실현 예산 변화가
+  합쳐진 total protocol effect 다.
+
+### 30.3 발견 7 — 다섯 구멍
+
+| 리뷰가 지적한 구멍 | 닫은 방법 |
+|---|---|
+| 1. 숫자가 문서 "어딘가" 있는지만 봤다 | `test_warm_probe_numbers_are_bound_to_keyed_table_cells` — §20.4 표를 **행 라벨로 찾아 열 위치로** 읽는다 (33p=4번째 칸, 34p=5번째 칸, warm=3번째 칸) |
+| 2. protocol test 가 non-null 만 봤다 | 위 run_spec exact-match 회귀 — `adaptive`·`n_restarts`·조건집합 해시·목적함수 순서 변경을 전부 거부 |
+| 3. 조건별 결과가 뒤바뀌어도 총 비율만 같으면 통과 | `test_warm_pairs_agree_row_by_row_on_the_first_objective` — 33p 부분 투영 sha256 을 통째로 비교. 34p 는 반대로 **달라야** 한다는 것도 함께 |
+| 4. summary 의 fits digest ↔ manifest 봉인 미검사 | `test_warm_probe_summary_fits_digest_matches_the_manifest_seal` |
+| 5. same-digest 짝의 input SHA·조건 해시·bounds·reference·optimizer·환경 exact equality 미강제 | 위 run_spec exact-match 회귀가 평탄화된 **전 키**를 본다 |
+
+### 30.4 Q2 항목 1 — 연쇄 1번째의 warm 비접촉
+
+이미 있었다 (`tests/test_compare.py::test_warm_start_passes_smooth_solution_to_dqdv_objectives`).
+다만 목적함수 **순서 하나만** 봤다. `pocv_dvdq_dqdv` 를 맨 앞에 둔 배치를
+추가했다 — 그 경우 `_has_dqdv` 는 True 인데 `seed_p` 가 아직 None 이라
+여전히 기본 초기값을 써야 한다. 불변량은 "어떤 목적함수인가" 가 아니라
+**연쇄 위치**에 걸려 있고, §20.4 의 warm 귀속이 기대는 것도 그쪽이다.
+
+뮤테이션 확인: `seed_p = None` → `seed_p = list(task["init"])` 로 바꾸면
+이 테스트가 실패한다 (실측). 되돌린 뒤 `source_digest` 재확인 `a72c0f3a`.
+
+### 30.5 지금 상태 — 회귀 2건이 의도적으로 RED
+
+```
+python -m pytest tests/test_docs_lint.py -q
+  → 2 failed, 44 passed
+     test_warm_probe_row_projections_are_committed_and_self_consistent
+     test_warm_pairs_agree_row_by_row_on_the_first_objective
+```
+
+둘 다 "행 수준 투영이 아직 커밋되지 않았다" 는 같은 이유다. 원자료가 있는
+기계에서 아래를 돌려 커밋하면 닫힌다:
+
+```bash
+python docs/22p_gap/row_projection.py --all
+git add docs/22p_gap/warm_probe/*.projection.*
+```
+
+투영이 붙기 전까지 warm-probe 다리들의 상태는 리뷰 Q4 분류로
+**`recorded_only`** 다 — 진단·설계 근거로는 쓰되 인용 정본이 아니다.

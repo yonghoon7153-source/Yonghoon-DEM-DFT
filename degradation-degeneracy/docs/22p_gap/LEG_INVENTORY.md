@@ -647,10 +647,40 @@ python3 tools/diagnose_pini_transition.py --objective pocv_dvdq_dqdv --legs \
 부수 효과: 이것은 이 저장소에서 드문 **교차-digest 완전 재현** 실측이다.
 "코드가 바뀌었으니 비교 불가" 가 항상 참은 아니라는 반례로 남긴다.
 
-## 23. §19 확정 — 7/8 붕괴는 전적으로 warm-start 때문이다
+## 23. §19 확정 — 7/8 붕괴는 warm-start **protocol** 때문이다 (단일 축 아님)
 
 digest 가 무해함이 증명됐으므로, `warm_now`(0/8) vs `nowarm`(7/8) 의 차이는
-**`--no-warm-start` 하나**에 귀속된다. 왜곡이 0 인 대조가 warm 을 끄면 무너진다.
+`--no-warm-start` 라는 **한 플래그**에 귀속된다. 왜곡이 0 인 대조가 warm 을
+끄면 무너진다.
+
+> **★ 정정 (2026-08-20, 21차 리뷰 발견 4) — "전적으로 warm-start 때문" 은
+> 플래그 하나라는 뜻이지 축 하나라는 뜻이 아니다.**
+>
+> half-cell 에서는 `src/fitting.py:862` 가 pristine 기준의 `p_ini` 도
+> **같은 warm 플래그로** 계산한다. 그래서 그 플래그를 끄면 원점이 함께 움직인다:
+>
+> ```
+> no-warm  p_ini(34p) = [1.509716, -0.418050, 1.087242, -0.084175]
+> warm     p_ini(34p) = [1.518503, -0.421892, 1.063315, -0.060152]
+> ```
+>
+> adaptive 도 켜져 있어 **실현 예산**까지 달라진다 (2회에서 끝난 행 223 → 238,
+> random-only 34p 표본 607 → 592).
+>
+> 따라서 `0.640625 → 0.184375` 는 세 효과의 합인 **total protocol effect** 다:
+> (1) pristine `p_ini` warm 연쇄 (2) 조건별 warm 초기값 (3) adaptive 실현
+> 예산 변화와의 상호작용. 단계 3 은 `p_ini_warm_start` 와
+> `condition_warm_start` 를 **분리한 2×2** 로 다시 설계한다.
+>
+> 회귀 `test_confounded_pairs_really_are_confounded` 가 이 짝을 warm 인과
+> 목록(`_WARM_PAIRS`)에서 빼고, **교란이 실재한다는 것 자체**를 검사한다 —
+> 단계 3 에서 원점을 고정해 교란이 사라지면 그 테스트가 실패하고, 그때 이
+> 짝을 승격하면 된다. (이 정정은 새로 넣은 run_spec exact-match 회귀가
+> 리뷰와 독립적으로 재현해 냈다.)
+>
+> **격자 짝(`paired_fixed5_v4_*`)은 영향받지 않는다** — 그쪽은
+> `p_ini = null` 이라 원점 축이 아예 없고, manifest 정규화 대조에서 warm
+> 외의 차이가 0 이다.
 
 ### 23.1 기전 — 연쇄의 **뒤쪽** 목적함수만 움직인다
 
