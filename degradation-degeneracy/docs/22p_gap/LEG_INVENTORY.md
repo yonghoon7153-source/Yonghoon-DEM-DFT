@@ -727,3 +727,72 @@ paired_fixed5_v4  pocv_dvdq_dqdv  degen=0.871951   (+25.27%p)
 `adaptive: False` 였으므로 그 정본에는 이 축이 없다 — 두 regime 이 **warm 과
 adaptive 둘 다** 다르다는 뜻이고, §24.1 의 재실행은 반드시
 `--no-adaptive` 를 포함해야 한다.
+
+---
+
+# 26. 실행 지시 — §24.1 (paired 정본에 warm 만 켠다)
+
+**현재 digest `a72c0f3a485c19bb` 에서 실행한다.** 단계 3(코드 수정)이 들어가면
+`paired_fixed5_v4` 와 나란히 놓을 수 없다.
+
+## 인자를 manifest 에서 뽑았다
+
+`results/paired_fixed5_v4/manifest.yaml` 의 `run_spec` 실측:
+
+```
+input        results/grid_curves_v4      reference     grid
+bounds       expanded                    v_col         v_full_noisy
+objectives   pocv_dvdq, pocv_dvdq_dqdv   n_restarts    5
+adaptive     false                       warm_start    false   ← 이것만 뒤집는다
+selection    full                        n_conditions  3069
+```
+
+`RUN_SH_DRY=1` 로 두 조립을 대조해 **`--no-warm-start` 하나만 다름**을 확인했다:
+
+```
+원 실행: … --n-restarts 5 --reference grid --no-adaptive --no-warm-start
+새 실행: … --n-restarts 5 --reference grid --no-adaptive
+```
+
+## 명령
+
+```bash
+cd ~/work/Yonghoon-DEM-DFT/degradation-degeneracy
+
+./run.sh --mode fit --in results/grid_curves_v4 \
+  --out results/paired_fixed5_v4_warm --nproc 28 \
+  --objective pocv_dvdq,pocv_dvdq_dqdv --n-restarts 5 \
+  --no-adaptive --reference grid --bounds expanded
+./run.sh --mode score --in results/paired_fixed5_v4_warm
+```
+
+3,069조건이라 404(640조건, 3분)의 약 5배 — **15~20분** 예상.
+
+끝나면 두 줄만 있으면 된다:
+
+```bash
+python3 - <<'EOF'
+import yaml
+for n in ("paired_fixed5_v4", "paired_fixed5_v4_warm"):
+    d = yaml.safe_load(open(f"results/{n}/degeneracy_summary.yaml"))["by_objective"]
+    for o in ("pocv_dvdq", "pocv_dvdq_dqdv"):
+        print(f"{n:26} {o:16} degen={d[o]['degenerate_frac']:.6f} "
+              f"corr={d[o]['degenerate_frac_corrected']:.6f} "
+              f"mae={d[o]['mean_abs_err']:.6f}")
+EOF
+```
+
+## 판정 기준 (실행 전에 고정한다)
+
+정본은 `pocv_dvdq 0.619241` / `pocv_dvdq_dqdv 0.871951`, 차이 **+25.27%p**.
+
+| warm 켠 결과 | 해석 | 문서에 할 일 |
+|---|---|---|
+| `dqdv` 가 0.87 → 0.6 대 이하로 내려오고 차이가 **부호 반전**(dqdv 가 더 좋아짐) | **+25.27%p 는 protocol 산물이다** | 결론 1 철회의 *근거 서술*을 다시 쓴다 — 철회 자체는 유지하되 "warm=False regime 에서만 관측" 으로 한정 |
+| `dqdv` 가 내려오지만 여전히 `dvdq` 보다 나쁨 | protocol 이 크기를 바꾸지만 **방향은 목적함수 성질** | 차이 수치를 regime 조건부로 표기 |
+| `dqdv` 가 0.87 근처로 그대로 | **목적함수 자체의 성질** — protocol 무관 | §20.4 유지, 유보 문구만 정량화 |
+| `dvdq`(1번째)가 움직인다 | **이상** — 연쇄 1번째는 warm 영향이 없어야 한다 (§23.1 에서 15자리 동일이었다) | 멈추고 원인부터 찾는다 |
+
+마지막 줄이 중요하다. 404 시험에서 1번째 목적함수는 warm 여부와 무관하게
+**15자리까지 동일**했다. 여기서도 `pocv_dvdq` 가 `0.619241` 그대로여야 하고,
+아니라면 이 비교의 전제가 깨진 것이다.
