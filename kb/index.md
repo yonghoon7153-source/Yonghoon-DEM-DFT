@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 232
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-20 · managed-files: 233
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -239,7 +239,7 @@
 - `kb/literature_db/pustorino_2025_lpscl_li_ordering_mechanical.md` — Pustorino et al. 2025 — LPSCl Li ordering → 기계적/전자 물성
 - `kb/literature_db/sundar_2025_lpscl_coating.md` — 📄 Sundar et al. 2025 — Computationally-Guided LPSCl Oxide Coating
 
-## seminars/ (23)
+## seminars/ (24)
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_README.md` — Research Seminar — Cascade final package
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_defense_QA_ko.md` — Research Seminar — Cascade Defense Q&A
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_script_ko.md` — Research Seminar — Cascade final speaker script
@@ -247,6 +247,7 @@
 - `kb/seminars/Research_Seminar_2026_08_cascade_final_terminology_symbols.md` — Research Seminar — 용어·기호 규약
 - `kb/seminars/cascade_content_edit_directive_2026_08_11.md` — Cascade 세미나 내용 편집 지시서 — 기준본 24장 (Codex 편집용)
 - `kb/seminars/cascade_deck_3to7_script_2026_08_20.md` — cascade 세미나 — 덱 3~7장 대본 (재정비판) ○미열람
+- `kb/seminars/cascade_deck_8to12_script_2026_08_20.md` — 세미나 대본 — 덱 8~12장 (후보군 · 자리 · 구조생성 · MLIP 스크리닝) ○미열람
 - `kb/seminars/cascade_dopant_screening_story_2026_08.md` — LPSCl 도펀트 스크리닝 — 연구세미나 대본 (v6 · 덱과 1:1) ○미열람
 - `kb/seminars/cascade_final_release_review_2026_08_11.md` — 최종 release 감사 보고 — Research_Seminar_2026_08_cascade_final (28장)
 - `kb/seminars/cascade_release_speaker_script_v2_ko.md` — 발표 대본 v2 — Research_Seminar_2026_08_cascade_release (29장, A3b 레이더 포함)

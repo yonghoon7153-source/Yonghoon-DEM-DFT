@@ -85,7 +85,11 @@ evidenceScope: multi-source-primary
 > 4. Long MD (conductivity, multi-seed)
 >
 > To cover **91** candidates at **low cost**, a screening route was devised instead.
-> 47 completed all three axes — the rest is [빨강]unfinished, not screened out[/].
+> **89 of 91 carry all three axes** — the two gaps are [빨강]unfinished, not screened out[/].
+>
+> ⛔ **슬라이드 교체 필요** (2026-08-20). 원래 문구는
+> *"47 completed all three axes — the rest is unfinished, not screened out"* 이었는데
+> **낡았다.** 아래 §4-1 참조.
 
 **[70초]**
 
@@ -98,17 +102,43 @@ evidenceScope: multi-source-primary
 그래서 앞단에 싸게 훑는 경로를 하나 만들었고, 그걸 91종에 돌렸습니다.
 오늘 발표가 그 얘기입니다.
 
-**— 91 과 47 을 여기서 가른다 (뒤에서 반드시 질문이 나오는 자리) —**
+**— 91 · 89 · 47 을 여기서 가른다 (뒤에서 반드시 질문이 나오는 자리) —**
 
-여기 91은 **돌리려고 계획한 입력 목록**입니다. 그중 세 축을 끝까지 완주한 게 **47종**이고,
-뒤에 나오는 깔때기는 그 47에서 시작합니다.
+여기 91은 **돌리려고 계획한 입력 목록**입니다. 실제로는 **89종이 세 축을 다 갖고
+있습니다** — 산화·안정성·기계 축이 `cascade_v23_ranked_v2.csv` 에서 **89/89** 로
+채워져 있고, Li 전송 프록시는 **90종**을 덮습니다.
 
-[빨강에서 쉼] 나머지 44종은 **떨어진 게 아니라 아직 안 끝난 겁니다.**
-계산이 밀린 것이지 물리로 거른 게 아니에요.
+[빨강에서 쉼] 못 채운 건 **둘뿐**이고 사유가 서로 다릅니다.
+As₂S₃ 은 **구조 생성이 0개**라 계산이 시작을 못 했고, AlI₃ 은 1등 구조에 **탄성 값이
+비어** 있었습니다. 물리로 거른 게 아니에요.
 
-💬 이 구분을 여기서 해두겠습니다. 뒤에서 47이 나올 때 "44개는 어디 갔냐"가 먼저 나오거든요.
+⛔⛔ **47 은 "완주 수" 가 아니다** — 이 말을 하면 안 된다.
+47 은 **2026-06-25 정본 스냅숏의 등재 수**이고, 그 47 = **산화물 37 + 불화물 10** 이다.
+빠진 44 는 **비-산화물 계열 전부**(염화물 19 · 황화물 11 · 브롬 5 · 질화물 5 · 요오드 4)다.
+뒤의 깔때기(G1~G5)가 그 스냅숏 위에서 계산됐기 때문에 47 이 등장하는 것뿐이다.
+
+💬 그래서 발표에서는 이렇게 말한다:
+> "계획은 91, 세 축을 갖춘 건 89 입니다. 뒤에 나오는 깔때기는 **6월 정본 스냅숏 47종**
+>  위에서 돌렸는데, 그 47 은 **산화물과 불화물만** 들어 있습니다.
+>  나머지 계열은 그 뒤에 채워졌고 지금은 다 있습니다."
 
 ⛔ `x = 0.02 / 0.05 / 0.10` 을 **농도로 말하지 말 것.** 폴더 라벨이다.
+   **cascade 캠페인**(11·12장, 3,615구조)에서는 실측이 셋 다 **x = 0.25**(4 f.u. 중 1개)다.
+   ⚠ 단 **10장 자리선호 그림은 다른 캠페인**이다 — `site_preference_raw_78.csv` 는
+   26 산화물 × **3 nominal x**(0.02/0.05/0.10)로 x 가 **실제로 갈린다**. 거기서는
+   "세 도핑 수준" 이 맞다 (`kb/results/site_preference_bar_meaning_2026_08_18.md`).
+   👉 두 캠페인을 섞지 말 것. 2026-08-20 에 섞어서 **맞는 문장을 틀리게 고칠 뻔했다.**
+
+### §4-1 슬라이드 교체 문구 (그대로 쓰면 됨)
+
+| 항목 | 옛 문구 | 새 문구 |
+|---|---|---|
+| 하단 2행 | `47 completed all three axes — the rest is unfinished, not screened out.` | `89 of 91 carry all three axes; As₂S₃ and AlI₃ are the two gaps — unfinished, not screened out.` |
+
+근거: `db/properties/cascade_pool_accounting.csv` (91→89, 탈락 2종 사유) ·
+`cascade_v23_ranked_v2.csv` (89/89 축 완전) ·
+`cascade_v23_litransport_v2.csv` (270행 / 90종, 결측은 AlI₃ 3행 + MgI₂ 1행) ·
+`cascade_seminar_pool_attrition_273_to_47.csv` (47 = 산화물37+불화물10)
 
 ---
 
@@ -190,10 +220,13 @@ evidenceScope: multi-source-primary
 > `해설` one cation at a time
 >
 > `< 26 dopant cations placed in our sulfide host >`
-> `해설` one precursor at a time · Li 19 / P 1 / changes with x 6
+> `해설` one precursor at a time · Li 19 / P 1 / **flips between runs 6**
+>   ⛔ `changes with x 6` → 고칠 것. x 라벨 3종은 실측 x=0.25 단일이라 "농도에 따라"가 아니다.
+>   그림 범례의 `changes with x` 도 `site flips between runs` 로 교체.
 >
 > `[표]` study / host / what is varied / n / mechanical axis
-> `this work | argyrodite sulfide | an added precursor compound | 47 (91 planned) |`
+> `this work | argyrodite sulfide | an added precursor compound | 89 (91 planned) |`
+>   ⛔ 표의 `47 (91 planned)` → `89 (91 planned)` 로 교체.
 > `Included (reported as sensitivity, not a gate)`
 
 **[75초]**
@@ -220,7 +253,8 @@ P₂S₅ 랑 LiCl 을 섞어 만드는데, 도핑할 땐 거기에 전구체를 
 그리고 표 맨 오른쪽 칸. **기계 물성 축은 넷 중 저희만 있습니다.** 다만 그 축은
 게이트가 아니라 **민감도로 보고**합니다 — 뒤에서 왜 그런지 말씀드리겠습니다.
 
-💬 표의 `n` 은 연구마다 세는 게 다릅니다. 저희는 **완주한 47**을 적었고, 계획은 91이었습니다.
+💬 표의 `n` 은 연구마다 세는 게 다릅니다. 저희는 **세 축을 갖춘 89**를 적었고,
+계획은 91이었습니다. (⛔ 옛 판은 47 이라 적었는데 그건 6월 스냅숏 등재 수다 — 4장 참조.)
 
 💬 한 가지 덧붙이면 — 코팅 스크리닝은 상대적으로 쉽습니다. 코팅 물질은 따로 존재하는
 화합물이라 데이터베이스에서 꺼내면 됩니다. 십만 종을 돌릴 수 있었던 이유가 그거예요.
