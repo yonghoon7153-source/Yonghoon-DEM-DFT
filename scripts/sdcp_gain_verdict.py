@@ -159,7 +159,7 @@ def _stats(vals):
     return {'n': n, 'mean': m, 'sd': sd, 'se': sd / math.sqrt(n)}
 
 
-def verdict(arms, seed_ensemble=False):
+def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False):
     """prereg §5 판정.  **순서를 바꾸지 말 것.**
 
     `seed_ensemble=True` 는 **`mpm_seed` 하나만** 고정 인자에서 면제한다 (코팅처럼 시딩
@@ -250,6 +250,48 @@ def verdict(arms, seed_ensemble=False):
                         reason=f'고정 인자 `{fld}` 가 매니페스트에 **없는** 팔이 {len(_miss)}개 '
                                f'({_miss[0]} …) — 기록되지 않은 인자는 고정을 확인할 수 없다.  '
                                f'옛 payload 로 돈 팔이면 다시 돌릴 것')
+    # ── ★★ 팔 계약 (CDXIJ-10 ①, Codex 재검증 §③) ─────────────────────────────────────
+    #   Codex 실측으로 드러난 것: **2팔씩만 있어도** 판정 · origin 이 전부 없어도 통과 ·
+    #   SBE origins 0..7 과 DBE origins 100..107 처럼 **완전히 다른 집합**이어도 h0 였다.
+    #   ⇒ 짝을 지을 수 없는 데이터는 §5 가 말하는 그 데이터가 아니다.  세 가지를 강제한다:
+    #     ⓐ 모든 팔이 origin 을 기록했다  ⓑ 침대 안에서 unique  ⓒ **두 침대의 origin 집합이 같다**
+    #   `require_arms` 를 주면 정확한 개수까지 본다 (사전등록 8팔 factorial 용).
+    _org = {}
+    for k in ('SBE', 'DBE'):
+        _miss_o = [r['file'] for r in arms[k] if not r.get('origin_shift_um')]
+        if _miss_o:
+            return dict(out, decision='HOLD',
+                        reason=f'{k} 에 origin 기록이 **없는** 팔이 {len(_miss_o)}개 '
+                               f'({_miss_o[0]} …) — origin 없이는 쌍을 지을 수 없다 (CDXIJ-10 ①)')
+        _org[k] = [tuple(round(float(x), 9) for x in r['origin_shift_um']) for r in arms[k]]
+        if len(set(_org[k])) != len(_org[k]):
+            return dict(out, decision='HOLD',
+                        reason=f'{k} 에 **중복 origin** — 같은 위상을 여러 번 세면 SE 가 가짜로 작아진다')
+    if set(_org['SBE']) != set(_org['DBE']):
+        _only_s = sorted(set(_org['SBE']) - set(_org['DBE']))
+        _only_d = sorted(set(_org['DBE']) - set(_org['SBE']))
+        return dict(out, decision='HOLD',
+                    reason=f'두 침대의 **origin 집합이 다르다** — SBE 전용 {len(_only_s)}개 · '
+                           f'DBE 전용 {len(_only_d)}개 (예: {(_only_s or _only_d)[:1]}).  '
+                           f'짝이 없는 팔로는 비를 정의할 수 없다 (CDXIJ-10 ①)')
+    if require_arms is not None and len(_org['SBE']) != int(require_arms):
+        return dict(out, decision='HOLD',
+                    reason=f'사전등록은 침대당 정확히 {int(require_arms)} origin 을 요구한다 — '
+                           f'받은 것은 {len(_org["SBE"])}개 (CDXIJ-10 ①)')
+    out['n_origin'] = len(_org['SBE'])
+
+    #  ★ 결과 seal (CDXIJ-10 ④) — `require_ionic` 이면 σ_ion 이 실제로 있어야 한다.
+    #    도핑 트랙은 이온축이 결론이므로 `--no-ion`(LEAN=2) 산출물로 판정하면 안 된다.
+    if require_ionic:
+        _no_i = [r['file'] for k in arms for r in arms[k]
+                 if not (isinstance(r.get('sigma_ion'), (int, float))
+                         and r['sigma_ion'] == r['sigma_ion'] and r['sigma_ion'] > 0)]
+        if _no_i:
+            return dict(out, decision='HOLD',
+                        reason=f'σ_ion 이 없는/비정상인 팔 {len(_no_i)}개 ({_no_i[0]} …) — '
+                               f'도핑 판정은 이온축이 결론이다.  `--no-ion` 산출물로 판정 불가 '
+                               f'(CDXIJ-10 ④)')
+
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
     if not st['SBE'] or not st['DBE'] or st['SBE']['n'] != st['DBE']['n']:
@@ -269,10 +311,14 @@ def verdict(arms, seed_ensemble=False):
     #    위 hypot 은 두 팔을 독립으로 보므로 비의 SE 를 **5.1 배 과대**평가한다 (보수 방향).
     #    ⚠ **게이트는 그대로 hypot 을 쓴다** — 그것이 런 전에 커밋된 조작적 정의다 (prereg §4).
     #      쌍별 값은 **보조 출력**일 뿐이고, 게이트 승격은 v3 prereg 에서 등록한다.
-    _pa = [d['sigma_e'] / s['sigma_e']
-           for s, d in zip(sorted(arms['SBE'], key=lambda r: r['file']),
-                           sorted(arms['DBE'], key=lambda r: r['file']))
-           if s.get('sigma_e') and d.get('sigma_e')]
+    #  ⚠⚠ 2026-08-20 (Codex 재검증 CDXIJ-10 ②) — 옛 판은 **파일명 정렬 뒤 zip()** 이었다.
+    #    파일명 순서가 origin 순서와 다르면 **엉뚱한 짝**이 지어지고, Codex 실측에서 그 상태로
+    #    paired SE 가 0.0 % 로 보고됐다 (참값 0.8511 %).  ⇒ **origin 을 키로 join** 한다.
+    #    (위 계약이 이미 두 집합의 동일성을 강제하므로 여기서 키가 빠질 일은 없다.)
+    _sm = {tuple(round(float(x), 9) for x in r['origin_shift_um']): r for r in arms['SBE']}
+    _dm = {tuple(round(float(x), 9) for x in r['origin_shift_um']): r for r in arms['DBE']}
+    _pa = [_dm[k2]['sigma_e'] / _sm[k2]['sigma_e'] for k2 in sorted(_sm)
+           if _sm[k2].get('sigma_e') and _dm[k2].get('sigma_e')]
     if len(_pa) > 1:
         _m = sum(_pa) / len(_pa)
         _sd = math.sqrt(sum((v - _m) ** 2 for v in _pa) / (len(_pa) - 1))
@@ -319,13 +365,18 @@ def _selftest():
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
                 se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30)
 
+    #  ★ 2026-08-20 (CDXIJ-10 ①) — 픽스처가 **origin 을 갖는다**.  팔 계약이 origin 기록·
+    #    unique·두 침대 집합 동일을 요구하므로, 없는 픽스처는 (옳게) 전부 HOLD 가 된다.
+    def _ori(i):
+        return [0.0, 0.0, round(0.01 * i, 9)]
+
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
         return {'SBE': [dict(f, file=f'p2_SBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False)
+                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i))
                         for i, v in enumerate(sbe)],
                 'DBE': [dict(f, file=f'p2_DBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False)
+                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i))
                         for i, v in enumerate(dbe)]}
 
     base = [1.0000, 1.0020, 0.9980, 1.0010, 0.9990, 1.0005, 0.9995, 1.0000]
@@ -575,6 +626,38 @@ def _selftest():
         f'({_v24["decision"]})',
         _v24['decision'] == 'HOLD' and 'backend' in (_v24.get('reason') or ''))
 
+    #  ㉕ ★★ 2026-08-20 (CDXIJ-10, Codex 재검증 §③) — **팔 계약**.  세 mutation 을 그대로.
+    _c1 = mk(base[:2], [v * 1.12 for v in base[:2]])
+    for _r in _c1['SBE'] + _c1['DBE']:
+        _r['origin_shift_um'] = None
+    _v25a = verdict(_c1)
+    chk(f'㉕a origin 기록이 없으면 HOLD ({_v25a["decision"]})',
+        _v25a['decision'] == 'HOLD' and 'origin' in (_v25a.get('reason') or ''))
+    _c2 = mk(base, [v * 1.12 for v in base])
+    for _i, _r in enumerate(_c2['DBE']):
+        _r['origin_shift_um'] = [0.0, 0.0, round(1.0 + 0.01 * _i, 9)]   # disjoint 집합
+    _v25b = verdict(_c2)
+    chk(f'㉕b ★ 두 침대의 origin 집합이 다르면 HOLD (Codex: 옛 판은 h0) ({_v25b["decision"]})',
+        _v25b['decision'] == 'HOLD' and 'origin 집합' in (_v25b.get('reason') or ''))
+    _v25c = verdict(mk(base[:2], [v * 1.12 for v in base[:2]]), require_arms=8)
+    chk(f'㉕c ★ 2팔뿐인데 8팔을 요구하면 HOLD (Codex: 옛 판은 판정했다) ({_v25c["decision"]})',
+        _v25c['decision'] == 'HOLD' and '정확히 8' in (_v25c.get('reason') or ''))
+    #  ㉕d ★ 쌍대응을 **origin 으로** 짝짓는가 — 파일명 순서를 뒤집어도 같은 답이어야 한다.
+    #  ⚠ 비가 **팔마다 달라야** 판별력이 있다 (상수 비면 SE 가 0 이라 뒤집어도 0).
+    _dvar = [v * (1.10 + 0.004 * _i) for _i, v in enumerate(base)]
+    _c4 = mk(base, _dvar)
+    for _i, _r in enumerate(_c4['DBE']):          # 파일명만 역순, origin 은 그대로
+        _r['file'] = f'p2_DBE_z{7 - _i}.json'
+    _v25d = verdict(_c4)
+    _v25ref = verdict(mk(base, _dvar))
+    chk(f'㉕d ★ 파일명 순서를 뒤집어도 쌍대응 SE 가 같다 (파일명 zip 폐기) '
+        f'({_v25d.get("se_ratio_paired_pct")} vs {_v25ref.get("se_ratio_paired_pct")})',
+        _v25d.get('se_ratio_paired_pct') == _v25ref.get('se_ratio_paired_pct'))
+    #  ㉕e ★ 결과 seal — 도핑 판정은 σ_ion 없이 못 낸다 (LEAN=2 산출물 거부).
+    _v25e = verdict(mk(base, [v * 1.12 for v in base]), require_ionic=True)
+    chk(f'㉕e ★ --require-ionic 인데 σ_ion 이 없으면 HOLD ({_v25e["decision"]})',
+        _v25e['decision'] == 'HOLD' and 'σ_ion' in (_v25e.get('reason') or ''))
+
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
@@ -591,6 +674,12 @@ if __name__ == '__main__':
     ap.add_argument('--seed-ensemble', action='store_true',
                     help='mpm_seed 를 고정 인자에서 면제 (시딩이 확률적인 축을 잴 때). '
                          'prereg 에 등록한 경우에만.')
+    #  ★ CDXIJ-10 (도핑 런 전 최소 계약) — 사전등록이 요구하는 **정확한 팔 수**와
+    #    **이온 산출물**을 명시적으로 강제한다.  기본은 끔 (진단 팔·1팔 프로브 호환).
+    ap.add_argument('--require-arms', type=int, default=None,
+                    help='침대당 정확히 N origin 을 요구한다 (사전등록 8팔 factorial: 8)')
+    ap.add_argument('--require-ionic', action='store_true',
+                    help='σ_ion 이 모든 팔에 있어야 한다 (도핑 트랙 — 이온축이 결론)')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
@@ -605,12 +694,16 @@ if __name__ == '__main__':
     if a.collect_only:
         print('  (--collect-only — 판정하지 않는다)')
         raise SystemExit(0)
-    v = verdict(arms, seed_ensemble=a.seed_ensemble)
+    v = verdict(arms, seed_ensemble=a.seed_ensemble,
+                require_arms=a.require_arms, require_ionic=a.require_ionic)
     print(f'\n══ 판정 (prereg §5) ══\n  결정: **{v["decision"]}**\n  근거: {v["reason"]}')
     if 'ratio' in v:
         print(f'  σ_e 비 = {v["ratio"]}   (h0 ≥ {H0_MIN_RATIO} · h1 = {H1_RATIO})')
     if 'se_ratio_pct' in v:
-        print(f'  비의 표준오차 = {v["se_ratio_pct"]} %p (문턱 {SE_MAX_PCT})')
+        print(f'  비의 표준오차 = {v["se_ratio_pct"]} %p (문턱 {SE_MAX_PCT}, 비대응 = 게이트 규약)')
+    if 'se_ratio_paired_pct' in v:
+        print(f'  쌍대응(origin-key join) 평균 = {v["ratio_paired_mean"]} · '
+              f'SE = {v["se_ratio_paired_pct"]} %p · n = {v.get("n_origin")}')
     if a.out:
         json.dump({'rows': rows, 'verdict': v}, open(a.out, 'w'), ensure_ascii=False, indent=1)
         print(f'\n  → {a.out}')

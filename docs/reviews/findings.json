@@ -579,11 +579,15 @@
   {
    "id": "CDXIJ-10",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "claude",
    "opened_in": "docs/reviews/codex_crosscheck_IJ_20260820.md",
    "title": "도핑 런 전 최소 계약 4항목 (정확한 팔 계약 · pair identity · 실험 전용 causal contract · 결과 seal)",
-   "note": "Codex §③ 이 IJ-02 의 8권장 중 **도핑 런 전에 반드시 필요한 최소 부분집합**으로 넷을 골랐다: ① bed×factor 마다 정확히 8 origin (non-null·unique·모든 factor 와 baseline 이 **같은 집합**, origin 으로 1:1 join) ② `pair_id = bed/input digest + exact origin + fixed-contract digest` ③ 실험 전용 causal contract (pair 간 `sigma_ion_se_S_cm` **만** 변경 허용, 실제 factor 를 manifest 값으로 검증, geometry/phase/fibre digest·vox/grid/plate/periodic·stamp/bridge/diameter·σ_SDCP·temperature·seed·component backend·solver tolerance·code SHA 고정) ④ 결과 seal (full-precision finite positive σ · ionic complete · CG/residual 통과 · atomic publish).  ⚠ **미착수** — 이것이 닫히기 전에는 도핑 팔을 돌리지 않는다.  현재 판정기는 disjoint origin 집합도 h0 를 내고 paired 통계가 **파일명 정렬 zip** 이다."
+   "note": "Codex §③ 이 IJ-02 의 8권장 중 **도핑 런 전에 반드시 필요한 최소 부분집합**으로 넷을 골랐다: ① bed×factor 마다 정확히 8 origin (non-null·unique·모든 factor 와 baseline 이 **같은 집합**, origin 으로 1:1 join) ② `pair_id = bed/input digest + exact origin + fixed-contract digest` ③ 실험 전용 causal contract (pair 간 `sigma_ion_se_S_cm` **만** 변경 허용, 실제 factor 를 manifest 값으로 검증, geometry/phase/fibre digest·vox/grid/plate/periodic·stamp/bridge/diameter·σ_SDCP·temperature·seed·component backend·solver tolerance·code SHA 고정) ④ 결과 seal (full-precision finite positive σ · ionic complete · CG/residual 통과 · atomic publish).  ⚠ **미착수** — 이것이 닫히기 전에는 도핑 팔을 돌리지 않는다.  현재 판정기는 disjoint origin 집합도 h0 를 내고 paired 통계가 **파일명 정렬 zip** 이다.  ★ 2026-08-20 **①②④ 구현** — ① 팔 계약: origin 기록 필수 · 침대 안 unique · **두 침대의 origin 집합 동일** · `--require-arms N` 으로 정확한 개수 ② **origin-key join** 으로 쌍대응 (파일명 정렬 zip 폐기 — Codex 실측에서 그것이 paired SE 를 0.0 %로 보고했다) ④ 결과 seal: `--require-ionic` 이면 모든 팔에 σ_ion 이 유한·양수여야 한다 (도핑은 이온축이 결론이라 `--no-ion` 산출물로 판정 불가). Codex 의 세 mutation 을 ㉕a/b/c 로, 파일명 역순 불변을 ㉕d 로, seal 을 ㉕e 로 상주. ⚠ **③(causal contract digest) 는 미착수** — geometry/phase/fibre digest 와 code SHA 를 payload 가 아직 기록하지 않는다.  도핑 런 전에 남은 항목은 이것 하나다.",
+   "claimed_fixed_sha": "1da6cbda",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest (㉕a~e 팔 계약·origin-key join·결과 seal)"
+   ]
   }
  ]
 }
