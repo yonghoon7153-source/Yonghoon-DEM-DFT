@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import math
 import sys
 from pathlib import Path
 
@@ -14,8 +15,10 @@ if _WRDKIT_SRC.exists() and str(_WRDKIT_SRC) not in sys.path:
 from contextlib import asynccontextmanager  # noqa: E402
 
 from fastapi import FastAPI, HTTPException  # noqa: E402
+from fastapi.encoders import jsonable_encoder  # noqa: E402
+from fastapi.exceptions import RequestValidationError  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import FileResponse  # noqa: E402
+from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from wrdkit import PRESETS as COMPOSITION_PRESETS  # noqa: E402
@@ -48,6 +51,29 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.exception_handler(RequestValidationError)
+async def _validation_error(request, exc: RequestValidationError):
+    """422 with a body that can actually be serialised.
+
+    Pydantic echoes the offending input back in the error detail.  When that
+    input is NaN or Infinity -- exactly the values the new bounds exist to
+    reject -- ``json.dumps`` refuses it and the 422 turns into a 500 with a
+    stack trace, so the one case the validation was added for reports as a
+    server fault instead of bad input.
+    """
+    def clean(value):
+        if isinstance(value, float) and not math.isfinite(value):
+            return repr(value)
+        if isinstance(value, dict):
+            return {key: clean(item) for key, item in value.items()}
+        if isinstance(value, (list, tuple)):
+            return [clean(item) for item in value]
+        return value
+
+    return JSONResponse(status_code=422,
+                        content={"detail": clean(jsonable_encoder(exc.errors()))})
+
 
 app.include_router(groups.router)
 app.include_router(samples.router)

@@ -1,5 +1,7 @@
 """Samples, groups, and the cell spec that drives normalisation."""
 
+import pytest
+
 
 def test_a_sample_resolves_its_cell_spec(client, sample_id):
     sample = client.get(f"/api/samples/{sample_id}").json()
@@ -133,3 +135,58 @@ def test_deleting_a_sample_with_its_files_drops_their_parse_cache(client, sample
 
 def test_an_empty_sample_name_is_rejected(client):
     assert client.post("/api/samples", json={"name": "   "}).status_code == 422
+
+
+# --- 물리량 입력의 문지기 ----------------------------------------------------
+#
+# 여기가 데이터 계약의 입구다. 음수 질량과 NaN 은 wrdkit 이 뒤에서 걸러 주더라도
+# DB 에 남아, 조회할 때마다 같은 잘못된 수를 다시 만들어 낸다.
+
+@pytest.mark.parametrize("payload", [
+    {"total_mass_mg": -5},
+    {"total_mass_mg": 0},
+    {"active_mass_mg": -1},
+    {"area_cm2": -2},
+    {"diameter_mm": -13},
+    {"thickness_um": 0},
+    {"active_wt_percent": 800},
+    {"active_wt_percent": -80},
+    {"reference_cycle": 0},
+    {"c_rate": -0.2},
+    {"composition": [{"name": "AM", "wt_percent": 150}]},
+])
+def test_impossible_physical_values_are_refused(client, payload):
+    response = client.post("/api/samples", json={"name": "X", **payload})
+    assert response.status_code == 422, payload
+
+
+@pytest.mark.parametrize("field", ["total_mass_mg", "area_cm2", "active_wt_percent"])
+@pytest.mark.parametrize("value", [float("nan"), float("inf"), float("-inf")])
+def test_nan_and_infinity_are_refused_with_a_serialisable_422(client, field, value):
+    """NaN 은 모든 산술을 물들이고 화면엔 빈칸으로 보인다.
+
+    그리고 422 본문에는 문제의 입력이 그대로 되돌아오는데, NaN 은 JSON 으로
+    직렬화되지 않아 422 가 500 으로 바뀐다 — 검증을 넣은 바로 그 경우가
+    서버 오류로 보고된다.
+    """
+    import json
+
+    response = client.post(
+        "/api/samples",
+        content=json.dumps({"name": "X", field: value}, allow_nan=True),
+        headers={"content-type": "application/json"})
+    assert response.status_code == 422
+    response.json()          # 본문이 실제로 직렬화되는지
+
+
+@pytest.mark.parametrize("payload", [
+    {"current_collector_mass_mg": 0},
+    {"composition": [{"name": "PTFE", "wt_percent": 0}]},
+    {"reference_cycle": 1},
+    {"total_mass_mg": 31.6, "active_wt_percent": 100},
+    {"total_mass_mg": 31.6, "active_wt_percent": 0},
+])
+def test_legitimate_edge_values_still_pass(client, payload):
+    """0 은 결함이 아니다 — 자립막은 집전체가 없고, PTFE 0 wt% 는 기록이다."""
+    response = client.post("/api/samples", json={"name": "OK", **payload})
+    assert response.status_code == 201, payload

@@ -101,6 +101,37 @@ class CellSpec:
             return self.composition.active_wt_percent
         return None
 
+    @property
+    def composition_names_no_active(self) -> bool:
+        """A blend was written down, and none of it is active material.
+
+        This is not the same as writing nothing down, and the difference
+        decides a number that gets published.  With no composition at all the
+        only reading available is "the mass I was given is the active mass" --
+        wrong in general, but stated as an assumption.  With a composition
+        whose every component is unrecognised, the operator *did* tell us what
+        the film is, and the honest answer is that the active fraction is
+        unknown (non-negotiable #4).  Treating the two the same puts the
+        binder, the electrolyte and the carbon into the mAh/g denominator and
+        reports the result as if it were measured.
+        """
+        if self.active_wt_percent is not None or not self.composition:
+            return False
+        if self.composition.is_empty():
+            return False
+        # "no component is active" only.  A blend that *does* name an active
+        # material at 0 wt% is a different statement -- the operator weighed it
+        # and it is zero -- and it already has its own reason.
+        return not any(c.role == "active" for c in self.composition.components)
+
+    @property
+    def unrecognised_component_names(self) -> list[str]:
+        """Components whose role could not be told from their name."""
+        if not self.composition:
+            return []
+        return [c.name for c in self.composition.components
+                if c.role == "other" and c.wt_percent]
+
     def resolve(self) -> ResolvedCell:
         notes: dict[str, str] = {}
 
@@ -117,6 +148,13 @@ class CellSpec:
             wt_percent = self.effective_active_wt_percent
             if electrode_mg <= 0:
                 notes["active_mass"] = "current collector mass exceeds total mass"
+            elif self.composition_names_no_active:
+                unknown = self.unrecognised_component_names
+                detail = (f" - none of {', '.join(unknown)} is a known active material"
+                          if unknown else "")
+                notes["active_mass"] = (
+                    "the composition names no active material" + detail
+                    + "; enter the active wt% to use mAh/g")
             elif wt_percent is not None and not 0 <= wt_percent <= 100:
                 # -80 or 800 would silently make mAh/g negative or eight times
                 # too small; a fraction outside [0, 100] is not a fraction.
