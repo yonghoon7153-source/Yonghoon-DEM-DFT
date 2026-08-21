@@ -684,19 +684,28 @@ def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
     The record does not carry the schedule down here, so the shape has to stand
     in for the metadata, and four things have to hold at once.
     """
+    n = len(cycles)
     shift = _exact_level_shift(cycles, values)
     if shift is None:
         return None
     rss, start, end, offset, residual = shift
-    n = len(cycles)
-
-    # Clearly better than a bend, not better by a nose.  On a straight line
-    # both models are fitting noise and the block model wins by a couple of
-    # percent about half the time; naming an "excursion" there would be
-    # inventing an event.  A real block leaves a third of the residual or less
-    # (2.3 against 44 on a 4 %p step).
+    # Clearly better than a bend, not better by a nose.  On a straight line both
+    # models are fitting noise and the block model wins by a couple of percent
+    # about half the time; naming an "excursion" there would be inventing an
+    # event.  A real block leaves a third of the residual or less (2.3 against
+    # 44 on a 4 %p step).
+    #
+    # Known limit: this competition is line-versus-line-with-a-block, so a cell
+    # that has a real knee *and* a block has no straight line to offer and the
+    # block search chases the knee's residual instead.  On an adversarial grid
+    # of block position, length, sign and post-knee rate, a third of the cells
+    # come back with the wrong cycle -- usually the block's trailing edge.
+    # Searching the block in the bend's residual was tried and did not find it
+    # either; telling the two apart needs them fitted together, which is the
+    # joint event model this module does not have yet.
     if rss >= 0.7 * rss_bend:
         return None
+
     # Seen rejoining, counted in observations.  Comparing cycle *numbers*
     # against `last - MIN_SEGMENT` rejected a block that ended at cycle 96 of a
     # 100-cycle record even though four full cycles followed it, and accepted

@@ -1035,3 +1035,34 @@ def test_straight_lines_do_not_manufacture_measurement_events():
         if "rejoined" in detect_knee(cycles, q, reference_cycle=3).primary.reason:
             made_up += 1
     assert made_up == 0, made_up
+
+
+def test_a_block_and_a_knee_together_are_a_known_limit():
+    """블록과 진짜 knee 가 같이 있으면 아직 틀린다 — 그 사실을 고정해 둔다.
+
+    경쟁이 "직선 대 직선+블록" 이라, 진짜로 꺾인 셀에는 내놓을 직선이 없고 블록
+    탐색이 knee 의 잔차를 쫓아간다.  단순한 배치(블록이 knee 보다 한참 앞)는
+    맞지만, 적대 격자에서는 셋에 하나가 틀린 사이클로 나온다.
+
+    이 테스트는 무엇이 맞는지가 아니라 얼마나 틀리는지를 고정한다.  joint event
+    model 을 넣으면 이 숫자가 내려가야 하고, 손대지 않았는데 올라가면 다른 것이
+    깨진 것이다.
+    """
+    truth = 50.0
+    wrong = 0
+    total = 0
+    for start in (12, 20, 28, 62, 70):
+        for length in (8, 14, 20):
+            for size in (-4.0, +4.0):
+                def shape(c, s=start, span=length, step=size):
+                    base = 100 - 0.05 * (min(c, truth) - 3) - 0.30 * max(c - truth, 0)
+                    return base + (step if s <= c < s + span else 0.0)
+
+                primary = detect_knee(*_curve(100, shape), reference_cycle=3).primary
+                total += 1
+                if not primary.detected or abs(primary.cycle - truth) > 5:
+                    wrong += 1
+    assert total == 30
+    # 지금 15/30 이다.  올라가면 다른 것이 깨진 것이고, 내려가면 joint event
+    # model 이 들어왔다는 뜻이니 이 숫자를 같이 내린다.
+    assert wrong <= 15, f"{wrong}/{total} — 더 나빠졌다"
