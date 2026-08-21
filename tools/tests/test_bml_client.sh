@@ -52,14 +52,19 @@ echo "다른 기계가 칠 수 있는 주소 고르기"
 # 실제로 겪은 목록.  169.254.x 가 맨 앞이라 `hostname -I | awk '{print $1}'`
 # 이 그것을 골랐고, 노트북에서는 끝내 안 열렸다.
 check "169.254.x 를 고르지 않는다" \
-  "$(lan_addresses '169.254.83.107 192.168.0.40 192.168.56.1' | tr '\n' ' ')" "192.168.0.40 "
-check "VirtualBox 호스트 전용을 버린다" "$(lan_addresses '192.168.56.1')" ""
-check "루프백을 버린다"                 "$(lan_addresses '127.0.0.1')"     ""
+  "$(reachable_addresses '169.254.83.107 192.168.0.40 192.168.56.1' | tr '\n' ' ')" "lan 192.168.0.40 "
+check "VirtualBox 호스트 전용을 버린다" "$(reachable_addresses '192.168.56.1')" ""
+check "루프백을 버린다"                 "$(reachable_addresses '127.0.0.1')"     ""
 # 도커 브리지와 WSL NAT 이 같은 대역이다.  둘 다 그 PC 안에서만 통한다.
-check "172.17.x 를 버린다"              "$(lan_addresses '172.17.0.1')"    ""
-check "172.28.x 를 버린다"              "$(lan_addresses '172.28.144.1')"  ""
-check "10.x 는 남긴다"                  "$(lan_addresses '10.0.1.5')"      "10.0.1.5"
-check "하나도 없으면 빈 값"             "$(lan_addresses '127.0.0.1 169.254.1.2')" ""
+check "172.17.x 를 버린다"              "$(reachable_addresses '172.17.0.1')"    ""
+check "172.28.x 를 버린다"              "$(reachable_addresses '172.28.144.1')"  ""
+check "10.x 는 남긴다"                  "$(reachable_addresses '10.0.1.5')"      "lan 10.0.1.5"
+check "하나도 없으면 빈 값"             "$(reachable_addresses '127.0.0.1 169.254.1.2')" ""
+# 두 사람이 다른 공유기에 있으면 이것만 통한다.  LAN 만 찍으면 안 알려 주게 된다.
+check "사설망 100.64/10 을 남긴다"      "$(reachable_addresses '100.118.47.60')" "vpn 100.118.47.60"
+check "공인 100.x 는 사설망이 아니다"   "$(reachable_addresses '100.20.1.1')"    ""
+check "100.127.x 까지가 사설망이다"     "$(reachable_addresses '100.127.0.1')"   "vpn 100.127.0.1"
+check "100.128.x 는 아니다"             "$(reachable_addresses '100.128.0.1')"   ""
 
 echo
 echo "실제로 열려 있는 곳"
