@@ -508,9 +508,14 @@ function useOneRowClamp(count: number) {
       const chip = node?.firstElementChild as HTMLElement | null
       if (!node || !chip) return
       const measure = () => {
-        const height = chip.offsetHeight
-        setRowHeight(height || null)
-        setOverflows(node.scrollHeight > height + 2)
+        const style = getComputedStyle(node)
+        const oneRow = oneRowHeight(
+          chip.offsetHeight,
+          parseFloat(style.paddingTop),
+          parseFloat(style.paddingBottom),
+        )
+        setRowHeight(oneRow || null)
+        setOverflows(node.scrollHeight > oneRow + 2)
       }
       measure()
       const observer = new ResizeObserver(measure)
@@ -519,6 +524,26 @@ function useOneRowClamp(count: number) {
     }, [count])
 
     return { box, rowHeight, overflows }
+}
+
+/** How tall the chip box may be and still show exactly one row.
+ *
+ * The container is `box-sizing: border-box` and carries 8px above the chips
+ * and 12px below, so a clamp set to the bare chip height (~20px) spends all of
+ * it on padding and slices every chip in half -- which is what shipped.  Both
+ * numbers here are border-box heights so `scrollHeight` can be compared
+ * against them directly, and the toggle stops appearing over a legend that
+ * already fits.
+ *
+ * Exported because jsdom has no layout engine: every offsetHeight there is 0,
+ * so a rendering test cannot see this arithmetic go wrong. */
+export function oneRowHeight(
+  chipHeight: number,
+  paddingTop: number,
+  paddingBottom: number,
+): number {
+  if (!chipHeight) return 0
+  return chipHeight + (paddingTop || 0) + (paddingBottom || 0)
 }
 
 export function PlotLegend({ series, onToggle }: LegendProps) {

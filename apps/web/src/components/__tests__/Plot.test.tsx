@@ -29,7 +29,7 @@ vi.mock('uplot', () => {
   return { default: FakePlot }
 })
 
-import { Plot, PlotLegend, pointAt, splitAxisLabel } from '../Plot'
+import { oneRowHeight, Plot, PlotLegend, pointAt, splitAxisLabel } from '../Plot'
 import type { PlotMarker } from '../Plot'
 
 /** jsdom has no layout, so the plot would stay under its 80px width floor. */
@@ -133,6 +133,25 @@ describe('PlotLegend', () => {
     const swatches = container.querySelectorAll<HTMLElement>('.swatch')
     expect(swatches[0]?.style.background).toBe(`var(--series-7, ${SERIES_COLORS[7]!})`)
     expect(swatches[1]?.style.background).toBe(`var(--series-1, ${SERIES_COLORS[1]!})`)
+  })
+})
+
+describe('범례 한 줄 접기', () => {
+  // jsdom 에는 레이아웃이 없어서 offsetHeight 가 전부 0 이다.  렌더링 테스트로는
+  // 이 계산이 틀린 것을 볼 수 없어서, 그대로 화면에 나갔다.
+  it('칩 높이만으로 자르면 칩이 반토막 난다 — 컨테이너 padding 까지 센다', () => {
+    // .legend-chips 는 border-box 이고 위 8px · 아래 12px 를 가진다.  clamp 를
+    // 칩 높이 20px 로 두면 padding 이 그 20 을 다 써서 칩 몫이 0 이 되고,
+    // 화면에는 칩의 윗동강만 남는다.
+    expect(oneRowHeight(20, 8, 12)).toBe(40)
+  })
+
+  it('padding 을 못 읽으면 칩 높이만 쓴다 — NaN 이 clamp 를 통째로 날리지 않게', () => {
+    expect(oneRowHeight(20, NaN, NaN)).toBe(20)
+  })
+
+  it('잴 칩이 없으면 0 — clamp 를 걸지 않는다는 뜻', () => {
+    expect(oneRowHeight(0, 8, 12)).toBe(0)
   })
 })
 
