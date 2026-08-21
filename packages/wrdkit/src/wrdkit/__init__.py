@@ -22,11 +22,18 @@ from .cycles import (
     summarize_cycles,
 )
 from .downsample import lttb, lttb_indices
+from .ica import (
+    DifferentialCapacity,
+    differential_capacities,
+    differential_capacity,
+)
 from .export import (
     cycles_csv_string,
+    dqdv_csv_string,
     profiles_csv_string,
     raw_csv_string,
     write_cycles_csv,
+    write_dqdv_csv,
     write_profiles_csv,
     write_raw_csv,
     write_xlsx,
@@ -68,8 +75,10 @@ __all__ = [
     "normalize_capacity", "c_rate", "areal_loading", "retention",
     # composition
     "Composition", "Component", "Role", "parse_composition",
+    # dQ/dV (ICA)
+    "DifferentialCapacity", "differential_capacity", "differential_capacities",
     # plotting / export
     "lttb", "lttb_indices", "write_raw_csv", "write_cycles_csv",
     "write_profiles_csv", "raw_csv_string", "cycles_csv_string",
-    "profiles_csv_string", "write_xlsx",
+    "profiles_csv_string", "write_dqdv_csv", "dqdv_csv_string", "write_xlsx",
 ]

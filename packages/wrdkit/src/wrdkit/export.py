@@ -22,12 +22,14 @@ from typing import TextIO
 import numpy as np
 
 from .cycles import CycleSummary, Profile
+from .ica import DifferentialCapacity
 from .normalize import Basis, ResolvedCell, normalize_capacity
 from .wrd import WrdFile
 
 __all__ = [
-    "write_raw_csv", "write_cycles_csv", "write_profiles_csv",
-    "raw_csv_string", "cycles_csv_string", "profiles_csv_string", "write_xlsx",
+    "write_raw_csv", "write_cycles_csv", "write_profiles_csv", "write_dqdv_csv",
+    "raw_csv_string", "cycles_csv_string", "profiles_csv_string",
+    "dqdv_csv_string", "write_xlsx",
 ]
 
 _UNIX_OFFSET = 62_135_596_800.0
@@ -186,6 +188,39 @@ def write_profiles_csv(profiles: Sequence[Profile], cell: ResolvedCell,
         writer.writerow(row)
 
 
+def write_dqdv_csv(curves: Sequence[DifferentialCapacity], cell: ResolvedCell,
+                   stream: TextIO, *, basis: str = Basis.ABSOLUTE) -> None:
+    """Voltage/dQdV column pairs, one pair per curve, side by side.
+
+    Laid out like the profile CSV so the two open the same way in the same
+    spreadsheet -- somebody comparing a capacity curve against its derivative
+    should not have to learn a second layout.
+
+    Unusable curves are written as an empty pair rather than skipped.  A
+    reader counting columns against the cycles they asked for would otherwise
+    silently line up cycle 51's data under cycle 30's header.
+    """
+    writer = csv.writer(stream, lineterminator="\n")
+    usable = basis if cell.divisor(basis) else Basis.ABSOLUTE
+    # mAh/V divided by grams is (mAh/g)/V.  The same divisor, one more slash.
+    unit = f"{usable}/V"
+
+    header: list[str] = []
+    columns: list[np.ndarray] = []
+    for curve in curves:
+        tag = f"cycle{curve.cycle_number}_{curve.branch}"
+        header += [f"{tag}_voltage (V)", f"{tag}_dQdV ({unit})"]
+        columns += [curve.voltage, normalize_capacity(curve.dq_dv, cell, usable)]
+
+    writer.writerow(header or ["voltage", "dQdV"])
+    depth = max((len(c) for c in columns), default=0)
+    for i in range(depth):
+        row = []
+        for values in columns:
+            row.append(f"{values[i]:.6g}" if i < len(values) else "")
+        writer.writerow(row)
+
+
 def _fmt(value: float | None) -> str:
     return "" if value is None else f"{value:.6g}"
 
@@ -205,6 +240,12 @@ def cycles_csv_string(cycles, cell, **kwargs) -> str:
 def profiles_csv_string(profiles, cell, **kwargs) -> str:
     buffer = io.StringIO()
     write_profiles_csv(profiles, cell, buffer, **kwargs)
+    return buffer.getvalue()
+
+
+def dqdv_csv_string(curves, cell, **kwargs) -> str:
+    buffer = io.StringIO()
+    write_dqdv_csv(curves, cell, buffer, **kwargs)
     return buffer.getvalue()
 
 
