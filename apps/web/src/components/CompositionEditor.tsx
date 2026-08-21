@@ -16,6 +16,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
+import { plain } from '../lib/format'
 import { ko } from '../lib/i18n'
 import type {
   Component, ComponentRole, CompositionPreset, PresetSettings, Sample,
@@ -50,16 +51,6 @@ const SETTING_ROWS: { key: keyof PresetSettings; label: string; unit?: string }[
   { key: 'reference_offset_v', label: '오프셋', unit: 'V' },
 ]
 
-/** The number as it was entered, minus float noise.
- *
- * Not `num()`: that formats *measurements* to a fixed significance, and a
- * preset line is a record of what will be written.  205.9 mAh/g shown as
- * "206" is a different nominal capacity, and "13.0 mm" is a punch nobody
- * typed. */
-function exact(value: number): string {
-  return String(Number(value.toFixed(6)))
-}
-
 /** The settings this cell would hand to a preset saved right now. */
 export function presetSettingsOf(sample: Sample): PresetSettings {
   return {
@@ -84,7 +75,7 @@ export function describeSettings(settings: PresetSettings | undefined): string[]
   for (const row of SETTING_ROWS) {
     const value = settings[row.key]
     if (value === null || value === undefined || value === '') continue
-    const shown = typeof value === 'number' ? exact(value) : value
+    const shown = typeof value === 'number' ? plain(value) : value
     parts.push(`${row.label} ${shown}${row.unit ? ` ${row.unit}` : ''}`)
   }
   return parts
@@ -445,7 +436,7 @@ function PresetDialog({
   const carried = describeSettings(settings)
   const blend = components.length
     ? `${components.map((c) => c.name).join(':')} = ${components
-        .map((c) => exact(c.wt_percent))
+        .map((c) => plain(c.wt_percent))
         .join(':')}`
     : ''
   const empty = !components.length && !carried.length

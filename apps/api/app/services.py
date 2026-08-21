@@ -300,6 +300,24 @@ def schedule_payload(wrd: WrdFile) -> dict:
     }
 
 
+def _formation_c_rate(payload: dict) -> float | None:
+    """The formation rate, from the currents the schedule already carries.
+
+    Formation runs once, outside the loop, at a fraction of the cycling
+    current -- so the ratio of the two currents scales the cycling rate into
+    the formation one.  Derived rather than asked for, because the instrument
+    knows it (CLAUDE.md §0.3), and left as ``None`` when the cycling rate
+    could not be inferred: a formation rate computed from a guessed cycling
+    rate would be a guess about a guess.
+    """
+    cycling_rate = payload.get("c_rate")
+    cycling_a = payload.get("cycling_current_a")
+    formation_a = payload.get("formation_current_a")
+    if not cycling_rate or not cycling_a or not formation_a:
+        return None
+    return cycling_rate * formation_a / cycling_a
+
+
 def apply_schedule_defaults(sample: Sample, payload: dict) -> bool:
     """Fill blank sample conditions from the schedule; never overwrite input."""
     changed = False
@@ -307,6 +325,7 @@ def apply_schedule_defaults(sample: Sample, payload: dict) -> bool:
         "cutoff_upper_v": payload.get("upper_cutoff_v"),
         "cutoff_lower_v": payload.get("lower_cutoff_v"),
         "c_rate": payload.get("c_rate"),
+        "c_rate_formation": _formation_c_rate(payload),
     }
     for field, value in mapping.items():
         if value is not None and getattr(sample, field) is None:

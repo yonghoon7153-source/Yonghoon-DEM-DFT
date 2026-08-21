@@ -242,3 +242,36 @@ def test_the_reference_electrode_comes_back_out(client):
                            json={"reference_offset_v": 0.62}).json()
     assert patched["reference_offset_v"] == 0.62
     assert patched["reference_electrode"] == "Li-In"
+
+
+def test_the_formation_rate_comes_from_the_schedule(client, scheduled_wrd_bytes):
+    """계측기가 아는 것을 사람에게 다시 묻지 않는다 (CLAUDE.md §0.3).
+
+    형성은 루프 밖에서 한 번, 본 사이클 전류의 몇 분의 일로 돈다.  그 전류 비가
+    본 사이클 C-rate 를 형성 C-rate 로 환산해 준다 — 스케줄에 이미 다 있는
+    값들이다.
+    """
+    sample = client.post("/api/samples", json={"name": "SCHED-01"}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("s_011.wrd", scheduled_wrd_bytes,
+                                "application/octet-stream")})
+
+    filled = client.get(f"/api/samples/{sample['id']}").json()
+    if filled["c_rate"] is None:
+        pytest.skip("이 픽스처의 스케줄로는 본 사이클 C-rate 를 추론하지 못한다")
+    assert filled["c_rate_formation"] is not None
+    assert filled["c_rate_formation"] < filled["c_rate"], "형성이 본 사이클보다 빠르다"
+
+
+def test_a_typed_condition_is_never_overwritten_by_a_schedule(client,
+                                                              scheduled_wrd_bytes):
+    """입력은 덮어쓰기다.  파일을 하나 더 붙였다고 사람이 적은 값이 바뀌면 안 된다."""
+    sample = client.post("/api/samples", json={"name": "SCHED-02",
+                                               "c_rate": 0.05,
+                                               "c_rate_formation": 0.01}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("s_011.wrd", scheduled_wrd_bytes,
+                                "application/octet-stream")})
+
+    after = client.get(f"/api/samples/{sample['id']}").json()
+    assert (after["c_rate"], after["c_rate_formation"]) == (0.05, 0.01)

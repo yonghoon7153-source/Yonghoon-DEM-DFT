@@ -16,6 +16,17 @@ export function num(value: number | null | undefined, digits = 4): string {
   return value.toPrecision(Math.max(2, digits - 1))
 }
 
+/** 사람이 적은 그대로의 수 — 부동소수점 찌꺼기만 턴다.
+ *
+ * `num()` 과 다르다.  저쪽은 *측정값*을 일정한 유효숫자로 맞추는 것이고,
+ * 여기는 "적힌 값을 그대로 보여 준다" 이다.  0.2C 를 "0.20C" 로, 205.9 mAh/g 를
+ * "206" 으로 쓰면 사람이 넣지 않은 정밀도가 생기거나 값 자체가 달라진다.
+ */
+export function plain(value: number | null | undefined): string {
+  if (value === null || value === undefined || !Number.isFinite(value)) return '—'
+  return String(Number(value.toFixed(6)))
+}
+
 export function pct(value: number | null | undefined, digits = 2): string {
   if (value === null || value === undefined || !Number.isFinite(value)) return '—'
   return value.toFixed(digits)

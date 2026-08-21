@@ -148,11 +148,15 @@ function SampleTable({ samples }: { samples: Sample[] }) {
             <th style={{ textAlign: 'left' }}>그룹</th>
             <th>날짜</th>
             <th style={{ textAlign: 'left' }}>양극재</th>
+            <th style={{ textAlign: 'left' }}>공정</th>
             <th style={{ textAlign: 'left' }}>조성</th>
             <th>활물질 (mg)</th>
             <th>면적 (cm²)</th>
             <th>로딩 (mg/cm²)</th>
-            <th>C-rate</th>
+            {/* 형성과 본 사이클은 다른 실험 조건이다.  한 칸에 하나만 보이면
+                "0.1C 로 돌린 셀" 이 형성 0.1C 인지 본 사이클 0.1C 인지 알 수
+                없고, 둘은 전혀 다른 시험이다. */}
+            <th>C-rate (형성/본)</th>
             <th>온도</th>
             <th>파일</th>
             <th>사이클</th>
@@ -171,13 +175,28 @@ function SampleTable({ samples }: { samples: Sample[] }) {
                 <td className="text dim">
                   {sample.cathode_detail || sample.cathode_type || '—'}
                 </td>
+                <td className="text dim">{sample.process || '—'}</td>
                 <td className="text dim tiny">
                   {cell.composition_compact_label || '—'}
                 </td>
                 <td>{cell.active_mass_g ? num(cell.active_mass_g * 1000) : '—'}</td>
                 <td>{num(cell.area_cm2)}</td>
                 <td>{num(cell.loading_mg_cm2, 3)}</td>
-                <td>{sample.c_rate ? `${sample.c_rate}C` : '—'}</td>
+                <td className="nowrap">
+                  {sample.c_rate || sample.c_rate_formation ? (
+                    <>
+                      <span className={sample.c_rate_formation ? '' : 'faint'}>
+                        {sample.c_rate_formation ? `${sample.c_rate_formation}C` : '—'}
+                      </span>
+                      <span className="faint"> / </span>
+                      <span className={sample.c_rate ? '' : 'faint'}>
+                        {sample.c_rate ? `${sample.c_rate}C` : '—'}
+                      </span>
+                    </>
+                  ) : (
+                    '—'
+                  )}
+                </td>
                 <td>{sample.temperature_c !== null ? `${sample.temperature_c}°C` : '—'}</td>
                 <td>{sample.run_count}</td>
                 <td>{sample.cycle_count}</td>

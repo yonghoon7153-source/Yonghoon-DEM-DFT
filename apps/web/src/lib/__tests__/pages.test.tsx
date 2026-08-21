@@ -1047,3 +1047,73 @@ describe('클립보드 복사', () => {
     expect(await screen.findByText('복사할 사이클 데이터가 없습니다')).toBeInTheDocument()
   })
 })
+
+// --- 시험 조건 ---------------------------------------------------------------
+
+describe('시험 조건 입력', () => {
+  it('라이브러리에서 비어 보이던 칸들을 여기서 채운다', async () => {
+    const sent: Record<string, unknown>[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          sent.push(JSON.parse(String(init.body)))
+          return sample({ process: 'dry', temperature_c: 60 })
+        }
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await userEvent.type(await screen.findByLabelText(/^공정/), 'dry')
+    await userEvent.type(screen.getByLabelText(/^온도/), '60')
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(sent[0]).toMatchObject({ process: 'dry', temperature_c: 60 })
+  })
+
+  it('스케줄이 말한 C-rate 를 옆에 적어 둔다 — 덮어쓴 것이 보여야 한다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/runs'
+          ? [
+              run({
+                schedule: {
+                  c_rate: 0.2,
+                  cycling_current_a: 0.002,
+                  formation_current_a: 0.001,
+                },
+              }),
+            ]
+          : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    // 본 사이클은 그대로, 형성은 전류 비로 환산해서.
+    expect(await screen.findByText('0.2C')).toBeInTheDocument()
+    expect(screen.getByText('0.1C')).toBeInTheDocument()
+  })
+
+  it('비운 칸은 지우는 것이지 0 으로 두는 것이 아니다', async () => {
+    const sent: Record<string, unknown>[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          sent.push(JSON.parse(String(init.body)))
+          return sample()
+        }
+        if (path(url) === '/api/samples/1') return sample({ temperature_c: 60 })
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await userEvent.clear(await screen.findByLabelText(/^온도/))
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => expect(sent).toHaveLength(1))
+    // 0 °C 는 실제 온도다.  빈 칸을 0 으로 보내면 영하 실험과 미입력이 같아진다.
+    expect(sent[0]).toEqual({ clear: ['temperature_c'] })
+  })
+})

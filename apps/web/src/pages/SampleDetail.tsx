@@ -7,6 +7,7 @@ import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
 import { CompositionEditor } from '../components/CompositionEditor'
 import { CyclePicker } from '../components/CyclePicker'
+import { TestConditionsPanel } from '../components/TestConditionsPanel'
 import { CycleTable } from '../components/CycleTable'
 import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../components/Plot'
 import { KneeDetail, ReportCard } from '../components/ReportCard'
@@ -497,6 +498,19 @@ export function SampleDetail() {
           ) : reportState.data ? (
             <ReportCard report={reportState.data} />
           ) : null}
+        </Card>
+
+        {/* 계산에 안 들어가는 값들이지만, 셀이 서른 개 쌓이면 라이브러리에서
+            무엇과 무엇을 나란히 놓을지를 이것들이 정한다.  셀 상태 바로 밑에
+            둔 이유는, 여기가 "이 셀이 무엇이었나" 를 읽는 자리이기 때문이다. */}
+        <Card title="시험 조건" tight>
+          <div style={{ padding: 'var(--s4)' }}>
+            <TestConditionsPanel
+              sample={sample}
+              schedule={runsState.data?.find((run) => run.schedule?.c_rate)?.schedule}
+              onSaved={setOverride}
+            />
+          </div>
         </Card>
 
         <div className="split">
