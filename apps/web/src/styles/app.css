@@ -909,13 +909,14 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   justify-content: center;
   align-items: flex-start;
   overflow-y: auto;
-  padding: clamp(var(--s4), 12vh, 140px) var(--s4) var(--s5);
+  padding: clamp(var(--s4), 24vh, 240px) var(--s4) var(--s5);
 }
 
 .modal {
   width: min(440px, 100%);
-  /* 위 여백을 뺀 나머지.  이보다 길면 팝업 안에서 스크롤된다. */
-  max-height: min(76vh, 680px);
+  /* 100% 는 배경(=화면)에서 위아래 여백을 뺀 나머지다.  vh 로 따로 적으면 위
+     offset 을 고칠 때 한쪽만 고쳐서 팝업 아래가 화면 밖으로 나간다. */
+  max-height: min(680px, 100%);
   overflow: auto;
   display: flex;
   flex-direction: column;
