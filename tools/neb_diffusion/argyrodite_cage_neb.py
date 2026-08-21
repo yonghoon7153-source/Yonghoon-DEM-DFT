@@ -510,14 +510,33 @@ def one_run(args):
         # 이완된 시작 위에서 **이동 Li 만** 공공 자리로 (원래 홉 벡터를 그대로 적용)
         fin0c = ini.copy()
         fin0c.positions[j2] = ini.positions[j2] + (fin0.positions[j2] - ini0.positions[j2])
-        fin, c2, s2 = relax_positions(fin0c, calc)      # 무작위 교란 없이 같은 분지에서
+        # ⛔⛔ 2026-08-21 실측 — 여기서 **자유 이완을 시키면 Li 가 굴러 돌아온다.**
+        #   첫 판이 그랬다: 홉 거리 2.771 → 0.981 Å 로 붕괴했고, 그러니 밴드가 단조
+        #   증가(안장점 없음)에 Ea(역)=0.0000 이 나왔다. 수렴은 했지만 **홉이 아니었다.**
+        #   끝점은 이동 Li 를 **목표 자리에 고정**한 채 나머지만 이완해야 한다 —
+        #   그게 "이 자리로 옮긴 상태의 국소 최소" 라는 끝점의 정의다.
+        from ase.constraints import FixAtoms
+        fin0c.set_constraint(FixAtoms(indices=[j2]))
+        fin, c2, s2 = relax_positions(fin0c, calc)      # 이동 Li 고정 · 나머지만 이완
+        fin.set_constraint()                             # NEB 전에 반드시 해제
         ep_f = {"gain_eV": 0.0, "n_escapes": 0, "converged": c2, "steps": s2}
         s1 = ep_i["steps"]
         _drift = float(_np_max_disp(ini, fin, exclude=j2))
+        _hop_done = float(np.linalg.norm(fin.positions[j2] - ini.positions[j2]))
         print(f"   ⭐ 결합 끝점: 시작 이완 {s1} steps → 이동 Li 만 옮겨 끝점 생성 "
               f"({s2} steps {'수렴' if c2 else '미수렴'})")
         print(f"      이동 Li 를 뺀 나머지 최대 변위 {_drift:.3f} Å "
               f"({'✅ 단일 홉으로 성립' if _drift < 1.0 else '⚠ 여전히 협동 이동이다 — (a) 물리 쪽'})")
+        # ★ 홉이 실제로 일어났는지 — 안 일어났으면 뒤의 Ea 는 장벽이 아니다.
+        print(f"      실제 이동 거리 {_hop_done:.3f} / 목표 {hop:.3f} Å "
+              f"({100*_hop_done/hop:.0f} %)")
+        if _hop_done < 0.5 * hop:
+            raise SystemExit(
+                f"⛔ 이동 Li 가 목표의 {100*_hop_done/hop:.0f} % 밖에 안 갔다 "
+                f"({_hop_done:.3f} / {hop:.3f} Å) — **홉이 일어나지 않았다.**\n"
+                f"   이 상태로 NEB 를 돌리면 단조 밴드에 Ea(역)=0 이 나오는데, 그건 장벽이 "
+                f"아니라 작은 변위의 에너지차다 (2026-08-21 실측: 2.771 → 0.981 Å).\n"
+                f"   끝점 이완에서 이동 Li 고정이 풀렸는지 확인할 것.")
     elif args.shallow_endpoints:
         ini, c1, s1 = relax_positions(ini0, calc)
         fin, c2, s2 = relax_positions(fin0, calc)
@@ -1036,6 +1055,25 @@ def selftest():
             "[음성] 다른 원자가 더 크게 움직이면 그게 잡힌다 (실측 3.9 Å 사례)")
     except ImportError:
         print("  ⚠ ase 없음 — 결합 끝점 헬퍼 시험 건너뜀")
+
+    # ── 결합 끝점: 홉 붕괴 가드 (2026-08-21 실측 사고) ───────────────────────
+    #   실측: 자유 이완시켰더니 홉이 2.771 → 0.981 Å (35 %) 로 붕괴했고,
+    #   밴드는 단조 증가에 Ea(역)=0.0000 이 나왔다. 수렴했지만 홉이 아니었다.
+    for _done, _tgt, _should_die in ((0.981, 2.771, True),    # 실측 사고값
+                                     (1.30, 2.771, True),     # 47 % — 경계 바로 아래
+                                     (1.50, 2.771, False),    # 54 % — 통과
+                                     (2.70, 2.771, False)):   # 정상
+        _dies = _done < 0.5 * _tgt
+        chk(_dies == _should_die,
+            f"[{'음성' if _should_die else '양성'}] 이동 {_done}/{_tgt} Å "
+            f"({100*_done/_tgt:.0f} %) → {'중단' if _should_die else '진행'}")
+    from ase.constraints import FixAtoms as _FA
+    _t = _A('Li2', positions=[[0, 0, 0], [3, 0, 0]], cell=[10, 10, 10], pbc=True)
+    _t.set_constraint(_FA(indices=[1]))
+    chk(len(_t.constraints) == 1, "[양성] 끝점 이완 중 이동 Li 를 고정한다")
+    _t.set_constraint()
+    chk(len(_t.constraints) == 0,
+        "[음성] NEB 전에 제약을 반드시 해제한다 (남으면 밴드가 못 움직인다)")
 
     # ── split NEB: 중간자리 식별 (음성 경로 포함) ────────────────────────────
     # 실측 밴드 (comp1 inter_211_deepep) — 이미지 4 가 시작보다 0.462 eV 낮다.
