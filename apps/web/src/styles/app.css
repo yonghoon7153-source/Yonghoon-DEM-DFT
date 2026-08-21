@@ -640,6 +640,10 @@ tbody tr:last-child td { border-bottom: none; }
 .uplot { font-family: var(--sans) !important; }
 .u-legend { display: none !important; }
 
+/* 범례를 접는 토글.  400 곡선이면 칩이 400개고, 그 밑의 모든 것이 화면 밖으로
+   밀린다. */
+.legend-toggle { align-self: flex-start; }
+
 .legend-chips {
   display: flex;
   flex-wrap: wrap;

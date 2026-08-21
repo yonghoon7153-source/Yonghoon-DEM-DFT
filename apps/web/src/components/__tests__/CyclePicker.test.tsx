@@ -59,10 +59,35 @@ describe('CyclePicker', () => {
     expect(screen.getByText(/선택된 사이클이 없습니다/)).toBeInTheDocument()
   })
 
-  it('offers the last cycle as one click', async () => {
+  it('첫 사이클 과 마지막 은 서로를 밀어내지 않는다', async () => {
+    // 한 화면에서 제일 보고 싶은 둘이 어디서 시작했고 지금 어디인가인데,
+    // 두 버튼이 선택을 통째로 갈아치우면 그건 손으로 쳐야만 볼 수 있었다.
     const onChange = vi.fn()
     render(<CyclePicker cycles={cycles} value={[1]} onChange={onChange} basis="mAh" />)
     await userEvent.click(screen.getByRole('button', { name: '마지막' }))
+    expect(onChange).toHaveBeenCalledWith([1, 10])
+  })
+
+  it('이미 골라 둔 사이클을 다시 누르면 뺀다', async () => {
+    const onChange = vi.fn()
+    render(<CyclePicker cycles={cycles} value={[1, 10]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '첫 사이클' }))
     expect(onChange).toHaveBeenCalledWith([10])
+  })
+
+  it('초기화 는 선택을 비운다', async () => {
+    const onChange = vi.fn()
+    render(<CyclePicker cycles={cycles} value={[1, 3]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '초기화' }))
+    expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('전체 는 정말 전체다', async () => {
+    // 40개에서 잘려서, 196 사이클짜리 셀이 자기 기록을 다 못 보여 줬다.
+    const many = Array.from({ length: 120 }, (_, i) => cycle(i + 1, 5 - i * 0.01))
+    const onChange = vi.fn()
+    render(<CyclePicker cycles={many} value={[1]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+    expect(onChange.mock.calls[0]![0]).toHaveLength(120)
   })
 })

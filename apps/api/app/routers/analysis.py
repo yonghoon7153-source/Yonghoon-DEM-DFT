@@ -256,6 +256,26 @@ def run_cycles(
     )
 
 
+#: How many cycles may be drawn at once.  The old ceiling was 60 and a 196-cycle
+#: cell could not show its own record: "all" quietly stopped at cycle 41.
+_PROFILE_CYCLE_LIMIT = 400
+#: Points across *every* curve in one response.  What has to stay bounded is the
+#: payload, not the number of curves, so a request for four hundred curves gets
+#: fewer samples of each rather than a refusal.  1,200 points per curve times
+#: 400 curves is ten megabytes of JSON; this is about one.
+_PROFILE_POINT_BUDGET = 120_000
+#: Below this a curve stops being a curve.
+_MIN_POINTS_PER_CURVE = 80
+
+
+def _points_per_curve(requested: int | None, curves: int) -> int:
+    """Share the point budget out over however many curves were asked for."""
+    limit = requested or settings.default_plot_points
+    if curves <= 0:
+        return limit
+    return max(min(limit, _PROFILE_POINT_BUDGET // curves), _MIN_POINTS_PER_CURVE)
+
+
 @router.get("/samples/{sample_id}/profile", response_model=ProfileOut)
 def sample_profile(
     sample_id: int,
@@ -285,12 +305,13 @@ def sample_profile(
     records = [r for r in sample_cycle_records(session, sample) if r.complete]
     if wanted is not None:
         records = [r for r in records if r.cycle_number in wanted]
-    if len(records) > 60:
+    if len(records) > _PROFILE_CYCLE_LIMIT:
         raise HTTPException(
-            422, f"{len(records)} cycles requested; ask for at most 60 at a time")
+            422, f"{len(records)} cycles requested; ask for at most "
+                 f"{_PROFILE_CYCLE_LIMIT} at a time")
 
     runs = {run.id: run for run in sample.runs}
-    limit = max_points or settings.default_plot_points
+    limit = _points_per_curve(max_points, len(records) * len(requested_branches))
     series: list[ProfileSeriesOut] = []
     for record in records:
         run = runs.get(record.run_id)

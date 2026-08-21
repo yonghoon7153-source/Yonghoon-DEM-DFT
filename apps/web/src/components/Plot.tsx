@@ -41,6 +41,7 @@ interface Props {
   height?: number
   markers?: PlotMarker[]
   yRange?: [number | null, number | null]
+  xRange?: [number | null, number | null]
   legend?: boolean
 }
 
@@ -218,6 +219,7 @@ export function Plot({
   height = 340,
   markers = NO_MARKERS,
   yRange,
+  xRange,
   legend = false,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
@@ -236,10 +238,13 @@ export function Plot({
     .map((m) => `${m.x}|${m.label}|${m.color ?? ''}|${m.tentative ? 't' : ''}`)
     .join(';')
   const rangeKey = yRange ? `${yRange[0]}|${yRange[1]}` : ''
+  const xRangeKey = xRange ? `${xRange[0]}|${xRange[1]}` : ''
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const steadyMarkers = useMemo(() => markers, [markerKey])
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const steadyRange = useMemo(() => yRange, [rangeKey])
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const steadyXRange = useMemo(() => xRange, [xRangeKey])
 
   const data = useMemo(() => {
     if (!visible.length) return null
@@ -265,7 +270,12 @@ export function Plot({
         points: { size: 6, width: 1.5 },
       },
       scales: {
-        x: { time: false },
+        x: {
+          time: false,
+          range: steadyXRange
+            ? (_u, min, max) => [steadyXRange[0] ?? min, steadyXRange[1] ?? max]
+            : undefined,
+        },
         y: {
           range: steadyRange
             ? (_u, min, max) => [steadyRange[0] ?? min, steadyRange[1] ?? max]
@@ -403,6 +413,7 @@ export function Plot({
     yLabel,
     steadyMarkers,
     steadyRange,
+    steadyXRange,
     legend,
     colors,
     wrapRef,
@@ -476,11 +487,33 @@ interface LegendProps {
 }
 
 /** A compact chip legend; uPlot's own legend is too tall for many series. */
+/** How many chips to show before the legend folds itself away.
+ *
+ * Four hundred curves is four hundred chips, and they pushed everything below
+ * the plot off the screen. */
+const LEGEND_PREVIEW = 12
+
 export function PlotLegend({ series, onToggle }: LegendProps) {
+  const [open, setOpen] = useState(false)
   if (series.length <= 1) return null
+  const folds = series.length > LEGEND_PREVIEW
+  const shown = folds && !open ? series.slice(0, LEGEND_PREVIEW) : series
   return (
-    <div className="legend-chips">
-      {series.map((item, index) => (
+    <div className="col" style={{ gap: 6 }}>
+      {folds ? (
+        <button
+          type="button"
+          className="sm legend-toggle"
+          onClick={() => setOpen((was) => !was)}
+          aria-expanded={open}
+        >
+          {open
+            ? `범례 접기 (${series.length}개)`
+            : `범례 전부 보기 (${series.length}개 중 ${LEGEND_PREVIEW}개 표시)`}
+        </button>
+      ) : null}
+      <div className="legend-chips">
+      {shown.map((item, index) => (
         <button
           key={item.label}
           type="button"
@@ -499,6 +532,7 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
           {item.label}
         </button>
       ))}
+      </div>
     </div>
   )
 }

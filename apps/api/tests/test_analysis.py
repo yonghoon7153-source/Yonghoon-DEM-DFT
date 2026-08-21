@@ -37,6 +37,15 @@ def two_cycle_wrd_bytes() -> bytes:
     return synthetic.build_wrd(samples[:-20], start_ticks=start)
 
 
+@pytest.fixture
+def long_sample(client) -> int:
+    """A cell with more cycles than the old ceiling of 60 allowed to be drawn."""
+    sample = client.post("/api/samples", json={"name": "LONG-01"}).json()["id"]
+    samples = synthetic.make_cycles(n_cycles=80, points_per_branch=12)
+    _upload(client, sample, synthetic.build_wrd(samples), name="long.wrd")
+    return sample
+
+
 def test_cycle_table_hides_the_cycle_in_progress_by_default(client, loaded):
     body = client.get(f"/api/samples/{loaded}/cycles").json()
     assert [c["cycle"] for c in body["cycles"]] == [1, 2, 3, 4, 5, 6, 7]
@@ -404,3 +413,31 @@ def test_both_compare_endpoints_share_one_selection_cap(client):
                           params={"sample_ids": ids, "cycle": 3})
     assert cycles.status_code == 422
     assert profiles.status_code == 422, "profiles 가 조용히 30개로 잘랐다"
+
+
+def test_a_long_record_can_draw_every_cycle(client, long_sample):
+    """"전체" 가 정말 전체여야 한다.
+
+    상한이 60 이라, 196 사이클짜리 셀이 자기 기록을 다 못 보여 주고 41번에서
+    조용히 끊겼다.
+    """
+    response = client.get(f"/api/samples/{long_sample}/profile",
+                          params={"cycles": "all", "branches": "discharge"})
+    assert response.status_code == 200, response.text
+    drawn = {item["cycle"] for item in response.json()["series"]}
+    assert len(drawn) >= 60
+
+
+def test_many_curves_share_the_point_budget(client, long_sample):
+    """곡선이 많으면 곡선마다 점을 줄인다 — 거절하지 않는다.
+
+    한계는 곡선 수가 아니라 응답 크기다.  곡선당 1,200 점 × 400 곡선이면
+    10 MB 짜리 JSON 이 된다.
+    """
+    few = client.get(f"/api/samples/{long_sample}/profile",
+                     params={"cycles": "3", "branches": "discharge"}).json()
+    many = client.get(f"/api/samples/{long_sample}/profile",
+                      params={"cycles": "all", "branches": "charge,discharge"}).json()
+    if len(many["series"]) > len(few["series"]) * 4:
+        assert max(s["points"] for s in many["series"]) <= max(
+            s["points"] for s in few["series"])

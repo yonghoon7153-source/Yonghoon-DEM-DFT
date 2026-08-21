@@ -5,6 +5,10 @@ import { useState } from 'react'
 import { basisUnit, num, parseCycleSpec, pct, spread } from '../lib/format'
 import type { Basis, Cycle } from '../lib/types'
 
+/** As many cycles as the API will draw in one response.  Keep in step with
+ *  `_PROFILE_CYCLE_LIMIT` in apps/api/app/routers/analysis.py. */
+export const MAX_DRAWN_CYCLES = 400
+
 export function CyclePicker({
   cycles,
   value,
@@ -24,7 +28,7 @@ export function CyclePicker({
     setSpec(text)
     const parsed = parseCycleSpec(text, available)
     setInvalid(text.trim() !== '' && parsed.length === 0)
-    if (parsed.length) onChange(parsed.slice(0, 40))
+    if (parsed.length) onChange(parsed.slice(0, MAX_DRAWN_CYCLES))
   }
 
   function preset(picks: number[]) {
@@ -33,8 +37,23 @@ export function CyclePicker({
     onChange(picks)
   }
 
+  /** Add or remove one cycle, leaving the rest of the selection alone.
+   *
+   * 첫 사이클 and 마지막 used to replace the whole selection, so the two most
+   * common things to want on screen at once -- where the cell started and
+   * where it is now -- could not be had without typing them. */
+  function toggle(cycle: number | undefined) {
+    if (cycle === undefined) return
+    const next = value.includes(cycle)
+      ? value.filter((c) => c !== cycle)
+      : [...value, cycle].sort((a, b) => a - b)
+    preset(next)
+  }
+
+  const first = available.at(0)
   const last = available.at(-1)
   const focus = cycles.find((c) => c.cycle === value.at(-1))
+  const capped = available.length > MAX_DRAWN_CYCLES
 
   return (
     <div className="col" style={{ gap: 8 }}>
@@ -47,14 +66,28 @@ export function CyclePicker({
           style={{ maxWidth: 220, borderColor: invalid ? 'var(--danger)' : undefined }}
           aria-label="사이클 선택"
         />
-        <button type="button" className="sm" onClick={() => preset(available.slice(0, 1))}>
+        <button
+          type="button"
+          className="sm"
+          disabled={!value.length}
+          onClick={() => preset([])}
+          title="선택을 모두 지웁니다"
+        >
+          초기화
+        </button>
+        <button
+          type="button"
+          className={`sm${first !== undefined && value.includes(first) ? ' on' : ''}`}
+          disabled={first === undefined}
+          onClick={() => toggle(first)}
+        >
           첫 사이클
         </button>
         <button
           type="button"
-          className="sm"
-          disabled={!last}
-          onClick={() => preset(last ? [last] : [])}
+          className={`sm${last !== undefined && value.includes(last) ? ' on' : ''}`}
+          disabled={last === undefined}
+          onClick={() => toggle(last)}
         >
           마지막
         </button>
@@ -64,8 +97,8 @@ export function CyclePicker({
         <button
           type="button"
           className="sm"
-          onClick={() => preset(available.slice(0, 40))}
-          title="최대 40개"
+          onClick={() => preset(available.slice(0, MAX_DRAWN_CYCLES))}
+          title={capped ? `최대 ${MAX_DRAWN_CYCLES}개` : `${available.length}개 전부`}
         >
           전체
         </button>

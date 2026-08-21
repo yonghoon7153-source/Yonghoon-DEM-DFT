@@ -89,6 +89,18 @@ export function SampleDetail() {
     })
   }, [profileState.data, hidden])
 
+  // 축을 이 셀이 낸 가장 큰 용량에 고정한다.  안 그러면 사이클을 하나 넣고
+  // 뺄 때마다 x 축이 늘었다 줄었다 해서, 같은 곡선이 매번 다른 폭으로 보인다.
+  const capacityAxis = useMemo((): [number | null, number | null] | undefined => {
+    let widest = 0
+    for (const cycle of cycles) {
+      if (!cycle.complete) continue
+      widest = Math.max(widest, cycle.discharge_capacity ?? 0, cycle.charge_capacity ?? 0)
+    }
+    // 여유 3 % — 곡선 끝이 축에 딱 붙으면 잘린 것처럼 보인다.
+    return widest > 0 ? [0, widest * 1.03] : undefined
+  }, [cycles])
+
   const lifeSeries: PlotSeries[] = useMemo(() => {
     const complete = cycles.filter((c) => c.complete)
     if (!complete.length) return []
@@ -417,6 +429,7 @@ export function SampleDetail() {
                     series={profileSeries}
                     xLabel={basisAxis(profileState.data?.basis ?? basis)}
                     yLabel="전압 (V)"
+                    xRange={capacityAxis}
                     height={400}
                   />
                   <PlotLegend
@@ -479,7 +492,18 @@ export function SampleDetail() {
             <Card
               title={`사이클 표 · ${cycles.length}개`}
               actions={
-                <span className="tiny faint">행을 누르면 프로파일에 추가·제거됩니다</span>
+                <div className="row" style={{ gap: 8 }}>
+                  <span className="tiny faint">행을 누르면 프로파일에 추가·제거됩니다</span>
+                  <button
+                    type="button"
+                    className="sm"
+                    disabled={!selected.length}
+                    onClick={() => setChosen([])}
+                    title="프로파일 선택을 모두 지웁니다"
+                  >
+                    초기화
+                  </button>
+                </div>
               }
               tight
             >
