@@ -6,8 +6,9 @@
  */
 
 import { noteOwnWrite } from './live'
+import { actorHeader } from './who'
 import type {
-  CompareResponse, CompositionPreset, CycleTable, DashboardRow, Facets, Group, Meta,
+  Activity, CompareResponse, CompositionPreset, CycleTable, DashboardRow, Facets, Group, Meta,
   ProfileResponse, Report, Run, Sample,
 } from './types'
 
@@ -36,7 +37,12 @@ function query(params?: Params): string {
 }
 
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
-  const response = await fetch(path, init)
+  // 이름은 모든 요청에 붙는다.  쓰기에만 붙이면 새 엔드포인트가 생겼을 때
+  // 한 종류의 편집만 익명으로 기록되는데, 그건 아무 오류도 내지 않는다.
+  const response = await fetch(path, {
+    ...init,
+    headers: { ...actorHeader(), ...(init?.headers ?? {}) },
+  })
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`
     try {
@@ -68,6 +74,9 @@ function json(method: string, body: unknown): RequestInit {
 export const api = {
   health: () => request<{ status: string; wrdkit: string }>('/api/health'),
   meta: () => request<Meta>('/api/meta'),
+
+  // -- 누가 무엇을 했는지 ----------------------------------------------------
+  activity: (params?: Params) => request<Activity[]>(`/api/activity${query(params)}`),
 
   // -- groups --------------------------------------------------------------
   listGroups: () => request<Group[]>('/api/groups'),

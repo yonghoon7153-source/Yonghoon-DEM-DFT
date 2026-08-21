@@ -31,6 +31,11 @@ class ExperimentGroup(SQLModel, table=True):
     color: str = ""
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
+    #: 누가 만들었고 누가 마지막으로 고쳤는지.  빈 문자열은 "이름을 대지 않은
+    #: 사람" 이고, 이 기능이 생기기 전에 저장된 행도 그렇다 — 둘을 구분하지
+    #: 않는다.  검증되지 않은 이름이므로 신원이 아니라 기록이다 (ADR 0012).
+    created_by: str = ""
+    updated_by: str = ""
 
     samples: list["Sample"] = Relationship(back_populates="group")
 
@@ -87,6 +92,11 @@ class Sample(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
+    #: 누가 만들었고 누가 마지막으로 고쳤는지.  빈 문자열은 "이름을 대지 않은
+    #: 사람" 이고, 이 기능이 생기기 전에 저장된 행도 그렇다 — 둘을 구분하지
+    #: 않는다.  검증되지 않은 이름이므로 신원이 아니라 기록이다 (ADR 0012).
+    created_by: str = ""
+    updated_by: str = ""
 
     group: ExperimentGroup | None = Relationship(back_populates="samples")
     runs: list["Run"] = Relationship(
@@ -105,6 +115,9 @@ class Run(SQLModel, table=True):
     sha256: str = Field(index=True, unique=True)
     size_bytes: int = 0
     uploaded_at: datetime = Field(default_factory=_now)
+    #: 누가 올렸는지.  파일은 불변이므로 고친 사람은 없다 (CLAUDE.md §0.2).
+    created_by: str = ""
+    updated_by: str = ""
 
     # -- parsed metadata ---------------------------------------------------
     device_model: str = ""
@@ -207,3 +220,38 @@ class CompositionPreset(SQLModel, table=True):
     settings_json: str = ""
     created_at: datetime = Field(default_factory=_now)
     updated_at: datetime = Field(default_factory=_now)
+    #: 누가 만들었고 누가 마지막으로 고쳤는지.  빈 문자열은 "이름을 대지 않은
+    #: 사람" 이고, 이 기능이 생기기 전에 저장된 행도 그렇다 — 둘을 구분하지
+    #: 않는다.  검증되지 않은 이름이므로 신원이 아니라 기록이다 (ADR 0012).
+    created_by: str = ""
+    updated_by: str = ""
+
+
+class Activity(SQLModel, table=True):
+    """무엇이 언제 누구에 의해 바뀌었는지 — 한 줄에 하나.
+
+    Written by a flush listener rather than by the routes (see ``db.py``), so
+    a new endpoint is recorded from the moment it exists.  A log somebody has
+    to remember to append to is a log with exactly one kind of edit missing,
+    and that gap is invisible: the feed looks complete.
+
+    Only the things people talk about are logged -- cells, groups, presets,
+    files.  A cycle row is not an edit anybody made; ten thousand of them
+    arrive from one upload, and the upload is the event.
+    """
+
+    __tablename__ = "activity"
+
+    id: int | None = Field(default=None, primary_key=True)
+    at: datetime = Field(default_factory=_now, index=True)
+    #: Unverified display name; "" when nobody said who they were.
+    actor: str = Field(default="", index=True)
+    action: str = ""            # create | update | delete
+    entity: str = Field(default="", index=True)   # sample | group | preset | run
+    entity_id: int | None = None
+    #: What it was called at the time.  Kept rather than joined: the feed has
+    #: to keep reading after the thing is deleted, and that is exactly when
+    #: somebody is looking for it.
+    label: str = ""
+    #: Which fields changed, comma separated.  Empty on create and delete.
+    fields: str = ""

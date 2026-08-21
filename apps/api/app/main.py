@@ -24,6 +24,7 @@ from fastapi.staticfiles import StaticFiles  # noqa: E402
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
 
+from .actor import ACTOR_HEADER, set_actor  # noqa: E402
 from .db import init_db  # noqa: E402
 from .live import (  # noqa: E402
     REVISION_HEADER,
@@ -31,7 +32,15 @@ from .live import (  # noqa: E402
     revision_stream,
     should_bump,
 )
-from .routers import analysis, exports, groups, presets, runs, samples  # noqa: E402
+from .routers import (  # noqa: E402
+    activity,
+    analysis,
+    exports,
+    groups,
+    presets,
+    runs,
+    samples,
+)
 from .schemas import basis_choices  # noqa: E402
 from .settings import settings  # noqa: E402
 
@@ -90,6 +99,11 @@ async def _announce_writes(request, call_next):
     the symptom is a screen that is stale for one kind of edit only, which is
     the hardest kind of staleness to notice.
     """
+    # Who is writing, for the whole request.  Set here and not in a dependency
+    # so it is in place before any route, service or flush listener runs --
+    # the listener that stamps rows is the one that most needs it, and it runs
+    # far away from anything that could have been given an argument.
+    set_actor(request.headers.get(ACTOR_HEADER))
     response = await call_next(request)
     if should_bump(request.method, response.status_code, request.url.path):
         response.headers[REVISION_HEADER] = str(revision.bump())
@@ -102,6 +116,7 @@ app.include_router(runs.router)
 app.include_router(analysis.router)
 app.include_router(exports.router)
 app.include_router(presets.router)
+app.include_router(activity.router)
 
 
 @app.get("/api/health")

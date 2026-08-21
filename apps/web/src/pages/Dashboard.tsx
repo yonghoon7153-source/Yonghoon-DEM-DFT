@@ -8,6 +8,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { ActivityFeed } from '../components/ActivityFeed'
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
@@ -215,6 +216,16 @@ export function Dashboard() {
           </Card>
         </div>
       ) : null}
+
+      {/* 한 서버를 여럿이 쓰면 제일 먼저 생기는 질문이 "이거 누가 올렸지" 다. */}
+      <div style={{ marginTop: 12 }}>
+        <Card
+          title="최근 활동"
+          actions={<span className="tiny faint">누가 무엇을 바꿨는지</span>}
+        >
+          <ActivityFeed limit={12} />
+        </Card>
+      </div>
     </main>
   )
 }

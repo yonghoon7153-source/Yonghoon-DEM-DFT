@@ -1,5 +1,6 @@
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 
+import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
 import { Dashboard } from './pages/Dashboard'
 import { Library } from './pages/Library'
@@ -33,6 +34,7 @@ export function App() {
           ))}
         </nav>
         <span className="spacer" />
+        <WhoAmI />
       </header>
 
       <Routes>

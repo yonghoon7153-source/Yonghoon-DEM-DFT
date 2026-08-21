@@ -571,6 +571,10 @@ function PresetDialog({
                         .filter(Boolean)
                         .join(' · ')}
                     </span>
+                    {/* 목록이 공용이므로, 지우기 전에 누구 것인지 보여 준다. */}
+                    {preset.created_by ? (
+                      <span className="tiny faint">{preset.created_by}</span>
+                    ) : null}
                   </span>
                   <span className="spacer" />
                   <button

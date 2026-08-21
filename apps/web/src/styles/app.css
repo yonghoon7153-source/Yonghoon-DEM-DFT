@@ -948,3 +948,31 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   border-top: 1px solid var(--line);
 }
 .preset-row:first-child { border-top: 0; }
+
+/* ------------------------------------------------------- 누가 무엇을 했는지 */
+/* 이름표.  아무도 검증하지 않는 표시용 이름이라, 계정처럼 보이지 않게 둔다
+   (ADR 0012). */
+.who { font-weight: 550; }
+.who.unnamed { color: var(--ink-4); font-weight: 450; }
+
+.feed { list-style: none; margin: 0; padding: 0; font-size: 12px; }
+.feed li {
+  display: flex;
+  align-items: baseline;
+  gap: var(--s2);
+  padding: 5px 0;
+  border-top: 1px solid var(--line);
+}
+.feed li:first-child { border-top: 0; }
+.feed .what { min-width: 0; }
+.feed .tag {
+  flex: none;
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: var(--r-pill);
+  background: var(--surface-3);
+  color: var(--ink-3);
+}
+.feed .tag.create { background: var(--pos-wash); color: var(--pos); }
+.feed .tag.delete { background: var(--neg-wash); color: var(--neg); }

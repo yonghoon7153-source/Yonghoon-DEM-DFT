@@ -11,6 +11,7 @@ import { CycleTable } from '../components/CycleTable'
 import { Plot, PlotLegend, type PlotMarker, type PlotSeries } from '../components/Plot'
 import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
+import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
 import { copyText, dischargeTsv, efficiencyTsv, profileTsv } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
@@ -315,7 +316,21 @@ export function SampleDetail() {
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
           <h1 className="truncate">{sample.name}</h1>
-          <div className="sub">{conditions.join('  ·  ') || '조건 미입력'}</div>
+          <div className="sub">
+            {conditions.join('  ·  ') || '조건 미입력'}
+            {/* 질량 하나가 이 셀의 모든 mAh/g 를 정한다.  누가 마지막으로
+                건드렸는지가 "이 값 맞아?" 의 첫 단서다. */}
+            {sample.updated_by || sample.created_by ? (
+              <>
+                {'  ·  '}
+                <By
+                  who={sample.updated_by || sample.created_by}
+                  at={sample.updated_at}
+                  verb="마지막 수정"
+                />
+              </>
+            ) : null}
+          </div>
         </div>
         <span className="spacer" />
         <div className="row">
@@ -692,6 +707,9 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
       ) : null}
 
       <div className="row" style={{ gap: 4 }}>
+        {/* 누가 올렸는지.  20 MB 짜리가 열 개 쌓이면 첫 질문이 이것이다. */}
+        <By who={run.created_by} at={run.uploaded_at} verb="올림" />
+        <span className="spacer" />
         <a
           className="tiny"
           href={api.exportOriginalUrl(run.id)}
@@ -702,7 +720,6 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
         <a className="tiny" href={api.exportRawUrl(run.id)}>
           raw CSV
         </a>
-        <span className="spacer" />
         <button
           type="button"
           className="ghost sm"

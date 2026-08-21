@@ -412,7 +412,9 @@ describe('Upload orphan card', () => {
   it('reports a failed attach rather than leaving the cell name showing', async () => {
     installFetch((url, init) => {
       if (path(url) === '/api/samples') return [sample({ id: 9, name: 'cell-9' })]
-      if (path(url) === '/api/runs' && !init) return [run({ id: 11, sample_id: null, sample_name: null })]
+      if (path(url) === '/api/runs' && (init?.method ?? 'GET') === 'GET') {
+        return [run({ id: 11, sample_id: null, sample_name: null })]
+      }
       if (path(url) === '/api/runs/11') return new Fail(404, 'sample 9 not found')
       return []
     })

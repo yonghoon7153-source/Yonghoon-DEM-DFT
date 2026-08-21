@@ -988,8 +988,24 @@ guard_data_dir() {
   [ -n "${WORKBENCH_DATA:-}" ] || return 0
   [ -d "$WORKBENCH_DATA" ] && return 0
   printf '%s✕%s 데이터 폴더가 없습니다: %s\n' "$RED" "$OFF" "$WORKBENCH_DATA" >&2
-  say "  ${DIM}외장 드라이브라면 마운트되었는지 먼저 보세요 (WSL 은 /mnt/e 같은 경로).${OFF}"
-  say "  ${DIM}처음 만드는 것이라면:${OFF} ${GREEN}mkdir -p \"$WORKBENCH_DATA\"${OFF}"
+  say "  ${DIM}(.bml/env 의 WORKBENCH_DATA 가 이 경로를 가리킵니다)${OFF}"
+
+  # 무엇이 실제로 붙어 있는지 보여 준다.  "없습니다" 만으로는 드라이브가 빠진
+  # 것인지, 애초에 그런 드라이브가 없는 것인지 구분할 수 없다 — 후자가 훨씬
+  # 흔한데(문서의 예시 경로를 그대로 붙여넣는다) 대처가 정반대다.
+  local mounts=""
+  [ -d /mnt ] && mounts="$(find /mnt -maxdepth 1 -mindepth 1 -type d 2>/dev/null | tr '\n' ' ')"
+  if [ -n "$mounts" ]; then
+    say ""
+    say "  이 기계에 보이는 드라이브: ${B}${mounts}${OFF}"
+  fi
+
+  say ""
+  say "  ${B}그 드라이브가 맞다면${OFF}   ${GREEN}mkdir -p \"$WORKBENCH_DATA\"${OFF}"
+  say "  ${B}다른 곳에 둘 거라면${OFF}   ${GREEN}\$EDITOR $REPO/.bml/env${OFF} ${DIM}에서 WORKBENCH_DATA 를 고칩니다${OFF}"
+  say "  ${B}이 기계는 중추 서버가 아니라면${OFF}"
+  say "    ${GREEN}rm $REPO/.bml/env${OFF} ${DIM}— 저장소 안의 data/ 를 씁니다 (그 기계만의 데이터)${OFF}"
+  say "    ${DIM}보기만 할 거라면 띄우지 말고 중추 서버 주소를 브라우저로 여세요.${OFF}"
   exit 1
 }
 

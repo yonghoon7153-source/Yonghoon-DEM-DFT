@@ -15,6 +15,7 @@
 | [0009](adr/0009-branch-is-the-home.md) | 이 워크벤치의 집은 브랜치다 | `main` 은 별개, 머지하지 않는다 |
 | [0010](adr/0010-user-saved-cell-presets.md) | 프리셋은 사람이 저장한다 | 조성 + 지름·비용량·기준전극, 질량은 담지 않는다 |
 | [0011](adr/0011-central-instance-for-data.md) | 데이터는 중추 서버 한 대에 | git 으로 옮기지 않는다, 백업이 push 를 대신한다 |
+| [0012](adr/0012-attribution-not-authentication.md) | 이름은 기록이지 신원 확인이 아니다 | 검증 없는 이름, 기록은 flush 리스너가 자동으로 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -36,7 +37,8 @@
 `adr/0004-cycle-three-reference.md` · `adr/0005-multi-criterion-knee.md` ·
 `adr/0006-frontend-stack.md` · `adr/0007-electrode-composition.md` ·
 `adr/0008-cell-state-weighted-evidence.md` · `adr/0009-branch-is-the-home.md` ·
-`adr/0010-user-saved-cell-presets.md` · `adr/0011-central-instance-for-data.md`
+`adr/0010-user-saved-cell-presets.md` · `adr/0011-central-instance-for-data.md` ·
+`adr/0012-attribution-not-authentication.md`
 
 ## 스펙
 

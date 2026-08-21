@@ -20,13 +20,15 @@ describe('query building', () => {
   it('drops null, undefined and empty values so the API sees no blanks', async () => {
     const fetchMock = mockFetch({ json: async () => [] })
     await api.listSamples({ group_id: null, cathode_type: '', process: 'dry', c_rate: 0.2 })
-    expect(fetchMock).toHaveBeenCalledWith('/api/samples?process=dry&c_rate=0.2', undefined)
+    // 두 번째 인자는 더 이상 undefined 가 아니다 — 모든 요청이 이름 헤더를
+    // 달고 나간다.  여기서 보는 것은 URL 조립이므로 그것만 본다.
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('/api/samples?process=dry&c_rate=0.2')
   })
 
   it('omits the question mark when nothing is filtered', async () => {
     const fetchMock = mockFetch({ json: async () => [] })
     await api.listSamples()
-    expect(fetchMock).toHaveBeenCalledWith('/api/samples', undefined)
+    expect(fetchMock.mock.calls[0]?.[0]).toBe('/api/samples')
   })
 
   it('keeps a false boolean, which is a real filter value', async () => {

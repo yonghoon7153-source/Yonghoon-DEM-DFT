@@ -57,6 +57,8 @@ class GroupOut(BaseModel):
     updated_at: datetime
     sample_count: int = 0
     run_count: int = 0
+    created_by: str = ""
+    updated_by: str = ""
 
 
 # --- 물리량 입력의 문지기 ------------------------------------------------------
@@ -101,6 +103,25 @@ class ComponentOut(BaseModel):
     role: str = "other"
 
 
+class ActivityOut(BaseModel):
+    """One line of "누가 무엇을 했는지".
+
+    ``actor`` is a display name nobody verified (ADR 0012); "" means the
+    person did not say who they were, or the row predates the feature.
+    """
+
+    id: int
+    at: datetime
+    actor: str = ""
+    action: str = ""
+    entity: str = ""
+    entity_id: int | None = None
+    #: What it was called at the time -- kept so a deleted thing is still
+    #: readable, which is exactly when somebody goes looking for it.
+    label: str = ""
+    fields: list[str] = Field(default_factory=list)
+
+
 class PresetSettings(BaseModel):
     """Cell settings a preset may carry.
 
@@ -140,6 +161,8 @@ class CompositionPresetIn(BaseModel):
 class CompositionPresetOut(BaseModel):
     id: int
     name: str
+    created_by: str = ""
+    updated_by: str = ""
     #: ``AM:SE:VGCF = 80:17:3`` -- the blend, as a lab says it.
     text: str
     #: What the dropdown shows: ``이름 · AM:SE:VGCF = 80:17:3``.
@@ -294,6 +317,8 @@ class SampleOut(BaseModel):
     run_count: int = 0
     cycle_count: int = 0
     resolved_cell: ResolvedCellOut
+    created_by: str = ""
+    updated_by: str = ""
 
 
 class RunOut(BaseModel):
@@ -304,6 +329,9 @@ class RunOut(BaseModel):
     sha256: str
     size_bytes: int
     uploaded_at: datetime
+    #: 누가 올렸는지.  파일 카드에 이름이 붙는 이유다 — 20 MB 짜리가 열 개
+    #: 쌓이면 "이거 누가 올린 거지" 가 첫 질문이 된다.
+    created_by: str = ""
     device_model: str
     serial_no: str
     channel: int | None

@@ -33,6 +33,22 @@ export interface ResolvedCell {
   notes: Record<string, string>
 }
 
+/** 누가 무엇을 했는지 한 줄.
+ *
+ * `actor` 는 아무도 검증하지 않은 표시용 이름이다 (ADR 0012). 빈 문자열은
+ * 이름을 대지 않은 사람이거나, 이 기능이 생기기 전에 저장된 것이다. */
+export interface Activity {
+  id: number
+  at: string
+  actor: string
+  action: 'create' | 'update' | 'delete'
+  entity: 'sample' | 'group' | 'preset' | 'run'
+  entity_id: number | null
+  /** 그때 이름.  지워진 뒤에도 읽히라고 남긴다 — 찾는 것이 정확히 그때다. */
+  label: string
+  fields: string[]
+}
+
 export interface Group {
   id: number
   name: string
@@ -42,6 +58,8 @@ export interface Group {
   updated_at: string
   sample_count: number
   run_count: number
+  created_by?: string
+  updated_by?: string
 }
 
 export interface Sample {
@@ -82,6 +100,8 @@ export interface Sample {
   run_count: number
   cycle_count: number
   resolved_cell: ResolvedCell
+  created_by?: string
+  updated_by?: string
 }
 
 export interface ScheduleStep {
@@ -120,6 +140,8 @@ export interface Run {
   sha256: string
   size_bytes: number
   uploaded_at: string
+  /** 누가 올렸는지 ('' = 이름을 대지 않았거나 이 기능 이전). */
+  created_by?: string
   device_model: string
   serial_no: string
   channel: number | null
@@ -350,6 +372,8 @@ export interface PresetSettings {
 export interface CompositionPreset {
   id: number
   name: string
+  created_by?: string
+  updated_by?: string
   /** `AM:SE:VGCF = 80:17:3` */
   text: string
   /** What the dropdown shows: `이름 · AM:SE:VGCF = 80:17:3` */
