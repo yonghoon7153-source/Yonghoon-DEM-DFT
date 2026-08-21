@@ -75,3 +75,9 @@ complete_only=false 가 부분값을 측정값처럼 내보내고 있었다. JSO
 ## [2026-08-21] create | Codex 회답 (docs/reviews/codex-knee-reply.md)
 15건 처리 결과, 우리가 심었다가 잡은 회귀 하나, P0-1 을 남긴 측정 근거, 그리고
 다음 라운드에 봐 달라는 다섯 가지.
+
+## [2026-08-21] fix | Codex 재검증 7건 — 5건 닫음
+primary 최솟값 회귀(내가 심은 것), 2/3선 실제 비교, insufficient 의 불능 경로와
+단조성, 프로토콜 구간 모형의 부호·부분회복·두계단·knee 공존, build_report 의 기준
+사이클 우회, 화면의 상태 연결. 블록+knee 공존(33 %)과 문턱 보정은 열려 있고
+joint event model 이 필요하다.

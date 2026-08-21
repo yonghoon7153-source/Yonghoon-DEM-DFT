@@ -22,6 +22,7 @@
 | [codex-review-request](reviews/codex-review-request.md) | Codex 에게 붙여넣는 전수 리뷰 과제 + 종결 절차 |
 | [codex-review-round2](reviews/codex-review-round2.md) | Codex 2차 리뷰 과제 — 갱신 검증 + 2차 대상 20건 |
 | [codex-review-round3](reviews/codex-review-round3.md) | Codex 3차 리뷰 과제 — 2차 갱신 검증 |
+| [codex-knee-reply-2](reviews/codex-knee-reply-2.md) | 재검증 회답 — 7건 중 5건 닫음, joint event model 이 남았다 |
 | [codex-knee-reply](reviews/codex-knee-reply.md) | Codex 에게 보내는 회답 — 15건 처리 결과와 다음 라운드 요청 |
 | [2026-08-21-codex-knee-review](reviews/2026-08-21-codex-knee-review.md) | knee 리뷰 15건 대응 기록 — 14건 닫음, 문턱 보정 1건은 왜 남겼나 |
 | [codex-review-knee](reviews/codex-review-knee.md) | knee 판정 집중 리뷰 과제 — 상수 과적합·세 직선 승격 편향 |
