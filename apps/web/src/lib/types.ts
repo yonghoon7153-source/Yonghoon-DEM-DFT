@@ -318,6 +318,8 @@ export interface DashboardRow {
   basis: Basis
   loading_mg_cm2: number | null
   composition_label: string
+  /** 이 셀을 만든 사람 ('' = 이름을 대지 않았거나 이 기능 이전). */
+  owner?: string
   /** Retention against the reference cycle, thinned for a sparkline. */
   trend: number[]
   /** 각 점이 실제로 속한 사이클 번호. 균등 간격을 가정하면 안 된다. */

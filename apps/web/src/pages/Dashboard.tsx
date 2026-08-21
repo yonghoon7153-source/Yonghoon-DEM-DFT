@@ -282,6 +282,13 @@ function DashboardTable({
                     {row.group_name}
                   </span>
                 ) : null}
+                {/* 누구 셀인지.  한 서버를 여럿이 쓰면 남의 셀과 내 셀이 이
+                    표에서 섞이는데, 이름이 없으면 열어 봐야 안다 (ADR 0012). */}
+                {row.owner ? (
+                  <span className="owner-tag" title={`만든 사람: ${row.owner}`}>
+                    {row.owner}
+                  </span>
+                ) : null}
                 <Link to={`/samples/${row.sample_id}`} style={{ fontWeight: 550 }}>
                   {row.sample_name}
                 </Link>

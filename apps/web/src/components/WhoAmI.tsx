@@ -62,7 +62,7 @@ export function WhoAmI() {
               value={draft}
               maxLength={MAX_NAME}
               aria-label="이름"
-              placeholder="예: 김용훈"
+              placeholder="예: 안용훈"
               onChange={(event) => setDraft(event.target.value)}
               onKeyDown={(event) => {
                 if (event.key === 'Enter') commit()

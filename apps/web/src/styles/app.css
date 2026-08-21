@@ -976,3 +976,18 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
 }
 .feed .tag.create { background: var(--pos-wash); color: var(--pos); }
 .feed .tag.delete { background: var(--neg-wash); color: var(--neg); }
+
+/* 셀 앞의 이름표.  그룹 칩과 나란히 서지만 그룹이 아니라는 것이 보여야 해서,
+   채우지 않고 테두리만 준다. */
+.owner-tag {
+  display: inline-block;
+  vertical-align: 1px;
+  margin-right: 6px;
+  padding: 1px 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-pill);
+  font-size: 10.5px;
+  font-weight: 550;
+  color: var(--ink-3);
+  white-space: nowrap;
+}

@@ -637,6 +637,9 @@ def dashboard(session: Session = Depends(get_session),
             "basis_fallback_reason": cell.missing_for(basis) if used != basis else None,
             "loading_mg_cm2": cell.loading_mg_cm2,
             "composition_label": cell.composition_compact_label,
+            # 이 셀이 누구 것인지.  한 서버를 여럿이 쓰면 표에서 남의 셀과 내
+            # 셀이 섞이는데, 이름이 없으면 열어 봐야 안다 (ADR 0012).
+            "owner": sample.created_by or "",
         })
 
     used_bases = {row["basis"] for row in rows}

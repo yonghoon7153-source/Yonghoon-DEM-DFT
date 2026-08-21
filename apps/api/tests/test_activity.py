@@ -167,3 +167,13 @@ def test_a_korean_name_survives_the_header(client):
     sample = client.post("/api/samples", json={"name": "cell"},
                          headers=_as("김용훈")).json()
     assert sample["created_by"] == "김용훈"
+
+
+def test_the_dashboard_says_whose_cell_each_row_is(client):
+    """표에서 남의 셀과 내 셀이 섞인다 — 이름이 없으면 열어 봐야 안다."""
+    client.post("/api/samples", json={"name": "A"}, headers=_as("안용훈"))
+    client.post("/api/samples", json={"name": "B"})   # 이름을 안 댄 사람
+
+    rows = {row["sample_name"]: row["owner"]
+            for row in client.get("/api/dashboard").json()["rows"]}
+    assert rows == {"A": "안용훈", "B": ""}
