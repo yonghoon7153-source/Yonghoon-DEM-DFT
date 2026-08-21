@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { ApiError } from './api'
+import { currentRevision, subscribe } from './live'
 
 export interface AsyncState<T> {
   data: T | null
@@ -18,10 +19,16 @@ export interface AsyncState<T> {
 export function useAsync<T>(
   loader: () => Promise<T>,
   deps: unknown[],
-  options: { enabled?: boolean; refreshMs?: number } = {},
+  options: { enabled?: boolean; refreshMs?: number; live?: boolean } = {},
 ): AsyncState<T> {
   const enabled = options.enabled ?? true
   const refreshMs = options.refreshMs ?? 0
+  // `live` puts this loader on the server's change stream: when anybody --
+  // here or on somebody else's machine -- changes something, it re-runs.
+  // The revision goes in the dependency list rather than firing a reload, so
+  // the existing "keep the last good value while reloading" behaviour holds
+  // and the screen does not blink on every edit.
+  const revision = useLiveRevision(options.live ?? false)
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(enabled)
@@ -49,7 +56,7 @@ export function useAsync<T>(
         if (ticket === latest.current) setLoading(false)
       })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [...deps, nonce, enabled])
+  }, [...deps, nonce, enabled, revision])
 
   const reload = useCallback(() => setNonce((n) => n + 1), [])
 
@@ -76,6 +83,20 @@ export function useAsync<T>(
   }, [enabled, refreshMs])
 
   return { data, error, loading, reload }
+}
+
+/** The server's change counter, or 0 when not listening.
+ *
+ * Shared: every caller rides the one connection `lib/live` holds for the tab.
+ */
+export function useLiveRevision(enabled = true): number {
+  const [revision, setRevision] = useState(() => (enabled ? currentRevision() : 0))
+  useEffect(() => {
+    if (!enabled) return
+    setRevision(currentRevision())
+    return subscribe(setRevision)
+  }, [enabled])
+  return revision
 }
 
 /** Delay a fast-changing value so typing a mass does not fire a request per key. */

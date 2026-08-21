@@ -14,17 +14,23 @@ if _WRDKIT_SRC.exists() and str(_WRDKIT_SRC) not in sys.path:
 
 from contextlib import asynccontextmanager  # noqa: E402
 
-from fastapi import FastAPI, HTTPException  # noqa: E402
+from fastapi import FastAPI, HTTPException, Request  # noqa: E402
 from fastapi.encoders import jsonable_encoder  # noqa: E402
 from fastapi.exceptions import RequestValidationError  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
 
 from .db import init_db  # noqa: E402
+from .live import (  # noqa: E402
+    REVISION_HEADER,
+    revision,
+    revision_stream,
+    should_bump,
+)
 from .routers import analysis, exports, groups, presets, runs, samples  # noqa: E402
 from .schemas import basis_choices  # noqa: E402
 from .settings import settings  # noqa: E402
@@ -74,6 +80,22 @@ async def _validation_error(request, exc: RequestValidationError):
                         content={"detail": clean(jsonable_encoder(exc.errors()))})
 
 
+@app.middleware("http")
+async def _announce_writes(request, call_next):
+    """Bump the revision after anything that changed something.
+
+    Here rather than in each router: a new endpoint is live from the moment it
+    exists, and nobody has to remember to announce.  The alternative -- a call
+    at the end of every write -- is one that gets forgotten exactly once, and
+    the symptom is a screen that is stale for one kind of edit only, which is
+    the hardest kind of staleness to notice.
+    """
+    response = await call_next(request)
+    if should_bump(request.method, response.status_code, request.url.path):
+        response.headers[REVISION_HEADER] = str(revision.bump())
+    return response
+
+
 app.include_router(groups.router)
 app.include_router(samples.router)
 app.include_router(runs.router)
@@ -90,6 +112,32 @@ def health() -> dict:
         "data_dir": str(settings.data_dir),
         "max_upload_mb": settings.max_upload_bytes // (1024 * 1024),
     }
+
+
+@app.get("/api/revision")
+def read_revision() -> dict:
+    """What the database is at, for anything that cannot hold a stream."""
+    return {"revision": revision.value}
+
+
+@app.get("/api/events")
+async def events(request: Request):
+    """Server-sent events: one line whenever somebody changes something.
+
+    What is sent is only the number, not what changed (see ``live.py``).  The
+    browser re-fetches whatever that screen is showing, which keeps this
+    endpoint from having to know anything about screens.
+    """
+    return StreamingResponse(
+        revision_stream(request.is_disconnected),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            # nginx buffers by default, which would hold each event until the
+            # buffer fills -- turning a live stream into a slow one.
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @app.get("/api/meta")

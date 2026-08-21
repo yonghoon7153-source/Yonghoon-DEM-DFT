@@ -19,8 +19,8 @@ export function Library() {
   const [creating, setCreating] = useState(false)
 
   const debouncedSearch = useDebounced(search)
-  const groups = useAsync(() => api.listGroups(), [creating])
-  const facets = useAsync(() => api.facets(), [])
+  const groups = useAsync(() => api.listGroups(), [creating], { live: true })
+  const facets = useAsync(() => api.facets(), [], { live: true })
   const samples = useAsync(
     () =>
       api.listSamples({

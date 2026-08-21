@@ -41,19 +41,35 @@ export function SampleDetail() {
   const [refDraft, setRefDraft] = useState('')
   const [settingsError, setSettingsError] = useState<string | null>(null)
 
-  const sampleState = useAsync(() => api.getSample(sampleId), [sampleId])
-  const sample = override ?? sampleState.data
+  const sampleState = useAsync(() => api.getSample(sampleId), [sampleId], { live: true })
+  // `override` is what a save on this page just returned, shown immediately so
+  // the panel does not flicker back to the old value while the re-fetch flies.
+  // Whichever is newer wins: without that comparison the override, once set,
+  // shadowed the server forever -- and on a shared instance that means the
+  // moment you edit a cell you stop seeing anybody else's edits to it.
+  const sample = useMemo(() => {
+    const fetched = sampleState.data
+    if (!override) return fetched
+    if (!fetched) return override
+    return fetched.updated_at >= override.updated_at ? fetched : override
+  }, [override, sampleState.data])
   const stamp = sample?.updated_at
 
+  // 이 셋도 살아 있어야 한다.  남이 이 셀에 파일을 하나 더 붙이면 사이클 표와
+  // 판정이 달라지는데, 그때 sample.updated_at 은 움직이지 않는다 — 바뀐 것은
+  // 셀이 아니라 run 이다.
   const cycleState = useAsync(
     () => api.sampleCycles(sampleId, { basis }),
     [sampleId, basis, stamp],
+    { live: true },
   )
   const reportState = useAsync(
     () => api.sampleReport(sampleId, { basis }),
     [sampleId, basis, stamp],
+    { live: true },
   )
-  const runsState = useAsync(() => api.listRuns({ sample_id: sampleId }), [sampleId])
+  const runsState = useAsync(() => api.listRuns({ sample_id: sampleId }), [sampleId],
+                             { live: true })
 
   const cycles = useMemo(() => cycleState.data?.cycles ?? [], [cycleState.data])
   const selected = useMemo(() => {

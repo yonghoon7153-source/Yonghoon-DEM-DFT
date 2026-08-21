@@ -5,6 +5,7 @@
  * rewording it here would only lose detail.
  */
 
+import { noteOwnWrite } from './live'
 import type {
   CompareResponse, CompositionPreset, CycleTable, DashboardRow, Facets, Group, Meta,
   ProfileResponse, Report, Run, Sample,
@@ -48,6 +49,10 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     }
     throw new ApiError(detail, response.status)
   }
+  // A write echoes back on the change stream a moment later.  Remembering the
+  // revision it produced lets this tab skip its own echo: the screen that made
+  // the edit already has the answer in hand.
+  noteOwnWrite(response)
   if (response.status === 204) return undefined as T
   return (await response.json()) as T
 }

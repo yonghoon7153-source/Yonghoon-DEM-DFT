@@ -5,7 +5,7 @@
  * re-reading the 20 MB original (ADR 0001).
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { api } from '../lib/api'
 import { massFromName, num } from '../lib/format'
@@ -43,11 +43,22 @@ export function CellSpecPanel({
   const [error, setError] = useState<string | null>(null)
   // 문자열이라 숫자 draft 에 섞지 않는다.
   const [electrode, setElectrode] = useState(sample.reference_electrode ?? '')
+  // 사람이 이 칸들을 건드렸는지.  `dirty` 로는 판단할 수 없다 — 남이 저장해서
+  // sample 이 바뀌기만 해도 draft 와 달라지므로 dirty 가 참이 된다.  "내가
+  // 쳤다" 와 "값이 달라졌다" 는 다른 질문이다.
+  const [touched, setTouched] = useState(false)
+  const shownId = useRef(sample.id)
 
   useEffect(() => {
+    // 공유 서버라 이 화면은 남의 편집으로도 다시 읽힌다.  타이핑 중에 그것이
+    // 들어오면, 반쯤 입력한 질량이 소리 없이 사라진다 — 저장한 줄 알고 넘어가면
+    // 그 셀의 모든 mAh/g 가 옛 질량으로 남는다.
+    if (touched && sample.id === shownId.current) return
+    shownId.current = sample.id
+    setTouched(false)
     setDraft(pick(sample))
     setElectrode(sample.reference_electrode ?? '')
-  }, [sample])
+  }, [sample, touched])
 
   const dirty =
     (Object.keys(draft) as SpecKey[]).some(
@@ -72,7 +83,9 @@ export function CellSpecPanel({
         body.reference_electrode = electrode
       }
       if (clear.length) body.clear = clear
-      onSaved(await api.updateSample(sample.id, body))
+      const updated = await api.updateSample(sample.id, body)
+      setTouched(false)
+      onSaved(updated)
     } catch (cause) {
       setError(String(cause instanceof Error ? cause.message : cause))
     } finally {
@@ -81,8 +94,10 @@ export function CellSpecPanel({
   }
 
   const cell = sample.resolved_cell
-  const set = (key: SpecKey) => (value: number | null) =>
+  const set = (key: SpecKey) => (value: number | null) => {
+    setTouched(true)
     setDraft((previous) => ({ ...previous, [key]: value }))
+  }
 
   // 파일 이름이 질량을 들고 다닌다 (`..._4.6V_1_17.5mg`).  .wrd 는 그 값을
   // 모르므로 손으로 넣어야 하는데, 옆에 이름이 말하는 값을 적어 두면 오타가
@@ -186,7 +201,10 @@ export function CellSpecPanel({
         <Field label="기준전극" hint="전압 표시 기준">
           <select
             value={electrode}
-            onChange={(event) => setElectrode(event.target.value)}
+            onChange={(event) => {
+              setTouched(true)
+              setElectrode(event.target.value)
+            }}
           >
             <option value="">기록 그대로 (환산 안 함)</option>
             <option value="Li">Li 금속 — vs Li/Li⁺</option>
@@ -207,7 +225,15 @@ export function CellSpecPanel({
           {saving ? '저장 중…' : dirty ? '저장하고 다시 계산' : '저장됨'}
         </button>
         {dirty ? (
-          <button type="button" className="ghost sm" onClick={() => setDraft(pick(sample))}>
+          <button
+            type="button"
+            className="ghost sm"
+            onClick={() => {
+              setTouched(false)
+              setDraft(pick(sample))
+              setElectrode(sample.reference_electrode ?? '')
+            }}
+          >
             되돌리기
           </button>
         ) : null}

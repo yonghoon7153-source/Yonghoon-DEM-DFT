@@ -32,8 +32,8 @@ export function Upload() {
   const [nameFromFile, setNameFromFile] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const samples = useAsync(() => api.listSamples(), [results.length])
-  const groups = useAsync(() => api.listGroups(), [results.length])
+  const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
+  const groups = useAsync(() => api.listGroups(), [results.length], { live: true })
 
   const matches = useMemo(() => {
     const all = samples.data ?? []
@@ -42,7 +42,8 @@ export function Upload() {
     if (!needle) return inGroup
     return inGroup.filter((s) => s.name.toLowerCase().includes(needle))
   }, [samples.data, sampleQuery, groupId])
-  const orphans = useAsync(() => api.listRuns({ unassigned: true }), [results.length])
+  const orphans = useAsync(() => api.listRuns({ unassigned: true }), [results.length],
+                         { live: true })
 
   const send = useCallback(
     async (files: FileList | File[]) => {

@@ -37,8 +37,9 @@ export function Compare() {
   const [hidden, setHidden] = useState<string[]>([])
   const [truncated, setTruncated] = useState(false)
 
-  const groups = useAsync(() => api.listGroups(), [])
-  const samples = useAsync(() => api.listSamples({ group_id: groupId }), [groupId])
+  const groups = useAsync(() => api.listGroups(), [], { live: true })
+  const samples = useAsync(() => api.listSamples({ group_id: groupId }), [groupId],
+                         { live: true })
 
   // An empty comparison is never what someone came here for; start with the
   // cells in view and let them narrow down.

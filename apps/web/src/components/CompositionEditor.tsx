@@ -12,7 +12,7 @@
  * that is measured per cell (ADR 0010).
  */
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
@@ -106,22 +106,34 @@ export function CompositionEditor({
   sample: Sample
   onSaved: (sample: Sample) => void
 }) {
-  const presets = useAsync(() => api.listPresets(), [])
+  // 남이 저장한 프리셋도 여기 나타난다 — 한 서버를 같이 보고 있으니
+  // 저장한 순간 모두의 목록이다.
+  const presets = useAsync(() => api.listPresets(), [], { live: true })
   const [components, setComponents] = useState<Component[]>(sample.composition)
   const [text, setText] = useState('')
   const [expanded, setExpanded] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [naming, setNaming] = useState(false)
+  // 사람이 이 칸들을 건드렸는지.  `dirty` 로는 판단할 수 없다 — 남이 저장해서
+  // sample 이 바뀌기만 해도 components 와 달라지므로 dirty 가 참이 된다.
+  const [touched, setTouched] = useState(false)
+  const shownId = useRef(sample.id)
   // Stamped with the sample revision it describes, so the note about what a
   // preset just changed disappears by itself on the next edit instead of
   // hanging around describing a state that is gone.
   const [applied, setApplied] = useState<{ at: string; parts: string[] } | null>(null)
 
   useEffect(() => {
+    // 공유 서버라 이 화면은 남의 편집으로도 다시 읽힌다.  성분을 고치는 도중에
+    // 그것이 들어오면 반쯤 고친 조성이 소리 없이 사라지고, 그 조성이 mAh/g
+    // 분모를 정한다.
+    if (touched && sample.id === shownId.current) return
+    shownId.current = sample.id
+    setTouched(false)
     setComponents(sample.composition)
     setText('')
-  }, [sample.composition, sample.updated_at])
+  }, [sample.id, sample.composition, sample.updated_at, touched])
 
   const total = components.reduce((sum, c) => sum + (c.wt_percent || 0), 0)
   const activePercent = components
@@ -135,6 +147,7 @@ export function CompositionEditor({
     setError(null)
     try {
       const updated = await api.updateSample(sample.id, body)
+      setTouched(false)
       onSaved(updated)
       setText('')
       return updated
@@ -189,7 +202,10 @@ export function CompositionEditor({
             type="text"
             value={text}
             placeholder={sample.composition_label || 'AM:SE:VGCF = 80:17:3'}
-            onChange={(event) => setText(event.target.value)}
+            onChange={(event) => {
+              setTouched(true)
+              setText(event.target.value)
+            }}
             onKeyDown={(event) => {
               if (event.key === 'Enter' && text.trim()) {
                 void save({ composition_text: text, clear: [CLEARS_WT] })
@@ -260,13 +276,14 @@ export function CompositionEditor({
                 type="text"
                 value={component.name}
                 aria-label={`성분 ${index + 1} 이름`}
-                onChange={(event) =>
+                onChange={(event) => {
+                  setTouched(true)
                   setComponents((current) =>
                     current.map((c, i) =>
                       i === index ? { ...c, name: event.target.value } : c,
                     ),
                   )
-                }
+                }}
                 style={{ flex: 2 }}
               />
               <input
@@ -275,19 +292,21 @@ export function CompositionEditor({
                 min={0}
                 value={component.wt_percent}
                 aria-label={`성분 ${index + 1} wt%`}
-                onChange={(event) =>
+                onChange={(event) => {
+                  setTouched(true)
                   setComponents((current) =>
                     current.map((c, i) =>
                       i === index ? { ...c, wt_percent: Number(event.target.value) } : c,
                     ),
                   )
-                }
+                }}
                 style={{ flex: 1, minWidth: 62 }}
               />
               <select
                 value={component.role}
                 aria-label={`성분 ${index + 1} 역할`}
-                onChange={(event) =>
+                onChange={(event) => {
+                  setTouched(true)
                   setComponents((current) =>
                     current.map((c, i) =>
                       i === index
@@ -295,7 +314,7 @@ export function CompositionEditor({
                         : c,
                     ),
                   )
-                }
+                }}
                 style={{ flex: 1.4, minWidth: 84 }}
               >
                 {(Object.keys(ROLE_LABELS) as ComponentRole[]).map((role) => (
@@ -308,9 +327,10 @@ export function CompositionEditor({
                 type="button"
                 className="ghost sm"
                 title="성분 제거"
-                onClick={() =>
+                onClick={() => {
+                  setTouched(true)
                   setComponents((current) => current.filter((_, i) => i !== index))
-                }
+                }}
               >
                 ✕
               </button>
@@ -321,12 +341,13 @@ export function CompositionEditor({
             <button
               type="button"
               className="sm"
-              onClick={() =>
+              onClick={() => {
+                setTouched(true)
                 setComponents((current) => [
                   ...current,
                   { name: '', wt_percent: 0, role: 'other' },
                 ])
-              }
+              }}
             >
               성분 추가
             </button>
