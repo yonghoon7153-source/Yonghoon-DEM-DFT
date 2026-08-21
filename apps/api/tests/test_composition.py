@@ -115,11 +115,13 @@ def test_unreadable_text_does_not_silently_invent_a_composition(client):
     assert sample["active_wt_percent"] is None
 
 
-def test_presets_and_roles_are_offered_by_the_api(client):
+def test_roles_are_offered_by_the_api(client):
     meta = client.get("/api/meta").json()
-    assert any("80:17:3" in preset["text"] for preset in meta["composition_presets"])
     assert {r["value"] for r in meta["component_roles"]} == {
         "active", "electrolyte", "conductive", "binder", "other"}
+    # Presets are rows now, saved by whoever is at the bench (ADR 0010).  A
+    # list baked into /api/meta could not be added to without a restart.
+    assert "composition_presets" not in meta
 
 
 def test_an_unknown_material_never_becomes_active_material(client):

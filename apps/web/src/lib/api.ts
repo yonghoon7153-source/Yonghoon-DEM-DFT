@@ -6,7 +6,7 @@
  */
 
 import type {
-  CompareResponse, CycleTable, DashboardRow, Facets, Group, Meta,
+  CompareResponse, CompositionPreset, CycleTable, DashboardRow, Facets, Group, Meta,
   ProfileResponse, Report, Run, Sample,
 } from './types'
 
@@ -71,6 +71,17 @@ export const api = {
   updateGroup: (id: number, body: { name: string; description?: string; color?: string }) =>
     request<Group>(`/api/groups/${id}`, json('PATCH', body)),
   deleteGroup: (id: number) => request<void>(`/api/groups/${id}`, { method: 'DELETE' }),
+
+  // -- composition presets --------------------------------------------------
+  listPresets: () => request<CompositionPreset[]>('/api/composition-presets'),
+  savePreset: (body: {
+    name: string
+    composition?: unknown[]
+    settings?: Record<string, unknown>
+    overwrite?: boolean
+  }) => request<CompositionPreset>('/api/composition-presets', json('POST', body)),
+  deletePreset: (id: number) =>
+    request<void>(`/api/composition-presets/${id}`, { method: 'DELETE' }),
 
   // -- samples -------------------------------------------------------------
   listSamples: (params?: Params) => request<Sample[]>(`/api/samples${query(params)}`),

@@ -334,9 +334,30 @@ export interface CompareResponse {
   series: CompareSeries[]
 }
 
+/** Cell settings a preset carries.  `null` = this preset does not carry it,
+ *  so applying leaves that field alone rather than clearing it.
+ *
+ *  No masses, deliberately: those are measured per cell (ADR 0010). */
+export interface PresetSettings {
+  area_cm2: number | null
+  diameter_mm: number | null
+  thickness_um: number | null
+  nominal_specific_capacity_mah_g: number | null
+  reference_electrode: string | null
+  reference_offset_v: number | null
+}
+
 export interface CompositionPreset {
-  label: string
+  id: number
+  name: string
+  /** `AM:SE:VGCF = 80:17:3` */
   text: string
+  /** What the dropdown shows: `이름 · AM:SE:VGCF = 80:17:3` */
+  label: string
+  composition: Component[]
+  settings: PresetSettings
+  created_at: string
+  updated_at: string
 }
 
 export interface Meta {
@@ -344,7 +365,6 @@ export interface Meta {
   states: string[]
   knee_methods: { value: string; label: string }[]
   default_plot_points: number
-  composition_presets: CompositionPreset[]
   component_roles: { value: ComponentRole; label: string }[]
 }
 

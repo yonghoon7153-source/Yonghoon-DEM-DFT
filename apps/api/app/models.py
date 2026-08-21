@@ -174,3 +174,36 @@ class CycleRecord(SQLModel, table=True):
     row_stop: int = 0
 
     run: Run | None = Relationship(back_populates="cycles")
+
+
+class CompositionPreset(SQLModel, table=True):
+    """A build saved by name: its blend, and the cell settings that go with it.
+
+    Applying one fills in several fields at once, which is the point -- cells
+    from the same recipe share a punch diameter, a nominal specific capacity
+    and a counter electrode -- and also the risk.  Two rules keep it honest
+    (ADR 0010):
+
+    *No masses.*  ``total_mass_mg`` and ``active_mass_mg`` are measured per
+    cell.  Carried in a preset they would put one cell's mass under another
+    cell's mAh/g with nothing on screen to say so.
+
+    *The blend is stored as components, not as ``AM:SE:VGCF = 80:17:3``.*
+    Re-parsing the shorthand re-runs role inference, and a role corrected by
+    hand -- the value that decides what enters the mAh/g denominator -- would
+    be quietly guessed again (ADR 0007).
+    """
+
+    __tablename__ = "composition_preset"
+
+    id: int | None = Field(default=None, primary_key=True)
+    #: Unique: saving over a name is a deliberate act, not a side effect.
+    name: str = Field(index=True, unique=True)
+    #: [{"name", "wt_percent", "role"}, ...], same shape as Sample.composition_json.
+    components_json: str = ""
+    #: Only the spec fields that had a value when the preset was saved.  A
+    #: field the preset does not carry is one it must not touch on apply --
+    #: absent is "I do not know", not "clear it".
+    settings_json: str = ""
+    created_at: datetime = Field(default_factory=_now)
+    updated_at: datetime = Field(default_factory=_now)

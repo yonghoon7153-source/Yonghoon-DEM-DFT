@@ -220,7 +220,6 @@ const META = {
   states: [],
   knee_methods: [],
   default_plot_points: 2000,
-  composition_presets: [],
   component_roles: [],
 }
 

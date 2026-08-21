@@ -21,7 +21,7 @@ from __future__ import annotations
 import re
 from dataclasses import asdict, dataclass, field
 
-__all__ = ["Component", "Composition", "Role", "PRESETS", "parse_composition"]
+__all__ = ["Component", "Composition", "Role", "parse_composition"]
 
 
 class Role:
@@ -342,40 +342,3 @@ def _positional(ratios: list[float]) -> Composition:
         name = _POSITIONAL[index] if index < len(_POSITIONAL) else f"Component {index + 1}"
         components.append(Component(name, ratio, infer_role(name)))
     return Composition(components)
-
-
-#: Formulations common enough to be worth one click.  Editable afterwards.
-PRESETS: tuple[dict, ...] = (
-    {
-        "label": "건식 ASSB · AM:SE:VGCF = 80:17:3",
-        "text": "AM:SE:VGCF = 80:17:3",
-    },
-    {
-        "label": "건식 ASSB · AM:SE:VGCF:PTFE = 78:17:3:2",
-        "text": "AM:SE:VGCF:PTFE = 78:17:3:2",
-    },
-    {
-        "label": "건식 ASSB · AM:SE:VGCF:PTFE = 80:15:3:2",
-        "text": "AM:SE:VGCF:PTFE = 80:15:3:2",
-    },
-    {
-        "label": "ASSB · AM:SE:Super P = 70:27:3",
-        "text": "AM:SE:Super P = 70:27:3",
-    },
-    {
-        "label": "ASSB · AM:SE = 70:30",
-        "text": "AM:SE = 70:30",
-    },
-    {
-        "label": "습식 슬러리 · AM:Super P:PVDF = 90:5:5",
-        "text": "AM:Super P:PVDF = 90:5:5",
-    },
-    {
-        "label": "습식 슬러리 · AM:Super P:PVDF = 96:2:2",
-        "text": "AM:Super P:PVDF = 96:2:2",
-    },
-    {
-        "label": "음극 · Graphite:Super P:CMC:SBR = 95:1:2:2",
-        "text": "Graphite:Super P:CMC:SBR = 95:1:2:2",
-    },
-)

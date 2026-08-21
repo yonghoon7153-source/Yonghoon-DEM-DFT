@@ -21,12 +21,11 @@ from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
 from fastapi.responses import FileResponse, JSONResponse  # noqa: E402
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
-from wrdkit import PRESETS as COMPOSITION_PRESETS  # noqa: E402
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
 
 from .db import init_db  # noqa: E402
-from .routers import analysis, exports, groups, runs, samples  # noqa: E402
+from .routers import analysis, exports, groups, presets, runs, samples  # noqa: E402
 from .schemas import basis_choices  # noqa: E402
 from .settings import settings  # noqa: E402
 
@@ -80,6 +79,7 @@ app.include_router(samples.router)
 app.include_router(runs.router)
 app.include_router(analysis.router)
 app.include_router(exports.router)
+app.include_router(presets.router)
 
 
 @app.get("/api/health")
@@ -94,7 +94,12 @@ def health() -> dict:
 
 @app.get("/api/meta")
 def meta() -> dict:
-    """Choices the UI renders: capacity bases, cell states, knee methods."""
+    """Choices the UI renders: capacity bases, cell states, knee methods.
+
+    Composition presets are *not* here.  They are rows now, saved by whoever
+    is at the bench, so they are fetched from /api/composition-presets and can
+    change without a restart (ADR 0010).
+    """
     return {
         "bases": [choice.model_dump() for choice in basis_choices()],
         "states": ["auto", "running", "finished"],
@@ -105,7 +110,6 @@ def meta() -> dict:
             {"value": "curvature", "label": "Maximum curvature"},
         ],
         "default_plot_points": settings.default_plot_points,
-        "composition_presets": list(COMPOSITION_PRESETS),
         "component_roles": [
             {"value": Role.ACTIVE, "label": "활물질 (AM)"},
             {"value": Role.ELECTROLYTE, "label": "고체전해질 (SE)"},
