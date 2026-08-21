@@ -902,14 +902,20 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   inset: 0;
   z-index: 60;
   background: rgb(16 24 40 / 38%);
-  display: grid;
-  place-items: center;
-  padding: var(--s4);
+  /* 세로 가운데 정렬이 아니라 위에서 띄운다.  가운데로 두면 창이 짧거나 내용이
+     길 때 위아래로 똑같이 넘쳐서, 넘친 윗부분에는 스크롤로도 닿을 수 없다 —
+     제목과 첫 입력칸이 잘려 나가는 자리가 하필 거기다. */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  overflow-y: auto;
+  padding: clamp(var(--s4), 12vh, 140px) var(--s4) var(--s5);
 }
 
 .modal {
   width: min(440px, 100%);
-  max-height: min(86vh, 720px);
+  /* 위 여백을 뺀 나머지.  이보다 길면 팝업 안에서 스크롤된다. */
+  max-height: min(76vh, 680px);
   overflow: auto;
   display: flex;
   flex-direction: column;
@@ -990,4 +996,20 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   font-weight: 550;
   color: var(--ink-3);
   white-space: nowrap;
+}
+
+/* 묶은 표의 구분 줄.  스크롤할 때 어느 묶음을 보고 있는지 잃지 않도록 붙어
+   있게 한다 — 표가 길어질수록 그것이 묶는 이유의 절반이다. */
+table tr.section > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 620;
+  color: var(--ink-2);
+  background: var(--surface-2);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 5px var(--s4);
 }
