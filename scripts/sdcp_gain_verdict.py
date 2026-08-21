@@ -707,6 +707,63 @@ def _selftest():
     _v26e = verdict(_c6e, require_digest=True)
     chk(f'㉖e ★ 커밋 안 된 코드(+dirty)로 돈 런은 HOLD ({_v26e["decision"]})',
         _v26e['decision'] == 'HOLD' and 'dirty' in (_v26e.get('reason') or ''))
+    #  ── ㉗ 대조쌍 검증 (CL-45) — **두 디렉터리를 빼는** 실험의 최소 계약 ────────────────
+    #     prereg v3 STEP 5 에서 실제로 일어난 일: 대조가 **다른 σ_VGCF** 로 돈 디렉터리였고
+    #     아무 게이트도 안 걸려 **거짓 경보**가 났다.  판정기의 고정-인자 검사가 *한 디렉터리
+    #     안*만 봤기 때문이다.  ⇒ 그 검사를 도구로 만들고 음성 대조를 상주시킨다.
+    def _mk2(d, *, yvgcf, sig_vgcf=11.0447, dig=('AA', 'BB'), n=2, dbe_mul=1.42):
+        _m0 = {'vox_um': 0.4, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
+               'sdcp_stamp': 'point', 'sdcp_sphere_d_um': 0.0,
+               'sigma_vgcf_S_cm': sig_vgcf, 'sigma_sdcp_S_cm': 250.0,
+               'sdcp_yield_to_vgcf': yvgcf, 'sigma_ptfe_S_cm': 0.0,
+               'code_sha': 'abc1234', 'components': _comps()}
+        for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
+            for _i in range(n):
+                _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
+                with open(os.path.join(d, f'p2_{_k}_a{_i}.json'), 'w', encoding='utf-8') as _f:
+                    json.dump({'mpm_metrics': {'step3': {
+                        'sigma_e_eff_S_cm': 0.4448190919120597 * _mul, 'cg_info': 0,
+                        'cg_resid': 1e-8, 'unconverged': False, 'manifest': _m}}}, _f)
+
+    _EXP = {'sdcp_yield_to_vgcf'}
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42)          # 대조 = 생산 규약
+        _mk2(_B, yvgcf=True, dbe_mul=1.29)           # 실험 = σ-치환 OFF
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗a 정상 증인 — 한 축만 다르면 measured ({_c["decision"]})',
+            _c['decision'] == 'measured')
+        chk(f'㉗a 감소율 산술이 맞다 ({_c.get("reduction_pct")})',
+            _c['decision'] == 'measured'
+            and abs(_c['reduction_pct'] - (0.42 - 0.29) / 0.42 * 100) < 0.5)
+    #  ★ STEP 5 거짓 경보 재현 — 대조가 다른 σ_VGCF 로 돌았다
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, sig_vgcf=11.0447)
+        _mk2(_B, yvgcf=True, sig_vgcf=78.5398)
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗b ★ 등록 밖 인자(σ_VGCF)가 다르면 HOLD — STEP 5 거짓 경보 재현 ({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'sigma_vgcf_S_cm' in (_c.get('reason') or ''))
+    #  ★ 노브가 안 걸린 경우 — "감소율 0 %" 는 물리가 아니다
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False)
+        _mk2(_B, yvgcf=False)
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗c ★ 등록 축이 두 디렉터리에서 **같으면** HOLD (실험이 안 일어났다) ({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'sdcp_yield_to_vgcf' in (_c.get('reason') or ''))
+    #  ★ 침대가 다르다 — 경로·이름은 증거가 아니다
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dig=('AA', 'BB'))
+        _mk2(_B, yvgcf=True, dig=('AA', 'ZZ'))
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗d ★ `input_digest` 가 다르면 HOLD (같은 침대가 아니다) ({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'input_digest' in (_c.get('reason') or ''))
+    #  ★ 짝이 안 맞는다
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, n=2)
+        _mk2(_B, yvgcf=True, n=3)
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗e ★ origin 집합이 다르면 HOLD (짝 없이 못 뺀다) ({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'origin' in (_c.get('reason') or ''))
+
     #  ㉖f 음성 대조 — 옛 격자 팔(전부 없음)은 **기본 모드에서 통과해야** 한다.
     chk('㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)',
         verdict(mk(base, [v * 1.12 for v in base]))['decision'] == 'h0')
@@ -714,6 +771,99 @@ def _selftest():
     print(f'\nsdcp_gain_verdict selftest: {ok}/{ok + len(fail)} PASS'
           + (f'   FAILED: {fail}' if fail else ''))
     return 1 if fail else 0
+
+
+#: 두 팔이 **고정**이어야 하는 인자 (한 디렉터리 안에서도, 두 디렉터리 사이에서도).
+_FIXED_FIELDS = ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
+                 'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
+                 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm')
+
+
+def _canon(v):
+    return json.dumps(v, sort_keys=True) if isinstance(v, (dict, list)) else v
+
+
+def compare_dirs(dir_a, dir_b, expect_differ):
+    """두 디렉터리를 **한 축만 다른 대조쌍**으로 검증하고 이득 감소율을 낸다.
+
+    ★★ 왜 (2026-08-20, CL-45): 감소율은 **두 디렉터리를 빼서** 나오는데, 판정기의 고정-인자
+      게이트는 여태 *한 디렉터리 안*만 봤다.  그래서 다른 σ_VGCF 로 돈 디렉터리를 대조로 삼아도
+      아무도 안 막았다 — 실제로 prereg v3 STEP 5 에서 그 일이 일어나 **거짓 경보**가 났다
+      (CLAUDE.md "잡은 결함 2건").  ⇒ 그 검사를 도구로 만든다.
+
+    강제하는 것 넷:
+      ⓐ 두 디렉터리의 (침대, origin) 집합이 같다 — 짝이 없으면 뺄 수 없다
+      ⓑ 짝마다 `input_digest` 가 같다 = **같은 침대**라는 기계 증거 (경로·이름은 증거가 아니다)
+      ⓒ `expect_differ` 밖의 모든 고정 인자가 같다 — 하나라도 다르면 HOLD (STEP 5 재발 방지)
+      ⓓ `expect_differ` 가 **실제로 다르다** — 같으면 노브가 안 걸린 것이고, 그때 나오는
+         "감소율 0 %" 는 물리가 아니라 **실험이 안 일어났다**는 뜻이다 (fail-closed)
+    """
+    out = {'dir_a': dir_a, 'dir_b': dir_b, 'expect_differ': sorted(expect_differ)}
+    _, arms_a = collect(dir_a)
+    _, arms_b = collect(dir_b)
+    pairs, differed = [], set()
+    for bed in ('SBE', 'DBE'):
+        ka = {tuple(round(float(x), 9) for x in (r.get('origin_shift_um') or [])): r
+              for r in arms_a[bed] if r.get('origin_shift_um')}
+        kb = {tuple(round(float(x), 9) for x in (r.get('origin_shift_um') or [])): r
+              for r in arms_b[bed] if r.get('origin_shift_um')}
+        if not ka or not kb:
+            return dict(out, decision='HOLD',
+                        reason=f'{bed} 팔이 한쪽 디렉터리에 없다 (A {len(ka)} · B {len(kb)}) — '
+                               f'origin 기록이 없는 옛 팔이면 다시 돌릴 것')
+        if set(ka) != set(kb):
+            return dict(out, decision='HOLD',
+                        reason=f'{bed} 의 origin 집합이 두 디렉터리에서 다르다 — '
+                               f'A 전용 {len(set(ka) - set(kb))}개 · B 전용 {len(set(kb) - set(ka))}개.  '
+                               f'짝이 없는 팔로는 감소율을 정의할 수 없다')
+        for key in sorted(ka):
+            ra, rb = ka[key], kb[key]
+            for fld in ('input_digest',):
+                if ra.get(fld) is None or rb.get(fld) is None:
+                    return dict(out, decision='HOLD',
+                                reason=f'`{fld}` 가 없는 팔이 있다 ({ra["file"]} / {rb["file"]}) — '
+                                       f'같은 침대라는 증거가 없다.  현행 payload 로 다시 돌릴 것 '
+                                       f'(CDXIJ-10 ③)')
+                if _canon(ra[fld]) != _canon(rb[fld]):
+                    return dict(out, decision='HOLD',
+                                reason=f'{bed} {key} 의 `{fld}` 가 두 디렉터리에서 다르다 '
+                                       f'({ra[fld]} vs {rb[fld]}) — **같은 침대가 아니다**.  '
+                                       f'감소율은 침대가 같을 때만 뜻이 있다')
+            for fld in _FIXED_FIELDS:
+                same = _canon(ra.get(fld)) == _canon(rb.get(fld))
+                if fld in expect_differ:
+                    if not same:
+                        differed.add(fld)
+                elif not same:
+                    return dict(out, decision='HOLD',
+                                reason=f'{bed} {key} 에서 고정 인자 `{fld}` 가 두 디렉터리 사이에 '
+                                       f'다르다 ({ra.get(fld)} vs {rb.get(fld)}) — 대조쌍은 '
+                                       f'`{sorted(expect_differ)}` **하나만** 달라야 한다.  '
+                                       f'prereg v3 STEP 5 가 정확히 이것으로 거짓 경보를 냈다')
+        pairs.append((bed, ka, kb))
+    _no = sorted(set(expect_differ) - differed)
+    if _no:
+        return dict(out, decision='HOLD',
+                    reason=f'`{_no}` 가 두 디렉터리에서 **같다** — 노브가 안 걸렸다.  '
+                           f'이때 나오는 감소율 0 % 는 물리가 아니라 실험이 일어나지 않았다는 뜻이다')
+
+    def _ratio(arms_x):
+        sm = {tuple(round(float(x), 9) for x in r['origin_shift_um']): r for r in arms_x['SBE']}
+        dm = {tuple(round(float(x), 9) for x in r['origin_shift_um']): r for r in arms_x['DBE']}
+        rs = [dm[k]['sigma_e'] / sm[k]['sigma_e'] for k in sorted(sm)
+              if sm[k].get('sigma_e') and dm[k].get('sigma_e')]
+        return (sum(rs) / len(rs), len(rs)) if rs else (None, 0)
+
+    (ra_, na), (rb_, nb) = _ratio(arms_a), _ratio(arms_b)
+    if not ra_ or not rb_:
+        return dict(out, decision='HOLD', reason='σ_e 가 없는 팔이 있어 비를 낼 수 없다')
+    ga, gb = ra_ - 1.0, rb_ - 1.0
+    out.update({'n_pair': na, 'ratio_a': ra_, 'ratio_b': rb_, 'gain_a': ga, 'gain_b': gb,
+                'reduction_pct': (ga - gb) / ga * 100.0 if ga else None,
+                'decision': 'measured',
+                'reason': f'대조쌍 검증 통과 — `{sorted(differed)}` 만 다르고 나머지 고정 인자와 '
+                          f'침대 digest 는 짝마다 동일 ({na} 쌍)'})
+    return out
 
 
 if __name__ == '__main__':
@@ -736,9 +886,38 @@ if __name__ == '__main__':
                          '(도핑 트랙 — "σ_ion 만 바꿨다" 의 유일한 기계 증거)')
     ap.add_argument('--require-ionic', action='store_true',
                     help='σ_ion 이 모든 팔에 있어야 한다 (도핑 트랙 — 이온축이 결론)')
+    ap.add_argument('--compare-dir', default='',
+                    help='두 번째 디렉터리 — 한 축만 다른 **대조쌍**으로 검증하고 이득 감소율을 낸다 '
+                         '(CL-44/CL-45 류).  `--expect-differ` 로 다를 축을 명시해야 한다')
+    ap.add_argument('--expect-differ', default='',
+                    help='대조쌍에서 **다를 것으로 등록된** 인자, 쉼표 구분 '
+                         '(예: sdcp_yield_to_vgcf).  그 밖이 다르면 HOLD, 그것이 같아도 HOLD')
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.compare_dir:
+        if not a.dir:
+            raise SystemExit('사용: --dir <대조> --compare-dir <실험> --expect-differ <필드>')
+        _exp = {s.strip() for s in a.expect_differ.split(',') if s.strip()}
+        if not _exp:
+            raise SystemExit('`--expect-differ` 가 비었다 — 무엇이 달라야 하는지 **먼저 등록**해야 '
+                             '"그 밖은 같다" 를 검사할 수 있다 (fail-closed)')
+        _bad = _exp - set(_FIXED_FIELDS)
+        if _bad:
+            raise SystemExit(f'알 수 없는 인자 {sorted(_bad)} — 가능: {list(_FIXED_FIELDS)}')
+        c = compare_dirs(a.dir, a.compare_dir, _exp)
+        print(f'\n══ 대조쌍 검증 ══\n  결정: **{c["decision"]}**\n  근거: {c["reason"]}')
+        if c['decision'] == 'measured':
+            print(f'\n  A (대조)   비 = {c["ratio_a"]:.6f}   G = {c["gain_a"]:+.5f}  '
+                  f'= {c["gain_a"] * 100:+.2f} %')
+            print(f'  B (실험)   비 = {c["ratio_b"]:.6f}   G = {c["gain_b"]:+.5f}  '
+                  f'= {c["gain_b"] * 100:+.2f} %')
+            print(f'  ▸ 이득 감소율 = **{c["reduction_pct"]:.2f} %**   ({c["n_pair"]} 쌍)')
+            print('  ⚠ 판정선 대입은 prereg 등록값으로 따로 — 이 도구는 **측정만** 한다')
+        if a.out:
+            json.dump(c, open(a.out, 'w'), ensure_ascii=False, indent=1)
+            print(f'\n  → {a.out}')
+        raise SystemExit(0 if c['decision'] == 'measured' else 1)
     if not a.dir:
         raise SystemExit('사용: --dir <결과 디렉터리>')
     rows, arms = collect(a.dir)
