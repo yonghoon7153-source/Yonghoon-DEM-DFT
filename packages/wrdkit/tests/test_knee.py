@@ -718,11 +718,12 @@ def test_no_usable_cycle_after_the_reference_is_indeterminate():
     assert "no usable cycle" in analysis.primary.reason
 
 
-def test_primary_is_the_earliest_onset_when_criteria_point_at_different_events():
-    """knee 는 가속이 *시작된* 지점이다 — 목록의 첫 방법이 아니라.
+def test_the_earliest_event_comes_from_the_model_not_from_a_minimum():
+    """knee 는 가속이 *시작된* 지점이고, 그건 모형이 찾는다.
 
-    50번에 꺾이고 150번에 다시 붕괴하는 셀에서 방법 우선순위는 147번을
-    골랐다.  51번을 찾아 둔 기준이 목록 아래에 있었다는 이유로.
+    50번에 꺾이고 150번에 다시 붕괴하는 셀에서 두 직선은 147번을 짚는다 — 가장
+    강한 절점 하나이지 onset 이 아니다.  세 직선이 두 절점을 다 놓으면 이른
+    전이가 답이 되고, 방법들 사이에서 최솟값을 고를 일이 없다.
     """
     def two_knees(c):
         return (100
@@ -731,12 +732,39 @@ def test_primary_is_the_earliest_onset_when_criteria_point_at_different_events()
                 - 0.90 * max(c - 150, 0))
 
     analysis = detect_knee(*_curve(180, two_knees, seed=1, noise=0.002), reference_cycle=3)
-    detected = [r.cycle for r in analysis.results
-                if r.detected and r.method in ("segmented", "slope_ratio")]
-    if len(detected) > 1:
-        assert analysis.primary.cycle == min(detected)
-        # 백 사이클 떨어진 두 답은 하나의 답이 아니다 — 그 사실도 말해야 한다.
-        assert "another criterion" in analysis.primary.reason
+    segmented = analysis.by_method("segmented")
+    assert segmented.detected, segmented.reason
+    assert segmented.cycle == pytest.approx(50, abs=4), segmented.reason
+    assert segmented.detail["second_breakpoint"] == pytest.approx(150, abs=6)
+    assert analysis.primary.cycle == pytest.approx(50, abs=4)
+
+
+def test_primary_is_not_the_minimum_of_two_noisy_estimates():
+    """단일 knee 에서 방법들의 최솟값을 고르면 체계적으로 이르다.
+
+    두 답이 두 사건인지 한 사건을 두 번 잰 것인지 먼저 가리지 않고 min 을 쓰면,
+    knee 가 하나뿐인 셀에서도 잡음이 만든 이른 후보가 이긴다.  200개 기록에서
+    두 직선 적합의 평균 오차는 +0.02 사이클인데 최솟값 규칙은 -8.2 였다.
+    """
+    cycles = np.arange(3, 163, dtype=float)
+    truth = 80.0
+    mean = (100
+            - 0.05 * (np.minimum(cycles, truth) - 3)
+            - 0.30 * np.maximum(cycles - truth, 0))
+
+    errors = []
+    for seed in range(40):
+        values = mean * (1 + np.random.default_rng(seed).normal(0, 0.005, len(cycles)))
+        primary = detect_knee(cycles, values, reference_cycle=3).primary
+        if primary.detected:
+            errors.append(primary.cycle - truth)
+    assert errors
+    assert abs(float(np.mean(errors))) < 1.0, float(np.mean(errors))
+
+    # Codex 가 든 개별 예: slope_ratio 가 잡음으로 28번을 짚어도 답은 80번이다.
+    values = mean * (1 + np.random.default_rng(2).normal(0, 0.005, len(cycles)))
+    analysis = detect_knee(cycles, values, reference_cycle=3)
+    assert analysis.primary.cycle == pytest.approx(80, abs=3), analysis.primary.reason
 
 
 def test_every_detail_number_is_json_safe():
@@ -847,3 +875,52 @@ def test_a_second_transition_still_counts_when_it_beats_the_first_rate():
                          reference_cycle=3).by_method("segmented")
     assert result.detected, result.reason
     assert result.cycle == pytest.approx(88, abs=2)
+
+
+def test_all_three_criteria_agree_on_whether_the_evidence_is_in():
+    """같은 저손실 bend 를 세 기준이 다른 상태로 말하면 안 된다.
+
+    `slope_ratio` 의 detail 에는 `_not_yet` 이 읽는 값이 없었고 `curvature` 는
+    적합도를 그 뒤에 계산했다.  둘 다 `insufficient` 가 될 수 없어서, 그 상태는
+    사실상 segmented 전용이었다.
+    """
+    def planted(c):
+        return 100 - 0.03 * (min(c, 12) - 3) - 0.35 * max(c - 12, 0)
+
+    analysis = detect_knee(*_curve(17, planted, noise=0.0), reference_cycle=3)
+    statuses = {m: analysis.by_method(m).status
+                for m in ("segmented", "slope_ratio", "curvature")}
+    assert set(statuses.values()) == {"insufficient"}, statuses
+    for method, _ in statuses.items():
+        assert analysis.by_method(method).candidate_cycle == pytest.approx(12, abs=2)
+
+
+def test_the_answer_does_not_move_backwards_as_the_record_grows():
+    """기록이 길어지면서 상태가 되돌아가면 안 된다.
+
+    "절반은 왔다" 로 미루던 규칙은 같은 느린 셀을 60 사이클에서 insufficient,
+    70~150 에서 none, 160 에서 다시 insufficient, 217 에서 detected 로 만들었다.
+    70번 사이클에 셀에 일어난 일은 없다.
+    """
+    def slow(c):
+        return 100 - 0.005 * (min(c, 50) - 3) - 0.012 * max(c - 50, 0)
+
+    order = {"none": 0, "insufficient": 1, "detected": 2}
+    seen = []
+    for n in range(60, 261, 10):
+        result = detect_knee(*_curve(n, slow, noise=0.0),
+                             reference_cycle=3).by_method("segmented")
+        seen.append((n, result.status))
+    ranks = [order[status] for _, status in seen]
+    assert ranks == sorted(ranks), seen
+
+
+def test_a_bend_with_too_little_after_it_is_never_dismissed():
+    """후속이 짧으면 "대가가 없다" 는 셀이 아니라 파일에 대한 진술이다."""
+    def planted(c):
+        return 100 - 0.03 * (min(c, 12) - 3) - 0.35 * max(c - 12, 0)
+
+    result = detect_knee(*_curve(17, planted, noise=0.0),
+                         reference_cycle=3).by_method("segmented")
+    assert result.status == "insufficient"
+    assert result.detail["followup_cycles"] < 20

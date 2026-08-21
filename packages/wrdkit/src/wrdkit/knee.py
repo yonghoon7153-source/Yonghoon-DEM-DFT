@@ -65,6 +65,27 @@ SUSTAINED_CROSSING = 2
 # something true and specific in its reason line, which "a bent line fits no
 # better" does not.  Only ``MIN_KNEE_DROP_PCT`` still decides a case alone.
 
+#: How many cycles have to follow a break before "it cost nothing" is a
+#: statement about the cell rather than about the file.  Below this the
+#: post-break rate is not measured well enough to dismiss the bend, so the
+#: answer is `insufficient` and not `none`.
+#:
+#: A stated convention, not a measured constant: twenty cycles is roughly where
+#: a fade rate stops being dominated by where the record happened to stop.  It
+#: is the number most likely to be wrong in this module and it is deliberately
+#: in one place.
+MIN_FOLLOWUP_CYCLES = 20
+
+#: How far ahead "it costs nothing" is allowed to look.  A bend whose measured
+#: rate would not lose ``MIN_KNEE_DROP_PCT`` within this many further cycles is
+#: dismissed; one that would is deferred until it does.  Projecting rather than
+#: waiting is what keeps the answer from moving backwards as a record grows.
+#:
+#: A stated convention like ``MIN_FOLLOWUP_CYCLES``: 200 cycles is the far end
+#: of what this lab runs, so a bend that would not matter within one is a bend
+#: that does not matter.
+MATERIAL_HORIZON_CYCLES = 200
+
 #: A knee has to cost something.  Past the break point the cell must actually
 #: lose this much retention, in percentage points, over the cycles that were
 #: recorded.  Without it the ratio test compares two near-zero slopes and calls
@@ -250,25 +271,35 @@ def _not_yet(method: str, breakpoint: float, drop: float,
             f"better than a straight one",
             detail, candidate_cycle=float(breakpoint),
         )
-    # Enough room to have lost 2 % at the *slowest* rate this module still
-    # calls fading?  No -- that would be millions of cycles.  The question is
-    # whether the fade actually measured after the break had room to add up,
-    # so ask this cell's own post-break rate.
-    rate = abs(float(detail.get("slope_after") or 0.0))
-    needed = MIN_KNEE_DROP_PCT / rate if rate > MIN_FADE_RATE else float("inf")
-    detail["cycles_needed_for_loss"] = needed if np.isfinite(needed) else -1.0
-    # "Not yet" only while more of the same record would settle it.  Any fade
-    # at all reaches 2 % eventually, so "it would get there in 658 more cycles"
-    # is not censoring -- 299 cycles of follow-up measured that rate perfectly
-    # well, and the answer is that the bend cost nothing.  Within a doubling of
-    # what has already been watched, the operator's stopping point really is
-    # what decided the answer.
-    if followup < needed <= 2 * followup:
+
+    # Everything below is in observed terms.  Working out how long the loss
+    # "would" take from a fitted slope mixed units -- %/cycle against a count
+    # of rows -- so a record with gaps got a different answer from the same
+    # cell densely sampled, and the comparison sat exactly on a floating-point
+    # boundary for round numbers.  The realised rate is drop/followup and the
+    # units cancel.
+    if followup < MIN_FOLLOWUP_CYCLES:
         return KneeResult(
             method, None, False,
-            f"cycle {breakpoint:.0f} bends, but only {followup} cycles follow it and "
-            f"{drop:.1f}% has been lost so far -- at this rate the {MIN_KNEE_DROP_PCT:g}% "
-            f"that makes it a knee needs about {needed:.0f}",
+            f"cycle {breakpoint:.0f} bends, but only {followup} cycles follow it -- "
+            f"too few to say whether it costs anything ({drop:.1f}% so far)",
+            detail, status=STATUS_INSUFFICIENT, candidate_cycle=float(breakpoint),
+        )
+    # "It cost nothing" has to be a claim that more cycling would not change the
+    # answer, so it is made by projection rather than by how far along the
+    # record happens to be.  A halfway rule looked reasonable and made the state
+    # move backwards in time: the same slow cell read `insufficient` at 60
+    # cycles, `none` from 70 to 150, `insufficient` again at 160 and `detected`
+    # at 217.  Nothing about the cell changed at cycle 70.
+    rate = drop / followup
+    projected = rate * MATERIAL_HORIZON_CYCLES
+    detail["projected_loss_pct"] = projected
+    if projected >= MIN_KNEE_DROP_PCT:
+        return KneeResult(
+            method, None, False,
+            f"cycle {breakpoint:.0f} bends and has cost {drop:.1f}% over {followup} "
+            f"cycles -- at this rate it reaches {MIN_KNEE_DROP_PCT:g}% within "
+            f"{MATERIAL_HORIZON_CYCLES} cycles, so more record would settle it",
             detail, status=STATUS_INSUFFICIENT, candidate_cycle=float(breakpoint),
         )
     return KneeResult(
@@ -377,7 +408,8 @@ def _record_ratio(detail: dict, ratio: float) -> None:
         detail["fade_starts_here"] = 1.0
 
 
-def _f_gain(rss_single: float, rss_model: float, n: int, extra: int) -> float:
+def _f_gain(rss_single: float, rss_model: float, n: int, extra: int,
+            parameters: int | None = None) -> float:
     """How much residual the bent model removes, per residual it leaves.
 
     Shaped like an F ratio and deliberately not called one: the break point was
@@ -387,7 +419,13 @@ def _f_gain(rss_single: float, rss_model: float, n: int, extra: int) -> float:
     """
     if rss_model <= 0:
         return float("inf")
-    return ((rss_single - rss_model) / extra) / (rss_model / max(n - 2 - extra, 1))
+    # ``parameters`` is how many the *fuller* model has, which is not always
+    # ``2 + extra``: an incremental comparison against a model that already
+    # carries a nuisance break is one break against two, so the residual
+    # degrees of freedom are n-4 and not n-3.  Left implicit it inflated short
+    # records by (n-3)/(n-4).
+    full = parameters if parameters is not None else 2 + extra
+    return ((rss_single - rss_model) / extra) / (rss_model / max(n - full, 1))
 
 
 def _bend_gain(cycles: np.ndarray, values: np.ndarray, breakpoint: float) -> float:
@@ -428,7 +466,7 @@ def _bend_gain(cycles: np.ndarray, values: np.ndarray, breakpoint: float) -> flo
         # The nuisance break is chosen to help the *candidate*, so it is picked
         # on the incremental gain rather than on the joint fit -- otherwise the
         # best pair is simply the best two-break model, whoever it belongs to.
-        incremental = _f_gain(without, with_both, n, 1)
+        incremental = _f_gain(without, with_both, n, 1, parameters=4)
         if best is None or incremental > best:
             best = incremental
     return max(gain, best if best is not None else gain)
@@ -684,8 +722,10 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
 
     # (break cycle, slope before it, slope after it, what follows, own gain)
     transitions = [
-        (first, slopes[0], slopes[1], slopes[2], _f_gain(without_first, rss, n, 1)),
-        (second, slopes[1], slopes[2], None, _f_gain(without_second, rss, n, 1)),
+        (first, slopes[0], slopes[1], slopes[2],
+         _f_gain(without_first, rss, n, 1, parameters=4)),
+        (second, slopes[1], slopes[2], None,
+         _f_gain(without_second, rss, n, 1, parameters=4)),
     ]
     rejected = None
     for where, before, after, then, own_gain in transitions:
@@ -715,8 +755,12 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
                 "a bent line fits no better than a straight one", detail,
                 candidate_cycle=float(where))
             continue
-        tail = (f" and eases off again from cycle {second:.0f} ({then:.3f} %/cycle)"
-                if then is not None else "")
+        if then is None:
+            tail = ""
+        elif then < after - MIN_FADE_RATE:
+            tail = f" and steepens again from cycle {second:.0f} ({then:.3f} %/cycle)"
+        else:
+            tail = f" and eases off again from cycle {second:.0f} ({then:.3f} %/cycle)"
         return KneeResult(
             "segmented", where, True,
             f"fade steepens at cycle {where:.0f} "
@@ -776,12 +820,31 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
 
     two_line = _judge_two_line(cycles, values, detail, breakpoint,
                                slope_before, slope_after, drop, gain)
+
+    # Both models, always -- the docstring said so and the code did not.  A
+    # cell with breaks at 50 and 150 fitted as two lines lands at 147 with a
+    # residual of 247; three lines put the breaks where they are and leave
+    # 5e-25.  Returning the two-line answer because it happened to be
+    # *detected* threw that away, and with it the earlier of the two events.
+    #
+    # The second break has to earn itself: preferred only when adding it to the
+    # best two-line model removes as much residual as a break has to.  Without
+    # that a third segment always fits a little better and every cell would get
+    # one.
+    three = _exact_three_break(cycles, values)
+    escalate = (three is not None
+                and _f_gain(rss, three[0], n, 1, parameters=4) >= MIN_FIT_GAIN_F)
+    if escalate:
+        escalated = _three_segment(cycles, values, rss_single)
+        if escalated.detected:
+            return escalated
     if two_line.detected:
         return two_line
 
-    escalated = _three_segment(cycles, values, rss_single)
-    if escalated.detected:
-        return escalated
+    if not escalate:
+        escalated = _three_segment(cycles, values, rss_single)
+        if escalated.detected:
+            return escalated
     # Neither model found a knee.  Prefer whichever rejection actually looked at
     # a break point: "not yet confirmed" says more than "no acceleration".
     for candidate in (two_line, escalated):
@@ -920,6 +983,11 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
         # to half a window and reported knees that lost 1.8 %.
         drop = float(values[index] - values[-1])
         detail["slope_at_knee"] = float(local[k])
+        # `_not_yet` reads `slope_after` to work out how long the loss would
+        # take at this rate.  Without it the rate came out 0, the answer was
+        # "needs infinitely many cycles", and this criterion could never say
+        # `insufficient` -- the state existed for segmented only.
+        detail["slope_after"] = float(local[k])
         detail["drop_after_pct"] = drop
         # Structure first, consequence second: `_not_yet` defers only when the
         # bend itself is supported, so it has to know the fit gain already.
@@ -930,10 +998,10 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
             # candidate failed, while saying "the rate never stayed" -- a cell
             # with a transient at cycle 60 and its real knee at 95 was reported
             # as having none, because the transient got asked first.
-            held = held or _not_yet("slope_ratio", cycle, drop, cycles, detail)
+            held = held or _not_yet("slope_ratio", cycle, drop, cycles, dict(detail))
             continue
         if gain < MIN_FIT_GAIN_F:
-            held = held or _weak_bend("slope_ratio", cycle, detail)
+            held = held or _weak_bend("slope_ratio", cycle, dict(detail))
             continue
         return KneeResult(
             "slope_ratio", cycle, True,
@@ -985,13 +1053,17 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
                           f"curvature peaks at cycle {cycle:.0f} but fade "
                           f"accelerates only {ratio:.2f}x there "
                           f"(needs {MIN_SLOPE_RATIO:g}x)", detail)
+    # Structure first, consequence second: `_not_yet` defers only when the bend
+    # itself is supported, so the score has to exist before it is asked.
+    # Computed after, it read a missing key as zero and this criterion could
+    # never say `insufficient` either.
+    gain = _bend_gain(cycles, smoothed, cycle)
+    detail["fit_gain_score"] = gain
     if drop < MIN_KNEE_DROP_PCT:
         # Curvature is scale-free: the sharpest bend on a curve that never
         # goes anywhere is still the sharpest bend.  A cell that loses 0.5 %
         # after its "knee" did not have one.
         return _not_yet("curvature", cycle, drop, cycles, detail)
-    gain = _bend_gain(cycles, smoothed, cycle)
-    detail["fit_gain_score"] = gain
     if gain < MIN_FIT_GAIN_F:
         return _weak_bend("curvature", cycle, detail)
     return KneeResult("curvature", cycle, True,
@@ -1136,14 +1208,23 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
         earliest = min(r.cycle for r in ranked)
         latest = max(r.cycle for r in ranked)
         if latest - earliest > smoothing_window:
-            primary = min(ranked, key=lambda r: r.cycle)
-            # One number on the panel, two criteria a hundred cycles apart: the
-            # disagreement is the finding, not a rounding error.
+            # Say that they disagree; do not pick the earlier one.
+            #
+            # Picking the minimum was a plausible reading of "a knee is where
+            # accelerated fade started" and it is not an estimator.  Nothing
+            # decides first whether two answers are two events or one event
+            # measured twice, so on a cell with a single knee at cycle 80 the
+            # minimum of two noisy estimates is systematically early: over 200
+            # records the two-line fit averaged +0.02 cycles of error and the
+            # minimum averaged -8.2, from 88 records where the rule fired at
+            # all.  Several real events are what the three-line model is for --
+            # it returns the earliest qualifying transition of one fit, which
+            # is an estimate of one thing.
             primary = replace(
                 primary,
                 detail={**primary.detail, "criteria_spread_cycles": float(latest - earliest)},
                 reason=(f"{primary.reason}; another criterion puts it at "
-                        f"cycle {latest:.0f}"),
+                        f"cycle {(latest if primary.cycle == earliest else earliest):.0f}"),
             )
 
     analysis = KneeAnalysis(
