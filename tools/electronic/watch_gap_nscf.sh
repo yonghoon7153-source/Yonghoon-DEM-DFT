@@ -210,12 +210,22 @@ for S in comp1 modelc; do
         if [ "$STAGE" = "nscf_gap" ]; then
             KD=$(grep -ac 'Computing kpt #' "$F")
             [ "$KD" = "0" ] && KD=$(grep -ac 'ethr =' "$F")
-            printf "   %s: 밴드 대각화 진행 — k-point %s/%s" "$STAGE" "$KD" "${NK:-?}"
+            # ⛔⛔ 2026-08-21 — **QE 는 pool 0 의 진행만 찍는다.**
+            #   -nk 10 이면 pool 0 은 170 중 17개만 맡는데, 화면은 그 17개를 170 에
+            #   대고 재던 것이다. 그래서 진행률도 ETA 도 **npool 배 비관적**이었다.
+            #   (이 착시가 "112 h" 추정을 만들었다 — 실제 처리량은 그 절반이었다.)
+            NPOOLS=$(grep -a 'npool' "$F" | head -1 | sed 's/.*npool[^0-9]*//' | awk '{print $1}')
+            [ -n "$NPOOLS" ] && [ "$NPOOLS" -gt 0 ] 2>/dev/null || NPOOLS=1
+            KTOT=$(( KD * NPOOLS ))
+            KPOOL=$(( ( ${NK:-0} + NPOOLS - 1 ) / NPOOLS ))
+            printf "   %s: 밴드 대각화 — pool0 %s/%s · 전체 ≈ %s/%s (npool %s)" \
+                   "$STAGE" "$KD" "$KPOOL" "$KTOT" "${NK:-?}" "$NPOOLS"
             [ -n "$CPUT" ] && awk -v t="$CPUT" 'BEGIN{printf "  · cpu %.1f h", t/3600}'
             echo
             if [ -n "$NK" ] && [ "${KD:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
-                awk -v k="$KD" -v n="$NK" -v t="$CPUT" 'BEGIN{
-                    if (k>0 && n>k) printf "        %.0f s/kpt · 남은 %d개 ≈ %.1f h\n", t/k, n-k, (n-k)*(t/k)/3600
+                # 처리량은 **전체 기준**으로 잰다 (pool0 개수 × npool).
+                awk -v kt="$KTOT" -v n="$NK" -v t="$CPUT" 'BEGIN{
+                    if (kt>0 && n>kt) printf "        전체 %.0f s/kpt · 남은 %d개 ≈ %.1f h  (초기화 포함이라 낙관 쪽으로 개선된다)\n", t/kt, n-kt, (n-kt)*(t/kt)/3600
                 }'
             fi
             printf "        로그 갱신 %s분 전" "$AGE"
