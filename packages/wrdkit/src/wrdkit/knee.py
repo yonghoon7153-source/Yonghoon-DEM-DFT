@@ -503,6 +503,99 @@ def _exact_three_break(cycles: np.ndarray, values: np.ndarray):
     return exact, float(cycles[i]), float(cycles[j]), exact_slopes
 
 
+def _exact_level_shift(cycles: np.ndarray, values: np.ndarray):
+    """The best "one straight line, plus a block that sits lower" fit.
+
+    This is the competing story for a bend.  Degradation is permanent: the
+    capacity a cell has lost, it has lost.  A block of cycles that sits below
+    the trend and then rejoins it is something else -- a C-rate step, a
+    temperature excursion, a diagnostic sweep -- and the cell was fading at the
+    same rate throughout.
+
+    A continuous hinge cannot say that, so it approximates the block with a
+    steep drop and a recovery, and reports the drop as an onset of degradation
+    several cycles *before* the block even starts.  Fitting the honest model
+    and comparing residuals is how the two are told apart; the design is
+    ``1, x, 1[t1 <= x < t2]`` and the search is exhaustive, on the same
+    suffix sums.
+    """
+    n = len(cycles)
+    if n < 3 * MIN_SEGMENT + 1:
+        return None
+    centre = float(np.mean(cycles))
+    x = cycles - centre
+    y = np.asarray(values, dtype=np.float64)
+    s = _suffix_sums(x, y)
+    total_yy = float(np.sum(y * y))
+    all_n, all_x, all_xx = s["n"][0], s["x"][0], s["xx"][0]
+    all_y, all_xy = s["y"][0], s["xy"][0]
+
+    best = None
+    for i in range(MIN_SEGMENT, n - 2 * MIN_SEGMENT + 1):
+        js = np.arange(i + MIN_SEGMENT, n - MIN_SEGMENT + 1)
+        if not len(js):
+            continue
+        # Indicator over [i, j): window sums are differences of suffix sums.
+        block_n = s["n"][i] - s["n"][js]
+        block_x = s["x"][i] - s["x"][js]
+        block_y = s["y"][i] - s["y"][js]
+
+        m = len(js)
+        gram = np.empty((m, 3, 3))
+        upper = {
+            (0, 0): np.full(m, all_n), (0, 1): np.full(m, all_x), (0, 2): block_n,
+            (1, 1): np.full(m, all_xx), (1, 2): block_x,
+            (2, 2): block_n,
+        }
+        for (row, col), value in upper.items():
+            gram[:, row, col] = value
+            gram[:, col, row] = value
+        moment = np.column_stack([np.full(m, all_y), np.full(m, all_xy), block_y])
+        gram[:, range(3), range(3)] += 1e-10
+        beta = np.linalg.solve(gram, moment[..., None])[..., 0]
+        rss = total_yy - np.einsum("ij,ij->i", beta, moment)
+        k = int(np.argmin(rss))
+        if best is None or rss[k] < best[0]:
+            best = (float(rss[k]), i, int(js[k]), float(beta[k, 2]), float(beta[k, 1]))
+    if best is None:
+        return None
+    rss, i, j, offset, slope = best
+    return rss, float(cycles[i]), float(cycles[min(j, n - 1)]), offset, slope
+
+
+def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
+                        rss_bend: float) -> tuple[float, float, float] | None:
+    """A block of cycles that sat lower and then rejoined the trend.
+
+    Returns ``(first cycle, last cycle, offset)`` when that story fits the
+    curve better than any bend does, and None otherwise.
+
+    Degradation is permanent.  A cell that drops 4 % for twenty cycles and then
+    comes back did not degrade there -- something about how it was measured
+    changed and changed back, which is what a C-rate block or a temperature
+    excursion inside a cycling schedule looks like.  The continuous hinge has
+    no way to say that, so it spends its two break points on a steep drop and a
+    recovery and reports the drop as an onset of degradation, several cycles
+    before the block even begins.
+
+    The record does not carry the schedule down here, so the shape has to
+    stand in for the metadata: the block must sit *below* the line, and it must
+    end before the record does.  A step that never comes back is a real
+    permanent loss, whatever caused it.
+    """
+    shift = _exact_level_shift(cycles, values)
+    if shift is None:
+        return None
+    rss, start, end, offset, _ = shift
+    if rss >= rss_bend:
+        return None
+    if offset >= 0.0:
+        return None
+    if end >= float(cycles[-1]):
+        return None
+    return start, end, offset
+
+
 def _three_segment(cycles: np.ndarray, values: np.ndarray,
                    rss_single: float) -> KneeResult:
     """Flat, then steep, then something else -- what two lines cannot describe.
@@ -533,7 +626,8 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
     gain = _f_gain(rss_single, rss, n, 2)
     shared = {"breakpoint": first, "second_breakpoint": second,
               "slope_before": slopes[0], "slope_after": slopes[1],
-              "slope_late": slopes[2], "f_statistic": gain, "segments": 3.0}
+              "slope_late": slopes[2], "f_statistic": gain, "segments": 3.0,
+              "rss_bend": rss}
 
     # (break cycle, slope before it, slope after it, what follows)
     transitions = [(first, slopes[0], slopes[1], slopes[2]),
@@ -614,6 +708,7 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
         "drop_after_pct": drop,
         "f_statistic": gain,
         "segments": 2.0,
+        "rss_bend": rss,
     }
 
     two_line = _judge_two_line(cycles, values, detail, breakpoint,
@@ -952,6 +1047,29 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
     # "Genuinely different" is more than a smoothing window apart.  Inside one,
     # the criteria are measuring the same bend and swapping to whichever landed
     # a cycle earlier would make the reported method jump around on noise.
+    # Before anything is called a knee: was the curve a straight line with a
+    # block of cycles that sat lower and then came back?  One fit answers it
+    # for every criterion at once, because it is a statement about the curve
+    # rather than about how any one of them looked at it.
+    bend_rss = next((r.detail.get("rss_bend") for r in results
+                     if r.method == "segmented" and "rss_bend" in r.detail), None)
+    if bend_rss is not None and any(r.detected for r in results
+                                    if r.method != "threshold"):
+        excursion = _protocol_excursion(search_cycles, smoothed, float(bend_rss))
+        if excursion is not None:
+            start, end, offset = excursion
+            reason = (f"cycles {start:.0f}-{end:.0f} sat {abs(offset):.1f}% below the "
+                      f"trend and rejoined it -- a change in how the cell was "
+                      f"measured, not degradation")
+            note = {"excursion_from": start, "excursion_to": end,
+                    "excursion_offset_pct": offset}
+            results = [
+                r if r.method == "threshold"
+                else KneeResult(r.method, None, False, reason,
+                                {**r.detail, **note}, candidate_cycle=r.candidate_cycle)
+                for r in results
+            ]
+
     ranked = [r for name in ("segmented", "slope_ratio")
               for r in results if r.method == name and r.detected]
     primary = ranked[0] if ranked else results[1]

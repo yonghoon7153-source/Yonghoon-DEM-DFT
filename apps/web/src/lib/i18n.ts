@@ -91,6 +91,12 @@ const KNEE_REASONS: Rule[] = [
   ],
   [/^no three-line break point fits$/, () => '세 직선으로도 맞는 절점이 없습니다'],
   [
+    /^cycles ([\d.]+)-([\d.]+) sat ([\d.]+)% below the trend and rejoined it -- a change in how the cell was measured, not degradation$/,
+    (m) =>
+      `${m[1]}~${m[2]}번이 추세보다 ${m[3]}% 아래 있다가 다시 붙었습니다 — ` +
+      `측정 조건이 바뀌었다 돌아온 것이지 열화가 아닙니다`,
+  ],
+  [
     /^fade steepens at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
     (m) => `${m[1]}번 사이클에서 열화가 급해집니다 (${m[2]} → ${m[3]} %/cycle)`,
   ],

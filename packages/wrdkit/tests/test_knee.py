@@ -756,3 +756,60 @@ def test_every_detail_number_is_json_safe():
     assert segmented.detail["fade_starts_here"] == 1.0
     for result in analysis.results:
         json.dumps(result.detail, allow_nan=False)
+
+
+def test_a_block_that_sat_lower_and_came_back_is_not_a_knee():
+    """가역적인 C-rate/온도 구간을 열화 onset 으로 보고하면 안 된다.
+
+    열화율은 처음부터 끝까지 -0.08 %/cycle 로 일정하고, 35~54 번만 측정 조건
+    때문에 용량이 낮았다가 완전히 회복하는 셀.  연속 hinge 는 계단을 "급감 +
+    회복" 으로 근사하므로 절점 두 개를 거기 쓰고, 이벤트가 시작하기도 *전인*
+    33번을 knee 라고 보고했다.  계단 크기를 1 → 8 %p 로 바꿔도 33번 고정이었다.
+
+    2 % 손실 게이트로는 못 막는다.  계단의 비가역 결과가 아니라 그 뒤 정상적인
+    배경 열화를 끝까지 합산하기 때문이다.
+    """
+    for size in (1.0, 4.0, 8.0):
+        def rate_block(c, step=size):
+            return 100 - 0.08 * (c - 3) - (step if 35 <= c < 55 else 0.0)
+
+        analysis = detect_knee(*_curve(80, rate_block), reference_cycle=3)
+        for method in ("segmented", "slope_ratio", "curvature"):
+            result = analysis.by_method(method)
+            assert not result.detected, f"{size}%p {method}: {result.reason}"
+        assert not analysis.primary.detected
+
+
+def test_the_excursion_is_named_with_the_cycles_it_covers():
+    """그냥 거부하지 말고 무엇이었는지 말한다 — 실험 노트와 대조할 수 있게."""
+    def rate_block(c):
+        return 100 - 0.08 * (c - 3) - (4.0 if 35 <= c < 55 else 0.0)
+
+    primary = detect_knee(*_curve(80, rate_block), reference_cycle=3).primary
+    assert "sat" in primary.reason and "rejoined" in primary.reason
+    assert primary.detail["excursion_from"] == pytest.approx(35, abs=2)
+    assert primary.detail["excursion_to"] == pytest.approx(55, abs=2)
+
+
+def test_a_permanent_step_is_still_a_real_loss():
+    """돌아오지 않는 계단은 측정 아티팩트가 아니다 — 무엇이 원인이든 진짜 손실이다."""
+    def permanent_step(c):
+        return 100 - 0.08 * (c - 3) - (6.0 if c >= 40 else 0.0)
+
+    analysis = detect_knee(*_curve(80, permanent_step), reference_cycle=3)
+    assert "rejoined" not in analysis.primary.reason
+
+
+def test_real_knees_survive_the_excursion_check():
+    """계단 모형이 진짜 꺾임을 삼키면 안 된다.  적합 잔차 차이가 30~370 배다."""
+    shapes = {
+        "textbook": (80, lambda c: (100 - 0.12 * (c - 3)) if c <= 40
+                     else 95.6 - 1.4 * (c - 40), 40),
+        "crash then ease": (62, _flat_then_crash_then_ease, 23),
+        "sudden death": (68, lambda c: (100 - 0.08 * (c - 3)) if c <= 55
+                         else 95.8 - 6.0 * (c - 55), 55),
+    }
+    for label, (n, shape, expected) in shapes.items():
+        analysis = detect_knee(*_curve(n, shape, noise=0.003), reference_cycle=3)
+        assert analysis.primary.detected, f"{label}: {analysis.primary.reason}"
+        assert analysis.primary.cycle == pytest.approx(expected, abs=4), label

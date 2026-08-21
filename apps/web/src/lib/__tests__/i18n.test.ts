@@ -67,6 +67,8 @@ describe('knee reasons', () => {
     // API 가 허용하는 경계 파라미터.  Python 의 :g 가 지수 표기를 만든다.
     'capacity never fell below 1e-05% (lowest 99.0%)',
     'fade rate never stayed at 1e+06x the early-life rate',
+    'cycles 35-55 sat 3.8% below the trend and rejoined it -- a change in how the cell was measured, not degradation',
+    'only 1.8% is lost after cycle 11 (needs 2%), and a line bent there fits no better than a straight one',
   ]
 
   it('translates every reason knee.py can produce', () => {
