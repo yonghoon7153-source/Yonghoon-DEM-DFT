@@ -629,24 +629,42 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
               "slope_late": slopes[2], "f_statistic": gain, "segments": 3.0,
               "rss_bend": rss}
 
-    # (break cycle, slope before it, slope after it, what follows)
-    transitions = [(first, slopes[0], slopes[1], slopes[2]),
-                   (second, slopes[1], slopes[2], None)]
+    # Each transition is scored by what *it* adds, not by how well the pair
+    # fits.  Scoring both with the joint gain repeats the mistake the nuisance
+    # break was fixed for, one level up: on a cell fading in a nearly straight
+    # line, a strong first break lent its evidence to a 1.6x second transition
+    # and produced a knee where the two-line model had correctly found none.
+    without_second, _ = _hinge_fit(cycles, values, (first,))
+    without_first, _ = _hinge_fit(cycles, values, (second,))
+
+    # (break cycle, slope before it, slope after it, what follows, own gain)
+    transitions = [
+        (first, slopes[0], slopes[1], slopes[2], _f_gain(without_first, rss, n, 1)),
+        (second, slopes[1], slopes[2], None, _f_gain(without_second, rss, n, 1)),
+    ]
     rejected = None
-    for where, before, after, then in transitions:
+    for where, before, after, then, own_gain in transitions:
         ratio = _acceleration(before, after)
         if ratio < MIN_SLOPE_RATIO:
+            continue
+        # A knee is fade faster than this cell has ever faded -- not merely
+        # faster than the lull in front of it.  A real 161-cycle cell fades at
+        # -0.280, slows to -0.158 for ninety cycles, then returns to -0.259:
+        # measured against the lull that is a 1.64x "acceleration" at cycle
+        # 121, and measured against the cell it is the rate it started with.
+        if _acceleration(slopes[0], after) < MIN_SLOPE_RATIO:
             continue
         detail = dict(shared)
         detail["knee_transition"] = 1.0 if where == first else 2.0
         detail["slope_before"], detail["slope_after"] = before, after
+        detail["f_statistic"] = min(gain, own_gain)
         _record_ratio(detail, ratio)
         drop = float(values[cycles >= where][0] - values[-1])
         detail["drop_after_pct"] = drop
         if drop < MIN_KNEE_DROP_PCT:
             rejected = rejected or _not_yet("segmented", where, drop, cycles, detail)
             continue
-        if gain < MIN_FIT_GAIN_F:
+        if min(gain, own_gain) < MIN_FIT_GAIN_F:
             rejected = rejected or KneeResult(
                 "segmented", None, False,
                 "a bent line fits no better than a straight one", detail,

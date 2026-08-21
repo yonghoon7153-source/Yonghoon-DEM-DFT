@@ -813,3 +813,37 @@ def test_real_knees_survive_the_excursion_check():
         analysis = detect_knee(*_curve(n, shape, noise=0.003), reference_cycle=3)
         assert analysis.primary.detected, f"{label}: {analysis.primary.reason}"
         assert analysis.primary.cycle == pytest.approx(expected, abs=4), label
+
+
+def test_a_lull_followed_by_the_original_rate_is_not_a_knee():
+    """느려졌다 원래 속도로 돌아온 것은 가속이 아니다.
+
+    실측 161 사이클 셀이 -0.280 으로 열화하다 90 사이클 동안 -0.158 로 느려진
+    뒤 -0.259 로 돌아왔다.  직전 구간과 견주면 121번에서 1.64배 "가속" 이고,
+    셀 자신과 견주면 처음 속도로 돌아온 것뿐이다.  세 선의 두 번째 전이를
+    직전 구간하고만 비교하던 것이 이 셀에 knee 를 붙였다.
+    """
+    def lull(c):
+        return (100
+                - 0.280 * (min(c, 32) - 3)
+                - 0.158 * max(min(c, 121) - 32, 0)
+                - 0.259 * max(c - 121, 0))
+
+    analysis = detect_knee(*_curve(161, lull, noise=0.002), reference_cycle=3)
+    for method in ("segmented", "slope_ratio", "curvature"):
+        result = analysis.by_method(method)
+        assert not result.detected, f"{method}: {result.reason}"
+
+
+def test_a_second_transition_still_counts_when_it_beats_the_first_rate():
+    """단, 처음 속도보다도 빨라졌으면 그것은 진짜 두 번째 knee 다."""
+    def recover_then_collapse(c):
+        return (100
+                - 0.55 * (min(c, 22) - 3)
+                - 0.02 * max(min(c, 88) - 22, 0)
+                - 0.90 * max(c - 88, 0))
+
+    result = detect_knee(*_curve(100, recover_then_collapse, noise=0.0),
+                         reference_cycle=3).by_method("segmented")
+    assert result.detected, result.reason
+    assert result.cycle == pytest.approx(88, abs=2)
