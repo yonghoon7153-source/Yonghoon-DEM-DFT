@@ -101,6 +101,55 @@ class ComponentOut(BaseModel):
     role: str = "other"
 
 
+class PresetSettings(BaseModel):
+    """Cell settings a preset may carry.
+
+    These are properties of the *build*, not of the individual cell: the same
+    recipe is punched with the same die, rated at the same nominal specific
+    capacity, and cycled against the same counter electrode.  Masses are
+    deliberately absent -- they are measured per cell, and a preset that
+    carried one would put it silently under another cell's mAh/g (ADR 0010).
+
+    Every field is optional and ``None`` means "this preset does not carry
+    it", so applying leaves that field alone rather than clearing it.
+    """
+
+    area_cm2: PositiveLength | None = None
+    diameter_mm: PositiveLength | None = None
+    thickness_um: PositiveLength | None = None
+    nominal_specific_capacity_mah_g: PositiveMass | None = None
+    reference_electrode: str | None = None
+    reference_offset_v: Finite | None = None
+
+    def filled(self) -> dict[str, Any]:
+        """Only the settings actually set, ready to PATCH onto a sample."""
+        return {key: value for key, value in self.model_dump().items()
+                if value is not None and value != ""}
+
+
+class CompositionPresetIn(BaseModel):
+    name: str
+    composition: list[ComponentIn] = Field(default_factory=list)
+    settings: PresetSettings = Field(default_factory=PresetSettings)
+    #: Replace a preset that already has this name.  Off by default: saving
+    #: over somebody's recipe is a deliberate act, not a side effect of
+    #: reusing a name.
+    overwrite: bool = False
+
+
+class CompositionPresetOut(BaseModel):
+    id: int
+    name: str
+    #: ``AM:SE:VGCF = 80:17:3`` -- the blend, as a lab says it.
+    text: str
+    #: What the dropdown shows: ``이름 · AM:SE:VGCF = 80:17:3``.
+    label: str
+    composition: list[ComponentOut] = Field(default_factory=list)
+    settings: PresetSettings = Field(default_factory=PresetSettings)
+    created_at: datetime
+    updated_at: datetime
+
+
 class CellSpecIn(BaseModel):
     """The inputs that turn mAh into mAh/g and mAh/cm2."""
 
@@ -223,6 +272,13 @@ class SampleOut(BaseModel):
     diameter_mm: float | None
     thickness_um: float | None
     nominal_specific_capacity_mah_g: float | None
+    # The counter electrode and its offset were stored and never sent back, so
+    # the editor's 기준전극 select re-opened on "환산 안 함" for a cell saved as
+    # Li-In -- and looked clean while doing it, because `dirty` compares the
+    # draft against exactly this field.  0.62 V is the difference between a
+    # 4.40 V cutoff and a 3.78 V one.
+    reference_electrode: str = ""
+    reference_offset_v: float | None = None
     composition: list[ComponentOut] = Field(default_factory=list)
     composition_label: str = ""
     temperature_c: float | None

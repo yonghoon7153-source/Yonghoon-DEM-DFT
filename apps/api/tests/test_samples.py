@@ -220,3 +220,25 @@ def test_patching_a_group_can_still_clear_a_field_on_purpose(client):
     body = client.patch(f"/api/groups/{created['id']}",
                         json={"description": ""}).json()
     assert body["description"] == ""
+
+
+def test_the_reference_electrode_comes_back_out(client):
+    """저장은 되는데 응답에 없으면 화면이 조용히 틀린다.
+
+    `reference_electrode` 와 `reference_offset_v` 가 `SampleOut` 에 없었다.
+    Li-In 으로 저장한 셀을 다시 열면 기준전극 칸이 "환산 안 함" 으로 보이고,
+    화면은 그 칸으로 dirty 를 계산하므로 저장할 것이 없다고 말한다.
+    0.62 V 는 4.40 V 컷오프가 3.78 V 로 보이는 차이다.
+    """
+    sample = client.post("/api/samples", json={
+        "name": "REF-01", "reference_electrode": "Li-In"}).json()
+    assert sample["reference_electrode"] == "Li-In"
+
+    fetched = client.get(f"/api/samples/{sample['id']}").json()
+    assert fetched["reference_electrode"] == "Li-In"
+    assert fetched["reference_offset_v"] is None
+
+    patched = client.patch(f"/api/samples/{sample['id']}",
+                           json={"reference_offset_v": 0.62}).json()
+    assert patched["reference_offset_v"] == 0.62
+    assert patched["reference_electrode"] == "Li-In"
