@@ -18,12 +18,19 @@ from fastapi import FastAPI, HTTPException, Request  # noqa: E402
 from fastapi.encoders import jsonable_encoder  # noqa: E402
 from fastapi.exceptions import RequestValidationError  # noqa: E402
 from fastapi.middleware.cors import CORSMiddleware  # noqa: E402
-from fastapi.responses import FileResponse, JSONResponse, StreamingResponse  # noqa: E402
+from fastapi.responses import (  # noqa: E402
+    FileResponse,
+    HTMLResponse,
+    JSONResponse,
+    RedirectResponse,
+    StreamingResponse,
+)
 from fastapi.staticfiles import StaticFiles  # noqa: E402
 
 from wrdkit import __version__ as wrdkit_version  # noqa: E402
 from wrdkit.composition import Role  # noqa: E402
 
+from . import gate  # noqa: E402
 from .actor import ACTOR_HEADER, set_actor  # noqa: E402
 from .db import init_db  # noqa: E402
 from .live import (  # noqa: E402
@@ -107,6 +114,46 @@ async def _announce_writes(request, call_next):
     response = await call_next(request)
     if should_bump(request.method, response.status_code, request.url.path):
         response.headers[REVISION_HEADER] = str(revision.bump())
+    return response
+
+
+@app.middleware("http")
+async def _gate(request: Request, call_next):
+    """One shared password, and only while the address is outside (ADR 0014).
+
+    Registered after ``_announce_writes`` so it ends up outermost: a request
+    that is not getting in should not reach anything that reads the database
+    or stamps an actor.
+
+    With no password configured this costs one attribute read, which is the
+    point -- the lab-network case must not pay for the away-from-lab one.
+    """
+    secret = settings.password
+    if (not secret
+            or gate.is_open(request.url.path)
+            or gate.accepts_cookie(request.cookies.get(gate.COOKIE), secret)):
+        return await call_next(request)
+
+    # The browser gets a page it can act on; the app's own fetches get JSON,
+    # because HTML arriving where JSON was expected fails as a parse error
+    # somewhere far away from the actual cause.
+    if request.url.path.startswith("/api/"):
+        return JSONResponse(status_code=401, content={"detail": "암호가 필요합니다."})
+    return HTMLResponse(gate.login_page(), status_code=401)
+
+
+@app.post("/__login", include_in_schema=False)
+async def login(request: Request):
+    """The door.  A plain form post, so it works before any script loads."""
+    form = await request.form()
+    given = form.get("password")
+    if not gate.accepts_password(given if isinstance(given, str) else None,
+                                 settings.password):
+        return HTMLResponse(gate.login_page(wrong=True), status_code=401)
+
+    response = RedirectResponse("/", status_code=303)
+    response.set_cookie(gate.COOKIE, gate.token(settings.password),
+                        max_age=gate.MAX_AGE, httponly=True, samesite="lax")
     return response
 
 

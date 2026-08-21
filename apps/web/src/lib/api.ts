@@ -36,6 +36,32 @@ function query(params?: Params): string {
   return text ? `?${text}` : ''
 }
 
+/** 문이 닫혔을 때 (ADR 0014) — 암호를 묻는 한 장은 서버가 그린다.
+ *
+ *  여기서 한 번만 다룬다.  화면마다 401 을 따로 처리하게 두면 어딘가 하나는
+ *  "불러오지 못했습니다" 로만 끝나고, 사용자는 암호를 물어보는 화면을 영영
+ *  못 본 채 앱이 고장 났다고 읽는다.
+ */
+let asking = false
+
+/** 401 일 때 할 일.  객체에 담아 두는 것은 테스트가 갈아끼우기 위해서다 —
+ *  jsdom 의 `window.location` 은 바꿔 끼울 수 없다. */
+export const unauthorized = {
+  handle: (): void => window.location.reload(),
+}
+
+export function askForPassword(): void {
+  // 한 화면이 요청 여럿을 동시에 보낸다.  전부 401 이라고 전부 다시 읽으면
+  // 새로고침이 겹쳐서 암호 창이 뜨지도 않는다.
+  if (asking) return
+  asking = true
+  try {
+    unauthorized.handle()
+  } catch {
+    /* 브라우저가 아닌 곳에서는 할 일이 없다 */
+  }
+}
+
 async function request<T>(path: string, init?: RequestInit): Promise<T> {
   // 이름은 모든 요청에 붙는다.  쓰기에만 붙이면 새 엔드포인트가 생겼을 때
   // 한 종류의 편집만 익명으로 기록되는데, 그건 아무 오류도 내지 않는다.
@@ -43,6 +69,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     ...init,
     headers: { ...actorHeader(), ...(init?.headers ?? {}) },
   })
+  if (response.status === 401) askForPassword()
   if (!response.ok) {
     let detail = `${response.status} ${response.statusText}`
     try {

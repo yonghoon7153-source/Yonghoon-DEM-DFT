@@ -102,6 +102,8 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml pull` | 실행 없이 최신화만 |
 | `bml use <주소>` | 이 기계가 볼 중추 서버를 정한다 — 그 뒤 `bml` 은 그것을 연다 |
 | `bml use off` | 해제 (이 기계가 자기 서버를 띄운다) |
+| `bml password <암호>` | 바깥에 열 때 쓸 공유 암호 (6자 이상) |
+| `bml share` | 임시 터널 — 다른 공유기에 있는 사람도 접속 (켜는 동안만) |
 | `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs · bml 회귀) |
 | `bml doctor` | 환경 점검 — 안 되면 여기부터 |
 | `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |

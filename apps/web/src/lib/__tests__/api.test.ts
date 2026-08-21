@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { ApiError, api } from '../api'
+import { ApiError, api, unauthorized } from '../api'
 
 function mockFetch(response: Partial<Response> & { json?: () => Promise<unknown> }) {
   const fake = vi.fn().mockResolvedValue({
@@ -89,5 +89,33 @@ describe('export urls', () => {
     expect(api.exportCyclesUrl(3, { basis: 'mAh/g' })).toBe(
       '/api/export/samples/3/cycles.csv?basis=mAh%2Fg',
     )
+  })
+})
+
+describe('문이 닫혔을 때 (ADR 0014)', () => {
+  it('401 이면 화면을 다시 읽는다 — 암호를 묻는 한 장은 서버가 그린다', async () => {
+    // 화면마다 401 을 따로 다루면 어딘가 하나는 "불러오지 못했습니다" 로만
+    // 끝나고, 사용자는 암호 창을 못 본 채 앱이 고장 났다고 읽는다.
+    const handle = vi.fn()
+    const real = unauthorized.handle
+    unauthorized.handle = handle
+    try {
+      mockFetch({
+        ok: false,
+        status: 401,
+        statusText: 'Unauthorized',
+        json: async () => ({ detail: '암호가 필요합니다.' }),
+      })
+
+      await expect(api.listSamples()).rejects.toBeInstanceOf(ApiError)
+      expect(handle).toHaveBeenCalledTimes(1)
+
+      // 한 화면이 요청 여럿을 동시에 보낸다.  전부 다시 읽으면 새로고침이
+      // 겹쳐서 암호 창이 뜨지도 않는다.
+      await expect(api.listSamples()).rejects.toBeInstanceOf(ApiError)
+      expect(handle).toHaveBeenCalledTimes(1)
+    } finally {
+      unauthorized.handle = real
+    }
   })
 })

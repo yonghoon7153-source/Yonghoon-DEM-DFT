@@ -31,6 +31,10 @@ class Settings:
     max_upload_bytes: int = int(os.environ.get("WORKBENCH_MAX_UPLOAD_MB", "512")) * 1024 * 1024
     #: Points per curve sent to the browser; the server downsamples to this.
     default_plot_points: int = int(os.environ.get("WORKBENCH_PLOT_POINTS", "1200"))
+    #: Shared password.  Empty means there is no door at all -- which is the
+    #: normal state on a lab network.  `bml share` sets it before opening a
+    #: tunnel, and refuses to open one without it (ADR 0014).
+    password: str = os.environ.get("WORKBENCH_PASSWORD", "").strip()
     #: Only needed in development, where the browser talks to Vite on one port
     #: and could reach the API on another.  `make serve` is single-origin, so
     #: none of this applies there.

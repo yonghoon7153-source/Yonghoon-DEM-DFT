@@ -136,6 +136,43 @@ check "안 닿는 주소는 거절한다" "$(server_alive 'http://127.0.0.1:1' &
 check "안 닿는 주소는 저장하지 않는다" "$(grep -c '^WORKBENCH_SERVER=' "$RUN_DIR/env")" "0"
 
 echo
+echo "터널 주소 꺼내기"
+# 못 꺼내면 터널은 떠 있는데 아무도 못 들어온다 — 열려 있다고 믿고 안 끈다.
+CF_LOG="2026-08-21T04:00:00Z INF +------------------------------+
+2026-08-21T04:00:00Z INF |  https://odd-lamp-9k2.trycloudflare.com  |
+2026-08-21T04:00:00Z INF +------------------------------+"
+check "여러 줄에서 주소만 꺼낸다" "$(tunnel_url_from "$CF_LOG")" "https://odd-lamp-9k2.trycloudflare.com"
+check "아직 안 나왔으면 빈 값"    "$(tunnel_url_from 'INF Starting tunnel')" ""
+# 로그에는 문서 링크도 같이 나온다.  그걸 주소로 찍으면 상대는 클라우드플레어
+# 문서를 열고 "안 열리는데요" 라고 한다.
+check "다른 도메인은 안 집는다"   "$(tunnel_url_from 'see https://developers.cloudflare.com/x')" ""
+
+echo
+echo "공유 암호"
+: > "$RUN_DIR/env"
+( WORKBENCH_PASSWORD="" cmd_password "짧다" >/dev/null 2>&1 )
+check "너무 짧으면 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' "$RUN_DIR/env")" "0"
+# 한글 두 글자는 여섯 '바이트' 다.  ${#var} 로 세면 로케일에 따라 통과한다.
+: > "$RUN_DIR/env"
+( WORKBENCH_PASSWORD="" cmd_password "암호" >/dev/null 2>&1 )
+check "한글도 글자 수로 센다"       "$(grep -c '^WORKBENCH_PASSWORD=' "$RUN_DIR/env")" "0"
+# .bml/env 는 KEY=VALUE 다.  '=' 가 든 암호는 잘려서 저장되고, 그러면 사용자가
+# 아는 암호로는 영영 안 열린다.
+: > "$RUN_DIR/env"
+( WORKBENCH_PASSWORD="" cmd_password "abc=defgh" >/dev/null 2>&1 )
+check "'=' 가 들면 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' "$RUN_DIR/env")" "0"
+: > "$RUN_DIR/env"
+( WORKBENCH_PASSWORD="" cmd_password "건식전극2026" >/dev/null 2>&1 )
+check "쓸 만한 암호는 저장된다"     "$(grep -c '^WORKBENCH_PASSWORD=건식전극2026$' "$RUN_DIR/env")" "1"
+
+echo
+echo "암호 없이는 바깥에 열지 않는다"
+# 로그인이 없는 앱을 인터넷에 올리는 일이라, 이 판정이 무너지면 되돌릴 수 없다.
+out="$(WORKBENCH_PASSWORD= BML_NO_OPEN=1 "$BML" share 2>&1)"
+check "share 가 거절한다"     "$(case "$out" in *"공유 암호가 없어서"*) echo yes ;; *) echo no ;; esac)" "yes"
+check "무엇을 하라는지 말한다" "$(case "$out" in *"bml password"*) echo yes ;; *) echo no ;; esac)" "yes"
+
+echo
 echo "중추 서버가 정해져 있으면 자기 서버를 안 띄운다"
 # 데이터 폴더가 없는 채로 부른다.  자기 서버를 띄우려 했다면 guard_data_dir 가
 # "데이터 폴더가 없습니다" 로 죽는다 — 그 메시지가 나오면 분기를 안 탄 것이다.
