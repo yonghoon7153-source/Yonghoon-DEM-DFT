@@ -436,7 +436,7 @@ def test_a_real_bend_with_no_consequence_is_not_a_knee():
     segmented = detect_knee(cycles, q, reference_cycle=3).by_method("segmented")
     assert not segmented.detected, segmented.reason
     # 전제: 적합도와 비율 게이트는 통과한다 -- 막은 것은 손실 게이트뿐이다.
-    assert segmented.detail["f_statistic"] >= 100.0
+    assert segmented.detail["fit_gain_score"] >= 100.0
     # 평탄하다 꺾이므로 비율은 무한대다 — detail 은 그걸 플래그로 적는다
     # (JSON 에 Infinity 를 넣으면 표준을 지키는 클라이언트가 전부 거부한다).
     assert segmented.detail["fade_starts_here"] == 1.0

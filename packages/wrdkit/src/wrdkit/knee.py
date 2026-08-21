@@ -73,16 +73,37 @@ SUSTAINED_CROSSING = 2
 #: rather than a rate, so a slow cell watched for 500 cycles still qualifies.
 MIN_KNEE_DROP_PCT = 2.0
 #: How much better the bent model has to fit than a single straight line,
-#: as an F-like ratio of the residual it removes to the residual it leaves.
-#: This is a screen, not a significance test -- the series is median-smoothed,
-#: so its residuals are correlated and no p-value would be honest.
+#: as a ratio of the residual it removes to the residual it leaves.  Shaped
+#: like an F ratio and not one: the break point is chosen by looking at the
+#: data and the series is median-smoothed first, so no tabulated distribution
+#: applies and this is a screen, not a significance test.
 #:
-#: Calibrated by measurement, not taste.  On 400 straight-line fades with
-#: random length, rate and noise, plus the archetype curves in
-#: ``tests/test_knee.py``: every planted knee scored above 1500, and the
-#: highest-scoring curve with no knee reached 63.  A gate at 50 let nine of
-#: those through; 100 lets none, and still leaves a 15x margin below the
-#: weakest real knee.
+#: Calibrated by measurement.  On 400 straight-line fades with random length,
+#: rate and noise, plus the archetype curves in ``tests/test_knee.py``: every
+#: planted knee scored above 1500, and the highest-scoring curve with no knee
+#: reached 63.  A gate at 50 let nine of those through; 100 lets none, and
+#: still leaves a 15x margin below the weakest real knee.
+#:
+#: Two limits, written down rather than papered over.
+#:
+#: One number cannot mean one thing at every record length.  Simulating the
+#: null -- straight lines with normal noise, through the same smoothing and the
+#: same exhaustive search, 1,500 records per length -- puts 100 near the 98th
+#: percentile of the largest score at 15 cycles and past the 99.9th at 200.  On
+#: a short record ``detected=False`` therefore means closer to "not at this
+#: length" than to "no knee".
+#:
+#: And it assumes each residual is its own piece of evidence.  Where they
+#: wander together -- a slow temperature drift, a cell still settling -- a bent
+#: line fits that wander, and on 500 straight-line records with AR(1) or
+#: random-walk residuals a knee was reported in one in ten.
+#:
+#: Both were attacked and the attempt was reverted: a length- and
+#: correlation-aware bar cut the correlated false knees by a third and cost a
+#: third of the power on planted ones.  Doing it properly means bootstrapping
+#: the whole selection under the null and validating on held-out real cells,
+#: not another constant.  ``docs/reviews/2026-08-21-codex-knee-review.md`` has
+#: the measurements to start from.
 MIN_FIT_GAIN_F = 100.0
 #: A window slope wobbles on its own.  Where early life is a straight line that
 #: wobble is the measurement noise, so the slope-ratio limit is lowered by this
@@ -187,6 +208,15 @@ def _linear_fit(x: np.ndarray, y: np.ndarray) -> tuple[float, float, float]:
     return float(slope), float(intercept), float(np.sum(residual ** 2))
 
 
+def _weak_bend(method: str, breakpoint: float, detail: dict) -> KneeResult:
+    """Bent, but not more than a straight line manages by accident."""
+    return KneeResult(
+        method, None, False,
+        "a bent line fits no better than a straight one", detail,
+        candidate_cycle=float(breakpoint),
+    )
+
+
 def _not_yet(method: str, breakpoint: float, drop: float,
              cycles: np.ndarray, detail: dict) -> KneeResult:
     """The curve bends here, but the record has not shown what it costs.
@@ -212,7 +242,7 @@ def _not_yet(method: str, breakpoint: float, drop: float,
     # hinge gets deferred instead of dismissed, and 5 % of pure straight-line
     # fades came back as "cycle N, not confirmed".  No structural support, no
     # deferral.
-    if float(detail.get("f_statistic", 0.0)) < MIN_FIT_GAIN_F:
+    if float(detail.get("fit_gain_score", 0.0)) < MIN_FIT_GAIN_F:
         return KneeResult(
             method, None, False,
             f"only {drop:.1f}% is lost after cycle {breakpoint:.0f} "
@@ -348,7 +378,13 @@ def _record_ratio(detail: dict, ratio: float) -> None:
 
 
 def _f_gain(rss_single: float, rss_model: float, n: int, extra: int) -> float:
-    """How much residual the bent model removes, per residual it leaves."""
+    """How much residual the bent model removes, per residual it leaves.
+
+    Shaped like an F ratio and deliberately not called one: the break point was
+    chosen by looking at the data and the series was median-smoothed first, so
+    no tabulated distribution applies.  What it is compared against is measured
+    instead -- see ``_fit_gain_threshold``.
+    """
     if rss_model <= 0:
         return float("inf")
     return ((rss_single - rss_model) / extra) / (rss_model / max(n - 2 - extra, 1))
@@ -587,11 +623,20 @@ def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
     if shift is None:
         return None
     rss, start, end, offset, _ = shift
-    if rss >= rss_bend:
+    # Clearly better, not better by a nose.  On a straight line both models are
+    # fitting noise and the block model wins by a couple of percent about half
+    # the time; naming an "excursion" there would be inventing an event.  A
+    # real block leaves a third of the residual or less (2.3 against 44 on a
+    # 4 %p step), so a 30 % reduction separates them with room to spare.
+    if rss >= 0.7 * rss_bend:
         return None
     if offset >= 0.0:
         return None
-    if end >= float(cycles[-1]):
+    if end > float(cycles[-1]) - MIN_SEGMENT:
+        # The block has to be seen rejoining the trend, not merely to stop a
+        # cycle or two before the file does.  A permanent 6 % step at cycle 40
+        # of an 80-cycle record was fitted as a block ending at 77 and called
+        # reversible; it never came back, the fit just ran out of room.
         return None
     return start, end, offset
 
@@ -626,7 +671,7 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
     gain = _f_gain(rss_single, rss, n, 2)
     shared = {"breakpoint": first, "second_breakpoint": second,
               "slope_before": slopes[0], "slope_after": slopes[1],
-              "slope_late": slopes[2], "f_statistic": gain, "segments": 3.0,
+              "slope_late": slopes[2], "fit_gain_score": gain, "segments": 3.0,
               "rss_bend": rss}
 
     # Each transition is scored by what *it* adds, not by how well the pair
@@ -657,7 +702,7 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
         detail = dict(shared)
         detail["knee_transition"] = 1.0 if where == first else 2.0
         detail["slope_before"], detail["slope_after"] = before, after
-        detail["f_statistic"] = min(gain, own_gain)
+        detail["fit_gain_score"] = min(gain, own_gain)
         _record_ratio(detail, ratio)
         drop = float(values[cycles >= where][0] - values[-1])
         detail["drop_after_pct"] = drop
@@ -724,7 +769,7 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
         "rss_segmented": rss,
         "rss_single_line": rss_single,
         "drop_after_pct": drop,
-        "f_statistic": gain,
+        "fit_gain_score": gain,
         "segments": 2.0,
         "rss_bend": rss,
     }
@@ -769,9 +814,7 @@ def _judge_two_line(cycles: np.ndarray, values: np.ndarray, detail: dict,
         # A ratio of two near-zero slopes is arithmetic, not degradation.
         return _not_yet("segmented", breakpoint, drop, cycles, detail)
     if gain < MIN_FIT_GAIN_F:
-        return KneeResult("segmented", None, False,
-                          "a bent line fits no better than a straight one", detail,
-                          candidate_cycle=float(breakpoint))
+        return _weak_bend("segmented", breakpoint, detail)
 
     if not np.isfinite(ratio):
         return KneeResult(
@@ -851,7 +894,8 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
 
     detail = {"baseline_slope": baseline, "factor": factor,
               "baseline_window": float(baseline_window),
-              "slope_noise": spread}
+              "slope_noise": spread,
+              }
     if baseline <= -MIN_FADE_RATE:
         limit = baseline * factor - SLOPE_NOISE_SIGMAS * spread
     else:
@@ -880,7 +924,7 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
         # Structure first, consequence second: `_not_yet` defers only when the
         # bend itself is supported, so it has to know the fit gain already.
         gain = _bend_gain(cycles, values, cycle)
-        detail["f_statistic"] = gain
+        detail["fit_gain_score"] = gain
         if drop < MIN_KNEE_DROP_PCT:
             # Keep looking.  Returning here proved only that the *first*
             # candidate failed, while saying "the rate never stayed" -- a cell
@@ -889,11 +933,7 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
             held = held or _not_yet("slope_ratio", cycle, drop, cycles, detail)
             continue
         if gain < MIN_FIT_GAIN_F:
-            held = held or KneeResult(
-                "slope_ratio", None, False,
-                f"the rate steepens around cycle {cycle:.0f}, but a "
-                f"line bent there fits no better than a straight one",
-                detail, candidate_cycle=cycle)
+            held = held or _weak_bend("slope_ratio", cycle, detail)
             continue
         return KneeResult(
             "slope_ratio", cycle, True,
@@ -951,11 +991,9 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
         # after its "knee" did not have one.
         return _not_yet("curvature", cycle, drop, cycles, detail)
     gain = _bend_gain(cycles, smoothed, cycle)
-    detail["f_statistic"] = gain
+    detail["fit_gain_score"] = gain
     if gain < MIN_FIT_GAIN_F:
-        return KneeResult("curvature", None, False,
-                          f"curvature peaks at cycle {cycle:.0f}, but a line "
-                          f"bent there fits no better than a straight one", detail)
+        return _weak_bend("curvature", cycle, detail)
     return KneeResult("curvature", cycle, True,
                       f"maximum curvature at cycle {cycle:.0f}", detail)
 
@@ -1071,8 +1109,11 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
     # rather than about how any one of them looked at it.
     bend_rss = next((r.detail.get("rss_bend") for r in results
                      if r.method == "segmented" and "rss_bend" in r.detail), None)
-    if bend_rss is not None and any(r.detected for r in results
-                                    if r.method != "threshold"):
+    # Run it whether or not a knee was reported: "cycles 35-55 sat 3.8 % below
+    # the trend and rejoined it" is worth saying to somebody holding the run
+    # sheet, and it is a better answer than "no acceleration after the best
+    # break point" even when both end in the same verdict.
+    if bend_rss is not None:
         excursion = _protocol_excursion(search_cycles, smoothed, float(bend_rss))
         if excursion is not None:
             start, end, offset = excursion
