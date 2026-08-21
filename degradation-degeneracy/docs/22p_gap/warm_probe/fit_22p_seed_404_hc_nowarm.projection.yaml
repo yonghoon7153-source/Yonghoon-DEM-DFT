@@ -1,4 +1,4 @@
-projection_schema: 2
+projection_schema: 3
 leg_id: fit_22p_seed_404_hc_nowarm
 projection_file: fit_22p_seed_404_hc_nowarm.projection.csv.gz
 n_rows: 1280
@@ -15,8 +15,8 @@ restart_projection_sha256: 398eb9459a1b316f5be8566d2c40e8582286c92c66d7883f72bff
 n_restart_rows: 5731
 analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
 analyzer:
-  compute_sha256: eaa44727ca271c2c
-  row_projection_py_sha256: 0b5579a7d0d757e2
+  compute_sha256: 73c1ac4ba06e59dc
+  row_projection_py_sha256: bbb4744256e42b8f
   src_scoring_py_sha256: 69e69cb046f4b4ae
   python: 3.12.3
   platform: Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39
@@ -91,6 +91,8 @@ analysis_spec:
   fits_sha256_읽은바이트: 1c858c65caf3cf5c02fce3c0843b163ce71eea520f170e6d29daff51becda2e4
   fits_sha256_summary: 1c858c65caf3cf5c02fce3c0843b163ce71eea520f170e6d29daff51becda2e4
   fits_삼중일치: true
+summary_sha256: 1b9f65ceaa6ca2f68c95e0bff80e6868116fb60073b0c80f13fa98c8b815776e
+manifest_sha256: 167e17a18d459537db330f4e951bce04a518c6e847f97d269aa4a577b9cb0176
 _주의: 이 투영은 원자료가 아니다. 감사·대조용 축약이며, 여기 없는 열(restarts_json 전체, p_spread, 경계 플래그 세부)은
   담기지 않는다. 완전 복원에는 results/<leg>/ 원본이 필요하다.
 fits_sha256_manifest_seal: 1c858c65caf3cf5c02fce3c0843b163ce71eea520f170e6d29daff51becda2e4
