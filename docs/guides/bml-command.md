@@ -100,6 +100,8 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml restart` | 내리고 다시 (pull 포함) |
 | `bml status` | 지금 뭐가 돌고 있는지 + 브랜치/미커밋/ahead·behind |
 | `bml pull` | 실행 없이 최신화만 |
+| `bml use <주소>` | 이 기계가 볼 중추 서버를 정한다 — 그 뒤 `bml` 은 그것을 연다 |
+| `bml use off` | 해제 (이 기계가 자기 서버를 띄운다) |
 | `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs · bml 회귀) |
 | `bml doctor` | 환경 점검 — 안 되면 여기부터 |
 | `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |

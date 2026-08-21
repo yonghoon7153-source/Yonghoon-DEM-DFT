@@ -87,6 +87,7 @@ test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, do
 	bash tools/tests/test_bml_ownership.sh
 	bash tools/tests/test_lint_gate.sh
 	bash tools/tests/test_bml_shutdown.sh
+	bash tools/tests/test_bml_client.sh
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py
 

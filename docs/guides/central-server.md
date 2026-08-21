@@ -50,17 +50,63 @@ bml
 > 데이터가 날아간 것처럼 보이고, 그 상태로 올린 파일은 나중에 드라이브를 꽂으면
 > 보이지 않는 곳에 남는다.
 
-## 다른 사람들 (설치할 것 없음)
+## 주소 — WSL 안에서 본 주소가 아니다
 
-주소만 있으면 된다.
+WSL2 는 Windows 뒤의 NAT 안에 있다. 그래서 중추 서버 안에서 `hostname -I` 로
+나오는 주소(`172.x`, 때로는 주소를 못 받았다는 뜻의 `169.254.x`)는 **그 PC
+안에서만** 통한다. 다른 기계가 칠 주소는 그 PC 의 **Windows 쪽 LAN 주소**이고,
+Windows 가 그 포트를 WSL 로 넘겨 주어야 한다.
 
-```bash
-# 중추 서버에서 IP 확인
-hostname -I | awk '{print $1}'
+중추 서버 PC 에서 **관리자 PowerShell** 로 한 번:
+
+```powershell
+# 1. WSL 쪽 주소 — 172. 로 시작하는 것을 고른다
+wsl hostname -I
+
+# 2. Windows 로 들어온 5003 을 WSL 로 넘긴다
+netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
+  connectport=5003 connectaddress=<위에서 고른 172.x>
+
+# 3. 방화벽을 연다
+New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
+  -Protocol TCP -Action Allow
+
+# 4. 다른 사람에게 알려 줄 주소
+ipconfig | Select-String IPv4
 ```
 
-브라우저에서 `http://<그 IP>:5003`. 업로드도, 질량 입력도, 그룹·프리셋도 전부
+WSL 을 재시작하면 `172.x` 가 바뀌므로 2번은 다시 해야 한다
+(`netsh interface portproxy reset` 후 다시 add).
+
+## 다른 사람들 (설치할 것 없음)
+
+브라우저에서 `http://<그 IPv4>:5003`. 업로드도, 질량 입력도, 그룹·프리셋도 전부
 그 서버에 바로 들어간다 — 저장한 순간 **모두의 것**이다.
+
+## 이미 `bml` 이 깔린 기계 — `bml use`
+
+노트북에도 저장소를 받아 뒀다면, 거기서 그냥 `bml` 을 치면 **그 노트북에**
+서버가 뜬다. 데이터는 git 을 타고 오지 않으므로 셀이 0개인 멀쩡한 화면이 뜨고,
+주소까지 똑같은 `localhost:5003` 이라 어느 쪽을 보고 있는지 화면으로는 알 수
+없다. 한 번 정해 두면 그 뒤로 `bml` 이 중추 서버를 연다:
+
+```bash
+bml use 192.168.0.7     # 중추 서버 PC 의 LAN 주소 (포트 생략하면 5003)
+bml stop                # 이 기계에 떠 있던 서버는 내린다
+bml                     # 이제 중추 서버가 열린다
+```
+
+| | |
+|---|---|
+| `bml use` | 지금 설정을 보여 준다 |
+| `bml use <주소>` | 그 주소를 쓴다 — 닿는 것을 확인한 뒤 `.bml/env` 에 적는다 |
+| `bml use off` | 해제. 이 기계가 다시 자기 서버를 띄운다 |
+
+**닿는지 본 뒤에만 저장한다.** 못 닿는 주소가 적혀 있으면 그 뒤로 `bml` 이
+매번 실패하는데, 사람은 방금 적은 주소가 아니라 서버 쪽을 의심한다.
+
+`bml dev` 는 이 설정과 무관하게 자기 서버를 띄운다 — 코드를 고칠 때 쓰는
+것이라 그렇고, 그때 보이는 데이터가 다르다는 것은 실행할 때 알려 준다.
 
 **화면은 스스로 갱신된다.** 누가 무엇을 바꾸면 열려 있는 모든 화면이 그 자리에서
 따라온다 (서버가 변경 알림을 흘려보내고, 각 화면이 자기가 보여 주는 것만 다시
@@ -71,15 +117,8 @@ hostname -I | awk '{print $1}'
 편집이 들어와도 입력하던 값은 그대로 남는다 — 반쯤 친 질량이 소리 없이 사라지면
 저장한 줄 알고 넘어가게 되고, 그 셀의 모든 mAh/g 가 옛 질량으로 남는다.
 
-WSL 자체 설치는 [[wsl-setup]] 에 있다. 띄웠는데 다른 기계에서 안 보이면
-Windows 방화벽과 WSL 포트 포워딩을 확인한다 (Windows PowerShell, 관리자):
-
-```powershell
-netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
-  connectport=5003 connectaddress=(wsl hostname -I).Trim()
-New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
-  -Protocol TCP -Action Allow
-```
+WSL 자체 설치는 [[wsl-setup]] 에 있다. 띄웠는데 다른 기계에서 안 보이면 위의
+"주소" 절로 돌아간다 — 거의 항상 포트 포워딩이나 방화벽이다.
 
 ## 이름 — 누가 무엇을 했는지
 
@@ -156,6 +195,10 @@ tailscale ip -4          # 이 주소를 쓴다
 
 **"원본 파일이 storage 에 없습니다"** → 드라이브가 마운트되지 않았다.
 `.wrd` 는 절대 지우지 않으므로(CLAUDE.md §0.2), 대개 케이블 문제다.
+
+**노트북에서 `bml` 을 쳤더니 셀이 0개다** → 그 노트북에 자기 서버가 뜬 것이다.
+`bml status` 의 `데이터` 줄이 그 노트북 안을 가리키고 원본이 0개면 그 경우다.
+`bml use <중추 서버 주소>` 로 한 번 정해 두면 그 뒤로는 중추 서버가 열린다.
 
 **노트북에서도 띄우고 싶다** → 띄울 수는 있지만 그 순간 데이터가 두 벌이 된다.
 보기만 할 것이면 브라우저로 중추 서버를 여는 쪽이 항상 낫다. 코드를 고칠 때만
