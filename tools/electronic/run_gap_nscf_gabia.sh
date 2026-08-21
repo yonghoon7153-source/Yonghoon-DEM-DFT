@@ -212,7 +212,21 @@ NP=${NP:-$(( PHYS < 16 ? PHYS : 16 ))}
 # ⚠ OMP 를 안 걸면 랭크마다 코어 수만큼 스레드를 띄운다 (2026-07-29 gabia: load 154).
 export OMP_NUM_THREADS=${OMP_NUM_THREADS:-1}
 export MKL_NUM_THREADS=$OMP_NUM_THREADS OPENBLAS_NUM_THREADS=$OMP_NUM_THREADS
-NPOOL=${NPOOL:-$(( NP % 4 == 0 ? 4 : (NP % 2 == 0 ? 2 : 1) ))}
+# ⛔ 2026-08-21 실측 — 첫 판의 기본값이 재앙이었다.
+#   NP=10 → 10%4≠0 → 10%2==0 → NPOOL=2 로 떨어졌고, nscf 가 **2376 s/kpt**,
+#   170 k-point 에 **112 시간** ETA 가 나왔다.
+#   nscf 는 k-point 를 각각 독립으로 대각화한다 — 거의 완벽하게 병렬화되는 일을
+#   pool 2개로 묶어 버린 것이다. 실측 기준 NPOOL 10 이면 같은 계산이 ~22 h 다.
+#   ⇒ **pool 을 최대로 잡는다.** NP 를 나누는 가장 큰 약수를 쓴다.
+#   ⚠ 메모리 대가가 있다: pool 당 랭크가 줄면 랭크당 데이터가 그만큼 커진다
+#     (실측 comp1: 5랭크/pool 에서 633 MB → 1랭크/pool 이면 ~3.2 GB, 총 ~32 GB).
+#     좁으면 NPOOL 을 손으로 낮춰라 — 이 값은 env 로 덮을 수 있다.
+if [ -z "${NPOOL:-}" ]; then
+    NPOOL=1
+    for d in $(seq "$NP" -1 1); do
+        [ $(( NP % d )) -eq 0 ] && { NPOOL=$d; break; }
+    done
+fi
 ts() { date '+%m-%d %H:%M:%S'; }
 echo "[$(ts)] repo=$REPO  out=$OUT  np=$NP -nk $NPOOL  OMP=$OMP_NUM_THREADS"
 
