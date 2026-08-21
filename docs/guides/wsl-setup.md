@@ -20,6 +20,63 @@ bml doctor
 
 환경을 점검하고 **무엇을 어떻게 고쳐야 하는지**까지 알려 줍니다.
 
+## 빠른 경로 — 아무것도 없는 Windows 에서 실행까지
+
+아래 순서대로 붙여 넣으면 됩니다. 왜 그런지는 각 절에 있습니다.
+
+**1) PowerShell 을 관리자로 열고** (한 번, 재부팅함):
+
+```powershell
+wsl --install
+```
+
+재부팅하면 Ubuntu 창이 뜨고 사용자 이름·비밀번호를 묻습니다. 그 창이
+아래의 "Ubuntu 안" 입니다. 이미 WSL 이 있다면 `wsl -l -v` 로 VERSION 이 2 인지
+확인하세요 (1 이면 `wsl --set-version Ubuntu 2`).
+
+**2) Ubuntu 안에서** (한 번, 2\~5분):
+
+```bash
+sudo apt update
+sudo apt install -y python3 python3-venv python3-pip git curl build-essential
+curl -fsSL https://deb.nodesource.com/setup_22.x | sudo -E bash - && sudo apt install -y nodejs
+git config --global core.autocrlf input
+```
+
+`python3-venv` 와 node 22 는 Ubuntu 가 기본으로 주지 않습니다. 이 두 줄이
+WSL 에서 가장 많이 걸리는 지점입니다.
+
+**3) 받아서 설치하고 띄웁니다:**
+
+```bash
+cd ~
+git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
+  https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git
+cd Yonghoon-DEM-DFT
+ls Makefile tools/bml          # 둘 다 보여야 정상입니다
+
+./tools/bml install
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && exec bash
+
+cd ~/Yonghoon-DEM-DFT && bml
+```
+
+`http://localhost:5003` 이 Windows 기본 브라우저에서 열립니다. 첫 실행은
+의존성을 받느라 1\~3분 걸리고, 그다음부터는 몇 초입니다.
+
+> **`-b` 를 빠뜨리지 마세요.** 이 저장소는 브랜치마다 다른 프로젝트를 담습니다.
+> 그냥 클론하면 `Makefile` 도 `tools/bml` 도 없는 것을 받습니다 (§3).
+>
+> **`/mnt/c` 에 두지 마세요.** 파일 접근이 10배 이상 느리고 핫 리로드가
+> 파일 변경을 놓칩니다 (§3).
+>
+> **이 기계가 중추 서버가 아니라면 `.bml/env` 를 만들지 마세요.** 데이터를
+> 외장 드라이브에 두고 남들과 공유하는 것은 한 대만 하는 설정입니다
+> ([[central-server]]).
+
+보기만 할 거라면 여기까지 할 필요도 없습니다 — 중추 서버 주소를 브라우저로
+열면 됩니다.
+
 ## 0. WSL 설치 (한 번)
 
 PowerShell 을 **관리자로** 열고:
