@@ -150,9 +150,23 @@ for S in comp1 modelc; do
         #   comp1 이 nscf 로 넘어가 nscf_gap.in 이 쓰이자 **끝난 scf.out 까지 '지난 판'** 이 됐다.
         #   ("comp1 scf 완료 E=-1022.9 Ry" 가 로그에 있는데 화면은 '아직 시작 안 함')
         #   ⇒ 진행선은 **그 단계 자신의 .in** 이어야 한다. 다른 단계의 .in 은 무관하다.
+        # ⛔ 이 판별을 **네 번** 고쳤다. 매번 "이번 실행" 의 경계를 간접 지표로 잡아서다:
+        #     ① .in 이 .out 보다 새로운가 → 지난 판에서 곧바로 실행돼 죽은 modelc 를 못 걸렀다
+        #     ② 모든 .in 중 최신 → comp1 이 nscf 로 넘어가자 끝난 scf 까지 '지난 판' 이 됐다
+        #     ③ 그 단계 자신의 .in → modelc 의 지난 판 오류가 다시 살아났다
+        #   ⇒ 경계는 **run.log 의 첫 타임스탬프**다. 러너가 실행 때마다 run.log 를 새로 쓴다.
+        #     그보다 오래된 .out 은 무조건 지난 판이다. 간접 지표를 그만 쓴다.
+        if [ -z "${RUNSTART_EPOCH:-}" ] && [ -s "$OUT/run.log" ]; then
+            _t=$(grep -aom1 '^\[[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]' "$OUT/run.log" | tr -d '[]')
+            [ -n "$_t" ] && RUNSTART_EPOCH=$(date -d "$(date +%Y)-${_t/ / }" +%s 2>/dev/null)
+        fi
+        if [ -n "${RUNSTART_EPOCH:-}" ] && [ "$(stat -c %Y "$F")" -lt "$RUNSTART_EPOCH" ]; then
+            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
+            continue
+        fi
         IN=$D/$STAGE.in
         if [ -f "$IN" ] && [ "$IN" -nt "$F" ]; then
-            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
+            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (.in 이 더 새롭다)"
             continue
         fi
 
