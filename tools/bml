@@ -776,7 +776,26 @@ cmd_stop() {
   done
   unset owner
 
-  sleep 0.8
+  # SIGTERM 은 uvicorn 에게 "하던 요청 끝내고 내려가" 다.  이벤트 스트림은
+  # 스스로 끝나는 응답이 아니라서, 브라우저 탭이 하나라도 열려 있으면 그
+  # "끝내기" 를 기다리며 포트를 붙잡고 있다.  uvicorn 쪽에 3초 상한을 걸어
+  # 뒀고, 여기서는 그 뒤에도 남아 있으면 확실히 내린다 — 우리 것임은 위에서
+  # 이미 확인했다.
+  local waited=0
+  while [ "$waited" -lt 45 ]; do
+    port_busy "$PORT" || port_busy "$API_PORT" || break
+    sleep 0.1
+    waited=$((waited + 1))
+  done
+  for port in "$PORT" "$API_PORT"; do
+    if port_busy "$port" && owns_port "$port"; then
+      local stubborn
+      stubborn="$(port_owner "$port")"
+      [ -n "$stubborn" ] && kill -9 "$stubborn" 2>/dev/null
+    fi
+  done
+
+  sleep 0.4
 
   # Claiming success without checking is how "내렸습니다" gets followed by
   # "포트가 사용 중" one command later.
@@ -905,7 +924,15 @@ start_serve() {
     fi
     cmd_stop >/dev/null 2>&1 || true
 
-    sleep 1
+    # 포트가 풀리는 데 걸리는 시간은 붙어 있던 연결 수에 달렸다.  1초를 딱
+    # 기다렸다 포기하면, 브라우저 탭 몇 개 열어 둔 것만으로 "포트를 옮기세요"
+    # 가 나온다 — 옮길 이유가 없는데도.
+    local freed=0
+    while [ "$freed" -lt 80 ]; do
+      port_busy "$PORT" || break
+      sleep 0.1
+      freed=$((freed + 1))
+    done
     if port_busy "$PORT"; then
       die "포트 ${PORT} 가 아직 잡혀 있습니다. WORKBENCH_PORT=6001 bml 로 옮기세요."
     fi
@@ -920,6 +947,7 @@ start_serve() {
     PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" \
     setsid nohup "$(python_bin)" -m uvicorn app.main:app \
       --host "$HOST" --port "$PORT" --app-dir "$REPO/apps/api" \
+      --timeout-graceful-shutdown 3 \
       > "$LOG" 2>&1 < /dev/null &
     printf '%s' "$!" > "$PID_FILE"
   )
@@ -953,6 +981,7 @@ start_dev() {
     PYTHONPATH="$REPO/packages/wrdkit/src:$REPO/apps/api" \
     setsid nohup "$(python_bin)" -m uvicorn app.main:app \
       --reload --host 127.0.0.1 --port "$API_PORT" --app-dir "$REPO/apps/api" \
+      --timeout-graceful-shutdown 3 \
       > "$LOG" 2>&1 < /dev/null &
     printf '%s' "$!" > "$PID_FILE"
   )
@@ -1078,6 +1107,7 @@ cmd_check() {
   ( cd "$REPO" && "$py" -m ruff check packages apps/api ) || exit 1
   ( cd "$REPO" && python3 tools/wiki_lint.py ) || exit 1
   ( cd "$REPO" && bash tools/tests/test_bml_ownership.sh ) || exit 1
+  ( cd "$REPO" && bash tools/tests/test_bml_shutdown.sh ) || exit 1
   ( cd "$REPO" && python3 tools/tests/test_backup.py ) || exit 1
   ok "전부 통과."
 }

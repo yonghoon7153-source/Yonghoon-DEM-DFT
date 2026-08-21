@@ -63,7 +63,8 @@ dev: ## 개발 서버 — http://localhost:5003 (핫 리로드)
 serve: build ## 한 포트로 실행 — http://localhost:5003 (node 불필요)
 	@echo "→ http://localhost:$(PORT)"
 	WORKBENCH_PORT=$(PORT) $(VENV_PY) -m uvicorn app.main:app \
-	  --host 127.0.0.1 --port $(PORT) --app-dir apps/api
+	  --host 127.0.0.1 --port $(PORT) --app-dir apps/api \
+	  --timeout-graceful-shutdown 3
 
 build: ## 프론트엔드 프로덕션 빌드 (apps/web/dist)
 	cd $(WEB) && npm run build
@@ -85,6 +86,7 @@ test-web: ## vitest + 타입 체크
 test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, docs lint, 백업)
 	bash tools/tests/test_bml_ownership.sh
 	bash tools/tests/test_lint_gate.sh
+	bash tools/tests/test_bml_shutdown.sh
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py
 
