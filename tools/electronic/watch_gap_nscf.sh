@@ -160,13 +160,17 @@ for S in comp1 modelc; do
             _t=$(grep -aom1 '^\[[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9]:[0-9][0-9]\]' "$OUT/run.log" | tr -d '[]')
             [ -n "$_t" ] && RUNSTART_EPOCH=$(date -d "$(date +%Y)-${_t/ / }" +%s 2>/dev/null)
         fi
+        # ⭐ 다섯 번째 판 — 시각 비교를 **완료 여부 뒤로** 뺐다. 규칙 방향이 틀렸었다.
+        #   실측: 러너가 "comp1 scf: 이미 완료 — 건너뜀" 으로 넘어갔는데, scf.out 이
+        #   이번 run.log 보다 오래됐다는 이유로 화면은 '아직 시작 안 함' 이라 찍었다.
+        #   **완료된 단계는 언제 끝났든 완료다.** 시각은 *미완/실패* 출력에만 의미가 있다
+        #   — 그게 지난 판 것인지 이번 판 것인지가 그때만 갈리기 때문이다.
+        _OLD=0
         if [ -n "${RUNSTART_EPOCH:-}" ] && [ "$(stat -c %Y "$F")" -lt "$RUNSTART_EPOCH" ]; then
-            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
-            continue
+            _OLD=1
         fi
-        IN=$D/$STAGE.in
-        if [ -f "$IN" ] && [ "$IN" -nt "$F" ]; then
-            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (.in 이 더 새롭다)"
+        if ! grep -aq 'JOB DONE' "$F" && [ "$_OLD" = 1 ]; then
+            echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
             continue
         fi
 
@@ -190,7 +194,7 @@ for S in comp1 modelc; do
         if grep -aq 'JOB DONE' "$F"; then
             CONV=$(grep -aq 'convergence has been achieved' "$F" && echo "수렴" || echo "종료")
             E=$(grep -a '^!' "$F" | tail -1 | awk '{print $5}')
-            echo "   $STAGE: ✅ JOB DONE ($CONV)${E:+  E=$E Ry}"
+            echo "   $STAGE: ✅ JOB DONE ($CONV)${E:+  E=$E Ry}$([ "$_OLD" = 1 ] && echo '  · 지난 실행에서 완료, 이번엔 건너뜀')"
             if [ "$STAGE" = "nscf_gap" ]; then
                 python3 "$SRC/extract_gap.py" "$F" 2>/dev/null | sed 's/^/     /'
                 echo "     ── 재현 목표: VBM ${TVBM[$S]}  CBM ${TCBM[$S]}  gap ${TGAP[$S]} ──"
