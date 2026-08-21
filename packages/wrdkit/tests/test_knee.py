@@ -924,3 +924,112 @@ def test_a_bend_with_too_little_after_it_is_never_dismissed():
                          reference_cycle=3).by_method("segmented")
     assert result.status == "insufficient"
     assert result.detail["followup_cycles"] < 20
+
+
+# --- 프로토콜 구간과 열화를 가르는 일 -------------------------------------------
+#
+# 가역 구간을 knee 로 부르지 않는 것과, 가역 구간이 있다고 해서 진짜 knee 를
+# 지우지 않는 것은 별개의 요구다.  둘 다 실패한 적이 있다.
+
+
+def _STRAIGHT_08(c):
+    return 100 - 0.08 * (c - 3)
+
+
+def _STRAIGHT_10(c):
+    return 100 - 0.10 * (c - 3)
+
+
+def _KNEE_AT_50(c):
+    return 100 - 0.05 * (min(c, 50) - 3) - 0.16 * max(c - 50, 0)
+
+
+def _with_block(base, lo, hi, size):
+    def shape(c):
+        return base(c) + (size if lo <= c < hi else 0.0)
+    return shape
+
+
+def test_a_block_that_reads_high_is_also_an_excursion():
+    """가역 구간이 아래로만 생기지 않는다.
+
+    더 완만한 진단 조건에서는 측정 용량이 *위로* 뜬다.  offset 이 음수여야 한다는
+    조건 하나 때문에 20 사이클 동안 자기 추세보다 4 % 위에 있다 돌아온 셀이
+    knee 를 받았다.
+    """
+    analysis = detect_knee(*_curve(80, _with_block(_STRAIGHT_08, 35, 55, +4.0)),
+                           reference_cycle=3)
+    assert not analysis.primary.detected, analysis.primary.reason
+    assert "above the trend" in analysis.primary.reason
+
+
+def test_a_partial_recovery_is_not_a_rejoining():
+    """절반만 돌아오면 그것은 앞에 웅덩이가 있는 영구 계단이다."""
+    def partial(c):
+        return 100 - 0.08 * (c - 3) - (5.0 if 35 <= c < 55 else (2.5 if c >= 55 else 0.0))
+
+    primary = detect_knee(*_curve(80, partial), reference_cycle=3).primary
+    assert "rejoined" not in primary.reason, primary.reason
+
+
+def test_two_permanent_steps_are_not_one_block():
+    """한 번도 회복하지 않은 두 계단을 하나의 가역 구간으로 읽으면 안 된다.
+
+    기울어진 baseline 이 tail 을 흡수해 "cycles 30-86 이 2.6% 아래 있다가 다시
+    붙었다" 가 나왔다.  실제로는 30 과 60 에서 두 번 내려가고 돌아오지 않는다.
+    """
+    def two_steps(c):
+        return 100 - 0.08 * (c - 3) - (6.0 if c >= 30 else 0.0) - (4.0 if c >= 60 else 0.0)
+
+    primary = detect_knee(*_curve(100, two_steps), reference_cycle=3).primary
+    assert "rejoined" not in primary.reason, primary.reason
+
+
+def test_a_block_does_not_erase_a_real_knee():
+    """가역 구간을 찾으면 그 구간을 빼고 다시 보지, 셀을 설명했다고 하지 않는다.
+
+    모든 비-threshold 결과를 한꺼번에 덮어쓰는 바람에, C-rate 블록과 같은 기록에
+    있던 진짜 knee 가 사라졌다 — 같은 셀이 블록 없이는 50번, 블록이 있으면
+    "knee 없음" 이었다.
+    """
+    plain = detect_knee(*_curve(100, _KNEE_AT_50), reference_cycle=3).primary
+    withblock = detect_knee(*_curve(100, _with_block(_KNEE_AT_50, 20, 38, -4.0)),
+                            reference_cycle=3).primary
+    assert plain.detected and withblock.detected, withblock.reason
+    assert withblock.cycle == pytest.approx(plain.cycle, abs=4)
+    assert "left out" in withblock.reason
+
+
+def test_eol_inside_a_block_is_not_end_of_life():
+    """한 보고서가 같은 20 사이클을 EOL 이자 비열화라고 말하면 안 된다."""
+    analysis = detect_knee(*_curve(80, _with_block(_STRAIGHT_08, 35, 55, -20.0)),
+                           reference_cycle=3)
+    threshold = analysis.by_method("threshold")
+    assert not threshold.detected, threshold.reason
+    assert threshold.status == "indeterminate"
+    assert "measured differently" in threshold.reason
+
+
+def test_a_block_is_only_seen_rejoining_with_room_to_spare():
+    """끝 여유는 사이클 번호가 아니라 관측 개수로 센다.
+
+    `end > last_cycle - MIN_SEGMENT` 로 재던 때는 100 사이클 기록에서 96번에
+    끝나는 블록을 (뒤에 네 사이클이 온전히 있는데도) 거부하고 68번 knee 를 냈다.
+    """
+    for last in (95, 96):
+        analysis = detect_knee(*_curve(100, _with_block(_STRAIGHT_10, 70, last + 1, -4.0)),
+                               reference_cycle=3)
+        assert "rejoined" in analysis.primary.reason, (last, analysis.primary.reason)
+
+
+def test_straight_lines_do_not_manufacture_measurement_events():
+    """직선에 잡음만 있는 기록이 "측정 조건이 바뀌었다" 를 만들면 안 된다."""
+    made_up = 0
+    for seed in range(60):
+        rng = np.random.default_rng(seed)
+        cycles = np.arange(1, 81, dtype=float)
+        q = 1.45 * (100 - 0.15 * (cycles - 3) + rng.normal(0, 1.0, 80)) / 100
+        q[0] = q[1] = 1.45 * 0.09
+        if "rejoined" in detect_knee(cycles, q, reference_cycle=3).primary.reason:
+            made_up += 1
+    assert made_up == 0, made_up

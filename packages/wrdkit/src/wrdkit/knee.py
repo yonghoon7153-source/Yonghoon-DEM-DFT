@@ -86,6 +86,15 @@ MIN_FOLLOWUP_CYCLES = 20
 #: that does not matter.
 MATERIAL_HORIZON_CYCLES = 200
 
+#: How much of a block may be left behind and still count as "rejoined".
+#: A block that recovers only half of what it lost is a permanent step with a
+#: dip in front of it, and that is degradation whatever caused it.
+REJOIN_TOLERANCE = 0.25
+#: How deep a block has to be, in residual scales, before it is called an event
+#: rather than a wobble.  Calibrated against the deepest block an exhaustive
+#: two-break search can extract from a straight line -- see ``_protocol_excursion``.
+EXCURSION_DEPTH_SIGMAS = 5.0
+
 #: A knee has to cost something.  Past the break point the cell must actually
 #: lose this much retention, in percentage points, over the cycles that were
 #: recorded.  Without it the ratio test compares two near-zero slopes and calls
@@ -577,21 +586,33 @@ def _exact_three_break(cycles: np.ndarray, values: np.ndarray):
     return exact, float(cycles[i]), float(cycles[j]), exact_slopes
 
 
+def _column_fit(design: np.ndarray, values: np.ndarray) -> float:
+    """Residual sum of squares of a least-squares fit to given columns."""
+    coefficients, *_ = np.linalg.lstsq(design, values, rcond=None)
+    residual = values - design @ coefficients
+    return float(np.dot(residual, residual))
+
+
 def _exact_level_shift(cycles: np.ndarray, values: np.ndarray):
-    """The best "one straight line, plus a block that sits lower" fit.
+    """Best fit of "one straight line, a block, and whatever the block left".
 
-    This is the competing story for a bend.  Degradation is permanent: the
-    capacity a cell has lost, it has lost.  A block of cycles that sits below
-    the trend and then rejoins it is something else -- a C-rate step, a
-    temperature excursion, a diagnostic sweep -- and the cell was fading at the
-    same rate throughout.
+    The design is ``1, x, 1[t1 <= x < t2], 1[x >= t2]``.  Three things follow
+    from that fourth column, and each of them was a wrong answer without it:
 
-    A continuous hinge cannot say that, so it approximates the block with a
-    steep drop and a recovery, and reports the drop as an onset of degradation
-    several cycles *before* the block even starts.  Fitting the honest model
-    and comparing residuals is how the two are told apart; the design is
-    ``1, x, 1[t1 <= x < t2]`` and the search is exhaustive, on the same
-    suffix sums.
+    *A block can leave something behind.*  With only the block term, a cell
+    that dropped 5 % for twenty cycles and stayed 2.5 % down afterwards was
+    described as having "rejoined the trend".  The permanent part now has
+    somewhere to go, and its size is what decides whether anything rejoined.
+
+    *Two permanent steps are not a block.*  Cycles 30 and 60 each losing
+    capacity and never recovering was fitted as one block from 30 to 86 that
+    "rejoined", because a tilted baseline absorbed the tail.
+
+    *Blocks go both ways.*  A gentler diagnostic reads *higher*, not lower, and
+    excluding positive offsets meant a cell that spent twenty cycles 4 % above
+    its own trend and came back was handed a knee.
+
+    Returns ``(rss, first cycle, last cycle, block offset, residual offset)``.
     """
     n = len(cycles)
     if n < 3 * MIN_SEGMENT + 1:
@@ -609,40 +630,48 @@ def _exact_level_shift(cycles: np.ndarray, values: np.ndarray):
         js = np.arange(i + MIN_SEGMENT, n - MIN_SEGMENT + 1)
         if not len(js):
             continue
-        # Indicator over [i, j): window sums are differences of suffix sums.
         block_n = s["n"][i] - s["n"][js]
         block_x = s["x"][i] - s["x"][js]
         block_y = s["y"][i] - s["y"][js]
+        tail_n, tail_x, tail_y = s["n"][js], s["x"][js], s["y"][js]
 
         m = len(js)
-        gram = np.empty((m, 3, 3))
+        gram = np.empty((m, 4, 4))
         upper = {
-            (0, 0): np.full(m, all_n), (0, 1): np.full(m, all_x), (0, 2): block_n,
-            (1, 1): np.full(m, all_xx), (1, 2): block_x,
-            (2, 2): block_n,
+            (0, 0): np.full(m, all_n), (0, 1): np.full(m, all_x),
+            (0, 2): block_n, (0, 3): tail_n,
+            (1, 1): np.full(m, all_xx), (1, 2): block_x, (1, 3): tail_x,
+            (2, 2): block_n, (2, 3): np.zeros(m),   # the two blocks never overlap
+            (3, 3): tail_n,
         }
         for (row, col), value in upper.items():
             gram[:, row, col] = value
             gram[:, col, row] = value
-        moment = np.column_stack([np.full(m, all_y), np.full(m, all_xy), block_y])
-        gram[:, range(3), range(3)] += 1e-10
+        moment = np.column_stack([np.full(m, all_y), np.full(m, all_xy),
+                                  block_y, tail_y])
+        gram[:, range(4), range(4)] += 1e-10
         beta = np.linalg.solve(gram, moment[..., None])[..., 0]
         rss = total_yy - np.einsum("ij,ij->i", beta, moment)
         k = int(np.argmin(rss))
         if best is None or rss[k] < best[0]:
-            best = (float(rss[k]), i, int(js[k]), float(beta[k, 2]), float(beta[k, 1]))
+            best = (float(rss[k]), i, int(js[k]),
+                    float(beta[k, 2]), float(beta[k, 3]))
     if best is None:
         return None
-    rss, i, j, offset, slope = best
-    return rss, float(cycles[i]), float(cycles[min(j, n - 1)]), offset, slope
+    rss, i, j, offset, residual = best
+    # The block column covers [i, j) and the tail covers [j, n), so the last
+    # cycle *in* the block is j-1.  Returning j made every reported block one
+    # cycle too long and pushed the end-of-record check over by one, which
+    # rejected a block with four clear cycles behind it.
+    return rss, i, max(j - 1, i), offset, residual
 
 
 def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
-                        rss_bend: float) -> tuple[float, float, float] | None:
-    """A block of cycles that sat lower and then rejoined the trend.
+                        rss_bend: float):
+    """A block of cycles that sat off the trend and then rejoined it.
 
-    Returns ``(first cycle, last cycle, offset)`` when that story fits the
-    curve better than any bend does, and None otherwise.
+    Returns ``(first cycle, last cycle, offset, first index, last index)`` when
+    that story fits the curve better than any bend does, and None otherwise.
 
     Degradation is permanent.  A cell that drops 4 % for twenty cycles and then
     comes back did not degrade there -- something about how it was measured
@@ -652,31 +681,68 @@ def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
     recovery and reports the drop as an onset of degradation, several cycles
     before the block even begins.
 
-    The record does not carry the schedule down here, so the shape has to
-    stand in for the metadata: the block must sit *below* the line, and it must
-    end before the record does.  A step that never comes back is a real
-    permanent loss, whatever caused it.
+    The record does not carry the schedule down here, so the shape has to stand
+    in for the metadata, and four things have to hold at once.
     """
     shift = _exact_level_shift(cycles, values)
     if shift is None:
         return None
-    rss, start, end, offset, _ = shift
-    # Clearly better, not better by a nose.  On a straight line both models are
-    # fitting noise and the block model wins by a couple of percent about half
-    # the time; naming an "excursion" there would be inventing an event.  A
-    # real block leaves a third of the residual or less (2.3 against 44 on a
-    # 4 %p step), so a 30 % reduction separates them with room to spare.
+    rss, start, end, offset, residual = shift
+    n = len(cycles)
+
+    # Clearly better than a bend, not better by a nose.  On a straight line
+    # both models are fitting noise and the block model wins by a couple of
+    # percent about half the time; naming an "excursion" there would be
+    # inventing an event.  A real block leaves a third of the residual or less
+    # (2.3 against 44 on a 4 %p step).
     if rss >= 0.7 * rss_bend:
         return None
-    if offset >= 0.0:
+    # Seen rejoining, counted in observations.  Comparing cycle *numbers*
+    # against `last - MIN_SEGMENT` rejected a block that ended at cycle 96 of a
+    # 100-cycle record even though four full cycles followed it, and accepted
+    # one that ended at 97 with three.
+    if end > n - 1 - MIN_SEGMENT:
         return None
-    if end > float(cycles[-1]) - MIN_SEGMENT:
-        # The block has to be seen rejoining the trend, not merely to stop a
-        # cycle or two before the file does.  A permanent 6 % step at cycle 40
-        # of an 80-cycle record was fitted as a block ending at 77 and called
-        # reversible; it never came back, the fit just ran out of room.
+    # Deep enough to be an event rather than a wobble.  The two break points
+    # are chosen by looking at every pair, so the deepest block a *straight*
+    # line can be made to yield is what has to be cleared: on 100 records each,
+    # white noise reached 4.3 residual scales and AR(1) noise 6.8, while a real
+    # 1 %p block sits at 7.4 and a 4 %p block at 32.  Five buys most of the
+    # separation; a 0.5 %p block lands at 3.3 and is lost, which is honest --
+    # that is a block inside the noise.
+    #
+    # AR(1) noise still crosses this about one record in eight.  That is the
+    # same uncorrected-selection-under-dependence problem as ``MIN_FIT_GAIN_F``
+    # and it is not fixed here either.
+    scale = np.sqrt(rss / max(n - 4, 1))
+    if abs(offset) < EXCURSION_DEPTH_SIGMAS * scale:
         return None
-    return start, end, offset
+    # And it has to have actually rejoined.  What the block left behind is
+    # fitted alongside it, so a partial recovery or a second permanent step
+    # shows up as a residual offset that is a real fraction of the block.
+    if abs(residual) > REJOIN_TOLERANCE * abs(offset):
+        # Unless what it is absorbing is not a step at all.  A cell with a
+        # C-rate block at 20-38 *and* a real knee at 50 leaves the post-block
+        # cycles far from the original line, and a step term will happily take
+        # that up -- the block then reads as a partial recovery and the knee
+        # disappears.  A step and a slope change are different shapes, so ask
+        # which one fits: if a hinge does at least as well, the leftover is the
+        # knee and the block itself did rejoin.
+        block = np.zeros(n)
+        block[start:end + 1] = 1.0
+        tail = np.zeros(n)
+        tail[end + 1:] = 1.0
+        ones, xs = np.ones(n), cycles
+        step_rss = _column_fit(np.column_stack([ones, xs, block, tail]), values)
+        best_hinge = None
+        for k in range(end + 1 + MIN_SEGMENT, n - MIN_SEGMENT):
+            hinge = np.maximum(cycles - float(cycles[k]), 0.0)
+            rss_k = _column_fit(np.column_stack([ones, xs, block, hinge]), values)
+            if best_hinge is None or rss_k < best_hinge:
+                best_hinge = rss_k
+        if best_hinge is None or best_hinge > step_rss:
+            return None
+    return float(cycles[start]), float(cycles[end]), offset, start, end
 
 
 def _three_segment(cycles: np.ndarray, values: np.ndarray,
@@ -1070,6 +1136,32 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
                       f"maximum curvature at cycle {cycle:.0f}", detail)
 
 
+def _criteria(cycles: np.ndarray, retention: np.ndarray, smoothed: np.ndarray, *,
+              threshold_pct: float, slope_factor: float, baseline_window: int,
+              slope_window: int, smoothing_window: int) -> list[KneeResult]:
+    """All four criteria over one stretch of cycles, in a fixed order.
+
+    Pulled out so the same four can be re-run on a record with a
+    protocol block taken out of it, and stay index-comparable with the first
+    pass.
+    """
+    n = len(cycles)
+    return [
+        _threshold_knee(cycles, retention, threshold_pct),
+        _segmented_knee(cycles, smoothed),
+        # `max(baseline_window, n // 4)` tied the definition of "early life" to
+        # how long the cell was eventually watched.  The same cell, analysed at
+        # cycle 150 and again at cycle 500, moved its baseline from 37 cycles to
+        # 124 -- by then the median of that window was the *late* rate, and the
+        # knee it had reported at cycle 51 disappeared.  A window that grows
+        # with the record is not a baseline.
+        _slope_ratio_knee(cycles, smoothed, factor=slope_factor,
+                          baseline_window=baseline_window,
+                          window=min(slope_window, max(n // 3, 2))),
+        _curvature_knee(cycles, retention, smoothing_window),
+    ]
+
+
 def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
                 threshold_pct: float = 80.0, slope_factor: float = 2.0,
                 baseline_window: int = 5, slope_window: int = 5,
@@ -1137,20 +1229,10 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
     search_n = len(search_cycles)
     smoothed = smooth_series(search_retention, smoothing_window)
 
-    results = [
-        _threshold_knee(search_cycles, search_retention, threshold_pct),
-        _segmented_knee(search_cycles, smoothed),
-        # `max(baseline_window, search_n // 4)` tied the definition of "early
-        # life" to how long the cell was eventually watched.  The same cell,
-        # analysed at cycle 150 and again at cycle 500, moved its baseline from
-        # 37 cycles to 124 -- by then the median of that window was the *late*
-        # rate, and the knee it had reported at cycle 51 disappeared.  A window
-        # that grows with the record is not a baseline.
-        _slope_ratio_knee(search_cycles, smoothed, factor=slope_factor,
-                          baseline_window=baseline_window,
-                          window=min(slope_window, max(search_n // 3, 2))),
-        _curvature_knee(search_cycles, search_retention, smoothing_window),
-    ]
+    results = _criteria(search_cycles, search_retention, smoothed,
+                        threshold_pct=threshold_pct, slope_factor=slope_factor,
+                        baseline_window=baseline_window, slope_window=slope_window,
+                        smoothing_window=smoothing_window)
 
     # Preference order among the criteria that answer "did the fade
     # accelerate".  ``threshold`` is deliberately not in it: crossing 80 % is
@@ -1188,18 +1270,64 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
     if bend_rss is not None:
         excursion = _protocol_excursion(search_cycles, smoothed, float(bend_rss))
         if excursion is not None:
-            start, end, offset = excursion
-            reason = (f"cycles {start:.0f}-{end:.0f} sat {abs(offset):.1f}% below the "
-                      f"trend and rejoined it -- a change in how the cell was "
-                      f"measured, not degradation")
+            start, end, offset, first_index, last_index = excursion
             note = {"excursion_from": start, "excursion_to": end,
                     "excursion_offset_pct": offset}
-            results = [
-                r if r.method == "threshold"
-                else KneeResult(r.method, None, False, reason,
-                                {**r.detail, **note}, candidate_cycle=r.candidate_cycle)
-                for r in results
-            ]
+            where = "below" if offset < 0 else "above"
+            # Take the block out and look again, rather than declaring the cell
+            # explained.  Blanking every criterion erased real knees that
+            # happened to share a record with a C-rate block: the same cell
+            # reported cycle 50 without the block and "no knee" with it.
+            keep = np.ones(len(search_cycles), dtype=bool)
+            keep[first_index:last_index + 1] = False
+            masked_results = None
+            if int(keep.sum()) >= 2 * MIN_SEGMENT + 1:
+                masked_results = _criteria(
+                    search_cycles[keep], search_retention[keep],
+                    smooth_series(search_retention[keep], smoothing_window),
+                    threshold_pct=threshold_pct, slope_factor=slope_factor,
+                    baseline_window=baseline_window, slope_window=slope_window,
+                    smoothing_window=smoothing_window,
+                )
+            outside = (f"cycles {start:.0f}-{end:.0f} sat {abs(offset):.1f}% {where} the "
+                       f"trend and rejoined it -- a change in how the cell was "
+                       f"measured, not degradation")
+            rebuilt = []
+            for index, r in enumerate(results):
+                if r.method == "threshold":
+                    # An EOL crossing inside the block is a crossing of the
+                    # block, not of the cell.  Saying "measurement change, not
+                    # degradation" and "end of life at cycle 35" about the same
+                    # twenty cycles is one report contradicting itself.
+                    # The crossing is interpolated between the last cycle above
+                    # the line and the first below, so it lands just *before*
+                    # the block that caused it.  What has to be inside the
+                    # block is the first cycle actually measured below.
+                    crossed = float(r.detail.get("first_cycle_below", r.cycle or 0.0))
+                    if r.detected and start <= crossed <= end:
+                        rebuilt.append(KneeResult(
+                            r.method, None, False,
+                            f"the {threshold_pct:g}% crossing at cycle {r.cycle:.1f} is "
+                            f"inside cycles {start:.0f}-{end:.0f}, where the cell was "
+                            f"measured differently",
+                            {**r.detail, **note},
+                            status=STATUS_INDETERMINATE, candidate_cycle=r.cycle))
+                    else:
+                        rebuilt.append(r)
+                    continue
+                found = masked_results[index] if masked_results else None
+                if found is not None and found.detected:
+                    rebuilt.append(replace(
+                        found,
+                        detail={**found.detail, **note},
+                        reason=(f"{found.reason}; cycles {start:.0f}-{end:.0f} were "
+                                f"measured differently and were left out"),
+                    ))
+                else:
+                    rebuilt.append(KneeResult(r.method, None, False, outside,
+                                              {**r.detail, **note},
+                                              candidate_cycle=r.candidate_cycle))
+            results = rebuilt
 
     ranked = [r for name in ("segmented", "slope_ratio")
               for r in results if r.method == name and r.detected]
