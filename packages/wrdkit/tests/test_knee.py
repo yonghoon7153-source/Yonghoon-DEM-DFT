@@ -36,8 +36,10 @@ def test_a_linear_fade_reports_no_knee_and_says_why():
     values = [5.0 - 0.01 * (c - 1) for c in cycles]
     analysis = detect_knee(cycles, values, reference_cycle=1)
     segmented = analysis.by_method("segmented")
-    assert not segmented.detected
-    assert "accelerates" in segmented.reason or "not fading" in segmented.reason
+    # 상태를 본다.  문장 조각으로 단언하면 문구를 고칠 때마다 깨지고, 실제로
+    # 다른 환경에서 `fade does not accelerate ...` 를 거부해 깨졌다.
+    assert segmented.status == "none", segmented.reason
+    assert segmented.reason
 
 
 def test_a_flat_series_is_not_a_knee():

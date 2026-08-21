@@ -102,3 +102,30 @@ def test_the_summary_sentence_carries_the_headline_numbers():
     assert "running" in report.state_summary
     assert "discharge" in report.state_summary
     assert "retention" in report.state_summary
+
+
+def test_a_reference_after_the_record_does_not_fall_back_to_formation():
+    """요청한 기준 사이클 뒤에 데이터가 없으면 cycle 1 을 쓰지 않는다.
+
+    `detect_knee` 는 이 경우 `indeterminate` 를 내도록 고쳤는데, `build_report`
+    가 먼저 `complete[0]` 을 골라 그것을 요청값인 양 넘기고 있었다.  기준
+    사이클이 존재하는 이유가 formation 을 빼는 것인데(ADR 0004), 그 되돌림이
+    유지율의 분모와 knee 의 baseline 으로 다시 들어갔다.  core 테스트만으로는
+    잡히지 않는 경로다 — 생산 보고서는 전부 여기를 지난다.
+    """
+    report = build_report(_cycles(8), reference_cycle=50)
+    assert not report.reference_available
+    assert report.reference is None
+    assert report.retention_pct is None
+    assert report.knee is not None
+    assert report.knee.reference_cycle == 50
+    assert report.knee.primary.status == "indeterminate", report.knee.primary.reason
+
+
+def test_a_continuation_file_still_gets_a_baseline_after_the_request():
+    """요청 뒤에 사이클이 있으면 그 첫 사이클을 쓴다 — 이어지는 파일을 위해서다."""
+    report = build_report(_cycles(8), reference_cycle=0)
+    assert not report.reference_available
+    assert report.reference is not None
+    assert report.reference.cycle == 1
+    assert report.retention_pct is not None

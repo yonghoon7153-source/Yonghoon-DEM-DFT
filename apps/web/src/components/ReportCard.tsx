@@ -89,7 +89,9 @@ export function ReportCard({ report }: { report: Report }) {
               ? cycleNumber(knee.primary.cycle)
               : knee?.primary.status === 'insufficient'
                 ? `${cycleNumber(knee.primary.candidate_cycle)}?`
-                : '검출 안 됨'
+                : knee?.primary.status === 'indeterminate'
+                  ? '판정 불가'
+                  : '검출 안 됨'
           }
           unit={knee?.primary.detected ? '번째' : undefined}
           note={knee ? ko.kneeReason(knee.primary.reason) : undefined}
@@ -265,7 +267,9 @@ export function KneeDetail({
                     ? `${cycleNumber(result.cycle)}번`
                     : result.status === 'insufficient' && result.candidate_cycle !== null
                       ? `${cycleNumber(result.candidate_cycle)}번?`
-                      : '—'}
+                      : result.status === 'indeterminate'
+                        ? '판정 불가'
+                        : '—'}
                 </span>
               </span>
               <span className="why">{METHOD_HINTS[result.method]}</span>

@@ -264,11 +264,18 @@ def build_report(cycles: list[CycleSummary], *,
         report.reference = _readout(reference)
         report.reference_available = True
     else:
-        # Fall back to the earliest cycle at or after the requested one, so a
+        # Fall back to the earliest cycle *after* the requested one, so a
         # continuation file that starts at cycle 200 still gets a baseline.
+        #
+        # And only then.  Falling back to `complete[0]` when nothing follows the
+        # request put cycle 1 -- a formation cycle, the one thing the reference
+        # exists to exclude (ADR 0004) -- back in as the retention denominator
+        # and the knee baseline.  `detect_knee` learned to answer
+        # `indeterminate` for exactly this, and this line reached past it by
+        # handing over cycle 1 as if the caller had asked for it.
         later = [c for c in complete if c.cycle_number > reference_cycle]
-        fallback = later[0] if later else complete[0]
-        report.reference = _readout(fallback)
+        if later:
+            report.reference = _readout(later[0])
         report.reference_available = False
 
     if report.reference and report.reference.discharge_mah:
@@ -283,11 +290,17 @@ def build_report(cycles: list[CycleSummary], *,
             report.retention_note = (
                 f"cycle {report.reported.cycle} vs cycle {report.reference.cycle} "
                 f"- cycle {reference_cycle} is not in this record, so retention "
-                f"is measured from the earliest cycle available"
+                f"is measured from the earliest cycle after it"
             )
 
     options = dict(knee_options or {})
-    options.setdefault("reference_cycle", report.reference.cycle if report.reference else None)
+    # The requested cycle, not the fallback: the core knows what to do when
+    # there is nothing at or after it, and passing the fallback along hides the
+    # question from it.
+    options.setdefault(
+        "reference_cycle",
+        report.reference.cycle if report.reference_available else reference_cycle,
+    )
     report.knee = detect_knee(
         [c.cycle_number for c in complete],
         [c.discharge_capacity_mah for c in complete],

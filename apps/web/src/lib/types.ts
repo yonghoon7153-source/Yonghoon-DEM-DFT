@@ -226,6 +226,8 @@ export interface KneeAnalysis {
   fade_rate_early_pct_per_cycle: number | null
   fade_rate_late_pct_per_cycle: number | null
   projected_cycle_at_80pct: number | null
+  /** 기준 사이클이 요청과 다를 때 그 사유. */
+  reference_note?: string
 }
 
 export interface CycleReadout {
@@ -287,6 +289,10 @@ export interface DashboardRow {
   initial_coulombic_efficiency: number | null
   knee_cycle: number | null
   knee_method: string | null
+  /** 확정 knee 가 아니어도 무엇인지 구분된다 — `null` 하나로 접지 않는다. */
+  knee_status?: KneeStatus | null
+  knee_candidate_cycle?: number | null
+  knee_reason?: string
   basis: Basis
   loading_mg_cm2: number | null
   composition_label: string

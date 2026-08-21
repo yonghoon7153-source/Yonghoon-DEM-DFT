@@ -30,6 +30,8 @@ export interface PlotMarker {
   x: number
   label: string
   color?: string
+  /** 확정이 아닌 후보.  같은 굵기로 그리면 확정과 구분이 안 된다. */
+  tentative?: boolean
 }
 
 interface Props {
@@ -230,7 +232,9 @@ export function Plot({
 
   // Callers build these inline, so their identity changes on every render of
   // the parent; the plot only needs to be rebuilt when the values differ.
-  const markerKey = markers.map((m) => `${m.x}|${m.label}|${m.color ?? ''}`).join(';')
+  const markerKey = markers
+    .map((m) => `${m.x}|${m.label}|${m.color ?? ''}|${m.tentative ? 't' : ''}`)
+    .join(';')
   const rangeKey = yRange ? `${yRange[0]}|${yRange[1]}` : ''
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const steadyMarkers = useMemo(() => markers, [markerKey])
@@ -356,8 +360,9 @@ export function Plot({
                   const x = u.valToPos(marker.x, 'x', true)
                   if (!Number.isFinite(x)) continue
                   ctx.strokeStyle = marker.color ?? colors.warn
-                  ctx.lineWidth = 1.25
-                  ctx.setLineDash([5, 4])
+                  ctx.lineWidth = marker.tentative ? 1 : 1.25
+                  ctx.globalAlpha = marker.tentative ? 0.55 : 1
+                  ctx.setLineDash(marker.tentative ? [2, 4] : [5, 4])
                   ctx.beginPath()
                   ctx.moveTo(x, u.bbox.top)
                   ctx.lineTo(x, u.bbox.top + u.bbox.height)
@@ -372,6 +377,7 @@ export function Plot({
                   ctx.fillRect(x + 3, u.bbox.top + 2, textWidth + 8, 16)
                   ctx.fillStyle = color
                   ctx.fillText(marker.label, x + 7, u.bbox.top + 14)
+                  ctx.globalAlpha = 1
                 }
                 ctx.restore()
               },

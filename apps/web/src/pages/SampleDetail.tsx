@@ -135,8 +135,22 @@ export function SampleDetail() {
 
   const kneeMarkers: PlotMarker[] = useMemo(() => {
     const result = reportState.data?.knee?.results.find((r) => r.method === kneeMethod)
-    if (!result?.detected || result.cycle === null) return []
-    return [{ x: result.cycle, label: `급감 ${Math.round(result.cycle)}` }]
+    if (!result) return []
+    if (result.detected && result.cycle !== null) {
+      return [{ x: result.cycle, label: `급감 ${Math.round(result.cycle)}` }]
+    }
+    // 확정이 아니어도 짚은 곳은 그린다 — 흐리게, 물음표를 달아서.  아무것도 안
+    // 그리면 "안 꺾였다" 와 "아직 확인할 데이터가 없다" 가 같은 그림이 된다.
+    if (result.status === 'insufficient' && result.candidate_cycle !== null) {
+      return [
+        {
+          x: result.candidate_cycle,
+          label: `급감? ${Math.round(result.candidate_cycle)}`,
+          tentative: true,
+        },
+      ]
+    }
+    return []
   }, [reportState.data, kneeMethod])
 
   if (sampleState.loading && !sample) {

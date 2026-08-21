@@ -600,8 +600,16 @@ def dashboard(session: Session = Depends(get_session),
             "reference_cycle": report.reference.cycle if report.reference else None,
             "reference_available": report.reference_available,
             "initial_coulombic_efficiency": report.initial_coulombic_efficiency,
+            # `null` for anything but a confirmed knee collapsed the four
+            # states the core works to keep apart back into two, on the one
+            # screen that compares cells side by side.  A cell whose knee is
+            # unconfirmed for want of cycles looked exactly like a cell that
+            # never bent.
             "knee_cycle": knee.cycle if knee and knee.detected else None,
             "knee_method": knee.method if knee and knee.detected else None,
+            "knee_status": knee.status if knee else None,
+            "knee_candidate_cycle": knee.candidate_cycle if knee else None,
+            "knee_reason": knee.reason if knee else "",
             "basis": used,
             # Without this a mass-less cell's raw mAh sits in the same column
             # as the other cells' mAh/g, under one mAh/g header.
