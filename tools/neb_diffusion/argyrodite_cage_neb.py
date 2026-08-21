@@ -212,6 +212,17 @@ def find_hops(atoms, kind, rmax=5.0, cage_margin=0.3):
     return out
 
 
+def _np_max_disp(a, b, exclude=None):
+    """두 구조의 **이동 원자를 뺀** 최대 변위 (Å). 협동 이동 판별용.
+
+    이 함수가 못 하는 것: 어느 원자가 왜 움직였는지 말하지 않는다. 크기만 잰다.
+    """
+    d = np.linalg.norm(b.get_positions() - a.get_positions(), axis=1)
+    if exclude is not None:
+        d = np.delete(d, exclude)
+    return d.max() if len(d) else 0.0
+
+
 def build_endpoints(atoms, i_vac, j_mig):
     """(시작, 끝). 시작 = Li_i 제거. 끝 = 거기서 Li_j 를 i 자리로 옮긴 것.
 
@@ -477,7 +488,37 @@ def one_run(args):
 
     calc = load_calc(args.device)
     t0 = time.time()
-    if args.shallow_endpoints:
+    if args.coupled_endpoints:
+        # ⭐⭐ 2026-08-21 — **끝점을 독립으로 이완하지 않는다.**
+        #
+        # 실측 진단 (neb_intra_211.xyz · neb_inter_211_shallow.xyz):
+        #   이동 Li 는 3.2 Å 움직이는데 **다른 Li 들이 2~3.9 Å 씩 같이 움직였다.**
+        #   끝점(이미지 8)의 골격 최대변위가 3.21 Å 였다 — 두 끝점이 "Li 하나 위치만
+        #   다른" 관계가 **아니었다.** 그러면 IDPP 는 그 모든 Li 를 동시에 보간하고,
+        #   NEB 는 하나의 홉이 아니라 **Li 부격자 전체의 재배열**을 넘는다.
+        #   intra 2.44 eV 는 그 재배열 비용이지 홉 장벽이 아니다.
+        #
+        # 원인이 (a)무질서의 물리인지 (b)독립 이완인지 갈리지 않았는데,
+        # (b) 는 고칠 수 있다. 시작을 먼저 이완하고 **그 이완된 구조에서** 이동 Li 만
+        # 옮겨 끝점을 만든다. 그러면 두 끝점은 정의상 이동 Li 하나와 그 국소 응답만
+        # 다르다. 남는 차이가 있다면 그건 (a) 다.
+        #
+        # ⚠ 대가: 끝점이 **각자의 전역 최소**가 아니다. 시작 분지에 묶인 끝점이다.
+        #   그래서 ΔE(끝−시작)가 커질 수 있고, 그건 결함이 아니라 이 방식의 정의다.
+        ini, ep_i = relax_endpoint_deep(ini0, calc, seed=args.seed,
+                                        track_idx=j2, max_track_drift=args.max_ep_drift)
+        # 이완된 시작 위에서 **이동 Li 만** 공공 자리로 (원래 홉 벡터를 그대로 적용)
+        fin0c = ini.copy()
+        fin0c.positions[j2] = ini.positions[j2] + (fin0.positions[j2] - ini0.positions[j2])
+        fin, c2, s2 = relax_positions(fin0c, calc)      # 무작위 교란 없이 같은 분지에서
+        ep_f = {"gain_eV": 0.0, "n_escapes": 0, "converged": c2, "steps": s2}
+        s1 = ep_i["steps"]
+        _drift = float(_np_max_disp(ini, fin, exclude=j2))
+        print(f"   ⭐ 결합 끝점: 시작 이완 {s1} steps → 이동 Li 만 옮겨 끝점 생성 "
+              f"({s2} steps {'수렴' if c2 else '미수렴'})")
+        print(f"      이동 Li 를 뺀 나머지 최대 변위 {_drift:.3f} Å "
+              f"({'✅ 단일 홉으로 성립' if _drift < 1.0 else '⚠ 여전히 협동 이동이다 — (a) 물리 쪽'})")
+    elif args.shallow_endpoints:
         ini, c1, s1 = relax_positions(ini0, calc)
         fin, c2, s2 = relax_positions(fin0, calc)
         ep_i = {"gain_eV": 0.0, "n_escapes": 0, "converged": c1, "steps": s1}
@@ -977,6 +1018,25 @@ def selftest():
     except ImportError:
         print("  ⚠ ase 없음 — 심화 이완 시험 건너뜀")
 
+    # ── 결합 끝점 헬퍼: 협동 이동 판별 (음성 경로 포함) ──────────────────────
+    try:
+        from ase import Atoms as _A
+        _a = _A('Li3', positions=[[0, 0, 0], [2, 0, 0], [4, 0, 0]],
+                cell=[10, 10, 10], pbc=True)
+        _b = _a.copy(); _b.positions[1] += [3, 0, 0]; _b.positions[2] += [0.2, 0, 0]
+        chk(abs(_np_max_disp(_a, _b) - 3.0) < 1e-9,
+            "[양성] 제외 없이는 이동 원자(3.0 Å)가 최대다")
+        chk(abs(_np_max_disp(_a, _b, exclude=1) - 0.2) < 1e-9,
+            "[양성] 이동 원자를 빼면 0.2 Å — 나머지가 얼마나 따라 움직였는지가 나온다")
+        _c = _a.copy(); _c.positions[1] += [3, 0, 0]
+        chk(_np_max_disp(_a, _c, exclude=1) < 1e-12,
+            "[음성] 이동 원자만 움직인 경우 나머지 변위 0 (협동 이동 없음)")
+        _d = _a.copy(); _d.positions[1] += [3, 0, 0]; _d.positions[0] += [3.5, 0, 0]
+        chk(_np_max_disp(_a, _d, exclude=1) > 3.0,
+            "[음성] 다른 원자가 더 크게 움직이면 그게 잡힌다 (실측 3.9 Å 사례)")
+    except ImportError:
+        print("  ⚠ ase 없음 — 결합 끝점 헬퍼 시험 건너뜀")
+
     # ── split NEB: 중간자리 식별 (음성 경로 포함) ────────────────────────────
     # 실측 밴드 (comp1 inter_211_deepep) — 이미지 4 가 시작보다 0.462 eV 낮다.
     real = [0.0, -0.2669, -0.0175, 0.4322, -0.462, 0.2468, -0.0793, -0.179, -0.0045]
@@ -1038,6 +1098,10 @@ def main():
                          "(2026-08-19 실측: 3.504 → 4.356 Å 로 바뀐 적이 있다).")
     ap.add_argument("--seed", type=int, default=0,
                     help="끝점 심화 이완의 rattle 시드")
+    ap.add_argument("--coupled_endpoints", action="store_true",
+                    help="끝점을 **결합해서** 만든다 — 시작을 이완한 뒤 그 구조에서 이동 Li 만 "
+                         "옮겨 끝점을 만든다. 두 끝점이 이동 Li 하나만 다르게 되어 "
+                         "단일 Li NEB 의 전제가 성립한다 (2026-08-21 처방)")
     ap.add_argument("--shallow_endpoints", action="store_true",
                     help="옛 동작 — 끝점을 한 번만 이완한다(심화 이완 끔). "
                          "심화 이완이 홉을 바꿔버린 것 같을 때 대조용.")
