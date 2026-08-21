@@ -82,10 +82,11 @@ test-py: ## pytest (wrdkit + api)
 test-web: ## vitest + 타입 체크
 	cd $(WEB) && npm run typecheck && npm run test -- --run
 
-test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, docs lint)
+test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, docs lint, 백업)
 	bash tools/tests/test_bml_ownership.sh
 	bash tools/tests/test_lint_gate.sh
 	$(PY) tools/tests/test_wiki_lint.py
+	$(PY) tools/tests/test_backup.py
 
 lint: lint-py lint-web wiki-lint ## 전체 린트
 

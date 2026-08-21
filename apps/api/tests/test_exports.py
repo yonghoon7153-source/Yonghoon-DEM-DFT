@@ -149,3 +149,34 @@ def test_a_profile_export_reads_each_file_once(client, two_files, monkeypatch):
     assert response.status_code == 200
     assert sorted(loads) == sorted(set(loads))
     assert len(loads) == 2
+
+
+def test_the_original_wrd_comes_back_byte_for_byte(client, sample_id, wrd_bytes):
+    """올린 파일을 다시 받을 수 있어야 한다.
+
+    중추 서버를 두는 이유가 원본이 각자 노트북에 흩어져 있지 않게 하는
+    것인데, 되받을 수 없으면 "워크벤치에 올려" 가 편도 여행이 된다.
+    아무도 유일본을 그렇게 맡기지 않는다.
+    """
+    run = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                      files={"file": ("No_1_dry_011.wrd", wrd_bytes,
+                                      "application/octet-stream")}).json()
+
+    got = client.get(f"/api/export/runs/{run['id']}/original.wrd")
+    assert got.status_code == 200, got.text
+    assert got.content == wrd_bytes
+    assert "No_1_dry_011.wrd" in got.headers["content-disposition"]
+
+
+def test_a_missing_original_says_to_check_the_drive(client, sample_id, wrd_bytes):
+    """외장 드라이브를 뽑은 것과 파일을 지운 것은 겉보기가 똑같다."""
+    from app import storage
+
+    run = client.post("/api/runs/upload", params={"sample_id": sample_id},
+                      files={"file": ("No_1_dry_011.wrd", wrd_bytes,
+                                      "application/octet-stream")}).json()
+    storage.upload_path(run["sha256"]).unlink()
+
+    failed = client.get(f"/api/export/runs/{run['id']}/original.wrd")
+    assert failed.status_code == 404
+    assert "external" in failed.json()["detail"]

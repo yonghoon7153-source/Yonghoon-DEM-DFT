@@ -1,0 +1,136 @@
+---
+title: central server
+created: 2026-08-21
+updated: 2026-08-21
+type: guide
+tags: [tooling, workflow, data, backup]
+sources: [docs/adr/0011-central-instance-for-data.md, tools/backup.py, tools/bml]
+confidence: high
+explored: false
+verificationStatus: unverified
+---
+
+# 한 대를 중추 서버로 쓰기
+
+데이터를 여러 노트북에 복제하지 않는다. **한 대만 워크벤치를 띄우고 나머지는
+브라우저로 접속한다.** 그러면 동기화라는 단계 자체가 없어진다 — 올린 `.wrd` 는
+이미 그 서버의 디스크에 있고, 모두가 같은 데이터베이스를 본다 (ADR 0011).
+
+git 은 **코드**를 옮기는 도구다. 데이터는 git 으로 옮기지 않는다 — 이유는
+ADR 0011 에 적어 뒀다 (요약: `.wrd` 하나가 20 MB 이고 git 은 모든 판본을
+영구히 보관한다).
+
+## 중추 서버가 될 기계에서 (한 번)
+
+늘 켜 두는 기계를 고른다. 실험실 PC 가 가장 좋다.
+
+```bash
+# 1. 데이터를 둘 곳을 만든다.  외장 드라이브를 쓰면 노트북 수명과 분리된다.
+mkdir -p /mnt/e/bml-data          # WSL 에서 Windows 의 E: 드라이브
+
+# 2. 이 기계의 설정을 적어 둔다.  .bml/ 는 git 에 올라가지 않으므로
+#    여기 적은 것은 이 기계에만 남는다.
+mkdir -p .bml
+cat > .bml/env <<'ENV'
+WORKBENCH_DATA=/mnt/e/bml-data
+WORKBENCH_HOST=0.0.0.0
+WORKBENCH_BACKUP=/mnt/f/bml-backup
+ENV
+
+# 3. 띄운다
+bml
+```
+
+`bml` 자체의 사용법은 [[bml-command]] 에 있다. `bml status` 가 데이터 위치와
+원본 개수를 보여 준다. 여기가 외장 드라이브를
+가리키고 있는지 항상 먼저 확인한다.
+
+> 드라이브가 안 잡힌 채로는 `bml` 이 **시작을 거부한다.** 그냥 뒀다면 그 자리에
+> 빈 `data/` 가 새로 생기고, 화면에는 셀이 하나도 없는 멀쩡한 워크벤치가 뜬다 —
+> 데이터가 날아간 것처럼 보이고, 그 상태로 올린 파일은 나중에 드라이브를 꽂으면
+> 보이지 않는 곳에 남는다.
+
+## 다른 사람들 (설치할 것 없음)
+
+주소만 있으면 된다.
+
+```bash
+# 중추 서버에서 IP 확인
+hostname -I | awk '{print $1}'
+```
+
+브라우저에서 `http://<그 IP>:5003`. 업로드도, 질량 입력도, 프리셋 저장도 전부
+그 서버에 바로 들어간다. **화면은 30초마다 스스로 갱신되므로** 남이 방금 올린
+파일이나 구동 중인 셀의 새 사이클이 새로고침 없이 나타난다.
+
+WSL 자체 설치는 [[wsl-setup]] 에 있다. 띄웠는데 다른 기계에서 안 보이면
+Windows 방화벽과 WSL 포트 포워딩을 확인한다 (Windows PowerShell, 관리자):
+
+```powershell
+netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
+  connectport=5003 connectaddress=(wsl hostname -I).Trim()
+New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
+  -Protocol TCP -Action Allow
+```
+
+## 원본 `.wrd` 다시 받기
+
+셀 화면의 파일 카드에서 **원본 .wrd**. 올린 바이트가 그대로 내려온다 — 파일
+이름이 곧 sha256 이라 올라간 것과 같음이 증명된다. 어느 기계에서 접속하든
+받을 수 있으므로, 원본을 워크벤치에 맡기는 것이 편도 여행이 아니다.
+
+## 백업 — push 를 대신하는 것
+
+중추 서버의 디스크 한 장에 전부 들어 있으므로, 그 한 장이 죽으면 전부 사라진다.
+
+```bash
+bml backup /mnt/f/bml-backup      # .bml/env 에 WORKBENCH_BACKUP 이 있으면 인자 생략
+```
+
+복사하는 것과 안 하는 것:
+
+| | 복사 | 왜 |
+|---|---|---|
+| `uploads/*.wrd` | O | 다시 만들 수 없다. 잃으면 측정을 잃는다 |
+| `workbench.db` | O | 질량·조성·그룹·프리셋. 작고, 사람의 시간이다 |
+| `runs/` (파싱 캐시) | X | 원본에서 다시 만들어진다 (ADR 0003). 용량의 대부분 |
+
+두 번째 백업부터는 싸다 — 파일 이름이 곧 내용 해시라, 이미 있는 것은 건드리지
+않는다. 데이터베이스는 SQLite 자체의 backup API 로 복사하므로 **서버가 돌고
+있어도 안전하다** (`cp` 로 복사한 라이브 DB 는 오류 없이 열리고 행이 비는 수가
+있다 — 백업으로서는 최악의 실패다).
+
+주기적으로 돌리려면 (매일 새벽 3시):
+
+```bash
+crontab -e
+0 3 * * * cd ~/Yonghoon-DEM-DFT && ./tools/bml backup /mnt/f/bml-backup >> /tmp/bml-backup.log 2>&1
+```
+
+## 밖에서 접속하기
+
+이 앱에는 **로그인이 없다.** 주소를 아는 사람은 다 보고 다 지울 수 있다.
+
+- **하지 말 것**: 공유기에서 5003 포트를 인터넷으로 여는 것.
+- **할 것**: [Tailscale](https://tailscale.com) 같은 사설 네트워크로 기계들을
+  묶는다. 무료이고, 설치하면 각 기계가 `100.x.x.x` 주소를 받는다. 그 주소로
+  `http://100.x.x.x:5003` 이면 집에서도 실험실 서버가 열린다. 초대한 기계
+  밖으로는 열리지 않는다.
+
+```bash
+curl -fsSL https://tailscale.com/install.sh | sh
+sudo tailscale up
+tailscale ip -4          # 이 주소를 쓴다
+```
+
+## 자주 겪는 것
+
+**라이브러리가 비어 보인다** → `bml status` 로 데이터 위치를 확인한다.
+드라이브가 빠졌거나 `.bml/env` 가 없는 기계에서 띄운 것이다.
+
+**"원본 파일이 storage 에 없습니다"** → 드라이브가 마운트되지 않았다.
+`.wrd` 는 절대 지우지 않으므로(CLAUDE.md §0.2), 대개 케이블 문제다.
+
+**노트북에서도 띄우고 싶다** → 띄울 수는 있지만 그 순간 데이터가 두 벌이 된다.
+보기만 할 것이면 브라우저로 중추 서버를 여는 쪽이 항상 낫다. 코드를 고칠 때만
+`bml dev` 를 자기 기계에서 쓴다.

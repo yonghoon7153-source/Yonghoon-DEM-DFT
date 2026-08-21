@@ -676,6 +676,13 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
       ) : null}
 
       <div className="row" style={{ gap: 4 }}>
+        <a
+          className="tiny"
+          href={api.exportOriginalUrl(run.id)}
+          title={`${run.original_name} 원본을 그대로 내려받습니다`}
+        >
+          원본 .wrd
+        </a>
         <a className="tiny" href={api.exportRawUrl(run.id)}>
           raw CSV
         </a>

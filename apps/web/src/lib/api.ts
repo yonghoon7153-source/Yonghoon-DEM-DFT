@@ -131,6 +131,10 @@ export const api = {
     request<ProfileResponse>(`/api/compare/profiles${query(params)}`),
 
   // -- exports (URLs, so the browser downloads them directly) --------------
+  /** The uploaded .wrd, byte for byte -- so the original can be fetched back
+   *  from wherever the workbench is running, not only from the laptop that
+   *  measured it. */
+  exportOriginalUrl: (runId: number) => `/api/export/runs/${runId}/original.wrd`,
   exportRawUrl: (runId: number) => `/api/export/runs/${runId}/raw.csv`,
   exportCyclesUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/cycles.csv${query(params)}`,

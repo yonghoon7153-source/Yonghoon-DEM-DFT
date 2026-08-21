@@ -18,9 +18,10 @@ export interface AsyncState<T> {
 export function useAsync<T>(
   loader: () => Promise<T>,
   deps: unknown[],
-  options: { enabled?: boolean } = {},
+  options: { enabled?: boolean; refreshMs?: number } = {},
 ): AsyncState<T> {
   const enabled = options.enabled ?? true
+  const refreshMs = options.refreshMs ?? 0
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(enabled)
@@ -51,6 +52,29 @@ export function useAsync<T>(
   }, [...deps, nonce, enabled])
 
   const reload = useCallback(() => setNonce((n) => n + 1), [])
+
+  // Poll, when asked.  One central instance means somebody else's upload is
+  // already in the database the moment it lands -- but the page that is open
+  // does not know that, so a screen left on the bench shows yesterday until
+  // it is reloaded by hand.
+  //
+  // Paused while the tab is hidden: a cell runs for days, and a browser left
+  // open overnight would otherwise ask a question a thousand times that
+  // nobody is there to read the answer to.  `visibilitychange` also fires on
+  // the way back, which doubles as the refresh you want when you return.
+  useEffect(() => {
+    if (!enabled || refreshMs <= 0) return
+    const tick = () => {
+      if (!document.hidden) setNonce((n) => n + 1)
+    }
+    const timer = setInterval(tick, refreshMs)
+    document.addEventListener('visibilitychange', tick)
+    return () => {
+      clearInterval(timer)
+      document.removeEventListener('visibilitychange', tick)
+    }
+  }, [enabled, refreshMs])
+
   return { data, error, loading, reload }
 }
 

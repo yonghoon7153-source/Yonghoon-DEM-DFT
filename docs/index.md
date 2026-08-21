@@ -14,6 +14,7 @@
 | [0008](adr/0008-cell-state-weighted-evidence.md) | 구동중/종료는 가중 근거로 판정 | 근거를 함께 보여 준다 |
 | [0009](adr/0009-branch-is-the-home.md) | 이 워크벤치의 집은 브랜치다 | `main` 은 별개, 머지하지 않는다 |
 | [0010](adr/0010-user-saved-cell-presets.md) | 프리셋은 사람이 저장한다 | 조성 + 지름·비용량·기준전극, 질량은 담지 않는다 |
+| [0011](adr/0011-central-instance-for-data.md) | 데이터는 중추 서버 한 대에 | git 으로 옮기지 않는다, 백업이 push 를 대신한다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -35,7 +36,7 @@
 `adr/0004-cycle-three-reference.md` · `adr/0005-multi-criterion-knee.md` ·
 `adr/0006-frontend-stack.md` · `adr/0007-electrode-composition.md` ·
 `adr/0008-cell-state-weighted-evidence.md` · `adr/0009-branch-is-the-home.md` ·
-`adr/0010-user-saved-cell-presets.md`
+`adr/0010-user-saved-cell-presets.md` · `adr/0011-central-instance-for-data.md`
 
 ## 스펙
 
@@ -47,6 +48,7 @@
 - [[getting-started]] — **처음 쓰는 사람용.** 올리기 → 질량·조성 입력 → 화면 읽기
 - [[bml-command]] — `bml` 한 줄로 최신화 + 실행. 협력자 설치 방법 포함
 - [[wsl-setup]] — Windows/WSL 에서 쓰는 법. 막히는 지점과 해결까지
+- [[central-server]] — 한 대를 중추 서버로. 공유·원본 되받기·백업
 - [[extension-roadmap]] — 충방전 다음에 붙일 분석(dQ/dV, EIS, DRT)과 그 순서
 
 ## 에이전트 하네스
@@ -64,4 +66,4 @@
 
 `.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
 
-Total pages: 3
+Total pages: 4

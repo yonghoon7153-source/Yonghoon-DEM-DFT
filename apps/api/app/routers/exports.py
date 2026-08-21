@@ -13,7 +13,7 @@ from datetime import datetime
 
 import numpy as np
 from fastapi import APIRouter, Depends, HTTPException, Query
-from fastapi.responses import Response, StreamingResponse
+from fastapi.responses import FileResponse, Response, StreamingResponse
 from sqlmodel import Session
 
 from wrdkit import (
@@ -26,6 +26,7 @@ from wrdkit import (
     write_xlsx,
 )
 
+from .. import storage
 from ..db import get_session
 from ..deps import get_run, get_sample, validate_basis
 from ..models import Run, Sample
@@ -56,6 +57,37 @@ def _csv_response(text: str, filename: str) -> Response:
         content=(_BOM + text).encode("utf-8"),
         media_type="text/csv; charset=utf-8",
         headers={"Content-Disposition": f'attachment; filename="{_safe(filename)}"'},
+    )
+
+
+@router.get("/runs/{run_id}/original.wrd")
+def export_run_original(run_id: int, session: Session = Depends(get_session)):
+    """The uploaded ``.wrd``, byte for byte.
+
+    The point of a central instance is that the originals stop living on
+    whichever laptop did the measurement.  That only holds if they can be got
+    back out again -- otherwise "upload it to the workbench" is a one-way trip
+    and nobody will do it with the only copy.
+
+    The bytes are served straight from storage rather than re-serialised: the
+    file is immutable by rule (CLAUDE.md §0.2) and its name is its SHA-256, so
+    what comes back down is provably what went up.
+    """
+    run = get_run(session, run_id)
+    path = storage.upload_path(run.sha256)
+    if not path.exists():
+        # Worth naming out loud: with the data directory on an external drive,
+        # an unplugged disk looks exactly like a deleted file, and the useful
+        # thing to check first is the cable.
+        raise HTTPException(
+            404,
+            f"the original file for {run.original_name} is not in storage "
+            f"({path.parent}) -- if the data directory is on an external "
+            f"drive, check that it is mounted")
+    return FileResponse(
+        path,
+        media_type="application/octet-stream",
+        filename=_safe(run.original_name),
     )
 
 

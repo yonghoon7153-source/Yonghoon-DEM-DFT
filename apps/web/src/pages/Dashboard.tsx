@@ -35,7 +35,10 @@ export function Dashboard() {
   // 그룹으로 서버에서 거르지 않는다.  칩마다 개수를 보여주려면 전체가 필요하고,
   // 그룹을 누를 때마다 다시 받아오지 않아도 되므로 전환이 즉시 된다.
   const groups = useAsync(() => api.listGroups(), [])
-  const board = useAsync(() => api.dashboard({ basis }), [basis])
+  // 30초마다 다시 읽는다.  구동 중인 셀은 사이클이 붙고 있고, 다른 사람이 올린
+  // 파일도 이 표에 나타나야 한다 — 실험실에 띄워 둔 화면이 어제를 보여 주고
+  // 있으면 안 된다.  이전 값을 지우지 않고 갱신하므로 화면이 깜빡이지 않는다.
+  const board = useAsync(() => api.dashboard({ basis }), [basis], { refreshMs: 30_000 })
 
   const everything = useMemo(() => board.data?.rows ?? [], [board.data])
   const all = useMemo(
