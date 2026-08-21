@@ -1,12 +1,12 @@
 /** The cell library: filter by date, cathode, process, C-rate; manage groups. */
 
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
-import { num } from '../lib/format'
-import { useAsync, useDebounced } from '../lib/hooks'
+import { nameFamily, num } from '../lib/format'
+import { useAsync, useDebounced, useStickyState } from '../lib/hooks'
 import type { Sample } from '../lib/types'
 
 export function Library() {
@@ -17,6 +17,7 @@ export function Library() {
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
   const [creating, setCreating] = useState(false)
+  const [groupBy, setGroupBy] = useStickyState<GroupKey>('workbench.libraryGroupBy', 'none')
 
   const debouncedSearch = useDebounced(search)
   const groups = useAsync(() => api.listGroups(), [creating], { live: true })
@@ -111,7 +112,27 @@ export function Library() {
             </div>
           </Card>
 
-          <Card title={`셀 ${samples.data?.length ?? 0}개`} tight>
+          <Card
+            title={`셀 ${samples.data?.length ?? 0}개`}
+            actions={
+              <div className="row" style={{ gap: 6 }}>
+                <span className="tiny faint">묶기</span>
+                <div className="segmented">
+                  {GROUP_KEYS.map(([value, label]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      className={groupBy === value ? 'on' : ''}
+                      onClick={() => setGroupBy(value)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            }
+            tight
+          >
             {samples.error ? (
               <div style={{ padding: 14 }}>
                 <Alert kind="error">{samples.error}</Alert>
@@ -121,7 +142,7 @@ export function Library() {
                 <Spinner />
               </div>
             ) : samples.data?.length ? (
-              <SampleTable samples={samples.data} />
+              <SampleTable samples={samples.data} groupBy={groupBy} />
             ) : (
               <Empty title="조건에 맞는 셀이 없습니다">
                 필터를 넓히거나 <Link to="/upload">파일을 올려</Link> 주세요.
@@ -138,74 +159,163 @@ export function Library() {
   )
 }
 
-function SampleTable({ samples }: { samples: Sample[] }) {
+/** 무엇으로 묶을 수 있는가.
+ *
+ * 그룹은 사람이 만들어 붙이는 것이고, 나머지는 이미 셀에 적혀 있는 것이다.
+ * 그룹을 만들기 전에도 "같은 조건 세 번 돌린 것" 을 나란히 보고 싶은 것이
+ * 실제 요구라서, 이름으로 묶는 길을 열어 둔다.
+ */
+const GROUP_KEYS: [GroupKey, string][] = [
+  ['none', '없음'],
+  ['group', '그룹'],
+  ['name', '이름'],
+  ['cathode', '양극재'],
+  ['process', '공정'],
+  ['temperature', '온도'],
+]
+
+type GroupKey = 'none' | 'group' | 'name' | 'cathode' | 'process' | 'temperature'
+
+/** 이 셀이 어느 묶음에 속하는가.  "" 는 값이 없다는 뜻이고, 그 묶음은 맨
+ *  아래로 내린다 — 비어 있는 것이 목록의 첫인상이 되면 안 된다. */
+function bucketOf(sample: Sample, key: GroupKey): string {
+  switch (key) {
+    case 'group':
+      return sample.group_name ?? ''
+    case 'name':
+      return nameFamily(sample.name)
+    case 'cathode':
+      return sample.cathode_detail || sample.cathode_type || ''
+    case 'process':
+      return sample.process || ''
+    case 'temperature':
+      return sample.temperature_c === null ? '' : `${sample.temperature_c}°C`
+    default:
+      return ''
+  }
+}
+
+function SampleTable({ samples, groupBy }: { samples: Sample[]; groupBy: GroupKey }) {
+  const sections = useMemo(() => {
+    if (groupBy === 'none') return null
+    const buckets = new Map<string, Sample[]>()
+    for (const sample of samples) {
+      const key = bucketOf(sample, groupBy)
+      const bucket = buckets.get(key)
+      if (bucket) bucket.push(sample)
+      else buckets.set(key, [sample])
+    }
+    // 값이 없는 묶음은 맨 아래.  나머지는 이름순 — 새로 올린 셀이 목록을
+    // 흔들지 않게 하려면 순서가 내용에만 달려 있어야 한다.
+    return [...buckets.entries()].sort(([a], [b]) => {
+      if (!a) return 1
+      if (!b) return -1
+      return a.localeCompare(b, 'ko')
+    })
+  }, [samples, groupBy])
+
+  if (sections) {
+    return (
+      <div className="table-wrap" style={{ maxHeight: 'none' }}>
+        <table>
+          <SampleHead />
+          {sections.map(([key, rows]) => (
+            <tbody key={key || '(none)'}>
+              <tr className="section">
+                <th colSpan={COLUMN_COUNT}>
+                  {key || <span className="faint">미입력</span>}
+                  <span className="faint"> · {rows.length}개</span>
+                </th>
+              </tr>
+              {rows.map((sample) => (
+                <SampleRow key={sample.id} sample={sample} />
+              ))}
+            </tbody>
+          ))}
+        </table>
+      </div>
+    )
+  }
+
   return (
     <div className="table-wrap" style={{ maxHeight: 'none' }}>
       <table>
-        <thead>
-          <tr>
-            <th>셀</th>
-            <th style={{ textAlign: 'left' }}>그룹</th>
-            <th>날짜</th>
-            <th style={{ textAlign: 'left' }}>양극재</th>
-            <th style={{ textAlign: 'left' }}>공정</th>
-            <th style={{ textAlign: 'left' }}>조성</th>
-            <th>활물질 (mg)</th>
-            <th>면적 (cm²)</th>
-            <th>로딩 (mg/cm²)</th>
-            {/* 형성과 본 사이클은 다른 실험 조건이다.  한 칸에 하나만 보이면
-                "0.1C 로 돌린 셀" 이 형성 0.1C 인지 본 사이클 0.1C 인지 알 수
-                없고, 둘은 전혀 다른 시험이다. */}
-            <th>C-rate (형성/본)</th>
-            <th>온도</th>
-            <th>파일</th>
-            <th>사이클</th>
-          </tr>
-        </thead>
+        <SampleHead />
         <tbody>
-          {samples.map((sample) => {
-            const cell = sample.resolved_cell
-            return (
-              <tr key={sample.id}>
-                <td className="text">
-                  <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
-                </td>
-                <td className="text dim">{sample.group_name ?? '—'}</td>
-                <td>{sample.test_date ?? '—'}</td>
-                <td className="text dim">
-                  {sample.cathode_detail || sample.cathode_type || '—'}
-                </td>
-                <td className="text dim">{sample.process || '—'}</td>
-                <td className="text dim tiny">
-                  {cell.composition_compact_label || '—'}
-                </td>
-                <td>{cell.active_mass_g ? num(cell.active_mass_g * 1000) : '—'}</td>
-                <td>{num(cell.area_cm2)}</td>
-                <td>{num(cell.loading_mg_cm2, 3)}</td>
-                <td className="nowrap">
-                  {sample.c_rate || sample.c_rate_formation ? (
-                    <>
-                      <span className={sample.c_rate_formation ? '' : 'faint'}>
-                        {sample.c_rate_formation ? `${sample.c_rate_formation}C` : '—'}
-                      </span>
-                      <span className="faint"> / </span>
-                      <span className={sample.c_rate ? '' : 'faint'}>
-                        {sample.c_rate ? `${sample.c_rate}C` : '—'}
-                      </span>
-                    </>
-                  ) : (
-                    '—'
-                  )}
-                </td>
-                <td>{sample.temperature_c !== null ? `${sample.temperature_c}°C` : '—'}</td>
-                <td>{sample.run_count}</td>
-                <td>{sample.cycle_count}</td>
-              </tr>
-            )
-          })}
+          {samples.map((sample) => (
+            <SampleRow key={sample.id} sample={sample} />
+          ))}
         </tbody>
       </table>
     </div>
+  )
+}
+
+/** 표의 머리.  묶은 표와 안 묶은 표가 같은 열을 쓰도록 한 곳에만 적는다 —
+ *  둘로 갈라 두면 열을 하나 추가할 때 한쪽만 고치게 되고, 그러면 묶기를 켰을
+ *  때만 헤더와 데이터가 한 칸씩 밀린다. */
+function SampleHead() {
+  return (
+    <thead>
+      <tr>
+        <th>셀</th>
+        <th style={{ textAlign: 'left' }}>그룹</th>
+        <th>날짜</th>
+        <th style={{ textAlign: 'left' }}>양극재</th>
+        <th style={{ textAlign: 'left' }}>공정</th>
+        <th style={{ textAlign: 'left' }}>조성</th>
+        <th>활물질 (mg)</th>
+        <th>면적 (cm²)</th>
+        <th>로딩 (mg/cm²)</th>
+        {/* 형성과 본 사이클은 다른 실험 조건이다.  한 칸에 하나만 보이면
+            "0.1C 로 돌린 셀" 이 형성 0.1C 인지 본 사이클 0.1C 인지 알 수 없고,
+            둘은 전혀 다른 시험이다. */}
+        <th>C-rate (형성/본)</th>
+        <th>온도</th>
+        <th>파일</th>
+        <th>사이클</th>
+      </tr>
+    </thead>
+  )
+}
+
+/** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
+const COLUMN_COUNT = 13
+
+function SampleRow({ sample }: { sample: Sample }) {
+  const cell = sample.resolved_cell
+  return (
+    <tr>
+      <td className="text">
+        <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
+      </td>
+      <td className="text dim">{sample.group_name ?? '—'}</td>
+      <td>{sample.test_date ?? '—'}</td>
+      <td className="text dim">{sample.cathode_detail || sample.cathode_type || '—'}</td>
+      <td className="text dim">{sample.process || '—'}</td>
+      <td className="text dim tiny">{cell.composition_compact_label || '—'}</td>
+      <td>{cell.active_mass_g ? num(cell.active_mass_g * 1000) : '—'}</td>
+      <td>{num(cell.area_cm2)}</td>
+      <td>{num(cell.loading_mg_cm2, 3)}</td>
+      <td className="nowrap">
+        {sample.c_rate || sample.c_rate_formation ? (
+          <>
+            <span className={sample.c_rate_formation ? '' : 'faint'}>
+              {sample.c_rate_formation ? `${sample.c_rate_formation}C` : '—'}
+            </span>
+            <span className="faint"> / </span>
+            <span className={sample.c_rate ? '' : 'faint'}>
+              {sample.c_rate ? `${sample.c_rate}C` : '—'}
+            </span>
+          </>
+        ) : (
+          '—'
+        )}
+      </td>
+      <td>{sample.temperature_c !== null ? `${sample.temperature_c}°C` : '—'}</td>
+      <td>{sample.run_count}</td>
+      <td>{sample.cycle_count}</td>
+    </tr>
   )
 }
 

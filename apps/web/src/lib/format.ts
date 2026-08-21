@@ -111,6 +111,40 @@ export function massFromName(name: string | null | undefined): number | null {
   return found
 }
 
+/** The part of a cell name shared by its replicates.
+ *
+ * This lab names cells for what the experiment was, then adds which replicate
+ * and how much it weighed: `4.6V_1_17.5mg`, `4.6V_2_18.1mg`.  Those two are
+ * the same condition run twice, and grouping them is the question people
+ * actually ask of the library — without having to create an experiment group
+ * for every condition first.
+ *
+ * So trailing tokens that identify the *individual cell* come off, and
+ * everything that identifies the *condition* stays:
+ *
+ *     4.6V_1_17.5mg            -> 4.6V
+ *     4.0V_post_formation_18.9mg -> 4.0V_post_formation
+ *     No_1_dry_011             -> No_1_dry
+ *
+ * Only trailing tokens are stripped.  `No_1_dry` keeps its `_1` because the
+ * `dry` after it says the number is part of the name, not a replicate index —
+ * and a rule that reached into the middle would merge `No_1_dry` with
+ * `No_2_wet`.
+ *
+ * A name that strips away to nothing keeps its full self.  Returning "" would
+ * put every all-numeric name in one nameless heap.
+ */
+export function nameFamily(name: string | null | undefined): string {
+  if (!name) return ''
+  let stem = name.trim()
+  // `17.5mg` is the mass, `011` is the file sequence or the replicate index.
+  const droppable = /[\s_-]+(?:\d+(?:\.\d+)?\s*mg|\d+)$/i
+  while (droppable.test(stem)) {
+    stem = stem.replace(droppable, '')
+  }
+  return stem || name.trim()
+}
+
 /** Qualitative palette, ordered so adjacent series stay distinguishable and
  *  no pair collides under the common forms of colour blindness. */
 export const SERIES_COLORS = [

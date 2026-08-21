@@ -1,14 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  basisAxis,
-  basisUnit,
-  massFromName,
-  num,
-  parseCycleSpec,
-  pct,
-  spread,
-} from '../format'
+import { basisAxis, basisUnit, massFromName, nameFamily, num, parseCycleSpec, pct, spread } from '../format'
 
 describe('num', () => {
   it('keeps significant figures rather than decimal places', () => {
@@ -120,5 +112,40 @@ describe('massFromName', () => {
 
   it('0 mg 은 질량이 아니다', () => {
     expect(massFromName('blank_0mg')).toBeNull()
+  })
+})
+
+describe('nameFamily', () => {
+  it('반복 실험을 하나로 묶는다 — 개체를 가리키는 꼬리만 뗀다', () => {
+    expect(nameFamily('4.6V_1_17.5mg')).toBe('4.6V')
+    expect(nameFamily('4.6V_2_18.1mg')).toBe('4.6V')
+  })
+
+  it('조건을 가리키는 말은 남긴다', () => {
+    expect(nameFamily('4.0V_post_formation_18.9mg')).toBe('4.0V_post_formation')
+  })
+
+  it('파일 순번도 꼬리다', () => {
+    expect(nameFamily('No_1_dry_011')).toBe('No_1_dry')
+  })
+
+  it('가운데 숫자는 건드리지 않는다 — No_1_dry 와 No_2_wet 은 다른 셀이다', () => {
+    expect(nameFamily('No_1_dry')).toBe('No_1_dry')
+    expect(nameFamily('No_2_wet')).toBe('No_2_wet')
+  })
+
+  it('전압처럼 숫자가 붙은 토큰은 숫자가 아니다', () => {
+    expect(nameFamily('3.6V')).toBe('3.6V')
+    expect(nameFamily('1000cyc_60oC_012')).toBe('1000cyc_60oC')
+  })
+
+  it('다 떼면 원래 이름을 돌려준다 — 이름 없는 더미가 생기면 안 된다', () => {
+    expect(nameFamily('12345')).toBe('12345')
+    expect(nameFamily('3_2_1')).toBe('3')
+  })
+
+  it('빈 이름은 빈 문자열', () => {
+    expect(nameFamily('')).toBe('')
+    expect(nameFamily(null)).toBe('')
   })
 })
