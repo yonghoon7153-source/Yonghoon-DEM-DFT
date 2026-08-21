@@ -62,6 +62,20 @@ check "10.x 는 남긴다"                  "$(lan_addresses '10.0.1.5')"      "
 check "하나도 없으면 빈 값"             "$(lan_addresses '127.0.0.1 169.254.1.2')" ""
 
 echo
+echo "실제로 열려 있는 곳"
+# `.bml/env` 를 나중에 넣고 서버를 안 내리면 설정과 실제가 어긋난다.
+SS_ALL="LISTEN 0 2048 0.0.0.0:$PORT 0.0.0.0:*"
+SS_LOCAL="LISTEN 0 2048 127.0.0.1:$PORT 0.0.0.0:*"
+check "0.0.0.0 이면 전체"        "$(listening_scope "$SS_ALL")"                  "all"
+check "127.0.0.1 이면 이 기계뿐" "$(listening_scope "$SS_LOCAL")"                "local"
+check "[::] 도 전체다"           "$(listening_scope "LISTEN 0 128 [::]:$PORT")"  "all"
+check "*:포트 도 전체다"         "$(listening_scope "LISTEN 0 128 *:$PORT")"     "all"
+# ss 가 없거나 서버가 안 떠 있으면 모른다고 해야 한다 — 모르는 것을 '이 기계뿐'
+# 으로 읽으면 멀쩡한 설정에 경고가 붙는다.
+check "안 떠 있으면 모른다"      "$(listening_scope "")"                         "unknown"
+check "다른 포트에 속지 않는다"  "$(listening_scope "LISTEN 0 128 0.0.0.0:22")"  "unknown"
+
+echo
 echo ".bml/env 고쳐 쓰기"
 printf 'WORKBENCH_DATA=/mnt/d/bml-data\nWORKBENCH_HOST=0.0.0.0\n' > "$RUN_DIR/env"
 write_env_key WORKBENCH_SERVER "http://10.0.0.9:5003"

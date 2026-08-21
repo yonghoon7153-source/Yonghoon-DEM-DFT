@@ -1076,6 +1076,21 @@ cmd_backup() {
   ok "백업 완료."
 }
 
+#: 지금 떠 있는 서버가 실제로 어디에 열려 있는가.  `ss -ltn` 의 출력을 받는다.
+#:
+#: `.bml/env` 만 읽고 "공개" 라고 찍으면 안 된다.  설정을 나중에 넣고 서버를
+#: 안 내렸으면 status 는 접속 가능하다고 하는데 다른 기계는 계속 못 붙는다 —
+#: 그러면 멀쩡한 방화벽만 몇 번씩 다시 확인하게 된다.
+listening_scope() {
+  local text="$1"
+  case "$text" in
+    "") printf 'unknown' ;;
+    *"0.0.0.0:$PORT"*|*"*:$PORT"*|*"[::]:$PORT"*) printf 'all' ;;
+    *":$PORT"*) printf 'local' ;;
+    *) printf 'unknown' ;;
+  esac
+}
+
 #: 다른 기계가 칠 수 있는 주소만 남긴다.
 #:
 #: `hostname -I` 는 있는 것을 다 뱉는다 — 루프백, 주소를 못 받았을 때 붙는
@@ -1259,7 +1274,11 @@ cmd_status() {
   else
     warn "데이터      ${DATA_DIR} — 폴더가 없습니다 (드라이브가 빠졌나요?)"
   fi
-  if [ "$HOST" = "0.0.0.0" ]; then
+  local scope; scope="$(listening_scope "$(ss -ltn 2>/dev/null)")"
+  if [ "$scope" = "local" ] && [ "$HOST" = "0.0.0.0" ]; then
+    warn "공개        설정은 0.0.0.0 인데, 떠 있는 서버는 이 기계 안에서만 열려 있습니다."
+    say "  ${GREEN}bml restart${OFF} ${DIM}— 설정을 넣기 전에 띄운 서버입니다.${OFF}"
+  elif [ "$HOST" = "0.0.0.0" ] || [ "$scope" = "all" ]; then
     say "공개        네트워크의 다른 기계에서 접속 가능"
     # 다른 사람에게 불러 줄 주소.  이것을 안 적어 두면 hostname -I 의 첫 줄을
     # 그대로 쓰게 되는데, 그것이 맞을 이유가 없다.
