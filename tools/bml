@@ -1076,6 +1076,25 @@ cmd_backup() {
   ok "백업 완료."
 }
 
+#: 다른 기계가 칠 수 있는 주소만 남긴다.
+#:
+#: `hostname -I` 는 있는 것을 다 뱉는다 — 루프백, 주소를 못 받았을 때 붙는
+#: 169.254.x, 도커 브리지, VirtualBox 호스트 전용 어댑터, WSL NAT.  그중
+#: 어느 것을 골라도 다른 기계에서는 똑같이 "연결할 수 없음" 이라, 목록만
+#: 보고는 어느 것이 맞는지 알 수가 없다.  실제로 첫 줄(169.254.x)을 골라
+#: 한참 헤맸다.
+lan_addresses() {
+  local addr
+  for addr in $1; do
+    case "$addr" in
+      192.168.56.*) ;;                  # VirtualBox 호스트 전용 — 그 PC 안에서만
+      10.*|192.168.*) printf '%s\n' "$addr" ;;
+      # 나머지는 버린다.  127.x 는 루프백, 169.254.x 는 주소를 못 받았다는
+      # 뜻이고, 172.16–31.x 는 도커 브리지이거나 WSL NAT 안쪽이다.
+    esac
+  done
+}
+
 #: 그 주소에 우리 워크벤치가 살아 있는가.  server_state 와 달리 임의의 주소를
 #: 받는다 — 아직 저장하지 않은 후보를 확인해야 하기 때문이다.
 server_alive() {
@@ -1105,18 +1124,16 @@ write_env_key() {
 server_unreachable_help() {
   local url="$1"
   say ""
-  say "  ${B}중추 서버에서 확인할 것${OFF}"
-  say "    1. 떠 있는가            ${GREEN}bml status${OFF} ${DIM}— '실행 중' 이어야 합니다${OFF}"
-  say "    2. 네트워크에 열었는가   ${DIM}.bml/env 에${OFF} ${GREEN}WORKBENCH_HOST=0.0.0.0${OFF}"
-  say "    3. Windows 가 WSL 로 넘기는가 ${DIM}(관리자 PowerShell, 그 PC 에서)${OFF}"
-  say "       ${GREEN}wsl hostname -I${OFF}  ${DIM}→ 172.x 로 시작하는 것을 고릅니다${OFF}"
-  say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=<그 172.x>${OFF}"
+  say "  ${B}중추 서버 쪽에서 순서대로${OFF}"
+  say "    1. 떠 있는가          ${GREEN}bml status${OFF} ${DIM}— '실행 중' 이어야 합니다${OFF}"
+  say "    2. 주소가 맞는가       ${DIM}같은 화면의${OFF} ${GREEN}접속 주소${OFF} ${DIM}줄을 그대로 씁니다${OFF}"
+  say "    3. 네트워크에 열었는가  ${DIM}.bml/env 에${OFF} ${GREEN}WORKBENCH_HOST=0.0.0.0${OFF}"
+  say "    4. 방화벽              ${DIM}그 PC 의${OFF} ${B}관리자${OFF} ${DIM}PowerShell (Win+X → 터미널(관리자))${OFF}"
   say "       ${GREEN}New-NetFirewallRule -DisplayName \"BML ${PORT}\" -Direction Inbound -LocalPort ${PORT} -Protocol TCP -Action Allow${OFF}"
-  say "    4. 여기 적을 주소        ${DIM}그 PC 의 Windows LAN 주소입니다${OFF}"
-  say "       ${GREEN}ipconfig${OFF} ${DIM}의 IPv4 — 169.254.x 는 주소를 못 받은 것이라 안 됩니다${OFF}"
   say ""
-  say "  ${DIM}두 기계가 다른 망에 있으면 LAN 주소로는 못 닿습니다 — Tailscale 로 묶고${OFF}"
-  say "  ${DIM}100.x 주소를 씁니다. docs/guides/central-server.md 의 '밖에서 접속하기'.${OFF}"
+  say "  ${DIM}여기까지 해도 안 되면 그 WSL 이 NAT 모드라 Windows 가 포트를 넘겨 줘야${OFF}"
+  say "  ${DIM}합니다. 두 기계가 다른 망에 있으면 LAN 주소로는 애초에 못 닿습니다 —${OFF}"
+  say "  ${DIM}둘 다 docs/guides/central-server.md 의 '주소' 절에 있습니다.${OFF}"
   say ""
   say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
   say "  ${DIM}(현재 설정: ${url})${OFF}"
@@ -1242,7 +1259,25 @@ cmd_status() {
   else
     warn "데이터      ${DATA_DIR} — 폴더가 없습니다 (드라이브가 빠졌나요?)"
   fi
-  [ "$HOST" = "0.0.0.0" ] && say "공개        네트워크의 다른 기계에서 접속 가능"
+  if [ "$HOST" = "0.0.0.0" ]; then
+    say "공개        네트워크의 다른 기계에서 접속 가능"
+    # 다른 사람에게 불러 줄 주소.  이것을 안 적어 두면 hostname -I 의 첫 줄을
+    # 그대로 쓰게 되는데, 그것이 맞을 이유가 없다.
+    local addrs first rest
+    addrs="$(lan_addresses "$(hostname -I 2>/dev/null)")"
+    if [ -n "$addrs" ]; then
+      first="$(printf '%s\n' "$addrs" | head -1)"
+      say "접속 주소   ${B}http://${first}:${PORT}${OFF}   ${DIM}(다른 기계에서: bml use ${first})${OFF}"
+      rest="$(printf '%s\n' "$addrs" | tail -n +2)"
+      [ -n "$rest" ] && printf '%s\n' "$rest" | while read -r a; do
+        say "            ${DIM}http://${a}:${PORT}  — 위 주소가 안 되면 이것${OFF}"
+      done
+    else
+      warn "접속 주소   찾지 못했습니다."
+      say "  ${DIM}WSL 이 NAT 뒤라면 Windows 쪽 포트 포워딩이 필요합니다 —${OFF}"
+      say "  ${DIM}docs/guides/central-server.md 의 '주소' 절.${OFF}"
+    fi
+  fi
   say "미커밋      ${dirty}개"
   say "업스트림    ahead ${ahead} / behind ${behind}"
   [ "$behind" != "0" ] && [ "$behind" != "?" ] && warn "'bml pull' 로 먼저 맞추세요."

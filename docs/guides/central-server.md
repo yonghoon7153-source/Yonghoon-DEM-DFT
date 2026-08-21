@@ -50,33 +50,57 @@ bml
 > 데이터가 날아간 것처럼 보이고, 그 상태로 올린 파일은 나중에 드라이브를 꽂으면
 > 보이지 않는 곳에 남는다.
 
-## 주소 — WSL 안에서 본 주소가 아니다
+## 주소 — `bml status` 가 불러 준다
 
-WSL2 는 Windows 뒤의 NAT 안에 있다. 그래서 중추 서버 안에서 `hostname -I` 로
-나오는 주소(`172.x`, 때로는 주소를 못 받았다는 뜻의 `169.254.x`)는 **그 PC
-안에서만** 통한다. 다른 기계가 칠 주소는 그 PC 의 **Windows 쪽 LAN 주소**이고,
-Windows 가 그 포트를 WSL 로 넘겨 주어야 한다.
+`hostname -I` 를 직접 읽지 않는다. 그것은 있는 것을 다 뱉는데, 그중 다른
+기계에서 통하는 것은 대개 하나뿐이고 맨 앞에 오지도 않는다. 실제로 맨 앞이
+`169.254.83.107` (= 주소를 못 받았다는 뜻)이라 한참 헤맸다.
 
-중추 서버 PC 에서 **관리자 PowerShell** 로 한 번:
+중추 서버에서:
 
-```powershell
-# 1. WSL 쪽 주소 — 172. 로 시작하는 것을 고른다
-wsl hostname -I
-
-# 2. Windows 로 들어온 5003 을 WSL 로 넘긴다
-netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
-  connectport=5003 connectaddress=<위에서 고른 172.x>
-
-# 3. 방화벽을 연다
-New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
-  -Protocol TCP -Action Allow
-
-# 4. 다른 사람에게 알려 줄 주소
-ipconfig | Select-String IPv4
+```bash
+bml status
 ```
 
-WSL 을 재시작하면 `172.x` 가 바뀌므로 2번은 다시 해야 한다
-(`netsh interface portproxy reset` 후 다시 add).
+```
+공개        네트워크의 다른 기계에서 접속 가능
+접속 주소   http://192.168.0.40:5003   (다른 기계에서: bml use 192.168.0.40)
+```
+
+이 줄이 안 나오면 `.bml/env` 에 `WORKBENCH_HOST=0.0.0.0` 이 없는 것이다.
+주소를 못 찾았다고 나오면 아래 "NAT 모드일 때" 로 간다.
+
+### 그래도 안 열리면 — 방화벽
+
+Windows 가 들어오는 5003 을 막는다. 그 PC 에서 **관리자** PowerShell
+(Win+X → *터미널(관리자)*) 로 한 번:
+
+```powershell
+New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
+  -Protocol TCP -Action Allow
+```
+
+`액세스가 거부되었습니다` 가 나오면 관리자 창이 아니다.
+
+### NAT 모드일 때
+
+WSL2 에는 네트워크 방식이 둘 있다. **mirrored** 면 WSL 이 Windows 의 주소를
+그대로 쓰므로 위의 것으로 끝이다. **NAT** (기본값) 면 WSL 이 `172.x` 사설망
+안에 있어서, Windows 로 들어온 포트를 WSL 로 넘겨 주어야 한다:
+
+```powershell
+wsl hostname -I        # 172. 로 시작하는 것을 고른다 (실제 값으로 바꿔 넣는다)
+
+netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
+  connectport=5003 connectaddress=172.28.144.1
+```
+
+`connectaddress=` 뒤에 `<...>` 같은 자리표시자를 그대로 두면 `구문이 올바르지
+않습니다` 가 난다. WSL 을 재시작하면 `172.x` 가 바뀌므로 다시 해야 한다
+(`netsh interface portproxy reset` 후 add).
+
+mirrored 모드에서는 이 portproxy 를 **넣지 않는다** — 넣으면 오히려 꼬인다.
+어느 쪽인지는 `%USERPROFILE%\.wslconfig` 의 `networkingMode` 로 정해진다.
 
 ## 다른 사람들 (설치할 것 없음)
 

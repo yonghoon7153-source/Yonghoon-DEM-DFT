@@ -48,6 +48,20 @@ check "경로가 있으면 포트를 넣지 않는다" "$(normalize_server_url l
 check "빈 값은 빈 값이다"                "$(normalize_server_url '')"                   ""
 
 echo
+echo "다른 기계가 칠 수 있는 주소 고르기"
+# 실제로 겪은 목록.  169.254.x 가 맨 앞이라 `hostname -I | awk '{print $1}'`
+# 이 그것을 골랐고, 노트북에서는 끝내 안 열렸다.
+check "169.254.x 를 고르지 않는다" \
+  "$(lan_addresses '169.254.83.107 192.168.0.40 192.168.56.1' | tr '\n' ' ')" "192.168.0.40 "
+check "VirtualBox 호스트 전용을 버린다" "$(lan_addresses '192.168.56.1')" ""
+check "루프백을 버린다"                 "$(lan_addresses '127.0.0.1')"     ""
+# 도커 브리지와 WSL NAT 이 같은 대역이다.  둘 다 그 PC 안에서만 통한다.
+check "172.17.x 를 버린다"              "$(lan_addresses '172.17.0.1')"    ""
+check "172.28.x 를 버린다"              "$(lan_addresses '172.28.144.1')"  ""
+check "10.x 는 남긴다"                  "$(lan_addresses '10.0.1.5')"      "10.0.1.5"
+check "하나도 없으면 빈 값"             "$(lan_addresses '127.0.0.1 169.254.1.2')" ""
+
+echo
 echo ".bml/env 고쳐 쓰기"
 printf 'WORKBENCH_DATA=/mnt/d/bml-data\nWORKBENCH_HOST=0.0.0.0\n' > "$RUN_DIR/env"
 write_env_key WORKBENCH_SERVER "http://10.0.0.9:5003"
