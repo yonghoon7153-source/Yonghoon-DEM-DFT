@@ -146,8 +146,12 @@ for S in comp1 modelc; do
         #   ⇒ 옳은 기준은 **이번 실행이 시작한 시각**이다. 러너는 계마다 실행 직전에
         #     .in 을 새로 만드니, 모든 .in 중 **가장 새로운 것**이 이번 실행의 진행선이다.
         #     그보다 오래된 .out 은 무조건 지난 판이다.
-        RUNSTART=$(ls -t "$OUT"/*/scf.in "$OUT"/*/nscf_gap.in 2>/dev/null | head -1)
-        if [ -n "$RUNSTART" ] && [ "$RUNSTART" -nt "$F" ]; then
+        # ⚠ 2026-08-21 실측 — 첫 판이 "모든 .in 중 가장 새로운 것" 을 진행선으로 썼는데,
+        #   comp1 이 nscf 로 넘어가 nscf_gap.in 이 쓰이자 **끝난 scf.out 까지 '지난 판'** 이 됐다.
+        #   ("comp1 scf 완료 E=-1022.9 Ry" 가 로그에 있는데 화면은 '아직 시작 안 함')
+        #   ⇒ 진행선은 **그 단계 자신의 .in** 이어야 한다. 다른 단계의 .in 은 무관하다.
+        IN=$D/$STAGE.in
+        if [ -f "$IN" ] && [ "$IN" -nt "$F" ]; then
             echo "   $STAGE: ⏸ 이번 실행에서 아직 시작 안 함 (남은 .out 은 **지난 판**이라 안 읽는다)"
             continue
         fi
@@ -180,8 +184,28 @@ for S in comp1 modelc; do
             continue
         fi
 
-        NIT=$(grep -ac 'iteration #' "$F")
         CPUT=$(grep -a 'total cpu time' "$F" | tail -1 | awk '{print $(NF-1)}')
+        # ⛔ nscf 는 SCF 반복이 아니라 **밴드 대각화**다 — 'iteration #' 이 영원히 0 이다.
+        #   첫 판은 그걸 "초기화 중" 으로 찍다가 15분 뒤 "초기화가 너무 길다" 고 오경보할
+        #   상태였다 (실측: 3.4시간째 도는데 화면은 '반복 전, 6분 경과').
+        #   nscf 진행은 계산된 k-point 수로 본다.
+        if [ "$STAGE" = "nscf_gap" ]; then
+            KD=$(grep -ac 'Computing kpt #' "$F")
+            [ "$KD" = "0" ] && KD=$(grep -ac 'ethr =' "$F")
+            printf "   %s: 밴드 대각화 진행 — k-point %s/%s" "$STAGE" "$KD" "${NK:-?}"
+            [ -n "$CPUT" ] && awk -v t="$CPUT" 'BEGIN{printf "  · cpu %.1f h", t/3600}'
+            echo
+            if [ -n "$NK" ] && [ "${KD:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
+                awk -v k="$KD" -v n="$NK" -v t="$CPUT" 'BEGIN{
+                    if (k>0 && n>k) printf "        %.0f s/kpt · 남은 %d개 ≈ %.1f h\n", t/k, n-k, (n-k)*(t/k)/3600
+                }'
+            fi
+            printf "        로그 갱신 %s분 전" "$AGE"
+            [ "$AGE" -gt 60 ] && printf "  ⚠ 60분 무갱신"
+            echo
+            continue
+        fi
+        NIT=$(grep -ac 'iteration #' "$F")
         if [ "$NIT" -eq 0 ]; then
             # ⚠ 초기화 구간을 "진행 없음" 으로 부르지 않는다 — 52원자 USPP 는 준비만 몇 분 간다.
             if [ "$AGE" -gt "$INIT_GRACE_MIN" ]; then
