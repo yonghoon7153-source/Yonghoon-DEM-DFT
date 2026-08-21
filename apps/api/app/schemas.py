@@ -422,6 +422,47 @@ class ProfileOut(BaseModel):
     mixed_basis: bool = False
 
 
+class DqdvSeriesOut(BaseModel):
+    """One branch's dQ/dV, and what it was computed with.
+
+    ``voltage_step`` and ``smoothing`` ride along because they change the
+    curve: smoothing lowers and widens a peak, so peak *heights* only compare
+    between curves built the same way (ADR 0013).
+
+    A curve that could not be computed still comes back -- empty, with
+    ``reason``.  Dropping it would leave a cycle missing from the plot with
+    nothing on screen to say why.
+    """
+
+    cycle: int
+    branch: str
+    basis: str
+    points: int
+    voltage: list[float]
+    #: mAh/V, or (mAh/g)/V etc. once normalised.  Negative on discharge, which
+    #: is the answer and not a bug: capacity rises while voltage falls.
+    dqdv: list[float]
+    run_id: int
+    label: str
+    voltage_step: float
+    smoothing: int
+    #: Samples excluded by the monotonic filter -- the CV hold and any
+    #: noise-driven backtracking.
+    points_dropped: int = 0
+    reason: str = ""
+
+
+class DqdvOut(BaseModel):
+    basis: str
+    basis_label: str
+    requested_basis: str
+    resolved_cell: ResolvedCellOut
+    series: list[DqdvSeriesOut]
+    voltage_step: float
+    smoothing: int
+    mixed_basis: bool = False
+
+
 class ReportOut(BaseModel):
     sample_id: int
     sample_name: str

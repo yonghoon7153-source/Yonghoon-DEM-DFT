@@ -20,11 +20,14 @@ from wrdkit import (
     Basis,
     WrdFile,
     cycles_csv_string,
+    differential_capacity,
+    dqdv_csv_string,
     extract_profile,
     profiles_csv_string,
     raw_csv_string,
     write_xlsx,
 )
+from wrdkit.ica import DEFAULT_SMOOTHING, DEFAULT_VOLTAGE_STEP  # noqa: E402
 
 from .. import storage
 from ..db import get_session
@@ -138,6 +141,43 @@ def export_sample_profiles(
         raise HTTPException(404, "no complete cycle matched the selection")
     text = profiles_csv_string(profiles, cell, basis=basis)
     return _csv_response(text, f"{_safe(sample.name)}_profiles.csv")
+
+
+@router.get("/samples/{sample_id}/dqdv.csv")
+def export_sample_dqdv(
+    sample_id: int,
+    session: Session = Depends(get_session),
+    cycles: str = Query("all"),
+    branches: str = Query("charge,discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+):
+    """dQ/dV column pairs per cycle, laid out like the profile CSV.
+
+    Written from the full-resolution curve, not the thinned one the plot
+    draws.  A CSV is what somebody re-plots or fits against, and a peak
+    position taken from a curve reduced for a 900-pixel canvas is accurate to
+    the pixel rather than to the grid.
+    """
+    validate_basis(basis)
+    sample = get_sample(session, sample_id)
+    cell = resolve_cell(sample)
+    profiles = _collect_profiles(session, sample, cycles, branches)
+    if not profiles:
+        raise HTTPException(404, "no complete cycle matched the selection")
+
+    curves = [differential_capacity(p, voltage_step=voltage_step,
+                                    smoothing=smoothing) for p in profiles]
+    if not any(c.usable for c in curves):
+        # 하나도 못 만들었으면 빈 파일 대신 이유를 준다.  빈 CSV 를 열어 본
+        # 사람은 자기가 사이클을 잘못 골랐다고 생각하지, 전압이 안 움직였다고
+        # 생각하지 않는다.
+        why = next((c.reason for c in curves if c.reason), "no usable branch")
+        raise HTTPException(422, f"dQ/dV could not be computed: {why}")
+
+    text = dqdv_csv_string(curves, cell, basis=basis)
+    return _csv_response(text, f"{_safe(sample.name)}_dqdv.csv")
 
 
 @router.get("/samples/{sample_id}/workbook.xlsx")

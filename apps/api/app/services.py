@@ -29,6 +29,7 @@ from wrdkit import (
 )
 from wrdkit.cycles import Profile, extract_profile
 from wrdkit.health import CellReport, build_report
+from wrdkit.ica import DifferentialCapacity, differential_capacity
 from wrdkit.knee import KneeAnalysis
 
 from . import storage
@@ -501,6 +502,50 @@ def profile_series(run: Run, record: CycleRecord, branch: str,
     profile = extract_profile(wrd, summary, branch)
     return _profile_payload(profile, cell, basis,
                             max_points or settings.default_plot_points)
+
+
+def dqdv_series(run: Run, record: CycleRecord, branch: str,
+                cell: ResolvedCell, basis: str, *,
+                voltage_step: float, smoothing: int,
+                max_points: int | None = None) -> dict:
+    """One branch's dQ/dV, ready for the plot."""
+    columns = load_wrd_columns(run)
+    wrd = WrdFile(_metadata_stub(run), columns)
+    summary = records_to_summaries([record])[0]
+    summary.steps = _rebuild_steps(wrd, record)
+    profile = extract_profile(wrd, summary, branch)
+    curve = differential_capacity(profile, voltage_step=voltage_step,
+                                  smoothing=smoothing)
+    return _dqdv_payload(curve, cell, basis,
+                         max_points or settings.default_plot_points)
+
+
+def _dqdv_payload(curve: DifferentialCapacity, cell: ResolvedCell, basis: str,
+                  max_points: int) -> dict:
+    used = effective_basis(cell, basis)
+    values = curve.dq_dv
+    if used != Basis.ABSOLUTE:
+        # mAh/V 를 그램으로 나누면 (mAh/g)/V.  같은 나눗수, 슬래시 하나 더.
+        values = normalize_capacity(values, cell, used)
+    voltage = curve.voltage
+    if len(values) > max_points:
+        # x 를 먼저 준다 — lttb 는 첫 배열을 x 로 보고 모양을 지킨다.  여기서
+        # 지켜야 하는 모양은 봉우리이고, 봉우리는 y 에 있다.
+        voltage, values = lttb(voltage, values, max_points)
+    return {
+        "cycle": curve.cycle_number,
+        "branch": curve.branch,
+        "basis": used,
+        "points": len(values),
+        # dQ/dV 의 x 축도 전위다 — 프로파일과 같은 오프셋을 적용한다.  상수를
+        # 더하는 것이라 미분값 자체는 변하지 않는다 (d(V+c) = dV).
+        "voltage": [round(float(v) + cell.voltage_offset_v, 6) for v in voltage],
+        "dqdv": [round(float(v), 6) for v in values],
+        "voltage_step": curve.voltage_step,
+        "smoothing": curve.smoothing,
+        "points_dropped": curve.points_dropped,
+        "reason": curve.reason,
+    }
 
 
 def _profile_payload(profile: Profile, cell: ResolvedCell, basis: str,

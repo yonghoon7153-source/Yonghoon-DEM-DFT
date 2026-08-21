@@ -22,11 +22,6 @@ from .cycles import (
     summarize_cycles,
 )
 from .downsample import lttb, lttb_indices
-from .ica import (
-    DifferentialCapacity,
-    differential_capacities,
-    differential_capacity,
-)
 from .export import (
     cycles_csv_string,
     dqdv_csv_string,
@@ -37,6 +32,11 @@ from .export import (
     write_profiles_csv,
     write_raw_csv,
     write_xlsx,
+)
+from .ica import (
+    DifferentialCapacity,
+    differential_capacities,
+    differential_capacity,
 )
 from .normalize import (
     BASES,

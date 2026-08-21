@@ -12,14 +12,24 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
 from wrdkit import Basis, ResolvedCell, basis_label, c_rate
+from wrdkit.ica import DEFAULT_SMOOTHING, DEFAULT_VOLTAGE_STEP
 
 from ..db import get_session
 from ..deps import get_run, get_sample, resolved_cell_out, validate_basis
 from ..models import CycleRecord, Sample
-from ..schemas import CycleOut, CycleTableOut, ProfileOut, ProfileSeriesOut, ReportOut
+from ..schemas import (
+    CycleOut,
+    CycleTableOut,
+    DqdvOut,
+    DqdvSeriesOut,
+    ProfileOut,
+    ProfileSeriesOut,
+    ReportOut,
+)
 from ..services import (
     build_cell_report,
     cycle_records,
+    dqdv_series,
     effective_basis,
     knee_payload,
     normalized,
@@ -330,6 +340,72 @@ def sample_profile(
     return ProfileOut(basis=used, basis_label=basis_label(used),
                       requested_basis=basis,
                       resolved_cell=resolved_cell_out(cell), series=series)
+
+
+@router.get("/samples/{sample_id}/dqdv", response_model=DqdvOut)
+def sample_dqdv(
+    sample_id: int,
+    session: Session = Depends(get_session),
+    cycles: str = Query("1", description="cycle numbers, e.g. 1,3,10-20 or all"),
+    branches: str = Query("charge,discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    max_points: int | None = Query(None, ge=50, le=20000),
+    active_mass_mg: float | None = None,
+    area_cm2: float | None = None,
+    diameter_mm: float | None = None,
+    total_mass_mg: float | None = None,
+    active_wt_percent: float | None = None,
+    nominal_specific_capacity_mah_g: float | None = None,
+    thickness_um: float | None = None,
+):
+    """dQ/dV for the requested cycles -- the same cycles the profile takes.
+
+    Deliberately its own endpoint rather than a mode of ``/profile``: the two
+    have different axes (volts across, mAh/V up) and different point budgets,
+    and a client that had to guess which shape came back would guess wrong on
+    the first empty result.
+    """
+    validate_basis(basis)
+    sample = get_sample(session, sample_id)
+    cell = resolve_cell(sample, _overrides(
+        active_mass_mg, area_cm2, diameter_mm, total_mass_mg,
+        active_wt_percent, nominal_specific_capacity_mah_g, thickness_um))
+
+    wanted = _parse_cycles(cycles)
+    requested_branches = _parse_branches(branches)
+
+    records = [r for r in sample_cycle_records(session, sample) if r.complete]
+    if wanted is not None:
+        records = [r for r in records if r.cycle_number in wanted]
+    if len(records) > _PROFILE_CYCLE_LIMIT:
+        raise HTTPException(
+            422, f"{len(records)} cycles requested; ask for at most "
+                 f"{_PROFILE_CYCLE_LIMIT} at a time")
+
+    runs = {run.id: run for run in sample.runs}
+    limit = _points_per_curve(max_points, len(records) * len(requested_branches))
+    series: list[DqdvSeriesOut] = []
+    for record in records:
+        run = runs.get(record.run_id)
+        if run is None:
+            continue
+        for branch in requested_branches:
+            payload = dqdv_series(run, record, branch, cell, basis,
+                                  voltage_step=voltage_step, smoothing=smoothing,
+                                  max_points=limit)
+            # 계산이 안 된 곡선도 이유와 함께 돌려준다.  빼 버리면 화면에서 그
+            # 사이클이 왜 없는지 알 방법이 없다.
+            series.append(DqdvSeriesOut(
+                **payload, run_id=run.id,
+                label=f"{sample.name} · cycle {record.cycle_number} {branch}"))
+
+    used = effective_basis(cell, basis)
+    return DqdvOut(basis=used, basis_label=basis_label(used),
+                   requested_basis=basis,
+                   resolved_cell=resolved_cell_out(cell), series=series,
+                   voltage_step=voltage_step, smoothing=smoothing)
 
 
 @router.get("/samples/{sample_id}/report", response_model=ReportOut)

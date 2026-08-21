@@ -71,6 +71,24 @@ def finished_wrd_bytes() -> bytes:
 
 
 @pytest.fixture
+def cv_wrd_bytes() -> bytes:
+    """A file whose charge branch ends in a constant-voltage hold.
+
+    Every real schedule has one, and it is the shape dQ/dV has to exclude:
+    voltage flat while capacity keeps rising, so dV is zero and the quotient
+    is not a peak but a division by nothing (ADR 0013).  Without a fixture
+    that carries it, the drop path is only ever exercised by unit tests on
+    hand-built arrays -- never through the parse-store-serve pipeline that
+    actually runs.
+    """
+    start = synthetic.ticks_ago(12 * _CYCLE_SECONDS)
+    return synthetic.build_wrd(
+        synthetic.make_cycles(n_cycles=6, points_per_branch=60,
+                              cv_points=25, start_ticks=start),
+        start_ticks=start)
+
+
+@pytest.fixture
 def scheduled_wrd_bytes() -> bytes:
     """A file that carries its schedule, like every real one does.
 
