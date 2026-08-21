@@ -74,6 +74,12 @@ export function SampleDetail() {
   )
 
   const profileSeries: PlotSeries[] = useMemo(() => {
+    // Nothing selected means nothing drawn.  `useAsync` deliberately keeps the
+    // last response while a new one loads -- that is what stops the panel
+    // blanking on every keystroke -- but it also means a disabled request
+    // leaves the old curves on screen, so 초기화 cleared the selection and the
+    // plot went on showing eight cycles.
+    if (!selected.length) return []
     const series = profileState.data?.series ?? []
     const cycleOrder = [...new Set(series.map((s) => s.cycle))]
     return series.map((item) => {
@@ -87,7 +93,7 @@ export function SampleDetail() {
         hidden: hidden.includes(label),
       }
     })
-  }, [profileState.data, hidden])
+  }, [profileState.data, hidden, selected.length])
 
   // 축을 이 셀이 낸 가장 큰 용량에 고정한다.  안 그러면 사이클을 하나 넣고
   // 뺄 때마다 x 축이 늘었다 줄었다 해서, 같은 곡선이 매번 다른 폭으로 보인다.

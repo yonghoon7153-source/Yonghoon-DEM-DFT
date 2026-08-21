@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CyclePicker } from '../CyclePicker'
@@ -33,6 +34,25 @@ function cycle(n: number, discharge: number): Cycle {
 }
 
 const cycles = [cycle(1, 5.25), cycle(2, 4.92), cycle(3, 4.92), cycle(10, 4.89)]
+
+/** The picker as the page actually uses it: something else owns the selection.
+ *
+ * 사이클 표의 행을 누르거나 그 카드의 초기화를 누르면 선택이 밖에서 바뀐다.
+ * `value` 를 고정해 두고 테스트하면 그 경로가 통째로 안 보인다. */
+function Controlled({ start }: { start: number[] }) {
+  const [value, setValue] = useState(start)
+  return (
+    <>
+      <CyclePicker cycles={cycles} value={value} onChange={setValue} basis="mAh" />
+      <button type="button" onClick={() => setValue([])}>
+        표에서 초기화
+      </button>
+      <button type="button" onClick={() => setValue([2, 3])}>
+        표에서 행 선택
+      </button>
+    </>
+  )
+}
 
 describe('CyclePicker', () => {
   it('reads the focused cycle back with its capacity', () => {
@@ -80,6 +100,35 @@ describe('CyclePicker', () => {
     render(<CyclePicker cycles={cycles} value={[1, 3]} onChange={onChange} basis="mAh" />)
     await userEvent.click(screen.getByRole('button', { name: '초기화' }))
     expect(onChange).toHaveBeenCalledWith([])
+  })
+
+  it('밖에서 선택이 바뀌면 입력란이 따라간다', async () => {
+    // 표에서 행을 누르는 것과 위에서 타이핑하는 것이 같은 선택이어야 한다.
+    // 따로 놀면 그래프는 네 곡선인데 입력란은 열 번 전에 친 것을 보여 준다.
+    render(<Controlled start={[1]} />)
+    const input = screen.getByLabelText('사이클 선택')
+    expect(input).toHaveValue('1')
+    await userEvent.click(screen.getByRole('button', { name: '표에서 행 선택' }))
+    expect(input).toHaveValue('2,3')
+    await userEvent.click(screen.getByRole('button', { name: '표에서 초기화' }))
+    expect(input).toHaveValue('')
+  })
+
+  it('타이핑한 범위 표기를 되받아쓰지 않는다', async () => {
+    // "1-3" 을 치면 위로는 [1,2,3] 이 올라간다.  그걸 그대로 "1,2,3" 으로
+    // 되돌려 쓰면 다음 글자를 칠 자리가 사라진다.
+    render(<Controlled start={[1]} />)
+    const input = screen.getByLabelText('사이클 선택')
+    await userEvent.clear(input)
+    await userEvent.type(input, '1-3')
+    expect(input).toHaveValue('1-3')
+  })
+
+  it('입력란을 비우면 선택도 빈다', async () => {
+    const onChange = vi.fn()
+    render(<CyclePicker cycles={cycles} value={[1, 2]} onChange={onChange} basis="mAh" />)
+    await userEvent.clear(screen.getByLabelText('사이클 선택'))
+    expect(onChange).toHaveBeenLastCalledWith([])
   })
 
   it('전체 는 정말 전체다', async () => {

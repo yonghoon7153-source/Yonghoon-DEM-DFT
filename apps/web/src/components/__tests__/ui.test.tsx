@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
+import { PlotLegend } from '../Plot'
+
 import { CapacityMetric, Metric, StateBadge } from '../ui'
 
 describe('StateBadge', () => {
@@ -39,5 +41,31 @@ describe('CapacityMetric', () => {
   it('shows a dash instead of inventing a number', () => {
     render(<CapacityMetric label="방전용량" value={null} basis="mAh" />)
     expect(screen.getByText('—')).toBeInTheDocument()
+  })
+})
+
+describe('PlotLegend', () => {
+  const many = Array.from({ length: 30 }, (_, i) => ({
+    label: `${i + 1}번 방전`,
+    x: [0, 1],
+    y: [4, 3],
+  }))
+
+  it('곡선이 하나면 범례를 그리지 않는다', () => {
+    const { container } = render(<PlotLegend series={many.slice(0, 1)} />)
+    expect(container).toBeEmptyDOMElement()
+  })
+
+  it('넘치지 않으면 토글을 붙이지 않는다', () => {
+    // jsdom 은 레이아웃이 없어 `scrollHeight` 가 늘 0 이다 — 넘치지 않는
+    // 경우와 같으므로, 토글이 조건부라는 사실만 여기서 고정한다.
+    render(<PlotLegend series={many} />)
+    expect(screen.queryByRole('button', { name: /범례 전부 보기/ })).toBeNull()
+  })
+
+  it('모든 곡선을 칩으로 낸다 — 잘라내는 것은 높이지 개수가 아니다', () => {
+    render(<PlotLegend series={many} />)
+    expect(screen.getAllByRole('button')).toHaveLength(many.length)
+    expect(screen.getByRole('button', { name: '30번 방전' })).toBeInTheDocument()
   })
 })

@@ -1,6 +1,6 @@
 /** Choose which cycles to plot, and read the chosen cycle's numbers. */
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import { basisUnit, num, parseCycleSpec, pct, spread } from '../lib/format'
 import type { Basis, Cycle } from '../lib/types'
@@ -21,20 +21,41 @@ export function CyclePicker({
   basis: Basis
 }) {
   const available = cycles.map((c) => c.cycle)
-  const [spec, setSpec] = useState(value.join(','))
+  const [spec, setSpec] = useState(() => value.join(','))
   const [invalid, setInvalid] = useState(false)
+  // What this box last handed upward.  The selection also changes from
+  // elsewhere -- clicking a row in the cycle table, the table's own 초기화 --
+  // and without somewhere to compare against, the text and the plot drift
+  // apart: the graph shows four curves and the box still says what was typed
+  // ten clicks ago.
+  const emitted = useRef(value.join(','))
+  const incoming = value.join(',')
+
+  useEffect(() => {
+    if (incoming === emitted.current) return
+    emitted.current = incoming
+    setSpec(incoming)
+    setInvalid(false)
+  }, [incoming])
+
+  function send(picks: number[]) {
+    emitted.current = picks.join(',')
+    onChange(picks)
+  }
 
   function apply(text: string) {
     setSpec(text)
     const parsed = parseCycleSpec(text, available)
     setInvalid(text.trim() !== '' && parsed.length === 0)
-    if (parsed.length) onChange(parsed.slice(0, MAX_DRAWN_CYCLES))
+    // An emptied box means an empty selection, not "keep the last one".
+    if (text.trim() === '') send([])
+    else if (parsed.length) send(parsed.slice(0, MAX_DRAWN_CYCLES))
   }
 
   function preset(picks: number[]) {
     setInvalid(false)
     setSpec(picks.join(','))
-    onChange(picks)
+    send(picks)
   }
 
   /** Add or remove one cycle, leaving the rest of the selection alone.

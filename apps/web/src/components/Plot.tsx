@@ -487,33 +487,63 @@ interface LegendProps {
 }
 
 /** A compact chip legend; uPlot's own legend is too tall for many series. */
-/** How many chips to show before the legend folds itself away.
+/** Fold the legend to one row until asked to open.
  *
- * Four hundred curves is four hundred chips, and they pushed everything below
- * the plot off the screen. */
-const LEGEND_PREVIEW = 12
+ * Cutting at a fixed number of chips does not cut at a fixed *height*: chip
+ * widths run from "2번 충전" to a full cell name, so twelve of them are one row
+ * on a wide screen and three rows on a narrow one.  Clamping the height
+ * instead lets the browser decide how many fit, which is the only thing that
+ * matters -- everything below the plot stays where it was.
+ *
+ * The row height is measured from a real chip rather than assumed, because the
+ * chips carry the app's own font and padding.
+ */
+function useOneRowClamp(count: number) {
+    const box = useRef<HTMLDivElement | null>(null)
+    const [rowHeight, setRowHeight] = useState<number | null>(null)
+    const [overflows, setOverflows] = useState(false)
+
+    useEffect(() => {
+      const node = box.current
+      const chip = node?.firstElementChild as HTMLElement | null
+      if (!node || !chip) return
+      const measure = () => {
+        const height = chip.offsetHeight
+        setRowHeight(height || null)
+        setOverflows(node.scrollHeight > height + 2)
+      }
+      measure()
+      const observer = new ResizeObserver(measure)
+      observer.observe(node)
+      return () => observer.disconnect()
+    }, [count])
+
+    return { box, rowHeight, overflows }
+}
 
 export function PlotLegend({ series, onToggle }: LegendProps) {
   const [open, setOpen] = useState(false)
+  const { box, rowHeight, overflows } = useOneRowClamp(series.length)
   if (series.length <= 1) return null
-  const folds = series.length > LEGEND_PREVIEW
-  const shown = folds && !open ? series.slice(0, LEGEND_PREVIEW) : series
+  const clamp = !open && overflows && rowHeight !== null
   return (
     <div className="col" style={{ gap: 6 }}>
-      {folds ? (
+      {overflows ? (
         <button
           type="button"
           className="sm legend-toggle"
           onClick={() => setOpen((was) => !was)}
           aria-expanded={open}
         >
-          {open
-            ? `범례 접기 (${series.length}개)`
-            : `범례 전부 보기 (${series.length}개 중 ${LEGEND_PREVIEW}개 표시)`}
+          {open ? `범례 접기 (${series.length}개)` : `범례 전부 보기 (${series.length}개)`}
         </button>
       ) : null}
-      <div className="legend-chips">
-      {shown.map((item, index) => (
+      <div
+        ref={box}
+        className="legend-chips"
+        style={clamp ? { maxHeight: rowHeight, overflow: 'hidden' } : undefined}
+      >
+      {series.map((item, index) => (
         <button
           key={item.label}
           type="button"

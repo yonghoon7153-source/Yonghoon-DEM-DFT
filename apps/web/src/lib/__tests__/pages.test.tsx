@@ -465,6 +465,60 @@ function sampleDetailHandler(extra: Handler): Handler {
 }
 
 describe('SampleDetail', () => {
+  it('초기화 는 그래프와 입력란을 함께 비운다', async () => {
+    // `useAsync` 는 새 응답이 올 때까지 이전 것을 들고 있다 — 키를 칠 때마다
+    // 화면이 깜빡이지 않게 하려는 것인데, 요청이 꺼졌을 때도 옛 곡선이 그대로
+    // 남는다.  그래서 초기화를 눌러 선택을 비워도 그래프는 여덟 사이클을
+    // 계속 보여 주고 있었다.
+    const drawn: string[] = []
+    installFetch(
+      sampleDetailHandler((url) => {
+        if (path(url) !== '/api/samples/1/profile') return undefined
+        drawn.push(new URL(url, 'http://x').searchParams.get('cycles') ?? '')
+        return {
+          basis: 'mAh',
+          basis_label: 'mAh',
+          requested_basis: 'mAh',
+          resolved_cell: CELL,
+          // 범례는 곡선이 둘 이상일 때만 그려진다.
+          series: [
+            {
+              cycle: 1,
+              branch: 'charge',
+              basis: 'mAh',
+              points: 2,
+              capacity: [0, 1],
+              voltage: [3.0, 4.2],
+              run_id: 11,
+              label: '1번 충전',
+            },
+            {
+              cycle: 1,
+              branch: 'discharge',
+              basis: 'mAh',
+              points: 2,
+              capacity: [0, 1],
+              voltage: [4.2, 3.0],
+              run_id: 11,
+              label: '1번 방전',
+            },
+          ],
+        }
+      }),
+    )
+    renderSampleDetail()
+
+    expect(await screen.findByText('1번 방전')).toBeInTheDocument()
+    const input = await screen.findByLabelText('사이클 선택')
+    expect(input).not.toHaveValue('')
+
+    const buttons = await screen.findAllByRole('button', { name: '초기화' })
+    await userEvent.click(buttons[0]!)
+
+    await waitFor(() => expect(screen.queryByText('1번 방전')).not.toBeInTheDocument())
+    expect(input).toHaveValue('')
+  })
+
   it('surfaces a failed profile fetch instead of leaving an empty chart', async () => {
     installFetch(
       sampleDetailHandler((url) =>
