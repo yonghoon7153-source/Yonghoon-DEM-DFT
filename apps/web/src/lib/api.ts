@@ -8,7 +8,7 @@
 import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
-  Activity, CompareResponse, CompositionPreset, CycleTable, DashboardRow, Facets, Group, Meta,
+  Activity, CompareResponse, CompositionPreset, DqdvResponse, CycleTable, DashboardRow, Facets, Group, Meta,
   ProfileResponse, Report, Run, Sample,
 } from './types'
 
@@ -133,6 +133,8 @@ export const api = {
     request<CycleTable>(`/api/runs/${id}/cycles${query(params)}`),
   sampleProfile: (id: number, params?: Params) =>
     request<ProfileResponse>(`/api/samples/${id}/profile${query(params)}`),
+  sampleDqdv: (id: number, params?: Params) =>
+    request<DqdvResponse>(`/api/samples/${id}/dqdv${query(params)}`),
   sampleReport: (id: number, params?: Params) =>
     request<Report>(`/api/samples/${id}/report${query(params)}`),
   dashboard: (params?: Params) =>
@@ -154,6 +156,8 @@ export const api = {
     `/api/export/samples/${sampleId}/cycles.csv${query(params)}`,
   exportProfilesUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/profiles.csv${query(params)}`,
+  exportDqdvUrl: (sampleId: number, params?: Params) =>
+    `/api/export/samples/${sampleId}/dqdv.csv${query(params)}`,
   exportWorkbookUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/workbook.xlsx${query(params)}`,
 }

@@ -224,6 +224,41 @@ export interface ProfileResponse {
   mixed_basis?: boolean
 }
 
+/** 한 브랜치의 dQ/dV, 그리고 무엇으로 만들었는지.
+ *
+ * `voltage_step` 과 `smoothing` 이 곡선을 바꾼다 — 평활은 봉우리를 낮추고
+ * 넓히므로, 봉우리 *높이*는 같은 설정으로 만든 곡선끼리만 비교된다 (ADR 0013).
+ *
+ * 만들지 못한 곡선도 온다. `points` 가 0 이고 `reason` 이 붙어 있다. */
+export interface DqdvSeries {
+  cycle: number
+  branch: Branch
+  basis: Basis
+  points: number
+  voltage: number[]
+  /** mAh/V (정규화하면 (mAh/g)/V 등). 방전은 음수 — 전압이 내려가면서 용량이
+   *  오르므로 그것이 답이다. */
+  dqdv: number[]
+  run_id: number
+  label: string
+  voltage_step: number
+  smoothing: number
+  /** 단조 필터가 뺀 표본 수 — CV 구간과 잡음성 되돌아감. */
+  points_dropped: number
+  reason: string
+}
+
+export interface DqdvResponse {
+  basis: Basis
+  basis_label: string
+  requested_basis: Basis
+  resolved_cell: ResolvedCell
+  series: DqdvSeries[]
+  voltage_step: number
+  smoothing: number
+  mixed_basis?: boolean
+}
+
 export type KneeStatus = 'detected' | 'insufficient' | 'none' | 'indeterminate'
 
 export interface KneeResult {

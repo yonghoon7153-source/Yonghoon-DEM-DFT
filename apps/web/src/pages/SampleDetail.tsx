@@ -13,7 +13,7 @@ import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
-import { copyText, dischargeTsv, efficiencyTsv, profileTsv } from '../lib/origin'
+import { copyText, dischargeTsv, dqdvTsv, efficiencyTsv, profileTsv } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
@@ -34,6 +34,11 @@ export function SampleDetail() {
 
   const [basis, setBasis] = useStickyState<Basis>('workbench.basis', 'mAh/g')
   const [branches, setBranches] = useState<('charge' | 'discharge')[]>(['charge', 'discharge'])
+  // 프로파일과 dQ/dV 는 축이 다르다 (가로 용량 vs 볼트, 세로 볼트 vs mAh/V).
+  // 한 그래프에 겹칠 수 없으므로 모드로 갈라 놓고, 사이클 선택과 충전·방전
+  // 토글은 둘이 공유한다 — 같은 것을 두 방식으로 보는 것이기 때문이다.
+  const [mode, setMode] = useStickyState<'profile' | 'dqdv'>(
+    'workbench.curveMode', 'profile')
   const [chosen, setChosen] = useState<number[] | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
   const [lifeMetric, setLifeMetric] = useState<LifeMetric>('discharge')
@@ -79,6 +84,19 @@ export function SampleDetail() {
     return available.length ? spread(available, 5) : []
   }, [chosen, cycles])
 
+  const dqdvState = useAsync(
+    () =>
+      api.sampleDqdv(sampleId, {
+        basis,
+        cycles: selected.join(','),
+        branches: branches.join(','),
+      }),
+    [sampleId, basis, selected.join(','), branches.join(','), stamp],
+    // 모드를 켰을 때만 받아 온다.  20 MB 파일에서 400 사이클의 미분을 아무도
+    // 보지 않는 동안 계산할 이유가 없다.
+    { enabled: mode === 'dqdv' && selected.length > 0 && branches.length > 0 },
+  )
+
   const profileState = useAsync(
     () =>
       api.sampleProfile(sampleId, {
@@ -111,6 +129,36 @@ export function SampleDetail() {
       }
     })
   }, [profileState.data, hidden, selected.length])
+
+  const dqdvSeries: PlotSeries[] = useMemo(() => {
+    if (!selected.length) return []
+    // 만들지 못한 곡선은 그릴 것이 없으므로 뺀다.  왜 없는지는 그래프 아래
+    // 한 줄로 따로 말해 준다 — 범례에 빈 항목이 서 있는 것보다 낫다.
+    const series = (dqdvState.data?.series ?? []).filter((item) => item.points > 0)
+    const cycleOrder = [...new Set(series.map((s) => s.cycle))]
+    return series.map((item) => {
+      const label = `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`
+      return {
+        label,
+        x: item.voltage,
+        y: item.dqdv,
+        color: seriesColor(cycleOrder.indexOf(item.cycle)),
+        dash: item.branch === 'charge' ? [5, 3] : undefined,
+        hidden: hidden.includes(label),
+      }
+    })
+  }, [dqdvState.data, hidden, selected.length])
+
+  /** 지금 모드가 보고 있는 요청.  로딩과 오류를 두 번 쓰지 않는다. */
+  const curve = mode === 'dqdv' ? dqdvState : profileState
+
+  /** 만들지 못한 곡선들이 왜 없는지 — 한 줄로. */
+  const dqdvSkipped = useMemo(() => {
+    const bad = (dqdvState.data?.series ?? []).filter((item) => !item.points)
+    if (!bad.length) return ''
+    const reasons = [...new Set(bad.map((item) => item.reason).filter(Boolean))]
+    return `${bad.length}개 곡선을 만들지 못했습니다 — ${reasons.join(' · ')}`
+  }, [dqdvState.data])
 
   // 축을 이 셀이 낸 가장 큰 용량에 고정한다.  안 그러면 사이클을 하나 넣고
   // 뺄 때마다 x 축이 늘었다 줄었다 해서, 같은 곡선이 매번 다른 폭으로 보인다.
@@ -333,54 +381,90 @@ export function SampleDetail() {
           </div>
         </div>
         <span className="spacer" />
-        <div className="row">
-          <BasisSelect value={basis} onChange={setBasis} cell={sample.resolved_cell} />
-          <a className="link-btn" href={api.exportCyclesUrl(sample.id, { basis })}>
-            사이클 CSV
-          </a>
-          <a
-            className="link-btn"
-            href={api.exportProfilesUrl(sample.id, {
-              basis,
-              cycles: selected.join(','),
-              branches: branches.join(','),
-            })}
-          >
-            프로파일 CSV
-          </a>
-          <a
-            className="link-btn"
-            href={api.exportWorkbookUrl(sample.id, { basis, cycles: selected.join(',') })}
-          >
-            XLSX
-          </a>
-          {/* 하나에 하나씩.  Origin 은 열 두 개를 받아 하나를 그린다. */}
-          <button
-            type="button"
-            className="link-btn"
-            title={`그려진 곡선을 용량·전압 두 열로 — 곡선 사이는 -- 로 끊는다 · ${basisUnit(profileState.data?.basis ?? basis)}`}
-            onClick={() =>
-              void copyBlock('프로파일', profileTsv(profileState.data?.series ?? []))
-            }
-          >
-            {copied === '프로파일' ? '복사됨 ✓' : '프로파일 복사'}
-          </button>
-          <button
-            type="button"
-            className="link-btn"
-            title={`사이클별 방전용량 · ${basisUnit(cycleState.data?.basis ?? basis)}`}
-            onClick={() => void copyBlock('사이클', dischargeTsv(cycles))}
-          >
-            {copied === '사이클' ? '복사됨 ✓' : '사이클 복사'}
-          </button>
-          <button
-            type="button"
-            className="link-btn"
-            title="사이클별 쿨롱효율 (%)"
-            onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(cycles))}
-          >
-            {copied === '쿨롱효율' ? '복사됨 ✓' : '쿨롱효율 복사'}
-          </button>
+        {/* 파일로 받는 것과 클립보드로 옮기는 것은 하는 일이 다르다.  한 줄에
+            일곱 개가 서 있으면 어느 것이 파일이고 어느 것이 붙여넣기인지
+            누르기 전에는 알 수 없어서, 줄을 나눴다. */}
+        <div className="col" style={{ gap: 6, alignItems: 'flex-end' }}>
+          <div className="row">
+            <BasisSelect value={basis} onChange={setBasis} cell={sample.resolved_cell} />
+            <a className="link-btn" href={api.exportCyclesUrl(sample.id, { basis })}>
+              사이클 CSV
+            </a>
+            <a
+              className="link-btn"
+              href={api.exportProfilesUrl(sample.id, {
+                basis,
+                cycles: selected.join(','),
+                branches: branches.join(','),
+              })}
+            >
+              프로파일 CSV
+            </a>
+            <a
+              className="link-btn"
+              href={api.exportDqdvUrl(sample.id, {
+                basis,
+                cycles: selected.join(','),
+                branches: branches.join(','),
+              })}
+              title="고른 사이클의 dQ/dV — 화면용으로 줄이지 않은 원래 격자 그대로"
+            >
+              dQ/dV CSV
+            </a>
+            <a
+              className="link-btn"
+              href={api.exportWorkbookUrl(sample.id, { basis, cycles: selected.join(',') })}
+            >
+              XLSX
+            </a>
+          </div>
+          <div className="row">
+            <span className="tiny faint">클립보드</span>
+            {/* 하나에 하나씩.  Origin 은 열 두 개를 받아 하나를 그린다. */}
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === '프로파일' ? '프로파일 복사됨' : '프로파일 복사'}
+              title={`그려진 곡선을 용량·전압 두 열로 — 곡선 사이는 -- 로 끊는다 · ${basisUnit(profileState.data?.basis ?? basis)}`}
+              onClick={() =>
+                void copyBlock('프로파일', profileTsv(profileState.data?.series ?? []))
+              }
+            >
+              {copied === '프로파일' ? '복사됨 ✓' : '프로파일'}
+            </button>
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === 'dQ/dV' ? 'dQ/dV 복사됨' : 'dQ/dV 복사'}
+              disabled={mode !== 'dqdv'}
+              title={
+                mode === 'dqdv'
+                  ? `그려진 dQ/dV 를 전압·값 두 열로 · ${basisUnit(dqdvState.data?.basis ?? basis)}/V`
+                  : 'dQ/dV 모드를 켜면 복사할 수 있습니다'
+              }
+              onClick={() => void copyBlock('dQ/dV', dqdvTsv(dqdvState.data?.series ?? []))}
+            >
+              {copied === 'dQ/dV' ? '복사됨 ✓' : 'dQ/dV'}
+            </button>
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === '사이클' ? '사이클 복사됨' : '사이클 복사'}
+              title={`사이클별 방전용량 · ${basisUnit(cycleState.data?.basis ?? basis)}`}
+              onClick={() => void copyBlock('사이클', dischargeTsv(cycles))}
+            >
+              {copied === '사이클' ? '복사됨 ✓' : '사이클'}
+            </button>
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === '쿨롱효율' ? '쿨롱효율 복사됨' : '쿨롱효율 복사'}
+              title="사이클별 쿨롱효율 (%)"
+              onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(cycles))}
+            >
+              {copied === '쿨롱효율' ? '복사됨 ✓' : '쿨롱효율'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -418,25 +502,45 @@ export function SampleDetail() {
         <div className="split">
           <div className="col" style={{ gap: 12 }}>
             <Card
-              title="충방전 프로파일"
+              title={mode === 'dqdv' ? 'dQ/dV' : '충방전 프로파일'}
               actions={
-                <div className="segmented">
-                  {(['charge', 'discharge'] as const).map((branch) => (
-                    <button
-                      key={branch}
-                      type="button"
-                      className={branches.includes(branch) ? 'on' : ''}
-                      onClick={() =>
-                        setBranches((current) =>
-                          current.includes(branch)
-                            ? current.filter((b) => b !== branch)
-                            : [...current, branch],
-                        )
-                      }
-                    >
-                      {branch === 'charge' ? '충전' : '방전'}
-                    </button>
-                  ))}
+                <div className="row" style={{ gap: 8 }}>
+                  <div className="segmented">
+                    {(['charge', 'discharge'] as const).map((branch) => (
+                      <button
+                        key={branch}
+                        type="button"
+                        className={branches.includes(branch) ? 'on' : ''}
+                        onClick={() =>
+                          setBranches((current) =>
+                            current.includes(branch)
+                              ? current.filter((b) => b !== branch)
+                              : [...current, branch],
+                          )
+                        }
+                      >
+                        {branch === 'charge' ? '충전' : '방전'}
+                      </button>
+                    ))}
+                  </div>
+                  {/* 모드는 배타적이다.  프로파일은 가로가 용량·세로가 볼트,
+                      dQ/dV 는 가로가 볼트·세로가 mAh/V 라 한 그래프에 겹칠 수
+                      없다.  충전·방전 토글과 사이클 선택은 둘이 공유한다. */}
+                  <div className="segmented">
+                    {([
+                      ['profile', '프로파일'],
+                      ['dqdv', 'dQ/dV'],
+                    ] as const).map(([value, label]) => (
+                      <button
+                        key={value}
+                        type="button"
+                        className={mode === value ? 'on' : ''}
+                        onClick={() => setMode(value)}
+                      >
+                        {label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               }
               tight
@@ -460,28 +564,52 @@ export function SampleDetail() {
                 <Empty title="충전도 방전도 꺼져 있습니다">
                   오른쪽 위에서 충전 또는 방전을 켜면 곡선이 그려집니다
                 </Empty>
-              ) : profileState.loading && !profileState.data ? (
+              ) : curve.loading && !curve.data ? (
                 <div style={{ padding: 20 }}>
-                  <Spinner label="프로파일 계산 중" />
+                  <Spinner label={mode === 'dqdv' ? 'dQ/dV 계산 중' : '프로파일 계산 중'} />
                 </div>
               ) : (
                 <>
                   {/* useAsync keeps the previous curves on a failure; without
                       this the stale plot is the only thing on screen. */}
-                  {profileState.error ? (
+                  {curve.error ? (
                     <div style={{ padding: '12px 16px 0' }}>
-                      <Alert kind="error">{profileState.error}</Alert>
+                      <Alert kind="error">{curve.error}</Alert>
                     </div>
                   ) : null}
-                  <Plot
-                    series={profileSeries}
-                    xLabel={basisAxis(profileState.data?.basis ?? basis)}
-                    yLabel="전압 (V)"
-                    xRange={capacityAxis}
-                    height={400}
-                  />
+                  {mode === 'dqdv' ? (
+                    <>
+                      <Plot
+                        series={dqdvSeries}
+                        xLabel="전압 (V)"
+                        yLabel={`dQ/dV (${basisUnit(dqdvState.data?.basis ?? basis)}/V)`}
+                        height={400}
+                      />
+                      {/* 평활이 봉우리를 낮추고 넓힌다.  무엇으로 만든 곡선인지
+                          말하지 않으면 셀 사이의 봉우리 높이를 비교할 수 없다. */}
+                      <div className="tiny faint" style={{ padding: '0 16px 4px' }}>
+                        전압 격자 {Math.round((dqdvState.data?.voltage_step ?? 0.005) * 1000)}
+                        {' mV · 평활 '}
+                        {dqdvState.data?.smoothing ?? 5}점
+                        {' · 정전압 구간은 제외됩니다 (dV=0)'}
+                      </div>
+                      {dqdvSkipped ? (
+                        <div className="tiny" style={{ padding: '0 16px 6px', color: 'var(--warn)' }}>
+                          {dqdvSkipped}
+                        </div>
+                      ) : null}
+                    </>
+                  ) : (
+                    <Plot
+                      series={profileSeries}
+                      xLabel={basisAxis(profileState.data?.basis ?? basis)}
+                      yLabel="전압 (V)"
+                      xRange={capacityAxis}
+                      height={400}
+                    />
+                  )}
                   <PlotLegend
-                    series={profileSeries}
+                    series={mode === 'dqdv' ? dqdvSeries : profileSeries}
                     onToggle={(label) =>
                       setHidden((current) =>
                         current.includes(label)

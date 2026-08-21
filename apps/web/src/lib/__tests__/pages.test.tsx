@@ -857,6 +857,136 @@ describe('셀 상세 질량 힌트', () => {
   })
 })
 
+// --- dQ/dV ---------------------------------------------------------------------
+
+describe('dQ/dV 모드', () => {
+  function dqdvBody(overrides: Record<string, unknown> = {}) {
+    return {
+      basis: 'mAh',
+      basis_label: 'mAh',
+      requested_basis: 'mAh',
+      resolved_cell: CELL,
+      voltage_step: 0.005,
+      smoothing: 5,
+      series: [
+        {
+          cycle: 3, branch: 'discharge', basis: 'mAh', points: 3,
+          voltage: [3.0, 3.005, 3.01], dqdv: [-1, -2, -1],
+          run_id: 11, label: '3번 방전',
+          voltage_step: 0.005, smoothing: 5, points_dropped: 0, reason: '',
+        },
+      ],
+      ...overrides,
+    }
+  }
+
+  it('켜기 전에는 dQ/dV 를 받아 오지 않는다', async () => {
+    // 20 MB 파일에서 400 사이클의 미분을, 아무도 보지 않는 동안 계산할 이유가
+    // 없다.
+    const asked: string[] = []
+    installFetch((url) => {
+      asked.push(path(url))
+      return sampleDetailHandler(() => undefined)(url)
+    })
+    renderSampleDetail()
+
+    await screen.findByRole('button', { name: 'dQ/dV' })
+    expect(asked).not.toContain('/api/samples/1/dqdv')
+  })
+
+  it('켜면 dQ/dV 를 받아 와서 그린다', async () => {
+    // 축 이름은 uPlot 이 캔버스에 그리므로 jsdom 에서 볼 수 없다.  대신 모드가
+    // 정말 바뀌었는지를 두 가지로 본다: 다른 엔드포인트를 물었는가, 그리고
+    // dQ/dV 에서만 나오는 설정 줄이 떴는가.
+    const asked: string[] = []
+    installFetch((url) => {
+      asked.push(path(url))
+      return sampleDetailHandler((inner) =>
+        path(inner) === '/api/samples/1/dqdv' ? dqdvBody() : undefined,
+      )(url)
+    })
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+
+    await waitFor(() => expect(asked).toContain('/api/samples/1/dqdv'))
+    expect(await screen.findByText(/전압 격자 5 mV/)).toBeInTheDocument()
+  })
+
+  it('돌아오면 프로파일이다 — 두 모드가 같이 켜져 있지 않다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv' ? dqdvBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    expect(await screen.findByText(/전압 격자 5 mV/)).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: '프로파일' }))
+    await waitFor(() =>
+      expect(screen.queryByText(/전압 격자 5 mV/)).not.toBeInTheDocument(),
+    )
+  })
+
+  it('무엇으로 만든 곡선인지 말한다 — 평활은 봉우리를 낮춘다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv'
+          ? dqdvBody({ voltage_step: 0.01, smoothing: 9 })
+          : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    expect(await screen.findByText(/전압 격자 10 mV · 평활 9점/)).toBeInTheDocument()
+  })
+
+  it('만들지 못한 곡선이 있으면 왜인지 말한다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv'
+          ? dqdvBody({
+              series: [
+                {
+                  cycle: 3, branch: 'charge', basis: 'mAh', points: 0,
+                  voltage: [], dqdv: [], run_id: 11, label: '3번 충전',
+                  voltage_step: 0.005, smoothing: 5, points_dropped: 40,
+                  reason: 'only 1 samples move in voltage',
+                },
+              ],
+            })
+          : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    // 그냥 빈 그래프면 고장으로 읽힌다.
+    expect(await screen.findByText(/1개 곡선을 만들지 못했습니다/)).toBeInTheDocument()
+  })
+
+  it('dQ/dV 복사는 모드를 켜야 눌린다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv' ? dqdvBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    // 꺼져 있을 때 눌러도 복사할 곡선이 없다 — 빈 것을 복사해 놓고 성공했다고
+    // 하면 사람은 Origin 에서 알게 된다.
+    expect(await screen.findByRole('button', { name: 'dQ/dV 복사' })).toBeDisabled()
+
+    await userEvent.click(screen.getByRole('button', { name: 'dQ/dV' }))
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'dQ/dV 복사' })).toBeEnabled(),
+    )
+  })
+})
+
 // --- Origin 붙여넣기 -----------------------------------------------------------
 
 describe('클립보드 복사', () => {
@@ -881,7 +1011,8 @@ describe('클립보드 복사', () => {
     // 하는 두 줄이다.  이 픽스처의 용량은 5.25 mAh (활물질 질량이 없어 mAh 로
     // 떨어진다).
     expect(written[0]!.split('\n')).toEqual(['1\t5.25', '2\t5.25', '3\t5.25'])
-    expect(await screen.findByRole('button', { name: '복사됨 ✓' })).toBeInTheDocument()
+    // 확인 표시는 눈에만 보이면 안 된다 — 접근성 이름도 같이 바뀐다.
+    expect(await screen.findByRole('button', { name: '사이클 복사됨' })).toBeInTheDocument()
   })
 
   it('쿨롱효율은 따로 나온다 — 버튼 하나에 열 두 개', async () => {

@@ -7,8 +7,8 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { dischargeTsv, efficiencyTsv, profileTsv, tsvColumns } from '../origin'
-import type { Cycle, ProfileSeries } from '../types'
+import { dischargeTsv, dqdvTsv, efficiencyTsv, profileTsv, tsvColumns } from '../origin'
+import type { Cycle, DqdvSeries, ProfileSeries } from '../types'
 
 function series(overrides: Partial<ProfileSeries> = {}): ProfileSeries {
   return {
@@ -124,5 +124,51 @@ describe('사이클 열 두 개', () => {
   it('완료된 사이클이 없으면 빈 문자열', () => {
     expect(dischargeTsv([cycle({ complete: false })])).toBe('')
     expect(efficiencyTsv([cycle({ complete: false })])).toBe('')
+  })
+})
+
+describe('dQ/dV 붙여넣기 블록', () => {
+  function curve(overrides: Partial<DqdvSeries> = {}): DqdvSeries {
+    return {
+      cycle: 3,
+      branch: 'discharge',
+      basis: 'mAh/g',
+      points: 3,
+      voltage: [3.0, 3.1, 3.2],
+      dqdv: [-1.5, -2.5, -1.0],
+      run_id: 1,
+      label: '3번 방전',
+      voltage_step: 0.005,
+      smoothing: 5,
+      points_dropped: 0,
+      reason: '',
+      ...overrides,
+    }
+  }
+
+  it('전압·dQdV 두 열로 쌓고 곡선 사이를 -- 로 끊는다', () => {
+    const text = dqdvTsv([
+      curve({ voltage: [3.0, 3.1], dqdv: [-1, -2], points: 2 }),
+      curve({ cycle: 50, voltage: [3.0, 3.1], dqdv: [-3, -4], points: 2 }),
+    ])
+    expect(text.split('\n')).toEqual(['3\t-1', '3.1\t-2', '--\t--', '3\t-3', '3.1\t-4'])
+  })
+
+  it('만들지 못한 곡선은 건너뛴다 — 양옆이 빈 구분줄은 그냥 구멍이다', () => {
+    const text = dqdvTsv([
+      curve({ voltage: [3.0], dqdv: [-1], points: 1 }),
+      curve({ cycle: 4, voltage: [], dqdv: [], points: 0, reason: '전압이 안 움직임' }),
+    ])
+    expect(text).toBe('3\t-1')
+  })
+
+  it('그릴 것이 없으면 빈 문자열', () => {
+    expect(dqdvTsv([])).toBe('')
+    expect(dqdvTsv([curve({ points: 0, voltage: [], dqdv: [] })])).toBe('')
+  })
+
+  it('방전의 음수 부호를 지우지 않는다 — 히스테리시스가 거기 있다', () => {
+    const text = dqdvTsv([curve({ voltage: [3.0], dqdv: [-2.5], points: 1 })])
+    expect(text).toBe('3\t-2.5')
   })
 })

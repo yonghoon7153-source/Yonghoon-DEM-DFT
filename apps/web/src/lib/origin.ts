@@ -18,7 +18,7 @@
  * cycle with no efficiency from being drawn at zero.
  */
 
-import type { Cycle, ProfileSeries } from './types'
+import type { Cycle, DqdvSeries, ProfileSeries } from './types'
 
 /** Origin's missing value. */
 export const MISSING = '--'
@@ -63,6 +63,34 @@ export function profileTsv(series: ProfileSeries[]): string {
     }
   }
   return tsvColumns([capacity, voltage])
+}
+
+/** Every dQ/dV curve stacked into two columns, separated by a `--` row.
+ *
+ * Same layout as `profileTsv` for the same reason: somebody comparing a
+ * capacity curve against its derivative in one worksheet should not have to
+ * learn a second arrangement.
+ *
+ * Curves that could not be computed are skipped rather than emitted as a
+ * lone `--` row.  An empty curve has no points to plot, and a separator with
+ * nothing on either side of it is just a gap in the column.
+ */
+export function dqdvTsv(series: DqdvSeries[]): string {
+  const drawable = series.filter((item) => item.points > 0)
+  if (!drawable.length) return ''
+  const voltage: string[] = []
+  const values: string[] = []
+  for (const item of drawable) {
+    if (voltage.length) {
+      voltage.push(MISSING)
+      values.push(MISSING)
+    }
+    for (let i = 0; i < item.voltage.length; i += 1) {
+      voltage.push(cell(item.voltage[i]))
+      values.push(cell(item.dqdv[i]))
+    }
+  }
+  return tsvColumns([voltage, values])
 }
 
 /** Two columns: cycle number and one value per complete cycle.
