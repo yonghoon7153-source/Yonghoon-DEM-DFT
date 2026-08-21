@@ -517,6 +517,17 @@ describe('SampleDetail', () => {
 
     await waitFor(() => expect(screen.queryByText('1번 방전')).not.toBeInTheDocument())
     expect(input).toHaveValue('')
+    // 빈 그래프는 고장처럼 보인다 — 왜 비었는지 화면이 말해야 한다.
+    expect(screen.getByText('고른 사이클이 없습니다')).toBeInTheDocument()
+  })
+
+  it('충전과 방전을 둘 다 끄면 그 이유를 말한다', async () => {
+    installFetch(sampleDetailHandler(() => undefined))
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: '충전' }))
+    await userEvent.click(screen.getByRole('button', { name: '방전' }))
+    expect(await screen.findByText('충전도 방전도 꺼져 있습니다')).toBeInTheDocument()
   })
 
   it('surfaces a failed profile fetch instead of leaving an empty chart', async () => {

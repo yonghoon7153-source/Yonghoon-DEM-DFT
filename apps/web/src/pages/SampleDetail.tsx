@@ -418,7 +418,18 @@ export function SampleDetail() {
                   basis={cycleState.data?.basis ?? basis}
                 />
               </div>
-              {profileState.loading && !profileState.data ? (
+              {/* 빈 그래프는 고장처럼 보인다.  초기화를 눌러 선택을 비우면
+                  충전·방전 버튼을 눌러도 아무 일이 없는데, 화면이 그 이유를
+                  말해 주지 않으면 버튼이 죽은 것으로 읽힌다. */}
+              {!selected.length ? (
+                <Empty title="고른 사이클이 없습니다">
+                  위에서 사이클을 고르거나 첫 사이클 · 마지막 · 균등 8개 · 전체를 누르세요
+                </Empty>
+              ) : !branches.length ? (
+                <Empty title="충전도 방전도 꺼져 있습니다">
+                  오른쪽 위에서 충전 또는 방전을 켜면 곡선이 그려집니다
+                </Empty>
+              ) : profileState.loading && !profileState.data ? (
                 <div style={{ padding: 20 }}>
                   <Spinner label="프로파일 계산 중" />
                 </div>
