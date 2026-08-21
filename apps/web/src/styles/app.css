@@ -792,6 +792,8 @@ tbody tr:last-child td { border-bottom: none; }
 .choice .head { display: flex; gap: 6px; align-items: baseline; }
 .choice .head strong { font-size: 12px; }
 .choice .head .cycle { font-family: var(--mono); font-weight: 620; margin-left: auto; }
+/* 확정이 아닌 후보.  숫자는 보여 주되 확정과 같은 무게로 읽히면 안 된다. */
+.choice .head .cycle.tentative { color: var(--ink-3); font-weight: 520; }
 .choice .why { display: block; margin-top: 2px; font-size: 10.5px; color: var(--ink-3); }
 
 details > summary {

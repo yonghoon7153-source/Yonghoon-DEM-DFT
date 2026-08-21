@@ -107,8 +107,8 @@ def test_a_single_glitch_cycle_is_not_an_end_of_life_crossing():
 
 
 def test_threshold_interpolates_the_crossing():
-    cycles = [1, 2, 3, 4, 5]
-    values = [5.0, 5.0, 5.0, 4.0, 3.0]   # 80% of 5.0 is exactly 4.0
+    cycles = [1, 2, 3, 4, 5, 6]
+    values = [5.0, 5.0, 5.0, 4.0, 3.0, 2.5]   # 80% of 5.0 is exactly 4.0
     result = detect_knee(cycles, values, reference_cycle=1).by_method("threshold")
     assert result.detected
     assert result.cycle == pytest.approx(4.0, abs=0.5)
@@ -430,12 +430,329 @@ def test_a_real_bend_with_no_consequence_is_not_a_knee():
     1 % 다.  이건 knee 가 아니라 측정 분해능이다.  손실 게이트만 이걸 막는다.
     """
     def bend_that_costs_nothing(c):
-        return 100.0 if c <= 50 else 100.0 - 0.02 * (c - 50)
+        return 100.0 if c <= 50 else 100.0 - 0.003 * (c - 50)
 
-    cycles, q = _curve(100, bend_that_costs_nothing, seed=21, noise=0.0002)
+    cycles, q = _curve(340, bend_that_costs_nothing, seed=21, noise=0.0002)
     segmented = detect_knee(cycles, q, reference_cycle=3).by_method("segmented")
     assert not segmented.detected, segmented.reason
-    assert "is lost" in segmented.reason
     # 전제: 적합도와 비율 게이트는 통과한다 -- 막은 것은 손실 게이트뿐이다.
     assert segmented.detail["f_statistic"] >= 100.0
-    assert segmented.detail["slope_ratio"] >= 1.5
+    # 평탄하다 꺾이므로 비율은 무한대다 — detail 은 그걸 플래그로 적는다
+    # (JSON 에 Infinity 를 넣으면 표준을 지키는 클라이언트가 전부 거부한다).
+    assert segmented.detail["fade_starts_here"] == 1.0
+    assert "slope_ratio" not in segmented.detail
+    # 꺾인 뒤로 290 사이클을 더 봤는데 1 % 다.  기록이 짧아서가 아니라 그
+    # 꺾임이 아무 대가도 치르지 않은 것이므로 "모른다" 가 아니라 "없다" 다.
+    assert segmented.status == "none", segmented.reason
+    assert "is lost" in segmented.reason
+    assert segmented.candidate_cycle == pytest.approx(50, abs=4)
+
+
+# --- 판정 네 가지 --------------------------------------------------------------
+#
+# `detected=False` 하나로 "knee 없음" 과 "아직 모른다" 를 같이 표현하면, 일찍
+# 뽑은 셀이 안 꺾인 셀과 똑같아 보인다.  기록 길이가 다른 셀끼리 knee 비율을
+# 비교하는 순간 그 혼동이 결론이 된다.
+
+
+def test_the_same_cell_cut_two_cycles_earlier_is_not_a_healthy_cell():
+    """같은 파일을 17번에서 자르면 None, 19번까지 있으면 12번 knee 였다.
+
+    바뀐 것은 셀이 아니라 언제 멈췄는가다.  둘 다 '12번에서 꺾였다' 로 답하되,
+    짧은 쪽은 확정이 아니라 근거 부족이어야 한다.
+    """
+    def planted(c):
+        return 100 - 0.03 * (min(c, 12) - 3) - 0.35 * max(c - 12, 0)
+
+    # 잡음 없이 — 이 테스트가 고정하려는 것은 "언제 멈췄나" 하나다.  0.3 % 잡음을
+    # 얹으면 6 사이클짜리 후속 구간의 적합도가 문턱 근처에서 흔들려, 검열 문제
+    # 대신 문턱 보정 문제를 재는 테스트가 된다.
+    short = detect_knee(*_curve(17, planted, noise=0.0),
+                        reference_cycle=3).by_method("segmented")
+    longer = detect_knee(*_curve(19, planted, noise=0.0),
+                         reference_cycle=3).by_method("segmented")
+
+    assert longer.detected and longer.cycle == pytest.approx(12, abs=1)
+    assert not short.detected
+    assert short.status == "insufficient", short.reason
+    assert short.candidate_cycle == pytest.approx(12, abs=1)
+    # 두 답이 가리키는 사이클은 같아야 한다 — 셀은 하나다.
+    assert short.candidate_cycle == pytest.approx(longer.cycle, abs=1)
+
+
+def test_a_slow_cell_watched_long_enough_is_answered_not_deferred():
+    """느린 셀도 충분히 오래 보면 답이 나와야 한다.
+
+    "언젠가는 2 % 에 도달한다" 는 모든 열화가 참이므로, 그걸로 판단을 미루면
+    `insufficient` 가 모든 것을 삼킨다.  이미 본 만큼을 한 번 더 봐서 판가름
+    날 때에만 미룬다.
+    """
+    def slow(c):
+        return 100 - 0.005 * (min(c, 101) - 3) - 0.012 * max(c - 101, 0)
+
+
+    # 전체 열화가 2 % 대인 셀이라 0.3 % 잡음이면 신호가 잡음에 묻힌다.
+    early = detect_knee(*_curve(250, slow, noise=0.0002),
+                        reference_cycle=3).by_method("segmented")
+    later = detect_knee(*_curve(400, slow, noise=0.0002),
+                        reference_cycle=3).by_method("segmented")
+    # 400 이면 확정된다.  250 은 아직 2 % 에 못 미치지만 "없다" 가 아니라 "아직" 이다.
+    assert later.detected, later.reason
+    assert early.status == "insufficient", early.reason
+    assert early.candidate_cycle == pytest.approx(later.cycle, rel=0.15)
+
+
+def test_a_crossing_on_the_last_cycle_did_not_recover():
+    """마지막 한 점이 80 % 를 넘은 것은 '회복했다' 가 아니다.
+
+    `under[c:c+2].all()` 은 슬라이스가 하나짜리여도 참이라, 기록의 마지막
+    측정만 아래로 내려가도 EOL 통과로 인정됐다.  반대로 무조건 거부하면 이번엔
+    "회복했다" 는 없는 데이터에 대한 주장이 된다.
+    """
+    cycles = np.arange(3, 13, dtype=float)
+    values = np.array([100.0] * 9 + [79.0])
+    result = detect_knee(cycles, values, reference_cycle=3).by_method("threshold")
+    assert not result.detected
+    assert result.status == "insufficient", result.reason
+    assert "recover" not in result.reason
+    assert result.candidate_cycle == pytest.approx(12, abs=1)
+
+
+def test_a_dip_that_really_did_recover_still_says_so():
+    cycles = np.arange(3, 15, dtype=float)
+    values = np.array([100.0] * 5 + [79.0] + [100.0] * 6)
+    result = detect_knee(cycles, values, reference_cycle=3).by_method("threshold")
+    assert not result.detected
+    assert result.status == "none"
+    assert "recovered" in result.reason
+
+
+# --- Codex 리뷰가 찾아낸 것들 ---------------------------------------------------
+#
+# 각 테스트는 리뷰의 재현을 그대로 굳힌 것이다.  이름은 증상이 아니라 계약을
+# 말한다 — 같은 실수를 다른 모양으로 다시 하지 않기 위해서다.
+
+
+def test_a_bend_is_certified_by_its_own_contribution_not_by_a_later_one():
+    """뒤의 진짜 knee 가 앞의 아무 transient 나 인증해서는 안 된다.
+
+    급감 후 감속하는 셀을 살리려고 후보 절점 뒤에 자유 절점 하나를 허용했는데,
+    비교 대상이 '직선 대 두 절점 전체' 였다.  그래서 80번의 진짜 knee 가
+    34번의 잡음을 통과시켰다 — 혼자서는 66점이던 것이 79번을 옆에 두자
+    34,877점이 됐다.  게다가 그 곡선의 첫 '절점' 은 가속이 아니라 감속이다.
+    """
+    def dip_then_knee(c):
+        base = 100 - 0.04 * (min(c, 80) - 3) - 0.70 * max(c - 80, 0)
+        return base - (1.0 if 35 <= c < 38 else 0.0)
+
+    analysis = detect_knee(*_curve(120, dip_then_knee, noise=0.0005), reference_cycle=3)
+    # 어느 기준도 35~37번의 dip 을 knee 로 보고해서는 안 된다.  80번을 짚는
+    # 것은 옳다 — 거기가 진짜 knee 다.
+    for method in ("segmented", "slope_ratio", "curvature"):
+        result = analysis.by_method(method)
+        if result.detected:
+            assert result.cycle == pytest.approx(80, abs=4), f"{method}: {result.reason}"
+
+
+def test_three_lines_are_tried_whatever_rejected_two():
+    """세 선을 '두 선이 감속으로 거부될 때만' 열면 정확히 세 선인 곡선을 놓친다.
+
+    절점 7/12, 기울기 -0.10 → -0.30 → -0.25 인 30 사이클 곡선.  두 선으로는
+    77점이라 거부되고, 세 선은 절점과 기울기를 소수점 셋째 자리까지 복원한다.
+    """
+    def exact_three(c):
+        return (100
+                - 0.10 * (min(c, 7) - 3)
+                - 0.30 * max(min(c, 12) - 7, 0)
+                - 0.25 * max(c - 12, 0))
+
+    result = detect_knee(*_curve(30, exact_three, noise=0.0), reference_cycle=3)
+    segmented = result.by_method("segmented")
+    assert segmented.detected, segmented.reason
+    assert segmented.cycle == pytest.approx(7, abs=1)
+    assert segmented.detail["second_breakpoint"] == pytest.approx(12, abs=1)
+
+
+def test_the_second_transition_can_be_the_knee():
+    """급감 후 회복, 그 다음 붕괴 — knee 는 두 번째 절점이다.
+
+    '첫 절점이 곧 knee' 는 급감→감속이라는 한 원형에만 맞는다.  첫 전이만
+    보던 판정은 두 번째 절점의 45배 가속을 통째로 버리고 None 을 냈다.
+    """
+    def recover_then_collapse(c):
+        return (100
+                - 0.55 * (min(c, 22) - 3)
+                - 0.02 * max(min(c, 88) - 22, 0)
+                - 0.90 * max(c - 88, 0))
+
+    segmented = detect_knee(*_curve(100, recover_then_collapse, noise=0.0),
+                            reference_cycle=3).by_method("segmented")
+    assert segmented.detected, segmented.reason
+    assert segmented.cycle == pytest.approx(88, abs=2)
+    assert segmented.detail["knee_transition"] == 2.0
+
+
+def test_break_points_are_found_at_cycle_resolution_on_a_long_record():
+    """긴 기록에서도 절점은 사이클 단위로 찾는다.
+
+    격자를 축마다 32점으로 솎았더니 1,000 사이클짜리에서 첫 절점 후보가
+    7, 39, 71, ... 뿐이었다.  10~25번에 급감한 셀은 27/31 로 적합되고, 그
+    잘못된 적합의 두 번째 전이가 모든 게이트를 통과했다 — 놓치는 것보다 나쁘다.
+    """
+    def early_crash(c):
+        return (100
+                - 0.02 * (min(c, 10) - 3)
+                - 1.00 * max(min(c, 25) - 10, 0)
+                - 0.02 * max(c - 25, 0))
+
+    segmented = detect_knee(*_curve(1000, early_crash, noise=0.0),
+                            reference_cycle=3).by_method("segmented")
+    assert segmented.detected, segmented.reason
+    assert segmented.cycle == pytest.approx(10, abs=2), segmented.reason
+    assert segmented.detail["second_breakpoint"] == pytest.approx(25, abs=2)
+
+
+def test_the_exhaustive_break_search_matches_brute_force():
+    """전수 탐색은 prefix 합으로 계산한다 — 브루트포스와 같은 답이어야 한다."""
+    from wrdkit.knee import MIN_SEGMENT, _exact_three_break, _hinge_fit
+
+    rng = np.random.default_rng(0)
+    for _ in range(5):
+        n = int(rng.integers(15, 40))
+        x = np.arange(1, n + 1, dtype=float)
+        y = 100 - rng.uniform(0, 0.2) * x + rng.normal(0, 0.3, n)
+        got = _exact_three_break(x, y)
+        brute = min(
+            (_hinge_fit(x, y, (x[i], x[j]))[0], x[i], x[j])
+            for i in range(MIN_SEGMENT, n - MIN_SEGMENT)
+            for j in range(i + MIN_SEGMENT, n - MIN_SEGMENT)
+        )
+        assert got[0] == pytest.approx(brute[0], rel=1e-9)
+        assert (got[1], got[2]) == (brute[1], brute[2])
+
+
+def test_early_life_does_not_grow_with_the_record():
+    """같은 셀을 더 오래 봤다고 초기 수명의 정의가 바뀌면 안 된다.
+
+    baseline 창이 `max(5, n // 4)` 였다.  150 사이클에서 37 사이클이던 창이
+    500 사이클에서는 124 사이클이 되고, 그 중앙값은 이미 *후기* 기울기다 —
+    51번에 보고했던 knee 가 데이터를 더 넣자 사라졌다.
+    """
+    def early_knee(c):
+        return 100 - 0.03 * (min(c, 50) - 3) - 0.08 * max(c - 50, 0)
+
+    short = detect_knee(*_curve(150, early_knee, noise=0.0),
+                        reference_cycle=3).by_method("slope_ratio")
+    longer = detect_knee(*_curve(500, early_knee, noise=0.0),
+                         reference_cycle=3).by_method("slope_ratio")
+    assert short.detected, short.reason
+    assert longer.detected, longer.reason
+    assert longer.cycle == pytest.approx(short.cycle, abs=5)
+
+
+def test_a_failing_first_candidate_does_not_hide_a_later_knee():
+    """첫 후보가 게이트에서 져도 뒤 후보를 계속 본다.
+
+    60~71번의 일시적인 5 %p 낙차가 첫 후보로 잡히고 gain 96.8 로 아깝게
+    떨어지면, 95번의 진짜 영구 knee 는 검사조차 되지 않았다.  그러면서
+    이유는 "한 번도 넘은 적 없다" 였다.
+    """
+    def transient_then_real(c):
+        base = 100 - 0.04 * (min(c, 95) - 3) - 1.0 * max(c - 95, 0)
+        return base - (5.0 if 60 <= c < 72 else 0.0)
+
+    result = detect_knee(*_curve(108, transient_then_real, noise=0.0),
+                         reference_cycle=3).by_method("slope_ratio")
+    assert result.detected, result.reason
+    assert result.cycle == pytest.approx(95, abs=4)
+
+
+def test_the_loss_is_measured_from_the_cycle_that_gets_reported():
+    """보고 cycle 부터의 손실이 2 % 여야 한다 — 창 시작부터가 아니라.
+
+    창의 가운데를 답으로 적도록 고쳤는데 손실은 창 시작에서 재고 있었다.
+    그래서 '13번 이후로 2 % 를 잃는다' 고 보고하면서 실제로는 1.8 % 였다.
+    """
+    def shape(c):
+        return 100 - 0.02 * (min(c, 12) - 3) - 0.30 * max(c - 12, 0)
+
+    cycles, q = _curve(19, shape, noise=0.0)
+    result = detect_knee(cycles, q, reference_cycle=3).by_method("slope_ratio")
+    if result.detected:
+        search = cycles[2:]
+        values = smooth_series(100.0 * q[2:] / q[2], 5)
+        index = int(np.flatnonzero(search == result.cycle)[0])
+        assert values[index] - values[-1] >= 2.0, result.reason
+
+
+def test_curvature_will_not_compare_a_three_point_slope():
+    """세 점을 지나는 직선은 기울기가 아니다.
+
+    가장자리 여유가 2 라 곡률 정점이 기준 사이클 바로 옆(5번)에 놓이고,
+    비교 대상이 된 '초기 수명' 이 세 사이클짜리였다.  이 수정은 한 번
+    들어갔다가 mutation 하네스가 오래된 백업으로 되돌리면서 날아갔는데,
+    테스트가 `cycle is None` 이면 단언을 건너뛰는 바람에 통과했다.
+    """
+    from wrdkit.knee import MIN_SEGMENT
+
+    def too_early(c):
+        return 100.0 if c <= 5 else 100.0 - 2.0 * (c - 5)
+
+    cycles, q = _curve(30, too_early, noise=0.0)
+    result = detect_knee(cycles, q, reference_cycle=3).by_method("curvature")
+    # 검출이든 아니든 후보 자체가 가장자리에서 MIN_SEGMENT 만큼 떨어져 있어야 한다.
+    assert result.candidate_cycle is None or result.candidate_cycle >= 3 + MIN_SEGMENT
+
+
+def test_no_usable_cycle_after_the_reference_is_indeterminate():
+    """요청한 기준 이후에 데이터가 없으면 formation 으로 되돌아가지 않는다.
+
+    `searchsorted` 가 n 을 반환하면 index 0 으로 떨어져 cycle 1 — 기준
+    사이클이 존재하는 이유가 바로 그 사이클을 빼는 것인데(ADR 0004),
+    그 되돌림이 평범한 조정처럼 적혀 나갔다.
+    """
+    analysis = detect_knee(np.arange(1, 6, dtype=float), np.linspace(1.0, 0.96, 5),
+                           reference_cycle=50)
+    assert analysis.primary.status == "indeterminate", analysis.primary.reason
+    assert analysis.reference_cycle == 50
+    assert "no usable cycle" in analysis.primary.reason
+
+
+def test_primary_is_the_earliest_onset_when_criteria_point_at_different_events():
+    """knee 는 가속이 *시작된* 지점이다 — 목록의 첫 방법이 아니라.
+
+    50번에 꺾이고 150번에 다시 붕괴하는 셀에서 방법 우선순위는 147번을
+    골랐다.  51번을 찾아 둔 기준이 목록 아래에 있었다는 이유로.
+    """
+    def two_knees(c):
+        return (100
+                - 0.03 * (min(c, 50) - 3)
+                - 0.18 * max(min(c, 150) - 50, 0)
+                - 0.90 * max(c - 150, 0))
+
+    analysis = detect_knee(*_curve(180, two_knees, seed=1, noise=0.002), reference_cycle=3)
+    detected = [r.cycle for r in analysis.results
+                if r.detected and r.method in ("segmented", "slope_ratio")]
+    if len(detected) > 1:
+        assert analysis.primary.cycle == min(detected)
+        # 백 사이클 떨어진 두 답은 하나의 답이 아니다 — 그 사실도 말해야 한다.
+        assert "another criterion" in analysis.primary.reason
+
+
+def test_every_detail_number_is_json_safe():
+    """detail 에 Infinity 가 들어가면 표준을 지키는 클라이언트가 전부 거부한다.
+
+    평탄하다 무너지는 셀은 비율이 무한대다 — 과학적으로는 옳고 JSON 으로는
+    불가능하다.  플래그로 적는다.
+    """
+    import json
+
+    cycles = list(range(1, 81))
+    q = [5 * (1 + 0.002 * (x - 1)) if x <= 35
+         else 5 * (1 + 0.002 * 34 - 0.016 * (x - 35)) for x in cycles]
+    analysis = detect_knee(cycles, q, reference_cycle=1)
+    segmented = analysis.by_method("segmented")
+    assert segmented.detected
+    assert segmented.detail["fade_starts_here"] == 1.0
+    for result in analysis.results:
+        json.dumps(result.detail, allow_nan=False)

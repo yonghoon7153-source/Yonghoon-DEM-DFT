@@ -10,12 +10,19 @@
 type Rule = [RegExp, (match: RegExpMatchArray) => string]
 
 const KNEE_REASONS: Rule[] = [
+  // 기준끼리 갈렸다는 꼬리표는 문장 뒤에 붙는다 — 앞부분을 먼저 번역하고
+  // 꼬리표를 다시 붙인다.  이게 없으면 문장 전체가 어느 규칙에도 안 맞아
+  // 통째로 영어로 나간다.
   [
-    /^retention crossed ([\d.]+)% at cycle ([\d.]+)$/,
+    /^(.*); another criterion puts it at cycle ([\d.]+)$/,
+    (m) => `${apply(KNEE_REASONS, m[1]!)} · 다른 기준은 ${m[2]}번을 짚습니다`,
+  ],
+  [
+    /^retention crossed (\S+)% at cycle ([\d.]+)$/,
     (m) => `유지율이 ${m[2]}번 사이클에서 ${m[1]}% 를 통과했습니다`,
   ],
   [
-    /^capacity never fell below ([\d.]+)% \(lowest ([\d.]+)%\)$/,
+    /^capacity never fell below (\S+)% \(lowest ([\d.]+)%\)$/,
     (m) => `유지율이 ${m[1]}% 아래로 내려간 적이 없습니다 (최저 ${m[2]}%)`,
   ],
   [
@@ -23,15 +30,15 @@ const KNEE_REASONS: Rule[] = [
     (m) => `${m[2]}번 사이클에서 열화율이 ${m[1]}배로 급해집니다 (${m[3]} → ${m[4]} %/cycle)`,
   ],
   [
-    /^fade rate reached ([\d.]+)x the early-life rate \(([-\d.]+) vs ([-\d.]+) %\/cycle\) at cycle ([\d.]+)$/,
+    /^fade rate reached (\S+)x the early-life rate \(([-\d.]+) vs ([-\d.]+) %\/cycle\) at cycle ([\d.]+)$/,
     (m) => `${m[4]}번 사이클에서 열화율이 초기의 ${m[1]}배에 도달했습니다 (${m[2]} vs ${m[3]} %/cycle)`,
   ],
   [
-    /^fade rate never reached ([\d.]+)x the early-life rate$/,
+    /^fade rate never reached (\S+)x the early-life rate$/,
     (m) => `열화율이 초기의 ${m[1]}배에 도달한 적이 없습니다`,
   ],
   [
-    /^fade rate never stayed at ([\d.]+)x the early-life rate$/,
+    /^fade rate never stayed at (\S+)x the early-life rate$/,
     (m) => `열화율이 초기의 ${m[1]}배를 넘은 채로 머무른 적이 없습니다`,
   ],
   [
@@ -43,6 +50,12 @@ const KNEE_REASONS: Rule[] = [
   [
     /^fade begins at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
     (m) => `${m[1]}번 사이클에서 열화가 시작됩니다 (${m[2]} → ${m[3]} %/cycle)`,
+  ],
+  [
+    /^only ([\d.]+)% is lost after cycle ([\d.]+) \(needs ([\d.]+)%\), and a line bent there fits no better than a straight one$/,
+    (m) =>
+      `${m[2]}번 이후로 잃는 것이 ${m[1]}% 뿐이고 (${m[3]}% 이상 필요), ` +
+      `거기서 꺾은 선이 곧은 선보다 잘 맞지도 않습니다`,
   ],
   [
     /^only ([\d.]+)% is lost after cycle ([\d.]+) \(needs ([\d.]+)%\)$/,
@@ -77,6 +90,24 @@ const KNEE_REASONS: Rule[] = [
     (m) => `세 직선으로 보려면 사이클이 ${m[1]}개 이상이어야 합니다 (현재 ${m[2]}개)`,
   ],
   [/^no three-line break point fits$/, () => '세 직선으로도 맞는 절점이 없습니다'],
+  [
+    /^fade steepens at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) => `${m[1]}번 사이클에서 열화가 급해집니다 (${m[2]} → ${m[3]} %/cycle)`,
+  ],
+  [
+    /^cycle ([\d.]+) bends, but only (\d+) cycles follow it and ([\d.]+)% has been lost so far -- at this rate the ([\d.]+)% that makes it a knee needs about (\d+)$/,
+    (m) =>
+      `${m[1]}번에서 꺾이지만 그 뒤가 ${m[2]} 사이클뿐이고 아직 ${m[3]}% 를 잃었습니다 — ` +
+      `이 속도라면 knee 로 인정하는 ${m[4]}% 까지 ${m[5]} 사이클쯤 더 필요합니다`,
+  ],
+  [
+    /^fell below (\S+)% at cycle ([\d.]+), the last cycle in the record -- nothing follows to confirm it$/,
+    (m) => `기록의 마지막 사이클인 ${m[2]}번에서 ${m[1]}% 아래로 내려갔습니다 — 확인할 뒤가 없습니다`,
+  ],
+  [
+    /^no usable cycle at or after cycle (\d+); the record ends at cycle (\d+)$/,
+    (m) => `${m[1]}번 이후로 쓸 수 있는 사이클이 없습니다 (기록은 ${m[2]}번에서 끝납니다)`,
+  ],
   [/^maximum curvature at cycle ([\d.]+)$/, (m) => `${m[1]}번 사이클에서 곡률이 가장 큽니다`],
   [
     /^curvature peaks at cycle ([\d.]+) but fade accelerates only ([\d.]+)x there \(needs ([\d.]+)x\)$/,
@@ -85,7 +116,7 @@ const KNEE_REASONS: Rule[] = [
       `(${m[3]}배 이상이어야 knee 로 인정)`,
   ],
   [
-    /^dipped below ([\d.]+)% at cycle ([\d.]+) but recovered$/,
+    /^dipped below (\S+)% at cycle ([\d.]+) but recovered$/,
     (m) => `${m[2]}번 사이클에서 ${m[1]}% 아래로 내려갔다가 회복했습니다`,
   ],
   [

@@ -84,7 +84,13 @@ export function ReportCard({ report }: { report: Report }) {
         />
         <Metric
           label="용량 급감 시작"
-          value={knee?.primary.detected ? cycleNumber(knee.primary.cycle) : '검출 안 됨'}
+          value={
+            knee?.primary.detected
+              ? cycleNumber(knee.primary.cycle)
+              : knee?.primary.status === 'insufficient'
+                ? `${cycleNumber(knee.primary.candidate_cycle)}?`
+                : '검출 안 됨'
+          }
           unit={knee?.primary.detected ? '번째' : undefined}
           note={knee ? ko.kneeReason(knee.primary.reason) : undefined}
           muted={!knee?.primary.detected}
@@ -251,8 +257,15 @@ export function KneeDetail({
                 {knee.primary.method === result.method && result.detected ? (
                   <span className="badge plain">기본</span>
                 ) : null}
-                <span className="cycle">
-                  {result.detected ? `${cycleNumber(result.cycle)}번` : '—'}
+                <span className={`cycle${result.status === 'insufficient' ? ' tentative' : ''}`}>
+                  {/* 확정이 아니어도 짚은 사이클은 보여 준다.  '—' 하나로
+                      "안 꺾였다" 와 "아직 확인할 데이터가 없다" 를 같이
+                      쓰면, 일찍 뽑은 셀이 안 꺾인 셀과 똑같아 보인다. */}
+                  {result.detected
+                    ? `${cycleNumber(result.cycle)}번`
+                    : result.status === 'insufficient' && result.candidate_cycle !== null
+                      ? `${cycleNumber(result.candidate_cycle)}번?`
+                      : '—'}
                 </span>
               </span>
               <span className="why">{METHOD_HINTS[result.method]}</span>

@@ -202,12 +202,18 @@ export interface ProfileResponse {
   mixed_basis?: boolean
 }
 
+export type KneeStatus = 'detected' | 'insufficient' | 'none' | 'indeterminate'
+
 export interface KneeResult {
   method: 'threshold' | 'segmented' | 'slope_ratio' | 'curvature' | 'none'
   cycle: number | null
   detected: boolean
   reason: string
   detail: Record<string, number>
+  /** `insufficient` 는 "knee 없음" 이 아니다 — 아직 확인할 데이터가 없는 것이다. */
+  status: KneeStatus
+  /** 확정 여부와 무관하게 이 기준이 짚고 있는 사이클. */
+  candidate_cycle: number | null
 }
 
 export interface KneeAnalysis {

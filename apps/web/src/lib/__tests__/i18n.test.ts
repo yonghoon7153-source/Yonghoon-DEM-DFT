@@ -59,6 +59,14 @@ describe('knee reasons', () => {
     'a three-line fit needs at least 13 cycles, has 10',
     'the rate does steepen, but only 0.1% is lost afterwards (needs 2%)',
     'the rate steepens around cycle 124, but a line bent there fits no better than a straight one',
+    'no usable cycle at or after cycle 50; the record ends at cycle 5',
+    'fell below 80% at cycle 12, the last cycle in the record -- nothing follows to confirm it',
+    'cycle 12 bends, but only 5 cycles follow it and 1.8% has been lost so far -- at this rate the 2% that makes it a knee needs about 6',
+    'fade steepens at cycle 88 (-0.020 -> -0.900 %/cycle)',
+    'fade rate steepens 11.67x at cycle 12 (-0.030 -> -0.350 %/cycle); another criterion puts it at cycle 51',
+    // API 가 허용하는 경계 파라미터.  Python 의 :g 가 지수 표기를 만든다.
+    'capacity never fell below 1e-05% (lowest 99.0%)',
+    'fade rate never stayed at 1e+06x the early-life rate',
   ]
 
   it('translates every reason knee.py can produce', () => {

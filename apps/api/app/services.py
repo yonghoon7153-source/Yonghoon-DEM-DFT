@@ -7,6 +7,7 @@ the series builders can be tested without a client.
 from __future__ import annotations
 
 import json
+import math
 import re
 from dataclasses import asdict, replace
 from datetime import datetime, timedelta, timezone
@@ -424,12 +425,29 @@ def build_cell_report(session: Session, sample: Sample, *,
     )
 
 
+def _finite_result(result) -> dict:
+    """One criterion's answer, with every number something JSON can carry.
+
+    ``detail`` is a free-form dict of measurements and one of them was
+    deliberately infinite: a fade that *begins* at the break has no finite
+    acceleration ratio.  wrdkit records that as a flag now, but this stays as
+    the boundary's own guarantee -- a future measurement that divides by a
+    near-zero slope must not be able to turn a correct knee into a 500.
+    """
+    payload = asdict(result)
+    payload["detail"] = {
+        key: value for key, value in payload.get("detail", {}).items()
+        if isinstance(value, (int, float)) and math.isfinite(value)
+    }
+    return payload
+
+
 def knee_payload(analysis: KneeAnalysis | None) -> dict | None:
     if analysis is None:
         return None
     return {
-        "primary": asdict(analysis.primary),
-        "results": [asdict(r) for r in analysis.results],
+        "primary": _finite_result(analysis.primary),
+        "results": [_finite_result(r) for r in analysis.results],
         "reference_cycle": analysis.reference_cycle,
         "reference_capacity_mah": analysis.reference_capacity_mah,
         "search_start_cycle": analysis.search_start_cycle,
