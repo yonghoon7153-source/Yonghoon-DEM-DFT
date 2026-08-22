@@ -428,3 +428,18 @@ Codex 리뷰 #21. `test_bml_client.sh` 는 `make test-tools` 에만 있고 `bml 
 스위트에 걸려 있는데, 그것이 한 번도 실행되지 않은 채 green 으로 합쳐졌다.
 `bml check` 와 CI 가 이제 같은 다섯을 돌린다 (ownership · shutdown · client ·
 tunnel · worklog + backup).
+
+## [2026-08-22] ingest | Codex 원격 접근 리뷰 결과를 저장소에 들인다
+확정 21건 (높음 8 · 중간 13). 원문을
+`docs/reviews/2026-08-22-codex-review-remote-access-result.md` 에 그대로 두고,
+그 위에 **대응 현황 표**를 얹었다 — 원문 표는 고치지 않는다. 무엇을
+지적받았는지가 남아야 하고, 상태만 한 곳에서 움직여야 두 세션이 같은 것을 본다.
+
+지금 닫은 것은 **#21 의 절반**뿐이다 (`bml check` 와 CI 가 client·shutdown·
+tunnel·worklog 를 함께 돌린다). #21 의 나머지 — fallback 테스트가 `cmd_share`
+본문의 문자열 개수만 세는 것 — 와 나머지 20건은 **전부 열려 있다.**
+
+다음 사람에게: 손대기 전에 그 표의 상태를 먼저 바꾸고 시작한다. 우선순위는
+#3(닫았다고 보고하고 안 닫힌 터널) → #2(부분 문자열 소유 판정) → #1(터널
+수명과 게이트 수명) 순으로 보인다 — 셋 다 CLAUDE.md §0.8 에 직접 걸리고,
+#3 은 "공개된 주소가 닫힌 줄 안다" 라서 결과가 가장 나쁘다.
