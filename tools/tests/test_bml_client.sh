@@ -177,6 +177,13 @@ check "아직 안 나왔으면 빈 값"    "$(tunnel_url_from 'INF Starting tunn
 # 로그에는 문서 링크도 같이 나온다.  그걸 주소로 찍으면 상대는 클라우드플레어
 # 문서를 열고 "안 열리는데요" 라고 한다.
 check "다른 도메인은 안 집는다"   "$(tunnel_url_from 'see https://developers.cloudflare.com/x')" ""
+# localhost.run 은 접속 안내에 관리 페이지 주소를 같이 찍는다.  그것을 알려
+# 주면 상대는 남의 관리 화면을 연다.
+LHR_LOG="Welcome to localhost.run!
+To set up and manage custom domains go to https://admin.localhost.run/
+6f8a1234.lhr.life tunneled with tls termination, https://6f8a1234.lhr.life"
+check "localhost.run 주소를 꺼낸다"     "$(tunnel_url_from "$LHR_LOG")" "https://6f8a1234.lhr.life"
+check "관리 페이지를 주소로 안 집는다"  "$(tunnel_url_from 'https://admin.localhost.run/')" ""
 
 echo
 echo "공유 암호"
@@ -229,6 +236,10 @@ echo "터널은 창을 닫아도 살아 있어야 한다"
 # 것만으로 죽이면 남의 프로세스를 그룹째 죽일 수 있다 (CLAUDE.md §0.8).
 check "우리 터널의 명령줄을 알아본다" \
   "$(looks_like_our_tunnel "cloudflared tunnel --no-autoupdate --url $URL" && echo yes || echo no)" "yes"
+check "SSH 터널도 우리 것이다" \
+  "$(looks_like_our_tunnel "ssh -T -o StrictHostKeyChecking=accept-new -R 80:localhost:$PORT nokey@localhost.run" && echo yes || echo no)" "yes"
+check "남의 포트를 넘기는 ssh 는 우리 것이 아니다" \
+  "$(looks_like_our_tunnel "ssh -T -R 80:localhost:9999 nokey@localhost.run" && echo yes || echo no)" "no"
 check "남의 cloudflared 는 우리 것이 아니다" \
   "$(looks_like_our_tunnel "cloudflared tunnel --url http://localhost:9999" && echo yes || echo no)" "no"
 check "아무 프로세스나 우리 것이 아니다" \
@@ -259,10 +270,10 @@ sleep 0.3
 check "프로세스가 실제로 죽는다" "$(kill -0 "$FAKE_TUNNEL" 2>/dev/null && echo no || echo yes)" "yes"
 check "주소 파일도 지운다"       "$([ -e "$TUNNEL_URL_FILE" ] && echo no || echo yes)" "yes"
 check "두 번 닫으면 닫을 게 없다" "$(close_tunnel && echo yes || echo no)" "no"
-# QUIC(UDP 7844)이 막힌 망에서도 주소는 발급된다.  그대로 두면 상대가
-# HTTP 530 을 보고 자기가 주소를 잘못 받아 적었다고 생각한다.
-check "QUIC 이 막히면 http2 로 다시 연다" \
-  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c -- '--protocol "\$proto"')" "1"
+# 7844 가 막힌 망에서는 cloudflared 가 어떤 --protocol 로도 못 붙는다.
+# 그때 SSH 로 넘어가지 않으면 그 망에서는 공유 자체가 불가능해진다.
+check "cloudflare 가 안 되면 SSH 로 넘어간다" \
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh')" "2"
 # 서버 없이 남은 터널은 남에게 오류 화면을 띄우는 주소일 뿐이다.
 check "bml stop 이 터널도 닫는다" \
   "$(sed -n '/^cmd_stop()/,/^}/p' "$BML" | grep -c close_tunnel)" "1"

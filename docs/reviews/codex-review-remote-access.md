@@ -39,13 +39,19 @@ git diff --stat d41aec3e^..d37b4071
 
 ## 지금 상태 — 리뷰어가 알아야 할 것
 
-`bml share` 는 **실제 사용 망에서 아직 동작하지 않는다.** cloudflared 가 엣지에
-붙는 데 쓰는 7844/TCP 가 그 망에서 막혀 있다 (로그: `dial tcp
-198.41.200.43:7844: i/o timeout`, 엣지 IP 여러 개, 45초). 터널 제공자를 바꿀지
-검토 중이다.
+이 랩 망에서 7844/TCP 가 막혀 있어 Cloudflare 터널이 안 됐다 (로그: `dial tcp
+198.41.200.43:7844: i/o timeout`, 엣지 IP 여러 개, 45초). 실측한 포트:
 
-그래서 **터널 제공자 선택(Cloudflare)** 자체보다, **주변 기계**를 봐 주면 좋겠다:
-게이트, 프로세스 소유 판정, 상태 판정, 대기·재시도, 사용자에게 하는 말이 사실인가.
+```
+region1.v2.argotunnel.com:7844  막힘
+localhost.run:22                열림
+connect.ngrok-agent.com:443     열림
+```
+
+그래서 제공자를 둘로 두고 `bml share` 가 7844 를 찔러 보고 고르게 했다
+(`WORKBENCH_TUNNEL=auto|cloudflare|ssh`). **SSH 쪽(localhost.run)은 이 컨테이너
+에서 22 가 막혀 실제로 붙여 보지 못했다** — 문법과 소유 판정, 주소 파싱만
+시험했다. 리뷰에서 가장 의심스러운 부분이다.
 
 ## 이 브랜치에서 이미 잡은 것 (다시 찾을 필요 없음)
 
@@ -97,6 +103,11 @@ docs/adr/0011-central-instance-for-data.md, CLAUDE.md 0장.
      bml share 가 하는 판단이 옳은가
    - nohup 으로 띄운 터널이 고아가 된 뒤 tunnel.pid 가 낡았을 때의 순열
    - bml stop 이 터널을 닫는 것이 항상 옳은가 (dev 서버만 내리는 경우 등)
+   - tunnel_via_ssh: 실제로 붙여 보지 못했다. `nohup ssh -T ... </dev/null` 이
+     stdin EOF 로 조용히 끝나지 않는가. StrictHostKeyChecking=accept-new 가
+     없는 옛 OpenSSH 에서는 어떻게 되는가. ExitOnForwardFailure 가 걸렸을 때
+     try_tunnel 이 그것을 실패로 읽는가. 키가 없는 기계에서 nokey@ 인증이
+     비밀번호 프롬프트로 빠지면 nohup 안에서 무슨 일이 생기는가
 
 3. tools/bml 의 "사실이 아닌 말" — 이 브랜치의 버그가 전부 이 종류였다
    - listening_scope: ss 출력을 문자열로 판정한다. 포트 번호가 다른 줄에

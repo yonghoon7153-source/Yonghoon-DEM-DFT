@@ -334,3 +334,12 @@ cloudflared 는 기본으로 QUIC(UDP 7844)으로 붙는데 학교 망에서 그
 인증 비슷한 것을 처음 만들었고(ADR 0012 를 조건부로 비켜 간다), 변경의 대부분이
 테스트가 가장 얇은 쉘 스크립트다. 이 브랜치에서 이미 잡은 다섯 가지는 적어
 두어 리뷰가 겹치지 않게 했다.
+
+## [2026-08-21] update | 터널을 둘로 — 망을 보고 고른다
+이 랩 망에서 7844/TCP 가 막혀 있어 cloudflared 가 어떤 `--protocol` 로도
+엣지에 못 붙었다 (QUIC 도 http2 도 443 이 아니라 7844 를 쓴다). 실측:
+`region1.v2.argotunnel.com:7844 막힘 / localhost.run:22 열림 /
+connect.ngrok-agent.com:443 열림`. localhost.run 을 SSH 한 줄로 붙인다 —
+계정도 받을 것도 없다. `bml share` 가 7844 를 먼저 찔러 보고 고른다
+(`WORKBENCH_TUNNEL=auto|cloudflare|ssh`). ngrok 은 됐겠지만 계정이 필요해서
+안 썼다.

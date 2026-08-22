@@ -128,6 +128,9 @@ DEV_PID_FILE="$RUN_DIR/dev.pid"
 #: 닫은 뒤에는 무엇이 열려 있는지 알 수 없다.
 TUNNEL_PID_FILE="$RUN_DIR/tunnel.pid"
 TUNNEL_URL_FILE="$RUN_DIR/tunnel.url"
+#: 어느 터널을 쓸지.  auto 는 밖으로 나가는 포트를 보고 고른다 (ADR 0014).
+#: cloudflare · ssh · auto.
+TUNNEL="${WORKBENCH_TUNNEL:-auto}"
 STAMP="$RUN_DIR/deps.stamp"
 
 #: 실행 상태를 둘 폴더.  만드는 것은 실제로 쓸 때까지 미룬다 — 워크벤치가 아닌
@@ -1265,7 +1268,11 @@ count_chars() {
 #: 주소를 못 꺼내면 터널은 떠 있는데 아무도 못 들어온다 — 그 상태가 제일
 #: 나쁘다. 열려 있다고 믿고 끄지 않기 때문이다.
 tunnel_url_from() {
-  printf '%s' "$1" | grep -oE 'https://[a-z0-9][a-z0-9-]*\.trycloudflare\.com' | head -1
+  # 도메인을 한정한다.  localhost.run 은 접속 안내에 admin.localhost.run 도 같이
+  # 찍는데, 그것을 주소로 알려 주면 상대는 남의 관리 페이지를 연다.
+  printf '%s' "$1" \
+    | grep -oE 'https://[a-z0-9][a-z0-9-]*\.(trycloudflare\.com|lhr\.life)' \
+    | head -1
 }
 
 #: 터널 프로그램의 경로.  ensure_cloudflared 가 채운다.
@@ -1359,6 +1366,7 @@ cmd_password() {
 looks_like_our_tunnel() {
   case "$1" in
     *cloudflared*--url*"$URL"*) return 0 ;;
+    *ssh*-R*"80:localhost:$PORT"*localhost.run*) return 0 ;;
     *) return 1 ;;
   esac
 }
@@ -1397,6 +1405,72 @@ close_tunnel() {
   # 다음 `bml share` 가 "이미 열려 있습니다" 로 끝난다.
   rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
   return 1
+}
+
+#: 터널 하나를 띄우고, 그 주소가 실제로 열릴 때까지 기다린다.
+#:
+#: 성공하면 TUNNEL_PID_FILE·TUNNEL_URL_FILE 을 채우고 0.  실패하면 띄운 것을
+#: 닫고 1 — 반쯤 열린 터널을 남겨 두면 다음 시도가 "이미 열려 있습니다" 로
+#: 끝난다.
+try_tunnel() {
+  local label="$1"; shift
+  local log="$RUN_DIR/tunnel.log" url="" pid i
+  : > "$log"
+  step "$label"
+  # 이 창에 매달아 두지 않는다.  창을 닫거나 Ctrl-C 를 누르면 터널이 죽고,
+  # 그 주소를 받은 사람은 오류 화면을 본다 — 실제로 그렇게 됐다.  닫는 것은
+  # `bml share stop` 이 한다.
+  nohup "$@" >>"$log" 2>&1 </dev/null &
+  pid=$!
+  echo "$pid" > "$TUNNEL_PID_FILE"
+  disown "$pid" 2>/dev/null || true
+
+  for i in $(seq 1 60); do
+    url="$(tunnel_url_from "$(cat "$log" 2>/dev/null)")"
+    [ -n "$url" ] && break
+    kill -0 "$pid" 2>/dev/null || break
+    sleep 0.5
+  done
+  if [ -z "$url" ]; then
+    close_tunnel >/dev/null 2>&1 || true
+    return 1
+  fi
+
+  printf '%s' "$url" > "$TUNNEL_URL_FILE"
+  # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이, "열렸다" 를
+  # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
+  step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
+  wait_until_alive "$url" 60 && return 0
+  close_tunnel >/dev/null 2>&1 || true
+  return 1
+}
+
+tunnel_via_cloudflare() {
+  ensure_cloudflared
+  [ -x "$CLOUDFLARED" ] || return 1
+  try_tunnel "터널 여는 중 ${DIM}(Cloudflare)${OFF}" \
+    "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" && return 0
+  # QUIC(UDP)만 막힌 망이 있다.  http2 도 같은 7844 를 쓰지만 TCP 다.
+  try_tunnel "다시 여는 중 ${DIM}(Cloudflare · http2)${OFF}" \
+    "$CLOUDFLARED" tunnel --no-autoupdate --protocol http2 --url "$URL"
+}
+
+#: SSH 한 줄이 전부다 — 받을 것도, 계정도 없다.
+#:
+#: 7844 가 막힌 망에서 유일하게 남는 길이다.  `nokey@` 는 키 없이 붙으라는
+#: localhost.run 의 사용자 이름이고, StrictHostKeyChecking=accept-new 가 없으면
+#: 첫 접속의 "계속할까요?" 에서 조용히 멈춘다 — nohup 이라 그 물음도 안 보인다.
+tunnel_via_ssh() {
+  if ! command -v ssh >/dev/null 2>&1; then
+    warn "ssh 가 없습니다 — SSH 터널을 쓸 수 없습니다."
+    return 1
+  fi
+  try_tunnel "터널 여는 중 ${DIM}(localhost.run · SSH)${OFF}" \
+    ssh -T \
+      -o StrictHostKeyChecking=accept-new \
+      -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
+      -o ExitOnForwardFailure=yes \
+      -R "80:localhost:$PORT" nokey@localhost.run
 }
 
 #: 다른 공유기에 있는 사람도 볼 수 있게 임시 터널을 연다 (ADR 0014).
@@ -1453,76 +1527,33 @@ cmd_share() {
   ensure_cloudflared
   [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
 
-  local log="$RUN_DIR/tunnel.log" url="" pid i proto
-
-  # 두 가지 방식으로 시도한다.
-  #
-  # cloudflared 는 기본으로 QUIC(UDP 7844)으로 붙는데, 학교·회사 망에서는 그
-  # 포트가 막혀 있는 일이 흔하다.  그때도 주소는 발급되므로 화면상 성공처럼
-  # 보이고, 그 주소를 열면 Cloudflare 오류 1033(HTTP 530)이 뜬다 — 주소를 받은
-  # 사람은 자기가 잘못 받아 적었다고 생각한다.  http2 는 443/TCP 만 쓴다.
-  for proto in "" "http2"; do
-    : > "$log"
-    if [ -n "$proto" ]; then
-      step "다른 방식으로 다시 여는 중 ${DIM}(--protocol $proto · QUIC 이 막힌 망일 때)${OFF}"
-      # 이 창에 매달아 두지 않는다 (아래 주석 참고).
-      nohup "$CLOUDFLARED" tunnel --no-autoupdate --protocol "$proto" --url "$URL" >>"$log" 2>&1 &
-    else
-      step "터널 여는 중"
-      # 창을 닫거나 Ctrl-C 를 누르면 터널이 죽고, 그 주소를 받은 사람은
-      # Cloudflare 오류 1033 을 본다 — 실제로 그렇게 됐다.  서버와 같은
-      # 방식으로 띄우고, 닫는 것은 `bml share stop` 이 한다.
-      nohup "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
-    fi
-    pid=$!
-    echo "$pid" > "$TUNNEL_PID_FILE"
-    disown "$pid" 2>/dev/null || true
-
-    url=""
-    for i in $(seq 1 60); do
-      url="$(tunnel_url_from "$(cat "$log" 2>/dev/null)")"
-      [ -n "$url" ] && break
-      kill -0 "$pid" 2>/dev/null || break
-      sleep 0.5
-    done
-    if [ -z "$url" ]; then
-      close_tunnel >/dev/null 2>&1 || true
-      continue
-    fi
-
-    printf '%s' "$url" > "$TUNNEL_URL_FILE"
-    # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이 "열렸다" 를
-    # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
-    # 넉넉히 기다린다.  엣지 연결이 붙기까지 30초를 넘는 일이 있고, 그 사이
-    # 응답은 즉시 돌아오는 530 이다.
-    step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
-    wait_until_alive "$url" 60 && break
-
-    close_tunnel >/dev/null 2>&1 || true
-    url=""
-  done
+  local url=""
+  case "$TUNNEL" in
+    ssh|localhost.run)      tunnel_via_ssh        && url="$(tunnel_url)" ;;
+    cloudflare|cloudflared) tunnel_via_cloudflare && url="$(tunnel_url)" ;;
+    *)
+      # 7844/TCP 가 열려 있으면 Cloudflare 가 빠르고 안정적이다.  막혀 있으면
+      # cloudflared 는 어떤 --protocol 로도 못 붙는다 (QUIC 도 http2 도 그
+      # 포트를 쓴다) — 그때는 SSH 쪽이 유일한 길이다.  찔러 보고 고른다.
+      step "밖으로 나가는 길 확인 중"
+      if edge_port_open; then
+        tunnel_via_cloudflare && url="$(tunnel_url)"
+      else
+        say "  ${DIM}7844/TCP 가 막혀 있습니다 — SSH 터널을 씁니다.${OFF}"
+      fi
+      [ -n "$url" ] || { tunnel_via_ssh && url="$(tunnel_url)"; }
+      ;;
+  esac
 
   if [ -z "$url" ]; then
     printf '%s✕%s 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
-    say "  ${DIM}$log 의 마지막 줄:${OFF}"
-    tail -n 12 "$log" 2>/dev/null | sed 's/^/    /'
+    say "  ${DIM}$RUN_DIR/tunnel.log 의 마지막 줄:${OFF}"
+    tail -n 12 "$RUN_DIR/tunnel.log" 2>/dev/null | sed 's/^/    /'
     say ""
-    # 포트 문제인지 아닌지를 여기서 갈라 준다.  로그의 "dial tcp ...:7844" 만
-    # 으로는 막힌 것인지 느린 것인지 알 수 없다.
-    step "밖으로 나가는 7844/TCP 확인 중"
-    if edge_port_open; then
-      ok "7844/TCP 는 열려 있습니다 — 포트 문제는 아닙니다."
-      say "  ${DIM}잠시 뒤 다시${OFF} ${GREEN}bml share${OFF} ${DIM}를 해 보세요.${OFF}"
-    else
-      printf '%s✕%s 밖으로 나가는 7844/TCP 가 막혀 있습니다.\n' "$RED" "$OFF" >&2
-      say "  ${DIM}cloudflared 는 QUIC 이든 http2 든 이 포트로만 엣지에 붙습니다 —${OFF}"
-      say "  ${DIM}443 이 열려 있어도 안 됩니다. 학교·회사 망에서 흔히 막혀 있습니다.${OFF}"
-      say ""
-      say "  ${B}대안${OFF}  같은 공유기 안이라면 터널 없이 ${GREEN}bml status${OFF} ${DIM}의 '접속 주소'${OFF}"
-      say "        휴대폰 테더링으로 잠깐 바꾸면 대개 열립니다"
-      say "        망 관리자에게 7844/TCP 아웃바운드를 열어 달라고 합니다"
-    fi
+    say "  ${B}대안${OFF}  같은 공유기 안이라면 터널 없이 ${GREEN}bml status${OFF} ${DIM}의 '접속 주소'${OFF}"
+    say "        휴대폰 테더링으로 잠깐 바꾸면 대개 열립니다"
+    say "        ${GREEN}WORKBENCH_TUNNEL=ssh bml share${OFF}${DIM} 또는 ${OFF}${GREEN}=cloudflare${OFF} ${DIM}로 한쪽만 시켜 봅니다${OFF}"
     exit 1
   fi
 

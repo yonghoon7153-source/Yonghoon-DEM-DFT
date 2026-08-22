@@ -232,16 +232,33 @@ stop` 이나 `bml stop` 이 닫는다. 지금 무엇이 열려 있는지는 `bml
 
 ### 터널이 아예 안 열릴 때
 
-`bml share` 가 실패하면 **밖으로 나가는 7844/TCP** 를 확인해 준다. cloudflared
-는 QUIC 이든 http2 든 이 포트로 엣지에 붙는다 — 443 이 열려 있어도 7844 가
-막히면 안 된다. 학교·회사 망에서 흔히 막혀 있다.
+둘 다 실패하면 로그 마지막 줄을 그 자리에 찍는다. 어느 포트가 열려 있는지
+직접 보려면:
 
-- 막혀 있다고 나오면: 휴대폰 테더링으로 잠깐 바꾸면 대개 열린다. 아니면 망
-  관리자에게 7844/TCP 아웃바운드를 열어 달라고 한다.
-- 열려 있다고 나오면 포트 문제가 아니다. 잠시 뒤 다시 `bml share`.
+```bash
+for hp in "region1.v2.argotunnel.com 7844" "localhost.run 22"; do
+  set -- $hp
+  timeout 6 bash -c "exec 3<>/dev/tcp/$1/$2" 2>/dev/null \
+    && echo "$1:$2  열림" || echo "$1:$2  막힘"
+done
+```
 
-터널 프로그램(`cloudflared`)이 없으면 `bml share` 가 `.bml/bin/` 에 받아 둔다.
-계정도 도메인도 공유기 설정도 필요 없다.
+둘 다 막혀 있으면 이 망에서 밖으로 나가는 터널은 안 된다. 휴대폰 테더링으로
+잠깐 바꾸거나, 같은 공유기 안이라면 터널 없이 `bml status` 의 `접속 주소` 를
+쓴다.
+
+터널은 두 가지 중에서 **망을 보고** 고른다 (ADR 0014).
+
+| | 붙는 곳 | 필요한 것 |
+|---|---|---|
+| Cloudflare | 7844/TCP | `cloudflared` — `bml share` 가 `.bml/bin/` 에 받아 둔다 |
+| localhost.run | 22/TCP (SSH) | 없음 |
+
+`bml share` 가 7844 를 먼저 찔러 본다. 열려 있으면 Cloudflare, 막혀 있으면 SSH.
+학교·회사 망에서는 7844 가 막혀 있는 일이 흔하다 — 이 랩이 그렇다.
+한쪽만 시키려면 `WORKBENCH_TUNNEL=ssh bml share` (또는 `=cloudflare`).
+
+어느 쪽이든 계정도 도메인도 공유기 설정도 필요 없다.
 
 > **암호 없이는 열리지 않는다.** 이 앱에는 로그인이 없어서, 주소를 아는 사람은
 > 전부 읽고 전부 지울 수 있다. `bml share` 는 `.bml/env` 에 암호가 있는지,
