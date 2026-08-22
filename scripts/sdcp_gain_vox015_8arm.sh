@@ -81,8 +81,23 @@ LEAN_FLAGS=""
   echo "[p2] ★ LEAN=2 (σ_e 전용) — 이온·pore-τ·집전체기하 를 전부 끈다 (팔당 솔브 3회 → 1회)"; }
 #  ⚠ LEAN=1 은 **옛 접미사 `_lean` 그대로** 둔다 — 이미 끝난 팔(STEP 2/3/5)이 살아 있는
 #    디렉터리라 이름을 바꾸면 전부 다시 돈다.  LEAN=2 만 새 접미사를 받는다.
+#  ★★ 2026-08-20 (게이트 ⑤ factorial) — **섬유 스탬프 축**.  CL-19 가 retired 된 이유가
+#    점 팔과 선분 팔에 **서로 다른 σ_VGCF** 를 줘서 두 축을 동시에 움직인 것이었다.
+#    가르려면 `{점,선분} × {σ 두 값}` 4조합이 필요한데, 여태 이 러너는 `segment` 를
+#    **세 군데에 하드코딩**하고 있었다 (SKIP 검사 · 그 진단 · payload 주입).
+#    ⚠ 그래서 `P2_EXTRA="--step3-fibre-stamp point"` 같은 우회는 **조용히 무력**하다:
+#      OUTDIR 태그가 안 갈려 기존 선분 팔과 같은 폴더를 보고, SKIP 검사가 `--stamp segment`
+#      로 그 팔들을 "완전" 이라 판정해 **아무것도 안 돌고 끝난다**.
+#    ⇒ 축을 정식 노브로 올린다.  기본은 segment (기존 동작 그대로).
+FIBRE_STAMP="${FIBRE_STAMP:-segment}"
+case "$FIBRE_STAMP" in
+  point|segment) ;;
+  *) echo "ABORT — FIBRE_STAMP 는 point 또는 segment (받은 값: $FIBRE_STAMP)"; exit 2;;
+esac
+FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
+FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${LEAN_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${FS_TAG}${LEAN_TAG}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -155,12 +170,12 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
   #    영구 캐시된다.  게이트는 이제 fail-closed(SystemExit)지만, 재개 판정 자체를
   #    **쓸 수 있는 결과인가**로 올린다 — 그 검사기는 이미 있었고 이 러너만 안 썼다.
   if [ -s "$OUT" ]; then
-    if python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp segment \
+    if python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp "$FIBRE_STAMP" \
          --expect-backend "${EXPECT_BACKEND:-gpu}" >/dev/null 2>&1; then
       echo "[p2] SKIP (완전) $TAG"; return 0
     fi
     echo "[p2] ⚠ 기존 $TAG 이 불완전 — 다시 돈다:"
-    python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp segment \
+    python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp "$FIBRE_STAMP" \
       --expect-backend "${EXPECT_BACKEND:-gpu}" 2>&1 | sed 's/^/     /'
     rm -f "$OUT"
   fi
@@ -208,8 +223,8 @@ PY
   #    원인이 무엇이든 이 실패 형태를 없앤다.)
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
-      --extract-payload "$KIT/run_mpm.sh" --stamp segment \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
@@ -253,7 +268,7 @@ PY
   [ -s "$RUN/$(basename "$OUT")" ] && mv "$RUN/$(basename "$OUT")" "$OUT"
 }
 
-echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · $ARMS 팔 · out $OUTDIR"
+echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · 섬유 $FIBRE_STAMP · $ARMS 팔 · out $OUTDIR"
 i=0
 for SH in "${SHIFTS[@]}"; do
   [ "$i" -ge "$ARMS" ] && break

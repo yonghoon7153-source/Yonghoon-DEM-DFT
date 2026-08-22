@@ -990,15 +990,17 @@ def scan(root):
         try:
             _, arms = collect(d)
         except Exception:                                          # noqa: BLE001
-            rows.append((os.path.basename(d), '읽기 실패', '', '', '', '', ''))
+            rows.append((os.path.basename(d), '읽기 실패', '', '', '', '', '', ''))
             continue
         allr = arms['SBE'] + arms['DBE']
         _u = lambda f: sorted({str(r.get(f)) for r in allr if r.get(f) is not None}) or ['—']
         bad = sum(1 for r in allr if r.get('unconverged') or r.get('cg_info'))
         ion = sum(1 for r in allr if isinstance(r.get('sigma_ion'), (int, float)))
+        #  ⚠ 2026-08-20 — 초판은 `sdcp_stamp` 만 보여줬고, 내가 그것을 게이트 ⑤ 의 축
+        #    (`fibre_stamp` = VGCF 섬유 점↔선분)으로 **오독**했다.  둘 다 보여준다.
         rows.append((os.path.basename(d), f"{len(arms['SBE'])}/{len(arms['DBE'])}",
-                     '/'.join(_u('vox')), '/'.join(_u('sdcp_stamp')),
-                     '/'.join(_u('sigma_vgcf_S_cm')),
+                     '/'.join(_u('vox')), '/'.join(_u('fibre_stamp')),
+                     '/'.join(_u('sdcp_stamp')), '/'.join(_u('sigma_vgcf_S_cm')),
                      f'{ion}/{len(allr)}', f'{bad} 미수렴' if bad else '✓'))
     return rows
 
@@ -1040,10 +1042,11 @@ if __name__ == '__main__':
         if not _rows:
             raise SystemExit(f'{a.scan} 아래에 p2_*.json 을 가진 디렉터리가 없다')
         _w = max(len(r[0]) for r in _rows)
-        print(f'{"디렉터리":{_w}} {"SBE/DBE":>8} {"vox":>7} {"스탬프":>8} '
+        print(f'{"디렉터리":{_w}} {"SBE/DBE":>8} {"vox":>7} {"섬유":>8} {"SDCP":>7} '
               f'{"σ_VGCF":>10} {"σ_ion":>7} {"수렴":>9}')
         for r in _rows:
-            print(f'{r[0]:{_w}} {r[1]:>8} {r[2]:>7} {r[3]:>8} {r[4]:>10} {r[5]:>7} {r[6]:>9}')
+            print(f'{r[0]:{_w}} {r[1]:>8} {r[2]:>7} {r[3]:>8} {r[4]:>7} '
+                  f'{r[5]:>10} {r[6]:>7} {r[7]:>9}')
         print('\n  σ_ion 열 = 이온값이 있는 팔 / 전체 (LEAN=2 는 0/N 이 정상)')
         print('  → 판정: --dir <위 이름 중 하나>   ·  대조쌍: --dir A --compare-dir B --expect-differ <필드>')
         raise SystemExit(0)
