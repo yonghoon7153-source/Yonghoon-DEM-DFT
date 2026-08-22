@@ -11,6 +11,7 @@
 #   bml use off    해제한다 (이 기계가 자기 서버를 띄운다)
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
+#   bml share stop 그 터널을 닫는다
 #   bml check      커밋 전 검사 (테스트·타입·린트·문서)
 #   bml pull       실행 없이 최신으로만 맞춘다
 #   bml logs       실행 로그 보기
@@ -123,6 +124,10 @@ PID_FILE="$RUN_DIR/server.pid"
 #: 떠 있는 서버가 어느 커밋의 코드를 들고 있는지.
 HEAD_FILE="$RUN_DIR/server.head"
 DEV_PID_FILE="$RUN_DIR/dev.pid"
+#: 열려 있는 터널.  주소는 열 때마다 바뀌므로 어딘가 적어 두지 않으면 창을
+#: 닫은 뒤에는 무엇이 열려 있는지 알 수 없다.
+TUNNEL_PID_FILE="$RUN_DIR/tunnel.pid"
+TUNNEL_URL_FILE="$RUN_DIR/tunnel.url"
 STAMP="$RUN_DIR/deps.stamp"
 
 #: 실행 상태를 둘 폴더.  만드는 것은 실제로 쓸 때까지 미룬다 — 워크벤치가 아닌
@@ -779,6 +784,11 @@ cmd_stop() {
   local stopped=0
   # 서버가 없어지면 "어느 커밋을 서비스 중" 이라는 표식도 사실이 아니다.
   rm -f "$HEAD_FILE"
+  # 서버 없이 남은 터널은 남에게 Cloudflare 오류 화면을 띄우는 주소일 뿐이다.
+  if close_tunnel; then
+    ok "터널도 닫았습니다."
+    stopped=1
+  fi
   for file in "$PID_FILE" "$DEV_PID_FILE"; do
     local pid
     # 파일에 적혀 있고 살아 있다는 것만으로는 죽일 근거가 못 된다.  낡은 PID
@@ -1315,9 +1325,54 @@ cmd_password() {
   warn "떠 있는 서버는 아직 옛 설정입니다 — ${GREEN}bml restart${OFF} ${DIM}로 반영됩니다.${OFF}"
 }
 
+tunnel_running() {
+  local pid
+  pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)" || return 1
+  [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+}
+
+tunnel_url() { cat "$TUNNEL_URL_FILE" 2>/dev/null; }
+
+#: 터널을 닫는다.  `bml stop` 도 이걸 부른다 — 서버 없이 남은 터널은 남에게
+#: Cloudflare 오류 화면(1033)을 띄우는 주소일 뿐이고, 그 화면은 "닫혔다" 가
+#: 아니라 "고장 났다" 로 읽힌다.
+close_tunnel() {
+  local pid
+  pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)"
+  if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+    kill "$pid" 2>/dev/null
+    kill -- "-$pid" 2>/dev/null
+    rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
+    return 0
+  fi
+  rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
+  return 1
+}
+
 #: 다른 공유기에 있는 사람도 볼 수 있게 임시 터널을 연다 (ADR 0014).
 #: 켜는 동안만 열린다.  잊고 꺼 두는 쪽이 잊고 열어 두는 쪽보다 낫다.
 cmd_share() {
+  case "${1:-}" in
+    stop|off|close|down)
+      if close_tunnel; then
+        ok "터널을 닫았습니다 — 그 주소는 이제 안 열립니다."
+      else
+        say "${DIM}열려 있는 터널이 없습니다.${OFF}"
+      fi
+      return 0
+      ;;
+  esac
+
+  # 이미 열려 있으면 새로 열지 않는다.  두 개를 열면 주소가 둘이 되고, 남에게
+  # 알려 준 쪽이 어느 것인지 알 수 없게 된다.
+  if tunnel_running && [ -n "$(tunnel_url)" ]; then
+    ok "이미 열려 있습니다 → ${B}$(tunnel_url)${OFF}"
+    say "  ${B}다른 기계에서${OFF}  ${GREEN}bml use $(tunnel_url)${OFF}"
+    say "  ${DIM}닫으려면${OFF}  ${GREEN}bml share stop${OFF}"
+    return 0
+  fi
+  close_tunnel >/dev/null 2>&1 || true
+
   if [ -z "${WORKBENCH_PASSWORD:-}" ]; then
     printf '%s✕%s 공유 암호가 없어서 열지 않습니다.\n' "$RED" "$OFF" >&2
     say "  ${DIM}이 주소는 인터넷에 있게 됩니다. 이 앱에는 로그인이 없어서, 주소를 아는${OFF}"
@@ -1351,8 +1406,13 @@ cmd_share() {
   local log="$RUN_DIR/tunnel.log" url="" pid i
   : > "$log"
   step "터널 여는 중"
-  "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
+  # 이 창에 매달아 두지 않는다.  창을 닫거나 Ctrl-C 를 누르면 터널이 죽고,
+  # 그 주소를 받은 사람은 Cloudflare 오류 1033 을 본다 — 실제로 그렇게 됐다.
+  # 서버와 같은 방식으로 띄우고, 닫는 것은 `bml share stop` 이 한다.
+  nohup "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
   pid=$!
+  echo "$pid" > "$TUNNEL_PID_FILE"
+  disown "$pid" 2>/dev/null || true
 
   for i in $(seq 1 60); do
     url="$(tunnel_url_from "$(cat "$log" 2>/dev/null)")"
@@ -1362,7 +1422,7 @@ cmd_share() {
   done
 
   if [ -z "$url" ]; then
-    kill "$pid" 2>/dev/null
+    close_tunnel >/dev/null 2>&1 || true
     printf '%s✕%s 터널 주소를 받지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
     say "  ${DIM}$log 의 마지막 줄:${OFF}"
@@ -1372,16 +1432,13 @@ cmd_share() {
     exit 1
   fi
 
+  printf '%s' "$url" > "$TUNNEL_URL_FILE"
   ok "열렸습니다 → ${B}${url}${OFF}"
   say ""
   say "  ${B}다른 기계에서${OFF}  ${GREEN}bml use ${url}${OFF}"
   say "  ${DIM}브라우저로만 볼 거라면 그 주소를 그대로 엽니다 — 암호를 한 번 묻습니다.${OFF}"
   say ""
-  say "  ${DIM}이 창을 닫거나 Ctrl-C 를 누르면 주소가 사라집니다.${OFF}"
-  say "  ${DIM}주소는 열 때마다 바뀝니다.${OFF}"
-
-  trap 'kill '"$pid"' 2>/dev/null' INT TERM
-  wait "$pid"
+  say "  ${DIM}이 창은 닫아도 됩니다. 닫으려면${OFF} ${GREEN}bml share stop${OFF}${DIM}, 주소는 열 때마다 바뀝니다.${OFF}"
 }
 
 #: 이 기계가 볼 중추 서버를 정한다.  인자 없이 부르면 지금 설정을 보여 준다.
@@ -1505,6 +1562,14 @@ cmd_status() {
     warn "데이터      ${DATA_DIR} — 폴더가 없습니다 (드라이브가 빠졌나요?)"
   fi
   [ -n "${WORKBENCH_PASSWORD:-}" ] && say "공유 암호   설정됨  ${DIM}(bml share 로 바깥에 열 수 있습니다)${OFF}"
+  if tunnel_running && [ -n "$(tunnel_url)" ]; then
+    if server_alive "$(tunnel_url)" 8; then
+      say "공유 주소   ${B}$(tunnel_url)${OFF}  ${DIM}(bml share stop 으로 닫습니다)${OFF}"
+    else
+      warn "공유 주소   $(tunnel_url) — 프로그램은 떠 있는데 응답이 없습니다"
+      say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}로 다시 여세요.${OFF}"
+    fi
+  fi
   local scope; scope="$(listening_scope "$(ss -ltn 2>/dev/null)")"
   if [ "$scope" = "local" ] && [ "$HOST" = "0.0.0.0" ]; then
     warn "공개        설정은 0.0.0.0 인데, 떠 있는 서버는 이 기계 안에서만 열려 있습니다."
@@ -1852,7 +1917,7 @@ main() {
     backup)            shift; cmd_backup "${1:-}" ;;
     use|server)        shift; cmd_use "${1:-}" ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
-    share|tunnel)      cmd_share ;;
+    share|tunnel)      shift; cmd_share "${1:-}" ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
     help|-h|--help)    cmd_help ;;
     *) die "모르는 명령: $1   ('bml help' 참고)" ;;

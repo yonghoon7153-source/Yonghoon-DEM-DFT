@@ -38,6 +38,9 @@ trap 'rm -rf "$TMP"; [ -n "${SERVER_PID:-}" ] && kill "$SERVER_PID" 2>/dev/null'
 BML_SOURCE_ONLY=1 . "$BML"
 # 진짜 저장소의 .bml/env 를 건드리지 않도록 옮겨 둔다.
 REPO="$TMP/repo"; RUN_DIR="$REPO/.bml"; mkdir -p "$RUN_DIR"
+# RUN_DIR 에서 파생된 경로들도 함께 옮긴다.  안 그러면 아래 시험이 진짜
+# 저장소의 상태 파일을 지우고, 돌고 있던 개발 서버를 죽인다.
+TUNNEL_PID_FILE="$RUN_DIR/tunnel.pid"; TUNNEL_URL_FILE="$RUN_DIR/tunnel.url"
 
 echo "주소 펴기"
 check "맨 IP 에 우리 포트를 붙인다"      "$(normalize_server_url 192.168.0.7)"          "http://192.168.0.7:$PORT"
@@ -203,6 +206,25 @@ PATH="$SAVED_PATH"
 check "경로가 변수로 온다"     "$CLOUDFLARED" "$RUN_DIR/bin/cloudflared"
 check "그 경로가 실행 가능하다" "$([ -x "$CLOUDFLARED" ] && echo yes || echo no)" "yes"
 check "값을 찍지 않는다"       "$(cat "$TMP/ensure.out")" ""
+
+echo
+echo "터널은 창을 닫아도 살아 있어야 한다"
+# 창에 매달아 두면 Ctrl-C 나 창 닫기로 터널이 죽고, 주소를 받은 사람은
+# Cloudflare 오류 1033 을 본다 — "닫혔다" 가 아니라 "고장 났다" 로 읽힌다.
+sleep 300 &
+FAKE_TUNNEL=$!
+echo "$FAKE_TUNNEL" > "$TUNNEL_PID_FILE"
+printf 'https://fake-tunnel.trycloudflare.com' > "$TUNNEL_URL_FILE"
+check "열려 있는 것을 알아본다"  "$(tunnel_running && echo yes || echo no)" "yes"
+check "주소를 기억한다"          "$(tunnel_url)" "https://fake-tunnel.trycloudflare.com"
+check "닫으면 닫혔다고 한다"     "$(close_tunnel && echo yes || echo no)" "yes"
+sleep 0.3
+check "프로세스가 실제로 죽는다" "$(kill -0 "$FAKE_TUNNEL" 2>/dev/null && echo no || echo yes)" "yes"
+check "주소 파일도 지운다"       "$([ -e "$TUNNEL_URL_FILE" ] && echo no || echo yes)" "yes"
+check "두 번 닫으면 닫을 게 없다" "$(close_tunnel && echo yes || echo no)" "no"
+# 서버 없이 남은 터널은 남에게 오류 화면을 띄우는 주소일 뿐이다.
+check "bml stop 이 터널도 닫는다" \
+  "$(sed -n '/^cmd_stop()/,/^}/p' "$BML" | grep -c close_tunnel)" "1"
 
 echo
 echo "암호 없이는 바깥에 열지 않는다"
