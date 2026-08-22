@@ -1145,11 +1145,18 @@ reachable_addresses() {
 #: 그 주소에 우리 워크벤치가 살아 있는가.  server_state 와 달리 임의의 주소를
 #: 받는다 — 아직 저장하지 않은 후보를 확인해야 하기 때문이다.
 #: 두 번째 인자는 기다릴 초.
-server_alive() {
+#:
+#: 코드를 그대로 돌려주는 쪽을 따로 둔다.  "응답이 없습니다" 는 세 가지를 한
+#: 덩어리로 만든다 — 못 닿음(000), 터널이 끊김(530), 엉뚱한 서버(404).
+#: 대처가 전혀 다른데 화면에서는 구분이 안 된다.
+http_code_of() {
   local code
   code="$(curl -s -o /dev/null -m "${2:-4}" -w '%{http_code}' "$1/api/health" 2>/dev/null)"
-  code="$(printf '%s' "$code" | tr -dc '0-9' | tail -c 3)"
-  [ "${code:-000}" = "200" ]
+  printf '%s' "$(printf '%s' "$code" | tr -dc '0-9' | tail -c 3)"
+}
+
+server_alive() {
+  [ "$(http_code_of "$1" "${2:-4}")" = "200" ]
 }
 
 #: 같은 주소를 몇 번 더 두드린다.
@@ -1433,6 +1440,24 @@ cmd_share() {
   fi
 
   printf '%s' "$url" > "$TUNNEL_URL_FILE"
+
+  # 주소를 받은 것과 그 주소가 열린 것은 다르다.  Cloudflare 가 이름을 실제로
+  # 연결하기까지 몇 초 걸리고, 그 사이에 "열렸습니다" 라고 말하면 주소를 받은
+  # 사람이 오류 화면을 보게 된다 — 그러면 주소를 의심하지 터널을 의심하지
+  # 않는다.  여기서 확인하는 비용이 그 왕복 한 번보다 훨씬 싸다.
+  step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
+  if ! server_alive_soon "$url" 6; then
+    warn "주소는 받았지만 아직 열리지 않았습니다 ${DIM}(HTTP $(http_code_of "$url" 8))${OFF}"
+    say "  ${B}${url}${OFF}"
+    say ""
+    say "  ${DIM}터널은 계속 돌고 있습니다. 잠시 뒤${OFF} ${GREEN}bml status${OFF} ${DIM}로 다시 보세요 —${OFF}"
+    say "  ${DIM}'공유 주소' 줄에 경고가 없으면 그때 알려 주면 됩니다.${OFF}"
+    say ""
+    say "  ${DIM}$log 의 마지막 줄:${OFF}"
+    tail -n 8 "$log" 2>/dev/null | sed 's/^/    /'
+    exit 1
+  fi
+
   ok "열렸습니다 → ${B}${url}${OFF}"
   say ""
   say "  ${B}다른 기계에서${OFF}  ${GREEN}bml use ${url}${OFF}"
@@ -1563,11 +1588,12 @@ cmd_status() {
   fi
   [ -n "${WORKBENCH_PASSWORD:-}" ] && say "공유 암호   설정됨  ${DIM}(bml share 로 바깥에 열 수 있습니다)${OFF}"
   if tunnel_running && [ -n "$(tunnel_url)" ]; then
-    if server_alive "$(tunnel_url)" 8; then
+    local tcode; tcode="$(http_code_of "$(tunnel_url)" 8)"
+    if [ "$tcode" = "200" ]; then
       say "공유 주소   ${B}$(tunnel_url)${OFF}  ${DIM}(bml share stop 으로 닫습니다)${OFF}"
     else
-      warn "공유 주소   $(tunnel_url) — 프로그램은 떠 있는데 응답이 없습니다"
-      say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}로 다시 여세요.${OFF}"
+      warn "공유 주소   $(tunnel_url) — 아직 응답하지 않습니다 ${DIM}(HTTP ${tcode:-000})${OFF}"
+      say "  ${DIM}방금 열었다면 10초쯤 뒤 다시${OFF} ${GREEN}bml status${OFF}${DIM}. 계속 이러면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
     fi
   fi
   local scope; scope="$(listening_scope "$(ss -ltn 2>/dev/null)")"
