@@ -1168,13 +1168,39 @@ server_alive() {
 #: 곧바로 돌려주므로 한 번 시도가 1초도 안 걸린다 — 횟수로 세면 "다섯 번
 #: 해 봤다" 가 실제로는 7초고, 준비 중인 터널을 우리가 먼저 죽인다.  실제로
 #: 그렇게 했다: 로그에 남은 것은 막힌 포트가 아니라 우리가 보낸 SIGTERM 이었다.
+#: 세 번째 인자로 pid 를 주면 그 프로그램이 살아 있는 동안만 기다린다.
+#: ssh 가 "remote port forwarding failed" 로 3초 만에 끝나도 우리는 남은 57초를
+#: 죽은 주소에 대고 물어보게 되는데, 화면에는 그저 "느리다" 로 보인다.
 wait_until_alive() {
-  local url="$1" limit="${2:-45}" start=$SECONDS
+  local url="$1" limit="${2:-45}" pid="${3:-}" start=$SECONDS
   while :; do
     server_alive "$url" 8 && return 0
+    if [ -n "$pid" ] && ! process_alive "$pid"; then
+      return 1
+    fi
     [ $((SECONDS - start)) -ge "$limit" ] && return 1
     sleep 3
   done
+}
+
+#: 그 pid 가 아직 일하고 있는가.
+#:
+#: `kill -0` 만으로는 부족하다.  터널은 `disown` 한 자식이라 끝나도 우리가
+#: 거두지 않아 **좀비로 남고, 좀비에게도 `kill -0` 은 성공한다** — 그러면 이미
+#: 죽은 터널을 상한까지 기다리게 되고, 화면에는 "느리다" 로만 보인다.
+#: `/proc/<pid>/stat` 의 상태 글자를 본다.  comm 에 괄호·공백이 들어갈 수
+#: 있으므로 마지막 `)` 뒤부터 자른다.
+process_alive() {
+  local pid="$1" state=""
+  [ -n "$pid" ] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  if [ -r "/proc/$pid/stat" ]; then
+    state="$(sed 's/.*) //' "/proc/$pid/stat" 2>/dev/null | cut -d' ' -f1)"
+  else
+    state="$(ps -p "$pid" -o state= 2>/dev/null | tr -d ' ' | cut -c1)"
+  fi
+  [ "$state" = "Z" ] && return 1
+  return 0
 }
 
 #: 밖으로 나가는 7844/TCP 가 열려 있는가.
@@ -1195,6 +1221,24 @@ explain_unreachable() {
   say "  ${DIM}curl 이 말한 것:${OFF}"
   curl -sS -o /dev/null -m 8 -w '    HTTP %{http_code}  (%{time_total}s)\n' \
     "$url/api/health" 2>&1 | sed 's/^/    /'
+}
+
+#: 확인에 실패했을 때 그 HTTP 코드가 무슨 뜻인지 한 줄로.
+#:
+#: "응답하지 않습니다" 는 대처가 전혀 다른 셋을 한 덩어리로 만든다 —
+#: **이 기계가 그 주소로 못 나간 것**(000: DNS·방화벽·TLS 가로채기)과,
+#: **터널이 아직 우리 서버에 못 붙은 것**(5xx)과, **엉뚱한 서버**(404)다.
+#: 특히 000 은 상대 쪽에서는 멀쩡히 열려 있을 수 있다 — 7844 를 막는 망은
+#: 처음 보는 도메인도 함께 막는 일이 흔하다.  그때 주소를 버리면 안 된다.
+tunnel_code_meaning() {
+  case "${1:-000}" in
+    200)    printf 'HTTP 200 — 열렸습니다' ;;
+    000|'') printf 'HTTP 000 — 이 기계가 그 주소로 나가지 못했습니다 (DNS·방화벽·TLS 가로채기). 상대 쪽에서는 열려 있을 수 있습니다' ;;
+    404)    printf 'HTTP 404 — 주소는 닿는데 우리 서버가 아닙니다' ;;
+    429)    printf 'HTTP 429 — 터널 제공자가 잠시 막았습니다 (무료 터널의 사용량 제한)' ;;
+    5*)     printf 'HTTP %s — 터널이 아직 우리 서버에 붙지 못했습니다' "$1" ;;
+    *)      printf 'HTTP %s' "$1" ;;
+  esac
 }
 
 #: `.bml/env` 의 한 줄을 고쳐 쓴다.  빈 값이면 그 줄을 지운다.
@@ -1415,10 +1459,14 @@ close_tunnel() {
 #: 돌려주는 값
 #:   0  열렸다
 #:   1  주소조차 못 받았다 (띄운 것은 닫았다)
-#:   2  주소는 받았는데 확인이 안 됐다.  첫 인자가 1 이면 **닫지 않고** 남긴다 —
-#:      마지막 시도에서는 남기는 쪽이 낫다.  터널이 준비되는 데 우리 상한보다
-#:      오래 걸렸을 수도 있고, 무엇보다 사람이 그 주소를 손으로 찔러 볼 수
-#:      있어야 원인이 갈린다.  죽여 놓고 "안 됐습니다" 만 하면 아무것도 모른다.
+#:   2  터널은 살아 있는데 여기서 확인이 안 됐다.  첫 인자가 1 이면 **닫지 않고**
+#:      남긴다 — 마지막 시도에서는 남기는 쪽이 낫다.  터널이 준비되는 데 우리
+#:      상한보다 오래 걸렸을 수도 있고, 이 기계만 그 주소로 못 나가는 것일 수도
+#:      있다 (상대는 열려 있다).  죽여 놓고 "안 됐습니다" 만 하면 아무것도 모른다.
+#:   3  주소는 받았는데 터널 프로그램이 끝났다.  이 주소는 살아날 일이 없으므로
+#:      keep 과 무관하게 닫는다 — 죽은 주소를 "열어 둡니다" 로 내보내면, 그것을
+#:      받은 사람이 오류 화면을 보고 서버를 의심한다.
+#: 어느 쪽이든 마지막으로 본 HTTP 코드를 `tunnel.last-code` 에 적어 둔다.
 try_tunnel() {
   local keep="$1"; shift
   local label="$1"; shift
@@ -1450,7 +1498,17 @@ try_tunnel() {
   # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이, "열렸다" 를
   # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
   step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
-  wait_until_alive "$url" 60 && return 0
+  if wait_until_alive "$url" 60 "$pid"; then
+    rm -f "$RUN_DIR/tunnel.last-code"
+    return 0
+  fi
+  # 1분을 이미 물어봤으면서 화면에서는 "확인해 보세요" 로 끝나면 안 된다.
+  # 우리가 본 것을 적어 둔다.
+  http_code_of "$url" 8 > "$RUN_DIR/tunnel.last-code"
+  if ! owns_tunnel_pid "$pid"; then
+    close_tunnel >/dev/null 2>&1 || true
+    return 3
+  fi
   [ "$keep" = "1" ] && return 2
   close_tunnel >/dev/null 2>&1 || true
   return 2
@@ -1563,6 +1621,10 @@ cmd_share() {
   if [ "$rc" -ne 0 ] && [ -z "$url" ]; then
     printf '%s✕%s 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
+    if [ "$rc" -eq 3 ]; then
+      say "  ${DIM}주소는 받았지만 터널 프로그램이 곧 끝났습니다 — 죽은 주소라서 남기지 않았습니다.${OFF}"
+      say ""
+    fi
     # 빈 줄을 걸러서 보여 준다.  localhost.run 의 접속 배너는 빈 줄로 끝나서,
     # 그냥 tail 하면 화면에 빈 줄 열두 개만 찍힌다 — 실제로 그랬다.
     say "  ${DIM}$RUN_DIR/tunnel.log 의 마지막 줄:${OFF}"
@@ -1583,13 +1645,27 @@ cmd_share() {
   fi
 
   if [ "$rc" -eq 2 ]; then
-    warn "주소는 받았는데 아직 응답하지 않습니다 — 그래도 열어 둡니다."
+    local code; code="$(cat "$RUN_DIR/tunnel.last-code" 2>/dev/null)"
+    warn "터널은 살아 있는데, 여기서는 확인이 안 됐습니다 — 그래서 열어 둡니다."
     say "  ${B}${url}${OFF}"
     say ""
-    say "  ${DIM}직접 확인:${OFF}"
-    say "    ${GREEN}curl -sS -o /dev/null -w '%{http_code}\\n' ${url}/api/health${OFF}"
-    say "  ${DIM}200 이면 열린 것입니다 (제 확인이 성급했던 것). 잠시 뒤${OFF} ${GREEN}bml status${OFF}"
-    say "  ${DIM}의 '공유 주소' 줄에 경고가 없으면 그때 상대에게 알려 주면 됩니다.${OFF}"
+    say "  ${DIM}1분 동안 물어본 결과:${OFF}  $(tunnel_code_meaning "$code")"
+    case "${code:-000}" in
+      000|'')
+        # 여기서 못 나가는 것과 터널이 안 붙은 것은 다르다.  7844 를 막는 망은
+        # 처음 보는 도메인도 같이 막는 일이 흔해서, 정작 상대 쪽에서는 열린다.
+        say ""
+        say "  ${B}먼저 상대에게 이 주소를 찔러 달라고 하세요${OFF} ${DIM}— 이 기계의 망 문제일 수 있습니다.${OFF}"
+        say "    ${GREEN}bml use ${url}${OFF} ${DIM}또는 브라우저로 그냥 엽니다${OFF}"
+        say "  ${DIM}상대도 안 되면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후 다시${OFF} ${GREEN}bml share${OFF} ${DIM}— 주소는 열 때마다 바뀝니다.${OFF}"
+        ;;
+      *)
+        say ""
+        say "  ${DIM}터널이 붙는 중일 수 있습니다. 10초쯤 뒤${OFF} ${GREEN}bml status${OFF}"
+        say "  ${DIM}의 '공유 주소' 줄에 경고가 없으면 그때 상대에게 알려 주면 됩니다.${OFF}"
+        say "  ${DIM}계속 이러면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후 다시${OFF} ${GREEN}bml share${OFF}"
+        ;;
+    esac
     say ""
     say "  ${DIM}닫으려면${OFF} ${GREEN}bml share stop${OFF}"
     exit 0
@@ -1729,7 +1805,8 @@ cmd_status() {
     if [ "$tcode" = "200" ]; then
       say "공유 주소   ${B}$(tunnel_url)${OFF}  ${DIM}(bml share stop 으로 닫습니다)${OFF}"
     else
-      warn "공유 주소   $(tunnel_url) — 아직 응답하지 않습니다 ${DIM}(HTTP ${tcode:-000})${OFF}"
+      warn "공유 주소   $(tunnel_url) — 여기서는 확인이 안 됩니다"
+      say "  ${DIM}$(tunnel_code_meaning "$tcode")${OFF}"
       say "  ${DIM}방금 열었다면 10초쯤 뒤 다시${OFF} ${GREEN}bml status${OFF}${DIM}. 계속 이러면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
     fi
   fi

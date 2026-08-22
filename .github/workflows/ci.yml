@@ -93,6 +93,8 @@ jobs:
       # killing it.  Four separate bugs have lived in that judgment, so it is
       # tested like any other code -- no dependencies, just bash.
       - run: bash tools/tests/test_bml_ownership.sh
+      # 확인이 안 된 터널을 무엇으로 읽어 주는지도 같은 종류의 판정이다.
+      - run: bash tools/tests/test_bml_tunnel.sh
 
   invariants:
     name: repo invariants
