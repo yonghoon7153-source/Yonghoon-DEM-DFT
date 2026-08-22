@@ -1437,6 +1437,8 @@ try_tunnel() {
   fi
 
   printf '%s' "$url" > "$TUNNEL_URL_FILE"
+  # 실패해도 남긴다 — 무엇이 안 열렸는지 사람이 손으로 찔러 볼 수 있어야 한다.
+  printf '%s' "$url" > "$RUN_DIR/tunnel.last-url"
   # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이, "열렸다" 를
   # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
   step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
@@ -1548,8 +1550,18 @@ cmd_share() {
   if [ -z "$url" ]; then
     printf '%s✕%s 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
+    # 빈 줄을 걸러서 보여 준다.  localhost.run 의 접속 배너는 빈 줄로 끝나서,
+    # 그냥 tail 하면 화면에 빈 줄 열두 개만 찍힌다 — 실제로 그랬다.
     say "  ${DIM}$RUN_DIR/tunnel.log 의 마지막 줄:${OFF}"
-    tail -n 12 "$RUN_DIR/tunnel.log" 2>/dev/null | sed 's/^/    /'
+    tr -d '\r' < "$RUN_DIR/tunnel.log" 2>/dev/null \
+      | grep -v '^[[:space:]]*$' | tail -n 14 | sed 's/^/    /'
+    # 주소는 받았는데 안 열린 경우가 있다.  그 주소를 알려 줘야 손으로 찔러 볼
+    # 수 있다.
+    if [ -s "$RUN_DIR/tunnel.last-url" ]; then
+      say ""
+      say "  ${DIM}받았지만 응답하지 않은 주소:${OFF} $(cat "$RUN_DIR/tunnel.last-url")"
+      say "  ${DIM}직접 확인:${OFF} ${GREEN}curl -sS -o /dev/null -w '%{http_code}\\n' $(cat "$RUN_DIR/tunnel.last-url")/api/health${OFF}"
+    fi
     say ""
     say "  ${B}대안${OFF}  같은 공유기 안이라면 터널 없이 ${GREEN}bml status${OFF} ${DIM}의 '접속 주소'${OFF}"
     say "        휴대폰 테더링으로 잠깐 바꾸면 대개 열립니다"
