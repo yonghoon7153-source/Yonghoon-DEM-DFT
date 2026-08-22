@@ -991,6 +991,15 @@ start_serve() {
       git -C "$REPO" rev-parse HEAD > "$HEAD_FILE" 2>/dev/null || : > "$HEAD_FILE"
       ok "실행 중 → ${B}${URL}${OFF}"
       say "${DIM}  멈추려면: bml stop   ·  로그: bml logs${OFF}"
+      # 자기 데이터가 비어 있는데 중추 서버도 안 정해져 있으면, 화면에는 아무
+      # 오류 없이 셀 0개짜리 워크벤치가 뜬다.  주소까지 늘 같은 localhost:5003
+      # 이라 어느 쪽을 보고 있는지 화면으로는 알 수 없다 — 여기서 말해 준다.
+      if [ -z "$SERVER" ] && [ "$(ls "$DATA_DIR/uploads" 2>/dev/null | wc -l | tr -d ' ')" = "0" ]; then
+        say ""
+        warn "이 화면은 ${B}이 기계의${OFF} 데이터입니다 — ${DATA_DIR} ${DIM}(원본 0개)${OFF}"
+        say "  ${DIM}중추 서버를 보려면${OFF}  ${GREEN}bml use <주소>${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
+        say "  ${DIM}주소는 중추 서버에서${OFF} ${GREEN}bml status${OFF} ${DIM}또는${OFF} ${GREEN}bml share${OFF} ${DIM}가 알려 줍니다.${OFF}"
+      fi
       open_browser "$URL"
       ;;
     2) report_failure "$LOG" "서버가 시작하자마자 멈췄습니다."; exit 1 ;;
