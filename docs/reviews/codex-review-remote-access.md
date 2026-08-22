@@ -17,14 +17,14 @@
 2. **우리 것임을 증명한 뒤에만 프로세스를 죽인다** (CLAUDE.md §0.8). 터널을
    띄우고 죽이는 코드가 새로 생겼다.
 
-거기에, 이 변경의 대부분은 **쉘 스크립트**(`tools/bml`, +594줄)다. 이 저장소에서
+거기에, 이 변경의 대부분은 **쉘 스크립트**(`tools/bml`, +653줄)다. 이 저장소에서
 테스트가 가장 얇은 층이고, 실패가 사용자 화면에 "안 됩니다" 로만 나타난다.
 
 ## 범위
 
 ```bash
-git log --oneline d41aec3e^..d37b4071
-git diff --stat d41aec3e^..d37b4071
+git log --oneline d41aec3e^..14dff93c
+git diff --stat d41aec3e^..14dff93c
 ```
 
 | 파일 | 무엇 |
@@ -33,9 +33,9 @@ git diff --stat d41aec3e^..d37b4071
 | `apps/api/app/main.py` | 게이트 미들웨어, `POST /__login` |
 | `apps/api/app/settings.py` | `WORKBENCH_PASSWORD` |
 | `apps/web/src/lib/api.ts` | 401 → 화면 다시 읽기 |
-| `tools/bml` | `use` `password` `share` `share stop`, 주소 판정, 대기 |
+| `tools/bml` | `use` `password` `share` `share stop`, 터널 둘, 주소 판정, 대기 |
 | `docs/adr/0014-...md` | 결정 |
-| 테스트 | `apps/api/tests/test_gate.py` (11), `tools/tests/test_bml_client.sh` (70) |
+| 테스트 | `apps/api/tests/test_gate.py` (11), `tools/tests/test_bml_client.sh` (74) |
 
 ## 지금 상태 — 리뷰어가 알아야 할 것
 
@@ -67,7 +67,7 @@ connect.ngrok-agent.com:443     열림
 ## 붙여넣는 프롬프트
 
 ```text
-이 브랜치의 커밋 d41aec3e^..d37b4071 을 리뷰해줘. 주제는 하나다: 다른 기계에서
+이 브랜치의 커밋 d41aec3e^..14dff93c 을 리뷰해줘. 주제는 하나다: 다른 기계에서
 이 워크벤치를 보게 하는 길 (bml use / bml share / 공유 암호). 결과는
 docs/reviews/2026-08-21-codex-remote-access-review.md 한 파일로 작성해서 이
 브랜치에 커밋해줘 (push 는 내가 말하면).
@@ -151,9 +151,11 @@ docs/adr/0011-central-instance-for-data.md, CLAUDE.md 0장.
 검토했고 문제 없다고 판단한 영역 목록.
 
 ## 터널 제공자
-7844/TCP 가 막힌 망에서 쓸 수 있는 대안이 있으면 적어라. 조건: 계정 없이
-되면 가장 좋고, 밖으로 나가는 443 만 쓰며, 이 앱에 로그인이 없다는 전제를
-바꾸지 않는 것. 없으면 없다고 적어라.
+localhost.run 을 고른 것이 맞는가. 실측한 포트는 7844 막힘 / 22 열림 /
+443(ngrok) 열림이었고, 계정이 필요 없다는 이유로 localhost.run 을 택했다.
+무료 익명 터널의 제약(대역폭, 세션 수명, 주소 안정성)이 이 용도 — 20 MB
+`.wrd` 업로드와 SSE 연결 유지 — 에 실제로 걸리는지 봐 달라. 걸린다면 대안을
+적어라. 조건: 이 앱에 로그인이 없다는 전제를 바꾸지 않는 것.
 ```
 
 ## 검사 상태 (리뷰 시작 시점)
@@ -162,7 +164,7 @@ docs/adr/0011-central-instance-for-data.md, CLAUDE.md 0장.
 make check           통과
 pytest (api+wrdkit)  212 통과
 vitest               15 파일 통과
-tools/tests          test_bml_client.sh 70 통과 · test_bml_ownership.sh ·
+tools/tests          test_bml_client.sh 74 통과 · test_bml_ownership.sh ·
                      test_bml_shutdown.sh · test_lint_gate.sh · wiki_lint · backup
 ```
 
