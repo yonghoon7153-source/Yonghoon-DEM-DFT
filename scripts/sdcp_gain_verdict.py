@@ -221,12 +221,45 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                                f'팔 {len(_non)}개가 한 디렉터리에 있다 ({_non[0]} …).  '
                                f'옛 payload 는 이 인자로 무슨 값을 썼는지 추정할 수 없으므로 '
                                f'(σ_ion 은 --temp-c 로도 움직인다) 비교 불가다.  옛 팔을 다시 돌릴 것')
+    #  ★★★ 2026-08-20 (FA-06) — **침대 정체성 필드는 침대 사이에서 비교하면 안 된다.**
+    #    실사고: 도핑 baseline 8팔이 `additive_E_GPa` 로 HOLD 를 맞았다 —
+    #      SBE `{PTFE, VGCF}` vs DBE `{PTFE, SDCP, VGCF}`.
+    #    SBE 에 SDCP 항목이 없는 것은 **위반이 아니라 이 실험의 독립변수 그 자체**다.
+    #    `input_digest` 도 같다 (내가 어제 넣은 것) — 두 침대는 **반드시** 다른 파일이다.
+    #    ⇒ 두 필드는 **침대 안에서** 고정을 본다.  그러면 CL-56 이 겨냥한 것(DBE 안에서
+    #      SDCP E 23.6 ↔ 9.0 섞임)은 그대로 잡히고, 침대 사이 공통 키(PTFE·VGCF)는 아래에서
+    #      따로 대조해 세대 혼합도 계속 잡는다.
+    _BED_FIELDS = ('input_digest', 'additive_E_GPa')
+    for fld in _BED_FIELDS:
+        for k in ('SBE', 'DBE'):
+            _v = {_canon(r.get(fld)) for r in arms[k] if r.get(fld) is not None}
+            if len(_v) > 1:
+                return dict(out, decision='HOLD',
+                            reason=f'{k} **안에서** `{fld}` 가 팔마다 다르다 '
+                                   f'({sorted(map(str, _v))}) — 한 침대의 팔들은 같은 입력·같은 '
+                                   f'물성이어야 한다 (CL-56 축)')
+    #  ★ 침대 **사이**: digest 는 달라야 하고(같으면 같은 침대다), additive 는 **공통 키**만 같아야 한다.
+    _ds = {r.get('input_digest') for r in arms['SBE'] if r.get('input_digest')}
+    _dd = {r.get('input_digest') for r in arms['DBE'] if r.get('input_digest')}
+    if _ds and _dd and _ds == _dd:
+        return dict(out, decision='HOLD',
+                    reason=f'SBE 와 DBE 의 `input_digest` 가 **같다** ({sorted(_ds)[0]}) — 두 팔이 '
+                           f'같은 침대를 읽고 있다.  비 1.0 은 물리가 아니라 배선 실수다')
+    _as = next((r['additive_E_GPa'] for r in arms['SBE'] if r.get('additive_E_GPa')), None)
+    _ad = next((r['additive_E_GPa'] for r in arms['DBE'] if r.get('additive_E_GPa')), None)
+    if isinstance(_as, dict) and isinstance(_ad, dict):
+        _diff = {k for k in set(_as) & set(_ad) if _as[k] != _ad[k]}
+        if _diff:
+            return dict(out, decision='HOLD',
+                        reason=f'두 침대가 `additive_E_GPa` 의 **공통 상**에서 다르다 ({sorted(_diff)}: '
+                               f'{ {k: (_as[k], _ad[k]) for k in sorted(_diff)} }) — 세대가 섞였다 '
+                               f'(CL-56).  SDCP 처럼 한쪽에만 있는 상은 정상이다')
     for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
                 'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend', 'sdcp_yield_to_vgcf',
                 'sigma_ptfe_S_cm',
                 # ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
                 #   σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
-                *(f for f in _GEN_FIELDS if f not in _gen_ex)):
+                *(f for f in _GEN_FIELDS if f not in _gen_ex and f not in _BED_FIELDS)):
         #  ★ F4: dict 값(additive_E_GPa)은 set 에 못 들어간다 — 정규 직렬화로 비교.
         _v = {(json.dumps(r.get(fld), sort_keys=True)
                if isinstance(r.get(fld), (dict, list)) else r.get(fld))
@@ -685,15 +718,32 @@ def _selftest():
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
     _c6 = mk(base, [v * 1.12 for v in base], **_dig)
-    chk(f'㉖a digest 가 같으면 통과 ({verdict(_c6, require_digest=True)["decision"]})',
+    #  ⚠⚠ 2026-08-20 (FA-06) — **이 블록의 전제가 틀려 있었다.**  어제 판은 두 침대에 **같은**
+    #    digest 를 주고 "통과", 침대끼리 **다르면** "HOLD" 를 기대했다.  그런데 SBE 와 DBE 는
+    #    서로 다른 침대이므로 digest 가 **다른 것이 정상**이고 같은 것이 배선 실수다.
+    #    ⇒ 어제의 테스트가 오히려 결함을 박제하고 있었다 (실런이 드러냈다: 도핑 baseline HOLD).
+    #    올바른 계약: **침대 안에서는 같고, 침대 사이에서는 다르다.**
+    def _perbed(c, s='aaa1111111111111', d='bbb2222222222222'):
+        for _r in c['SBE']:
+            _r['input_digest'] = s
+        for _r in c['DBE']:
+            _r['input_digest'] = d
+        return c
+
+    _c6 = _perbed(_c6)
+    chk(f'㉖a 침대별 digest 가 침대 안에서 일정하면 통과 '
+        f'({verdict(_c6, require_digest=True)["decision"]})',
         verdict(_c6, require_digest=True)['decision'] in ('h0', 'h1', 'BOTH_REJECTED'))
-    _c6b = mk(base, [v * 1.12 for v in base], **_dig)
-    for _r in _c6b['DBE']:
-        _r['input_digest'] = 'ffffffffffffffff'      # 다른 침대를 몰래 넣은 경우
+    _c6b = _perbed(mk(base, [v * 1.12 for v in base], **_dig))
+    _c6b['DBE'][3]['input_digest'] = 'ffffffffffffffff'   # 한 팔만 다른 침대를 읽었다
     _v26b = verdict(_c6b)
-    chk(f'㉖b ★ 입력 digest 가 팔마다 다르면 HOLD (다른 침대) ({_v26b["decision"]})',
+    chk(f'㉖b ★ **한 침대 안에서** digest 가 갈리면 HOLD ({_v26b["decision"]})',
         _v26b['decision'] == 'HOLD' and 'input_digest' in (_v26b.get('reason') or ''))
-    _c6c = mk(base, [v * 1.12 for v in base], **_dig)
+    _v26b2 = verdict(_perbed(mk(base, [v * 1.12 for v in base], **_dig),
+                             s='same0000same0000', d='same0000same0000'))
+    chk(f'㉖b2 ★ 두 침대의 digest 가 **같으면** HOLD (같은 침대다) ({_v26b2["decision"]})',
+        _v26b2['decision'] == 'HOLD' and 'input_digest' in (_v26b2.get('reason') or ''))
+    _c6c = _perbed(mk(base, [v * 1.12 for v in base], **_dig))
     for _r in _c6c['SBE']:
         _r['code_sha'] = 'deadbee'                   # 다른 코드로 돈 팔
     _v26c = verdict(_c6c)
@@ -702,8 +752,7 @@ def _selftest():
     _v26d = verdict(mk(base, [v * 1.12 for v in base]), require_digest=True)
     chk(f'㉖d ★ --require-digest 인데 기록이 없으면 HOLD (옛 payload) ({_v26d["decision"]})',
         _v26d['decision'] == 'HOLD' and 'input_digest' in (_v26d.get('reason') or ''))
-    _c6e = mk(base, [v * 1.12 for v in base], input_digest='abc123def4567890',
-              code_sha='1da6cbd+dirty')
+    _c6e = _perbed(mk(base, [v * 1.12 for v in base], code_sha='1da6cbd+dirty'))
     _v26e = verdict(_c6e, require_digest=True)
     chk(f'㉖e ★ 커밋 안 된 코드(+dirty)로 돈 런은 HOLD ({_v26e["decision"]})',
         _v26e['decision'] == 'HOLD' and 'dirty' in (_v26e.get('reason') or ''))
@@ -778,6 +827,50 @@ def _selftest():
         chk(f'㉘b 팔 수를 보고한다 ({_sc[0][1]})', _sc[0][1] == '2/2')
         chk('㉘c ★ 빈/무관 디렉터리는 목록에 안 뜬다 (없는 경로를 고르게 두지 않는다)',
             all(r[0] != 'noise_dir' for r in _sc))
+
+    #  ── ㉙ FA-06 — **침대 정체성 필드**를 침대 사이에서 비교하면 안 된다 ────────────────
+    #     실사고 (2026-08-20): 도핑 baseline 8팔이 `additive_E_GPa` 로 HOLD 를 맞았다.
+    #     SBE `{PTFE, VGCF}` vs DBE `{PTFE, SDCP, VGCF}` — SBE 에 SDCP 가 없는 것은
+    #     **위반이 아니라 이 실험의 독립변수 그 자체**다.  게이트가 실험을 결함으로 신고했다.
+    def _mk3(d, *, s_add, d_add, s_dig='AA', d_dig='BB', n=2, s_add2=None, d_add2=None):
+        _m0 = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
+               'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
+               'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
+               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+               'code_sha': 'abc1234', 'components': _comps()}
+        for _k, _mul, _ad, _ad2, _dg in (('SBE', 1.0, s_add, s_add2, s_dig),
+                                         ('DBE', 1.12, d_add, d_add2, d_dig)):
+            for _i in range(n):
+                _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.075],
+                          input_digest=_dg,          # ← additive 와 **분리** (한 번에 하나만)
+                          additive_E_GPa=(_ad if _i == 0 or _ad2 is None else _ad2))
+                with open(os.path.join(d, f'p2_{_k}_sph_a{_i}.json'), 'w', encoding='utf-8') as _f:
+                    json.dump({'mpm_metrics': {'step3': {
+                        'sigma_e_eff_S_cm': 0.073 * _mul, 'cg_info': 0, 'cg_resid': 1e-8,
+                        'unconverged': False, 'manifest': _m}}}, _f)
+
+    _SB = {'PTFE': 0.3, 'VGCF': 10.0}
+    _DB = {'PTFE': 0.3, 'SDCP': 23.6, 'VGCF': 10.0}
+    with _tf22.TemporaryDirectory() as _d29:
+        _mk3(_d29, s_add=_SB, d_add=_DB)
+        _v = verdict(collect(_d29)[1])
+        chk(f'㉙a ★ 정상 증인 — SBE 에 SDCP 항목이 없는 것은 **정상**이다 ({_v["decision"]})',
+            _v['decision'] != 'HOLD')
+    with _tf22.TemporaryDirectory() as _d29:                       # DBE 안에서 SDCP E 가 섞임
+        _mk3(_d29, s_add=_SB, d_add=_DB, d_add2={'PTFE': 0.3, 'SDCP': 9.0, 'VGCF': 10.0})
+        _v = verdict(collect(_d29)[1])
+        chk(f'㉙b ★ 침대 **안에서** SDCP E 23.6↔9.0 이 섞이면 HOLD (CL-56 축 보존) ({_v["decision"]})',
+            _v['decision'] == 'HOLD' and 'additive_E_GPa' in (_v.get('reason') or ''))
+    with _tf22.TemporaryDirectory() as _d29:                       # 공통 상의 물성이 다름
+        _mk3(_d29, s_add=_SB, d_add={'PTFE': 0.3, 'SDCP': 23.6, 'VGCF': 12.0})
+        _v = verdict(collect(_d29)[1])
+        chk(f'㉙c ★ 두 침대의 **공통 상**(VGCF) 물성이 다르면 HOLD (세대 혼합) ({_v["decision"]})',
+            _v['decision'] == 'HOLD' and '공통 상' in (_v.get('reason') or ''))
+    with _tf22.TemporaryDirectory() as _d29:                       # 두 침대가 같은 파일
+        _mk3(_d29, s_add=_SB, d_add=_DB, s_dig='SAME', d_dig='SAME')
+        _v = verdict(collect(_d29)[1])
+        chk(f'㉙d ★ 두 침대의 digest 가 **같으면** HOLD (같은 침대를 읽고 있다) ({_v["decision"]})',
+            _v['decision'] == 'HOLD' and 'input_digest' in (_v.get('reason') or ''))
 
     #  ㉖f 음성 대조 — 옛 격자 팔(전부 없음)은 **기본 모드에서 통과해야** 한다.
     chk('㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)',
