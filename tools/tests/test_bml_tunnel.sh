@@ -145,6 +145,52 @@ else
   fail=$((fail + 1)); printf '  FAIL 상한 3초인데 %d초 걸렸다\n' "$elapsed"
 fi
 
+# --- 000 이 어느 층에서 끊긴 것인가 -----------------------------------------
+
+# 실제로 일어난 일 (2026-08-22): `curl https://a1ef13c23c42c8.lhr.life/api/health`
+# 가 `SSL_ERROR_SYSCALL` 과 000 을 냈다. 이름은 풀렸고 443 에도 붙었는데 TLS
+# 손을 잡다가 끊긴 것 — 7844 를 막던 그 망의 장비가 SNI 의 도메인을 보고
+# 끊었다. 터널은 멀쩡히 살아 있었다. 이것을 "터널이 안 됐다" 로 읽으면 사람은
+# 멀쩡한 터널을 닫고 처음부터 다시 한다.
+
+# 이름이 없는 주소는 dns 에서 걸려야 한다 — .invalid 는 절대 풀리지 않는다(RFC 2606).
+check "풀리지 않는 이름은 dns 층" \
+  "$(tunnel_block_layer https://bml-test.invalid)" "dns"
+
+# 아무도 안 듣는 곳은 tcp 층 — 443 에 못 붙는다.
+# (이 기계가 443 을 쓰고 있으면 이 검사는 뜻이 없다. 건너뛴다.)
+if ss -ltn 2>/dev/null | grep -qE '[:.]443[[:space:]]'; then
+  printf '  --   tcp 층 검사 건너뜀 (이 기계가 443 을 쓰고 있다)\n'
+else
+  check "443 이 안 열린 곳은 tcp 층" \
+    "$(tunnel_block_layer https://127.0.0.1)" "tcp"
+fi
+
+# 주소에 이상한 글자가 섞이면 셸에 넘기지 않는다.  이 값은 우리가 로그에서
+# 뽑아낸 것이라 원칙적으로 안전하지만, 셸 명령에 붙는 자리는 좁혀 둔다.
+check "명령이 섞인 이름은 넘기지 않는다" \
+  "$(tunnel_block_layer 'https://evil.example.com;touch /tmp/bml-pwned')" "unknown"
+if [ -e /tmp/bml-pwned ]; then
+  fail=$((fail + 1)); printf '  FAIL 주소에 섞인 명령이 실행됐다\n'; rm -f /tmp/bml-pwned
+else
+  pass=$((pass + 1)); printf '  ok   주소에 섞인 명령이 실행되지 않는다\n'
+fi
+
+# 그리고 층마다 다음에 할 일이 달라야 한다.
+contains "dns 는 터널이 닫혔을 가능성을 말한다" "$(block_layer_meaning dns)" "닫혔"
+contains "tcp 는 이 망이 막는다고 말한다"       "$(block_layer_meaning tcp)" "이 망이"
+contains "tls 는 다른 망에서는 열린다고 말한다"  "$(block_layer_meaning tls)" "다른 망에서는 열립니다"
+contains "짚지 못하면 짚지 못했다고 말한다"      "$(block_layer_meaning unknown)" "짚지 못했습니다"
+
+# tls·tcp 로 판정되면 "다시 열어 보라" 고 하면 안 된다 — 멀쩡한 터널을 닫는
+# 안내다.  화면 분기가 실제로 갈라져 있는지 코드에서 확인한다.
+if grep -q 'case "$tlayer" in tls|tcp)' "$HERE/../bml" \
+   && grep -q 'case "$layer" in' "$HERE/../bml"; then
+  pass=$((pass + 1)); printf '  ok   tls·tcp 는 다시 열라고 하지 않는 갈래로 간다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 층에 따라 안내가 갈리지 않는다\n'
+fi
+
 # --- 확인이 안 됐을 때 화면이 뭘 말하는가 -----------------------------------
 
 # 1분을 이미 물어봤으면서 "curl 로 직접 확인해 보세요" 로 끝나면 안 된다.
