@@ -1159,18 +1159,28 @@ server_alive() {
   [ "$(http_code_of "$1" "${2:-4}")" = "200" ]
 }
 
-#: 같은 주소를 몇 번 더 두드린다.
+#: 열릴 때까지 <초> 만큼 기다린다.
 #:
-#: 한 번 실패로 "안 됩니다" 라고 하면, 이제 막 연 터널이 준비되는 몇 초 사이에
-#: 걸린 사람은 주소를 잘못 받아 적은 줄 안다.  실제로 그랬다 — 방금 만든
-#: trycloudflare 주소는 DNS 와 TLS 준비 때문에 첫 응답이 4초를 넘는 일이 흔하다.
-server_alive_soon() {
-  local url="$1" tries="${2:-5}" i
-  for i in $(seq 1 "$tries"); do
+#: **횟수가 아니라 시간으로 센다.**  아직 안 붙은 터널은 Cloudflare 가 530 을
+#: 곧바로 돌려주므로 한 번 시도가 1초도 안 걸린다 — 횟수로 세면 "다섯 번
+#: 해 봤다" 가 실제로는 7초고, 준비 중인 터널을 우리가 먼저 죽인다.  실제로
+#: 그렇게 했다: 로그에 남은 것은 막힌 포트가 아니라 우리가 보낸 SIGTERM 이었다.
+wait_until_alive() {
+  local url="$1" limit="${2:-45}" start=$SECONDS
+  while :; do
     server_alive "$url" 8 && return 0
-    [ "$i" -lt "$tries" ] && sleep 2
+    [ $((SECONDS - start)) -ge "$limit" ] && return 1
+    sleep 3
   done
-  return 1
+}
+
+#: 밖으로 나가는 7844/TCP 가 열려 있는가.
+#:
+#: cloudflared 는 QUIC 이든 http2 든 **이 포트로** 엣지에 붙는다.  443 이
+#: 열려 있어도 7844 가 막히면 터널은 안 된다 — 그런데 그때도 주소는 발급되고
+#: 로그에는 "dial tcp ...:7844" 만 남아서, 포트 문제인지 아닌지가 안 보인다.
+edge_port_open() {
+  timeout 8 bash -c 'exec 3<>/dev/tcp/region1.v2.argotunnel.com/7844' 2>/dev/null
 }
 
 #: 왜 안 닿았는지 curl 이 아는 것을 그대로 보여 준다.
@@ -1450,8 +1460,10 @@ cmd_share() {
     printf '%s' "$url" > "$TUNNEL_URL_FILE"
     # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이 "열렸다" 를
     # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
-    step "주소가 실제로 열렸는지 확인 중"
-    server_alive_soon "$url" 3 && break
+    # 넉넉히 기다린다.  엣지 연결이 붙기까지 30초를 넘는 일이 있고, 그 사이
+    # 응답은 즉시 돌아오는 530 이다.
+    step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
+    wait_until_alive "$url" 60 && break
 
     close_tunnel >/dev/null 2>&1 || true
     url=""
@@ -1463,8 +1475,21 @@ cmd_share() {
     say "  ${DIM}$log 의 마지막 줄:${OFF}"
     tail -n 12 "$log" 2>/dev/null | sed 's/^/    /'
     say ""
-    say "  ${DIM}밖으로 나가는 443/TCP 가 막혀 있으면 여기서 멈춥니다.${OFF}"
-    say "  ${DIM}같은 공유기 안이라면 터널 없이${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 를 쓰세요.${OFF}"
+    # 포트 문제인지 아닌지를 여기서 갈라 준다.  로그의 "dial tcp ...:7844" 만
+    # 으로는 막힌 것인지 느린 것인지 알 수 없다.
+    step "밖으로 나가는 7844/TCP 확인 중"
+    if edge_port_open; then
+      ok "7844/TCP 는 열려 있습니다 — 포트 문제는 아닙니다."
+      say "  ${DIM}잠시 뒤 다시${OFF} ${GREEN}bml share${OFF} ${DIM}를 해 보세요.${OFF}"
+    else
+      printf '%s✕%s 밖으로 나가는 7844/TCP 가 막혀 있습니다.\n' "$RED" "$OFF" >&2
+      say "  ${DIM}cloudflared 는 QUIC 이든 http2 든 이 포트로만 엣지에 붙습니다 —${OFF}"
+      say "  ${DIM}443 이 열려 있어도 안 됩니다. 학교·회사 망에서 흔히 막혀 있습니다.${OFF}"
+      say ""
+      say "  ${B}대안${OFF}  같은 공유기 안이라면 터널 없이 ${GREEN}bml status${OFF} ${DIM}의 '접속 주소'${OFF}"
+      say "        휴대폰 테더링으로 잠깐 바꾸면 대개 열립니다"
+      say "        망 관리자에게 7844/TCP 아웃바운드를 열어 달라고 합니다"
+    fi
     exit 1
   fi
 
@@ -1501,10 +1526,10 @@ cmd_use() {
   esac
 
   local url; url="$(normalize_server_url "$raw")"
-  step "확인  $url ${DIM}(최대 40초)${OFF}"
+  step "확인  $url ${DIM}(최대 ${WORKBENCH_WAIT:-40}초)${OFF}"
   # 닿는지 본 뒤에만 적는다.  못 닿는 주소를 적어 두면 그 뒤로 `bml` 이 매번
   # 실패하는데, 사람은 방금 적은 주소를 의심하지 않고 서버를 의심한다.
-  if ! server_alive_soon "$url"; then
+  if ! wait_until_alive "$url" "${WORKBENCH_WAIT:-40}"; then
     printf '%s✕%s 그 주소에서 워크벤치가 응답하지 않습니다: %s\n' "$RED" "$OFF" "$url" >&2
     server_unreachable_help "$url"
     say "  ${DIM}한 번만 시험해 보려면${OFF}  ${GREEN}WORKBENCH_SERVER=$url bml${OFF}"
@@ -1529,7 +1554,7 @@ cmd_use() {
 cmd_connect() {
   say "${B}Battery Lab Workbench${OFF}  ${DIM}중추 서버${OFF}"
   say ""
-  if ! server_alive_soon "$SERVER" 3; then
+  if ! wait_until_alive "$SERVER" "${WORKBENCH_WAIT:-20}"; then
     printf '%s✕%s 중추 서버가 응답하지 않습니다: %s\n' "$RED" "$OFF" "$SERVER" >&2
     server_unreachable_help "$SERVER"
     exit 1

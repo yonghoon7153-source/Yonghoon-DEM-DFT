@@ -125,20 +125,20 @@ if [ -n "$LIVE" ]; then
 
   # 확인이 끝난 뒤에만 적는다.
   : > "$RUN_DIR/env"
-  ( BML_NO_OPEN=1 cmd_use "127.0.0.1:$LIVE" >/dev/null 2>&1 )
+  ( WORKBENCH_WAIT=1 BML_NO_OPEN=1 cmd_use "127.0.0.1:$LIVE" >/dev/null 2>&1 )
   check "닿는 주소는 저장된다" "$(grep -c "^WORKBENCH_SERVER=http://127.0.0.1:$LIVE$" "$RUN_DIR/env")" "1"
 else
   fail=$((fail + 1)); printf '  FAIL 시험용 서버를 못 띄웠다\n'
 fi
 
-  check "몇 번 두드려도 살아 있는 것은 살아 있다" \
-    "$(server_alive_soon "http://127.0.0.1:$LIVE" 2 && echo yes || echo no)" "yes"
+  check "살아 있으면 바로 통과한다" \
+    "$(wait_until_alive "http://127.0.0.1:$LIVE" 10 && echo yes || echo no)" "yes"
 
 # 닫힌 포트.  curl 은 기다리지 않고 바로 거절당한다.
 check "안 닿는 주소는 거절한다" "$(server_alive 'http://127.0.0.1:1' && echo yes || echo no)" "no"
 
 : > "$RUN_DIR/env"
-( BML_NO_OPEN=1 cmd_use "127.0.0.1:1" >/dev/null 2>&1 )
+( WORKBENCH_WAIT=1 BML_NO_OPEN=1 cmd_use "127.0.0.1:1" >/dev/null 2>&1 )
 check "안 닿는 주소는 저장하지 않는다" "$(grep -c '^WORKBENCH_SERVER=' "$RUN_DIR/env")" "0"
 
 echo
@@ -156,6 +156,15 @@ check "터널 주소에는 방화벽을 말하지 않는다" \
 # "응답하지 않습니다" 만으로는 오타·터널 닫힘·방화벽·엉뚱한 서버를 구분할 수 없다.
 check "curl 이 뭐라 했는지 보여 준다" \
   "$(case "$help_tunnel" in *"curl 이 말한 것"*) echo yes ;; *) echo no ;; esac)" "yes"
+
+echo
+echo "기다리는 것은 횟수가 아니라 시간이다"
+# 아직 안 붙은 터널은 530 을 곧바로 돌려준다.  횟수로 세면 "다섯 번 해 봤다"
+# 가 실제로는 7초고, 준비 중인 터널을 우리가 먼저 죽인다 — 실제로 그랬다.
+started=$SECONDS
+wait_until_alive "http://127.0.0.1:1" 6 && waited=-1 || waited=$((SECONDS - started))
+check "포기하기 전에 준 시간만큼 기다린다" "$([ "$waited" -ge 6 ] && echo yes || echo no)" "yes"
+check "영원히 붙잡고 있지는 않는다"       "$([ "$waited" -lt 20 ] && echo yes || echo no)" "yes"
 
 echo
 echo "터널 주소 꺼내기"
@@ -242,7 +251,7 @@ echo "중추 서버가 정해져 있으면 자기 서버를 안 띄운다"
 # 데이터 폴더가 없는 채로 부른다.  자기 서버를 띄우려 했다면 guard_data_dir 가
 # "데이터 폴더가 없습니다" 로 죽는다 — 그 메시지가 나오면 분기를 안 탄 것이다.
 out="$(WORKBENCH_SERVER=http://127.0.0.1:1 WORKBENCH_DATA="$TMP/없는폴더" \
-       BML_NO_OPEN=1 "$BML" 2>&1)"
+       WORKBENCH_WAIT=1 BML_NO_OPEN=1 "$BML" 2>&1)"
 check "중추 서버 이야기를 한다"      "$(case "$out" in *"중추 서버"*) echo yes ;; *) echo no ;; esac)" "yes"
 check "자기 데이터 폴더를 안 찾는다" "$(case "$out" in *"데이터 폴더가 없습니다"*) echo no ;; *) echo yes ;; esac)" "yes"
 check "빈 data/ 를 만들지 않는다"    "$([ -d "$TMP/없는폴더" ] && echo no || echo yes)" "yes"
