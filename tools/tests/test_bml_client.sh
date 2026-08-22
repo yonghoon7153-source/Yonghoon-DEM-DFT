@@ -222,6 +222,10 @@ sleep 0.3
 check "프로세스가 실제로 죽는다" "$(kill -0 "$FAKE_TUNNEL" 2>/dev/null && echo no || echo yes)" "yes"
 check "주소 파일도 지운다"       "$([ -e "$TUNNEL_URL_FILE" ] && echo no || echo yes)" "yes"
 check "두 번 닫으면 닫을 게 없다" "$(close_tunnel && echo yes || echo no)" "no"
+# QUIC(UDP 7844)이 막힌 망에서도 주소는 발급된다.  그대로 두면 상대가
+# HTTP 530 을 보고 자기가 주소를 잘못 받아 적었다고 생각한다.
+check "QUIC 이 막히면 http2 로 다시 연다" \
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c -- '--protocol "\$proto"')" "1"
 # 서버 없이 남은 터널은 남에게 오류 화면을 띄우는 주소일 뿐이다.
 check "bml stop 이 터널도 닫는다" \
   "$(sed -n '/^cmd_stop()/,/^}/p' "$BML" | grep -c close_tunnel)" "1"

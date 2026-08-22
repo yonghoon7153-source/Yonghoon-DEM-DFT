@@ -1410,51 +1410,61 @@ cmd_share() {
   ensure_cloudflared
   [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
 
-  local log="$RUN_DIR/tunnel.log" url="" pid i
-  : > "$log"
-  step "터널 여는 중"
-  # 이 창에 매달아 두지 않는다.  창을 닫거나 Ctrl-C 를 누르면 터널이 죽고,
-  # 그 주소를 받은 사람은 Cloudflare 오류 1033 을 본다 — 실제로 그렇게 됐다.
-  # 서버와 같은 방식으로 띄우고, 닫는 것은 `bml share stop` 이 한다.
-  nohup "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
-  pid=$!
-  echo "$pid" > "$TUNNEL_PID_FILE"
-  disown "$pid" 2>/dev/null || true
+  local log="$RUN_DIR/tunnel.log" url="" pid i proto
 
-  for i in $(seq 1 60); do
-    url="$(tunnel_url_from "$(cat "$log" 2>/dev/null)")"
-    [ -n "$url" ] && break
-    kill -0 "$pid" 2>/dev/null || break
-    sleep 0.5
+  # 두 가지 방식으로 시도한다.
+  #
+  # cloudflared 는 기본으로 QUIC(UDP 7844)으로 붙는데, 학교·회사 망에서는 그
+  # 포트가 막혀 있는 일이 흔하다.  그때도 주소는 발급되므로 화면상 성공처럼
+  # 보이고, 그 주소를 열면 Cloudflare 오류 1033(HTTP 530)이 뜬다 — 주소를 받은
+  # 사람은 자기가 잘못 받아 적었다고 생각한다.  http2 는 443/TCP 만 쓴다.
+  for proto in "" "http2"; do
+    : > "$log"
+    if [ -n "$proto" ]; then
+      step "다른 방식으로 다시 여는 중 ${DIM}(--protocol $proto · QUIC 이 막힌 망일 때)${OFF}"
+      # 이 창에 매달아 두지 않는다 (아래 주석 참고).
+      nohup "$CLOUDFLARED" tunnel --no-autoupdate --protocol "$proto" --url "$URL" >>"$log" 2>&1 &
+    else
+      step "터널 여는 중"
+      # 창을 닫거나 Ctrl-C 를 누르면 터널이 죽고, 그 주소를 받은 사람은
+      # Cloudflare 오류 1033 을 본다 — 실제로 그렇게 됐다.  서버와 같은
+      # 방식으로 띄우고, 닫는 것은 `bml share stop` 이 한다.
+      nohup "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
+    fi
+    pid=$!
+    echo "$pid" > "$TUNNEL_PID_FILE"
+    disown "$pid" 2>/dev/null || true
+
+    url=""
+    for i in $(seq 1 60); do
+      url="$(tunnel_url_from "$(cat "$log" 2>/dev/null)")"
+      [ -n "$url" ] && break
+      kill -0 "$pid" 2>/dev/null || break
+      sleep 0.5
+    done
+    if [ -z "$url" ]; then
+      close_tunnel >/dev/null 2>&1 || true
+      continue
+    fi
+
+    printf '%s' "$url" > "$TUNNEL_URL_FILE"
+    # 주소를 받은 것과 그 주소가 열린 것은 다르다.  확인하는 비용이 "열렸다" 를
+    # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
+    step "주소가 실제로 열렸는지 확인 중"
+    server_alive_soon "$url" 3 && break
+
+    close_tunnel >/dev/null 2>&1 || true
+    url=""
   done
 
   if [ -z "$url" ]; then
-    close_tunnel >/dev/null 2>&1 || true
-    printf '%s✕%s 터널 주소를 받지 못했습니다.\n' "$RED" "$OFF" >&2
+    printf '%s✕%s 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
     say "  ${DIM}$log 의 마지막 줄:${OFF}"
     tail -n 12 "$log" 2>/dev/null | sed 's/^/    /'
     say ""
-    say "  ${DIM}밖으로 나가는 443/7844 이 막혀 있으면 여기서 멈춥니다.${OFF}"
-    exit 1
-  fi
-
-  printf '%s' "$url" > "$TUNNEL_URL_FILE"
-
-  # 주소를 받은 것과 그 주소가 열린 것은 다르다.  Cloudflare 가 이름을 실제로
-  # 연결하기까지 몇 초 걸리고, 그 사이에 "열렸습니다" 라고 말하면 주소를 받은
-  # 사람이 오류 화면을 보게 된다 — 그러면 주소를 의심하지 터널을 의심하지
-  # 않는다.  여기서 확인하는 비용이 그 왕복 한 번보다 훨씬 싸다.
-  step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
-  if ! server_alive_soon "$url" 6; then
-    warn "주소는 받았지만 아직 열리지 않았습니다 ${DIM}(HTTP $(http_code_of "$url" 8))${OFF}"
-    say "  ${B}${url}${OFF}"
-    say ""
-    say "  ${DIM}터널은 계속 돌고 있습니다. 잠시 뒤${OFF} ${GREEN}bml status${OFF} ${DIM}로 다시 보세요 —${OFF}"
-    say "  ${DIM}'공유 주소' 줄에 경고가 없으면 그때 알려 주면 됩니다.${OFF}"
-    say ""
-    say "  ${DIM}$log 의 마지막 줄:${OFF}"
-    tail -n 8 "$log" 2>/dev/null | sed 's/^/    /'
+    say "  ${DIM}밖으로 나가는 443/TCP 가 막혀 있으면 여기서 멈춥니다.${OFF}"
+    say "  ${DIM}같은 공유기 안이라면 터널 없이${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 를 쓰세요.${OFF}"
     exit 1
   fi
 
