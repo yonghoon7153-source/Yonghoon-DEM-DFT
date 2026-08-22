@@ -1203,6 +1203,9 @@ write_env_key() {
   # 그 사이에 설정 파일이 없는 순간이 생긴다.
   tmp="$RUN_DIR/env.$$"
   : > "$tmp"
+  # 이 파일에는 공유 암호가 들어간다.  실험실 공용 PC 의 기본 umask 로는
+  # 누구나 읽을 수 있는 파일이 된다.
+  chmod 600 "$tmp" 2>/dev/null || true
   [ -f "$file" ] && grep -v "^[[:space:]]*${key}[[:space:]]*=" "$file" >> "$tmp"
   [ -n "$value" ] && printf '%s=%s\n' "$key" "$value" >> "$tmp"
   mv "$tmp" "$file"
@@ -1333,8 +1336,11 @@ cmd_password() {
   if [ "$(count_chars "$given")" -lt 6 ]; then
     die "너무 짧습니다 (6자 이상).  주소가 인터넷에 있는 동안에는 이것 하나가 전부입니다."
   fi
+  # `.bml/env` 는 한 줄이 한 설정이다.  줄바꿈이 든 암호는 파일을 두 줄로
+  # 쪼개서 저장되고, 그러면 사용자가 아는 암호로는 영영 안 열린다.
   case "$given" in
     *=*) die "암호에 '=' 는 쓸 수 없습니다 (.bml/env 가 KEY=VALUE 라서 잘립니다)." ;;
+    *$'\n'*|*$'\r'*|*$'\t'*) die "암호에 줄바꿈이나 탭은 쓸 수 없습니다." ;;
   esac
 
   write_env_key WORKBENCH_PASSWORD "$given"
@@ -1342,10 +1348,35 @@ cmd_password() {
   warn "떠 있는 서버는 아직 옛 설정입니다 — ${GREEN}bml restart${OFF} ${DIM}로 반영됩니다.${OFF}"
 }
 
+#: 이 명령줄이 우리가 띄운 터널의 것인가.
+#:
+#: PID 는 재사용된다.  낡은 tunnel.pid 가 가리키는 번호를 그 사이 남의
+#: 프로세스가 물려받았을 수 있는데, close_tunnel 은 프로세스 그룹째 죽인다 —
+#: 남의 실험을 죽이는 길이다 (CLAUDE.md §0.8).  포트 쪽(classify_process)과
+#: 같은 원칙으로, 정체를 설명할 수 없으면 죽이지 않는다.
+#:
+#: 프로세스 없이 시험할 수 있게 명령줄만 받는다.
+looks_like_our_tunnel() {
+  case "$1" in
+    *cloudflared*--url*"$URL"*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+owns_tunnel_pid() {
+  local pid="$1" cmd
+  [ -n "$pid" ] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)"
+  [ -n "$cmd" ] || cmd="$(ps -p "$pid" -o args= 2>/dev/null)"
+  [ -n "$cmd" ] || return 1
+  looks_like_our_tunnel "$cmd"
+}
+
 tunnel_running() {
   local pid
   pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)" || return 1
-  [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null
+  owns_tunnel_pid "$pid"
 }
 
 tunnel_url() { cat "$TUNNEL_URL_FILE" 2>/dev/null; }
@@ -1356,12 +1387,14 @@ tunnel_url() { cat "$TUNNEL_URL_FILE" 2>/dev/null; }
 close_tunnel() {
   local pid
   pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)"
-  if [ -n "$pid" ] && kill -0 "$pid" 2>/dev/null; then
+  if owns_tunnel_pid "$pid"; then
     kill "$pid" 2>/dev/null
     kill -- "-$pid" 2>/dev/null
     rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
     return 0
   fi
+  # 우리 것이 아니면 건드리지 않는다.  표식만 지운다 — 낡은 파일을 남겨 두면
+  # 다음 `bml share` 가 "이미 열려 있습니다" 로 끝난다.
   rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
   return 1
 }

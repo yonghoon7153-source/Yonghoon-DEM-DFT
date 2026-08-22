@@ -181,6 +181,9 @@ check "다른 도메인은 안 집는다"   "$(tunnel_url_from 'see https://deve
 echo
 echo "공유 암호"
 : > "$RUN_DIR/env"
+( WORKBENCH_PASSWORD="" cmd_password "$(printf 'abc\ndef')" >/dev/null 2>&1 )
+check "줄바꿈이 든 암호는 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' "$RUN_DIR/env")" "0"
+: > "$RUN_DIR/env"
 ( WORKBENCH_PASSWORD="" cmd_password "짧다" >/dev/null 2>&1 )
 check "너무 짧으면 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' "$RUN_DIR/env")" "0"
 # 한글 두 글자는 여섯 '바이트' 다.  ${#var} 로 세면 로케일에 따라 통과한다.
@@ -195,6 +198,8 @@ check "'=' 가 들면 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' 
 : > "$RUN_DIR/env"
 ( WORKBENCH_PASSWORD="" cmd_password "건식전극2026" >/dev/null 2>&1 )
 check "쓸 만한 암호는 저장된다"     "$(grep -c '^WORKBENCH_PASSWORD=건식전극2026$' "$RUN_DIR/env")" "1"
+# 실험실 공용 PC 의 기본 umask 로는 누구나 읽을 수 있는 파일이 된다.
+check "암호가 든 파일은 나만 읽는다" "$(stat -c '%a' "$RUN_DIR/env" 2>/dev/null)" "600"
 
 echo
 echo "터널 프로그램 찾기"
@@ -220,7 +225,30 @@ echo
 echo "터널은 창을 닫아도 살아 있어야 한다"
 # 창에 매달아 두면 Ctrl-C 나 창 닫기로 터널이 죽고, 주소를 받은 사람은
 # Cloudflare 오류 1033 을 본다 — "닫혔다" 가 아니라 "고장 났다" 로 읽힌다.
+# 명령줄이 우리 터널처럼 보여야 소유로 친다.  PID 는 재사용되므로 살아 있다는
+# 것만으로 죽이면 남의 프로세스를 그룹째 죽일 수 있다 (CLAUDE.md §0.8).
+check "우리 터널의 명령줄을 알아본다" \
+  "$(looks_like_our_tunnel "cloudflared tunnel --no-autoupdate --url $URL" && echo yes || echo no)" "yes"
+check "남의 cloudflared 는 우리 것이 아니다" \
+  "$(looks_like_our_tunnel "cloudflared tunnel --url http://localhost:9999" && echo yes || echo no)" "no"
+check "아무 프로세스나 우리 것이 아니다" \
+  "$(looks_like_our_tunnel "python3 -m long_experiment" && echo yes || echo no)" "no"
+check "빈 명령줄은 우리 것이 아니다" \
+  "$(looks_like_our_tunnel "" && echo yes || echo no)" "no"
+
+# 살아 있지만 우리 것이 아닌 pid — 죽이면 안 된다.
 sleep 300 &
+STRANGER=$!
+echo "$STRANGER" > "$TUNNEL_PID_FILE"
+printf 'https://someone-else.trycloudflare.com' > "$TUNNEL_URL_FILE"
+check "남의 pid 는 열려 있는 것으로 안 친다" "$(tunnel_running && echo yes || echo no)" "no"
+close_tunnel >/dev/null 2>&1
+sleep 0.3
+check "남의 pid 를 죽이지 않는다" "$(kill -0 "$STRANGER" 2>/dev/null && echo yes || echo no)" "yes"
+kill "$STRANGER" 2>/dev/null
+
+# 이제 진짜 우리 것처럼 보이는 프로세스로.
+bash -c "exec -a \"cloudflared tunnel --no-autoupdate --url $URL\" sleep 300" &
 FAKE_TUNNEL=$!
 echo "$FAKE_TUNNEL" > "$TUNNEL_PID_FILE"
 printf 'https://fake-tunnel.trycloudflare.com' > "$TUNNEL_URL_FILE"
