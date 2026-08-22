@@ -1746,7 +1746,7 @@
    "id": "CL-58",
    "date": "2026-08-20",
    "status": "live",
-   "kind": "measurement",
+   "kind": "measurement_record",
    "claim": "**도핑 트랙 baseline** — 생산 규약(vox 0.15 · 구 스탬프 Ø0.30)에서 SBE↔DBE 의 σ_ion 비.  CL-57 이 확정한 대로 도핑 효과는 산술이 아니라 **이 baseline 대비 실측**이라, 이 값이 그 원점이다.",
    "measured": {
     "metric": "vox 0.15 · 구 스탬프 Ø0.30 · 브리지 0.48 · **8팔 factorial × 2침대** · LEAN=1(이온 포함)",
@@ -1756,7 +1756,8 @@
    "asserted": "★ **판정기 3게이트 통과** (`--require-arms 8 --require-ionic --require-digest`) — 이 셋을 **동시에** 건 첫 판정이다.  출력 σ_e 비 1.123214 · 비대응 SE 0.2892 %p · 쌍대응 1.123217 · SE 0.097 %p · n = 8.  내가 손으로 읽은 값과 소수 여섯째 자리까지 일치.",
    "bridge": "도핑은 σ_SE 를 올리는 축인데, CL-57 이 재 보였듯 **한 상만** 올리면 σ_eff 가 그 배수로 안 움직인다 (η 0.179~0.789, topology 의존).  ⇒ 도핑 팔의 σ_ion 을 이 baseline 과 비교해야 하고, baseline 자신이 1 이 아니라 **0.9927** 이라는 것이 출발점이다.",
    "verdict": "★ **측정 기록이지 가설검정이 아니다.**  판정기가 `h0` 를 출력하지만 prereg v2 는 **점 스탬프**에 대해 등록됐다 (prereg §7) — 구 스탬프 규약에서 `h0` 는 **문턱 위치**를 알려줄 뿐이다.  원고에는 *\"구 스탬프 규약, vox 0.15 에서 σ_e 비 1.1232 · σ_ion 비 0.9927\"* 이라는 **측정 서술**로만 쓴다.\n★★ **SDCP 의 대차대조표가 처음으로 양쪽 다 있다** — 전자 **+12.3 %** / 이온 **−0.73 %**.  이온 손실은 SDCP 가 SE·pore 부피를 점유해 이온 경로를 막는 몫이고, 전자 이득의 1/17 크기다.\n⚠ vox 0.15 는 σ_ion 인용 금지 구간 **밖**이다 (DR3-07 의 금지는 vox ≤ 0.125, λ 3.0 → 1.72 → 0.88).  0.15 는 λ = 3.0 으로 충전돼 있다.\n⚠ σ_e 축은 격자 미수렴이라 1.1232 는 **하한**이다 (CL-41).  **σ_ion 축의 격자 의존은 미측정** — 같은 시험을 이온에 대해 한 적이 없다.  ⇒ −0.73 % 의 격자 안정성은 모른다.\n⚠ 침대 = 2026-08-12 (SDCP E 23.6, ADD_E_SET 이전) — CL-56 앵커 주의.\n★ 부수 확인: 이 런은 이온을 켰고(LEAN=1) σ_e 가 CL-33/34 의 `--no-ion` 값을 **0.002 % 차**로 재현했다 ⇒ 두 솔브가 서로에게 영향을 주지 않는다는 코드 가정이 실측으로 확인됐다.",
-   "date_resolved": "2026-08-20"
+   "date_resolved": "2026-08-20",
+   "provenance": "러너 `scripts/sdcp_gain_vox015_8arm.sh` — `VOX=0.15 SDCP_SPHERE_D=0.30 ARMS=8 LEAN=1` (2026-08-20, kgy, 사용자 실행).  출력 `~/sdcp/prereg_v2_vox015_sph_b048_lean` 의 p2_{SBE,DBE}_sph_a0..a7.json 16개.\n판정: `scripts/sdcp_gain_verdict.py --require-arms 8 --require-ionic --require-digest` — 세 게이트를 **동시에** 통과한 첫 산출물이다.\nσ_e 는 판정기 출력(1.123214 / 쌍대응 1.123217, SE 0.097 %p, n=8)을 그대로 옮겼다.  σ_ion 비 0.992720 은 러너가 찍은 팔별 σ_ion 16개에서 내가 계산한 값이고, 판정기는 `--require-ionic` 으로 **존재·유한·양수**만 확인한다 (비를 계산하지는 않는다).\n침대: `kit_{SBE,DBE}/run_VGCF3_PTFE0.5_SDCP0.5_20260812_*` = 2026-08-12 세대 (SDCP E 23.6 GPa, ADD_E_SET 이전 — CL-56 앵커).  코드 = 그 시점 `claude/stoic-knuth-NObVQ` HEAD (입력 digest·code_sha 가 각 payload 매니페스트에 기록돼 있다, CDXIJ-10 ③).\n규약 기본값: σ_VGCF 78.5398(직경-보존 @vox 0.15) · σ_SDCP 250 · 브리지 0.48 µm 고정 · 섬유 선분 스탬프 · SDCP 구 스탬프 Ø0.30 µm."
   }
  ],
  "quotation_ban": [
