@@ -1213,11 +1213,17 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         if not gz.is_file():
             bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
             continue
-        if m.get("projection_schema") != 2:
+        # ★ 23차 자체 발견 — 초판은 `!= 2` 로 **숫자를 박아** 뒀다. 스키마가 3 이
+        #   되자 정상 산출물을 거부했다. `BRANCHES.md` 의 휘발성 커밋 수와 같은
+        #   형태다 (값이 바뀌는 곳에 리터럴). 정본은 `ANALYSIS_SPEC` 하나이므로
+        #   거기서 읽는다. 하한 검사 대신 **정확히 같아야** 한다 — 낡은 산출물도
+        #   앞선 스키마도 둘 다 거부해야 재생성 신호가 정확해진다.
+        want_schema = _current_projection_schema()
+        if m.get("projection_schema") != want_schema:
             bad.append(
-                f"{leg}: 투영 스키마가 {m.get('projection_schema')} 다 (2 필요). "
-                f"22차 발견 5 대응 필드(실제 fits SHA·전체 semantic 대조·"
-                f"restart 투영·분석기 provenance)가 없다 — 원자료가 있는 기계에서 "
+                f"{leg}: 투영 스키마가 {m.get('projection_schema')} 다 "
+                f"({want_schema} 필요 — `ANALYSIS_SPEC.schema_version`). "
+                f"원자료가 있는 기계에서 "
                 f"`python docs/22p_gap/row_projection.py --all` 을 다시 돌려라")
             continue
         import gzip
@@ -1300,6 +1306,23 @@ def test_warm_pairs_agree_row_by_row_on_the_first_objective():
 #: 교차-digest 짝 중 **전 열·전 행이 동일**하다고 주장하는 짝.
 #: 실측(2026-08-20, 행 수준 투영): `cbe040612aa4415a` 로 완전히 같다.
 _XDIGEST_EXACT = [("fit_22p_seed_404_hc_warm_now", "fit_22p_seed_404_hc")]
+
+
+
+def _row_projection_module():
+    """`docs/22p_gap/row_projection.py` 를 import 한다 (원자료 없이 가능)."""
+    import importlib.util
+
+    src = _REPO / "docs" / "22p_gap" / "row_projection.py"
+    spec = importlib.util.spec_from_file_location("_rp_mod", src)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _current_projection_schema() -> int:
+    """산출물이 따라야 할 스키마 번호의 **정본**."""
+    return int(_row_projection_module().ANALYSIS_SPEC["schema_version"])
 
 
 def _projection(leg: str) -> dict:
