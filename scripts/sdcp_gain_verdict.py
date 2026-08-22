@@ -764,6 +764,21 @@ def _selftest():
         chk(f'㉗e ★ origin 집합이 다르면 HOLD (짝 없이 못 뺀다) ({_c["decision"]})',
             _c['decision'] == 'HOLD' and 'origin' in (_c.get('reason') or ''))
 
+    #  ── ㉘ `--scan` — 디렉터리 이름을 **짓지 말고 찾는다** ──────────────────────────
+    #     실사고 3회: 이름이 인자에서 조립되는데(`vox{V}{_sph}{_bNNN}{_sgN}{_lean}`) 사람이
+    #     손으로 재조립해 `--dir` 에 넣었고, 셋 다 "0 팔 → HOLD" 로 끝났다.  그 HOLD 는
+    #     **데이터가 나쁘다는 뜻으로 읽힌다** = 존재하지 않는 경로가 실패로 위장한다.
+    with _tf22.TemporaryDirectory() as _sr:
+        os.makedirs(os.path.join(_sr, 'prereg_v2_vox015_sph_b048_lean'))
+        os.makedirs(os.path.join(_sr, 'noise_dir'))          # p2_*.json 없음 → 안 잡혀야
+        _mk2(os.path.join(_sr, 'prereg_v2_vox015_sph_b048_lean'), yvgcf=False, n=2)
+        _sc = scan(_sr)
+        chk(f'㉘a `--scan` 이 결과 디렉터리만 찾는다 ({len(_sc)}개)',
+            len(_sc) == 1 and _sc[0][0] == 'prereg_v2_vox015_sph_b048_lean')
+        chk(f'㉘b 팔 수를 보고한다 ({_sc[0][1]})', _sc[0][1] == '2/2')
+        chk('㉘c ★ 빈/무관 디렉터리는 목록에 안 뜬다 (없는 경로를 고르게 두지 않는다)',
+            all(r[0] != 'noise_dir' for r in _sc))
+
     #  ㉖f 음성 대조 — 옛 격자 팔(전부 없음)은 **기본 모드에서 통과해야** 한다.
     chk('㉖f 옛 팔(digest 전부 없음)은 기본 모드에서 통과 (진행 중 스윕을 안 죽인다)',
         verdict(mk(base, [v * 1.12 for v in base]))['decision'] == 'h0')
@@ -866,8 +881,40 @@ def compare_dirs(dir_a, dir_b, expect_differ):
     return out
 
 
+def scan(root):
+    """`root` 아래의 결과 디렉터리를 전부 훑어 **무엇이 어디 있는지** 표로 낸다.
+
+    ★★ 왜 (2026-08-20): 디렉터리 이름이 `prereg_v2_vox{V}{_sph}{_bNNN}{_sgN}{_yvgcf}{_ptfeN}{_leanN}`
+      로 **인자에서 조립**되는데, 사람이 그것을 손으로 재조립해 `--dir` 에 넣고 있었다.  세 번
+      틀렸고 세 번 다 "0 팔" 로 조용히 끝났다 — 존재하지 않는 경로에 대고 판정을 요청하면
+      HOLD 가 나오는데, 그 HOLD 는 **데이터가 나쁘다는 뜻으로 읽힌다**.  ⇒ 이름을 짓지 말고 **찾는다**.
+    """
+    import glob as _g
+    rows = []
+    for d in sorted(_g.glob(os.path.join(root, '*'))):
+        if not os.path.isdir(d) or not _g.glob(os.path.join(d, 'p2_*.json')):
+            continue
+        try:
+            _, arms = collect(d)
+        except Exception:                                          # noqa: BLE001
+            rows.append((os.path.basename(d), '읽기 실패', '', '', '', '', ''))
+            continue
+        allr = arms['SBE'] + arms['DBE']
+        _u = lambda f: sorted({str(r.get(f)) for r in allr if r.get(f) is not None}) or ['—']
+        bad = sum(1 for r in allr if r.get('unconverged') or r.get('cg_info'))
+        ion = sum(1 for r in allr if isinstance(r.get('sigma_ion'), (int, float)))
+        rows.append((os.path.basename(d), f"{len(arms['SBE'])}/{len(arms['DBE'])}",
+                     '/'.join(_u('vox')), '/'.join(_u('sdcp_stamp')),
+                     '/'.join(_u('sigma_vgcf_S_cm')),
+                     f'{ion}/{len(allr)}', f'{bad} 미수렴' if bad else '✓'))
+    return rows
+
+
 if __name__ == '__main__':
     ap = argparse.ArgumentParser()
+    ap.add_argument('--scan', default='',
+                    help='이 디렉터리 아래의 결과 폴더를 전부 찾아 표로 낸다 — '
+                         '이름을 손으로 짓지 말 것 (예: --scan ~/sdcp)')
     ap.add_argument('--dir', default='')
     ap.add_argument('--collect-only', action='store_true')
     ap.add_argument('--out', default='')
@@ -895,6 +942,18 @@ if __name__ == '__main__':
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    if a.scan:
+        _rows = scan(os.path.expanduser(a.scan))
+        if not _rows:
+            raise SystemExit(f'{a.scan} 아래에 p2_*.json 을 가진 디렉터리가 없다')
+        _w = max(len(r[0]) for r in _rows)
+        print(f'{"디렉터리":{_w}} {"SBE/DBE":>8} {"vox":>7} {"스탬프":>8} '
+              f'{"σ_VGCF":>10} {"σ_ion":>7} {"수렴":>9}')
+        for r in _rows:
+            print(f'{r[0]:{_w}} {r[1]:>8} {r[2]:>7} {r[3]:>8} {r[4]:>10} {r[5]:>7} {r[6]:>9}')
+        print('\n  σ_ion 열 = 이온값이 있는 팔 / 전체 (LEAN=2 는 0/N 이 정상)')
+        print('  → 판정: --dir <위 이름 중 하나>   ·  대조쌍: --dir A --compare-dir B --expect-differ <필드>')
+        raise SystemExit(0)
     if a.compare_dir:
         if not a.dir:
             raise SystemExit('사용: --dir <대조> --compare-dir <실험> --expect-differ <필드>')
