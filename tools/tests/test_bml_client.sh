@@ -128,12 +128,31 @@ else
   fail=$((fail + 1)); printf '  FAIL 시험용 서버를 못 띄웠다\n'
 fi
 
+  check "몇 번 두드려도 살아 있는 것은 살아 있다" \
+    "$(server_alive_soon "http://127.0.0.1:$LIVE" 2 && echo yes || echo no)" "yes"
+
 # 닫힌 포트.  curl 은 기다리지 않고 바로 거절당한다.
 check "안 닿는 주소는 거절한다" "$(server_alive 'http://127.0.0.1:1' && echo yes || echo no)" "no"
 
 : > "$RUN_DIR/env"
 ( BML_NO_OPEN=1 cmd_use "127.0.0.1:1" >/dev/null 2>&1 )
 check "안 닿는 주소는 저장하지 않는다" "$(grep -c '^WORKBENCH_SERVER=' "$RUN_DIR/env")" "0"
+
+echo
+echo "안 닿을 때의 안내"
+# 터널 주소에 방화벽·포트포워딩 안내를 주면, 아무 상관 없는 것을 확인하느라
+# 시간을 쓴다.  실제로 그렇게 한참 돌았다.
+help_lan="$(server_unreachable_help 'http://192.168.0.40:5003' 2>&1)"
+help_tunnel="$(server_unreachable_help 'https://127.0.0.1:1' 2>&1)"
+check "LAN 주소에는 방화벽을 말한다" \
+  "$(case "$help_lan" in *"방화벽"*) echo yes ;; *) echo no ;; esac)" "yes"
+check "터널 주소에는 bml share 를 말한다" \
+  "$(case "$help_tunnel" in *"bml share"*) echo yes ;; *) echo no ;; esac)" "yes"
+check "터널 주소에는 방화벽을 말하지 않는다" \
+  "$(case "$help_tunnel" in *"New-NetFirewallRule"*) echo no ;; *) echo yes ;; esac)" "yes"
+# "응답하지 않습니다" 만으로는 오타·터널 닫힘·방화벽·엉뚱한 서버를 구분할 수 없다.
+check "curl 이 뭐라 했는지 보여 준다" \
+  "$(case "$help_tunnel" in *"curl 이 말한 것"*) echo yes ;; *) echo no ;; esac)" "yes"
 
 echo
 echo "터널 주소 꺼내기"
