@@ -479,6 +479,33 @@ def one_run(args):
             f"   (면높이 최소 {W.min():.2f} Å 는 보수적 하한일 뿐 게이트 기준이 아니다 — "
             f"kb/methodology/defect_cell_size_metric_2026_08_16.md)")
 
+    # ⛔⛔ 2026-08-23 실측 사고 — **이완되지 않은 구조로 NEB 를 돌렸다.**
+    #   lpscl_F43m_24G_canonical.cif (a=10.249) 로 정렬 대조를 돌렸는데, 그건
+    #   db/structures/STRUCTURES_NOTE.md:9 가 "V0 아님 · 필요시 V0로 스케일해 사용" 이라고
+    #   적어 둔 **이상화 Wyckoff 좌표** 파일이다. comp1 V0(a=10.0551) 대비 부피 +5.9 %.
+    #   끝점 이완 695 스텝이 홉 이완이 아니라 **구조가 처음 자기 최소를 찾아간 과정**이었고
+    #   (P 0.28 Å 제자리 / S 1.78 · Li 1.22 Å 이동 — P 만 정확한 특수위치라 안 움직였다),
+    #   그 위에서 나온 0.6258 eV 는 장벽이 아니다.
+    #   ⚠ 이 도구 docstring 첫 경고가 "DFT V0 셀에서 출발하고 고정한다" 인데 우리가 어겼다.
+    #     Wu 2026 의 26 % 팽창 격자 NEB 를 지적한 그 규칙이다 — 규모만 다르고 같은 종류다.
+    #   ⇒ **파일명으로 막지 않는다. 힘을 재서 막는다.** 이미 이완된 구조면 fmax 가 작다.
+    _pre = atoms.copy()
+    _pre.calc = load_calc(args.device)
+    _f0 = float(np.linalg.norm(_pre.get_forces(), axis=1).max())
+    print(f"   입력 구조 fmax = {_f0:.3f} eV/Å", end="")
+    if _f0 > args.max_input_fmax and not args.force:
+        print()
+        raise SystemExit(
+            f"⛔ 입력 구조가 **이완되어 있지 않다** (fmax {_f0:.3f} > {args.max_input_fmax} eV/Å).\n"
+            f"   이대로 돌리면 끝점 이완이 '구조 이완' 을 겸해 버려서, 나오는 값이 홉 장벽이\n"
+            f"   아니라 구조 완화 비용이 된다 (2026-08-23 실측: 24G 이상화 CIF 로 0.6258 eV).\n"
+            f"   먼저 이 셀에서 **위치만** 이완해 구조로 등록한 뒤 그것으로 돌려라.\n"
+            f"   db/structures/STRUCTURES_NOTE.md 에 각 파일이 V0 인지 적혀 있다.\n"
+            f"   (수렴시험 목적이면 --force)")
+    print("  ✅ 이완된 구조로 판단" if _f0 <= args.max_input_fmax
+          else f"  ⚠ 크지만 --force 로 진행")
+    del _pre
+
     cands = find_hops(atoms, args.kind, rmax=args.rmax, cage_margin=args.cage_margin)
     if not cands:
         raise SystemExit(f"⛔ '{args.kind}' hop 후보가 없다 (rmax={args.rmax})")
@@ -1043,6 +1070,17 @@ def selftest():
     except ImportError:
         print("  ⚠ ase 없음 — 심화 이완 시험 건너뜀")
 
+    # ── 이완 안 된 입력 가드 (2026-08-23 실측 사고) ──────────────────────────
+    for _f, _lim, _die in ((0.02, 0.30, False),   # 이완된 구조
+                           (0.29, 0.30, False),   # 경계 바로 아래
+                           (0.31, 0.30, True),    # 경계 바로 위
+                           (2.50, 0.30, True)):   # 24G 이상화 CIF 같은 경우
+        chk((_f > _lim) == _die,
+            f"[{'음성' if _die else '양성'}] 입력 fmax {_f} vs 상한 {_lim} → "
+            f"{'즉사' if _die else '진행'}")
+    chk("STRUCTURES_NOTE" in open(__file__).read(),
+        "[양성] 즉사 메시지가 STRUCTURES_NOTE.md 를 가리킨다 (어디서 확인할지 알려준다)")
+
     # ── 결합 끝점 헬퍼: 협동 이동 판별 (음성 경로 포함) ──────────────────────
     try:
         from ase import Atoms as _A
@@ -1142,6 +1180,9 @@ def main():
                          "(2026-08-19 실측: 3.504 → 4.356 Å 로 바뀐 적이 있다).")
     ap.add_argument("--seed", type=int, default=0,
                     help="끝점 심화 이완의 rattle 시드")
+    ap.add_argument("--max_input_fmax", type=float, default=0.30,
+                    help="입력 구조가 이완돼 있다고 볼 fmax 상한 (eV/Å). 넘으면 즉사 — "
+                         "끝점 이완이 구조 이완을 겸하는 사고를 막는다 (2026-08-23)")
     ap.add_argument("--coupled_endpoints", action="store_true",
                     help="끝점을 **결합해서** 만든다 — 시작을 이완한 뒤 그 구조에서 이동 Li 만 "
                          "옮겨 끝점을 만든다. 두 끝점이 이동 Li 하나만 다르게 되어 "
