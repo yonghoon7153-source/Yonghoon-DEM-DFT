@@ -166,6 +166,26 @@ check "'=' 가 들면 저장하지 않는다" "$(grep -c '^WORKBENCH_PASSWORD=' 
 check "쓸 만한 암호는 저장된다"     "$(grep -c '^WORKBENCH_PASSWORD=건식전극2026$' "$RUN_DIR/env")" "1"
 
 echo
+echo "터널 프로그램 찾기"
+# 경로를 stdout 으로 돌려주면 진행 표시가 그 변수로 들어가 실행이 깨진다.
+# 실제로 그렇게 됐고, 화면에는 "터널 주소를 받지 못했습니다" 만 떴다.
+mkdir -p "$RUN_DIR/bin"
+printf '#!/bin/sh\n' > "$RUN_DIR/bin/cloudflared"
+chmod +x "$RUN_DIR/bin/cloudflared"
+# PATH 를 비워 두고 부른다 — 이 기계에 cloudflared 가 이미 깔려 있으면
+# 그쪽이 이겨서 받아 둔 것을 쓰는 경로를 시험하지 못한다.
+mkdir -p "$TMP/emptybin"
+SAVED_PATH="$PATH"; PATH="$TMP/emptybin"
+CLOUDFLARED=""
+# 여기서 `$(ensure_cloudflared)` 로 부르면 안 된다.  서브셸에서 값이 정해지고
+# 부모는 빈 값을 들고 간다 — 지금 고치는 버그가 바로 그것이었다.
+ensure_cloudflared >"$TMP/ensure.out" 2>/dev/null
+PATH="$SAVED_PATH"
+check "경로가 변수로 온다"     "$CLOUDFLARED" "$RUN_DIR/bin/cloudflared"
+check "그 경로가 실행 가능하다" "$([ -x "$CLOUDFLARED" ] && echo yes || echo no)" "yes"
+check "값을 찍지 않는다"       "$(cat "$TMP/ensure.out")" ""
+
+echo
 echo "암호 없이는 바깥에 열지 않는다"
 # 로그인이 없는 앱을 인터넷에 올리는 일이라, 이 판정이 무너지면 되돌릴 수 없다.
 out="$(WORKBENCH_PASSWORD= BML_NO_OPEN=1 "$BML" share 2>&1)"

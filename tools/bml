@@ -1182,15 +1182,24 @@ tunnel_url_from() {
   printf '%s' "$1" | grep -oE 'https://[a-z0-9][a-z0-9-]*\.trycloudflare\.com' | head -1
 }
 
-#: 터널 프로그램.  이미 있으면 그것을, 없으면 우리가 받아 둔 것을 쓴다.
-cloudflared_bin() {
-  if command -v cloudflared >/dev/null 2>&1; then command -v cloudflared; return 0; fi
-  [ -x "$RUN_DIR/bin/cloudflared" ] && { printf '%s' "$RUN_DIR/bin/cloudflared"; return 0; }
-  return 1
-}
+#: 터널 프로그램의 경로.  ensure_cloudflared 가 채운다.
+CLOUDFLARED=""
 
-install_cloudflared() {
-  local arch own="$RUN_DIR/bin/cloudflared" url
+#: 터널 프로그램을 준비한다.  경로는 찍지 않고 CLOUDFLARED 에 넣는다.
+#:
+#: 값을 stdout 으로 돌려주면 호출부가 `$(...)` 로 받게 되는데, 그러면 두 가지가
+#: 한꺼번에 깨진다.  진행 표시("받는 중")가 사람 눈이 아니라 그 변수로 들어가고,
+#: `die` 의 exit 이 서브셸만 끝내서 스크립트는 빈 경로를 들고 계속 간다.
+#: 실제로 그렇게 됐다 — 화면에는 아무 설명 없이 "터널 주소를 받지 못했습니다"
+#: 만 떴다.
+ensure_cloudflared() {
+  local own="$RUN_DIR/bin/cloudflared" arch url
+  if command -v cloudflared >/dev/null 2>&1; then
+    CLOUDFLARED="$(command -v cloudflared)"
+    return 0
+  fi
+  if [ -x "$own" ]; then CLOUDFLARED="$own"; return 0; fi
+
   case "$(uname -m)" in
     x86_64|amd64)  arch=amd64 ;;
     aarch64|arm64) arch=arm64 ;;
@@ -1199,16 +1208,17 @@ install_cloudflared() {
   esac
   url="https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-$arch"
   mkdir -p "$RUN_DIR/bin"
-  step "터널 프로그램을 받는 중 (cloudflared, 처음 한 번)"
+  step "터널 프로그램을 받는 중 (cloudflared, 처음 한 번 · 약 35 MB)"
   if command -v curl >/dev/null 2>&1; then
-    curl -fsSL -o "$own.part" "$url" || die "받지 못했습니다: $url"
+    curl -fL --progress-bar -o "$own.part" "$url" || die "받지 못했습니다: $url"
   elif command -v wget >/dev/null 2>&1; then
-    wget -q -O "$own.part" "$url" || die "받지 못했습니다: $url"
+    wget -q --show-progress -O "$own.part" "$url" || die "받지 못했습니다: $url"
   else
     die "curl 이나 wget 이 필요합니다."
   fi
   chmod +x "$own.part" && mv "$own.part" "$own"
-  printf '%s' "$own"
+  ok "받았습니다 (${own})"
+  CLOUDFLARED="$own"
 }
 
 #: 바깥에 열 때 쓸 공유 암호.  값은 절대 다시 찍지 않는다 — 터미널 기록과
@@ -1279,13 +1289,13 @@ cmd_share() {
     exit 1
   fi
 
-  local bin
-  bin="$(cloudflared_bin)" || bin="$(install_cloudflared)" || exit 1
+  ensure_cloudflared
+  [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
 
   local log="$RUN_DIR/tunnel.log" url="" pid i
   : > "$log"
   step "터널 여는 중"
-  "$bin" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
+  "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" >>"$log" 2>&1 &
   pid=$!
 
   for i in $(seq 1 60); do
@@ -1297,7 +1307,13 @@ cmd_share() {
 
   if [ -z "$url" ]; then
     kill "$pid" 2>/dev/null
-    die "터널 주소를 받지 못했습니다.  ${DIM}로그: $log${OFF}"
+    printf '%s✕%s 터널 주소를 받지 못했습니다.\n' "$RED" "$OFF" >&2
+    say ""
+    say "  ${DIM}$log 의 마지막 줄:${OFF}"
+    tail -n 12 "$log" 2>/dev/null | sed 's/^/    /'
+    say ""
+    say "  ${DIM}밖으로 나가는 443/7844 이 막혀 있으면 여기서 멈춥니다.${OFF}"
+    exit 1
   fi
 
   ok "열렸습니다 → ${B}${url}${OFF}"
