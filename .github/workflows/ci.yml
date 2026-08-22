@@ -95,6 +95,11 @@ jobs:
       - run: bash tools/tests/test_bml_ownership.sh
       # 확인이 안 된 터널을 무엇으로 읽어 주는지도 같은 종류의 판정이다.
       - run: bash tools/tests/test_bml_tunnel.sh
+      # `bml check` 와 같은 것을 돌린다.  client·shutdown 이 여기 없던 동안은
+      # 가장 위험한 회귀 테스트가 CI 에서 한 번도 실행되지 않았다.
+      - run: bash tools/tests/test_bml_shutdown.sh
+      - run: bash tools/tests/test_bml_client.sh
+      - run: bash tools/tests/test_worklog.sh
 
   invariants:
     name: repo invariants

@@ -17,7 +17,7 @@ PORT_API ?= 8000
 .DEFAULT_GOAL := help
 .PHONY: help setup setup-git sync venv install-api install-web install-bml \
         dev serve api web build test test-py test-web test-tools \
-        lint lint-py lint-web check wiki-lint wiki-status clean fmt doctor
+        lint lint-py lint-web check wiki-lint wiki-status clean fmt doctor feed
 
 help: ## 사용 가능한 타겟
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
@@ -26,12 +26,13 @@ help: ## 사용 가능한 타겟
 setup: setup-git venv install-api install-web ## 클론 직후 1회
 	@echo "준비 완료. 'make dev' 로 실행하세요."
 
-setup-git: ## 공용 브랜치용 git 설정 (rebase + autostash)
+setup-git: ## 공용 브랜치용 git 설정 (rebase + autostash + 커밋 기록 훅)
 	git config pull.rebase true
 	git config rebase.autoStash true
 	git config push.default current
 	git config merge.ours.driver true
-	@echo "git: pull.rebase=true rebase.autoStash=true"
+	git config core.hooksPath .githooks
+	@echo "git: pull.rebase=true rebase.autoStash=true hooksPath=.githooks"
 
 sync: ## 세션 시작 — 안전하게 최신 상태로 (작업 중 변경은 자동 stash)
 	git pull --rebase --autostash
@@ -89,8 +90,12 @@ test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, do
 	bash tools/tests/test_bml_shutdown.sh
 	bash tools/tests/test_bml_client.sh
 	bash tools/tests/test_bml_tunnel.sh
+	bash tools/tests/test_worklog.sh
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py
+
+feed: ## 이 브랜치에서 무슨 일이 있었나 (커밋 <-> docs/log.md)
+	@bash tools/bml feed
 
 lint: lint-py lint-web wiki-lint ## 전체 린트
 

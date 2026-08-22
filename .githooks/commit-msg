@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+#
+# 커밋마다 `docs/log.md` 에 한 줄이 있는지 본다.
+#
+# 왜 필요한가: 두 사람이 같은 브랜치를 쓰고, 각자 **다른 Claude Code 세션**에서
+# 일한다. 세션은 서로의 대화를 볼 수 없다. `git log` 는 무엇을 고쳤는지만
+# 말하고, 왜 그렇게 고쳤는지 — 어떤 증상이었고 무엇을 재현했고 무엇을 일부러
+# 안 했는지 — 는 대화에만 남는다. 그 대화가 끝나면 사라진다.
+#
+# 그래서 커밋 제목과 같은 제목으로 `docs/log.md` 에 한 줄을 남긴다. 제목을
+# 같게 쓰는 것이 규칙이다 (`fix: <제목>` ↔ `## [날짜] fix | <제목>`) — 그래야
+# `bml feed` 가 둘을 짝지어 보여 주고, 빠진 것이 드러난다.
+#
+# **막지는 않는다.** 상대는 사람이고, 급한 수정을 훅이 가로막으면 그 다음부터는
+# --no-verify 가 습관이 된다. 대신 빠졌다는 것을 크게 말하고 `bml feed` 가
+# 계속 세어 준다. WORKBENCH_LOG_STRICT=1 이면 막는다.
+
+set -uo pipefail
+
+msg_file="${1:-}"
+[ -n "$msg_file" ] && [ -f "$msg_file" ] || exit 0
+
+repo="$(git rev-parse --show-toplevel 2>/dev/null)" || exit 0
+
+# 주석과 빈 줄을 뺀 첫 줄이 제목이다.
+subject="$(grep -v '^#' "$msg_file" 2>/dev/null | sed '/^[[:space:]]*$/d' | head -n 1)"
+[ -n "$subject" ] || exit 0
+
+# 사람이 쓴 제목이 아닌 것은 넘어간다 — 머지·리버트·fixup 은 그 자체가 기록이다.
+case "$subject" in
+  Merge\ *|Revert\ *|fixup!\ *|squash!\ *|amend!\ *) exit 0 ;;
+esac
+# rebase 중에는 옛 커밋을 다시 쓰는 것이라 새 기록을 요구하지 않는다.
+git_dir="$(git rev-parse --git-dir 2>/dev/null)"
+for marker in rebase-merge rebase-apply CHERRY_PICK_HEAD MERGE_HEAD; do
+  [ -e "$git_dir/$marker" ] && exit 0
+done
+
+# 판정은 bml 한 곳에만 둔다 — 훅과 `bml feed` 가 서로 다르게 세면, 훅이
+# 통과시킨 커밋을 feed 가 빠졌다고 말한다.
+BML_SOURCE_ONLY=1 . "$repo/tools/bml" 2>/dev/null || exit 0
+command -v log_has_entry >/dev/null 2>&1 || exit 0
+
+log_has_entry "$subject" "$repo/docs/log.md" && exit 0
+
+printf '\n\033[33m!\033[0m docs/log.md 에 이 커밋의 기록이 없습니다.\n' >&2
+printf '  다른 세션(다른 Claude Code)은 이 커밋의 "왜" 를 볼 수 없습니다.\n' >&2
+printf '  같은 제목으로 한 줄 적어 주세요:\n\n' >&2
+printf '    ## [%s] %s | %s\n\n' \
+  "$(date +%F)" "$(printf '%s' "$subject" | sed 's/:.*//')" \
+  "$(printf '%s' "${subject#* }")" >&2
+printf '  적은 뒤:  git add docs/log.md && git commit --amend --no-edit\n' >&2
+printf '  현황:     bml feed\n\n' >&2
+
+[ "${WORKBENCH_LOG_STRICT:-}" = "1" ] && exit 1
+exit 0
