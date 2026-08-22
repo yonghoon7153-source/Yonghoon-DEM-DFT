@@ -228,8 +228,18 @@ for S in comp1 modelc; do
                     if (kt>0 && n>kt) printf "        전체 %.0f s/kpt · 남은 %d개 ≈ %.1f h  (초기화 포함이라 낙관 쪽으로 개선된다)\n", t/kt, n-kt, (n-kt)*(t/kt)/3600
                 }'
             fi
+            # ⚠ 무갱신 문턱을 60분 고정으로 뒀더니 **정상 작동을 경고로 찍었다** (2026-08-23).
+            #   pool 당 k-point 하나가 4시간 넘게 걸리는 작업이라 2.3시간 침묵이 정상이다.
+            #   문턱은 **실측 per-pool-kpt 시간의 1.5배**로 잡는다 — 그보다 오래 조용하면
+            #   그때가 진짜 이상이다. (실측이 없으면 판정을 보류하지 경고하지 않는다.)
             printf "        로그 갱신 %s분 전" "$AGE"
-            [ "$AGE" -gt 60 ] && printf "  ⚠ 60분 무갱신"
+            if [ "${KD:-0}" -gt 0 ] && [ -n "$CPUT" ]; then
+                awk -v age="$AGE" -v k="$KD" -v t="$CPUT" 'BEGIN{
+                    per = t/k/60                       # pool0 kpt 하나당 분
+                    if (age > 1.5*per) printf "  ⚠ 정상 주기(%.0f분/kpt)의 1.5배 초과 — 확인 필요", per
+                    else                printf "  (정상 — kpt 하나에 %.0f분 걸린다)", per
+                }'
+            fi
             echo
             continue
         fi
