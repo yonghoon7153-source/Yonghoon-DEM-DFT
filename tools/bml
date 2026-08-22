@@ -1412,7 +1412,15 @@ close_tunnel() {
 #: 성공하면 TUNNEL_PID_FILE·TUNNEL_URL_FILE 을 채우고 0.  실패하면 띄운 것을
 #: 닫고 1 — 반쯤 열린 터널을 남겨 두면 다음 시도가 "이미 열려 있습니다" 로
 #: 끝난다.
+#: 돌려주는 값
+#:   0  열렸다
+#:   1  주소조차 못 받았다 (띄운 것은 닫았다)
+#:   2  주소는 받았는데 확인이 안 됐다.  첫 인자가 1 이면 **닫지 않고** 남긴다 —
+#:      마지막 시도에서는 남기는 쪽이 낫다.  터널이 준비되는 데 우리 상한보다
+#:      오래 걸렸을 수도 있고, 무엇보다 사람이 그 주소를 손으로 찔러 볼 수
+#:      있어야 원인이 갈린다.  죽여 놓고 "안 됐습니다" 만 하면 아무것도 모른다.
 try_tunnel() {
+  local keep="$1"; shift
   local label="$1"; shift
   local log="$RUN_DIR/tunnel.log" url="" pid i
   : > "$log"
@@ -1443,17 +1451,19 @@ try_tunnel() {
   # 믿고 상대에게 알려 줬다가 되돌아오는 왕복 한 번보다 훨씬 싸다.
   step "주소가 실제로 열렸는지 확인 중 ${DIM}(최대 1분)${OFF}"
   wait_until_alive "$url" 60 && return 0
+  [ "$keep" = "1" ] && return 2
   close_tunnel >/dev/null 2>&1 || true
-  return 1
+  return 2
 }
 
 tunnel_via_cloudflare() {
+  local keep="${1:-0}"
   ensure_cloudflared
   [ -x "$CLOUDFLARED" ] || return 1
-  try_tunnel "터널 여는 중 ${DIM}(Cloudflare)${OFF}" \
+  try_tunnel 0 "터널 여는 중 ${DIM}(Cloudflare)${OFF}" \
     "$CLOUDFLARED" tunnel --no-autoupdate --url "$URL" && return 0
   # QUIC(UDP)만 막힌 망이 있다.  http2 도 같은 7844 를 쓰지만 TCP 다.
-  try_tunnel "다시 여는 중 ${DIM}(Cloudflare · http2)${OFF}" \
+  try_tunnel "$keep" "다시 여는 중 ${DIM}(Cloudflare · http2)${OFF}" \
     "$CLOUDFLARED" tunnel --no-autoupdate --protocol http2 --url "$URL"
 }
 
@@ -1463,11 +1473,12 @@ tunnel_via_cloudflare() {
 #: localhost.run 의 사용자 이름이고, StrictHostKeyChecking=accept-new 가 없으면
 #: 첫 접속의 "계속할까요?" 에서 조용히 멈춘다 — nohup 이라 그 물음도 안 보인다.
 tunnel_via_ssh() {
+  local keep="${1:-0}"
   if ! command -v ssh >/dev/null 2>&1; then
     warn "ssh 가 없습니다 — SSH 터널을 쓸 수 없습니다."
     return 1
   fi
-  try_tunnel "터널 여는 중 ${DIM}(localhost.run · SSH)${OFF}" \
+  try_tunnel "$keep" "터널 여는 중 ${DIM}(localhost.run · SSH)${OFF}" \
     ssh -T \
       -o StrictHostKeyChecking=accept-new \
       -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
@@ -1529,25 +1540,27 @@ cmd_share() {
   ensure_cloudflared
   [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
 
-  local url=""
+  local url="" rc=1
   case "$TUNNEL" in
-    ssh|localhost.run)      tunnel_via_ssh        && url="$(tunnel_url)" ;;
-    cloudflare|cloudflared) tunnel_via_cloudflare && url="$(tunnel_url)" ;;
+    ssh|localhost.run)      tunnel_via_ssh 1;        rc=$? ;;
+    cloudflare|cloudflared) tunnel_via_cloudflare 1; rc=$? ;;
     *)
       # 7844/TCP 가 열려 있으면 Cloudflare 가 빠르고 안정적이다.  막혀 있으면
       # cloudflared 는 어떤 --protocol 로도 못 붙는다 (QUIC 도 http2 도 그
       # 포트를 쓴다) — 그때는 SSH 쪽이 유일한 길이다.  찔러 보고 고른다.
       step "밖으로 나가는 길 확인 중"
       if edge_port_open; then
-        tunnel_via_cloudflare && url="$(tunnel_url)"
+        tunnel_via_cloudflare 0; rc=$?
       else
         say "  ${DIM}7844/TCP 가 막혀 있습니다 — SSH 터널을 씁니다.${OFF}"
       fi
-      [ -n "$url" ] || { tunnel_via_ssh && url="$(tunnel_url)"; }
+      # SSH 가 마지막 시도다 — 확인이 안 돼도 남긴다.
+      [ "$rc" -eq 0 ] || { tunnel_via_ssh 1; rc=$?; }
       ;;
   esac
+  url="$(tunnel_url)"
 
-  if [ -z "$url" ]; then
+  if [ "$rc" -ne 0 ] && [ -z "$url" ]; then
     printf '%s✕%s 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
     say ""
     # 빈 줄을 걸러서 보여 준다.  localhost.run 의 접속 배너는 빈 줄로 끝나서,
@@ -1567,6 +1580,19 @@ cmd_share() {
     say "        휴대폰 테더링으로 잠깐 바꾸면 대개 열립니다"
     say "        ${GREEN}WORKBENCH_TUNNEL=ssh bml share${OFF}${DIM} 또는 ${OFF}${GREEN}=cloudflare${OFF} ${DIM}로 한쪽만 시켜 봅니다${OFF}"
     exit 1
+  fi
+
+  if [ "$rc" -eq 2 ]; then
+    warn "주소는 받았는데 아직 응답하지 않습니다 — 그래도 열어 둡니다."
+    say "  ${B}${url}${OFF}"
+    say ""
+    say "  ${DIM}직접 확인:${OFF}"
+    say "    ${GREEN}curl -sS -o /dev/null -w '%{http_code}\\n' ${url}/api/health${OFF}"
+    say "  ${DIM}200 이면 열린 것입니다 (제 확인이 성급했던 것). 잠시 뒤${OFF} ${GREEN}bml status${OFF}"
+    say "  ${DIM}의 '공유 주소' 줄에 경고가 없으면 그때 상대에게 알려 주면 됩니다.${OFF}"
+    say ""
+    say "  ${DIM}닫으려면${OFF} ${GREEN}bml share stop${OFF}"
+    exit 0
   fi
 
   ok "열렸습니다 → ${B}${url}${OFF}"

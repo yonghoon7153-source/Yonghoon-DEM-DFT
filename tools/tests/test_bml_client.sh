@@ -274,6 +274,12 @@ check "두 번 닫으면 닫을 게 없다" "$(close_tunnel && echo yes || echo 
 # 그때 SSH 로 넘어가지 않으면 그 망에서는 공유 자체가 불가능해진다.
 check "cloudflare 가 안 되면 SSH 로 넘어간다" \
   "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh')" "2"
+# 주소는 받았는데 확인이 안 된 것을 실패로 치고 죽여 버리면, 사람이 그 주소를
+# 손으로 찔러 볼 수도 없다 — 실제로 그래서 원인을 못 찾았다.
+check "마지막 시도는 확인이 안 돼도 남긴다" \
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'tunnel_via_ssh 1')" "2"
+check "확인 실패(2)를 실패(1)와 구분한다" \
+  "$(sed -n '/^cmd_share()/,/^}/p' "$BML" | grep -c 'rc" -eq 2')" "1"
 # 서버 없이 남은 터널은 남에게 오류 화면을 띄우는 주소일 뿐이다.
 check "bml stop 이 터널도 닫는다" \
   "$(sed -n '/^cmd_stop()/,/^}/p' "$BML" | grep -c close_tunnel)" "1"
