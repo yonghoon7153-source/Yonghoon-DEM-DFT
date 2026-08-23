@@ -184,7 +184,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['SDCP','Particle diameter','0.30','μm','This work (Figure S5)'],
    ['','Young’s modulus','23.6','GPa','This work (Figure 2g) ^c^'],
    ['','Electronic conductivity','250','S cm^−1^','Assumed'],
-   ['','Ionic conductivity','1.0 × 10^−3^ (provisional)','S cm^−1^','Not yet calibrated ^d^'],
+   ['','Ionic conductivity','—','S cm^−1^','Not yet calibrated ^d^'],
   ];
   body.push(mkTable(w, ['Category','Parameter','Value','Unit','Source'], rows, 2));
 }
@@ -201,20 +201,21 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
    ['Structure','Thickness','72.48','72.48','μm'],
    ['','Porosity','7.87','7.39','%'],
    ['','Areal capacity','3.11','3.07','mAh cm^−2^'],
-   ['','LPSCl coverage of NCM811','86.7','86.7','%'],
-   ['','VGCF coverage of NCM811','13.0','15.4','%'],
-   ['','Median conductive-additive contacts per NCM811 particle','433','517','–'],
-   ['','Electronic connectivity','100','100','%'],
+   ['','LPSCl coverage of NCM811 ^b^','—','—','%'],
+   ['','VGCF coverage of NCM811 ^b^','—','—','%'],
+   ['','Median conductive-additive contacts per NCM811 particle ^b^','—','—','–'],
+   ['','Electronic connectivity ^b^','—','—','%'],
    ['Transport','Effective electronic conductivity','7.27 × 10^−2^','8.16 × 10^−2^','S cm^−1^'],
-   ['','Effective ionic conductivity ^b^','5.69 × 10^−4^','5.64 × 10^−4^','S cm^−1^'],
+   ['','Effective ionic conductivity ^c^','—','—','S cm^−1^'],
    ['','DBE / SBE electronic conductivity ratio ^a^','SPAN:1.1232 ± 0.0011','','–'],
-   ['','DBE / SBE ionic conductivity ratio ^b^','SPAN:provisional — see note','','–'],
+   ['','DBE / SBE ionic conductivity ratio ^c^','SPAN:—','','–'],
   ];
   body.push(mkTable(w, ['Category','Parameter','SBE','DBE','Unit'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
 body.push(Note('^a^ Mean over eight grid-origin arms; the uncertainty is the paired standard error. All eight solves converged.'));
-body.push(Note('^b^ PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking, and the ionic conductivity of SDCP has not been calibrated against Figure 2h. The ionic comparison therefore reflects only the electrolyte volume displaced by SDCP and is not quoted as a result.'));
+body.push(Note('^b^ Not reported. These descriptors were extracted at the earlier 0.4 μm rasterization and are being re-extracted at the production voxel size.'));
+body.push(Note('^c^ Not reported. PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking, and the ionic conductivity of SDCP has not been calibrated against Figure 2h; the model therefore does not yet represent the quantity being compared.'));
 
 // ---------------- C. References -----------------------------------------
 body.push(H('C.  References to be merged into the main list'));
@@ -256,8 +257,7 @@ NOTE('D3.', '**Table S2 — 기계 물성이 AFM 그림과 어긋난다 (결정 
 
 NOTE('D4.', '**Table S3 — 구조 항목은 v5.1 에서 그대로 가져왔다.** 두께 · porosity · 면적용량 · '
 + 'coverage · 접촉수 · 연결률은 옛 0.4 μm 래스터에서 뽑은 값이다.  특히 coverage 와 접촉수는 '
-+ '복셀 크기에 직접 의존하므로 투고 전 0.15 μm 에서 다시 뽑아야 한다.  porosity 도 논문 전체에서 '
-+ '한 가지 규약(구 부피 기준)으로 통일해 보고할 것.');
++ '복셀 크기에 직접 의존하므로 **표에서 비워 두었다**(각주 b) — 0.15 μm 에서 다시 뽑아 채울 것.  두께 · porosity · 면적용량은 래스터가 아니라 압밀 결과라 그대로 두었고, porosity 는 논문 전체에서 한 가지 규약(구 부피 기준)으로 통일해 보고할 것.');
 
 NOTE('D5.', '**용어를 "Young’s modulus (*E*)" 로 통일했다.** v5.1 은 "elastic modulus"(AFM · '
 + 'Table S2 · Figure S6–S7 캡션)와 "Young’s modulus"(DEM 본문)를 섞어 쓴다.  AFM 절과 '
@@ -298,8 +298,7 @@ NOTE('D12.', '**이온 결과는 아직 결과로 내세우지 않는다.** 값 
 + '생산 설정에서 PTFE 가 전도 격자에 **아예 스탬프되지 않는다**.  그래서 Figure 2h 가 보고하는 효과, '
 + '즉 PTFE 는 LPSCl 이온전도도를 27 % 로 죽이고 SDCP 는 80 % 로만 죽인다는 것을 모델이 표현할 수 '
 + '없다.  PTFE 가 보이지 않으면 SBE 와 DBE 의 이온적 차이는 "DBE 에만 SDCP 가 있어 전해질·기공 부피를 '
-+ '점유한다" 하나로 줄어들고, 그것은 구성상 작은 손해일 수밖에 없다.  ⇒ 표에서 이온 비를 숫자로 '
-+ '확정하지 않았다.');
++ '점유한다" 하나로 줄어들고, 그것은 구성상 작은 손해일 수밖에 없다.  ⇒ **표의 이온 행을 전부 비웠다** (각주 c).  D13 의 보정을 마친 뒤 채운다.');
 
 NOTE('D13.', '**Figure 2h 로 이온 상 전도도를 보정할 수 있다 — 다음 우선순위 (신규).** Figure 2h 는 '
 + '9:1 wt 펠릿을 재는데, 이것이 곧 **이 논문 자신의 상-수준 보정 데이터**다.  리포 밀도 규약'
