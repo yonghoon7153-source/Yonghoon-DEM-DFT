@@ -177,9 +177,9 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
    ['','Yield strength','0.30','GPa','Calibrated'],
    ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. [37]'],
-   ['VGCF','Fibre diameter','0.15','μm','Experimental value'],
+   ['VGCF','Fibre diameter','0.15','μm','Supplier data'],
    ['','Young’s modulus','10','GPa','Assumed'],
-   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data'],
+   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Effective value'],
    ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value'],
    ['PTFE','Young’s modulus','1.8','GPa','This work (Figure S6, S7)'],
    ['','Electronic / ionic conductivity','0','S cm^−1^','Assumed (insulating)'],
@@ -291,7 +291,13 @@ NOTE('D14.', '**표에서 각주를 뺐다 — 아래는 우리끼리 알고 있
 + '를 받았는데, 원고는 powder 를 **polycrystalline** NCM811 (*r* = 2.5 μm) 로 기술한다.  우리 규약에서 '
 + '다결정은 AM_P = 5 mS cm^−1^ 다 — **2배 차이**라 의도한 것인지 확인이 필요하다 (AM 이 나르는 전류는 '
 + 'SBE 기준 약 12 % → σ_e_ 절대값에 영향, 비에는 공통모드로 거의 상쇄).  (ii) *σ*_e_(VGCF) 100 '
-+ 'S cm^−1^ 은 **압분 분말값**(0.012 Ω cm)이고 단섬유 고유값(≈10^4^ S cm^−1^)이 아니다.  복셀이 닿은 '
++ 'S cm^−1^ 은 **압분 분말값** 자릿수(Showa Denko VGCF-H 카탈로그 0.012 Ω cm ≈ 83 S cm^−1^)이고 단섬유 '
++ '고유값(1e−4 Ω cm ≈ 10^4^ S cm^−1^)이 아니다.  ⚠ 코드값 100 은 카탈로그 83 을 그대로 쓴 것이 아니라 '
++ '자릿수를 맞춰 채택한 값이라 Source 를 *Supplier data* → *Effective value* 로 고쳤다.  섬유 직경 0.15 μm '
++ '도 우리 측정이 아니라 같은 카탈로그 값이라 *Supplier data* 로 바꿨다 (SEM 으로 실측한 것이면 되돌릴 것).  '
++ '⚠ VGCF 영률 10 GPa 는 **앵커 없는 placeholder** 다 — 흑연화 탄소섬유의 축방향 영률은 10^2^ GPa 급이다.  '
++ 'STEP3 σ 계산에는 안 들어가고 MPM 압밀 기하에만 들어가며 로딩이 3 wt% 라 영향이 작을 것으로 보지만 **미측정**이다.  '
++ '복셀이 닿은 '
 + '섬유를 융합시켜 섬유-섬유 접촉저항을 안 담으므로 접촉저항이 포함된 쪽을 쓰는 것이 맞다 — 단섬유값을 '
 + '쓰면 접촉저항이 두 번 소거된다.  0.15 μm 복셀에서 섬유가 한 칸 굵기로 그려지므로 원/정사각 면적비 '
 + '(π/4) 로 재척도해 78.5 S cm^−1^ 를 쓴다 (축방향 컨덕턴스 보존).  이 두 문장은 리뷰어가 물으면 그때 '
@@ -332,7 +338,7 @@ NOTE('', '⇒ 지금 모델은 이 두 가지를 **모두** 놓치고 있다: σ
 + '**(SBE 1 wt% vs DBE 0.5 wt%)에서만 나올 수 있고, 그것이 지금 모델에 없는 항이다.');
 NOTE('', '⇒ **제안하는 보정 (frame[4] — 모델끼리가 아니라 실험에 맞춘다)**: 9:1 LPSCl+바인더 펠릿을 '
 + '같은 복셀 파이프라인으로 만들고, ⓐ σ_ion_(SDCP) 와 ⓑ PTFE 의 차단 표현(스탬프 + 표면층)을 '
-+ 'Figure 2h 의 0.97 / 2.86 mS cm^−1^ 를 재현하도록 맞춘다.  그렇게 얻은 상 전도도를 전극에 넣어 '
++ 'Figure 2h 의 0.97 / 2.86 mS cm^−1^ 를 재현하도록 맞춘다.  ★ **같은 펠릿으로 전자 축도 앵커할 수 있다** — Figure 2i 가 같은 9:1 펠릿의 σ_e_ 를 준다 (LPSCl 0.30 → +PTFE 0.12 → +SDCP 1.53 × 10^−7^ S cm^−1^).  지금 σ_e_(SDCP) = 250 S cm^−1^ 는 논문 밖에서 온 가정값이므로, 같은 RVE 로 1.53 × 10^−7^ 을 재현하는 값을 찾으면 **전자·이온 두 축이 모두 이 논문 자신의 Figure 2 에 앵커**된다.  ⚠ 단 SDCP 14.6 vol% 는 3D 구 퍼콜레이션 문턱(≈16 vol%) 근처라 결과가 퍼콜 여부에 민감하다 — 그 자체가 재볼 값어치가 있다.  그렇게 얻은 상 전도도를 전극에 넣어 '
 + '8팔을 다시 돌리면 이온 축이 **이 논문 자신의 측정에 앵커된** 결과가 된다.  작은 RVE 라 비용도 낮다.');
 
 fs.writeFileSync('/dev/null','');
