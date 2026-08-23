@@ -141,27 +141,19 @@ body.push(RunIn('Microstructure reconstruction:',
 + 'both reach 72.48 μm, at porosities of 7.87 % and 7.39 %, respectively.'));
 
 body.push(RunIn('Effective transport simulations:',
-  'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm, and the '
-+ 'electronic and ionic networks were solved on the same grid. Adjacent conducting voxels were '
-+ 'coupled through harmonic-mean conductances and the potential field was obtained from'));
+  'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm. Adjacent '
++ 'conducting voxels were coupled through harmonic-mean conductances, and the potential field was '
++ 'obtained from'));
 body.push(Eq('∇·(*σ*∇*φ*) = 0', 1));
-body.push(P('where *σ* is the local conductivity assigned to each voxel and *φ* is the electric '
-+ 'potential. A potential difference was imposed between the separator and current-collector '
-+ 'faces of the domain, the remaining boundaries were treated as insulating, and the effective '
-+ 'conductivity was obtained from the resulting total current. NCM811, VGCF and SDCP formed the '
-+ 'electronic network and LPSCl and SDCP the ionic network, with PTFE insulating in both; the '
-+ 'phase conductivities are listed in Table S2. VGCF was assigned a diameter-preserving '
-+ 'conductivity so that the axial conductance of a fibre resolved as a one-voxel-wide tube '
-+ 'matches that of the 0.15 μm fibre. Because a rasterized conductivity depends on the position '
-+ 'of the microstructure relative to the grid, each electrode was solved eight times over a full '
-+ 'factorial of half-voxel origin shifts along the three axes; the SBE and DBE were solved on the '
-+ 'same set of origins, and conductivity ratios are reported as the paired mean with its standard '
-+ 'error. The Joule dissipation of a phase was evaluated as'));
-body.push(Eq('*P* = Σ *g*_k_ (Δ*φ*_k_)^2^', 2));
-body.push(P('where *g*_k_ and Δ*φ*_k_ are the conductance of and the potential difference across '
-+ 'the *k*-th voxel-to-voxel connection and the summation runs over all connections belonging to '
-+ 'the phase. Since the electronic conductivity of SDCP has not been measured directly, a '
-+ 'representative value of 250 S cm^−1^ was adopted.'));
+body.push(P('where *σ* is the local conductivity of each voxel and *φ* the electric potential. A '
++ 'potential difference was applied between the separator and current-collector faces with the '
++ 'remaining boundaries insulating, and the effective conductivity was taken from the total current. '
++ 'NCM811, VGCF and SDCP carried the electronic network and LPSCl and SDCP the ionic network; PTFE '
++ 'was not resolved on the conduction grid. Phase conductivities are listed in Table S2, in which '
++ 'the VGCF value is rescaled so that a fibre resolved as a one-voxel-wide tube retains its axial '
++ 'conductance. Each electrode was solved at eight half-voxel grid-origin shifts (2 × 2 × 2), the '
++ 'SBE and DBE sharing the same origins, and conductivity ratios are reported as the paired mean '
++ 'with its standard error.'));
 
 // ---------------- B. SI tables ------------------------------------------
 body.push(H('B.  Supporting Information — tables'));
@@ -292,10 +284,13 @@ NOTE('D8.', '**Cross-model agreement claim removed.** v5.1 stated that the two m
 + 'difference between the two porosity conventions, not independent agreement, so it is not '
 + 'evidence of validity. The statement that the models were calibrated independently is kept.');
 
-NOTE('D9.', '**σ_SDCP_ sensitivity sweep moved out of Methods.** The paragraph reporting the '
-+ 'five-point sweep and the dissipation-share anti-correlation is a result, not a method, and its '
-+ 'numbers are from the superseded grid. Methods now states only the value adopted. If the sweep '
-+ 'is wanted in the SI it must be re-run at the production convention.');
+NOTE('D9.', '**σ_SDCP_ sweep and the Joule-dissipation equation removed from Methods.** The '
++ 'five-point sweep and the dissipation-share argument are results, not methods, and their numbers '
++ 'come from the superseded grid. With that paragraph gone, nothing in the paper uses the Joule '
++ 'dissipation — Figure 4b reports conductivities only — so the second equation and its symbol '
++ 'definitions were dropped as well, and the remaining equation is renumbered. The adopted SDCP '
++ 'conductivity is now given only in Table S2. If the sweep is wanted in the SI it must be re-run '
++ 'at the production convention, and the equation restored with it.');
 
 NOTE('D10.', '**Mechanism sentence needs rewriting wherever it appears in the Results.** The v5.1 '
 + 'reading — SDCP acting as a high-conductivity bridge that relieves series bottlenecks — is not '
