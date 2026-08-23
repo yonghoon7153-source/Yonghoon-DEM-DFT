@@ -217,12 +217,13 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
    ['Transport','Effective electronic conductivity','7.27 × 10^−2^','8.16 × 10^−2^','S cm^−1^'],
    ['','Effective ionic conductivity','5.69 × 10^−4^','5.64 × 10^−4^','S cm^−1^'],
    ['','DBE / SBE electronic conductivity ratio ^a^','SPAN:1.1232 ± 0.0011','','–'],
-   ['','DBE / SBE ionic conductivity ratio ^a^','SPAN:0.99272 ± 0.00003','','–'],
+   ['','DBE / SBE ionic conductivity ratio ^a,b^','SPAN:0.99272 ± 0.00003','','–'],
   ];
   body.push(mkTable(w, ['Category','Parameter','SBE','DBE','Unit'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
 body.push(Note('^a^ Mean over eight grid-origin arms; the uncertainty is the paired standard error. All eight solves converged.'));
+body.push(Note('^b^ PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking. The ionic difference between the two electrodes therefore reflects only the electrolyte volume displaced by SDCP and not the difference in ion blocking between the two binders reported in Figure 2h. This value is provisional.'));
 
 // ---------------- C. References -----------------------------------------
 body.push(H('C.  References to be merged into the main list'));
@@ -303,6 +304,23 @@ NOTE('D10.', '**Mechanism sentence needs rewriting wherever it appears in the Re
 + '*"SDCP raises the electronic conductivity mainly by converting electronically insulating volume '
 + '— electrolyte and pore — into conducting volume, which reroutes current around bottlenecks in '
 + 'the existing carbon network, rather than by carrying a proportional share of the current itself."*');
+
+NOTE('D12.', '**The ionic result is provisional — do not present it as a finding yet.** The value '
++ 'itself is reproducible (eight arms, all converged, ±0.003 % paired), but two things are open. '
++ '(i) It has never been checked against voxel size. The electronic ratio was tested at three grids '
++ 'and kept moving, and the ionic ratio reversed sign across the coarse grids used earlier; a '
++ 'refinement test cannot simply be run here, because the electrolyte fill degrades below 0.15 μm '
++ '(about 5 % of electrolyte cells unfilled at 0.15 μm, 18 % at 0.125 μm, 42 % at 0.10 μm), which '
++ 'makes the ionic solve unusable on finer grids. (ii) More importantly, PTFE is not stamped onto '
++ 'the conduction grid at all in the production setting, so the model cannot express the effect '
++ 'Figure 2h reports — that PTFE suppresses the ionic conductivity of LPSCl to 27 % while SDCP '
++ 'suppresses it only to 80 %. With PTFE invisible, the SBE and DBE differ ionically only in that '
++ 'the DBE has SDCP occupying volume that would otherwise be electrolyte or pore, which is a small '
++ 'penalty by construction. The direct test is to repeat the eight-arm run with PTFE stamped as a '
++ 'blocking phase; on the electronic side that change lowered the SBE by 25 % and the DBE by 13 % '
++ '(the SBE carries twice the PTFE) and raised the ratio from 1.126 to 1.309, so the same asymmetry '
++ 'is expected to move the ionic ratio upward. Until that run exists, either omit the ionic row or '
++ 'state it as a volume-occupancy effect only.');
 
 NOTE('D11.', '**References.** Methods now carries five citations only: LIGGGHTS, MPM, the dense '
 + 'LPSCl modulus, the NCM modulus and the electrolyte grain conductivity. Every quantitative '
