@@ -91,7 +91,7 @@ PAIR_MIGRATED / PAIR_COLLAPSED 검사. 회수 후 `analyze_results.py` 가 자�
 
 1. **E_ads 수치** — wave1 회수 대기. 게이트 통과 후 Figure 2e · 본문에 삽입.
 2. **Figure S3** — 계산 모델 그림 (슬랩 + 조각 3종). 구조는 wave1 POSCAR 에 다 있다.
-3. ⚠ **U(Ni 3d) = 6.2 eV 의 원전** — `kb/methodology/terminology_register.md` §42 가 이미
+3. ⏳ **U(Ni 3d) = 6.2 eV 의 원전** — 사용자가 로컬에서 pymatgen 확인 예정 (§7) — `kb/methodology/terminology_register.md` §42 가 이미
    *"⚠ 원전 미보유"* 로 적어 뒀다. 2026-08-23 결정: **Source 열을 "-" 로 두고 인용하지 않는다.**
    리비전에서 물으면 그때 단다 — 유력 후보는 §7.
 4. LiNiO₂ AFM 배열 — **인용 대상 아님.** 문헌 수치가 아니라 우리 모델링 선택이라 Source "-" 가 맞다.
@@ -131,6 +131,27 @@ PAIR_MIGRATED / PAIR_COLLAPSED 검사. 회수 후 `analyze_results.py` 가 자�
 
 ---
 
+## 6b. 참고문헌 매핑 — 본문 번호 ↔ SI S-번호
+
+⚠ **본문은 S 번호를 쓰지 않는다.** 본문은 원고 자체 번호(현재 1–32), S 번호는 SI 전용이다.
+QE 와 UMA 는 **양쪽에 다 실리는** 논문이라 서지사항이 본문 목록·SI 목록 둘 다에 들어간다.
+
+| 본문 위치 | 논문 | SI | 본문 번호 |
+|---|---|---|---|
+| "performed with Quantum ESPRESSO **[ref]**" | Giannozzi 2009, *J. Phys.: Condens. Matter* **21**, 395502 | Ref. S1 | **[33]** (잠정) |
+| "with a machine-learned interatomic potential **[ref]**" | Wood 2025, *NeurIPS* **38**, 143528 (UMA) | Ref. S4 | **[34]** (잠정) |
+
+**잠정인 이유** — 본문 마지막 인용이 현재 [32] 이고 Experimental section 이 그 뒤다. 그런데
+`Discrete element method` 문단이 `Computational details` **앞**에 있으면서 지금 인용이 **0개**다.
+교수님 지시(*"대표적인거 한두개만 앞부분에 있으면 되고 dem"*)대로 DEM 에 ref 1–2개를 넣으면
+그만큼 밀린다. ⇒ **DEM 인용을 먼저 확정한 뒤 번호를 매긴다.**
+
+**PBE(S2)·D3(S3) 는 본문에 인용하지 않는다 — 의도된 것.** 본문은 이름만 쓰고
+(*"the Perdew–Burke–Ernzerhof functional, Grimme D3 dispersion"*) Table S1 의 Source 열이 받는다.
+근거: *"methodology 하나하나 레퍼런스 달 필요없어, 대표적인거 한두개만 앞부분에"* (2026-08-23).
+
+---
+
 ## 7. U(Ni 3d) = 6.2 eV — 물으면 어디를 볼 것인가
 
 repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(Dudarev)"* 로 기록).
@@ -143,6 +164,15 @@ repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(D
   산화 에너지에 맞춘 전이금속 U 세트의 원전
 - Jain, A.; Hautier, G.; Ong, S. P.; Moore, C. J.; Fischer, C. C.; Persson, K. A.;
   Ceder, G. *Phys. Rev. B* **2011**, *84*, 045115 — MP 의 GGA/GGA+U 혼합 스킴
+
+확인용 한 줄 (pymatgen 있는 기계에서 — 사용자가 나중에 실행):
+
+```bash
+python3 -c "import pymatgen.io.vasp.sets as s,yaml,os;print(yaml.safe_load(open(os.path.join(os.path.dirname(s.__file__),'MPRelaxSet.yaml')))['INCAR']['LDAUU'])" | tr ',' '\n' | grep -i ni
+```
+
+6.2 로 나오면 Table S1 의 `Dispersion / Hubbard U` 행 Source 를 `Ref. S3, S5` 로 바꾸고
+참고문헌에 한 건 추가하면 끝이다 (생성기 `sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 두 줄).
 
 ⚠ **확인 전에는 달지 않는다.** 값이 다르면(예: 6.0) 엉뚱한 인용이 되고,
 그건 2026-07 Kim/Cui 교훈(인용 역할 확인 후 삽입)에 정면으로 걸린다.
