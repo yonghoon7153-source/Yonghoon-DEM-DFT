@@ -80,19 +80,32 @@ for _s in $SYSTEMS; do
   esac
 done
 
-echo "OUT=$OUTROOT  DEVICE=$DEVICE  SYSTEMS=$SYSTEMS"
+# ⭐ 2026-08-23 — 온도·생산시간을 env 로 받는다. 헤더는 "600K is already 3-seeded for
+#   **both**" 라고 단언했지만 **modelc 쪽 실물이 없었다** (b2o3 만 b2o3_600K_reseed_errorbar.csv
+#   로 3시드가 있고, modelc 는 D_600 = 7.901e-06 단일값 하나뿐이다).
+#   그래서 600 K 를 이 스크립트로 돌릴 수 있어야 한다.
+#   ⚠ 600 K 는 **200 ps** 다 — 기존 600 K 런이 200 ps 였고(요청대장 §6-3), 100 ps 로 줄이면
+#     예측 홉 수가 13.9 → ~7 로 반토막나 β 게이트가 경계로 떨어진다.
+#     TEMPS=600 을 줄 때 PROD_PS=200 을 같이 주지 않으면 아래에서 막는다.
+if [ "${TEMPS:-}" = "600" ] && [ "${PROD_PS:-100}" -lt 200 ]; then
+  echo "⛔ 600 K 인데 PROD_PS=${PROD_PS:-100} ps 다. 600 K 는 200 ps 규약이다"
+  echo "   (100 ps 면 예측 홉 13.9 → ~7 로 반토막, β 게이트가 경계로 떨어진다)"
+  echo "   PROD_PS=200 TEMPS=600 ... 로 다시 실행하라. 의도한 것이면 FORCE_SHORT=1 을 붙여라."
+  [ "${FORCE_SHORT:-0}" = "1" ] || exit 1
+fi
+echo "OUT=$OUTROOT  DEVICE=$DEVICE  SYSTEMS=$SYSTEMS  TEMPS=${TEMPS:-800 1000}  PROD_PS=${PROD_PS:-100} ps"
 echo "⚠ 재실행분은 **새 런**이다 — D 와 beta 를 이 궤적들에서 같이 뽑아 Ea 를 다시 적합할 것."
 [ "$SYSTEMS" = "b2o3 modelc" ] || \
   echo "⚠ 계를 갈라 돌린다 ($SYSTEMS) — 나머지 계를 다른 서버에서 돌리고 **합친 뒤** Ea 재적합."
 for SYS in $SYSTEMS; do
   for S in 2 3 4; do
-    echo "===================== $SYS  800/1000K  reseed s${S} ====================="
+    echo "===================== $SYS  ${TEMPS:-800 1000} K (${PROD_PS:-100} ps)  reseed s${S} ====================="
     python3 "$DRIVER" \
       --v0_xyz "${V0[$SYS]}" --label "$SYS" \
       --out_root "$OUTROOT/${SYS}/s${S}" \
       --disorder_levels 0.0 --n_configs 1 \
-      --temperatures 800 1000 \
-      --equilib_ps 5 --prod_ps 100 --timestep_fs 2.0 --friction 0.02 \
+      --temperatures ${TEMPS:-800 1000} \
+      --equilib_ps 5 --prod_ps ${PROD_PS:-100} --timestep_fs 2.0 --friction 0.02 \
       --save_fs 100 --fit_window_ps 2 50 --seed ${S} --save_traj \
       --uma_model uma-s-1p1 --uma_task omat --device "$DEVICE"
   done
