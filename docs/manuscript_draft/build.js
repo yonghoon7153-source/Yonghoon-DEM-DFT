@@ -203,7 +203,7 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
    ['','VGCF coverage of NCM811','—','—','%'],
    ['','Median conductive-additive contacts per NCM811 particle','—','—','–'],
    ['','Electronic connectivity','—','—','%'],
-   ['Transport','Effective electronic conductivity','7.27 × 10^−2^','8.16 × 10^−2^','S cm^−1^'],
+   ['Transport','Effective electronic conductivity','—','—','S cm^−1^'],
    ['','Effective ionic conductivity','—','—','S cm^−1^'],
    ['','DBE / SBE electronic conductivity ratio','SPAN:1.1232 ± 0.0011','','–'],
    ['','DBE / SBE ionic conductivity ratio','SPAN:—','','–'],
@@ -303,6 +303,15 @@ NOTE('D14.', '**표에서 각주를 뺐다 — 아래는 우리끼리 알고 있
 + '(π/4) 로 재척도해 78.5 S cm^−1^ 를 쓴다 (축방향 컨덕턴스 보존).  이 두 문장은 리뷰어가 물으면 그때 '
 + '넣으면 된다.  (iii) 표의 공백은 각각 — 두께 · porosity · 면적용량 = 재압밀 대기(D3) / coverage · '
 + '접촉수 · 연결률 = 0.15 μm 재추출 대기(D4) / σ_ion_ 전부 = Fig 2h 보정 대기(D12·D13).');
+
+NOTE('D15.', '**σ_e 절대값도 비웠다 — 격자에 크게 움직이기 때문이다 (신규).** 같은 침대 · 같은 규약에서 '
++ '복셀만 0.15 → 0.125 μm 로 조이면 **절대값이 SBE −26.8 % · DBE −25.5 %** 움직인다.  같은 구간에서 '
++ '**비는 +2.1 %p** 만 움직인다 (1.1232 → 1.1438).  ⇒ 이 파이프라인에서 재현되는 양은 **비**이고 절대값이 '
++ '아니다.  PTFE 를 격자에 찍는 규약으로 바꾸면 절대값이 한 번 더 −13~−25 % 움직인다 (CL-49).  '
++ '⇒ 표에는 **비만** 남겼다.  ⚠ 비 1.1232 도 격자와 함께 **단조 증가**한다 (0.15 → 0.125 → 0.115 에서 '
++ '1.1232 → 1.1438 → 1.1554) 이므로 **하한**으로 읽어야 한다.  세 점이 어떤 멱법칙에도 안 맞아 외삽이 '
++ '성립하지 않고, 이 하드웨어에서는 0.115 보다 더 못 조인다 (peak RSS 35.6 GB).  부호와 존재는 8/8 팔에서 '
++ '확정이고, 크기만 열려 있다.');
 
 NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
 + 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
