@@ -58,26 +58,31 @@ const row = (cells, opt = {}) =>
 // ── 본문 삽입 문단 ────────────────────────────────────────────────────────
 const METHODS = [
   "*Computational details*: Spin-polarised density functional theory (DFT) calculations were ",
-  "performed with Quantum ESPRESSO [ref] using the Perdew–Burke–Ernzerhof functional with ",
-  "Grimme D3 dispersion and a Hubbard correction of *U* = 6.2 eV on the Ni 3*d* states. Wave ",
-  "functions and the charge density were expanded to 60 and 480 Ry, respectively, with Gaussian ",
-  "smearing of 0.05 eV and a self-consistency threshold of 1 × 10^−6^ Ry. The NCM811 surface was ",
-  "represented by an antiferromagnetic LiNiO~2~(104) slab (1 × 4, four layers, 192 atoms, ",
-  "18.27 × 11.51 Å in plane) sampled with a Γ-centred 2 × 3 × 1 mesh and a dipole correction ",
-  "along the surface normal; more than 15 Å of vacuum separated the adsorbate from its periodic ",
-  "image. SDCP was represented by its sulfonate-functionalised EDOT repeat unit ",
-  "(C~11~H~16~O~6~S~2~; the self-doped form C~11~H~15~O~6~S~2~ was obtained by removing the ",
-  "sulfonate proton) and PTFE by a C~10~F~22~ segment. Adsorption configurations were ",
-  "pre-screened over seven surface sites and 48 molecular orientations with a universal ",
-  "machine-learned interatomic potential [ref], and the lowest-energy configuration on each of ",
-  "the surface Li and Ni sites was rescored by DFT. Gas-phase references were relaxed at the ",
-  "Γ point in the same cell until residual forces fell below 1 × 10^−3^ Ry bohr^−1^, and the box ",
-  "size was increased by 20 and 24 Å to confirm convergence. Adsorption energies were evaluated ",
-  "as *E*~ads~ = *E*(slab+molecule) − *E*(slab) − *E*(molecule), with all three terms obtained ",
-  "with identical settings and the same antiferromagnetic configuration. Because the adsorbed ",
-  "complexes were evaluated as single points on the machine-learned-potential geometries, the ",
-  "reported *E*~ads~ values do not include DFT relaxation of the adsorbed complex.",
+  "performed with Quantum ESPRESSO [ref] using the Perdew–Burke–Ernzerhof functional, Grimme D3 ",
+  "dispersion, and a Hubbard correction of *U* = 6.2 eV on the Ni 3*d* states. Wave functions ",
+  "and the charge density were expanded to 60 and 480 Ry, respectively, with Gaussian smearing ",
+  "of 0.05 eV and a self-consistency threshold of 1 × 10^−6^ Ry. The NCM811 surface was modelled ",
+  "as an antiferromagnetic LiNiO~2~(104) slab (1 × 4, four layers, 192 atoms, 18.27 × 11.51 Å in ",
+  "plane) with more than 15 Å of vacuum, sampled with a Γ-centred 2 × 3 × 1 mesh and a dipole ",
+  "correction along the surface normal. SDCP was represented by its sulfonate-functionalised ",
+  "EDOT repeat unit (C~11~H~16~O~6~S~2~; the self-doped form C~11~H~15~O~6~S~2~ was obtained by ",
+  "removing the sulfonate proton) and PTFE by a C~10~F~22~ segment. Adsorption configurations ",
+  "were pre-screened over seven surface sites and 48 molecular orientations with a ",
+  "machine-learned interatomic potential [ref], and the lowest-energy configuration of each ",
+  "species on the surface Li and Ni sites was evaluated by DFT. Gas-phase references were ",
+  "relaxed at the Γ point in the same cell until residual forces fell below 1 × 10^−3^ Ry ",
+  "bohr^−1^, with the box padding increased from 20 to 24 Å to confirm convergence. Adsorption ",
+  "energies were obtained as *E*~ads~ = *E*(slab+molecule) − *E*(slab) − *E*(molecule), with all ",
+  "three terms computed with identical settings and the same antiferromagnetic configuration.",
 ].join("");
+
+// ── 그림 캡션 (현재 원고에 'DFT' 한 단어만 있는 자리) ────────────────────
+const CAPTIONS = [
+  ["Figure 2e", "Calculated adsorption energies of the SDCP repeat unit and a PTFE segment "
+    + "on the LiNiO~2~(104) surface. ⟨values to be inserted⟩"],
+  ["Figure S3", "Computational models used for the DFT calculations: the LiNiO~2~(104) slab "
+    + "and the adsorbed SDCP (neutral and self-doped) and PTFE segments."],
+];
 
 // ── Table S1 ─────────────────────────────────────────────────────────────
 const ROWS = [
@@ -110,7 +115,7 @@ const ROWS = [
   ["", "Interatomic potential", "UMA-s-1p1", "-", "Ref. S6"],
   ["", "Force convergence", "0.05", "eV Å^−1^", "-"],
   ["Adsorption energy", "Definition",
-   "*E*(slab+molecule) − *E*(slab) − *E*(molecule)", "eV", "-"],
+   "*E*(slab+molecule) − *E*(slab) − *E*(molecule)^a^", "eV", "-"],
 ];
 
 const REFS = [
@@ -169,10 +174,14 @@ const doc = new Document({
       }),
 
       p("", { after: 120 }),
-      p("Adsorption energies are single-point energies evaluated on machine-learned-potential "
-        + "geometries and therefore do not include DFT relaxation of the adsorbed complex. "
+      p("^a^ Adsorption energies are single-point DFT energies evaluated on the pre-screened "
+        + "adsorption geometries; the adsorbed complexes were not relaxed at the DFT level. "
         + "The *k*-point mesh was verified directly for the C~10~F~22~ and self-doped SDCP "
         + "systems; the remaining systems use the same mesh.", { size: 16, after: 220 }),
+
+      p("Figure captions (DFT panels)", { bold: true, size: 18, after: 80 }),
+      ...CAPTIONS.flatMap(([k, v]) => [p(k + ". " + v, { size: 17, after: 60 })]),
+      p("", { after: 140 }),
 
       p("References", { bold: true, size: 18, after: 80 }),
       ...REFS.map((r) => p(r, { size: 16, after: 40 })),
