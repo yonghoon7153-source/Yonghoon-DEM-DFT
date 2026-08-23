@@ -136,9 +136,8 @@ body.push(RunIn('Microstructure reconstruction:',
 + 'bulk modulus (*K* = 25.5 GPa) while lowering the shear modulus to *μ* = 0.51 GPa. The two '
 + 'models were calibrated independently against the same experimental porosity rather than '
 + 'against each other. VGCF fibres, PTFE fibrils and SDCP particles were then seeded into the '
-+ 'pore space at the experimental weight fractions. All inputs are listed in Table S2. The '
-+ 'binder-free NCM811–LPSCl composite compacts to 68.0 μm at 9.8 % porosity, and the SBE and DBE '
-+ 'both reach 72.48 μm, at porosities of 7.87 % and 7.39 %, respectively.'));
++ 'pore space at the experimental weight fractions. All inputs are listed in Table S2, and the '
++ 'resulting thicknesses and porosities in Table S3.'));
 
 body.push(RunIn('Effective transport simulations:',
   'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm. Adjacent '
@@ -170,7 +169,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Voxel edge length','0.15','μm','–'],
    ['NCM811','Particle radius','2.5','μm','Experimental value'],
    ['','Young’s modulus','140','GPa','Ref. [36]'],
-   ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value ^a^'],
+   ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value'],
    ['LPSCl','Particle radius','0.5','μm','Experimental value'],
    ['','Young’s modulus (dense)','24','GPa','Ref. [34]'],
    ['','Young’s modulus (DEM contact)','1.35','GPa','Calibrated'],
@@ -180,44 +179,38 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. [37]'],
    ['VGCF','Fibre diameter','0.15','μm','Experimental value'],
    ['','Young’s modulus','10','GPa','Assumed'],
-   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data ^b^'],
-   ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value ^b^'],
+   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data'],
+   ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value'],
    ['PTFE','Young’s modulus','1.8','GPa','This work (Figure S6, S7)'],
    ['','Electronic / ionic conductivity','0','S cm^−1^','Assumed (insulating)'],
    ['SDCP','Particle diameter','0.30','μm','This work (Figure S5)'],
    ['','Young’s modulus','9.0','GPa','This work (Figure 2g)'],
    ['','Electronic conductivity','250','S cm^−1^','Assumed'],
-   ['','Ionic conductivity','—','S cm^−1^','Not yet calibrated ^c^'],
+   ['','Ionic conductivity','—','S cm^−1^','Not yet calibrated'],
   ];
   body.push(mkTable(w, ['Category','Parameter','Value','Unit','Source'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
-body.push(Note('^a^ Effective network value calibrated against the measured electrode response, not the intrinsic conductivity of NCM811.'));
-body.push(Note('^b^ The voxel representation fuses touching fibres and therefore carries no explicit fibre–fibre contact resistance, so the contact-inclusive compressed-powder value is used rather than the intrinsic single-fibre value (≈ 10^4^ S cm^−1^). At a 0.15 μm voxel the fibre is one voxel wide, and the conductivity is rescaled by the circle-in-square area ratio (π/4) so that the axial conductance is preserved.'));
-body.push(Note('^c^ Provisional. Figure 2h is consistent with SDCP acting as an inert filler on the ionic network, and this value has not yet been calibrated against that measurement.'));
 
 body.push(Cap('**Table S3.** Structural and transport parameters obtained from the simulations.'));
 {
   const w = [1400, 3400, 1500, 1500, 1200];
   const rows = [
-   ['Structure','Thickness','72.48','72.48','μm'],
-   ['','Porosity','7.87','7.39','%'],
-   ['','Areal capacity','3.11','3.07','mAh cm^−2^'],
-   ['','LPSCl coverage of NCM811 ^b^','—','—','%'],
-   ['','VGCF coverage of NCM811 ^b^','—','—','%'],
-   ['','Median conductive-additive contacts per NCM811 particle ^b^','—','—','–'],
-   ['','Electronic connectivity ^b^','—','—','%'],
+   ['Structure','Thickness','—','—','μm'],
+   ['','Porosity','—','—','%'],
+   ['','Areal capacity','—','—','mAh cm^−2^'],
+   ['','LPSCl coverage of NCM811','—','—','%'],
+   ['','VGCF coverage of NCM811','—','—','%'],
+   ['','Median conductive-additive contacts per NCM811 particle','—','—','–'],
+   ['','Electronic connectivity','—','—','%'],
    ['Transport','Effective electronic conductivity','7.27 × 10^−2^','8.16 × 10^−2^','S cm^−1^'],
-   ['','Effective ionic conductivity ^c^','—','—','S cm^−1^'],
-   ['','DBE / SBE electronic conductivity ratio ^a^','SPAN:1.1232 ± 0.0011','','–'],
-   ['','DBE / SBE ionic conductivity ratio ^c^','SPAN:—','','–'],
+   ['','Effective ionic conductivity','—','—','S cm^−1^'],
+   ['','DBE / SBE electronic conductivity ratio','SPAN:1.1232 ± 0.0011','','–'],
+   ['','DBE / SBE ionic conductivity ratio','SPAN:—','','–'],
   ];
   body.push(mkTable(w, ['Category','Parameter','SBE','DBE','Unit'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
-body.push(Note('^a^ Mean over eight grid-origin arms; the uncertainty is the paired standard error. All eight solves converged.'));
-body.push(Note('^b^ Not reported. These descriptors were extracted at the earlier 0.4 μm rasterization and are being re-extracted at the production voxel size.'));
-body.push(Note('^c^ Not reported. PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking, and the ionic conductivity of SDCP has not been calibrated against Figure 2h; the model therefore does not yet represent the quantity being compared.'));
 
 // ---------------- C. References -----------------------------------------
 body.push(H('C.  References to be merged into the main list'));
@@ -254,7 +247,7 @@ NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 
 NOTE('D3.', '**Table S2 의 기계 물성 = AFM 값 (PTFE 1.8 · SDCP 9.0 GPa).  값은 확정이고, 아직 그 값으로 '
 + '돌린 모델이 없을 뿐이다.** 여기 실린 미세구조는 그 이전 세대(PTFE 0.30 · SDCP 23.6 GPa)로 압밀한 '
 + '것이므로 투고 전 재압밀이 필요하다.  ⚠ 그때 **Table S3 에서 바뀌는 칸**: 두께 · porosity · 면적용량 · '
-+ 'σ_e (절대값 2개와 비).  침대 기하가 바뀌기 때문이다.  나머지 행은 영향 없다.  전도도 비의 이동이 '
++ 'σ_e (절대값 2개와 비).  침대 기하가 바뀌기 때문이다.  앞의 셋은 **표에서 비웠고**(각주 b) 본문도 '+ '수치 대신 Table S3 을 가리키게 했다.  전도도 비의 이동이 '
 + '8팔 산포(±0.7 %) 안이면 무시 가능으로 닫히고, 벗어나면 새 침대 값으로 갱신한다.');
 
 NOTE('D4.', '**Table S3 — 구조 항목은 v5.1 에서 그대로 가져왔다.** 두께 · porosity · 면적용량 · '
@@ -289,6 +282,16 @@ NOTE('D10.', '**기전 문장은 Results 쪽에서 다시 써야 한다.** v5.1 
 + '*"SDCP raises the electronic conductivity mainly by converting electronically insulating volume — '
 + 'electrolyte and pore — into conducting volume, which reroutes current around bottlenecks in the '
 + 'existing carbon network, rather than by carrying a proportional share of the current itself."*');
+
+NOTE('D14.', '**표에서 각주를 뺐다 — 아래는 우리끼리 알고 있을 것.** (i) *σ*_e_(NCM811) 1.0 × 10^−2^ '
++ 'S cm^−1^ 은 활성물질 **망의 유효값**(코퍼스 적합 endpoint)이지 NCM811 고유 전도도가 아니다.  문헌 '
++ '두 출처는 이 값의 약 1/200 을 준다 — 물성값처럼 소개하는 문장은 쓰지 말 것.  (ii) *σ*_e_(VGCF) 100 '
++ 'S cm^−1^ 은 **압분 분말값**(0.012 Ω cm)이고 단섬유 고유값(≈10^4^ S cm^−1^)이 아니다.  복셀이 닿은 '
++ '섬유를 융합시켜 섬유-섬유 접촉저항을 안 담으므로 접촉저항이 포함된 쪽을 쓰는 것이 맞다 — 단섬유값을 '
++ '쓰면 접촉저항이 두 번 소거된다.  0.15 μm 복셀에서 섬유가 한 칸 굵기로 그려지므로 원/정사각 면적비 '
++ '(π/4) 로 재척도해 78.5 S cm^−1^ 를 쓴다 (축방향 컨덕턴스 보존).  이 두 문장은 리뷰어가 물으면 그때 '
++ '넣으면 된다.  (iii) 표의 공백은 각각 — 두께 · porosity · 면적용량 = 재압밀 대기(D3) / coverage · '
++ '접촉수 · 연결률 = 0.15 μm 재추출 대기(D4) / σ_ion_ 전부 = Fig 2h 보정 대기(D12·D13).');
 
 NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
 + 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
