@@ -6,6 +6,8 @@
 // 수치 출처: sdcp_wave1_2026_08_12 번들 (MANIFEST.json · INCAR · KPOINTS · POSCAR 실측).
 // 근거·인용 제약: docs/manuscripts/sdcp_dft_methods_draft_2026_08_23.md
 //
+// Table S1 각주 a (단일점·k 범위) 는 2026-08-23 사용자 결정으로 **뺐다** — 내부 보관:
+//   kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md (리비전 회신 문구 포함)
 // 이 스크립트가 못 하는 것: E_ads 수치를 채우지 않는다 (wave1 미회수).
 //   Table S1 은 '조건' 표이고 결과값 표가 아니다.
 //
@@ -17,7 +19,7 @@ const fs = require("fs");
 const path = require("path");
 
 const W = 9360;                                  // Letter 여백 안에 맞는 표 전체 폭 (DXA)
-const COL = [1600, 2860, 2900, 900, 1100];       // 합 = W
+const COL = [1500, 2760, 3200, 800, 1100];       // 합 = W
 const HDR = "D9E2F3";
 const FONT = "Times New Roman";
 
@@ -111,36 +113,28 @@ const CAPTIONS = [
 
 // ── Table S1 ─────────────────────────────────────────────────────────────
 const ROWS = [
-  ["Method", "Program", "Quantum ESPRESSO", "-", "Ref. S1"],
-  ["", "Exchange–correlation functional", "PBE", "-", "Ref. S2"],
-  ["", "Dispersion correction", "Grimme D3", "-", "Ref. S3"],
-  ["", "Hubbard *U* (Ni 3*d*)", "6.2", "eV", "Ref. S4"],
-  ["Basis set", "Wavefunction cutoff", "60", "Ry", "-"],
-  ["", "Charge-density cutoff", "480", "Ry", "-"],
-  ["Brillouin zone", "*k*-point mesh (slab)", "2 × 3 × 1", "-", "Γ-centred"],
-  ["", "*k*-point mesh (convergence check)", "3 × 4 × 1", "-", "Γ-centred"],
-  ["", "*k*-point mesh (gas-phase molecule)", "1 × 1 × 1", "-", "Γ only"],
-  ["", "Smearing width (Gaussian)", "0.05", "eV", "-"],
-  ["Convergence", "Total energy", "1 × 10^−6^", "Ry", "-"],
-  ["", "Residual force (gas-phase relaxation)", "1 × 10^−3^", "Ry bohr^−1^", "-"],
-  ["Surface model", "Slab", "LiNiO~2~(104), 1 × 4, four layers", "-", "-"],
-  ["", "Number of atoms", "192 (Li~48~Ni~48~O~96~)", "-", "-"],
-  ["", "In-plane dimensions", "18.27 × 11.51", "Å", "-"],
-  ["", "Cell height", "30.26", "Å", "-"],
+  ["Method", "Code / functional", "Quantum ESPRESSO; PBE", "-", "Ref. S1, S2"],
+  ["", "Dispersion / Hubbard *U* (Ni 3*d*)", "Grimme D3; 6.2 eV", "-", "Ref. S3, S4"],
+  ["", "Cutoff (wavefunction / charge density)", "60 / 480", "Ry", "-"],
+  ["", "Smearing (Gaussian)", "0.05", "eV", "-"],
+  ["", "Convergence (SCF / force)",
+   "1 × 10^−6^ Ry / 1 × 10^−3^ Ry bohr^−1^", "-", "-"],
+  ["", "*k*-point mesh (slab / check / molecule)",
+   "2 × 3 × 1 / 3 × 4 × 1 / Γ", "-", "Γ-centred"],
+  ["Surface model", "Slab",
+   "LiNiO~2~(104), 1 × 4, four layers, 192 atoms (Li~48~Ni~48~O~96~)", "-", "-"],
+  ["", "Cell (in-plane × height)", "18.27 × 11.51 × 30.26", "Å", "-"],
   ["", "Adsorbate–image separation", "> 15", "Å", "-"],
   ["", "Constrained atoms", "144 (*z* ≤ 17.40 Å)", "-", "-"],
-  ["", "Magnetic configuration", "Antiferromagnetic (net 0)", "-", "Ref. S5"],
-  ["", "Ni magnetic moment", "1.02", "μ~B~", "Calculated"],
+  ["", "Magnetic configuration", "Antiferromagnetic (net 0); Ni 1.02 μ~B~", "-", "Ref. S5"],
   ["", "Dipole correction", "Along surface normal", "-", "-"],
-  ["Adsorbate", "SDCP repeat unit (neutral)", "C~11~H~16~O~6~S~2~", "-", "-"],
-  ["", "SDCP repeat unit (self-doped)", "C~11~H~15~O~6~S~2~", "-", "-"],
+  ["Adsorbate", "SDCP repeat unit (neutral / self-doped)",
+   "C~11~H~16~O~6~S~2~ / C~11~H~15~O~6~S~2~", "-", "-"],
   ["", "PTFE segment", "C~10~F~22~", "-", "-"],
   ["", "Gas-phase reference box padding", "20 and 24", "Å", "-"],
-  ["Configuration search", "Surface sites / orientations", "7 / 48", "-", "-"],
-  ["", "Interatomic potential", "UMA-s-1p1", "-", "Ref. S6"],
-  ["", "Force convergence", "0.05", "eV Å^−1^", "-"],
-  ["Adsorption energy", "Definition",
-   "Equation (3)^a^", "eV", "-"],
+  ["Configuration search", "Potential; sites / orientations; force",
+   "UMA-s-1p1; 7 / 48; 0.05 eV Å^−1^", "-", "Ref. S6"],
+  ["Adsorption energy", "Definition", "Equation (3)", "eV", "-"],
 ];
 
 const REFS = [
@@ -203,11 +197,6 @@ const doc = new Document({
       }),
 
       p("", { after: 120 }),
-      p("^a^ Adsorption energies are single-point DFT energies evaluated on the pre-screened "
-        + "adsorption geometries; the adsorbed complexes were not relaxed at the DFT level. "
-        + "The *k*-point mesh was verified directly for the C~10~F~22~ and self-doped SDCP "
-        + "systems; the remaining systems use the same mesh.", { size: 16, after: 220 }),
-
       p("Figure captions (DFT panels)", { bold: true, size: 18, after: 80 }),
       ...CAPTIONS.flatMap(([k, v]) => [p(k + ". " + v, { size: 17, after: 60 })]),
       p("", { after: 140 }),

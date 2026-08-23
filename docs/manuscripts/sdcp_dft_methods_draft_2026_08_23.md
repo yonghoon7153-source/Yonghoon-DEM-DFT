@@ -81,9 +81,9 @@ PAIR_MIGRATED / PAIR_COLLAPSED 검사. 회수 후 `analyze_results.py` 가 자�
 
 | # | 원문 | 원고에서 |
 |---|---|---|
-| 1 | `claim_scope`: "E_ads 는 UMA 기하 위 단일점이라 완전 이완 흡착에너지가 아니다" | Table S1 **각주 ᵃ** 로 명시 (본문은 깔끔하게 유지) |
+| 1 | `claim_scope`: "E_ads 는 UMA 기하 위 단일점이라 완전 이완 흡착에너지가 아니다" | ⛔ **SI 에 안 넣기로 결정**(2026-08-23) — 내부 보관 + 리비전 회신 문구: `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md` |
 | 2 | `branch_policy`: "pm1 same-seed conditional — branch minimum 미주장" | *"at the magnetic ground state"* 금지 → *"the same antiferromagnetic configuration"* 로 |
-| 3 | `k_label_rule`: 직접 dense 한 건 `ptfe_c10`·`sdcp_doped` 둘뿐, 나머지는 `K_TRANSFER_SCREENED` | *"k-point converged"* 금지 → mesh 병기 + 각주 한 줄 |
+| 3 | `k_label_rule`: 직접 dense 한 건 `ptfe_c10`·`sdcp_doped` 둘뿐, 나머지는 `K_TRANSFER_SCREENED` | *"k-point converged"* 금지 → **mesh 병기만**(각주도 뺐다 — 위 카드 참조) |
 
 ---
 
