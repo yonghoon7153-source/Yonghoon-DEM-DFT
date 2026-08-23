@@ -22,7 +22,7 @@
 | **8** | Li migration barrier figure (BVSE) | ✅ 완료 | §11 참조 |
 | **9** | output log 에 site 별 energy screening 이 남아 있나 | ✅ **§12** | **§12** |
 | **10** | ELF 사진 더 선명하게 | ✅ 완료 · **2026-08-20 repo 회수** | §7 |
-| **11** | **intercage / intracage** · AIMD 논문도 외삽인지 | 🟡 진행 — 오늘 대폭 갱신 | **§13** |
+| **11** | **intercage / intracage** · AIMD 논문도 외삽인지 | 🔴 **NEB 경로 폐기 (2026-08-23)** — 아래 참조 | **§13** · §14 |
 
 > (7번은 1저자 목록에 없다 — 이 문서 §7 의 isosurface 답변은 별도 질문이었다.)
 
