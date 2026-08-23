@@ -170,30 +170,29 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value ^a^'],
    ['LPSCl','Particle radius','0.5','μm','Experimental value'],
    ['','Young’s modulus (dense)','24','GPa','Ref. [34]'],
-   ['','Young’s modulus (DEM contact)','1.35','GPa','Calibrated ^b^'],
-   ['','Young’s modulus (MPM continuum)','1.53','GPa','Calibrated ^b^'],
-   ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated ^b^'],
-   ['','Yield strength','0.30','GPa','Calibrated ^b^'],
+   ['','Young’s modulus (DEM contact)','1.35','GPa','Calibrated'],
+   ['','Young’s modulus (MPM continuum)','1.53','GPa','Calibrated'],
+   ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
+   ['','Yield strength','0.30','GPa','Calibrated'],
    ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. [37]'],
    ['VGCF','Fibre diameter','0.15','μm','Experimental value'],
    ['','Young’s modulus','10','GPa','Assumed'],
-   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data ^c^'],
-   ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value ^c^'],
-   ['PTFE','Young’s modulus','0.30','GPa','Assumed ^d^'],
+   ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data ^b^'],
+   ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value ^b^'],
+   ['PTFE','Young’s modulus','0.30','GPa','Assumed ^c^'],
    ['','Electronic / ionic conductivity','0','S cm^−1^','Assumed (insulating)'],
    ['SDCP','Particle diameter','0.30','μm','This work (Figure S5)'],
-   ['','Young’s modulus','23.6','GPa','This work (Figure 2g) ^d^'],
+   ['','Young’s modulus','23.6','GPa','This work (Figure 2g) ^c^'],
    ['','Electronic conductivity','250','S cm^−1^','Assumed'],
-   ['','Ionic conductivity','1.0 × 10^−3^','S cm^−1^','Assumed ^e^'],
+   ['','Ionic conductivity','1.0 × 10^−3^ (provisional)','S cm^−1^','Not yet calibrated ^d^'],
   ];
   body.push(mkTable(w, ['Category','Parameter','Value','Unit','Source'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
-body.push(Note('^a^ Effective conductivity of the active-material network, calibrated against the measured electrode response; not the intrinsic conductivity of NCM811.'));
-body.push(Note('^b^ Effective mechanical inputs calibrated to reproduce the measured porosity of cold-pressed LPSCl at 300 MPa; not dense-material properties.'));
-body.push(Note('^c^ The voxel representation fuses touching fibres and therefore carries no explicit fibre–fibre contact resistance, so the contact-inclusive compressed-powder value (0.012 Ω cm ≈ 83 S cm^−1^) is used rather than the intrinsic single-fibre value (10^−4^ Ω cm ≈ 10^4^ S cm^−1^). At a 0.15 μm voxel a 0.15 μm fibre is resolved as a one-voxel-wide tube, and the assigned conductivity is rescaled to 78.5 S cm^−1^ so that the axial conductance is preserved.'));
-body.push(Note('^d^ Values used in the compaction simulations, corresponding to an earlier analysis of the AFM modulus maps.'));
-body.push(Note('^e^ SDCP is not an ionic insulator: the LPSCl–SDCP pellet retains 80 % of the ionic conductivity of pristine LPSCl, whereas the LPSCl–PTFE pellet retains 27 % (Figure 2h). A representative value was assigned pending direct measurement.'));
+body.push(Note('^a^ Effective network value calibrated against the measured electrode response, not the intrinsic conductivity of NCM811.'));
+body.push(Note('^b^ The voxel representation fuses touching fibres and therefore carries no explicit fibre–fibre contact resistance, so the contact-inclusive compressed-powder value is used rather than the intrinsic single-fibre value (≈ 10^4^ S cm^−1^). At a 0.15 μm voxel the fibre is one voxel wide, and the conductivity is rescaled by the circle-in-square area ratio (π/4) so that the axial conductance is preserved.'));
+body.push(Note('^c^ Values used in the compaction simulations, corresponding to an earlier analysis of the AFM modulus maps.'));
+body.push(Note('^d^ Provisional. Figure 2h is consistent with SDCP acting as an inert filler on the ionic network, and this value has not yet been calibrated against that measurement.'));
 
 body.push(Cap('**Table S3.** Structural and transport parameters obtained from the simulations.'));
 {
@@ -207,15 +206,15 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
    ['','Median conductive-additive contacts per NCM811 particle','433','517','–'],
    ['','Electronic connectivity','100','100','%'],
    ['Transport','Effective electronic conductivity','7.27 × 10^−2^','8.16 × 10^−2^','S cm^−1^'],
-   ['','Effective ionic conductivity','5.69 × 10^−4^','5.64 × 10^−4^','S cm^−1^'],
+   ['','Effective ionic conductivity ^b^','5.69 × 10^−4^','5.64 × 10^−4^','S cm^−1^'],
    ['','DBE / SBE electronic conductivity ratio ^a^','SPAN:1.1232 ± 0.0011','','–'],
-   ['','DBE / SBE ionic conductivity ratio ^a,b^','SPAN:0.99272 ± 0.00003','','–'],
+   ['','DBE / SBE ionic conductivity ratio ^b^','SPAN:provisional — see note','','–'],
   ];
   body.push(mkTable(w, ['Category','Parameter','SBE','DBE','Unit'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
 body.push(Note('^a^ Mean over eight grid-origin arms; the uncertainty is the paired standard error. All eight solves converged.'));
-body.push(Note('^b^ PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking. The ionic difference between the two electrodes therefore reflects only the electrolyte volume displaced by SDCP and not the difference in ion blocking between the two binders reported in Figure 2h. This value is provisional.'));
+body.push(Note('^b^ PTFE is not resolved on the conduction grid, so the ionic network contains no PTFE blocking, and the ionic conductivity of SDCP has not been calibrated against Figure 2h. The ionic comparison therefore reflects only the electrolyte volume displaced by SDCP and is not quoted as a result.'));
 
 // ---------------- C. References -----------------------------------------
 body.push(H('C.  References to be merged into the main list'));
@@ -232,94 +231,99 @@ body.push(P('Numbering continues from [32] in Manuscript v5.1; the arbitrary [10
 
 
 // ---------------- D. Notes to co-authors --------------------------------
-body.push(H('D.  Notes to co-authors  (delete before submission)'));
+body.push(H('D.  공저자용 메모  (투고 전 삭제)'));
 const NOTE = (n, str) => body.push(new Paragraph({
   children: [ b(n + '  ') , ...runs(str) ],
   spacing: { after: 120, line: 290 }, alignment: AlignmentType.JUSTIFIED,
   indent: { left: 400, hanging: 400 } }));
 
-NOTE('D1.', '**Removed — "a resolution validated against measured ionic conductivities."** '
-+ 'The 0.4 μm grid used in v5.1 is not converged: re-solving the same electrodes at finer voxels '
-+ 'changes the electronic conductivity ratio and reverses the sign of the ionic one. The '
-+ 'agreement with a measured ionic conductivity held at one grid only and cannot be described '
-+ 'as a validation. The sentence is deleted and the production grid (0.15 μm) is simply stated.');
+NOTE('D1.', '**삭제 — "a resolution validated against measured ionic conductivities."** v5.1 의 '
++ '0.4 μm 격자는 수렴하지 않았다.  같은 전극을 더 고운 격자에서 다시 풀면 전자 전도도 비가 '
++ '계속 움직이고 이온 비는 부호가 뒤집힌다.  측정 이온전도도와의 일치는 **그 한 격자에서만** '
++ '성립했으므로 검증이라고 부를 수 없다.  문장을 지우고 생산 격자(0.15 μm)만 적었다.');
 
-NOTE('D2.', '**All transport numbers replaced.** The v5.1 values (electronic 1.98 → 3.00 S cm^−1^, '
-+ 'ionic 2.03 → 2.15 × 10^−4^ S cm^−1^) come from the 0.4 μm grid with SDCP drawn as one voxel '
-+ 'per particle, which over-represents its volume roughly four-fold. The values above are from '
-+ 'the production convention (0.15 μm voxel, SDCP drawn as a true-diameter sphere, eight '
-+ 'grid-origin arms). The electronic gain is +12.3 % and the ionic change is −0.7 %; both figures '
-+ 'may be refined and should be treated as provisional.');
+NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 → 3.00 S cm^−1^, 이온 '
++ '2.03 → 2.15 × 10^−4^ S cm^−1^)은 0.4 μm 격자에서 SDCP 를 입자당 복셀 하나로 찍은 것이고, '
++ '그러면 SDCP 부피가 참값의 약 네 배가 된다.  위 표의 값은 생산 규약(0.15 μm 복셀 · SDCP 를 '
++ '참 직경 구로 · 격자 원점 8팔)에서 나온 것이다.  전자 이득은 +12.3 % 이며, 이 값도 아직 '
++ '격자 수렴이 확인되지 않았으므로 잠정으로 다룬다.');
 
-NOTE('D3.', '**Table S2 — mechanical inputs vs. the AFM figures (needs a decision).** The '
-+ 'microstructures were compacted with PTFE 0.30 GPa and SDCP 23.6 GPa, but Figure 2g and '
-+ 'Figures S6–S7 now report 1.8 GPa and 9.0 GPa. A methods table must list what was actually run, '
-+ 'so the older values appear above with footnote d. The clean fix is to re-compact one electrode '
-+ 'pair at 1.8 / 9.0 GPa and confirm the conductivity ratio moves by less than the ±0.7 % spread '
-+ 'of the eight arms; the table can then quote the AFM values throughout.');
+NOTE('D3.', '**Table S2 — 기계 물성이 AFM 그림과 어긋난다 (결정 필요).** 미세구조는 PTFE '
++ '0.30 GPa · SDCP 23.6 GPa 로 압밀했는데 Figure 2g 와 Figure S6–S7 은 1.8 GPa 와 9.0 GPa 를 '
++ '보고한다.  방법론 표는 **실제로 돌린 값**을 적어야 하므로 옛 값에 각주 c 를 달아 두었다.  '
++ '깨끗한 해법은 전극 한 쌍을 1.8 / 9.0 GPa 로 다시 압밀해 전도도 비가 8팔 산포(±0.7 %) 안에서 '
++ '움직이는지 확인하는 것이고, 그러면 표에 AFM 값을 그대로 쓸 수 있다.');
 
-NOTE('D4.', '**Table S3 — structural descriptors carried over.** Thickness, porosity, areal '
-+ 'capacity, coverages, contact counts and connectivity are unchanged from v5.1 and were '
-+ 'extracted from the earlier 0.4 μm rasterization. The coverage and contact-count rows in '
-+ 'particular depend on voxel size and should be re-extracted at 0.15 μm before submission. '
-+ 'Porosity should also be reported on a single convention (sphere-volume basis) across the paper.');
+NOTE('D4.', '**Table S3 — 구조 항목은 v5.1 에서 그대로 가져왔다.** 두께 · porosity · 면적용량 · '
++ 'coverage · 접촉수 · 연결률은 옛 0.4 μm 래스터에서 뽑은 값이다.  특히 coverage 와 접촉수는 '
++ '복셀 크기에 직접 의존하므로 투고 전 0.15 μm 에서 다시 뽑아야 한다.  porosity 도 논문 전체에서 '
++ '한 가지 규약(구 부피 기준)으로 통일해 보고할 것.');
 
-NOTE('D5.', '**Terminology unified to "Young’s modulus (*E*)".** v5.1 mixes "elastic modulus" '
-+ '(AFM, Table S2, Figure S6–S7 captions) with "Young’s modulus" (DEM text). The AFM section and '
-+ 'the Figure S6/S7 captions should be changed to match, or the DEM section changed back — but '
-+ 'one term only.');
+NOTE('D5.', '**용어를 "Young’s modulus (*E*)" 로 통일했다.** v5.1 은 "elastic modulus"(AFM · '
++ 'Table S2 · Figure S6–S7 캡션)와 "Young’s modulus"(DEM 본문)를 섞어 쓴다.  AFM 절과 '
++ 'Figure S6/S7 캡션을 맞추거나 DEM 쪽을 되돌리거나 — **한 가지만** 쓰면 된다.');
 
-NOTE('D6.', '**Bulk modulus comparison corrected.** v5.1 placed *K* = 25.5 GPa next to the '
-+ '"dense-material 24 GPa", but 24 GPa is a Young’s modulus, not a bulk modulus. The revised text '
-+ 'states *K* = 25.5 GPa without that comparison. If an anchor is wanted, use the calculated bulk '
-+ 'modulus of LPSCl (26.2 GPa, this work) rather than 24 GPa.');
+NOTE('D6.', '**체적탄성률 비교 삭제.** v5.1 은 *K* = 25.5 GPa 를 "dense-material 24 GPa" 옆에 '
++ '놓았는데, 24 GPa 는 체적탄성률이 아니라 **영률**이다.  수정본은 *K* = 25.5 GPa 만 적는다.  '
++ '앵커가 필요하면 24 GPa 가 아니라 계산된 LPSCl 체적탄성률(26.2 GPa, this work)을 쓸 것.');
 
-NOTE('D7.', '**Shear-softening factor removed.** v5.1 said the shear modulus "falls 18-fold"; the '
-+ 'factor is 15.8 when referred to the calculated shear modulus of dense LPSCl. The revised text '
-+ 'quotes the value (0.51 GPa) instead of a fold-change. The 18-fold figure remains correct for '
-+ 'the DEM contact Young’s modulus (24 → 1.35 GPa).');
+NOTE('D7.', '**전단 연화 배수 삭제.** v5.1 은 전단탄성률이 "18-fold" 떨어진다고 적었으나, 계산된 '
++ '치밀 LPSCl 전단탄성률 기준으로는 15.8 배다.  수정본은 배수 대신 값(0.51 GPa)을 적는다.  '
++ '18 배는 **DEM 접촉 영률**(24 → 1.35 GPa)에 대해서는 그대로 맞다.');
 
-NOTE('D8.', '**Cross-model agreement claim removed.** v5.1 stated that the two models "agree on '
-+ 'composite porosity and thickness to within one percentage point". That gap is a bookkeeping '
-+ 'difference between the two porosity conventions, not independent agreement, so it is not '
-+ 'evidence of validity. The statement that the models were calibrated independently is kept.');
+NOTE('D8.', '**두 모델이 "1 %p 안에서 일치" 주장 삭제.** 그 차이는 두 porosity 규약 사이의 '
++ '부기 차이이지 독립적인 일치가 아니므로 타당성의 근거가 되지 않는다.  두 모델을 서로가 아니라 '
++ '같은 실험값에 각각 보정했다는 문장은 남겼다.');
 
-NOTE('D9.', '**σ_SDCP_ sweep and the Joule-dissipation equation removed from Methods.** The '
-+ 'five-point sweep and the dissipation-share argument are results, not methods, and their numbers '
-+ 'come from the superseded grid. With that paragraph gone, nothing in the paper uses the Joule '
-+ 'dissipation — Figure 4b reports conductivities only — so the second equation and its symbol '
-+ 'definitions were dropped as well, and the remaining equation is renumbered. The adopted SDCP '
-+ 'conductivity is now given only in Table S2. If the sweep is wanted in the SI it must be re-run '
-+ 'at the production convention, and the equation restored with it.');
+NOTE('D9.', '**σ_SDCP_ 민감도 스윕과 Joule 식을 Methods 에서 뺐다.** 5점 스윕과 소산-분담 논증은 '
++ '방법이 아니라 **결과**이고, 그 수치는 폐기된 격자의 것이다.  그 문단이 빠지면서 Joule 소산을 '
++ '쓰는 곳이 논문에 하나도 남지 않으므로(Figure 4b 는 전도도만 보여준다) 두 번째 식과 기호 정의도 '
++ '함께 삭제하고 남은 식을 (1) 로 번호를 매겼다.  채택한 SDCP 전도도는 이제 Table S2 에만 있다.');
 
-NOTE('D10.', '**Mechanism sentence needs rewriting wherever it appears in the Results.** The v5.1 '
-+ 'reading — SDCP acting as a high-conductivity bridge that relieves series bottlenecks — is not '
-+ 'supported by the current simulations: SDCP carries about 1 % of the electronic current, and '
-+ 'suppressing its conductivity advantage removes only 6 % of the gain. Suggested replacement: '
-+ '*"SDCP raises the electronic conductivity mainly by converting electronically insulating volume '
-+ '— electrolyte and pore — into conducting volume, which reroutes current around bottlenecks in '
-+ 'the existing carbon network, rather than by carrying a proportional share of the current itself."*');
+NOTE('D10.', '**기전 문장은 Results 쪽에서 다시 써야 한다.** v5.1 의 서술 — SDCP 가 고전도 '
++ '브리지로서 직렬 병목을 해소한다 — 은 지금 시뮬레이션이 지지하지 않는다.  SDCP 가 나르는 전자 '
++ '전류는 약 1 % 이고, SDCP 의 전도도 우위를 없애도 이득은 6 % 만 줄어든다.  교체안: '
++ '*"SDCP raises the electronic conductivity mainly by converting electronically insulating volume — '
++ 'electrolyte and pore — into conducting volume, which reroutes current around bottlenecks in the '
++ 'existing carbon network, rather than by carrying a proportional share of the current itself."*');
 
-NOTE('D12.', '**The ionic result is provisional — do not present it as a finding yet.** The value '
-+ 'itself is reproducible (eight arms, all converged, ±0.003 % paired), but two things are open. '
-+ '(i) It has never been checked against voxel size. The electronic ratio was tested at three grids '
-+ 'and kept moving, and the ionic ratio reversed sign across the coarse grids used earlier; a '
-+ 'refinement test cannot simply be run here, because the electrolyte fill degrades below 0.15 μm '
-+ '(about 5 % of electrolyte cells unfilled at 0.15 μm, 18 % at 0.125 μm, 42 % at 0.10 μm), which '
-+ 'makes the ionic solve unusable on finer grids. (ii) More importantly, PTFE is not stamped onto '
-+ 'the conduction grid at all in the production setting, so the model cannot express the effect '
-+ 'Figure 2h reports — that PTFE suppresses the ionic conductivity of LPSCl to 27 % while SDCP '
-+ 'suppresses it only to 80 %. With PTFE invisible, the SBE and DBE differ ionically only in that '
-+ 'the DBE has SDCP occupying volume that would otherwise be electrolyte or pore, which is a small '
-+ 'penalty by construction. The direct test is to repeat the eight-arm run with PTFE stamped as a '
-+ 'blocking phase; on the electronic side that change lowered the SBE by 25 % and the DBE by 13 % '
-+ '(the SBE carries twice the PTFE) and raised the ratio from 1.126 to 1.309, so the same asymmetry '
-+ 'is expected to move the ionic ratio upward. Until that run exists, either omit the ionic row or '
-+ 'state it as a volume-occupancy effect only.');
+NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
++ 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
++ 'Table S2 의 Source 열에 출처가 있다.  임의로 붙였던 [100]/[102]/[107]/[109]/[110] 은 없앴다.');
 
-NOTE('D11.', '**References.** Methods now carries five citations only: LIGGGHTS, MPM, the dense '
-+ 'LPSCl modulus, the NCM modulus and the electrolyte grain conductivity. Every quantitative '
-+ 'input that is not calibrated or measured in this work has a source in Table S2.');
+NOTE('D12.', '**이온 결과는 아직 결과로 내세우지 않는다.** 값 자체는 재현된다(8팔 전부 수렴, '
++ '쌍대응 ±0.003 %).  그러나 두 가지가 열려 있다.  (i) 복셀 크기에 대해 한 번도 확인한 적이 없고, '
++ '**확인할 수도 없다** — 0.15 μm 아래에서 전해질 충전이 무너진다(미충전 셀이 0.15 μm 에서 약 5 %, '
++ '0.125 μm 에서 18 %, 0.10 μm 에서 42 %) → 이온 솔브가 그 격자에서 못 쓰게 된다.  (ii) 더 중요한 것 — '
++ '생산 설정에서 PTFE 가 전도 격자에 **아예 스탬프되지 않는다**.  그래서 Figure 2h 가 보고하는 효과, '
++ '즉 PTFE 는 LPSCl 이온전도도를 27 % 로 죽이고 SDCP 는 80 % 로만 죽인다는 것을 모델이 표현할 수 '
++ '없다.  PTFE 가 보이지 않으면 SBE 와 DBE 의 이온적 차이는 "DBE 에만 SDCP 가 있어 전해질·기공 부피를 '
++ '점유한다" 하나로 줄어들고, 그것은 구성상 작은 손해일 수밖에 없다.  ⇒ 표에서 이온 비를 숫자로 '
++ '확정하지 않았다.');
+
+NOTE('D13.', '**Figure 2h 로 이온 상 전도도를 보정할 수 있다 — 다음 우선순위 (신규).** Figure 2h 는 '
++ '9:1 wt 펠릿을 재는데, 이것이 곧 **이 논문 자신의 상-수준 보정 데이터**다.  리포 밀도 규약'
++ '(LPSCl 2.00 · PTFE 2.20 · SDCP 1.30 g cm^−3^)으로 부피분율을 내고 불활성 충전재 희석'
++ '(Bruggeman, (1 − *φ*)^1.5^)과 비교하면:');
+body.push(mkTable([1900, 1500, 2100, 1600, 1900],
+  ['Binder','vol %','Dilution-only prediction','Measured','Measured / prediction'],
+  [ ['PTFE (9:1)','9.17','3.09 mS cm^−1^','0.97 mS cm^−1^','**0.31**'],
+    ['SDCP (9:1)','14.60','2.82 mS cm^−1^','2.86 mS cm^−1^','**1.02**'] ], 1));
+body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
+NOTE('', '⇒ **SDCP 는 이온망에서 사실상 불활성 충전재로 거동한다** — 부피 희석만으로 실측이 1.5 % '
++ '안에서 설명된다 (Maxwell–Garnett 로 교차확인: 절연 가정 2.84 vs 실측 2.86; σ_i_ = 1.0 mS cm^−1^ '
++ '가정은 3.10 으로 벗어난다).  ρ_SDCP_ 가 proxy 값(1.3)이라 1.1–1.7 g cm^−3^ 로 흔들어 봐도 비는 '
++ '1.06–0.96 로 결론이 바뀌지 않는다.  반대로 **PTFE 는 희석으로 설명되는 것의 3.2 배를 더 깎는다** — '
++ '부피 점유가 아니라 표면 피복/피브릴 웹의 차단 효과다.');
+NOTE('', '⇒ 지금 모델은 이 두 가지를 **모두** 놓치고 있다: σ_ion_(SDCP) 를 1.0 mS cm^−1^ 로 두어 '
++ '실측보다 후하게 잡았고, PTFE 는 아예 안 그린다.  두 오차가 **같은 방향으로** 작용해 이온 비를 '
++ 'DBE 에 불리하게 민다.  ⚠ 다만 부피만 보면 DBE 쪽 바인더가 오히려 많다 (2.03 vs 1.51 vol% of '
++ 'solid — SDCP 가 PTFE 보다 가벼워서다).  즉 DBE 의 이온 이득은 부피가 아니라 **PTFE 차단의 비대칭'
++ '**(SBE 1 wt% vs DBE 0.5 wt%)에서만 나올 수 있고, 그것이 지금 모델에 없는 항이다.');
+NOTE('', '⇒ **제안하는 보정 (frame[4] — 모델끼리가 아니라 실험에 맞춘다)**: 9:1 LPSCl+바인더 펠릿을 '
++ '같은 복셀 파이프라인으로 만들고, ⓐ σ_ion_(SDCP) 와 ⓑ PTFE 의 차단 표현(스탬프 + 표면층)을 '
++ 'Figure 2h 의 0.97 / 2.86 mS cm^−1^ 를 재현하도록 맞춘다.  그렇게 얻은 상 전도도를 전극에 넣어 '
++ '8팔을 다시 돌리면 이온 축이 **이 논문 자신의 측정에 앵커된** 결과가 된다.  작은 RVE 라 비용도 낮다.');
 
 fs.writeFileSync('/dev/null','');
 const doc = new Document({ sections: [ { properties: { page: { margin:
