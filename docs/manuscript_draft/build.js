@@ -179,20 +179,19 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Young’s modulus','10','GPa','Assumed'],
    ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Supplier data ^b^'],
    ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value ^b^'],
-   ['PTFE','Young’s modulus','—','GPa','This work (Figure S6, S7) ^c^'],
+   ['PTFE','Young’s modulus','1.8','GPa','This work (Figure S6, S7)'],
    ['','Electronic / ionic conductivity','0','S cm^−1^','Assumed (insulating)'],
    ['SDCP','Particle diameter','0.30','μm','This work (Figure S5)'],
-   ['','Young’s modulus','—','GPa','This work (Figure 2g) ^c^'],
+   ['','Young’s modulus','9.0','GPa','This work (Figure 2g)'],
    ['','Electronic conductivity','250','S cm^−1^','Assumed'],
-   ['','Ionic conductivity','—','S cm^−1^','Not yet calibrated ^d^'],
+   ['','Ionic conductivity','—','S cm^−1^','Not yet calibrated ^c^'],
   ];
   body.push(mkTable(w, ['Category','Parameter','Value','Unit','Source'], rows, 2));
 }
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
 body.push(Note('^a^ Effective network value calibrated against the measured electrode response, not the intrinsic conductivity of NCM811.'));
 body.push(Note('^b^ The voxel representation fuses touching fibres and therefore carries no explicit fibre–fibre contact resistance, so the contact-inclusive compressed-powder value is used rather than the intrinsic single-fibre value (≈ 10^4^ S cm^−1^). At a 0.15 μm voxel the fibre is one voxel wide, and the conductivity is rescaled by the circle-in-square area ratio (π/4) so that the axial conductance is preserved.'));
-body.push(Note('^c^ Left blank pending re-compaction at the AFM moduli reported in Figure 2g and Figures S6–S7; the microstructures analysed here were built before those values were adopted.'));
-body.push(Note('^d^ Provisional. Figure 2h is consistent with SDCP acting as an inert filler on the ionic network, and this value has not yet been calibrated against that measurement.'));
+body.push(Note('^c^ Provisional. Figure 2h is consistent with SDCP acting as an inert filler on the ionic network, and this value has not yet been calibrated against that measurement.'));
 
 body.push(Cap('**Table S3.** Structural and transport parameters obtained from the simulations.'));
 {
@@ -249,11 +248,10 @@ NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 
 + '참 직경 구로 · 격자 원점 8팔)에서 나온 것이다.  전자 이득은 +12.3 % 이며, 이 값도 아직 '
 + '격자 수렴이 확인되지 않았으므로 잠정으로 다룬다.');
 
-NOTE('D3.', '**Table S2 — 기계 물성은 비워 두었다 (각주 c).** 지금 미세구조는 PTFE 0.30 GPa · '
-+ 'SDCP 23.6 GPa 로 압밀한 것인데, Figure 2g 와 Figure S6–S7 이 보고하는 값은 1.8 GPa 와 9.0 GPa 다.  '
-+ '방법론 표에 옛 값을 적으면 그림과 어긋나고, AFM 값을 적으면 실제로 돌린 것과 달라진다.  ⇒ **AFM 값으로 '
-+ '다시 압밀한 뒤 채운다.**  ⚠ 그때 Table S3 의 두께 · porosity · 면적용량과 σ_e 도 같이 움직인다 — '
-+ '침대 기하가 바뀌기 때문이다.  전도도 비의 이동이 8팔 산포(±0.7 %) 안이면 무시 가능으로 닫히고, '
+NOTE('D3.', '**Table S2 의 기계 물성은 AFM 값(PTFE 1.8 · SDCP 9.0 GPa)으로 적었다 — 투고 전 그 값으로 '
++ '재압밀할 것.** 지금 분석한 미세구조는 PTFE 0.30 · SDCP 23.6 GPa 로 압밀한 세대이므로, 그대로 두면 '
++ '표와 실제로 돌린 것이 어긋난다.  ⚠ 재압밀하면 Table S3 의 두께 · porosity · 면적용량과 σ_e 도 같이 '
++ '움직인다 (침대 기하가 바뀐다).  전도도 비의 이동이 8팔 산포(±0.7 %) 안이면 무시 가능으로 닫히고, '
 + '벗어나면 그 값들도 새 침대 것으로 갱신한다.');
 
 NOTE('D4.', '**Table S3 — 구조 항목은 v5.1 에서 그대로 가져왔다.** 두께 · porosity · 면적용량 · '
