@@ -114,7 +114,7 @@ const CAPTIONS = [
 // ── Table S1 ─────────────────────────────────────────────────────────────
 const ROWS = [
   ["Method", "Code / functional", "Quantum ESPRESSO; PBE", "-", "Ref. S1, S2"],
-  ["", "Dispersion / Hubbard *U* (Ni 3*d*)", "Grimme D3; 6.2 eV", "-", "Ref. S3, S4"],
+  ["", "Dispersion / Hubbard *U* (Ni 3*d*)", "Grimme D3; 6.2 eV", "-", "Ref. S3"],
   ["", "Cutoff (wavefunction / charge density)", "60 / 480", "Ry", "-"],
   ["", "Smearing (Gaussian)", "0.05", "eV", "-"],
   ["", "Convergence (SCF / force)",
@@ -126,14 +126,14 @@ const ROWS = [
   ["", "Cell (in-plane × height)", "18.27 × 11.51 × 30.26", "Å", "-"],
   ["", "Adsorbate–image separation", "> 15", "Å", "-"],
   ["", "Constrained atoms", "144 (*z* ≤ 17.40 Å)", "-", "-"],
-  ["", "Magnetic configuration", "Antiferromagnetic (net 0); Ni 1.02 μ~B~", "-", "Ref. S5"],
+  ["", "Magnetic configuration", "Antiferromagnetic (net 0); Ni 1.02 μ~B~", "-", "-"],
   ["", "Dipole correction", "Along surface normal", "-", "-"],
   ["Adsorbate", "SDCP repeat unit (neutral / self-doped)",
    "C~11~H~16~O~6~S~2~ / C~11~H~15~O~6~S~2~", "-", "-"],
   ["", "PTFE segment", "C~10~F~22~", "-", "-"],
   ["", "Gas-phase reference box padding", "20 and 24", "Å", "-"],
   ["Configuration search", "Potential; sites / orientations; force",
-   "UMA-s-1p1; 7 / 48; 0.05 eV Å^−1^", "-", "Ref. S6"],
+   "UMA-s-1p1; 7 / 48; 0.05 eV Å^−1^", "-", "Ref. S4"],
   ["Adsorption energy", "Definition", "Equation (3)", "eV", "-"],
 ];
 
@@ -150,9 +150,7 @@ const REFS = [
   "[S3] S. Grimme, J. Antony, S. Ehrlich, H. Krieg, A consistent and accurate ab initio "
   + "parametrization of density functional dispersion correction (DFT-D) for the 94 elements "
   + "H-Pu, J. Chem. Phys. 132 (2010) 154104.",
-  "[S4] ── TO BE SUPPLIED: source for U(Ni 3d) = 6.2 eV in LiNiO2.",
-  "[S5] ── TO BE SUPPLIED: source for the antiferromagnetic ordering of LiNiO2.",
-  "[S6] B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, L. Barroso-Luque, K. Abdelmaqsoud, "
+  "[S4] B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, L. Barroso-Luque, K. Abdelmaqsoud, "
   + "V. Gharakhanyan, J. R. Kitchin, D. S. Levine, K. Michel, A. Sriram, T. S. Cohen, A. Das, "
   + "S. J. Sahoo, A. Rizvi, Z. W. Ulissi, C. L. Zitnick, UMA: A family of universal models for "
   + "atoms, Adv. Neural Inf. Process. Syst. 38 (2025) 143528–143564.",

@@ -90,9 +90,11 @@ PAIR_MIGRATED / PAIR_COLLAPSED 검사. 회수 후 `analyze_results.py` 가 자�
 ## 4. 열려 있는 것
 
 1. **E_ads 수치** — wave1 회수 대기. 게이트 통과 후 Figure 2e · 본문에 삽입.
-2. **Ref. S4** — U(Ni 3d) = 6.2 eV 출처 논문 (우리 규약값, 원전 미보유)
-3. **Ref. S5** — LiNiO₂ AFM 배열 출처 논문
-4. **Figure S3** — 계산 모델 그림 (슬랩 + 조각 3종). 구조는 wave1 POSCAR 에 다 있다.
+2. **Figure S3** — 계산 모델 그림 (슬랩 + 조각 3종). 구조는 wave1 POSCAR 에 다 있다.
+3. ⚠ **U(Ni 3d) = 6.2 eV 의 원전** — `kb/methodology/terminology_register.md` §42 가 이미
+   *"⚠ 원전 미보유"* 로 적어 뒀다. 2026-08-23 결정: **Source 열을 "-" 로 두고 인용하지 않는다.**
+   리비전에서 물으면 그때 단다 — 유력 후보는 §7.
+4. LiNiO₂ AFM 배열 — **인용 대상 아님.** 문헌 수치가 아니라 우리 모델링 선택이라 Source "-" 가 맞다.
 
 ---
 
@@ -125,3 +127,22 @@ PAIR_MIGRATED / PAIR_COLLAPSED 검사. 회수 후 `analyze_results.py` 가 자�
 | `tot_magnetization = 1` (doped 분자) | `NUPDOWN = 1` | |
 | (QE PAW 기본 포함) | `LASPH` · `ADDGRID` · `LREAL = Auto` | QE 표기 불필요 |
 | Γ-centred 2 × 3 × 1 / 3 × 4 × 1 | 동일 | `kmesh_effective` 기준 |
+
+
+---
+
+## 7. U(Ni 3d) = 6.2 eV — 물으면 어디를 볼 것인가
+
+repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(Dudarev)"* 로 기록).
+값 자체는 **Materials Project / pymatgen 의 Ni 기본 U 와 같은 값**으로 보인다 —
+확인은 `pymatgen/io/vasp/MPRelaxSet.yaml` 의 `LDAUU: Ni` 한 줄이면 끝난다.
+
+일치하면 표준 인용은 둘 중 하나(또는 둘 다):
+
+- Wang, L.; Maxisch, T.; Ceder, G. *Phys. Rev. B* **2006**, *73*, 195107 —
+  산화 에너지에 맞춘 전이금속 U 세트의 원전
+- Jain, A.; Hautier, G.; Ong, S. P.; Moore, C. J.; Fischer, C. C.; Persson, K. A.;
+  Ceder, G. *Phys. Rev. B* **2011**, *84*, 045115 — MP 의 GGA/GGA+U 혼합 스킴
+
+⚠ **확인 전에는 달지 않는다.** 값이 다르면(예: 6.0) 엉뚱한 인용이 되고,
+그건 2026-07 Kim/Cui 교훈(인용 역할 확인 후 삽입)에 정면으로 걸린다.

@@ -94,6 +94,16 @@ INCAR 주석에도 *"기하는 DFT 최소점이 아니다 — E_ads 를 인용�
 > C₁₀F₂₂ and self-doped SDCP systems, for which the change in adsorption energy was below
 > 10 meV. All systems share the same slab and cell, so the same mesh was used throughout.
 
+## 곁가지 — Table S1 에서 같이 뺀 것 (2026-08-23)
+
+| 항목 | 뺀 이유 | 물으면 |
+|---|---|---|
+| `Ref. S4` U(Ni 3d) = 6.2 eV 출처 | repo 에 원전이 없다 (`kb/methodology/terminology_register.md` §42 가 *"원전 미보유(Dudarev)"* 로 기록). 확인 안 된 인용을 다는 것보다 비우는 쪽을 택했다 | `pymatgen/io/vasp/MPRelaxSet.yaml` 의 `LDAUU: Ni` 를 대조하고, 6.2 이면 Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) / Jain *et al.* *PRB* **84**, 045115 (2011) |
+| `Ref. S5` LiNiO₂ AFM 배열 출처 | **인용 대상이 아니다** — 문헌 수치가 아니라 우리 모델링 선택. Source "-" 가 맞다 | "the antiferromagnetic configuration used here" 로 서술 |
+
+⚠ 지도교수 규칙(*"정량 수치는 뭘 참고해서 쓴 거면 출처가 있어야 한다"*)에 U 값은 걸린다.
+심사 전에 위 한 줄 확인으로 닫는 것이 안전하다.
+
 ## 근거 파일
 
 - `sdcp_wave1_2026_08_12` 번들 — `MANIFEST.json` (`claim_scope` · `k_label_rule` ·
