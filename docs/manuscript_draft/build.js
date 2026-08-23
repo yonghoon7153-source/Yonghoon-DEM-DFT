@@ -236,7 +236,15 @@ const NOTE = (n, str) => body.push(new Paragraph({
 NOTE('D1.', '**삭제 — "a resolution validated against measured ionic conductivities."** v5.1 의 '
 + '0.4 μm 격자는 수렴하지 않았다.  같은 전극을 더 고운 격자에서 다시 풀면 전자 전도도 비가 '
 + '계속 움직이고 이온 비는 부호가 뒤집힌다.  측정 이온전도도와의 일치는 **그 한 격자에서만** '
-+ '성립했으므로 검증이라고 부를 수 없다.  문장을 지우고 생산 격자(0.15 μm)만 적었다.');
++ '성립했으므로 검증이라고 부를 수 없다.  문장을 지우고 생산 격자(0.15 μm)만 적었다.  '
++ '★ **결정 (2026-08-23): 본문은 이 상태로 두고 재런이 끝난 뒤 다시 본다.** 그때 선택지 두 개 — '
++ '**(B)** 격자 문장 뒤 한 절 추가: *because the absolute effective conductivity depends on the '
++ 'discretisation, all comparisons are reported as ratios between electrodes solved on identical '
++ 'grids* (근거 = 절대값 27 % 이동 vs 비 2 %p 이동; 수렴 질문을 미리 막는다).  '
++ '**(C)** SI 에 격자 3점(1.1232 / 1.1438 / 1.1554)을 싣고 보고값이 하한임을 명시 — 리뷰어가 물었을 때 '
++ '꺼내는 쪽이 낫다.  ⚠ 어느 쪽이든 격자에 대해 validated / verified 계열 표현은 수렴 시험을 같이 '
++ '보이지 않는 한 쓰지 않는다.  ⚠ Bazzoun 을 σ_ion_ 앵커로 다시 쓰지 않는다 — 조성이 다르고 intrinsic σ '
++ '도 안 맞다 (정규화하면 formation factor 0.388 / 0.973 / 1.235 로 어느 격자도 일치가 아니다).');
 
 NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 → 3.00 S cm^−1^, 이온 '
 + '2.03 → 2.15 × 10^−4^ S cm^−1^)은 0.4 μm 격자에서 SDCP 를 입자당 복셀 하나로 찍은 것이고, '
