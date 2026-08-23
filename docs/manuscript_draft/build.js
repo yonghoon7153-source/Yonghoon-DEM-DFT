@@ -153,7 +153,10 @@ body.push(P('where *σ* is the local conductivity of each voxel and *φ* the ele
 + 'the VGCF value is rescaled so that a fibre resolved as a one-voxel-wide tube retains its axial '
 + 'conductance. Each electrode was solved at eight half-voxel grid-origin shifts (2 × 2 × 2), the '
 + 'SBE and DBE sharing the same origins, and conductivity ratios are reported as the paired mean '
-+ 'with its standard error.'));
++ 'with its standard error. The Joule dissipation of a phase was evaluated as'));
+body.push(Eq('*P* = Σ *g*_k_ (Δ*φ*_k_)^2^', 2));
+body.push(P('where *g*_k_ and Δ*φ*_k_ are the conductance of and the potential difference across the '
++ '*k*-th voxel-to-voxel connection, summed over the connections belonging to that phase.'));
 
 // ---------------- B. SI tables ------------------------------------------
 body.push(H('B.  Supporting Information — tables'));
@@ -274,10 +277,11 @@ NOTE('D8.', '**두 모델이 "1 %p 안에서 일치" 주장 삭제.** 그 차이
 + '부기 차이이지 독립적인 일치가 아니므로 타당성의 근거가 되지 않는다.  두 모델을 서로가 아니라 '
 + '같은 실험값에 각각 보정했다는 문장은 남겼다.');
 
-NOTE('D9.', '**σ_SDCP_ 민감도 스윕과 Joule 식을 Methods 에서 뺐다.** 5점 스윕과 소산-분담 논증은 '
-+ '방법이 아니라 **결과**이고, 그 수치는 폐기된 격자의 것이다.  그 문단이 빠지면서 Joule 소산을 '
-+ '쓰는 곳이 논문에 하나도 남지 않으므로(Figure 4b 는 전도도만 보여준다) 두 번째 식과 기호 정의도 '
-+ '함께 삭제하고 남은 식을 (1) 로 번호를 매겼다.  채택한 SDCP 전도도는 이제 Table S2 에만 있다.');
+NOTE('D9.', '**σ_SDCP_ 민감도 스윕은 Methods 에서 뺐다 (식 (2) 는 유지).** 5점 스윕과 소산-분담 '
++ '논증은 방법이 아니라 **결과**이고, 그 수치는 폐기된 격자의 것이다.  채택한 SDCP 전도도는 이제 '
++ 'Table S2 에만 있다.  ⚠ 식 (2)(Joule 소산)를 남긴 이상 **Results 어딘가에서 그 양을 써야 한다** — '
++ '지금 Figure 4b 는 전도도만 보여주므로, 스윕을 생산 규약에서 다시 돌려 소산 분담을 싣거나 '
++ '아니면 식 (2) 를 다시 빼는 것 중 하나를 골라야 한다.');
 
 NOTE('D10.', '**기전 문장은 Results 쪽에서 다시 써야 한다.** v5.1 의 서술 — SDCP 가 고전도 '
 + '브리지로서 직렬 병목을 해소한다 — 은 지금 시뮬레이션이 지지하지 않는다.  SDCP 가 나르는 전자 '
