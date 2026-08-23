@@ -11,7 +11,8 @@
 //
 //   NODE_PATH=<docx 설치 경로> SDCP_DFT_OUT=<폴더> node docs/manuscripts/sdcp_dft_methods_build.js
 const { Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell,
-        WidthType, ShadingType, BorderStyle, PageBreak } = require("docx");
+        WidthType, ShadingType, BorderStyle, PageBreak, PositionalTab,
+        PositionalTabAlignment, PositionalTabLeader, PositionalTabRelativeTo } = require("docx");
 const fs = require("fs");
 const path = require("path");
 
@@ -36,6 +37,23 @@ function runs(text, { bold = false, size = 18 } = {}) {
   }
   push(text.slice(last));
   return out;
+}
+
+// 별행 수식 + 오른쪽 끝 번호 — 원고의 (1)·(2) 와 같은 모양
+function eq(text, num, o = {}) {
+  return new Paragraph({
+    spacing: { before: o.before ?? 160, after: o.after ?? 160, line: 300 },
+    indent: { left: 720 },
+    children: [
+      ...runs(text, { size: o.size ?? 20 }),
+      new TextRun({ children: [new PositionalTab({
+        alignment: PositionalTabAlignment.RIGHT,
+        relativeTo: PositionalTabRelativeTo.MARGIN,
+        leader: PositionalTabLeader.NONE,
+      })] }),
+      ...runs("(" + num + ")", { size: o.size ?? 20 }),
+    ],
+  });
 }
 
 const p = (text, o = {}) => new Paragraph({
@@ -72,9 +90,16 @@ const METHODS = [
   "species on the surface Li and Ni sites was evaluated by DFT. Gas-phase references were ",
   "relaxed at the Γ point in the same cell until residual forces fell below 1 × 10^−3^ Ry ",
   "bohr^−1^, with the box padding increased from 20 to 24 Å to confirm convergence. Adsorption ",
-  "energies were obtained as *E*~ads~ = *E*(slab+molecule) − *E*(slab) − *E*(molecule), with all ",
-  "three terms computed with identical settings and the same antiferromagnetic configuration.",
+  "energies were obtained as",
 ].join("");
+
+// 원고 본문은 DEM 절에서 (1)·(2) 를 이미 쓴다 → DFT 수식은 **(3)**.
+const EQ_NUM = "3";
+const EQ = "*E*~ads~ = *E*(slab+molecule) − *E*(slab) − *E*(molecule)";
+const EQ_WHERE =
+  "where *E*(slab+molecule), *E*(slab), and *E*(molecule) are the total energies of the "
+  + "adsorbed complex, the clean slab, and the isolated molecule, respectively, all computed "
+  + "with identical settings and the same antiferromagnetic configuration.";
 
 // ── 그림 캡션 (현재 원고에 'DFT' 한 단어만 있는 자리) ────────────────────
 const CAPTIONS = [
@@ -115,7 +140,7 @@ const ROWS = [
   ["", "Interatomic potential", "UMA-s-1p1", "-", "Ref. S6"],
   ["", "Force convergence", "0.05", "eV Å^−1^", "-"],
   ["Adsorption energy", "Definition",
-   "*E*(slab+molecule) − *E*(slab) − *E*(molecule)^a^", "eV", "-"],
+   "Equation (3)^a^", "eV", "-"],
 ];
 
 const REFS = [
@@ -147,8 +172,12 @@ const doc = new Document({
     children: [
       p("Manuscript — Experimental section", { bold: true, size: 22, after: 60 }),
       p("Insert after the “Discrete element method” paragraph, replacing the "
-        + "placeholder “Computational details: DFT”.", { size: 17, after: 200 }),
-      p(METHODS, { after: 200, line: 360 }),
+        + "placeholder “Computational details: DFT”. Equations (1) and (2) are already used by "
+        + "the discrete-element section, so the adsorption-energy expression is numbered (3).",
+        { size: 17, after: 200 }),
+      p(METHODS, { after: 0, line: 360 }),
+      eq(EQ, EQ_NUM),
+      p(EQ_WHERE, { after: 200, line: 360 }),
 
       new Paragraph({ children: [new PageBreak()] }),
 

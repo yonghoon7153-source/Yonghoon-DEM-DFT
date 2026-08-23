@@ -17,9 +17,13 @@ polymer for high-rate, low-pressure dry-processed all-solid-state battery cathod
 **SDCP 반복단위가 PTFE 조각보다 NCM811 표면에 더 강하게 흡착한다** — 근거는 DFT 흡착에너지.
 
 ```
-E_ads = E(slab + molecule) − E(clean slab) − E(gas molecule)
-        ↑ 같은 AFM seed     ↑ 같은 AFM seed  ↑ box24 정본
+E_ads = E(slab+molecule) − E(slab) − E(molecule)          ← 본문 별행 수식 (3)
+        ↑ 같은 AFM seed    ↑ 같은 seed  ↑ box24 정본
 ```
+
+⚠ 번호는 **(3)** 이다 — 본문 DEM 절이 (1)·(2) 를 이미 쓴다. DFT 절이 DEM 앞으로 가면 다시 매긴다.
+수식은 일반 텍스트(이탤릭·아래첨자)로 넣어 뒀다. Word 수식 개체로 바꾸려면 영진 님 쪽에서
+(1)·(2) 와 같은 방식으로 교체하면 된다.
 
 들어가는 자리: 본문 `*Computational details*:` · SI **Table S1** · **Figure 2e**(값) ·
 **Figure S3**(모델 그림).
