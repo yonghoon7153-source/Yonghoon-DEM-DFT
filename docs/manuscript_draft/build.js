@@ -136,7 +136,8 @@ body.push(RunIn('Microstructure reconstruction:',
 + 'bulk modulus (*K* = 25.5 GPa) while lowering the shear modulus to *μ* = 0.51 GPa. The two '
 + 'models were calibrated independently against the same experimental porosity rather than '
 + 'against each other. VGCF fibres, PTFE fibrils and SDCP particles were then seeded into the '
-+ 'pore space at the experimental weight fractions. All inputs are listed in Table S2.'));
++ 'pore space at the experimental weight fractions. All inputs are listed in Table S2, and the '
++ 'resulting thicknesses and porosities in Table S3.'));
 
 body.push(RunIn('Effective transport simulations:',
   'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm. Adjacent '
@@ -254,7 +255,7 @@ NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 
 NOTE('D3.', '**Table S2 의 기계 물성 = AFM 값 (PTFE 1.8 · SDCP 9.0 GPa).  값은 확정이고, 아직 그 값으로 '
 + '돌린 모델이 없을 뿐이다.** 여기 실린 미세구조는 그 이전 세대(PTFE 0.30 · SDCP 23.6 GPa)로 압밀한 '
 + '것이므로 투고 전 재압밀이 필요하다.  ⚠ 그때 **Table S3 에서 바뀌는 칸**: 두께 · porosity · 면적용량 · '
-+ 'σ_e (절대값 2개와 비).  침대 기하가 바뀌기 때문이다.  앞의 셋은 **표에서 비웠고**(각주 b) 본문도 '+ '수치 대신 Table S3 을 가리키게 했다.  전도도 비의 이동이 '
++ 'σ_e (절대값 2개와 비).  침대 기하가 바뀌기 때문이다.  앞의 셋은 **표에서 비웠고** 본문은 수치 대신 '+ 'Table S3 을 가리킨다 — ⚠ **그 포인터와 표의 세 행은 같이 채워져야 한다.**  투고 시점에 표가 여전히 '+ '비어 있으면 본문이 빈 칸을 가리키게 된다.  전도도 비의 이동이 '
 + '8팔 산포(±0.7 %) 안이면 무시 가능으로 닫히고, 벗어나면 새 침대 값으로 갱신한다.');
 
 NOTE('D4.', '**Table S3 — 구조 항목은 v5.1 에서 그대로 가져왔다.** 두께 · porosity · 면적용량 · '
