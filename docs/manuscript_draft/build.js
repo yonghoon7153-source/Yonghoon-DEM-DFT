@@ -136,8 +136,7 @@ body.push(RunIn('Microstructure reconstruction:',
 + 'bulk modulus (*K* = 25.5 GPa) while lowering the shear modulus to *μ* = 0.51 GPa. The two '
 + 'models were calibrated independently against the same experimental porosity rather than '
 + 'against each other. VGCF fibres, PTFE fibrils and SDCP particles were then seeded into the '
-+ 'pore space at the experimental weight fractions. All inputs are listed in Table S2, and the '
-+ 'resulting thicknesses and porosities in Table S3.'));
++ 'pore space at the experimental weight fractions. All inputs are listed in Table S2.'));
 
 body.push(RunIn('Effective transport simulations:',
   'Each microstructure was rasterized onto a cubic grid with a voxel edge of 0.15 μm. Adjacent '
@@ -149,7 +148,7 @@ body.push(P('where *σ* is the local conductivity of each voxel and *φ* the ele
 + 'remaining boundaries insulating, and the effective conductivity was taken from the total current. '
 + 'NCM811, VGCF and SDCP carried the electronic network and LPSCl and SDCP the ionic network; PTFE '
 + 'was not resolved on the conduction grid. Phase conductivities are listed in Table S2, in which '
-+ 'the VGCF value is rescaled so that a fibre resolved as a one-voxel-wide tube retains its axial '
++ 'the VGCF value is rescaled so that a fiber resolved as a one-voxel-wide tube retains its axial '
 + 'conductance. Each electrode was solved at eight half-voxel grid-origin shifts (2 × 2 × 2), the '
 + 'SBE and DBE sharing the same origins, and conductivity ratios are reported as the paired mean '
 + 'with its standard error. The Joule dissipation of a phase was evaluated as'));
@@ -177,7 +176,7 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
    ['','Yield strength','0.30','GPa','Calibrated'],
    ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. [37]'],
-   ['VGCF','Fibre diameter','0.15','μm','Supplier data'],
+   ['VGCF','Fiber diameter','0.15','μm','Supplier data'],
    ['','Young’s modulus','10','GPa','Assumed'],
    ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Effective value'],
    ['','Electronic conductivity (voxel, diameter-preserving)','78.5','S cm^−1^','Calculated value'],
