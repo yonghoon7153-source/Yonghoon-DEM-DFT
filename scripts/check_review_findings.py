@@ -105,7 +105,11 @@ BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
                   'webapp/templates/*.html', 'webapp/static/js/*.js',
                   'scripts/seminar_deck/*.js',
                   'docs/**/*.json', 'webapp/**/*.json', 'scripts/*.sh',
-                  'docs/**/*.pptx')
+                  'docs/**/*.pptx',
+                  # ⚠ 2026-08-23 — 리더(`BAN_ZIP_EXT`)는 처음부터 .docx 를 읽을 수 있었는데
+                  #   글롭이 .pptx 만 걸어 **원고·SI 가 스윕 밖에 있었다** (CDXIJ-9 와 같은
+                  #   구조의 매체 구멍 — 철회값이 가장 크게 새는 자리가 정작 안 읽혔다).
+                  'docs/**/*.docx')
 
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
@@ -675,6 +679,23 @@ def _selftest():
             _p9, _, _ = ban_sweep(_d, _claims, files=[_d4])
             ok('22d) ★ 발표 순서에 없는(고아) 슬라이드도 검사한다 — 덱이 검사를 숨길 수 없다',
                any(_pat in x and 'orphan' in x for x in _p9))
+
+            #  ⓔ ★ **원고·SI 는 .docx 다.**  리더(`BAN_ZIP_EXT`)는 처음부터 word/document 를
+            #     읽을 수 있었는데 **글롭이 .pptx 만 걸어** 원고가 스윕 밖에 있었다 (2026-08-23).
+            #     그래서 여기서는 `files=` 를 주지 않는다 — 글롭 발견 경로 자체를 검사한다.
+            _dr = os.path.join(_d, 'reporoot')
+            os.makedirs(os.path.join(_dr, 'docs', 'reviews'), exist_ok=True)
+            import shutil as _sh
+            _sh.copy(_claims, os.path.join(_dr, 'docs', 'reviews', 'claims.json'))
+            _d5 = os.path.join(_dr, 'docs', 'manuscript.docx')
+            with _zft.ZipFile(_d5, 'w') as _z:
+                _z.writestr('word/document.xml',
+                            '<w:document xmlns:w="z"><w:body><w:p>'
+                            f'<w:r><w:t>headline {_pat} achieved</w:t></w:r>'
+                            '</w:p></w:body></w:document>')
+            _p10, _nf10, _ = ban_sweep(_dr)
+            ok('22e) ★ 글롭이 .docx 를 발견한다 — 원고·SI 가 스윕 안에 있다',
+               _nf10 >= 1 and any(_pat in x and 'manuscript.docx' in x for x in _p10))
 
     ok('21) ★ 리포 전체가 지금 깨끗하다 (누수 0)',
        ban_sweep(here, _claims)[0] == [])
