@@ -15,7 +15,7 @@ import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
-import { copyText, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv } from '../lib/origin'
+import { copyText, cycleAndEfficiencyTsv, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
@@ -589,6 +589,15 @@ export function SampleDetail() {
               onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(cycles))}
             >
               {copied === '쿨롱효율' ? '복사됨 ✓' : '쿨롱효율'}
+            </button>
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === '사이클+쿨롱' ? '사이클과 쿨롱효율 복사됨' : '사이클과 쿨롱효율 복사'}
+              title={`한 번에 세 열 — 사이클 · 방전용량(${basisUnit(cycleState.data?.basis ?? basis)}) · 쿨롱효율(%)`}
+              onClick={() => void copyBlock('사이클+쿨롱', cycleAndEfficiencyTsv(cycles))}
+            >
+              {copied === '사이클+쿨롱' ? '복사됨 ✓' : '사이클+쿨롱'}
             </button>
           </div>
         </div>

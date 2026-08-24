@@ -7,7 +7,14 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { dischargeTsv, dqdvTsv, efficiencyTsv, profileTsv, tsvColumns } from '../origin'
+import {
+  cycleAndEfficiencyTsv,
+  dischargeTsv,
+  dqdvTsv,
+  efficiencyTsv,
+  profileTsv,
+  tsvColumns,
+} from '../origin'
 import type { Cycle, DqdvSeries, ProfileSeries } from '../types'
 
 function series(overrides: Partial<ProfileSeries> = {}): ProfileSeries {
@@ -124,6 +131,40 @@ describe('사이클 열 두 개', () => {
   it('완료된 사이클이 없으면 빈 문자열', () => {
     expect(dischargeTsv([cycle({ complete: false })])).toBe('')
     expect(efficiencyTsv([cycle({ complete: false })])).toBe('')
+  })
+})
+
+describe('사이클 열 세 개 — 용량과 쿨롱효율을 한 번에', () => {
+  it('사이클 · 방전용량 · 쿨롱효율 순서로 나온다', () => {
+    // 순서가 곧 계약이다.  붙여 넣는 사람은 열 이름을 못 받으므로(헤더가 없다)
+    // 두 번째가 용량이고 세 번째가 효율이라는 것만 믿고 축을 지정한다.
+    expect(cycleAndEfficiencyTsv([cycle({ cycle: 3 })])).toBe('3\t4.9\t96.1')
+  })
+
+  it('세 열의 길이가 항상 같다 — 값이 비어도 줄이 밀리지 않는다', () => {
+    const text = cycleAndEfficiencyTsv([
+      cycle({ cycle: 1, coulombic_efficiency: null }),
+      cycle({ cycle: 2, discharge_capacity: null }),
+    ])
+    expect(text.split('\n')).toEqual(['1\t4.9\t--', '2\t--\t96.1'])
+  })
+
+  it('잘린 사이클은 세 열에서도 빠진다', () => {
+    const text = cycleAndEfficiencyTsv([cycle({ cycle: 1 }), cycle({ cycle: 2, complete: false })])
+    expect(text.split('\n')).toEqual(['1\t4.9\t96.1'])
+  })
+
+  it('두 열짜리와 사이클 번호가 어긋나지 않는다', () => {
+    // 따로 복사해서 손으로 붙이면 어긋날 수 있는 바로 그 지점 — 한쪽에만
+    // 빠지는 사이클이 없어야 이 버튼이 존재할 이유가 있다.
+    const cycles = [cycle({ cycle: 1 }), cycle({ cycle: 2, complete: false }), cycle({ cycle: 3 })]
+    const three = cycleAndEfficiencyTsv(cycles).split('\n')
+    const one = dischargeTsv(cycles).split('\n')
+    expect(three.map((row) => row.split('\t')[0])).toEqual(one.map((row) => row.split('\t')[0]))
+  })
+
+  it('완료된 사이클이 없으면 빈 문자열', () => {
+    expect(cycleAndEfficiencyTsv([cycle({ complete: false })])).toBe('')
   })
 })
 

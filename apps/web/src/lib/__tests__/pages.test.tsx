@@ -1319,6 +1319,20 @@ describe('클립보드 복사', () => {
     expect(written[0]!.split('\n')[0]).toBe('1\t97.2')
   })
 
+  it('둘을 한 그래프에 그리려면 세 열이 한 번에 나온다', async () => {
+    // 따로 두 번 복사하면 사이클 번호를 사람이 맞춰야 한다.  용량 fade 에
+    // 효율을 제2축으로 얹는 그림이 실제로 그리는 것이라, 그건 매번 하는 일이다.
+    const written = installClipboard()
+    installFetch(sampleDetailHandler(() => undefined))
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: '사이클과 쿨롱효율 복사' }))
+    expect(written[0]!.split('\n')).toEqual(['1\t5.25\t97.2', '2\t5.25\t97.2', '3\t5.25\t97.2'])
+    expect(
+      await screen.findByRole('button', { name: '사이클과 쿨롱효율 복사됨' }),
+    ).toBeInTheDocument()
+  })
+
   it('복사할 것이 없으면 조용히 성공한 척하지 않는다', async () => {
     installClipboard()
     installFetch(

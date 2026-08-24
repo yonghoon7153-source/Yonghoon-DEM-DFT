@@ -148,6 +148,27 @@ export function efficiencyTsv(cycles: Cycle[]): string {
   return cycleColumnTsv(cycles, (cycle) => cycle.coulombic_efficiency)
 }
 
+/** Three columns at once: cycle number, discharge capacity, coulombic efficiency.
+ *
+ * The rule above -- one button copies one thing -- holds when the two things
+ * go to different plots.  These two go to the *same* one: capacity fade with
+ * efficiency on the second axis is the figure people actually draw.  Copying
+ * them separately means pasting twice and lining the cycle numbers up by hand,
+ * and the two blocks can disagree in length the moment a cycle is incomplete.
+ *
+ * Same rule as the two-column blocks: only complete cycles, and a value that
+ * is missing comes out as an empty cell rather than a zero.
+ */
+export function cycleAndEfficiencyTsv(cycles: Cycle[]): string {
+  const complete = cycles.filter((cycle) => cycle.complete)
+  if (!complete.length) return ''
+  return tsvColumns([
+    complete.map((c) => String(c.cycle)),
+    complete.map((c) => cell(c.discharge_capacity)),
+    complete.map((c) => cell(c.coulombic_efficiency)),
+  ])
+}
+
 /** Put text on the clipboard, with a path for browsers that refuse the API.
  *
  * `navigator.clipboard` needs a secure context, and the workbench is normally
