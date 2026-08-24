@@ -48,7 +48,34 @@ export function tsvColumns(columns: string[][]): string {
  * arrive already reduced for drawing (LTTB), so the block matches the picture
  * rather than the 20 MB original.  CSV and XLSX hand over every logged point.
  */
+/** 아직 끝나지 않은 곡선인가.
+ *
+ *  붙여 넣은 워크시트에는 표시를 붙일 자리가 없다 -- 위 '숫자만' 규칙이 그
+ *  이유고, 그 규칙 자체는 옳다.  그래서 **구동 중인 셀의 잘린 마지막 곡선은
+ *  복사하지 않는다.**  Origin 안에서는 완료 곡선과 구분되지 않고, 커서로 읽은
+ *  마지막 값이 그 사이클의 용량으로 읽힌다 (CLAUDE.md §3: 구동 중인 셀의
+ *  마지막 사이클 값은 절대 보고하지 않는다).
+ *
+ *  정상 종료한 곡선은 다르다.  `no_discharge` 는 "이 프로토콜은 방전을 안
+ *  한다" 이고 그 숫자는 최종값이다 -- 뺄 이유가 없다.  이유를 모르는 것(옛
+ *  기록, `unknown`)은 뺀다: 모르는 것을 최종값처럼 내보내지 않는다 (§0.4).
+ */
+export function stillRunning(item: {
+  complete?: boolean
+  incomplete_reason?: string
+}): boolean {
+  if (item.complete !== false) return false
+  const reason = item.incomplete_reason ?? ''
+  return reason === 'truncated' || reason === 'unknown' || reason === ''
+}
+
+/** 복사에서 빠지는 곡선 수 -- 화면이 몇 개를 뺐는지 말할 수 있도록. */
+export function skippedForCopy(series: ProfileSeries[]): number {
+  return series.filter(stillRunning).length
+}
+
 export function profileTsv(series: ProfileSeries[]): string {
+  series = series.filter((item) => !stillRunning(item))
   if (!series.length) return ''
   const capacity: string[] = []
   const voltage: string[] = []

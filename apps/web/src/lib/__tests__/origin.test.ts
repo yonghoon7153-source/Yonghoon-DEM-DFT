@@ -14,6 +14,8 @@ import {
   efficiencyTsv,
   profileTsv,
   tsvColumns,
+  skippedForCopy,
+  stillRunning,
 } from '../origin'
 import type { Cycle, DqdvSeries, ProfileSeries } from '../types'
 
@@ -211,5 +213,44 @@ describe('dQ/dV 붙여넣기 블록', () => {
   it('방전의 음수 부호를 지우지 않는다 — 히스테리시스가 거기 있다', () => {
     const text = dqdvTsv([curve({ voltage: [3.0], dqdv: [-2.5], points: 1 })])
     expect(text).toBe('3\t-2.5')
+  })
+})
+
+describe('아직 끝나지 않은 곡선은 복사하지 않는다', () => {
+  // 붙여 넣은 워크시트에는 표시를 붙일 자리가 없다 ('숫자만' 규칙).  구동 중인
+  // 셀의 잘린 마지막 곡선은 Origin 안에서 완료 곡선과 구분되지 않고, 커서로
+  // 읽은 마지막 값이 그 사이클의 용량으로 읽힌다 (§3).
+  const curve = (over: Partial<ProfileSeries>): ProfileSeries =>
+    ({ label: 'c', capacity: [0, 1], voltage: [3, 4], points: 2, ...over }) as ProfileSeries
+
+  it('잘린 곡선은 뺀다', () => {
+    const text = profileTsv([
+      curve({ label: '완료' }),
+      curve({ label: '잘림', complete: false, incomplete_reason: 'truncated' }),
+    ])
+    // 곡선 하나만 남는다 -- 둘이면 사이에 `--` 로 끊긴 줄이 생긴다.
+    expect(text.split('\n')).toHaveLength(2)
+    expect(text).not.toContain('--')
+  })
+
+  it('정상 종료한 곡선은 그대로 낸다', () => {
+    // no_discharge 는 "이 프로토콜은 방전을 안 한다" 이고 그 숫자는 최종값이다.
+    const text = profileTsv([curve({ complete: false, incomplete_reason: 'no_discharge' })])
+    expect(text.split('\n')).toHaveLength(2)
+  })
+
+  it('이유를 모르면 뺀다 — 모르는 것을 최종값처럼 내보내지 않는다', () => {
+    expect(stillRunning({ complete: false, incomplete_reason: 'unknown' })).toBe(true)
+    expect(stillRunning({ complete: false, incomplete_reason: '' })).toBe(true)
+    expect(stillRunning({ complete: false, incomplete_reason: 'no_charge' })).toBe(false)
+    expect(stillRunning({ complete: true })).toBe(false)
+  })
+
+  it('몇 개를 뺐는지 셀 수 있다 — 조용히 빼면 곡선 수가 다른 것을 못 본다', () => {
+    expect(skippedForCopy([
+      curve({}),
+      curve({ complete: false, incomplete_reason: 'truncated' }),
+      curve({ complete: false, incomplete_reason: 'no_discharge' }),
+    ])).toBe(1)
   })
 })

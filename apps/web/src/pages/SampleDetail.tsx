@@ -15,7 +15,7 @@ import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
-import { copyText, cycleAndEfficiencyTsv, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv } from '../lib/origin'
+import { copyText, cycleAndEfficiencyTsv, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv, skippedForCopy } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
@@ -420,15 +420,23 @@ export function SampleDetail() {
     setChosen(null) // a deleted run's cycles must not stay selected
   }
 
-  async function copyBlock(what: string, text: string) {
+  async function copyBlock(what: string, text: string, skipped = 0) {
     setCopyError(null)
     if (!text) {
-      setCopyError(`복사할 ${what} 데이터가 없습니다`)
+      setCopyError(
+        skipped
+          ? `복사할 ${what} 데이터가 없습니다 — 고른 곡선 ${skipped}개가 모두 아직 끝나지 않았습니다`
+          : `복사할 ${what} 데이터가 없습니다`,
+      )
       return
     }
     try {
       await copyText(text)
       setCopied(what)
+      // 조용히 빼면 붙여 넣은 사람이 곡선 수가 다른 것을 못 본다.
+      if (skipped) {
+        setCopyError(`아직 끝나지 않은 곡선 ${skipped}개는 뺐습니다 — 그 마지막 값은 사이클 용량이 아닙니다`)
+      }
       window.setTimeout(() => setCopied((current) => (current === what ? null : current)), 1800)
     } catch (cause) {
       setCopyError(cause instanceof Error ? cause.message : String(cause))
@@ -557,7 +565,11 @@ export function SampleDetail() {
               aria-label={copied === '프로파일' ? '프로파일 복사됨' : '프로파일 복사'}
               title={`그려진 곡선을 용량·전압 두 열로 — 곡선 사이는 -- 로 끊는다 · ${basisUnit(profileState.data?.basis ?? basis)}`}
               onClick={() =>
-                void copyBlock('프로파일', profileTsv(profileState.data?.series ?? []))
+                void copyBlock(
+                  '프로파일',
+                  profileTsv(profileState.data?.series ?? []),
+                  skippedForCopy(profileState.data?.series ?? []),
+                )
               }
             >
               {copied === '프로파일' ? '복사됨 ✓' : '프로파일'}
