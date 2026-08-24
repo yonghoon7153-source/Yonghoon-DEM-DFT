@@ -165,14 +165,16 @@ repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(D
 - Jain, A.; Hautier, G.; Ong, S. P.; Moore, C. J.; Fischer, C. C.; Persson, K. A.;
   Ceder, G. *Phys. Rev. B* **2011**, *84*, 045115 — MP 의 GGA/GGA+U 혼합 스킴
 
-확인용 한 줄 (pymatgen 있는 기계에서 — 사용자가 나중에 실행):
+확인 도구를 repo 에 넣어 뒀다 (`--selftest` 7/7, 음성 경로 포함):
 
 ```bash
-python3 -c "import pymatgen.io.vasp.sets as s,yaml,os;print(yaml.safe_load(open(os.path.join(os.path.dirname(s.__file__),'MPRelaxSet.yaml')))['INCAR']['LDAUU'])" | tr ',' '\n' | grep -i ni
+cd ~/Yonghoon-DEM-DFT && git pull
+python3 tools/sdcp/check_ldauu_provenance.py
 ```
 
-6.2 로 나오면 Table S1 의 `Dispersion / Hubbard U` 행 Source 를 `Ref. S3, S5` 로 바꾸고
-참고문헌에 한 건 추가하면 끝이다 (생성기 `sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 두 줄).
+rc 0 = MATCH(MP 기본값과 같음) · 1 = MISMATCH(출처가 MP 가 아님) · 2 = 확인 불가.
+MATCH 면 Table S1 의 `Dispersion / Hubbard U` 행 Source 와 참고문헌 한 건만 고치면 된다
+(생성기 `sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 각 한 줄).
 
 ⚠ **확인 전에는 달지 않는다.** 값이 다르면(예: 6.0) 엉뚱한 인용이 되고,
 그건 2026-07 Kim/Cui 교훈(인용 역할 확인 후 삽입)에 정면으로 걸린다.
