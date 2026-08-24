@@ -401,6 +401,24 @@ localhostForwarding=true
 : 저장소가 `/mnt/c` 에 있으면 파일 변경 감지가 동작하지 않습니다. 3번대로
   WSL 안으로 옮기세요.
 
+**`.exe` 가 `cannot execute binary file: Exec format error` 로 죽습니다**
+: `/etc/wsl.conf` 에 `systemd=true` 가 있으면 생깁니다. systemd 가 부팅 때
+  `binfmt_misc` 등록을 정리하면서 **WSL 이 `.exe` 를 실행하려고 걸어 둔 등록
+  (`WSLInterop`)까지 지웁니다.** 오류 문구에는 systemd 도 WSL 도 interop 도
+  나오지 않아서 원인을 찾을 수 없습니다. `bml doctor` 가 짚어 주고, 고치는
+  것은 두 줄입니다 (한 번만 — `/usr/lib/binfmt.d/` 에 두면 systemd 가 다음
+  부팅부터 다시 걸어 줍니다):
+
+```bash
+sudo sh -c 'echo :WSLInterop:M::MZ::/init:PF > /usr/lib/binfmt.d/WSLInterop.conf'
+sudo systemctl restart systemd-binfmt
+ipconfig.exe | head -3      # 나오면 된 것입니다
+```
+
+  이게 죽어 있으면 `bml mirrored` 도, `bml status` 의 LAN 주소 읽기도, WSL 안
+  에서 `wsl.exe --shutdown` 을 부르는 것도 안 됩니다. systemd 가 꼭 필요한 게
+  아니면 `wsl.conf` 의 `systemd=true` 를 빼도 됩니다.
+
 **WSL 을 껐다 켜고 싶다**
 : PowerShell 에서 `wsl --shutdown`. 다음 `bml` 이 알아서 다시 띄웁니다.
 

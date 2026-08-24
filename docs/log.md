@@ -1092,3 +1092,39 @@ vEthernet·WSL·Loopback·VirtualBox·Hyper-V·Bluetooth·Teredo·isatap, 그리
 이 커밋은 리뷰 요청서(`docs/reviews/codex-review-screens-and-wsl.md`)가 범위로
 적은 구간보다 뒤에 있다. 요청서의 범위를 `..a34aeea0` 그대로 두고, 이 건은
 "요청 이후 발견" 으로 그쪽 문서에 한 줄 남긴다.
+
+## [2026-08-24] fix | systemd 가 WSL 의 .exe 실행을 지운다
+`ipconfig.exe` 가 왜 빈손이었는지 나왔다:
+
+    -bash: /mnt/c/Windows/system32/ipconfig.exe: cannot execute binary file:
+           Exec format error
+
+`/etc/wsl.conf` 에 `[boot] systemd=true` 가 있는 기계다. **systemd 가 부팅 때
+`binfmt_misc` 등록을 정리하면서, WSL 이 `.exe` 를 `/init` 에 넘기려고 걸어 둔
+`WSLInterop` 등록까지 지운다.** 그 뒤 모든 `.exe` 가 위 문구로 죽는다.
+
+그 문구에는 systemd 도 WSL 도 interop 도 나오지 않는다 — §0.5 의 CRLF,
+`python3-venv`, `0x80370114` 와 같은 종류다. 그리고 **이 저장소는 이제 `.exe` 에
+기댄다**: `bml mirrored`(Windows 홈 찾기), `bml status`(LAN 주소 읽기), 그리고
+WSL 안에서 부르는 `wsl.exe --shutdown` 까지 전부 여기에 걸려 있다. 그래서
+`bml doctor` 가 봐야 하는 것이 됐다.
+
+`interop_state(목록, 항목)` → `ok`/`wiped`/`disabled`/`unknown`. binfmt_misc 가
+안 보이면 단정하지 않는다 (§0.4). 고치는 것은 두 줄이고
+`interop_repair_commands` 가 낸다:
+
+    sudo sh -c 'echo :WSLInterop:M::MZ::/init:PF > /usr/lib/binfmt.d/WSLInterop.conf'
+    sudo systemctl restart systemd-binfmt
+
+`/usr/lib/binfmt.d/` 에 두는 것이 핵심이다 — 거기 있으면 systemd 가 다음
+부팅부터 **자기가 다시 걸어 준다.** 한 번만 하면 되는 이유가 그것이다.
+`:WSLInterop:M::MZ::/init:PF` 는 WSL 이 원래 걸던 줄과 같다 (매직 `MZ` 로
+알아보고 `/init` 에 넘김, `P`=argv[0] 보존, `F`=인터프리터 미리 열기).
+
+`bml status` 의 "못 불렀다" 안내는 이제 `bml doctor` 로 보낸다 — 원인과 명령이
+거기 다 있다. `wsl-setup.md` 의 "안 될 때" 에도 한 항목 넣었다. 사람이 오류
+문구를 검색해서 오는 자리다. 153 → 159건.
+
+**이 항목은 실측으로 확인하지 못했다**: 이 컨테이너에는 `binfmt_misc` 가 마운트돼
+있지 않아 판정 함수만 픽스처로 고정했고, 고치는 두 줄은 사용자 기계에서 아직
+안 돌려 봤다. 리뷰 요청서에 그대로 적는다.

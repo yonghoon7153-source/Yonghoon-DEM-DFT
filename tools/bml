@@ -1188,6 +1188,48 @@ wsl_nat_address() {
   return 0
 }
 
+#: WSL 에서 Windows 프로그램(`.exe`)을 부를 수 있는가.
+#: `ok` | `wiped` | `disabled` | `unknown`.
+#:
+#: 인자는 (`/proc/sys/fs/binfmt_misc` 목록, `WSLInterop` 항목 내용) — 시험할 수
+#: 있게 밖에서 받는다.
+#:
+#: 왜 이걸 보나.  `.exe` 를 부르면 커널이 `binfmt_misc` 의 `WSLInterop` 등록을
+#: 보고 `/init` 에 넘긴다.  그런데 `/etc/wsl.conf` 에 `systemd=true` 를 두면
+#: **systemd 가 부팅 때 binfmt 등록을 정리하면서 그것까지 지운다.**  그 뒤로
+#: 모든 `.exe` 가 이렇게 죽는다:
+#:
+#:     -bash: /mnt/c/Windows/system32/ipconfig.exe: cannot execute binary file:
+#:            Exec format error
+#:
+#: 이 문구에는 systemd 도 WSL 도 interop 도 나오지 않는다.  §0.5 의 CRLF,
+#: `python3-venv`, `0x80370114` 와 같은 종류다 — 증상이 원인을 안 가리킨다.
+#: 그리고 이 저장소는 이제 `.exe` 에 기댄다 (`bml mirrored`, LAN 주소 읽기).
+interop_state() {
+  local names="${1:-}" entry="${2:-}"
+  [ -n "$names" ] || { printf 'unknown'; return; }
+  case "$names" in
+    *WSLInterop*) : ;;
+    *) printf 'wiped'; return ;;
+  esac
+  case "$entry" in
+    *disabled*) printf 'disabled' ;;
+    *enabled*)  printf 'ok' ;;
+    *)          printf 'unknown' ;;
+  esac
+}
+
+#: 그 등록을 되살리는 두 줄.  `/usr/lib/binfmt.d/` 에 두면 systemd 가 부팅
+#: 때마다 **다시 걸어 준다** — 한 번만 하면 된다.
+#:
+#: `:WSLInterop:M::MZ::/init:PF` 는 WSL 이 원래 걸던 것과 같은 줄이다:
+#: 매직 `MZ`(DOS 헤더)로 알아보고 `/init` 에 넘기며, `P` 는 argv[0] 보존,
+#: `F` 는 인터프리터를 미리 열어 둔다 (마운트 네임스페이스가 바뀌어도 산다).
+interop_repair_commands() {
+  printf '%s\n' "sudo sh -c 'echo :WSLInterop:M::MZ::/init:PF > /usr/lib/binfmt.d/WSLInterop.conf'"
+  printf '%s\n' "sudo systemctl restart systemd-binfmt"
+}
+
 #: Windows 프로그램 하나를 WSL 에서 부를 길.  PATH 에 없으면 System32 에서
 #: 직접 찾는다.  못 찾으면 빈 값과 1.
 #:
@@ -1520,8 +1562,7 @@ nat_hint() {
     if ipc="$(windows_ipconfig)"; then seen="$(windows_ipv4_by_adapter "$ipc")"; fi
     if [ -z "$ipc" ]; then
       say "  ${DIM}이 WSL 에서 Windows 프로그램을 부르지 못해 (interop) 주소를 대신 읽지 못했습니다.${OFF}"
-      say "  ${DIM}확인:${OFF} ${GREEN}ipconfig.exe${OFF} ${DIM}를 직접 쳐 보세요. 아무것도 안 나오면${OFF} ${GREEN}cat /etc/wsl.conf${OFF} ${DIM}의${OFF}"
-      say "  ${GREEN}[interop] enabled=false${OFF} ${DIM}나${OFF} ${GREEN}appendWindowsPath=false${OFF} ${DIM}를 보세요 (고친 뒤${OFF} ${GREEN}wsl.exe --shutdown${OFF}${DIM}).${OFF}"
+      say "  ${GREEN}bml doctor${OFF} ${DIM}가 원인과 고치는 명령까지 짚어 줍니다 (systemd 가 지운 binfmt 등록이 흔한 원인입니다).${OFF}"
     elif [ -z "$seen" ]; then
       say "  ${DIM}ipconfig 에 IPv4 가 하나도 없습니다 — 랜선·Wi-Fi 가 붙어 있나요?${OFF}"
     else
@@ -2725,6 +2766,25 @@ cmd_doctor() {
     else
       warn "브라우저를 자동으로 못 엽니다. 주소를 직접 여세요: $URL"
     fi
+
+    # .exe 를 부를 수 있는가.  이 저장소는 이제 여기에 기댄다.
+    local ib_names ib_entry
+    ib_names="$(ls /proc/sys/fs/binfmt_misc/ 2>/dev/null | tr '\n' ' ')"
+    ib_entry="$(cat /proc/sys/fs/binfmt_misc/WSLInterop /proc/sys/fs/binfmt_misc/WSLInterop-late 2>/dev/null)"
+    case "$(interop_state "$ib_names" "$ib_entry")" in
+      ok) ok "Windows 프로그램 실행 (interop)" ;;
+      wiped|disabled)
+        warn "Windows 프로그램(.exe)을 부를 수 없습니다."
+        say  "  ${DIM}systemd 가 부팅 때 binfmt 등록을 정리하면서 WSL 의 것까지 지웁니다${OFF}"
+        say  "  ${DIM}(/etc/wsl.conf 의 systemd=true). 오류는${OFF} ${DIM}'cannot execute binary file:${OFF}"
+        say  "  ${DIM}Exec format error' 로만 나와서 원인이 안 보입니다.${OFF}"
+        say  "  ${DIM}이 두 줄이면 됩니다 (한 번만 — systemd 가 다음 부팅부터 다시 걸어 줍니다):${OFF}"
+        interop_repair_commands | while IFS= read -r c; do say "    ${GREEN}${c}${OFF}"; done
+        say  "  ${DIM}확인:${OFF} ${GREEN}ipconfig.exe | head -3${OFF}"
+        say  "  ${DIM}systemd 가 꼭 필요한 게 아니면 wsl.conf 의 systemd=true 를 빼도 됩니다.${OFF}"
+        ;;
+      *) say "  ${DIM}interop 상태를 확인하지 못했습니다 (binfmt_misc 가 안 보입니다).${OFF}" ;;
+    esac
 
     local wsl_ip
     wsl_ip="$(hostname -I 2>/dev/null | awk '{print $1}')"

@@ -87,6 +87,14 @@ url_host  dns_public_json_verdict  dns_public_state
   실패로 보도록 고쳤다. **이 종류(“할 수 있다”와 “했다”를 안 가르는 판정)가
   이 묶음에 더 있는지 봐 달라.**
 
+- `f5451c4e` 이후: `.exe` 가 안 돌던 진짜 이유가 나왔다 — `/etc/wsl.conf` 의
+  `systemd=true` 가 부팅 때 `binfmt_misc` 의 `WSLInterop` 등록을 지운다.
+  `bml doctor` 에 판정(`interop_state`)과 고치는 두 줄
+  (`interop_repair_commands`)을 넣었다. **이 두 줄은 아직 실측하지 못했다** —
+  컨테이너에 `binfmt_misc` 가 없고 사용자 기계에서도 아직 안 돌렸다.
+  `:WSLInterop:M::MZ::/init:PF` 가 맞는 줄인지, `/usr/lib/binfmt.d/` 가 맞는
+  자리인지 봐 달라.
+
 ## 특히 봐 달라는 것
 
 1. **저장소 바깥 파일 쓰기** (`cmd_mirrored`, `wslconfig_set_mirrored`).

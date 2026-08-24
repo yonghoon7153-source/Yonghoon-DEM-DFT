@@ -550,6 +550,21 @@ check "빈 출력도 죽지 않는다" "$(windows_lan_address '')" ""
 # 출력이 비면 못 부른 것이다 — 종료 코드로 갈라야 화면이 옳은 말을 한다.
 windows_ipconfig >/dev/null 2>&1; rc=$?
 check "못 부르면 실패로 알린다"  "$([ "$rc" -ne 0 ] && echo yes || echo no)" "yes"
+# 실제로 걸린 것: /etc/wsl.conf 의 systemd=true 가 부팅 때 binfmt 등록을
+# 정리하면서 WSL 의 WSLInterop 까지 지운다.  그 뒤 모든 .exe 가
+# "cannot execute binary file: Exec format error" 로 죽는데, 그 문구에는
+# systemd 도 WSL 도 interop 도 안 나온다.  이 저장소는 이제 .exe 에 기댄다
+# (bml mirrored, LAN 주소 읽기) — doctor 가 짚어야 한다.
+check "등록이 살아 있으면 ok"     "$(interop_state 'status register WSLInterop' 'enabled')" "ok"
+check "등록만 사라졌으면 wiped"   "$(interop_state 'status register' '')"                   "wiped"
+check "꺼져 있으면 disabled"      "$(interop_state 'status register WSLInterop' 'disabled')" "disabled"
+# binfmt_misc 가 안 보이면 단정하지 않는다 (§0.4) — 다른 이유일 수 있다.
+check "목록이 없으면 unknown"     "$(interop_state '' '')"                                  "unknown"
+# 고치는 줄은 /usr/lib/binfmt.d 에 둔다.  거기 두어야 systemd 가 다음 부팅마다
+# 다시 걸어 준다 — 한 번만 하면 되는 이유가 그것이다.
+check "부팅마다 다시 걸리는 자리" "$(interop_repair_commands | grep -c '/usr/lib/binfmt.d/')" "1"
+check "등록 줄은 WSL 의 것과 같다" "$(interop_repair_commands | grep -c ':WSLInterop:M::MZ::/init:PF')" "1"
+
 check "받은 것이 있으면 그대로"  "$(windows_ipconfig 'Wi-Fi:
    IPv4 주소 . . . : 10.1.2.3' | tail -1 | tr -d ' ')" "IPv4주소...:10.1.2.3"
 
