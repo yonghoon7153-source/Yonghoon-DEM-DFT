@@ -168,15 +168,15 @@ body.push(Cap('**Table S2.** Material parameters used for the microstructure and
    ['','Compaction pressure','300','MPa','Experimental value'],
    ['','Voxel edge length','0.15','μm','–'],
    ['NCM811','Particle radius','2.5','μm','Experimental value'],
-   ['','Young’s modulus','140','GPa','Ref. [36]'],
+   ['','Young’s modulus','140','GPa','Ref. S6'],
    ['','Electronic conductivity','1.0 × 10^−2^','S cm^−1^','Effective value'],
    ['LPSCl','Particle radius','0.5','μm','Experimental value'],
-   ['','Young’s modulus (dense)','24','GPa','Ref. [34]'],
+   ['','Young’s modulus (dense)','24','GPa','Ref. S7'],
    ['','Young’s modulus (DEM contact)','1.35','GPa','Calibrated'],
    ['','Young’s modulus (MPM continuum)','1.53','GPa','Calibrated'],
    ['','Poisson’s ratio (MPM continuum)','0.49','–','Calibrated'],
    ['','Yield strength','0.30','GPa','Calibrated'],
-   ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. [37]'],
+   ['','Ionic conductivity (grain interior)','3.0 × 10^−3^','S cm^−1^','Ref. S8'],
    ['VGCF','Fiber diameter','0.15','μm','Supplier data'],
    ['','Young’s modulus','10','GPa','Assumed'],
    ['','Electronic conductivity (compressed powder)','1.0 × 10^2^','S cm^−1^','Effective value'],
@@ -213,18 +213,23 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
 body.push(new Paragraph({ children: [], spacing: { after: 80 } }));
 
 // ---------------- C. References -----------------------------------------
-body.push(H('C.  References to be merged into the main list'));
-body.push(P('Numbering continues from [32] in Manuscript v5.1; the arbitrary [100]/[102]/[107]/[109]/[110] labels are removed.'));
+body.push(H('C.  References'));
+body.push(P('**Main text** — numbering continues from [32] in Manuscript v5.1; the arbitrary '
++ '[100]/[102]/[107]/[109]/[110] labels are removed.'));
 [
  '[33]\tC. Kloss, C. Goniva, A. Hager, S. Amberger, S. Pirker, *Prog. Comput. Fluid Dyn.* **2012**, *12*, 140.',
  '[34]\tA. Sakuda, A. Hayashi, M. Tatsumisago, *Sci. Rep.* **2013**, *3*, 2261.',
  '[35]\tY. Hu, Y. Fang, Z. Ge, Z. Qu, Y. Zhu, A. Pradhana, C. Jiang, *ACM Trans. Graph.* **2018**, *37*, 150.',
- '[36]\tH. Wang, et al., *J. Power Sources* **2020**, *470*, 228413.',
- '[37]\tM. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling, *ACS Energy Lett.* **2021**, *6*, 3072.',
  '[9]\t(already cited) T. Minnmann et al., *Adv. Energy Mater.* **2022**, *12*, 2201425.',
 ].forEach(r => body.push(new Paragraph({ children: runs(r), spacing: { after: 60 },
   indent: { left: 500, hanging: 500 } })));
-
+body.push(P('**Supporting Information** — continues from [S5] in the DFT part (Table S1).'));
+[
+ '[S6]\tH. Wang, et al., Elastic properties of layered lithium transition-metal oxides, *J. Power Sources* **470** (2020) 228413.',
+ '[S7]\tA. Sakuda, A. Hayashi, M. Tatsumisago, Sulfide solid electrolyte with favorable mechanical property for all-solid-state lithium battery, *Sci. Rep.* **3** (2013) 2261.',
+ '[S8]\tM. Cronau, M. Szabo, C. König, T. B. Wassermann, B. Roling, How to measure a reliable ionic conductivity? The stack pressure dilemma of microcrystalline sulfide-based solid electrolytes, *ACS Energy Lett.* **6** (2021) 3072–3077.',
+].forEach(r => body.push(new Paragraph({ children: runs(r), spacing: { after: 60 },
+  indent: { left: 500, hanging: 500 } })));
 
 // ---------------- D. Notes to co-authors --------------------------------
 body.push(H('D.  공저자용 메모  (투고 전 삭제)'));
@@ -326,6 +331,18 @@ NOTE('D15.', '**σ_e 절대값도 비웠다 — 격자에 크게 움직이기 �
 + '1.1232 → 1.1438 → 1.1554) 이므로 **하한**으로 읽어야 한다.  세 점이 어떤 멱법칙에도 안 맞아 외삽이 '
 + '성립하지 않고, 이 하드웨어에서는 0.115 보다 더 못 조인다 (peak RSS 35.6 GB).  부호와 존재는 8/8 팔에서 '
 + '확정이고, 크기만 열려 있다.');
+
+NOTE('D16.', '**DFT 파트와 규약을 맞췄다 (신규, 2026-08-23).** 같은 원고의 DFT 절이 '
++ '`claude/md-status-monitoring-q2xbu1` 브랜치에서 병행 작성 중이다 '
++ '(`docs/manuscripts/SDCP_DFT_methods_TableS1.docx` · 생성기 `sdcp_dft_methods_build.js` — 우리와 '
++ '같은 build.js 방식).  세 가지가 맞물린다: **(i) 수식 번호** — DFT 가 E_ads_ 를 **(3)** 으로 잡아 '
++ '우리 (1)·(2) 뒤에 온다.  본문에서 DFT 절이 DEM 앞으로 가면 둘 다 다시 매겨야 한다.  '
++ '**(ii) SI 인용 번호** — DFT Table S1 이 `Ref. S1`~`S5` 를 쓴다 (QE · PBE · D3 · Jain 2011 · UMA).  '
++ '⇒ 우리 Table S2 의 Source 를 `[34]/[36]/[37]` 에서 **`Ref. S6`~`S8`** 로 바꿨다.  본문 인용은 '
++ '[33]~[35] 로 그대로 (본문과 SI 는 별도 목록).  **(iii) 표 각주** — DFT 도 Table S1 각주를 지우고 '
++ '내용을 kb 방어 카드로 옮겼다 = 우리 결정과 같다.  ⚠ 남은 불일치: **서지 스타일**.  본문 목록은 '
++ 'Wiley 식(*저널* **연도**, *권*, 쪽), DFT 의 SI 목록은 제목 포함 (저널 **권** (연도) 쪽) 이다.  '
++ '나는 SI 항목을 DFT 스타일에 맞췄으나, 최종적으로 **SI 목록 스타일을 한 가지로 통일**해야 한다.');
 
 NOTE('D11.', '**레퍼런스.** Methods 는 이제 인용 5개만 쓴다 — LIGGGHTS · MPM · 치밀 LPSCl 영률 · '
 + 'NCM 영률 · 전해질 grain 이온전도도.  이 논문에서 보정하거나 측정한 것이 아닌 **모든 정량 입력**은 '
