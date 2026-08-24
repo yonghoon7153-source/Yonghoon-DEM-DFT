@@ -180,7 +180,7 @@ warm    33p→34p:
 | `validate_provenance` 호출 | 원자료가 git 밖. 계약 §10 에 보존 단위만 정의 |
 | 고유 leg 목록·비용 재산정 | 계약 §9 에 항목만. 23차가 요구한 leg ID 단위 전개 미완 |
 | 두 철회 체계의 **단일화** | §4.1 — 결속만 했고 이전은 안 했다 |
-| 8다리 상태 | `preservation_status: recorded_projection` · `validation_status: unvalidated` · `inference_role: diagnostic` |
+| 8다리 상태 | **§11 정정 참조** — 1개 `full_bundle`+`current_validated`, 7개 `missing` |
 | §20.4 의 `multistart._해석` 문자열 | `src/` 가 생성 → 단계 3 코드 라운드 |
 | plateau pilot · sentinel_panel.yaml **실체** | 기준·스키마만 정의, 미실행 |
 
@@ -206,12 +206,19 @@ warm    33p→34p:
 (floor = 0). 실제로 재현 산포를 만들려면 무엇을 바꿔야 하는가 — BLAS 스레드
 수? 부동소수 요약 순서? 아니면 floor 를 다른 방식으로 정의해야 하는가?
 
-### Q4. §5.1 의 여덟 판정이 `inference_role: canonical` 로 가기에 무엇이 더 필요한가
+### Q4. **(재작성)** `paired_fixed5_v4` 하나로 무엇을 할 수 있는가
 
-지금 `전체`·`삼중`·`봉인`·`proj`·`rst`·`sum`·`man` 여덟이 전부 True 다.
-남은 것은 `validate_provenance` 와 완전 bundle 뿐인데, 23차 Q6 답변은 "각
-leg 의 fits 는 접근 가능해야 한다" 였다. **content-addressed 외부 저장소
-방식(계약 §10)이면 `canonical` 승격에 충분한가?**
+요청문 작성 후 작업 기계가 교체되면서 warm 실험 **7다리의 원자료를 잃었다**
+(§11). 살아남은 `paired_fixed5_v4` 는 완전 bundle 이고 `validate_provenance`
+**34검사 전부 통과**했다 (ok=True, fail=[]).
+
+- 이 한 다리로 23차 Q6 이 요구한 "도구 경로가 동작한다는 smoke 근거" 가
+  충족되는가?
+- 그 다리를 `inference_role: canonical` 로 승격할 수 있는가, 아니면 새
+  protocol 산물이 아니므로 `historical_validated` 에 머물러야 하는가?
+- 7다리는 투영만 남았다. 계약 §8 의 3축으로 `missing`/`unvalidated`/
+  `diagnostic` 이라 적었는데, **전이표·후보 구성·다봉성을 설계 근거로 쓰는
+  것**(23차 Q4 가 허용한 exploratory design prior)은 그대로 유효한가?
 
 ### Q5. 자체 발견 4.3 의 함의 — 리터럴 하드코딩 전수 점검이 필요한가
 
@@ -312,3 +319,75 @@ python -m pytest tests/ -q
 ```
 
 9번 승인 전에는 대규모 재실행을 시작하지 않는다.
+
+
+---
+
+## 11. ★ 요청문 작성 후 정정 (2026-08-24) — 원자료 7다리 손실
+
+이 요청문은 8다리를 전부 "원자료 보유 기계에서 재생성 가능" 으로 적었다.
+**작성 후 작업 기계가 교체되면서 그것이 틀린 상태가 됐다.**
+
+| 다리 | `preservation_status` | `validation_status` | `inference_role` |
+|---|---|---|---|
+| `paired_fixed5_v4` | **`full_bundle`** | **`current_validated`** | `canonical_candidate` |
+| 나머지 7 (warm 실험) | `missing` | `unvalidated` | `diagnostic` |
+
+### 11.1 `paired_fixed5_v4` — 34검사 전부 통과
+
+2026-08-16 백업에서 복구. `fits.parquet` sha256 이 manifest 봉인과 바이트
+일치하고 `_inputs/`·`attempts/`·`fit_chunks/` 가 완비된 **완전 bundle** 이다.
+
+```
+$ validate_provenance('results/paired_fixed5_v4')
+ok: True · 검사 수: 34 · 실패: []
+  출력봉인_재계산 · 입력_digest_재해시 · 조건집합_서명일치 ·
+  run_signature_재계산 · 곡선_producer_재검 · restart_예산_완주 … 34/34
+```
+
+**검사기가 실패를 실제로 잡는지 변이로 확인**했다 — fits 중간 1비트를 뒤집으면
+`ok: False`, `fail: ['출력봉인_재계산', 'restart_출처', 'restart_예산_완주']`.
+즉 `fail: []` 는 검사가 안 돈 것이 아니다.
+
+**21차 발견 6 의 세 번째 줄(`restore → validate → score → analyze`)이 이
+다리에서 닫혔다.** §7 의 "닫지 않은 것" 첫 줄을 이만큼 정정한다.
+
+투영은 **세 번째 기계**에서도 바이트 동일하게 재생성됐다 (`ad598fe77e75afec`).
+`grid_curves_v4`(봉인 입력 곡선)도 함께 복구돼 계약 §9 의 곡선 재사용 경로가
+실물로 확보됐다.
+
+### 11.2 7다리 — 손실
+
+2026-08-20 warm 실험이라 백업 이후다. 네 곳 전수 조사에서 없다.
+
+**결론은 무너지지 않는다** — 전이표(`131/436/55/854`·`381/186/167/742`) ·
+후보 구성(`base_init` → `warm` slot 교체) · random-only 다봉성(`0.969512`) 이
+전부 **커밋된 투영에서 재계산**된다. 이 요청문 §4·§5.2 의 수치가 그것이다.
+
+잃은 것: 투영을 원자료에서 다시 만들 수 없고, `validate_provenance` 가 영구
+불가하며, 투영에 없는 열(`p_spread` 등)이 사라졌다.
+
+### 11.3 계약 §10·§11 을 고쳤다 — 보존을 실행 **앞으로**
+
+23차 Q6 이 content-addressed 보존을 권고했고 우리는 계약 §10 에 적어 두고
+구현을 "단계 3 이후" 로 미뤘다. **그 사이에 잃었다.**
+
+구현 순서에서 보존을 12번(RUN_SCOPE 변경) **앞**으로 옮겼다. 보존 없이 새로
+돌리면 같은 방식으로 또 잃는데, 이번엔 ~12시간짜리다.
+
+### 11.4 부수 발견 — `validate_provenance` 가 깨진 parquet 에서 예외로 죽는다
+
+footer 손상 시 `pd.read_parquet` 이 먼저 죽어 `ArrowInvalid` 가 그대로
+올라온다 (`src/io.py:1676`). 조용한 통과는 아니라 안전 쪽이지만, 함수 계약이
+`{"ok":…, "fail":[…]}` 라 **깨진 파일을 발견으로 보고하지 못한다.** `src/` 라
+지금 고치면 digest 가 바뀐다 → 계약 §9.4 로 이월.
+
+### 11.5 새 회귀 2건
+
+- `test_preservation_registry_covers_every_warm_probe_leg` — 투영이 있는 모든
+  다리가 `LEG_PRESERVATION.yaml` 에 3축으로 등록됐는가. **원자료가 없는데
+  `validation_status` 가 `unvalidated` 가 아니면 실패**한다.
+- `test_docs_do_not_claim_lost_legs_are_regenerable` — 손실 다리가 §32 에
+  기록돼 있는가.
+
+변이 2건(손실 다리를 "검증됨" 으로 위장 · 원장에서 다리 삭제) 전부 실패 확인.

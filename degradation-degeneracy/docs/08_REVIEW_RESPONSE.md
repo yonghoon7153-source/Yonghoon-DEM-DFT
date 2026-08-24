@@ -2287,3 +2287,116 @@ upstream 조회 실패 시 `origin/HEAD` 로 자동 대체하던 것을 없애�
 계약 §2·§4·§6 은 **정의만 있고 구현이 없다.** 리뷰 순서로 11번(문서·회귀
 재심사)이 지금이고, 12번(RUN_SCOPE 변경 → `source_digest` 변화 → 재실행)은
 그 뒤다. 비용은 재산정 전까지 승인 요청하지 않는다 (§9.3).
+
+## 32. 작업 기계 교체로 원자료 7다리 손실 — 그리고 정본 한 다리의 완전 검증
+
+> 2026-08-24. 문서 라운드 중 작업 환경이 바뀌면서 `results/` 가 사라졌다.
+> 이 절은 **무엇이 남고 무엇이 사라졌는지의 정본**이다. 기계로 읽는 형태는
+> `docs/22p_gap/LEG_PRESERVATION.yaml`.
+
+### 32.1 무슨 일이 있었나
+
+작업 기계가 교체됐다 (`DESKTOP-K1BLBIJ`/`yonghoon` → `DESKTOP-IK8J81H`/
+`yonghoon71`). 옛 기계의 WSL 홈에 있던 `degradation-degeneracy/results/`
+(1.9 GB, 73 디렉터리)는 git 밖이라 함께 사라졌다.
+
+네 곳을 전수 조사했다 — 새 WSL 홈 · D 드라이브 2곳 · C 드라이브. **8다리 중
+하나만 살아남았다.**
+
+### 32.2 `paired_fixed5_v4` — 완전 bundle 복구 + 34검사 통과
+
+2026-08-16 백업(`v4_run_extras`)에서 복구했다. 실측:
+
+```
+복구본 sha256  e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+manifest 봉인  동일  ✅
+동봉  _inputs/ · attempts/ · fit_chunks/ · manifest.yaml · provenance.json
+```
+
+`_inputs/` 까지 있어 **축약본이 아니라 완전 bundle** 이다. 그래서 21차 발견 6
+이 "확인할 수 없다" 고 적은 세 번째 줄을 이 다리에서 실제로 돌렸다:
+
+```
+$ validate_provenance('results/paired_fixed5_v4')
+ok      : True
+검사 수 : 34
+실패    : []
+
+  ✅ 출력봉인_재계산    ✅ 입력_digest_재해시   ✅ 조건집합_서명일치
+  ✅ run_signature_재계산  ✅ 곡선_producer_재검  ✅ 코드_identity
+  ✅ 입력봉인_교차일치   ✅ 입력_스냅샷        ✅ restart_예산_완주
+  … (34/34 통과)
+```
+
+**검사기가 실제로 실패를 잡는지도 확인했다** (변이 시험). fits 중간 바이트를
+1비트 뒤집으면:
+
+```
+변이본 sha  e07032f5…  (원본 e033b195…)
+ok: False
+실패한 검사: ['출력봉인_재계산', 'restart_출처', 'restart_예산_완주']
+```
+
+즉 `fail: []` 는 검사가 안 돈 것이 아니라 **34건이 돌아서 전부 통과한 것**이다.
+
+투영도 **세 번째 기계**에서 바이트 동일하게 재생성됐다 (WSL2/py3.12 →
+컨테이너/py3.11 → 새 WSL2/py3.12, 전부 `ad598fe77e75afec`).
+
+곁들여 `grid_curves_v4`(봉인 입력 곡선) · `grid_fit_v4` · `halfcell_fit_v4`
+도 복구됐다. 계약 §9 가 "producer identity 가 불변이면 곡선을 재사용한다
+(재생성 ~28분 절약)" 고 적은 그 곡선이 실물로 있다.
+
+### 32.3 warm 실험 7다리 — 손실
+
+2026-08-20 에 만든 것들이라 8/16 백업 이후다. 네 곳 어디에도 없다.
+
+```
+paired_fixed5_v4_nowarm_now · paired_fixed5_v4_warm
+fit_22p_seed_404_hc · _nowarm · _warm_now
+fit_seed404_pe5mv · _nowarm
+```
+
+**안 바뀌는 것** (커밋된 투영에서 전부 재계산된다):
+
+| 근거 | 어디서 |
+|---|---|
+| 전이표 `131/436/55/854` · `381/186/167/742` | 행 투영 |
+| 후보 구성 (`base_init` → `warm` slot 교체) | restart 투영 |
+| random-only 다봉성 `0.969512` | restart 투영 |
+| summary·manifest·투영 digest 자기정합 | 커밋된 파일 |
+
+**바뀌는 것**:
+
+- 7다리는 투영을 **원자료에서 다시 만들 수 없다** → 영구 `diagnostic`
+- `validate_provenance` 영구 불가
+- 투영에 없는 열(`p_spread`·경계 플래그 세부·`restarts_json` 전문) 영구 손실
+- 계약 §9 의 재실행에서 그 7다리는 "재실행" 이 아니라 **"새로 생성"**
+
+### 32.4 계약 §8 의 3축이 여기서 실증됐다
+
+23차 P0-6 이 단일 `inference_status` 를 셋으로 나누라고 했다. 지금 상태가
+정확히 그 이유다 — 단일 축으로는 "원자료가 없지만 투영은 검증된" 상태를 못 적는다.
+
+| 다리 | `preservation_status` | `validation_status` | `inference_role` |
+|---|---|---|---|
+| `paired_fixed5_v4` | `full_bundle` | `current_validated` | `canonical_candidate` |
+| 나머지 7 | `missing` | `unvalidated` | `diagnostic` |
+
+### 32.5 교훈 — 23차 Q6 을 미룬 대가
+
+23차 Q6 답변이 "각 leg 의 fits 는 접근 가능해야 한다 · content-addressed 외부
+저장소에 `_inputs/` 를 한 번만 보존" 을 권고했다. 계약 §10 에 적어 두고
+**구현을 단계 3 이후로 미뤘다.** 그 사이에 기계가 바뀌었고 7다리를 잃었다.
+
+계약 §10 의 보존 단위를 **단계 3 실행 전에** 세운다 — 순서를 바꾼다 (§9.5).
+
+### 32.6 부수 발견 — `validate_provenance` 가 깨진 parquet 에서 예외로 죽는다
+
+footer 를 깨면 `pd.read_parquet` 이 먼저 죽어 `ArrowInvalid` 가 그대로
+올라온다 (`src/io.py:1676`). 조용히 통과하는 것이 아니라 fail-hard 라 안전
+쪽이지만, 함수 계약은 `{"ok":…, "fail":[…]}` 를 돌려준다고 적혀 있다.
+**깨진 파일을 "발견" 으로 보고하지 못하는 구멍**이다.
+
+`src/` 라 지금 고치면 `source_digest` 가 바뀐다 → 단계 3 항목으로 이월
+(계약 §9.4 에 추가). 파싱 가능한 손상은 정상적으로 `출력봉인_재계산` 실패를
+낸다는 것은 위 변이 시험으로 확인했다.

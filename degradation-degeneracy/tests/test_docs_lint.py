@@ -2117,3 +2117,76 @@ def test_projection_schema_is_declared_consistently():
             f"≠ spec {s['schema_version']}")
         for k in ("summary_sha256", "manifest_sha256"):
             assert m.get(k), f"{m['leg_id']}: {k} 가 없다 (발견 5)"
+
+
+_PRESERVE = DOCS / "22p_gap" / "LEG_PRESERVATION.yaml"
+
+
+def test_preservation_registry_covers_every_warm_probe_leg():
+    """★ 2026-08-24 — 원자료 보존 상태가 문서 주장과 어긋나면 안 된다.
+
+    기계 교체로 warm 실험 7다리의 원자료를 잃었다. 그 전까지 문서는 8다리를
+    전부 "원자료 보유 기계에서 재생성 가능" 으로 적고 있었다 — **틀린 상태가
+    문서에 있었다.** 24차 요청문도 그렇게 썼다.
+
+    보존 상태를 기계가 읽는 정본(`LEG_PRESERVATION.yaml`)으로 두고, 투영이
+    있는 모든 다리가 거기 등록됐는지 검사한다. 새 다리를 돌리면 이 테스트가
+    먼저 깨져서 보존 상태를 적게 만든다.
+    """
+    import yaml
+
+    assert _PRESERVE.is_file(), "LEG_PRESERVATION.yaml 이 없다"
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    assert reg.get("schema_version") == 1
+
+    recorded = {l["leg_id"]: l for l in reg["legs"]}
+    have = {p.name[: -len(".projection.yaml")]
+            for p in _WARM.glob("*.projection.yaml")}
+
+    missing = sorted(have - set(recorded))
+    assert not missing, (
+        f"투영은 있는데 보존 상태가 기록되지 않은 다리: {missing}\n"
+        f"  `docs/22p_gap/LEG_PRESERVATION.yaml` 에 3축을 적어라")
+    extra = sorted(set(recorded) - have)
+    assert not extra, f"보존 원장에만 있고 투영이 없는 다리: {extra}"
+
+    _P = {"full_bundle", "recorded_projection", "missing"}
+    _V = {"current_validated", "historical_validated", "unvalidated"}
+    _R = {"canonical", "canonical_candidate", "diagnostic", "confounded",
+          "superseded", "excluded"}
+    bad = []
+    for leg, e in sorted(recorded.items()):
+        if e.get("preservation_status") not in _P:
+            bad.append(f"{leg}: preservation_status={e.get('preservation_status')}")
+        if e.get("validation_status") not in _V:
+            bad.append(f"{leg}: validation_status={e.get('validation_status')}")
+        if e.get("inference_role") not in _R:
+            bad.append(f"{leg}: inference_role={e.get('inference_role')}")
+        if not e.get("근거"):
+            bad.append(f"{leg}: 근거가 없다")
+        # ★ 원자료가 없으면 검증됐다고 주장할 수 없다 (23차 P0-6)
+        if (e.get("preservation_status") == "missing"
+                and e.get("validation_status") != "unvalidated"):
+            bad.append(f"{leg}: 원자료가 없는데 validation_status="
+                       f"{e['validation_status']} — 검증 근거가 없다")
+    assert not bad, "보존 원장이 규칙과 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_docs_do_not_claim_lost_legs_are_regenerable():
+    """★ 손실된 다리를 "재생성 가능" 으로 적는 문구가 되살아나지 않는가.
+
+    이 저장소의 반복 실패 형태다 — 상태가 바뀌었는데 문서가 옛 상태를 계속
+    말한다 (21차 발견 8 의 철회 잔여, 20차 13-2 의 stale 커밋 수). 보존 쪽에서
+    같은 일이 나지 않게 **원장을 정본으로** 묶는다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    lost = sorted(l["leg_id"] for l in reg["legs"]
+                  if l["preservation_status"] == "missing")
+    assert lost, "손실 다리가 없다 — 이 테스트의 전제가 바뀌었다면 갱신하라"
+
+    doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
+    assert "§32" in doc or "## 32." in doc, "§32(손실 기록)이 문서에 없다"
+    for leg in lost:
+        assert leg in doc, f"{leg} 의 손실이 §32 에 기록되지 않았다"
