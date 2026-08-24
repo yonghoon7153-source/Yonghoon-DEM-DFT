@@ -501,6 +501,50 @@ check "대답이 없으면 모르는 것"      "$(door_state 000 '암호')"     
 check "빈 코드도 모르는 것"          "$(door_state '' '')"         "unknown"
 
 echo
+echo "Windows 쪽 LAN 주소 읽기 (사람이 ipconfig 에서 골라 적던 자리)"
+KO='Windows IP 구성
+
+이더넷 어댑터 vEthernet (WSL):
+   IPv4 주소 . . . . . . . . . : 172.24.25.206
+   서브넷 마스크 . . . . . . . : 255.255.240.0
+
+무선 LAN 어댑터 Wi-Fi:
+   IPv4 주소 . . . . . . . . . : 192.168.0.40
+   서브넷 마스크 . . . . . . . : 255.255.255.0
+   기본 게이트웨이 . . . . . . : 192.168.0.1'
+# 172.x 는 WSL NAT 이라 밖에서 못 쓴다.  그것을 불러 주면 노트북에서 영영 안 열린다.
+check "WSL 의 172.x 를 고르지 않는다" "$(windows_lan_address "$KO")" "192.168.0.40"
+
+EN='Windows IP Configuration
+
+Ethernet adapter vEthernet (WSL):
+   IPv4 Address. . . . . . . . . . . : 172.24.25.206
+   Subnet Mask . . . . . . . . . . . : 255.255.240.0
+
+Wireless LAN adapter Wi-Fi:
+   IPv4 Address. . . . . . . . . . . : 10.0.1.5
+   Default Gateway . . . . . . . . . : 10.0.1.1'
+# 'IPv4' 는 어느 언어의 Windows 에서도 번역되지 않는다 — 그래서 이 낱말로 잡는다.
+check "영문 Windows 도 같다" "$(windows_lan_address "$EN")" "10.0.1.5"
+
+# 가장 위험한 오답: 기본 게이트웨이(공유기)를 사람에게 불러 주는 것.  IP 처럼
+# 생긴 것을 다 긁으면 그렇게 된다.  IPv4 줄만 보므로 걸리지 않는다.
+check "게이트웨이를 고르지 않는다" \
+  "$(windows_lan_address 'Wi-Fi:
+   IPv4 주소 . . . : 192.168.0.40
+   기본 게이트웨이 . : 192.168.0.1')" "192.168.0.40"
+# 서브넷 마스크도 IP 처럼 생겼다.
+check "서브넷 마스크도 고르지 않는다" \
+  "$(windows_lan_address 'Wi-Fi:
+   서브넷 마스크 . . : 255.255.255.0
+   IPv4 주소 . . . : 192.168.0.40')" "192.168.0.40"
+# 쓸 만한 것이 하나도 없으면 짐작하지 않는다 (§0.4).
+check "WSL 것뿐이면 빈 값" \
+  "$(windows_lan_address 'vEthernet (WSL):
+   IPv4 주소 . . . : 172.24.25.206')" ""
+check "빈 출력도 죽지 않는다" "$(windows_lan_address '')" ""
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
