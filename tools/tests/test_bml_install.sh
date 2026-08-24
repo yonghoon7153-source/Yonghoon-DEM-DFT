@@ -56,16 +56,21 @@ for n in bml bmlin bmlout; do
   else bad_ "$n 이 없거나 실행할 수 없다"; fi
 done
 
-if grep -qF "REAL=\"$(cd -P "$HERE/.." && pwd)/bml\"" "$TARGET/bml"; then
+# **생성 문자열이 아니라 동작을 본다.**  경로를 어떻게 인용하느냐는 구현이고,
+# 이 시험이 지켜야 하는 것은 "그 실행기가 이 트리의 bml 을 부르는가" 다.
+# 문자열로 못 박아 두면 인용을 고칠 때마다 애먼 시험이 깨지고, 정작 특수문자
+# 경로에서 깨지는 것은 못 잡는다.
+if REAL_SEEN="$(BML_PRINT_REAL=1 "$TARGET/bml" 2>/dev/null)" \
+   && [ "$REAL_SEEN" = "$(cd -P "$HERE/.." && pwd)/bml" ]; then
   ok_ "이 트리의 bml 을 가리킨다"
 else
-  bad_ "엉뚱한 곳을 가리킨다: $(grep '^REAL=' "$TARGET/bml")"
+  bad_ "엉뚱한 곳을 가리킨다: ${REAL_SEEN:-(못 읽음)}"
 fi
 
 # 껍데기를 통해서도 별칭이 살아 있어야 한다.  셔뱅을 거치면 커널이 argv[0] 을
 # 스크립트 경로로 갈아치우므로 `$0` 로는 알 수 없다 -- 환경변수로 넘긴다.
 for n in bmlin bmlout; do
-  if grep -qF "BML_INVOKED_AS=\"$n\"" "$TARGET/$n"; then
+  if [ "$(BML_PRINT_INVOKED_AS=1 "$TARGET/$n" 2>/dev/null)" = "$n" ]; then
     ok_ "$n 이 자기 이름을 넘긴다"
   else
     bad_ "$n 이 이름을 안 넘긴다 — bml 과 똑같이 동작한다"
@@ -231,6 +236,102 @@ if [ -z "$missing_case" ]; then
   ok_ "옛 서버·옛 번들·알 수 없음을 각각 구분해 말한다"
 else
   bad_ "이 경우에 안내가 없다:$missing_case"
+fi
+
+# --- 실패를 실패라고 말하는가 ------------------------------------------------
+#
+# 예전에는 cat 과 chmod 가 실패해도 "설치" 를 출력하고 rc 파일까지 고친 뒤 0 으로
+# 끝났다.  PATH 는 잡혔는데 실행기가 없는, 가장 헷갈리는 상태다 -- 실제로
+# 한 기계가 `bash: .../bml: No such file or directory` 로 막혔다.
+
+echo
+echo "쓸 수 없을 때"
+
+HOME="$TMP/home2"; mkdir -p "$HOME"; export SHELL=/bin/bash
+RC2="$HOME/.bashrc"; : > "$RC2"
+BAD="$TMP/nowrite"
+mkdir -p "$BAD"
+# root 로도 도는 시험이라 권한 대신 mv 를 실패시킨다.
+mv() { return 1; }
+out="$(cmd_install "$BAD" 2>&1)"; rc=$?
+unset -f mv
+if [ "$rc" -ne 0 ]; then ok_ "실행기를 못 쓰면 0 으로 끝나지 않는다"
+else bad_ "실행기를 못 썼는데 0 으로 끝났다"; fi
+case "$out" in *"설치:"*) bad_ "설치했다고 말했다" ;; *) ok_ "설치했다고 말하지 않는다" ;; esac
+if [ ! -s "$RC2" ]; then ok_ "PATH 를 건드리지 않는다"
+else bad_ "실행기도 없는데 rc 파일을 고쳤다"; fi
+if [ -z "$(find "$BAD" -maxdepth 1 -name 'bml*' 2>/dev/null)" ]; then
+  ok_ "빈/잘린 실행기를 남기지 않는다"
+else
+  bad_ "쓰다 만 파일이 남았다: $(find "$BAD" -maxdepth 1 -name 'bml*')"
+fi
+
+# --- 특수문자가 든 경로 ------------------------------------------------------
+#
+# 실행기에 `REAL="/tmp/Battery $100/repo/tools/bml"` 이 적히면 다음 실행 때
+# `$1` 이 다시 펼쳐져서, 실제 파일이 있어도 엉뚱한 경로를 찾는다.
+
+echo
+echo "특수문자가 든 경로"
+
+ODD="$TMP/Battery \$100 'lab'"
+mkdir -p "$ODD/tools" "$TMP/bin3"
+cat > "$ODD/tools/bml" <<'FAKE'
+#!/usr/bin/env bash
+printf 'REACHED %s
+' "${BML_INVOKED_AS:-?}"
+FAKE
+chmod +x "$ODD/tools/bml"
+
+SAVED_SCRIPT="$SCRIPT"; SAVED_REPO="$REPO"
+SCRIPT="$ODD/tools/bml"; REPO="$ODD"
+write_launcher "$TMP/bin3/bmlin" bmlin && wrote=0 || wrote=1
+SCRIPT="$SAVED_SCRIPT"; REPO="$SAVED_REPO"
+
+if [ "$wrote" -eq 0 ]; then ok_ "특수문자 경로에도 실행기를 쓴다"
+else bad_ "특수문자 경로에서 실행기를 못 썼다"; fi
+
+# 문자열만 보지 않고 **실제로 실행한다.**  생성 문자열 검사는 이 결함을
+# 그대로 통과시켰다.
+got="$("$TMP/bin3/bmlin" 2>&1)"
+if [ "$got" = "REACHED bmlin" ]; then
+  ok_ "그 실행기가 실제로 원본을 부른다"
+else
+  bad_ "실행기가 원본을 못 찾았다: $got"
+fi
+
+# --- rc 의 주석은 '이미 있다' 가 아니다 ---------------------------------------
+
+echo
+echo "rc 파일 판정"
+
+HOME="$TMP/home3"; mkdir -p "$HOME"
+RC3="$HOME/.bashrc"
+TARGET3="$TMP/bin4"
+printf '# old %s\n' "$TARGET3" > "$RC3"
+out="$(cmd_install "$TARGET3" 2>&1)"
+if grep -q "^export PATH=\"$TARGET3:" "$RC3"; then
+  ok_ "주석만 있으면 PATH 를 넣는다"
+else
+  bad_ "주석을 '이미 있다' 로 읽고 건너뛰었다 — 새 터미널에서 여전히 bml 이 없다"
+fi
+
+# 진짜로 있으면 두 번 넣지 않는다.
+before="$(grep -c "^export PATH=" "$RC3")"
+out="$(cmd_install "$TARGET3" 2>&1)"
+after="$(grep -c "^export PATH=" "$RC3")"
+if [ "$before" = "$after" ]; then ok_ "이미 있으면 다시 넣지 않는다"
+else bad_ "같은 줄을 또 넣었다 ($before -> $after)"; fi
+
+# `$HOME` 으로 적힌 형태도 같은 줄로 본다.
+HOME="$TMP/home4"; mkdir -p "$HOME/.local/bin"
+RC4="$HOME/.bashrc"
+printf 'export PATH="$HOME/.local/bin:$PATH"\n' > "$RC4"
+out="$(cmd_install "$HOME/.local/bin" 2>&1)"
+if [ "$(grep -c 'export PATH=' "$RC4")" = "1" ]; then
+  ok_ "\$HOME 으로 적힌 줄도 알아본다"
+else
+  bad_ "\$HOME 으로 적힌 줄을 못 알아보고 또 넣었다"
 fi
 
 echo
