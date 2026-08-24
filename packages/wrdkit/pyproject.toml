@@ -13,7 +13,10 @@ dependencies = ["numpy>=1.24"]
 
 [project.optional-dependencies]
 xlsx = ["openpyxl>=3.1"]
-dev = ["pytest>=7.4", "openpyxl>=3.1", "ruff>=0.6"]
+# 임피던스 등가회로 피팅.  닫힌 해가 없어 최적화가 필요하고, 신뢰구간은 해에서의
+# 야코비안에서 나온다 (ADR 0019).  읽기·그리기는 이것 없이도 동작한다.
+eis = ["scipy>=1.11"]
+dev = ["pytest>=7.4", "openpyxl>=3.1", "ruff>=0.6", "scipy>=1.11"]
 
 [project.scripts]
 wrdkit = "wrdkit.cli:main"
