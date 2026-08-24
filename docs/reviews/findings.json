@@ -682,6 +682,21 @@
    ],
    "note": "구멍이 두 겹이었다.\n① `mpm_webapp_payload.py:1528` 이 이온을 **무조건** `_s3mark('ionic','complete')` 로 적었다.  전자 경로는 2026-08-20 전수감사 γ 가 이미 갈라 적도록 고쳤는데(`:1198`) **이온 쌍둥이는 그대로 남았다**.  게다가 이온은 전자와 달리 `cg_info`·`unconverged` 를 **payload 에 싣지도 않아** 판정기가 볼 것 자체가 없었다.\n② `sdcp_gain_verdict.py:349` 의 `--require-ionic` 이 **양의 σ_ion 존재만** 봤다.\n⇒ 이온 솔브가 30000 iter 로 안 붙어도 `complete` + 양의 σ_ion 이면 이온축 결론이 **초록**으로 나온다.\n★★ **같은 결함의 3회차**다 — 웹앱↔킷 쌍둥이 파이프라인의 thermal 무음-결손(2026-08-11, 양쪽에 따로 존재해 각각 고침)과 같은 뿌리다: **한 경로를 고치고 쌍둥이를 안 고친다**.  CLAUDE.md frame[5] 의 ⚠ 가 정확히 이것을 경고한다.\n★ 고침 `46c39b9d`: payload 가 상태를 갈라 적고 `ion_cg_info`·`ion_unconverged` 를 싣는다 · 판정기 `_read` 가 읽는다 · 게이트를 3단으로(σ_ion 없음 → 미수렴 → 수렴정보 없음; 순서가 중요해 ㉕e 가 강제한다) · 봉인 이전 세대는 HOLD (fail-closed).\n★ 회귀 ㉛a~d.  변이체로 확인 — 봉인을 걷어내면 ㉛b/c 가 HOLD 대신 **h0** 를 내며 실패한다 = Codex 가 말한 false-green 을 정확히 재현 (66/68).\n⚠ **소급 영향**: CL-58 등 봉인 이전 이온 결과는 `--require-ionic` 에서 이제 HOLD 다.  σ_ion 비 0.99272 를 **결론으로** 쓰려면 재실행이 필요하다 (σ_e 축은 무영향).",
    "found_by": "codex (1차 리뷰 실행차단점 ②) · 3회차 성격은 claude"
+  },
+  {
+   "id": "CDXR2-5",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "1332824e",
+   "opened_in": "docs/reviews/crossreview_ptfe_8arm_20260824.md",
+   "title": "러너가 완전한 fail-fast 가 아니었다 — fresh 팔 미검사 · `status:failed` 통과 · 마지막이 항상 exit 0",
+   "evidence_tests": [
+    "scripts/sr01_stamp_compare.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "세 구멍이 겹쳐 **쓰레기 팔이 영구 캐시**될 수 있었다.\n① 옛 러너는 **캐시된** 팔만 `--check-arm` 을 돌리고 갓 만든 팔은 그대로 `mv` 했다.  payload 는 STEP3 예외를 `status:failed` 로 적고 **exit 0** 으로 끝나므로, 검사 없이 들어간 JSON 이 다음 실행에서 `SKIP (완전)` 으로 재사용된다.\n② `check_arm` 이 `status:failed` 를 **안 봤다**.  payload 의 `except` 블록은 σ_e 솔브 **뒤**의 작업(STEP4 grid 저장 등)까지 감싸므로 **σ_e 는 멀쩡한데 status 는 failed** 인 팔이 나온다 — 실사고가 정확히 그것이었다(\"정상 완주한 뒤 죽었다\").  옛 검사는 σ_e 가 양수라 통과시켰다.\n③ 마지막 줄이 `--collect-only` 라 **항상 exit 0**.  팔이 모자라도·미수렴이어도 러너가 초록으로 끝났다.\n★ 고침 `1332824e`.  ③ 이 설계 판단을 요구했다 — 러너가 판정을 돌리면 이 파일 헤더의 규약(\"결과를 보고 창을 옮길 수 없게\")이 깨진다.  ⇒ **봉인과 판정을 갈랐다**: 봉인 = 데이터가 쓸 만한가(팔 수·origin 집합·수렴·digest·고정인자), 판정 = 그것이 뭐라고 말하는가(h0/h1/비).  신설 `--seal-only` 는 답을 **출력하지 않으므로** 사전등록이 안 깨진다.  러너는 ARMS≥2 에서만 건다.\n⚠ Codex 의 \"payload failure 를 nonzero exit 로 전파\" 는 **의도대로 하되 방법을 바꿨다** — opt-in 플래그는 러너가 잊으면 다시 fail-open 이다.  `check_arm` 의 **무조건** 검사가 같은 것을 캐시 경로까지 포함해 덮으므로 그쪽을 택했고, 산출물 부재는 ① 의 명시 ABORT 가 덮는다.\n★ 회귀 8n~8q · ㉜a~d.  ㉜c 가 핵심 — 봉인 출력이 `decision`·`ratio`·`ratio_paired_mean` 을 누설하지 않는지 강제한다.  변이체 3종 확인 (봉인 제거 → 8n/8o FAIL 59/61 · 비 누설 → ㉜c FAIL 71/72).",
+   "found_by": "codex (1차 리뷰 실행차단점 ①) · 봉인/판정 분리 설계는 claude"
   }
  ]
 }
