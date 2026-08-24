@@ -495,10 +495,22 @@ def physics_protocol_id(man):
     ⚠ 값이 하나라도 **없으면** 규약을 확정할 수 없다 → `unknown:<빠진 필드>` 를 낸다
       (임의 기본값으로 채우지 않는다 — 그것이 fail-open 이다)."""
     import hashlib as _hl
-    _miss = [k for k in PROTOCOL_FIELDS if man.get(k) is None]
+    #  ★★ 2026-08-25 (M-R3-02, Codex 재리뷰) — **`None` 이 곧 missing 은 아니다.**
+    #    `temp_c=None` 은 "온도 기능 OFF" 라는 **유효값**이고 생산 기본이다 (러너가
+    #    `--temp-c` 를 안 준다).  옛 판은 그것을 missing 으로 읽어 정상 16팔이 전부
+    #    `unknown:temp_c` 가 됐고, 내가 넣은 게이트가 그것을 HOLD 로 잡았다 =
+    #    **내가 만든 생산 과잉차단**.  ⇒ OFF 가 정당한 축은 sentinel 로 정규화한다.
+    _OFF_OK = ('temp_c',)          # None = 명시적 OFF 인 축
+    _v = {}
+    for k in PROTOCOL_FIELDS:
+        if man.get(k) is None and k in _OFF_OK:
+            _v[k] = '__OFF__'      # 값이 없는 것과 **끈 것**을 구분해 해시에 넣는다
+        else:
+            _v[k] = man.get(k)
+    _miss = [k for k in PROTOCOL_FIELDS if _v[k] is None]
     if _miss:
         return 'unknown:' + ','.join(sorted(_miss))
-    _canon = json.dumps({k: man[k] for k in PROTOCOL_FIELDS}, sort_keys=True,
+    _canon = json.dumps(_v, sort_keys=True,
                         ensure_ascii=False, separators=(',', ':'))
     return 'p1-' + _hl.sha256(_canon.encode('utf-8')).hexdigest()[:16]
 
@@ -1838,6 +1850,13 @@ def main():
                     step3['trackb'] = {'reason': 'ionic solve n_dof=0 (SE non-percolating) — '
                                                  'trackb undefined; 재실행으로 해소되지 않음'}
                 # ── STEP3 열전도 (σ_thermal, 多상 k) — 同 sid3 격자 재사용, ∇·(k∇T)=0 (σ_e/σ_ion과 동일 솔버) ──
+                if a.no_thermal:
+                    #  ★★ 2026-08-25 (M-R3-03, Codex 재리뷰) — **끈 것을 disabled 로 적는다.**
+                    #    옛 판은 `--no-thermal` 에서 아무 기록도 안 남겨 thermal 이
+                    #    `missing` 으로 채워졌고, 내가 오늘 넣은 required 게이트가 그것을
+                    #    실패로 세어 **LEAN=1/2 생산 스윕 팔 전부가 exit 3** 이 됐다.
+                    #    (ion·pore 는 이미 disabled 를 적고 있었다 — thermal 만 빠져 있었다.)
+                    _s3mark('thermal', 'disabled', '--no-thermal (σ_e 전용 스윕)')
                 if not a.no_thermal:
                     try:
                         _kt, _kprov = _s3.thermal_k_table(k_carbon=a.k_carbon)

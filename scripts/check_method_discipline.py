@@ -991,7 +991,7 @@ def _smoke_fixture(d):
     return am, se_p, ph_p, fid_p, dia_p
 
 
-def smoke_assert_payload(out, label, errs, warns):
+def smoke_assert_payload(out, label, errs, warns, expect=None):
     """규칙 J 의 **사후 단언**만 떼어낸 것 — 가짜 payload 로 음성 대조를 걸 수 있게.
 
     ★ 2026-08-20 (Codex CDX-IJ-05): 이 단언들이 실제로 무는지 증명하려면 계산 없이
@@ -1014,8 +1014,11 @@ def smoke_assert_payload(out, label, errs, warns):
     #    통과한다 (독립 fake producer 가 `electronic=complete` 한 줄만 적고 통과했고,
     #    전부 `disabled` 로 적어도 통과했다).  ⇒ ⓐ 팔별 **기대 상태 맵**을 고정하고
     #    ⓑ 실제 **수치**(σ_e 유한·양수, dof>0)를 본다.
-    _EXPECT = {'electronic': 'complete', 'thermal': 'complete',
-               'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
+    #  ★ 2026-08-25 (M-R3-03) — 기대 상태는 **팔마다 다르다**.  러너의 LEAN=2 는
+    #    thermal 도 끄므로 그 팔에서 `thermal: complete` 를 요구하면 정상 생산 경로를
+    #    거짓 실패시킨다.  ⇒ 호출부가 팔의 플래그에 맞는 기대를 넘긴다 (기본은 옛 값).
+    _EXPECT = expect or {'electronic': 'complete', 'thermal': 'complete',
+                         'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
     bad = {k: (v or {}).get('status') for k, v in comps.items()
            if (v or {}).get('status') not in ('complete', 'disabled')}
     _wrong = {k: (comps.get(k) or {}).get('status')
@@ -1093,12 +1096,28 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         if not se_p:
             return (['J_NO_NUMPY| numpy 가 없어 스모크 픽스처를 만들 수 없다 — '
                      '확인 못 한 것을 통과시키지 않는다 (fail-closed)'], warns)
+        _EXP_STD = {'electronic': 'complete', 'thermal': 'complete',
+                    'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
+        _EXP_LEAN = {'electronic': 'complete', 'thermal': 'disabled',
+                     'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
         arms = [('plain  (--fibre 없음 = 첨가제 없는 킷)',
-                 ['--scaffold', am, '--se', se_p]),
+                 ['--scaffold', am, '--se', se_p], _EXP_STD),
                 ('fibre  (--phase/--fibre 있음 = 첨가제 킷)',
                  ['--scaffold', am, '--se', se_p, '--phase', ph_p,
-                  '--fibre', fid_p, '--fibre-dia', dia_p])]
-        for label, extra in arms:
+                  '--fibre', fid_p, '--fibre-dia', dia_p], _EXP_STD),
+                #  ★★★ 2026-08-25 (M-R3-03, Codex 재리뷰) — **LEAN 생산 경로**를 태운다.
+                #    옛 스모크는 `--no-ion --no-pore` 만 써서 러너가 실제로 쓰는
+                #    `--no-thermal --no-trackb --no-field --no-collector` 를 **한 번도
+                #    안 태웠다**.  그래서 내가 넣은 required 게이트가 thermal 을 missing 으로
+                #    세어 **LEAN=1/2 스윕 팔 전부를 exit 3** 으로 죽이는데도 J-1 이 초록이었다.
+                #    ⇒ 러너의 LEAN=2 플래그 집합을 그대로 넣는다.  이 팔이 이 부류의 유일한
+                #      실물 증인이다 (손수 만든 manifest 픽스처는 producer 를 증명하지 못한다).
+                ('lean2  (러너 LEAN=2 = σ_e 전용 생산 경로)',
+                 ['--scaffold', am, '--se', se_p, '--phase', ph_p,
+                  '--fibre', fid_p, '--fibre-dia', dia_p,
+                  '--no-thermal', '--no-trackb', '--no-field', '--no-collector',
+                  '--no-step4'], _EXP_LEAN)]
+        for label, extra, _exp in arms:
             out = os.path.join(d, 'p_%d.json' % len(errs))
             cmd = [sys.executable, pay, *extra, '--n-vox', _SMOKE_NVOX,
                    '--step3-vox', _SMOKE_VOX, '--no-ion', '--no-pore', '--out', out]
@@ -1116,7 +1135,7 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                 errs.append(f'J_SKIPPED| {label}: **STEP3 가 조용히 죽었다** (exit 0 인데) — '
                             f'{_ln[0].strip()}')
                 continue
-            _res = smoke_assert_payload(out, label, errs, warns)
+            _res = smoke_assert_payload(out, label, errs, warns, expect=_exp)
             if _res is None:
                 continue
             bad, comps = _res
