@@ -1099,9 +1099,16 @@ def smoke_negative_control(verbose=True):
             f.write(src.replace(_J_NEEDLE, _J_MUTANT, 1))
         e, _ = check_entrypoint_smoke(verbose=False,
                                       payload=os.path.join(dst, 'mpm_webapp_payload.py'))
-    caught = [x for x in e if x.startswith('J_SKIPPED') and 'plain' in x]
+    #  ★★ 2026-08-25 (CDXR3-2) — **잡히는 코드가 둘이다.**  producer 가 required
+    #    component 실패를 nonzero 로 전파하게 된 뒤로(fail-closed), 이 돌연변이는
+    #    `J_SKIPPED`(조용히 건너뜀)가 아니라 `J_EXIT`(요란하게 죽음)로 잡힌다 —
+    #    **더 강한 포착**이다.  둘 다 "돌연변이를 잡았다" 이므로 둘 다 인정하되,
+    #    `plain` 팔이라는 것과 **둘 중 하나여야 한다**는 것은 그대로 고정한다
+    #    (무엇이든 오류가 나면 통과, 로 느슨해지면 CDX-IJ-05 가 막으려던 그것이 된다).
+    caught = [x for x in e
+              if (x.startswith('J_SKIPPED') or x.startswith('J_EXIT')) and 'plain' in x]
     if not caught:
-        return (['J_NEG_BLIND| ★ 규칙 J 가 돌연변이를 **못 잡았다** — `_kind_all` hoist 를 '
+        return (['J_NEG_BLIND| ★ 규칙 J 가 돌연변이를 **못 잡았다** — hoist 를 '
                  f'지웠는데 plain 팔이 통과했다 (얻은 오류: {e or "없음"}).  검사가 '
                  '무의미하다'], [])
     if verbose:

@@ -629,6 +629,14 @@ def main():
     #    (prereg v3 STEP 3 이 대비 25,000 배에서 이미 CG 미수렴 HOLD).
     #    ★ 솔버는 이미 `cond = sig > 0` (step3_sigma.py:447) 이라 **σ=0 셀은 dof 에서 빠진다**.
     #      ⇒ 게이트만 분리하면 `--ptfe-stamp centerline --sigma-ptfe 0` = **exact-zero DOF** 다.
+    #  ★★ 2026-08-25 (CDXR3-2) — **required component 실패는 nonzero 로 끝난다.**
+    #    옛 판은 STEP3 예외를 `status: failed` 로 적고 payload 를 쓴 뒤 **exit 0** 이었다.
+    #    러너의 `check_arm` 이 2차 방어를 하지만 그것으로 **대체할 수 없다** — Codex 가
+    #    partial/missing·backend 위장 mutant 로 8팔 최종 봉인까지 통과시켰다.
+    #    ⇒ 기본 fail-closed.  부분 payload 가 필요한 소비자(웹앱 미리보기 등)는 명시로 연다.
+    ap.add_argument('--allow-partial-step3', action='store_true',
+                    help='STEP3 가 실패/부분이어도 exit 0 으로 끝낸다 (기본은 nonzero).  '
+                         '⚠ 과학 산출물에는 쓰지 말 것 — 부분 결과가 성공으로 캐시된다')
     ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule'),
                     help="PTFE 를 전도 격자에 어떻게 그릴지.  off = 안 그린다 · centerline = "
                          "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**).  "
@@ -2377,8 +2385,17 @@ def main():
                                                   '값이 null 인 자리는 계산이 안 된 것으로 읽을 것.'}
         print(f'  ⚠ 비유한값 {len(_nonfinite)}개를 null 로 치환했다 (payload.nonfinite_sanitized 참조): '
               + ', '.join(_nonfinite[:5]) + (' …' if len(_nonfinite) > 5 else ''), flush=True)
-    with open(a.out, 'w') as fh:
+    #  ★★ 2026-08-25 (CDXR3-2) — **원자적 쓰기**.  옛 판은 최종 파일명에 직접 썼다.
+    #    중간에 죽으면 **반쯤 쓰인 JSON 이 성공 경로의 이름**으로 남고, 러너의
+    #    `[ -s "$OUT" ]` 캐시가 그것을 재사용한다.  `.part` → fsync → rename 으로 막는다.
+    _part = a.out + '.part'
+    with open(_part, 'w') as fh:
         json.dump(payload, fh, allow_nan=False)   # 벨트 뒤이므로 남아 있으면 **터뜨린다**
+        fh.flush()
+        import os as _os_w
+        _os_w.fsync(fh.fileno())
+    import os as _os_w2
+    _os_w2.replace(_part, a.out)
     import os
     _mp = mpm_metrics                                      # AUTHORITATIVE table values (sim porosity/
     #   thickness/SE-of-solid + converged plastic coverage vs rigid reference) — NOT the n_vox
@@ -2395,6 +2412,34 @@ def main():
           f'  [voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
     if a.save_step4_grid and not getattr(a, '_s4grid_saved', False):
         print(f'⚠ --save-step4-grid 요청됐지만 미저장 — STEP3 미도달/실패 경로 (step4-v2 입력 없음)')
+
+    #  ★★★ 2026-08-25 (CDXR3-2) — **required component 실패를 process exit 로 전파한다.**
+    #    이것이 R-1 의 원래 요구다.  러너의 `check_arm` 은 2차 방어이지 대체가 아니다 —
+    #    Codex 가 partial/missing·backend 위장 mutant 로 8팔 최종 봉인까지 통과시켰다.
+    #    ⚠ STEP3 를 **요청하지 않은** 런(`--no-step3`)은 대상이 아니다 (disabled 는 실패가 아니다).
+    #  ⚠⚠ **aggregate `partial` 로 판단하면 안 된다** — `--no-ion` 처럼 **의도적으로 끈**
+    #    component 도 `disabled` 라서 aggregate 가 `partial` 이 된다.  초판이 그렇게 짜서
+    #    규칙 J 스모크(그리고 실제 LEAN=2 생산 스윕 팔 전부)를 거부했다.
+    #    ⇒ Codex 가 말한 대로 **required 를 run mode 에서 파생**하고 그것만 본다.
+    #      required = electronic(항상) + ionic(--no-ion 이 아닐 때).
+    _m3 = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
+    _st3 = (_m3 or {}).get('status')
+    _req3 = ['electronic'] + ([] if a.no_ion else ['ionic'])
+    _cmp3 = (_m3 or {}).get('components') or {}
+    _bad3 = [c for c in _req3
+             if not isinstance(_cmp3.get(c), dict) or _cmp3[c].get('status') != 'complete']
+    #  `failed`/`missing` 목록에 뭐가 있으면 required 가 아니어도 실패다 (조용한 결손 금지).
+    _bad3 += [f'{c}(failed)' for c in ((_m3 or {}).get('failed') or [])]
+    _bad3 += [f'{c}(missing)' for c in ((_m3 or {}).get('missing') or [])]
+    if _st3 == 'disabled':
+        _bad3 = []                                     # STEP3 자체를 안 돌린 런은 대상 아님
+    if _bad3 and not a.allow_partial_step3:
+        print(f'\n✗ STEP3 required component 가 완료되지 않았다: {sorted(set(_bad3))}  '
+              f'(manifest.status={_st3}, required={_req3})', flush=True)
+        print('  이 payload 는 **성공이 아니다**.  러너가 캐시하지 못하게 nonzero 로 끝낸다.', flush=True)
+        print('  부분 결과가 필요하면 `--allow-partial-step3` 을 **명시**할 것 '
+              '(과학 산출물에는 쓰지 말 것).', flush=True)
+        raise SystemExit(3)
 
 
 if __name__ == '__main__':

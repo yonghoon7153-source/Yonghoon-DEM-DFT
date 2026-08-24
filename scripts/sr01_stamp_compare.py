@@ -133,9 +133,21 @@ def backend_of(step3):
     수치도 같다 (같은 행렬·같은 rtol 1e-8 = backend swap only).  위험한 것은 **두 팔이
     다른 backend 로 도는 것** — arm A 가 도는 동안 답답해서 cupy 를 깔면 arm B 만 GPU 가
     되고, 그러면 "스탬프만 다르다" 는 A/B 의 전제가 깨진다.  수치가 같아야 마땅하지만
-    그것은 **가정**이고, 이 스크립트의 일은 가정을 검사하는 것이다."""
+    그것은 **가정**이고, 이 스크립트의 일은 가정을 검사하는 것이다.
+
+    ★★ 2026-08-25 (CDXR3-2) — **component 별 backend 가 정본이다.**  옛 판은
+    `backend_last_solve` 를 먼저 읽었는데 그것은 이름 그대로 **마지막 solve** 요약이다.
+    electronic 이 CPU 로 떨어지고 thermal 만 GPU 면 이 함수가 'gpu' 를 돌려줘
+    backend 게이트가 통과했다 (Codex mutant 실측).  ⇒ 관심 component 를 먼저 본다."""
     if not isinstance(step3, dict):
         return None
+    _comp = dig(step3, ('manifest', 'components')) or {}
+    for _c in ('electronic', 'ionic'):                 # σ 를 낸 solve 가 정본
+        _b = (_comp.get(_c) or {}).get('backend') if isinstance(_comp.get(_c), dict) else None
+        if isinstance(_b, dict) and _b.get('used'):
+            return str(_b['used'])
+        if isinstance(_b, str) and _b:
+            return _b
     for p in (('manifest', 'backend_last_solve'), ('manifest', 'backend')):
         got = dig(step3, p)
         if isinstance(got, dict) and got.get('used'):
@@ -206,6 +218,28 @@ def check_arm(path, want, expect_backend=None):
     #    작업(STEP4 grid 저장 등)까지 감싸므로, **σ_e 는 멀쩡한데 status 는 failed** 인
     #    팔이 나올 수 있다 — 실사고가 정확히 그것이었다 ("payload 가 정상 완주한 뒤 죽었다").
     #    옛 검사는 σ_e 가 양수라 **통과**시켰고, 그 팔이 영구 캐시됐다.
+    #  ★★ 2026-08-25 (CDXR3-2) — **aggregate manifest.status 도 본다.**  옛 판은
+    #    component 별 상태만 봐서 `manifest.status='partial'` + electronic `missing` 인
+    #    payload 가 통과했다 (Codex mutant: 8×2 팔 전부 그렇게 만들어도 최종 봉인까지 초록).
+    #  ⚠⚠ **aggregate `partial` 로 거부하면 안 된다** — `--no-ion`(LEAN=2) 처럼 의도적으로
+    #    끈 component 가 `disabled` 라 aggregate 는 정상적으로 `partial` 이 된다.  초판이
+    #    그렇게 짜서 **생산 스윕 팔 전부**를 거부할 뻔했다.  ⇒ `failed`/`missing` 목록을 본다.
+    _man = s.get('manifest') or {}
+    if _man.get('status') == 'failed':
+        return 'manifest.status=failed — 실패한 런이다.  재활용하지 말 것'
+    _fm = list(_man.get('failed') or []) + list(_man.get('missing') or [])
+    if _fm:
+        return (f'manifest 에 실패/누락 component 가 있다: {sorted(set(_fm))} '
+                f'(status={_man.get("status")}) — 재활용하지 말 것')
+    #  ★ required component 가 **실제로 있고 complete** 인가.  없는 것은 통과가 아니다.
+    _comp = (s.get('manifest') or {}).get('components')
+    if _comp is not None:
+        for _need in ('electronic',):                  # σ_e 팔의 최소 요구
+            _cv = _comp.get(_need)
+            if not isinstance(_cv, dict) or _cv.get('status') != 'complete':
+                return (f'required component `{_need}` 가 complete 가 아니다 '
+                        f'({_cv if _cv is not None else "부재"}) — σ_e 를 낸 solve 가 '
+                        f'끝나지 않았다')
     if s.get('status') == 'failed':
         return (f'STEP3 가 실패로 기록됐다 (status=failed: {s.get("reason")!r}) — '
                 f'σ_e 가 있어도 그 런은 도중에 죽었다.  재활용하지 말 것')
@@ -220,9 +254,17 @@ def check_arm(path, want, expect_backend=None):
     v = s.get('sigma_e_eff_S_cm')
     if not isinstance(v, (int, float)) or isinstance(v, bool) or not v > 0:
         return f'σ_e 가 없거나 0 ({v!r})'
+    #  ★ 2026-08-25 (CDXR3-2) — **유한해야 한다.**  옛 판은 `> 0` 만 봐서 `inf` 가 통과했다.
+    if v != v or v == float('inf'):
+        return f'σ_e 가 비유한이다 ({v!r})'
     if expect_backend:
         got = backend_of(s)
-        if got and got != expect_backend:
+        #  ★ 2026-08-25 (CDXR3-2) — **fail-closed**.  옛 판은 `got` 이 비면 통과시켰다
+        #    (backend metadata 를 지운 mutant 가 그대로 통과).  모르는 것은 통과가 아니다.
+        if not got:
+            return (f'backend 기록이 **없다** — 지금 돌면 {expect_backend} 인데 이 팔이 '
+                    f'무엇으로 돌았는지 모른다.  모르는 것을 재활용하지 않는다')
+        if got != expect_backend:
             return (f'backend 가 {got} 인데 지금 돌면 {expect_backend} — 두 팔이 갈린다. '
                     '재개 대신 다시 돌아야 한다')
     return None
@@ -526,6 +568,45 @@ def _selftest():
         _f4 = _mk(0.0051, 'point'); _f4['metrics']['step3']['status'] = 'complete'
         chk(check_arm(w('f4.json', _f4), 'point') is None,
             '8q) 음성 대조 — status=complete 는 통과 (과잉차단 아님)')
+        #  ★★★ 8r~8w 2026-08-25 (CDXR3-2) — **Codex 가 통과시킨 mutant 4종**을 상주 회귀로.
+        #    R-1("check_arm 이 producer nonzero exit 를 대체한다")이 틀렸음을 보인 것들이다.
+        _g1 = _mk(0.0051, 'point')
+        _g1['metrics']['step3'].setdefault('manifest', {}).update(
+            status='partial', missing=['electronic'],
+            components={'thermal': {'status': 'complete'}})
+        chk('실패/누락' in (check_arm(w('g1.json', _g1), 'point') or ''),
+            '8r) ★★ `missing=[electronic]` 을 거부 (Codex mutant ①)')
+        _g1b = _mk(0.0051, 'point')                    # LEAN=2 = ionic 을 **의도적으로** 끔
+        _g1b['metrics']['step3'].setdefault('manifest', {}).update(
+            status='partial', missing=[], failed=[],
+            components={'electronic': {'status': 'complete'}, 'ionic': {'status': 'disabled'}})
+        chk(check_arm(w('g1b.json', _g1b), 'point') is None,
+            '8r2) ★★ 음성 대조 — `disabled`(LEAN=2) 로 인한 aggregate partial 은 통과해야 '
+            '한다 (초판은 생산 스윕 팔 전부를 거부할 뻔했다)')
+        _g2 = _mk(0.0051, 'point')
+        _g2['metrics']['step3'].setdefault('manifest', {})['components'] = {
+            'thermal': {'status': 'complete'}}          # electronic 자체가 없다
+        chk('required component' in (check_arm(w('g2.json', _g2), 'point') or ''),
+            '8s) ★★ required component `electronic` 부재를 거부')
+        _g3 = _mk(0.0051, 'point')
+        _g3['metrics']['step3'].setdefault('manifest', {}).pop('backend_last_solve', None)
+        _g3['metrics']['step3']['manifest'].pop('backend', None)
+        chk('backend 기록이 **없다**' in (check_arm(w('g3.json', _g3), 'point', 'gpu') or ''),
+            '8t) ★★ backend 기록 부재를 거부 — 옛 판은 통과시켰다 (Codex mutant ③)')
+        _g4 = _mk(0.0051, 'point')
+        _g4['metrics']['step3'].setdefault('manifest', {}).update(
+            backend_last_solve={'used': 'gpu'},          # 마지막 solve 는 GPU 인데
+            components={'electronic': {'status': 'complete', 'backend': {'used': 'cpu'}}})
+        chk('cpu' in (check_arm(w('g4.json', _g4), 'point', 'gpu') or ''),
+            '8u) ★★ electronic=cpu·last-solve=gpu 위장을 거부 (component 가 정본, mutant ④)')
+        _g5 = _mk(float('inf'), 'point')
+        chk('비유한' in (check_arm(w('g5.json', _g5), 'point') or ''),
+            '8v) ★ σ_e 가 inf 면 거부 (옛 판은 `> 0` 만 봤다)')
+        _g6 = _mk(0.0051, 'point')
+        _g6['metrics']['step3'].setdefault('manifest', {}).update(
+            status='complete', components={'electronic': {'status': 'complete'}})
+        chk(check_arm(w('g6.json', _g6), 'point') is None,
+            '8w) 음성 대조 — status=complete + electronic complete 는 통과')
     print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 
