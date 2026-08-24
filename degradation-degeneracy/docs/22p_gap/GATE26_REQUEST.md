@@ -7,7 +7,7 @@
 
 ```yaml
 브랜치:     origin/claude/14-gate-code-review-9qkx05
-대상 커밋:   __TARGET__
+대상 커밋:   e1ec91d11222…
 코드 커밋:   cedaf922e937…      # RUN_SCOPE 변경이 들어간 커밋
 직전 대상:   d405d1b855e975c2e34974a776c3ac2b6ee99141   (25차, 조건부 GO)
 직전 회신:   Gate 24 두 번째 보충 재검증
@@ -21,7 +21,7 @@ source_digest:
          검사는 run_spec 이 digest 를 갖고 dirty 가 아닌지만 보므로
          (`src/io.py:1514`) 옛 산출물 검증은 그대로다 — 이번 영수증이 실측이다.
 
-재현:      git checkout __TARGET__ && cd degradation-degeneracy
+재현:      git checkout e1ec91d11222… && cd degradation-degeneracy
 ```
 
 ## 0. 요청 판정
@@ -38,14 +38,14 @@ source_digest:
 
 ```
 $ git rev-parse HEAD
-__TARGET_FULL__
+e1ec91d11222a0d0d756c523fd4469c984653b4e
 $ git status --short
 (빈 출력)
 
 $ python3 -m pytest tests/ -q
-__PYTEST__
+742 passed, 1 xfailed in 349.35s (0:05:49)
 
-$ ./scripts/smoke_e2e.sh          # cedaf922 (clean) 에서
+$ ./scripts/smoke_e2e.sh          # e1ec91d1 (clean) 에서
 ✅ pipeline smoke 통과
 ⚠ 보존 gate 미완료 (계약 v4 묶음 9) — 새 leg 실행 금지.
    이 통과는 실행 승인이 아니다. 보존 트랜잭션은 이 smoke 에 아직 없다.
@@ -92,8 +92,8 @@ analyzer 를 g1→g2 로 올리고 `paired_fixed5_v4` 를 새 cohort 에 재생�
 | `projection_sha256` | `ad598fe77e75afec…` | **바이트 동일** |
 | `restart_projection_sha256` | `84333ad3c19625ca…` | **바이트 동일** |
 | `analysis_spec_sha256` · `fits_sha256` | | **바이트 동일** |
-| `compute_sha256` | `73c1ac4ba06e59dc` | `1c36a92f11c6f856` |
-| `row_projection_py_sha256` | `bbb4744256e42b8f` | `923ba02d29e61928` |
+| `compute_sha256` | `73c1ac4ba06e59dc` | `45ebcdc85915413a` |
+| `row_projection_py_sha256` | `bbb4744256e42b8f` | `147c4b2f3a4ac6e0` |
 
 digest 수정이 계산을 바꾸지 않았다는 직접 증거다. g1 은 py3.12.3/numpy 2.5.2,
 g2 는 py3.11.15/numpy 2.4.6 에서 만들었으므로 **runtime 이 equality 축이
@@ -195,8 +195,27 @@ g2 는 py3.11.15/numpy 2.4.6 에서 만들었으므로 **runtime 이 equality �
 이 지적한 형태가 새 파일에서 재발한 것이다.
 
 영수증이 **현행 검증기**보다 낡으면 실패하도록 고쳤다. 재생성 뒤, dirty 트리와
-clean 트리에서 만든 core sha 가 `f0bae903e015a177` 로 **같다** — core/stamp
-분리가 의도대로 동작한다는 증거다.
+clean 트리에서 만든 core sha 가 같다 — core/stamp 분리가 의도대로 동작한다는
+증거다. 현재 core sha 는 `350342d36585796a` 이고
+`make_receipt.py --check` 가 매번 바이트 동일 재생성을 확인한다.
+
+### 7.1 그리고 이번 라운드에 **내가 만든** 복제 둘
+
+자체 diff 를 최소주의 사다리로 훑다가 찾았다 — 24차 보충 Q5 가 경고한 구조적
+복제의 실물이고, 둘 다 이번 라운드에 새로 들어온 것이다.
+
+1. **채점 경로가 두 곳에 인라인으로** 있었다 (`row_projection.py` ·
+   `make_receipt.py`). 한쪽만 고치면 두 감사 도구가 서로 다른 것을 검증하게
+   된다. 초판에 "여기서 갈리면 두 감사 도구가 다른 것을 검증하게 된다" 는
+   **주석까지 달아 놓고** 복제를 남겼다 — 주석은 강제가 아니다.
+   → `score_canonical()` 하나로 모으고 회귀가 복제를 막는다.
+2. **`score-semantic/v1` 한 라벨이 두 바이트 스트림**을 뜻했다.
+   `make_receipt._semantic` 은 기본 구분자, `preserve.canonical_bytes` 는
+   고정 구분자. 둘 다 산출 manifest 에 같은 canonicalizer 를 적었으므로,
+   나중에 두 digest 를 대조하면 영원히 다르다. → 정규화는 한 곳만.
+
+추출 뒤 g2 를 재생성했더니 내용 digest 가 여전히 g1 과 바이트 동일했다 —
+추출이 계산을 바꾸지 않았다는 확인이다.
 
 ## 8. 변이 시험 — 이번 라운드 전체
 
@@ -210,6 +229,7 @@ clean 트리에서 만든 core sha 가 `f0bae903e015a177` 로 **같다** — cor
 | 없는 claim_id · 중복 · 원자료 없는 canonical · 고아 주장 · 철회 주장 | 5종 전부 실패 |
 | 영수증 core 필드 조작 | core sha 불일치로 실패 |
 | xfail 테스트의 전제 파괴 | **정상 FAIL** (xfail 아님) |
+| 회귀 파일에 `canonical_candidate` literal 재도입 | 계약 밖 토큰으로 실패 |
 | 보존 트랜잭션 실패 16종 | 전부 해당 단계에서 멈추고 index 비어 있음 |
 
 ## 9. 아직 안 한 것
