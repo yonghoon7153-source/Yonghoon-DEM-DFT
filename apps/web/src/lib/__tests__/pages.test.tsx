@@ -283,6 +283,113 @@ describe('Dashboard capacity column', () => {
 
 // -- compare ---------------------------------------------------------------
 
+describe('비교 · dQ/dV 와 dV/dQ', () => {
+  function compareHandler(extra: (url: string) => unknown) {
+    return (url: string) => {
+      const supplied = extra(url)
+      if (supplied !== undefined) return supplied
+      if (path(url) === '/api/groups') return []
+      if (path(url) === '/api/samples') {
+        return [sample({ id: 1, name: 'A' }), sample({ id: 2, name: 'B' })]
+      }
+      return []
+    }
+  }
+
+  function curve(name: string, kind: 'dqdv' | 'dvdq') {
+    const shared = {
+      cycle: 3, branch: 'discharge' as const, basis: 'mAh' as const, points: 3,
+      run_id: 11, label: `${name} · cycle 3 discharge`,
+      smoothing: 5, smoother: 'moving' as const, poly_order: 2,
+      points_dropped: 0, reason: '',
+    }
+    return kind === 'dqdv'
+      ? { ...shared, voltage: [3.0, 3.005, 3.01], dqdv: [-1, -2, -1], voltage_step: 0.005 }
+      : { ...shared, capacity: [0, 0.01, 0.02], dvdq: [-0.5, -0.9, -0.4], capacity_step: 0.01 }
+  }
+
+  function body(kind: 'dqdv' | 'dvdq', names = ['A', 'B']) {
+    return {
+      basis: 'mAh', basis_label: 'mAh', requested_basis: 'mAh',
+      resolved_cell: CELL, smoothing: 5, smoother: 'moving', poly_order: 2,
+      ...(kind === 'dqdv' ? { voltage_step: 0.005 } : { capacity_step: null }),
+      series: names.map((name) => curve(name, kind)),
+    }
+  }
+
+  function renderCompare() {
+    render(
+      <MemoryRouter>
+        <Compare />
+      </MemoryRouter>,
+    )
+  }
+
+  it('두 곡선을 겹칠 수 있다', async () => {
+    installFetch(compareHandler((url) =>
+      path(url) === '/api/compare/dvdq' ? body('dvdq') : undefined))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dV/dQ' }))
+    expect(await screen.findByText(/3번 사이클 · dV\/dQ/)).toBeInTheDocument()
+    // 이 분석을 왜 쓰는지가 화면에 있어야 한다.
+    expect(screen.getByText(/봉우리 사이의 가로 거리가/)).toBeInTheDocument()
+  })
+
+  it('선택한 모든 셀에 같은 평활을 건다 — 봉우리 높이는 그래야 비교된다', async () => {
+    const asked: string[] = []
+    installFetch(compareHandler((url) => {
+      if (path(url) === '/api/compare/dqdv') {
+        asked.push(url.toString())
+        return body('dqdv')
+      }
+      return undefined
+    }))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    await waitFor(() => expect(asked.length).toBeGreaterThan(0))
+    // 셀마다 따로 부르지 않는다 — 한 번에 보내고 서버가 같은 격자를 쓴다.
+    expect(asked[asked.length - 1]).toContain('sample_ids=1%2C2')
+    expect(screen.getByText(/같은 격자·같은 창으로 만듭니다/)).toBeInTheDocument()
+  })
+
+  it('차수 1 을 고르면 이동평균과 같다고 말한다', async () => {
+    installFetch(compareHandler((url) =>
+      path(url) === '/api/compare/dqdv' ? body('dqdv') : undefined))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Savitzky-Golay' }))
+    const order = await screen.findByLabelText('다항식 차수')
+    await userEvent.clear(order)
+    await userEvent.type(order, '1')
+    expect(await screen.findByText(/차수 1 은 이동평균과 같은 값입니다/)).toBeInTheDocument()
+  })
+
+  it('그 사이클을 못 낸 셀이 몇 개인지 말한다', async () => {
+    // 비교 화면은 빈 곡선을 싣지 않는다.  아무 말도 없으면 사람은 자기가 셀을
+    // 잘못 골랐다고 생각한다.
+    installFetch(compareHandler((url) =>
+      path(url) === '/api/compare/dvdq' ? body('dvdq', ['A']) : undefined))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dV/dQ' }))
+    expect(await screen.findByText(/1개는 3번 사이클을 완료하지 않았거나/)).toBeInTheDocument()
+  })
+
+  it('세로축을 잠글 수 있다', async () => {
+    installFetch(compareHandler((url) =>
+      path(url) === '/api/compare/dqdv' ? body('dqdv') : undefined))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    const lock = await screen.findByRole('button', { name: /세로축/ })
+    await userEvent.click(lock)
+    expect(lock).toHaveAttribute('aria-pressed', 'true')
+  })
+})
+
 describe('Compare mixed bases', () => {
   it('names the cells that fell back to raw mAh instead of claiming one basis', async () => {
     installFetch((url) => {
@@ -857,28 +964,166 @@ describe('셀 상세 질량 힌트', () => {
   })
 })
 
-// --- dQ/dV ---------------------------------------------------------------------
+/** dQ/dV 응답 하나.  두 describe 가 같은 것을 쓰므로 모듈 수준에 둔다 —
+ *  사본이 둘이면 한쪽만 고쳐진다. */
+function dqdvBodyShared(overrides: Record<string, unknown> = {}) {
+  return {
+    basis: 'mAh',
+    basis_label: 'mAh',
+    requested_basis: 'mAh',
+    resolved_cell: CELL,
+    voltage_step: 0.005,
+    smoothing: 5,
+    smoother: 'moving',
+    poly_order: 2,
+    series: [
+      {
+        cycle: 3, branch: 'discharge', basis: 'mAh', points: 3,
+        voltage: [3.0, 3.005, 3.01], dqdv: [-1, -2, -1],
+        run_id: 11, label: '3번 방전',
+        voltage_step: 0.005, smoothing: 5, smoother: 'moving', poly_order: 2,
+        points_dropped: 0, reason: '',
+      },
+    ],
+    ...overrides,
+  }
+}
 
-describe('dQ/dV 모드', () => {
-  function dqdvBody(overrides: Record<string, unknown> = {}) {
+// --- dV/dQ -----------------------------------------------------------------------
+
+describe('dV/dQ 모드', () => {
+  function dvdqBody(overrides: Record<string, unknown> = {}) {
     return {
       basis: 'mAh',
       basis_label: 'mAh',
       requested_basis: 'mAh',
       resolved_cell: CELL,
-      voltage_step: 0.005,
       smoothing: 5,
+      smoother: 'moving',
+      poly_order: 2,
+      capacity_step: null,
       series: [
         {
           cycle: 3, branch: 'discharge', basis: 'mAh', points: 3,
-          voltage: [3.0, 3.005, 3.01], dqdv: [-1, -2, -1],
+          capacity: [0, 0.01, 0.02], dvdq: [-0.5, -0.9, -0.4],
           run_id: 11, label: '3번 방전',
-          voltage_step: 0.005, smoothing: 5, points_dropped: 0, reason: '',
+          capacity_step: 0.01, smoothing: 5, smoother: 'moving', poly_order: 2,
+          points_dropped: 0, reason: '',
         },
       ],
       ...overrides,
     }
   }
+
+  it('켜기 전에는 dV/dQ 를 받아 오지 않는다', async () => {
+    const asked: string[] = []
+    installFetch((url) => {
+      asked.push(path(url))
+      return sampleDetailHandler(() => undefined)(url, undefined)
+    })
+    renderSampleDetail()
+    await screen.findByRole('heading', { name: /No_1_dry/ })
+    expect(asked).not.toContain('/api/samples/1/dvdq')
+  })
+
+  it('켜면 용량이 가로축이 된다 — dQ/dV 와 축이 반대다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dvdq' ? dvdqBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dV/dQ' }))
+    expect(await screen.findByText(/용량 격자/)).toBeInTheDocument()
+    // 이 분석의 존재 이유를 화면이 말해야 한다 — 그러지 않으면 dQ/dV 의
+    // 이상하게 생긴 형제로만 보인다.
+    expect(screen.getByText(/봉우리 사이 간격이 곧/)).toBeInTheDocument()
+  })
+
+  it('용량이 멈춘 구간을 뺀다고 말한다 — dQ/dV 와 다른 이유다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dvdq' ? dvdqBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dV/dQ' }))
+    expect(await screen.findByText(/dQ=0/)).toBeInTheDocument()
+  })
+
+  it('세 모드는 배타적이다 — 두 축을 한 그래프에 겹칠 수 없다', async () => {
+    installFetch(
+      sampleDetailHandler((url) => {
+        if (path(url) === '/api/samples/1/dqdv') return dqdvBodyShared()
+        if (path(url) === '/api/samples/1/dvdq') return dvdqBody()
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dV/dQ' }))
+    expect(await screen.findByText(/용량 격자/)).toBeInTheDocument()
+
+    await userEvent.click(screen.getByRole('button', { name: 'dQ/dV' }))
+    expect(await screen.findByText(/전압 격자/)).toBeInTheDocument()
+    await waitFor(() =>
+      expect(screen.queryByText(/용량 격자/)).not.toBeInTheDocument(),
+    )
+  })
+
+  it('평활 설정이 dQ/dV 와 dV/dQ 사이에서 이어진다', async () => {
+    // 두 그림이 같은 처리로 만들어졌다고 말할 수 있어야 한다 (ADR 0015).
+    const asked: string[] = []
+    installFetch(
+      sampleDetailHandler((url) => {
+        const p = path(url)
+        if (p === '/api/samples/1/dqdv') {
+          asked.push(url.toString())
+          return dqdvBodyShared()
+        }
+        if (p === '/api/samples/1/dvdq') {
+          asked.push(url.toString())
+          return dvdqBody()
+        }
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Savitzky-Golay' }))
+    await waitFor(() => expect(asked.some((u) => u.includes('smoother=savgol'))).toBe(true))
+
+    asked.length = 0
+    await userEvent.click(screen.getByRole('button', { name: 'dV/dQ' }))
+    await waitFor(() =>
+      expect(asked.some((u) => u.includes('/dvdq') && u.includes('smoother=savgol'))).toBe(true),
+    )
+  })
+
+  it('클립보드 버튼은 그 모드에서만 켜진다', async () => {
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dvdq' ? dvdqBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+    await screen.findByRole('heading', { name: /No_1_dry/ })
+
+    expect(screen.getByRole('button', { name: 'dV/dQ 복사' })).toBeDisabled()
+    await userEvent.click(screen.getByRole('button', { name: 'dV/dQ' }))
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: 'dV/dQ 복사' })).toBeEnabled(),
+    )
+  })
+})
+
+// --- dQ/dV ---------------------------------------------------------------------
+
+describe('dQ/dV 모드', () => {
+  const dqdvBody = dqdvBodyShared
 
   it('켜기 전에는 dQ/dV 를 받아 오지 않는다', async () => {
     // 20 MB 파일에서 400 사이클의 미분을, 아무도 보지 않는 동안 계산할 이유가
@@ -941,7 +1186,57 @@ describe('dQ/dV 모드', () => {
     renderSampleDetail()
 
     await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
-    expect(await screen.findByText(/전압 격자 10 mV · 평활 9점/)).toBeInTheDocument()
+    // 격자는 서버가 정한 값이라 문장으로, 평활은 사람이 바꾸는 값이라 입력칸으로
+    // 보여 준다.  둘 다 화면에 있어야 "무엇으로 만든 곡선인지" 를 말한 것이다.
+    expect(await screen.findByText(/전압 격자 10 mV/)).toBeInTheDocument()
+    expect(await screen.findByLabelText('평활 창')).toHaveValue(5)
+  })
+
+  it('차수 1 의 SG 가 이동평균과 같다는 것을 화면이 말한다', async () => {
+    // 랩 공용 스크립트가 그 설정이라 재현용으로 열어 두지만, 그것이 "봉우리가
+    // 살아난다" 는 뜻은 아니다 (ADR 0015).  말해 주지 않으면 SG 를 골라 놓고
+    // 이동평균을 보면서 봉우리가 살았다고 생각한다.
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv' ? dqdvBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    await userEvent.click(await screen.findByRole('button', { name: 'Savitzky-Golay' }))
+
+    const order = await screen.findByLabelText('다항식 차수')
+    await userEvent.clear(order)
+    await userEvent.type(order, '1')
+    expect(await screen.findByText(/이동평균과 같은 값을 냅니다/)).toBeInTheDocument()
+
+    await userEvent.clear(order)
+    await userEvent.type(order, '2')
+    await waitFor(() =>
+      expect(screen.queryByText(/이동평균과 같은 값을 냅니다/)).not.toBeInTheDocument(),
+    )
+  })
+
+  it('세로축을 잠그면 사이클을 바꿔도 눈금이 그대로다', async () => {
+    // 안 잠그면 사이클 하나만 골랐을 때 y 축이 그 곡선에 맞춰 다시 잡혀서,
+    // 같은 곡선이 훨씬 뚱뚱해 보인다 — 숫자는 하나도 안 변했는데.
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1/dqdv' ? dqdvBody() : undefined,
+      ),
+    )
+    renderSampleDetail()
+
+    await userEvent.click(await screen.findByRole('button', { name: 'dQ/dV' }))
+    const lock = await screen.findByRole('button', { name: /세로축/ })
+    expect(lock).toHaveAttribute('aria-pressed', 'false')
+
+    await userEvent.click(lock)
+    expect(lock).toHaveAttribute('aria-pressed', 'true')
+    // 잠그면 경계 두 칸이 나타나고, 거기 숫자가 들어 있어야 한다.
+    const low = await screen.findByLabelText('세로축 최소')
+    expect((low as HTMLInputElement).value).not.toBe('')
   })
 
   it('만들지 못한 곡선이 있으면 왜인지 말한다', async () => {

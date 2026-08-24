@@ -180,6 +180,16 @@ export interface Cycle {
   voltage_max: number | null
   voltage_min: number | null
   retention_pct: number | null
+  /** 직전 **완료** 사이클 대비 단차. 표에 보이는 열과 같은 단위다. 유지율과는
+   *  다른 질문이다 — 저쪽 분모는 기준 사이클, 이쪽은 직전 사이클. */
+  discharge_delta?: number | null
+  charge_delta?: number | null
+  discharge_delta_pct?: number | null
+  /** 무엇과 비교했는가, 그리고 몇 사이클 전인가. 1 이 아니면 그 단차는 여러
+   *  사이클치 열화를 한 칸에 담고 있다. */
+  delta_base_cycle?: number | null
+  delta_span?: number
+  discharge_delta_per_cycle?: number | null
   c_rate: number | null
   temperature_mean: number | null
   duration_h: number
@@ -243,6 +253,10 @@ export interface DqdvSeries {
   label: string
   voltage_step: number
   smoothing: number
+  /** 어떤 필터로, (savgol 이면) 몇 차로 평활했는가. 봉우리 *높이* 는 창·필터·
+   *  차수가 모두 같은 곡선끼리만 비교된다 (ADR 0015). */
+  smoother?: Smoother
+  poly_order?: number
   /** 단조 필터가 뺀 표본 수 — CV 구간과 잡음성 되돌아감. */
   points_dropped: number
   reason: string
@@ -256,6 +270,48 @@ export interface DqdvResponse {
   series: DqdvSeries[]
   voltage_step: number
   smoothing: number
+  smoother?: Smoother
+  poly_order?: number
+  mixed_basis?: boolean
+}
+
+/** 평활 방법. `savgol` 을 차수 1 로 쓰면 내부에서 이동평균과 값이 같다 —
+ *  랩 공용 스크립트가 그 설정이다 (ADR 0015). 봉우리를 살리려면 2 이상. */
+export type Smoother = 'moving' | 'savgol'
+
+export interface DvdqSeries {
+  cycle: number
+  branch: Branch
+  basis: Basis
+  points: number
+  /** x 축. dQ/dV 와 반대로 여기서는 용량이 가로다. */
+  capacity: number[]
+  /** V/mAh (정규화하면 V/(mAh/g) 등). 방전은 음수 — dQ/dV 와 같은 이유다. */
+  dvdq: number[]
+  run_id: number
+  label: string
+  /** 격자 간격, x 축과 같은 단위로. 두 봉우리가 실제로 분해된 것인지 판단하는
+   *  데 필요하다. */
+  capacity_step: number
+  smoothing: number
+  smoother?: Smoother
+  poly_order?: number
+  /** 용량이 멈춘 구간에서 뺀 표본 수 — CV 홀드와 휴지. */
+  points_dropped: number
+  reason: string
+}
+
+export interface DvdqResponse {
+  basis: Basis
+  basis_label: string
+  requested_basis: Basis
+  resolved_cell: ResolvedCell
+  series: DvdqSeries[]
+  smoothing: number
+  smoother?: Smoother
+  poly_order?: number
+  /** 호출자가 고정한 격자(mAh). null 이면 가지마다 자기 폭의 1/400 을 썼다. */
+  capacity_step: number | null
   mixed_basis?: boolean
 }
 

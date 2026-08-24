@@ -8,8 +8,8 @@
 import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
-  Activity, CompareResponse, CompositionPreset, DqdvResponse, CycleTable, DashboardRow, Facets, Group, Meta,
-  ProfileResponse, Report, Run, Sample,
+  Activity, CompareResponse, CompositionPreset, DqdvResponse, DvdqResponse, CycleTable,
+  DashboardRow, Facets, Group, Meta, ProfileResponse, Report, Run, Sample,
 } from './types'
 
 export class ApiError extends Error {
@@ -162,6 +162,8 @@ export const api = {
     request<ProfileResponse>(`/api/samples/${id}/profile${query(params)}`),
   sampleDqdv: (id: number, params?: Params) =>
     request<DqdvResponse>(`/api/samples/${id}/dqdv${query(params)}`),
+  sampleDvdq: (id: number, params?: Params) =>
+    request<DvdqResponse>(`/api/samples/${id}/dvdq${query(params)}`),
   sampleReport: (id: number, params?: Params) =>
     request<Report>(`/api/samples/${id}/report${query(params)}`),
   dashboard: (params?: Params) =>
@@ -172,6 +174,10 @@ export const api = {
     request<CompareResponse>(`/api/compare/cycles${query(params)}`),
   compareProfiles: (params: Params) =>
     request<ProfileResponse>(`/api/compare/profiles${query(params)}`),
+  compareDqdv: (params: Params) =>
+    request<DqdvResponse>(`/api/compare/dqdv${query(params)}`),
+  compareDvdq: (params: Params) =>
+    request<DvdqResponse>(`/api/compare/dvdq${query(params)}`),
 
   // -- exports (URLs, so the browser downloads them directly) --------------
   /** The uploaded .wrd, byte for byte -- so the original can be fetched back
@@ -185,6 +191,8 @@ export const api = {
     `/api/export/samples/${sampleId}/profiles.csv${query(params)}`,
   exportDqdvUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/dqdv.csv${query(params)}`,
+  exportDvdqUrl: (sampleId: number, params?: Params) =>
+    `/api/export/samples/${sampleId}/dvdq.csv${query(params)}`,
   exportWorkbookUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/workbook.xlsx${query(params)}`,
 }

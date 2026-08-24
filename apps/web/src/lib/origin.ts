@@ -18,7 +18,7 @@
  * cycle with no efficiency from being drawn at zero.
  */
 
-import type { Cycle, DqdvSeries, ProfileSeries } from './types'
+import type { Cycle, DqdvSeries, DvdqSeries, ProfileSeries } from './types'
 
 /** Origin's missing value. */
 export const MISSING = '--'
@@ -76,21 +76,47 @@ export function profileTsv(series: ProfileSeries[]): string {
  * nothing on either side of it is just a gap in the column.
  */
 export function dqdvTsv(series: DqdvSeries[]): string {
+  return stackedPairs(series, (item) => [item.voltage, item.dqdv])
+}
+
+/** Every dV/dQ curve stacked into two columns, separated by a `--` row.
+ *
+ * The same shape as `dqdvTsv`, because the two are pasted into the same
+ * worksheet and read side by side.  Note which column is which: here the
+ * **capacity** is the x axis, so the first column is capacity and the second
+ * is V per capacity — the mirror of dQ/dV, and the one thing somebody
+ * copy-pasting between the two would get wrong.
+ */
+export function dvdqTsv(series: DvdqSeries[]): string {
+  return stackedPairs(series, (item) => [item.capacity, item.dvdq])
+}
+
+/** Stack `(x, y)` pairs from many curves into two columns with `--` between.
+ *
+ * Curves that could not be computed are skipped rather than emitted as a lone
+ * `--` row: an empty curve has no points to plot, and a separator with nothing
+ * on either side of it is just a gap in the column.
+ */
+function stackedPairs<T extends { points: number }>(
+  series: T[],
+  pick: (item: T) => [number[], number[]],
+): string {
   const drawable = series.filter((item) => item.points > 0)
   if (!drawable.length) return ''
-  const voltage: string[] = []
-  const values: string[] = []
+  const left: string[] = []
+  const right: string[] = []
   for (const item of drawable) {
-    if (voltage.length) {
-      voltage.push(MISSING)
-      values.push(MISSING)
+    const [xs, ys] = pick(item)
+    if (left.length) {
+      left.push(MISSING)
+      right.push(MISSING)
     }
-    for (let i = 0; i < item.voltage.length; i += 1) {
-      voltage.push(cell(item.voltage[i]))
-      values.push(cell(item.dqdv[i]))
+    for (let i = 0; i < xs.length; i += 1) {
+      left.push(cell(xs[i]))
+      right.push(cell(ys[i]))
     }
   }
-  return tsvColumns([voltage, values])
+  return tsvColumns([left, right])
 }
 
 /** Two columns: cycle number and one value per complete cycle.

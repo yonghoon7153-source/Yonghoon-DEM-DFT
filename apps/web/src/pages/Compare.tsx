@@ -2,15 +2,27 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
+import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, basisUnit, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
-import type { Basis } from '../lib/types'
+import type { Basis, Smoother } from '../lib/types'
 
-type Mode = 'cycles' | 'profiles'
+/** 겹쳐 볼 수 있는 네 가지.  뒤의 셋은 "한 사이클을 여러 셀에서" 라는 같은
+ *  질문을 세 축으로 보는 것이라 사이클 번호와 충전·방전 토글을 공유한다. */
+type Mode = 'cycles' | 'profiles' | 'dqdv' | 'dvdq'
+
+const CURVE_MODES: Mode[] = ['profiles', 'dqdv', 'dvdq']
+
+const MODE_LABELS: Record<Mode, string> = {
+  cycles: '사이클 추세',
+  profiles: '충방전 프로파일',
+  dqdv: 'dQ/dV',
+  dvdq: 'dV/dQ',
+}
 
 /** Matches the server's own limit (apps/api/app/routers/analysis.py: "compare
  *  at most 30 samples at a time"), so "모두 선택" only ever stops where the
@@ -32,6 +44,12 @@ export function Compare() {
   const [metric, setMetric] = useState('discharge_capacity')
   const [cycle, setCycle] = useState(3)
   const [branches, setBranches] = useState<('charge' | 'discharge')[]>(['discharge'])
+  // 비교 화면에서 평활이 특히 중요하다.  봉우리 *높이* 는 창·필터·차수가 모두
+  // 같은 곡선끼리만 비교되는데(ADR 0013), 여기가 바로 사람이 높이를 눈으로 재는
+  // 곳이다.  서버가 선택한 모든 셀에 같은 설정을 적용한다.
+  const [smoother, setSmoother] = useStickyState<Smoother>('workbench.smoother', 'moving')
+  const [smoothing, setSmoothing] = useStickyState<number>('workbench.smoothing', 5)
+  const [polyOrder, setPolyOrder] = useStickyState<number>('workbench.polyOrder', 2)
   const [picked, setPicked] = useState<number[]>([])
   const [groupId, setGroupId] = useState<number | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
@@ -67,6 +85,55 @@ export function Compare() {
     { enabled: mode === 'profiles' && picked.length > 0 && branches.length > 0 },
   )
 
+  const smoothingParams = {
+    smoother,
+    smoothing,
+    ...(smoother === 'savgol' ? { poly_order: polyOrder } : {}),
+  }
+  const smoothingKey = `${smoother}|${smoothing}|${polyOrder}`
+  const curveDeps = [ids, cycle, basis, branches.join(','), smoothingKey]
+
+  const dqdvCompare = useAsync(
+    () => api.compareDqdv({ sample_ids: ids, cycle, basis,
+                            branches: branches.join(','), ...smoothingParams }),
+    curveDeps,
+    { enabled: mode === 'dqdv' && picked.length > 0 && branches.length > 0 },
+  )
+  const dvdqCompare = useAsync(
+    () => api.compareDvdq({ sample_ids: ids, cycle, basis,
+                            branches: branches.join(','), ...smoothingParams }),
+    curveDeps,
+    { enabled: mode === 'dvdq' && picked.length > 0 && branches.length > 0 },
+  )
+
+  /** 곡선 세 모드가 쓰는 응답.  하나로 모아 두면 아래의 축 라벨·단위 경고·
+   *  범례가 모드마다 갈라지지 않는다 — 갈라지면 한 모드에만 경고가 빠진다. */
+  const curveCompare =
+    mode === 'profiles' ? profileCompare
+    : mode === 'dqdv' ? dqdvCompare
+    : mode === 'dvdq' ? dvdqCompare
+    : null
+
+  /** 지금 모드가 그리는 계열들.  x/y 는 모드마다 다른 배열에서 온다. */
+  const curveSeries = useMemo(() => {
+    if (mode === 'profiles') {
+      return (profileCompare.data?.series ?? []).map((item) => ({
+        item, x: item.capacity, y: item.voltage,
+      }))
+    }
+    if (mode === 'dqdv') {
+      return (dqdvCompare.data?.series ?? [])
+        .filter((item) => item.points > 0)
+        .map((item) => ({ item, x: item.voltage, y: item.dqdv }))
+    }
+    if (mode === 'dvdq') {
+      return (dvdqCompare.data?.series ?? [])
+        .filter((item) => item.points > 0)
+        .map((item) => ({ item, x: item.capacity, y: item.dvdq }))
+    }
+    return []
+  }, [mode, profileCompare.data, dqdvCompare.data, dvdqCompare.data])
+
   const series: PlotSeries[] = useMemo(() => {
     if (mode === 'cycles') {
       return (cycleCompare.data?.series ?? []).map((item, index) => ({
@@ -77,23 +144,26 @@ export function Compare() {
         hidden: hidden.includes(item.sample_name),
       }))
     }
-    const list = profileCompare.data?.series ?? []
-    const names = [...new Set(list.map((s) => s.label.split(' · ')[0] ?? s.label))]
-    return list.map((item) => {
-      const name = item.label.split(' · ')[0] ?? item.label
-      return {
-        label: item.label,
-        x: item.capacity,
-        y: item.voltage,
-        color: seriesColor(names.indexOf(name)),
-        dash: item.branch === 'charge' ? [5, 3] : undefined,
-        hidden: hidden.includes(item.label),
-      }
-    })
-  }, [mode, cycleCompare.data, profileCompare.data, hidden])
+    // 셀 이름으로 색을 준다 — 한 셀의 충전과 방전이 같은 색, 파선으로 갈린다.
+    const names = [...new Set(curveSeries.map(({ item }) =>
+      item.label.split(' · ')[0] ?? item.label))]
+    return curveSeries.map(({ item, x, y }) => ({
+      label: item.label,
+      x,
+      y,
+      color: seriesColor(names.indexOf(item.label.split(' · ')[0] ?? item.label)),
+      dash: item.branch === 'charge' ? [5, 3] : undefined,
+      hidden: hidden.includes(item.label),
+    }))
+  }, [mode, cycleCompare.data, curveSeries, hidden])
 
-  const loading = mode === 'cycles' ? cycleCompare.loading : profileCompare.loading
-  const error = mode === 'cycles' ? cycleCompare.error : profileCompare.error
+  const loading = mode === 'cycles' ? cycleCompare.loading : (curveCompare?.loading ?? false)
+  const error = mode === 'cycles' ? cycleCompare.error : (curveCompare?.error ?? null)
+
+  // 축 고정.  여기서도 이유는 같다 — 셀을 하나 빼면 y 축이 다시 잡혀서 남은
+  // 곡선이 갑자기 커 보인다.  단위가 바뀌면(모드·기준·평활) 자동으로 풀린다.
+  const yLock = useAxisLock(series, 'y', `${mode}|${basis}|${metric}|${smoothingKey}`)
+  const xLock = useAxisLock(series, 'x', `${mode}|${basis}|${metric}`)
 
   // The backend normalises each cell on its own: one without an active mass comes
   // back in raw mAh while its neighbours are in mAh/g, and only the per-series
@@ -107,13 +177,13 @@ export function Compare() {
         if (item.basis && item.basis !== basis) found.set(item.sample_name, item.basis)
       }
     } else {
-      for (const item of profileCompare.data?.series ?? []) {
+      for (const { item } of curveSeries) {
         const name = item.label.split(' · ')[0] ?? item.label
         if (item.basis && item.basis !== basis) found.set(name, item.basis)
       }
     }
     return [...found].map(([name, seriesBasis]) => ({ name, basis: seriesBasis }))
-  }, [mode, metric, basis, cycleCompare.data, profileCompare.data])
+  }, [mode, metric, basis, cycleCompare.data, curveSeries])
 
   // 유지율은 "무엇 대비" 가 곡선의 뜻을 정한다.  기준 사이클이 없는 셀은
   // 서버가 다른 사이클로 대체하는데(ADR 0004), 그 사실이 화면에 없으면
@@ -131,7 +201,8 @@ export function Compare() {
 
   // Label the axis from what came back, never from what was asked for.
   const shownBasis: Basis =
-    mode === 'profiles' ? (profileCompare.data?.basis ?? basis) : (cycleCompare.data?.basis ?? basis)
+    mode === 'cycles' ? (cycleCompare.data?.basis ?? basis)
+                      : ((curveCompare?.data?.basis as Basis | undefined) ?? basis)
 
   // Falling back is not the same as mixing.  When every selected cell lacks a
   // mass they all come back in raw mAh — one unit, one axis, a comparison that
@@ -143,22 +214,39 @@ export function Compare() {
   // 비교가 유효합니다" 라고 말한다.  없으면 그린 곡선의 단위 집합에서 직접
   // 유도한다.
   const seriesBases =
-    mode === 'profiles'
-      ? (profileCompare.data?.series ?? []).map((item) => item.basis)
-      : (cycleCompare.data?.series ?? []).map((item) => item.basis)
+    mode === 'cycles'
+      ? (cycleCompare.data?.series ?? []).map((item) => item.basis)
+      : curveSeries.map(({ item }) => item.basis)
   const derivedMixed = new Set(seriesBases.filter(Boolean)).size > 1
   const reported =
-    mode === 'profiles' ? profileCompare.data?.mixed_basis : cycleCompare.data?.mixed_basis
+    mode === 'cycles' ? cycleCompare.data?.mixed_basis : curveCompare?.data?.mixed_basis
   const mixedBasis = reported ?? derivedMixed
   const capacityAxis = basisAxis(shownBasis) + (mixedBasis ? ' · 단위 혼재' : '')
 
   const yLabel =
     mode === 'profiles'
       ? '전압 (V)'
-      : metric.endsWith('capacity')
-        ? capacityAxis
-        : (METRICS.find((m) => m.value === metric)?.label ?? '')
-  const xLabel = mode === 'profiles' ? capacityAxis : '사이클'
+      : mode === 'dqdv'
+        ? `dQ/dV (${basisUnit(shownBasis)}/V)`
+        : mode === 'dvdq'
+          ? `dV/dQ (V/${basisUnit(shownBasis)})`
+          : metric.endsWith('capacity')
+            ? capacityAxis
+            : (METRICS.find((m) => m.value === metric)?.label ?? '')
+  const xLabel =
+    mode === 'cycles' ? '사이클'
+    : mode === 'dqdv' ? '전압 (V)'
+    : capacityAxis
+
+  /** 만들지 못한 곡선이 왜 없는지 — 비교 화면은 빈 곡선을 싣지 않으므로
+   *  서버가 아예 안 보낸다.  대신 "고른 셀 중 몇 개가 이 사이클을 못 낸다" 를
+   *  셀 수로 말해 준다. */
+  const missingCells = useMemo(() => {
+    if (mode === 'cycles' || !curveCompare?.data) return 0
+    const drawn = new Set(curveSeries.map(({ item }) =>
+      item.label.split(' · ')[0] ?? item.label))
+    return Math.max(0, picked.length - drawn.size)
+  }, [mode, curveCompare?.data, curveSeries, picked.length])
 
   return (
     <main className="page">
@@ -166,28 +254,26 @@ export function Compare() {
         <div>
           <h1>비교</h1>
           <div className="sub">
-            {fellBack.length
-              ? '여러 셀을 겹쳐 봅니다. 일부 셀은 이 기준으로 정규화할 수 없어 원값으로 그렸습니다.'
-              : '여러 셀을 겹쳐 봅니다. 질량이 다른 셀도 같은 기준으로 정규화되어 비교됩니다.'}
+            {mode === 'dvdq'
+              ? '봉우리 사이의 가로 거리가 그 구간의 용량입니다 — 전극 슬리피지를 자로 재듯 읽습니다.'
+              : fellBack.length
+                ? '여러 셀을 겹쳐 봅니다. 일부 셀은 이 기준으로 정규화할 수 없어 원값으로 그렸습니다.'
+                : '여러 셀을 겹쳐 봅니다. 질량이 다른 셀도 같은 기준으로 정규화되어 비교됩니다.'}
           </div>
         </div>
         <span className="spacer" />
         <div className="row">
           <div className="segmented">
-            <button
-              type="button"
-              className={mode === 'cycles' ? 'on' : ''}
-              onClick={() => setMode('cycles')}
-            >
-              사이클 추세
-            </button>
-            <button
-              type="button"
-              className={mode === 'profiles' ? 'on' : ''}
-              onClick={() => setMode('profiles')}
-            >
-              충방전 프로파일
-            </button>
+            {(['cycles', ...CURVE_MODES] as Mode[]).map((value) => (
+              <button
+                key={value}
+                type="button"
+                className={mode === value ? 'on' : ''}
+                onClick={() => setMode(value)}
+              >
+                {MODE_LABELS[value]}
+              </button>
+            ))}
           </div>
           <BasisSelect value={basis} onChange={setBasis} />
         </div>
@@ -196,7 +282,7 @@ export function Compare() {
       <div className="split">
         <div className="col" style={{ gap: 14 }}>
           <Card
-            title={mode === 'cycles' ? '사이클 추세' : `${cycle}번 사이클 프로파일`}
+            title={mode === 'cycles' ? '사이클 추세' : `${cycle}번 사이클 · ${MODE_LABELS[mode]}`}
             actions={
               mode === 'cycles' ? (
                 <select
@@ -289,7 +375,88 @@ export function Compare() {
                     </Alert>
                   </div>
                 ) : null}
-                <Plot series={series} xLabel={xLabel} yLabel={yLabel} height={420} />
+                {missingCells ? (
+                  <div className="tiny" style={{ padding: '8px 14px 0', color: 'var(--warn)' }}>
+                    고른 셀 중 {missingCells}개는 {cycle}번 사이클을 완료하지 않았거나 이 곡선을
+                    만들지 못해 빠졌습니다.
+                  </div>
+                ) : null}
+                <Plot
+                  series={series}
+                  xLabel={xLabel}
+                  yLabel={yLabel}
+                  xRange={xLock.range}
+                  yRange={yLock.range}
+                  height={420}
+                />
+                {/* 셀을 하나 빼면 y 축이 다시 잡혀서 남은 곡선이 갑자기 커
+                    보인다.  잠그면 눈금이 그대로 남는다. */}
+                <div className="row" style={{ padding: '6px 14px 0', gap: 12, flexWrap: 'wrap' }}>
+                  <AxisLockControl lock={yLock} label="세로축" />
+                  <AxisLockControl lock={xLock} label="가로축" />
+                </div>
+                {mode === 'dqdv' || mode === 'dvdq' ? (
+                  <>
+                    <div className="row" style={{ padding: '8px 14px 0', gap: 10, flexWrap: 'wrap' }}>
+                      <span className="tiny faint">평활</span>
+                      <div className="segmented">
+                        {([
+                          ['moving', '이동평균'],
+                          ['savgol', 'Savitzky-Golay'],
+                        ] as const).map(([value, label]) => (
+                          <button
+                            key={value}
+                            type="button"
+                            className={smoother === value ? 'on' : ''}
+                            onClick={() => setSmoother(value)}
+                          >
+                            {label}
+                          </button>
+                        ))}
+                      </div>
+                      <label className="tiny faint" style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                        창
+                        <input
+                          type="number"
+                          min={1}
+                          max={101}
+                          step={2}
+                          value={smoothing}
+                          onChange={(event) =>
+                            setSmoothing(Math.min(101, Math.max(1, Number(event.target.value) || 1)))
+                          }
+                          style={{ width: 66 }}
+                          aria-label="평활 창"
+                        />
+                        점
+                      </label>
+                      {smoother === 'savgol' ? (
+                        <label className="tiny faint" style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                          차수
+                          <input
+                            type="number"
+                            min={0}
+                            max={6}
+                            value={polyOrder}
+                            onChange={(event) =>
+                              setPolyOrder(Math.min(6, Math.max(0, Number(event.target.value) || 0)))
+                            }
+                            style={{ width: 56 }}
+                            aria-label="다항식 차수"
+                          />
+                        </label>
+                      ) : null}
+                    </div>
+                    <div className="tiny faint" style={{ padding: '4px 14px 0' }}>
+                      선택한 모든 셀을 같은 격자·같은 창으로 만듭니다 — 봉우리 높이는 그래야
+                      비교할 수 있습니다.
+                      {smoother === 'savgol' && polyOrder <= 1
+                        ? ' 차수 1 은 이동평균과 같은 값입니다 (랩 공용 스크립트 설정).'
+                        : ''}
+                      {mode === 'dvdq' ? ' 봉우리 사이 간격이 곧 그 구간의 용량입니다.' : ''}
+                    </div>
+                  </>
+                ) : null}
                 <PlotLegend
                   series={series}
                   onToggle={(label) =>

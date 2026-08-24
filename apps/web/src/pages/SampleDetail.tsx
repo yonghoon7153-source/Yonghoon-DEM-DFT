@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
 import { CompositionEditor } from '../components/CompositionEditor'
@@ -14,13 +15,37 @@ import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
-import { copyText, dischargeTsv, dqdvTsv, efficiencyTsv, profileTsv } from '../lib/origin'
+import { copyText, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
-import type { Basis, Run, Sample } from '../lib/types'
+import type { Basis, Run, Sample, Smoother } from '../lib/types'
 
 type LifeMetric = 'discharge' | 'efficiency' | 'retention' | 'hysteresis'
+
+/** 한 그래프에 겹칠 수 없는 세 가지 축.
+ *
+ *  프로파일  가로 용량 · 세로 볼트
+ *  dQ/dV     가로 볼트 · 세로 용량/볼트   ← 평탄부가 봉우리가 된다
+ *  dV/dQ     가로 용량 · 세로 볼트/용량   ← 봉우리 *사이 간격* 이 용량이다
+ *
+ *  사이클 선택과 충전·방전 토글, 평활 설정은 셋이 공유한다 — 같은 것을 세
+ *  방식으로 보는 것이기 때문이다. */
+type CurveMode = 'profile' | 'dqdv' | 'dvdq'
+
+/** 격자 간격을 칸에 넣을 만큼만.  mAh 와 mAh/g 는 자릿수가 서너 자리 다르다. */
+function formatStep(step: number | undefined): string {
+  if (step === undefined || !Number.isFinite(step)) return '—'
+  if (step >= 1) return step.toFixed(2)
+  if (step >= 0.01) return step.toFixed(4)
+  return step.toExponential(1)
+}
+
+const CURVE_TITLES: Record<CurveMode, string> = {
+  profile: '충방전 프로파일',
+  dqdv: 'dQ/dV',
+  dvdq: 'dV/dQ',
+}
 
 const LIFE_METRICS: { value: LifeMetric; label: string }[] = [
   { value: 'discharge', label: '방전용량' },
@@ -38,8 +63,13 @@ export function SampleDetail() {
   // 프로파일과 dQ/dV 는 축이 다르다 (가로 용량 vs 볼트, 세로 볼트 vs mAh/V).
   // 한 그래프에 겹칠 수 없으므로 모드로 갈라 놓고, 사이클 선택과 충전·방전
   // 토글은 둘이 공유한다 — 같은 것을 두 방식으로 보는 것이기 때문이다.
-  const [mode, setMode] = useStickyState<'profile' | 'dqdv'>(
-    'workbench.curveMode', 'profile')
+  const [mode, setMode] = useStickyState<CurveMode>('workbench.curveMode', 'profile')
+  // 평활은 세 곡선이 함께 쓴다.  dQ/dV 와 dV/dQ 를 오갈 때 설정이 따라와야
+  // 두 그림이 같은 처리로 만들어졌다고 말할 수 있다 (ADR 0015).
+  const [smoother, setSmoother] = useStickyState<Smoother>(
+    'workbench.smoother', 'moving')
+  const [smoothing, setSmoothing] = useStickyState<number>('workbench.smoothing', 5)
+  const [polyOrder, setPolyOrder] = useStickyState<number>('workbench.polyOrder', 2)
   const [chosen, setChosen] = useState<number[] | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
   const [lifeMetric, setLifeMetric] = useState<LifeMetric>('discharge')
@@ -85,17 +115,37 @@ export function SampleDetail() {
     return available.length ? spread(available, 5) : []
   }, [chosen, cycles])
 
+  const smoothingParams = {
+    smoother,
+    smoothing,
+    ...(smoother === 'savgol' ? { poly_order: polyOrder } : {}),
+  }
+  const smoothingKey = `${smoother}|${smoothing}|${polyOrder}`
+
   const dqdvState = useAsync(
     () =>
       api.sampleDqdv(sampleId, {
         basis,
         cycles: selected.join(','),
         branches: branches.join(','),
+        ...smoothingParams,
       }),
-    [sampleId, basis, selected.join(','), branches.join(','), stamp],
+    [sampleId, basis, selected.join(','), branches.join(','), smoothingKey, stamp],
     // 모드를 켰을 때만 받아 온다.  20 MB 파일에서 400 사이클의 미분을 아무도
     // 보지 않는 동안 계산할 이유가 없다.
     { enabled: mode === 'dqdv' && selected.length > 0 && branches.length > 0 },
+  )
+
+  const dvdqState = useAsync(
+    () =>
+      api.sampleDvdq(sampleId, {
+        basis,
+        cycles: selected.join(','),
+        branches: branches.join(','),
+        ...smoothingParams,
+      }),
+    [sampleId, basis, selected.join(','), branches.join(','), smoothingKey, stamp],
+    { enabled: mode === 'dvdq' && selected.length > 0 && branches.length > 0 },
   )
 
   const profileState = useAsync(
@@ -150,16 +200,36 @@ export function SampleDetail() {
     })
   }, [dqdvState.data, hidden, selected.length])
 
-  /** 지금 모드가 보고 있는 요청.  로딩과 오류를 두 번 쓰지 않는다. */
-  const curve = mode === 'dqdv' ? dqdvState : profileState
+  const dvdqSeries: PlotSeries[] = useMemo(() => {
+    if (!selected.length) return []
+    const series = (dvdqState.data?.series ?? []).filter((item) => item.points > 0)
+    const cycleOrder = [...new Set(series.map((s) => s.cycle))]
+    return series.map((item) => {
+      const label = `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`
+      return {
+        label,
+        x: item.capacity,
+        y: item.dvdq,
+        color: seriesColor(cycleOrder.indexOf(item.cycle)),
+        dash: item.branch === 'charge' ? [5, 3] : undefined,
+        hidden: hidden.includes(label),
+      }
+    })
+  }, [dvdqState.data, hidden, selected.length])
+
+  /** 지금 모드가 보고 있는 요청.  로딩과 오류를 세 번 쓰지 않는다. */
+  const curve = mode === 'dqdv' ? dqdvState : mode === 'dvdq' ? dvdqState : profileState
+  const shownSeries =
+    mode === 'dqdv' ? dqdvSeries : mode === 'dvdq' ? dvdqSeries : profileSeries
 
   /** 만들지 못한 곡선들이 왜 없는지 — 한 줄로. */
-  const dqdvSkipped = useMemo(() => {
-    const bad = (dqdvState.data?.series ?? []).filter((item) => !item.points)
+  const skipped = useMemo(() => {
+    const source = mode === 'dqdv' ? dqdvState.data : mode === 'dvdq' ? dvdqState.data : null
+    const bad = (source?.series ?? []).filter((item) => !item.points)
     if (!bad.length) return ''
     const reasons = [...new Set(bad.map((item) => item.reason).filter(Boolean))]
     return `${bad.length}개 곡선을 만들지 못했습니다 — ${reasons.join(' · ')}`
-  }, [dqdvState.data])
+  }, [mode, dqdvState.data, dvdqState.data])
 
   // 축을 이 셀이 낸 가장 큰 용량에 고정한다.  안 그러면 사이클을 하나 넣고
   // 뺄 때마다 x 축이 늘었다 줄었다 해서, 같은 곡선이 매번 다른 폭으로 보인다.
@@ -172,6 +242,34 @@ export function SampleDetail() {
     // 여유 3 % — 곡선 끝이 축에 딱 붙으면 잘린 것처럼 보인다.
     return widest > 0 ? [0, widest * 1.03] : undefined
   }, [cycles])
+
+  // dQ/dV 의 x 축(전압)도 같은 이유로 셀 전체 창에 고정한다.  사이클 표가 이미
+  // 사이클마다 v_min/v_max 를 들고 있으므로 공짜다 — dQ/dV 를 다시 계산할
+  // 필요가 없다.
+  const voltageAxis = useMemo((): [number | null, number | null] | undefined => {
+    let low = Number.POSITIVE_INFINITY
+    let high = Number.NEGATIVE_INFINITY
+    for (const cycle of cycles) {
+      if (!cycle.complete) continue
+      if (cycle.voltage_min !== null) low = Math.min(low, cycle.voltage_min)
+      if (cycle.voltage_max !== null) high = Math.max(high, cycle.voltage_max)
+    }
+    if (!Number.isFinite(low) || !Number.isFinite(high) || high <= low) return undefined
+    const pad = (high - low) * 0.02
+    return [low - pad, high + pad]
+  }, [cycles])
+
+  // 세로축은 공짜가 아니다.  전체 사이클의 dQ/dV 범위를 알려면 안 그릴 곡선까지
+  // 전부 미분해야 하므로, 사람이 지금 눈금을 잠그는 쪽을 택했다.  단위가 바뀌면
+  // (기준 변경·모드 전환·평활 변경) 잠근 숫자는 다른 축의 것이라 자동으로 풀린다.
+  const yLock = useAxisLock(shownSeries, 'y', `${mode}|${basis}|${smoothingKey}`)
+  const xLock = useAxisLock(shownSeries, 'x', `${mode}|${basis}`)
+
+  /** 잠근 값이 있으면 그것, 없으면 그 모드의 기본 고정축. */
+  const xRange = xLock.range ?? (
+    mode === 'dqdv' ? voltageAxis
+    : mode === 'dvdq' ? capacityAxis
+    : capacityAxis)
 
   const lifeSeries: PlotSeries[] = useMemo(() => {
     const complete = cycles.filter((c) => c.complete)
@@ -407,10 +505,23 @@ export function SampleDetail() {
                 basis,
                 cycles: selected.join(','),
                 branches: branches.join(','),
+                ...smoothingParams,
               })}
-              title="고른 사이클의 dQ/dV — 화면용으로 줄이지 않은 원래 격자 그대로"
+              title="고른 사이클의 dQ/dV — 화면용으로 줄이지 않은 원래 격자 그대로, 지금 평활 설정으로"
             >
               dQ/dV CSV
+            </a>
+            <a
+              className="link-btn"
+              href={api.exportDvdqUrl(sample.id, {
+                basis,
+                cycles: selected.join(','),
+                branches: branches.join(','),
+                ...smoothingParams,
+              })}
+              title="고른 사이클의 dV/dQ — 전 해상도. 봉우리 사이 간격을 재는 표입니다"
+            >
+              dV/dQ CSV
             </a>
             <a
               className="link-btn"
@@ -446,6 +557,20 @@ export function SampleDetail() {
               onClick={() => void copyBlock('dQ/dV', dqdvTsv(dqdvState.data?.series ?? []))}
             >
               {copied === 'dQ/dV' ? '복사됨 ✓' : 'dQ/dV'}
+            </button>
+            <button
+              type="button"
+              className="link-btn"
+              aria-label={copied === 'dV/dQ' ? 'dV/dQ 복사됨' : 'dV/dQ 복사'}
+              disabled={mode !== 'dvdq'}
+              title={
+                mode === 'dvdq'
+                  ? `그려진 dV/dQ 를 용량·값 두 열로 — 첫 열이 용량이다 (dQ/dV 와 반대) · V/${basisUnit(dvdqState.data?.basis ?? basis)}`
+                  : 'dV/dQ 모드를 켜면 복사할 수 있습니다'
+              }
+              onClick={() => void copyBlock('dV/dQ', dvdqTsv(dvdqState.data?.series ?? []))}
+            >
+              {copied === 'dV/dQ' ? '복사됨 ✓' : 'dV/dQ'}
             </button>
             <button
               type="button"
@@ -516,7 +641,7 @@ export function SampleDetail() {
         <div className="split">
           <div className="col" style={{ gap: 12 }}>
             <Card
-              title={mode === 'dqdv' ? 'dQ/dV' : '충방전 프로파일'}
+              title={CURVE_TITLES[mode]}
               actions={
                 <div className="row" style={{ gap: 8 }}>
                   <div className="segmented">
@@ -544,6 +669,7 @@ export function SampleDetail() {
                     {([
                       ['profile', '프로파일'],
                       ['dqdv', 'dQ/dV'],
+                      ['dvdq', 'dV/dQ'],
                     ] as const).map(([value, label]) => (
                       <button
                         key={value}
@@ -580,7 +706,7 @@ export function SampleDetail() {
                 </Empty>
               ) : curve.loading && !curve.data ? (
                 <div style={{ padding: 20 }}>
-                  <Spinner label={mode === 'dqdv' ? 'dQ/dV 계산 중' : '프로파일 계산 중'} />
+                  <Spinner label={`${CURVE_TITLES[mode]} 계산 중`} />
                 </div>
               ) : (
                 <>
@@ -591,39 +717,126 @@ export function SampleDetail() {
                       <Alert kind="error">{curve.error}</Alert>
                     </div>
                   ) : null}
-                  {mode === 'dqdv' ? (
+                  <Plot
+                    series={shownSeries}
+                    xLabel={
+                      mode === 'dqdv'
+                        ? '전압 (V)'
+                        : basisAxis(curve.data?.basis ?? basis)
+                    }
+                    yLabel={
+                      mode === 'dqdv'
+                        ? `dQ/dV (${basisUnit(dqdvState.data?.basis ?? basis)}/V)`
+                        : mode === 'dvdq'
+                          ? `dV/dQ (V/${basisUnit(dvdqState.data?.basis ?? basis)})`
+                          : '전압 (V)'
+                    }
+                    xRange={xRange}
+                    yRange={yLock.range}
+                    height={400}
+                  />
+                  {/* 축 고정.  안 잠그면 사이클을 하나만 골랐을 때 y 축이 그
+                      곡선에 맞춰 다시 잡혀, 같은 곡선이 훨씬 뚱뚱해 보인다 —
+                      숫자는 하나도 안 변했는데 봉우리가 커진 것으로 읽힌다. */}
+                  <div className="row" style={{ padding: '6px 16px 0', gap: 12, flexWrap: 'wrap' }}>
+                    <AxisLockControl lock={yLock} label="세로축" />
+                    <AxisLockControl lock={xLock} label="가로축" />
+                    {!xLock.locked && xRange ? (
+                      <span className="tiny faint">
+                        가로축은 이 셀의 전체 범위에 맞춰 두었습니다
+                      </span>
+                    ) : null}
+                  </div>
+                  {mode !== 'profile' ? (
                     <>
-                      <Plot
-                        series={dqdvSeries}
-                        xLabel="전압 (V)"
-                        yLabel={`dQ/dV (${basisUnit(dqdvState.data?.basis ?? basis)}/V)`}
-                        height={400}
-                      />
                       {/* 평활이 봉우리를 낮추고 넓힌다.  무엇으로 만든 곡선인지
                           말하지 않으면 셀 사이의 봉우리 높이를 비교할 수 없다. */}
-                      <div className="tiny faint" style={{ padding: '0 16px 4px' }}>
-                        전압 격자 {Math.round((dqdvState.data?.voltage_step ?? 0.005) * 1000)}
-                        {' mV · 평활 '}
-                        {dqdvState.data?.smoothing ?? 5}점
-                        {' · 정전압 구간은 제외됩니다 (dV=0)'}
+                      <div className="row" style={{ padding: '8px 16px 4px', gap: 10, flexWrap: 'wrap' }}>
+                        <span className="tiny faint">평활</span>
+                        <div className="segmented">
+                          {([
+                            ['moving', '이동평균'],
+                            ['savgol', 'Savitzky-Golay'],
+                          ] as const).map(([value, label]) => (
+                            <button
+                              key={value}
+                              type="button"
+                              className={smoother === value ? 'on' : ''}
+                              onClick={() => setSmoother(value)}
+                            >
+                              {label}
+                            </button>
+                          ))}
+                        </div>
+                        <label className="tiny faint" style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                          창
+                          <input
+                            type="number"
+                            min={1}
+                            max={101}
+                            step={2}
+                            value={smoothing}
+                            onChange={(event) =>
+                              setSmoothing(Math.min(101, Math.max(1, Number(event.target.value) || 1)))
+                            }
+                            style={{ width: 66 }}
+                            aria-label="평활 창"
+                          />
+                          점
+                        </label>
+                        {smoother === 'savgol' ? (
+                          <label className="tiny faint" style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
+                            차수
+                            <input
+                              type="number"
+                              min={0}
+                              max={6}
+                              value={polyOrder}
+                              onChange={(event) =>
+                                setPolyOrder(Math.min(6, Math.max(0, Number(event.target.value) || 0)))
+                              }
+                              style={{ width: 56 }}
+                              aria-label="다항식 차수"
+                            />
+                          </label>
+                        ) : null}
                       </div>
-                      {dqdvSkipped ? (
+                      {/* 차수 1 의 SG 는 대칭 창에서 이동평균과 값이 같다 —
+                          1차 항이 홀함수라 상쇄된다.  랩 공용 스크립트가 그
+                          설정이라 재현용으로 열어 두지만, 그것이 "봉우리가
+                          살아난다" 는 뜻은 아니라는 것을 화면이 말해야 한다. */}
+                      {smoother === 'savgol' && polyOrder <= 1 ? (
+                        <div className="tiny" style={{ padding: '0 16px 4px', color: 'var(--warn)' }}>
+                          차수 {polyOrder} 는 이동평균과 같은 값을 냅니다 (대칭 창에서 1차 항이
+                          상쇄됩니다). 랩 공용 스크립트가 이 설정입니다 — 봉우리를 살리려면 2 이상.
+                        </div>
+                      ) : null}
+                      <div className="tiny faint" style={{ padding: '0 16px 4px' }}>
+                        {mode === 'dqdv' ? (
+                          <>
+                            전압 격자 {Math.round((dqdvState.data?.voltage_step ?? 0.005) * 1000)}
+                            {' mV · 정전압 구간은 제외됩니다 (dV=0)'}
+                          </>
+                        ) : (
+                          <>
+                            용량 격자{' '}
+                            {formatStep(dvdqState.data?.series.find((s) => s.points)?.capacity_step)}
+                            {' '}
+                            {basisUnit(dvdqState.data?.basis ?? basis)}
+                            {' · 용량이 멈춘 구간(정전압·휴지)은 제외됩니다 (dQ=0)'}
+                            {' · 봉우리 사이 간격이 곧 그 구간의 용량입니다'}
+                          </>
+                        )}
+                      </div>
+                      {skipped ? (
                         <div className="tiny" style={{ padding: '0 16px 6px', color: 'var(--warn)' }}>
-                          {dqdvSkipped}
+                          {skipped}
                         </div>
                       ) : null}
                     </>
-                  ) : (
-                    <Plot
-                      series={profileSeries}
-                      xLabel={basisAxis(profileState.data?.basis ?? basis)}
-                      yLabel="전압 (V)"
-                      xRange={capacityAxis}
-                      height={400}
-                    />
-                  )}
+                  ) : null}
                   <PlotLegend
-                    series={mode === 'dqdv' ? dqdvSeries : profileSeries}
+                    series={shownSeries}
                     onToggle={(label) =>
                       setHidden((current) =>
                         current.includes(label)
