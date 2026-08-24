@@ -544,6 +544,20 @@ check "WSL 것뿐이면 빈 값" \
    IPv4 주소 . . . : 172.24.25.206')" ""
 check "빈 출력도 죽지 않는다" "$(windows_lan_address '')" ""
 
+# 한국어 Windows 의 ipconfig 는 CP949 로 찍는다.  UTF-8 로케일의 grep 은 그런
+# 바이트가 섞인 줄에서 매칭을 조용히 놓친다 — 주소는 ASCII 인데 같은 줄의
+# '주소' 두 글자 때문에 못 찾는다.  그래서 바이트로만 본다.
+CP949="$(printf 'Wi-Fi:\n   IPv4 \xc1\xd6\xbc\xd2 . . . : 192.168.0.40\n   \xb1\xe2\xba\xbb . : 192.168.0.1\n')"
+check "CP949 로 찍혀도 읽는다" "$(LC_ALL=C.UTF-8 windows_lan_address "$CP949")" "192.168.0.40"
+
+# PATH 에 Windows 가 안 붙은 기계가 있다 (/etc/wsl.conf 의 appendWindowsPath=false).
+# 그때 `command -v ipconfig.exe` 는 빈손이고, 화면은 이유 없이 "못 찾았습니다"
+# 로만 끝난다.  System32 를 직접 본다.
+FAKE32="$TMP/mnt/c/Windows/System32"; mkdir -p "$FAKE32"
+check "PATH 에 있으면 이름 그대로"  "$(win_exe bash)" "bash"
+check "없는 것은 거부한다"          "$(win_exe nope-nope.exe || echo REFUSED)" "REFUSED"
+check "빈 이름도 거부한다"          "$(win_exe '' || echo REFUSED)" "REFUSED"
+
 echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
