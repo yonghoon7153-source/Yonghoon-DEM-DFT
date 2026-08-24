@@ -29,10 +29,98 @@ export OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
 export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 
+# ── 이어달리기 안전장치 (현재 폴더에서 동작) ────────────────────────────────
+#   호출 직후 러너가 `> neb.out` 으로 출력을 덮어쓰므로, **그 전에** 이력을 떠 놓고
+#   restart_mode 를 맞춘다. 조건이 안 맞으면 아무것도 건드리지 않는다.
+prep_resume() {
+  local _NPATH _NITER _BAK _RM
+  _NPATH=$(ls ./*.path 2>/dev/null | head -1)
+  # ⚠ 스텝 수는 'activation energy (->)' 줄로 센다. neb.out 의 반복 머리글은
+  #   '---- iteration N ----' 라 '^ *iteration' 로는 **한 줄도 안 잡힌다**
+  #   (그렇게 짜면 _NITER=0 → 이 블록이 영영 안 돌고, 조용히 이력을 덮어쓴다).
+  #   watch_gabia.py:321 이 화면의 it 를 세는 것과 같은 신호다.
+  # ⚠ `grep -c ... || echo 0` 로 쓰면 안 된다: grep -c 는 0건일 때 "0" 을 **찍고도**
+  #   exit 1 이라 `|| echo 0` 이 하나 더 붙어 _NITER 가 "0\n0" 이 된다 → 뒤의
+  #   [ -gt ] 가 "integer expression expected" 로 터진다 (selftest ④ 가 잡았다).
+  _NITER=$(grep -ac "activation energy (->)" neb.out 2>/dev/null)
+  [ -n "$_NITER" ] || _NITER=0          # 파일 자체가 없으면 빈 문자열
+  [ -n "$_NPATH" ] || return 0
+  [ "${_NITER:-0}" -gt 0 ] || return 0
+  _BAK="neb.out.iter${_NITER}_$(date +%m%d)"
+  cp neb.out "$_BAK" 2>/dev/null && ts "  ⭐ 이어달리기: 이력 ${_NITER}스텝 보존 → $_BAK"
+  _RM=$(sed -n "s/.*restart_mode[[:space:]]*=[[:space:]]*'\{0,1\}\([a-z_]*\).*/\1/p" neb.in | head -1)
+  if [ "$_RM" = "restart" ]; then
+    ts "  ✓ restart_mode 이미 'restart'"
+    return 0
+  fi
+  cp neb.in "neb.in.bak_$(date +%m%d)"
+  if grep -aq "restart_mode" neb.in; then
+    sed -i "s/restart_mode[[:space:]]*=.*/restart_mode = 'restart'/" neb.in
+  else
+    sed -i "0,/&PATH/s//\&PATH\n   restart_mode = 'restart'/" neb.in
+  fi
+  ts "  ⭐ restart_mode: '${_RM:-미기재}' → 'restart' (경로 파일 ${_NPATH#./} 를 실제로 쓴다)"
+}
+
 # ⚠⚠ 바이너리를 **미리** 확인한다 (2026-08-07 실측). neb.x 가 없으면 mpirun 이
 #   "unable to launch ... could not access or execute" 만 남기고 조용히 끝나는데,
 #   러너는 'convergence achieved' 가 없다는 이유로 "경로 미수렴" 이라고 보고했다.
 #   → 2시간을 아무것도 안 돌고 흘려보냈다. 없는 건 없다고 즉시 말해야 한다.
+# ── --selftest: prep_resume 만 검증한다 (QE 없이, 임시 폴더에서) ───────────
+#   ⛔ 이 selftest 가 보증하지 **못하는** 것: neb.x 가 실제로 경로를 이어받는지,
+#     끝점/의사퍼텐셜/자원 가드. 여기서 보는 건 "이력을 안 지우는가 ·
+#     restart_mode 를 맞추는가 · 조건이 아니면 손대지 않는가" 세 가지뿐이다.
+if [ "${1:-}" = "--selftest" ]; then
+  _T=$(mktemp -d); _ok=1
+  say(){ echo "  $1 $2"; if [ "$1" = "✗" ]; then _ok=0; fi; return 0; }
+  # QE 가 실제로 찍는 모양: 반복 머리글은 '---- iteration N ----' 이지 '^iteration' 이 아니다
+  _mkout(){ local n=$1 f=$2; : > "$f"
+    for i in $(seq 1 "$n"); do
+      printf '     ------------------------------ iteration %3d ---\n' "$i" >> "$f"
+      printf '     activation energy (->) =   0.%03d000 eV\n' $((900 - i)) >> "$f"
+      printf '     activation energy (<-) =   0.%03d000 eV\n' $((900 - i)) >> "$f"
+    done; }
+  _in(){ printf '&PATH\n   restart_mode = %s\n   nstep_path = 50\n/\n' "$1"; }
+
+  echo "── prep_resume selftest ──"
+  # ① 양성: .path + 이력 24스텝 + from_scratch → 백업 생김 · restart 로 바뀜
+  mkdir -p "$_T/a"; ( cd "$_T/a"
+    touch li3nd.path; _mkout 24 neb.out; _in "'from_scratch'" > neb.in; prep_resume >/dev/null )
+  [ -f "$_T/a/neb.out.iter24_$(date +%m%d)" ] && say "✓" "① 이력 24스텝 백업" || say "✗" "① 백업이 안 생겼다"
+  grep -q "restart_mode = 'restart'" "$_T/a/neb.in" && say "✓" "① restart_mode → restart" || say "✗" "① restart_mode 가 안 바뀌었다"
+  # ② 회귀(이 selftest 의 존재 이유): 옛 패턴 '^ *iteration' 은 0줄이어야 한다
+  [ "$(grep -ac '^ *iteration ' "$_T/a/neb.out")" = 0 ] \
+    && say "✓" "② 옛 패턴은 0줄 — activation energy 로 세는 게 맞다" \
+    || say "✗" "② 옛 패턴이 잡힌다 — 픽스 근거가 틀렸다"
+  # ③ 음성: .path 가 없으면 (첫 실행) 아무것도 안 만들고 neb.in 도 그대로
+  mkdir -p "$_T/b"; ( cd "$_T/b"
+    _mkout 5 neb.out; _in "'from_scratch'" > neb.in; prep_resume >/dev/null )
+  [ -z "$(ls "$_T/b"/neb.out.iter* 2>/dev/null)" ] && say "✓" "③ .path 없음 → 백업 안 만듦" || say "✗" "③ .path 없는데 손댔다"
+  grep -q "restart_mode = 'from_scratch'" "$_T/b/neb.in" && say "✓" "③ .path 없음 → neb.in 그대로" || say "✗" "③ .path 없는데 neb.in 을 고쳤다"
+  # ④ 음성: .path 는 있는데 이력 0스텝(초반에 죽은 런) → 덮어써도 잃을 게 없다, 손대지 않는다
+  mkdir -p "$_T/c"; ( cd "$_T/c"
+    touch x.path; printf '     Program NEB starts\n' > neb.out; _in "'from_scratch'" > neb.in
+    prep_resume >/dev/null 2>"$_T/c.err" )
+  [ -z "$(ls "$_T/c"/neb.out.iter* 2>/dev/null)" ] && say "✓" "④ 이력 0스텝 → 손대지 않음" || say "✗" "④ 이력이 없는데 백업했다"
+  # ④' 조용히 지나가야 한다 — stderr 가 있으면 판정이 우연히 맞은 것이다
+  [ ! -s "$_T/c.err" ] && say "✓" "④' 0건 세기에 에러 없음" || { say "✗" "④' stderr: $(head -1 "$_T/c.err")"; }
+  # ④'' 파일 자체가 없는 경우도 조용해야 한다
+  mkdir -p "$_T/f"; ( cd "$_T/f"; touch w.path; _in "'from_scratch'" > neb.in
+    prep_resume >/dev/null 2>"$_T/f.err" )
+  [ ! -s "$_T/f.err" ] && say "✓" "④'' neb.out 부재도 조용" || say "✗" "④'' stderr: $(head -1 "$_T/f.err")"
+  # ⑤ restart_mode 줄이 아예 없으면 &PATH 밑에 넣는다
+  mkdir -p "$_T/d"; ( cd "$_T/d"
+    touch y.path; _mkout 3 neb.out; printf '&PATH\n   nstep_path = 50\n/\n' > neb.in; prep_resume >/dev/null )
+  grep -q "restart_mode = 'restart'" "$_T/d/neb.in" && say "✓" "⑤ 미기재 → &PATH 밑에 삽입" || say "✗" "⑤ 삽입이 안 됐다"
+  # ⑥ 이미 restart 면 neb.in 백업을 만들지 않는다 (불필요한 사본 금지)
+  mkdir -p "$_T/e"; ( cd "$_T/e"
+    touch z.path; _mkout 7 neb.out; _in "'restart'" > neb.in; prep_resume >/dev/null )
+  [ -z "$(ls "$_T/e"/neb.in.bak_* 2>/dev/null)" ] && say "✓" "⑥ 이미 restart → neb.in 백업 안 만듦" || say "✗" "⑥ 쓸데없이 neb.in 을 백업했다"
+  [ -f "$_T/e/neb.out.iter7_$(date +%m%d)" ] && say "✓" "⑥ 그래도 이력은 보존" || say "✗" "⑥ 이력을 안 지켰다"
+  rm -rf "$_T"
+  [ "$_ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ selftest 실패"; exit 1; }
+fi
+
 MODE=neb
 AFTER=""
 while [ $# -gt 0 ]; do
@@ -237,7 +325,22 @@ for t in "${TARGETS[@]}"; do
   # 지문은 실제로 돌리기로 한 뒤에 기록한다
   [ -n "$CIS" ] && echo "$CIS" > .ci_stage
   # ⚠ neb.x 는 재시작 파일(prefix.path)이 있으면 이어서 돈다. 지우지 말 것.
+  #
+  # ⛔⛔ 2026-08-24 실측 — 그 문장에 **두 구멍**이 있었다 (li3nd cc333 이 3일 7시간
+  #   돌다 08-23 08:34 에 멈췄고, 이어서 돌리려다 발견했다):
+  #
+  #   ① `> neb.out` 이 **3일치 이력을 통째로 덮어쓴다.** iteration 1~24 의
+  #      activation energy 궤적이 사라진다 — 수렴하는 중이었는지(0.936→0.880)를
+  #      나중에 볼 수 없게 된다. 진행을 보는 유일한 기록인데 그걸 지우고 시작했다.
+  #   ② **restart_mode 를 확인하지 않는다.** prefix.path 가 있어도 neb.in 이
+  #      restart_mode='from_scratch' 면 neb.x 는 **처음부터** 돈다. 주석은
+  #      "있으면 이어서 돈다" 라고 단언하지만 QE 는 그렇게 동작하지 않는다.
+  #      3일을 버리고도 화면상으로는 정상 진행처럼 보인다.
+  #
+  #   ⇒ 이어달리기 조건이 갖춰졌으면(경로 파일 + 진행한 이력) 이력을 보존하고
+  #     restart_mode 를 명시적으로 맞춘다. 아니면 손대지 않는다.
   nat=$(grep -a -m1 "nat" neb.in | grep -oE "[0-9]+")
+  prep_resume
   ts "  ▶ neb.x (원자 ${nat:-?})  — 진행은 neb.out 의 'activation energy' 줄로 본다"
   $MPIRUN -np 1 --oversubscribe "$NEB" -inp neb.in > neb.out 2>&1
   # ⚠ mpirun 실행 실패는 '미수렴' 이 아니다 — 아예 안 돈 것이다. 구분해서 말한다.

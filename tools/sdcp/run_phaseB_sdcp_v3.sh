@@ -281,7 +281,12 @@ if [ "$STAGE" = probe ]; then
   # ⚠⚠ '미수렴(rc=1)이 아니면 통과' 로 판정하면 안 된다 — 아무것도 안 돌아도 통과가 된다.
   #   통과의 정의는 **SCF 반복이 실제로 한 번이라도 돌았고 OOM 이 없었다** 이다.
   F="$OUT/complex_doped_extr/scf.out"
-  NIT=$(grep -ac "iteration #" "$F" 2>/dev/null || echo 0)
+  # ⛔ 2026-08-24 — 여기 `|| echo 0` 이 붙어 있었다. grep -c 는 0건일 때 "0" 을 찍고도
+  #   exit 1 이라 NIT 가 "0\n0" 이 되고, `[ "0\n0" -lt 1 ]` 은 문법 오류로 **비영 종료**한다
+  #   → if 가 else 로 빠져 **"✅ 탐침 통과 — SCF 반복 0회 완주"** 를 찍고 exit 0 했다.
+  #   하필 이 가드가 잡아야 할 바로 그 경우(반복 0회)에 정반대로 통과를 내주고 있었다.
+  NIT=$(grep -ac "iteration #" "$F" 2>/dev/null)
+  [ -n "$NIT" ] || NIT=0                # 파일 자체가 없으면 빈 문자열
   EST=$(grep -a "Estimated max dynamical RAM" "$F" 2>/dev/null | tail -1)
   ts "  QE 견적: ${EST:-(없음)}"
   if [ "$NIT" -lt 1 ]; then
