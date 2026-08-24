@@ -99,6 +99,95 @@ check "빈 값이면 줄이 사라진다" "$(grep -c '^WORKBENCH_SERVER=' "$RUN_
 check "지운 뒤에도 다른 줄은 남는다" "$(grep -c '^WORKBENCH_HOST=0.0.0.0$' "$RUN_DIR/env")" "1"
 
 echo
+echo ".bml/env 저장이 실패할 때"
+# 예전에는 어느 단계가 실패해도 조용히 넘어가서, 부르는 쪽이 "저장했습니다" 를
+# 출력하고 0 으로 끝났다.  사용자는 보호됐다고 믿는데 서버에는 옛 암호(또는
+# 무암호)가 그대로 남았다.  실패 지점마다 하나씩 찔러 본다.
+#
+# 권한(chmod)으로 막지 않는다 -- 이 시험은 root 로도 돌기 때문이다.  함수를
+# 갈아 끼워 그 단계만 실패시키면 누가 돌리든 같은 경로를 지난다.
+ENV_GOOD='WORKBENCH_DATA=/mnt/d/bml-data
+WORKBENCH_PASSWORD=옛날암호'
+
+reset_env() { printf '%s\n' "$ENV_GOOD" > "$RUN_DIR/env"; }
+
+reset_env
+mv() { return 1; }
+write_env_key WORKBENCH_PASSWORD "새암호1234" && rc=0 || rc=1
+unset -f mv
+check "mv 가 실패하면 실패를 돌려준다" "$rc" "1"
+check "그때 원본은 그대로다" "$(grep -c '^WORKBENCH_PASSWORD=옛날암호$' "$RUN_DIR/env")" "1"
+check "임시 파일을 남기지 않는다" "$(find "$RUN_DIR" -maxdepth 1 -name 'env.*' | wc -l | tr -d ' ')" "0"
+
+reset_env
+chmod() { return 1; }
+write_env_key WORKBENCH_PASSWORD "새암호1234" && rc=0 || rc=1
+unset -f chmod
+# 누구나 읽을 수 있는 암호는 없는 암호보다 나쁘다 -- 있다고 믿게 되므로.
+check "권한을 못 걸면 저장하지 않는다" "$rc" "1"
+check "그때도 원본은 그대로다" "$(grep -c '^WORKBENCH_PASSWORD=옛날암호$' "$RUN_DIR/env")" "1"
+
+reset_env
+grep() { command grep "$@" >/dev/null 2>&1; return 2; }   # 읽기 오류
+write_env_key WORKBENCH_SERVER "http://10.0.0.9:5003" && rc=0 || rc=1
+unset -f grep
+# 그냥 진행하면 새 key 하나만 든 파일이 원본을 갈아치워, WORKBENCH_DATA 와
+# 기존 암호가 통째로 사라진다.
+check "기존 파일을 못 읽으면 갈아치우지 않는다" "$rc" "1"
+check "다른 설정이 살아 있다" "$(grep -c '^WORKBENCH_DATA=/mnt/d/bml-data$' "$RUN_DIR/env")" "1"
+
+# grep 이 1 을 내는 것(남은 줄이 없음)은 실패가 아니다.  이것까지 실패로 읽으면
+# 한 줄짜리 env 를 고칠 수 없다.
+printf 'WORKBENCH_SERVER=http://old:5003\n' > "$RUN_DIR/env"
+write_env_key WORKBENCH_SERVER "http://new:5003" && rc=0 || rc=1
+check "남은 줄이 없는 것은 실패가 아니다" "$rc" "0"
+check "그래도 새 값이 적힌다" "$(grep -c '^WORKBENCH_SERVER=http://new:5003$' "$RUN_DIR/env")" "1"
+
+# 여기서는 함수를 갈아 끼우지 않는다.  `need_run_dir` 은 **우리 함수**라,
+# 셰임을 씌운 뒤 `unset -f` 하면 원본까지 같이 사라진다 -- 그 뒤의 모든
+# write_env_key 가 "command not found"(127) 로 실패한다.  실제로 그렇게
+# 뒤쪽 시험 두 개가 엉뚱하게 깨졌다.  대신 만들 수 없는 경로를 준다.
+reset_env
+saved_run_dir="$RUN_DIR"; RUN_DIR=/dev/null/nope
+write_env_key WORKBENCH_PASSWORD "새암호1234" && rc=0 || rc=1
+RUN_DIR="$saved_run_dir"
+check "설정 폴더를 못 만들면 실패를 돌려준다" "$rc" "1"
+check "그 뒤에도 저장이 멀쩡하다" \
+  "$(reset_env; write_env_key WORKBENCH_SERVER http://x:1 && echo ok || echo no)" "ok"
+
+echo
+echo "부르는 쪽이 그 실패를 본다"
+# 조용히 넘어가면 "공유 암호를 저장했습니다" 를 출력하고 0 으로 끝난다.
+reset_env
+mv() { return 1; }
+out="$( WORKBENCH_PASSWORD="" cmd_password "새암호1234" 2>&1 )" && rc=0 || rc=1
+unset -f mv
+check "cmd_password 가 0 으로 끝나지 않는다" "$rc" "1"
+check "저장했다고 말하지 않는다" \
+  "$(case "$out" in *"저장했습니다"*) echo yes ;; *) echo no ;; esac)" "no"
+check "무엇이 잘못됐는지 말한다" \
+  "$(case "$out" in *"저장하지 못했습니다"*) echo yes ;; *) echo no ;; esac)" "yes"
+
+reset_env
+mv() { return 1; }
+out="$( WORKBENCH_HOST="" cmd_host local 2>&1 )" && rc=0 || rc=1
+unset -f mv
+check "cmd_host 도 0 으로 끝나지 않는다" "$rc" "1"
+check "공개 범위를 바꿨다고 말하지 않는다" \
+  "$(case "$out" in *"저장하지 못했습니다"*) echo yes ;; *) echo no ;; esac)" "yes"
+
+# 실제 권한으로도 한 번 -- root 가 아니면.
+if [ "$(id -u)" -ne 0 ]; then
+  reset_env
+  chmod 500 "$RUN_DIR"
+  write_env_key WORKBENCH_PASSWORD "새암호1234" && rc=0 || rc=1
+  chmod 700 "$RUN_DIR"
+  check "읽기 전용 폴더에서도 실패를 돌려준다" "$rc" "1"
+else
+  printf '  skip 읽기 전용 폴더 시험 (root 로는 권한이 안 먹는다)\n'
+fi
+
+echo
 echo "살아 있는 서버 판정"
 # /api/health 가 200 을 주는 최소 서버.  파일 하나면 된다.
 mkdir -p "$TMP/www/api" && printf 'ok' > "$TMP/www/api/health"
