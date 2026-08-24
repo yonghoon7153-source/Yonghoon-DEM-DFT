@@ -9,6 +9,8 @@
 #   bml status     지금 뭐가 돌고 있는지 + 저장소 상태
 #   bml use <주소> 이 기계가 볼 중추 서버를 정한다 — 그 뒤 `bml` 은 그것을 연다
 #   bml use off    해제한다 (이 기계가 자기 서버를 띄운다)
+#   bmlin  [주소]  랩 안(LAN) 주소로 갈아 끼우고 연다 — 주소는 한 번만 적으면 된다
+#   bmlout [주소]  밖(터널) 주소로 갈아 끼우고 연다 — 터널은 열 때마다 주소가 바뀔 수 있다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
 #   bml share stop 그 터널을 닫는다
@@ -2417,13 +2419,87 @@ cmd_share() {
 
   ok "열렸습니다 → ${B}${url}${OFF}"
   say ""
-  say "  ${B}다른 기계에서${OFF}  ${GREEN}bml use ${url}${OFF}"
+  say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${url}${OFF}   ${DIM}(한 번만 — 그다음부터는${OFF} ${GREEN}bmlout${OFF}${DIM})${OFF}"
   say "  ${DIM}브라우저로만 볼 거라면 그 주소를 그대로 엽니다 — 암호를 한 번 묻습니다.${OFF}"
   say ""
   say "  ${DIM}이 창은 닫아도 됩니다. 닫으려면${OFF} ${GREEN}bml share stop${OFF}${DIM}, 주소는 열 때마다 바뀝니다.${OFF}"
 }
 
 #: 이 기계가 볼 중추 서버를 정한다.  인자 없이 부르면 지금 설정을 보여 준다.
+#: 랩 안에서 쓸 주소와 밖에서 쓸 주소를 **따로** 기억한다.
+#:
+#: `WORKBENCH_SERVER` 하나만 있으면 자리를 옮길 때마다 주소를 다시 쳐야 한다.
+#: 그런데 두 주소의 성격이 다르다: LAN 주소는 한 번 정하면 안 바뀌고, 터널
+#: 주소는 **열 때마다 달라질 수 있다** (실측: 70a2261f8bc0e8 → 683dafde44f8ea).
+#: 그래서 둘을 따로 적어 두고 `bml in` / `bml out` 으로 갈아 끼운다.
+#:
+#: 활성 주소는 여전히 `WORKBENCH_SERVER` 다 — 나머지 코드는 아무것도 안 바뀐다.
+#: 여기서 하는 일은 "어느 것을 거기에 복사할까" 뿐이다.
+slot_key() {
+  case "${1:-}" in
+    in|lan)      printf 'WORKBENCH_SERVER_LAN' ;;
+    out|tunnel)  printf 'WORKBENCH_SERVER_TUNNEL' ;;
+    *)           return 1 ;;
+  esac
+}
+
+slot_label() {
+  case "${1:-}" in
+    in|lan)     printf '랩 안 (LAN)' ;;
+    out|tunnel) printf '밖 (터널)' ;;
+  esac
+}
+
+#: `bml in [주소]` / `bml out [주소]`.
+#:
+#: 주소를 주면 그 자리에 적고 그리로 붙는다.  안 주면 적어 둔 것을 쓴다.
+#: 닿는지 본 뒤에만 활성으로 만든다 — 못 닿는 주소를 활성으로 만들면 그 뒤로
+#: `bml` 이 매번 실패하는데, 사람은 방금 고른 자리가 아니라 서버를 의심한다
+#: (`cmd_use` 가 같은 이유로 같은 순서를 지킨다).
+cmd_slot() {
+  local which="$1" raw="${2:-}" key url
+  key="$(slot_key "$which")" || die "모르는 자리: $which"
+
+  if [ -z "$raw" ]; then
+    raw="${!key:-}"
+    if [ -z "$raw" ]; then
+      printf '%s✕%s %s 주소가 아직 없습니다.\n' "$RED" "$OFF" "$(slot_label "$which")" >&2
+      case "$which" in
+        in|lan)
+          say "  ${DIM}중추 서버에서${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 줄을 보고:${OFF}"
+          say "    ${GREEN}bml in <그 주소>${OFF}" ;;
+        *)
+          say "  ${DIM}중추 서버에서${OFF} ${GREEN}bml share${OFF} ${DIM}가 알려 준 주소로:${OFF}"
+          say "    ${GREEN}bml out <그 주소>${OFF}"
+          say "  ${DIM}터널 주소는 열 때마다 달라질 수 있습니다 — 그때마다 다시 적어 주세요.${OFF}" ;;
+      esac
+      exit 1
+    fi
+  fi
+
+  url="$(normalize_server_url "$raw")"
+  step "확인  $url ${DIM}($(slot_label "$which") · 최대 ${WORKBENCH_WAIT:-40}초)${OFF}"
+  if ! wait_until_alive "$url" "${WORKBENCH_WAIT:-40}"; then
+    printf '%s✕%s 그 주소에서 워크벤치가 응답하지 않습니다: %s\n' "$RED" "$OFF" "$url" >&2
+    server_unreachable_help "$url"
+    # 적어 둔 것은 지우지 않는다.  자리를 옮기는 중일 뿐일 수 있고, 지워 버리면
+    # 돌아왔을 때 다시 쳐야 한다.
+    [ -n "${!key:-}" ] && say "  ${DIM}적어 둔 $(slot_label "$which") 주소는 그대로 둡니다: ${!key}${OFF}"
+    exit 1
+  fi
+
+  write_env_key "$key" "$url"
+  write_env_key WORKBENCH_SERVER "$url"
+  SERVER="$url"
+  ok "$(slot_label "$which") → ${B}${url}${OFF}"
+
+  # 이 기계에 서버가 떠 있으면 같이 짚는다 (cmd_use 와 같은 이유: 둘 다
+  # localhost:5003 이라 화면으로는 어느 쪽인지 알 수 없다).
+  if port_busy "$PORT" && owns_port "$PORT"; then
+    warn "이 기계에도 서버가 떠 있습니다 — ${GREEN}bml stop${OFF} ${DIM}으로 내리세요.${OFF}"
+  fi
+}
+
 cmd_use() {
   local raw="${1:-}"
 
@@ -2569,6 +2645,16 @@ cmd_status() {
       say "중추 서버   ${SERVER}  ${DIM}(화면에 뜨는 것은 여기 있습니다)${OFF}"
     else
       warn "중추 서버   ${SERVER} — 응답 없음"
+    fi
+    # 적어 둔 두 자리를 같이 보여 준다.  어느 쪽에 붙어 있는지, 반대쪽으로
+    # 가려면 무엇을 치는지가 한 화면에 있어야 자리를 옮길 때 헤매지 않는다.
+    local lan="${WORKBENCH_SERVER_LAN:-}" wan="${WORKBENCH_SERVER_TUNNEL:-}"
+    if [ -n "$lan" ] || [ -n "$wan" ]; then
+      local mark
+      mark=" "; [ "$SERVER" = "$lan" ] && mark="●"
+      [ -n "$lan" ] && say "  ${mark} ${DIM}랩 안 (bmlin)${OFF}   ${lan}"
+      mark=" "; [ "$SERVER" = "$wan" ] && mark="●"
+      [ -n "$wan" ] && say "  ${mark} ${DIM}밖   (bmlout)${OFF}   ${wan}"
     fi
   fi
   # 떠 있는 서버가 **어느 코드를 들고 있는가.**
@@ -3055,7 +3141,10 @@ cmd_install() {
   local target="${1:-$HOME/.local/bin}"
   mkdir -p "$target"
   ln -sf "$SCRIPT" "$target/bml"
-  ok "설치: $target/bml"
+  # 자리 바꾸기용 두 이름.  같은 파일을 가리키므로 bml 을 고치면 같이 따라온다.
+  ln -sf "$SCRIPT" "$target/bmlin"
+  ln -sf "$SCRIPT" "$target/bmlout"
+  ok "설치: $target/bml  ${DIM}(+ bmlin · bmlout)${OFF}"
 
   case ":$PATH:" in
     *":$target:"*)
@@ -3097,6 +3186,14 @@ if [ -n "${BML_SOURCE_ONLY:-}" ]; then
 fi
 
 main() {
+  # `bmlin` / `bmlout` 은 이 파일을 가리키는 심볼릭 링크다.  별칭을 기계마다
+  # 손으로 관리하면 반드시 어긋나고(특히 터널 주소가 바뀔 때), `bml` 을 고쳐도
+  # 별칭은 안 따라온다.  불린 이름으로 첫 인자를 붙여 주면 한 파일로 끝난다.
+  case "$(basename "${0:-bml}")" in
+    bmlin)  set -- in  "$@" ;;
+    bmlout) set -- out "$@" ;;
+  esac
+
   # sync_repo 가 재실행할 때 쓸 원래 인자.
   BML_ARGV=()
   [ $# -gt 0 ] && BML_ARGV=("$@")
@@ -3147,6 +3244,8 @@ main() {
       ;;
     backup)            shift; cmd_backup "${1:-}" ;;
     use|server)        shift; cmd_use "${1:-}" ;;
+    in|lan)            shift; cmd_slot in  "${1:-}"; sync_repo; cmd_connect ;;
+    out|wan)           shift; cmd_slot out "${1:-}"; sync_repo; cmd_connect ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)      shift; cmd_share "${1:-}" ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;

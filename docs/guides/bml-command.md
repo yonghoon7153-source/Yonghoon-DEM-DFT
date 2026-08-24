@@ -148,6 +148,8 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml share` | 임시 터널 — 다른 공유기에 있는 사람도 접속 |
 | `bml share stop` | 그 터널을 닫는다 (`bml stop` 도 함께 닫는다) |
 | `bml mirrored` | WSL 을 mirrored 네트워크로 — 다른 기계가 이 서버를 보게 (WSL 에서 실행) |
+| `bmlin [주소]` | 랩 안(LAN) 주소로 갈아 끼우고 연다 — 주소는 한 번만 적으면 됩니다 |
+| `bmlout [주소]` | 밖(터널) 주소로 갈아 끼우고 연다 — 터널은 열 때마다 주소가 바뀔 수 있습니다 |
 | `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs · bml 회귀) |
 | `bml doctor` | 환경 점검 — 안 되면 여기부터 |
 | `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |

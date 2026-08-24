@@ -635,6 +635,23 @@ check "누가 잡았는지 볼 명령을 준다" \
   "$(printf '%s\n' "$THEIRS" | grep -c 'netstat.exe -ano')" "1"
 
 echo
+echo "자리를 둘로 — bmlin / bmlout"
+# 랩 주소는 한 번 정하면 안 바뀌고, 터널 주소는 열 때마다 달라질 수 있다.
+# 하나만 저장하면 자리를 옮길 때마다 주소를 다시 쳐야 한다.
+check "in 은 LAN 자리"     "$(slot_key in)"     "WORKBENCH_SERVER_LAN"
+check "out 은 터널 자리"   "$(slot_key out)"    "WORKBENCH_SERVER_TUNNEL"
+check "lan 도 같은 자리"   "$(slot_key lan)"    "WORKBENCH_SERVER_LAN"
+check "모르는 자리는 거부" "$(slot_key nope || echo REFUSED)" "REFUSED"
+# 별칭을 기계마다 손으로 관리하면 반드시 어긋난다.  같은 파일을 가리키는
+# 심볼릭 링크라 bml 을 고치면 bmlin/bmlout 도 같이 따라온다.
+check "install 이 세 이름을 만든다" \
+  "$(grep -c 'ln -sf "\$SCRIPT" "\$target/bml' "$BML")" "3"
+check "불린 이름으로 자리를 정한다" \
+  "$(grep -c 'bmlin)  set -- in' "$BML")" "1"
+# 'tunnel' 은 이미 share 의 별칭이다 — out 에 겹쳐 쓰면 share 가 먹힌다.
+check "out 은 tunnel 을 뺏지 않는다" "$(grep -c 'out|wan)' "$BML")" "1"
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
