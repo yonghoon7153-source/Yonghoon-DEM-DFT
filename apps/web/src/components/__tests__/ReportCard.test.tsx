@@ -95,3 +95,52 @@ describe('ReportCard', () => {
     expect(container.querySelectorAll('.evidence li')).toHaveLength(2)
   })
 })
+
+// --- 완료된 사이클이 하나도 없을 때 -------------------------------------------
+//
+// 실측: multi-step CCCV 파일(260630_MJ1, 41,738행)에 방전이 한 번도 없었다.
+// 화면은 지표가 전부 — 이고 아무 설명이 없었다.  전부 맞는 말인데 **왜** 가
+// 없어서 파싱 실패로 읽혔다.
+
+function empty(reason: string): Report {
+  return {
+    ...REPORT,
+    state: 'finished',
+    cycles_complete: 0,
+    in_progress_cycle: null,
+    retention_pct: null,
+    reported: null,
+    reference: null,
+    first_cycle: null,
+    no_complete_reason: reason,
+  }
+}
+
+describe('숫자가 하나도 없을 때', () => {
+  it('방전이 없다고 말한다 — 그리고 그것이 계산에 무슨 뜻인지도', () => {
+    render(<ReportCard report={empty('no_discharge')} />)
+    expect(screen.getByText(/방전이 없습니다/)).toBeInTheDocument()
+    // 무엇을 못 내는지까지 적어야 "고장" 이 아니라 "그런 실험" 으로 읽힌다.
+    expect(screen.getByText(/사이클 용량·유지율·쿨롱효율/)).toBeInTheDocument()
+  })
+
+  it('잘린 것과 방전이 없는 것을 다르게 말한다', () => {
+    // 하나는 기다리면 되고 하나는 영영 안 된다.  같은 문장으로 덮으면 안 된다.
+    const { unmount } = render(<ReportCard report={empty('truncated')} />)
+    expect(screen.getByText(/이어지는 파일/)).toBeInTheDocument()
+    unmount()
+
+    render(<ReportCard report={empty('no_discharge')} />)
+    expect(screen.queryByText(/이어지는 파일/)).toBeNull()
+  })
+
+  it('지표 밑의 문구도 이유를 안다', () => {
+    render(<ReportCard report={empty('no_discharge')} />)
+    expect(screen.getByText('방전이 없어 사이클 용량이 없습니다')).toBeInTheDocument()
+  })
+
+  it('완료된 사이클이 있으면 이 줄은 안 나온다', () => {
+    render(<ReportCard report={REPORT} />)
+    expect(screen.queryByText(/방전이 없습니다/)).toBeNull()
+  })
+})

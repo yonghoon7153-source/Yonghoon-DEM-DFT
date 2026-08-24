@@ -41,6 +41,19 @@ export function ReportCard({ report }: { report: Report }) {
         <span className="badge plain">판정 근거 {report.evidence.length}건</span>
       </div>
 
+      {/* 완료된 사이클이 하나도 없을 때, **왜** 없는지.
+       *
+       * 이 줄이 없던 동안 화면은 지표가 전부 — 이고 아무 설명이 없었다.
+       * 실측(260630_MJ1, 41,738행)에서 그것은 파싱 실패로 읽혔다 — 파일은
+       * 멀쩡히 읽혔고, 그 프로토콜에 방전이 없었을 뿐이다. */}
+      {report.no_complete_reason ? (
+        <div style={{ padding: '12px 16px 0' }}>
+          <Alert kind={report.no_complete_reason === 'truncated' ? 'info' : 'warn'}>
+            {ko.noCompleteReason(report.no_complete_reason)}
+          </Alert>
+        </div>
+      ) : null}
+
       {!report.reference_available && report.retention_note ? (
         <div style={{ padding: '12px 16px 0' }}>
           <Alert kind="warn">
@@ -61,7 +74,9 @@ export function ReportCard({ report }: { report: Report }) {
               ? running
                 ? `${reported.cycle}번 — ${report.in_progress_cycle}번이 진행 중이라 그 직전 값`
                 : `${reported.cycle}번 사이클`
-              : '완료된 사이클이 아직 없습니다'
+              : report.no_complete_reason === 'no_discharge'
+                ? '방전이 없어 사이클 용량이 없습니다'
+                : '완료된 사이클이 아직 없습니다'
           }
         />
         <Metric

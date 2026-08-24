@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { basisUnit, num, parseCycleSpec, pct, spread } from '../lib/format'
-import type { Basis, Cycle } from '../lib/types'
+import { ko } from '../lib/i18n'
+import type { Basis, Cycle, PartialCycle } from '../lib/types'
 
 /** As many cycles as the API will draw in one response.  Keep in step with
  *  `_PROFILE_CYCLE_LIMIT` in apps/api/app/routers/analysis.py. */
@@ -14,13 +15,19 @@ export function CyclePicker({
   value,
   onChange,
   basis,
+  partial = [],
 }: {
   cycles: Cycle[]
   value: number[]
   onChange: (cycles: number[]) => void
   basis: Basis
+  /** 숫자는 없지만 곡선은 그릴 수 있는 사이클들.  비어 있으면 없는 것과 같다 --
+   *  고를 수 없는 번호를 목록에 넣으면 `전체` 가 그릴 수 없는 것을 고른다. */
+  partial?: PartialCycle[]
 }) {
-  const available = cycles.map((c) => c.cycle)
+  const available = [...cycles.map((c) => c.cycle), ...partial.map((p) => p.cycle)].sort(
+    (a, b) => a - b,
+  )
   const [spec, setSpec] = useState(() => value.join(','))
   const [invalid, setInvalid] = useState(false)
   // What this box last handed upward.  The selection also changes from
@@ -74,6 +81,11 @@ export function CyclePicker({
   const first = available.at(0)
   const last = available.at(-1)
   const focus = cycles.find((c) => c.cycle === value.at(-1))
+  // 고른 것이 숫자 없는 사이클이면 그렇게 말한다.  숫자 줄이 그냥 사라지면
+  // 방금 누른 것이 안 먹은 것으로 읽힌다.
+  const focusPartial = focus
+    ? undefined
+    : partial.find((item) => item.cycle === value.at(-1))
   const capped = available.length > MAX_DRAWN_CYCLES
 
   return (
@@ -128,6 +140,16 @@ export function CyclePicker({
       {invalid ? (
         <div className="tiny" style={{ color: 'var(--danger)' }}>
           선택된 사이클이 없습니다. 이 셀은 {available.at(0)}–{last}번을 가지고 있습니다.
+        </div>
+      ) : null}
+
+      {focusPartial ? (
+        <div className="row small" style={{ gap: 14 }}>
+          <span className="dim">{focusPartial.cycle}번</span>
+          <span className="faint">
+            {ko.partialReason(focusPartial.reason)} — 곡선은 그리지만 사이클 용량은
+            없습니다
+          </span>
         </div>
       ) : null}
 

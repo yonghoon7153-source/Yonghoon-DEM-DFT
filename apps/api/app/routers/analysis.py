@@ -31,6 +31,7 @@ from ..schemas import (
     DqdvSeriesOut,
     DvdqOut,
     DvdqSeriesOut,
+    PartialCycleOut,
     ProfileOut,
     ProfileSeriesOut,
     ReportOut,
@@ -251,6 +252,32 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
     return rows, reference_info
 
 
+def _partial_cycles(records: list[CycleRecord]) -> list[PartialCycleOut]:
+    """The cycles that carry no numbers, and why.
+
+    ``incomplete_reason`` is stored at parse time.  Rows written before that
+    column existed hold "", and rather than guess, they are reported as "" and
+    the screen says "이유 미상 — 재파싱하면 나옵니다".  Guessing here would be
+    wrong in the case that matters most: a running cell cut off during its
+    charge looks exactly like a charge-only protocol from the stored numbers,
+    and the two need opposite readings.
+    """
+    out: list[PartialCycleOut] = []
+    for record in records:
+        if record.complete:
+            continue
+        out.append(PartialCycleOut(
+            cycle=record.cycle_number,
+            run_id=record.run_id,
+            reason=record.incomplete_reason,
+            # 용량이 아니라 **전류 부호**로 본다.  CV 홀드만 있는 스텝은 용량이
+            # 0 에 가까울 수 있어도 그 브랜치는 분명히 있었다.
+            has_charge=record.max_charge_current_a is not None,
+            has_discharge=record.max_discharge_current_a is not None,
+        ))
+    return out
+
+
 @router.get("/samples/{sample_id}/cycles", response_model=CycleTableOut)
 def sample_cycles(
     sample_id: int,
@@ -273,6 +300,9 @@ def sample_cycles(
         active_wt_percent, nominal_specific_capacity_mah_g, thickness_um))
 
     records = sample_cycle_records(session, sample)
+    # 걸러내기 **전에** 센다.  complete_only 는 표에서 그 행을 빼라는 뜻이지,
+    # 그런 사이클이 없다고 말하라는 뜻이 아니다.
+    partial = _partial_cycles(records)
     if complete_only:
         records = [r for r in records if r.complete]
 
@@ -286,6 +316,7 @@ def sample_cycles(
         reference_cycle=sample.reference_cycle,
         resolved_cell=resolved_cell_out(cell),
         cycles=rows,
+        partial_cycles=partial,
         **reference_info,
     )
 
@@ -303,6 +334,7 @@ def run_cycles(
     sample = session.get(Sample, run.sample_id) if run.sample_id else None
     cell = resolve_cell(sample)
     records = cycle_records(session, [run.id])
+    partial = _partial_cycles(records)
     if complete_only:
         records = [r for r in records if r.complete]
     used = effective_basis(cell, basis)
@@ -316,6 +348,7 @@ def run_cycles(
         reference_cycle=reference,
         resolved_cell=resolved_cell_out(cell),
         cycles=rows,
+        partial_cycles=partial,
         **reference_info,
     )
 
@@ -347,6 +380,8 @@ def sample_profile(
     cycles: str = Query("1", description="cycle numbers, e.g. 1,3,10-20 or all"),
     branches: str = Query("charge,discharge"),
     basis: str = Query(Basis.ABSOLUTE),
+    include_partial: bool = Query(
+        False, description="also draw cycles that carry no cycle-level numbers"),
     max_points: int | None = Query(None, ge=50, le=20000),
     active_mass_mg: float | None = None,
     area_cm2: float | None = None,
@@ -366,7 +401,15 @@ def sample_profile(
     wanted = _parse_cycles(cycles)
     requested_branches = _parse_branches(branches)
 
-    records = [r for r in sample_cycle_records(session, sample) if r.complete]
+    # 잘리거나 한쪽 브랜치가 없는 사이클도 **곡선은 실측이다.**  숫자를 내는
+    # 것과 그리는 것은 다르다 -- 사이클 용량은 여전히 안 내고(표가 비운다),
+    # 그린 곡선에는 complete=false 를 달아 화면이 그렇게 그리게 한다.
+    #
+    # 기본이 False 인 이유: 완료 사이클들 사이에 잘린 곡선이 아무 표시 없이 끼면
+    # 셀이 갑자기 용량을 잃은 것처럼 보인다.  달라고 해야 준다.
+    records = sample_cycle_records(session, sample)
+    if not include_partial:
+        records = [r for r in records if r.complete]
     if wanted is not None:
         records = [r for r in records if r.cycle_number in wanted]
     if len(records) > _PROFILE_CYCLE_LIMIT:
@@ -388,6 +431,8 @@ def sample_profile(
                 continue
             series.append(ProfileSeriesOut(
                 **payload, run_id=run.id,
+                complete=record.complete,
+                incomplete_reason=record.incomplete_reason,
                 label=f"{sample.name} · cycle {record.cycle_number} {branch}"))
 
     used = effective_basis(cell, basis)
@@ -624,6 +669,7 @@ def sample_report(
         reference_available=report.reference_available,
         retention_pct=report.retention_pct,
         retention_note=report.retention_note,
+        no_complete_reason=report.no_complete_reason,
         basis=used,
         basis_label=basis_label(used),
         reported=readout(report.reported),

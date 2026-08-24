@@ -246,6 +246,7 @@ def persist_parse(session: Session, run: Run, wrd: WrdFile) -> list[CycleSummary
             duration_s=cycle.duration_s,
             n_points=cycle.n_points,
             complete=cycle.complete,
+            incomplete_reason=cycle.incomplete_reason,
             row_start=cycle.start,
             row_stop=cycle.stop,
         ))
@@ -382,6 +383,7 @@ def records_to_summaries(records: list[CycleRecord]) -> list[CycleSummary]:
             max_discharge_current_a=record.max_discharge_current_a,
             temperature_mean=record.temperature_mean,
             complete=record.complete,
+            incomplete_reason=record.incomplete_reason,
         )
         summaries.append(summary)
     return summaries

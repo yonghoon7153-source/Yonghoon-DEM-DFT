@@ -94,7 +94,56 @@ def test_no_completed_cycle_yields_an_honest_empty_report():
     samples = synthetic.make_cycles(1, 20)[:10]
     report = build_report(summarize_cycles(read_wrd_bytes(synthetic.build_wrd(samples))))
     assert report.reported is None
-    assert report.state_summary == "no completed cycle yet"
+    # 무엇이 없는지까지 말한다.  "no completed cycle yet" 만 있던 동안, 화면은
+    # 온통 — 뿐이었고 그것은 파싱 실패로 읽혔다.
+    assert report.no_complete_reason == "truncated"
+    assert "stops part-way through a step" in report.state_summary
+
+
+def test_a_charge_only_schedule_is_not_called_cut_off():
+    """multi-step CCCV 처럼 방전이 아예 없는 프로토콜.
+
+    실측 파일(260630_MJ1, 41,738행)이 이랬다: 3.5 → 3.75 → 4.0 → 4.25 V 를
+    CC-CV 로 네 단 올리고 끝난다.  `cell_status` 에 4(방전)가 한 번도 안 나온다.
+
+    예전에는 "1번 사이클이 스텝 도중에 잘렸습니다" 라고 했다.  거짓이다 --
+    파일은 CV 홀드를 끝까지 마치고 정상 종료했다.  그리고 그 문장은 "기다리면
+    된다" 로 읽히는데, 이 기록은 아무리 기다려도 사이클 용량을 내지 않는다.
+    """
+    samples = synthetic.make_cycles(1, 20)
+    charge_only = [s for s in samples if s.current >= 0]
+    # 실측 파일의 모양 그대로: 휴지 뒤에 CC-CV 충전 두 단, 방전 스텝은 없다.
+    schedule = (
+        synthetic.SchedStep("rest", control=7),
+        synthetic.SchedStep("cc-1", control=0, value=0.00123),
+        synthetic.SchedStep("cv-1", control=1, value=3.5),
+        synthetic.SchedStep("cc-2", control=0, value=0.00123),
+        synthetic.SchedStep("cv-2", control=1, value=4.25),
+    )
+    wrd = read_wrd_bytes(synthetic.build_wrd(charge_only, schedule=schedule))
+    [cycle] = summarize_cycles(wrd)
+    assert cycle.complete is False
+    assert cycle.incomplete_reason == "no_discharge"
+
+    report = build_report(summarize_cycles(wrd))
+    assert report.no_complete_reason == "no_discharge"
+    # 영영 안 올라갈 사이클 번호를 "진행 중" 으로 걸어 두지 않는다.
+    assert report.in_progress_cycle is None
+    assert "no discharge" in report.state_summary
+    assert not any("cut off" in e.detail for e in report.evidence)
+    assert any("has no discharge" in e.detail for e in report.evidence)
+
+
+def test_a_missing_branch_the_schedule_asked_for_is_still_cut_off():
+    """스케줄이 방전을 시켰는데 기록에 없으면, 그것은 아직 못 간 것이다.
+
+    구동 중인 셀이 충전과 휴지를 마치고 방전 직전에 파일이 끊기면 숫자만으로는
+    방전 없는 스케줄과 구분되지 않는다 -- 한쪽은 한 시간 뒤에 생기고 다른 쪽은
+    영영 안 생기는데.  스케줄이 그 답을 갖고 있다.
+    """
+    report = build_report(_cycles(truncate=True), planned_cycles=100)
+    assert report.state == CellState.RUNNING
+    assert report.in_progress_cycle == 8
 
 
 def test_the_summary_sentence_carries_the_headline_numbers():

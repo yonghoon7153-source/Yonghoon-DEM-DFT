@@ -4,7 +4,7 @@ import { useState } from 'react'
 import { describe, expect, it, vi } from 'vitest'
 
 import { CyclePicker } from '../CyclePicker'
-import type { Cycle } from '../../lib/types'
+import type { Cycle, PartialCycle } from '../../lib/types'
 
 function cycle(n: number, discharge: number): Cycle {
   return {
@@ -138,5 +138,64 @@ describe('CyclePicker', () => {
     render(<CyclePicker cycles={many} value={[1]} onChange={onChange} basis="mAh" />)
     await userEvent.click(screen.getByRole('button', { name: '전체' }))
     expect(onChange.mock.calls[0]![0]).toHaveLength(120)
+  })
+})
+
+// --- 숫자 없는 사이클 ---------------------------------------------------------
+
+const PARTIAL: PartialCycle[] = [
+  { cycle: 11, run_id: 1, reason: 'no_discharge', has_charge: true, has_discharge: false },
+]
+
+describe('숫자 없는 사이클 고르기', () => {
+  it('안 넘겨 주면 목록에 없다 — 그릴 수 없는 번호를 전체가 집으면 안 된다', async () => {
+    const onChange = vi.fn()
+    render(<CyclePicker cycles={cycles} value={[]} onChange={onChange} basis="mAh" />)
+    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+    expect(onChange).toHaveBeenCalledWith([1, 2, 3, 10])
+  })
+
+  it('넘겨 주면 전체와 마지막이 그것까지 집는다', async () => {
+    const onChange = vi.fn()
+    render(
+      <CyclePicker
+        cycles={cycles}
+        value={[]}
+        onChange={onChange}
+        basis="mAh"
+        partial={PARTIAL}
+      />,
+    )
+    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+    expect(onChange).toHaveBeenCalledWith([1, 2, 3, 10, 11])
+  })
+
+  it('고른 것이 숫자 없는 사이클이면 그렇게 말한다', () => {
+    // 숫자 줄이 그냥 사라지면 방금 누른 것이 안 먹은 것으로 읽힌다.
+    render(
+      <CyclePicker
+        cycles={cycles}
+        value={[11]}
+        onChange={() => {}}
+        basis="mAh"
+        partial={PARTIAL}
+      />,
+    )
+    expect(screen.getByText('11번')).toBeInTheDocument()
+    expect(screen.getByText(/방전 없음 — 곡선은 그리지만/)).toBeInTheDocument()
+  })
+
+  it('완료된 사이클을 고르면 평소처럼 숫자가 나온다', () => {
+    render(
+      <CyclePicker
+        cycles={cycles}
+        value={[3]}
+        onChange={() => {}}
+        basis="mAh"
+        partial={PARTIAL}
+      />,
+    )
+    expect(screen.getByText(/방전 4.920 mAh/)).toBeInTheDocument()
+    expect(screen.queryByText(/곡선은 그리지만/)).toBeNull()
   })
 })

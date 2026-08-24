@@ -220,6 +220,93 @@ def test_report_calls_a_truncated_file_running(client, loaded):
     assert any(e["signal"] == "partial cycle" for e in body["evidence"])
 
 
+# --- 숫자가 없는 사이클 --------------------------------------------------------
+#
+# 실측: multi-step CCCV 파일(260630_MJ1, 41,738행)에 방전이 한 번도 없었다.
+# 사이클 표가 비고, 지표가 전부 —, 프로파일이 "그릴 데이터가 없습니다" 였다.
+# 전부 맞는 말인데 **왜** 가 어디에도 없어서 파싱 실패로 읽혔다.
+
+
+@pytest.fixture
+def charge_only(client, sample_id):
+    """방전 스텝이 아예 없는 스케줄로 충전만 한 파일."""
+    samples = [s for s in synthetic.make_cycles(1, 20) if s.current >= 0]
+    schedule = (
+        synthetic.SchedStep("rest", control=7),
+        synthetic.SchedStep("cc", control=0, value=0.00123),
+        synthetic.SchedStep("cv", control=1, value=4.25),
+    )
+    _upload(client, sample_id,
+            synthetic.build_wrd(samples, schedule=schedule), name="chg_only.wrd")
+    return sample_id
+
+
+def test_the_table_says_which_cycles_it_left_out_and_why(client, charge_only):
+    body = client.get(f"/api/samples/{charge_only}/cycles").json()
+    assert body["cycles"] == []
+    # 행은 빼되 **있다는 사실**은 뺀 적이 없다.  그 둘을 같이 숨긴 것이 화면을
+    # 파싱 실패처럼 보이게 했다.
+    [partial] = body["partial_cycles"]
+    assert partial["cycle"] == 1
+    assert partial["reason"] == "no_discharge"
+    assert partial["has_charge"] is True
+    assert partial["has_discharge"] is False
+
+
+def test_partial_cycles_are_reported_even_when_the_rows_are_asked_for(client,
+                                                                     charge_only):
+    # complete_only=false 는 "그 행을 보여 달라" 이지 "빠진 것을 세지 말라" 가
+    # 아니다.  두 화면이 같은 목록을 봐야 한다.
+    body = client.get(f"/api/samples/{charge_only}/cycles",
+                      params={"complete_only": "false"}).json()
+    assert [c["cycle"] for c in body["cycles"]] == [1]
+    assert body["cycles"][0]["discharge_capacity"] is None
+    assert [c["cycle"] for c in body["partial_cycles"]] == [1]
+
+
+def test_the_report_says_there_is_no_discharge_rather_than_cut_off(client,
+                                                                  charge_only):
+    body = client.get(f"/api/samples/{charge_only}/report").json()
+    assert body["no_complete_reason"] == "no_discharge"
+    # 영영 안 올라갈 사이클 번호를 "진행 중" 으로 걸어 두지 않는다.
+    assert body["in_progress_cycle"] is None
+    assert not any("cut off" in e["detail"] for e in body["evidence"])
+    assert any(e["signal"] == "branch missing" for e in body["evidence"])
+
+
+def test_a_charge_only_cycle_is_not_drawn_unless_asked_for(client, charge_only):
+    # 기본이 False 인 이유: 완료 사이클들 사이에 잘린 곡선이 아무 표시 없이 끼면
+    # 셀이 갑자기 용량을 잃은 것처럼 보인다.
+    body = client.get(f"/api/samples/{charge_only}/profile",
+                      params={"cycles": "all"}).json()
+    assert body["series"] == []
+
+
+def test_asking_for_it_draws_the_charge_curve_and_marks_it(client, charge_only):
+    """곡선은 실측이다.  숫자를 내는 것과 그리는 것은 다르다.
+
+    사이클 용량은 여전히 안 낸다(표가 비운다).  하지만 2.9 → 4.25 V 로 올라간
+    충전 곡선은 실제로 측정된 것이고, 그리지 않을 이유가 없다 -- 완료 사이클인
+    척만 안 하면 된다.
+    """
+    body = client.get(f"/api/samples/{charge_only}/profile",
+                      params={"cycles": "all", "include_partial": "true"}).json()
+    [series] = body["series"]
+    assert series["cycle"] == 1
+    assert series["branch"] == "charge"
+    assert series["points"] > 0
+    assert series["complete"] is False
+    assert series["incomplete_reason"] == "no_discharge"
+
+
+def test_a_complete_cycle_is_still_marked_complete(client, loaded):
+    body = client.get(f"/api/samples/{loaded}/profile",
+                      params={"cycles": "3", "branches": "discharge"}).json()
+    [series] = body["series"]
+    assert series["complete"] is True
+    assert series["incomplete_reason"] == ""
+
+
 def test_report_quotes_retention_against_cycle_three(client, loaded):
     body = client.get(f"/api/samples/{loaded}/report").json()
     assert body["reference"]["cycle"] == 3

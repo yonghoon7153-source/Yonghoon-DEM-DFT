@@ -84,6 +84,17 @@ class CellReport:
     retention_note: str = ""
     knee: KneeAnalysis | None = None
 
+    #: Why there is no completed cycle, when there is none.  Empty otherwise.
+    #: ``no_discharge`` | ``no_charge`` | ``truncated`` | ``no_steps`` |
+    #: ``no_cycles``.
+    #:
+    #: Without this the screen showed a column of em-dashes and the word "no
+    #: completed cycle yet", which reads as a parse failure.  The three causes
+    #: need three different actions: wait for the run (truncated), upload the
+    #: next file in the split, or accept that a charge-only protocol will never
+    #: produce a cycle capacity.
+    no_complete_reason: str = ""
+
     @property
     def initial_coulombic_efficiency(self) -> float | None:
         """CE of the reference cycle -- what the user calls the initial CE."""
@@ -158,11 +169,29 @@ def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
              f"{len(complete)} of {planned_cycles} planned cycles completed",
              CellState.FINISHED, _WEIGHTS["planned_reached"])
 
-    ends_mid_cycle = bool(cycles) and not cycles[-1].complete
+    # "Incomplete" is not one thing.  A cycle cut off mid-step argues the cell
+    # is still running; a cycle that simply has no discharge argues nothing at
+    # all -- the schedule never asked for one.  Saying "cut off mid-step" about
+    # a multi-step CCCV charge that ran to its cut-off and stopped cleanly is
+    # false, and it was the only line the screen had to explain an empty table.
+    reason = cycles[-1].incomplete_reason if cycles else ""
+    last_incomplete = bool(cycles) and not cycles[-1].complete
+    # 이유를 모르면(옛 기록, 손으로 만든 요약) 예전처럼 "잘렸다" 로 읽는다 --
+    # 아는 것이 늘었을 때만 판단이 바뀌어야 한다.
+    ends_mid_cycle = last_incomplete and reason not in ("no_discharge", "no_charge")
     if ends_mid_cycle:
         note("partial cycle",
              f"cycle {cycles[-1].cycle_number} is cut off mid-step",
              CellState.RUNNING, _WEIGHTS["partial_cycle"])
+    elif reason in ("no_discharge", "no_charge"):
+        # A note, not a vote: it explains the empty table without pretending to
+        # know whether the rack is still busy.
+        evidence.append(StateEvidence(
+            "branch missing",
+            f"cycle {cycles[-1].cycle_number} has no "
+            f"{'discharge' if reason == 'no_discharge' else 'charge'} "
+            f"- the schedule never asked for one",
+            CellState.UNKNOWN))
     if planned_cycles and len(complete) < planned_cycles:
         note("cycle count",
              f"only {len(complete)} of {planned_cycles} planned cycles are present",
@@ -200,6 +229,23 @@ def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
     margin = abs(running - finished)
     confidence = "high" if margin >= 2.5 else "medium" if margin >= 1.0 else "low"
     return state, confidence, evidence
+
+
+def _no_complete_summary(reason: str) -> str:
+    """Say what is missing, not just that something is.
+
+    "no completed cycle yet" was the whole message, and "yet" is wrong for a
+    charge-only protocol: that record will never produce a cycle capacity no
+    matter how long anyone waits.
+    """
+    return {
+        "no_discharge": "no completed cycle: the record has no discharge, "
+                        "so there is no cycle capacity to report",
+        "no_charge": "no completed cycle: the record has no charge",
+        "truncated": "no completed cycle yet: the record stops part-way "
+                     "through a step",
+        "no_cycles": "no cycles in this record",
+    }.get(reason, "no completed cycle yet")
 
 
 def _hours(value: float) -> str:
@@ -247,11 +293,18 @@ def build_report(cycles: list[CycleSummary], *,
         reference_cycle_requested=reference_cycle,
     )
 
-    if cycles and not cycles[-1].complete:
+    last_reason = cycles[-1].incomplete_reason if cycles else ""
+    if cycles and not cycles[-1].complete and last_reason not in (
+            "no_discharge", "no_charge"):
+        # A cycle missing a branch the schedule never asked for is not "in
+        # progress" -- putting a cycle number there promises one that will
+        # never advance.  An unknown reason keeps the old reading (in progress),
+        # so nothing regresses on records parsed before this existed.
         report.in_progress_cycle = cycles[-1].cycle_number
 
     if not complete:
-        report.state_summary = "no completed cycle yet"
+        report.no_complete_reason = last_reason if cycles else "no_cycles"
+        report.state_summary = _no_complete_summary(report.no_complete_reason)
         return report
 
     # The quoted capacity is always the last cycle that actually finished.

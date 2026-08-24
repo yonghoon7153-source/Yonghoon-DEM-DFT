@@ -222,6 +222,22 @@ export interface CycleTable {
   retention_note?: string
   resolved_cell: ResolvedCell
   cycles: Cycle[]
+  /** 표에서 빠진 사이클들 — 숫자가 없어서 뺀 것이지, 없는 사이클이 아니다. */
+  partial_cycles?: PartialCycle[]
+}
+
+/** 기록에는 있는데 사이클 지표가 없는 사이클.
+ *
+ * 행을 빼는 것은 옳다 (잘린 사이클의 부분값은 측정값이 아니다).  행과 함께
+ * **있다는 사실까지** 빼는 바람에, 화면이 온통 — 인 이유를 아무도 알 수 없었다.
+ */
+export interface PartialCycle {
+  cycle: number
+  run_id: number
+  /** truncated | no_discharge | no_charge | no_steps | '' (이유 미상) */
+  reason: string
+  has_charge: boolean
+  has_discharge: boolean
 }
 
 export interface ProfileSeries {
@@ -235,6 +251,9 @@ export interface ProfileSeries {
   label: string
   /** Why this one curve is not in the requested unit, when it is not. */
   basis_fallback_reason?: string | null
+  /** 사이클 지표가 없는 사이클의 곡선인가.  곡선 자체는 실측이다. */
+  complete?: boolean
+  incomplete_reason?: string
 }
 
 export interface ProfileResponse {
@@ -383,6 +402,8 @@ export interface Report {
   reference_available: boolean
   retention_pct: number | null
   retention_note: string
+  /** 완료된 사이클이 하나도 없을 때, 왜 없는지.  있으면 빈 문자열. */
+  no_complete_reason?: string
   basis: Basis
   basis_label: string
   reported: CycleReadout | null

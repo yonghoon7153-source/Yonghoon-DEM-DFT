@@ -1357,6 +1357,113 @@ describe('클립보드 복사', () => {
   })
 })
 
+// --- 숫자 없는 사이클 ---------------------------------------------------------
+//
+// 실측: multi-step CCCV 파일(260630_MJ1)에 방전이 한 번도 없었다.  사이클 표가
+// 비고, 프로파일이 "그릴 데이터가 없습니다" 였다.  전부 맞는 말인데, 2.9 →
+// 4.25 V 로 올라간 충전 곡선은 실제로 측정돼 있었고 볼 방법이 없었다.
+
+describe('숫자 없는 사이클도 그리기', () => {
+  const PARTIAL = {
+    cycle: 1,
+    run_id: 1,
+    reason: 'no_discharge',
+    has_charge: true,
+    has_discharge: false,
+  }
+
+  /** 완료 사이클은 없고, 숫자 없는 사이클만 하나 있는 셀. */
+  function chargeOnly(seen: string[]): Handler {
+    return sampleDetailHandler((url) => {
+      if (path(url) === '/api/samples/1/cycles') {
+        return {
+          basis: 'mAh',
+          basis_label: 'mAh',
+          requested_basis: 'mAh',
+          basis_fallback_reason: null,
+          reference_cycle: 3,
+          resolved_cell: CELL,
+          cycles: [],
+          partial_cycles: [PARTIAL],
+        }
+      }
+      if (path(url) === '/api/samples/1/profile') {
+        const search = new URL(url, 'http://x').searchParams
+        seen.push(search.get('include_partial') ?? 'absent')
+        return {
+          basis: 'mAh',
+          basis_label: 'mAh',
+          requested_basis: 'mAh',
+          resolved_cell: CELL,
+          series:
+            search.get('include_partial') === 'true'
+              ? [
+                  {
+                    cycle: 1,
+                    branch: 'charge',
+                    basis: 'mAh',
+                    points: 2,
+                    capacity: [0, 1],
+                    voltage: [2.9, 4.25],
+                    run_id: 1,
+                    label: 'x',
+                    complete: false,
+                    incomplete_reason: 'no_discharge',
+                  },
+                ]
+              : [],
+        }
+      }
+      return undefined
+    })
+  }
+
+  it('그런 사이클이 있다는 것과 왜 비었는지를 화면이 말한다', async () => {
+    installFetch(chargeOnly([]))
+    renderSampleDetail()
+    expect(
+      await screen.findByRole('button', { name: /숫자 없는 사이클 1개도 그리기/ }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/1번 방전 없음/)).toBeInTheDocument()
+  })
+
+  it('기본은 꺼져 있다 — 표시 없는 잘린 곡선은 용량이 떨어진 것으로 읽힌다', async () => {
+    const seen: string[] = []
+    installFetch(chargeOnly(seen))
+    renderSampleDetail()
+    await screen.findByRole('button', { name: /숫자 없는 사이클 1개도 그리기/ })
+    expect(seen.every((value) => value !== 'true')).toBe(true)
+  })
+
+  it('누르면 곡선을 받아 오고, 이름에 이유가 붙는다', async () => {
+    const seen: string[] = []
+    installFetch(chargeOnly(seen))
+    renderSampleDetail()
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: /숫자 없는 사이클 1개도 그리기/ }),
+    )
+    // 고를 수 있어야 그린다 — 표가 비어 있으니 선택도 비어 있다.
+    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+
+    await waitFor(() => expect(seen).toContain('true'))
+    // 곡선 이름은 캔버스 안이라 jsdom 에서 못 본다 (범례는 곡선이 둘 이상일 때만
+    // 그려진다).  대신 고른 것이 무엇인지 화면이 말하는지를 본다 — 숫자 줄이
+    // 그냥 사라지면 방금 누른 것이 안 먹은 것으로 읽힌다.
+    expect(
+      await screen.findByText(/방전 없음 — 곡선은 그리지만 사이클 용량은 없습니다/),
+    ).toBeInTheDocument()
+    expect(screen.queryByText('고른 사이클이 없습니다')).toBeNull()
+  })
+
+  it('숫자 없는 사이클이 없으면 그 버튼도 없다', async () => {
+    installFetch(sampleDetailHandler(() => undefined))
+    renderSampleDetail()
+    await screen.findByText('No_1_dry')
+    expect(screen.queryByRole('button', { name: /숫자 없는 사이클/ })).toBeNull()
+  })
+})
+
 // --- 시험 조건 ---------------------------------------------------------------
 
 describe('시험 조건 입력', () => {

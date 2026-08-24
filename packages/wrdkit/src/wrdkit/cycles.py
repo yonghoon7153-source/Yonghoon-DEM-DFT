@@ -70,6 +70,17 @@ class CycleSummary:
     max_discharge_current_a: float | None = None
     temperature_mean: float | None = None
     complete: bool = True
+    #: Why this cycle carries no cycle-level numbers, when it carries none:
+    #: ``truncated`` | ``no_discharge`` | ``no_charge`` | ``no_steps``.  Empty
+    #: for a complete cycle, and also for a summary rebuilt from a source that
+    #: did not record one -- unknown and "nothing missing" are both "".
+    #:
+    #: Being incomplete is not one thing, and the two causes need opposite
+    #: readings.  A cycle cut off mid-step will finish; a schedule that only
+    #: charges never will.  From the numbers alone they look identical (charge
+    #: present, discharge absent), so only whoever read the file can tell them
+    #: apart -- which is why this is a stored field and not a property.
+    incomplete_reason: str = ""
     steps: list[StepSegment] = field(default_factory=list)
 
     @property
@@ -261,12 +272,51 @@ def summarize_cycles(wrd: WrdFile, *, cycle_offset: int = 0,
         has_charge = any(s.mode == "charge" for s in cycle_steps)
         has_discharge = any(s.mode == "discharge" for s in cycle_steps)
         is_last = stop >= len(cycle_index)
-        summary.complete = bool(has_charge and has_discharge) and not (
-            is_last and _ends_mid_step(wrd, stop)
-        )
+        truncated = bool(is_last and _ends_mid_step(wrd, stop))
+        summary.complete = bool(has_charge and has_discharge) and not truncated
+        if not summary.complete:
+            summary.incomplete_reason = _why_incomplete(
+                wrd, truncated=truncated, is_last=is_last,
+                has_charge=has_charge, has_discharge=has_discharge)
         summaries.append(summary)
 
     return summaries
+
+
+def _why_incomplete(wrd: WrdFile, *, truncated: bool, is_last: bool,
+                    has_charge: bool, has_discharge: bool) -> str:
+    """Which kind of incomplete this is.
+
+    The distinction that matters is "will this cycle ever gain the missing
+    branch".  Two records look identical from the numbers -- charge present,
+    discharge absent -- and mean opposite things: a cell cut off part-way
+    through, and a multi-step CCCV protocol that only charges.
+
+    ``_ends_mid_step`` catches the obvious cut, but only while current is
+    still flowing; a file that stops during the rest *between* charge and
+    discharge looks finished to it.  So when a branch is missing the schedule
+    decides: **it says what the protocol intends to do**, and if it declares
+    no step in that direction, no amount of waiting will produce one (rule
+    §0.3 -- do not ask the operator what the instrument already recorded).
+
+    With no schedule there is nothing to decide with, so the last cycle keeps
+    the old reading (cut off) and an earlier one is reported as missing the
+    branch.  Unknown is never dressed up as known.
+    """
+    if truncated:
+        return "truncated"
+    missing = ("discharge" if has_charge and not has_discharge
+               else "charge" if has_discharge and not has_charge else None)
+    if missing is None:
+        return "no_steps"
+    schedule = wrd.metadata.schedule
+    if schedule is None or not schedule.steps:
+        return "truncated" if is_last else f"no_{missing}"
+    # A CV hold carries a voltage rather than a signed current, so its
+    # direction reads "unknown"; it always follows a CC leg that does declare
+    # one, which is why looking for a declared *discharge* step is enough.
+    declared = any(step.direction == missing for step in schedule.steps)
+    return "truncated" if declared else f"no_{missing}"
 
 
 def _ends_mid_step(wrd: WrdFile, stop: int) -> bool:

@@ -181,6 +181,17 @@ class CycleRecord(SQLModel, table=True):
     duration_s: float = 0.0
     n_points: int = 0
     complete: bool = True
+    #: Why this cycle carries no cycle-level numbers, when it carries none.
+    #: ``truncated`` | ``no_discharge`` | ``no_charge`` | ``no_steps``; empty
+    #: for a complete cycle.
+    #:
+    #: Stored rather than derived because the two causes cannot be told apart
+    #: after the fact.  A running cell cut off during its charge and a
+    #: charge-only protocol both end up "has charge, no discharge" -- but one
+    #: will have a discharge in an hour and the other never will, and only the
+    #: parser (which can see whether the file stops mid-step) knows which.
+    #: Rows written before this column existed hold "" and are read as unknown.
+    incomplete_reason: str = ""
 
     # Row slice into the cached npz, so a profile request need not rescan.
     row_start: int = 0

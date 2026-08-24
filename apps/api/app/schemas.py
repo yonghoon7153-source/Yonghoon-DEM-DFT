@@ -403,6 +403,26 @@ class CycleOut(BaseModel):
     complete: bool
 
 
+class PartialCycleOut(BaseModel):
+    """A cycle that exists in the record but carries no cycle-level numbers.
+
+    The table hides these on purpose -- a truncated cycle's capacity is
+    whatever had accumulated when the file stopped, and printing it puts a
+    point on the fade curve that drops for no physical reason.  Hiding the
+    *row* also hid the *fact*, though, and a screen of em-dashes with no
+    explanation reads as a parse failure.  This says they are there and why
+    they are empty, without quoting a number.
+    """
+
+    cycle: int
+    run_id: int
+    #: ``truncated`` | ``no_discharge`` | ``no_charge`` | ``no_steps`` | ``""``
+    #: (unknown -- written before the parser recorded a reason).
+    reason: str
+    has_charge: bool
+    has_discharge: bool
+
+
 class CycleTableOut(BaseModel):
     basis: str
     basis_label: str
@@ -416,6 +436,10 @@ class CycleTableOut(BaseModel):
     retention_note: str = ""
     resolved_cell: ResolvedCellOut
     cycles: list[CycleOut]
+    #: Cycles left out of ``cycles`` because they carry no numbers.  Always
+    #: reported, whatever ``complete_only`` says -- their existence is not a
+    #: number, and hiding it is what made an empty table unreadable.
+    partial_cycles: list[PartialCycleOut] = []
 
 
 class ProfileSeriesOut(BaseModel):
@@ -429,6 +453,12 @@ class ProfileSeriesOut(BaseModel):
     label: str
     #: Why this one curve is not in the requested unit, when it is not.
     basis_fallback_reason: str | None = None
+    #: False when this curve comes from a cycle with no cycle-level numbers.
+    #: The trace itself is measured data and worth drawing; what it must not do
+    #: is sit on the plot looking like a finished cycle.
+    complete: bool = True
+    #: Why, when it is not complete.  Same codes as ``PartialCycleOut``.
+    incomplete_reason: str = ""
 
 
 class ProfileOut(BaseModel):
@@ -557,6 +587,10 @@ class ReportOut(BaseModel):
     reference_available: bool
     retention_pct: float | None
     retention_note: str
+    #: Why there is no completed cycle, when there is none.  Empty otherwise.
+    #: ``no_discharge`` | ``no_charge`` | ``truncated`` | ``no_steps`` |
+    #: ``no_cycles``.
+    no_complete_reason: str = ""
     basis: str
     basis_label: str
     reported: dict[str, Any] | None

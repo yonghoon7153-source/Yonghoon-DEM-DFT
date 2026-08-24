@@ -109,6 +109,14 @@ export function SampleDetail() {
                              { live: true })
 
   const cycles = useMemo(() => cycleState.data?.cycles ?? [], [cycleState.data])
+  //: 표에 없는 사이클들 — 잘렸거나 한쪽 브랜치가 없어서 지표를 못 내는 것들.
+  //  곡선은 실측이므로 그릴 수는 있다.  기본은 끔: 완료 사이클들 사이에 잘린
+  //  곡선이 아무 표시 없이 끼면 셀이 갑자기 용량을 잃은 것처럼 보인다.
+  const partialCycles = useMemo(
+    () => cycleState.data?.partial_cycles ?? [],
+    [cycleState.data],
+  )
+  const [includePartial, setIncludePartial] = useState(false)
   const selected = useMemo(() => {
     if (chosen) return chosen
     const available = cycles.map((c) => c.cycle)
@@ -154,8 +162,9 @@ export function SampleDetail() {
         basis,
         cycles: selected.join(','),
         branches: branches.join(','),
+        include_partial: includePartial,
       }),
-    [sampleId, basis, selected.join(','), branches.join(','), stamp],
+    [sampleId, basis, selected.join(','), branches.join(','), includePartial, stamp],
     { enabled: selected.length > 0 && branches.length > 0 },
   )
 
@@ -169,13 +178,21 @@ export function SampleDetail() {
     const series = profileState.data?.series ?? []
     const cycleOrder = [...new Set(series.map((s) => s.cycle))]
     return series.map((item) => {
-      const label = `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}`
+      // 완료 사이클인 척하면 안 된다.  이름에 표시하고, 점선으로 그린다 --
+      // 잘린 방전 곡선이 실선으로 옆에 서면 용량이 떨어진 것으로 읽힌다.
+      const partial = item.complete === false
+      const label =
+        `${item.cycle}번 ${item.branch === 'charge' ? '충전' : '방전'}` +
+        (partial ? ` (${ko.partialReason(item.incomplete_reason ?? '')})` : '')
       return {
         label,
         x: item.capacity,
         y: item.voltage,
         color: seriesColor(cycleOrder.indexOf(item.cycle)),
         dash: item.branch === 'charge' ? [5, 3] : undefined,
+        // 파선은 이미 충전/방전을 가르는 데 쓰고 있으므로, 숫자 없는 곡선은
+        // 가늘게 그린다.  이름표에 이유가 붙어 있어 둘이 겹치지 않는다.
+        width: partial ? 1.0 : undefined,
         hidden: hidden.includes(label),
       }
     })
@@ -700,8 +717,32 @@ export function SampleDetail() {
                   value={selected}
                   onChange={setChosen}
                   basis={cycleState.data?.basis ?? basis}
+                  partial={includePartial ? partialCycles : []}
                 />
               </div>
+              {/* 숫자가 없는 사이클도 곡선은 실측이다.  실측 파일(multi-step
+                  CCCV)은 방전이 아예 없어서 표가 비었는데, 2.9 → 4.25 V 로
+                  올라간 충전 곡선은 볼 만했고 볼 방법이 없었다. */}
+              {partialCycles.length ? (
+                <div className="row" style={{ padding: '0 16px 8px', gap: 8, flexWrap: 'wrap' }}>
+                  <button
+                    type="button"
+                    className={includePartial ? 'sm on' : 'sm ghost'}
+                    aria-pressed={includePartial}
+                    onClick={() => setIncludePartial((was) => !was)}
+                  >
+                    숫자 없는 사이클 {partialCycles.length}개도 그리기
+                  </button>
+                  <span className="tiny faint">
+                    {partialCycles
+                      .slice(0, 4)
+                      .map((item) => `${item.cycle}번 ${ko.partialReason(item.reason)}`)
+                      .join(' · ')}
+                    {partialCycles.length > 4 ? ` 외 ${partialCycles.length - 4}` : ''}
+                    {' — 곡선은 실측이지만 사이클 용량은 나오지 않습니다'}
+                  </span>
+                </div>
+              ) : null}
               {/* 빈 그래프는 고장처럼 보인다.  초기화를 눌러 선택을 비우면
                   충전·방전 버튼을 눌러도 아무 일이 없는데, 화면이 그 이유를
                   말해 주지 않으면 버튼이 죽은 것으로 읽힌다. */}

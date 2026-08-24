@@ -155,6 +155,12 @@ const EVIDENCE: Rule[] = [
   ],
   [/^cycle (\d+) is cut off mid-step$/, (m) => `${m[1]}번 사이클이 스텝 도중에 잘렸습니다`],
   [
+    /^cycle (\d+) has no (charge|discharge) - the schedule never asked for one$/,
+    (m) =>
+      `${m[1]}번 사이클에 ${m[2] === 'charge' ? '충전' : '방전'}이 없습니다 — ` +
+      `스케줄에 그 스텝이 아예 없습니다`,
+  ],
+  [
     /^last sample is (.+?) old, under (.+)$/,
     (m) => `마지막 샘플이 ${duration(m[1]!)} 전입니다 (${window_(m[2]!)} 이내)`,
   ],
@@ -291,6 +297,27 @@ export const ko = {
   basisReason: (text: string) => BASIS_REASONS[text] ?? passThrough(text),
   /** Phrases that fell through untranslated, for tests and for the console. */
   untranslated: () => [...untranslated],
+  /** 완료된 사이클이 없는 이유.  화면 여러 곳이 같은 문장을 써야 한다. */
+  noCompleteReason: (code: string) =>
+    ({
+      no_discharge:
+        '이 기록에는 방전이 없습니다 — 스케줄이 충전만 합니다. ' +
+        '사이클 용량·유지율·쿨롱효율은 방전이 있어야 나오는 값입니다.',
+      no_charge: '이 기록에는 충전이 없습니다 — 스케줄이 방전만 합니다.',
+      truncated:
+        '기록이 스텝 도중에 끝났습니다 — 아직 마치지 못한 사이클입니다. ' +
+        '이어지는 파일(..._012.wrd 등)을 올리면 이어 붙습니다.',
+      no_steps: '이 사이클에는 충전도 방전도 없습니다.',
+      no_cycles: '이 기록에는 사이클이 없습니다.',
+    })[code] ?? '',
+  /** 한 사이클이 표에서 빠진 이유, 칩에 들어갈 길이로. */
+  partialReason: (code: string) =>
+    ({
+      no_discharge: '방전 없음',
+      no_charge: '충전 없음',
+      truncated: '잘림',
+      no_steps: '스텝 없음',
+    })[code] ?? '이유 미상',
   stateTarget: (text: string) =>
     ({ running: '구동 중', finished: '종료', unknown: '불명' })[text] ?? text,
   signal: (text: string) =>
@@ -299,6 +326,7 @@ export const ko = {
       schedule: '스케줄',
       'cycle count': '사이클 수',
       'partial cycle': '잘린 사이클',
+      'branch missing': '없는 반쪽',
       recency: '최신성',
       none: '근거 없음',
     })[text] ?? text,
