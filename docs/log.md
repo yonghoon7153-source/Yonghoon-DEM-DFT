@@ -1068,3 +1068,27 @@ vEthernet·WSL·Loopback·VirtualBox·Hyper-V·Bluetooth·Teredo·isatap, 그리
 "테스트를 더 쓰라" 는 그 자체로 지적이 아니라고 못 박았다. 62건이 늘었는데
 (89→151, 33→48) 대부분 문자열 검사라, **어떤 회귀가 지금 안 잡히는지**를
 짚어 달라고 적었다.
+
+## [2026-08-24] fix | 실행 비트가 있다고 도는 것은 아니다
+화면이 `(IPv4 가 하나도 없습니다 — 랜선·Wi-Fi 가 붙어 있나요?)` 로 끝났다.
+그런데 그 데스크톱은 랩 망에 붙어 있다. 걸러 낸 것이 아니라 **`ipconfig.exe`
+가 한 줄도 안 내놓은 것**이었다.
+
+`win_exe` 가 `[ -x /mnt/c/Windows/System32/ipconfig.exe ]` 로 판정했는데,
+**drvfs 는 `/mnt/c` 의 모든 파일에 실행 비트를 붙인다.** interop 이 꺼져 있어도
+그 시험은 참이다. 그래서 "부를 수 있다" 로 세고, 빈 출력을 "쓸 만한 주소가
+없다" 로 읽어서, 사람을 **랜선 뽑혔나 보러** 보냈다. 원인은 거기 없다.
+
+이제 `windows_ipconfig` 가 출력이 비면 실패(1)로 답한다. 화면은 셋을 가른다:
+
+- 못 불렀다 → interop 문제. `ipconfig.exe` 를 직접 쳐 보고, `/etc/wsl.conf` 의
+  `[interop] enabled=false` 나 `appendWindowsPath=false` 를 보라고 짚는다.
+- 불렀는데 IPv4 가 없다 → 랜선·Wi-Fi.
+- 있는데 다 뺐다 → 어댑터별로 본 것을 그대로 찍고, 우리 판정이 틀렸으면
+  알려 달라고 적는다.
+
+셋의 대처가 전부 다른데 한 문장으로 뭉쳐 있었다. 151 → 153건.
+
+이 커밋은 리뷰 요청서(`docs/reviews/codex-review-screens-and-wsl.md`)가 범위로
+적은 구간보다 뒤에 있다. 요청서의 범위를 `..a34aeea0` 그대로 두고, 이 건은
+"요청 이후 발견" 으로 그쪽 문서에 한 줄 남긴다.

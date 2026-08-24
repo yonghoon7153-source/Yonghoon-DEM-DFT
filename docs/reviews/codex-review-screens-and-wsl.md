@@ -79,6 +79,14 @@ url_host  dns_public_json_verdict  dns_public_state
 - `win_exe` 의 System32 대체 경로 — `appendWindowsPath=false` 인 기계를 실제로
   못 만들어 봤다.
 
+## 요청서를 쓴 뒤에 나온 것
+
+- `a1b2` 이후 `win_exe` 가 한 번 더 틀렸다: `[ -x /mnt/c/.../ipconfig.exe ]` 는
+  **interop 이 꺼져 있어도 참**이다 (drvfs 가 모든 파일에 실행 비트를 붙인다).
+  빈 출력을 "쓸 주소가 없다" 로 읽어서 사람을 랜선 보러 보냈다. 출력이 비면
+  실패로 보도록 고쳤다. **이 종류(“할 수 있다”와 “했다”를 안 가르는 판정)가
+  이 묶음에 더 있는지 봐 달라.**
+
 ## 특히 봐 달라는 것
 
 1. **저장소 바깥 파일 쓰기** (`cmd_mirrored`, `wslconfig_set_mirrored`).

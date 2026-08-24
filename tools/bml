@@ -1250,10 +1250,18 @@ windows_lan_address() {
 #: awk 는 올바르지 않은 멀티바이트가 섞인 줄에서 매칭을 조용히 놓친다 —
 #: 주소는 ASCII 인데 같은 줄의 '주소' 두 글자 때문에 못 찾는다.
 windows_ipconfig() {
-  local exe
-  [ $# -gt 0 ] && { printf '%s' "$1"; return 0; }
-  exe="$(win_exe ipconfig.exe)" || return 1
-  "$exe" 2>/dev/null | tr -d '\r'
+  local exe out="${1:-}"
+  if [ -z "$out" ]; then
+    exe="$(win_exe ipconfig.exe)" || return 1
+    out="$("$exe" 2>/dev/null | tr -d '\r')"
+  fi
+  # **실행 가능해 보이는 것과 실제로 도는 것은 다르다.**  drvfs 는 /mnt/c 의
+  # 모든 파일에 실행 비트를 붙이므로 `[ -x ]` 는 interop 이 꺼져 있어도 참이다.
+  # 그때 ipconfig.exe 는 한 줄도 못 내놓고 죽는데, 화면은 그것을 "부를 수는
+  # 있는데 쓸 주소가 없습니다" 라는 **틀린 진단**으로 냈다 (실제로 그랬다).
+  # 출력이 비면 못 부른 것이다.
+  [ -n "$out" ] || return 1
+  printf '%s' "$out"
 }
 
 #: `.wslconfig` 에 `networkingMode=mirrored` 를 넣는 PowerShell **한 줄**.
@@ -1504,22 +1512,24 @@ nat_hint() {
   else
     # 왜 못 읽었는지까지 말한다.  "직접 찾아 적으세요" 만 남으면, 우리가 읽어
     # 주기로 한 값이 왜 안 나왔는지 아무도 모른다.
-    if win_exe ipconfig.exe >/dev/null 2>&1; then
-      say "  ${DIM}이 PC 의 LAN 주소를 읽어 봤지만 쓸 만한 것이 없었습니다. 본 것은 이렇습니다:${OFF}"
-      # 무엇을 보고 뺐는지까지 보여 준다.  "없었습니다" 만 남으면 랜선이
-      # 빠진 것인지 우리가 잘못 버린 것인지 아무도 모른다 — 실제로 그 화면을
-      # 놓고 원인을 못 짚었다.
-      local seen; seen="$(windows_ipv4_by_adapter "$(windows_ipconfig)")"
-      if [ -n "$seen" ]; then
-        printf '%s\n' "$seen" | while IFS="$(printf '\t')" read -r nic ip; do
-          file_line "$(printf '%-34s %s' "$nic" "$ip")"
-        done
-      else
-        say "  ${DIM}(IPv4 가 하나도 없습니다 — 랜선·Wi-Fi 가 붙어 있나요?)${OFF}"
-      fi
-      say "  ${DIM}이 중에 다른 기계가 칠 주소가 보이는데 우리가 빼 버렸다면 알려 주세요 — 판정을 고칩니다.${OFF}"
+    # 셋을 갈라야 한다.  대처가 전부 다르다:
+    #   못 불렀다      → interop 문제.  주소를 아무리 봐도 안 나온다.
+    #   불렀는데 빈손  → 랜선·Wi-Fi 가 안 붙었다.
+    #   있는데 다 뺐다 → 우리 판정이 틀렸을 수 있다.  본 것을 보여 준다.
+    local ipc="" seen=""
+    if ipc="$(windows_ipconfig)"; then seen="$(windows_ipv4_by_adapter "$ipc")"; fi
+    if [ -z "$ipc" ]; then
+      say "  ${DIM}이 WSL 에서 Windows 프로그램을 부르지 못해 (interop) 주소를 대신 읽지 못했습니다.${OFF}"
+      say "  ${DIM}확인:${OFF} ${GREEN}ipconfig.exe${OFF} ${DIM}를 직접 쳐 보세요. 아무것도 안 나오면${OFF} ${GREEN}cat /etc/wsl.conf${OFF} ${DIM}의${OFF}"
+      say "  ${GREEN}[interop] enabled=false${OFF} ${DIM}나${OFF} ${GREEN}appendWindowsPath=false${OFF} ${DIM}를 보세요 (고친 뒤${OFF} ${GREEN}wsl.exe --shutdown${OFF}${DIM}).${OFF}"
+    elif [ -z "$seen" ]; then
+      say "  ${DIM}ipconfig 에 IPv4 가 하나도 없습니다 — 랜선·Wi-Fi 가 붙어 있나요?${OFF}"
     else
-      say "  ${DIM}이 WSL 에서는 Windows 프로그램을 부를 수 없어 (interop 꺼짐) 주소를 대신 읽지 못했습니다.${OFF}"
+      say "  ${DIM}이 PC 의 LAN 주소를 읽어 봤지만 쓸 만한 것이 없었습니다. 본 것은 이렇습니다:${OFF}"
+      printf '%s\n' "$seen" | while IFS="$(printf '\t')" read -r nic ip; do
+        file_line "$(printf '%-34s %s' "$nic" "$ip")"
+      done
+      say "  ${DIM}이 중에 다른 기계가 칠 주소가 보이는데 우리가 빼 버렸다면 알려 주세요 — 판정을 고칩니다.${OFF}"
     fi
     say "  ${DIM}Windows 쪽에서${OFF} ${GREEN}ipconfig${OFF} ${DIM}의 IPv4 를 보고, 노트북에서${OFF} ${GREEN}bml use <그 IPv4>${OFF} ${DIM}를 씁니다.${OFF}"
     say "  ${DIM}(${OFF}${GREEN}172.${OFF}${DIM} 로 시작하는 것은 WSL 것이라 쓰면 안 됩니다.)${OFF}"
