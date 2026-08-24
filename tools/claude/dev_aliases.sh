@@ -70,8 +70,18 @@ dftpull() {                  # 최신 받기. -f 를 줘야만 로컬 변경을 
     local n; n=$(git -C "$DFT_REPO" status --porcelain | grep -c '^??')
     [ "${n:-0}" -gt 0 ] && echo "· untracked ${n}건은 그대로 둔다 (reset 대상 아님)"
   fi
-  git -C "$DFT_REPO" reset --hard FETCH_HEAD && \
-    git -C "$DFT_REPO" log --oneline -1
+  # ⛔ 2026-08-25 — 이 파일 자체가 바뀌면 **셸에는 옛 함수가 그대로 남는다.**
+  #   dftpull 의 버그를 고쳐 올려도, 그걸 받으려면 옛 dftpull 을 써야 하는 자물쇠가
+  #   두 번 걸렸다. 당긴 뒤 파일이 바뀌었으면 스스로 다시 읽는다.
+  local _self="$DFT_REPO/tools/claude/dev_aliases.sh"
+  local _before=""; [ -f "$_self" ] && _before=$(git -C "$DFT_REPO" hash-object "$_self" 2>/dev/null)
+  git -C "$DFT_REPO" reset --hard FETCH_HEAD || return 1
+  git -C "$DFT_REPO" log --oneline -1
+  local _after=""; [ -f "$_self" ] && _after=$(git -C "$DFT_REPO" hash-object "$_self" 2>/dev/null)
+  if [ -n "$_before" ] && [ "$_before" != "$_after" ]; then
+    # shellcheck disable=SC1090
+    . "$_self" && echo "↻ dev_aliases.sh 가 바뀌어 다시 읽었다 (dfthelp 로 확인)"
+  fi
 }
 
 # ⛔ 2026-08-25 실측 — 첫 판은 **실패하고도 아무 말을 안 했다.** 새로 깐 WSL 에서
