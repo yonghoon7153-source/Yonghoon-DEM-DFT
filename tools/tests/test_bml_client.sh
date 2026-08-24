@@ -660,10 +660,18 @@ check "CP949 로 찍혀도 읽는다" "$(LC_ALL=C.UTF-8 windows_lan_address "$CP
 # PATH 에 Windows 가 안 붙은 기계가 있다 (/etc/wsl.conf 의 appendWindowsPath=false).
 # 그때 `command -v ipconfig.exe` 는 빈손이고, 화면은 이유 없이 "못 찾았습니다"
 # 로만 끝난다.  System32 를 직접 본다.
-FAKE32="$TMP/mnt/c/Windows/System32"; mkdir -p "$FAKE32"
 check "PATH 에 있으면 이름 그대로"  "$(win_exe bash)" "bash"
 check "없는 것은 거부한다"          "$(win_exe nope-nope.exe || echo REFUSED)" "REFUSED"
 check "빈 이름도 거부한다"          "$(win_exe '' || echo REFUSED)" "REFUSED"
+# PATH 에 없을 때 System32 를 실제로 보는지 — 예전 시험은 가짜 폴더를 만들기만
+# 하고 쓰지 않아, 이 분기를 지워도 통과했다 (Codex 리뷰의 테스트 지적).
+FAKE32="$TMP/System32"; mkdir -p "$FAKE32"; : > "$FAKE32/onlyhere.exe"; chmod +x "$FAKE32/onlyhere.exe"
+check "PATH 에 없으면 System32 를 본다" \
+  "$(WIN_SYSTEM32="$FAKE32" win_exe onlyhere.exe)" "$FAKE32/onlyhere.exe"
+# 실행 비트가 없으면 부를 수 없다 — 있는 척하면 안 된다.
+: > "$FAKE32/notexec.exe"; chmod -x "$FAKE32/notexec.exe"
+check "실행할 수 없으면 거부한다" \
+  "$(WIN_SYSTEM32="$FAKE32" win_exe notexec.exe || echo REFUSED)" "REFUSED"
 
 echo
 echo "mirrored 를 켠 뒤의 포트 충돌 — bml stop 으로는 안 되는 경우"
@@ -711,6 +719,39 @@ check "멈출 때 stash 를 짚어 준다" "$(grep -c 'git stash list' "$BML")" 
 # 그 검사는 재실행보다 **앞**에 있어야 한다.  뒤에 있으면 이미 실행된 뒤다.
 check "재실행보다 앞에 있다" \
   "$(awk '/--diff-filter=U/{u=NR} /exec "\$SCRIPT"/{e=NR} END{print (u && e && u < e) ? "yes" : "no"}' "$BML")" "yes"
+
+echo
+echo "LAN 주소는 이름이 아니라 기본 경로로 고른다"
+# 어댑터 이름은 정체성이 아니다.  VMware 가 192.168.x 를 들고 있으면 이름
+# 규칙은 그것을 LAN 으로 보고 노트북에 그 주소를 쓰라고 한다.  반대로 사람이
+# 어댑터 이름을 바꾸면(Windows 가 공식 지원) 진짜 LAN 을 버린다.
+ROUTES='활성 경로:
+네트워크 대상        네트워크 마스크          게이트웨이       인터페이스   메트릭
+          0.0.0.0          0.0.0.0     172.20.0.1     172.20.30.40     35
+          0.0.0.0          0.0.0.0   192.168.231.2    192.168.231.1    281
+        127.0.0.0        255.0.0.0            연결됨        127.0.0.1    331'
+check "기본 경로의 인터페이스를 고른다" "$(windows_default_route_ip "$ROUTES")" "172.20.30.40"
+# 경로가 여럿이면 메트릭이 낮은 것이 이긴다 — Windows 자신이 고르는 규칙이다.
+check "메트릭이 낮은 쪽이 이긴다" \
+  "$(windows_default_route_ip '          0.0.0.0          0.0.0.0     10.0.0.1     10.0.0.5     99
+          0.0.0.0          0.0.0.0   192.168.0.1  192.168.0.40     10')" "192.168.0.40"
+# 기본 경로가 아닌 줄은 보지 않는다 (마스크 칸에도 0.0.0.0 이 나온다).
+check "기본 경로가 아닌 줄은 무시"      "$(windows_default_route_ip '        127.0.0.0        255.0.0.0   연결됨   127.0.0.1   331')" ""
+check "빈 출력도 죽지 않는다"           "$(windows_default_route_ip '')" ""
+
+echo
+echo "401 은 '지금 그 암호' 라는 증거가 아니다"
+# bml password 새암호 를 적고 restart 를 안 하면 서버는 옛 암호를 들고 있는데
+# 무인증 요청은 똑같이 401 이다.  화면이 잠겼다고만 하면 사람은 새 암호를
+# 남에게 알려 주고, 그 사람은 못 들어온다.  문을 실제로 두드려야 안다.
+check "303 이면 그 암호가 맞다" \
+  "$( curl() { printf '303'; }; door_password_works http://x "암호" && echo yes || echo no )" "yes"
+check "401 이면 아니다" \
+  "$( curl() { printf '401'; }; door_password_works http://x "암호" && echo yes || echo no )" "no"
+check "암호가 없으면 물어보지도 않는다" \
+  "$( curl() { printf '303'; }; door_password_works http://x "" && echo yes || echo no )" "no"
+# share 는 인터넷에 여는 자리라 이 확인을 반드시 거쳐야 한다.
+check "share 가 그 확인을 한다" "$(grep -c 'door_password_works "\$URL"' "$BML")" "2"
 
 echo
 echo "중추 서버를 봐도 저장소는 맞춘다"

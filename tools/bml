@@ -1299,11 +1299,16 @@ FIXLINES
 #: `/etc/wsl.conf` 에 `appendWindowsPath=false` 를 두면 Windows 의 PATH 가 안
 #: 붙는다 (PATH 가 지저분해지는 것을 싫어해서 그렇게 두는 사람이 있다).  그때
 #: 화면은 "주소를 못 찾았습니다" 로만 끝나서, 왜 못 찾았는지가 안 보인다.
+#: System32 위치는 변수로 둔다 — 시험에서 갈아 끼울 수 있어야 이 갈래가
+#: 실제로 도는지 확인된다 (Codex 리뷰의 테스트 지적: 예전 시험은 가짜 폴더를
+#: 만들기만 하고 쓰지 않아, 이 분기를 지워도 통과했다).
+WIN_SYSTEM32="${WIN_SYSTEM32:-/mnt/c/Windows/System32}"
+
 win_exe() {
   local name="${1:-}"
   [ -n "$name" ] || return 1
   command -v "$name" >/dev/null 2>&1 && { printf '%s' "$name"; return 0; }
-  [ -x "/mnt/c/Windows/System32/$name" ] && { printf '/mnt/c/Windows/System32/%s' "$name"; return 0; }
+  [ -x "$WIN_SYSTEM32/$name" ] && { printf '%s/%s' "$WIN_SYSTEM32" "$name"; return 0; }
   return 1
 }
 
@@ -1316,6 +1321,28 @@ windows_ipv4_by_adapter() {
     /^[^ \t]/ { name = $0; sub(/:[ \t]*$/, "", name); next }
     /IPv4/    { if (match($0, /[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+/))
                   print name "\t" substr($0, RSTART, RLENGTH) }
+  '
+}
+
+#: `route print -4 0.0.0.0` 출력에서 **기본 경로가 나가는 인터페이스의 주소**.
+#:
+#: 이름으로 고르던 것을 여기로 옮겼다 (Codex 리뷰 7번).  어댑터 이름은 정체성이
+#: 아니다: `VMware Network Adapter VMnet8` 이 `192.168.231.1` 을 들고 있으면
+#: 이름 규칙은 그것을 LAN 으로 보고 노트북에 그 주소를 쓰라고 한다.  반대로
+#: 사람이 어댑터 이름을 바꾸면(Windows 가 공식 지원한다) 진짜 LAN 을 버린다.
+#:
+#: 기본 경로는 짐작이 아니다 — **Windows 자신이 밖으로 나갈 때 쓰는 길**이고,
+#: 다른 기계가 이 PC 로 들어올 때 쓰는 주소도 거기에 붙어 있다.  경로가 여럿이면
+#: 메트릭이 가장 낮은 것이 이긴다 (Windows 가 고르는 규칙 그대로).
+#:
+#: 표의 열: 대상 / 마스크 / 게이트웨이 / **인터페이스** / 메트릭.
+windows_default_route_ip() {
+  printf '%s\n' "${1:-}" | LC_ALL=C awk '
+    $1 == "0.0.0.0" && $2 == "0.0.0.0" && NF >= 5 &&
+    $4 ~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ && $5 ~ /^[0-9]+$/ {
+      if (best == "" || $5 + 0 < metric) { best = $4; metric = $5 + 0 }
+    }
+    END { if (best != "") print best }
   '
 }
 
@@ -1343,9 +1370,28 @@ windows_lan_pick() {
 #: WSL 에서 `ipconfig.exe` 를 부를 수 있으므로 우리가 읽어 준다 (§0.3).
 #: 못 찾으면 빈 값 — 짐작하지 않는다 (§0.4).
 windows_lan_address() {
-  local out
+  local out ip
+  # 1) 기본 경로가 나가는 주소.  이름 규칙이 아니라 Windows 자신의 판단이다.
+  if [ $# -eq 0 ]; then
+    ip="$(windows_default_route_ip "$(windows_route_print)")"
+    case "$ip" in
+      ''|0.0.0.0|127.*|169.254.*) ip="" ;;
+    esac
+    [ -n "$ip" ] && { printf '%s' "$ip"; return 0; }
+  fi
+  # 2) 그것을 못 읽으면 어댑터 목록에서 고른다 (이름 규칙 — 덜 확실하다).
   out="$(windows_ipconfig ${1+"$1"})" || return 0
   windows_lan_pick "$(windows_ipv4_by_adapter "$out")"
+}
+
+#: `route.exe print -4 0.0.0.0` 을 부른 결과.  못 부르면 1.
+#: `windows_ipconfig` 과 같은 이유로 출력이 비면 실패로 본다.
+windows_route_print() {
+  local exe out
+  exe="$(win_exe route.exe)" || return 1
+  out="$("$exe" print -4 0.0.0.0 2>/dev/null | tr -d '\r')"
+  [ -n "$out" ] || return 1
+  printf '%s' "$out"
 }
 
 #: `ipconfig.exe` 를 부른 결과.  인자를 주면 그것을 그대로 쓴다 (시험용).
@@ -1583,6 +1629,22 @@ wslconfig_set_mirrored() {
   cat "$tmp" > "$f" || { rm -f "$tmp"; return 2; }
   rm -f "$tmp"
   return 0
+}
+
+#: **지금 설정한 암호가 떠 있는 서버의 문을 여는가.**
+#:
+#: 401 은 문이 있다는 증거일 뿐 그 문이 **이 암호의 것**이라는 증거가 아니다
+#: (Codex 리뷰 9번).  `bml password 새암호` 를 적고 `bml restart` 를 안 하면
+#: 서버는 옛 암호를 들고 있는데 무인증 요청은 똑같이 401 이다 — 화면은 잠겼다고
+#: 하고, 사람은 새 암호를 남에게 알려 주고, 그 사람은 못 들어온다.
+#: 문을 실제로 두드려 봐야 안다.  성공은 303 (로그인 뒤 리다이렉트)이다.
+door_password_works() {
+  local url="${1:-}" pass="${2:-}" code
+  [ -n "$url" ] && [ -n "$pass" ] || return 1
+  code="$(curl -s -o /dev/null -m 6 -w '%{http_code}' \
+          --data-urlencode "password=$pass" "$url/__login" 2>/dev/null \
+          | tr -dc '0-9' | tail -c 3)"
+  [ "$code" = "303" ]
 }
 
 #: 지금 떠 있는 서버에 문이 있는가.  (`/api/samples` 의 HTTP 코드, 설정된 암호)
@@ -1935,12 +1997,19 @@ url_host() {
 #: (NXDOMAIN)이면 missing, 나머지는 전부 unknown 이다.  틀리게 단정하면
 #: 살아 있는 터널을 닫거나, 죽은 터널을 기다리게 만든다 (§0.4).
 dns_public_json_verdict() {
-  case "${1:-}" in
-    '')                             printf 'unknown' ;;
-    *'"Answer"'*)                   printf 'exists' ;;
-    *'"Status":3'*|*'"Status": 3'*) printf 'missing' ;;
-    *)                              printf 'unknown' ;;
+  local out="${1:-}"
+  [ -n "$out" ] || { printf 'unknown'; return; }
+  # 없는 이름이라고 **응답한** 경우만 missing 이다.
+  case "$out" in *'"Status":3'*|*'"Status": 3'*) printf 'missing'; return ;; esac
+  # Status 가 0 이 아니면 답이 아니다 (2 = SERVFAIL 등).  예전에는 "Answer" 라는
+  # 글자만 보고 exists 로 셌는데, `{"Status":2,"Answer":[]}` 가 그렇게 통과했다.
+  case "$out" in *'"Status":0'*|*'"Status": 0'*) ;; *) printf 'unknown'; return ;; esac
+  # Status 0 이어도 Answer 가 비어 있으면 주소가 없는 것이다.
+  case "$out" in
+    *'"Answer":[]'*|*'"Answer": []'*) printf 'unknown'; return ;;
+    *'"Answer"'*)                     printf 'exists';  return ;;
   esac
+  printf 'unknown'
 }
 
 #: 이 기계의 resolver 를 **일부러 건너뛰고** 공용 DNS 에 직접 물어본다.
@@ -2004,12 +2073,12 @@ block_layer_meaning() {
   local alive="${2:-}"
   case "$1" in
     dns) if [ -n "$alive" ]; then
-           printf '이름을 못 찾습니다 — 터널은 붙어 있으니, 이 기계의 DNS 가 그 도메인을 거르는 것입니다 (랩 DNS 가 터널 도메인을 막는 일이 흔합니다)'
+           printf '이름을 못 찾습니다 — 터널 프로그램은 살아 있으니, 이 기계의 DNS 가 그 도메인을 거르는 쪽이 유력합니다 (랩 DNS 가 터널 도메인을 막는 일이 흔합니다)'
          else
            printf '이름을 못 찾습니다 — 터널이 이미 닫혔거나 DNS 가 막혔습니다'
          fi ;;
     tcp) printf '443 에 붙지 못합니다 — 이 망이 나가는 길을 막습니다' ;;
-    tls) printf 'TCP 는 붙는데 TLS 손을 잡다가 끊깁니다 — 이 망의 장비가 도메인을 보고 끊는 것입니다. 그 주소는 다른 망에서는 열립니다' ;;
+    tls) printf '443 에 TCP 는 붙는데 그 뒤가 안 끝납니다 — 이 망의 장비가 끊는 것으로 보입니다 (TLS 손잡기 자체를 확인한 것은 아닙니다). 다른 망에서는 열릴 수 있습니다' ;;
     *)   printf '어디서 끊겼는지 짚지 못했습니다' ;;
   esac
 }
@@ -2126,7 +2195,8 @@ server_unreachable_help() {
             # 그 둘을 뭉뚱그리면 죽은 터널을 기다리게 만든다.
             say "  ${B}→ 공용 DNS 에서는 잡힙니다 — 이 망의 DNS 가 막는 것입니다.${OFF}"
             say "    ${DIM}같은 랩 안이라면 터널 말고 LAN 주소를 쓰세요 — 중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 줄.${OFF}"
-            say "    ${DIM}밖에서 봐야 한다면 휴대폰 테더링으로 바꾸거나 이 기계의 DNS 를 1.1.1.1 로 둡니다.${OFF}"
+            say "    ${DIM}밖에서 봐야 한다면 휴대폰 테더링으로 바꿉니다. (이 기계의 DNS 를 1.1.1.1 로 바꾸는 것은${OFF}"
+            say "    ${DIM}권하지 않습니다 — 이런 망은 바깥 53 번도 막는 일이 많아, 그러면 DNS 가 통째로 죽습니다.)${OFF}"
             say "    ${DIM}단, 이름이 잡히는 것과 터널이 살아 있는 것은 다릅니다 (lhr.life 는 어떤 이름이든${OFF}"
             say "    ${DIM}잡히는 와일드카드입니다). 터널 자체는 휴대폰으로 그 주소를 열어 봐야 압니다.${OFF}"
             say ""
@@ -2505,6 +2575,15 @@ cmd_share() {
     printf '%s✕%s 떠 있는 서버에 암호가 안 걸려 있습니다 (/api/samples → %s).\n' \
       "$RED" "$OFF" "${code:-무응답}" >&2
     say "  ${DIM}.bml/env 에 적기 전에 띄운 서버입니다.${OFF}"
+    say "  ${GREEN}bml restart${OFF} ${DIM}후 다시${OFF} ${GREEN}bml share${OFF}"
+    exit 1
+  fi
+  # 401 은 문이 있다는 뜻일 뿐이다.  **그 문이 지금 적어 둔 암호의 것인지**를
+  # 실제로 두드려 확인한다 — 여기서 틀리면 남에게 안 맞는 암호를 알려 주고
+  # 주소만 인터넷에 남는다.
+  if ! door_password_works "$URL" "${WORKBENCH_PASSWORD:-}"; then
+    printf '%s✕%s 떠 있는 서버가 지금 적어 둔 암호를 안 씁니다.\n' "$RED" "$OFF" >&2
+    say "  ${DIM}암호를 바꾸고 서버를 다시 안 띄운 경우입니다 — 문은 옛 암호로 잠겨 있습니다.${OFF}"
     say "  ${GREEN}bml restart${OFF} ${DIM}후 다시${OFF} ${GREEN}bml share${OFF}"
     exit 1
   fi
@@ -2932,7 +3011,17 @@ cmd_status() {
     local door_code
     door_code="$(curl -s -o /dev/null -m 4 -w '%{http_code}' "$URL/api/samples" 2>/dev/null | tr -dc '0-9' | tail -c 3)"
     case "$(door_state "$door_code" "${WORKBENCH_PASSWORD:-}")" in
-      locked)  say "문          공유 암호를 한 번 묻습니다." ;;
+      locked)
+        # 문이 있다는 것과 **지금 적어 둔 암호의 문**이라는 것은 다르다.
+        if [ -z "${WORKBENCH_PASSWORD:-}" ]; then
+          say "문          공유 암호를 한 번 묻습니다. ${DIM}(이 기계에는 그 암호가 안 적혀 있습니다)${OFF}"
+        elif door_password_works "$URL" "${WORKBENCH_PASSWORD:-}"; then
+          say "문          공유 암호를 한 번 묻습니다. ${DIM}(지금 적어 둔 암호로 열립니다 — 확인했습니다)${OFF}"
+        else
+          warn "문          있는데 ${B}지금 적어 둔 암호로는 안 열립니다${OFF} — 떠 있는 서버가 옛 암호를 들고 있습니다."
+          say "  ${GREEN}bml restart${OFF} ${DIM}— 적어 둔 암호를 서버에 반영합니다. 그 전에 남에게 알려 주면 못 들어옵니다.${OFF}"
+        fi
+        ;;
       pending) warn "문          암호를 적어 뒀지만 떠 있는 서버는 그것을 안 들고 있습니다."
                say "  ${GREEN}bml restart${OFF} ${DIM}— 적기 전에 띄운 서버입니다.${OFF}" ;;
       open)    say "문          ${B}없습니다${OFF} ${DIM}— 이 주소에 닿는 사람은 암호 없이 전부 보고 고칩니다.${OFF}"

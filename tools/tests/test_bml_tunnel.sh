@@ -179,7 +179,7 @@ fi
 # 그리고 층마다 다음에 할 일이 달라야 한다.
 contains "dns 는 터널이 닫혔을 가능성을 말한다" "$(block_layer_meaning dns)" "닫혔"
 contains "tcp 는 이 망이 막는다고 말한다"       "$(block_layer_meaning tcp)" "이 망이"
-contains "tls 는 다른 망에서는 열린다고 말한다"  "$(block_layer_meaning tls)" "다른 망에서는 열립니다"
+contains "tls 는 다른 망 가능성을 말한다"        "$(block_layer_meaning tls)" "다른 망에서는 열릴 수 있습니다"
 contains "짚지 못하면 짚지 못했다고 말한다"      "$(block_layer_meaning unknown)" "짚지 못했습니다"
 
 # tls·tcp 로 판정되면 "다시 열어 보라" 고 하면 안 된다 — 멀쩡한 터널을 닫는
@@ -215,8 +215,12 @@ check "그때는 이 기계의 DNS 라고 짚는다" \
 check "모르면 두 가능성을 다 남긴다" \
   "$(block_layer_meaning dns | grep -c '이미 닫혔거나')" "1"
 # tls·tcp 는 터널과 무관하다는 판정이라 원래대로다.
-check "tls 는 다른 망에서는 열린다고 단정한다" \
-  "$(block_layer_meaning tls | grep -c '다른 망에서는 열립니다')" "1"
+# TLS 손잡기를 실제로 해 본 적이 없다 — /dev/tcp 로 붙어만 봤다.  그러니
+# "SNI 를 보고 끊는다" 고 단정하면 안 된다 (Codex 리뷰 10번).
+check "확인 못 한 것을 단정하지 않는다" \
+  "$(block_layer_meaning tls | grep -c '확인한 것은 아닙니다')" "1"
+check "그래도 다른 망 가능성은 말한다" \
+  "$(block_layer_meaning tls | grep -c '다른 망에서는 열릴 수 있습니다')" "1"
 
 # 그리고 그 단정과 아래 안내가 어긋나면 안 된다.  "터널은 붙어 있다" 고 적어
 # 놓고 세 줄 밑에서 "이 기계의 망 문제일 수 있습니다" 로 물러서면, 사람은
@@ -236,6 +240,11 @@ check "NXDOMAIN 이면 없는 것" \
   "$(dns_public_json_verdict '{"Status":3,"Question":[]}')" "missing"
 check "빈 칸으로 띄운 것도 읽는다" \
   "$(dns_public_json_verdict '{"Status": 3}')" "missing"
+# "Answer" 라는 글자만 보면 안 된다 — SERVFAIL 응답에도 빈 배열로 들어 있다.
+check "Status 가 0 이 아니면 모른다" \
+  "$(dns_public_json_verdict '{"Status":2,"Answer":[]}')" "unknown"
+check "답이 비어 있으면 모른다" \
+  "$(dns_public_json_verdict '{"Status":0,"Answer":[]}')" "unknown"
 # 확실한 신호가 없으면 단정하지 않는다 (§0.4) — 틀리게 단정하면 살아 있는
 # 터널을 닫거나, 죽은 터널을 기다리게 만든다.
 check "대답이 없으면 모른다"       "$(dns_public_json_verdict '')"        "unknown"
