@@ -117,10 +117,10 @@ false-green 을 **실제 실행 경로에서 여전히 만들 수 있다**.  Cod
 
 | # | 조건 | 상태 | 커밋 |
 |---|---|---|---|
-| 1 | 봉인이 눈먼가: producer raw 로그·collect 를 봉인 뒤로 · 네 모드 CLI 배타 | ✅ | `d8d134a0` · `<P14>` |
+| 1 | 봉인이 눈먼가: producer raw 로그·collect 를 봉인 뒤로 · 네 모드 CLI 배타 | ✅ | `d8d134a0` · `3e3cf2cb` |
 | 2 | **게시 전 검증** · LEAN 의 disabled component · required 계획 | ✅ | `d8d134a0` |
 | 3 | 수렴 계약 통일(`0 ≤ resid ≤ 1e-6`) + authoritative backend | ✅ | `d8d134a0` |
-| 4 | 규약 기대값을 **러너 자기 설정**에서 계산 · `periodic_xy`·component 계획·plate 규칙판·관측 sid7 수 추가 | ✅ | `<P14>` |
+| 4 | 규약 기대값을 **러너 자기 설정**에서 계산 · `periodic_xy`·component 계획·plate 규칙판·관측 sid7 수 추가 | ✅ | `3e3cf2cb` |
 | 5 | `verdict` 와 `compare_dirs` 가 **하나의** `validate_contract` 를 공유 · `required_since` | ✅ | `0db71bf9` |
 | 6 | plate 회귀: 아래판 분기 · 반응 솔버 · 비단위 vox FD · plate 원장 없으면 fail-closed | ✅ | `c89ea13b` |
 | 7 | 규칙 J 가 **정확히 exit 3** + 인과 코드 · 규칙 K 가 주석/echo/죽은 줄 거부 · 러너 통합 selftest | ✅ | `79165db0` |
