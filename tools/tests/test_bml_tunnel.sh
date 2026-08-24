@@ -249,6 +249,11 @@ check "포트도 뗀다"             "$(url_host http://192.168.0.7:5003)"      
 # 남의 명령을 실행시킬 수 있다.
 check "이상한 글자는 거부한다"  "$(url_host 'https://a;rm -rf/' || echo REFUSED)" "REFUSED"
 check "빈 값도 거부한다"        "$(url_host '' || echo REFUSED)"           "REFUSED"
+# userinfo 를 안 떼면 curl 이 가는 곳과 우리가 진단하는 곳이 달라진다.
+check "userinfo 를 뗀다"        "$(url_host 'https://u:p@real.example/path')"  "real.example"
+# 앞이 '-' 인 이름은 nslookup·dig 의 옵션 인자로 먹힐 수 있다.
+check "앞이 - 면 거부한다"      "$(url_host 'https://-debug' || echo REFUSED)" "REFUSED"
+check "빈 라벨도 거부한다"      "$(url_host 'https://x..y' || echo REFUSED)"   "REFUSED"
 
 echo
 echo "같은 망에서는 '중추 서버에서 확인해 보라' 가 갈라 주지 못한다"

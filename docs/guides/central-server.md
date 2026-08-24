@@ -107,8 +107,15 @@ Windows 쪽 `%USERPROFILE%\.wslconfig` 를 찾아 고치고 (고치기 전 파�
 PowerShell 쪽에서 직접 하려면 (관리자 아니어도 된다) 이 **한 줄**:
 
 ```powershell
-$f="$env:USERPROFILE\.wslconfig"; $t=(Get-Content $f -Raw -EA 0); if($t -match '(?m)^[ \t]*networkingMode'){$t=$t -replace '(?m)^[ \t]*networkingMode[ \t]*=[^\r\n]*','networkingMode=mirrored'}elseif($t -match '(?m)^\[wsl2\]'){$t=$t -replace '(?m)^\[wsl2\]',"[wsl2]`r`nnetworkingMode=mirrored"}else{$t="[wsl2]`r`nnetworkingMode=mirrored`r`n$t"}; Set-Content $f $t -NoNewline; Get-Content $f
+$f="$env:USERPROFILE\.wslconfig"; $e=New-Object System.Text.UTF8Encoding($false); $t=''; if(Test-Path -LiteralPath $f){if((Get-Item -LiteralPath $f -Force).LinkType){throw "$f 는 링크입니다 - 무엇을 고치게 될지 알 수 없어 멈춥니다"}; $t=[IO.File]::ReadAllText($f,$e)}; if($t -notmatch '(?m)^[ \t]*networkingMode[ \t]*=[ \t]*mirrored[ \t]*\r?$'){if((Test-Path -LiteralPath $f) -and -not (Test-Path -LiteralPath "$f.bml-bak")){Copy-Item -LiteralPath $f -Destination "$f.bml-bak" -ErrorAction Stop}; if($t -match '(?m)^[ \t]*networkingMode'){$t=$t -replace '(?m)^[ \t]*networkingMode[ \t]*=[^\r\n]*','networkingMode=mirrored'}elseif($t -match '(?m)^\[wsl2\]'){$t=$t -replace '(?m)^\[wsl2\]',"[wsl2]`r`nnetworkingMode=mirrored"}else{$t="[wsl2]`r`nnetworkingMode=mirrored`r`n$t"}; [IO.File]::WriteAllText($f,$t,$e)}; Get-Content -LiteralPath $f
 ```
+
+이 한 줄이 지키는 것: 인코딩을 **명시한 UTF-8(BOM 없음)** 로 읽고 쓴다 —
+`Get-Content`/`Set-Content` 의 기본값은 Windows PowerShell 5.1 에서 ANSI 라,
+한글이 든 `.wslconfig` 를 CP949 로 다시 써 버린다. 링크면 멈추고, 이미
+mirrored 면 아무것도 안 하며, 백업(`.bml-bak`)은 없을 때만 만들고 있으면 덮지
+않는다. PowerShell 7.4.6 으로 다섯 경우 + 한글 UTF-8 + 링크 + 기존 백업까지
+돌려 확인했다.
 
 어느 쪽이든 그다음 `wsl --shutdown` (WSL 안에서라면 `wsl.exe --shutdown`),
 그리고 WSL 터미널을 다시 연다.

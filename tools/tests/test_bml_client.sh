@@ -365,7 +365,19 @@ check "그 명령이 넣는 값"   "$(wslconfig_mirror_command | grep -c 'networ
 # 읽고 → 있으면 그 자리를 고치고 → 없으면 넣는다, 이 순서가 깨지면 안 된다.
 # 실제 PowerShell 7.4.6 으로 다섯 경우를 돌려 확인했다 (log.md 참고):
 # 없던 파일 / [wsl2]+memory / 다른 절만 / networkingMode=NAT / 이미 mirrored.
-check "있는 파일을 먼저 읽는다"       "$(wslconfig_mirror_command | grep -c 'Get-Content \$f -Raw')" "1"
+# 인코딩을 명시하지 않으면 Windows PowerShell 5.1 의 Get-Content/Set-Content 가
+# 기본 ANSI 로 읽고 써서, 한글이 든 .wslconfig 를 CP949 로 다시 쓴다.  cmdlet 을
+# 피하고 .NET API 에 인코딩을 넘긴다.
+check "인코딩을 명시한다"           "$(wslconfig_mirror_command | grep -cF 'UTF8Encoding($false)')" "1"
+check "cmdlet 대신 .NET 으로 쓴다"  "$(wslconfig_mirror_command | grep -cF '[IO.File]::WriteAllText')" "1"
+check "읽기도 .NET 으로"            "$(wslconfig_mirror_command | grep -cF '[IO.File]::ReadAllText')" "1"
+# 링크면 멈춘다 — 무엇을 고치게 될지 알 수 없다.
+check "링크면 멈춘다"               "$(wslconfig_mirror_command | grep -c 'LinkType')" "1"
+# 백업은 없을 때만 만든다.  두 번째 실행이 첫 원본 백업을 덮으면 되돌릴 것이 사라진다.
+check "기존 백업을 덮지 않는다"      "$(wslconfig_mirror_command | grep -cF 'not (Test-Path -LiteralPath "$f.bml-bak")')" "1"
+# CRLF 파일에서 [ \t]*$ 는 \r 때문에 절대 안 맞는다 — 그러면 이미 mirrored 인
+# 파일을 매번 다시 쓰고 백업까지 새로 만든다 (검증에서 실제로 걸렸다).
+check "멱등 판정이 CR 을 본다"       "$(wslconfig_mirror_command | grep -cF 'mirrored[ \t]*\r?$')" "1"
 check "NAT 이라고 적힌 줄을 바꾼다"   "$(wslconfig_mirror_command | grep -cF 'networkingMode[ \t]*=[^\r\n]*')" "1"
 check "[wsl2] 절을 두 번 만들지 않는다" "$(wslconfig_mirror_command | grep -cF 'elseif($t -match')" "1"
 # 줄바꿈을 CRLF 그대로 둔다.  `.*` 로 지우면 그 줄만 LF 가 되어 파일이 섞인다 —
@@ -688,6 +700,17 @@ check "불린 이름으로 자리를 정한다" \
   "$(grep -c 'bmlin)  set -- in' "$BML")" "1"
 # 'tunnel' 은 이미 share 의 별칭이다 — out 에 겹쳐 쓰면 share 가 먹힌다.
 check "out 은 tunnel 을 뺏지 않는다" "$(grep -c 'out|wan)' "$BML")" "1"
+
+echo
+echo "충돌이 남았으면 그 트리를 실행하지 않는다"
+# git pull --rebase --autostash 는 autostash 를 되돌리다 충돌해도 0 을 주는
+# 경우가 있다.  그러면 <<<<<<< 가 든 tools/bml 이 남고, 재실행이 그것을
+# 실행해서 셸 구문 오류로 죽는다 — 사람은 방금 친 명령을 의심한다.
+check "unmerged 를 보고 멈춘다"    "$(grep -c -- '--diff-filter=U' "$BML")" "1"
+check "멈출 때 stash 를 짚어 준다" "$(grep -c 'git stash list' "$BML")" "1"
+# 그 검사는 재실행보다 **앞**에 있어야 한다.  뒤에 있으면 이미 실행된 뒤다.
+check "재실행보다 앞에 있다" \
+  "$(awk '/--diff-filter=U/{u=NR} /exec "\$SCRIPT"/{e=NR} END{print (u && e && u < e) ? "yes" : "no"}' "$BML")" "yes"
 
 echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
