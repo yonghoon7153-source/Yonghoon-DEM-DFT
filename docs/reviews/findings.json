@@ -632,6 +632,39 @@
     "scripts/sdcp_gain_verdict.py --selftest  (㉖a·㉖b·㉖b2 = 고쳐 쓴 전제)"
    ],
    "note": "도핑 baseline 8팔(실런)이 `additive_E_GPa` 로 HOLD 를 맞았다 — SBE `{PTFE, VGCF}` vs DBE `{PTFE, SDCP, VGCF}`.  **SBE 에 SDCP 항목이 없는 것은 위반이 아니라 이 실험의 독립변수 그 자체**다.  고정-인자 게이트가 두 침대를 가로질러 비교했기 때문이다.\n같은 결함이 `input_digest` 에도 잠복해 있었다 (내가 어제 `_GEN_FIELDS` 에 넣은 것) — 두 침대는 **반드시** 다른 파일이므로 digest 가 있는 모든 디렉터리가 HOLD 였을 것이다.\n★ 수정: `_BED_FIELDS = (input_digest, additive_E_GPa)` 를 **침대 안에서만** 고정 검사.  침대 사이에는 대신 두 검사를 새로 둔다 — digest 는 **달라야** 하고(같으면 두 팔이 같은 침대를 읽고 있다 = 비 1.0 이 물리가 아니라 배선 실수), additive 는 **공통 키**(PTFE·VGCF)만 같아야 한다.  ⇒ CL-56 이 겨냥한 SDCP E 23.6↔9.0 혼합은 그대로 잡히고(침대 안 + 공통 키), 실험은 통과한다.\n★★ **오늘의 교훈 — 음성 대조가 틀린 전제를 박제할 수 있다.**  어제 내가 쓴 ㉖b 는 두 침대의 digest 가 **다르면 HOLD** 를 기대했다 = 정확히 이 오해를 테스트로 굳힌 것이다.  그 테스트는 초록이었고, **실런이 아니었으면 계속 초록이었을 것**이다.  CDXIJ-01 의 '동어반복' 부류와 다르다 — 그쪽은 테스트가 실제 경로를 안 탔고, 이쪽은 **기대값 자체가 틀렸다**.  ⇒ 게이트를 새로 만들면 **합성 대조뿐 아니라 실제 산출물 한 벌에도** 돌려 봐야 한다.  (⚠ 이 SHA 는 후속 커밋에서 바로잡았다 —  가 SHA 를 바꾸는데 원장이 amend **전** 값을 가리키고 있었다.  그 커밋은 unreachable 이라 검사기의 존재 확인은 통과했다 = **도달 불가 커밋도 통과한다**는 구멍이 드러났다.  별도 항목으로 다루지 않고 여기 기록해 둔다.)"
+  },
+  {
+   "id": "CDXR2-1",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/crossreview_ptfe_8arm_20260824.md",
+   "title": "`phase_current_share` 가 **플레이트 소산을 빠뜨려** 자기 docstring 의 항등식을 만족하지 않는다 — 같은 결함의 2회차",
+   "evidence_tests": [],
+   "note": "그 함수 docstring 은 *\"이 분담은 변분(포락선) 정리로 w_a = ∂ln σ_eff/∂ln σ_a 와 **같은 양**\"* 이라고 단언한다.  포락선 정리가 그 항등식을 주려면 **σ_a 에 비례하는 모든 conductance** 가 합에 들어가야 하는데, 솔버의 bottom/top 플레이트 커플링 `g = σ·vox²/max(dist, vox/2)` 이 σ 비례인데도 **빠져 있다**.  ⇒ 보고되는 분담은 총미분이 아니라 **내부+seam 몫**이고, 크기 미상만큼 과소다.\n★★ **같은 결함의 2회차**다 — Codex #7 (2026-08-12) 이 이미 **주기 seam 면쌍 누락**을 잡았고(seam 지배 격자에서 소산의 22.9 % 가 통째로 사라졌다) 그때 wrap 쌍을 더했다.  실패 양식이 동일하다: **σ 비례 conductance 를 합에서 빠뜨림**.  두 번 같은 이유로 틀렸으므로 개별 수정이 아니라 **불변식**을 세워야 한다 — 솔버가 L 에 넣는 모든 σ 비례 항이 분담 합에도 들어간다는 것을, 유한차분 대조 회귀로 강제한다.\n★ **영향**: (a) CL-41 의 'SDCP 1 %' 는 미상 크기만큼 **과소**다 — 2026-08-24 에 '인용 금지, CL-44 를 쓰라' 로 정정해 둔 것이 이 이유로 **한 겹 더** 정당화된다.  (b) 이 값을 σ_SDCP 감도 봉투의 입력으로 쓸 수 없다 (교차리뷰 Q2 가 HOLD 된 세 근거 중 하나).\n⚠ 크기 미측정 — 플레이트 drop 이 작으면 실질 영향이 작을 수 있으나, **작다는 증거가 없다**.\n\n**증거 (파일:행)**\n· `step3_sigma.py:626-672` — 합산 면쌍 = 내부 3 + (주기면) wrap 2.  **플레이트 없음**\n· `step3_sigma.py:549-564` `_plate_couple` — `g = sa * vox * vox / dist` = **σ 비례**\n**써야 할 회귀 (미작성)**: 플레이트 항을 넣은 분담이 ±1 % 유한차분 `dlnσ_eff/dlnσ_a` 와 일치하는가 — 그리고 그 대조를 **모든 σ 비례 항**에 대해 도는 불변식으로.",
+   "found_by": "codex (Q2) · 2회차 성격과 docstring 자기모순은 claude 가 추가"
+  },
+  {
+   "id": "CDXR2-2",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/crossreview_ptfe_8arm_20260824.md",
+   "title": "`--fibre-dia` 가 **raster 에 배선돼 있지 않고** 로드가 solve **뒤**이며 길이 불일치를 조용히 삼킨다",
+   "evidence_tests": [],
+   "note": "직경 인식 PTFE 스탬프(capsule 또는 face-fraction)를 넣으려면 per-fibril 직경이 **전도 격자를 굽기 전에** 필요하다.  현재 그 배열은 뷰어 폴리라인 블록에서만 읽히고 raster 호출에는 전달되지 않는다.  게다가 `len(dia) != len(se)` 이면 경고 한 줄 뒤 `dia = None` 으로 **조용히 계속**한다 — 규약이 직경을 요구하는 순간 이것은 fail-open 이다.\n⇒ S1 (a) 는 '게이트 분리 + zero-DOF' 만으로 끝나지 않는다.  직경 소스를 solve 전으로 옮기고 hard-error 로 봉인하는 것이 **선행 조건**이다.\n★ 이 때문에 `capsule` 은 지금 동작하는 enum 으로 두면 안 된다 — 예약값으로 두고 선택 시 `unsupported_protocol` 로 nonzero abort (Codex Q3).\n\n**증거 (파일:행)**\n· `mpm_webapp_payload.py:507-509` — help 가 'so the **viewer** renders thickness' = 뷰어 전용 설계\n· `mpm_webapp_payload.py:1085-1095` — `rasterize(...)` 인자에 dia **없음**\n· `mpm_webapp_payload.py:2040-2044` — `np.load` 가 solve **뒤**, `len(dia)!=len(se)` 면 경고 후 `dia=None` (fail-open)\n**써야 할 회귀 (미작성)**: 직경 인식 스탬프를 요청했는데 dia 가 없거나 길이가 안 맞으면 **nonzero abort**.",
+   "found_by": "codex (Q3)"
+  },
+  {
+   "id": "CDXR2-3",
+   "severity": "P2",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/crossreview_ptfe_8arm_20260824.md",
+   "title": "비의 표준오차가 **상대 %** 인데 상수·키·출력이 전부 `%p` 로 표기된다 (게이트는 자기일관, 라벨만 오류)",
+   "evidence_tests": [],
+   "note": "실행된 조작적 게이트는 상대 % 끼리의 비교라 **자기일관**하고, 절대 %p 로 엄격히 다시 읽어도 다섯 기록 전부 1.17 아래다 (CL-33 0.2829 · CL-41 0.3685/0.4090 · CL-58 0.3248/0.0905 %p).  ⇒ **재판정·재실행 없음**, erratum 각주만.\n⚠ **claude 의 자기정정**: 교차리뷰 초판은 (i) 'prereg 전체가 상대 % 로 명시' 라고 했으나 실제로는 **실행 계약은 상대 %, 설명 문구는 혼용** 이고, (ii) '라벨이 값을 작게 보고하므로 보수적' 이라고 했으나 절대 SE = R × 상대 SE 이므로 **R > 1 이면 라벨이 불확도를 과소보고 = 반보수적** 이다 (전자비 전부 해당).  R < 1 인 CL-58 이온비에서만 반대다.  보수적인 것은 라벨이 아니라 **비대응 quadrature 가 쌍대응보다 크다** 는 별개 사실이고, 초판이 그 둘을 섞었다.\n★ 행동: 상수·키 개명(SE_MAX_REL_PCT · se_ratio_rel_pct) + se_ratio_abs_pp 파생 + CL-33/41/58 각주 + 새 prereg 는 단위를 하나만 명시.\n\n**증거 (파일:행)**\n· `sdcp_gain_verdict.py:363-365` — `100*hypot(SE/mean, SE/mean)` = 비의 **상대 RSE(%)**\n· `sdcp_gain_verdict.py:387-390` — 그 값과 `SE_MAX_PCT` 직접 비교 ⇒ 상대끼리 = **자기일관**\n· `sdcp_gain_prereg_v2_20260816.md:74-80` 은 상대 % 로 유도(팔 SE 0.58 % · 비 SE 0.82 %)하는데 `:88`·`:106` 은 문턱을 **%p** 로 적었다\n**써야 할 회귀 (미작성)**: `se_ratio_abs_pp = R × se_ratio_rel_pct` 파생 필드 + 단위 회귀.",
+   "found_by": "codex (Q1) — claude 초판의 두 하위 논거를 반박"
   }
  ]
 }
