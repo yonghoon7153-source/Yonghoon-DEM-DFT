@@ -21,6 +21,9 @@ export function Library() {
   // 지우고 나서 목록이 그대로면 사라진 셀이 계속 보이고, 눌러 보면 404 다.
   const [reloadKey, bumpReload] = useState(false)
   const [groupBy, setGroupBy] = useStickyState<GroupKey>('workbench.libraryGroupBy', 'none')
+  // 이름 묶음 필터.  묶기와 **같은 규칙**(nameFamily)을 쓴다 — 표에서 한
+  // 덩어리로 보이던 것이 필터에서 다른 덩어리면 둘 중 하나는 거짓말이다.
+  const [family, setFamily] = useState('')
 
   const debouncedSearch = useDebounced(search)
   const groups = useAsync(() => api.listGroups(), [reloadKey], { live: true })
@@ -36,6 +39,24 @@ export function Library() {
         date_to: dateTo,
       }),
     [debouncedSearch, groupId, cathode, process, dateFrom, dateTo, reloadKey],
+  )
+
+  // 이름 묶음은 **받아 온 뒤** 거른다.  서버에 같이 보내면 고른 순간 선택지가
+  // 그 하나로 줄어서, 다른 묶음으로 옮겨 갈 수가 없다.
+  const families = useMemo(() => {
+    const seen = new Set<string>()
+    for (const item of samples.data ?? []) {
+      const name = nameFamily(item.name)
+      if (name) seen.add(name)
+    }
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [samples.data])
+
+  const shown = useMemo(
+    () => (family
+      ? (samples.data ?? []).filter((item) => nameFamily(item.name) === family)
+      : samples.data ?? []),
+    [samples.data, family],
   )
 
   return (
@@ -62,6 +83,20 @@ export function Library() {
                   onChange={(event) => setSearch(event.target.value)}
                   placeholder="No_1_dry…"
                 />
+              </Field>
+              <Field label="이름" hint="같은 조건 반복분을 한 덩어리로">
+                <select
+                  aria-label="이름"
+                  value={family}
+                  onChange={(event) => setFamily(event.target.value)}
+                >
+                  <option value="">전체</option>
+                  {families.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
               </Field>
               <Field label="그룹">
                 <select
@@ -116,7 +151,7 @@ export function Library() {
           </Card>
 
           <Card
-            title={`셀 ${samples.data?.length ?? 0}개`}
+            title={`셀 ${shown.length}개`}
             actions={
               <div className="row" style={{ gap: 6 }}>
                 <span className="tiny faint">묶기</span>
@@ -144,9 +179,9 @@ export function Library() {
               <div style={{ padding: 20 }}>
                 <Spinner />
               </div>
-            ) : samples.data?.length ? (
+            ) : shown.length ? (
               <SampleTable
-                samples={samples.data}
+                samples={shown}
                 groupBy={groupBy}
                 onDeleted={() => bumpReload((v) => !v)}
               />
@@ -291,6 +326,10 @@ function SampleHead() {
     <thead>
       <tr>
         <th>셀</th>
+        {/* 이름 묶음.  같은 조건을 세 번 돌린 것이 이름 뒤의 번호·질량만
+            다르므로, 그 앞자리를 따로 보여 주면 표를 훑으며 반복분을 셀 수
+            있다 — 묶기를 켜지 않아도. */}
+        <th style={{ textAlign: 'left' }}>이름</th>
         <th style={{ textAlign: 'left' }}>그룹</th>
         <th>날짜</th>
         <th style={{ textAlign: 'left' }}>양극재</th>
@@ -315,7 +354,7 @@ function SampleHead() {
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 14
+const COLUMN_COUNT = 15
 
 function SampleRow({
   sample,
@@ -332,6 +371,7 @@ function SampleRow({
       <td className="text">
         <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
       </td>
+      <td className="text dim">{nameFamily(sample.name) || '—'}</td>
       <td className="text dim">{sample.group_name ?? '—'}</td>
       <td>{sample.test_date ?? '—'}</td>
       <td className="text dim">{sample.cathode_detail || sample.cathode_type || '—'}</td>

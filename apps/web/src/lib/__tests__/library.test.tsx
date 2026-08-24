@@ -183,7 +183,8 @@ describe('라이브러리 묶기', () => {
       sample(3, 'C', { process: 'wet' }),
     ])
     renderLibrary()
-    await screen.findByText('A')
+    // 이름 드롭박스에도 'A' 가 선택지로 뜬다 -- 표 안의 셀 이름만 본다.
+    await screen.findByRole('link', { name: 'A' })
 
     await userEvent.click(screen.getByRole('button', { name: '공정' }))
 
@@ -365,5 +366,61 @@ describe('app.css 첫 열 고정 규칙', () => {
     //   글자에 sticky → 라벨   left=0,    첫 열 left=0
     expect(block).toContain('tr.section > th > .section-label')
     expect(block).not.toMatch(/tr\.section > th \{[^}]*left:/)
+  })
+})
+
+describe('이름으로 좁히기', () => {
+  const pick = () => screen.getByLabelText('이름') as HTMLSelectElement
+
+  it('묶기와 같은 규칙으로 선택지를 만든다', async () => {
+    // 표에서 한 덩어리로 보이던 것이 필터에서 다른 덩어리면 둘 중 하나는
+    // 거짓말이다.
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    const options = [...pick().options].map((option) => option.textContent)
+    expect(options).toEqual(['전체', '4.0V_post_formation', '4.6V'])
+  })
+
+  it('고르면 그 묶음만 남는다', async () => {
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    await userEvent.selectOptions(pick(), '4.6V')
+
+    await waitFor(() =>
+      expect(screen.queryByText('4.0V_post_formation_18.9mg')).toBeNull(),
+    )
+    expect(screen.getByText('4.6V_1_17.5mg')).toBeInTheDocument()
+    expect(screen.getByText('4.6V_2_18.1mg')).toBeInTheDocument()
+  })
+
+  it('골라도 다른 묶음으로 옮겨 갈 수 있다', async () => {
+    // 서버에 같이 보내면 고른 순간 선택지가 그 하나로 줄어서, 되돌아올 길이
+    // '전체' 뿐이 된다.
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    await userEvent.selectOptions(pick(), '4.6V')
+    await waitFor(() => expect(pick().value).toBe('4.6V'))
+
+    expect([...pick().options].map((option) => option.value)).toContain('4.0V_post_formation')
+  })
+
+  it('표에도 그 묶음이 열로 있다 — 묶기를 안 켜도 반복분이 보인다', async () => {
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    const head = [...document.querySelectorAll('thead th')].map((n) => n.textContent)
+    expect(head[0]).toBe('셀')
+    expect(head[1]).toBe('이름')
+    expect(head[2]).toBe('그룹')
+
+    const first = document.querySelector('tbody tr')!
+    expect(first.querySelectorAll('td')[1]!.textContent).toBe('4.6V')
   })
 })
