@@ -204,6 +204,63 @@ const TIP_WIDTH = 150
 const AXIS_FONT = '11px Pretendard, system-ui, sans-serif'
 const LABEL_FONT = '600 11px Pretendard, system-ui, sans-serif'
 
+/** What the plot looked like when it was built -- the view 초기화 goes back to.
+ *
+ * Recomputing "the whole data range" instead would land somewhere slightly
+ * different: uPlot pads a y scale by 10 % and snaps tick-friendly bounds, and
+ * an axis lock overrides both.  Capturing the scales uPlot actually settled on
+ * makes 초기화 exact by construction -- it *is* the first view, not a
+ * reconstruction of it. */
+type HomeScales = Record<string, { min: number; max: number }>
+
+function readScales(plot: uPlot): HomeScales {
+  const home: HomeScales = {}
+  for (const key of Object.keys(plot.scales)) {
+    const scale = plot.scales[key]
+    // A derived scale (`from`) follows its parent; setting it directly fights
+    // uPlot rather than moving the view.
+    if (!scale || scale.from != null) continue
+    if (typeof scale.min !== 'number' || typeof scale.max !== 'number') continue
+    if (!Number.isFinite(scale.min) || !Number.isFinite(scale.max)) continue
+    home[key] = { min: scale.min, max: scale.max }
+  }
+  return home
+}
+
+/** Is the view still where it started?
+ *
+ * Compared against the span rather than absolutely: dV/dQ runs at 1e-9 and
+ * capacity at 1e2, so any fixed epsilon is wrong for one of them.  The
+ * tolerance is loose enough that uPlot's own float round-trips do not read as
+ * a zoom, which would leave 초기화 lit on a plot nobody touched.
+ */
+export function sameView(home: HomeScales, now: HomeScales): boolean {
+  for (const key of Object.keys(home)) {
+    const was = home[key]!
+    const is = now[key]
+    if (!is) continue
+    const span = Math.abs(was.max - was.min) || 1
+    if (Math.abs(is.min - was.min) > span * 1e-6) return false
+    if (Math.abs(is.max - was.max) > span * 1e-6) return false
+  }
+  return true
+}
+
+/** Both ends of an axis pinned by the caller's lock.
+ *
+ * A pinned axis cannot be zoomed -- uPlot re-applies the lock's `range`
+ * function on every scale change, so a zoom would be undone in the same frame.
+ * Better to disable the button and say why than to ship one that does nothing.
+ */
+function fullyPinned(range: [number | null, number | null] | undefined): boolean {
+  return range !== undefined && range[0] !== null && range[1] !== null
+}
+
+/** 한 번 누를 때 얼마나. */
+const ZOOM_STEP = 0.6
+
+const PINNED_HINT = '축 고정이 켜져 있습니다 — 자물쇠를 풀거나 그 숫자를 고치세요'
+
 /** Stable identity for the common `markers={[]}` case.
  *
  * The plot is rebuilt whenever its options change, and the cursor readout
@@ -229,6 +286,9 @@ export function Plot({
   const [readout, setReadout] = useState<Readout | null>(null)
   //: uPlot 이 정한 "커서에 가장 가까운 계열".  setSeries 로만 바뀐다.
   const focusRef = useRef<number | null>(null)
+  //: 처음 잡힌 눈금.  '전체' 가 여기로 되돌린다.
+  const homeRef = useRef<HomeScales | null>(null)
+  const [zoomed, setZoomed] = useState(false)
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
 
@@ -321,6 +381,16 @@ export function Plot({
         })),
       ],
       hooks: {
+        // 확대 여부는 **uPlot 의 눈금을 읽어서** 정한다.  버튼을 누른 횟수를
+        // 세면 드래그 확대와 더블클릭 복귀를 놓치고, 그때 '전체' 버튼이
+        // 화면과 어긋난 상태로 남는다 (꺼져 있는데 확대돼 있거나, 그 반대).
+        setScale: [
+          (u: uPlot) => {
+            const home = homeRef.current
+            if (!home) return
+            setZoomed(!sameView(home, readScales(u)))
+          },
+        ],
         // 커서가 어느 계열에 붙었는지는 uPlot 이 focus.prox 로 이미 정한다.
         // 그 판단을 다시 구현하지 않고 그대로 받아 쓴다.
         setSeries: [
@@ -398,11 +468,18 @@ export function Plot({
 
     plotRef.current?.destroy()
     focusRef.current = null
+    homeRef.current = null
     setReadout(null)
-    plotRef.current = new uPlot(options, data, node)
+    setZoomed(false)
+    const plot = new uPlot(options, data, node)
+    plotRef.current = plot
+    // 생성이 끝난 뒤에 읽는다 -- uPlot 은 초기 setData 안에서 눈금을 정하므로
+    // 여기서 읽은 값이 곧 사람이 처음 본 그림이다.
+    homeRef.current = readScales(plot)
     return () => {
       plotRef.current?.destroy()
       plotRef.current = null
+      homeRef.current = null
     }
   }, [
     data,
@@ -422,10 +499,88 @@ export function Plot({
   const xAxis = splitAxisLabel(xLabel)
   const yAxis = splitAxisLabel(yLabel)
 
+  // 두 축이 모두 잠겨 있으면 확대가 그림을 못 바꾼다 -- uPlot 이 매 프레임
+  // 잠금 범위를 다시 씌우기 때문이다.  아무 일도 안 일어나는 버튼을 내놓는
+  // 대신 끄고, 왜 껐는지를 말한다.
+  const pinned = fullyPinned(steadyXRange) && fullyPinned(steadyRange)
+
+  /** 가운데를 붙잡고 폭만 줄이거나 늘린다.
+   *
+   *  커서 자리를 중심으로 잡을 수도 있지만, 버튼은 커서가 그래프 밖(버튼 위)에
+   *  있을 때 눌린다.  그때 "마지막으로 머물던 자리" 를 쓰면 누를 때마다 다른
+   *  곳으로 튀고, 두 번 눌러 원래대로 돌아오지도 않는다.
+   *
+   *  축소는 처음 범위를 넘지 않는다.  넘어가면 '축소' 를 계속 눌렀을 때
+   *  데이터가 점점 작아지다 사라지고, '전체' 와 다른 곳에 멈춘다. */
+  const zoomBy = (factor: number) => {
+    const plot = plotRef.current
+    const home = homeRef.current
+    if (!plot || !home) return
+    plot.batch(() => {
+      for (const key of Object.keys(home)) {
+        const scale = plot.scales[key]
+        const limit = home[key]!
+        if (!scale || typeof scale.min !== 'number' || typeof scale.max !== 'number') continue
+        const middle = (scale.min + scale.max) / 2
+        const half = ((scale.max - scale.min) / 2) * factor
+        const width = Math.min(half, (limit.max - limit.min) / 2)
+        let min = middle - width
+        let max = middle + width
+        // 밖으로 밀려난 만큼 도로 안쪽으로 민다 -- 폭은 지키고 자리만 옮긴다.
+        if (min < limit.min) { max += limit.min - min; min = limit.min }
+        if (max > limit.max) { min -= max - limit.max; max = limit.max }
+        plot.setScale(key, { min: Math.max(min, limit.min), max: Math.min(max, limit.max) })
+      }
+    })
+  }
+
+  const resetZoom = () => {
+    const plot = plotRef.current
+    const home = homeRef.current
+    if (!plot || !home) return
+    plot.batch(() => {
+      for (const key of Object.keys(home)) plot.setScale(key, { ...home[key]! })
+    })
+  }
+
   return (
     <div ref={wrapRef} className="plot-shell">
       {data ? (
-        <div ref={nodeRef} />
+        <>
+          <div className="plot-zoom">
+            <button
+              type="button"
+              className="sm ghost"
+              onClick={() => zoomBy(ZOOM_STEP)}
+              disabled={pinned}
+              aria-label="확대"
+              title={pinned ? PINNED_HINT : '확대 — 그래프 위를 드래그해도 그 부분만 확대됩니다'}
+            >
+              🔍+
+            </button>
+            <button
+              type="button"
+              className="sm ghost"
+              onClick={() => zoomBy(1 / ZOOM_STEP)}
+              disabled={pinned || !zoomed}
+              aria-label="축소"
+              title={pinned ? PINNED_HINT : '축소'}
+            >
+              🔍−
+            </button>
+            <button
+              type="button"
+              className="sm ghost"
+              onClick={resetZoom}
+              disabled={!zoomed}
+              aria-label="확대 초기화"
+              title="처음 보이던 범위로 되돌립니다 (그래프를 더블클릭해도 됩니다)"
+            >
+              전체
+            </button>
+          </div>
+          <div ref={nodeRef} />
+        </>
       ) : (
         <div
           className="empty"

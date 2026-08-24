@@ -591,6 +591,38 @@ tbody tr:last-child td { border-bottom: none; }
 /* -------------------------------------------------------------- plots */
 .plot-shell { position: relative; padding: var(--s2) var(--s1) 0; }
 
+/* --- 돋보기 ----------------------------------------------------------------- */
+
+/* 드래그로 확대하는 것은 예전부터 됐지만 화면에 그렇게 적힌 곳이 없어서 아무도
+   안 썼고, 무엇보다 **되돌리는 방법**(더블클릭)이 안 보였다 -- 확대해 놓고
+   빠져나오지 못하면 새로고침을 하게 된다.
+
+   그래프 위에 얹되 오른쪽 위 구석에 둔다.  그쪽이 uPlot 의 그림 영역에서 데이터가
+   가장 덜 지나가는 자리이고, 세로축 라벨·눈금과도 안 겹친다.  기본은 반투명이고
+   그래프에 마우스를 올리면 또렷해진다 -- 캡처해서 슬라이드에 넣는 그림 위에 늘
+   버튼 세 개가 떠 있으면 안 된다. */
+.plot-zoom {
+  position: absolute;
+  z-index: 3;
+  top: var(--s2);
+  right: var(--s1);
+  display: flex;
+  gap: 3px;
+  opacity: 0.35;
+  transition: opacity 0.12s ease;
+}
+.plot-shell:hover .plot-zoom,
+.plot-zoom:focus-within { opacity: 1; }
+.plot-zoom button {
+  padding: 2px 7px;
+  font-size: 11px;
+  line-height: 1.6;
+  background: var(--surface);
+}
+/* 끈 버튼은 눌러도 아무 일이 없다는 것이 보여야 한다 -- 안 그러면 '전체' 가
+   고장 난 것으로 읽힌다 (확대를 안 했을 뿐이다). */
+.plot-zoom button:disabled { opacity: 0.4; cursor: default; }
+
 /* --- 커서 판독기 ------------------------------------------------------------ */
 
 /* 십자선 옆에 x·y 를 그대로 적는다.  pointer-events 를 끄는 것이 핵심이다 --
