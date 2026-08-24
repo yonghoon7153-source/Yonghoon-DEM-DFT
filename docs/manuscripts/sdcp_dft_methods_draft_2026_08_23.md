@@ -167,9 +167,13 @@ repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(D
 
 확인 도구를 repo 에 넣어 뒀다 (`--selftest` 7/7, 음성 경로 포함):
 
+**어디서 돌리나 — gabia** (SDCP 계산이 있는 기계. 데스크톱 WSL 은 ORCA 분자 쪽이라 별개).
+repo 는 `/data/work/repo`, 브랜치가 다를 수 있으니 파일만 꺼내는 쪽이 안전하다:
+
 ```bash
-cd ~/Yonghoon-DEM-DFT && git pull
-python3 tools/sdcp/check_ldauu_provenance.py
+cd /data/work/repo && git fetch origin
+git show origin/claude/md-status-monitoring-q2xbu1:tools/sdcp/check_ldauu_provenance.py > /tmp/chk.py
+python3 /tmp/chk.py
 ```
 
 rc 0 = MATCH(MP 기본값과 같음) · 1 = MISMATCH(출처가 MP 가 아님) · 2 = 확인 불가.

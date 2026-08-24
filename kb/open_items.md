@@ -741,6 +741,31 @@ Li 추출 격리 · 판정 바닥 max(30 meV, 쌍 편차) · 검열(못 잼)과 
 
 ---
 
+### S. 🟡 **U(Ni 3d) = 6.2 eV 의 원전이 없다 — 원고 v5 Table S1 의 유일한 무출처 수치** (2026-08-23 신설)
+
+- **무엇** — SDCP 원고 v5 SI Table S1 의 `Hubbard U (Ni 3d) = 6.2 eV` 만 Source 가 비어 있다.
+  `kb/methodology/terminology_register.md` §42 가 이미 *"⚠ 원전 미보유(Dudarev)"* 로 기록.
+- **왜 지금 문제인가** — 2026-08-23 지도교수 지시: *"영률 수치같은거 그런거는 뭘 참고해서
+  쓴 거면 있어야지."* 정량값에 출처를 요구하는 규칙에 이 한 값이 걸린다.
+- **현재 처리** — Table S1 Source 를 **`-` 로 두고 인용하지 않는다** (2026-08-23 사용자 결정).
+  확인 안 된 인용을 다는 것보다 낫다 (2026-07 Kim/Cui 교훈).
+- **닫는 방법 (1분)** — 우리 6.2 가 Materials Project 기본값과 같은 값인지 확인:
+  ```bash
+  # gabia (SDCP 계산이 있는 곳) — repo 는 /data/work/repo, uma env
+  ssh root@121.78.116.27
+  cd /data/work/repo && git fetch origin
+  git show origin/claude/md-status-monitoring-q2xbu1:tools/sdcp/check_ldauu_provenance.py > /tmp/chk.py
+  python3 /tmp/chk.py          # rc 0 MATCH / 1 MISMATCH / 2 확인불가
+  ```
+  - **MATCH** → 인용 후보 Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) ·
+    Jain *et al.* *PRB* **84**, 045115 (2011). 생성기
+    `docs/manuscripts/sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 각 한 줄만 고치면 끝.
+  - **MISMATCH** → 출처가 MP 가 아니다. Source `-` 유지하고 **그 사실을 카드에 기록**.
+- ⚠ **이 확인은 "6.2 이 이 계에 옳다" 를 말하지 않는다.** U 민감도(4 vs 6.2)는 미실시 —
+  심사에서 물으면 별개 계산이다.
+- 관련: 항목 P (SDCP·PTFE 자리 선호) · `kb/syntheses/sdcp_eads_revision_defense_2026_08_23.md`
+- 도구: `tools/sdcp/check_ldauu_provenance.py` (`--selftest` 7/7, 음성 경로 포함)
+
 ## 📄 PDF 확보 대기 (원전 미보유 — 웹/재인용 딱지 상태)
 
 | # | 서지 | DOI | 왜 필요한가 |
