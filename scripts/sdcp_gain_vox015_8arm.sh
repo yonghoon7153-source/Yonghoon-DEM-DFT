@@ -135,6 +135,10 @@ FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}}"
+#  ★★★ RUNNER_CONFIG_END — 여기까지가 **순수 변수 조립**이다 (부작용 없음).
+#    규칙 L 이 이 지점까지를 서브셸에서 **실제로 실행해** 조립 결과를 검사한다.
+#    그 아래는 mkdir·venv·게이트라 실행하면 안 된다.  ⚠ 이 표지를 옮기면 규칙 L 이
+#    다른 것을 재게 되므로, 옮길 때는 규칙 L 의 기대값도 같이 본다.
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"

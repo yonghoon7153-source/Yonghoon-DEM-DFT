@@ -556,19 +556,24 @@ def _payload_reject_reason(a, step3):
     if getattr(a, '_protocol_expect', ''):
         _got = _m.get('physics_protocol_id')
         if _got != a._protocol_expect:
-            return (f'물리 규약 불일치 — 기대 `{a._protocol_expect}` · 적용 `{_got}`.  '
-                    f'러너가 요청한 규약과 payload 가 실제로 한 것이 갈렸다')
+            return (f'PROTOCOL_MISMATCH: 물리 규약 불일치 — 기대 `{a._protocol_expect}` · '
+                    f'적용 `{_got}`.  러너가 요청한 규약과 payload 가 실제로 한 것이 갈렸다')
     if _m.get('status') == 'disabled':
         return None
     _req = ['electronic'] + ([] if a.no_ion else ['ionic'])
     _cmp = _m.get('components') or {}
-    _bad = [c for c in _req
+    #  ★ 2026-08-25 (Codex 재리뷰 조건 7) — **required 만 센다.**  초판은 `failed`/`missing`
+    #    목록을 통째로 붙여, `--no-ion --no-thermal` 런에서 사유가
+    #    `['electronic', 'ionic(missing)', 'pnm(missing)', 'pore(missing)', 'thermal(missing)']`
+    #    처럼 나왔다 — **원인 하나가 잡음 넷에 묻힌다**.  required 밖은 애초에 요구가 아니다.
+    _bad = [f'{c}({(_cmp.get(c) or {}).get("status") or "absent"})' for c in _req
             if not isinstance(_cmp.get(c), dict) or _cmp[c].get('status') != 'complete']
-    _bad += [f'{c}(failed)' for c in (_m.get('failed') or [])]
-    _bad += [f'{c}(missing)' for c in (_m.get('missing') or [])]
+    _bad += [f'{c}(failed)' for c in (_m.get('failed') or []) if c in _req]
+    _bad += [f'{c}(missing)' for c in (_m.get('missing') or []) if c in _req]
     if _bad and not a.allow_partial_step3:
-        return (f'STEP3 required component 가 완료되지 않았다: {sorted(set(_bad))} '
-                f'(required={_req}).  `--allow-partial-step3` 로만 연다')
+        #  ★ 인과 코드 — 러너·규칙 J 가 문자열이 아니라 **코드**로 짝지을 수 있게 (조건 7).
+        return (f'STEP3_REQUIRED_INCOMPLETE: required component 가 완료되지 않았다: '
+                f'{sorted(set(_bad))} (required={_req}).  `--allow-partial-step3` 로만 연다')
     return None
 
 
@@ -2512,7 +2517,9 @@ def main():
         _os_w2.replace(_part, _bad)
         print(f'\n✗ {_fail_reason}', flush=True)
         print(f'  최종 파일명을 쓰지 않는다 — 진단본: {_bad}', flush=True)
-        raise SystemExit(3 if _fail_reason.startswith('STEP3') else 4)
+        #  exit 3 = STEP3 required component · exit 4 = 물리 규약 불일치.
+        #  ⚠ 사유 문자열이 아니라 **코드 접두사**로 가른다 (조건 7 — 러너가 짝짓는 축).
+        raise SystemExit(3 if _fail_reason.startswith('STEP3_REQUIRED_INCOMPLETE') else 4)
     _os_w2.replace(_part, a.out)
     import os
     _mp = mpm_metrics                                      # AUTHORITATIVE table values (sim porosity/

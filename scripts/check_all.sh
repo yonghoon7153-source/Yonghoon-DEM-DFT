@@ -61,7 +61,7 @@ run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftes
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 run 'check_review_findings   (원장 + 철회값 스윕)' python3 scripts/check_review_findings.py
-run 'check_method_discipline (규칙 A~J + claims 원장)' python3 scripts/check_method_discipline.py
+run 'check_method_discipline (규칙 A~L + claims 원장)' python3 scripts/check_method_discipline.py
 
 echo
 if [ "$FAIL" = 0 ]; then

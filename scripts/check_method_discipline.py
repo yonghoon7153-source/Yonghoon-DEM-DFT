@@ -798,6 +798,184 @@ K_CHECK_ALL = 'scripts/check_all.sh'
 K_CI_YML = '.github/workflows/discipline.yml'
 
 
+def k_live_invocation(line, base, flag):
+    """이 줄이 `base` 를 `flag` 로 **실제 실행**하는가 (주석·echo·인용문 배제).
+
+    ★ 왜 (2026-08-25, Codex 재리뷰 조건 7): 규칙 K 의 초판은 한 줄에 스크립트 이름과
+      플래그가 같이 있기만 하면 배선으로 셌다.  그래서 아래가 전부 통과했다 —
+        `# python3 scripts/foo.py --selftest`      (주석 처리된 죽은 줄)
+        `echo "python3 scripts/foo.py --selftest"` (안내문일 뿐 실행이 아니다)
+        `run 'foo.py --selftest' python3 scripts/bar.py` (라벨만 맞고 대상이 다르다)
+      = 규칙 K 자신이 false-green.  ⇒ **인터프리터 호출 형태**를 요구한다.
+
+    받아들이는 형태: `python`/`python3` 토큰 **바로 뒤**에 `…/base` 가 오고, 그 뒤
+    어딘가에 `flag` 가 있다.  그 앞에 `echo`/`printf` 가 있으면 실행이 아니다.
+    ⚠ 정적 검사의 한계는 남는다 (`if false; then … fi` 안은 못 본다) — 그래서
+      `check_all.sh` 자신이 **실행**으로 다시 본다.  두 층은 서로를 대신하지 않는다.
+    """
+    st = line.strip()
+    if not st or st.startswith('#'):
+        return False
+    #  주석 꼬리 제거 (YAML/셸 공통) — 따옴표 안의 `#` 은 흔치 않아 단순 규칙으로 충분하다
+    if ' #' in st and st.count('"') % 2 == 0 and st.count("'") % 2 == 0:
+        st = st.split(' #', 1)[0]
+    toks = st.replace('"', ' ').replace("'", ' ').split()
+    for _i, _t in enumerate(toks[:-1]):
+        if _t.rsplit('/', 1)[-1] not in ('python', 'python3'):
+            continue
+        if any(_p.rsplit('/', 1)[-1] in ('echo', 'printf') for _p in toks[:_i]):
+            continue                       # 안내문 안의 명령어 — 실행이 아니다
+        _tgt = toks[_i + 1]
+        if _tgt.rsplit('/', 1)[-1] != base:
+            continue
+        if flag in toks[_i + 2:]:
+            return True
+    return False
+
+
+import subprocess as _sp                    # 규칙 J·L 이 실물을 **실행**한다
+import tempfile as _tf
+
+#: 규칙 L — 러너 통합.  ★ 이름은 파일 안에서만 쓰인다 (프로덕션 러너 경로).
+L_RUNNER = 'scripts/sdcp_gain_vox015_8arm.sh'
+#: `RUNNER_CONFIG_END` 위쪽 = 순수 변수 조립.  아래는 mkdir·venv·게이트 (실행 금지).
+L_MARKER = 'RUNNER_CONFIG_END'
+
+
+def runner_config(env, runner=None):
+    """러너의 **설정 조립부를 실제로 실행**해 조립된 변수를 돌려준다.
+
+    ★★★ 왜 (2026-08-25, Codex 재리뷰 조건 7): 러너의 배선(`LEAN_FLAGS` · `EP_FLAG` ·
+      `--require-arms` 상수 8)이 **한 번도 실행으로 확인된 적이 없었다** — grep 뿐이었다.
+      grep 은 주석·죽은 줄을 배선으로 세고(규칙 K 가 방금 그 부류였다), 셸의 조건 전개
+      (`[ "${LEAN:-0}" = "2" ] && …`)는 정적으로 못 읽는다.
+      ⇒ `RUNNER_CONFIG_END` 위쪽만 잘라 서브셸에서 **돌리고** 결과를 읽는다.
+    ⚠ 아래쪽(mkdir·venv·GPU 솔브)은 자르므로 부작용이 없다.  표지가 사라지면 **거부**한다
+      (fail-closed — 잘못 자르면 진짜 러너를 돌려 버린다).
+    """
+    _p = os.path.join(ROOT, runner or L_RUNNER)
+    with open(_p, encoding='utf-8') as f:
+        src = f.read()
+    if L_MARKER not in src:
+        raise RuntimeError(f'{L_MARKER} 표지가 러너에 없다 — 어디까지가 설정인지 알 수 없다')
+    head = src[:src.index(L_MARKER)].rsplit('\n', 1)[0]
+    _keys = ('LEAN_FLAGS', 'PREREG_ARMS', 'ARMS', 'OUTDIR', 'FIBRE_STAMP')
+    #  ⚠ `${V-…}` 는 **콜론 없이** — `${V:-…}` 는 빈 문자열도 미설정으로 읽어
+    #    "기본에서 LEAN_FLAGS 가 비었는가" 를 물을 수 없게 만든다 (초판이 그랬다).
+    probe = head + '\n' + '\n'.join(
+        'printf "%s=%s\\n" ' + k + ' "${' + k + '-<UNSET>}"' for k in _keys)
+    _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
+    _env.setdefault('MPM_NO_VENV', '1')
+    r = _sp.run(['bash', '-s'], input=probe, capture_output=True, text=True,
+                timeout=60, env=_env, cwd=_tf.gettempdir())
+    if r.returncode != 0:
+        raise RuntimeError(f'설정 조립부가 exit {r.returncode} — {(r.stderr or "")[-300:]}')
+    out = {}
+    for ln in (r.stdout or '').splitlines():
+        if '=' in ln:
+            k, v = ln.split('=', 1)
+            if k in _keys:
+                out[k] = v
+    return out
+
+
+def runner_extra_flags(env, runner=None):
+    """러너의 `--extra-flags "…"` 문자열을 **셸에 실제로 전개**시켜 돌려준다.
+
+    ★ 왜 (조건 7): 이 한 문자열이 payload 에 가는 물리 인자 전부다.  `$EP_FLAG` 를
+      조립해 놓고 **문자열에 넣는 것을 잊는** 부류는 grep 으로 안 잡힌다 (변수는 있고
+      쓰이지 않았을 뿐이다).  ⇒ 러너에서 그 리터럴과 `EP_FLAG` 조립 줄을 떼어
+      같은 셸에서 전개한다.  전개 결과 = payload 가 실제로 받을 인자열.
+    ⚠ 다른 변수는 표지값으로 채운다 (이 검사의 대상이 아니다).  `local` 은 함수 밖에서
+      문법 오류라 떼어낸다.
+    """
+    _p = os.path.join(ROOT, runner or L_RUNNER)
+    with open(_p, encoding='utf-8') as f:
+        lines = f.read().splitlines()
+    _ep = [ln.strip().replace('local ', '', 1) for ln in lines
+           if 'EP_FLAG=' in ln and not ln.strip().startswith('#')]
+    if not _ep:
+        raise RuntimeError('EP_FLAG 조립 줄을 러너에서 못 찾았다')
+    _xf = [ln for ln in lines if '--extra-flags "' in ln and not ln.strip().startswith('#')]
+    if len(_xf) != 1:
+        raise RuntimeError(f'`--extra-flags` 리터럴이 {len(_xf)}개다 (1개를 기대)')
+    _lit = _xf[0].split('--extra-flags "', 1)[1].rsplit('"', 1)[0]
+    _seed = ['SIGMA=SIG', 'VOX=VOX', 'BRIDGE_UM=BR', 'SH=SHIFT',
+             'SD_FLAG=', 'YV_FLAG=', 'PT_FLAG=', 'PS_FLAG=', 'FS_FLAG=',
+             'LEAN_FLAGS=', 'P2_EXTRA=']
+    probe = '\n'.join(['set -u', *_seed, *_ep, 'printf "%s\\n" "' + _lit + '"'])
+    _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
+    _env.pop('EXPECT_PROTOCOL', None)
+    _env.update({k: str(v) for k, v in env.items()})
+    r = _sp.run(['bash', '-s'], input=probe, capture_output=True, text=True,
+                timeout=60, env=_env, cwd=_tf.gettempdir())
+    if r.returncode != 0:
+        raise RuntimeError(f'전개가 exit {r.returncode} — {(r.stderr or "")[-300:]}')
+    return (r.stdout or '').strip()
+
+
+def check_runner_integration(verbose=True, runner=None):
+    """→ (문제 목록, 경고).  규칙 L — 러너의 배선이 **실행으로** 확인되는가."""
+    problems, warns = [], []
+    _p = os.path.join(ROOT, runner or L_RUNNER)
+    if not os.path.exists(_p):
+        return [f'L_MISSING| 러너가 없다 ({_p})'], warns
+    _bn = _sp.run(['bash', '-n', _p], capture_output=True, text=True, timeout=60)
+    if _bn.returncode != 0:
+        return [f'L_SYNTAX| 러너가 문법 오류다 — {(_bn.stderr or "").strip()[-200:]}'], warns
+    try:
+        _std = runner_config({}, runner)
+        _l2 = runner_config({'LEAN': '2'}, runner)
+        _ep = runner_config({'EXPECT_PROTOCOL': 'p1-deadbeefdeadbeef'}, runner)
+    except Exception as e:                                  # noqa: BLE001
+        return [f'L_PROBE| 러너 설정 조립부를 실행할 수 없다 ({type(e).__name__}: {e}) — '
+                f'확인 못 한 것을 통과시키지 않는다'], warns
+    #  ⓐ LEAN=2 = σ_e 전용.  이 일곱이 러너 문서(§LEAN)가 선언한 집합이다.
+    _need = ('--no-step4', '--no-thermal', '--no-trackb', '--no-field',
+             '--no-ion', '--no-pore', '--no-collector')
+    _miss = [f for f in _need if f not in _l2.get('LEAN_FLAGS', '')]
+    if _miss:
+        problems.append(f'L_LEAN2| LEAN=2 가 {_miss} 를 켜지 않는다 (조립 결과 '
+                        f'`{_l2.get("LEAN_FLAGS")}`) — σ_e 전용 규약이 선언과 다르다')
+    if _std.get('LEAN_FLAGS', '<UNSET>').strip():
+        problems.append(f'L_LEANDEFAULT| LEAN 미지정인데 LEAN_FLAGS 가 비어 있지 않다 '
+                        f'(`{_std.get("LEAN_FLAGS")}`) — 기본이 조용히 LEAN 이 된다')
+    #  ⓑ EXPECT_PROTOCOL 통과 — 요청↔적용 봉인의 **유일한** 배선점이다 (CDXR3-3).
+    #    `EP_FLAG` 은 함수 안 `local` 이라 설정 프리픽스에 없다 ⇒ 러너에서 그 조립 줄과
+    #    `--extra-flags` 문자열을 **그대로 떼어 셸에 전개**시킨다 (진짜 확장이라
+    #    "$EP_FLAG 를 문자열에 넣는 것을 잊었다" 도 잡힌다 — grep 으로는 못 잡는다).
+    try:
+        _on = runner_extra_flags({'EXPECT_PROTOCOL': 'p1-deadbeefdeadbeef'}, runner)
+        _off = runner_extra_flags({}, runner)
+    except Exception as e:                                  # noqa: BLE001
+        problems.append(f'L_EXTRA| `--extra-flags` 전개를 실행할 수 없다 '
+                        f'({type(e).__name__}: {e}) — 확인 못 한 것을 통과시키지 않는다')
+        _on = _off = ''
+    if '--expect-protocol p1-deadbeefdeadbeef' not in _on:
+        problems.append(f'L_EXPECT| EXPECT_PROTOCOL 이 payload 인자로 안 들어간다 '
+                        f'(전개 결과 `{_on[:200]}`) — 규약 봉인이 끊긴다')
+    if '--expect-protocol' in _off:
+        problems.append(f'L_EXPECTDEFAULT| EXPECT_PROTOCOL 없이도 `--expect-protocol` 이 '
+                        f'붙는다 (`{_off[:200]}`)')
+    #  ⓒ 사전등록 팔 수는 **상수**여야 한다.  ARMS 로 자기가 자기한테 요구하면 봉인이 아니다.
+    if _std.get('PREREG_ARMS') != '8':
+        problems.append(f'L_PREREG_ARMS| PREREG_ARMS = {_std.get("PREREG_ARMS")!r} (기대 8) — '
+                        f'사전등록 팔 수가 상수가 아니면 최종 봉인이 뜻을 잃는다')
+    _a2 = runner_config({'ARMS': '2'}, runner)
+    if _a2.get('PREREG_ARMS') != '8':
+        problems.append(f'L_PREREG_DRIFT| ARMS=2 에서 PREREG_ARMS 가 '
+                        f'{_a2.get("PREREG_ARMS")!r} 로 따라 움직인다 — 자기가 자기한테 '
+                        f'요구하는 봉인은 봉인이 아니다')
+    #  ⓓ 진단 런은 **다른 디렉터리**로 가야 한다 (사전등록 팔과 섞이면 안 된다).
+    if _a2.get('OUTDIR') == _std.get('OUTDIR'):
+        problems.append(f'L_ARMTAG| ARMS=2 진단 런이 사전등록과 **같은 OUTDIR** 로 간다 '
+                        f'({_std.get("OUTDIR")}) — 2팔과 8팔 산출물이 섞인다')
+    if verbose and not problems:
+        print(f'  ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 {len(_need)}플래그 · '
+              f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리)')
+    return problems, warns
+
+
 def check_selftest_wiring(verbose=True, check_all=None, ci_yml=None):
     """→ (문제 목록, 경고).  규칙 K — 규율 selftest 가 두 곳 다에 배선됐는가.
 
@@ -819,8 +997,11 @@ def check_selftest_wiring(verbose=True, check_all=None, ci_yml=None):
     for _script, _flag in K_REQUIRED_SELFTESTS:
         _base = os.path.basename(_script)
         for _lbl, _txt in (('check_all.sh', ca), (K_CI_YML, ci)):
-            #  같은 줄에 스크립트와 플래그가 함께 있어야 한다 (다른 줄의 우연한 일치 배제).
-            _hit = any(_base in ln and _flag in ln for ln in _txt.splitlines())
+            #  ★★★ 2026-08-25 (Codex 재리뷰 조건 7) — **살아 있는 호출만** 센다.
+            #    초판은 `_base in ln and _flag in ln` 이라 주석 처리된 줄과
+            #    `echo "… --selftest"` 안내문이 배선으로 통과했다 = 규칙 K 자신이
+            #    false-green 이었다 (규칙 J 가 `--help` 만 보다 놓친 것과 같은 부류).
+            _hit = any(k_live_invocation(ln, _base, _flag) for ln in _txt.splitlines())
             if not _hit:
                 problems.append(
                     f'K_UNWIRED| `{_base} {_flag}` 가 **{_lbl} 에서 안 돈다** — '
@@ -1157,6 +1338,45 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                 _st = ', '.join('%s=%s' % (k, (v or {}).get('status'))
                                 for k, v in comps.items())
                 print(f'  ✓ {label} — {_st}')
+        #  ★★★ 2026-08-25 (Codex 재리뷰 조건 7) — **실패 경로도 실물로 태운다.**
+        #    여태 규칙 J 는 성공 팔만 돌렸다.  그래서 `_payload_reject_reason` 이
+        #    ⓐ 정확히 어떤 코드로 끝나는지 ⓑ 최종 파일명을 정말 안 쓰는지 ⓒ 진단본을
+        #    남기는지가 **한 번도 실행으로 확인되지 않았다** (R3-F2 는 손으로만 봤다).
+        #    ⚠ exit 코드는 **정확히** 본다 — nonzero 만 보면 3↔4 가 뒤바뀌어도 통과한다.
+        _fail_arms = [
+            ('exit3  (required electronic 미완 — 도체 σ=0)', 3, 'STEP3_REQUIRED_INCOMPLETE',
+             ['--sigma-am-s', '0', '--sigma-am-p', '0']),
+            ('exit4  (물리 규약 불일치)', 4, 'PROTOCOL_MISMATCH',
+             ['--expect-protocol', 'DELIBERATELY_WRONG']),
+        ]
+        for label, want_rc, want_code, extra in _fail_arms:
+            out = os.path.join(d, 'f_%d.json' % want_rc)
+            cmd = [sys.executable, pay, '--scaffold', am, '--se', se_p,
+                   '--n-vox', _SMOKE_NVOX, '--step3-vox', _SMOKE_VOX,
+                   '--no-ion', '--no-pore', *extra, '--out', out]
+            try:
+                r = _sp.run(cmd, capture_output=True, text=True, timeout=timeout, cwd=d)
+            except Exception as e:                          # noqa: BLE001
+                errs.append(f'J_FAILRUN| {label}: 실행 자체가 실패 ({type(e).__name__}: {e})')
+                continue
+            log = (r.stdout or '') + (r.stderr or '')
+            if r.returncode != want_rc:
+                errs.append(f'J_EXITCODE| {label}: exit {r.returncode} — **정확히 '
+                            f'{want_rc}** 여야 한다 (러너가 코드로 갈라 처리한다).  '
+                            f'{log.strip()[-160:]}')
+            if want_code not in log:
+                errs.append(f'J_FAILCODE| {label}: 인과 코드 `{want_code}` 가 로그에 없다 — '
+                            f'사유가 문자열 매칭에 의존하면 러너가 원인을 못 가른다')
+            if os.path.exists(out):
+                errs.append(f'J_PUBLISHED| {label}: **최종 파일명이 만들어졌다** ({out}) — '
+                            f'실패 payload 가 러너의 `[ -s "$OUT" ]` 캐시를 오염시킨다 (R3-F2)')
+            if not os.path.exists(out + '.failed'):
+                errs.append(f'J_NODIAG| {label}: 진단본 `<out>.failed` 가 없다 — '
+                            f'실패를 조사할 산출물이 사라졌다')
+            if os.path.exists(out + '.part'):
+                errs.append(f'J_STRAYPART| {label}: `.part` 임시 파일이 남았다')
+            if verbose:
+                print(f'  ✓ {label} — exit {r.returncode} · out 없음 · .failed 있음')
     return errs, warns
 
 
@@ -1216,6 +1436,8 @@ def run_all(verbose=True):
                       ('규칙 H — argparse help 가 살아 있는가', check_argparse_help),
                       ('규칙 K — 규율 selftest 가 check_all·CI 에서 실제로 도는가',
                        check_selftest_wiring),
+                      ('규칙 L — 러너 배선을 **실행으로** 확인 (LEAN·규약·팔 수)',
+                       check_runner_integration),
                       ('규칙 J — 생산 엔트리포인트 스모크 (기본 경로가 정말 도는가)',
                        check_entrypoint_smoke),
                       ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
@@ -1488,6 +1710,76 @@ def _selftest():
     chk('K-4: ★ 목록에 있는 selftest 가 **실재하는 파일**이다 (선언만 있고 파일이 없으면 '
         '규칙 K 자신이 가짜 보증이 된다)',
         all(os.path.exists(os.path.join(ROOT, _sc)) for _sc, _ in K_REQUIRED_SELFTESTS))
+    #  ── K-5 (2026-08-25, Codex 재리뷰 조건 7) — **죽은 줄을 배선으로 세지 않는가** ────
+    #    초판은 `이름 in ln and 플래그 in ln` 이라 아래가 전부 통과했다 = 규칙 K 자신이
+    #    false-green (규칙 J 가 `--help` 만 보다 놓친 것과 같은 부류).
+    #    ⚠ 이 문자열들은 **검사 대상 파일이 아니라 이 시험 안**에 있다 — 규칙 K 는
+    #      `check_all.sh`/CI yml 만 읽으므로 여기 적어도 리포가 빨개지지 않는다.
+    _DEAD = (
+        ('주석 처리된 줄', '# python3 scripts/step3_sigma.py --selftest'),
+        ('들여쓴 주석', '    #python3 scripts/step3_sigma.py --selftest'),
+        ('echo 안내문', 'echo "python3 scripts/step3_sigma.py --selftest"'),
+        ('printf 안내문', "printf '%s\\n' \"python scripts/step3_sigma.py --selftest\""),
+        ('꼬리 주석', 'true   # python3 scripts/step3_sigma.py --selftest'),
+        ('라벨만 일치 (대상이 다르다)',
+         "run 'step3_sigma.py --selftest' python3 scripts/other.py --selftest"),
+        ('플래그 없음', 'python3 scripts/step3_sigma.py'),
+        ('인터프리터 없음', 'scripts/step3_sigma.py --selftest'),
+    )
+    _dead_pass = [_lb for _lb, _ln in _DEAD
+                  if k_live_invocation(_ln, 'step3_sigma.py', '--selftest')]
+    chk(f'K-5: ★★ 죽은 줄 {len(_DEAD)}종을 배선으로 세지 않는다 (통과한 것: {_dead_pass})',
+        not _dead_pass)
+    #  ★ 판별력 자기증명 — 진짜 호출 형태는 **받아들여야** 한다 (거부만 하면 규칙이 죽는다)
+    _LIVE = (
+        ("run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest",
+         'check_all.sh 실물 형태'),
+        ('        run: python scripts/step3_sigma.py --selftest', 'CI yml 실물 형태'),
+        ('  /usr/bin/python3 scripts/step3_sigma.py --selftest', '절대경로 인터프리터'),
+    )
+    _live_fail = [_lb for _ln, _lb in _LIVE
+                  if not k_live_invocation(_ln, 'step3_sigma.py', '--selftest')]
+    chk(f'K-6: ★ 진짜 호출 3종은 받아들인다 (거부된 것: {_live_fail})', not _live_fail)
+
+    # ── 규칙 L (2026-08-25, Codex 재리뷰 조건 7) — 러너 통합 ───────────────────────────
+    chk('L-1: 리포의 러너가 지금 통과한다 (LEAN·EXPECT_PROTOCOL·PREREG_ARMS·진단분리)',
+        check_runner_integration(verbose=False)[0] == [])
+    #  ★ 음성 대조 4종 — 사본에서만 고친다.  "지금 통과한다" 는 검사를 인증하지 않는다.
+    import tempfile as _tl, shutil as _sl
+    _RSRC = open(os.path.join(ROOT, L_RUNNER), encoding='utf-8').read()
+
+    def _rmut(old_, new_):
+        assert _RSRC.count(old_) == 1, (old_[:40], _RSRC.count(old_))
+        _d = _tl.mkdtemp()
+        _rel = os.path.join('scripts', 'mutant_runner.sh')
+        _abs = os.path.join(ROOT, _rel)
+        with open(_abs, 'w', encoding='utf-8') as _f:
+            _f.write(_RSRC.replace(old_, new_))
+        try:
+            return check_runner_integration(verbose=False, runner=_rel)[0]
+        finally:
+            os.remove(_abs)
+            _sl.rmtree(_d, ignore_errors=True)
+    _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
+                'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
+    chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
+        any(x.startswith('L_LEAN2') and 'no-collector' in x for x in _m1))
+    _m2 = _rmut('$PS_FLAG$EP_FLAG$FS_FLAG', '$PS_FLAG$FS_FLAG')
+    chk(f'L-3: ★★ `$EP_FLAG` 를 인자열에서 빼면 **잡는다** — 변수는 그대로 있고 '
+        f'**쓰이지 않을 뿐**이라 grep 으로는 안 보인다 ({len(_m2)}건)',
+        any(x.startswith('L_EXPECT') for x in _m2))
+    _m3 = _rmut('PREREG_ARMS=8', 'PREREG_ARMS="$ARMS"')
+    chk(f'L-4: ★★ 사전등록 팔 수가 `$ARMS` 를 따라가면 **잡는다** (자기가 자기한테 '
+        f'요구하는 봉인) ({len(_m3)}건)',
+        any(x.startswith('L_PREREG') for x in _m3))
+    _m4 = _rmut('${FS_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${LEAN_TAG}')
+    chk(f'L-5: ★ 진단 런(ARMS≠8)이 사전등록과 같은 OUTDIR 로 가면 **잡는다** ({len(_m4)}건)',
+        any(x.startswith('L_ARMTAG') for x in _m4))
+    #  ★ 표지가 사라지면 **거부**한다 (잘못 자르면 진짜 러너를 돌려 버린다)
+    _m5 = _rmut(L_MARKER, 'RUNNER_CONFIG_' + 'RENAMED')
+    chk(f'L-6: ★★ `{L_MARKER}` 표지가 없으면 **거부**한다 (fail-closed — 어디까지가 '
+        f'설정인지 모르면 실행하지 않는다) ({len(_m5)}건)',
+        any(x.startswith('L_PROBE') for x in _m5))
 
     # ── 규칙 J (2026-08-20) — 생산 엔트리포인트 스모크 ────────────────────────────────
     #   J-2 가 이 규칙의 존재 이유다: "지금 리포가 통과한다" 만으로는 검사기가 **정말**
