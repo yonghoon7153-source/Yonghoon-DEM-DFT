@@ -55,6 +55,7 @@
 
 ## 가이드
 
+- [[new-laptop]] — **새 노트북 한 대 붙이기.** `wsl --install` 부터 `bmlin`/`bmlout` 까지
 - [[getting-started]] — **처음 쓰는 사람용.** 올리기 → 질량·조성 입력 → 화면 읽기
 - [[bml-command]] — `bml` 한 줄로 최신화 + 실행. 협력자 설치 방법 포함
 - [[wsl-setup]] — Windows/WSL 에서 쓰는 법. 막히는 지점과 해결까지
@@ -76,4 +77,4 @@
 
 `.claude/commands/` — `/sync` `/check` `/wrap` `/adr` `/verify` `/status`
 
-Total pages: 4
+Total pages: 6

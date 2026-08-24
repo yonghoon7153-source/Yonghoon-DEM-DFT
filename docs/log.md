@@ -1298,3 +1298,29 @@ bmlout 로 붙습니다: <주소>" 가 따라 나온다.
 옛 시험 하나가 이 규칙과 충돌했다: `https://127.0.0.1:1` 을 '터널 주소' 로
 쓰고 있었다. 그 전제가 바로 리뷰가 지적한 "아무 https 나 터널" 이라, 진짜
 제공자 도메인으로 바꿨다. 183건 + 터널 60건.
+
+## [2026-08-24] create | 새 노트북 한 대 붙이기 — wsl --install 부터
+`docs/guides/new-laptop.md`. 오늘 하루 데스크톱과 노트북에서 걸린 자리를 전부
+순서대로 엮었다 — 다음 사람이 같은 길을 다시 헤매지 않게.
+
+담은 것: `wsl --install` → **`.exe` 가 도는지 먼저 확인** → 저장소를 브랜치째
+클론 → `bml install`(bml·bmlin·bmlout) → `bmlin`/`bmlout` 로 자리 정하기 →
+하루 흐름 → 자주 걸리는 것 다섯.
+
+2번 절이 오늘 가장 비싸게 배운 것이다. `ipconfig.exe | head -3` 한 줄로 먼저
+확인하게 했다 — interop 이 죽어 있으면 `bml mirrored` 도, LAN 주소 읽기도,
+`wsl.exe --shutdown` 도 안 되는데, 증상은 전부 다른 얼굴로 나온다. 원인
+(`systemd=true` → `ConditionVirtualization=!wsl` 로 `systemd-binfmt` 건너뜀)과
+고치는 두 갈래(지금/다음 부팅)를 그 자리에 적었다.
+
+**중추 서버를 보기만 할 기계는 가볍다**는 것도 적었다 — `cmd_connect` 는 venv
+도 빌드도 하지 않으므로 `git` 과 `curl` 이면 된다. node 를 깔라는 안내를
+받고 30분 쓰는 일이 없게.
+
+"자주 걸리는 것" 다섯은 전부 오늘 실제로 본 화면이다: `bmlin` timeout(그 망에
+서버가 없음), `bmlout` 503(터널이 끊김), `Could not resolve host`(랩 DNS 가
+터널 도메인을 거름 — 랩 안에서는 애초에 `bmlin`), 셀 0개(자기 서버를 봄),
+포트 5003 충돌(mirrored 에서는 Windows 쪽이 잡은 것일 수 있음).
+
+`docs/index.md` 가이드 목록 맨 앞에 넣었다. Total pages 4 → 6 (실제 개수와
+어긋나 있었다).
