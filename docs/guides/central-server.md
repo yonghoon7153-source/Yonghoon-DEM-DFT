@@ -93,13 +93,25 @@ Windows 로 들어온 포트를 WSL 로 넘겨 주어야 한다. 길이 둘이�
 나오므로, 그 앞에 앉아 있다면 화면 쪽이 낫다.
 
 **A. mirrored 로 바꾼다 (권장).** 포워딩이 필요 없어지고, WSL 을 재시작해도
-풀리지 않는다. PowerShell 에 (관리자 아니어도 된다) 이 **한 줄**:
+풀리지 않는다. **WSL 터미널에서 한 줄이면 된다** — 창을 옮길 것 없다:
+
+```bash
+bml mirrored
+```
+
+Windows 쪽 `%USERPROFILE%\.wslconfig` 를 찾아 고치고 (고치기 전 파일은
+`.wslconfig.bml-bak` 로 남긴다), 그다음 할 일까지 이어서 찍는다. 상호운용이
+꺼져 있어 그 폴더를 찾지 못하면 **아무것도 쓰지 않고** 아래 PowerShell 한 줄을
+대신 준다 — 짐작해서 남의 폴더에 쓰지 않는다.
+
+PowerShell 쪽에서 직접 하려면 (관리자 아니어도 된다) 이 **한 줄**:
 
 ```powershell
 $f="$env:USERPROFILE\.wslconfig"; $t=(Get-Content $f -Raw -EA 0); if($t -match '(?m)^[ \t]*networkingMode'){$t=$t -replace '(?m)^[ \t]*networkingMode[ \t]*=[^\r\n]*','networkingMode=mirrored'}elseif($t -match '(?m)^\[wsl2\]'){$t=$t -replace '(?m)^\[wsl2\]',"[wsl2]`r`nnetworkingMode=mirrored"}else{$t="[wsl2]`r`nnetworkingMode=mirrored`r`n$t"}; Set-Content $f $t -NoNewline; Get-Content $f
 ```
 
-그다음 `wsl --shutdown`, WSL 터미널을 다시 연다.
+어느 쪽이든 그다음 `wsl --shutdown` (WSL 안에서라면 `wsl.exe --shutdown`),
+그리고 WSL 터미널을 다시 연다.
 
 이 한 줄이 하는 일은 `%USERPROFILE%\.wslconfig` 를 이렇게 만드는 것뿐이다:
 

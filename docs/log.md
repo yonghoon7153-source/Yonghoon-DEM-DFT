@@ -814,3 +814,37 @@ Linux 의 pwsh 는 역슬래시가 경로 구분자가 아니라 경로 결합�
 `wsl-setup.md` 의 `localhostForwarding` 두 줄은 그대로 뒀다. ```ini 로 표시돼
 있어 문서에서는 구분이 되기 때문이다. 대신 "파일 내용이지 명령이 아니다" 를
 한 줄 달았다 — 같은 실수를 부르는 모양이다.
+
+## [2026-08-24] feat | bml mirrored — WSL 에서 한 줄로 끝낸다
+앞 항목에서 mirrored 안내를 "PowerShell 에 이 한 줄" 로 고쳤는데, 그 화면을
+읽는 사람은 **WSL 터미널 앞에 앉아 있다.** 창을 옮기는 순간 붙여넣기가 어긋나고
+(그래서 파일 두 줄을 PowerShell 에 붙여넣는 사고가 났다), 무엇보다 그 파일이
+어디 있는지 **우리가 알 수 있다** — §0.3 그대로다. `bml mirrored` 로 만들었다.
+
+- `windows_home()` — `cmd.exe /C echo %USERPROFILE%` + `wslpath`. 상호운용이
+  꺼진 기계가 있어서 `windows_home_candidate()` 를 뒤에 뒀다: `.wslconfig` 가
+  이미 있는 폴더가 하나뿐이거나 / WSL 사용자 이름과 같은 폴더가 있거나 /
+  시스템 폴더(Public·Default·All Users)를 뺀 사람 폴더가 딱 하나일 때만 고른다.
+  **아니면 빈 값이다** (§0.4). 저장소 바깥 파일을 짐작으로 고치지 않는다 —
+  그때는 아무것도 안 쓰고 PowerShell 한 줄을 대신 준다.
+- `wslconfig_set_mirrored()` — PowerShell 판과 같은 규칙을 bash 로. `[wsl2]`
+  절이 있으면 그 안에, `networkingMode` 가 있으면 그 줄만, 둘 다 없으면 맨 앞에.
+  **줄바꿈은 그 파일이 쓰던 것을 따른다** (LF 파일에 CR 을 섞지 않는다 — §0.5).
+  rc 1 = 이미 mirrored 라 손대지 않음.
+- 저장소 바깥 파일이라 셋을 지킨다: 어디를 고칠지 **먼저 화면에 적고**, 고치기
+  전 파일을 `.wslconfig.bml-bak` 로 남기고, 손대지 않은 경우엔 그 백업을 도로
+  지운다 (쓸데없는 파일을 남기면 다음 사람이 그것을 의심한다).
+
+`nat_hint` 의 A 는 이제 `bml mirrored` 한 줄이다. 300자짜리 PowerShell 줄이
+화면에서 빠져 안내가 훨씬 짧아졌다 — 그 줄은 가이드와, 경로를 못 찾았을 때의
+대체 경로에만 남는다 (가이드와 화면이 글자까지 같은지는 테스트가 계속 본다).
+
+시험은 실제 파일로 돌린다: 없던 파일 / `[wsl2]`+memory·processors /
+`[experimental]` 만 / `networkingMode=NAT` / 이미 mirrored / LF 파일, 그리고
+`cmd_mirrored` 자체를 서브셸에서 `is_wsl`·`windows_home` 을 갈아 끼워 끝까지
+(고침 → 백업 → 두 번째엔 안 고침 → 백업 회수 → 못 찾으면 안 씀). 103 → 125건.
+
+`wsl.exe --shutdown` 은 WSL 안에서 부를 수 있지만 **그 터미널도 같이 닫힌다.**
+화면에 그렇게 적었다. 방화벽(`New-NetFirewallRule`)과 `netsh` 는 관리자 권한이
+필요해 WSL 에서 대신 해 주지 않는다 — UAC 를 띄우는 방법은 이 환경에서 확인할
+수 없었고, 확인 못 한 것을 "붙여넣으세요" 로 주지 않는다.

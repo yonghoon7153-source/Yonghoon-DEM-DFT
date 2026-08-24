@@ -386,9 +386,12 @@ WORKBENCH_HOST=0.0.0.0 bml
 localhostForwarding=true
 ```
 
-그리고 `wsl --shutdown` 후 다시 시작합니다. 파일을 손으로 만들지 않고 명령
-한 줄로 하고 싶으면 [[central-server]] 의 mirrored 안내를 참고하세요 (그쪽은
-`networkingMode` 를 넣지만 모양은 같습니다).
+그리고 `wsl --shutdown` 후 다시 시작합니다.
+
+파일을 손으로 만들 것 없이 `bml mirrored` 가 같은 자리를 고쳐 주기도 합니다
+(그쪽은 `networkingMode=mirrored` 를 넣습니다 — 다른 기계에서 이 서버를 볼 때
+필요한 설정이고, 넣으면 localhost 포워딩 문제도 같이 없어집니다).
+[[central-server]] 를 보세요.
 
 **포트 5003 이 이미 쓰이고 있습니다**
 : `bml stop`. Windows 쪽 프로그램이 잡고 있으면

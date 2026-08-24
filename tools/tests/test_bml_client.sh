@@ -349,8 +349,9 @@ check "파일 내용에는 │ 가 붙는다" \
   "$(printf '%s\n' "$NAT_HINT" | grep -c '│ \[wsl2\]')" "1"
 
 # 그리고 사람이 손으로 파일을 만들지 않도록, 그 일을 하는 명령을 준다.
+# 이 화면을 읽는 사람은 WSL 터미널 앞에 앉아 있다 — 창을 옮기게 하지 않는다.
 check "mirrored 를 켜는 명령이 화면에 있다" \
-  "$(printf '%s\n' "$NAT_HINT" | grep -c 'Set-Content \$f \$t -NoNewline')" "1"
+  "$(printf '%s\n' "$NAT_HINT" | grep -c 'bml mirrored')" "1"
 
 # 붙여넣기는 한 번에 끝나야 한다.  줄이 갈리면 PowerShell 은 오류도 없이
 # 다음 줄을 기다리기만 하고, 사람은 명령이 먹은 줄 안다.
@@ -385,6 +386,87 @@ check "가이드에도 같은 한 줄이 있다" \
 # `bml feed` 도 같은 자리다 — docs/log.md 에 적을 줄은 명령이 아니다.
 check "log.md 예시 줄도 파일 내용으로 찍는다" \
   "$(grep -c 'file_line "## \[' "$BML")" "1"
+
+
+echo "WSL 쪽에서 .wslconfig 고치기 (bml mirrored)"
+WSC="$TMP/wslconfig"; mkdir -p "$WSC"
+# 파일 내용을 눈으로 보기 좋게 (CR 을 드러낸다).
+seen() { sed -e 's/\r/<CR>/' "$1" | tr '\n' '|'; }
+
+# 없던 파일: Windows 가 읽는 파일이니 CRLF 로 만든다.
+f="$WSC/none"; wslconfig_set_mirrored "$f"
+check "없던 파일을 CRLF 로 만든다" "$(seen "$f")" "[wsl2]<CR>|networkingMode=mirrored<CR>|"
+
+# 이미 있는 설정을 지우면 그 기계의 메모리·CPU 설정이 조용히 사라진다.
+f="$WSC/keep"; printf '[wsl2]\r\nmemory=8GB\r\nprocessors=4\r\n' > "$f"
+wslconfig_set_mirrored "$f"
+check "[wsl2] 절 안에 넣고 나머지를 살린다" "$(seen "$f")" \
+  "[wsl2]<CR>|networkingMode=mirrored<CR>|memory=8GB<CR>|processors=4<CR>|"
+
+# [wsl2] 가 없는 파일: 절째로 앞에 넣되 뒤에 있던 것은 그대로 둔다.
+f="$WSC/other"; printf '[experimental]\r\nautoMemoryReclaim=gradual\r\n' > "$f"
+wslconfig_set_mirrored "$f"
+check "다른 절만 있으면 앞에 붙인다" "$(seen "$f")" \
+  "[wsl2]<CR>|networkingMode=mirrored<CR>|[experimental]<CR>|autoMemoryReclaim=gradual<CR>|"
+
+# NAT 이라고 적힌 파일에 두 줄을 더 얹고 끝나면, 사람은 켰다고 믿는데 안 켜져 있다.
+f="$WSC/nat"; printf '[wsl2]\r\nnetworkingMode=NAT\r\nmemory=8GB\r\n' > "$f"
+wslconfig_set_mirrored "$f"
+check "NAT 이라고 적힌 줄을 바꾼다" "$(seen "$f")" \
+  "[wsl2]<CR>|networkingMode=mirrored<CR>|memory=8GB<CR>|"
+
+# 줄바꿈은 그 파일이 쓰던 것을 따른다.  Windows 가 읽는 파일에 LF 와 CRLF 를
+# 섞어 놓는 것은 §0.5 로 이미 값을 치른 종류의 사고다.
+f="$WSC/lf"; printf '[wsl2]\nmemory=8GB\n' > "$f"
+wslconfig_set_mirrored "$f"
+check "LF 파일에 CR 을 섞지 않는다" "$(seen "$f")" "[wsl2]|networkingMode=mirrored|memory=8GB|"
+
+# 두 번 눌러도 안전해야 한다.  rc 1 은 "이미 되어 있어 손대지 않았다" 는 뜻이고,
+# cmd_mirrored 는 그때 백업을 도로 지운다.
+f="$WSC/twice"; wslconfig_set_mirrored "$f"
+before="$(seen "$f")"; wslconfig_set_mirrored "$f"; rc=$?
+check "이미 mirrored 면 손대지 않는다" "$rc" "1"
+check "그때 내용도 그대로다"           "$(seen "$f")" "$before"
+
+echo
+echo "Windows 사용자 폴더 고르기 (짐작해서 남의 폴더에 쓰지 않는다)"
+U="$TMP/Users"; mkdir -p "$U/Public" "$U/Default" "$U/윤홍" && : > "$U/desktop.ini"
+check "시스템 폴더를 빼면 하나뿐" "$(windows_home_candidate "$U" nobody)" "$U/윤홍"
+# 사람 폴더가 둘이면 이름이 맞는 쪽.  Windows 는 대소문자를 안 가린다.
+mkdir -p "$U/Lab"
+check "WSL 사용자 이름과 같은 폴더"  "$(windows_home_candidate "$U" lab)" "$U/Lab"
+check "대소문자는 안 가린다"         "$(windows_home_candidate "$U" LAB)" "$U/Lab"
+# 이름이 아무것도 안 맞으면 고르지 않는다 — 남의 폴더에 쓰는 것보다 낫다.
+check "못 고르면 빈 값"              "$(windows_home_candidate "$U" nobody)" ""
+# 다만 .wslconfig 가 이미 있는 폴더가 하나뿐이면 그것이 정답이다.
+: > "$U/Lab/.wslconfig"
+check ".wslconfig 가 있는 쪽을 고른다" "$(windows_home_candidate "$U" nobody)" "$U/Lab"
+check "없는 폴더는 빈 값"              "$(windows_home_candidate "$TMP/nope" me)" ""
+
+
+echo
+echo "bml mirrored — 저장소 바깥 파일을 고치므로 흔적을 남긴다"
+FAKE="$TMP/winhome"; mkdir -p "$FAKE"
+printf '[wsl2]\r\nnetworkingMode=NAT\r\nmemory=8GB\r\n' > "$FAKE/.wslconfig"
+# 함수 재정의는 서브셸 안에만 남는다 — 뒤의 시험이 가짜를 물려받지 않는다.
+OUT="$( is_wsl() { return 0; }; windows_home() { printf '%s' "$FAKE"; }; cmd_mirrored 2>&1 )"
+check "고쳤다고 말한다"        "$(printf '%s\n' "$OUT" | grep -c '고쳤습니다')" "1"
+check "어느 파일인지 먼저 밝힌다" "$(printf '%s\n' "$OUT" | grep -c "^대상.*$FAKE/.wslconfig")" "1"
+check "실제로 mirrored 가 된다"  "$(grep -c '^networkingMode=mirrored' "$FAKE/.wslconfig")" "1"
+# 저장소 바깥 파일이다.  되돌릴 것을 남기지 않으면 사람은 손을 못 쓴다.
+check "고치기 전 파일을 남긴다"  "$(grep -c 'networkingMode=NAT' "$FAKE/.wslconfig.bml-bak")" "1"
+# 다음 할 일이 화면에 있어야 한다 — 여기서 끊기면 "고쳤는데 그대로" 가 된다.
+check "wsl.exe --shutdown 을 준다" "$(printf '%s\n' "$OUT" | grep -c 'wsl.exe --shutdown')" "1"
+
+OUT="$( is_wsl() { return 0; }; windows_home() { printf '%s' "$FAKE"; }; cmd_mirrored 2>&1 )"
+check "두 번째는 손대지 않는다"   "$(printf '%s\n' "$OUT" | grep -c '이미 mirrored')" "1"
+check "쓸데없는 백업은 지운다"    "$([ -e "$FAKE/.wslconfig.bml-bak" ] && echo 있음 || echo 없음)" "없음"
+
+# 경로가 확실하지 않으면 아무것도 안 하고 PowerShell 한 줄을 준다 (§0.4).
+OUT="$( is_wsl() { return 0; }; windows_home() { printf ''; }; cmd_mirrored 2>&1 )"
+check "못 찾으면 쓰지 않는다"     "$(printf '%s\n' "$OUT" | grep -c '짐작해서')" "1"
+check "대신 PowerShell 한 줄을 준다" \
+  "$(printf '%s\n' "$OUT" | grep -cF "$(wslconfig_mirror_command)")" "1"
 
 echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
