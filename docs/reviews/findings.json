@@ -739,6 +739,49 @@
    ],
    "note": "러너의 마지막 봉인이 `--require-arms \"$ARMS\"` 였다 — **자기가 설정한 값을 자기한테 요구**한다.  `ARMS=2` 도 2팔을 요구하고 `봉인: 통과` + exit 0 이 된다 (Codex 실측).  단일팔 예외의 문제가 아니라 **8팔 계약 전체의 우회**다.  덧붙여 OUTDIR 이 ARMS 를 구분하지 않아 진단 런이 생산 산출물을 재사용할 수 있었고, 비정수·0·음수 입력에 upfront 검증이 없었다.\n★ 고침 `abe03766`: 봉인을 **상수 8**(`PREREG_ARMS`)로 건다 · 8 이 아니면 **진단 런**으로 보고 OUTDIR 에 `_armN` 을 붙여 이름이 겹치지 않게 한다 · ARMS 를 양의 정수로 검증.\n⚠ 진단 런은 이제 봉인을 **걸지 않고** 그 사실을 명시 출력한다 — 성공 종료를 생산 봉인과 같은 신호로 쓰지 않는다.",
    "found_by": "codex (흡수 리뷰 CDXR3-7)"
+  },
+  {
+   "id": "CDXR3-2",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "1c12e322",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`check_arm` 은 producer nonzero exit 를 **대체하지 못한다** (R-1 논거가 틀렸다)",
+   "evidence_tests": [
+    "scripts/sr01_stamp_compare.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "Codex mutant 4종이 `check_arm` **과 8팔 최종 봉인을 둘 다** 통과했다: `manifest.status=partial`+electronic missing · `cg_info=99`+`unconverged=False` · backend metadata 부재 · electronic=cpu·last-solve=gpu 위장.\n★ 고침 `1c12e322`: producer 가 required component 미완료를 **exit 3** 으로 전파(`--allow-partial-step3` 로만 연다) · 원자적 쓰기(`.part`→fsync→rename) · `check_arm` 에 failed/missing 목록·required component·backend 부재 거부·component 별 backend 정본·유한성 검사.\n⚠⚠ **고치다 더 큰 것을 만들 뻔했다** — 초판은 aggregate `partial` 로 판단했는데 `--no-ion` 으로 **의도적으로 끈** component 도 partial 을 낸다.  **실제 LEAN=2 생산 스윕 팔 전부**(게이트⑤ 8팔·CL-33/41/58)를 거부할 뻔했고 규칙 J 스모크가 잡았다.  ⇒ required 를 **run mode 에서 파생**하고 음성 대조 8r2 로 지킨다.\n★ 부수: 규칙 J 음성 대조의 잡히는 코드가 `J_SKIPPED`(조용한 건너뜀) → `J_EXIT`(요란한 죽음)로 바뀌었다 = 더 강한 포착.",
+   "found_by": "codex (흡수 리뷰 CDXR3-2)"
+  },
+  {
+   "id": "CDXR3-6",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "b5598999",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "⚠⚠ 플레이트가 **절연 고체를 관통**해 더 깊은 도체에 붙었다 — σ_e 절대값이 바뀐다",
+   "evidence_tests": [
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "`cond = sig > 0` 으로 표면 복셀을 골라(`k_first`/`k_last`) 표면에 절연 **고체**가 있어도 건너뛰고 그 아래 도체를 플레이트에 직접 결합했다.\n★ **실측 재현** (vox 0.15, 기둥 [AM,AM,AM,PTFE]): 표면 PTFE 기둥의 σ_eff = 0.01 로 **위가 공극인 기둥과 완전히 같았다** ⇒ 절연체가 없는 것과 구분되지 않았다.\n★ exact-zero PTFE 규약(CDXR2-6)이 이 결함을 **노출**시켰을 뿐 결함 자체는 그 전부터 있었다 — 전자 솔브에서 **SE(sid 6)도 σ=0 인 절연 고체**다.\n★ 고침 `b5598999`: 가장 바깥 **점유 고체**(sid != 0)를 먼저 정하고 그것이 그 수송의 도체일 때만 결합.  공극 갭은 그대로(band 담당) — 절연 **고체** 통과만 막는다.  `solve_sigma_z` 와 **반응 솔버 둘 다**.\n★ 회귀 4건 (PTFE blocker · SE blocker · **pore-gap 양성 대조** · Rayleigh 단조성).  변이체로 옛 거동 복원 시 3건 FAIL, 양성 대조 유지.\n⚠⚠⚠ **소급 영향 — σ_e 절대값이 바뀐다.**  합성 침대(랜덤 혼합, pore/AM/VGCF/SE = 8/40/5/47 %)에서 **약 50 % 의 기둥이 플레이트 접촉을 잃는다**.  실제 압밀 침대는 표면이 AM 크라운에 지배돼 이보다 낮겠지만 **0 이 아니다**.\n⇒ **CL-33/41/58 의 σ_e 절대값과 비는 옛 규약(관통) 산물이다.**  재측정 전에는 새 규약 결과와 **섞지 말 것**.  비(ratio)가 공통모드로 상쇄될지는 **미측정** — SBE/DBE 는 표면 조성이 다르므로(DBE 에 SDCP) 보장되지 않는다.\n⚠ 생산 하단 플레이트는 `bot_allowed`(해석적 접촉 마스크)를 받아 이미 정확 기하로 제한돼 있었다 ⇒ 노출은 주로 **상단**이다 (실침대 미측정 — kgy 에서 재야 한다).",
+   "found_by": "codex (흡수 리뷰 CDXR3-6)"
+  },
+  {
+   "id": "CDXR3-8",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "e882ec95",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "규율 selftest 가 `check_all`·CI 에서 **안 돌고 있었다** — 규칙 K 신설",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "Codex: *\"테스트 파일이 존재하고 수동 실행이 녹색인 것만으로는 자동 규율이 아니다.\"*\n★ 실사고: S1 봉인의 **핵심 셋**이 양쪽 어디에도 없었다 — `sr01_stamp_compare`(팔 검사기, 68 tests) · `mpm_webapp_payload`(PTFE 규약) · `step3_sigma`(솔버 규약).  셋 다 **1초 미만**이라 비용 이유도 없었다.  리포의 selftest 64개 중 **4개만** 돌고 있었다.\n★ 고침 `e882ec95`: 셋을 양쪽에 배선 + **규칙 K** 신설 — `K_REQUIRED_SELFTESTS` 가 `check_all.sh` 와 CI yml **둘 다** 에 있는지 대조(드리프트 금지, 같은 줄에 스크립트명+플래그).  `run_all` 에 배선(선언만 하면 규칙 K 자신이 그 결함이 된다).\n★ 회귀 K-1~4 — K-2/K-3 은 사본에서 한 줄씩 빼서 **양쪽 방향**을 건다.  리포 실물 변이체로도 `K_UNWIRED` 확인.",
+   "found_by": "codex (흡수 리뷰 ⑩)"
   }
  ]
 }
