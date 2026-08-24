@@ -2144,7 +2144,7 @@ API 가 `reference_cycle_reason` 으로 어느 사이클을 왜 썼는지 함께
 하면 이미 올라와 있는 데이터에는 아무 일도 일어나지 않는데, 고치려는 대상이 바로
 그 데이터다.
 
-## [2026-08-24] create | EIS 는 독자 섹션이다 — 결정과 BioLogic 리더 (ADR 0019)
+## [2026-08-24] create | EIS 섹션 결정과 BioLogic 리더 (ADR 0019)
 충방전은 `.wrd`(WonATech), EIS 는 `.mpr`(BioLogic) 다. 장비도 파일도 축도 다르다.
 그리고 EIS 안에서도 하나가 아니다 — 액체 셀의 두 아크는 SEI 와 charge transfer
 지만, 전고체 이온블로킹 대칭셀의 두 아크는 bulk 와 grain boundary 이고 뽑는 수도
