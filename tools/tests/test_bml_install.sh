@@ -300,6 +300,88 @@ else
   bad_ "실행기가 원본을 못 찾았다: $got"
 fi
 
+# --- 실행기에 엉뚱한 것이 박히지 않는가 ----------------------------------------
+#
+# 실행기를 만드는 heredoc 은 값을 끼워 넣어야 해서 따옴표를 못 씌운다.  본문에
+# 역따옴표나 $( ) 가 들어가면 쓰는 순간 실행되어 그 출력이 파일에 박히고,
+# 실행기는 그 줄들을 명령으로 읽는다.  실제로 주석의 역따옴표 한 쌍 때문에
+# bml 이 실행돼 커밋 목록이 통째로 들어갔다.
+echo
+echo "실행기 본문"
+mkdir -p "$TMP/bin6"
+write_launcher "$TMP/bin6/bml" bml
+if LC_ALL=C grep -q "$(printf '\033')" "$TMP/bin6/bml"; then
+  bad_ "실행기에 색 문자가 박혔다 — 만드는 중에 무언가가 실행됐다"
+else
+  ok_ "실행기에 다른 명령의 출력이 안 박힌다"
+fi
+if [ "$(wc -l < "$TMP/bin6/bml")" -lt 60 ]; then
+  ok_ "실행기가 한 장을 넘지 않는다"
+else
+  bad_ "실행기가 $(wc -l < "$TMP/bin6/bml") 줄이다 — 뭔가 섞였다"
+fi
+
+# --- 브랜치를 오가도 죽지 않는가 ----------------------------------------------
+#
+# 이 저장소에는 프로젝트가 둘이고 각자 다른 브랜치에 산다.  한 폴더에서 브랜치를
+# 바꾸면 상대 프로젝트 파일이 통째로 사라지고, 실행기가 가리키던 파일도 없어진다.
+# 실제로 그렇게 `bash: .../bml: No such file or directory` 로 막혔다.
+
+echo
+echo "브랜치를 오가도"
+
+if command -v git >/dev/null 2>&1; then
+  GITREPO="$TMP/repo"
+  mkdir -p "$GITREPO/tools"
+  git -C "$GITREPO" init -q -b main 2>/dev/null
+  git -C "$GITREPO" config user.email t@t; git -C "$GITREPO" config user.name t
+  printf '#!/usr/bin/env bash\nprintf %%s "REACHED"\n' > "$GITREPO/tools/bml"
+  chmod +x "$GITREPO/tools/bml"
+  git -C "$GITREPO" add -A >/dev/null; git -C "$GITREPO" commit -qm work
+  # 워크벤치는 이 브랜치에, 상대 프로젝트는 main 에.
+  git -C "$GITREPO" branch -q bench
+  git -C "$GITREPO" rm -q tools/bml >/dev/null
+  git -C "$GITREPO" commit -qm "main 에는 워크벤치가 없다"
+
+  # 실행기는 main 체크아웃을 가리키게 만든다 (사람이 브랜치를 바꾼 상황).
+  SAVED_SCRIPT="$SCRIPT"; SAVED_REPO="$REPO"; SAVED_BRANCH="$WORKBENCH_BRANCH"
+  SCRIPT="$GITREPO/tools/bml"; REPO="$GITREPO"; WORKBENCH_BRANCH=bench
+  mkdir -p "$TMP/bin5"
+  write_launcher "$TMP/bin5/bml" bml
+  SCRIPT="$SAVED_SCRIPT"; REPO="$SAVED_REPO"; WORKBENCH_BRANCH="$SAVED_BRANCH"
+
+  # 이 상태에서는 못 찾는 것이 맞다 -- 어디에도 워크벤치가 없다.
+  if "$TMP/bin5/bml" >/dev/null 2>&1; then
+    bad_ "워크벤치가 없는데 뭔가를 실행했다"
+  else
+    ok_ "어디에도 없으면 이유를 말하고 멈춘다"
+  fi
+  helped="$("$TMP/bin5/bml" 2>&1)"
+  case "$helped" in
+    *"worktree add"*) ok_ "폴더를 나누는 명령을 알려 준다" ;;
+    *) bad_ "무엇을 하라는지 안 알려 준다" ;;
+  esac
+
+  # 이제 옆에 워크벤치 작업 폴더를 만든다 -- 실행기를 다시 설치하지 않아도
+  # 살아나야 한다.  브랜치를 오갈 때마다 install 을 다시 하라고 할 수는 없다.
+  git -C "$GITREPO" worktree add -q "$TMP/bench" bench 2>/dev/null
+  got="$("$TMP/bin5/bml" 2>&1)"
+  if [ "$got" = "REACHED" ]; then
+    ok_ "옆 작업 폴더의 워크벤치를 찾아 간다"
+  else
+    bad_ "옆에 있는데도 못 찾았다: $got"
+  fi
+else
+  printf '  skip 브랜치 시험 (git 이 없다)\n'
+fi
+
+# 그 폴더가 다른 브랜치가 되면 "거기서 stop 하세요" 는 통하지 않는 명령이다.
+if sed -n '/다른 폴더의 워크벤치/,/둘 다 띄운다/p' "$HERE/../bml" | grep -q 'kill \$(port_owner'; then
+  ok_ "옛 폴더에 tools/bml 이 없으면 kill 을 알려 준다"
+else
+  bad_ "통하지 않는 stop 명령만 알려 준다"
+fi
+
 # --- rc 의 주석은 '이미 있다' 가 아니다 ---------------------------------------
 
 echo
