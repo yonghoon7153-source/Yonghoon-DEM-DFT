@@ -567,15 +567,18 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
         A = idx[ii, jj, kk2]; sa = sig[ii, jj, kk2]
         m = A >= 0
         if not m.any():
-            return 0, None, None
+            return 0, None, None, None
         dist = np.maximum(np.abs(zc[kk2[m]] - plane), 0.5 * vox)
         g = sa[m] * vox * vox / dist
         np.add.at(diag, A[m], g)
         if phi_p != 0.0:
             np.add.at(b, A[m], g * phi_p)
-        return int(m.sum()), A[m], g
-    n_pb, _Ab, _gb = _plate_couple(bot_m, k_first, z_b, 1.0)
-    n_pt, _At, _gt = _plate_couple(top_m, k_last, z_plate, 0.0)
+        #  ★★ 2026-08-25 (CDXR2-1) — **조립이 실제로 쓴 edge 를 좌표째 돌려준다.**
+        #    진단이 post-hoc 으로 재구성하면 band·bot_allowed·거리 규약이 솔버와 다시
+        #    어긋난다 (Codex 경고).  ⇒ 정본은 여기이고 진단은 이것을 **소비**한다.
+        return int(m.sum()), A[m], g, (ii[m], jj[m], kk2[m])
+    n_pb, _Ab, _gb, _cb = _plate_couple(bot_m, k_first, z_b, 1.0)
+    n_pt, _At, _gt, _ct = _plate_couple(top_m, k_last, z_plate, 0.0)
     L = sparse.coo_matrix((np.concatenate(vals + [diag]),
                            (np.concatenate(rows + [np.arange(n_dof)]),
                             np.concatenate(cols + [np.arange(n_dof)]))),
@@ -609,6 +612,11 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
            # ★ 해가 자기 경계조건을 들고 다닌다 (Codex #7) — 진단이 솔버의 주기성을 추측하지
            #   않게.  `phase_current_share` 는 이 키를 읽고, 없으면 **거부**한다 (fail-closed).
            'periodic_xy': bool(periodic_xy),
+           #  ★★ 2026-08-25 (CDXR2-1) — 조립이 쓴 **플레이트 edge 원장**.  진단이 σ 비례
+           #    항을 하나도 빠뜨리지 않도록 정본을 넘긴다 (재구성 금지).
+           #    각 항목 = (셀좌표 (i,j,k), g[S/cm·µm²/µm], φ_plate).
+           'plate_edges': {'bot': (_cb, _gb, 1.0), 'top': (_ct, _gt, 0.0)},
+           'vox_um': float(vox),
            'unconverged': unconv}
     if return_field:
         P = np.zeros(sid.shape, np.float64); P[cond] = phi
@@ -671,14 +679,36 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
              (np.s_[:, :, :-1], np.s_[:, :, 1:])]
     if periodic_xy:                       # seam 면쌍 (마지막 층 ↔ 첫 층).  z 는 넣지 않는다.
         pairs += [(np.s_[-1:, :, :], np.s_[:1, :, :]), (np.s_[:, -1:, :], np.s_[:, :1, :])]
+    #  ★★★ 2026-08-25 (CDXR2-1) — **단위를 맞춘다.**  조립부의 내부 g 는
+    #    `harmonic × vox` (`:549`) 인데 이 진단은 `× vox` 를 빼고 계산해 왔다.
+    #    내부끼리만 정규화할 때는 공통 인자라 상쇄됐지만, **플레이트 항**
+    #    (`σ·vox²/dist`) 을 더하려면 같은 단위여야 한다.
+    _vox = res.get('vox_um')
+    _pe = res.get('plate_edges')
+    _use_plate = _pe is not None and _vox is not None
+    _u = float(_vox) if _use_plate else 1.0
     for sl_a, sl_b in pairs:
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
-        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0)
+        g = np.where(both, 2.0 * sa * sb / np.maximum(sa + sb, 1e-30), 0.0) * _u
         d = g * (P[sl_a] - P[sl_b]) ** 2                   # per-face dissipation; split ∝ each side's
         wa = np.where(both, sb / np.maximum(sa + sb, 1e-30), 0.0)   # RESISTANCE (review F4 — the old
         diss[sl_a] += wa * d; diss[sl_b] += (1.0 - wa) * d          # half-half gave carbon 50% at a
         #   1e4-contrast face where it truly dissipates ~0.01%)
+    #  ★★★ **플레이트 소산을 더한다.**  옛 판은 내부(+seam) 면만 더해 자기 docstring 의
+    #    항등식 `w_a = ∂ln σ_eff/∂ln σ_a` 를 **만족하지 않았다** — 솔버의 플레이트 커플링
+    #    `g = σ·vox²/dist` 도 σ 에 비례하는데 합에서 빠져 있었기 때문이다.
+    #    ⚠ 이것은 **같은 결함의 2회차**다 (Codex #7 이 이미 주기 seam 누락을 잡았다).
+    #    ⚠ 플레이트는 상(相)이 아니므로 반쪽 배분 없이 **접촉 셀의 상에 전액** 귀속한다.
+    #    ⚠ `sum(shares)==1` 로는 이 결함을 못 잡는다 — 옛 판도 1 이었다.  판별은
+    #      **centered-log 유한차분**이고 그것이 `_selftest` 의 `plate-share-identity` 다.
+    if _use_plate:
+        for _side in ('bot', 'top'):
+            _c, _g, _phi_p = _pe.get(_side, (None, None, 0.0))
+            if _c is None or _g is None or not len(_g):
+                continue
+            _i, _j, _k = _c
+            np.add.at(diss, (_i, _j, _k), np.asarray(_g) * (P[_i, _j, _k] - _phi_p) ** 2)
     tot = diss.sum()
     out = {}
     for s in np.unique(sid[sid > 0]):
@@ -1652,6 +1682,51 @@ def _selftest():
     _p4 = _blk_ptfe <= _all_cond and _blk_se <= _all_cond
     ok &= _p4
     print(f"plate-monotone: 절연 표면이 σ 를 올리지 않는다  {'OK' if _p4 else 'FAIL'}")
+
+    #  ── ★★★ CDXR2-1 (2026-08-25) — **소산 분담이 자기 항등식을 만족한다** ──────────────
+    #    `phase_current_share` docstring 은 이 분담이 변분 정리로
+    #    `w_a = ∂ln σ_eff/∂ln σ_a` 와 **같은 양**이라고 단언한다.  그러려면 σ_a 에
+    #    비례하는 **모든** conductance 가 합에 들어가야 하는데, 솔버의 플레이트 커플링
+    #    (`g = σ·vox²/dist`) 이 빠져 있었다 = 항등식 불성립.
+    #    ⚠ **같은 결함의 2회차** — Codex #7 이 이미 주기 seam 누락을 잡았다.
+    #    ⚠ `sum(shares) == 1` 로는 **못 잡는다** (옛 판도 1 이었다).  판별은 centered-log
+    #      유한차분이고, 그것이 이 검사다.
+    _cid = np.zeros((1, 1, 3), np.int8)
+    _cid[0, 0, 0] = 1
+    _cid[0, 0, 1] = 2
+    _cid[0, 0, 2] = 2
+
+    def _cs(_sa, _sb):
+        _sg = np.zeros(9)
+        _sg[1], _sg[2] = _sa, _sb
+        return _sg
+
+    def _sigeff(_sa, _sb):
+        return solve_sigma_z(_cid, _cs(_sa, _sb), 1.0, z_top_um=3.0, z_bot_um=0.0)['sigma_eff']
+
+    _r3 = solve_sigma_z(_cid, _cs(1.0, 10.0), 1.0, return_field=True,
+                        z_top_um=3.0, z_bot_um=0.0)
+    _sh3 = phase_current_share(_r3, _cid, _cs(1.0, 10.0), periodic_xy=False)
+    #  해석해 (Codex 반례): 직렬 1 + 2 개의 10 → plate 포함 로그미분 share = (5/6, 1/6).
+    #  옛 internal-only 판은 (10/13, 3/13) 을 냈고 **합은 양쪽 다 1** 이었다.
+    _i1 = abs(_sh3.get(1, 0) - 5.0 / 6.0) < 1e-6 and abs(_sh3.get(2, 0) - 1.0 / 6.0) < 1e-6
+    ok &= _i1
+    print(f"plate-share-analytic: 3-cell 직렬 반례가 해석해 (5/6, 1/6) 과 일치 "
+          f"(A={_sh3.get(1, 0):.6f} B={_sh3.get(2, 0):.6f})  {'OK' if _i1 else 'FAIL'}")
+    #  ★ 옛 값과 **구분되는가** — 이 검사가 판별력을 갖는지 자기증명.
+    _i2 = abs(_sh3.get(1, 0) - 10.0 / 13.0) > 1e-3
+    ok &= _i2
+    print(f"plate-share-discriminates: 옛 internal-only 값(10/13)과 구분된다  "
+          f"{'OK' if _i2 else 'FAIL'}")
+    #  ★★ centered-log 유한차분 항등식 (σ 비례 항이 **하나라도** 빠지면 깨진다)
+    import math
+    _h = 1e-4
+    _fdA = (math.log(_sigeff(math.exp(_h), 10.0)) - math.log(_sigeff(math.exp(-_h), 10.0))) / (2 * _h)
+    _fdB = (math.log(_sigeff(1.0, 10.0 * math.exp(_h))) - math.log(_sigeff(1.0, 10.0 * math.exp(-_h)))) / (2 * _h)
+    _i3 = abs(_fdA - _sh3.get(1, 0)) < 1e-5 and abs(_fdB - _sh3.get(2, 0)) < 1e-5
+    ok &= _i3
+    print(f"plate-share-identity: w_a = d ln σ_eff/d ln σ_a 유한차분과 일치 "
+          f"(A {_fdA:.6f} B {_fdB:.6f})  {'OK' if _i3 else 'FAIL'}")
 
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
