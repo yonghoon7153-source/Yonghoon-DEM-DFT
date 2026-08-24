@@ -248,7 +248,7 @@ function SampleTable({
 
   if (sections) {
     return (
-      <div className="table-wrap" style={{ maxHeight: 'none' }}>
+      <div className="table-wrap pin-first" style={{ maxHeight: 'none' }}>
         <table>
           <SampleHead />
           {sections.map(([key, rows]) => (
@@ -269,7 +269,7 @@ function SampleTable({
   }
 
   return (
-    <div className="table-wrap" style={{ maxHeight: 'none' }}>
+    <div className="table-wrap pin-first" style={{ maxHeight: 'none' }}>
       <table>
         <SampleHead />
         <tbody>{samples.map(row)}</tbody>

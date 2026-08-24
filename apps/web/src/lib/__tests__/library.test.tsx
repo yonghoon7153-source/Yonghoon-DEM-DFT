@@ -9,6 +9,8 @@
 
 import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { existsSync, readFileSync } from 'node:fs'
+import { resolve } from 'node:path'
 import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
@@ -297,5 +299,57 @@ describe('셀 지우기', () => {
     const header = document.querySelector('tr.section th') as HTMLTableCellElement
     const columns = document.querySelectorAll('thead th').length
     expect(header.colSpan).toBe(columns)
+  })
+})
+
+// --- 첫 열 고정 ---------------------------------------------------------------
+
+describe('셀 이름 열을 고정한다', () => {
+  // 열이 열넷이고 이름이 제일 왼쪽이다.  로딩이나 C-rate 를 보려고 오른쪽으로
+  // 밀면 이름이 화면 밖으로 나가고, 그때부터는 값은 읽히는데 그 값이 누구
+  // 것인지 모르는 상태가 된다.
+  it('표가 고정 열을 켠 채로 그려진다', async () => {
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+    expect(document.querySelector('.table-wrap.pin-first')).not.toBeNull()
+  })
+
+  it('묶은 표에서도 켜져 있다', async () => {
+    // 묶기를 켜면 표를 다시 그리는 다른 분기로 들어간다.  둘로 갈라 둔 자리라
+    // 한쪽만 고치기 쉽다.
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+    await userEvent.click(screen.getByRole('button', { name: '이름' }))
+    await waitFor(() => expect(document.querySelector('tr.section')).not.toBeNull())
+    expect(document.querySelector('.table-wrap.pin-first')).not.toBeNull()
+  })
+})
+
+describe('app.css 첫 열 고정 규칙', () => {
+  // jsdom 에는 레이아웃이 없어서 "정말 안 넘어가는가" 는 렌더링으로 볼 수 없다.
+  // 볼 수 있는 것은, 조용히 망가지는 방식이 규칙에 안 남아 있는가다.
+  const path = ['src/styles/app.css', 'apps/web/src/styles/app.css']
+    .map((candidate) => resolve(process.cwd(), candidate))
+    .find(existsSync)
+  const css = path ? readFileSync(path, 'utf8') : ''
+  const block = css.slice(css.indexOf('.table-wrap.pin-first'))
+
+  it('붙일 방향과 위치를 정한다', () => {
+    expect(block).toContain('position: sticky')
+    expect(block).toContain('left: 0')
+  })
+
+  it('배경이 불투명하다 — 이것이 빠지면 글자가 두 겹으로 겹친다', () => {
+    // 기본 td 에는 배경이 없다.  투명한 채로 붙이면 밑으로 흘러가는 칸들이
+    // 이름 위에 겹쳐 보이고, 고정한 것이 아니라 글자가 두 겹이 된다.
+    expect(block).toMatch(/background: var\(--surface\)/)
+  })
+
+  it('줄 배경이 이 칸만 빼놓고 칠해지지 않는다', () => {
+    // 안 맞추면 마우스를 올린 줄이 첫 칸만 다른 색이 된다.
+    expect(block).toContain('tbody tr:hover td:first-child')
+    expect(block).toContain('tbody tr.selected td:first-child')
   })
 })
