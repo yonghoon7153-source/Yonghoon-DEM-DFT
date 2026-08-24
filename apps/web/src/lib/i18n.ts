@@ -317,6 +317,10 @@ export const ko = {
       no_charge: '충전 없음',
       truncated: '잘림',
       no_steps: '스텝 없음',
+      // 스케줄이 이 방향을 시키는지 아닌지를 정하지 못한 경우.  '잘림' 도
+      // '방전 없음' 도 아닌 것을 둘 중 하나로 적으면, 화면이 기다리라거나
+      // 영영 안 온다거나 둘 중 하나를 단정하게 된다.
+      unknown: '판단 불가',
     })[code] ?? '이유 미상',
   stateTarget: (text: string) =>
     ({ running: '구동 중', finished: '종료', unknown: '불명' })[text] ?? text,

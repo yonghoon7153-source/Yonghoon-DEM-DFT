@@ -295,13 +295,17 @@ def _why_incomplete(wrd: WrdFile, *, truncated: bool, is_last: bool,
     ``_ends_mid_step`` catches the obvious cut, but only while current is
     still flowing; a file that stops during the rest *between* charge and
     discharge looks finished to it.  So when a branch is missing the schedule
-    decides: **it says what the protocol intends to do**, and if it declares
-    no step in that direction, no amount of waiting will produce one (rule
-    §0.3 -- do not ask the operator what the instrument already recorded).
+    decides: **it says what the protocol intends to do** (rule §0.3 -- do not
+    ask the operator what the instrument already recorded).
 
-    With no schedule there is nothing to decide with, so the last cycle keeps
-    the old reading (cut off) and an earlier one is reported as missing the
-    branch.  Unknown is never dressed up as known.
+    But the schedule does not always answer.  ``Schedule.declares`` returns
+    ``unclear`` when the direction cannot be settled -- a CV-only leg with no
+    CC to inherit from, or a formation phase and a cycling loop that disagree.
+    That answer is passed through as ``unknown`` rather than collapsed into
+    one of the two real reasons (§0.4).  Both collapses were wrong in a way
+    the screen states out loud: "cut off" tells the operator to wait for a
+    branch that will never come, and "no discharge" tells them the protocol
+    never discharges when it may well do so.
     """
     if truncated:
         return "truncated"
@@ -309,14 +313,23 @@ def _why_incomplete(wrd: WrdFile, *, truncated: bool, is_last: bool,
                else "charge" if has_discharge and not has_charge else None)
     if missing is None:
         return "no_steps"
+
     schedule = wrd.metadata.schedule
     if schedule is None or not schedule.steps:
-        return "truncated" if is_last else f"no_{missing}"
-    # A CV hold carries a voltage rather than a signed current, so its
-    # direction reads "unknown"; it always follows a CC leg that does declare
-    # one, which is why looking for a declared *discharge* step is enough.
-    declared = any(step.direction == missing for step in schedule.steps)
-    return "truncated" if declared else f"no_{missing}"
+        # An earlier cycle is settled by the run itself: it moved on, so
+        # nothing more will be added.  For the last one there is no evidence
+        # either way -- a charge that ended cleanly in the rest before the
+        # discharge looks exactly like a protocol that never discharges.
+        return f"no_{missing}" if not is_last else "unknown"
+
+    verdict = schedule.declares(missing)
+    if verdict == "yes":
+        # The schedule asks for this direction.  On the last cycle it has not
+        # arrived yet; on an earlier one it never arrived and we cannot say why.
+        return "truncated" if is_last else "unknown"
+    if verdict == "no":
+        return f"no_{missing}"
+    return "unknown"
 
 
 def _ends_mid_step(wrd: WrdFile, stop: int) -> bool:

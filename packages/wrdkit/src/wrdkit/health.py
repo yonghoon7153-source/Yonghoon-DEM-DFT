@@ -176,9 +176,14 @@ def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
     # false, and it was the only line the screen had to explain an empty table.
     reason = cycles[-1].incomplete_reason if cycles else ""
     last_incomplete = bool(cycles) and not cycles[-1].complete
-    # 이유를 모르면(옛 기록, 손으로 만든 요약) 예전처럼 "잘렸다" 로 읽는다 --
-    # 아는 것이 늘었을 때만 판단이 바뀌어야 한다.
-    ends_mid_cycle = last_incomplete and reason not in ("no_discharge", "no_charge")
+    # 구동 중이라는 표는 **측정된** 잘림에만 준다.
+    #
+    # 예전에는 "no_discharge/no_charge 가 아니면 잘린 것" 이었는데, 그러면 이유를
+    # 모르는 것("", 옛 기록)과 스텝이 아예 없는 것(no_steps)까지 잘림으로 읽혔다.
+    # 같은 옛 기록을 사이클 표는 "이유 미상 — 재파싱하세요" 라고 하는데 보고서는
+    # "잘렸으니 구동 중" 이라고 말하는, 한 화면 안의 모순이 그렇게 생겼다.
+    # 모르는 것은 아무 쪽에도 표를 주지 않는다 (§0.4).
+    ends_mid_cycle = last_incomplete and reason == "truncated"
     if ends_mid_cycle:
         note("partial cycle",
              f"cycle {cycles[-1].cycle_number} is cut off mid-step",
@@ -191,6 +196,16 @@ def _classify(cycles: list[CycleSummary], *, planned_cycles: int | None,
             f"cycle {cycles[-1].cycle_number} has no "
             f"{'discharge' if reason == 'no_discharge' else 'charge'} "
             f"- the schedule never asked for one",
+            CellState.UNKNOWN))
+    elif last_incomplete:
+        # 남은 것: no_steps, unknown, 그리고 이유가 안 적힌 옛 기록.  화면에는
+        # 설명이 있어야 하되, 그 설명이 판정으로 새어 들어가면 안 된다.
+        evidence.append(StateEvidence(
+            "partial cycle",
+            f"cycle {cycles[-1].cycle_number} is incomplete and the reason "
+            f"cannot be told from the record"
+            + (" (parsed before the reason was stored - re-parse to settle it)"
+               if not reason else ""),
             CellState.UNKNOWN))
     if planned_cycles and len(complete) < planned_cycles:
         note("cycle count",
@@ -245,6 +260,12 @@ def _no_complete_summary(reason: str) -> str:
         "truncated": "no completed cycle yet: the record stops part-way "
                      "through a step",
         "no_cycles": "no cycles in this record",
+        "no_steps": "no completed cycle: the record has no charge or "
+                    "discharge step at all",
+        "unknown": "no completed cycle: a branch is missing and the schedule "
+                   "does not settle whether one is still coming",
+        "": "no completed cycle: the reason was not stored - re-parse the "
+            "file to settle it",
     }.get(reason, "no completed cycle yet")
 
 
@@ -294,12 +315,10 @@ def build_report(cycles: list[CycleSummary], *,
     )
 
     last_reason = cycles[-1].incomplete_reason if cycles else ""
-    if cycles and not cycles[-1].complete and last_reason not in (
-            "no_discharge", "no_charge"):
-        # A cycle missing a branch the schedule never asked for is not "in
-        # progress" -- putting a cycle number there promises one that will
-        # never advance.  An unknown reason keeps the old reading (in progress),
-        # so nothing regresses on records parsed before this existed.
+    if cycles and not cycles[-1].complete and last_reason == "truncated":
+        # "진행 중" 은 그 사이클이 곧 올라간다는 약속이다.  스케줄이 시키지 않은
+        # 방향이 빠진 사이클도, 이유를 알 수 없는 사이클도 그 약속을 지킬 수
+        # 없다.  측정된 잘림에만 번호를 건다.
         report.in_progress_cycle = cycles[-1].cycle_number
 
     if not complete:

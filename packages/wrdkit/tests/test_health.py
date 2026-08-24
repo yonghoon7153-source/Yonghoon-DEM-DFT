@@ -10,11 +10,17 @@ from wrdkit.health import CellState, build_report
 import synthetic
 
 
-def _cycles(n_cycles=8, truncate=False):
+def _cycles(n_cycles=8, truncate=False, cut=20, schedule=None):
+    """*cut* 은 뒤에서 몇 표본을 지울지.
+
+    기본 20 은 방전 **도중**에서 끊는다 -- 전류가 흐르는 중이라 파일만 보고도
+    잘렸음을 알 수 있는, 이 테스트들이 실제로 뜻하는 상태다.  25 로 하면 방전이
+    끝난 뒤 휴지에서 끊겨서 파일만으로는 구분되지 않는다 (아래 별도 테스트).
+    """
     samples = synthetic.make_cycles(n_cycles, 20)
     if truncate:
-        samples = samples[:-25]
-    wrd = read_wrd_bytes(synthetic.build_wrd(samples))
+        samples = samples[:-cut]
+    wrd = read_wrd_bytes(synthetic.build_wrd(samples, schedule=schedule))
     return summarize_cycles(wrd)
 
 
@@ -134,16 +140,115 @@ def test_a_charge_only_schedule_is_not_called_cut_off():
     assert any("has no discharge" in e.detail for e in report.evidence)
 
 
+#: 충전과 방전을 모두 시키는 최소 스케줄 (루프 없음).
+_CHARGE_AND_DISCHARGE = (
+    synthetic.SchedStep("chg", control=0, value=0.00123),
+    synthetic.SchedStep("dch", control=0, value=-0.00123),
+)
+
+
 def test_a_missing_branch_the_schedule_asked_for_is_still_cut_off():
     """스케줄이 방전을 시켰는데 기록에 없으면, 그것은 아직 못 간 것이다.
 
     구동 중인 셀이 충전과 휴지를 마치고 방전 직전에 파일이 끊기면 숫자만으로는
     방전 없는 스케줄과 구분되지 않는다 -- 한쪽은 한 시간 뒤에 생기고 다른 쪽은
     영영 안 생기는데.  스케줄이 그 답을 갖고 있다.
+
+    끊는 자리를 25 로 두는 것이 이 테스트의 전부다: 전류가 이미 0 이라
+    `_ends_mid_step` 은 아무 말도 못 하고, 답은 스케줄에서만 나온다.
     """
-    report = build_report(_cycles(truncate=True), planned_cycles=100)
+    cycles = _cycles(truncate=True, cut=25, schedule=_CHARGE_AND_DISCHARGE)
+    assert cycles[-1].incomplete_reason == "truncated"
+    report = build_report(cycles, planned_cycles=100)
     assert report.state == CellState.RUNNING
     assert report.in_progress_cycle == 8
+
+
+def test_no_schedule_and_no_current_is_unknown_not_cut_off():
+    """스케줄이 없으면 그 답을 낼 근거가 없다 (§0.4).
+
+    예전에는 마지막 사이클이면 무조건 "잘렸다" 였다.  전류 0 에서 정상 종료한
+    `charge → rest` 기록도 그렇게 읽혀서, 화면은 오지 않을 방전을 기다리라고
+    했다.  근거가 없으면 모른다고 해야 한다.
+    """
+    cycles = _cycles(truncate=True, cut=25)          # 스케줄 없음
+    assert cycles[-1].incomplete_reason == "unknown"
+
+    report = build_report(cycles, planned_cycles=100)
+    # 구동 중이라는 표를 주지 않는다 -- 번호를 걸면 곧 올라간다는 약속이 된다.
+    assert report.in_progress_cycle is None
+    assert not any("cut off" in e.detail for e in report.evidence)
+    assert any("cannot be told" in e.detail for e in report.evidence)
+
+
+def test_formation_only_discharge_does_not_speak_for_the_loop():
+    """화성에만 방전이 있고 루프는 충전만 하는 스케줄.
+
+    스케줄 전체를 `any()` 로 훑으면 "방전을 선언했다" 가 나온다.  그러면 루프
+    안의 사이클이 **영원히 오지 않을 방전을 기다리는 것**으로 보고된다.  어느
+    구간의 사이클인지 모르는 채로는 둘 중 하나를 고를 수 없다.
+    """
+    schedule = (
+        synthetic.SchedStep("form-chg", control=0, value=0.00025),
+        synthetic.SchedStep("form-dch", control=0, value=-0.00025),
+        synthetic.SchedStep("cyc-chg", control=0, value=0.00123,
+                            loop_count=200, turn_step="cyc-chg"),
+    )
+    cycles = _cycles(truncate=True, cut=25, schedule=schedule)
+    assert cycles[-1].incomplete_reason == "unknown"
+    assert build_report(cycles, planned_cycles=100).in_progress_cycle is None
+
+
+def test_a_cv_only_discharge_is_not_read_as_no_discharge():
+    """부호 없는 정전압 스텝을 "방전이 없다" 로 읽으면 안 된다.
+
+    CV 스텝은 전류 부호가 없어 방향이 `unknown` 이다.  대개 앞선 CC 의 연장이라
+    그 방향을 물려받지만, 물려받을 CC 가 앞에 없으면 충전인지 방전인지 알 수
+    없다.  정전압만으로 방전하는 프로토콜은 실재한다 -- 없는 것으로 단정하면
+    화면이 "영원히 방전하지 않을 프로토콜" 이라고 말한다.
+    """
+    schedule = (
+        synthetic.SchedStep("cv-only", control=1, value2=1.88),   # 앞에 CC 가 없다
+        synthetic.SchedStep("chg", control=0, value=0.00123),
+    )
+    cycles = _cycles(truncate=True, cut=25, schedule=schedule)
+    assert cycles[-1].incomplete_reason == "unknown"
+
+
+def test_a_cv_hold_after_a_cc_leg_inherits_its_direction():
+    """반대로, 앞에 CC 가 있는 CV 홀드는 판단을 흐리면 안 된다.
+
+    이것까지 unknown 으로 두면 CCCV 충전만 하는 흔한 스케줄이 전부 "모름" 이
+    되어, 방금 고친 것이 다른 쪽으로 똑같이 쓸모없어진다.
+    """
+    schedule = (
+        synthetic.SchedStep("cc-chg", control=0, value=0.00123),
+        synthetic.SchedStep("cv-chg", control=1, value2=4.25),
+    )
+    cycles = _cycles(truncate=True, cut=25, schedule=schedule)
+    assert cycles[-1].incomplete_reason == "no_discharge"
+
+
+def test_an_old_row_without_a_reason_is_not_called_running():
+    """이유가 안 적힌 옛 기록.
+
+    사이클 표는 "이유 미상 -- 재파싱하세요" 라고 하는데 보고서는 "잘렸으니 구동
+    중" 이라고 말했다.  한 화면 안에서 두 말을 하면 사람은 둘 다 안 믿는다.
+    """
+    cycles = _cycles(truncate=True)
+    cycles[-1].incomplete_reason = ""
+    report = build_report(cycles, planned_cycles=100)
+    assert report.in_progress_cycle is None
+    assert any("re-parse" in e.detail for e in report.evidence)
+
+
+def test_a_rest_only_record_is_not_called_running():
+    """충·방전 스텝이 아예 없는 기록(no_steps)도 잘린 것이 아니다."""
+    cycles = _cycles(truncate=True)
+    cycles[-1].incomplete_reason = "no_steps"
+    report = build_report(cycles, planned_cycles=100)
+    assert report.in_progress_cycle is None
+    assert not any("cut off" in e.detail for e in report.evidence)
 
 
 def test_the_summary_sentence_carries_the_headline_numbers():

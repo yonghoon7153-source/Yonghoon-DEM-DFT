@@ -291,6 +291,65 @@ class Schedule:
                         {s.name for s in self.steps[start:i + 1]})
         return best[2]
 
+    @staticmethod
+    def _effective_directions(steps: list[ScheduleStep]) -> list[str]:
+        """CV 홀드에 방향을 물려준다.
+
+        정전압 구간은 전류 부호가 없어 ``direction`` 이 ``unknown`` 이다.  대개
+        바로 앞 CC 구간의 연장이므로 그 방향을 물려받는다.  앞에 아무 CC 도
+        없으면 물려받을 것이 없고, 그때는 ``unknown`` 으로 남긴다 — 정전압만으로
+        방전하는 프로토콜이 실재하므로(NEWARE·BioLogic 의 constant-potential
+        discharge), 부호가 없다는 이유로 "없다" 로 읽으면 안 된다.
+        """
+        out: list[str] = []
+        inherited = "unknown"
+        for step in steps:
+            direction = step.direction
+            if direction in ("charge", "discharge"):
+                inherited = direction
+                out.append(direction)
+            elif direction == "unknown":
+                out.append(inherited)
+            else:
+                out.append(direction)      # rest
+        return out
+
+    def declares(self, direction: str) -> str:
+        """이 스케줄이 *direction* 스텝을 시키는가 — ``yes`` · ``no`` · ``unclear``.
+
+        ``unclear`` 가 답인 경우가 둘이다.
+
+        **방향을 못 정한 CV 스텝이 있다.**  물려받을 CC 가 앞에 없는 정전압
+        구간은 충전인지 방전인지 알 수 없다.
+
+        **formation 과 loop 가 서로 다르게 말한다.**  이쪽이 더 중요하다.
+        formation 에만 방전이 있고 루프는 충전만 하는 스케줄에서 전체를 한 번에
+        훑으면 "선언했다" 가 나오는데, 그러면 루프 안의 사이클이 **영원히 오지
+        않을 방전을 기다리는 것으로** 보고된다.  어느 구간의 사이클인지 모르는
+        채로는 둘 중 하나를 고를 수 없다 (§0.4).
+        """
+        if not self.steps:
+            return "unclear"
+
+        looped = self._looped_step_names()
+        if looped:
+            groups = [[s for s in self.steps if s.name in looped],
+                      [s for s in self.steps if s.name not in looped]]
+            groups = [group for group in groups if group]
+        else:
+            groups = [list(self.steps)]
+
+        answers: set[str] = set()
+        for group in groups:
+            directions = self._effective_directions(group)
+            if direction in directions:
+                answers.add("yes")
+            elif "unknown" in directions:
+                return "unclear"
+            else:
+                answers.add("no")
+        return answers.pop() if len(answers) == 1 else "unclear"
+
     def nominal_capacity_ah(self, c_rate: float | None = None) -> float | None:
         """Capacity the operator dialled in, back-calculated from the current.
 
