@@ -2038,6 +2038,20 @@ write_env_key() {
 #: 안 닿을 때 무엇을 볼지.  WSL 은 NAT 뒤에 있어서, 중추 서버 안에서 본
 #: `hostname -I` 주소로는 다른 기계에서 닿지 않는다 — 그 PC 의 Windows 쪽
 #: 주소로 접속하고, Windows 가 WSL 로 넘겨 주어야 한다.
+#: 이 주소가 **우리가 여는 터널**의 것인가.
+#:
+#: 예전에는 `https://` 면 전부 터널로 봤다 (Codex 리뷰 12번).  그러면
+#: `bml use https://typo.example.invalid` 같은 오타에도 "bml share stop 후 다시
+#: bml share" 를 시킨다 — 열지도 않은 터널을 닫으라는 말이다.  우리가 쓰는
+#: 제공자의 도메인만 그 절차로 보낸다.
+is_our_tunnel_url() {
+  local h; h="$(url_host "${1:-}")" || return 1
+  case "$h" in
+    *.lhr.life|*.localhost.run|*.trycloudflare.com) return 0 ;;
+  esac
+  return 1
+}
+
 server_unreachable_help() {
   local url="$1"
   say ""
@@ -2046,8 +2060,30 @@ server_unreachable_help() {
 
   # 터널 주소는 방화벽도 포트 포워딩도 상관이 없다.  LAN 안내를 그대로 주면
   # 아무 소용 없는 것을 확인하느라 시간을 쓴다.
-  case "$url" in
-    *trycloudflare.com*|https://*)
+  if is_our_tunnel_url "$url"; then
+      # 코드가 무엇을 말하는지 먼저 읽는다.  **502·503·530 은 짐작이 아니라
+      # 확정 신호다**: 이름도 잡히고 TLS 도 됐는데 제공자가 "뒤에 아무도 없다"
+      # 고 답한 것이다.  그때 아래 점검표를 훑게 하면 안 되는 일에 시간을 쓴다.
+      # (실측: 노트북에서 bmlout 이 HTTP 503 을 받았고, 중추 서버의 터널이
+      # 정말 끊겨 있었다.)
+      local hc; hc="$(http_code_of "$url" 8)"
+      case "$hc" in
+        502|503|504|530)
+          warn "터널 주소는 살아 있는데 그 뒤에 서버가 없습니다 (HTTP ${hc})."
+          say "  ${DIM}중추 서버 쪽 터널이 끊긴 것입니다 — 그 기계에서 다시 엽니다:${OFF}"
+          say "    ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+          say "  ${DIM}새로 나온 주소로${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}— 주소가 바뀔 수 있습니다.${OFF}"
+          say ""
+          say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
+          return 0
+          ;;
+        404)
+          warn "그 주소에 닿기는 하는데 우리 워크벤치가 아닙니다 (HTTP 404)."
+          say "  ${DIM}터널이 다른 서비스로 이어졌거나 주소를 잘못 적었습니다.${OFF}"
+          say "  ${DIM}중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '공유 주소' 줄을 그대로 씁니다.${OFF}"
+          return 0
+          ;;
+      esac
       # 이름 자체가 안 잡히면, 아래 목록을 훑기 전에 **갈라 준다.**  터널이
       # 닫힌 것과 이 망의 DNS 가 그 도메인을 거르는 것은 화면에서 똑같은데
       # 대처가 정반대다 — 뒤쪽인데 앞쪽으로 알면 멀쩡한 터널을 닫고 다시 열기를
@@ -2103,8 +2139,7 @@ server_unreachable_help() {
       say ""
       say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
       return 0
-      ;;
-  esac
+  fi
 
   say "  ${B}중추 서버 쪽에서 순서대로${OFF}"
   say "    1. 떠 있는가          ${GREEN}bml status${OFF} ${DIM}— '실행 중' 이어야 합니다${OFF}"
@@ -2614,6 +2649,13 @@ cmd_slot() {
     # 적어 둔 것은 지우지 않는다.  자리를 옮기는 중일 뿐일 수 있고, 지워 버리면
     # 돌아왔을 때 다시 쳐야 한다.
     [ -n "${!key:-}" ] && say "  ${DIM}적어 둔 $(slot_label "$which") 주소는 그대로 둡니다: ${!key}${OFF}"
+    # 자리를 둘로 나눈 이유가 이것이다 — 한쪽이 안 되면 다른 쪽이 있다.
+    local other okey
+    case "$which" in in|lan) other=out ;; *) other=in ;; esac
+    okey="$(slot_key "$other")"
+    if [ -n "${!okey:-}" ]; then
+      say "  ${DIM}반대쪽이 적혀 있습니다 —${OFF} ${GREEN}bml${other}${OFF} ${DIM}로 붙습니다: ${!okey}${OFF}"
+    fi
     exit 1
   fi
 

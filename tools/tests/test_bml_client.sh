@@ -145,8 +145,12 @@ echo
 echo "안 닿을 때의 안내"
 # 터널 주소에 방화벽·포트포워딩 안내를 주면, 아무 상관 없는 것을 확인하느라
 # 시간을 쓴다.  실제로 그렇게 한참 돌았다.
+# 터널 판정은 **도메인**으로 한다.  예전에는 아무 https 나 터널로 봐서, 오타
+# 하나에도 "bml share stop 후 다시" 를 시켰다 (열지도 않은 터널을 닫으라는 말).
+# 그래서 이 시험도 진짜 제공자 도메인을 쓴다.  코드는 000 으로 고정한다 —
+# 여기서 보려는 것은 '어느 안내로 가는가' 이지 그 주소의 상태가 아니다.
 help_lan="$(server_unreachable_help 'http://192.168.0.40:5003' 2>&1)"
-help_tunnel="$(server_unreachable_help 'https://127.0.0.1:1' 2>&1)"
+help_tunnel="$( http_code_of() { printf '000'; }; server_unreachable_help 'https://a.lhr.life' 2>&1 )"
 check "LAN 주소에는 방화벽을 말한다" \
   "$(case "$help_lan" in *"방화벽"*) echo yes ;; *) echo no ;; esac)" "yes"
 check "터널 주소에는 bml share 를 말한다" \

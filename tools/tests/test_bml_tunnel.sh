@@ -260,6 +260,32 @@ check "망 밖에서 찔러 보라고 한다" "$(printf '%s\n' "$HELP" | grep -c
 check "같은 망이면 안 갈린다고 말한다" "$(printf '%s\n' "$HELP" | grep -c '같은 망이면')" "1"
 
 echo
+echo "터널 주소인가 — 아무 https 나 터널로 보면 안 된다"
+# 예전에는 https:// 면 전부 터널로 봤다.  그러면 오타 하나에도 "bml share stop
+# 후 다시 bml share" 를 시킨다 — 열지도 않은 터널을 닫으라는 말이다.
+check "lhr.life 는 우리 것"        "$(is_our_tunnel_url https://a.lhr.life && echo yes || echo no)" "yes"
+check "trycloudflare 도 우리 것"   "$(is_our_tunnel_url https://x.trycloudflare.com/y && echo yes || echo no)" "yes"
+check "localhost.run 도 우리 것"   "$(is_our_tunnel_url https://z.localhost.run && echo yes || echo no)" "yes"
+check "남의 https 는 아니다"       "$(is_our_tunnel_url https://lab.example.org && echo yes || echo no)" "no"
+check "오타 도메인도 아니다"       "$(is_our_tunnel_url https://typo.example.invalid && echo yes || echo no)" "no"
+check "LAN 주소는 당연히 아니다"   "$(is_our_tunnel_url http://192.168.0.40:5003 && echo yes || echo no)" "no"
+# 이름을 흉내 낸 것도 아니다 — 접미사로만 인정한다.
+check "이름만 비슷한 것은 아니다"  "$(is_our_tunnel_url https://evil-lhr.life.example.com && echo yes || echo no)" "no"
+
+echo
+echo "503 은 짐작이 아니라 확정 신호다"
+# 실측: 노트북에서 bmlout 이 HTTP 503 을 받았고, 중추 서버의 터널이 정말
+# 끊겨 있었다.  이름도 잡히고 TLS 도 됐는데 제공자가 "뒤에 아무도 없다" 고
+# 답한 것이다.  그때 점검표를 훑게 하면 안 되는 일에 시간을 쓴다.
+DEAD="$( http_code_of() { printf '503'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
+check "터널이 끊겼다고 말한다"     "$(printf '%s\n' "$DEAD" | grep -c '뒤에 서버가 없습니다')" "1"
+check "다시 여는 명령을 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
+check "점검표를 훑게 하지 않는다"  "$(printf '%s\n' "$DEAD" | grep -c '중추 서버 쪽에서 순서대로')" "0"
+# 404 는 다른 뜻이다 — 주소는 닿는데 우리 서버가 아니다.
+WRONG="$( http_code_of() { printf '404'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
+check "404 는 다르게 말한다"       "$(printf '%s\n' "$WRONG" | grep -c '우리 워크벤치가 아닙니다')" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0
