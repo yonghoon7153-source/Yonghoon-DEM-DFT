@@ -469,6 +469,38 @@ check "대신 PowerShell 한 줄을 준다" \
   "$(printf '%s\n' "$OUT" | grep -cF "$(wslconfig_mirror_command)")" "1"
 
 echo
+echo "모르는 명령 — 오타보다 '옛 bml' 이 흔하다"
+# 실제로 일어난 일: 화면과 문서가 알려 준 `bml mirrored` 를 그대로 쳤는데
+# `모르는 명령: mirrored` 가 났다.  그 기계의 bml 이 옛것이었을 뿐인데, 그
+# 문구는 "네가 잘못 쳤다" 로 읽힌다.  이제 먼저 맞춰 보고, 그래도 없으면
+# 가까운 이름을 짚는다.
+check "목록을 case 라벨에서 뽑는다"   "$(known_commands | grep -c '^mirrored$')" "1"
+check "안쪽 case 는 섞이지 않는다"    "$(known_commands | grep -c '^crlf$')" "0"
+check "'*' 는 명령이 아니다"          "$(known_commands | grep -c '^\*$')" "0"
+
+# 도움말에 적힌 명령이 실제로 붙어 있어야 한다.  한쪽만 고치는 일이 잦고,
+# 그때 사람은 문서를 그대로 따라 하다 오늘과 같은 화면을 본다.
+MISSING=""
+while read -r c; do
+  known_commands | grep -qx -- "$c" || MISSING="$MISSING $c"
+done < <(sed -n '3,30p' "$BML" | grep -oE '^#   bml [a-z-]+' | awk '{print $3}' | sort -u)
+check "도움말의 명령이 전부 붙어 있다" "$MISSING" ""
+
+check "오타에 가까운 것을 짚는다"     "$(suggest_commands mirrorred)" "mirror"
+check "앞이 같으면 그것"              "$(suggest_commands stat)"      "status"
+check "아무것도 안 닮았으면 빈 값"    "$(suggest_commands zzzz)"      ""
+
+echo
+echo "지금 이 서버에 문이 있는가"
+# 설정에 암호가 있는 것과 떠 있는 서버가 그것을 들고 있는 것은 다르다.
+# 적어 두고 restart 를 안 하면 문이 없는 채로 열려 있다.
+check "401 이면 잠긴 것"            "$(door_state 401 '')"        "locked"
+check "적어는 뒀는데 안 물으면"      "$(door_state 200 '암호')"     "pending"
+check "암호가 없으면 열린 것"        "$(door_state 200 '')"        "open"
+check "대답이 없으면 모르는 것"      "$(door_state 000 '암호')"     "unknown"
+check "빈 코드도 모르는 것"          "$(door_state '' '')"         "unknown"
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
