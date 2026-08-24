@@ -2025,6 +2025,7 @@ cmd_check() {
   ( cd "$REPO" && bash tools/tests/test_bml_client.sh ) || exit 1
   ( cd "$REPO" && bash tools/tests/test_bml_tunnel.sh ) || exit 1
   ( cd "$REPO" && bash tools/tests/test_worklog.sh ) || exit 1
+  ( cd "$REPO" && bash tools/tests/test_bml_install.sh ) || exit 1
   ( cd "$REPO" && python3 tools/tests/test_backup.py ) || exit 1
   ok "전부 통과."
 }
@@ -2125,6 +2126,26 @@ cmd_doctor() {
     local branch
     branch="$(git -C "$REPO" rev-parse --abbrev-ref HEAD 2>/dev/null || echo '?')"
     ok "프로젝트 파일 정상 (브랜치 ${branch})"
+  fi
+
+  # --- bml 명령 자체 ----------------------------------------------------------
+  #
+  # `bml doctor` 를 `./tools/bml doctor` 로 부를 수도 있으므로, 이 검사가 돌고
+  # 있다는 것이 `bml` 이 PATH 에 있다는 뜻은 아니다.  실제로 걸린 자리다:
+  # clone → make setup 까지 했는데 `bml` 이 없어서 command not found 가 났다.
+  local bml_on_path; bml_on_path="$(command -v bml 2>/dev/null)"
+  if [ -z "$bml_on_path" ]; then
+    warn "bml 명령    PATH 에 없습니다 — 'bml' 로 못 부릅니다."
+    say "  ${GREEN}$REPO/tools/bml install${OFF} ${DIM}한 번이면 등록됩니다.${OFF}"
+    problems=$((problems + 1))
+  elif [ "$(readlink -f "$bml_on_path" 2>/dev/null)" != "$(readlink -f "$SCRIPT" 2>/dev/null)" ]; then
+    # 두 클론(예: worktree)이 있으면 PATH 의 bml 이 다른 트리를 가리킬 수 있다.
+    # 그러면 여기서 고친 것이 저기서 안 보인다.
+    warn "bml 명령    $bml_on_path — 지금 이 트리($SCRIPT)가 아닙니다."
+    say "  ${DIM}이 트리를 쓰려면${OFF} ${GREEN}$REPO/tools/bml install${OFF}"
+    problems=$((problems + 1))
+  else
+    ok "bml 명령    $bml_on_path"
   fi
 
   # --- 줄바꿈 (WSL 에서 가장 흔한 사고) ---------------------------------------
@@ -2255,19 +2276,61 @@ cmd_doctor() {
   fi
 }
 
+#: 새 터미널이 열릴 때 읽는 파일.
+#:
+#: 지금 돌고 있는 셸이 아니라 `$SHELL`(로그인 셸)을 기준으로 고른다 — 사람이
+#: 다음에 여는 터미널이 실제로 읽는 것은 그쪽이다.  `bash tools/bml install`
+#: 처럼 잠깐 bash 로 실행했다고 zsh 사용자의 `.bashrc` 에 적으면, 새 터미널에서
+#: 여전히 안 된다.
+shell_rc() {
+  case "${SHELL:-}" in
+    */zsh)  printf '%s' "$HOME/.zshrc" ;;
+    */bash) printf '%s' "$HOME/.bashrc" ;;
+    *)      [ -f "$HOME/.bashrc" ] && printf '%s' "$HOME/.bashrc" ;;
+  esac
+  return 0
+}
+
+#: 이 명령을 PATH 에 등록한다.
+#:
+#: 링크만 만들고 "PATH 는 알아서 하세요" 로 끝내면 안 된다.  `bml install` 을
+#: 시킨 바로 다음 줄에서 `bml: command not found` 가 나고, 사람은 설치가 실패한
+#: 줄 안다 — 실제로 그렇게 됐다.  이 명령의 이름이 install 인 이상, 셸 설정
+#: 한 줄까지가 이 명령의 일이다.
+#:
+#: 그러면서도 두 가지는 지킨다: 같은 줄을 두 번 넣지 않고, 지금 이 터미널에
+#: 반영하는 방법을 함께 준다 (rc 는 **새** 터미널에서만 읽힌다 — 이걸 안 주면
+#: "넣었다는데 여전히 안 된다" 가 된다).
 cmd_install() {
   local target="${1:-$HOME/.local/bin}"
   mkdir -p "$target"
   ln -sf "$SCRIPT" "$target/bml"
   ok "설치: $target/bml"
+
   case ":$PATH:" in
-    *":$target:"*) say "${DIM}PATH 에 이미 있습니다. 'bml' 로 바로 쓰세요.${OFF}" ;;
-    *)
-      warn "PATH 에 없습니다. 셸 설정에 아래 한 줄을 추가하세요:"
-      say "  export PATH=\"$target:\$PATH\""
-      say "${DIM}  bash → ~/.bashrc  ·  zsh → ~/.zshrc  (추가 후 새 터미널)${OFF}"
+    *":$target:"*)
+      say "${DIM}PATH 에 이미 있습니다. 'bml' 로 바로 쓰세요.${OFF}"
+      return 0
       ;;
   esac
+
+  local rc line
+  line="export PATH=\"$target:\$PATH\""
+  rc="$(shell_rc)"
+
+  if [ -n "$rc" ] && grep -qF "$target" "$rc" 2>/dev/null; then
+    say "${DIM}${rc} 에 이미 그 줄이 있습니다 — 이 터미널에만 아직 반영이 안 됐습니다.${OFF}"
+  elif [ -n "$rc" ]; then
+    printf '\n# bml — Yonghoon Battery Lab Workbench\n%s\n' "$line" >> "$rc"
+    ok "${rc} 에 PATH 한 줄을 넣었습니다 — 새 터미널부터 'bml' 이 됩니다."
+  else
+    warn "셸 설정 파일을 찾지 못했습니다. 아래 한 줄을 직접 넣으세요:"
+    say "  $line"
+  fi
+
+  say ""
+  say "  ${B}지금 이 터미널에서 바로 쓰려면:${OFF}"
+  say "    ${GREEN}${line}${OFF}"
 }
 
 cmd_help() {

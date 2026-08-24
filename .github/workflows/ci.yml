@@ -100,6 +100,7 @@ jobs:
       - run: bash tools/tests/test_bml_shutdown.sh
       - run: bash tools/tests/test_bml_client.sh
       - run: bash tools/tests/test_worklog.sh
+      - run: bash tools/tests/test_bml_install.sh
 
   invariants:
     name: repo invariants

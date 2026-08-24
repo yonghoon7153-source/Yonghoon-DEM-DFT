@@ -443,3 +443,31 @@ tunnel·worklog 를 함께 돌린다). #21 의 나머지 — fallback 테스트�
 #3(닫았다고 보고하고 안 닫힌 터널) → #2(부분 문자열 소유 판정) → #1(터널
 수명과 게이트 수명) 순으로 보인다 — 셋 다 CLAUDE.md §0.8 에 직접 걸리고,
 #3 은 "공개된 주소가 닫힌 줄 안다" 라서 결과가 가장 나쁘다.
+
+## [2026-08-22] fix | bml install 이 PATH 까지 등록한다
+노트북에서 실측: `git clone` → `./tools/bml install` 까지 했는데 다음 줄이
+`bml: command not found` 였다. `install` 이 `~/.local/bin/bml` 심볼릭 링크만
+만들고 PATH 는 "셸 설정에 추가하세요" 로 사람에게 미뤘기 때문이다. 명령의
+이름이 `install` 이고 도움말이 "이 명령을 PATH 에 등록한다" 인 이상, 셸 설정
+한 줄까지가 이 명령의 일이다.
+
+세 곳이 비어 있었다.
+
+1. `bml install` 이 링크만 만들었다 → `$SHELL` 로 rc 파일을 고르고
+   (`shell_rc()`: zsh→`.zshrc`, bash→`.bashrc`) 없으면 한 줄 넣는다.
+   같은 줄을 두 번 넣지 않는다. **그리고 지금 이 터미널용 `export` 한 줄을
+   함께 찍는다** — rc 는 새 터미널에서만 읽히므로, 이걸 안 주면 "넣었다는데
+   여전히 안 된다" 가 된다. 지금 셸이 아니라 `$SHELL` 을 보는 이유는,
+   `bash tools/bml install` 로 잠깐 bash 를 쓴 zsh 사용자의 `.bashrc` 에
+   적으면 새 터미널에서 여전히 안 되기 때문이다.
+2. `make setup` 이 `install-bml` 을 안 불렀다 → 넣었다. 설치 절차에 없는
+   단계는 반드시 빠진다.
+3. `bml doctor` 가 PATH 를 안 봤다 → `command -v bml` 을 짚는다. PATH 의
+   `bml` 이 **다른 트리**를 가리키는 경우도 따로 경고한다 (worktree 를 두 개
+   쓰면 여기서 고친 것이 저기서 안 보인다).
+
+`docs/guides/wsl-setup.md` 의 빠른 경로에서 `exec bash` 를 뺐다 — `export` 한
+줄이면 지금 터미널에 바로 먹고, `exec bash` 는 그 자리에서 셸을 갈아치워
+사람이 하던 것을 잃는다. 회귀 테스트 `tools/tests/test_bml_install.sh` (11건).
+rc 에 넣은 줄이 **실제로 먹는지**까지 본다 — `env -i` 로 깨끗한 셸을 띄워
+그 rc 를 읽히고 `command -v bml` 이 잡히는지 확인한다.

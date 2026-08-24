@@ -55,10 +55,10 @@ git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
 cd Yonghoon-DEM-DFT
 ls Makefile tools/bml          # 둘 다 보여야 정상입니다
 
-./tools/bml install
-echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc && exec bash
+./tools/bml install                        # 셸 설정의 PATH 한 줄까지 넣습니다
+export PATH="$HOME/.local/bin:$PATH"       # 지금 이 터미널에 반영 (새 터미널은 그냥 됩니다)
 
-cd ~/Yonghoon-DEM-DFT && bml
+bml
 ```
 
 `http://localhost:5003` 이 Windows 기본 브라우저에서 열립니다. 첫 실행은
@@ -73,6 +73,11 @@ cd ~/Yonghoon-DEM-DFT && bml
 > **이 기계가 중추 서버가 아니라면 `.bml/env` 를 만들지 마세요.** 데이터를
 > 외장 드라이브에 두고 남들과 공유하는 것은 한 대만 하는 설정입니다
 > ([[central-server]]).
+
+`bml: command not found` 가 나면 `install` 을 건너뛴 것이거나 `export` 줄을 안
+친 것입니다 — `~/.bashrc` 에 들어간 줄은 **새 터미널**에서만 읽힙니다.
+`bml doctor` 가 이것을 짚어 주고, 저장소 안에서는 언제든 `./tools/bml <명령>`
+으로 경로째 부를 수 있습니다.
 
 보기만 할 거라면 여기까지 할 필요도 없습니다 — 중추 서버 주소를 브라우저로
 열면 됩니다.

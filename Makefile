@@ -23,8 +23,10 @@ help: ## 사용 가능한 타겟
 	@grep -hE '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) \
 	  | awk 'BEGIN {FS = ":.*?## "}; {printf "  \033[36m%-16s\033[0m %s\n", $$1, $$2}'
 
-setup: setup-git venv install-api install-web ## 클론 직후 1회
-	@echo "준비 완료. 'make dev' 로 실행하세요."
+# install-bml 이 여기 없어서, make setup 을 끝까지 한 사람이 다음 줄에서
+# `bml: command not found` 를 봤다.  설치 절차에 없는 한 단계는 반드시 빠진다.
+setup: setup-git venv install-api install-web install-bml ## 클론 직후 1회
+	@echo "준비 완료. 'bml' 로 실행하세요 (새 터미널이거나, 위가 알려 준 export 한 줄 뒤)."
 
 setup-git: ## 공용 브랜치용 git 설정 (rebase + autostash + 커밋 기록 훅)
 	git config pull.rebase true
@@ -91,6 +93,7 @@ test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, do
 	bash tools/tests/test_bml_client.sh
 	bash tools/tests/test_bml_tunnel.sh
 	bash tools/tests/test_worklog.sh
+	bash tools/tests/test_bml_install.sh
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py
 
