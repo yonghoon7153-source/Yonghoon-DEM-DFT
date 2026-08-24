@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { DeleteSampleButton } from '../components/DeleteSample'
 import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
 import { nameFamily, num } from '../lib/format'
@@ -16,11 +17,13 @@ export function Library() {
   const [process, setProcess] = useState('')
   const [dateFrom, setDateFrom] = useState('')
   const [dateTo, setDateTo] = useState('')
-  const [creating, setCreating] = useState(false)
+  // 목록을 다시 읽게 하는 토큰.  셀을 새로 만들 때도, 지울 때도 뒤집는다 —
+  // 지우고 나서 목록이 그대로면 사라진 셀이 계속 보이고, 눌러 보면 404 다.
+  const [reloadKey, bumpReload] = useState(false)
   const [groupBy, setGroupBy] = useStickyState<GroupKey>('workbench.libraryGroupBy', 'none')
 
   const debouncedSearch = useDebounced(search)
-  const groups = useAsync(() => api.listGroups(), [creating], { live: true })
+  const groups = useAsync(() => api.listGroups(), [reloadKey], { live: true })
   const facets = useAsync(() => api.facets(), [], { live: true })
   const samples = useAsync(
     () =>
@@ -32,7 +35,7 @@ export function Library() {
         date_from: dateFrom,
         date_to: dateTo,
       }),
-    [debouncedSearch, groupId, cathode, process, dateFrom, dateTo, creating],
+    [debouncedSearch, groupId, cathode, process, dateFrom, dateTo, reloadKey],
   )
 
   return (
@@ -45,7 +48,7 @@ export function Library() {
           </div>
         </div>
         <span className="spacer" />
-        <NewSampleButton groups={groups.data ?? []} onCreated={() => setCreating((v) => !v)} />
+        <NewSampleButton groups={groups.data ?? []} onCreated={() => bumpReload((v) => !v)} />
       </div>
 
       <div className="split">
@@ -142,7 +145,11 @@ export function Library() {
                 <Spinner />
               </div>
             ) : samples.data?.length ? (
-              <SampleTable samples={samples.data} groupBy={groupBy} />
+              <SampleTable
+                samples={samples.data}
+                groupBy={groupBy}
+                onDeleted={() => bumpReload((v) => !v)}
+              />
             ) : (
               <Empty title="조건에 맞는 셀이 없습니다">
                 필터를 넓히거나 <Link to="/upload">파일을 올려</Link> 주세요.
@@ -152,7 +159,7 @@ export function Library() {
         </div>
 
         <Card title="그룹">
-          <GroupManager onChanged={() => setCreating((v) => !v)} />
+          <GroupManager onChanged={() => bumpReload((v) => !v)} />
         </Card>
       </div>
     </main>
@@ -195,7 +202,18 @@ function bucketOf(sample: Sample, key: GroupKey): string {
   }
 }
 
-function SampleTable({ samples, groupBy }: { samples: Sample[]; groupBy: GroupKey }) {
+function SampleTable({
+  samples,
+  groupBy,
+  onDeleted,
+}: {
+  samples: Sample[]
+  groupBy: GroupKey
+  onDeleted: () => void
+}) {
+  // 실패는 표 바깥에 한 번만 그린다.  행 안에 끼우면 열이 밀리고, 묶은 표에서는
+  // 구분 줄까지 함께 밀린다.
+  const [deleteError, setDeleteError] = useState<string | null>(null)
   const sections = useMemo(() => {
     if (groupBy === 'none') return null
     const buckets = new Map<string, Sample[]>()
@@ -214,6 +232,20 @@ function SampleTable({ samples, groupBy }: { samples: Sample[]; groupBy: GroupKe
     })
   }, [samples, groupBy])
 
+  const row = (sample: Sample) => (
+    <SampleRow
+      key={sample.id}
+      sample={sample}
+      onDeleted={onDeleted}
+      onError={setDeleteError}
+    />
+  )
+  const failure = deleteError ? (
+    <div style={{ padding: '10px 14px 0' }}>
+      <Alert kind="error">{deleteError}</Alert>
+    </div>
+  ) : null
+
   if (sections) {
     return (
       <div className="table-wrap" style={{ maxHeight: 'none' }}>
@@ -227,12 +259,11 @@ function SampleTable({ samples, groupBy }: { samples: Sample[]; groupBy: GroupKe
                   <span className="faint"> · {rows.length}개</span>
                 </th>
               </tr>
-              {rows.map((sample) => (
-                <SampleRow key={sample.id} sample={sample} />
-              ))}
+              {rows.map(row)}
             </tbody>
           ))}
         </table>
+        {failure}
       </div>
     )
   }
@@ -241,12 +272,9 @@ function SampleTable({ samples, groupBy }: { samples: Sample[]; groupBy: GroupKe
     <div className="table-wrap" style={{ maxHeight: 'none' }}>
       <table>
         <SampleHead />
-        <tbody>
-          {samples.map((sample) => (
-            <SampleRow key={sample.id} sample={sample} />
-          ))}
-        </tbody>
+        <tbody>{samples.map(row)}</tbody>
       </table>
+      {failure}
     </div>
   )
 }
@@ -274,15 +302,26 @@ function SampleHead() {
         <th>온도</th>
         <th>파일</th>
         <th>사이클</th>
+        {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그 글자가
+            먼저 읽힌다 — 이 표는 셀을 찾으러 오는 곳이지 지우러 오는 곳이 아니다. */}
+        <th />
       </tr>
     </thead>
   )
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 13
+const COLUMN_COUNT = 14
 
-function SampleRow({ sample }: { sample: Sample }) {
+function SampleRow({
+  sample,
+  onDeleted,
+  onError,
+}: {
+  sample: Sample
+  onDeleted: () => void
+  onError: (message: string | null) => void
+}) {
   const cell = sample.resolved_cell
   return (
     <tr>
@@ -315,6 +354,14 @@ function SampleRow({ sample }: { sample: Sample }) {
       <td>{sample.temperature_c !== null ? `${sample.temperature_c}°C` : '—'}</td>
       <td>{sample.run_count}</td>
       <td>{sample.cycle_count}</td>
+      <td style={{ whiteSpace: 'nowrap' }}>
+        <DeleteSampleButton
+          sampleId={sample.id}
+          sampleName={sample.name}
+          onDeleted={onDeleted}
+          onError={onError}
+        />
+      </td>
     </tr>
   )
 }

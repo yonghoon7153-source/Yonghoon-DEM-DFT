@@ -9,11 +9,12 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { ActivityFeed } from '../components/ActivityFeed'
+import { DeleteSampleButton } from '../components/DeleteSample'
 import { PatchNotes } from '../components/PatchNotes'
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
-import { Alert, Card, Empty, StateBadge, TableSkeleton, TrashIcon } from '../components/ui'
+import { Alert, Card, Empty, StateBadge, TableSkeleton } from '../components/ui'
 import { api } from '../lib/api'
 import { basisUnit, num, pct, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
@@ -259,9 +260,8 @@ function DashboardTable({
   basis: Basis
   onDeleted: () => void
 }) {
-  // 실수로 한 번 눌러 셀이 사라지지 않도록, 지우기는 두 번 눌러야 한다.
-  const [confirmDelete, setConfirmDelete] = useState<number | null>(null)
-  const [deleting, setDeleting] = useState(false)
+  // 지우기 버튼은 셀 라이브러리와 공유한다 (DeleteSampleButton) — 무엇이
+  // 지워지는가를 설명하는 문구가 두 화면에서 갈라지면 안 된다.
   const [deleteError, setDeleteError] = useState<string | null>(null)
   return (
     <div className="table-wrap tall">
@@ -383,52 +383,12 @@ function DashboardTable({
                   .join(' · ') || '—'}
               </td>
               <td style={{ whiteSpace: 'nowrap' }}>
-                {confirmDelete === row.sample_id ? (
-                  <>
-                    <button
-                      className="danger tiny"
-                      disabled={deleting}
-                      onClick={async () => {
-                        setDeleting(true)
-                        try {
-                          setDeleteError(null)
-                          // 원본 .wrd 는 지우지 않는다 (불변 규칙 2).
-                          // 파일은 data/uploads/ 에 남고, 다시 올리면 살아난다.
-                          await api.deleteSample(row.sample_id, true)
-                          setConfirmDelete(null)
-                          onDeleted()
-                        } catch (cause) {
-                          setDeleteError(
-                            cause instanceof Error ? cause.message : String(cause),
-                          )
-                        } finally {
-                          setDeleting(false)
-                        }
-                      }}
-                    >
-                      지웁니다
-                    </button>
-                    <button
-                      className="ghost tiny"
-                      disabled={deleting}
-                      onClick={() => setConfirmDelete(null)}
-                    >
-                      취소
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    className="ghost icon"
-                    aria-label={`${row.sample_name} 지우기`}
-                    title="이 셀을 기록에서 지웁니다 (원본 .wrd 는 남습니다)"
-                    onClick={() => {
-                      setDeleteError(null)
-                      setConfirmDelete(row.sample_id)
-                    }}
-                  >
-                    <TrashIcon />
-                  </button>
-                )}
+                <DeleteSampleButton
+                  sampleId={row.sample_id}
+                  sampleName={row.sample_name}
+                  onDeleted={onDeleted}
+                  onError={setDeleteError}
+                />
               </td>
             </tr>
           ))}

@@ -78,14 +78,35 @@ const SAMPLES = [
   sample(3, '4.0V_post_formation_18.9mg', { process: 'wet' }),
 ]
 
-function installFetch(samples: Sample[] = SAMPLES) {
+/** 주고받은 요청.  지우기가 **정말 서버에 갔는지**를 보려면 이것이 필요하다 --
+ *  화면에서 행이 사라지는 것은 목록을 다시 읽어서일 수도 있다. */
+let sent: { url: string; method: string }[] = []
+
+function installFetch(samples: Sample[] = SAMPLES, fail?: string) {
+  sent = []
+  let live = samples
   vi.stubGlobal(
     'fetch',
-    vi.fn(async (url: string) => {
+    vi.fn(async (url: string, init?: RequestInit) => {
       const path = url.split('?')[0] ?? url
+      const method = init?.method ?? 'GET'
+      sent.push({ url: path, method })
+      if (method === 'DELETE') {
+        if (fail) {
+          return {
+            ok: false,
+            status: 500,
+            statusText: 'Error',
+            json: async () => ({ detail: fail }),
+          }
+        }
+        const id = Number(path.split('/').pop())
+        live = live.filter((item) => item.id !== id)
+        return { ok: true, status: 200, statusText: 'OK', json: async () => ({}) }
+      }
       const body =
         path === '/api/samples'
-          ? samples
+          ? live
           : path === '/api/samples/facets'
             ? {
                 cathode_type: [], cathode_detail: [], process: [], electrolyte: [],
@@ -209,5 +230,72 @@ describe('라이브러리 묶기', () => {
       (row) => row.querySelector('td') !== null,
     )
     expect(dataRows).toHaveLength(SAMPLES.length)
+  })
+})
+
+// --- 쓰레기통 ---------------------------------------------------------------
+
+describe('셀 지우기', () => {
+  it('한 번 눌러서는 안 지워진다 — 확인을 받는다', async () => {
+    // 표의 행 끝에 있는 버튼이라 스크롤하다 스치기 쉽고, 되돌리기가 없다.
+    installFetch()
+    renderLibrary()
+
+    await userEvent.click(await screen.findByRole('button', { name: '4.6V_1_17.5mg 지우기' }))
+    expect(sent.filter((r) => r.method === 'DELETE')).toHaveLength(0)
+    expect(screen.getByRole('button', { name: '지웁니다' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '취소' })).toBeInTheDocument()
+  })
+
+  it('취소하면 아무 일도 없다', async () => {
+    installFetch()
+    renderLibrary()
+
+    await userEvent.click(await screen.findByRole('button', { name: '4.6V_1_17.5mg 지우기' }))
+    await userEvent.click(screen.getByRole('button', { name: '취소' }))
+    expect(sent.filter((r) => r.method === 'DELETE')).toHaveLength(0)
+    expect(screen.getByText('4.6V_1_17.5mg')).toBeInTheDocument()
+  })
+
+  it('두 번째로 눌러야 지워지고, 목록에서 사라진다', async () => {
+    // 지우고 나서 목록이 그대로면 사라진 셀이 계속 보이고, 눌러 보면 404 다.
+    installFetch()
+    renderLibrary()
+
+    await userEvent.click(await screen.findByRole('button', { name: '4.6V_1_17.5mg 지우기' }))
+    await userEvent.click(screen.getByRole('button', { name: '지웁니다' }))
+
+    await waitFor(() => expect(screen.queryByText('4.6V_1_17.5mg')).toBeNull())
+    const deletes = sent.filter((r) => r.method === 'DELETE')
+    expect(deletes).toHaveLength(1)
+    expect(deletes[0]!.url).toBe('/api/samples/1')
+    // 나머지는 그대로 -- 지운 것만 사라져야 한다.
+    expect(screen.getByText('4.6V_2_18.1mg')).toBeInTheDocument()
+  })
+
+  it('실패하면 그렇게 말한다 — 조용히 지운 척하지 않는다', async () => {
+    installFetch(SAMPLES, '이 셀에는 파일이 붙어 있습니다')
+    renderLibrary()
+
+    await userEvent.click(await screen.findByRole('button', { name: '4.6V_1_17.5mg 지우기' }))
+    await userEvent.click(screen.getByRole('button', { name: '지웁니다' }))
+
+    expect(await screen.findByText(/이 셀에는 파일이 붙어 있습니다/)).toBeInTheDocument()
+    expect(screen.getByText('4.6V_1_17.5mg')).toBeInTheDocument()
+  })
+
+  it('묶어 놓은 표에서도 구분 줄이 안 밀린다', async () => {
+    // 구분 줄은 colSpan 으로 표 전체를 걸친다.  열을 하나 더했으니 그 숫자도
+    // 따라가야 하고, 안 그러면 묶기를 켰을 때만 표가 한 칸 어긋난다.
+    installFetch()
+    renderLibrary()
+    await screen.findByText('4.6V_1_17.5mg')
+
+    await userEvent.click(screen.getByRole('button', { name: '이름' }))
+    await waitFor(() => expect(document.querySelector('tr.section th')).not.toBeNull())
+
+    const header = document.querySelector('tr.section th') as HTMLTableCellElement
+    const columns = document.querySelectorAll('thead th').length
+    expect(header.colSpan).toBe(columns)
   })
 })
