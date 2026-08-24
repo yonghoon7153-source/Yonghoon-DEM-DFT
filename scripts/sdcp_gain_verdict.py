@@ -45,6 +45,20 @@ PREREG = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'
 #  재발), "없으면 HOLD" 로 하면 **진행 중인 스윕이 통째로 멈춘다**(vox 0.125 팔들이 옛 payload).
 #  ⇒ 정확한 판정은 **섞이면 HOLD** 다: 한 디렉터리 안에서 어떤 팔은 기록이 있고 어떤 팔은
 #  없다면, 그것이 바로 세대가 갈렸다는 신호이므로 비교할 수 없다.
+#  ★★★ 2026-08-24 (CDXR2-6/CDXR2-7) — **고정 인자의 단일 소스**.
+#    실사고: `ptfe_stamp` 를 목록에 넣었는데 게이트가 **발화하지 않았다**.  같은 목록이
+#    세 곳에 **따로 하드코딩**돼 있었기 때문이다 — ⓐ 팔간-차이 루프 ⓑ 부재 검사 루프
+#    ⓒ `compare_dirs` 용 튜플.  하나만 늘리면 나머지 둘은 그대로다.
+#    ⇒ 셋이 **이것 하나를** 쓴다.  회귀 ㉞ 가 인라인 튜플의 재출현을 막는다.
+#    ⚠ 여기에 필드를 더하면 그 필드를 기록하지 않는 **옛 세대 payload 는 HOLD** 가 된다.
+#      그것이 규약이다 (H5 의 논리 — 기록되지 않은 인자는 고정을 확인할 수 없다).
+#  · `ptfe_stamp`/`ptfe_zero_dof`: σ_PTFE 만 보면 **exact-zero(σ=0·스탬프 ON)와
+#    미스탬프(σ=0·스탬프 OFF)가 구분되지 않는다** — 둘 다 sigma_ptfe_S_cm=0.0 이다.
+_FIXED_FIELDS = ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
+                 'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
+                 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm',
+                 'ptfe_stamp', 'ptfe_zero_dof')
+
 _GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam',
                'temp_c', 'ea_ion_ev', 'mpm_seed',
@@ -106,6 +120,11 @@ def _read(path):
             #    계수는 애초에 검사 대상이 아니었다.  `backend` 는 CuPy 실패 시 조용한 CPU
             #    폴백을 잡는다 (step3_sigma._solve_cg 는 print 만 하고 내려간다).
             'sdcp_stamp': man.get('sdcp_stamp'),
+            #  ★ 2026-08-24 (CDXR2-6) — 부재는 `None` 으로 보존한다 (CDX-IJ-01 의 교훈:
+            #    기본값으로 접으면 missing 게이트가 원리적으로 발화하지 못한다).
+            'ptfe_stamp': man.get('ptfe_stamp'),
+            'ptfe_zero_dof': (None if man.get('ptfe_zero_dof') is None
+                              else bool(man.get('ptfe_zero_dof'))),
             'sdcp_sphere_d_um': man.get('sdcp_sphere_d_um'),
             #  ★★ 2026-08-20 정정 (Codex CDX-IJ-01) — **부재를 기본값으로 접지 않는다.**
             #    옛 판은 `bool(man.get(..., False))` · `float(man.get(..., 0.0) or 0.0)` 이라
@@ -282,11 +301,9 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                         reason=f'두 침대가 `additive_E_GPa` 의 **공통 상**에서 다르다 ({sorted(_diff)}: '
                                f'{ {k: (_as[k], _ad[k]) for k in sorted(_diff)} }) — 세대가 섞였다 '
                                f'(CL-56).  SDCP 처럼 한쪽에만 있는 상은 정상이다')
-    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend', 'sdcp_yield_to_vgcf',
-                'sigma_ptfe_S_cm',
-                # ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
-                #   σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
+    #  ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
+    #    σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
+    for fld in (*_FIXED_FIELDS,
                 *(f for f in _GEN_FIELDS if f not in _gen_ex and f not in _BED_FIELDS)):
         #  ★ F4: dict 값(additive_E_GPa)은 set 에 못 들어간다 — 정규 직렬화로 비교.
         _v = {(json.dumps(r.get(fld), sort_keys=True)
@@ -308,9 +325,7 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     #      이어 쓰라" 고 안내하므로 이 경로는 가정이 아니라 권장 시나리오다.
     #      ⇒ 현행 payload 는 이 여섯을 **항상** 기록한다 (`mpm_webapp_payload.py` 매니페스트)
     #        — 없으면 옛 세대이고, 옛 세대는 고정을 확인할 수 없으므로 HOLD 다 (H5 와 같은 논리).
-    for fld in ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp',
-                'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sdcp_sphere_d_um',
-                'backend', 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm'):
+    for fld in _FIXED_FIELDS:
         _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
         if _miss:
             return dict(out, decision='HOLD',
@@ -470,6 +485,9 @@ def _selftest():
     _FIX = dict(vox=0.15, bridge_um=0.48, fibre_stamp='segment', sdcp_stamp='point',
                 sdcp_sphere_d_um=0.0, sigma_vgcf_S_cm=78.5398, sigma_sdcp_S_cm=250.0,
                 backend='gpu', sdcp_yield_to_vgcf=False, sigma_ptfe_S_cm=0.0,
+                #  ★ 2026-08-24 (CDXR2-6) — PTFE 규약.  σ_PTFE 만으로는 exact-zero 와
+                #    미스탬프가 구분되지 않으므로 규약 자체가 고정 인자다.
+                ptfe_stamp='off', ptfe_zero_dof=False,
                 # ★ 2026-08-19 (A5) — 세대 인자도 픽스처에 싣는다.  안 실으면 위와 같은
                 #   이유로 새 게이트가 selftest 에서 **검증된 적 없는 코드**가 된다.
                 additive_E_GPa={'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 23.6},
@@ -672,6 +690,8 @@ def _selftest():
               'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
               'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+              #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
+              'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
@@ -715,6 +735,8 @@ def _selftest():
               'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
               'sigma_vgcf_S_cm': 133.622, 'sigma_sdcp_S_cm': 250.0,
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+              #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
+              'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
@@ -832,6 +854,45 @@ def _selftest():
     chk(f'㉜c ★★ 봉인 출력이 **판정도 비도 누설하지 않는다** (누설: {_leak})', not _leak)
     chk('㉜d 봉인이 깨진 이유는 싣는다 (데이터 상태는 답이 아니다)',
         any('근거' in x for x in _l2) and not any('근거' in x for x in _l1))
+    #  ★★ ㉝ 2026-08-24 (CDXR2-6) — **PTFE 규약이 고정 인자다.**  σ_PTFE 만 보던 옛
+    #    목록은 exact-zero(σ=0·스탬프 ON)와 미스탬프(σ=0·스탬프 OFF)를 **구분하지 못한다**
+    #    — 둘 다 sigma_ptfe_S_cm=0.0 이다.  규약이 갈렸는데 게이트가 통과시키는 형태.
+    _pf = dict(ptfe_stamp='off', ptfe_zero_dof=False)
+    _v33a = verdict(mk(base, [v * 1.12 for v in base], **_pf))
+    chk(f'㉝a 같은 PTFE 규약이면 통과 ({_v33a["decision"]})', _v33a['decision'] == 'h0')
+    _mix = mk(base, [v * 1.12 for v in base], **_pf)
+    for _r in _mix['DBE']:                                  # DBE 만 exact-zero 로 (규약 혼합)
+        _r['ptfe_stamp'] = 'centerline'; _r['ptfe_zero_dof'] = True
+    _v33b = verdict(_mix)
+    chk(f'㉝b ★★ σ_PTFE 는 같은데 **스탬프 규약이 다르면** HOLD (둘 다 σ=0 이라 옛 '
+        f'게이트는 통과시켰다): {_v33b["decision"]}',
+        _v33b['decision'] == 'HOLD' and 'ptfe_stamp' in (_v33b.get('reason') or ''))
+    _mix2 = mk(base, [v * 1.12 for v in base], **_pf)
+    for _r in _mix2['DBE']:
+        _r.pop('ptfe_stamp')                                 # 옛 세대 payload (필드 부재)
+    _v33c = verdict(_mix2)
+    chk(f'㉝c ★ 규약 기록이 **없는** 팔은 HOLD — 부재를 기본값으로 접지 않는다 '
+        f'(CDX-IJ-01 의 교훈): {_v33c["decision"]}',
+        _v33c['decision'] == 'HOLD')
+    #  ★★★ ㉞ 2026-08-24 (CDXR2-7) — **고정 인자의 단일 소스를 강제한다.**
+    #    이번 결함의 근본 원인: 같은 목록이 세 곳에 따로 하드코딩돼 있어 `_FIXED_FIELDS` 에
+    #    `ptfe_stamp` 를 넣어도 **팔간-차이 루프와 부재 검사 루프는 그대로**였다 —
+    #    ㉝b/㉝c 가 그것을 잡았다.  개별 필드 테스트로는 다음 번 추가를 못 막으므로
+    #    **구조**를 건다: 두 루프가 `_FIXED_FIELDS` 를 참조해야 하고, 필드 목록 리터럴이
+    #    파일에 두 번 나오면 안 된다.
+    import os as _os2
+    _self = open(_os2.path.abspath(__file__), encoding='utf-8').read()
+    chk('㉞a 부재 검사 루프가 _FIXED_FIELDS 를 쓴다 (인라인 튜플 아님)',
+        'for fld in _FIXED_FIELDS:' in _self)
+    chk('㉞b 팔간-차이 루프가 _FIXED_FIELDS 를 쓴다',
+        'for fld in (*_FIXED_FIELDS,' in _self)
+    #  ⚠ needle 을 쪼개 만든다 — 통짜로 적으면 이 줄 자신이 두 번째 출현이 된다 (자기참조).
+    _lit = "'vox', " + "'bridge_um', " + "'fibre_stamp', " + "'sdcp_stamp'"
+    chk(f'㉞c ★★ 필드 목록 리터럴이 파일에 **한 번만** 나온다 (={_self.count(_lit)}) — '
+        f'복사본이 생기면 게이트가 조용히 갈린다',
+        _self.count(_lit) == 1)
+    chk('㉞d compare_dirs 와 verdict 가 같은 계약을 쓴다',
+        'ptfe_stamp' in _FIXED_FIELDS and 'ptfe_zero_dof' in _FIXED_FIELDS)
 
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
@@ -955,6 +1016,8 @@ def _selftest():
                'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
                'sigma_vgcf_S_cm': 78.5398, 'sigma_sdcp_S_cm': 250.0,
                'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
+               #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
+               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
                'code_sha': 'abc1234', 'components': _comps()}
         for _k, _mul, _ad, _ad2, _dg in (('SBE', 1.0, s_add, s_add2, s_dig),
                                          ('DBE', 1.12, d_add, d_add2, d_dig)):
@@ -1000,9 +1063,6 @@ def _selftest():
 
 
 #: 두 팔이 **고정**이어야 하는 인자 (한 디렉터리 안에서도, 두 디렉터리 사이에서도).
-_FIXED_FIELDS = ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                 'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
-                 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm')
 
 
 def _canon(v):

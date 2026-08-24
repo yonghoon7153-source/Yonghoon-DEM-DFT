@@ -1072,7 +1072,11 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
 #: 규칙 J 의 **음성 대조** — 이 한 줄(2026-08-20 hoist)을 지우면 ① 이 그대로 재현된다.
 #: 사본에서만 지우고 원본은 건드리지 않는다.  needle 이 안 맞으면 그것 자체가 실패다
 #: (검사가 무엇을 지웠는지 모르는 채 통과하면 규칙 D 의 "발동한 적 없는 검사" 가 된다).
-_J_NEEDLE = ("    _kind_all = None\n"
+#  ★ 2026-08-24 (CDXR2-2) — hoist 가 **둘**이 됐다.  `_dia_all` 을 읽는 게이트
+#    (`PTFE_STAMP_NEEDS_DIA`)도 `if a.fibre` 블록 밖에 있어 같은 부류의 결함이다.
+#    ⇒ 니들을 두 줄로 넓혀 **어느 쪽을 지워도** 음성 대조가 발화하게 한다.
+_J_NEEDLE = ("    _dia_all = None\n"
+             "    _kind_all = None\n"
              "    if getattr(a, 'fibre', '') and phase is not None:")
 _J_MUTANT = "    if getattr(a, 'fibre', '') and phase is not None:"
 
@@ -1356,7 +1360,7 @@ def _selftest():
     #   실제로 돌려, 08-12~20 의 그 사고가 재현되고 **검사가 그것을 잡는지** 본다.
     chk('J-1: 두 팔(±--fibre)이 지금 통과한다 (STEP3 manifest 가 complete)',
         check_entrypoint_smoke(verbose=False)[0] == [])
-    chk('J-2: ★ 음성 대조 — `_kind_all` hoist 를 지우면 **잡는다**',
+    chk('J-2: ★ 음성 대조 — `_dia_all`/`_kind_all` hoist 를 지우면 **잡는다**',
         smoke_negative_control(verbose=False)[0] == [])
     #  ── J-3 (2026-08-20, Codex CDX-IJ-05) — **계산 없는 자가보고**를 잡는가 ──────────────
     #     Codex 가 독립 fake producer 로 통과시킨 두 변형을 그대로 상주 음성 대조로 만든다.

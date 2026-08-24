@@ -353,6 +353,34 @@ def _selftest_temperature():
     print(('  PASS  ' if _z_ok else '  FAIL  ')
           + f'0 은 0 으로 남는다 (_mflt(0.0)={_mflt(0.0)!r} · _mint(0)={_mint(0)!r})')
     ok = ok and _z_ok
+    #  ── ★★ PTFE 스탬프 규약 (CDXR2-2 / CDXR2-6) ──────────────────────────────────────
+    def _p(label, cond):
+        nonlocal ok
+        print(('  PASS  ' if cond else '  FAIL  ') + label)
+        ok = ok and bool(cond)
+
+    _p('ptfe-legacy-on  옛 규약: 요청 없음 + σ>0 → centerline (CL-49 재현성 보존)',
+       resolve_ptfe_stamp('', 1e-16) == ('centerline', True))
+    _p('ptfe-legacy-off 옛 규약: 요청 없음 + σ=0 → off (생산 기본 불변)',
+       resolve_ptfe_stamp('', 0.0) == ('off', True))
+    _p('ptfe-explicit   ★ 명시 요청은 σ 를 **보지 않는다** — centerline+σ=0 = exact-zero DOF',
+       resolve_ptfe_stamp('centerline', 0.0) == ('centerline', False)
+       and resolve_ptfe_stamp('off', 250.0) == ('off', False))
+    _p('ptfe-reserved   ★ capsule 은 예약값이다 (centerline 별칭 금지)',
+       'capsule' in PTFE_STAMPS_RESERVED and 'capsule' in PTFE_STAMPS)
+    #  ★ 이 검사가 요점이다 — 누가 capsule 을 구현하면서 직경 배선을 잊으면 여기서 걸린다.
+    _p('ptfe-dia-gate   ★★ 예약 해제된 규약은 전부 직경 배선을 갖춰야 한다',
+       all(r in PTFE_STAMP_NEEDS_DIA for r in PTFE_STAMPS_RESERVED))
+    import os as _os_mod
+    _txt = open(_os_mod.path.abspath(__file__), encoding='utf-8').read()
+    #  ⚠ needle 을 **쪼개서** 만든다 — 통짜로 적으면 이 줄 자신이 파일에 들어가
+    #    검사가 스스로를 잡는다 (자기참조).  실제로 초판이 그렇게 실패했다.
+    _old_gate = 'if a.sigma_ptfe > 0 else ' + '(2, 3, 5, 6)'
+    _p('ptfe-gate-split ★ _cond_ph 가 σ 가 아니라 규약으로 갈린다 (옛 결함 회귀)',
+       "_ptfe_stamp != 'off'" in _txt and _old_gate not in _txt)
+    _p('ptfe-dia-early  ★ --fibre-dia 를 solve **전에** 읽는다 (뷰어 블록은 재사용)',
+       '_dia_all = np.load(a.fibre_dia)' in _txt and 'dia = _dia_all' in _txt)
+
     print('PAYLOAD TEMPERATURE SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
@@ -440,6 +468,34 @@ def finite_belt(obj, path='$', found=None):
             out.append(w)
         return out, found
     return obj, found
+
+#: ★ 직경 인식 PTFE 스탬프 규약 (CDXR2-2).  여기 있는 규약은 per-fibril 직경 없이
+#  돌면 **안 된다** — 직경 없이 돌면 요청과 다른 규약(1-셀 선분)을 재게 된다.
+#  ⚠ `capsule` 은 아직 예약값이라 parse 직후 중단되므로 그 게이트는 아직 발화하지 않는다.
+#    구현이 들어올 때 이 목록이 fail-open 을 막는 자리다.
+PTFE_STAMP_NEEDS_DIA = ('capsule',)
+
+#: PTFE 스탬프 규약 이름들.  '' = 옛 규약 유도 (매니페스트에 legacy-unversioned).
+PTFE_STAMPS = ('off', 'centerline', 'capsule')
+#: 아직 구현되지 않은 예약값 — 고르면 **중단**한다 (centerline 별칭 금지, Codex Q3).
+PTFE_STAMPS_RESERVED = ('capsule',)
+
+
+def resolve_ptfe_stamp(requested, sigma_ptfe):
+    """(요청, σ_PTFE) → (적용 규약, 옛 규약 유도인가).
+
+    ★ **스탬프 여부와 전도도는 다른 축이다** (CDXR2-6).  옛 게이트는 둘을 묶어
+    `sigma_ptfe > 0` 일 때만 찍었고, 그래서 "격자에 그리되 절연으로" 를 표현할 방법이
+    없었다 — CL-49 가 `1e-16` 우회로를 쓴 이유다 (σ 대비 1e18 = 조건수 파괴).
+    솔버는 이미 `cond = sig > 0` 이라 σ=0 셀을 dof 에서 빼므로, 게이트만 떼면
+    `centerline + σ=0` 이 **exact-zero DOF** 가 된다.
+
+    ⚠ 옛 호출부 호환: 요청이 비면 σ 로 유도하고 `legacy=True` 를 돌려준다.
+      그 팔은 매니페스트에 `legacy-unversioned` 로 적혀 새 세대와 섞이지 않는다."""
+    if requested:
+        return requested, False
+    return ('centerline' if float(sigma_ptfe or 0.0) > 0 else 'off'), True
+
 
 def main():
     ap = argparse.ArgumentParser()
@@ -566,6 +622,19 @@ def main():
                          '아예 미스탬프, bulk PTFE ~1e-16 S/cm 절연체).  >0이면 PTFE phase-4 점을 sid7로 '
                          '스탬프해 전자망에 참여시킴 — "절연 가정이 결과를 만들었나" 반론 검증용 '
                          '(랩 논의 2026-07-14, 0.58 S/cm 제안값의 출처는 미확인 ⚠).  이온은 항상 절연.')
+    #  ★★ 2026-08-24 (CDXR2-2/CDXR2-6) — **스탬프 여부와 전도도를 분리한다.**
+    #    옛 게이트 `_cond_ph = (...) if a.sigma_ptfe > 0 else (...)` 는 둘을 묶어 놓아
+    #    "PTFE 를 격자에 그리되 절연으로" 를 표현할 방법이 **없었다**.  그래서 CL-49 는
+    #    `--sigma-ptfe 1e-16` 이라는 우회로를 썼고, 그것은 σ 대비 1e18 로 조건수를 무너뜨린다
+    #    (prereg v3 STEP 3 이 대비 25,000 배에서 이미 CG 미수렴 HOLD).
+    #    ★ 솔버는 이미 `cond = sig > 0` (step3_sigma.py:447) 이라 **σ=0 셀은 dof 에서 빠진다**.
+    #      ⇒ 게이트만 분리하면 `--ptfe-stamp centerline --sigma-ptfe 0` = **exact-zero DOF** 다.
+    ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule'),
+                    help="PTFE 를 전도 격자에 어떻게 그릴지.  off = 안 그린다 · centerline = "
+                         "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**).  "
+                         "빈 값 = 옛 규약 유도(sigma_ptfe > 0 이면 centerline, 아니면 off) 이고 "
+                         "매니페스트에 legacy-unversioned 로 적힌다.  ⚠ σ 와 무관하다 — "
+                         "`--ptfe-stamp centerline --sigma-ptfe 0` 이 exact-zero DOF 다")
     ap.add_argument('--sigma-swcnt', type=float, default=100.0,
                     help='σ_e SWCNT sheath (S/cm) — A14.  VGCF급 lit order ⚠hook: 개별 SWCNT 축방향은 '
                          '1e4-1e5 S/cm급이나 vein-번들 film 유효값은 미앵커.  ⚠ koo2026의 0.20 S/cm은 '
@@ -659,6 +728,20 @@ def main():
     ap.add_argument('--selftest-temperature', action='store_true',
                     help='T1-e/T1-a 온도 계약 회귀 테스트만 실행하고 종료 (입력 파일 불필요)')
     a = ap.parse_args()
+    #  ★★ PTFE 스탬프 규약 해석 (CDXR2-6).  **어떤 작업보다 먼저** — 예약값을 고르면
+    #    GPU 를 잡기 전에 죽어야 한다.
+    a._ptfe_stamp, a._ptfe_stamp_legacy = resolve_ptfe_stamp(a.ptfe_stamp, a.sigma_ptfe)
+    if a._ptfe_stamp in PTFE_STAMPS_RESERVED:
+        #  ⚠ 예약값이다 — centerline 으로 별칭하거나 매니페스트에 'capsule applied' 라고
+        #    적으면 **안 된다** (Codex Q3).  구현될 때까지 명시적으로 죽는다.
+        raise SystemExit(
+            'unsupported_protocol: --ptfe-stamp capsule 은 **예약값이고 미구현**이다.\n'
+            '  PTFE 는 정부피 인발로 시딩돼 직경이 **분포**다 (additives.seed_fibres '
+            'vol_conserve, d_i ∝ √(V_i/L_i)) — 단일 Ø0.25 캡슐로는 표현되지 않는다.\n'
+            '  게다가 per-fibril 직경이 아직 raster 에 배선돼 있지 않다 (CDXR2-2: '
+            '--fibre-dia 는 뷰어 전용이고 로드가 solve 뒤다).\n'
+            '  ⇒ D-1 source census 를 먼저 돌려 표현법을 정한 뒤 구현한다.  '
+            '지금은 `--ptfe-stamp {off,centerline}` 만 쓸 것.')
     if a.selftest_temperature:
         _sys.exit(_selftest_temperature())
     # ── σ_ion(T) ────────────────────────────────────────────────────────────────
@@ -963,6 +1046,13 @@ def main():
     #   ⇒ σ_e·σ_ion·k·pore-τ·collector·step4_grid 가 통째로 **소실**되는데 런은 성공으로 보인다.
     #   (2026-08-12 `60bd849e` 이후 활성.  pyflakes(check_undefined_names)는 조건부 바인딩을
     #    원리적으로 못 본다 — 그래서 규칙 J 스모크가 필요하다.)
+    #  ★★ 2026-08-24 (CDXR2-2) — `_dia_all` 도 **같은 부류**다.  per-fibril 직경을
+    #    solve 전에 읽는데(옛 판은 뷰어 블록에서만, 솔브 **뒤**), 그것을 읽는 게이트
+    #    (`PTFE_STAMP_NEEDS_DIA`)가 아래 `if a.fibre` 블록 **밖**에 있다 — 즉 hoist 가
+    #    없으면 `--fibre` 없는 plain 침대에서 정확히 위와 같은 UnboundLocalError 다.
+    #    ⇒ 두 hoist 를 **붙여 둔다**.  규칙 J 의 음성 대조(`_J_NEEDLE`)가 이 두 줄을
+    #      한 덩어리로 지키므로, 어느 쪽을 지워도 스모크가 잡는다.
+    _dia_all = None
     _kind_all = None
     if getattr(a, 'fibre', '') and phase is not None:
         try:
@@ -984,6 +1074,23 @@ def main():
                 print(f'  ⚠ --fibre 길이 {len(_fid_all):,} ≠ SE 점 {len(se):,} → 선분 스탬프 비활성',
                       flush=True)
                 _fid_all = None
+            #  ★ per-fibril 상대 직경 (PTFE 정부피 인발: d ∝ √(V/L) 이라 **분포**다).
+            #    길이가 안 맞으면 **여기서** 버린다 — 뷰어 뒤가 아니라.
+            if getattr(a, 'fibre_dia', ''):
+                try:
+                    _dia_all = np.load(a.fibre_dia)
+                    if len(_dia_all) != len(se):
+                        print(f'  ⚠ --fibre-dia 길이 {len(_dia_all):,} ≠ SE 점 {len(se):,} '
+                              f'→ 직경 비활성', flush=True)
+                        _dia_all = None
+                    else:
+                        print(f'  STEP3: per-fibril 직경 로드 ({a.fibre_dia}) — '
+                              f'{len(_dia_all):,} 점', flush=True)
+                except Exception as _e2:                       # noqa: BLE001
+                    print(f'  ⚠ --fibre-dia 로드 실패 ({type(_e2).__name__}: {_e2})', flush=True)
+                    _dia_all = None
+        except SystemExit:
+            raise
         except Exception as _e:                                # noqa: BLE001
             # ★ 2026-08-12 fail-closed: `--step3-fibre-stamp segment` 를 **명시적으로** 요청했으면
             #   조용히 점으로 내려앉으면 안 된다.  런은 성공한 것처럼 끝나고 **다른 규약을 잰다**
@@ -999,6 +1106,16 @@ def main():
     #  ★ 방어 기본값 — 아래 try 가 이들을 대입하기 **전에** 죽으면 매니페스트 조립(:1690~)이
     #    NameError 를 낸다 (2026-08-16 에 `_zt3` 로 실제로 겪었다).  매니페스트가 읽는 이름은
     #    전부 여기서 먼저 정의한다.
+    #  ★★ 2026-08-24 (CDXR2-2) — **직경 인식 스탬프는 직경 없이 돌면 안 된다.**
+    #    지금은 `capsule` 하나뿐이고 그것은 parse 직후 예약값으로 중단되므로 이 게이트는
+    #    아직 발화하지 않는다.  그래도 **여기 있어야** 한다 — 구현이 들어오는 순간
+    #    fail-open 이 되는 것을 막는 자리이고, 규약 목록에 이름을 올려 두면 다음 사람이
+    #    직경 배선을 잊지 않는다.  (`_selftest` 의 `ptfe-dia-gate` 가 이 목록을 지킨다.)
+    if a._ptfe_stamp in PTFE_STAMP_NEEDS_DIA and _dia_all is None:
+        raise SystemExit(
+            f'ABORT — --ptfe-stamp {a._ptfe_stamp} 는 per-fibril 직경이 필요한데 '
+            f'--fibre-dia 가 없거나 길이가 SE 점과 다르다.  직경 없이 돌면 요청과 '
+            f'**다른 규약**(1-셀 선분)을 재게 된다.')
     _bru = None; _osh = np.zeros(3); _zt3 = _zb3 = None; _afid = None
     step3 = None; je_am = None; jb_am = None; elec_field = None; ion_field = None; jrxn_am = None
     thermal_field = None                                     # STEP3 열류 |k∇T| 점군 (전자/이온 필드처럼)
@@ -1013,7 +1130,12 @@ def main():
             _off = np.array([SW[0], SW[0], FLOOR])
             _am_c = (c - _off) * UM
             _am_r = r * UM
-            _cond_ph = (2, 3, 5, 6, 4) if a.sigma_ptfe > 0 else (2, 3, 5, 6)   # PTFE(4)는 민감도 런에서만 스탬프; 6=SWCNT sheath(A14, 도체)
+            #  ★★ 2026-08-24 (CDXR2-6) — 스탬프 여부는 **규약**이 정한다 (σ 가 아니라).
+            #    `--ptfe-stamp centerline --sigma-ptfe 0` 이면 sid 7 이 찍히되 σ=0 이라
+            #    솔버의 `cond = sig > 0` 이 그 셀을 **dof 에서 제외**한다 = exact-zero DOF.
+            #    1e-16 우회로(σ 대비 1e18)와 달리 조건수를 건드리지 않는다.
+            _cond_ph = ((2, 3, 5, 6, 4) if a._ptfe_stamp != 'off'
+                        else (2, 3, 5, 6))   # 6=SWCNT sheath(A14, 도체)
             _m = (np.isin(phase, _cond_ph) if phase is not None
                   else np.zeros(len(se), bool))            # conductive additives (PTFE 4 = insulator, default)
             _apts = (se[_m] - _off) * UM if _m.any() else None
@@ -1928,6 +2050,12 @@ def main():
             # ★ origin 앙상블 (prereg sdcp_gain_prereg_20260816 §4) — **일어난 일**을 적는다.
             #   앙상블 팔을 나중에 대조하려면 각 payload 가 자기 위상을 알고 있어야 한다.
             'origin_shift_um': [float(x) for x in _osh],
+            #  ★★ 2026-08-24 (CDXR2-6) — PTFE 규약을 **고정 인자로** 기록한다.  안 적으면
+            #    exact-zero 팔과 1e-16 팔과 미스탬프 팔이 섞여도 게이트가 못 잡는다 (H5 와 같은 실수).
+            'ptfe_stamp': a._ptfe_stamp,
+            'ptfe_stamp_requested': (a.ptfe_stamp or 'legacy-unversioned'),
+            #  σ=0 으로 찍혔나 = 그 셀이 dof 에서 빠졌나 (1e-16 = 극저-σ dof 와 **다른 규약**)
+            'ptfe_zero_dof': bool(a._ptfe_stamp != 'off' and float(a.sigma_ptfe or 0.0) == 0.0),
             'sdcp_stamp': ('sphere' if getattr(a, 'step3_sdcp_sphere_d', 0) > 0 else 'point'),
             'sdcp_sphere_d_um': float(getattr(a, 'step3_sdcp_sphere_d', 0.0)),
             # ★ 2026-08-18 (CL-43) — 진단 팔은 **매니페스트에 남아야** 한다.  안 그러면
@@ -2051,12 +2179,9 @@ def main():
     additive_fibres = []
     if a.fibre and phase is not None:
         fid = np.load(a.fibre)
-        dia = None
-        if a.fibre_dia:                                      # per-point relative Ø (PTFE draw d∝√(V/L))
-            dia = np.load(a.fibre_dia)
-            if len(dia) != len(se):
-                print(f'  ⚠ fibre-dia length {len(dia)} != SE {len(se)} — ignoring --fibre-dia')
-                dia = None
+        #  ★ 2026-08-24 (CDXR2-2) — 위에서 **이미 읽고 검증한** 배열을 쓴다.  옛 판은
+        #    여기서 다시 `np.load` 하고 길이 불일치를 여기서만 잡았다 (솔브 뒤라 늦었다).
+        dia = _dia_all
         if len(fid) != len(se):
             print(f'  ⚠ fibre length {len(fid)} != SE {len(se)} — ignoring --fibre')
         else:
