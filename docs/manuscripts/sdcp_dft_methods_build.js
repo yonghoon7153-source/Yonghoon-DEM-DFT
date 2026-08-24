@@ -114,7 +114,7 @@ const CAPTIONS = [
 // ── Table S1 ─────────────────────────────────────────────────────────────
 const ROWS = [
   ["Method", "Code / functional", "Quantum ESPRESSO; PBE", "-", "Ref. S1, S2"],
-  ["", "Dispersion / Hubbard *U* (Ni 3*d*)", "Grimme D3; 6.2 eV", "-", "Ref. S3"],
+  ["", "Dispersion / Hubbard *U* (Ni 3*d*)", "Grimme D3; 6.2 eV", "-", "Ref. S3, S4"],
   ["", "Cutoff (wavefunction / charge density)", "60 / 480", "Ry", "-"],
   ["", "Smearing (Gaussian)", "0.05", "eV", "-"],
   ["", "Convergence (SCF / force)",
@@ -133,7 +133,7 @@ const ROWS = [
   ["", "PTFE segment", "C~10~F~22~", "-", "-"],
   ["", "Gas-phase reference box padding", "20 and 24", "Å", "-"],
   ["Configuration search", "Potential; sites / orientations; force",
-   "UMA-s-1p1; 7 / 48; 0.05 eV Å^−1^", "-", "Ref. S4"],
+   "UMA-s-1p1; 7 / 48; 0.05 eV Å^−1^", "-", "Ref. S5"],
   ["Adsorption energy", "Definition", "Equation (3)", "eV", "-"],
 ];
 
@@ -150,7 +150,10 @@ const REFS = [
   "[S3] S. Grimme, J. Antony, S. Ehrlich, H. Krieg, A consistent and accurate ab initio "
   + "parametrization of density functional dispersion correction (DFT-D) for the 94 elements "
   + "H-Pu, J. Chem. Phys. 132 (2010) 154104.",
-  "[S4] B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, L. Barroso-Luque, K. Abdelmaqsoud, "
+  "[S4] A. Jain, G. Hautier, S. P. Ong, C. J. Moore, C. C. Fischer, K. A. Persson, G. Ceder, "
+  + "Formation enthalpies by mixing GGA and GGA+U calculations, Phys. Rev. B 84 (2011) 045115. "
+  + "https://doi.org/10.1103/PhysRevB.84.045115.",
+  "[S5] B. M. Wood, M. Dzamba, X. Fu, M. Gao, M. Shuaibi, L. Barroso-Luque, K. Abdelmaqsoud, "
   + "V. Gharakhanyan, J. R. Kitchin, D. S. Levine, K. Michel, A. Sriram, T. S. Cohen, A. Das, "
   + "S. J. Sahoo, A. Rizvi, Z. W. Ulissi, C. L. Zitnick, UMA: A family of universal models for "
   + "atoms, Adv. Neural Inf. Process. Syst. 38 (2025) 143528–143564.",

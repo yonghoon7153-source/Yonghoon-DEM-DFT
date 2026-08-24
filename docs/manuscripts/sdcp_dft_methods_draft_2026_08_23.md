@@ -152,33 +152,31 @@ QE 와 UMA 는 **양쪽에 다 실리는** 논문이라 서지사항이 본문 �
 
 ---
 
-## 7. U(Ni 3d) = 6.2 eV — 물으면 어디를 볼 것인가
+## 7. U(Ni 3d) = 6.2 eV — ✅ 확인 완료 (2026-08-23)
 
-repo 안에 원전이 없다 (`terminology_register.md` 가 *"원전 미보유(Dudarev)"* 로 기록).
-값 자체는 **Materials Project / pymatgen 의 Ni 기본 U 와 같은 값**으로 보인다 —
-확인은 `pymatgen/io/vasp/MPRelaxSet.yaml` 의 `LDAUU: Ni` 한 줄이면 끝난다.
+gabia 에서 `tools/sdcp/check_ldauu_provenance.py` 실행 → **MATCH**:
 
-일치하면 표준 인용은 둘 중 하나(또는 둘 다):
-
-- Wang, L.; Maxisch, T.; Ceder, G. *Phys. Rev. B* **2006**, *73*, 195107 —
-  산화 에너지에 맞춘 전이금속 U 세트의 원전
-- Jain, A.; Hautier, G.; Ong, S. P.; Moore, C. J.; Fischer, C. C.; Persson, K. A.;
-  Ceder, G. *Phys. Rev. B* **2011**, *84*, 045115 — MP 의 GGA/GGA+U 혼합 스킴
-
-확인 도구를 repo 에 넣어 뒀다 (`--selftest` 7/7, 음성 경로 포함):
-
-**어디서 돌리나 — gabia** (SDCP 계산이 있는 기계. 데스크톱 WSL 은 ORCA 분자 쪽이라 별개).
-repo 는 `/data/work/repo`, 브랜치가 다를 수 있으니 파일만 꺼내는 쪽이 안전하다:
-
-```bash
-cd /data/work/repo && git fetch origin
-git show origin/claude/md-status-monitoring-q2xbu1:tools/sdcp/check_ldauu_provenance.py > /tmp/chk.py
-python3 /tmp/chk.py
+```
+[API.MPRelaxSet.CONFIG]  Ni U = 6.2   (anion group: F/ · O/)
+O-group 대조: {'Co': 3.32, 'Mn': 3.9, 'Ni': 6.2, 'Fe': 5.3}
 ```
 
-rc 0 = MATCH(MP 기본값과 같음) · 1 = MISMATCH(출처가 MP 가 아님) · 2 = 확인 불가.
-MATCH 면 Table S1 의 `Dispersion / Hubbard U` 행 Source 와 참고문헌 한 건만 고치면 된다
-(생성기 `sdcp_dft_methods_build.js` 의 `ROWS`·`REFS` 각 한 줄).
+O-group 네 값이 **Materials Project 파라미터 세트 그대로**다 — Ni 하나만 봤으면 우연일 수
+있지만 Co/Mn/Fe 까지 맞으므로 출처가 MP 로 확정된다.
 
-⚠ **확인 전에는 달지 않는다.** 값이 다르면(예: 6.0) 엉뚱한 인용이 되고,
-그건 2026-07 Kim/Cui 교훈(인용 역할 확인 후 삽입)에 정면으로 걸린다.
+⇒ Table S1 `Dispersion / Hubbard U (Ni 3d)` 행 Source = **`Ref. S3, S4`**
+  (S3 = Grimme D3 · **S4 = Jain *et al.*, *Phys. Rev. B* 84, 045115 (2011)**).
+  UMA 는 S4 → **S5** 로 밀렸다.
+
+**왜 Jain 2011 하나인가** — 6.2 라는 값이 실제로 실려 있는 것이 MP 의 GGA+U 스킴 논문이다.
+Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) 은 그 U 세트를 만든 **방법론 조상**이라
+같이 달아도 되지만, 표를 압축하기로 한 방침(2026-08-23)에 맞춰 한 건만 뒀다.
+심사에서 요구하면 그때 추가한다 — 문장은 kb 카드에.
+
+⚠ **이 확인이 말하지 않는 것** — "6.2 이 이 계에 옳다" 는 별개다. U 민감도(4 vs 6.2)
+계산은 안 돌렸다. 심사에서 물으면 그건 새 계산이다.
+
+### 도구 곁가지 (수리함)
+gabia 실행에서 YAML 경로가 *"expected str, bytes or os.PathLike object, not NoneType"* 로
+죽었다 — pymatgen 이 **namespace package** 라 `__file__` 이 `None` 이었다. API 경로가
+성공해서 판정에는 영향이 없었지만, `__path__` 폴백과 `importlib.metadata` 버전 조회로 고쳤다.

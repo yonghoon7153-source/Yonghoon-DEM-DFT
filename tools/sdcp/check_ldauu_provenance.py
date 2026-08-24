@@ -84,7 +84,12 @@ def collect_configs():
 
     try:
         import yaml
-        root = os.path.dirname(pymatgen.__file__)
+        # ⚠ pymatgen 은 namespace package 라 __file__ 이 None 일 수 있다 (2026-08-23 gabia 실측:
+        #   "expected str, bytes or os.PathLike object, not NoneType"). __path__ 로 받는다.
+        root = (os.path.dirname(pymatgen.__file__) if getattr(pymatgen, "__file__", None)
+                else next(iter(pymatgen.__path__), None))
+        if not root:
+            raise RuntimeError("pymatgen 설치 경로를 못 찾았다")
         for path in sorted(glob.glob(root + "/**/MPRelaxSet.yaml", recursive=True)):
             data = yaml.safe_load(open(path)) or {}
             found[path.replace(root, "pymatgen")] = data.get("INCAR", {}).get("LDAUU", {})
@@ -135,7 +140,14 @@ def main():
         print("   LDAUU 를 봐도 같은 답이 나온다.")
         return 2
 
-    print(f"pymatgen {getattr(pymatgen, '__version__', '?')}")
+    ver = getattr(pymatgen, "__version__", None)
+    if not ver:
+        try:
+            from importlib.metadata import version as _v
+            ver = _v("pymatgen")
+        except Exception:                                       # noqa: BLE001
+            ver = "?"
+    print(f"pymatgen {ver}")
     configs = collect_configs()
     if not configs:
         print("⛔ LDAUU 를 담은 설정을 못 찾았다 — pymatgen 버전을 알려줄 것")

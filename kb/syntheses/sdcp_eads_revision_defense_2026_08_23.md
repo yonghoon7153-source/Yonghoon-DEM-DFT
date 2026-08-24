@@ -98,11 +98,11 @@ INCAR 주석에도 *"기하는 DFT 최소점이 아니다 — E_ads 를 인용�
 
 | 항목 | 뺀 이유 | 물으면 |
 |---|---|---|
-| `Ref. S4` U(Ni 3d) = 6.2 eV 출처 | repo 에 원전이 없다 (`kb/methodology/terminology_register.md` §42 가 *"원전 미보유(Dudarev)"* 로 기록). 확인 안 된 인용을 다는 것보다 비우는 쪽을 택했다 | `pymatgen/io/vasp/MPRelaxSet.yaml` 의 `LDAUU: Ni` 를 대조하고, 6.2 이면 Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) / Jain *et al.* *PRB* **84**, 045115 (2011) |
+| ~~`Ref. S4` U(Ni 3d) = 6.2 eV 출처~~ ✅ **닫힘 (2026-08-23)** | gabia 확인 결과 **MP 기본값과 일치**(O-group Co 3.32 / Mn 3.9 / Ni 6.2 / Fe 5.3 = MP 세트 그대로) → Source 를 `Ref. S3, S4` 로 채웠다 (S4 = Jain 2011) | 더 요구하면 방법론 조상 Wang–Maxisch–Ceder *PRB* **73**, 195107 (2006) 추가. **U 민감도(4 vs 6.2)는 여전히 미실시** — 그건 새 계산이다 |
 | `Ref. S5` LiNiO₂ AFM 배열 출처 | **인용 대상이 아니다** — 문헌 수치가 아니라 우리 모델링 선택. Source "-" 가 맞다 | "the antiferromagnetic configuration used here" 로 서술 |
 
-⚠ 지도교수 규칙(*"정량 수치는 뭘 참고해서 쓴 거면 출처가 있어야 한다"*)에 U 값은 걸린다.
-심사 전에 위 한 줄 확인으로 닫는 것이 안전하다.
+지도교수 규칙(*"정량 수치는 뭘 참고해서 쓴 거면 출처가 있어야 한다"*)에 걸리던 U 값은
+2026-08-23 에 닫혔다. 남은 무출처 항목은 없다.
 
 ## 근거 파일
 
