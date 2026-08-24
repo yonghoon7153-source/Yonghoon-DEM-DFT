@@ -2053,37 +2053,48 @@ def test_projection_analyzer_digests_recompute_from_the_current_tree():
     서로 같은지만 본다. 스크립트를 고치고 재생성을 안 하면 여덟이 **사이좋게
     낡은 채로** 통과한다. 현재 트리에서 직접 재계산해 대조한다.
 
-    이 테스트는 `row_projection.py` 나 `src/scoring.py` 를 고치면 **깨져야
-    정상**이다 — 그때 재생성하라는 신호다.
+    이 테스트는 `row_projection.py` 나 `src/scoring.py` 를 고치면 **재생성할 수
+    있는 다리에서** 깨져야 정상이다 — 그때 재생성하라는 신호다.
+
+    ★ 24차 보충 발견 6 — 초판은 여덟 다리를 **전부** 현행 트리에 대고 검사했다.
+    원자료를 잃은 7다리는 재생성이 불가능하므로 그것은 트랩이었다: 분석기를 한
+    글자만 고쳐도 영구 실패였고, 분석기를 영원히 얼리거나 다리를 지우는 것
+    말고는 빠져나갈 길이 없었다. 이제 **보존 상태로 갈라 검사**한다.
+
+      · `available_raw_present`  → 현행 트리에 대고 (낡음 감시가 여기서 산다)
+      · `unavailable_raw_lost`   → 원장이 못 박은 세대 바이트에 대고
+
+    낡음 감시가 약해지는 만큼은 `test_analyzer_change_breaks_the_comparison_set_loudly`
+    가 받는다 — 분석기가 pin 에서 벗어나면 그쪽이 실패해 선언을 강제한다.
     """
-    import importlib.util
     import yaml
 
-    src = _REPO / "docs" / "22p_gap" / "row_projection.py"
-    assert src.is_file(), "row_projection.py 가 없다"
-    spec = importlib.util.spec_from_file_location("_rp", src)
-    rp = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(rp)                     # RESULTS 접근 없이 import 가능해야 한다
-
-    want_compute = rp._compute_sha256()
-    want_spec = rp._spec_sha256()
-    want_scoring = hashlib.sha256(
-        (_REPO / "src" / "scoring.py").read_bytes()).hexdigest()[:16]
+    cur, pin = _current_analyzer(), _projection_pin()
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    cap = {e["leg_id"]: (e.get("evidence") or {}).get("regeneration_capability")
+           for e in reg["legs"]}
 
     stale = []
     for y in sorted(_WARM.glob("*.projection.yaml")):
         m = yaml.safe_load(y.read_text(encoding="utf-8"))
-        a = m.get("analyzer") or {}
-        if a.get("compute_sha256") != want_compute:
-            stale.append(f"{m['leg_id']}: compute {a.get('compute_sha256')} "
-                         f"≠ 현재 {want_compute}")
-        if m.get("analysis_spec_sha256") != want_spec:
-            stale.append(f"{m['leg_id']}: analysis_spec ≠ 현재")
-        if a.get("src_scoring_py_sha256") != want_scoring:
-            stale.append(f"{m['leg_id']}: src_scoring ≠ 현재")
+        leg, a = m["leg_id"], (m.get("analyzer") or {})
+        c = cap.get(leg)
+        assert c in ("available_raw_present", "unavailable_raw_lost"), (
+            f"{leg}: regeneration_capability 가 원장에 없다 — 어느 기준으로 "
+            "검사할지 정할 수 없다")
+        want = cur if c == "available_raw_present" else pin
+        기준 = "현행 트리" if c == "available_raw_present" else "원장 pin"
+        if a.get("compute_sha256") != want["compute_sha256"]:
+            stale.append(f"{leg}: compute {a.get('compute_sha256')} "
+                         f"≠ {기준} {want['compute_sha256']}")
+        if m.get("analysis_spec_sha256") != want["analysis_spec_sha256"]:
+            stale.append(f"{leg}: analysis_spec ≠ {기준}")
+        if a.get("src_scoring_py_sha256") != want["src_scoring_py_sha256"]:
+            stale.append(f"{leg}: src_scoring ≠ {기준}")
     assert not stale, (
-        "투영이 현재 코드로 만든 것이 아니다 — 원자료가 있는 기계에서 "
-        "`python docs/22p_gap/row_projection.py --all` 로 재생성할 것:\n  "
+        "투영이 기준 코드로 만든 것이 아니다 — 원자료가 있는 다리는 "
+        "`python docs/22p_gap/row_projection.py --all` 로 재생성하고, "
+        "원자료가 없는 다리는 투영을 손대지 말 것:\n  "
         + "\n  ".join(stale[:8]))
 
 
@@ -2137,7 +2148,7 @@ def test_preservation_registry_covers_every_warm_probe_leg():
 
     assert _PRESERVE.is_file(), "LEG_PRESERVATION.yaml 이 없다"
     reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
-    assert reg.get("schema_version") == 1
+    assert reg.get("schema_version") == 2
 
     recorded = {l["leg_id"]: l for l in reg["legs"]}
     have = {p.name[: -len(".projection.yaml")]
@@ -2150,22 +2161,17 @@ def test_preservation_registry_covers_every_warm_probe_leg():
     extra = sorted(set(recorded) - have)
     assert not extra, f"보존 원장에만 있고 투영이 없는 다리: {extra}"
 
-    _P = {"full_bundle", "recorded_projection", "missing"}
-    _V = {"current_validated", "historical_validated", "unvalidated"}
-    _R = {"canonical", "canonical_candidate", "diagnostic", "confounded",
-          "superseded", "excluded"}
+    # ★ 24차 보충 발견 1 — enum 을 여기 옮겨 적지 않는다. 계약이 정본이다.
+    enums = _contract_status_enums()
     bad = []
     for leg, e in sorted(recorded.items()):
-        if e.get("preservation_status") not in _P:
-            bad.append(f"{leg}: preservation_status={e.get('preservation_status')}")
-        if e.get("validation_status") not in _V:
-            bad.append(f"{leg}: validation_status={e.get('validation_status')}")
-        if e.get("inference_role") not in _R:
-            bad.append(f"{leg}: inference_role={e.get('inference_role')}")
+        for axis, ok in enums.items():
+            if e.get(axis) not in ok:
+                bad.append(f"{leg}: {axis}={e.get(axis)!r} ∉ {sorted(ok)}")
         if not e.get("근거"):
             bad.append(f"{leg}: 근거가 없다")
         # ★ 원자료가 없으면 검증됐다고 주장할 수 없다 (23차 P0-6)
-        if (e.get("preservation_status") == "missing"
+        if (e.get("preservation_status") in {"recorded_projection", "missing"}
                 and e.get("validation_status") != "unvalidated"):
             bad.append(f"{leg}: 원자료가 없는데 validation_status="
                        f"{e['validation_status']} — 검증 근거가 없다")
@@ -2173,20 +2179,394 @@ def test_preservation_registry_covers_every_warm_probe_leg():
 
 
 def test_docs_do_not_claim_lost_legs_are_regenerable():
-    """★ 손실된 다리를 "재생성 가능" 으로 적는 문구가 되살아나지 않는가.
+    """★ 손실된 다리를 "되살릴 수 있다" 로 적는 문구가 되살아나지 않는가.
 
     이 저장소의 반복 실패 형태다 — 상태가 바뀌었는데 문서가 옛 상태를 계속
     말한다 (21차 발견 8 의 철회 잔여, 20차 13-2 의 stale 커밋 수). 보존 쪽에서
     같은 일이 나지 않게 **원장을 정본으로** 묶는다.
+
+    ★ 24차 보충 발견 5 — 초판은 이름과 하는 일이 달랐다. §32 존재와 leg_id
+    등장만 봤을 뿐 **금지 문구를 검색하지 않았다.** 문서가 옛 상태를 말하는
+    것을 잡겠다고 만든 테스트가 정작 그 문장을 안 본 것이다. 여기서 본다.
     """
     import yaml
 
     reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
     lost = sorted(l["leg_id"] for l in reg["legs"]
-                  if l["preservation_status"] == "missing")
-    assert lost, "손실 다리가 없다 — 이 테스트의 전제가 바뀌었다면 갱신하라"
+                  if l["preservation_status"] in {"recorded_projection", "missing"})
+    assert lost, "원자료 없는 다리가 없다 — 이 테스트의 전제가 바뀌었다면 갱신하라"
 
     doc = (DOCS / "08_REVIEW_RESPONSE.md").read_text(encoding="utf-8")
     assert "§32" in doc or "## 32." in doc, "§32(손실 기록)이 문서에 없다"
     for leg in lost:
         assert leg in doc, f"{leg} 의 손실이 §32 에 기록되지 않았다"
+
+    # ── 여기부터가 이름이 약속한 것 ──────────────────────────────────────
+    #    원자료가 없는 다리를 "되살릴 수 있다" 로 읽히게 만드는 문구
+    FORBIDDEN = [
+        r"원자료\s*보유\s*기계",
+        r"재생성\s*가능",
+        r"재실행\s*시\s*바이트\s*동일",
+        r"원자료가\s*로컬에만\s*있다",
+    ]
+    hits = []
+    for rel in _CLAIM_SCOPE:                       # 발견 기반 — 새 문서도 자동 포함
+        raw = (_REPO_ROOT / rel).read_text(encoding="utf-8")
+        active, _ = _active_text(raw)              # QUARANTINE 울타리 밖만
+        lines = active.splitlines()
+        fenced = _strip_fences(lines)
+        for i, line in enumerate(lines, 1):
+            if fenced[i - 1]:
+                continue
+            for pat in FORBIDDEN:
+                if re.search(pat, line):
+                    hits.append(f"{rel}:{i}: {line.strip()[:90]}")
+    assert not hits, (
+        "원자료 없는 다리를 되살릴 수 있는 것처럼 읽히는 문구가 살아 있다:\n  "
+        + "\n  ".join(hits))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 24차 **보충** 리뷰 (2026-08-24, NO-GO) — 보존 원장 schema 가 계약 밖으로 샜다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _contract_status_enums() -> dict[str, set[str]]:
+    """계약 §8 의 3축 enum 을 **계약에서 읽는다** — 회귀가 옮겨 적지 않는다."""
+    txt = _CONTRACT.read_text(encoding="utf-8")
+    out: dict[str, set[str]] = {}
+    for axis in ("preservation_status", "validation_status", "inference_role"):
+        m = re.search(rf"(?m)^{axis}:\s*(.+)$", txt)
+        assert m, f"계약 §8 에 `{axis}` 축 정의가 없다 — enum 의 정본이 사라졌다"
+        out[axis] = {v.strip() for v in m.group(1).split("|") if v.strip()}
+    return out
+
+
+def test_status_axis_enums_have_exactly_one_authority():
+    """★ 24차 보충 발견 1 — 구조적 literal 을 회귀가 독립 복제하면 안 된다.
+
+    직전 라운드 Q5 가 "구조적 literal 의 독립 복제" 를 경고했는데, **같은
+    커밋에서** 바로 재발했다: `canonical_candidate` 는 계약 §8 에 없는
+    `inference_role` 인데 원장과 이 회귀 파일이 임의로 추가했다. 계약을 고친
+    것이 아니라 **회귀가 계약 밖 상태를 두 번째 authority 로 만든** 것이다.
+
+    이 테스트는 계약에서 enum 을 읽고, 회귀 파일 안에 계약 어휘장에서 온
+    것처럼 보이는 상태 literal 이 계약 밖에 있지 않은지 본다.
+    """
+    allowed = set().union(*_contract_status_enums().values())
+    src = Path(__file__).read_text(encoding="utf-8")
+    # 상태 **값**의 어휘장만 본다 — `bundle_uri` 같은 필드명은 값이 아니다.
+    def looks_like_status(tok: str) -> bool:
+        return (tok.endswith("_bundle") or "validated" in tok
+                or "canonical" in tok or tok.startswith("recorded_"))
+
+    stray = sorted({
+        tok for tok in re.findall(r'"([a-z][a-z0-9]*(?:_[a-z0-9]+)+)"', src)
+        if tok not in allowed and looks_like_status(tok)
+    })
+    assert not stray, (
+        "계약 §8 밖의 상태 토큰이 회귀 파일에 literal 로 박혀 있다: "
+        f"{stray}\n  계약을 고치거나 토큰을 버려라 — 회귀는 authority 가 아니다")
+
+
+def test_preservation_registry_validates_against_the_contract_enums():
+    """★ 24차 보충 발견 2 — 원장의 3축 값은 계약 enum 안에 있어야 한다."""
+    import yaml
+
+    enums = _contract_status_enums()
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+    for e in reg["legs"]:
+        for axis, ok in enums.items():
+            if e.get(axis) not in ok:
+                bad.append(f"{e['leg_id']}: {axis}={e.get(axis)!r} ∉ {sorted(ok)}")
+    assert not bad, "원장이 계약 enum 을 벗어났다:\n  " + "\n  ".join(bad)
+
+
+def test_legs_with_projection_but_no_raw_are_recorded_projection():
+    """★ 24차 보충 발견 3 — 투영이 커밋돼 있으면 `missing` 이 아니다.
+
+    계약 §8 이 `recorded_projection` 을 "summary/manifest/투영만 남아 원자료
+    독립 재계산 불가" 로 정의했다. 7다리가 정확히 그 상태인데 원장은
+    `missing` 이라고 적었다 — 계약이 이미 가진 칸을 안 쓰고 더 센 말을 골랐다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+    for e in reg["legs"]:
+        has_proj = (_WARM / f"{e['leg_id']}.projection.yaml").is_file()
+        if has_proj and e.get("preservation_status") == "missing":
+            bad.append(f"{e['leg_id']}: 투영이 커밋돼 있는데 preservation_status=missing")
+    assert not bad, (
+        "계약 §8 의 `recorded_projection` 을 써야 한다:\n  " + "\n  ".join(bad))
+
+
+def test_every_leg_binds_its_evidence_to_verifiable_anchors():
+    """★ 24차 보충 발견 4 — `근거` 산문만으로는 보존 주장을 검증할 수 없다.
+
+    `full_bundle` 이면 묶음 URI · payload index SHA · 바이트 수 · 검증 영수증 ·
+    검증기 identity 가 있어야 한다. `recorded_projection` 이면 투영 세대
+    (`projection_generation`) 와 재생성 가능성(`regeneration_capability`) 이
+    있어야 한다 — 원자료가 없는 다리는 **기록된 분석기 바이트**에 대고
+    검증하는 것 말고 할 수 있는 게 없기 때문이다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+    for e in reg["legs"]:
+        leg, ps = e["leg_id"], e.get("preservation_status")
+        ev = e.get("evidence") or {}
+        if ps == "full_bundle":
+            for k in ("bundle_uri", "payload_index_sha256", "payload_bytes",
+                      "verification_receipt", "validator_identity"):
+                if not ev.get(k):
+                    bad.append(f"{leg}: evidence.{k} 없음")
+        elif ps == "recorded_projection":
+            for k in ("projection_generation", "regeneration_capability"):
+                if not ev.get(k):
+                    bad.append(f"{leg}: evidence.{k} 없음")
+        if not e.get("claim_roles"):
+            bad.append(f"{leg}: claim_roles 없음 — 어느 주장에 쓰이는지 불명")
+    assert not bad, "보존 증거가 anchor 에 묶이지 않았다:\n  " + "\n  ".join(bad)
+
+
+def _projection_pin() -> dict:
+    import yaml
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    pin = reg.get("projection_generation_pin")
+    assert pin, ("`LEG_PRESERVATION.yaml` 에 `projection_generation_pin` 이 없다 — "
+                 "원자료를 잃은 다리의 투영이 어느 세대인지 못 박아야 한다")
+    return pin
+
+
+def _current_analyzer() -> dict:
+    import importlib.util
+    src = _REPO / "docs" / "22p_gap" / "row_projection.py"
+    spec = importlib.util.spec_from_file_location("_rp_pin", src)
+    rp = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(rp)
+    return {
+        "schema_version": rp.ANALYSIS_SPEC["schema_version"],
+        "compute_sha256": rp._compute_sha256(),
+        "row_projection_py_sha256": hashlib.sha256(src.read_bytes()).hexdigest()[:16],
+        "src_scoring_py_sha256": hashlib.sha256(
+            (_REPO / "src" / "scoring.py").read_bytes()).hexdigest()[:16],
+        "analysis_spec_sha256": rp._spec_sha256(),
+    }
+
+
+def test_projection_generation_pin_matches_every_leg():
+    """★ 24차 보충 발견 6 — 원자료를 잃은 투영은 **세대에 못 박혀야** 한다.
+
+    7다리는 다시 만들 수 없다. 그런데 회귀는 여덟 투영을 전부 **현행 트리**에
+    대고 검사했다 (`…recompute_from_the_current_tree`). 그러면 `row_projection.py`
+    를 한 글자만 고쳐도 7다리가 영구히 실패하고, 고칠 방법이 없다 — 분석기를
+    영원히 얼리거나 다리를 지우는 것 말고는. 트랩이다.
+
+    세대를 원장에 못 박고, 원자료 없는 다리는 **기록된 세대 바이트**에 대고
+    검사한다. 원장의 pin 은 투영 YAML 과 다리 evidence 양쪽과 일치해야 한다.
+    """
+    import yaml
+
+    pin = _projection_pin()
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+
+    for e in reg["legs"]:
+        g = (e.get("evidence") or {}).get("projection_generation") or {}
+        for k in ("projection_schema", "compute_sha256",
+                  "row_projection_py_sha256", "analysis_spec_sha256"):
+            pk = "schema_version" if k == "projection_schema" else k
+            if g.get(k) != pin.get(pk):
+                bad.append(f"{e['leg_id']}: evidence.{k}={g.get(k)!r} ≠ pin {pin.get(pk)!r}")
+
+    for y in sorted(_WARM.glob("*.projection.yaml")):
+        m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        a = m.get("analyzer") or {}
+        got = {"schema_version": m.get("projection_schema"),
+               "compute_sha256": a.get("compute_sha256"),
+               "row_projection_py_sha256": a.get("row_projection_py_sha256"),
+               "src_scoring_py_sha256": a.get("src_scoring_py_sha256"),
+               "analysis_spec_sha256": m.get("analysis_spec_sha256")}
+        for k, v in got.items():
+            if pin.get(k) != v:
+                bad.append(f"{m['leg_id']}.projection: {k}={v!r} ≠ pin {pin.get(k)!r}")
+
+    assert not bad, "투영 세대 pin 이 실체와 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_analyzer_change_breaks_the_comparison_set_loudly():
+    """★ 24차 보충 발견 6 (2) — 분석기를 고치면 **결정을 강제**한다.
+
+    7다리가 세대에 얼어붙었으므로, 분석기를 고치는 순간 8다리 교차 비교
+    (전이표 대조·짝 재현·교차-digest 재현)는 "같은 규격끼리" 라는 전제를 잃는다.
+    조용히 깨지면 안 된다. 원장이 상태를 **선언**하게 만들고, 선언과 실체가
+    어긋나면 실패한다.
+
+    지금은 pin == 현행 트리라 `intact` 다. `row_projection.py` 를 고치면 이
+    테스트가 먼저 깨지고, `broken_by_analyzer_change` 로 선언한 뒤 교차 비교
+    주장을 내리라고 말한다.
+    """
+    import yaml
+
+    pin, cur = _projection_pin(), _current_analyzer()
+    # ★ **계산에 관계된 축만** 본다. `row_projection_py_sha256` 은 파일 전체
+    #   해시라 주석 한 줄에도 바뀐다 — 22차 자체 발견이 `compute_sha256` 을
+    #   따로 만든 이유가 그것이다. 표시 코드를 고쳤다고 교차 비교가 깨지지
+    #   않는다. (파일 해시는 기록으로 pin 에 남고, leg 별 일치는
+    #   `test_projection_generation_pin_matches_every_leg` 가 본다.)
+    keys = ("schema_version", "compute_sha256",
+            "src_scoring_py_sha256", "analysis_spec_sha256")
+    drift = [k for k in keys if pin.get(k) != cur.get(k)]
+    declared = pin.get("comparison_set_status")
+    assert declared in ("intact", "broken_by_analyzer_change"), declared
+
+    if drift:
+        assert declared == "broken_by_analyzer_change", (
+            f"분석기가 pin 에서 벗어났다 ({drift}) — 원장이 아직 `intact` 라고 "
+            "말한다.\n  원자료를 잃은 7다리는 따라올 수 없다. "
+            "`comparison_set_status: broken_by_analyzer_change` 로 선언하고 "
+            "8다리 교차 비교 주장을 내려라.")
+        reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+        alive = [e["leg_id"] for e in reg["legs"]
+                 if (e.get("evidence") or {}).get("regeneration_capability")
+                 == "unavailable_raw_lost"
+                 and any(r.get("role") == "인용가능" for r in e.get("claim_roles") or [])]
+        assert not alive, (
+            "교차 비교가 깨졌는데 원자료 없는 다리가 아직 인용가능 주장을 "
+            f"갖고 있다: {alive}")
+    else:
+        assert declared == "intact", (
+            "분석기는 pin 과 같은데 원장이 깨졌다고 말한다 — 둘 중 하나가 낡았다")
+
+
+def _allowed_combos() -> set[tuple[str, str, str]]:
+    """계약 §8 의 **허용 조합표**를 계약에서 읽는다 (v4 묶음 7).
+
+    축별 membership 만 보면 `missing / unvalidated / canonical` 같은 불가능한
+    튜플이 통과한다 — 24차 보충 발견 5-1 의 반례가 정확히 그것이었다.
+    """
+    txt = _CONTRACT.read_text(encoding="utf-8")
+    m = re.search(r"(?ms)^allowed_status_combinations:\n(.*?)(?=\n[^ \-\n]|\Z)", txt)
+    assert m, "계약 §8 에 `allowed_status_combinations` 표가 없다"
+    out = set()
+    for line in m.group(1).splitlines():
+        g = re.match(r"\s*-\s*\[([^\]]+)\]", line)
+        if g:
+            parts = tuple(p.strip() for p in g.group(1).split(","))
+            assert len(parts) == 3, line
+            out.add(parts)
+    assert out, "허용 조합표가 비었다"
+    return out
+
+
+def test_registry_rejects_impossible_status_tuples():
+    """★ 24차 보충 발견 5-1 — 축별 membership 은 불가능한 튜플을 막지 못한다.
+
+    리뷰가 준 반례 넷이 전부 통과했다:
+      · 실물 bundle 없이 `full_bundle / current_validated / canonical`
+      · `recorded_projection / current_validated / canonical`
+      · `missing / unvalidated / canonical`
+      · 같은 `leg_id` 를 두 번 등록 (dict comprehension 이 덮는다)
+
+    허용 조합은 계약 §8 의 표 하나가 정본이다.
+    """
+    import yaml
+
+    allowed = _allowed_combos()
+    raw = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))["legs"]
+
+    ids = [e["leg_id"] for e in raw]
+    dup = sorted({i for i in ids if ids.count(i) > 1})
+    assert not dup, f"leg_id 가 중복 등록됐다: {dup} — 뒤엣것이 앞엣것을 덮는다"
+
+    bad = []
+    for e in raw:
+        t = (e.get("preservation_status"), e.get("validation_status"),
+             e.get("inference_role"))
+        if t not in allowed:
+            bad.append(f"{e['leg_id']}: {t} 는 계약 §8 허용 조합표에 없다")
+    assert not bad, "불가능한 상태 튜플:\n  " + "\n  ".join(bad)
+
+
+def test_full_bundle_claims_are_backed_by_a_real_bundle():
+    """★ 24차 보충 발견 5-1 — `full_bundle` 을 **실물**에 대고 확인한다.
+
+    원장이 "완전 묶음이 있다" 고 적는 것만으로는 아무 것도 증명하지 않는다.
+    선언한 URI 가 실재하고, 파일 수·바이트 수·payload index 해시·검증
+    영수증이 **지금 디스크에서 다시 계산해** 맞아야 한다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    bad = []
+    for e in reg["legs"]:
+        if e.get("preservation_status") != "full_bundle":
+            continue
+        ev = e.get("evidence") or {}
+        root = _REPO / ev["bundle_uri"]
+        if not root.is_dir():
+            bad.append(f"{e['leg_id']}: 묶음 경로가 없다 {ev['bundle_uri']}")
+            continue
+        files = sorted(p for p in root.rglob("*") if p.is_file())
+        if len(files) != ev.get("bundle_files"):
+            bad.append(f"{e['leg_id']}: 파일 수 {len(files)} ≠ 선언 {ev.get('bundle_files')}")
+        nbytes = sum(p.stat().st_size for p in files)
+        if nbytes != ev.get("payload_bytes"):
+            bad.append(f"{e['leg_id']}: 바이트 {nbytes} ≠ 선언 {ev.get('payload_bytes')}")
+        idx = _REPO / ev["payload_index"]
+        got = hashlib.sha256(idx.read_bytes()).hexdigest()
+        if got != ev.get("payload_index_sha256"):
+            bad.append(f"{e['leg_id']}: payload index sha {got[:16]} ≠ 선언")
+        rec = _REPO / ev["verification_receipt"]
+        if not rec.is_file():
+            bad.append(f"{e['leg_id']}: 검증 영수증 파일이 없다 {ev['verification_receipt']}")
+        else:
+            rg = hashlib.sha256(rec.read_bytes()).hexdigest()
+            if rg != ev.get("verification_receipt_sha256"):
+                bad.append(f"{e['leg_id']}: 영수증 sha {rg[:16]} ≠ 선언")
+            body = rec.read_text(encoding="utf-8")
+            if "ok: True" not in body or "fail: []" not in body:
+                bad.append(f"{e['leg_id']}: 영수증이 통과를 말하지 않는다")
+    assert not bad, "`full_bundle` 주장이 실물과 어긋난다:\n  " + "\n  ".join(bad)
+
+
+def test_preservation_registry_coverage_rule_matches_its_docstring():
+    """★ 24차 보충 발견 5-1 — docstring 이 실제 동작과 **반대**였다.
+
+    초판은 "새 다리를 돌리면 이 테스트가 먼저 깨져서 보존 상태를 적게 만든다"
+    고 적었다. 실제로는 커밋된 `*.projection.yaml` 만 훑으므로, 새 다리를
+    돌려도 투영을 만들기 전에는 깨지지 않았다. 반대로 원장의 extra leg 는
+    거부해서 **실행 전 사전 등록도 막았다.**
+
+    지금 할 수 있는 정직한 규칙:
+      · 투영이 있는 다리는 전부 등록돼 있어야 한다 (사후 누락 방지)
+      · 투영이 없는 다리도 등록할 수 있다 — 단 `missing` 일 때만
+        (사전 등록 / 아무 것도 안 남은 다리)
+
+    실행 **전에** 강제하는 것은 planned leg index + 실행 영수증이 있어야
+    가능하다 → 계약 v4 묶음 9 (트랜잭션 보존 gate). 여기서 못 한다는 것을
+    계약이 명시해야 한다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    recorded = {e["leg_id"]: e for e in reg["legs"]}
+    have = {p.name[: -len(".projection.yaml")]
+            for p in _WARM.glob("*.projection.yaml")}
+
+    missing_from_reg = sorted(have - set(recorded))
+    assert not missing_from_reg, (
+        f"투영은 있는데 보존 상태가 없다: {missing_from_reg}")
+
+    bad = [leg for leg in sorted(set(recorded) - have)
+           if recorded[leg].get("preservation_status") != "missing"]
+    assert not bad, (
+        f"투영이 없는데 `missing` 이 아닌 다리: {bad}\n"
+        "  사전 등록은 `missing` 으로만 할 수 있다")
+
+    # 계약이 이 한계를 **명시**해야 한다 — 조용히 넘어가면 다시 잊는다
+    txt = _CONTRACT.read_text(encoding="utf-8")
+    assert "planned leg index" in txt and "묶음 9" in txt, (
+        "계약이 '실행 전 강제는 아직 못 한다' 를 적지 않았다")

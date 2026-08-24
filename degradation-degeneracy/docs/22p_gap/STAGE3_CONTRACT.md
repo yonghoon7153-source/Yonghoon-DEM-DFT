@@ -1,7 +1,13 @@
-# 단계 3 계약 v3 — protocol 축 분해와 고정 restart bank
+# 단계 3 계약 v4 — protocol 축 분해, 고정 restart bank, 보존 트랜잭션
 
 > v1(21차 순서 4) → **22차가 출발 전제를 뒤집어** v2 → **23차가 v2 의 자기모순
-> 여섯 개를 찾아** v3. 구현 전에 다시 심사받는다.
+> 여섯 개를 찾아** v3 → **24차 + 24차 보충이 보존 축을 요구해** v4.
+> 구현 전에 다시 심사받는다.
+>
+> **v4 가 더한 것**: 24차가 남긴 묶음 1~6 은 그대로 미결로 유지하고, 24차
+> 보충이 P0 로 추가한 보존 묶음 7~10 을 §13 에 적는다. 상태 3축의 **허용
+> 조합표**(묶음 7)는 §8 에 들어갔다 — 축별 membership 만으로는
+> `missing / unvalidated / canonical` 같은 불가능한 튜플이 통과했다.
 >
 > v3 가 고친 것: 후보 예산 `N` 의 이중 의미(P0-1) · `pair_group_id` 이름과
 > 후보 ID 범위, `n_pair_groups` 640→320(P0-2) · provider freeze 미봉인(P0-3) ·
@@ -502,10 +508,41 @@ inference_role:      canonical | diagnostic | confounded | superseded | excluded
 | `validation_status` | 그것이 **검증됐는가**, 어느 세대 검증기로 |
 | `inference_role` | 그것을 **어디에 쓸 수 있는가** |
 
-**raw bundle 이 없는 다리를 선택만으로 `historical_valid` 라고 부를 수 없다** —
-검증은 실제 보존·검증 증거가 있을 때만 붙는다. 현재 warm-probe 8다리는
-`preservation_status: recorded_projection` · `validation_status: unvalidated`
-(`validate_provenance` 미실행) · `inference_role: diagnostic` 이다.
+**raw bundle 이 없는 다리를 선택만으로 `historical_validated` 라고 부를 수
+없다** — 검증은 실제 보존·검증 증거가 있을 때만 붙는다.
+
+```yaml
+# 허용 조합 (allowed cross-product) — 이 표 밖의 튜플은 거부한다. ★ v4 묶음 7
+#   규칙:  canonical            은 full_bundle + current_validated 에서만
+#          historical_validated 는 full_bundle 에서만 (원자료 없이 검증 못 한다)
+#          recorded_projection · missing 은 언제나 unvalidated
+allowed_status_combinations:
+  - [full_bundle, current_validated, canonical]
+  - [full_bundle, current_validated, diagnostic]
+  - [full_bundle, current_validated, superseded]
+  - [full_bundle, historical_validated, diagnostic]
+  - [full_bundle, historical_validated, confounded]
+  - [full_bundle, historical_validated, superseded]
+  - [full_bundle, unvalidated, diagnostic]
+  - [full_bundle, unvalidated, excluded]
+  - [recorded_projection, unvalidated, diagnostic]
+  - [recorded_projection, unvalidated, confounded]
+  - [recorded_projection, unvalidated, superseded]
+  - [recorded_projection, unvalidated, excluded]
+  - [missing, unvalidated, excluded]
+```
+
+**★ 이 두 fenced 블록(enum + 허용 조합표)이 3축의 유일한 정본이다.** 원장도 회귀도 값을
+옮겨 적지 않는다 — 회귀는 여기서 파싱한다
+(`test_status_axis_enums_have_exactly_one_authority`). 24차 보충 리뷰가 반려한
+것이 정확히 이 규칙의 위반이었다: 계약에 없는 `canonical_candidate` 를 원장과
+회귀가 만들어 **두 번째 authority** 가 생겼다.
+
+현재 warm-probe 8다리의 실측 상태는 이 문서가 아니라
+`docs/22p_gap/LEG_PRESERVATION.yaml` 이 정본이다 (기계가 읽는다). 요약하면
+`paired_fixed5_v4` 하나가 `full_bundle` · `historical_validated` ·
+`diagnostic`, 나머지 7다리가 `recorded_projection` · `unvalidated` ·
+`diagnostic`/`confounded` 다. 숫자·digest 는 여기 옮기지 않는다.
 
 참고로 v2 의 단일 축은 다음과 같았다 (이제 쓰지 않는다):
 
@@ -518,7 +555,8 @@ inference_role:      canonical | diagnostic | confounded | superseded | excluded
 | `superseded` | 새 protocol 정본으로 대체됨 | ❌ |
 | `excluded` | 원점 오염 등으로 폐기 | ❌ |
 
-정확히 하나여야 한다. 현재 warm-probe 8다리는 `recorded_only`.
+정확히 하나여야 한다 — **v2 를 쓰던 때의 규칙이다.** v3 부터는 위 3축을
+쓰므로 이 표는 옛 원장을 읽을 때의 대조용으로만 남긴다.
 
 ### 8.1 `leg_index.yaml`
 
@@ -665,7 +703,8 @@ v2 투영이 부분적으로 좁혔다 — 실제 fits 바이트 SHA 를 계산�
 
 여덟 다리를 63 MB 씩 Git 에 중복 커밋할 필요는 없다. 그러나 **citation-ready 로
 승격하려면 각 leg 의 fits 는 접근 가능해야 한다.** 원자료를 보존하지 않는
-다리는 `recorded_only` 로 남기는 것이 정직하다.
+다리는 §8 의 `recorded_projection` 으로 남기는 것이 정직하다 (v2 는 이것을
+`recorded_only` 라고 불렀다).
 
 ## 11. 구현 순서
 
@@ -683,8 +722,23 @@ v2 투영이 부분적으로 좁혔다 — 실제 fits 바이트 SHA 를 계산�
 12. **보존 체계 구축** — §10. ★ 2026-08-24 에 앞으로 당겼다
 13. 그 다음에만 RUN_SCOPE 변경과 pilot 실행
 
-2~7 은 이 문서가 **정의만** 했고 구현은 없다. 13 을 시작하면 `source_digest`
-가 바뀐다.
+2~7 은 이 문서가 **정의만** 했고 구현은 없다.
+
+**★ 24차 보충 발견 7 정정 — `source_digest` 는 13 이 아니라 12 에서 바뀐다.**
+보존 구현체가 `tools/archive_bundle.py` · `scripts/archive_results.sh` 이고
+`tools/`·`scripts/` 는 **RUN_SCOPE 안**이다. content-addressed backend ·
+receipt · atomic promotion 을 넣으면 그 순간 digest 가 움직인다. 리뷰가 준
+두 갈래 중 우리가 고르는 것은 **2번**이다:
+
+| 갈래 | 뜻 | 채택 |
+|---|---|---|
+| 1 | 기존 archiver 를 그대로 쓰고 외부 store/config 만 세운다 | ✗ — 묶음 9 의 트랜잭션 강제가 코드 변경 없이는 안 된다 |
+| 2 | archiver 코드를 바꾸고 **12 에서 새 digest 를 동결**한다 | **✓** — 이후 pilot 은 그 digest 를 쓴다 |
+
+따라서 순서는 `12 (보존, digest 동결) → 13 (RUN_SCOPE 나머지, 같은 digest 세대)`
+다. 12 에서 동결한 digest 를 13 이 다시 바꾸므로, **동결 지점은 12 의 끝이
+아니라 13 의 끝**이다 — 12 는 "보존이 먼저 존재한다" 를 보장할 뿐 digest 를
+고정하지 않는다. pilot 실행은 13 이후의 digest 로만 한다.
 
 **12 를 13 앞에 둔 이유**: 기계 교체로 warm 실험 7다리의 원자료를 잃었다
 (§10 머리, `08_REVIEW_RESPONSE.md` §32). 보존 체계 없이 새로 돌리면 **같은
@@ -704,3 +758,72 @@ v2 투영이 부분적으로 좁혔다 — 실제 fits 바이트 SHA 를 계산�
   정해지는 것은 세 estimand 의 값이다. 어느 것을 운영 정본으로 삼을지는
   사전 등록된 primary endpoint 가 정하는 것이지 결과가 정하지 않는다.
 - **transition table 은 기술통계다.** 이 격자는 확률표본이 아니다.
+
+## 13. v4 가 닫아야 할 묶음 열 개
+
+> 1~6 은 **24차 리뷰**가 남긴 미결이고, 7~10 은 **24차 보충 리뷰**가 원자료
+> 손실 사고를 계기로 P0 로 추가한 보존 묶음이다. 이 절은 목록이지 구현이
+> 아니다 — 구현은 §11 의 12·13 단계다.
+
+### 13.1 24차가 남긴 여섯 (미결 그대로)
+
+| # | 묶음 | 상태 |
+|---|---|---|
+| 1 | `planned_protocol` 과 `execution_receipt` 분리, stage×objective×arm 별 예산/실현 count | 미착수 |
+| 2 | canonical pairing-design wire schema · full arm registry · serialization/hash domain · golden vectors | 미착수 |
+| 3 | provider materialize→seal→consumer DAG 와 `p_ini` arm 별 solution-map schema | 미착수 |
+| 4 | `mono_tol` 과 `material_tol` 분리 · stratum · budget adoption · max-failure 규칙 | 미착수 |
+| 5 | placeholder 가 아닌 **실제** `sentinel_panel.yaml` | 미착수 |
+| 6 | 구 `pairing_design_id`·`inference_status` 제거 · actual digest 재해시 · per-key linkage mutation test | 미착수 |
+
+### 13.2 묶음 7 — 상태 schema 단일 authority
+
+**이번 라운드에서 닫았다.** 근거:
+
+| 요구 | 어디 |
+|---|---|
+| `recorded_projection`/`missing` 의미 | §8 (enum + 아래 조합표) |
+| validation generation 의미 | §8 — `historical_validated` 는 `full_bundle` 에서만 |
+| claim 별 inference role | `LEG_PRESERVATION.yaml` 의 `claim_roles` |
+| allowed cross-product | §8 `allowed_status_combinations` |
+| duplicate rejection | `test_registry_rejects_impossible_status_tuples` |
+| **authority 가 하나인가** | `test_status_axis_enums_have_exactly_one_authority` — 회귀 파일에 계약 밖 상태 literal 이 있으면 실패 |
+
+### 13.3 묶음 8 — immutable bundle index 와 receipt schema
+
+부분. `paired_fixed5_v4` 한 다리에 대해서만 실물로 결속했다.
+
+| 요구 | 지금 | 남은 것 |
+|---|---|---|
+| bundle URI/backend · payload SHA · byte size · exact members | ✅ `evidence.bundle_uri` 등, 회귀가 디스크에서 재계산 | 외부 backend(비-git) URI 형식 |
+| producer/schema/source identity | ✅ `leg_source_digest` · `projection_generation` | v6 producer schema |
+| validator commit/source digest/version/time | 부분 — `validator_identity.source_digest` · `n_checks` | validator **commit** 과 실행 시각 |
+| empty-root restore + validate + **score/analyze** output digests | ✗ — validate 만 있다 | ★ 보충 발견 4: score/analyze 산출 digest 를 영수증에 결속 |
+
+### 13.4 묶음 9 — 트랜잭션 보존 gate
+
+**미착수. 이것이 다음 라운드의 본체다.** 강제할 순서:
+
+```text
+run complete → seal → immutable external copy → index commit
+→ empty-root restore → validator + score/analyze receipt
+→ 그 뒤에만 projection/status/claim 등록
+```
+
+지금 못 하는 것을 명시한다: 보존 원장의 coverage 는 **커밋된 투영**을 기준으로
+한다. 그래서 새 다리를 돌려도 투영을 만들기 전에는 회귀가 깨지지 않는다.
+실행 **전에** 강제하려면 planned leg index 와 실행 영수증이 있어야 하고, 그것이
+**묶음 9** 다. 그때까지 사전 등록은 `preservation_status: missing` 으로만
+가능하다 (`test_preservation_registry_coverage_rule_matches_its_docstring`).
+
+### 13.5 묶음 10 — historical projection version dispatch
+
+**이번 라운드에서 닫았다.** 원자료를 잃은 투영은 다시 만들 수 없으므로,
+현행 트리 equality 를 강요하면 영구 실패한다.
+
+| 요구 | 어디 |
+|---|---|
+| raw-lost v3 투영은 **기록된** analyzer/spec 에 대해 검증 | `LEG_PRESERVATION.yaml` `projection_generation_pin` + `test_projection_generation_pin_matches_every_leg` |
+| current tree equality 는 현행 세대에만 | `test_projection_analyzer_digests_recompute_from_the_current_tree` 가 `regeneration_capability` 로 분기 |
+| cohort 밖 비교 금지 | `comparison_set_status` + `test_analyzer_change_breaks_the_comparison_set_loudly` |
+| 새 schema 는 새 경로에 | v6 투영은 `docs/22p_gap/warm_probe/` 를 덮지 않고 별도 디렉터리에 쓴다 (구현 시) |

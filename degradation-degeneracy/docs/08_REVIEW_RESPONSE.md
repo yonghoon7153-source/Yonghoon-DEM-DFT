@@ -2010,9 +2010,14 @@ apply_bias_correction → summarize`)로 **다시 채점**해서 커밋된 summa
    357 KB (gz) · 재실행 시 바이트 동일
 ```
 
-나머지 7다리는 원자료가 로컬에만 있다. **회귀 2건이 그 산출물이 없으면
+나머지 7다리는 이 컨테이너에 원자료가 없었다. **회귀 2건이 그 산출물이 없으면
 실패하도록** 걸어 뒀다 (skip 하지 않는다) — 없는 상태가 곧 리뷰의
 "citation-ready 아님" 판정이고, 조용히 넘어가면 그 판정이 사라진다.
+
+> **★ 2026-08-24 정정** — 위 문장을 쓸 때는 "작업 기계에는 있다" 였다. 그
+> 기계가 교체되면서 7다리 원자료는 **어디에도 없다** (§32). 지금 그 7다리는
+> `preservation_status: recorded_projection` 이고 되살릴 수 없다. 보존 상태의
+> 정본은 `docs/22p_gap/LEG_PRESERVATION.yaml` 하나다.
 
 ### 30.2 발견 4 — half-cell 짝은 warm "한 축" 이 아니었다 (회귀가 독립 재현)
 
@@ -2202,7 +2207,9 @@ aggregate 일치는 조건별 일치가 아니라는 것이 21차 Q2 의 지적�
 마지막 자리까지 맞췄다 (회귀
 `test_random_only_multimodality_is_recomputable_from_the_restart_projection`).
 
-8다리 전량 실측 (원자료 보유 기계):
+8다리 전량 실측 (2026-08-20, 당시 원자료가 살아 있던 기계 — 그 기계는 §32
+에서 사라졌다. 아래는 그때의 영수증이며 지금 재현할 수 있는 것은
+`paired_fixed5_v4` 뿐이다):
 
 ```
 전체 True · by_obj True · fits삼중 True · 봉인일치 True  ×8
@@ -2379,16 +2386,46 @@ fit_seed404_pe5mv · _nowarm
 
 | 다리 | `preservation_status` | `validation_status` | `inference_role` |
 |---|---|---|---|
-| `paired_fixed5_v4` | `full_bundle` | `current_validated` | `canonical_candidate` |
-| 나머지 7 | `missing` | `unvalidated` | `diagnostic` |
+| `paired_fixed5_v4` | `full_bundle` | `historical_validated` | `diagnostic` |
+| 나머지 7 | `recorded_projection` | `unvalidated` | `diagnostic` / `confounded` |
 
-### 32.5 교훈 — 23차 Q6 을 미룬 대가
+> **★ 2026-08-24 정정 (24차 보충 리뷰)** — 이 표의 초판은 `current_validated` ·
+> `canonical_candidate` · `missing` 이었다. 셋 다 틀렸다.
+> · `canonical_candidate` 는 **계약 §8 에 없는 값**이다. 계약을 고치지 않고
+>   원장과 회귀가 만들어 두 번째 authority 가 생겼다 — 직전 라운드 Q5 가
+>   경고한 것이 같은 커밋에서 재발했다.
+> · `current_validated` 도 틀렸다. 이 다리의 run_spec 은
+>   `source_digest: d50295f980ccaa81` 로 현행 `a72c0f3a485c19bb` 가 아니고,
+>   `코드_identity` 검사는 (`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty
+>   가 아닌지만 본다 — 현행 트리와의 일치는 보지 않는다.
+> · 7다리는 `missing` 이 아니라 `recorded_projection` 이다. 계약 §8 이 그
+>   상태에 이미 칸을 갖고 있었는데 안 쓰고 더 센 말을 골랐다.
+>
+> 정본은 `docs/22p_gap/LEG_PRESERVATION.yaml` (schema 2) 이고, 회귀는 3축
+> enum 을 계약에서 파싱한다.
 
-23차 Q6 답변이 "각 leg 의 fits 는 접근 가능해야 한다 · content-addressed 외부
-저장소에 `_inputs/` 를 한 번만 보존" 을 권고했다. 계약 §10 에 적어 두고
-**구현을 단계 3 이후로 미뤘다.** 그 사이에 기계가 바뀌었고 7다리를 잃었다.
+### 32.5 교훈 — 도구가 없었던 게 아니라 **강제가 없었다**
 
-계약 §10 의 보존 단위를 **단계 3 실행 전에** 세운다 — 순서를 바꾼다 (§9.5).
+> **★ 2026-08-24 정정 (24차 보충 리뷰)** — 이 절의 초판은 "23차 Q6 의 보존
+> 단위 구현을 미룬 대가" 라고 적었다. **원인 진단이 틀렸다.**
+
+보존 체계는 이미 있었다:
+
+| 있던 것 | 증거 |
+|---|---|
+| `tools/archive_bundle.py` | 6차 F62 → 7차 F71, fail-closed·payload digest·원자적 교체 |
+| `scripts/archive_results.sh` | 묶음 생성 wrapper |
+| git `artifacts/` | `artifacts/paired_fixed5_v4/` 26파일 · 23,863,555 B 가 저장소 안에 있다 |
+| 그것이 **작동했다** | `python -m tools.archive_bundle check artifacts/paired_fixed5_v4` → 불일치 0 |
+
+`paired_fixed5_v4` 가 살아남은 이유가 백업 운뿐이 아니다 — 그 다리는 이
+체계를 **통과했다**. 8월 20일 warm 다리 7개는 통과하지 않았다.
+
+따라서 실패는 도구 부재가 아니라 **coverage·운영** 문제다: 다리를 만들고
+보존 없이 끝낼 수 있었다. 계약 v4 가 고칠 것은 "보존 도구를 만든다" 가 아니라
+**"보존 영수증 없이는 leg_index 등록이 실패한다"** — 트랜잭션으로 만드는 것이다
+(계약 v4 bundle 3). 23차 Q6 의 권고 자체는 여전히 유효하지만, 그것은 외부
+저장소 이야기이고 이번 사고를 막았을 것은 **필수 gate** 쪽이다.
 
 ### 32.6 부수 발견 — `validate_provenance` 가 깨진 parquet 에서 예외로 죽는다
 
@@ -2400,3 +2437,101 @@ footer 를 깨면 `pd.read_parquet` 이 먼저 죽어 `ArrowInvalid` 가 그대�
 `src/` 라 지금 고치면 `source_digest` 가 바뀐다 → 단계 3 항목으로 이월
 (계약 §9.4 에 추가). 파싱 가능한 손상은 정상적으로 `출력봉인_재계산` 실패를
 낸다는 것은 위 변이 시험으로 확인했다.
+
+## 33. 24차 **보충** 리뷰 대응 — 보존 원장을 계약 안으로 되돌린다
+
+> 2026-08-24. 보충 응답 `0ca48cbf` 에 대한 재검증이 NO-GO 로 돌아왔다.
+> 판정 자체는 받아들인다. 원자료 손실을 공개하고 보존을 앞으로 당긴 결정은
+> 수용됐지만, **그 결정을 담은 원장이 계약을 위반했다.**
+
+### 33.1 무엇이 틀렸나 — 한 문장
+
+계약에 없는 상태값을 만들고, 그것을 통과시키려고 **회귀에 enum 을 하나 더
+적었다.** 계약을 고친 것이 아니라 회귀를 두 번째 authority 로 만든 것이다.
+직전 라운드 Q5 가 "구조적 literal 의 독립 복제" 를 경고했는데 **같은 커밋에서**
+재발했다.
+
+### 33.2 발견별 대응
+
+| # | 발견 | 대응 | 증거 |
+|---|---|---|---|
+| 1 | `canonical_candidate` 가 계약 enum 밖 | 값을 버렸다. 회귀가 enum 을 **계약에서 파싱**한다 | `test_status_axis_enums_have_exactly_one_authority` — 계약 밖 상태 literal 이 회귀 파일에 있으면 실패 |
+| 2 | 7다리는 `missing` 이 아니라 `recorded_projection` | 재분류 | 계약 §8 정의 그대로 |
+| 3 | v5 artifact 를 `current_validated/canonical_candidate` 로 적었다 | `full_bundle / historical_validated / diagnostic` + `claim_roles` 로 claim 별 role 분리 | `LEG_PRESERVATION.yaml` |
+| 4 | 보존 원장이 bundle 위치·SHA·크기·receipt·validator 를 결속 안 함 | `evidence` 블록 + 회귀가 **디스크에서 재계산** | `test_full_bundle_claims_are_backed_by_a_real_bundle` |
+| 5-1 | 회귀가 불가능한 튜플·중복 ID 를 통과시킴 | 계약 §8 에 **허용 조합표**, 회귀가 그것을 읽는다 | `test_registry_rejects_impossible_status_tuples` |
+| 5-2 | 되살릴 수 있다는 문구를 막겠다던 테스트가 정작 그 문구를 검색 안 함 | 두 테스트를 하나로 합치고 금지 문구 검색을 넣었다 | `test_docs_do_not_claim_lost_legs_are_regenerable` |
+| 6 | CI 가 잃은 다리에 재생성을 강요 (충족 불가) | 세대 pin + `regeneration_capability` 분기 | `projection_generation_pin`, `test_analyzer_change_breaks_the_comparison_set_loudly` |
+| 7 | "보존을 앞으로" 가 다른 문서에 반영 안 됨 | 4개 문서 stale 정정 + digest 동결 시점 명시 | 계약 §11, 요청문 §0·§7·§10 |
+| 8 | `validate_provenance` 가 깨진 parquet 에서 예외 | 수용 조건을 **strict xfail** 로 지금 적어 뒀다 | `test_validate_provenance_reports_a_corrupt_fits_as_a_finding` |
+| 9 | contract v4 여섯 묶음 미구현 | 열 묶음을 계약 §13 에 원장화. 7·10 은 닫았고 8 은 부분, 9 는 다음 라운드 본체 | 계약 §13 |
+
+### 33.3 원인 진단을 뒤집었다 — 도구는 있었다
+
+초판이 "보존 단위를 안 세워서 잃었다" 고 적은 것은 **틀렸다.** 리뷰가
+바로잡은 대로 확인했다:
+
+```
+$ python -m tools.archive_bundle check artifacts/paired_fixed5_v4
+검증 가능: 필요한 파일이 모두 있고 digest가 일치한다
+
+$ git ls-files artifacts/paired_fixed5_v4/ | wc -l
+26
+```
+
+`tools/archive_bundle.py` 는 6차 F62 → 7차 F71 로 fail-closed 까지 갖췄고,
+`paired_fixed5_v4` 에서 **실제로 작동했다.** 8월 20일 warm 다리 7개는 그 체계를
+통과하지 않았을 뿐이다. 실패는 도구 부재가 아니라 **강제 부재**다 — 다리를
+만들고 보존 없이 끝낼 수 있었다. 그래서 계약 v4 묶음 9 는 "보존 도구를
+만든다" 가 아니라 **"보존 영수증 없이는 등록이 실패한다"** 로 적었다.
+
+### 33.4 `paired_fixed5_v4` 를 이 컨테이너에서 다시 검증했다
+
+사용자 기계(py3.12)의 결과를 옮겨 적지 않고, 컨테이너(py3.11)에서 직접 돌려
+영수증을 커밋했다:
+
+```
+validator_source_digest: a72c0f3a485c19bb
+python: 3.11.15
+ok: True
+fail: []
+n_checks: 34
+```
+
+정본은 `docs/22p_gap/receipts/paired_fixed5_v4.validate.txt` 이고, 원장이 그
+파일의 sha256 을 들고 있으며, 회귀가 매번 다시 해시한다.
+
+**다만 이것이 `current_validated` 를 뜻하지 않는다.** 이 다리의 run_spec 은
+`source_digest: d50295f980ccaa81` 이고 `코드_identity` 검사는
+(`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty 가 아닌지만 본다 — 현행
+트리와의 일치를 보지 않는다. 리뷰가 지적한 그대로 `historical_validated` 다.
+
+### 33.5 변이 시험 — 리뷰가 준 반례 다섯을 전부 재현했다
+
+새 회귀가 fixture 에 가려져 있지 않은지 확인했다. 각 변이 후 복원했다.
+
+| 변이 | 결과 |
+|---|---|
+| `bundle_uri` 를 없는 경로로 | `묶음 경로가 없다` 로 실패 |
+| `recorded_projection / current_validated / canonical` | 허용 조합표 위반 + 검증근거 없음, 둘 다 실패 |
+| `missing / unvalidated / canonical` | 허용 조합표 위반으로 실패 |
+| 같은 `leg_id` 두 번 등록 | `중복 등록됐다` 로 실패 |
+| 영수증의 `ok: True` → `ok: False` | sha 불일치 + "통과를 말하지 않는다" 둘 다 실패 |
+| 회귀 파일에 `canonical_candidate` literal 재도입 | 계약 밖 토큰으로 실패 |
+| `row_projection.py` **계산 경로** 변경 | 원자료 있는 다리만 stale, 잃은 7다리는 무사 · 교차비교 선언 강제로 실패 |
+| `row_projection.py` **주석만** 변경 | 교차비교는 무사 (계산 축만 본다) |
+
+마지막 두 줄이 발견 6 의 핵심이다 — 트랩은 사라졌고 낡음 감시는 남았다.
+
+### 33.6 닫지 못한 것
+
+| 묶음 | 상태 | 왜 |
+|---|---|---|
+| 1~6 (24차) | **미착수** | 전부 `src/`·새 schema 구현이다. RUN_SCOPE 를 건드리므로 계약 재심사 후 |
+| 8 immutable index | **부분** | bundle URI·SHA·크기·validator 는 결속했다. **score/analyze 산출 digest 를 묶은 영수증**과 비-git backend URI 형식이 없다 (보충 발견 4) |
+| 9 트랜잭션 gate | **미착수** | 다음 라운드의 본체. 원장 coverage 가 아직 커밋된 투영 기준이라 실행 **전** 강제가 안 된다 — 계약 §13.4 에 명시 |
+| Q2 canonical design | **미착수** | canonical bytes·arm registry·serialization/hash domain·golden vector 필요 |
+
+Q1·Q3·Q4·Q5 회신은 전부 수용한다. Q5("literal audit 지금") 는 이번 라운드에서
+상태 enum 축을 단일 authority 로 만드는 것으로 착수했고, schema version·step
+number·target SHA·receipt field 축은 남았다.

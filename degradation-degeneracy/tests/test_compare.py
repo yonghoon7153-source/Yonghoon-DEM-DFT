@@ -4860,3 +4860,36 @@ def test_pini_diagnostic_warns_when_origins_differ(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "원점이 여러 개다" in out, f"원점 불일치를 경고하지 않았다\n{out}"
     assert "섞여" in out, out
+
+
+@pytest.mark.xfail(strict=True, reason=(
+    "★ 24차 보충 발견 8 — 아직 안 고쳤다. `src/io.py:1676` 의 "
+    "`pd.read_parquet(fp)` 가 guard 밖이라 corrupt footer 에서 ArrowInvalid 가 "
+    "그대로 올라온다. `src/` 는 RUN_SCOPE 라 지금 고치면 source_digest 가 "
+    "바뀐다 → 계약 v4 §11 의 12·13 단계에서 고친다. "
+    "strict=True 이므로 **고치는 순간 이 테스트가 XPASS 로 실패**하고, "
+    "그때 이 marker 를 지우면 된다."))
+def test_validate_provenance_reports_a_corrupt_fits_as_a_finding(tmp_path):
+    """깨진 parquet 은 예외가 아니라 **발견**으로 보고돼야 한다.
+
+    `validate_provenance` 의 계약은 `{"ok": bool, "fail": [...]}` 다. 호출자가
+    그 dict 만 보고 실패를 처리할 수 있어야 하는데, 지금은 footer 가 깨지면
+    함수가 예외로 죽는다. fail-open 은 아니므로 급하지 않지만, 계약 위반이라
+    호출자가 "검증 실패" 와 "검증기 고장" 을 구별하지 못한다.
+
+    리뷰가 요구한 형태 그대로 적어 둔다 — 모든 downstream parquet read 를
+    하나의 fail-closed 경계 안에 넣어야 통과한다.
+    """
+    from src.io import validate_provenance
+
+    d, _ = _complete_artifact(tmp_path)
+    assert validate_provenance(d)["ok"], "전제: 손상 전에는 통과해야 한다"
+
+    fp = d / "fits.parquet"
+    raw = bytearray(fp.read_bytes())
+    raw[-4:] = b"\x00\x00\x00\x00"          # PAR1 footer magic 파괴
+    fp.write_bytes(bytes(raw))
+
+    v = validate_provenance(d)               # ← 예외 없이 돌아와야 한다
+    assert v["ok"] is False
+    assert "fits_읽기" in v["fail"], v["fail"]

@@ -2,15 +2,30 @@
 
 ```
 브랜치   origin/claude/14-gate-code-review-9qkx05
-대상 커밋 439e06ef594acff751a557c2fe4cda86d953a6e0
-직전 대상 a037eba4ef2e65205522380b123455c5de1dcda3  (23차, NO-GO)
-source_digest  a72c0f3a485c19bb   ← 21·22·23차와 동일
+source_digest  a72c0f3a485c19bb   ← 21·22·23·24차와 동일 (RUN_SCOPE 무변경)
+
+# 이 문서는 왕복 하나가 아니라 **셋**을 담는다. 각 절이 어느 커밋을 말하는지:
+code_target        439e06ef594acff751a557c2fe4cda86d953a6e0   §1~§10  (24차 본 요청)
+supplement_parent  58fb51ed…                                   §11 을 담은 커밋의 부모
+supplement_target  0ca48cbf…                                   §11    (원자료 손실 정정)
+supplement2_target <이 커밋>                                    §12    (24차 보충 리뷰 대응)
+직전 대상          a037eba4ef2e65205522380b123455c5de1dcda3   (23차, NO-GO)
 ```
+
+> **★ 24차 보충 리뷰가 지적한 것 (발견 9)** — 초판 식별 블록은 `439e06ef` 하나만
+> 적어 두고 §11 을 그 아래 덧붙였다. 그런데 §11 은 `439e06ef` 에 없다 —
+> `0ca48cbf` 에서 생겼다. 리뷰어가 `439e06ef` 를 체크아웃하면 §11 이 말하는
+> 파일들이 없다. 그리고 `0ca48cbf` 자체의 전체 테스트·smoke 영수증이 어디에도
+> 없었다. 둘 다 아래 §12.1 에서 닫는다.
 
 ## 0. 요청 판정
 
 리뷰가 정한 순서 **11번(문서·회귀 재심사)** 이다. 12번(RUN_SCOPE 변경)은 아직
 시작하지 않았다.
+
+**★ 24차 보충 리뷰 후 순서가 하나 늘었다** — RUN_SCOPE 변경 **앞에**
+「보존 gate 구현 + 빈 root smoke」가 들어간다 (§12.5). 7다리를 잃은 원인이
+도구 부재가 아니라 **강제 부재**였기 때문이다.
 
 | 대상 | 요청 |
 |---|---|
@@ -177,7 +192,7 @@ warm    33p→34p:
 | 항목 | 왜 |
 |---|---|
 | 계약 §2·§4·§6 **구현** | `src/` 변경 → 리뷰 순서 12번 |
-| `validate_provenance` 호출 | 원자료가 git 밖. 계약 §10 에 보존 단위만 정의 |
+| ~~`validate_provenance` 호출~~ | **닫혔다 (§12.1)** — `artifacts/paired_fixed5_v4` 복원 후 34검사 전부 통과, 영수증 커밋됨. 나머지 7다리는 원자료가 없어 영구 불가 |
 | 고유 leg 목록·비용 재산정 | 계약 §9 에 항목만. 23차가 요구한 leg ID 단위 전개 미완 |
 | 두 철회 체계의 **단일화** | §4.1 — 결속만 했고 이전은 안 했다 |
 | 8다리 상태 | **§11 정정 참조** — 1개 `full_bundle`+`current_validated`, 7개 `missing` |
@@ -306,6 +321,9 @@ python -m pytest tests/ -q
 ## 10. GO 시 실행 순서 (리뷰 순서 12번)
 
 ```
+0  ★ 보존 gate — leg 생성이 보존 영수증 없이 끝날 수 없게 (계약 v4 bundle 3)
+   tools/preserve_leg.py + 빈 root smoke. RUN_SCOPE 안이므로 digest 가 바뀐다.
+   **1번보다 먼저** — 아래 1~9 가 만드는 다리를 또 잃지 않기 위해서다.
 1  pair_group_id 행 단위 + unit cube bank 생성기    src/grid.py, src/fitting.py
 2  protocol 을 총 시작점 예산 B · 목적함수별로 → run_spec, sig_version 6
 3  p_ini 경로 분리 + candidate_mode 3종 + provider freeze
@@ -369,6 +387,10 @@ ok: True · 검사 수: 34 · 실패: []
 
 ### 11.3 계약 §10·§11 을 고쳤다 — 보존을 실행 **앞으로**
 
+> **★ 이 절의 원인 진단은 틀렸다 (24차 보충 리뷰).** 아래 문단은 기록으로
+> 남기고, 정정은 §12.4 에 있다. 요약: 보존 도구는 **이미 있었고 작동했다**.
+> 없었던 것은 강제다.
+
 23차 Q6 이 content-addressed 보존을 권고했고 우리는 계약 §10 에 적어 두고
 구현을 "단계 3 이후" 로 미뤘다. **그 사이에 잃었다.**
 
@@ -388,6 +410,7 @@ footer 손상 시 `pd.read_parquet` 이 먼저 죽어 `ArrowInvalid` 가 그대�
   다리가 `LEG_PRESERVATION.yaml` 에 3축으로 등록됐는가. **원자료가 없는데
   `validation_status` 가 `unvalidated` 가 아니면 실패**한다.
 - `test_docs_do_not_claim_lost_legs_are_regenerable` — 손실 다리가 §32 에
-  기록돼 있는가.
+  기록돼 있는가. **★ 이 판은 이름이 약속한 일을 하지 않았다** — 금지 문구를
+  검색하지 않았다 (보충 발견 5). §12.3 에서 고쳤다.
 
 변이 2건(손실 다리를 "검증됨" 으로 위장 · 원장에서 다리 삭제) 전부 실패 확인.

@@ -1,0 +1,42 @@
+# validate_provenance 영수증 — paired_fixed5_v4
+# 이 파일은 손으로 쓰지 않는다. 재생성:
+#   python3 -c "import sys;sys.path.insert(0,'.');from src.io import validate_provenance as V;print(V('results/paired_fixed5_v4'))"
+validator_source_digest: a72c0f3a485c19bb
+python: 3.11.15
+ok: True
+fail: []
+n_checks: 34
+  - _참고_코드재계산불가: 통과
+  - attempt_파일_일치: 통과
+  - attempt_파일_존재: 통과
+  - clean_worktree: 통과
+  - config_hash: 통과
+  - manifest_존재: 통과
+  - manifest와_일치: 통과
+  - optimizer_정책: 통과
+  - producer_곡선일치: 통과
+  - restart_예산_완주: 통과
+  - restart_출처: 통과
+  - run_signature_기록: 통과
+  - run_signature_재계산: 통과
+  - run_spec_schema: 통과
+  - sig_version: 통과
+  - start_파일_일치: 통과
+  - start_파일_존재: 통과
+  - 곡선_producer_재검: 통과
+  - 단일_서명: 통과
+  - 목적함수_순서: 통과
+  - 시작_provenance: 통과
+  - 시작종료_서명일치: 통과
+  - 실행중_코드불변: 통과
+  - 입력_digest_재해시: 통과
+  - 입력_스냅샷: 통과
+  - 입력봉인_교차일치: 통과
+  - 조건집합_서명일치: 통과
+  - 채점파일_정본: 통과
+  - 출력_격자완전성: 통과
+  - 출력_완전성: 통과
+  - 출력봉인_재계산: 통과
+  - 코드_identity: 통과
+  - 필수_입력_존재: 통과
+  - 행별_서명: 통과
