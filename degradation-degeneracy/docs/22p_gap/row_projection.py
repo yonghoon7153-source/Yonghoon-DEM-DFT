@@ -259,35 +259,77 @@ def _add_multistart_blocks(df, summary: dict) -> None:
         "마세요 — 출처를 저장하는 현재 코드로 재fit해야 복구됩니다 (F25/F31).")
 
 
-#: 산출물을 실제로 만드는 것들. 여기 없는 것(예: `main()` 의 출력 문구)이
-#: 바뀌어도 투영 내용은 안 바뀐다.
+#: 계산 닫힘의 **뿌리**. 여기서 출발해 실제로 읽는 module-level 이름을
+#: 따라가며 닫는다 — 목록에 손으로 적는 것은 이 여섯 개뿐이다.
 _COMPUTE_NAMES = ("_cell", "_restart_list", "_restart_facts",
                   "_add_multistart_blocks", "_analyzer_provenance", "build")
 
 
+def _compute_closure(src: str) -> dict[str, str]:
+    """계산 경로가 **실제로 읽는** module-level 정의의 닫힘.
+
+    ★ 25차 발견 2 — 초판은 손으로 고른 함수 여섯 개와 상수 셋만 해시했다.
+      그런데 `_restart_list()` 는 `_RESTART_SOURCES` 를 읽어 허용·거부를
+      정한다. 그 frozenset 에 값을 하나 더하면 analyzer 의 의미가 바뀌는데
+      digest 는 그대로였고, breaker 는 파일 전체 SHA 를 일부러 제외하므로
+      교차비교도 `intact` 로 남았다. **의미가 바뀌었는데 아무 것도 안 깨졌다.**
+
+      그래서 목록이 아니라 닫힘으로 만든다: 뿌리 함수에서 시작해 body 가
+      참조하는 module-level 이름을 따라가고, 그것이 module-level 정의면
+      포함하고 다시 따라간다.
+
+    import 는 일부러 포함하지 않는다 — runtime/library 버전은 별도 축이고,
+    투영이 py3.11/3.12·pandas 2/3 에서 바이트 동일하게 재생성된다는 것을
+    세 기계에서 실측했다. 버전을 digest 에 넣으면 그 성질을 잃는다.
+    """
+    import ast
+
+    tree = ast.parse(src)
+    defs: dict[str, ast.AST] = {}
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            defs[node.name] = node
+        elif isinstance(node, ast.Assign):
+            for t in node.targets:
+                if isinstance(t, ast.Name):
+                    defs[t.id] = node
+        elif isinstance(node, ast.AnnAssign) and isinstance(node.target, ast.Name):
+            defs[node.target.id] = node
+
+    missing = [n for n in _COMPUTE_NAMES if n not in defs]
+    if missing:
+        raise SystemExit(f"✗ 계산 함수를 못 찾았다: {sorted(missing)} — "
+                         f"이름을 바꿨다면 _COMPUTE_NAMES 도 고쳐라")
+
+    out: dict[str, str] = {}
+    todo = list(_COMPUTE_NAMES)
+    while todo:
+        name = todo.pop()
+        if name in out:
+            continue
+        node = defs[name]
+        out[name] = ast.get_source_segment(src, node) or ""
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Name) and sub.id in defs and sub.id not in out:
+                todo.append(sub.id)
+    return out
+
+
 def _compute_sha256() -> str:
-    """계산 경로의 source + 출력 규격 상수만 해시한다.
+    """계산 경로의 **닫힘** + 출력 규격 상수를 해시한다.
 
     표시 코드 변경이 provenance 를 흔들지 않게 하고, 반대로 계산이 바뀌면
     반드시 흔들리게 한다. `analysis_spec_sha256` 이 **무엇을 만들기로 했는가**
     라면 이것은 **무엇이 만들었는가** 다.
     """
-    import ast
-
     src = Path(__file__).resolve().read_text(encoding="utf-8")
-    tree = ast.parse(src)
-    parts = []
-    for node in tree.body:
-        if isinstance(node, ast.FunctionDef) and node.name in _COMPUTE_NAMES:
-            parts.append(f"{node.name}\n{ast.get_source_segment(src, node)}")
+    closure = _compute_closure(src)
+    parts = [f"{k}\n{closure[k]}" for k in sorted(closure)]
+    # 값 수준 대조 — 계산식으로 만들어진 상수까지 잡는다 (source 만으로는 부족)
     parts.append(json.dumps({"COLUMNS": COLUMNS,
                              "RESTART_COLUMNS": RESTART_COLUMNS,
                              "ANALYSIS_SPEC": ANALYSIS_SPEC},
                             sort_keys=True, ensure_ascii=False))
-    missing = set(_COMPUTE_NAMES) - {p.split("\n", 1)[0] for p in parts[:-1]}
-    if missing:
-        raise SystemExit(f"✗ 계산 함수를 못 찾았다: {sorted(missing)} — "
-                         f"이름을 바꿨다면 _COMPUTE_NAMES 도 고쳐라")
     return hashlib.sha256("\n".join(parts).encode("utf-8")).hexdigest()[:16]
 
 
@@ -321,7 +363,7 @@ def _analyzer_provenance() -> dict:
     return out
 
 
-def build(leg: str) -> dict:
+def build(leg: str, out: Path | None = None) -> dict:
     import pandas as pd
     import yaml
 
@@ -436,13 +478,14 @@ def build(leg: str) -> dict:
     r_lines += ["\t".join(_cell(v) for v in row) for row in rrows]
     r_text = "\n".join(r_lines) + "\n"
     r_sha = hashlib.sha256(r_text.encode("utf-8")).hexdigest()
-    r_csv = WARM / f"{leg}.restarts.csv.gz"
-    WARM.mkdir(parents=True, exist_ok=True)
+    _out = out or WARM                       # ★ 25차 발견 1 — cohort 디렉터리
+    r_csv = _out / f"{leg}.restarts.csv.gz"
+    _out.mkdir(parents=True, exist_ok=True)
     with gzip.GzipFile(r_csv, "wb", compresslevel=9, mtime=0) as fh:
         fh.write(r_text.encode("utf-8"))
 
-    out_csv = WARM / f"{leg}.projection.csv.gz"
-    WARM.mkdir(parents=True, exist_ok=True)
+    out_csv = _out / f"{leg}.projection.csv.gz"
+    _out.mkdir(parents=True, exist_ok=True)
     # mtime=0 은 timestamp 만 고정한다. **deflate 구현 차이는 고정하지 않는다** —
     # 22차 리뷰가 zlib-ng 1.3.1 에서 다른 바이트를 실측했다 (zlib 1.3 끼리는 같다).
     # git noise 를 줄이는 효과는 있지만, 정본 앵커는 아래 `full_sha`(압축 전)다.
@@ -557,7 +600,7 @@ def build(leg: str) -> dict:
         meta["source_digest"] = rs.get("source_digest")
         meta["warm_start"] = rs.get("warm_start")
 
-    (WARM / f"{leg}.projection.yaml").write_text(
+    (_out / f"{leg}.projection.yaml").write_text(
         yaml.safe_dump(meta, allow_unicode=True, sort_keys=False), encoding="utf-8")
     return meta
 
@@ -567,7 +610,12 @@ def main() -> int:
     ap.add_argument("legs", nargs="*")
     ap.add_argument("--all", action="store_true",
                     help="warm_probe 에 summary 가 있는 다리 전부")
+    ap.add_argument("--out", default=None, help=(
+        "투영을 쓸 디렉터리 (repo 상대). 기본은 warm_probe. "
+        "★ 25차 발견 1 — analyzer 세대가 바뀌면 옛 cohort 를 덮지 않고 "
+        "새 디렉터리에 쓴다. 봉인 summary/manifest 는 언제나 warm_probe 에서 읽는다."))
     a = ap.parse_args()
+    out_dir = (REPO / a.out) if a.out else None
 
     legs = list(a.legs)
     if a.all:
@@ -580,7 +628,7 @@ def main() -> int:
     rc = 0
     for leg in legs:
         try:
-            m = build(leg)
+            m = build(leg, out_dir)
         except SystemExit as e:
             print(e)
             rc = 1

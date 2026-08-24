@@ -1,0 +1,69 @@
+_주의: '손으로 고치지 않는다. 이 값이 바뀌면 ID 도메인이 바뀐 것이고, 이미 만든 모든 pair_group_id·bank_id·candidate_id 가 무효가 된다. 재생성:
+  python3 tools/gen_design_golden.py'
+schema_version: 1
+parameter_order:
+- lli
+- lam_pe
+- lam_ne
+- p_ini_scale
+- shift
+parameter_order_sha256: f111a1c5c6fbeade5df422badf326581795ed6eaf0b8c1a8f67d18a04a02d8ce
+unit_cube_bank_sha256: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+exact_bounds_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+designs:
+  p22_halfcell_2x2_v6:
+    arms:
+    - A
+    - B
+    - C
+    - D
+    pairing_design_sha256: d3e9f452503cbc485f5007df86d1c3d26dffc038e10555b04d6530840a10ce3f
+  p22_grid_primary_v6:
+    arms:
+    - G_A
+    - G_C
+    pairing_design_sha256: fb2f85e54a268bbc3007c8ad1ce704dcf034aa82d07323df5cc4e38786cbfe20
+vectors:
+- name: halfcell_2x2_coord0
+  coords:
+    lli: '0.17'
+    lam_pe: '0.13'
+    lam_ne: '0.13'
+    lam_pe_type: capacity
+    lam_ne_type: capacity
+  pair_group_id: b737581155547cd4e92ce92111a65044af6e5c13708d9968c109972d0d16f493
+  bank_id: ffe83a52820afa80733530bf3188de397b11d555e18112d0211ca503bf967531
+  candidate_ids:
+    base_init: c825f9c8fa220443f6d3f9718e2c4d5a0643f30bb49edec1ee13f7f81c9fcacf
+    warm: 4cd7f03e70cfea58fd3825392cdc663b34ff6b7c55405ec392debf62f17e3098
+    random: 30e9fa0e041b2aedaf3c46cfd7e29bd9bbbb9b409d60348f520e15ae32facf48
+- name: halfcell_2x2_coord1
+  coords:
+    lli: '0.170'
+    lam_pe: '0.13'
+    lam_ne: '0.13'
+    lam_pe_type: capacity
+    lam_ne_type: capacity
+  pair_group_id: b737581155547cd4e92ce92111a65044af6e5c13708d9968c109972d0d16f493
+  bank_id: ffe83a52820afa80733530bf3188de397b11d555e18112d0211ca503bf967531
+  candidate_ids:
+    base_init: c825f9c8fa220443f6d3f9718e2c4d5a0643f30bb49edec1ee13f7f81c9fcacf
+    warm: 4cd7f03e70cfea58fd3825392cdc663b34ff6b7c55405ec392debf62f17e3098
+    random: 30e9fa0e041b2aedaf3c46cfd7e29bd9bbbb9b409d60348f520e15ae32facf48
+- name: halfcell_2x2_coord2
+  coords:
+    lli: '0'
+    lam_pe: '0'
+    lam_ne: '0'
+    lam_pe_type: capacity
+    lam_ne_type: capacity
+  pair_group_id: 43a6751fb830addd35f429f35dc85c2cbb328d1ee64ada85548c9e521270e20d
+  bank_id: 0298e1d24bdeb805291c755c8fe25c4e1a516e16155a0d98211900efdd8c3c4f
+  candidate_ids:
+    base_init: 8016623e30a66ad7fa242c6d3e70cd422d7ea87a91c2648baf292bc876d67921
+    warm: 3200f977393e7b6b82eeba804b69cf12aa878a2db05e3e02e175884c2f23b416
+    random: 8cb9f89c28d30e428b5e686ebf9c879f6ab8570b246a198a768c8bfc014f693b
+cross_design_same_coords:
+  note: 같은 좌표라도 설계가 다르면 다른 pair_group_id 여야 한다
+  halfcell: b737581155547cd4e92ce92111a65044af6e5c13708d9968c109972d0d16f493
+  grid: a12ce1ac39a58489c98b3e7d2e0031ff98df328eda1b7586860342fd61930721

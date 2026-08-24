@@ -30,7 +30,67 @@
 #   "두 오류가 동시에 ~1%" 와 "판정선을 어디에 두든" 이 각각 배너가 명시적으로
 #   **유지**한다고 적은 문장과 정반대 주장을 잡았다. 원장이 참인 문장을 금지하면
 #   문서를 거짓으로 만든다 — 금지어를 넣기 전에 그 배너가 무엇을 유지하는지 읽어라.
-schema_version: 1
+schema_version: 2
+
+# ── 활성 주장 원장 (★ 25차 발견 6) ─────────────────────────────────────────
+# 왜 여기 있나: `LEG_PRESERVATION.yaml` 의 `claim_roles` 가 자유문장이라
+#   "어느 주장에 이 다리를 쓸 수 있는가" 가 기계 계약이 아니었다. claim ID 를
+#   여기 한 곳에 두고 원장이 그것을 참조한다 — Q1 이 요구한 "claim authority 는
+#   `CLAIM_STATUS.yaml` 하나" 를 활성 주장까지 넓힌 것이다.
+#
+#   `protocol_generation` 이 핵심이다. 한 다리가 옛 protocol 주장에는 쓸 수
+#   있고 새 protocol 주장에는 못 쓰는 상황을 leg-level 필드 하나로는 적을 수
+#   없다 (25차 발견 3 이 지적한 것).
+#
+#   `requires_leg: true` 면 적어도 한 다리가 이 주장에 role 을 선언해야 한다
+#   (양방향 coverage).
+active_claims:
+  - id: P22_NOWARM_PRIMARY
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      현행 digest 무-warm 짝의 1차 전이표와 Δ. 정본 수치는 투영과
+      `docs/09_22P_GAP.md` — 여기 옮겨 적지 않는다.
+  - id: P22_WARM_PAIR
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: 같은 digest·같은 예산에서 warm 만 켠 짝의 전이표.
+  - id: WARM_REPLACES_SLOT
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      warm 은 후보를 **더하지 않고** 결정론 slot 을 교체한다. 근거는 restart
+      투영의 `source` 구성이다 (계약 v4 §0).
+  - id: HALFCELL_PAIR_CONFOUNDED
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      half-cell 짝은 warm 이 `p_ini` 까지 움직여 warm 단일 축이 아니다
+      (21차 발견 4). 이 주장 자체는 교란 다리가 **증거**다.
+  - id: XDIGEST_NUMERICALLY_HARMLESS
+    protocol_generation: v5
+    requires_leg: true
+    무엇: >-
+      교차-digest 짝의 1번째가 같다는 것 — 그 digest 구간이 수치적으로
+      무해하다는 별도 증거. regime 병기 필수.
+  - id: RANDOM_ONLY_MULTIMODALITY
+    protocol_generation: v6_prep
+    requires_leg: true
+    무엇: >-
+      random-only 다봉성 지표. **수렴한 국소최소의 다봉성이 아니라** endpoint
+      dispersion / optimizer sensitivity 까지만 지지한다 (24차 보충 Q4).
+  - id: LEGACY_PAIRED_FIXED5
+    protocol_generation: v5
+    requires_leg: true
+    무엇: >-
+      옛 v4 fixed-budget · no-warm 주장. `RESULTS_PAIRED_FIXED5.md` 가 지지하던
+      범위이며, **그 protocol 세대를 명시한 채로만** 인용 가능하다.
+  - id: P22_STAGE3_PRIMARY
+    protocol_generation: v6
+    requires_leg: false          # 아직 아무 다리도 이 주장을 지지하지 않는다
+    무엇: >-
+      단계 3 의 사전 등록 primary estimand. v5 산출물을 여기로 승격하는 것은
+      계약 §2.1 이 금지한다.
 
 claims:
   - id: RULE_OF_THREE

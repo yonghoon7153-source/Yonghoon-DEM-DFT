@@ -619,7 +619,15 @@ printf '\n'
 [[ "$DIRTY" == "1" ]] && printf \
   '\033[33m⚠ dirty worktree 에서 돌렸다 — clean_worktree·코드_identity 는 제외했다.\n   본 실행은 반드시 커밋 후 clean 상태에서 시작할 것.\033[0m\n'
 if [[ "$fail" -eq 0 ]]; then
-  printf '\033[1m✅ end-to-end smoke 통과 — 본 실행을 시작해도 된다\033[0m\n'
+  # ★ 25차 발견 8 — 이 줄은 **실행 승인을 발행하면 안 된다.**
+  #   보존 gate(계약 v4 묶음 9)가 아직 없다. 이 smoke 에는 보존 트랜잭션이
+  #   없으므로 통과는 "기존 pipeline 이 온전하다" 는 뜻일 뿐, 새 leg 를
+  #   돌려도 된다는 뜻이 아니다. 8월 20일 warm 7다리를 그 구분 없이 돌렸고
+  #   보존 없이 끝나서 잃었다. 묶음 9 가 실제 gate 로 들어온 뒤에만 이 문구를
+  #   실행 승인으로 되돌린다.
+  printf '\033[1m✅ pipeline smoke 통과\033[0m\n'
+  printf '\033[33m⚠ 보존 gate 미완료 (계약 v4 묶음 9) — 새 leg 실행 금지.\n'
+  printf '   이 통과는 실행 승인이 아니다. 보존 트랜잭션은 이 smoke 에 아직 없다.\033[0m\n'
   exit 0
 fi
 printf '\033[1m❌ 실패 %d건 — 본 실행을 시작하지 말 것\033[0m\n' "$fail"

@@ -1,66 +1,76 @@
-# warm-probe 8다리의 **실제 보존 상태** — 계약 v3 §8 의 3축 실체
+# warm-probe 다리의 **실제 보존 상태**와 투영 cohort — 계약 v4 §8 의 실체
 #
 # 왜 이 파일이 있나 (2026-08-24):
 #   작업 기계가 교체되면서 `results/` 가 사라졌다. 그 전까지 문서는 8다리를
-#   전부 "원자료 보유 기계에서 되살릴 수 있다" 로 적고 있었고, 24차 요청문도
-#   그렇게 썼다. **틀린 상태가 문서에 있었다.**
+#   전부 "원자료 보유 기계에서 되살릴 수 있다" 로 적고 있었다. **틀린 상태가
+#   문서에 있었다.** 복구 전수 조사에서 `paired_fixed5_v4` 하나만 살아남았다.
 #
-#   복구 전수 조사에서 `paired_fixed5_v4` 하나만 살아남았다 (2026-08-16
-#   백업 `v4_run_extras`). 나머지 7다리는 2026-08-20 에 만든 warm 실험이라
-#   그 백업 이후이고, 네 곳(WSL 홈 · D 드라이브 2곳 · C 드라이브)을 전부
-#   뒤졌지만 없다.
+# 이 파일이 담는 것은 **이미 실행된 다리**뿐이다. 아직 실행하지 않은 계획
+# 다리는 여기 오지 않는다 — `planned_leg_index` 가 그것이고 계약 v4 묶음 1·9 다
+# (25차 발견 5: 계획 다리를 `missing/unvalidated/excluded` 로 적으면 "과학적으로
+# 폐기됨" 처럼 읽힌다. 초판이 그렇게 시켰고 틀렸다).
 #
-# ★ 24차 **보충** 리뷰 (2026-08-24, NO-GO) 가 이 파일의 초판을 4건으로 반려했다.
-#   초판이 틀린 것:
-#     1. `inference_role: canonical_candidate` — 계약 §8 에 없는 값을 원장과
-#        회귀가 임의로 만들었다. 계약을 고친 것이 아니라 **회귀를 두 번째
-#        authority 로 만든** 것이다. 직전 라운드 Q5 가 경고한 "구조적 literal
-#        의 독립 복제" 가 같은 커밋에서 바로 재발했다. → 값을 버렸다.
-#        회귀는 이제 enum 을 계약에서 읽는다
-#        (`test_status_axis_enums_have_exactly_one_authority`).
-#     2. 7다리를 `missing` 이라 적었다. 계약 §8 은 그 상태에 이미
-#        `recorded_projection` 이라는 칸을 갖고 있다 (투영·summary·manifest 는
-#        커밋돼 있고 원자료 독립 재계산만 불가). → 고쳤다.
-#     3. `근거` 산문만 있고 검증 가능한 anchor 가 없었다. → `evidence` 블록.
-#     4. 어느 주장에 쓰이는 다리인지 없었다. → `claim_roles`.
-#
-# ★ 사고 원인의 정정 (보충 리뷰가 바로잡았다):
-#   초판은 "보존 단위를 아직 안 세웠기 때문" 이라고 적었다. **틀렸다.**
-#   `tools/archive_bundle.py` · `scripts/archive_results.sh` · git `artifacts/`
-#   체계는 이미 있었고 `paired_fixed5_v4` 에서 실제로 작동했다 (아래 evidence
-#   가 그 산물이다). 실패는 도구 부재가 아니라 **8월 20일 warm 다리 7개에 그
-#   체계를 필수 gate 로 적용하지 않은 coverage·운영 문제**다. 계약 v4 가 고칠
-#   것은 "보존 도구를 만든다" 가 아니라 "다리 생성이 보존 없이 끝날 수 없게
-#   한다" 이다.
-#
-# 이 파일은 관측 기록이지 계획이 아니다. 원자료가 더 발견되면 갱신한다.
-# 3축 enum 의 정본은 `STAGE3_CONTRACT.md` §8 하나다 — 여기 옮겨 적지 않는다.
-schema_version: 2
-recorded: 2026-08-24
-recorded_on: "새 작업 기계 (기계 교체 후 복구 조사) + 컨테이너 재검증"
+# 3축 enum 과 허용 제약의 정본은 `STAGE3_CONTRACT.md` §8 하나다 — 여기 옮겨
+# 적지 않는다. claim ID 의 정본은 `CLAIM_STATUS.yaml` 하나다.
+schema_version: 3
+recorded: 2026-08-25
+recorded_on: "새 작업 기계 복구 조사 + 컨테이너 재검증"
 
-# ── 투영 세대 pin ────────────────────────────────────────────────────────
-# 왜 필요한가 (24차 보충 발견 6):
-#   7다리는 다시 만들 수 없다. 그런데 회귀는 여덟 투영을 전부 **현행 트리**에
-#   대고 검사했다 (`test_projection_analyzer_digests_recompute_from_the_current_tree`).
-#   그러면 `row_projection.py` 를 한 글자만 고쳐도 그 7다리가 영구히 실패하고,
-#   고칠 방법이 없다 — 분석기를 영원히 얼리거나 다리를 지우는 것 말고는.
+# ── 투영 cohort ──────────────────────────────────────────────────────────
+# ★ 25차 발견 1 — 투영을 전역 pin 하나로 묶으면 analyzer 를 고치는 순간
+#   충족 불가능해진다. 원자료를 잃은 7다리는 새 analyzer 로 재생성할 수 없고,
+#   살아 있는 다리만 재생성하면 "여덟이 한 세대" 회귀가 깨진다. 어느 쪽으로도
+#   suite 를 만족시킬 수 없었다.
 #
-#   그래서 세대를 여기 못 박는다. 원자료 없는 다리는 **기록된 세대 바이트**에
-#   대고 검사한다. 원자료가 있는 다리만 현행 트리에 대고 검사한다.
+#   그래서 cohort 로 나눈다. 옛 여덟 투영은 **immutable historical cohort** 로
+#   얼리고, 새 투영은 새 cohort_id 와 **새 경로**에 쓴다. 옛 바이트를 덮지
+#   않는다. 교차-다리 비교는 **같은 cohort 안에서만** 성립한다.
 #
-#   `comparison_set_status` 는 8다리 **교차** 비교(전이표 대조·짝 재현·
-#   교차-digest 재현)가 아직 "같은 규격끼리" 인가를 선언한다. 분석기를 고치는
-#   순간 그 전제가 깨지고, 회귀가 먼저 실패해서 선언을 강제한다 — 조용히
-#   깨지지 않는다.
-projection_generation_pin:
-  schema_version: 3
-  compute_sha256: 73c1ac4ba06e59dc
-  row_projection_py_sha256: bbb4744256e42b8f
-  src_scoring_py_sha256: 69e69cb046f4b4ae
-  analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
-  recorded: 2026-08-20            # 8다리가 마지막으로 원자료에서 재생성된 날
-  comparison_set_status: intact   # intact | broken_by_analyzer_change
+#   `runtime` 은 기록이지 equality 축이 아니다. g1 은 py3.12.3/numpy 2.5.2,
+#   g2 는 py3.11.15/numpy 2.4.6 에서 만들었는데 `projection_sha256` ·
+#   `restart_projection_sha256` 이 **바이트 동일**하다 (아래 두 pin 이 그
+#   증거다). runtime 을 digest 에 넣으면 그 성질을 잃는다.
+cohorts:
+  - cohort_id: g1_2026_08_20
+    dir: docs/22p_gap/warm_probe
+    status: frozen
+    frozen_reason: >-
+      8다리 중 7다리의 원자료가 소실됐다. 이 cohort 는 다시 만들 수 없으므로
+      기록된 analyzer 바이트에 대고만 검증한다. 25차 발견 2 로 analyzer 가
+      g2 로 올라갔지만 이 cohort 는 g1 바이트 그대로 얼린다.
+    cross_leg_comparison: allowed_within_cohort
+    pin:
+      schema_version: 3
+      compute_sha256: 73c1ac4ba06e59dc
+      row_projection_py_sha256: bbb4744256e42b8f
+      src_scoring_py_sha256: 69e69cb046f4b4ae
+      analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+    runtime: {python: "3.12.3", pandas: "3.0.5", pyarrow: "25.0.1",
+              numpy: "2.5.2", yaml: "6.0.3"}
+    legs: [fit_22p_seed_404_hc, fit_22p_seed_404_hc_nowarm,
+           fit_22p_seed_404_hc_warm_now, fit_seed404_pe5mv,
+           fit_seed404_pe5mv_nowarm, paired_fixed5_v4,
+           paired_fixed5_v4_nowarm_now, paired_fixed5_v4_warm]
+
+  - cohort_id: g2_2026_08_25
+    dir: docs/22p_gap/proj_g2
+    status: active
+    cross_leg_comparison: not_applicable_single_leg
+    무엇이_달라졌나: >-
+      계산 digest 를 손으로 고른 함수 목록이 아니라 **dependency closure** 에서
+      만든다 (25차 발견 2 — `_RESTART_SOURCES` 가 digest 밖에 있었다). 계산
+      **의미**는 안 바뀌었다: 이 cohort 의 `projection_sha256` ·
+      `restart_projection_sha256` · `analysis_spec_sha256` · `fits_sha256` 이
+      g1 과 전부 바이트 동일하다. 움직인 것은 identity 회계뿐이다.
+    pin:
+      schema_version: 3
+      compute_sha256: 1c36a92f11c6f856
+      row_projection_py_sha256: 923ba02d29e61928
+      src_scoring_py_sha256: 69e69cb046f4b4ae
+      analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+    runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
+              numpy: "2.4.6", yaml: "6.0.3"}
+    legs: [paired_fixed5_v4]
 
 legs:
   # ── 원자료가 살아남은 유일한 다리 ────────────────────────────────────────
@@ -70,45 +80,56 @@ legs:
     inference_role: diagnostic
     근거: >-
       2026-08-16 백업 `v4_run_extras` 에서 복구. `validate_provenance` 34검사
-      전부 통과 (ok=True, fail=[]) — 21차 발견 6 의 세 번째 줄이 이 다리에서
-      닫혔다. 다만 **현행 정본은 아니다**: 이 다리의 run_spec 은
-      `source_digest: d50295f980ccaa81` 로 현행 `a72c0f3a485c19bb` 와 다르고,
-      `코드_identity` 검사는 (`src/io.py:1514`) run_spec 이 digest 를 갖고
-      dirty 가 아닌지만 본다 — 현행 트리와의 일치를 보지 않는다. 그래서
-      `current_validated` 가 아니라 `historical_validated` 다. 전이표도
-      현행 digest 짝(131/436/55/854, Δ 0.258130)과 다르다
-      (133/429/56/858, Δ 0.252710) → 현행 1차 표의 대체물이 아니다.
+      전부 통과 (ok=True, fail=[]). 다만 **현행 정본은 아니다**: run_spec 이
+      `source_digest: d50295f980ccaa81` 로 현행과 다르고, `코드_identity` 검사는
+      (`src/io.py:1514`) run_spec 이 digest 를 갖고 dirty 가 아닌지만 본다 —
+      현행 트리와의 일치를 보지 않는다. 그래서 `historical_validated` 다.
+      전이표도 현행 digest 짝과 다르다 (133/429/56/858, Δ 0.252710 vs
+      131/436/55/854, Δ 0.258130) → 현행 1차 표의 대체물이 아니다.
     evidence:
       bundle_uri: artifacts/paired_fixed5_v4          # git tracked
       bundle_files: 26
       payload_bytes: 23863555
       payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
       payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
-      bundle_check: "python -m tools.archive_bundle check artifacts/paired_fixed5_v4 → 0 mismatch"
-      verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.txt
-      verification_receipt_sha256: 4aec75a656081725d8ffbbcb61a49599877cbd00805bcdf1d415fd330d6a4728
+      # ★ 25차 발견 3 — 산문이 아니라 회귀가 `tools/archive_bundle.check()` 를
+      #   **호출해서** member 를 전수 재해시한다. 크기를 유지한 1비트 반전을
+      #   옛 검사가 통과했다.
+      member_rehash_by: tools.archive_bundle.check
+      # ★ 25차 발견 4 — 영수증은 손으로 쓰지 않는다.
+      #   `python3 docs/22p_gap/make_receipt.py paired_fixed5_v4` 가 만들고
+      #   `--check` 가 **core 바이트 동일** 재생성을 확인한다. core 는 묶음
+      #   바이트와 validator 소스에서만 나오므로 언제 어디서 돌려도 같다 —
+      #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
+      #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
+      verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
+      verification_receipt_core_sha256: f0bae903e015a177fce820fda91326eb354fd600fa178da39b59fada3e86d3f9
+      verification_receipt_generator: docs/22p_gap/make_receipt.py
+      empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
+      rescored_from_restored_fits: true
       validator_identity:
-        source_digest: a72c0f3a485c19bb              # 검증기 쪽 (현행 트리)
+        source_digest: 0b9fb0d4519d34ae
         n_checks: 34
         ok: true
       leg_source_digest: d50295f980ccaa81            # 산출물 쪽 (옛 세대)
       fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
       fits_봉인일치: true
-      projection_generation:
-        projection_schema: 3
-        compute_sha256: 73c1ac4ba06e59dc
-        row_projection_py_sha256: bbb4744256e42b8f
-        analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+      cohorts: [g1_2026_08_20, g2_2026_08_25]
       regeneration_capability: available_raw_present
     claim_roles:
-      - claim: "§20.4 재정정 표의 `paired_fixed5_v4` 행 (pocv_dvdq · pocv_dvdq_dqdv)"
-        role: 인용가능
-      - claim: "현행 digest 1차 전이표 (131/436/55/854)"
-        role: 사용불가        # 옛 digest — 값이 다르다
+      - claim_id: LEGACY_PAIRED_FIXED5
+        inference_role: canonical
+        protocol_generation: v5
+      - claim_id: P22_STAGE3_PRIMARY
+        inference_role: diagnostic
+        reason: v5_to_v6_promotion_forbidden
+      - claim_id: P22_NOWARM_PRIMARY
+        inference_role: excluded
+        protocol_generation: v5
+        reason: 옛 digest — 전이표 값이 다르다
     함께_복구: [grid_curves_v4, grid_fit_v4, halfcell_fit_v4]
 
-  # ── 2026-08-20 warm 실험 7다리. 원자료 소실, 투영은 커밋돼 있다 ──────────
-  #    전부 같은 상태이므로 공통 evidence 는 `_공통_recorded_projection` 을 본다.
+  # ── 2026-08-20 warm 실험 7다리. 원자료 소실, 투영은 g1 에 얼려 있다 ──────
   - leg_id: paired_fixed5_v4_nowarm_now
     preservation_status: recorded_projection
     validation_status: unvalidated
@@ -120,17 +141,15 @@ legs:
     evidence:
       leg_source_digest: a72c0f3a485c19bb
       fits_sha256_prefix: 264e91fda4f45a66
-      projection_generation: &pg3
-        projection_schema: 3
-        compute_sha256: 73c1ac4ba06e59dc
-        row_projection_py_sha256: bbb4744256e42b8f
-        analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+      cohorts: [g1_2026_08_20]
       regeneration_capability: &rc unavailable_raw_lost
     claim_roles:
-      - claim: "무-warm 1차 전이표 131/436/55/854 · Δ 0.258130"
-        role: 인용가능        # 투영에서 재계산된다
-      - claim: "계약 v3 §7 1차 표"
-        role: 인용가능
+      - claim_id: P22_NOWARM_PRIMARY
+        inference_role: diagnostic
+        protocol_generation: v6_prep
+      - claim_id: RANDOM_ONLY_MULTIMODALITY
+        inference_role: diagnostic
+        protocol_generation: v6_prep
 
   - leg_id: paired_fixed5_v4_warm
     preservation_status: recorded_projection
@@ -140,13 +159,15 @@ legs:
     evidence:
       leg_source_digest: a72c0f3a485c19bb
       fits_sha256_prefix: 8011aa70fb09a16d
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "warm 짝 전이표 381/186/167/742"
-        role: 인용가능
-      - claim: "warm 이 결정론 slot 을 **교체**한다 (더하지 않는다)"
-        role: 인용가능        # restart 투영에서 재계산된다
+      - claim_id: P22_WARM_PAIR
+        inference_role: diagnostic
+        protocol_generation: v6_prep
+      - claim_id: WARM_REPLACES_SLOT
+        inference_role: diagnostic
+        protocol_generation: v6_prep
 
   - leg_id: fit_22p_seed_404_hc
     preservation_status: recorded_projection
@@ -158,11 +179,12 @@ legs:
     evidence:
       leg_source_digest: 7250c6e689399381        # 옛 digest
       fits_sha256_prefix: 3643872aa0c762b1
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "warm 축 인과 귀속"
-        role: 사용불가
+      - claim_id: HALFCELL_PAIR_CONFOUNDED
+        inference_role: confounded
+        protocol_generation: v5
 
   - leg_id: fit_22p_seed_404_hc_nowarm
     preservation_status: recorded_projection
@@ -172,11 +194,12 @@ legs:
     evidence:
       leg_source_digest: a72c0f3a485c19bb
       fits_sha256_prefix: 1c858c65caf3cf5c
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "half-cell 짝이 warm 단일 축이 아니라는 것 자체"
-        role: 인용가능        # 교란의 **증거**로는 쓴다
+      - claim_id: HALFCELL_PAIR_CONFOUNDED
+        inference_role: diagnostic       # 교란의 **증거**로는 쓴다
+        protocol_generation: v6_prep
 
   - leg_id: fit_22p_seed_404_hc_warm_now
     preservation_status: recorded_projection
@@ -186,11 +209,12 @@ legs:
     evidence:
       leg_source_digest: a72c0f3a485c19bb
       fits_sha256_prefix: fd924dd0e0e588c7
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "half-cell 짝이 warm 단일 축이 아니라는 것 자체"
-        role: 인용가능
+      - claim_id: HALFCELL_PAIR_CONFOUNDED
+        inference_role: diagnostic
+        protocol_generation: v6_prep
 
   - leg_id: fit_seed404_pe5mv
     preservation_status: recorded_projection
@@ -200,13 +224,13 @@ legs:
     evidence:
       leg_source_digest: d842894dbbc2a0f9        # 옛 digest
       fits_sha256_prefix: 3b73f73106b12be6
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "warm 축 인과 귀속"
-        role: 사용불가
-      - claim: "그 digest 구간이 수치적으로 무해하다는 별도 증거"
-        role: 조건부          # `_XDIGEST_PAIRS` — regime 병기 필수
+      - claim_id: XDIGEST_NUMERICALLY_HARMLESS
+        inference_role: diagnostic
+        protocol_generation: v5
+        reason: regime 병기 필수
 
   - leg_id: fit_seed404_pe5mv_nowarm
     preservation_status: recorded_projection
@@ -216,18 +240,20 @@ legs:
     evidence:
       leg_source_digest: a72c0f3a485c19bb
       fits_sha256_prefix: 599be8127f801828
-      projection_generation: *pg3
+      cohorts: [g1_2026_08_20]
       regeneration_capability: *rc
     claim_roles:
-      - claim: "warm 축 인과 귀속"
-        role: 사용불가
+      - claim_id: XDIGEST_NUMERICALLY_HARMLESS
+        inference_role: diagnostic
+        protocol_generation: v5
+        reason: regime 병기 필수
 
 # ── 손실이 무엇을 바꾸고 무엇을 안 바꾸나 ────────────────────────────────
 영향:
   안_바뀌는_것:
     - "전이표(131/436/55/854 · 381/186/167/742)는 커밋된 투영에서 재계산된다"
     - "후보 구성(base_init → warm slot 교체)도 restart 투영에서 재계산된다"
-    - "random-only 다봉성(0.969512)도 restart 투영에서 재계산된다"
+    - "random-only 다봉성도 restart 투영에서 재계산된다"
     - "8다리의 summary·manifest·투영 digest 자기정합은 그대로 검사된다"
   바뀌는_것:
     - "7다리는 투영을 원자료에서 **다시 만들 수 없다** — 영구 diagnostic"
@@ -235,12 +261,11 @@ legs:
     - "투영에 없는 열(p_spread · 경계 플래그 세부 · restarts_json 전문) 영구 손실"
     - "계약 §9 의 재실행에서 그 7다리는 '재실행' 이 아니라 '새로 생성' 이다"
     - >-
-      투영 스키마가 4로 올라가면 7다리는 따라올 수 없다 — 그래서
-      `projection_generation` 을 다리마다 적는다. 회귀는 현행 스키마가 아니라
-      **기록된 세대**에 대고 검사해야 한다 (계약 v4 bundle 4).
+      analyzer 세대가 올라가면 g1 은 따라올 수 없다 — 그래서 cohort 를 나눈다.
+      교차-다리 비교는 g1 안에서만 성립한다.
   교훈:
     - >-
       보존 도구는 있었다. 없었던 것은 **강제**다. `archive_bundle` 을 통과하지
-      않은 다리가 존재할 수 있는 한 같은 사고가 반복된다. 계약 v4 는 다리
-      생성을 트랜잭션으로 만든다 — 보존 영수증 없이는 leg_index 등록 자체가
+      않은 다리가 존재할 수 있는 한 같은 사고가 반복된다. 계약 v4 묶음 9 는
+      다리 생성을 트랜잭션으로 만든다 — 보존 영수증 없이는 등록 자체가
       실패한다.

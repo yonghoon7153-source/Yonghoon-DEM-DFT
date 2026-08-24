@@ -1,0 +1,91 @@
+schema_version: 2
+_주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
+  재생성을 확인한다.
+core_sha256: f0bae903e015a177fce820fda91326eb354fd600fa178da39b59fada3e86d3f9
+core:
+  leg_id: paired_fixed5_v4
+  bundle:
+    uri: artifacts/paired_fixed5_v4
+    files: 26
+    bytes: 23863555
+    payload_index: artifacts/paired_fixed5_v4/payload_sha256.yaml
+    payload_index_sha256: eeb8ae8911083c992710ace2c8f255682b64930a03929f12ae72796ade174716
+    member_rehash: tools.archive_bundle.check
+    member_mismatches: 0
+    fits_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+  restore:
+    mode: empty_root
+    command: python3 -c "from tools.archive_bundle import restore; restore('artifacts/paired_fixed5_v4',
+      repo_root=<empty>)"
+    files_written: 24
+    run_dir_relative: results/paired_fixed5_v4
+    conflicts: 0
+  validation:
+    validator: src.io.validate_provenance
+    ok: true
+    fail: []
+    n_checks: 34
+    checks:
+      _참고_코드재계산불가: 통과
+      attempt_파일_일치: 통과
+      attempt_파일_존재: 통과
+      clean_worktree: 통과
+      config_hash: 통과
+      manifest_존재: 통과
+      manifest와_일치: 통과
+      optimizer_정책: 통과
+      producer_곡선일치: 통과
+      restart_예산_완주: 통과
+      restart_출처: 통과
+      run_signature_기록: 통과
+      run_signature_재계산: 통과
+      run_spec_schema: 통과
+      sig_version: 통과
+      start_파일_일치: 통과
+      start_파일_존재: 통과
+      곡선_producer_재검: 통과
+      단일_서명: 통과
+      목적함수_순서: 통과
+      시작_provenance: 통과
+      시작종료_서명일치: 통과
+      실행중_코드불변: 통과
+      입력_digest_재해시: 통과
+      입력_스냅샷: 통과
+      입력봉인_교차일치: 통과
+      조건집합_서명일치: 통과
+      채점파일_정본: 통과
+      출력_격자완전성: 통과
+      출력_완전성: 통과
+      출력봉인_재계산: 통과
+      코드_identity: 통과
+      필수_입력_존재: 통과
+      행별_서명: 통과
+  identity:
+    validator_source_digest: 0b9fb0d4519d34ae
+    src_io_sha256: fcef6c662f72ae6d
+    src_scoring_sha256: 69e69cb046f4b4ae
+    archive_bundle_sha256: 4b0b373997b1edaa
+    make_receipt_sha256: f97f79262ef2ce91
+  outputs:
+  - role: rescored_summary
+    produced_from: restored fits.parquet only
+    source_file_sha256: e033b19510ddbed951cfebe7e28793f19c5f0da915268b0731a30c56f0b3b064
+    n_rows: 6138
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v1
+    semantic_sha256: 92f80586fec14f97436178a73e8b3920549cf0aa141c3a14acad660bdde47ed9
+  - role: sealed_summary
+    relative_path: degeneracy_summary.yaml
+    byte_size: 9080
+    file_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
+    semantic_schema: degeneracy-summary/v5
+    canonicalizer: score-semantic/v1
+    semantic_sha256: e4a5448ed906c34afcc4651ea42b5716ffdaa8494daf6e5122ba65320760c0ba
+stamp:
+  _주의: 기록용. core 재생성 대조에서 제외된다.
+  validator_commit: 39dd30902d39cd7c98860fd0e01b18f9bb035168
+  validator_tree_dirty: true
+  generated_at_utc: '2026-08-24T21:58:24Z'
+  runtime:
+    python: 3.11.15
+    platform: Linux-6.18.44-fc-v21-x86_64-with-glibc2.39

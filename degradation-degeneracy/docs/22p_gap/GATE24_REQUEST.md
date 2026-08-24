@@ -195,7 +195,7 @@ warm    33p→34p:
 | ~~`validate_provenance` 호출~~ | **닫혔다 (§12.1)** — `artifacts/paired_fixed5_v4` 복원 후 34검사 전부 통과, 영수증 커밋됨. 나머지 7다리는 원자료가 없어 영구 불가 |
 | 고유 leg 목록·비용 재산정 | 계약 §9 에 항목만. 23차가 요구한 leg ID 단위 전개 미완 |
 | 두 철회 체계의 **단일화** | §4.1 — 결속만 했고 이전은 안 했다 |
-| 8다리 상태 | **§11 정정 참조** — 1개 `full_bundle`+`current_validated`, 7개 `missing` |
+| 8다리 상태 | **§13 참조** — 1개 `full_bundle`/`historical_validated`/`diagnostic`, 7개 `recorded_projection`/`unvalidated`/`diagnostic`\|`confounded`. (§11 초판의 `current_validated`·`canonical_candidate`·`missing` 은 전부 철회) |
 | §20.4 의 `multistart._해석` 문자열 | `src/` 가 생성 → 단계 3 코드 라운드 |
 | plateau pilot · sentinel_panel.yaml **실체** | 기준·스키마만 정의, 미실행 |
 
@@ -321,7 +321,7 @@ python -m pytest tests/ -q
 ## 10. GO 시 실행 순서 (리뷰 순서 12번)
 
 ```
-0  ★ 보존 gate — leg 생성이 보존 영수증 없이 끝날 수 없게 (계약 v4 bundle 3)
+0  ★ 보존 gate — leg 생성이 보존 영수증 없이 끝날 수 없게 (계약 v4 **묶음 9**)
    tools/preserve_leg.py + 빈 root smoke. RUN_SCOPE 안이므로 digest 가 바뀐다.
    **1번보다 먼저** — 아래 1~9 가 만드는 다리를 또 잃지 않기 위해서다.
 1  pair_group_id 행 단위 + unit cube bank 생성기    src/grid.py, src/fitting.py
@@ -348,7 +348,7 @@ python -m pytest tests/ -q
 
 | 다리 | `preservation_status` | `validation_status` | `inference_role` |
 |---|---|---|---|
-| `paired_fixed5_v4` | **`full_bundle`** | **`current_validated`** | `canonical_candidate` |
+| ~~`paired_fixed5_v4`~~ | ~~`full_bundle`~~ | ~~`current_validated`~~ | ~~`canonical_candidate`~~ → **철회.** 정본은 `full_bundle`/`historical_validated`/`diagnostic` (§13.1) |
 | 나머지 7 (warm 실험) | `missing` | `unvalidated` | `diagnostic` |
 
 ### 11.1 `paired_fixed5_v4` — 34검사 전부 통과
