@@ -263,6 +263,12 @@ check "userinfo 를 뗀다"        "$(url_host 'https://u:p@real.example/path')"
 # 앞이 '-' 인 이름은 nslookup·dig 의 옵션 인자로 먹힐 수 있다.
 check "앞이 - 면 거부한다"      "$(url_host 'https://-debug' || echo REFUSED)" "REFUSED"
 check "빈 라벨도 거부한다"      "$(url_host 'https://x..y' || echo REFUSED)"   "REFUSED"
+# authority 를 먼저 끊지 않으면 fragment·query 안의 @ 를 userinfo 로 읽는다 —
+# 그러면 남의 도메인을 우리 터널로 판정한다.
+check "fragment 뒤의 @ 에 속지 않는다" "$(url_host 'https://custom.example#@x.lhr.life')" "custom.example"
+check "query 뒤의 @ 도 마찬가지"       "$(url_host 'https://custom.example?a@x.lhr.life')" "custom.example"
+check "그때 우리 터널로 보지 않는다" \
+  "$(is_our_tunnel_url 'https://custom.example#@x.lhr.life' && echo yes || echo no)" "no"
 
 echo
 echo "같은 망에서는 '중추 서버에서 확인해 보라' 가 갈라 주지 못한다"

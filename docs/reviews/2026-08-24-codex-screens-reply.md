@@ -7,11 +7,18 @@ tags: [review, audit, crosscheck, wsl, tooling]
 sources: [docs/reviews/codex-review-screens-and-wsl.md, tools/bml]
 confidence: high
 explored: true
-verificationStatus: verified
-verifiedAt: 2026-08-24
+verificationStatus: partial
 ---
 
-# Codex 화면 리뷰 회답 — 15건 전부 대응
+# Codex 화면 리뷰 회답 — 1차 15건 대응, 2차에서 되돌아옴
+
+> **정정 (2026-08-24).** 이 문서의 첫 판은 "15건 전부 닫음" 과
+> `verificationStatus: verified` 를 달았다. **둘 다 과장이었다.** 2차 리뷰가
+> 같은 커밋(`9ee20825`)을 다시 보고 **닫힘 5 · 부분 해결 8 · 미해결 2** 로
+> 판정했고, 그 판정이 맞다. 고친 자리가 있다는 것과 그 결함이 닫혔다는 것은
+> 다르고, 내가 돌린 시험이 통과했다는 것과 검증됐다는 것도 다르다.
+> 아래 표의 "닫음" 은 **1차 지적에 대해 무엇을 했는지**의 기록이고,
+> 지금의 상태는 2차 회답서를 따른다.
 
 받은 리뷰: 높음 4 · 중간 9 · 낮음 2 (범위 `a7efba10..284a4582`).
 **승인 보류가 맞았다.** 15건 중 반박한 것은 없다 — 전부 실제로 사고가 되는

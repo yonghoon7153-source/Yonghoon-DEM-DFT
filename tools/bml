@@ -100,9 +100,28 @@ URL="http://localhost:${PORT}"
 DATA_DIR="${WORKBENCH_DATA:-$REPO/data}"
 #: 사람이 적은 주소를 브라우저가 받는 형태로 편다.  실제로 적어 넣는 것은
 #: `192.168.0.7` 이나 `192.168.0.7:5003` 이지 완전한 URL 이 아니다.
+#: 주소를 셸에 넘겨도, **화면에 명령으로 찍어도** 안전한가.
+#:
+#: 화면이 `bml use $url` · `curl … $url/api/health` · `WORKBENCH_SERVER=$url bml`
+#: 를 인용 없이 찍는다.  그래서 주소에 `;touch /tmp/PWN;#` 이 섞여 있으면,
+#: **사람이 화면대로 붙여넣는 순간 그것이 실행된다** (Codex 2차 리뷰 1번).
+#: `url_host` 의 제한은 진단용 호스트에만 걸려서 이 출력을 못 막았다.
+#:
+#: 그래서 들어올 때 막는다.  우리 주소는 `scheme://host[:port][/path]` 뿐이라
+#: RFC 3986 의 안전한 글자만 있으면 된다 — 셸에서 뜻이 있는 글자는 하나도
+#: 필요 없다.
+url_is_safe() {
+  case "${1:-}" in
+    '') return 1 ;;
+    *[!A-Za-z0-9._~:/%?=@-]*) return 1 ;;
+  esac
+  return 0
+}
+
 normalize_server_url() {
   local raw="${1:-}"
   [ -n "$raw" ] || return 0
+  url_is_safe "$raw" || return 1
   raw="${raw%/}"
   # 규칙을 짧게 둔다: 사람이 주소만 적었으면 우리 포트를 붙이고, 스킴까지 적어
   # 넣었으면 그대로 믿는다.  `https://lab.example` 에 :5003 을 붙이면 프록시
@@ -1526,12 +1545,38 @@ windows_home() {
 #: CRLF 를 섞어 놓는 것은 이 저장소가 §0.5 로 이미 값을 치른 종류의 사고다.
 #:
 #: 0 = 고쳤다, 1 = 이미 mirrored 라 손대지 않았다, 2 = 쓰지 못했다.
+#: `[wsl2]` 절 **안에서만** 키 하나를 찾는다.  찾으면 그 값을 찍는다.
+#:
+#: 절 범위를 안 보면 이렇게 틀린다 (Codex 2차 리뷰 5번):
+#:
+#:     [wsl2]
+#:     memory=8GB
+#:     [experimental]
+#:     networkingMode=NAT      ← 이것을 고치고 "됐다" 고 한다
+#:
+#: `[wsl2]` 에는 설정이 안 들어가고, 반대로 엉뚱한 절의 mirrored 를 보고
+#: "이미 되어 있다" 고도 한다.  둘 다 사람은 켰다고 믿는데 안 켜져 있다.
+wslconfig_value_in_wsl2() {
+  local f="$1" key="$2"
+  [ -r "$f" ] || return 2
+  LC_ALL=C awk -v key="$key" '
+    { line = $0; sub(/\r$/, "", line) }
+    line ~ /^[ \t]*\[/ { insec = (line ~ /^[ \t]*\[wsl2\][ \t]*$/); next }
+    insec && line ~ ("^[ \t]*" key "[ \t]*=") {
+      sub(/^[ \t]*[^=]*=[ \t]*/, "", line); sub(/[ \t]*$/, "", line)
+      print line; found = 1; exit
+    }
+    END { exit(found ? 0 : 1) }
+  ' "$f"
+}
+
 #: 이미 mirrored 인가.  읽지 못하면 2 (모름) — "아니다" 로 세지 않는다.
 wslconfig_is_mirrored() {
-  local f="$1"
+  local f="$1" v
   [ -f "$f" ] || return 1
   [ -r "$f" ] || return 2
-  grep -qE '^[[:space:]]*networkingMode[[:space:]]*=[[:space:]]*mirrored[[:space:]]*$' "$f"
+  v="$(wslconfig_value_in_wsl2 "$f" networkingMode)" || return 1
+  [ "$v" = "mirrored" ]
 }
 
 #: 이 파일을 우리가 고쳐도 되는가.  된다면 0, 아니면 1 과 이유를 표준출력으로.
@@ -1549,8 +1594,19 @@ wslconfig_writable_reason() {
     [ -f "$f" ] || { printf '보통 파일이 아닙니다'; return 1; }
     [ -r "$f" ] || { printf '읽을 수 없습니다'; return 1; }
     [ -w "$f" ] || { printf '쓸 수 없습니다'; return 1; }
-    if head -c 3 "$f" 2>/dev/null | od -An -tx1 2>/dev/null | tr -d ' \n' | grep -q '^efbbbf'; then
-      printf 'UTF-8 BOM 이 붙어 있습니다 — 손대면 BOM 이 파일 중간으로 갑니다'
+    local head_hex
+    head_hex="$(head -c 4 "$f" 2>/dev/null | od -An -tx1 2>/dev/null | tr -d ' \n')"
+    case "$head_hex" in
+      efbbbf*) printf 'UTF-8 BOM 이 붙어 있습니다 — 손대면 BOM 이 파일 중간으로 갑니다'; return 1 ;;
+      fffe*|feff*) printf 'UTF-16 파일입니다 — 우리 도구는 바이트로 다뤄서 섞어 놓게 됩니다'; return 1 ;;
+    esac
+    # BOM 이 없는 UTF-16 도 있다.  NUL 바이트가 그 표식이고, 텍스트 설정
+    # 파일에는 원래 없어야 한다 (Codex 2차 리뷰 3번).
+    # bash 는 문자열에 NUL 을 담지 못한다 — `grep -q $'\000'` 은 **빈 패턴**이
+    # 되어 모든 파일에 걸린다 (여기서 한 번 걸렸다: 멀쩡한 CRLF 파일을 전부
+    # 거부했다).  지워서 크기가 달라지는지로 본다.
+    if ! LC_ALL=C tr -d '\000' < "$f" 2>/dev/null | cmp -s - "$f"; then
+      printf 'NUL 바이트가 있습니다 — 텍스트가 아닌 인코딩입니다'
       return 1
     fi
   else
@@ -1591,14 +1647,20 @@ wslconfig_set_mirrored() {
 
   if [ ! -e "$f" ]; then
     printf '[wsl2]\r\nnetworkingMode=mirrored\r\n' > "$tmp" || rc=2
-  elif grep -qE '^[[:space:]]*networkingMode[[:space:]]*=' "$f"; then
-    awk '{ if ($0 ~ /^[ \t]*networkingMode[ \t]*=/) {
-             cr = ($0 ~ /\r$/) ? "\r" : ""; print "networkingMode=mirrored" cr
-           } else print }' "$f" > "$tmp" || rc=2
-  elif grep -qE '^\[wsl2\][[:space:]]*$' "$f"; then
-    awk 'BEGIN { put = 0 }
+  elif wslconfig_value_in_wsl2 "$f" networkingMode >/dev/null; then
+    # `[wsl2]` 절 **안의** 그 줄만 바꾼다.  다른 절의 같은 이름은 남의 설정이다.
+    LC_ALL=C awk '
+      { line = $0; sub(/\r$/, "", line); cr = ($0 ~ /\r$/) ? "\r" : "" }
+      line ~ /^[ \t]*\[/ { insec = (line ~ /^[ \t]*\[wsl2\][ \t]*$/); print; next }
+      insec && !done && line ~ /^[ \t]*networkingMode[ \t]*=/ {
+        print "networkingMode=mirrored" cr; done = 1; next
+      }
+      { print }
+    ' "$f" > "$tmp" || rc=2
+  elif grep -qE '^[[:space:]]*\[wsl2\][[:space:]]*$' "$f"; then
+    LC_ALL=C awk 'BEGIN { put = 0 }
          { print
-           if (!put && $0 ~ /^\[wsl2\][ \t\r]*$/) {
+           if (!put && $0 ~ /^[ \t]*\[wsl2\][ \t\r]*$/) {
              cr = ($0 ~ /\r$/) ? "\r" : ""; print "networkingMode=mirrored" cr; put = 1
            } }' "$f" > "$tmp" || rc=2
   else
@@ -1610,25 +1672,29 @@ wslconfig_set_mirrored() {
 
   # 만든 것이 그럴듯한가.  여기서 걸러야 원본이 무사하다.
   if [ "$rc" = 0 ]; then
-    # CR 을 떼고 본다.  grep -E 의 `\r` 은 캐리지 리턴이 아니라 글자 r 이라,
-    # CRLF 파일에서는 `$` 가 절대 안 맞는다 (여기서 한 번 걸렸다).
-    tr -d '\r' < "$tmp" | grep -qE '^networkingMode=mirrored$' || rc=2
+    # 만든 것이 **`[wsl2]` 절 안에서** mirrored 인가.  파일 어딘가에 그 글자가
+    # 있는 것으로는 부족하다 — 엉뚱한 절에 넣고 통과하면 안 된다.
+    [ "$(wslconfig_value_in_wsl2 "$tmp" networkingMode)" = "mirrored" ] || rc=2
   fi
   if [ "$rc" = 0 ] && [ -s "$f" ]; then
-    # 원본이 있었으면 결과가 그보다 짧을 수 없다 (줄을 넣거나 바꾸기만 한다).
-    [ "$(wc -c < "$tmp")" -ge "$(wc -c < "$f")" ] || rc=2
+    # **길이로 재지 않는다** (Codex 2차 리뷰 12번).  `networkingMode=virtioproxy`
+    # (공식 값이다) 를 mirrored 로 바꾸면 파일이 짧아져서, 길이 검사는 멀쩡한
+    # 설정을 거부하고 화면은 권한 문제로 오진한다.  대신 **줄 수**를 본다 —
+    # 우리는 줄을 넣거나 한 줄을 바꾸기만 하므로 줄이 줄어들 수는 없다.
+    [ "$(wc -l < "$tmp")" -ge "$(wc -l < "$f")" ] || rc=2
   fi
   [ "$rc" = 0 ] || { rm -f "$tmp"; return 2; }
 
-  # 통째로 갈아 끼우는 쪽을 먼저 시도한다.  drvfs 에서 rename 이 막히는 일이
-  # 있어 그때만 덮어쓰기로 물러선다 (그 경우 잘림 구간이 생기지만, 그 앞에서
-  # 백업을 이미 확인해 두었다).
+  # 통째로 갈아 끼운다.  **못 하면 원본을 건드리지 않는다** (Codex 2차 리뷰
+  # 2번).  예전에는 `cat "$tmp" > "$f"` 로 물러섰는데, 그것은 원본을 **먼저
+  # 비우고** 쓰는 것이라 도중에 실패하면 설정이 조각난 채 남는다 — 리뷰어가
+  # `mv`·`cat` 을 실패시켜 37바이트 원본이 7바이트로 잘리는 것을 재현했다.
+  # 되돌릴 백업이 있어도, 화면이 실패라고 말하는데 파일이 망가져 있으면 안 된다.
   if mv -f "$tmp" "$f" 2>/dev/null; then
     return 0
   fi
-  cat "$tmp" > "$f" || { rm -f "$tmp"; return 2; }
   rm -f "$tmp"
-  return 0
+  return 2
 }
 
 #: **지금 설정한 암호가 떠 있는 서버의 문을 여는가.**
@@ -1845,7 +1911,15 @@ cmd_mirrored() {
     local bak="$f.bml-bak"
     if [ -e "$f" ]; then
       if [ -e "$bak" ]; then
-        # 남의(또는 예전의) 백업을 덮지 않는다.  그것이 되돌릴 유일한 원본일 수 있다.
+        # 남의(또는 예전의) 백업을 덮지 않는다.  그것이 되돌릴 유일한 원본일 수
+        # 있다.  다만 **그것이 실제로 되돌릴 수 있는 것인지**는 봐야 한다
+        # (Codex 2차 리뷰 4번): 빈 파일이나 폴더를 그 이름으로 만들어 두면
+        # "백업이 있습니다" 라고 한 뒤 원본을 고쳤다 — 되돌릴 것이 없는 채로.
+        if [ ! -f "$bak" ] || [ ! -r "$bak" ] || [ ! -s "$bak" ]; then
+          warn "백업 자리가 쓸 수 없는 것입니다 — 고치지 않았습니다: $bak"
+          say "  ${DIM}보통 파일이 아니거나, 비어 있거나, 읽을 수 없습니다. 치우거나 다른 곳으로 옮긴 뒤 다시 하세요.${OFF}"
+          return 1
+        fi
         say "  ${DIM}백업이 이미 있습니다 — 그대로 둡니다: ${bak}${OFF}"
       elif cp -p "$f" "$bak" 2>/dev/null && cmp -s "$f" "$bak"; then
         say "  ${DIM}고치기 전 파일을 ${bak} 에 두었습니다.${OFF}"
@@ -1979,9 +2053,14 @@ edge_port_open() {
 #: 주소에서 호스트만.  셸에 넘길 것이므로 글자를 좁혀서 돌려준다 —
 #: 못 쓸 모양이면 빈 값과 1.
 url_host() {
-  local h="${1:-}"; h="${h#*://}"; h="${h%%/*}"
-  # userinfo 를 떼지 않으면 `https://u:p@real.example/` 에서 `u` 가 나온다 —
-  # curl 은 real.example 로 가는데 우리는 u 를 진단한다 (Codex 리뷰 15번).
+  local h="${1:-}"; h="${h#*://}"
+  # **authority 를 먼저 끊는다** — `/`·`?`·`#` 중 가장 먼저 오는 것까지가
+  # 호스트 자리다.  이 순서를 뒤집으면 `https://custom.example#@x.lhr.life` 의
+  # 호스트를 `x.lhr.life` 로 읽는다 (Codex 2차 리뷰 13번): 실제로는
+  # custom.example 로 가는데 우리는 남의 도메인을 우리 터널로 판정하게 된다.
+  h="${h%%/*}"; h="${h%%\?*}"; h="${h%%#*}"
+  # 그 안에서만 userinfo 를 뗀다.  `https://u:p@real.example/` 에서 `u` 가
+  # 나오면 curl 은 real.example 로 가는데 우리는 u 를 진단한다.
   case "$h" in *@*) h="${h##*@}" ;; esac
   h="${h%%:*}"
   case "$h" in

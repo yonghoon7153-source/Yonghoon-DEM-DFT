@@ -754,6 +754,67 @@ check "암호가 없으면 물어보지도 않는다" \
 check "share 가 그 확인을 한다" "$(grep -c 'door_password_works "\$URL"' "$BML")" "2"
 
 echo
+echo "화면에 명령으로 찍힐 주소는 애초에 안 받는다"
+# 실패 화면이 `bml use $url`, `curl … $url/api/health`, `WORKBENCH_SERVER=$url bml`
+# 을 인용 없이 찍는다.  주소에 `;touch …;#` 이 섞여 있으면 사람이 화면대로
+# 붙여넣는 순간 그것이 실행된다.  들어올 때 막는 것이 유일하게 확실한 자리다.
+check "세미콜론이 든 주소를 거부"   "$(normalize_server_url 'https://x.lhr.life/;touch /tmp/BML_PWN;#' || echo REFUSED)" "REFUSED"
+check "명령 치환도 거부"           "$(normalize_server_url 'http://a$(id)b' || echo REFUSED)" "REFUSED"
+check "역따옴표도 거부"            "$(normalize_server_url 'http://a`id`b' || echo REFUSED)" "REFUSED"
+check "공백도 거부"                "$(normalize_server_url 'http://a b' || echo REFUSED)" "REFUSED"
+check "멀쩡한 주소는 그대로"       "$(normalize_server_url 'https://x.lhr.life')" "https://x.lhr.life"
+check "맨 IP 도 그대로 편다"       "$(normalize_server_url '192.168.0.40')" "http://192.168.0.40:5003"
+
+echo
+echo ".wslconfig — 갈아 끼우지 못하면 원본을 건드리지 않는다"
+WT="$TMP/atomic"; mkdir -p "$WT"
+printf '[wsl2]\r\nmemory=8GB\r\n' > "$WT/.wslconfig"
+BEFORE="$(md5sum < "$WT/.wslconfig")"
+# mv 를 실패시킨다.  예전에는 여기서 `cat "$tmp" > "$f"` 로 물러섰고, 그것은
+# 원본을 먼저 비우므로 도중에 실패하면 설정이 조각난 채 남았다.
+RC="$( mv() { return 1; }; wslconfig_set_mirrored "$WT/.wslconfig"; echo $? )"
+check "옮기지 못하면 실패로 끝난다" "$RC" "2"
+check "그때 원본은 그대로다"        "$(md5sum < "$WT/.wslconfig")" "$BEFORE"
+check "임시 파일도 안 남긴다"       "$(ls "$WT" | grep -c 'bml-new')" "0"
+
+echo
+echo ".wslconfig — 알 수 없는 인코딩은 손대지 않는다"
+printf '\xff\xfe[\x00w\x00s\x00l\x002\x00]\x00' > "$WT/u16"
+check "UTF-16 BOM 을 거부한다"   "$(wslconfig_writable_reason "$WT/u16" | grep -c 'UTF-16')" "1"
+printf 'a\x00b\n' > "$WT/nul"
+check "NUL 이 있으면 거부한다"   "$(wslconfig_writable_reason "$WT/nul" | grep -c 'NUL')" "1"
+# 그리고 멀쩡한 CRLF 파일은 통과해야 한다 — NUL 검사를 잘못 짜면 전부 거부한다
+# (bash 는 문자열에 NUL 을 못 담아서 `grep $'\000'` 이 빈 패턴이 된다).
+check "멀쩡한 CRLF 파일은 통과"  "$(wslconfig_writable_reason "$WT/.wslconfig" >/dev/null && echo OK)" "OK"
+
+echo
+echo ".wslconfig — [wsl2] 절 안에서만 본다"
+# 엉뚱한 절의 networkingMode 를 고치고 "됐다" 고 하면, [wsl2] 에는 설정이
+# 안 들어가고 사람은 켰다고 믿는다.
+printf '[wsl2]\r\nmemory=8GB\r\n[experimental]\r\nnetworkingMode=NAT\r\n' > "$WT/sec"
+wslconfig_set_mirrored "$WT/sec"
+check "[wsl2] 안에 넣는다"        "$(wslconfig_value_in_wsl2 "$WT/sec" networkingMode)" "mirrored"
+check "남의 절은 안 건드린다"      "$(grep -c 'networkingMode=NAT' "$WT/sec")" "1"
+# 반대로 엉뚱한 절의 mirrored 를 보고 "이미 되어 있다" 고 해도 안 된다.
+printf '[experimental]\r\nnetworkingMode=mirrored\r\n' > "$WT/wrong"
+check "남의 절의 mirrored 는 아니다" "$(wslconfig_is_mirrored "$WT/wrong" && echo yes || echo no)" "no"
+# 공식 값 virtioproxy → mirrored 는 파일이 짧아진다.  길이로 재면 멀쩡한
+# 설정을 거부하고 화면은 권한 문제로 오진한다.
+printf '[wsl2]\r\nnetworkingMode=virtioproxy\r\n' > "$WT/vp"
+wslconfig_set_mirrored "$WT/vp"
+check "짧아지는 값도 고친다"       "$(wslconfig_value_in_wsl2 "$WT/vp" networkingMode)" "mirrored"
+
+echo
+echo ".wslconfig — 되돌릴 수 없는 백업이면 고치지 않는다"
+BK="$TMP/bakcheck"; mkdir -p "$BK"
+printf '[wsl2]\r\nmemory=8GB\r\n' > "$BK/.wslconfig"
+mkdir -p "$BK/.wslconfig.bml-bak"          # 백업 자리가 폴더다
+BEFORE="$(md5sum < "$BK/.wslconfig")"
+OUT="$(run_mirrored "$BK")"
+check "쓸 수 없는 백업이면 멈춘다" "$(printf '%s\n' "$OUT" | grep -c '쓸 수 없는 것입니다')" "1"
+check "그때 원본은 그대로다"       "$(md5sum < "$BK/.wslconfig")" "$BEFORE"
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
