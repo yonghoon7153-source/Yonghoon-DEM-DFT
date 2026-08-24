@@ -327,6 +327,11 @@ fi
 check "서버만 띄우면 주소가 그대로임을 말한다" \
   "$(printf '%s\n' "$DEAD" | grep -c '주소도 그대로')" "1"
 check "다시 여는 명령도 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
+# 어느 줄을 보라고까지 말해야 한다.  '실행 중' 만 짚으면, 서버가 돌고 있는
+# 경우에 화면은 다 맞는 말을 했는데도 사람이 엉뚱한 곳을 판다 (실측: 그렇게
+# 됐다 — 답은 '공유 주소' 줄이 **없다** 는 것이었다).
+check "실행 중 줄을 짚는다"        "$(printf '%s\n' "$DEAD" | grep -c "'실행 중' 이 없다")" "1"
+check "공유 주소 줄도 짚는다"      "$(printf '%s\n' "$DEAD" | grep -c "'공유 주소' 가 없다")" "1"
 check "점검표를 훑게 하지 않는다"  "$(printf '%s\n' "$DEAD" | grep -c '중추 서버 쪽에서 순서대로')" "0"
 # 확정 코드가 있으면 curl 의 첫 대답은 안 찍는다.  두 번 물어보면 답이 다를 수
 # 있어서, 실제 화면에 `HTTP 000` 바로 밑에 `(HTTP 503)` 이 나란히 찍혔다 —
@@ -335,6 +340,24 @@ check "모순되는 첫 대답을 안 찍는다" "$(printf '%s\n' "$DEAD" | grep
 # 404 는 다른 뜻이다 — 주소는 닿는데 우리 서버가 아니다.
 WRONG="$( http_code_of() { printf '404'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
 check "404 는 다르게 말한다"       "$(printf '%s\n' "$WRONG" | grep -c '우리 워크벤치가 아닙니다')" "1"
+
+echo
+echo "터널이 스스로 죽으면 status 가 그렇게 말한다"
+# 주소 파일은 남고 프로세스만 없다 (SSH 가 끊기면 그렇게 된다).  예전에는 그때
+# 공유 관련 줄이 통째로 사라졌고, 그러면 "터널이 죽었다" 와 "애초에 안 열었다"
+# 가 같은 화면이 된다 -- 없는 줄은 근거가 아니다.
+# cmd_status 를 통째로 돌리려면 git·포트·서버까지 다 세워야 한다.  여기서
+# 못 박을 것은 그 화면에 **그 줄이 있는가** 이므로 소스에서 직접 본다.
+if grep -q '터널이 죽어 있습니다' "$HERE/../bml"; then
+  pass=$((pass + 1)); printf '  ok   죽었으면 죽었다고 적는다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 죽은 터널을 침묵으로 넘긴다\n'
+fi
+if sed -n "/! tunnel_running && \[ -n \"\$(tunnel_url)\" \]/,/^  fi/p" "$HERE/../bml" | grep -q 'bml share'; then
+  pass=$((pass + 1)); printf '  ok   다시 여는 명령을 함께 준다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 죽었다고만 하고 무엇을 할지 안 준다\n'
+fi
 
 echo
 echo "보여 준다고 해 놓고 침묵하지 않는다"

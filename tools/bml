@@ -2448,11 +2448,11 @@ server_unreachable_help() {
           # 터널을 다시 여는 것은 주소를 잃는다.
           warn "터널 주소는 닿는데 그 뒤에서 응답이 없습니다 (HTTP ${hc})."
           say "  ${DIM}터널이 끊겼거나, 그 뒤의 서버가 안 떠 있습니다 — 이 코드로는 구분되지 않습니다.${OFF}"
-          say "  ${B}중추 서버에서 순서대로${OFF}"
-          say "    1. ${GREEN}bml status${OFF} ${DIM}— '실행 중' 이 아니면 서버가 내려간 것입니다.${OFF}"
-          say "       ${GREEN}bml${OFF} ${DIM}로 띄우면 됩니다. 터널은 그대로라 주소도 그대로입니다.${OFF}"
-          say "    2. ${DIM}실행 중인데도 이러면 터널 쪽입니다:${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
-          say "       ${DIM}그때는 주소가 바뀌므로 여기서${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}를 다시 칩니다.${OFF}"
+          say "  ${B}중추 서버에서${OFF} ${GREEN}bml status${OFF} ${DIM}— 그 화면의 두 줄이 답을 가릅니다.${OFF}"
+          say "    ${B}'실행 중' 이 없다${OFF}       ${DIM}서버가 내려갔습니다.${OFF} ${GREEN}bml${OFF} ${DIM}로 띄웁니다.${OFF}"
+          say "                          ${DIM}터널은 그대로라 주소도 그대로입니다.${OFF}"
+          say "    ${B}'공유 주소' 가 없다${OFF}   ${DIM}터널이 죽었습니다.${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+          say "                          ${DIM}주소가 바뀌므로 여기서${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}를 다시 칩니다.${OFF}"
           say ""
           say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
           return 0
@@ -3274,6 +3274,17 @@ cmd_status() {
     warn "데이터      ${DATA_DIR} — 폴더가 없습니다 (드라이브가 빠졌나요?)"
   fi
   [ -n "${WORKBENCH_PASSWORD:-}" ] && say "공유 암호   설정됨  ${DIM}(bml share 로 바깥에 열 수 있습니다)${OFF}"
+  # 터널이 **스스로 죽은** 경우.  주소 파일은 남고 프로세스만 없다 (SSH 가
+  # 끊기거나 랩 망이 그 연결을 자르면 그렇게 된다).
+  #
+  # 예전에는 이때 화면이 아무 말도 안 했다 -- 공유 관련 줄이 통째로 사라질
+  # 뿐이라, "터널이 죽었다" 와 "애초에 안 열었다" 가 같은 화면이 된다.  실측
+  # 2026-08-24: 그 침묵 때문에 서버가 내려간 줄 알고 엉뚱한 곳을 30분 팠다.
+  # **없는 줄은 근거가 아니다.**  죽었으면 죽었다고 적는다.
+  if ! tunnel_running && [ -n "$(tunnel_url)" ]; then
+    warn "공유 주소   $(tunnel_url) — ${B}터널이 죽어 있습니다${OFF} ${DIM}(주소 기록만 남았습니다)${OFF}"
+    say "  ${GREEN}bml share${OFF} ${DIM}로 다시 엽니다 — 주소가 바뀌므로 다른 기계에서${OFF} ${GREEN}bmlout <새 주소>${OFF}"
+  fi
   if tunnel_running && [ -n "$(tunnel_url)" ]; then
     local tcode; tcode="$(http_code_of "$(tunnel_url)" 8)"
     if [ "$tcode" = "200" ]; then
