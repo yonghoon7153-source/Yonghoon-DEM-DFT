@@ -27,6 +27,7 @@
 | 문서 | 용도 |
 |---|---|
 | [2026-08-22-codex-review-remote-access-result](reviews/2026-08-22-codex-review-remote-access-result.md) | **원격 접근 리뷰 결과 (확정 21건)** — 대응 현황 표를 여기서 갱신한다 |
+| [2026-08-24-codex-screens-and-partials-reply](reviews/2026-08-24-codex-screens-and-partials-reply.md) | **부분 사이클 리뷰 회답 (12건 전부 닫음)** — #6 은 결론을 바꿨고 ADR 0017 에 이유가 있다 |
 | [2026-08-24-codex-screens-reply](reviews/2026-08-24-codex-screens-reply.md) | **화면 리뷰 회답 (15건 전부 닫음)** — 대응 현황 표를 여기서 갱신한다 |
 | [codex-review-screens-and-wsl](reviews/codex-review-screens-and-wsl.md) | 화면·WSL 리뷰 과제 (보낸 것) |
 | [codex-review-remote-access](reviews/codex-review-remote-access.md) | 원격 접근 리뷰 과제 (보낸 것) |
