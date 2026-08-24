@@ -812,6 +812,20 @@
     "scripts/sdcp_gain_verdict.py --selftest"
    ],
    "note": "Codex 실측: 등록 축 밖의 `sigma_am_s_S_cm` 0.010 → 0.020 이 `decision=measured`.  `compare_dirs()` 가 `input_digest` 를 별도 하드코딩하고 `_FIXED_FIELDS` 만 비교했다 — `_GEN_FIELDS` 와 bed field 는 보지 않았다.\n★ 고침 `10bdb1ae`: **FIELD_CONTRACT** 신설 — 필드마다 `scope`(physics/numeric/bed) · `across_dir` · `required` 를 선언하고 모든 게이트(`_FIXED_FIELDS`·`_REQUIRED_FIELDS`·`_XDIR_FIELDS`·`_BED_FIELDS_C`)가 여기서 파생된다.\n★ **`required` 와 `across_dir` 은 다른 축**이다 (Codex 의 `required_since`) — 세대 인자는 *섞이면 HOLD, 전부 없으면 통과* 다.  초판에 이 구분이 없어 옛 payload 회귀 4건이 죽었다.\n★ `code_sha` 를 빠뜨렸다가 회귀 ㉖c 가 잡았다 ⇒ ㉞g 를 세워 **레지스트리가 옛 목록을 전부 담는지** 상시 대조 (덮개 강제).\n★ 회귀 ㉗e(σ_AM)·㉗f(additive_E_GPa = CL-56) 는 Codex 가 통과시킨 mutant 다.  변이체로 cross-dir 을 되돌리면 `measured` 를 낸다."
+  },
+  {
+   "id": "SELF-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`vox_um` 이 매니페스트에 없어 `physics_protocol_id` 가 모든 런에서 `unknown:vox_um` 이었다",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "자체발견 (R3-F2 검증 중, 2026-08-25).  `PROTOCOL_FIELDS` 는 `vox_um` 을 요구하는데 producer 의 매니페스트 리터럴이 그 키를 **안 썼다** → `physics_protocol_id` 가 실제 런에서 `unknown:vox_um` 으로 내려앉았다.\n★ 영향은 **거짓 초록이 아니라 생산 과잉차단**이다 — `verdict()` 의 `PROTOCOL_UNKNOWN` 게이트가 fail-closed 라, 현행 payload 로 도는 팔은 전부 HOLD 된다.  `--expect-protocol` 을 준 러너 팔은 그보다 앞서 exit 4 로 죽는다.  temp_c(M-R3-02)·thermal(M-R3-03) 과 **같은 부류**: 내가 넣은 게이트가 정상 생산을 막았다.\n★ 왜 안 잡혔나: 규칙 J 스모크가 매니페스트의 고정 인자는 봤지만 `physics_protocol_id` 자신은 **한 번도 안 봤다**.  이 필드는 판정기 리더의 blank 목록에도 없었다 (값이 있긴 했으니까).\n★ 고침: ⓐ 매니페스트에 `vox_um` 을 적는다 ⓑ 규칙 J 가 id 의 `p1-` 접두사를 요구한다 — `unknown:` 뒤에 빠진 필드 이름이 실려 있으므로 이 한 줄이 '규약 필드를 새로 넣고 producer 에 안 쓴' 부류를 전부 잡는다.  필드 목록을 검사기에 **다시 적지 않는다** (backend·bridge_um 두 사고의 원인).\n★ 돌연변이 1:1 확인: 매니페스트의 그 한 줄만 지우면 규칙 J 가 `J_PROTOCOL| … ('unknown:vox_um')` 으로 빨간불.",
+   "claimed_fixed_sha": "d8d134a0"
   }
  ]
 }

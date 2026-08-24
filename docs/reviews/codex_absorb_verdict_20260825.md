@@ -104,3 +104,41 @@ false-green 을 **실제 실행 경로에서 여전히 만들 수 있다**.  Cod
 
 ⚠ **GPU 8팔 재실행도 보류**다 — Codex: *"plate/contact 및 protocol seal 이 고정되기 전에
 돌리면 계산비를 쓰고도 어느 물리·실행 계약을 측정했는지 다시 모호해진다."*
+
+---
+
+# 2차 재리뷰 (Codex, 2026-08-25) — **여전히 HOLD**
+
+10/10 을 닫은 diff 를 다시 먹였더니 **새 mutant 16개**와 **새 최소 조건 8개**가 나왔다.
+이것 자체가 이 세션의 교훈이다 — *"조건을 닫았다"* 는 **내 판단**이고, 그것을 근거로
+흡수하면 같은 부류가 또 들어간다.
+
+## 최소 종료 조건 (8) — 진행
+
+| # | 조건 | 상태 | 커밋 |
+|---|---|---|---|
+| 1 | 봉인이 눈먼가: producer raw 로그·collect 를 봉인 뒤로 · 네 모드 CLI 배타 | 🔶 배타 ✅ / 로그 이동 미완 | `d8d134a0` |
+| 2 | **게시 전 검증** · LEAN 의 disabled component · required 계획 | ✅ | `d8d134a0` |
+| 3 | 수렴 계약 통일(`0 ≤ resid ≤ 1e-6`) + authoritative backend | ✅ | `d8d134a0` |
+| 4 | 규약 기대값을 **러너 자기 설정**에서 계산 · `periodic_xy`·component 계획·plate 규칙판·관측 sid7 수 추가 | ⬜ | |
+| 5 | `verdict` 와 `compare_dirs` 가 **하나의** `validate_contract` 를 공유 · `required_since` | ⬜ | |
+| 6 | plate 회귀: 아래판 분기 · 반응 솔버 · 비단위 vox FD · plate 원장 없으면 fail-closed | ⬜ | |
+| 7 | 규칙 J 가 **정확히 exit 3** + 인과 코드 · 규칙 K 가 주석/echo/죽은 줄 거부 · 러너 통합 selftest | ⬜ | |
+| 8 | 각 수정의 **단일-되돌림** 검증 · SciPy 환경에서 full suite | 🔶 진행 | |
+
+## 자체발견 (재리뷰 조건 밖) — SELF-01
+
+조건 2 의 게시-전-검증을 **실측으로** 확인하다가 (`--expect-protocol` 불일치 → exit 4)
+로그에 `적용 unknown:vox_um` 이 찍혔다.  `PROTOCOL_FIELDS` 가 요구하는 `vox_um` 을
+producer 의 매니페스트 리터럴이 **안 쓰고 있었다**.
+
+· 영향 = **거짓 초록이 아니라 생산 과잉차단**.  판정기의 `PROTOCOL_UNKNOWN` 이
+  fail-closed 라 현행 payload 로 도는 팔이 **전부 HOLD** 된다.
+· `temp_c`(M-R3-02) · `thermal`(M-R3-03) 과 **같은 부류** — 내가 넣은 게이트가 생산을 막았다.
+  이 부류만 세 번째다.
+· 왜 안 잡혔나 = 규칙 J 가 매니페스트의 고정 인자는 봤지만 `physics_protocol_id`
+  **자신은 한 번도 안 봤다**.
+· 고침 = 값을 적고, 규칙 J 가 id 의 `p1-` 접두사를 요구한다.  `unknown:` 뒤에 빠진 필드
+  이름이 실려 있으므로 한 줄이 이 부류를 전부 잡는다.  **필드 목록을 검사기에 다시 적지
+  않는다** (backend·bridge_um 두 사고의 원인).
+· 돌연변이 1:1 확인 — 매니페스트의 그 한 줄만 지우면 `J_PROTOCOL| … ('unknown:vox_um')`.
