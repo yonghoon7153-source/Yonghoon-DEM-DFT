@@ -245,6 +245,15 @@ check "이상한 글자는 거부한다"  "$(url_host 'https://a;rm -rf/' || ech
 check "빈 값도 거부한다"        "$(url_host '' || echo REFUSED)"           "REFUSED"
 
 echo
+echo "같은 망에서는 '중추 서버에서 확인해 보라' 가 갈라 주지 못한다"
+# 실제로 겪은 것: 데스크톱과 노트북이 같은 랩 망이라 둘 다 똑같이 실패했다.
+# 그 화면의 확인 절차는 전부 같은 망 안에서 도는 것이라 아무것도 못 가른다.
+# 망 밖(모바일 데이터)에서 한 번 찔러 보는 것만이 그 경우를 가른다.
+HELP="$(server_unreachable_help https://a1b2c3.lhr.life 2>&1)"
+check "망 밖에서 찔러 보라고 한다" "$(printf '%s\n' "$HELP" | grep -c '모바일 데이터로 그 주소를')" "1"
+check "같은 망이면 안 갈린다고 말한다" "$(printf '%s\n' "$HELP" | grep -c '같은 망이면')" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0

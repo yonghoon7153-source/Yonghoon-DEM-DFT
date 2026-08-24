@@ -1768,6 +1768,14 @@ server_unreachable_help() {
       say "    ${GREEN}curl -sS -m 15 $url/api/health${OFF}"
       say "    ${DIM}거기서도 안 되면 터널 문제, 되면 이 기계의 네트워크 문제입니다.${OFF}"
       say ""
+      # 두 기계가 같은 망에 있으면 위의 확인이 갈라 주지 못한다 — 둘 다 같은
+      # DNS·같은 방화벽을 쓰므로 똑같이 실패한다.  망 밖에서 한 번 찔러 보는
+      # 것만이 그 경우를 가른다.  랩 망은 터널 도메인을 막는 일이 흔하다.
+      say "  ${B}두 기계가 같은 망이면 위의 확인으로는 안 갈립니다${OFF} ${DIM}— 같은 DNS·같은 방화벽입니다.${OFF}"
+      say "  ${DIM}휴대폰의 Wi-Fi 를${OFF} ${B}끄고${OFF} ${DIM}모바일 데이터로 그 주소를 열어 보세요. 그것이 진짜 '밖' 입니다:${OFF}"
+      say "    ${DIM}열리면${OFF}   터널은 정상이고 ${B}이 망이 막는 것${OFF}${DIM}입니다. 같은 랩 안이라면 터널 말고 LAN 주소를 쓰세요.${OFF}"
+      say "    ${DIM}안 열리면${OFF} 중추 서버에서 ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}${DIM}.${OFF}"
+      say ""
       say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
       return 0
       ;;
