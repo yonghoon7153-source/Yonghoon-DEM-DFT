@@ -445,28 +445,62 @@ check "없는 폴더는 빈 값"              "$(windows_home_candidate "$TMP/no
 
 
 echo
-echo "bml mirrored — 저장소 바깥 파일을 고치므로 흔적을 남긴다"
+echo "bml mirrored — 저장소 바깥 파일이라 증명된 것에만 손댄다"
 FAKE="$TMP/winhome"; mkdir -p "$FAKE"
 printf '[wsl2]\r\nnetworkingMode=NAT\r\nmemory=8GB\r\n' > "$FAKE/.wslconfig"
 # 함수 재정의는 서브셸 안에만 남는다 — 뒤의 시험이 가짜를 물려받지 않는다.
-OUT="$( is_wsl() { return 0; }; windows_home() { printf '%s' "$FAKE"; }; cmd_mirrored 2>&1 )"
+# $1 은 재정의한 함수 안에서는 그 함수의 인자다 — 미리 잡아 둔다.
+run_mirrored() { local h="$1"; ( is_wsl() { return 0; }; windows_home_verified() { printf '%s' "$h"; }; cmd_mirrored 2>&1 ); }
+OUT="$(run_mirrored "$FAKE")"
 check "고쳤다고 말한다"        "$(printf '%s\n' "$OUT" | grep -c '고쳤습니다')" "1"
 check "어느 파일인지 먼저 밝힌다" "$(printf '%s\n' "$OUT" | grep -c "^대상.*$FAKE/.wslconfig")" "1"
 check "실제로 mirrored 가 된다"  "$(grep -c '^networkingMode=mirrored' "$FAKE/.wslconfig")" "1"
-# 저장소 바깥 파일이다.  되돌릴 것을 남기지 않으면 사람은 손을 못 쓴다.
 check "고치기 전 파일을 남긴다"  "$(grep -c 'networkingMode=NAT' "$FAKE/.wslconfig.bml-bak")" "1"
-# 다음 할 일이 화면에 있어야 한다 — 여기서 끊기면 "고쳤는데 그대로" 가 된다.
-check "wsl.exe --shutdown 을 준다" "$(printf '%s\n' "$OUT" | grep -c 'wsl.exe --shutdown')" "1"
+check "다음 할 일을 준다"        "$(printf '%s\n' "$OUT" | grep -c -- '--shutdown')" "1"
 
-OUT="$( is_wsl() { return 0; }; windows_home() { printf '%s' "$FAKE"; }; cmd_mirrored 2>&1 )"
-check "두 번째는 손대지 않는다"   "$(printf '%s\n' "$OUT" | grep -c '이미 mirrored')" "1"
-check "쓸데없는 백업은 지운다"    "$([ -e "$FAKE/.wslconfig.bml-bak" ] && echo 있음 || echo 없음)" "없음"
+# 두 번째 실행이 첫 실행의 백업을 없애면 되돌릴 것이 사라진다.  예전에는
+# 백업을 먼저 뜨고 나중에 지워서, 두 번째 실행이 '이미 mirrored 인 파일' 로
+# NAT 원본 백업을 덮었다.  이제 이미 되어 있으면 백업을 만들지도 지우지도 않는다.
+OUT="$(run_mirrored "$FAKE")"
+check "두 번째는 손대지 않는다"  "$(printf '%s\n' "$OUT" | grep -c '이미 mirrored')" "1"
+check "첫 백업이 살아남는다"     "$(grep -c 'networkingMode=NAT' "$FAKE/.wslconfig.bml-bak")" "1"
 
-# 경로가 확실하지 않으면 아무것도 안 하고 PowerShell 한 줄을 준다 (§0.4).
-OUT="$( is_wsl() { return 0; }; windows_home() { printf ''; }; cmd_mirrored 2>&1 )"
-check "못 찾으면 쓰지 않는다"     "$(printf '%s\n' "$OUT" | grep -c '짐작해서')" "1"
+# 지금 로그인한 Windows 사용자를 모르면 **아무것도 안 쓴다.**  '.wslconfig 가
+# 하나뿐' 같은 짐작은 그 사용자라는 증거가 아니다 — 남의 파일을 고치게 된다.
+BEFORE="$(cat "$FAKE/.wslconfig")"
+OUT="$( is_wsl() { return 0; }; windows_home_verified() { printf ''; }; windows_home_candidate() { printf '%s' "$FAKE"; }; cmd_mirrored 2>&1 )"
+check "사용자를 모르면 안 쓴다"   "$(printf '%s\n' "$OUT" | grep -c '짐작으로 파일을 고치지 않습니다')" "1"
+check "그때 파일은 그대로다"      "$(cat "$FAKE/.wslconfig")" "$BEFORE"
+check "짐작은 제안으로만 보여 준다" "$(printf '%s\n' "$OUT" | grep -c '아마 여기')" "1"
 check "대신 PowerShell 한 줄을 준다" \
   "$(printf '%s\n' "$OUT" | grep -cF "$(wslconfig_mirror_command)")" "1"
+
+# 심볼릭 링크를 따라가면 화면은 .wslconfig 를 고친다고 하면서 엉뚱한 파일을
+# 덮어쓴다.  실제로 걸리는 모양: .wslconfig -> ~/.ssh/config
+LINKHOME="$TMP/linkhome"; mkdir -p "$LINKHOME"
+printf 'Host lab\n  User yonghoon\n' > "$TMP/ssh-config"
+ln -s "$TMP/ssh-config" "$LINKHOME/.wslconfig"
+SSHBEFORE="$(cat "$TMP/ssh-config")"
+OUT="$(run_mirrored "$LINKHOME")"
+check "링크면 손대지 않는다"      "$(printf '%s\n' "$OUT" | grep -c '심볼릭 링크')" "1"
+check "링크가 가리킨 파일은 무사하다" "$(cat "$TMP/ssh-config")" "$SSHBEFORE"
+
+# 백업 자리가 링크여도 마찬가지다 — 백업을 뜨는 순간 그쪽이 덮인다.
+BAKHOME="$TMP/bakhome"; mkdir -p "$BAKHOME"
+printf '[wsl2]\r\nmemory=8GB\r\n' > "$BAKHOME/.wslconfig"
+printf 'keep me\n' > "$TMP/precious"
+ln -s "$TMP/precious" "$BAKHOME/.wslconfig.bml-bak"
+OUT="$(run_mirrored "$BAKHOME")"
+check "백업 자리가 링크여도 멈춘다" "$(printf '%s\n' "$OUT" | grep -c '심볼릭 링크')" "1"
+check "그 링크가 가리킨 파일도 무사" "$(cat "$TMP/precious")" "keep me"
+
+# BOM 이 붙은 파일에 절을 앞에 붙이면 BOM 이 파일 한가운데로 간다.
+BOMHOME="$TMP/bomhome"; mkdir -p "$BOMHOME"
+printf '\xef\xbb\xbf[experimental]\r\nautoMemoryReclaim=gradual\r\n' > "$BOMHOME/.wslconfig"
+BOMBEFORE="$(md5sum < "$BOMHOME/.wslconfig")"
+OUT="$(run_mirrored "$BOMHOME")"
+check "BOM 파일은 손대지 않는다"   "$(printf '%s\n' "$OUT" | grep -c 'BOM')" "1"
+check "그 파일도 그대로다"        "$(md5sum < "$BOMHOME/.wslconfig")" "$BOMBEFORE"
 
 echo
 echo "모르는 명령 — 오타보다 '옛 bml' 이 흔하다"

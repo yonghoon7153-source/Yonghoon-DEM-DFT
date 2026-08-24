@@ -1415,21 +1415,37 @@ windows_home_candidate() {
 }
 
 #: Windows 사용자 폴더를 WSL 에서 본 경로로.  못 찾으면 빈 값.
+#: **Windows 가 스스로 말한** 사용자 폴더.  interop 으로 `%USERPROFILE%` 을
+#: 직접 물어본 것만 여기로 나온다.  못 물어봤으면 빈 값이다.
+#:
+#: 이 구분이 왜 필요한가 (Codex 리뷰 1번).  `windows_home_candidate` 의 세
+#: 규칙(`.wslconfig` 가 하나뿐 / WSL 사용자명과 같음 / 사람 폴더가 하나뿐)은
+#: **지금 로그인한 Windows 사용자라는 증거가 아니다.**  `C:\Users\Alice` 에만
+#: `.wslconfig` 가 있고 실제 사용자가 Bob 이면, 짐작은 Alice 를 고르고 화면은
+#: 그것을 `%USERPROFILE%\.wslconfig` 라고 부른 뒤 **남의 파일을 고친다.**
+#: §0.3 으로 자동화해도 되는 값이 아니라 §0.4 로 "모른다" 고 해야 하는 값이다.
+#: 그래서 **쓰기는 이 함수의 결과로만 한다.**  짐작은 화면에 제안으로만 쓴다.
+windows_home_verified() {
+  local p="" cmdexe=""
+  cmdexe="$(win_exe cmd.exe)" || return 0
+  command -v wslpath >/dev/null 2>&1 || return 0
+  # /mnt/c 에서 부른다.  WSL 경로에서 cmd.exe 를 부르면 "UNC 경로는
+  # 지원되지 않습니다" 를 먼저 뱉고 제멋대로 C:\Windows 로 옮겨 간다.
+  p="$( (cd /mnt/c 2>/dev/null && "$cmdexe" /C 'echo %USERPROFILE%') 2>/dev/null | tr -d '\r\n' )"
+  case "$p" in
+    [A-Za-z]:\\*)
+      p="$(wslpath -u "$p" 2>/dev/null)"
+      [ -n "$p" ] && [ -d "$p" ] && printf '%s' "$p"
+      ;;
+  esac
+  return 0
+}
+
+#: 읽기 전용으로 쓸 때의 사용자 폴더 — 증명된 것이 있으면 그것, 없으면 짐작.
+#: **여기 값으로 파일을 쓰지 않는다.**
 windows_home() {
-  local p=""
-  local cmdexe=""
-  cmdexe="$(win_exe cmd.exe)" || cmdexe=""
-  if command -v wslpath >/dev/null 2>&1 && [ -n "$cmdexe" ]; then
-    # /mnt/c 에서 부른다.  WSL 경로에서 cmd.exe 를 부르면 "UNC 경로는
-    # 지원되지 않습니다" 를 먼저 뱉고 제멋대로 C:\Windows 로 옮겨 간다.
-    p="$( (cd /mnt/c 2>/dev/null && "$cmdexe" /C 'echo %USERPROFILE%') 2>/dev/null | tr -d '\r\n' )"
-    case "$p" in
-      [A-Za-z]:\\*)
-        p="$(wslpath -u "$p" 2>/dev/null)"
-        [ -n "$p" ] && [ -d "$p" ] && { printf '%s' "$p"; return 0; }
-        ;;
-    esac
-  fi
+  local p; p="$(windows_home_verified)"
+  [ -n "$p" ] && { printf '%s' "$p"; return 0; }
   windows_home_candidate
 }
 
@@ -1447,33 +1463,106 @@ windows_home() {
 #: CRLF 를 섞어 놓는 것은 이 저장소가 §0.5 로 이미 값을 치른 종류의 사고다.
 #:
 #: 0 = 고쳤다, 1 = 이미 mirrored 라 손대지 않았다, 2 = 쓰지 못했다.
-wslconfig_set_mirrored() {
-  local f="$1" tmp cr
-  if [ -f "$f" ] && grep -qE '^[[:space:]]*networkingMode[[:space:]]*=[[:space:]]*mirrored[[:space:]]*$' "$f"; then
-    return 1
+#: 이미 mirrored 인가.  읽지 못하면 2 (모름) — "아니다" 로 세지 않는다.
+wslconfig_is_mirrored() {
+  local f="$1"
+  [ -f "$f" ] || return 1
+  [ -r "$f" ] || return 2
+  grep -qE '^[[:space:]]*networkingMode[[:space:]]*=[[:space:]]*mirrored[[:space:]]*$' "$f"
+}
+
+#: 이 파일을 우리가 고쳐도 되는가.  된다면 0, 아니면 1 과 이유를 표준출력으로.
+#:
+#: 링크를 따라가면 안 된다 (Codex 리뷰 2번).  `.wslconfig` 가
+#: `~/.ssh/config` 로 가는 심볼릭 링크면, 화면은 `.wslconfig` 를 고친다고
+#: 말하면서 **SSH 설정을 덮어쓴다.**  `-f`·`grep`·`cat >` 가 전부 링크를
+#: 따라가므로 우리는 눈치도 못 챈다.  BOM 도 마찬가지다: 앞에 BOM 이 있는
+#: 파일에 절을 앞에 붙이면 BOM 이 파일 한가운데로 간다.
+wslconfig_writable_reason() {
+  local f="$1"
+  [ -L "$f" ] && { printf '심볼릭 링크입니다 — 무엇을 고치게 될지 알 수 없습니다'; return 1; }
+  [ -L "$f.bml-bak" ] && { printf '백업 자리(%s.bml-bak)가 심볼릭 링크입니다' "$f"; return 1; }
+  if [ -e "$f" ]; then
+    [ -f "$f" ] || { printf '보통 파일이 아닙니다'; return 1; }
+    [ -r "$f" ] || { printf '읽을 수 없습니다'; return 1; }
+    [ -w "$f" ] || { printf '쓸 수 없습니다'; return 1; }
+    if head -c 3 "$f" 2>/dev/null | od -An -tx1 2>/dev/null | tr -d ' \n' | grep -q '^efbbbf'; then
+      printf 'UTF-8 BOM 이 붙어 있습니다 — 손대면 BOM 이 파일 중간으로 갑니다'
+      return 1
+    fi
+  else
+    [ -d "$(dirname "$f")" ] || { printf '폴더가 없습니다: %s' "$(dirname "$f")"; return 1; }
+    [ -w "$(dirname "$f")" ] || { printf '그 폴더에 쓸 수 없습니다'; return 1; }
   fi
-  tmp="$(mktemp)" || return 2
-  if [ ! -f "$f" ]; then
-    printf '[wsl2]\r\nnetworkingMode=mirrored\r\n' > "$tmp"
+  return 0
+}
+
+#: `.wslconfig` 를 mirrored 로 고친다.  경로 하나만 받는다 — 그래야 시험한다.
+#:
+#: 세 경우가 있고 셋 다 다르게 다뤄야 한다:
+#:   - `networkingMode` 가 이미 있으면 **그 줄만** 바꾼다.  `NAT` 이라고 적혀
+#:     있는 파일에 두 줄을 더 얹고 끝나면, 사람은 켰다고 믿는데 안 켜져 있다.
+#:   - `[wsl2]` 절이 있으면 그 절 **안에** 넣는다.  절을 하나 더 만들지 않는다
+#:     — 같은 절이 두 번 나올 때 WSL 이 어느 쪽을 읽는지 확인한 바가 없다 (§0.4).
+#:   - 둘 다 없으면 맨 앞에 절째로 넣는다.  뒤에 있던 것은 그대로 산다.
+#:
+#: 줄바꿈은 **그 파일이 쓰던 것을 그대로 쓴다** (§0.5).
+#:
+#: **읽기 실패를 성공으로 세지 않는다** (Codex 리뷰 3번).  예전에는 `grep`·
+#: `awk`·`cat` 의 실패를 아무도 안 봤고, 마지막 `cat "$tmp" > "$f"` 가 원본을
+#: 먼저 비우므로 **불완전한 결과를 쓰고도 성공 화면에 도착**할 수 있었다.
+#: 이제 각 단계를 확인하고, 완성된 임시 파일이 그럴듯한지(우리가 넣은 줄이
+#: 실제로 들어갔는지) 본 뒤에야 원본에 손댄다.
+#:
+#: 0 = 고쳤다, 1 = 이미 mirrored 라 손대지 않았다, 2 = 못 했다.
+wslconfig_set_mirrored() {
+  local f="$1" tmp rc=0 cr st
+  wslconfig_is_mirrored "$f"; st=$?
+  [ "$st" = 0 ] && return 1
+  [ "$st" = 2 ] && return 2
+  wslconfig_writable_reason "$f" >/dev/null || return 2
+
+  # 임시 파일은 **대상과 같은 폴더**에 만든다 — 그래야 mv 가 같은 파일시스템
+  # 안에서 일어나고, 되면 통째로 갈아 끼울 수 있다.
+  tmp="$(mktemp "${f}.bml-new.XXXXXX" 2>/dev/null)" || return 2
+
+  if [ ! -e "$f" ]; then
+    printf '[wsl2]\r\nnetworkingMode=mirrored\r\n' > "$tmp" || rc=2
   elif grep -qE '^[[:space:]]*networkingMode[[:space:]]*=' "$f"; then
     awk '{ if ($0 ~ /^[ \t]*networkingMode[ \t]*=/) {
              cr = ($0 ~ /\r$/) ? "\r" : ""; print "networkingMode=mirrored" cr
-           } else print }' "$f" > "$tmp"
+           } else print }' "$f" > "$tmp" || rc=2
   elif grep -qE '^\[wsl2\][[:space:]]*$' "$f"; then
     awk 'BEGIN { put = 0 }
          { print
            if (!put && $0 ~ /^\[wsl2\][ \t\r]*$/) {
              cr = ($0 ~ /\r$/) ? "\r" : ""; print "networkingMode=mirrored" cr; put = 1
-           } }' "$f" > "$tmp"
+           } }' "$f" > "$tmp" || rc=2
   else
     cr=$'\r'
     # 빈 파일이면 Windows 가 읽는 파일이니 CRLF 로 시작한다.
     [ -s "$f" ] && { head -1 "$f" | grep -q $'\r$' || cr=""; }
-    printf '[wsl2]%s\nnetworkingMode=mirrored%s\n' "$cr" "$cr" > "$tmp"
-    cat "$f" >> "$tmp"
+    { printf '[wsl2]%s\nnetworkingMode=mirrored%s\n' "$cr" "$cr" && cat "$f"; } > "$tmp" || rc=2
   fi
-  # 옮겨 끼우지 않고 덮어쓴다.  /mnt/c 는 drvfs 라 rename 이 권한에서 걸리는
-  # 일이 있고, 그때 원본이 사라진 자리에 임시 파일만 남는다.
+
+  # 만든 것이 그럴듯한가.  여기서 걸러야 원본이 무사하다.
+  if [ "$rc" = 0 ]; then
+    # CR 을 떼고 본다.  grep -E 의 `\r` 은 캐리지 리턴이 아니라 글자 r 이라,
+    # CRLF 파일에서는 `$` 가 절대 안 맞는다 (여기서 한 번 걸렸다).
+    tr -d '\r' < "$tmp" | grep -qE '^networkingMode=mirrored$' || rc=2
+  fi
+  if [ "$rc" = 0 ] && [ -s "$f" ]; then
+    # 원본이 있었으면 결과가 그보다 짧을 수 없다 (줄을 넣거나 바꾸기만 한다).
+    [ "$(wc -c < "$tmp")" -ge "$(wc -c < "$f")" ] || rc=2
+  fi
+  [ "$rc" = 0 ] || { rm -f "$tmp"; return 2; }
+
+  # 통째로 갈아 끼우는 쪽을 먼저 시도한다.  drvfs 에서 rename 이 막히는 일이
+  # 있어 그때만 덮어쓰기로 물러선다 (그 경우 잘림 구간이 생기지만, 그 앞에서
+  # 백업을 이미 확인해 두었다).
+  if mv -f "$tmp" "$f" 2>/dev/null; then
+    return 0
+  fi
   cat "$tmp" > "$f" || { rm -f "$tmp"; return 2; }
   rm -f "$tmp"
   return 0
@@ -1639,43 +1728,83 @@ cmd_mirrored() {
   step "WSL 네트워크를 mirrored 로"
   is_wsl || die "여기는 WSL 이 아닙니다 — mirrored 는 Windows 의 WSL 설정입니다."
 
-  local home f
-  home="$(windows_home)"
+  # **짐작한 경로에는 쓰지 않는다** (Codex 리뷰 1번).  interop 으로 Windows 가
+  # 스스로 말한 %USERPROFILE% 일 때만 고친다.  못 물어봤으면 남의 폴더를 고칠
+  # 수 있으므로, 짐작은 화면에 '아마 여기' 로만 보여 주고 손은 사람이 댄다.
+  local home f guess
+  home="$(windows_home_verified)"
   if [ -z "$home" ]; then
-    warn "Windows 사용자 폴더를 찾지 못했습니다 — 짐작해서 남의 폴더에 쓰지 않습니다."
-    say "  ${DIM}대신 PowerShell 에 이 한 줄을 붙여넣으면 같은 일을 합니다:${OFF}"
+    warn "지금 로그인한 Windows 사용자를 확인하지 못했습니다 — 짐작으로 파일을 고치지 않습니다."
+    say "  ${DIM}(이 WSL 에서 Windows 프로그램을 부르지 못했습니다.${OFF} ${GREEN}bml doctor${OFF} ${DIM}가 그 이유를 짚어 줍니다.)${OFF}"
+    guess="$(windows_home_candidate)"
+    [ -n "$guess" ] && say "  ${DIM}폴더는 아마 여기입니다 —${OFF} ${B}${guess}/.wslconfig${OFF} ${DIM}(확인은 사람 몫입니다)${OFF}"
+    say ""
+    say "  ${DIM}PowerShell 에 이 한 줄을 붙여넣으면 Windows 자신이 자기 경로에 씁니다:${OFF}"
     say "    ${GREEN}$(wslconfig_mirror_command)${OFF}"
     return 1
   fi
   f="$home/.wslconfig"
-  say "대상        ${B}${f}${OFF}  ${DIM}(Windows 의 %USERPROFILE%\\.wslconfig)${OFF}"
+  say "대상        ${B}${f}${OFF}  ${DIM}(Windows 가 말한 %USERPROFILE%)${OFF}"
 
-  local had=0
-  [ -f "$f" ] && { had=1; cp -f "$f" "$f.bml-bak" 2>/dev/null || true; }
+  local why
+  if ! why="$(wslconfig_writable_reason "$f")"; then
+    warn "이 파일은 건드리지 않습니다 — ${why}."
+    say "  ${DIM}무엇을 고치게 될지 확실하지 않으면 고치지 않습니다. 직접 확인해 주세요:${OFF}"
+    say "    ${GREEN}ls -l \"$f\"${OFF}"
+    return 1
+  fi
 
-  wslconfig_set_mirrored "$f"
-  case "$?" in
-    1) ok "이미 mirrored 입니다 — 손대지 않았습니다."
-       [ "$had" = 1 ] && rm -f "$f.bml-bak"
-       ;;
-    2) warn "쓰지 못했습니다: $f"
-       say "  ${DIM}그 파일이 Windows 쪽에서 열려 있거나 권한이 막힌 경우입니다."
-       say "  PowerShell 에 이 한 줄을 붙여넣으면 같은 일을 합니다:${OFF}"
-       say "    ${GREEN}$(wslconfig_mirror_command)${OFF}"
-       return 1
-       ;;
-    *) ok "고쳤습니다."
-       [ "$had" = 1 ] && say "  ${DIM}고치기 전 파일은${OFF} ${GREEN}${f}.bml-bak${OFF} ${DIM}에 두었습니다.${OFF}"
-       ;;
-  esac
+  # 이미 되어 있으면 **백업도 만들지 않는다** (Codex 리뷰 5번).  예전에는
+  # 먼저 백업을 뜨고 나중에 지웠는데, 두 번째 실행이 '이미 mirrored 인 파일' 로
+  # 첫 실행의 NAT 원본 백업을 덮어써 버렸다 — 되돌릴 것이 사라졌다.
+  if wslconfig_is_mirrored "$f"; then
+    ok "이미 mirrored 입니다 — 손대지 않았습니다."
+  else
+    local bak="$f.bml-bak"
+    if [ -e "$f" ]; then
+      if [ -e "$bak" ]; then
+        # 남의(또는 예전의) 백업을 덮지 않는다.  그것이 되돌릴 유일한 원본일 수 있다.
+        say "  ${DIM}백업이 이미 있습니다 — 그대로 둡니다: ${bak}${OFF}"
+      elif cp -p "$f" "$bak" 2>/dev/null && cmp -s "$f" "$bak"; then
+        say "  ${DIM}고치기 전 파일을 ${bak} 에 두었습니다.${OFF}"
+      else
+        rm -f "$bak" 2>/dev/null
+        warn "백업을 만들지 못해 고치지 않았습니다: $bak"
+        say "  ${DIM}되돌릴 것이 없는 채로 남의 설정 파일을 고치지 않습니다.${OFF}"
+        return 1
+      fi
+    fi
+    wslconfig_set_mirrored "$f"
+    case "$?" in
+      0) ok "고쳤습니다." ;;
+      1) ok "이미 mirrored 입니다 — 손대지 않았습니다." ;;
+      *) warn "쓰지 못했습니다: $f"
+         say "  ${DIM}그 파일이 Windows 쪽에서 열려 있거나 권한이 막힌 경우입니다."
+         say "  PowerShell 에 이 한 줄을 붙여넣으면 같은 일을 합니다:${OFF}"
+         say "    ${GREEN}$(wslconfig_mirror_command)${OFF}"
+         return 1
+         ;;
+    esac
+  fi
 
   say ""
   say "  ${DIM}지금 파일 내용:${OFF}"
-  while IFS= read -r l; do file_line "$(printf '%s' "$l" | tr -d '\r')"; done < "$f"
+  if [ -r "$f" ]; then
+    while IFS= read -r l; do file_line "$(printf '%s' "$l" | tr -d '\r')"; done < "$f"
+  else
+    say "  ${DIM}(읽지 못했습니다)${OFF}"
+  fi
 
   say ""
   say "  ${B}다음 — 이 터미널에서${OFF}"
-  say "    ${GREEN}wsl.exe --shutdown${OFF}"
+  # appendWindowsPath=false 인 기계에서는 맨 이름이 안 먹는다 (Codex 리뷰 13번).
+  local wslexe; wslexe="$(win_exe wsl.exe)" || wslexe=""
+  if [ -n "$wslexe" ]; then
+    say "    ${GREEN}${wslexe} --shutdown${OFF}"
+  else
+    say "    ${DIM}이 터미널에서는 wsl.exe 를 부를 수 없습니다 — Windows PowerShell 에서:${OFF}"
+    say "    ${GREEN}wsl --shutdown${OFF}"
+  fi
   say "     ${DIM}WSL 전체가 내려갑니다. 이 터미널도 닫힙니다 (다른 창에서 돌던 것도요).${OFF}"
   say "     ${DIM}그다음 WSL 터미널을 새로 열고${OFF} ${GREEN}bml${OFF} ${DIM}→${OFF} ${GREEN}bml status${OFF}"
   say ""
