@@ -348,10 +348,24 @@ def _member(stream: NrbfStream, obj: NrbfObject | None, name: str) -> Any:
     if obj is None:
         return None
     members = obj.members
-    key = f"<{name}>k__BackingField"
-    if key not in members:
-        key = name
-    return resolve(stream, members.get(key))
+    for key in _member_keys(name):
+        if key in members:
+            return resolve(stream, members[key])
+    return None
+
+
+def _member_keys(name: str) -> tuple[str, ...]:
+    """Every spelling one member name takes across Smart Interface versions.
+
+    C# auto-properties serialize as ``<Name>k__BackingField``; plain fields
+    keep their own name.  Smart Interface 2.13 also writes some of them as the
+    private backing field ``_camelCase`` -- the schedule lives in
+    ``_seqDataSet`` there where 1.x had ``SeqDataSet``.  Looking for one
+    spelling only meant a 2.13 file parsed with **no schedule at all**: no
+    cutoffs, no C-rate, and nothing on screen saying why.
+    """
+    lower_first = name[:1].lower() + name[1:]
+    return (f"<{name}>k__BackingField", name, f"_{lower_first}", f"_{name}")
 
 
 def _list_items(stream: NrbfStream, obj: NrbfObject | None) -> list[Any]:
@@ -406,7 +420,14 @@ def read_schedule(stream: NrbfStream, header: NrbfObject) -> Schedule | None:
             control=control_name,
             control_raw=control_raw,
         )
-        if control_raw != ControlType.REST:
+        if control_raw == ControlType.CV:
+            # **CV 스텝의 Value 는 전압이다, 전류가 아니다.**  여기가 오래
+            # 틀려 있었는데 드러날 파일이 없었다: multi-step CCCV 를 CC/CV
+            # 스텝으로 번갈아 쓴 실측 파일(SIF 2.13)이 처음으로 4.25 를
+            # "4.25 A" 로 만들었다.  그 값은 C-rate 자동 채움까지 타고 들어가
+            # 화면의 숫자를 조용히 바꾼다.
+            step.voltage_limit_v = value
+        elif control_raw != ControlType.REST:
             step.current_a = value
         if control_raw == ControlType.CCCV:
             step.voltage_limit_v = _member(stream, control, "Value2") or None

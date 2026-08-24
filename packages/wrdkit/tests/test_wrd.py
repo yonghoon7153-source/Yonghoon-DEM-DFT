@@ -181,3 +181,23 @@ def test_a_wall_clock_survives_the_round_trip_through_a_file():
         synthetic.make_cycles(1, 5, start_ticks=ticks), start_ticks=ticks)
     parsed = read_wrd_bytes(raw)
     assert parsed.metadata.start_time.replace(microsecond=0) == moment
+
+
+def test_a_cv_step_records_a_voltage_not_a_current():
+    """CV 스텝의 Value 는 전압이다.
+
+    오래 틀려 있었는데 드러날 파일이 없었다: multi-step CCCV 를 CC/CV 스텝으로
+    번갈아 쓴 실측 파일(SIF 2.13)이 처음으로 `4.25` 를 **4.25 A** 로 만들었다.
+    그 값은 화면의 C-rate 자동 채움까지 타고 들어가서, 사람이 입력하지도 않은
+    숫자가 바뀐다.
+    """
+    steps = (synthetic.SchedStep(name="cc", control=0, value=0.35),
+             synthetic.SchedStep(name="cv", control=1, value=4.25))
+    data = synthetic.build_wrd(synthetic.make_cycles(1, 5), schedule=steps)
+    schedule = read_wrd_bytes(data, source_name="a.wrd").metadata.schedule
+    cc, cv = schedule.steps
+    assert cc.current_a == pytest.approx(0.35)
+    assert cc.voltage_limit_v is None
+    # 여기가 요점이다 — 전압이 전류 칸에 들어가면 안 된다.
+    assert cv.current_a is None
+    assert cv.voltage_limit_v == pytest.approx(4.25)

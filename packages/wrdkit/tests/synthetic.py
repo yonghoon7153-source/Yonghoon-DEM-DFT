@@ -12,6 +12,7 @@ It doubles as executable documentation of the format.
 from __future__ import annotations
 
 import struct
+import zlib
 from dataclasses import dataclass
 
 # --- NRBF record ids -------------------------------------------------------
@@ -27,6 +28,7 @@ OBJECT_NULL = 10
 
 # --- BinaryTypeEnum --------------------------------------------------------
 BT_PRIMITIVE = 0
+BT_PRIMITIVE_ARRAY = 7
 BT_STRING = 1
 BT_SYSTEM_CLASS = 3
 BT_CLASS = 4
@@ -161,6 +163,8 @@ def _class_record(writer: Writer, object_id: int, name: str,
         elif binary_type == BT_CLASS:
             writer.string(extra[0])
             writer.i32(extra[1])
+        elif binary_type == BT_PRIMITIVE_ARRAY:
+            writer.u8(extra)          # PrimitiveTypeEnum of the element
     if library_id is not None:
         writer.i32(library_id)
 
@@ -300,6 +304,144 @@ class Sample:
                       self.charge_e, self.discharge_e, 0.0, 0.0, self.voltage):
             writer.f64(value)
         return writer.bytes()
+
+    def pack_sif213(self, control_status: int = 1) -> bytes:
+        """One row in the Smart Interface 2.13 layout (fixed, 128 bytes).
+
+        2.13 declares no column list, so this **is** the contract: if the
+        reader and this writer agree, the layout in the spec is right.  The
+        differences from 1.x are all here — no DATE TIME, no I RANGE string,
+        a fourth status byte (CC/CV), and twelve trailing bytes we have not
+        identified.
+        """
+        writer = Writer()
+        writer.i32(self.channel)
+        writer.i64(self.test_ticks).i64(self.step_ticks).i64(self.cycle_ticks)
+        writer.i32(self.step_index).i32(self.total_step).i32(self.cycle_index)
+        writer.u8(5).u8(0).u8(self.cell_status).u8(control_status)
+        for value in (self.voltage, self.current, self.charge_q, self.discharge_q,
+                      self.charge_e, self.discharge_e, 0.0, 0.0, self.voltage):
+            writer.f64(value)
+        row = writer.bytes()
+        assert len(row) == 116, len(row)
+        return row + b"\x02\x00\x00\x00" + b"\x00" * 5 + b"\xa9\x9b\x93"
+
+
+ARRAY_SINGLE_PRIMITIVE = 15
+P_BYTE = 2
+SIF_213_ROW_SIZE = 128
+
+
+def _write_header_values(writer: Writer, *, start_ticks: int, base_tick: int,
+                         file_name: str, unit_coulomb: bool, row_count: int,
+                         end_ticks: int,
+                         schedule: tuple[SchedStep, ...] | None,
+                         schedule_path: str) -> None:
+    """The 2.13 header: one stream, ``WbcsFile.Data.DataHeaderValues``.
+
+    1.x split this across two streams (``DataFileHeader`` + ``DataHeader``).
+    2.13 merges them, moves ``EndTime`` from a tick count to a ``DateTime``,
+    and writes the schedule under the **private field** name ``_seqDataSet``
+    instead of the auto-property ``SeqDataSet`` -- reading only one spelling
+    meant a 2.13 file parsed with no schedule at all.
+    """
+    writer.u8(HEADER).i32(1).i32(-1).i32(1).i32(0)
+    writer.u8(BINARY_LIBRARY).i32(2).string(WBCS_LIBRARY)
+
+    members = [
+        ("<Version>k__BackingField", BT_STRING, None),
+        ("<Model>k__BackingField", BT_STRING, None),
+        ("<SerialNo>k__BackingField", BT_STRING, None),
+        ("<DeviceType>k__BackingField", BT_STRING, None),
+        ("<AppVer>k__BackingField", BT_STRING, None),
+        ("<FirmVer>k__BackingField", BT_STRING, None),
+        ("<UnitCoulomb>k__BackingField", BT_PRIMITIVE, P_BOOLEAN),
+        ("<BaseTick>k__BackingField", BT_PRIMITIVE, P_UINT32),
+        ("<FileName>k__BackingField", BT_STRING, None),
+        ("<StartTime>k__BackingField", BT_PRIMITIVE, P_DATETIME),
+        ("<EndTime>k__BackingField", BT_PRIMITIVE, P_DATETIME),
+        ("<DataCount>k__BackingField", BT_PRIMITIVE, P_INT32),
+        ("<Format>k__BackingField", BT_CLASS, ("WbcsFile.Data.DataFile+eFormat", 2)),
+    ]
+    if schedule is not None:
+        members.append(("_seqDataSet", BT_CLASS, ("WbcsFile.Sch.SeqDataSet", 2)))
+    _class_record(writer, 1, "WbcsFile.Data.DataHeaderValues", members, library_id=2)
+
+    for object_id, text in ((3, "2.1.3.1"), (4, "WBRS50"), (5, "W5K-TEST-0001"),
+                            (6, "BatteryCycler"), (7, "2.1.3.1"), (8, "2.1.3.0")):
+        writer.u8(BINARY_OBJECT_STRING).i32(object_id).string(text)
+    writer.u8(1 if unit_coulomb else 0)
+    writer.u32(base_tick)
+    writer.u8(BINARY_OBJECT_STRING).i32(9).string(file_name)
+    writer.raw(struct.pack("<Q", (2 << 62) | start_ticks))     # StartTime
+    writer.raw(struct.pack("<Q", (2 << 62) | end_ticks))       # EndTime
+    writer.i32(row_count)
+
+    _class_record(writer, -11, "WbcsFile.Data.DataFile+eFormat",
+                  [("value__", BT_PRIMITIVE, P_INT32)], library_id=2)
+    writer.i32(0)
+
+    if schedule is not None:
+        _write_schedule(writer, schedule,
+                        schedule_path or r"C:\Zive Data\Schedule\test.cyc")
+    writer.u8(MESSAGE_END)
+
+
+def build_wrd_sif213(samples: list[Sample], *, start_ticks: int | None = None,
+                     base_tick: int = 50_000,
+                     file_name: str = r"C:\Zive Data\Smart Interface\test.wrd",
+                     unit_coulomb: bool = False,
+                     schedule: tuple[SchedStep, ...] | None = None,
+                     schedule_path: str = "",
+                     version: str = "1.6.0.0",
+                     gap: int = 64,
+                     control_status: int = 1) -> bytes:
+    """A Smart Interface 2.13 file: deflated header in an envelope.
+
+    ``gap`` leaves unused bytes between the envelope and the first row, the
+    way the real file does (its stream ended at 4770 but ``HeaderSize`` was
+    6767).  A reader that starts the rows at "end of the last stream" instead
+    of at ``HeaderSize`` reads garbage, and every number after that is wrong
+    but plausible -- so the fixture makes that mistake fail loudly.
+    """
+    if start_ticks is None:
+        start_ticks = DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND
+    end_ticks = start_ticks + (samples[-1].test_ticks if samples else 0)
+
+    inner = Writer()
+    _write_header_values(inner, start_ticks=start_ticks, base_tick=base_tick,
+                         file_name=file_name, unit_coulomb=unit_coulomb,
+                         row_count=len(samples), end_ticks=end_ticks,
+                         schedule=schedule, schedule_path=schedule_path)
+    # raw DEFLATE: .NET's DeflateStream writes no zlib/gzip wrapper.
+    compressor = zlib.compressobj(9, zlib.DEFLATED, -15)
+    blob = compressor.compress(inner.bytes()) + compressor.flush()
+
+    envelope = Writer()
+    envelope.u8(HEADER).i32(1).i32(-1).i32(1).i32(0)
+    envelope.u8(BINARY_LIBRARY).i32(2).string(WBCS_LIBRARY)
+    _class_record(envelope, 1, "WbcsFile.Data.DataHeaderBase", [
+        ("Version", BT_STRING, None),
+        ("HeaderSize", BT_PRIMITIVE, P_INT32),
+        ("HeaderData", BT_PRIMITIVE_ARRAY, P_BYTE),
+    ], library_id=2)
+    envelope.u8(BINARY_OBJECT_STRING).i32(3).string(version)
+    header_size_at = len(envelope.bytes())
+    envelope.i32(0)                      # HeaderSize, patched below
+    envelope.u8(MEMBER_REFERENCE).i32(4)
+    envelope.u8(ARRAY_SINGLE_PRIMITIVE).i32(4).i32(len(blob)).u8(P_BYTE)
+    envelope.raw(blob)
+    envelope.u8(MESSAGE_END)
+
+    body = bytearray(envelope.bytes())
+    header_size = len(body) + gap
+    body[header_size_at:header_size_at + 4] = struct.pack("<i", header_size)
+    body.extend(b"\x00" * gap)
+    for sample in samples:
+        row = sample.pack_sif213(control_status)
+        assert len(row) == SIF_213_ROW_SIZE, len(row)
+        body.extend(row)
+    return bytes(body)
 
 
 def build_wrd(samples: list[Sample], *, start_ticks: int | None = None,

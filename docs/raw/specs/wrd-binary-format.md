@@ -173,6 +173,72 @@ Smart Interface (Zive WBCS3000) 가 저장하는 충방전 원본 파일의 구�
 - `CYCLE INDEX` — 0부터. 검증 파일에서 사이클 0 은 formation(스텝 0–4),
   1 이후가 루프(스텝 5–8)였다.
 
+## Smart Interface 2.13 — 두 번째 모양 (`DataHeaderBase`)
+
+2.13 부터 파일 앞이 달라진다. 스트림이 둘이 아니라 **하나**이고, 그 하나가
+옛 헤더를 압축해 들고 있다 (ADR 0016).
+
+```
+[스트림 1]  WbcsFile.Data.DataHeaderBase
+    Version    string   "1.6.0.0"      우리가 해독한 값은 이것뿐이다
+    HeaderSize int32    6767           행 블록이 시작하는 **절대 오프셋**
+    HeaderData byte[]   4574 바이트    raw DEFLATE (zlib/gzip 래퍼 없음)
+        └─ 풀면 NRBF 스트림 하나
+           root = WbcsFile.Data.DataHeaderValues
+             Version/Model/SerialNo/OrderNo/DeviceType/AppVer/FirmVer
+             UnitCoulomb, BaseTick, FileName, StartTime, Format
+             EndTime (DateTime — 1.x 의 tick int64 가 아니다)
+             DataCount (int32)
+             LastRunStatus, _seqDataSet, _IRangeString, _SeqDHistoryList
+[HeaderSize 부터]  행 블록
+```
+
+주의할 점 셋.
+
+1. **행은 `HeaderSize` 에서 시작한다.** 스트림이 끝나는 곳이 아니다. 실측
+   파일에서 스트림은 4770 에서 끝났는데 `HeaderSize` 는 6767 이었다 — 사이의
+   1997 바이트는 쓰이지 않는다. "마지막 스트림 다음" 에서 읽으면 쓰레기를
+   행으로 읽는다.
+2. **`HeaderData` 는 raw DEFLATE 다.** `zlib.decompress(blob)` 는
+   `incorrect header check` 로 실패한다. `zlib.decompress(blob, -15)`.
+3. **스케줄은 `_seqDataSet`** 이다 (1.x 는 `SeqDataSet`). 안쪽 구조는 같다.
+
+### 행 레이아웃 (128 바이트 고정, **파일이 선언하지 않는다**)
+
+1.x 는 `DataHeader.ColumnList` 로 컬럼을 선언한다. **2.13 은 하지 않는다** —
+그래서 이 표가 유일한 계약이다. 근거는 ADR 0016 에 있고, `synthetic.py` 의
+`build_wrd_sif213` 이 같은 표로 파일을 쓴다.
+
+| 오프셋 | 형 | 이름 | 어떻게 확정했나 |
+|---:|---|---|---|
+| +0 | Int32 | CHANNEL | 27 고정, 헤더의 채널과 일치 |
+| +4 | Int64 | TEST TIME | 유일하게 단조 증가, 마지막 41,452 s |
+| +12 | Int64 | STEP TIME | 스텝 경계에서 리셋 |
+| +20 | Int64 | CYCLE TIME | 사이클 경계에서 리셋 |
+| +28 | Int32 | STEP INDEX | 0..8, 여덟 번 변화 |
+| +32 | Int32 | TOTAL STEP | 1..9, 헤더의 SchStep 9개와 일치 |
+| +36 | Int32 | CYCLE INDEX | 이 조각에서는 0 고정 |
+| +40 | Byte | RUN STATUS | **미확정** (5 고정) |
+| +41 | Byte | SUB STATUS | **미확정** (초당 여러 번 변한다) |
+| +42 | Byte | **CELL STATUS** | 전류 0 인 300행에서 1, 전류 흐르는 41,438행에서 3 |
+| +43 | Byte | CONTROL STATUS | 1→평균 0.324 A(CC), 2→0.032 A(CV), 0→0 A |
+| +44 | Double | VOLTAGE | 2.585–4.250 V |
+| +52 | Double | CURRENT | 0–0.352 A |
+| +60 | Double | CHARGE Q | 0–3.661 Ah (MJ1 정격) |
+| +68 | Double | DISCHARGE Q | 이 조각은 충전만 하므로 0 |
+| +76 | Double | CHARGE E | 0–13.85 Wh |
+| +84 | Double | DISCHARGE E | 0 |
+| +92 | Double | AUX. VOLTAGE | 이 장비는 0 |
+| +100 | Double | TEMPERATURE | 이 장비는 0 |
+| +108 | Double | OCP | 2.878–2.879 V (휴지 전압) |
+| +116..127 | — | **미상 12바이트** | 이름을 붙이지 않는다 |
+
+1.x 와 다른 점: **DATE TIME 이 없고**, **I RANGE 문자열이 없다** (그래서 행이
+가변 길이가 아니다), 상태 바이트가 셋이 아니라 넷이다.
+
+**교차검증**: CC 구간에서 ΔQ ÷ (I·Δt) 의 중앙값 = 1.0000. 전류 단위(A)·용량
+단위(Ah)·시간 단위(tick)가 동시에 맞아야 나오는 값이다.
+
 ## 파싱 전략
 
 1. 스트림 1 → 장비·스케줄·리포트.

@@ -51,11 +51,18 @@ def test_time_advances_monotonically(sample_wrd):
 
 def test_schedule_cutoffs_bracket_the_measured_voltage(sample_wrd):
     schedule = sample_wrd.metadata.schedule
-    if not schedule or schedule.upper_cutoff_v is None:
+    if not schedule:
+        pytest.skip("file carries no schedule")
+    # 두 쪽을 따로 본다.  충전만 하는 스케줄(multi-step CCCV 의 조각 같은 것)은
+    # 하한 컷오프가 없다 — 한 덩어리로 묶어 두면 그런 파일에서 TypeError 로
+    # 죽고, 그것은 데이터가 이상하다는 뜻으로 읽힌다.
+    if schedule.upper_cutoff_v is None and schedule.lower_cutoff_v is None:
         pytest.skip("file carries no voltage cut-offs")
     voltage = sample_wrd["voltage"]
-    assert voltage.max() <= schedule.upper_cutoff_v + 0.05
-    assert voltage.min() >= schedule.lower_cutoff_v - 0.05
+    if schedule.upper_cutoff_v is not None:
+        assert voltage.max() <= schedule.upper_cutoff_v + 0.05
+    if schedule.lower_cutoff_v is not None:
+        assert voltage.min() >= schedule.lower_cutoff_v - 0.05
 
 
 def test_profiles_span_the_cycle_capacity(sample_wrd):

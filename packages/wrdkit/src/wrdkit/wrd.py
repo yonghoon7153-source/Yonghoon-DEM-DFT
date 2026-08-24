@@ -18,6 +18,7 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import zlib
 import re
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -260,7 +261,16 @@ class _Layout:
     fixed_size: int  # row size with every string empty
 
     @classmethod
-    def build(cls, columns: list[WrdColumn]) -> _Layout:
+    def build(cls, columns: list[WrdColumn], row_size: int | None = None) -> _Layout:
+        """Byte layout for *columns*.
+
+        ``row_size`` forces the row stride.  Smart Interface 2.13 does not
+        declare its columns at all (see ``_SIF_213_COLUMNS``) and leaves twelve
+        bytes at the end of every row that we have not identified; the stride
+        has to come from the file's own arithmetic, not from the sum of the
+        fields we understand.  Naming those bytes as a column would be
+        inventing meaning we do not have.
+        """
         fields: list[tuple[str, str, int]] = []
         strings: list[tuple[str, int]] = []
         offset = 0
@@ -276,6 +286,11 @@ class _Layout:
                 )
             fields.append((column.name, dtype, offset))
             offset += np.dtype(dtype).itemsize
+        if row_size is not None:
+            if row_size < offset:
+                raise WrdError(
+                    f"row size {row_size} is smaller than the declared columns ({offset})")
+            offset = row_size
         return cls(fields, strings, offset)
 
 
@@ -423,6 +438,120 @@ def _read_block(buf: bytes, offsets: list[int], shapes: list[tuple[int, ...]],
     return out
 
 
+#: Smart Interface 2.13 (``DataHeaderBase`` version ``1.6.0.0``) 의 행 레이아웃.
+#:
+#: **이 저장소는 컬럼을 하드코딩하지 않는다** (CLAUDE.md §0.6) — 파일이 선언한
+#: 대로 읽는다.  그런데 2.13 파일은 컬럼 목록을 **선언하지 않는다**: 헤더 어디
+#: 에도 ColumnList 가 없다.  그래서 이것만은 예외이고, 예외인 만큼 두 가지를
+#: 지킨다.
+#:
+#: 1. **버전으로 잠근다.** ``DataHeaderBase.Version`` 이 아는 값일 때만 쓴다.
+#:    모르는 버전이면 이 레이아웃을 들이대지 않고 실패한다 — 한 바이트만
+#:    어긋나도 모든 숫자가 그럴듯하게 틀린다.
+#: 2. **어떻게 확정했는지 적는다.** 아래 근거는 실측 파일
+#:    (MJ1 multi-step CCCV, 41,738행)에서 나온 것이고, 스펙 문서에도 같은
+#:    내용이 있다.  숫자를 못 밝힌 자리는 컬럼으로 만들지 않는다.
+#:
+#: 근거:
+#:   - 행 크기 128 = (파일 크기 - HeaderSize) / DataCount, 나머지 0.
+#:   - +42 는 전류가 0 인 300행에서 1, 전류가 흐르는 41,438행에서 3 —
+#:     1=휴지·3=충전 (§3) 과 정확히 일치한다.  이 한 칸이 사이클 분할의 근거다.
+#:   - +43 은 1일 때 평균 0.324 A, 2일 때 0.032 A, 0일 때 0 A — CC / CV 꼬리 /
+#:     휴지다.
+#:   - +32 는 1..9 로 8번 바뀌고, 헤더의 SchStep 이 정확히 9개다.
+#:   - +44 는 2.585..4.250 (V), +52 는 0..0.352 (A), +60 은 0..3.661 (Ah,
+#:     MJ1 정격), +76 은 0..13.85 (Wh) — 전부 이 셀에서 물리적으로 맞는 범위다.
+#:   - +40, +41, 그리고 끝 12바이트(+116..127)는 **확정하지 못했다.**
+_SIF_213_ROW_SIZE = 128
+_SIF_213_VERSIONS = ("1.6.0.0",)
+_SIF_213_COLUMNS: tuple[tuple[str, str, str], ...] = (
+    ("CHANNEL", "System.Int32", ""),
+    ("TEST TIME", "System.Int64", "tick"),
+    ("STEP TIME", "System.Int64", "tick"),
+    ("CYCLE TIME", "System.Int64", "tick"),
+    ("STEP INDEX", "System.Int32", ""),
+    ("TOTAL STEP", "System.Int32", ""),
+    ("CYCLE INDEX", "System.Int32", ""),
+    ("RUN STATUS", "System.Byte", ""),
+    ("SUB STATUS", "System.Byte", ""),
+    ("CELL STATUS", "System.Byte", ""),
+    ("CONTROL STATUS", "System.Byte", ""),
+    ("VOLTAGE", "System.Double", "V"),
+    ("CURRENT", "System.Double", "A"),
+    ("CHARGE Q", "System.Double", "Ah"),
+    ("DISCHARGE Q", "System.Double", "Ah"),
+    ("CHARGE E", "System.Double", "Wh"),
+    ("DISCHARGE E", "System.Double", "Wh"),
+    ("AUX. VOLTAGE", "System.Double", "V"),
+    ("TEMPERATURE", "System.Double", "C"),
+    ("OCP", "System.Double", "V"),
+)
+
+
+def _sif_213_columns() -> list[WrdColumn]:
+    return [WrdColumn(_slug(label), label, dotnet, unit)
+            for label, dotnet, unit in _SIF_213_COLUMNS]
+
+
+def _sif_213_header(file_stream: NrbfStream, wrapper: NrbfObject,
+                    source_name: str) -> tuple[NrbfStream, NrbfObject, int]:
+    """Unwrap the 2.13 envelope: ``HeaderData`` is a deflated NRBF stream.
+
+    The 1.x layout put two NRBF streams at the front of the file and started
+    the rows right after them.  2.13 writes one tiny stream that carries the
+    old header **compressed** (raw DEFLATE, no zlib wrapper) plus the offset
+    where the rows begin.  Nothing about the row block itself changed shape --
+    only how you find it.
+    """
+    version = _member(file_stream, wrapper, "Version")
+    if version not in _SIF_213_VERSIONS:
+        raise WrdError(
+            f"{source_name}: Smart Interface header version {version!r} is not one we have "
+            f"decoded (known: {', '.join(_SIF_213_VERSIONS)}). "
+            "run `python3 -m wrdkit.cli probe <file>` and send that output"
+        )
+    header_size = _member(file_stream, wrapper, "HeaderSize")
+    if not isinstance(header_size, int) or header_size <= 0:
+        raise WrdError(f"{source_name}: header declares no usable HeaderSize")
+    blob = _member(file_stream, wrapper, "HeaderData")
+    if blob is None:
+        raise WrdError(f"{source_name}: header carries no HeaderData")
+    try:
+        raw = bytes(bytearray(blob))
+    except (TypeError, ValueError) as exc:
+        raise WrdError(f"{source_name}: HeaderData is not a byte array") from exc
+    try:
+        # -15: raw DEFLATE.  .NET's DeflateStream writes no zlib/gzip wrapper,
+        # so zlib.decompress() alone fails with "incorrect header check".
+        plain = zlib.decompress(raw, -15)
+    except zlib.error as exc:
+        raise WrdError(f"{source_name}: HeaderData did not decompress: {exc}") from exc
+    try:
+        inner = read_stream(plain, 0)
+    except NrbfError as exc:
+        raise WrdError(f"{source_name}: header inside HeaderData is unreadable: {exc}") from exc
+    values = inner.root
+    if not isinstance(values, NrbfObject) or "DataHeaderValues" not in values.class_name:
+        raise WrdError(
+            f"{source_name}: expected WbcsFile.Data.DataHeaderValues inside HeaderData, "
+            f"found {getattr(values, 'class_name', type(values).__name__)!r}"
+        )
+    return inner, values, header_size
+
+
+def _as_datetime(value: Any) -> datetime.datetime | None:
+    """``EndTime`` is a tick count in 1.x and a ``DateTime`` in 2.13.
+
+    Reading only one shape meant a 2.13 file came out with no end time, and
+    "구동 중" / "종료" is decided partly on that -- a missing end time is not a
+    cosmetic gap.
+    """
+    if isinstance(value, int):
+        return _ticks_to_datetime(value)
+    to_datetime = getattr(value, "to_datetime", None)
+    return to_datetime() if callable(to_datetime) else None
+
+
 def read_wrd(path: str | Path, *, load_data: bool = True) -> WrdFile:
     """Parse a ``.wrd`` file into metadata plus per-column numpy arrays."""
     path = Path(path)
@@ -449,7 +578,19 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
             f"unexpected root object of type {type(file_header).__name__}; "
             "expected WbcsFile.Data.DataFileHeader"
         )
-    if "DataFileHeader" not in file_header.class_name:
+
+    # Smart Interface 2.13 wraps the old header in a tiny envelope and
+    # compresses it.  Everything after this point works the same way; only
+    # *where the header and the rows are* differs.
+    sif_213 = "DataHeaderBase" in file_header.class_name
+    if sif_213:
+        header_stream, header_obj, row_start = _sif_213_header(
+            file_stream, file_header, source_name)
+        file_stream, file_header = header_stream, header_obj
+        data_stream, data_header = header_stream, header_obj
+        report = None
+        columns = _sif_213_columns()
+    elif "DataFileHeader" not in file_header.class_name:
         # 무엇을 봤는지와 **다음에 무엇을 할지**를 같이 준다.  이 오류만 받으면
         # 사람이 할 수 있는 일이 없다 — `info` 는 이 검사 앞에서 죽으므로
         # 파일이 뭐라고 말하는지 볼 방법이 없었다.  (Smart Interface 2.13 이
@@ -460,15 +601,18 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
             "run `python3 -m wrdkit.cli probe <file>` and send that output"
         )
 
-    try:
-        data_stream = read_stream(buf, file_stream.end_offset)
-    except NrbfError as exc:
-        raise WrdError(f"not a readable .wrd: {exc}") from exc
-    data_header = data_stream.root
-    if not isinstance(data_header, NrbfObject) or "DataHeader" not in data_header.class_name:
-        raise WrdError("missing WbcsFile.Data.DataHeader stream")
+    if not sif_213:
+        try:
+            data_stream = read_stream(buf, file_stream.end_offset)
+        except NrbfError as exc:
+            raise WrdError(f"not a readable .wrd: {exc}") from exc
+        data_header = data_stream.root
+        if not isinstance(data_header, NrbfObject) or "DataHeader" not in data_header.class_name:
+            raise WrdError("missing WbcsFile.Data.DataHeader stream")
+        report = _member(file_stream, file_header, "StartReport")
+        row_start = data_stream.end_offset
+        columns = _read_columns(data_stream, data_header)
 
-    report = _member(file_stream, file_header, "StartReport")
     format_obj = _member(file_stream, file_header, "Format")
     data_format = (format_obj.members.get("value__", 0)
                    if isinstance(format_obj, NrbfObject) else 0)
@@ -477,7 +621,6 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
     declared_rows = data_header.members.get("<DataCount>k__BackingField")
     end_ticks = data_header.members.get("<EndTime>k__BackingField")
 
-    columns = _read_columns(data_stream, data_header)
     if not columns:
         raise WrdError("file declares no data columns")
 
@@ -496,7 +639,7 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
         unit_coulomb=bool(_member(file_stream, file_header, "UnitCoulomb")),
         data_format=data_format,
         start_time=start_dt.to_datetime() if start_dt is not None else None,
-        end_time=_ticks_to_datetime(end_ticks if isinstance(end_ticks, int) else None),
+        end_time=_as_datetime(end_ticks),
         instrument_path=_member(file_stream, file_header, "FileName"),
         declared_row_count=declared_rows if isinstance(declared_rows, int) and declared_rows >= 0 else None,
         cell_weight_g=_member(file_stream, report, "CellWeight"),
@@ -510,8 +653,8 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
     if metadata.schedule:
         metadata.schedule_path = metadata.schedule.source_path
 
-    layout = _Layout.build(columns)
-    offsets, shapes, end = _scan_rows(buf, data_stream.end_offset, layout)
+    layout = _Layout.build(columns, row_size=_SIF_213_ROW_SIZE if sif_213 else None)
+    offsets, shapes, end = _scan_rows(buf, row_start, layout)
     metadata.row_count = len(offsets)
     metadata.trailing_bytes = len(buf) - end
 
