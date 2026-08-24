@@ -100,11 +100,31 @@ else
   bad_ "doctor 가 command not found 의 원인을 안 짚는다"
 fi
 
-# 가이드도 같이 고쳐야 한다 — 사람이 붙여넣는 것은 문서 쪽이다.
-if grep -q 'tools/bml install' "$ROOT/docs/guides/wsl-setup.md"; then
-  ok_ "wsl-setup 가이드가 install 을 안내한다"
+# 가이드도 같이 고쳐야 한다 — 사람이 실제로 붙여넣는 것은 문서 쪽이다.
+# 코드만 고치고 문서에 옛 처방이 남아 있으면 피해는 똑같다.
+for guide in wsl-setup bml-command; do
+  g="$ROOT/docs/guides/$guide.md"
+  if grep -q 'tools/bml install' "$g"; then
+    ok_ "$guide 가 install 을 안내한다"
+  else
+    bad_ "$guide 에 install 단계가 없다"
+  fi
+  # rc 는 새 터미널에서만 읽힌다.  지금 터미널용 export 가 붙어 있지 않으면
+  # 붙여넣은 사람은 바로 다음 줄에서 command not found 를 본다.
+  if grep -qF 'export PATH="$HOME/.local/bin:$PATH"' "$g"; then
+    ok_ "$guide 가 지금 터미널용 export 를 함께 준다"
+  else
+    bad_ "$guide 가 rc 만 고치고 지금 터미널을 그대로 둔다"
+  fi
+done
+
+# 남의 컴퓨터에 깔 때 install 에서 멈추면 안 된다.  그냥 `bml` 을 치면 그
+# 기계에 빈 서버가 뜨고, 주소까지 localhost:5003 로 같아서 데이터가 날아간
+# 것처럼 보인다.  설치 안내에 `bml use` 가 붙어 있어야 한다.
+if grep -q 'bml use' "$ROOT/docs/guides/bml-command.md"; then
+  ok_ "설치 안내가 bml use 까지 데려간다"
 else
-  bad_ "가이드에 install 단계가 없다"
+  bad_ "설치만 안내하고 중추 서버에 붙이는 단계가 없다 (빈 화면을 보게 된다)"
 fi
 
 echo

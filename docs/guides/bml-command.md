@@ -1,7 +1,7 @@
 ---
 title: bml command
 created: 2026-08-20
-updated: 2026-08-20
+updated: 2026-08-24
 type: guide
 tags: [tooling, workflow]
 sources: [docs/adr/0003-timeseries-on-disk-summaries-in-db.md, docs/adr/0009-branch-is-the-home.md]
@@ -61,25 +61,67 @@ cd ~/bml
 git clone -b claude/battery-charge-discharge-webapp-dq4ja3 \
   https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git bml
 cd bml
-./tools/bml install     # ~/.local/bin/bml 로 심볼릭 링크
-bml                     # 의존성·빌드·실행까지 알아서
+./tools/bml install                   # 링크 + 셸 설정의 PATH 한 줄
+export PATH="$HOME/.local/bin:$PATH"  # 지금 이 터미널에 반영
+bml                                   # 의존성·빌드·실행까지 알아서
 ```
 
 DFT 판도 쓰고 있다면 위 "프로젝트가 둘" 절의 `worktree` 방법을 쓰세요.
 
 의존성은 `bml` 이 처음 실행될 때 설치합니다. git 설정까지 한 번에 하려면
-`make setup` 을 써도 됩니다.
+`make setup` 을 쓰세요 — `install` 도 그 안에 들어 있습니다.
 
-`~/.local/bin` 이 PATH 에 없다는 경고가 나오면 셸 설정에 한 줄 추가하고 새
-터미널을 엽니다:
+### `bml: command not found` — 실제로 걸린 자리
+
+`install` 은 `~/.local/bin/bml` 심볼릭 링크를 만들고, `$SHELL` 에 맞는 셸
+설정(`~/.bashrc` 또는 `~/.zshrc`)에 PATH 한 줄을 넣습니다. 같은 줄을 두 번
+넣지는 않습니다.
+
+**그 줄은 새 터미널에서만 읽힙니다.** 그래서 위 블록의 `export` 한 줄이
+따로 있습니다 — 이걸 빼면 `install` 을 했는데도 바로 다음 줄에서
+`command not found` 가 나고, 사람은 설치가 실패한 줄 압니다. 노트북에
+깔면서 실제로 그렇게 됐습니다.
+
+막히면:
 
 ```bash
-# bash → ~/.bashrc   ·   zsh → ~/.zshrc
-export PATH="$HOME/.local/bin:$PATH"
+which bml          # ~/.local/bin/bml 이 나와야 합니다
+bml doctor         # PATH·WSL·python3-venv·node·CRLF·포트를 한 번에 짚습니다
 ```
+
+`doctor` 는 PATH 의 `bml` 이 **다른 트리**를 가리키는 경우도 경고합니다.
+worktree 를 둘 쓰면 한쪽에서 고친 것이 다른 쪽에서 안 보이기 때문입니다.
+
+저장소 안에서는 언제든 `./tools/bml <명령>` 으로 경로째 부를 수 있습니다 —
+PATH 문제와 무관하게 항상 됩니다.
 
 다른 위치에 두고 싶으면 인자로 줍니다: `./tools/bml install /usr/local/bin`
 (권한이 필요하면 `sudo`).
+
+### 그 기계가 중추 서버가 아니라면 — `bml use` 까지 해야 끝입니다
+
+**여기서 멈추면 안 됩니다.** 남의 컴퓨터·노트북에서 그냥 `bml` 을 치면
+**그 기계에** 서버가 뜹니다. 데이터는 git 을 타고 오지 않으므로 셀이 0개인
+멀쩡한 화면이 뜨고, 주소까지 똑같은 `localhost:5003` 이라 어느 쪽을 보고
+있는지 화면으로는 구분이 안 됩니다 — 데이터가 날아간 것처럼 보입니다.
+
+```bash
+bml use 192.168.0.40    # 중추 서버의 LAN 주소 (포트 생략하면 5003)
+bml
+bml status              # 원본 개수가 중추 서버와 같아야 합니다
+```
+
+주소는 중추 서버에서 `bml status` 의 `접속 주소` 줄이 알려 줍니다.
+`bml use` 는 **닿는 것을 확인한 뒤에만** 저장하므로, 저장이 안 되면 주소를
+잘못 쓴 것이 아니라 중추 서버가 아직 안 열린 것입니다 (그쪽 `WORKBENCH_HOST`,
+Windows 방화벽, WSL portproxy — [[central-server]] 참고).
+
+그 기계에는 **`.bml/env` 를 직접 만들지 마세요.** `WORKBENCH_DATA` /
+`WORKBENCH_HOST` 는 중추 서버 한 대만 하는 설정입니다. `bml use` 가 알아서
+한 줄만 적습니다.
+
+브라우저로 보기만 할 사람은 이 절 전체가 필요 없습니다 — 중추 서버 주소를
+그냥 열면 됩니다. 설치할 것이 없습니다.
 
 **alias 로 쓰고 싶다면** (심볼릭 링크 대신):
 
