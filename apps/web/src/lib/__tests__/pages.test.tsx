@@ -572,6 +572,96 @@ function sampleDetailHandler(extra: Handler): Handler {
   }
 }
 
+describe('제목에서 이름 고치기', () => {
+  /** PATCH 를 받아 이름만 바꾼 셀을 돌려주는 손잡이. */
+  function renameHandler(fail?: Fail) {
+    const patched: unknown[] = []
+    let current = 'No_1_dry'
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          const body = JSON.parse(String(init.body))
+          patched.push(body)
+          if (fail) return fail
+          current = String(body.name)
+          return sample({ name: current, updated_at: '2026-08-02T00:00:00' })
+        }
+        if (path(url) === '/api/samples/1') return sample({ name: current })
+        return undefined
+      }),
+    )
+    return patched
+  }
+
+  const openEditor = async () => {
+    await userEvent.click(await screen.findByRole('button', { name: /No_1_dry/ }))
+    return screen.getByLabelText('셀 이름')
+  }
+
+  it('제목을 누르면 그 자리에서 고칠 수 있다', async () => {
+    const patched = renameHandler()
+    renderSampleDetail()
+
+    const input = await openEditor()
+    await userEvent.clear(input)
+    await userEvent.type(input, 'No_7_dry{Enter}')
+
+    await waitFor(() => expect(patched).toEqual([{ name: 'No_7_dry' }]))
+    // 저장한 이름이 제목에 바로 보인다 — 다시 읽어 올 때까지 옛 이름이
+    // 남아 있으면 저장이 안 된 것처럼 보인다.
+    expect(await screen.findByRole('button', { name: /No_7_dry/ })).toBeInTheDocument()
+  })
+
+  it('Esc 는 되돌린다 — 저장하지 않는다', async () => {
+    const patched = renameHandler()
+    renderSampleDetail()
+
+    const input = await openEditor()
+    await userEvent.clear(input)
+    await userEvent.type(input, '버리는 이름{Escape}')
+
+    expect(patched).toEqual([])
+    expect(await screen.findByRole('button', { name: /No_1_dry/ })).toBeInTheDocument()
+  })
+
+  it('빈 이름은 저장하지 않는다 — 이 셀을 부르는 이름이 그것뿐이다', async () => {
+    const patched = renameHandler()
+    renderSampleDetail()
+
+    const input = await openEditor()
+    await userEvent.clear(input)
+    await userEvent.type(input, '   {Enter}')
+
+    expect(await screen.findByText('이름은 비울 수 없습니다.')).toBeInTheDocument()
+    expect(patched).toEqual([])
+    // 편집이 닫히면 방금 친 것이 사라지고 옛 이름이 저장된 것처럼 보인다.
+    expect(screen.getByLabelText('셀 이름')).toBeInTheDocument()
+  })
+
+  it('저장이 실패하면 친 이름을 들고 열어 둔다', async () => {
+    renameHandler(new Fail(422, 'sample name cannot be empty'))
+    renderSampleDetail()
+
+    const input = await openEditor()
+    await userEvent.clear(input)
+    await userEvent.type(input, 'No_7_dry{Enter}')
+
+    expect(await screen.findByText('sample name cannot be empty')).toBeInTheDocument()
+    expect(screen.getByLabelText('셀 이름')).toHaveValue('No_7_dry')
+  })
+
+  it('같은 이름이면 서버를 부르지 않는다', async () => {
+    const patched = renameHandler()
+    renderSampleDetail()
+
+    const input = await openEditor()
+    await userEvent.type(input, '{Enter}')
+
+    expect(patched).toEqual([])
+    await waitFor(() => expect(screen.queryByLabelText('셀 이름')).toBeNull())
+  })
+})
+
 describe('SampleDetail', () => {
   it('초기화 는 그래프와 입력란을 함께 비운다', async () => {
     // `useAsync` 는 새 응답이 올 때까지 이전 것을 들고 있다 — 키를 칠 때마다

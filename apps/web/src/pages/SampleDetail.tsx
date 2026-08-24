@@ -488,7 +488,7 @@ export function SampleDetail() {
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1 className="truncate">{sample.name}</h1>
+          <CellName sample={sample} onSaved={setOverride} />
           <div className="sub">
             {conditions.join('  ·  ') || '조건 미입력'}
             {/* 질량 하나가 이 셀의 모든 mAh/g 를 정한다.  누가 마지막으로
@@ -1061,6 +1061,110 @@ export function SampleDetail() {
         </div>
       </div>
     </main>
+  )
+}
+
+/** 셀 이름을 제목 자리에서 그대로 고친다.
+ *
+ *  이름은 이 셀을 부르는 유일한 이름이다 — 화면 어디에도 id 가 없다.  그래서
+ *  두 가지를 지킨다.
+ *
+ *  1. **빈 이름으로 저장하지 않는다.**  서버도 422 로 막지만(POST 와 같은
+ *     제약), 화면이 먼저 말해 줘야 왕복 한 번을 아낀다.
+ *  2. **실패하면 편집을 닫지 않는다.**  닫아 버리면 방금 친 이름이 사라지고,
+ *     화면에는 옛 이름이 그대로 있어 저장된 것처럼 보인다.
+ *
+ *  적용은 Enter 와 포커스 이탈, 취소는 Esc — 옆의 '기준 사이클' 과 같은 규칙이다. */
+function CellName({
+  sample,
+  onSaved,
+}: {
+  sample: Sample
+  onSaved: (updated: Sample) => void
+}) {
+  const [editing, setEditing] = useState(false)
+  const [draft, setDraft] = useState(sample.name)
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+
+  // 다른 사람이 이름을 고쳤을 수 있다.  편집 중에는 덮어쓰지 않는다 —
+  // 치고 있는 글자가 남의 저장에 지워지면 무엇을 잃었는지도 모른다.
+  useEffect(() => {
+    if (!editing) setDraft(sample.name)
+  }, [sample.name, editing])
+
+  const commit = async () => {
+    if (busy) return
+    const name = draft.trim()
+    if (!name) {
+      setError('이름은 비울 수 없습니다.')
+      return
+    }
+    if (name === sample.name) {
+      setEditing(false)
+      setError(null)
+      return
+    }
+    setBusy(true)
+    try {
+      onSaved(await api.updateSample(sample.id, { name }))
+      setEditing(false)
+      setError(null)
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (!editing) {
+    return (
+      <h1 className="truncate">
+        <button
+          type="button"
+          className="title-edit"
+          title="눌러서 이름 고치기"
+          onClick={() => {
+            setDraft(sample.name)
+            setError(null)
+            setEditing(true)
+          }}
+        >
+          {/* 이름이 길면 잘려야 한다 — 자르기는 글자를 들고 있는 칸에
+              걸어야 하고, inline-flex 인 버튼에 걸면 듣지 않는다. */}
+          <span className="truncate">{sample.name}</span>
+          <span className="pencil" aria-hidden="true">
+            ✎
+          </span>
+        </button>
+      </h1>
+    )
+  }
+
+  return (
+    <div className="col" style={{ gap: 4 }}>
+      <input
+        className="title-input"
+        aria-label="셀 이름"
+        autoFocus
+        value={draft}
+        disabled={busy}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={() => void commit()}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') {
+            event.preventDefault()
+            void commit()
+          }
+          if (event.key === 'Escape') {
+            setDraft(sample.name)
+            setError(null)
+            setEditing(false)
+          }
+        }}
+      />
+      {error ? <Alert kind="error">{error}</Alert> : null}
+    </div>
   )
 }
 

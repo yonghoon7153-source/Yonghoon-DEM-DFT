@@ -137,6 +137,32 @@ def test_an_empty_sample_name_is_rejected(client):
     assert client.post("/api/samples", json={"name": "   "}).status_code == 422
 
 
+def test_a_rename_cannot_blank_the_name(client, sample_id):
+    """The screen lets the title be edited in place; a blank must not land.
+
+    A nameless row is a link with nothing to click, and nothing else on the
+    library screen identifies the cell -- the id is never shown.  POST has
+    refused this since the beginning; PATCH used to let it through.
+    """
+    before = client.get(f"/api/samples/{sample_id}").json()["name"]
+    assert client.patch(f"/api/samples/{sample_id}", json={"name": "   "}).status_code == 422
+    assert client.get(f"/api/samples/{sample_id}").json()["name"] == before
+
+
+def test_a_rename_stores_the_trimmed_name(client, sample_id):
+    renamed = client.patch(f"/api/samples/{sample_id}",
+                           json={"name": "  No_7_dry  "}).json()
+    assert renamed["name"] == "No_7_dry"
+
+
+def test_a_new_sample_stores_the_trimmed_name(client):
+    """POST and PATCH have to agree on what gets stored, not just on what is
+    refused -- otherwise the same typed name sorts differently depending on
+    which door it came through."""
+    created = client.post("/api/samples", json={"name": "  No_8_dry  "}).json()
+    assert created["name"] == "No_8_dry"
+
+
 # --- 물리량 입력의 문지기 ----------------------------------------------------
 #
 # 여기가 데이터 계약의 입구다. 음수 질량과 NaN 은 wrdkit 이 뒤에서 걸러 주더라도

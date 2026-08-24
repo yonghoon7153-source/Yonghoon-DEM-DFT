@@ -107,6 +107,7 @@ def create_sample(payload: SampleIn, session: Session = Depends(get_session)):
     if payload.declared_state not in VALID_STATES:
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
     values = payload.model_dump(exclude={"composition", "composition_text"})
+    values["name"] = payload.name.strip()
     sample = Sample(**values)
     apply_composition(sample, payload.composition, payload.composition_text,
                       explicit_wt_percent=payload.active_wt_percent is not None)
@@ -131,6 +132,14 @@ def update_sample(sample_id: int, payload: SampleUpdate,
                                 exclude={"clear", "composition", "composition_text"})
     if "declared_state" in values and values["declared_state"] not in VALID_STATES:
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
+    # POST refuses an empty name; PATCH has to refuse it too.  A blank name
+    # leaves a row that is a link with nothing to click on every screen, and
+    # nothing else identifies the cell -- the id is not shown anywhere.
+    if "name" in values:
+        name = (values["name"] or "").strip()
+        if not name:
+            raise HTTPException(422, "sample name cannot be empty")
+        values["name"] = name
     reference = values.get("reference_cycle")
     if reference is not None and reference < 1:
         raise HTTPException(422, "reference_cycle must be 1 or greater")
