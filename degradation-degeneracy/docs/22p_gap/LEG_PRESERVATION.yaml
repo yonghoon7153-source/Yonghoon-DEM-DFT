@@ -64,8 +64,8 @@ cohorts:
       g1 과 전부 바이트 동일하다. 움직인 것은 identity 회계뿐이다.
     pin:
       schema_version: 3
-      compute_sha256: 1c36a92f11c6f856
-      row_projection_py_sha256: 923ba02d29e61928
+      compute_sha256: 45ebcdc85915413a
+      row_projection_py_sha256: 147c4b2f3a4ac6e0
       src_scoring_py_sha256: 69e69cb046f4b4ae
       analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
     runtime: {python: "3.11.15", pandas: "3.0.5", pyarrow: "25.0.1",
@@ -103,7 +103,7 @@ legs:
       #   commit SHA·실행 시각·dirty 여부는 stamp 로 뺐다 (그것들을 core 에
       #   두면 커밋된 영수증이 원리적으로 재생 불가능해진다).
       verification_receipt: docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml
-      verification_receipt_core_sha256: f0bae903e015a177fce820fda91326eb354fd600fa178da39b59fada3e86d3f9
+      verification_receipt_core_sha256: 350342d36585796a5fa354958789f59300765fbf4fef88830ed0b8b2c1cdfb7e
       verification_receipt_generator: docs/22p_gap/make_receipt.py
       empty_root_restore: true       # 원본 results/ 에 접근하지 않고 복원해 검증
       rescored_from_restored_fits: true

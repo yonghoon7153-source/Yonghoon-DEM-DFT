@@ -121,6 +121,28 @@ def _cell(v) -> str:
     return str(v)
 
 
+def score_canonical(df):
+    """정본 채점 경로. **여기 한 곳에서만 정의한다.**
+
+    ★ 자체 발견 — `make_receipt.py` 가 같은 네 단계를 각자 적고 있었다. 한쪽만
+      고치면 두 감사 도구가 서로 다른 것을 검증하게 되고, 그것을 알아차릴
+      방법이 없다. 회귀
+      `test_the_two_audit_tools_share_one_canonical_score_path` 가 복제를
+      막는다.
+
+    `ANALYSIS_SPEC["score_path"]` 의 문자열이 이 함수를 서술한다 — 둘이 갈리면
+    같은 회귀가 잡는다.
+    """
+    from src.scoring import (DEFAULT_TOL, add_error_columns,
+                             apply_bias_correction, classify_recoverability,
+                             clean_bias)
+
+    df = add_error_columns(df, DEFAULT_TOL)
+    df = classify_recoverability(df)
+    bias = clean_bias(df)
+    return apply_bias_correction(df, bias, DEFAULT_TOL)
+
+
 #: restart `source` 로 허용되는 값. 여기 없는 값은 코드가 바뀐 것이다.
 _RESTART_SOURCES = frozenset({"base_init", "warm", "random"})
 
@@ -262,7 +284,8 @@ def _add_multistart_blocks(df, summary: dict) -> None:
 #: 계산 닫힘의 **뿌리**. 여기서 출발해 실제로 읽는 module-level 이름을
 #: 따라가며 닫는다 — 목록에 손으로 적는 것은 이 여섯 개뿐이다.
 _COMPUTE_NAMES = ("_cell", "_restart_list", "_restart_facts",
-                  "_add_multistart_blocks", "_analyzer_provenance", "build")
+                  "_add_multistart_blocks", "_analyzer_provenance",
+                  "score_canonical", "build")
 
 
 def _compute_closure(src: str) -> dict[str, str]:
@@ -389,10 +412,7 @@ def build(leg: str, out: Path | None = None) -> dict:
     fits_bytes_sha = hashlib.sha256(fits_payload).hexdigest()
 
     df = pd.read_parquet(io.BytesIO(fits_payload))
-    df = add_error_columns(df, DEFAULT_TOL)
-    df = classify_recoverability(df)
-    bias = clean_bias(df)
-    df = apply_bias_correction(df, bias, DEFAULT_TOL)
+    df = score_canonical(df)
 
     src_col = df["restarts_json"] if "restarts_json" in df.columns else [None] * len(df)
     facts = [_restart_facts(v) for v in src_col]

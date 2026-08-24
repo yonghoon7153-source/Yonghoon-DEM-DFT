@@ -1,7 +1,7 @@
 schema_version: 2
 _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
   재생성을 확인한다.
-core_sha256: f0bae903e015a177fce820fda91326eb354fd600fa178da39b59fada3e86d3f9
+core_sha256: 350342d36585796a5fa354958789f59300765fbf4fef88830ed0b8b2c1cdfb7e
 core:
   leg_id: paired_fixed5_v4
   bundle:
@@ -65,7 +65,7 @@ core:
     src_io_sha256: fcef6c662f72ae6d
     src_scoring_sha256: 69e69cb046f4b4ae
     archive_bundle_sha256: 4b0b373997b1edaa
-    make_receipt_sha256: f97f79262ef2ce91
+    make_receipt_sha256: b595d352091fd03e
   outputs:
   - role: rescored_summary
     produced_from: restored fits.parquet only
@@ -73,19 +73,19 @@ core:
     n_rows: 6138
     semantic_schema: degeneracy-summary/v5
     canonicalizer: score-semantic/v1
-    semantic_sha256: 92f80586fec14f97436178a73e8b3920549cf0aa141c3a14acad660bdde47ed9
+    semantic_sha256: 302dc5733a905e83df28bef81926857c2ef4a0ebb3727242c744ad6c4a77d4c0
   - role: sealed_summary
     relative_path: degeneracy_summary.yaml
     byte_size: 9080
     file_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
     semantic_schema: degeneracy-summary/v5
     canonicalizer: score-semantic/v1
-    semantic_sha256: e4a5448ed906c34afcc4651ea42b5716ffdaa8494daf6e5122ba65320760c0ba
+    semantic_sha256: 2ca493a81ed65af4c1c78f0f09b03d5bc2852b43cf196ac61b068f98a74b465f
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: cedaf922e937a995aeb123c93a149d6253167b11
-  validator_tree_dirty: false
-  generated_at_utc: '2026-08-24T22:03:38Z'
+  validator_commit: 342229106aa7baca513fa3939ee78ba480586a5a
+  validator_tree_dirty: true
+  generated_at_utc: '2026-08-24T22:11:08Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v21-x86_64-with-glibc2.39

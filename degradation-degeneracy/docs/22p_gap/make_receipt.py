@@ -35,7 +35,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import json
 import os
 import platform
 import shutil
@@ -49,21 +48,52 @@ import yaml
 
 REPO = Path(__file__).resolve().parent.parent.parent
 RECEIPTS = REPO / "docs" / "22p_gap" / "receipts"
-sys.path.insert(0, str(REPO))
+sys.path.insert(0, str(REPO))          # `tools.` import 보다 **먼저** 와야 한다
+
+from tools.preserve import canonical_bytes    # noqa: E402
 
 #: 산출 manifest 의 semantic digest 규격. 표현이 바뀌어도 내용이 같으면 같다.
 CANONICALIZER = "score-semantic/v1"
+
+
+def _row_projection():
+    """정본 채점 경로를 가진 모듈. import 로 묶어 복제를 막는다."""
+    import importlib.util
+
+    src = REPO / "docs" / "22p_gap" / "row_projection.py"
+    spec = importlib.util.spec_from_file_location("_rp_receipt", src)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
 
 
 def _sha(p: Path) -> str:
     return hashlib.sha256(p.read_bytes()).hexdigest()
 
 
+def _plain(o):
+    """JSON 기본형으로만 이루어진 구조로 낮춘다 (numpy 스칼라 등)."""
+    if isinstance(o, dict):
+        return {str(k): _plain(v) for k, v in o.items()}
+    if isinstance(o, (list, tuple)):
+        return [_plain(v) for v in o]
+    if isinstance(o, bool) or o is None or isinstance(o, (int, str)):
+        return o
+    if isinstance(o, float):
+        return o
+    item = getattr(o, "item", None)                  # numpy 스칼라
+    return _plain(item()) if callable(item) else str(o)
+
+
 def _semantic(obj) -> str:
-    """dict → 정규 직렬화 digest. 키 순서·YAML 표현에 무관하다."""
-    return hashlib.sha256(
-        json.dumps(obj, sort_keys=True, ensure_ascii=False, default=str)
-        .encode("utf-8")).hexdigest()
+    """dict → 정규 직렬화 digest. 키 순서·YAML 표현에 무관하다.
+
+    ★ 자체 발견 — 초판은 여기서 직렬화를 **따로** 적었다 (기본 구분자).
+      `tools.preserve.canonical_bytes` 는 고정 구분자를 쓴다. 둘 다 산출
+      manifest 에 `canonicalizer: score-semantic/v1` 이라고 적었으므로 **한
+      버전 라벨이 두 바이트 스트림을 가리켰다.** 정규화는 한 곳이어야 한다.
+    """
+    return hashlib.sha256(canonical_bytes(_plain(obj))).hexdigest()
 
 
 def _git(*args: str) -> str:
@@ -180,18 +210,12 @@ def _score_manifest(run_dir: Path) -> list[dict]:
     """복원한 fits 만으로 재채점하고 산출을 두 digest 로 적는다."""
     import pandas as pd
 
-    from src.scoring import (DEFAULT_TOL, add_error_columns, apply_bias_correction,
-                             classify_recoverability, clean_bias, summarize)
+    from src.scoring import DEFAULT_TOL, summarize
 
     fits = run_dir / "fits.parquet"
     df = pd.read_parquet(fits)
-    # `row_projection.py` 와 **같은 정규 경로** — 여기서 갈리면 두 감사 도구가
-    # 다른 것을 검증하게 된다.
-    df = add_error_columns(df, DEFAULT_TOL)
-    df = classify_recoverability(df)
-    bias = clean_bias(df)
-    df = apply_bias_correction(df, bias, DEFAULT_TOL)
-    summary = summarize(df, DEFAULT_TOL)
+    # `row_projection.py` 의 **정본** 채점 경로를 그대로 부른다 — 복제하지 않는다.
+    summary = summarize(_row_projection().score_canonical(df), DEFAULT_TOL)
 
     out = [{
         "role": "rescored_summary",

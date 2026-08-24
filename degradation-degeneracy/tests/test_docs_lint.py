@@ -2253,9 +2253,19 @@ def test_status_axis_enums_have_exactly_one_authority():
         return (tok.endswith("_bundle") or "validated" in tok
                 or "canonical" in tok or tok.startswith("recorded_"))
 
+    # ★ 코드 이름은 상태 값이 아니다. `canonical_bytes` · `score_canonical` 은
+    #   실재하는 함수라 어휘장에 걸린다 — 저장소에 정의가 있으면 제외한다.
+    code_names: set[str] = set()
+    for py in sorted((_REPO / "tools").glob("*.py")) + \
+            sorted((_REPO / "docs" / "22p_gap").glob("*.py")):
+        code_names |= set(re.findall(r"(?m)^(?:def |class )([A-Za-z_]\w*)",
+                                     py.read_text(encoding="utf-8")))
+        code_names |= set(re.findall(r"(?m)^([A-Za-z_]\w*)\s*(?::[^=]+)?=",
+                                     py.read_text(encoding="utf-8")))
+
     stray = sorted({
         tok for tok in re.findall(r'"([a-z][a-z0-9]*(?:_[a-z0-9]+)+)"', src)
-        if tok not in allowed and looks_like_status(tok)
+        if tok not in allowed and tok not in code_names and looks_like_status(tok)
     })
     assert not stray, (
         "계약 §8 밖의 상태 토큰이 회귀 파일에 literal 로 박혀 있다: "
@@ -2824,3 +2834,49 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
         bad.append(f"지지 다리가 없는 활성 주장: {orphan}")
 
     assert not bad, "claim_roles 가 기계 계약이 아니다:\n  " + "\n  ".join(bad)
+
+
+def test_the_two_audit_tools_share_one_canonical_score_path():
+    """★ 자체 발견 — 감사 도구 둘이 채점 경로를 각자 적고 있었다.
+
+    `row_projection.py` 와 `make_receipt.py` 가 둘 다
+    `add_error_columns → classify_recoverability → clean_bias →
+    apply_bias_correction → summarize` 를 인라인으로 적었다. 한쪽만 고치면
+    **두 감사 도구가 서로 다른 것을 검증**하게 되고, 그것을 알아차릴 방법이
+    없다 — 24차 보충 Q5 가 경고한 구조적 복제의 실물이다.
+
+    (초판에 "여기서 갈리면 두 감사 도구가 다른 것을 검증하게 된다" 는 주석까지
+    달아 놓고 복제를 남겼다. 주석은 강제가 아니다.)
+    """
+    rp = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    mr = (_REPO / "docs" / "22p_gap" / "make_receipt.py").read_text(encoding="utf-8")
+
+    assert "def score_canonical(" in rp, (
+        "`row_projection.py` 에 정본 채점 경로 함수가 없다")
+    assert "score_canonical" in mr, (
+        "`make_receipt.py` 가 정본 채점 경로를 쓰지 않는다")
+
+    # 파이프라인 단계를 **각자** 부르는 곳이 둘 이상이면 복제다
+    steps = ("add_error_columns", "classify_recoverability", "clean_bias",
+             "apply_bias_correction")
+    for step in steps:
+        assert f"{step}(" not in mr, (
+            f"`make_receipt.py` 가 `{step}` 를 직접 부른다 — "
+            "`score_canonical` 하나만 부르게 하라")
+        assert rp.count(f"{step}(") <= 2, (
+            f"`row_projection.py` 안에서도 `{step}` 가 여러 번 불린다")
+
+
+def test_semantic_digests_use_one_canonicalization():
+    """★ 자체 발견 — 같은 `score-semantic/v1` 이 두 바이트 스트림을 뜻했다.
+
+    `make_receipt._semantic` 은 기본 구분자(`", "` `": "`)로, `preserve.
+    canonical_bytes` 는 고정 구분자(`","` `":"`)로 직렬화했다. 둘 다 산출
+    manifest 에 `canonicalizer: score-semantic/v1` 이라고 적었다 — **한 버전
+    라벨이 두 규격을 가리켰다.** 나중에 두 digest 를 대조하면 영원히 다르다.
+    """
+    mr = (_REPO / "docs" / "22p_gap" / "make_receipt.py").read_text(encoding="utf-8")
+    assert "canonical_bytes" in mr, (
+        "`make_receipt.py` 가 `tools.preserve.canonical_bytes` 를 쓰지 않는다")
+    assert "json.dumps(" not in mr, (
+        "`make_receipt.py` 가 직렬화를 따로 적는다 — 정규화는 한 곳이어야 한다")
