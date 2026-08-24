@@ -50,10 +50,21 @@ contains "000 은 상대 쪽 가능성을 남긴다" \
 contains "빈 코드도 000 과 같이 다룬다" \
   "$(tunnel_code_meaning "")" "이 기계가"
 
-# 5xx 는 반대다 — 우리는 나갔고, 터널 쪽이 아직 우리 서버에 못 붙었다.
-# Cloudflare 는 530, localhost.run 은 502 를 준다.
-contains "530 은 터널이 못 붙었다고 말한다" "$(tunnel_code_meaning 530)" "붙지 못했습니다"
-contains "502 도 같은 갈래다"               "$(tunnel_code_meaning 502)" "붙지 못했습니다"
+# 5xx 는 반대다 — 우리는 나갔고, 제공자가 뒤에서 응답을 못 받았다.
+# Cloudflare 는 530, localhost.run 은 502·503 을 준다.
+#
+# 그런데 그 코드가 가르는 것은 거기까지다.  터널이 끊긴 것인지 그 뒤의 서버가
+# 안 떠 있는 것인지는 **둘 다 503** 이라 구분되지 않는다.  한쪽으로 단정하면
+# 나머지 절반의 사람에게 틀린 절차를 시킨다 (실측 2026-08-24: 방금 연 터널이
+# 503 이었고, 끊긴 것은 터널이 아니라 서버였다).
+for code in 502 503 530; do
+  contains "$code 는 뒤에서 응답이 없다고 말한다" \
+    "$(tunnel_code_meaning "$code")" "아무 응답도 못 받았습니다"
+  case "$(tunnel_code_meaning "$code")" in
+    *"터널이 끊겼거나"*) pass=$((pass + 1)); printf '  ok   %s 는 둘 다 가능하다고 말한다\n' "$code" ;;
+    *) fail=$((fail + 1)); printf '  FAIL %s 가 한쪽으로 단정한다\n' "$code" ;;
+  esac
+done
 contains "404 는 엉뚱한 서버라고 말한다"     "$(tunnel_code_meaning 404)" "우리 서버가 아닙니다"
 contains "429 는 사용량 제한이라고 말한다"   "$(tunnel_code_meaning 429)" "제한"
 
@@ -293,13 +304,29 @@ check "LAN 주소는 당연히 아니다"   "$(is_our_tunnel_url http://192.168.
 check "이름만 비슷한 것은 아니다"  "$(is_our_tunnel_url https://evil-lhr.life.example.com && echo yes || echo no)" "no"
 
 echo
-echo "503 은 짐작이 아니라 확정 신호다"
-# 실측: 노트북에서 bmlout 이 HTTP 503 을 받았고, 중추 서버의 터널이 정말
-# 끊겨 있었다.  이름도 잡히고 TLS 도 됐는데 제공자가 "뒤에 아무도 없다" 고
-# 답한 것이다.  그때 점검표를 훑게 하면 안 되는 일에 시간을 쓴다.
+echo "503 은 확정 신호지만, 무엇이 끊겼는지까지는 아니다"
+# 두 번 겪었고 원인이 서로 달랐다.
+#   1차: 중추 서버의 터널이 정말 끊겨 있었다.
+#   2차(2026-08-24): 방금 연 터널이 503 이었고, 끊긴 것은 **서버** 였다.
+# 화면에서 둘은 똑같다.  그래서 단정하지 않고, **값싼 확인을 먼저** 시킨다 --
+# status 는 아무것도 안 바꾸고, 터널을 다시 여는 것은 주소를 잃는다.
 DEAD="$( http_code_of() { printf '503'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
-check "터널이 끊겼다고 말한다"     "$(printf '%s\n' "$DEAD" | grep -c '뒤에 서버가 없습니다')" "1"
-check "다시 여는 명령을 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
+check "응답이 없다고 말한다"       "$(printf '%s\n' "$DEAD" | grep -c '뒤에서 응답이 없습니다')" "1"
+check "둘 다 가능하다고 말한다"    "$(printf '%s\n' "$DEAD" | grep -c '구분되지 않습니다')" "1"
+# 순서가 요점이다.  bml status 가 bml share stop 보다 먼저 나와야 한다.
+STATUS_LINE="$(printf '%s\n' "$DEAD" | grep -n 'bml status' | head -1 | cut -d: -f1)"
+SHARE_LINE="$(printf '%s\n' "$DEAD" | grep -n 'bml share stop' | head -1 | cut -d: -f1)"
+if [ -n "$STATUS_LINE" ] && [ -n "$SHARE_LINE" ] && [ "$STATUS_LINE" -lt "$SHARE_LINE" ]; then
+  pass=$((pass + 1)); printf '  ok   값싼 확인(status)을 먼저 시킨다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 주소를 잃는 절차를 먼저 시킨다 (status %s, share %s)\n' \
+    "${STATUS_LINE:-없음}" "${SHARE_LINE:-없음}"
+fi
+# 서버가 내려간 경우에는 주소가 안 바뀐다는 것도 말해야 한다 -- 안 그러면
+# 습관대로 터널부터 다시 연다.
+check "서버만 띄우면 주소가 그대로임을 말한다" \
+  "$(printf '%s\n' "$DEAD" | grep -c '주소도 그대로')" "1"
+check "다시 여는 명령도 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
 check "점검표를 훑게 하지 않는다"  "$(printf '%s\n' "$DEAD" | grep -c '중추 서버 쪽에서 순서대로')" "0"
 # 확정 코드가 있으면 curl 의 첫 대답은 안 찍는다.  두 번 물어보면 답이 다를 수
 # 있어서, 실제 화면에 `HTTP 000` 바로 밑에 `(HTTP 503)` 이 나란히 찍혔다 —
