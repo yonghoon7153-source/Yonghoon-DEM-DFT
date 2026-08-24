@@ -1,7 +1,7 @@
 ---
 title: wsl setup
 created: 2026-08-20
-updated: 2026-08-20
+updated: 2026-08-24
 type: guide
 tags: [tooling, workflow, wsl]
 sources: [docs/guides/bml-command.md]
@@ -96,6 +96,48 @@ WSL2 인지 확인하세요 (WSL1 은 네트워크·성능이 다릅니다):
 ```powershell
 wsl -l -v          # VERSION 이 2 여야 합니다
 wsl --set-version Ubuntu 2   # 1 이면 변환
+```
+
+### `WslRegisterDistribution failed with error: 0x80370114`
+
+**가상화가 꺼져 있다는 뜻입니다.** Windows 를 새로 깐 직후에 가장 흔합니다 —
+설치 관리자가 기능을 다 켜 주지 않고, BIOS 설정도 초기화되기 때문입니다.
+오류 메시지에는 "가상화" 라는 말이 한 번도 안 나와서 원인이 안 보입니다.
+
+**순서대로** 확인하세요. 아래를 건너뛰고 위만 고치면 같은 오류가 그대로 납니다.
+
+**1) CPU 수준에서 켜져 있는가** — 작업 관리자 → 성능 → CPU → 오른쪽 아래
+**"가상화"**.
+
+- `사용 안 함` → BIOS/UEFI 문제입니다. 재부팅해서 진입(보통 `Del` 또는 `F2`),
+  `Intel VT-x` · `SVM Mode`(AMD) · `Virtualization Technology` 를 **Enabled**.
+  이게 꺼져 있으면 아래 것들은 아무 소용이 없습니다.
+- `사용` → 2)로.
+
+**2) Windows 기능** — 관리자 PowerShell:
+
+```powershell
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+bcdedit /set hypervisorlaunchtype auto
+```
+
+**세 번째 줄이 자주 빠지는 부분입니다.** 일부 게임 안티치트와 "최적화" 도구가
+하이퍼바이저를 꺼 두는데, 그러면 1)·2)가 멀쩡해도 같은 오류가 납니다.
+
+**재부팅합니다** (필수). 그다음:
+
+```powershell
+wsl --update
+wsl --set-default-version 2
+wsl --install -d Ubuntu
+```
+
+그래도 안 되면 `wsl --status` 와 `systeminfo | findstr /i "hyper"` 를 봅니다.
+Windows **홈** 에디션이면 하이퍼바이저 플랫폼이 따로 필요할 수 있습니다:
+
+```powershell
+dism.exe /online /enable-feature /featurename:HypervisorPlatform /all /norestart
 ```
 
 ## 1. 필요한 패키지
@@ -263,6 +305,11 @@ setx BML_WSL_DISTRO Ubuntu
 ```
 
 ## 안 될 때
+
+**`WslRegisterDistribution failed with error: 0x80370114`**
+: WSL 이 아직 없는 상태입니다 — 가상화가 꺼져 있습니다. 0번 절의
+  "가상화가 꺼져 있다는 뜻입니다" 를 순서대로 보세요. 작업 관리자 →
+  성능 → CPU 의 **"가상화"** 부터 확인합니다.
 
 **`bml: command not found`**
 : 두 가지 중 하나입니다.

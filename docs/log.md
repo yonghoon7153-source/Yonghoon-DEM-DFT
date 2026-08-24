@@ -707,3 +707,29 @@ ADR            15건       (0015 포함)
 `chart-v2.js` 는 해시가 아니다 — 테스트가 그 목록을 고정한다.
 
 `test_web_serving.py` 4건 추가 (12 → 16건).
+
+## [2026-08-24] docs | WSL 설치가 0x80370114 로 죽을 때
+데스크톱(중추 서버) Windows 를 새로 깔고 `wsl --install` 을 했더니
+`WslRegisterDistribution failed with error: 0x80370114` 로 멈췄다. 가상화가
+꺼져 있다는 뜻인데, **오류 메시지에 "가상화" 라는 말이 한 번도 안 나온다** —
+`python3-venv` 때와 같은 종류의 함정이다 (증상이 원인을 안 가리킨다).
+
+새로 깐 직후에 가장 흔한 이유가 둘이다: 설치 관리자가 Windows 기능을 다 켜
+주지 않고, BIOS 설정이 초기화되면서 VT-x/SVM 도 같이 꺼진다.
+
+`docs/guides/wsl-setup.md` 0번 절에 **순서대로** 적었다. 순서가 중요하다 —
+아래(BIOS)를 건너뛰고 위(Windows 기능)만 고치면 같은 오류가 그대로 난다.
+
+1. 작업 관리자 → 성능 → CPU 의 **"가상화"** 부터. `사용 안 함` 이면 BIOS 문제.
+2. `Microsoft-Windows-Subsystem-Linux` + `VirtualMachinePlatform` +
+   **`bcdedit /set hypervisorlaunchtype auto`**. 세 번째 줄이 자주 빠진다 —
+   일부 게임 안티치트와 "최적화" 도구가 하이퍼바이저를 꺼 두기 때문에, 1·2 가
+   멀쩡해도 같은 오류가 난다.
+3. Windows 홈 에디션이면 `HypervisorPlatform` 이 따로 필요할 수 있다.
+
+"안 될 때" 절에도 한 줄 걸었다 — 사람이 오류 문구를 검색해서 오는 자리다.
+
+곁들여: 그 PC 의 데이터는 외장(T7 Shield, WSL 에서 `/mnt/d`)으로 옮겨 뒀다.
+복구할 때 `WORKBENCH_DATA=/mnt/d/bml-data` 로 두면 다음에 OS 를 갈아엎어도
+데이터는 그대로다 — 이번에 `C:` 에 있던 것을 손으로 건져 내야 했던 이유가
+그것이다.
