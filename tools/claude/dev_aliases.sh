@@ -34,10 +34,19 @@ export DFT_REPO DFT_BRANCH DFT_PORT
 # ── 안전 가드 ────────────────────────────────────────────────────────────────
 # ⚠ 서버에서는 `git reset --hard` 를 쓴다(읽기 전용 소비자라 잃을 게 없다). 로컬은
 #   다르다 — 여기서 같은 걸 하면 **손댄 것이 말없이 사라진다.** 더러우면 멈춘다.
-_dft_tree_clean() {          # $1 = repo 경로.  0 = 깨끗함, 1 = 변경 있음, 2 = repo 아님
-  local r="${1:-$DFT_REPO}"
+# ⛔ 2026-08-25 실측 — 첫 판은 **untracked 까지 막았다.** `git reset --hard` 는
+#   추적 중인 파일만 되돌린다 — untracked 는 손도 안 댄다. 그런데 가드가 둘을 안 갈라서,
+#   다른 브랜치가 남긴 .bml/ · apps/ · data/ · packages/ 때문에 dftpull 이 영영 막혔다.
+#   (그 상태로는 "이걸 무시하게 해주는 .gitignore" 조차 못 받는다 — 자기가 자기를 막는다.)
+#   위험한 건 **추적 파일의 수정**뿐이다. 그것만 막고 untracked 는 알려만 준다.
+_dft_tree_clean() {          # $1 = repo.  0 깨끗 · 1 추적파일 수정(위험) · 2 repo 아님 · 3 untracked만(안전)
+  local r="${1:-$DFT_REPO}" st
   git -C "$r" rev-parse --git-dir >/dev/null 2>&1 || return 2
-  [ -z "$(git -C "$r" status --porcelain 2>/dev/null)" ]
+  st="$(git -C "$r" status --porcelain 2>/dev/null)"
+  [ -z "$st" ] && return 0
+  # '??' 로 시작하지 않는 줄 = 추적 파일의 수정/스테이지 → reset --hard 가 지운다
+  printf '%s\n' "$st" | grep -qv '^??' && return 1
+  return 3
 }
 
 # ── 명령 ─────────────────────────────────────────────────────────────────────
@@ -47,14 +56,19 @@ dftpull() {                  # 최신 받기. -f 를 줘야만 로컬 변경을 
   local force=0
   [ "${1:-}" = "-f" ] && force=1
   git -C "$DFT_REPO" fetch origin "$DFT_BRANCH" || return 1
-  if ! _dft_tree_clean "$DFT_REPO"; then
-    if [ "$force" = 0 ]; then
-      echo "⛔ 로컬에 변경이 있다 — 그냥 덮으면 사라진다. 먼저 보라:"
-      git -C "$DFT_REPO" status --short
-      echo "   버려도 되면:  dftpull -f"
-      return 1
-    fi
-    echo "⚠ -f — 아래 변경을 버린다:"; git -C "$DFT_REPO" status --short
+  _dft_tree_clean "$DFT_REPO"; local st=$?
+  if [ "$st" = 2 ]; then echo "⛔ git repo 가 아니다: $DFT_REPO"; return 1; fi
+  if [ "$st" = 1 ] && [ "$force" = 0 ]; then
+    echo "⛔ **추적 파일에 수정이 있다** — reset 하면 사라진다. 먼저 보라:"
+    git -C "$DFT_REPO" status --short | grep -v '^??'
+    echo "   버려도 되면:  dftpull -f"
+    return 1
+  fi
+  [ "$st" = 1 ] && { echo "⚠ -f — 아래 수정을 버린다:"; git -C "$DFT_REPO" status --short | grep -v '^??'; }
+  # untracked 는 reset --hard 가 건드리지 않는다. 막지 않고 알려만 준다.
+  if [ "$st" = 3 ] || [ "$force" = 1 ]; then
+    local n; n=$(git -C "$DFT_REPO" status --porcelain | grep -c '^??')
+    [ "${n:-0}" -gt 0 ] && echo "· untracked ${n}건은 그대로 둔다 (reset 대상 아님)"
   fi
   git -C "$DFT_REPO" reset --hard FETCH_HEAD && \
     git -C "$DFT_REPO" log --oneline -1
@@ -178,14 +192,21 @@ if [ "${1:-}" = "--selftest" ]; then
   _dft_tree_clean "$T" && say "✓" "④ 깨끗한 트리 → 0" || say "✗" "④ 깨끗한데 더럽다고 했다"
   # [음성] ★ 이 한 줄이 이 파일의 존재 이유다 — 더러운 트리를 깨끗하다고 하면
   #   dftpull 이 손댄 것을 말없이 버린다
+  # ★ untracked 만 있는 경우는 **막으면 안 된다** — reset --hard 가 안 건드리기 때문이다.
+  #   (첫 판이 여기서 막혀, 그 막힘을 푸는 .gitignore 조차 못 받는 자물쇠가 됐다)
   echo dirty > "$T/dirty.txt"
-  _dft_tree_clean "$T" && say "✗" "⑤ **더러운 트리를 깨끗하다고 했다** — dftpull 이 변경을 버린다" \
-                       || say "✓" "⑤ 더러운 트리 → 1 (dftpull 이 멈춘다)"
-  # [음성] 추적 중인 파일을 고친 경우도 잡아야 한다 (untracked 만 보면 놓친다)
+  _dft_tree_clean "$T"; [ "$?" = 3 ] && say "✓" "⑤ untracked 만 → 3 (통과시킨다)" \
+                                     || say "✗" "⑤ untracked 를 위험으로 오판 — dftpull 이 영영 막힌다"
+  # [음성] 추적 중인 파일의 수정은 **반드시** 막아야 한다 (이건 reset 이 지운다)
   rm -f "$T/dirty.txt"; echo v1 > "$T/f.txt"
   git -C "$T" add f.txt 2>/dev/null; git -C "$T" -c user.email=a@b -c user.name=a commit -q -m f 2>/dev/null
   echo v2 > "$T/f.txt"
-  _dft_tree_clean "$T" && say "✗" "⑥ 추적 파일 수정을 못 잡았다" || say "✓" "⑥ 추적 파일 수정 → 1"
+  _dft_tree_clean "$T"; [ "$?" = 1 ] && say "✓" "⑥ 추적 파일 수정 → 1 (막는다)" \
+                                     || say "✗" "⑥ **추적 파일 수정을 못 잡았다** — 수정이 사라진다"
+  # [음성] 추적 수정 + untracked 가 섞이면 **위험 쪽**으로 판정해야 한다
+  echo also > "$T/untracked2.txt"
+  _dft_tree_clean "$T"; [ "$?" = 1 ] && say "✓" "⑦ 수정+untracked 혼재 → 1 (안전측)" \
+                                     || say "✗" "⑦ 혼재인데 통과시켰다 — 수정이 사라진다"
   rm -rf "$T"
   [ "$ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ selftest 실패"; exit 1; }
 fi

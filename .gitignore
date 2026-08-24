@@ -51,7 +51,14 @@ db/*.tmp*
 
 # ── 다른 브랜치(충방전 webapp)의 로컬 런타임 산출물 (2026-08-25) ────────────
 #   브랜치를 오가면 이 두 개가 untracked 로 남아 dftpull 가드에 매번 걸린다.
-#   .bml/ = pid·로그·터널 상태 + 내려받은 cloudflared 바이너리 (전부 재생성물)
-#   apps/ = 그 앱 소스는 해당 브랜치에 추적돼 있고, 여기 남는 건 __pycache__ 류다
+#   .bml/     = pid·로그·터널 상태 + 내려받은 cloudflared 바이너리 (전부 재생성물)
+#   apps/     = 그 앱 소스는 해당 브랜치에 추적돼 있고, 여기 남는 건 __pycache__ 류다
+#   packages/ = 같은 앱의 공유 패키지
+#   data/workbench.db = 그 앱의 로컬 SQLite. ⚠ 유일본일 수 있으니 지우지 말 것 —
+#               무시만 한다(무시 ≠ 삭제). 옮길 거면 해당 브랜치에서 판단한다.
+#   ⛔ `data/` 를 통째로 무시하면 안 된다 — **우리 브랜치가 그 밑을 추적한다**
+#     (data/lpscl_bulk.cif · data/doping_screening/…). 파일 하나만 집는다.
 .bml/
 apps/
+packages/
+data/workbench.db
