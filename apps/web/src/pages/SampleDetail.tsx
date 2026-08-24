@@ -193,6 +193,7 @@ export function SampleDetail() {
         // 파선은 이미 충전/방전을 가르는 데 쓰고 있으므로, 숫자 없는 곡선은
         // 가늘게 그린다.  이름표에 이유가 붙어 있어 둘이 겹치지 않는다.
         width: partial ? 1.0 : undefined,
+        partial,
         hidden: hidden.includes(label),
       }
     })
@@ -738,7 +739,7 @@ export function SampleDetail() {
                       .slice(0, 4)
                       .map((item) => `${item.cycle}번 ${ko.partialReason(item.reason)}`)
                       .join(' · ')}
-                    {partialCycles.length > 4 ? ` 외 ${partialCycles.length - 4}` : ''}
+                    {partialCycles.length > 4 ? ` 외 ${partialCycles.length - 4}개` : ''}
                     {' — 곡선은 실측이지만 사이클 용량은 나오지 않습니다'}
                   </span>
                 </div>

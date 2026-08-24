@@ -22,6 +22,12 @@ export interface PlotSeries {
   width?: number
   points?: boolean
   hidden?: boolean
+  /** 숫자가 안 나오는 곡선 (잘렸거나 한쪽 브랜치가 없다).
+   *
+   *  선 굵기만으로 가르면 정적 캡처에서 사라진다 -- 1.0px 과 1.6px 은 인쇄물이나
+   *  스크린샷에서 구분되지 않고, 범례 색칠에는 굵기가 아예 반영되지 않았다.
+   *  이 표시가 범례 조각과 접힌 범례의 안내까지 따라간다. */
+  partial?: boolean
   /** Draw across x positions this series has no sample at.  Defaults to true. */
   spanGaps?: boolean
 }
@@ -830,6 +836,7 @@ export function oneRowHeight(
 export function PlotLegend({ series, onToggle }: LegendProps) {
   const [open, setOpen] = useState(false)
   const { box, rowHeight, overflows } = useOneRowClamp(series.length)
+  const partialCount = series.filter((item) => item.partial).length
   if (series.length <= 1) return null
   const clamp = !open && overflows && rowHeight !== null
   return (
@@ -841,7 +848,12 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
           onClick={() => setOpen((was) => !was)}
           aria-expanded={open}
         >
-          {open ? `범례 접기 (${series.length}개)` : `범례 전부 보기 (${series.length}개)`}
+          {(open ? '범례 접기' : '범례 전부 보기')
+            + ` (${series.length}개`
+            // 접혀 있으면 부분 곡선이 통째로 안 보일 수 있다.  몇 개가 그런
+            // 곡선인지라도 말해 주면, 캡처만 보는 사람이 속지 않는다.
+            + (partialCount ? ` · 부분 ${partialCount}개` : '')
+            + ')'}
         </button>
       ) : null}
       <div
@@ -858,7 +870,7 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
           title={item.hidden ? '표시' : '숨기기'}
         >
           <span
-            className={`swatch${item.dash ? ' dashed' : ''}`}
+            className={`swatch${item.dash ? ' dashed' : ''}${item.partial ? ' thin' : ''}`}
             style={
               item.dash
                 ? { color: seriesToken(item.color, index), background: 'transparent' }

@@ -736,6 +736,10 @@ tbody tr:last-child td { border-bottom: none; }
 .legend-chip .swatch.dashed {
   background-image: repeating-linear-gradient(90deg, currentColor 0 3px, transparent 3px 5px);
 }
+/* 숫자가 안 나오는 곡선.  그래프에서 가늘게 그리는 것을 색칠도 따라간다 --
+   안 그러면 이름표를 읽기 전에는 범례에서 구분되지 않고, 접힌 범례나 캡처에서는
+   이름표를 읽을 기회 자체가 없다. */
+.legend-chip .swatch.thin { height: 1px; opacity: 0.75; }
 .legend-chip.off { opacity: 0.38; }
 
 .sparkline { display: block; }

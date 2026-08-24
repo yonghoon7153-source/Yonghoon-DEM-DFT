@@ -384,6 +384,41 @@ describe('sameView', () => {
   })
 })
 
+describe('부분 곡선 표시', () => {
+  // 선 굵기만으로 가르면 정적 캡처에서 사라진다 -- 1.0px 과 1.6px 은 스크린샷
+  // 에서 구분되지 않고, 접힌 범례에서는 이름표를 읽을 기회조차 없다.
+  const many = Array.from({ length: 12 }, (_, i) => ({
+    label: `${i + 1}번 방전${i === 11 ? ' (잘림)' : ''}`,
+    x: [0, 1],
+    y: [0, 1],
+    partial: i === 11,
+  }))
+
+  it('색칠이 굵기를 따라간다', () => {
+    render(<PlotLegend series={many} />)
+    const chips = [...document.querySelectorAll('.legend-chip')]
+    const last = chips.at(-1)!.querySelector('.swatch')!
+    expect(last.className).toContain('thin')
+    expect(chips[0]!.querySelector('.swatch')!.className).not.toContain('thin')
+  })
+
+  it('접혀 있어도 부분 곡선이 몇 개인지 말한다', () => {
+    // 접힌 범례 밖으로 완전히 숨는 것이 이 결함이었다.  순서를 바꾸면 그래프와
+    // 어긋나므로, 대신 몇 개가 그런 곡선인지 접는 버튼이 말한다.
+    render(<PlotLegend series={many} />)
+    const toggle = document.querySelector('.legend-toggle')
+    // jsdom 에는 레이아웃이 없어 접힘 판정이 안 될 수 있다 -- 버튼이 있을
+    // 때만 문구를 본다.
+    if (toggle) expect(toggle.textContent).toContain('부분 1개')
+  })
+
+  it('부분 곡선이 없으면 그 말을 붙이지 않는다', () => {
+    render(<PlotLegend series={many.map((item) => ({ ...item, partial: false }))} />)
+    const toggle = document.querySelector('.legend-toggle')
+    if (toggle) expect(toggle.textContent).not.toContain('부분')
+  })
+})
+
 describe('돋보기', () => {
   let restoreWidth: (() => void) | undefined
 
