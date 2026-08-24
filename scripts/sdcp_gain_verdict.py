@@ -64,18 +64,30 @@ PREREG = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'
 #       침대 세대)가 **두 디렉터리 사이에서 자유롭게 달라져도 `measured` 를 냈다**
 #       (Codex 실측: `sigma_am_s_S_cm` 0.010→0.020 이 통과).  ⇒ 여기서 한 번에 정한다.
 FIELD_CONTRACT = {
-    'vox':                  dict(scope='physics', across_dir=True, required=True),
-    'bridge_um':            dict(scope='physics', across_dir=True, required=True),
-    'fibre_stamp':          dict(scope='physics', across_dir=True, required=True),
-    'sdcp_stamp':           dict(scope='physics', across_dir=True, required=True),
-    'sdcp_sphere_d_um':     dict(scope='physics', across_dir=True, required=True),
-    'sigma_vgcf_S_cm':      dict(scope='physics', across_dir=True, required=True),
-    'sigma_sdcp_S_cm':      dict(scope='physics', across_dir=True, required=True),
-    'sdcp_yield_to_vgcf':   dict(scope='physics', across_dir=True, required=True),
-    'sigma_ptfe_S_cm':      dict(scope='physics', across_dir=True, required=True),
-    'ptfe_stamp':           dict(scope='physics', across_dir=True, required=True),
-    'ptfe_zero_dof':        dict(scope='physics', across_dir=True, required=True),
-    'backend':              dict(scope='numeric', across_dir=True, required=True),
+    'vox':                  dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-12'),
+    'bridge_um':            dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-20'),
+    'fibre_stamp':          dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-12'),
+    'sdcp_stamp':           dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-16'),
+    'sdcp_sphere_d_um':     dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-16'),
+    'sigma_vgcf_S_cm':      dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-20'),
+    'sigma_sdcp_S_cm':      dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-20'),
+    'sdcp_yield_to_vgcf':   dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-18'),
+    'sigma_ptfe_S_cm':      dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-20'),
+    'ptfe_stamp':           dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-24'),
+    'ptfe_zero_dof':        dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-24'),
+    'backend':              dict(scope='numeric', across_dir=True, required=True,
+                            required_since='2026-08-20'),
     # ── 세대 인자 (옛 `_GEN_FIELDS`) — 전부 physics 다.  섞이면 다른 실험이다. ──
     'sigma_ion_se_S_cm':    dict(scope='physics', across_dir=True),
     'sigma_ion_sdcp_S_cm':  dict(scope='physics', across_dir=True),
@@ -96,7 +108,8 @@ FIELD_CONTRACT = {
     #  ★★ 2026-08-25 (CDXR3-3) — **물리 규약 정체성**.  적용된 인자들에서 파생된 해시라
     #    개별 필드가 하나라도 다르면 이것도 달라진다 = 요약 봉인.  required 로 둔다 —
     #    기록이 없으면 어느 규약인지 확정할 수 없다.
-    'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True),
+    'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
     #  요청↔적용 불일치 (payload 가 기록).  False 면 그 팔은 요청과 다른 규약으로 돌았다.
     'physics_protocol_match': dict(scope='physics', across_dir=True),
 }
@@ -304,18 +317,36 @@ def seal_lines(v):
     return ok, out
 
 
-def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
-            require_digest=False):
-    """prereg §5 판정.  **순서를 바꾸지 말 것.**
+def validate_contract(arms, seed_ensemble=False, require_arms=None,
+                      require_ionic=False, require_digest=False, where=''):
+    """`_validate_contract_raw` 에 **어디서 깨졌는지** 접두사를 붙인다.
 
-    `seed_ensemble=True` 는 **`mpm_seed` 하나만** 고정 인자에서 면제한다 (코팅처럼 시딩
-    자체가 확률적인 축을 잴 때).  ⚠ prereg 에 그렇게 등록한 경우에만 쓸 것 — 나머지
-    인자는 그대로 고정이고, 면제 사실은 판정 출력에 남는다.
+    ⚠ 얇은 껍질인 이유: 사유 문자열이 21곳에서 만들어지므로 각 자리에 접두사를 심으면
+      또 갈라진다.  한 자리에서 붙인다."""
+    _h, _info = _validate_contract_raw(arms, seed_ensemble=seed_ensemble,
+                                       require_arms=require_arms,
+                                       require_ionic=require_ionic,
+                                       require_digest=require_digest)
+    if _h and where and _h.get('reason'):
+        _h = dict(_h, reason=f'[{where}] ' + _h['reason'])
+    return _h, _info
+
+
+def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
+                           require_ionic=False, require_digest=False):
+    """한 디렉터리의 **실행 계약 검증**.  통과면 `(None, info)` · 위반이면 `(hold, info)`.
+
+    ★★★ 왜 떼어냈나 (2026-08-25, Codex 재리뷰 조건 5): 이 검사들이 `verdict()` 안에
+      인라인이라 **`compare_dirs()` 는 하나도 돌리지 않았다**.  두 디렉터리를 빼는 실험은
+      각 디렉터리가 먼저 계약을 만족해야 하는데, 옛 판은 origin 짝·digest·`_XDIR_FIELDS`
+      만 보고 **미수렴·세대혼합·규약 불명·필수 필드 부재를 전부 통과**시켰다.
+      ⇒ `verdict` 와 `compare_dirs` 가 **같은 함수**를 부른다.  검사 목록이 갈라질 자리가
+        없어진다 (`_FIXED_FIELDS` 가 세 곳에 하드코딩돼 있던 것과 같은 부류의 결함).
+
+    ⚠ 순서는 prereg §5 의 전제 집행 순서 그대로다 — **바꾸지 말 것**.
+    ⚠ `where` 는 사유 문자열의 접두사다 (어느 디렉터리가 깼는지 말해 준다).
     """
-    out = {'prereg': PREREG, 'thresholds': {
-        'h0_min_ratio': H0_MIN_RATIO, 'h1_ratio': H1_RATIO,
-        'undecided': [UNDECIDED_LO, UNDECIDED_HI],
-                  'se_max_rel_pct': SE_MAX_REL_PCT, 'se_max_pct': SE_MAX_REL_PCT}}
+    info = {}
     # ① 미수렴 — 하나라도 있으면 보류.  ★ **fail-closed**: 수렴 정보가 **없어도** 보류한다.
     #   실사고 2026-08-16: `cg_info` 를 안 싣는 payload 를 None 으로 읽고 통과시켰다 =
     #   fail-open.  "확인 못 했다" 와 "확인했고 괜찮다" 는 다르다.
@@ -327,15 +358,15 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
             elif r.get('cg_info') is None and r.get('cg_resid') is None:
                 unknown.append(r['file'])
     if unconv:
-        return dict(out, decision='HOLD',
+        return dict(decision='HOLD',
                     reason=f'미수렴 팔 {len(unconv)}개 — prereg §5-1 (판정 보류)',
-                    unconverged=unconv)
+                    unconverged=unconv), info
     if unknown:
-        return dict(out, decision='HOLD',
+        return dict(decision='HOLD',
                     reason=f'수렴 정보 없는 팔 {len(unknown)}개 — 확인 못 한 것을 통과시키지 '
                            f'않는다 (fail-closed).  payload 가 cg_info/cg_resid 를 싣도록 '
                            f'고치고 다시 돌릴 것',
-                    no_convergence_info=unknown)
+                    no_convergence_info=unknown), info
     # ── 데이터 무결성 게이트 (2026-08-16, 심층 리뷰 ③) ────────────────────────────────
     #   ⚠ 이것은 §5 판정 순서의 **변경이 아니라 전제 집행**이다.  §5 는 "8 팔 factorial" 과
     #     "그 외 모든 인자 고정" 을 stipulate 한다 — 그 전제가 깨진 데이터는 §5 가 말하는
@@ -343,25 +374,25 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     for k in ('SBE', 'DBE'):
         _sh = [tuple(r['origin_shift_um']) for r in arms[k] if r.get('origin_shift_um')]
         if _sh and len(set(_sh)) != len(_sh):
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'{k} 에 **중복 origin** 이 있다 ({len(_sh) - len(set(_sh))}건) — '
-                               f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다')
+                               f'같은 위상을 여러 번 세면 표준오차가 가짜로 작아진다'), info
     #  ★★ 2026-08-19 (A5) — 세대 혼합 게이트.  **고정-인자 검사보다 먼저** 돈다: 기록이 있는
     #    팔과 없는 팔이 섞이면 아래 "다르면 HOLD" 는 None 을 건너뛰어 **통과시켜 버리기** 때문이다.
     _gen_ex = {_SEED_FIELD} if seed_ensemble else set()
     if seed_ensemble:
-        out['seed_ensemble'] = True          # 면제를 판정 출력에 남긴다 (조용한 완화 금지)
+        info['seed_ensemble'] = True          # 면제를 판정 출력에 남긴다 (조용한 완화 금지)
     for fld in _GEN_FIELDS:
         if fld in _gen_ex:
             continue
         _has = [r['file'] for k in ('SBE', 'DBE') for r in arms[k] if r.get(fld) is not None]
         _non = [r['file'] for k in ('SBE', 'DBE') for r in arms[k] if r.get(fld) is None]
         if _has and _non:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'세대 혼합 — `{fld}` 를 기록한 팔 {len(_has)}개와 기록이 **없는** '
                                f'팔 {len(_non)}개가 한 디렉터리에 있다 ({_non[0]} …).  '
                                f'옛 payload 는 이 인자로 무슨 값을 썼는지 추정할 수 없으므로 '
-                               f'(σ_ion 은 --temp-c 로도 움직인다) 비교 불가다.  옛 팔을 다시 돌릴 것')
+                               f'(σ_ion 은 --temp-c 로도 움직인다) 비교 불가다.  옛 팔을 다시 돌릴 것'), info
     #  ★★★ 2026-08-20 (FA-06) — **침대 정체성 필드는 침대 사이에서 비교하면 안 된다.**
     #    실사고: 도핑 baseline 8팔이 `additive_E_GPa` 로 HOLD 를 맞았다 —
     #      SBE `{PTFE, VGCF}` vs DBE `{PTFE, SDCP, VGCF}`.
@@ -376,26 +407,26 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         for k in ('SBE', 'DBE'):
             _v = {_canon(r.get(fld)) for r in arms[k] if r.get(fld) is not None}
             if len(_v) > 1:
-                return dict(out, decision='HOLD',
+                return dict(decision='HOLD',
                             reason=f'{k} **안에서** `{fld}` 가 팔마다 다르다 '
                                    f'({sorted(map(str, _v))}) — 한 침대의 팔들은 같은 입력·같은 '
-                                   f'물성이어야 한다 (CL-56 축)')
+                                   f'물성이어야 한다 (CL-56 축)'), info
     #  ★ 침대 **사이**: digest 는 달라야 하고(같으면 같은 침대다), additive 는 **공통 키**만 같아야 한다.
     _ds = {r.get('input_digest') for r in arms['SBE'] if r.get('input_digest')}
     _dd = {r.get('input_digest') for r in arms['DBE'] if r.get('input_digest')}
     if _ds and _dd and _ds == _dd:
-        return dict(out, decision='HOLD',
+        return dict(decision='HOLD',
                     reason=f'SBE 와 DBE 의 `input_digest` 가 **같다** ({sorted(_ds)[0]}) — 두 팔이 '
-                           f'같은 침대를 읽고 있다.  비 1.0 은 물리가 아니라 배선 실수다')
+                           f'같은 침대를 읽고 있다.  비 1.0 은 물리가 아니라 배선 실수다'), info
     _as = next((r['additive_E_GPa'] for r in arms['SBE'] if r.get('additive_E_GPa')), None)
     _ad = next((r['additive_E_GPa'] for r in arms['DBE'] if r.get('additive_E_GPa')), None)
     if isinstance(_as, dict) and isinstance(_ad, dict):
         _diff = {k for k in set(_as) & set(_ad) if _as[k] != _ad[k]}
         if _diff:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'두 침대가 `additive_E_GPa` 의 **공통 상**에서 다르다 ({sorted(_diff)}: '
                                f'{ {k: (_as[k], _ad[k]) for k in sorted(_diff)} }) — 세대가 섞였다 '
-                               f'(CL-56).  SDCP 처럼 한쪽에만 있는 상은 정상이다')
+                               f'(CL-56).  SDCP 처럼 한쪽에만 있는 상은 정상이다'), info
     #  ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
     #    σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
     #  ★ 2026-08-25 (CDXR3-5) — 레지스트리가 세대 인자까지 담으므로 목록이 하나다.
@@ -407,9 +438,9 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                if isinstance(r.get(fld), (dict, list)) else r.get(fld))
               for k in arms for r in arms[k] if r.get(fld) is not None}
         if len(_v) > 1:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'고정 인자 `{fld}` 가 팔마다 다르다 ({sorted(map(str, _v))}) — '
-                               f'prereg §5 는 그 외 모든 인자 고정을 요구한다')
+                               f'prereg §5 는 그 외 모든 인자 고정을 요구한다'), info
     #  ★ 그리고 **없는 것**도 잡는다 (리뷰 ① H5): `bridge_um` 이 매니페스트에 없던 시절에는
     #    위 루프가 항상 빈 집합을 봐서 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
     #    명시적으로 못 박으라고 한 인자가 기록조차 안 됐다면 그것은 통과가 아니라 HOLD 다.
@@ -435,31 +466,39 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
             if not _ok:
                 _eb.append((_r['file'], _why))
     if _eb:
-        return dict(out, decision='HOLD', hold_code='ELECTRONIC_CONV',
+        return dict(decision='HOLD', hold_code='ELECTRONIC_CONV',
                     reason=f'전자 수렴이 확인되지 않는 팔 {len(_eb)}개 '
                            f'({_eb[0][0]}: {_eb[0][1]}) — cg_info=0 ∧ unconverged=False ∧ '
-                           f'0 ≤ resid ≤ {CG_RESID_MAX:g} 를 모두 만족해야 한다 (M-R3-04)')
+                           f'0 ≤ resid ≤ {CG_RESID_MAX:g} 를 모두 만족해야 한다 (M-R3-04)'), info
     _pm = [r['file'] for k in arms for r in arms[k] if r.get('physics_protocol_match') is False]
     if _pm:
-        return dict(out, decision='HOLD', hold_code='PROTOCOL_MISMATCH',
+        return dict(decision='HOLD', hold_code='PROTOCOL_MISMATCH',
                     reason=f'요청한 규약과 **적용된 규약이 다른** 팔이 {len(_pm)}개 '
                            f'({_pm[0]} …) — 러너가 요청한 것과 payload 가 실제로 한 것이 '
-                           f'갈렸다.  다시 돌릴 것 (CDXR3-3)')
+                           f'갈렸다.  다시 돌릴 것 (CDXR3-3)'), info
     #  ★ `unknown:` 접두 = 규약을 확정할 수 없다 (필드가 빠졌다).  통과시키지 않는다.
     _pu = [r['file'] for k in arms for r in arms[k]
            if isinstance(r.get('physics_protocol_id'), str)
            and r['physics_protocol_id'].startswith('unknown:')]
     if _pu:
-        return dict(out, decision='HOLD', hold_code='PROTOCOL_UNKNOWN',
+        return dict(decision='HOLD', hold_code='PROTOCOL_UNKNOWN',
                     reason=f'규약을 확정할 수 없는 팔이 {len(_pu)}개 ({_pu[0]} …) — '
-                           f'payload 가 규약 인자를 다 싣지 않았다.  현행 payload 로 다시 돌릴 것')
+                           f'payload 가 규약 인자를 다 싣지 않았다.  현행 payload 로 다시 돌릴 것'), info
+    #  ★ 2026-08-25 (Codex 재리뷰 조건 5) — **`required_since` 를 사유에 싣는다.**
+    #    "없으면 HOLD" 만 말하면 운영자는 이것이 *버그* 인지 *옛 세대* 인지 모른다.
+    #    producer 가 그 필드를 쓰기 시작한 날짜를 같이 말해 주면 "그 이전 payload 를
+    #    다시 돌려라" 가 **행동 가능한 지시**가 된다.  게이트는 그대로 fail-closed 다 —
+    #    `required_since` 는 **완화 스위치가 아니라 라벨**이다 (완화하면 H5 가 재발한다).
     for fld in _REQUIRED_FIELDS:
         _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
         if _miss:
-            return dict(out, decision='HOLD',
+            _since = FIELD_CONTRACT[fld].get('required_since')
+            return dict(decision='HOLD', hold_code='REQUIRED_FIELD_MISSING',
+                        missing_field=fld, required_since=_since,
                         reason=f'고정 인자 `{fld}` 가 매니페스트에 **없는** 팔이 {len(_miss)}개 '
                                f'({_miss[0]} …) — 기록되지 않은 인자는 고정을 확인할 수 없다.  '
-                               f'옛 payload 로 돈 팔이면 다시 돌릴 것')
+                               f'현행 payload 는 {_since} 부터 이것을 항상 적는다 ⇒ 그 이전 '
+                               f'세대로 돈 팔이다.  다시 돌릴 것'), info
     # ── ★★ 팔 계약 (CDXIJ-10 ①, Codex 재검증 §③) ─────────────────────────────────────
     #   Codex 실측으로 드러난 것: **2팔씩만 있어도** 판정 · origin 이 전부 없어도 통과 ·
     #   SBE origins 0..7 과 DBE origins 100..107 처럼 **완전히 다른 집합**이어도 h0 였다.
@@ -470,25 +509,25 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     for k in ('SBE', 'DBE'):
         _miss_o = [r['file'] for r in arms[k] if not r.get('origin_shift_um')]
         if _miss_o:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'{k} 에 origin 기록이 **없는** 팔이 {len(_miss_o)}개 '
-                               f'({_miss_o[0]} …) — origin 없이는 쌍을 지을 수 없다 (CDXIJ-10 ①)')
+                               f'({_miss_o[0]} …) — origin 없이는 쌍을 지을 수 없다 (CDXIJ-10 ①)'), info
         _org[k] = [tuple(round(float(x), 9) for x in r['origin_shift_um']) for r in arms[k]]
         if len(set(_org[k])) != len(_org[k]):
-            return dict(out, decision='HOLD',
-                        reason=f'{k} 에 **중복 origin** — 같은 위상을 여러 번 세면 SE 가 가짜로 작아진다')
+            return dict(decision='HOLD',
+                        reason=f'{k} 에 **중복 origin** — 같은 위상을 여러 번 세면 SE 가 가짜로 작아진다'), info
     if set(_org['SBE']) != set(_org['DBE']):
         _only_s = sorted(set(_org['SBE']) - set(_org['DBE']))
         _only_d = sorted(set(_org['DBE']) - set(_org['SBE']))
-        return dict(out, decision='HOLD',
+        return dict(decision='HOLD',
                     reason=f'두 침대의 **origin 집합이 다르다** — SBE 전용 {len(_only_s)}개 · '
                            f'DBE 전용 {len(_only_d)}개 (예: {(_only_s or _only_d)[:1]}).  '
-                           f'짝이 없는 팔로는 비를 정의할 수 없다 (CDXIJ-10 ①)')
+                           f'짝이 없는 팔로는 비를 정의할 수 없다 (CDXIJ-10 ①)'), info
     if require_arms is not None and len(_org['SBE']) != int(require_arms):
-        return dict(out, decision='HOLD',
+        return dict(decision='HOLD',
                     reason=f'사전등록은 침대당 정확히 {int(require_arms)} origin 을 요구한다 — '
-                           f'받은 것은 {len(_org["SBE"])}개 (CDXIJ-10 ①)')
-    out['n_origin'] = len(_org['SBE'])
+                           f'받은 것은 {len(_org["SBE"])}개 (CDXIJ-10 ①)'), info
+    info['n_origin'] = len(_org['SBE'])
 
     #  ★ CDXIJ-10 ③ — `require_digest` 면 **입력 digest·code SHA 가 있어야** 한다.
     #    기본은 끔 (옛 격자 팔 호환).  도핑 트랙은 켠다 — 그 실험의 전제가
@@ -497,16 +536,16 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         for _f in ('input_digest', 'code_sha'):
             _nd = [r['file'] for k in arms for r in arms[k] if not r.get(_f)]
             if _nd:
-                return dict(out, decision='HOLD',
+                return dict(decision='HOLD',
                             reason=f'`{_f}` 가 없는 팔 {len(_nd)}개 ({_nd[0]} …) — 같은 '
                                    f'디렉터리는 같은 입력·같은 코드의 증거가 아니다 '
-                                   f'(CDXIJ-10 ③).  현행 payload 로 다시 돌릴 것')
+                                   f'(CDXIJ-10 ③).  현행 payload 로 다시 돌릴 것'), info
         _dirty = [r['file'] for k in arms for r in arms[k]
                   if str(r.get('code_sha') or '').endswith('+dirty')]
         if _dirty:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'커밋 안 된 코드로 돈 팔 {len(_dirty)}개 ({_dirty[0]} …) — '
-                               f'`code_sha` 가 `+dirty` 다.  재현 불가한 런은 판정 대상이 아니다')
+                               f'`code_sha` 가 `+dirty` 다.  재현 불가한 런은 판정 대상이 아니다'), info
 
     #  ★ 결과 seal (CDXIJ-10 ④) — `require_ionic` 이면 σ_ion 이 실제로 있어야 한다.
     #    도핑 트랙은 이온축이 결론이므로 `--no-ion`(LEAN=2) 산출물로 판정하면 안 된다.
@@ -515,10 +554,10 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                  if not (isinstance(r.get('sigma_ion'), (int, float))
                          and r['sigma_ion'] == r['sigma_ion'] and r['sigma_ion'] > 0)]
         if _no_i:
-            return dict(out, decision='HOLD',
+            return dict(decision='HOLD',
                         reason=f'σ_ion 이 없는/비정상인 팔 {len(_no_i)}개 ({_no_i[0]} …) — '
                                f'도핑 판정은 이온축이 결론이다.  `--no-ion` 산출물로 판정 불가 '
-                               f'(CDXIJ-10 ④)')
+                               f'(CDXIJ-10 ④)'), info
         #  ★★ 2026-08-24 (CDXR2-4) — **σ_ion 이 있다는 것과 수렴했다는 것은 다르다.**
         #    옛 게이트는 양의 σ_ion 존재만 봤고, payload 는 이온 미수렴도 `complete` 로
         #    적었다 ⇒ 이온축 결론이 **false-green** 이 될 수 있었다.  전자축은 이미
@@ -545,18 +584,42 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                 if not _ok:
                     (_ion_blind if _why == 'blind' else _ion_bad).append(_r['file'])
         if _ion_bad:
-            return dict(out, decision='HOLD', hold_code='IONIC_UNCONVERGED',
+            return dict(decision='HOLD', hold_code='IONIC_UNCONVERGED',
                         ion_unconverged_arms=len(_ion_bad),
                         reason=f'이온 솔브가 **미수렴**인 팔 {len(_ion_bad)}개 ({_ion_bad[0]} …) — '
-                               f'prereg §5-1 대로 숫자를 내지 않는다')
+                               f'prereg §5-1 대로 숫자를 내지 않는다'), info
         if _ion_blind:
-            return dict(out, decision='HOLD', hold_code='IONIC_BLIND',
+            return dict(decision='HOLD', hold_code='IONIC_BLIND',
                         ion_no_convergence_info=len(_ion_blind),
                         reason=f'이온 수렴 정보가 **없는** 팔 {len(_ion_blind)}개 '
                                f'({_ion_blind[0]} …) — 봉인 이전 세대 payload 다 (CDXR2-4).  '
                                f'이온축이 결론이면 재실행할 것; σ_e 만 보려면 '
-                               f'`--require-ionic` 을 끄면 된다')
+                               f'`--require-ionic` 을 끄면 된다'), info
 
+    return None, info
+
+
+def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
+            require_digest=False):
+    """prereg §5 판정.  **순서를 바꾸지 말 것.**
+
+    `seed_ensemble=True` 는 **`mpm_seed` 하나만** 고정 인자에서 면제한다 (코팅처럼 시딩
+    자체가 확률적인 축을 잴 때).  ⚠ prereg 에 그렇게 등록한 경우에만 쓸 것 — 나머지
+    인자는 그대로 고정이고, 면제 사실은 판정 출력에 남는다.
+    """
+    out = {'prereg': PREREG, 'thresholds': {
+        'h0_min_ratio': H0_MIN_RATIO, 'h1_ratio': H1_RATIO,
+        'undecided': [UNDECIDED_LO, UNDECIDED_HI],
+                  'se_max_rel_pct': SE_MAX_REL_PCT, 'se_max_pct': SE_MAX_REL_PCT}}
+    #  ★ 2026-08-25 (Codex 재리뷰 조건 5) — 계약 검증은 **공용 함수**다.
+    #    `compare_dirs()` 도 같은 것을 부른다 (옛 판은 하나도 안 돌렸다).
+    _hold, _info = validate_contract(arms, seed_ensemble=seed_ensemble,
+                                     require_arms=require_arms,
+                                     require_ionic=require_ionic,
+                                     require_digest=require_digest)
+    out.update(_info)
+    if _hold:
+        return dict(out, **_hold)
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
     if not st['SBE'] or not st['DBE'] or st['SBE']['n'] != st['DBE']['n']:
@@ -1253,7 +1316,8 @@ def _selftest():
     #     prereg v3 STEP 5 에서 실제로 일어난 일: 대조가 **다른 σ_VGCF** 로 돈 디렉터리였고
     #     아무 게이트도 안 걸려 **거짓 경보**가 났다.  판정기의 고정-인자 검사가 *한 디렉터리
     #     안*만 봤기 때문이다.  ⇒ 그 검사를 도구로 만들고 음성 대조를 상주시킨다.
-    def _mk2(d, *, yvgcf, sig_vgcf=11.0447, dig=('AA', 'BB'), n=2, dbe_mul=1.42, **_gen):
+    def _mk2(d, *, yvgcf, sig_vgcf=11.0447, dig=('AA', 'BB'), n=2, dbe_mul=1.42,
+                s3=None, **_gen):
         _m0 = {'vox_um': 0.4, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
                'sdcp_stamp': 'point', 'sdcp_sphere_d_um': 0.0,
                'sigma_vgcf_S_cm': sig_vgcf, 'sigma_sdcp_S_cm': 250.0,
@@ -1266,9 +1330,10 @@ def _selftest():
             for _i in range(n):
                 _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
                 with open(os.path.join(d, f'p2_{_k}_a{_i}.json'), 'w', encoding='utf-8') as _f:
-                    json.dump({'mpm_metrics': {'step3': {
-                        'sigma_e_eff_S_cm': 0.4448190919120597 * _mul, 'cg_info': 0,
-                        'cg_resid': 1e-8, 'unconverged': False, 'manifest': _m}}}, _f)
+                    _s3d = {'sigma_e_eff_S_cm': 0.4448190919120597 * _mul, 'cg_info': 0,
+                            'cg_resid': 1e-8, 'unconverged': False, 'manifest': _m}
+                    _s3d.update(s3 or {})       # ㊳ 용 — step3 수준 노브 (수렴·규약)
+                    json.dump({'mpm_metrics': {'step3': _s3d}}, _f)
 
     _EXP = {'sdcp_yield_to_vgcf'}
     with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
@@ -1325,6 +1390,74 @@ def _selftest():
         _c = compare_dirs(_A, _B, _EXP)
         chk(f'㉗e ★ origin 집합이 다르면 HOLD (짝 없이 못 뺀다) ({_c["decision"]})',
             _c['decision'] == 'HOLD' and 'origin' in (_c.get('reason') or ''))
+
+    import ast as _ast38
+    #  ── ㊳ 2026-08-25 (Codex 재리뷰 조건 5) — **`compare_dirs` 도 계약을 건다** ──────
+    #     옛 판은 origin 짝·digest·`_XDIR_FIELDS` 만 봤다.  그래서 `verdict()` 이 HOLD 를
+    #     냈을 데이터(미수렴 · `unknown:` 규약 · 필수 필드 부재)에 `measured` 를 냈다.
+    #     ⇒ 같은 `validate_contract` 를 부르는지 **행동으로** 확인한다 (구조 검사는 ㊳e).
+    for _tag, _s3, _needle in (
+            ('㊳a 미수렴 팔이 A 에 있으면 HOLD', {'cg_info': 30000}, '미수렴'),
+            ('㊳b 수렴 정보가 없으면 HOLD (blind)',
+             {'cg_info': None, 'cg_resid': None, 'unconverged': None}, '수렴 정보'),
+            ('㊳c resid 가 문턱을 넘으면 HOLD', {'cg_resid': 2e-6}, '전자 수렴')):
+        with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+            _mk2(_A, yvgcf=False, dbe_mul=1.42, s3=_s3)
+            _mk2(_B, yvgcf=True, dbe_mul=1.29)
+            _c = compare_dirs(_A, _B, _EXP)
+            chk(f'{_tag} ({_c["decision"]})',
+                _c['decision'] == 'HOLD' and _needle in (_c.get('reason') or ''))
+            chk(f'{_tag[:3]}′ 사유가 **어느 디렉터리**인지 말한다',
+                (_c.get('reason') or '').startswith('[디렉터리 A]'))
+    #  ★ `unknown:` 규약 — SELF-01 이 실제로 만든 상태다 (모든 런이 그랬다)
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42)
+        _mk2(_B, yvgcf=True, dbe_mul=1.29, physics_protocol_id='unknown:vox_um')
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㊳d ★ `unknown:` 규약이 B 에 있으면 HOLD (SELF-01 이 만든 상태) ({_c["decision"]})',
+            _c['decision'] == 'HOLD' and '규약을 확정할 수 없는' in (_c.get('reason') or '')
+            and (_c.get('reason') or '').startswith('[디렉터리 B]'))
+    #  ★ 구조 — 두 게이트가 **같은 함수**를 부른다.  인라인 사본이 다시 생기면 여기서 걸린다.
+    #  ⚠ 함수 본문은 **AST 로** 잘라낸다.  문자열 `.index('def verdict(')` 로 자르면
+    #    그 리터럴이 **이 시험 자신의 소스**에 있어 자기를 먼저 찾는다 — 실제로 초판이
+    #    그래서 ㊳f 가 돌연변이를 놓쳤다 (`ptfe-gate-split` 과 같은 self-referential needle).
+    _tree38 = _ast38.parse(_self)
+    def _fnsrc(name):
+        _f = [x for x in _tree38.body
+              if isinstance(x, _ast38.FunctionDef) and x.name == name]
+        return _ast38.get_source_segment(_self, _f[0]) if _f else ''
+    _vsrc, _csrc = _fnsrc('verdict'), _fnsrc('compare_dirs')
+    chk(f'㊳e ★★ `verdict` 가 validate_contract 를 부른다 (인라인 사본 아님, {len(_vsrc)}B)',
+        bool(_vsrc) and 'validate_contract(arms,' in _vsrc
+        and 'for fld in _GEN_FIELDS:' not in _vsrc)
+    chk(f'㊳f ★★ `compare_dirs` 가 같은 validate_contract 를 부른다 ({len(_csrc)}B)',
+        bool(_csrc) and 'validate_contract(_ar,' in _csrc)
+    def _own_returns(fn):
+        """`fn` **자신의** return 노드만 (중첩 def 의 것은 그 함수 소관이다)."""
+        out38 = []
+        def _w(node, top=False):
+            for _ch in _ast38.iter_child_nodes(node):
+                if isinstance(_ch, (_ast38.FunctionDef, _ast38.AsyncFunctionDef,
+                                    _ast38.Lambda)) and not top:
+                    continue
+                if isinstance(_ch, _ast38.Return):
+                    out38.append(_ch)
+                if not isinstance(_ch, (_ast38.FunctionDef, _ast38.AsyncFunctionDef,
+                                        _ast38.Lambda)):
+                    _w(_ch)
+        _w(fn, top=True)
+        return out38
+    _vcr = [_f for _f in _ast38.parse(_self).body
+            if isinstance(_f, _ast38.FunctionDef) and _f.name == '_validate_contract_raw'][0]
+    _rets = _own_returns(_vcr)
+    _nosince = sorted(k for k, _d in FIELD_CONTRACT.items()
+                      if _d.get('required') and not _d.get('required_since'))
+    chk(f'㊳h ★★ `required` 인 필드는 전부 `required_since` 를 선언한다 (누락: {_nosince})',
+        not _nosince)
+    chk(f'㊳g ★ 계약 함수의 모든 반환이 (hold, info) 2-튜플이다 (n={len(_rets)})',
+        len(_rets) >= 20
+        and all(isinstance(_n.value, _ast38.Tuple) and len(_n.value.elts) == 2
+                for _n in _rets))
 
     #  ── ㉘ `--scan` — 디렉터리 이름을 **짓지 말고 찾는다** ──────────────────────────
     #     실사고 3회: 이름이 인자에서 조립되는데(`vox{V}{_sph}{_bNNN}{_sgN}{_lean}`) 사람이
@@ -1422,6 +1555,16 @@ def compare_dirs(dir_a, dir_b, expect_differ):
     out = {'dir_a': dir_a, 'dir_b': dir_b, 'expect_differ': sorted(expect_differ)}
     _, arms_a = collect(dir_a)
     _, arms_b = collect(dir_b)
+    #  ★★★ 2026-08-25 (Codex 재리뷰 조건 5) — **두 디렉터리 각각이 먼저 계약을 만족해야 한다.**
+    #    옛 판은 origin 짝·`input_digest`·`_XDIR_FIELDS` 만 봤다.  그래서 미수렴 팔·세대
+    #    혼합·`unknown:` 규약·필수 필드 부재가 **한 건도 안 걸리고** `measured` 가 났다 —
+    #    `verdict()` 이 같은 데이터에 HOLD 를 냈을 상황인데도.  ⇒ 같은 `validate_contract`
+    #    를 부른다.  검사 목록이 두 곳으로 갈라질 자리가 없다.
+    #    ⚠ `require_arms` 는 걸지 않는다 — 감소율 실험은 8팔 사전등록이 아니다 (짝만 맞으면 된다).
+    for _tag, _ar in (('A', arms_a), ('B', arms_b)):
+        _h, _ = validate_contract(_ar, where=f'디렉터리 {_tag}')
+        if _h:
+            return dict(out, **_h)
     pairs, differed = [], set()
     for bed in ('SBE', 'DBE'):
         ka = {tuple(round(float(x), 9) for x in (r.get('origin_shift_um') or [])): r
