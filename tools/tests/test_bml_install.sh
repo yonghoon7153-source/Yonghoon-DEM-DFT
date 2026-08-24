@@ -51,13 +51,87 @@ TARGET="$TMP/bin"
 
 out="$(cmd_install "$TARGET" 2>&1)"
 
-if [ -L "$TARGET/bml" ]; then ok_ "링크를 만든다"
-else bad_ "링크가 없다"; fi
+for n in bml bmlin bmlout; do
+  if [ -x "$TARGET/$n" ]; then ok_ "$n 을 만든다"
+  else bad_ "$n 이 없거나 실행할 수 없다"; fi
+done
 
-if [ "$(readlink -f "$TARGET/bml")" = "$(readlink -f "$HERE/../bml")" ]; then
-  ok_ "링크가 이 트리의 bml 을 가리킨다"
+if grep -qF "REAL=\"$(cd -P "$HERE/.." && pwd)/bml\"" "$TARGET/bml"; then
+  ok_ "이 트리의 bml 을 가리킨다"
 else
-  bad_ "링크가 엉뚱한 곳을 가리킨다: $(readlink -f "$TARGET/bml")"
+  bad_ "엉뚱한 곳을 가리킨다: $(grep '^REAL=' "$TARGET/bml")"
+fi
+
+# 껍데기를 통해서도 별칭이 살아 있어야 한다.  셔뱅을 거치면 커널이 argv[0] 을
+# 스크립트 경로로 갈아치우므로 `$0` 로는 알 수 없다 -- 환경변수로 넘긴다.
+for n in bmlin bmlout; do
+  if grep -qF "BML_INVOKED_AS=\"$n\"" "$TARGET/$n"; then
+    ok_ "$n 이 자기 이름을 넘긴다"
+  else
+    bad_ "$n 이 이름을 안 넘긴다 — bml 과 똑같이 동작한다"
+  fi
+done
+if grep -q 'BML_INVOKED_AS' "$HERE/../bml"; then
+  ok_ "bml 이 그 이름을 읽는다"
+else
+  bad_ "껍데기는 이름을 넘기는데 bml 이 안 읽는다"
+fi
+
+# --- 가리키는 파일이 사라졌을 때 ---------------------------------------------
+#
+# 실측: 한 폴더에서 브랜치를 바꾸면 워크벤치 파일이 통째로 사라지고(§0.7),
+# 심볼릭 링크였던 시절에는 화면에 `No such file or directory` 한 줄만 남았다.
+# 그 문장에는 **무엇이** 없는지가 없어서, 사람은 자기가 잘못 친 줄 안다.
+
+GONE="$TMP/gone"; mkdir -p "$GONE/bin"
+( SCRIPT="$GONE/repo/tools/bml" REPO="$GONE/repo"
+  write_launcher "$GONE/bin/bml" bml )
+
+out_missing="$("$GONE/bin/bml" 2>&1)"
+if [ $? -ne 0 ]; then ok_ "없으면 0 을 돌려주지 않는다"
+else bad_ "파일이 없는데 성공으로 끝났다"; fi
+case "$out_missing" in
+  *"저장소 폴더가 없습니다"*) ok_ "폴더가 통째로 없으면 그렇게 말한다" ;;
+  *) bad_ "폴더가 없는데 다른 소리를 한다: $out_missing" ;;
+esac
+case "$out_missing" in
+  *"tools/bml install"*) ok_ "그때 할 일을 준다" ;;
+  *) bad_ "무엇을 하라는 말이 없다" ;;
+esac
+
+# 저장소는 있는데 그 파일만 없는 경우 — 브랜치를 바꾼 것이다.  대처가 정반대다.
+mkdir -p "$GONE/repo"
+git -C "$GONE/repo" init -q -b claude/friendly-meitner-lldvar 2>/dev/null
+out_branch="$("$GONE/bin/bml" 2>&1)"
+case "$out_branch" in
+  *"저장소는 있는데"*) ok_ "저장소는 있고 파일만 없는 경우를 가른다" ;;
+  *) bad_ "두 경우를 같은 말로 덮는다: $out_branch" ;;
+esac
+case "$out_branch" in
+  *"switch claude/battery-charge-discharge-webapp"*) ok_ "돌아가는 명령을 준다" ;;
+  *) bad_ "브랜치를 되돌리는 명령이 없다" ;;
+esac
+case "$out_branch" in
+  *"worktree"*) ok_ "둘을 같이 쓰는 방법도 알려 준다" ;;
+  *) bad_ "폴더를 나누는 방법을 안 알려 준다 — 또 바꾸게 된다" ;;
+esac
+
+# --- 옛 심볼릭 링크 위에 덮어써도 저장소를 안 망친다 -------------------------
+#
+# `cat >` 는 링크를 따라간다.  걷어내지 않으면 저장소의 tools/bml 이 껍데기로
+# 덮여 사라진다 -- 이 명령이 고치려던 사고를 이 명령이 일으킨다.
+LINKY="$TMP/linky"; mkdir -p "$LINKY"
+REALCOPY="$TMP/realcopy"; cp "$HERE/../bml" "$REALCOPY"
+BEFORE="$(md5sum < "$REALCOPY")"
+ln -sf "$REALCOPY" "$LINKY/bml"
+# 다른 HOME 으로 격리한다.  cmd_install 은 rc 에 PATH 한 줄을 넣는데, 아래
+# 'command -v bml' 검사는 그 rc 를 읽는다 — 여기서 넣은 줄이 $TARGET 을 가려
+# 멀쩡한 검사가 깨진다.
+( HOME="$TMP/otherhome"; mkdir -p "$HOME"; cmd_install "$LINKY" ) >/dev/null 2>&1
+if [ "$(md5sum < "$REALCOPY")" = "$BEFORE" ]; then
+  ok_ "옛 링크를 덮어써도 원본이 안 바뀐다"
+else
+  bad_ "install 이 저장소의 bml 을 덮어썼다"
 fi
 
 if grep -qF "$TARGET" "$RC"; then ok_ "$RC 에 PATH 한 줄을 넣는다"

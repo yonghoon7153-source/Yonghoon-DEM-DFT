@@ -700,10 +700,11 @@ check "in 은 LAN 자리"     "$(slot_key in)"     "WORKBENCH_SERVER_LAN"
 check "out 은 터널 자리"   "$(slot_key out)"    "WORKBENCH_SERVER_TUNNEL"
 check "lan 도 같은 자리"   "$(slot_key lan)"    "WORKBENCH_SERVER_LAN"
 check "모르는 자리는 거부" "$(slot_key nope || echo REFUSED)" "REFUSED"
-# 별칭을 기계마다 손으로 관리하면 반드시 어긋난다.  같은 파일을 가리키는
-# 심볼릭 링크라 bml 을 고치면 bmlin/bmlout 도 같이 따라온다.
+# 별칭을 기계마다 손으로 관리하면 반드시 어긋난다.  세 이름이 같은 파일을
+# 부르므로 bml 을 고치면 bmlin/bmlout 도 같이 따라온다.  (자세한 것은
+# test_bml_install.sh — 여기서는 세 이름이 있다는 것만 본다.)
 check "install 이 세 이름을 만든다" \
-  "$(grep -c 'ln -sf "\$SCRIPT" "\$target/bml' "$BML")" "3"
+  "$(grep -c 'for name in bml bmlin bmlout' "$BML")" "1"
 check "불린 이름으로 자리를 정한다" \
   "$(grep -c 'bmlin)  set -- in' "$BML")" "1"
 # 'tunnel' 은 이미 share 의 별칭이다 — out 에 겹쳐 쓰면 share 가 먹힌다.

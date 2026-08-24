@@ -84,8 +84,9 @@ make setup-git          # pull.rebase, autostash, 커밋 훅
 exec $SHELL -l          # 새 PATH 를 이 터미널에 반영
 ```
 
-`bml` · `bmlin` · `bmlout` 세 이름이 걸린다. 셋 다 같은 파일을 가리키는
-심볼릭 링크라, `bml` 을 고치면 나머지도 같이 따라온다.
+`bml` · `bmlin` · `bmlout` 세 이름이 걸린다. 셋 다 저장소의 `tools/bml` 을
+부르는 껍데기라, `bml` 을 고치면 나머지도 같이 따라온다. 저장소 폴더를 옮겼거나
+브랜치를 바꿔서 그 파일이 없어지면, 껍데기가 어느 쪽인지 보고 맞는 명령을 준다.
 
 ## 5. 볼 주소를 정한다 — `bmlin` / `bmlout`
 
