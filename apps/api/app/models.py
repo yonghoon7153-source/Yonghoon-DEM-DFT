@@ -85,8 +85,14 @@ class Sample(SQLModel, table=True):
 
     # -- analysis settings -------------------------------------------------
     #: Cycle used for retention and "initial" CE.  3 by default: cycles 1-2
-    #: are formation and lose capacity by design (ADR 0004).
+    #: are formation and lose capacity by design (ADR 0004).  A schedule with
+    #: no formation at all moves the anchor to cycle 1 -- resolved on read, not
+    #: written here, so correcting a schedule never needs a re-upload (ADR 0018).
     reference_cycle: int = 3
+    #: Who put that number there: "user" when a person typed it, "" when the
+    #: row predates this column.  Without it a stored 3 cannot be told apart
+    #: from the default, and the schedule would overwrite a typed 3 forever.
+    reference_cycle_source: str = ""
     #: "auto" lets the evidence decide; "running"/"finished" pin it.
     declared_state: str = "auto"
 

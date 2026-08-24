@@ -608,6 +608,19 @@ class SchedStep:
     sampling_s: float | None = None
 
 
+#: formation 이 없는 계획: 임피던스 재기 전의 안정화 휴지 하나, 그리고 바로
+#: 사이클링 루프.  기준 사이클이 3이 아니라 1이어야 하는 모양이다 (ADR 0018).
+FORMATIONLESS_SCHEDULE: tuple[SchedStep, ...] = (
+    SchedStep("eis-rest", control=7, value=0.0,
+              cutoff1=(0, 1, 0.0, 1800.0), sampling_s=30.0),
+    SchedStep("cyc-chg", control=13, value=0.00123, value2=3.78, value3=0.000615,
+              cutoff1=(15, 1, 0.000615, 0.0), sampling_s=10.0),
+    SchedStep("cyc-dch", control=0, value=-0.00123,
+              cutoff1=(1, 1, 1.88, 0.0), loop_count=200, turn_step="cyc-chg",
+              sampling_s=10.0),
+)
+
+
 #: 실측 파일에서 본 형태를 줄인 것: 화성 2사이클 뒤 사이클링 루프.
 DEFAULT_SCHEDULE: tuple[SchedStep, ...] = (
     SchedStep("form-chg", control=13, value=0.00025, value2=3.18, value3=0.000125,

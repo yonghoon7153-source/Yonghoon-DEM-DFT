@@ -311,6 +311,13 @@ class SampleOut(BaseModel):
     c_rate: float | None
     c_rate_formation: float | None
     reference_cycle: int
+    #: 저장된 값이 아니라 **실제로 쓰이는** 기준 사이클과 그 이유 (ADR 0018).
+    #: ``user`` | ``formationless`` | ``default``.  formation 이 없는 스케줄은
+    #: 1번에 앵커하고, 사람이 입력한 값은 언제나 그대로다.
+    reference_cycle_effective: int = 3
+    reference_cycle_reason: str = "default"
+    #: 스케줄이 말하는 formation 유무 -- ``yes`` | ``no`` | ``unclear``.
+    formation: str = "unclear"
     declared_state: str
     created_at: datetime
     updated_at: datetime
@@ -431,6 +438,9 @@ class CycleTableOut(BaseModel):
     #: What was asked for, and what the retention column is really anchored to.
     #: They differ when the reference cycle is not in the record (ADR 0004).
     reference_cycle: int | None = None
+    #: 그 기준을 누가 정했나 (ADR 0018): ``user`` | ``formationless`` |
+    #: ``default``.  1번에 앵커한 표를 보고 "왜 3번이 아니지" 를 묻게 두지 않는다.
+    reference_cycle_reason: str = "default"
     reference_cycle_used: int | None = None
     reference_available: bool = True
     retention_note: str = ""
@@ -584,6 +594,8 @@ class ReportOut(BaseModel):
     planned_cycles: int | None
     in_progress_cycle: int | None
     reference_cycle_requested: int
+    #: 그 기준을 누가 정했나 (ADR 0018): ``user`` | ``formationless`` | ``default``.
+    reference_cycle_reason: str = "default"
     reference_available: bool
     retention_pct: float | None
     retention_note: str

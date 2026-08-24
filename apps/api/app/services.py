@@ -30,7 +30,7 @@ from wrdkit import (
 )
 from wrdkit.cycles import Profile, extract_profile
 from wrdkit.dva import DifferentialVoltage, differential_voltage
-from wrdkit.health import CellReport, build_report
+from wrdkit.health import CellReport, build_report, resolve_reference_cycle
 from wrdkit.ica import DifferentialCapacity, differential_capacity
 from wrdkit.knee import KneeAnalysis
 
@@ -279,6 +279,9 @@ def schedule_payload(wrd: WrdFile) -> dict:
         "c_rate": schedule.infer_c_rate(),
         "cycling_current_a": schedule.cycling_current_a,
         "formation_current_a": schedule.formation_current_a,
+        # 루프 앞에 충방전이 있나 -- 기준 사이클이 3인지 1인지가 여기서
+        # 갈린다 (ADR 0018).  "yes" | "no" | "unclear".
+        "formation": schedule.formation,
         "nominal_capacity_mah": nominal * 1000 if nominal else None,
         "sampling_interval_s": schedule.sampling_interval_s,
         "steps": [
@@ -322,6 +325,45 @@ def _formation_c_rate(payload: dict) -> float | None:
     if not cycling_rate or not cycling_a or not formation_a:
         return None
     return cycling_rate * formation_a / cycling_a
+
+
+def sample_formation(sample: Sample) -> str:
+    """이 셀의 파일들이 formation 을 말하나 -- ``yes`` · ``no`` · ``unclear``.
+
+    한 셀이 여러 파일로 쪼개져 있어도 프로토콜은 하나다.  그래도 파일마다 다른
+    답이 나올 수 있다: 연속 파일이 루프 도중부터 시작하면 그 파일의 스케줄에는
+    루프 앞 구간이 통째로 없다.
+
+    그래서 **하나라도 "yes" 면 yes** 다 -- formation 을 본 파일이 있으면 그
+    셀에는 formation 이 있었다.  "no" 는 아는 파일이 모두 없다고 할 때만 낸다.
+    아무 파일도 모르면 모른다 (§0.4).
+    """
+    answers = set()
+    for run in sample.runs:
+        if not run.schedule_json:
+            continue
+        verdict = json.loads(run.schedule_json).get("formation")
+        if verdict in ("yes", "no", "unclear"):
+            answers.add(verdict)
+    if "yes" in answers:
+        return "yes"
+    if answers == {"no"}:
+        return "no"
+    return "unclear"
+
+
+def sample_reference_cycle(sample: Sample) -> tuple[int, str]:
+    """이 셀의 기준 사이클과 누가 정했는지 (ADR 0018).
+
+    저장된 값을 고쳐 쓰지 않고 **읽을 때마다** 푼다.  스케줄 해석이 좋아지거나
+    파일이 하나 더 붙으면 답이 따라 움직여야 하고, 업로드 시점에 박아 두면 그
+    셀만 옛 규칙에 남는다.
+    """
+    return resolve_reference_cycle(
+        sample.reference_cycle,
+        formation=sample_formation(sample),
+        by_user=True if sample.reference_cycle_source == "user" else None,
+    )
 
 
 def apply_schedule_defaults(sample: Sample, payload: dict) -> bool:
@@ -442,7 +484,7 @@ def build_cell_report(session: Session, sample: Sample, *,
     last_sample_time = _usable_last_sample_time(last_sample_time, now)
     return build_report(
         summaries,
-        reference_cycle=sample.reference_cycle,
+        reference_cycle=sample_reference_cycle(sample)[0],
         planned_cycles=planned,
         last_sample_time=last_sample_time,
         now=now,

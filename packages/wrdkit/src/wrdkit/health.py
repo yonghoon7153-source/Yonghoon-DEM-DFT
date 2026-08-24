@@ -10,7 +10,9 @@ finished cell has no such caveat.
 
 Cycle 3 is the reference because the first cycles are formation: they lose
 several percent by design, so retention measured against cycle 1 mixes
-formation loss with degradation.
+formation loss with degradation.  When the schedule has no formation at all
+-- impedance, then straight into the loop -- the same reasoning points the
+other way, and the anchor moves to cycle 1 (ADR 0018).
 """
 
 from __future__ import annotations
@@ -22,11 +24,42 @@ from .cycles import CycleSummary
 from .knee import KneeAnalysis, detect_knee
 
 __all__ = ["CellState", "StateEvidence", "CycleReadout", "CellReport", "build_report",
-           "DEFAULT_REFERENCE_CYCLE"]
+           "DEFAULT_REFERENCE_CYCLE", "FORMATIONLESS_REFERENCE_CYCLE",
+           "resolve_reference_cycle"]
 
 #: Formation normally takes two cycles, so cycle 3 is the first that reflects
 #: steady-state behaviour.  Overridable per sample.
 DEFAULT_REFERENCE_CYCLE = 3
+
+#: Where to anchor when the schedule declares no formation at all.  There is
+#: nothing to step over, and cycles 1-3 of such a cell are already degradation
+#: -- folding them into the baseline flatters the retention (ADR 0018).
+FORMATIONLESS_REFERENCE_CYCLE = 1
+
+
+def resolve_reference_cycle(stored: int | None, *, formation: str = "unclear",
+                            by_user: bool | None = None) -> tuple[int, str]:
+    """Which cycle the retention baseline sits on, and who decided (ADR 0018).
+
+    ``stored`` is the sample's saved reference cycle, ``formation`` the
+    schedule's verdict (``yes`` / ``no`` / ``unclear``), and ``by_user`` whether
+    a person typed the stored value -- ``None`` when the record predates that
+    being written down.
+
+    The reason string is part of the answer, not decoration: the screen prints
+    it, and a baseline that silently moved between 3 and 1 would change every
+    retention number on the page with nothing to point at.
+    """
+    if by_user and stored:
+        return stored, "user"
+    if by_user is None and stored and stored != DEFAULT_REFERENCE_CYCLE:
+        # 옛 행이다.  3 이 아닌 값은 기본값일 수 없으므로 사람이 친 것이다.
+        return stored, "user"
+    if formation == "no":
+        return FORMATIONLESS_REFERENCE_CYCLE, "formationless"
+    if stored:
+        return stored, "default"
+    return DEFAULT_REFERENCE_CYCLE, "default"
 
 
 class CellState:

@@ -322,7 +322,12 @@ export function SampleDetail() {
   // The reference cycle is the denominator of retention, initial CE and the
   // knee search, so it is typed into local state and committed once — a PATCH
   // per keystroke commits every half-typed number ("2" on the way to "25").
-  const referenceCycle = sample?.reference_cycle
+  //
+  // 입력란은 **실제로 쓰이는** 값을 보여 준다.  formation 이 없는 스케줄은
+  // 1번에 앵커하는데(ADR 0018) 칸에 저장값 3 이 남아 있으면, 표의 유지율이
+  // 1번 기준인데 칸은 3 이라고 말하는 화면이 된다.
+  const referenceCycle = sample?.reference_cycle_effective ?? sample?.reference_cycle
+  const referenceReason = sample?.reference_cycle_reason ?? 'default'
   useEffect(() => {
     if (referenceCycle !== undefined) setRefDraft(String(referenceCycle))
   }, [referenceCycle])
@@ -397,16 +402,18 @@ export function SampleDetail() {
     const value = Number(refDraft)
     if (!Number.isFinite(value) || value < 1) {
       setSettingsError('기준 사이클은 1 이상이어야 합니다.')
-      setRefDraft(String(sample.reference_cycle))
+      setRefDraft(String(referenceCycle ?? sample.reference_cycle))
       return
     }
-    if (value === sample.reference_cycle) return
+    // 쓰이는 값과 비교한다.  저장값과 비교하면, 자동으로 1번이 된 셀에 1 을
+    // 쳐도 "같다" 며 아무 일도 안 하고 -- 사람이 고정하려던 의도가 사라진다.
+    if (value === referenceCycle && referenceReason === 'user') return
     try {
       setSettingsError(null)
       setOverride(await api.updateSample(sample.id, { reference_cycle: value }))
     } catch (cause) {
       setSettingsError(cause instanceof Error ? cause.message : String(cause))
-      setRefDraft(String(sample.reference_cycle))
+      setRefDraft(String(referenceCycle ?? sample.reference_cycle))
     }
   }
 
@@ -447,7 +454,14 @@ export function SampleDetail() {
     <Card title="분석 설정" padSmall>
       <div className="col" style={{ gap: 9 }}>
         {settingsError ? <Alert kind="error">{settingsError}</Alert> : null}
-        <Field label="기준 사이클" hint="유지율·초기 CE·knee 탐색 기준 · Enter 로 적용">
+        <Field
+          label="기준 사이클"
+          hint={
+            referenceReason === 'formationless'
+              ? 'formation 이 없는 스케줄이라 1번에 앵커합니다 · 입력하면 고정'
+              : '유지율·초기 CE·knee 탐색 기준 · Enter 로 적용'
+          }
+        >
           <input
             type="number"
             min={1}

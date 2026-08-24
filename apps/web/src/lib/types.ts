@@ -3,6 +3,9 @@
 export type Basis = 'mAh' | 'mAh/g' | 'mAh/cm2' | 'mAh/cm3' | '%'
 export type CellState = 'running' | 'finished' | 'unknown'
 export type DeclaredState = 'auto' | 'running' | 'finished'
+/** 기준 사이클을 누가 정했나 (ADR 0018).  `formationless` 는 스케줄에
+ *  formation 이 없어 1번에 앵커했다는 뜻이다. */
+export type ReferenceReason = 'user' | 'formationless' | 'default'
 export type Branch = 'charge' | 'discharge'
 
 export type ComponentRole = 'active' | 'electrolyte' | 'conductive' | 'binder' | 'other'
@@ -107,6 +110,13 @@ export interface Sample {
   c_rate: number | null
   c_rate_formation: number | null
   reference_cycle: number
+  /** 실제로 쓰이는 기준 사이클과 그 이유 (ADR 0018).  formation 이 없는
+   *  스케줄은 1번에 앵커하므로 `reference_cycle` 과 다를 수 있다 — 입력란은
+   *  저장값을, 문구는 쓰이는 값을 보여 준다. */
+  reference_cycle_effective?: number
+  reference_cycle_reason?: ReferenceReason
+  /** 스케줄이 말하는 formation 유무. */
+  formation?: 'yes' | 'no' | 'unclear'
   declared_state: DeclaredState
   created_at: string
   updated_at: string
@@ -216,6 +226,8 @@ export interface CycleTable {
   requested_basis: Basis
   basis_fallback_reason: string | null
   reference_cycle: number | null
+  /** 그 기준을 누가 정했나 (ADR 0018). */
+  reference_cycle_reason?: ReferenceReason
   /** 실제로 기준으로 쓴 사이클. 요청값과 다를 수 있다 (ADR 0004). */
   reference_cycle_used?: number | null
   reference_available?: boolean
@@ -399,6 +411,7 @@ export interface Report {
   planned_cycles: number | null
   in_progress_cycle: number | null
   reference_cycle_requested: number
+  reference_cycle_reason?: ReferenceReason
   reference_available: boolean
   retention_pct: number | null
   retention_note: string

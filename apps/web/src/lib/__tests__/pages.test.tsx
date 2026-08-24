@@ -742,6 +742,68 @@ describe('SampleDetail', () => {
     expect(await screen.findByText('could not read No_1_dry_011.wrd')).toBeInTheDocument()
   })
 
+  it('formation 이 없으면 칸이 1번을 보여 준다 — 표와 같은 값이어야 한다', async () => {
+    // 칸에 저장값 3 이 남아 있으면, 표의 유지율은 1번 기준인데 칸은 3 이라고
+    // 말하는 화면이 된다 (ADR 0018).
+    installFetch(
+      sampleDetailHandler((url) =>
+        path(url) === '/api/samples/1'
+          ? sample({
+              reference_cycle: 3,
+              reference_cycle_effective: 1,
+              reference_cycle_reason: 'formationless',
+              formation: 'no',
+            })
+          : undefined,
+      ),
+    )
+
+    renderSampleDetail()
+
+    const input = await screen.findByRole('spinbutton', { name: /기준 사이클/ })
+    expect(input).toHaveValue(1)
+    // hint 는 ' · ' 를 앞에 붙여 그리므로 정확히 같은 문자열이 아니다.
+    expect(
+      screen.getByText(/formation 이 없는 스케줄이라 1번에 앵커합니다/),
+    ).toBeInTheDocument()
+  })
+
+  it('자동으로 1번이 된 셀에 1 을 쳐도 고정된다', async () => {
+    // 저장값(3)과 비교하면 통과하지만, 쓰이는 값(1)과 비교하면 "같다" 로 걸린다.
+    // 사람이 고정하려던 의도가 거기서 사라지면 스케줄이 계속 정하게 된다.
+    const patched: unknown[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          patched.push(JSON.parse(String(init.body)))
+          return sample({
+            reference_cycle: 1,
+            reference_cycle_effective: 1,
+            reference_cycle_reason: 'user',
+          })
+        }
+        if (path(url) === '/api/samples/1') {
+          return sample({
+            reference_cycle: 3,
+            reference_cycle_effective: 1,
+            reference_cycle_reason: 'formationless',
+            formation: 'no',
+          })
+        }
+        return undefined
+      }),
+    )
+
+    renderSampleDetail()
+
+    const input = await screen.findByRole('spinbutton', { name: /기준 사이클/ })
+    await userEvent.clear(input)
+    await userEvent.type(input, '1')
+    await userEvent.tab()
+
+    await waitFor(() => expect(patched).toEqual([{ reference_cycle: 1 }]))
+  })
+
   it('commits the reference cycle once, on blur, not on every keystroke', async () => {
     const patched: unknown[] = []
     installFetch(

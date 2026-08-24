@@ -14,7 +14,13 @@ from ..db import get_session
 from ..deps import get_sample, resolved_cell_out, validate_basis
 from ..models import CycleRecord, ExperimentGroup, Run, Sample
 from ..schemas import ComponentOut, SampleIn, SampleOut, SampleUpdate
-from ..services import apply_composition, resolve_cell, sample_composition
+from ..services import (
+    apply_composition,
+    resolve_cell,
+    sample_composition,
+    sample_formation,
+    sample_reference_cycle,
+)
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
@@ -29,6 +35,11 @@ def _out(session: Session, sample: Sample) -> SampleOut:
         group = session.get(ExperimentGroup, sample.group_id)
         group_name = group.name if group else None
     composition = sample_composition(sample)
+    # 저장된 기준 사이클과 **실제로 쓰이는** 기준 사이클은 다를 수 있다:
+    # formation 이 없는 스케줄은 1번에 앵커한다 (ADR 0018).  둘 다 낸다 --
+    # 입력란은 저장값을 보여 줘야 하고, 화면 문구는 쓰이는 값을 말해야 한다.
+    formation = sample_formation(sample)
+    anchor, anchor_reason = sample_reference_cycle(sample)
     return SampleOut(
         **sample.model_dump(exclude={"composition_json"}),
         group_name=group_name,
@@ -37,6 +48,9 @@ def _out(session: Session, sample: Sample) -> SampleOut:
         composition=[ComponentOut(**c) for c in composition.to_json()],
         composition_label=composition.label(),
         resolved_cell=resolved_cell_out(resolve_cell(sample)),
+        reference_cycle_effective=anchor,
+        reference_cycle_reason=anchor_reason,
+        formation=formation,
     )
 
 
@@ -143,6 +157,11 @@ def update_sample(sample_id: int, payload: SampleUpdate,
     reference = values.get("reference_cycle")
     if reference is not None and reference < 1:
         raise HTTPException(422, "reference_cycle must be 1 or greater")
+    if reference is not None:
+        # 사람이 친 값이라고 적어 둔다.  저장된 3 이 기본값인지 입력인지
+        # 구별되지 않으면, formation 없는 스케줄이 그것을 영원히 1 로
+        # 덮어쓴다 (ADR 0018).
+        values["reference_cycle_source"] = "user"
     for key, value in values.items():
         setattr(sample, key, value)
     # Clearing happens first so a request that drops a hand-typed wt% and

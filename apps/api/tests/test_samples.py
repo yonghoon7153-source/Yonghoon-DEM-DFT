@@ -301,3 +301,73 @@ def test_a_typed_condition_is_never_overwritten_by_a_schedule(client,
 
     after = client.get(f"/api/samples/{sample['id']}").json()
     assert (after["c_rate"], after["c_rate_formation"]) == (0.05, 0.01)
+
+
+# --- 기준 사이클은 스케줄이 정한다 (ADR 0018) --------------------------------
+#
+# 3 과 1 사이에서 조용히 움직이면 화면의 유지율이 전부 달라진다.  어느 쪽으로도
+# 틀릴 수 있으므로 네 갈래를 모두 고정한다.
+
+def test_formation_keeps_the_reference_at_cycle_three(client, scheduled_wrd_bytes):
+    sample = client.post("/api/samples", json={"name": "FORM-01"}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("f_011.wrd", scheduled_wrd_bytes,
+                                "application/octet-stream")})
+
+    out = client.get(f"/api/samples/{sample['id']}").json()
+    assert out["formation"] == "yes"
+    assert out["reference_cycle_effective"] == 3
+    assert out["reference_cycle_reason"] == "default"
+
+
+def test_no_formation_moves_the_reference_to_cycle_one(client, formationless_wrd_bytes):
+    """임피던스 재고 바로 메인 루프.  1~3 사이의 손실은 formation 이 아니라 열화다."""
+    sample = client.post("/api/samples", json={"name": "NOFORM-01"}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+
+    out = client.get(f"/api/samples/{sample['id']}").json()
+    assert out["formation"] == "no"
+    assert out["reference_cycle_effective"] == 1
+    assert out["reference_cycle_reason"] == "formationless"
+    # 저장된 값은 그대로다 -- 입력란은 사람이 넣은 것을 보여 줘야 한다.
+    assert out["reference_cycle"] == 3
+
+
+def test_the_cycle_table_anchors_where_the_sample_says(client, formationless_wrd_bytes):
+    """푼 값이 표까지 간다.  SampleOut 만 맞고 표가 3번에 앵커하면 아무 소용이 없다."""
+    sample = client.post("/api/samples", json={"name": "NOFORM-02"}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+
+    table = client.get(f"/api/samples/{sample['id']}/cycles").json()
+    assert table["reference_cycle"] == 1
+    assert table["reference_cycle_reason"] == "formationless"
+    assert table["reference_cycle_used"] == 1
+    first = next(row for row in table["cycles"] if row["cycle"] == 1)
+    assert first["retention_pct"] == pytest.approx(100.0)
+
+
+def test_a_typed_reference_cycle_survives_a_formationless_schedule(
+        client, formationless_wrd_bytes):
+    """사용자 입력은 덮어쓰기다 (§0.3).  스케줄이 사람을 이기지 못한다."""
+    sample = client.post("/api/samples", json={"name": "NOFORM-03"}).json()
+    client.patch(f"/api/samples/{sample['id']}", json={"reference_cycle": 3})
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+
+    out = client.get(f"/api/samples/{sample['id']}").json()
+    assert out["formation"] == "no"
+    assert out["reference_cycle_effective"] == 3
+    assert out["reference_cycle_reason"] == "user"
+
+
+def test_a_sample_with_no_file_cannot_say(client):
+    """파일이 없으면 스케줄도 없다.  모르면 기본값을 그대로 둔다 (§0.4)."""
+    out = client.post("/api/samples", json={"name": "BARE-01"}).json()
+    assert out["formation"] == "unclear"
+    assert out["reference_cycle_effective"] == 3
+    assert out["reference_cycle_reason"] == "default"

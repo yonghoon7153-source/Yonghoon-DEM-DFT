@@ -350,6 +350,45 @@ class Schedule:
                 answers.add("no")
         return answers.pop() if len(answers) == 1 else "unclear"
 
+    @property
+    def formation(self) -> str:
+        """이 계획이 메인 루프 **앞에서** 충방전을 시키는가 — formation 이 있나.
+
+        ``yes`` · ``no`` · ``unclear`` 셋 중 하나다 (ADR 0018).
+
+        루프 바깥의 스텝은 한 번만 돈다.  거기에 충전이나 방전이 있으면 그것이
+        formation 이다.  **휴지뿐이면 formation 이 아니다** — 임피던스를 재기
+        전의 안정화 휴지가 그렇고, 이 결정이 겨냥하는 프로토콜이 바로 그것이다.
+        휴지는 용량을 만들지도 잃지도 않으므로 1번 사이클을 기준선에서 뺄 이유가
+        되지 못한다.
+
+        모르는 경우가 둘이고, 둘 다 ``unclear`` 로 답한다 (§0.4).
+
+        **루프가 기록돼 있지 않다.**  그러면 무엇이 formation 이고 무엇이 본
+        구동인지 가를 선이 없다.  스텝을 한 번씩만 도는 짧은 계획일 수도, 장비가
+        루프 표시를 안 남긴 것일 수도 있다.
+
+        **방향을 못 정한 스텝이 루프 밖에 있다.**  물려받을 CC 가 앞에 없는
+        정전압 구간은 충전인지 방전인지 알 수 없다.  휴지로 셀 수 없고 충방전으로
+        셀 수도 없다.
+        """
+        if not self.steps:
+            return "unclear"
+        looped = self._looped_step_names()
+        if not looped:
+            # 가를 선이 없다.  '루프 밖이 전부' 라고 읽으면 모든 스케줄이
+            # formation 있음이 되고, '루프가 전부' 라고 읽으면 모두 없음이 된다.
+            return "unclear"
+        outside = [s for s in self.steps if s.name not in looped]
+        if not outside:
+            return "no"
+        directions = self._effective_directions(outside)
+        if "charge" in directions or "discharge" in directions:
+            return "yes"
+        if "unknown" in directions:
+            return "unclear"
+        return "no"
+
     def nominal_capacity_ah(self, c_rate: float | None = None) -> float | None:
         """Capacity the operator dialled in, back-calculated from the current.
 

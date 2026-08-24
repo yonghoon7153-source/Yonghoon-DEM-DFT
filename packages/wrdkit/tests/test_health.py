@@ -5,7 +5,13 @@ from datetime import datetime, timedelta
 import pytest
 
 from wrdkit import read_wrd_bytes, summarize_cycles
-from wrdkit.health import CellState, build_report
+from wrdkit.health import (
+    DEFAULT_REFERENCE_CYCLE,
+    FORMATIONLESS_REFERENCE_CYCLE,
+    CellState,
+    build_report,
+    resolve_reference_cycle,
+)
 
 import synthetic
 
@@ -283,3 +289,48 @@ def test_a_continuation_file_still_gets_a_baseline_after_the_request():
     assert report.reference is not None
     assert report.reference.cycle == 1
     assert report.retention_pct is not None
+
+
+# --- 기준 사이클을 누가 정하나 (ADR 0018) ------------------------------------
+#
+# 3 과 1 사이에서 조용히 움직이면 화면의 유지율이 전부 달라진다.  그래서 답과
+# 함께 '누가 정했는지' 를 돌려주고, 그 문자열까지 여기서 고정한다.
+
+def test_formation_makes_the_default_cycle_three():
+    assert resolve_reference_cycle(3, formation="yes") == (DEFAULT_REFERENCE_CYCLE,
+                                                           "default")
+
+
+def test_no_formation_anchors_at_cycle_one():
+    assert resolve_reference_cycle(3, formation="no") == (FORMATIONLESS_REFERENCE_CYCLE,
+                                                          "formationless")
+
+
+def test_an_unclear_schedule_keeps_cycle_three():
+    """모르면 기본값을 그대로 둔다 (§0.4).  1 로 내리는 것도 추측이다."""
+    assert resolve_reference_cycle(3, formation="unclear") == (3, "default")
+
+
+def test_a_typed_value_wins_over_the_schedule():
+    """사용자 입력은 덮어쓰기(override)다 (§0.3) — 스케줄이 이기지 못한다."""
+    assert resolve_reference_cycle(3, formation="no", by_user=True) == (3, "user")
+    assert resolve_reference_cycle(7, formation="yes", by_user=True) == (7, "user")
+
+
+def test_an_old_row_that_is_not_three_is_read_as_typed():
+    """`reference_cycle_source` 가 생기기 전 행이다.
+
+    3 은 기본값이라 누가 넣었는지 알 수 없지만, 3 이 아닌 값은 기본값일 수
+    없으므로 사람이 친 것이다.  그것을 스케줄이 덮으면 입력을 잃는다.
+    """
+    assert resolve_reference_cycle(5, formation="no") == (5, "user")
+
+
+def test_an_old_row_that_is_three_follows_the_schedule():
+    """ADR 0018 이 유일하게 추측하는 자리.  대신 이유를 함께 낸다."""
+    assert resolve_reference_cycle(3, formation="no") == (1, "formationless")
+
+
+def test_nothing_stored_still_answers():
+    assert resolve_reference_cycle(None, formation="unclear") == (3, "default")
+    assert resolve_reference_cycle(None, formation="no") == (1, "formationless")

@@ -47,6 +47,7 @@ from ..services import (
     profile_series,
     resolve_cell,
     sample_cycle_records,
+    sample_reference_cycle,
 )
 from ..settings import settings
 
@@ -311,13 +312,18 @@ def sample_cycles(
         records = [r for r in records if r.complete]
 
     used = effective_basis(cell, basis)
-    rows, reference_info = _cycle_rows(records, cell, basis, sample.reference_cycle)
+    # 저장된 값이 아니라 **푼** 값이다: formation 이 없는 스케줄은 1번에
+    # 앵커한다 (ADR 0018).  누가 정했는지도 함께 낸다 -- 기준선이 조용히
+    # 움직이면 이 표의 유지율이 전부 달라진다.
+    anchor, anchor_reason = sample_reference_cycle(sample)
+    rows, reference_info = _cycle_rows(records, cell, basis, anchor)
     return CycleTableOut(
         basis=used,
         basis_label=basis_label(used),
         requested_basis=basis,
         basis_fallback_reason=cell.missing_for(basis) if used != basis else None,
-        reference_cycle=sample.reference_cycle,
+        reference_cycle=anchor,
+        reference_cycle_reason=anchor_reason,
         resolved_cell=resolved_cell_out(cell),
         cycles=rows,
         partial_cycles=partial,
@@ -342,7 +348,8 @@ def run_cycles(
     if complete_only:
         records = [r for r in records if r.complete]
     used = effective_basis(cell, basis)
-    reference = sample.reference_cycle if sample else None
+    reference, reference_reason = (sample_reference_cycle(sample) if sample
+                                   else (None, "default"))
     rows, reference_info = _cycle_rows(records, cell, basis, reference)
     return CycleTableOut(
         basis=used,
@@ -350,6 +357,7 @@ def run_cycles(
         requested_basis=basis,
         basis_fallback_reason=cell.missing_for(basis) if used != basis else None,
         reference_cycle=reference,
+        reference_cycle_reason=reference_reason,
         resolved_cell=resolved_cell_out(cell),
         cycles=rows,
         partial_cycles=partial,
@@ -722,7 +730,8 @@ def compare_cycles(
         records = sample_cycle_records(session, sample)
         if complete_only:
             records = [r for r in records if r.complete]
-        rows, reference_info = _cycle_rows(records, cell, basis, sample.reference_cycle)
+        rows, reference_info = _cycle_rows(records, cell, basis,
+                                           sample_reference_cycle(sample)[0])
 
         key = {"retention": "retention_pct"}.get(metric, metric)
         points = [

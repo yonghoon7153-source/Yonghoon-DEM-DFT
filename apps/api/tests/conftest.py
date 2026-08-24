@@ -104,6 +104,19 @@ def scheduled_wrd_bytes() -> bytes:
 
 
 @pytest.fixture
+def formationless_wrd_bytes() -> bytes:
+    """임피던스를 재고 바로 메인 루프로 들어가는 계획을 담은 파일.
+
+    기준 사이클이 3이 아니라 1이어야 하는 모양이다 (ADR 0018).  루프 앞에 있는
+    것은 안정화 휴지 하나뿐이고, 휴지는 formation 이 아니다.
+    """
+    start = synthetic.ticks_ago(30 * _CYCLE_SECONDS)
+    return synthetic.build_wrd(
+        synthetic.make_cycles(n_cycles=4, points_per_branch=30, start_ticks=start),
+        start_ticks=start, schedule=synthetic.FORMATIONLESS_SCHEDULE)
+
+
+@pytest.fixture
 def sample_id(client):
     response = client.post("/api/samples", json={
         "name": "TEST-01",
