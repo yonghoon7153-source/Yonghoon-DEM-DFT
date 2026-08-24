@@ -54,10 +54,69 @@ PREREG = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'
 #      그것이 규약이다 (H5 의 논리 — 기록되지 않은 인자는 고정을 확인할 수 없다).
 #  · `ptfe_stamp`/`ptfe_zero_dof`: σ_PTFE 만 보면 **exact-zero(σ=0·스탬프 ON)와
 #    미스탬프(σ=0·스탬프 OFF)가 구분되지 않는다** — 둘 다 sigma_ptfe_S_cm=0.0 이다.
-_FIXED_FIELDS = ('vox', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                 'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'backend',
-                 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm',
-                 'ptfe_stamp', 'ptfe_zero_dof')
+#: ★★★ **필드 계약 레지스트리** (CDXR3-5, 종료조건 ⑧).  `scope` · 비교 규칙을 **한 곳에**
+#   선언하고 아래 파생 튜플과 모든 게이트가 여기서 나온다.
+#     scope 'physics' — 규약을 정하는 물리 인자.  `physics_protocol_id` 에 들어간다.
+#     scope 'numeric' — 수치 방법 (규약은 아니나 팔 간 고정돼야 한다).
+#     scope 'bed'     — 침대 정체성.  **침대 안에서만** 고정 (침대끼리는 달라야 정상, FA-06).
+#   `across_dir` — cross-directory 대조(`compare_dirs`)에서도 고정인가.
+#     ⚠ 옛 판은 `compare_dirs` 가 `_FIXED_FIELDS` 만 봐서 `_GEN_FIELDS`(σ_AM·σ_ion·온도·
+#       침대 세대)가 **두 디렉터리 사이에서 자유롭게 달라져도 `measured` 를 냈다**
+#       (Codex 실측: `sigma_am_s_S_cm` 0.010→0.020 이 통과).  ⇒ 여기서 한 번에 정한다.
+FIELD_CONTRACT = {
+    'vox':                  dict(scope='physics', across_dir=True, required=True),
+    'bridge_um':            dict(scope='physics', across_dir=True, required=True),
+    'fibre_stamp':          dict(scope='physics', across_dir=True, required=True),
+    'sdcp_stamp':           dict(scope='physics', across_dir=True, required=True),
+    'sdcp_sphere_d_um':     dict(scope='physics', across_dir=True, required=True),
+    'sigma_vgcf_S_cm':      dict(scope='physics', across_dir=True, required=True),
+    'sigma_sdcp_S_cm':      dict(scope='physics', across_dir=True, required=True),
+    'sdcp_yield_to_vgcf':   dict(scope='physics', across_dir=True, required=True),
+    'sigma_ptfe_S_cm':      dict(scope='physics', across_dir=True, required=True),
+    'ptfe_stamp':           dict(scope='physics', across_dir=True, required=True),
+    'ptfe_zero_dof':        dict(scope='physics', across_dir=True, required=True),
+    'backend':              dict(scope='numeric', across_dir=True, required=True),
+    # ── 세대 인자 (옛 `_GEN_FIELDS`) — 전부 physics 다.  섞이면 다른 실험이다. ──
+    'sigma_ion_se_S_cm':    dict(scope='physics', across_dir=True),
+    'sigma_ion_sdcp_S_cm':  dict(scope='physics', across_dir=True),
+    'sigma_am_s_S_cm':      dict(scope='physics', across_dir=True),
+    'sigma_am_p_S_cm':      dict(scope='physics', across_dir=True),
+    'cam':                  dict(scope='physics', across_dir=True),
+    'temp_c':               dict(scope='physics', across_dir=True),
+    'ea_ion_ev':            dict(scope='physics', across_dir=True),
+    'se_E_GPa':             dict(scope='physics', across_dir=True),
+    'se_nu':                dict(scope='physics', across_dir=True),
+    'se_sigma_y_GPa':       dict(scope='physics', across_dir=True),
+    'mpm_seed':             dict(scope='physics', across_dir=True),
+    # ── 침대 정체성 — 침대 **안**에서만 고정 (FA-06: SBE 에 SDCP 가 없는 것은 정상) ──
+    'additive_E_GPa':       dict(scope='bed', across_dir=True),
+    'input_digest':         dict(scope='bed', across_dir=True),
+    # ── 코드 정체성 — 침대와 무관하지만 **섞이면 다른 실험**이다 (CDXIJ-10 ③). ──
+    'code_sha':             dict(scope='numeric', across_dir=True),
+}
+
+
+def contract_fields(scope=None, across_dir=None, required=None):
+    """레지스트리에서 필드 이름을 뽑는다 — **모든 게이트의 유일한 출처**.
+
+    ★ `required` (Codex 의 `required_since`) — **있어야 하는가** 와 **달라지면 안 되는가**
+      는 다른 축이다.  세대 인자(σ_AM·온도·침대 E)는 *섞이면 HOLD, 전부 없으면 통과* 다
+      (옛 payload 를 죽이지 않는다, 회귀 ⑲).  규약 인자는 *없으면 HOLD* 다 (H5)."""
+    return tuple(k for k, v in FIELD_CONTRACT.items()
+                 if (scope is None or v['scope'] in (scope if isinstance(scope, (tuple, list))
+                                                     else (scope,)))
+                 and (across_dir is None or v.get('across_dir') is across_dir)
+                 and (required is None or bool(v.get('required', False)) is required))
+
+
+#: 팔 간 고정 인자 (같은 디렉터리) — physics + numeric.  bed 는 제외 (침대끼리 다르다).
+_FIXED_FIELDS = contract_fields(scope=('physics', 'numeric'))
+#: 그중 **기록이 없으면 HOLD** 인 것 (규약 인자).  세대 인자는 여기 없다 — 회귀 ⑲ 참조.
+_REQUIRED_FIELDS = contract_fields(required=True)
+#: 침대 정체성 — 침대 안에서만 고정.
+_BED_FIELDS_C = contract_fields(scope='bed')
+#: cross-directory 대조에서 고정할 축 — **세대 인자와 침대까지** 포함한다.
+_XDIR_FIELDS = contract_fields(across_dir=True)
 
 _GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam',
@@ -277,7 +336,8 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     #    ⇒ 두 필드는 **침대 안에서** 고정을 본다.  그러면 CL-56 이 겨냥한 것(DBE 안에서
     #      SDCP E 23.6 ↔ 9.0 섞임)은 그대로 잡히고, 침대 사이 공통 키(PTFE·VGCF)는 아래에서
     #      따로 대조해 세대 혼합도 계속 잡는다.
-    _BED_FIELDS = ('input_digest', 'additive_E_GPa')
+    #  ★ 2026-08-25 (CDXR3-5) — 레지스트리 파생.  지역 튜플을 따로 두면 또 갈라진다.
+    _BED_FIELDS = _BED_FIELDS_C
     for fld in _BED_FIELDS:
         for k in ('SBE', 'DBE'):
             _v = {_canon(r.get(fld)) for r in arms[k] if r.get(fld) is not None}
@@ -304,8 +364,10 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                                f'(CL-56).  SDCP 처럼 한쪽에만 있는 상은 정상이다')
     #  ★ A5: σ_ion 축(도핑)과 σ_AM·CAM·T — σ_AM 은 σ_e 솔브에 직접 들어가고,
     #    σ_ion 은 도핑 트랙의 **유일한** 노브다.  둘 다 여태 미게이트였다.
-    for fld in (*_FIXED_FIELDS,
-                *(f for f in _GEN_FIELDS if f not in _gen_ex and f not in _BED_FIELDS)):
+    #  ★ 2026-08-25 (CDXR3-5) — 레지스트리가 세대 인자까지 담으므로 목록이 하나다.
+    #    면제(`_gen_ex`, --seed-ensemble)는 **전체에 균일하게** 적용한다 — 옛 판은
+    #    세대 목록에만 걸어서, 같은 필드가 `_FIXED_FIELDS` 에도 있으면 면제가 무시됐다.
+    for fld in (f for f in _FIXED_FIELDS if f not in _gen_ex):
         #  ★ F4: dict 값(additive_E_GPa)은 set 에 못 들어간다 — 정규 직렬화로 비교.
         _v = {(json.dumps(r.get(fld), sort_keys=True)
                if isinstance(r.get(fld), (dict, list)) else r.get(fld))
@@ -326,7 +388,7 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     #      이어 쓰라" 고 안내하므로 이 경로는 가정이 아니라 권장 시나리오다.
     #      ⇒ 현행 payload 는 이 여섯을 **항상** 기록한다 (`mpm_webapp_payload.py` 매니페스트)
     #        — 없으면 옛 세대이고, 옛 세대는 고정을 확인할 수 없으므로 HOLD 다 (H5 와 같은 논리).
-    for fld in _FIXED_FIELDS:
+    for fld in _REQUIRED_FIELDS:
         _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
         if _miss:
             return dict(out, decision='HOLD',
@@ -914,12 +976,26 @@ def _selftest():
     chk('㉞b 팔간-차이 루프가 _FIXED_FIELDS 를 쓴다',
         'for fld in (*_FIXED_FIELDS,' in _self)
     #  ⚠ needle 을 쪼개 만든다 — 통짜로 적으면 이 줄 자신이 두 번째 출현이 된다 (자기참조).
-    _lit = "'vox', " + "'bridge_um', " + "'fibre_stamp', " + "'sdcp_stamp'"
-    chk(f'㉞c ★★ 필드 목록 리터럴이 파일에 **한 번만** 나온다 (={_self.count(_lit)}) — '
-        f'복사본이 생기면 게이트가 조용히 갈린다',
-        _self.count(_lit) == 1)
-    chk('㉞d compare_dirs 와 verdict 가 같은 계약을 쓴다',
-        'ptfe_stamp' in _FIXED_FIELDS and 'ptfe_zero_dof' in _FIXED_FIELDS)
+    #  ★★ 2026-08-25 (CDXR3-5) — 이제 **레지스트리 하나**가 정본이므로 구조를 그것으로 건다.
+    chk('㉞c ★★ 모든 게이트 목록이 FIELD_CONTRACT 에서 파생된다 (인라인 튜플 없음)',
+        'contract_fields(' in _self
+        and all(set(_t) <= set(FIELD_CONTRACT)
+                for _t in (_FIXED_FIELDS, _REQUIRED_FIELDS, _XDIR_FIELDS, _BED_FIELDS_C)))
+    chk('㉞d ★★ cross-dir 이 **세대·침대 인자까지** 본다 (옛 판은 _FIXED_FIELDS 만 봐서 '
+        'σ_AM 을 바꿔도 measured 였다)',
+        'sigma_am_s_S_cm' in _XDIR_FIELDS and 'additive_E_GPa' in _XDIR_FIELDS
+        and 'input_digest' in _XDIR_FIELDS)
+    chk('㉞e ★ required 와 across_dir 은 **다른 축**이다 (세대 인자는 없어도 통과, '
+        '섞이면 HOLD — 회귀 ⑲ 가 그 계약이다)',
+        'sigma_am_s_S_cm' not in _REQUIRED_FIELDS and 'vox' in _REQUIRED_FIELDS)
+    chk('㉞f ★ 침대 인자는 팔-간 고정에서 **빠진다** (FA-06: SBE 에 SDCP 가 없는 것은 정상)',
+        not (set(_BED_FIELDS_C) & set(_FIXED_FIELDS)))
+    #  ★★ 2026-08-25 — **레지스트리가 옛 목록을 전부 담는가**.  이 검사가 없었으면
+    #    `code_sha` 누락을 회귀 ㉖c 가 우연히 잡은 것으로 끝났다 (실제로 그랬다).
+    #    옛 튜플이 사라진 뒤에도 이 대조는 남는다 — 레지스트리가 **덮개**임을 강제한다.
+    chk(f'㉞g ★★ FIELD_CONTRACT 가 옛 _GEN_FIELDS 를 **전부** 담는다 '
+        f'(누락: {sorted(set(_GEN_FIELDS) - set(FIELD_CONTRACT))})',
+        set(_GEN_FIELDS) <= set(FIELD_CONTRACT))
     #  ★★★ ㉟ 2026-08-25 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
     #    초판의 ㉜c 는 `seal_lines()` 반환 문자열만 검사해서 CLI preamble·옵션 우선순위·
     #    SE 역산을 전부 놓쳤다 = 이 리포가 여러 번 겪은 "실제 경로를 안 타는 테스트".
@@ -1044,12 +1120,14 @@ def _selftest():
     #     prereg v3 STEP 5 에서 실제로 일어난 일: 대조가 **다른 σ_VGCF** 로 돈 디렉터리였고
     #     아무 게이트도 안 걸려 **거짓 경보**가 났다.  판정기의 고정-인자 검사가 *한 디렉터리
     #     안*만 봤기 때문이다.  ⇒ 그 검사를 도구로 만들고 음성 대조를 상주시킨다.
-    def _mk2(d, *, yvgcf, sig_vgcf=11.0447, dig=('AA', 'BB'), n=2, dbe_mul=1.42):
+    def _mk2(d, *, yvgcf, sig_vgcf=11.0447, dig=('AA', 'BB'), n=2, dbe_mul=1.42, **_gen):
         _m0 = {'vox_um': 0.4, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
                'sdcp_stamp': 'point', 'sdcp_sphere_d_um': 0.0,
                'sigma_vgcf_S_cm': sig_vgcf, 'sigma_sdcp_S_cm': 250.0,
                'sdcp_yield_to_vgcf': yvgcf, 'sigma_ptfe_S_cm': 0.0,
+               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
                'code_sha': 'abc1234', 'components': _comps()}
+        _m0.update(_gen)                        # 세대 인자 노브 (㉗e/f 용)
         for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
             for _i in range(n):
                 _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
@@ -1082,6 +1160,23 @@ def _selftest():
         _c = compare_dirs(_A, _B, _EXP)
         chk(f'㉗c ★ 등록 축이 두 디렉터리에서 **같으면** HOLD (실험이 안 일어났다) ({_c["decision"]})',
             _c['decision'] == 'HOLD' and 'sdcp_yield_to_vgcf' in (_c.get('reason') or ''))
+    #  ★★★ ㉗e/f 2026-08-25 (CDXR3-5) — **Codex 가 통과시킨 cross-dir mutant**.
+    #    옛 `compare_dirs` 는 `_FIXED_FIELDS` 만 봐서 **세대 인자가 두 디렉터리 사이에서
+    #    자유롭게 달라져도 `measured`** 를 냈다 (Codex 실측: σ_AM 0.010 → 0.020).
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42, sigma_am_s_S_cm=0.010)
+        _mk2(_B, yvgcf=True, dbe_mul=1.29, sigma_am_s_S_cm=0.020)   # 등록 밖 세대 인자
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗e ★★ 세대 인자(σ_AM)가 cross-dir 로 다르면 HOLD — 옛 판은 measured '
+            f'({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'sigma_am_s_S_cm' in (_c.get('reason') or ''))
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42, additive_E_GPa={'SDCP': 23.6})
+        _mk2(_B, yvgcf=True, dbe_mul=1.29, additive_E_GPa={'SDCP': 9.0})   # CL-56 세대
+        _c = compare_dirs(_A, _B, _EXP)
+        chk(f'㉗f ★★ 침대 세대(additive_E_GPa, CL-56)가 cross-dir 로 다르면 HOLD '
+            f'({_c["decision"]})',
+            _c['decision'] == 'HOLD' and 'additive_E_GPa' in (_c.get('reason') or ''))
     #  ★ 침대가 다르다 — 경로·이름은 증거가 아니다
     with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
         _mk2(_A, yvgcf=False, dig=('AA', 'BB'))
@@ -1220,7 +1315,10 @@ def compare_dirs(dir_a, dir_b, expect_differ):
                                 reason=f'{bed} {key} 의 `{fld}` 가 두 디렉터리에서 다르다 '
                                        f'({ra[fld]} vs {rb[fld]}) — **같은 침대가 아니다**.  '
                                        f'감소율은 침대가 같을 때만 뜻이 있다')
-            for fld in _FIXED_FIELDS:
+            #  ★★ 2026-08-25 (CDXR3-5) — **`_XDIR_FIELDS`** 를 쓴다.  옛 판은
+            #    `_FIXED_FIELDS` 만 봐서 세대 인자(σ_AM·σ_ion·온도·침대 E)가 두 디렉터리
+            #    사이에서 **자유롭게 달라져도 `measured`** 를 냈다 (Codex 실측).
+            for fld in _XDIR_FIELDS:
                 same = _canon(ra.get(fld)) == _canon(rb.get(fld))
                 if fld in expect_differ:
                     if not same:
