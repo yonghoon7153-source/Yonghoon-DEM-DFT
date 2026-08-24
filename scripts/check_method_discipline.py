@@ -1778,6 +1778,28 @@ def _selftest():
     _live_fail = [_lb for _ln, _lb in _LIVE
                   if not k_live_invocation(_ln, 'step3_sigma.py', '--selftest')]
     chk(f'K-6: ★ 진짜 호출 3종은 받아들인다 (거부된 것: {_live_fail})', not _live_fail)
+    #  ★★★ K-7 (2026-08-25) — **검사기가 그 판별을 실제로 쓰는가.**
+    #    K-5/K-6 은 `k_live_invocation()` 을 **직접** 부르므로, 호출부가 옛 부분문자열
+    #    검사로 되돌아가도 둘 다 초록이다 — 실제로 조건 8 돌연변이 스윕에서 그 되돌림을
+    #    **놓쳤다**.  ⇒ 죽은 줄만 남은 `check_all.sh` 사본을 만들어 **검사기를 통째로**
+    #    돌린다 (helper 가 아니라 `check_selftest_wiring` 의 거동을 본다).
+    with _tk.TemporaryDirectory() as _dk7:
+        _ca7 = os.path.join(_dk7, 'check_all.sh')
+        with open(os.path.join(ROOT, K_CHECK_ALL), encoding='utf-8') as _f:
+            _t7 = _f.read()
+        _live7 = [ln for ln in _t7.splitlines()
+                  if k_live_invocation(ln, 'step3_sigma.py', '--selftest')]
+        _t7 = '\n'.join(('# ' + ln + '   ← 주석 처리 (K-7 음성 대조)')
+                         if ln in _live7 else ln for ln in _t7.splitlines())
+        #  안내문만 남긴다 — 옛 부분문자열 검사는 이것을 배선으로 센다
+        _t7 += '\necho "run:  python3 scripts/step3_sigma.py --selftest"\n'
+        with open(_ca7, 'w', encoding='utf-8') as _f:
+            _f.write(_t7)
+        _ek7, _ = check_selftest_wiring(verbose=False, check_all=_ca7)
+        chk(f'K-7: ★★ **검사기가** 주석+echo 만 남은 check_all 을 거부한다 '
+            f'(helper 직접 호출이 아니라 `check_selftest_wiring` 자신) — '
+            f'호출부를 옛 부분문자열로 되돌리면 여기서 빨간불 ({len(_ek7)}건)',
+            any(x.startswith('K_UNWIRED') and 'step3_sigma' in x for x in _ek7))
 
     # ── 규칙 L (2026-08-25, Codex 재리뷰 조건 7) — 러너 통합 ───────────────────────────
     chk('L-1: 리포의 러너가 지금 통과한다 (LEAN·EXPECT_PROTOCOL·PREREG_ARMS·진단분리)',

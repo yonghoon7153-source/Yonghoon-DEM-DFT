@@ -124,7 +124,7 @@ false-green 을 **실제 실행 경로에서 여전히 만들 수 있다**.  Cod
 | 5 | `verdict` 와 `compare_dirs` 가 **하나의** `validate_contract` 를 공유 · `required_since` | ✅ | `0db71bf9` |
 | 6 | plate 회귀: 아래판 분기 · 반응 솔버 · 비단위 vox FD · plate 원장 없으면 fail-closed | ✅ | `c89ea13b` |
 | 7 | 규칙 J 가 **정확히 exit 3** + 인과 코드 · 규칙 K 가 주석/echo/죽은 줄 거부 · 러너 통합 selftest | ✅ | `79165db0` |
-| 8 | 각 수정의 **단일-되돌림** 검증 · SciPy 환경에서 full suite | 🔶 진행 | |
+| 8 | 각 수정의 **단일-되돌림** 검증 · SciPy 환경에서 full suite | ✅ | `<P8>` |
 
 ## 자체발견 (재리뷰 조건 밖) — SELF-01
 
@@ -177,3 +177,35 @@ producer 의 매니페스트 리터럴이 **안 쓰고 있었다**.
 떼어 셸에 전개시킨다.  음성 대조 L-2~L-9.  ★ L-3·L-8 이 이 규칙의 존재 이유다 —
 `$EP_FLAG`/`$XP_FLAG` 를 **인자열에서만** 빼면 변수는 그대로 있고 쓰이지 않을 뿐이라
 grep 으로는 안 보인다.
+
+## 조건 8 — 단일 되돌림 배터리 (2026-08-25)
+
+`scripts/mutation_sweep_20260825.py` — 각 수정에 대해 **그 하나만** 옛 코드로 되돌린
+사본을 만들고 대응 selftest 가 빨간불을 내는지 본다.  통과하는 회귀는 인증되지 않은
+회귀다.  이 환경은 SciPy 1.17.1 · NumPy 2.4.6 이라 full suite 가 완주한다
+(Codex 가 자기 신고한 한계 — 로컬에 SciPy 가 없어 못 돌린 것 — 이 여기서 해소된다).
+
+| 돌연변이 | 결과 | 적발 회귀 |
+|---|---|---|
+| 조건5 `compare_dirs` 계약 제거 | 적발 | ㊳a 외 9건 — HOLD 가 **`measured`** 로 돌아간다 |
+| 조건5 `where` 접두사 제거 | 적발 | ㊳a′ 외 5건 |
+| 조건3 전자 수렴 게이트 제거 | 적발 | ㊳c 외 3건 |
+| 조건3 resid 문턱 제거 | 적발 | ㉟h 외 8건 |
+| 조건4 `periodic_xy` 규약축 제거 | 적발 | ㊴a 외 3건 |
+| 조건6 아래판 occupied-first 되돌림 | 적발 | `plate-blocker-bottom` (σ 0 → **0.01**) |
+| 조건6 반응 솔버 되돌림 | 적발 | `plate-blocker-rxn` (reason → `None`) |
+| 조건6 plate 소산 vox 인자 제거 | 적발 | `plate-share-identity-vox` (0.8333 → **0.7850**) |
+| 조건6 원장 fail-open 되돌림 | 적발 | `plate-share-failclosed` |
+| 조건7 규칙 K 옛 부분문자열 | 적발 | K-7 외 2건 |
+| SELF-01 `vox_um` 매니페스트 제거 | 적발 | J-1(J_PROTOCOL) 외 2건 |
+| 조건2 게시-전-검증 되돌림 | 적발 | J-1(J_PUBLISHED·J_NODIAG) 외 2건 |
+
+**놓친 돌연변이: 없음.**
+
+⚠⚠ **초판 스윕은 하나를 놓쳤다** — 「조건7 규칙 K 옛 부분문자열」.  K-5/K-6 이
+`k_live_invocation()` 을 **직접** 부르기 때문에, **호출부**가 옛 부분문자열 검사로
+되돌아가도 둘 다 초록이었다.  helper 를 시험하는 것과 **검사기를 시험하는 것**은
+다르다.  ⇒ K-7 신설: 죽은 줄만 남은 `check_all.sh` 사본을 만들어
+`check_selftest_wiring` **자신**을 돌린다.
+★ 이것이 조건 8 이 존재하는 이유 그 자체다 — 돌연변이 배터리가 없었으면 이 구멍은
+**규칙 K 를 하드닝하는 커밋 안에** 그대로 남았을 것이다.
