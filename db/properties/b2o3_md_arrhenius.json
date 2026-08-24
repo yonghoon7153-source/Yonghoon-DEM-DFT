@@ -1,131 +1,138 @@
 {
-  "FINAL_for_paper": {
-    "method": "UMA-s-1p1 (omat) Langevin NVT MD; D = slope/6 of a FREE-INTERCEPT linear fit MSD = c + 6Dt over 2-50 ps (np.polyfit deg-1; c = cage intercept, NOT forced through origin) (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven = 1. SAME pipeline reproduces the validated deck slide for modelc exactly.",
-    "window_ps": [
-      2,
-      50
-    ],
-    "n_Li_cm3": 2.3806298818304583e+22,
-    "D_per_T_cm2_s": {
-      "600": 9.174e-06,
-      "800": 3.009e-05,
-      "1000": 5.067e-05
-    },
-    "Ea_eV": 0.2234,
-    "D0_cm2_s": 0.0007112,
-    "D_300K_cm2_s": 1.2547e-07,
-    "D_273K_cm2_s": 5.337e-08,
-    "sigma_300K_mS_cm": 18.51,
-    "sigma_273K_mS_cm": 8.65,
-    "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
-    "Ea_eV_PAPER": "0.199 +/- 0.034  [FINAL: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> quote this]",
-    "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
-    "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL).",
-    "method_note_2026_08_11": "코드 실측: 캠페인 전 지점이 자유 절편 OLS 기울기다(disorder_ensemble_diffusion.py:168 포함 7곳). 옛 문구 'MSD = 6 D t' 는 원점 통과 강제로 오독될 수 있어 정정 — 값은 불변."
+ "FINAL_for_paper": {
+  "method": "UMA-s-1p1 (omat) Langevin NVT MD; D = slope/6 of a FREE-INTERCEPT linear fit MSD = c + 6Dt over 2-50 ps (np.polyfit deg-1; c = cage intercept, NOT forced through origin) (msd_origin default); 3-pt Arrhenius (600/800/1000 K); Nernst-Einstein sigma = n q^2 D / (kB T), Haven = 1. SAME pipeline reproduces the validated deck slide for modelc exactly.",
+  "window_ps": [
+   2,
+   50
+  ],
+  "n_Li_cm3": 2.3806298818304583e+22,
+  "D_per_T_cm2_s": {
+   "600": 9.174e-06,
+   "800": 3.009e-05,
+   "1000": 5.067e-05
   },
-  "supplementary_lowT_400_500": {
-    "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
-    "window_ps": [
-      5,
-      40
-    ],
-    "D_400K_cm2_s": 1.124e-06,
-    "D_500K_cm2_s": 5.517e-06,
-    "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
+  "Ea_eV": 0.2234,
+  "D0_cm2_s": 0.0007112,
+  "D_300K_cm2_s": 1.2547e-07,
+  "D_273K_cm2_s": 5.337e-08,
+  "sigma_300K_mS_cm": 18.51,
+  "sigma_273K_mS_cm": 8.65,
+  "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
+  "Ea_eV_PAPER_RETRACTED_2026_08_23": "0.199 +/- 0.034  [⛔ 2026-08-23 철회 — 600–1000 K 를 하나의 Ea 로 기술할 수 없다 (굽음 145 meV). 원래 라벨: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> 인용 금지]",
+  "Ea_eV_USABLE_segment_600_800": "0.222 eV [600→800 K 구간만. 800→1000 은 0.077 eV 로 갈린다 — 단일 직선 금지. 근거: ⛔_RETRACTED_2026_08_23 · kb/results/b2o3_arrhenius_curvature_2026_08_23.md]",
+  "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
+  "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL).",
+  "method_note_2026_08_11": "코드 실측: 캠페인 전 지점이 자유 절편 OLS 기울기다(disorder_ensemble_diffusion.py:168 포함 7곳). 옛 문구 'MSD = 6 D t' 는 원점 통과 강제로 오독될 수 있어 정정 — 값은 불변."
+ },
+ "supplementary_lowT_400_500": {
+  "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
+  "window_ps": [
+   5,
+   40
+  ],
+  "D_400K_cm2_s": 1.124e-06,
+  "D_500K_cm2_s": 5.517e-06,
+  "curvature_verdict": "segment Ea zig-zags (no clean super-Arrhenius). To fold into a consistent 5-pt fit, re-extract the 400/500 K MSD arrays (gabia) at 2-50 ps."
+ },
+ "multiseed_600K_errorbar": {
+  "note": "600K is the dominant Ea-noise driver (leave-one-out); reseeded 3x (each 200 ps, 2-50 ps window, uma-s-1p1) to quantify. This is the honest paper value; the single-seed Ea 0.2234 above is one draw within this bar.",
+  "seeds_D_600_cm2_s": {
+   "s2": 7.981e-06,
+   "s3": 1.3043e-05,
+   "s4": 1.0211e-05
   },
-  "multiseed_600K_errorbar": {
-    "note": "600K is the dominant Ea-noise driver (leave-one-out); reseeded 3x (each 200 ps, 2-50 ps window, uma-s-1p1) to quantify. This is the honest paper value; the single-seed Ea 0.2234 above is one draw within this bar.",
-    "seeds_D_600_cm2_s": {
-      "s2": 7.981e-06,
-      "s3": 1.3043e-05,
-      "s4": 1.0211e-05
-    },
-    "D_600_mean_cm2_s": 1.041e-05,
-    "D_600_std_cm2_s": 2.537e-06,
-    "D_600_spread_pct": 24,
-    "high_T_anchor_cm2_s": {
-      "800": 3.009e-05,
-      "1000": 5.067e-05,
-      "note": "deck-validated but still single-seed -> a 2nd-order uncertainty on top of the 600K bar"
-    },
-    "Ea_eV": "0.206 (+0.038/-0.030)",
-    "Ea_per_seed_eV": {
-      "s2": 0.2425,
-      "s3": 0.1752,
-      "s4": 0.2087
-    },
-    "sigma_300K_mS_cm_per_seed": {
-      "s2": 11.27,
-      "s3": 64.81,
-      "s4": 27.11,
-      "mean": 29.05,
-      "caution": "sigma300 swings 11-65 with the 600K seed -> single-seed absolute sigma is NOT reportable; quote Ea+-err and the b2o3/modelc ratio only"
-    },
-    "resolves": "the earlier 0.223-vs-0.172 (51 meV) swing was entirely 600K seed variation, not a real difference. Confirms the leave-one-out diagnosis.",
-    "data": "db/properties/b2o3_600K_reseed_errorbar.csv ; fig docs/figures/cascade/b2o3_600K_reseed_errorbar.png"
+  "D_600_mean_cm2_s": 1.041e-05,
+  "D_600_std_cm2_s": 2.537e-06,
+  "D_600_spread_pct": 24,
+  "high_T_anchor_cm2_s": {
+   "800": 3.009e-05,
+   "1000": 5.067e-05,
+   "note": "deck-validated but still single-seed -> a 2nd-order uncertainty on top of the 600K bar"
   },
-  "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
-  "SUPERSEDED": {
-    "note": "earlier (5-40 ps) fits, retained for traceability only; the (5-40) window faked a b2o3 Ea advantage via modelc's window-sensitive 800 K point.",
-    "highT_5_40": {
-      "Ea_eV": 0.207,
-      "sigma_300K_mS_cm": 27.82
-    },
-    "full5pt_5_40": {
-      "Ea_eV": 0.214,
-      "sigma_300K_mS_cm": 23.93
-    }
+  "Ea_eV": "0.206 (+0.038/-0.030)",
+  "Ea_per_seed_eV": {
+   "s2": 0.2425,
+   "s3": 0.1752,
+   "s4": 0.2087
   },
-  "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability.",
-  "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md",
-  "_provenance_audit": {
-    "audited": "2026-08-12",
-    "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
-    "generator": "(없음 — 손으로 누적)",
-    "source": "gabia:/data/work/b2o3md/b2o3_unified/d0.00_cfg0/T{600,800,1000}/ · runs/b2o3_600_reseed/s{2,3,4}/",
-    "collected": "2026-06-29",
-    "confidence": "high",
-    "note": "헤드라인 3회 교체 — FINAL_for_paper.Ea_eV_PAPER 만 인용",
-    "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+  "sigma_300K_mS_cm_per_seed": {
+   "s2": 11.27,
+   "s3": 64.81,
+   "s4": 27.11,
+   "mean": 29.05,
+   "caution": "sigma300 swings 11-65 with the 600K seed -> single-seed absolute sigma is NOT reportable; quote Ea+-err and the b2o3/modelc ratio only"
   },
-  "⛔_RETRACTED_2026_08_23": {
-    "what": "Ea_eV_PAPER_SUPERSEDED_600K_only = 0.206 (+0.038/-0.030) 및 2026-08-23 3x3 단일적합 0.1732 eV 를 모두 철회한다.",
-    "why": "아레니우스가 800 K 위에서 굽는다. 구간 Ea 가 600→800 0.2219 eV / 800→1000 0.0773 eV 로 145 meV 갈린다. 단일 직선으로 기술할 수 없다.",
-    "why_it_was_hidden": "옛 판은 600 K 3시드 + **단일시드** 고온 앵커로 냈다. 그 단일시드 1000 K = 5.067e-05 는 3시드 평균 3.809e-05 보다 33 % 높아 굽음을 가렸다 (그 앵커로는 800→1000 구간 Ea 가 0.180 eV 로 나와 저온 구간 0.222 와 가까워 보인다).",
-    "multiseed_3x3": {
-      "600": [
-        7.981e-06,
-        1.3043e-05,
-        1.0211e-05
-      ],
-      "800": [
-        2.741e-05,
-        2.75e-05,
-        3.641e-05
-      ],
-      "1000": [
-        3.72e-05,
-        4.403e-05,
-        3.305e-05
-      ],
-      "means": {
-        "600": 1.041e-05,
-        "800": 3.044e-05,
-        "1000": 3.809e-05
-      },
-      "ratio_1000_over_800_per_seed": [
-        1.22,
-        1.45,
-        1.09
-      ]
-    },
-    "artifact_hypotheses_all_refuted": {
-      "beta_gate": "6/6 확산 영역 통과 (msd_diffusive_check --scan --average --mto)",
-      "msd_window_saturation": "창 2-50 / 10-50 / 25-100 에서 m = 2.678 / 2.691 / 2.784 (+4 %) — 포화면 떨어져야 한다. c 는 +3.41 → -0.72 로 줄어든다(sub-diffusion 이면 커져야 한다).",
-      "structural_change_at_1000K": "궤적 첫/끝 프레임 P 배위수 8/8 CN=4, 시작=끝 동일. PS4 x6 · PS3O x1 · PS2O2 x1 — 해리 없음."
-    },
-    "usable": "600→800 구간 Ea = 0.222 eV (단일시드 옛 값 0.2234 와 거의 같다 — 저온 구간은 처음부터 맞았다)",
-    "open": "왜 포화하는지 미규명 · 1000 K 위 미측정 · sigma(300 K) 재계산 필요",
-    "card": "kb/results/b2o3_arrhenius_curvature_2026_08_23.md"
+  "resolves": "the earlier 0.223-vs-0.172 (51 meV) swing was entirely 600K seed variation, not a real difference. Confirms the leave-one-out diagnosis.",
+  "data": "db/properties/b2o3_600K_reseed_errorbar.csv ; fig docs/figures/cascade/b2o3_600K_reseed_errorbar.png"
+ },
+ "caveat": "MLIP classical Nernst-Einstein (Haven=1) overestimates ABSOLUTE sigma ~3-5x for the LPSCl family. Robust quantities = Ea and the relative b2o3-vs-modelc ratio (same method/window). Absolute sigma is an upper bound.",
+ "SUPERSEDED": {
+  "note": "earlier (5-40 ps) fits, retained for traceability only; the (5-40) window faked a b2o3 Ea advantage via modelc's window-sensitive 800 K point.",
+  "highT_5_40": {
+   "Ea_eV": 0.207,
+   "sigma_300K_mS_cm": 27.82
+  },
+  "full5pt_5_40": {
+   "Ea_eV": 0.214,
+   "sigma_300K_mS_cm": 23.93
   }
+ },
+ "_SUPERSEDED_sigma_ratio_2026_07_09": "The 1.33x sigma300 ratio (and any 'b2o3 raises sigma' wording) is SUPERSEDED: 멀티시드(3-seed×3-T) σ비율 1.08/0.82/1.15 = 동등; 단일시드 1.33×는 시드 노이즈로 철회(SEMIFINAL 2026-07-09); Ea 0.199±0.034 vs 0.197±0.032 eV. Correct claim: B2O3 PRESERVES sigma (O Li-trap offset by +45% BVSE channel opening). Source: kb/results/b2o3_SEMIFINAL_report_2026_07_09.md. Ea/D values kept for traceability.",
+ "⚠_DIFFUSIVE_GATE_2026_08_01": "⚠⚠ 확산영역 게이트 미통과/미검사 (2026-08-01). MSD 창 2-50 ps 의 log-log 기울기 β 가 0.8 미만이면 케이지 진동을 확산으로 오독한 것이다. comp1 seeds 6/6, comp2 d=1.0 8/9 가 케이지로 판정됐고 **창 변경·시드 평균 어느 쪽으로도 구제되지 않았다**(200 ps 부족). 같은 프로토콜로 낸 Ea 는 tools/ionic/msd_diffusive_check.py 게이트를 통과하기 전까지 **인용 보류**. 근거: kb/results/mlip_md_diffusive_gate_2026_08_01.md",
+ "_provenance_audit": {
+  "audited": "2026-08-12",
+  "audited_by": "db provenance sweep (tools/db/validate_canonical.py --cited 로 대상 선정)",
+  "generator": "(없음 — 손으로 누적)",
+  "source": "gabia:/data/work/b2o3md/b2o3_unified/d0.00_cfg0/T{600,800,1000}/ · runs/b2o3_600_reseed/s{2,3,4}/",
+  "collected": "2026-06-29",
+  "confidence": "high",
+  "note": "헤드라인 3회 교체 — FINAL_for_paper.Ea_eV_PAPER 만 인용",
+  "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ },
+ "⛔_RETRACTED_2026_08_23": {
+  "what": "Ea_eV_PAPER_SUPERSEDED_600K_only = 0.206 (+0.038/-0.030) 및 2026-08-23 3x3 단일적합 0.1732 eV , 그리고 Ea_eV_PAPER = 0.199 +/- 0.034 (2026-07-07 3seed x 3T 단일적합) 까지 **셋 다** 철회한다.",
+  "why": "아레니우스가 800 K 위에서 굽는다. 구간 Ea 가 600→800 0.2219 eV / 800→1000 0.0773 eV 로 145 meV 갈린다. 단일 직선으로 기술할 수 없다.",
+  "why_it_was_hidden": "옛 판은 600 K 3시드 + **단일시드** 고온 앵커로 냈다. 그 단일시드 1000 K = 5.067e-05 는 3시드 평균 3.809e-05 보다 33 % 높아 굽음을 가렸다 (그 앵커로는 800→1000 구간 Ea 가 0.180 eV 로 나와 저온 구간 0.222 와 가까워 보인다).",
+  "multiseed_3x3": {
+   "600": [
+    7.981e-06,
+    1.3043e-05,
+    1.0211e-05
+   ],
+   "800": [
+    2.741e-05,
+    2.75e-05,
+    3.641e-05
+   ],
+   "1000": [
+    3.72e-05,
+    4.403e-05,
+    3.305e-05
+   ],
+   "means": {
+    "600": 1.041e-05,
+    "800": 3.044e-05,
+    "1000": 3.809e-05
+   },
+   "ratio_1000_over_800_per_seed": [
+    1.22,
+    1.45,
+    1.09
+   ]
+  },
+  "artifact_hypotheses_all_refuted": {
+   "beta_gate": "6/6 확산 영역 통과 (msd_diffusive_check --scan --average --mto)",
+   "msd_window_saturation": "창 2-50 / 10-50 / 25-100 에서 m = 2.678 / 2.691 / 2.784 (+4 %) — 포화면 떨어져야 한다. c 는 +3.41 → -0.72 로 줄어든다(sub-diffusion 이면 커져야 한다).",
+   "structural_change_at_1000K": "궤적 첫/끝 프레임 P 배위수 8/8 CN=4, 시작=끝 동일. PS4 x6 · PS3O x1 · PS2O2 x1 — 해리 없음."
+  },
+  "usable": "600→800 구간 Ea = 0.222 eV (단일시드 옛 값 0.2234 와 거의 같다 — 저온 구간은 처음부터 맞았다)",
+  "open": "왜 포화하는지 미규명 · 1000 K 위 미측정 · sigma(300 K) 재계산 필요",
+  "card": "kb/results/b2o3_arrhenius_curvature_2026_08_23.md",
+  "what_missed_in_first_pass": "초판 철회 블록은 0.206 과 0.1732 만 적었고 Ea_eV_PAPER = 0.199 를 빠뜨렸다. 그래서 같은 파일이 한쪽에서 \"단일 Ea 불가\" 라고 하면서 다른 쪽에서 \"[FINAL ... quote this] 0.199\" 라고 말하는 자기모순 상태로 하루 갔다. 철회는 **같은 종류의 값 전부**에 걸어야 한다 (2026-08-24 발견).",
+  "downstream_still_using_0.199": [
+   "tools/ionic/md_temperature_feasibility.py:47  B2O3-doped Ea=0.199",
+   "tools/ionic/hops_per_ion.py:40               B2O3@LPSCl1.6 Ea=0.199",
+   "⚠ 둘 다 **저온(300–500 K) 외삽**에 쓴다. 굽은 아레니우스를 평균낸 0.199 는 저온을 실제보다 쉽게 보이게 한다 — 저온 구간 값 0.222 를 써야 한다. 미수정."
+  ]
+ }
 }
