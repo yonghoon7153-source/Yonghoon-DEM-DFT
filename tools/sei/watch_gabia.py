@@ -25,6 +25,11 @@ import subprocess
 import sys
 from datetime import datetime
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 끝점 디렉터리(_r2 이어달리기 포함) 판정은 **한 곳**에만 둔다 — 복사가 화면과
+# 도구를 서로 다른 파일을 보게 만들었다 (2026-08-16 · 2026-08-25 두 번).
+from symmetric_saddle import endpoint_dir          # noqa: E402
+
 #: SEI DFT 작업 루트 — **여러 개**. frozen-4f 재계산은 별도 폴더라
 #:  한 곳만 보면 "미착수" 로 보인다 (2026-08-12 실제로 그랬다: LiNdO₂·Nd₂S₃ 는
 #:  이미 6단계 완주였는데 화면은 vc-rlx 만 ✓ 로 찍고 있었다).
@@ -254,8 +259,17 @@ def neb_status(d):
     r["ci"] = meta.get("ci_scheme")          # neb.out 을 읽으면 아래에서 덮어쓴다
 
     # ── 끝점 ──
-    ei, mi = relax_end(os.path.join(d, "ep_initial", "relax.out"))
-    ef, mf = relax_end(os.path.join(d, "ep_final", "relax.out"))
+    # ⛔⛔ 2026-08-25 — 여기가 `ep_initial/` 을 **고정으로** 읽고 있었다. 끝점 이완
+    #   이어달리기는 `ep_initial_r2/` 로 들어가므로(미수렴 원본을 안 덮으려고),
+    #   수렴본을 옆에 두고 **미수렴 원본을 보고 "스텝 소진 — 수렴 아님" 경보**를 냈다.
+    #   cc333 이 정확히 그 상태였다: r2 는 'Begin final coordinates' 가 있고 힘도
+    #   6분의 1인데(0.0029 vs 0.018), 화면은 "끝점 미수렴이니 Δ끝점을 믿지 말라" 고
+    #   말하고 있었다. build_neb_inputs --verify_endpoints 는 neb.in 이 r2 좌표를
+    #   107원자 전부 |Δ|=0 으로 물고 있다고 확인해 준다 — 화면만 틀렸던 것이다.
+    #   판정 규칙은 symmetric_saddle.endpoint_dir() 하나뿐이다. 복사하지 말고 쓴다.
+    _epd = {nm: endpoint_dir(d, nm) for nm in ("ep_initial", "ep_final")}
+    ei, mi = relax_end(os.path.join(_epd["ep_initial"], "relax.out"))
+    ef, mf = relax_end(os.path.join(_epd["ep_final"], "relax.out"))
     r["ep_mark"] = mi + mf
     r["ep_converged"] = (mi == "✓" and mf == "✓")
     if "▸" in r["ep_mark"]:
@@ -267,8 +281,10 @@ def neb_status(d):
         for nm, mk in (("ep_initial", mi), ("ep_final", mf)):
             if mk != "▪":
                 continue
-            nst, mxf = relax_progress(os.path.join(d, nm, "relax.out"))
-            bits.append(f"{nm} {nst or '?'}스텝"
+            _sd = _epd[nm]
+            nst, mxf = relax_progress(os.path.join(_sd, "relax.out"))
+            # 어느 디렉터리를 봤는지 화면에 적는다 — 옛 판이 조용히 원본을 보던 게 문제였다
+            bits.append(f"{os.path.basename(_sd)} {nst or '?'}스텝"
                         + (f" max|F| {mxf:.5f}" if mxf is not None else ""))
         r["alerts"].append(
             f"{r['tag']}: 끝점이 **스텝 소진으로 멈췄다** (수렴 아님 — "
@@ -609,6 +625,33 @@ def selftest():
         "양성: Begin final coordinates 있으면 ✓✓")
     chk(not any("스텝 소진" in a for a in s2["alerts"]),
         "양성: 수렴본에 소진 경고를 달지 않는다")
+    # ── ★ _r2 이어달리기 (2026-08-25) — 이 화면이 실제로 틀렸던 케이스 ──────────
+    #   끝점 이완을 이어달리면 ep_initial_r2/ 로 들어간다(미수렴 원본을 안 덮으려고).
+    #   옛 코드는 ep_initial/ 만 읽어, **수렴본을 옆에 두고** "스텝 소진 — 수렴 아님"
+    #   경보를 냈다. cc333 이 그 상태로 하루를 갔다.
+    _d = mk("r2case", None, -100.0, -100.004, body, exhausted=True)   # 원본 = 소진
+    for ep in ("ep_initial", "ep_final"):
+        _r2 = os.path.join(_d, ep + "_r2")
+        os.makedirs(_r2, exist_ok=True)
+        open(os.path.join(_r2, "relax.out"), "w").write(
+            "!    total energy              =    -7.35000000 Ry\n"
+            "     End of BFGS Geometry Optimization\n"
+            "Begin final coordinates\nATOMIC_POSITIONS (crystal)\n"
+            "End final coordinates\n   JOB DONE.\n")
+    _s3 = neb_status(_d)
+    chk(_s3["ep_mark"] == "✓✓" and _s3.get("ep_converged") is True,
+        "★ _r2 수렴본이 있으면 그걸 본다 (원본이 소진이어도 ✓✓)")
+    chk(not any("스텝 소진" in a for a in _s3["alerts"]),
+        "★ 음성: _r2 가 수렴했는데 소진 경보를 내지 않는다")
+    # 반대 방향 — _r2 도 소진이면 여전히 막아야 한다(경보를 없애버린 게 아님)
+    for ep in ("ep_initial", "ep_final"):
+        open(os.path.join(_d, ep + "_r2", "relax.out"), "w").write(
+            "!    total energy              =    -7.35000000 Ry\n"
+            "     The maximum number of steps has been reached.\n"
+            "     End of BFGS Geometry Optimization\n   JOB DONE.\n")
+    _s4 = neb_status(_d)
+    chk("▪" in _s4["ep_mark"] and any("스텝 소진" in a for a in _s4["alerts"]),
+        "★ 음성: _r2 도 소진이면 여전히 경보를 낸다")
     # 미수렴 끝점의 ΔE 는 축퇴 증거가 아니다 → 표에서 ✓ 를 주면 안 된다
     s3 = neb_status(mk("cc333eq", True, -100.0, -100.001, body, exhausted=True))
     chk(s3.get("ep_converged") is False and s3["eqv"] is True,
