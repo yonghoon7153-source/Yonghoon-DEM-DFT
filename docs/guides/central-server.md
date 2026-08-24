@@ -1,7 +1,7 @@
 ---
 title: central server
 created: 2026-08-21
-updated: 2026-08-21
+updated: 2026-08-24
 type: guide
 tags: [tooling, workflow, data, backup]
 sources: [docs/adr/0011-central-instance-for-data.md, tools/backup.py, tools/bml]
@@ -82,11 +82,45 @@ New-NetFirewallRule -DisplayName "BML 5003" -Direction Inbound -LocalPort 5003 `
 
 `액세스가 거부되었습니다` 가 나오면 관리자 창이 아니다.
 
-### NAT 모드일 때
+### 주소를 못 찾을 때 — WSL 이 NAT 뒤에 있다
 
-WSL2 에는 네트워크 방식이 둘 있다. **mirrored** 면 WSL 이 Windows 의 주소를
-그대로 쓰므로 위의 것으로 끝이다. **NAT** (기본값) 면 WSL 이 `172.x` 사설망
-안에 있어서, Windows 로 들어온 포트를 WSL 로 넘겨 주어야 한다:
+`bml status` 가 `접속 주소 찾지 못했습니다` 로 끝나면 그 WSL 은 **NAT** 모드다.
+WSL2 의 네트워크 방식은 둘이고, **mirrored** 면 WSL 이 Windows 의 주소를 그대로
+쓰므로 위의 것으로 끝이다. **NAT**(기본값) 면 WSL 이 `172.x` 사설망 안에 있어서
+Windows 로 들어온 포트를 WSL 로 넘겨 주어야 한다. 길이 둘이다.
+
+`bml status` 도 같은 두 길을 찍는다 — 화면에는 이 기계의 실제 `172.x` 까지 채워
+나오므로, 그 앞에 앉아 있다면 화면 쪽이 낫다.
+
+**A. mirrored 로 바꾼다 (권장).** 포워딩이 필요 없어지고, WSL 을 재시작해도
+풀리지 않는다. PowerShell 에 (관리자 아니어도 된다) 이 **한 줄**:
+
+```powershell
+$f="$env:USERPROFILE\.wslconfig"; $t=(Get-Content $f -Raw -EA 0); if($t -match '(?m)^[ \t]*networkingMode'){$t=$t -replace '(?m)^[ \t]*networkingMode[ \t]*=[^\r\n]*','networkingMode=mirrored'}elseif($t -match '(?m)^\[wsl2\]'){$t=$t -replace '(?m)^\[wsl2\]',"[wsl2]`r`nnetworkingMode=mirrored"}else{$t="[wsl2]`r`nnetworkingMode=mirrored`r`n$t"}; Set-Content $f $t -NoNewline; Get-Content $f
+```
+
+그다음 `wsl --shutdown`, WSL 터미널을 다시 연다.
+
+이 한 줄이 하는 일은 `%USERPROFILE%\.wslconfig` 를 이렇게 만드는 것뿐이다:
+
+```ini
+[wsl2]
+networkingMode=mirrored
+```
+
+**이 두 줄은 파일 내용이지 명령이 아니다.** 예전에는 `bml status` 가 이 두 줄만
+찍었고, 실제로 PowerShell 에 그대로 붙여넣어 `'networkingMode=mirrored' 용어가
+... 인식되지 않습니다` 를 본 일이 있다. 오류 문구에 '파일' 이라는 말이 없어서
+원인을 알 수 없다. 그래서 파일을 고치는 일까지 명령 한 줄로 준다 — 위의 것을
+쓰면 손으로 파일을 만들 일이 없다. 이미 있는 `.wslconfig` 는 덮어쓰지 않고,
+`[wsl2]` 절이 있으면 그 안에 넣고, `networkingMode=NAT` 라고 적혀 있으면 그 줄만
+바꾼다. 두 번 눌러도 결과가 같다.
+
+**Windows 11 22H2 미만이면 mirrored 는 오류 없이 무시된다.** `wsl --shutdown`
+후에도 `bml status` 가 여전히 주소를 못 찾으면 그 경우이니 B 로 간다.
+
+**B. NAT 그대로 두고 포워딩한다.** WSL 을 재시작할 때마다 다시 해야 한다.
+관리자 PowerShell:
 
 ```powershell
 wsl hostname -I        # 172. 로 시작하는 것을 고른다 (실제 값으로 바꿔 넣는다)
@@ -96,7 +130,8 @@ netsh interface portproxy add v4tov4 listenport=5003 listenaddress=0.0.0.0 `
 ```
 
 `connectaddress=` 뒤에 `<...>` 같은 자리표시자를 그대로 두면 `구문이 올바르지
-않습니다` 가 난다. WSL 을 재시작하면 `172.x` 가 바뀌므로 다시 해야 한다
+않습니다` 가 난다 — `bml status` 는 이 줄을 실제 `172.x` 까지 채워서 준다.
+WSL 을 재시작하면 `172.x` 가 바뀌므로 다시 해야 한다
 (`netsh interface portproxy reset` 후 add).
 
 mirrored 모드에서는 이 portproxy 를 **넣지 않는다** — 넣으면 오히려 꼬인다.

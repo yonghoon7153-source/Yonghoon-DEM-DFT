@@ -152,6 +152,16 @@ ok()   { printf '%s✓%s %s\n' "$GREEN" "$OFF" "$*"; }
 warn() { printf '%s!%s %s\n' "$YELLOW" "$OFF" "$*"; }
 die()  { printf '%s✕%s %s\n' "$RED" "$OFF" "$*" >&2; exit 1; }
 
+#: **파일에 들어갈 내용** 한 줄.  명령이 아니다.
+#:
+#: 이 화면에서 초록색은 "그대로 붙여넣으면 되는 것" 이라는 뜻으로 써 왔다.
+#: `.wslconfig` 의 두 줄을 같은 초록으로 찍었더니 PowerShell 에 그대로
+#: 붙여넣었고, 돌아온 것은 `'networkingMode=mirrored' 용어가 ... 인식되지
+#: 않습니다` 였다 — 오류 문구 어디에도 '파일' 이라는 말이 없어서, 화면을 준
+#: 우리 말고는 원인을 알 수 없다.  그래서 파일 내용은 색을 바꾸고 왼쪽에
+#: 세로줄을 세운다.  색이 꺼진 자리(파이프·로그)에서도 세로줄은 남는다.
+file_line() { printf '%s       │%s %s%s%s\n' "$DIM" "$OFF" "$BLUE" "$*" "$OFF"; }
+
 # --- 파이썬 ------------------------------------------------------------------
 python_bin() {
   if [ -x "$REPO/.venv/bin/python" ]; then
@@ -1177,6 +1187,75 @@ wsl_nat_address() {
   return 0
 }
 
+#: `.wslconfig` 에 `networkingMode=mirrored` 를 넣는 PowerShell **한 줄**.
+#:
+#: 예전에는 파일 두 줄(`[wsl2]` / `networkingMode=mirrored`)을 화면에 그냥
+#: 찍었다.  붙여넣을 명령과 같은 초록이라 구분이 안 됐고, 실제로 PowerShell 에
+#: 그대로 붙여넣어 `'networkingMode=mirrored' 용어가 ... 인식되지 않습니다` 를
+#: 두 번 봤다.  그래서 **파일을 고치는 일까지 명령 한 줄로 준다.**
+#:
+#: 이 한 줄이 지키는 것:
+#:   - 이미 있는 `.wslconfig` 를 덮어쓰지 않는다 (memory·processors 등이 산다).
+#:   - `[wsl2]` 절이 이미 있으면 **그 절 안에** 넣는다.  절을 하나 더 붙이지
+#:     않는다 — 같은 절이 두 번 나올 때 WSL 이 어느 쪽을 읽는지 확인한 바가
+#:     없다.  확인 못 한 것에 기대지 않는다 (§0.4).
+#:   - `networkingMode` 가 이미 있으면 그 줄을 mirrored 로 **바꾼다**.  NAT 이라고
+#:     적혀 있는 파일에 아무것도 안 하고 끝나면, 사람은 켰다고 믿는다.
+#:   - 끝에 파일을 그대로 찍는다 — 사람이 결과를 눈으로 본다.
+#:
+#: 관리자 권한은 필요 없다 (자기 홈의 파일이다).  줄바꿈이 들어가면 안 된다 —
+#: 붙여넣기 한 번에 끝나야 하고, PowerShell 은 잘린 줄을 계속 프롬프트로
+#: 기다리기만 한다.  `test_bml_client.sh` 가 그 한 줄임을 고정한다.
+wslconfig_mirror_command() {
+  # 따옴표를 있는 그대로 두려고 heredoc 을 쓴다 (셸이 손대지 않는다).
+  cat <<'PSLINE'
+$f="$env:USERPROFILE\.wslconfig"; $t=(Get-Content $f -Raw -EA 0); if($t -match '(?m)^[ \t]*networkingMode'){$t=$t -replace '(?m)^[ \t]*networkingMode[ \t]*=[^\r\n]*','networkingMode=mirrored'}elseif($t -match '(?m)^\[wsl2\]'){$t=$t -replace '(?m)^\[wsl2\]',"[wsl2]`r`nnetworkingMode=mirrored"}else{$t="[wsl2]`r`nnetworkingMode=mirrored`r`n$t"}; Set-Content $f $t -NoNewline; Get-Content $f
+PSLINE
+}
+
+#: 다른 기계가 칠 수 있는 주소가 하나도 없을 때의 안내.
+#:
+#: 거의 항상 WSL 의 NAT 모드다: `172.x` 사설망 안에 있어서 `hostname -I` 의
+#: 주소로는 밖에서 못 닿는다.  여기서 문서로만 넘기면 안 된다 (§0.3: 계측기가
+#: 아는 것을 사람에게 다시 묻지 않는다) — 우리는 그 `172.x` 를 알고 있고,
+#: 사람이 손으로 옮겨 적어야 하는 값이 정확히 그것이다.
+#:
+#: 화면 전체에 규칙 하나를 건다: **들여쓴 초록 줄은 그대로 붙여넣는 명령,
+#: `│` 로 시작하는 줄은 파일에 들어갈 내용.**  이 구분이 없어서 파일 내용을
+#: PowerShell 에 붙여넣는 일이 실제로 일어났다.
+nat_hint() {
+  local nat="${1:-}"
+  say ""
+  say "  ${B}두 가지 길이 있습니다.${OFF}"
+  say "  ${DIM}들여쓴 줄은 그대로 붙여넣는 명령이고, │ 로 시작하는 줄은 파일 내용입니다.${OFF}"
+  say ""
+  say "  ${B}A. mirrored 모드${OFF} ${DIM}(권장 — 한 번만 하면 끝)${OFF}"
+  say "     ${DIM}WSL 이 Windows 의 주소를 그대로 씁니다. 포워딩도, 재시작마다 다시 하는 일도 없습니다.${OFF}"
+  say "     ${DIM}PowerShell (관리자 아니어도 됩니다) — 한 줄입니다:${OFF}"
+  say "       ${GREEN}$(wslconfig_mirror_command)${OFF}"
+  say "     ${DIM}그다음${OFF} ${GREEN}wsl --shutdown${OFF} ${DIM}후 WSL 터미널을 다시 엽니다.${OFF}"
+  say "     ${DIM}이 명령이 만드는 것 — %USERPROFILE%\\.wslconfig 가 이렇게 됩니다:${OFF}"
+  file_line "[wsl2]"
+  file_line "networkingMode=mirrored"
+  say "     ${DIM}Windows 11 22H2 미만이면 mirrored 는 오류 없이 무시됩니다. 그때는 B 로 갑니다.${OFF}"
+  say ""
+  say "  ${B}B. NAT 그대로 두고 포워딩${OFF} ${DIM}(WSL 을 재시작하면 다시 해야 합니다)${OFF}"
+  if [ -n "$nat" ]; then
+    say "     ${DIM}관리자 PowerShell — 아래를 그대로 붙여넣으면 됩니다:${OFF}"
+    say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=${nat}${OFF}"
+  else
+    say "     ${DIM}관리자 PowerShell. 먼저${OFF} ${GREEN}wsl hostname -I${OFF} ${DIM}로 172.x 를 확인하고,${OFF}"
+    say "     ${DIM}아래의${OFF} <그 172.x> ${DIM}를 그 값으로 바꿔서 붙여넣습니다 — 자리표시자를 그대로 두면 '구문이 올바르지 않습니다' 가 납니다:${OFF}"
+    say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=<그 172.x>${OFF}"
+  fi
+  say ""
+  say "  ${B}둘 중 어느 쪽이든 방화벽은 한 번 열어야 합니다${OFF} ${DIM}(관리자 PowerShell, 1회):${OFF}"
+  say "     ${GREEN}New-NetFirewallRule -DisplayName \"BML ${PORT}\" -Direction Inbound -LocalPort ${PORT} -Protocol TCP -Action Allow${OFF}"
+  say ""
+  say "  ${DIM}그 PC 의 LAN 주소는 Windows 쪽에서${OFF} ${GREEN}ipconfig${OFF} ${DIM}의 IPv4 입니다 — 노트북에서는${OFF}"
+  say "  ${DIM}그 주소로${OFF} ${GREEN}bml use <그 IPv4>${OFF} ${DIM}를 씁니다. 자세히는 docs/guides/central-server.md.${OFF}"
+}
+
 #: 그 주소에 우리 워크벤치가 살아 있는가.  server_state 와 달리 임의의 주소를
 #: 받는다 — 아직 저장하지 않은 후보를 확인해야 하기 때문이다.
 #: 두 번째 인자는 기다릴 초.
@@ -2030,42 +2109,10 @@ cmd_status() {
       done
       say "            ${DIM}다른 기계에서:${OFF} ${GREEN}bml use <위 주소 중 하나>${OFF}"
     else
-      # 다른 기계가 칠 수 있는 주소가 없다.  거의 항상 WSL 의 NAT 모드다:
-      # 172.x 사설망 안에 있어서 `hostname -I` 의 주소로는 밖에서 못 닿는다.
-      #
-      # 여기서 문서로만 넘기면 안 된다 (§0.3: 계측기가 아는 것을 사람에게 다시
-      # 묻지 않는다).  **우리는 그 172.x 를 알고 있고**, 사람이 손으로 옮겨
-      # 적어야 하는 것이 정확히 그 값이다.  가이드 자신이 적어 두었듯이
-      # `connectaddress=<...>` 를 자리표시자째 붙여넣어 "구문이 올바르지
-      # 않습니다" 를 보는 일이 실제로 일어난다.  붙여넣을 수 있는 줄을 준다.
+      # 다른 기계가 칠 수 있는 주소가 없다.  거의 항상 WSL 의 NAT 모드다 —
+      # 무엇을 붙여넣어야 하는지까지 nat_hint 가 찍는다.
       warn "접속 주소   찾지 못했습니다 — WSL 이 NAT 뒤에 있습니다."
-      local nat
-      nat="$(wsl_nat_address "$(hostname -I 2>/dev/null)")"
-      say ""
-      say "  ${B}두 가지 길이 있습니다.${OFF}"
-      say ""
-      say "  ${B}A. mirrored 모드${OFF} ${DIM}(권장 — 한 번만 하면 끝)${OFF}"
-      say "     ${DIM}WSL 이 Windows 의 주소를 그대로 쓰므로 포워딩이 필요 없습니다.${OFF}"
-      say "     ${DIM}Windows 에서${OFF} ${GREEN}%USERPROFILE%\\.wslconfig${OFF} ${DIM}에:${OFF}"
-      say "       ${GREEN}[wsl2]${OFF}"
-      say "       ${GREEN}networkingMode=mirrored${OFF}"
-      say "     ${DIM}그다음 관리자 PowerShell 에서${OFF} ${GREEN}wsl --shutdown${OFF} ${DIM}후 터미널을 다시 엽니다.${OFF}"
-      say ""
-      say "  ${B}B. NAT 그대로 두고 포워딩${OFF} ${DIM}(WSL 을 재시작하면 다시 해야 합니다)${OFF}"
-      if [ -n "$nat" ]; then
-        say "     ${DIM}관리자 PowerShell — 아래를 그대로 붙여넣으면 됩니다:${OFF}"
-        say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=${nat}${OFF}"
-      else
-        say "     ${DIM}관리자 PowerShell:${OFF}"
-        say "       ${GREEN}wsl hostname -I${OFF} ${DIM}로 172.x 를 확인한 뒤${OFF}"
-        say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=<그 172.x>${OFF}"
-      fi
-      say ""
-      say "  ${B}둘 중 어느 쪽이든 방화벽은 한 번 열어야 합니다${OFF} ${DIM}(관리자 PowerShell, 1회):${OFF}"
-      say "     ${GREEN}New-NetFirewallRule -DisplayName \"BML ${PORT}\" -Direction Inbound -LocalPort ${PORT} -Protocol TCP -Action Allow${OFF}"
-      say ""
-      say "  ${DIM}그 PC 의 LAN 주소는 Windows 쪽에서${OFF} ${GREEN}ipconfig${OFF} ${DIM}의 IPv4 입니다 — 노트북에서는${OFF}"
-      say "  ${DIM}그 주소로${OFF} ${GREEN}bml use <그 IPv4>${OFF} ${DIM}를 씁니다. 자세히는 docs/guides/central-server.md.${OFF}"
+      nat_hint "$(wsl_nat_address "$(hostname -I 2>/dev/null)")"
     fi
   fi
   say "미커밋      ${dirty}개"
@@ -2119,8 +2166,8 @@ cmd_feed() {
   if [ "$missing" -gt 0 ]; then
     say ""
     warn "기록이 없는 커밋 ${missing}개 — 다른 세션은 '왜' 를 알 수 없습니다."
-    say "  ${DIM}커밋 제목과 같은 제목으로 한 줄 적습니다:${OFF}"
-    say "    ${GREEN}## [$(date +%F)] fix | <커밋 제목과 같은 문장>${OFF}"
+    say "  ${DIM}docs/log.md 에 커밋 제목과 같은 제목으로 한 줄 적습니다 (명령이 아니라 파일 내용입니다):${OFF}"
+    file_line "## [$(date +%F)] fix | <커밋 제목과 같은 문장>"
   else
     ok "커밋마다 기록이 있습니다."
   fi

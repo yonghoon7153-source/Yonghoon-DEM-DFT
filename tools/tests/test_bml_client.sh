@@ -333,6 +333,60 @@ check "LAN 주소만 있으면 비운다"   "$(wsl_nat_address '192.168.0.40')" 
 check "빈 입력도 죽지 않는다"      "$(wsl_nat_address '')" ""
 
 echo
+echo "안내 화면 — 명령과 파일 내용을 섞지 않는다"
+# 실제로 일어난 일: `bml status` 가 mirrored 안내에서 `.wslconfig` 의 두 줄을
+# 붙여넣을 명령과 같은 초록으로 찍었다.  사람은 PowerShell 에 그대로
+# 붙여넣었고 `'networkingMode=mirrored' 용어가 ... 인식되지 않습니다` 를 봤다.
+# 오류 문구에 '파일' 이라는 말이 없어서, 화면을 준 우리 말고는 원인을 알 수 없다.
+NAT_HINT="$(nat_hint '172.28.144.1')"
+
+# 파일 내용은 반드시 │ 를 달고 나온다.  들여쓰기만 벗기면 명령과 똑같아지는
+# 줄이 하나라도 있으면 같은 사고가 다시 난다.
+check "파일 내용이 맨줄로 새지 않는다" \
+  "$(printf '%s\n' "$NAT_HINT" | sed 's/^[[:space:]]*//' \
+     | grep -c -x -e '\[wsl2\]' -e 'networkingMode=mirrored')" "0"
+check "파일 내용에는 │ 가 붙는다" \
+  "$(printf '%s\n' "$NAT_HINT" | grep -c '│ \[wsl2\]')" "1"
+
+# 그리고 사람이 손으로 파일을 만들지 않도록, 그 일을 하는 명령을 준다.
+check "mirrored 를 켜는 명령이 화면에 있다" \
+  "$(printf '%s\n' "$NAT_HINT" | grep -c 'Set-Content \$f \$t -NoNewline')" "1"
+
+# 붙여넣기는 한 번에 끝나야 한다.  줄이 갈리면 PowerShell 은 오류도 없이
+# 다음 줄을 기다리기만 하고, 사람은 명령이 먹은 줄 안다.
+check "그 명령은 한 줄이다" "$(wslconfig_mirror_command | wc -l | tr -d ' ')" "1"
+check "그 명령이 넣는 값"   "$(wslconfig_mirror_command | grep -c 'networkingMode=mirrored')" "1"
+# 이미 있는 .wslconfig 를 통째로 덮으면 memory·processors 설정이 사라진다.
+# 읽고 → 있으면 그 자리를 고치고 → 없으면 넣는다, 이 순서가 깨지면 안 된다.
+# 실제 PowerShell 7.4.6 으로 다섯 경우를 돌려 확인했다 (log.md 참고):
+# 없던 파일 / [wsl2]+memory / 다른 절만 / networkingMode=NAT / 이미 mirrored.
+check "있는 파일을 먼저 읽는다"       "$(wslconfig_mirror_command | grep -c 'Get-Content \$f -Raw')" "1"
+check "NAT 이라고 적힌 줄을 바꾼다"   "$(wslconfig_mirror_command | grep -cF 'networkingMode[ \t]*=[^\r\n]*')" "1"
+check "[wsl2] 절을 두 번 만들지 않는다" "$(wslconfig_mirror_command | grep -cF 'elseif($t -match')" "1"
+# 줄바꿈을 CRLF 그대로 둔다.  `.*` 로 지우면 그 줄만 LF 가 되어 파일이 섞인다 —
+# CRLF 가 섞인 파일이 어떤 얼굴로 나타나는지는 §0.5 가 이미 겪은 그대로다.
+check "고친 줄의 CRLF 를 먹지 않는다"   "$(wslconfig_mirror_command | grep -cF '[^\r\n]*')" "1"
+
+# B 안내는 우리가 아는 172.x 를 실제로 채워야 한다.  자리표시자가 남으면
+# `구문이 올바르지 않습니다` 가 나고, 그 문구는 주소 얘기를 하지 않는다.
+check "netsh 줄에 진짜 주소가 들어간다" \
+  "$(printf '%s\n' "$NAT_HINT" | grep -c 'connectaddress=172.28.144.1')" "1"
+# 주소를 모르면 아는 척하지 않는다 (§0.4).
+check "모르면 자리표시자를 남긴다" \
+  "$(nat_hint '' | grep -c 'connectaddress=<그 172.x>')" "1"
+check "모를 때 빈 connectaddress 를 주지 않는다" \
+  "$(nat_hint '' | grep -c 'connectaddress=$')" "0"
+
+# 화면과 가이드가 서로 다른 한 줄을 주면, 둘 중 어느 것이 맞는지 아무도 모른다.
+# 한쪽만 고치는 일이 실제로 잦아서 여기서 붙들어 둔다.
+check "가이드에도 같은 한 줄이 있다" \
+  "$(grep -cFx "$(wslconfig_mirror_command)" "$HERE/../../docs/guides/central-server.md")" "1"
+
+# `bml feed` 도 같은 자리다 — docs/log.md 에 적을 줄은 명령이 아니다.
+check "log.md 예시 줄도 파일 내용으로 찍는다" \
+  "$(grep -c 'file_line "## \[' "$BML")" "1"
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.

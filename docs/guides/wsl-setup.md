@@ -377,14 +377,18 @@ hostname -I | awk '{print $1}'      # 예: 172.20.1.5 → http://172.20.1.5:5003
 WORKBENCH_HOST=0.0.0.0 bml
 ```
 
-포워딩 자체를 켜려면 Windows 쪽 `%USERPROFILE%\.wslconfig` 에:
+포워딩 자체를 켜려면 Windows 쪽 `%USERPROFILE%\.wslconfig` 에 아래 두 줄을
+넣습니다. **파일 내용이지 명령이 아닙니다** — PowerShell 에 붙여넣으면
+`'localhostForwarding=true' 용어가 ... 인식되지 않습니다` 가 납니다:
 
 ```ini
 [wsl2]
 localhostForwarding=true
 ```
 
-그리고 `wsl --shutdown` 후 다시 시작합니다.
+그리고 `wsl --shutdown` 후 다시 시작합니다. 파일을 손으로 만들지 않고 명령
+한 줄로 하고 싶으면 [[central-server]] 의 mirrored 안내를 참고하세요 (그쪽은
+`networkingMode` 를 넣지만 모양은 같습니다).
 
 **포트 5003 이 이미 쓰이고 있습니다**
 : `bml stop`. Windows 쪽 프로그램이 잡고 있으면
