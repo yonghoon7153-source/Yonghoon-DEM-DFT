@@ -13,7 +13,8 @@
 #   · 원격으로 못 본다 — 각 서버에서 실행해야 한다 (alias 로 감싸 쓸 것).
 #   · 프로세스 이름으로 식별한다. 이름이 겹치면 잘못 셀 수 있다.
 #
-#   bash tools/claude/server_status.sh
+#   bash tools/claude/server_status.sh            # 지금 뭐가 도나 (빠름)
+#   bash tools/claude/server_status.sh --jobs      # + 작업별 진행률 (기존 워처 위임)
 #   bash tools/claude/server_status.sh --selftest
 # =============================================================================
 set -u
@@ -99,3 +100,41 @@ find /data/work /home/kgy/work "$HOME/logs" -maxdepth 4 -name '*.log' -mmin -30 
 # ── 디스크 ──────────────────────────────────────────────────────────────────
 echo "■ 디스크"
 df -h 2>/dev/null | awk 'NR==1 || /\/data|\/home| \/$/ {printf "   %s\n", $0}' | head -5
+
+# ── --jobs: 진행률까지 (기존 워처에 위임한다) ───────────────────────────────
+#   ⚠ 위는 "살아 있나" 만 본다. "얼마나 갔나" 는 작업마다 다른 파일을 읽어야 하는데,
+#     그 파서는 이미 워처마다 있다. **여기서 다시 짜지 않고 불러 쓴다** —
+#     tools/ 에 워처가 30개 넘게 쌓인 게 그렇게 복사해서다.
+#   ⛔ 이 모드가 **못 하는 것**: 결과가 맞는지 판정하지 않는다. 각 워처가 하는 만큼만 한다.
+#     워처가 없는 작업(cascade)은 로그 꼬리만 보여준다 — 그건 진행률이 아니다.
+if [ "${1:-}" = "--jobs" ]; then
+    R="$(cd "$(dirname "$0")/../.." && pwd)"
+    sec() { echo; echo "════ $1 ════"; }
+    run_if() {   # $1 = 있어야 할 파일, $2… = 실행할 것
+        local f="$1"; shift
+        if [ -e "$f" ]; then "$@" 2>&1 | tail -25
+        else echo "   (해당 없음: $f)"; fi
+    }
+    sec "sei NEB (li3nd 등)"
+    run_if "$R/tools/sei/watch_gabia.py" python3 "$R/tools/sei/watch_gabia.py"
+    sec "gap nscf"
+    run_if "$R/tools/electronic/watch_gap_nscf.sh" bash "$R/tools/electronic/watch_gap_nscf.sh"
+    sec "cage NEB"
+    run_if "$R/tools/neb_diffusion/watch_cage_neb.sh" bash "$R/tools/neb_diffusion/watch_cage_neb.sh"
+    sec "cascade (전용 워처 없음 — 로그 꼬리)"
+    _cl=$(find /data/work/runs -maxdepth 3 \( -name 'cascade*.log' -o -name '*as2s3*.log' \
+          -o -name 'ali3*.log' \) 2>/dev/null | head -1)
+    if [ -n "$_cl" ]; then
+        echo "   $_cl  ($(date -r "$_cl" '+%m-%d %H:%M'))"; tail -8 "$_cl" | sed 's/^/     /'
+    else
+        echo "   (로그를 못 찾았다 — tmux ali3 안을 직접 볼 것: tmux capture-pane -pt ali3 | tail -20)"
+    fi
+    sec "MD 재시드"
+    _ml=$(find /data/work/runs -maxdepth 3 -name '*reseed*.log' -o -maxdepth 3 -name 'mc600*.log' \
+          2>/dev/null | head -1)
+    if [ -n "$_ml" ]; then
+        echo "   $_ml  ($(date -r "$_ml" '+%m-%d %H:%M'))"; tail -6 "$_ml" | sed 's/^/     /'
+    else
+        echo "   (로그 못 찾음 — tmux capture-pane -pt mc600 | tail -20)"
+    fi
+fi

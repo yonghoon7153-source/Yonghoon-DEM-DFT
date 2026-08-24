@@ -171,8 +171,10 @@ dftlint() { python3 "$DFT_REPO/tools/kb_wiki.py" lint; python3 "$DFT_REPO/tools/
 gabia()  { ssh root@121.78.116.27 "$@"; }
 kgy()    { ssh kgy@59.12.161.91 "$@"; }
 # 붙자마자 "지금 걸어도 되나" 를 본다
-gabiast() { ssh root@121.78.116.27 'cd /data/work/repo && bash tools/claude/server_status.sh'; }
-kgyst()   { ssh kgy@59.12.161.91 'cd ~/work/Yonghoon-DEM-DFT && bash tools/claude/server_status.sh'; }
+gabiast() { ssh root@121.78.116.27 "cd /data/work/repo && bash tools/claude/server_status.sh ${1:-}"; }
+gabiajobs(){ gabiast --jobs; }        # 진행률까지
+kgyst()   { ssh kgy@59.12.161.91 "cd ~/work/Yonghoon-DEM-DFT && bash tools/claude/server_status.sh ${1:-}"; }
+kgyjobs() { kgyst --jobs; }
 
 dfthelp() {
   cat <<'EOT'
@@ -183,6 +185,7 @@ dfthelp() {
   dftwebstop  webapp 종료             dfttest   webapp 테스트
   dftlint     kb lint + 물리규약 검사
   gabia/kgy   ssh 접속                gabiast/kgyst  서버 현황 한 화면
+  gabiajobs/kgyjobs   + 작업별 진행률
 EOT
 }
 
