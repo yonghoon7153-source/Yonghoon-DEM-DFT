@@ -15,6 +15,23 @@
 set -uo pipefail
 cd "$(dirname "$0")/.."
 
+#  ★ preflight (2026-08-24) — 의존 부재를 **원인 이름으로** 먼저 말한다.
+#    실사고: kgy 에서 `(base)` 로 돌려 scipy 가 없었고, 검사기가 fail-closed 로
+#    5 오류를 냈다 (그 자체는 옳은 거동이다 — "모르면 통과가 아니라 오류다").
+#    그런데 출력이 raw traceback 5벌이라 **"venv 를 켜라"가 안 보였다**.
+#    ⇒ 리포 결함과 환경 결함을 갈라 준다.  검사 자체는 그대로 돈다.
+_MISS=""
+for _m in numpy scipy; do
+  python3 -c "import $_m" 2>/dev/null || _MISS="$_MISS $_m"
+done
+if [ -n "$_MISS" ]; then
+  echo "⚠ 파이썬 의존이 없다:$_MISS"
+  echo "   → 이것은 **리포 결함이 아니라 환경 결함**이다.  검사기는 모르는 것을"
+  echo "     통과시키지 않으므로(fail-closed) 아래에서 오류로 나온다."
+  echo "   → GPU 호스트라면 venv 를 켤 것:   . ~/dem-venv/bin/activate"
+  echo
+fi
+
 FAIL=0
 run() {
   local label="$1"; shift
