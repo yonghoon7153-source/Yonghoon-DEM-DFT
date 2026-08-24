@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import math
+import re
 import sys
 from pathlib import Path
 
@@ -265,7 +266,8 @@ def mount_web(target: FastAPI, dist: Path) -> bool:
 
     root = dist.resolve()
     if (dist / "assets").is_dir():
-        target.mount("/assets", StaticFiles(directory=dist / "assets"), name="assets")
+        target.mount("/assets", _ImmutableStatic(directory=dist / "assets"),
+                     name="assets")
 
     @target.get("/{path:path}", include_in_schema=False)
     def spa(path: str) -> FileResponse:
@@ -285,11 +287,69 @@ def mount_web(target: FastAPI, dist: Path) -> bool:
             # escape the build directory.
             candidate = (root / path).resolve()
             if candidate.is_file() and candidate.is_relative_to(root):
-                return FileResponse(candidate)
+                return FileResponse(candidate, headers=_cache_headers(path))
 
-        return FileResponse(root / "index.html")
+        return FileResponse(root / "index.html", headers=_SHELL_CACHE)
 
     return True
+
+
+class _ImmutableStatic(StaticFiles):
+    """``/assets`` with the long cache its hashed filenames have earned.
+
+    The mount handles these requests itself, so the header the SPA route sets
+    never reaches them.  Left alone they get no ``Cache-Control`` at all and
+    the browser revalidates a file that cannot have changed -- a round trip per
+    bundle per page load, on a lab wifi, for nothing.
+    """
+
+    def file_response(self, *args, **kwargs):  # type: ignore[override]
+        response = super().file_response(*args, **kwargs)
+        response.headers.setdefault("Cache-Control", _ASSET_CACHE["Cache-Control"])
+        return response
+
+
+#: The one file that must never be served from cache without asking.
+#:
+#: Vite gives every build a new asset name (``index-DqARYaLz.js``), so the
+#: bundles are safe to cache forever -- but ``index.html`` is what *names* them.
+#: With no ``Cache-Control`` the browser falls back to heuristic freshness and
+#: may keep serving the old shell, which keeps requesting the old bundle.  The
+#: server then has the new build on disk and the screen still shows the old
+#: one, with nothing anywhere saying so.
+#:
+#: This is the "pull 했는데 화면이 그대로다" failure, and it survives a server
+#: restart, which is what makes it so hard to place: every other explanation
+#: (stale checkout, stale build, wrong branch) is ruled out by evidence, and
+#: the remaining one leaves no trace on the machine you are looking at.
+#:
+#: ``no-cache`` does not mean "do not store" -- it means "revalidate before
+#: use".  The conditional request costs one round trip on an unchanged shell
+#: (304, no body) and is the difference between shipping a fix and not.
+_SHELL_CACHE = {"Cache-Control": "no-cache"}
+
+#: Hashed assets, on the other hand, can be cached as long as the browser
+#: likes: a changed file gets a changed name, so there is nothing to
+#: invalidate.  A year is the conventional ceiling.
+_ASSET_CACHE = {"Cache-Control": "public, max-age=31536000, immutable"}
+
+
+def _cache_headers(path: str) -> dict[str, str]:
+    """How long the browser may keep *path* without asking again.
+
+    Anything whose name carries a content hash is immutable; everything else
+    -- an icon, a manifest, a stray file dropped into the build -- gets the
+    shell's treatment.  Guessing "immutable" for an unhashed file is the same
+    bug as not setting a header on the shell, one directory down.
+    """
+    name = Path(path).name
+    return _ASSET_CACHE if _HASHED.match(name) else _SHELL_CACHE
+
+
+#: Vite's pattern: ``<name>-<hash>.<ext>``, hash being at least eight
+#: characters of base64url.  Deliberately strict -- a false positive here
+#: freezes a file in browsers for a year.
+_HASHED = re.compile(r"^.+-[A-Za-z0-9_-]{8,}\.[A-Za-z0-9]+$")
 
 
 mount_web(app, settings.web_dist)
