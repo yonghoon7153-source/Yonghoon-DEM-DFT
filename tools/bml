@@ -1569,12 +1569,68 @@ edge_port_open() {
 #:   open  거기까지 됐다 — 000 이 아니라 HTTP 코드가 나왔어야 한다
 #:
 #: 도구가 없으면 그 층은 건너뛴다.  없는 것을 "막혔다" 로 읽으면 안 된다.
-tunnel_block_layer() {
-  local host="${1#*://}"; host="${host%%/*}"; host="${host%%:*}"
-  # 우리 정규식이 뽑은 주소지만, 셸에 넘기기 전에 한 번 더 좁힌다.
-  case "$host" in
-    ''|*[!A-Za-z0-9.-]*) printf 'unknown'; return ;;
+#: 주소에서 호스트만.  셸에 넘길 것이므로 글자를 좁혀서 돌려준다 —
+#: 못 쓸 모양이면 빈 값과 1.
+url_host() {
+  local h="${1:-}"; h="${h#*://}"; h="${h%%/*}"; h="${h%%:*}"
+  case "$h" in
+    ''|*[!A-Za-z0-9.-]*) return 1 ;;
   esac
+  printf '%s' "$h"
+}
+
+#: 공용 DNS 가 준 JSON 을 낱말 하나로.  RFC 8484 의 JSON 형식(Cloudflare)이다.
+#:
+#: 확실한 신호가 있을 때만 단정한다: 답이 실려 있으면 exists, `Status:3`
+#: (NXDOMAIN)이면 missing, 나머지는 전부 unknown 이다.  틀리게 단정하면
+#: 살아 있는 터널을 닫거나, 죽은 터널을 기다리게 만든다 (§0.4).
+dns_public_json_verdict() {
+  case "${1:-}" in
+    '')                             printf 'unknown' ;;
+    *'"Answer"'*)                   printf 'exists' ;;
+    *'"Status":3'*|*'"Status": 3'*) printf 'missing' ;;
+    *)                              printf 'unknown' ;;
+  esac
+}
+
+#: 이 기계의 resolver 를 **일부러 건너뛰고** 공용 DNS 에 직접 물어본다.
+#: 'exists' | 'missing' | 'unknown'.
+#:
+#: **이것으로 아는 것은 "이 기계의 DNS 가 막는가" 하나뿐이다.**  터널이 살아
+#: 있는지는 알 수 없다 — `lhr.life` 는 와일드카드라 없는 이름도 같은 IP 로
+#: 잡힌다 (`getent hosts <아무거나>.lhr.life` 로 확인했다).  그래서 exists 를
+#: "터널이 살아 있다" 로 읽어서는 안 된다.  `trycloudflare.com` 처럼
+#: 와일드카드가 아닌 도메인에서만 missing 이 의미를 가진다.
+#:
+#: 이름이 안 잡히는 데에는 두 가지 이유가 있고 대처가 정반대다: 터널이 닫혔거나,
+#: 이 망의 DNS 가 그 도메인을 거르거나.  화면에서는 똑같이 "응답하지 않습니다"
+#: 로 보인다.  랩 망은 터널 도메인을 거르는 일이 흔해서, 여기서 안 가르면
+#: 사람은 멀쩡한 터널을 닫고 다시 열기를 반복한다.
+dns_public_state() {
+  local host="${1:-}" out
+  [ -n "$host" ] || { printf 'unknown'; return; }
+  if command -v nslookup >/dev/null 2>&1; then
+    out="$(nslookup "$host" 1.1.1.1 2>/dev/null)"
+    case "$out" in
+      *NXDOMAIN*|*"can't find"*) printf 'missing'; return ;;
+      *Name:*)                   printf 'exists';  return ;;
+    esac
+  fi
+  # dig 는 실패와 NXDOMAIN 이 똑같이 빈 줄이라, 있다는 쪽으로만 쓴다.
+  if command -v dig >/dev/null 2>&1; then
+    out="$(dig +short +time=4 +tries=1 @1.1.1.1 "$host" A 2>/dev/null)"
+    [ -n "$out" ] && { printf 'exists'; return; }
+  fi
+  # 둘 다 없는 기계가 흔하다 (WSL 기본 설치에는 dnsutils 가 없다).  curl 은
+  # 있으므로 DNS-over-HTTPS 로 묻는다 — 주소가 IP 라 이 기계의 resolver 를
+  # 타지 않는다.
+  out="$(curl -sS -m 6 -H 'accept: application/dns-json'          "https://1.1.1.1/dns-query?name=${host}&type=A" 2>/dev/null)"
+  dns_public_json_verdict "$out"
+}
+
+tunnel_block_layer() {
+  local host
+  host="$(url_host "${1:-}")" || { printf 'unknown'; return; }
   if command -v getent >/dev/null 2>&1; then
     getent hosts "$host" >/dev/null 2>&1 || { printf 'dns'; return; }
   fi
@@ -1667,9 +1723,45 @@ server_unreachable_help() {
   # 아무 소용 없는 것을 확인하느라 시간을 쓴다.
   case "$url" in
     *trycloudflare.com*|https://*)
+      # 이름 자체가 안 잡히면, 아래 목록을 훑기 전에 **갈라 준다.**  터널이
+      # 닫힌 것과 이 망의 DNS 가 그 도메인을 거르는 것은 화면에서 똑같은데
+      # 대처가 정반대다 — 뒤쪽인데 앞쪽으로 알면 멀쩡한 터널을 닫고 다시 열기를
+      # 반복하게 된다 (랩 망이 터널 도메인을 거르는 일은 흔하다).
+      local uhost=""
+      uhost="$(url_host "$url" 2>/dev/null)" || uhost=""
+      if [ -n "$uhost" ] && command -v getent >/dev/null 2>&1 \
+         && ! getent hosts "$uhost" >/dev/null 2>&1; then
+        say "  ${B}이름 자체를 못 찾았습니다.${OFF} ${DIM}공용 DNS 에 직접 물어봅니다 (이 기계의 DNS 를 건너뜁니다)...${OFF}"
+        case "$(dns_public_state "$uhost")" in
+          exists)
+            # 여기서 말할 수 있는 것은 **이 망의 DNS 가 막는다** 까지다.
+            # 이름이 잡힌다고 터널이 살아 있다는 뜻은 아니다 — lhr.life 는
+            # 와일드카드라 아무 이름이나 같은 IP 로 잡힌다 (실측으로 확인).
+            # 그 둘을 뭉뚱그리면 죽은 터널을 기다리게 만든다.
+            say "  ${B}→ 공용 DNS 에서는 잡힙니다 — 이 망의 DNS 가 막는 것입니다.${OFF}"
+            say "    ${DIM}같은 랩 안이라면 터널 말고 LAN 주소를 쓰세요 — 중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 줄.${OFF}"
+            say "    ${DIM}밖에서 봐야 한다면 휴대폰 테더링으로 바꾸거나 이 기계의 DNS 를 1.1.1.1 로 둡니다.${OFF}"
+            say "    ${DIM}단, 이름이 잡히는 것과 터널이 살아 있는 것은 다릅니다 (lhr.life 는 어떤 이름이든${OFF}"
+            say "    ${DIM}잡히는 와일드카드입니다). 터널 자체는 휴대폰으로 그 주소를 열어 봐야 압니다.${OFF}"
+            say ""
+            return 0
+            ;;
+          missing)
+            say "  ${B}→ 그 이름은 없습니다 — 터널이 닫혔습니다.${OFF}"
+            say "    ${DIM}중추 서버에서${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}${DIM}, 새로 나온 주소를 씁니다.${OFF}"
+            say ""
+            return 0
+            ;;
+          *)
+            say "  ${DIM}→ 공용 DNS 에도 못 물어봤습니다 (이 망이 그것마저 막습니다).${OFF}"
+            say "    ${DIM}휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다 — 열리면 이 망 문제입니다.${OFF}"
+            say ""
+            ;;
+        esac
+      fi
       say "  ${B}터널 주소일 때 확인할 것${OFF}"
       say "    1. ${DIM}중추 서버에서${OFF} ${GREEN}bml share${OFF} ${DIM}창이 아직 켜져 있는가 (닫으면 주소가 죽습니다)${OFF}"
-      say "    2. ${DIM}그 창에 지금 떠 있는 주소와 같은가 — 열 때마다 바뀝니다${OFF}"
+      say "    2. ${DIM}그 창에 지금 떠 있는 주소와 같은가 — 주소가 바뀔 수 있습니다${OFF}"
       say "    3. ${DIM}방금 열었다면 몇 초 더 기다렸다 다시${OFF} ${GREEN}bml use $url${OFF}"
       say ""
       say "  ${DIM}중추 서버에서 직접 확인해 보면 어디가 문제인지 갈립니다:${OFF}"

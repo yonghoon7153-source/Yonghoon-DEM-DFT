@@ -219,6 +219,32 @@ check "tls 는 다른 망에서는 열린다고 단정한다" \
   "$(block_layer_meaning tls | grep -c '다른 망에서는 열립니다')" "1"
 
 echo
+echo "이름이 안 잡힐 때 — 터널이 죽은 것과 이 망의 DNS 는 대처가 정반대다"
+# 노트북에서 `bml use <터널 주소>` 가 'Could not resolve host' 로 죽었다.
+# 그 화면은 "터널이 닫혔나 보다" 로 읽히는데, 실제로는 이 랩 망의 DNS 가
+# lhr.life 를 거르고 있었다.  둘을 안 가르면 멀쩡한 터널을 닫고 다시 열기를
+# 반복하게 된다.  그래서 이 기계의 resolver 를 건너뛰고 공용 DNS 에 묻는다.
+check "답이 실려 있으면 있는 것" \
+  "$(dns_public_json_verdict '{"Status":0,"Answer":[{"data":"1.2.3.4"}]}')" "exists"
+check "NXDOMAIN 이면 없는 것" \
+  "$(dns_public_json_verdict '{"Status":3,"Question":[]}')" "missing"
+check "빈 칸으로 띄운 것도 읽는다" \
+  "$(dns_public_json_verdict '{"Status": 3}')" "missing"
+# 확실한 신호가 없으면 단정하지 않는다 (§0.4) — 틀리게 단정하면 살아 있는
+# 터널을 닫거나, 죽은 터널을 기다리게 만든다.
+check "대답이 없으면 모른다"       "$(dns_public_json_verdict '')"        "unknown"
+check "모르는 모양이면 모른다"     "$(dns_public_json_verdict 'garbage')" "unknown"
+
+echo
+echo "주소에서 호스트만 (셸에 넘기기 전에 좁힌다)"
+check "스킴과 경로를 뗀다"      "$(url_host https://a.lhr.life/api/health)" "a.lhr.life"
+check "포트도 뗀다"             "$(url_host http://192.168.0.7:5003)"      "192.168.0.7"
+# 이 값이 그대로 nslookup/curl 에 들어간다.  글자를 안 좁히면 주소 한 줄로
+# 남의 명령을 실행시킬 수 있다.
+check "이상한 글자는 거부한다"  "$(url_host 'https://a;rm -rf/' || echo REFUSED)" "REFUSED"
+check "빈 값도 거부한다"        "$(url_host '' || echo REFUSED)"           "REFUSED"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0
