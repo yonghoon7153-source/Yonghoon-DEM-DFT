@@ -218,6 +218,12 @@ check "모르면 두 가능성을 다 남긴다" \
 check "tls 는 다른 망에서는 열린다고 단정한다" \
   "$(block_layer_meaning tls | grep -c '다른 망에서는 열립니다')" "1"
 
+# 그리고 그 단정과 아래 안내가 어긋나면 안 된다.  "터널은 붙어 있다" 고 적어
+# 놓고 세 줄 밑에서 "이 기계의 망 문제일 수 있습니다" 로 물러서면, 사람은
+# 약한 쪽을 믿고 멀쩡한 터널을 닫는다.  dns 도 tls·tcp 와 같은 취급이어야 한다.
+check "dns 도 단정하는 분기에 있다" \
+  "$(grep -c 'tls|tcp|dns)' "$HERE/../bml")" "1"
+
 echo
 echo "이름이 안 잡힐 때 — 터널이 죽은 것과 이 망의 DNS 는 대처가 정반대다"
 # 노트북에서 `bml use <터널 주소>` 가 'Could not resolve host' 로 죽었다.
