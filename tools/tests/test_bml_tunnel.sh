@@ -304,6 +304,14 @@ WRONG="$( http_code_of() { printf '404'; }; server_unreachable_help https://a.lh
 check "404 는 다르게 말한다"       "$(printf '%s\n' "$WRONG" | grep -c '우리 워크벤치가 아닙니다')" "1"
 
 echo
+echo "보여 준다고 해 놓고 침묵하지 않는다"
+# 실제 화면: "tunnel.log 의 마지막 줄:" 뒤에 아무것도 안 나왔다.  빈 줄을
+# 걸러 냈더니 남는 게 없었던 것인데(배너만 찍고 죽는 경우), 사람은 자기 화면이
+# 잘린 줄 안다.  없으면 없다고 말하고, 그때 할 일까지 준다.
+check "빈 로그면 없다고 말한다"   "$(grep -c '남은 말이 없습니다' "$HERE/../bml")" "1"
+check "그때 다시 열라고 안내한다" "$(grep -c 'ExitOnForwardFailure' "$HERE/../bml")" "2"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0

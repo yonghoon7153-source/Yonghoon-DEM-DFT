@@ -2626,9 +2626,20 @@ cmd_share() {
     fi
     # 빈 줄을 걸러서 보여 준다.  localhost.run 의 접속 배너는 빈 줄로 끝나서,
     # 그냥 tail 하면 화면에 빈 줄 열두 개만 찍힌다 — 실제로 그랬다.
-    say "  ${DIM}$RUN_DIR/tunnel.log 의 마지막 줄:${OFF}"
-    tr -d '\r' < "$RUN_DIR/tunnel.log" 2>/dev/null \
-      | grep -v '^[[:space:]]*$' | tail -n 14 | sed 's/^/    /'
+    # 빈 줄을 걸러 냈더니 **아무것도 안 남는** 경우가 실제로 있었다 (배너만
+    # 찍고 죽거나, 로그 자체가 안 생긴 경우).  그때 화면은 "마지막 줄:" 이라고
+    # 해 놓고 침묵한다 — 사람은 자기 화면이 잘린 줄 안다.  없으면 없다고 한다.
+    local tlog_lines
+    tlog_lines="$(tr -d '\r' < "$RUN_DIR/tunnel.log" 2>/dev/null \
+                  | grep -v '^[[:space:]]*$' | tail -n 14)"
+    if [ -n "$tlog_lines" ]; then
+      say "  ${DIM}$RUN_DIR/tunnel.log 의 마지막 줄:${OFF}"
+      printf '%s\n' "$tlog_lines" | sed 's/^/    /'
+    else
+      say "  ${DIM}$RUN_DIR/tunnel.log 에 남은 말이 없습니다 — 터널 프로그램이 아무 말도 없이 끝났습니다.${OFF}"
+      say "  ${DIM}같은 주소가 아직 저쪽에 잡혀 있으면 새 연결이 그대로 거절됩니다 (ExitOnForwardFailure).${OFF}"
+      say "  ${DIM}1분쯤 뒤에 다시${OFF} ${GREEN}bml share${OFF} ${DIM}— 그래도 같으면${OFF} ${GREEN}WORKBENCH_TUNNEL=cloudflare bml share${OFF}"
+    fi
     # 주소는 받았는데 안 열린 경우가 있다.  그 주소를 알려 줘야 손으로 찔러 볼
     # 수 있다.
     if [ -s "$RUN_DIR/tunnel.last-url" ]; then
