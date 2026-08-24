@@ -25,12 +25,25 @@ type BuiltOptions = {
   series: { stroke: string }[]
   axes: { stroke: string }[]
   hooks?: { setScale?: ((u: unknown, key: string) => void)[] }
-  cursor?: { drag?: { x?: boolean; y?: boolean; dist?: number; uni?: number } }
+  cursor?: {
+    drag?: { x?: boolean; y?: boolean; dist?: number; uni?: number }
+    bind?: {
+      mousedown?: (
+        u: unknown,
+        target: unknown,
+        handler: (e: MouseEvent) => null | void,
+      ) => ((e: MouseEvent) => null | void) | null
+    }
+  }
 }
 type Scale = { min: number; max: number; from?: string }
 interface Built {
   options: BuiltOptions
-  plot: { scales: Record<string, Scale>; setScale: (key: string, opts: Scale) => void }
+  plot: {
+    scales: Record<string, Scale>
+    setScale: (key: string, opts: Scale) => void
+    over: HTMLElement
+  }
 }
 const built = vi.hoisted(() => [] as Built[])
 
@@ -48,9 +61,16 @@ vi.mock('uplot', () => {
       x: { min: Infinity, max: -Infinity },
       y: { min: Infinity, max: -Infinity },
     }
+    // uPlot 이 마우스를 받는 층.  Shift+드래그 이동이 여기에 붙는다.
+    over: HTMLElement = document.createElement('div')
     constructor(options: unknown) {
       this.options = options as BuiltOptions
       built.push({ options: this.options, plot: this })
+      // jsdom 에는 레이아웃이 없어 clientWidth/Height 가 0 이다.  이동량이
+      // 0 으로 나누어지지 않게 크기를 준다.
+      Object.defineProperty(this.over, 'clientWidth', { value: 600 })
+      Object.defineProperty(this.over, 'clientHeight', { value: 400 })
+      document.body.appendChild(this.over)
       queueMicrotask(() => this.commit())
     }
     /** uPlot 의 첫 `_commit`: 눈금을 정하고 setScale 훅을 부른다.
@@ -70,7 +90,9 @@ vi.mock('uplot', () => {
       this.scales[key] = { ...this.scales[key], ...opts }
       for (const hook of this.options.hooks?.setScale ?? []) hook(this, key)
     }
-    destroy() {}
+    destroy() {
+      this.over.remove()
+    }
   }
   return { default: FakePlot }
 })
@@ -505,6 +527,63 @@ describe('돋보기', () => {
     await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
     expect(button('확대').title).toContain('세로축이 고정')
     expect(button('확대').title).toContain('자물쇠')
+  })
+
+  it('Shift+드래그로 옮긴다 — 그냥 드래그는 확대라 자리가 없다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    // 먼저 확대해 둔다.  다 보이는 상태에서는 옮길 곳이 없다.
+    act(() => button('확대').click())
+    expect(at().scales.x).toEqual({ min: 2, max: 8 })
+
+    const over = at().over
+    act(() => {
+      over.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true, clientX: 300, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    })
+    // 왼쪽으로 100px (폭 600, 보이는 범위 6) → 오른쪽으로 1 만큼 간다.
+    expect(at().scales.x!.min).toBeCloseTo(3, 6)
+    expect(at().scales.x!.max).toBeCloseTo(9, 6)
+  })
+
+  it('처음 범위 밖으로는 못 나간다', async () => {
+    // 계속 끌다 데이터가 사라지면 돌아오는 길이 '전체' 버튼밖에 없다.
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    act(() => button('확대').click())
+    const over = at().over
+    act(() => {
+      over.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true, clientX: 300, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mousemove', { clientX: -5000, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    })
+    expect(at().scales.x!.max).toBeCloseTo(10, 6)
+    expect(at().scales.x!.max - at().scales.x!.min).toBeCloseTo(6, 6)  // 폭은 지킨다
+  })
+
+  it('Shift 없이 끌면 옮기지 않는다 — 그건 확대다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    act(() => button('확대').click())
+    const before = { ...at().scales.x! }
+    const over = at().over
+    act(() => {
+      over.dispatchEvent(new MouseEvent('mousedown', { clientX: 300, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mousemove', { clientX: 200, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    })
+    expect(at().scales.x).toEqual(before)
+  })
+
+  it('잠긴 축은 Shift+드래그로도 안 움직인다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
+    act(() => button('확대').click())
+    const y = { ...at().scales.y! }
+    const over = at().over
+    act(() => {
+      over.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true, clientX: 300, clientY: 200, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mousemove', { clientX: 300, clientY: 100, bubbles: true }))
+      window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
+    })
+    expect(at().scales.y).toEqual(y)
   })
 
   it('그릴 것이 없으면 버튼도 없다', () => {

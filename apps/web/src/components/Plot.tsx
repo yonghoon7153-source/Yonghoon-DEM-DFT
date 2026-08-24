@@ -342,6 +342,14 @@ export function Plot({
           y: !fullyPinned(steadyRange),
           dist: 6,
         },
+        // Shift 를 누른 채 끄는 것은 **이동**이다 (아래 직접 처리).  그대로 두면
+        // uPlot 이 선택 사각형을 그려서, 옮기려던 사람이 확대를 하게 된다.
+        bind: {
+          mousedown: (_u, _target, handler) => (event: MouseEvent) => {
+            if (!event.shiftKey) handler(event)
+            return null
+          },
+        },
         focus: { prox: 24 },
         points: { size: 6, width: 1.5 },
       },
@@ -506,7 +514,64 @@ export function Plot({
     // 훅이 첫 commit 에서 잡는다.
     const plot = new uPlot(options, data, node)
     plotRef.current = plot
+
+    // --- Shift + 드래그로 이동 ------------------------------------------------
+    //
+    // 확대해 놓고 옆을 보려면 옮길 수 있어야 하는데, 그냥 드래그는 이미 "이
+    // 사각형을 크게" 가 가져갔다.  uPlot 에는 이동이 없으므로 직접 옮긴다.
+    // 처음 범위 밖으로는 안 나간다 -- 계속 끌다 데이터가 사라지면 돌아오는
+    // 길이 '전체' 버튼뿐이다.
+    const over = plot.over
+    const lockedX = fullyPinned(steadyXRange)
+    const lockedY = fullyPinned(steadyRange)
+    let pan: { x: number; y: number; from: HomeScales } | null = null
+
+    const onDown = (event: MouseEvent) => {
+      if (!event.shiftKey || !homeRef.current) return
+      event.preventDefault()
+      pan = { x: event.clientX, y: event.clientY, from: readScales(plot) }
+      over.style.cursor = 'grabbing'
+    }
+    const onMove = (event: MouseEvent) => {
+      if (!pan) return
+      const width = over.clientWidth || 1
+      const height = over.clientHeight || 1
+      const home = homeRef.current ?? {}
+      const from = pan.from
+      const dx = event.clientX - pan.x
+      const dy = event.clientY - pan.y
+      plot.batch(() => {
+        for (const key of Object.keys(from)) {
+          if (key === 'x' ? lockedX : lockedY) continue
+          const start = from[key]!
+          const span = start.max - start.min
+          // 화면 y 는 아래로 늘고 값은 위로 는다 -- 그래서 부호가 다르다.
+          const shift = key === 'x' ? -(dx / width) * span : (dy / height) * span
+          let min = start.min + shift
+          let max = start.max + shift
+          const limit = home[key]
+          if (limit) {
+            if (min < limit.min) { max += limit.min - min; min = limit.min }
+            if (max > limit.max) { min -= max - limit.max; max = limit.max }
+          }
+          plot.setScale(key, { min, max })
+        }
+      })
+    }
+    const onUp = () => {
+      if (!pan) return
+      pan = null
+      over.style.cursor = ''
+    }
+
+    over.addEventListener('mousedown', onDown)
+    window.addEventListener('mousemove', onMove)
+    window.addEventListener('mouseup', onUp)
+
     return () => {
+      over.removeEventListener('mousedown', onDown)
+      window.removeEventListener('mousemove', onMove)
+      window.removeEventListener('mouseup', onUp)
       plotRef.current?.destroy()
       plotRef.current = null
       homeRef.current = null
@@ -610,7 +675,10 @@ export function Plot({
               onClick={() => zoomBy(ZOOM_STEP)}
               disabled={pinned || !homeReady}
               aria-label="확대"
-              title={lockNote || '확대 — 그래프 위를 끌면 그 사각형이 그대로 화면이 됩니다'}
+              title={
+                (lockNote || '확대 — 그래프 위를 끌면 그 사각형이 그대로 화면이 됩니다')
+                + ' · Shift+드래그로 이동'
+              }
             >
               🔍+
             </button>
