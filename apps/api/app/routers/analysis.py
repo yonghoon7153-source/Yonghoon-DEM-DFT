@@ -12,7 +12,14 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
 from wrdkit import Basis, ResolvedCell, basis_label, c_rate
-from wrdkit.ica import DEFAULT_SMOOTHING, DEFAULT_VOLTAGE_STEP
+from wrdkit.deltas import previous_cycle_deltas
+from wrdkit.ica import (
+    DEFAULT_POLY_ORDER,
+    DEFAULT_SMOOTHER,
+    DEFAULT_SMOOTHING,
+    DEFAULT_VOLTAGE_STEP,
+    SMOOTHERS,
+)
 
 from ..db import get_session
 from ..deps import get_run, get_sample, resolved_cell_out, validate_basis
@@ -22,6 +29,8 @@ from ..schemas import (
     CycleTableOut,
     DqdvOut,
     DqdvSeriesOut,
+    DvdqOut,
+    DvdqSeriesOut,
     ProfileOut,
     ProfileSeriesOut,
     ReportOut,
@@ -30,6 +39,7 @@ from ..services import (
     build_cell_report,
     cycle_records,
     dqdv_series,
+    dvdq_series,
     effective_basis,
     knee_payload,
     normalized,
@@ -38,6 +48,20 @@ from ..services import (
     sample_cycle_records,
 )
 from ..settings import settings
+
+
+def _validate_smoother(smoother: str) -> None:
+    """Refuse an unknown filter by name instead of falling back silently.
+
+    Falling back would put "savgol" on the screen and a moving average in the
+    numbers, and the two differ enough at order 2 to change what a reader
+    concludes about a peak (ADR 0015).
+    """
+    if smoother not in SMOOTHERS:
+        raise HTTPException(
+            422, f"unknown smoother {smoother!r}; expected one of "
+                 f"{', '.join(SMOOTHERS)}")
+
 
 #: How many cells one comparison may hold.  Both compare endpoints share it:
 #: /compare/cycles used to 422 past thirty while /compare/profiles silently
@@ -145,8 +169,29 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
         rate_reference_mah = next(
             (r.discharge_capacity_mah for r in records if r.discharge_capacity_mah), None)
 
+    # 단차는 표 전체를 한 번에 봐야 한다 — 앞 행을 보고 계산하는 것이라
+    # 행마다 따로 구할 수 없다.  잘린 사이클이 기준이 되지 않게 하는 규칙도
+    # 여기 한 곳(wrdkit/deltas.py)에만 둔다.
+    #
+    # 정규화된 값으로 계산한다.  표에 보이는 열과 그 열의 차가 같아야 하기
+    # 때문이다 — mAh 로 빼고 mAh/g 로 보여 주면, 사람이 두 행을 직접 빼 본
+    # 값과 단차 열이 어긋난다.
+    numbers = [r.cycle_number for r in records]
+    flags = [r.complete for r in records]
+    discharge_steps = previous_cycle_deltas(
+        numbers,
+        [normalized(r.discharge_capacity_mah, cell, used) if r.complete else None
+         for r in records],
+        flags)
+    charge_steps = previous_cycle_deltas(
+        numbers,
+        [normalized(r.charge_capacity_mah, cell, used) if r.complete else None
+         for r in records],
+        flags)
+
     rows: list[CycleOut] = []
-    for record in records:
+    for record, discharge_step, charge_step in zip(
+            records, discharge_steps, charge_steps, strict=True):
         # 잘린 사이클의 파생 수치는 내보내지 않는다.  complete_only=false 는
         # "그 행을 보여 달라" 이지 "부분값을 측정값으로 달라" 가 아니다 —
         # JSON 의 숫자 칸은 complete 플래그가 뭐라고 하든 측정값으로 읽힌다.
@@ -188,6 +233,15 @@ def _cycle_rows(records: list[CycleRecord], cell, basis: str,
             voltage_max=kept(cell.potential(record.voltage_max)),
             voltage_min=kept(cell.potential(record.voltage_min)),
             retention_pct=kept(retention),
+            # `kept` 를 다시 씌우지 않는다.  deltas 가 이미 잘린 사이클에
+            # None 을 넣었고, 그 판정이 한 곳에만 있어야 두 규칙이 어긋나지
+            # 않는다.
+            discharge_delta=discharge_step.delta,
+            charge_delta=charge_step.delta,
+            discharge_delta_pct=discharge_step.delta_pct,
+            delta_base_cycle=discharge_step.previous_cycle,
+            delta_span=discharge_step.span,
+            discharge_delta_per_cycle=discharge_step.per_cycle,
             c_rate=rate,
             temperature_mean=record.temperature_mean,
             duration_h=record.duration_s / 3600.0,
@@ -351,6 +405,11 @@ def sample_dqdv(
     basis: str = Query(Basis.ABSOLUTE),
     voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
     smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER,
+                          description="moving | savgol (ADR 0015)"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6,
+                            description="savgol only; 1 reproduces the lab "
+                                        "script and equals a moving average"),
     max_points: int | None = Query(None, ge=50, le=20000),
     active_mass_mg: float | None = None,
     area_cm2: float | None = None,
@@ -368,22 +427,14 @@ def sample_dqdv(
     the first empty result.
     """
     validate_basis(basis)
+    _validate_smoother(smoother)
     sample = get_sample(session, sample_id)
     cell = resolve_cell(sample, _overrides(
         active_mass_mg, area_cm2, diameter_mm, total_mass_mg,
         active_wt_percent, nominal_specific_capacity_mah_g, thickness_um))
 
-    wanted = _parse_cycles(cycles)
-    requested_branches = _parse_branches(branches)
-
-    records = [r for r in sample_cycle_records(session, sample) if r.complete]
-    if wanted is not None:
-        records = [r for r in records if r.cycle_number in wanted]
-    if len(records) > _PROFILE_CYCLE_LIMIT:
-        raise HTTPException(
-            422, f"{len(records)} cycles requested; ask for at most "
-                 f"{_PROFILE_CYCLE_LIMIT} at a time")
-
+    records, requested_branches = _differential_records(
+        session, sample, cycles, branches)
     runs = {run.id: run for run in sample.runs}
     limit = _points_per_curve(max_points, len(records) * len(requested_branches))
     series: list[DqdvSeriesOut] = []
@@ -394,6 +445,7 @@ def sample_dqdv(
         for branch in requested_branches:
             payload = dqdv_series(run, record, branch, cell, basis,
                                   voltage_step=voltage_step, smoothing=smoothing,
+                                  smoother=smoother, poly_order=poly_order,
                                   max_points=limit)
             # 계산이 안 된 곡선도 이유와 함께 돌려준다.  빼 버리면 화면에서 그
             # 사이클이 왜 없는지 알 방법이 없다.
@@ -405,7 +457,105 @@ def sample_dqdv(
     return DqdvOut(basis=used, basis_label=basis_label(used),
                    requested_basis=basis,
                    resolved_cell=resolved_cell_out(cell), series=series,
-                   voltage_step=voltage_step, smoothing=smoothing)
+                   voltage_step=voltage_step, smoothing=smoothing,
+                   smoother=smoother, poly_order=poly_order,
+                   mixed_basis=_mixed(series))
+
+
+def _differential_records(session, sample, cycles: str, branches: str):
+    """The complete cycles and branches a dQ/dV or dV/dQ request asked for.
+
+    Shared by both so the two endpoints can never disagree about which cycles
+    exist -- they are drawn one above the other and a cycle present on one
+    plot and absent on the other reads as a data problem in the cell.
+    """
+    wanted = _parse_cycles(cycles)
+    requested_branches = _parse_branches(branches)
+    records = [r for r in sample_cycle_records(session, sample) if r.complete]
+    if wanted is not None:
+        records = [r for r in records if r.cycle_number in wanted]
+    if len(records) > _PROFILE_CYCLE_LIMIT:
+        raise HTTPException(
+            422, f"{len(records)} cycles requested; ask for at most "
+                 f"{_PROFILE_CYCLE_LIMIT} at a time")
+    return records, requested_branches
+
+
+def _mixed(series) -> bool:
+    """Do the curves that actually carry data disagree about their unit?
+
+    Empty curves have a basis but no numbers, so counting them would report a
+    mixed axis for a plot that draws in one unit.
+    """
+    return len({item.basis for item in series if item.points}) > 1
+
+
+@router.get("/samples/{sample_id}/dvdq", response_model=DvdqOut)
+def sample_dvdq(
+    sample_id: int,
+    session: Session = Depends(get_session),
+    cycles: str = Query("1", description="cycle numbers, e.g. 1,3,10-20 or all"),
+    branches: str = Query("charge,discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    capacity_step: float | None = Query(
+        None, gt=0,
+        description="grid spacing in mAh; omit to use 1/400 of each branch's "
+                    "own span (ADR 0015)"),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER, description="moving | savgol"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6),
+    max_points: int | None = Query(None, ge=50, le=20000),
+    active_mass_mg: float | None = None,
+    area_cm2: float | None = None,
+    diameter_mm: float | None = None,
+    total_mass_mg: float | None = None,
+    active_wt_percent: float | None = None,
+    nominal_specific_capacity_mah_g: float | None = None,
+    thickness_um: float | None = None,
+):
+    """dV/dQ for the requested cycles -- dQ/dV's mirror, on a capacity grid.
+
+    Its own endpoint for the same reason dQ/dV is: the axes are different
+    (capacity across, V per capacity up) and so is the point budget, and a
+    client made to guess which shape came back would guess wrong on the first
+    empty result.
+
+    ``capacity_step`` matters more than it looks.  Left out, every branch gets
+    a grid sized to its own span, which is right for one curve and wrong for an
+    overlay -- pin it in mAh when comparing cycles or cells.
+    """
+    validate_basis(basis)
+    _validate_smoother(smoother)
+    sample = get_sample(session, sample_id)
+    cell = resolve_cell(sample, _overrides(
+        active_mass_mg, area_cm2, diameter_mm, total_mass_mg,
+        active_wt_percent, nominal_specific_capacity_mah_g, thickness_um))
+
+    records, requested_branches = _differential_records(
+        session, sample, cycles, branches)
+    runs = {run.id: run for run in sample.runs}
+    limit = _points_per_curve(max_points, len(records) * len(requested_branches))
+    series: list[DvdqSeriesOut] = []
+    for record in records:
+        run = runs.get(record.run_id)
+        if run is None:
+            continue
+        for branch in requested_branches:
+            payload = dvdq_series(run, record, branch, cell, basis,
+                                  capacity_step=capacity_step,
+                                  smoothing=smoothing, smoother=smoother,
+                                  poly_order=poly_order, max_points=limit)
+            series.append(DvdqSeriesOut(
+                **payload, run_id=run.id,
+                label=f"{sample.name} · cycle {record.cycle_number} {branch}"))
+
+    used = effective_basis(cell, basis)
+    return DvdqOut(basis=used, basis_label=basis_label(used),
+                   requested_basis=basis,
+                   resolved_cell=resolved_cell_out(cell), series=series,
+                   smoothing=smoothing, smoother=smoother,
+                   poly_order=poly_order, capacity_step=capacity_step,
+                   mixed_basis=_mixed(series))
 
 
 @router.get("/samples/{sample_id}/report", response_model=ReportOut)
@@ -640,6 +790,149 @@ def compare_profiles(
     return ProfileOut(basis=used, basis_label=basis_label(used),
                       requested_basis=basis, mixed_basis=mixed,
                       resolved_cell=resolved_cell_out(shown_cell), series=series)
+
+
+def _compare_ids(sample_ids: str) -> list[int]:
+    try:
+        ids = [int(part) for part in sample_ids.split(",") if part.strip()]
+    except ValueError as exc:
+        raise HTTPException(
+            422, "sample_ids must be comma-separated integers") from exc
+    if len(ids) > _COMPARE_LIMIT:
+        raise HTTPException(
+            422, f"at most {_COMPARE_LIMIT} cells can be compared at once "
+                 f"({len(ids)} requested)")
+    return ids
+
+
+def _compare_differential(session, ids, cycle, requested_branches, basis, build):
+    """Walk the selected cells for one cycle and let *build* make each curve.
+
+    dQ/dV and dV/dQ differ only in which service function runs and which
+    schema wraps it; everything around that -- skipping a cell that has no such
+    cycle, tracking which units were actually drawn, deciding whose mass may
+    describe the plot -- is identical, and having it twice is how the two
+    screens end up disagreeing about a fallback.
+    """
+    out = []
+    drawn_cells: list[ResolvedCell] = []
+    for sample_id in ids:
+        sample = session.get(Sample, sample_id)
+        if sample is None:
+            continue
+        cell = resolve_cell(sample)
+        record = next((r for r in sample_cycle_records(session, sample)
+                       if r.cycle_number == cycle and r.complete), None)
+        if record is None:
+            continue
+        run = next((r for r in sample.runs if r.id == record.run_id), None)
+        if run is None:
+            continue
+        drew = False
+        for branch in requested_branches:
+            payload = build(run, record, branch, cell)
+            # 비교 화면에서는 빈 곡선을 싣지 않는다.  상세 화면과 다른 선택인데
+            # 이유가 있다: 거기서는 "이 사이클이 왜 없나" 를 셀 하나에 대해
+            # 말해 줘야 하고, 여기서는 서른 셀의 빈 항목이 범례를 덮는다.
+            if not payload["points"]:
+                continue
+            drew = True
+            out.append((payload, run, sample, branch, cell))
+        if drew:
+            drawn_cells.append(cell)
+
+    used_bases = {p["basis"] for p, *_ in out if p["basis"]}
+    mixed = len(used_bases) > 1
+    used = next(iter(used_bases)) if len(used_bases) == 1 else basis
+    # 한 셀의 질량·면적은 그 셀 하나만 그려졌을 때에만 이 화면을 설명한다.
+    shown_cell = drawn_cells[0] if len(drawn_cells) == 1 else resolve_cell(None)
+    return out, used, mixed, shown_cell
+
+
+@router.get("/compare/dqdv", response_model=DqdvOut)
+def compare_dqdv(
+    session: Session = Depends(get_session),
+    sample_ids: str = Query(...),
+    cycle: int = Query(..., ge=1),
+    branches: str = Query("discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER, description="moving | savgol"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6),
+    max_points: int | None = Query(None, ge=50, le=20000),
+):
+    """The same cycle's dQ/dV from several cells, overlaid.
+
+    Every cell is gridded and smoothed identically here, which is the whole
+    point: peak *height* is only comparable between curves built the same way
+    (ADR 0013), and a comparison screen is exactly where someone reads heights
+    off against each other.
+    """
+    validate_basis(basis)
+    _validate_smoother(smoother)
+    ids = _compare_ids(sample_ids)
+    requested_branches = _parse_branches(branches)
+    limit = max_points or settings.default_plot_points
+
+    built, used, mixed, shown_cell = _compare_differential(
+        session, ids, cycle, requested_branches, basis,
+        lambda run, record, branch, cell: dqdv_series(
+            run, record, branch, cell, basis, voltage_step=voltage_step,
+            smoothing=smoothing, smoother=smoother, poly_order=poly_order,
+            max_points=limit))
+
+    series = [DqdvSeriesOut(**payload, run_id=run.id,
+                            label=f"{sample.name} · cycle {cycle} {branch}")
+              for payload, run, sample, branch, _cell in built]
+    return DqdvOut(basis=used, basis_label=basis_label(used),
+                   requested_basis=basis, mixed_basis=mixed,
+                   resolved_cell=resolved_cell_out(shown_cell), series=series,
+                   voltage_step=voltage_step, smoothing=smoothing,
+                   smoother=smoother, poly_order=poly_order)
+
+
+@router.get("/compare/dvdq", response_model=DvdqOut)
+def compare_dvdq(
+    session: Session = Depends(get_session),
+    sample_ids: str = Query(...),
+    cycle: int = Query(..., ge=1),
+    branches: str = Query("discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    capacity_step: float | None = Query(None, gt=0),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER, description="moving | savgol"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6),
+    max_points: int | None = Query(None, ge=50, le=20000),
+):
+    """The same cycle's dV/dQ from several cells, overlaid.
+
+    ``capacity_step`` is left free rather than forced: cells of different sizes
+    each get a grid scaled to their own capacity, which is what makes their
+    curves the same *shape* and comparable at all.  Pin it in mAh when the
+    cells really are the same size and the absolute x positions matter.
+    """
+    validate_basis(basis)
+    _validate_smoother(smoother)
+    ids = _compare_ids(sample_ids)
+    requested_branches = _parse_branches(branches)
+    limit = max_points or settings.default_plot_points
+
+    built, used, mixed, shown_cell = _compare_differential(
+        session, ids, cycle, requested_branches, basis,
+        lambda run, record, branch, cell: dvdq_series(
+            run, record, branch, cell, basis, capacity_step=capacity_step,
+            smoothing=smoothing, smoother=smoother, poly_order=poly_order,
+            max_points=limit))
+
+    series = [DvdqSeriesOut(**payload, run_id=run.id,
+                            label=f"{sample.name} · cycle {cycle} {branch}")
+              for payload, run, sample, branch, _cell in built]
+    return DvdqOut(basis=used, basis_label=basis_label(used),
+                   requested_basis=basis, mixed_basis=mixed,
+                   resolved_cell=resolved_cell_out(shown_cell), series=series,
+                   smoothing=smoothing, smoother=smoother,
+                   poly_order=poly_order, capacity_step=capacity_step)
 
 
 @router.get("/dashboard")

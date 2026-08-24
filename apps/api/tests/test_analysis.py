@@ -441,3 +441,98 @@ def test_many_curves_share_the_point_budget(client, long_sample):
     if len(many["series"]) > len(few["series"]) * 4:
         assert max(s["points"] for s in many["series"]) <= max(
             s["points"] for s in few["series"])
+
+
+# --- 사이클 간 단차 -----------------------------------------------------------
+#
+# 유지율과 다른 질문이다.  여기 있는 검사는 전부 "그럴듯한 잘못된 숫자" 를
+# 막는 것이라, 없으면 화면에 멀쩡히 찍힌 채 아무도 눈치채지 못한다.
+
+def _cycles(client, sample_id, **params):
+    response = client.get(f"/api/samples/{sample_id}/cycles", params=params)
+    assert response.status_code == 200, response.text
+    return response.json()["cycles"]
+
+
+def test_the_delta_is_this_cycle_minus_the_previous_one(client, sample_id,
+                                                        wrd_bytes):
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    rows = _cycles(client, sample_id, complete_only="true")
+    assert len(rows) >= 3
+
+    assert rows[0]["discharge_delta"] is None      # 기준이 없다
+    assert rows[0]["delta_base_cycle"] is None
+    # 의도적으로 길이가 하나 다르다 — 각 행을 그 앞 행과 짝짓는다.
+    for previous, row in zip(rows, rows[1:], strict=False):
+        assert row["delta_base_cycle"] == previous["cycle"]
+        assert row["discharge_delta"] == pytest.approx(
+            row["discharge_capacity"] - previous["discharge_capacity"], rel=1e-6)
+        assert row["charge_delta"] == pytest.approx(
+            row["charge_capacity"] - previous["charge_capacity"], rel=1e-6)
+
+
+def test_the_delta_is_in_the_same_unit_as_the_column_beside_it(client, sample_id,
+                                                              wrd_bytes):
+    """mAh 로 빼고 mAh/g 로 보여 주면, 사람이 두 행을 손으로 뺀 값과 어긋난다."""
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    rows = _cycles(client, sample_id, basis="mAh/g", complete_only="true")
+    second = rows[1]
+    assert second["discharge_delta"] == pytest.approx(
+        second["discharge_capacity"] - rows[0]["discharge_capacity"], rel=1e-6)
+
+
+def test_a_running_cycle_neither_gets_a_delta_nor_becomes_a_base(client,
+                                                                 sample_id,
+                                                                 wrd_bytes):
+    """잘린 사이클의 용량은 파일이 끝난 순간까지 쌓인 부분값이다.
+
+    빼면 급사처럼 보이고, 그것이 다음 사이클의 기준이 되면 잘못이 전파된다.
+    """
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    rows = _cycles(client, sample_id, complete_only="false")
+    running = [r for r in rows if not r["complete"]]
+    assert running, "이 픽스처는 마지막 사이클이 잘려 있어야 한다"
+    for row in running:
+        assert row["discharge_delta"] is None
+        assert row["charge_delta"] is None
+        assert row["delta_base_cycle"] is None
+
+
+def test_the_span_says_how_far_back_the_base_is(client, sample_id, wrd_bytes):
+    """이웃한 사이클끼리면 1 이다.  1 이 아니면 그 단차는 여러 사이클치다."""
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    rows = _cycles(client, sample_id, complete_only="true")
+    for row in rows[1:]:
+        assert row["delta_span"] == 1
+        assert row["discharge_delta_per_cycle"] == pytest.approx(
+            row["discharge_delta"], rel=1e-9)
+
+
+def test_the_percentage_is_against_the_previous_cycle_not_the_reference(
+        client, sample_id, wrd_bytes):
+    """유지율의 분모는 기준 사이클, 단차의 분모는 직전 사이클이다."""
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    rows = _cycles(client, sample_id, complete_only="true")
+    row, previous = rows[2], rows[1]
+    assert row["discharge_delta_pct"] == pytest.approx(
+        100.0 * row["discharge_delta"] / previous["discharge_capacity"], rel=1e-6)
+
+
+def test_the_delta_columns_survive_a_what_if_mass(client, sample_id, wrd_bytes):
+    """질량을 바꾸면 표의 모든 수치가 재파싱 없이 따라와야 한다 (§0.1).
+
+    단차는 정규화된 값의 차라 같은 배율로 움직인다.
+    """
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("d.wrd", wrd_bytes, "application/octet-stream")})
+    base = _cycles(client, sample_id, basis="mAh/g", active_mass_mg=20.0,
+                   complete_only="true")
+    doubled = _cycles(client, sample_id, basis="mAh/g", active_mass_mg=40.0,
+                      complete_only="true")
+    assert base[1]["discharge_delta"] == pytest.approx(
+        doubled[1]["discharge_delta"] * 2, rel=1e-6)

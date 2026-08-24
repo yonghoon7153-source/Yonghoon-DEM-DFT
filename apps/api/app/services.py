@@ -24,10 +24,12 @@ from wrdkit import (
     WrdFile,
     lttb,
     normalize_capacity,
+    normalize_per_capacity,
     parse_composition,
     summarize_cycles,
 )
 from wrdkit.cycles import Profile, extract_profile
+from wrdkit.dva import DifferentialVoltage, differential_voltage
 from wrdkit.health import CellReport, build_report
 from wrdkit.ica import DifferentialCapacity, differential_capacity
 from wrdkit.knee import KneeAnalysis
@@ -514,29 +516,88 @@ def profile_series(run: Run, record: CycleRecord, branch: str,
                    cell: ResolvedCell, basis: str, *,
                    max_points: int | None = None) -> dict:
     """One downsampled capacity-vs-voltage branch, ready for the plot."""
-    columns = load_wrd_columns(run)
-    wrd = WrdFile(_metadata_stub(run), columns)
-    summary = records_to_summaries([record])[0]
-    summary.steps = _rebuild_steps(wrd, record)
-    profile = extract_profile(wrd, summary, branch)
-    return _profile_payload(profile, cell, basis,
+    return _profile_payload(_branch_profile(run, record, branch), cell, basis,
                             max_points or settings.default_plot_points)
 
 
 def dqdv_series(run: Run, record: CycleRecord, branch: str,
                 cell: ResolvedCell, basis: str, *,
                 voltage_step: float, smoothing: int,
+                smoother: str = "moving", poly_order: int = 2,
                 max_points: int | None = None) -> dict:
     """One branch's dQ/dV, ready for the plot."""
+    profile = _branch_profile(run, record, branch)
+    curve = differential_capacity(profile, voltage_step=voltage_step,
+                                  smoothing=smoothing, smoother=smoother,
+                                  poly_order=poly_order)
+    return _dqdv_payload(curve, cell, basis,
+                         max_points or settings.default_plot_points)
+
+
+def dvdq_series(run: Run, record: CycleRecord, branch: str,
+                cell: ResolvedCell, basis: str, *,
+                capacity_step: float | None, smoothing: int,
+                smoother: str = "moving", poly_order: int = 2,
+                max_points: int | None = None) -> dict:
+    """One branch's dV/dQ, ready for the plot."""
+    profile = _branch_profile(run, record, branch)
+    curve = differential_voltage(profile, capacity_step=capacity_step,
+                                 smoothing=smoothing, smoother=smoother,
+                                 poly_order=poly_order)
+    return _dvdq_payload(curve, cell, basis,
+                         max_points or settings.default_plot_points)
+
+
+def _branch_profile(run: Run, record: CycleRecord, branch: str) -> Profile:
+    """Rebuild one branch from the stored columns.
+
+    Three call sites wanted the same six lines and had three copies of them.
+    A fourth analysis would have made four, and the copies were already the
+    place a fix would have been applied to two of three.
+    """
     columns = load_wrd_columns(run)
     wrd = WrdFile(_metadata_stub(run), columns)
     summary = records_to_summaries([record])[0]
     summary.steps = _rebuild_steps(wrd, record)
-    profile = extract_profile(wrd, summary, branch)
-    curve = differential_capacity(profile, voltage_step=voltage_step,
-                                  smoothing=smoothing)
-    return _dqdv_payload(curve, cell, basis,
-                         max_points or settings.default_plot_points)
+    return extract_profile(wrd, summary, branch)
+
+
+def _dvdq_payload(curve: DifferentialVoltage, cell: ResolvedCell, basis: str,
+                  max_points: int) -> dict:
+    used = effective_basis(cell, basis)
+    capacity = curve.capacity
+    values = curve.dv_dq
+    step = curve.capacity_step
+    if used != Basis.ABSOLUTE:
+        # 두 축이 **반대 방향으로** 바뀐다.  x 축의 용량은 나누고(mAh → mAh/g),
+        # y 축은 그 용량이 분모라 곱한다(V/mAh → V/(mAh/g)).  한쪽만 바꾸면
+        # 곡선은 여전히 매끄럽고 봉우리도 제자리라 화면에서 안 걸린다
+        # (ADR 0015).
+        capacity = normalize_capacity(capacity, cell, used)
+        values = normalize_per_capacity(values, cell, used)
+        # 격자 간격도 x 축과 같은 단위를 따라간다 — 화면이 "격자 0.01 mAh/g"
+        # 라고 적으면서 실제로는 mAh 이면 분해능을 잘못 읽는다.
+        step = normalize_capacity(step, cell, used) if step else step
+    if len(values) > max_points:
+        # x 를 먼저 준다 — lttb 는 첫 배열을 x 로 보고 y 의 모양을 지킨다.
+        capacity, values = lttb(capacity, values, max_points)
+    return {
+        "cycle": curve.cycle_number,
+        "branch": curve.branch,
+        "basis": used,
+        "points": len(values),
+        # 기준전극 오프셋은 여기 없다.  전압이 x 축이 아니라 **미분된 양**이고,
+        # d(V+c)/dQ = dV/dQ 라 상수는 사라진다.  x 축인 용량에는 오프셋이라는
+        # 개념 자체가 없다.
+        "capacity": [round(float(v), 6) for v in capacity],
+        "dvdq": [round(float(v), 9) for v in values],
+        "capacity_step": round(float(step), 9),
+        "smoothing": curve.smoothing,
+        "smoother": curve.smoother,
+        "poly_order": curve.poly_order,
+        "points_dropped": curve.points_dropped,
+        "reason": curve.reason,
+    }
 
 
 def _dqdv_payload(curve: DifferentialCapacity, cell: ResolvedCell, basis: str,
@@ -562,6 +623,8 @@ def _dqdv_payload(curve: DifferentialCapacity, cell: ResolvedCell, basis: str,
         "dqdv": [round(float(v), 6) for v in values],
         "voltage_step": curve.voltage_step,
         "smoothing": curve.smoothing,
+        "smoother": curve.smoother,
+        "poly_order": curve.poly_order,
         "points_dropped": curve.points_dropped,
         "reason": curve.reason,
     }

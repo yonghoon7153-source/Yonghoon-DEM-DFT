@@ -181,3 +181,70 @@ def test_a_cycle_that_does_not_exist_is_a_404(client, loaded):
     response = client.get(f"/api/export/samples/{loaded}/dqdv.csv",
                           params={"cycles": "9999"})
     assert response.status_code == 404
+
+
+# --- 평활 선택 (ADR 0015) -----------------------------------------------------
+
+def test_the_smoother_travels_with_the_numbers(client, loaded):
+    """봉우리 높이를 비교해도 되는지는 창·필터·차수가 같은지에 달려 있다.
+
+    응답이 그것을 말하지 않으면, 두 사람이 다른 설정으로 만든 곡선을 같은
+    축에서 비교하고도 알 방법이 없다.
+    """
+    body = _dqdv(client, loaded, cycles="3", branches="discharge",
+                 smoothing=9, smoother="savgol", poly_order=3)
+    assert (body["smoothing"], body["smoother"], body["poly_order"]) == (9, "savgol", 3)
+    curve = next(s for s in body["series"] if s["points"])
+    assert (curve["smoothing"], curve["smoother"], curve["poly_order"]) == (9, "savgol", 3)
+
+
+def test_savgol_at_order_one_is_the_moving_average(client, loaded):
+    """랩 공용 스크립트가 쓰는 설정이다.  대칭 창의 최소제곱 직선은 중심에서
+    창의 평균과 정확히 같아서, 내부 값이 이동평균과 일치한다 (ADR 0015).
+
+    이게 깨졌다면 둘 중 하나가 바뀐 것이고, "차수 1 로 랩 스크립트를
+    재현한다" 는 약속도 함께 깨진 것이다.
+    """
+    common = {"cycles": "3", "branches": "discharge", "smoothing": 21}
+    moving = _dqdv(client, loaded, smoother="moving", **common)
+    savgol = _dqdv(client, loaded, smoother="savgol", poly_order=1, **common)
+
+    a = next(s for s in moving["series"] if s["points"])["dqdv"]
+    b = next(s for s in savgol["series"] if s["points"])["dqdv"]
+    assert len(a) == len(b)
+    interior = slice(10, -10)
+    assert a[interior] == pytest.approx(b[interior], abs=1e-6)
+
+
+def test_a_higher_order_keeps_more_of_the_peak(client, loaded):
+    """차수 2 부터 SG 가 값을 한다.  이 검사가 없으면 'SG 를 붙였다' 가 곧
+    '봉우리가 산다' 로 읽히는데, 차수 1 에서는 거짓이다."""
+    common = {"cycles": "3", "branches": "discharge", "smoothing": 21}
+    moving = _dqdv(client, loaded, smoother="moving", **common)
+    savgol = _dqdv(client, loaded, smoother="savgol", poly_order=2, **common)
+
+    def depth(body):
+        values = next(s for s in body["series"] if s["points"])["dqdv"]
+        return max(abs(v) for v in values)
+
+    assert depth(savgol) >= depth(moving)
+
+
+def test_an_unknown_smoother_is_refused_by_name(client, loaded):
+    """조용히 되돌아가면 화면은 savgol 이라 적고 이동평균을 그린다."""
+    response = client.get(f"/api/samples/{loaded}/dqdv",
+                          params={"cycles": "3", "smoother": "gaussian"})
+    assert response.status_code == 422
+    assert "gaussian" in response.text
+
+
+def test_the_csv_takes_the_same_smoother(client, loaded):
+    response = client.get(f"/api/export/samples/{loaded}/dqdv.csv",
+                          params={"cycles": "3", "branches": "discharge",
+                                  "smoother": "savgol", "poly_order": 2})
+    assert response.status_code == 200
+    assert "dQdV" in response.text.splitlines()[0]
+
+    refused = client.get(f"/api/export/samples/{loaded}/dqdv.csv",
+                         params={"cycles": "3", "smoother": "nope"})
+    assert refused.status_code == 422

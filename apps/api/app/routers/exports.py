@@ -21,13 +21,21 @@ from wrdkit import (
     WrdFile,
     cycles_csv_string,
     differential_capacity,
+    differential_voltage,
     dqdv_csv_string,
+    dvdq_csv_string,
     extract_profile,
     profiles_csv_string,
     raw_csv_string,
     write_xlsx,
 )
-from wrdkit.ica import DEFAULT_SMOOTHING, DEFAULT_VOLTAGE_STEP  # noqa: E402
+from wrdkit.ica import (  # noqa: E402
+    DEFAULT_POLY_ORDER,
+    DEFAULT_SMOOTHER,
+    DEFAULT_SMOOTHING,
+    DEFAULT_VOLTAGE_STEP,
+    SMOOTHERS,
+)
 
 from .. import storage
 from ..db import get_session
@@ -152,6 +160,8 @@ def export_sample_dqdv(
     basis: str = Query(Basis.ABSOLUTE),
     voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
     smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER, description="moving | savgol"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6),
 ):
     """dQ/dV column pairs per cycle, laid out like the profile CSV.
 
@@ -161,6 +171,7 @@ def export_sample_dqdv(
     the pixel rather than to the grid.
     """
     validate_basis(basis)
+    _validate_smoother(smoother)
     sample = get_sample(session, sample_id)
     cell = resolve_cell(sample)
     profiles = _collect_profiles(session, sample, cycles, branches)
@@ -168,16 +179,69 @@ def export_sample_dqdv(
         raise HTTPException(404, "no complete cycle matched the selection")
 
     curves = [differential_capacity(p, voltage_step=voltage_step,
-                                    smoothing=smoothing) for p in profiles]
-    if not any(c.usable for c in curves):
-        # 하나도 못 만들었으면 빈 파일 대신 이유를 준다.  빈 CSV 를 열어 본
-        # 사람은 자기가 사이클을 잘못 골랐다고 생각하지, 전압이 안 움직였다고
-        # 생각하지 않는다.
-        why = next((c.reason for c in curves if c.reason), "no usable branch")
-        raise HTTPException(422, f"dQ/dV could not be computed: {why}")
-
+                                    smoothing=smoothing, smoother=smoother,
+                                    poly_order=poly_order) for p in profiles]
+    _require_a_usable_curve(curves, "dQ/dV")
     text = dqdv_csv_string(curves, cell, basis=basis)
     return _csv_response(text, f"{_safe(sample.name)}_dqdv.csv")
+
+
+@router.get("/samples/{sample_id}/dvdq.csv")
+def export_sample_dvdq(
+    sample_id: int,
+    session: Session = Depends(get_session),
+    cycles: str = Query("all"),
+    branches: str = Query("charge,discharge"),
+    basis: str = Query(Basis.ABSOLUTE),
+    capacity_step: float | None = Query(None, gt=0),
+    smoothing: int = Query(DEFAULT_SMOOTHING, ge=1, le=101),
+    smoother: str = Query(DEFAULT_SMOOTHER, description="moving | savgol"),
+    poly_order: int = Query(DEFAULT_POLY_ORDER, ge=0, le=6),
+):
+    """dV/dQ column pairs per cycle, laid out like the dQ/dV CSV.
+
+    Full resolution, like every other CSV here: this is what someone re-plots
+    or measures peak spacings off, and a curve thinned for a 900-pixel canvas
+    puts those spacings out by a pixel rather than by a grid cell.
+
+    Pin ``capacity_step`` when the columns will be compared against each other
+    -- without it each branch is gridded to its own span, so the x columns of
+    two cycles do not line up (ADR 0015).
+    """
+    validate_basis(basis)
+    _validate_smoother(smoother)
+    sample = get_sample(session, sample_id)
+    cell = resolve_cell(sample)
+    profiles = _collect_profiles(session, sample, cycles, branches)
+    if not profiles:
+        raise HTTPException(404, "no complete cycle matched the selection")
+
+    curves = [differential_voltage(p, capacity_step=capacity_step,
+                                   smoothing=smoothing, smoother=smoother,
+                                   poly_order=poly_order) for p in profiles]
+    _require_a_usable_curve(curves, "dV/dQ")
+    text = dvdq_csv_string(curves, cell, basis=basis)
+    return _csv_response(text, f"{_safe(sample.name)}_dvdq.csv")
+
+
+def _validate_smoother(smoother: str) -> None:
+    if smoother not in SMOOTHERS:
+        raise HTTPException(
+            422, f"unknown smoother {smoother!r}; expected one of "
+                 f"{', '.join(SMOOTHERS)}")
+
+
+def _require_a_usable_curve(curves, what: str) -> None:
+    """A file of empty columns is worse than an error.
+
+    하나도 못 만들었으면 빈 파일 대신 이유를 준다.  빈 CSV 를 열어 본 사람은
+    자기가 사이클을 잘못 골랐다고 생각하지, 전압이(또는 용량이) 안 움직였다고
+    생각하지 않는다.
+    """
+    if any(c.usable for c in curves):
+        return
+    why = next((c.reason for c in curves if c.reason), "no usable branch")
+    raise HTTPException(422, f"{what} could not be computed: {why}")
 
 
 @router.get("/samples/{sample_id}/workbook.xlsx")

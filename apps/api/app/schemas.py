@@ -376,6 +376,26 @@ class CycleOut(BaseModel):
     voltage_max: float | None
     voltage_min: float | None
     retention_pct: float | None = None
+    #: Step against the most recent *complete* cycle before this one, in the
+    #: table's basis.  Retention answers "how much is left against cycle 3";
+    #: this answers "how much went this cycle", and the two are not
+    #: interchangeable -- a cell can hold 92 % for forty cycles and then drop
+    #: four points in one, which a retention column renders as the same small
+    #: step formation makes at the start.
+    discharge_delta: float | None = None
+    charge_delta: float | None = None
+    #: The same discharge step as a percentage of that base cycle.  None when
+    #: the base is zero: the relative change from nothing is undefined, not
+    #: enormous.
+    discharge_delta_pct: float | None = None
+    #: Which cycle the step was measured against, and how many cycle numbers
+    #: back that is.  A gap means the step covers several cycles' fade -- 1 is
+    #: adjacent.  Both are None/0 when there is no base yet.
+    delta_base_cycle: int | None = None
+    delta_span: int = 0
+    #: ``discharge_delta / delta_span`` -- the honest per-cycle rate when
+    #: cycles are missing from the record.
+    discharge_delta_per_cycle: float | None = None
     c_rate: float | None = None
     temperature_mean: float | None = None
     duration_h: float
@@ -446,6 +466,12 @@ class DqdvSeriesOut(BaseModel):
     label: str
     voltage_step: float
     smoothing: int
+    #: Which filter ran, and its polynomial order when that filter is
+    #: Savitzky-Golay.  Peak *heights* only compare between curves whose
+    #: window, filter and order all match, so all three travel with the
+    #: numbers (ADR 0015).
+    smoother: str = "moving"
+    poly_order: int = 2
     #: Samples excluded by the monotonic filter -- the CV hold and any
     #: noise-driven backtracking.
     points_dropped: int = 0
@@ -460,6 +486,59 @@ class DqdvOut(BaseModel):
     series: list[DqdvSeriesOut]
     voltage_step: float
     smoothing: int
+    smoother: str = "moving"
+    poly_order: int = 2
+    mixed_basis: bool = False
+
+
+class DvdqSeriesOut(BaseModel):
+    """One branch's dV/dQ, and what it was computed with.
+
+    The sibling of ``DqdvSeriesOut`` and deliberately its mirror image: the
+    x axis is capacity, the y axis is V per capacity, and the useful reading is
+    the **distance between two peaks**, which is the capacity between two stage
+    boundaries (ADR 0015).
+
+    ``capacity_step`` is the resolved grid spacing in the series' own capacity
+    unit.  It is reported rather than assumed because the default step is a
+    fraction of each branch's own span, so two cells do not share a grid unless
+    the caller pinned one.
+    """
+
+    cycle: int
+    branch: str
+    basis: str
+    points: int
+    #: The grid, in ``basis`` units.
+    capacity: list[float]
+    #: V/mAh, or V/(mAh/g) etc. once normalised.  Negative on discharge --
+    #: voltage falls while capacity rises, and erasing that sign would erase
+    #: the hysteresis a charge/discharge overlay exists to show.
+    dvdq: list[float]
+    run_id: int
+    label: str
+    capacity_step: float
+    smoothing: int
+    smoother: str = "moving"
+    poly_order: int = 2
+    #: Samples excluded because capacity stopped advancing -- the CV hold and
+    #: any rest.
+    points_dropped: int = 0
+    reason: str = ""
+
+
+class DvdqOut(BaseModel):
+    basis: str
+    basis_label: str
+    requested_basis: str
+    resolved_cell: ResolvedCellOut
+    series: list[DvdqSeriesOut]
+    smoothing: int
+    smoother: str = "moving"
+    poly_order: int = 2
+    #: The step the caller pinned, in mAh, or None when each branch used a
+    #: fraction of its own span.
+    capacity_step: float | None = None
     mixed_basis: bool = False
 
 
