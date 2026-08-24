@@ -30,6 +30,71 @@ def upload_path(sha256: str) -> Path:
     return settings.uploads_dir / f"{sha256}.wrd"
 
 
+def spectrum_upload_path(sha256: str, suffix: str) -> Path:
+    """Where an impedance original lives.
+
+    The extension is kept because it is not decoration: ``.mpr`` and ``.mpt``
+    are read by different code, and a stored file that has lost the difference
+    cannot be re-parsed without guessing.  Anything unexpected becomes
+    ``.bin`` rather than being trusted into a path.
+    """
+    clean = suffix.lower().lstrip(".")
+    if clean not in ("mpr", "mpt", "mps"):
+        clean = "bin"
+    return settings.uploads_dir / f"{sha256}.{clean}"
+
+
+def spectrum_dir(spectrum_id: int) -> Path:
+    return settings.spectra_dir / str(spectrum_id)
+
+
+def spectrum_points_path(spectrum_id: int) -> Path:
+    return spectrum_dir(spectrum_id) / "points.npz"
+
+
+def cache_spectrum(spectrum_id: int, spectrum) -> Path:
+    """Persist the parsed points so a plot need not re-read the original."""
+    directory = spectrum_dir(spectrum_id)
+    directory.mkdir(parents=True, exist_ok=True)
+    target = spectrum_points_path(spectrum_id)
+    payload = {"frequency_hz": spectrum.frequency_hz,
+               "z_re": spectrum.z_re, "z_im": spectrum.z_im}
+    payload.update({f"col::{name}": values
+                    for name, values in spectrum.columns.items()})
+    _write_atomically(target, lambda handle: np.savez_compressed(handle, **payload))
+    return target
+
+
+def load_spectrum(spectrum_id: int):
+    """The cached points, or ``None`` when the cache is gone or unreadable."""
+    from wrdkit.eis import Spectrum
+
+    path = spectrum_points_path(spectrum_id)
+    if not path.exists():
+        return None
+    try:
+        with np.load(path, allow_pickle=False) as archive:
+            frequency = archive["frequency_hz"]
+            z_re = archive["z_re"]
+            z_im = archive["z_im"]
+            columns = {name[5:]: archive[name] for name in archive.files
+                       if name.startswith("col::")}
+    except (OSError, ValueError, KeyError):
+        return None
+    return Spectrum(frequency_hz=frequency, z_re=z_re, z_im=z_im,
+                    columns=columns)
+
+
+def drop_spectrum_cache(spectrum_id: int) -> None:
+    """Remove a spectrum's parsed points.  The original upload stays (§0.2)."""
+    directory = spectrum_dir(spectrum_id)
+    if not directory.exists():
+        return
+    for child in directory.iterdir():
+        child.unlink(missing_ok=True)
+    directory.rmdir()
+
+
 def run_dir(run_id: int) -> Path:
     return settings.runs_dir / str(run_id)
 
@@ -65,6 +130,18 @@ def _write_atomically(target: Path, write) -> None:
         os.replace(temporary, target)
     finally:
         temporary.unlink(missing_ok=True)
+
+
+def store_bytes(content: bytes, target: Path) -> Path:
+    """Write *content* to *target* unless the same length is already there.
+
+    The caller names the file after its own content hash, so a size mismatch
+    can only be a partial write from an earlier attempt.
+    """
+    settings.ensure_dirs()
+    if not target.exists() or target.stat().st_size != len(content):
+        _write_atomically(target, lambda handle: handle.write(content))
+    return target
 
 
 def store_upload(content: bytes, sha256: str) -> Path:

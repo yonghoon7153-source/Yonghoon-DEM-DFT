@@ -44,6 +44,7 @@ from .routers import (  # noqa: E402
     activity,
     analysis,
     changelog,
+    eis,
     exports,
     groups,
     presets,
@@ -163,6 +164,7 @@ app.include_router(groups.router)
 app.include_router(samples.router)
 app.include_router(runs.router)
 app.include_router(analysis.router)
+app.include_router(eis.router)
 app.include_router(exports.router)
 app.include_router(presets.router)
 app.include_router(activity.router)

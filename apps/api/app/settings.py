@@ -74,9 +74,19 @@ class Settings:
     def runs_dir(self) -> Path:
         return self.data_dir / "runs"
 
+    @property
+    def spectra_dir(self) -> Path:
+        """Parsed EIS points, one directory per spectrum.
+
+        Beside ``runs_dir`` rather than inside it: a spectrum is not a cycling
+        run and a backup that walks one must not silently pick up the other.
+        """
+        return self.data_dir / "spectra"
+
     def ensure_dirs(self) -> None:
         self.uploads_dir.mkdir(parents=True, exist_ok=True)
         self.runs_dir.mkdir(parents=True, exist_ok=True)
+        self.spectra_dir.mkdir(parents=True, exist_ok=True)
 
 
 settings = Settings()

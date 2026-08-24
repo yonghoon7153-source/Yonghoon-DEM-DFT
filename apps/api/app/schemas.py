@@ -638,3 +638,97 @@ def basis_choices() -> list[BasisInfo]:
 
 
 DEFAULT_BASIS = Basis.ABSOLUTE
+
+
+# --------------------------------------------------------------------------
+# 임피던스 (ADR 0019)
+# --------------------------------------------------------------------------
+class SpectrumOut(BaseModel):
+    id: int
+    sample_id: int | None
+    sample_name: str | None = None
+    name: str
+    #: "liquid" | "solid" — 같은 두 아크가 무엇으로 불릴지를 정한다.
+    kind: str
+    original_name: str
+    sha256: str
+    size_bytes: int
+    source_format: str
+    uploaded_at: datetime
+    n_points: int
+    frequency_start_hz: float | None
+    frequency_end_hz: float | None
+    amplitude_mv: float | None
+    device: str
+    technique: str
+    measured_at: datetime | None
+    thickness_um: float | None
+    area_cm2: float | None
+    last_circuit: str
+    parse_error: str
+    created_by: str = ""
+    updated_by: str = ""
+    updated_at: datetime
+    fit_count: int = 0
+    best_chi_squared: float | None = None
+    best_circuit: str = ""
+
+
+class SpectrumFitOut(BaseModel):
+    id: int
+    spectrum_id: int
+    circuit: str
+    #: 피팅 당시의 종류.  스펙트럼의 현재 종류(``kind_now``)와 다를 수 있고,
+    #: 다르면 화면이 그렇게 말해야 한다 — 이름이 달라진다는 뜻이므로.
+    kind: str
+    kind_now: str = ""
+    converged: bool
+    chi_squared: float | None
+    reason: str
+    #: [{"name","value","unit","stderr","determined","relative_error"}, ...]
+    parameters: list[dict[str, Any]] = []
+    #: 그 저항들이 이 셀에서 무엇인지.  읽을 때 붙인다 (이름은 고정값이 아니다).
+    arcs: list[dict[str, Any]] = []
+    #: 전고체일 때의 전도도.  두께·면적이 없으면 무엇이 없는지 말한다.
+    conductivity: dict[str, Any] = {}
+    dropped_inductive: int = 0
+    dropped_out_of_range: int = 0
+    frequency_low_hz: float | None = None
+    frequency_high_hz: float | None = None
+    starts: int = 0
+    starts_converged: int = 0
+    created_at: datetime
+    created_by: str = ""
+
+
+class SpectrumDetailOut(SpectrumOut):
+    settings: dict[str, Any] = {}
+    #: 실제로 쓰이는 기하 — 스펙트럼 자신의 값이 없으면 셀에서 온다.
+    thickness_cm: float | None = None
+    area_cm2_effective: float | None = None
+    fits: list[SpectrumFitOut] = []
+
+
+class SpectrumPointsOut(BaseModel):
+    id: int
+    name: str
+    kind: str
+    #: raw 만 (ADR 0001): Hz 와 Ω.  z_im 은 **허수부 자체**이고 그 음수가 아니다.
+    frequency_hz: list[float]
+    z_re: list[float]
+    z_im: list[float]
+    magnitude: list[float]
+    phase_deg: list[float]
+
+
+class SpectrumUpdate(BaseModel):
+    """PATCH 는 이름을 댄 필드만 건드린다."""
+
+    name: str | None = None
+    kind: str | None = None
+    sample_id: int | None = None
+    thickness_um: PositiveLength | None = None
+    area_cm2: PositiveLength | None = None
+    measured_at: datetime | None = None
+    #: 숫자 필드를 비우려면 이름을 여기에 담는다.
+    clear: list[str] = Field(default_factory=list)

@@ -283,3 +283,96 @@ class Activity(SQLModel, table=True):
     label: str = ""
     #: Which fields changed, comma separated.  Empty on create and delete.
     fields: str = ""
+
+
+class SpectrumRecord(SQLModel, table=True):
+    """One impedance measurement: the file it came from and what it says.
+
+    Attached to a ``Sample`` like a cycling run is, because it is the same cell
+    -- the library filters, the group, the owner and the name all come along
+    (ADR 0019).  It can also stand alone: a pellet measured before anybody
+    decided it was a cell still needs somewhere to live.
+
+    ``kind`` decides what the fitted arcs are **called**, not how they are
+    found.  ``liquid`` reads them as an SEI film and a charge transfer;
+    ``solid`` reads the same two arcs as a grain interior and a grain
+    boundary, and offers conductivity instead of resistance.
+    """
+
+    __tablename__ = "spectrum"
+
+    id: int | None = Field(default=None, primary_key=True)
+    sample_id: int | None = Field(default=None, foreign_key="sample.id", index=True)
+    name: str = Field(default="", index=True)
+    #: "liquid" | "solid".  Not inferred from the data: the two look alike and
+    #: only the person who built the cell knows which it was (§0.4).
+    kind: str = Field(default="liquid", index=True)
+
+    original_name: str = ""
+    #: Content hash of the original.  Duplicate uploads are the same row.
+    sha256: str = Field(default="", index=True, unique=True)
+    size_bytes: int = 0
+    #: "mpr" | "mpt".  Which reader made the points, so a re-parse is not a guess.
+    source_format: str = ""
+    uploaded_at: datetime = Field(default_factory=_now)
+
+    n_points: int = 0
+    frequency_start_hz: float | None = None
+    frequency_end_hz: float | None = None
+    #: What the .mps said, when a .mps came with it.
+    amplitude_mv: float | None = None
+    device: str = ""
+    technique: str = ""
+    #: When the instrument measured it, if the file says.
+    measured_at: datetime | None = None
+    #: Everything else the settings file carried, verbatim.
+    settings_json: str = ""
+
+    #: Cell geometry for conductivity.  Kept on the spectrum rather than only
+    #: on the sample because a pellet gets measured at several thicknesses and
+    #: each spectrum belongs to one of them.  Blank means "take the sample's".
+    thickness_um: float | None = None
+    area_cm2: float | None = None
+
+    #: The circuit last fitted here, so the screen can re-offer it.
+    last_circuit: str = ""
+    parse_error: str = ""
+
+    created_by: str = ""
+    updated_by: str = ""
+    updated_at: datetime = Field(default_factory=_now)
+
+
+class SpectrumFit(SQLModel, table=True):
+    """One fit of one circuit to one spectrum.
+
+    Kept rather than recomputed: a fit is not deterministic in the way a
+    parse is -- it starts from scattered points and keeps the best -- so a
+    number quoted in a report has to be the number that was quoted, not one
+    that will be re-derived slightly differently next week.
+    """
+
+    __tablename__ = "spectrum_fit"
+
+    id: int | None = Field(default=None, primary_key=True)
+    spectrum_id: int = Field(foreign_key="spectrum.id", index=True)
+    circuit: str = ""
+    #: Copied from the spectrum at fit time.  A spectrum re-labelled later must
+    #: not silently rename the arcs of a fit already reported.
+    kind: str = "liquid"
+
+    converged: bool = True
+    chi_squared: float | None = None
+    reason: str = ""
+    #: [{"name", "value", "unit", "stderr", "determined"}, ...]
+    parameters_json: str = ""
+
+    dropped_inductive: int = 0
+    dropped_out_of_range: int = 0
+    frequency_low_hz: float | None = None
+    frequency_high_hz: float | None = None
+    starts: int = 0
+    starts_converged: int = 0
+
+    created_at: datetime = Field(default_factory=_now)
+    created_by: str = ""
