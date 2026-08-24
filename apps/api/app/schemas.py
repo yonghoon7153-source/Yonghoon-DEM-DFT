@@ -566,6 +566,20 @@ class ReportOut(BaseModel):
     resolved_cell: ResolvedCellOut
 
 
+class ChangeNoteOut(BaseModel):
+    """`docs/log.md` 의 한 항목.
+
+    `action` 을 Enum 으로 좁히지 않는다 -- 파일에 있는 그대로 낸다.  목록에 없는
+    action 을 거르면 그 커밋만 패치노트에서 조용히 빠지고, 화면은 그 사실을
+    말할 방법이 없다.
+    """
+
+    date: str
+    action: str
+    subject: str
+    body: str
+
+
 class BasisInfo(BaseModel):
     value: str
     label: str

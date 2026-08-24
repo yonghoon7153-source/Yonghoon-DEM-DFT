@@ -43,6 +43,7 @@ from .live import (  # noqa: E402
 from .routers import (  # noqa: E402
     activity,
     analysis,
+    changelog,
     exports,
     groups,
     presets,
@@ -165,6 +166,7 @@ app.include_router(analysis.router)
 app.include_router(exports.router)
 app.include_router(presets.router)
 app.include_router(activity.router)
+app.include_router(changelog.router)
 
 
 @app.get("/api/health")

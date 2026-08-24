@@ -18,8 +18,8 @@ from __future__ import annotations
 
 import datetime
 import hashlib
-import zlib
 import re
+import zlib
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any

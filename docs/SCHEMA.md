@@ -60,8 +60,13 @@ verifiedBy: agent | human | both  # verified 일 때만
 ## 로그
 
 `docs/log.md` 는 append-only. `## [YYYY-MM-DD] action | subject`.
-action: `create` `update` `ingest` `verify` `lint` `fix` `start`.
+action: `create` `update` `ingest` `verify` `lint` `fix` `start` `feat` `docs`.
 충돌 시 양쪽 항목을 모두 남긴다.
+
+이 목록은 **닫혀 있지 않다.** 대시보드의 패치노트가 이 파일을 그대로 읽는데,
+목록에 없는 action 을 거르면 그 커밋만 화면에서 조용히 사라진다 — 기록을 읽는
+쪽이 기록을 검열하면 안 된다. 파서도 화면도 모르는 action 을 그대로 통과시키고,
+아는 것에만 색과 우리말 이름표를 준다.
 
 ## 태그
 

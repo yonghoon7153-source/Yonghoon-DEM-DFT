@@ -49,6 +49,19 @@ export interface Activity {
   fields: string[]
 }
 
+/** 패치노트 한 줄 — `docs/log.md` 의 한 항목.
+ *
+ * `action` 을 유니온으로 좁히지 않는다.  파일에 있는 그대로 오고, 서버가
+ * 거르지 않는다 (거르면 그 항목만 조용히 사라진다).  화면은 아는 것만 색을
+ * 주고 나머지는 중립으로 그린다. */
+export interface ChangeNote {
+  date: string
+  action: string
+  subject: string
+  /** 커밋 메시지에 안 들어간 것.  없을 수도 있다. */
+  body: string
+}
+
 export interface Group {
   id: number
   name: string

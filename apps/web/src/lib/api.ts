@@ -8,8 +8,8 @@
 import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
-  Activity, CompareResponse, CompositionPreset, DqdvResponse, DvdqResponse, CycleTable,
-  DashboardRow, Facets, Group, Meta, ProfileResponse, Report, Run, Sample,
+  Activity, ChangeNote, CompareResponse, CompositionPreset, DqdvResponse, DvdqResponse,
+  CycleTable, DashboardRow, Facets, Group, Meta, ProfileResponse, Report, Run, Sample,
 } from './types'
 
 export class ApiError extends Error {
@@ -104,6 +104,9 @@ export const api = {
 
   // -- 누가 무엇을 했는지 ----------------------------------------------------
   activity: (params?: Params) => request<Activity[]>(`/api/activity${query(params)}`),
+
+  // -- 무엇이 바뀌었는지 (docs/log.md) ---------------------------------------
+  changelog: (params?: Params) => request<ChangeNote[]>(`/api/changelog${query(params)}`),
 
   // -- groups --------------------------------------------------------------
   listGroups: () => request<Group[]>('/api/groups'),

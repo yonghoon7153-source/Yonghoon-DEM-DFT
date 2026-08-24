@@ -57,6 +57,16 @@ class Settings:
         return _path("WORKBENCH_WEB_DIST", REPO_ROOT / "apps/web/dist")
 
     @property
+    def changelog_path(self) -> Path:
+        """패치노트가 읽는 파일 -- 저장소의 `docs/log.md`.
+
+        데이터가 아니라 **이 저장소의 기록**이므로 data_dir 을 따라가지 않는다.
+        중추 서버의 데이터가 외장하드에 있어도 패치노트는 그 기계가 지금 돌리고
+        있는 코드의 것이어야 한다.
+        """
+        return _path("WORKBENCH_CHANGELOG", REPO_ROOT / "docs/log.md")
+
+    @property
     def uploads_dir(self) -> Path:
         return self.data_dir / "uploads"
 

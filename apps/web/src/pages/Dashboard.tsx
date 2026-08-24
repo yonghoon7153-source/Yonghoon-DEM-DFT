@@ -9,6 +9,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { ActivityFeed } from '../components/ActivityFeed'
+import { PatchNotes } from '../components/PatchNotes'
 import { BasisSelect } from '../components/BasisSelect'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
@@ -216,6 +217,18 @@ export function Dashboard() {
           </Card>
         </div>
       ) : null}
+
+      {/* 두 칸은 다른 질문에 답한다.  위는 **워크벤치가** 어떻게 바뀌었는지,
+          아래는 **데이터가** 어떻게 바뀌었는지.  둘이 나란히 있어야 "어제와
+          화면이 다른데" 와 "이 질량 누가 고쳤지" 를 같은 자리에서 본다. */}
+      <div style={{ marginTop: 12 }}>
+        <Card
+          title="패치노트"
+          actions={<span className="tiny faint">워크벤치가 무엇이 바뀌었는지</span>}
+        >
+          <PatchNotes limit={8} />
+        </Card>
+      </div>
 
       {/* 한 서버를 여럿이 쓰면 제일 먼저 생기는 질문이 "이거 누가 올렸지" 다. */}
       <div style={{ marginTop: 12 }}>

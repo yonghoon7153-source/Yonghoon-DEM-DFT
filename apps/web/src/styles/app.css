@@ -1013,6 +1013,22 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
 }
 .feed .tag.create { background: var(--pos-wash); color: var(--pos); }
 .feed .tag.delete { background: var(--neg-wash); color: var(--neg); }
+.feed .tag.fix { background: var(--warn-wash); color: var(--warn); }
+
+/* --- 패치노트 --------------------------------------------------------------- */
+
+/* 한 줄짜리 활동 기록과 달리 항목마다 요약 한 줄이 붙으므로 위아래로 숨을 준다.
+   접혀 있을 때 그 한 줄이 보이는 것이 요점이다 -- 제목만 스무 개면 무엇이
+   바뀌었는지가 아니라 "뭔가 바뀌었다" 만 읽힌다. */
+.patch-notes li { padding: 8px 0; }
+.patch-notes .note-body {
+  color: var(--ink-3);
+  line-height: 1.55;
+  /* 펼치면 원문 그대로 -- 문단과 목록의 줄바꿈이 살아 있어야 읽힌다. */
+  white-space: pre-wrap;
+}
+.patch-notes .note-body.truncate { white-space: nowrap; }
+.patch-notes .link-btn { padding: 0; }
 
 /* 셀 앞의 이름표.  그룹 칩과 나란히 서지만 그룹이 아니라는 것이 보여야 해서,
    채우지 않고 테두리만 준다. */

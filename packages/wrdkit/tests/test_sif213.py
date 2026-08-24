@@ -13,8 +13,9 @@
 import numpy as np
 import pytest
 
-import synthetic
 from wrdkit.wrd import WrdError, read_wrd_bytes
+
+import synthetic
 
 
 @pytest.fixture
