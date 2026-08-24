@@ -522,6 +522,36 @@ explain_log() {
   return 1
 }
 
+#: `bml restart` 는 터널을 살려 둔 채 서버를 내린다.  그것은 **"곧 돌아온다"
+#: 는 약속**이고, 약속을 못 지키고 나가면 그 주소는 남에게 오류 화면만 띄운다.
+#:
+#: 나가는 길이 하나가 아니라서 함수마다 정리를 붙일 수 없다 -- `guard_data_dir`
+#: 은 그 자리에서 exit 하고, 빌드 실패는 `die` 로 나가고, Ctrl-C 는 아무 데서나
+#: 온다.  예전에는 `report_failure` 를 지나는 길에만 정리가 있어서, 데이터
+#: 폴더가 빠진 채 restart 하면 서버 없는 터널이 그대로 남았다.  약속을 건 뒤의
+#: **모든** 퇴장에 걸리도록 trap 으로 잡는다.
+TUNNEL_PROMISE=0
+
+keep_tunnel_promise() {
+  TUNNEL_PROMISE=1
+  trap 'break_tunnel_promise' EXIT INT TERM
+}
+
+#: 약속을 지켰다 (서버가 다시 떴다).
+promise_kept() {
+  TUNNEL_PROMISE=0
+  trap - EXIT INT TERM
+}
+
+break_tunnel_promise() {
+  [ "$TUNNEL_PROMISE" = "1" ] || return 0
+  TUNNEL_PROMISE=0
+  # report_failure 가 이미 닫았으면 여기서 할 일이 없다 -- 두 번 불려도 안전.
+  if tunnel_running && close_tunnel; then
+    warn "터널도 닫았습니다 — 뒤에 서버가 없는 주소를 남기지 않습니다."
+  fi
+}
+
 report_failure() {
   local log="$1" reason="$2"
   warn "$reason"
@@ -3953,12 +3983,6 @@ cmd_help() {
 }
 
 # --- 진입점 ------------------------------------------------------------------
-# Sourcing this file defines the functions without running a command, so the
-# tests can exercise them directly.  Nothing else sets this.
-if [ -n "${BML_SOURCE_ONLY:-}" ]; then
-  return 0 2>/dev/null || exit 0
-fi
-
 main() {
   # `bmlin` / `bmlout` 은 이 파일을 부르는 다른 이름이다.  별칭을 기계마다 손으로
   # 관리하면 반드시 어긋나고(특히 터널 주소가 바뀔 때), `bml` 을 고쳐도 별칭은
@@ -4018,8 +4042,17 @@ main() {
       #
       # serve 와 같은 이유로 여기서도 맞춘다.  restart 는 "고친 것을 반영해
       # 달라" 는 뜻이라, 갱신을 건너뛰면 정확히 그 요청을 배신한다.
-      if [ -n "$SERVER" ]; then sync_repo; cmd_stop --keep-tunnel; cmd_connect
-      else sync_repo; ensure_deps; cmd_stop --keep-tunnel; start_serve; fi
+      if [ -n "$SERVER" ]; then
+        sync_repo; cmd_stop --keep-tunnel
+        keep_tunnel_promise
+        cmd_connect
+        promise_kept
+      else
+        sync_repo; ensure_deps; cmd_stop --keep-tunnel
+        keep_tunnel_promise
+        start_serve
+        promise_kept
+      fi
       ;;
     pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
     status|st)         cmd_status ;;
@@ -4050,6 +4083,15 @@ main() {
     *) cmd_unknown "$1" ;;
   esac
 }
+
+# Sourcing this file defines the functions **including `main`**, so the tests can
+# drive whole commands rather than counting strings in the source.  `main` used
+# to sit below this guard, which is why the restart path had no behavioural test
+# at all -- and why a `bml restart` that died half-way left a tunnel with no
+# server behind it, unnoticed.  Nothing but the tests sets this.
+if [ -n "${BML_SOURCE_ONLY:-}" ]; then
+  return 0 2>/dev/null || exit 0
+fi
 
 # 이 한 줄이 파일의 마지막이어야 한다.
 #

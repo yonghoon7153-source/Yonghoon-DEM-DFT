@@ -914,8 +914,22 @@ echo "중추 서버를 봐도 저장소는 맞춘다"
 # (`cmd_stop --keep-tunnel` 이 그랬다) 규칙이 멀쩡한데 시험이 깨지고, 고치는
 # 사람은 시험을 지우는 쪽으로 간다.  못 박을 것은 **순서**다: 중추 서버로
 # 붙는 두 분기 모두에서 sync_repo 가 cmd_connect 보다 먼저 와야 한다.
-check "serve·restart 두 분기가 붙기 전에 sync_repo 를 부른다" \
-  "$(grep -cE 'if \[ -n "\$SERVER" \]; then sync_repo;.*cmd_connect' "$BML")" "2"
+# **순서를 문자열로 못 박지 않는다.**  한 줄로 쓰든 여러 줄로 쓰든 지켜야 하는
+# 것은 "붙기 전에 최신화한다" 이고, 정규식은 줄바꿈 하나에 깨진다 -- 그러면
+# 규칙이 멀쩡한데 시험이 깨지고, 고치는 사람은 시험을 지우는 쪽으로 간다.
+# 실제로 불러 보고 순서를 본다.
+sync_before_connect() {
+  ( SERVER="https://x.example"
+    PORT=59992
+    sync_repo()   { printf 'sync '; }
+    ensure_deps() { :; }
+    cmd_stop()    { :; }
+    cmd_connect() { printf 'connect '; }
+    main "$1"
+  ) 2>/dev/null
+}
+check "serve 는 붙기 전에 최신화한다"   "$(sync_before_connect serve)"   "sync connect "
+check "restart 도 붙기 전에 최신화한다" "$(sync_before_connect restart)" "sync connect "
 
 echo
 echo "restart 는 터널을 살려 둔다"
@@ -931,6 +945,43 @@ check "stop 은 그대로 닫는다" \
 # 깨졌으므로 닫는다 — 뒤에 서버가 없는 주소는 남에게 오류 화면만 띄운다.
 check "서버가 안 뜨면 터널을 닫는다" \
   "$(sed -n '/^report_failure()/,/^}/p' "$BML" | grep -c 'close_tunnel')" "1"
+
+# **문자열을 세는 것으로는 부족하다.**  나가는 길이 하나가 아니다 --
+# guard_data_dir 은 그 자리에서 exit 하고, 빌드 실패는 die 로 나가고, Ctrl-C 는
+# 아무 데서나 온다.  예전에는 report_failure 를 지나는 길에만 정리가 있어서,
+# 데이터 폴더가 빠진 채 restart 하면 서버 없는 터널이 그대로 남았다.
+# 실제로 restart 를 깨뜨려 본다.
+restart_leaves_tunnel() {
+  # $1: restart 를 깨뜨리는 방법 (함수 정의 문자열)
+  bash -c "exec -a \"cloudflared tunnel --no-autoupdate --url $URL\" sleep 60" &
+  local fake=$!
+  echo "$fake" > "$TUNNEL_PID_FILE"
+  printf 'https://fake-restart.trycloudflare.com' > "$TUNNEL_URL_FILE"
+  (
+    PORT=59991
+    sync_repo() { :; }
+    cmd_stop() { :; }
+    open_browser() { :; }
+    eval "$1"
+    main restart
+  ) >/dev/null 2>&1
+  sleep 0.3
+  if tunnel_running; then printf 'yes'; else printf 'no'; fi
+  kill "$fake" 2>/dev/null
+  rm -f "$TUNNEL_PID_FILE" "$TUNNEL_URL_FILE"
+}
+
+check "데이터 폴더가 빠지면 터널을 남기지 않는다" \
+  "$(restart_leaves_tunnel 'ensure_deps() { :; }; guard_data_dir() { exit 1; }')" "no"
+# build_web 은 start_serve 안, 즉 약속을 건 **뒤**에 돈다.  (ensure_deps 는 그
+# 전이라 거기서 죽는 것은 문제가 아니다 -- 서버가 아직 살아 있다.)
+check "빌드가 실패해도 터널을 남기지 않는다" \
+  "$(restart_leaves_tunnel 'ensure_deps() { :; }; guard_data_dir() { :; }; build_web() { die "빌드 실패"; }')" "no"
+# 사람이 Ctrl-C 를 눌러도 같다 -- 나가는 길이 하나가 아니라는 것이 요점이다.
+# `$$` 가 아니라 `$BASHPID` 로 보낸다: 서브셸 안에서도 `$$` 는 **부모** pid 라,
+# 시험을 돌리는 셸 자신이 INT 를 받고 통째로 죽는다 (한 번 그렇게 죽였다).
+check "중간에 끊어도 터널을 남기지 않는다" \
+  "$(restart_leaves_tunnel 'ensure_deps() { :; }; guard_data_dir() { kill -INT $BASHPID; sleep 1; }')" "no"
 # 멈추기 전에 먼저 받는다 -- 내려가 있는 시간을 줄이고, sync_repo 가 자기 자신을
 # 갱신해 exec 로 다시 시작할 때 아직 아무것도 안 멈춘 상태여야 한다.
 check "restart 는 멈추기 전에 sync_repo 를 부른다" \
