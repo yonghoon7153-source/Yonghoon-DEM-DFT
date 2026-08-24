@@ -1,5 +1,7 @@
 """Cycle tables, profiles, the cell report and comparisons."""
 
+import dataclasses
+
 import pytest
 
 import synthetic
@@ -251,6 +253,30 @@ def test_the_table_says_which_cycles_it_left_out_and_why(client, charge_only):
     assert partial["reason"] == "no_discharge"
     assert partial["has_charge"] is True
     assert partial["has_discharge"] is False
+
+
+def test_current_noise_does_not_invent_a_discharge(client, sample_id):
+    """-2e-12 A 짜리 잡음 한 점이 "방전이 있었다" 가 되면 안 된다.
+
+    브랜치 존재를 전류 최댓값으로 판정하면 그렇게 된다.  그러면 같은 응답
+    안에서 `reason` 은 `no_discharge` 인데 `has_discharge` 는 참인 모순이
+    나오고, 화면이 둘 중 무엇을 믿어도 한쪽은 거짓말이다.  브랜치의 존재는
+    스텝(CELL STATUS)이 정한다.
+    """
+    samples = [s for s in synthetic.make_cycles(1, 20) if s.current >= 0]
+    # 한 점만 음수로.  스텝은 여전히 충전·휴지뿐이다.
+    samples[5] = dataclasses.replace(samples[5], current=-2e-12)
+    schedule = (
+        synthetic.SchedStep("rest", control=7),
+        synthetic.SchedStep("cc", control=0, value=0.00123),
+    )
+    _upload(client, sample_id,
+            synthetic.build_wrd(samples, schedule=schedule), name="noise.wrd")
+
+    [partial] = client.get(f"/api/samples/{sample_id}/cycles").json()["partial_cycles"]
+    assert partial["reason"] == "no_discharge"
+    assert partial["has_discharge"] is False, "잡음 한 점을 방전으로 셌다"
+    assert partial["has_charge"] is True
 
 
 def test_partial_cycles_are_reported_even_when_the_rows_are_asked_for(client,

@@ -247,6 +247,9 @@ def persist_parse(session: Session, run: Run, wrd: WrdFile) -> list[CycleSummary
             n_points=cycle.n_points,
             complete=cycle.complete,
             incomplete_reason=cycle.incomplete_reason,
+            # 브랜치의 존재는 스텝이 정한다 -- 전류 잡음이 아니라 (models.py).
+            has_charge_step=any(step.mode == "charge" for step in cycle.steps),
+            has_discharge_step=any(step.mode == "discharge" for step in cycle.steps),
             row_start=cycle.start,
             row_stop=cycle.stop,
         ))

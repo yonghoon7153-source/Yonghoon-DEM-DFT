@@ -193,6 +193,17 @@ class CycleRecord(SQLModel, table=True):
     #: Rows written before this column existed hold "" and are read as unknown.
     incomplete_reason: str = ""
 
+    #: 이 사이클에 그 방향의 **스텝**이 있었는가.
+    #:
+    #: 전류 최댓값으로 판정하면 -2e-12 A 짜리 잡음 한 점이 "방전이 있었다" 가
+    #: 된다.  그러면 같은 응답 안에서 incomplete_reason 은 ``no_discharge`` 인데
+    #: ``has_discharge`` 는 참인 모순이 나온다 -- 화면이 둘 중 무엇을 믿어도
+    #: 한쪽은 거짓말이다.  브랜치의 존재는 스텝(CELL STATUS)이 정한다.
+    #:
+    #: 이 열이 생기기 전 행은 NULL 이고, 그때는 예전처럼 전류로 읽는다.
+    has_charge_step: bool | None = None
+    has_discharge_step: bool | None = None
+
     # Row slice into the cached npz, so a profile request need not rescan.
     row_start: int = 0
     row_stop: int = 0

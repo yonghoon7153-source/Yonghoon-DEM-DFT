@@ -270,10 +270,14 @@ def _partial_cycles(records: list[CycleRecord]) -> list[PartialCycleOut]:
             cycle=record.cycle_number,
             run_id=record.run_id,
             reason=record.incomplete_reason,
-            # 용량이 아니라 **전류 부호**로 본다.  CV 홀드만 있는 스텝은 용량이
-            # 0 에 가까울 수 있어도 그 브랜치는 분명히 있었다.
-            has_charge=record.max_charge_current_a is not None,
-            has_discharge=record.max_discharge_current_a is not None,
+            # 용량도 전류도 아닌 **스텝**으로 본다.  용량으로 보면 CV 홀드만
+            # 있는 브랜치가 없는 것이 되고, 전류로 보면 -2e-12 A 짜리 잡음
+            # 한 점이 "방전이 있었다" 가 된다 -- 뒤쪽은 incomplete_reason 과
+            # 정면으로 어긋난다.  옛 행(NULL)만 예전처럼 전류로 읽는다.
+            has_charge=(record.has_charge_step if record.has_charge_step is not None
+                        else record.max_charge_current_a is not None),
+            has_discharge=(record.has_discharge_step if record.has_discharge_step is not None
+                           else record.max_discharge_current_a is not None),
         ))
     return out
 
