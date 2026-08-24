@@ -13,16 +13,31 @@
   },
   "Ea_eV": 0.2234,
   "D0_cm2_s": 0.0007112,
-  "D_300K_cm2_s": 1.2547e-07,
-  "D_273K_cm2_s": 5.337e-08,
-  "sigma_300K_mS_cm": 18.51,
-  "sigma_273K_mS_cm": 8.65,
+  "D_300K_cm2_s_RETRACTED_2026_08_24": "1.2547e-07  [⛔ 철회 — 철회된 전구간 단일적합(Ea 0.199/0.2234)에서 나온 값이다. 굽은 곡선을 평균낸 Ea 로 300 K 를 외삽하면 저온을 실제보다 쉽게 본다.]",
+  "D_273K_cm2_s_RETRACTED_2026_08_24": "5.337e-08  [⛔ 철회 — 철회된 전구간 단일적합(Ea 0.199/0.2234)에서 나온 값이다. 굽은 곡선을 평균낸 Ea 로 300 K 를 외삽하면 저온을 실제보다 쉽게 본다.]",
+  "sigma_300K_mS_cm_RETRACTED_2026_08_24": "18.51  [⛔ 철회 — 철회된 전구간 단일적합(Ea 0.199/0.2234)에서 나온 값이다. 굽은 곡선을 평균낸 Ea 로 300 K 를 외삽하면 저온을 실제보다 쉽게 본다.]",
+  "sigma_273K_mS_cm_RETRACTED_2026_08_24": "8.65  [⛔ 철회 — 철회된 전구간 단일적합(Ea 0.199/0.2234)에서 나온 값이다. 굽은 곡선을 평균낸 Ea 로 300 K 를 외삽하면 저온을 실제보다 쉽게 본다.]",
   "Ea_eV_PAPER_SUPERSEDED_600K_only": "0.206 (+0.038/-0.030)  [3-seed 600K error bar; single-seed 0.2234 is ONE draw inside it -> quote this]",
   "Ea_eV_PAPER_RETRACTED_2026_08_23": "0.199 +/- 0.034  [⛔ 2026-08-23 철회 — 600–1000 K 를 하나의 Ea 로 기술할 수 없다 (굽음 145 meV). 원래 라벨: fully symmetric 3-seed x 3-T reseed, 2026-07-07 (b2o3_vs_lpscl16_conductivity.csv). Supersedes the 0.206 (+0.038/-0.030) 600K-only-error-bar figure and the single-seed 0.2234 -> 인용 금지]",
   "Ea_eV_USABLE_segment_600_800": "0.222 eV [600→800 K 구간만. 800→1000 은 0.077 eV 로 갈린다 — 단일 직선 금지. 근거: ⛔_RETRACTED_2026_08_23 · kb/results/b2o3_arrhenius_curvature_2026_08_23.md]",
   "vs_modelc_SUPERSEDED": "Ea identical (modelc 0.2235); sigma 1.33x higher, D0-driven (1.24x). See b2o3_vs_modelc_md.json.",
   "vs_modelc": "Ea EQUAL (b2o3 0.199+/-0.034 vs LPSCl1.6 0.197+/-0.032; dEa +0.002+/-0.047). sigma EQUIVALENT (per-T ratio 1.08+/-0.18 / 0.82+/-0.15 / 1.15+/-0.12). The earlier 'sigma 1.33x higher, D0-driven 1.24x' was single-seed noise, RETRACTED 2026-07-09. See b2o3_vs_lpscl16_conductivity.csv (FINAL).",
-  "method_note_2026_08_11": "코드 실측: 캠페인 전 지점이 자유 절편 OLS 기울기다(disorder_ensemble_diffusion.py:168 포함 7곳). 옛 문구 'MSD = 6 D t' 는 원점 통과 강제로 오독될 수 있어 정정 — 값은 불변."
+  "method_note_2026_08_11": "코드 실측: 캠페인 전 지점이 자유 절편 OLS 기울기다(disorder_ensemble_diffusion.py:168 포함 7곳). 옛 문구 'MSD = 6 D t' 는 원점 통과 강제로 오독될 수 있어 정정 — 값은 불변.",
+  "segment_extrapolation_2026_08_24": {
+   "what": "저온 구간(600→800 K)만으로 300 K 외삽. 시드마다 적합하고 시드 분산을 전파했다 (평균 D 를 먼저 내고 적합하면 분산이 사라진다).",
+   "tool": "python3 tools/modelc_v3/nernst_einstein_300K.py --segment db/properties/b2o3_md_arrhenius.json  (--selftest 음성 5건)",
+   "Ea_eV": "0.2241 +/- 0.0606  [3시드 구간적합. 평균 D 로 먼저 적합한 값 0.2219 와 일치하나 **오차막대가 처음 붙었다**]",
+   "D_300K_cm2_s": "2.6018e-07 +/- 3.46e-07",
+   "sigma_300K_mS_cm_per_seed": [
+    8.463666506617521,
+    97.37889155246886,
+    9.318946015666077
+   ],
+   "sigma_300K_mS_cm": "38.39 +/- 51.09  ⛔ **인용 금지** — 표준편차가 평균보다 크다. 시드만 바꿔도 11.5배 (8.46–97.38) 흔들린다.",
+   "why_it_matters": "철회된 18.51 mS/cm 은 이 범위 **안에** 있다. 값이 틀렸다기보다 **의미 없이 정밀했다** — 3시드로도 자릿수가 안 잡힌다. CLAUDE.md 의 \"σ 절대값 인용 금지\" 에 붙는 첫 정량 근거다.",
+   "outlier_note": "seed2 만 구간 Ea 0.1543 (나머지 0.2552 · 0.2629). 그 시드의 600 K D 가 1.3043e-05 로 셋 중 가장 크다 — 600 K 가 여전히 지배적 잡음원이라는 leave-one-out 결과와 같은 방향.",
+   "assumption_not_verified": "600 K 아래 실측이 없다. Ea 0.224 가 300 K 까지 이어진다는 것은 가정이다. supplementary 400/500 K 는 MSD 창이 5-40 이라 2-50 으로 재추출해야 붙일 수 있다."
+  }
  },
  "supplementary_lowT_400_500": {
   "note": "low-T MD for curvature check. D extracted at the MD script's own window (5-40 ps); NOT yet re-extracted at 2-50 ps, so do NOT mix into the FINAL 3-pt fit above. 400 K D has the largest statistical noise (slow diffusion, marginal MSD diffusive regime).",
