@@ -21,22 +21,32 @@ from .cycles import (
     segment_steps,
     summarize_cycles,
 )
+from .deltas import CycleDelta, previous_cycle_deltas
 from .downsample import lttb, lttb_indices
+from .dva import (
+    DifferentialVoltage,
+    differential_voltage,
+    differential_voltages,
+)
 from .export import (
     cycles_csv_string,
     dqdv_csv_string,
+    dvdq_csv_string,
     profiles_csv_string,
     raw_csv_string,
     write_cycles_csv,
     write_dqdv_csv,
+    write_dvdq_csv,
     write_profiles_csv,
     write_raw_csv,
     write_xlsx,
 )
 from .ica import (
+    SMOOTHERS,
     DifferentialCapacity,
     differential_capacities,
     differential_capacity,
+    smooth,
 )
 from .normalize import (
     BASES,
@@ -47,6 +57,7 @@ from .normalize import (
     basis_label,
     c_rate,
     normalize_capacity,
+    normalize_per_capacity,
     retention,
 )
 from .nrbf import NrbfError
@@ -72,13 +83,19 @@ __all__ = [
     "CycleSummary", "StepSegment", "Profile",
     # normalisation
     "CellSpec", "ResolvedCell", "REFERENCE_ELECTRODES", "ReferenceElectrode", "offset_for", "Basis", "BASES", "basis_label",
-    "normalize_capacity", "c_rate", "areal_loading", "retention",
+    "normalize_capacity", "normalize_per_capacity", "c_rate", "areal_loading",
+    "retention",
     # composition
     "Composition", "Component", "Role", "parse_composition",
-    # dQ/dV (ICA)
+    # dQ/dV (ICA) and dV/dQ (DVA) -- ADR 0013, ADR 0015
     "DifferentialCapacity", "differential_capacity", "differential_capacities",
+    "DifferentialVoltage", "differential_voltage", "differential_voltages",
+    "SMOOTHERS", "smooth",
+    # cycle-to-cycle steps
+    "CycleDelta", "previous_cycle_deltas",
     # plotting / export
     "lttb", "lttb_indices", "write_raw_csv", "write_cycles_csv",
     "write_profiles_csv", "raw_csv_string", "cycles_csv_string",
-    "profiles_csv_string", "write_dqdv_csv", "dqdv_csv_string", "write_xlsx",
+    "profiles_csv_string", "write_dqdv_csv", "dqdv_csv_string",
+    "write_dvdq_csv", "dvdq_csv_string", "write_xlsx",
 ]

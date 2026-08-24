@@ -20,7 +20,8 @@ from .reference import offset_for
 
 __all__ = [
     "CellSpec", "ResolvedCell", "Basis", "BASES", "basis_label",
-    "normalize_capacity", "c_rate", "areal_loading", "retention",
+    "normalize_capacity", "normalize_per_capacity", "c_rate", "areal_loading",
+    "retention",
 ]
 
 
@@ -329,6 +330,35 @@ def normalize_capacity(values, cell: ResolvedCell, basis: str):
     if values is None:
         return None
     return values / divisor
+
+
+def normalize_per_capacity(values, cell: ResolvedCell, basis: str):
+    """Convert a *per-mAh* quantity to *per-basis* -- dV/dQ's normalisation.
+
+    This is not ``normalize_capacity`` and must not be confused with it.  There
+    the capacity is in the numerator, so a bigger divisor makes the number
+    smaller.  Here it is in the **denominator**: V/mAh expressed per gram is
+    V/(mAh/g), and dividing mAh by grams makes the denominator smaller, so the
+    value gets *bigger* -- multiply, do not divide.
+
+    Getting this backwards is not a visible error.  A dV/dQ curve normalised
+    the wrong way is still smooth, still peaked in the right places, and wrong
+    by the square of the active mass in grams -- a factor of ~1e6 for a
+    milligram-scale dry electrode, or ~0.25 for a 2 g one, either of which
+    reads as a real difference between cells rather than as a bug.  So the
+    inversion is written once, here, and tested.
+    """
+    divisor = cell.divisor(basis)
+    if divisor is None:
+        raise ValueError(
+            f"cannot express capacity as {basis}: {cell.missing_for(basis)}")
+    if isinstance(values, np.ndarray):
+        return values * divisor
+    if isinstance(values, (list, tuple)):
+        return [None if v is None else v * divisor for v in values]
+    if values is None:
+        return None
+    return values * divisor
 
 
 def c_rate(current_a: float, cell: ResolvedCell,

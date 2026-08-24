@@ -18,6 +18,7 @@
 | [0012](adr/0012-attribution-not-authentication.md) | 이름은 기록이지 신원 확인이 아니다 | 검증 없는 이름, 기록은 flush 리스너가 자동으로 |
 | [0013](adr/0013-dqdv-on-a-voltage-grid.md) | dQ/dV 는 전압 격자 위에서 | 평탄부에서 ΔV→0, CV 구간은 빼고 격자로 옮겨 미분 |
 | [0014](adr/0014-share-with-a-tunnel-and-one-password.md) | 바깥에서 볼 때만 문을 단다 | 임시 터널 + 공유 암호 하나, 랩 안에서는 아무것도 안 바뀐다 |
+| [0015](adr/0015-dvdq-and-a-choice-of-smoother.md) | dV/dQ 는 용량 격자 위에서, 평활은 고를 수 있게 | 봉우리 간격이 곧 용량, SG 차수 1 은 이동평균과 같다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -44,7 +45,8 @@
 `adr/0010-user-saved-cell-presets.md` · `adr/0011-central-instance-for-data.md` ·
 `adr/0012-attribution-not-authentication.md` ·
 `adr/0013-dqdv-on-a-voltage-grid.md` ·
-`adr/0014-share-with-a-tunnel-and-one-password.md`
+`adr/0014-share-with-a-tunnel-and-one-password.md` ·
+`adr/0015-dvdq-and-a-choice-of-smoother.md`
 
 ## 스펙
 

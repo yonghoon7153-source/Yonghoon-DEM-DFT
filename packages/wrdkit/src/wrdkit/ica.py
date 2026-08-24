@@ -19,7 +19,8 @@ So the curve is built on a voltage grid we choose (ADR 0013):
    and the honest thing is to leave it out rather than invent it;
 2. interpolate capacity onto a uniform grid, so the denominator is ours;
 3. differentiate with a central difference;
-4. smooth with a moving average over an odd window.
+4. smooth over an odd window -- a moving average by default, or Savitzky-Golay
+   when the answer has to line up with the lab's shared ICA script (ADR 0015).
 
 Units out are mAh/V.  Normalising to mAh/g/V is the caller's job, so that
 correcting a mass never requires re-reading the file (ADR 0001).
@@ -46,8 +47,9 @@ import numpy as np
 
 from .cycles import Profile
 
-__all__ = ["DifferentialCapacity", "differential_capacities",
-           "differential_capacity", "monotonic_mask"]
+__all__ = ["DifferentialCapacity", "LAB_SCRIPT_POLY_ORDER", "LAB_SCRIPT_WINDOW",
+           "SMOOTHERS", "differential_capacities", "differential_capacity",
+           "monotonic_mask", "smooth"]
 
 #: Grid spacing, in volts.  5 mV resolves graphite staging and keeps a
 #: 2.5-4.5 V window to 400 points, which draws without downsampling.
@@ -57,6 +59,37 @@ DEFAULT_VOLTAGE_STEP = 0.005
 #: the result half a cell, and in an analysis whose answer *is* a peak
 #: position that half cell is not free.
 DEFAULT_SMOOTHING = 5
+
+#: How the curve is smoothed.  ``moving`` is the default and what every number
+#: published from this repository so far was computed with (ADR 0013); changing
+#: the default would silently move every peak height already in someone's
+#: notebook.  ``savgol`` is what the lab's shared ICA script uses, so a result
+#: from here can be put next to one from there (ADR 0015).
+SMOOTHERS = ("moving", "savgol")
+DEFAULT_SMOOTHER = "moving"
+
+#: Savitzky-Golay polynomial order.
+#:
+#: **Order 1 is not worth choosing, and that is a measured fact, not an
+#: opinion.**  A least-squares straight line fitted to a symmetric window and
+#: evaluated at its centre gives exactly the window's mean -- the linear term
+#: is odd and cancels -- so ``savgol`` at order 1 returns the moving average to
+#: machine precision everywhere except the two ends.  The lab's shared script
+#: uses ``polyorder=1``, so its "Smoothed" curve is a 21-point moving average.
+#:
+#: Order 2 is where the filter starts earning its name.  On a Gaussian peak of
+#: width 8 mV smoothed with a 21-point window: raw height 1.000, moving average
+#: 0.774, order 2 gives 0.977.  Against 2 % added noise the RMS error away from
+#: the true curve drops from 0.039 to 0.008.  Same window, five times closer.
+#:
+#: So the default is 2, and 1 is kept reachable because reproducing the lab
+#: script's exact numbers is a real thing to want.
+DEFAULT_POLY_ORDER = 2
+
+#: What the lab's shared ICA script uses.  Kept as a named constant so the
+#: claim "this reproduces그 스크립트" is checkable rather than folklore.
+LAB_SCRIPT_WINDOW = 21
+LAB_SCRIPT_POLY_ORDER = 1
 
 #: Below this many usable samples there is nothing to differentiate.  Three is
 #: the minimum a central difference needs; ten is where the result stops being
@@ -88,6 +121,11 @@ class DifferentialCapacity:
     dq_dv: np.ndarray = field(default_factory=lambda: np.empty(0))
     voltage_step: float = DEFAULT_VOLTAGE_STEP
     smoothing: int = DEFAULT_SMOOTHING
+    #: Which smoother ran, and (for savgol) its polynomial order.  Two curves
+    #: are only comparable by peak height when these match, so they travel
+    #: with the numbers rather than being remembered by the caller.
+    smoother: str = DEFAULT_SMOOTHER
+    poly_order: int = DEFAULT_POLY_ORDER
     #: Samples that survived the monotonic filter, and how many did not.
     points_used: int = 0
     points_dropped: int = 0
@@ -149,11 +187,101 @@ def _moving_average(values: np.ndarray, window: int) -> np.ndarray:
     return np.convolve(padded, kernel, mode="valid")
 
 
+def _odd_window(window: int, length: int) -> int:
+    """The largest usable odd window no wider than the data.
+
+    Both smoothers need this and both got it wrong once: an even window shifts
+    the result half a cell, and a window wider than the array makes the fit
+    rank-deficient.  One place to be right.
+    """
+    if window <= 1 or length == 0:
+        return 1
+    window = min(window, length)
+    if window % 2 == 0:
+        window -= 1
+    return max(window, 1)
+
+
+def _savgol(values: np.ndarray, window: int, poly_order: int) -> np.ndarray:
+    """Savitzky-Golay smoothing, on numpy alone.
+
+    This is the smoother the lab's shared ICA script uses (``savgol_filter``,
+    window 21, order 1), and matching it is the point: a curve from here has to
+    be comparable with one from there.  scipy stays out of ``wrdkit`` (ADR
+    0002), and it is not needed -- on a *uniform* grid the filter is a fixed
+    convolution kernel, and our grid is uniform by construction (ADR 0013).
+
+    Verified against the textbook kernel: window 5, order 2 comes out as
+    ``(-3, 12, 17, 12, -3)/35`` exactly, and any polynomial of degree
+    ``poly_order`` or less passes through unchanged to 1e-13.
+
+    The kernel is the first row of the pseudo-inverse of the Vandermonde matrix
+    of sample offsets: least-squares fit a degree-``poly_order`` polynomial to
+    each window and take its value at the centre.
+
+    The ends get the same treatment scipy's ``mode="interp"`` gives them -- the
+    edge polynomial is fitted once to the first (last) full window and then
+    *evaluated* at the edge positions.  Reflecting instead, which is what the
+    moving average does, would be wrong here: a Savitzky-Golay filter's whole
+    purpose is to follow a slope, and a mirrored end has slope zero, so the
+    curve would flatten exactly at the cutoff voltages a reader checks first.
+    """
+    length = len(values)
+    window = _odd_window(window, length)
+    if window <= 1:
+        return values
+    # A polynomial that can pass through every point in the window fits the
+    # noise exactly and smooths nothing.  Drop the order rather than refuse.
+    order = min(poly_order, window - 1)
+    if order < 0:
+        return values
+
+    half = window // 2
+    offsets = np.arange(-half, half + 1, dtype=np.float64)
+    design = np.vander(offsets, order + 1, increasing=True)
+    # Row 0 of the pseudo-inverse gives the constant term, i.e. the fitted
+    # value at offset 0 -- the window's centre.
+    kernel = np.linalg.pinv(design)[0]
+
+    out = np.empty(length, dtype=np.float64)
+    # `np.convolve` runs the kernel backwards, so hand it a reversed copy.
+    out[half:length - half] = np.convolve(values, kernel[::-1], mode="valid")
+
+    # Edges: one fit per end, evaluated where the centred kernel cannot reach.
+    positions = np.arange(window, dtype=np.float64)
+    first = np.polynomial.polynomial.Polynomial.fit(
+        positions, values[:window], order, domain=[], window=[0, window - 1])
+    out[:half] = first(positions[:half])
+    last = np.polynomial.polynomial.Polynomial.fit(
+        positions, values[length - window:], order, domain=[],
+        window=[0, window - 1])
+    out[length - half:] = last(positions[window - half:])
+    return out
+
+
+def smooth(values: np.ndarray, window: int, *,
+           method: str = DEFAULT_SMOOTHER,
+           poly_order: int = DEFAULT_POLY_ORDER) -> np.ndarray:
+    """Smooth a curve on a uniform grid by the named method.
+
+    Shared by dQ/dV and dV/dQ so the two can never drift into smoothing
+    differently -- they are read side by side and a difference in the filter
+    would look like a difference in the cell.
+    """
+    if method not in SMOOTHERS:
+        raise ValueError(f"unknown smoother {method!r}; expected one of {SMOOTHERS}")
+    if method == "savgol":
+        return _savgol(values, window, poly_order)
+    return _moving_average(values, window)
+
+
 def differential_capacity(
     profile: Profile,
     *,
     voltage_step: float = DEFAULT_VOLTAGE_STEP,
     smoothing: int = DEFAULT_SMOOTHING,
+    smoother: str = DEFAULT_SMOOTHER,
+    poly_order: int = DEFAULT_POLY_ORDER,
 ) -> DifferentialCapacity:
     """dQ/dV for one branch of one cycle, in mAh/V.
 
@@ -165,7 +293,12 @@ def differential_capacity(
         branch=profile.branch,
         voltage_step=voltage_step,
         smoothing=smoothing,
+        smoother=smoother,
+        poly_order=poly_order,
     )
+    if smoother not in SMOOTHERS:
+        result.reason = f"unknown smoother {smoother!r}"
+        return result
     if voltage_step <= 0:
         result.reason = "voltage step must be positive"
         return result
@@ -216,15 +349,19 @@ def differential_capacity(
     derivative = np.gradient(on_grid, grid)
 
     result.voltage = grid
-    result.dq_dv = _moving_average(derivative, smoothing)
+    result.dq_dv = smooth(derivative, smoothing, method=smoother,
+                          poly_order=poly_order)
     return result
 
 
 def differential_capacities(
     profiles, *, voltage_step: float = DEFAULT_VOLTAGE_STEP,
     smoothing: int = DEFAULT_SMOOTHING,
+    smoother: str = DEFAULT_SMOOTHER,
+    poly_order: int = DEFAULT_POLY_ORDER,
 ) -> list[DifferentialCapacity]:
     """dQ/dV for many branches, keeping the unusable ones and their reasons."""
     return [differential_capacity(profile, voltage_step=voltage_step,
-                                  smoothing=smoothing)
+                                  smoothing=smoothing, smoother=smoother,
+                                  poly_order=poly_order)
             for profile in profiles]

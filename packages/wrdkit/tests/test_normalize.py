@@ -233,3 +233,54 @@ def test_an_unknown_reference_name_does_not_invent_an_offset():
 def test_potential_passes_none_through():
     cell = CellSpec(reference_electrode="Li-In").resolve()
     assert cell.potential(None) is None
+
+
+# --- dV/dQ 의 정규화는 dQ/dV 의 정규화와 방향이 반대다 ------------------------
+#
+# 틀려도 예외가 안 나고 곡선도 멀쩡해 보인다. 활물질 25 mg 짜리 전극에서
+# 방향을 뒤집으면 값이 (0.025)^2 = 6.25e-4 배, 즉 1600 배 어긋나는데, 화면에서는
+# 그냥 "다른 셀" 로 읽힌다. 그래서 방향 자체를 검사한다.
+
+def test_a_per_capacity_quantity_normalises_the_other_way():
+    from wrdkit.normalize import normalize_per_capacity
+
+    cell = CellSpec(active_mass_mg=25.0).resolve()
+    divisor = cell.divisor(Basis.SPECIFIC)          # 그램 단위 활물질 질량
+    assert divisor == pytest.approx(0.025)
+
+    # mAh → mAh/g 는 나눈다.
+    assert normalize_capacity(5.0, cell, Basis.SPECIFIC) == pytest.approx(200.0)
+    # V/mAh → V/(mAh/g) 는 곱한다.  분모가 작아지므로 값은 커진다.
+    assert normalize_per_capacity(5.0, cell, Basis.SPECIFIC) == pytest.approx(0.125)
+
+
+def test_the_two_normalisations_undo_each_other():
+    """dQ/dV 와 dV/dQ 는 서로 역수다. 정규화 뒤에도 그래야 한다."""
+    from wrdkit.normalize import normalize_per_capacity
+
+    cell = CellSpec(active_mass_mg=25.0).resolve()
+    dqdv, dvdq = 4.0, 0.25                       # 서로 역수인 한 쌍
+    assert dqdv * dvdq == pytest.approx(1.0)
+    assert (normalize_capacity(dqdv, cell, Basis.SPECIFIC)
+            * normalize_per_capacity(dvdq, cell, Basis.SPECIFIC)) == pytest.approx(1.0)
+
+
+def test_per_capacity_normalisation_handles_arrays_lists_and_none():
+    import numpy as np
+
+    from wrdkit.normalize import normalize_per_capacity
+
+    cell = CellSpec(active_mass_mg=25.0).resolve()
+    assert np.allclose(normalize_per_capacity(np.array([4.0, 8.0]), cell,
+                                              Basis.SPECIFIC), [0.1, 0.2])
+    assert normalize_per_capacity([4.0, None], cell, Basis.SPECIFIC) == [0.1, None]
+    assert normalize_per_capacity(None, cell, Basis.SPECIFIC) is None
+
+
+def test_per_capacity_normalisation_refuses_what_it_cannot_express():
+    """질량이 없으면 추정하지 않는다 — normalize_capacity 와 같은 계약."""
+    from wrdkit.normalize import normalize_per_capacity
+
+    cell = CellSpec().resolve()
+    with pytest.raises(ValueError, match="active mass"):
+        normalize_per_capacity(4.0, cell, Basis.SPECIFIC)

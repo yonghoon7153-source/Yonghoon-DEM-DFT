@@ -22,14 +22,15 @@ from typing import TextIO
 import numpy as np
 
 from .cycles import CycleSummary, Profile
+from .dva import DifferentialVoltage
 from .ica import DifferentialCapacity
-from .normalize import Basis, ResolvedCell, normalize_capacity
+from .normalize import Basis, ResolvedCell, normalize_capacity, normalize_per_capacity
 from .wrd import WrdFile
 
 __all__ = [
     "write_raw_csv", "write_cycles_csv", "write_profiles_csv", "write_dqdv_csv",
-    "raw_csv_string", "cycles_csv_string", "profiles_csv_string",
-    "dqdv_csv_string", "write_xlsx",
+    "write_dvdq_csv", "raw_csv_string", "cycles_csv_string",
+    "profiles_csv_string", "dqdv_csv_string", "dvdq_csv_string", "write_xlsx",
 ]
 
 _UNIX_OFFSET = 62_135_596_800.0
@@ -221,6 +222,41 @@ def write_dqdv_csv(curves: Sequence[DifferentialCapacity], cell: ResolvedCell,
         writer.writerow(row)
 
 
+def write_dvdq_csv(curves: Sequence[DifferentialVoltage], cell: ResolvedCell,
+                   stream: TextIO, *, basis: str = Basis.ABSOLUTE) -> None:
+    """Capacity/dVdQ column pairs, one pair per curve, side by side.
+
+    Same layout as the dQ/dV CSV -- the two are read next to each other, and a
+    second layout would be one more thing to hold in your head.
+
+    The normalisation runs the *other* way here and that is not a typo: mAh is
+    the denominator, so V/mAh expressed per gram is V/(mAh/g), a bigger number
+    (ADR 0015).  ``normalize_per_capacity`` is where that inversion lives.
+
+    Unusable curves keep their empty column pair, so a reader counting columns
+    against the cycles they asked for never lines cycle 51 up under cycle 30.
+    """
+    writer = csv.writer(stream, lineterminator="\n")
+    usable = basis if cell.divisor(basis) else Basis.ABSOLUTE
+    unit = f"V/({usable})" if usable != Basis.ABSOLUTE else "V/mAh"
+
+    header: list[str] = []
+    columns: list[np.ndarray] = []
+    for curve in curves:
+        tag = f"cycle{curve.cycle_number}_{curve.branch}"
+        header += [f"{tag}_capacity ({usable})", f"{tag}_dVdQ ({unit})"]
+        columns += [normalize_capacity(curve.capacity, cell, usable),
+                    normalize_per_capacity(curve.dv_dq, cell, usable)]
+
+    writer.writerow(header or ["capacity", "dVdQ"])
+    depth = max((len(c) for c in columns), default=0)
+    for i in range(depth):
+        row = []
+        for values in columns:
+            row.append(f"{values[i]:.6g}" if i < len(values) else "")
+        writer.writerow(row)
+
+
 def _fmt(value: float | None) -> str:
     return "" if value is None else f"{value:.6g}"
 
@@ -246,6 +282,12 @@ def profiles_csv_string(profiles, cell, **kwargs) -> str:
 def dqdv_csv_string(curves, cell, **kwargs) -> str:
     buffer = io.StringIO()
     write_dqdv_csv(curves, cell, buffer, **kwargs)
+    return buffer.getvalue()
+
+
+def dvdq_csv_string(curves, cell, **kwargs) -> str:
+    buffer = io.StringIO()
+    write_dvdq_csv(curves, cell, buffer, **kwargs)
     return buffer.getvalue()
 
 
