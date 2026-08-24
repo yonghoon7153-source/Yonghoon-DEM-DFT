@@ -785,6 +785,33 @@
    ],
    "note": "Codex: *\"테스트 파일이 존재하고 수동 실행이 녹색인 것만으로는 자동 규율이 아니다.\"*\n★ 실사고: S1 봉인의 **핵심 셋**이 양쪽 어디에도 없었다 — `sr01_stamp_compare`(팔 검사기, 68 tests) · `mpm_webapp_payload`(PTFE 규약) · `step3_sigma`(솔버 규약).  셋 다 **1초 미만**이라 비용 이유도 없었다.  리포의 selftest 64개 중 **4개만** 돌고 있었다.\n★ 고침 `e882ec95`: 셋을 양쪽에 배선 + **규칙 K** 신설 — `K_REQUIRED_SELFTESTS` 가 `check_all.sh` 와 CI yml **둘 다** 에 있는지 대조(드리프트 금지, 같은 줄에 스크립트명+플래그).  `run_all` 에 배선(선언만 하면 규칙 K 자신이 그 결함이 된다).\n★ 회귀 K-1~4 — K-2/K-3 은 사본에서 한 줄씩 빼서 **양쪽 방향**을 건다.  리포 실물 변이체로도 `K_UNWIRED` 확인.",
    "found_by": "codex (흡수 리뷰 ⑩)"
+  },
+  {
+   "id": "CDXR3-3",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "6d933923",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "러너가 요청한 규약과 payload 가 적용한 규약이 **대조되지 않았다** — physics_protocol_id 신설",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/mpm_webapp_payload.py --selftest-temperature"
+   ],
+   "note": "Codex: *\"`_ptscenterline` OUTDIR 에서 모든 arm 이 조용히 `off` 로 실행돼도 **서로만 같으면 초록**이 될 수 있다.\"*  규약 id 를 팔끼리 비교하는 것만으로는 **러너가 무엇을 요청했는지** 모른다.\n★ 고침 `6d933923`: 적용된 17 인자에서 파생한 안정 해시 `physics_protocol_id` — **선언 라벨이 아니라 결과**다.  인자가 하나라도 없으면 `unknown:<빠진 필드>` (임의 기본값으로 채우지 않는다).\n★ end-to-end: payload 가 manifest 에 싣고 · `--expect-protocol` 로 대조해 다르면 **exit 4** · 러너가 `EXPECT_PROTOCOL` 로 넘기고 · 판정기가 `PROTOCOL_MISMATCH`/`PROTOCOL_UNKNOWN` 으로 HOLD.\n★ 회귀 ㊱a~g — 특히 ㊱e 가 **파생이 인자에 반응하는지**(vox 만 바꿔도 id 가 달라진다)를 건다.  변이체 2종 확인.\n⚠ `schema_version` 은 파일 **구조**, 이것은 물리 **의미**다 — 둘 중 하나가 다른 하나를 대신하지 못한다."
+  },
+  {
+   "id": "CDXR3-5",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "10bdb1ae",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`_FIXED_FIELDS` 통합은 **syntactic single source 일 뿐** — cross-dir 가 세대·침대를 안 봤다",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "Codex 실측: 등록 축 밖의 `sigma_am_s_S_cm` 0.010 → 0.020 이 `decision=measured`.  `compare_dirs()` 가 `input_digest` 를 별도 하드코딩하고 `_FIXED_FIELDS` 만 비교했다 — `_GEN_FIELDS` 와 bed field 는 보지 않았다.\n★ 고침 `10bdb1ae`: **FIELD_CONTRACT** 신설 — 필드마다 `scope`(physics/numeric/bed) · `across_dir` · `required` 를 선언하고 모든 게이트(`_FIXED_FIELDS`·`_REQUIRED_FIELDS`·`_XDIR_FIELDS`·`_BED_FIELDS_C`)가 여기서 파생된다.\n★ **`required` 와 `across_dir` 은 다른 축**이다 (Codex 의 `required_since`) — 세대 인자는 *섞이면 HOLD, 전부 없으면 통과* 다.  초판에 이 구분이 없어 옛 payload 회귀 4건이 죽었다.\n★ `code_sha` 를 빠뜨렸다가 회귀 ㉖c 가 잡았다 ⇒ ㉞g 를 세워 **레지스트리가 옛 목록을 전부 담는지** 상시 대조 (덮개 강제).\n★ 회귀 ㉗e(σ_AM)·㉗f(additive_E_GPa = CL-56) 는 Codex 가 통과시킨 mutant 다.  변이체로 cross-dir 을 되돌리면 `measured` 를 낸다."
   }
  ]
 }

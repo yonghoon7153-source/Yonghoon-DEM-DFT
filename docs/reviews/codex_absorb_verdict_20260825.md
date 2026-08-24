@@ -84,11 +84,23 @@ false-green 을 **실제 실행 경로에서 여전히 만들 수 있다**.  Cod
 
 ## 진행 (claude)
 
-| 조건 | 상태 |
-|---|---|
-| 1 · 5 · 7 | ✅ `abe03766` (회귀 ㉟a~i, CLI subprocess, 변이체 4종 1:1) |
-| 2 | 진행 중 |
-| 3 · 4 · 6 · 8 · 9 · 10 | 미착수 |
+| 조건 | 상태 | 커밋 |
+|---|---|---|
+| 1 · 5 · 7 | ✅ 봉인/판정 분리 · 이온 conjunction · ARMS 상수 8 | `abe03766` |
+| 2 | ✅ producer exit 3 · 원자적 쓰기 · check_arm 5종 강화 | `1c12e322` |
+| **3 · 4** | ✅ `physics_protocol_id` end-to-end (exit 4 · EXPECT_PROTOCOL) | `6d933923` |
+| **6** | ✅ occupied-surface-first plate (두 솔버) | `b5598999` |
+| **8** | ✅ FIELD_CONTRACT 레지스트리 (scope·across_dir·required) | `10bdb1ae` |
+| **9** | ✅ plate 소산 포함 + FD 항등식 (차 1.5e-10) | `4860eb24` |
+| **10** | ✅ 규칙 K — selftest 배선 강제 | `e882ec95` |
+
+**10/10 완료.**  selftest: verdict **100** · sr01 **68** · discipline **59** · step3(+7) · payload.
+⚠ 그러나 **흡수는 재리뷰 뒤**다 — Codex 가 *"이 조건을 충족한 수정 diff를 다시 보면 된다"*
+라고 했고, 이 세션의 증거가 그것을 뒷받침한다: 내 자기검증이 **이 부류에서** 두 번 틀렸다
+(누설 없음을 주장하며 누설 · R-1 이 덮는다고 했으나 안 덮음).  둘 다 내 selftest 는 초록이었다.
+
+⚠⚠ **1차 리뷰 때 없던 것이 생겼다** — CDXR3-6 이 **σ_e 값을 바꾼다**.  게이트 수정이 아니라
+**과학적 결과**이고, 특히 *비(ratio)가 공통모드로 살아남는지*는 **미측정**이다.
 
 ⚠ **GPU 8팔 재실행도 보류**다 — Codex: *"plate/contact 및 protocol seal 이 고정되기 전에
 돌리면 계산비를 쓰고도 어느 물리·실행 계약을 측정했는지 다시 모호해진다."*
