@@ -1160,3 +1160,27 @@ WSL 안에서 부르는 `wsl.exe --shutdown` 까지 전부 여기에 걸려 있�
 그리고 `interop_repair_persist` 를 heredoc 으로 옮겼다. 처음에 bash 문자열로
 짰더니 `printf "...\n"` 의 역슬래시가 두 개로 새서, 붙여넣으면 유닛 파일에
 글자 그대로 `\n` 이 들어갔다. 테스트가 그것을 본다. 159 → 164건.
+
+## [2026-08-24] fix | mirrored 를 켜면 'bml stop' 으로 안 되는 포트 충돌이 생긴다
+mirrored 가 켜진 직후 `bml` 이 `포트 5003 를 이미 다른 프로세스가 쓰고
+있습니다 / bml stop 후 다시` 로 죽었다. 그 안내는 이제 틀릴 수 있다.
+
+**mirrored 네트워크에서는 WSL 이 Windows 의 망을 그대로 쓴다.** 그래서 Windows
+쪽이 잡은 5003 도 WSL 안에서 보이는데, 그것은 **WSL 안에서 끌 수 없다.**
+`bml stop` 을 하라고 하면 사람은 영영 안 되는 일을 반복한다. 이 저장소는
+`cmd_stop`·`doctor` 에는 그 사실을 적어 뒀는데, 정작 서버가 못 뜬 자리
+(`explain_log` 의 address-already-in-use)에는 없었다.
+
+이제 `is_wsl && ! owns_port` 이면 다르게 말한다: "우리 프로세스가 아닙니다 …
+`bml stop` 은 소용없습니다" + 가장 흔한 범인인 `netsh interface portproxy
+reset` (mirrored 에서는 포워딩이 필요 없다 — 넣어 두면 이렇게 꼬인다) +
+그래도 남으면 `netstat.exe -ano | grep :5003` 으로 PID 를 보는 길.
+Windows 쪽 명령이지만 interop 이 살아났으므로 **WSL 터미널에서 그대로 친다.**
+
+이번 건 자체는 재시작 직후 이전 서버가 포트를 놓는 중이었던 것으로 보인다
+(잠시 뒤 `ss` 와 `netsh portproxy show all` 둘 다 비었다). 그래도 안내는
+고쳐 둔다 — mirrored 를 켠 이상 이 자리는 언제든 다시 온다.
+
+**오늘 목표가 여기서 닫혔다**: `bml status` 가 `접속 주소
+http://192.168.0.40:5003  같은 공유기 안에서` 를 찍는다. NAT 안내가 통째로
+사라졌다. 그 값이 노트북에 넣을 값이다. 164 → 168건.

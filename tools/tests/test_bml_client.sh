@@ -616,6 +616,25 @@ check "없는 것은 거부한다"          "$(win_exe nope-nope.exe || echo REF
 check "빈 이름도 거부한다"          "$(win_exe '' || echo REFUSED)" "REFUSED"
 
 echo
+echo "mirrored 를 켠 뒤의 포트 충돌 — bml stop 으로는 안 되는 경우"
+# mirrored 네트워크에서는 WSL 이 Windows 의 망을 그대로 쓴다.  그래서 Windows
+# 쪽이 잡은 5003 도 WSL 안에서 보이는데, 그것은 WSL 안에서 끌 수 없다.
+# 그때 "bml stop 후 다시" 라고 하면 사람은 영영 안 되는 일을 반복한다.
+BINDLOG="$TMP/bind.log"
+printf 'ERROR: [Errno 98] error while attempting to bind on address: address already in use\n' > "$BINDLOG"
+MINE="$( is_wsl() { return 0; }; owns_port() { return 0; }; explain_log "$BINDLOG" 2>&1 )"
+THEIRS="$( is_wsl() { return 0; }; owns_port() { return 1; }; explain_log "$BINDLOG" 2>&1 )"
+check "우리 것이면 bml stop 을 준다"   "$(printf '%s\n' "$MINE"   | grep -c 'bml stop')" "1"
+check "남의 것이면 bml stop 은 소용없다고 말한다" \
+  "$(printf '%s\n' "$THEIRS" | grep -c '소용없습니다')" "1"
+# mirrored 를 켠 기계에서 가장 흔한 범인은 예전에 걸어 둔 portproxy 다.
+check "포워딩을 지우라고 짚는다" \
+  "$(printf '%s\n' "$THEIRS" | grep -c 'portproxy reset')" "1"
+# 그래도 남으면 무엇이 잡고 있는지 볼 길을 준다 — WSL 안에서 칠 수 있는 것으로.
+check "누가 잡았는지 볼 명령을 준다" \
+  "$(printf '%s\n' "$THEIRS" | grep -c 'netstat.exe -ano')" "1"
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
