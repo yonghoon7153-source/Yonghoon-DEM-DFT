@@ -319,6 +319,20 @@ check "빈 주소는 아니다"        "$(server_is_this_machine "" && echo yes 
 check "IPv6 루프백도 이 기계다" "$(server_is_this_machine 'http://[::1]:5003' && echo yes || echo no)" "yes"
 
 echo
+echo "NAT 뒤 WSL 주소 뽑기 (netsh connectaddress= 에 들어가는 값)"
+# 이 값 하나를 사람이 손으로 옮겨 적어야 해서, 가이드가 경고해 둔 대로
+# 자리표시자째 붙여넣는 사고가 실제로 난다.  bml 이 알고 있으니 대신 넣어 준다.
+check "172.x 를 뽑는다"          "$(wsl_nat_address '172.28.144.1')" "172.28.144.1"
+check "여러 개면 사설망 먼저"     "$(wsl_nat_address '172.28.144.1 10.0.0.5')" "172.28.144.1"
+check "10.x 도 사설망이다"        "$(wsl_nat_address '10.0.0.5')" "10.0.0.5"
+# 169.254 는 DHCP 를 못 받았다는 뜻이다.  이걸 넘겨 주면 포워딩은 걸리지만
+# 아무것도 안 지나가고, 사람은 방화벽을 의심한다.
+check "169.254 는 건너뛴다"       "$(wsl_nat_address '169.254.83.107 172.20.5.3')" "172.20.5.3"
+# LAN 주소가 보이는 기계는 애초에 이 안내가 필요 없다 — 빈 값이어야 한다.
+check "LAN 주소만 있으면 비운다"   "$(wsl_nat_address '192.168.0.40')" ""
+check "빈 입력도 죽지 않는다"      "$(wsl_nat_address '')" ""
+
+echo
 echo "중추 서버를 봐도 저장소는 맞춘다"
 # 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.

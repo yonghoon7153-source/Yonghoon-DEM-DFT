@@ -168,14 +168,10 @@ export function TestConditionsPanel({
             ))}
           </datalist>
         </Field>
-        <NumberField
-          label="C-rate · 본 사이클"
-          hint="0.2 = 0.2C"
-          note={scheduleRate ? <span title="스케줄에서 읽은 값">{plain(scheduleRate)}C</span> : undefined}
-          value={numbers.c_rate}
-          onChange={setNumber('c_rate')}
-          min={0}
-        />
+        {/* 형성이 먼저다 — 셀이 실제로 거치는 순서이고, 사이클 표도 1번부터
+            읽는다.  본 사이클을 왼쪽에 두면 화면의 순서와 실험의 순서가
+            어긋나서, 두 칸 중 어느 것이 무엇인지 매번 라벨을 다시 읽어야
+            한다 (Library 의 'C-rate (형성/본)' 열도 이 순서다). */}
         <NumberField
           label="C-rate · 형성"
           hint="formation"
@@ -188,6 +184,14 @@ export function TestConditionsPanel({
           }
           value={numbers.c_rate_formation}
           onChange={setNumber('c_rate_formation')}
+          min={0}
+        />
+        <NumberField
+          label="C-rate · 본 사이클"
+          hint="0.2 = 0.2C"
+          note={scheduleRate ? <span title="스케줄에서 읽은 값">{plain(scheduleRate)}C</span> : undefined}
+          value={numbers.c_rate}
+          onChange={setNumber('c_rate')}
           min={0}
         />
         <NumberField

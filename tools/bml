@@ -1162,6 +1162,21 @@ reachable_addresses() {
   done
 }
 
+#: NAT 뒤의 WSL 이 Windows 에서 보이는 주소.  `hostname -I` 의 출력을 받는다.
+#:
+#: 이 값 하나가 `netsh ... connectaddress=` 에 들어간다.  사람이 손으로 옮겨
+#: 적어야 하는 것이 정확히 이것이고, 가이드 자신이 적어 두었듯이 자리표시자를
+#: 그대로 붙여넣어 "구문이 올바르지 않습니다" 를 보는 일이 실제로 일어난다.
+#:
+#: 사설망 대역만 남긴다.  `hostname -I` 는 있는 것을 다 뱉는데, 맨 앞이
+#: `169.254.x`(= DHCP 를 못 받았다는 뜻)인 경우가 실제로 있었다 — 그것을 넘겨
+#: 주면 포워딩은 걸리지만 아무것도 안 지나간다.
+wsl_nat_address() {
+  printf '%s' "${1:-}" | tr ' ' '\n' \
+    | grep -E '^(172\.(1[6-9]|2[0-9]|3[01])\.|10\.)' | head -1
+  return 0
+}
+
 #: 그 주소에 우리 워크벤치가 살아 있는가.  server_state 와 달리 임의의 주소를
 #: 받는다 — 아직 저장하지 않은 후보를 확인해야 하기 때문이다.
 #: 두 번째 인자는 기다릴 초.
@@ -2015,9 +2030,42 @@ cmd_status() {
       done
       say "            ${DIM}다른 기계에서:${OFF} ${GREEN}bml use <위 주소 중 하나>${OFF}"
     else
-      warn "접속 주소   찾지 못했습니다."
-      say "  ${DIM}WSL 이 NAT 뒤라면 Windows 쪽 포트 포워딩이 필요합니다 —${OFF}"
-      say "  ${DIM}docs/guides/central-server.md 의 '주소' 절.${OFF}"
+      # 다른 기계가 칠 수 있는 주소가 없다.  거의 항상 WSL 의 NAT 모드다:
+      # 172.x 사설망 안에 있어서 `hostname -I` 의 주소로는 밖에서 못 닿는다.
+      #
+      # 여기서 문서로만 넘기면 안 된다 (§0.3: 계측기가 아는 것을 사람에게 다시
+      # 묻지 않는다).  **우리는 그 172.x 를 알고 있고**, 사람이 손으로 옮겨
+      # 적어야 하는 것이 정확히 그 값이다.  가이드 자신이 적어 두었듯이
+      # `connectaddress=<...>` 를 자리표시자째 붙여넣어 "구문이 올바르지
+      # 않습니다" 를 보는 일이 실제로 일어난다.  붙여넣을 수 있는 줄을 준다.
+      warn "접속 주소   찾지 못했습니다 — WSL 이 NAT 뒤에 있습니다."
+      local nat
+      nat="$(wsl_nat_address "$(hostname -I 2>/dev/null)")"
+      say ""
+      say "  ${B}두 가지 길이 있습니다.${OFF}"
+      say ""
+      say "  ${B}A. mirrored 모드${OFF} ${DIM}(권장 — 한 번만 하면 끝)${OFF}"
+      say "     ${DIM}WSL 이 Windows 의 주소를 그대로 쓰므로 포워딩이 필요 없습니다.${OFF}"
+      say "     ${DIM}Windows 에서${OFF} ${GREEN}%USERPROFILE%\\.wslconfig${OFF} ${DIM}에:${OFF}"
+      say "       ${GREEN}[wsl2]${OFF}"
+      say "       ${GREEN}networkingMode=mirrored${OFF}"
+      say "     ${DIM}그다음 관리자 PowerShell 에서${OFF} ${GREEN}wsl --shutdown${OFF} ${DIM}후 터미널을 다시 엽니다.${OFF}"
+      say ""
+      say "  ${B}B. NAT 그대로 두고 포워딩${OFF} ${DIM}(WSL 을 재시작하면 다시 해야 합니다)${OFF}"
+      if [ -n "$nat" ]; then
+        say "     ${DIM}관리자 PowerShell — 아래를 그대로 붙여넣으면 됩니다:${OFF}"
+        say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=${nat}${OFF}"
+      else
+        say "     ${DIM}관리자 PowerShell:${OFF}"
+        say "       ${GREEN}wsl hostname -I${OFF} ${DIM}로 172.x 를 확인한 뒤${OFF}"
+        say "       ${GREEN}netsh interface portproxy add v4tov4 listenport=${PORT} listenaddress=0.0.0.0 connectport=${PORT} connectaddress=<그 172.x>${OFF}"
+      fi
+      say ""
+      say "  ${B}둘 중 어느 쪽이든 방화벽은 한 번 열어야 합니다${OFF} ${DIM}(관리자 PowerShell, 1회):${OFF}"
+      say "     ${GREEN}New-NetFirewallRule -DisplayName \"BML ${PORT}\" -Direction Inbound -LocalPort ${PORT} -Protocol TCP -Action Allow${OFF}"
+      say ""
+      say "  ${DIM}그 PC 의 LAN 주소는 Windows 쪽에서${OFF} ${GREEN}ipconfig${OFF} ${DIM}의 IPv4 입니다 — 노트북에서는${OFF}"
+      say "  ${DIM}그 주소로${OFF} ${GREEN}bml use <그 IPv4>${OFF} ${DIM}를 씁니다. 자세히는 docs/guides/central-server.md.${OFF}"
     fi
   fi
   say "미커밋      ${dirty}개"
