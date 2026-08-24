@@ -24,6 +24,22 @@ set -uo pipefail
 VOX="${VOX:-0.15}"
 BRIDGE_UM="${BRIDGE_UM:-0.48}"          # prereg §5 — 격자와 무관하게 고정
 ARMS="${ARMS:-8}"
+#  ★★ 2026-08-24 (CDXR3-7) — `ARMS` 는 **사전등록 계약이 아니다**.  옛 판은 마지막 봉인에
+#    `--require-arms "$ARMS"` 를 줘서 **자기가 설정한 값을 자기한테 요구**했다 — ARMS=2 도
+#    2팔을 요구하고 초록이 됐다 (실측).  prereg §4 가 고정한 것은 **8** 이다.
+#    ⇒ 생산 봉인은 상수 8 로 건다.  8 이 아니면 **진단 런**이고, OUTDIR 을 갈라
+#      생산 산출물과 같은 이름을 쓰지 못하게 한다 (재사용 오염 차단).
+case "$ARMS" in
+  ''|*[!0-9]*) echo "[p2] ABORT — ARMS 는 양의 정수 (받은 값: $ARMS)"; exit 2;;
+esac
+[ "$ARMS" -ge 1 ] || { echo "[p2] ABORT — ARMS >= 1 이어야 한다 (받은 값: $ARMS)"; exit 2; }
+PREREG_ARMS=8
+AR_TAG=""
+if [ "$ARMS" -ne "$PREREG_ARMS" ]; then
+  AR_TAG="_arm$ARMS"
+  echo "[p2] ⚠ ARMS=$ARMS ≠ 사전등록 $PREREG_ARMS — **진단 런**이다."
+  echo "     OUTDIR 에 $AR_TAG 를 붙여 생산 산출물과 갈라 놓는다.  생산 봉인은 걸지 않는다."
+fi
 #  ★ SDCP **부피-보존 구 스탬프** (2026-08-16, prereg v2 판정 h1 의 대응).
 #    빈 값이면 현행 점 스탬프 = 사전등록 v2 판별 런과 같은 규약.
 #    `SDCP_SPHERE_D=0.30` 을 주면 참 직경 구로 굽는다 — 태그와 OUTDIR 이 갈려 섞이지 않는다.
@@ -118,7 +134,7 @@ esac
 FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${LEAN_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -332,12 +348,15 @@ python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only
 #    돌리면 이 파일 헤더의 규약("결과를 보고 창을 옮길 수 없게")이 깨진다.
 #    ⇒ **봉인과 판정을 가른다**: 봉인 = 데이터가 쓸 만한가, 판정 = 그것이 뭐라고 말하는가.
 #      `--seal-only` 는 h0/h1 과 비를 **출력하지 않으므로** 사전등록이 안 깨진다.
-if [ "$ARMS" -ge 2 ]; then
-  if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only --require-arms "$ARMS"; then
+#  ⚠ 상수 8 로 건다 ($ARMS 가 아니다 — 그것이 CDXR3-7 의 자기참조였다).
+if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
+  if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
+       --require-arms "$PREREG_ARMS"; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
     exit 1
   fi
-  echo "[p2] ✓ 계약 봉인 통과 ($ARMS 팔).  판정은 prereg §5 순서로 **따로** 돌 것"
+  echo "[p2] ✓ 계약 봉인 통과 ($PREREG_ARMS 팔).  판정은 prereg §5 순서로 **따로** 돌 것"
 else
-  echo "[p2] (ARMS=$ARMS — 단일팔 진단이라 봉인을 걸지 않는다: 표준오차가 없다)"
+  echo "[p2] ⚠ **진단 런 ($ARMS 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것."
+  echo "     사전등록은 $PREREG_ARMS 팔이다 (prereg §4).  OUTDIR: $OUTDIR"
 fi

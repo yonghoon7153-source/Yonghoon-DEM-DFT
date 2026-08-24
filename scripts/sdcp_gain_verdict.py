@@ -108,6 +108,7 @@ def _read(path):
             #    아예 안 실었다는 뜻이고, 아래 `require_ionic` 게이트가 fail-closed 로 잡는다.
             'ion_cg_info': s.get('ion_cg_info'),
             'ion_unconverged': s.get('ion_unconverged'),
+            'ion_resid': s.get('ion_resid'),
             'n_dof': s.get('n_dof'),
             'cg_info': s.get('cg_info'),
             'cg_resid': s.get('cg_resid'),
@@ -398,15 +399,38 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         #    ⚠ 봉인 이전 세대 payload 는 필드가 **없어** HOLD 가 된다.  그것이 옳다 —
         #      수렴했는지 모르는 값으로 이온축 결론을 내지 않는다.  σ_e 만 볼 때는
         #      `--require-ionic` 을 켜지 않으면 되고, 이온축이 결론이면 재실행해야 한다.
-        _ion_bad = [r['file'] for k in arms for r in arms[k] if r.get('ion_unconverged')]
-        _ion_blind = [r['file'] for k in arms for r in arms[k]
-                      if r.get('ion_unconverged') is None and r.get('ion_cg_info') is None]
+        #  ★★ 2026-08-24 (CDXR3-4) — 초판은 `ion_unconverged` 가 truthy 일 때만 실패하고
+        #    **둘 다** None 일 때만 blind 로 봤다.  그 사이 상태공간이 통째로 뚫려 있었다
+        #    (실측): `cg_info=30000` 인데 `unconverged=False` (모순) → h0 · 한쪽만 있고
+        #    다른 쪽이 좋아 보임 (반쪽) → h0.
+        #    ⇒ **conjunction 을 요구한다**: cg_info == 0 ∧ unconverged is False ∧ resid 유한.
+        #      모르는 것·모순·타입 오류는 전부 HOLD (fail-closed).
+        def _ion_ok(r):
+            ci, un, rs = r.get('ion_cg_info'), r.get('ion_unconverged'), r.get('ion_resid')
+            if ci is None or un is None:
+                return False, 'blind'
+            if not isinstance(un, bool) or isinstance(ci, bool) or not isinstance(ci, (int, float)):
+                return False, 'type'
+            if bool(un) or int(ci) != 0:
+                return False, 'unconv'
+            if rs is not None and not (isinstance(rs, (int, float)) and rs == rs
+                                       and abs(rs) != float('inf')):
+                return False, 'resid'
+            return True, ''
+        _ion_bad, _ion_blind = [], []
+        for _k in arms:
+            for _r in arms[_k]:
+                _ok, _why = _ion_ok(_r)
+                if not _ok:
+                    (_ion_blind if _why == 'blind' else _ion_bad).append(_r['file'])
         if _ion_bad:
-            return dict(out, decision='HOLD', ion_unconverged_arms=len(_ion_bad),
+            return dict(out, decision='HOLD', hold_code='IONIC_UNCONVERGED',
+                        ion_unconverged_arms=len(_ion_bad),
                         reason=f'이온 솔브가 **미수렴**인 팔 {len(_ion_bad)}개 ({_ion_bad[0]} …) — '
                                f'prereg §5-1 대로 숫자를 내지 않는다')
         if _ion_blind:
-            return dict(out, decision='HOLD', ion_no_convergence_info=len(_ion_blind),
+            return dict(out, decision='HOLD', hold_code='IONIC_BLIND',
+                        ion_no_convergence_info=len(_ion_blind),
                         reason=f'이온 수렴 정보가 **없는** 팔 {len(_ion_blind)}개 '
                                f'({_ion_blind[0]} …) — 봉인 이전 세대 payload 다 (CDXR2-4).  '
                                f'이온축이 결론이면 재실행할 것; σ_e 만 보려면 '
@@ -455,9 +479,12 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         out['se_note'] = ('게이트는 prereg §4 의 hypot 을 쓴다 (보수적).  쌍별 SE 는 참고용 — '
                           '점예측 일치 서술에 쓰지 말 것')
     if se_ratio_rel_pct > SE_MAX_REL_PCT:
-        return dict(out, decision='HOLD',
-                    reason=f'비의 상대 표준오차 {se_ratio_rel_pct:.2f} % > {SE_MAX_REL_PCT} % '
-                           f'(절대 {out["se_ratio_abs_pp"]:.2f} %p) — '
+        #  ⚠⚠ 2026-08-24 (CDXR3-1) — **절대 %p 를 사유에 적지 않는다.**
+        #    `SE_abs = R · SE_rel` 이라 둘을 나란히 내면 **몫으로 R 이 복원된다**.
+        #    초판이 정확히 그것을 했다 — 같은 커밋에서 '누설 없음' 을 주장하면서.
+        #    절대값은 `out['se_ratio_abs_pp']` 로 JSON 에 남는다 (비-blind 소비자용).
+        return dict(out, decision='HOLD', hold_code='SE_EXCEEDED',
+                    reason=f'비의 상대 표준오차 {se_ratio_rel_pct:.2f} % > {SE_MAX_REL_PCT} % — '
                            f'prereg §5-2 (origin 16 으로 늘릴 것)')
     # ③④⑤ 본 판정
     if ratio >= H0_MIN_RATIO:
@@ -893,6 +920,84 @@ def _selftest():
         _self.count(_lit) == 1)
     chk('㉞d compare_dirs 와 verdict 가 같은 계약을 쓴다',
         'ptfe_stamp' in _FIXED_FIELDS and 'ptfe_zero_dof' in _FIXED_FIELDS)
+    #  ★★★ ㉟ 2026-08-25 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
+    #    초판의 ㉜c 는 `seal_lines()` 반환 문자열만 검사해서 CLI preamble·옵션 우선순위·
+    #    SE 역산을 전부 놓쳤다 = 이 리포가 여러 번 겪은 "실제 경로를 안 타는 테스트".
+    #    ⇒ 여기서는 **CLI 를 subprocess 로 실제 실행**하고 stdout·exit code 를 본다.
+    import subprocess as _sp, tempfile as _tf, json as _js, os as _os3, sys as _sys3
+    _me = _os3.path.abspath(__file__)
+
+    def _write_arms(_d, n=8, mul=1.12, **s3over):
+        _man = {k: v for k, v in _FIX.items()
+                if k not in ('sigma_e_eff_S_cm',)}
+        for _b, _m in (('SBE', 1.0), ('DBE', mul)):
+            for _i in range(n):
+                _s3 = {'sigma_e_eff_S_cm': 0.073 * _m * (1 + 0.001 * _i),
+                       'cg_info': 0, 'cg_resid': 1e-9, 'unconverged': False,
+                       'status': 'complete',
+                       'manifest': dict({'vox_um': _FIX['vox'],
+                                         'origin_shift_um': [0.0, 0.0, round(0.01 * _i, 9)],
+                                         'components': {'electronic': {'status': 'complete'}}},
+                                        **{k: v for k, v in _FIX.items() if k != 'vox'})}
+                _s3.update(s3over)
+                with open(_os3.path.join(_d, f'p2_{_b}_a{_i}.json'), 'w', encoding='utf-8') as _f:
+                    _js.dump({'step3': _s3}, _f)
+
+    def _cli(_d, *args):
+        _r = _sp.run([_sys3.executable, _me, '--dir', _d, *args],
+                     capture_output=True, text=True)
+        return _r.returncode, _r.stdout + _r.stderr
+
+    with _tf.TemporaryDirectory() as _d35:
+        _write_arms(_d35)
+        _rc, _o = _cli(_d35, '--seal-only', '--collect-only', '--require-arms', '8')
+        chk(f'㉟a ★★ `--seal-only --collect-only` 는 **거부**된다 (옛 판은 collect 가 먼저 '
+            f'돌아 exit 0 + raw 출력 + 봉인 미실행이었다): rc={_rc}',
+            _rc != 0 and '같이 못 쓴다' in _o)
+        _rc2, _o2 = _cli(_d35, '--seal-only', '--require-arms', '8')
+        _leak = [t for t in ('0.073', '0.0817', 'σ_e', 'h0', 'h1')
+                 if t in _o2.replace('h0/h1 과 비는 출력하지 않는다', '')]
+        chk(f'㉟b ★★ 봉인 모드 CLI stdout 에 **팔 표·σ 원값이 없다** (누설: {_leak}) rc={_rc2}',
+            not _leak)
+        _rc3, _o3 = _cli(_d35, '--collect-only')
+        chk('㉟c 음성 대조 — collect 모드는 여전히 표를 찍는다 (과잉차단 아님)',
+            _rc3 == 0 and 'σ_e' in _o3)
+
+    #  ── SE HOLD 사유의 역산 누설 (SE_abs = R · SE_rel) ──
+    _ua2 = 0.02                                              # 상대 SE 를 문턱 위로
+    _ub2 = [1 - 3 * _ua2, 1 - 2 * _ua2, 1 - _ua2, 1.0, 1.0, 1 + _ua2, 1 + 2 * _ua2, 1 + 3 * _ua2]
+    _vse = verdict(mk(_ub2, [v * 1.08 for v in _ub2]))
+    chk(f'㉟d SE 초과가 HOLD 이고 코드가 붙는다 ({_vse.get("hold_code")})',
+        _vse['decision'] == 'HOLD' and _vse.get('hold_code') == 'SE_EXCEEDED')
+    chk('㉟e ★★ HOLD 사유에 **절대 %p 가 없다** — 상대와 나란히 내면 몫으로 R 이 복원된다',
+        '%p' not in (_vse.get('reason') or '')
+        and _vse.get('se_ratio_abs_pp') is not None)      # JSON 에는 남는다
+
+    #  ── 이온 수렴 쌍의 모순·반쪽 (Codex 실측 재현) ──
+    _ig2 = dict(sigma_ion=5.6e-4)
+    _v35f = verdict(mk(base, [v * 1.12 for v in base],
+                       **dict(_ig2, ion_cg_info=30000, ion_unconverged=False)),
+                    require_ionic=True)
+    chk(f'㉟f ★★ `cg_info=30000` 인데 `unconverged=False` = **모순** → HOLD '
+        f'(옛 판은 h0): {_v35f["decision"]}/{_v35f.get("hold_code")}',
+        _v35f['decision'] == 'HOLD' and _v35f.get('hold_code') == 'IONIC_UNCONVERGED')
+    _half = mk(base, [v * 1.12 for v in base], **dict(_ig2, ion_cg_info=0))
+    for _k2 in _half:
+        for _r2 in _half[_k2]:
+            _r2['ion_unconverged'] = None                     # 반쪽
+    _v35g = verdict(_half, require_ionic=True)
+    chk(f'㉟g ★ 한쪽만 있는 쌍(반쪽)도 HOLD (옛 판은 h0): {_v35g["decision"]}',
+        _v35g['decision'] == 'HOLD')
+    _v35h = verdict(mk(base, [v * 1.12 for v in base],
+                       **dict(_ig2, ion_cg_info=0, ion_unconverged=False, ion_resid=float('nan'))),
+                    require_ionic=True)
+    chk(f'㉟h ★ residual 이 비유한이면 HOLD: {_v35h["decision"]}',
+        _v35h['decision'] == 'HOLD')
+    _v35i = verdict(mk(base, [v * 1.12 for v in base],
+                       **dict(_ig2, ion_cg_info=0, ion_unconverged=False, ion_resid=2.2e-9)),
+                    require_ionic=True)
+    chk(f'㉟i 음성 대조 — 일관된 좋은 쌍은 통과 ({_v35i["decision"]})',
+        _v35i['decision'] == 'h0')
 
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
@@ -1265,11 +1370,21 @@ if __name__ == '__main__':
         raise SystemExit(0 if c['decision'] == 'measured' else 1)
     if not a.dir:
         raise SystemExit('사용: --dir <결과 디렉터리>')
+    #  ★★ 2026-08-24 (CDXR3-1) — **모드는 배타다.**  옛 판은 두 옵션을 같이 주면
+    #    collect 분기가 **먼저** 실행돼 raw 결과를 찍고 exit 0 으로 끝났다 = 봉인 미실행
+    #    (실측 재현).  봉인이 "결과를 안 보고" 를 뜻하려면 조합 자체가 불가능해야 한다.
+    if a.seal_only and a.collect_only:
+        raise SystemExit('--seal-only 와 --collect-only 는 **같이 못 쓴다**.  봉인은 결과를 '
+                         '보지 않는 검사이고 수집은 결과를 찍는 것이다 (CDXR3-1)')
     rows, arms = collect(a.dir)
-    print(f'{"파일":<28} {"σ_e":>12} {"σ_ion":>12} {"dof":>12} {"origin shift":>22} {"cg":>4}')
-    for r in rows:
-        print(f'{r["file"]:<28} {str(r["sigma_e"]):>12} {str(r["sigma_ion"]):>12} '
-              f'{str(r["n_dof"]):>12} {str(r["origin_shift_um"]):>22} {str(r["cg_info"]):>4}')
+    #  ⚠⚠ 봉인 모드에서는 **팔 표를 찍지 않는다**.  옛 판은 이 표가 분기보다 위에 있어
+    #    σ_e 원값 16개가 봉인 전에 그대로 노출됐다 — 회귀 ㉜c 는 `seal_lines()` 반환만
+    #    검사해서 이 preamble 을 못 봤다 ("실제 경로를 안 타는 테스트" 의 재발).
+    if not a.seal_only:
+        print(f'{"파일":<28} {"σ_e":>12} {"σ_ion":>12} {"dof":>12} {"origin shift":>22} {"cg":>4}')
+        for r in rows:
+            print(f'{r["file"]:<28} {str(r["sigma_e"]):>12} {str(r["sigma_ion"]):>12} '
+                  f'{str(r["n_dof"]):>12} {str(r["origin_shift_um"]):>22} {str(r["cg_info"]):>4}')
     print(f'\n  수집: SBE {len(arms["SBE"])} 팔 · DBE {len(arms["DBE"])} 팔')
     if a.collect_only:
         print('  (--collect-only — 판정하지 않는다)')
