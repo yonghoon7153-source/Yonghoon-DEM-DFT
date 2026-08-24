@@ -262,6 +262,31 @@ def _stats(vals):
     return {'n': n, 'mean': m, 'sd': sd, 'se': sd / math.sqrt(n)}
 
 
+#: 솔버가 수렴이라고 부르는 문턱 (`step3_sigma.py:590` 과 **같은 값**이어야 한다).
+CG_RESID_MAX = 1e-6
+
+
+def _conv_ok(ci, un, rs):
+    """(cg_info, unconverged, resid) → (통과?, 사유코드).  전자·이온 **공통** 검사.
+
+    ★ Codex M-R3-04/05/06: 초판은 축마다 다른 강도로 봤고 residual 문턱을 안 썼다.
+      NaN 전자 residual 이 producer→check_arm→final seal 전 구간을 통과했고,
+      ionic residual `None`·`1e100` 도 `h0` 였다.
+    ⇒ **conjunction**: cg_info 는 진짜 정수 0 · unconverged 는 진짜 bool False ·
+      resid 는 유한한 수이고 0 ≤ resid ≤ CG_RESID_MAX.  누락·모순·타입오류는 전부 실패."""
+    if ci is None or un is None or rs is None:
+        return False, 'blind'
+    if not isinstance(un, bool) or isinstance(ci, bool) or not isinstance(ci, (int, float)):
+        return False, 'type'
+    if isinstance(rs, bool) or not isinstance(rs, (int, float)):
+        return False, 'type'
+    if bool(un) or int(ci) != 0:
+        return False, 'unconv'
+    if rs != rs or rs in (float('inf'), float('-inf')) or rs < 0 or rs > CG_RESID_MAX:
+        return False, 'resid'
+    return True, ''
+
+
 def seal_lines(v):
     """판정 dict → (봉인 통과?, 출력 줄들).  **h0/h1 과 비를 누설하지 않는다.**
 
@@ -399,6 +424,21 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     #        — 없으면 옛 세대이고, 옛 세대는 고정을 확인할 수 없으므로 HOLD 다 (H5 와 같은 논리).
     #  ★★ 2026-08-25 (CDXR3-3) — 요청↔적용 불일치는 **그 자체로** HOLD 다.
     #    (규약 id 가 팔끼리 같아도, 러너가 요청한 것과 다르면 다른 실험이다.)
+    #  ★★ 2026-08-25 (M-R3-04) — **전자축도 같은 문턱을 쓴다.**  Codex 가 전자
+    #    `cg_info=0 · unconverged=False · residual=NaN` 으로 producer→check_arm→final seal
+    #    **전 구간**을 통과시켰다 (payload 의 finite 벨트가 NaN 을 null 로 바꾸면 리더가
+    #    None 을 보고 넘어간다).  ⇒ 이온과 **같은 `_conv_ok`** 로 건다.
+    _eb = []
+    for _k in arms:
+        for _r in arms[_k]:
+            _ok, _why = _conv_ok(_r.get('cg_info'), _r.get('unconverged'), _r.get('cg_resid'))
+            if not _ok:
+                _eb.append((_r['file'], _why))
+    if _eb:
+        return dict(out, decision='HOLD', hold_code='ELECTRONIC_CONV',
+                    reason=f'전자 수렴이 확인되지 않는 팔 {len(_eb)}개 '
+                           f'({_eb[0][0]}: {_eb[0][1]}) — cg_info=0 ∧ unconverged=False ∧ '
+                           f'0 ≤ resid ≤ {CG_RESID_MAX:g} 를 모두 만족해야 한다 (M-R3-04)')
     _pm = [r['file'] for k in arms for r in arms[k] if r.get('physics_protocol_match') is False]
     if _pm:
         return dict(out, decision='HOLD', hold_code='PROTOCOL_MISMATCH',
@@ -492,18 +532,12 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         #    다른 쪽이 좋아 보임 (반쪽) → h0.
         #    ⇒ **conjunction 을 요구한다**: cg_info == 0 ∧ unconverged is False ∧ resid 유한.
         #      모르는 것·모순·타입 오류는 전부 HOLD (fail-closed).
+        #  ★★ 2026-08-25 (M-R3-05/06) — **솔버 규약과 같은 문턱을 쓴다.**
+        #    `step3_sigma.py:590` 은 `unconv = bool(info) or resid > 1e-6` 이다.
+        #    초판은 residual 이 **있을 때만** 유한성을 봤고 문턱은 안 썼다 ⇒ `None` 과
+        #    `1e100` 이 둘 다 `h0` 로 통과했다 (Codex 실측).  residual 은 **필수**다.
         def _ion_ok(r):
-            ci, un, rs = r.get('ion_cg_info'), r.get('ion_unconverged'), r.get('ion_resid')
-            if ci is None or un is None:
-                return False, 'blind'
-            if not isinstance(un, bool) or isinstance(ci, bool) or not isinstance(ci, (int, float)):
-                return False, 'type'
-            if bool(un) or int(ci) != 0:
-                return False, 'unconv'
-            if rs is not None and not (isinstance(rs, (int, float)) and rs == rs
-                                       and abs(rs) != float('inf')):
-                return False, 'resid'
-            return True, ''
+            return _conv_ok(r.get('ion_cg_info'), r.get('ion_unconverged'), r.get('ion_resid'))
         _ion_bad, _ion_blind = [], []
         for _k in arms:
             for _r in arms[_k]:
@@ -935,7 +969,7 @@ def _selftest():
     #    *수렴했다*는 것은 다르다.  payload 가 이온 미수렴도 `complete` 로 적었고
     #    (전자 경로만 2026-08-20 에 고쳐졌다 = 같은 결함의 3회차) 게이트는 양의 σ_ion
     #    존재만 봤다 ⇒ 이온축 결론이 false-green 이 될 수 있었다.
-    _ig = dict(sigma_ion=5.6e-4, ion_cg_info=0, ion_unconverged=False)     # 봉인된 정상 팔
+    _ig = dict(sigma_ion=5.6e-4, ion_cg_info=0, ion_unconverged=False, ion_resid=1e-9)     # 봉인된 정상 팔
     _v31a = verdict(mk(base, [v * 1.12 for v in base], **_ig), require_ionic=True)
     chk(f'㉛a 봉인된 수렴 팔은 --require-ionic 을 통과한다 ({_v31a["decision"]})',
         _v31a['decision'] == 'h0')
@@ -1065,7 +1099,8 @@ def _selftest():
     _man36b.pop('vox_um')
     chk('㊱g ★★ 인자가 **빠지면** `unknown:` 을 낸다 (임의 기본값으로 채우지 않는다)',
         _p36.physics_protocol_id(_man36b).startswith('unknown:vox_um'))
-    #  ★★★ ㉟ 2026-08-25 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
+
+    #  ★★★ ㉟ 2026-08-24 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
     #    초판의 ㉜c 는 `seal_lines()` 반환 문자열만 검사해서 CLI preamble·옵션 우선순위·
     #    SE 역산을 전부 놓쳤다 = 이 리포가 여러 번 겪은 "실제 경로를 안 타는 테스트".
     #    ⇒ 여기서는 **CLI 를 subprocess 로 실제 실행**하고 stdout·exit code 를 본다.
@@ -1098,7 +1133,7 @@ def _selftest():
         _rc, _o = _cli(_d35, '--seal-only', '--collect-only', '--require-arms', '8')
         chk(f'㉟a ★★ `--seal-only --collect-only` 는 **거부**된다 (옛 판은 collect 가 먼저 '
             f'돌아 exit 0 + raw 출력 + 봉인 미실행이었다): rc={_rc}',
-            _rc != 0 and '같이 못 쓴다' in _o)
+            _rc != 0 and '모드는 하나만' in _o)
         _rc2, _o2 = _cli(_d35, '--seal-only', '--require-arms', '8')
         _leak = [t for t in ('0.073', '0.0817', 'σ_e', 'h0', 'h1')
                  if t in _o2.replace('h0/h1 과 비는 출력하지 않는다', '')]
@@ -1119,7 +1154,7 @@ def _selftest():
         and _vse.get('se_ratio_abs_pp') is not None)      # JSON 에는 남는다
 
     #  ── 이온 수렴 쌍의 모순·반쪽 (Codex 실측 재현) ──
-    _ig2 = dict(sigma_ion=5.6e-4)
+    _ig2 = dict(sigma_ion=5.6e-4, ion_resid=1e-9)
     _v35f = verdict(mk(base, [v * 1.12 for v in base],
                        **dict(_ig2, ion_cg_info=30000, ion_unconverged=False)),
                     require_ionic=True)
@@ -1143,6 +1178,35 @@ def _selftest():
                     require_ionic=True)
     chk(f'㉟i 음성 대조 — 일관된 좋은 쌍은 통과 ({_v35i["decision"]})',
         _v35i['decision'] == 'h0')
+    #  ★★★ ㊲ 2026-08-25 (Codex 재리뷰 M-R3-01/05/06) — 재리뷰가 통과시킨 mutant.
+    with _tf.TemporaryDirectory() as _d37:
+        _write_arms(_d37)
+        for _combo in (('--seal-only', '--compare-dir', _d37),
+                       ('--seal-only', '--scan', _d37),
+                       ('--collect-only', '--compare-dir', _d37)):
+            _rc37, _o37 = _cli(_d37, *_combo, '--expect-differ', 'sdcp_yield_to_vgcf')
+            chk(f'㊲a[{_combo[1]}] ★★ 모드 조합은 **거부**된다 — 초판은 배타 검사보다 위의 '
+                f'분기로 빠져 결과를 출력하고 exit 0 이었다 (rc={_rc37})',
+                _rc37 != 0 and '모드는 하나만' in _o37)
+    _rbase = dict(sigma_ion=5.6e-4, ion_cg_info=0, ion_unconverged=False)
+    for _lbl, _rs, _want in (('None', None, 'HOLD'), ('1e100', 1e100, 'HOLD'),
+                             ('NaN', float('nan'), 'HOLD'), ('음수', -1e-9, 'HOLD'),
+                             ('1e-9', 1e-9, 'h0'), ('문턱 1e-6', 1e-6, 'h0'),
+                             ('문턱 초과 2e-6', 2e-6, 'HOLD')):
+        _kw = dict(_rbase)
+        if _rs is not None:
+            _kw['ion_resid'] = _rs
+        _v37 = verdict(mk(base, [v * 1.12 for v in base], **_kw), require_ionic=True)
+        chk(f'㊲b[{_lbl}] 이온 residual — 기대 {_want}, 실제 {_v37["decision"]}',
+            _v37['decision'] == _want)
+    chk('㊲c ★ 판정기 문턱이 솔버 규약과 **같은 값**이다 (step3_sigma:590 = 1e-6)',
+        CG_RESID_MAX == 1e-6)
+    #  ★★★ ㉟ 2026-08-25 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
+    #    초판의 ㉜c 는 `seal_lines()` 반환 문자열만 검사해서 CLI preamble·옵션 우선순위·
+    #    SE 역산을 전부 놓쳤다 = 이 리포가 여러 번 겪은 "실제 경로를 안 타는 테스트".
+    #    ⇒ 여기서는 **CLI 를 subprocess 로 실제 실행**하고 stdout·exit code 를 본다.
+    import subprocess as _sp, tempfile as _tf, json as _js, os as _os3, sys as _sys3
+    _me = _os3.path.abspath(__file__)
 
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
@@ -1501,6 +1565,17 @@ if __name__ == '__main__':
     a = ap.parse_args()
     if a.selftest:
         raise SystemExit(_selftest())
+    #  ★★★ 2026-08-25 (M-R3-01, Codex 재리뷰) — **네 모드가 배타다.**  초판은 seal/collect
+    #    만 배타로 만들었는데, `--seal-only --compare-dir` 은 배타 검사보다 **위**의 compare
+    #    분기로 빠져 ratio·gain·reduction 을 출력하고 exit 0 으로 끝났다 (Codex 실측).
+    #    ⇒ 어떤 조합도 결과 분기로 먼저 빠지지 못하게 **첫 줄에서** 막는다.
+    _modes = [n for n, v in (('--scan', bool(a.scan)), ('--compare-dir', bool(a.compare_dir)),
+                             ('--collect-only', a.collect_only), ('--seal-only', a.seal_only))
+              if v]
+    if len(_modes) > 1:
+        raise SystemExit(f'모드는 하나만 쓸 수 있다 (받은 것: {" ".join(_modes)}).  '
+                         f'봉인은 결과를 보지 않는 검사이고 나머지는 결과를 내는 것이다 — '
+                         f'섞으면 봉인이 우회된다 (M-R3-01)')
     if a.scan:
         _rows = scan(os.path.expanduser(a.scan))
         if not _rows:
@@ -1542,9 +1617,6 @@ if __name__ == '__main__':
     #  ★★ 2026-08-24 (CDXR3-1) — **모드는 배타다.**  옛 판은 두 옵션을 같이 주면
     #    collect 분기가 **먼저** 실행돼 raw 결과를 찍고 exit 0 으로 끝났다 = 봉인 미실행
     #    (실측 재현).  봉인이 "결과를 안 보고" 를 뜻하려면 조합 자체가 불가능해야 한다.
-    if a.seal_only and a.collect_only:
-        raise SystemExit('--seal-only 와 --collect-only 는 **같이 못 쓴다**.  봉인은 결과를 '
-                         '보지 않는 검사이고 수집은 결과를 찍는 것이다 (CDXR3-1)')
     rows, arms = collect(a.dir)
     #  ⚠⚠ 봉인 모드에서는 **팔 표를 찍지 않는다**.  옛 판은 이 표가 분기보다 위에 있어
     #    σ_e 원값 16개가 봉인 전에 그대로 노출됐다 — 회귀 ㉜c 는 `seal_lines()` 반환만

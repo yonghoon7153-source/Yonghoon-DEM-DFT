@@ -1073,6 +1073,20 @@ def smoke_assert_payload(out, label, errs, warns, expect=None):
         #    판정기 리더가 터지는 것은 "확인 못 했다" 이고 그것을 성공으로 세면 fail-open 이다.
         errs.append(f'J_READER| {label}: 판정기 리더가 payload 를 읽다 죽었다 '
                     f'({type(_e).__name__}: {_e}) — 확인 못 한 것을 통과시키지 않는다')
+    #  ★★★ 2026-08-25 (자체발견) — **물리 규약 id 가 실제로 확정되는가.**
+    #    `PROTOCOL_FIELDS` 에 이름은 있는데 producer 가 그 키를 **안 쓰면**
+    #    `physics_protocol_id` 는 조용히 `unknown:<빠진 필드>` 로 내려앉는다.  그 값은
+    #    모든 팔에서 **같은 상수**라 팔간 일치 게이트가 초록이고, 규약이 실제로 갈려도
+    #    못 잡는다 = 가짜 보증.  실제로 `vox_um` 이 그 상태였다 (오늘 발견·수정).
+    #    ⇒ 여기서 **접두사**를 본다.  `unknown:` 뒤에 빠진 필드 이름이 그대로 실려 있으므로
+    #      이 한 줄이 "규약 필드를 새로 넣고 producer 에 안 쓴" 부류를 전부 잡는다.
+    #    ⚠ 필드 목록을 여기 **다시 적지 않는다** — 그것이 backend/bridge_um 두 사고의 원인이다.
+    _pid = ((s3.get('manifest') or {}).get('physics_protocol_id'))
+    if not (isinstance(_pid, str) and _pid.startswith('p1-')):
+        errs.append(f'J_PROTOCOL| {label}: physics_protocol_id 가 확정되지 않았다 '
+                    f'({_pid!r}) — `unknown:` 뒤가 producer 가 매니페스트에 **안 쓴** '
+                    f'PROTOCOL_FIELDS 다.  그 상태의 id 는 모든 팔에서 같은 상수라 '
+                    f'규약 게이트가 무발화한다 (2026-08-25 vox_um 실사고)')
     return (bad, comps)
 
 

@@ -536,6 +536,42 @@ def resolve_ptfe_stamp(requested, sigma_ptfe):
     return ('centerline' if float(sigma_ptfe or 0.0) > 0 else 'off'), True
 
 
+def _payload_reject_reason(a, step3):
+    """의미적으로 실패한 payload 인가 → 사유 문자열 (없으면 None).
+
+    ★ 2026-08-25 (R3-F2): 이 판정은 **최종 파일명에 게시하기 전에** 나야 한다.
+      게시 뒤에 죽으면 실패 산출물이 성공 이름으로 남고 러너 캐시가 그것을 재사용한다."""
+    #  ★★★ 2026-08-25 (CDXR3-2) — **required component 실패를 process exit 로 전파한다.**
+    #    이것이 R-1 의 원래 요구다.  러너의 `check_arm` 은 2차 방어이지 대체가 아니다 —
+    #    Codex 가 partial/missing·backend 위장 mutant 로 8팔 최종 봉인까지 통과시켰다.
+    #    ⚠ STEP3 를 **요청하지 않은** 런(`--no-step3`)은 대상이 아니다 (disabled 는 실패가 아니다).
+    #  ⚠⚠ **aggregate `partial` 로 판단하면 안 된다** — `--no-ion` 처럼 **의도적으로 끈**
+    #    component 도 `disabled` 라서 aggregate 가 `partial` 이 된다.  초판이 그렇게 짜서
+    #    규칙 J 스모크(그리고 실제 LEAN=2 생산 스윕 팔 전부)를 거부했다.
+    #    ⇒ Codex 가 말한 대로 **required 를 run mode 에서 파생**하고 그것만 본다.
+    #      required = electronic(항상) + ionic(--no-ion 이 아닐 때).
+    _m = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
+    if not isinstance(_m, dict):
+        return None
+    if getattr(a, '_protocol_expect', ''):
+        _got = _m.get('physics_protocol_id')
+        if _got != a._protocol_expect:
+            return (f'물리 규약 불일치 — 기대 `{a._protocol_expect}` · 적용 `{_got}`.  '
+                    f'러너가 요청한 규약과 payload 가 실제로 한 것이 갈렸다')
+    if _m.get('status') == 'disabled':
+        return None
+    _req = ['electronic'] + ([] if a.no_ion else ['ionic'])
+    _cmp = _m.get('components') or {}
+    _bad = [c for c in _req
+            if not isinstance(_cmp.get(c), dict) or _cmp[c].get('status') != 'complete']
+    _bad += [f'{c}(failed)' for c in (_m.get('failed') or [])]
+    _bad += [f'{c}(missing)' for c in (_m.get('missing') or [])]
+    if _bad and not a.allow_partial_step3:
+        return (f'STEP3 required component 가 완료되지 않았다: {sorted(set(_bad))} '
+                f'(required={_req}).  `--allow-partial-step3` 로만 연다')
+    return None
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r); omit for an SE-only '
@@ -2139,6 +2175,13 @@ def main():
             'input_digest': _in_dig,
             'input_files': _in_files,
             'code_sha': _code_sha(_os.path.dirname(_os.path.abspath(__file__))),
+            #  ★★★ 2026-08-25 (자체발견, R3-F2 검증 중) — **`vox_um` 이 매니페스트에 없었다.**
+            #    `PROTOCOL_FIELDS` 는 그것을 요구하는데 producer 가 안 써서 `physics_protocol_id`
+            #    가 **모든 런에서 `unknown:vox_um`** 이 됐다.  팔끼리는 그 상수로 일치하므로
+            #    게이트는 초록이고, 규약이 실제로 갈려도 못 잡는다 = H5·backend 와 같은 부류의
+            #    **가짜 보증**.  ⇒ 값을 적고, 규칙 J 가 `unknown:` 접두사를 **거부**하게 한다
+            #    (그것이 이 부류의 유일한 실물 증인이다 — 손수 만든 매니페스트는 증명 못 한다).
+            'vox_um': float(a.step3_vox),
             'bridge_um': float(_bru) if _bru is not None else 1.2 * float(a.step3_vox),
             'bridge_um_explicit': _bru is not None,   # 고정 지시였나 vs 기본값이었나 (구분 보존)
             'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
@@ -2458,6 +2501,18 @@ def main():
         import os as _os_w
         _os_w.fsync(fh.fileno())
     import os as _os_w2
+    #  ★★★ 2026-08-25 (R3-F2, Codex 재리뷰) — **semantic validation 을 게시보다 먼저.**
+    #    초판은 `.part → fsync → replace` 를 했지만 replace 가 exit-3/exit-4 검사보다
+    #    **앞**이라, 의미적으로 실패한 payload 가 성공 파일명에 먼저 나타났다 (러너의
+    #    `[ -s "$OUT" ]` 캐시가 그것을 재사용한다).  ⇒ 판정을 여기서 끝내고, 실패면
+    #    **최종 이름을 쓰지 않고** `.failed` 로 남긴다 (진단은 보존, 캐시는 오염 안 됨).
+    _fail_reason = _payload_reject_reason(a, step3)
+    if _fail_reason:
+        _bad = a.out + '.failed'
+        _os_w2.replace(_part, _bad)
+        print(f'\n✗ {_fail_reason}', flush=True)
+        print(f'  최종 파일명을 쓰지 않는다 — 진단본: {_bad}', flush=True)
+        raise SystemExit(3 if _fail_reason.startswith('STEP3') else 4)
     _os_w2.replace(_part, a.out)
     import os
     _mp = mpm_metrics                                      # AUTHORITATIVE table values (sim porosity/
@@ -2475,44 +2530,6 @@ def main():
           f'  [voxel-preview por/SE/cov {por:.0f}/{f_se:.0f}/{cov["AM_P"]:.0f}% vary with n_vox — not reported]')
     if a.save_step4_grid and not getattr(a, '_s4grid_saved', False):
         print(f'⚠ --save-step4-grid 요청됐지만 미저장 — STEP3 미도달/실패 경로 (step4-v2 입력 없음)')
-
-    #  ★★★ 2026-08-25 (CDXR3-2) — **required component 실패를 process exit 로 전파한다.**
-    #    이것이 R-1 의 원래 요구다.  러너의 `check_arm` 은 2차 방어이지 대체가 아니다 —
-    #    Codex 가 partial/missing·backend 위장 mutant 로 8팔 최종 봉인까지 통과시켰다.
-    #    ⚠ STEP3 를 **요청하지 않은** 런(`--no-step3`)은 대상이 아니다 (disabled 는 실패가 아니다).
-    #  ⚠⚠ **aggregate `partial` 로 판단하면 안 된다** — `--no-ion` 처럼 **의도적으로 끈**
-    #    component 도 `disabled` 라서 aggregate 가 `partial` 이 된다.  초판이 그렇게 짜서
-    #    규칙 J 스모크(그리고 실제 LEAN=2 생산 스윕 팔 전부)를 거부했다.
-    #    ⇒ Codex 가 말한 대로 **required 를 run mode 에서 파생**하고 그것만 본다.
-    #      required = electronic(항상) + ionic(--no-ion 이 아닐 때).
-    #  ★★ 2026-08-25 (CDXR3-3) — 요청↔적용 규약 대조를 **exit 로** 전파한다.
-    _mp = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
-    if a._protocol_expect and isinstance(_mp, dict):
-        _got = _mp.get('physics_protocol_id')
-        if _got != a._protocol_expect:
-            print(f'\n✗ 물리 규약 불일치 — 기대 `{a._protocol_expect}` · 적용 `{_got}`',
-                  flush=True)
-            print('  러너가 요청한 규약과 payload 가 실제로 적용한 규약이 다르다.  '
-                  '이 팔을 다른 팔과 섞으면 **다른 실험을 하나로 본다**.', flush=True)
-            raise SystemExit(4)
-    _m3 = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
-    _st3 = (_m3 or {}).get('status')
-    _req3 = ['electronic'] + ([] if a.no_ion else ['ionic'])
-    _cmp3 = (_m3 or {}).get('components') or {}
-    _bad3 = [c for c in _req3
-             if not isinstance(_cmp3.get(c), dict) or _cmp3[c].get('status') != 'complete']
-    #  `failed`/`missing` 목록에 뭐가 있으면 required 가 아니어도 실패다 (조용한 결손 금지).
-    _bad3 += [f'{c}(failed)' for c in ((_m3 or {}).get('failed') or [])]
-    _bad3 += [f'{c}(missing)' for c in ((_m3 or {}).get('missing') or [])]
-    if _st3 == 'disabled':
-        _bad3 = []                                     # STEP3 자체를 안 돌린 런은 대상 아님
-    if _bad3 and not a.allow_partial_step3:
-        print(f'\n✗ STEP3 required component 가 완료되지 않았다: {sorted(set(_bad3))}  '
-              f'(manifest.status={_st3}, required={_req3})', flush=True)
-        print('  이 payload 는 **성공이 아니다**.  러너가 캐시하지 못하게 nonzero 로 끝낸다.', flush=True)
-        print('  부분 결과가 필요하면 `--allow-partial-step3` 을 **명시**할 것 '
-              '(과학 산출물에는 쓰지 말 것).', flush=True)
-        raise SystemExit(3)
 
 
 if __name__ == '__main__':

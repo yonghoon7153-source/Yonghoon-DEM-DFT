@@ -249,7 +249,21 @@ def check_arm(path, want, expect_backend=None):
     if _bad:
         return (f'manifest component 가 failed/unconverged 다: {sorted(_bad)} — '
                 f'부분 실패한 런이다.  재활용하지 말 것')
-    if s.get('unconverged'):
+    #  ★★ 2026-08-25 (M-R3-04) — 판정기와 **같은 규약**으로.  옛 판은 `unconverged` 만
+    #    보고 `cg_info`·residual 을 안 봤다 ⇒ residual=NaN(payload 에서 null 로 바뀐다)이
+    #    이 검사기를 그대로 통과해 캐시됐다 (Codex full-chain mutant).
+    _ci, _un, _rs = s.get('cg_info'), s.get('unconverged'), s.get('cg_resid')
+    if _ci is None or _un is None or _rs is None:
+        return (f'CG 수렴 증거가 불완전하다 (cg_info={_ci!r} unconverged={_un!r} '
+                f'resid={_rs!r}) — 모르는 것을 재활용하지 않는다')
+    if not isinstance(_un, bool) or isinstance(_ci, bool) or not isinstance(_ci, (int, float)):
+        return f'CG 수렴 필드의 타입이 틀렸다 (cg_info={_ci!r} unconverged={_un!r})'
+    if isinstance(_rs, bool) or not isinstance(_rs, (int, float)):
+        return f'CG residual 의 타입이 틀렸다 ({_rs!r})'
+    if _rs != _rs or _rs in (float('inf'), float('-inf')) or _rs < 0 or _rs > 1e-6:
+        return (f'CG residual 이 규약 밖이다 ({_rs!r}) — 0 ≤ resid ≤ 1e-6 '
+                f'(step3_sigma:590 과 같은 문턱)')
+    if bool(_un) or int(_ci) != 0:
         return 'CG 미수렴 (σ UNRELIABLE) — 다시 돌아야 한다'
     v = s.get('sigma_e_eff_S_cm')
     if not isinstance(v, (int, float)) or isinstance(v, bool) or not v > 0:
@@ -385,6 +399,9 @@ def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu'
         'sigma_e_eff_S_cm': sig, 'vox_um': vox, 'n_dof': n_dof,
         'n_floating_dropped': 7, 'cg_resid': 1e-9,
         'cg_info': cg_info,
+        #  ★ 2026-08-25 (M-R3-04) — 현행 payload 는 `unconverged` 를 항상 싣는다.
+        #    검사기가 그것을 요구하므로 픽스처도 실제 payload 를 따른다.
+        'unconverged': bool(cg_info),
         'manifest': {'schema_version': 2, 'status': 'complete',
                      'fibre_stamp': stamp, 'fibre_stamp_applied': applied,
                      'backend_last_solve': {'requested': 'gpu', 'used': backend,
@@ -607,6 +624,23 @@ def _selftest():
             status='complete', components={'electronic': {'status': 'complete'}})
         chk(check_arm(w('g6.json', _g6), 'point') is None,
             '8w) 음성 대조 — status=complete + electronic complete 는 통과')
+        #  ★★★ 8x~8z 2026-08-25 (M-R3-04, Codex 재리뷰) — **전자 수렴 full-chain**.
+        #    Codex 가 `cg_info=0 · unconverged=False · residual=NaN` 으로
+        #    producer→check_arm→final seal 전 구간을 통과시켰다.  payload 의 finite 벨트가
+        #    NaN 을 null 로 바꾸므로 리더는 `None` 을 본다 — 그것을 통과시키면 안 된다.
+        for _lbl, _rs, _blk in (('None', None, True), ('NaN', float('nan'), True),
+                                ('1e100', 1e100, True), ('음수', -1e-9, True),
+                                ('2e-6(문턱초과)', 2e-6, True),
+                                ('1e-9', 1e-9, False), ('1e-6(문턱)', 1e-6, False)):
+            _gz = _mk(0.0051, 'point')
+            if _rs is None:
+                _gz['metrics']['step3'].pop('cg_resid')
+            else:
+                _gz['metrics']['step3']['cg_resid'] = _rs
+            _r8 = check_arm(w(f'gz_{_lbl}.json', _gz), 'point')
+            chk((_r8 is not None) == _blk,
+                f'8x[{_lbl}] 전자 residual — {"거부" if _blk else "통과"} 기대, '
+                f'실제 {"거부" if _r8 else "통과"}')
     print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 
