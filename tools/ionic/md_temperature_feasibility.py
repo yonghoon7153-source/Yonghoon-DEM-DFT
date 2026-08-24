@@ -36,17 +36,25 @@ SYS = {
         "Ea": 0.197, "Ea_err": 0.032, "D600": 1.041e-5 / 1.0,   # 아래 note 참조
         "src": "db/properties/b2o3_md_arrhenius.json (3-seed x 3-T) · "
                "D600 은 b2o3 와 같은 프로토콜의 modelc 값 사용",
-        "note": "⚠ li_transport.json 헤드라인은 Ea 0.2235(단일시드 계열). 멀티시드 0.197±0.032 를 쓴다.",
+        "note": "⚠ li_transport.json 헤드라인은 Ea 0.2235(단일시드 계열). 멀티시드 0.197±0.032 를 쓴다. "
+                "⚠⚠ 2026-08-24 — modelc 도 **102 meV 굽는다**(b2o3 145 meV 와 같은 방향). "
+                "b2o3 처럼 구간값으로 바꿔야 하는데 modelc 600 K 가 아직 단일시드라 "
+                "시드별 구간적합을 못 한다. gabia 3시드 런이 끝나면 이 앵커도 갱신할 것.",
     },
     "LPSOCl (+O)": {
         "Ea": 0.287, "Ea_err": 0.024, "D600": 6.2705e-6,
         "src": "db/properties/lpsocl_md_arrhenius.json (4-seed x 3-T, D_600_mean)",
         "note": None,
     },
+    # ⛔ 2026-08-24 — 옛 앵커 Ea 0.199 ± 0.034 (600–1000 K 전구간 단일적합) 는 철회됐다.
+    #   800 K 위에서 굽는다 (600→800 0.222 / 800→1000 0.077, 145 meV). 이 표는 **저온**
+    #   MD 소요시간을 예측하므로 저온 구간값을 쓴다 — 평균낸 0.199 는 저온을 실제보다
+    #   쉽게(짧게) 보이게 한다. 오차막대도 0.034 → 0.061 로 커진다(시드별 적합).
     "B2O3-doped": {
-        "Ea": 0.199, "Ea_err": 0.034, "D600": 1.041e-5,
-        "src": "db/properties/b2o3_md_arrhenius.json (3-seed x 3-T reseed, D_600_mean)",
-        "note": None,
+        "Ea": 0.2241, "Ea_err": 0.0606, "D600": 1.041e-5,
+        "src": "db/properties/b2o3_md_arrhenius.json segment_extrapolation_2026_08_24 "
+               "(600→800 K 구간, 3시드 각각 적합, D_600_mean)",
+        "note": "⛔ 전구간 단일 Ea 는 이 계에 없다. 800→1000 은 0.077 eV 로 갈린다.",
     },
 }
 T_REF = 600.0

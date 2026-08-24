@@ -38,8 +38,14 @@ SYS = {
                           "src": "b2o3_md_arrhenius.json 3-seed x 3-T"},
     "LPSOCl1.6":         {"Ea": 0.287, "D600": 6.2705e-6,
                           "src": "lpsocl_md_arrhenius.json 4-seed x 3-T"},
-    "B2O3@LPSCl1.6":     {"Ea": 0.199, "D600": 1.041e-5,
-                          "src": "b2o3_md_arrhenius.json 3-seed reseed"},
+    # ⛔ 2026-08-24 — Ea 0.199 (전구간 600–1000 K 단일적합) 는 철회됐다. 아레니우스가
+    #   800 K 위에서 굽어(600→800 0.222 / 800→1000 0.077) 하나의 직선이 성립하지 않는다.
+    #   이 도구는 **저온(300–500 K) 외삽**에 쓰므로 저온 구간값을 써야 한다. 굽은 곡선을
+    #   평균낸 0.199 를 쓰면 저온을 실제보다 **쉽게** 본다(홉이 더 많이 일어난다고 센다).
+    #   0.2241 = 3시드 구간적합 평균 (±0.0606). 근거: b2o3_md_arrhenius.json
+    #   segment_extrapolation_2026_08_24 · kb/results/b2o3_arrhenius_curvature_2026_08_23.md
+    "B2O3@LPSCl1.6":     {"Ea": 0.2241, "D600": 1.041e-5,
+                          "src": "b2o3_md_arrhenius.json 구간적합 600→800 (3시드, ±0.061)"},
 }
 T_REF = 600.0
 TEMPS = [1000, 900, 800, 700, 600, 500, 400, 300]
