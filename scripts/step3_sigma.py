@@ -474,17 +474,31 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     # with distance-aware g.  A layer-band coupled a column through TWO layers whenever the band
     # edge crossed a voxel centre (probe: plate-voxel count 54→278 on a +0.1µm shift, σ ×2) —
     # per-column contact makes the plate set the physical crown patch and σ vary smoothly.
-    any_c = cond.any(2)
-    k_first = np.argmax(cond, axis=2)                      # column's lowest conductive voxel
-    k_last = nz - 1 - np.argmax(cond[:, :, ::-1], axis=2)  # column's highest conductive voxel
-    bot_m = any_c & (zc[k_first] - z_b <= band_bot)
+    #  ★★★ 2026-08-25 (CDXR3-6, Codex 흡수 리뷰) — **표면은 도체가 아니라 고체가 정한다.**
+    #    옛 판은 `cond`(= σ > 0) 로 표면 복셀을 골랐다.  그러면 **절연 고체가 표면에 있어도
+    #    건너뛰고 그 아래 도체를 플레이트에 직접 붙인다** = 플레이트가 절연체를 관통한다.
+    #    실측 재현 (vox 0.15, 기둥 [AM,AM,AM,PTFE]): 표면 PTFE 인 기둥의 σ_eff 가
+    #    **위가 공극인 기둥과 완전히 같았다** (0.01) — PTFE 가 없는 것과 구분되지 않았다.
+    #    exact-zero PTFE 규약(CDXR2-6)이 이 결함을 **노출**시켰지만 결함 자체는 그 전부터
+    #    있었다 — 전자 솔브에서 **SE(sid 6)도 σ=0 인 절연 고체**이기 때문이다.
+    #    ⇒ 각 기둥에서 **가장 바깥 점유 고체**(sid != 0)를 먼저 정하고, 그것이 그 수송에서
+    #      **도체일 때만** 결합한다.  공극 갭은 그대로다 (band 가 담당) — 절연 **고체**를
+    #      통과해 더 깊은 도체를 찾는 것만 막는다.
+    occ = sid != 0
+    any_c = occ.any(2)
+    k_first = np.argmax(occ, axis=2)                       # column's lowest OCCUPIED voxel
+    k_last = nz - 1 - np.argmax(occ[:, :, ::-1], axis=2)   # column's highest OCCUPIED voxel
+    _ii, _jj = np.meshgrid(np.arange(nx), np.arange(ny), indexing='ij')
+    _surf_bot_cond = cond[_ii, _jj, k_first]               # 노출면이 이 수송의 도체인가
+    _surf_top_cond = cond[_ii, _jj, k_last]
+    bot_m = any_c & _surf_bot_cond & (zc[k_first] - z_b <= band_bot)
     # ANALYTIC contact mask (v3, optional): [nx,ny] bool from EXACT sphere/point z (payload computes
     # it — gap ≤ 0.1µm bare / ≤ 0.3µm film-wetted).  Voxel-centre bands cannot resolve below
     # ~half-voxel; the analytic mask removes that blur — the SELECTION is exact, only the coupling
     # conductance stays voxel-scale.
     if bot_allowed is not None:
         bot_m &= np.asarray(bot_allowed, bool)
-    top_m = any_c & (z_plate - zc[k_last] <= band)
+    top_m = any_c & _surf_top_cond & (z_plate - zc[k_last] <= band)
     if not bot_m.any() or not top_m.any():
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False,
@@ -1208,12 +1222,18 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
     z_plate = min(float(z_top_um) if z_top_um is not None else nz * vox, nz * vox)
     band = vox + 0.10
     zc = (np.arange(nz) + 0.5) * vox
-    any_e = cond_e.any(2)
-    k_first_e = np.argmax(cond_e, axis=2)
-    bot_e = any_e & (zc[k_first_e] - z_b <= band)            # 집전체 접점 (전자망만)
-    any_i = cond_i.any(2)
-    k_last_i = nz - 1 - np.argmax(cond_i[:, :, ::-1], axis=2)
-    top_i = any_i & (z_plate - zc[k_last_i] <= band)         # 분리막 접점 (이온망만)
+    #  ★★ 2026-08-25 (CDXR3-6) — **반응 솔버도 같은 결함이었다.**  `solve_sigma_z` 와
+    #    똑같이 `cond_*` 로 표면을 골라 절연 고체를 관통했다.  같은 규약으로 맞춘다:
+    #    가장 바깥 **점유 고체**를 먼저 정하고, 그것이 그 망의 도체일 때만 결합한다.
+    _occ_r = sid != 0
+    _any_o = _occ_r.any(2)
+    _kf = np.argmax(_occ_r, axis=2)
+    _kl = nz - 1 - np.argmax(_occ_r[:, :, ::-1], axis=2)
+    _iir, _jjr = np.meshgrid(np.arange(nx), np.arange(ny), indexing='ij')
+    any_e, k_first_e = _any_o, _kf
+    bot_e = _any_o & cond_e[_iir, _jjr, _kf] & (zc[_kf] - z_b <= band)   # 집전체 접점 (전자망만)
+    any_i, k_last_i = _any_o, _kl
+    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (z_plate - zc[_kl] <= band)  # 분리막 접점 (이온망만)
     if not bot_e.any() or not top_i.any():
         return {**out0, 'reason': f'no_plate_contact(bot_e={int(bot_e.sum())},top_i={int(top_i.sum())})'}
     # anchored-component filter: 결합 그래프(전자·이온·BV 인접 = 모두 6-이웃 face)를 union 마스크
@@ -1597,6 +1617,42 @@ def _selftest():
     _ed = bool((_sD1 == _sD2).all())
     ok &= _ed
     print(f"sdcp-yield-default: 기본값은 옛 거동과 셀 단위 동일  {'OK' if _ed else 'FAIL'}")
+    #  ── ★★★ CDXR3-6 (2026-08-25) — **플레이트가 절연 고체를 관통하지 않는다** ──────────
+    #    옛 판은 `cond`(σ>0) 로 표면 복셀을 골라, 표면에 절연 **고체**가 있어도 건너뛰고
+    #    그 아래 도체를 플레이트에 직접 붙였다.  실측 재현: 표면 PTFE 기둥의 σ_eff 가
+    #    **위가 공극인 기둥과 완전히 같았다** — 절연체가 없는 것과 구분되지 않았다.
+    #    ⇒ 가장 바깥 **점유 고체**를 먼저 정하고 그것이 도체일 때만 결합한다.
+    #    ⚠ 공극 갭은 그대로다 (band 담당).  절연 **고체** 통과만 막는다.
+    _pv, _psig = 0.15, np.zeros(9)
+    _psig[1] = 0.010
+    def _pcol(top_sid):
+        _a = np.zeros((3, 3, 4), np.int8)
+        _a[:, :, 0:3] = 1
+        if top_sid:
+            _a[:, :, 3] = top_sid
+        return solve_sigma_z(_a, _psig, _pv, z_top_um=4 * _pv, z_bot_um=0.0)['sigma_eff']
+    _blk_ptfe = _pcol(7)            # 표면 PTFE (절연 고체)
+    _blk_se = _pcol(6)              # 표면 SE — 전자 솔브에서 σ=0 = 역시 절연 고체
+    _open_pore = _pcol(0)           # 위가 공극 (양성 대조 — 막히면 안 된다)
+    _all_cond = _pcol(1)            # 전부 도체 (양성 대조)
+    _p1 = _blk_ptfe == 0.0
+    ok &= _p1
+    print(f"plate-blocker(PTFE): 표면 절연 고체는 플레이트 접촉을 **막는다** "
+          f"(σ={_blk_ptfe:g})  {'OK' if _p1 else 'FAIL'}")
+    _p2 = _blk_se == 0.0
+    ok &= _p2
+    print(f"plate-blocker(SE): 전자 솔브에서 SE 도 절연 고체다 (σ={_blk_se:g})  "
+          f"{'OK' if _p2 else 'FAIL'}")
+    _p3 = _open_pore > 0 and abs(_open_pore - _all_cond) < 1e-12
+    ok &= _p3
+    print(f"plate-poregap: 공극 갭은 **막지 않는다** (양성 대조: {_open_pore:g} == "
+          f"{_all_cond:g})  {'OK' if _p3 else 'FAIL'}")
+    #  ★ 단조성 — 절연 표면을 씌우면 σ 는 **오를 수 없다** (Rayleigh).  옛 판은 이것이
+    #    깨져 있었다 (씌워도 같았다 = 절연체가 무시됐다).
+    _p4 = _blk_ptfe <= _all_cond and _blk_se <= _all_cond
+    ok &= _p4
+    print(f"plate-monotone: 절연 표면이 σ 를 올리지 않는다  {'OK' if _p4 else 'FAIL'}")
+
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
 
