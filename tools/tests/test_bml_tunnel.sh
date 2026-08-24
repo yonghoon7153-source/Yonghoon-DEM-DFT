@@ -203,6 +203,22 @@ else
 fi
 
 echo
+echo "이름이 안 잡힐 때 — 터널이 닫힌 것과 이 기계의 DNS 는 다르다"
+# 실제 화면: "터널은 살아 있는데, 여기서는 확인이 안 됐습니다" 바로 밑에
+# "터널이 이미 닫혔거나" 가 찍혔다.  두 줄이 서로 부딪히고, 사람은 멀쩡한
+# 터널을 닫고 처음부터 다시 한다.  살아 있는 줄 알면 앞쪽은 배제된다.
+check "살아 있으면 '닫혔거나' 를 말하지 않는다" \
+  "$(block_layer_meaning dns 1 | grep -c '이미 닫혔')" "0"
+check "그때는 이 기계의 DNS 라고 짚는다" \
+  "$(block_layer_meaning dns 1 | grep -c 'DNS 가 그 도메인을 거르는')" "1"
+# 반대로 살아 있는지 모르면 두 가능성을 다 남긴다 (§0.4).
+check "모르면 두 가능성을 다 남긴다" \
+  "$(block_layer_meaning dns | grep -c '이미 닫혔거나')" "1"
+# tls·tcp 는 터널과 무관하다는 판정이라 원래대로다.
+check "tls 는 다른 망에서는 열린다고 단정한다" \
+  "$(block_layer_meaning tls | grep -c '다른 망에서는 열립니다')" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0
