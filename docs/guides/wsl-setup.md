@@ -406,13 +406,22 @@ localhostForwarding=true
   `binfmt_misc` 등록을 정리하면서 **WSL 이 `.exe` 를 실행하려고 걸어 둔 등록
   (`WSLInterop`)까지 지웁니다.** 오류 문구에는 systemd 도 WSL 도 interop 도
   나오지 않아서 원인을 찾을 수 없습니다. `bml doctor` 가 짚어 주고, 고치는
-  것은 두 줄입니다 (한 번만 — `/usr/lib/binfmt.d/` 에 두면 systemd 가 다음
-  부팅부터 다시 걸어 줍니다):
+  것은 아래와 같습니다. **`/usr/lib/binfmt.d/` 에 파일만 두면 아무 일도 일어나지
+  않습니다** — systemd 는 WSL 안에서 그 서비스를 건너뜁니다
+  (`ConditionVirtualization=!wsl`). 지금 살리는 길은 커널에 직접 쓰는 것입니다:
 
 ```bash
+sudo sh -c 'echo ":WSLInterop:M::MZ::/init:PF" > /proc/sys/fs/binfmt_misc/register'
+ipconfig.exe | head -3      # 나오면 된 것입니다 (글자가 깨져 보여도 정상 — CP949)
+```
+
+  다음 부팅에도 살아남게 하려면 그 조건을 비워서 서비스가 돌게 합니다:
+
+```bash
+sudo mkdir -p /etc/systemd/system/systemd-binfmt.service.d
+sudo sh -c 'printf "[Unit]\nConditionVirtualization=\n" > /etc/systemd/system/systemd-binfmt.service.d/wsl.conf'
 sudo sh -c 'echo :WSLInterop:M::MZ::/init:PF > /usr/lib/binfmt.d/WSLInterop.conf'
-sudo systemctl restart systemd-binfmt
-ipconfig.exe | head -3      # 나오면 된 것입니다
+sudo systemctl daemon-reload && sudo systemctl restart systemd-binfmt
 ```
 
   이게 죽어 있으면 `bml mirrored` 도, `bml status` 의 LAN 주소 읽기도, WSL 안

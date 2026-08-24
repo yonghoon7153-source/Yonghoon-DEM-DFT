@@ -1128,3 +1128,35 @@ WSL 안에서 부르는 `wsl.exe --shutdown` 까지 전부 여기에 걸려 있�
 **이 항목은 실측으로 확인하지 못했다**: 이 컨테이너에는 `binfmt_misc` 가 마운트돼
 있지 않아 판정 함수만 픽스처로 고정했고, 고치는 두 줄은 사용자 기계에서 아직
 안 돌려 봤다. 리뷰 요청서에 그대로 적는다.
+
+## [2026-08-24] fix | binfmt.d 에 파일만 두는 것은 WSL 에서 아무 일도 안 한다
+앞 항목의 안내가 틀렸다. 실측:
+
+    systemd-binfmt.service - Set Up Additional Binary Formats was skipped
+    because of an unmet condition check (ConditionVirtualization=!wsl)
+
+**systemd 는 WSL 안에서 `systemd-binfmt` 를 아예 건너뛴다.** 그러니
+`/usr/lib/binfmt.d/WSLInterop.conf` 를 만들어도 적용해 줄 사람이 없다. 앞
+항목에서 "systemd 가 지웠다" 고 쓴 것도 틀렸다 — 그 기계의 `binfmt_misc` 는
+멀쩡히 마운트돼 있었고 목록만 비어 있었다. 지운 것이 아니라 **아무도 안 건
+것**이다. 증상(모든 `.exe` 가 Exec format error)이 같아서 원인을 잘못 짚었다.
+
+두 갈래로 나눴다.
+
+- `interop_repair_now` — 커널에 직접 등록. systemd 를 안 거친다.
+  **실측 확인**: `sudo sh -c 'echo ":WSLInterop:M::MZ::/init:PF" >
+  /proc/sys/fs/binfmt_misc/register'` 뒤에 `ipconfig.exe` 가 출력을 냈다.
+  커널 상태라 WSL 을 껐다 켜면 사라진다.
+- `interop_repair_persist` — `ConditionVirtualization=` 를 **빈 값**으로 두는
+  드롭인. 빈 값은 조건 목록을 초기화하므로 WSL 안에서도 서비스가 돌고, 그때
+  `/usr/lib/binfmt.d/` 의 파일이 적용된다. **실측 확인**: 드롭인 후
+  `systemctl is-active systemd-binfmt` 가 `active`. 재부팅 뒤에도 남는지는
+  아직 확인 못 했다.
+
+곁들여 확인된 것: `ipconfig.exe` 출력이 UTF-8 터미널에서 `Windows IP ????` 로
+깨져 보였다. **CP949 가 맞다** — `windows_ipconfig`/`windows_ipv4_by_adapter` 가
+`LC_ALL=C` 로 바이트만 보는 이유가 이것이고, 이제 실물로 확인됐다.
+
+그리고 `interop_repair_persist` 를 heredoc 으로 옮겼다. 처음에 bash 문자열로
+짰더니 `printf "...\n"` 의 역슬래시가 두 개로 새서, 붙여넣으면 유닛 파일에
+글자 그대로 `\n` 이 들어갔다. 테스트가 그것을 본다. 159 → 164건.

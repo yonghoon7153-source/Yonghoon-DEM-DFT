@@ -560,10 +560,19 @@ check "등록만 사라졌으면 wiped"   "$(interop_state 'status register' '')
 check "꺼져 있으면 disabled"      "$(interop_state 'status register WSLInterop' 'disabled')" "disabled"
 # binfmt_misc 가 안 보이면 단정하지 않는다 (§0.4) — 다른 이유일 수 있다.
 check "목록이 없으면 unknown"     "$(interop_state '' '')"                                  "unknown"
-# 고치는 줄은 /usr/lib/binfmt.d 에 둔다.  거기 두어야 systemd 가 다음 부팅마다
-# 다시 걸어 준다 — 한 번만 하면 되는 이유가 그것이다.
-check "부팅마다 다시 걸리는 자리" "$(interop_repair_commands | grep -c '/usr/lib/binfmt.d/')" "1"
-check "등록 줄은 WSL 의 것과 같다" "$(interop_repair_commands | grep -c ':WSLInterop:M::MZ::/init:PF')" "1"
+# 처음엔 /usr/lib/binfmt.d 에 파일만 두라고 안내했다가 실측에서 틀렸다:
+#   systemd-binfmt.service ... skipped (ConditionVirtualization=!wsl)
+# systemd 는 WSL 안에서 그 서비스를 건너뛴다.  그래서 파일을 아무리 잘 써 놔도
+# 적용해 줄 사람이 없다.  지금 살리는 길은 커널에 직접 쓰는 것뿐이다.
+check "지금 살리기는 커널에 직접"   "$(interop_repair_now | grep -c '/proc/sys/fs/binfmt_misc/register')" "1"
+check "그것도 한 줄이다"            "$(interop_repair_now | wc -l | tr -d ' ')" "1"
+check "등록 줄은 WSL 의 것과 같다"  "$(interop_repair_now | grep -c ':WSLInterop:M::MZ::/init:PF')" "1"
+# 다음 부팅에도 살리려면 그 조건을 비워야 서비스가 돈다.
+check "조건을 비우는 드롭인"        "$(interop_repair_persist | grep -c 'ConditionVirtualization=')" "1"
+check "드롭인 자리"                 "$(interop_repair_persist | grep -c '/etc/systemd/system/systemd-binfmt.service.d')" "2"
+check "그때 쓰일 파일도 만든다"      "$(interop_repair_persist | grep -c '/usr/lib/binfmt.d/WSLInterop.conf')" "1"
+# printf 안의 \n 이 두 개로 새면 파일에 글자 그대로 \n 이 들어가고 유닛이 안 읽힌다.
+check "줄바꿈 escape 가 안 샌다"    "$(interop_repair_persist | grep -c '\\\\n')" "0"
 
 check "받은 것이 있으면 그대로"  "$(windows_ipconfig 'Wi-Fi:
    IPv4 주소 . . . : 10.1.2.3' | tail -1 | tr -d ' ')" "IPv4주소...:10.1.2.3"
