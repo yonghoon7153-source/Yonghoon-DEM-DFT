@@ -90,6 +90,10 @@ def _read(path):
     return {'file': os.path.basename(path),
             'sigma_e': s.get('sigma_e_eff_S_cm'),
             'sigma_ion': s.get('sigma_ion_eff_S_cm'),
+            #  ★ 2026-08-24 (CDXR2-4) — 이온 수렴 봉인.  `None` = 그 세대 payload 가
+            #    아예 안 실었다는 뜻이고, 아래 `require_ionic` 게이트가 fail-closed 로 잡는다.
+            'ion_cg_info': s.get('ion_cg_info'),
+            'ion_unconverged': s.get('ion_unconverged'),
             'n_dof': s.get('n_dof'),
             'cg_info': s.get('cg_info'),
             'cg_resid': s.get('cg_resid'),
@@ -355,6 +359,26 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
                         reason=f'σ_ion 이 없는/비정상인 팔 {len(_no_i)}개 ({_no_i[0]} …) — '
                                f'도핑 판정은 이온축이 결론이다.  `--no-ion` 산출물로 판정 불가 '
                                f'(CDXIJ-10 ④)')
+        #  ★★ 2026-08-24 (CDXR2-4) — **σ_ion 이 있다는 것과 수렴했다는 것은 다르다.**
+        #    옛 게이트는 양의 σ_ion 존재만 봤고, payload 는 이온 미수렴도 `complete` 로
+        #    적었다 ⇒ 이온축 결론이 **false-green** 이 될 수 있었다.  전자축은 이미
+        #    fail-closed 다 (`no_convergence_info`) — 이온을 같은 규약으로 맞춘다.
+        #    ⚠ 봉인 이전 세대 payload 는 필드가 **없어** HOLD 가 된다.  그것이 옳다 —
+        #      수렴했는지 모르는 값으로 이온축 결론을 내지 않는다.  σ_e 만 볼 때는
+        #      `--require-ionic` 을 켜지 않으면 되고, 이온축이 결론이면 재실행해야 한다.
+        _ion_bad = [r['file'] for k in arms for r in arms[k] if r.get('ion_unconverged')]
+        _ion_blind = [r['file'] for k in arms for r in arms[k]
+                      if r.get('ion_unconverged') is None and r.get('ion_cg_info') is None]
+        if _ion_bad:
+            return dict(out, decision='HOLD', ion_unconverged_arms=len(_ion_bad),
+                        reason=f'이온 솔브가 **미수렴**인 팔 {len(_ion_bad)}개 ({_ion_bad[0]} …) — '
+                               f'prereg §5-1 대로 숫자를 내지 않는다')
+        if _ion_blind:
+            return dict(out, decision='HOLD', ion_no_convergence_info=len(_ion_blind),
+                        reason=f'이온 수렴 정보가 **없는** 팔 {len(_ion_blind)}개 '
+                               f'({_ion_blind[0]} …) — 봉인 이전 세대 payload 다 (CDXR2-4).  '
+                               f'이온축이 결론이면 재실행할 것; σ_e 만 보려면 '
+                               f'`--require-ionic` 을 끄면 된다')
 
     st = {k: _stats([r['sigma_e'] for r in arms[k] if r['sigma_e']]) for k in ('SBE', 'DBE')}
     out['arms'] = st
@@ -750,6 +774,29 @@ def _selftest():
     _v25e = verdict(mk(base, [v * 1.12 for v in base]), require_ionic=True)
     chk(f'㉕e ★ --require-ionic 인데 σ_ion 이 없으면 HOLD ({_v25e["decision"]})',
         _v25e['decision'] == 'HOLD' and 'σ_ion' in (_v25e.get('reason') or ''))
+    #  ★★ ㉛ 2026-08-24 (CDXR2-4) — **이온 수렴 봉인**.  σ_ion 이 *있다*는 것과
+    #    *수렴했다*는 것은 다르다.  payload 가 이온 미수렴도 `complete` 로 적었고
+    #    (전자 경로만 2026-08-20 에 고쳐졌다 = 같은 결함의 3회차) 게이트는 양의 σ_ion
+    #    존재만 봤다 ⇒ 이온축 결론이 false-green 이 될 수 있었다.
+    _ig = dict(sigma_ion=5.6e-4, ion_cg_info=0, ion_unconverged=False)     # 봉인된 정상 팔
+    _v31a = verdict(mk(base, [v * 1.12 for v in base], **_ig), require_ionic=True)
+    chk(f'㉛a 봉인된 수렴 팔은 --require-ionic 을 통과한다 ({_v31a["decision"]})',
+        _v31a['decision'] == 'h0')
+    _v31b = verdict(mk(base, [v * 1.12 for v in base],
+                       **dict(_ig, ion_cg_info=30000, ion_unconverged=True)),
+                    require_ionic=True)
+    chk(f'㉛b ★ σ_ion 은 있는데 **이온이 미수렴**이면 HOLD (옛 게이트는 통과시켰다): '
+        f'{_v31b["decision"]}',
+        _v31b['decision'] == 'HOLD' and _v31b.get('ion_unconverged_arms') == 16)
+    _v31c = verdict(mk(base, [v * 1.12 for v in base], sigma_ion=5.6e-4), require_ionic=True)
+    chk(f'㉛c ★ 봉인 이전 세대(이온 수렴 정보 없음)는 HOLD — fail-open 금지: '
+        f'{_v31c["decision"]}',
+        _v31c['decision'] == 'HOLD' and _v31c.get('ion_no_convergence_info') == 16)
+    #  ★ 음성 대조 — 이온축이 결론이 아니면(플래그 없음) 이온 미수렴이 σ_e 판정을 막지 않는다.
+    _v31d = verdict(mk(base, [v * 1.12 for v in base],
+                       **dict(_ig, ion_cg_info=30000, ion_unconverged=True)))
+    chk(f'㉛d 음성 대조 — --require-ionic 없이는 이온 미수렴이 σ_e 판정을 막지 않는다 '
+        f'({_v31d["decision"]})', _v31d['decision'] == 'h0')
 
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')

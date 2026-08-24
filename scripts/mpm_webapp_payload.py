@@ -1525,8 +1525,20 @@ def main():
                         'ionic': _phi_prof(_res3i)}.items() if v}
                     step3['phi_profile']['note'] = ('ΔV=1V 전도 솔브 층별 전도-복셀 평균 φ '
                                                     '(바닥판 φ=1, 꼭대기 φ=0; Oh2025 Fig4e 문법)')
-                    _s3mark('ionic', 'complete')
+                    #  ★★ 2026-08-24 (CDXR2-4) — **이온도 미수렴을 `complete` 로 적지 않는다.**
+                    #    2026-08-20 감사 γ 가 **전자 경로만** 고쳤고(:1198) 이온 쌍둥이는 그대로
+                    #    무조건 'complete' 였다 = 같은 결함의 3회차 (웹앱↔킷 쌍둥이 결함과 같은
+                    #    뿌리 — CLAUDE.md frame[5] ⚠).  게다가 이쪽은 전자와 달리 `cg_info`·
+                    #    `unconverged` 를 **payload 에 싣지도 않아** 판정기가 볼 것 자체가 없었다
+                    #    (`--require-ionic` 은 양의 σ_ion 존재만 본다) = fail-open.
+                    _ion_unconv = bool(_res3i.get('unconverged', False))
+                    _s3mark('ionic', 'unconverged' if _ion_unconv else 'complete',
+                            (f"cg_info={_res3i.get('cg_info')} resid={_res3i.get('resid')}"
+                             if _ion_unconv else ''))
                     step3['sigma_ion_eff_S_cm'] = float(_res3i['sigma_eff'])
+                    #  ★ 판정기가 **기계로** 읽는 이온 수렴 봉인 (전자의 cg_info/unconverged 와 대칭)
+                    step3['ion_cg_info'] = int(_res3i.get('cg_info', 0) or 0)
+                    step3['ion_unconverged'] = _ion_unconv
                     step3['ion_dissipation_share'] = {_s3.SID_NAME.get(k, str(k)): round(v, 4)
                                                       for k, v in _sharei.items()}
                     step3['sigma_ion_table_S_cm'] = {'SE': a.sigma_ion_se, 'SDCP': a.sigma_ion_sdcp}
