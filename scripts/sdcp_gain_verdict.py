@@ -30,7 +30,13 @@ import sys
 H0_MIN_RATIO = 1.05          # h0 (이득은 물리)
 H1_RATIO = 1.015             # h1 (SDCP 부피 인공물)
 UNDECIDED_LO, UNDECIDED_HI = 1.025, 1.05
-SE_MAX_PCT = 1.17            # 이보다 크면 판정 보류하고 origin 을 늘린다
+#  ⚠⚠ 2026-08-24 (CDXR2-3) — 이 문턱과 그 짝 `se_ratio_rel_pct` 는 **비의 상대 RSE(%)**
+#    다.  절대 percentage-point 가 아니다 (`SE_abs(%p) = R · SE_rel(%)`).  prereg 본문이
+#    유도는 상대 % 로 하고(§ '팔 SE 0.58 % · 비 SE 0.82 %') 문턱만 `%p` 로 적어 두어
+#    라벨이 어긋나 있었다.  **게이트는 상대끼리 비교라 처음부터 자기일관**했고 다섯 기록
+#    전부 절대 %p 로 다시 읽어도 통과한다 ⇒ 재판정 없음.  이름만 바로잡는다.
+SE_MAX_REL_PCT = 1.17        # 비의 **상대** RSE 문턱 [%].  넘으면 판정 보류하고 origin 을 늘린다
+SE_MAX_PCT = SE_MAX_REL_PCT  # ⚠ deprecated 별칭 — 옛 호출부/픽스처 호환용.  새 코드는 위를 쓸 것
 PREREG = 'docs/reviews/sdcp_gain_prereg_v2_20260816.md'
 
 #  ★★ 2026-08-19 (코팅·도핑 코드리뷰 A5) — 세대(generation) 인자.
@@ -174,7 +180,8 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     """
     out = {'prereg': PREREG, 'thresholds': {
         'h0_min_ratio': H0_MIN_RATIO, 'h1_ratio': H1_RATIO,
-        'undecided': [UNDECIDED_LO, UNDECIDED_HI], 'se_max_pct': SE_MAX_PCT}}
+        'undecided': [UNDECIDED_LO, UNDECIDED_HI],
+                  'se_max_rel_pct': SE_MAX_REL_PCT, 'se_max_pct': SE_MAX_REL_PCT}}
     # ① 미수렴 — 하나라도 있으면 보류.  ★ **fail-closed**: 수렴 정보가 **없어도** 보류한다.
     #   실사고 2026-08-16: `cg_info` 를 안 싣는 payload 를 None 으로 읽고 통과시켰다 =
     #   fail-open.  "확인 못 했다" 와 "확인했고 괜찮다" 는 다르다.
@@ -360,9 +367,14 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     # ② 표준오차 게이트
     if st['SBE']['se'] is None:
         return dict(out, decision='HOLD', reason='팔이 1 개 — 표준오차를 못 낸다')
-    se_ratio_pct = 100.0 * math.hypot(st['SBE']['se'] / st['SBE']['mean'],
-                                      st['DBE']['se'] / st['DBE']['mean'])
-    out['se_ratio_pct'] = round(se_ratio_pct, 4)
+    se_ratio_rel_pct = 100.0 * math.hypot(st['SBE']['se'] / st['SBE']['mean'],
+                                          st['DBE']['se'] / st['DBE']['mean'])
+    out['se_ratio_rel_pct'] = round(se_ratio_rel_pct, 4)
+    out['se_ratio_pct'] = out['se_ratio_rel_pct']       # ⚠ deprecated 별칭 (CDXR2-3)
+    #  ★ 절대 percentage-point 는 **파생**이다: SE_abs = R · SE_rel.  R > 1 이면 상대값을
+    #    그대로 %p 로 읽는 것이 불확도를 **과소**보고한다 (반보수적) — 그래서 따로 낸다.
+    #    ⚠ **게이트에는 쓰지 않는다**.  게이트 입력은 런 전에 커밋된 상대 % 그대로다.
+    out['se_ratio_abs_pp'] = round(ratio * se_ratio_rel_pct, 4)
     #  ── 보조 통계: **쌍대응** SE (심층 리뷰 ③④) ───────────────────────────────────────
     #    팔은 origin 으로 쌍이 맞고 두 침대가 강한 공통모드를 갖는다 (실측 r = +0.963).
     #    위 hypot 은 두 팔을 독립으로 보므로 비의 SE 를 **5.1 배 과대**평가한다 (보수 방향).
@@ -380,13 +392,16 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
         _m = sum(_pa) / len(_pa)
         _sd = math.sqrt(sum((v - _m) ** 2 for v in _pa) / (len(_pa) - 1))
         out['ratio_paired_mean'] = round(_m, 6)
-        out['se_ratio_paired_pct'] = round(100.0 * _sd / math.sqrt(len(_pa)) / _m, 4)
+        out['se_ratio_paired_rel_pct'] = round(100.0 * _sd / math.sqrt(len(_pa)) / _m, 4)
+        out['se_ratio_paired_pct'] = out['se_ratio_paired_rel_pct']   # ⚠ deprecated 별칭
+        out['se_ratio_paired_abs_pp'] = round(_m * 100.0 * _sd / math.sqrt(len(_pa)) / _m, 4)
         out['ratio_arms'] = [round(v, 6) for v in _pa]
         out['se_note'] = ('게이트는 prereg §4 의 hypot 을 쓴다 (보수적).  쌍별 SE 는 참고용 — '
                           '점예측 일치 서술에 쓰지 말 것')
-    if se_ratio_pct > SE_MAX_PCT:
+    if se_ratio_rel_pct > SE_MAX_REL_PCT:
         return dict(out, decision='HOLD',
-                    reason=f'비의 표준오차 {se_ratio_pct:.2f} %p > {SE_MAX_PCT} — '
+                    reason=f'비의 상대 표준오차 {se_ratio_rel_pct:.2f} % > {SE_MAX_REL_PCT} % '
+                           f'(절대 {out["se_ratio_abs_pp"]:.2f} %p) — '
                            f'prereg §5-2 (origin 16 으로 늘릴 것)')
     # ③④⑤ 본 판정
     if ratio >= H0_MIN_RATIO:
@@ -456,7 +471,28 @@ def _selftest():
     chk(f'⑧ ★ 수렴 정보 없는 팔은 HOLD (옛 판은 통과시켰다): {vb["decision"]}',
         vb['decision'] == 'HOLD' and 'no_convergence_info' in vb)
     chk('⑦ 문턱이 prereg 값과 같다 (코드가 사전등록이다)',
-        (H0_MIN_RATIO, H1_RATIO, SE_MAX_PCT) == (1.05, 1.015, 1.17))
+        (H0_MIN_RATIO, H1_RATIO, SE_MAX_REL_PCT) == (1.05, 1.015, 1.17)
+        and SE_MAX_PCT == SE_MAX_REL_PCT)
+    #  ★★ 2026-08-24 (CDXR2-3) — SE 단위.  게이트 입력은 **상대 RSE(%)** 여야 하고
+    #    절대 %p 는 파생일 뿐이다.  픽스처를 **판별 구간**에 둔다: 상대 1.12 % 는 문턱
+    #    1.17 을 통과하는데 절대 1.2096 %p 는 넘는다 ⇒ 누가 게이트 입력을 절대값으로
+    #    바꾸면 이 팔의 판정이 h0 → HOLD 로 **뒤집혀** 검사가 발화한다.
+    _ua = 0.0112
+    _ub = [1 - 3 * _ua, 1 - 2 * _ua, 1 - _ua, 1.0, 1.0, 1 + _ua, 1 + 2 * _ua, 1 + 3 * _ua]
+    _uv = verdict(mk(_ub, [v * 1.08 for v in _ub]))
+    chk(f'㉚a ★ 게이트는 **상대 %** 를 쓴다 — 상대 {_uv.get("se_ratio_rel_pct")} % < '
+        f'{SE_MAX_REL_PCT} 라 통과 (절대 {_uv.get("se_ratio_abs_pp")} %p 였다면 HOLD): '
+        f'{_uv["decision"]}',
+        _uv['decision'] == 'h0' and _uv['se_ratio_rel_pct'] < SE_MAX_REL_PCT
+        and _uv['se_ratio_abs_pp'] > SE_MAX_REL_PCT)
+    chk('㉚b ★ 절대 %p 는 파생 항등식 SE_abs = R · SE_rel 을 만족한다',
+        _uv['se_ratio_abs_pp'] == round(_uv['ratio'] * _uv['se_ratio_rel_pct'], 4))
+    chk('㉚c deprecated 별칭이 새 키와 같은 값이다 (옛 픽스처·비교기 호환)',
+        _uv['se_ratio_pct'] == _uv['se_ratio_rel_pct']
+        and _uv.get('se_ratio_paired_pct') == _uv.get('se_ratio_paired_rel_pct'))
+    chk('㉚d R < 1 이면 절대 %p 가 상대 % 보다 **작다** (CL-58 이온비가 유일한 보수 사례)',
+        (lambda _w: _w['se_ratio_abs_pp'] < _w['se_ratio_rel_pct'])(
+            verdict(mk(_ub, [v * 0.9927 for v in _ub]))))
     #  ★★ 2026-08-18 (리뷰 ① H5) — 고정-인자 게이트의 **회귀**.  프로덕션에서 `bridge_um`
     #    이 매니페스트에 없어 이 게이트가 한 번도 발화하지 않았는데, 옛 픽스처가 그 필드를
     #    아예 안 실어 selftest 도 그 사실을 못 봤다.  두 방향을 다 건다.
@@ -1090,11 +1126,16 @@ if __name__ == '__main__':
     print(f'\n══ 판정 (prereg §5) ══\n  결정: **{v["decision"]}**\n  근거: {v["reason"]}')
     if 'ratio' in v:
         print(f'  σ_e 비 = {v["ratio"]}   (h0 ≥ {H0_MIN_RATIO} · h1 = {H1_RATIO})')
-    if 'se_ratio_pct' in v:
-        print(f'  비의 표준오차 = {v["se_ratio_pct"]} %p (문턱 {SE_MAX_PCT}, 비대응 = 게이트 규약)')
-    if 'se_ratio_paired_pct' in v:
-        print(f'  쌍대응(origin-key join) 평균 = {v["ratio_paired_mean"]} · '
-              f'SE = {v["se_ratio_paired_pct"]} %p · n = {v.get("n_origin")}')
+    _rel = v.get('se_ratio_rel_pct', v.get('se_ratio_pct'))     # 옛 payload 호환
+    if _rel is not None:
+        _abs = v.get('se_ratio_abs_pp')
+        _abs_s = f' = 절대 {_abs} %p' if _abs is not None else ''
+        print(f'  비의 상대 표준오차 = {_rel} % (문턱 {SE_MAX_REL_PCT} %, 비대응 = 게이트 '
+              f'규약){_abs_s}')
+    _prel = v.get('se_ratio_paired_rel_pct', v.get('se_ratio_paired_pct'))
+    if _prel is not None:
+        print(f'  쌍대응(origin-key join) 평균 = {v.get("ratio_paired_mean")} · '
+              f'SE = {_prel} % · n = {v.get("n_origin")}')
     if a.out:
         json.dump({'rows': rows, 'verdict': v}, open(a.out, 'w'), ensure_ascii=False, indent=1)
         print(f'\n  → {a.out}')
