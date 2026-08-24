@@ -1450,6 +1450,28 @@ def _selftest():
     _vcr = [_f for _f in _ast38.parse(_self).body
             if isinstance(_f, _ast38.FunctionDef) and _f.name == '_validate_contract_raw'][0]
     _rets = _own_returns(_vcr)
+    #  ── ㊴ 2026-08-25 (Codex 재리뷰 조건 4) — **새 규약 축 둘** ────────────────────────
+    #    `periodic_xy` (seam 면이 회로에 드는가) 와 `plate_rule` (CDXR3-6 이 바꾼 결합 규약,
+    #    σ_e **절대값**이 달라진다) 이 `PROTOCOL_FIELDS` 에 들어갔다.  판정기는 해시로만
+    #    보므로 축이 갈리면 자동으로 잡히지만, **그 성질 자체를 회귀로 못 박는다**.
+    _p39 = _p36
+    _man39 = {k: 1.0 for k in _p39.PROTOCOL_FIELDS}
+    _base39 = _p39.physics_protocol_id(_man39)
+    for _ax, _alt in (('periodic_xy', True), ('plate_rule', 'p1-cond-first')):
+        chk(f'㊴a ★★ `{_ax}` 이 규약 해시를 가른다 (섞이면 다른 실험이다)',
+            _p39.physics_protocol_id(dict(_man39, **{_ax: _alt})) != _base39)
+    chk('㊴b ★ 두 축이 PROTOCOL_FIELDS 에 실제로 있다',
+        {'periodic_xy', 'plate_rule'} <= set(_p39.PROTOCOL_FIELDS))
+    #  ★ plate_rule 은 **솔버가 선언한 값**이어야 한다 (payload 가 지어내면 안 된다)
+    _sp39 = _iu36.spec_from_file_location(
+        's39', _os36.path.join(_os36.path.dirname(_os36.path.abspath(__file__)),
+                               'step3_sigma.py'))
+    _s39 = _iu36.module_from_spec(_sp39)
+    _sp39.loader.exec_module(_s39)
+    chk(f'㊴c ★★ `PLATE_RULE_VERSION` 이 솔버에 있고 현행 규약을 가리킨다 '
+        f'({getattr(_s39, "PLATE_RULE_VERSION", None)!r})',
+        str(getattr(_s39, 'PLATE_RULE_VERSION', '')).startswith('p2-'))
+
     _nosince = sorted(k for k, _d in FIELD_CONTRACT.items()
                       if _d.get('required') and not _d.get('required_since'))
     chk(f'㊳h ★★ `required` 인 필드는 전부 `required_since` 를 선언한다 (누락: {_nosince})',

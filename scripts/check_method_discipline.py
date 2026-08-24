@@ -900,10 +900,14 @@ def runner_extra_flags(env, runner=None):
     if len(_xf) != 1:
         raise RuntimeError(f'`--extra-flags` 리터럴이 {len(_xf)}개다 (1개를 기대)')
     _lit = _xf[0].split('--extra-flags "', 1)[1].rsplit('"', 1)[0]
-    _seed = ['SIGMA=SIG', 'VOX=VOX', 'BRIDGE_UM=BR', 'SH=SHIFT',
+    #  `--expect-physics` 조립 줄도 같이 떼어 온다 (조건 4 — 러너 자기 설정 선언)
+    _xp = [ln.strip().replace('local ', '', 1) for ln in lines
+           if ('XP=' in ln or 'XP_FLAG=' in ln) and not ln.strip().startswith('#')]
+    _seed = ['SIGMA=SIG', 'VOX=0.15', 'BRIDGE_UM=0.48', 'SH=SHIFT', 'FIBRE_STAMP=segment',
              'SD_FLAG=', 'YV_FLAG=', 'PT_FLAG=', 'PS_FLAG=', 'FS_FLAG=',
-             'LEAN_FLAGS=', 'P2_EXTRA=']
-    probe = '\n'.join(['set -u', *_seed, *_ep, 'printf "%s\\n" "' + _lit + '"'])
+             'LEAN_FLAGS=', 'P2_EXTRA=', 'XP_FLAG=']
+    probe = '\n'.join(['set -u', *_seed, *_ep, *_xp,
+                        'printf "%s\\n" "' + _lit + '"'])
     _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
     _env.pop('EXPECT_PROTOCOL', None)
     _env.update({k: str(v) for k, v in env.items()})
@@ -957,6 +961,21 @@ def check_runner_integration(verbose=True, runner=None):
     if '--expect-protocol' in _off:
         problems.append(f'L_EXPECTDEFAULT| EXPECT_PROTOCOL 없이도 `--expect-protocol` 이 '
                         f'붙는다 (`{_off[:200]}`)')
+    #  ⓑ′ ★★ **러너 자기 설정 선언** (조건 4).  첫 팔의 id 를 베끼는 것과 다르다 —
+    #     그것은 첫 팔이 진리가 되므로, 첫 팔이 조용히 틀리면 나머지가 그것에 일치해
+    #     전부 통과한다.  러너가 자기가 넘긴 축을 선언하고 payload 가 적용값과 맞춘다.
+    _xp_need = ('vox_um=0.15', 'bridge_um=0.48', 'sigma_vgcf_S_cm=SIG',
+                'fibre_stamp=segment', 'sdcp_stamp=point', 'sdcp_yield_to_vgcf=False')
+    if '--expect-physics' not in _off:
+        problems.append(f'L_EXPECTPHYS| 러너가 `--expect-physics` 를 넘기지 않는다 '
+                        f'(`{_off[:200]}`) — 기대값을 자기 설정에서 만들지 않으면 '
+                        f'첫 팔이 진리가 된다 (조건 4)')
+    else:
+        _decl = _off.split('--expect-physics ', 1)[1].split(' ')[0]
+        _xmiss = [f for f in _xp_need if f not in _decl]
+        if _xmiss:
+            problems.append(f'L_EXPECTPHYS_AXIS| 러너 선언에 {_xmiss} 가 없다 '
+                            f'(선언 `{_decl}`) — 러너가 넘긴 축인데 대조되지 않는다')
     #  ⓒ 사전등록 팔 수는 **상수**여야 한다.  ARMS 로 자기가 자기한테 요구하면 봉인이 아니다.
     if _std.get('PREREG_ARMS') != '8':
         problems.append(f'L_PREREG_ARMS| PREREG_ARMS = {_std.get("PREREG_ARMS")!r} (기대 8) — '
@@ -970,9 +989,28 @@ def check_runner_integration(verbose=True, runner=None):
     if _a2.get('OUTDIR') == _std.get('OUTDIR'):
         problems.append(f'L_ARMTAG| ARMS=2 진단 런이 사전등록과 **같은 OUTDIR** 로 간다 '
                         f'({_std.get("OUTDIR")}) — 2팔과 8팔 산출물이 섞인다')
+    #  ⓔ ★★ **봉인이 원값보다 먼저 나와야 한다** (Codex 재리뷰 조건 1).
+    #    옛 러너는 `--collect-only` 로 16 팔 σ_e 표를 찍은 **뒤** 봉인을 걸었다 —
+    #    운영자가 결과를 다 보고 봉인 통과 여부를 고를 수 있으면 눈먼 봉인이 아니다.
+    #    ⚠ 여기서는 **순서**만 본다 (실행은 GPU 팔이 있어야 한다).  주석 줄은 뺀다 —
+    #      규칙 K 가 방금 그 부류로 false-green 이었다.
+    with open(_p, encoding='utf-8') as f:
+        _rl = [ln for ln in f.read().splitlines() if not ln.strip().startswith('#')]
+    _seal_i = next((i for i, ln in enumerate(_rl) if '--seal-only' in ln), None)
+    _coll = [i for i, ln in enumerate(_rl) if '--collect-only' in ln]
+    if _seal_i is None:
+        problems.append('L_NOSEAL| 러너가 `--seal-only` 를 부르지 않는다 — 계약 봉인이 없다')
+    else:
+        _early = [i for i in _coll if i < _seal_i]
+        if _early:
+            problems.append(
+                f'L_SEALORDER| `--collect-only` 가 봉인보다 **먼저** 나온다 '
+                f'(줄 {[i + 1 for i in _early]} vs 봉인 {_seal_i + 1}) — 원값 표를 보고 '
+                f'봉인을 통과시킬지 고를 수 있으면 눈먼 봉인이 아니다 (조건 1)')
     if verbose and not problems:
         print(f'  ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 {len(_need)}플래그 · '
-              f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리)')
+              f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리 · '
+              f'봉인이 원값보다 먼저)')
     return problems, warns
 
 
@@ -1764,7 +1802,7 @@ def _selftest():
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
         any(x.startswith('L_LEAN2') and 'no-collector' in x for x in _m1))
-    _m2 = _rmut('$PS_FLAG$EP_FLAG$FS_FLAG', '$PS_FLAG$FS_FLAG')
+    _m2 = _rmut('$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$PS_FLAG$XP_FLAG$FS_FLAG')
     chk(f'L-3: ★★ `$EP_FLAG` 를 인자열에서 빼면 **잡는다** — 변수는 그대로 있고 '
         f'**쓰이지 않을 뿐**이라 grep 으로는 안 보인다 ({len(_m2)}건)',
         any(x.startswith('L_EXPECT') for x in _m2))
@@ -1780,6 +1818,19 @@ def _selftest():
     chk(f'L-6: ★★ `{L_MARKER}` 표지가 없으면 **거부**한다 (fail-closed — 어디까지가 '
         f'설정인지 모르면 실행하지 않는다) ({len(_m5)}건)',
         any(x.startswith('L_PROBE') for x in _m5))
+    _m6 = _rmut('  echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"',
+                '  python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only')
+    _m7 = _rmut('$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$PS_FLAG$EP_FLAG$FS_FLAG')
+    chk(f'L-8: ★★ 러너 자기설정 선언(`$XP_FLAG`)이 인자열에서 빠지면 **잡는다** — '
+        f'첫 팔의 id 를 베끼면 첫 팔이 진리가 된다 (조건 4) ({len(_m7)}건)',
+        any(x.startswith('L_EXPECTPHYS') for x in _m7))
+    _m8 = _rmut('local XP="vox_um=$VOX,bridge_um=$BRIDGE_UM,sigma_vgcf_S_cm=$SIGMA"',
+                'local XP="bridge_um=$BRIDGE_UM,sigma_vgcf_S_cm=$SIGMA"')
+    chk(f'L-9: ★ 선언에서 축 하나(vox_um)를 빼면 **잡는다** ({len(_m8)}건)',
+        any(x.startswith('L_EXPECTPHYS_AXIS') for x in _m8))
+    chk(f'L-7: ★★ 원값 덤프(`--collect-only`)가 봉인보다 앞서면 **잡는다** — '
+        f'결과를 보고 봉인을 통과시킬지 고를 수 있으면 눈먼 봉인이 아니다 ({len(_m6)}건)',
+        any(x.startswith('L_SEALORDER') for x in _m6))
 
     # ── 규칙 J (2026-08-20) — 생산 엔트리포인트 스모크 ────────────────────────────────
     #   J-2 가 이 규칙의 존재 이유다: "지금 리포가 통과한다" 만으로는 검사기가 **정말**

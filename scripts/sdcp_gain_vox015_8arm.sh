@@ -269,10 +269,25 @@ PY
   #      (규약이 도중에 조용히 바뀌는 것을 그때 잡는다).
   local EP_FLAG=""
   [ -n "${EXPECT_PROTOCOL:-}" ] && EP_FLAG=" --expect-protocol $EXPECT_PROTOCOL"
+  #  ★★★ 2026-08-25 (Codex 재리뷰 조건 4) — **기대값을 러너 자신의 설정에서 만든다.**
+  #    `EXPECT_PROTOCOL` 의 표준 용법("첫 팔이 찍은 id 를 나머지에 넘긴다")은 **첫 팔을
+  #    진리로 삼는다** — 첫 팔이 조용히 잘못된 규약으로 돌면 나머지 일곱이 그것에
+  #    일치해 전부 통과한다.  팔간 일치는 옳음이 아니다.
+  #    ⇒ 러너가 자기가 설정한 축을 **선언**하고 payload 가 적용값과 필드별로 대조한다.
+  #      다르면 exit 4.  해시가 아니라 필드라서 **어느 축이 갈렸는지**까지 말해 준다.
+  #    ⚠ 여기 적는 것은 러너가 **실제로 인자로 넘긴 축**뿐이다 (킷이 정하는 σ_AM·온도 등은
+  #      러너가 모르므로 선언하지 않는다 — 모르는 것을 선언하면 그것이 새 거짓 보증이다).
+  local XP="vox_um=$VOX,bridge_um=$BRIDGE_UM,sigma_vgcf_S_cm=$SIGMA"
+  XP="$XP,fibre_stamp=$FIBRE_STAMP"
+  XP="$XP,sdcp_stamp=$([ -n "$SD_FLAG" ] && echo sphere || echo point)"
+  XP="$XP,sdcp_yield_to_vgcf=$([ -n "$YV_FLAG" ] && echo True || echo False)"
+  [ -n "$PS_FLAG" ] && XP="$XP,ptfe_stamp=$PTFE_STAMP"
+  [ -n "$PT_FLAG" ] && XP="$XP,sigma_ptfe_S_cm=$SIGMA_PTFE"
+  local XP_FLAG=" --expect-physics $XP"
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$EP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
@@ -351,23 +366,34 @@ for SH in "${SHIFTS[@]}"; do
 done
 
 echo
-echo "[p2] 수집 — 판정은 하지 않는다 (prereg §5 순서로 따로)"
-python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only
-
 #  ★★ 2026-08-24 (CDXR2-5) — `--collect-only` 는 **항상 exit 0** 이라 팔이 모자라도·
 #    미수렴이어도·고정인자가 어긋나도 러너가 초록으로 끝났다.  그렇다고 러너가 판정을
 #    돌리면 이 파일 헤더의 규약("결과를 보고 창을 옮길 수 없게")이 깨진다.
 #    ⇒ **봉인과 판정을 가른다**: 봉인 = 데이터가 쓸 만한가, 판정 = 그것이 뭐라고 말하는가.
 #      `--seal-only` 는 h0/h1 과 비를 **출력하지 않으므로** 사전등록이 안 깨진다.
 #  ⚠ 상수 8 로 건다 ($ARMS 가 아니다 — 그것이 CDXR3-7 의 자기참조였다).
+#  ★★★ 2026-08-25 (Codex 재리뷰 조건 1) — **봉인이 먼저다.**  옛 판은 바로 위에서
+#    `--collect-only` 를 돌려 **16 팔의 σ_e 원값 표**를 찍은 **뒤에** 봉인을 걸었다.
+#    그러면 운영자가 결과를 다 보고 나서 봉인을 통과시킬지 결정할 수 있다 = 봉인이
+#    눈먼 것이 아니다 (사전등록의 요점이 정확히 그것이다).
+#    ⇒ 봉인을 **먼저** 돌리고, 원값 덤프는
+#       · 봉인 통과 → 찍지 않는다 (필요하면 운영자가 명령을 직접 친다)
+#       · 봉인 실패 → 찍는다 (데이터는 이미 기각됐으므로 창을 옮길 여지가 없고,
+#                             진단에는 원값이 필요하다)
 if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
+  echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"
   if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
        --require-arms "$PREREG_ARMS"; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
+    echo "──── 진단용 원값 (봉인이 이미 기각했으므로 창을 옮길 수 없다) ────"
+    python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true
     exit 1
   fi
   echo "[p2] ✓ 계약 봉인 통과 ($PREREG_ARMS 팔).  판정은 prereg §5 순서로 **따로** 돌 것"
+  echo "     원값을 보려면:  python3 $SCR/sdcp_gain_verdict.py --dir \"$OUTDIR\" --collect-only"
 else
+  #  진단 런은 애초에 "판정하지 말 것" 이므로 원값을 봐도 사전등록이 안 깨진다.
+  python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true
   echo "[p2] ⚠ **진단 런 ($ARMS 팔) — 생산 봉인 아님.**  이 산출물로 판정하지 말 것."
   echo "     사전등록은 $PREREG_ARMS 팔이다 (prereg §4).  OUTDIR: $OUTDIR"
 fi

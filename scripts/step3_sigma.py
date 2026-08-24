@@ -425,6 +425,14 @@ def _fibre_segment_ijk(add_pts, add_phase, add_fid, lo, vox, n, gap_tol=2.0,
     return ijk[ok], ph[ok]
 
 
+#: ★★★ **플레이트 결합 규약 판**.  이 문자열이 바뀌면 σ_e 절대값이 바뀐다 —
+#   `p2` = 2026-08-25 (CDXR3-6) 가장 바깥 **점유 고체**를 먼저 정하고 그것이 도체일 때만
+#   플레이트에 붙인다.  `p1` = 그 이전, `cond`(σ>0) 로 표면을 골라 절연 고체를 **관통**했다.
+#   ⚠ 두 판의 산출물은 **섞으면 안 된다** (같은 침대·같은 vox 라도 σ_e 가 다르다).
+#     그래서 매니페스트에 싣고 `PROTOCOL_FIELDS` 에 넣는다 — 규약 해시가 갈라진다.
+PLATE_RULE_VERSION = 'p2-occupied-surface-first'
+
+
 def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, plate_band_um=None,
                   z_bot_um=None, plate_band_bot_um=None, bot_allowed=None, periodic_xy=False,
                   area_um2=None):

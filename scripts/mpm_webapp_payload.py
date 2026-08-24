@@ -479,11 +479,20 @@ PTFE_STAMP_NEEDS_DIA = ('capsule',)
 #   이것은 **물리 의미**다 — 둘 중 하나가 다른 하나를 대신하지 못한다 (Codex).
 #   여기 적힌 인자가 하나라도 다르면 **다른 규약**이고, 그 결과는 섞으면 안 된다.
 #   ⚠ 값은 **적용된 것**(applied)이지 요청값이 아니다.  요청↔적용 불일치는 별 필드로 남긴다.
+#  ★★ 2026-08-25 (Codex 재리뷰 조건 4) — 둘을 **더 넣는다**.
+#    · `periodic_xy` : x·y 경계 규약.  seam 면이 회로에 들어가는지가 달라진다 (Codex #7)
+#      — 물리 인자인데 규약 해시에 없어서 주기 팔과 비주기 팔이 섞여도 안 걸렸다.
+#    · `plate_rule`  : 플레이트 결합 규약 판 (`step3_sigma.PLATE_RULE_VERSION`).
+#      CDXR3-6 이 이 규칙을 바꿔 **σ_e 절대값이 바뀌었다** — 옛 판 산출물과 새 판
+#      산출물은 같은 침대·같은 vox 라도 다른 수를 낸다.  섞이면 안 되므로 해시에 넣는다.
+#  ⚠ 축을 늘리면 **모든 id 가 바뀐다**.  그것이 의도다 — 규약이 실제로 달라졌으므로
+#    옛 팔과 새 팔은 다른 실험이고, 판정기가 그것을 섞지 못하게 해야 한다.
 PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
                    'sdcp_yield_to_vgcf', 'ptfe_stamp', 'ptfe_zero_dof',
                    'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
                    'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
-                   'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c')
+                   'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c',
+                   'periodic_xy', 'plate_rule')
 
 
 def physics_protocol_id(man):
@@ -558,6 +567,22 @@ def _payload_reject_reason(a, step3):
         if _got != a._protocol_expect:
             return (f'PROTOCOL_MISMATCH: 물리 규약 불일치 — 기대 `{a._protocol_expect}` · '
                     f'적용 `{_got}`.  러너가 요청한 규약과 payload 가 실제로 한 것이 갈렸다')
+    #  ★★ 조건 4 — 러너가 **자기 설정으로** 선언한 물리 인자와 적용값을 필드별로 맞춘다.
+    #    문자열로 비교한다 (선언은 CLI 텍스트다): `0.15` ↔ `0.15`, `True` ↔ `True`.
+    #    ⚠ 부동소수 표기 차이(`0.15` vs `0.150`)는 float 로도 한 번 더 본다.
+    _pe = getattr(a, '_physics_expect', None) or {}
+    for _k, _want in _pe.items():
+        _got = _m.get(_k)
+        if str(_got) == _want:
+            continue
+        try:
+            if abs(float(_got) - float(_want)) <= 1e-12 * max(1.0, abs(float(_want))):
+                continue
+        except (TypeError, ValueError):
+            pass
+        return (f'PROTOCOL_MISMATCH: 러너가 선언한 `{_k}` = {_want!r} 인데 적용된 것은 '
+                f'{_got!r} — 요청↔적용이 갈렸다.  ⚠ 이 대조는 **첫 팔이 아니라 러너 자신의 '
+                f'설정**을 기준으로 한다 (첫 팔을 베끼면 첫 팔이 진리가 된다)')
     if _m.get('status') == 'disabled':
         return None
     _req = ['electronic'] + ([] if a.no_ion else ['ionic'])
@@ -722,6 +747,16 @@ def main():
     ap.add_argument('--expect-protocol', default='',
                     help='기대하는 physics_protocol_id.  적용된 것과 다르면 **중단**한다. '
                          '러너가 넘긴다 — 규약이 조용히 바뀌는 것을 막는 유일한 자리다')
+    #  ★★★ 2026-08-25 (Codex 재리뷰 조건 4) — **기대값을 첫 팔에서 읽지 않는다.**
+    #    `--expect-protocol` 의 표준 용법은 "첫 팔이 찍은 id 를 나머지 팔에 넘기기" 였는데,
+    #    그러면 **첫 팔이 진리를 정의한다** — 첫 팔이 조용히 잘못된 규약으로 돌면 나머지
+    #    일곱이 그것에 일치해 전부 통과한다 (팔간 일치는 옳음이 아니다).
+    #    ⇒ 러너가 **자기가 설정한 값**을 그대로 선언하고, payload 가 **적용값**과 필드별로
+    #      대조한다.  해시가 아니라 필드라서 어느 축이 갈렸는지도 말해 준다.
+    ap.add_argument('--expect-physics', default='',
+                    help='러너가 설정한 물리 인자 선언 `KEY=VAL,KEY=VAL…` (KEY 는 '
+                         'PROTOCOL_FIELDS).  적용값과 다르면 **중단**한다 (exit 4).  '
+                         '⚠ 첫 팔의 id 를 베끼는 것과 다르다 — 그것은 첫 팔을 진리로 삼는다')
     ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule'),
                     help="PTFE 를 전도 격자에 어떻게 그릴지.  off = 안 그린다 · centerline = "
                          "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**).  "
@@ -825,6 +860,19 @@ def main():
     #    GPU 를 잡기 전에 죽어야 한다.
     a._ptfe_stamp, a._ptfe_stamp_legacy = resolve_ptfe_stamp(a.ptfe_stamp, a.sigma_ptfe)
     a._protocol_expect = (a.expect_protocol or '').strip()
+    a._physics_expect = {}
+    for _kv in (a.expect_physics or '').split(','):
+        _kv = _kv.strip()
+        if not _kv:
+            continue
+        if '=' not in _kv:
+            raise SystemExit(f'--expect-physics 항목이 `KEY=VAL` 이 아니다: {_kv!r}')
+        _k, _v = _kv.split('=', 1)
+        _k = _k.strip()
+        if _k not in PROTOCOL_FIELDS:
+            raise SystemExit(f'--expect-physics 의 `{_k}` 는 PROTOCOL_FIELDS 가 아니다 '
+                             f'(가능: {", ".join(PROTOCOL_FIELDS)})')
+        a._physics_expect[_k] = _v.strip()
     if a._ptfe_stamp in PTFE_STAMPS_RESERVED:
         #  ⚠ 예약값이다 — centerline 으로 별칭하거나 매니페스트에 'capsule applied' 라고
         #    적으면 **안 된다** (Codex Q3).  구현될 때까지 명시적으로 죽는다.
@@ -2187,6 +2235,21 @@ def main():
             #    **가짜 보증**.  ⇒ 값을 적고, 규칙 J 가 `unknown:` 접두사를 **거부**하게 한다
             #    (그것이 이 부류의 유일한 실물 증인이다 — 손수 만든 매니페스트는 증명 못 한다).
             'vox_um': float(a.step3_vox),
+            #  ★★ 2026-08-25 (Codex 재리뷰 조건 4) — 규약 축 둘 + 감사 축 둘.
+            'periodic_xy': bool(a.periodic),
+            'plate_rule': str(getattr(_s3, 'PLATE_RULE_VERSION', 'unknown')),
+            #  ★ **component 계획** — 무엇을 돌리기로 했는가 (요청).  이것이 없으면
+            #    `disabled` 가 "의도적으로 껐다" 인지 "조용히 죽었다" 인지 구분할 근거가
+            #    매니페스트 안에 없다 (M-R3-03 이 정확히 그 혼동이었다).
+            'component_plan': {'electronic': True,
+                               'ionic': not bool(a.no_ion),
+                               'thermal': not bool(a.no_thermal),
+                               'pore': not bool(a.no_pore),
+                               'collector': not bool(a.no_collector)},
+            #  ★ **관측 sid7 수** — PTFE 가 격자에 **실제로 몇 셀** 찍혔는가.
+            #    `ptfe_stamp='centerline'` 이라고 적혀 있어도 0 셀이면 아무 일도 안 났다
+            #    (스탬프 도장과 실제 효과를 가르는 유일한 증거).
+            'ptfe_cells_observed': int((sid3 == 7).sum()) if sid3 is not None else None,
             'bridge_um': float(_bru) if _bru is not None else 1.2 * float(a.step3_vox),
             'bridge_um_explicit': _bru is not None,   # 고정 지시였나 vs 기본값이었나 (구분 보존)
             'sigma_vgcf_S_cm': float(getattr(a, 'sigma_vgcf', 0.0) or 0.0),
