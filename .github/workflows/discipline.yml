@@ -50,3 +50,15 @@ jobs:
 
       - name: 상별 부피 원장 캐시 매칭 (selftest)
         run: python scripts/sdcp_phase_ledger_match.py --selftest
+
+      # ★★ 2026-08-25 (CDXR3-8/⑩) — S1 봉인의 핵심 셋이 CI 에서 **안 돌고 있었다**.
+      #   팔 검사기(check_arm)·PTFE 규약·솔버 규약.  셋 다 1초 미만이다.
+      #   규칙 K 가 check_all.sh 와 이 파일을 대조해 재발을 막는다.
+      - name: 팔 검사기 · 스탬프 비교 (selftest)
+        run: python scripts/sr01_stamp_compare.py --selftest
+
+      - name: payload 규약 (온도 · PTFE 스탬프) (selftest)
+        run: python scripts/mpm_webapp_payload.py --selftest-temperature
+
+      - name: STEP3 솔버 규약 (selftest)
+        run: python scripts/step3_sigma.py --selftest

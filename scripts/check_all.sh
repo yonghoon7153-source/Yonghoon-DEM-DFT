@@ -50,6 +50,14 @@ run 'check_review_findings   --selftest' python3 scripts/check_review_findings.p
 run 'check_method_discipline --selftest' python3 scripts/check_method_discipline.py --selftest
 run 'sdcp_gain_verdict       --selftest' python3 scripts/sdcp_gain_verdict.py --selftest
 run 'sdcp_phase_ledger_match --selftest' python3 scripts/sdcp_phase_ledger_match.py --selftest
+#  ★★ 2026-08-25 (CDXR3-8/⑩) — **셋이 여기서 안 돌고 있었다.**  Codex: "테스트 파일이
+#    존재하고 수동 실행이 녹색인 것만으로는 자동 규율이 아니다."  실제로 이 세 selftest 가
+#    S1 봉인의 핵심(팔 검사기·PTFE 규약·솔버 규약)인데 check_all 도 CI 도 부르지 않았다.
+#    셋 다 1초 미만이라 비용 이유도 없었다 — 그냥 배선을 잊은 것이다.
+#    ⇒ `check_method_discipline` 의 규칙 K 가 이 목록과 CI yml 을 대조해 재발을 막는다.
+run 'sr01_stamp_compare     --selftest' python3 scripts/sr01_stamp_compare.py --selftest
+run 'mpm_webapp_payload     --selftest-temperature' python3 scripts/mpm_webapp_payload.py --selftest-temperature
+run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
 run 'check_review_findings   (원장 + 철회값 스윕)' python3 scripts/check_review_findings.py

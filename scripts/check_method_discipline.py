@@ -774,6 +774,64 @@ def check_claims_ledger(path=LEDGER, verbose=True):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+#: ★★★ 규칙 K (2026-08-25, Codex 흡수 리뷰 ⑩) — **규율 selftest 가 실제로 돌아야 한다.**
+#
+#   Codex: *"테스트 파일이 존재하고 수동 실행이 녹색인 것만으로는 자동 규율이 아니다."*
+#   실사고: S1 봉인의 핵심 셋(`sr01_stamp_compare` = 팔 검사기 · `mpm_webapp_payload`
+#   = PTFE 규약 · `step3_sigma` = 솔버 규약)이 `check_all.sh` 에도 CI yml 에도 **없었다**.
+#   셋 다 1초 미만이라 비용 이유도 없었다 — 그냥 배선을 잊은 것이고, 잊었다는 사실을
+#   알려 줄 것이 아무것도 없었다.  규칙 D 가 말하는 "발동한 적 없는 검사" 의 상위 판이다.
+#
+#   ⇒ 여기 적힌 것은 **두 곳 다** 에서 돌아야 한다.  한쪽에만 있으면 오류다 (드리프트 금지).
+#   ⚠ 목록에 더할 때는 실제로 두 파일에 배선하고 나서 더할 것 — 이 목록만 늘리면
+#     규칙 K 자신이 "선언만 있고 실행이 없는" 그것이 된다.
+K_REQUIRED_SELFTESTS = (
+    ('scripts/check_review_findings.py', '--selftest'),
+    ('scripts/check_method_discipline.py', '--selftest'),
+    ('scripts/sdcp_gain_verdict.py', '--selftest'),
+    ('scripts/sdcp_phase_ledger_match.py', '--selftest'),
+    ('scripts/sr01_stamp_compare.py', '--selftest'),
+    ('scripts/mpm_webapp_payload.py', '--selftest-temperature'),
+    ('scripts/step3_sigma.py', '--selftest'),
+)
+K_CHECK_ALL = 'scripts/check_all.sh'
+K_CI_YML = '.github/workflows/discipline.yml'
+
+
+def check_selftest_wiring(verbose=True, check_all=None, ci_yml=None):
+    """→ (문제 목록, 경고).  규칙 K — 규율 selftest 가 두 곳 다에 배선됐는가.
+
+    ★ 문자열 포함으로 본다 (실행하지 않는다) — 실행은 `check_all.sh` 자신이 한다.
+      여기서 보는 것은 **호출이 존재하는가** 이고, 그것이 이 규칙의 전부다."""
+    problems, warns = [], []
+    _ca_p = check_all or os.path.join(ROOT, K_CHECK_ALL)
+    _ci_p = ci_yml or os.path.join(ROOT, K_CI_YML)
+    for _lbl, _p in (('check_all', _ca_p), ('CI yml', _ci_p)):
+        if not os.path.exists(_p):
+            problems.append(f'K_MISSING_FILE| {_lbl} 이 없다 ({_p}) — 규율이 어디서 도는지 '
+                            f'확인할 수 없다')
+    if problems:
+        return problems, warns
+    with open(_ca_p, encoding='utf-8') as f:
+        ca = f.read()
+    with open(_ci_p, encoding='utf-8') as f:
+        ci = f.read()
+    for _script, _flag in K_REQUIRED_SELFTESTS:
+        _base = os.path.basename(_script)
+        for _lbl, _txt in (('check_all.sh', ca), (K_CI_YML, ci)):
+            #  같은 줄에 스크립트와 플래그가 함께 있어야 한다 (다른 줄의 우연한 일치 배제).
+            _hit = any(_base in ln and _flag in ln for ln in _txt.splitlines())
+            if not _hit:
+                problems.append(
+                    f'K_UNWIRED| `{_base} {_flag}` 가 **{_lbl} 에서 안 돈다** — '
+                    f'수동으로 녹색인 것은 자동 규율이 아니다 (Codex ⑩).  배선하거나 '
+                    f'K_REQUIRED_SELFTESTS 에서 빼고 이유를 적을 것')
+    if verbose and not problems:
+        print(f'  ✓ 규칙 K — 규율 selftest {len(K_REQUIRED_SELFTESTS)}개가 '
+              f'check_all·CI 양쪽에 배선돼 있다')
+    return problems, warns
+
+
 def check_argparse_help(verbose=True):
     """규칙 H — `--help` 가 살아 있어야 한다.
 
@@ -1123,6 +1181,8 @@ def run_all(verbose=True):
                       ('규칙 B — 판별력 있는 rung (D2)', check_oblique_rungs),
                       ('규칙 C·D·E — 판별력 / 개수≠귀결 / 량 패리티 (D1)', check_claims_ledger),
                       ('규칙 H — argparse help 가 살아 있는가', check_argparse_help),
+                      ('규칙 K — 규율 selftest 가 check_all·CI 에서 실제로 도는가',
+                       check_selftest_wiring),
                       ('규칙 J — 생산 엔트리포인트 스모크 (기본 경로가 정말 도는가)',
                        check_entrypoint_smoke),
                       ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
@@ -1360,6 +1420,41 @@ def _selftest():
         _help_ok('오차 ≤0.014 %% (기본 %(default)s)'))
     chk('H-3: 리포 전체가 지금 통과한다 (0 오류)',
         check_argparse_help(verbose=False)[0] == [])
+
+    # ── 규칙 K (2026-08-25, Codex ⑩) — 규율 selftest 배선 ──────────────────────────────
+    chk('K-1: 리포가 지금 통과한다 (7개 전부 두 곳에 배선)',
+        check_selftest_wiring(verbose=False)[0] == [])
+    #  ★ 음성 대조 — 한쪽에서 빼면 **잡는가**.  "지금 통과한다" 만으로는 검사가 인증되지
+    #    않는다 (규칙 D 의 교훈).  사본에서만 지운다.
+    import tempfile as _tk, shutil as _sk
+    with _tk.TemporaryDirectory() as _dk:
+        _ca = os.path.join(_dk, 'check_all.sh')
+        _sk.copy(os.path.join(ROOT, K_CHECK_ALL), _ca)
+        with open(_ca, encoding='utf-8') as _f:
+            _t = _f.read()
+        _t = '\n'.join(ln for ln in _t.splitlines()
+                        if not ('sr01_stamp_compare.py' in ln and '--selftest' in ln))
+        with open(_ca, 'w', encoding='utf-8') as _f:
+            _f.write(_t)
+        _ek, _ = check_selftest_wiring(verbose=False, check_all=_ca)
+        chk(f'K-2: ★ 음성 대조 — check_all 에서 한 줄 빼면 **잡는다** '
+            f'({len(_ek)}건)',
+            any(x.startswith('K_UNWIRED') and 'sr01_stamp_compare' in x
+                and 'check_all.sh' in x for x in _ek))
+        _ci = os.path.join(_dk, 'ci.yml')
+        _sk.copy(os.path.join(ROOT, K_CI_YML), _ci)
+        with open(_ci, encoding='utf-8') as _f:
+            _t2 = _f.read()
+        _t2 = '\n'.join(ln for ln in _t2.splitlines()
+                         if not ('step3_sigma.py' in ln and '--selftest' in ln))
+        with open(_ci, 'w', encoding='utf-8') as _f:
+            _f.write(_t2)
+        _ek2, _ = check_selftest_wiring(verbose=False, ci_yml=_ci)
+        chk('K-3: ★ 음성 대조 — CI yml 에서 빼도 **잡는다** (드리프트 금지)',
+            any(x.startswith('K_UNWIRED') and 'step3_sigma' in x for x in _ek2))
+    chk('K-4: ★ 목록에 있는 selftest 가 **실재하는 파일**이다 (선언만 있고 파일이 없으면 '
+        '규칙 K 자신이 가짜 보증이 된다)',
+        all(os.path.exists(os.path.join(ROOT, _sc)) for _sc, _ in K_REQUIRED_SELFTESTS))
 
     # ── 규칙 J (2026-08-20) — 생산 엔트리포인트 스모크 ────────────────────────────────
     #   J-2 가 이 규칙의 존재 이유다: "지금 리포가 통과한다" 만으로는 검사기가 **정말**
