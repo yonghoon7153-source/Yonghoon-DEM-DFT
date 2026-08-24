@@ -820,8 +820,31 @@ echo "중추 서버를 봐도 저장소는 맞춘다"
 # 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
 # serve 와 restart 두 분기 모두여야 한다.  하나만 고치면 나머지 하나로 들어온
 # 사람에게 같은 증상이 그대로 남는다.
-check "serve·restart 두 분기가 sync_repo 를 부른다" \
-  "$(grep -c 'if \[ -n "$SERVER" \]; then sync_repo; cmd_connect' "$BML")" "2"
+# 한 줄을 통째로 대조하지 않는다.  그러면 그 줄에 단어 하나만 늘어도
+# (`cmd_stop --keep-tunnel` 이 그랬다) 규칙이 멀쩡한데 시험이 깨지고, 고치는
+# 사람은 시험을 지우는 쪽으로 간다.  못 박을 것은 **순서**다: 중추 서버로
+# 붙는 두 분기 모두에서 sync_repo 가 cmd_connect 보다 먼저 와야 한다.
+check "serve·restart 두 분기가 붙기 전에 sync_repo 를 부른다" \
+  "$(grep -cE 'if \[ -n "\$SERVER" \]; then sync_repo;.*cmd_connect' "$BML")" "2"
+
+echo
+echo "restart 는 터널을 살려 둔다"
+# 터널은 localhost:5003 을 가리키므로 그 뒤의 서버가 몇 초 내려갔다 올라오는
+# 것은 견딘다.  그런데 restart 가 터널을 닫으면 **주소가 바뀐다** (실측: 열
+# 때마다 다른 이름).  그러면 코드를 고칠 때마다 기계마다 `bmlout <새 주소>` 를
+# 다시 쳐야 하고, 그 사이 노트북은 HTTP 503 을 본다.
+check "restart 만 --keep-tunnel 을 쓴다" \
+  "$(grep -c 'cmd_stop --keep-tunnel' "$BML")" "2"
+check "stop 은 그대로 닫는다" \
+  "$(grep -cE '^\s+stop\|down\)\s+cmd_stop ;;' "$BML")" "1"
+# 살려 두는 것은 "곧 돌아온다" 는 약속이다.  다시 띄우다 실패하면 그 약속이
+# 깨졌으므로 닫는다 — 뒤에 서버가 없는 주소는 남에게 오류 화면만 띄운다.
+check "서버가 안 뜨면 터널을 닫는다" \
+  "$(sed -n '/^report_failure()/,/^}/p' "$BML" | grep -c 'close_tunnel')" "1"
+# 멈추기 전에 먼저 받는다 -- 내려가 있는 시간을 줄이고, sync_repo 가 자기 자신을
+# 갱신해 exec 로 다시 시작할 때 아직 아무것도 안 멈춘 상태여야 한다.
+check "restart 는 멈추기 전에 sync_repo 를 부른다" \
+  "$(grep -cE 'sync_repo; (ensure_deps; )?cmd_stop --keep-tunnel' "$BML")" "2"
 
 echo
 if [ "$fail" -eq 0 ]; then
