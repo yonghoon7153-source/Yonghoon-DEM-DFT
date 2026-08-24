@@ -127,6 +127,38 @@ else
   bad_ "설치만 안내하고 중추 서버에 붙이는 단계가 없다 (빈 화면을 보게 된다)"
 fi
 
+# --- 떠 있는 서버가 어느 코드인지 status 가 말하는가 -------------------------
+#
+# 실제로 막힌 자리: 새 기능을 push 하고 상대가 bml 을 쳤는데 화면에 안 보였다.
+# 그때 확인할 방법이 "코드를 열어 본다" 뿐이었다.  저장소는 최신인데 서버가 옛
+# 코드일 수도, 서버는 새 코드인데 브라우저가 옛 번들을 잡고 있을 수도 있고,
+# 대처가 셋 다 다르다.
+
+if grep -q '서비스 중' "$HERE/../bml"; then
+  ok_ "bml status 가 서비스 중인 커밋을 말한다"
+else
+  bad_ "떠 있는 서버가 어느 코드인지 status 가 말하지 않는다"
+fi
+
+# server_state 는 값을 찍지 않고 종료 코드로 답한다.  $(...) 로 받으면 항상
+# 빈 문자열이라 판정이 통째로 죽는데, 화면은 아무 말도 안 해서 안 보인다.
+if grep -q 'if \[ -z "$SERVER" \] && server_state; then' "$HERE/../bml"; then
+  ok_ "server_state 를 종료 코드로 받는다"
+else
+  bad_ "server_state 를 \$(...) 로 받으면 판정이 조용히 죽는다"
+fi
+
+# 세 갈래가 모두 있어야 한다 — 하나라도 빠지면 그 경우에 아무 안내가 없다.
+missing_case=""
+for phrase in '어느 커밋인지 알 수 없습니다' '옛 코드가 떠 있습니다' '화면 번들이 소스보다 낡았습니다'; do
+  grep -qF -- "$phrase" "$HERE/../bml" || missing_case="$missing_case '$phrase'"
+done
+if [ -z "$missing_case" ]; then
+  ok_ "옛 서버·옛 번들·알 수 없음을 각각 구분해 말한다"
+else
+  bad_ "이 경우에 안내가 없다:$missing_case"
+fi
+
 echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"

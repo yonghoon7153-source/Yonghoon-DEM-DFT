@@ -619,3 +619,26 @@ scipy 는 안 들였다 (ADR 0002). 균일 격자 위의 SG 는 고정 커널이
 검증: 웹 233건 (신규 `CycleTable.test.tsx` 8건, dV/dQ 모드 6건, 비교 5건,
 축 고정·SG 경고 3건). 전체 검사 통과 — ruff · wrdkit 352 · API 전부 ·
 tsc · eslint · vitest 233 · wiki-lint · tools 4스위트.
+
+## [2026-08-24] fix | bml status 가 어느 커밋을 서비스 중인지 말한다
+"dQ/dV·dV/dQ 셀간 비교가 안 들어간 것 같다" 는 지적을 받고 확인한 결과,
+**코드는 두 브랜치에 다 들어가 있었다.** 확인한 것:
+
+- `origin/...dq4ja3` 의 `Compare.tsx` 에 `CURVE_MODES`·`compareDqdv`·
+  `compareDvdq` 가 있고, `analysis.py` 에 `/compare/dqdv`·`/compare/dvdq` 가 있다.
+- `npm run build` 결과 번들에 `compare/dqdv`·`compare/dvdq` 문자열이 각각 1회.
+- 합성 셀 2개를 올려 네 비교 엔드포인트를 실제로 호출: 사이클 추세·프로파일·
+  dQ/dV(341점×2계열)·dV/dQ(401점×2계열) 전부 200, mAh/g 정규화까지 정상.
+
+그러니 문제는 **떠 있는 서버가 옛 코드**라는 것인데, 그것을 확인할 방법이
+"코드를 열어 본다" 뿐이었다. `bml` 자체는 옛 서버를 감지해 다시 띄우지만
+(`server.head` 표식), **`bml status` 는 그 사실을 한마디도 안 했다.**
+
+이제 status 가 `서비스 중   <커밋 8자>  <커밋 제목>` 을 찍고, 어긋나면 갈래를
+나눠 말한다 — 저장소보다 옛 커밋인가, 화면 번들이 소스보다 낡았는가, 아니면
+옛 bml 이 띄워서 아예 알 수 없는가. 셋의 대처가 다르기 때문이다.
+
+구현 중 실수 하나를 테스트가 잡았다: `server_state` 는 값을 찍지 않고 **종료
+코드**로 답한다. `[ "$(server_state)" = "0" ]` 로 받으면 항상 빈 문자열이라
+판정이 통째로 죽는데, 화면에는 아무것도 안 나와서 티가 안 난다.
+`test_bml_install.sh` 가 세 갈래 문구와 이 호출 형태를 고정한다 (15 → 18건).
