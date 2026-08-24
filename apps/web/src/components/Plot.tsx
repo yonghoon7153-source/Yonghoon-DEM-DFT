@@ -289,6 +289,9 @@ export function Plot({
   //: 처음 잡힌 눈금.  '전체' 가 여기로 되돌린다.
   const homeRef = useRef<HomeScales | null>(null)
   const [zoomed, setZoomed] = useState(false)
+  // 돋보기 기준 범위를 아직 못 잡았으면 버튼도 없는 셈이다.  눌러도 아무 일이
+  // 없는 버튼은 고장 난 것으로 읽힌다.
+  const [homeReady, setHomeReady] = useState(false)
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
 
@@ -325,7 +328,20 @@ export function Plot({
       height,
       legend: { show: legend },
       cursor: {
-        drag: { x: true, y: true, uni: 20 },
+        // 끌어서 만든 사각형이 그대로 화면이 된다.
+        //
+        // `uni` 를 두면 가로로 길쭉한 드래그는 가로만 확대한다.  사람이 원하는
+        // 것은 "이 블록을 크게" 이고, 한쪽만 확대되면 고른 세로 구간이 그대로
+        // 남아 확대가 안 된 것처럼 보인다.  대신 `dist` 로 손 떨림만 거른다.
+        //
+        // 잠긴 축은 아예 못 끌게 한다.  끌 수 있게 두면 uPlot 이 잠금 범위를
+        // 다시 씌우기 전까지 잠깐 움직이고, 그 사이 '축 고정' 이 꺼진 것처럼
+        // 보인다 -- 버튼은 비활성인데 드래그는 되는 모순이었다.
+        drag: {
+          x: !fullyPinned(steadyXRange),
+          y: !fullyPinned(steadyRange),
+          dist: 6,
+        },
         focus: { prox: 24 },
         points: { size: 6, width: 1.5 },
       },
@@ -386,9 +402,23 @@ export function Plot({
         // 화면과 어긋난 상태로 남는다 (꺼져 있는데 확대돼 있거나, 그 반대).
         setScale: [
           (u: uPlot) => {
-            const home = homeRef.current
-            if (!home) return
-            setZoomed(!sameView(home, readScales(u)))
+            // **처음 눈금이 정해지는 순간을 여기서 잡는다.**
+            //
+            // 생성자가 반환할 때 uPlot 의 scales.*.min 은 아직 ±Infinity 다 --
+            // 초기 commit 을 microtask 로 미루기 때문이다 (uPlot 1.6.32,
+            // `_init → _setSize → commit`, `commit → microTask(_commit)`).
+            // 생성 직후에 읽으면 readScales 가 {} 를 돌려주고, 그 뒤로 zoomBy
+            // 는 순회할 축이 없어 아무 일도 안 하며 sameView({}, …) 는 늘 참이라
+            // '축소'·'전체' 가 영영 비활성으로 남는다 -- 돋보기 셋이 전부 죽는다.
+            if (!homeRef.current) {
+              const first = readScales(u)
+              if (!Object.keys(first).length) return
+              homeRef.current = first
+              setHomeReady(true)
+              setZoomed(false)
+              return
+            }
+            setZoomed(!sameView(homeRef.current, readScales(u)))
           },
         ],
         // 커서가 어느 계열에 붙었는지는 uPlot 이 focus.prox 로 이미 정한다.
@@ -471,11 +501,11 @@ export function Plot({
     homeRef.current = null
     setReadout(null)
     setZoomed(false)
+    setHomeReady(false)
+    // 기준 범위는 여기서 읽지 않는다 -- 아직 정해지지 않았다.  위 setScale
+    // 훅이 첫 commit 에서 잡는다.
     const plot = new uPlot(options, data, node)
     plotRef.current = plot
-    // 생성이 끝난 뒤에 읽는다 -- uPlot 은 초기 setData 안에서 눈금을 정하므로
-    // 여기서 읽은 값이 곧 사람이 처음 본 그림이다.
-    homeRef.current = readScales(plot)
     return () => {
       plotRef.current?.destroy()
       plotRef.current = null
@@ -504,6 +534,16 @@ export function Plot({
   // 대신 끄고, 왜 껐는지를 말한다.
   const pinned = fullyPinned(steadyXRange) && fullyPinned(steadyRange)
 
+  // 잠긴 축은 버튼도 건드리지 않는다.  uPlot 은 명시적으로 준 범위를 잠금의
+  // `range` 콜백으로 다시 덮지 않으므로, 여기서 setScale 하면 한쪽만 잠긴
+  // 그래프에서 잠긴 축이 슬그머니 풀린다.
+  const lockedKeys = useMemo(() => {
+    const keys = new Set<string>()
+    if (fullyPinned(steadyXRange)) keys.add('x')
+    if (fullyPinned(steadyRange)) keys.add('y')
+    return keys
+  }, [steadyXRange, steadyRange])
+
   /** 가운데를 붙잡고 폭만 줄이거나 늘린다.
    *
    *  커서 자리를 중심으로 잡을 수도 있지만, 버튼은 커서가 그래프 밖(버튼 위)에
@@ -518,6 +558,7 @@ export function Plot({
     if (!plot || !home) return
     plot.batch(() => {
       for (const key of Object.keys(home)) {
+        if (lockedKeys.has(key)) continue
         const scale = plot.scales[key]
         const limit = home[key]!
         if (!scale || typeof scale.min !== 'number' || typeof scale.max !== 'number') continue
@@ -539,7 +580,10 @@ export function Plot({
     const home = homeRef.current
     if (!plot || !home) return
     plot.batch(() => {
-      for (const key of Object.keys(home)) plot.setScale(key, { ...home[key]! })
+      for (const key of Object.keys(home)) {
+        if (lockedKeys.has(key)) continue
+        plot.setScale(key, { ...home[key]! })
+      }
     })
   }
 
@@ -552,7 +596,7 @@ export function Plot({
               type="button"
               className="sm ghost"
               onClick={() => zoomBy(ZOOM_STEP)}
-              disabled={pinned}
+              disabled={pinned || !homeReady}
               aria-label="확대"
               title={pinned ? PINNED_HINT : '확대 — 그래프 위를 드래그해도 그 부분만 확대됩니다'}
             >
@@ -562,7 +606,7 @@ export function Plot({
               type="button"
               className="sm ghost"
               onClick={() => zoomBy(1 / ZOOM_STEP)}
-              disabled={pinned || !zoomed}
+              disabled={pinned || !homeReady || !zoomed}
               aria-label="축소"
               title={pinned ? PINNED_HINT : '축소'}
             >
@@ -572,7 +616,7 @@ export function Plot({
               type="button"
               className="sm ghost"
               onClick={resetZoom}
-              disabled={!zoomed}
+              disabled={!homeReady || !zoomed}
               aria-label="확대 초기화"
               title="처음 보이던 범위로 되돌립니다 (그래프를 더블클릭해도 됩니다)"
             >

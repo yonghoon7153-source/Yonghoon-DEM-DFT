@@ -25,6 +25,7 @@ type BuiltOptions = {
   series: { stroke: string }[]
   axes: { stroke: string }[]
   hooks?: { setScale?: ((u: unknown, key: string) => void)[] }
+  cursor?: { drag?: { x?: boolean; y?: boolean; dist?: number; uni?: number } }
 }
 type Scale = { min: number; max: number; from?: string }
 interface Built {
@@ -36,12 +37,31 @@ const built = vi.hoisted(() => [] as Built[])
 vi.mock('uplot', () => {
   class FakePlot {
     options: BuiltOptions
-    // 0..10 가로, 0..100 세로.  '처음 눈금' 이 무엇이었는지가 이 시험의 전부라
-    // 데이터에서 다시 계산하지 않고 여기서 못 박는다.
-    scales: Record<string, Scale> = { x: { min: 0, max: 10 }, y: { min: 0, max: 100 } }
+    // **생성자는 눈금을 정하지 않는다.**
+    //
+    // uPlot 1.6.32 는 초기 commit 을 microtask 로 미루므로, 생성자가 반환할 때
+    // min/max 는 아직 ±Infinity 다 (`_init → _setSize → commit`,
+    // `commit → microTask(_commit)`).  예전 대역은 여기서 0..10 / 0..100 을
+    // 동기로 채워 넣었고, 그래서 **실제로는 죽어 있는 돋보기를 이 시험들이
+    // 정답으로 통과시켰다.**  라이브러리 계약과 반대인 대역은 시험이 아니다.
+    scales: Record<string, Scale> = {
+      x: { min: Infinity, max: -Infinity },
+      y: { min: Infinity, max: -Infinity },
+    }
     constructor(options: unknown) {
       this.options = options as BuiltOptions
       built.push({ options: this.options, plot: this })
+      queueMicrotask(() => this.commit())
+    }
+    /** uPlot 의 첫 `_commit`: 눈금을 정하고 setScale 훅을 부른다.
+     *  0..10 가로, 0..100 세로 — '처음 눈금' 이 무엇이었는지가 이 시험의
+     *  전부라 데이터에서 다시 계산하지 않고 여기서 못 박는다. */
+    commit() {
+      this.scales.x = { min: 0, max: 10 }
+      this.scales.y = { min: 0, max: 100 }
+      for (const key of ['x', 'y']) {
+        for (const hook of this.options.hooks?.setScale ?? []) hook(this, key)
+      }
     }
     batch(fn: () => void) {
       fn()
@@ -354,16 +374,28 @@ describe('돋보기', () => {
   const at = () => built.at(-1)!.plot
   const button = (name: string) => screen.getByRole('button', { name })
 
-  it('확대하기 전에는 전체·축소가 꺼져 있다', () => {
+  /** 그리고 **첫 눈금이 정해질 때까지 기다린다.**
+   *
+   *  실제 uPlot 과 같은 시점이다.  여기서 안 기다리면 "돋보기 기준 범위를
+   *  언제 잡는가" 라는 이 시험들의 전제 자체가 사라진다. */
+  async function renderPlot(ui: Parameters<typeof render>[0]) {
+    const result = render(ui)
+    await act(async () => {
+      await Promise.resolve()
+    })
+    return result
+  }
+
+  it('확대하기 전에는 전체·축소가 꺼져 있다', async () => {
     // 켜져 있는데 눌러도 아무 일이 없으면 버튼이 고장 난 것으로 읽힌다.
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     expect(button('확대 초기화')).toBeDisabled()
     expect(button('축소')).toBeDisabled()
     expect(button('확대')).toBeEnabled()
   })
 
-  it('확대하면 두 축이 함께 좁아지고, 전체가 켜진다', () => {
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+  it('확대하면 두 축이 함께 좁아지고, 전체가 켜진다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     act(() => button('확대').click())
     // 0..10 의 60 % 를 가운데에 두면 2..8.
     expect(at().scales.x).toEqual({ min: 2, max: 8 })
@@ -371,12 +403,12 @@ describe('돋보기', () => {
     expect(button('확대 초기화')).toBeEnabled()
   })
 
-  it('전체는 처음 눈금으로 정확히 돌아간다', () => {
+  it('전체는 처음 눈금으로 정확히 돌아간다', async () => {
     // "데이터 전체 범위를 다시 계산" 이 아니라 **처음 잡힌 눈금**이어야 한다.
     // uPlot 은 세로축에 여유를 주고 눈금을 예쁜 값으로 스냅하므로, 다시 계산한
     // 값은 처음 그림과 조금씩 다르다 -- 초기화를 눌렀는데 처음과 다르면 그것이
     // 버그다.
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     act(() => button('확대').click())
     act(() => button('확대').click())
     act(() => button('확대 초기화').click())
@@ -385,10 +417,10 @@ describe('돋보기', () => {
     expect(button('확대 초기화')).toBeDisabled()
   })
 
-  it('축소는 처음 범위를 넘지 않는다', () => {
+  it('축소는 처음 범위를 넘지 않는다', async () => {
     // 넘어가면 계속 누를 때 데이터가 점점 작아지다 사라지고, 전체와 다른 곳에
     // 멈춘다 -- 같은 "다 보이는 그림" 이 두 개가 된다.
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     act(() => button('확대').click())
     act(() => button('축소').click())
     act(() => button('축소').click())
@@ -396,8 +428,8 @@ describe('돋보기', () => {
     expect(button('확대 초기화')).toBeDisabled()
   })
 
-  it('구석에서 축소해도 폭은 지키고 자리만 안으로 민다', () => {
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+  it('구석에서 축소해도 폭은 지키고 자리만 안으로 민다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     // 왼쪽 끝을 보고 있는 상태 (드래그 확대로 이렇게 된다).
     act(() => at().setScale('x', { min: 0, max: 2 }))
     act(() => button('축소').click())
@@ -406,11 +438,11 @@ describe('돋보기', () => {
     expect(at().scales.x!.max).toBeCloseTo(10 / 3, 6)
   })
 
-  it('드래그로 확대해도 전체가 켜진다 — 버튼 누른 횟수를 세지 않는다', () => {
+  it('드래그로 확대해도 전체가 켜진다 — 버튼 누른 횟수를 세지 않는다', async () => {
     // uPlot 이 스스로 눈금을 바꾸는 길이 셋이다: 드래그 확대, 더블클릭 복귀,
     // 그리고 우리 버튼.  횟수를 세면 앞의 둘을 놓치고, 그때 버튼이 화면과
     // 어긋난 채로 남는다.
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
     act(() => at().setScale('x', { min: 3, max: 4 }))
     expect(button('확대 초기화')).toBeEnabled()
 
@@ -418,17 +450,53 @@ describe('돋보기', () => {
     expect(button('확대 초기화')).toBeDisabled()
   })
 
-  it('축이 잠겨 있으면 확대를 끄고 이유를 말한다', () => {
+  it('축이 잠겨 있으면 확대를 끄고 이유를 말한다', async () => {
     // 잠금이 걸린 축은 uPlot 이 매 프레임 그 범위를 다시 씌운다.  버튼을 살려
     // 두면 눌러도 그림이 안 바뀌고, 사람은 돋보기가 고장 났다고 읽는다.
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" xRange={[0, 5]} yRange={[1, 4]} />)
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" xRange={[0, 5]} yRange={[1, 4]} />)
     expect(button('확대')).toBeDisabled()
     expect(button('확대').title).toContain('축 고정')
   })
 
-  it('한쪽 끝만 잠근 것은 잠금이 아니다 — 반대쪽은 여전히 움직인다', () => {
-    render(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[0, null]} />)
+  it('한쪽 끝만 잠근 것은 잠금이 아니다 — 반대쪽은 여전히 움직인다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[0, null]} />)
     expect(button('확대')).toBeEnabled()
+  })
+
+  it('첫 눈금이 정해지기 전에는 버튼이 꺼져 있다', () => {
+    // 여기서 켜 두면 눌러도 아무 일이 없다 -- 실제로 그 상태로 나갔고, 사람은
+    // 돋보기가 고장 났다고 읽었다.  기준 범위가 없으면 없다고 보여 준다.
+    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    expect(button('확대')).toBeDisabled()
+    expect(button('축소')).toBeDisabled()
+    expect(button('확대 초기화')).toBeDisabled()
+  })
+
+  it('끌어서 만든 사각형이 그대로 화면이 된다 — 한 축만 늘어나지 않는다', async () => {
+    // `uni` 를 두면 가로로 길쭉하게 끌었을 때 세로는 그대로 남는다.  사람이
+    // 고른 것은 블록이지 가로 구간이 아니다.
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    const drag = built.at(-1)!.options.cursor?.drag
+    expect(drag?.x).toBe(true)
+    expect(drag?.y).toBe(true)
+    expect(drag?.uni).toBeUndefined()
+  })
+
+  it('잠긴 축은 드래그로도 안 움직인다', async () => {
+    // 버튼은 꺼 놓고 드래그만 살려 두면, 잠금이 잠깐 풀린 것처럼 보인다.
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
+    const drag = built.at(-1)!.options.cursor?.drag
+    expect(drag?.y).toBe(false)
+    expect(drag?.x).toBe(true)
+  })
+
+  it('한쪽만 잠근 그래프에서 확대해도 잠긴 축은 그대로다', async () => {
+    // uPlot 은 명시적으로 준 범위를 잠금의 range 콜백으로 다시 덮지 않는다.
+    // 그래서 확대가 잠긴 축까지 건드리면 잠금이 슬그머니 풀린다.
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
+    act(() => button('확대').click())
+    expect(at().scales.y).toEqual({ min: 0, max: 100 })   // 손대지 않았다
+    expect(at().scales.x).toEqual({ min: 2, max: 8 })
   })
 
   it('그릴 것이 없으면 버튼도 없다', () => {
