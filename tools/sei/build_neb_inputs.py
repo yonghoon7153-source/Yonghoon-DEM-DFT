@@ -35,6 +35,7 @@ import argparse
 import glob
 import json
 import os
+import re
 import sys
 from pathlib import Path      # ⚠ 2026-08-20 — uma_scout 저장부가 이걸 쓰는데 빠져 있었다.
 #   li2o 두 셀을 다 돌고 **결과를 쓰는 줄에서** NameError 로 죽어 li3p/li3po4g/licl 이
@@ -867,6 +868,98 @@ def build(tag, path, disp, a, pool):
 
 
 # ── UMA 정찰 (2026-08-19) ────────────────────────────────────────────────────
+def _atomic_rows(text, start=0, end=None):
+    """ATOMIC_POSITIONS 블록 하나 → [(심볼, [x,y,z]), …]. 단위가 angstrom 이 아니면 None."""
+    seg = text[start:end if end is not None else len(text)]
+    m = re.search(r"ATOMIC_POSITIONS\s*\(?\s*(\w+)", seg)
+    if not m or m.group(1).lower() != "angstrom":
+        return None
+    rows = []
+    for ln in seg[m.end():].splitlines():
+        pr = ln.split()
+        if len(pr) >= 4 and re.match(r"^[A-Z][a-z]?\d*$", pr[0]):
+            try:
+                rows.append((pr[0], [float(pr[1]), float(pr[2]), float(pr[3])]))
+            except ValueError:
+                break
+        elif rows:
+            break                      # 블록이 끝났다 (다음 카드로 넘어감)
+    return rows or None
+
+
+def verify_endpoints(work, only=None, tol=1e-4):
+    """이미 만들어진 neb.in 의 끝점이 **수렴한** relax.out 좌표와 같은지 대조한다.
+
+    왜 필요하냐 — 끝점 이완 이어달리기는 `ep_initial_r2/` 처럼 옆 디렉터리에 들어간다.
+    빌더가 그걸 승계하게 고쳐진 건 2026-08-17 인데, **그 전에 만들어진 neb.in** 은
+    미수렴 원본 좌표를 물고 있다. 미이완 끝점 위에서 NEB 을 돌리면 기준선이 위로
+    뜬 자로 높이를 재는 셈이라, 며칠을 태워 수렴해도 그 Ea 는 인용할 수 없다.
+    파일 시각(neb.in 이 더 나중)은 **증거가 아니다** — 좌표를 직접 대조한다.
+
+    ⛔ 이 함수가 못 하는 것: 중간 이미지의 타당성, k-mesh·컷오프·의사퍼텐셜 일치,
+      relax.out 이 **그 계**의 것인지(심볼 목록까지만 본다). 끝점 두 개만 본다.
+    """
+    import glob as _g
+    # 판정 규칙은 symmetric_saddle.endpoint_dir() 하나뿐이다 — 복사하지 말고 쓴다.
+    from symmetric_saddle import endpoint_dir   # noqa: E402
+    rc = 0
+    dirs = sorted(d for d in _g.glob(os.path.join(work, "*"))
+                  if os.path.isfile(os.path.join(d, "neb.in")))
+    if only:
+        dirs = [d for d in dirs if os.path.basename(d) in only]
+    if not dirs:
+        print(f"⛔ {work} 에 neb.in 이 있는 폴더가 없다")
+        return 1
+    for d in dirs:
+        tag = os.path.basename(d)
+        nt = open(os.path.join(d, "neb.in"), errors="ignore").read()
+        i1, i2 = nt.find("FIRST_IMAGE"), nt.find("LAST_IMAGE")
+        i3 = nt.find("END_POSITIONS")
+        if min(i1, i2, i3) < 0:
+            print(f"⛔ {tag}: neb.in 에 FIRST_IMAGE/LAST_IMAGE/END_POSITIONS 가 없다")
+            rc = 1
+            continue
+        print(f"── {tag} ──")
+        for name, (s, e) in (("ep_initial", (i1, i2)), ("ep_final", (i2, i3))):
+            want = _atomic_rows(nt, s, e)
+            srcd = endpoint_dir(d, name)
+            outp = os.path.join(srcd, "relax.out")
+            if not os.path.isfile(outp):
+                print(f"   ⛔ {name}: relax.out 없음 ({srcd})")
+                rc = 1
+                continue
+            tx = open(outp, errors="ignore").read()
+            if "Begin final coordinates" not in tx:
+                print(f"   ⛔ {name}: **수렴본이 아니다** — 'Begin final coordinates' 없음"
+                      f" ({os.path.basename(srcd)}). NEB 을 걸면 안 된다")
+                rc = 1
+                continue
+            k = tx.rfind("Begin final coordinates")
+            e2 = tx.find("End final coordinates", k)
+            got = _atomic_rows(tx, k, e2 if e2 > 0 else None)
+            if not want or not got:
+                print(f"   ⛔ {name}: 좌표 블록을 못 읽었다 (단위가 angstrom 인지 볼 것)")
+                rc = 1
+                continue
+            if len(want) != len(got) or [r[0] for r in want] != [r[0] for r in got]:
+                print(f"   ⛔ {name}: 원자 목록이 다르다 "
+                      f"(neb.in {len(want)} vs relax.out {len(got)})")
+                rc = 1
+                continue
+            dmax = max(max(abs(a - b) for a, b in zip(p, q)) for (_, p), (_, q)
+                       in zip(want, got))
+            if dmax <= tol:
+                print(f"   ✅ {name}: {os.path.basename(srcd)}/relax.out 수렴본과 일치 "
+                      f"(최대 |Δ| {dmax:.2e} Å, {len(want)}원자)")
+            else:
+                print(f"   ⛔ {name}: **좌표가 다르다** — 최대 |Δ| {dmax:.4f} Å "
+                      f"vs 수렴본 {os.path.basename(srcd)}/relax.out")
+                print(f"      → neb.in 이 미수렴 끝점 위에 세워졌다. "
+                      f"build_neb_inputs.py 로 다시 만들고 NEB 을 다시 걸 것")
+                rc = 1
+    return rc
+
+
 def uma_scout(args):
     """**어느 홉을 DFT 로 잴지** UMA 로 먼저 고른다. 답이 아니라 정찰이다.
 
@@ -1101,6 +1194,76 @@ def _selftest():
     ck("diff_reports_one", len(d) == 1 and d[0].startswith("ase_version:"), True)
     ck("diff_empty_when_same", protocol_diff(pay, dict(pay)), [])
 
+    # ── verify_endpoints: 임시 트리로 양성 1 · 음성 4 ─────────────────────────
+    import tempfile as _tf
+    import contextlib as _cl
+    import io as _io
+
+    def _mk(root, tag, ini, fin, relax_ini, relax_fin, conv=True, suf="_r2"):
+        d = os.path.join(root, tag)
+        for nm, blk in (("ep_initial", relax_ini), ("ep_final", relax_fin)):
+            dd = os.path.join(d, nm + suf)
+            os.makedirs(dd, exist_ok=True)
+            body = "Begin final coordinates\n" if conv else ""
+            body += "ATOMIC_POSITIONS (angstrom)\n" + blk
+            body += "End final coordinates\n" if conv else ""
+            open(os.path.join(dd, "relax.out"), "w").write(body)
+        open(os.path.join(d, "neb.in"), "w").write(
+            "BEGIN_POSITIONS\nFIRST_IMAGE\nATOMIC_POSITIONS angstrom\n" + ini +
+            "LAST_IMAGE\nATOMIC_POSITIONS angstrom\n" + fin + "END_POSITIONS\n")
+        return d
+
+    def _run(root, tag):
+        buf = _io.StringIO()
+        with _cl.redirect_stdout(buf):
+            r = verify_endpoints(root, [tag])
+        return r, buf.getvalue()
+
+    A = "  Li     0.0000000000     0.0000000000     0.0000000000\n" \
+        "  S      1.5000000000     1.5000000000     1.5000000000\n"
+    B = "  Li     2.0000000000     0.0000000000     0.0000000000\n" \
+        "  S      1.5000000000     1.5000000000     1.5000000000\n"
+    A_off = "  Li     0.0000000000     0.0000000000     0.4000000000\n" \
+            "  S      1.5000000000     1.5000000000     1.5000000000\n"
+    A_sym = "  Na     0.0000000000     0.0000000000     0.0000000000\n" \
+            "  S      1.5000000000     1.5000000000     1.5000000000\n"
+    with _tf.TemporaryDirectory() as _r:
+        _mk(_r, "ok", A, B, A, B)                       # ① 양성
+        ck("vep_pass", _run(_r, "ok")[0], 0)
+        _mk(_r, "drift", A, B, A_off, B)                # ② 음성: 좌표가 다르다
+        rc2, out2 = _run(_r, "drift")
+        ck("vep_drift_rc", rc2, 1)
+        ck("vep_drift_msg", "좌표가 다르다" in out2, True)
+        neg += 1
+        # ③ 음성: 수렴본이 아니다 (suf="" — endpoint_dir 이 원본으로 되돌아오는 경로)
+        _mk(_r, "unconv", A, B, A, B, conv=False, suf="")
+        rc3, out3 = _run(_r, "unconv")
+        ck("vep_unconv_rc", rc3, 1)
+        ck("vep_unconv_msg", "수렴본이 아니다" in out3, True)
+        neg += 1
+        # ③' 수렴본이 아예 없고 디렉터리도 없으면 '없음' 으로 잡는다 (다른 문구, 같은 ⛔)
+        _mk(_r, "nodir", A, B, A, B, conv=False)
+        rc3b, out3b = _run(_r, "nodir")
+        ck("vep_nodir_rc", rc3b, 1)
+        ck("vep_nodir_msg", "relax.out 없음" in out3b, True)
+        neg += 1
+        _mk(_r, "sym", A, B, A_sym, B)                  # ④ 음성: 원자 목록이 다르다
+        rc4, out4 = _run(_r, "sym")
+        ck("vep_symbol_rc", rc4, 1)
+        ck("vep_symbol_msg", "원자 목록이 다르다" in out4, True)
+        neg += 1
+        # ⑤ 음성: `_r2` 수렴본을 두고 미수렴 원본을 물고 있으면 잡아야 한다
+        #    (이게 cc333 을 며칠 태울 뻔한 바로 그 상황이다)
+        d5 = _mk(_r, "stale", A_off, B, A, B)
+        os.makedirs(os.path.join(d5, "ep_initial"), exist_ok=True)
+        open(os.path.join(d5, "ep_initial", "relax.out"), "w").write(
+            "The maximum number of steps has been reached.\n"
+            "ATOMIC_POSITIONS (angstrom)\n" + A_off)
+        rc5, out5 = _run(_r, "stale")
+        ck("vep_stale_rc", rc5, 1)
+        ck("vep_stale_msg", "미수렴 끝점 위에 세워졌다" in out5, True)
+        neg += 1
+
     if fails:
         print(f"⛔ selftest 실패 {len(fails)}/{n}")
         for f in fails:
@@ -1169,9 +1332,16 @@ def main():
                     help="spglib 없이 강행 (⚠ 전역 최단만 잰다 — li3nd 함정)")
     ap.add_argument("--plan", action="store_true",
                     help="⚠ 비용만 보고 **입력을 만들지 않는다** (돌리기 전에 이걸 먼저)")
+    ap.add_argument("--verify_endpoints", action="store_true",
+                    help="이미 만든 neb.in 의 끝점이 **수렴한** relax.out 좌표와 같은지 "
+                         "대조만 한다 (입력을 만들지 않는다). NEB 을 며칠 태우기 전에 이걸 먼저")
     a = ap.parse_args()
     if a.selftest:
         return _selftest()
+
+    # ⭐ 대조만 하는 모드 — pseudo·구조 파일을 아예 안 본다. 갈래를 위로 둔다.
+    if a.verify_endpoints:
+        return verify_endpoints(a.work, a.only)
 
     # ⭐ UMA 정찰은 pseudo·QE 를 아예 안 본다 — 아래 준비 단계보다 **먼저** 갈라진다.
     if a.uma_scout:
