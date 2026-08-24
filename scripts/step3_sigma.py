@@ -685,8 +685,18 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
     #    (`σ·vox²/dist`) 을 더하려면 같은 단위여야 한다.
     _vox = res.get('vox_um')
     _pe = res.get('plate_edges')
-    _use_plate = _pe is not None and _vox is not None
-    _u = float(_vox) if _use_plate else 1.0
+    #  ★★★ 2026-08-25 (Codex 재리뷰 조건 6d) — **플레이트 원장이 없으면 거부한다.**
+    #    초판은 `_use_plate = ... is not None` 로 두어, 옛 res 를 받으면 **조용히**
+    #    internal-only 로 돌아갔다 = CDXR2-1 이 고친 바로 그 틀린 답(10/13)을 다시 낸다.
+    #    `periodic_xy` 는 이미 fail-closed 인데 이쪽만 fail-open 이었다 (같은 함수 안에서
+    #    두 규약이 갈려 있었다).  ⇒ 같은 규약으로 맞춘다.
+    if _pe is None or _vox is None:
+        raise ValueError('phase_current_share: 플레이트 원장이 없다 (plate_edges/vox_um) — '
+                         'solve_sigma_z 의 새 res 를 쓸 것.  없이 계산하면 소산 분담이 '
+                         '내부 면만 세어 항등식 w_a = ∂ln σ_eff/∂ln σ_a 를 깬다 (CDXR2-1).  '
+                         '조용히 옛 값으로 돌아가지 않는다 (fail-closed)')
+    _use_plate = True
+    _u = float(_vox)
     for sl_a, sl_b in pairs:
         both = cond[sl_a] & cond[sl_b]
         sa, sb = sig[sl_a], sig[sl_b]
@@ -1727,6 +1737,83 @@ def _selftest():
     ok &= _i3
     print(f"plate-share-identity: w_a = d ln σ_eff/d ln σ_a 유한차분과 일치 "
           f"(A {_fdA:.6f} B {_fdB:.6f})  {'OK' if _i3 else 'FAIL'}")
+
+    #  ── ★★★ Codex 재리뷰 조건 6 (2026-08-25) — plate 회귀 4종 ────────────────────────
+    #    초판 회귀는 **윗판만·vox=1 만·`solve_sigma_z` 만** 봤다.  아래 넷은 각각
+    #    그 사각지대다 (Codex: "아래판 분기 · 반응 솔버 · 비단위 vox FD · 원장 부재").
+
+    #  ⓐ **아래판** 분기 — 위와 대칭인 코드가 따로 있어 따로 깨질 수 있다.
+    def _pcol_bot(bot_sid):
+        _a = np.zeros((3, 3, 4), np.int8)
+        _a[:, :, 1:4] = 1
+        if bot_sid:
+            _a[:, :, 0] = bot_sid
+        return solve_sigma_z(_a, _psig, _pv, z_top_um=4 * _pv, z_bot_um=0.0)['sigma_eff']
+    _b_ptfe, _b_se, _b_pore = _pcol_bot(7), _pcol_bot(6), _pcol_bot(0)
+    _q1 = _b_ptfe == 0.0 and _b_se == 0.0
+    ok &= _q1
+    print(f"plate-blocker-bottom: **아래판** 표면 절연 고체도 막는다 "
+          f"(PTFE {_b_ptfe:g} · SE {_b_se:g})  {'OK' if _q1 else 'FAIL'}")
+    _q2 = _b_pore > 0 and abs(_b_pore - _all_cond) < 1e-12
+    ok &= _q2
+    print(f"plate-poregap-bottom: 아래 공극 갭은 막지 않는다 (양성 대조 {_b_pore:g})  "
+          f"{'OK' if _q2 else 'FAIL'}")
+
+    #  ⓑ **반응 솔버** — 같은 규약이 두 번째 자리에도 걸려 있는가.
+    #     전자망 아래판이 절연 고체로 막히면 접점이 없어 `no_plate_contact` 여야 한다.
+    def _rxn_bot(bot_sid):
+        _a = np.zeros((3, 3, 5), np.int8)
+        _a[:, :, 1:4] = 1               # AM (전자 도체)
+        _a[:, :, 4] = 6                 # 위는 SE (이온 도체)
+        if bot_sid:
+            _a[:, :, 0] = bot_sid
+        _se = np.zeros(9); _se[1] = 0.010          # 전자: AM 만
+        _si = np.zeros(9); _si[6] = 0.001          # 이온: SE 만
+        _pid = np.where(_a == 1, 0, -1).astype(np.int32)   # 규약: AM 은 입자 0, 나머지 -1
+        return solve_reaction_current(_a, _se, _si, _pid, 1, _pv, 1,
+                                      z_top_um=5 * _pv, z_bot_um=0.0)
+    _rx_blk = _rxn_bot(7)               # 아래 표면 PTFE = 절연 고체
+    _rx_open = _rxn_bot(0)              # 아래가 공극 (양성 대조)
+    _q3 = 'no_plate_contact' in str(_rx_blk.get('reason') or '')
+    ok &= _q3
+    print(f"plate-blocker-rxn: **반응 솔버**도 절연 고체를 관통하지 않는다 "
+          f"(reason={_rx_blk.get('reason')})  {'OK' if _q3 else 'FAIL'}")
+    _q4 = not str(_rx_open.get('reason') or '').startswith('no_plate_contact')
+    ok &= _q4
+    print(f"plate-rxn-poregap: 아래 공극은 반응 솔버에서 막지 않는다 (양성 대조) "
+          f"{'OK' if _q4 else 'FAIL'}")
+
+    #  ⓒ **비단위 vox** FD 항등식 — 플레이트 g 는 `σ·vox²/dist` 라 vox 인자를 빠뜨려도
+    #     vox=1 에서는 **안 보인다**.  초판 회귀가 정확히 vox=1 뿐이었다.
+    _vv = 0.15
+    def _sigeff_v(_sa, _sb):
+        return solve_sigma_z(_cid, _cs(_sa, _sb), _vv,
+                             z_top_um=3 * _vv, z_bot_um=0.0)['sigma_eff']
+    _r3v = solve_sigma_z(_cid, _cs(1.0, 10.0), _vv, return_field=True,
+                         z_top_um=3 * _vv, z_bot_um=0.0)
+    _sh3v = phase_current_share(_r3v, _cid, _cs(1.0, 10.0), periodic_xy=False)
+    _fdAv = (math.log(_sigeff_v(math.exp(_h), 10.0))
+             - math.log(_sigeff_v(math.exp(-_h), 10.0))) / (2 * _h)
+    _fdBv = (math.log(_sigeff_v(1.0, 10.0 * math.exp(_h)))
+             - math.log(_sigeff_v(1.0, 10.0 * math.exp(-_h)))) / (2 * _h)
+    _q5 = abs(_fdAv - _sh3v.get(1, 0)) < 1e-5 and abs(_fdBv - _sh3v.get(2, 0)) < 1e-5
+    ok &= _q5
+    print(f"plate-share-identity-vox: **vox={_vv}** 에서도 항등식이 성립한다 "
+          f"(A {_fdAv:.6f}/{_sh3v.get(1, 0):.6f} B {_fdBv:.6f}/{_sh3v.get(2, 0):.6f})  "
+          f"{'OK' if _q5 else 'FAIL'}")
+
+    #  ⓓ **원장 부재 = 거부**.  초판은 조용히 internal-only 로 돌아가 CDXR2-1 이 고친
+    #     틀린 답(10/13)을 다시 냈다.  `periodic_xy` 는 이미 fail-closed 였는데 이쪽만
+    #     fail-open 이라 같은 함수 안에서 두 규약이 갈려 있었다.
+    try:
+        phase_current_share({'phi': _r3['phi'], 'cond': _r3['cond'], 'periodic_xy': False},
+                            _cid, _cs(1.0, 10.0))
+        _q6 = False
+    except ValueError as _e6:
+        _q6 = 'plate_edges' in str(_e6)
+    ok &= _q6
+    print(f"plate-share-failclosed: 플레이트 원장 없는 res 는 **거부**한다  "
+          f"{'OK' if _q6 else 'FAIL'}")
 
     print('SELFTEST', 'PASS' if ok else 'FAIL')
     return 0 if ok else 1
