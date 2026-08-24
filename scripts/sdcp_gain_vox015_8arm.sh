@@ -58,6 +58,27 @@ if [ -n "${SIGMA_PTFE:-}" ]; then
   PT_FLAG=" --sigma-ptfe $SIGMA_PTFE"; PT_TAG="_ptfe${SIGMA_PTFE//./}"
   echo "[p2] ★ **진단 팔** — PTFE 를 격자에 스탬프 (σ_PTFE=$SIGMA_PTFE).  생산 규약 아님 (CL-49)"
 fi
+#  ★★ 2026-08-24 (CDXR2-6) — PTFE **스탬프 규약**을 σ 와 따로 준다.
+#    `PTFE_STAMP=centerline` + σ 미지정 = **exact-zero DOF** (sid 7 을 찍되 σ=0 이라
+#    솔버의 `cond = sig > 0` 이 dof 에서 뺀다).  1e-16 우회로와 달리 조건수를 안 건드린다.
+#    ⚠ 반드시 **태그와 OUTDIR 을 가른다** — P2_EXTRA 로 주면 이름이 안 갈려 옛 팔과
+#      섞이고 SKIP 캐시가 오염된다 (H4 와 같은 실수).  그래서 전용 변수를 둔다.
+PS_FLAG=""; PS_TAG=""
+if [ -n "${PTFE_STAMP:-}" ]; then
+  case "$PTFE_STAMP" in
+    off|centerline) ;;
+    capsule) echo "[p2] ABORT — PTFE_STAMP=capsule 은 **예약값이고 미구현**이다 (payload 가 " \
+                  "unsupported_protocol 로 중단한다).  D-1 census 뒤에 구현한다"; exit 2;;
+    *) echo "[p2] ABORT — PTFE_STAMP 는 off 또는 centerline (받은 값: $PTFE_STAMP)"; exit 2;;
+  esac
+  PS_FLAG=" --ptfe-stamp $PTFE_STAMP"; PS_TAG="_pts${PTFE_STAMP}"
+  if [ -z "${SIGMA_PTFE:-}" ] && [ "$PTFE_STAMP" != "off" ]; then
+    echo "[p2] ★ **진단 팔** — PTFE 스탬프 $PTFE_STAMP · σ_PTFE 미지정 = **exact-zero DOF**." \
+         " 생산 규약 아님 (CDXR2-6)"
+  else
+    echo "[p2] ★ PTFE 스탬프 규약 = $PTFE_STAMP (명시)"
+  fi
+fi
 # ★ 스윕 팔에서 끌 것 (리뷰 ① H7): 팔당 σ_e 솔브 1회가 아니라 **7~8회**가 돈다.
 #   `--no-step4`(2×dof 연성계) · `--no-thermal` · `--no-trackb`(기하 τ) · `--no-field`.
 #   ⚠ `_res3w`/`_res3b`(collector wetted/bare)는 끄는 플래그가 **없어** 2회는 남는다 —
@@ -97,7 +118,7 @@ esac
 FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${FS_TAG}${LEAN_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${LEAN_TAG}}"
 #  ⚠ 이름 규약이 바뀌었다 — 2026-08-16/17 판별 런은 `prereg_v2_vox015[_sph]` 에 있다.
 #    그 팔들을 다시 돌리고 싶지 않으면 `OUTDIR=` 로 옛 경로를 명시할 것.
 _LEGACY="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}"
@@ -224,7 +245,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
