@@ -48,3 +48,10 @@ docs/figures/mpm*_*.png
 # 코멘트 쓰기 락 (프로세스 간 flock 용, 내용 없음)
 db/file_comments.json.lock
 db/*.tmp*
+
+# ── 다른 브랜치(충방전 webapp)의 로컬 런타임 산출물 (2026-08-25) ────────────
+#   브랜치를 오가면 이 두 개가 untracked 로 남아 dftpull 가드에 매번 걸린다.
+#   .bml/ = pid·로그·터널 상태 + 내려받은 cloudflared 바이너리 (전부 재생성물)
+#   apps/ = 그 앱 소스는 해당 브랜치에 추적돼 있고, 여기 남는 건 __pycache__ 류다
+.bml/
+apps/
