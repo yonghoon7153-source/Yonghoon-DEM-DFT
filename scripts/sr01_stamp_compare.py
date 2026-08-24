@@ -200,6 +200,21 @@ def check_arm(path, want, expect_backend=None):
     if _req is not None and _req != k:
         return (f'요청({_req}) ≠ 적용({k}) — 조용히 강등된 런이다.  '
                 f'다른 팔로 재활용하지 말 것 (같은 규약이라도 그 런은 실패를 겪었다)')
+    #  ★★ 2026-08-24 (CDXR2-5) — **`status: failed` 를 본다.**  payload 의
+    #    `except Exception` 경로는 STEP3 가 죽어도 `status='failed'` 만 적고 payload 를
+    #    정상적으로 쓴 뒤 **exit 0** 으로 끝난다.  그런데 그 try 블록은 σ_e 솔브 **뒤**의
+    #    작업(STEP4 grid 저장 등)까지 감싸므로, **σ_e 는 멀쩡한데 status 는 failed** 인
+    #    팔이 나올 수 있다 — 실사고가 정확히 그것이었다 ("payload 가 정상 완주한 뒤 죽었다").
+    #    옛 검사는 σ_e 가 양수라 **통과**시켰고, 그 팔이 영구 캐시됐다.
+    if s.get('status') == 'failed':
+        return (f'STEP3 가 실패로 기록됐다 (status=failed: {s.get("reason")!r}) — '
+                f'σ_e 가 있어도 그 런은 도중에 죽었다.  재활용하지 말 것')
+    _mc = ((s.get('manifest') or {}).get('components') or {})
+    _bad = [k2 for k2, v2 in _mc.items()
+            if isinstance(v2, dict) and v2.get('status') in ('failed', 'unconverged')]
+    if _bad:
+        return (f'manifest component 가 failed/unconverged 다: {sorted(_bad)} — '
+                f'부분 실패한 런이다.  재활용하지 말 것')
     if s.get('unconverged'):
         return 'CG 미수렴 (σ UNRELIABLE) — 다시 돌아야 한다'
     v = s.get('sigma_e_eff_S_cm')
@@ -490,6 +505,27 @@ def _selftest():
             '8l) ★★ cupy 를 깔면 다음 팔이 자동 GPU — CPU 로 끝난 팔을 SKIP 하지 않는다')
         chk(main(['--check-arm', good, '--stamp', 'point', '--expect-backend', 'gpu']) == 1,
             '8m) CLI: backend 불일치는 exit 1 (러너가 다시 돈다)')
+        #  ★★ 8n~8q 2026-08-24 (CDXR2-5) — **σ_e 가 멀쩡한데 런은 죽은** 팔.
+        #    payload 의 `except Exception` 은 σ_e 솔브 **뒤**의 작업(STEP4 grid 저장 등)까지
+        #    감싸므로, 값은 다 나온 뒤 죽으면 `status='failed'` 만 붙고 exit 0 으로 끝난다.
+        #    옛 검사는 σ_e 가 양수라 **통과**시켰고 그 팔이 영구 캐시됐다 (실사고 재현).
+        _f1 = _mk(0.0051, 'point'); _f1['metrics']['step3']['status'] = 'failed'
+        _f1['metrics']['step3']['reason'] = 'NameError: geom'
+        chk('status=failed' in (check_arm(w('f1.json', _f1), 'point') or ''),
+            '8n) ★ σ_e 는 멀쩡한데 status=failed 인 팔은 거부 (정상 완주한 뒤 죽은 런)')
+        _f2 = _mk(0.0051, 'point')
+        _f2['metrics']['step3'].setdefault('manifest', {})['components'] = {
+            'electronic': {'status': 'complete'}, 'ionic': {'status': 'unconverged'}}
+        chk('component' in (check_arm(w('f2.json', _f2), 'point') or ''),
+            '8o) ★ manifest component 가 unconverged 면 거부 (부분 실패한 런)')
+        _f3 = _mk(0.0051, 'point')
+        _f3['metrics']['step3'].setdefault('manifest', {})['components'] = {
+            'electronic': {'status': 'complete'}, 'ionic': {'status': 'disabled'}}
+        chk(check_arm(w('f3.json', _f3), 'point') is None,
+            '8p) 음성 대조 — `disabled`(LEAN=2 로 끈 것)는 실패가 아니다.  통과해야 한다')
+        _f4 = _mk(0.0051, 'point'); _f4['metrics']['step3']['status'] = 'complete'
+        chk(check_arm(w('f4.json', _f4), 'point') is None,
+            '8q) 음성 대조 — status=complete 는 통과 (과잉차단 아님)')
     print(f'\nsr01_stamp_compare selftest: {ok}/{ok + fail} PASS')
     return 0 if fail == 0 else 1
 

@@ -265,7 +265,24 @@ PY
     PK=$(awk -F': *' '/Maximum resident set size/{print $2}' "$RSSLOG")
     [ -n "$PK" ] && echo "[p2] ▸ $TAG 피크 호스트 RSS = $(awk -v k="$PK" 'BEGIN{printf "%.1f", k/1048576}') GB"
   fi
-  [ -s "$RUN/$(basename "$OUT")" ] && mv "$RUN/$(basename "$OUT")" "$OUT"
+  #  ★★ 2026-08-24 (CDXR2-5) — **fresh 팔도 검사한다.**  옛 판은 **캐시된** 팔만
+  #    `--check-arm` 을 돌리고 갓 만든 팔은 그대로 옮겼다.  payload 는 STEP3 예외를
+  #    `status: failed` 로 적고 **exit 0** 으로 끝낼 수 있으므로
+  #    (`mpm_webapp_payload.py` 의 `except Exception` 경로), 쓰레기 JSON 이 검사 없이
+  #    $OUTDIR 로 들어가고 다음 실행에서 "SKIP (완전)" 로 **영구 캐시**된다.
+  #    ⇒ 옮기기 **전에** 같은 검사기를 건다.  실패하면 옮기지 않고 $RUN 에 남겨 둔다
+  #      (증거 보존 — 지우면 왜 죽었는지 못 본다).
+  local FRESH="$RUN/$(basename "$OUT")"
+  [ -s "$FRESH" ] || { echo "[p2] ABORT — $TAG 이 산출물을 안 남겼다 ($FRESH)"; return 1; }
+  if ! python3 "$SCR/sr01_stamp_compare.py" --check-arm "$FRESH" --stamp "$FIBRE_STAMP" \
+       --expect-backend "${EXPECT_BACKEND:-gpu}" >/dev/null 2>&1; then
+    echo "[p2] ABORT — 갓 만든 $TAG 이 불완전하다.  **옮기지 않는다** (캐시 오염 방지):"
+    python3 "$SCR/sr01_stamp_compare.py" --check-arm "$FRESH" --stamp "$FIBRE_STAMP" \
+      --expect-backend "${EXPECT_BACKEND:-gpu}" 2>&1 | sed 's/^/     /'
+    echo "     원본을 남겨 둔다: $FRESH"
+    return 1
+  fi
+  mv "$FRESH" "$OUT"
 }
 
 echo "[p2] vox $VOX · 브리지 $BRIDGE_UM µm 고정 · 섬유 $FIBRE_STAMP · $ARMS 팔 · out $OUTDIR"
@@ -288,3 +305,18 @@ done
 echo
 echo "[p2] 수집 — 판정은 하지 않는다 (prereg §5 순서로 따로)"
 python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only
+
+#  ★★ 2026-08-24 (CDXR2-5) — `--collect-only` 는 **항상 exit 0** 이라 팔이 모자라도·
+#    미수렴이어도·고정인자가 어긋나도 러너가 초록으로 끝났다.  그렇다고 러너가 판정을
+#    돌리면 이 파일 헤더의 규약("결과를 보고 창을 옮길 수 없게")이 깨진다.
+#    ⇒ **봉인과 판정을 가른다**: 봉인 = 데이터가 쓸 만한가, 판정 = 그것이 뭐라고 말하는가.
+#      `--seal-only` 는 h0/h1 과 비를 **출력하지 않으므로** 사전등록이 안 깨진다.
+if [ "$ARMS" -ge 2 ]; then
+  if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only --require-arms "$ARMS"; then
+    echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
+    exit 1
+  fi
+  echo "[p2] ✓ 계약 봉인 통과 ($ARMS 팔).  판정은 prereg §5 순서로 **따로** 돌 것"
+else
+  echo "[p2] (ARMS=$ARMS — 단일팔 진단이라 봉인을 걸지 않는다: 표준오차가 없다)"
+fi

@@ -174,6 +174,23 @@ def _stats(vals):
     return {'n': n, 'mean': m, 'sd': sd, 'se': sd / math.sqrt(n)}
 
 
+def seal_lines(v):
+    """판정 dict → (봉인 통과?, 출력 줄들).  **h0/h1 과 비를 누설하지 않는다.**
+
+    러너가 이것을 돌린다.  봉인 = 데이터가 쓸 만한가(팔 수·origin 집합·수렴·digest·
+    고정인자), 판정 = 그것이 뭐라고 말하는가(h0/h1/비).  둘을 가르는 것이 요점이다 —
+    러너가 판정을 보면 사전등록이 깨진다 (결과를 보고 창을 옮길 수 있게 된다).
+    ⇒ HOLD 사유는 **데이터 상태**에 관한 말이라 실어도 되고, `decision`·`ratio`·
+      `ratio_paired_mean`·`ratio_arms` 는 **절대** 싣지 않는다."""
+    ok = v.get('decision') != 'HOLD'
+    out = ['', '══ 계약 봉인 (판정 아님) ══',
+           f'  봉인: {"통과" if ok else "**깨짐**"}']
+    if not ok:
+        out.append(f'  근거: {v.get("reason")}')
+    out.append('  ⚠ h0/h1 과 비는 출력하지 않는다 — 판정은 prereg §5 순서로 따로 돈다')
+    return ok, out
+
+
 def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
             require_digest=False):
     """prereg §5 판정.  **순서를 바꾸지 말 것.**
@@ -797,6 +814,24 @@ def _selftest():
                        **dict(_ig, ion_cg_info=30000, ion_unconverged=True)))
     chk(f'㉛d 음성 대조 — --require-ionic 없이는 이온 미수렴이 σ_e 판정을 막지 않는다 '
         f'({_v31d["decision"]})', _v31d['decision'] == 'h0')
+    #  ★★ ㉜ 2026-08-24 (CDXR2-5) — **봉인과 판정의 분리**.  러너의 마지막 줄이
+    #    `--collect-only` 라 항상 exit 0 이었다.  그렇다고 러너가 판정을 돌리면 이 파일
+    #    헤더의 규약("결과를 보고 창을 옮길 수 없게")이 깨진다.  `--seal-only` 는
+    #    데이터 상태만 말하고 답은 말하지 않는다 — 그 성질을 여기서 강제한다.
+    _sv_ok = verdict(mk(base, [v * 1.12 for v in base]))
+    _o1, _l1 = seal_lines(_sv_ok)
+    chk(f'㉜a 봉인 통과 시 ok=True ({_sv_ok["decision"]})', _o1 is True)
+    _sv_bad = verdict(mk(base, base[:4]))                     # 팔 수 불일치
+    _o2, _l2 = seal_lines(_sv_bad)
+    chk(f'㉜b 봉인이 깨지면 ok=False ({_sv_bad["decision"]})', _o2 is False)
+    _blob = '\n'.join(_l1 + _l2)
+    _leak = [t for t in ('h0', 'h1', str(_sv_ok.get('ratio')),
+                         str(_sv_ok.get('ratio_paired_mean')))
+             if t and t != 'None' and t in _blob.replace(
+                 '⚠ h0/h1 과 비는 출력하지 않는다 — 판정은 prereg §5 순서로 따로 돈다', '')]
+    chk(f'㉜c ★★ 봉인 출력이 **판정도 비도 누설하지 않는다** (누설: {_leak})', not _leak)
+    chk('㉜d 봉인이 깨진 이유는 싣는다 (데이터 상태는 답이 아니다)',
+        any('근거' in x for x in _l2) and not any('근거' in x for x in _l1))
 
     #  ㉖ ★★ CDXIJ-10 ③ — 입력 digest · code SHA.
     _dig = dict(input_digest='abc123def4567890', code_sha='1da6cbd')
@@ -1095,6 +1130,18 @@ if __name__ == '__main__':
                          '이름을 손으로 짓지 말 것 (예: --scan ~/sdcp)')
     ap.add_argument('--dir', default='')
     ap.add_argument('--collect-only', action='store_true')
+    #  ★★ 2026-08-24 (CDXR2-5) — 러너의 마지막 줄이 `--collect-only` 라 **항상 exit 0** 이었다.
+    #    팔이 모자라도·미수렴이어도·고정인자가 어긋나도 러너가 초록으로 끝났다.
+    #    그렇다고 러너가 판정을 돌리면 안 된다 — 이 스크립트 헤더가 못박은 대로
+    #    "결과를 보고 창을 옮길 수 없게" 판정은 따로 돌아야 한다.
+    #    ⇒ **봉인과 판정을 가른다**: 봉인 = 데이터가 쓸 만한가(팔 수·origin 집합·수렴·
+    #      digest·고정인자), 판정 = 그것이 뭐라고 말하는가(h0/h1/비).  봉인은 답을 누설하지
+    #      않으므로 러너가 돌려도 사전등록이 안 깨진다.
+    ap.add_argument('--seal-only', action='store_true',
+                    help='계약 **봉인만** 검사한다 (팔 수·origin 집합·수렴·digest·고정인자). '
+                         'h0/h1 과 비는 **출력하지 않는다** — 판정은 prereg §5 순서로 따로 '
+                         '돈다.  봉인이 깨지면 nonzero.  ⚠ 팔이 1개면 표준오차를 못 내 봉인이 '
+                         '깨진 것으로 나온다 — 단일팔 진단에는 쓰지 말 것 (러너가 ARMS≥2 에서만 건다)')
     ap.add_argument('--out', default='')
     ap.add_argument('--selftest', action='store_true')
     #  ★ 2026-08-19 (A5) — seed 앙상블 축.  `mpm_seed` **하나만** 고정 인자에서 면제한다.
@@ -1167,6 +1214,12 @@ if __name__ == '__main__':
     if a.collect_only:
         print('  (--collect-only — 판정하지 않는다)')
         raise SystemExit(0)
+    if a.seal_only:
+        _v = verdict(arms, seed_ensemble=a.seed_ensemble, require_arms=a.require_arms,
+                     require_ionic=a.require_ionic, require_digest=a.require_digest)
+        _ok, _lines = seal_lines(_v)
+        print('\n'.join(_lines))
+        raise SystemExit(0 if _ok else 1)
     v = verdict(arms, seed_ensemble=a.seed_ensemble,
                 require_arms=a.require_arms, require_ionic=a.require_ionic,
                 require_digest=a.require_digest)
