@@ -2535,3 +2535,104 @@ n_checks: 34
 Q1·Q3·Q4·Q5 회신은 전부 수용한다. Q5("literal audit 지금") 는 이번 라운드에서
 상태 enum 축을 단일 authority 로 만드는 것으로 착수했고, schema version·step
 number·target SHA·receipt field 축은 남았다.
+
+## 34. 25차 (2차 보충) 리뷰 대응 — 보존 트랜잭션을 실제로 만든다
+
+> 2026-08-25. 판정은 **묶음 9 설계·구현 착수 조건부 GO / 묶음 9 완료·새 leg
+> 실행 NO-GO**. 선행조건 10건이 붙었고 그것을 닫는다. 이 라운드에서 처음으로
+> **RUN_SCOPE 를 건드린다** — `source_digest` 가 `a72c0f3a485c19bb` →
+> `0b9fb0d4519d34ae` 로 움직였다.
+
+### 34.1 이번 라운드가 뒤집은 두 가지
+
+**(1) 회귀가 만든 트랩을 회귀로 풀었다.** 24차 보충에서 "원자료를 잃은 다리는
+기록된 세대 바이트에 대고 검사한다" 로 고쳤는데, 25차가 **그것으로는 부족하다**
+고 지적했다. 다른 세 회귀가 여전히 여덟 투영을 전역 하나로 묶고 있어서,
+analyzer 를 고치면 어느 쪽으로도 suite 를 만족시킬 수 없었다:
+
+```
+살아 있는 다리를 옛 투영 그대로 둔다   → current-tree equality 실패
+살아 있는 다리만 새 analyzer 로 재생성  → 전역 pin · 단일 세대 equality 실패
+```
+
+`comparison_set_status` 를 바꿔도 저 셋은 해제되지 않는다. 맞다. **cohort** 로
+나눴다 — g1(8다리, frozen) · g2(1다리, active). 새 세대는 새 경로에 쓰고 옛
+바이트를 덮지 않는다.
+
+**(2) 계산 digest 가 계산 의미를 빠뜨리고 있었다.** `_RESTART_SOURCES` 는
+`_restart_list()` 의 허용·거부를 정하는데 `compute_sha256` 밖에 있었다. 허용
+목록에 값을 하나 더해도 digest 가 안 움직이고, breaker 는 파일 전체 SHA 를
+일부러 제외하므로 교차비교도 `intact` 로 남는다 — **의미가 바뀌었는데 아무 것도
+안 깨진다.** 손으로 고른 목록을 **dependency closure** 로 바꿨다.
+
+이 둘을 고친 뒤 `paired_fixed5_v4` 를 새 cohort 에 재생성한 결과가 중요하다:
+
+| | g1 | g2 |
+|---|---|---|
+| `projection_sha256` | `ad598fe7…` | **동일** |
+| `restart_projection_sha256` | `84333ad3…` | **동일** |
+| `analysis_spec_sha256` · `fits_sha256` | | **동일** |
+| `compute_sha256` | `73c1ac4b…` | `1c36a92f…` |
+| `row_projection_py_sha256` | `bbb47442…` | `923ba02d…` |
+
+**내용은 그대로고 identity 회계만 엄격해졌다.** digest 수정이 계산을 바꾸지
+않았다는 직접 증거다. (g1 은 py3.12.3/numpy 2.5.2, g2 는 py3.11.15/numpy 2.4.6
+에서 만들었다 — runtime 이 equality 축이 아니라는 것도 같이 실측됐다.)
+
+### 34.2 발견별 대응
+
+| # | 발견 | 대응 | 검사 |
+|---|---|---|---|
+| 1 | historical dispatch 가 여전히 충족 불가능 | cohort 로 분리 (frozen/active) | `test_every_projection_matches_its_own_cohort_pin` 외 3건 |
+| 2 | `compute_sha256` 가 계산 의미를 빠뜨림 | dependency closure | `test_compute_digest_moves_when_a_constant_the_compute_path_reads_moves` + 반대 방향 1건 |
+| 3 | "실물 검사" 가 같은 크기 손상을 놓침 | `archive_bundle.check()` 를 **호출**해 전수 재해시 | `test_full_bundle_payload_members_are_rehashed_one_by_one` |
+| 4 | 영수증이 재생 불가·결속 없음 | `make_receipt.py` — 빈 root 복원 + 재채점 + 두 digest, core/stamp 분리 | `test_full_bundle_claims_are_backed_by_a_real_bundle` (구조 파싱) |
+| 5 | 허용표가 정상 상태를 빠뜨림 | 열거 → **제약에서 생성**, 계획 다리 분리 | `_allowed_combos` · `test_preservation_registry_holds_executed_legs_only` |
+| 6 | `claim_roles` 가 자유문장 | `CLAIM_STATUS.active_claims` + role enum + 세대 | `test_claim_roles_are_a_machine_contract_not_free_prose` |
+| 7 | 묶음 9 트랜잭션 미정의 | `tools/preserve.py` two-phase + 실패 17종 | `tests/test_preserve.py` 26건 |
+| 8 | smoke 가 실행 승인을 발행 | 문구 제거 + 보존 gate 미완료 경고 | 실행 출력 |
+| 9 | xfail 이 실패 원인을 넓게 삼킴 | 손상 뒤 `ArrowInvalid` 에만 한정 | 전제 파괴 변이 = 정상 FAIL 확인 |
+| 10 | committed 요청문 stale | 묶음 번호 3→9, 옛 상태 tuple 철회 표기 | `test_docs_do_not_claim_lost_legs_are_regenerable` 외 |
+
+### 34.3 묶음 2 를 앞당겼다 (Q3)
+
+리뷰가 "묶음 9 는 planned leg index 를 key 로 쓰므로 묶음 2 가 먼저" 라고
+답했다. `tools/design_wire.py` + `tools/design_golden.yaml`:
+
+- **arm registry** 가 계약 §5 의 2×2 와 회귀로 묶였다 (표와 코드가 갈리면 실패)
+- **좌표에 이진 float 를 금지**하고 십진 문자열만 받는다
+- 십진 **정규화** — 초판 golden 이 `0.17` 과 `0.170` 을 **다른 조건**으로
+  갈랐다. 그것을 보고 고쳤다. 계약 §4.2 가 경고한 "조용한 merge/split" 의
+  숫자판이다
+- ID 사슬 `pair_group_id → bank_id → candidate_id` 를 golden vector 로 고정.
+  arm registry 를 한 글자 고치거나 직렬화 구분자를 바꾸면 golden 이 깨진다
+  (변이 2종 확인)
+
+### 34.4 묶음 9 — 무엇을 만들었고 무엇이 아직 아닌가
+
+`tools/preserve.py` 의 불변식은 하나다: **어느 단계에서 멈추든 public index 는
+오염되지 않는다.** 실패 17종을 주입해 전부 확인했다 (계약 §13.2 표).
+
+**아직 "닫음" 이 아닌 이유 셋:**
+
+1. `run.sh`·smoke 의 **필수 gate 로 배선되지 않았다.** 호출하지 않으면 그만이고,
+   그것이 정확히 8월 20일 사고의 형태다.
+2. 실제 운영 backend canary 가 없다. Q1 대로 local `file+cas://` 로 트랜잭션
+   **의미**만 검증했다.
+3. `planned_leg_index` 가 실제 leg 원장과 결속되지 않았다 (묶음 1·6 필요).
+
+### 34.5 스스로 찾은 것 — 영수증이 조용히 낡았다
+
+`tools/` 에 파일을 더하자 `source_digest` 가 또 움직였고 (`73c67903` →
+`0b9fb0d4`), 커밋된 영수증은 옛 digest 를 들고 있었다. **그런데 회귀가
+통과했다** — 영수증과 원장을 서로 비교하기만 했기 때문이다. 24차 보충 발견 5-1
+이 지적한 형태가 새 파일에서 재발한 것이다.
+
+영수증이 **현행 검증기**보다 낡으면 실패하도록 고쳤다. 그 뒤 재생성했고,
+dirty 트리와 clean 트리에서 만든 core sha 가 `f0bae903e015a177` 로 **같다** —
+core/stamp 분리가 의도대로 동작한다는 증거다.
+
+### 34.6 계약 v4 §13 — "닫음" 판정을 전부 철회
+
+초판이 묶음 7·10 을 "닫았다" 고 적었고 리뷰가 둘 다 반례를 냈다. §13 은 이제
+**미착수 / 부분** 둘만 쓴다. 닫힘 판정은 리뷰가 한다.

@@ -83,9 +83,9 @@ core:
     semantic_sha256: e4a5448ed906c34afcc4651ea42b5716ffdaa8494daf6e5122ba65320760c0ba
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: 39dd30902d39cd7c98860fd0e01b18f9bb035168
-  validator_tree_dirty: true
-  generated_at_utc: '2026-08-24T21:58:24Z'
+  validator_commit: cedaf922e937a995aeb123c93a149d6253167b11
+  validator_tree_dirty: false
+  generated_at_utc: '2026-08-24T22:03:38Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v21-x86_64-with-glibc2.39
