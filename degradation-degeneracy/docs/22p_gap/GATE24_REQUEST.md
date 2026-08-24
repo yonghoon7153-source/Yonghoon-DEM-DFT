@@ -8,7 +8,7 @@ source_digest  a72c0f3a485c19bb   ← 21·22·23·24차와 동일 (RUN_SCOPE 무
 code_target        439e06ef594acff751a557c2fe4cda86d953a6e0   §1~§10  (24차 본 요청)
 supplement_parent  58fb51ed…                                   §11 을 담은 커밋의 부모
 supplement_target  0ca48cbf…                                   §11    (원자료 손실 정정)
-supplement2_target <이 커밋>                                    §12    (24차 보충 리뷰 대응)
+supplement2_target d405d1b855e975c2e34974a776c3ac2b6ee99141   §12    (24차 보충 리뷰 대응)
 직전 대상          a037eba4ef2e65205522380b123455c5de1dcda3   (23차, NO-GO)
 ```
 
@@ -414,3 +414,147 @@ footer 손상 시 `pd.read_parquet` 이 먼저 죽어 `ArrowInvalid` 가 그대�
   검색하지 않았다 (보충 발견 5). §12.3 에서 고쳤다.
 
 변이 2건(손실 다리를 "검증됨" 으로 위장 · 원장에서 다리 삭제) 전부 실패 확인.
+
+---
+
+## 12. 24차 **보충** 리뷰 대응 (2026-08-24)
+
+```
+검토 대상   d405d1b855e975c2e34974a776c3ac2b6ee99141   ← 이 절이 말하는 tree
+직전 보충   0ca48cbf393f5a54facf68b27620ac0c202ef8f7   (24차 보충, NO-GO)
+diff        0ca48cbf..d405d1b8   8파일 +999/-101
+source_digest  a72c0f3a485c19bb  ← 무변경 (RUN_SCOPE 밖만 고쳤다)
+재현        git checkout d405d1b8 && cd degradation-degeneracy
+```
+
+### 12.1 `d405d1b8` 자체의 영수증 (보충 발견 9)
+
+이전 요청문은 `439e06ef` 의 `689 passed` 를 §11 의 근거처럼 제시했다. §11 은
+`439e06ef` 에 없으므로 그 지시대로 체크아웃하면 §11 이 말하는 파일이 없다.
+이번에는 **이 절이 말하는 커밋에서** 직접 돌린 출력만 적는다.
+
+```
+$ git rev-parse HEAD
+d405d1b855e975c2e34974a776c3ac2b6ee99141
+$ git status --short
+(빈 출력)
+
+$ python3 -m pytest tests/ -q
+700 passed, 1 xfailed in 239.57s (0:03:59)
+
+$ ./scripts/smoke_e2e.sh
+✅ end-to-end smoke 통과 — 본 실행을 시작해도 된다
+
+$ python3 -c "…source_digest()"
+a72c0f3a485c19bb
+
+$ python3 wiki/tools/lint.py
+RESULT: 0 errors
+```
+
+`xfailed` 1건은 발견 8 의 수용조건이다 (§12.6).
+
+### 12.2 발견 1~5 — 상태 schema 를 하나로
+
+| 발견 | 대응 | 검사 |
+|---|---|---|
+| 1 `canonical_candidate` | 폐기. 회귀가 계약 §8 fenced 블록을 **파싱**한다 | `test_status_axis_enums_have_exactly_one_authority` |
+| 2 `missing`→`recorded_projection` | 7다리 재분류 | `test_legs_with_projection_but_no_raw_are_recorded_projection` |
+| 3 v5 를 canonical 로 | `full_bundle / historical_validated / diagnostic` + `claim_roles` | `test_registry_rejects_impossible_status_tuples` |
+| 4 evidence 미결속 | bundle URI·파일수·바이트·index SHA·영수증 SHA·validator identity | `test_full_bundle_claims_are_backed_by_a_real_bundle` (디스크 재계산) |
+| 5-1 반례 4종 통과 | 계약 §8 **허용 조합표** + 중복 ID 거부 | 위 + `test_preservation_registry_coverage_rule_matches_its_docstring` |
+| 5-2 이름과 다른 회귀 | 두 테스트를 합치고 금지 문구 검색 추가 | `test_docs_do_not_claim_lost_legs_are_regenerable` |
+
+리뷰가 준 반례를 그대로 변이로 넣고 전부 실패를 확인했다 (원장 §33.5, 8종).
+
+### 12.3 발견 6 — CI 트랩 제거
+
+```yaml
+# LEG_PRESERVATION.yaml
+projection_generation_pin:
+  schema_version: 3
+  compute_sha256: 73c1ac4ba06e59dc
+  src_scoring_py_sha256: 69e69cb046f4b4ae
+  analysis_spec_sha256: f1898eb6…
+  comparison_set_status: intact   # intact | broken_by_analyzer_change
+```
+
+- `available_raw_present` → 현행 트리 equality (낡음 감시가 여기 산다)
+- `unavailable_raw_lost` → 원장 pin equality (영구 만족 가능)
+- 분석기 **계산 축**이 pin 에서 벗어나면 `comparison_set_status` 선언을 강제
+- `row_projection_py_sha256`(파일 전체 해시)는 pin 에 기록만 하고 breaker 로
+  쓰지 않는다 — 주석 한 줄로 교차비교가 깨지면 안 된다 (22차 자체 발견)
+
+변이 2종 확인: 계산 경로 변경 → 원자료 있는 다리만 stale + 교차비교 선언 강제.
+주석만 변경 → 교차비교 무사.
+
+### 12.4 발견 7 — 원인 진단 정정 + 순서·digest 시점
+
+원인은 "보존 도구 부재" 가 아니라 **강제 부재**다. 리뷰가 옳다:
+
+```
+$ python -m tools.archive_bundle check artifacts/paired_fixed5_v4
+검증 가능: 필요한 파일이 모두 있고 digest가 일치한다
+$ git ls-files artifacts/paired_fixed5_v4/ | wc -l
+26
+```
+
+digest 동결 시점도 명시했다. 리뷰의 두 갈래 중 **2번(archiver 코드 변경)**
+을 고른다 — 묶음 9 의 트랜잭션 강제가 코드 변경 없이는 불가능하기 때문이다.
+따라서 `source_digest` 는 13 이 아니라 **12 에서** 움직인다 (계약 §11).
+
+stale 정정: `08_REVIEW_RESPONSE.md:2013·2205·2287-2289·2391(§9.5 → 실재 절)`,
+`LEG_INVENTORY.md` 2차 갱신 머리, `STAGE3_CONTRACT.md` §8·§10,
+`GATE24_REQUEST.md` §0·§7·§10.
+
+### 12.5 발견 9 — 계약 v4 §13
+
+| 묶음 | 상태 |
+|---|---|
+| 1~6 (24차) | 미착수 — 전부 `src/`·새 schema. 계약 §13.1 에 원장화 |
+| 7 상태 schema 단일 authority | **닫음** (§13.2) |
+| 8 immutable index·receipt | **부분** (§13.3) — score/analyze 산출 digest 결속과 비-git backend URI 미완 |
+| 9 트랜잭션 보존 gate | 미착수 — **다음 라운드의 본체** (§13.4) |
+| 10 historical projection dispatch | **닫음** (§13.5) |
+
+### 12.6 발견 8 — 수용조건을 지금 적어 뒀다
+
+```python
+v = validate_provenance(corrupt_bundle)
+assert v["ok"] is False
+assert "fits_읽기" in v["fail"]
+```
+
+`tests/test_compare.py::test_validate_provenance_reports_a_corrupt_fits_as_a_finding`
+에 **`xfail(strict=True)`** 로 넣었다. `src/io.py` 는 RUN_SCOPE 라 지금 고치면
+digest 가 바뀌므로 12·13 단계로 이월하되, **고치는 순간 XPASS 로 실패**해서
+marker 를 지우게 만든다.
+
+### 12.7 요청
+
+| 대상 | 요청 |
+|---|---|
+| 보충 발견 1~9 | 닫혔는가 |
+| 계약 **v4** §8 허용 조합표 · §13 묶음 원장 | 묶음 9 착수 가능한가 |
+| 묶음 9 의 acceptance fixture 형태 | 어떤 영수증을 어디까지 요구하는가 (§12.8 Q1) |
+| 대규모 재실행 | **승인 요청하지 않는다** |
+
+### 12.8 질문
+
+**Q1 — 묶음 9 의 acceptance 는 어디까지인가.** 트랜잭션 순서는
+`run → seal → external copy → index commit → empty-root restore → validator +
+score/analyze receipt → 등록` 이다. 이 중 **external copy** 의 backend 를
+이번 단계에서 실제로 세워야 하는가, 아니면 git `artifacts/` 를 backend 로 두고
+URI 형식·retention·atomic promotion 만 코드로 강제하면 acceptance 로
+충분한가? (전자는 자격증명·외부 인프라가 필요해 이 브랜치에서 검증 불가다.)
+
+**Q2 — score/analyze 영수증의 결속 단위.** 발견 4 가 요구한 "empty-root
+restore + validate + score/analyze output digests" 에서, score/analyze 산출의
+digest 는 (a) `degeneracy_summary.yaml` 등 파일별 sha256 목록인가,
+(b) 재채점 결과의 **내용 digest**(투영과 같은 방식)인가? 후자여야 파일 포맷
+변경에 견딘다고 보는데, 전자를 원하면 그렇게 맞춘다.
+
+**Q3 — 묶음 1~6 의 착수 순서.** 지금 계약은 정의만 있고 구현이 없다.
+묶음 9 를 먼저 닫고 1~6 을 그 gate 아래에서 구현하는 순서로 이해했다.
+1~6 중 **묶음 2(canonical pairing-design wire schema + golden vectors)** 만
+따로 앞당길 이유가 있는가? 그것이 나머지의 입력이라 병목으로 보인다.
