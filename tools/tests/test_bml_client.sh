@@ -302,6 +302,32 @@ check "자기 데이터 폴더를 안 찾는다" "$(case "$out" in *"데이터 �
 check "빈 data/ 를 만들지 않는다"    "$([ -d "$TMP/없는폴더" ] && echo no || echo yes)" "yes"
 
 echo
+echo "중추 서버 주소가 이 기계 자신을 가리키는 경우"
+# 실제로 막힌 자리 (2026-08-24): 이 설정이 걸려 있으면 bml 은 서버를 띄우지도
+# 빌드하지도 않고 브라우저만 연다.  이미 떠 있던 옛 서버가 계속 응답하므로
+# 화면은 멀쩡하고, git pull 을 받아도 화면이 그대로다 — "restart 했는데 안
+# 바뀐다" 가 이렇게 나온다.  판정이 조용히 틀리면 안내도 같이 사라진다.
+PORT=5003
+check "localhost 는 이 기계다"  "$(server_is_this_machine http://localhost:5003 && echo yes || echo no)" "yes"
+check "127.0.0.1 도 이 기계다"  "$(server_is_this_machine http://127.0.0.1:5003 && echo yes || echo no)" "yes"
+# 포트가 다르면 다른 서비스다 — 같은 기계라도 우리 것이 아니다.
+check "포트가 다르면 아니다"    "$(server_is_this_machine http://localhost:9999 && echo yes || echo no)" "no"
+# 남의 기계는 당연히 아니다.  여기서 yes 가 나오면 멀쩡한 설정에 헛경고가 뜬다.
+check "남의 LAN 주소는 아니다"  "$(server_is_this_machine http://192.0.2.7:5003 && echo yes || echo no)" "no"
+check "빈 주소는 아니다"        "$(server_is_this_machine "" && echo yes || echo no)" "no"
+# IPv6 리터럴이 대괄호째 들어와도 호스트와 포트를 갈라야 한다.
+check "IPv6 루프백도 이 기계다" "$(server_is_this_machine 'http://[::1]:5003' && echo yes || echo no)" "yes"
+
+echo
+echo "중추 서버를 봐도 저장소는 맞춘다"
+# 이 분기가 sync_repo 를 건너뛰면, 그 기계의 bml·문서·스킬이 클론한 시점에
+# 얼어붙는다.  중추 서버 자신에게 use 가 걸리면 아무도 코드를 갱신하지 않는다.
+# serve 와 restart 두 분기 모두여야 한다.  하나만 고치면 나머지 하나로 들어온
+# 사람에게 같은 증상이 그대로 남는다.
+check "serve·restart 두 분기가 sync_repo 를 부른다" \
+  "$(grep -c 'if \[ -n "$SERVER" \]; then sync_repo; cmd_connect' "$BML")" "2"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '통과 %d건.\n' "$pass"
 else

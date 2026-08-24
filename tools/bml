@@ -1791,6 +1791,12 @@ cmd_use() {
     if [ -n "$SERVER" ]; then
       say "중추 서버  ${B}${SERVER}${OFF}   ${DIM}($REPO/.bml/env)${OFF}"
       if server_alive "$SERVER"; then ok "응답합니다."; else warn "지금은 응답하지 않습니다."; fi
+      if server_is_this_machine; then
+        say ""
+        warn "이 주소는 ${B}이 기계 자신${OFF}입니다 — 설정을 지우는 편이 맞습니다."
+        say "  ${DIM}이대로면 bml 이 서버를 띄우지도 빌드하지도 않아, 갱신을 받아도${OFF}"
+        say "  ${DIM}화면이 그대로입니다.${OFF}  ${GREEN}bml use off${OFF}"
+      fi
     else
       say "${DIM}중추 서버가 설정돼 있지 않습니다 — 'bml' 은 이 기계에 서버를 띄웁니다.${OFF}"
       say "  ${GREEN}bml use 192.168.0.7${OFF}   ${DIM}(중추 서버 PC 의 주소)${OFF}"
@@ -1833,9 +1839,42 @@ cmd_use() {
 #: 중추 서버를 여는 것이 전부다.  pull 도 venv 도 하지 않는다 — 이 기계는
 #: 코드를 실행하지 않으므로 최신일 필요가 없고, 무엇보다 data/ 를 만들지
 #: 않는다.  코드를 고칠 때만 `bml dev` 로 자기 서버를 띄운다.
+#: `bml use` 로 적어 둔 주소가 이 기계 자신을 가리키는가.
+#:
+#: 그러면 `bml` 은 서버를 띄우지도 빌드하지도 않고 브라우저만 연다 —
+#: 이미 떠 있던 옛 서버가 계속 응답하므로 화면은 멀쩡하고, 갱신을 받아도
+#: 반영되지 않는다.  **"restart 했는데 안 바뀐다" 가 이렇게 나온다.**
+#: 실제로 그렇게 됐다 (2026-08-24, 비교 화면의 dQ/dV 토글).
+#:
+#: 주소만 받아 시험할 수 있게 인자를 하나 받는다.
+server_is_this_machine() {
+  local url="${1:-$SERVER}"
+  [ -n "$url" ] || return 1
+  local rest="${url#*://}"; rest="${rest%%/*}"
+  local host="$rest" port=""
+  case "$rest" in
+    \[*\]*)  host="${rest%%]*}]"; port="${rest##*]}"; port="${port#:}" ;;
+    *:*)     host="${rest%%:*}";  port="${rest##*:}" ;;
+  esac
+  [ -n "$port" ] || port=80
+  [ "$port" = "$PORT" ] || return 1
+  case "$host" in
+    localhost|127.0.0.1|'[::1]'|::1|0.0.0.0) return 0 ;;
+  esac
+  hostname -I 2>/dev/null | tr ' ' '\n' | grep -qx -- "$host"
+}
+
 cmd_connect() {
   say "${B}Battery Lab Workbench${OFF}  ${DIM}중추 서버${OFF}"
   say ""
+  if server_is_this_machine; then
+    warn "중추 서버 주소가 ${B}이 기계 자신${OFF}을 가리킵니다 — ${SERVER}"
+    say "  ${DIM}그러면 bml 은 서버를 띄우지도, 화면을 빌드하지도 않고 브라우저만${OFF}"
+    say "  ${DIM}엽니다.  이미 떠 있던 옛 서버가 계속 응답하므로, 갱신을 받아도${OFF}"
+    say "  ${DIM}화면이 그대로입니다.${OFF}"
+    say "  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF} ${DIM}— 이 기계가 직접 띄우게 하세요.${OFF}"
+    say ""
+  fi
   if ! wait_until_alive "$SERVER" "${WORKBENCH_WAIT:-20}"; then
     printf '%s✕%s 중추 서버가 응답하지 않습니다: %s\n' "$RED" "$OFF" "$SERVER" >&2
     server_unreachable_help "$SERVER"
@@ -2385,8 +2424,12 @@ main() {
 
   case "${1:-serve}" in
     serve|start|up|"")
-      # 중추 서버가 정해져 있으면 아무것도 띄우지 않는다 (ADR 0011).
-      if [ -n "$SERVER" ]; then cmd_connect
+      # 중추 서버가 정해져 있으면 서버를 **띄우지는** 않는다 (ADR 0011).
+      # 그래도 저장소는 맞춘다: 이 기계의 bml·문서·스킬이 전부 저장소에서
+      # 오므로, 안 맞추면 그 기계만 클론한 시점에 얼어붙는다.  그리고 중추
+      # 서버 자신에게 `bml use` 가 걸려 있으면 이 분기 때문에 **아무도** 코드를
+      # 갱신하지 않게 되는데, 화면은 멀쩡해서 티가 안 난다.
+      if [ -n "$SERVER" ]; then sync_repo; cmd_connect
       else sync_repo; ensure_deps; start_serve; fi
       ;;
     dev)
@@ -2398,7 +2441,9 @@ main() {
     stop|down)         cmd_stop ;;
     restart)
       cmd_stop
-      if [ -n "$SERVER" ]; then cmd_connect
+      # serve 와 같은 이유로 여기서도 맞춘다.  restart 는 "고친 것을 반영해
+      # 달라" 는 뜻이라, 갱신을 건너뛰면 정확히 그 요청을 배신한다.
+      if [ -n "$SERVER" ]; then sync_repo; cmd_connect
       else sync_repo; ensure_deps; start_serve; fi
       ;;
     pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
