@@ -475,6 +475,33 @@ def finite_belt(obj, path='$', found=None):
 #    구현이 들어올 때 이 목록이 fail-open 을 막는 자리다.
 PTFE_STAMP_NEEDS_DIA = ('capsule',)
 
+#: ★★★ **물리 규약 정체성** (CDXR3-3, 종료조건 ③④).  `schema_version` 은 **파일 구조**,
+#   이것은 **물리 의미**다 — 둘 중 하나가 다른 하나를 대신하지 못한다 (Codex).
+#   여기 적힌 인자가 하나라도 다르면 **다른 규약**이고, 그 결과는 섞으면 안 된다.
+#   ⚠ 값은 **적용된 것**(applied)이지 요청값이 아니다.  요청↔적용 불일치는 별 필드로 남긴다.
+PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
+                   'sdcp_yield_to_vgcf', 'ptfe_stamp', 'ptfe_zero_dof',
+                   'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
+                   'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
+                   'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c')
+
+
+def physics_protocol_id(man):
+    """적용된 규약 dict → 안정 해시 문자열.  **선언이 아니라 결과**다.
+
+    ★ 왜 (Codex CDXR3-3): 러너가 요청한 규약과 payload 가 실제로 적용한 규약을
+      **end-to-end 로 대조할 방법이 없었다**.  `_ptscenterline` OUTDIR 에서 모든 팔이
+      조용히 `off` 로 돌아도 서로만 같으면 초록이었다.
+    ⚠ 값이 하나라도 **없으면** 규약을 확정할 수 없다 → `unknown:<빠진 필드>` 를 낸다
+      (임의 기본값으로 채우지 않는다 — 그것이 fail-open 이다)."""
+    import hashlib as _hl
+    _miss = [k for k in PROTOCOL_FIELDS if man.get(k) is None]
+    if _miss:
+        return 'unknown:' + ','.join(sorted(_miss))
+    _canon = json.dumps({k: man[k] for k in PROTOCOL_FIELDS}, sort_keys=True,
+                        ensure_ascii=False, separators=(',', ':'))
+    return 'p1-' + _hl.sha256(_canon.encode('utf-8')).hexdigest()[:16]
+
 #: PTFE 스탬프 규약 이름들.  '' = 옛 규약 유도 (매니페스트에 legacy-unversioned).
 PTFE_STAMPS = ('off', 'centerline', 'capsule')
 #: 아직 구현되지 않은 예약값 — 고르면 **중단**한다 (centerline 별칭 금지, Codex Q3).
@@ -637,6 +664,11 @@ def main():
     ap.add_argument('--allow-partial-step3', action='store_true',
                     help='STEP3 가 실패/부분이어도 exit 0 으로 끝낸다 (기본은 nonzero).  '
                          '⚠ 과학 산출물에는 쓰지 말 것 — 부분 결과가 성공으로 캐시된다')
+    #  ★★ 2026-08-25 (CDXR3-3) — 러너가 **기대하는 규약 id** 를 넘긴다.  payload 가
+    #    적용한 것과 다르면 nonzero 로 죽는다 (요청↔적용 end-to-end 봉인).
+    ap.add_argument('--expect-protocol', default='',
+                    help='기대하는 physics_protocol_id.  적용된 것과 다르면 **중단**한다. '
+                         '러너가 넘긴다 — 규약이 조용히 바뀌는 것을 막는 유일한 자리다')
     ap.add_argument('--ptfe-stamp', default='', choices=('', 'off', 'centerline', 'capsule'),
                     help="PTFE 를 전도 격자에 어떻게 그릴지.  off = 안 그린다 · centerline = "
                          "1-셀 선분(현행) · capsule = 직경 인식(**예약값, 미구현 — 고르면 중단**).  "
@@ -739,6 +771,7 @@ def main():
     #  ★★ PTFE 스탬프 규약 해석 (CDXR2-6).  **어떤 작업보다 먼저** — 예약값을 고르면
     #    GPU 를 잡기 전에 죽어야 한다.
     a._ptfe_stamp, a._ptfe_stamp_legacy = resolve_ptfe_stamp(a.ptfe_stamp, a.sigma_ptfe)
+    a._protocol_expect = (a.expect_protocol or '').strip()
     if a._ptfe_stamp in PTFE_STAMPS_RESERVED:
         #  ⚠ 예약값이다 — centerline 으로 별칭하거나 매니페스트에 'capsule applied' 라고
         #    적으면 **안 된다** (Codex Q3).  구현될 때까지 명시적으로 죽는다.
@@ -2141,6 +2174,17 @@ def main():
             'backend_last_solve': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),
             'backend': dict(getattr(_s3, 'LAST_BACKEND', {}) or {}),   # 하위호환 별칭
         }
+        #  ★★★ 2026-08-25 (CDXR3-3, 종료조건 ③④) — **물리 규약 정체성**.
+        #    `schema_version` 은 파일 **구조**, 이것은 **물리 의미**다.  적용된 값에서
+        #    파생하므로 자유 입력 라벨이 아니라 **결과**다 (Codex: "디렉터리 태그와 선언
+        #    enum 은 검증 근거가 아니라 결과여야 한다").
+        step3['manifest']['physics_protocol_id'] = physics_protocol_id(step3['manifest'])
+        #  ★ 요청↔적용 불일치를 **기계가 읽게** 남긴다.  러너가 `--ptfe-stamp centerline`
+        #    을 줬는데 payload 가 `off` 로 돌아도, 팔끼리만 같으면 옛 게이트는 통과했다.
+        if getattr(a, '_protocol_expect', ''):
+            step3['manifest']['physics_protocol_expected'] = a._protocol_expect
+            step3['manifest']['physics_protocol_match'] = bool(
+                a._protocol_expect == step3['manifest']['physics_protocol_id'])
     elif _s3st:
         step3 = {'manifest': {'schema_version': 2, 'status': 'failed',
                               'components': dict(_s3st),
@@ -2422,6 +2466,16 @@ def main():
     #    규칙 J 스모크(그리고 실제 LEAN=2 생산 스윕 팔 전부)를 거부했다.
     #    ⇒ Codex 가 말한 대로 **required 를 run mode 에서 파생**하고 그것만 본다.
     #      required = electronic(항상) + ionic(--no-ion 이 아닐 때).
+    #  ★★ 2026-08-25 (CDXR3-3) — 요청↔적용 규약 대조를 **exit 로** 전파한다.
+    _mp = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
+    if a._protocol_expect and isinstance(_mp, dict):
+        _got = _mp.get('physics_protocol_id')
+        if _got != a._protocol_expect:
+            print(f'\n✗ 물리 규약 불일치 — 기대 `{a._protocol_expect}` · 적용 `{_got}`',
+                  flush=True)
+            print('  러너가 요청한 규약과 payload 가 실제로 적용한 규약이 다르다.  '
+                  '이 팔을 다른 팔과 섞으면 **다른 실험을 하나로 본다**.', flush=True)
+            raise SystemExit(4)
     _m3 = (step3 or {}).get('manifest') if isinstance(step3, dict) else None
     _st3 = (_m3 or {}).get('status')
     _req3 = ['electronic'] + ([] if a.no_ion else ['ionic'])

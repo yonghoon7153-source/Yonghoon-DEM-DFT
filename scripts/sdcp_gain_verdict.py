@@ -93,6 +93,12 @@ FIELD_CONTRACT = {
     'input_digest':         dict(scope='bed', across_dir=True),
     # ── 코드 정체성 — 침대와 무관하지만 **섞이면 다른 실험**이다 (CDXIJ-10 ③). ──
     'code_sha':             dict(scope='numeric', across_dir=True),
+    #  ★★ 2026-08-25 (CDXR3-3) — **물리 규약 정체성**.  적용된 인자들에서 파생된 해시라
+    #    개별 필드가 하나라도 다르면 이것도 달라진다 = 요약 봉인.  required 로 둔다 —
+    #    기록이 없으면 어느 규약인지 확정할 수 없다.
+    'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True),
+    #  요청↔적용 불일치 (payload 가 기록).  False 면 그 팔은 요청과 다른 규약으로 돌았다.
+    'physics_protocol_match': dict(scope='physics', across_dir=True),
 }
 
 
@@ -183,6 +189,9 @@ def _read(path):
             #  ★ 2026-08-24 (CDXR2-6) — 부재는 `None` 으로 보존한다 (CDX-IJ-01 의 교훈:
             #    기본값으로 접으면 missing 게이트가 원리적으로 발화하지 못한다).
             'ptfe_stamp': man.get('ptfe_stamp'),
+            'physics_protocol_id': man.get('physics_protocol_id'),
+            'physics_protocol_match': (None if man.get('physics_protocol_match') is None
+                                       else bool(man.get('physics_protocol_match'))),
             'ptfe_zero_dof': (None if man.get('ptfe_zero_dof') is None
                               else bool(man.get('ptfe_zero_dof'))),
             'sdcp_sphere_d_um': man.get('sdcp_sphere_d_um'),
@@ -388,6 +397,22 @@ def verdict(arms, seed_ensemble=False, require_arms=None, require_ionic=False,
     #      이어 쓰라" 고 안내하므로 이 경로는 가정이 아니라 권장 시나리오다.
     #      ⇒ 현행 payload 는 이 여섯을 **항상** 기록한다 (`mpm_webapp_payload.py` 매니페스트)
     #        — 없으면 옛 세대이고, 옛 세대는 고정을 확인할 수 없으므로 HOLD 다 (H5 와 같은 논리).
+    #  ★★ 2026-08-25 (CDXR3-3) — 요청↔적용 불일치는 **그 자체로** HOLD 다.
+    #    (규약 id 가 팔끼리 같아도, 러너가 요청한 것과 다르면 다른 실험이다.)
+    _pm = [r['file'] for k in arms for r in arms[k] if r.get('physics_protocol_match') is False]
+    if _pm:
+        return dict(out, decision='HOLD', hold_code='PROTOCOL_MISMATCH',
+                    reason=f'요청한 규약과 **적용된 규약이 다른** 팔이 {len(_pm)}개 '
+                           f'({_pm[0]} …) — 러너가 요청한 것과 payload 가 실제로 한 것이 '
+                           f'갈렸다.  다시 돌릴 것 (CDXR3-3)')
+    #  ★ `unknown:` 접두 = 규약을 확정할 수 없다 (필드가 빠졌다).  통과시키지 않는다.
+    _pu = [r['file'] for k in arms for r in arms[k]
+           if isinstance(r.get('physics_protocol_id'), str)
+           and r['physics_protocol_id'].startswith('unknown:')]
+    if _pu:
+        return dict(out, decision='HOLD', hold_code='PROTOCOL_UNKNOWN',
+                    reason=f'규약을 확정할 수 없는 팔이 {len(_pu)}개 ({_pu[0]} …) — '
+                           f'payload 가 규약 인자를 다 싣지 않았다.  현행 payload 로 다시 돌릴 것')
     for fld in _REQUIRED_FIELDS:
         _miss = [r['file'] for k in arms for r in arms[k] if r.get(fld) is None]
         if _miss:
@@ -577,6 +602,8 @@ def _selftest():
                 #  ★ 2026-08-24 (CDXR2-6) — PTFE 규약.  σ_PTFE 만으로는 exact-zero 와
                 #    미스탬프가 구분되지 않으므로 규약 자체가 고정 인자다.
                 ptfe_stamp='off', ptfe_zero_dof=False,
+                #  ★ 2026-08-25 (CDXR3-3) — 현행 세대는 규약 id 를 항상 기록한다.
+                physics_protocol_id='p1-testfixture0001', physics_protocol_match=True,
                 # ★ 2026-08-19 (A5) — 세대 인자도 픽스처에 싣는다.  안 실으면 위와 같은
                 #   이유로 새 게이트가 selftest 에서 **검증된 적 없는 코드**가 된다.
                 additive_E_GPa={'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 23.6},
@@ -781,6 +808,7 @@ def _selftest():
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
+              'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
@@ -826,6 +854,7 @@ def _selftest():
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
+              'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
@@ -996,6 +1025,46 @@ def _selftest():
     chk(f'㉞g ★★ FIELD_CONTRACT 가 옛 _GEN_FIELDS 를 **전부** 담는다 '
         f'(누락: {sorted(set(_GEN_FIELDS) - set(FIELD_CONTRACT))})',
         set(_GEN_FIELDS) <= set(FIELD_CONTRACT))
+    #  ★★★ ㊱ 2026-08-25 (CDXR3-3, 종료조건 ③④) — **요청↔적용 규약 봉인**.
+    #    Codex: "`_ptscenterline` OUTDIR 에서 모든 arm 이 조용히 `off` 로 실행돼도
+    #    서로만 같으면 초록이 될 수 있다."  규약 id 를 팔끼리 비교하는 것만으로는
+    #    **러너가 무엇을 요청했는지** 모른다.
+    _v36a = verdict(mk(base, [v * 1.12 for v in base], physics_protocol_match=False))
+    chk(f'㊱a ★★ 요청↔적용 규약이 **다른** 팔이 있으면 HOLD (팔끼리는 같아도) '
+        f'{_v36a["decision"]}/{_v36a.get("hold_code")}',
+        _v36a['decision'] == 'HOLD' and _v36a.get('hold_code') == 'PROTOCOL_MISMATCH')
+    _v36b = verdict(mk(base, [v * 1.12 for v in base],
+                       physics_protocol_id='unknown:vox_um,bridge_um'))
+    chk(f'㊱b ★ 규약을 **확정할 수 없으면** HOLD (필드가 빠졌다) '
+        f'{_v36b["decision"]}/{_v36b.get("hold_code")}',
+        _v36b['decision'] == 'HOLD' and _v36b.get('hold_code') == 'PROTOCOL_UNKNOWN')
+    _mix36 = mk(base, [v * 1.12 for v in base])
+    for _r36 in _mix36['DBE']:
+        _r36['physics_protocol_id'] = 'p1-otherprotocol01'    # 규약이 갈린 팔
+    _v36c = verdict(_mix36)
+    chk(f'㊱c ★ 규약 id 가 팔마다 다르면 HOLD ({_v36c["decision"]})',
+        _v36c['decision'] == 'HOLD' and 'physics_protocol_id' in (_v36c.get('reason') or ''))
+    _v36d = verdict(mk(base, [v * 1.12 for v in base]))
+    chk(f'㊱d 음성 대조 — 규약이 일치하면 통과 ({_v36d["decision"]})',
+        _v36d['decision'] == 'h0')
+    #  ★ payload 쪽 파생이 **결정론적이고 값에 반응하는가** (선언 라벨이 아니라 결과).
+    import importlib.util as _iu36, os as _os36
+    _sp36 = _iu36.spec_from_file_location(
+        'p36', _os36.path.join(_os36.path.dirname(_os36.path.abspath(__file__)),
+                               'mpm_webapp_payload.py'))
+    _p36 = _iu36.module_from_spec(_sp36)
+    _sp36.loader.exec_module(_p36)
+    _man36 = {k: 1.0 for k in _p36.PROTOCOL_FIELDS}
+    _id1 = _p36.physics_protocol_id(_man36)
+    _id2 = _p36.physics_protocol_id(dict(_man36, vox_um=0.125))
+    chk(f'㊱e ★ 규약 id 가 인자에 **반응한다** (vox 만 바꿔도 달라진다) {_id1[:10]} vs {_id2[:10]}',
+        _id1 != _id2 and _id1.startswith('p1-'))
+    chk('㊱f ★ 같은 인자면 같은 id (결정론)',
+        _p36.physics_protocol_id(dict(_man36)) == _id1)
+    _man36b = dict(_man36)
+    _man36b.pop('vox_um')
+    chk('㊱g ★★ 인자가 **빠지면** `unknown:` 을 낸다 (임의 기본값으로 채우지 않는다)',
+        _p36.physics_protocol_id(_man36b).startswith('unknown:vox_um'))
     #  ★★★ ㉟ 2026-08-25 (CDXR3-1/4) — **Codex 가 재현한 false-green 을 상주 회귀로**.
     #    초판의 ㉜c 는 `seal_lines()` 반환 문자열만 검사해서 CLI preamble·옵션 우선순위·
     #    SE 역산을 전부 놓쳤다 = 이 리포가 여러 번 겪은 "실제 경로를 안 타는 테스트".
@@ -1126,6 +1195,7 @@ def _selftest():
                'sigma_vgcf_S_cm': sig_vgcf, 'sigma_sdcp_S_cm': 250.0,
                'sdcp_yield_to_vgcf': yvgcf, 'sigma_ptfe_S_cm': 0.0,
                'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
+               'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
                'code_sha': 'abc1234', 'components': _comps()}
         _m0.update(_gen)                        # 세대 인자 노브 (㉗e/f 용)
         for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
@@ -1218,6 +1288,7 @@ def _selftest():
                'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
                #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
                'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
+               'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
                'code_sha': 'abc1234', 'components': _comps()}
         for _k, _mul, _ad, _ad2, _dg in (('SBE', 1.0, s_add, s_add2, s_dig),
                                          ('DBE', 1.12, d_add, d_add2, d_dig)):

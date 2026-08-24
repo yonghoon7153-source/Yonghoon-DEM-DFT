@@ -258,10 +258,17 @@ PY
   #    **반쯤 쓰인 파일**을 실행한다.  `$$` 로 갈라 놓으면 그 경합이 원리적으로 사라지고,
   #    `mv` 로 원자화하면 부분 파일을 볼 수 없다.  (⚠ 근본 원인 미확정이지만 이 수정은
   #    원인이 무엇이든 이 실패 형태를 없앤다.)
+  #  ★★ 2026-08-25 (CDXR3-3) — 러너가 **기대 규약 id** 를 넘긴다.  빈 값이면 payload 가
+  #    적용값에서 파생만 하고 대조는 안 한다 (옛 거동).  `EXPECT_PROTOCOL=p1-...` 을 주면
+  #    payload 가 적용값과 대조해 다르면 **exit 4** 로 죽는다 = 요청↔적용 end-to-end 봉인.
+  #    ⚠ 첫 팔의 payload 가 찍은 id 를 읽어 나머지 팔에 넘기는 것이 표준 용법이다
+  #      (규약이 도중에 조용히 바뀌는 것을 그때 잡는다).
+  local EP_FLAG=""
+  [ -n "${EXPECT_PROTOCOL:-}" ] && EP_FLAG=" --expect-protocol $EXPECT_PROTOCOL"
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$EP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
