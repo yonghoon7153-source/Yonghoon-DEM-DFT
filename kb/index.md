@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-23 · managed-files: 234
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-24 · managed-files: 235
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -66,7 +66,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (85)
+## results/ (86)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -82,6 +82,7 @@
 - `kb/results/b2o3_anode_interface_2026_06_30.md` — B₂O₃-doped 챔피언의 anode 계면 안정성 — Li-metal에선 **악화**, Li-In에선 **완화**
 - `kb/results/b2o3_anode_interface_MD_dynamics_2026_07_06.md` — B₂O₃ champion — anode 계면 **동역학** MLIP-MD: 도핑이 Li-metal 분해를 **억제** (열역학 worst-case 반전)
 - `kb/results/b2o3_anode_interface_campaign_2026_07_07.md` — B₂O₃ anode 계면 — 통제 campaign 확정판: **"6× 억제" 철회**, 도핑 ≈ 무도핑(악화 없음), BS₃ 강건·LiB 없음
+- `kb/results/b2o3_arrhenius_curvature_2026_08_23.md` — b2o3 아레니우스가 800 K 위에서 굽는다 — 단일 Ea 를 철회한다 ○미열람
 - `kb/results/b2o3_bond_lengths_2026_06_29.md` — B₂O₃-doped LPSCl1.6 챔피언의 결합길이 분석 (+ 4a/4d Cl 부분별 Li–Cl)
 - `kb/results/b2o3_bvse_channel_2026_07_02.md` — B₂O₃ 도핑 → Li 채널 확장 (BVSE, b2o3 vs LPSCl1.6)
 - `kb/results/b2o3_cdd_2026_07_02.md` — B₂O₃ 챔피언 — CDD 전하밀도차 (슬라이드 24의 b2o3 판)
