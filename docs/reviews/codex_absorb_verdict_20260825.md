@@ -123,7 +123,7 @@ false-green 을 **실제 실행 경로에서 여전히 만들 수 있다**.  Cod
 | 4 | 규약 기대값을 **러너 자기 설정**에서 계산 · `periodic_xy`·component 계획·plate 규칙판·관측 sid7 수 추가 | ⬜ | |
 | 5 | `verdict` 와 `compare_dirs` 가 **하나의** `validate_contract` 를 공유 · `required_since` | ✅ | `0db71bf9` |
 | 6 | plate 회귀: 아래판 분기 · 반응 솔버 · 비단위 vox FD · plate 원장 없으면 fail-closed | ✅ | `c89ea13b` |
-| 7 | 규칙 J 가 **정확히 exit 3** + 인과 코드 · 규칙 K 가 주석/echo/죽은 줄 거부 · 러너 통합 selftest | ✅ | `<P7>` |
+| 7 | 규칙 J 가 **정확히 exit 3** + 인과 코드 · 규칙 K 가 주석/echo/죽은 줄 거부 · 러너 통합 selftest | ✅ | `79165db0` |
 | 8 | 각 수정의 **단일-되돌림** 검증 · SciPy 환경에서 full suite | 🔶 진행 | |
 
 ## 자체발견 (재리뷰 조건 밖) — SELF-01
