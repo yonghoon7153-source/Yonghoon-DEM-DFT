@@ -544,6 +544,18 @@ export function Plot({
     return keys
   }, [steadyXRange, steadyRange])
 
+  // 한쪽만 잠근 그래프에서는 끌어도 **한 방향으로만** 좁아진다 -- 선택 띠가
+  // 잠긴 쪽으로 꽉 차서, 사람은 "블록이 안 생기고 회색이 화면을 덮는다" 로
+  // 읽는다.  맞는 동작이지만 이유가 화면에 없으면 고장으로 보인다.
+  const lockNote =
+    lockedKeys.size === 0
+      ? ''
+      : lockedKeys.has('x') && lockedKeys.has('y')
+        ? PINNED_HINT
+        : lockedKeys.has('y')
+          ? '세로축이 고정돼 있어 가로만 확대됩니다 — 자물쇠를 풀면 끈 사각형 그대로 확대됩니다'
+          : '가로축이 고정돼 있어 세로만 확대됩니다 — 자물쇠를 풀면 끈 사각형 그대로 확대됩니다'
+
   /** 가운데를 붙잡고 폭만 줄이거나 늘린다.
    *
    *  커서 자리를 중심으로 잡을 수도 있지만, 버튼은 커서가 그래프 밖(버튼 위)에
@@ -598,7 +610,7 @@ export function Plot({
               onClick={() => zoomBy(ZOOM_STEP)}
               disabled={pinned || !homeReady}
               aria-label="확대"
-              title={pinned ? PINNED_HINT : '확대 — 그래프 위를 드래그해도 그 부분만 확대됩니다'}
+              title={lockNote || '확대 — 그래프 위를 끌면 그 사각형이 그대로 화면이 됩니다'}
             >
               🔍+
             </button>

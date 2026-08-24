@@ -217,6 +217,9 @@ describe('라이브러리 묶기', () => {
     expect(document.querySelectorAll('thead th')).toHaveLength(flat)
     const [first] = [...document.querySelectorAll('tr.section th')]
     expect(first?.getAttribute('colspan')).toBe(String(flat))
+    // 붙는 것은 이 안쪽 글자다 (아래 'app.css' 절 참고).  구조가 사라지면
+    // CSS 만 남아 아무 데도 안 걸린다.
+    expect(first?.querySelector('.section-label')).not.toBeNull()
   })
 
   it('한 줄에 한 셀 — 묶어도 데이터 행 수는 그대로다', async () => {
@@ -351,5 +354,16 @@ describe('app.css 첫 열 고정 규칙', () => {
     // 안 맞추면 마우스를 올린 줄이 첫 칸만 다른 색이 된다.
     expect(block).toContain('tbody tr:hover td:first-child')
     expect(block).toContain('tbody tr.selected td:first-child')
+  })
+
+  it('묶음 이름은 칸이 아니라 그 안의 글자를 붙인다', () => {
+    // 구분 칸은 colspan 으로 표 전체 폭이라 sticky 가 붙잡을 여지가 없다.
+    // 칸에 left:0 을 줘도 표와 함께 그대로 밀려난다.
+    //
+    // Chromium 실측 (1400px 표, scrollLeft=500):
+    //   칸에 sticky   → 구분 칸 left=-390, 첫 열 left=8   ← 이름이 화면 밖으로
+    //   글자에 sticky → 라벨   left=0,    첫 열 left=0
+    expect(block).toContain('tr.section > th > .section-label')
+    expect(block).not.toMatch(/tr\.section > th \{[^}]*left:/)
   })
 })

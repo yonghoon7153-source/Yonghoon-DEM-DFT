@@ -499,6 +499,14 @@ describe('돋보기', () => {
     expect(at().scales.x).toEqual({ min: 2, max: 8 })
   })
 
+  it('한쪽만 잠갔으면 왜 한 방향으로만 좁아지는지 말한다', async () => {
+    // 선택 띠가 잠긴 쪽으로 꽉 차는 것을 사람은 "블록이 안 생기고 회색이 화면을
+    // 덮는다" 로 읽는다.  맞는 동작이라도 이유가 화면에 없으면 고장으로 보인다.
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
+    expect(button('확대').title).toContain('세로축이 고정')
+    expect(button('확대').title).toContain('자물쇠')
+  })
+
   it('그릴 것이 없으면 버튼도 없다', () => {
     render(<Plot series={[]} xLabel="x" yLabel="y" />)
     expect(screen.queryByRole('button', { name: '확대' })).toBeNull()

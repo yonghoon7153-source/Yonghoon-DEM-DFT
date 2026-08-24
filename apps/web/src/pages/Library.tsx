@@ -255,8 +255,12 @@ function SampleTable({
             <tbody key={key || '(none)'}>
               <tr className="section">
                 <th colSpan={COLUMN_COUNT}>
-                  {key || <span className="faint">미입력</span>}
-                  <span className="faint"> · {rows.length}개</span>
+                  {/* 가로 스크롤에 붙는 것은 이 span 이다 — 칸 자체는 표 전체
+                      폭이라 붙잡을 여지가 없다 (app.css 의 .section-label). */}
+                  <span className="section-label">
+                    {key || <span className="faint">미입력</span>}
+                    <span className="faint"> · {rows.length}개</span>
+                  </span>
                 </th>
               </tr>
               {rows.map(row)}

@@ -593,9 +593,15 @@ tbody tr:last-child td { border-bottom: none; }
 /* 줄 배경(hover·선택)이 이 칸만 빼놓고 칠해지면 한 줄이 두 색이 된다. */
 .table-wrap.pin-first tbody tr:hover td:first-child { background: var(--surface-2); }
 .table-wrap.pin-first tbody tr.selected td:first-child { background: var(--accent-wash); }
-/* 묶음 구분 줄은 표 전체를 걸치므로, 왼쪽에 붙여 두어야 오른쪽으로 밀어도
-   묶음 이름이 남는다. */
-.table-wrap.pin-first table tr.section > th { position: sticky; left: 0; }
+/* 가로로 밀어도 묶음 이름이 남는다.
+   **붙이는 것은 칸이 아니라 그 안의 글자다.**  구분 칸은 colspan 으로 표 전체
+   폭이라 sticky 가 붙잡을 여지가 없다 — 칸에 left:0 을 줘도 표와 함께 그대로
+   밀려난다 (실측: 1400px 표를 scrollLeft=500 으로 옮기면 left=-499.5). */
+.table-wrap.pin-first table tr.section > th > .section-label {
+  position: sticky;
+  left: 0;
+  background: var(--surface-2);
+}
 
 /* An inline bar behind a percentage, so a column of them reads as a shape. */
 .bar-cell { position: relative; }
@@ -1087,5 +1093,12 @@ table tr.section > th {
   background: var(--surface-2);
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  padding: 5px var(--s4);
+  /* 여백은 안쪽 라벨이 갖는다 — 라벨이 왼쪽에 붙을 때 그 여백도 같이 가야
+     글자가 표 끝에 닿지 않는다. */
+  padding: 5px 0;
+}
+
+table tr.section > th > .section-label {
+  display: inline-block;
+  padding: 0 var(--s4);
 }
