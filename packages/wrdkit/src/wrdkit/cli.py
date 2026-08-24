@@ -187,6 +187,62 @@ def _cycles(args) -> int:
     return 0
 
 
+def _probe(path: Path) -> int:
+    """Print what the file *says* it is, making no assumptions about layout.
+
+    ``info`` cannot help with a file that fails the header check -- it raises
+    before printing anything, so the only thing the user can report is the
+    error message.  This walks the NRBF streams and prints the class names and
+    member names as they are, which is the first question the
+    extending-the-wrd-parser skill tells you to ask.
+
+    Smart Interface 2.13 produced ``WbcsFile.Data.DataHeaderBase`` where we
+    expected ``DataFileHeader``; whether that object carries the same members
+    (a renamed/base class) or a different layout entirely can only be answered
+    by looking.
+    """
+    from .nrbf import NrbfError, NrbfObject, read_stream
+
+    buf = path.read_bytes()
+    print(f"file           {path.name}")
+    print(f"size           {len(buf)} bytes")
+    print(f"first bytes    {buf[:16].hex(' ')}")
+    offset = 0
+    for index in range(1, 5):
+        if offset >= len(buf):
+            break
+        try:
+            stream = read_stream(buf, offset)
+        except NrbfError as exc:
+            if index > 2:
+                # 두 스트림 뒤부터는 행 블록이다 — 스트림이 아니어서 못 읽는
+                # 것이 정상이고, 그것을 오류로 찍으면 사람이 거기부터 의심한다.
+                print(f"\nrow block      offset {offset} .. {len(buf)}"
+                      f"  ({len(buf) - offset} bytes, not an NRBF stream)")
+                return 0
+            print(f"\nstream {index}      unreadable at offset {offset}: {exc}")
+            return 1
+        root = stream.root
+        print(f"\nstream {index}      offset {offset} .. {stream.end_offset}"
+              f"  ({len(stream.objects)} objects)")
+        if isinstance(root, NrbfObject):
+            print(f"  root class   {root.class_name}")
+            for name, value in root.members.items():
+                kind = type(value).__name__
+                if isinstance(value, NrbfObject):
+                    kind = f"NrbfObject {value.class_name}"
+                shown = value if isinstance(value, (int, float, str, bool)) else ""
+                text = f"    {name:<40} {kind}"
+                if shown != "":
+                    text += f" = {str(shown)[:60]}"
+                print(text)
+        else:
+            print(f"  root         {type(root).__name__} (not an object)")
+        offset = stream.end_offset
+    print(f"\nafter streams  {len(buf) - offset} bytes (the row block, if the layout is the usual one)")
+    return 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(prog="wrdkit", description=__doc__.splitlines()[0])
     parser.add_argument("--version", action="version", version=f"wrdkit {__version__}")
@@ -208,6 +264,10 @@ def main(argv: list[str] | None = None) -> int:
         help="keep the cut-off last cycle (its numbers come out blank)")
     _cell_arguments(convert)
 
+    probe = subparsers.add_parser(
+        "probe", help="print the NRBF streams as they are (for a file that will not parse)")
+    probe.add_argument("path")
+
     cycles = subparsers.add_parser("cycles", help="print the cycle table as CSV on stdout")
     cycles.add_argument("path")
     cycles.add_argument("--basis", default=Basis.ABSOLUTE, choices=list(BASES))
@@ -221,6 +281,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         if args.command == "info":
             return _print_info(Path(args.path))
+        if args.command == "probe":
+            return _probe(Path(args.path))
         if args.command == "convert":
             return _convert(args)
         if args.command == "cycles":

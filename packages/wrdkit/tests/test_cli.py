@@ -111,3 +111,34 @@ def test_a_non_wrd_file_is_reported(tmp_path, capsys):
     bad.write_bytes(b"not a wrd file at all, definitely not" * 4)
     assert main(["info", str(bad)]) == 1
     assert "not a .wrd" in capsys.readouterr().err
+
+
+def test_probe_names_what_the_file_says(tmp_path, synthetic_bytes, capsys):
+    """`probe` 는 헤더 검사에 걸린 파일에게 물어볼 수 있는 유일한 도구다.
+
+    실제로 걸린 자리: Smart Interface 2.13 이 낸 파일의 첫 스트림 루트가
+    `WbcsFile.Data.DataHeaderBase` 였다.  `info` 는 그 검사 **앞에서** 죽어서
+    아무것도 못 찍고, 사람이 보고할 수 있는 것은 오류 문구뿐이었다.
+    """
+    path = tmp_path / "probe.wrd"
+    path.write_bytes(synthetic_bytes)
+    assert main(["probe", str(path)]) == 0
+    out = capsys.readouterr().out
+    assert "WbcsFile.Data.DataFileHeader" in out
+    assert "WbcsFile.Data.DataHeader" in out
+    # 멤버 이름까지 나와야 한다 — 클래스 이름만으로는 '같은 것을 다른 이름으로
+    # 부르는가' 를 판단할 수 없다.
+    assert "<UnitCoulomb>k__BackingField" in out
+    # 스트림 뒤의 행 블록을 오류로 찍으면 사람이 거기부터 의심한다.
+    assert "unreadable" not in out
+    assert "row block" in out
+
+
+def test_probe_survives_a_file_that_will_not_parse(tmp_path, capsys):
+    """헤더가 우리 기대와 다른 파일에서도 probe 는 끝까지 찍어야 한다."""
+    path = tmp_path / "odd.wrd"
+    # NRBF 로는 읽히지만 우리가 아는 루트가 아닌 파일은 합성하기 어렵다.
+    # 최소한 '안 읽히는 파일' 에서 죽지 않고 이유를 말하는 것은 고정한다.
+    path.write_bytes(b"\x00" + b"\x01" * 64)
+    assert main(["probe", str(path)]) == 1
+    assert "unreadable" in capsys.readouterr().out

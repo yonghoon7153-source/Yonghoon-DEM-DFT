@@ -450,9 +450,14 @@ def read_wrd_bytes(buf: bytes, *, source_name: str = "<bytes>",
             "expected WbcsFile.Data.DataFileHeader"
         )
     if "DataFileHeader" not in file_header.class_name:
+        # 무엇을 봤는지와 **다음에 무엇을 할지**를 같이 준다.  이 오류만 받으면
+        # 사람이 할 수 있는 일이 없다 — `info` 는 이 검사 앞에서 죽으므로
+        # 파일이 뭐라고 말하는지 볼 방법이 없었다.  (Smart Interface 2.13 이
+        # `WbcsFile.Data.DataHeaderBase` 를 내놓은 것이 그 자리였다.)
         raise WrdError(
             f"unexpected root object {file_header.class_name!r}; "
-            "expected WbcsFile.Data.DataFileHeader"
+            "expected WbcsFile.Data.DataFileHeader. "
+            "run `python3 -m wrdkit.cli probe <file>` and send that output"
         )
 
     try:

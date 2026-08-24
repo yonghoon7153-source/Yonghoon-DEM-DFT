@@ -1502,3 +1502,32 @@ mirrored 는 파일이 **짧아진다.** 바이트 길이 대신 줄 수로 본�
 
 201 → 219건, 터널 69 → 72건. 남은 것은 6·7·8·9·10·11 과 PowerShell 폴백 쪽
 (2·3번의 PS 절반)이다.
+
+## [2026-08-24] create | wrdkit probe — 안 읽히는 파일에게 물어보는 도구
+Smart Interface 2.13 이 낸 파일이 이렇게 죽었다:
+
+    could not read '260807_#1 interruption_4.5 90 0.5C_1000 ohm_028.wrd':
+    unexpected root object 'WbcsFile.Data.DataHeaderBase';
+    expected WbcsFile.Data.DataFileHeader
+
+**그런데 그 파일에게 더 물어볼 방법이 없었다.** `info` 는 바로 그 검사 앞에서
+죽으므로 아무것도 안 찍고, 사람이 보고할 수 있는 것은 오류 문구 한 줄뿐이다.
+스킬(`extending-the-wrd-parser`)이 "먼저 파일이 실제로 뭐라고 말하는지 보라"
+고 하는데, 정작 그 자리에서 볼 도구가 없었다.
+
+`wrdkit probe <파일>` 을 만들었다. 아무 가정 없이 NRBF 스트림을 걸어가며
+**루트 클래스 이름과 멤버 이름·타입**을 그대로 찍는다. 클래스 이름만으로는
+"같은 것을 다른 이름으로 부르는가"(기반 클래스가 직렬화됐나)를 판단할 수
+없어서, 멤버까지 봐야 한다.
+
+두 스트림 뒤부터는 행 블록이라 NRBF 로 안 읽히는 것이 정상이다 — 그것을
+`unreadable` 로 찍으면 사람이 거기부터 의심한다. `row block  offset .. (N
+bytes, not an NRBF stream)` 으로 구분한다.
+
+그리고 헤더 검사 오류에 **다음에 할 일**을 넣었다: "run `python3 -m wrdkit.cli
+probe <file>` and send that output". 무엇이 틀렸는지만 말하고 끝내지 않는다.
+
+**아직 고친 것이 아니다.** `DataHeaderBase` 가 (a) 같은 멤버를 가진 기반
+클래스라 검사만 넓히면 되는 것인지, (b) 파일 구조가 다른 것인지 — 파일 없이는
+모른다. 파일명이 `_028` 로 끝나는 분할 조각이라는 것도 단서다. probe 출력을
+받고 나서 판단한다 (§0.4).
