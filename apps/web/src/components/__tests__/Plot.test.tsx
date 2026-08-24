@@ -472,12 +472,10 @@ describe('돋보기', () => {
     expect(button('확대 초기화')).toBeDisabled()
   })
 
-  it('축이 잠겨 있으면 확대를 끄고 이유를 말한다', async () => {
-    // 잠금이 걸린 축은 uPlot 이 매 프레임 그 범위를 다시 씌운다.  버튼을 살려
-    // 두면 눌러도 그림이 안 바뀌고, 사람은 돋보기가 고장 났다고 읽는다.
+  it('잠금이 무엇을 하는지 확대 버튼이 말한다', async () => {
     await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" xRange={[0, 5]} yRange={[1, 4]} />)
-    expect(button('확대')).toBeDisabled()
-    expect(button('확대').title).toContain('축 고정')
+    expect(button('확대').title).toContain('기본 화면')
+    expect(button('확대').title).toContain('전체')
   })
 
   it('한쪽 끝만 잠근 것은 잠금이 아니다 — 반대쪽은 여전히 움직인다', async () => {
@@ -504,29 +502,33 @@ describe('돋보기', () => {
     expect(drag?.uni).toBeUndefined()
   })
 
-  it('잠긴 축은 드래그로도 안 움직인다', async () => {
-    // 버튼은 꺼 놓고 드래그만 살려 두면, 잠금이 잠깐 풀린 것처럼 보인다.
+  it('잠긴 축이어도 끌면 그 사각형이 화면이 된다', async () => {
+    // 자물쇠는 **기본 화면**을 정하는 것이지 확대를 막는 것이 아니다.  잠근
+    // 채로 두면 고른 블록이 한 방향으로만 좁아져서, 사람은 "블록이 안 생기고
+    // 회색이 화면을 덮는다" 로 읽는다.
     await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
     const drag = built.at(-1)!.options.cursor?.drag
-    expect(drag?.y).toBe(false)
     expect(drag?.x).toBe(true)
+    expect(drag?.y).toBe(true)
   })
 
-  it('한쪽만 잠근 그래프에서 확대해도 잠긴 축은 그대로다', async () => {
-    // uPlot 은 명시적으로 준 범위를 잠금의 range 콜백으로 다시 덮지 않는다.
-    // 그래서 확대가 잠긴 축까지 건드리면 잠금이 슬그머니 풀린다.
-    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
+  it('잠금이 걸려 있어도 확대·축소 버튼이 산다', async () => {
+    await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" xRange={[0, 5]} yRange={[1, 4]} />)
+    expect(button('확대')).toBeEnabled()
     act(() => button('확대').click())
-    expect(at().scales.y).toEqual({ min: 0, max: 100 })   // 손대지 않았다
+    expect(at().scales.y).toEqual({ min: 20, max: 80 })
     expect(at().scales.x).toEqual({ min: 2, max: 8 })
   })
 
-  it('한쪽만 잠갔으면 왜 한 방향으로만 좁아지는지 말한다', async () => {
-    // 선택 띠가 잠긴 쪽으로 꽉 차는 것을 사람은 "블록이 안 생기고 회색이 화면을
-    // 덮는다" 로 읽는다.  맞는 동작이라도 이유가 화면에 없으면 고장으로 보인다.
+  it("'전체' 를 누르면 잠근 화면으로 정확히 돌아간다", async () => {
+    // 원하는 크기로 확대해 놓고 그 안을 보다가, 되돌리면 잠금 화면이어야 한다.
+    // 처음 눈금이 잠금이 걸린 채로 잡힌 것이라 그 자리가 곧 잠금 화면이다.
     await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
-    expect(button('확대').title).toContain('세로축이 고정')
-    expect(button('확대').title).toContain('자물쇠')
+    act(() => button('확대').click())
+    act(() => button('확대 초기화').click())
+    expect(at().scales.y).toEqual({ min: 0, max: 100 })
+    expect(at().scales.x).toEqual({ min: 0, max: 10 })
+    expect(button('확대 초기화')).toBeDisabled()
   })
 
   it('Shift+드래그로 옮긴다 — 그냥 드래그는 확대라 자리가 없다', async () => {
@@ -573,17 +575,18 @@ describe('돋보기', () => {
     expect(at().scales.x).toEqual(before)
   })
 
-  it('잠긴 축은 Shift+드래그로도 안 움직인다', async () => {
+  it('잠긴 축도 Shift+드래그로 옮길 수 있다', async () => {
+    // 확대해 놓고 그 안을 끌면서 보는 것이 이 버튼들이 있는 이유다.
     await renderPlot(<Plot series={SERIES} xLabel="x" yLabel="y" yRange={[1, 4]} />)
     act(() => button('확대').click())
-    const y = { ...at().scales.y! }
+    const before = { ...at().scales.y! }
     const over = at().over
     act(() => {
       over.dispatchEvent(new MouseEvent('mousedown', { shiftKey: true, clientX: 300, clientY: 200, bubbles: true }))
       window.dispatchEvent(new MouseEvent('mousemove', { clientX: 300, clientY: 100, bubbles: true }))
       window.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }))
     })
-    expect(at().scales.y).toEqual(y)
+    expect(at().scales.y!.min).toBeLessThan(before.min)
   })
 
   it('그릴 것이 없으면 버튼도 없다', () => {

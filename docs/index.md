@@ -20,6 +20,7 @@
 | [0014](adr/0014-share-with-a-tunnel-and-one-password.md) | 바깥에서 볼 때만 문을 단다 | 임시 터널 + 공유 암호 하나, 랩 안에서는 아무것도 안 바뀐다 |
 | [0015](adr/0015-dvdq-and-a-choice-of-smoother.md) | dV/dQ 는 용량 격자 위에서, 평활은 고를 수 있게 | 봉우리 간격이 곧 용량, SG 차수 1 은 이동평균과 같다 |
 | [0016](adr/0016-smart-interface-213-is-a-second-file-shape.md) | Smart Interface 2.13 은 두 번째 파일 모양이다 | 압축된 헤더 봉투 + 고정 레이아웃, 버전으로 잠근다 |
+| [0017](adr/0017-the-axis-lock-sets-the-default-view.md) | 축 고정은 기본 화면을 정한다 | 확대·이동 중에는 잠시 놓고, '전체' 가 그 화면으로 되돌린다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -49,7 +50,9 @@
 `adr/0012-attribution-not-authentication.md` ·
 `adr/0013-dqdv-on-a-voltage-grid.md` ·
 `adr/0014-share-with-a-tunnel-and-one-password.md` ·
-`adr/0015-dvdq-and-a-choice-of-smoother.md`
+`adr/0015-dvdq-and-a-choice-of-smoother.md` ·
+`adr/0016-smart-interface-213-is-a-second-file-shape.md` ·
+`adr/0017-the-axis-lock-sets-the-default-view.md`
 
 ## 스펙
 

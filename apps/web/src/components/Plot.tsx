@@ -248,9 +248,13 @@ export function sameView(home: HomeScales, now: HomeScales): boolean {
 
 /** Both ends of an axis pinned by the caller's lock.
  *
- * A pinned axis cannot be zoomed -- uPlot re-applies the lock's `range`
- * function on every scale change, so a zoom would be undone in the same frame.
- * Better to disable the button and say why than to ship one that does nothing.
+ * 잠금은 **기본 화면**을 정한다.  사이클을 하나만 골랐을 때 y 축이 그 곡선에
+ * 맞춰 다시 잡히면 같은 곡선이 훨씬 뚱뚱해 보이는데, 숫자는 하나도 안 변했다 --
+ * 그것을 막는 것이 잠금의 일이다.
+ *
+ * 확대를 막는 것은 그 일이 아니다.  확대·이동 중에는 잠금을 잠시 놓고(
+ * `overrideLock`), '전체' 를 누르면 잠긴 화면으로 정확히 돌아온다.  그래야
+ * 원하는 크기의 블록으로 확대해 놓고 그 안을 끌면서 볼 수 있다.
  */
 function fullyPinned(range: [number | null, number | null] | undefined): boolean {
   return range !== undefined && range[0] !== null && range[1] !== null
@@ -259,7 +263,8 @@ function fullyPinned(range: [number | null, number | null] | undefined): boolean
 /** 한 번 누를 때 얼마나. */
 const ZOOM_STEP = 0.6
 
-const PINNED_HINT = '축 고정이 켜져 있습니다 — 자물쇠를 풀거나 그 숫자를 고치세요'
+const PINNED_HINT =
+  '축 고정은 기본 화면만 정합니다 — 확대하면 잠시 풀리고, 전체를 누르면 그 화면으로 돌아옵니다'
 
 /** Stable identity for the common `markers={[]}` case.
  *
@@ -292,6 +297,17 @@ export function Plot({
   // 돋보기 기준 범위를 아직 못 잡았으면 버튼도 없는 셈이다.  눌러도 아무 일이
   // 없는 버튼은 고장 난 것으로 읽힌다.
   const [homeReady, setHomeReady] = useState(false)
+  // 확대·이동 중에는 축 고정을 잠시 놓는다.
+  //
+  // **자물쇠는 "기본 화면" 을 정하는 것이지 확대를 막는 것이 아니다.**  잠근
+  // 채로 두면 끌어서 고른 블록이 한 방향으로만 좁아져서, 사람은 "블록이 안
+  // 생기고 회색이 화면을 덮는다" 로 읽는다.  원하는 크기로 확대해 놓고 그
+  // 안을 끌면서 보는 것이 이 버튼들이 있는 이유다.
+  //
+  // 잠금이 필요한 이유(사이클을 하나만 골랐을 때 y 축이 그 곡선에 맞춰 다시
+  // 잡혀 같은 곡선이 뚱뚱해 보이는 것)는 **기본 화면**에서 생기는 문제이므로,
+  // '전체' 를 누르면 그 자리로 정확히 돌아간다.
+  const overrideLock = useRef(false)
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
 
@@ -337,16 +353,18 @@ export function Plot({
         // 잠긴 축은 아예 못 끌게 한다.  끌 수 있게 두면 uPlot 이 잠금 범위를
         // 다시 씌우기 전까지 잠깐 움직이고, 그 사이 '축 고정' 이 꺼진 것처럼
         // 보인다 -- 버튼은 비활성인데 드래그는 되는 모순이었다.
-        drag: {
-          x: !fullyPinned(steadyXRange),
-          y: !fullyPinned(steadyRange),
-          dist: 6,
-        },
+        // 끌어서 만든 사각형이 그대로 화면이 된다.  잠긴 축이어도 마찬가지다 --
+        // 잠금은 아래 overrideLock 이 잠시 놓는다.
+        drag: { x: true, y: true, dist: 6 },
         // Shift 를 누른 채 끄는 것은 **이동**이다 (아래 직접 처리).  그대로 두면
         // uPlot 이 선택 사각형을 그려서, 옮기려던 사람이 확대를 하게 된다.
         bind: {
           mousedown: (_u, _target, handler) => (event: MouseEvent) => {
-            if (!event.shiftKey) handler(event)
+            if (event.shiftKey) return null
+            // 끌기 시작한 순간부터 잠금을 놓는다.  선택이 끝난 뒤에 놓으면
+            // uPlot 이 이미 잠금 범위로 되돌린 뒤라 늦다.
+            overrideLock.current = true
+            handler(event)
             return null
           },
         },
@@ -357,12 +375,18 @@ export function Plot({
         x: {
           time: false,
           range: steadyXRange
-            ? (_u, min, max) => [steadyXRange[0] ?? min, steadyXRange[1] ?? max]
+            ? (_u, min, max) =>
+                overrideLock.current
+                  ? [min, max]
+                  : [steadyXRange[0] ?? min, steadyXRange[1] ?? max]
             : undefined,
         },
         y: {
           range: steadyRange
-            ? (_u, min, max) => [steadyRange[0] ?? min, steadyRange[1] ?? max]
+            ? (_u, min, max) =>
+                overrideLock.current
+                  ? [min, max]
+                  : [steadyRange[0] ?? min, steadyRange[1] ?? max]
             : undefined,
         },
       },
@@ -522,13 +546,12 @@ export function Plot({
     // 처음 범위 밖으로는 안 나간다 -- 계속 끌다 데이터가 사라지면 돌아오는
     // 길이 '전체' 버튼뿐이다.
     const over = plot.over
-    const lockedX = fullyPinned(steadyXRange)
-    const lockedY = fullyPinned(steadyRange)
     let pan: { x: number; y: number; from: HomeScales } | null = null
 
     const onDown = (event: MouseEvent) => {
       if (!event.shiftKey || !homeRef.current) return
       event.preventDefault()
+      overrideLock.current = true
       pan = { x: event.clientX, y: event.clientY, from: readScales(plot) }
       over.style.cursor = 'grabbing'
     }
@@ -542,7 +565,6 @@ export function Plot({
       const dy = event.clientY - pan.y
       plot.batch(() => {
         for (const key of Object.keys(from)) {
-          if (key === 'x' ? lockedX : lockedY) continue
           const start = from[key]!
           const span = start.max - start.min
           // 화면 y 는 아래로 늘고 값은 위로 는다 -- 그래서 부호가 다르다.
@@ -597,29 +619,9 @@ export function Plot({
   // 두 축이 모두 잠겨 있으면 확대가 그림을 못 바꾼다 -- uPlot 이 매 프레임
   // 잠금 범위를 다시 씌우기 때문이다.  아무 일도 안 일어나는 버튼을 내놓는
   // 대신 끄고, 왜 껐는지를 말한다.
-  const pinned = fullyPinned(steadyXRange) && fullyPinned(steadyRange)
 
-  // 잠긴 축은 버튼도 건드리지 않는다.  uPlot 은 명시적으로 준 범위를 잠금의
-  // `range` 콜백으로 다시 덮지 않으므로, 여기서 setScale 하면 한쪽만 잠긴
-  // 그래프에서 잠긴 축이 슬그머니 풀린다.
-  const lockedKeys = useMemo(() => {
-    const keys = new Set<string>()
-    if (fullyPinned(steadyXRange)) keys.add('x')
-    if (fullyPinned(steadyRange)) keys.add('y')
-    return keys
-  }, [steadyXRange, steadyRange])
-
-  // 한쪽만 잠근 그래프에서는 끌어도 **한 방향으로만** 좁아진다 -- 선택 띠가
-  // 잠긴 쪽으로 꽉 차서, 사람은 "블록이 안 생기고 회색이 화면을 덮는다" 로
-  // 읽는다.  맞는 동작이지만 이유가 화면에 없으면 고장으로 보인다.
-  const lockNote =
-    lockedKeys.size === 0
-      ? ''
-      : lockedKeys.has('x') && lockedKeys.has('y')
-        ? PINNED_HINT
-        : lockedKeys.has('y')
-          ? '세로축이 고정돼 있어 가로만 확대됩니다 — 자물쇠를 풀면 끈 사각형 그대로 확대됩니다'
-          : '가로축이 고정돼 있어 세로만 확대됩니다 — 자물쇠를 풀면 끈 사각형 그대로 확대됩니다'
+  const anyLock = fullyPinned(steadyXRange) || fullyPinned(steadyRange)
+  const lockNote = anyLock ? PINNED_HINT : ''
 
   /** 가운데를 붙잡고 폭만 줄이거나 늘린다.
    *
@@ -633,9 +635,9 @@ export function Plot({
     const plot = plotRef.current
     const home = homeRef.current
     if (!plot || !home) return
+    overrideLock.current = true
     plot.batch(() => {
       for (const key of Object.keys(home)) {
-        if (lockedKeys.has(key)) continue
         const scale = plot.scales[key]
         const limit = home[key]!
         if (!scale || typeof scale.min !== 'number' || typeof scale.max !== 'number') continue
@@ -656,11 +658,11 @@ export function Plot({
     const plot = plotRef.current
     const home = homeRef.current
     if (!plot || !home) return
+    // 처음 눈금은 잠금이 걸린 채로 잡힌 것이라, 여기로 돌아가면 잠금 화면으로
+    // 정확히 돌아간다.  그 뒤의 자동 재계산부터 잠금이 다시 일한다.
+    overrideLock.current = false
     plot.batch(() => {
-      for (const key of Object.keys(home)) {
-        if (lockedKeys.has(key)) continue
-        plot.setScale(key, { ...home[key]! })
-      }
+      for (const key of Object.keys(home)) plot.setScale(key, { ...home[key]! })
     })
   }
 
@@ -673,7 +675,7 @@ export function Plot({
               type="button"
               className="sm ghost"
               onClick={() => zoomBy(ZOOM_STEP)}
-              disabled={pinned || !homeReady}
+              disabled={!homeReady}
               aria-label="확대"
               title={
                 (lockNote || '확대 — 그래프 위를 끌면 그 사각형이 그대로 화면이 됩니다')
@@ -686,9 +688,9 @@ export function Plot({
               type="button"
               className="sm ghost"
               onClick={() => zoomBy(1 / ZOOM_STEP)}
-              disabled={pinned || !homeReady || !zoomed}
+              disabled={!homeReady || !zoomed}
               aria-label="축소"
-              title={pinned ? PINNED_HINT : '축소'}
+              title={'축소'}
             >
               🔍−
             </button>
