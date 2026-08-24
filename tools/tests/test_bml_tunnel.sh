@@ -295,6 +295,10 @@ DEAD="$( http_code_of() { printf '503'; }; server_unreachable_help https://a.lhr
 check "터널이 끊겼다고 말한다"     "$(printf '%s\n' "$DEAD" | grep -c '뒤에 서버가 없습니다')" "1"
 check "다시 여는 명령을 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
 check "점검표를 훑게 하지 않는다"  "$(printf '%s\n' "$DEAD" | grep -c '중추 서버 쪽에서 순서대로')" "0"
+# 확정 코드가 있으면 curl 의 첫 대답은 안 찍는다.  두 번 물어보면 답이 다를 수
+# 있어서, 실제 화면에 `HTTP 000` 바로 밑에 `(HTTP 503)` 이 나란히 찍혔다 —
+# 화면이 스스로 모순되면 사람은 어느 쪽을 믿을지부터 정해야 한다.
+check "모순되는 첫 대답을 안 찍는다" "$(printf '%s\n' "$DEAD" | grep -c 'curl 이 말한 것')" "0"
 # 404 는 다른 뜻이다 — 주소는 닿는데 우리 서버가 아니다.
 WRONG="$( http_code_of() { printf '404'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
 check "404 는 다르게 말한다"       "$(printf '%s\n' "$WRONG" | grep -c '우리 워크벤치가 아닙니다')" "1"

@@ -2149,8 +2149,6 @@ is_our_tunnel_url() {
 server_unreachable_help() {
   local url="$1"
   say ""
-  explain_unreachable "$url"
-  say ""
 
   # 터널 주소는 방화벽도 포트 포워딩도 상관이 없다.  LAN 안내를 그대로 주면
   # 아무 소용 없는 것을 확인하느라 시간을 쓴다.
@@ -2163,6 +2161,9 @@ server_unreachable_help() {
       local hc; hc="$(http_code_of "$url" 8)"
       case "$hc" in
         502|503|504|530)
+          # 여기서는 curl 의 첫 대답을 찍지 않는다.  두 번 물어보면 답이 다를 수
+          # 있고 (실제로 `HTTP 000` 바로 밑에 `(HTTP 503)` 이 나란히 찍혔다),
+          # 그러면 화면이 스스로 모순된다.  확정 코드가 있으면 그것이 답이다.
           warn "터널 주소는 살아 있는데 그 뒤에 서버가 없습니다 (HTTP ${hc})."
           say "  ${DIM}중추 서버 쪽 터널이 끊긴 것입니다 — 그 기계에서 다시 엽니다:${OFF}"
           say "    ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
@@ -2178,6 +2179,9 @@ server_unreachable_help() {
           return 0
           ;;
       esac
+      # 확정이 아니면 그때 curl 이 뭐라 했는지를 보여 준다.
+      explain_unreachable "$url"
+      say ""
       # 이름 자체가 안 잡히면, 아래 목록을 훑기 전에 **갈라 준다.**  터널이
       # 닫힌 것과 이 망의 DNS 가 그 도메인을 거르는 것은 화면에서 똑같은데
       # 대처가 정반대다 — 뒤쪽인데 앞쪽으로 알면 멀쩡한 터널을 닫고 다시 열기를
@@ -2236,6 +2240,8 @@ server_unreachable_help() {
       return 0
   fi
 
+  explain_unreachable "$url"
+  say ""
   say "  ${B}중추 서버 쪽에서 순서대로${OFF}"
   say "    1. 떠 있는가          ${GREEN}bml status${OFF} ${DIM}— '실행 중' 이어야 합니다${OFF}"
   say "    2. 주소가 맞는가       ${DIM}같은 화면의${OFF} ${GREEN}접속 주소${OFF} ${DIM}줄을 그대로 씁니다${OFF}"
