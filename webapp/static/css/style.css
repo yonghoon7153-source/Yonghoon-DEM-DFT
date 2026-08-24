@@ -23,6 +23,8 @@
   --mo-bonding:#2563eb; --mo-nonbonding:#6b7280; --mo-antibonding:#dc2626;
   --font:'Inter',sans-serif; --mono:'JetBrains Mono',monospace;
   --sidebar-w:240px; --radius:12px; --radius-sm:8px;
+  /* 사이드바 스크롤바 폭. rail-btn 위치가 이 값을 쓴다 — 둘을 따로 두면 다시 겹친다. */
+  --sbw:10px;
   color-scheme:light;
 }
 /* ── Dark theme (toggle = data-theme; OS = prefers-color-scheme) ── */
@@ -92,7 +94,16 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 /* ── Sidebar ───────────────────────────────────────────── */
 .sidebar{position:fixed;top:0;left:0;width:var(--sidebar-w);height:100vh;
   background:var(--surface);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;padding:20px 14px;overflow-y:auto;z-index:40}
+  display:flex;flex-direction:column;padding:20px 14px;overflow-y:auto;z-index:40;
+  /* 스크롤바 폭을 **우리가 정한다.** 기본값은 OS·브라우저마다 달라서(윈도우 ~15px,
+     mac 오버레이 0px) rail-btn 위치를 맞출 수가 없다. gutter:stable 은 스크롤이
+     생겼다 없어질 때 내용이 좌우로 튀는 것도 같이 막는다. */
+  scrollbar-width:thin;scrollbar-gutter:stable;
+  scrollbar-color:var(--border) transparent}
+.sidebar::-webkit-scrollbar{width:var(--sbw)}
+.sidebar::-webkit-scrollbar-track{background:transparent}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px}
+.sidebar::-webkit-scrollbar-thumb:hover{background:var(--muted)}
 .sidebar-header{padding:6px 8px 18px}
 .brand{font-size:1.32rem;font-weight:800;color:var(--navy);letter-spacing:-.02em}
 .brand-accent{color:var(--accent)}
@@ -1212,14 +1223,20 @@ mark.dn-hl{background:#fef3c7;color:inherit;border-bottom:2px solid #f59e0b;
    1저자 요청: "누르면 해당 부분 들어가고 화면 꽉차게".
    ⚠ 두 가지를 **같이** 풀어야 진짜 꽉 찬다 — margin-left 만 지우면 max-width:1240px
      때문에 가운데에 그대로 갇힌다 (실제로 그 상태였다). */
-.rail-btn{position:fixed;top:12px;left:calc(var(--sidebar-w) - 40px);z-index:60;
+/* ⛔ 2026-08-25 — 버튼이 **사이드바 스크롤바를 덮고 있었다.** 사이드바는 240px 인데
+   윈도우 Chrome 기본 스크롤바가 ~15px(225–240px), 버튼은 200–230px 이라 225–230 이
+   겹쳤다. z-index 60 이라 버튼이 이기고, 그 30px 구간에서 스크롤바를 못 잡는다.
+   → 버튼을 스크롤바 폭(--sbw)만큼 더 왼쪽으로 뺀다. 아래 얇은 스크롤바 규칙과 한 쌍이다. */
+.rail-btn{position:fixed;top:12px;left:calc(var(--sidebar-w) - 40px - var(--sbw));z-index:60;
   width:30px;height:30px;padding:0;display:flex;align-items:center;justify-content:center;
   border:1px solid var(--border);border-radius:8px;background:var(--surface);
   color:var(--dim);cursor:pointer;transition:left .18s ease,background .14s,color .14s;
   box-shadow:0 1px 3px rgba(16,24,40,.08)}
 .rail-btn:hover{background:var(--bg);color:var(--navy)}
 .rail-btn svg{width:16px;height:16px;display:block}
-body.rail .rail-btn{left:10px}
+/* 접힘 상태 — 왼쪽 가장자리 14px 는 rail-peek(사이드바 살짝 보기)이 쓴다. 10px 에
+   두면 그 띠와 10–14px 이 겹친다. 20px 로 빼서 가장자리 조작과 안 부딪히게 한다. */
+body.rail .rail-btn{left:20px}
 body.rail .sidebar{transform:translateX(-100%)}
 .sidebar{transition:transform .18s ease}
 body.rail .content{margin-left:0;max-width:none;padding-left:56px}
