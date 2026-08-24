@@ -28,18 +28,20 @@ ADR 0011 에 적어 뒀다 (요약: `.wrd` 하나가 20 MB 이고 git 은 모든
 # 1. 데이터를 둘 곳을 만든다.  외장 드라이브를 쓰면 노트북 수명과 분리된다.
 mkdir -p /mnt/e/bml-data          # WSL 에서 Windows 의 E: 드라이브
 
-# 2. 이 기계의 설정을 적어 둔다.  .bml/ 는 git 에 올라가지 않으므로
-#    여기 적은 것은 이 기계에만 남는다.
-mkdir -p .bml
-cat > .bml/env <<'ENV'
-WORKBENCH_DATA=/mnt/e/bml-data
-WORKBENCH_HOST=0.0.0.0
-WORKBENCH_BACKUP=/mnt/f/bml-backup
-ENV
+# 2. 이 기계의 설정.  .bml/ 는 git 에 올라가지 않으므로 여기 적은 것은
+#    이 기계에만 남는다.
+bml data /mnt/e/bml-data          # 데이터가 어디 있는지
+bml host open                     # 다른 기계가 이 서버를 보게
 
 # 3. 띄운다
 bml
 ```
+
+세 설정은 모두 `.bml/env` 의 한 줄이다. **그 파일을 통째로 덮어쓰지 않는다** —
+`cat > .bml/env` 나 `printf ... > .bml/env` 로 한 줄을 넣으면 나머지가 함께
+사라진다. 실제로 그렇게 `WORKBENCH_HOST` 가 날아가서, 서버는 멀쩡히 떠 있는데
+노트북 두 대가 `curl (7)` 로 튕겼다 — 그리고 서버 쪽 화면에는 아무 말도 안
+나왔다. `bml data` · `bml host` · `bml password` 는 각각 자기 줄만 고친다.
 
 `bml` 자체의 사용법은 [[bml-command]] 에 있다. `bml status` 가 데이터 위치와
 원본 개수를 보여 준다. 여기가 외장 드라이브를
@@ -49,6 +51,23 @@ bml
 > 빈 `data/` 가 새로 생기고, 화면에는 셀이 하나도 없는 멀쩡한 워크벤치가 뜬다 —
 > 데이터가 날아간 것처럼 보이고, 그 상태로 올린 파일은 나중에 드라이브를 꽂으면
 > 보이지 않는 곳에 남는다.
+
+### 외장 드라이브가 WSL 에 안 보일 때
+
+WSL2 는 **VM 이 뜰 때 붙어 있던 드라이브만** `/mnt/<문자>` 로 자동 마운트한다.
+외장 SSD 를 나중에 꽂으면 Windows 탐색기에는 D: 가 보이는데 WSL 에는 `/mnt/d`
+가 없다. 그때는:
+
+```bash
+sudo mkdir -p /mnt/d && sudo mount -t drvfs D: /mnt/d
+echo 'D: /mnt/d drvfs defaults,nofail 0 0' | sudo tee -a /etc/fstab   # 재부팅 후에도
+```
+
+**`mkdir -p /mnt/d/bml-data` 는 하지 않는다.** `/mnt/d` 가 마운트가 아니면 그
+명령은 드라이브가 아니라 리눅스 루트에 같은 이름의 빈 폴더를 만든다. 그 뒤로는
+검사가 통과하고, 화면은 셀 0개로 멀쩡히 뜨고, 거기 올린 `.wrd` 는 드라이브를
+꽂아도 안 보이는 곳에 쌓인다. `ls` 로도 `[ -d ]` 로도 두 경우가 똑같이 보이므로,
+`bml` 이 대신 구분해서 (`/proc/mounts`) 맞는 명령만 안내한다.
 
 ## 주소 — `bml status` 가 불러 준다
 
@@ -67,8 +86,8 @@ bml status
 접속 주소   http://192.168.0.40:5003   (다른 기계에서: bml use 192.168.0.40)
 ```
 
-이 줄이 안 나오면 `.bml/env` 에 `WORKBENCH_HOST=0.0.0.0` 이 없는 것이다.
-주소를 못 찾았다고 나오면 아래 "NAT 모드일 때" 로 간다.
+이 줄 대신 `공개  이 기계 안에서만 (localhost)` 이 나오면 `bml host open` 후
+`bml restart`. 주소를 못 찾았다고 나오면 아래 "NAT 모드일 때" 로 간다.
 
 ### 그래도 안 열리면 — 방화벽
 

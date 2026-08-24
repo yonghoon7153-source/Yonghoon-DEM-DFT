@@ -11,6 +11,9 @@
 #   bml use off    해제한다 (이 기계가 자기 서버를 띄운다)
 #   bmlin  [주소]  랩 안(LAN) 주소로 갈아 끼우고 연다 — 주소는 한 번만 적으면 된다
 #   bmlout [주소]  밖(터널) 주소로 갈아 끼우고 연다 — 터널은 열 때마다 주소가 바뀔 수 있다
+#   bml data       데이터가 어느 폴더에 있는지 (외장하드 등) — `bml data <경로>` 로 옮긴다
+#   bml data off   저장소 안의 data/ 로 되돌린다 (원본은 그 드라이브에 그대로)
+#   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
 #   bml share stop 그 터널을 닫는다
@@ -1137,6 +1140,45 @@ start_dev() {
   fi
 }
 
+#: `/mnt/d/bml-data` 에서 **`/mnt/d` 가 마운트인가**.
+#:
+#: WSL 에서 이 차이가 전부다.  `/mnt/d` 가 드라이브면 그 아래는 D: 이고, 마운트가
+#: 아니면 그냥 리눅스 루트의 빈 폴더다 — 이름이 같고, `ls` 도 `[ -d ]` 도 둘을
+#: 구분하지 못한다.
+#:
+#: 경로가 `/mnt/<한 글자>/...` 꼴이면 그 마운트 지점을 찍는다.  아니면 실패.
+wsl_drive_mount_of() {
+  case "${1:-}" in
+    /mnt/[A-Za-z]|/mnt/[A-Za-z]/*) ;;
+    *) return 1 ;;
+  esac
+  printf '/mnt/%s' "$(printf '%s' "${1#/mnt/}" | cut -d/ -f1)"
+}
+
+#: 이 경로가 마운트 지점인가.  `mountpoint(1)` 은 없는 기계가 있어서 직접 본다.
+#: /proc/mounts 는 공백을 \040 으로 이스케이프하지만 `/mnt/d` 에는 공백이 없다.
+path_is_mounted() {
+  [ -r /proc/mounts ] || return 1
+  LC_ALL=C awk -v want="${1:-}" '$2 == want { hit = 1; exit } END { exit(hit ? 0 : 1) }' \
+    /proc/mounts 2>/dev/null
+}
+
+#: 지금 붙어 있는 Windows 드라이브들 (`/mnt/c /mnt/d` 꼴).
+#:
+#: 예전에는 `/mnt` 아래 폴더를 전부 찍었다.  그러면 `/mnt/wslg /mnt/wsl` 이 섞여
+#: 나오고 — 둘 다 드라이브가 아니다 — 무엇보다 **마운트가 아닌 빈 폴더가
+#: 드라이브인 척** 목록에 들어간다.  마운트된 것만 센다.
+wsl_mounted_drives() {
+  local d out=""
+  [ -d /mnt ] || return 0
+  for d in /mnt/?; do
+    [ -d "$d" ] || continue
+    case "$d" in /mnt/[A-Za-z]) ;; *) continue ;; esac
+    path_is_mounted "$d" && out="$out $d"
+  done
+  printf '%s' "${out# }"
+}
+
 #: 외장 드라이브에 데이터를 둔 중추 서버가, 드라이브가 안 잡힌 채로 뜨는 것을
 #: 막는다.  그냥 두면 uvicorn 이 그 경로에 빈 data/ 를 새로 만들고 화면에는
 #: 셀이 하나도 없는 멀쩡한 워크벤치가 뜬다 — 사람은 데이터가 날아갔다고 읽고,
@@ -1149,24 +1191,148 @@ guard_data_dir() {
   [ -d "$WORKBENCH_DATA" ] && return 0
   printf '%s✕%s 데이터 폴더가 없습니다: %s\n' "$RED" "$OFF" "$WORKBENCH_DATA" >&2
   say "  ${DIM}(.bml/env 의 WORKBENCH_DATA 가 이 경로를 가리킵니다)${OFF}"
+  data_dir_help "$WORKBENCH_DATA"
+  exit 1
+}
 
-  # 무엇이 실제로 붙어 있는지 보여 준다.  "없습니다" 만으로는 드라이브가 빠진
-  # 것인지, 애초에 그런 드라이브가 없는 것인지 구분할 수 없다 — 후자가 훨씬
-  # 흔한데(문서의 예시 경로를 그대로 붙여넣는다) 대처가 정반대다.
-  local mounts=""
-  [ -d /mnt ] && mounts="$(find /mnt -maxdepth 1 -mindepth 1 -type d 2>/dev/null | tr '\n' ' ')"
-  if [ -n "$mounts" ]; then
+#: 없는 데이터 폴더를 어떻게 되살릴지.  `guard_data_dir` 과 `cmd_data` 가 같은
+#: 화면을 쓴다 — 한쪽에만 맞는 안내를 하면 다른 쪽에서 그대로 틀린다.
+data_dir_help() {
+  local want="$1" mount letter
+
+  #: **드라이브가 안 붙어 있는 경우를 먼저 가른다.**  실측: T7 외장 SSD 를 WSL
+  #: 이 뜬 뒤에 꽂았더니 탐색기에는 D: 가 보이는데 `/mnt/d` 는 없었다.  그때
+  #: 예전 안내는 `mkdir -p /mnt/d/bml-data` 를 시켰는데, 그것은 드라이브가
+  #: 아니라 **리눅스 루트에 같은 이름의 빈 폴더**를 만든다.  그 뒤로는 검사가
+  #: 통과하고, 워크벤치는 셀 0개로 멀쩡히 뜨고, 거기 올린 `.wrd` 는 드라이브를
+  #: 꽂아도 안 보이는 곳에 쌓인다 — 이 가드가 막으려던 사고를, 가드의 안내문이
+  #: 시키고 있었다.
+  if is_wsl && mount="$(wsl_drive_mount_of "$want")" && ! path_is_mounted "$mount"; then
+    letter="$(printf '%s' "${mount#/mnt/}" | tr '[:lower:]' '[:upper:]')"
     say ""
-    say "  이 기계에 보이는 드라이브: ${B}${mounts}${OFF}"
+    say "  ${B}${letter}: 가 WSL 에 안 붙어 있습니다.${OFF} ${DIM}(폴더가 없는 것이 아니라, 드라이브가 없습니다)${OFF}"
+    say "  ${DIM}WSL2 는 VM 이 뜰 때 붙어 있던 드라이브만 자동으로 붙입니다.  외장 SSD 를${OFF}"
+    say "  ${DIM}나중에 꽂으면 Windows 탐색기에는 보이는데 여기서는 안 보입니다.${OFF}"
+    say ""
+    say "  ${B}지금 붙이기${OFF}   ${GREEN}sudo mkdir -p ${mount} && sudo mount -t drvfs ${letter}: ${mount}${OFF}"
+    say "  ${B}재부팅해도${OFF}     ${GREEN}echo '${letter}: ${mount} drvfs defaults,nofail 0 0' | sudo tee -a /etc/fstab${OFF}"
+    say ""
+    say "  ${RED}mkdir -p \"$want\" 는 하지 마세요${OFF} ${DIM}— ${mount} 가 마운트가 아니라, 그 명령은${OFF}"
+    say "  ${DIM}리눅스 쪽에 같은 이름의 빈 폴더를 만듭니다.  그 뒤로는 이 검사가 통과하고,${OFF}"
+    say "  ${DIM}화면은 셀 0개로 멀쩡히 뜨고, 거기 올린 .wrd 는 드라이브에 안 남습니다.${OFF}"
+    local drives; drives="$(wsl_mounted_drives)"
+    [ -n "$drives" ] && say "" && say "  ${DIM}지금 붙어 있는 드라이브: ${drives}${OFF}"
+    return 0
   fi
 
+  # 드라이브는 붙어 있는데 그 안의 폴더가 없는 경우.  이때만 mkdir 이 맞다.
   say ""
-  say "  ${B}그 드라이브가 맞다면${OFF}   ${GREEN}mkdir -p \"$WORKBENCH_DATA\"${OFF}"
-  say "  ${B}다른 곳에 둘 거라면${OFF}   ${GREEN}\$EDITOR $REPO/.bml/env${OFF} ${DIM}에서 WORKBENCH_DATA 를 고칩니다${OFF}"
-  say "  ${B}이 기계는 중추 서버가 아니라면${OFF}"
-  say "    ${GREEN}rm $REPO/.bml/env${OFF} ${DIM}— 저장소 안의 data/ 를 씁니다 (그 기계만의 데이터)${OFF}"
+  if [ -d "$(dirname "$want")" ]; then
+    say "  ${B}이 자리가 맞다면${OFF}     ${GREEN}mkdir -p \"$want\"${OFF} ${DIM}(빈 워크벤치로 시작합니다)${OFF}"
+  else
+    say "  ${B}윗 폴더부터 없습니다${OFF} ${DIM}$(dirname "$want")${OFF} — 경로를 다시 보세요."
+  fi
+  say "  ${B}다른 곳에 둘 거라면${OFF}   ${GREEN}bml data <경로>${OFF}"
+  say "  ${B}이 기계만의 데이터로${OFF}  ${GREEN}bml data off${OFF} ${DIM}— 저장소 안의 data/ 를 씁니다${OFF}"
+  say "    ${DIM}중추 서버였다면 이건 빈 화면이 된다는 뜻입니다 (원본은 그 드라이브에 그대로).${OFF}"
   say "    ${DIM}보기만 할 거라면 띄우지 말고 중추 서버 주소를 브라우저로 여세요.${OFF}"
-  exit 1
+}
+
+#: `bml data` — 데이터가 어디 있는지 보고, 옮기고, 되돌린다.
+#:
+#: `.bml/env` 를 손으로 고치라고 안내하던 자리다.  그 안내는 두 가지로 샜다.
+#: 파일이 `.bml/` 안에 있어서 **지우는 것**이 제일 쉬운 되돌리기처럼 보이는데
+#: (`rm .bml/env`), 그러면 외장하드를 쓰던 중추 서버가 조용히 빈 데이터로
+#: 갈아탄다.  그리고 새 경로가 진짜 있는 자리인지 아무도 안 본다.
+cmd_data() {
+  local want="${1:-}"
+
+  if [ -z "$want" ]; then
+    if [ -n "${WORKBENCH_DATA:-}" ]; then
+      say "데이터: ${B}${WORKBENCH_DATA}${OFF} ${DIM}(.bml/env)${OFF}"
+    else
+      say "데이터: ${B}${REPO}/data${OFF} ${DIM}(기본 — 이 기계만의 데이터)${OFF}"
+    fi
+    if [ -d "$DATA_DIR" ]; then
+      local uploads=0
+      [ -d "$DATA_DIR/uploads" ] && uploads="$(find "$DATA_DIR/uploads" -maxdepth 1 -name '*.wrd' 2>/dev/null | wc -l | tr -d ' ')"
+      say "  ${DIM}.wrd ${uploads}개${OFF}"
+    else
+      printf '%s✕%s 그 폴더가 지금 없습니다.\n' "$RED" "$OFF" >&2
+      data_dir_help "$DATA_DIR"
+      return 1
+    fi
+    say ""
+    say "  ${DIM}옮기기: bml data <경로>   ·   되돌리기: bml data off${OFF}"
+    return 0
+  fi
+
+  if [ "$want" = "off" ] || [ "$want" = "기본" ]; then
+    # 지금 보고 있던 것이 무엇이었는지 말하고 끈다.  중추 서버에서 이걸 치면
+    # 화면이 비는데, 그 이유가 화면에 안 나오면 "데이터가 날아갔다" 가 된다.
+    if [ -n "${WORKBENCH_DATA:-}" ]; then
+      say "${DIM}${WORKBENCH_DATA} 는 그대로 둡니다 — 보지 않을 뿐입니다.${OFF}"
+    fi
+    write_env_key WORKBENCH_DATA ""
+    ok "데이터: ${REPO}/data ${DIM}(이 기계만의 데이터)${OFF}"
+    say "  ${DIM}되돌리려면: bml data <그 경로>${OFF}"
+    return 0
+  fi
+
+  # `~/...` 는 우리가 편다 — 따옴표 안에 넣어 오면 셸이 안 펴 준다.
+  case "$want" in "~/"*) want="$HOME/${want#\~/}" ;; esac
+  # 절대 경로로 못 박는다.  `.bml/env` 는 어디서 실행하든 같은 곳을 가리켜야 한다.
+  case "$want" in /*) ;; *) want="$PWD/$want" ;; esac
+  want="${want%/}"
+
+  if [ ! -d "$want" ]; then
+    printf '%s✕%s 그런 폴더가 없습니다: %s\n' "$RED" "$OFF" "$want" >&2
+    data_dir_help "$want"
+    return 1
+  fi
+
+  write_env_key WORKBENCH_DATA "$want"
+  ok "데이터: ${B}${want}${OFF}"
+  local uploads=0
+  [ -d "$want/uploads" ] && uploads="$(find "$want/uploads" -maxdepth 1 -name '*.wrd' 2>/dev/null | wc -l | tr -d ' ')"
+  say "  ${DIM}.wrd ${uploads}개  ·  적용하려면: bml restart${OFF}"
+}
+
+#: `bml host` — 이 서버가 이 기계 안에서만 열릴지, 네트워크에 열릴지.
+#:
+#: `.bml/env` 에 `WORKBENCH_HOST=0.0.0.0` 을 손으로 적으라고 안내하던 자리다.
+#: 손으로 적는 파일에는 이미 WORKBENCH_DATA 같은 다른 줄이 있고, 한 줄을 넣는
+#: 가장 쉬운 방법이 `> .bml/env` 라서 나머지가 함께 날아간다 (실측: 그래서
+#: 중추 서버가 localhost 전용이 되었고 노트북 두 대가 못 붙었다).
+#: `write_env_key` 는 그 줄 하나만 바꾼다.
+cmd_host() {
+  case "${1:-}" in
+    '')
+      if [ "$HOST" = "0.0.0.0" ]; then
+        say "공개: ${B}네트워크${OFF} ${DIM}(WORKBENCH_HOST=0.0.0.0)${OFF}"
+        say "  ${DIM}이 기계 안에서만 열려면: bml host local${OFF}"
+      else
+        say "공개: ${B}이 기계 안에서만${OFF} ${DIM}(${HOST})${OFF}"
+        say "  ${DIM}다른 기계에서 보게 하려면: bml host open${OFF}"
+      fi
+      ;;
+    open|network|0.0.0.0)
+      write_env_key WORKBENCH_HOST "0.0.0.0"
+      ok "공개: 네트워크 ${DIM}(적용하려면 bml restart)${OFF}"
+      # "접속 가능" 이 무슨 뜻인지 여기서 말한다.  status 가 같은 말을 하지만,
+      # 이 줄을 친 그 순간에 안 나오면 나중에 status 를 볼 이유가 없다.
+      if [ -z "${WORKBENCH_PASSWORD:-}" ]; then
+        say "  ${DIM}이 주소에 닿는 사람은 암호 없이 전부 보고 고칩니다 — 랩 안에서는 이대로가 맞습니다.${OFF}"
+        say "  ${DIM}걸려면: bml password <암호>${OFF}"
+      fi
+      ;;
+    local|localhost|off|127.0.0.1)
+      write_env_key WORKBENCH_HOST ""
+      ok "공개: 이 기계 안에서만 ${DIM}(적용하려면 bml restart)${OFF}"
+      say "  ${DIM}다른 기계에서 보던 중이었다면 그쪽은 이제 못 붙습니다.${OFF}"
+      ;;
+    *) die "모르는 값: $1   (open | local | 없음)" ;;
+  esac
 }
 
 #: 다시 만들 수 없는 것만 다른 폴더로 복사한다.  자세한 것은 tools/backup.py.
@@ -3099,6 +3265,13 @@ cmd_status() {
   if [ "$scope" = "local" ] && [ "$HOST" = "0.0.0.0" ]; then
     warn "공개        설정은 0.0.0.0 인데, 떠 있는 서버는 이 기계 안에서만 열려 있습니다."
     say "  ${GREEN}bml restart${OFF} ${DIM}— 설정을 넣기 전에 띄운 서버입니다.${OFF}"
+  elif [ -z "$SERVER" ] && server_state && [ "$HOST" != "0.0.0.0" ] && [ "$scope" != "all" ]; then
+    # 이 기계 안에서만 열려 있다.  예전에는 이때 **아무 줄도 안 찍었다** — 그래서
+    # "노트북에서 왜 안 붙지" 를 서버 쪽 화면에서 확인할 방법이 없었다.  실측:
+    # `.bml/env` 를 통째로 덮어써서 WORKBENCH_HOST 줄이 사라졌고, 서버는 멀쩡히
+    # 떠 있는데 노트북이 `curl (7)` 로 튕겼다.  서버 화면은 그때도 조용했다.
+    say "공개        ${DIM}이 기계 안에서만 (localhost)${OFF}"
+    say "            ${DIM}다른 기계에서 보려면${OFF} ${GREEN}bml host open${OFF} ${DIM}후${OFF} ${GREEN}bml restart${OFF}"
   elif [ "$HOST" = "0.0.0.0" ] || [ "$scope" = "all" ]; then
     say "공개        네트워크의 다른 기계에서 접속 가능"
     # 누가 들어올 수 있는지까지 말한다.  "접속 가능" 만으로는 **암호 없이**
@@ -3627,6 +3800,8 @@ main() {
       esac
       ;;
     backup)            shift; cmd_backup "${1:-}" ;;
+    data)              shift; cmd_data "${1:-}" ;;
+    host|public)       shift; cmd_host "${1:-}" ;;
     use|server)        shift; cmd_use "${1:-}" ;;
     in|lan)            shift; cmd_slot in  "${1:-}"; sync_repo; cmd_connect ;;
     out|wan)           shift; cmd_slot out "${1:-}"; sync_repo; cmd_connect ;;

@@ -120,6 +120,11 @@ Windows 방화벽, WSL portproxy — [[central-server]] 참고).
 `WORKBENCH_HOST` 는 중추 서버 한 대만 하는 설정입니다. `bml use` 가 알아서
 한 줄만 적습니다.
 
+중추 서버에서도 그 파일을 **손으로 덮어쓰지 않습니다.** 한 줄을 넣는 가장 쉬운
+방법이 `cat > .bml/env` 인데, 그러면 나머지 줄이 함께 사라집니다 — 실제로 그렇게
+`WORKBENCH_HOST` 가 날아가서 서버는 떠 있는데 노트북이 못 붙었습니다.
+`bml data` · `bml host` · `bml password` · `bml use` 는 각각 자기 줄만 고칩니다.
+
 브라우저로 보기만 할 사람은 이 절 전체가 필요 없습니다 — 중추 서버 주소를
 그냥 열면 됩니다. 설치할 것이 없습니다.
 
@@ -144,6 +149,11 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml pull` | 실행 없이 최신화만 |
 | `bml use <주소>` | 이 기계가 볼 중추 서버를 정한다 — 그 뒤 `bml` 은 그것을 연다 |
 | `bml use off` | 해제 (이 기계가 자기 서버를 띄운다) |
+| `bml data` | 데이터가 어느 폴더에 있는지 (`.wrd` 개수까지) |
+| `bml data <경로>` | 데이터를 그 폴더로 — 없는 폴더는 적지 않는다 |
+| `bml data off` | 저장소 안의 `data/` 로 되돌린다 (원본은 그 드라이브에 그대로) |
+| `bml host open` | 이 서버를 네트워크에 연다 (다른 기계가 보게) |
+| `bml host local` | 이 기계 안에서만 |
 | `bml password <암호>` | 바깥에 열 때 쓸 공유 암호 (6자 이상) |
 | `bml share` | 임시 터널 — 다른 공유기에 있는 사람도 접속 |
 | `bml share stop` | 그 터널을 닫는다 (`bml stop` 도 함께 닫는다) |
