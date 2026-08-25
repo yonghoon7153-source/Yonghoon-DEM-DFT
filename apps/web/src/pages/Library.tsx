@@ -24,6 +24,9 @@ export function Library() {
   // 이름 묶음 필터.  묶기와 **같은 규칙**(nameFamily)을 쓴다 — 표에서 한
   // 덩어리로 보이던 것이 필터에서 다른 덩어리면 둘 중 하나는 거짓말이다.
   const [family, setFamily] = useState('')
+  // 작성자도 같은 자리에서 거른다.  서버에 보내면 고른 순간 선택지가 그 하나로
+  // 줄어서 다른 사람 것으로 옮겨 갈 수가 없다 -- 이름 묶음과 같은 이유다.
+  const [owner, setOwner] = useState('')
 
   const debouncedSearch = useDebounced(search)
   const groups = useAsync(() => api.listGroups(), [reloadKey], { live: true })
@@ -52,11 +55,19 @@ export function Library() {
     return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
   }, [samples.data])
 
+  const owners = useMemo(() => {
+    const seen = new Set<string>()
+    for (const item of samples.data ?? []) {
+      if (item.created_by) seen.add(item.created_by)
+    }
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [samples.data])
+
   const shown = useMemo(
-    () => (family
-      ? (samples.data ?? []).filter((item) => nameFamily(item.name) === family)
-      : samples.data ?? []),
-    [samples.data, family],
+    () => (samples.data ?? []).filter(
+      (item) => (!family || nameFamily(item.name) === family)
+        && (!owner || item.created_by === owner)),
+    [samples.data, family, owner],
   )
 
   return (
@@ -84,9 +95,23 @@ export function Library() {
                   placeholder="No_1_dry…"
                 />
               </Field>
-              <Field label="이름" hint="같은 조건 반복분을 한 덩어리로">
+              <Field label="작성자" hint="누가 올린 셀인가">
                 <select
-                  aria-label="이름"
+                  aria-label="작성자"
+                  value={owner}
+                  onChange={(event) => setOwner(event.target.value)}
+                >
+                  <option value="">전체</option>
+                  {owners.map((value) => (
+                    <option key={value} value={value}>
+                      {value}
+                    </option>
+                  ))}
+                </select>
+              </Field>
+              <Field label="이름 묶음" hint="같은 조건 반복분을 한 덩어리로">
+                <select
+                  aria-label="이름 묶음"
                   value={family}
                   onChange={(event) => setFamily(event.target.value)}
                 >
@@ -210,13 +235,18 @@ export function Library() {
 const GROUP_KEYS: [GroupKey, string][] = [
   ['none', '없음'],
   ['group', '그룹'],
-  ['name', '이름'],
+  // 누가 올린 셀인가.  한 서버를 여럿이 쓰면 표에서 남의 셀과 내 셀이 섞이고,
+  // 이름만 보고는 알 수 없다 (ADR 0012 — 이름은 기록이지 신원 확인이 아니다).
+  ['owner', '작성자'],
+  // 이름 **묶음**: 같은 조건을 세 번 돌린 것이 이름 뒤의 번호·질량만 다르다.
+  // '이름' 이라고만 적었더니 작성자로 읽혔다 -- 둘 다 필요한 것이었다.
+  ['name', '이름 묶음'],
   ['cathode', '양극재'],
   ['process', '공정'],
   ['temperature', '온도'],
 ]
 
-type GroupKey = 'none' | 'group' | 'name' | 'cathode' | 'process' | 'temperature'
+type GroupKey = 'none' | 'group' | 'owner' | 'name' | 'cathode' | 'process' | 'temperature'
 
 /** 이 셀이 어느 묶음에 속하는가.  "" 는 값이 없다는 뜻이고, 그 묶음은 맨
  *  아래로 내린다 — 비어 있는 것이 목록의 첫인상이 되면 안 된다. */
@@ -224,6 +254,8 @@ function bucketOf(sample: Sample, key: GroupKey): string {
   switch (key) {
     case 'group':
       return sample.group_name ?? ''
+    case 'owner':
+      return sample.created_by ?? ''
     case 'name':
       return nameFamily(sample.name)
     case 'cathode':
@@ -326,10 +358,12 @@ function SampleHead() {
     <thead>
       <tr>
         <th>셀</th>
+        {/* 누가 올렸나.  한 서버를 여럿이 쓰면 이것이 첫 번째 거르개다. */}
+        <th style={{ textAlign: 'left' }}>작성자</th>
         {/* 이름 묶음.  같은 조건을 세 번 돌린 것이 이름 뒤의 번호·질량만
             다르므로, 그 앞자리를 따로 보여 주면 표를 훑으며 반복분을 셀 수
             있다 — 묶기를 켜지 않아도. */}
-        <th style={{ textAlign: 'left' }}>이름</th>
+        <th style={{ textAlign: 'left' }}>이름 묶음</th>
         <th style={{ textAlign: 'left' }}>그룹</th>
         <th>날짜</th>
         <th style={{ textAlign: 'left' }}>양극재</th>
@@ -354,7 +388,7 @@ function SampleHead() {
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 15
+const COLUMN_COUNT = 16
 
 function SampleRow({
   sample,
@@ -371,6 +405,7 @@ function SampleRow({
       <td className="text">
         <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
       </td>
+      <td className="text dim">{sample.created_by || '—'}</td>
       <td className="text dim">{nameFamily(sample.name) || '—'}</td>
       <td className="text dim">{sample.group_name ?? '—'}</td>
       <td>{sample.test_date ?? '—'}</td>

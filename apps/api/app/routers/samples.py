@@ -13,8 +13,22 @@ from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 from .. import storage
 from ..db import get_session
 from ..deps import get_sample, resolved_cell_out, validate_basis
-from ..models import CycleRecord, ExperimentGroup, Run, Sample, SpectrumRecord
-from ..schemas import ComponentOut, SampleIn, SampleOut, SampleUpdate
+from ..models import (
+    CycleRecord,
+    ExperimentGroup,
+    GittRun,
+    Run,
+    Sample,
+    SpectrumRecord,
+)
+from ..schemas import (
+    ComponentOut,
+    MeasurementOut,
+    MeasurementsOut,
+    SampleIn,
+    SampleOut,
+    SampleUpdate,
+)
 from ..services import (
     apply_composition,
     resolve_cell,
@@ -234,3 +248,79 @@ def sample_bases(sample_id: int, session: Session = Depends(get_session),
     validate_basis(basis)
     sample = get_sample(session, sample_id)
     return resolved_cell_out(resolve_cell(sample)).model_dump()
+
+
+# --------------------------------------------------------------------------
+# 이 셀에 무엇이 붙어 있나
+# --------------------------------------------------------------------------
+def _frequency_span(record: SpectrumRecord) -> str:
+    """`7 MHz–10 mHz`.  둘 중 하나라도 없으면 빈 문자열이다 (§0.4)."""
+    start, end = record.frequency_start_hz, record.frequency_end_hz
+    if start is None or end is None:
+        return ""
+    return f"{_hz(start)}–{_hz(end)}"
+
+
+def _hz(value: float) -> str:
+    for scale, unit in ((1e6, "MHz"), (1e3, "kHz"), (1.0, "Hz"), (1e-3, "mHz")):
+        if abs(value) >= scale:
+            return f"{value / scale:g} {unit}"
+    return f"{value:g} Hz"
+
+
+@router.get("/{sample_id}/measurements", response_model=MeasurementsOut)
+def sample_measurements(sample_id: int, session: Session = Depends(get_session)):
+    """이 셀의 충방전·임피던스·GITT 를 한 번에.
+
+    세 섹션은 서로 독립이지만 셀은 하나다.  같은 셀을 세 번 재 놓고 세 화면을
+    따로 열어야 한다면 그건 나눈 것이 아니라 흩어 놓은 것이다.  각 상세
+    페이지가 이 한 번의 물음으로 "이 셀의 다른 측정" 을 그린다.
+
+    붙어 있지 않은 측정은 여기 없다.  `sample_id` 가 비어 있는 파일은 이름이
+    비슷해도 같은 셀이라고 단정하지 않는다 -- 이름은 기록이지 관계가 아니다.
+    """
+    sample = session.get(Sample, sample_id)
+    if sample is None:
+        raise HTTPException(404, f"sample {sample_id} not found")
+
+    runs = session.exec(
+        select(Run).where(Run.sample_id == sample_id)
+        .order_by(Run.start_time, Run.id)).all()
+    spectra = session.exec(
+        select(SpectrumRecord).where(SpectrumRecord.sample_id == sample_id)).all()
+    spectra = sorted(spectra, key=lambda r: (r.at_cycle is None,
+                                             r.at_cycle if r.at_cycle is not None else 0,
+                                             r.uploaded_at, r.sweep_index))
+    gitt = session.exec(
+        select(GittRun).where(GittRun.sample_id == sample_id)
+        .order_by(GittRun.start_time, GittRun.id)).all()
+
+    return MeasurementsOut(
+        sample_id=sample_id,
+        sample_name=sample.name,
+        cycling=[MeasurementOut(
+            kind="cycling", id=run.id or 0,
+            name=run.original_name or f"run {run.id}",
+            detail=(f"{run.complete_cycle_count} 사이클"
+                    if run.complete_cycle_count else "사이클 없음"),
+            measured_at=run.start_time,
+        ) for run in runs],
+        eis=[MeasurementOut(
+            kind="eis", id=record.id or 0,
+            name=record.name or record.original_name,
+            # 스윕이 여럿인 파일은 몇 번째인지가 곧 SOC 다 (ADR 0022).
+            detail=" · ".join(part for part in (
+                _frequency_span(record),
+                f"{record.sweep_index}/{record.sweep_count}"
+                if record.sweep_count > 1 else "",
+                record.purpose,
+            ) if part),
+            measured_at=record.measured_at,
+        ) for record in spectra],
+        gitt=[MeasurementOut(
+            kind="gitt", id=record.id or 0,
+            name=record.name or record.original_name,
+            detail=f"펄스 {record.n_pulses}개",
+            measured_at=record.start_time,
+        ) for record in gitt],
+    )

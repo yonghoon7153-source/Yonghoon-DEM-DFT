@@ -436,6 +436,12 @@ class GittRun(SQLModel, table=True):
     __tablename__ = "gitt_run"
 
     id: int | None = Field(default=None, primary_key=True)
+    #: 어느 셀의 GITT 인가.  `Run`·`SpectrumRecord` 와 같은 자리를 가리키므로,
+    #: 이것이 붙는 순간 한 셀의 충방전·임피던스·GITT 가 서로를 찾을 수 있다.
+    #:
+    #: `None` 이 정상 상태다 -- 셀을 만들기 전에 파일부터 올리는 일이 흔하고
+    #: (GITT 는 특히), 없는 소속을 지어내는 것보다 비워 두는 편이 맞다 (§0.4).
+    sample_id: int | None = Field(default=None, foreign_key="sample.id", index=True)
     name: str = Field(default="", index=True)
     original_name: str = ""
     #: Content hash of the ``.wrd``.  Duplicate uploads are the same row.

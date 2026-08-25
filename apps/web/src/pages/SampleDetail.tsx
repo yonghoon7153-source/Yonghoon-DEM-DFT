@@ -7,6 +7,7 @@ import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
 import { CellSpectra } from '../components/CellSpectra'
+import { OtherMeasurements } from '../components/OtherMeasurements'
 import { CompositionEditor } from '../components/CompositionEditor'
 import { CyclePicker } from '../components/CyclePicker'
 import { TestConditionsPanel } from '../components/TestConditionsPanel'
@@ -1108,6 +1109,14 @@ export function SampleDetail() {
           섹션으로 둔다. */}
       <div style={{ marginTop: 14 }}>
         <CellSpectra sampleId={sample.id} />
+      </div>
+      {/* 임피던스는 위에서 **그려서** 보여 주고, 여기는 이 셀에 붙어 있는
+          측정 전부를 한 줄씩 가리킨다 — GITT 를 포함해서.  겹치는 EIS 줄을
+          빼지 않는 것은, 위 카드가 겹쳐 그리는 자리이고 이 카드는 어디로
+          가면 되는지를 말하는 자리라 하는 일이 다르기 때문이다. */}
+      <div style={{ marginTop: 14 }}>
+        <OtherMeasurements sampleId={sample.id}
+                           exclude={{ kind: 'cycling', id: sample.id }} />
       </div>
     </main>
   )

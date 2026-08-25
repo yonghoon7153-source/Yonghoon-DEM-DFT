@@ -11,7 +11,7 @@ import type {
   Activity, ChangeNote, CircuitCombination,
   CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
-  GittRun, Group, Meta, Pocv,
+  GittRun, Group, Measurements, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Scan, Spectrum, SpectrumDetail,
   SpectrumFit, SpectrumPoints,
 } from './types'
@@ -195,6 +195,9 @@ export const api = {
     request<Spectrum[]>(`/api/eis/spectra${query(params)}`),
   /** 스윕이 여럿인 원본만 — SOC 스캔 목록.  점은 안 실려 온다. */
   listScans: (params?: Params) => request<Scan[]>(`/api/eis/scans${query(params)}`),
+  /** 이 셀에 붙어 있는 충방전·임피던스·GITT 전부 (섹션끼리 서로를 찾는 길). */
+  measurements: (sampleId: number) =>
+    request<Measurements>(`/api/samples/${sampleId}/measurements`),
   getScan: (sha256: string) => request<Scan>(`/api/eis/scans/${sha256}`),
   getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),
   spectrumPoints: (id: number) =>

@@ -602,6 +602,24 @@ export interface Spectrum {
   best_circuit: string
 }
 
+/** 한 셀에 붙어 있는 측정 하나 — 세 종류를 한 모양으로. */
+export interface Measurement {
+  kind: 'cycling' | 'eis' | 'gitt'
+  id: number
+  name: string
+  /** 그 종류에서만 뜻이 있는 한 줄 (사이클 수 · 주파수 범위 · 펄스 수). */
+  detail: string
+  measured_at: string | null
+}
+
+export interface Measurements {
+  sample_id: number
+  sample_name: string
+  cycling: Measurement[]
+  eis: Measurement[]
+  gitt: Measurement[]
+}
+
 /** 한 스윕과, 그 스윕에서 가장 잘 맞은 피팅의 값들 (ADR 0022). */
 export interface ScanPoint {
   spectrum_id: number
@@ -769,6 +787,9 @@ export interface DrtSweep {
 // -- GITT (ADR 0020) --------------------------------------------------------
 
 export interface GittRun {
+  /** 어느 셀의 것인가.  `null` 은 아직 안 붙였다는 뜻이고 정상 상태다. */
+  sample_id?: number | null
+  sample_name?: string | null
   id: number
   name: string
   original_name: string

@@ -6,6 +6,7 @@
  *  삼킨 파라미터는 숫자처럼 보일 뿐이다 (ADR 0019 §7).
  */
 
+import { OtherMeasurements } from '../components/OtherMeasurements'
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -324,6 +325,10 @@ export function SpectrumDetail() {
             ]}
           />
         </Card>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <OtherMeasurements sampleId={record.sample_id}
+                           exclude={{ kind: 'eis', id: record.id }} />
       </div>
     </main>
   )

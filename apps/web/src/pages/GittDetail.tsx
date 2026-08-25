@@ -5,6 +5,7 @@
  *  그래서 확산계수 자리는 비어 있을 때 "무엇이 없는지" 를 말한다.
  */
 
+import { OtherMeasurements } from '../components/OtherMeasurements'
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -204,6 +205,10 @@ export function GittDetail() {
             ['올린 때', dateTime(record.uploaded_at)],
           ]} />
         </Card>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <OtherMeasurements sampleId={record.sample_id ?? null}
+                           exclude={{ kind: 'gitt', id: record.id }} />
       </div>
     </main>
   )

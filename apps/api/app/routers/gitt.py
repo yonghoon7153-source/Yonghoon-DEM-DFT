@@ -23,7 +23,7 @@ from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
-from ..models import GittRun
+from ..models import GittRun, Sample
 from ..schemas import (
     DiffusionOut,
     DiffusionPointOut,
@@ -57,8 +57,17 @@ def _missing(record: GittRun) -> list[str]:
             if not getattr(record, field) or getattr(record, field) <= 0]
 
 
-def _out(record: GittRun) -> GittRunOut:
-    return GittRunOut(**record.model_dump(),
+def _out(record: GittRun, session: Session | None = None) -> GittRunOut:
+    """한 줄로 내보낼 모양.  셀 이름은 붙어 있을 때만 채운다.
+
+    id 만 보내면 화면이 이름을 얻으려고 셀을 한 번 더 물어야 하고, GITT 목록은
+    한 줄에 한 번씩 그것을 하게 된다.
+    """
+    sample_name = None
+    if session is not None and record.sample_id:
+        sample = session.get(Sample, record.sample_id)
+        sample_name = sample.name if sample else None
+    return GittRunOut(**record.model_dump(), sample_name=sample_name,
                       missing_for_diffusion=_missing(record))
 
 
@@ -112,18 +121,22 @@ def _load(record: GittRun):
 # --------------------------------------------------------------------------
 @router.get("/runs", response_model=list[GittRunOut])
 def list_runs(session: Session = Depends(get_session),
-              search: str | None = Query(None)):
-    records = session.exec(
-        select(GittRun).order_by(GittRun.uploaded_at.desc())).all()
+              search: str | None = Query(None),
+              sample_id: int | None = Query(None)):
+    statement = select(GittRun)
+    if sample_id is not None:
+        statement = statement.where(GittRun.sample_id == sample_id)
+    records = session.exec(statement.order_by(GittRun.uploaded_at.desc())).all()
     if search:
         needle = search.lower()
         records = [r for r in records
                    if needle in r.name.lower() or needle in r.original_name.lower()]
-    return [_out(record) for record in records]
+    return [_out(record, session) for record in records]
 
 
 @router.post("/runs/upload", response_model=GittRunOut, status_code=201)
 async def upload_run(file: UploadFile = File(...),
+                     sample_id: int | None = Query(None, description="이 셀에 붙인다"),
                      session: Session = Depends(get_session)):
     """Store one GITT ``.wrd`` and count what is in it.
 
@@ -138,6 +151,9 @@ async def upload_run(file: UploadFile = File(...),
     if not content:
         raise HTTPException(422, "uploaded file is empty")
 
+    if sample_id is not None and session.get(Sample, sample_id) is None:
+        raise HTTPException(404, f"sample {sample_id} not found")
+
     digest = hashlib.sha256(content).hexdigest()
     existing = session.exec(select(GittRun).where(GittRun.sha256 == digest)).first()
     if existing is not None:
@@ -145,7 +161,15 @@ async def upload_run(file: UploadFile = File(...),
         # that file is gone the screen says "다시 올려 주세요", and a dedup
         # that returned without storing made the advice a lie (#23).
         storage.store_upload(content, digest)
-        return _out(existing)
+        # 같은 파일을 셀에 붙이려고 다시 올리는 일이 실제로 있다: 파일부터
+        # 올려 두고 나중에 셀을 만드는 순서가 흔하기 때문이다.  이미 붙어
+        # 있으면 조용히 옮기지 않는다 -- 남의 셀에서 떼어 오는 것이 된다.
+        if sample_id is not None and existing.sample_id is None:
+            existing.sample_id = sample_id
+            session.add(existing)
+            session.commit()
+            session.refresh(existing)
+        return _out(existing, session)
 
     try:
         wrd = read_wrd_bytes(content, source_name=file.filename or "gitt.wrd")
@@ -163,6 +187,7 @@ async def upload_run(file: UploadFile = File(...),
     storage.store_upload(content, digest)
     seconds = wrd.seconds("test_time")
     record = GittRun(
+        sample_id=sample_id,
         name=(file.filename or "gitt").rsplit(".", 1)[0],
         original_name=file.filename or "",
         sha256=digest,
@@ -176,12 +201,12 @@ async def upload_run(file: UploadFile = File(...),
     session.add(record)
     session.commit()
     session.refresh(record)
-    return _out(record)
+    return _out(record, session)
 
 
 @router.get("/runs/{gitt_id}", response_model=GittRunOut)
 def read_run(gitt_id: int, session: Session = Depends(get_session)):
-    return _out(_get(session, gitt_id))
+    return _out(_get(session, gitt_id), session)
 
 
 @router.patch("/runs/{gitt_id}", response_model=GittRunOut)
@@ -194,6 +219,11 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
         if not name:
             raise HTTPException(422, "gitt run name cannot be empty")
         values["name"] = name
+    if values.get("sample_id") is not None \
+            and session.get(Sample, values["sample_id"]) is None:
+        # 없는 셀에 붙이면 목록에서 사라진 것처럼 보인다: 어느 셀 화면에도
+        # 안 나오고, GITT 목록은 지워진 셀 이름을 못 찾아 빈칸을 그린다.
+        raise HTTPException(404, f"sample {values['sample_id']} not found")
     for key, value in values.items():
         setattr(record, key, value)
     for field in payload.clear:
@@ -209,12 +239,16 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
     session.add(record)
     session.commit()
     session.refresh(record)
-    return _out(record)
+    return _out(record, session)
 
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 사람이 입력하는 재료 상수들이다.
 CLEARABLE_GITT_FIELDS = {"molar_volume_cm3", "molar_mass_g", "active_mass_g",
-                         "area_cm2"}
+                         "area_cm2",
+                         # 셀에서 떼어내는 길.  붙이는 것과 달리 값이 `None`
+                         # 이라 `sample_id: null` 로는 "안 보냄" 과 구별되지
+                         # 않는다 -- 그래서 clear 를 쓴다.
+                         "sample_id"}
 
 
 @router.delete("/runs/{gitt_id}", status_code=204)

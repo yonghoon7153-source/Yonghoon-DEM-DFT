@@ -844,6 +844,10 @@ class DrtSweepOut(BaseModel):
 # --------------------------------------------------------------------------
 class GittRunOut(BaseModel):
     id: int
+    #: 어느 셀의 것인가.  `None` 은 "아직 안 붙였다" 이고, 그 상태로도 분석은
+    #: 다 된다 -- 소속은 비교와 상호 링크를 위한 것이지 계산의 입력이 아니다.
+    sample_id: int | None = None
+    sample_name: str | None = None
     name: str
     original_name: str
     sha256: str
@@ -870,6 +874,7 @@ class GittRunOut(BaseModel):
 
 class GittRunUpdate(BaseModel):
     name: str | None = None
+    sample_id: int | None = None
     molar_volume_cm3: PositiveMass | None = None
     molar_mass_g: PositiveMass | None = None
     active_mass_g: PositiveMass | None = None
@@ -928,3 +933,37 @@ class DiffusionOut(BaseModel):
     #: 숫자가 나온 점의 수와 전체 점의 수.
     usable: int = 0
     total: int = 0
+
+
+# --------------------------------------------------------------------------
+# 한 셀의 측정들 — 세 섹션이 서로를 찾는 길
+# --------------------------------------------------------------------------
+class MeasurementOut(BaseModel):
+    """한 셀에 붙어 있는 측정 하나.
+
+    세 종류를 한 모양으로 줄인다.  상세 페이지들이 서로를 가리킬 때 필요한
+    것은 "무엇이 있고, 어디로 가면 되고, 한 줄로 뭐라고 적을까" 뿐이라,
+    각 종류의 전체 스키마를 세 번 실어 보낼 이유가 없다.
+    """
+
+    #: "cycling" | "eis" | "gitt".  화면이 어느 섹션으로 보낼지 정한다.
+    kind: str
+    id: int
+    name: str
+    #: 그 종류에서만 뜻이 있는 한 줄 (사이클 수 · 주파수 범위 · 펄스 수).
+    detail: str = ""
+    measured_at: datetime | None = None
+
+
+class MeasurementsOut(BaseModel):
+    """`GET /api/samples/{id}/measurements` 의 답."""
+
+    sample_id: int
+    sample_name: str
+    cycling: list[MeasurementOut] = []
+    eis: list[MeasurementOut] = []
+    gitt: list[MeasurementOut] = []
+
+    @property
+    def total(self) -> int:
+        return len(self.cycling) + len(self.eis) + len(self.gitt)
