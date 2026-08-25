@@ -510,20 +510,33 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
                 #   라벨이 `1a, 1b, "1 "` 이 됐다. 문자열 슬라이싱 대신 목록으로.
                 _SUF = "abcdefgh"
                 sublab = f"{pno + 1}{_SUF[k]}" if k < len(_SUF) else f"{pno + 1}_{k}"
-                if sbr > keep_blank:
-                    skipped.append((f"F{sublab}", pno + 1, f"거의 백지({sbr:.3f})"))
-                    continue
+                # ⛔ 2026-08-25 (codex D·E) — 여기서 `continue` 로 **슬롯을 버렸다.**
+                #   26쪽×2 = 52 슬롯인데 manifest 엔 50개뿐이었고(2a·2b 소멸) 이유가
+                #   어디에도 안 남았다. skipped 는 콘솔로만 나가 기록이 아니다.
+                #   판정: blank_score 는 **삭제 기준이 아니라 검토 우선순위 점수**다.
+                #   전 슬롯·전 PNG 를 남기고, 사람이 확인해야 blank_confirmed 가 된다.
+                blank_cand = sbr > keep_blank
                 cap = " / ".join(
                     " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
                     if b[4].strip() and clip.y0 <= b[1] < clip.y1)[:900]
                 fn = f"fig_{sublab}.png"
                 found.append({"key": f"F{sublab}", "kind": "figure", "label": sublab,
+                              "slot_id": sublab,
                               "page": pno + 1, "file": fn, "caption": cap,
                               "rotated_deg": 0,
                               "bbox": [round(v, 1) for v in clip],
                               "w": sub.width, "h": sub.height, "dpi": d_eff,
                               "src": Path(pdf_path).name, "blank": round(sbr, 3),
+                              "blank_score": round(sbr, 3),
+                              # 자동 분류일 뿐 확정 아님 — 확정은 사람만 한다
+                              "content_status": "blank_candidate" if blank_cand else "content",
+                              "artifact_retained": True,
+                              "digest_included": not blank_cand,
+                              "reviewed": False,
                               "slide": True, "nup": nup, "nup_index": k})
+                if blank_cand:
+                    skipped.append((f"F{sublab}", pno + 1,
+                                    f"백지 후보({sbr:.3f}) — 보존됨, 검토 대기"))
                 if not dry:
                     out_dir.mkdir(parents=True, exist_ok=True)
                     sub.save(out_dir / fn)
@@ -532,9 +545,7 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
 
         pix = page.get_pixmap(dpi=d_eff)
         br = blank_ratio(pix)
-        if br > keep_blank:                      # 표지 뒤 백지·간지
-            skipped.append((f"F{pno + 1}", pno + 1, f"거의 백지({br:.3f})"))
-            continue
+        blank_cand = br > keep_blank             # 표지 뒤 백지·간지 — **버리지 않는다**
         # 캡션 = 위에서부터 텍스트 블록을 이어붙인다 (제목 + 첫 불릿이면 충분)
         cap = " / ".join(
             " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
@@ -542,11 +553,20 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
         label = str(pno + 1)
         fn = f"fig_{label}.png"
         found.append({"key": f"F{label}", "kind": "figure", "label": label,
+                      "slot_id": label,
                       "page": pno + 1, "file": fn, "caption": cap, "rotated_deg": 0,
                       "bbox": [round(v, 1) for v in page.rect],
                       "w": pix.width, "h": pix.height, "dpi": d_eff,
                       "src": Path(pdf_path).name, "blank": round(br, 3),
+                      "blank_score": round(br, 3),
+                      "content_status": "blank_candidate" if blank_cand else "content",
+                      "artifact_retained": True,
+                      "digest_included": not blank_cand,
+                      "reviewed": False,
                       "slide": True})
+        if blank_cand:
+            skipped.append((f"F{label}", pno + 1,
+                            f"백지 후보({br:.3f}) — 보존됨, 검토 대기"))
         if not dry:
             out_dir.mkdir(parents=True, exist_ok=True)
             pix.save(out_dir / fn)
@@ -1242,7 +1262,9 @@ def selftest():
         finally:
             OUT_ROOT = keep_root
 
-        # --- --slides 모드 (덱): 백지 슬라이드는 버리고 내용 슬라이드만 남겨야 한다
+        # --- --slides 모드 (덱): 백지 슬라이드도 **버리지 않는다** (2026-08-25 codex E)
+        #     옛 판은 여기서 "1장만 남는다" 를 검사했다 — 그건 **버리던 시절의 계약**이다.
+        #     계약이 바뀌면 그 계약을 주장하던 테스트도 같이 고쳐야 한다.
         deck = root / "deck.pdf"
         d = fitz.open()
         p1 = d.new_page(width=720, height=540)          # 내용 있는 슬라이드
@@ -1253,16 +1275,26 @@ def selftest():
         keep_root, OUT_ROOT = OUT_ROOT, root
         try:
             m, sk = extract_slides(str(deck), "deck_test", dpi=72, maxpx=900, relto=root)
-            chk("양성(--slides): 내용 슬라이드 1장만 남는다", len(m["figures"]) == 1)
+            chk("양성(--slides): 슬롯 2개가 **전부** 남는다 (백지도 버리지 않는다)",
+                len(m["figures"]) == 2)
+            _blank = [f for f in m["figures"]
+                      if f.get("content_status") == "blank_candidate"]
+            chk("양성(--slides): 백지는 blank_candidate 로 **표시**된다 (삭제 아님)",
+                len(_blank) == 1 and _blank[0]["artifact_retained"] is True)
+            chk("음성⑧(--slides): 백지 후보는 digest 에서만 빠진다 (행·PNG 는 남는다)",
+                _blank[0]["digest_included"] is False)
+            chk("음성⑨(--slides): 자동 분류는 **확정이 아니다** (reviewed=False)",
+                _blank[0]["reviewed"] is False
+                and _blank[0]["content_status"] != "blank_confirmed")
             chk("양성(--slides): 라벨=쪽번호, 파일명 fig_1.png",
                 m["figures"][0]["label"] == "1" and m["figures"][0]["file"] == "fig_1.png")
             chk("양성(--slides): 캡션에 슬라이드 텍스트가 들어간다",
                 "D50" in m["figures"][0]["caption"])
             chk("양성(--slides): mode 표시가 남는다", m.get("mode") == "slides")
-            chk("음성⑥(--slides): 백지 슬라이드는 버린다 (skipped 로 이유가 남음)",
-                len(sk) == 1 and "백지" in sk[0][2])
-            chk("음성⑦(--slides): PNG 도 1장만 쓰인다",
-                len(list((root / "deck_test").glob("*.png"))) == 1)
+            chk("음성⑥(--slides): 백지는 '보존됨, 검토 대기' 로 사유가 남는다",
+                len(sk) == 1 and "검토 대기" in sk[0][2])
+            chk("음성⑦(--slides): PNG 는 **2장 다** 쓰인다 (사람이 열어봐야 하므로)",
+                len(list((root / "deck_test").glob("*.png"))) == 2)
         finally:
             OUT_ROOT = keep_root
 
@@ -1349,6 +1381,56 @@ def audit():
     return 0
 
 
+def drop_blank(slug, apply_it=False):
+    """사람이 **확정한** 백지 슬롯의 PNG 만 지운다 (2026-08-25 codex E 판정).
+
+    규칙 — 이 셋이 이 함수의 존재 이유다:
+      · 대상은 `content_status == "blank_confirmed"` 뿐이다. 자동 분류인
+        `blank_candidate` 는 **절대 지우지 않는다** (unreviewed 삭제 금지).
+      · manifest 행은 남긴다. 파일이 사라져도 슬롯이 있었다는 사실은 남아야 한다.
+      · `--apply` 없이는 지우지 않는다 (이중 의도).
+
+    ⛔ 이 함수가 못 하는 것: 백지인지 아닌지 **판단하지 않는다.** 사람이
+      figures.json 에서 `blank_confirmed` + `reviewed:true` 로 바꿔 둔 것만 따른다.
+    """
+    if not slug:
+        raise SystemExit("⛔ --drop-blank 는 slug 가 필요하다")
+    d = OUT_ROOT / slug
+    fj = d / "figures.json"
+    if not fj.is_file():
+        raise SystemExit(f"⛔ {fj} 가 없다")
+    meta = json.loads(fj.read_text(encoding="utf-8"))
+    figs = meta.get("figures", [])
+    cand = [f for f in figs if f.get("content_status") == "blank_candidate"]
+    conf = [f for f in figs if f.get("content_status") == "blank_confirmed"]
+    unrev = [f for f in conf if not f.get("reviewed")]
+    if unrev:
+        raise SystemExit(
+            f"⛔ blank_confirmed 인데 reviewed 가 아닌 슬롯 {len(unrev)}건 "
+            f"({', '.join(f.get('slot_id', f.get('label', '?')) for f in unrev[:6])}) — "
+            "사람이 열어본 표시 없이 확정만 바뀌었다. 삭제하지 않는다.")
+    print(f"{slug}: 슬롯 {len(figs)} · 백지후보 {len(cand)}(검토대기, 대상 아님) "
+          f"· 확정 {len(conf)}(삭제 대상)")
+    if not conf:
+        print("  삭제할 것 없음 — 확정은 사람만 한다 (figures.json 의 "
+              "content_status 를 blank_confirmed 로, reviewed 를 true 로).")
+        return 0
+    n = 0
+    for f in conf:
+        p = d / f.get("file", "")
+        if apply_it and p.is_file():
+            p.unlink()
+            n += 1
+        f["artifact_retained"] = bool(not apply_it)
+        f["digest_included"] = False
+    if apply_it:
+        fj.write_text(json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"  PNG {n}건 삭제 · manifest 행 {len(conf)}건은 그대로 남겼다")
+    else:
+        print(f"  (dry) --apply 를 붙이면 PNG {len(conf)}건을 지운다. 행은 남는다.")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser(
         description="논문 PDF 에서 그림·표를 캡션 기준으로 잘라 litdb/figures/<slug>/ 에 넣는다.")
@@ -1391,6 +1473,9 @@ def main():
     ap.add_argument("--slides", action="store_true",
                     help="발표 덱(PPT→PDF): 캡션이 없으므로 **슬라이드 1장 = 그림 1장**으로 렌더 "
                          "(litdb/talks 용. --slug --pdf 와 함께)")
+    ap.add_argument("--drop-blank", dest="drop_blank", action="store_true",
+                    help="사람이 blank_confirmed 로 확정한 슬롯의 PNG 만 지운다. "
+                         "manifest 행은 남는다. 실제 삭제에는 --apply 도 필요.")
     ap.add_argument("--nup", type=int, default=1,
                     help="한 쪽에 슬라이드 N 장인 인쇄 자료집을 나눈다 (심포지엄 자료집은 "
                          "대개 2). 라벨이 <쪽>a/<쪽>b 가 된다. --slides 와 함께.")
@@ -1413,6 +1498,9 @@ def main():
 
     if a.dedupe:
         return dedupe(apply_it=a.apply)
+
+    if a.drop_blank:
+        return drop_blank(a.slug, apply_it=a.apply)
 
     if a.refresh:
         box = Path(a.inbox_dir).expanduser() if a.inbox_dir else INBOX

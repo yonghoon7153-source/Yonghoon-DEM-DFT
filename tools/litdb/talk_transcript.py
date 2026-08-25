@@ -27,6 +27,8 @@
 from __future__ import annotations
 
 import argparse
+import datetime
+import hashlib
 import json
 import os
 import re
@@ -34,6 +36,7 @@ import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 OUT_ROOT = os.path.join(ROOT, "litdb", "talks", "_transcripts")
+_TODAY = datetime.date.today().isoformat()
 
 #: STT 가 전문용어를 망가뜨린 실측 사례. **자동 치환하지 않는다** — 후보만 띄운다.
 #: (2026-08-25 오승모 튜토리얼에서 실제로 나온 것들)
@@ -54,6 +57,115 @@ SUSPECT = [
 ]
 
 _TS = re.compile(r"^\s*(참석자\s*\d+|화자\s*\d+|[A-Za-z가-힣]+)\s+(\d{1,2}):(\d{2})(?::(\d{2}))?\s*$")
+
+# ══ 증거층 스키마 (2026-08-25 codex E 판정) ═══════════════════════════════════
+#   증거층은 셋이다: 덱 · **실제 음성** · **STT(음성의 오류 많은 파생물)**.
+#   우리는 음성을 들은 적이 없으므로 `[말]` 은 쓸 수 없다.
+#
+#   ⚠ 한 축에 몰면 안 된다 — 세 가지가 서로 다른 종류의 상태다:
+#     deck_support     = 주장의 증거 상태
+#     stt_status       = STT 문자열의 상태
+#     claim_resolution = 판정 완료 여부
+#   한 항목이 동시에 deck_support=supports 이면서 stt_status=ambiguous 일 수 있다.
+#
+#   ⛔ `transcript_error` 라는 값을 두지 않는다. 비어휘성(`a미타`)은 관측되지만
+#     **오류가 어디서 났는지**(STT 인가 발표자 실언인가)는 음성 없이 관측 불가다.
+#     그래서 이름이 `normalized_unique` 다 — "한 가지로만 읽힌다" 까지가 우리가 아는 것.
+AXES = {
+    "deck_support": ("supports", "conflicts_with_stt", "none", "unclear"),
+    "stt_status": ("raw", "normalized_unique", "ambiguous", "unusable"),
+    "claim_resolution": ("deck_supported", "stt_only_unverified", "unresolved"),
+    "audio_status": ("unavailable", "absent", "present"),
+}
+#: 음성을 **실제로 재청취한 구간에만** 열리는 별도 축.
+AUDIO_RESOLUTION = ("agrees_with_deck", "transcription_error",
+                    "speaker_corrects_deck", "spoken_conflict", "unresolved")
+
+#: 생성 자체를 막는 것 — 여기 걸리면 digest 를 만들지 않는다.
+GEN_BLOCKERS = ("sha256 계산 불가/누락", "page/slot 수 불일치", "시각 역행·비정상",
+                "schema 오류", "manifest 가 실제 산출물과 불일치")
+#: 생성은 허용하되 **승격(인용·외부사용)** 을 막는 것.
+PROMO_BLOCKERS = {
+    "audio_status": "음성 미보유 → [말]·직접인용·speech-only claim 차단",
+    "rights_status": "권리 미상 → 외부 공개·원고 사용 차단",
+    "qa_consent_status": "Q&A 동의 미상 → Q&A 외부 사용 차단",
+    "stt_engine_status": "STT 엔진 미상 → transcript-derived claim 승격 차단 "
+                         "(deck-only claim 은 막지 않는다)",
+}
+
+
+def sha256(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for b in iter(lambda: f.read(1 << 20), b""):
+            h.update(b)
+    return h.hexdigest()
+
+
+def source_manifest(slug, pdf=None, txt=None, audio=None, slots=None, stt_engine=None):
+    """세션의 원본 사슬·권한을 **먼저 고정한다**.
+
+    값과 상태를 분리한다 — 문자열 "unknown" 을 값에 넣으면 나중에 진짜 값과
+    구분이 안 된다. `stt_engine: null` + `stt_engine_status: "unknown"` 꼴.
+
+    ⛔ 이 함수가 못 하는 것: 권리·동의·off-record 여부를 **알아내지 못한다.**
+      사람만 채울 수 있고, 채우기 전까지 citable 은 false 로 잠긴다.
+    """
+    m = {"slug": slug, "generated": _TODAY, "schema": "talk_source_manifest/v1",
+         "sources": {}, "audio_status": "absent" if not audio else "present",
+         "stt_engine": stt_engine, "stt_engine_status": "known" if stt_engine else "unknown",
+         "rights_status": "unknown", "qa_consent_status": "unknown",
+         "off_record_status": "unknown",
+         "citable": False, "external_use_allowed": False,
+         "slots_expected": slots, "coverage": {}}
+    for kind, p in (("deck_pdf", pdf), ("stt_txt", txt), ("audio", audio)):
+        if not p:
+            continue
+        m["sources"][kind] = {"file": os.path.basename(p), "sha256": sha256(p),
+                              "bytes": os.path.getsize(p)}
+    return m
+
+
+def promo_blockers(man):
+    """승격(인용·외부사용)을 막는 사유 목록. 빈 목록이어야 citable 을 열 수 있다."""
+    out = []
+    if man.get("audio_status") != "present":
+        out.append(("audio_status", PROMO_BLOCKERS["audio_status"]))
+    for k in ("rights_status", "qa_consent_status", "stt_engine_status"):
+        if man.get(k) == "unknown":
+            out.append((k, PROMO_BLOCKERS[k]))
+    return out
+
+
+def validate_claim(c):
+    """claim 레코드 한 건을 검사한다 → 위반 사유 목록 (빈 목록이면 통과).
+
+    ⛔ 이 함수가 못 하는 것: 주장의 **참·거짓**을 보지 않는다. 증거 귀속이
+      관측한 범위를 넘지 않는지만 본다.
+    """
+    e = []
+    for ax in ("deck_support", "stt_status", "claim_resolution", "audio_status"):
+        v = c.get(ax)
+        if v is None:
+            e.append(f"{ax} 없음 — 축은 비워 둘 수 없다")
+        elif v not in AXES[ax]:
+            e.append(f"{ax}={v!r} 은 허용값이 아니다 {AXES[ax]}")
+    # ⛔ 핵심 음성 경로 — 음성을 안 들었는데 직접인용을 열면 STT 환각이 발언으로 승격된다
+    if not c.get("audio_verified") and c.get("direct_quote_allowed"):
+        e.append("audio_verified=false 인데 direct_quote_allowed=true "
+                 "— 음성 미확인 직접인용 금지")
+    if c.get("audio_status") != "present" and c.get("audio_resolution"):
+        e.append("음성이 없는데 audio_resolution 이 있다 — 재청취 구간에만 열린다")
+    if c.get("audio_resolution") and c["audio_resolution"] not in AUDIO_RESOLUTION:
+        e.append(f"audio_resolution={c['audio_resolution']!r} 허용값 아님")
+    if c.get("claim_resolution") == "deck_supported" and c.get("deck_support") != "supports":
+        e.append("claim_resolution=deck_supported 인데 deck_support 가 supports 가 아니다")
+    if c.get("stt_status") == "normalized_unique" and not c.get("normalization_basis"):
+        e.append("normalized_unique 인데 normalization_basis 가 없다 "
+                 "— 무엇을 근거로 한 가지로 읽었는지 남겨야 한다")
+    if c.get("claim_source") == ["stt"] and c.get("allowed_use") != "hypothesis_generation_only":
+        e.append("STT 만 근거인데 allowed_use 가 hypothesis_generation_only 가 아니다")
+    return e
 
 
 def parse(text):
@@ -190,6 +302,43 @@ def _selftest():
     say("슬라이드" in md and "| ? |" in md, "⑤ 정렬 표 뼈대에 빈칸(?)이 남는다")
     say("자동으로 고치지 않았다" in md, "⑤ 오탈자 표에 '고치지 않았다' 가 명시된다")
     say(fmt(135) == "02:15" and fmt(3930) == "1:05:30", "⑥ 시각 표기")
+
+    # ── ⑦ 증거층 스키마 (codex E) — **음성 경로가 본체다** ───────────────────
+    base = {"deck_support": "supports", "stt_status": "normalized_unique",
+            "normalization_basis": "deck+context", "claim_resolution": "deck_supported",
+            "audio_status": "unavailable", "audio_verified": False,
+            "direct_quote_allowed": False}
+    say(validate_claim(base) == [], f"⑦ 정상 레코드는 통과 ({validate_claim(base)})")
+    for patch, why in (
+            ({"direct_quote_allowed": True},
+             "⑦⛔ 음성 미확인 직접인용 금지 — STT 환각이 발언으로 승격되는 경로"),
+            ({"audio_resolution": "transcription_error"},
+             "⑦⛔ 음성 없는데 audio_resolution 을 열 수 없다"),
+            ({"deck_support": "none"},
+             "⑦⛔ 덱이 없는데 claim_resolution=deck_supported 금지"),
+            ({"normalization_basis": None},
+             "⑦⛔ normalized_unique 인데 근거 미기재 금지"),
+            ({"stt_status": "transcript_error"},
+             "⑦⛔ transcript_error 는 축에 없다 (오류 발생지점은 미관측)"),
+            ({"claim_source": ["stt"], "allowed_use": "citation"},
+             "⑦⛔ STT 단독 근거는 가설생성 외 용도 금지"),
+            ({"audio_status": None}, "⑦⛔ 축을 비워 둘 수 없다"),
+    ):
+        c = dict(base, **patch)
+        say(bool(validate_claim(c)), why)
+    say("transcript_error" not in AXES["stt_status"],
+        "⑦ stt_status 에 transcript_error 가 **없다** (이름을 normalized_unique 로)")
+    # ⑧ 승격 게이트 — 생성 게이트와 분리됐나
+    m = {"audio_status": "absent", "rights_status": "unknown",
+         "qa_consent_status": "unknown", "stt_engine_status": "unknown"}
+    pb = dict(promo_blockers(m))
+    say(len(pb) == 4, f"⑧ 미상 4종이 전부 승격을 막는다 ({len(pb)}건)")
+    m2 = {"audio_status": "present", "rights_status": "cleared",
+          "qa_consent_status": "cleared", "stt_engine_status": "known"}
+    say(promo_blockers(m2) == [], "⑧ 전부 확보되면 승격 차단 없음")
+    say("stt_engine_status" in pb and "deck-only" in pb["stt_engine_status"],
+        "⑧ 엔진 미상이 deck-only claim 까지 막지는 않는다고 사유에 적힌다")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
 
@@ -201,7 +350,34 @@ def main():
     ap.add_argument("--slug", help="litdb/talks slug")
     ap.add_argument("--minutes", type=int, default=5, help="목차 묶음 단위 (기본 5분)")
     ap.add_argument("--selftest", action="store_true")
+    ap.add_argument("--manifest", action="store_true",
+                    help="source_manifest.json 을 만든다 (해시·권한·승격 게이트). "
+                         "--pdf/--txt/--audio/--slots 와 함께.")
+    ap.add_argument("--pdf", help="자료집 PDF")
+    ap.add_argument("--audio", help="음성 파일 (있으면)")
+    ap.add_argument("--slots", type=int, help="예상 슬롯 수 (쪽수 × nup)")
+    ap.add_argument("--stt_engine", default=None,
+                    help="STT 엔진·모델. 모르면 **지정하지 않는다** — 추정 금지.")
     a = ap.parse_args()
+
+    if a.manifest:
+        if not a.slug:
+            raise SystemExit("⛔ --manifest 는 --slug 가 필요하다")
+        m = source_manifest(a.slug, a.pdf, a.txt, a.audio, a.slots, a.stt_engine)
+        blockers = promo_blockers(m)
+        m["promotion_blockers"] = [{"field": k, "why": v} for k, v in blockers]
+        os.makedirs(OUT_ROOT, exist_ok=True)
+        p = os.path.join(OUT_ROOT, f"{a.slug}_source_manifest.json")
+        with open(p, "w", encoding="utf-8") as f:
+            json.dump(m, f, ensure_ascii=False, indent=1)
+        print(f"→ {p}")
+        print(f"  원본 {len(m['sources'])}종 · audio={m['audio_status']} "
+              f"· citable={m['citable']}")
+        for k, v in blockers:
+            print(f"  ⛔ 승격차단 {k}: {v}")
+        if not blockers:
+            print("  ✅ 승격 차단 없음 — citable 을 사람이 열 수 있다")
+        return 0
     if a.selftest:
         return _selftest()
     if not (a.txt and a.slug):
