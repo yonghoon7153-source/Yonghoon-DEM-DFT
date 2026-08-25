@@ -264,6 +264,19 @@ def main():
             }, indent=2, default=str))
             print(f"  {i+1}/{len(todo)}")
 
+    # ⛔⛔ 2026-08-25 — li_mobility_score 를 **저장한 뒤에** 계산하고 있었다.
+    #   그래서 화면의 순위표에만 쓰이고 json 에는 한 번도 안 들어갔다:
+    #     cascade_v23_all.csv 에서 migration_volume_fraction 681/3615 (있음)
+    #                          li_mobility_score          **0/3615** (없음)
+    #   그 빈 열을 combine_rankings.py 가 읽고, normalize() 가 "전부 결측이면 0.5" 로
+    #   메워서 **score_combined 의 이동도 30 % 가 전원 동일한 상수**가 됐다.
+    #   = MD 를 접고 BVSE 로 갈아탔는데, 그 BVSE 결과조차 랭킹에 안 들어가고 있었다.
+    #   → 저장 **전에** 계산한다. (아래 순위표는 이 값을 그대로 다시 쓴다)
+    for r in records:
+        if 'bvs_li_proxy_score' in r and 'migration_volume_fraction' in r:
+            r['li_mobility_score'] = (3 * r['migration_volume_fraction']
+                                      + r['bvs_li_proxy_score'])
+
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({
@@ -275,11 +288,11 @@ def main():
     # Rank by migration volume × proxy score (combined Li mobility metric)
     ok = [r for r in records if 'bvs_li_proxy_score' in r
           and 'migration_volume_fraction' in r]
+    # (위에서 이미 계산·저장했다. 여기 남겨 둔 것은 옛 json 을 --resume 으로 이어받은
+    #  경우를 위한 폴백이다 — 값이 이미 있으면 같은 값이므로 무해하다.)
     for r in ok:
-        # Combined: weight migration volume (most direct conductivity proxy)
-        # 3x, BVS proxy score 1x
-        r['li_mobility_score'] = (3 * r['migration_volume_fraction']
-                                  + r['bvs_li_proxy_score'])
+        r.setdefault('li_mobility_score',
+                     3 * r['migration_volume_fraction'] + r['bvs_li_proxy_score'])
     ok.sort(key=lambda r: -r['li_mobility_score'])
     print(f"\n{'Rank':<5}{'Name':<45}{'⟨BVS⟩':>8}{'σ BVS':>8}{'V_mig%':>9}"
           f"{'mob_score':>11}")
