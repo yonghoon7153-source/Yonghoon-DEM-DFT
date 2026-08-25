@@ -17,7 +17,10 @@ TOTAL=500000
 _one() {
   local n_done n_all cur run pid step rate eta
   n_all=$(ls "$D"/in.*.liggghts 2>/dev/null | wc -l)
-  n_done=$(ls -d "$D"/post_oat_* 2>/dev/null | wc -l)
+  #  ⚠⚠ 완료 = **디렉터리 존재가 아니다**.  `post_oat_*/` 은 LIGGGHTS 가 압축 시작 **전에**
+  #     만든다 (입력 §shell mkdir).  존재를 완료로 세면 도는 런을 끝났다고 보고한다 —
+  #     실제로 그렇게 오보했다.  ⇒ 로그의 **종료 문구**로 센다.
+  n_done=$(grep -l 'Finished!' "$D"/log.*.txt 2>/dev/null | wc -l)
   echo "═══ OAT 스윕  ($(date '+%H:%M:%S')) ═══"
 
   #  ★ 프로세스가 있나 — 없으면 끝났거나 죽은 것이고, 그 둘은 다르다
@@ -36,12 +39,13 @@ _one() {
   if [ -z "$cur" ]; then echo "  로그 없음 — 아직 시작 안 함"; return; fi
   run=$(basename "$cur" .txt); run=${run#log.}
 
-  step=$(grep -oE '^ *[0-9]+ +[0-9]+ ' "$cur" 2>/dev/null | tail -1 | awk '{print $1}')
+  #  ⚠ thermo 줄만 고른다: 4열 이상 · 1·2열이 정수 · 마지막 열이 CPU 초.
+  #    (옛 판은 grep -oE 로 잡으려다 실패해 "아직 설정 단계" 라고 오보했다 — 실제 109,000 스텝)
+  read -r step cpus < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; c=$NF}
+                             END{print s, c}' "$cur")
   echo "  현재 런 : $run     ($n_done / $n_all 완료)"
   if [ -n "${step:-}" ]; then
     #  진행률·속도·ETA — CPU 열(4번째)이 LIGGGHTS 가 찍는 경과초다
-    local cpus
-    cpus=$(grep -oE '^ *[0-9]+ +[0-9]+ +[0-9.e+-]+ +[0-9.]+' "$cur" | tail -1 | awk '{print $4}')
     printf "  스텝    : %s / ~%s  (%.1f %%)\n" "$step" "$TOTAL" \
            "$(awk -v a="$step" -v b="$TOTAL" 'BEGIN{print a*100/b}')"
     if [ -n "${cpus:-}" ] && [ "$(awk -v c="$cpus" 'BEGIN{print (c>0)}')" = 1 ]; then
@@ -58,10 +62,10 @@ _one() {
   #  ★★ 대조 2건은 특별히 따로 본다 — 이게 어긋나면 나머지는 의미가 없다
   echo "  ── 대조 ──"
   for c in orig_1type base; do
-    if [ -d "$D/post_oat_$c" ]; then
-      echo "    ✓ $c 완료 (덤프 $(ls "$D/post_oat_$c" 2>/dev/null | wc -l)개)"
+    if [ -f "$D/log.$c.txt" ] && grep -q 'Finished!' "$D/log.$c.txt" 2>/dev/null; then
+      echo "    ✓ $c **완료** (덤프 $(ls "$D/post_oat_$c" 2>/dev/null | wc -l)개)"
     elif [ -f "$D/log.$c.txt" ]; then
-      echo "    … $c 진행 중"
+      echo "    … $c 진행 중 (덤프 $(ls "$D/post_oat_$c" 2>/dev/null | wc -l)개)"
     else
       echo "    · $c 대기"
     fi
