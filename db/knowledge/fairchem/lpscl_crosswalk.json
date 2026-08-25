@@ -1,0 +1,264 @@
+[
+  {
+    "crosswalk_id": "lpscl-task-omat",
+    "fairchem_capability": "UMA inorganic-material inference",
+    "project_use": "LPSCl structural relaxation, screening and selected MD",
+    "official_task": "omat",
+    "project_status": "validated_with_project_specific_exceptions",
+    "project_rule": "Use the project-pinned model/task/protocol. Official support does not override the Li3N ban or convergence gates.",
+    "paper_language": "UMA provides an inorganic pretrained potential used as a computational accelerator; project-specific validation defines the claim scope.",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-energy-reference",
+    "fairchem_capability": "OMat total energy and formation-energy references",
+    "project_use": "Host-relative energies within one frozen protocol",
+    "official_task": "omat",
+    "project_status": "conditional",
+    "project_rule": "Do not merge OMat energies with Materials Project hull/grand-potential values. Keep method_id and reference set explicit.",
+    "paper_language": "MLIP energy differences were interpreted only within the same task and reference convention.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "sha256": "73e70e526c3a978b7c0ef732f2ff51c90814946d72d29a68feb2cca290cc4ae4"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-relaxation",
+    "fairchem_capability": "ASE geometry/cell relaxation",
+    "project_use": "Screening-stage optimization",
+    "official_task": "omat",
+    "project_status": "conditional_on_convergence",
+    "project_rule": "Persist fmax, step count, residual stress, optimizer, model version and final structure. A returned structure is not automatically converged.",
+    "paper_language": "Structures were relaxed with a pinned UMA/OMat calculator and promoted only after explicit force/stress convergence checks.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/ase_calculator.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/ase_calculator.md",
+        "sha256": "d63ffe289534ef2de48a4eaf28b72dab4e3fd8501f110f07de4be86a2cb9f31f"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/relaxation_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/relaxation_runner.py",
+        "sha256": "b8d8cc699db6cf5d974638934be9925cfd87cbf4e024db39aa0b3902b43c0f64"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-md",
+    "fairchem_capability": "ASE/LAMMPS molecular dynamics",
+    "project_use": "Li diffusion and framework-state diagnostics",
+    "official_task": "omat",
+    "project_status": "project_protocol_controls_claim",
+    "project_rule": "Use the project canonical temperature/seed/time-window contract and save raw trajectories required by retrospective gates.",
+    "paper_language": "FAIR-Chem supplied the force engine; trajectory generation, seed policy and transport estimator followed the project protocol.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/core/common_tasks/lammps.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/lammps.md",
+        "sha256": "80a0cfa0c11546dc9be76fdce82a40c6c5ec8ee978b45572c755f6ddc28d87c8"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/md_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/md_runner.py",
+        "sha256": "403579b89e9917bc572586bd6bd5155eac2e3be648fc057dc7cc5b2ddd4713eb"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-elastic",
+    "fairchem_capability": "Elastic response workflow",
+    "project_use": "Screening-stage mechanical response",
+    "official_task": "omat",
+    "project_status": "conditional_on_physical_validity",
+    "project_rule": "Record strain/relaxation semantics and reject non-positive or otherwise nonphysical moduli before species aggregation.",
+    "paper_language": "Elastic quantities were treated as configuration-conditional diagnostics, not intrinsic values until convergence and validity checks passed.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/elastic.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/elastic.md",
+        "sha256": "05ef089bb15e1565dd79e55b7104498b03e809d3b64500336a4eb1436d325920"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/elasticity_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/elasticity_runner.py",
+        "sha256": "7daa2a119f699580e847e9c56a61fc585fbc6c4d9abcb347cce342cb89cbc10a"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-phonon",
+    "fairchem_capability": "Phonon workflow",
+    "project_use": "Future local/dynamical stability validation",
+    "official_task": "omat",
+    "project_status": "not_yet_project_canonical",
+    "project_rule": "Require displacement, supercell and force-convergence studies before promotion.",
+    "paper_language": "Phonons remain a planned validation layer rather than an output of the current screen.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/phonons.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/phonons.md",
+        "sha256": "3b0dbcbf9191e7fd9d742b72c744b716e87a9faaac424a5adc653a7c22d75187"
+      },
+      {
+        "source_path": "src/fairchem/core/components/calculate/_single/phonon_runner.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/components/calculate/_single/phonon_runner.py",
+        "sha256": "572d46c181a7715c6da4b5c8e3fb4ab6812e2be0d92cf6c0a6651b215dc0cceb"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-ehull-esw",
+    "fairchem_capability": "Formation-energy workflow",
+    "project_use": "Grand-potential and E_hull context",
+    "official_task": "omat",
+    "project_status": "blocked_as_cross_reference",
+    "project_rule": "Use a separately pinned Materials Project phase set for MP thermodynamics; never substitute UMA/OMat totals into that ledger.",
+    "paper_language": "Thermodynamic phase competition was evaluated in a method-specific external phase-set workflow, separate from UMA screening energies.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/formation_energy.md",
+        "sha256": "73e70e526c3a978b7c0ef732f2ff51c90814946d72d29a68feb2cca290cc4ae4"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-neb",
+    "fairchem_capability": "Catalysis transition-state tooling and general MLIP forces",
+    "project_use": "Li-hop scout calculations",
+    "official_task": "omat",
+    "project_status": "diagnostic_only_until_dft",
+    "project_rule": "CatTSunami/OC20NEB are catalysis-specific. Bulk Li hopping requires our own cell, path and DFT validation contract.",
+    "paper_language": "MLIP barriers were used only to scout paths; absolute barriers required matched DFT validation.",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/examples_tutorials/cattsunami_tutorial.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/cattsunami_tutorial.md",
+        "sha256": "9a8db9cba889a2ddb4646699868c6714c06c36fbcf59f7e9be64f8031dd4f472"
+      },
+      {
+        "source_path": "docs/catalysts/datasets/oc20neb.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20neb.md",
+        "sha256": "7c0ff23c652c71ee44063f91076d256056900c90627324d092918c2f8d4f5dd7"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-batch-screening",
+    "fairchem_capability": "Batch inference and distributed workers",
+    "project_use": "Large candidate roster throughput",
+    "official_task": "omat",
+    "project_status": "engineering_ready_science_contract_separate",
+    "project_rule": "Batch records need immutable composition, site, seed and method identity. Throughput metadata must not be used as a replicate label.",
+    "paper_language": "Batched inference reduced computational cost, while scientific denominators were defined from exact structure provenance.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/batch_inference.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/batch_inference.md",
+        "sha256": "9780bd7ed61fffc67eb55e579a7540e4152df5edff3fd6efe8e0c659cb220d43"
+      },
+      {
+        "source_path": "docs/core/common_tasks/inference_batcher.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/inference_batcher.md",
+        "sha256": "11796b111210c7910eb5450c270827503acbdb82338b42437186c784d1831937"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-finetune",
+    "fairchem_capability": "UMA fine-tuning",
+    "project_use": "Potential future LPSCl domain adaptation",
+    "official_task": "omat",
+    "project_status": "future_after_ground_truth",
+    "project_rule": "First fix relaxation convergence and collect composition-diverse DFT energies/forces/stress; use nested chemistry-group evaluation.",
+    "paper_language": "Fine-tuning is reserved for residual systematic error after protocol defects are removed.",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/fine_tuning.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/fine_tuning.md",
+        "sha256": "eb35f1621c8b6a8531f99783abb1a889a0317b88d3658b1f8cbf02856243990d"
+      },
+      {
+        "source_path": "docs/core/common_tasks/evaluation.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/evaluation.md",
+        "sha256": "187eb50682936562f844a809fc7f53505c064a45f1b0e282b3c3c9fb7c287055"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-li3n-exception",
+    "fairchem_capability": "General inorganic UMA inference",
+    "project_use": "Li3N",
+    "official_task": "omat",
+    "project_status": "project_blocked",
+    "project_rule": "UMA is banned for Li3N by project evidence even though the official task is broad.",
+    "paper_language": "Li3N was excluded from UMA-based claims under a project-specific validation decision.",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      },
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      }
+    ]
+  },
+  {
+    "crosswalk_id": "lpscl-model-upgrade",
+    "fairchem_capability": "Named pretrained model registry and versioned releases",
+    "project_use": "Model migration",
+    "official_task": "omat",
+    "project_status": "requires_revalidation",
+    "project_rule": "A model/version upgrade creates a new method_id. Do not silently mix UMA 1.1 and 1.2 values.",
+    "paper_language": "All model upgrades were treated as method changes and benchmarked before data pooling.",
+    "sources": [
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "docs/core/uma_changelog.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma_changelog.md",
+        "sha256": "b95aed55157a5854f1a84200489b5dc2e18573e9a19724808880f8b028daacd8"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+        "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+      }
+    ]
+  }
+]

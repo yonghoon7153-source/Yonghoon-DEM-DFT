@@ -1,0 +1,548 @@
+[
+  {
+    "paper_id": "fc-paper-gemnet-oc-graph-neural-networks-for-large-datasets",
+    "title": "GemNet-OC: Graph Neural Networks for Large Datasets",
+    "category": "Universal Models & Architectures",
+    "arxiv_url": "https://arxiv.org/abs/2204.02782",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2204.02782"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-spherical-channels-for-modeling-atomic-interactions",
+    "title": "Spherical Channels for Modeling Atomic Interactions",
+    "category": "Universal Models & Architectures",
+    "arxiv_url": "https://arxiv.org/abs/2206.14331",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2206.14331"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-forcenet-a-graph-neural-network-for-large-scale-quantum-calculations",
+    "title": "ForceNet: A Graph Neural Network for Large-Scale Quantum Calculations",
+    "category": "Universal Models & Architectures",
+    "arxiv_url": "https://arxiv.org/abs/2103.01436",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2103.01436"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-rotation-invariant-graph-neural-networks-using-spin-convolutions",
+    "title": "Rotation Invariant Graph Neural Networks using Spin Convolutions",
+    "category": "Universal Models & Architectures",
+    "arxiv_url": "https://arxiv.org/abs/2106.09575",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2106.09575"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-towards-training-billion-parameter-graph-neural-networks",
+    "title": "Towards Training Billion Parameter Graph Neural Networks",
+    "category": "Universal Models & Architectures",
+    "arxiv_url": "https://arxiv.org/abs/2203.09697",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2203.09697"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-polymers-2026-opoly26-dataset",
+    "title": "The Open Polymers 2026 (OPoly26) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2512.23117",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2512.23117"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-catalyst-2025-oc25-dataset-for-solid-liquid-interfaces",
+    "title": "The Open Catalyst 2025 (OC25) Dataset for Solid-Liquid Interfaces",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2509.17862",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2509.17862"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-molecules-2025-omol25-dataset",
+    "title": "The Open Molecules 2025 (OMol25) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2505.08762",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2505.08762"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-open-molecular-crystals-2025-omc25-dataset",
+    "title": "Open Molecular Crystals 2025 (OMC25) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2508.02651",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2508.02651"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-dac-2025-odac25-dataset",
+    "title": "The Open DAC 2025 (ODAC25) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2508.03162",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2508.03162"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-open-materials-2024-omat24-dataset",
+    "title": "Open Materials 2024 (OMat24) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2410.12771",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2410.12771"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-open-catalyst-experiments-2024-ocx24",
+    "title": "Open Catalyst Experiments 2024 (OCx24)",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2411.11783",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2411.11783"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-catalyst-2022-oc22-dataset",
+    "title": "The Open Catalyst 2022 (OC22) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2206.08917",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2206.08917"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-dac-2023-odac23-dataset",
+    "title": "The Open DAC 2023 (ODAC23) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2311.00341",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2311.00341"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-open-catalyst-2020-oc20-dataset",
+    "title": "The Open Catalyst 2020 (OC20) Dataset",
+    "category": "Datasets",
+    "arxiv_url": "https://arxiv.org/abs/2010.09990",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2010.09990"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-all-atom-diffusion-transformers-adit",
+    "title": "All-atom Diffusion Transformers (ADiT)",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2503.03965",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2503.03965"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-space-group-conditional-flow-matching",
+    "title": "Space Group Conditional Flow Matching",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2509.23822",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2509.23822"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-flowllm-llms-and-riemannian-flow-matching-for-materials",
+    "title": "FlowLLM: LLMs and Riemannian Flow Matching for Materials",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2410.23405",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2410.23405"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-flowmm-riemannian-flow-matching-for-materials",
+    "title": "FlowMM: Riemannian Flow Matching for Materials",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2406.04713",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2406.04713"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-fine-tuned-language-models-generate-stable-inorganic-materials",
+    "title": "Fine-Tuned Language Models Generate Stable Inorganic Materials",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2402.04379",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2402.04379"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-fastcsp-accelerated-molecular-crystal-structure-prediction",
+    "title": "FastCSP: Accelerated Molecular Crystal Structure Prediction",
+    "category": "Generative Models",
+    "arxiv_url": "https://arxiv.org/abs/2508.02641",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2508.02641"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-adjoint-sampling",
+    "title": "Adjoint Sampling",
+    "category": "Sampling & Molecular Dynamics",
+    "arxiv_url": "https://arxiv.org/abs/2504.11713",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2504.11713"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-adjoint-schr-dinger-bridge-sampler-asbs",
+    "title": "Adjoint Schrödinger Bridge Sampler (ASBS)",
+    "category": "Sampling & Molecular Dynamics",
+    "arxiv_url": "https://arxiv.org/abs/2506.22565",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2506.22565"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-enhancing-diffusion-based-sampling-with-molecular-collective-variables",
+    "title": "Enhancing Diffusion-Based Sampling with Molecular Collective Variables",
+    "category": "Sampling & Molecular Dynamics",
+    "arxiv_url": "https://arxiv.org/abs/2510.11923",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2510.11923"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-cattsunami-accelerating-transition-state-energy-calculations",
+    "title": "CatTSunami: Accelerating Transition State Energy Calculations",
+    "category": "Applications & Discovery",
+    "arxiv_url": "https://arxiv.org/abs/2405.02078",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2405.02078"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-adsorbml-a-leap-in-efficiency-for-adsorption-energy-calculations",
+    "title": "AdsorbML: A Leap in Efficiency for Adsorption Energy Calculations",
+    "category": "Applications & Discovery",
+    "arxiv_url": "https://arxiv.org/abs/2211.16486",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2211.16486"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-catlas-automated-framework-for-catalyst-discovery",
+    "title": "Catlas: Automated Framework for Catalyst Discovery",
+    "category": "Applications & Discovery",
+    "arxiv_url": "https://arxiv.org/abs/2208.12717",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2208.12717"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-genetic-algorithm-accelerated-discovery-of-liquid-crystal-polymers",
+    "title": "Genetic Algorithm-Accelerated Discovery of Liquid Crystal Polymers",
+    "category": "Applications & Discovery",
+    "arxiv_url": "https://arxiv.org/abs/2505.13477",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2505.13477"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-adapting-oc20-trained-equiformerv2-for-high-entropy-materials",
+    "title": "Adapting OC20-trained EquiformerV2 for High-Entropy Materials",
+    "category": "Applications & Discovery",
+    "arxiv_url": "https://arxiv.org/abs/2403.09811",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2403.09811"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-generalizing-denoising-to-non-equilibrium-structures-dens",
+    "title": "Generalizing Denoising to Non-Equilibrium Structures (DeNS)",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2403.09549",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2403.09549"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-from-molecules-to-materials-joint-multi-domain-pre-training-jmp",
+    "title": "From Molecules to Materials: Joint Multi-domain Pre-training (JMP)",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2310.16802",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2310.16802"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-finetuna-fine-tuning-accelerated-molecular-simulations",
+    "title": "FINETUNA: Fine-tuning Accelerated Molecular Simulations",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2205.01223",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2205.01223"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-robust-and-scalable-uncertainty-estimation-with-conformal-prediction",
+    "title": "Robust and Scalable Uncertainty Estimation with Conformal Prediction",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2208.08337",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2208.08337"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-generalization-of-graph-based-active-learning-relaxation-strategies",
+    "title": "Generalization of Graph-Based Active Learning Relaxation Strategies",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2311.01987",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2311.01987"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-enabling-robust-offline-active-learning-for-ml-potentials",
+    "title": "Enabling Robust Offline Active Learning for ML Potentials",
+    "category": "Training Methods & Techniques",
+    "arxiv_url": "https://arxiv.org/abs/2008.10773",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2008.10773"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-helm-learning-from-electronic-structure-across-the-periodic-table",
+    "title": "HELM: Learning from Electronic Structure Across the Periodic Table",
+    "category": "Electronic Structure & Properties",
+    "arxiv_url": "https://arxiv.org/abs/2510.00224",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2510.00224"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-chemical-properties-from-graph-neural-network-predicted-electron-densities",
+    "title": "Chemical Properties from Graph Neural Network-Predicted Electron Densities",
+    "category": "Electronic Structure & Properties",
+    "arxiv_url": "https://arxiv.org/abs/2309.04811",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2309.04811"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-the-loss-landscape-of-powder-x-ray-diffraction-based-structure-optimization",
+    "title": "The Loss Landscape of Powder X-Ray Diffraction-Based Structure Optimization",
+    "category": "Electronic Structure & Properties",
+    "arxiv_url": "https://arxiv.org/abs/2512.04036",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2512.04036"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-a-physically-informed-graph-based-order-parameter",
+    "title": "A Physically-informed Graph-based Order Parameter",
+    "category": "Electronic Structure & Properties",
+    "arxiv_url": "https://arxiv.org/abs/2106.08215",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2106.08215"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-open-challenges-in-developing-large-scale-ml-models-for-catalyst-discovery",
+    "title": "Open Challenges in Developing Large Scale ML Models for Catalyst Discovery",
+    "category": "Perspectives & Introductions",
+    "arxiv_url": "https://arxiv.org/abs/2206.02005",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2206.02005"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-an-introduction-to-electrocatalyst-design-using-machine-learning",
+    "title": "An Introduction to Electrocatalyst Design using Machine Learning",
+    "category": "Perspectives & Introductions",
+    "arxiv_url": "https://arxiv.org/abs/2010.09435",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2010.09435"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  },
+  {
+    "paper_id": "fc-paper-computational-catalyst-discovery-active-classification-through-myopic-multiscale-sampling",
+    "title": "Computational Catalyst Discovery: Active Classification through Myopic Multiscale Sampling",
+    "category": "Perspectives & Introductions",
+    "arxiv_url": "https://arxiv.org/abs/2102.01528",
+    "doi_url": null,
+    "all_urls": [
+      "https://arxiv.org/abs/2102.01528"
+    ],
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+    "status": "official_index_entry"
+  }
+]

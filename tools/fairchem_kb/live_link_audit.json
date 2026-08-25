@@ -1,0 +1,41 @@
+{
+  "checked_at": "2026-08-21",
+  "official_site": "https://fair-chem.github.io/",
+  "unique_internal_targets_checked": 83,
+  "http_200_targets": 64,
+  "broken_targets": [
+    {"path":"/catalysts/datasets/oc20","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/catalysts/datasets/oc20dense","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/catalysts/datasets/oc20neb","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/catalysts/datasets/oc22","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/dac/datasets/odac","http_status":404,"reason":"nonexistent or obsolete link"},
+    {"path":"/inorganic_materials/datasets/omat24","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/molecules/datasets/omc25","http_status":404,"reason":"obsolete nested link"},
+    {"path":"/core/common_tasks/ase_calculator.html","http_status":404,"reason":"obsolete HTML link"},
+    {"path":"/NRR/NRR_example-gemnet","http_status":404,"reason":"missing notebook or page"},
+    {"path":"/example_configs/4h_on_ni111.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/example_configs/c_o_on_ni111.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/example_configs/co_on_ni111.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/example_configs/h_on_ni111.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/example_configs/ni_bulk.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/example_configs/ni111_slab.xyz","http_status":404,"reason":"missing example asset"},
+    {"path":"/blaiszik@uchicago.edu","http_status":404,"reason":"malformed relative mail link"},
+    {"path":"/levineds@meta.com","http_status":404,"reason":"malformed relative mail link"},
+    {"path":"/mshuaibi@meta.com","http_status":404,"reason":"malformed relative mail link"},
+    {"path":"/build/benchmark-3148f3d7d0de190594325f48351eae49.md","http_status":404,"reason":"benchmark card target points to a source-only orphan"}
+  ],
+  "special_probes": [
+    {"url":"https://fair-chem.github.io/autoapi/","http_status":404,"finding":"No current live API reference at this route."},
+    {"url":"https://fair-chem.github.io/oc20-slabs/","http_status":404,"finding":"Tracked source page is not built."},
+    {"url":"https://fair-chem.github.io/benchmark/","http_status":404,"finding":"Tracked source page is not built."},
+    {"url":"https://fair-chem.github.io/sitemap.xml","http_status":200,"finding":"Contains 64 locations, but every location uses http://localhost:3000."},
+    {"url":"https://fair-chem.github.io/robots.txt","http_status":200,"finding":"Points to http://localhost:3000/sitemap.xml."}
+  ],
+  "execution_render_findings": [
+    {
+      "pages": ["/formation-energy", "/phonons", "/elastic"],
+      "finding": "Pages return HTTP 200 but render ModuleNotFoundError for quacc.recipes.mlp in the first code cell.",
+      "classification": "rendered_with_execution_error"
+    }
+  ]
+}

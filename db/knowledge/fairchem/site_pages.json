@@ -1,0 +1,5174 @@
+[
+  {
+    "page_id": "fc-page-docs-catalysts-faq-md",
+    "source_path": "docs/catalysts/FAQ.md",
+    "title": "FAQ",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 46,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/faq/",
+    "live_url": "https://fair-chem.github.io/faq-1",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "faq",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 5,
+    "headings": [
+      {
+        "level": 1,
+        "title": "FAQ",
+        "anchor": "faq",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "General",
+        "anchor": "general",
+        "line": 43
+      },
+      {
+        "level": 2,
+        "title": "ML Questions",
+        "anchor": "ml-questions",
+        "line": 124
+      },
+      {
+        "level": 2,
+        "title": "Catalysis Questions",
+        "anchor": "catalysis-questions",
+        "line": 176
+      },
+      {
+        "level": 2,
+        "title": "Computational Catalysis Questions",
+        "anchor": "computational-catalysis-questions",
+        "line": 256
+      }
+    ],
+    "internal_links": [
+      "./examples_tutorials/adsorption_energies/adsorption_energies.md",
+      "./examples_tutorials/cattsunami_tutorial.md",
+      "./examples_tutorials/ocpapi.md",
+      "./examples_tutorials/summary.md"
+    ],
+    "external_links": [
+      "https://arxiv.org/abs/2211.16486",
+      "https://distill.pub/2021/gnn-intro/",
+      "https://en.wikipedia.org/wiki/Periodic_boundary_conditions",
+      "https://fair-chem.github.io/",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/data/oc/utils/vasp.py",
+      "https://github.com/facebookresearch/fairchem/discussions",
+      "https://github.com/facebookresearch/fairchem/issues",
+      "https://github.com/facebookresearch/fairchem/tree/main/src/fairchem/data/oc",
+      "https://opencatalystproject.org/leaderboard.html",
+      "https://pymatgen.org/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 28327,
+    "sha256": "e2a5fcdde75ca8c8062cc19da4ae0d411e4b851522ee8038bccd83721b45b505",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/FAQ.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc20-md",
+    "source_path": "docs/catalysts/datasets/oc20.md",
+    "title": "Open Catalyst 2020 (OC20)",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 32,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc20/",
+    "live_url": "https://fair-chem.github.io/oc20",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 19,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2020 (OC20)",
+        "anchor": "open-catalyst-2020-oc20",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Download and preprocess the dataset",
+        "anchor": "download-and-preprocess-the-dataset",
+        "line": 20
+      },
+      {
+        "level": 2,
+        "title": "Structure to Energy and Forces (S2EF) task",
+        "anchor": "structure-to-energy-and-forces-s2ef-task",
+        "line": 74
+      },
+      {
+        "level": 2,
+        "title": "Initial Structure to Relaxed Structure (IS2RS) and Initial Structure to Relaxed Energy (IS2RE) tasks",
+        "anchor": "initial-structure-to-relaxed-structure-is2rs-and-initial-structure-to-relaxed-energy-is2re-tasks",
+        "line": 110
+      },
+      {
+        "level": 2,
+        "title": "Relaxation Trajectories",
+        "anchor": "relaxation-trajectories",
+        "line": 132
+      },
+      {
+        "level": 3,
+        "title": "Adsorbate+catalyst system trajectories (optional download)",
+        "anchor": "adsorbate-catalyst-system-trajectories-optional-download",
+        "line": 134
+      },
+      {
+        "level": 4,
+        "title": "Per-adsorbate trajectories (optional download)",
+        "anchor": "per-adsorbate-trajectories-optional-download",
+        "line": 148
+      },
+      {
+        "level": 3,
+        "title": "Catalyst system trajectories (optional download)",
+        "anchor": "catalyst-system-trajectories-optional-download",
+        "line": 260
+      },
+      {
+        "level": 2,
+        "title": "Bader charge data",
+        "anchor": "bader-charge-data",
+        "line": 267
+      },
+      {
+        "level": 2,
+        "title": "OC20 mappings",
+        "anchor": "oc20-mappings",
+        "line": 272
+      },
+      {
+        "level": 3,
+        "title": "Data mapping information",
+        "anchor": "data-mapping-information",
+        "line": 274
+      },
+      {
+        "level": 2,
+        "title": "Adsorbate-catalyst system to catalyst system mapping information",
+        "anchor": "adsorbate-catalyst-system-to-catalyst-system-mapping-information",
+        "line": 325
+      },
+      {
+        "level": 2,
+        "title": "Dataset changelog",
+        "anchor": "dataset-changelog",
+        "line": 343
+      },
+      {
+        "level": 3,
+        "title": "September 2021",
+        "anchor": "september-2021",
+        "line": 345
+      },
+      {
+        "level": 3,
+        "title": "March 2021",
+        "anchor": "march-2021",
+        "line": 349
+      },
+      {
+        "level": 3,
+        "title": "Version 2, Feb 2021",
+        "anchor": "version-2-feb-2021",
+        "line": 354
+      },
+      {
+        "level": 3,
+        "title": "Version 1, Oct 2020",
+        "anchor": "version-1-oct-2020",
+        "line": 398
+      },
+      {
+        "level": 2,
+        "title": "Citing OC20",
+        "anchor": "citing-oc20",
+        "line": 432
+      },
+      {
+        "level": 1,
+        "title": "Per-adsorbate trajectories",
+        "anchor": "per-adsorbate-trajectories",
+        "line": 451
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2re_test_challenge_2021.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_train_trajectories.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_train_val_test_lmdbs.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_val_id_trajectories.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_val_ood_ads_trajectories.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_val_ood_both_trajectories.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_val_ood_cat_trajectories.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/0.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/1.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/10.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/11.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/12.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/13.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/14.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/15.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/16.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/17.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/18.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/19.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/2.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/20.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/21.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/22.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/23.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/24.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/25.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/26.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/27.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/28.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/29.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/3.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/30.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/31.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/32.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/33.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/34.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/35.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/38.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/4.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/40.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/41.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/42.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/44.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/45.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/46.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/47.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/48.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/49.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/50.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/51.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/52.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/53.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/54.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/55.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/56.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/57.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/58.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/59.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/6.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/60.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/62.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/63.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/65.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/67.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/68.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/69.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/7.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/70.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/71.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/72.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/73.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/74.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/75.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/76.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/77.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/78.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/79.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/8.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/80.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/81.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/per_adsorbate_is2res/9.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_md.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_rattled.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_test_lmdbs.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_200K.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_20M.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_2M.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_train_all.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_val_id.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_val_ood_ads.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_val_ood_both.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_val_ood_cat.tar",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/slab_trajectories.tar",
+      "https://doi.org/10.1021/acscatal.0c04525",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/scripts/download_data.py",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/oc20",
+      "https://opencatalystproject.org/challenge.html"
+    ],
+    "image_refs": [],
+    "code_fence_count": 6,
+    "bytes": 39539,
+    "sha256": "b01cbd068438d81f12455027a32bb21c81a7884be67163b292658a6c24740030",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc20-mads-md",
+    "source_path": "docs/catalysts/datasets/oc20_mads.md",
+    "title": "Open Catalyst 2020 Multi-Adsorbate (mAds) Dataset",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 33,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc20-mads/",
+    "live_url": "https://fair-chem.github.io/oc20-mads",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2020 Multi-Adsorbate (mAds) Dataset",
+        "anchor": "open-catalyst-2020-multi-adsorbate-mads-dataset",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Overview",
+        "anchor": "overview",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "File Contents and Download",
+        "anchor": "file-contents-and-download",
+        "line": 18
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/pdf/2506.23971",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc20mAds/oc20_multiads_train.tar.gz"
+    ],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 1814,
+    "sha256": "91d4a8a8e3c93e5f516b2dea9331d512316b1fa7bacc39799c2a27df7f8d7382",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20_mads.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc20-slabs-md",
+    "source_path": "docs/catalysts/datasets/oc20_slabs.md",
+    "title": "Open Catalyst 2020 Surfaces Dataset",
+    "nav_section": "Unlisted tracked page",
+    "nav_order": null,
+    "nav_depth": null,
+    "in_myst_toc": false,
+    "derived_live_url": "https://fair-chem.github.io/oc20-slabs/",
+    "live_url": "https://fair-chem.github.io/oc20-slabs/",
+    "http_status": 404,
+    "content_status": "source_only_orphan",
+    "webapp_categories": [
+      "dataset",
+      "catalysis",
+      "source_only"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "source_only_orphan",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2020 Surfaces Dataset",
+        "anchor": "open-catalyst-2020-surfaces-dataset",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Overview",
+        "anchor": "overview",
+        "line": 13
+      },
+      {
+        "level": 2,
+        "title": "File Contents and Download",
+        "anchor": "file-contents-and-download",
+        "line": 17
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/pdf/2506.23971",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc20/oc20_slabs.tar.gz"
+    ],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 1133,
+    "sha256": "7061e8a56707f6541167eb30218b991dba7cd4f7e6f78051576df55395734515",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20_slabs.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc20dense-md",
+    "source_path": "docs/catalysts/datasets/oc20dense.md",
+    "title": "Open Catalyst 2020 Dense (OC20Dense)",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 35,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc20dense/",
+    "live_url": "https://fair-chem.github.io/oc20dense",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2020 Dense (OC20Dense)",
+        "anchor": "open-catalyst-2020-dense-oc20dense",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Overview",
+        "anchor": "overview",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "File Contents and Download",
+        "anchor": "file-contents-and-download",
+        "line": 18
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2010.09990",
+      "https://arxiv.org/abs/2211.16486",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/adsorbml/oc20_dense_data.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/adsorbml/oc20_dense_trajectories.tar.gz"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 4151,
+    "sha256": "fa8277d50fe6ee49fcc7754be6bf15a459e97ee94124158d2a27f988cf74b609",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20dense.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc20neb-md",
+    "source_path": "docs/catalysts/datasets/oc20neb.md",
+    "title": "Open Catalyst 2020 Nudged Elastic Band (OC20NEB)",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 36,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc20neb/",
+    "live_url": "https://fair-chem.github.io/oc20neb",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis",
+      "transition_state"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2020 Nudged Elastic Band (OC20NEB)",
+        "anchor": "open-catalyst-2020-nudged-elastic-band-oc20neb",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Overview",
+        "anchor": "overview",
+        "line": 27
+      },
+      {
+        "level": 2,
+        "title": "File Structure and Contents",
+        "anchor": "file-structure-and-contents",
+        "line": 31
+      },
+      {
+        "level": 1,
+        "title": "Use a small number of steps here to keep the docs fast during CI, but otherwise do quite reasonable settings.",
+        "anchor": "use-a-small-number-of-steps-here-to-keep-the-docs-fast-during-ci-but-otherwise-do-quite-reasonable-settings",
+        "line": 90
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2405.02078",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc20neb/oc20neb_dft_trajectories_04_23_24.tar.gz"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 5015,
+    "sha256": "7c0ff23c652c71ee44063f91076d256056900c90627324d092918c2f8d4f5dd7",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc20neb.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc22-md",
+    "source_path": "docs/catalysts/datasets/oc22.md",
+    "title": "Open Catalyst 2022 (OC22)",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 34,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc22/",
+    "live_url": "https://fair-chem.github.io/oc22",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 9,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst 2022 (OC22)",
+        "anchor": "open-catalyst-2022-oc22",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Structure to Total Energy and Forces (S2EF-Total) task",
+        "anchor": "structure-to-total-energy-and-forces-s2ef-total-task",
+        "line": 19
+      },
+      {
+        "level": 2,
+        "title": "Initial Structure to Relaxed Structure (IS2RS) and Initial Structure to Relaxed Total Energy (IS2RE-Total) tasks",
+        "anchor": "initial-structure-to-relaxed-structure-is2rs-and-initial-structure-to-relaxed-total-energy-is2re-total-tasks",
+        "line": 32
+      },
+      {
+        "level": 2,
+        "title": "Relaxation Trajectories",
+        "anchor": "relaxation-trajectories",
+        "line": 49
+      },
+      {
+        "level": 3,
+        "title": "System trajectories (optional download)",
+        "anchor": "system-trajectories-optional-download",
+        "line": 51
+      },
+      {
+        "level": 2,
+        "title": "OC22 Mappings",
+        "anchor": "oc22-mappings",
+        "line": 66
+      },
+      {
+        "level": 3,
+        "title": "Data mapping information",
+        "anchor": "data-mapping-information",
+        "line": 68
+      },
+      {
+        "level": 3,
+        "title": "OC20 reference information",
+        "anchor": "oc20-reference-information",
+        "line": 112
+      },
+      {
+        "level": 2,
+        "title": "Citing OC22",
+        "anchor": "citing-oc22",
+        "line": 120
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/is2res_total_train_val_test_lmdbs.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/oc22_trajectories.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/oc22/s2ef_total_train_val_test_lmdbs.tar.gz",
+      "https://doi.org/10.1021/acscatal.2c05426"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 6319,
+    "sha256": "1bb62e0c69fcfcbfa7a3b77f73cf0997d85824e3f68693a886956f9e7ffabe21",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc22.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-oc25-md",
+    "source_path": "docs/catalysts/datasets/oc25.md",
+    "title": "OC25",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 38,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc25/",
+    "live_url": "https://fair-chem.github.io/oc25",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis",
+      "interface"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OC25",
+        "anchor": "oc25",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Dataset format",
+        "anchor": "dataset-format",
+        "line": 28
+      },
+      {
+        "level": 3,
+        "title": "Citing OC25",
+        "anchor": "citing-oc25",
+        "line": 32
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://huggingface.co/facebook/OC25"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 2094,
+    "sha256": "56fbf38a035afeb5c8a43305f23a151afe297a3555a188b1ccd93cd44cfca210",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/oc25.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-ocx24-md",
+    "source_path": "docs/catalysts/datasets/ocx24.md",
+    "title": "Open Catalyst Experiments 2024 (OCx24): Bridging Experiments and Computational Models",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 37,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/ocx24/",
+    "live_url": "https://fair-chem.github.io/ocx24",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "catalysis",
+      "experiment"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Catalyst Experiments 2024 (OCx24): Bridging Experiments and Computational Models",
+        "anchor": "open-catalyst-experiments-2024-ocx24-bridging-experiments-and-computational-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Experimental datasets",
+        "anchor": "experimental-datasets",
+        "line": 16
+      },
+      {
+        "level": 2,
+        "title": "Computational datasets",
+        "anchor": "computational-datasets",
+        "line": 19
+      },
+      {
+        "level": 2,
+        "title": "Citing this work",
+        "anchor": "citing-this-work",
+        "line": 25
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "http://arxiv.org/abs/2411.11783",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/ocx24/comp_df_241022.csv",
+      "https://github.com/facebookresearch/fairchem/tree/main/src/fairchem/applications/ocx/data/experimental_data"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 2557,
+    "sha256": "8bac7fc5c830b9583761d2791a8a060af9c3934f1f48cc75724cfc018cd509ff",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/ocx24.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-datasets-summary-md",
+    "source_path": "docs/catalysts/datasets/summary.md",
+    "title": "Datasets",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 31,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-3",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "data",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Datasets",
+        "anchor": "datasets",
+        "line": 1
+      }
+    ],
+    "internal_links": [
+      "../../core/uma"
+    ],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 1564,
+    "sha256": "dd30aa366ee1b69cd9610777279a37b9a801991601f26f9b7857819475c20de6",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-ocp-introduction-md",
+    "source_path": "docs/catalysts/examples_tutorials/OCP-introduction.md",
+    "title": "Intro to Adsorption Energies",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 41,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/ocp-introduction/",
+    "live_url": "https://fair-chem.github.io/ocp-introduction",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 14,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Intro to Adsorption Energies",
+        "anchor": "intro-to-adsorption-energies",
+        "line": 15
+      },
+      {
+        "level": 2,
+        "title": "Intro to Adsorption energies",
+        "anchor": "intro-to-adsorption-energies",
+        "line": 36
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 92
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 95
+      },
+      {
+        "level": 3,
+        "title": "Exercises",
+        "anchor": "exercises",
+        "line": 193
+      },
+      {
+        "level": 2,
+        "title": "Trends in adsorption energies across metals.",
+        "anchor": "trends-in-adsorption-energies-across-metals",
+        "line": 200
+      },
+      {
+        "level": 3,
+        "title": "Site correlations",
+        "anchor": "site-correlations",
+        "line": 286
+      },
+      {
+        "level": 3,
+        "title": "Exercises",
+        "anchor": "exercises",
+        "line": 377
+      },
+      {
+        "level": 2,
+        "title": "Next steps",
+        "anchor": "next-steps",
+        "line": 384
+      },
+      {
+        "level": 3,
+        "title": "Convergence study",
+        "anchor": "convergence-study",
+        "line": 391
+      },
+      {
+        "level": 3,
+        "title": "Effects of number of layers",
+        "anchor": "effects-of-number-of-layers",
+        "line": 399
+      },
+      {
+        "level": 3,
+        "title": "Effects of relaxation",
+        "anchor": "effects-of-relaxation",
+        "line": 427
+      },
+      {
+        "level": 3,
+        "title": "Unit cell size",
+        "anchor": "unit-cell-size",
+        "line": 461
+      },
+      {
+        "level": 2,
+        "title": "Summary",
+        "anchor": "summary",
+        "line": 492
+      }
+    ],
+    "internal_links": [
+      "./NRR/NRR_example-gemnet"
+    ],
+    "external_links": [
+      "https://pubs.acs.org/doi/suppl/10.1021/jp508805h/suppl_file/jp508805h_si_001.pdf"
+    ],
+    "image_refs": [],
+    "code_fence_count": 17,
+    "bytes": 17609,
+    "sha256": "2f0fbd713e84c2565387fc6028af42f8850f7296d842b4661eff61f565d03fc7",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/OCP-introduction.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-adsorbml-walkthrough-md",
+    "source_path": "docs/catalysts/examples_tutorials/adsorbml_walkthrough.md",
+    "title": "AdsorbML Tutorial",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 43,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/adsorbml-walkthrough/",
+    "live_url": "https://fair-chem.github.io/adsorbml-walkthrough",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "catalysis",
+      "adsorbml"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 6,
+    "headings": [
+      {
+        "level": 1,
+        "title": "AdsorbML Tutorial",
+        "anchor": "adsorbml-tutorial",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 50
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 53
+      },
+      {
+        "level": 2,
+        "title": "Define desired adsorbate+slab system",
+        "anchor": "define-desired-adsorbate-slab-system",
+        "line": 60
+      },
+      {
+        "level": 2,
+        "title": "Run heuristic/random adsorbate placement and ML relaxations",
+        "anchor": "run-heuristic-random-adsorbate-placement-and-ml-relaxations",
+        "line": 82
+      },
+      {
+        "level": 2,
+        "title": "Write VASP input files",
+        "anchor": "write-vasp-input-files",
+        "line": 118
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://ai.meta.com/research/publications/uma-a-family-of-universal-models-for-atoms/",
+      "https://arxiv.org/abs/2211.16486"
+    ],
+    "image_refs": [],
+    "code_fence_count": 8,
+    "bytes": 5373,
+    "sha256": "e66e3b5f528e4e2ff707bbb5a356f2d0ce2d440da7221aafbdcac272b4addb0f",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/adsorbml_walkthrough.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-adsorption-energies-adsorption-energies-md",
+    "source_path": "docs/catalysts/examples_tutorials/adsorption_energies/adsorption_energies.md",
+    "title": "Expert Adsorption Energies",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 42,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/adsorption-energies/",
+    "live_url": "https://fair-chem.github.io/adsorption-energies",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 11,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Expert Adsorption Energies",
+        "anchor": "expert-adsorption-energies",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 48
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 51
+      },
+      {
+        "level": 1,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 81
+      },
+      {
+        "level": 1,
+        "title": "Enumerate the adsorbate-slab configurations to run relaxations on",
+        "anchor": "enumerate-the-adsorbate-slab-configurations-to-run-relaxations-on",
+        "line": 91
+      },
+      {
+        "level": 2,
+        "title": "Work out a single example",
+        "anchor": "work-out-a-single-example",
+        "line": 106
+      },
+      {
+        "level": 3,
+        "title": "Run an ML relaxation",
+        "anchor": "run-an-ml-relaxation",
+        "line": 159
+      },
+      {
+        "level": 1,
+        "title": "Run all the systems",
+        "anchor": "run-all-the-systems",
+        "line": 193
+      },
+      {
+        "level": 1,
+        "title": "Parse the trajectories and post-process",
+        "anchor": "parse-the-trajectories-and-post-process",
+        "line": 322
+      },
+      {
+        "level": 1,
+        "title": "Make parity plots for values obtained by ML v. reported in the paper",
+        "anchor": "make-parity-plots-for-values-obtained-by-ml-v-reported-in-the-paper",
+        "line": 399
+      },
+      {
+        "level": 1,
+        "title": "Make figure 6b and compare to literature results",
+        "anchor": "make-figure-6b-and-compare-to-literature-results",
+        "line": 473
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 19,
+    "bytes": 17908,
+    "sha256": "65a6bd3fb10a2bffebc4bfdcc84af4252470bfcbceaec5928a67aaff1221c828",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/adsorption_energies/adsorption_energies.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-cattsunami-tutorial-md",
+    "source_path": "docs/catalysts/examples_tutorials/cattsunami_tutorial.md",
+    "title": "Transition State Search (NEBs)",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 44,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/cattsunami-tutorial/",
+    "live_url": "https://fair-chem.github.io/cattsunami-tutorial",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "catalysis",
+      "transition_state"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 7,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Transition State Search (NEBs)",
+        "anchor": "transition-state-search-nebs",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 65
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 68
+      },
+      {
+        "level": 2,
+        "title": "Do enumerations in an AdsorbML style",
+        "anchor": "do-enumerations-in-an-adsorbml-style",
+        "line": 75
+      },
+      {
+        "level": 2,
+        "title": "Enumerate NEBs",
+        "anchor": "enumerate-nebs",
+        "line": 180
+      },
+      {
+        "level": 2,
+        "title": "Run NEBs",
+        "anchor": "run-nebs",
+        "line": 213
+      },
+      {
+        "level": 2,
+        "title": "Visualize the results",
+        "anchor": "visualize-the-results",
+        "line": 267
+      }
+    ],
+    "internal_links": [
+      "dissociation_scheme.png"
+    ],
+    "external_links": [],
+    "image_refs": [
+      "dissociation_scheme.png"
+    ],
+    "code_fence_count": 20,
+    "bytes": 9400,
+    "sha256": "9a8db9cba889a2ddb4646699868c6714c06c36fbcf59f7e9be64f8031dd4f472",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/cattsunami_tutorial.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-ocpapi-md",
+    "source_path": "docs/catalysts/examples_tutorials/ocpapi.md",
+    "title": "ocpapi",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 45,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/ocpapi/",
+    "live_url": "https://fair-chem.github.io/ocpapi",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "api_guide",
+      "catalysis",
+      "remote_service"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 17,
+    "headings": [
+      {
+        "level": 1,
+        "title": "ocpapi",
+        "anchor": "ocpapi",
+        "line": 13
+      },
+      {
+        "level": 2,
+        "title": "Installation",
+        "anchor": "installation",
+        "line": 26
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 48
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 51
+      },
+      {
+        "level": 2,
+        "title": "Quickstart",
+        "anchor": "quickstart",
+        "line": 58
+      },
+      {
+        "level": 3,
+        "title": "Note about async methods",
+        "anchor": "note-about-async-methods",
+        "line": 62
+      },
+      {
+        "level": 3,
+        "title": "Search over all surfaces",
+        "anchor": "search-over-all-surfaces",
+        "line": 86
+      },
+      {
+        "level": 3,
+        "title": "Supported bulks and adsorbates",
+        "anchor": "supported-bulks-and-adsorbates",
+        "line": 127
+      },
+      {
+        "level": 3,
+        "title": "Skip relaxation approval prompts",
+        "anchor": "skip-relaxation-approval-prompts",
+        "line": 149
+      },
+      {
+        "level": 3,
+        "title": "Persisting results",
+        "anchor": "persisting-results",
+        "line": 183
+      },
+      {
+        "level": 3,
+        "title": "Viewing results in the web UI",
+        "anchor": "viewing-results-in-the-web-ui",
+        "line": 207
+      },
+      {
+        "level": 2,
+        "title": "Advanced usage",
+        "anchor": "advanced-usage",
+        "line": 222
+      },
+      {
+        "level": 3,
+        "title": "Changing the model type",
+        "anchor": "changing-the-model-type",
+        "line": 224
+      },
+      {
+        "level": 3,
+        "title": "Converting to [ase.Atoms](https://wiki.fysik.dtu.dk/ase/ase/atoms.html) objects",
+        "anchor": "converting-to-ase-atoms-https-wiki-fysik-dtu-dk-ase-ase-atoms-html-objects",
+        "line": 252
+      },
+      {
+        "level": 3,
+        "title": "Converting to other structure formats",
+        "anchor": "converting-to-other-structure-formats",
+        "line": 277
+      },
+      {
+        "level": 2,
+        "title": "License",
+        "anchor": "license",
+        "line": 289
+      },
+      {
+        "level": 2,
+        "title": "Citing ocpapi",
+        "anchor": "citing-ocpapi",
+        "line": 293
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://docs.python.org/3/library/asyncio-runner.html#asyncio.run",
+      "https://docs.python.org/3/library/asyncio.html",
+      "https://github.com/facebookresearch/fairchem/blob/main/LICENSE.md",
+      "https://open-catalyst.metademolab.com/",
+      "https://wiki.fysik.dtu.dk/ase",
+      "https://wiki.fysik.dtu.dk/ase/ase/atoms.html",
+      "https://wiki.fysik.dtu.dk/ase/ase/io/io.html#ase.io.write",
+      "https://www.nature.com/articles/s41524-023-01121-5",
+      "https://www.vasp.at/wiki/index.php/POSCAR"
+    ],
+    "image_refs": [],
+    "code_fence_count": 16,
+    "bytes": 10605,
+    "sha256": "3f1edaa90e8d79cceda06d0731db5ebe8ae14ebab7e965a9201fad1887641a48",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/ocpapi.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-examples-tutorials-summary-md",
+    "source_path": "docs/catalysts/examples_tutorials/summary.md",
+    "title": "Examples & Tutorials",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 40,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-4",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "tutorial",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Examples & Tutorials",
+        "anchor": "examples-tutorials",
+        "line": 1
+      }
+    ],
+    "internal_links": [
+      "OCP-introduction.md"
+    ],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 1633,
+    "sha256": "1054852d352b4c0bdf1094f6bacd13d4b44b9c1b6ae1659ccedd1bc16e86d225",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/examples_tutorials/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-catalysts-models-md",
+    "source_path": "docs/catalysts/models.md",
+    "title": "Pretrained Models",
+    "nav_section": "Heterogeneous Catalysis",
+    "nav_order": 39,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/models/",
+    "live_url": "https://fair-chem.github.io/models-1",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model_catalog",
+      "catalysis",
+      "legacy"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 7,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Pretrained Models",
+        "anchor": "pretrained-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Legacy FAIRChemV1 Models Trained on Open Catalyst 2020 (OC20)",
+        "anchor": "legacy-fairchemv1-models-trained-on-open-catalyst-2020-oc20",
+        "line": 24
+      },
+      {
+        "level": 3,
+        "title": "S2EF models: optimized for EFwT",
+        "anchor": "s2ef-models-optimized-for-efwt",
+        "line": 37
+      },
+      {
+        "level": 3,
+        "title": "S2EF models: optimized for force only",
+        "anchor": "s2ef-models-optimized-for-force-only",
+        "line": 75
+      },
+      {
+        "level": 3,
+        "title": "IS2RE models",
+        "anchor": "is2re-models",
+        "line": 85
+      },
+      {
+        "level": 2,
+        "title": "Open Catalyst 2022 (OC22)",
+        "anchor": "open-catalyst-2022-oc22",
+        "line": 118
+      },
+      {
+        "level": 3,
+        "title": "S2EF-Total models",
+        "anchor": "s2ef-total-models",
+        "line": 125
+      }
+    ],
+    "internal_links": [
+      "../core/uma"
+    ],
+    "external_links": [
+      "https://arxiv.org/abs/2010.09990",
+      "https://arxiv.org/abs/2206.08917",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/is2re/dimenet_100k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/is2re/dimenet_10k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/is2re/dimenet_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/cgcnn_200k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/cgcnn_20M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/cgcnn_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/cgcnn_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/dimenet_200k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/dimenet_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/dimenetpp_all_forceonly.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/schnet_200k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/schnet_20M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/schnet_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/schnet_all_forceonly.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2020_11/s2ef/schnet_all_large.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/cgcnn_100k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/cgcnn_10k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/cgcnn_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/dimenetpp_100k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/dimenetpp_10k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/dimenetpp_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/schnet_100k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/schnet_10k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/is2re/schnet_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_200k.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_20M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_20M_md_forceonly.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_20M_rattled_forceonly.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_02/s2ef/dimenetpp_large_all_forceonly.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_08/s2ef/gemnet_t_direct_h512_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_08/s2ef/spinconv_force_centric_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_12/s2ef/gemnet_t_direct_h512_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2021_12/s2ef/spinconv_force_centric_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_05/is2re/painn_h1024_bs4x8_is2re_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_05/s2ef/painn_h512_s2ef_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_07/s2ef/gemnet_oc_base_s2ef_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_07/s2ef/gemnet_oc_base_s2ef_all.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_07/s2ef/gemnet_oc_large_s2ef_all_md.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_09/oc22/s2ef/gndt_oc22_all_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_09/oc22/s2ef/gnoc_finetune_all_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_09/oc22/s2ef/gnoc_oc22_all_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2022_09/oc22/s2ef/gnoc_oc22_oc20_all_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/escn_l4_m2_lay12_2M_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/escn_l6_m2_lay12_2M_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/escn_l6_m2_lay12_2M_s2ef_export_cuda_9182024.pt2",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/escn_l6_m2_lay12_all_md_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/escn_l6_m3_lay20_all_md_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/gemnet_oc_base_s2ef_all_md.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/scn_all_md_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/scn_t1_b1_s2ef_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_03/s2ef/scn_t4_b2_s2ef_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_05/oc22/s2ef/gnoc_oc22_oc20_all_s2ef.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_06/oc20/s2ef/eq2_153M_ec4_allmd.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_06/oc20/s2ef/eq2_31M_ec4_allmd.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_06/oc20/s2ef/eq2_83M_2M.pt",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/models/2023_10/oc22/s2ef/eq2_121M_e4_f100_oc22_s2ef.pt",
+      "https://fair-chem.github.io/oc20",
+      "https://github.com/facebookresearch/fairchem/blob/481f3a5a92dc787384ddae9fe3f50f5d932712fd/configs/oc20/s2ef/all/gemnet/scaling_factors/gemnet-oc-large.pt",
+      "https://github.com/facebookresearch/fairchem/blob/481f3a5a92dc787384ddae9fe3f50f5d932712fd/configs/oc20/s2ef/all/gemnet/scaling_factors/gemnet-oc.pt",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/100k/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/100k/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/100k/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/10k/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/10k/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/10k/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/all/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/all/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/all/painn/painn_h1024_bs8x4.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/is2re/all/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/200k/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/200k/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/200k/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/20M/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/20M/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/20M/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/equiformer_v2/equiformer_v2_N@12_L@6_M@2.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/escn/eSCN-L4-M2-Lay12.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/escn/eSCN-L6-M2-Lay12.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/gemnet/gemnet-dT.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/gemnet/gemnet-oc.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/scn/scn-t1-b1.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/scn/scn-t4-b2.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/2M/spinconv/spinconv_force.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/cgcnn/cgcnn.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/dimenet_plus_plus/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/dimenet_plus_plus/dpp10.7M_forceonly.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/dimenet_plus_plus/dpp_forceonly.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/equiformer_v2/equiformer_v2_N@20_L@6_M@3_153M.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/equiformer_v2/equiformer_v2_N@8_L@4_M@2_31M.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/escn/eSCN-L6-M2-Lay12-All-MD.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/escn/eSCN-L6-M3-Lay20-All-MD.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/gemnet/gemnet-dT.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/gemnet/gemnet-oc-large.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/gemnet/gemnet-oc.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/painn/painn_h512.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/painn/painn_nb6_scaling_factors.pt",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/schnet/schnet.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/scn/scn-all-md.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc20/s2ef/all/spinconv/spinconv_force.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/equiformer_v2/equiformer_v2_N@18_L@6_M@2_e4_f100_121M.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/gemnet-dt/gemnet-dT.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/gemnet-oc/gemnet_oc.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/gemnet-oc/gemnet_oc_finetune.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/gemnet-oc/gemnet_oc_oc20_oc22.yml",
+      "https://github.com/facebookresearch/fairchem/blob/main/configs/oc22/s2ef/gemnet-oc/gemnet_oc_oc20_oc22_degen_edges.yml",
+      "https://github.com/facebookresearch/fairchem/pull/467",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/oc22",
+      "https://opencatalystproject.org/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 22985,
+    "sha256": "03673f35e7d87cc70d69a6474ae82978f1fb6325a4d28427905322bd0eee63df",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/models.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-ase-calculator-md",
+    "source_path": "docs/core/common_tasks/ase_calculator.md",
+    "title": "Inference using ASE and Predictor Interface",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 10,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/ase-calculator/",
+    "live_url": "https://fair-chem.github.io/ase-calculator",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "api_guide",
+      "inference",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 9,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Inference using ASE and Predictor Interface",
+        "anchor": "inference-using-ase-and-predictor-interface",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 51
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 54
+      },
+      {
+        "level": 2,
+        "title": "Default mode",
+        "anchor": "default-mode",
+        "line": 61
+      },
+      {
+        "level": 2,
+        "title": "Batch mode",
+        "anchor": "batch-mode",
+        "line": 65
+      },
+      {
+        "level": 2,
+        "title": "Turbo mode",
+        "anchor": "turbo-mode",
+        "line": 75
+      },
+      {
+        "level": 2,
+        "title": "Custom modes for advanced users",
+        "anchor": "custom-modes-for-advanced-users",
+        "line": 85
+      },
+      {
+        "level": 2,
+        "title": "Enabling gradient stress or Hessian prediction",
+        "anchor": "enabling-gradient-stress-or-hessian-prediction",
+        "line": 121
+      },
+      {
+        "level": 2,
+        "title": "Multi-GPU Inference",
+        "anchor": "multi-gpu-inference",
+        "line": 144
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://docs.pytorch.org/docs/stable/notes/cuda.html",
+      "https://github.com/facebookresearch/fairchem/blob/85bd83535fedbc1d99eee4c12e175603ccc44ef7/src/fairchem/core/units/mlip_unit/predict.py#L415",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/calculate/ase_calculator.py#L3",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/units/mlip_unit/api/inference.py#L47",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/units/mlip_unit/mlip_unit.py#L867",
+      "https://www.ray.io/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 10,
+    "bytes": 10704,
+    "sha256": "d63ffe289534ef2de48a4eaf28b72dab4e3fd8501f110f07de4be86a2cb9f31f",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/ase_calculator.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-ase-dataset-creation-md",
+    "source_path": "docs/core/common_tasks/ase_dataset_creation.md",
+    "title": "FAIRChem and Custom Datasets",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 14,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/ase-dataset-creation/",
+    "live_url": "https://fair-chem.github.io/ase-dataset-creation",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "data",
+      "api_guide"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 6,
+    "headings": [
+      {
+        "level": 1,
+        "title": "FAIRChem and Custom Datasets",
+        "anchor": "fairchem-and-custom-datasets",
+        "line": 2
+      },
+      {
+        "level": 2,
+        "title": "Datasets in FAIRChem",
+        "anchor": "datasets-in-fairchem",
+        "line": 4
+      },
+      {
+        "level": 2,
+        "title": "Custom ASE Databases",
+        "anchor": "custom-ase-databases",
+        "line": 21
+      },
+      {
+        "level": 2,
+        "title": "Using ASE-Readable Files",
+        "anchor": "using-ase-readable-files",
+        "line": 65
+      },
+      {
+        "level": 3,
+        "title": "Single-Structure Files",
+        "anchor": "single-structure-files",
+        "line": 75
+      },
+      {
+        "level": 3,
+        "title": "Multi-structure Files",
+        "anchor": "multi-structure-files",
+        "line": 96
+      }
+    ],
+    "internal_links": [
+      "catalysts/datasets/oc20",
+      "catalysts/datasets/oc20dense",
+      "catalysts/datasets/oc20neb",
+      "catalysts/datasets/oc22",
+      "dac/datasets/odac",
+      "inorganic_materials/datasets/omat24",
+      "molecules/datasets/omc25"
+    ],
+    "external_links": [
+      "https://ai.meta.com/blog/meta-fair-science-new-open-source-releases/",
+      "https://databases.fysik.dtu.dk/ase/ase/db/db.html"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 5133,
+    "sha256": "13b310f7982a75cc02f973159e2deb891c681ec9553bdfa1479fc3e9c8efbba2",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/ase_dataset_creation.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-batch-inference-md",
+    "source_path": "docs/core/common_tasks/batch_inference.md",
+    "title": "Batch Inference with UMA Models",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 12,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/batch-inference/",
+    "live_url": "https://fair-chem.github.io/batch-inference",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "api_guide",
+      "inference"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 6,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Batch Inference with UMA Models",
+        "anchor": "batch-inference-with-uma-models",
+        "line": 1
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 23
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Generate Batches at Runtime",
+        "anchor": "generate-batches-at-runtime",
+        "line": 39
+      },
+      {
+        "level": 2,
+        "title": "Batch Inference Using a Dataset and DataLoader",
+        "anchor": "batch-inference-using-a-dataset-and-dataloader",
+        "line": 71
+      },
+      {
+        "level": 2,
+        "title": "Inference over Heterogeneous Batches",
+        "anchor": "inference-over-heterogeneous-batches",
+        "line": 90
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://fair-chem.github.io/core/common_tasks/ase_calculator.html"
+    ],
+    "image_refs": [],
+    "code_fence_count": 7,
+    "bytes": 4405,
+    "sha256": "9780bd7ed61fffc67eb55e579a7540e4152df5edff3fd6efe8e0c659cb220d43",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/batch_inference.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-benchmark-md",
+    "source_path": "docs/core/common_tasks/benchmark.md",
+    "title": "Running Model Benchmarks",
+    "nav_section": "Unlisted tracked page",
+    "nav_order": null,
+    "nav_depth": null,
+    "in_myst_toc": false,
+    "derived_live_url": "https://fair-chem.github.io/benchmark/",
+    "live_url": "https://fair-chem.github.io/benchmark/",
+    "http_status": 404,
+    "content_status": "source_only_orphan",
+    "webapp_categories": [
+      "benchmark",
+      "source_only"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "source_only_orphan",
+    "heading_count": 10,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Running Model Benchmarks",
+        "anchor": "running-model-benchmarks",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Available Benchmark Configurations",
+        "anchor": "available-benchmark-configurations",
+        "line": 9
+      },
+      {
+        "level": 2,
+        "title": "Running Benchmarks",
+        "anchor": "running-benchmarks",
+        "line": 22
+      },
+      {
+        "level": 2,
+        "title": "Benchmark Configuration File Format",
+        "anchor": "benchmark-configuration-file-format",
+        "line": 36
+      },
+      {
+        "level": 3,
+        "title": "Top-Level Keys",
+        "anchor": "top-level-keys",
+        "line": 40
+      },
+      {
+        "level": 3,
+        "title": "CalculateRunners",
+        "anchor": "calculaterunners",
+        "line": 50
+      },
+      {
+        "level": 3,
+        "title": "BenchmarkReducers",
+        "anchor": "benchmarkreducers",
+        "line": 74
+      },
+      {
+        "level": 2,
+        "title": "Inference & Training Perf Check",
+        "anchor": "inference-training-perf-check",
+        "line": 109
+      },
+      {
+        "level": 3,
+        "title": "Inference Benchmark",
+        "anchor": "inference-benchmark",
+        "line": 113
+      },
+      {
+        "level": 3,
+        "title": "Training Benchmark",
+        "anchor": "training-benchmark",
+        "line": 169
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://hydra.cc/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 5,
+    "bytes": 10501,
+    "sha256": "4730dc3fbea124e9c1ef1aeafab76247c15f0f584209e63bed1c311c773a1c79",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/benchmark.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-evaluation-md",
+    "source_path": "docs/core/common_tasks/evaluation.md",
+    "title": "Evaluating Pretrained Models",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 16,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/evaluation/",
+    "live_url": "https://fair-chem.github.io/evaluation",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "evaluation",
+      "cli"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 7,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Evaluating Pretrained Models",
+        "anchor": "evaluating-pretrained-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Running Model Evaluations",
+        "anchor": "running-model-evaluations",
+        "line": 9
+      },
+      {
+        "level": 2,
+        "title": "Evaluation Configuration File Format",
+        "anchor": "evaluation-configuration-file-format",
+        "line": 25
+      },
+      {
+        "level": 3,
+        "title": "Top-Level Keys",
+        "anchor": "top-level-keys",
+        "line": 29
+      },
+      {
+        "level": 3,
+        "title": "Under job:",
+        "anchor": "under-job",
+        "line": 38
+      },
+      {
+        "level": 3,
+        "title": "Under runner:",
+        "anchor": "under-runner",
+        "line": 50
+      },
+      {
+        "level": 3,
+        "title": "Using the defaults Key to Define Config Groups",
+        "anchor": "using-the-defaults-key-to-define-config-groups",
+        "line": 60
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://hydra.cc/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 4,
+    "bytes": 4981,
+    "sha256": "187eb50682936562f844a809fc7f53505c064a45f1b0e282b3c3c9fb7c287055",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/evaluation.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-fine-tuning-md",
+    "source_path": "docs/core/common_tasks/fine_tuning.md",
+    "title": "Fine-tuning",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 17,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/fine-tuning/",
+    "live_url": "https://fair-chem.github.io/fine-tuning",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "training",
+      "fine_tuning"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 8,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Fine-tuning",
+        "anchor": "fine-tuning",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Generating Training/Fine-tuning Datasets",
+        "anchor": "generating-training-fine-tuning-datasets",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Model Fine-tuning (Default Settings)",
+        "anchor": "model-fine-tuning-default-settings",
+        "line": 73
+      },
+      {
+        "level": 2,
+        "title": "Advanced Configuration",
+        "anchor": "advanced-configuration",
+        "line": 82
+      },
+      {
+        "level": 3,
+        "title": "Logging and Artifacts",
+        "anchor": "logging-and-artifacts",
+        "line": 145
+      },
+      {
+        "level": 3,
+        "title": "Distributed Training",
+        "anchor": "distributed-training",
+        "line": 153
+      },
+      {
+        "level": 3,
+        "title": "Resuming Runs",
+        "anchor": "resuming-runs",
+        "line": 165
+      },
+      {
+        "level": 3,
+        "title": "Running Inference on the Fine-tuned Model",
+        "anchor": "running-inference-on-the-fine-tuned-model",
+        "line": 174
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2502.12147",
+      "https://huggingface.co/facebook/UMA",
+      "https://hydra.cc/",
+      "https://hydra.cc/docs/advanced/override_grammar/basic/",
+      "https://slurm.schedmd.com/documentation.html",
+      "https://wandb.ai/site/",
+      "https://wiki.fysik.dtu.dk/ase/ase/db/db.html#ase.db.core.connect"
+    ],
+    "image_refs": [],
+    "code_fence_count": 8,
+    "bytes": 8609,
+    "sha256": "eb35f1621c8b6a8531f99783abb1a889a0317b88d3658b1f8cbf02856243990d",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/fine_tuning.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-inference-batcher-md",
+    "source_path": "docs/core/common_tasks/inference_batcher.md",
+    "title": "Batched Atomic Simulations with InferenceBatcher",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 13,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/inference-batcher/",
+    "live_url": "https://fair-chem.github.io/inference-batcher",
+    "http_status": 200,
+    "content_status": "experimental",
+    "webapp_categories": [
+      "api_guide",
+      "inference",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 10,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Batched Atomic Simulations with InferenceBatcher",
+        "anchor": "batched-atomic-simulations-with-inferencebatcher",
+        "line": 1
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 23
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Basic Setup",
+        "anchor": "basic-setup",
+        "line": 41
+      },
+      {
+        "level": 2,
+        "title": "Writing Simulation Functions",
+        "anchor": "writing-simulation-functions",
+        "line": 66
+      },
+      {
+        "level": 2,
+        "title": "Running Batched Relaxations",
+        "anchor": "running-batched-relaxations",
+        "line": 85
+      },
+      {
+        "level": 3,
+        "title": "Using executor.map",
+        "anchor": "using-executor-map",
+        "line": 89
+      },
+      {
+        "level": 3,
+        "title": "Using executor.submit for more control",
+        "anchor": "using-executor-submit-for-more-control",
+        "line": 116
+      },
+      {
+        "level": 2,
+        "title": "Running Batched Molecular Dynamics",
+        "anchor": "running-batched-molecular-dynamics",
+        "line": 137
+      },
+      {
+        "level": 2,
+        "title": "When to Use InferenceBatcher",
+        "anchor": "when-to-use-inferencebatcher",
+        "line": 177
+      }
+    ],
+    "internal_links": [
+      "batch_inference.md"
+    ],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 8,
+    "bytes": 6332,
+    "sha256": "11796b111210c7910eb5450c270827503acbdb82338b42437186c784d1831937",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/inference_batcher.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-lammps-md",
+    "source_path": "docs/core/common_tasks/lammps.md",
+    "title": "LAMMPS Integration",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 11,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/lammps/",
+    "live_url": "https://fair-chem.github.io/lammps",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "integration",
+      "inference",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "LAMMPS Integration",
+        "anchor": "lammps-integration",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Usage Notes",
+        "anchor": "usage-notes",
+        "line": 30
+      },
+      {
+        "level": 2,
+        "title": "Install and Run",
+        "anchor": "install-and-run",
+        "line": 45
+      },
+      {
+        "level": 2,
+        "title": "Multi-GPU Parallelism",
+        "anchor": "multi-gpu-parallelism",
+        "line": 75
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://docs.lammps.org/Install_conda.html",
+      "https://docs.lammps.org/Speed_kokkos.html",
+      "https://docs.lammps.org/fix_external.html",
+      "https://docs.lammps.org/units.html",
+      "https://fair-chem.github.io/core/common_tasks/ase_calculator.html",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/lammps/lammps_fc_config.yaml#L20",
+      "https://github.com/facebookresearch/fairchem/pull/1454",
+      "https://hydra.cc/",
+      "https://www.lammps.org"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 5308,
+    "sha256": "80a0cfa0c11546dc9be76fdce82a40c6c5ec8ee978b45572c755f6ddc28d87c8",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/lammps.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-summary-md",
+    "source_path": "docs/core/common_tasks/summary.md",
+    "title": "Common Tasks",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 9,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Common Tasks",
+        "anchor": "common-tasks",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 1631,
+    "sha256": "8b320ae0955fba388cea67d4de07b60e82c1221b7b17b9a54058db8bdfbba1dd",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-training-md",
+    "source_path": "docs/core/common_tasks/training.md",
+    "title": "Training Models from Scratch",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 15,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/training/",
+    "live_url": "https://fair-chem.github.io/training",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "training",
+      "cli",
+      "distributed"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 9,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Training Models from Scratch",
+        "anchor": "training-models-from-scratch",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "FAIRChem Training Framework Overview",
+        "anchor": "fairchem-training-framework-overview",
+        "line": 13
+      },
+      {
+        "level": 2,
+        "title": "FAIRChem v2 CLI",
+        "anchor": "fairchem-v2-cli",
+        "line": 30
+      },
+      {
+        "level": 3,
+        "title": "FAIRChem v2 Config Structure",
+        "anchor": "fairchem-v2-config-structure",
+        "line": 40
+      },
+      {
+        "level": 3,
+        "title": "Example Configurations",
+        "anchor": "example-configurations",
+        "line": 47
+      },
+      {
+        "level": 3,
+        "title": "Config Object Instantiation",
+        "anchor": "config-object-instantiation",
+        "line": 78
+      },
+      {
+        "level": 3,
+        "title": "Runtime Instantiation with Partial Functions",
+        "anchor": "runtime-instantiation-with-partial-functions",
+        "line": 103
+      },
+      {
+        "level": 2,
+        "title": "Training UMA",
+        "anchor": "training-uma",
+        "line": 132
+      },
+      {
+        "level": 3,
+        "title": "Example Commands",
+        "anchor": "example-commands",
+        "line": 152
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://docs.pytorch.org/docs/stable/distributed.elastic.html",
+      "https://docs.pytorch.org/tnt/stable/",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/_cli.py",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/train/train_runner.py",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/units/mlip_unit/mlip_unit.py",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/uma/training_release",
+      "https://github.com/facebookresearch/fairchem/tree/main/src/fairchem/core/models/uma",
+      "https://hydra.cc/",
+      "https://hydra.cc/docs/advanced/override_grammar/basic/",
+      "https://hydra.cc/docs/intro/",
+      "https://hydra.cc/docs/tutorials/basic/your_first_app/config_groups/",
+      "https://slurm.schedmd.com/documentation.html"
+    ],
+    "image_refs": [],
+    "code_fence_count": 9,
+    "bytes": 8211,
+    "sha256": "1e6252a8bccd26e5569801a88086143e10971b57c0714e0ebd66e43b0ebaacc8",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/training.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-common-tasks-workflows-md",
+    "source_path": "docs/core/common_tasks/workflows.md",
+    "title": "Calculation Workflows with FAIRChem Models",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 18,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/workflows/",
+    "live_url": "https://fair-chem.github.io/workflows",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "workflows",
+      "simulation",
+      "quacc"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Calculation Workflows with FAIRChem Models",
+        "anchor": "calculation-workflows-with-fairchem-models",
+        "line": 14
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://github.com/Quantum-Accelerators/quacc"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 1447,
+    "sha256": "829b7a6e0fc990c01f7314e7e288377979851c36bf06fee0a06e3f8923a994a1",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/workflows.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-fair-chemistry-papers-md",
+    "source_path": "docs/core/fair_chemistry_papers.md",
+    "title": "FAIR Chemistry Papers",
+    "nav_section": "Home",
+    "nav_order": 24,
+    "nav_depth": 0,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/fair-chemistry-papers/",
+    "live_url": "https://fair-chem.github.io/fair-chemistry-papers",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "papers",
+      "index"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 9,
+    "headings": [
+      {
+        "level": 1,
+        "title": "FAIR Chemistry Papers",
+        "anchor": "fair-chemistry-papers",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Universal Models & Architectures",
+        "anchor": "universal-models-architectures",
+        "line": 9
+      },
+      {
+        "level": 2,
+        "title": "Datasets",
+        "anchor": "datasets",
+        "line": 90
+      },
+      {
+        "level": 2,
+        "title": "Generative Models",
+        "anchor": "generative-models",
+        "line": 216
+      },
+      {
+        "level": 2,
+        "title": "Sampling & Molecular Dynamics",
+        "anchor": "sampling-molecular-dynamics",
+        "line": 306
+      },
+      {
+        "level": 2,
+        "title": "Applications & Discovery",
+        "anchor": "applications-discovery",
+        "line": 363
+      },
+      {
+        "level": 2,
+        "title": "Training Methods & Techniques",
+        "anchor": "training-methods-techniques",
+        "line": 444
+      },
+      {
+        "level": 2,
+        "title": "Electronic Structure & Properties",
+        "anchor": "electronic-structure-properties",
+        "line": 528
+      },
+      {
+        "level": 2,
+        "title": "Perspectives & Introductions",
+        "anchor": "perspectives-introductions",
+        "line": 594
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2008.10773",
+      "https://arxiv.org/abs/2010.09435",
+      "https://arxiv.org/abs/2010.09990",
+      "https://arxiv.org/abs/2102.01528",
+      "https://arxiv.org/abs/2103.01436",
+      "https://arxiv.org/abs/2106.08215",
+      "https://arxiv.org/abs/2106.09575",
+      "https://arxiv.org/abs/2203.09697",
+      "https://arxiv.org/abs/2204.02782",
+      "https://arxiv.org/abs/2205.01223",
+      "https://arxiv.org/abs/2206.02005",
+      "https://arxiv.org/abs/2206.08917",
+      "https://arxiv.org/abs/2206.14331",
+      "https://arxiv.org/abs/2208.08337",
+      "https://arxiv.org/abs/2208.12717",
+      "https://arxiv.org/abs/2211.16486",
+      "https://arxiv.org/abs/2309.04811",
+      "https://arxiv.org/abs/2310.16802",
+      "https://arxiv.org/abs/2311.00341",
+      "https://arxiv.org/abs/2311.01987",
+      "https://arxiv.org/abs/2402.04379",
+      "https://arxiv.org/abs/2403.09549",
+      "https://arxiv.org/abs/2403.09811",
+      "https://arxiv.org/abs/2405.02078",
+      "https://arxiv.org/abs/2406.04713",
+      "https://arxiv.org/abs/2410.12771",
+      "https://arxiv.org/abs/2410.23405",
+      "https://arxiv.org/abs/2411.11783",
+      "https://arxiv.org/abs/2503.03965",
+      "https://arxiv.org/abs/2504.11713",
+      "https://arxiv.org/abs/2505.08762",
+      "https://arxiv.org/abs/2505.13477",
+      "https://arxiv.org/abs/2506.22565",
+      "https://arxiv.org/abs/2508.02641",
+      "https://arxiv.org/abs/2508.02651",
+      "https://arxiv.org/abs/2508.03162",
+      "https://arxiv.org/abs/2509.17862",
+      "https://arxiv.org/abs/2509.23822",
+      "https://arxiv.org/abs/2510.00224",
+      "https://arxiv.org/abs/2510.11923",
+      "https://arxiv.org/abs/2512.04036",
+      "https://arxiv.org/abs/2512.23117"
+    ],
+    "image_refs": [],
+    "code_fence_count": 8,
+    "bytes": 27005,
+    "sha256": "02bcb0c2b23eddd15b7c541364482ab35cd51fd90565c7e6581455014f53e9fb",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-fairchemv1-v2-md",
+    "source_path": "docs/core/fairchemv1_v2.md",
+    "title": "fairchem>=2.0",
+    "nav_section": "Quickstart",
+    "nav_order": 4,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/fairchemv1-v2/",
+    "live_url": "https://fair-chem.github.io/fairchemv1-v2",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "migration",
+      "legacy"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "fairchem>=2.0",
+        "anchor": "fairchem-2-0",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Using Fairchem V1",
+        "anchor": "using-fairchem-v1",
+        "line": 16
+      },
+      {
+        "level": 2,
+        "title": "Projects and models built on fairchem version v2",
+        "anchor": "projects-and-models-built-on-fairchem-version-v2",
+        "line": 36
+      },
+      {
+        "level": 2,
+        "title": "Projects and models built on fairchem version v1",
+        "anchor": "projects-and-models-built-on-fairchem-version-v1",
+        "line": 50
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 2,
+    "bytes": 3998,
+    "sha256": "2435cdf002d6fd49fa54a10cf3eecc6d896e9a1de86120f44b08ce629baacd64",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fairchemv1_v2.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-generative-models-md",
+    "source_path": "docs/core/generative_models.md",
+    "title": "Generative Models",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 23,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/generative-models/",
+    "live_url": "https://fair-chem.github.io/generative-models",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "generative",
+      "papers",
+      "code_index"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Generative Models",
+        "anchor": "generative-models",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 2254,
+    "sha256": "f47a3b286d708bbae597d43ffdfcd86acd4b175e6004ade335db4073c61f207b",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/generative_models.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-install-md",
+    "source_path": "docs/core/install.md",
+    "title": "Installation & License",
+    "nav_section": "Quickstart",
+    "nav_order": 2,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/install/",
+    "live_url": "https://fair-chem.github.io/install",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "install"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 13,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Installation & License",
+        "anchor": "installation-license",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Installation",
+        "anchor": "installation",
+        "line": 3
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Create a virtual environment",
+        "anchor": "step-1-create-a-virtual-environment",
+        "line": 15
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Install the package",
+        "anchor": "step-2-install-the-package",
+        "line": 22
+      },
+      {
+        "level": 2,
+        "title": "Subpackages",
+        "anchor": "subpackages",
+        "line": 44
+      },
+      {
+        "level": 3,
+        "title": "Data Packages",
+        "anchor": "data-packages",
+        "line": 48
+      },
+      {
+        "level": 3,
+        "title": "Application Packages",
+        "anchor": "application-packages",
+        "line": 76
+      },
+      {
+        "level": 3,
+        "title": "Integration & Demo Packages",
+        "anchor": "integration-demo-packages",
+        "line": 100
+      },
+      {
+        "level": 2,
+        "title": "Access to gated models on HuggingFace",
+        "anchor": "access-to-gated-models-on-huggingface",
+        "line": 117
+      },
+      {
+        "level": 2,
+        "title": "License",
+        "anchor": "license",
+        "line": 130
+      },
+      {
+        "level": 3,
+        "title": "Repository software",
+        "anchor": "repository-software",
+        "line": 132
+      },
+      {
+        "level": 3,
+        "title": "Terms of use & privacy policy",
+        "anchor": "terms-of-use-privacy-policy",
+        "line": 164
+      },
+      {
+        "level": 3,
+        "title": "Model checkpoints and datasets",
+        "anchor": "model-checkpoints-and-datasets",
+        "line": 169
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://opensource.fb.com/legal/privacy",
+      "https://opensource.fb.com/legal/terms"
+    ],
+    "image_refs": [],
+    "code_fence_count": 4,
+    "bytes": 5255,
+    "sha256": "2aef1a6e446850d7e47607bafcc2bc22ef57cc0bcc4519aef5bf26fc781b2400",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/install.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-intro-md",
+    "source_path": "docs/core/intro.md",
+    "title": "GNNs for Chemistry",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 8,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/intro/",
+    "live_url": "https://fair-chem.github.io/intro",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "concepts"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "GNNs for Chemistry",
+        "anchor": "gnns-for-chemistry",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Background on DFT and machine learning potentials",
+        "anchor": "background-on-dft-and-machine-learning-potentials",
+        "line": 18
+      },
+      {
+        "level": 2,
+        "title": "FAIR Chemistry models",
+        "anchor": "fair-chemistry-models",
+        "line": 32
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 7184,
+    "sha256": "f8074469225406dd4754b422a4031bc1cee4d2dc25e071bb5d55b5137e4565d7",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/intro.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-intro-series-md",
+    "source_path": "docs/core/intro_series.md",
+    "title": "Why model atoms for climate?",
+    "nav_section": "Learn More",
+    "nav_order": 65,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/intro-series/",
+    "live_url": "https://fair-chem.github.io/intro-series",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "education"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Why model atoms for climate?",
+        "anchor": "why-model-atoms-for-climate",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "http://larryzitnick.org/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 770,
+    "sha256": "72a0a9d5f638a10142440f247706aa74c0d794637195e02888f35b5eec529173",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/intro_series.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-quickstart-md",
+    "source_path": "docs/core/quickstart.md",
+    "title": "UMA Quick Start w/ ASE",
+    "nav_section": "Quickstart",
+    "nav_order": 3,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/quickstart/",
+    "live_url": "https://fair-chem.github.io/quickstart",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "quickstart",
+      "inference",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 8,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Quick Start w/ ASE",
+        "anchor": "uma-quick-start-w-ase",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Available Tasks",
+        "anchor": "available-tasks",
+        "line": 25
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 149
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 152
+      },
+      {
+        "level": 2,
+        "title": "Relax an adsorbate on a catalytic surface",
+        "anchor": "relax-an-adsorbate-on-a-catalytic-surface",
+        "line": 159
+      },
+      {
+        "level": 2,
+        "title": "Relax an inorganic crystal",
+        "anchor": "relax-an-inorganic-crystal",
+        "line": 181
+      },
+      {
+        "level": 2,
+        "title": "Run molecular MD",
+        "anchor": "run-molecular-md",
+        "line": 199
+      },
+      {
+        "level": 2,
+        "title": "Calculate a spin gap",
+        "anchor": "calculate-a-spin-gap",
+        "line": 225
+      }
+    ],
+    "internal_links": [
+      "../catalysts/datasets/oc22.md",
+      "../catalysts/datasets/oc25.md",
+      "../catalysts/datasets/summary.md",
+      "../dac/datasets/summary.md",
+      "../inorganic_materials/datasets/summary.md",
+      "../molecules/datasets/omc25.md",
+      "../molecules/datasets/summary.md"
+    ],
+    "external_links": [
+      "https://huggingface.co/facebook/UMA",
+      "https://wiki.fysik.dtu.dk/ase/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 14,
+    "bytes": 6128,
+    "sha256": "df39f4007080dcf0286c85b2ceb1e52990216959bc198c97eadc685732d91fc2",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/quickstart.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-uma-md",
+    "source_path": "docs/core/uma.md",
+    "title": "UMA Models",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 6,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/uma/",
+    "live_url": "https://fair-chem.github.io/uma",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Models",
+        "anchor": "uma-models",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "The UMA Mixture-of-Linear-Experts routing function",
+        "anchor": "the-uma-mixture-of-linear-experts-routing-function",
+        "line": 20
+      },
+      {
+        "level": 3,
+        "title": "The UMA task",
+        "anchor": "the-uma-task",
+        "line": 49
+      }
+    ],
+    "internal_links": [
+      "uma.svg"
+    ],
+    "external_links": [
+      "https://ai.meta.com/research/publications/uma-a-family-of-universal-models-for-atoms/",
+      "https://arxiv.org/abs/2010.09990",
+      "https://arxiv.org/abs/2206.08917",
+      "https://arxiv.org/abs/2311.00341",
+      "https://arxiv.org/abs/2410.12771",
+      "https://arxiv.org/abs/2505.08762",
+      "https://arxiv.org/abs/2506.23971",
+      "https://arxiv.org/abs/2508.02651",
+      "https://arxiv.org/abs/2509.17862"
+    ],
+    "image_refs": [
+      "uma.svg"
+    ],
+    "code_fence_count": 0,
+    "bytes": 6960,
+    "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-uma-changelog-md",
+    "source_path": "docs/core/uma_changelog.md",
+    "title": "UMA Release Changelog",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 7,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/uma-changelog/",
+    "live_url": "https://fair-chem.github.io/uma-changelog",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model",
+      "changelog"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 11,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Release Changelog",
+        "anchor": "uma-release-changelog",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Library compatibility — UMA 1.0 deprecation",
+        "anchor": "library-compatibility-uma-1-0-deprecation",
+        "line": 20
+      },
+      {
+        "level": 2,
+        "title": "UMA 1.2",
+        "anchor": "uma-1-2",
+        "line": 28
+      },
+      {
+        "level": 3,
+        "title": "Model Highlights",
+        "anchor": "model-highlights",
+        "line": 36
+      },
+      {
+        "level": 3,
+        "title": "Available Tasks (7 total)",
+        "anchor": "available-tasks-7-total",
+        "line": 65
+      },
+      {
+        "level": 3,
+        "title": "Large-Scale Inference & Molecular Dynamics",
+        "anchor": "large-scale-inference-molecular-dynamics",
+        "line": 77
+      },
+      {
+        "level": 2,
+        "title": "UMA 1.1",
+        "anchor": "uma-1-1",
+        "line": 104
+      },
+      {
+        "level": 3,
+        "title": "Available Tasks (5 total)",
+        "anchor": "available-tasks-5-total",
+        "line": 112
+      },
+      {
+        "level": 2,
+        "title": "UMA 1.0",
+        "anchor": "uma-1-0",
+        "line": 124
+      },
+      {
+        "level": 3,
+        "title": "Available Tasks (5 total)",
+        "anchor": "available-tasks-5-total",
+        "line": 132
+      },
+      {
+        "level": 3,
+        "title": "Key Features",
+        "anchor": "key-features",
+        "line": 142
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2010.09990",
+      "https://arxiv.org/abs/2206.08917",
+      "https://arxiv.org/abs/2311.00341",
+      "https://arxiv.org/abs/2410.12771",
+      "https://arxiv.org/abs/2505.08762",
+      "https://arxiv.org/abs/2508.02651",
+      "https://arxiv.org/abs/2509.17862",
+      "https://www.ray.io/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 5421,
+    "sha256": "b95aed55157a5854f1a84200489b5dc2e18573e9a19724808880f8b028daacd8",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma_changelog.md"
+  },
+  {
+    "page_id": "fc-page-docs-core-uma-faq-md",
+    "source_path": "docs/core/uma_faq.md",
+    "title": "UMA FAQ",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 19,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/uma-faq/",
+    "live_url": "https://fair-chem.github.io/uma-faq",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "faq"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA FAQ",
+        "anchor": "uma-faq",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://huggingface.co/facebook/UMA"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 1800,
+    "sha256": "7c5f62398017c0d2b1d5b74f4946ff2aad2b9dc92a6579e709042061c815ba2f",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma_faq.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-datasets-odac23-md",
+    "source_path": "docs/dac/datasets/odac23.md",
+    "title": "Open Direct Air Capture 2023 (ODAC23)",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 61,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/odac23/",
+    "live_url": "https://fair-chem.github.io/odac23",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "mof_dac"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 5,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Open Direct Air Capture 2023 (ODAC23)",
+        "anchor": "open-direct-air-capture-2023-odac23",
+        "line": 2
+      },
+      {
+        "level": 2,
+        "title": "Structure to Energy and Forces (S2EF) task",
+        "anchor": "structure-to-energy-and-forces-s2ef-task",
+        "line": 20
+      },
+      {
+        "level": 2,
+        "title": "Initial Structure to Relaxed Structure (IS2RS) / Relaxed Energy (IS2RE) tasks",
+        "anchor": "initial-structure-to-relaxed-structure-is2rs-relaxed-energy-is2re-tasks",
+        "line": 37
+      },
+      {
+        "level": 2,
+        "title": "DDEC Charges",
+        "anchor": "ddec-charges",
+        "line": 47
+      },
+      {
+        "level": 2,
+        "title": "Citing ODAC23",
+        "anchor": "citing-odac23",
+        "line": 57
+      }
+    ],
+    "internal_links": [
+      "odac25.md"
+    ],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/dac/datasets/ddec.tar.gz",
+      "https://dl.fbaipublicfiles.com/dac/datasets/extxyz_val.tar.gz",
+      "https://dl.fbaipublicfiles.com/dac/datasets/odac23_is2r.tar.gz",
+      "https://dl.fbaipublicfiles.com/large_objects/dac/datasets/extxyz_train.tar.gz",
+      "https://dl.fbaipublicfiles.com/large_objects/dac/datasets/odac23_s2ef.tar.gz"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 4255,
+    "sha256": "b17753772b860082825484be6637e13bb1cb6715a20c826cbe2b16988b8b758e",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/odac23.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-datasets-odac25-md",
+    "source_path": "docs/dac/datasets/odac25.md",
+    "title": "ODAC25",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 60,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/odac25/",
+    "live_url": "https://fair-chem.github.io/odac25",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "mof_dac"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "ODAC25",
+        "anchor": "odac25",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Dataset format",
+        "anchor": "dataset-format",
+        "line": 32
+      },
+      {
+        "level": 3,
+        "title": "Citing ODAC25",
+        "anchor": "citing-odac25",
+        "line": 36
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://huggingface.co/facebook/ODAC25"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 2248,
+    "sha256": "c79e4c79804cedd83567cea11798e8d01acb1c900603399a852de74f716308e1",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/odac25.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-datasets-summary-md",
+    "source_path": "docs/dac/datasets/summary.md",
+    "title": "Datasets",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 59,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-8",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "data",
+      "mof_dac"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Datasets",
+        "anchor": "datasets",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 527,
+    "sha256": "b3aaabb451b772244c9097698734e40ab40974288163996d152da07c3a88f67b",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-examples-tutorials-adsorption-energy-md",
+    "source_path": "docs/dac/examples_tutorials/adsorption_energy.md",
+    "title": "Adsorption Energies in MOFs",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 64,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/adsorption-energy/",
+    "live_url": "https://fair-chem.github.io/adsorption-energy",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "mof_dac"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 8,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Adsorption Energies in MOFs",
+        "anchor": "adsorption-energies-in-mofs",
+        "line": 14
+      },
+      {
+        "level": 2,
+        "title": "Loading Pre-trained Models",
+        "anchor": "loading-pre-trained-models",
+        "line": 28
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 50
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 53
+      },
+      {
+        "level": 2,
+        "title": "Adsorption in rigid MOFs: CO<sub>2</sub> Adsorption Energy in Mg-MOF-74",
+        "anchor": "adsorption-in-rigid-mofs-co2-adsorption-energy-in-mg-mof-74",
+        "line": 70
+      },
+      {
+        "level": 2,
+        "title": "Adsorption in flexible MOFs",
+        "anchor": "adsorption-in-flexible-mofs",
+        "line": 106
+      },
+      {
+        "level": 3,
+        "title": "H<sub>2</sub>O Adsorption Energy in Flexible WOBHEB with UMA",
+        "anchor": "h2o-adsorption-energy-in-flexible-wobheb-with-uma",
+        "line": 126
+      },
+      {
+        "level": 2,
+        "title": "Acknowledgements & Authors",
+        "anchor": "acknowledgements-authors",
+        "line": 221
+      }
+    ],
+    "internal_links": [
+      "./WOBHEB_flexible.png"
+    ],
+    "external_links": [
+      "https://doi.org/10.1021/acscentsci.3c01629"
+    ],
+    "image_refs": [
+      "./WOBHEB_flexible.png"
+    ],
+    "code_fence_count": 14,
+    "bytes": 12327,
+    "sha256": "0feb0ab6661e4540f86fbfec1bab5930f1e9311b26bbef927503fc28ac34fd25",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/examples_tutorials/adsorption_energy.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-examples-tutorials-summary-md",
+    "source_path": "docs/dac/examples_tutorials/summary.md",
+    "title": "Examples & Tutorials",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 63,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-9",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "tutorial",
+      "mof_dac"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Examples & Tutorials",
+        "anchor": "examples-tutorials",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 441,
+    "sha256": "bb16ad4c57c1434f932eddb155dfdb8a5ce28bacc4e402c3d30f39398cd16f70",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/examples_tutorials/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-dac-models-md",
+    "source_path": "docs/dac/models.md",
+    "title": "Pretrained models",
+    "nav_section": "MOFs for Direct Air Capture",
+    "nav_order": 62,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/models/",
+    "live_url": "https://fair-chem.github.io/models-3",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model_catalog",
+      "mof_dac",
+      "legacy"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 6,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Pretrained models",
+        "anchor": "pretrained-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "ODAC25 Models",
+        "anchor": "odac25-models",
+        "line": 16
+      },
+      {
+        "level": 2,
+        "title": "ODAC23 Models",
+        "anchor": "odac23-models",
+        "line": 40
+      },
+      {
+        "level": 3,
+        "title": "S2EF models",
+        "anchor": "s2ef-models",
+        "line": 48
+      },
+      {
+        "level": 3,
+        "title": "IS2RE Direct models",
+        "anchor": "is2re-direct-models",
+        "line": 60
+      },
+      {
+        "level": 3,
+        "title": "IS2RS",
+        "anchor": "is2rs",
+        "line": 70
+      }
+    ],
+    "internal_links": [
+      "../core/uma"
+    ],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/DimenetPP.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/Gemnet-OC.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/Gemnet-OC_Direct.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/PaiNN.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/Schnet.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/eSCN.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231018/eSCN_Direct.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231116/Equiformer_V2_Direct.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231116/Equiformer_V2_Large.pt",
+      "https://dl.fbaipublicfiles.com/dac/checkpoints_20231116/eqv2_31M.pt",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/is2re/eSCN.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/is2re/eqv2_31M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/is2re/gemnet-oc.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/dpp.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/eSCN.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/eqv2_153M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/eqv2_31M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/gemnet-oc.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/painn.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/odac/s2ef/schnet.yml",
+      "https://huggingface.co/facebook/ODAC25",
+      "https://huggingface.co/facebook/UMA"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 5569,
+    "sha256": "8c915a1eb3620c5c0381919df846440ab877db424976cfa69b88744fe5d2aacd",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/models.md"
+  },
+  {
+    "page_id": "fc-page-docs-index-md",
+    "source_path": "docs/index.md",
+    "title": "index",
+    "nav_section": "Home",
+    "nav_order": 1,
+    "nav_depth": 0,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/",
+    "live_url": "https://fair-chem.github.io/",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "landing"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 2,
+        "title": "Application Domains",
+        "anchor": "application-domains",
+        "line": 46
+      },
+      {
+        "level": 2,
+        "title": "Get Started",
+        "anchor": "get-started",
+        "line": 122
+      },
+      {
+        "level": 2,
+        "title": "The UMA Model",
+        "anchor": "the-uma-model",
+        "line": 176
+      },
+      {
+        "level": 2,
+        "title": "Resources",
+        "anchor": "resources",
+        "line": 200
+      }
+    ],
+    "internal_links": [
+      "./core/common_tasks/summary.md",
+      "./core/fair_chemistry_papers.md",
+      "./core/install.md",
+      "./core/quickstart.md",
+      "./core/uma.md",
+      "./uma_tutorials/summary.md",
+      "./videos/technical_talks.md",
+      "catalysts/datasets/summary.md",
+      "core/fairchemv1_v2.md",
+      "dac/datasets/summary.md",
+      "inorganic_materials/datasets/summary.md",
+      "molecules/datasets/omc25.md",
+      "molecules/datasets/summary.md"
+    ],
+    "external_links": [
+      "https://ai.meta.com/research/",
+      "https://github.com/codespaces/badge.svg",
+      "https://github.com/facebookresearch/fairchem",
+      "https://huggingface.co/facebook/UMA",
+      "https://opensource.fb.com/legal/privacy",
+      "https://opensource.fb.com/legal/terms",
+      "https://pypi.org/project/fairchem-core/1.10.0/"
+    ],
+    "image_refs": [
+      "https://github.com/codespaces/badge.svg"
+    ],
+    "code_fence_count": 8,
+    "bytes": 5862,
+    "sha256": "3fd28266459020a58488f5f78a947a324af5b1497afe612340a0afb27a09332d",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/index.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-faq-md",
+    "source_path": "docs/inorganic_materials/FAQ.md",
+    "title": "FAQ",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 58,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/faq/",
+    "live_url": "https://fair-chem.github.io/faq-2",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "faq",
+      "inorganic"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "FAQ",
+        "anchor": "faq",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 173,
+    "sha256": "3e8ceabbaf1b7fdc77f6a7b66fa6976ae1fb4e15cfe538e1ff2efc35e24cc2a5",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/FAQ.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-datasets-omat24-md",
+    "source_path": "docs/inorganic_materials/datasets/omat24.md",
+    "title": "OMat24",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 52,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/omat24/",
+    "live_url": "https://fair-chem.github.io/omat24",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "inorganic"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 8,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OMat24",
+        "anchor": "omat24",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Subdatasets",
+        "anchor": "subdatasets",
+        "line": 25
+      },
+      {
+        "level": 2,
+        "title": "File contents and downloads",
+        "anchor": "file-contents-and-downloads",
+        "line": 39
+      },
+      {
+        "level": 3,
+        "title": "OMat24 train split",
+        "anchor": "omat24-train-split",
+        "line": 41
+      },
+      {
+        "level": 3,
+        "title": "OMat24 val split (this is a 1M subset used to train eqV2 models from the 5M val split)",
+        "anchor": "omat24-val-split-this-is-a-1m-subset-used-to-train-eqv2-models-from-the-5m-val-split",
+        "line": 57
+      },
+      {
+        "level": 3,
+        "title": "sAlex Dataset",
+        "anchor": "salex-dataset",
+        "line": 77
+      },
+      {
+        "level": 2,
+        "title": "Getting ASE atoms objects",
+        "anchor": "getting-ase-atoms-objects",
+        "line": 88
+      },
+      {
+        "level": 3,
+        "title": "Citing OMat24",
+        "anchor": "citing-omat24",
+        "line": 121
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://alexandria.icams.rub.de/",
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/aimd-from-PBE-1000-npt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/aimd-from-PBE-1000-nvt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/aimd-from-PBE-3000-npt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/aimd-from-PBE-3000-nvt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-1000-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-1000.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-300-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-300.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-500-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-500.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/omat/train/rattled-relax.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/sAlex/train.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241018/sAlex/val.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/aimd-from-PBE-1000-npt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/aimd-from-PBE-1000-nvt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/aimd-from-PBE-3000-npt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/aimd-from-PBE-3000-nvt.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-1000-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-1000.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-300-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-300.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-500-subsampled.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-500.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/omat/241220/omat/val/rattled-relax.tar.gz",
+      "https://github.com/facebookresearch/fairchem/issues/942",
+      "https://wiki.fysik.dtu.dk/ase/ase/db/db.html"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 11068,
+    "sha256": "52834685f001bf4598cb81f9f4c26110adff7ff5846589d886ad2f621e6ec468",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/datasets/omat24.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-datasets-summary-md",
+    "source_path": "docs/inorganic_materials/datasets/summary.md",
+    "title": "Datasets",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 51,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-6",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "data",
+      "inorganic"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Datasets",
+        "anchor": "datasets",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 438,
+    "sha256": "92c2e3642840c9d7fb1bcb3cd90238396f161d4e84dd0f982d5acf13c113e724",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/datasets/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-examples-tutorials-elastic-md",
+    "source_path": "docs/inorganic_materials/examples_tutorials/elastic.md",
+    "title": "Elastic Tensors",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 57,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/elastic/",
+    "live_url": "https://fair-chem.github.io/elastic",
+    "http_status": 200,
+    "content_status": "rendered_with_execution_error",
+    "webapp_categories": [
+      "tutorial",
+      "inorganic",
+      "elastic"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Elastic Tensors",
+        "anchor": "elastic-tensors",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 52
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 55
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://quantum-accelerators.github.io/quacc/reference/quacc/recipes/mlp/elastic.html#quacc.recipes.mlp.elastic.elastic_tensor_flow"
+    ],
+    "image_refs": [],
+    "code_fence_count": 5,
+    "bytes": 3033,
+    "sha256": "05ef089bb15e1565dd79e55b7104498b03e809d3b64500336a4eb1436d325920",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/elastic.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-examples-tutorials-formation-energy-md",
+    "source_path": "docs/inorganic_materials/examples_tutorials/formation_energy.md",
+    "title": "Formation Energy",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 55,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/formation-energy/",
+    "live_url": "https://fair-chem.github.io/formation-energy",
+    "http_status": 200,
+    "content_status": "rendered_with_execution_error",
+    "webapp_categories": [
+      "tutorial",
+      "inorganic",
+      "thermodynamics"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Formation Energy",
+        "anchor": "formation-energy",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 44
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 47
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://docs.materialsproject.org/methodology/materials-methodology/thermodynamic-stability/thermodynamic-stability/anion-and-gga-gga+u-mixing",
+      "https://next-gen.materialsproject.org/materials/mp-1265?chemsys=Mg-O#thermodynamic_stability"
+    ],
+    "image_refs": [],
+    "code_fence_count": 5,
+    "bytes": 3868,
+    "sha256": "73e70e526c3a978b7c0ef732f2ff51c90814946d72d29a68feb2cca290cc4ae4",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/formation_energy.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-examples-tutorials-phonons-md",
+    "source_path": "docs/inorganic_materials/examples_tutorials/phonons.md",
+    "title": "Phonon Calculations",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 56,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/phonons/",
+    "live_url": "https://fair-chem.github.io/phonons",
+    "http_status": 200,
+    "content_status": "rendered_with_execution_error",
+    "webapp_categories": [
+      "tutorial",
+      "inorganic",
+      "phonons"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Phonon Calculations",
+        "anchor": "phonon-calculations",
+        "line": 14
+      },
+      {
+        "level": 1,
+        "title": "Login using the huggingface-cli utility",
+        "anchor": "login-using-the-huggingface-cli-utility",
+        "line": 87
+      },
+      {
+        "level": 1,
+        "title": "alternatively,",
+        "anchor": "alternatively",
+        "line": 90
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 5,
+    "bytes": 3447,
+    "sha256": "3b0dbcbf9191e7fd9d742b72c744b716e87a9faaac424a5adc653a7c22d75187",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/phonons.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-examples-tutorials-summary-md",
+    "source_path": "docs/inorganic_materials/examples_tutorials/summary.md",
+    "title": "Examples & Tutorials",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 54,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-7",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "tutorial",
+      "inorganic"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Examples & Tutorials",
+        "anchor": "examples-tutorials",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 710,
+    "sha256": "76b8a11b123c60176021acc01eba02f2e9586679c5b7aee869ac7d687da7f1f7",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/examples_tutorials/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-inorganic-materials-models-md",
+    "source_path": "docs/inorganic_materials/models.md",
+    "title": "Pretrained models",
+    "nav_section": "Inorganic Materials",
+    "nav_order": 53,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/models/",
+    "live_url": "https://fair-chem.github.io/models-2",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model_catalog",
+      "inorganic",
+      "legacy"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Pretrained models",
+        "anchor": "pretrained-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Legacy OMat pretrained models",
+        "anchor": "legacy-omat-pretrained-models",
+        "line": 19
+      },
+      {
+        "level": 2,
+        "title": "MPTrj only models",
+        "anchor": "mptrj-only-models",
+        "line": 40
+      },
+      {
+        "level": 2,
+        "title": "Finetuned OMat models",
+        "anchor": "finetuned-omat-models",
+        "line": 51
+      }
+    ],
+    "internal_links": [
+      "../core/uma"
+    ],
+    "external_links": [
+      "https://figshare.com/articles/dataset/Materials_Project_Trjectory_MPtrj_Dataset/23713842",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/all/eqV2_153M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/all/eqV2_31M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/all/eqV2_86M.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/finetune/eqV2_153M_ft_salexmptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/finetune/eqV2_31M_ft_salexmptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/finetune/eqV2_86M_ft_salexmptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/mptrj/eqV2_153M_dens_mptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/mptrj/eqV2_31M_dens_mptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/mptrj/eqV2_31M_mptrj.yml",
+      "https://github.com/facebookresearch/fairchem/tree/main/configs/omat24/mptrj/eqV2_86M_dens_mptrj.yml",
+      "https://huggingface.co/fairchem/OMAT24",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_153M_omat.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_31M_mp.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_31M_omat.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_31M_omat_mp_salex.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_86M_omat.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_86M_omat_mp_salex.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_dens_153M_mp.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_dens_31M_mp.pt",
+      "https://huggingface.co/fairchem/OMAT24/blob/main/eqV2_dens_86M_mp.pt"
+    ],
+    "image_refs": [],
+    "code_fence_count": 2,
+    "bytes": 5443,
+    "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md"
+  },
+  {
+    "page_id": "fc-page-docs-leaderboard-oc20-md",
+    "source_path": "docs/leaderboard/oc20.md",
+    "title": "OC20 Leaderboard",
+    "nav_section": "Leaderboard",
+    "nav_order": 50,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/oc20/",
+    "live_url": "https://fair-chem.github.io/oc20-1",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "leaderboard",
+      "catalysis"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 5,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OC20 Leaderboard",
+        "anchor": "oc20-leaderboard",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Download",
+        "anchor": "download",
+        "line": 17
+      },
+      {
+        "level": 2,
+        "title": "Install the necessary packages",
+        "anchor": "install-the-necessary-packages",
+        "line": 24
+      },
+      {
+        "level": 2,
+        "title": "S2EF",
+        "anchor": "s2ef",
+        "line": 30
+      },
+      {
+        "level": 2,
+        "title": "IS2RE",
+        "anchor": "is2re",
+        "line": 89
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/abs/2010.09990",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/is2res_train_val_test_lmdbs.tar.gz",
+      "https://dl.fbaipublicfiles.com/opencatalystproject/data/s2ef_test_lmdbs.tar.gz",
+      "https://huggingface.co/spaces/facebook/fairchem_leaderboard"
+    ],
+    "image_refs": [],
+    "code_fence_count": 4,
+    "bytes": 3893,
+    "sha256": "e1c901b94c10c1f5d388fb72fc6fb2e117f05b0b909c208ac5bfbe8ed627f718",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/leaderboard/oc20.md"
+  },
+  {
+    "page_id": "fc-page-docs-leaderboard-omol-md",
+    "source_path": "docs/leaderboard/omol.md",
+    "title": "OMol25 Leaderboard",
+    "nav_section": "Leaderboard",
+    "nav_order": 49,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/omol/",
+    "live_url": "https://fair-chem.github.io/omol",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "leaderboard",
+      "molecules"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 5,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OMol25 Leaderboard",
+        "anchor": "omol25-leaderboard",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Download",
+        "anchor": "download",
+        "line": 12
+      },
+      {
+        "level": 2,
+        "title": "Install the necessary packages",
+        "anchor": "install-the-necessary-packages",
+        "line": 19
+      },
+      {
+        "level": 2,
+        "title": "S2EF",
+        "anchor": "s2ef",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Evaluations",
+        "anchor": "evaluations",
+        "line": 90
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://arxiv.org/pdf/2505.08762",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L140",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L188",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L237",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L284",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L323",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L372",
+      "https://github.com/facebookresearch/fairchem/blob/main/src/fairchem/core/components/calculate/recipes/omol.py#L439",
+      "https://huggingface.co/facebook/OMol25/blob/main/DATASET.md#dataset-splits",
+      "https://huggingface.co/facebook/OMol25/blob/main/DATASET.md#evaluation-data"
+    ],
+    "image_refs": [],
+    "code_fence_count": 4,
+    "bytes": 7273,
+    "sha256": "1a65e9c6aa88762328ec162e417bd2c1fc0406c22841a1000437f3272072701d",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/leaderboard/omol.md"
+  },
+  {
+    "page_id": "fc-page-docs-leaderboard-summary-md",
+    "source_path": "docs/leaderboard/summary.md",
+    "title": "Leaderboard",
+    "nav_section": "Leaderboard",
+    "nav_order": 48,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-5",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "leaderboard",
+      "index"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 3,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Leaderboard",
+        "anchor": "leaderboard",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "How to Submit",
+        "anchor": "how-to-submit",
+        "line": 14
+      },
+      {
+        "level": 3,
+        "title": "Need Help?",
+        "anchor": "need-help",
+        "line": 28
+      }
+    ],
+    "internal_links": [
+      "oc20.md",
+      "omol.md"
+    ],
+    "external_links": [
+      "https://github.com/facebookresearch/fairchem",
+      "https://huggingface.co/spaces/facebook/fairchem_leaderboard",
+      "https://huggingface.co/spaces/facebook/fairchem_leaderboard/discussions"
+    ],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 1631,
+    "sha256": "a297b38e837198f981dd4b57c80886bb66c1043564a73a1a6932ac11ca90811e",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/leaderboard/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-faq-md",
+    "source_path": "docs/molecules/FAQ.md",
+    "title": "FAQ",
+    "nav_section": "Organic Molecules",
+    "nav_order": 30,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/faq/",
+    "live_url": "https://fair-chem.github.io/faq",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "faq",
+      "molecules"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "FAQ",
+        "anchor": "faq",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 173,
+    "sha256": "3e8ceabbaf1b7fdc77f6a7b66fa6976ae1fb4e15cfe538e1ff2efc35e24cc2a5",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/FAQ.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-datasets-omc25-md",
+    "source_path": "docs/molecules/datasets/omc25.md",
+    "title": "OMC25",
+    "nav_section": "Organic Molecules",
+    "nav_order": 28,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/omc25/",
+    "live_url": "https://fair-chem.github.io/omc25",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "molecules",
+      "crystals"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OMC25",
+        "anchor": "omc25",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Dataset format",
+        "anchor": "dataset-format",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Level of theory",
+        "anchor": "level-of-theory",
+        "line": 30
+      },
+      {
+        "level": 2,
+        "title": "Citing",
+        "anchor": "citing",
+        "line": 34
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://huggingface.co/facebook/OMC25"
+    ],
+    "image_refs": [],
+    "code_fence_count": 2,
+    "bytes": 2252,
+    "sha256": "d5d49992177e16af84273b9138cfd5c02098fedcf8ebf39c8a1fa1d9d6f97c79",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omc25.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-datasets-omol25-md",
+    "source_path": "docs/molecules/datasets/omol25.md",
+    "title": "OMol25",
+    "nav_section": "Organic Molecules",
+    "nav_order": 26,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/omol25/",
+    "live_url": "https://fair-chem.github.io/omol25",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "molecules"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OMol25",
+        "anchor": "omol25",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Dataset format",
+        "anchor": "dataset-format",
+        "line": 20
+      },
+      {
+        "level": 2,
+        "title": "Level of theory",
+        "anchor": "level-of-theory",
+        "line": 24
+      },
+      {
+        "level": 3,
+        "title": "Citing OMol25",
+        "anchor": "citing-omol25",
+        "line": 28
+      }
+    ],
+    "internal_links": [],
+    "external_links": [
+      "https://creativecommons.org/licenses/by/4.0/legalcode",
+      "https://huggingface.co/facebook/OMol25"
+    ],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 2807,
+    "sha256": "b25bf00cf109d6c04b1c644f2377093b808a825ad3f92d96472908ed51b1e3ae",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omol25.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-datasets-omol25-elec-md",
+    "source_path": "docs/molecules/datasets/omol25_elec.md",
+    "title": "OMol25 Electronic Structures",
+    "nav_section": "Organic Molecules",
+    "nav_order": 27,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/omol25-elec/",
+    "live_url": "https://fair-chem.github.io/omol25-elec",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "dataset",
+      "molecules",
+      "electronic_structure"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 4,
+    "headings": [
+      {
+        "level": 1,
+        "title": "OMol25 Electronic Structures",
+        "anchor": "omol25-electronic-structures",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Data Description",
+        "anchor": "data-description",
+        "line": 20
+      },
+      {
+        "level": 2,
+        "title": "How to Access the Data",
+        "anchor": "how-to-access-the-data",
+        "line": 83
+      },
+      {
+        "level": 2,
+        "title": "Contact Us",
+        "anchor": "contact-us",
+        "line": 90
+      }
+    ],
+    "internal_links": [
+      "blaiszik@uchicago.edu",
+      "levineds@meta.com",
+      "mshuaibi@meta.com"
+    ],
+    "external_links": [
+      "https://github.com/facebookresearch/fairchem",
+      "https://huggingface.co/facebook/OMol25/blob/main/DATASET.md#dataset-splits",
+      "https://www.anl.gov/",
+      "https://www.faccts.de/docs/orca/6.0/manual/",
+      "https://www.globus.org/globus-connect-personal",
+      "https://www.materialsdatafacility.org/spotlight/omol25"
+    ],
+    "image_refs": [],
+    "code_fence_count": 4,
+    "bytes": 5527,
+    "sha256": "636d37c9848d2f7c9c6985e6c8d3fee73ca455034768341d1d1b5e6976125fd9",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/omol25_elec.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-datasets-summary-md",
+    "source_path": "docs/molecules/datasets/summary.md",
+    "title": "Datasets",
+    "nav_section": "Organic Molecules",
+    "nav_order": 25,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-2",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "data",
+      "molecules"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Datasets",
+        "anchor": "datasets",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 1,
+    "bytes": 741,
+    "sha256": "9910ad9e16ea59c00936b127341a29c0304386dd18f4fb665a93d617b3095322",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-molecules-models-md",
+    "source_path": "docs/molecules/models.md",
+    "title": "Pretrained models",
+    "nav_section": "Organic Molecules",
+    "nav_order": 29,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/models/",
+    "live_url": "https://fair-chem.github.io/models",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "model_catalog",
+      "molecules"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 6,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Pretrained models",
+        "anchor": "pretrained-models",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Baseline models in the OMol25 paper",
+        "anchor": "baseline-models-in-the-omol25-paper",
+        "line": 19
+      },
+      {
+        "level": 2,
+        "title": "Citing",
+        "anchor": "citing",
+        "line": 26
+      },
+      {
+        "level": 2,
+        "title": "Baseline models in the OMC25 paper",
+        "anchor": "baseline-models-in-the-omc25-paper",
+        "line": 42
+      },
+      {
+        "level": 2,
+        "title": "Citing",
+        "anchor": "citing",
+        "line": 45
+      },
+      {
+        "level": 2,
+        "title": "License",
+        "anchor": "license",
+        "line": 61
+      }
+    ],
+    "internal_links": [
+      "../core/uma"
+    ],
+    "external_links": [
+      "https://huggingface.co/facebook/OMC25",
+      "https://huggingface.co/facebook/OMol25/tree/main",
+      "https://huggingface.co/facebook/UMA"
+    ],
+    "image_refs": [],
+    "code_fence_count": 3,
+    "bytes": 3489,
+    "sha256": "55631ea67344441c1aa1ced6e21b0ca237fd65276f9f9c81491372f096657aa7",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/models.md"
+  },
+  {
+    "page_id": "fc-page-docs-uma-tutorials-summary-md",
+    "source_path": "docs/uma_tutorials/summary.md",
+    "title": "UMA Tutorials",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 20,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/summary/",
+    "live_url": "https://fair-chem.github.io/summary-1",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "section_index",
+      "tutorial"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 1,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Tutorials",
+        "anchor": "uma-tutorials",
+        "line": 1
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 790,
+    "sha256": "651e67dfcbe3150e062934cf0a7b18d49491526869df80a863f2ee8db9e13c4f",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/uma_tutorials/summary.md"
+  },
+  {
+    "page_id": "fc-page-docs-uma-tutorials-uma-catalysis-tutorial-md",
+    "source_path": "docs/uma_tutorials/uma_catalysis_tutorial.md",
+    "title": "UMA Catalysis Tutorial",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 22,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/uma-catalysis-tutorial/",
+    "live_url": "https://fair-chem.github.io/uma-catalysis-tutorial",
+    "http_status": 200,
+    "content_status": "warning_present",
+    "webapp_categories": [
+      "tutorial",
+      "catalysis",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 80,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Catalysis Tutorial",
+        "anchor": "uma-catalysis-tutorial",
+        "line": 15
+      },
+      {
+        "level": 2,
+        "title": "Overview",
+        "anchor": "overview",
+        "line": 21
+      },
+      {
+        "level": 2,
+        "title": "Installation and Setup",
+        "anchor": "installation-and-setup",
+        "line": 47
+      },
+      {
+        "level": 3,
+        "title": "Huggingface setups",
+        "anchor": "huggingface-setups",
+        "line": 58
+      },
+      {
+        "level": 3,
+        "title": "FAIR Chemistry (UMA) installation",
+        "anchor": "fair-chemistry-uma-installation",
+        "line": 86
+      },
+      {
+        "level": 2,
+        "title": "Package imports",
+        "anchor": "package-imports",
+        "line": 109
+      },
+      {
+        "level": 2,
+        "title": "Part 1: Bulk Crystal Optimization",
+        "anchor": "part-1-bulk-crystal-optimization",
+        "line": 185
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 187
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 191
+      },
+      {
+        "level": 2,
+        "title": "Part 2: Surface Energy Calculations",
+        "anchor": "part-2-surface-energy-calculations",
+        "line": 282
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 284
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 288
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Setup and Bulk Energy Reference",
+        "anchor": "step-1-setup-and-bulk-energy-reference",
+        "line": 311
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Generate and Relax Slabs",
+        "anchor": "step-2-generate-and-relax-slabs",
+        "line": 333
+      },
+      {
+        "level": 3,
+        "title": "Step 3: Visualize Linear Fits",
+        "anchor": "step-3-visualize-linear-fits",
+        "line": 409
+      },
+      {
+        "level": 3,
+        "title": "Step 4: Compare with Literature",
+        "anchor": "step-4-compare-with-literature",
+        "line": 465
+      },
+      {
+        "level": 3,
+        "title": "Explore on Your Own",
+        "anchor": "explore-on-your-own",
+        "line": 533
+      },
+      {
+        "level": 2,
+        "title": "Part 3: Wulff Construction",
+        "anchor": "part-3-wulff-construction",
+        "line": 543
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 545
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 549
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Prepare Surface Energies",
+        "anchor": "step-1-prepare-surface-energies",
+        "line": 559
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Generate Wulff Construction",
+        "anchor": "step-2-generate-wulff-construction",
+        "line": 579
+      },
+      {
+        "level": 3,
+        "title": "Step 3: Visualize and Compare",
+        "anchor": "step-3-visualize-and-compare",
+        "line": 601
+      },
+      {
+        "level": 3,
+        "title": "Explore on Your Own",
+        "anchor": "explore-on-your-own",
+        "line": 665
+      },
+      {
+        "level": 2,
+        "title": "Part 4: H Adsorption Energy with ZPE Correction",
+        "anchor": "part-4-h-adsorption-energy-with-zpe-correction",
+        "line": 675
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 677
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 681
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Setup and Relax Clean Slab",
+        "anchor": "step-1-setup-and-relax-clean-slab",
+        "line": 697
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Relax Clean Slab",
+        "anchor": "step-2-relax-clean-slab",
+        "line": 718
+      },
+      {
+        "level": 3,
+        "title": "Step 3: Generate H Adsorption Sites",
+        "anchor": "step-3-generate-h-adsorption-sites",
+        "line": 746
+      },
+      {
+        "level": 3,
+        "title": "Step 4: Relax All H Configurations",
+        "anchor": "step-4-relax-all-h-configurations",
+        "line": 767
+      },
+      {
+        "level": 3,
+        "title": "Step 5: Calculate H₂ Reference Energy",
+        "anchor": "step-5-calculate-h-reference-energy",
+        "line": 815
+      },
+      {
+        "level": 3,
+        "title": "Step 6: Compute Adsorption Energy",
+        "anchor": "step-6-compute-adsorption-energy",
+        "line": 843
+      },
+      {
+        "level": 3,
+        "title": "Step 7: Zero-Point Energy (ZPE) Corrections",
+        "anchor": "step-7-zero-point-energy-zpe-corrections",
+        "line": 860
+      },
+      {
+        "level": 3,
+        "title": "Step 8: Visualize and Compare Results",
+        "anchor": "step-8-visualize-and-compare-results",
+        "line": 899
+      },
+      {
+        "level": 3,
+        "title": "Explore on Your Own",
+        "anchor": "explore-on-your-own",
+        "line": 937
+      },
+      {
+        "level": 2,
+        "title": "Part 5: Coverage-Dependent H Adsorption",
+        "anchor": "part-5-coverage-dependent-h-adsorption",
+        "line": 947
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 949
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 953
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Setup Slab and Calculators",
+        "anchor": "step-1-setup-slab-and-calculators",
+        "line": 969
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Calculate Reference Energies",
+        "anchor": "step-2-calculate-reference-energies",
+        "line": 990
+      },
+      {
+        "level": 3,
+        "title": "Step 3: Set Up Coverage Study",
+        "anchor": "step-3-set-up-coverage-study",
+        "line": 1033
+      },
+      {
+        "level": 3,
+        "title": "Step 4: Generate and Relax Configurations at Each Coverage",
+        "anchor": "step-4-generate-and-relax-configurations-at-each-coverage",
+        "line": 1052
+      },
+      {
+        "level": 3,
+        "title": "Step 5: Perform Linear Fit",
+        "anchor": "step-5-perform-linear-fit",
+        "line": 1121
+      },
+      {
+        "level": 3,
+        "title": "Step 6: Visualize Coverage Dependence",
+        "anchor": "step-6-visualize-coverage-dependence",
+        "line": 1142
+      },
+      {
+        "level": 3,
+        "title": "Explore on Your Own",
+        "anchor": "explore-on-your-own",
+        "line": 1220
+      },
+      {
+        "level": 2,
+        "title": "Part 6: CO Formation/Dissociation Thermochemistry and Barrier",
+        "anchor": "part-6-co-formation-dissociation-thermochemistry-and-barrier",
+        "line": 1230
+      },
+      {
+        "level": 3,
+        "title": "Introduction",
+        "anchor": "introduction",
+        "line": 1232
+      },
+      {
+        "level": 3,
+        "title": "Theory",
+        "anchor": "theory",
+        "line": 1236
+      },
+      {
+        "level": 3,
+        "title": "Step 1: Setup Slab and Calculators",
+        "anchor": "step-1-setup-slab-and-calculators",
+        "line": 1243
+      },
+      {
+        "level": 3,
+        "title": "Step 2: Generate and Relax Final State (CO)",
+        "anchor": "step-2-generate-and-relax-final-state-co",
+        "line": 1263
+      },
+      {
+        "level": 3,
+        "title": "Step 3: Generate and Relax Initial State (C + O)",
+        "anchor": "step-3-generate-and-relax-initial-state-c-o",
+        "line": 1330
+      },
+      {
+        "level": 3,
+        "title": "Step 3b: Calculate C and O Energies Separately",
+        "anchor": "step-3b-calculate-c-and-o-energies-separately",
+        "line": 1409
+      },
+      {
+        "level": 3,
+        "title": "Step 4: Calculate Reaction Energy with ZPE",
+        "anchor": "step-4-calculate-reaction-energy-with-zpe",
+        "line": 1564
+      },
+      {
+        "level": 3,
+        "title": "Step 5: Calculate CO Adsorption Energy (Bonus)",
+        "anchor": "step-5-calculate-co-adsorption-energy-bonus",
+        "line": 1652
+      },
+      {
+        "level": 3,
+        "title": "Step 6: Find guesses for nearby initial and final states for the reaction",
+        "anchor": "step-6-find-guesses-for-nearby-initial-and-final-states-for-the-reaction",
+        "line": 1730
+      },
+      {
+        "level": 3,
+        "title": "Step 7: Run NEB to Find Activation Barrier",
+        "anchor": "step-7-run-neb-to-find-activation-barrier",
+        "line": 1782
+      },
+      {
+        "level": 3,
+        "title": "Step 8: Visualize NEB Path and Key Structures",
+        "anchor": "step-8-visualize-neb-path-and-key-structures",
+        "line": 1837
+      },
+      {
+        "level": 3,
+        "title": "Explore on Your Own",
+        "anchor": "explore-on-your-own",
+        "line": 1974
+      },
+      {
+        "level": 2,
+        "title": "Summary and Best Practices",
+        "anchor": "summary-and-best-practices",
+        "line": 1984
+      },
+      {
+        "level": 3,
+        "title": "Key Takeaways",
+        "anchor": "key-takeaways",
+        "line": 1986
+      },
+      {
+        "level": 3,
+        "title": "Recommended Workflow for New Systems",
+        "anchor": "recommended-workflow-for-new-systems",
+        "line": 1995
+      },
+      {
+        "level": 3,
+        "title": "Accuracy Considerations",
+        "anchor": "accuracy-considerations",
+        "line": 2005
+      },
+      {
+        "level": 3,
+        "title": "Further Reading",
+        "anchor": "further-reading",
+        "line": 2016
+      },
+      {
+        "level": 2,
+        "title": "Appendix: Troubleshooting",
+        "anchor": "appendix-troubleshooting",
+        "line": 2024
+      },
+      {
+        "level": 3,
+        "title": "Common Issues",
+        "anchor": "common-issues",
+        "line": 2026
+      },
+      {
+        "level": 3,
+        "title": "Performance Tips",
+        "anchor": "performance-tips",
+        "line": 2046
+      },
+      {
+        "level": 2,
+        "title": "Caveats and Pitfalls",
+        "anchor": "caveats-and-pitfalls",
+        "line": 2055
+      },
+      {
+        "level": 3,
+        "title": "1. Task Selection: OMAT vs OC20",
+        "anchor": "1-task-selection-omat-vs-oc20",
+        "line": 2063
+      },
+      {
+        "level": 3,
+        "title": "2. D3 Dispersion Corrections",
+        "anchor": "2-d3-dispersion-corrections",
+        "line": 2075
+      },
+      {
+        "level": 3,
+        "title": "3. Coverage Dependence Challenges",
+        "anchor": "3-coverage-dependence-challenges",
+        "line": 2094
+      },
+      {
+        "level": 3,
+        "title": "4. Periodic Boundary Conditions",
+        "anchor": "4-periodic-boundary-conditions",
+        "line": 2107
+      },
+      {
+        "level": 3,
+        "title": "5. Gas Phase Reference Energies",
+        "anchor": "5-gas-phase-reference-energies",
+        "line": 2116
+      },
+      {
+        "level": 3,
+        "title": "6. Spin Polarization",
+        "anchor": "6-spin-polarization",
+        "line": 2126
+      },
+      {
+        "level": 3,
+        "title": "7. Constraint Philosophy",
+        "anchor": "7-constraint-philosophy",
+        "line": 2136
+      },
+      {
+        "level": 3,
+        "title": "8. Complex Surface Structures",
+        "anchor": "8-complex-surface-structures",
+        "line": 2151
+      },
+      {
+        "level": 3,
+        "title": "9. Slab Thickness and Vacuum",
+        "anchor": "9-slab-thickness-and-vacuum",
+        "line": 2163
+      },
+      {
+        "level": 3,
+        "title": "10. NEB Convergence",
+        "anchor": "10-neb-convergence",
+        "line": 2173
+      },
+      {
+        "level": 3,
+        "title": "11. Lattice Constant Source",
+        "anchor": "11-lattice-constant-source",
+        "line": 2186
+      },
+      {
+        "level": 3,
+        "title": "12. Adsorbate Placement",
+        "anchor": "12-adsorbate-placement",
+        "line": 2193
+      }
+    ],
+    "internal_links": [
+      "example_configs/4h_on_ni111.xyz",
+      "example_configs/c_o_on_ni111.xyz",
+      "example_configs/co_on_ni111.xyz",
+      "example_configs/h_on_ni111.xyz",
+      "example_configs/ni111_slab.xyz",
+      "example_configs/ni_bulk.xyz"
+    ],
+    "external_links": [
+      "https://arxiv.org/abs/2410.12771",
+      "https://arxiv.org/abs/2506.23971",
+      "https://facebook-fairchem-uma-demo.hf.space/",
+      "https://pubs.acs.org/doi/10.1021/acs.jpcc.0c09985",
+      "https://pubs.acs.org/doi/full/10.1021/acscatal.0c04525",
+      "https://wiki.fysik.dtu.dk/ase/"
+    ],
+    "image_refs": [],
+    "code_fence_count": 64,
+    "bytes": 78767,
+    "sha256": "6670a89699e07ec19ae7c03d20dc5a9a7547f4bef106ba5fccdcc80ec8801800",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/uma_tutorials/uma_catalysis_tutorial.md"
+  },
+  {
+    "page_id": "fc-page-docs-uma-tutorials-uma-tutorial-md",
+    "source_path": "docs/uma_tutorials/uma_tutorial.md",
+    "title": "UMA Intro Tutorial",
+    "nav_section": "AI/ML Models & Usage",
+    "nav_order": 21,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/uma-tutorial/",
+    "live_url": "https://fair-chem.github.io/uma-tutorial",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "tutorial",
+      "inference",
+      "simulation"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 23,
+    "headings": [
+      {
+        "level": 1,
+        "title": "UMA Intro Tutorial",
+        "anchor": "uma-intro-tutorial",
+        "line": 15
+      },
+      {
+        "level": 1,
+        "title": "Before you start / installation",
+        "anchor": "before-you-start-installation",
+        "line": 33
+      },
+      {
+        "level": 2,
+        "title": "Installation process",
+        "anchor": "installation-process",
+        "line": 60
+      },
+      {
+        "level": 1,
+        "title": "Illustrative examples",
+        "anchor": "illustrative-examples",
+        "line": 83
+      },
+      {
+        "level": 2,
+        "title": "Spin gap energy - OMOL",
+        "anchor": "spin-gap-energy-omol",
+        "line": 94
+      },
+      {
+        "level": 2,
+        "title": "Example of adsorbate relaxation - OC20",
+        "anchor": "example-of-adsorbate-relaxation-oc20",
+        "line": 130
+      },
+      {
+        "level": 1,
+        "title": "Example bulk relaxation - OMAT",
+        "anchor": "example-bulk-relaxation-omat",
+        "line": 161
+      },
+      {
+        "level": 2,
+        "title": "Molecular dynamics - OMOL",
+        "anchor": "molecular-dynamics-omol",
+        "line": 185
+      },
+      {
+        "level": 1,
+        "title": "[Catalyst Adsorption energies](../catalysts/examplestutorials/OCP-introduction)",
+        "anchor": "catalyst-adsorption-energies-catalysts-examplestutorials-ocp-introduction",
+        "line": 225
+      },
+      {
+        "level": 1,
+        "title": "Molecular vibrations",
+        "anchor": "molecular-vibrations",
+        "line": 330
+      },
+      {
+        "level": 1,
+        "title": "Bulk alloy phase behavior",
+        "anchor": "bulk-alloy-phase-behavior",
+        "line": 354
+      },
+      {
+        "level": 2,
+        "title": "Alloy formation energies",
+        "anchor": "alloy-formation-energies",
+        "line": 395
+      },
+      {
+        "level": 2,
+        "title": "Phonon calculation",
+        "anchor": "phonon-calculation",
+        "line": 456
+      },
+      {
+        "level": 1,
+        "title": "Transition States (NEBs)",
+        "anchor": "transition-states-nebs",
+        "line": 516
+      },
+      {
+        "level": 2,
+        "title": "Initial state",
+        "anchor": "initial-state",
+        "line": 533
+      },
+      {
+        "level": 2,
+        "title": "Final state",
+        "anchor": "final-state",
+        "line": 556
+      },
+      {
+        "level": 2,
+        "title": "Setup and relax the band",
+        "anchor": "setup-and-relax-the-band",
+        "line": 572
+      },
+      {
+        "level": 1,
+        "title": "Ideas for things you can do with UMA",
+        "anchor": "ideas-for-things-you-can-do-with-uma",
+        "line": 602
+      },
+      {
+        "level": 1,
+        "title": "Advanced applications",
+        "anchor": "advanced-applications",
+        "line": 624
+      },
+      {
+        "level": 2,
+        "title": "[AdsorbML](../catalysts/examplestutorials/adsorbmlwalkthrough.md)",
+        "anchor": "adsorbml-catalysts-examplestutorials-adsorbmlwalkthrough-md",
+        "line": 629
+      },
+      {
+        "level": 2,
+        "title": "[Expert adsorption energies](../catalysts/examplestutorials/adsorptionenergies/adsorptionenergies.md)",
+        "anchor": "expert-adsorption-energies-catalysts-examplestutorials-adsorptionenergies-adsorptionenergies-md",
+        "line": 635
+      },
+      {
+        "level": 2,
+        "title": "[CatTsunami](../catalysts/examplestutorials/cattsunamitutorial.md)",
+        "anchor": "cattsunami-catalysts-examplestutorials-cattsunamitutorial-md",
+        "line": 641
+      },
+      {
+        "level": 2,
+        "title": "Acknowledgements",
+        "anchor": "acknowledgements",
+        "line": 645
+      }
+    ],
+    "internal_links": [
+      "../catalysts/examples_tutorials/OCP-introduction",
+      "../catalysts/examples_tutorials/adsorbml_walkthrough.md",
+      "../catalysts/examples_tutorials/adsorption_energies/adsorption_energies.md",
+      "../catalysts/examples_tutorials/cattsunami_tutorial.md"
+    ],
+    "external_links": [
+      "http://doi.org/10.1088/2632-2153/ac8fe0",
+      "http://doi.org/10.1088/2632-2153/ad37f0",
+      "https://arxiv.org/abs/2411.11783",
+      "https://pubs.acs.org/doi/10.1021/acs.jpcc.4c07477",
+      "https://pubs.acs.org/doi/10.1021/acscatal.4c04272",
+      "https://www.nature.com/articles/s41524-023-01121-5"
+    ],
+    "image_refs": [],
+    "code_fence_count": 31,
+    "bytes": 19676,
+    "sha256": "835f9db438cafdfc61b7f49ac4bcaac3310c645ce8c5b79f16226e49b4ead3c4",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/uma_tutorials/uma_tutorial.md"
+  },
+  {
+    "page_id": "fc-page-docs-videos-technical-talks-md",
+    "source_path": "docs/videos/technical_talks.md",
+    "title": "Technical Presentations",
+    "nav_section": "Learn More",
+    "nav_order": 66,
+    "nav_depth": 1,
+    "in_myst_toc": true,
+    "derived_live_url": "https://fair-chem.github.io/technical-talks/",
+    "live_url": "https://fair-chem.github.io/technical-talks",
+    "http_status": 200,
+    "content_status": "live",
+    "webapp_categories": [
+      "education",
+      "video"
+    ],
+    "live_checked_at": "2026-08-21",
+    "route_status": "live_verified",
+    "heading_count": 2,
+    "headings": [
+      {
+        "level": 1,
+        "title": "Technical Presentations",
+        "anchor": "technical-presentations",
+        "line": 1
+      },
+      {
+        "level": 2,
+        "title": "Featured Talks",
+        "anchor": "featured-talks",
+        "line": 9
+      }
+    ],
+    "internal_links": [],
+    "external_links": [],
+    "image_refs": [],
+    "code_fence_count": 0,
+    "bytes": 1542,
+    "sha256": "6dd0f058b18f6e228cfac16bd13aef9bb45c6f251a11034abac92ece775f6749",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/videos/technical_talks.md"
+  }
+]

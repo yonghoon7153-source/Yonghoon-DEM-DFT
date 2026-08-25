@@ -1,0 +1,382 @@
+{
+  "schema_version": "fairchem-kb-release-v1",
+  "release_id": "fairchem_official_kb_2026_08_21",
+  "bundle_prefix": "fairchem_official_kb_2026_08_21_93a03d65",
+  "generated_at": "2026-08-21T00:00:00+00:00",
+  "official_source": "https://github.com/facebookresearch/fairchem",
+  "official_source_commit": "93a03d656806a55f08c7cd126cfaa40ef18181fb",
+  "official_source_commit_time": "2026-08-20T23:19:48Z",
+  "knowledge_schema_version": "fairchem-kb-v1",
+  "payload_count": 36,
+  "payload_bytes": 1522693,
+  "files": [
+    {
+      "repo_path": "db/knowledge/fairchem/claims.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/claims.json",
+      "bytes": 10613,
+      "sha256": "08b8b46fc566b2debc99f690f10673a35e133ffecff5075250c088562ce154d1",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/datasets.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/datasets.json",
+      "bytes": 8174,
+      "sha256": "6b7d0199605dcf4128624a33517c3e9665ef8ba38042d324c27dddb2e488301b",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/license_observations.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/license_observations.json",
+      "bytes": 3817,
+      "sha256": "fdac9571b5db64df035c5fcb3b36ae2817d0fa9fc57d47b9c029162f2edfd389",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/live_link_audit.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/live_link_audit.json",
+      "bytes": 3752,
+      "sha256": "29af6a4d18ed5f03b6e3ecbeb24c6d7fd23a0fa2414602745bc19428bdc1d64c",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/lpscl_crosswalk.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/lpscl_crosswalk.json",
+      "bytes": 15002,
+      "sha256": "12ecde87b0ee2cb8e5d30846a7f667dfba16bb5bc409f8fec6792bd708bc7009",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/models.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/models.json",
+      "bytes": 8837,
+      "sha256": "4266cb265819215f3cae475a69e45ba5be53d68dda246537898cc08eefb43973",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/packages.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/packages.json",
+      "bytes": 10529,
+      "sha256": "8b4141decc29ae2b6df1343a71f66f7579c7183d21921462ee1ac9e41e68fc45",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/papers.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/papers.json",
+      "bytes": 24631,
+      "sha256": "b06c73749f2b67e32b4291d36c12957d72657476a4788367925ab4f72b4d7073",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/release_observations.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/release_observations.json",
+      "bytes": 1266,
+      "sha256": "9bc63986f37ad592da4412c568442b8d679130a8a770c0ee0cc42aadf0aa2818",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/repo_files.csv",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/repo_files.csv",
+      "bytes": 451212,
+      "sha256": "a6990d54c1bbba5e263e235ff4482342ce6a3a88d39bcbb7f09bcaf0a53bd6f9",
+      "mime_type": "application/vnd.ms-excel",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/repo_files.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/repo_files.json",
+      "bytes": 595580,
+      "sha256": "2d9bf20827e844d6afa7c256d964d18044da9e244227eaba7e6d77b3af94067c",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/site_pages.csv",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/site_pages.csv",
+      "bytes": 43844,
+      "sha256": "b10cc0a4e74c5ccaa0bfaf91d822f4708beae439f13443812363790417e7c458",
+      "mime_type": "application/vnd.ms-excel",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/site_pages.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/site_pages.json",
+      "bytes": 174386,
+      "sha256": "65189efcdd9c63d09633f928cdb075369e9a1afffd1fc2d2b37a87b1073dc4df",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/snapshot.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/snapshot.json",
+      "bytes": 3283,
+      "sha256": "d3be97242c6c11c6eb0a895954e8c0d30bda1ed8a41c7f351c374f27b98a573c",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/tasks.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/tasks.json",
+      "bytes": 8769,
+      "sha256": "f0e0c6b8ef0c242b026d67d137d57a9157ae15c533b0d7faee21816b8a646c75",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/technologies.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/technologies.json",
+      "bytes": 24906,
+      "sha256": "75d0d1c8a8bb5507105979b846eabcaea37bcbc2ccae47540d4c15463f1eebfc",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "db/knowledge/fairchem/webapp_seed.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/db/knowledge/fairchem/webapp_seed.json",
+      "bytes": 9564,
+      "sha256": "76a6f4f81d4e09a6e33ca570b61f53d3c543532178250080158cd744192642d7",
+      "mime_type": "application/json",
+      "status": "generated_machine_index_or_curated_registry",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "docs/reviews/fairchem_official_kb_2026_08_21_README.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/docs/reviews/fairchem_official_kb_2026_08_21_README.md",
+      "bytes": 2346,
+      "sha256": "ccb7f0e486957542f89494ad9f2b6d2035eaeef93a403510b6af12f3b58754c9",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/00_site_map.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/00_site_map.md",
+      "bytes": 2697,
+      "sha256": "5776b0f28d6f717f960e4898f2ddd61c9062956bc4bcd2f55c818c7280fac6d4",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/01_models_and_tasks.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/01_models_and_tasks.md",
+      "bytes": 3018,
+      "sha256": "51a91d2ef233870ee43256a62a74581187b5dc5a0bba2228995b597b9622b863",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/02_datasets_and_domains.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/02_datasets_and_domains.md",
+      "bytes": 2301,
+      "sha256": "aa00892bcaf8e5de8eb1d75f0ea60b1346dc5c1d494380ac2042d3e8de76ada7",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/03_workflows_and_code.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/03_workflows_and_code.md",
+      "bytes": 2441,
+      "sha256": "a3c0c1af143764cf2f029ad8f84d0df0baca33b4093fe407f65ccc75d5e48120",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/04_lpscl_research_crosswalk.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/04_lpscl_research_crosswalk.md",
+      "bytes": 4206,
+      "sha256": "a40a41c5e5eedcbc8fcf381cf4d76add83c5e8c150d745e8e29b0242760c160e",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/05_papers_and_insight_workflow.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/05_papers_and_insight_workflow.md",
+      "bytes": 2464,
+      "sha256": "bc51501a429095673853a112cb640a51b8da24bd0ddf5fc10e4fd9599883964c",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/06_claims_caveats_and_citations.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/06_claims_caveats_and_citations.md",
+      "bytes": 2542,
+      "sha256": "3f9bd26e0bd2b0b5757c57d263437c75700db14d1329cb0d4a8eeda3ce33dbfe",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/07_webapp_handoff_for_claude.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/07_webapp_handoff_for_claude.md",
+      "bytes": 5838,
+      "sha256": "b4c3ceb7799d335515dfbbc313848ed5eea6944305d573568cf7670bfaa9a59b",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/08_update_playbook.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/08_update_playbook.md",
+      "bytes": 2065,
+      "sha256": "52bc9a95cb2dc7bc900a8c9a5df8ccce8f279433bc2ff74714762029fba6ad00",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/09_source_coverage.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/09_source_coverage.md",
+      "bytes": 2052,
+      "sha256": "dda67bb5625c23a2eb12786698e5c612b7792af3c76df76956060bc1e6f67379",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "kb/fairchem/README.md",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/kb/fairchem/README.md",
+      "bytes": 3957,
+      "sha256": "70da51b7c07e31559b8f7958932baef2c7492c650ffbb10b83694148f0f5e105",
+      "mime_type": "text/markdown",
+      "status": "project_authored_documentation",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/build_fairchem_kb.py",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/build_fairchem_kb.py",
+      "bytes": 23416,
+      "sha256": "1141d1d078c8ac5d60cf3ff3273a17721f905356f14916f1f3417208a4491241",
+      "mime_type": "text/x-python",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/curated_knowledge.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/curated_knowledge.json",
+      "bytes": 36994,
+      "sha256": "4a16584c4c8e0e2927756a183e62bc51f9d5d0febaae0b7ea1ff3fd7e752410e",
+      "mime_type": "application/json",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/license_observations.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/license_observations.json",
+      "bytes": 1737,
+      "sha256": "a50c27a82ffa81d6e75782763a11dda03a3dcd0494fc6e5637b1e8fba3a56ef2",
+      "mime_type": "application/json",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/live_doc_status.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/live_doc_status.json",
+      "bytes": 15040,
+      "sha256": "d19e7a6b637e71c05017e3652fcdeafd958aa86bbdc418b3c0ba6099e45cbcc8",
+      "mime_type": "application/json",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/live_link_audit.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/live_link_audit.json",
+      "bytes": 3024,
+      "sha256": "b8a16a70c360d93f03c063f418e649a1307179e2faa3aa833bc6c2dcfc858514",
+      "mime_type": "application/json",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/package_fairchem_kb.py",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/package_fairchem_kb.py",
+      "bytes": 7312,
+      "sha256": "5a14a9fa437542f9cee45a66f1711b0f8076929488533af26854b91c7eced335",
+      "mime_type": "text/x-python",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    },
+    {
+      "repo_path": "tools/fairchem_kb/release_observations.json",
+      "archive_path": "fairchem_official_kb_2026_08_21_93a03d65/tools/fairchem_kb/release_observations.json",
+      "bytes": 1078,
+      "sha256": "fd806f462a872d83ba55c86ad481fad5eca8f47fc315477147161336bfa72e01",
+      "mime_type": "application/json",
+      "status": "project_builder_or_curated_seed",
+      "license_scope": "project-authored metadata/documentation; upstream source remains linked, not copied"
+    }
+  ],
+  "excluded": [
+    {
+      "kind": "official source file contents",
+      "reason": "indexed by path/hash/link rather than redistributed"
+    },
+    {
+      "kind": "pretrained checkpoints",
+      "reason": "gated external artifacts with separate licenses"
+    },
+    {
+      "kind": "Hugging Face datasets",
+      "reason": "large external payloads and separate licenses"
+    },
+    {
+      "kind": "paper PDFs and cropped figures",
+      "reason": "managed locally in litdb; redistribution rights vary"
+    },
+    {
+      "kind": "tokens, credentials and server-only paths",
+      "reason": "security and portability"
+    },
+    {
+      "kind": "raw trajectories",
+      "reason": "not needed for this source-knowledge bundle"
+    }
+  ],
+  "coverage_contract": {
+    "included": [
+      "all files tracked by the official repository default-branch snapshot",
+      "all tracked Markdown documentation pages and MyST navigation entries",
+      "all pyproject package manifests",
+      "all code-registered pretrained model records",
+      "the official FAIR Chemistry papers index",
+      "curated crosswalks that explicitly distinguish official facts from project policy"
+    ],
+    "excluded": [
+      "Git history before the pinned commit",
+      "GitHub Issues, Pull Requests, Discussions and unmerged branches",
+      "Hugging Face model and dataset payloads",
+      "full upstream source-file contents",
+      "third-party papers not yet curated into this project"
+    ],
+    "exhaustive_meaning": "complete tracked-file and current-doc inventory at one pinned official commit, not the full mutable web/GitHub history"
+  }
+}

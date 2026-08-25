@@ -1,0 +1,292 @@
+[
+  {
+    "package_id": "fc-package-fairchem-applications-adsorbml",
+    "name": "fairchem-applications-adsorbml",
+    "version": null,
+    "description": "Module for calculating the minima adsorbtion energy",
+    "requires_python": null,
+    "dependencies": [],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-applications-AdsorbML/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-AdsorbML/pyproject.toml",
+    "sha256": "c12143868794887c35d833bdf7c67766fcd92848908c881e6f356cdcc64d4674"
+  },
+  {
+    "package_id": "fc-package-fairchem-applications-cattsunami",
+    "name": "fairchem-applications-cattsunami",
+    "version": null,
+    "description": "Accelerating Transition State Energy Calculations with Pre-trained Graph Neural Networks",
+    "requires_python": null,
+    "dependencies": [
+      "fairchem-core",
+      "fairchem-data-oc"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-applications-cattsunami/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-cattsunami/pyproject.toml",
+    "sha256": "b3243d669c4dd9fa10fd13d96bb5dab017cf76435d460fd230de9194df073a7c"
+  },
+  {
+    "package_id": "fc-package-fairchem-applications-fastcsp",
+    "name": "fairchem-applications-fastcsp",
+    "version": null,
+    "description": "FastCSP: Accelerated Molecular Crystal Structure Prediction with Universal Model for Atoms",
+    "requires_python": null,
+    "dependencies": [
+      "fairchem-core",
+      "p_tqdm",
+      "pyarrow",
+      "pymatgen",
+      "rdkit"
+    ],
+    "optional_dependency_groups": [
+      "free_energy"
+    ],
+    "scripts": {
+      "fastcsp": "fairchem.applications.fastcsp.core.cli:cli_main",
+      "fastcsp-confgen": "fairchem.applications.fastcsp.confgen.main:main"
+    },
+    "source_path": "packages/fairchem-applications-fastcsp/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-fastcsp/pyproject.toml",
+    "sha256": "36494eda66bd5b7f65c7d4c7d637bed5417df986443f2221b9155fbbce523884"
+  },
+  {
+    "package_id": "fc-package-fairchem-applications-ocx",
+    "name": "fairchem-applications-ocx",
+    "version": null,
+    "description": "Bridging Experiments to Computational Models",
+    "requires_python": null,
+    "dependencies": [
+      "numpy>=2.0,<2.4",
+      "scipy>=1.15.0",
+      "scikit-learn",
+      "pandas",
+      "matminer",
+      "plotly",
+      "matplotlib",
+      "yellowbrick",
+      "statsmodels",
+      "seaborn"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-applications-ocx/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-applications-ocx/pyproject.toml",
+    "sha256": "7cb7bc69ef16f20b5d0531771cb6d58b945637875e05f5547623e1ea63129519"
+  },
+  {
+    "package_id": "fc-package-fairchem-core",
+    "name": "fairchem-core",
+    "version": null,
+    "description": "Machine learning models for chemistry and materials science by the FAIR Chemistry team",
+    "requires_python": ">=3.10, <3.14",
+    "dependencies": [
+      "torch~=2.13.0",
+      "ray[serve]>=2.53.0",
+      "numpy>=1.26.4,<2",
+      "scipy>=1.15.0",
+      "lmdb>=1.6.2,<=1.7.3",
+      "numba>=0.62.0",
+      "e3nn>=0.5",
+      "huggingface_hub>=0.27.1",
+      "ase>=3.26.0",
+      "ase-db-backends>=0.10.0",
+      "monty>=v2025.1.3",
+      "clusterscope==0.0.18",
+      "setuptools<81.0.0",
+      "requests",
+      "orjson",
+      "tqdm",
+      "submitit>=1.5.4",
+      "hydra-core",
+      "torchtnt",
+      "pyyaml",
+      "wandb",
+      "websockets"
+    ],
+    "optional_dependency_groups": [
+      "adsorbml",
+      "dev",
+      "docs",
+      "extras"
+    ],
+    "scripts": {
+      "fairchem": "fairchem.core._cli:main"
+    },
+    "source_path": "packages/fairchem-core-numpy126/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-core-numpy126/pyproject.toml",
+    "sha256": "df43ad9b3e43dc69a346b9821688d59ac3252d9862cf827066cdc5a2f92e8a8d"
+  },
+  {
+    "package_id": "fc-package-fairchem-core",
+    "name": "fairchem-core",
+    "version": null,
+    "description": "Machine learning models for chemistry and materials science by the FAIR Chemistry team",
+    "requires_python": ">=3.11, <3.15",
+    "dependencies": [
+      "torch~=2.13.0",
+      "ray[serve]>=2.53.0",
+      "numpy>=2.0,<2.5",
+      "scipy>=1.15.0",
+      "lmdb>=1.6.2,<=1.7.3",
+      "numba>=0.62.0",
+      "e3nn>=0.5",
+      "huggingface_hub>=0.27.1",
+      "ase>=3.26.0",
+      "ase-db-backends>=0.10.0",
+      "monty>=2026.2.18",
+      "clusterscope==0.0.18",
+      "setuptools<81.0.0",
+      "requests",
+      "orjson",
+      "tqdm",
+      "submitit>=1.5.4",
+      "hydra-core",
+      "torchtnt",
+      "pyyaml",
+      "wandb",
+      "websockets"
+    ],
+    "optional_dependency_groups": [
+      "adsorbml",
+      "dev",
+      "docs",
+      "extras",
+      "torchsim"
+    ],
+    "scripts": {
+      "fairchem": "fairchem.core._cli:main"
+    },
+    "source_path": "packages/fairchem-core/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-core/pyproject.toml",
+    "sha256": "5a7b8330134c168f941d564a5094784c3b427c779be732fa7d325adc40618bfd"
+  },
+  {
+    "package_id": "fc-package-fairchem-data-oc",
+    "name": "fairchem-data-oc",
+    "version": null,
+    "description": "Code for generating adsorbate-catalyst input configurations",
+    "requires_python": null,
+    "dependencies": [
+      "numpy>=2.0",
+      "scipy>=1.15.0",
+      "matplotlib",
+      "ase>=3.27",
+      "pymatgen>=2023.10.3",
+      "tqdm"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-data-oc/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-data-oc/pyproject.toml",
+    "sha256": "4e16131481a5992b956c871bbf564a290525c825f1a81007772b755a4d7c108a"
+  },
+  {
+    "package_id": "fc-package-fairchem-data-odac",
+    "name": "fairchem-data-odac",
+    "version": null,
+    "description": "Code for ODAC MOF configurations and VASP input sets for direct air capture",
+    "requires_python": null,
+    "dependencies": [
+      "ase>=3.27",
+      "pymatgen>=2023.10.3"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-data-odac/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-data-odac/pyproject.toml",
+    "sha256": "fe1127469ec265287cfdedad190632a2603efe8d3becd3161ed5f601320f6c09"
+  },
+  {
+    "package_id": "fc-package-fairchem-data-omat",
+    "name": "fairchem-data-omat",
+    "version": null,
+    "description": "Code for generating omat24 input configurations and vasp input sets",
+    "requires_python": null,
+    "dependencies": [
+      "pymatgen>=2023.10.3"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-data-omat/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-data-omat/pyproject.toml",
+    "sha256": "f6736cf1ad419ae028bf85f7fd58bcc672a536a012a4383c4dd7e34bb394166f"
+  },
+  {
+    "package_id": "fc-package-fairchem-data-omc",
+    "name": "fairchem-data-omc",
+    "version": null,
+    "description": "Code for generating OMC VASP inputs",
+    "requires_python": null,
+    "dependencies": [
+      "ase",
+      "atomate2>=0.0.12",
+      "pymatgen",
+      "pyyaml",
+      "tqdm"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {},
+    "source_path": "packages/fairchem-data-omc/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-data-omc/pyproject.toml",
+    "sha256": "6e3ee3f9d724205db9117c34d557d0044eaf626c9a157782782460a07cb11796"
+  },
+  {
+    "package_id": "fc-package-fairchem-data-omol",
+    "name": "fairchem-data-omol",
+    "version": null,
+    "description": "Code for generating OMOL input configurations",
+    "requires_python": null,
+    "dependencies": [
+      "ase"
+    ],
+    "optional_dependency_groups": [
+      "extras"
+    ],
+    "scripts": {},
+    "source_path": "packages/fairchem-data-omol/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-data-omol/pyproject.toml",
+    "sha256": "1130e8f7b376c2ac44a76793d0f9fda9d4978a99ffae67cf7c5204d594f74c6b"
+  },
+  {
+    "package_id": "fc-package-fairchem-demo-ocpapi",
+    "name": "fairchem-demo-ocpapi",
+    "version": null,
+    "description": "Python client library for the Open Catalyst API",
+    "requires_python": ">=3.9",
+    "dependencies": [
+      "dataclasses-json == 0.6.0",
+      "inquirer == 3.1.3",
+      "requests",
+      "responses == 0.23.2",
+      "tenacity == 8.2.3",
+      "tqdm"
+    ],
+    "optional_dependency_groups": [
+      "dev"
+    ],
+    "scripts": {},
+    "source_path": "packages/fairchem-demo-ocpapi/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-demo-ocpapi/pyproject.toml",
+    "sha256": "411cadeda6bc06329dc6dad67fdf367261e6071fa02984c0a60415f0ed4ce867"
+  },
+  {
+    "package_id": "fc-package-fairchem-lammps",
+    "name": "fairchem-lammps",
+    "version": null,
+    "description": "Fairchem extension package to use LAMMPs with fairchem models",
+    "requires_python": ">=3.10,<3.15",
+    "dependencies": [
+      "fairchem.core>=2.4.0"
+    ],
+    "optional_dependency_groups": [],
+    "scripts": {
+      "lmp_fc": "fairchem.lammps.lammps_fc:main"
+    },
+    "source_path": "packages/fairchem-lammps/pyproject.toml",
+    "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/packages/fairchem-lammps/pyproject.toml",
+    "sha256": "179ddbe3b19e51f33fe11e6482ed2fbacdad341c951434072017c65a030f9b52"
+  }
+]

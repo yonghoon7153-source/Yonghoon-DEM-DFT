@@ -448,6 +448,60 @@ def governance_page():
                            problems=_C.validate_governance() + _C.validate_artifacts())
 
 
+@app.route("/fairchem")
+def fairchem_page():
+    """Fair-Chem/UMA 공식 지식 — **무엇을 할 수 있나** 가 아니라 **무엇을 우리가 써도 되나**.
+
+    ⚠ 세 축을 절대 한 배지로 합치지 않는다: `http_status`(페이지가 열리나) ·
+      `execution_status`(예제가 도나) · `project_status`(우리 계에 쓸 수 있나).
+      합치면 200 인데 실행 실패한 튜토리얼이 "정상" 으로 보인다.
+    ⛔ 이 페이지가 **못 하는 것**: 공식 주장의 참·거짓을 판정하지 않는다.
+      우리 수치를 여기에 복사하지도 않는다 — crosswalk 는 FK 이지 값이 아니다.
+    """
+    import fairchem as FC
+    if not FC.available():
+        return render_template("fairchem.html", active="fairchem", ready=False,
+                               sections=FC.SECTIONS), 200
+    return render_template(
+        "fairchem.html", active="fairchem", ready=True,
+        sections=FC.SECTIONS, summary=FC.summary(), snap=FC.snapshot(),
+        models=FC.entities("models"), tasks=FC.entities("tasks"),
+        datasets=FC.entities("datasets"), claims=FC.entities("claims"),
+        techs=FC.entities("technologies"), seed=FC.entities("webapp_seed"),
+        crosswalk=FC.crosswalk_rows(), papers=FC.papers_rows(),
+        pages=FC.page_status_rows(), audit=FC.blob("live_link_audit"),
+        licenses=FC.entities("license_observations"),
+        stages=FC.PAPER_STAGES)
+
+
+@app.route("/api/fairchem/v1/<name>")
+def fairchem_api(name):
+    """인계 문서가 정한 봉투로 entity 를 낸다 (읽기 전용).
+
+    ⛔ **fail-closed**: 알 수 없는 이름이면 빈 배열을 주지 않고 404 를 낸다.
+      빈 배열은 "그런 건 없다" 와 "이름을 틀렸다" 를 구분 못 하게 만든다.
+    """
+    import fairchem as FC
+    if not FC.available():
+        abort(404)
+    if name == "manifest":
+        return jsonify(FC.envelope(FC.manifest()))
+    if name == "integrity":
+        v = FC.verify_hashes()
+        return jsonify(FC.envelope(v, [] if v["ok"] else ["sha256 불일치/누락 — 번들을 다시 받을 것"]))
+    if name == "lpscl-crosswalk":
+        return jsonify(FC.envelope(FC.crosswalk_rows()))
+    if name == "papers":
+        return jsonify(FC.envelope(FC.papers_rows()))
+    if name == "pages":
+        return jsonify(FC.envelope(FC.page_status_rows()))
+    allowed = {"models", "tasks", "datasets", "technologies", "claims",
+               "packages", "site_pages", "license_observations"}
+    if name in allowed:
+        return jsonify(FC.envelope(FC.entities(name)))
+    abort(404)
+
+
 @app.route("/nd-survey")
 def nd_survey_page():
     """Nd 치환 문헌 54편 — 우리 화학과의 거리를 앞세워 보여준다."""

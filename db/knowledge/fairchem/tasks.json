@@ -1,0 +1,182 @@
+[
+  {
+    "task_id": "omol",
+    "label": "OMol",
+    "domain": "Aperiodic organic molecules and molecular complexes",
+    "reference_method": "wB97M-V/def2-TZVPD in ORCA 6",
+    "charge_spin_contract": "Total charge and spin multiplicity are required model inputs.",
+    "official_cautions": [
+      "Use the OMol task only when molecular charge and spin are defined."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "omc",
+    "label": "OMC",
+    "domain": "Organic molecular crystals",
+    "reference_method": "PBE+D3 in VASP",
+    "charge_spin_contract": "Training did not vary charge or spin; the documented inputs are charge=0 and spin multiplicity=0.",
+    "official_cautions": [
+      "Do not treat OMC as a charged-crystal model without validation."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "omat",
+    "label": "OMat",
+    "domain": "Inorganic materials",
+    "reference_method": "PBE/PBE+U with VASP 5.4 conventions",
+    "charge_spin_contract": "Charge and spin are not user-selectable physical states for this task.",
+    "official_cautions": [
+      "OMat total energies are not directly compatible with Materials Project total energies or MP2020 corrections.",
+      "Magnetic-state selection is not exposed as a user-controlled condition."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      },
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "oc20",
+    "label": "OC20",
+    "domain": "Heterogeneous catalysis on surfaces",
+    "reference_method": "RPBE with VASP 5.4 pseudopotentials; no dispersion",
+    "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+    "official_cautions": [
+      "OC20 does not cover oxides or explicit solvents.",
+      "Transition-state use is described as possible but caution is required."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "odac",
+    "label": "ODAC",
+    "domain": "CO2/H2O adsorption in metal-organic frameworks",
+    "reference_method": "PBE+D3 with VASP 5.4 pseudopotentials",
+    "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+    "official_cautions": [
+      "Training chemistry is centered on CO2/H2O adsorption; hydrocarbons and unseen bare MOFs require caution."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "oc25",
+    "label": "OC25",
+    "domain": "Solid-liquid electrochemical and catalytic interfaces",
+    "reference_method": "RPBE+D3 with VASP 6.4 pseudopotentials and dipole corrections",
+    "charge_spin_contract": "Training did not explicitly condition on charge or spin.",
+    "official_cautions": [
+      "Available only in UMA 1.2 according to the docs.",
+      "Work functions are not model outputs and require subsequent DFT."
+    ],
+    "code_snapshot_state": "present_in_UMATask_enum",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  },
+  {
+    "task_id": "oc22",
+    "label": "OC22",
+    "domain": "Oxide catalysis and supports",
+    "reference_method": "Spin-polarized PBE+U with VASP 5.4 pseudopotentials",
+    "charge_spin_contract": "Documented inputs are charge=0 and spin multiplicity=0.",
+    "official_cautions": [
+      "Available only in UMA 1.2 according to the docs.",
+      "No explicit solvents are included."
+    ],
+    "code_snapshot_state": "documented_but_absent_from_UMATask_enum_at_pinned_commit",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "docs/core/quickstart.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/quickstart.md",
+        "sha256": "df39f4007080dcf0286c85b2ceb1e52990216959bc198c97eadc685732d91fc2"
+      },
+      {
+        "source_path": "src/fairchem/core/units/mlip_unit/api/inference.py",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/units/mlip_unit/api/inference.py",
+        "sha256": "b474bebf4486b2cd2a4d1d1aa1a5963aa797f2d5ef0323a3e1f1e57ef5adf1d8"
+      }
+    ]
+  }
+]

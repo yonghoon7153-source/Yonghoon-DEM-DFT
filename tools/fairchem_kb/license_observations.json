@@ -1,0 +1,56 @@
+[
+  {
+    "subject":"official repository root code",
+    "license":"MIT",
+    "source_path":"LICENSE.md",
+    "scope_note":"Does not automatically cover every checkpoint, dataset or separately licensed component."
+  },
+  {
+    "subject":"CGCNN-derived component notice",
+    "license":"MIT",
+    "source_path":"licenses/LICENSE.cgcnn",
+    "scope_note":"Component-specific attribution."
+  },
+  {
+    "subject":"MMF-derived component notice",
+    "license":"BSD-style",
+    "source_path":"licenses/LICENSE.mmf",
+    "scope_note":"Component-specific attribution."
+  },
+  {
+    "subject":"FAIR-Chem LAMMPS component",
+    "license":"GPL-2.0",
+    "source_path":"src/fairchem/lammps/LICENSE.md",
+    "scope_note":"Treat separately from the root MIT code."
+  },
+  {
+    "subject":"pretrained checkpoints",
+    "license":"model-repository specific / gated",
+    "source_path":"README.md",
+    "scope_note":"Accept the relevant Hugging Face license; weights are excluded from this bundle."
+  },
+  {
+    "subject":"OMat24",
+    "license":"CC BY 4.0",
+    "source_path":"docs/inorganic_materials/datasets/omat24.md",
+    "scope_note":"Dataset license, not checkpoint or software license."
+  },
+  {
+    "subject":"OMol25",
+    "license":"CC BY 4.0",
+    "source_path":"docs/molecules/datasets/omol25.md",
+    "scope_note":"Dataset license, not checkpoint or software license."
+  },
+  {
+    "subject":"OMC25",
+    "license":"CC BY 4.0",
+    "source_path":"docs/molecules/datasets/omc25.md",
+    "scope_note":"Dataset license, not checkpoint or software license."
+  },
+  {
+    "subject":"ODAC23/ODAC25",
+    "license":"CC BY 4.0",
+    "source_path":"docs/dac/datasets/odac25.md",
+    "scope_note":"Confirm each dataset card at download time."
+  }
+]

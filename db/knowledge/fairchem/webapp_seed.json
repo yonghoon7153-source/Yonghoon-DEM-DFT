@@ -1,0 +1,206 @@
+[
+  {
+    "section_id": "fairchem-overview",
+    "title": "Overview",
+    "fairchem_parallel": "Documentation home and Quickstart",
+    "purpose": "Explain domains, version, source snapshot and the difference between capability and approval.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/index.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/index.md",
+        "sha256": "3fd28266459020a58488f5f78a947a324af5b1497afe612340a0afb27a09332d"
+      },
+      {
+        "source_path": "docs/core/quickstart.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/quickstart.md",
+        "sha256": "df39f4007080dcf0286c85b2ceb1e52990216959bc198c97eadc685732d91fc2"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-models-tasks",
+    "title": "Models & Tasks",
+    "fairchem_parallel": "AI/ML Models & Usage",
+    "purpose": "Show registered model IDs, task-specific DFT conventions and documentation/code drift.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "src/fairchem/core/calculate/pretrained_models.json",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/src/fairchem/core/calculate/pretrained_models.json",
+        "sha256": "ff7e8d71f6114301b3bbb45bab94fb37503b6352d5c61db0022444d937def147"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-organic",
+    "title": "Organic Molecules & Crystals",
+    "fairchem_parallel": "Organic Molecules",
+    "purpose": "Organize OMol25, OMol25 electronic and OMC25 without mixing them with inorganic claims.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/molecules/datasets/summary.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/datasets/summary.md",
+        "sha256": "9910ad9e16ea59c00936b127341a29c0304386dd18f4fb665a93d617b3095322"
+      },
+      {
+        "source_path": "docs/molecules/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/molecules/models.md",
+        "sha256": "55631ea67344441c1aa1ced6e21b0ca237fd65276f9f9c81491372f096657aa7"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-catalysis",
+    "title": "Heterogeneous Catalysis",
+    "fairchem_parallel": "Heterogeneous Catalysis",
+    "purpose": "Index OC datasets and application workflows with their surface-specific scope.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/catalysts/datasets/summary.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/datasets/summary.md",
+        "sha256": "dd30aa366ee1b69cd9610777279a37b9a801991601f26f9b7857819475c20de6"
+      },
+      {
+        "source_path": "docs/catalysts/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/catalysts/models.md",
+        "sha256": "03673f35e7d87cc70d69a6474ae82978f1fb6325a4d28427905322bd0eee63df"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-inorganic",
+    "title": "Inorganic Materials",
+    "fairchem_parallel": "Inorganic Materials",
+    "purpose": "Place OMat24, UMA/OMat and property workflows next to explicit energy-reference cautions.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/inorganic_materials/datasets/summary.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/datasets/summary.md",
+        "sha256": "92c2e3642840c9d7fb1bcb3cd90238396f161d4e84dd0f982d5acf13c113e724"
+      },
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-dac",
+    "title": "MOFs for Direct Air Capture",
+    "fairchem_parallel": "MOFs for Direct Air Capture",
+    "purpose": "Keep ODAC chemistry and adsorption claims in their own domain.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/dac/datasets/summary.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/datasets/summary.md",
+        "sha256": "b3aaabb451b772244c9097698734e40ab40974288163996d152da07c3a88f67b"
+      },
+      {
+        "source_path": "docs/dac/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/dac/models.md",
+        "sha256": "8c915a1eb3620c5c0381919df846440ab877db424976cfa69b88744fe5d2aacd"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-workflows",
+    "title": "Workflows & Code",
+    "fairchem_parallel": "Common Tasks and Tutorials",
+    "purpose": "Search relax, MD, LAMMPS, elastic, phonon, training and inference technology by capability.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/core/common_tasks/summary.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/summary.md",
+        "sha256": "8b320ae0955fba388cea67d4de07b60e82c1221b7b17b9a54058db8bdfbba1dd"
+      },
+      {
+        "source_path": "docs/core/common_tasks/workflows.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/common_tasks/workflows.md",
+        "sha256": "829b7a6e0fc990c01f7314e7e288377979851c36bf06fee0a06e3f8923a994a1"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-papers",
+    "title": "Papers",
+    "fairchem_parallel": "FAIR Chemistry Papers",
+    "purpose": "Seed future litdb curation; show paper-index status separately from locally reviewed papers.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/core/fair_chemistry_papers.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fair_chemistry_papers.md",
+        "sha256": "02bcb0c2b23eddd15b7c541364482ab35cd51fd90565c7e6581455014f53e9fb"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-lpscl",
+    "title": "Our LPSCl Use",
+    "fairchem_parallel": "Project-specific addition",
+    "purpose": "Map official capability to project validation, exceptions and approved wording.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/core/uma.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma.md",
+        "sha256": "430c8345d75b6dbdba1d09b1f692a0f8e75e612f4855738efecd63ce80aeca61"
+      },
+      {
+        "source_path": "docs/inorganic_materials/models.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/inorganic_materials/models.md",
+        "sha256": "6d65aa43d4bae84de2672f22f8d76d055afe154d5aca56741113bd19ade6fedc"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-sources",
+    "title": "Source & Provenance Explorer",
+    "fairchem_parallel": "GitHub source links",
+    "purpose": "Expose pinned commit, file hash, source path and official link behind every claim.",
+    "default_visibility": "public",
+    "sources": [
+      {
+        "source_path": "docs/myst.yml",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/myst.yml",
+        "sha256": "90f61f39f3fdf1fbb1573a4320cd9c1c7c4177465d17e2952843493593089c7c"
+      },
+      {
+        "source_path": "README.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/README.md",
+        "sha256": "2a1d7fe5bfb5cd7b835669e67666029dfaf4b415500dd070cff9d4eab614f82f"
+      }
+    ]
+  },
+  {
+    "section_id": "fairchem-updates",
+    "title": "Updates & Drift",
+    "fairchem_parallel": "Changelog and migration guides",
+    "purpose": "Compare snapshots, flag model/task/page changes and require review before promotion.",
+    "default_visibility": "maintainer",
+    "sources": [
+      {
+        "source_path": "docs/core/uma_changelog.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/uma_changelog.md",
+        "sha256": "b95aed55157a5854f1a84200489b5dc2e18573e9a19724808880f8b028daacd8"
+      },
+      {
+        "source_path": "docs/core/fairchemv1_v2.md",
+        "source_url": "https://github.com/facebookresearch/fairchem/blob/93a03d656806a55f08c7cd126cfaa40ef18181fb/docs/core/fairchemv1_v2.md",
+        "sha256": "2435cdf002d6fd49fa54a10cf3eecc6d896e9a1de86120f44b08ce629baacd64"
+      }
+    ]
+  }
+]
