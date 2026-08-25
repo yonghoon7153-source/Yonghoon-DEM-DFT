@@ -453,7 +453,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
 
 
 def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
-                   keep_blank=0.995, relto=None):
+                   keep_blank=0.995, relto=None, nup=1):
     """발표 덱(PPT→PDF)을 **슬라이드 1장 = 그림 1장**으로 자른다 (`--slides`).
 
     왜 별도 모드인가 — 본체 extract() 는 "Fig. 1." 같은 **저널 캡션을 앵커**로 쓴다.
@@ -464,8 +464,16 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
     **슬라이드 7**을 가리키게 라벨을 쪽번호로 맞춘다 (덱 자체 인쇄 번호와 다를 수 있으니
     digest 에 "PDF 쪽 = 슬라이드" 를 명시할 것).
 
+    ⭐ `nup=2` (2026-08-25) — **2-up 인쇄 자료집**(한 쪽에 슬라이드 2장)을 위·아래로
+      나눈다. 심포지엄 자료집이 대개 이 꼴이라 쪽 렌더만 하면 슬라이드 두 장이 한 그림에
+      뭉쳐 digest 가 "Fig. 3" 으로 무엇을 가리키는지 모호해진다.
+      라벨은 `<쪽>a` / `<쪽>b` 로 준다 — 덱 자체 인쇄 번호와 다를 수 있으므로
+      digest 에 **"PDF 쪽-위치 ↔ 덱 인쇄번호"** 대응을 반드시 적을 것.
+      ⚠ 반쪽이 거의 백지면(간지·마지막 홀수 슬라이드) 그 반쪽만 버린다.
+
     이 모드가 못 하는 것: 한 슬라이드 안의 여러 패널을 나누지 않는다(a/b/c 분해 없음).
-    2-up 인쇄 자료집(한 쪽에 슬라이드 2장)도 나누지 못한다 — 그런 덱은 쪽 렌더가 곧 2장이다.
+      nup 은 **균등 분할**이라 위아래 여백이 다른 레이아웃에서는 경계가 어긋날 수 있다 —
+      결과를 눈으로 확인할 것.
     """
     out_dir = OUT_ROOT / slug
     doc = fitz.open(pdf_path)
@@ -477,6 +485,35 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
             long_pt = max(page.rect.width, page.rect.height)
             if long_pt > 0:
                 d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
+        # ── nup 분할 (2-up 자료집) ─────────────────────────────────────
+        if nup > 1:
+            h = page.rect.height / nup
+            for k in range(nup):
+                clip = fitz.Rect(page.rect.x0, page.rect.y0 + k * h,
+                                 page.rect.x1, page.rect.y0 + (k + 1) * h)
+                sub = page.get_pixmap(dpi=d_eff, clip=clip)
+                sbr = blank_ratio(sub)
+                sublab = f"{pno + 1}{'ab cdef'[k]}" if k < 6 else f"{pno + 1}_{k}"
+                if sbr > keep_blank:
+                    skipped.append((f"F{sublab}", pno + 1, f"거의 백지({sbr:.3f})"))
+                    continue
+                cap = " / ".join(
+                    " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
+                    if b[4].strip() and clip.y0 <= b[1] < clip.y1)[:900]
+                fn = f"fig_{sublab}.png"
+                found.append({"key": f"F{sublab}", "kind": "figure", "label": sublab,
+                              "page": pno + 1, "file": fn, "caption": cap,
+                              "rotated_deg": 0,
+                              "bbox": [round(v, 1) for v in clip],
+                              "w": sub.width, "h": sub.height, "dpi": d_eff,
+                              "src": Path(pdf_path).name, "blank": round(sbr, 3),
+                              "slide": True, "nup": nup, "nup_index": k})
+                if not dry:
+                    out_dir.mkdir(parents=True, exist_ok=True)
+                    sub.save(out_dir / fn)
+                    _shrink(out_dir / fn)
+            continue
+
         pix = page.get_pixmap(dpi=d_eff)
         br = blank_ratio(pix)
         if br > keep_blank:                      # 표지 뒤 백지·간지
@@ -499,7 +536,7 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
             pix.save(out_dir / fn)
             _shrink(out_dir / fn)
     doc.close()
-    meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx, "mode": "slides",
+    meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx, "mode": "slides", "nup": nup,
             "generated": time.strftime("%Y-%m-%d"),
             "sources": [_relto(Path(pdf_path), relto)], "figures": found}
     if not dry:
@@ -1338,6 +1375,9 @@ def main():
     ap.add_argument("--slides", action="store_true",
                     help="발표 덱(PPT→PDF): 캡션이 없으므로 **슬라이드 1장 = 그림 1장**으로 렌더 "
                          "(litdb/talks 용. --slug --pdf 와 함께)")
+    ap.add_argument("--nup", type=int, default=1,
+                    help="한 쪽에 슬라이드 N 장인 인쇄 자료집을 나눈다 (심포지엄 자료집은 "
+                         "대개 2). 라벨이 <쪽>a/<쪽>b 가 된다. --slides 와 함께.")
     a = ap.parse_args()
     if a.pdf:                       # [[a,b],[c]] → [a,b,c]
         a.pdf = [x for grp in a.pdf for x in grp]
@@ -1481,7 +1521,7 @@ def main():
         if len(a.pdf) > 1:
             raise SystemExit("⛔ --slides 는 덱 1개만 받는다 (덱마다 슬라이드 번호가 다르다).")
         meta, skipped = extract_slides(a.pdf[0], a.slug, dpi=a.dpi,
-                                       dry=a.dry, maxpx=a.maxpx)
+                                       dry=a.dry, maxpx=a.maxpx, nup=a.nup)
         _report(a.slug, meta, skipped, a.dry)
         if not a.dry:
             _write_sources_index()
