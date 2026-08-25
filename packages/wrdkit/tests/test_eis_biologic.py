@@ -11,6 +11,7 @@ import pytest
 import synthetic_eis as S
 
 from wrdkit.eis import UnknownColumn, read_mpr_bytes, read_mps_text, read_mpt_text
+from wrdkit.eis.biologic import read_mpr_sweeps
 
 
 @pytest.fixture
@@ -276,3 +277,97 @@ def test_a_blank_essential_cell_is_refused_at_the_boundary():
     lines[first_data] = "\t".join(cells)
     with pytest.raises(ValueError, match="not a number at row 1"):
         read_mpt_text("\n".join(lines))
+
+
+# --- SOC 스캔: 한 파일에 스펙트럼 여럿 (ADR 0022) -----------------------------
+
+def test_a_soc_scan_comes_back_as_one_spectrum_per_sweep():
+    """사이클링 사이에 끼어 있는 스윕들을 각각 꺼낸다.
+
+    한 스펙트럼만 돌려주면 실측 파일에서 15~20개를 조용히 버린다.
+    """
+    sweeps = read_mpr_sweeps(S.build_mpr_soc_scan(sweeps=4, points=10))
+    assert len(sweeps) == 4
+    assert [len(sw.spectrum) for sw in sweeps] == [10, 10, 10, 10]
+    assert [sw.index for sw in sweeps] == [1, 2, 3, 4]
+    # 스윕을 가르는 것은 전위·용량이므로 스펙트럼과 함께 다닌다.
+    assert [round(sw.potential_v, 2) for sw in sweeps] == [3.6, 3.7, 3.8, 3.9]
+    assert all(sw.sequence is not None for sw in sweeps)
+    assert sweeps[0].start_time_s < sweeps[-1].start_time_s
+
+
+def test_a_repeated_sweep_inside_one_sequence_is_still_two_sweeps():
+    """주파수가 다시 올라가면 새 스윕이다 — 한 Ns 안에 아홉 번 반복하는
+    파일이 실제로 있다."""
+    sweeps = read_mpr_sweeps(S.build_mpr_soc_scan(sweeps=2, points=6, cycling_rows=0))
+    assert len(sweeps) == 2
+
+
+def test_the_row_block_may_end_short_of_the_module():
+    """실측 파일은 모듈 끝에서 5바이트 앞에서 끝난다.
+
+    5바이트가 밀리면 모든 실수가 다른 실수가 되는데 그것도 float 로는 읽힌다.
+    끝에 딱 붙어 있다고 가정하면 이 파일 전체가 쓰레기가 된다.
+    """
+    for trailer in (0, 5, 11):
+        sweeps = read_mpr_sweeps(S.build_mpr_soc_scan(sweeps=2, points=8,
+                                                      trailer=trailer))
+        assert len(sweeps) == 2, trailer
+        assert sweeps[0].spectrum.z_re[0] == pytest.approx(5.0, abs=1e-3), trailer
+
+
+def test_re_and_im_are_recovered_from_magnitude_and_phase():
+    """반쪽셀 파일은 |Z| 와 위상만 싣는다.  Re=|Z|cosφ 는 추정이 아니라 정의다."""
+    sweeps = read_mpr_sweeps(S.build_mpr_soc_scan(sweeps=1, points=12))
+    spectrum = sweeps[0].spectrum
+    # 픽스처의 모델: R_s=5 직렬에 R=20 / C=1e-3 병렬.
+    assert spectrum.z_re[0] == pytest.approx(5.0, abs=1e-3)      # 고주파 극한
+    assert spectrum.z_re[-1] == pytest.approx(25.0, rel=1e-2)    # 저주파 극한
+    assert np.all(spectrum.z_im <= 1e-6)                          # 용량성
+
+
+def test_an_unknown_column_in_the_middle_is_still_fatal():
+    """맨 뒤의 미지 컬럼만 넘어간다.  중간에 있으면 뒤 컬럼을 전부 밀기
+    때문에 종전대로 거절한다 (§0.6)."""
+    frequency = S.log_sweep(1e5, 1e-1, 6)
+    z = S.randles(frequency)
+    columns = S.spectrum_columns(frequency, z)
+    renamed = {}
+    for name, values in columns.items():
+        renamed[name] = values
+    data = bytearray(S.build_mpr(renamed))
+    # freq(32) 를 등록되지 않은 id 로 바꾼다 — 목록 맨 앞이므로 치명적이어야 한다.
+    at = data.find(b"VMP data")
+    import struct as _struct
+    head = data.find(b"MODULE", at - 16)
+    _struct.pack_into("<H", data, head + 65 + 6, 999)
+    with pytest.raises(UnknownColumn):
+        read_mpr_sweeps(bytes(data))
+
+
+def test_reading_a_scan_as_one_spectrum_says_to_use_the_list():
+    """조용히 첫 스윕만 주면 나머지를 잃는다."""
+    data = S.build_mpr_soc_scan(sweeps=3, points=8)
+    with pytest.raises(ValueError, match="3 impedance sweeps"):
+        read_mpr_bytes(data)
+
+
+# --- 실측 SOC 스캔 파일 ------------------------------------------------------
+
+def test_a_real_scan_holds_many_sweeps_each_a_full_decade_range(sample_mpr_scan):
+    assert len(sample_mpr_scan) > 1
+    for sw in sample_mpr_scan:
+        f = sw.spectrum.frequency_hz
+        assert np.all(f > 0)
+        assert f[0] > f[-1]                       # 하강 스윕
+        assert f[0] / f[-1] > 1e3                 # 여러 decade
+        assert len(sw.spectrum) >= 8
+
+
+def test_a_real_scan_walks_its_capacity_axis(sample_mpr_scan):
+    """SOC 스캔의 x축은 용량이다.  스윕마다 달라야 의미가 있다."""
+    capacities = [sw.capacity_mah for sw in sample_mpr_scan]
+    assert all(q is not None for q in capacities)
+    assert max(capacities) - min(capacities) > 0.1
+    potentials = [sw.potential_v for sw in sample_mpr_scan]
+    assert all(p is not None and np.isfinite(p) for p in potentials)

@@ -141,3 +141,68 @@ def build_mpt(columns: dict[str, np.ndarray], *, comma_decimal: bool = False,
             cells.append(text.replace(".", ",") if comma_decimal else text)
         rows.append("\t".join(cells))
     return "\r\n".join(preamble + rows) + "\r\n"
+
+
+# --- SOC 스캔 파일 (ADR 0022) ------------------------------------------------
+#
+# 실측 반쪽셀 파일의 모양을 그대로 흉내낸다: 앞에 1바이트 플래그들, Re/Im 없이
+# |Z|·위상만, 사이클링 행 사이에 끼어 있는 EIS 스윕 여럿, 목록 끝의 모르는
+# 컬럼, 그리고 모듈 끝에서 몇 바이트 앞에서 끝나는 행 블록.
+
+SCAN_FLAGS = [(1, "<B"), (2, "<B"), (3, "<B"), (21, "<B"), (31, "<B"), (65, "<B")]
+#: 목록 맨 뒤의 모르는 id 와 그 합계 폭 (실측 파일은 880·469 가 7바이트다).
+SCAN_TAIL = [(880, 3), (469, 4)]
+
+
+def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 25,
+                       trailer: int = 5, preamble: int = 1007) -> bytes:
+    """A GCPL record with ``sweeps`` impedance sweeps measured along the way.
+
+    ``trailer`` is how many bytes follow the row block inside the module -- the
+    lab's file leaves five, and five bytes of shift turns every float into a
+    different float that is still a float.
+    """
+    layout = ([(i, f) for i, f in SCAN_FLAGS]
+              + [(131, "<H"), (39, "<H"), (4, "<d"), (6, "<f"),
+                 (32, "<f"), (36, "<f"), (35, "<f")])
+    record = sum({"<B": 1, "<H": 2, "<d": 8, "<f": 4}[f] for _, f in layout)
+    record += sum(width for _, width in SCAN_TAIL)
+
+    rows = bytearray()
+    n = 0
+    clock = 0.0
+    frequency = np.logspace(5, -1, points)
+    for sweep in range(sweeps):
+        for _ in range(cycling_rows):          # 사이클링: 주파수 0
+            rows += _scan_row(clock, 3.6 + 0.1 * sweep, 0.0, 0.0, 0.0, ns=2 * sweep)
+            clock += 1.0
+            n += 1
+        for f in frequency:                    # 스윕: 7 MHz → 0.1 Hz 하강
+            z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * f * 1e-3)
+            rows += _scan_row(clock, 3.6 + 0.1 * sweep, f, abs(z),
+                              np.degrees(np.angle(z)), ns=2 * sweep + 1)
+            clock += 1.0
+            n += 1
+
+    header = struct.pack("<IH", n, len(layout) + len(SCAN_TAIL))
+    header += struct.pack(f"<{len(layout) + len(SCAN_TAIL)}H",
+                          *[i for i, _ in layout], *[i for i, _ in SCAN_TAIL])
+    payload = header + b"\x00" * (preamble - len(header)) + bytes(rows) + b"\x00" * trailer
+
+    out = bytearray(MAGIC)
+    out += b" " * (52 - len(out))
+    out += module("VMP Set", "VMP settings", b"\x1d\x00\x08K\x03" + b"\x00" * 600)
+    out += module("VMP data", "VMP data", payload, version=11)
+    out += module("VMP LOG", "VMP LOG", b"\x00" * 128)
+    return bytes(out)
+
+
+def _scan_row(t: float, ewe: float, freq: float, magnitude: float,
+              phase_deg: float, *, ns: int) -> bytes:
+    row = struct.pack("<BBBBBB", 0, 0, 0, 0, 0, 0)
+    row += struct.pack("<HH", ns, 39)
+    row += struct.pack("<d", t)
+    row += struct.pack("<f", ewe)
+    row += struct.pack("<fff", freq, magnitude, phase_deg)
+    row += b"\x00" * sum(width for _, width in SCAN_TAIL)
+    return row

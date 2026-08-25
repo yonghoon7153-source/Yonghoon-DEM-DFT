@@ -25,13 +25,14 @@ from __future__ import annotations
 
 import re
 import struct
+from dataclasses import dataclass
 
 import numpy as np
 
 from .spectrum import Spectrum
 
-__all__ = ["read_mpr_bytes", "read_mpt_text", "read_mps_text", "MPR_MAGIC",
-           "COLUMNS", "UnknownColumn"]
+__all__ = ["read_mpr_bytes", "read_mpr_sweeps", "read_mpt_text", "read_mpt_sweeps",
+           "read_mps_text", "MPR_MAGIC", "COLUMNS", "Sweep", "UnknownColumn"]
 
 MPR_MAGIC = b"BIO-LOGIC MODULAR FILE"
 
@@ -56,6 +57,15 @@ class UnknownColumn(ValueError):
 #: wrong file.  Only ids seen in this lab's files are listed -- an id we have
 #: never met raises rather than being guessed at.
 COLUMNS: dict[int, tuple[str, str]] = {
+    # Per-sample flags.  One byte each; confirmed by what follows them --
+    # ``Ns`` and ``I Range`` land on their own values only at this width, and
+    # the whole row block validates from there (ADR 0022).
+    1: ("mode", "<B"),
+    2: ("ox/red", "<B"),
+    3: ("error", "<B"),
+    21: ("control changes", "<B"),
+    31: ("Ns changes", "<B"),
+    65: ("counter inc.", "<B"),
     4: ("time/s", "<d"),
     5: ("control/V/mA", "<f"),
     6: ("Ewe/V", "<f"),
@@ -91,9 +101,11 @@ COLUMNS: dict[int, tuple[str, str]] = {
     168: ("Rcmp/Ohm", "<f"),
     169: ("Cs/µF", "<f"),
     172: ("Cp/µF", "<f"),
+    467: ("Q charge/discharge/mA.h", "<d"),
+    468: ("half cycle", "<I"),
 }
 
-_WIDTH = {"<d": 8, "<f": 4, "<H": 2, "<I": 4}
+_WIDTH = {"<d": 8, "<f": 4, "<H": 2, "<I": 4, "<B": 1}
 
 
 def _modules(data: bytes) -> list[tuple[str, int, int, int]]:
@@ -111,15 +123,171 @@ def _modules(data: bytes) -> list[tuple[str, int, int, int]]:
     return out
 
 
-def read_mpr_bytes(data: bytes) -> Spectrum:
-    """Parse a BioLogic ``.mpr``.
+@dataclass
+class Sweep:
+    """One impedance sweep, and the cell state it was measured at.
 
-    The row block sits at the **end** of the data module: the module carries a
-    preamble whose length varies with the module version, and anchoring on the
-    end sidesteps having to know it.  That is not a guess -- it is checked,
-    because ``n_points x record_size`` has to land exactly on the module
-    boundary, and a wrong column width makes it miss.
+    A SOC scan puts sixteen of these in one file (ADR 0022).  The potential
+    and the capacity are what tells them apart, so they travel with the
+    spectrum rather than beside it -- separated, the plot cannot be redrawn.
     """
+
+    spectrum: Spectrum
+    #: 1-based position in the file.
+    index: int
+    #: The instrument's sequence number (``Ns``), when the file carries one.
+    sequence: int | None = None
+    #: Cell potential during the sweep, V.
+    potential_v: float | None = None
+    #: Accumulated capacity at the sweep, mA.h -- the SOC axis.
+    capacity_mah: float | None = None
+    #: Seconds from the start of the record.
+    start_time_s: float | None = None
+
+
+def _row_layout(data: bytes, start: int, end: int, n_points: int,
+                ids: tuple[int, ...]) -> tuple[int, int]:
+    """Record size and where the rows begin -- solved from the file.
+
+    Two assumptions used to be baked in and both are false on real files
+    (ADR 0022): that every column id is known, and that the row block ends
+    exactly at the module boundary.  A lab file ends five bytes short of it,
+    and five bytes of shift turns every float into a different float that is
+    still a float.
+
+    So the record size is the smallest one that leaves a plausible preamble,
+    and the row offset is chosen by **physical validation** rather than
+    arithmetic.  Searching without validating is what makes this dangerous:
+    while reverse-engineering these files, "time increases" alone accepted a
+    wrong offset twice -- both times a zero-filled preamble read as data.
+    """
+    header = 6 + 2 * len(ids)
+    unknown_at = [k for k, cid in enumerate(ids) if cid not in COLUMNS]
+    if unknown_at:
+        first = unknown_at[0]
+        stranded = [cid for cid in ids[first:] if cid in COLUMNS]
+        if stranded:
+            listed = ", ".join(str(i) for i in sorted(set(ids[first:]) - set(COLUMNS)))
+            raise UnknownColumn(
+                f"column id {listed} is not in the table and columns we read "
+                f"come after it; add it to wrdkit.eis.biologic.COLUMNS with "
+                f"its width before this file can be read")
+        known_ids = ids[:first]
+        spare = len(ids) - first          # at least one byte per unknown column
+    else:
+        known_ids, spare = ids, 0
+    known_width = sum(_WIDTH[COLUMNS[i][1]] for i in known_ids)
+    if known_width <= 0:
+        raise ValueError("this .mpr declares no readable columns")
+
+    length = end - start
+    candidates = ([known_width] if not spare
+                  else range(known_width + spare, known_width + spare + 64))
+    for record in candidates:
+        leftover = length - n_points * record
+        if leftover < header:
+            break
+        if leftover > _MAX_PREAMBLE:
+            continue
+        for shift in range(record):
+            rows_at = end - n_points * record - shift
+            if rows_at < start + header:
+                break
+            if _layout_is_sound(data, rows_at, n_points, record, known_ids):
+                return record, rows_at
+    if not spare:
+        # Every column width is known, so the record size is not in doubt and
+        # only the anchor was.  Fall back to the conventional one (rows ending
+        # at the module boundary) so the column validators downstream can say
+        # precisely what is wrong -- "|Z| does not match its parts" is a far
+        # better answer than "no layout reads as measurements", and a file
+        # corrupted in the values rather than the framing lands here.
+        return known_width, end - n_points * known_width
+    raise ValueError(
+        f"could not place the {n_points} rows of this .mpr -- the module is "
+        f"{length} bytes and no row layout in it reads as measurements")
+
+
+#: How much zero padding may sit between the column list and the rows.  Both
+#: real files carry about 1 kB; the bound only has to exclude the absurd.
+_MAX_PREAMBLE = 4096
+
+
+def _offsets(ids) -> dict[str, int]:
+    out, at = {}, 0
+    for cid in ids:
+        name, fmt = COLUMNS[cid]
+        out[name] = at
+        at += _WIDTH[fmt]
+    return out
+
+
+def _column_at(data: bytes, rows_at: int, n: int, record: int,
+               offset: int, fmt: str) -> np.ndarray:
+    dtype = {"<d": "<f8", "<f": "<f4", "<H": "<u2", "<I": "<u4", "<B": "u1"}[fmt]
+    width = _WIDTH[fmt]
+    raw = np.frombuffer(data, dtype=np.uint8, count=n * record, offset=rows_at)
+    block = raw.reshape(n, record)[:, offset:offset + width]
+    return np.frombuffer(block.copy().tobytes(), dtype=dtype).astype(np.float64)
+
+
+def _layout_is_sound(data: bytes, rows_at: int, n: int, record: int,
+                     ids) -> bool:
+    """Does this alignment read as measurements rather than as padding?
+
+    Several independent properties at once, because any one of them alone has
+    a false positive: a zero-filled preamble passes "time never decreases",
+    and any record-aligned window passes the ``|Z|`` identity.
+    """
+    offsets = _offsets(ids)
+    fmt = {COLUMNS[i][0]: COLUMNS[i][1] for i in ids}
+    col = lambda name: _column_at(data, rows_at, n, record,
+                                  offsets[name], fmt[name])   # noqa: E731
+
+    if "time/s" in offsets:
+        t = col("time/s")
+        if not np.all(np.isfinite(t)) or t[0] < 0 or np.any(np.diff(t) < 0):
+            return False
+        if not 0 < t[-1] < 1e9:
+            return False
+    if "freq/Hz" in offsets:
+        f = col("freq/Hz")
+        if not np.all(np.isfinite(f)) or np.any(f < 0) or not np.any(f > 0):
+            return False
+        positive = f[f > 0]
+        # No instrument sweeps outside this; a misaligned float readily does.
+        if positive.min() < 1e-6 or positive.max() > 1e9:
+            return False
+        # A sweep is many decades wide; a block of padding is not.
+        if positive.max() / positive.min() < 10.0:
+            return False
+    if "|Z|/Ohm" in offsets and "Phase(Z)/deg" in offsets:
+        # The polar pair is the only redundancy a file without Re/Im carries,
+        # and it is a strong one: a phase is an angle, so a misaligned float
+        # almost never lands inside +-180 for every row.  Without this check
+        # a wrong record size passed the search and failed downstream with
+        # "phase does not match" -- the right complaint from the wrong place.
+        magnitude, phase = col("|Z|/Ohm"), col("Phase(Z)/deg")
+        if not np.all(np.isfinite(magnitude)) or np.any(magnitude < 0):
+            return False
+        if not np.all(np.isfinite(phase)) or np.any(np.abs(phase) > 180.0):
+            return False
+    if "Ewe/V" in offsets or "<Ewe>/V" in offsets:
+        e = col("Ewe/V" if "Ewe/V" in offsets else "<Ewe>/V")
+        # Padding reads as exact zeros; a cell sits somewhere real.
+        if not np.all(np.isfinite(e)) or np.all(e == 0) or np.max(np.abs(e)) > 100:
+            return False
+    if {"Re(Z)/Ohm", "-Im(Z)/Ohm", "|Z|/Ohm"} <= set(offsets):
+        re_z, neg_im, mag = col("Re(Z)/Ohm"), col("-Im(Z)/Ohm"), col("|Z|/Ohm")
+        with np.errstate(invalid="ignore", divide="ignore"):
+            rel = np.abs(np.hypot(re_z, neg_im) - mag) / np.maximum(np.abs(mag), 1e-30)
+        if not np.isfinite(np.median(rel)) or np.median(rel) > 1e-3:
+            return False
+    return True
+
+
+def _read_mpr_columns(data: bytes) -> tuple[dict[str, np.ndarray], dict]:
+    """Every column the data module declares, as float64 arrays."""
     if not data.startswith(MPR_MAGIC):
         raise ValueError("not a BioLogic .mpr file (magic missing)")
 
@@ -143,39 +311,132 @@ def read_mpr_bytes(data: bytes) -> Spectrum:
 
     n_points, n_columns = struct.unpack_from("<IH", data, start)
     ids = struct.unpack_from(f"<{n_columns}H", data, start + 6)
-
-    unknown = sorted({i for i in ids if i not in COLUMNS})
-    if unknown:
-        listed = ", ".join(str(i) for i in unknown)
-        raise UnknownColumn(
-            f"column id {listed} is not in the table; add it to "
-            "wrdkit.eis.biologic.COLUMNS with its width before this file "
-            "can be read")
-
-    record = sum(_WIDTH[COLUMNS[i][1]] for i in ids)
-    rows_at = end - n_points * record
-    if rows_at < start + 6 + 2 * n_columns:
-        raise ValueError(
-            f"{n_points} rows x {record} bytes do not fit in the data module "
-            f"({length} bytes)")
+    record, rows_at = _row_layout(data, start, end, n_points, ids)
 
     columns: dict[str, np.ndarray] = {}
     offset = 0
     for column_id in ids:
+        if column_id not in COLUMNS:
+            break                      # the opaque tail (ADR 0022)
         name, fmt = COLUMNS[column_id]
-        width = _WIDTH[fmt]
-        raw = np.frombuffer(data, dtype=np.uint8,
-                            count=n_points * record, offset=rows_at)
-        block = raw.reshape(n_points, record)[:, offset:offset + width]
-        dtype = {"<d": "<f8", "<f": "<f4", "<H": "<u2", "<I": "<u4"}[fmt]
-        # ``.copy()`` because the slice is a view into a non-contiguous buffer
-        # and ``frombuffer`` on it would read the neighbouring column.
-        columns[name] = np.frombuffer(block.copy().tobytes(),
-                                      dtype=dtype).astype(np.float64)
-        offset += width
+        columns[name] = _column_at(data, rows_at, n_points, record, offset, fmt)
+        offset += _WIDTH[fmt]
+    return columns, {"source_format": "mpr", "n_points": int(n_points)}
 
-    return _spectrum_from_columns(columns, {"source_format": "mpr",
-                                            "n_points": int(n_points)})
+
+def read_mpr_sweeps(data: bytes) -> list[Sweep]:
+    """Every impedance sweep in a BioLogic ``.mpr``, in file order.
+
+    A SOC scan holds one sweep per state of charge, with cycling in between
+    (ADR 0022); a single-technique file holds exactly one.
+    """
+    columns, metadata = _read_mpr_columns(data)
+    return _sweeps_from_columns(columns, metadata)
+
+
+def read_mpr_bytes(data: bytes) -> Spectrum:
+    """The one impedance sweep in a ``.mpr``.
+
+    Refuses a file that holds several rather than silently returning the
+    first: a SOC scan's sixteen sweeps are the measurement, not a detail.
+    """
+    sweeps = read_mpr_sweeps(data)
+    return _only_sweep(sweeps, "mpr")
+
+
+def _only_sweep(sweeps: list[Sweep], kind: str) -> Spectrum:
+    if not sweeps:
+        raise ValueError("this record is not an impedance sweep -- no "
+                         "frequency column with positive frequencies")
+    if len(sweeps) > 1:
+        raise ValueError(
+            f"this .{kind} holds {len(sweeps)} impedance sweeps; use "
+            f"read_{kind}_sweeps() to get all of them (ADR 0022)")
+    return sweeps[0].spectrum
+
+
+def _sweep_pieces(frequency: np.ndarray) -> list[np.ndarray]:
+    """Row indices of each sweep.
+
+    Impedance rows come in contiguous runs -- the cycling rows between them
+    are the natural divider -- and one run can hold a sweep repeated nine
+    times, so a run is cut again wherever the frequency reverses direction.
+    """
+    usable = np.isfinite(frequency) & (frequency > 0)
+    index = np.flatnonzero(usable)
+    if not len(index):
+        return []
+    runs = np.split(index, np.flatnonzero(np.diff(index) != 1) + 1)
+    pieces: list[np.ndarray] = []
+    for run in runs:
+        if len(run) < 3:
+            pieces.append(run)
+            continue
+        steps = np.diff(frequency[run])
+        direction = -1.0 if np.median(steps) < 0 else 1.0
+        breaks = np.flatnonzero(steps * direction < 0) + 1
+        pieces.extend(piece for piece in np.split(run, breaks) if len(piece))
+    return pieces
+
+
+def _mean_of(columns: dict[str, np.ndarray], names: tuple[str, ...],
+             rows: np.ndarray) -> float | None:
+    for name in names:
+        if name in columns:
+            value = float(np.mean(columns[name][rows]))
+            if np.isfinite(value):
+                return value
+    return None
+
+
+def _sweeps_from_columns(columns: dict[str, np.ndarray],
+                         metadata: dict) -> list[Sweep]:
+    if "freq/Hz" not in columns:
+        raise ValueError("this record is not an impedance sweep -- no "
+                         "freq/Hz column")
+    out: list[Sweep] = []
+    for number, rows in enumerate(_sweep_pieces(columns["freq/Hz"]), start=1):
+        piece = {name: values[rows] for name, values in columns.items()}
+        info = dict(metadata)
+        info["n_points"] = int(len(rows))
+        info["sweep_index"] = number
+        sequence = None
+        if "Ns" in piece and len(rows):
+            sequence = int(np.median(piece["Ns"]))
+            info["sequence"] = sequence
+        out.append(Sweep(
+            spectrum=_spectrum_from_columns(piece, info),
+            index=number,
+            sequence=sequence,
+            potential_v=_mean_of(columns, ("<Ewe>/V", "Ewe/V"), rows),
+            capacity_mah=_mean_of(columns, ("(Q-Qo)/mA.h", "Q charge/discharge/mA.h",
+                                            "dq/mA.h"), rows),
+            start_time_s=(float(columns["time/s"][rows][0])
+                          if "time/s" in columns and len(rows) else None),
+        ))
+    return out
+
+
+def _with_rectangular(columns: dict[str, np.ndarray]) -> dict[str, np.ndarray]:
+    """Fill in ``Re(Z)`` / ``-Im(Z)`` from ``|Z|`` and the phase when the file
+    carries only the polar pair.
+
+    The lab's half-cell files do exactly that (ADR 0022).  ``Re = |Z| cos phi``
+    and ``Im = |Z| sin phi`` is what the phase *means*, not an estimate -- and
+    the reader already checks the same identity in reverse wherever the file
+    carries both forms.
+    """
+    if "Re(Z)/Ohm" in columns and "-Im(Z)/Ohm" in columns:
+        return columns
+    if "|Z|/Ohm" not in columns or "Phase(Z)/deg" not in columns:
+        return columns
+    magnitude = columns["|Z|/Ohm"]
+    phase = np.radians(columns["Phase(Z)/deg"])
+    filled = dict(columns)
+    filled["Re(Z)/Ohm"] = magnitude * np.cos(phase)
+    # The file stores -Im(Z), so the stored form is the negated imaginary part.
+    filled["-Im(Z)/Ohm"] = -(magnitude * np.sin(phase))
+    return filled
 
 
 def _spectrum_from_columns(columns: dict[str, np.ndarray],
@@ -189,6 +450,7 @@ def _spectrum_from_columns(columns: dict[str, np.ndarray],
     Re/Im -- redundancy the instrument wrote, and the strongest alignment
     check there is: misplaced row bytes do not stay on the circle.
     """
+    columns = _with_rectangular(columns)
     missing = [name for name in ("freq/Hz", "Re(Z)/Ohm", "-Im(Z)/Ohm")
                if name not in columns]
     if missing:

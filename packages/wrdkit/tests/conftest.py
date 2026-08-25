@@ -48,3 +48,18 @@ def sample_mpr():
         pytest.skip("set WRDKIT_EIS_SAMPLE to a real .mpr file to run this test")
     from wrdkit.eis import read_mpr_bytes
     return read_mpr_bytes(Path(path).read_bytes())
+
+
+@pytest.fixture
+def sample_mpr_scan():
+    """A real SOC-scan ``.mpr`` -- many sweeps in one file (ADR 0022).
+
+    ``WRDKIT_EIS_SCAN=/path/to/half_cell.mpr pytest``.  Physics-only
+    assertions again: this holds for any GCPL+PEIS record, not just the two
+    half-cell files the format was worked out on.
+    """
+    path = os.environ.get("WRDKIT_EIS_SCAN")
+    if not path or not Path(path).exists():
+        pytest.skip("set WRDKIT_EIS_SCAN to a real SOC-scan .mpr to run this test")
+    from wrdkit.eis.biologic import read_mpr_sweeps
+    return read_mpr_sweeps(Path(path).read_bytes())
