@@ -422,8 +422,10 @@ def check(findings, repo_root=None):
                 if key == 'verified_sha' and f.get('verified_repo'):
                     pass
                 else:
-                    problems.append(f'{fid}: {key}={sha} 가 이 리포에 없는 커밋이다'
-                                    f' (외부 검증이면 `verified_repo` 를 적을 것)')
+                    problems.append(f'{fid}: {key}={sha} 가 **HEAD 에서 안 닿는** 커밋이다 '
+                                    f'— 리베이스로 SHA 가 바뀌었거나 다른 브랜치의 커밋이다.  '
+                                    f'같은 변경의 현재 SHA 로 고칠 것 '
+                                    f'(외부 검증이면 `verified_repo` 를 적을 것)')
         # ★ evidence 가 가리키는 **파일이 실재**해야 한다 (RC7-04: 유령 evidence 통과)
         for ev in (f.get('evidence_tests') or []):
             path = str(ev).split('::', 1)[0].split()[0] if ev else ''
@@ -437,9 +439,24 @@ def check(findings, repo_root=None):
 
 
 def _commit_exists(repo_root, sha):
-    """그 SHA 가 이 리포의 **실재하는 커밋**인가 (RC7-04).  git 이 없으면 검사 생략."""
+    """그 SHA 가 **HEAD 에서 닿는** 커밋인가 (RC7-04 + 2026-08-25 강화).
+
+    ★★ 옛 판은 `cat-file -e` 로 **객체 존재**만 봤다.  그러면 리베이스로 버려진 커밋도
+      로컬 저장소에 객체가 남아 있어 **통과한다** — 그리고 그 브랜치를 번들로 떼어내면
+      그 객체가 없어서 받는 쪽에서 원장 검사가 깨진다.
+    ⚠ 실측으로 잡혔다 (2026-08-25): R4CX-01~08 이 `c0ac0ad8` 을 가리키는데 그것은 이
+      세션 초반 rebase **이전** SHA 였다.  같은 변경이 이 브랜치엔 `8bcfbeff` 로 들어가
+      있었고(patch-id 동일), 로컬에서는 8건 전부 초록이었다.  `make_review_bundle.sh` 가
+      번들 안에서 이 검사를 **실제로 돌려서야** 드러났다.
+    ⇒ 이제 **조상 여부**를 본다.  "이 브랜치가 그 수정을 담고 있는가" 가 원장이 주장하는
+      바이고, 객체가 어딘가 떠다니는 것은 그 주장이 아니다.
+    ⚠ git 이 없거나 HEAD 가 없는 환경에서는 **거짓 실패를 만들지 않는다** (검사 생략).
+    """
     try:
-        r = subprocess.run(['git', '-C', repo_root, 'cat-file', '-e', f'{sha}^{{commit}}'],
+        if subprocess.run(['git', '-C', repo_root, 'rev-parse', '--verify', 'HEAD'],
+                          capture_output=True, timeout=10).returncode != 0:
+            return True                                     # HEAD 가 없다 = 판단 불가
+        r = subprocess.run(['git', '-C', repo_root, 'merge-base', '--is-ancestor', sha, 'HEAD'],
                            capture_output=True, timeout=10)
         return r.returncode == 0
     except Exception:                                       # noqa: BLE001
@@ -568,10 +585,37 @@ def _selftest():
     ok('18) ★ 유령 evidence 를 잡는다',
        any('evidence 가 실재하지' in p for p in check([_corrupt], repo_root=here)))
     ok('19) ★ 형식은 맞지만 리포에 없는 커밋을 잡는다',
-       any('없는 커밋' in p for p in check(
+       any('안 닿는' in p for p in check(
            [dict(_corrupt, verified_by='codex', claimed_fixed_sha='deadbeef',
                  verified_sha='cafebabe',
                  evidence_tests=['webapp/test_pipeline_provenance.py'])], repo_root=here)))
+    #  ★★ 2026-08-25 — **존재하지만 HEAD 에서 안 닿는** 커밋도 잡아야 한다.  이것이
+    #    리베이스 잔재의 모양이고, 옛 판(`cat-file -e`)은 여기서 **통과**했다.
+    #    실측: R4CX-01~08 이 rebase 이전 SHA 를 가리키는데 로컬 8건 전부 초록이었고,
+    #    `make_review_bundle.sh` 가 번들 안에서 이 검사를 실제로 돌려서야 드러났다.
+    #  ⇒ 매달린(dangling) 커밋을 하나 만들어 그 상태를 재현한다 — 객체는 실재하지만
+    #    어느 ref 에서도 안 닿는다.
+    _dang = None
+    try:
+        _t = subprocess.run(['git', '-C', here, 'rev-parse', 'HEAD^{tree}'],
+                            capture_output=True, text=True, timeout=10)
+        if _t.returncode == 0:
+            _c = subprocess.run(['git', '-C', here, 'commit-tree', _t.stdout.strip(), '-m',
+                                 'dangling probe (selftest)'],
+                                capture_output=True, text=True, timeout=10)
+            if _c.returncode == 0:
+                _dang = _c.stdout.strip()[:8]
+    except Exception:                                       # noqa: BLE001
+        _dang = None
+    if _dang:
+        _pd = check([dict(_corrupt, verified_by='codex', claimed_fixed_sha=_dang,
+                          verified_sha=_dang,
+                          evidence_tests=['webapp/test_pipeline_provenance.py'])],
+                    repo_root=here)
+        ok(f'19b) ★★ **존재하지만 HEAD 에서 안 닿는** 커밋을 잡는다 (리베이스 잔재, {_dang})',
+           any('안 닿는' in p for p in _pd))
+    else:
+        ok('19b) (git 을 못 써 건너뜀 — 거짓 실패를 만들지 않는다)', True)
     ok('20) 정본 actor 세 개는 통과', set(ACTORS) == {'claude', 'codex', 'user'})
 
     led = os.path.join(here, LEDGER_DEFAULT)

@@ -967,7 +967,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "봉인 producer 가 `ideal_R0` 라는 **다른 이름으로 σ_e 를 노출**",
    "evidence_tests": [
@@ -982,7 +982,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "plan·PTFE·PNM·비전자 수치 계약이 **fail-open** (실제-read 16팔이 전부 h0)",
    "evidence_tests": [
@@ -997,7 +997,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "러너의 resolved 물리 설정이 봉인되지 않는다 (argparse 축약·숨은 env)",
    "evidence_tests": [
@@ -1012,7 +1012,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "backend 가 `requested` 로 **실제 사용값을 위장**",
    "evidence_tests": [
@@ -1027,7 +1027,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "`FIELD_CONTRACT` 가 raw 축·타입·독립 불변량의 단일 출처가 아니다",
    "evidence_tests": [
@@ -1042,7 +1042,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "규칙 K 와 배터리가 잘못된 적발을 성공으로 센다",
    "evidence_tests": [
@@ -1057,7 +1057,7 @@
    "severity": "P1",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "반응 솔버 두 분기가 회귀 봉인 밖 (구현은 옳으나 증인이 없다)",
    "evidence_tests": [
@@ -1072,7 +1072,7 @@
    "severity": "P2",
    "status": "claimed_fixed",
    "owner": "claude",
-   "claimed_fixed_sha": "c0ac0ad8",
+   "claimed_fixed_sha": "8bcfbeff",
    "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
    "title": "진단 namespace 접미사가 **문자열**이라 junction/symlink 로 우회",
    "evidence_tests": [
@@ -1136,6 +1136,19 @@
    ],
    "note": "payload 분기 `if a.se_proxy or not a.se:` → `v3.proxy_se(...)` 가 만든 구름이 `se_pts=` 로 `_s3.rasterize` 에 들어간다.  읽은 파일이 없으므로 `input_digest` 가 **원리적으로** 못 덮는다.\n★ 고침: producer 가 `se_source` 를 적고(`proxy:<frac>@<n_vox>` / `npy`), 판정기가 `hold_code='SE_PROXY'` 로 막는다.  생산 경로는 막지 않는다 — 만드는 것은 자유고 그것으로 σ 를 주장하는 것만 막는다.  회귀 ㊹g(차단) · ㊹h(정상 증인) · 배터리 mutant 1종.\n⚠ **미확인**: 킷 `run_mpm.sh` 가 `--se` 를 정말 넘기는지 (이 리포에 킷이 없다).  C 를 돌릴 때 `se_source` 기록으로 처음 확인된다.\n★ 2026-08-25 kgy 실측 확인 — 생산 킷 두 개 다 `--se se_dump.npy` 를 넘긴다 ⇒ **실침대였다** (합성 침대 우려는 닫혔다).  게이트는 재발 방지로 남는다.",
    "claimed_fixed_sha": "69ee2fb5"
+  },
+  {
+   "id": "SELF-06",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/next_steps_20260825.md",
+   "title": "원장 SHA 검사가 **객체 존재**만 봐서 리베이스 잔재를 통과시켰다",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --selftest",
+    "scripts/make_review_bundle.sh"
+   ],
+   "note": "`_commit_exists` 가 `git cat-file -e` 로 **객체 존재**만 봤다.  리베이스로 버려진 커밋도 로컬 저장소에 객체가 남아 통과하고, 그 브랜치를 번들로 떼어내면 객체가 없어 **받는 쪽에서 원장 검사가 깨진다**.\n★ 실측: R4CX-01~08 이 `c0ac0ad8` 을 가리키는데 그것은 이 세션 초반 rebase **이전** SHA 였다.  같은 변경이 이 브랜치엔 `8bcfbeff` 로 들어가 있다 (patch-id `71318d74…` 동일 확인).  로컬에서는 8건 전부 초록이었고, `make_review_bundle.sh` 가 **번들 안에서 이 검사를 실제로 돌려서야** 드러났다.\n⇒ ⓐ 검사를 `merge-base --is-ancestor` 로 바꿨다 ('이 브랜치가 그 수정을 담고 있는가' 가 원장이 주장하는 바이고, 객체가 어딘가 떠다니는 것은 그 주장이 아니다) ⓑ 원장 8건을 현재 SHA 로 정정 ⓒ 회귀 19b — `git commit-tree` 로 **매달린 커밋**을 만들어 '존재하지만 안 닿는' 상태를 재현한다 (옛 판은 여기서 통과했다).\n★ 교훈: 번들 검증이 'clone 되는가' 에서 '**거기서 우리 검사가 도는가**' 로 올라간 그 한 겹이 이것을 잡았다."
   }
  ]
 }
