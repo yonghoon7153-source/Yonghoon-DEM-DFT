@@ -42,23 +42,41 @@ export function tauBand(logTau: number): string {
 
 const LAMBDA_NOTE =
   'λ 는 "얼마나 매끄럽게 볼까" 입니다. 키우면 봉우리가 넓어지고 서로 합쳐지며 ' +
-  '**전체 분극이 줄어듭니다** — 과하게 매끄러우면 실제 분극을 깎습니다. 줄이면 ' +
+  '전체 분극이 줄어듭니다 — 과하게 매끄러우면 실제 분극을 깎습니다. 줄이면 ' +
   '데이터에 더 붙는 대신 잡음이 봉우리로 올라옵니다. 슬라이더를 움직이며 아래 ' +
   'χ² 와 전체 분극이 함께 어떻게 움직이는지 보는 것이 고르는 방법입니다.'
 
 const ORDER_NOTE =
-  '평활 차수는 **무엇을** 매끄럽게 볼지입니다. 0 = 값 자체를 작게 (봉우리가 ' +
-  '낮아집니다), 1 = 기울기를 (기본), 2 = 곡률을 (넓지만 어깨가 살아남습니다).'
+  '평활 차수는 무엇을 매끄럽게 볼지입니다. 0 = 값 자체를 작게 (기본 · 봉우리가 ' +
+  '가장 뾰족하고, 대신 λ 를 키우면 전체 분극이 함께 깎입니다), 1 = 기울기를, ' +
+  '2 = 곡률을 (넓지만 어깨가 살아남습니다). 전고체 셀에서는 1·2 가 격자 끝에 ' +
+  '봉우리를 남겨 추천 λ 를 못 고르는 일이 잦아 0 을 기본으로 둡니다.'
 
 const WIDTH_NOTE =
   '봉우리가 넓은 데는 이유가 셋이고 셋 다 정상일 수 있습니다. ① DRT 자체의 ' +
   '해상도 한계 — 이상적인 R‖C 하나도 λ=1e-5 에서 0.5 decade 로 나옵니다. ' +
   '② CPE 지수 n<1 은 진짜로 넓습니다 (합성 스펙트럼에서 n=0.8 이면 1.3, ' +
   'n=0.6 이면 1.9 decade). ③ 복합전극의 전송선은 이완 시간이 하나가 아니라 ' +
-  '**띠**입니다 — 봉우리가 아니라 넓은 언덕이 정상입니다 (ADR 0028).'
+  '하나의 띠입니다 — 봉우리가 아니라 넓은 언덕이 정상입니다 (ADR 0028).'
+
+/** 평활 차수의 기본값 — 벌점을 γ 자체에 건다 (0차 티호노프).
+ *
+ *  오래 1 이었다.  기울기에 벌점을 걸면 전체 분극이 λ 에 거의 흔들리지 않아
+ *  안전해 보였기 때문이다.  그런데 이 실험실의 실측 파일에서는 1·2 차가
+ *  **답을 아예 못 낸다**: 격자 끝(측정하지 않은 주파수)에 작은 봉우리가 남고,
+ *  `lcurve_corner` 가 그것을 이유로 모든 후보를 건너뛴다.
+ *
+ *  전고체 .mpr 여섯 개로 센 결과 — 추천 λ 를 찾은 개수:
+ *    0차 6/6 · 1차 1/6 · 2차 1/6
+ *  (full 1cyc, sym, half-NE 스윕 둘, half-PE 스윕 둘)
+ *
+ *  0 차의 대가는 λ 를 키울수록 γ 가 통째로 작아지는 것이다.  숨기지 않고
+ *  아래 "전체 분극" 옆에 벌점 없는 답과의 비를 적는다.
+ */
+const DEFAULT_ORDER = 0
 
 export function DrtPanel({ spectrumId }: { spectrumId: number }) {
-  const [order, setOrder] = useState(1)
+  const [order, setOrder] = useState(DEFAULT_ORDER)
   const [index, setIndex] = useState<number | null>(null)
   const sweep = useAsync(
     () => api.spectrumDrtSweep(spectrumId, { derivative_order: order }),
@@ -129,6 +147,18 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
   }
 
   const suggested = sweep.data?.suggested_index ?? -1
+
+  // 벌점이 γ 를 얼마나 깎았나.  0 차에서는 벌점이 γ 자체에 걸리므로 λ 를
+  // 키우면 전체 분극이 통째로 작아진다 — 실측 대칭셀에서 λ=1e-2 의 44.2 Ω 가
+  // 벌점이 가장 약한 답의 61.1 Ω 였다.  그 차이를 안 적으면 깎인 쪽이
+  // 측정값처럼 읽힌다 (§0.4).  1·2 차에서는 이 비가 1 근처라 조용하다.
+  const leastPenalised = results.reduce(
+    (best, item) => (item.regularisation < best.regularisation ? item : best),
+    results[0]!,
+  )
+  const kept = leastPenalised.total_polarisation_ohm > 0
+    ? shown.total_polarisation_ohm / leastPenalised.total_polarisation_ohm
+    : 1
 
   return (
     <Card
@@ -222,7 +252,9 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
           cols={2}
           rows={[
             ['R∞', `${num(shown.r_inf_ohm, 4)} Ω`],
-            ['전체 분극', `${num(shown.total_polarisation_ohm, 4)} Ω`],
+            ['전체 분극', kept < 0.95
+              ? `${num(shown.total_polarisation_ohm, 4)} Ω · 벌점 없는 답의 ${(kept * 100).toFixed(0)}%`
+              : `${num(shown.total_polarisation_ohm, 4)} Ω`],
             ['χ²', num(shown.chi_squared, 4)],
             ['봉우리', `${shown.peaks.length}개`],
             ...(shown.dropped_inductive

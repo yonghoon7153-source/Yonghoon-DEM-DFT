@@ -417,7 +417,7 @@ describe('스펙트럼 상세', () => {
 
   it('평활 차수를 바꾸면 옛 차수의 γ 를 그리지도 복사하지도 않는다 (#19)', async () => {
     // useAsync 는 재요청 중 옛 값을 유지한다.  여기서는 차수 2 버튼 아래
-    // 차수 1 의 곡선이 남아 복사까지 됐고, 차수를 바꿀 때 비운 index 를
+    // 옛 차수의 곡선이 남아 복사까지 됐고, 차수를 바꿀 때 비운 index 를
     // 옛 응답의 추천이 도로 채워 새 응답의 추천(다른 λ)을 영영 안 탔다.
     let releaseOrder2: (value: unknown) => void = () => {}
     const deferred = new Promise((resolve) => {
@@ -426,7 +426,7 @@ describe('스펙트럼 상세', () => {
     installFetch(
       detailHandler((url) => {
         if (path(url) === '/api/eis/spectra/1/drt/sweep') {
-          const order = Number(params(url).get('derivative_order') ?? 1)
+          const order = Number(params(url).get('derivative_order') ?? 0)
           if (order === 2) {
             return deferred.then(() => ({
               spectrum_id: 1,
@@ -437,7 +437,7 @@ describe('스펙트럼 상세', () => {
           }
           return {
             spectrum_id: 1,
-            results: [drtResult(1, 0.001), drtResult(1, 0.01), drtResult(1, 0.1)],
+            results: [drtResult(0, 0.001), drtResult(0, 0.01), drtResult(0, 0.1)],
             suggested_index: 2,
             suggested_reason: 'L 곡선의 곡률이 가장 큰 지점 (λ=0.1)',
           }
@@ -447,7 +447,7 @@ describe('스펙트럼 상세', () => {
     )
     renderDetail()
 
-    // 차수 1 응답: 추천 index 2 (λ=0.1) 로 열린다.
+    // 기본 차수(0) 응답: 추천 index 2 (λ=0.1) 로 열린다.
     const slider = await screen.findByLabelText('벌점 λ')
     await waitFor(() => expect(slider).toHaveValue('2'))
 

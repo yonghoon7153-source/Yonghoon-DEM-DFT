@@ -29,11 +29,11 @@ function installFetch(handler: Handler) {
 const path = (url: string) => url.split('?')[0] ?? url
 const params = (url: string) => new URL(url, 'http://x').searchParams
 
-function drt(lambda: number, peaks: number) {
+function drt(lambda: number, peaks: number, order = 0) {
   return {
     spectrum_id: 1,
     regularisation: lambda,
-    derivative_order: 1,
+    derivative_order: order,
     tau_s: [1e-6, 1e-4, 1e-2, 1e0],
     gamma_ohm: [1, 20, 5, 0.2],
     r_inf_ohm: 5.0,
@@ -54,10 +54,13 @@ function drt(lambda: number, peaks: number) {
   }
 }
 
-function sweep(suggested: number, reason = 'L 곡선의 곡률이 가장 큰 지점 (λ=0.01, 봉우리 2개)') {
+function sweep(suggested: number,
+               reason = 'L 곡선의 곡률이 가장 큰 지점 (λ=0.01, 봉우리 2개)',
+               order = 0) {
   return {
     spectrum_id: 1,
-    results: [drt(1e-6, 5), drt(1e-4, 2), drt(1e-2, 2), drt(1, 1)],
+    results: [drt(1e-6, 5, order), drt(1e-4, 2, order),
+              drt(1e-2, 2, order), drt(1, 1, order)],
     suggested_index: suggested,
     suggested_reason: reason,
   }
@@ -128,8 +131,11 @@ describe('DRT 화면', () => {
     const orders: (string | null)[] = []
     installFetch((url) => {
       if (path(url) === '/api/eis/spectra/1/drt/sweep') {
-        orders.push(params(url).get('derivative_order'))
-        return sweep(2)
+        const asked = params(url).get('derivative_order')
+        orders.push(asked)
+        // 서버처럼 **물어본 차수**를 돌려준다.  옛 mock 은 늘 같은 차수를
+        // 답해서, 화면의 신선도 판정을 우연히만 통과했다.
+        return sweep(2, undefined, Number(asked ?? 0))
       }
       return {}
     })

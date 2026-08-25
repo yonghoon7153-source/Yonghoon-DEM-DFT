@@ -1291,7 +1291,7 @@ def _drt_module():
 @router.get("/spectra/{spectrum_id}/drt", response_model=DrtOut)
 def spectrum_drt(spectrum_id: int,
                  regularisation: float = Query(1e-3, gt=0),
-                 derivative_order: int = Query(1, ge=0, le=2),
+                 derivative_order: int = Query(0, ge=0, le=2),
                  drop_inductive: bool = Query(True),
                  session: Session = Depends(get_session)):
     """이완 시간 분포 하나 — 주어진 λ 에서.
@@ -1314,7 +1314,7 @@ def spectrum_drt(spectrum_id: int,
 
 @router.get("/spectra/{spectrum_id}/drt/sweep", response_model=DrtSweepOut)
 def spectrum_drt_sweep(spectrum_id: int,
-                       derivative_order: int = Query(1, ge=0, le=2),
+                       derivative_order: int = Query(0, ge=0, le=2),
                        drop_inductive: bool = Query(True),
                        session: Session = Depends(get_session)):
     """λ 를 여섯 자리에 걸쳐 훑고, L 곡선 모서리를 이유와 함께 짚는다.

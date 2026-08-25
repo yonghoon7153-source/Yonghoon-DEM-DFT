@@ -5,6 +5,8 @@ weight -- that it changes the answer, that both failure modes are reachable,
 and that when the L curve has no corner we say so instead of picking one (§0.4).
 """
 
+import inspect
+
 import numpy as np
 import pytest
 import synthetic_eis as S
@@ -257,15 +259,36 @@ def test_the_reported_total_is_the_model_dc_limit():
 def test_gamma_climbing_into_the_grid_edge_counts_as_out_of_band():
     """격자 끝으로 밀린 과정은 극대가 없어 find_peaks 에 안 잡힌다.  그래도
     아무 주파수도 재지 않은 곳에 서 있는 것은 같으므로, L 곡선 추천이 그
-    λ 를 건너뛰고 이유에 격자 끝을 말해야 한다."""
+    λ 를 건너뛰고 이유에 격자 끝을 말해야 한다.
+
+    차수를 1 로 못박는다.  기본이 0 으로 바뀌었는데, 0 차는 벌점이 γ 자체에
+    걸려 격자 끝의 낮은 언덕부터 깎아 없앤다 -- 그러면 이 시험이 겨누는
+    상황 자체가 안 생겨서, 통과해도 가드가 살아 있다는 뜻이 아니게 된다.
+    """
     frequency = np.logspace(5, 3, 40)          # 1..100 kHz 만 측정
     tau_out = 1.0 / (2 * np.pi * 1e7)          # 과정은 10 MHz
     z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * frequency * tau_out)
     spectrum = Spectrum(frequency, z.real, z.imag)
-    results = sweep(spectrum)
+    results = sweep(spectrum, derivative_order=1)
     index, reason = lcurve_corner(results)
     if index >= 0:
         assert not any("격자 끝" in text
                        for text in __import__("wrdkit.eis.drt", fromlist=["x"])
                        ._peaks_outside_band(results[index]))
     assert "격자 끝" in reason or index == -1
+
+
+def test_default_derivative_order_is_zero():
+    """기본 평활 차수는 0 -- 벌점을 γ 자체에 건다.
+
+    1 차(기울기)가 오래 기본이었다.  전고체 실측 .mpr 여섯 개에서 추천 λ 를
+    찾은 개수가 0차 6 · 1차 1 · 2차 1 이라 바꿨다: 1·2 차는 격자 끝에 남는
+    작은 언덕 때문에 `lcurve_corner` 가 모든 후보를 건너뛰고 화면이 "풀지
+    못했습니다" 만 낸다.  세 층(wrdkit·API·화면)이 같은 값을 써야 하므로
+    여기서 못박는다.
+    """
+    assert inspect.signature(drt).parameters["derivative_order"].default == 0
+    frequency = np.logspace(5, -1, 60)
+    z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * frequency * 1e-3)
+    result = drt(Spectrum(frequency, z.real, z.imag), regularisation=1e-4)
+    assert result.derivative_order == 0

@@ -64,7 +64,7 @@ class DrtResult:
     inductance_h: float | None = None
     #: The penalty weight that produced this gamma.  Part of the answer.
     regularisation: float = 0.0
-    derivative_order: int = 1
+    derivative_order: int = 0
     #: Proportional residual norm and penalty norm -- the two axes of the L curve.
     residual_norm: float = 0.0
     penalty_norm: float = 0.0
@@ -134,7 +134,7 @@ def _difference_matrix(size: int, order: int) -> np.ndarray:
 
 def drt(spectrum: Spectrum, *, regularisation: float = 1e-3,
         tau_per_decade: int = 10, extend_decades: float = 0.5,
-        derivative_order: int = 1, fit_inductance: bool = True,
+        derivative_order: int = 0, fit_inductance: bool = True,
         drop_inductive: bool = True) -> DrtResult:
     """Solve for ``gamma(tau)`` at one penalty weight.
 
