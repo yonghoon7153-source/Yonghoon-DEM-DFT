@@ -257,6 +257,21 @@ MPM_POROSITY_CAVEAT = (
     '⚠⚠ MPM porosity 는 **정본이 신뢰성을 유보한 축**이다 (CLAUDE.md 트랙 2 · docs/mpm_platen_kinematic_stop_defect.md · docs/reviews/fam_platen_prereg_20260812.md): ① porosity 는 **정지 프레임의 함수**이고 속도 사다리(sub 40/80/160)에서 14.38 → 12.76 → 11.08 % 로 **수렴하지 않는다** ② scaffold 런에서 `solid_vol` 은 씨앗 시점에 DEM dump 로 고정된 상수라 **porosity 가 독립 정보를 담지 않는다** (MPM 의 유일한 출력은 wall_z) ③ 정지 결함을 고치면 ε_sphere 1.13 % = 실험 대비 **14.5 %p 과압축** (CL-04) ④ 따라서 **DEM↔MPM porosity 일치를 validity 증명서로 쓰면 순환**이다 — `cross-validated` 배지를 그렇게 읽지 말 것.  ⇒ 살아 있는 MPM 산출물: **응력-정지 두께** · 형태(morphology) · 소성 변형장.')
 
 
+#: 같은 양인데 **표마다 열 이름이 다르다** → 명시적 별칭표.
+#:  ⚠⚠ 2026-08-25 실측 — 접미사 깎기 휴리스틱(`k[:-4]`)이 조용히 빗나갔다:
+#:    `porosity_mpm_pct` → `mpm_porosity_mpm` 을 찾는데 실제 열은 `mpm_porosity_pct` 라
+#:    **17건이 통째로 누락**됐다 (a9_p00~p10 · 2mAh_real_16~20 · 8mAh_real_11~15 · 1mAh_100_15).
+#:    나는 그걸 "원래 MPM 이 없는 케이스" 로 사용자에게 잘못 말했다.  추측 대신 표를 읽는다.
+#:  ★ 같은 양임을 확인하고 넣었다: 두 열을 다 가진 **139건에서 중앙 |Δ| = 0.0000**
+#:    (135건 완전 일치).  어긋나는 4건은 corpus 열이 우선이라 영향 없다
+#:    (최대 input_1mAh_100_10 Δ 5.87 — 이 불일치 자체는 별도 항목).
+#:  ⇒ corpus 열(`mpm_<key>`)을 **먼저** 보고, 없을 때만 별칭을 쓴다.
+_MPM_ALIASES = {
+    #  mpm_dem_porosity_reliability.csv · case_3d_collection.csv 의 열 이름
+    'porosity_mpm_pct': ('mpm_porosity_pct',),
+}
+
+
 def mpm_metrics(m):
     """중첩 `mpm.*` (풍부) 를 우선하고, 없으면 평평한 `mpm_*` 에서 접두사를 떼어 모은다."""
     nested = m.get('mpm') if isinstance(m.get('mpm'), dict) else {}
@@ -266,7 +281,12 @@ def mpm_metrics(m):
             continue
         v = m.get('mpm_' + k)
         if v is None and k.endswith('_pct'):
-            v = m.get('mpm_' + k[:-4])          # mpm_porosity_pct 같은 축약형
+            v = m.get('mpm_' + k[:-4])          # mpm_se_fraction 같은 축약형
+        if v is None:
+            for alias in _MPM_ALIASES.get(k, ()):
+                v = m.get(alias)
+                if v is not None:
+                    break
         if v is not None:
             out[k] = v
     #  ⚠ 하나도 없으면 파일을 안 만든다 — 빈 박스를 띄우지 않는다
@@ -390,6 +410,20 @@ def _selftest():
     mm2 = mpm_metrics({'mpm_porosity_mpm_pct': 20.9, 'mpm_thickness_mpm_um': 115.2})
     chk(f'⑰ ★ 평평한 mpm_* 도 접두사를 떼어 모은다 ({sorted(mm2)})',
         mm2.get('porosity_mpm_pct') == 20.9 and mm2.get('thickness_mpm_um') == 115.2)
+    # ── ⑱ 표마다 열 이름이 다른 문제 — 접미사 깎기가 17건을 조용히 놓쳤다 ────────────────
+    mm3 = mpm_metrics({'mpm_porosity_pct': 27.42})
+    chk(f'⑱a ★★ `mpm_porosity_pct`(reliability·3d 표 이름)도 잡는다 ({mm3})',
+        mm3 is not None and mm3.get('porosity_mpm_pct') == 27.42)
+    mm4 = mpm_metrics({'mpm_porosity_mpm_pct': 21.78, 'mpm_porosity_pct': 15.91})
+    chk('⑱b ★ 둘 다 있으면 **corpus 열이 이긴다** (별칭은 대타일 뿐)',
+        mm4.get('porosity_mpm_pct') == 21.78)
+    #  ★★ 복사본 표류 감시 — 같은 파일 안에 키 목록이 **둘** 있다 (표 행 · mpm_metrics).
+    #     실제로 갈라져 있었다: 표 행엔 `mpm_porosity_pct` 가 있었는데 mpm_metrics 엔 없었다.
+    _row_cands = next(c for lab, c, _ in _NET if lab == 'MPM Porosity(%)')
+    _mm_cands = ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct') + \
+        _MPM_ALIASES['porosity_mpm_pct']
+    chk(f'⑱c ★★ 표 행과 mpm_metrics 의 porosity 열 이름이 **같은 집합** ({len(_row_cands)}개)',
+        set(_row_cands) == set(_mm_cands))
     thin = build({'porosity': 1.0})
     chk(f'⑩ ★ 지표가 거의 없으면 만들 수 있는 표만 ({sorted(thin)})',
         set(thin) == {'network_summary'})
