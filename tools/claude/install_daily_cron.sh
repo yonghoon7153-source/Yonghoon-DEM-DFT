@@ -71,6 +71,10 @@ fi
   echo "✅ 걸었다 — 매일 KST 00:00"
   echo "   $LINE"
   echo "   로그: $LOG"
-  echo "   ⚠ 기계가 꺼져 있으면 그날은 건너뛴다. run_daily.sh 가 --catchup 으로"
-  echo "     '마지막 실행 이후 하루 넘었으면 즉시 1회' 를 처리한다."
+  echo "   ⚠ 기계가 꺼져 있으면 그날은 건너뛴다. 안전망을 같이 걸어 둘 것 —"
+  echo "     터미널을 열 때 '20시간 넘게 안 돌았으면' 한 번 따라잡는다:"
+  echo ""
+  echo "       echo 'bash $REPO/tools/claude/run_daily.sh --catchup >> $LOG 2>&1 &' >> ~/.bashrc"
+  echo ""
+  echo "     (백그라운드(&)로 두면 셸 시작이 안 느려진다. 최근에 돌았으면 조용히 끝난다.)"
 }

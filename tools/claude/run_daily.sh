@@ -15,6 +15,7 @@
 #
 #   bash tools/claude/run_daily.sh              # cron 이 부르는 형태
 #   bash tools/claude/run_daily.sh --dry        # Claude 를 부르지 않고 점검만
+#   bash tools/claude/run_daily.sh --catchup    # 하루 넘게 안 돌았을 때만 실행 (셸 시작용)
 #   bash tools/claude/run_daily.sh --selftest
 # =============================================================================
 set -u
@@ -33,9 +34,42 @@ if [ "${1:-}" = "--selftest" ]; then
     # [음성] stamp 가 없으면 '오래됐다' 로 봐야 한다 (없다고 건너뛰면 영영 안 돈다)
     _s=/nonexistent/stamp
     [ ! -f "$_s" ] && say "✓" "③ [음성] stamp 부재 = 오래됨으로 처리" || say "✗" "③"
+    # [음성] --catchup 이 **최근에 돌았으면 조용히 끝나야** 한다 (매번 돌면 무의미)
+    _t=$(mktemp -d); date +%s > "$_t/s"
+    DFT_DAILY_STAMP="$_t/s" bash "$0" --catchup >/dev/null 2>&1
+    [ "$?" = 0 ] && say "✓" "⑤ [음성] 최근 실행이면 catchup 이 조용히 끝난다" \
+                 || say "✗" "⑤ catchup 이 최근 실행인데도 돌았다"
+    # [음성] 오래됐으면 실제로 돌아야 한다 (조용히 넘기면 안전망이 아니다)
+    echo 0 > "$_t/s"
+    _o=$(DFT_DAILY_STAMP="$_t/s" bash "$0" --catchup --dry 2>&1)
+    case "$_o" in *"밀린 만큼 지금 돈다"*|*"run_daily"*) say "✓" "⑤ [음성] 오래되면 실제로 돈다";;
+                  *) say "✗" "⑤ 오래됐는데 안 돈다 — 안전망이 아니다";; esac
+    rm -rf "$_t"
     command -v claude >/dev/null && say "✓" "④ claude CLI 있음" \
         || say "✓" "④ claude CLI 없음 — 점검만 하고 끝난다(정상 동작)"
     [ "$ok" = 1 ] && { echo "  ✅ selftest 통과"; exit 0; } || { echo "  ⛔ 실패"; exit 1; }
+fi
+
+# ── --catchup: 밀린 경우에만 돈다 ──────────────────────────────────────────
+#   ⛔ 2026-08-25 — install_daily_cron.sh 가 "--catchup 으로 놓친 날을 따라잡는다" 고
+#     안내하면서 정작 **구현이 없었다**(stamp 를 쓰기만 하고 읽지 않았다).
+#     WSL 은 창을 닫으면 cron 데몬이 죽어 그날을 통째로 건너뛴다 — 그래서 이 경로가
+#     장식이 아니라 실제 안전망이다. ~/.bashrc 에 걸어 두면 터미널 열 때 따라잡는다.
+CATCHUP_AFTER=${DFT_CATCHUP_AFTER:-72000}      # 20 h. 24 h 로 두면 매일 조금씩 밀린다.
+if [ "${1:-}" = "--catchup" ]; then
+    if [ -f "$STAMP" ]; then
+        _last=$(cat "$STAMP" 2>/dev/null || echo 0)
+        _age=$(( $(date +%s) - ${_last:-0} ))
+        if [ "$_age" -lt "$CATCHUP_AFTER" ]; then
+            exit 0                              # 최근에 돌았다 — 조용히 끝낸다
+        fi
+        echo "· 마지막 실행 이후 $((_age/3600))시간 — 밀린 만큼 지금 돈다"
+    else
+        echo "· 실행 기록이 없다 — 처음 1회 돈다"
+    fi
+    # ⚠ `set -- ""` 로 쓰면 **뒤따르는 인자가 날아간다** — `--catchup --dry` 를 줘도
+    #   --dry 가 사라져 Claude 를 부르게 된다. --catchup 하나만 떼어낸다.
+    shift
 fi
 
 cd "$REPO" || exit 2
