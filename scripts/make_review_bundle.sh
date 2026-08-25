@@ -53,8 +53,22 @@ if [ -n "$_UNTRACKED" ]; then
   echo "  → ALLOW_UNTRACKED=1 이므로 지역 산출물로 보고 계속한다." >&2
 fi
 
-git bundle create "$OUT" --all
-echo "번들 → $OUT"
+#  ★★ 2026-08-25 (사용자 지적) — **이 브랜치만 싣는다.**  `--all` 은 43개 ref 를 전부
+#    실어 1.5 GB 가 됐다 (이력에 데이터 파일이 많다).  리뷰 대상은 이 브랜치 하나이고,
+#    브랜치만 실으면 **301 MB** 다.
+#  ⚠ 그 이상 줄이지 **않는다** — 이력을 자르면 `check_review_findings.py` 가 원장의
+#    `claimed_fixed_sha` 를 리포에서 못 찾아 리뷰어 쪽 검사가 깨진다.  번들의 목적은
+#    "받는 쪽에서 우리 검사가 그대로 돈다" 이므로 전 이력이 있어야 한다.
+#  전 ref 가 필요하면 `BUNDLE_ALL=1`.
+_BR="$(git rev-parse --abbrev-ref HEAD)"
+if [ "${BUNDLE_ALL:-0}" = "1" ]; then
+  echo "· 전 ref 를 싣는다 (BUNDLE_ALL=1)"
+  git bundle create "$OUT" --all
+else
+  echo "· 이 브랜치만 싣는다: $_BR  (전 ref 는 BUNDLE_ALL=1)"
+  git bundle create "$OUT" "$_BR"
+fi
+echo "번들 → $OUT  ($(du -h "$OUT" | cut -f1))"
 
 #  ★ **받는 쪽 검증까지 여기서 한다** (번들이 정말 단독으로 열리는가).
 #    지난번 실패는 만들 때가 아니라 **열 때** 드러났다.
@@ -64,6 +78,16 @@ if git clone --quiet "$OUT" "$TMP/repo" 2>"$TMP/err"; then
   _n="$(git -C "$TMP/repo" rev-list --count HEAD)"
   _h="$(git -C "$TMP/repo" rev-parse --short HEAD)"
   echo "✓ 빈 저장소에서 clone 성공 — HEAD $_h · 커밋 $_n 개"
+  #  ★ clone 이 되는 것과 **우리 검사가 거기서 도는 것**은 다른 주장이다.  원장 검사는
+  #    `claimed_fixed_sha` 가 실재 커밋인지 보므로 이력이 잘리면 여기서 빨간불이 난다
+  #    (= 번들을 더 줄이려는 시도를 막는 실측 가드).
+  if python3 "$TMP/repo/scripts/check_review_findings.py" >"$TMP/led" 2>&1; then
+    echo "✓ 받는 쪽에서 원장 검사 통과 (SHA 실재 확인 — 이력이 충분하다)"
+  else
+    echo "⛔ 번들 안에서 원장 검사가 실패한다 — 이력이 모자라거나 원장이 깨졌다:" >&2
+    tail -5 "$TMP/led" >&2
+    exit 4
+  fi
 else
   echo "⛔ 단독 clone 실패 (이것이 R4-CX-08 의 증상이다):" >&2
   cat "$TMP/err" >&2
