@@ -435,12 +435,73 @@ def _looks_superseded(name):
     return any(k in low for k in ('_old', 'old_', '.bak', 'bak_', 'legacy', 'deprecated'))
 
 
+def score_rows(rows, measured, axis_set, W):
+    """점수를 행에 **제자리로** 붙이고 정렬한다. 배치와 단일이 같은 이 함수를 쓴다.
+
+    ⛔ 못 하는 것: 미측정 구조에 결합점수를 주지 않는다 (0.0 도 0.5 도 아닌 None).
+      '모른다' 를 숫자로 바꾸는 순간 순위가 그 가짜 숫자를 믿기 시작한다.
+    """
+    dn = normalize([_de_of(r) for r in measured], invert=True)
+    mo = (normalize([r.get('E_young_GPa') for r in measured])
+          if 'modulus' in axis_set else [0.0] * len(measured))
+    mb = (normalize([r.get('li_mobility_score') for r in measured])
+          if 'mobility' in axis_set else [0.0] * len(measured))
+    tag = '+'.join(axis_set)
+    for r, ds, ms, bs in zip(measured, dn, mo, mb):
+        r['score_stability'] = ds
+        r['score_modulus'] = ms
+        r['score_mobility'] = bs
+        r['score_combined'] = (W.get('stability', 0) * ds
+                               + W.get('modulus', 0) * ms
+                               + W.get('mobility', 0) * bs)
+        r['scored_on'] = 'measured_subset_' + tag
+    for r, ds in zip(rows, normalize([_de_of(r) for r in rows], invert=True)):
+        r['score_stability_all'] = ds
+        if 'score_combined' not in r:
+            r['score_combined'] = None
+            r['scored_on'] = 'not_measured_on_' + tag
+    measured.sort(key=lambda r: -r['score_combined'])
+    rows.sort(key=lambda r: -r['score_stability_all'])
+
+
+def build_payload(rows, measured, axis_set, w_raw):
+    """출력 JSON. **무엇을 주장하지 않는지**를 파일이 스스로 말하게 한다."""
+    return {
+        'provenance': get_provenance(),
+        'weights_raw': w_raw,
+        'weights_applied': renorm_weights(w_raw, axis_set),
+        'axis_set': axis_set,
+        'n_structures': len(rows),
+        'n_scored': len(measured),
+        'scoring_policy': {
+            'adopted': 'A (2026-08-25)',
+            'rule': '결합점수는 axis_set 의 **모든** 축에 값이 있는 구조들 안에서만 '
+                    '정규화·산출한다. 그 밖은 score_combined = null.',
+            'why': 'normalize 의 결측→0.0 이 미측정을 최하점으로 채점해 가중치 0.6 이 '
+                   '"측정됐나" 하나로 갈렸다. 상위 10개만 측정되므로 11위 이하가 '
+                   '구조적으로 못 올라왔다 (안정성 이중계산).',
+            'axis_set_note': '캠페인마다 돌아간 스테이지가 달라 축 수가 다르다 '
+                             '(dualx_v23 은 elastic 미실행 → 2축). 가중치는 살아있는 '
+                             '축에 비례 배분했다.',
+            '⛔_do_not': '축 수가 다른 캐스케이드끼리 score_combined 를 직접 비교하지 말 것 '
+                         '— 척도가 다르다. axis_set 이 같은 것끼리만 비교한다.',
+            'not_claimed': '미측정 구조가 나쁘다는 뜻이 아니다 — 모른다는 뜻이다.',
+            'full_list_axis': 'score_stability_all (안정성 단일축, 전체 구조 대상)',
+        },
+        'ranking_scored_only': [r['name'] for r in measured],
+        'rows': rows,
+    }
+
+
 def _batch(args):
     """--cascade_glob: 전수 인구조사. **집계만 하고 순위 파일은 쓰지 않는다.**
 
-    ⛔ 못 하는 것: FINAL_RANKING.json 을 캐스케이드마다 쓰지 않는다 — 그건
-      결과를 바꾸는 일이라 잎별 --out 을 명시해 돌려야 한다. 여기서는
-      "전체 풀이 몇 개이고 3축 비교가 가능한 게 몇 개인가" 만 센다.
+    기본은 **읽기 전용 인구조사**다. --write 를 주면 캐스케이드마다
+    FINAL_RANKING.json 을 쓴다 (기존 파일은 .bak_rerank 로 보존).
+
+    ⛔ 못 하는 것: 어느 세대를 포함할지 정하지 않는다 — --exclude 로 사람이 준다.
+      축이 1개뿐인 캐스케이드는 결합점수가 성립하지 않아 **건너뛴다**(조용히가 아니라
+      집계에 센다).
     """
     dirs = find_cascades(args.cascade_glob)
     if args.exclude:
@@ -458,7 +519,10 @@ def _batch(args):
     for d in dirs:
         rows = load_rows(d)
         aset = axes_present(rows)
-        meas = rows_with_axes(rows, aset)
+        # ⛔ 축이 1개뿐이면 '결합점수' 가 성립하지 않는다 (안정성 단일 순위와 같다).
+        #   그런 캐스케이드의 행을 '채점 대상' 으로 세면 커버리지가 부풀려진다.
+        #   --status 가 rc=3 으로 막는 것과 같은 기준을 여기서도 쓴다.
+        meas = rows_with_axes(rows, aset) if len(aset) >= 2 else []
         family = d.parent.name
         f = fam[family]
         f['casc'] += 1; f['struct'] += len(rows); f['meas'] += len(meas)
@@ -473,6 +537,7 @@ def _batch(args):
 
     tot_s = sum(f['struct'] for f in fam.values())
     tot_m = sum(f['meas'] for f in fam.values())
+    n_1ax = sum(1 for _, _, _, a in per if a and a.count('+') == 0 and a != 'none')
     n_none = sum(1 for _, _, m, _ in per if m == 0)
     n_thin = sum(1 for _, _, m, _ in per if m == 1)
     n_2ax = sum(1 for _, _, _, a in per if a.count('+') == 1)
@@ -483,7 +548,9 @@ def _batch(args):
         print(f"  채점 대상       {tot_m}  ({100.0*tot_m/tot_s:.1f}%)")
     print(f"  ⚠ 2축짜리       {n_2ax}개 캐스케이드 — 3축과 **다른 척도**다 "
           f"(캐스케이드 간 score_combined 직접 비교 금지)")
-    print(f"  ⛔ 채점 0개      {n_none}개")
+    print(f"  ⚠ 1축뿐          {n_1ax}개 캐스케이드 — 결합점수 불가 "
+          f"(안정성 단일 순위와 같다). 채점 대상에서 뺐다.")
+    print(f"  ⛔ 채점 0개      {n_none}개 (위 1축·none 포함)")
     print(f"  ⚠ 채점 1개       {n_thin}개 — 표본 1개는 정규화가 상수라 순위 의미 없음")
 
     sup = sorted(n for n in fam if _looks_superseded(n))
@@ -503,6 +570,33 @@ def _batch(args):
             w.writerow(['cascade', 'n_structures', 'n_scored', 'axis_set'])
             w.writerows(per)
         print(f"\n  ✓ 전체 목록 → {args.out_csv}")
+
+    if args.write:
+        print(f"\n▸ FINAL_RANKING.json 쓰기 ({len(dirs)}개 대상)")
+        n_w = n_skip = 0
+        for d in dirs:
+            rows = load_rows(d)
+            aset = axes_present(rows)
+            if len(aset) < 2:
+                n_skip += 1
+                continue
+            meas = rows_with_axes(rows, aset)
+            if not meas:
+                n_skip += 1
+                continue
+            W_RAW = {'stability': args.w_stab, 'modulus': args.w_mod,
+                     'mobility': args.w_mob}
+            score_rows(rows, meas, aset, renorm_weights(W_RAW, aset))
+            out = d / 'FINAL_RANKING.json'
+            if out.exists():
+                bak = d / 'FINAL_RANKING.json.bak_rerank'
+                if not bak.exists():
+                    bak.write_text(out.read_text())
+            out.write_text(json.dumps(build_payload(rows, meas, aset, W_RAW),
+                                      indent=2, default=str))
+            n_w += 1
+        print(f"  ✓ 썼다 {n_w} · 건너뜀 {n_skip} (축 1개 이하)")
+        print(f"  · 기존 파일은 FINAL_RANKING.json.bak_rerank 로 보존 (첫 1회만)")
     return 0
 
 
@@ -529,6 +623,9 @@ def main():
                        '순위에 기여하는지 확인용 (--out 은 무시된다). '
                        'li_mobility_score 가 전원 결측이라 3축이 실제로 2축이었던 '
                        '2026-08-25 사고 이후 추가.')
+    p.add_argument('--write', action='store_true',
+                  help='--cascade_glob 대상마다 FINAL_RANKING.json 을 쓴다. '
+                       '기본은 읽기 전용 인구조사다 — **순위 변경은 명시해야 일어난다.**')
     p.add_argument('--exclude', action='append', default=[],
                   help='제외할 경로 부분문자열 (여러 번 지정 가능). '
                        '세대 중복(v22 vs v23 등)을 뺄 때 쓴다. **자동 제외는 없다** — '
@@ -625,49 +722,14 @@ def main():
         report_axis_health(W)
         return 0
 
-    for r, ds, ms, mb in zip(measured, de_norm, mod_norm, mob_norm):
-        r['score_stability'] = ds
-        r['score_modulus'] = ms
-        r['score_mobility'] = mb
-        r['score_combined'] = (W.get('stability', 0) * ds
-                              + W.get('modulus', 0) * ms
-                              + W.get('mobility', 0) * mb)
-        r['scored_on'] = 'measured_subset_' + '+'.join(axis_set)
-
-    # 미측정 구조: 3축 점수를 **주지 않는다** (0.0 도 0.5 도 아니고 없음).
-    #   '모른다' 를 숫자로 바꾸는 순간 순위가 그 가짜 숫자를 믿기 시작한다.
-    stab_all = normalize(de_axis, invert=True)      # 전체 stability-only 축
-    for r, ds in zip(rows, stab_all):
-        r['score_stability_all'] = ds
-        if 'score_combined' not in r:
-            r['score_combined'] = None
-            r['scored_on'] = 'not_measured_on_' + '+'.join(axis_set)
-
-    measured.sort(key=lambda r: -r['score_combined'])
-    rows.sort(key=lambda r: -r['score_stability_all'])
-
+    score_rows(rows, measured, axis_set, W)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps({
-        'provenance': get_provenance(),
-        'weights': {'stability': args.w_stab, 'modulus': args.w_mod,
-                    'mobility': args.w_mob},
-        'n_structures': len(rows),
-        'n_measured_3axis': len(measured),
-        'scoring_policy': {
-            'adopted': 'A (2026-08-25)',
-            'rule': '3축 결합점수는 modulus·mobility 를 **둘 다** 가진 구조들 '
-                    '안에서만 정규화·산출한다. 미측정 구조는 score_combined = null.',
-            'why': 'normalize 의 결측→0.0 이 미측정을 최하점으로 채점해 가중치 0.6 이 '
-                   '"측정됐나" 하나로 갈렸다. 상위 10개만 측정되므로 11위 이하가 '
-                   '구조적으로 못 올라왔다 (안정성 이중계산).',
-            'not_claimed': '미측정 구조가 나쁘다는 뜻이 아니다 — 모른다는 뜻이다.',
-            'full_list_axis': 'score_stability_all (안정성 단일축, 전체 구조 대상)',
-        },
-        'ranking_3axis_measured_only': [r['name'] for r in measured],
-        'rows': rows,
-        'grouped_stats': grouped_stats,  # v4.5 D1: n_seeds mean±std per group
-    }, indent=2, default=str))
+    payload = build_payload(rows, measured, axis_set,
+                            {'stability': args.w_stab, 'modulus': args.w_mod,
+                             'mobility': args.w_mob})
+    payload['grouped_stats'] = grouped_stats   # v4.5 D1: n_seeds mean±std per group
+    out.write_text(json.dumps(payload, indent=2, default=str))
 
     # Top-20 table
     print(f"\n{'='*110}")
