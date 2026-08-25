@@ -2542,3 +2542,14 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   user 로 바뀌어 영구 고정, 이후 formation 파일이 붙어도 스케줄이 기준을
   못 정한다. refDirty 로 손댄 뒤에만 커밋. "1 을 쳐서 고정" 경로는 그대로다
   (기존 테스트가 지킨다).
+## [2026-08-25] feat | DBW — knee-onset 과 knee-point 를 한 적합으로 (ADR 0021)
+- Double Bacon-Watts (Fermin-Cueto 2020) 를 다섯 번째 기준으로, 검출 시 primary.
+  격자 초기값은 변수 분리(α 는 선형이라 lstsq 로 정확히)로 훑고 상위 3 씨앗만
+  scipy 정련 (해석적 야코비안, ftol 1e-6). 단일 BW 로 먼저 적합하고 두 번째
+  전환이 F-gain 을 넘을 때만 이중 — 순수 힌지에서 x2 가 잡음 따라 떠돌며
+  "onset 40, point 58" 을 내던 것을 막는다. 닫는 전환이 완화(a3>=0)면 급감
+  출구를 point 로 읽은 것이라 물러나고, 전환 간격이 2(γ1+γ2) 를 넘으면 두
+  사건이라 물러난다 (50/150 이중 knee 가 한 knee 라벨을 쓰던 것). null sweep
+  200 직선: 검출 0, 유예 0. 블록+knee 격자는 15/30→17/30 (dbw 가 블록 복귀
+  에지를 읽는 2건 추가 — 알려진 한계에 흡수, 테스트가 고정). bootstrap 95%
+  CI 는 dbw_confidence_interval 로 제공하되 요청 경로에서는 안 부른다.

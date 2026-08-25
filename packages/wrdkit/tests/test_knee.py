@@ -26,9 +26,12 @@ def test_segmented_finds_a_planted_knee():
 
 
 def test_primary_prefers_the_acceleration_criteria():
+    # dbw 가 검출하면 primary 다 (ADR 0021): 한 적합이 onset 과 point 를 같은
+    # 곡선의 매개변수로 추정한다.  threshold/curvature 는 여전히 밀려난다.
     cycles, values = _piecewise(knee=30)
     analysis = detect_knee(cycles, values, reference_cycle=1)
-    assert analysis.primary.method == "segmented"
+    assert analysis.primary.method == "dbw"
+    assert analysis.primary.cycle == pytest.approx(30, abs=2)
 
 
 def test_a_linear_fade_reports_no_knee_and_says_why():
@@ -358,10 +361,16 @@ def test_straight_line_fades_never_get_a_knee():
     for seed in range(200):
         cycles, q = _noisy_linear(seed)
         analysis = detect_knee(cycles, q, reference_cycle=3)
-        for method in ("segmented", "slope_ratio", "curvature"):
+        for method in ("segmented", "slope_ratio", "curvature", "dbw"):
             result = analysis.by_method(method)
             if result.detected:
                 false_positives.append((seed, method, result.cycle, result.reason))
+            # dbw 는 "아직 모른다" 도 만들면 안 된다: 직선 위에서 적합이 경계로
+            # 흘러간 것을 "미확정 knee 후보" 라고 미루면, 건강한 셀이 화면에서
+            # 판정 대기로 보인다.  null sweep 200개 중 10개가 그랬다.
+            if method == "dbw" and result.status == "insufficient":
+                false_positives.append((seed, "dbw-deferred", result.candidate_cycle,
+                                        result.reason))
     assert not false_positives, false_positives[:5]
 
 
@@ -406,7 +415,7 @@ def test_curvature_is_never_the_primary_answer():
     cycles, q = _curve(80, _flat_then_accelerate, seed=2)
     analysis = detect_knee(cycles, q, reference_cycle=3)
     assert analysis.by_method("curvature").detected
-    assert analysis.primary.method in ("segmented", "slope_ratio")
+    assert analysis.primary.method in ("dbw", "segmented", "slope_ratio")
 
 
 def test_curvature_needs_real_segments_on_both_sides():
@@ -1063,6 +1072,142 @@ def test_a_block_and_a_knee_together_are_a_known_limit():
                 if not primary.detected or abs(primary.cycle - truth) > 5:
                     wrong += 1
     assert total == 30
-    # 지금 15/30 이다.  올라가면 다른 것이 깨진 것이고, 내려가면 joint event
-    # model 이 들어왔다는 뜻이니 이 숫자를 같이 내린다.
-    assert wrong <= 15, f"{wrong}/{total} — 더 나빠졌다"
+    # segmented 가 primary 이던 때 15/30 이었다.  dbw primary (ADR 0021) 로
+    # 17/30 이 됐다: excursion 탐지가 블록을 놓친 배치 중 두 곳에서 dbw 가
+    # 블록의 복귀 에지(γ가 하한에 붙은 급전환)를 knee 로 읽는다 — segmented
+    # 의 3선/excursion 기계가 없는 매끈한 전역 적합의 한계다.  여기서
+    # 올라가면 다른 것이 깨진 것이고, 내려가면 joint event model 이 들어왔다는
+    # 뜻이니 이 숫자를 같이 내린다.
+    assert wrong <= 17, f"{wrong}/{total} — 더 나빠졌다"
+
+
+# --- Double Bacon-Watts: onset 과 point 를 함께 (ADR 0021) --------------------
+#
+# 한 적합이 두 지점을 같은 곡선의 매개변수로 추정한다.  적합은 언제나 무언가에
+# 수렴하므로, 아래는 "언제 말하고 언제 물러나는가" 를 모양별로 고정한다.
+
+def _two_phase(c):
+    """문헌의 knee 모양: 완만한 이탈 → 점점 급해지는 손실 (Fermin-Cueto 2020)."""
+    if c <= 60:
+        return 100.0 - 0.10 * (c - 3)
+    if c <= 90:
+        return 94.3 - 0.10 * (c - 60) - 0.009 * (c - 60) ** 2
+    return 83.2 - 1.0 * (c - 90) - 0.02 * (c - 90) ** 2
+
+
+def test_dbw_reports_the_onset_and_the_point_of_one_event():
+    analysis = detect_knee(*_curve(130, _two_phase), reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert dbw.detected, dbw.reason
+    assert dbw.onset_cycle is not None
+    assert dbw.onset_cycle < dbw.cycle
+    # 이탈은 60번에서 시작해 90번부터 빠르게 잃는다.  onset 은 완만한 이탈
+    # 구간에, point 는 급감이 자리 잡는 곳에 있어야 한다.
+    assert 60 <= dbw.onset_cycle <= 80
+    assert 88 <= dbw.cycle <= 110
+    assert analysis.primary.method == "dbw"
+    assert analysis.primary.onset_cycle == dbw.onset_cycle
+
+
+def test_dbw_does_not_invent_an_onset_on_a_plain_hinge():
+    """한 전환으로 설명되는 곡선에서 두 번째 전환의 x2 는 잡음이 정한다.
+
+    세 번째 직선이 자신을 증명해야 하듯 (segmented), 두 번째 전환도 잔차를
+    그만큼 지워야 존재한다.  못 지우면 단일 Bacon-Watts 가 답하고 onset 은
+    없다고 말한다 — 40번에 꺾이는 셀이 "onset 40, point 58" 로 나오던 것을
+    이 강등이 막는다.
+    """
+    analysis = detect_knee(*_curve(200, _flat_then_accelerate), reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert dbw.detected, dbw.reason
+    assert dbw.cycle == pytest.approx(40, abs=3)
+    assert dbw.onset_cycle is None
+    assert "no separate onset" in dbw.reason
+
+
+def test_dbw_declines_two_separate_events():
+    """50번에 꺾이고 150번에 다시 무너지는 셀 — onset/point 가 아니라 두 사건이다.
+
+    tanh 는 2γ 밖에서 96 % 포화된다.  전환 사이가 폭 합의 두 배를 넘으면 그
+    사이는 직선이고, 두 knee 에 한 knee 의 라벨을 씌우는 셈이라 물러난다.
+    """
+    def two_knees(c):
+        return (100 - 0.03 * (min(c, 50) - 3)
+                - 0.18 * max(min(c, 150) - 50, 0)
+                - 0.90 * max(c - 150, 0))
+
+    analysis = detect_knee(*_curve(180, two_knees, seed=1, noise=0.002),
+                           reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert not dbw.detected
+    assert "separate events" in dbw.reason
+    # 답은 세 직선 모형의 이른 전이다.
+    assert analysis.primary.method == "segmented"
+    assert analysis.primary.cycle == pytest.approx(50, abs=4)
+
+
+def test_dbw_declines_a_crash_that_eases_off():
+    """닫는 전환이 열화를 *늦추면* 그 x2 는 급감의 출구지 knee-point 가 아니다.
+
+    이 가드가 없을 때 23번에 무너지는 셀이 "onset 23, point 31" 로 나왔다 —
+    31번은 급감이 끝나 가는 곳이다.
+    """
+    analysis = detect_knee(*_curve(62, _flat_then_crash_then_ease),
+                           reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert not dbw.detected
+    assert "eases" in dbw.reason
+    assert analysis.primary.cycle == pytest.approx(23, abs=4)
+
+
+def test_dbw_needs_enough_cycles_for_eight_parameters():
+    cycles = np.arange(1, 12, dtype=float)
+    values = 1.45 * (100 - 0.2 * (cycles - 3)) / 100
+    dbw = detect_knee(cycles, values, reference_cycle=3).by_method("dbw")
+    assert not dbw.detected
+    assert "needs at least" in dbw.reason
+
+
+def test_dbw_without_scipy_says_so(monkeypatch):
+    """scipy 는 선택 의존성이다 (wrdkit 코어는 numpy 만).  없으면 이유를 적고
+    빠지지, 다른 기준의 답을 막지 않는다 (§0.4)."""
+    import sys
+    monkeypatch.setitem(sys.modules, "scipy.optimize", None)
+    analysis = detect_knee(*_curve(80, _flat_then_accelerate), reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert not dbw.detected
+    assert dbw.status == "indeterminate"
+    assert "scipy" in dbw.reason
+    assert analysis.by_method("segmented").detected   # 나머지는 그대로 일한다
+
+
+def test_dbw_confidence_interval_brackets_the_estimates():
+    from wrdkit.knee import dbw_confidence_interval, smooth_series
+
+    cycles, q = _curve(130, _two_phase)
+    analysis = detect_knee(cycles, q, reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    # 기준(3번)부터의 유지율을 기준과 같은 스무딩으로 -- docstring 의
+    # "the same series the criterion fitted" 그대로.
+    retention = smooth_series(100.0 * q[2:] / q[2], 5)
+    ci = dbw_confidence_interval(cycles[2:], retention, n_boot=40, seed=0)
+    assert ci is not None
+    assert ci["n_resamples_used"] >= 20
+    assert ci["onset_low"] <= dbw.onset_cycle <= ci["onset_high"]
+    assert ci["point_low"] <= dbw.cycle <= ci["point_high"]
+    assert ci["onset_high"] <= ci["point_high"]
+
+
+def test_dbw_stays_fast_enough_for_the_report_path():
+    """대시보드는 셀마다 이 분석을 다시 돈다.  전체 상한을 박아 둔다.
+
+    측정치는 warm 기준 곡선당 ~0.1 s (씨앗 격자는 선형 최소제곱, 비선형 적합은
+    상위 씨앗 셋뿐이다).  1.5 s 는 CI 의 느린 러너 여유다 — 여기 걸리면 격자나
+    적합이 눈덩이가 된 것이다.
+    """
+    import time
+    cycles, q = _curve(200, _flat_then_accelerate)
+    detect_knee(cycles, q, reference_cycle=3)          # scipy import 는 한 번
+    started = time.perf_counter()
+    detect_knee(cycles, q, reference_cycle=3)
+    assert time.perf_counter() - started < 1.5

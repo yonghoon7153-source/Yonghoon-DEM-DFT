@@ -43,7 +43,8 @@ from dataclasses import dataclass, field, replace
 
 import numpy as np
 
-__all__ = ["KneeResult", "KneeAnalysis", "detect_knee", "smooth_series"]
+__all__ = ["KneeResult", "KneeAnalysis", "dbw_confidence_interval",
+           "detect_knee", "smooth_series"]
 
 #: A knee must be at least this many cycles from either end to be meaningful.
 MIN_SEGMENT = 4
@@ -144,6 +145,28 @@ SLOPE_NOISE_SIGMAS = 2.0
 #: One window is a glitch; two overlapping ones mean the curve moved.
 SUSTAINED_WINDOWS = 2
 
+#: Double Bacon-Watts (ADR 0021; Fermin-Cueto et al. 2020).  Eight parameters;
+#: below this many cycles the residual degrees of freedom (n-8) stop meaning
+#: anything, and the two transitions have nowhere distinct to sit.
+DBW_MIN_POINTS = 12
+#: Initial-value grid resolution for (x1, x2).  The fit is sensitive to where
+#: it starts -- one curve_fit from one guess lands in local minima -- so
+#: candidate transition pairs are scanned (the supplied procedure's 15x15).
+DBW_GRID = 15
+#: How many of the best-scoring grid seeds get the full nonlinear refinement.
+#: The grid itself is scored by *exact* linear least squares (the model is
+#: linear in the alphas once x1, x2 and the gammas are fixed), so only the
+#: winners need scipy.
+DBW_REFINE_SEEDS = 3
+#: Transition sharpness bounds, in cycles, from the supplied procedure.
+DBW_GAMMA_BOUNDS = (0.1, 20.0)
+#: Convergence tolerance for the Bacon-Watts fits.  The solver's default 1e-8
+#: polishes transition estimates to a millionth of a cycle -- three orders
+#: below the data's own resolution -- and on a knee-less record it wanders a
+#: flat likelihood 2.6x longer doing it.  1e-6 moves the answers by under
+#: 0.05 cycles on every archetype.
+DBW_FIT_TOL = 1e-6
+
 
 #: ``KneeResult.status`` values.
 #:
@@ -177,6 +200,10 @@ class KneeResult:
     #: None unless the knee is confirmed; this one survives so a screen can show
     #: "cycle 12, not yet confirmed" instead of a dash.
     candidate_cycle: float | None = None
+    #: Where the fade first leaves its early trend -- the knee-onset (ADR 0021).
+    #: Only the ``dbw`` criterion estimates it; everywhere else it stays None.
+    #: ``cycle`` is the knee-point, the later of the two.
+    onset_cycle: float | None = None
 
     def __post_init__(self) -> None:
         if not self.status:
@@ -1145,10 +1172,412 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
                       f"maximum curvature at cycle {cycle:.0f}", detail)
 
 
+def _dbw_model(x, a0, a1, a2, a3, x1, x2, g1, g2):
+    """Double Bacon-Watts (Fermin-Cueto et al. 2020, eq. as supplied).
+
+    ``x1`` is the knee-onset, ``x2`` the knee-point, the gammas the sharpness
+    of each transition.  Symmetric under swapping (a2, x1, g1) with
+    (a3, x2, g2) -- the a1*(x-x1) term only moves a constant into the
+    intercept -- so a fit that converges with the labels crossed is the same
+    curve and gets relabelled, not rejected.
+    """
+    u = x - x1
+    v = x - x2
+    return a0 + a1 * u + a2 * u * np.tanh(u / g1) + a3 * v * np.tanh(v / g2)
+
+
+def _dbw_jacobian(x, a0, a1, a2, a3, x1, x2, g1, g2):
+    """Analytic derivatives of ``_dbw_model`` for the solver.
+
+    Finite differencing costs one model evaluation per parameter per
+    iteration, and on a knee-less record the optimiser wanders a flat
+    likelihood for hundreds of iterations -- the fit ran 3x slower without
+    this, and the dashboard pays it once per cell.
+    """
+    u = x - x1
+    v = x - x2
+    tu = np.tanh(u / g1)
+    tv = np.tanh(v / g2)
+    du = 1.0 - tu * tu          # d tanh
+    dv = 1.0 - tv * tv
+    return np.column_stack((
+        np.ones_like(x),                          # a0
+        u,                                        # a1
+        u * tu,                                   # a2
+        v * tv,                                   # a3
+        -a1 - a2 * (tu + u * du / g1),            # x1
+        -a3 * (tv + v * dv / g2),                 # x2  (a1 rides on u only)
+        -a2 * u * u * du / (g1 * g1),             # g1
+        -a3 * v * v * dv / (g2 * g2),             # g2
+    ))
+
+
+def _bw_model(x, a0, a1, a2, x1, g1):
+    """Single Bacon-Watts -- one smooth transition (Bacon & Watts 1971)."""
+    u = x - x1
+    return a0 + a1 * u + a2 * u * np.tanh(u / g1)
+
+
+def _bw_jacobian(x, a0, a1, a2, x1, g1):
+    u = x - x1
+    tu = np.tanh(u / g1)
+    du = 1.0 - tu * tu
+    return np.column_stack((
+        np.ones_like(x),
+        u,
+        u * tu,
+        -a1 - a2 * (tu + u * du / g1),
+        -a2 * u * u * du / (g1 * g1),
+    ))
+
+
+def _transition_seeds(cycles, values, columns):
+    """Score an initial-value grid by exact linear least squares.
+
+    The supplied procedure runs a full ``curve_fit`` from every grid point
+    because one start lands in local minima.  The same grid can be scored
+    without the nonlinear solver: with the transitions and gammas held fixed
+    both models are linear in their alphas, so each candidate's best SSE is
+    one ``lstsq``.  Only the best few seeds get the real fit -- the same
+    search with exact inner solutions (ADR 0021).
+
+    ``columns(x1, x2, gamma)`` builds the design matrix; for the single-
+    transition model it ignores ``x2`` and the grid collapses to one axis.
+    """
+    lo, hi = float(cycles[0]), float(cycles[-1])
+    x1_grid = np.linspace(lo + 2, hi - 4, DBW_GRID)
+    x2_grid = np.linspace(lo + 4, hi - 1, DBW_GRID)
+    scored = []
+    # Two sharpness seeds: gamma=1 (the procedure's start) finds cliff knees,
+    # gamma=5 keeps a gentle bend from scoring as noise on the grid pass.
+    for gamma in (1.0, 5.0):
+        for x1 in x1_grid:
+            for x2 in x2_grid:
+                if x2 <= x1:
+                    continue
+                design = columns(x1, x2, gamma)
+                if design is None:
+                    continue
+                coef, *_ = np.linalg.lstsq(design, values, rcond=None)
+                sse = float(np.sum((design @ coef - values) ** 2))
+                scored.append((sse, float(x1), float(x2), gamma, coef))
+    scored.sort(key=lambda item: item[0])
+    return scored[:DBW_REFINE_SEEDS]
+
+
+def _dbw_fit(cycles, values):
+    """Best double-transition fit over the seeded starts; ``None`` if nothing
+    converges.  Bounds are the supplied procedure's: alphas free, both
+    transitions inside the record, gammas in ``DBW_GAMMA_BOUNDS``."""
+    from scipy.optimize import curve_fit
+
+    lo, hi = float(cycles[0]), float(cycles[-1])
+    gamma_lo, gamma_hi = DBW_GAMMA_BOUNDS
+
+    def columns(x1, x2, gamma):
+        u = cycles - x1
+        v = cycles - x2
+        return np.column_stack((np.ones_like(cycles), u,
+                                u * np.tanh(u / gamma), v * np.tanh(v / gamma)))
+
+    bounds = ([-np.inf] * 4 + [lo, lo, gamma_lo, gamma_lo],
+              [np.inf] * 4 + [hi, hi, gamma_hi, gamma_hi])
+    best = None
+    for _, x1, x2, gamma, coef in _transition_seeds(cycles, values, columns):
+        try:
+            popt, _ = curve_fit(_dbw_model, cycles, values,
+                                p0=[*coef, x1, x2, gamma, gamma],
+                                jac=_dbw_jacobian, bounds=bounds,
+                                ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
+                                maxfev=20000)
+        except (RuntimeError, ValueError):
+            continue
+        sse = float(np.sum((_dbw_model(cycles, *popt) - values) ** 2))
+        if best is None or sse < best[0]:
+            best = (sse, popt)
+    return best
+
+
+def _bw_fit(cycles, values):
+    """Best single-transition fit, same seeding and bounds discipline."""
+    from scipy.optimize import curve_fit
+
+    lo, hi = float(cycles[0]), float(cycles[-1])
+    gamma_lo, gamma_hi = DBW_GAMMA_BOUNDS
+
+    seen = set()
+
+    def columns(x1, x2, gamma):
+        # One transition: the x2 axis of the shared grid is meaningless, so
+        # each (x1, gamma) is scored once and the rest are skipped.
+        if (x1, gamma) in seen:
+            return None
+        seen.add((x1, gamma))
+        u = cycles - x1
+        return np.column_stack((np.ones_like(cycles), u, u * np.tanh(u / gamma)))
+
+    bounds = ([-np.inf] * 3 + [lo, gamma_lo],
+              [np.inf] * 3 + [hi, gamma_hi])
+    best = None
+    for _, x1, _x2, gamma, coef in _transition_seeds(cycles, values, columns):
+        try:
+            popt, _ = curve_fit(_bw_model, cycles, values,
+                                p0=[*coef, x1, gamma],
+                                jac=_bw_jacobian, bounds=bounds,
+                                ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
+                                maxfev=20000)
+        except (RuntimeError, ValueError):
+            continue
+        sse = float(np.sum((_bw_model(cycles, *popt) - values) ** 2))
+        if best is None or sse < best[0]:
+            best = (sse, popt)
+    return best
+
+
+def _judge_bacon_watts(cycles, values, detail, point, onset, slope_before,
+                       slope_after, gain) -> KneeResult:
+    """The same gates the two-line fit passes, with Bacon-Watts wording.
+
+    ``curve_fit`` always converges to something, so like ``curvature`` this
+    family would name a cycle on every curve it sees; nothing here is a knee
+    until the fade accelerates, costs something, and fits better bent.
+    """
+    if slope_before > -MIN_FADE_RATE and slope_after > -MIN_FADE_RATE:
+        return KneeResult("dbw", None, False, "capacity is not fading", detail)
+    if slope_after >= slope_before:
+        return KneeResult("dbw", None, False,
+                          "fade does not accelerate across the fitted "
+                          "transition", detail)
+    ratio = _acceleration(slope_before, slope_after)
+    _record_ratio(detail, ratio)
+    if ratio < MIN_SLOPE_RATIO:
+        return KneeResult("dbw", None, False,
+                          f"fade accelerates only {ratio:.2f}x "
+                          f"(needs {MIN_SLOPE_RATIO:g}x)", detail)
+    # The documented failure shape (ADR 0021): on sub-linear records DBW
+    # pushes the knee-point past the data, which under bounds means onto the
+    # last few cycles or the boundary itself.  A genuine bend that late is
+    # also unconfirmable -- either way the record ends before the evidence.
+    n = len(cycles)
+    if point >= float(cycles[max(n - MIN_SEGMENT, 0)]):
+        # "Not yet" is a claim that something bent (see _not_yet).  Without
+        # structural support this is a straight line whose fit wandered to
+        # the boundary -- ten of the 200 null-sweep curves did exactly that --
+        # and deferring it would make a healthy cell read "unconfirmed".
+        if gain < MIN_FIT_GAIN_F:
+            return _weak_bend("dbw", point, detail)
+        return KneeResult(
+            "dbw", None, False,
+            f"the fitted knee-point sits at cycle {point:.0f}, within the "
+            f"last {MIN_SEGMENT} cycles of the record -- either the bend is "
+            f"too recent to confirm, or the fit pushed it to the edge, which "
+            f"is what this model does on sub-linear fades",
+            detail, status=STATUS_INSUFFICIENT, candidate_cycle=point,
+        )
+    drop = float(values[cycles >= point][0] - values[-1])
+    detail["drop_after_pct"] = drop
+    if drop < MIN_KNEE_DROP_PCT:
+        return _not_yet("dbw", point, drop, cycles, detail)
+    if gain < MIN_FIT_GAIN_F:
+        return _weak_bend("dbw", point, detail)
+
+    if onset is None:
+        where = f"at cycle {point:.0f} (one transition; no separate onset resolved)"
+    else:
+        where = (f"at cycle {onset:.0f} (onset) and settles in "
+                 f"by cycle {point:.0f}")
+    if not np.isfinite(ratio):
+        return KneeResult(
+            "dbw", point, True,
+            f"fade begins {where} ({slope_before:+.3f} -> {slope_after:.3f} "
+            f"%/cycle)",
+            detail, onset_cycle=onset,
+        )
+    return KneeResult(
+        "dbw", point, True,
+        f"fade leaves its early trend {where}, steepening {ratio:.2f}x "
+        f"({slope_before:.3f} -> {slope_after:.3f} %/cycle)",
+        detail, onset_cycle=onset,
+    )
+
+
+def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
+    """Knee-onset and knee-point from a Double Bacon-Watts fit (ADR 0021).
+
+    One fit estimates both ends of the same event: where the fade first
+    leaves its early trend (x1, the onset) and where the rapid loss settles
+    in (x2, the point).  The other criteria answer only the second question.
+
+    The second transition has to earn itself, exactly as the third line does
+    in ``_segmented_knee``: on a curve that one transition describes -- a
+    plain hinge -- the double model's x2 carries no slope change and lands
+    wherever the noise leans, so it would report a confident knee-point at a
+    cycle where nothing happened.  The single Bacon-Watts fit is therefore
+    taken first, and the double fit speaks only when adding its transition
+    removes as much residual as a break has to.  When it does not, the knee
+    has no resolvable onset and the result says so instead of inventing one.
+    """
+    n = len(cycles)
+    if n < DBW_MIN_POINTS:
+        return KneeResult("dbw", None, False,
+                          f"needs at least {DBW_MIN_POINTS} cycles, has {n}")
+    try:
+        import scipy.optimize  # noqa: F401  -- deferred; wrdkit core is numpy-only
+    except ImportError:
+        return KneeResult(
+            "dbw", None, False,
+            "scipy is not installed, so the Bacon-Watts fits were skipped "
+            "(pip install 'wrdkit[eis]')",
+            status=STATUS_INDETERMINATE,
+        )
+    rss_single = _linear_fit(cycles, values)[2]
+
+    single = _bw_fit(cycles, values)
+    double = _dbw_fit(cycles, values)
+    if single is None and double is None:
+        return KneeResult("dbw", None, False,
+                          "the fit converged from none of the seeded starts")
+
+    judged_double = None
+    if double is not None:
+        sse, popt = double
+        a0, a1, a2, a3, x1, x2, g1, g2 = (float(value) for value in popt)
+        if x2 < x1:
+            # Same curve, labels crossed (see _dbw_model).  The onset is the
+            # earlier transition by definition.
+            x1, x2, g1, g2, a2, a3 = x2, x1, g2, g1, a3, a2
+        escalate = (single is None
+                    or _f_gain(single[0], sse, n, 2, parameters=8)
+                    >= MIN_FIT_GAIN_F)
+        if escalate:
+            detail = {
+                "knee_onset": x1, "breakpoint": x2,
+                "gamma_onset": g1, "gamma_point": g2,
+                "slope_before": a1 - a2 - a3, "slope_after": a1 + a2 + a3,
+                "rss_dbw": sse, "rss_single_line": rss_single,
+                "fit_gain_score": _f_gain(rss_single, sse, n, 6, parameters=8),
+                "transitions": 2.0,
+            }
+            # The double fit earned both transitions, but "onset then point"
+            # is a claim about their *shape*, not just their existence.  Each
+            # transition changes the slope by twice its alpha, so:
+            #
+            # A closing transition that eases (a3 >= 0) is a crash levelling
+            # off or a lull ending -- there is no cycle where rapid loss
+            # settles in, and the fitted x2 marks where the fade *slowed*.
+            # Reporting it as the knee-point put the answer at the crash's
+            # exit instead of its entry.
+            if a3 >= 0:
+                return KneeResult(
+                    "dbw", None, False,
+                    f"the later transition (cycle {x2:.0f}) eases the fade "
+                    f"rather than steepening it -- a crash that eases off or "
+                    f"a lull, not an onset-to-point knee; the segmented "
+                    f"criterion handles that shape", detail)
+            # Transitions that do not overlap are two events with a straight
+            # stretch between them, not one event's onset and point.  tanh is
+            # 96 % saturated two gammas out, so the zones touch only while
+            # the gap is within twice the summed widths.  Without this a cell
+            # that bends at 50 and collapses at 150 reported "onset 50,
+            # point 150" -- two knees wearing one knee's labels.
+            if a2 < 0 and (x2 - x1) > 2.0 * (g1 + g2):
+                detail["separation_cycles"] = x2 - x1
+                return KneeResult(
+                    "dbw", None, False,
+                    f"the two fitted transitions ({x1:.0f} and {x2:.0f}) are "
+                    f"separate events, not one knee's onset and point -- the "
+                    f"stretch between them is straight; the segmented "
+                    f"criterion reports the earliest",
+                    detail)
+            # An opening transition that eases (a2 >= 0) is the end of a lull,
+            # not the onset of the fade; the knee is the closing transition
+            # alone.
+            onset = x1 if a2 < 0 else None
+            judged_double = _judge_bacon_watts(
+                cycles, values, detail, x2, onset,
+                a1 - a2 - a3, a1 + a2 + a3, detail["fit_gain_score"],
+            )
+            if judged_double.detected:
+                return judged_double
+
+    judged_single = None
+    if single is not None:
+        sse, popt = single
+        a0, a1, a2, x1, g1 = (float(value) for value in popt)
+        detail = {
+            "breakpoint": x1, "gamma_point": g1,
+            "slope_before": a1 - a2, "slope_after": a1 + a2,
+            "rss_bw": sse, "rss_single_line": rss_single,
+            "fit_gain_score": _f_gain(rss_single, sse, n, 4, parameters=6),
+            "transitions": 1.0,
+        }
+        judged_single = _judge_bacon_watts(
+            cycles, values, detail, x1, None,
+            a1 - a2, a1 + a2, detail["fit_gain_score"],
+        )
+        if judged_single.detected:
+            return judged_single
+
+    # Neither model found a knee.  Prefer whichever rejection actually looked
+    # at a break point: "not yet confirmed" says more than "no acceleration".
+    for candidate in (judged_double, judged_single):
+        if candidate is not None and candidate.status == STATUS_INSUFFICIENT:
+            return candidate
+    return judged_double or judged_single
+
+
+def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
+                            seed: int = 0) -> dict | None:
+    """Case-resampling bootstrap 95 % CI for (onset, point) -- Fermin-Cueto 2020.
+
+    ``values`` is the same series the criterion fitted: retention from the
+    reference cycle on.  Each resample refits from the full fit's optimum, as
+    the supplied procedure does.  **Not called on the request path**: one
+    resample is one fit, and 200 of them belong in a report script, not in
+    every dashboard render (ADR 0021).
+
+    ``None`` when the base fit fails or fewer than half the resamples
+    converge -- an interval built from the surviving quarter would look exact
+    and mean nothing (0.4).
+    """
+    cycles = np.asarray(cycles, dtype=np.float64)
+    values = np.asarray(values, dtype=np.float64)
+    fit = _dbw_fit(cycles, values)
+    if fit is None:
+        return None
+    from scipy.optimize import curve_fit
+
+    _, popt = fit
+    rng = np.random.default_rng(seed)
+    onsets, points = [], []
+    n = len(cycles)
+    for _ in range(n_boot):
+        index = rng.choice(n, size=n, replace=True)
+        try:
+            resampled, _ = curve_fit(_dbw_model, cycles[index], values[index],
+                                     p0=popt, jac=_dbw_jacobian,
+                                     ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
+                                     maxfev=20000)
+        except RuntimeError:
+            continue
+        low, high = sorted((float(resampled[4]), float(resampled[5])))
+        onsets.append(low)
+        points.append(high)
+    if len(onsets) < n_boot // 2:
+        return None
+    onset_lo, onset_hi = np.percentile(onsets, [2.5, 97.5])
+    point_lo, point_hi = np.percentile(points, [2.5, 97.5])
+    return {
+        "onset_low": float(onset_lo), "onset_high": float(onset_hi),
+        "point_low": float(point_lo), "point_high": float(point_hi),
+        "n_resamples_used": len(onsets),
+    }
+
+
 def _criteria(cycles: np.ndarray, retention: np.ndarray, smoothed: np.ndarray, *,
               threshold_pct: float, slope_factor: float, baseline_window: int,
               slope_window: int, smoothing_window: int) -> list[KneeResult]:
-    """All four criteria over one stretch of cycles, in a fixed order.
+    """All five criteria over one stretch of cycles, in a fixed order.
 
     Pulled out so the same four can be re-run on a record with a
     protocol block taken out of it, and stay index-comparable with the first
@@ -1168,6 +1597,9 @@ def _criteria(cycles: np.ndarray, retention: np.ndarray, smoothed: np.ndarray, *
                           baseline_window=baseline_window,
                           window=min(slope_window, max(n // 3, 2))),
         _curvature_knee(cycles, retention, smoothing_window),
+        # Appended last on purpose: detect_knee falls back to results[1] (the
+        # two-line fit) and the excursion rebuild pairs results by index.
+        _dbw_knee(cycles, smoothed),
     ]
 
 
@@ -1338,7 +1770,10 @@ def detect_knee(cycles, capacities, *, reference_cycle: int | None = None,
                                               candidate_cycle=r.candidate_cycle))
             results = rebuilt
 
-    ranked = [r for name in ("segmented", "slope_ratio")
+    # ``dbw`` first (ADR 0021): one fit that estimates the onset and the
+    # point of the same event outranks the criteria that only see the point.
+    # The rest of the order is ADR 0005's.
+    ranked = [r for name in ("dbw", "segmented", "slope_ratio")
               for r in results if r.method == name and r.detected]
     primary = ranked[0] if ranked else results[1]
     if len(ranked) > 1:
