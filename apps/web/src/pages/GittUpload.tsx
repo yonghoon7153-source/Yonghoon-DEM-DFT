@@ -9,7 +9,7 @@
  *  달라서 여기서 한 번에 받을 수가 없다.
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { RelatedCellIndex } from '../components/RelatedCell'
@@ -36,9 +36,15 @@ export function GittUpload() {
   const [results, setResults] = useState<Result[]>([])
 
   const pick = useUploadTarget(results.length)
-  // EIS 업로드와 같은 창이다 -- 전부 보여 주고 여기서 붙이거나 뗀다.
   const runs = useAsync(() => api.listGittRuns(), [results.length], { live: true })
   const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
+
+  // EIS 업로드와 같은 창이고 같은 규칙이다 -- 이번에 올린 것만 편다.
+  const mine = useMemo(
+    () => new Set(results.map((item) => item.run?.id)
+      .filter((id): id is number => id !== undefined)),
+    [results],
+  )
 
   const send = useCallback(async (files: FileList | File[]) => {
     const list = [...files]
@@ -140,7 +146,7 @@ export function GittUpload() {
                 <Spinner />
               ) : (
                 <RelatedCellIndex
-                  entries={(runs.data ?? []).map((run) => ({
+                  entries={(runs.data ?? []).filter((run) => mine.has(run.id)).map((run) => ({
                     id: run.id,
                     name: run.name,
                     sampleId: run.sample_id ?? null,
@@ -159,7 +165,7 @@ export function GittUpload() {
                     await api.deleteGittRun(id)
                     runs.reload()
                   }}
-                  emptyLabel="아직 올린 기록이 없습니다"
+                  emptyLabel="이번에 올린 기록이 여기 나옵니다 — 예전 것은 목록에서 고칠 수 있습니다"
                 />
               )}
             </div>

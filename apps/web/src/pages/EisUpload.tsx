@@ -13,7 +13,7 @@
  *  말하고 (§0.3), 올린 뒤 표가 그렇게 적어 준다.
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { RelatedCellIndex } from '../components/RelatedCell'
@@ -54,10 +54,18 @@ export function EisUpload() {
   const [results, setResults] = useState<Result[]>([])
 
   const pick = useUploadTarget(results.length)
-  // 색인 창은 **전부**를 본다.  안 붙은 것만 보여 주면 잘못 붙인 것을 옮길
-  // 자리가 없는데, 그 일은 실제로 자주 생긴다 (셀을 나중에 만들기 때문이다).
   const spectra = useAsync(() => api.listSpectra(), [results.length], { live: true })
   const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
+
+  // 색인 창은 **이번에 올린 것만** 편다.  한때 전부를 폈는데, 스펙트럼이
+  // 쌓이자 방금 올린 파일이 수십 줄 사이에 묻혀서 정작 여기서 할 일 -- 방금
+  // 것의 관계셀을 정하는 일 -- 이 제일 어려워졌다.  예전 것의 관계셀은
+  // 목록·대시보드에서 그대로 고칠 수 있다.
+  const mine = useMemo(
+    () => new Set(results.map((item) => item.spectrum?.id)
+      .filter((id): id is number => id !== undefined)),
+    [results],
+  )
 
   const send = useCallback(async (files: FileList | File[]) => {
     const all = [...files]
@@ -194,7 +202,7 @@ export function EisUpload() {
               <Spinner />
             ) : (
               <RelatedCellIndex
-                entries={(spectra.data ?? []).map((item) => ({
+                entries={(spectra.data ?? []).filter((item) => mine.has(item.id)).map((item) => ({
                   id: item.id,
                   name: item.name,
                   sampleId: item.sample_id,
@@ -213,7 +221,7 @@ export function EisUpload() {
                   await api.deleteSpectrum(id)
                   spectra.reload()
                 }}
-                emptyLabel="아직 올린 스펙트럼이 없습니다"
+                emptyLabel="이번에 올린 스펙트럼이 여기 나옵니다 — 예전 것은 목록에서 고칠 수 있습니다"
               />
             )}
           </div>
