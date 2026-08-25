@@ -336,6 +336,71 @@ describe('스펙트럼 상세', () => {
     }
   }
 
+  function drtResult(order: number, lam: number) {
+    return {
+      spectrum_id: 1,
+      regularisation: lam,
+      derivative_order: order,
+      tau_s: [1e-4, 1e-3, 1e-2],
+      gamma_ohm: [1, 5, 1],
+      r_inf_ohm: 5,
+      inductance_h: null,
+      chi_squared: 1e-6,
+      residual_norm: 0.01,
+      penalty_norm: 0.1,
+      peaks: [],
+      total_polarisation_ohm: 12,
+      dropped_inductive: 0,
+    }
+  }
+
+  it('평활 차수를 바꾸면 옛 차수의 γ 를 그리지도 복사하지도 않는다 (#19)', async () => {
+    // useAsync 는 재요청 중 옛 값을 유지한다.  여기서는 차수 2 버튼 아래
+    // 차수 1 의 곡선이 남아 복사까지 됐고, 차수를 바꿀 때 비운 index 를
+    // 옛 응답의 추천이 도로 채워 새 응답의 추천(다른 λ)을 영영 안 탔다.
+    let releaseOrder2: (value: unknown) => void = () => {}
+    const deferred = new Promise((resolve) => {
+      releaseOrder2 = resolve
+    })
+    installFetch(
+      detailHandler((url) => {
+        if (path(url) === '/api/eis/spectra/1/drt/sweep') {
+          const order = Number(params(url).get('derivative_order') ?? 1)
+          if (order === 2) {
+            return deferred.then(() => ({
+              spectrum_id: 1,
+              results: [drtResult(2, 0.01), drtResult(2, 0.1)],
+              suggested_index: 0,
+              suggested_reason: 'L 곡선의 곡률이 가장 큰 지점 (λ=0.01)',
+            }))
+          }
+          return {
+            spectrum_id: 1,
+            results: [drtResult(1, 0.001), drtResult(1, 0.01), drtResult(1, 0.1)],
+            suggested_index: 2,
+            suggested_reason: 'L 곡선의 곡률이 가장 큰 지점 (λ=0.1)',
+          }
+        }
+        return undefined
+      }),
+    )
+    renderDetail()
+
+    // 차수 1 응답: 추천 index 2 (λ=0.1) 로 열린다.
+    const slider = await screen.findByLabelText('벌점 λ')
+    await waitFor(() => expect(slider).toHaveValue('2'))
+
+    await userEvent.click(screen.getByRole('button', { name: '2' }))
+    // 지연 중: 옛 차수의 곡선/복사 대신 스피너.
+    expect(await screen.findByText('λ 를 훑는 중')).toBeInTheDocument()
+    expect(screen.queryByLabelText('벌점 λ')).not.toBeInTheDocument()
+
+    releaseOrder2(null)
+    // 새 응답의 추천(index 0, λ=0.01)으로 선다 — 옛 index 2 가 아니라.
+    await waitFor(() => expect(screen.getByLabelText('벌점 λ')).toHaveValue('0'))
+    expect(screen.getByText('0.01')).toBeInTheDocument()
+  })
+
   it('회로 프리셋을 누르면 입력란에 들어간다', async () => {
     installFetch(detailHandler())
     renderDetail()

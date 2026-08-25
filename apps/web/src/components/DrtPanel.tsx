@@ -28,25 +28,34 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
     [spectrumId, order],
   )
 
+  const results = useMemo(() => sweep.data?.results ?? [], [sweep.data])
+  // 응답이 **지금 누른 차수의 것**인지.  useAsync 는 새 요청이 도는 동안 옛
+  // 값을 유지하는데(다른 화면에서는 그게 맞다), 여기서는 차수 2 버튼 아래
+  // 차수 1 의 γ 가 그려지고 복사까지 됐다 (리뷰 #19).  더 나쁜 것: 차수를
+  // 바꾸면 index 를 비우는데, 옛 응답이 남아 있어 선택 효과가 옛 추천으로
+  // 도로 채웠고 — 새 응답이 와도 index !== null 이라 새 추천을 안 탔다.
+  // 결과마다 실려 오는 derivative_order 가 신선도의 증명이다.
+  const fresh = sweep.data !== null &&
+    (results.length === 0 || results[0]!.derivative_order === order)
+
   // 모서리가 있으면 거기서 시작한다.  없으면 가운데 — 어느 쪽 실패 모드에도
   // 붙어 있지 않은 자리다.  둘 다 이유를 화면이 말한다.
   useEffect(() => {
-    if (!sweep.data || index !== null) return
+    if (!sweep.data || !fresh || index !== null) return
     // 응답이 비어 있을 수 있다 (풀지 못한 스펙트럼).  거기서 `.length` 를
     // 읽으면 화면 전체가 죽는데, 죽은 화면은 "DRT 를 못 풀었다" 보다 훨씬
     // 나쁜 소식이다 — 나이퀴스트도 파라미터도 함께 사라진다.
-    const available = sweep.data.results ?? []
-    if (!available.length) return
+    if (!results.length) return
     const suggested = sweep.data.suggested_index ?? -1
-    setIndex(suggested >= 0 ? suggested : Math.floor(available.length / 2))
-  }, [sweep.data, index])
+    setIndex(suggested >= 0 ? suggested : Math.floor(results.length / 2))
+  }, [sweep.data, fresh, results, index])
 
   useEffect(() => {
     setIndex(null)
   }, [spectrumId, order])
 
-  const results = sweep.data?.results ?? []
-  const shown: Drt | null = index === null ? null : (results[index] ?? null)
+  const shown: Drt | null =
+    !fresh || index === null ? null : (results[index] ?? null)
 
   const series = useMemo<PlotSeries[]>(() => {
     if (!shown) return []
@@ -70,7 +79,7 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
   if (!shown) {
     return (
       <Card title="DRT (이완 시간 분포)">
-        {sweep.data && !results.length ? (
+        {sweep.data && fresh && !results.length ? (
           <Alert kind="info">
             이 스펙트럼으로는 DRT 를 풀지 못했습니다
             {sweep.data.suggested_reason ? ` — ${sweep.data.suggested_reason}` : ''}
