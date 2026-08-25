@@ -31,7 +31,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from .wrd import WrdFile
+from .wrd import CellStatus, WrdFile
 
 __all__ = ["PulseBlock", "PseudoOcvPoint", "PseudoOcv", "DiffusionPoint",
            "DiffusionResult", "segment_pulses", "pseudo_ocv", "diffusion",
@@ -136,12 +136,23 @@ def segment_pulses(wrd: WrdFile, *, rest_threshold_a: float | None = None
                    ) -> list[PulseBlock]:
     """Split a record into pulse and rest blocks.
 
-    Uses the current, not the step counter.  The step counter is the right tool
-    for cycling (CLAUDE.md §3) because a schedule step is what a cycle is made
-    of, but a GITT schedule often writes one *looped* step pair for hundreds of
-    pulses -- the counter then changes at every pulse, which is the same
-    answer, or does not, which is the wrong one.  The current says what the
-    cell was doing either way.
+    ``CELL STATUS`` first: the instrument wrote down what it was doing at
+    every sample, and re-deriving that from the current is answering a
+    question the file already answers (CLAUDE.md 0.3).  The re-derivation
+    also has a real failure: a rest with a small offset reading -- one
+    microamp of leakage on the sense line -- sets the percentile threshold
+    *at the offset*, and the whole file merges into one pulse (review #26).
+
+    The current is the fallback, for records whose status column carries
+    values we do not know (CV steps, other instruments) -- there the sign of
+    the current still says what the cell was doing.  An explicit
+    ``rest_threshold_a`` also forces the current path: the caller has looked
+    at the record and made a judgement, and that overrides both.
+
+    Not the step counter in either case: a GITT schedule often writes one
+    *looped* step pair for hundreds of pulses -- the counter then changes at
+    every pulse, which is the same answer, or does not, which is the wrong
+    one.
     """
     if not len(wrd):
         return []
@@ -150,9 +161,17 @@ def segment_pulses(wrd: WrdFile, *, rest_threshold_a: float | None = None
     seconds = wrd.seconds("test_time")
     signed = _signed_capacity_mah(wrd)
 
-    threshold = (rest_threshold_a if rest_threshold_a is not None
-                 else _rest_threshold(current))
-    state = np.where(np.abs(current) > threshold, np.sign(current), 0.0)
+    status = wrd.data.get("cell_status")
+    known = {CellStatus.REST, CellStatus.CHARGE, CellStatus.DISCHARGE}
+    if (rest_threshold_a is None and status is not None
+            and set(np.unique(np.asarray(status, dtype=int))) <= known):
+        status = np.asarray(status, dtype=int)
+        state = np.where(status == CellStatus.CHARGE, 1.0,
+                         np.where(status == CellStatus.DISCHARGE, -1.0, 0.0))
+    else:
+        threshold = (rest_threshold_a if rest_threshold_a is not None
+                     else _rest_threshold(current))
+        state = np.where(np.abs(current) > threshold, np.sign(current), 0.0)
 
     blocks: list[PulseBlock] = []
     changes = np.flatnonzero(np.diff(state)) + 1

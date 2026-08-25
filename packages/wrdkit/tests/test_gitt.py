@@ -266,6 +266,31 @@ def test_a_short_rest_invalidates_the_next_baseline_too():
     assert recovered.d_cm2_s == pytest.approx(normal.d_cm2_s, rel=1e-6)
 
 
+def test_a_rest_current_offset_does_not_merge_the_file():
+    """휴지에 1 µA 오프셋이 있으면 p90 문턱이 그 오프셋에서 정해진다.
+
+    그러면 문턱이 오프셋의 1/10 이 되어 모든 샘플이 "펄스" 가 되고, 파일
+    전체가 한 덩어리 충전이 된다 (리뷰 #26).  계측기는 CELL STATUS 로 매
+    샘플의 상태를 이미 적어 놨다 — 그것을 먼저 쓴다 (§0.3).
+    """
+    samples = synthetic.make_gitt(n_pulses=4)
+    for sample in samples:
+        if sample.cell_status == 1:          # rest
+            sample.current = 1e-6
+    wrd = read_wrd_bytes(synthetic.build_wrd(samples))
+    blocks = segment_pulses(wrd)
+    assert [block.mode for block in blocks] == ["charge", "rest"] * 4
+
+
+def test_an_explicit_threshold_still_wins():
+    """호출자가 문턱을 넘겨줬으면 기록을 보고 판단한 것이다 — 그쪽을 따른다."""
+    samples = synthetic.make_gitt(n_pulses=2)
+    wrd = read_wrd_bytes(synthetic.build_wrd(samples))
+    # 문턱을 펄스 전류(1 mA)보다 높게 주면 전부 휴지로 읽혀야 한다.
+    blocks = segment_pulses(wrd, rest_threshold_a=0.1)
+    assert [block.mode for block in blocks] == ["rest"]
+
+
 # --- 증거 보존과 행 보존 (리뷰 #17·#25) ---------------------------------------
 
 def test_every_pulse_gets_a_row_even_without_a_rest():

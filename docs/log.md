@@ -2633,3 +2633,8 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   남고 원문이 버려졌다 — 내용 해시로 원문 보존, SpectrumRecord 에
   settings_sha256·settings_name (추가 컬럼은 _add_missing_columns 가 처리).
   dedup 재업로드도 빈 경우 원문을 채운다.
+## [2026-08-25] fix | GITT 분할이 CELL STATUS 를 두고 전류를 재추정했다
+- Codex #26. 휴지에 1 µA 오프셋(센스 누설)이 있으면 p90 문턱이 그 오프셋에서
+  정해져 파일 전체가 한 덩어리 충전이 됐다. 계측기가 매 샘플 적어 둔 CELL
+  STATUS(1/3/4)를 1차로 쓰고 (§0.3), 모르는 상태값이 섞인 파일과 명시적
+  rest_threshold_a 는 종전 전류 경로로. 오프셋 재현 + 명시 문턱 우선 테스트.
