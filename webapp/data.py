@@ -118,6 +118,42 @@ def load_canonical_methods() -> str:
     return p.read_text(encoding="utf-8") if p.exists() else ""
 
 
+SDCP_WAVE1_MD = KB / "results" / "sdcp_wave1_explainer_2026_08_25.md"
+SDCP_WAVE1_JSON = DB / "properties" / "sdcp_wave1_results.json"
+
+
+def load_sdcp_wave1_md() -> str:
+    return SDCP_WAVE1_MD.read_text(encoding="utf-8") if SDCP_WAVE1_MD.exists() else ""
+
+
+def sdcp_wave1_rows() -> dict:
+    """wave1 잡 표를 **basin 일치 여부와 함께** 낸다.
+
+    ⛔ 이 함수가 못 하는 것: basin 이 어긋난 잡의 값을 보정하지 않는다.
+      50 meV 벌점을 알고 있어도 빼지 않는다 — 4점 추정으로 결론을 만들면
+      측정이 아니라 가정이 된다. 어긋난 행은 값과 함께 **경고를 달아** 낸다.
+    """
+    if not SDCP_WAVE1_JSON.exists():
+        return {}
+    d = json.loads(SDCP_WAVE1_JSON.read_text(encoding="utf-8"))
+    jobs = d.get("jobs", [])
+    # 자리 선호 ΔE = E(Ni_top) − E(Li_top) — 같은 조각·같은 seed 끼리만
+    by = {}
+    for j in jobs:
+        by.setdefault((j["fragment"], j["seed"]), {})[j["pose"]] = j
+    dE = []
+    for (frag, seed), d2 in sorted(by.items()):
+        if "Nitop" not in d2 or "Litop" not in d2:
+            continue
+        ni, li = d2["Nitop"], d2["Litop"]
+        same = ni["basin"] == li["basin"]
+        dE.append({"fragment": frag, "seed": seed,
+                   "dE_meV": round((ni["E_total_eV"] - li["E_total_eV"]) * 1000, 1),
+                   "basin_pair": f'{li["basin"]}/{ni["basin"]}', "valid": same})
+    return {"meta": d, "jobs": jobs, "dE": dE,
+            "n_valid": sum(1 for r in dE if r["valid"]), "n_dE": len(dE)}
+
+
 OPEN_ITEMS_MD = KB / "open_items.md"
 
 

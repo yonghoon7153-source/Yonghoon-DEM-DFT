@@ -402,6 +402,24 @@ def methods():
                            subtitle="kb/methodology/computational_methods_canonical.md · 값 인용 전 단일 기준")
 
 
+@app.route("/sdcp")
+def sdcp_wave1():
+    """SDCP wave1 — NCM(104) 표면 위 바인더/SDCP 흡착 (VASP 외주 회신 해석).
+
+    ⚠ 표는 **basin 일치 여부를 값과 같은 줄에** 둔다. 어긋난 잡도 숨기지 않고
+      경고와 함께 보인다 — 숨기면 "없는 데이터"로 보여 다시 계산하게 된다.
+    ⛔ 이 페이지가 못 하는 것: 실제 셀의 바인더 분포를 예측하지 않는다.
+      진공·0 K·단분자 값이다. 절대 E_ads 를 타 코드/논문과 직접 비교하지 않는다.
+    """
+    md = D.load_sdcp_wave1_md()
+    html = md_html(md, ("tables", "fenced_code", "toc"))
+    return render_template("doc.html", active="sdcp",
+                           title="🧪 SDCP wave1 — 바인더가 NCM 표면 어디에 붙나",
+                           content=html, data=D.sdcp_wave1_rows(),
+                           subtitle="VASP 외주 30잡 · 두 자기 시드 교차확인 · "
+                                    "db/properties/sdcp_wave1_results.json")
+
+
 @app.route("/todo")
 def todo():
     md = D.load_open_items_md()

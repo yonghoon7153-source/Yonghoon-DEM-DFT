@@ -7,5 +7,41 @@
   <div><h1>{{ title }}</h1>{% if subtitle %}<div class="sub">{{ subtitle }}</div>{% endif %}</div>
   <div class="page-actions"><a class="btn" href="/">▦ Dashboard</a></div>
 </div>
+{# 데이터 표는 **설명문 위**에 둔다 — 값 보러 온 사람이 스크롤하지 않게.
+   라우트가 data 를 안 넘기면 통째로 빠진다(/methods · /todo 는 영향 없음). #}
+{% if data and data.jobs %}
+<div class="doc">
+  <h2>📊 원자료 (db/properties/sdcp_wave1_results.json)</h2>
+  <p class="sub">{{ data.meta.code }} · 잡 {{ data.meta.n_jobs }} · OUTCAR {{ data.meta.n_outcar }}
+     · 분자 기준 {{ data.meta.molecule_reference_box }}</p>
+
+  <h3>자리 선호 ΔE = E(Ni_top) − E(Li_top) · 양수 = Li 자리 우세</h3>
+  <table><thead><tr><th>조각</th><th>seed</th><th style="text-align:right">ΔE (meV)</th>
+    <th>basin (Li/Ni)</th><th>판정</th></tr></thead><tbody>
+  {% for r in data.dE %}
+    <tr><td>{{ r.fragment }}</td><td>{{ r.seed }}</td>
+        <td style="text-align:right"><b>{{ '%+.1f'|format(r.dE_meV) }}</b></td>
+        <td>{{ r.basin_pair }}</td>
+        <td>{% if r.valid %}✓ 같은 basin{% else %}⛔ 다른 basin — 이 값은 분자 효과가
+            아니라 basin 차이를 섞어 본다{% endif %}</td></tr>
+  {% endfor %}
+  </tbody></table>
+  <p class="sub">유효 {{ data.n_valid }}/{{ data.n_dE }} — 어긋난 행도 지우지 않는다
+     (숨기면 "안 돌린 계산" 으로 보인다).</p>
+
+  <h3>흡착에너지 E_ads (eV · 음수 = 잘 붙는다)</h3>
+  <table><thead><tr><th>잡</th><th>조각</th><th>자세</th><th>seed</th>
+    <th style="text-align:right">E_ads</th><th>basin (잡/슬랩)</th></tr></thead><tbody>
+  {% for j in data.jobs %}
+    <tr{% if not j.basin_consistent %} style="opacity:.72"{% endif %}>
+      <td style="font-size:.85em">{{ j.job }}</td><td>{{ j.fragment }}</td>
+      <td>{{ j.pose }}</td><td>{{ j.seed }}</td>
+      <td style="text-align:right"><b>{{ '%.3f'|format(j.E_ads_eV) }}</b></td>
+      <td>{{ j.basin }}/{{ j.slab_basin }}
+          {% if not j.basin_consistent %} ⛔ 슬랩 기준과 다른 basin{% endif %}</td></tr>
+  {% endfor %}
+  </tbody></table>
+</div>
+{% endif %}
 <div class="doc">{{ content|safe }}</div>
 {% endblock %}
