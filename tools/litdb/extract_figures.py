@@ -322,9 +322,14 @@ def _shrink(path):
         return
     try:
         im = Image.open(path).convert("RGB")
-        q = im.quantize(colors=256, method=Image.MEDIANCUT)
-        # 팔레트로 바꿔 오차가 큰 사진류는 원본 유지 (구조 그림·그래프만 이득)
-        if len(im.getcolors(maxcolors=4096) or []) > 3500:
+        # ⛔⛔ 2026-08-25 (codex D 리뷰) — 여기가 **정확히 반대로** 동작했다.
+        #   `getcolors(maxcolors=4096)` 은 4096 색을 넘으면 **None** 을 돌려준다.
+        #   `or []` 가 그걸 빈 목록으로 바꿔 len=0 → `0 > 3500` 거짓 → else 로 가서
+        #   **256 색으로 양자화**했다. 즉 **색이 가장 풍부한 이미지가 가장 심하게 뭉개졌다.**
+        #   스캔 자료집의 글자·미세 범례·열지도 판독을 해친다. talks 뿐 아니라
+        #   **모든 그림 추출**에 걸려 있었다. None = "너무 많다" 로 읽는다.
+        cols = im.getcolors(maxcolors=4096)
+        if cols is None or len(cols) > 3500:
             im.save(path, "PNG", optimize=True)
         else:
             q.save(path, "PNG", optimize=True)
@@ -501,7 +506,10 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
                                  page.rect.x1, page.rect.y0 + (k + 1) * h)
                 sub = page.get_pixmap(dpi=d_eff, clip=clip)
                 sbr = blank_ratio(sub)
-                sublab = f"{pno + 1}{'ab cdef'[k]}" if k < 6 else f"{pno + 1}_{k}"
+                # ⛔ 2026-08-25 (codex D) — `'ab cdef'[2]` 가 **공백**이라 nup=3 에서
+                #   라벨이 `1a, 1b, "1 "` 이 됐다. 문자열 슬라이싱 대신 목록으로.
+                _SUF = "abcdefgh"
+                sublab = f"{pno + 1}{_SUF[k]}" if k < len(_SUF) else f"{pno + 1}_{k}"
                 if sbr > keep_blank:
                     skipped.append((f"F{sublab}", pno + 1, f"거의 백지({sbr:.3f})"))
                     continue

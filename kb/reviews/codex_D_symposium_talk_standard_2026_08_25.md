@@ -3,9 +3,11 @@ title: "교차리뷰 D — 심포지엄 세션(덱+녹취) 표준 (codex 작업�
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, litdb, talks, transcript, standard, symposium]
-status: 리뷰대기
+status: 리뷰완료-HOLD
 confidence: medium
-verificationStatus: unverified
+verificationStatus: verified
+verifiedAt: 2026-08-25
+verifiedBy: "codex 리뷰 수령 · P1 4건 중 코드 2건은 직접 재현·수정 확인"
 explored: false
 authoredBy: agent
 effort: high
@@ -14,6 +16,70 @@ evidenceScope: single-source
 ---
 
 # 교차리뷰 D — 심포지엄 세션(덱 + 녹취) 표준
+
+## ⚖ 판정 (2026-08-25 수령)
+
+> **방향 조건부 찬성 · 10편 일괄 적용 HOLD.**
+> · 첫 기준판을 **draft 로 계속 쓰기**: GO
+> · v2 를 **10편 고정 표준으로 확정**: **HOLD**
+> · 수치·직접인용을 downstream 에 전파: **P1 수정 후 재리뷰**
+
+### P1 4건 — 우리가 묻지 않은 것들
+
+| | 지적 | 상태 |
+|---|---|---|
+| **1** | `[말]` 과 STT 가 **같은 증거처럼** 섞여 있다. 증거층은 셋이다 — 덱 · **실제 음성** · **STT(음성의 오류 많은 파생물)**. 우리는 음성을 들은 적이 없고 **파일도 없다** ⇒ `[말 12:34]` 은 전부 `[STT 12:34]` 여야 한다. 안 그러면 **STT 환각을 발표자의 실제 발언으로 승격**한다 | ⛔ **미수정** — 양식 전면 재작업 필요 |
+| **2** | **원본 사슬·공개 권한이 없다** — PDF/audio/STT 의 sha256, STT 엔진·모델, 음성 실제 길이 vs coverage, 공개/내부전용, Q&A 동의·익명화, off-record 여부. 세션마다 `source_manifest.json` 을 먼저 고정해야 한다 | ⛔ 미수정 |
+| **3** | **백지로 버린 슬롯이 manifest 에서 사라진다** — 26쪽×2 = 52 슬롯인데 figures.json 엔 50개뿐이고 이유가 안 남는다. 표준의 "안 본 것도 기록한다" 와 정면 충돌. 합성 테스트에서 `Q&A` 글자만 있는 희소 슬라이드가 백지로 삭제됨 | ⛔ 미수정 |
+| **4** | `_shrink()` 가 **고색상 이미지를 256색으로 양자화** — `getcolors(maxcolors=4096)` 이 초과 시 None 인데 `or []` 로 빈 목록 취급 ⇒ 조건이 뒤집혀 **색이 가장 풍부한 이미지가 가장 심하게 뭉개졌다** | ✅ **수정** (아래) |
+
+### 즉시 수정한 것 (직접 재현 후)
+
+- **P1-4** `_shrink()` — `None` 을 "너무 많다" 로 읽게 고쳤다. 65,536색 합성 이미지가
+  `P` 모드 250색이 되던 것 → **RGB 보존 확인.** ⚠ talks 뿐 아니라 **모든 그림 추출**에
+  걸려 있던 버그다.
+- **nup=3 라벨** — `'ab cdef'[2]` 가 **공백**이라 `1a, 1b, "1 "` 이 됐다. `"abcdefgh"` 로 교체.
+
+### 찬성해 준 것
+
+- **균등 분할 유지** — "실제 확인 없이 흰 줄 자동 탐지를 넣는 편이 더 위험하다."
+  내가 되돌린 판단이 옳았다. 다른 레이아웃이 오면 자동 탐지보다 **`--layout` · `--split-y`
+  명시 override** 를 먼저 열라는 처방까지 받았다.
+- 블록 단위 정렬 · `?/–/skip` · 불일치 세분화 · STT 6분류 · 판독 메타 (v2 추가분 전부)
+
+### 남은 큰 숙제 (10편 전에)
+
+1. **증거층 3분리** — 출처(`deck/audio/stt`) × 판정(`agree / transcript_error /
+   deck_corrected_by_speaker / spoken_conflict / unresolved`) **두 축**으로 분리.
+   badge 하나에 합치면 경우의 수가 계속 는다.
+2. **`source_manifest.json`** — 해시·권한·coverage. 음성 미보유면 **direct quote 와
+   `[말]` 금지**.
+3. **모든 슬롯을 manifest 에** — `blank_candidate` 로 남기고 `kept:false` · `reviewed:false`.
+4. **사전 외부화** — `talk_lexicons/base.json` + `_lexicons/<slug>.json`.
+   현재 13개는 실제 오탈자·정상 표기(`디퓨션`,`SOC`)·의미 분기(`conversion/convection`)를
+   한 목록에 섞고 있다.
+5. **전문가 판단 → `전문가 관찰·가설`** 로 이름을 낮추고 `allowed_use:
+   hypothesis_generation_only`. **직접 인용은 음성 재청취를 한 경우에만.**
+6. **Q&A 를 별도 절로** — 질문자의 전제와 즉석 답변을 본 발표와 합치면 안 된다.
+7. **coverage 헤더** — slides reviewed 50/50 · audio reviewed 0/83:11 · unresolved N ·
+   citation-ready N. 부분 digest 는 정상 상태로 허용하되 `citable=no`.
+8. Windows CP949 에서 selftest 상태기호가 `UnicodeEncodeError` · `12:61` 허용 ·
+   시각 역행 허용 · pipe escaping 누락 · SRT/VTT 미지원.
+
+### §4 우리 의심 셋에 대한 답
+
+- **`?` 빈칸**: Markdown 문자만으로는 부족 — machine-readable 상태 + digest 상단 coverage.
+  부분 digest 를 **정상 상태로 허용하되 citable=no** 로 막는 게 대충 채우는 압력을 줄인다.
+- **500장**: 전수 1회는 봐야 한다. 단 3단계로 — ① 전수 훑기 ② 숫자·범례·불일치만 3–8×
+  ③ 실제 전파할 claim 만 음성 재확인. **전수 훑기 안 한 digest 는 partial/non-citable.**
+- **다리 vs 억지**: `σ→iR` 은 **결과 비교가 아니라 입력 변수의 연결**이다.
+  허용: *"원자수준 이온전도도는 셀 ohmic polarization 을 구성하는 **한 입력 변수**다."*
+  금지: *"우리 bulk σ 향상이 실제 셀 분극 감소를 **입증**한다."*
+  **중간 전달식·추가 변수(두께·면적·공극률·tortuosity·입계·접촉)·적용 스케일을 명시할 수
+  있으면 다리, 생략하고 용어가 비슷하다고 잇는 것이 억지.**
+
+---
+
 
 > **A·B·C 와 다른 점**: 앞의 셋은 **결과를 인용할지**를 물었다. 이 카드는 **양식이
 > 옳은지**를 묻는다. 지금 판정할 값이 없고, 대신 **앞으로 10편 이상이 이 틀로 들어온다.**
