@@ -223,7 +223,7 @@ def _solve_cg(L, b):
 
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
-              sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False,
+              sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False, sdcp_bridge_um=0.0,
               add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
@@ -262,6 +262,18 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
         if particle >= 0:
             psub = pid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
             psub[m] = particle
+
+    def _ball_empty(centre_um, rad_um, s):
+        """`_ball` 과 같되 **빈 셀에만** 쓴다 (브리지 전용).  pid 는 안 건드린다."""
+        c = (np.asarray(centre_um, np.float64) - lo) / vox; rr = rad_um / vox
+        i0 = np.maximum(0, np.floor(c - rr).astype(int))
+        i1 = np.minimum(n - 1, np.ceil(c + rr).astype(int))
+        if (i1 < i0).any():
+            return
+        gx, gy, gz = np.ogrid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
+        m = ((gx + 0.5 - c[0]) ** 2 + (gy + 0.5 - c[1]) ** 2 + (gz + 0.5 - c[2]) ** 2) <= rr * rr
+        sub = sid[i0[0]:i1[0] + 1, i0[1]:i1[1] + 1, i0[2]:i1[2] + 1]
+        sub[m & (sub == 0)] = s
 
     for i in range(len(am_c)):                             # AM spheres (few hundred): ball masks
         _ball(am_c[i], am_r[i], 2 if am_t[i] == 1 else 1, i)   # type 1 = AM_P → sid 2; 2 = AM_S → sid 1
@@ -350,6 +362,51 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                         _acc.append(_q[_ok][_in])
                 if _acc:
                     _sph_ijk = np.unique(np.vstack(_acc), axis=0)
+        # ── ★★★ SDCP 접촉 브리지 (2026-08-25, SELF-11 / Q-B2 판별 노브) ─────────────────
+        #   왜: 이 파일 docstring 이 이미 적었듯 *"plain rasterization randomly DROPS
+        #   touching contacts (6-neighbour faces need shared/adjacent voxels)"* 다.  그래서
+        #   **AM–AM 은 접촉 브리지**로, **섬유는 `_fibre_segment_ijk`(6-면 보장)** 로 고쳐
+        #   두었는데 **SDCP 구만 무처리**였다 — 그리고 전자 격자에서 SBE↔DBE 의 유일한
+        #   차이가 SDCP 다 (CL-33 의 SBE 음성 대조 8/8 셀 단위 동일이 증인) ⇒ 이 누락은
+        #   **DBE 전용 오차**라 침대 간 공통모드 상쇄가 원리적으로 없다.
+        #   실측 (Ø0.30, 고정 격자, 위치·방향 무작위 200회): 생산 격자 vox 0.15(d/vox 2.00)
+        #   에서 **참 접촉의 35 % 누락** · 10 % 물리적 틈의 **32.5 % 가 가짜 연결**.  두 오차는
+        #   σ 에 반대 방향이고 h 수렴 속도가 달라 `R = R∞ − C·h^p`(지배 오차 하나 가정)가
+        #   **원리적으로 안 맞는다** — CL-41 의 "어떤 p > 0 도 안 맞는다" 와 정합.
+        #   ⇒ 이 노브는 **vox 를 안 바꾸고 접촉 검출만** 고친다.  상관을 인과로 바꾸려면
+        #     노브를 vox 에서 떼어내야 한다 (CL-43 이 걸린 함정).
+        #   ⚠ **기본 0.0 = off → 바이트 동일.**  생산 규약을 바꾸지 않는다 (진단 팔이다).
+        #   ⚠ σ-id 는 AM–AM 과 **같은 series-conservative 규칙** — 낮은 σ 쪽을 쓴다.
+        #     (SDCP–SDCP → 5 · SDCP–VGCF → 3 · SDCP–AM → 그 AM).  브리지가 없던 곳에
+        #     **더 좋은 도체를 새로 깔지 않는다** = 이득을 인위로 만들지 않는다.
+        _brg = []
+        if sdcp_sphere_d_um and float(sdcp_bridge_um) > 0.0:
+            _tol = float(sdcp_bridge_um)
+            _rs = float(sdcp_sphere_d_um) / 2.0
+            _p5b = add_pts[add_phase == 5]
+            if len(_p5b):
+                from scipy.spatial import cKDTree as _KD
+                _t5 = _KD(_p5b)
+                #  ⓐ SDCP–SDCP : 표면 간극 ≤ tol
+                for _i, _j in _t5.query_pairs(2.0 * _rs + _tol):
+                    _mid = 0.5 * (_p5b[_i] + _p5b[_j])
+                    _brg.append((_mid, 5))
+                #  ⓑ SDCP–AM : 낮은 σ 쪽(AM)의 sid 를 쓴다
+                if len(am_c):
+                    _ta = _KD(np.asarray(am_c, np.float64))
+                    for _k, _c5 in enumerate(_p5b):
+                        for _a in _ta.query_ball_point(_c5, _rs + float(np.max(am_r)) + _tol):
+                            _d = float(np.linalg.norm(_c5 - am_c[_a]))
+                            if _d <= _rs + float(am_r[_a]) + _tol:
+                                _brg.append((0.5 * (_c5 + am_c[_a]),
+                                             2 if am_t[_a] == 1 else 1))
+                #  ⓒ SDCP–VGCF : 낮은 σ 쪽(VGCF, sid 3)
+                _pv = add_pts[add_phase == 2]
+                if len(_pv):
+                    _tv = _KD(_pv)
+                    for _k, _c5 in enumerate(_p5b):
+                        for _v in _tv.query_ball_point(_c5, _rs + _tol):
+                            _brg.append((0.5 * (_c5 + _pv[_v]), 3))
         # ── σ-치환 판별 팔 (2026-08-18, CL-43) — SDCP 가 VGCF 셀에 **양보**한다 ───────────
         #   왜: 상별 원장이 SDCP 셀의 39.8 %(vox 0.4) ~ 7.2 %(0.15) 가 **원래 VGCF 셀**임을
         #   보였다.  그 셀은 dof(도체 셀 수) 가 안 변하고 **σ 만** 11.0 → 250 (거친 격자에서
@@ -368,6 +425,21 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                     q = q[sid[q[:, 0], q[:, 1], q[:, 2]] != 3]
                 if len(q):
                     sid[q[:, 0], q[:, 1], q[:, 2]] = s      # ★ 제자리 = 같은 우선순위
+                #  ★ 브리지도 **SDCP 와 같은 우선순위 자리**에서 찍는다.
+                #  ⚠ **빈 셀(sid 0)에만** 채운다 — 브리지의 목적은 *빠진 목을 복원*하는
+                #    것이지 이미 배정된 상을 덮는 것이 아니다.  덮게 두면 SDCP–AM 브리지가
+                #    SDCP·VGCF 셀을 낮은 σ 의 AM 으로 **강등**해 인위적 손실을 만든다.
+                #  ★★ 2026-08-25 실측으로 배운 것 — **판정 반경과 목 반경은 다르다.**
+                #    초판은 하나로 썼다가 둘 다 틀렸다: 목이 `0.08 µm` 면 vox 0.15 에서
+                #    **0.53 복셀**이라 셀을 못 만들어 참 접촉 복원이 0.717 에 그쳤고,
+                #    동시에 판정 tol 0.08 이 **0.03 µm 틈**(10 %)보다 커서 가짜 연결을
+                #    0.69~1.00 로 **키웠다**.  ⇒ AM–AM 과 **같은 구조**로 나눈다:
+                #      · **판정** = 물리 간극 ≤ tol  (격자 무관 — 이것이 노브다)
+                #      · **목 반경** = `1.2·vox`      (AM–AM 기본과 동일)
+                #    목 면적이 격자에 양자화되는 것은 이 파일이 이미 적어 둔 v1 한계다
+                #    (`a 1-voxel neck's area is quantized to the face area`).
+                for _bc, _bs in _brg:
+                    _ball_empty(_bc, 1.2 * vox, _bs)
                 continue
             m = ph == code
             if m.any():
@@ -1692,6 +1764,79 @@ def _selftest():
     ok &= not _rf_exc
     print(f"sdcp-gate-fail-closed: 거부가 Exception 이 아니다 (blanket except 통과)  "
           f"{'OK' if not _rf_exc else 'FAIL — 호출자가 삼킨다'}")
+    # ── ★★★ SDCP 접촉 브리지 (SELF-11 / Q-B2 판별 노브, 2026-08-25) ──────────────────
+    #   `step3_sigma` docstring 이 이미 적은 결함 — *"plain rasterization randomly DROPS
+    #   touching contacts"* — 이 **SDCP 구에만 안 고쳐져 있었다** (AM–AM 은 브리지,
+    #   섬유는 6-면 보장).  그리고 전자 격자에서 SBE↔DBE 의 유일한 차이가 SDCP 다.
+    #   ⇒ 네 가지를 못박는다: ⓐ 기본 off 는 **바이트 동일** ⓑ 실제로 끊긴 접촉을 **잇는다**
+    #     ⓒ 이미 배정된 상을 **강등하지 않는다** ⓓ SDCP 없는 침대(SBE)에 **no-op**.
+    _bx = np.zeros((0, 3)); _br0 = np.zeros(0)
+    #  ⓐ 기본값 off = 바이트 동일 (생산 규약 불변)
+    #  ⚠ 좌표는 **찾아서** 넣은 것이다 — 임의의 접촉쌍은 대개 그냥 이어져서 ⓑ 가 거저
+    #    통과한다 (초판이 그랬다: 성분 1 → 1).  이 둘은 **정확히 접하는데**(중심거리 =
+    #    직경 0.30) 평범한 래스터가 **끊는** 실제 배치다 = 측정한 35 % 누락의 한 표본.
+    _pB = np.array([[1.543747, 1.664973, 1.512001],
+                    [1.395702, 1.407554, 1.554648]])
+    _phB = np.array([5, 5], np.int8)
+    _s_off, _ = rasterize(_bx, _br0, None, _pB, _phB, (0, 0, 0), (3., 3., 3.), 0.15,
+                          sdcp_sphere_d_um=0.30)
+    _s_off2, _ = rasterize(_bx, _br0, None, _pB, _phB, (0, 0, 0), (3., 3., 3.), 0.15,
+                           sdcp_sphere_d_um=0.30, sdcp_bridge_um=0.0)
+    _e1 = bool((_s_off == _s_off2).all())
+    ok &= _e1
+    print(f"sdcp-bridge-off: 기본 0.0 은 **바이트 동일** (생산 규약 불변)  {'OK' if _e1 else 'FAIL'}")
+
+    #  ⓑ 끊긴 두 구를 잇는다 — 6-면 인접 성분 수가 2 → 1
+    def _ncomp(sid_, want):
+        """6-면 인접 기준 연결성분 수 (want 인 셀만)."""
+        m = (sid_ == want)
+        seen = np.zeros_like(m); nc = 0
+        idx = list(zip(*np.nonzero(m)))
+        pos = set(idx)
+        for st in idx:
+            if seen[st]:
+                continue
+            nc += 1; stack = [st]; seen[st] = True
+            while stack:
+                a, b, c = stack.pop()
+                for da, db, dc in ((1,0,0),(-1,0,0),(0,1,0),(0,-1,0),(0,0,1),(0,0,-1)):
+                    q = (a+da, b+db, c+dc)
+                    if q in pos and not seen[q]:
+                        seen[q] = True; stack.append(q)
+        return nc
+    _s_on, _ = rasterize(_bx, _br0, None, _pB, _phB, (0, 0, 0), (3., 3., 3.), 0.15,
+                         sdcp_sphere_d_um=0.30, sdcp_bridge_um=0.08)
+    _n_off, _n_on = _ncomp(_s_off, 5), _ncomp(_s_on, 5)
+    _e2 = (_n_off > _n_on) and (_n_on == 1)
+    ok &= _e2
+    print(f"sdcp-bridge-connect: 끊긴 접촉을 잇는다 (성분 {_n_off} → {_n_on})  "
+          f"{'OK' if _e2 else 'FAIL'}")
+
+    #  ⓒ 이미 배정된 상을 **강등하지 않는다** — 브리지는 빈 셀에만 들어간다
+    #     (SDCP–AM 브리지의 sid 는 series-conservative 로 AM 인데, 그것이 SDCP·VGCF 셀을
+    #      덮으면 인위적 손실이 된다.)
+    _amc = np.array([[1.60, 1.00, 1.00]]); _amr = np.array([0.25]); _amt = np.array([2], np.int8)
+    _pC = np.array([[1.20, 1.00, 1.00]]); _phC = np.array([5], np.int8)
+    _s_n, _ = rasterize(_amc, _amr, _amt, _pC, _phC, (0, 0, 0), (3., 3., 3.), 0.15,
+                        sdcp_sphere_d_um=0.30)
+    _s_b, _ = rasterize(_amc, _amr, _amt, _pC, _phC, (0, 0, 0), (3., 3., 3.), 0.15,
+                        sdcp_sphere_d_um=0.30, sdcp_bridge_um=0.08)
+    _lost = int(((_s_n != 0) & (_s_b != _s_n)).sum())
+    _e3 = (_lost == 0)
+    ok &= _e3
+    print(f"sdcp-bridge-no-downgrade: 배정된 셀을 안 덮는다 (덮은 셀 {_lost})  "
+          f"{'OK' if _e3 else 'FAIL'}")
+
+    #  ⓓ SDCP 가 없는 침대(SBE)에는 **no-op** — CL-33 음성 대조와 같은 증인
+    _pD = np.array([[1.0, 1.0, 1.0], [1.2, 1.0, 1.0]]); _phD = np.array([2, 3], np.int8)
+    _d0, _ = rasterize(_bx, _br0, None, _pD, _phD, (0, 0, 0), (3., 3., 3.), 0.15,
+                       sdcp_sphere_d_um=0.30)
+    _d1, _ = rasterize(_bx, _br0, None, _pD, _phD, (0, 0, 0), (3., 3., 3.), 0.15,
+                       sdcp_sphere_d_um=0.30, sdcp_bridge_um=0.08)
+    _e4 = bool((_d0 == _d1).all())
+    ok &= _e4
+    print(f"sdcp-bridge-sbe-noop: SDCP 없는 침대에 셀 단위 no-op  {'OK' if _e4 else 'FAIL'}")
+
     # ── σ-치환 판별 팔 (CL-43) — `sdcp_yield_to_vgcf` ────────────────────────────────
     #   ① VGCF 와 겹친 SDCP 셀은 sid 3 으로 남고, ② 안 겹친 SDCP 셀은 그대로 sid 5 이며,
     #   ③ 기본값(False)은 **비트 단위로 옛 거동**이어야 한다 (생산 규약 불변).

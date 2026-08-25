@@ -222,6 +222,15 @@ MUTANTS = [
      #    통과한다.  이 변이를 실제로 무는 것은 **정상 증인 G2** 와 이유-메시지 G5 다.
      #    (교훈: 음성 시험만으로는 '전부 거부' 회귀를 못 잡는다 — 양성 대조가 잡는다.)
      RC, ('G2', 'G5')),
+    #  ── SELF-11 / Q-B2 판별 노브 (SDCP 접촉 브리지) ──────────────────────────────
+    ('SELF-11 브리지 기본값을 off 가 아니게 (생산 규약 오염)', 'step3_sigma.py',
+     "        if sdcp_sphere_d_um and float(sdcp_bridge_um) > 0.0:",
+     "        if sdcp_sphere_d_um and float(sdcp_bridge_um) >= 0.0:",
+     STEP3, ('sdcp-bridge-off',)),
+    ('SELF-11 브리지가 배정된 셀을 덮게 (강등 복원)', 'step3_sigma.py',
+     "        sub[m & (sub == 0)] = s",
+     "        sub[m] = s",
+     STEP3, ('sdcp-bridge-no-downgrade',)),
     ('R5-CX-05 미등록 component 조용한 통과 복원', 'run_contract.py',
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",

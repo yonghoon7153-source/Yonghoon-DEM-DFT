@@ -86,6 +86,9 @@ CLI_ACCOUNTING = {
     #  ★ 한 옵션이 두 축을 움직인다 — 지름을 주면 도장이 sphere 로 바뀐다.
     '--step3-sdcp-sphere-d': ('protocol', ('sdcp_sphere_d_um', 'sdcp_stamp')),
     '--step3-sdcp-yield-to-vgcf': ('protocol', ('sdcp_yield_to_vgcf',)),
+    #  ★ 2026-08-25 (SELF-11 / Q-B2) — SDCP 접촉 브리지.  **σ 침대를 바꾸므로 규약 축이다**
+    #    (등재를 빠뜨리면 SELF-04 와 같은 결함: 해시에는 없고 cross-dir 검사도 안 지난다).
+    '--step3-sdcp-bridge': ('protocol', ('sdcp_bridge_um',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -206,8 +209,8 @@ EVIDENCE_SINCE_SCHEMA = 3
 #  ★ 영수증은 **선언**이고 매니페스트는 **결과**다.  둘을 필드별로 대조하면 어느 축이
 #    갈렸는지까지 말할 수 있다 (해시 하나만 비교하면 "다르다" 밖에 못 말한다).
 RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                'sdcp_yield_to_vgcf', 'ptfe_stamp', 'sigma_ptfe_S_cm', 'sigma_vgcf_S_cm',
-                'periodic_xy')
+                'sdcp_yield_to_vgcf', 'sdcp_bridge_um', 'ptfe_stamp', 'sigma_ptfe_S_cm',
+                'sigma_vgcf_S_cm', 'periodic_xy')
 #: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
 RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
 
@@ -320,7 +323,7 @@ PROTOCOL_SCHEMA = 'p2'
 
 #: 규약을 정하는 축.  ⚠ **producer 도 소비자도 이 목록 하나만 쓴다** (사본 금지).
 PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                   'sdcp_yield_to_vgcf', 'ptfe_stamp', 'ptfe_zero_dof',
+                   'sdcp_yield_to_vgcf', 'sdcp_bridge_um', 'ptfe_stamp', 'ptfe_zero_dof',
                    'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
                    'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                    'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c',
@@ -408,6 +411,7 @@ STRICT_TYPES = {
     'periodic_xy': bool, 'ptfe_zero_dof': bool, 'sdcp_yield_to_vgcf': bool,
     'physics_protocol_match': bool,
     'vox_um': float, 'bridge_um': float, 'sdcp_sphere_d_um': float,
+    'sdcp_bridge_um': float,
     'sigma_vgcf_S_cm': float, 'sigma_sdcp_S_cm': float, 'sigma_ptfe_S_cm': float,
     'sigma_ion_se_S_cm': float, 'sigma_ion_sdcp_S_cm': float,
     'sigma_am_s_S_cm': float, 'sigma_am_p_S_cm': float,
@@ -916,7 +920,8 @@ def _selftest():
                                     for y in (0.0, 0.075) for z in (0.0, 0.075)})]
     _hrec = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
              'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
-             'sdcp_yield_to_vgcf': False, 'ptfe_stamp': 'off', 'sigma_ptfe_S_cm': 0.0,
+             'sdcp_yield_to_vgcf': False, 'sdcp_bridge_um': 0.0,
+             'ptfe_stamp': 'off', 'sigma_ptfe_S_cm': 0.0,
              'sigma_vgcf_S_cm': 78.54, 'periodic_xy': False,
              'code_sha': 'edec17a2', 'arms': 8, 'expect_backend': 'gpu',
              'origins': _h8}

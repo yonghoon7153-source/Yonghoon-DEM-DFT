@@ -748,6 +748,16 @@ def main():
                          '(0.24× @0.15 ~ 4.53× @0.4).  구 스탬프는 2.4 %% 안이다.  '
                          '⚠ d/vox ≥ 2 필요 — 그 아래는 fail-closed 로 거부한다.  '
                          'prereg v2 판정(h1) 의 대응, CL-33')
+    ap.add_argument('--step3-sdcp-bridge', type=float, default=0.0, metavar='UM',
+                    help='★ **진단 전용** (SELF-11 / Q-B2) — SDCP 구의 **접촉 브리지** 반경(µm). '
+                         '0 = off (기본, 바이트 동일).  이 파일 docstring 이 이미 적은 결함 — '
+                         'plain rasterization 이 닿아 있는 접촉을 무작위로 **떨어뜨린다** — 이 '
+                         'AM-AM 은 브리지로, 섬유는 6-면 보장으로 고쳤는데 **SDCP 구만 무처리**'
+                         '였다.  실측(Ø0.30, vox 0.15 = d/vox 2.00): 참 접촉의 **35 %% 누락** · '
+                         '10 %% 틈의 32.5 %% 가 **가짜 연결**.  ⇒ vox 를 안 바꾸고 접촉 검출만 '
+                         '고치는 노브다 (상관을 인과로 바꾸려면 노브를 vox 에서 떼야 한다).  '
+                         '⚠ 빈 셀에만 채운다 = 배정된 상을 강등하지 않는다.  σ-id 는 AM-AM 과 '
+                         '같은 series-conservative(낮은 σ 쪽).')
     ap.add_argument('--step3-sdcp-yield-to-vgcf', action='store_true',
                     help='★ **진단 전용** (CL-43, prereg v3 STEP 5) — SDCP 가 이미 VGCF 인 셀에는 '
                          '안 찍고 **양보**한다.  상별 원장이 SDCP 셀의 39.8 %% (vox 0.4) ~ 7.2 %% '
@@ -1418,6 +1428,10 @@ def main():
                 print(f'  STEP3: CG maxiter {_s3.CG_MAXITER:,} (기본 30,000) — 조건수가 나쁜 '
                       f'팔을 수렴시키기 위한 것이지 규약 변경이 아니다', flush=True)
             _yv3 = bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False))
+            _sbr3 = float(getattr(a, 'step3_sdcp_bridge', 0.0) or 0.0)
+            if _sbr3 > 0:
+                print(f'  STEP3: ★ **진단 팔** — SDCP 접촉 브리지 {_sbr3:g} µm (SELF-11 / '
+                      f'Q-B2).  ⚠ 생산 규약 아님', flush=True)
             if _yv3:
                 print('  STEP3: ★ **진단 팔** — SDCP 가 VGCF 셀에 양보한다 (σ-치환 채널 OFF, '
                       'CL-43).  ⚠ 생산 규약 아님', flush=True)
@@ -1425,6 +1439,7 @@ def main():
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
                                        sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
                                        sdcp_yield_to_vgcf=_yv3,
+                                       sdcp_bridge_um=_sbr3,
                                        # ⚠ 도메인은 `se` 다 — `_m` 은 se 위의 마스크라
                                        #   `_kind_all[_m]` 이 성립하려면 len(_kind_all)==len(se).
                                        #   옛 코드는 `len(_fid_all)` 과 비교해 ⓐ 길이 불일치로
@@ -1441,6 +1456,7 @@ def main():
                 import json as _rj
                 _led = {'vox_um': a.step3_vox, 'origin_shift_um': [float(x) for x in _osh],
                         'bridge_um': _bru, 'sdcp_yield_to_vgcf': _yv3,
+                        'sdcp_bridge_um': _sbr3,
                         'sdcp_sphere_d_um': float(
                             getattr(a, 'step3_sdcp_sphere_d', 0.0) or 0.0),
                         'grid_shape': [int(x) for x in sid3.shape],
@@ -1454,7 +1470,7 @@ def main():
                     _alt, _ = _s3.rasterize(
                         _am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox, se_pts=_septs,
                         add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
-                        sdcp_yield_to_vgcf=_yv3,          # 양쪽을 같은 규약으로 (like-for-like diff)
+                        sdcp_yield_to_vgcf=_yv3, sdcp_bridge_um=_sbr3,   # 양쪽 같은 규약 (like-for-like)
                         add_kind=(_kind_all[_m] if _kind_all is not None
                                   and len(_kind_all) == len(se) else None))   # 도메인 = se (위 주석)
                     #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)
@@ -2328,6 +2344,8 @@ def main():
             # ★ 2026-08-18 (CL-43) — 진단 팔은 **매니페스트에 남아야** 한다.  안 그러면
             #   σ-치환 OFF 팔과 생산 팔이 섞여도 고정-인자 게이트가 못 잡는다 (H5 와 같은 실수).
             'sdcp_yield_to_vgcf': bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False)),
+            #  ★ 2026-08-25 (SELF-11) — 브리지는 σ 침대를 바꾸므로 **규약 축**이다.
+            'sdcp_bridge_um': float(getattr(a, 'step3_sdcp_bridge', 0.0) or 0.0),
             #  ★★ 2026-08-25 (A1 2차) — 침대 기하(z 늘림)와 SE 점구름 **출처**.
             #    둘 다 `_s3.rasterize` 로 들어가는데 규약에 없었다 (digest 는 파일
             #    내용만 덮는다).  `se_source` 는 합성일 때만 모양(frac@n_vox)을 싣는다.

@@ -85,6 +85,9 @@ FIELD_CONTRACT = {
                             required_since='2026-08-20'),
     'sdcp_yield_to_vgcf':   dict(scope='physics', across_dir=True, required=True,
                             required_since='2026-08-18'),
+    #  ★ SELF-11 / Q-B2 판별 노브 — σ 침대를 바꾼다 (브리지가 셀을 새로 채운다)
+    'sdcp_bridge_um':       dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
     'sigma_ptfe_S_cm':      dict(scope='physics', across_dir=True, required=True,
                             required_since='2026-08-20'),
     'ptfe_stamp':           dict(scope='physics', across_dir=True, required=True,
@@ -961,6 +964,8 @@ def _selftest():
     _FIX = dict(vox=0.15, bridge_um=0.48, fibre_stamp='segment', sdcp_stamp='point',
                 sdcp_sphere_d_um=0.0, sigma_vgcf_S_cm=78.5398, sigma_sdcp_S_cm=250.0,
                 backend='gpu', sdcp_yield_to_vgcf=False, sigma_ptfe_S_cm=0.0,
+                #  ★ 2026-08-25 (SELF-11) — SDCP 접촉 브리지도 규약 축이다 (0 = 생산).
+                sdcp_bridge_um=0.0,
                 #  ★ 2026-08-24 (CDXR2-6) — PTFE 규약.  σ_PTFE 만으로는 exact-zero 와
                 #    미스탬프가 구분되지 않으므로 규약 자체가 고정 인자다.
                 ptfe_stamp='off', ptfe_zero_dof=False,
@@ -1005,7 +1010,8 @@ def _selftest():
                 'sigma_ion_se_S_cm': 0.003, 'sigma_ion_sdcp_S_cm': 0.001,
                 'sigma_am_s_S_cm': 0.010, 'sigma_am_p_S_cm': 0.005,
                 'cam': 'nmc811', 'temp_c': 25.0,
-                'dilate_z': 1.0, 'se_source': 'npy'}
+                'dilate_z': 1.0, 'se_source': 'npy',
+                'sdcp_bridge_um': 0.0}
         for _k, _v in _DEF.items():
             man.setdefault(_k, _v)
         #  ★ 2026-08-25 (R4-CX-02) — 파일 픽스처는 전부 이 함수를 지난다.  **현행 세대**로
