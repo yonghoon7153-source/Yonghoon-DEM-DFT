@@ -99,6 +99,21 @@ for pair in "UPLOAD:uploads" "RESULTS:results" "ARCHIVE:archive" "MPM_LAB:mpm_la
 done
 _n=$(find "$DATA/webapp/results" -maxdepth 1 -mindepth 1 -type d 2>/dev/null | wc -l)
 echo "[dem] 데이터 배선 완료 — results 케이스 ${_n}건"
+#  ★★ 2026-08-25 — **백업 나이를 매번 보여준다.**  윈도우 재설치로 WSL 안의 케이스 169건을
+#    잃고 나서 붙였다.  백업은 조용히 안 도는 것이 기본값이므로 **침묵이 보이게** 만든다:
+#    스탬프가 없거나 오래됐으면 여기서 눈에 띈다 (막지는 않는다 — 웹앱은 떠야 한다).
+_BSTAMP="$DATA/webapp/.last_backup"
+if [ -f "$_BSTAMP" ]; then
+  _bage=$(( ( $(date +%s) - $(stat -c %Y "$_BSTAMP" 2>/dev/null || echo 0) ) / 86400 ))
+  if [ "$_bage" -ge 7 ]; then
+    echo "[dem] ⚠ 마지막 D 백업이 **${_bage}일 전** — bash $CODE/scripts/backup_webapp_data.sh"
+  else
+    echo "[dem] 백업 ✓ ${_bage}일 전"
+  fi
+elif [ "$_n" -gt 0 ]; then
+  echo "[dem] ⚠⚠ **D 백업 기록이 없다** — 이 케이스 ${_n}건은 WSL 안에만 있다 (윈도우와 함께 사라진다)."
+  echo "[dem]    bash $CODE/scripts/backup_webapp_data.sh    (대상: \${DEM_WEB_BACKUP:-/mnt/d/dem-backup/webapp})"
+fi
 [ "$_n" = 0 ] && echo "      ⚠ 0건이면 데이터 경로가 틀렸을 수 있다:  DEM_WEB_DATA=<경로> 로 지정"
 
 # ── ④ 실행 ──────────────────────────────────────────────────────────────────────
