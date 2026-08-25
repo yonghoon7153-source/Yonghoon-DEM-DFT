@@ -231,6 +231,41 @@ def network_summary(m):
     return out or None
 
 
+# ══ ⑤ MPM 결과 파라미터 (`mpm_metrics.json`) ══════════════════════════════════════
+#  케이스 페이지의 **MPM 결과 파라미터** 박스는 탭이 아니라 `results/<id>/mpm_metrics.json`
+#  을 읽는다 (`app._load_mpm_metrics`).  그 파일이 없으면 박스가 `display:none` 이다.
+#  ⇒ 우리가 가진 MPM 지표로 그 파일을 만든다.
+#  ⚠ `mpm_payload.json`(3D·무거움)은 못 만든다 — 원자료가 필요하다.  그래서 3D "MPM" 버튼과
+#    `has_mpm` 배지는 여전히 꺼진다.  **파라미터 표만** 살아난다.
+_MPM_KEYS = ('porosity_mpm_pct', 'thickness_mpm_um', 'bulk_density_g_cm3', 'se_fraction_pct',
+             'compacted_porosity_pct', 'seed_porosity_pct', 'seed_AM_frac_pct',
+             'seed_SE_frac_pct', 'E_SE_GPa', 'K_SE_GPa', 'nu_SE', 'sigma_y_GPa',
+             'target_GPa', 'final_stress_GPa', 'protocol', 'n_am', 'n_grid', 'n_vox',
+             'n_strain_pts', 'se_surface_tris', 'strain_kind', 'cov_method',
+             'cov_hertz_um', 'cov_tabor_um', 'dg_mean', 'dg_max', 'dg_nonzero_pct',
+             'dg_vmax98',
+             'coverage_AM_P_hertz_pct', 'coverage_AM_P_tabor_pct', 'coverage_AM_P_mpm_pct',
+             'coverage_AM_S_hertz_pct', 'coverage_AM_S_tabor_pct', 'coverage_AM_S_mpm_pct',
+             'coverage_AM_P_rigid_hertz_pct', 'coverage_AM_P_rigid_tabor_pct',
+             'coverage_AM_S_rigid_hertz_pct', 'coverage_AM_S_rigid_tabor_pct')
+
+
+def mpm_metrics(m):
+    """중첩 `mpm.*` (풍부) 를 우선하고, 없으면 평평한 `mpm_*` 에서 접두사를 떼어 모은다."""
+    nested = m.get('mpm') if isinstance(m.get('mpm'), dict) else {}
+    out = {k: v for k, v in nested.items() if v is not None}
+    for k in _MPM_KEYS:
+        if k in out:
+            continue
+        v = m.get('mpm_' + k)
+        if v is None and k.endswith('_pct'):
+            v = m.get('mpm_' + k[:-4])          # mpm_porosity_pct 같은 축약형
+        if v is not None:
+            out[k] = v
+    #  ⚠ 하나도 없으면 파일을 안 만든다 — 빈 박스를 띄우지 않는다
+    return out or None
+
+
 TABLES = {'atom_statistics': atom_statistics, 'contact_summary': contact_summary,
           'coordination_summary': coordination_summary, 'network_summary': network_summary}
 #: 첫 행에 넣는 복원 표식 (템플릿이 `──` 로 시작하는 행을 구분선으로 렌더한다)
@@ -255,6 +290,7 @@ def run(data_root=None, write=False):
     rs = os.path.join(dr, 'webapp', 'results')
     made = skipped = nocase = 0
     per_table = {k: 0 for k in TABLES}
+    per_table['mpm_metrics'] = 0
     if not os.path.isdir(rs):
         return {'error': f'results 폴더가 없다: {rs}'}
     for cid in sorted(os.listdir(rs)):
@@ -269,6 +305,20 @@ def run(data_root=None, write=False):
         except (OSError, ValueError):
             nocase += 1
             continue
+        mm = mpm_metrics(m)
+        if mm:
+            pmm = os.path.join(d, 'mpm_metrics.json')
+            if os.path.exists(pmm):
+                skipped += 1
+            else:
+                per_table['mpm_metrics'] = per_table.get('mpm_metrics', 0) + 1
+                made += 1
+                if write:
+                    with open(pmm, 'w', encoding='utf-8') as f:
+                        json.dump({**mm, '_reconstructed': True,
+                                   '_reconstructed_note': 'CSV 유래 — 재실행 아님.  '
+                                                          'mpm_payload.json(3D)은 없다'},
+                                  f, ensure_ascii=False, indent=1)
         for name, rows in build(m).items():
             p = os.path.join(d, f'{name}.csv')
             if os.path.exists(p):
@@ -321,6 +371,12 @@ def _selftest():
     chk('⑨ Constriction 은 유도 (1−bulk_resistance_fraction = 60.0)',
         any(r['지표'] == 'Constriction 비율(%)' and r['값'] == 60.0
             for r in t['network_summary']))
+    chk('⑮ ★ MPM 이 없으면 mpm_metrics 도 안 만든다', mpm_metrics({'porosity': 1}) is None)
+    mm = mpm_metrics({'mpm': {'porosity_mpm_pct': 15.9, 'E_SE_GPa': 1.53}})
+    chk(f'⑯ 중첩 mpm.* 를 그대로 쓴다 ({sorted(mm)})', mm['E_SE_GPa'] == 1.53)
+    mm2 = mpm_metrics({'mpm_porosity_mpm_pct': 20.9, 'mpm_thickness_mpm_um': 115.2})
+    chk(f'⑰ ★ 평평한 mpm_* 도 접두사를 떼어 모은다 ({sorted(mm2)})',
+        mm2.get('porosity_mpm_pct') == 20.9 and mm2.get('thickness_mpm_um') == 115.2)
     thin = build({'porosity': 1.0})
     chk(f'⑩ ★ 지표가 거의 없으면 만들 수 있는 표만 ({sorted(thin)})',
         set(thin) == {'network_summary'})

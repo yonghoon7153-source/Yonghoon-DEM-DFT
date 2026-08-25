@@ -206,9 +206,26 @@ def write(cases, data_root=None, force=False):
                  'reconstructed_note': ('CSV 표에서 되편 것이다 — **재실행이 아니다**.  '
                                         '그림·report·3D·원본 덤프는 없다.'),
                  'reconstructed_fields': c['n_fields']}
+        #  ★ 2026-08-25 — `mode` 를 **데이터에서 유도**한다 (옛 판은 'unknown' 을 박았다).
+        #    웹앱 규약: 입자 3종(AM_P+AM_S+SE) = bimodal · 2종(AM+SE) = standard
+        #    (`app.py` §detect mode).  ⇒ AM_P/AM_S 입자수가 **둘 다** 있으면 bimodal.
+        #    ⚠ 판정 근거가 없으면 'unknown' 그대로 둔다 — 추측해서 채우지 않는다.
+        met = c['metrics']
+        _p = met.get('AM_P_n_particles') is not None
+        _s = met.get('AM_S_n_particles') is not None
+        mode = 'bimodal' if (_p and _s) else ('standard' if (_p or _s) else 'unknown')
+        extra = {'mode': mode}
+        if mode != 'unknown':
+            extra['mode_source'] = 'AM_P/AM_S 입자수 유무에서 유도 (추측 아님)'
+        for k_meta, k_src in (('scale', 'meta.scale'), ('ps_ratio', 'ps_ratio'),
+                              ('type_map', 'meta.type_map')):
+            v = met.get(k_src.split('.')[-1]) if '.' not in k_src else \
+                (met.get('meta') or {}).get(k_src.split('.')[-1])
+            if v is not None:
+                extra[k_meta] = v
         with open(mf, 'w', encoding='utf-8') as f:
             json.dump({'name': c['name'], 'created': _created_from_id(cid),
-                       'mode': 'unknown', 'status': 'reconstructed', **stamp},
+                       'status': 'reconstructed', **extra, **stamp},
                       f, ensure_ascii=False, indent=1)
         with open(ff, 'w', encoding='utf-8') as f:
             json.dump({**c['metrics'], '_reconstructed': stamp}, f, ensure_ascii=False, indent=1)
@@ -251,6 +268,8 @@ def _selftest():
         chk(f'⑨ 파일을 실제로 만든다 ({made}건)',
             made == 1 and os.path.exists(mf) and os.path.exists(ff))
         m = json.load(open(mf, encoding='utf-8'))
+        chk('⑩a ★ 근거가 없으면 mode 는 unknown (추측해서 안 채운다)',
+            m.get('mode') == 'unknown' and 'mode_source' not in m)
         fm = json.load(open(ff, encoding='utf-8'))
         chk('⑩ ★★ **복원임을 산출물에 박는다** (재실행과 섞이지 않게)',
             m.get('reconstructed') is True and m.get('status') == 'reconstructed'
@@ -262,6 +281,18 @@ def _selftest():
         write({'X1': {'name': 'DIFFERENT', 'metrics': {'q': 999}, 'source': 's', 'n_fields': 1}},
               data_root=d)
         chk('⑫ ★ 덮어쓰기 시도해도 내용이 안 바뀐다', open(ff, encoding='utf-8').read() == before)
+    with tempfile.TemporaryDirectory() as d:
+        two = {'B1': {'name': 'b', 'source': 's', 'n_fields': 2,
+                      'metrics': {'AM_P_n_particles': 36, 'AM_S_n_particles': 421}},
+               'S1': {'name': 's', 'source': 's', 'n_fields': 1,
+                      'metrics': {'AM_S_n_particles': 400}}}
+        write(two, data_root=d)
+        mb = json.load(open(os.path.join(d, 'webapp', 'uploads', 'B1', 'meta.json'), encoding='utf-8'))
+        ms = json.load(open(os.path.join(d, 'webapp', 'uploads', 'S1', 'meta.json'), encoding='utf-8'))
+        chk(f'⑬ ★ AM_P+AM_S 둘 다 → bimodal ({mb["mode"]})', mb['mode'] == 'bimodal')
+        chk(f'⑭ ★ 한 종류만 → standard ({ms["mode"]})', ms['mode'] == 'standard')
+        chk('⑮ 유도 근거를 적는다', 'mode_source' in mb and '추측 아님' in mb['mode_source'])
+
     print(f'\nrebuild_cases_from_csv selftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1
 
