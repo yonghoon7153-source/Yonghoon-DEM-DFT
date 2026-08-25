@@ -231,6 +231,12 @@ def _out(session: Session, record: SpectrumRecord, *,
     )
 
 
+def circle_cm2(diameter_mm: float) -> float:
+    """원형 펠릿의 면적 (cm²).  지름은 mm 로 받는다 -- 캘리퍼가 그렇게 읽는다."""
+    radius_cm = diameter_mm / 20.0
+    return float(np.pi * radius_cm ** 2)
+
+
 def _geometry(session: Session, record: SpectrumRecord) -> tuple[float | None, float | None]:
     """Thickness in cm and area in cm², the spectrum's own or the cell's.
 
@@ -240,6 +246,10 @@ def _geometry(session: Session, record: SpectrumRecord) -> tuple[float | None, f
     """
     thickness_um = record.thickness_um
     area = record.area_cm2
+    # 잰 것은 지름이고 면적은 거기서 나온 수다.  그래도 **적어 넣은 면적이
+    # 이긴다**: 원이 아닌 전극이 있고, 그때 지름은 잴 수 있는 값이 아니다.
+    if area is None and record.diameter_mm:
+        area = circle_cm2(record.diameter_mm)
     if (thickness_um is None or area is None) and record.sample_id:
         sample = session.get(Sample, record.sample_id)
         if sample is not None:
@@ -248,8 +258,7 @@ def _geometry(session: Session, record: SpectrumRecord) -> tuple[float | None, f
             if area is None:
                 area = sample.area_cm2
                 if area is None and sample.diameter_mm:
-                    radius_cm = sample.diameter_mm / 20.0
-                    area = float(np.pi * radius_cm ** 2)
+                    area = circle_cm2(sample.diameter_mm)
     thickness_cm = thickness_um / 1e4 if thickness_um else None
     return thickness_cm, area
 
@@ -492,6 +501,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_id=sample_id,
             sample_name=sample.name,
             name=latest.original_name or latest.name,
+            spectrum_id=latest.id,
             group_id=group_id,
             group_name=group_name,
             group_parent_name=parent_name,
@@ -531,6 +541,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_id=None,
             sample_name="",
             name=latest.original_name or latest.name,
+            spectrum_id=latest.id,
             attached=False,
             owner=latest.created_by or "",
             kind=next(iter(kinds)) if len(kinds) == 1 else "",
@@ -943,7 +954,7 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 전부 사람이 입력하는 것들이다.
 CLEARABLE_SPECTRUM_FIELDS = {"sample_id", "at_cycle", "thickness_um",
-                             "area_cm2", "measured_at"}
+                             "area_cm2", "diameter_mm", "measured_at"}
 
 
 @router.delete("/spectra/{spectrum_id}", status_code=204)

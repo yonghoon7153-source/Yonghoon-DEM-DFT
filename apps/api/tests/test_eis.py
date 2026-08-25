@@ -930,3 +930,36 @@ def test_auto_is_not_a_circuit_name(client):
                         params={"circuit": "AUTO", "restarts": 1})
     assert reply.status_code == 201, reply.text
     assert reply.json()["circuit"] != "AUTO"
+
+
+# --- 지름과 면적 --------------------------------------------------------------
+
+
+def test_the_area_comes_from_the_diameter_when_it_is_blank(client):
+    """캘리퍼로 재는 것은 지름이다.  면적만 물으면 매번 손으로 πd²/4 를 한다."""
+    made = upload(client, kind="solid", cell_config="sym")
+    client.patch(f"/api/eis/spectra/{made['id']}",
+                 json={"diameter_mm": 10.0, "thickness_um": 500.0})
+    detail = client.get(f"/api/eis/spectra/{made['id']}").json()
+    assert detail["diameter_mm"] == 10.0
+    # π (0.5 cm)² = 0.7854 cm²
+    assert detail["area_cm2_effective"] == pytest.approx(0.785398, rel=1e-4)
+
+
+def test_a_written_area_beats_the_diameter(client):
+    """원이 아닌 전극이 있고, 그때 지름은 잴 수 있는 값이 아니다."""
+    made = upload(client, kind="solid", cell_config="sym")
+    client.patch(f"/api/eis/spectra/{made['id']}",
+                 json={"diameter_mm": 10.0, "area_cm2": 1.33})
+    detail = client.get(f"/api/eis/spectra/{made['id']}").json()
+    assert detail["area_cm2_effective"] == pytest.approx(1.33)
+    # 지름은 지워지지 않는다 -- 둘 다 사람이 적은 값이다.
+    assert detail["diameter_mm"] == 10.0
+
+
+def test_the_diameter_can_be_cleared(client):
+    made = upload(client)
+    client.patch(f"/api/eis/spectra/{made['id']}", json={"diameter_mm": 10.0})
+    cleared = client.patch(f"/api/eis/spectra/{made['id']}",
+                           json={"clear": ["diameter_mm"]}).json()
+    assert cleared["diameter_mm"] is None

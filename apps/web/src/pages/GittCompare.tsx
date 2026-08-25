@@ -141,9 +141,9 @@ export function GittCompare() {
         actions={
           <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
             <GroupFilterFields pick={group} compact />
-            <Field label="셀" hint="충방전과 같은 셀">
+            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
               <select
-                aria-label="셀"
+                aria-label="관계셀"
                 value={sampleId ?? ''}
                 style={{ width: 150 }}
                 onChange={(event) =>
@@ -223,7 +223,7 @@ export function GittCompare() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>펄스</th>
                   {/* 이 GITT 가 어느 충방전 곡선 옆에서 나온 것인지 (ADR 0024). */}

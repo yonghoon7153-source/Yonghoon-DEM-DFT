@@ -695,6 +695,8 @@ class SpectrumOut(BaseModel):
     measured_at: datetime | None
     thickness_um: float | None
     area_cm2: float | None
+    #: 원형 펠릿의 지름.  면적이 비어 있으면 면적이 여기서 나온다.
+    diameter_mm: float | None = None
     last_circuit: str
     parse_error: str
     created_by: str = ""
@@ -772,6 +774,8 @@ class SpectrumUpdate(BaseModel):
     sample_id: int | None = None
     thickness_um: PositiveLength | None = None
     area_cm2: PositiveLength | None = None
+    #: 원형 펠릿의 지름.  면적이 비어 있을 때 면적이 여기서 나온다.
+    diameter_mm: PositiveLength | None = None
     measured_at: datetime | None = None
     #: 무엇을 보려고 잰 측정인가.  빈 문자열이 "안 적음" 이므로 clear 는 필요 없다.
     purpose: str | None = None
@@ -1013,6 +1017,9 @@ class EisDashboardRow(BaseModel):
     #: 안 붙은 줄은 그 파일 자신의 이름이다.  파일 이름에 조건이 적혀 있는
     #: 일이 많아서, 셀 이름만으로는 어느 측정인지 모른다.
     name: str = ""
+    #: 그 이름이 가리키는 스펙트럼.  이름을 눌러 바로 갈 수 있게, 그리고 안 붙은
+    #: 줄을 그 자리에서 지울 수 있게 함께 낸다.
+    spectrum_id: int | None = None
     #: 셀에 붙어 있는가.  안 붙은 것도 줄로 나온다 -- 배너로만 세면 "하나
     #: 있습니다" 만 알고 그게 무엇인지는 다른 화면에 가야 안다.
     attached: bool = True
@@ -1059,8 +1066,10 @@ class GittDashboardRow(BaseModel):
 
     sample_id: int | None = None
     sample_name: str = ""
-    #: EIS 대시보드와 같은 둘 -- 안 붙은 기록도 이름으로 한 줄 나온다.
+    #: EIS 대시보드와 같은 셋 -- 안 붙은 기록도 이름으로 한 줄 나오고,
+    #: 그 이름은 기록으로 가는 길이자 지울 대상이다.
     name: str = ""
+    gitt_id: int | None = None
     attached: bool = True
     #: EIS 대시보드와 같은 셋 -- 화면이 그룹·소그룹으로 거를 수 있게.
     group_id: int | None = None

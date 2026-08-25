@@ -8,10 +8,11 @@
  *  스물이냐 뿐이라 **거르개 하나**면 된다 (ADR 0022).
  */
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -46,11 +47,30 @@ export function EisLibrary() {
   const [purpose, setPurpose] = useState('')
   const [search, setSearch] = useState('')
 
+  const [reloadKey, bumpReload] = useState(false)
+  // 표 바깥에 한 번만.  행 안에 끼우면 열이 밀린다 (셀 라이브러리와 같은 규칙).
+  const [rowError, setRowError] = useState<string | null>(null)
+
   const spectra = useAsync(
-    () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
+    () => api.listSpectra({ kind: kind || undefined }), [kind, reloadKey],
+    { live: true })
   const group = useGroupChoice()
   // 그룹은 셀의 성질이라 셀 표가 있어야 거를 수 있다 (비교 화면과 같다).
   const samples = useAsync(() => api.listSamples(), [], { live: true })
+
+  const attach = useCallback(async (id: number, sampleId: number | null) => {
+    setRowError(null)
+    try {
+      // 빈 값은 떼어내기다.  `sample_id: null` 은 "안 보냄" 과 구별되지 않아
+      // 서버가 clear 를 따로 받는다.
+      await api.updateSpectrum(id, sampleId
+        ? { sample_id: sampleId }
+        : { clear: ['sample_id'] })
+      bumpReload((value) => !value)
+    } catch (cause) {
+      setRowError(cause instanceof Error ? cause.message : String(cause))
+    }
+  }, [])
 
   const purposes = useMemo(() => {
     const seen = new Set<string>()
@@ -147,6 +167,8 @@ export function EisLibrary() {
         </div>
       </Card>
 
+      {rowError ? <Alert kind="error">{rowError}</Alert> : null}
+
       <Card
         title={`${shown.length}개${scanFiles.size ? ` · 스캔 ${scanFiles.size}개` : ''}`}
         tight
@@ -161,7 +183,7 @@ export function EisLibrary() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th style={{ textAlign: 'left' }}>주파수</th>
@@ -169,6 +191,9 @@ export function EisLibrary() {
                   <th>사이클</th>
                   <th style={{ textAlign: 'left' }}>피팅</th>
                   <th>올린 때</th>
+                  {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
+                      글자가 먼저 읽힌다 -- 여기는 찾으러 오는 곳이다. */}
+                  <th />
                 </tr>
               </thead>
               <tbody>
@@ -188,9 +213,19 @@ export function EisLibrary() {
                       ) : null}
                     </td>
                     <td className="text dim">
-                      {item.sample_id
-                        ? <Link to={`/samples/${item.sample_id}`}>{item.sample_name}</Link>
-                        : '— 안 붙임'}
+                      {/* 붙이는 일을 여기서 한다 -- 다른 화면으로 갔다 오지 않게.
+                          붙지 않은 채로 두는 것도 정상이다 (§0.4). */}
+                      <RelatedCellSelect
+                        value={item.sample_id}
+                        samples={samples.data ?? []}
+                        label={`${item.name} 관계셀`}
+                        onPick={(sampleId) => void attach(item.id, sampleId)}
+                      />
+                      {item.sample_id ? (
+                        <Link className="tiny" to={`/samples/${item.sample_id}`}>
+                          셀 화면
+                        </Link>
+                      ) : null}
                     </td>
                     <td className="text dim">
                       {item.kind === 'solid' ? '전고체' : '액체'}
@@ -211,6 +246,16 @@ export function EisLibrary() {
                         : '—'}
                     </td>
                     <td className="dim">{dateTime(item.uploaded_at)}</td>
+                    <td>
+                      <DeleteMeasurementButton
+                        name={item.name}
+                        onError={setRowError}
+                        onDelete={async () => {
+                          await api.deleteSpectrum(item.id)
+                          bumpReload((value) => !value)
+                        }}
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>

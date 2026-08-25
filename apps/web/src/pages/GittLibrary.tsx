@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -93,9 +94,9 @@ export function GittLibrary() {
               ))}
             </select>
           </Field>
-          <Field label="셀" hint="충방전과 같은 셀">
+          <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
             <select
-              aria-label="셀"
+              aria-label="관계셀"
               value={owner}
               onChange={(event) => setOwner(event.target.value)}
             >
@@ -128,13 +129,14 @@ export function GittLibrary() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>펄스</th>
                   <th>점</th>
                   <th>기간</th>
                   <th style={{ textAlign: 'left' }}>확산계수</th>
                   <th>올린 때</th>
+                  <th />
                 </tr>
               </thead>
               <tbody>
@@ -147,16 +149,18 @@ export function GittLibrary() {
                       ) : null}
                     </td>
                     <td className="text">
-                      <select
-                        aria-label={`${run.name} 셀`}
-                        value={run.sample_id ? String(run.sample_id) : ''}
-                        onChange={(event) => void attach(run.id, event.target.value)}
-                      >
-                        <option value="">— 안 붙임</option>
-                        {(samples.data ?? []).map((sample) => (
-                          <option key={sample.id} value={sample.id}>{sample.name}</option>
-                        ))}
-                      </select>
+                      <RelatedCellSelect
+                        value={run.sample_id}
+                        samples={samples.data ?? []}
+                        label={`${run.name} 관계셀`}
+                        onPick={(sampleId) =>
+                          void attach(run.id, sampleId ? String(sampleId) : '')}
+                      />
+                      {run.sample_id ? (
+                        <Link className="tiny" to={`/samples/${run.sample_id}`}>
+                          셀 화면
+                        </Link>
+                      ) : null}
                     </td>
                     <td className="text dim">{run.purpose || '—'}</td>
                     <td>{run.n_pulses}</td>
@@ -171,6 +175,17 @@ export function GittLibrary() {
                         : '가능'}
                     </td>
                     <td className="dim">{dateTime(run.uploaded_at)}</td>
+                    <td>
+                      {/* 붙어 있어도 지울 수 있다.  원본 `.wrd` 는 남는다. */}
+                      <DeleteMeasurementButton
+                        name={run.name}
+                        onError={setError}
+                        onDelete={async () => {
+                          await api.deleteGittRun(run.id)
+                          bumpReload((value) => !value)
+                        }}
+                      />
+                    </td>
                   </tr>
                 ))}
               </tbody>

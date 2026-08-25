@@ -144,9 +144,9 @@ export function EisCompare() {
         actions={
           <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
             <GroupFilterFields pick={group} compact />
-            <Field label="셀" hint="충방전과 같은 셀">
+            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
               <select
-                aria-label="셀"
+                aria-label="관계셀"
                 value={sampleId ?? ''}
                 style={{ width: 150 }}
                 onChange={(event) =>
@@ -260,7 +260,7 @@ export function EisCompare() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>사이클</th>
                   <th>점</th>

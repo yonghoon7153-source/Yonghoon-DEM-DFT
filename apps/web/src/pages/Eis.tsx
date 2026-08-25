@@ -266,7 +266,7 @@ export function Eis() {
                 <tr>
                   <th style={{ width: 30 }} />
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th>사이클</th>
                   <th style={{ textAlign: 'left' }}>셀 구성</th>
                   <th>두께</th>

@@ -385,6 +385,12 @@ class SpectrumRecord(SQLModel, table=True):
     #: each spectrum belongs to one of them.  Blank means "take the sample's".
     thickness_um: float | None = None
     area_cm2: float | None = None
+    #: 원형 펠릿의 지름.  면적이 비어 있으면 여기서 나온다 (πd²/4).
+    #:
+    #: 재는 것은 지름이고 면적은 그것에서 나온 수다.  둘 다 저장하되 **면적을
+    #: 직접 적으면 그것이 이긴다** -- 잘라 쓴 전극처럼 원이 아닌 경우가 있고,
+    #: 그때 지름은 잴 수 있는 값이 아니다 (ADR 0001 의 raw 우선과 같은 결).
+    diameter_mm: float | None = None
 
     #: The circuit last fitted here, so the screen can re-offer it.
     last_circuit: str = ""

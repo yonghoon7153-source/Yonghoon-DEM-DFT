@@ -67,7 +67,7 @@ export function Scans() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>스윕</th>

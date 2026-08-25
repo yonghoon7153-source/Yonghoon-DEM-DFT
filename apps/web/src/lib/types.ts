@@ -604,6 +604,8 @@ export interface Spectrum {
   measured_at: string | null
   thickness_um: number | null
   area_cm2: number | null
+  /** 원형 펠릿의 지름 (mm).  면적이 비어 있으면 면적이 여기서 나온다. */
+  diameter_mm?: number | null
   last_circuit: string
   parse_error: string
   created_by?: string
@@ -621,6 +623,8 @@ export interface EisDashboardRow {
   /** 이 줄의 원래 이름 — 붙은 줄은 가장 최근 스펙트럼의, 안 붙은 줄은 그 파일
    *  자신의 것.  파일 이름에 조건이 적혀 있는 일이 많다. */
   name: string
+  /** 그 이름이 가리키는 스펙트럼 — 눌러서 가고, 안 붙은 줄은 여기서 지운다. */
+  spectrum_id: number | null
   /** 셀에 붙어 있는가.  안 붙은 것도 줄로 나온다. */
   attached: boolean
   /** 그룹·소그룹으로 거르려면 id 가, "부모 · 자식" 으로 적으려면 이름 둘이
@@ -656,8 +660,9 @@ export interface EisDashboard {
 export interface GittDashboardRow {
   sample_id: number | null
   sample_name: string
-  /** EIS 대시보드와 같은 둘 — 안 붙은 기록도 이름으로 한 줄 나온다. */
+  /** EIS 대시보드와 같은 셋 — 안 붙은 기록도 이름으로 한 줄 나온다. */
   name: string
+  gitt_id: number | null
   attached: boolean
   group_id: number | null
   group_name: string

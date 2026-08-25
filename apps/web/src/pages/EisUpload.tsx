@@ -16,8 +16,9 @@
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { RelatedCellIndex } from '../components/RelatedCell'
 import { DropZone, UploadTargetFields, useUploadTarget } from '../components/UploadTarget'
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import { Alert, Card, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, EisKind, Spectrum } from '../lib/types'
@@ -53,9 +54,10 @@ export function EisUpload() {
   const [results, setResults] = useState<Result[]>([])
 
   const pick = useUploadTarget(results.length)
-  const orphans = useAsync(
-    () => api.listSpectra().then((all) => all.filter((item) => !item.sample_id)),
-    [results.length], { live: true })
+  // 색인 창은 **전부**를 본다.  안 붙은 것만 보여 주면 잘못 붙인 것을 옮길
+  // 자리가 없는데, 그 일은 실제로 자주 생긴다 (셀을 나중에 만들기 때문이다).
+  const spectra = useAsync(() => api.listSpectra(), [results.length], { live: true })
+  const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
 
   const send = useCallback(async (files: FileList | File[]) => {
     const all = [...files]
@@ -181,32 +183,38 @@ export function EisUpload() {
           ) : null}
         </div>
 
-        <Card
-          title={`셀에 안 붙은 스펙트럼 · ${orphans.error ? '—' : `${orphans.data?.length ?? 0}개`}`}
-          tight
-        >
+        <Card title="관계셀 색인" tight>
           <div style={{ padding: 14 }}>
-            {/* "모두 붙어 있습니다" 는 단정이다.  실패한 조회는 그것을 알 수
-                없고, 오류를 그 문장 뒤에 숨기면 셀에 못 들어간 파일에서
-                사람을 돌려보내게 된다. */}
-            {orphans.error ? (
-              <Alert kind="error">{orphans.error}</Alert>
-            ) : orphans.loading && !orphans.data ? (
+            {/* 오류를 문장 뒤에 숨기지 않는다.  실패한 조회는 "모두 붙어
+                있습니다" 를 말할 근거가 없고, 그 단정은 셀에 못 들어간 파일에서
+                사람을 돌려보낸다. */}
+            {spectra.error ? (
+              <Alert kind="error">{spectra.error}</Alert>
+            ) : spectra.loading && !spectra.data ? (
               <Spinner />
-            ) : orphans.data?.length ? (
-              <div className="col" style={{ gap: 8 }}>
-                {orphans.data.map((item) => (
-                  <div key={item.id} className="row" style={{ gap: 8 }}>
-                    <Link to={`/eis/${item.id}`}>{item.name}</Link>
-                    <span className="tiny dim">{item.n_points}점</span>
-                  </div>
-                ))}
-                <div className="tiny faint">
-                  <Link to="/eis/library">라이브러리</Link>에서 셀을 정할 수 있습니다.
-                </div>
-              </div>
             ) : (
-              <Empty title="모두 붙어 있습니다" />
+              <RelatedCellIndex
+                entries={(spectra.data ?? []).map((item) => ({
+                  id: item.id,
+                  name: item.name,
+                  sampleId: item.sample_id,
+                  sampleName: item.sample_name,
+                  detail: `${item.n_points}점`,
+                  href: `/eis/${item.id}`,
+                }))}
+                samples={samples.data ?? []}
+                onAttach={async (id, sampleId) => {
+                  await api.updateSpectrum(id, sampleId
+                    ? { sample_id: sampleId }
+                    : { clear: ['sample_id'] })
+                  spectra.reload()
+                }}
+                onDelete={async (id) => {
+                  await api.deleteSpectrum(id)
+                  spectra.reload()
+                }}
+                emptyLabel="아직 올린 스펙트럼이 없습니다"
+              />
             )}
           </div>
         </Card>

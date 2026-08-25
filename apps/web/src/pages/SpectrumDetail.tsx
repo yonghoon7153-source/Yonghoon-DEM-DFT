@@ -484,10 +484,22 @@ function CellFields({
   const [area, setArea] = useState(
     record.area_cm2 === null ? '' : String(record.area_cm2),
   )
+  const [diameter, setDiameter] = useState(
+    record.diameter_mm === null || record.diameter_mm === undefined
+      ? '' : String(record.diameter_mm),
+  )
   const [cycle, setCycle] = useState(
     record.at_cycle === null ? '' : String(record.at_cycle),
   )
   const [purpose, setPurpose] = useState(record.purpose ?? '')
+
+  /** 지름이 말하는 면적.  화면에만 쓴다 -- 저장은 raw(지름)만 한다 (§0.1). */
+  const diameterArea = useMemo(() => {
+    const value = Number(diameter.trim())
+    if (!diameter.trim() || !Number.isFinite(value) || value <= 0) return null
+    const radiusCm = value / 20
+    return Math.PI * radiusCm * radiusCm
+  }, [diameter])
 
   const namedThickness = thicknessFromName(record.name) ?? thicknessFromName(record.original_name)
   const namedConfig = cellConfigFromName(record.name) ?? cellConfigFromName(record.original_name)
@@ -645,9 +657,44 @@ function CellFields({
         />
       </Field>
 
+      {/* 지름이 먼저다.  캘리퍼로 재는 것은 지름이고 면적은 거기서 나오는
+          수인데, 면적만 물어 보면 사람이 매번 πd²/4 를 손으로 계산해서 넣는다.
+          비어 있는 면적은 이 값에서 나오고, 면적을 직접 적으면 그것이 이긴다
+          (원이 아닌 전극이 있다). */}
+      <Field
+        label="지름"
+        hint={diameterArea === null
+          ? 'mm · 원형 펠릿 · 면적이 여기서 나옵니다'
+          : `mm · 면적 ${num(diameterArea, 4)} cm²`}
+      >
+        <input
+          aria-label="지름"
+          type="number"
+          min={0}
+          step="any"
+          value={diameter}
+          disabled={busy}
+          onChange={(event) => setDiameter(event.target.value)}
+          onBlur={() => {
+            const value = diameter.trim()
+            const now = record.diameter_mm ?? null
+            if (value === '' && now === null) return
+            if (value !== '' && Number(value) === now) return
+            void save(value === ''
+              ? { clear: ['diameter_mm'] }
+              : { diameter_mm: Number(value) })
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur()
+          }}
+        />
+      </Field>
+
       <Field
         label="면적"
-        hint="cm² · 전도도의 분모 · 비우면 붙은 셀의 것"
+        hint={area.trim() === '' && diameterArea !== null
+          ? 'cm² · 지금은 지름에서 나옵니다 · 적으면 그것이 이깁니다'
+          : 'cm² · 전도도의 분모 · 비우면 지름이나 붙은 셀의 것'}
       >
         {/* 전도도 안내는 "셀이나 스펙트럼에 면적을 적으라" 고 하는데, 정작
             여기에 입력란이 없어 셀 없이 올린 스펙트럼은 그 안내를 따를 수

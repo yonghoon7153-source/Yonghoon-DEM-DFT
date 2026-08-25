@@ -12,8 +12,9 @@
 import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { RelatedCellIndex } from '../components/RelatedCell'
 import { DropZone, UploadTargetFields, useUploadTarget } from '../components/UploadTarget'
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import { Alert, Card, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num } from '../lib/format'
 import { useAsync } from '../lib/hooks'
@@ -35,9 +36,9 @@ export function GittUpload() {
   const [results, setResults] = useState<Result[]>([])
 
   const pick = useUploadTarget(results.length)
-  const orphans = useAsync(
-    () => api.listGittRuns().then((all) => all.filter((run) => !run.sample_id)),
-    [results.length], { live: true })
+  // EIS 업로드와 같은 창이다 -- 전부 보여 주고 여기서 붙이거나 뗀다.
+  const runs = useAsync(() => api.listGittRuns(), [results.length], { live: true })
+  const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
 
   const send = useCallback(async (files: FileList | File[]) => {
     const list = [...files]
@@ -131,30 +132,35 @@ export function GittUpload() {
         </div>
 
         <div className="col" style={{ gap: 14 }}>
-          <Card
-            title={`셀에 안 붙은 기록 · ${orphans.error ? '—' : `${orphans.data?.length ?? 0}개`}`}
-            tight
-          >
+          <Card title="관계셀 색인" tight>
             <div style={{ padding: 14 }}>
-              {orphans.error ? (
-                <Alert kind="error">{orphans.error}</Alert>
-              ) : orphans.loading && !orphans.data ? (
+              {runs.error ? (
+                <Alert kind="error">{runs.error}</Alert>
+              ) : runs.loading && !runs.data ? (
                 <Spinner />
-              ) : orphans.data?.length ? (
-                <div className="col" style={{ gap: 8 }}>
-                  {orphans.data.map((run) => (
-                    <div key={run.id} className="row" style={{ gap: 8 }}>
-                      <Link to={`/gitt/${run.id}`}>{run.name}</Link>
-                      <span className="tiny dim">펄스 {run.n_pulses}개</span>
-                    </div>
-                  ))}
-                  <div className="tiny faint">
-                    <Link to="/gitt/library">라이브러리</Link>에서 그 자리로 붙일 수
-                    있습니다.
-                  </div>
-                </div>
               ) : (
-                <Empty title="모두 붙어 있습니다" />
+                <RelatedCellIndex
+                  entries={(runs.data ?? []).map((run) => ({
+                    id: run.id,
+                    name: run.name,
+                    sampleId: run.sample_id ?? null,
+                    sampleName: run.sample_name ?? null,
+                    detail: `펄스 ${run.n_pulses}개`,
+                    href: `/gitt/${run.id}`,
+                  }))}
+                  samples={samples.data ?? []}
+                  onAttach={async (id, sampleId) => {
+                    await api.updateGittRun(id, sampleId
+                      ? { sample_id: sampleId }
+                      : { clear: ['sample_id'] })
+                    runs.reload()
+                  }}
+                  onDelete={async (id) => {
+                    await api.deleteGittRun(id)
+                    runs.reload()
+                  }}
+                  emptyLabel="아직 올린 기록이 없습니다"
+                />
               )}
             </div>
           </Card>

@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
+import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime } from '../lib/format'
@@ -70,7 +71,7 @@ export function GittDashboard() {
               <thead>
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>그룹</th>
                   <th>기록</th>
                   <th>펄스</th>
@@ -89,7 +90,13 @@ export function GittDashboard() {
                 {rows.map((row) => (
                   <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
                       className={row.attached ? undefined : 'dim'}>
-                    <td className="text">{row.name || '—'}</td>
+                    <td className="text">
+                      {/* 이름이 곧 그 측정으로 가는 길이다 -- 셀 이름만으로는
+                          어느 측정인지 모른다 (파일 이름에 조건이 적혀 있다). */}
+                      {row.gitt_id
+                        ? <Link to={`/gitt/${row.gitt_id}`}>{row.name}</Link>
+                        : (row.name || '—')}
+                    </td>
                     <td className="text">
                       {row.attached
                         ? <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
@@ -121,14 +128,26 @@ export function GittDashboard() {
                     <td>
                       {/* 셀을 기록에서 내린다.  원본 파일은 남는다 (불변 규칙 2) --
                           같은 바이트를 다시 올리면 sha256 이 같아 되살아난다. */}
-                      {row.sample_id === null ? null : (
+                      {/* 붙은 줄은 셀을 지우고 (그 셀의 측정이 다 딸려
+                          간다), 안 붙은 줄은 그 측정 하나를 지운다.  줄이
+                          가리키는 것이 다르므로 지우는 것도 다르다. */}
+                      {row.attached && row.sample_id !== null ? (
                         <DeleteSampleButton
                           sampleId={row.sample_id}
                           sampleName={row.sample_name}
                           onDeleted={() => board.reload()}
                           onError={setDeleteError}
                         />
-                      )}
+                      ) : row.gitt_id ? (
+                        <DeleteMeasurementButton
+                          name={row.name}
+                          onError={setDeleteError}
+                          onDelete={async () => {
+                            await api.deleteGittRun(row.gitt_id as number)
+                            board.reload()
+                          }}
+                        />
+                      ) : null}
                     </td>
                   </tr>
                 ))}
