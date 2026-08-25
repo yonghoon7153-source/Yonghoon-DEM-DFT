@@ -2553,3 +2553,9 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   200 직선: 검출 0, 유예 0. 블록+knee 격자는 15/30→17/30 (dbw 가 블록 복귀
   에지를 읽는 2건 추가 — 알려진 한계에 흡수, 테스트가 고정). bootstrap 95%
   CI 는 dbw_confidence_interval 로 제공하되 요청 경로에서는 안 부른다.
+## [2026-08-25] docs | Codex 33건 원문 보존 + 교차검증 대응 현황표
+- Codex 결과가 그쪽 환경에서 커밋되지 못해 채팅으로 와서 원문 그대로
+  docs/reviews/2026-08-25-codex-eis-gitt-result.md 에 보존. 교차표: 겹침 15
+  (그중 7건은 Codex 범위 고정 뒤에 이미 수정된 것 — Codex 재현을 HEAD 에서
+  재실행해 닫힘 검증: #1 stderr=None, #2 χ² 일치, #3 60 Ω 정확), Codex 단독
+  18, Claude 단독 9 (5건 수정 완료). 반박 0. 남은 수정은 심각도순.
