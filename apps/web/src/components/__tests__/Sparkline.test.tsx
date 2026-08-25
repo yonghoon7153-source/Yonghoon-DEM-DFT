@@ -47,4 +47,22 @@ describe('Sparkline', () => {
     const { container } = render(<Sparkline values={[100, 90]} markIndex={9} />)
     expect(container.querySelector('line[stroke-dasharray]')).not.toBeInTheDocument()
   })
+
+  it('그림에도 두 자리를 긋는다 — 시작과 지점 (ADR 0021)', () => {
+    const { container } = render(
+      <Sparkline values={[100, 99, 98, 90, 60]} onsetIndex={2} markIndex={3} />,
+    )
+    const marks = container.querySelectorAll('line[stroke-dasharray]')
+    expect(marks).toHaveLength(2)
+    // 시작은 옅게.  같은 굵기로 그으면 확정된 지점과 층위가 뒤바뀐다.
+    expect(marks[0]?.getAttribute('stroke-opacity')).toBe('0.45')
+    expect(marks[1]?.getAttribute('stroke-opacity')).toBeNull()
+  })
+
+  it('시작과 지점이 같은 자리면 한 줄만 긋는다', () => {
+    const { container } = render(
+      <Sparkline values={[100, 99, 98, 90, 60]} onsetIndex={3} markIndex={3} />,
+    )
+    expect(container.querySelectorAll('line[stroke-dasharray]')).toHaveLength(1)
+  })
 })

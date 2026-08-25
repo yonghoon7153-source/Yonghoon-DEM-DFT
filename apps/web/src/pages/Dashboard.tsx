@@ -352,6 +352,10 @@ function DashboardTable({
                 <Sparkline
                   values={row.trend}
                   markIndex={row.knee_trend_index}
+                  // 서버는 이탈 시작 자리도 함께 보낸다 (ADR 0021).  그림에
+                  // point 만 긋고 옆 칸에 "96→131" 이라고 적으면, 두 수 중
+                  // 어느 쪽이 선인지 볼 수가 없다.
+                  onsetIndex={row.knee_onset_trend_index}
                   title={
                     row.trend.length
                       ? `사이클 ${row.trend_first_cycle}–${row.trend_last_cycle} 유지율`

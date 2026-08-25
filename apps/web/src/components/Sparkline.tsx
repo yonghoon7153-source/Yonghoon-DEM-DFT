@@ -14,6 +14,10 @@ interface Props {
   color?: string
   /** Cycle index (0-based into `values`) to mark, e.g. the detected knee. */
   markIndex?: number | null
+  /** 이탈이 *시작* 되는 자리 (ADR 0021).  point 하나만 그으면 그림이 "여기서
+   *  급감이 시작됐다" 로 읽히는데, DBW 가 실제로 재는 것은 두 자리다.  옅게
+   *  그어서 확정된 point 와 층위가 뒤바뀌지 않게 한다. */
+  onsetIndex?: number | null
   title?: string
 }
 
@@ -23,6 +27,7 @@ export function Sparkline({
   height = 26,
   color,
   markIndex = null,
+  onsetIndex = null,
   title,
 }: Props) {
   const gradientId = useId()
@@ -55,13 +60,16 @@ export function Sparkline({
     return {
       line: line.join(''),
       area,
-      mark:
-        markIndex !== null && markIndex >= 0 && markIndex <= lastIndex
-          ? x(markIndex)
-          : null,
+      mark: at(markIndex),
+      onset: at(onsetIndex),
       end: { x: x(last.index), y: y(last.value) },
     }
-  }, [values, width, height, markIndex])
+
+    function at(index: number | null | undefined): number | null {
+      if (index === null || index === undefined) return null
+      return index >= 0 && index <= lastIndex ? x(index) : null
+    }
+  }, [values, width, height, markIndex, onsetIndex])
 
   if (!shape) {
     return (
@@ -89,6 +97,18 @@ export function Sparkline({
         </linearGradient>
       </defs>
       <path d={shape.area} fill={`url(#${gradientId})`} />
+      {shape.onset !== null && shape.onset !== shape.mark ? (
+        <line
+          x1={shape.onset}
+          y1={1}
+          x2={shape.onset}
+          y2={height - 1}
+          stroke="var(--warn)"
+          strokeWidth={1}
+          strokeOpacity={0.45}
+          strokeDasharray="1 3"
+        />
+      ) : null}
       {shape.mark !== null ? (
         <line
           x1={shape.mark}

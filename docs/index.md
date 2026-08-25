@@ -77,6 +77,7 @@
 
 ## 가이드
 
+- [[whats-new]] — **이번에 바뀐 것 쓰는 법.** 띄우는 법부터 SOC 스캔·knee 두 점까지
 - [[new-laptop]] — **새 노트북 한 대 붙이기.** `wsl --install` 부터 `bmlin`/`bmlout` 까지
 - [[getting-started]] — **처음 쓰는 사람용.** 올리기 → 질량·조성 입력 → 화면 읽기
 - [[bml-command]] — `bml` 한 줄로 최신화 + 실행. 협력자 설치 방법 포함
