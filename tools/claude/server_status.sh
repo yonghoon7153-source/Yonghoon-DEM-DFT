@@ -137,11 +137,21 @@ if [ "${1:-}" = "--jobs" ]; then
         echo "   (로그를 못 찾았다 — tmux ali3 안을 직접 볼 것: tmux capture-pane -pt ali3 | tail -20)"
     fi
     sec "MD 재시드"
-    _ml=$(find /data/work/runs -maxdepth 3 -name '*reseed*.log' -o -maxdepth 3 -name 'mc600*.log' \
-          2>/dev/null | head -1)
-    if [ -n "$_ml" ]; then
-        echo "   $_ml  ($(date -r "$_ml" '+%m-%d %H:%M'))"; tail -6 "$_ml" | sed 's/^/     /'
-    else
-        echo "   (로그 못 찾음 — tmux capture-pane -pt mc600 | tail -20)"
-    fi
+    # ⛔ 2026-08-25 — 첫 판은 *.log 를 뒤졌는데 이 런은 tmux 안에서만 돌아 로그 파일이
+    #   없다. 그래서 7/9 완료·궤적 7개인 멀쩡한 런을 "로그 못 찾음" 으로 보여줬다.
+    #   MD 는 msd.json/traj 를 보는 **전용 워처가 이미 있다** — 그걸 부른다.
+    #   ⚠ 루트 이름이 둘이다: highT_reseed(옛) · highT_reseed_traj(--save_traj 판).
+    #     둘 다 보고, 실제로 내용이 있는 쪽만 찍는다 (한쪽만 보면 빈 화면이 나온다).
+    _w="$R/tools/modelc_v3/watch_b2o3_md.sh"
+    _md_any=0
+    for _root in ${MDROOTS:-/data/work/runs/highT_reseed_traj /data/work/runs/highT_reseed \
+                            "$HOME/work/runs/highT_reseed_1200"}; do
+        [ -d "$_root" ] || continue
+        [ -f "$_w" ] || { echo "   (워처 없음: $_w)"; break; }
+        _o=$(bash "$_w" "$_root" 2>&1)
+        # 런이 하나도 안 잡히면 건너뛴다 — 빈 표를 세 번 찍는 게 더 헷갈린다
+        echo "$_o" | grep -q '완료 0 · 진행 0' && continue
+        echo "$_o" | tail -18; _md_any=1
+    done
+    [ "$_md_any" = 0 ] && echo "   (MD 런 없음 — 루트를 바꾸려면 MDROOTS='경로 …')"
 fi
