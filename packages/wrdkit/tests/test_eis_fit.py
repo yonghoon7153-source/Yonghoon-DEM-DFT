@@ -463,6 +463,38 @@ def test_every_element_draws_a_smooth_curve_across_its_own_bounds():
         assert worst < 3.0, (kind, worst, worst_values)
 
 
+def test_every_diffusion_circuit_gets_the_wide_ladder():
+    """자릿수를 넘나드는 파라미터가 있으면 **회로를 가리지 않고** 사다리를 탄다.
+
+    이것이 없어서 놓친 것: 사다리 대상을 `_tau` 와 반무한 `W` 의 σ 로만 봤고,
+    전송선의 시간상수는 이름이 `_Wt` 라 통째로 빠졌다.  화면에 그대로 찍혔다 --
+    파라미터 아홉 개짜리 `Ws` 회로는 `시작점 29`, **열세 개**짜리 `TL` 회로는
+    `시작점 9`.  더 험한 지형을 더 적은 시작점으로 훑고 있었다.
+    """
+    from wrdkit.eis.circuit import parse_circuit
+    from wrdkit.eis.fit import _is_wide
+
+    for text in ("R0-p(R1,CPE1)-W2", "R0-p(R1,CPE1)-Ws2", "R0-p(R1,CPE1)-Wo2",
+                 "L1-R0-p(R1,CPE1)-TL1", "R0-TL1"):
+        model = parse_circuit(text)
+        wide = [name for name in model.parameter_names if _is_wide(model, name)]
+        assert wide, f"{text}: 확산이 있는데 사다리 대상이 없다"
+
+    # 확산이 없는 회로는 사다리도 필요 없다 -- 있으면 시작점만 늘어난다.
+    plain = parse_circuit("R0-p(R1,CPE1)-p(R2,CPE2)")
+    assert not [n for n in plain.parameter_names if _is_wide(plain, n)]
+
+
+def test_a_harder_circuit_does_not_get_fewer_starts():
+    """파라미터가 많을수록 지형이 험한데, 예전에는 그쪽이 시작점이 적었다."""
+    spectrum_, _ = _tl_spectrum("L1-R0-p(R1,CPE1)-TL1",
+                                [1e-6, 12.0, 5.0, 1e-5, 0.9,
+                                 40.0, 2.0, 3.0, 1e-2, 0.8, 30.0, 0.5, 60.0])
+    easy = fit_circuit(spectrum_, "R0-p(R1,CPE1)-Ws2")
+    hard = fit_circuit(spectrum_, "L1-R0-p(R1,CPE1)-TL1")
+    assert hard.starts >= easy.starts
+
+
 def test_the_diffusion_exponent_stops_below_the_pole_line():
     """``Wn`` 상한은 취향이 아니라 ``coth`` 의 극점이 시작되는 자리다.
 

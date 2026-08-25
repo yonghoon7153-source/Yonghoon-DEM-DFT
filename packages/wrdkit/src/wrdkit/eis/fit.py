@@ -122,6 +122,21 @@ def _is_warburg_sigma(model, name: str) -> bool:
     return name.startswith("W") and not name.startswith(("Ws", "Wo"))
 
 
+#: 자릿수를 넘나드는 파라미터의 접미사 — 여기에 걸리면 **결정된 사다리**로
+#: 훑고, 재시작도 늘린다.
+#:
+#: 예전에는 `_tau` 와 반무한 `W` 의 σ 만 봤다.  그래서 전송선(`TL`)이 통째로
+#: 빠졌다: 그 시간상수 이름은 `_Wt` 라 `_tau` 로 끝나지 않고, σ 도 아니다.
+#: 결과가 화면에 그대로 찍혔다 — `Ws` 회로는 `시작점 29`, 파라미터가 **열셋**
+#: 으로 더 어려운 `TL` 회로는 `시작점 9`.  더 험한 지형을 더 적은 시작점으로
+#: 훑고 있었고, 그래서 저주파 꼬리를 놓친 채 멈춘 답이 나왔다.
+_WIDE_SUFFIXES = ("_tau", "_Wt", "_Wr")
+
+
+def _is_wide(model, name: str) -> bool:
+    return name.endswith(_WIDE_SUFFIXES) or _is_warburg_sigma(model, name)
+
+
 def _residuals(values, circuit, frequency, z, weights):
     model = circuit.impedance(values, frequency)
     diff = model - z
@@ -193,8 +208,7 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     if restarts is None:
         restarts = (_DIFFUSION_RESTARTS
-                    if any(_is_warburg_sigma(model, name) or name.endswith("_tau")
-                           for name in model.parameter_names)
+                    if any(_is_wide(model, name) for name in model.parameter_names)
                     else _DEFAULT_RESTARTS)
 
     n_params = len(model.parameter_names)
@@ -227,7 +241,7 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     # 자릿수를 양쪽으로 결정적으로 훑는다: 결과가 재현되고, 스윕 스물한 개가
     # 서로 비교 가능해진다.
     wide = [i for i, name in enumerate(model.parameter_names)
-            if name.endswith("_tau") or _is_warburg_sigma(model, name)]
+            if _is_wide(model, name)]
     for i in wide:
         for factor in (1e-2, 1e-1, 1e1, 1e2):
             candidate = start.copy()
