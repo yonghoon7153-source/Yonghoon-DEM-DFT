@@ -282,6 +282,10 @@ export interface ProfileResponse {
   requested_basis: Basis
   resolved_cell: ResolvedCell
   series: ProfileSeries[]
+  /** 실제로 그린 사이클 번호들 — `cycles=all` 은 골라 뽑을 수 있다. */
+  cycles?: number[]
+  /** 전부를 못 그렸으면 무엇을 어떻게 골랐는지 한 줄.  비면 고른 것이 전부다. */
+  cycles_note?: string
   /** True when the curves are not all in the same unit. */
   mixed_basis?: boolean
 }
@@ -320,6 +324,10 @@ export interface DqdvResponse {
   requested_basis: Basis
   resolved_cell: ResolvedCell
   series: DqdvSeries[]
+  /** 실제로 그린 사이클 번호들 — `cycles=all` 은 골라 뽑을 수 있다. */
+  cycles?: number[]
+  /** 전부를 못 그렸으면 무엇을 어떻게 골랐는지 한 줄.  비면 고른 것이 전부다. */
+  cycles_note?: string
   voltage_step: number
   smoothing: number
   smoother?: Smoother
@@ -359,6 +367,10 @@ export interface DvdqResponse {
   requested_basis: Basis
   resolved_cell: ResolvedCell
   series: DvdqSeries[]
+  /** 실제로 그린 사이클 번호들 — `cycles=all` 은 골라 뽑을 수 있다. */
+  cycles?: number[]
+  /** 전부를 못 그렸으면 무엇을 어떻게 골랐는지 한 줄.  비면 고른 것이 전부다. */
+  cycles_note?: string
   smoothing: number
   smoother?: Smoother
   poly_order?: number

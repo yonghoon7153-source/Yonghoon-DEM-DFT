@@ -41,10 +41,13 @@ const METRICS = [
 
 /** 사이클 지정을 제목으로.  `"all"` 은 몇 번인지 여기서 알 수 없다 --
  *  고른 셀마다 다르므로 서버가 정하고, 화면은 "전체" 라고만 적는다. */
-function cycleTitle(spec: string): string {
+function cycleTitle(spec: string, drawn: number[]): string {
   const text = spec.trim()
-  if (!text || text.toLowerCase() === 'all') return '전체 사이클'
-  return `${text}번 사이클`
+  if (!text) return '3번 사이클'
+  if (text.toLowerCase() !== 'all') return `${text}번 사이클`
+  // 몇 번인지는 고른 셀마다 달라 요청만으로는 모른다 — 서버가 정한 것을 적는다.
+  if (!drawn.length) return '전체 사이클'
+  return `전체 사이클 · ${drawn[0]}–${drawn[drawn.length - 1]}번 중 ${drawn.length}개`
 }
 
 export function Compare() {
@@ -171,6 +174,11 @@ export function Compare() {
       hidden: hidden.includes(item.label),
     }))
   }, [mode, cycleCompare.data, curveSeries, hidden])
+
+  // 서버가 실제로 그린 사이클과, 골라 뽑았다면 그 한 줄.  `all` 은 요청만
+  // 봐서는 무엇이 그려졌는지 알 수 없다 -- 고른 셀마다 다르다.
+  const drawnCycles = curveCompare?.data?.cycles ?? []
+  const cyclesNote = curveCompare?.data?.cycles_note ?? ''
 
   const loading = mode === 'cycles' ? cycleCompare.loading : (curveCompare?.loading ?? false)
   const error = mode === 'cycles' ? cycleCompare.error : (curveCompare?.error ?? null)
@@ -303,7 +311,7 @@ export function Compare() {
           <Card
             title={mode === 'cycles'
               ? '사이클 추세'
-              : `${cycleTitle(cycleSpec)} · ${MODE_LABELS[mode]}`}
+              : `${cycleTitle(cycleSpec, drawnCycles)} · ${MODE_LABELS[mode]}`}
             actions={
               mode === 'cycles' ? (
                 <select
@@ -416,10 +424,15 @@ export function Compare() {
                     </Alert>
                   </div>
                 ) : null}
+                {cyclesNote ? (
+                  <div style={{ padding: '12px 14px 0' }}>
+                    <Alert kind="info">{cyclesNote}</Alert>
+                  </div>
+                ) : null}
                 {missingCells ? (
                   <div className="tiny" style={{ padding: '8px 14px 0', color: 'var(--warn)' }}>
-                    고른 셀 중 {missingCells}개는 {cycleTitle(cycleSpec)}을 완료하지 않았거나
-                    이 곡선을 만들지 못해 빠졌습니다.
+                    고른 셀 중 {missingCells}개는 {cycleTitle(cycleSpec, drawnCycles)}을
+                    완료하지 않았거나 이 곡선을 만들지 못해 빠졌습니다.
                   </div>
                 ) : null}
                 <Plot

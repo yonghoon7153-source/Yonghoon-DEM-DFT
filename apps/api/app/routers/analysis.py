@@ -80,43 +80,82 @@ _COMPARE_LIMIT = 30
 _COMPARE_CURVE_LIMIT = 60
 
 
+#: `cycles=all` 이 한 번에 겹칠 사이클 수의 위쪽.  곡선 수 한도와 별개로 두는
+#: 이유는 읽는 쪽 한계이기 때문이다 -- 열두 곡선을 넘으면 색이 돌기 시작하고,
+#: 프로파일처럼 서로 가까운 곡선은 그 지점에서 이미 구분되지 않는다.
+_ALL_CYCLE_CAP = 12
+
+
+def _even_pick(values: list[int], count: int) -> list[int]:
+    """`values` 에서 `count` 개를 **고르게**.  양 끝은 반드시 들어간다.
+
+    앞의 몇 개를 자르는 것과 다르다.  "전체" 를 누른 사람이 보려는 것은 전
+    구간의 모습이지 앞부분이 아니고, 첫 사이클과 마지막 사이클이 곧 비교의
+    두 끝이라 둘 중 하나라도 빠지면 그림이 답을 못 준다.
+    """
+    if count >= len(values):
+        return values
+    if count <= 1:
+        return values[-1:]
+    span = len(values) - 1
+    picked = {values[round(i * span / (count - 1))] for i in range(count)}
+    return sorted(picked)
+
+
 def _compare_cycles(session, ids: list[int], spec: str | None,
-                    fallback: int | None) -> list[int]:
-    """비교 화면이 그릴 사이클 번호들.
+                    fallback: int | None,
+                    branches: int) -> tuple[list[int], str]:
+    """비교 화면이 그릴 사이클 번호들, 그리고 전부가 아니면 그 이유 한 줄.
 
     `"3,4"` · `"1-5"` · `"3, 7-9"` 를 받는다 -- 사람이 실제로 그렇게 적고,
     열 개를 겹쳐 보려고 쉼표로 열 번 쓰지는 않기 때문이다.  문법은 내보내기
     쪽과 같은 `_parse_cycles` 를 쓴다: 한 화면에서 되는 표기가 다른 화면에서
     안 되면 그것이 곧 버그로 보고된다.
 
-    `"all"` 은 **고른 셀들이 실제로 가진** 사이클 전부다.  1..N 을 지어내지
-    않는다 -- 없는 사이클을 세면 아래 곡선 수 검사가 엉뚱한 수로 거절한다.
-    비어 있으면 `fallback` 하나 (옛 링크의 `cycle=` 이 그것이다).
+    **적어 낸 것과 `"all"` 을 다르게 다룬다.**  번호나 범위를 적었으면 그것이
+    요청이므로 다 그리거나 거절한다 (`_check_curve_count`).  `"all"` 은 번호가
+    아니라 "전 구간을 보여 달라" 이므로, 많으면 고르게 뽑고 무엇을 뽑았는지
+    함께 낸다.  950 사이클짜리를 950줄로 그리면 범례가 그림보다 크다.
+
+    `"all"` 의 후보는 **고른 셀들이 실제로 가진** 완료 사이클이다.  1..N 을
+    지어내지 않는다 -- 없는 사이클을 세면 뽑는 간격이 실제와 어긋난다.
     """
     if spec is None or not spec.strip():
         if fallback is None:
             raise HTTPException(
                 422, "그릴 사이클을 정해 주세요 -- cycle=3 또는 cycles=3,4")
-        return [fallback]
+        return [fallback], ""
+
     wanted = _parse_cycles(spec)
-    if wanted is None:                                  # "all"
-        wanted = set()
-        for sample_id in ids:
-            sample = session.get(Sample, sample_id)
-            if sample is None:
-                continue
-            wanted.update(r.cycle_number for r in sample_cycle_records(session, sample)
-                          if r.complete)
-    if any(number < 1 for number in wanted):
-        raise HTTPException(422, "사이클 번호는 1 부터입니다")
-    ordered = sorted(wanted)
-    if ordered:
-        return ordered
-    if fallback is None:
-        # "all" 인데 완료된 사이클이 하나도 없다.  없는 것을 지어내지 않는다:
-        # 빈 응답이 나가고 화면이 "이 사이클을 낼 수 없는 셀" 로 셈한다.
-        return []
-    return [fallback]
+    if wanted is not None:                              # 사람이 적어 낸 것
+        if any(number < 1 for number in wanted):
+            raise HTTPException(422, "사이클 번호는 1 부터입니다")
+        ordered = sorted(wanted)
+        _check_curve_count(len(ids), len(ordered), branches)
+        return ordered, ""
+
+    available: set[int] = set()
+    for sample_id in ids:
+        sample = session.get(Sample, sample_id)
+        if sample is None:
+            continue
+        available.update(r.cycle_number for r in sample_cycle_records(session, sample)
+                         if r.complete)
+    ordered = sorted(available)
+    if not ordered:
+        # 완료된 사이클이 하나도 없다.  없는 것을 지어내지 않는다: 빈 응답이
+        # 나가고 화면이 "이 사이클을 낼 수 없는 셀" 로 셈한다 (§0.4).
+        return ([] if fallback is None else [fallback]), ""
+
+    room = _COMPARE_CURVE_LIMIT // max(1, len(ids) * max(1, branches))
+    count = max(1, min(_ALL_CYCLE_CAP, room))
+    picked = _even_pick(ordered, count)
+    if len(picked) == len(ordered):
+        return picked, ""
+    note = (f"사이클 {len(ordered)}개 중 {len(picked)}개를 고르게 뽑았습니다 "
+            f"({ordered[0]}번부터 {ordered[-1]}번까지). "
+            f"특정 사이클을 보려면 번호를 직접 적어 주세요 -- 3,4 나 1-5.")
+    return picked, note
 
 
 def _check_curve_count(cells: int, cycles: int, branches: int) -> None:
@@ -125,7 +164,8 @@ def _check_curve_count(cells: int, cycles: int, branches: int) -> None:
         raise HTTPException(
             422, f"곡선이 {total}개입니다 (셀 {cells} × 사이클 {cycles} × "
                  f"{branches}) -- 한 번에 {_COMPARE_CURVE_LIMIT}개까지 그립니다. "
-                 f"셀이나 사이클을 줄여 주세요.")
+                 f"셀이나 사이클을 줄이거나, 전체 를 눌러 고르게 뽑아 보세요.")
+
 
 router = APIRouter(prefix="/api", tags=["analysis"])
 
@@ -871,8 +911,8 @@ def compare_profiles(
         raise HTTPException(
             422, f"at most {_COMPARE_LIMIT} cells can be compared at once "
                  f"({len(ids)} requested)")
-    wanted = _compare_cycles(session, ids, cycles, cycle)
-    _check_curve_count(len(ids), len(wanted), len(requested_branches))
+    wanted, cycles_note = _compare_cycles(session, ids, cycles, cycle,
+                                          len(requested_branches))
 
     limit = max_points or settings.default_plot_points
     series: list[ProfileSeriesOut] = []
@@ -918,6 +958,7 @@ def compare_profiles(
     shown_cell = drawn_cells[0] if len(drawn_cells) == 1 else resolve_cell(None)
     return ProfileOut(basis=used, basis_label=basis_label(used),
                       requested_basis=basis, mixed_basis=mixed,
+                      cycles=wanted, cycles_note=cycles_note,
                       resolved_cell=resolved_cell_out(shown_cell), series=series)
 
 
@@ -1009,8 +1050,8 @@ def compare_dqdv(
     _validate_smoother(smoother)
     ids = _compare_ids(sample_ids)
     requested_branches = _parse_branches(branches)
-    wanted = _compare_cycles(session, ids, cycles, cycle)
-    _check_curve_count(len(ids), len(wanted), len(requested_branches))
+    wanted, cycles_note = _compare_cycles(session, ids, cycles, cycle,
+                                          len(requested_branches))
     limit = max_points or settings.default_plot_points
 
     built, used, mixed, shown_cell = _compare_differential(
@@ -1025,6 +1066,7 @@ def compare_dqdv(
               for payload, run, sample, branch, _cell, number in built]
     return DqdvOut(basis=used, basis_label=basis_label(used),
                    requested_basis=basis, mixed_basis=mixed,
+                   cycles=wanted, cycles_note=cycles_note,
                    resolved_cell=resolved_cell_out(shown_cell), series=series,
                    voltage_step=voltage_step, smoothing=smoothing,
                    smoother=smoother, poly_order=poly_order)
@@ -1057,8 +1099,8 @@ def compare_dvdq(
     _validate_smoother(smoother)
     ids = _compare_ids(sample_ids)
     requested_branches = _parse_branches(branches)
-    wanted = _compare_cycles(session, ids, cycles, cycle)
-    _check_curve_count(len(ids), len(wanted), len(requested_branches))
+    wanted, cycles_note = _compare_cycles(session, ids, cycles, cycle,
+                                          len(requested_branches))
     limit = max_points or settings.default_plot_points
 
     built, used, mixed, shown_cell = _compare_differential(
@@ -1073,6 +1115,7 @@ def compare_dvdq(
               for payload, run, sample, branch, _cell, number in built]
     return DvdqOut(basis=used, basis_label=basis_label(used),
                    requested_basis=basis, mixed_basis=mixed,
+                   cycles=wanted, cycles_note=cycles_note,
                    resolved_cell=resolved_cell_out(shown_cell), series=series,
                    smoothing=smoothing, smoother=smoother,
                    poly_order=poly_order, capacity_step=capacity_step)

@@ -491,6 +491,12 @@ class ProfileOut(BaseModel):
     requested_basis: str
     resolved_cell: ResolvedCellOut
     series: list[ProfileSeriesOut]
+    #: 실제로 그린 사이클 번호들.  `cycles=all` 은 골라 뽑을 수 있으므로
+    #: (아래 `cycles_note`), 무엇이 그려졌는지는 요청만 봐서는 알 수 없다.
+    cycles: list[int] = []
+    #: 전부를 그리지 못했을 때 무엇을 어떻게 골랐는지 한 줄.  비어 있으면
+    #: 고른 것이 곧 전부다 -- 조용히 줄이지 않는다.
+    cycles_note: str = ""
     #: True when the curves are not all in the same unit, so one axis label
     #: cannot describe them and the client has to annotate each curve.
     mixed_basis: bool = False
@@ -538,6 +544,12 @@ class DqdvOut(BaseModel):
     requested_basis: str
     resolved_cell: ResolvedCellOut
     series: list[DqdvSeriesOut]
+    #: 실제로 그린 사이클 번호들.  `cycles=all` 은 골라 뽑을 수 있으므로
+    #: (아래 `cycles_note`), 무엇이 그려졌는지는 요청만 봐서는 알 수 없다.
+    cycles: list[int] = []
+    #: 전부를 그리지 못했을 때 무엇을 어떻게 골랐는지 한 줄.  비어 있으면
+    #: 고른 것이 곧 전부다 -- 조용히 줄이지 않는다.
+    cycles_note: str = ""
     voltage_step: float
     smoothing: int
     smoother: str = "moving"
@@ -587,6 +599,12 @@ class DvdqOut(BaseModel):
     requested_basis: str
     resolved_cell: ResolvedCellOut
     series: list[DvdqSeriesOut]
+    #: 실제로 그린 사이클 번호들.  `cycles=all` 은 골라 뽑을 수 있으므로
+    #: (아래 `cycles_note`), 무엇이 그려졌는지는 요청만 봐서는 알 수 없다.
+    cycles: list[int] = []
+    #: 전부를 그리지 못했을 때 무엇을 어떻게 골랐는지 한 줄.  비어 있으면
+    #: 고른 것이 곧 전부다 -- 조용히 줄이지 않는다.
+    cycles_note: str = ""
     smoothing: int
     smoother: str = "moving"
     poly_order: int = 2

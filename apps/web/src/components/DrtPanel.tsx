@@ -219,6 +219,7 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
         />
 
         <KeyValues
+          cols={2}
           rows={[
             ['R∞', `${num(shown.r_inf_ohm, 4)} Ω`],
             ['전체 분극', `${num(shown.total_polarisation_ohm, 4)} Ω`],

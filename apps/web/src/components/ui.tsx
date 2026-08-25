@@ -293,9 +293,15 @@ export function NumberField({
 }
 
 /** Key/value list for dense metadata panels. */
-export function KeyValues({ rows }: { rows: [string, ReactNode][] }) {
+export function KeyValues({ rows, cols = 1 }: {
+  rows: [string, ReactNode][]
+  /** 몇 갈래로 나눠 담을까.  기본 1 -- 좁은 카드에서는 한 줄에 하나가 읽기
+   *  쉽다.  넓은 카드에서 그러면 이름과 값 사이가 화면 폭만큼 벌어져, 어느
+   *  값이 어느 이름의 것인지 눈으로 잇기 어렵다. */
+  cols?: 1 | 2
+}) {
   return (
-    <dl className="kv">
+    <dl className={cols === 2 ? 'kv cols-2' : 'kv'}>
       {rows.map(([key, value]) => (
         <div key={key}>
           <span className="k">{key}</span>

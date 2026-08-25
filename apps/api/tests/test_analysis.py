@@ -419,14 +419,48 @@ def test_all_means_the_cycles_these_cells_actually_have(client, loaded):
     assert len(body["series"]) == len(complete)
 
 
-def test_too_many_curves_is_refused_not_quietly_trimmed(client, loaded):
-    """앞의 몇 개만 그리면 그 그림이 "이게 전부" 로 읽힌다."""
+def test_a_written_out_range_that_is_too_big_is_refused(client, loaded):
+    """번호를 적어 냈으면 그것이 요청이다 -- 앞의 몇 개만 그리면 그 그림이
+    "이게 전부" 로 읽힌다.  줄이는 것은 사람이 정한다."""
     sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
     answer = client.get("/api/compare/profiles",
                         params={"sample_ids": str(sample_id), "cycles": "1-200",
                                 "branches": "charge,discharge"})
     assert answer.status_code == 422
     assert "400" in answer.json()["detail"]     # 1 × 200 × 2
+
+
+def test_all_thins_evenly_and_says_so(client, loaded):
+    """`all` 은 번호가 아니라 "전 구간을 보여 달라" 다.  거절 대신 고르게 뽑는다."""
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    rows = client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]
+    complete = sorted(r["cycle"] for r in rows if r["complete"])
+
+    body = client.get("/api/compare/profiles",
+                      params={"sample_ids": str(sample_id), "cycles": "all",
+                              "branches": "charge,discharge"}).json()
+    drawn = body["cycles"]
+    # 이 픽스처는 사이클이 몇 개 안 되므로 전부 들어간다 -- 그때는 말이 없다.
+    assert drawn == complete
+    assert body["cycles_note"] == ""
+
+
+def test_all_keeps_both_ends_when_it_has_to_thin(client, loaded, wrd_bytes):
+    """첫 사이클과 마지막 사이클이 비교의 두 끝이다 -- 하나라도 빠지면 답이 없다."""
+    from app.routers.analysis import _even_pick
+    values = list(range(1, 951))
+    picked = _even_pick(values, 12)
+    assert len(picked) == 12
+    assert picked[0] == 1 and picked[-1] == 950
+    gaps = {b - a for a, b in zip(picked, picked[1:], strict=False)}
+    # 고르게 -- 반올림 때문에 한 칸 차이는 난다.
+    assert max(gaps) - min(gaps) <= 1
+
+
+def test_even_pick_never_drops_the_only_value(client):
+    from app.routers.analysis import _even_pick
+    assert _even_pick([7], 12) == [7]
+    assert _even_pick([1, 2, 3], 1) == [3]
 
 
 def test_an_unreadable_cycle_selection_is_a_422(client, loaded):
