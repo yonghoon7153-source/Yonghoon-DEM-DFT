@@ -332,6 +332,14 @@ class SpectrumRecord(SQLModel, table=True):
     amplitude_mv: float | None = None
     device: str = ""
     technique: str = ""
+    #: Which cycle of the cell's cycling this spectrum belongs to.
+    #:
+    #: The lab's solid-state work measures impedance twice -- before cycling and
+    #: after a couple of hundred cycles -- and the whole point is comparing the
+    #: two.  Without a number they sort by upload time, which is the order
+    #: somebody happened to drag files in.  ``None`` is "not said"; ``0`` is a
+    #: real answer meaning before any cycling.
+    at_cycle: int | None = Field(default=None, index=True)
     #: When the instrument measured it, if the file says.
     measured_at: datetime | None = None
     #: Everything else the settings file carried, verbatim.

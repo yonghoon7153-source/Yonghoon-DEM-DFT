@@ -127,6 +127,9 @@ export function SpectrumDetail() {
           <div className="sub">
             {[
               KIND_LABEL[record.kind],
+              record.at_cycle === null
+                ? null
+                : record.at_cycle === 0 ? '구동 전' : `${record.at_cycle} 사이클`,
               `${record.n_points}점`,
               frequencySpan(record),
               record.device || null,
@@ -468,6 +471,9 @@ function CellFields({
   const [thickness, setThickness] = useState(
     record.thickness_um === null ? '' : String(record.thickness_um),
   )
+  const [cycle, setCycle] = useState(
+    record.at_cycle === null ? '' : String(record.at_cycle),
+  )
 
   const namedThickness = thicknessFromName(record.name) ?? thicknessFromName(record.original_name)
   const namedConfig = cellConfigFromName(record.name) ?? cellConfigFromName(record.original_name)
@@ -510,6 +516,28 @@ function CellFields({
             </option>
           ))}
         </select>
+      </Field>
+
+      <Field label="사이클" hint="구동 전은 0 · 비우면 안 적음 · Enter 로 적용">
+        <input
+          aria-label="사이클"
+          type="number"
+          min={0}
+          value={cycle}
+          disabled={busy}
+          onChange={(event) => setCycle(event.target.value)}
+          onBlur={() => {
+            const value = cycle.trim()
+            if (value === '' && record.at_cycle === null) return
+            if (value !== '' && Number(value) === record.at_cycle) return
+            void save(value === ''
+              ? { clear: ['at_cycle'] }
+              : { at_cycle: Number(value) })
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur()
+          }}
+        />
       </Field>
 
       <Field

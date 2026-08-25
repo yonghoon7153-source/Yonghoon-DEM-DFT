@@ -64,6 +64,7 @@ function spectrum(overrides: Partial<Spectrum> = {}): Spectrum {
     amplitude_mv: 5,
     device: 'VSP-300',
     technique: 'Potentio Electrochemical Impedance Spectroscopy',
+    at_cycle: null,
     measured_at: null,
     thickness_um: null,
     area_cm2: null,
@@ -137,6 +138,7 @@ const POINTS = {
   id: 1,
   name: 'sym_01',
   kind: 'solid',
+  at_cycle: null,
   frequency_hz: [1e5, 1e3, 1e1, 1e-1],
   z_re: [8.1, 20.0, 45.0, 66.0],
   z_im: [-1.2, -12.0, -9.0, -0.4],
@@ -401,6 +403,33 @@ describe('스펙트럼 상세', () => {
 
     renderDetail()
     expect(await screen.findByText(/이온 블로킹 대칭셀에서만/)).toBeInTheDocument()
+  })
+
+  it('사이클 번호를 적으면 저장한다 — 초기와 200 사이클을 가르는 것이 그것이다', async () => {
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum({ at_cycle: 200 })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    const input = await screen.findByLabelText('사이클')
+    await userEvent.type(input, '200')
+    await userEvent.tab()
+    await waitFor(() => expect(sent).toEqual({ at_cycle: 200 }))
+  })
+
+  it('0 사이클은 "구동 전" 이지 빈 값이 아니다', async () => {
+    installFetch(detailHandler((url) =>
+      path(url) === '/api/eis/spectra/1' ? detail({ at_cycle: 0 }) : undefined))
+
+    renderDetail()
+    // 제목 줄에 "구동 전" 이 뜨고, 칸에는 0 이 들어 있다 — 빈 칸이 아니다.
+    expect(await screen.findByLabelText('사이클')).toHaveValue(0)
+    expect(screen.getAllByText(/구동 전/).length).toBeGreaterThan(0)
   })
 
   it('맞추지 못했으면 이유를 낸다', async () => {

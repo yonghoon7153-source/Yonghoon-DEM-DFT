@@ -664,6 +664,8 @@ class SpectrumOut(BaseModel):
     amplitude_mv: float | None
     device: str
     technique: str
+    #: 몇 번째 사이클의 임피던스인가.  None 은 "안 적음", 0 은 "구동 전".
+    at_cycle: int | None = None
     measured_at: datetime | None
     thickness_um: float | None
     area_cm2: float | None
@@ -716,6 +718,7 @@ class SpectrumPointsOut(BaseModel):
     id: int
     name: str
     kind: str
+    at_cycle: int | None = None
     #: raw 만 (ADR 0001): Hz 와 Ω.  z_im 은 **허수부 자체**이고 그 음수가 아니다.
     frequency_hz: list[float]
     z_re: list[float]
@@ -731,6 +734,7 @@ class SpectrumUpdate(BaseModel):
     kind: str | None = None
     #: 빈 문자열은 "아직 안 정함" 이다.
     cell_config: str | None = None
+    at_cycle: int | None = Field(default=None, ge=0)
     sample_id: int | None = None
     thickness_um: PositiveLength | None = None
     area_cm2: PositiveLength | None = None

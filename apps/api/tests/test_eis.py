@@ -275,3 +275,80 @@ def test_the_circuit_presets_say_what_each_one_is_for(client):
     assert kinds["solid"]["presets"][0]["circuit"].endswith("CPE3")
     assert all(preset["note"] for entry in body["kinds"]
                for preset in entry["presets"])
+
+
+# --- 같은 셀의 여러 시점 (초기 · 200 사이클) --------------------------------
+#
+# 전고체 과제는 구동 전과 200 사이클 뒤를 재서 **둘을 비교**한다.  그 비교가
+# 목적이므로 몇 번째 사이클인지가 데이터의 일부이고, 없으면 올린 순서로 정렬돼
+# 누가 파일을 어떤 순으로 끌어다 놓았는지가 그림의 순서가 된다.
+
+def test_a_spectrum_can_say_which_cycle_it_belongs_to(client, sample_id):
+    before = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "cell_config": "full", "sample_id": sample_id,
+                "at_cycle": 0},
+        files={"file": ("before.mpr", mpr(), "application/octet-stream")}).json()
+    assert before["at_cycle"] == 0
+
+
+def test_the_list_is_ordered_by_cycle_not_by_upload_time(client, sample_id):
+    late = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "sample_id": sample_id, "at_cycle": 200},
+        files={"file": ("after.mpr", mpr(rs=9.0), "application/octet-stream")}).json()
+    early = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "sample_id": sample_id, "at_cycle": 0},
+        files={"file": ("before.mpr", mpr(rs=5.0), "application/octet-stream")}).json()
+    # 200 사이클 것을 먼저 올렸지만 0 이 먼저 나와야 한다.
+    listed = client.get("/api/eis/spectra", params={"sample_id": sample_id}).json()
+    assert [row["id"] for row in listed] == [early["id"], late["id"]]
+
+
+def test_a_spectrum_with_no_cycle_number_sorts_last(client, sample_id):
+    unnumbered = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "sample_id": sample_id},
+        files={"file": ("x.mpr", mpr(rs=3.0), "application/octet-stream")}).json()
+    numbered = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "sample_id": sample_id, "at_cycle": 200},
+        files={"file": ("y.mpr", mpr(rs=4.0), "application/octet-stream")}).json()
+    listed = client.get("/api/eis/spectra", params={"sample_id": sample_id}).json()
+    assert [row["id"] for row in listed] == [numbered["id"], unnumbered["id"]]
+
+
+def test_the_cycle_number_can_be_set_afterwards(client):
+    out = upload(client)
+    patched = client.patch(f"/api/eis/spectra/{out['id']}", json={"at_cycle": 200})
+    assert patched.status_code == 200, patched.text
+    assert patched.json()["at_cycle"] == 200
+
+
+def test_a_negative_cycle_number_is_refused(client):
+    out = upload(client)
+    assert client.patch(f"/api/eis/spectra/{out['id']}",
+                        json={"at_cycle": -1}).status_code == 422
+
+
+def test_several_spectra_come_back_in_one_request(client, sample_id):
+    """겹쳐 그리려면 동시에 필요하다.  하나씩 부르면 축이 두 번 다시 잡힌다."""
+    first = upload(client, name="a.mpr", sample_id=sample_id)
+    second = upload(client, name="b.mpr", sample_id=sample_id, rs=9.0)
+    body = client.get("/api/eis/points",
+                      params={"ids": f"{first['id']},{second['id']}"}).json()
+    assert [row["id"] for row in body] == [first["id"], second["id"]]
+    assert all(len(row["z_re"]) > 10 for row in body)
+
+
+def test_a_missing_spectrum_in_a_batch_is_an_error_not_a_gap(client):
+    """곡선 하나가 빠진 그림은 안 빠진 그림과 구분되지 않는다."""
+    out = upload(client)
+    response = client.get("/api/eis/points", params={"ids": f"{out['id']},9999"})
+    assert response.status_code == 404
+
+
+def test_a_batch_refuses_nonsense_ids(client):
+    assert client.get("/api/eis/points", params={"ids": "1,abc"}).status_code == 422
+    assert client.get("/api/eis/points", params={"ids": " "}).status_code == 422

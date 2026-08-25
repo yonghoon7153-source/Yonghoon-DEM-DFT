@@ -192,6 +192,7 @@ export function Eis() {
                   <th style={{ width: 30 }} />
                   <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
+                  <th>사이클</th>
                   <th style={{ textAlign: 'left' }}>셀 구성</th>
                   <th>두께</th>
                   <th>점</th>
@@ -266,6 +267,9 @@ function Row({
           '—'
         )}
       </td>
+      {/* 초기와 200 사이클을 비교하는 것이 목적이므로 번호가 데이터의 일부다.
+          없으면 올린 순서로 정렬돼 파일을 끌어다 놓은 순서가 그림의 순서가 된다. */}
+      <td>{spectrum.at_cycle === null ? '—' : spectrum.at_cycle}</td>
       {/* 아크의 이름과 전도도가 이 두 칸에 걸려 있다.  표에서 비어 있는 것이
           보여야 채우러 들어간다. */}
       <td className="text dim">{CONFIG_LABELS[spectrum.cell_config] ?? '—'}</td>

@@ -505,6 +505,14 @@ a:hover { text-decoration: underline; }
 .chip.active { border-color: var(--accent-line); background: var(--accent-wash); }
 .chip.active .pct { color: var(--accent); }
 
+/* 겹쳐 그릴 스펙트럼 고르기 — 전압 곡선에서 사이클을 고르는 것과 같은 몸짓. */
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+button.chip { cursor: pointer; }
+button.chip:hover { border-color: var(--line-strong); color: var(--ink); }
+button.chip.on { border-color: var(--accent-line); background: var(--accent-wash);
+                 color: var(--accent); }
+button.chip:focus-visible { box-shadow: var(--ring); }
+
 /* -------------------------------------------------------------- forms */
 label.field { display: flex; flex-direction: column; gap: 4px; font-size: 11.5px; }
 label.field > span { color: var(--ink-2); font-weight: 550; }

@@ -190,6 +190,9 @@ export const api = {
   getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),
   spectrumPoints: (id: number) =>
     request<SpectrumPoints>(`/api/eis/spectra/${id}/points`),
+  /** 여러 개를 한 번에 — 겹쳐 그리려면 동시에 있어야 축이 한 번만 잡힌다. */
+  spectraPoints: (ids: number[]) =>
+    request<SpectrumPoints[]>(`/api/eis/points${query({ ids: ids.join(',') })}`),
   uploadSpectrum: (file: File, params?: Params, settingsFile?: File | null) => {
     const form = new FormData()
     form.append('file', file)

@@ -173,6 +173,11 @@ def list_spectra(session: Session = Depends(get_session),
         statement = statement.where(SpectrumRecord.sample_id == sample_id)
     records = session.exec(
         statement.order_by(SpectrumRecord.uploaded_at.desc())).all()
+    # 사이클 번호가 있으면 그 순서가 사람이 보고 싶은 순서다 — 올린 순서는
+    # 누가 파일을 어떤 순으로 끌어다 놓았느냐일 뿐이다.  번호 없는 것은 뒤로.
+    records = sorted(records, key=lambda r: (r.at_cycle is None,
+                                             r.at_cycle if r.at_cycle is not None else 0,
+                                             r.uploaded_at))
     if search:
         needle = search.lower()
         records = [r for r in records
@@ -196,6 +201,54 @@ def read_spectrum(spectrum_id: int, session: Session = Depends(get_session)):
     )
 
 
+@router.get("/points", response_model=list[SpectrumPointsOut])
+def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트럼 id"),
+                session: Session = Depends(get_session)):
+    """여러 스펙트럼의 점을 한 번에.
+
+    나이퀴스트를 겹쳐 그리려면 두세 개가 동시에 필요하고, 하나씩 부르면 화면이
+    부분적으로 채워지며 축이 두 번 다시 잡힌다.  못 읽은 것은 **조용히 빠지지
+    않고** 그 자리에서 404 로 말한다 — 곡선 하나가 없는 그림은 있는 그림과
+    구분되지 않는다.
+    """
+    wanted = []
+    for chunk in ids.split(","):
+        chunk = chunk.strip()
+        if not chunk:
+            continue
+        if not chunk.lstrip("-").isdigit():
+            raise HTTPException(422, f"스펙트럼 id 가 아닙니다: {chunk!r}")
+        wanted.append(int(chunk))
+    if not wanted:
+        raise HTTPException(422, "고른 스펙트럼이 없습니다")
+    if len(wanted) > 12:
+        raise HTTPException(422, "한 번에 12개까지만 겹쳐 그립니다")
+
+    out = []
+    for spectrum_id in wanted:
+        record = _get(session, spectrum_id)
+        spectrum = storage.load_spectrum(spectrum_id)
+        if spectrum is None:
+            raise HTTPException(
+                409, f"{record.name}: 파싱 결과가 없습니다 — 파일을 다시 올려 주세요")
+        out.append(_points_out(record, spectrum))
+    return out
+
+
+def _points_out(record: SpectrumRecord, spectrum) -> SpectrumPointsOut:
+    return SpectrumPointsOut(
+        id=record.id,
+        name=record.name,
+        kind=record.kind,
+        at_cycle=record.at_cycle,
+        frequency_hz=[float(v) for v in spectrum.frequency_hz],
+        z_re=[float(v) for v in spectrum.z_re],
+        z_im=[float(v) for v in spectrum.z_im],
+        magnitude=[float(v) for v in spectrum.magnitude],
+        phase_deg=[float(v) for v in spectrum.phase_deg],
+    )
+
+
 @router.get("/spectra/{spectrum_id}/points", response_model=SpectrumPointsOut)
 def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
     """The measured points, raw ohms and hertz (ADR 0001)."""
@@ -204,16 +257,7 @@ def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
     if spectrum is None:
         raise HTTPException(
             409, "이 스펙트럼의 파싱 결과가 없습니다 — 파일을 다시 올려 주세요")
-    return SpectrumPointsOut(
-        id=spectrum_id,
-        name=record.name,
-        kind=record.kind,
-        frequency_hz=[float(v) for v in spectrum.frequency_hz],
-        z_re=[float(v) for v in spectrum.z_re],
-        z_im=[float(v) for v in spectrum.z_im],
-        magnitude=[float(v) for v in spectrum.magnitude],
-        phase_deg=[float(v) for v in spectrum.phase_deg],
-    )
+    return _points_out(record, spectrum)
 
 
 # --------------------------------------------------------------------------
@@ -239,6 +283,7 @@ async def upload_spectrum(
     sample_id: int | None = Query(None),
     kind: str = Query(LIQUID),
     cell_config: str = Query(""),
+    at_cycle: int | None = Query(None, ge=0),
     session: Session = Depends(get_session),
 ):
     """Store one ``.mpr`` or ``.mpt``, with its ``.mps`` when there is one.
@@ -291,6 +336,7 @@ async def upload_spectrum(
         name=name,
         kind=kind,
         cell_config=cell_config,
+        at_cycle=at_cycle,
         original_name=file.filename or "",
         sha256=digest,
         size_bytes=len(content),

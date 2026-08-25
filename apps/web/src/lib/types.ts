@@ -572,6 +572,8 @@ export interface Spectrum {
   amplitude_mv: number | null
   device: string
   technique: string
+  /** 몇 번째 사이클의 임피던스인가. null 은 "안 적음", 0 은 "구동 전". */
+  at_cycle: number | null
   measured_at: string | null
   thickness_um: number | null
   area_cm2: number | null
@@ -643,6 +645,7 @@ export interface SpectrumPoints {
   id: number
   name: string
   kind: EisKind
+  at_cycle: number | null
   frequency_hz: number[]
   /** z_im 은 허수부 자체다. 나이퀴스트 세로축은 그 음수. */
   z_re: number[]

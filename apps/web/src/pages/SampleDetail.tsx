@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom'
 import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
+import { CellSpectra } from '../components/CellSpectra'
 import { CompositionEditor } from '../components/CompositionEditor'
 import { CyclePicker } from '../components/CyclePicker'
 import { TestConditionsPanel } from '../components/TestConditionsPanel'
@@ -1073,6 +1074,13 @@ export function SampleDetail() {
             </Card>
           </div>
         </div>
+      </div>
+
+      {/* 같은 셀의 임피던스.  충방전을 찍다가 EIS 를 찍는 일이 흔해서, 그 둘이
+          한 화면에서 이어져야 한다 — GITT 는 중간에 끼우는 일이 드물어 독자
+          섹션으로 둔다. */}
+      <div style={{ marginTop: 14 }}>
+        <CellSpectra sampleId={sample.id} />
       </div>
     </main>
   )
