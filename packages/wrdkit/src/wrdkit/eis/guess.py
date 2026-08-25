@@ -142,6 +142,130 @@ def series_resistance(spectrum: Spectrum) -> float:
 #: numbers: 1e-4 for the first, 1e-3 for the second.
 _CPE_FALLBACK_Q = (1e-4, 1e-3, 1e-2)
 
+#: ``-Z''`` of a transmissive finite Warburg peaks at ``w tau ~ 2.53``.  Used
+#: both ways: from a visible peak to tau, and -- when the sweep stopped before
+#: the tail turned over -- from the lowest measured frequency to the smallest
+#: tau consistent with what was seen.
+_WS_PEAK_OMEGA_TAU = 2.53
+
+
+def _tail(spectrum: Spectrum, arcs: list[Arc]) -> tuple[float, float, float]:
+    """(lowest usable frequency in Hz, its ``Z'``, its ``-Z''``).
+
+    "Usable" means non-inductive: the megahertz end is cables, and a diffusion
+    element started from a cable measurement is started from nothing.
+    """
+    ordered = spectrum.sorted_by_frequency(descending=True)
+    usable = ordered.select(~inductive_mask(ordered))
+    if len(usable) == 0:
+        usable = ordered
+    return (float(usable.frequency_hz[-1]), float(usable.z_re[-1]),
+            float(-usable.z_im[-1]))
+
+
+def _warburg_sigma(spectrum: Spectrum, arcs: list[Arc]) -> float:
+    """Start for a semi-infinite Warburg, in Ω·s^-½.
+
+    ``Z_W = sigma (1-j)/sqrt(w)``, so ``-Z'' = sigma / sqrt(w)`` and the
+    lowest measured point reads sigma straight off: ``sigma = -Z'' sqrt(w)``.
+
+    This used to start at the spectrum's real span, which is a resistance --
+    the wrong dimension entirely.  On the lab's own solid-state scan that put
+    the start at 122 where the answer was 20, and the eight restarts were what
+    rescued it.  A start that needs rescuing is a start that fails whenever the
+    rescue is turned down (`restarts=0`) or the spectrum is a little harder.
+    """
+    _, _, neg_im = _tail(spectrum, arcs)
+    omega = 2.0 * np.pi * _tail(spectrum, arcs)[0]
+    if neg_im <= 0 or omega <= 0:
+        return max(float(np.max(spectrum.z_re) - np.min(spectrum.z_re)), 1e-6)
+    return max(neg_im * np.sqrt(omega), 1e-9)
+
+
+def _finite_warburg(spectrum: Spectrum, arcs: list[Arc], kind: str,
+                    branches: int) -> tuple[float, float]:
+    """(R, tau) start for ``Ws``/``Wo``.
+
+    **R** is what the real axis has left over: the lowest-frequency ``Z'``
+    minus the series resistance and every arc diameter already accounted for.
+    Starting at the whole span instead double-counts the arcs, which puts the
+    tail's foot inside the last arc.
+
+    The two elements land differently, so the leftover means different things.
+    A transmissive ``Ws`` returns to the real axis at ``R``, so the leftover
+    *is* R.  A blocking ``Wo`` rises capacitively and its real part settles at
+    ``R/3``, so the leftover is a third of it.  Using one rule for both starts
+    ``Wo`` three times too small, which is where its tail comes from.
+
+    **tau** comes from where ``-Z''`` turns over, if the sweep went low enough
+    to see it -- only ``Ws`` has such a turn-over (``Wo`` diverges instead).
+    If the sweep stopped first, the turn-over is below the last measured
+    frequency, so ``tau >= 2.53 / w_low``: start there rather than at one
+    second, which is a number about no spectrum in particular.
+    """
+    frequency, z_re_low, _ = _tail(spectrum, arcs)
+    span = float(np.max(spectrum.z_re) - np.min(spectrum.z_re)) or 1.0
+
+    # 꼬리가 화면 안에서 완전히 닫혔으면 `find_arcs` 가 그것까지 아크로 센다 --
+    # 그 봉우리는 정말 반원처럼 생겼기 때문이다.  회로가 가진 R-CPE 가지 수를
+    # 넘는 **가장 낮은** 아크가 곧 그 꼬리이고, 그때는 지름과 꼭짓점이 R 과
+    # tau 를 바로 말해 준다.  이 경우를 놓치면 남는 실축 길이가 음수가 되어
+    # 폴백(전체 span)으로 떨어지고, tau 는 잡음 봉우리에서 나온다.
+    for_branches = arcs[:branches]
+    tail_arc = arcs[branches] if len(arcs) > branches else None
+
+    accounted = series_resistance(spectrum) + sum(
+        arc.diameter_ohm for arc in for_branches)
+    leftover = z_re_low - accounted
+    peak = 0.0
+    if tail_arc is not None:
+        # 꼭짓점은 아크에서, 지름은 **둘 중 큰 쪽**에서.  화면 안에서 아직 다
+        # 닫히지 않은 꼬리는 아크로 재면 지름이 실제보다 작게 나오는데, 실축이
+        # 이미 간 거리보다 작을 수는 없다.
+        leftover = max(tail_arc.diameter_ohm, leftover)
+        peak = tail_arc.peak_hz
+    elif kind == "Ws":
+        peak = _tail_peak_hz(spectrum, arcs)
+
+    resistance = leftover * (3.0 if kind == "Wo" else 1.0)
+    if not np.isfinite(resistance) or resistance <= 0:
+        resistance = span
+    omega = 2.0 * np.pi * (peak if peak else frequency)
+    tau = _WS_PEAK_OMEGA_TAU / omega if omega > 0 else 1.0
+    return max(resistance, 1e-6), float(np.clip(tau, 1e-6, 1e6))
+
+
+def _tail_peak_hz(spectrum: Spectrum, arcs: list[Arc]) -> float:
+    """Where ``-Z''`` turns over below the last arc, or 0 if it never does.
+
+    A finite diffusion layer bends the 45-degree line back toward the real
+    axis, and the bend has a top.  That top is the one frequency in the whole
+    spectrum that speaks directly to the diffusion time constant, so it is
+    worth finding even though `find_arcs` deliberately throws it away (a
+    diffusion hump is not an arc, and calling it one adds two free parameters
+    describing nothing).
+    """
+    ordered = spectrum.sorted_by_frequency(descending=True)
+    usable = ordered.select(~inductive_mask(ordered))
+    if len(usable) < 5:
+        return 0.0
+    smoothed = _smooth(-usable.z_im, 3)
+    lowest_arc = min((arc.peak_hz for arc in arcs), default=float("inf"))
+    #: 꼬리의 꼭대기는 그 스펙트럼에서 가장 큰 것들 축에 든다 (Ws 의 정점은
+    #: 0.417 R).  이 문턱이 없으면 저주파 끝의 잡음 한 점이 꼭대기로 뽑히고,
+    #: **틀린 확신**이 담긴 시작점은 중립적인 시작점보다 나쁘다 -- 재시작의
+    #: 산포(로그 ×5)로는 두 자릿수를 되돌아올 수 없다.
+    floor = 0.2 * float(np.max(smoothed)) if len(smoothed) else 0.0
+    for i in range(len(smoothed) - 2, 0, -1):
+        # 낮은 주파수에서 위로 훑는다 -- 꼬리의 꼭대기는 아크들보다 아래에 있다.
+        if usable.frequency_hz[i] >= lowest_arc:
+            break
+        if smoothed[i] < floor:
+            continue
+        if smoothed[i] >= smoothed[i - 1] and smoothed[i] > smoothed[i + 1]:
+            return float(usable.frequency_hz[i])
+    return 0.0
+
 
 def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
     """Starting values for every parameter of *circuit*.
@@ -159,6 +283,7 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
     names = list(circuit.parameter_names)
     values = np.zeros(len(names))
     element_kinds = _kinds_by_name(circuit)
+    branch_count = len(circuit.parallel_rc_branches())
 
     arc_index = 0
     used_series_r = False
@@ -197,10 +322,13 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
             values[i] = 1e-6
         elif kind == "L":
             values[i] = 1e-7
-        elif kind == "W" or name.endswith("_R"):
-            values[i] = span
-        elif name.endswith("_tau"):
-            values[i] = 1.0
+        elif kind == "W":
+            values[i] = _warburg_sigma(spectrum, arcs)
+        elif name.endswith("_R") or name.endswith("_tau"):
+            # Ws/Wo 의 두 값은 함께 나온다 -- R 은 남은 실축 길이, tau 는 꼬리가
+            # 꺾이는 자리다.  따로 구하면 서로 모순되는 시작점이 된다.
+            resistance, tau = _finite_warburg(spectrum, arcs, kind, branch_count)
+            values[i] = resistance if name.endswith("_R") else tau
         else:
             values[i] = 1.0
     return np.clip(values, circuit.lower, circuit.upper)

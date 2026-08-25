@@ -32,7 +32,7 @@ const GROUPS = [
 ]
 
 function installGroups(made: unknown[] = []) {
-  vi.stubGlobal('fetch', vi.fn(async (url: string, init?: RequestInit) => {
+  vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => {
     if (init?.method === 'POST') {
       made.push(JSON.parse(String(init.body)))
       return { ok: true, status: 201, statusText: 'Created',

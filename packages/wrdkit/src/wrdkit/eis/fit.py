@@ -102,6 +102,26 @@ class FitResult:
         return [p.name for p in self.parameters if not p.determined]
 
 
+#: 시작점을 몇 개나 흩을까.  확산이 든 회로는 더 많이 -- 위 docstring 참고.
+_DEFAULT_RESTARTS = 8
+_DIFFUSION_RESTARTS = 24
+
+#: 훑기 한 번에 허용하는 함수 호출 수.  골짜기를 **고르는** 데는 이만큼이면
+#: 충분하고, 바닥까지 내려가는 것은 다음 단계의 일이다.
+_SCREEN_NFEV = 200
+
+#: 끝까지 미는 시작점의 수, 그리고 그때의 예산.
+_POLISH_KEEP = 4
+_POLISH_NFEV = 4000
+
+
+def _is_warburg_sigma(model, name: str) -> bool:
+    """``W`` 의 단일 파라미터인가.  ``Ws_R``/``Wo_R`` 은 저항이라 아니다."""
+    if "_" in name:
+        return False
+    return name.startswith("W") and not name.startswith(("Ws", "Wo"))
+
+
 def _residuals(values, circuit, frequency, z, weights):
     model = circuit.impedance(values, frequency)
     diff = model - z
@@ -131,7 +151,7 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                 guess: np.ndarray | None = None,
                 drop_inductive: bool = True,
                 frequency_range: tuple[float, float] | None = None,
-                restarts: int = 8,
+                restarts: int | None = None,
                 seed: int = 0) -> FitResult:
     """Fit *circuit* to *spectrum* and say how well it went.
 
@@ -140,9 +160,15 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     the result so the screen can say how many went.
 
     ``restarts`` scatters extra starting points around the data-driven guess
-    (a factor of a few on each parameter, log-uniform).  Eight is enough to
-    escape the shallow local minima this family of circuits has, and cheap:
-    each fit is a few milliseconds on a hundred points.
+    (a factor of a few on each parameter, log-uniform).  Left unset it depends
+    on the circuit: eight for plain arc circuits, and more when a diffusion
+    element is present.  Those have one more decade-wide parameter and a second
+    shallow minimum beside the answer (a long ``tau`` imitating a semi-infinite
+    Warburg), and eight starts reached the better of the two on only two of six
+    seeds on the lab's own solid-state sweep -- the same spectrum and circuit
+    reporting chi-square 1.0e-3 or 9.6e-3 depending on nothing the user can
+    see.  Twenty-four reached it on five of six, and the two-stage search below
+    made that no slower than eight used to be.
     """
     try:
         from scipy.optimize import least_squares
@@ -165,6 +191,12 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         dropped_range = int(np.sum(~mask))
         working = working.select(mask)
 
+    if restarts is None:
+        restarts = (_DIFFUSION_RESTARTS
+                    if any(_is_warburg_sigma(model, name) or name.endswith("_tau")
+                           for name in model.parameter_names)
+                    else _DEFAULT_RESTARTS)
+
     n_params = len(model.parameter_names)
     if len(working) < n_params:
         return _failed(model, working,
@@ -184,6 +216,26 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
 
     rng = np.random.default_rng(seed)
     starts = [start]
+
+    # 확산 파라미터는 **결정된 사다리**로도 훑는다.
+    #
+    # 꼬리가 화면 안에서 꺾이지 않으면 tau 는 하한만 알 수 있고, 그 하한
+    # 근처에는 "tau 를 크게 보내 반무한 Warburg 를 흉내내는" 얕은 골이 하나 더
+    # 있다.  무작위 산포(로그 다섯 배)로는 그 골에서 못 나오고, 산포를 넓히면
+    # 이번에는 **뽑기 운**에 답이 달린다 -- 같은 스펙트럼 같은 회로가 seed 에
+    # 따라 chi^2 1.4e-3 과 1.0e-2 사이를 오갔다.  그래서 무작위 대신 두
+    # 자릿수를 양쪽으로 결정적으로 훑는다: 결과가 재현되고, 스윕 스물한 개가
+    # 서로 비교 가능해진다.
+    wide = [i for i, name in enumerate(model.parameter_names)
+            if name.endswith("_tau") or _is_warburg_sigma(model, name)]
+    for i in wide:
+        for factor in (1e-2, 1e-1, 1e1, 1e2):
+            candidate = start.copy()
+            candidate[i] = float(np.clip(start[i] * factor,
+                                         model.lower[i] * 1.0001,
+                                         model.upper[i] * 0.9999))
+            starts.append(candidate)
+
     for _ in range(max(0, restarts)):
         scatter = np.exp(rng.uniform(-np.log(5.0), np.log(5.0), size=n_params))
         candidate = np.clip(start * scatter, model.lower * 1.0001,
@@ -197,24 +249,52 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                                              model.upper[i] - 1e-6))
         starts.append(candidate)
 
-    best = None
-    converged_count = 0
-    for candidate in starts:
+    def solve(candidate, budget):
         try:
             solution = least_squares(
                 lambda free: _residuals(
                     _from_unbounded(free, model.lower, model.upper),
                     model, working.frequency_hz, z, weights),
                 _to_unbounded(candidate, model.lower, model.upper),
-                method="lm", max_nfev=4000)
+                method="lm", max_nfev=budget)
         except (ValueError, FloatingPointError):
-            continue
+            return None
         if not np.all(np.isfinite(solution.fun)):
+            return None
+        return solution
+
+    # 두 단계로 나눈다: **싸게 훑고, 몇 개만 끝까지.**
+    #
+    # 한 시작점을 끝까지 미는 데 드는 비용이 대충 훑는 비용의 스무 배다.  전부
+    # 끝까지 밀면 시작점을 스물넷으로 늘리는 것이 그대로 스물넷 배가 되고,
+    # 그래서 여덟에 묶여 있었다 -- 그런데 확산이 든 회로(파라미터 아홉 개)는
+    # 여덟으로 부족했다: 실측 스윕 하나에서 seed 여섯 개 중 둘만 최소에
+    # 도달했고, 나머지는 chi^2 가 아홉 배인 답을 냈다.  같은 스펙트럼 같은
+    # 회로가 뽑기에 따라 다른 답을 내는 것은 보고할 수 없는 수다.
+    screened = []
+    for index, candidate in enumerate(starts):
+        solution = solve(candidate, _SCREEN_NFEV)
+        if solution is None:
+            continue
+        screened.append((float(np.sum(solution.fun ** 2)), index,
+                         _from_unbounded(solution.x, model.lower, model.upper)))
+    screened.sort(key=lambda item: item[0])
+
+    best = None
+    converged_count = 0
+    seen: set[int] = set()
+    for _, index, polished_start in screened[:_POLISH_KEEP]:
+        seen.add(index)
+        solution = solve(polished_start, _POLISH_NFEV)
+        if solution is None:
             continue
         converged_count += 1
         cost = float(np.sum(solution.fun ** 2))
         if best is None or cost < best[0]:
             best = (cost, solution)
+    # 훑기에서 살아남았지만 다듬지 않은 것들도 "수렴했다" 에는 든다 -- 그 수는
+    # 화면이 "몇 곳에서 출발해 몇 곳이 답에 닿았나" 로 읽는 값이다.
+    converged_count += sum(1 for _, index, _ in screened if index not in seen)
 
     if best is None:
         return _failed(model, working, "어느 시작점에서도 수렴하지 않았습니다",
@@ -235,9 +315,16 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
             strict=True)
     ]
 
-    at_bound = [p.name for p, low, high in zip(parameters, model.lower,
-                                               model.upper, strict=True)
-                if p.value <= low * 1.01 or p.value >= high * 0.99]
+    at_bound = []
+    for parameter, low, high in zip(parameters, model.lower, model.upper,
+                                    strict=True):
+        if not (parameter.value <= low * 1.01 or parameter.value >= high * 0.99):
+            continue
+        at_bound.append(parameter.name)
+        # 경계에 눌린 파라미터는 자유롭지 않다.  그 자리의 공분산은 "이 값을
+        # 얼마나 잘 쟀나" 가 아니라 "벽이 얼마나 단단한가" 이고, 작은 오차
+        # 막대는 가장 정밀해 보이는 숫자를 가장 못 본 숫자에 붙인다 (§0.4).
+        parameter.stderr = None
     reason = ""
     if at_bound:
         reason = ("물리적 한계에 붙은 파라미터: " + ", ".join(at_bound)

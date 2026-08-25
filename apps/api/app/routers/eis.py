@@ -141,24 +141,48 @@ PRESETS_BY_CONFIG: dict[tuple[str, str], list[dict]] = {
     ],
     (SOLID, SYMMETRIC): PRESETS[SOLID],
     (SOLID, FULL): [
-        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
-         "label": "전해질 + 계면 + 확산",
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-Ws3",
+         "label": "전해질 + 계면 + 유한 확산 (Ws)",
          "note": "전고체 풀셀. 저주파 아크는 전극/전해질 계면이 지배하고, "
-                 "벌크와 입계는 대개 하나로 합쳐 보인다."},
+                 "벌크와 입계는 대개 하나로 합쳐 보인다. 꼬리는 45° 로 끝나지 "
+                 "않고 실축으로 꺾여 돌아온다 — 실측 SOC 스캔 21스윕에서 "
+                 "W 는 한 번도 못 이겼다 (Ws 18, Wo 3, W 0). 1번 스윕 기준 "
+                 "χ² 1.06e-2 → 1.04e-3, 1 Hz 아래 평균 상대오차 19.5% → 2.7%."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-Wo3",
+         "label": "막힌 확산 (Wo)",
+         "note": "꼬리가 실축으로 안 돌아오고 수직으로 서면 이쪽이다. "
+                 "같은 스캔에서 3스윕이 이걸 골랐다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "반무한 확산 (W, 45°)",
+         "note": "꼬리가 화면 끝까지 45° 직선일 때만. 저주파를 충분히 낮게 "
+                 "재면 대개 꺾이므로, 이 회로가 이기는 일은 드물다."},
         {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
          "label": "전해질 + 계면",
          "note": "확산 꼬리가 안 보일 때."},
     ],
     (SOLID, HALF): [
-        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
-         "label": "전해질 + 작동전극 계면 + 확산",
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-Ws3",
+         "label": "전해질 + 작동전극 계면 + 유한 확산",
          "note": "전고체 하프셀. 상대 전극(리튬/인듐) 계면이 아크를 더할 수 "
-                 "있어 아크 수가 늘기도 한다."},
+                 "있어 아크 수가 늘기도 한다. 유한 확산을 먼저 두는 이유는 "
+                 "풀셀과 같다 — 실측에서 45° 로 끝나는 꼬리가 드물다."},
         {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
          "label": "블로킹 꼬리로 끝날 때",
          "note": "저주파가 45° 가 아니라 수직으로 서면 확산이 아니라 블로킹이다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "반무한 확산 (W, 45°)",
+         "note": "꼬리가 끝까지 45° 직선일 때만."},
     ],
 }
+
+
+#: ``circuit=auto`` — 프리셋을 전부 맞춰 보고 가장 잘 맞은 것을 쓴다.
+#:
+#: 사람이 하던 일이 그대로 이것이다: 회로를 바꿔 가며 몇 번 맞춰 보고 χ² 와
+#: 모양을 본다.  기본 회로 하나만 돌리면 그 회로가 이 셀에 안 맞을 때 "피팅이
+#: 이상하다" 로만 보이는데, 실제로는 **회로가 틀린 것**이다 -- 실측 전고체
+#: 풀셀 스캔에서 기본이던 반무한 W 는 21스윕 중 한 번도 못 이겼다.
+AUTO = "auto"
 
 
 def presets_for(kind: str, config: str = "") -> list[dict]:
@@ -241,6 +265,7 @@ def circuits():
     return {
         "kinds": [{"kind": kind, "label": kind_label[kind],
                    "presets": PRESETS[kind]} for kind in KINDS],
+        "auto": AUTO,
         # 여섯 조합 — 화면의 드롭박스 하나가 이것을 그대로 쓴다.  아크의
         # 이름과 회로가 같은 축에서 갈리므로, 고르는 것도 한 번이어야 한다.
         "combinations": [
@@ -1036,7 +1061,9 @@ def fit_spectrum(spectrum_id: int,
                  drop_inductive: bool = Query(True),
                  frequency_low_hz: float | None = Query(None),
                  frequency_high_hz: float | None = Query(None),
-                 restarts: int = Query(8, ge=0, le=64),
+                 restarts: int | None = Query(
+                     None, ge=0, le=64,
+                     description="비우면 회로에 맞춰 정한다 (확산이 있으면 더 많이)"),
                  session: Session = Depends(get_session)):
     """Fit one circuit to one spectrum and keep the result."""
     return _run_fit(session, spectrum_id, circuit=circuit,
@@ -1048,7 +1075,7 @@ def fit_spectrum(spectrum_id: int,
 def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
              drop_inductive: bool = True, frequency_low_hz: float | None = None,
              frequency_high_hz: float | None = None,
-             restarts: int = 8) -> SpectrumFitOut:
+             restarts: int | None = None) -> SpectrumFitOut:
     """The work behind both fit endpoints.
 
     A plain function rather than one route calling the other: FastAPI fills a
@@ -1063,6 +1090,13 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
     """
     record = _get(session, spectrum_id)
     spectrum = _load_points(record)
+
+    if (circuit or "").strip().lower() == AUTO:
+        return _run_auto(session, record, spectrum,
+                         drop_inductive=drop_inductive,
+                         frequency_low_hz=frequency_low_hz,
+                         frequency_high_hz=frequency_high_hz,
+                         restarts=restarts)
 
     text = circuit or presets_for(record.kind, record.cell_config)[0]["circuit"]
     window = None
@@ -1111,10 +1145,39 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
     return _fit_out(session, record, fit)
 
 
+def _run_auto(session: Session, record: SpectrumRecord, spectrum, *,
+              drop_inductive: bool, frequency_low_hz: float | None,
+              frequency_high_hz: float | None,
+              restarts: int | None) -> SpectrumFitOut:
+    """Fit every preset for this measurement and return the best by chi-square.
+
+    All of them are stored, the failures included.  Two reasons: the screen's
+    "best fit" already means *lowest chi-square among the converged* so the
+    stored set is what it reads, and a circuit that will not fit this cell is
+    a finding -- discarding it means the next person tries it again and waits
+    for the same answer.
+
+    Best is the lowest chi-square among the fits that converged.  When none
+    converge the first one is returned, so the reply still says why.
+    """
+    outs: list[SpectrumFitOut] = []
+    for preset in presets_for(record.kind, record.cell_config):
+        outs.append(_run_fit(session, record.id or 0, circuit=preset["circuit"],
+                             drop_inductive=drop_inductive,
+                             frequency_low_hz=frequency_low_hz,
+                             frequency_high_hz=frequency_high_hz,
+                             restarts=restarts))
+    converged = [out for out in outs
+                 if out.converged and out.chi_squared is not None]
+    if not converged:
+        return outs[0]
+    return min(converged, key=lambda out: out.chi_squared)
+
+
 @router.post("/fit-batch")
 def fit_batch(spectrum_ids: list[int],
               circuit: str | None = Query(None),
-              restarts: int = Query(8, ge=0, le=64),
+              restarts: int | None = Query(None, ge=0, le=64),
               session: Session = Depends(get_session)):
     """Fit many spectra in one go -- the point of automating this at all.
 

@@ -890,3 +890,43 @@ def test_uploading_onto_a_cell_that_does_not_exist_is_refused(client):
                            files={"file": ("s.mpr", mpr(),
                                            "application/octet-stream")})
     assert response.status_code == 404
+
+
+# --- 회로 자동 고르기 ---------------------------------------------------------
+
+
+def test_auto_fits_every_preset_and_returns_the_best(client):
+    """사람이 하던 일이 그대로 이것이다 — 회로를 바꿔 가며 맞춰 보고 χ² 를 본다.
+
+    기본 회로 하나만 돌리면 그 회로가 이 셀에 안 맞을 때 "피팅이 이상하다" 로만
+    보이는데, 실제로는 **회로가 틀린 것**이다.
+    """
+    made = upload(client, kind="solid", cell_config="full")
+    presets = client.get("/api/eis/circuits").json()["combinations"]
+    wanted = next(entry for entry in presets
+                  if entry["kind"] == "solid" and entry["cell_config"] == "full")
+
+    reply = client.post(f"/api/eis/spectra/{made['id']}/fit",
+                        params={"circuit": "auto", "restarts": 2})
+    assert reply.status_code == 201, reply.text
+    best = reply.json()
+
+    detail = client.get(f"/api/eis/spectra/{made['id']}").json()
+    tried = {fit["circuit"] for fit in detail["fits"]}
+    # 전부 저장한다 -- 안 맞는 회로도 발견이고, 버리면 다음 사람이 같은 것을
+    # 다시 시도하고 같은 답을 기다린다.
+    assert tried == {preset["circuit"] for preset in wanted["presets"]}
+
+    converged = [fit for fit in detail["fits"]
+                 if fit["converged"] and fit["chi_squared"] is not None]
+    assert best["circuit"] in {fit["circuit"] for fit in converged}
+    assert best["chi_squared"] == min(fit["chi_squared"] for fit in converged)
+
+
+def test_auto_is_not_a_circuit_name(client):
+    """`auto` 는 회로가 아니라 지시다 -- 회로로 읽히면 파서가 422 를 낸다."""
+    made = upload(client)
+    reply = client.post(f"/api/eis/spectra/{made['id']}/fit",
+                        params={"circuit": "AUTO", "restarts": 1})
+    assert reply.status_code == 201, reply.text
+    assert reply.json()["circuit"] != "AUTO"

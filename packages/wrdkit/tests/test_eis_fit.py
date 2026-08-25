@@ -257,3 +257,90 @@ def test_excess_branches_do_not_all_start_on_the_last_arc():
     values = dict(zip(circuit.parameter_names,
                       initial_guess(spectrum, circuit), strict=True))
     assert values["R1"] != pytest.approx(values["R2"])
+
+
+# --- 확산 원소의 시작점 ------------------------------------------------------
+#
+# 여기가 "와버그가 안 맞는다" 의 절반이었다.  σ 는 Ω·s^-½ 인데 시작값으로
+# 스펙트럼의 **실축 폭**(Ω)을 넣고 있었다 — 차원이 다른 수다.  실측 전고체
+# 스캔에서 그것이 122 였고 답은 20 이었다.  재시작 여덟 번이 대개 구제했지만,
+# 구제하고 있다는 것 자체가 시작점이 나쁘다는 뜻이다.
+
+
+def _with_tail(circuit_text: str, truth: list[float], *, f_lo: float = 1e-2,
+               n: int = 60) -> tuple[Spectrum, object]:
+    circuit = parse_circuit(circuit_text)
+    frequency = np.logspace(5, np.log10(f_lo), n)
+    z = circuit.impedance(np.asarray(truth, float), frequency)
+    return Spectrum(frequency, z.real, z.imag), circuit
+
+
+def _guess_of(spectrum_, circuit) -> dict:
+    return dict(zip(circuit.parameter_names, initial_guess(spectrum_, circuit),
+                    strict=True))
+
+
+def test_the_warburg_coefficient_is_read_off_the_lowest_point():
+    """-Z'' = σ/√ω 이므로 가장 낮은 점 하나가 σ 를 바로 말한다."""
+    spectrum_, circuit = _with_tail(
+        "R0-p(R1,CPE1)-p(R2,CPE2)-W3", [12, 30, 1e-5, .9, 60, 1e-3, .8, 8.0])
+    assert _guess_of(spectrum_, circuit)["W3"] == pytest.approx(8.0, rel=0.3)
+
+
+def test_a_large_and_a_small_warburg_do_not_share_a_starting_point():
+    """전에는 둘 다 '실축 폭' 에서 출발했다 — 스펙트럼이 말한 것이 아니다."""
+    small, circuit = _with_tail(
+        "R0-p(R1,CPE1)-p(R2,CPE2)-W3", [12, 30, 1e-5, .9, 60, 1e-3, .8, 8.0])
+    large, _ = _with_tail(
+        "R0-p(R1,CPE1)-p(R2,CPE2)-W3", [12, 30, 1e-5, .9, 60, 1e-3, .8, 120.0])
+    assert (_guess_of(large, circuit)["W3"]
+            > 5 * _guess_of(small, circuit)["W3"])
+
+
+def test_a_finite_warburg_starts_from_where_the_tail_turns_over():
+    """Ws 의 -Z'' 는 ωτ≈2.53 에서 꺾인다.  그 자리가 τ 를 말한다."""
+    spectrum_, circuit = _with_tail("R0-p(R1,CPE1)-Ws2",
+                                    [10, 40, 1e-4, .85, 80, 3.0])
+    guess = _guess_of(spectrum_, circuit)
+    assert guess["Ws2_tau"] == pytest.approx(3.0, rel=0.5)
+    # R 은 실축에서 아크와 직렬저항을 뺀 나머지다 -- 전체 폭이 아니다.
+    assert guess["Ws2_R"] == pytest.approx(80.0, rel=0.3)
+
+
+def test_a_blocking_warburg_starts_three_times_larger_than_the_leftover():
+    """Wo 의 실축은 저주파에서 R/3 에 앉는다.  Ws 와 같은 규칙을 쓰면 세 배
+    작게 출발한다."""
+    spectrum_, circuit = _with_tail("R0-p(R1,CPE1)-Wo2",
+                                    [10, 40, 1e-4, .85, 80, 3.0])
+    assert _guess_of(spectrum_, circuit)["Wo2_R"] == pytest.approx(80.0, rel=0.4)
+
+
+@pytest.mark.parametrize("text,truth", [
+    ("R0-p(R1,CPE1)-p(R2,CPE2)-W3", [12, 30, 1e-5, .9, 60, 1e-3, .8, 8.0]),
+    ("R0-p(R1,CPE1)-p(R2,CPE2)-W3", [12, 30, 1e-5, .9, 60, 1e-3, .8, 120.0]),
+    ("R0-p(R1,CPE1)-Ws2", [10, 40, 1e-4, .85, 80, 30.0]),
+    ("R0-p(R1,CPE1)-Ws2", [10, 40, 1e-4, .85, 80, 0.05]),
+    ("R0-p(R1,CPE1)-Wo2", [10, 40, 1e-4, .85, 80, 30.0]),
+])
+def test_the_tail_is_recovered_from_the_start_alone(text, truth):
+    """재시작 없이도 되찾아야 한다.
+
+    `restarts=0` 으로 고정하는 이유: 재시작이 가리면 시작점이 나빠져도 이
+    테스트가 통과한다.  그리고 SOC 스캔은 스윕이 스물이라 재시작 여덟 번이
+    그대로 여덟 배다.
+    """
+    spectrum_, circuit = _with_tail(text, truth)
+    result = fit_circuit(spectrum_, circuit, restarts=0)
+    assert result.converged
+    for name, real in zip(circuit.parameter_names, truth, strict=True):
+        assert result.values()[name] == pytest.approx(real, rel=0.05), name
+
+
+def test_the_diffusion_ladder_is_tried_whatever_the_seed():
+    """시간상수는 결정적인 사다리로도 훑는다 -- 답이 뽑기 운에 달리지 않게."""
+    spectrum_, circuit = _with_tail("R0-p(R1,CPE1)-Ws2",
+                                    [10, 40, 1e-4, .85, 80, 30.0])
+    counts = {fit_circuit(spectrum_, circuit, restarts=0, seed=seed).starts
+              for seed in range(3)}
+    # 재시작이 0 이어도 시작점은 1 개가 아니다: 기본 + tau 사다리 4 개.
+    assert counts == {5}

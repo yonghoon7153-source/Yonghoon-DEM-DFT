@@ -121,13 +121,13 @@ export function SpectrumDetail() {
     ]
   }, [points.data])
 
-  async function runFit() {
+  async function runFit(mode?: 'auto') {
     if (!record) return
     setBusy(true)
     setError(null)
     try {
       const made = await api.fitSpectrum(record.id, {
-        circuit: chosenCircuit || undefined,
+        circuit: mode === 'auto' ? 'auto' : (chosenCircuit || undefined),
         drop_inductive: dropInductive,
       })
       setShowFit(made.id)
@@ -277,6 +277,14 @@ export function SpectrumDetail() {
             <div className="row">
               <button type="button" className="primary" disabled={busy} onClick={() => void runFit()}>
                 {busy ? '맞추는 중…' : '맞추기'}
+              </button>
+              {/* 사람이 하던 일이 그대로 이것이다: 회로를 바꿔 가며 몇 번 맞춰
+                  보고 χ² 를 본다.  전부 저장되므로 아래 '지난 피팅' 에서
+                  나란히 볼 수 있다. */}
+              <button type="button" disabled={busy}
+                      title="이 조합의 프리셋을 전부 맞춰 보고 χ² 가 가장 작은 것을 보여 줍니다"
+                      onClick={() => void runFit('auto')}>
+                {busy ? '…' : '자동으로 고르기'}
               </button>
               {fits.length > 1 ? (
                 <select
