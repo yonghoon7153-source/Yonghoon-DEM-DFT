@@ -328,9 +328,30 @@ def _standard_errors(solution, values, model, chi2, dof) -> list[float | None]:
     frac = np.clip(frac, 1e-12, 1 - 1e-12)
     derivative = values * span * frac * (1 - frac)
 
+    # 데이터가 그 파라미터를 보고 있는가.  야코비안 컬럼이 수치적으로 0 이면
+    # (절단 SVD 가 그 방향의 분산을 0 으로 만든다) stderr 가 ~0 이 되어,
+    # **아무 정보도 없는** 파라미터가 "초정밀 측정값" 으로 보고된다 -- 리뷰
+    # 재현: 무너진 가지의 CPE_n=1.000 이 stderr 1e-27, determined=True.
+    # 경계에 눌린 파라미터(frac→0/1, dp/dfree→0)도 같은 길로 0 이 된다.
+    # 둘 다 "모른다" 이므로 None 으로 낸다 (§0.4).
+    column_norms = np.linalg.norm(jac, axis=0)
+    biggest = float(np.max(column_norms)) if column_norms.size else 0.0
+    blind = column_norms <= np.finfo(float).eps * max(jac.shape) * biggest
+    pressed = (frac <= 1e-9) | (frac >= 1 - 1e-9)
+    # 내부 축퇴: 한 아크가 두 가지로 쪼개져 같은 τ 를 공유하면 개별 컬럼은
+    # 살아 있어도 그 **차이 방향**이 널이다.  절단 SVD 가 버린 방향에 파라미터
+    # 축이 절반 넘게 실려 있으면, 그 파라미터의 분산은 계산에서 그 방향을 뺀
+    # 과소평가다 -- 개별값이 아무 뜻 없는 R1=37.5/R2=2.5 가 "정밀" 로 나온다.
+    if np.any(~good):
+        leak = np.sqrt(np.sum(vt[~good] ** 2, axis=0))
+    else:
+        leak = np.zeros(len(values))
+    degenerate = leak > 0.5
+
     out: list[float | None] = []
     for i, var in enumerate(variance):
-        usable = np.isfinite(var) and var >= 0
+        usable = (np.isfinite(var) and var >= 0
+                  and not blind[i] and not pressed[i] and not degenerate[i])
         out.append(float(np.sqrt(var) * abs(derivative[i])) if usable else None)
     return out
 

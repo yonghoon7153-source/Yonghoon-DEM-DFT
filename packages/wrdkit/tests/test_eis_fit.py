@@ -221,3 +221,19 @@ def test_a_paper_style_branch_order_does_not_swap_the_series_resistance():
             np.ones(len(data), dtype=bool)).z
         mismatch = np.max(np.abs(result.fitted - z) / np.abs(z))
         assert mismatch < 1e-3, seed
+
+
+def test_an_element_pressed_to_its_bound_reports_no_precision():
+    """경계에 눌린 파라미터의 stderr ~0 은 '완벽히 쟀다' 가 아니다.
+
+    실측 전고체 파일에서 실제로 보였다: 대역이 실수축에 닿아 블로킹 꼬리가
+    없는데 CPE3 를 붙이면 CPE3_n=1, ±0 으로 — 가장 정밀해 보이는 숫자가
+    가장 못 본 숫자였다.
+    """
+    result = fit_circuit(spectrum(), LIQUID + "-CPE9")
+    assert result.converged
+    tail = [p for p in result.parameters if p.name.startswith("CPE9")]
+    assert tail
+    for parameter in tail:
+        assert parameter.stderr is None, parameter
+        assert not parameter.determined, parameter

@@ -163,7 +163,7 @@ def _series_resistor_names(result: FitResult) -> set[str]:
     """
     try:
         parsed = parse_circuit(result.circuit)
-    except (CircuitError, Exception):
+    except CircuitError:
         text = result.circuit.strip()
         if text and text[0] == "R" and not text.startswith("p("):
             first = next((p.name for p in result.parameters
@@ -175,7 +175,7 @@ def _series_resistor_names(result: FitResult) -> set[str]:
 
 
 def _has_series_element(result: FitResult) -> bool:
-    return bool(_series_resistor_names(result)) and not text.startswith("p(")
+    return bool(_series_resistor_names(result))
 
 
 def total_resistance(result: FitResult) -> float | None:
