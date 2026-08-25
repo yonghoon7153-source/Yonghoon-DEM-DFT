@@ -434,7 +434,17 @@ def _group_names(session: Session, sample) -> tuple[int | None, str, str]:
     화면이 그룹 표를 한 번 더 물어야 하고, 이름만 주면 소그룹으로 거를 수
     없다 (ADR 0025).
     """
-    group = sample.group
+    return _group_by_id(session, sample.group_id if sample is not None else None)
+
+
+def _group_by_id(session: Session, group_id: int | None) -> tuple[int | None, str, str]:
+    """같은 셋을, 셀이 아니라 **그룹 id 하나**에서.
+
+    셀에 안 붙은 측정도 자기 그룹을 가진다 (ADR 0027).  대시보드가 셀을 통해서만
+    그룹을 읽으면 그 줄의 그룹 칸이 늘 비고, 화면은 "그룹이 없는 측정" 이라고
+    말하게 된다 -- 실제로는 적혀 있는데 읽는 길이 없었을 뿐이다.
+    """
+    group = session.get(ExperimentGroup, group_id) if group_id else None
     if group is None:
         return None, "", ""
     parent = session.get(ExperimentGroup, group.parent_id) if group.parent_id else None
@@ -539,12 +549,20 @@ def dashboard(session: Session = Depends(get_session)):
             total = total_resistance(_FitStub(
                 circuit=fit.circuit,
                 parameters=[_ParameterStub(**p) for p in parameters]))
+        # 같은 파일의 스윕들이 저마다 다른 그룹일 수 있다.  하나로 모이지
+        # 않으면 그룹을 비운다 -- 아무 하나를 골라 적으면 그 줄이 거짓말한다.
+        own = {r.group_id for r in items if r.group_id}
+        group_id, group_name, parent_name = _group_by_id(
+            session, next(iter(own)) if len(own) == 1 else None)
         rows.append(EisDashboardRow(
             sample_id=None,
             sample_name="",
             name=latest.original_name or latest.name,
             spectrum_id=latest.id,
             attached=False,
+            group_id=group_id,
+            group_name=group_name,
+            group_parent_name=parent_name,
             owner=latest.created_by or "",
             kind=next(iter(kinds)) if len(kinds) == 1 else "",
             cell_config=next(iter(configs)) if len(configs) == 1 else "",

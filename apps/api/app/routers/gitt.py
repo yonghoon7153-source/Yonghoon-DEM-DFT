@@ -106,7 +106,17 @@ def _group_names(session: Session, sample) -> tuple[int | None, str, str]:
     화면이 그룹 표를 한 번 더 물어야 하고, 이름만 주면 소그룹으로 거를 수
     없다 (ADR 0025).
     """
-    group = sample.group
+    return _group_by_id(session, sample.group_id if sample is not None else None)
+
+
+def _group_by_id(session: Session, group_id: int | None) -> tuple[int | None, str, str]:
+    """같은 셋을, 셀이 아니라 **그룹 id 하나**에서.
+
+    셀에 안 붙은 기록도 자기 그룹을 가진다 (ADR 0027).  셀을 통해서만 읽으면
+    그 줄의 그룹 칸이 늘 비고, 화면은 "그룹이 없다" 고 말하게 된다 -- 적혀
+    있는데 읽는 길이 없었을 뿐이다.
+    """
+    group = session.get(ExperimentGroup, group_id) if group_id else None
     if group is None:
         return None, "", ""
     parent = session.get(ExperimentGroup, group.parent_id) if group.parent_id else None
@@ -507,12 +517,16 @@ def dashboard(session: Session = Depends(get_session)):
     # 안 붙은 기록도 줄로.  셀 칸이 비어 있다는 것 자체가 "이 파일에는 아직
     # 할 일이 있다" 이고, 수만 세면 그게 무엇인지는 다른 화면에 가야 안다.
     for record in sorted(loose, key=lambda r: (r.start_time or r.uploaded_at)):
+        group_id, group_name, parent_name = _group_by_id(session, record.group_id)
         rows.append(GittDashboardRow(
             sample_id=None,
             sample_name="",
             name=record.original_name or record.name,
             gitt_id=record.id,
             attached=False,
+            group_id=group_id,
+            group_name=group_name,
+            group_parent_name=parent_name,
             purposes=[record.purpose] if record.purpose else [],
             owner=record.created_by or "",
             records=1,

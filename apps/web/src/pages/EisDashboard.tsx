@@ -68,9 +68,12 @@ export function EisDashboard() {
             <table>
               <thead>
                 <tr>
+                  {/* 이름 다음이 그룹이다.  표를 훑는 눈이 먼저 찾는 것은
+                      "무엇을 잰 파일인가" 와 "어느 묶음인가" 이고, 관계셀은
+                      그 다음이다 -- 셀 라이브러리와 같은 순서로 맞췄다. */}
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>그룹</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th>스펙트럼</th>
                   <th>SOC 스캔</th>
@@ -97,6 +100,9 @@ export function EisDashboard() {
                         ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
                         : (row.name || '—')}
                     </td>
+                    <td className="text dim">
+                      {groupPath(row.group_name, row.group_parent_name) || '—'}
+                    </td>
                     <td className="text">
                       {/* 셀 칸이 비어 있다는 것 자체가 이 줄의 정보다: 아직
                           붙일 일이 남아 있다는 뜻이고, 그 일은 라이브러리에서
@@ -104,9 +110,6 @@ export function EisDashboard() {
                       {row.attached
                         ? <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
                         : <Link className="tiny" to="/eis/library">셀 안 붙음</Link>}
-                    </td>
-                    <td className="text dim">
-                      {groupPath(row.group_name, row.group_parent_name) || '—'}
                     </td>
                     <td className="text dim">
                       {/* 한 셀에 액체와 전고체가 섞여 있으면 서버가 종류를

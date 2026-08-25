@@ -30,6 +30,13 @@ export interface PlotSeries {
   partial?: boolean
   /** Draw across x positions this series has no sample at.  Defaults to true. */
   spanGaps?: boolean
+  /** 범례에만 붙는 회색 꼬리표 — 그룹 · 소그룹처럼 **곡선을 고르는 데 쓰지만
+   *  곡선의 이름은 아닌** 것.
+   *
+   *  이름에 이어 붙이지 않는 이유는 이름이 곧 열쇠이기 때문이다: 범례 조각의
+   *  `key` 이자 숨김 목록의 값이라, 그룹을 바꿔 다시 그리면 숨겨 둔 곡선이
+   *  도로 켜진다.  툴팁도 이름으로 자리를 잡으므로 거기까지 길어진다. */
+  note?: string
 }
 
 export interface PlotMarker {
@@ -1046,6 +1053,7 @@ export function PlotLegend({ series, onToggle }: LegendProps) {
             }
           />
           {item.label}
+          {item.note ? <span className="legend-note">{item.note}</span> : null}
         </button>
       ))}
       </div>

@@ -12,7 +12,7 @@ import { ActivityFeed } from '../components/ActivityFeed'
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { PatchNotes } from '../components/PatchNotes'
 import { BasisSelect } from '../components/BasisSelect'
-import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
 import { Alert, Card, Empty, StateBadge, TableSkeleton } from '../components/ui'
@@ -95,6 +95,11 @@ export function Dashboard() {
             y: row.trend,
             color: seriesColor(index),
             hidden: hiddenSeries.includes(row.sample_name),
+            // 어느 묶음의 곡선인지.  이름만으로는 네 곡선이 한 실험의 조건
+            // 넷인지 서로 다른 실험 넷인지 알 수 없고, 그 둘은 같은 그림을
+            // 전혀 다르게 읽게 한다.  이름에 이어 붙이지 않는 이유는
+            // `PlotSeries.note` 에 적어 두었다.
+            note: groupPath(row.group_name, row.group_parent_name) || undefined,
           }
         }),
     [rows, hiddenSeries],

@@ -445,6 +445,8 @@ export interface DashboardRow {
   sample_name: string
   group_id: number | null
   group_name?: string
+  /** 그 그룹이 소그룹이면 그 위 그룹의 이름.  최상위면 빈 문자열. */
+  group_parent_name?: string
   group_color?: string
   cathode_type: string
   c_rate: number | null

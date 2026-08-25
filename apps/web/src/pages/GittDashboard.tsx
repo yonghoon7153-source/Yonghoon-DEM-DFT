@@ -70,9 +70,11 @@ export function GittDashboard() {
             <table>
               <thead>
                 <tr>
+                  {/* 이름 다음이 그룹이다 — EIS 대시보드·셀 라이브러리와
+                      같은 순서.  관계셀은 그 다음이다. */}
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th style={{ textAlign: 'left' }}>그룹</th>
+                  <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th>기록</th>
                   <th>펄스</th>
                   <th>계산 가능</th>
@@ -97,13 +99,13 @@ export function GittDashboard() {
                         ? <Link to={`/gitt/${row.gitt_id}`}>{row.name}</Link>
                         : (row.name || '—')}
                     </td>
+                    <td className="text dim">
+                      {groupPath(row.group_name, row.group_parent_name) || '—'}
+                    </td>
                     <td className="text">
                       {row.attached
                         ? <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
                         : <Link className="tiny" to="/gitt/library">셀 안 붙음</Link>}
-                    </td>
-                    <td className="text dim">
-                      {groupPath(row.group_name, row.group_parent_name) || '—'}
                     </td>
                     <td>{row.records}</td>
                     <td>{row.pulses}</td>

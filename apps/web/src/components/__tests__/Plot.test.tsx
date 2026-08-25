@@ -7,7 +7,7 @@
  * with.
  */
 
-import { act, render, screen } from '@testing-library/react'
+import { act, fireEvent, render, screen } from '@testing-library/react'
 import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
@@ -229,6 +229,25 @@ describe('PlotLegend', () => {
     const swatches = container.querySelectorAll<HTMLElement>('.swatch')
     expect(swatches[0]?.style.background).toBe(`var(--series-7, ${SERIES_COLORS[7]!})`)
     expect(swatches[1]?.style.background).toBe(`var(--series-1, ${SERIES_COLORS[1]!})`)
+  })
+
+  it('꼬리표는 이름 옆에 붙되 이름의 일부가 되지 않는다', () => {
+    // 이름은 조각의 key 이자 숨김 목록의 값이다.  꼬리표를 이름에 이어
+    // 붙이면 그룹을 바꿔 다시 그릴 때 숨겨 둔 곡선이 도로 켜진다.
+    const toggled: string[] = []
+    render(
+      <PlotLegend
+        series={[
+          { label: 'cell39', x: [], y: [], note: '전고체 · 3차' },
+          { label: 'cell29', x: [], y: [] },
+        ]}
+        onToggle={(label) => toggled.push(label)}
+      />,
+    )
+    const chip = document.querySelectorAll('.legend-chip')[0]!
+    expect(chip.querySelector('.legend-note')?.textContent).toBe('전고체 · 3차')
+    fireEvent.click(chip)
+    expect(toggled).toEqual(['cell39'])
   })
 })
 

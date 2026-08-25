@@ -628,6 +628,25 @@ def test_the_dashboard_shows_what_is_not_attached_yet_as_its_own_row(client, sam
     assert loose["name"]
 
 
+def test_an_unattached_row_still_shows_its_own_group(client):
+    """측정은 셀 없이도 그룹을 가진다 (ADR 0027).
+
+    셀을 통해서만 그룹을 읽으면 이 줄의 그룹 칸이 늘 비고, 화면은 "그룹 없는
+    측정" 이라고 말하게 된다 -- 적혀 있는데 읽는 길이 없었을 뿐이다.
+    """
+    parent = client.post("/api/groups", json={"name": "전고체"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "3차", "parent_id": parent["id"]}).json()
+    out = upload(client)
+    client.patch(f"/api/eis/spectra/{out['id']}", json={"group_id": child["id"]})
+
+    row = client.get("/api/eis/dashboard").json()["rows"][0]
+    assert row["attached"] is False
+    assert row["group_id"] == child["id"]
+    assert row["group_name"] == "3차"
+    assert row["group_parent_name"] == "전고체"
+
+
 def test_one_unattached_scan_is_one_row_not_twenty(client):
     """스윕이 스물인 SOC 스캔 하나가 스무 줄이 되면 표가 그것만으로 덮인다."""
     client.post("/api/eis/spectra/upload",

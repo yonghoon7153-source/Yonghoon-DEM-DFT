@@ -23,7 +23,7 @@ from wrdkit.ica import (
 
 from ..db import get_session
 from ..deps import get_run, get_sample, group_scope, resolved_cell_out, validate_basis
-from ..models import CycleRecord, Sample
+from ..models import CycleRecord, ExperimentGroup, Sample
 from ..schemas import (
     CycleOut,
     CycleTableOut,
@@ -1046,6 +1046,10 @@ def dashboard(session: Session = Depends(get_session),
             # request and can count cells per group without asking the server
             # again for every chip.
             "group_name": sample.group.name if sample.group else "",
+            # 소그룹이면 그 위 그룹의 이름도.  "3차" 만으로는 어느 실험의
+            # 3차인지 알 수 없고, 소그룹 이름은 실험마다 되풀이된다
+            # (ADR 0025 -- 셀은 언제나 잎 노드에 있다).
+            "group_parent_name": _parent_name(session, sample.group),
             "group_color": sample.group.color if sample.group else "",
             "cathode_type": sample.cathode_type,
             "c_rate": sample.c_rate,
@@ -1126,6 +1130,18 @@ def _trend(records: list[CycleRecord], reference_cycle: int | None) -> dict:
         "first_cycle": picked[0].cycle_number,
         "last_cycle": picked[-1].cycle_number,
     }
+
+
+def _parent_name(session: Session, group) -> str:
+    """소그룹을 담고 있는 그룹의 이름.  최상위거나 그룹이 없으면 빈 문자열.
+
+    이름만 낸다 -- 대시보드는 이것으로 "부모 · 자식" 을 적을 뿐이고, 거르기는
+    이미 `group_id` 로 한다 (`group_scope()` 가 부모를 자식들로 펼친다).
+    """
+    if group is None or not group.parent_id:
+        return ""
+    parent = session.get(ExperimentGroup, group.parent_id)
+    return parent.name if parent else ""
 
 
 def _trend_index(trend: dict, cycle: float | None) -> int | None:

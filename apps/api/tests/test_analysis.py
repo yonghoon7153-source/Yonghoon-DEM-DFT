@@ -386,6 +386,27 @@ def test_dashboard_gives_one_line_per_cell(client, loaded):
     assert row["loading_mg_cm2"] == pytest.approx(19.045, rel=1e-3)
 
 
+def test_dashboard_names_the_parent_group_too(client, loaded):
+    """소그룹 이름은 실험마다 되풀이된다 -- "3차" 만으로는 어느 3차인지 모른다."""
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    parent = client.post("/api/groups", json={"name": "건식 시리즈"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "3차", "parent_id": parent["id"]}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": child["id"]})
+
+    row = client.get("/api/dashboard").json()["rows"][0]
+    assert row["group_name"] == "3차"
+    assert row["group_parent_name"] == "건식 시리즈"
+
+
+def test_a_top_level_group_has_no_parent_name(client, loaded):
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    group = client.post("/api/groups", json={"name": "혼자"}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": group["id"]})
+    row = client.get("/api/dashboard").json()["rows"][0]
+    assert row["group_parent_name"] == ""
+
+
 def test_compare_overlays_a_metric_across_cells(client, loaded, wrd_bytes,
                                                 finished_wrd_bytes):
     other = client.post("/api/samples", json={"name": "TEST-02",
