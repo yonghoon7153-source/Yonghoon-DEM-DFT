@@ -995,6 +995,26 @@ echo "남의 서버만 보는 기계는 파이썬 환경이 필요 없다"
 # `serve` 분기는 이미 이 규칙을 지키고 있었는데 `pull` 만 빠져 있었다.
 check "pull 도 중추 서버가 있으면 건너뛴다" \
   "$(grep -c '중추 서버 ${SERVER} 를 보는 기계라 의존성은 건너뜁니다' "$BML")" "1"
+# 그리고 아직 아무 말도 안 한 기계(갓 클론)에서도 만들지 않는다.  그 기계가
+# 서버가 될지 브라우저가 될지는 아무도 말한 적이 없고, 1~3분짜리 설치는
+# "맞추기" 가 아니다.  실제로 그 설치가 python3-venv 없는 노트북을 두 번 죽였다.
+check "환경이 없으면 pull 이 만들지 않는다" \
+  "$(grep -c 'elif \[ -x "$REPO/.venv/bin/python" \]; then' "$BML")" "1"
+check "대신 무엇을 치면 되는지 말한다" \
+  "$(grep -c '파이썬 환경은 아직 없습니다 — 필요할 때 만듭니다' "$BML")" "1"
+
+echo "만들다 만 가상환경은 살려 두지 않는다"
+# `python3 -m venv` 가 도중에 죽어도 `.venv/bin/python` 은 남는다.  그러면
+# 다음 실행이 "환경이 있다" 로 넘어가 pip 을 부르고, 매번 `No module named
+# pip` 로 끝난다 -- 화면은 venv 가 아니라 wrdkit 을 탓한다.
+check "pip 이 없으면 껍데기로 본다" \
+  "$(grep -c '\-m pip --version >/dev/null 2>&1' "$BML")" "1"
+check "그때는 지우고 다시 만든다" \
+  "$(grep -c '가상환경이 만들다 말았습니다' "$BML")" "1"
+# 두 곳이다: `ensure_deps` 와 `bml repair`.  둘 다 남은 조각이 새 환경에
+# 섞이지 않게 --clear 를 쓴다 -- 한쪽만 쓰면 그쪽으로 들어온 사람만 낫는다.
+check "다시 만들 때는 --clear 로 (ensure_deps · repair)" \
+  "$(grep -c 'python3 -m venv --clear "$REPO/.venv"' "$BML")" "2"
 check "그래도 저장소는 맞춘다" \
   "$(awk '/pull\|sync\|update\)/,/^      ;;/' "$BML" | grep -c 'sync_repo')" "1"
 

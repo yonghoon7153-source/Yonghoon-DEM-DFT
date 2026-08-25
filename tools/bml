@@ -852,12 +852,23 @@ ensure_deps() {
   if [ $need_py -eq 1 ]; then
     local py
     py="$(python_bin)"
+    # 만들다 만 venv 는 **다음 실행을 계속 망가뜨린다.**  `python3 -m venv` 가
+    # 도중에 죽어도 `.venv/bin/python` 은 남는데, 아래 검사는 그 파일만 보고
+    # "환경이 있다" 로 넘어가 pip 을 부른다 -- 그러면 매번 `No module named
+    # pip` 로 끝나고, 화면은 venv 가 아니라 wrdkit 을 탓한다.  실제로 그렇게
+    # 두 번 죽었다.  껍데기만 남았으면 통째로 다시 만든다 (`bml repair` 가
+    # 같은 이유로 `--clear` 를 쓴다).
+    if [ -x "$REPO/.venv/bin/python" ] && [ -z "${VIRTUAL_ENV:-}" ] \
+       && ! "$REPO/.venv/bin/python" -m pip --version >/dev/null 2>&1; then
+      warn "가상환경이 만들다 말았습니다 (pip 이 없습니다) — 새로 만듭니다."
+      rm -rf "$REPO/.venv"
+    fi
     if [ ! -x "$REPO/.venv/bin/python" ] && [ -z "${VIRTUAL_ENV:-}" ]; then
       say "  ${DIM}가상환경 생성 (.venv)${OFF}"
       # 여기서 그냥 죽으면 화면에 파이썬의 영어 안내만 남는다.  그것은 "이
       # 패키지를 까세요" 까지만 말하고, **이 기계에 그게 정말 필요한지**는
       # 말해 주지 않는다 -- 남의 서버만 볼 기계라면 필요 없다 (ADR 0011).
-      if ! python3 -m venv "$REPO/.venv"; then
+      if ! python3 -m venv --clear "$REPO/.venv"; then
         printf '%s✕%s venv 생성 실패\n' "$RED" "$OFF" >&2
         say ""
         say "  ${B}이 기계에서 서버를 띄울 거라면${OFF} ${DIM}— 파이썬의 venv 패키지가 없습니다:${OFF}"
@@ -4148,10 +4159,19 @@ main() {
       # 기계에서 1~3분짜리 설치가 돌고 python3-venv 가 없으면 거기서 죽었다.
       # 저장소는 맞춘다 -- bml·문서·스킬이 전부 거기서 온다.
       sync_repo
+      # `pull` 은 "실행 없이 최신으로만 맞춘다" 이다.  이미 있는 환경은 맞춰
+      # 주되 **없는 환경을 새로 만들지는 않는다**: 1~3분짜리 설치는 맞추기가
+      # 아니고, 갓 클론한 기계에서 그 기계가 서버가 될지 브라우저가 될지는
+      # 아직 아무도 말한 적이 없다 (ADR 0011).  띄울 때 `bml` 이 어차피 한다.
       if [ -n "$SERVER" ]; then
         ok "최신 상태입니다. ${DIM}(중추 서버 ${SERVER} 를 보는 기계라 의존성은 건너뜁니다)${OFF}"
-      else
+      elif [ -x "$REPO/.venv/bin/python" ]; then
         ensure_deps; ok "최신 상태입니다."
+      else
+        ok "최신 상태입니다."
+        say "  ${DIM}파이썬 환경은 아직 없습니다 — 필요할 때 만듭니다:${OFF}"
+        say "    ${GREEN}bml${OFF}                ${DIM}이 기계에서 서버를 띄운다 (그때 설치합니다)${OFF}"
+        say "    ${GREEN}bmlin${OFF}${DIM}/${OFF}${GREEN}bmlout <주소>${OFF} ${DIM}남의 서버를 본다 (파이썬이 아예 필요 없습니다)${OFF}"
       fi
       ;;
     status|st)         cmd_status ;;
