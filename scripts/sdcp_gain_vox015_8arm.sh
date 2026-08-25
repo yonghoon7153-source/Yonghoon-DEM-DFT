@@ -146,6 +146,23 @@ if [ -n "${P2_EXTRA:-}" ]; then
         esac;;
     esac
   done
+  #  ★★★ 2026-08-25 (R5-CX-01, Codex 5차) — **위 검사만으로는 뚫린다.**
+  #    `for _tok in $P2_EXTRA` 는 한 번만 확장하므로 `--step3-maxiter=$MPM_ATTACK` 이
+  #    **리터럴**로 보여 통과한다.  그 문자열은 뒤에서 생성 스크립트에 박히고 그것이
+  #    실행될 때 **두 번째로 확장**돼 `--step3-maxiter=1 --show-results` 두 토큰이 된다
+  #    (Codex 실측: 금지된 결과-공개 플래그가 실제 payload argv 에 도달했다).
+  #  ⇒ **문자 allowlist** 로 막는다.  "나쁜 것을 다 적는" 부정 목록은 원리적으로 진다는
+  #    것이 바로 위 주석의 교훈이므로, 여기서도 **허용 문자만** 통과시킨다.
+  #    ⚠ `$`·백틱·`;`·`|`·`&`·괄호·따옴표·개행이 전부 여기서 걸린다.
+  if printf '%s' "$P2_EXTRA" | LC_ALL=C grep -q '[^A-Za-z0-9._=/ -]'; then
+    echo "ABORT — P2_EXTRA 에 허용 밖 문자가 있다 (허용: 영숫자 . _ = / - 공백)."
+    echo "  이유: 이 문자열은 생성 스크립트에 박혀 **한 번 더 확장**된다.  \$VAR·명령치환·"
+    echo "        구분자를 넣으면 검사를 통과한 뒤 다른 인자가 만들어진다 (R5-CX-01)."
+    exit 2
+  fi
+  if [ "$(printf '%s' "$P2_EXTRA" | wc -l)" -ne 0 ]; then
+    echo "ABORT — P2_EXTRA 에 개행이 있다 (토큰 검사를 우회한다)."; exit 2
+  fi
 fi
 #  ★★ R4-CX-03 — `${MPM_PERIODIC_SIGMA:+--periodic}` 은 **값이 `0` 이어도** 켠다
 #    (`:+` 는 nonempty 를 본다).  킷 생성기는 `= "1"` 로 비교하므로 두 곳이 갈린다.
@@ -372,6 +389,20 @@ PY
   #   유효해서(두 개의 명령) `bash -n` 도 통과하고, payload 는 **정상 완주한 뒤** 다음 줄에서
   #   `command not found` 로 죽는다 = 40 분을 버리고 팔이 실패한다.
   #   ⇒ 돌기 **전에** --out 토큰이 한 줄에 붙어 있는지 본다.  잘린 파일은 지우지 않고 남긴다.
+  #  ★★★ 2026-08-25 (R5-CX-01, 2겹) — **생성된 실물에 확장되지 않은 변수가 남아 있나.**
+  #    위 문자 검사는 `P2_EXTRA` 경로를 막지만, 다른 경로로 `$` 가 들어오면 실행 시점에
+  #    새 인자가 만들어진다.  ⇒ **만들어진 명령 자체**를 보고, 러너가 스스로 넣은 셋
+  #    (`$KIT` · `$SCR` · `${PSIG[@]}`) 밖의 변수 참조가 있으면 돌기 전에 선다.
+  #    (검사 대상은 "무엇을 줬나" 가 아니라 "무엇이 실행되나" 다 — 이 리포의 반복 교훈.)
+  _STRAY="$(grep -o -- '\$[A-Za-z_{][A-Za-z0-9_]*' "$SHF" \
+            | grep -vE '^\$(KIT|SCR|\{PSIG)' | sort -u || true)"
+  if [ -n "$_STRAY" ]; then
+    echo "[p2] ABORT — 생성된 $TAG.sh 에 확장 안 된 변수 참조가 남아 있다:"
+    printf '     %s\n' $_STRAY
+    echo "     실행 시점에 확장되면 검사를 지난 뒤 **다른 인자**가 만들어진다 (R5-CX-01)."
+    echo "     파일을 남겨 둔다: $SHF"
+    return 1
+  fi
   _ON="$(basename "$OUT")"
   if ! grep -q -- "--out $_ON" "$SHF"; then
     echo "[p2] ABORT — 생성된 $TAG.sh 에서 \`--out $_ON\` 토큰이 온전하지 않다 (줄바꿈에 잘렸나?)."

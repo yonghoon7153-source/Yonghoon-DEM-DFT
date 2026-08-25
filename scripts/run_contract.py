@@ -194,14 +194,44 @@ SCHEMA_VERSION = 3
 EVIDENCE_SINCE_SCHEMA = 3
 
 
+def observed_generation(man):
+    """매니페스트가 **실제로 담고 있는 것**으로 판정한 세대 → `int|None`.
+
+    ★★★ 2026-08-25 (R5-CX-02, Codex 5차) — **자기신고를 믿으면 안 된다.**
+      옛 판은 `schema_version` 숫자 하나로 계약 강도를 정했고, Codex 가 같은 p2
+      매니페스트에서 그 한 줄만 `3 → 2` 로 낮춰 ionic/thermal/pore 증거 누락을
+      **HOLD → h0** 로 바꿨다 (regime id 는 그대로 `p2-…`).  payload 가 스스로
+      validator 를 약하게 만들 수 있었던 것이다.
+    ⇒ 세대를 **규약에 묶는다**.  현행 producer 는 `PROTOCOL_FIELDS` 24축을 **전부**
+      적으므로, 재계산한 규약 id 가 `unknown:` 없이 깨끗한 `p2-` 면 그 매니페스트는
+      **현행 세대**다.  축 하나라도 빼면 `unknown:` 이 되어 `protocol_ok` 가 잡는다
+      (즉 이 판정을 피하려면 규약 검사를 대신 실패해야 한다 — 우회로가 아니다).
+    """
+    if not isinstance(man, dict):
+        return None
+    pid = physics_protocol_id(man)
+    if isinstance(pid, str) and pid.startswith(PROTOCOL_SCHEMA + '-') and 'unknown' not in pid:
+        return SCHEMA_VERSION
+    return None
+
+
 def schema_of(man):
-    """매니페스트 세대 → `(version|None, reason|None)`.  모르는 모양이면 None."""
+    """매니페스트 세대 → `(version|None, reason|None)`.  모르는 모양이면 None.
+
+    ★★ 2026-08-25 (R5-CX-02) — **신고와 관찰이 어긋나면 HOLD** 다.  거짓말은 둘 중
+      어느 쪽보다도 강한 신호이므로 낮은 쪽을 채택하지 않는다 (fail-closed).
+    """
     v = (man or {}).get('schema_version')
     if type(v) is not int or v < 1:                      # noqa: E721
         return None, f'SCHEMA|{v!r}| schema_version 이 없거나 정수가 아니다'
     if v > SCHEMA_VERSION:
         return None, (f'SCHEMA|{v}| 이 코드가 모르는 미래 세대다 (아는 최신 '
                       f'{SCHEMA_VERSION}) — 모르는 것을 통과시키지 않는다')
+    _obs = observed_generation(man)
+    if _obs is not None and v < _obs:
+        return None, (f'SCHEMA|{v}| **신고({v}) 와 관찰({_obs}) 이 다르다** — 이 매니페스트는 '
+                      f'규약 축 {len(PROTOCOL_FIELDS)} 개를 전부 담은 현행 세대인데 낮은 세대를 '
+                      f'신고했다.  세대를 낮추면 증거 계약이 꺼지므로 이것은 우회다 (R5-CX-02)')
     return v, None
 
 
@@ -675,6 +705,43 @@ def _selftest():
         'E3 ★ `component_plan` 이 있으면 그것이 정본 (소비자는 실행 인자를 모른다)')
     chk('collector_geom' in required_components(plan={'collector': True}),
         'E4 ★ 계획 키 `collector` ↔ component 이름 `collector_geom` 불일치를 흡수한다')
+
+    #  ── F: 세대 신고 우회 (R5-CX-02, Codex 5차 실측) ────────────────────────────────
+    #    같은 p2 매니페스트에서 `schema_version` **한 줄만** 3 → 2 로 낮추면 증거 계약이
+    #    통째로 꺼져 `HOLD → h0` 가 됐다.  regime id 는 그대로였다 = payload 가 스스로
+    #    validator 를 약하게 만들 수 있었다.
+    _fman = {'schema_version': SCHEMA_VERSION}
+    _fman.update({k: (0.15 if k == 'vox_um' else 0.48 if k == 'bridge_um'
+                      else 0.30 if k == 'sdcp_sphere_d_um'
+                      else 1.0 if k == 'dilate_z'
+                      else False if k in ('sdcp_yield_to_vgcf', 'ptfe_zero_dof',
+                                          'periodic_xy', 'swcnt_ion_block')
+                      else 'segment' if k == 'fibre_stamp'
+                      else 'sphere' if k == 'sdcp_stamp'
+                      else 'off' if k == 'ptfe_stamp'
+                      else 'nmc811' if k == 'cam'
+                      else 'npy' if k == 'se_source'
+                      else 'p2-occupied-surface-first' if k == 'plate_rule'
+                      else 25.0 if k == 'temp_c' else 1.0)
+                  for k in PROTOCOL_FIELDS})
+    chk(physics_protocol_id(_fman).startswith('p2-')
+        and 'unknown' not in physics_protocol_id(_fman),
+        'F1 픽스처가 **완비된 현행 규약**이다 (그래야 아래 시험이 뜻을 가진다)')
+    chk(observed_generation(_fman) == SCHEMA_VERSION,
+        'F2 ★ 세대를 **규약 완비**로 관찰한다 (자기신고가 아니라)')
+    chk(schema_of(_fman)[0] == SCHEMA_VERSION, 'F3 정상 증인 — 신고=관찰이면 통과')
+    for _v in (1, 2):
+        _sv, _swhy = schema_of(dict(_fman, schema_version=_v))
+        chk(_sv is None and '신고' in (_swhy or ''),
+            f'F4({_v}) ★★ 세대를 낮춰 증거 계약을 끄는 우회를 잡는다 (R5-CX-02)')
+    #  ⚠ 정상 증인 — **진짜** 옛 세대(새 축이 애초에 없다)는 계속 통과해야 한다.
+    #    이것이 없으면 위 게이트가 옛 payload 를 소급 차단한다 (R4 §5 가 경고한 과잉차단).
+    _old = {k: v for k, v in _fman.items()
+            if k not in ('dilate_z', 'se_source', 'sigma_superp_S_cm',
+                         'sigma_swcnt_S_cm', 'swcnt_ion_block')}
+    _old['schema_version'] = 2
+    chk(schema_of(_old)[0] == 2,
+        'F5 ★ 정상 증인 — 진짜 옛 세대는 통과한다 (소급 과잉차단 없음)')
 
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))

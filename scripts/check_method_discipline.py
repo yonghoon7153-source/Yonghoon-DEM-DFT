@@ -2258,6 +2258,22 @@ def _selftest():
     chk(f'L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** ({len(_m10)}건)',
         any(x.startswith('L_NODIGEST') for x in _m10))
     _m11 = _rmut('  for _tok in $P2_EXTRA; do', '  for _tok in ; do')
+    #  ── R5-CX-01 (2026-08-25, Codex 5차) — **2단계 shell 확장 우회** ────────────────
+    #    허용 목록은 옵션 **이름**만 봤고 `for _tok in $P2_EXTRA` 는 한 번만 확장한다.
+    #    `--step3-maxiter=$MPM_ATTACK` 은 리터럴로 통과한 뒤, 생성 스크립트가 실행될 때
+    #    두 번째로 확장돼 `--show-results` 가 **실제 producer argv 에 도달했다** (Codex 실측).
+    #    ⇒ 문자 allowlist 로 막고, 그 거부를 **실행으로** 확인한다.
+    for _inj, _lbl in ((r'--step3-maxiter=$MPM_ATTACK', '변수 참조'),
+                       ('--step3-maxiter=1;--show-results', '구분자'),
+                       ('--step3-maxiter=`id`', '명령치환'),
+                       ('--step3-maxiter=1\n--show-results', '개행')):
+        _ri = runner_config({'P2_EXTRA': _inj, 'ARMS': '1'})
+        chk(f'L-13({_lbl}): ★★ `P2_EXTRA` 주입이 **실행으로** 거부된다 (R5-CX-01)',
+            bool(_ri.get('_aborted')))
+    #  ⚠ 정상 증인 — 허용 축은 계속 통과해야 한다 (과잉차단 확인)
+    _rok = runner_config({'P2_EXTRA': '--step3-maxiter=99999', 'ARMS': '1'})
+    chk('L-13(정상 증인): 허용 축 `--step3-maxiter=99999` 는 통과',
+        not _rok.get('_aborted'))
     chk(f'L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 '
         f'아니다 ({len(_m11)}건)',
         any(x.startswith('L_P2EXTRA') for x in _m11))
