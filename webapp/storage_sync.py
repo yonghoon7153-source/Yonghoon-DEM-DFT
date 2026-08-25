@@ -36,12 +36,31 @@ def is_enabled():
 
 
 def init():
-    """Initialize storage sync. Returns True if configured."""
+    """Initialize storage sync. Returns True if configured.
+
+    ⚠⚠ 2026-08-25 실사고 — 여기서 예외가 나면 `app.py` 가 **최상위에서 import** 하므로
+      **웹앱 전체가 안 뜬다**.  실제로 `SUPABASE_URL='https://<project>.supabase.co'` 자리표시자가
+      셸에 남아 있어 DNS 실패(`%3cproject%3e...`)로 앱이 죽었다.
+      스토리지는 **선택 기능**이다 — 그것 때문에 로컬 웹앱을 못 쓰는 것은 과한 실패다.
+      ⇒ 설정이 잘못됐으면 **끄고 계속한다**.  단 **조용히 끄지 않는다**: 이유를 찍는다
+      (fail-open 이 맞는 자리이되, 무엇이 꺼졌는지는 보이게).
+    """
     global _enabled
     if SUPABASE_URL and SUPABASE_KEY:
+        #  자리표시자(`<project>`·`<...key>`)는 **설정된 것이 아니다** — 먼저 걸러낸다.
+        if '<' in SUPABASE_URL or '>' in SUPABASE_URL or '<' in SUPABASE_KEY:
+            _enabled = False
+            print('[Storage] ⛔ 자리표시자가 그대로다 — 스토리지를 끄고 계속한다.  '
+                  '지우려면:  sed -i "/SUPABASE_/d" ~/.bashrc && unset SUPABASE_URL SUPABASE_KEY')
+            return _enabled
         _enabled = True
         print(f"[Storage] Supabase enabled: {SUPABASE_URL} bucket={SUPABASE_BUCKET}")
-        _ensure_bucket()
+        try:
+            _ensure_bucket()
+        except Exception as e:                                # noqa: BLE001
+            _enabled = False
+            print(f'[Storage] ⛔ 버킷 확인 실패 ({type(e).__name__}) — 스토리지를 끄고 계속한다.  '
+                  f'웹앱은 로컬 폴더로 정상 동작하고, 업로드/복구만 꺼진다.')
     else:
         print(f"[Storage] NOT configured - SUPABASE_URL={bool(SUPABASE_URL)} SUPABASE_KEY={bool(SUPABASE_KEY)}")
     return _enabled
