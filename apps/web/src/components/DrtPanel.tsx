@@ -11,10 +11,12 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
+import { CopyBar } from './CopyBar'
 import { Plot, type PlotSeries } from './Plot'
 import { Alert, Card, KeyValues, Spinner } from './ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
+import { drtTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { Drt } from '../lib/types'
 
@@ -148,6 +150,15 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
           yLabel="γ (Ω)"
           height={280}
           legend
+        />
+
+        <CopyBar
+          items={[{
+            label: 'γ(τ)',
+            // τ 를 그대로 낸다 -- 로그로 내보내면 워크시트에서 되돌릴 수 없다.
+            title: 'τ 와 γ 두 열 · 지금 보고 있는 λ 의 것',
+            build: () => drtTsv(shown),
+          }]}
         />
 
         <KeyValues

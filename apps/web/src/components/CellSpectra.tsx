@@ -11,10 +11,12 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { CopyBar } from './CopyBar'
 import { Plot, type PlotSeries } from './Plot'
 import { Alert, Card, Empty, Spinner } from './ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
+import { nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 
 export function CellSpectra({ sampleId }: { sampleId: number }) {
@@ -110,6 +112,15 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
             )
           })}
         </div>
+
+        <CopyBar
+          items={[{
+            label: '나이퀴스트',
+            title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
+            disabled: !points.data?.length,
+            build: () => nyquistTsv(points.data ?? []),
+          }]}
+        />
 
         {points.error ? <Alert kind="error">{points.error}</Alert> : null}
 

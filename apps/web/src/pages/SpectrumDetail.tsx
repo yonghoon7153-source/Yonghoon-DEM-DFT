@@ -9,12 +9,14 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { CopyBar } from '../components/CopyBar'
 import { DrtPanel } from '../components/DrtPanel'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
+import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, CircuitKind, EisKind, SpectrumDetail as Detail, SpectrumFit }
   from '../lib/types'
@@ -154,6 +156,32 @@ export function SpectrumDetail() {
       </div>
 
       {error ? <Alert kind="error">{error}</Alert> : null}
+
+      {/* 절차서의 마지막 단계가 "Copy to clipboard → 엑셀 → Origin" 이다. */}
+      <div style={{ marginBottom: 12 }}>
+        <CopyBar
+          items={[
+            {
+              label: '나이퀴스트',
+              title: "Z′ 와 −Z″ 두 열 — Origin 에서 -col(B) 를 다시 할 필요 없다",
+              disabled: !points.data,
+              build: () => (points.data ? nyquistTsv([points.data]) : ''),
+            },
+            {
+              label: '보드',
+              title: '주파수 · |Z| · 위상 세 열',
+              disabled: !points.data,
+              build: () => (points.data ? bodeTsv([points.data]) : ''),
+            },
+            {
+              label: '피팅 파라미터',
+              title: '이름 · 값 · 1σ — 엑셀에 붙여 넣는 표',
+              disabled: !fit?.parameters.length,
+              build: () => fitParametersTsv(fit?.parameters ?? []),
+            },
+          ]}
+        />
+      </div>
 
       <div className="grid cols-2">
         <Card title="나이퀴스트">

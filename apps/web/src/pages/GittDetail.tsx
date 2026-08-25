@@ -8,10 +8,12 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { CopyBar } from '../components/CopyBar'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num, seriesColor } from '../lib/format'
+import { diffusionTsv, pocvTsv, skippedDiffusionPoints } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { GittRun } from '../lib/types'
 
@@ -105,6 +107,29 @@ export function GittDetail() {
                 onClick={() => setMode('diffusion')}>
           확산계수
         </button>
+      </div>
+
+      <div style={{ marginBottom: 12 }}>
+        <CopyBar
+          items={[
+            {
+              label: 'pOCV',
+              title: '용량 · 전압 두 열 — 충전과 방전을 `--` 로 갈라 쌓는다',
+              disabled: !pocv.data,
+              build: () => (pocv.data ? pocvTsv(pocv.data) : ''),
+            },
+            {
+              label: '확산계수',
+              title: '용량 · D 두 열 — 숫자가 나온 점만',
+              disabled: !diffusion.data?.points.length,
+              build: () => diffusionTsv(diffusion.data?.points ?? []),
+              skipped: skippedDiffusionPoints(diffusion.data?.points ?? []),
+              // 조용히 빼면 붙여 넣은 사람이 점 수가 다른 것을 못 본다.
+              skippedNote: (n) => `가정을 통과하지 못한 펄스 ${n}개는 뺐습니다 — `
+                + '이유는 아래 표에 있습니다',
+            },
+          ]}
+        />
       </div>
 
       <div className="grid cols-2">

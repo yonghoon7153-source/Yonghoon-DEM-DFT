@@ -8,16 +8,23 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  bodeTsv,
   cycleAndEfficiencyTsv,
+  diffusionTsv,
   dischargeTsv,
   dqdvTsv,
+  drtTsv,
   efficiencyTsv,
+  fitParametersTsv,
+  nyquistTsv,
+  pocvTsv,
   profileTsv,
   tsvColumns,
+  skippedDiffusionPoints,
   skippedForCopy,
   stillRunning,
 } from '../origin'
-import type { Cycle, DqdvSeries, ProfileSeries } from '../types'
+import type { Cycle, DqdvSeries, ProfileSeries, SpectrumPoints } from '../types'
 
 function series(overrides: Partial<ProfileSeries> = {}): ProfileSeries {
   return {
@@ -251,6 +258,96 @@ describe('아직 끝나지 않은 곡선은 복사하지 않는다', () => {
       curve({}),
       curve({ complete: false, incomplete_reason: 'truncated' }),
       curve({ complete: false, incomplete_reason: 'no_discharge' }),
+    ])).toBe(1)
+  })
+})
+
+// -- 임피던스와 GITT ---------------------------------------------------------
+//
+// 절차서의 마지막 단계가 "Copy to clipboard → 엑셀 → Origin" 이다.  화면에서
+// 읽을 수는 있는데 밖으로 나갈 수 없으면 그 자리에서 절차가 끊긴다.
+
+function spectrumPoints(overrides: Partial<SpectrumPoints> = {}): SpectrumPoints {
+  return {
+    id: 1, name: 's', kind: 'solid', at_cycle: null,
+    frequency_hz: [1e4, 1e2],
+    z_re: [8, 20],
+    z_im: [-1.2, -12],
+    magnitude: [8.09, 23.32],
+    phase_deg: [-8.5, -31],
+    ...overrides,
+  }
+}
+
+describe('nyquistTsv', () => {
+  it('세로축은 −Z″ 다 — Origin 에서 다시 뒤집을 필요가 없다', () => {
+    // 절차서가 실제로 `-col(B)` 를 시킨다.  한 번 잊으면 아크가 아래로 뒤집힌
+    // 그림이 나오고, 그것은 물리적으로 유도성 셀이다.
+    expect(nyquistTsv([spectrumPoints()])).toBe('8\t1.2\n20\t12')
+  })
+
+  it('여러 스펙트럼은 `--` 한 줄로 갈라 쌓는다', () => {
+    const text = nyquistTsv([
+      spectrumPoints({ z_re: [1], z_im: [-2] }),
+      spectrumPoints({ z_re: [3], z_im: [-4] }),
+    ])
+    expect(text).toBe('1\t2\n--\t--\n3\t4')
+  })
+
+  it('없으면 빈 문자열 — 조용히 성공한 척하지 않는다', () => {
+    expect(nyquistTsv([])).toBe('')
+  })
+})
+
+describe('bodeTsv', () => {
+  it('세 열이다 — |Z| 와 위상은 축이 달라 쌓을 수 없다', () => {
+    expect(bodeTsv([spectrumPoints()])).toBe('10000\t8.09\t-8.5\n100\t23.32\t-31')
+  })
+})
+
+describe('fitParametersTsv', () => {
+  it('이름부터 나간다 — R1 없이 32.02 만 있는 열은 아무것도 아니다', () => {
+    const text = fitParametersTsv([
+      { name: 'R0', value: 7.99, unit: 'Ω', stderr: 0.31, determined: true },
+      { name: 'CPE1_n', value: 0.58, unit: '', stderr: null, determined: false },
+    ])
+    expect(text).toBe('R0\t7.99\t0.31\nCPE1_n\t0.58\t--')
+  })
+})
+
+describe('drtTsv', () => {
+  it('τ 를 그대로 낸다 — 로그로 내보내면 워크시트에서 되돌릴 수 없다', () => {
+    expect(drtTsv({ tau_s: [1e-4, 1e-2], gamma_ohm: [20, 5] }))
+      .toBe('0.0001\t20\n0.01\t5')
+  })
+})
+
+describe('pocvTsv', () => {
+  it('충전과 방전을 `--` 로 가른다', () => {
+    const text = pocvTsv({
+      charge: [{ capacity_mah: 0, voltage_v: 3.0 }],
+      discharge: [{ capacity_mah: 0, voltage_v: 3.4 }],
+    })
+    expect(text).toBe('0\t3\n--\t--\n0\t3.4')
+  })
+
+  it('한쪽만 있으면 구분선을 넣지 않는다', () => {
+    expect(pocvTsv({ charge: [{ capacity_mah: 1, voltage_v: 3.1 }], discharge: [] }))
+      .toBe('1\t3.1')
+  })
+})
+
+describe('diffusionTsv', () => {
+  it('숫자가 나온 점만 낸다', () => {
+    // `--` 로 끼워 넣으면 Origin 에서는 선이 끊긴 자리로만 보이고, 왜 끊겼는지는
+    // 화면에만 남는다 — 워크시트에서는 측정하지 않은 것과 구분되지 않는다.
+    const text = diffusionTsv([
+      { capacity_mah: 0, d_cm2_s: null },
+      { capacity_mah: 0.5, d_cm2_s: 1.27e-6 },
+    ])
+    expect(text).toBe('0.5\t0.00000127')
+    expect(skippedDiffusionPoints([
+      { d_cm2_s: null }, { d_cm2_s: 1e-6 },
     ])).toBe(1)
   })
 })

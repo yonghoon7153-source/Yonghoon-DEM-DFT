@@ -18,7 +18,9 @@
  * cycle with no efficiency from being drawn at zero.
  */
 
-import type { Cycle, DqdvSeries, DvdqSeries, ProfileSeries } from './types'
+import type {
+  Cycle, DqdvSeries, DvdqSeries, FitParameter, ProfileSeries, SpectrumPoints,
+} from './types'
 
 /** Origin's missing value. */
 export const MISSING = '--'
@@ -221,4 +223,112 @@ export async function copyText(text: string): Promise<void> {
   } finally {
     document.body.removeChild(area)
   }
+}
+
+// -- 임피던스와 GITT (ADR 0019 · 0020) ---------------------------------------
+//
+// 위의 세 규칙을 그대로 따른다.  절차서의 마지막 단계가 "Copy to clipboard →
+// 엑셀 → Origin" 이므로, 여기서 나오는 것이 그 워크시트에 그대로 들어가야 한다.
+
+/** 나이퀴스트: Z′ 와 **−Z″**.
+ *
+ *  세로축이 −Z″ 인 것은 관례가 아니라 이 그림의 정의다.  허수부를 그대로 내면
+ *  붙여 넣은 사람이 Origin 에서 `-col(B)` 를 다시 해야 하고 (절차서가 실제로
+ *  그렇게 시킨다), 한 번 잊으면 아크가 아래로 뒤집힌 그림이 나온다.
+ */
+export function nyquistTsv(spectra: SpectrumPoints[]): string {
+  return stackedXy(spectra.map((item) => [item.z_re, item.z_im.map((v) => -v)]))
+}
+
+/** 보드: 주파수, |Z|, 위상 — 세 열.
+ *
+ *  여기만 두 열이 아니다.  |Z| 와 위상은 축이 다르므로 쌓으면 한 축에 두
+ *  단위가 섞인다.  스펙트럼이 여럿이면 세 열씩 나란히 놓는다.
+ */
+export function bodeTsv(spectra: SpectrumPoints[]): string {
+  const columns: string[][] = []
+  for (const item of spectra) {
+    columns.push(item.frequency_hz.map(cell))
+    columns.push(item.magnitude.map(cell))
+    columns.push(item.phase_deg.map(cell))
+  }
+  return columns.length ? tsvColumns(columns) : ''
+}
+
+/** 피팅 파라미터: 이름, 값, 1σ.
+ *
+ *  여기는 숫자만이 아니라 **이름부터** 나간다.  파라미터 표는 그리는 것이
+ *  아니라 읽는 것이고, `R1` 없이 32.02 만 있는 열은 아무것도 아니다.
+ *  절차서도 이 블록을 엑셀에 붙인다 ("Error값은 필요 없어 Delete 가능").
+ */
+export function fitParametersTsv(parameters: FitParameter[]): string {
+  if (!parameters.length) return ''
+  return parameters
+    .map((p) => [p.name, cell(p.value), cell(p.stderr)].join('\t'))
+    .join('\n')
+}
+
+/** DRT: τ 와 γ.
+ *
+ *  τ 를 그대로 낸다 — log 를 취하는 것은 그리는 쪽의 선택이고, 로그로 내보내면
+ *  워크시트에서 원래 시간을 되돌릴 수 없다.
+ */
+export function drtTsv(drt: { tau_s: number[]; gamma_ohm: number[] }): string {
+  if (!drt.tau_s.length) return ''
+  return tsvColumns([drt.tau_s.map(cell), drt.gamma_ohm.map(cell)])
+}
+
+/** pOCV: 용량과 전압.  충전과 방전을 `--` 한 줄로 갈라 쌓는다. */
+export function pocvTsv(pocv: {
+  charge: { capacity_mah: number; voltage_v: number }[]
+  discharge: { capacity_mah: number; voltage_v: number }[]
+}): string {
+  const branches = [pocv.charge, pocv.discharge].filter((b) => b.length)
+  return stackedXy(branches.map((branch) => [
+    branch.map((point) => point.capacity_mah),
+    branch.map((point) => point.voltage_v),
+  ]))
+}
+
+/** 확산계수: 용량과 D.
+ *
+ *  **숫자가 나온 점만** 낸다.  가정을 통과하지 못한 펄스를 `--` 로 끼워 넣으면
+ *  Origin 에서는 선이 끊긴 자리로만 보이고, 왜 끊겼는지는 화면에만 남는다 —
+ *  붙여 넣은 워크시트에서는 측정하지 않은 것과 구분되지 않는다.
+ */
+export function diffusionTsv(points: {
+  capacity_mah: number
+  d_cm2_s: number | null
+}[]): string {
+  const usable = points.filter((point) => point.d_cm2_s !== null)
+  if (!usable.length) return ''
+  return tsvColumns([
+    usable.map((point) => cell(point.capacity_mah)),
+    usable.map((point) => cell(point.d_cm2_s)),
+  ])
+}
+
+/** 몇 개가 빠졌나 — 조용히 빼면 붙여 넣은 사람이 점 수가 다른 것을 못 본다. */
+export function skippedDiffusionPoints(points: { d_cm2_s: number | null }[]): number {
+  return points.filter((point) => point.d_cm2_s === null).length
+}
+
+/** (x, y) 쌍 여럿을 두 열로 쌓는다.  `stackedPairs` 와 같은 배치이되 원본이
+ *  `points` 를 들고 있지 않은 것들을 위해. */
+function stackedXy(pairs: [number[], number[]][]): string {
+  const drawable = pairs.filter(([xs]) => xs.length)
+  if (!drawable.length) return ''
+  const left: string[] = []
+  const right: string[] = []
+  for (const [xs, ys] of drawable) {
+    if (left.length) {
+      left.push(MISSING)
+      right.push(MISSING)
+    }
+    for (let i = 0; i < xs.length; i += 1) {
+      left.push(cell(xs[i]))
+      right.push(cell(ys[i]))
+    }
+  }
+  return tsvColumns([left, right])
 }
