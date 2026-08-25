@@ -62,22 +62,55 @@ export function Eis() {
     setNote(null)
     // `.mps` 는 짝이 되는 데이터 파일에 붙여 보낸다.  따로 올라온 설정 파일은
     // 그 자체로는 스펙트럼이 아니라서 서버가 거절한다.
+    //
+    // EC-Lab 은 채널 접미사를 **데이터 파일에만** 붙인다: `A_C01.mpr` 의 짝은
+    // `A.mps` 다.  접미사를 안 떼고 비교하면 맞는 짝이 항상 빠지고, "하나씩
+    // 이면 그냥 붙인다" 는 예비 규칙이 남의 실험 조건을 측정 조건으로 저장
+    // 했다 (리뷰 #13).  정규화한 이름이 정확히 하나 맞을 때만 붙는다.
     const settings = [...files].filter((file) => file.name.toLowerCase().endsWith('.mps'))
     const data = [...files].filter((file) => !file.name.toLowerCase().endsWith('.mps'))
+    const stemOf = (name: string) => name.replace(/\.[^.]+$/, '').replace(/_C\d+$/i, '')
+    const pairs = data.map((file) => {
+      const matches = settings.filter((s) => stemOf(s.name) === stemOf(file.name))
+      return { file, matches }
+    })
+    const ambiguous = pairs.filter((pair) => pair.matches.length > 1)
+    if (ambiguous.length) {
+      setError(
+        ambiguous
+          .map(
+            (pair) =>
+              `${pair.file.name} 에 맞는 설정 파일이 여럿입니다: ` +
+              pair.matches.map((m) => m.name).join(', '),
+          )
+          .join('\n') + '\n하나만 남기고 다시 올려 주세요.',
+      )
+      setBusy(false)
+      if (fileRef.current) fileRef.current.value = ''
+      return
+    }
     let added = 0
+    let already = 0
     try {
-      for (const file of data) {
-        const stem = file.name.replace(/\.[^.]+$/, '')
-        const mate = settings.find((s) => s.name.replace(/\.[^.]+$/, '') === stem)
-          ?? (settings.length === 1 && data.length === 1 ? settings[0] : null)
-        await api.uploadSpectrum(
+      for (const { file, matches } of pairs) {
+        const out = await api.uploadSpectrum(
           file,
           { kind, sample_id: attachTo || undefined },
-          mate,
+          matches[0] ?? null,
         )
-        added += 1
+        if (out.duplicate) already += 1
+        else added += 1
       }
-      setNote(added ? `${added}개 올렸습니다` : '올릴 데이터 파일이 없습니다')
+      const used = new Set(pairs.flatMap((pair) => pair.matches.map((m) => m.name)))
+      const orphans = settings.filter((s) => !used.has(s.name))
+      const parts: string[] = []
+      if (added) parts.push(`${added}개 올렸습니다`)
+      // "올렸습니다" 와 "이미 있었습니다" 는 다른 일이다 (리뷰 #22) — 같은
+      // 파일을 다시 올린 사람은 새 항목이 안 생긴 이유를 알아야 한다.
+      if (already) parts.push(`${already}개는 이미 있던 파일입니다`)
+      if (orphans.length)
+        parts.push(`짝을 못 찾은 설정 파일: ${orphans.map((s) => s.name).join(', ')}`)
+      setNote(parts.length ? parts.join(' · ') : '올릴 데이터 파일이 없습니다')
       reload()
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : String(cause))

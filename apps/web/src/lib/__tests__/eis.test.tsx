@@ -220,6 +220,61 @@ describe('EIS 목록', () => {
     expect(sent!.get('sample_id')).toBe('3')
   })
 
+  it('`.mps` 는 채널 접미사를 뗀 이름이 정확히 맞아야 붙는다 (#13)', async () => {
+    // EC-Lab 은 `A_C01.mpr` 와 `A.mps` 를 쓴다.  접미사를 안 떼면 짝이 항상
+    // 빠지고, "하나씩이면 그냥 붙인다" 는 예비 규칙이 B 실험의 조건을 A 에
+    // 저장했다.
+    const attached: (string | null)[] = []
+    installFetch((url, init) => {
+      if (path(url) === '/api/eis/spectra/upload' && init?.method === 'POST') {
+        const form = init.body as FormData
+        const mate = form.get('settings_file') as File | null
+        attached.push(mate ? mate.name : null)
+        return spectrum({})
+      }
+      if (path(url) === '/api/samples') return []
+      if (path(url) === '/api/eis/spectra') return []
+      return []
+    })
+
+    renderList()
+    await userEvent.upload(await screen.findByLabelText('스펙트럼 파일'), [
+      new File(['x'], 'A_C01.mpr', { type: 'application/octet-stream' }),
+      new File(['y'], 'B_C01.mpr', { type: 'application/octet-stream' }),
+      new File(['s'], 'A.mps', { type: 'application/octet-stream' }),
+      new File(['t'], 'B.mps', { type: 'application/octet-stream' }),
+    ])
+
+    await waitFor(() => expect(attached).toHaveLength(2))
+    expect(attached).toEqual(['A.mps', 'B.mps'])
+  })
+
+  it('이름이 다른 `.mps` 는 하나뿐이어도 붙이지 않는다', async () => {
+    const attached: (string | null)[] = []
+    installFetch((url, init) => {
+      if (path(url) === '/api/eis/spectra/upload' && init?.method === 'POST') {
+        const form = init.body as FormData
+        const mate = form.get('settings_file') as File | null
+        attached.push(mate ? mate.name : null)
+        return spectrum({})
+      }
+      if (path(url) === '/api/samples') return []
+      if (path(url) === '/api/eis/spectra') return []
+      return []
+    })
+
+    renderList()
+    await userEvent.upload(await screen.findByLabelText('스펙트럼 파일'), [
+      new File(['x'], 'A_C01.mpr', { type: 'application/octet-stream' }),
+      new File(['t'], 'B.mps', { type: 'application/octet-stream' }),
+    ])
+
+    await waitFor(() => expect(attached).toHaveLength(1))
+    expect(attached).toEqual([null])
+    // 남은 설정 파일은 조용히 사라지지 않고 이름이 불린다.
+    expect(await screen.findByText(/짝을 못 찾은 설정 파일: B\.mps/)).toBeInTheDocument()
+  })
+
   it('고른 것만 일괄로 맞춘다', async () => {
     let sent: unknown = null
     installFetch((url, init) => {

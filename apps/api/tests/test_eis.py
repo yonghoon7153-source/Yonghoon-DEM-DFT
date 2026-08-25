@@ -343,6 +343,31 @@ def test_a_duplicate_upload_fills_blanks_and_overwrites_nothing(client, sample_i
     assert conflicting.json()["cell_config"] == "sym"            # 안 덮인다
 
 
+def test_a_settings_file_for_another_experiment_is_refused(client):
+    """EC-Lab 접미사(_C01)를 뗀 실험 이름이 달라야 남의 조건이다 (#13).
+
+    "하나씩이면 그냥 붙인다" 는 클라이언트 예비 규칙이 B 실험의 진폭·장비를
+    A 의 측정 조건으로 저장했다.  서버도 이름 불일치를 독립적으로 거절한다.
+    """
+    response = client.post(
+        "/api/eis/spectra/upload", params={"kind": "solid"},
+        files={"file": ("A_C01.mpr", mpr(), "application/octet-stream"),
+               "settings_file": ("B.mps", b"EC-LAB SETTING FILE\r\n",
+                                 "application/octet-stream")})
+    assert response.status_code == 422
+    assert "짝이 아닙니다" in response.json()["detail"]
+
+
+def test_a_channel_suffix_does_not_break_the_settings_pair(client):
+    """`A_C01.mpr` 의 짝은 `A.mps` 다 — 접미사는 데이터 파일에만 붙는다."""
+    response = client.post(
+        "/api/eis/spectra/upload", params={"kind": "solid"},
+        files={"file": ("A_C01.mpr", mpr(), "application/octet-stream"),
+               "settings_file": ("A.mps", b"EC-LAB SETTING FILE\r\n",
+                                 "application/octet-stream")})
+    assert response.status_code == 201
+
+
 def test_a_fresh_upload_is_not_marked_duplicate(client):
     assert upload(client)["duplicate"] is False
 

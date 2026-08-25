@@ -11,6 +11,7 @@ bar swallows it, points dropped before fitting.  See ADR 0019.
 from __future__ import annotations
 
 import hashlib
+import re
 import json
 from datetime import datetime, timezone
 
@@ -308,6 +309,35 @@ def _parse(content: bytes, filename: str) -> tuple[Spectrum, str]:
         "EC-Lab 에서 저장한 원본이나 텍스트 내보내기를 올려 주세요")
 
 
+def _normalised_stem(filename: str) -> str:
+    """The experiment name a file belongs to: extension off, channel off.
+
+    EC-Lab appends ``_C01`` to the data files of an experiment and not to its
+    ``.mps`` -- `A_C01.mpr` pairs with `A.mps`.
+    """
+    stem = re.sub(r"\.[^.]+$", "", filename or "")
+    return re.sub(r"_C\d+$", "", stem, flags=re.IGNORECASE)
+
+
+def _check_settings_stem(data_name: str | None, settings_name: str | None) -> None:
+    """Refuse a settings file that names a different experiment.
+
+    The client pairs by name too, but it once had a "one of each -- just
+    attach it" fallback that stored another experiment's amplitude and device
+    as this measurement's conditions (review #13).  The server cannot know
+    which pairing the client intended, but it can see the names disagree.
+    """
+    if not data_name or not settings_name:
+        return
+    data_stem = _normalised_stem(data_name)
+    settings_stem = _normalised_stem(settings_name)
+    if data_stem and settings_stem and data_stem != settings_stem:
+        raise HTTPException(
+            422,
+            f"설정 파일 {settings_name!r} 은 {data_name!r} 의 짝이 아닙니다 — "
+            f"실험 이름이 다릅니다 ({settings_stem!r} ≠ {data_stem!r})")
+
+
 @router.post("/spectra/upload", response_model=SpectrumOut, status_code=201)
 async def upload_spectrum(
     file: UploadFile = File(...),
@@ -397,6 +427,7 @@ async def upload_spectrum(
 
     meta: dict = {}
     if settings_file is not None:
+        _check_settings_stem(file.filename, settings_file.filename)
         raw = await settings_file.read()
         if raw:
             try:

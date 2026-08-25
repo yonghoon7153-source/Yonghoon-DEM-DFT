@@ -556,6 +556,8 @@ export type EisKind = 'liquid' | 'solid'
 export type CellConfig = 'sym' | 'full' | 'half'
 
 export interface Spectrum {
+  /** 이번 업로드가 같은 바이트의 기존 항목을 돌려준 것인가 (서버 dedup). */
+  duplicate?: boolean
   id: number
   sample_id: number | null
   sample_name: string | null
