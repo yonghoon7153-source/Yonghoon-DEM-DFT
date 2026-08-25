@@ -182,7 +182,7 @@ _NET = [
     ('σ_thermal [physics] (mS/cm equiv)', ('thermal_sigma_full_mScm_physics',), 3),
     #  ── MPM (압밀 시뮬) ──  키가 두 갈래다: 중첩 `mpm.*`(case_master 27건) 와
     #     평평한 `mpm_*`(코퍼스 146건).  둘 다 후보로 넣어 **있는 쪽**을 쓴다.
-    ('── MPM (압밀) ──', None, None),
+    ('── MPM (압밀) ⚠ porosity 는 정본이 신뢰성 유보 (CL-04·플래튼 정본) ──', None, None),
     ('MPM Porosity(%)', ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct', 'mpm_porosity_pct'), 2),
     ('MPM 압밀 Porosity(%)', ('mpm.compacted_porosity_pct', 'mpm_compacted_porosity_pct'), 2),
     ('MPM seed Porosity(%)', ('mpm.seed_porosity_pct', 'mpm_seed_porosity_pct'), 2),
@@ -248,6 +248,13 @@ _MPM_KEYS = ('porosity_mpm_pct', 'thickness_mpm_um', 'bulk_density_g_cm3', 'se_f
              'coverage_AM_S_hertz_pct', 'coverage_AM_S_tabor_pct', 'coverage_AM_S_mpm_pct',
              'coverage_AM_P_rigid_hertz_pct', 'coverage_AM_P_rigid_tabor_pct',
              'coverage_AM_S_rigid_hertz_pct', 'coverage_AM_S_rigid_tabor_pct')
+
+
+#: ⚠⚠ 2026-08-25 (사용자 지적) — 복원이 **규율 ④ 를 어길 뻔했다**.  MPM porosity 는
+#:   정본이 신뢰성을 유보한 축인데, 표지 없이 UI 로 되돌리면 그 유보가 사라진다.
+#:   ⇒ 되살릴 때 **경고를 함께 싣는다** (수치를 지우지는 않는다 — 지우면 왜 없는지 모른다).
+MPM_POROSITY_CAVEAT = (
+    '⚠⚠ MPM porosity 는 **정본이 신뢰성을 유보한 축**이다 (CLAUDE.md 트랙 2 · docs/mpm_platen_kinematic_stop_defect.md · docs/reviews/fam_platen_prereg_20260812.md): ① porosity 는 **정지 프레임의 함수**이고 속도 사다리(sub 40/80/160)에서 14.38 → 12.76 → 11.08 % 로 **수렴하지 않는다** ② scaffold 런에서 `solid_vol` 은 씨앗 시점에 DEM dump 로 고정된 상수라 **porosity 가 독립 정보를 담지 않는다** (MPM 의 유일한 출력은 wall_z) ③ 정지 결함을 고치면 ε_sphere 1.13 % = 실험 대비 **14.5 %p 과압축** (CL-04) ④ 따라서 **DEM↔MPM porosity 일치를 validity 증명서로 쓰면 순환**이다 — `cross-validated` 배지를 그렇게 읽지 말 것.  ⇒ 살아 있는 MPM 산출물: **응력-정지 두께** · 형태(morphology) · 소성 변형장.')
 
 
 def mpm_metrics(m):
@@ -317,7 +324,8 @@ def run(data_root=None, write=False):
                     with open(pmm, 'w', encoding='utf-8') as f:
                         json.dump({**mm, '_reconstructed': True,
                                    '_reconstructed_note': 'CSV 유래 — 재실행 아님.  '
-                                                          'mpm_payload.json(3D)은 없다'},
+                                                          'mpm_payload.json(3D)은 없다',
+                                   '_porosity_caveat': MPM_POROSITY_CAVEAT},
                                   f, ensure_ascii=False, indent=1)
         for name, rows in build(m).items():
             p = os.path.join(d, f'{name}.csv')
@@ -372,6 +380,11 @@ def _selftest():
         any(r['지표'] == 'Constriction 비율(%)' and r['값'] == 60.0
             for r in t['network_summary']))
     chk('⑮ ★ MPM 이 없으면 mpm_metrics 도 안 만든다', mpm_metrics({'porosity': 1}) is None)
+    chk('⑮a ★★ porosity 유보 경고문이 정본 근거를 지목한다 (규율 ④)',
+        'CL-04' in MPM_POROSITY_CAVEAT and '순환' in MPM_POROSITY_CAVEAT
+        and 'mpm_platen_kinematic_stop_defect' in MPM_POROSITY_CAVEAT)
+    chk('⑮b ★ MPM 섹션 머리글에도 유보가 붙는다',
+        any('신뢰성 유보' in lbl for lbl, k, _ in _NET if k is None and 'MPM' in lbl))
     mm = mpm_metrics({'mpm': {'porosity_mpm_pct': 15.9, 'E_SE_GPa': 1.53}})
     chk(f'⑯ 중첩 mpm.* 를 그대로 쓴다 ({sorted(mm)})', mm['E_SE_GPa'] == 1.53)
     mm2 = mpm_metrics({'mpm_porosity_mpm_pct': 20.9, 'mpm_thickness_mpm_um': 115.2})
