@@ -49,6 +49,27 @@ def step3_of(payload):
     return None
 
 
+#: 매니페스트 **스키마 세대**.  ★ 3 = component 별 증거(수렴 3필드·backend `used`)와
+#  `component_plan` 을 **항상** 싣는 세대.  2 = 그 이전 (전자 top-level 만 실었다).
+#  ⚠ 새 필드를 **과거 결과에 소급 필수화하면 과잉차단**이다 (Codex R4 §5).  그래서
+#    계약은 세대별로 적용한다 — 옛 세대는 옛 계약(required·protocol·전자 numeric)만 받고,
+#    **모르는 세대**(미래 값·비정수)는 HOLD 한다 (fail-closed).
+SCHEMA_VERSION = 3
+#: 이 계약이 적용되기 시작하는 세대.
+EVIDENCE_SINCE_SCHEMA = 3
+
+
+def schema_of(man):
+    """매니페스트 세대 → `(version|None, reason|None)`.  모르는 모양이면 None."""
+    v = (man or {}).get('schema_version')
+    if type(v) is not int or v < 1:                      # noqa: E721
+        return None, f'SCHEMA|{v!r}| schema_version 이 없거나 정수가 아니다'
+    if v > SCHEMA_VERSION:
+        return None, (f'SCHEMA|{v}| 이 코드가 모르는 미래 세대다 (아는 최신 '
+                      f'{SCHEMA_VERSION}) — 모르는 것을 통과시키지 않는다')
+    return v, None
+
+
 #: 물리 규약 스키마 판.  ★ 축 집합이 바뀌면 **이 접두사도 올린다** — 안 올리면 옛 팔과
 #  새 팔의 id 가 같은 이름공간에 살아 "다른 축 집합인데 문자열만 같다" 를 구분할 수 없다
 #  (R3-CX-03: 축을 17 → 19 로 늘렸는데 접두사는 `p1-` 그대로였다).
@@ -126,6 +147,124 @@ def protocol_ok(man):
     return True, None
 
 
+#: 축별 **엄격 타입**.  ⚠ registry 가 강제하는 것이지 리더가 관대하게 바꾸는 것이 아니다.
+#   R4-CX-05: 리더가 `bool(man.get(...))` 을 써서 JSON 문자열 `"false"` 가 **True** 가 됐고,
+#   그 상태의 16팔이 `h0` 로 봉인됐다 (Codex 실측).  강제(coercion)는 기록을 **바꾸는** 것이다.
+STRICT_TYPES = {
+    'periodic_xy': bool, 'ptfe_zero_dof': bool, 'sdcp_yield_to_vgcf': bool,
+    'physics_protocol_match': bool,
+    'vox_um': float, 'bridge_um': float, 'sdcp_sphere_d_um': float,
+    'sigma_vgcf_S_cm': float, 'sigma_sdcp_S_cm': float, 'sigma_ptfe_S_cm': float,
+    'sigma_ion_se_S_cm': float, 'sigma_ion_sdcp_S_cm': float,
+    'sigma_am_s_S_cm': float, 'sigma_am_p_S_cm': float,
+    'fibre_stamp': str, 'sdcp_stamp': str, 'ptfe_stamp': str, 'cam': str,
+    'plate_rule': str, 'physics_protocol_id': str,
+    'ptfe_cells_observed': int,
+}
+
+
+def strict_type_ok(man):
+    """매니페스트의 축 타입이 선언과 맞는가 → `(ok, reason|None)`.
+
+    ⚠ **강제하지 않고 거부한다.**  `bool("false") == True` 라서 강제는 기록을 바꾼다.
+      JSON 왕복에서 타입이 뒤틀린 payload 는 "그 값이었다" 를 증언하지 못한다.
+    ⚠ `int` 는 `bool` 을 배제한다 (bool 은 int 의 하위형).
+    """
+    for k, t in STRICT_TYPES.items():
+        if k not in man or man[k] is None:
+            continue                     # 부재는 다른 게이트 소관 (required / protocol_ok)
+        v = man[k]
+        if t is bool:
+            if type(v) is not bool:      # noqa: E721
+                return False, f'TYPE|{k}| bool 이어야 하는데 {type(v).__name__} ({v!r})'
+        elif t is int:
+            if type(v) is not int:       # noqa: E721
+                return False, f'TYPE|{k}| int 이어야 하는데 {type(v).__name__} ({v!r})'
+        elif t is float:
+            if isinstance(v, bool) or not isinstance(v, (int, float)):
+                return False, f'TYPE|{k}| 수여야 하는데 {type(v).__name__} ({v!r})'
+        elif t is str:
+            if not isinstance(v, str):
+                return False, f'TYPE|{k}| str 이어야 하는데 {type(v).__name__} ({v!r})'
+    return True, None
+
+
+#: `component_plan` 의 정확한 스키마.  ⚠ nonempty 라고 정본으로 믿으면 안 된다 —
+#  `{'electronic': True}` 만 적어도 required 가 하나로 줄고, `{'electronic': False}` 면
+#  **빈 집합**이 된다 (Codex R4-CX-02 실측: 둘 다 `h0`).
+PLAN_KEYS = ('electronic', 'ionic', 'thermal', 'pore', 'collector')
+
+
+def ptfe_record_ok(man):
+    """PTFE 도장 기록 계약 → `(ok, reason|None)`.
+
+    ★★★ 2026-08-25 (R4-CX-02, Codex 4차): 옛 게이트는 `observed == 0` **만** 거부했다.
+      그래서 키를 **지우면** 통과했다 (Codex 실측: stamp=centerline + observed 삭제 → h0).
+      `== 0` 검사는 값이 있을 때만 도는데, 없애면 그 검사가 안 돈다 = 삭제로 게이트 끄기.
+    ⚠ 그렇다고 `observed > 0` 을 무조건 요구하면 **PTFE 가 진짜 0개인 침대**가 막힌다
+      (Codex 자신의 §5 과잉차단 경고).  ⇒ 조건부 불변량으로 나눈다:
+        · 현행 세대는 이 필드를 **항상 싣는다** (부재 = 위반)
+        · 값은 음이 아닌 정수여야 한다 (음수·문자열·float = 위반)
+        · 도장이 켜졌는데 0 = "그렸다는 기록은 있는데 격자에는 없다" = 위반
+        · 도장이 꺼졌는데 0 = **정상** (PTFE 없는 침대)
+    """
+    sv, why = schema_of(man)
+    if sv is None:
+        return False, why
+    v = man.get('ptfe_cells_observed')
+    if sv >= EVIDENCE_SINCE_SCHEMA and v is None:
+        return False, ('PTFE|absent| schema %d 세대는 `ptfe_cells_observed` 를 항상 싣는다 — '
+                       '없으면 도장과 실제 효과를 가를 근거가 사라진다 (삭제로 게이트를 '
+                       '끄는 경로)' % sv)
+    if v is None:
+        return True, None                       # 옛 세대는 면제
+    if type(v) is not int or v < 0:             # noqa: E721
+        return False, f'PTFE|domain| ptfe_cells_observed={v!r} (음이 아닌 정수여야 한다)'
+    if man.get('ptfe_stamp') not in (None, '', 'off') and v == 0:
+        return False, (f'PTFE|no_effect| `ptfe_stamp={man.get("ptfe_stamp")}` 인데 관측 '
+                       f'sid7 셀이 0 이다 — 격자에 아무것도 안 그려졌다.  그 팔의 PTFE '
+                       f'규약은 미스탬프와 구분되지 않는다')
+    return True, None
+
+
+def plan_required(man):
+    """이 세대는 `component_plan` 을 **반드시** 실어야 하는가 → `(ok, reason|None)`.
+
+    ★ R4-CX-02: 계획을 **지우면** required 를 파생할 수 없어 검사가 통째로 비활성화됐다
+      (Codex 실측: plan 삭제 → final `h0`).  "없으면 건너뛴다" 는 삭제로 무력화된다.
+      ⇒ 현행 세대는 계획이 **없는 것 자체가 위반**이다.  옛 세대는 면제된다.
+    """
+    sv, why = schema_of(man)
+    if sv is None:
+        return False, why
+    if sv >= EVIDENCE_SINCE_SCHEMA and man.get('component_plan') is None:
+        return False, (f'PLAN|absent| schema {sv} 세대는 `component_plan` 을 항상 싣는다 — '
+                       f'없으면 무엇을 돌리기로 했는지 알 수 없고, 그러면 required 검사가 '
+                       f'통째로 꺼진다 (삭제로 게이트를 끄는 경로)')
+    return True, None
+
+
+def plan_ok(plan):
+    """`component_plan` 스키마 → `(ok, reason|None)`.  키 완비 · bool · electronic 필수."""
+    if not isinstance(plan, dict):
+        return False, f'PLAN|shape| dict 이어야 하는데 {type(plan).__name__}'
+    _miss = [k for k in PLAN_KEYS if k not in plan]
+    if _miss:
+        return False, f'PLAN|missing| 키가 빠졌다 {sorted(_miss)} (필요: {list(PLAN_KEYS)})'
+    _extra = [k for k in plan if k not in PLAN_KEYS]
+    if _extra:
+        return False, f'PLAN|extra| 모르는 키 {sorted(_extra)}'
+    _bad = [k for k in PLAN_KEYS if type(plan[k]) is not bool]   # noqa: E721
+    if _bad:
+        return False, f'PLAN|type| bool 이 아닌 키 {sorted(_bad)}'
+    if plan['electronic'] is not True:
+        return False, ('PLAN|electronic| `electronic` 은 **항상** True 다 — 전자축이 이 '
+                       '실험의 결론이고, False 로 적으면 required 가 빈 집합이 된다')
+    if plan['pore'] and not plan.get('_pnm_implied', True):
+        return False, 'PLAN|pore| pore 를 켜면 pnm 도 따라온다'
+    return True, None
+
+
 def conv_ok(cg_info, unconverged, resid):
     """수렴 계약 → `(ok, why)`.  모르는 것·모순·타입 오류는 전부 실패다 (fail-closed).
 
@@ -159,8 +298,17 @@ def required_components(no_ion=False, no_thermal=False, no_pore=False,
     """
     _MAP = {'electronic': 'electronic', 'ionic': 'ionic', 'thermal': 'thermal',
             'pore': 'pore', 'collector': 'collector_geom'}
-    if isinstance(plan, dict) and plan:
-        return tuple(_MAP[k] for k in _MAP if plan.get(k))
+    #  ★★★ 2026-08-25 (R4-CX-02) — 계획은 **검증한 뒤** 정본이 된다.  옛 판은 nonempty
+    #    면 그대로 믿어 `{'electronic': True}` 가 required 를 하나로 줄였다 (Codex 실측).
+    #    스키마가 틀린 계획은 정본이 아니므로 **run mode 로 내려간다** (그리고 호출자가
+    #    `plan_ok` 로 따로 거부한다 — 여기서 조용히 통과시키지 않는다).
+    #  ★ `pore ⇒ pnm` — pnm 은 계획 키가 아니지만 pore 의 산출물이라 같이 요구한다
+    #    (Codex 실측: PNM 이 missing/exception 이어도 최종이 h0 였다).
+    if isinstance(plan, dict) and plan and plan_ok(plan)[0]:
+        _req = [_MAP[k] for k in _MAP if plan.get(k)]
+        if plan.get('pore'):
+            _req.append('pnm')
+        return tuple(_req)
     req = list(ALWAYS_REQUIRED)
     if not no_ion:
         req.append('ionic')
@@ -187,7 +335,12 @@ def component_backend(step3, comp):
         return None
     b = v.get('backend')
     if isinstance(b, dict):
-        b = b.get('used') or b.get('requested')
+        #  ★★★ 2026-08-25 (R4-CX-04, Codex 4차) — **`requested` 는 증거가 아니다.**
+        #    옛 판은 `b.get('used') or b.get('requested')` 라 `used` 만 지우고
+        #    `requested='cpu'` 를 남기면 **실제 사용값으로 위장**됐다 (Codex 실측:
+        #    component_backend → 'cpu' · producer reject None · check_arm None · 16팔 h0).
+        #    요청은 요청이고 사용은 사용이다 — 폴백이 아니라 **다른 사실**이다.
+        b = b.get('used')
     return b if isinstance(b, str) and b else None
 
 
@@ -212,6 +365,67 @@ def numeric_ok(step3):
     if not ok:
         return False, (f'CONV|{why}| 전자 수렴 미확인 cg_info={s.get("cg_info")!r} '
                        f'unconverged={s.get("unconverged")!r} cg_resid={s.get("cg_resid")!r}')
+    return True, None
+
+
+#: component → step3 안의 (수렴 필드 3개, 결과 필드) 위치.  ⚠ 전자만 top-level 이다.
+#  ⚠ 키 이름은 **producer 실물**에서 확인한 것이다 (추측 금지 — 틀리면 생산 과잉차단).
+#    전자만 top-level 이고 thermal/pore 는 자기 블록 안에 있다.
+COMPONENT_EVIDENCE = {
+    'electronic':     (('cg_info', 'unconverged', 'cg_resid'), 'sigma_e_eff_S_cm', None),
+    'ionic':          (('ion_cg_info', 'ion_unconverged', 'ion_resid'),
+                       'sigma_ion_eff_S_cm', None),
+    'thermal':        (('cg_info', 'unconverged', 'cg_resid'), 'k_eff_W_mK', 'thermal'),
+    'pore':           (('cg_info', 'unconverged', 'resid'), 'tau', 'pore'),
+}
+
+
+def component_evidence_ok(step3, required):
+    """**계획된 component 마다** 수치·수렴·backend 증거가 있는가 → `(ok, reason|None)`.
+
+    ★★★ 2026-08-25 (R4-CX-02, Codex 4차): `numeric_ok` 가 **전자 top-level 만** 봤다.
+      그래서 Codex 가 통과시켰다 —
+        · thermal/pore `resid=1e100` · `unconverged=True`  → producer None · final h0
+        · 계획된 ionic 의 결과·CG·resid **전부 삭제**       → producer None · final h0
+      계획했으면 그 축의 증거도 계획의 일부다.
+    ⚠ 증거 위치를 모르는 component(pnm·collector_geom)는 **status 로만** 본다 —
+      모르는 것을 지어내지 않는다.  그 대신 status 는 위에서 `complete` 를 요구한다.
+    """
+    s = step3 or {}
+    _man = (s.get('manifest') or {})
+    _sv, _swhy = schema_of(_man)
+    if _sv is None:
+        return False, _swhy                       # 모르는 세대 = HOLD
+    if _sv < EVIDENCE_SINCE_SCHEMA:
+        #  ★ 옛 세대는 이 필드를 **애초에 안 실었다**.  소급 요구는 과잉차단이다
+        #    (Codex R4 §5).  전자축은 `numeric_ok` 가, 규약은 `protocol_ok` 가 본다.
+        return True, None
+    _cmp = (_man.get('components') or {})
+    for comp in required:
+        #  ★ `not_solvable` = 물리적으로 정의 안 됨 (SE 비퍼콜 등).  **숫자가 없는 것이
+        #    정상**이므로 증거를 요구하지 않는다.  대신 그 축으로 결론을 낼 수 없다는 것은
+        #    호출자(`--require-ionic` 등)가 따로 본다.
+        if (_cmp.get(comp) or {}).get('status') == 'not_solvable':
+            continue
+        spec = COMPONENT_EVIDENCE.get(comp)
+        if spec is None:
+            continue
+        (ki, ku, kr), kres, sub = spec
+        blk = (s.get(sub) or {}) if sub else s
+        if not isinstance(blk, dict):
+            return False, f'EVID|{comp}|block| `{sub}` 블록이 없다'
+        res = blk.get(kres) if sub else s.get(kres)
+        if isinstance(res, bool) or not isinstance(res, (int, float)) \
+                or not math.isfinite(res) or res <= 0:
+            return False, f'EVID|{comp}|result| {kres}={res!r} (유한한 양수여야 한다)'
+        ci = blk.get(ki) if ki else 0
+        ok, why = conv_ok(ci, blk.get(ku), blk.get(kr))
+        if not ok:
+            return False, (f'EVID|{comp}|conv|{why}| {ki}={blk.get(ki)!r} '
+                           f'{ku}={blk.get(ku)!r} {kr}={blk.get(kr)!r}')
+        if component_backend(s, comp) is None:
+            return False, (f'EVID|{comp}|backend| 이 component 의 `used` backend 기록이 '
+                           f'없다 — 무엇으로 돌았는지 모르는 결과다')
     return True, None
 
 
@@ -288,6 +502,15 @@ def _selftest():
                                          'backend': {'used': 'cpu', 'requested': 'gpu'}}),
                           'electronic') == 'cpu',
         'D3 dict backend 는 **실제로 쓴 것**(used)을 읽는다')
+    chk(component_backend(_p(electronic={'status': 'complete',
+                                         'backend': {'requested': 'cpu'}}),
+                          'electronic') is None,
+        'D3b ★★ `requested` 만 있고 `used` 가 없으면 None — 요청은 사용의 증거가 아니다 '
+        '(R4-CX-04: 옛 판은 requested 로 폴백해 위장을 통과시켰다)')
+    chk(component_backend(_p(electronic={'status': 'complete',
+                                         'backend': {'used': None, 'requested': 'gpu'}}),
+                          'electronic') is None,
+        'D3c ★ `used=null` 도 None (JSON 왕복에서 흔한 모양)')
     chk(component_backend({}, 'electronic') is None, 'D4 매니페스트가 없으면 None')
 
     #  ── required (계획이 정본) ────────────────────────────────────────────────────

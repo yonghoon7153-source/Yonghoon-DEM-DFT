@@ -265,6 +265,28 @@ def check_arm(path, want, expect_backend=None):
     _nok, _nwhy = _RC.numeric_ok(s)
     if not _nok:
         return f'수치 증거가 계약을 만족하지 않는다 — {_nwhy}'
+    #  ★★★ 2026-08-25 (R4-CX-02/05) — producer 와 **같은 계약**을 캐시 검사에도 건다.
+    #    옛 판은 전자 top-level 만 봐서 계획 스키마·타입·비전자 증거가 전부 통과했다.
+    _man = (s.get('manifest') or {})
+    _tok, _twhy = _RC.strict_type_ok(_man)
+    if not _tok:
+        return f'매니페스트 타입이 계약과 다르다 — {_twhy}'
+    _rok, _rwhy = _RC.plan_required(_man)
+    if not _rok:
+        return f'계획 기록이 계약과 다르다 — {_rwhy}'
+    _fok, _fwhy = _RC.ptfe_record_ok(_man)
+    if not _fok:
+        return f'PTFE 도장 기록이 계약과 다르다 — {_fwhy}'
+    if _man.get('component_plan') is not None:
+        _pok, _pwhy = _RC.plan_ok(_man.get('component_plan'))
+        if not _pok:
+            return f'component_plan 스키마가 계약과 다르다 — {_pwhy}'
+    #  ⚠ 계획이 없으면 required 를 파생할 수 없다 (옛 팔) — 전자축은 위 `numeric_ok` 소관.
+    if _man.get('component_plan') is not None:
+        _eok, _ewhy = _RC.component_evidence_ok(
+            s, _RC.required_components(plan=_man['component_plan']))
+        if not _eok:
+            return f'계획한 component 의 증거가 없다 — {_ewhy}'
     if expect_backend:
         got = backend_of(s)
         #  ★ 2026-08-25 (CDXR3-2) — **fail-closed**.  옛 판은 `got` 이 비면 통과시켰다

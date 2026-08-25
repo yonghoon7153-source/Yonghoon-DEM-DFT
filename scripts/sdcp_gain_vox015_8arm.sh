@@ -122,20 +122,40 @@ fi
 #    조립 문자열의 **맨 뒤**에 붙어 앞의 선언을 전부 덮을 수 있었다
 #    (`--periodic` · `--no-ion` · `--sigma-vgcf` …).  주의는 게이트가 아니다.
 #    ⇒ 금지 목록을 **거부**한다 (fail-closed).  진짜로 필요하면 러너에 축을 만든다.
-_P2_BANNED='--periodic --no-ion --no-thermal --no-pore --no-collector --sigma-vgcf
---sigma-sdcp --sigma-ptfe --ptfe-stamp --step3-vox --step3-bridge-um --step3-fibre-stamp
---step3-sdcp-sphere-d --step3-sdcp-yield-to-vgcf --step3-origin-shift --expect-physics
---expect-protocol --cam --temp-c --sigma-am-s --sigma-am-p --allow-partial-step3'
-for _b in $_P2_BANNED; do
-  case " ${P2_EXTRA:-} " in
-    *" $_b "*|*" $_b="*)
-      echo "ABORT — P2_EXTRA 에 규약 인자 \`$_b\` 가 있다."
-      echo "  P2_EXTRA 는 조립 문자열 **맨 뒤**라 러너의 선언을 덮는다 — 그러면"
-      echo "  \`--expect-physics\` 선언과 실제 적용이 갈리고, 판정기는 그것을 못 잡는다."
-      echo "  규약을 바꾸려면 러너에 축을 만들 것 (VOX·SIGMA_PTFE·PTFE_STAMP·LEAN …)."
-      exit 2;;
-  esac
-done
+#  ★★★ 2026-08-25 (R4-CX-03, Codex 4차) — **금지 목록(deny) → 허용 목록(allow).**
+#    정확 문자열 금지는 argparse **축약**으로 뚫린다 (`--period` 가 `--periodic` 으로
+#    받아졌다, Codex 실측).  그리고 목록에 없던 축이 계속 나왔다 —
+#    `--show-results` · `--sigma-ion-se` · `--sigma-superp` · `--swcnt-ion-block` ·
+#    `--step3-amg` 전부 통과했다.  **없는 것을 다 적는 방식은 원리적으로 진다.**
+#    ⇒ 진단용으로 안전하다고 **명시한 것만** 통과시킨다 (solver 물리를 안 바꾸는 축).
+#      새 축이 필요하면 여기 적으면서 "왜 물리를 안 바꾸는가" 를 같이 적는다.
+_P2_ALLOWED='--step3-maxiter --step3-rtol --gpu-mem --n-vox --void-max'
+if [ -n "${P2_EXTRA:-}" ]; then
+  for _tok in $P2_EXTRA; do
+    case "$_tok" in
+      -*)
+        _k="${_tok%%=*}"
+        case " $_P2_ALLOWED " in
+          *" $_k "*) ;;
+          *)
+            echo "ABORT — P2_EXTRA 의 \`$_k\` 는 허용 목록에 없다."
+            echo "  P2_EXTRA 는 조립 문자열 **맨 뒤**라 러너의 \`--expect-physics\` 선언을 덮는다."
+            echo "  허용(진단·수치 전용): $_P2_ALLOWED"
+            echo "  물리를 바꾸려면 러너에 축을 만들 것 (VOX·SIGMA_PTFE·PTFE_STAMP·LEAN …)."
+            exit 2;;
+        esac;;
+    esac
+  done
+fi
+#  ★★ R4-CX-03 — `${MPM_PERIODIC_SIGMA:+--periodic}` 은 **값이 `0` 이어도** 켠다
+#    (`:+` 는 nonempty 를 본다).  킷 생성기는 `= "1"` 로 비교하므로 두 곳이 갈린다.
+#    ⇒ 여기서도 `= 1` 만 켠다.  그리고 `periodic_xy` 를 선언 목록에 넣는다 (아래 XP).
+if [ -n "${MPM_PERIODIC_SIGMA:-}" ] && [ "${MPM_PERIODIC_SIGMA}" != "1" ] \
+   && [ "${MPM_PERIODIC_SIGMA}" != "0" ]; then
+  echo "ABORT — MPM_PERIODIC_SIGMA=${MPM_PERIODIC_SIGMA} 는 0 또는 1 이어야 한다"
+  exit 2
+fi
+PERIODIC_ON=0; [ "${MPM_PERIODIC_SIGMA:-0}" = "1" ] && PERIODIC_ON=1
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
 #     ★ 2026-08-18 2차: `--no-collector` 도 넣는다.  1차 LEAN=2 시도가 **집전체 기하 솔브**
@@ -167,6 +187,23 @@ OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
   OUTDIR="${OUTDIR}_arm${ARMS}"
   echo "[p2] ⚠ 진단 런($ARMS 팔) — OUTDIR 에 강제 접미사: $OUTDIR"
+fi
+#  ★★★ 2026-08-25 (R4-CX-08, Codex 4차) — **접미사는 문자열이다.**  `user_arm2` 를
+#    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
+#    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
+if [ "$ARMS" -ne 8 ]; then
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${LEAN_TAG}"
+  mkdir -p "$OUTDIR" 2>/dev/null || true
+  _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
+  _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
+  if [ "$_R_OUT" = "$_R_PROD" ]; then
+    echo "ABORT — 진단 런($ARMS 팔)의 실경로가 **생산 디렉터리와 같다**."
+    echo "  OUTDIR   = $OUTDIR"
+    echo "  실경로   = $_R_OUT"
+    echo "  생산경로 = $_R_PROD"
+    echo "  (junction/symlink 로 이름만 다르게 한 경우다 — 접미사는 문자열이지 격리가 아니다)"
+    exit 2
+  fi
 fi
 #  ★★★ RUNNER_CONFIG_END — 여기까지가 **순수 변수 조립**이다 (부작용 없음).
 #    규칙 L 이 이 지점까지를 서브셸에서 **실제로 실행해** 조립 결과를 검사한다.
@@ -314,6 +351,8 @@ PY
   XP="$XP,fibre_stamp=$FIBRE_STAMP"
   XP="$XP,sdcp_stamp=$([ -n "$SD_FLAG" ] && echo sphere || echo point)"
   XP="$XP,sdcp_yield_to_vgcf=$([ -n "$YV_FLAG" ] && echo True || echo False)"
+  #  ★ R4-CX-03 — `periodic_xy` 가 선언 목록에 **없었다** (규약 축인데).
+  XP="$XP,periodic_xy=$([ "$PERIODIC_ON" = 1 ] && echo True || echo False)"
   [ -n "$PS_FLAG" ] && XP="$XP,ptfe_stamp=$PTFE_STAMP"
   [ -n "$PT_FLAG" ] && XP="$XP,sigma_ptfe_S_cm=$SIGMA_PTFE"
   local XP_FLAG=" --expect-physics $XP"
@@ -323,7 +362,8 @@ PY
       --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
-    echo "PSIG=(${MPM_PERIODIC_SIGMA:+--periodic})"; cat "$SHF.body"; } > "$SHF.part" \
+    #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
+    echo "PSIG=($([ "$PERIODIC_ON" = 1 ] && echo --periodic))"; cat "$SHF.body"; } > "$SHF.part" \
     && mv -f "$SHF.part" "$SHF"
   rm -f "$SHF.body"
   # ★★ 2026-08-19 fail-closed — **생성된 스크립트 자체가 온전한가**.

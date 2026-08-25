@@ -232,6 +232,9 @@ def _read(path):
             #    `physics_protocol_id` 만 읽으면 stale·손으로 쓴 값·축 키 부재를 못 잡는다
             #    (Codex 가 셋 다 통과시켰다).  재계산하려면 원본이 있어야 한다.
             '_manifest': man,
+            #  ★ R4-CX-02 — component 별 증거는 step3 **전체**를 봐야 한다 (thermal·pore
+            #    블록이 top-level 이 아니다).  리더가 골라 담으면 그 목록이 또 갈라진다.
+            '_step3': s,
             'physics_protocol_match': (None if man.get('physics_protocol_match') is None
                                        else bool(man.get('physics_protocol_match'))),
             'ptfe_zero_dof': (None if man.get('ptfe_zero_dof') is None
@@ -514,14 +517,36 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                            f'({_pl[0][0]}: `{_pl[0][1]}` = {_pl[0][2]!r}) — '
                            f'`component_plan` 은 무엇을 돌리기로 했는지의 기록이다.  '
                            f'계획과 결과가 다르면 그 팔은 계획한 실험이 아니다 (R3-CX-04)'), info
-    _ps = [(r['file'], r.get('ptfe_stamp')) for k in arms for r in arms[k]
-           if r.get('ptfe_stamp') not in (None, '', 'off')
-           and r.get('ptfe_cells_observed') == 0]
-    if _ps:
-        return dict(decision='HOLD', hold_code='STAMP_NO_EFFECT',
-                    reason=f'PTFE 도장이 찍혔는데 관측 셀이 **0** 인 팔 {len(_ps)}개 '
-                           f'({_ps[0][0]}: `{_ps[0][1]}`) — 격자에 아무것도 안 그려졌다.  '
-                           f'그 팔의 PTFE 규약은 미스탬프와 구분되지 않는다 (R3-CX-04)'), info
+    #  ★★★ 2026-08-25 (R4-CX-02/05) — 세 소비자가 **같은 계약**을 쓴다.
+    _cb = []
+    for _k in arms:
+        for _r in arms[_k]:
+            _man = _r.get('_manifest') or {}
+            _s3r = _r.get('_step3') or {}
+            for _fn, _lbl in ((lambda: _RC.strict_type_ok(_man), '타입'),
+                              (lambda: _RC.plan_required(_man), '계획 존재'),
+                              (lambda: _RC.ptfe_record_ok(_man), 'PTFE 기록'),
+                              (lambda: (_RC.plan_ok(_man['component_plan'])
+                                        if _man.get('component_plan') is not None
+                                        else (True, None)), '계획 스키마'),
+                              #  ⚠ 계획이 **없으면** 무엇을 돌리기로 했는지 알 수 없다.
+                              #    그때 run-mode 기본(다섯 전부)을 요구하면 옛 팔이 통째로
+                              #    막힌다 = 과잉차단.  전자축은 `numeric_ok` 가 이미 본다.
+                              (lambda: (_RC.component_evidence_ok(
+                                  _s3r, _RC.required_components(
+                                      plan=_man['component_plan']))
+                                  if _man.get('component_plan') is not None
+                                  else (True, None)), 'component 증거')):
+                _o, _w = _fn()
+                if not _o:
+                    _cb.append((_r['file'], _lbl, _w))
+                    break
+    if _cb:
+        return dict(decision='HOLD',
+                    hold_code=str(_cb[0][2]).split('|', 1)[0],
+                    reason=f'{_cb[0][1]} 계약을 만족하지 않는 팔 {len(_cb)}개 — '
+                           f'{_cb[0][0]}: {_cb[0][2]}'), info
+    #  ★ R4-CX-02 — 이 검사는 위 `ptfe_record_ok` 로 옮겼다 (부재·음수·오타입까지 본다).
     _pm = [r['file'] for k in arms for r in arms[k] if r.get('physics_protocol_match') is False]
     if _pm:
         return dict(decision='HOLD', hold_code='PROTOCOL_MISMATCH',
@@ -798,11 +823,29 @@ def _selftest():
                 'cam': 'nmc811', 'temp_c': 25.0}
         for _k, _v in _DEF.items():
             man.setdefault(_k, _v)
+        #  ★ 2026-08-25 (R4-CX-02) — 파일 픽스처는 전부 이 함수를 지난다.  **현행 세대**로
+        #    만드는 것도 여기서 한다 (각 픽스처가 따로 적으면 또 갈라진다 = R3 의 뿌리).
+        man.setdefault('schema_version', _RC.SCHEMA_VERSION)
+        man.setdefault('component_plan', {'electronic': True, 'ionic': False,
+                                          'thermal': False, 'pore': False,
+                                          'collector': False})
+        man.setdefault('components', {'electronic': {'status': 'complete',
+                                                     'backend': {'used': 'gpu'}}})
+        man.setdefault('ptfe_cells_observed', 0)      # 도장 off = PTFE 0개 침대 (정상)
         man['physics_protocol_id'] = _RC.physics_protocol_id(man)
         return man
 
     _FIX_MAN = {k: _FIX[k] for k in _RC.PROTOCOL_FIELDS if k in _FIX}
     _FIX_MAN['vox_um'] = _FIX['vox']
+    #  ★ 2026-08-25 (R4-CX-02) — 픽스처는 **현행 세대**다 (schema 3 + 계획).  안 그러면
+    #    새 계약이 픽스처에서 한 번도 안 돈다 = 또 "선언만 있고 시험 안 됨".
+    #    ⚠ 옛 세대(schema 2)를 시험하는 회귀는 스스로 그 상태를 만든다.
+    _FIX_MAN['schema_version'] = _RC.SCHEMA_VERSION
+    _FIX_MAN['component_plan'] = {'electronic': True, 'ionic': False, 'thermal': False,
+                                  'pore': False, 'collector': False}
+    _FIX_MAN['components'] = {'electronic': {'status': 'complete',
+                                             'backend': {'used': 'gpu'}}}
+    _FIX_MAN['ptfe_cells_observed'] = 0           # ptfe_stamp='off' 와 일관 (정상 침대)
     _FIX['physics_protocol_id'] = _RC.physics_protocol_id(_FIX_MAN)
     _FIX_MAN['physics_protocol_id'] = _FIX['physics_protocol_id']
     _FIX['_manifest'] = _FIX_MAN
@@ -814,14 +857,20 @@ def _selftest():
 
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
-        return {'SBE': [dict(f, file=f'p2_SBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i),
-                             **({} if 'input_digest' in over else {'input_digest': 'AA'}))
-                        for i, v in enumerate(sbe)],
-                'DBE': [dict(f, file=f'p2_DBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i),
-                             **({} if 'input_digest' in over else {'input_digest': 'BB'}))
-                        for i, v in enumerate(dbe)]}
+        #  ★ R4-CX-02 — 행마다 `_step3` 도 만든다 (component 증거 계약이 그것을 본다).
+        #    ⚠ 실제 payload 처럼 **행의 값과 일치**시킨다 — 안 그러면 계약이 픽스처의
+        #      다른 수를 보고 통과/실패해 시험이 뜻을 잃는다.
+        def _mk_row(bed, i, v, dig):
+            _m = dict(f.get('_manifest') or {})
+            _r = dict(f, file=f'p2_{bed}_a{i}.json', sigma_e=v, cg_info=cg,
+                      cg_resid=resid, unconverged=False, origin_shift_um=_ori(i),
+                      **({} if 'input_digest' in over else {'input_digest': dig}))
+            _r['_step3'] = {'manifest': _r.get('_manifest') or _m,
+                            'sigma_e_eff_S_cm': v, 'n_dof': 5000,
+                            'cg_info': cg, 'cg_resid': resid, 'unconverged': False}
+            return _r
+        return {'SBE': [_mk_row('SBE', i, v, 'AA') for i, v in enumerate(sbe)],
+                'DBE': [_mk_row('DBE', i, v, 'BB') for i, v in enumerate(dbe)]}
 
     base = [1.0000, 1.0020, 0.9980, 1.0010, 0.9990, 1.0005, 0.9995, 1.0000]
     chk('① 미수렴이 하나라도 있으면 HOLD (숫자를 내지 않는다)',
@@ -1010,7 +1059,14 @@ def _selftest():
               'physics_protocol_match': True,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
-              'components': _comps()}
+              'components': _comps(),
+              #  ★ R4-CX-02 — 파일 픽스처도 **현행 세대**다 (schema 3 + 계획).
+              'schema_version': _RC.SCHEMA_VERSION,
+              #  ⚠ 이 픽스처는 **전자축 전용**이다 (thermal 수치를 안 싣는다).  계획을
+              #    거기에 맞춘다 — 안 그러면 픽스처가 자기모순이고, 그 모순을 계약이
+              #    옳게 잡는데 시험이 "기준선 실패" 로 읽는다.
+              'component_plan': {'electronic': True, 'ionic': False, 'thermal': False,
+                                 'pore': False, 'collector': False}}
     _stamp_pid(_man22)
 
     def _write_dir(_d, drop=None):
@@ -1024,8 +1080,13 @@ def _selftest():
                 if drop in _RC.PROTOCOL_FIELDS:
                     _m.pop('physics_protocol_id', None)
                 if drop == 'backend':
+                    #  ★ 2026-08-25 (R4-CX-02) — **backend 기록만** 지운다.  `components` 를
+                    #    통째로 지우면 "계획한 component 가 없다" 로 먼저 걸려 이 시험이
+                    #    다른 것을 재게 된다 (needle 이 `backend` 인데 사유는 plan 이었다).
                     _m.pop('backend_last_solve', None)
-                    _m.pop('components', None)          # 정본을 지워야 진짜 "기록 없음" 이다
+                    _m['components'] = {_c: {_k2: _v2 for _k2, _v2 in (_cv or {}).items()
+                                             if _k2 != 'backend'}
+                                        for _c, _cv in (_m.get('components') or {}).items()}
                 _m['origin_shift_um'] = [0.0, 0.0, _i * 0.01]
                 with open(os.path.join(_d, f'p2_{_k}_sph_a{_i}.json'), 'w',
                           encoding='utf-8') as _f:
@@ -1036,14 +1097,16 @@ def _selftest():
     with _tf22.TemporaryDirectory() as _d22:
         _write_dir(_d22)
         _v22ok = verdict(collect(_d22)[1])
-        chk(f'㉒ 기준선 — 기록 완비 파일 16개는 판정이 난다 ({_v22ok["decision"]})',
+        chk(f'㉒ 기준선 — 기록 완비 파일 16개는 판정이 난다 ({_v22ok["decision"]}: '
+            f'{(_v22ok.get("reason") or "")[:110]})',
             _v22ok['decision'] in ('h0', 'h1', 'BOTH_REJECTED'))
     for _f in ('sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sdcp_sphere_d_um',
                'backend', 'sdcp_yield_to_vgcf', 'sigma_ptfe_S_cm'):
         with _tf22.TemporaryDirectory() as _d22:
             _write_dir(_d22, drop=_f)
             _v22 = verdict(collect(_d22)[1])
-        chk(f'㉒ **실제 JSON** 에서 `{_f}` 키를 지우면 HOLD ({_v22["decision"]})',
+        chk(f'㉒ **실제 JSON** 에서 `{_f}` 키를 지우면 HOLD ({_v22["decision"]}: '
+            f'{(_v22.get("reason") or "")[:80]})',
             _v22['decision'] == 'HOLD' and _f in (_v22.get('reason') or ''))
 
     #  ㉓ ★★ 2026-08-20 — `_read` 가 **매니페스트에 실제로 있는 키**를 읽는가.
@@ -1485,8 +1548,12 @@ def _selftest():
         _m0.update(_gen)                        # 세대 인자 노브 (㉗e/f 용)
         #  ★ R3-CX-03: 노브를 반영한 **뒤에** id 를 계산한다 (그래야 축이 바뀌면 id 도
         #    바뀌는 실제 거동을 픽스처가 재현한다 — 손으로 적으면 그 결합이 사라진다).
-        if 'physics_protocol_id' not in _gen:
-            _stamp_pid(_m0)
+        #  ★ 세대 필드는 **id 를 덮어도** 싣는다 — 안 그러면 "규약 불명" 시험이
+        #    schema 부재로 먼저 걸려 **다른 이유로** HOLD 하고, 그 시험이 뜻을 잃는다.
+        _pid_over = _gen.get('physics_protocol_id')
+        _stamp_pid(_m0)
+        if _pid_over is not None:
+            _m0['physics_protocol_id'] = _pid_over
         for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
             for _i in range(n):
                 _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
@@ -1637,15 +1704,35 @@ def _selftest():
         or verdict(_c40b).get('hold_code') != 'PLAN_NOT_MET')
     #  ⓒ 도장은 centerline 인데 관측 셀 0
     _c40c = (mk(base, [v * 1.12 for v in base],
-                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=0))
+                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=0,
+                       _manifest=_stamp_pid(dict(_FIX_MAN, ptfe_stamp='centerline',
+                                                 ptfe_zero_dof=True,
+                                                 ptfe_cells_observed=0))))
     _v40c = verdict(_c40c)
     chk(f'㊵c ★★ PTFE 도장 + 관측 셀 0 이면 HOLD — 미스탬프와 구분되지 않는다 '
         f'({_v40c["decision"]})',
-        _v40c['decision'] == 'HOLD' and _v40c.get('hold_code') == 'STAMP_NO_EFFECT')
+        _v40c['decision'] == 'HOLD' and _v40c.get('hold_code') == 'PTFE')
     _c40d = (mk(base, [v * 1.12 for v in base],
-                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=41234))
+                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=41234,
+                       _manifest=_stamp_pid(dict(_FIX_MAN, ptfe_stamp='centerline',
+                                                 ptfe_zero_dof=True,
+                                                 ptfe_cells_observed=41234))))
     chk('㊵d ★ 관측 셀이 있으면 통과 (과잉차단 아님)',
-        verdict(_c40d).get('hold_code') != 'STAMP_NO_EFFECT')
+        verdict(_c40d).get('hold_code') != 'PTFE')
+    #  ★ R4-CX-02 — **부재·음수·오타입도** 잡는다 (옛 판은 `==0` 만 봐서 삭제로 꺼졌다)
+    for _pv, _pl in ((None, '키 삭제'), (-1, '음수'), (3.0, 'float'), ('7', '문자열')):
+        _mp = dict(_FIX_MAN, ptfe_stamp='centerline', ptfe_zero_dof=True)
+        if _pv is None:
+            _mp.pop('ptfe_cells_observed', None)
+        else:
+            _mp['ptfe_cells_observed'] = _pv
+        _vp = verdict(mk(base, [v * 1.12 for v in base], ptfe_stamp='centerline',
+                         ptfe_zero_dof=True, _manifest=_stamp_pid(_mp)))
+        #  ⚠ 타입 위반은 `TYPE` 게이트가 **먼저** 문다 (그것이 더 이른 계약이다) —
+        #    둘 중 하나로 HOLD 하면 이 부류는 닫힌 것이다.
+        chk(f'㊵e ★★ ptfe_cells_observed {_pl} → HOLD ({_vp["decision"]}/'
+            f'{_vp.get("hold_code")})',
+            _vp['decision'] == 'HOLD' and _vp.get('hold_code') in ('PTFE', 'TYPE'))
 
     #  ── ㊶ 2026-08-25 (R3-CX-06) — **파생 id 는 축이 아니다** (과잉·누락 양방향) ────────
     #    Codex 실측 두 건:
@@ -1888,7 +1975,7 @@ def _selftest():
                 with open(os.path.join(d, f'p2_{_k}_sph_a{_i}.json'), 'w', encoding='utf-8') as _f:
                     json.dump({'mpm_metrics': {'step3': {
                         'sigma_e_eff_S_cm': 0.073 * _mul, 'cg_info': 0, 'cg_resid': 1e-8,
-                        'unconverged': False, 'manifest': _m}}}, _f)
+                        'n_dof': 5000, 'unconverged': False, 'manifest': _m}}}, _f)
 
     _SB = {'PTFE': 0.3, 'VGCF': 10.0}
     _DB = {'PTFE': 0.3, 'SDCP': 23.6, 'VGCF': 10.0}

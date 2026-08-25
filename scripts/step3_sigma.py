@@ -801,7 +801,12 @@ def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=Non
         k_table, _ = thermal_k_table()
     res = solve_sigma_z(sid, k_table, vox, return_field=True, z_top_um=z_top_um, z_bot_um=z_bot_um,
                         periodic_xy=periodic_xy)
+    #  ★★★ 2026-08-25 (R4-CX-02, Codex 4차) — **`cg_info` 도 싣는다.**  소비자의 수렴
+    #    계약은 `cg_info == 0 ∧ unconverged is False ∧ 0 ≤ resid ≤ 1e-6` 의 conjunction 인데,
+    #    열 블록이 `cg_info` 를 안 실어서 그 계약을 **적용할 수 없었다** (계약이 blind).
+    #    ⇒ 전자축과 같은 세 필드를 전부 남긴다.  솔버는 이미 알고 있다.
     out = {'k_eff_W_mK': None, 'reason': res.get('reason'), 'n_dof': int(res.get('n_dof', 0)),
+           'cg_info': int(res.get('cg_info', 0)),
            'cg_resid': float(f"{res.get('resid', 0.0):.2g}"), 'unconverged': bool(res.get('unconverged'))}
     if not res.get('reason') and res.get('n_dof'):
         out['k_eff_W_mK'] = float(f"{res['sigma_eff'] * 100.0:.4g}")   # W/cm·K → W/m·K
@@ -1117,7 +1122,8 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), p
     eps = float(pore.mean())
     if eps <= 0.0:
         return {'eps_total_pct': 0.0, 'eps_connected_pct': 0.0, 'D_rel': 0.0, 'tau': None,
-                'n_dof': 0, 'resid': 0.0, 'unconverged': False, 'reason': 'no_void'}
+                'n_dof': 0, 'cg_info': 0, 'resid': 0.0, 'unconverged': False,
+                'reason': 'no_void'}
     res = solve_sigma_z(pore.astype(np.int8), np.array([0.0, 1.0]), vox,
                         z_top_um=z_top_um, z_bot_um=0.0, plate_band_um=vox, periodic_xy=periodic_xy)
     d_rel = float(res['sigma_eff'])
@@ -1137,6 +1143,8 @@ def pore_tau(sid, vox, z_top_um, extra_solid_pts=None, box_lo=(0.0, 0.0, 0.0), p
            'n_dof': res['n_dof'],
            'n_plate_reachable_dof': res.get('n_plate_reachable_dof'),
            'n_through_dof': res.get('n_through_dof'),
+           #  ★ 2026-08-25 (R4-CX-02) — `cg_info` 도 남긴다 (소비자 계약이 conjunction).
+           'cg_info': int(res.get('cg_info', 0)),
            'resid': res['resid'], 'unconverged': res['unconverged']}
     if res.get('reason'):
         out['reason'] = res['reason']
@@ -1915,6 +1923,94 @@ def _selftest():
     ok &= not _rgrid_bad
     print(f"plate-rxn-grid: 반응 솔버가 **두 면 다** 절연 고체를 막는다 (갭은 통과)  "
           f"{'OK' if not _rgrid_bad else 'FAIL ' + str(_rgrid_bad)}")
+
+    #  ── ★★★ R4-CX-07 (Codex 4차) — **반응 솔버도 상×면 격자로 본다** ──────────────────
+    #    3차의 `plate-rxn-grid` 는 PTFE 와 pore 만 봤다.  그래서 Codex 가 둘을 통과시켰다:
+    #      ① reaction 만 `_occ_r=(sid!=0)&(sid!=5)` 로 바꿔 노출 SDCP 를 surface 에서 제거
+    #      ② reaction 의 양면 absolute band 만 signed 로 되돌림
+    #    상 시험은 `solve_sigma_z` 만 부르고, outside-slab 음성 대조도 `solve_sigma_z`
+    #    뿐이라 **반응 분기가 회귀 봉인 밖**이었다 (구현은 옳은데 증인이 없다).
+    #    ⇒ 두 망의 도체성이 다르므로 **망별 기대**를 따로 준다.
+    #      전자망 도체 = AM(1,2)·carbon(3,4)·SDCP(5) · 이온망 도체 = SE(6)·SDCP(5)
+    _RX_E = {1: 0.010, 2: 0.010, 3: 100.0, 4: 5.0, 5: 250.0, 6: 0.0, 7: 0.0, 8: 0.0}
+    _RX_I = {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.001, 6: 0.001, 7: 0.0, 8: 0.0}
+
+    def _rxn_face(surf_sid, side, vox=0.15):
+        """전자 slab(아래) + 이온 slab(위) 사이에 BV.  `side` 표면에 `surf_sid` 를 얹는다."""
+        _a = np.zeros((3, 3, 7), np.int8)
+        _a[:, :, 1:4] = 1                       # AM (전자망)
+        _a[:, :, 4:6] = 6                       # SE (이온망)
+        _a[:, :, 6 if side == 'top' else 0] = surf_sid
+        _se = np.zeros(9); _si = np.zeros(9)
+        for _k, _v in _RX_E.items():
+            _se[_k] = _v
+        for _k, _v in _RX_I.items():
+            _si[_k] = _v
+        _pid = np.where(_a == 1, 0, -1).astype(np.int32)
+        return solve_reaction_current(_a, _se, _si, _pid, 1, vox, 1,
+                                      z_top_um=7 * vox, z_bot_um=0.0)
+
+    _rxg_bad = []
+    for _sd in sorted(_RX_E):
+        for _side, _tab, _net in (('bot', _RX_E, '전자망'), ('top', _RX_I, '이온망')):
+            _r = _rxn_face(_sd, _side)
+            _blocked = 'no_plate_contact' in str(_r.get('reason') or '')
+            _is_cond = _tab[_sd] > 0
+            if _is_cond and _blocked:
+                _rxg_bad.append(f'{_PHASE_NM[_sd]}/{_side}({_net}): 도체인데 막혔다')
+            if (not _is_cond) and not _blocked:
+                _rxg_bad.append(f'{_PHASE_NM[_sd]}/{_side}({_net}): 절연인데 관통했다 '
+                                f'(I={_r.get("I_tot")!r})')
+    ok &= not _rxg_bad
+    print(f"plate-rxn-phase-grid: 반응 솔버 상 {len(_RX_E)} × 면 2 = {2 * len(_RX_E)} 조합이 "
+          f"**망별** 도체/절연 규약을 지킨다  "
+          f"{'OK' if not _rxg_bad else 'FAIL ' + str(_rxg_bad[:3])}")
+
+    #  ★★★ R4-CX-07 A — **AM|SDCP 노출면 증인**.  표면에 얹는 시험만으로는 이 부류를
+    #    못 잡는다: `_occ_r` 에서 sid5 를 빼도 바로 아래가 AM 이면 `k_first` 가 그리로
+    #    내려가 여전히 접촉이다.  ⇒ **판에서 한 셀 멀어지면 band 를 벗어나는** 기하로
+    #    짓는다 (vox 0.25 · band = vox+0.10 = 0.35 · zc[1] = 0.375 > band).
+    #    그러면 sid5 를 occupancy 에서 빼는 순간 접촉이 사라지고 I 가 0 이 된다.
+    #  ⚠ 반응 계면은 `am_m = (sid==1)|(sid==2)` 라 **AM 만** BV 를 만든다 (탄소는 안 만든다,
+    #    `solve_reaction_current` §BV).  그래서 증인은 "SDCP 노출 + AM 본체" 여야 한다 —
+    #    탄소 균일 slab 은 I=0 이 **정상**이고 그것으로는 이 mutant 를 못 가른다.
+    def _rxn_sdcp_face(vox=0.25, occ_sdcp=True):
+        _a = np.zeros((3, 3, 8), np.int8)
+        _a[:, :, 0] = 5                         # 노출면 = SDCP (전자·이온 양쪽 도체)
+        _a[:, :, 1:4] = 1                       # AM 본체 (BV 를 만드는 유일한 상)
+        _a[:, :, 4:8] = 6                       # SE (이온망)
+        _se = np.zeros(9); _si = np.zeros(9)
+        for _k, _v in _RX_E.items():
+            _se[_k] = _v
+        for _k, _v in _RX_I.items():
+            _si[_k] = _v
+        _pid = np.where(_a == 1, 0, -1).astype(np.int32)
+        return solve_reaction_current(_a, _se, _si, _pid, 1, vox, 1,
+                                      z_top_um=8 * vox, z_bot_um=0.0)
+    _rI = (_rxn_sdcp_face().get('I_tot') or 0.0)
+    _rA = _rI > 0
+    ok &= _rA
+    print(f"plate-rxn-sdcp-face: **노출 SDCP** 가 전자망 접점이 된다 (I={_rI:.6g}) — "
+          f"occupancy 에서 상 하나만 빼면 이 접점이 사라진다  {'OK' if _rA else 'FAIL'}")
+
+    #  ★ 반응 솔버의 **슬래브 밖** 음성 대조 (양면).  3차에는 `solve_sigma_z` 뿐이었다.
+    def _rxn_outside(which, vox=0.25):
+        _a = np.zeros((1, 1, 8), np.int8)
+        _a[0, 0, 0:4] = 1                       # 전자망 아래
+        _a[0, 0, 4:8] = 6                       # 이온망 위
+        _se = np.zeros(9); _se[1] = 0.010
+        _si = np.zeros(9); _si[6] = 0.001
+        _pid = np.where(_a == 1, 0, -1).astype(np.int32)
+        #  top: 물리 판을 기둥 한복판에 → 최상단 이온 셀이 판보다 위
+        #  bot: 바닥 판을 위로 올려 → 최하단 전자 셀이 판보다 아래
+        _zt, _zb = (1.0, 0.0) if which == 'top' else (8 * vox, 1.0)
+        return solve_reaction_current(_a, _se, _si, _pid, 1, vox, 1,
+                                      z_top_um=_zt, z_bot_um=_zb)
+    _rxo_bad = [w for w in ('top', 'bot')
+                if 'no_plate_contact' not in str(_rxn_outside(w).get('reason') or '')]
+    ok &= not _rxo_bad
+    print(f"plate-rxn-outside-slab: 반응 솔버도 물리 판 **밖** 셀을 접촉으로 세지 않는다 "
+          f"(위반: {_rxo_bad or '없음'})  {'OK' if not _rxo_bad else 'FAIL'}")
 
     #  ★ 슬래브 **밖** 셀은 접촉이 아니다 (signed band 결함).
     #    ⚠ 아래판은 정상이고 **위판만** 밖이어야 signed↔abs 가 갈린다 (양쪽 다 밖이면

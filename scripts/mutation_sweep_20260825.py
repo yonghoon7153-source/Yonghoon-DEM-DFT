@@ -100,6 +100,40 @@ MUTANTS = [
      STEP3, ('plate-share-identity-vox',)),
     #  ── R3-CX-06: **선언을 뒤집는** mutant.  ㊷ 가 레지스트리에서 거동을 생성하므로
     #     선언을 뒤집으면 그 필드가 시험에서 빠져 조용히 초록이 되던 부류다 (Codex 실측).
+    #  ── R4-CX (Codex 4차) ────────────────────────────────────────────────────────────
+    ('R4 backend requested 로 폴백', 'run_contract.py',
+     "        b = b.get('used')", "        b = b.get('used') or b.get('requested')",
+     RC, ('D3b',)),
+    ('R4 엄격 타입 검사 제거', 'run_contract.py',
+     "        if t is bool:\n            if type(v) is not bool:      # noqa: E721",
+     "        if t is bool:\n            if False:",
+     VERDICT, ('㊵e',)),
+    ('R4 계획 스키마 검사 제거', 'run_contract.py',
+     "    _miss = [k for k in PLAN_KEYS if k not in plan]",
+     "    _miss = []",
+     VERDICT, ('㊵a',)),
+    ('R4 PTFE 기록 계약 제거', 'run_contract.py',
+     "    if sv >= EVIDENCE_SINCE_SCHEMA and v is None:",
+     "    if False:",
+     VERDICT, ('㊵e',)),
+    ('R4-CX-07 reaction sid5 제외', 'step3_sigma.py',
+     "    _occ_r = sid != 0", "    _occ_r = (sid != 0) & (sid != 5)",
+     STEP3, ('plate-rxn-sdcp-face',)),
+    ('R4-CX-07 reaction bot signed band', 'step3_sigma.py',
+     "    bot_e = _any_o & cond_e[_iir, _jjr, _kf] & (np.abs(zc[_kf] - z_b) <= band)   # 집전체 접점",
+     "    bot_e = _any_o & cond_e[_iir, _jjr, _kf] & (zc[_kf] - z_b <= band)   # 집전체 접점",
+     STEP3, ('plate-rxn-outside-slab',)),
+    ('R4-CX-07 reaction top signed band', 'step3_sigma.py',
+     "    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (np.abs(z_plate - zc[_kl]) <= band)  # 분리막 접점",
+     "    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (z_plate - zc[_kl] <= band)  # 분리막 접점",
+     STEP3, ('plate-rxn-outside-slab',)),
+    ('R4-CX-06 규칙 K 제어흐름 무시', 'check_method_discipline.py',
+     "    if not _live_after(toks):\n        return False", "    if False:\n        return False",
+     DISC, ('K-5',)),
+    ('R4-CX-01 producer 봉인 해제', 'mpm_webapp_payload.py',
+     "def _blind(a):\n    return not bool(getattr(a, 'show_results', False))",
+     "def _blind(a):\n    return False",
+     DISC, ('J-1',)),
     ('CX-06 physics_protocol_id.required 뒤집기', 'sdcp_gain_verdict.py',
      "'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True,",
      "'physics_protocol_id':  dict(scope='physics', across_dir=True, required=False,",
@@ -222,14 +256,33 @@ def main():
             rows.append((label, 'HARNESS_ERROR', 'timeout')); bad.append(label); continue
         finally:
             shutil.rmtree(d, ignore_errors=True)
-        if 'Traceback' in out and 'SystemExit' not in out.split('Traceback')[-1][:400]:
+        #  ★★★ 2026-08-25 (R4-CX-06, Codex 4차) — **compile/import 를 먼저 본다.**
+        #    옛 판은 출력 문자열만 읽어, Traceback 없는 SyntaxError 의 **소스 줄**이
+        #    `㊷g: FAIL` 처럼 보이면 그것을 정상 적발로 분류했다.  ⇒ mutant 파일을
+        #    실행 전에 컴파일해 보고, 실패면 harness 사고로 뺀다 (시험 결과가 아니다).
+        _mut_src = open(os.path.join(d, 'scripts', fname), encoding='utf-8').read()
+        try:
+            compile(_mut_src, fname, 'exec')
+        except SyntaxError as _se:
             rows.append((label, 'HARNESS_ERROR',
-                         'mutant 가 예외로 죽었다 (시험이 문 것이 아니다) — '
-                         + [l for l in out.split('\n') if 'Error' in l][-1:][0][:60]
-                         if any('Error' in l for l in out.split('\n')) else '예외'))
+                         f'mutant 가 문법 오류다 ({_se.lineno}행) — 시험이 문 것이 아니다'))
             bad.append(label)
             continue
-        _, f = _parse(out)
+        if 'Traceback' in out and 'SystemExit' not in out.split('Traceback')[-1][:400]:
+            _elines = [l for l in out.split('\n') if 'Error' in l]
+            rows.append((label, 'HARNESS_ERROR',
+                         'mutant 가 예외로 죽었다 (시험이 문 것이 아니다) — '
+                         + (_elines[-1][:60] if _elines else '예외')))
+            bad.append(label)
+            continue
+        _p, f = _parse(out)
+        #  ★ R4-CX-06 — baseline 과 **집합으로** 대조한다.  같은 접두사의 여러 FAIL 이
+        #    한 기대 id 로 접히던 것도, baseline 에 없던 PASS 가 사라진 것도 여기서 보인다.
+        _b_rc, _b_pass, _b_fail = base[cmd]
+        if rc == 0:
+            rows.append((label, '★놓침★', 'mutant 인데 rc=0 (아무 시험도 안 물었다)'))
+            bad.append(label)
+            continue
         hit = sorted({w for w in want if any(x.startswith(w) for x in f)})
         extra = sorted({x for x in f if not any(x.startswith(w) for w in want)})
         if len(hit) != len(want):

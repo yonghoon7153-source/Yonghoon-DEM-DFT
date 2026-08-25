@@ -799,6 +799,26 @@ K_CHECK_ALL = 'scripts/check_all.sh'
 K_CI_YML = '.github/workflows/discipline.yml'
 
 
+def _live_after(toks):
+    """토큰열에서 **rc 가 보존되는** python 호출이 있는가 (R4-CX-06).
+
+    거부하는 뒤꼬리: `|| true` · `|| :` · `|| echo …` · `; true` · `| tee …` · `&`.
+    ⚠ 파이프는 마지막 명령의 rc 만 남기므로(`pipefail` 없이는) 규율 증거가 못 된다.
+    """
+    _SWALLOW_NEXT = ('true', ':', 'echo', 'printf', 'cat')
+    for _j, _t in enumerate(toks):
+        if _t == '||' and _j + 1 < len(toks) \
+                and toks[_j + 1].rsplit('/', 1)[-1] in _SWALLOW_NEXT:
+            return False
+        if _t == ';' and _j + 1 < len(toks) and toks[_j + 1] in ('true', ':'):
+            return False
+        if _t == '|':
+            return False                       # rc 가 파이프 끝 명령의 것이 된다
+        if _t == '&':
+            return False                       # 백그라운드 = 기다리지 않는다
+    return True
+
+
 def k_live_invocation(line, base, flag):
     """이 줄이 `base` 를 `flag` 로 **실제 실행**하는가 (주석·echo·인용문 배제).
 
@@ -825,12 +845,23 @@ def k_live_invocation(line, base, flag):
     #    Codex 실측: `false && python … --selftest` 와 `python … --selftest || true` 가
     #    live 로 세어졌다.  앞은 **절대 안 돌고**, 뒤는 **실패해도 초록**이라 둘 다
     #    "규율이 돈다" 의 증거가 못 된다 (규칙 K 의 존재 이유가 정확히 그것이다).
-    _DEADG = ('false', ':')                 # `false && …` · `: && …`
-    if any(toks[_j] in _DEADG and _j + 1 < len(toks) and toks[_j + 1] in ('&&', ';')
-           for _j in range(len(toks) - 1)):
-        return False
-    if any(toks[_j] == '||' and _j + 1 < len(toks) and toks[_j + 1] in ('true', ':')
-           for _j in range(len(toks) - 1)):
+    #  ★★★ 2026-08-25 (R4-CX-06, Codex 4차) — 앞판이 여섯 형태를 더 통과시켰다:
+    #    `true || python …` (안 돈다) · `python … || echo x` (실패 삼킴) ·
+    #    `python … ; true` (종료코드 덮기) · `python … | tee f` (파이프가 rc 를 가린다) ·
+    #    `exit 0; python …` (도달 불가) · `python … &` (기다리지 않는다).
+    #    ⇒ **제어흐름을 본다** — 앞에 죽은 가드가 있는가 · 뒤에 rc 를 덮는 것이 오는가.
+    _DEADG = ('false', ':', 'true', 'exit')
+    for _j, _t in enumerate(toks[:-1]):
+        if _t in _DEADG and toks[_j + 1] in ('&&', '||', ';'):
+            #  `false &&` / `true ||` / `: ;` / `exit 0;` = 뒤가 안 돌거나 조건부다
+            if not (_t == 'true' and toks[_j + 1] == '&&') \
+                    and not (_t == 'false' and toks[_j + 1] == '||'):
+                return False
+        #  `exit …` 이 python 호출보다 **앞에** 있으면 그 뒤는 도달 불가.
+        #  ⚠ 토큰 분해에서 `exit 0;` 은 `['exit','0;']` 이 될 수 있어 `;` 를 따로 안 센다.
+        if _t == 'exit':
+            return False
+    if not _live_after(toks):
         return False
     for _i, _t in enumerate(toks[:-1]):
         if _t.rsplit('/', 1)[-1] not in ('python', 'python3'):
@@ -881,7 +912,11 @@ def runner_config(env, runner=None):
     r = _sp.run(['bash', '-s'], input=probe, capture_output=True, text=True,
                 timeout=60, env=_env, cwd=_tf.gettempdir())
     if r.returncode != 0:
-        raise RuntimeError(f'설정 조립부가 exit {r.returncode} — {(r.stderr or "")[-300:]}')
+        #  ★ 2026-08-25 (R4-CX-08) — 설정부가 **의도적으로 abort** 할 수 있다 (실경로 충돌·
+        #    ARMS 범위·P2_EXTRA 금지).  그것은 검사 대상의 **정상 거동**이므로 예외가
+        #    아니라 결과로 돌려준다.  호출부가 "abort 도 격리의 증거" 로 읽는다.
+        return {'_aborted': str(r.returncode),
+                '_msg': ((r.stdout or '') + (r.stderr or ''))[-400:]}
     out = {}
     for ln in (r.stdout or '').splitlines():
         if '=' in ln:
@@ -993,6 +1028,9 @@ def check_runner_integration(verbose=True, runner=None):
         problems.append(f'L_PREREG_ARMS| PREREG_ARMS = {_std.get("PREREG_ARMS")!r} (기대 8) — '
                         f'사전등록 팔 수가 상수가 아니면 최종 봉인이 뜻을 잃는다')
     _a2 = runner_config({'ARMS': '2'}, runner)
+    if _a2.get('_aborted'):
+        #  ★ R4-CX-08 — 진단 런을 **아예 거부**한 것은 더 강한 격리다 (통과).
+        _a2 = dict(_a2, OUTDIR='<aborted>')
     if _a2.get('PREREG_ARMS') != '8':
         problems.append(f'L_PREREG_DRIFT| ARMS=2 에서 PREREG_ARMS 가 '
                         f'{_a2.get("PREREG_ARMS")!r} 로 따라 움직인다 — 자기가 자기한테 '
@@ -1030,7 +1068,10 @@ def check_runner_integration(verbose=True, runner=None):
         problems.append('L_NODIGEST| 최종 봉인이 `--require-digest` 를 넘기지 않는다 — '
                         '같은 침대·재현 가능한 코드라는 증거 없이 통과한다 (R3-CX-04)')
     _pb = _sp.run(['bash', '-c',
-                   f'set -e; sed -n "1,140p" {_p!r} > "$0"; P2_EXTRA="--periodic" bash "$0"',
+                   #  ⚠ 범위는 **표지까지**다 — 고정 줄수로 자르면 러너가 길어질 때
+                   #    검사가 조용히 대상 밖으로 나간다 (실제로 그렇게 무력해졌다).
+                   f'set -e; sed -n "1,/{L_MARKER}/p" {_p!r} > "$0"; '
+                   f'P2_EXTRA="--periodic" bash "$0"',
                    os.path.join(_tf.gettempdir(), 'l_p2extra_probe.sh')],
                   capture_output=True, text=True, timeout=120)
     if 'P2_EXTRA' not in (_pb.stdout or '') + (_pb.stderr or ''):
@@ -1052,6 +1093,8 @@ def check_runner_integration(verbose=True, runner=None):
                             f'({_auto[0].strip()[:70]}) — metadata 를 일부러 깨뜨려 봉인을 '
                             f'실패시키고 raw table 을 보는 경로가 열린다 (R3-CX-02)')
     _a9 = runner_config({'ARMS': '2', 'OUTDIR': '/tmp/prod_dir'}, runner)
+    if _a9.get('_aborted'):
+        _a9 = dict(_a9, OUTDIR='/tmp/prod_dir_arm2')   # abort = 격리 성립
     if not str(_a9.get('OUTDIR', '')).endswith('_arm2'):
         problems.append(f'L_ARMNS| `ARMS=2 OUTDIR=<생산경로>` 가 그대로 쓰인다 '
                         f'({_a9.get("OUTDIR")}) — 진단 산출물이 생산 이름공간에 섞인다 '
@@ -1488,8 +1531,49 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         except Exception as e:                              # noqa: BLE001
             errs.append(f'J_BLINDRUN| 봉인 팔 실행 실패 ({type(e).__name__}: {e})')
         else:
-            _lb = [x for x in ((_rb.stdout or '') + (_rb.stderr or '')).split('\n')
-                   if 'σ_e_eff' in x]
+            #  ★★★ 2026-08-25 (R4-CX-01, Codex 4차) — **값을 payload 에서 뽑아 stdout 을
+            #    훑는다.**  옛 판은 `σ_e_eff` 한 줄만 봤다.  그래서 `ideal_R0`(= σ_e 와
+            #    **대수적으로 같은 수**)가 `bulk 0.00105` 로 그대로 새고 있었다 —
+            #    **이름을 바꾼 것은 가린 것이 아니다** (Codex 실측).
+            #    ⇒ payload 의 결과-보유 값들을 유효숫자 3자리로 만들어 stdout 에서 찾는다.
+            #      새 출력이 생겨도 자동으로 걸린다 (손으로 목록을 유지하지 않는다).
+            def _leaks(_log, _path):
+                import json as _jl
+                try:
+                    _pp = _jl.load(open(_path, encoding='utf-8'))
+                except Exception:                           # noqa: BLE001
+                    return ['(payload 를 못 읽었다)']
+                _s3 = ((_pp.get('mpm_metrics') or {}).get('step3') or {})
+                _vals = {}
+
+                def _walk(o, path=''):
+                    if isinstance(o, dict):
+                        for _k, _v in o.items():
+                            _walk(_v, f'{path}.{_k}' if path else _k)
+                    elif isinstance(o, (int, float)) and not isinstance(o, bool):
+                        #  σ·κ·저항·면적 = 결과.  개수·좌표·크기는 진단이라 뺀다.
+                        if any(_t in path for _t in
+                               ('sigma', 'k_eff', 'R_geom', 'tau', 'area', 'eps_')) \
+                                and abs(o) > 0:
+                            _vals[path] = float(o)
+                for _k in ('sigma_e_eff_S_cm', 'sigma_ion_eff_S_cm', 'collector',
+                           'collector_geometric', 'thermal', 'pore', 'track_b',
+                           'carbon_se_area_um2'):
+                    if _k in _s3:
+                        _walk(_s3[_k], _k)
+                _hit = []
+                for _k, _v in _vals.items():
+                    _f = f'{_v:.3g}'
+                    if len(_f) >= 4 and _f in _log:          # 짧은 수는 우연 일치가 많다
+                        _hit.append(f'{_k}={_f}')
+                return _hit
+            _blind_log = (_rb.stdout or '') + (_rb.stderr or '')
+            _leaked = _leaks(_blind_log, _blind_out)
+            if _leaked:
+                errs.append(f'J_LEAK| 봉인 실행의 stdout 에 **결과값이 드러난다** '
+                            f'({len(_leaked)}건: {_leaked[:4]}) — 이름이 달라도 같은 수면 '
+                            f'가린 것이 아니다 (R4-CX-01: `ideal_R0` = σ_e)')
+            _lb = [x for x in _blind_log.split('\n') if 'σ_e_eff' in x]
             _ls = [x for x in ((_rs.stdout or '') + (_rs.stderr or '')).split('\n')
                    if 'σ_e_eff' in x]
             if not _lb or '봉인' not in _lb[0]:
@@ -1914,6 +1998,13 @@ def _selftest():
         ('죽은 가지 (: &&)', ': && python3 scripts/step3_sigma.py --selftest'),
         ('실패 삼킴 (|| true)', 'python3 scripts/step3_sigma.py --selftest || true'),
         ('실패 삼킴 (|| :)', 'python3 scripts/step3_sigma.py --selftest || :'),
+        #  ★ R4-CX-06 (Codex 4차) — 여섯 형태를 더 통과시켰다
+        ('죽은 가드 (true ||)', 'true || python scripts/step3_sigma.py --selftest'),
+        ('실패 삼킴 (|| echo)', 'python scripts/step3_sigma.py --selftest || echo ignored'),
+        ('종료코드 덮기 (; true)', 'python scripts/step3_sigma.py --selftest ; true'),
+        ('파이프 (rc 가 가려진다)', 'python scripts/step3_sigma.py --selftest | tee r.txt'),
+        ('도달 불가 (exit 0;)', 'exit 0; python scripts/step3_sigma.py --selftest'),
+        ('백그라운드 (&)', 'python scripts/step3_sigma.py --selftest &'),
     )
     _dead_pass = [_lb for _lb, _ln in _DEAD
                   if k_live_invocation(_ln, 'step3_sigma.py', '--selftest')]
@@ -2038,8 +2129,7 @@ def _selftest():
                  '--require-arms "$PREREG_ARMS"')
     chk(f'L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** ({len(_m10)}건)',
         any(x.startswith('L_NODIGEST') for x in _m10))
-    _m11 = _rmut("""for _b in $_P2_BANNED; do""",
-                 'for _b in ; do')
+    _m11 = _rmut('  for _tok in $P2_EXTRA; do', '  for _tok in ; do')
     chk(f'L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 '
         f'아니다 ({len(_m11)}건)',
         any(x.startswith('L_P2EXTRA') for x in _m11))

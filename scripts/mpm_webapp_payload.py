@@ -585,8 +585,15 @@ def _payload_reject_reason(a, step3):
     _cmp = _m.get('components') or {}
     #  ★ 2026-08-25 (조건 7) — **required 만 센다.**  초판은 `failed`/`missing` 목록을 통째로
     #    붙여 원인 하나가 잡음 넷에 묻혔다.  required 밖은 애초에 요구가 아니다.
+    #  ★★★ 2026-08-25 (R4-CX-02 를 닫다가 발견) — `not_solvable` 은 **정상 물리 결과**다
+    #    (`_s3mark` docstring: "물리적으로 정의 안 됨=정상").  SE 가 안 퍼콜하면 σ_ion 은
+    #    없는 것이 맞고, 그것을 `failed` 와 같이 취급하면 **생산 과잉차단 6번째**가 된다
+    #    (규칙 J 의 full-component 팔이 즉시 exit 3 이었다).
+    #    ⚠ 다만 `not_solvable` 은 **숫자가 없다**는 뜻이므로 아래 증거 검사에서 제외되고,
+    #      판정기는 그 축으로 결론을 낼 수 없다 (`--require-ionic` 이 따로 막는다).
+    _OKST = ('complete', 'not_solvable')
     _bad = [f'{c}({(_cmp.get(c) or {}).get("status") or "absent"})' for c in _req
-            if not isinstance(_cmp.get(c), dict) or _cmp[c].get('status') != 'complete']
+            if not isinstance(_cmp.get(c), dict) or _cmp[c].get('status') not in _OKST]
     _bad += [f'{c}(failed)' for c in (_m.get('failed') or []) if c in _req]
     _bad += [f'{c}(missing)' for c in (_m.get('missing') or []) if c in _req]
     if _bad and not a.allow_partial_step3:
@@ -601,23 +608,49 @@ def _payload_reject_reason(a, step3):
         if not _nok:
             return f'STEP3_NUMERIC_EVIDENCE: {_nwhy}'
         #  ★ required component 는 **자기 backend 도장**이 있어야 한다 (폴백 금지).
-        _nb = [c for c in _req if _RC.component_backend(step3, c) is None]
+        #  ⚠ `not_solvable` 은 solve 자체가 없었으므로 backend 도장도 없다 — 그것을
+        #    요구하면 SE 비퍼콜 침대가 전부 막힌다 (생산 과잉차단).  status 로 가른다.
+        _nb = [c for c in _req
+               if (_cmp.get(c) or {}).get('status') != 'not_solvable'
+               and _RC.component_backend(step3, c) is None]
         if _nb:
             return (f'STEP3_BACKEND_UNKNOWN: required component {sorted(_nb)} 에 backend '
                     f'기록이 없다 — 무엇으로 돌았는지 모르는 결과는 게시하지 않는다 '
                     f'(다른 component 의 도장을 빌려오지 않는다, R3-CX-05)')
-    #  ★★ R3-CX-04 — **PTFE 도장과 실제 효과**.  `centerline` 이라 적혀 있는데 관측
-    #    셀이 0 이면 아무 일도 안 난 것이다 (도장만 남고 물리는 없다).
-    if (_m.get('ptfe_stamp') not in (None, '', 'off')
-            and _m.get('ptfe_cells_observed') == 0):
-        return (f'STEP3_STAMP_NO_EFFECT: `ptfe_stamp={_m.get("ptfe_stamp")}` 인데 관측 '
-                f'sid7 셀이 **0** 이다 — 도장은 찍혔지만 격자에 아무것도 안 그려졌다.  '
-                f'그 팔의 PTFE 규약은 미스탬프와 구분되지 않는다')
+    #  ★★★ 2026-08-25 (R4-CX-02/05) — **엄격 타입 · 계획 스키마 · component 별 증거.**
+    #    Codex 실측으로 전부 fail-open 이었다: `periodic_xy="False"`(문자열) 통과 ·
+    #    `component_plan={'electronic':True}` 통과 · thermal/pore `resid=1e100` 통과 ·
+    #    계획된 ionic 의 결과·CG 전부 삭제 통과.
+    if not a.allow_partial_step3:
+        _tok, _twhy = _RC.strict_type_ok(_m)
+        if not _tok:
+            return f'STEP3_TYPE: {_twhy}'
+        _rok, _rwhy = _RC.plan_required(_m)
+        if not _rok:
+            return f'STEP3_PLAN: {_rwhy}'
+        if _m.get('component_plan') is not None:
+            _pok, _pwhy = _RC.plan_ok(_m.get('component_plan'))
+            if not _pok:
+                return f'STEP3_PLAN: {_pwhy}'
+        _eok, _ewhy = _RC.component_evidence_ok(step3, _req)
+        if not _eok:
+            return f'STEP3_EVIDENCE: {_ewhy}'
+    #  ★★ R3-CX-04 / R4-CX-02 — PTFE 도장과 실제 효과.  **부재·음수·오타입도** 잡는다
+    #    (옛 판은 `== 0` 만 봐서 키를 지우면 통과했다).  조건부 불변량은 공용 계약에 있다.
+    if not a.allow_partial_step3:
+        _fok, _fwhy = _RC.ptfe_record_ok(_m)
+        if not _fok:
+            return f'STEP3_STAMP: {_fwhy}'
     return None
 
 
 def main():
-    ap = argparse.ArgumentParser()
+    #  ★★★ 2026-08-25 (R4-CX-03, Codex 4차) — **축약을 끈다.**  argparse 는 기본으로
+    #    `--period` 를 `--periodic` 으로 받는다.  그래서 러너의 문자열 금지 목록이
+    #    원리적으로 뚫렸다 (Codex 실측: `--period --help` → rc 0).
+    #    ⚠ 축약을 쓰는 호출자가 있으면 그 호출이 **깨진다** — 그것이 의도다.
+    #      암묵적 축약은 "무슨 인자를 줬는지" 를 기록으로 확정할 수 없게 만든다.
+    ap = argparse.ArgumentParser(allow_abbrev=False)
     ap.add_argument('--scaffold', default='', help='AM scaffold CSV (type,x,y,z,r); omit for an SE-only '
                     'payload (loose→dense demo — no AM particles, just the SE continuum + strain)')
     ap.add_argument('--se', help='SE point cloud npy [n,3] box units (--save-se)')
@@ -1634,12 +1667,22 @@ def main():
                 # 문구가 그 regime에서 거짓이 되던 것을 조건화 (260714 carbon-free: R_bulk 12 Ωcm²)
                 _rel = ('≪ 계면' if _Rbulk < 3.0 else
                         '≈ 계면과 동급 — carbon-free/희박 배선 regime' if _Rbulk < 100.0 else '≫ 계면(!)')
-                print(f"  STEP3 collector scenarios(cycled): bulk {_ca['ideal_R0']:.3g} → "
-                      + " / ".join(f"{nm2}({_R:g}Ωcm²) {_ca[nm2]:.3g}" for nm2, _R in _cyc_pairs[1:])
-                      + f" S/cm  (R_bulk {_Rbulk:.2g} Ωcm² {_rel})")
+                #  ★★★ 2026-08-25 (R4-CX-01, Codex 4차) — **`ideal_R0` 는 σ_e 자신이다.**
+                #    `R_bulk = L/σ_e` 이고 `ideal_R0` 는 `R_int = 0` 이므로
+                #    `L/(R_bulk+0) = σ_e` — 대수적으로 **같은 수**다.  옛 판은 이 줄을
+                #    `_blind()` 없이 찍어, 봉인 실행에서도 `bulk 0.00105` 로 σ_e 가
+                #    세 자리까지 드러났다 (Codex 실측).  **이름을 바꾼 것은 가린 것이 아니다.**
+                #    ⇒ 결과-보유 파생값은 전부 같은 게이트를 지난다.  R_bulk 도 σ_e 의
+                #      역수라 함께 가린다 (regime 라벨 `≪ 계면` 은 남긴다 — 진단이다).
+                print(f"  STEP3 collector scenarios(cycled): bulk {_sig_str(a, _ca['ideal_R0'], '.3g')}"
+                      + (' → ' + " / ".join(f"{nm2}({_R:g}Ωcm²) {_ca[nm2]:.3g}"
+                                            for nm2, _R in _cyc_pairs[1:])
+                         if not _blind(a) else ' → [봉인]')
+                      + f" S/cm  (R_bulk {_sig_str(a, _Rbulk, '.2g')} Ωcm² {_rel})")
                 _cp = step3['collector']['sigma_apparent_pristine_S_cm']
                 print("  STEP3 collector PRISTINE(시간-일관, panel-e≈): "
-                      + " / ".join(f"{nm2}({_R:g}) {_cp[nm2]:.3g}" for nm2, _R in _pri_pairs[1:])
+                      + ('[봉인]' if _blind(a) else
+                         " / ".join(f"{nm2}({_R:g}) {_cp[nm2]:.3g}" for nm2, _R in _pri_pairs[1:]))
                       + " S/cm  (위 cycled 세트=aged-접촉 민감도)")
                 # ★ ANALYTIC-GAP GEOMETRIC pair (v3, user: "지금 하자"): the contact SELECTION now
                 # comes from EXACT sphere/point z (no voxel blur — the DEM positions are known
@@ -1740,10 +1783,15 @@ def main():
                             'solve degenerate (bare/wetted 중 하나가 비퍼콜)')
                     _cgm = step3['collector_geometric']
                     _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
-                    print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "
+                    #  ★ R4-CX-01 — wetted/bare σ 와 R_geom 도 결과-보유값이다.
+                    #    접촉 **수**는 진단이므로 남긴다 (그것으로는 창을 못 옮긴다).
+                    print(f"  STEP3 collector geometry (MODEL output): wetted "
+                          f"{_sig_str(a, _cgm['wetted_sigma_S_cm'], '.3g')} "
                           f"({_cgm['n_bottom_contacts']['wetted']} contacts) vs bare "
-                          f"{_cgm['bare_sigma_S_cm']:.3g} S/cm ({_cgm['n_bottom_contacts']['bare']}) → "
-                          f"R_geom {_rgs} Ωcm² (측정 R_int와의 갭 = 화학/열화 몫)")
+                          f"{_sig_str(a, _cgm['bare_sigma_S_cm'], '.3g')} S/cm "
+                          f"({_cgm['n_bottom_contacts']['bare']}) → "
+                          f"R_geom {_rgs if not _blind(a) else '[봉인]'} Ωcm² "
+                          f"(측정 R_int와의 갭 = 화학/열화 몫)")
                 # ★ φ(z)/T(z) 프로파일 헬퍼 (Oh 2025 primer 논문 Fig 4e 문법 = ΔV=1V 전도 솔브의
                 # 두께방향 전위) — 층별 전도-복셀 평균.  solve 규약: 바닥판 φ=1, 꼭대기 φ=0.
                 # ★ 여기(이온 solve 前)에 두는 이유: 예전엔 `if _res3i['n_dof']:` 안에서 정의돼
@@ -1995,6 +2043,10 @@ def main():
                         _tres = _th.pop('_res', None)          # T(z) 프로파일용 (JSON 前 pop 필수)
                         step3['thermal'] = {
                             'k_eff_W_mK': _th['k_eff_W_mK'], 'n_dof': _th['n_dof'],
+                            #  ★ 2026-08-25 (R4-CX-02) — 수렴 세 필드를 **전부** 옮긴다.
+                            #    옛 판은 `cg_resid` 만 옮겨서 소비자의 conjunction 계약이
+                            #    적용조차 안 됐다 (`unconverged=True` 여도 최종이 h0).
+                            'cg_info': _th.get('cg_info'), 'unconverged': _th.get('unconverged'),
                             'cg_resid': _th['cg_resid'], 'temp_drop_share': _th.get('temp_drop_share'),
                             'status': _s3mark('thermal', 'complete')['status'],
                             'k_table_provenance': _kprov,
@@ -2081,6 +2133,8 @@ def main():
                     step3['pore'] = {k: _rp[k] for k in ('eps_total_pct', 'eps_connected_pct',
                                                          'eps_connected_basis', 'eps_through_pct',
                                                          'D_rel', 'tau', 'n_dof',
+                                                         #  ★ R4-CX-02 — 수렴 증거 세 필드
+                                                         'cg_info', 'unconverged', 'resid',
                                                          'n_plate_reachable_dof', 'n_through_dof')
                                      if k in _rp}
                     _s3mark('pore', 'not_solvable' if _rp.get('reason') else 'complete',
@@ -2217,7 +2271,10 @@ def main():
         else:
             _top = 'partial'
         step3['manifest'] = {
-            'schema_version': 2,          # 1→2: missing 채움 + component 별 backend
+            #  ★ 2026-08-25 (R4-CX-02) — 2→3: component 별 **증거**(수렴 3필드 + backend
+            #    `used`)와 `component_plan` 을 항상 싣는 세대.  소비자는 이 값으로 계약을
+            #    세대별로 적용한다 (옛 payload 에 새 필드를 소급 요구하면 과잉차단이다).
+            'schema_version': _RC.SCHEMA_VERSION,
             'status': _top, 'components': dict(_s3st),
             'expected': list(STEP3_EXPECTED),
             'missing': sorted(c for c, v in _sts.items() if v == 'missing'),
