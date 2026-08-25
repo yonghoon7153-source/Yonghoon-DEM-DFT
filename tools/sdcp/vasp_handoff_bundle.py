@@ -4815,7 +4815,166 @@ def selftest() -> int:
     return 0 if ok else 1
 
 
+# ══ wave1.5 — clean_slab net4 를 **의도한 basin 으로** 유도하는 재실행 패키지 ═══
+#   (2026-08-25 codex E 후속) VASP 는 결정론적이라 같은 입력을 다시 보내면 같은
+#   basin B 에서 같게 끝난다. 그래서 2상으로 유도한다:
+#     static_pin : NUPDOWN 을 **시드 자화합**으로 고정 + 보수적 스핀 믹싱
+#                  → #82 반전(총모멘트 ±2.36 μB 변화)이 금지된 채 수렴
+#     static     : pin 의 CHGCAR 를 ICHARG=1 로 승계, NUPDOWN 해제 —
+#                  **이 상의 에너지만** 다른 잡과 비교 가능 (원본과 유일한 차이 = ICHARG)
+#   ⛔ 이 설계가 못 하는 것:
+#     · basin 유지 **보장** 없음 — NUPDOWN 해제 후 재반전 가능. 그러면 결론은
+#       "net4 의 intended topology 는 이 Hamiltonian 에서 국소최소가 아니다" 이고,
+#       그것대로 (E-6 의 realized_basin 언어로) 유효한 답이다. fallback 은
+#       noncollinear constrained(I_CONSTRAINED_M) — 프로토콜 변경이라 별도 승인 필요.
+#     · "Ni #82 반전 비용" 측정이 아니다 (그건 constrained pair 소관, 미착수).
+
+def make_basin_rescue(src_job, out_dir):
+    src, out = Path(src_job), Path(out_dir)
+    need = ["INCAR", "POSCAR", "KPOINTS", "POTCAR_ASSEMBLE.sh", "job.json"]
+    # 원본 잡은 static/ 아래에 INCAR·KPOINTS 를 두는 배치다 — 둘 다 지원
+    def find(f):
+        for c in (src / f, src / "static" / f):
+            if c.is_file():
+                return c
+        raise SystemExit(f"⛔ {src} 에 {f} 가 없다 — 원본 번들 잡 디렉터리를 줄 것")
+    meta = json.loads(find("job.json").read_text())
+    mm = meta.get("magmom_poscar") or []
+    nup = sum(mm)
+    if abs(nup - round(nup)) > 1e-6:
+        raise SystemExit(f"⛔ 시드 자화합 {nup} 이 정수가 아니다 — NUPDOWN 고정 근거가 없다")
+    nup = int(round(nup))
+    inc0 = find("INCAR").read_text()
+    if "NUPDOWN" in inc0:
+        raise SystemExit("⛔ 원본 INCAR 에 이미 NUPDOWN 이 있다 — 이 레시피의 전제가 깨진다")
+    out.mkdir(parents=True, exist_ok=True)
+    # 공통 파일은 **바이트 그대로** (기하·k·POTCAR 는 원본과 동일해야 비교가 성립)
+    for f in ("POSCAR", "KPOINTS", "POTCAR_ASSEMBLE.sh"):
+        shutil.copy(find(f), out / f)
+    pin = inc0.rstrip() + f"""
+
+# ── basin 유도 1상 (wave1.5, 2026-08-25) — 이 상의 에너지는 **인용 금지** ──
+#  시드 topology(자화합 {nup:+d})를 지키게 총 스핀차를 고정한다. #82 단독 반전은
+#  총모멘트를 바꾸므로 이 제약 아래에서 금지된다 (보상 반전 가능성은 남는다 —
+#  회신 후 모멘트 표로 검증한다).
+NUPDOWN  = {nup}
+AMIX     = 0.2
+BMIX     = 0.0001
+AMIX_MAG = 0.4
+BMIX_MAG = 0.0001
+"""
+    (out / "static_pin").mkdir(exist_ok=True)
+    (out / "static_pin" / "INCAR").write_text(pin)
+    # 2상: 원본과의 차이는 ICHARG=2→1 **한 줄** — 그래야 wave1 static 과 비교 가능
+    st2, nsub = re.subn(r"(?m)^ICHARG\s*=\s*2\b", "ICHARG   = 1", inc0)
+    if nsub != 1:
+        raise SystemExit(f"⛔ ICHARG=2 를 정확히 1회 치환해야 하는데 {nsub}회 — 원본 확인")
+    st2 = st2.rstrip() + ("\n\n# ── basin 유도 2상 — pin 의 CHGCAR 승계, NUPDOWN 해제 ──\n"
+                          "# 원본 static 과의 유일한 차이는 ICHARG=1 이다. 이 상의 에너지만 비교 가능.\n")
+    (out / "static").mkdir(exist_ok=True)
+    (out / "static" / "INCAR").write_text(st2)
+    for ph in ("static_pin", "static"):
+        shutil.copy(find("KPOINTS"), out / ph / "KPOINTS")
+    meta2 = dict(meta)
+    meta2["phases"] = ["static_pin", "static"]
+    meta2["incar_expected"] = {"static_pin": _incar_expected_from(pin),
+                               "static": _incar_expected_from(st2)}
+    meta2["rescue"] = {
+        "what": "clean_slab net4 basin 유도 (wave1.5)", "nupdown_pin": nup,
+        "parent_job": str(src), "made": "2026-08-25",
+        "accept_iff": ["두 상 모두 정상 종료", "static 모멘트가 시드 topology 와 일치 "
+                       "(flip_indices_poscar == [])", "static NUPDOWN 되울림 = -1.0000 (해제 확인)"],
+        "if_reflips": "intended topology 는 이 Hamiltonian 의 국소최소가 아니다 — "
+                      "realized-basin 언어로 기록하고 noncollinear constrained 는 별도 승인",
+    }
+    (out / "job.json").write_text(json.dumps(meta2, indent=1, ensure_ascii=False))
+    (out / "run_job.sh").write_text("""#!/usr/bin/env bash
+# wave1.5 basin 유도 — 2상 사슬. 1상 CHGCAR 없이는 2상을 돌리지 않는다 (fail-closed).
+set -euo pipefail
+cd "$(dirname "$0")"
+bash POTCAR_ASSEMBLE.sh
+for ph in static_pin static; do cp POTCAR POSCAR "$ph"/ ; done
+( cd static_pin && mpirun -np ${NP:-48} ${VASP:-vasp_std} 2>&1 | tee vasp.log )
+[ -s static_pin/CHGCAR ] || { echo "⛔ static_pin/CHGCAR 없음 — 2상 중단"; exit 1; }
+cp static_pin/CHGCAR static/
+( cd static && mpirun -np ${NP:-48} ${VASP:-vasp_std} 2>&1 | tee vasp.log )
+echo "✅ 완료 — 회신물: 각 상 OUTCAR(.gz)·OSZICAR (CHGCAR/WAVECAR 제외)"
+""")
+    os.chmod(out / "run_job.sh", 0o755)
+    import hashlib as _h
+    manifest = {f: _h.sha256((out / f).read_bytes()).hexdigest()
+                for f in ("POSCAR", "KPOINTS", "POTCAR_ASSEMBLE.sh", "job.json",
+                          "run_job.sh", "static_pin/INCAR", "static/INCAR")}
+    (out / "MANIFEST_RESCUE.json").write_text(json.dumps(
+        {"schema": "sdcp_rescue/v1", "sha256": manifest,
+         "poscar_identical_to_parent": _h.sha256(find("POSCAR").read_bytes()).hexdigest()
+         == manifest["POSCAR"]}, indent=1, ensure_ascii=False))
+    print(f"→ {out}  (NUPDOWN={nup:+d} · 2상 · POSCAR/KPOINTS 원본 바이트 동일)")
+    return out
+
+
+def _selftest_rescue():
+    import tempfile
+    ok = [0, 0]
+
+    def chk(c, m):
+        ok[0] += 1; ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + m)
+
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        src = d / "src"; (src / "static").mkdir(parents=True)
+        (src / "static" / "INCAR").write_text(
+            "ENCUT = 520\nISMEAR = 0\nISTART = 0\nICHARG = 2\nLREAL = Auto\n"
+            "LDAUU = 0.0 6.2 0.0\nMAGMOM = 2*0 1 -1 1 1\n")
+        (src / "static" / "KPOINTS").write_text("g\n0\nGamma\n3 3 1\n0 0 0\n")
+        (src / "POSCAR").write_text("t\n1.0\n" + "5 0 0\n0 5 0\n0 0 5\n"
+                                    "Li Ni\n2 4\nDirect\n" + "0 0 0\n" * 6)
+        (src / "POTCAR_ASSEMBLE.sh").write_text("cat Li Ni > POTCAR\n")
+        (src / "job.json").write_text(json.dumps(
+            {"magmom_poscar": [0, 0, 1.0, -1.0, 1.0, 1.0]}))
+        out = make_basin_rescue(src, d / "out")
+        pin = (out / "static_pin" / "INCAR").read_text()
+        st = (out / "static" / "INCAR").read_text()
+        chk("NUPDOWN  = 2" in pin, "핀 상: NUPDOWN 이 시드 자화합(+2)으로 **계산**된다")
+        chk("BMIX_MAG" in pin and "인용 금지" in pin, "핀 상: 보수 믹싱 + 인용금지 명기")
+        # ⚠ 주석의 "NUPDOWN 해제" 언급까지 잡으면 안 된다 — **대입 줄**만 검사
+        #   (오늘만 세 번째 같은 교훈: qe 조각 ecutwfc, drop-blank, 그리고 여기)
+        chk(not re.search(r"(?m)^NUPDOWN\s*=", st),
+            "⛔음성: 2상에 NUPDOWN **대입**이 새면 안 된다 (해제 상)")
+        chk(re.search(r"(?m)^ICHARG\s*=\s*1\b", st)
+            and len(re.findall(r"(?m)^ICHARG\s*=", st)) == 1,
+            "2상: 원본과의 차이가 ICHARG 대입 한 줄")
+        chk((out / "POSCAR").read_bytes() == (src / "POSCAR").read_bytes(),
+            "POSCAR 바이트 동일 (기하 불변)")
+        mj = json.loads((out / "job.json").read_text())
+        chk(mj["incar_expected"]["static_pin"]["NUPDOWN"] == "2",
+            "분석기 v2 가 감사할 기대값에 NUPDOWN 이 실린다")
+        chk("CHGCAR 없음" in (out / "run_job.sh").read_text(),
+            "run_job: 1상 CHGCAR 없으면 2상을 돌리지 않는다 (fail-closed)")
+        # ⛔ 음성 — 전제 위반은 거부
+        (src / "job.json").write_text(json.dumps({"magmom_poscar": [0.3, 0, 1, -1, 1, 1]}))
+        try:
+            make_basin_rescue(src, d / "out2"); chk(False, "⛔음성: 비정수 자화합 거부")
+        except SystemExit:
+            chk(True, "⛔음성: 시드 자화합이 정수가 아니면 거부 (NUPDOWN 근거 없음)")
+        (src / "job.json").write_text(json.dumps({"magmom_poscar": [0, 0, 1, -1, 1, 1]}))
+        (src / "static" / "INCAR").write_text("ENCUT = 520\nNUPDOWN = 0\nICHARG = 2\n")
+        try:
+            make_basin_rescue(src, d / "out3"); chk(False, "⛔음성: NUPDOWN 기존재 거부")
+        except SystemExit:
+            chk(True, "⛔음성: 원본에 NUPDOWN 이 이미 있으면 거부 (전제 붕괴)")
+    print(f"  rescue selftest {ok[1]}/{ok[0]}")
+    return 0 if ok[0] == ok[1] else 1
+
+
 def main():
+    if "--selftest_rescue" in sys.argv:
+        sys.exit(_selftest_rescue())
+    if "--basin_rescue" in sys.argv:
+        i = sys.argv.index("--basin_rescue")
+        make_basin_rescue(sys.argv[i + 1], sys.argv[i + 2])
+        return
     ap = argparse.ArgumentParser()
     ap.add_argument("--runs", default="/data/work/runs/sdcp_v4_sitescreen")
     ap.add_argument("--out", default="/data/work/runs/sdcp_vasp_oneshot_v3")
