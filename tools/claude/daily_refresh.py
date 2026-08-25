@@ -201,6 +201,43 @@ def check_litdb_index(root=ROOT):
     return ("litdb", True, "digest 전부 인덱스 등재 (DFT·DEM 축 각각)")
 
 
+def check_md_trajectories(root=ROOT):
+    """msd.json 은 있는데 **traj.xyz 가 없는 런**을 잡는다.
+
+    ⛔ 2026-08-25 — 같은 사고가 **세 번째**다:
+       2026-07  highT_reseed   msd 12 · traj 0  → highT_reseed_traj 를 새로 만들어야 했다
+       2026-08  arrhenius_6pt  msd 21 · traj 0  → MTO 재판정이 원리적으로 불가해졌고
+                                                   1저자 요청 1·2 가 그 자리에서 막혔다
+    두 번 다 **화면상으로는 정상 완료**였다 — msd.json 이 있으니 아무도 몰랐고,
+    몇 주 뒤 "그 궤적으로 다시 재보자" 는 순간에야 드러났다. 궤적이 없으면
+    **소급 계산이 원리적으로 불가**하므로 늦게 아는 것이 곧 데이터 유실이다.
+
+    두 러너에는 이제 --save_traj 가 박혀 있다(run_arrhenius_6pt.sh · run_highT_reseed.sh).
+    이 점검은 그 뒤에도 새는 경로(손으로 돌린 런, 새 러너)를 잡는 안전망이다.
+
+    ⛔ 못 하는 것: 원격 서버(gabia/kgy)를 못 본다 — repo 안의 런만 본다.
+      실제 궤적은 서버 디스크에 있으므로 이 점검은 **repo 에 회수된 것**에만 걸린다.
+    """
+    import glob as _g
+    roots = os.environ.get("MDROOTS", "").split() or [
+        os.path.join(root, "db", "md"), os.path.join(root, "runs")]
+    miss, seen = [], 0
+    for r in roots:
+        if not os.path.isdir(r):
+            continue
+        for j in _g.glob(os.path.join(r, "**", "msd.json"), recursive=True):
+            seen += 1
+            if not os.path.isfile(os.path.join(os.path.dirname(j), "traj.xyz")):
+                miss.append(os.path.relpath(j, root))
+    if not seen:
+        return ("md-traj", None, "repo 안에 msd.json 이 없다 (궤적은 서버에 있다 — 건너뜀)")
+    if miss:
+        return ("md-traj", False,
+                f"궤적 없는 런 {len(miss)}/{seen} — 소급 계산 불가: "
+                + " · ".join(miss[:3]) + (" …" if len(miss) > 3 else ""))
+    return ("md-traj", True, f"msd.json {seen}건 전부 traj.xyz 동반")
+
+
 def check_uncommitted(root=ROOT):
     rc, out = _run("git status --porcelain", root)
     n = len([l for l in out.splitlines() if l.strip()])
@@ -211,7 +248,8 @@ def check_uncommitted(root=ROOT):
 
 CHECKS = [check_dashboard_freshness, check_canonical, check_governance,
           check_kb_lint, check_conventions, check_requests_ledger,
-          check_fairchem, check_litdb_index, check_uncommitted]
+          check_fairchem, check_litdb_index, check_md_trajectories,
+          check_uncommitted]
 
 
 def run_all(root=ROOT, verbose=False):
@@ -296,6 +334,18 @@ def _selftest():
     say(not _dem_leak,
         f"⑤ [음성] DEM digest 를 미등재로 오보하지 않는다 ({_msg[:52]})")
     say(_ok is not None, "⑤ litdb 점검이 판정을 낸다(건너뛰지 않는다)")
+
+    # ⑥ [음성] 궤적 없는 런을 **놓치면 안 된다** — 이 사고가 세 번째다
+    import tempfile as _tf2
+    with _tf2.TemporaryDirectory() as _td:
+        d1 = os.path.join(_td, "runs", "a"); os.makedirs(d1)
+        open(os.path.join(d1, "msd.json"), "w").write("{}")
+        os.environ["MDROOTS"] = os.path.join(_td, "runs")
+        _n, _o, _m = check_md_trajectories(_td)
+        say(_o is False and "궤적 없는 런" in _m, "⑥ [음성] traj.xyz 없는 런을 잡는다")
+        open(os.path.join(d1, "traj.xyz"), "w").write("x")
+        say(check_md_trajectories(_td)[1] is True, "⑥ 궤적이 있으면 통과")
+        os.environ.pop("MDROOTS", None)
 
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
