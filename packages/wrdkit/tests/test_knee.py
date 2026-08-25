@@ -1326,3 +1326,28 @@ def test_a_confidence_interval_does_not_count_impossible_resamples():
     assert interval["onset_low"] <= interval["onset_high"]
     assert interval["point_high"] <= float(cycles[-1])     # 관측 밖으로 안 나간다
     assert dbw_confidence_interval(cycles[2:], retention, n_boot=1, seed=0) is None
+
+
+def test_an_exact_double_transition_input_is_recovered_to_machine_precision():
+    """모델이 만든 곡선을 모델이 못 찾으면 격자가 잘못된 것이다 (Codex #2).
+
+    γ 씨앗이 {1, 5} 뿐이던 때는 폭이 (6, 14) 인 이 입력의 상위 세 씨앗이 전부
+    엉뚱한 골짜기에서 나와, 전역해(SSE ~1e-26)를 버리고 "두 사건" 으로
+    사퇴했다.  기록 길이에 맞춘 넓은 γ 씨앗이 그 골짜기를 덮는다.
+    """
+    from wrdkit.knee import _dbw_fit, _dbw_model
+
+    cycles = np.arange(3, 96, dtype=float)
+    planted = [107.6781883, -0.48, -0.05, -0.33, 25.0, 55.0, 6.0, 14.0]
+    values = _dbw_model(cycles, *planted)
+    sse, popt = _dbw_fit(cycles, values)
+    onset, point = sorted((float(popt[4]), float(popt[5])))
+    assert sse < 1e-12, sse
+    assert onset == pytest.approx(25.0, abs=1e-3)
+    assert point == pytest.approx(55.0, abs=1e-3)
+
+    analysis = detect_knee(cycles, values * 1.45 / 100.0, reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert dbw.detected, dbw.reason
+    assert dbw.onset_cycle == pytest.approx(25.0, abs=0.5)
+    assert dbw.cycle == pytest.approx(55.0, abs=0.5)

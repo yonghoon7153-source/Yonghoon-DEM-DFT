@@ -241,8 +241,8 @@ def _layout_is_sound(data: bytes, rows_at: int, n: int, record: int,
     """
     offsets = _offsets(ids)
     fmt = {COLUMNS[i][0]: COLUMNS[i][1] for i in ids}
-    col = lambda name: _column_at(data, rows_at, n, record,
-                                  offsets[name], fmt[name])   # noqa: E731
+    def col(name: str) -> np.ndarray:
+        return _column_at(data, rows_at, n, record, offsets[name], fmt[name])
 
     if "time/s" in offsets:
         t = col("time/s")
