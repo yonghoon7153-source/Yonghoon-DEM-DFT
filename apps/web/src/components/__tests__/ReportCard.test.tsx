@@ -8,7 +8,7 @@
 import { render, screen } from '@testing-library/react'
 import { describe, expect, it } from 'vitest'
 
-import { ReportCard } from '../ReportCard'
+import { kneeEvidence, ReportCard } from '../ReportCard'
 import type { Report, ResolvedCell } from '../../lib/types'
 
 const CELL: ResolvedCell = {
@@ -145,6 +145,43 @@ describe('숫자가 하나도 없을 때', () => {
   })
 })
 
+
+describe('사퇴한 기준의 근거', () => {
+  it('무엇을 재고 그렇게 판단했는지 숫자로 말한다', () => {
+    // 이유 한 줄은 결론이다.  읽은 사람이 다음에 묻는 것은 "얼마나 안 됐는데?"
+    // 이고, 그 숫자는 이미 detail 에 있는데 화면이 버리고 있었다.
+    const rows = kneeEvidence(
+      { breakpoint: 34, slope_before: -0.05, slope_after: -0.06,
+        slope_ratio: 1.2, drop_after_pct: 8.4, fit_gain_score: 900 },
+      { slope_ratio: 1.5, drop_after_pct: 2, fit_gain_score: 100 },
+    )
+    const by = Object.fromEntries(rows.map((r) => [r.label, r]))
+    expect(by['전환 지점']?.value).toBe('34번')
+    // `num` 은 측정값을 유효숫자로 맞춘다 — 자릿수를 지어내지 않는다.
+    expect(by['가속 배수']?.value).toBe('1.2배')
+    expect(by['가속 배수']?.need).toBe('1.5배 이상')
+  })
+
+  it('걸린 게이트만 표시한다 — 어느 줄 때문인지가 요점이다', () => {
+    const rows = kneeEvidence(
+      { slope_ratio: 1.2, drop_after_pct: 8.4, fit_gain_score: 900 },
+      { slope_ratio: 1.5, drop_after_pct: 2, fit_gain_score: 100 },
+    )
+    const failed = rows.filter((r) => r.failed).map((r) => r.label)
+    expect(failed).toEqual(['가속 배수'])
+  })
+
+  it('문턱이 없는 항목은 관측값으로만 적는다 — 없는 기준을 지어내지 않는다', () => {
+    const rows = kneeEvidence({ knee_onset: 25, second_transition: 55 }, {})
+    expect(rows.every((r) => r.need === undefined)).toBe(true)
+    expect(rows.map((r) => r.label))
+      .toEqual(['이탈 시작(onset)', '두 번째 전환'])
+  })
+
+  it('없는 값은 줄을 만들지 않는다 — 빈 칸도 근거가 아니다', () => {
+    expect(kneeEvidence({}, { slope_ratio: 1.5 })).toEqual([])
+  })
+})
 
 describe('DBW onset·point (ADR 0021)', () => {
   const dbw = {

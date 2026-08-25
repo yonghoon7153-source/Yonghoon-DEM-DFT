@@ -387,6 +387,10 @@ export interface KneeAnalysis {
   projected_cycle_at_80pct: number | null
   /** 기준 사이클이 요청과 다를 때 그 사유. */
   reference_note?: string
+  /** 게이트의 문턱값.  "1.3배였는데 1.5배가 필요합니다" 를 쓰려면 필요한 쪽
+   *  숫자도 있어야 하는데, 여기에 베껴 두면 서버가 문턱을 바꾼 날 화면만 옛
+   *  숫자를 말하게 된다 — 그래서 서버가 준다. */
+  thresholds?: Record<string, number>
 }
 
 export interface CycleReadout {

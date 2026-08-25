@@ -32,7 +32,12 @@ from wrdkit.cycles import Profile, extract_profile
 from wrdkit.dva import DifferentialVoltage, differential_voltage
 from wrdkit.health import CellReport, build_report, resolve_reference_cycle
 from wrdkit.ica import DifferentialCapacity, differential_capacity
-from wrdkit.knee import KneeAnalysis
+from wrdkit.knee import (
+    MIN_FIT_GAIN_F,
+    MIN_KNEE_DROP_PCT,
+    MIN_SLOPE_RATIO,
+    KneeAnalysis,
+)
 
 from . import memo, storage
 from .models import CycleRecord, Run, Sample
@@ -541,6 +546,14 @@ def knee_payload(analysis: KneeAnalysis | None) -> dict | None:
         # absent.  Dropping it made the knee look anchored at cycle 3 for a
         # continuation file whose numbering starts at 201 (ADR 0004).
         "reference_note": getattr(analysis, "reference_note", "") or "",
+        # 게이트의 문턱값.  화면이 "1.3배였는데 1.5배가 필요합니다" 라고 쓰려면
+        # 필요한 쪽 숫자도 있어야 하는데, 프런트에 베껴 두면 여기서 문턱을
+        # 바꾼 날 화면만 옛 숫자를 말한다.
+        "thresholds": {
+            "slope_ratio": MIN_SLOPE_RATIO,
+            "drop_after_pct": MIN_KNEE_DROP_PCT,
+            "fit_gain_score": MIN_FIT_GAIN_F,
+        },
     }
 
 

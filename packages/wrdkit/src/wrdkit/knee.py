@@ -1134,6 +1134,11 @@ def _slope_ratio_knee(cycles: np.ndarray, values: np.ndarray, *,
         )
     if held is not None:
         return held
+    # 얼마나 못 미쳤는가.  "한 번도 안 됐다" 는 결론이고, 화면을 보는 사람이
+    # 다음에 묻는 것은 "얼마나?" 다 -- 탐색 구간에서 가장 가팔랐던 기울기를
+    # 함께 남긴다.  넘어야 할 값(`slope_limit`)은 이미 위에 있다.
+    if len(local) > early:
+        detail["steepest_slope"] = float(np.min(local[early:]))
     return KneeResult("slope_ratio", None, False,
                       f"fade rate never stayed at {factor:g}x the early-life rate",
                       detail)

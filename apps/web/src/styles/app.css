@@ -956,6 +956,53 @@ tbody tr:last-child td { border-bottom: none; }
 .choice .head .cycle { font-family: var(--mono); font-weight: 620; margin-left: auto; }
 /* 확정이 아닌 후보.  숫자는 보여 주되 확정과 같은 무게로 읽히면 안 된다. */
 .choice .head .cycle.tentative { color: var(--ink-3); font-weight: 520; }
+/* 사퇴한 기준의 근거 — 올려놓으면 나온다.
+   카드 안에 접어 두면(details) 카드가 버튼이라 클릭이 겹치고, 늘 펴 두면
+   기준 다섯 개가 표 다섯 개가 된다.  그래서 떠 있는 판이다. */
+.choice { position: relative; }
+.knee-evidence {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  min-width: 260px;
+  max-width: 340px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  box-shadow: var(--shadow-2);
+  /* 마우스가 판 위로 올라가면 카드에서 벗어난 것이 되어 판이 사라진다.
+     읽기만 하는 판이므로 아예 안 받는다. */
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .12s ease;
+}
+.choice:hover .knee-evidence,
+.choice:focus-visible .knee-evidence {
+  opacity: 1;
+  visibility: visible;
+}
+.knee-evidence table { font-size: 11.5px; margin-top: 4px; }
+.knee-evidence th {
+  text-align: left;
+  font-weight: 500;
+  color: var(--ink-3);
+  padding: 2px 8px 2px 0;
+  white-space: nowrap;
+}
+.knee-evidence td {
+  border: none;
+  padding: 2px 0 2px 8px;
+  font-family: var(--mono);
+  text-align: right;
+}
+.knee-evidence td.dim { font-family: var(--sans); font-size: 10.5px; }
+/* 걸린 게이트.  다섯 줄 중 어느 줄 때문에 값이 안 나왔는지가 요점이다. */
+.knee-evidence tr.failed th,
+.knee-evidence tr.failed td { color: var(--warn); font-weight: 600; }
+
 .choice .why { display: block; margin-top: 2px; font-size: 10.5px; color: var(--ink-3); }
 
 details > summary {

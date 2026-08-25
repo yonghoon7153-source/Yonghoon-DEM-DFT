@@ -234,6 +234,126 @@ function summarize(report: Report): string {
   return parts.join(' · ')
 }
 
+
+/** 사퇴한 기준이 **무엇을 재고** 그렇게 판단했는가.
+ *
+ *  이유 한 줄은 결론이지 근거가 아니다.  "열화가 가속되지 않습니다" 를 읽은
+ *  사람이 다음에 하는 일은 "얼마나 안 됐는데?" 를 묻는 것이고, 그 숫자는 이미
+ *  `detail` 에 다 들어 있는데 화면이 버리고 있었다.
+ *
+ *  문턱값은 서버가 준다 (`knee.thresholds`).  여기 베껴 두면 서버가 문턱을 바꾼
+ *  날 화면만 옛 숫자를 말한다.
+ */
+interface Measured {
+  label: string
+  value: string
+  /** 필요한 쪽 값.  없으면 그냥 관측값이다 (문턱이 없는 항목). */
+  need?: string
+  /** 이 항목이 걸린 게이트인가 — 그 줄만 굵게. */
+  failed?: boolean
+}
+
+export function kneeEvidence(
+  detail: Record<string, number>,
+  thresholds: Record<string, number> = {},
+): Measured[] {
+  const has = (key: string) => typeof detail[key] === 'number'
+  const rows: Measured[] = []
+
+  const push = (key: string, label: string, digits = 4, unit = '') => {
+    if (!has(key)) return
+    const value = `${num(detail[key], digits)}${unit}`
+    const limit = thresholds[key]
+    if (typeof limit !== 'number') {
+      rows.push({ label, value })
+      return
+    }
+    rows.push({
+      label, value,
+      need: `${num(limit, digits)}${unit} 이상`,
+      // 문턱이 있는 항목은 미달일 때가 곧 사퇴 사유다.
+      failed: (detail[key] as number) < limit,
+    })
+  }
+
+  // -- 유지율 임계 (threshold) --------------------------------------------
+  if (has('level')) {
+    rows.push({ label: 'EOL 기준', value: `${num(detail.level, 3)} %` })
+  }
+  if (has('min_retention')) {
+    rows.push({
+      label: '기록 중 최저 유지율',
+      value: `${num(detail.min_retention, 3)} %`,
+      need: has('level') ? `${num(detail.level, 3)} % 미만` : undefined,
+      // 한 번도 안 내려갔으면 그것이 사퇴 사유다.
+      failed: has('level') && (detail.min_retention as number) >= (detail.level as number),
+    })
+  }
+  if (has('first_cycle_below')) {
+    rows.push({
+      label: '처음 내려간 사이클', value: `${num(detail.first_cycle_below, 0)}번`,
+    })
+  }
+
+  // -- 초기 대비 열화율 배수 (slope_ratio) ---------------------------------
+  if (has('baseline_slope')) {
+    rows.push({
+      label: `초기 기울기 (${has('baseline_window')
+        ? `${num(detail.baseline_window, 0)}사이클` : '초기'})`,
+      value: `${num(detail.baseline_slope, 4)} %/cycle`,
+    })
+  }
+  if (has('factor')) {
+    rows.push({ label: '요구 배수', value: `${num(detail.factor, 2)}배` })
+  }
+  if (has('steepest_slope')) {
+    rows.push({
+      label: '가장 가팔랐던 구간',
+      value: `${num(detail.steepest_slope, 4)} %/cycle`,
+      need: has('slope_limit')
+        ? `${num(detail.slope_limit, 4)} %/cycle 이하` : undefined,
+      // 기울기는 음수라 "이하" 여야 통과다 -- 부등호가 다른 항목들과 반대다.
+      failed: has('slope_limit')
+        && (detail.steepest_slope as number) > (detail.slope_limit as number),
+    })
+  } else if (has('slope_limit')) {
+    rows.push({ label: '넘어야 할 기울기', value: `${num(detail.slope_limit, 4)} %/cycle` })
+  }
+  if (has('slope_at_knee')) {
+    rows.push({ label: '그 자리 기울기', value: `${num(detail.slope_at_knee, 4)} %/cycle` })
+  }
+
+  // -- 최대 곡률 -----------------------------------------------------------
+  if (has('curvature')) {
+    rows.push({ label: '최대 곡률', value: num(detail.curvature, 3) })
+  }
+  if (has('median_curvature')) {
+    rows.push({ label: '곡률 중앙값', value: num(detail.median_curvature, 3) })
+  }
+
+  if (has('knee_onset')) {
+    rows.push({ label: '이탈 시작(onset)', value: `${num(detail.knee_onset, 0)}번` })
+  }
+  if (has('breakpoint')) {
+    rows.push({ label: '전환 지점', value: `${num(detail.breakpoint, 0)}번` })
+  }
+  if (has('second_transition')) {
+    rows.push({ label: '두 번째 전환', value: `${num(detail.second_transition, 0)}번` })
+  }
+  push('slope_before', '앞 기울기', 4, ' %/cycle')
+  push('slope_after', '뒤 기울기', 4, ' %/cycle')
+  if (has('slope_late')) push('slope_late', '그 뒤 기울기', 4, ' %/cycle')
+  push('slope_ratio', '가속 배수', 2, '배')
+  push('drop_after_pct', '그 뒤 손실', 2, ' %p')
+  push('fit_gain_score', '적합 이득', 1)
+  if (has('separation_cycles')) {
+    rows.push({
+      label: '두 전환 사이', value: `${num(detail.separation_cycles, 0)} 사이클`,
+    })
+  }
+  return rows
+}
+
 const METHOD_LABELS: Record<string, string> = {
   dbw: 'Double Bacon-Watts',
   segmented: '두 직선 교점',
@@ -271,6 +391,7 @@ export function KneeDetail({
       <div className="knee-choices">
         {knee.results.map((result) => {
           const on = selected === result.method
+          const evidence = kneeEvidence(result.detail, knee.thresholds ?? {})
           return (
             <button
               key={result.method}
@@ -300,6 +421,25 @@ export function KneeDetail({
               </span>
               <span className="why">{METHOD_HINTS[result.method]}</span>
               <span className="why">{ko.kneeReason(result.reason)}</span>
+              {/* 올려놓으면 근거가 나온다.  이유 한 줄은 결론이고, 사람이
+                  다음에 묻는 것은 "얼마나?" 다 — 그 숫자는 이미 있는데 화면이
+                  버리고 있었다.  걸린 게이트만 굵게. */}
+              {evidence.length ? (
+                <span className="knee-evidence" role="note">
+                  <span className="tiny faint">{ko.kneeReason(result.reason)}</span>
+                  <table>
+                    <tbody>
+                      {evidence.map((row) => (
+                        <tr key={row.label} className={row.failed ? 'failed' : ''}>
+                          <th>{row.label}</th>
+                          <td>{row.value}</td>
+                          <td className="dim">{row.need ? `필요: ${row.need}` : ''}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </span>
+              ) : null}
             </button>
           )
         })}
