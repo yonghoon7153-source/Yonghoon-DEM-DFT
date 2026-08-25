@@ -86,12 +86,30 @@ _before=$(_count "$DST")
 #    ⚠ `--modify-window=1` 은 NTFS 의 2초 타임스탬프 해상도 때문 (없으면 매번 전량 재전송).
 RS=(-a)
 case "$DST" in
-  /mnt/*) RS=(-rlt --no-perms --no-owner --no-group --modify-window=1 --chmod=ugo=rwX);;
+  #  `--inplace` 가 핵심: DrvFs 는 rsync 의 **임시파일 → rename** 방식을 거부한다
+  #  (`mkstemp … Operation not permitted`).  직접 쓰면 그 단계가 사라진다.
+  #  `--omit-dir-times` 는 디렉터리 mtime 설정이 NTFS 에서 자주 실패하기 때문.
+  /mnt/*) RS=(-rlt --no-perms --no-owner --no-group --omit-dir-times --inplace
+              --modify-window=1);;
 esac
-echo "[백업] rsync 중… (원본 파일 $_n_src · 옵션 ${RS[*]})"
+echo "[백업] rsync 중… (원본 파일 $_n_src)"
+#  ⚠ 실패 경로를 **버리지 않는다** — 앞선 판은 tail 에 묻혀 무엇이 안 됐는지 알 수 없었다.
+_ERR="$(mktemp)"
 rsync "${RS[@]}" --delete --info=stats2 "$SRC/" "$DST/" \
   --exclude '.last_backup' --exclude 'dem_webapp.log' --exclude 'dem_webapp.pid' \
-  || { echo "[백업] ⛔ rsync 실패 — 스탬프를 남기지 않는다 (실패를 성공으로 기록하지 않는다)"; exit 1; }
+  2> >(tee "$_ERR" >&2)
+_RC=$?
+if [ "$_RC" != 0 ]; then
+  echo "[백업] ⛔ rsync 종료코드 $_RC — 스탬프를 남기지 않는다"
+  echo "──── 실패한 항목 (앞 15줄) ────"
+  grep -E 'rsync:|failed|denied|Permission|not permitted' "$_ERR" | head -15
+  echo "────────────────────────────────"
+  echo "  · 계속 같은 파일이면 대상에서 지우고 다시:  rm -rf \"$DST\" && $0"
+  echo "  · /mnt 옵션으로도 안 되면 WSL 의 metadata 마운트가 필요할 수 있다:"
+  echo "      sudo umount /mnt/d && sudo mount -t drvfs D: /mnt/d -o metadata,uid=$(id -u),gid=$(id -g)"
+  rm -f "$_ERR"; exit 1
+fi
+rm -f "$_ERR"
 
 _after=$(_count "$DST")
 _c_src=$(_cases "$SRC"); _c_dst=$(_cases "$DST")
