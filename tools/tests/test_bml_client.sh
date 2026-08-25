@@ -1082,6 +1082,14 @@ check "이미 닿으면 아무것도 안 한다" \
 # 것이 그것이고, 이름 풀이는 대리 지표일 뿐이라 어긋날 수 있다.
 check "이름이 아니라 응답으로 판정한다" \
   "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'server_alive "\$url"')" "1"
+# 4초로 재다가 두 번 헛짚었다.  이 왕복은 학교망 → 인터넷 → localhost.run →
+# 다시 학교망 → WSL 이라 잘 되는 날에도 몇 초가 든다.
+check "왕복 시간을 넉넉히 준다" \
+  "$(grep -c 'server_alive "$url" 12' "$BML")" "1"
+# 이름이 이미 잡히면 hosts 로 내려갈 이유가 없다.  거기서 공용 DNS 가 막히면
+# "이 망이 막습니다" 라는 엉뚱한 결론으로 끝난다 -- 정작 막힌 건 없는데.
+check "이름이 잡히면 평소 길로 보낸다" \
+  "$(grep -c '이름은 이미 잡힙니다' "$BML")" "1"
 # WSL 에서 이 명령이 고치는 것은 **WSL 의** /etc/hosts 인데, 브라우저는
 # Windows 에 있고 그 파일을 안 본다.  그래서 bml 은 붙었다고 하는데 크롬은
 # ERR_CONNECTION_CLOSED 를 낸다 -- 화면 둘이 정반대를 말한다 (실측).
@@ -1091,8 +1099,11 @@ check "Windows 쪽 명령도 준다" \
   "$(grep -cF 'Add-Content' "$BML")" "1"
 check "지우는 법까지" \
   "$(grep -c "notmatch 'lhr" "$BML")" "1"
-check "끝은 bmlout 과 같은 길로" \
-  "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'cmd_slot out "\$url"')" "2"
+# 세 갈래 모두 같은 곳으로 나간다: 이미 닿을 때, 이름이 잡힐 때, 이름표를
+# 막 박았을 때.  `bmlonly` 가 따로 접속 절차를 갖지 않는 것이 요점이다 --
+# 갖는 순간 `bmlout` 과 조용히 달라진다.
+check "세 갈래 다 bmlout 과 같은 길로" \
+  "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'cmd_slot out "\$url"')" "3"
 
 echo
 if [ "$fail" -eq 0 ]; then
