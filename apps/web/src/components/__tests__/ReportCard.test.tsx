@@ -188,6 +188,7 @@ describe('DBW onset·point (ADR 0021)', () => {
       />,
     )
     expect(screen.getByText('24.2')).toBeInTheDocument()
-    expect(screen.queryByText(/→/)).not.toBeInTheDocument()
+    // 열화율 지표의 "a → b" 는 화살표 양옆에 공백이 있다; knee 쌍(공백 없음)만 본다.
+    expect(screen.queryByText(/\d→/)).not.toBeInTheDocument()
   })
 })

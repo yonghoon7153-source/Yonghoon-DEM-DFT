@@ -2587,3 +2587,9 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   안 덮음, kind 는 기본값과 구별 불가라 제외·주석) + duplicate 플래그.
   GITT dedup 도 원본 재저장. (4) 셀 삭제가 SpectrumRecord 를 detach — SQLite
   id 재사용으로 죽은 셀의 임피던스가 다음 셀 측정으로 둔갑하던 것. 회귀 8건.
+## [2026-08-25] feat | DBW 를 API·화면에 — onset→point 쌍으로 말한다
+- knee_methods 에 dbw(화면 기본 선택), onset_cycle 은 asdict 로 이미 API 에
+  실려 나감. 화면: 타일·기준 행·요약이 "20.4→24.2번" 쌍, 그래프는 이탈(흐림)
+  +급감(진함) 두 세로선, i18n 에 DBW 이유 10종. 직전 커밋에서 이 로그 한 줄과
+  부정 단언(공백 없는 → 만) 수정이 빠져 이 커밋으로 보탠다.
+## [2026-08-25] fix | ReportCard 테스트의 → 부정 단언이 열화율 화살표에 걸렸다
