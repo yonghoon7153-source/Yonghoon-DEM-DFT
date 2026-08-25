@@ -11,8 +11,8 @@ verifiedBy: "kb/results/sdcp_wave1_vasp_return_2026_08_25.md 의 수치를 그�
 explored: false
 authoredBy: agent
 effort: medium
-claimType: descriptive
-evidenceScope: multi-source
+claimType: empirical
+evidenceScope: multi-source-primary
 ---
 
 # SDCP wave1 — 결과 읽는 법

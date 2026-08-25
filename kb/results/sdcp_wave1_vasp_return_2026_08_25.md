@@ -12,7 +12,7 @@ explored: false
 authoredBy: agent
 effort: high
 claimType: empirical
-evidenceScope: multi-source
+evidenceScope: multi-source-primary
 ---
 
 # SDCP wave1 VASP 회신 (2026-08-25)

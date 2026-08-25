@@ -12,7 +12,7 @@ explored: false
 authoredBy: agent
 effort: medium
 claimType: empirical
-evidenceScope: multi-source
+evidenceScope: multi-source-primary
 ---
 
 # SDCP wave1 — 인용 확정본

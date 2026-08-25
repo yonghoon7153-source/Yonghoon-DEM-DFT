@@ -12,7 +12,7 @@ explored: false
 authoredBy: agent
 effort: high
 claimType: prescriptive
-evidenceScope: multi-source
+evidenceScope: multi-source-primary
 ---
 
 # 교차리뷰 E — SDCP wave1 (2026-08-25 판정 수령)
