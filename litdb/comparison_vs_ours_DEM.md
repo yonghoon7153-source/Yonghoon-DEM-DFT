@@ -485,6 +485,50 @@
     ⇒ **권고 = P0(후처리 진단만, 코드 변경 0) 먼저**, P1(명시적 1-반복, 힘커널 ~2n̄ 배)은 P0 결과 유의할 때만,
     P2(완전 구현)는 **보류**(hooke/hysteresis 의 접촉 **이력변수**가 반복 안의 접촉 생성/소멸과 충돌).
     ⚠ 논문에 **벽시계·반복횟수 수치 없음** → "3–10× 느려짐" 은 **우리 추정**.
+---
+
+- **★★★ Paulick 2015 (`papers/paulick2015_elastic_particle_properties_dem_review.md`, Powder Technol. 283, 66–76)
+  — "E 를 낮추면 벌크가 *선형으로* 따라온다" 의 문헌 근거, 그리고 그 청구서 (2026-08-25 신설).**
+  Coetzee 2017 이 *보정 방법론* 을 맡았다면 이쪽은 **탄성 파라미터 자체의 물리·민감도**를 맡는다.
+  이 축(A)에 주는 것은 다섯 가지다.
+  - **① ✅ "E 가 도달밀도를 정한다" 가 문헌에서 *선형관계* 로 확립돼 있다 — 독립 4건.**
+
+    | 관계 | 계 · 스윕 | 코드 | 출처 |
+    |---|---|---|---|
+    | k_n ∝ **구속 벌크계수** | 오이도미터 2D (0–80 kPa), k_n 10→500 kN/m (**50×**) | PFC2D | Coetzee & Els [21] |
+    | G ∝ **벌크강성** | 단축압축 18k 입자 주기경계, G 10⁴→10¹¹ Pa (**10⁷×**) | EDEM H–M | Lommen [23] |
+    | E ∝ **성립 벌크계수** | 동적 콘 관입, E 2.9/9/29 GPa | 자체 3D | Yohannes [24] |
+    | 강성 = 하중–변위의 **주** 파라미터 | 오이도미터 3D **비구형** | PFC3D | Coetzee [30] |
+
+    ⇒ 우리 MPM E-sweep(**E 24 → porosity 33–38 % · E 1.35 → 8 %**)과 **부호·구조가 일치**한다.
+    이 절 제목("E_SE 강성이 floor를 정한다")이 **문헌으로 뒷받침된다.**
+  - **② ★★ (b)형 보정(벌크를 *맞추려고* 낮추기)에 대한 유일한 명시적 허가 문장** (§2.2 p.71):
+    *"All authors found a **linear relationship** between the applied elastic parameter … and the bulk modulus
+    which **enables the DEM user to scale down the stiffness parameter** for this specific application and for
+    determining the bulk modulus."*  선형·단조 사상은 역함수를 가지므로 **"원하는 벌크계수를 주는 강성 고르기"**
+    가 리뷰 자체 논리로 정당하다.  ⚠ 단 **사례 논문은 0편** (배수 보고도 0) — **원리적 허가이지 선례가 아니다.**
+  - **③ ⚠ 같은 문단이 붙이는 청구서 — 하필 우리 전달망 앞으로 온다.**
+    *"However, a scale down in stiffness leads to a **different compression behaviour** and, thus,
+    **different force chains and distributions of normal force values may develop**."*
+    정량 예시가 리뷰 안에 있다 — **Xu [38]** E 70 MPa vs 70 GPa (**÷1000**): 배출률·유동프로파일은 불변인데
+    평균 압축력 1.97 vs 2.99 (×10⁻⁴ N, **1.5×**), **최대 압축력 40.6 vs 364.4 (×10⁻⁴ N) = 8.98×**.
+    ⇒ **평균은 전이되고 꼬리는 전이되지 않는다.**  우리 σ 는 접촉당 A(δ) → Holm R = 1/(2σr_c) 의 망이라
+    **힘/면적 *분포* 에 민감** ⇒ 이 리뷰의 자로 잰 정확한 판정은
+    **"porosity 는 맞춰도 되고, 힘 분포는 아직 못 믿는다"** 다.
+    (부분 대응 = Stage-E 5-regime capped area · MPM 독립 이산화; **미대응 = 힘 분포 자체를 실험과 대조한 적 없음**.)
+  - **④ ⚠ 우리에게 불리한 조항 — 구(sphere)를 쓰면 마찰이 더 중요해진다.**  §2.2 p.71:
+    *"the stiffness value has the most significant impact **as long as real particle geometries are applied
+    and no ideal spherical particle shapes are used**.  For the case of **spherical shapes, the friction
+    coefficient becomes more important**."*  ⇒ 우리는 구를 쓰고 **마찰 민감도를 한 번도 재지 않았다**
+    → **F-C1 의 우선순위가 이 문헌으로 한 단계 올라간다.**
+  - **⑤ 배수 자체는 이 문헌군에서 작다 (사실, 인용 가능).**  Nakamura [66] Hertz값 3.8×10⁶ N/m 대비
+    **÷475–4,750** 을 저자가 *"reasonable enough"* 로 판정 · Xu [38] **÷1,000** · Cleary [5] 스윕 ÷10⁴ ·
+    Lommen [23] 스윕 ÷10⁷  **vs 우리 ÷17.8**.
+    ⇒ *"18 배가 허무맹랑하게 크다"* 는 비판은 **이 문헌군의 자로는 성립하지 않는다.**
+    성립하는 비판은 **배수가 아니라 응력 영역**이다 (리뷰 최대 **≈96 kPa** vs 우리 **300 MPa = 3,125×**).
+  - ⛔ **넘지 말 것**: *"Paulick 이 우리 18× 를 승인한다"* (사례 0편 · 응력 3,000× 밖) ·
+    리뷰 안의 **E 값을 우리 재료 앵커로 쓰는 것** (소재 무관 리뷰; LPSCl·배터리 언급 **0회**) ·
+    **인용 ②를 ③ 없이 단독 인용** (체리피킹 — 같은 문단이라 리뷰어가 바로 찾는다).
 
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
@@ -1446,6 +1490,58 @@
     **Int. J. Solids Struct. 46, 3357–3364** — **비국소 + 탄소성 + 고밀도**, 즉 이 논문의 소성판.
     ⛔ litdb 미보유.  ⚠ 그쪽은 **FEM 에서 fitting** 하므로 자유변수가 있고 격자별 case-by-case 특성화가 필요하다
     (Gonzalez §1 이 그 한계를 명시).
+---
+
+- **★★★ 탄성 파라미터 축의 미충족 5건 — Paulick 2015 기준 (2026-08-25 신설,
+  `papers/paulick2015_elastic_particle_properties_dem_review.md`).**
+  §A 의 Paulick 항목(우리에게 유리한 쪽)과 짝이다.  ⚠ 이 리뷰의 **(a)/(b) 라벨은 Coetzee 카드와 번호가 반대**다 —
+  여기서는 **(a) = 속도용 감소 · (b) = 벌크-맞춤 보정**.
+  - **F-P1 · ⚠⚠ F-C2′ 의 근거 문장이 잘못됐다 (즉시 정정 대상).**
+    현행 F-C2′ 는 사내 관측 *"E 1.35 ≡ 1.5 는 전 축에서 동일 regime"* 을 **"σ 는 E_eff 에 둔감"의 증거**로 쓴다.
+    **그것은 E 를 11 % 바꾼 실험**이고, Paulick 이 4건으로 확립한 **선형 벌크계수 법칙이 예측하는 응답도 11 %**,
+    우리 실측 ε 13.47 vs 12.77 ± 0.31 %(3 seed)는 **시드 산포 안**이다.
+    ⇒ **둔감의 증거가 아니라 "11 % 는 우리 잡음 이하"의 증거**이며 선형법칙과 **완전히 양립**한다
+    (리뷰의 스윕 폭은 10× ~ 10⁷×).  **리뷰어가 먼저 잡는다.**
+    → **대체 문장**: *"E-민감도는 우리 코퍼스에서 **아직 측정되지 않았다**."*
+    → **해소 런(사전등록 대상)**: `E_eff ∈ {0.45, 1.35, 4.0} GPa`(×3 간격, ~1 decade) × 동일 시드 × 300 MPa servo,
+      관측 = ε_sphere · ⟨δ⟩/d · **max δ/d** · Z · σ_ionic.  1차 판정 = **선형 벌크계수 법칙이 우리 계에서 성립하나**,
+      2차 = `dlnσ/dlnE`.
+  - **F-P2 · ★★ E-민감 *검증시험* 이 하나도 없다 — 그리고 리뷰가 후보를 지목해 준다.**
+    F-C2(보정과 *다른* 시험) × F-C2′(그 파라미터에 *민감한* 시험) 를 **동시에** 만족하는 후보는,
+    우리가 아는 한 **구속 벌크계수(제하–재하)** 하나다.  Paulick 이 **4 그룹 독립 · 10×~10⁷× 폭 · 선형**으로
+    확립한 **가장 이득이 큰** E-관측량이고, Coetzee & Els [21] 의 규약은
+    ***"once a stable hysteresis loop was reached"*** = **제하–재하 강성** — 즉 우리 `hooke/hysteresis` 의
+    **k₂(제하강성)** 가 지배하는 양이다.
+    → **실행**: pure-SE 침대를 300 MPa 로 누른 뒤 **제하–재하 사이클** → M = dσ/dε 를 DEM 에서 산출.
+    ⚠ **실험 앵커 부재** — LPSCl 분말 오이도미터 제하–재하 계수가 **리포에 없다** (n/a, 문헌 탐색 필요).
+  - **F-P3 · ⚠ 힘사슬·수직력 *분포* 를 한 번도 검증하지 않았다 (리뷰가 명시한 연화의 대가).**
+    §2.2 p.71: *"a scale down in stiffness … **different force chains and distributions of normal force values
+    may develop**"*; Xu [38] 정량 = **÷1000 연화에서 평균힘 1.5×, 최대힘 8.98×**.
+    우리 σ 삼중항은 접촉당 힘→면적→Holm 저항의 망이라 **분포에 민감**한데, 우리가 대조한 것은 **porosity(1차 모멘트급)**
+    뿐이다.  Stage-E capped area 가 부분 대응이지만 **분포 자체는 미검증**.
+    → **최소 대응(저비용)**: 덤프에서 **`max δ/d` 와 p99 분위수**를 리포트 항목에 추가.
+      리뷰는 *"maximum overlap … or the average overlap"* 을 **둘 다** 쓰라 하고, Table 3 은
+      **평균 0.6 % 일 때 최대 15 %** (**25× 차**) 임을 보인다 — 우리는 ⟨δ⟩ 만 낸다.
+  - **F-P4 · ⚠ 재인용 오류 정정 (2× 과장) — 위 W3 및 Coetzee 카드에 적용.**
+    W3 와 `coetzee2017_dem_calibration_review.md` 는 Paulick 권고를 **"≤1 % of particle *radius*"** 로 적고
+    **"우리는 22–24× 밖"** 이라 쓴다.  **1차 자료는 두 곳 모두 "1 % of the particle *diameter*"**
+    (§4 p.75 · §5 p.75).  ⇒ **정확한 배수는 11–12× 이지 22–24× 가 아니다.**
+    (radius 로 말한 것은 Paulick 의 권고가 아니라 **Cleary & Hoyer 의 "평균 0.6 % of radius"**다.)
+    ★ **그래도 가드레일 밖이라는 사실은 변하지 않는다** — 정정의 목적은 방어가 아니라 재인용 정확성.
+    ★★ **그리고 W3 의 판정 자체가 더 강해진다**: 봉투계산(단분산·Hertz·Z=6·φ=0.64·ν=0.30·300 MPa)으로
+    **실물 E=24 GPa 로도 δ/d ≈ 7.6 %** 이고, **1 % 를 지키려면 E ≈ 500 GPa**(강철의 2.5×)가 필요하다.
+    ⇒ **이 가드레일은 우리 보정이 어긴 것이 아니라 "탄성-구 DEM 으로 300 MPa 를 누르는 것" 자체가
+    원리적으로 못 지키는 것**이다.  탈출구는 둘뿐 — **경로 A(항복캡, `contact_models_layer_map.md` §2)** 와
+    **MPM(진짜 형상소성)**, 둘 다 이미 우리 자산이다.  ⚠ 봉투계산은 **order-of-magnitude 전용**.
+  - **F-P5 · ⚠ 미감사: `hooke/hysteresis` 의 k̂₂ ↔ COR 정합.**  §4 p.75:
+    *"the coefficient of restitution in normal direction corresponds to **the square root of loading to
+    unloading stiffness**"* (선형 모델).  우리 덱이 **COR 과 k̂₂ 를 독립 설정**한다면 둘이 모순일 수 있다.
+    → 입력덱 1회 확인 (현재 **n/a**).  ★ 만약 E 스케일이 **k₁ 만 바꾸고 k₂/k₁ 비를 보존**한다면
+    **COR 은 불변** → *"우리 연화는 COR 을 오염시키지 않는다"* 는 방어 문장 1줄을 얻는다.
+  - ★ **field-level 상태 서술 (면죄부 아님)**: 리뷰가 §4 p.75 에서 **미해결로 지목한 두 영역이 하필 우리 자리**다 —
+    *"**only little research on the influence of contact stiffness on bulk behaviour of powders** has been
+    conducted.  Due to high computational efforts in case of numerically describing **fine powders**, also the
+    influence of contact stiffness during **particle upscaling** should be investigated."*
 
 - **★★ Duquesnoy 2023 (Franco/ARTISTIC, LIB NMC111 습식) = 우리 5-Phase 로드맵의 *published archetype* — 최적화 loop 전체가
   흡수 대상** (digest `papers/duquesnoy2023_ml_multiobjective_manufacturing_optimization.md`, CSV

@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 109편 · 생성 2026-08-25
+> digest 110편 · 생성 2026-08-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -20,7 +20,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (25편)
+## 접촉역학 · 소성 (DEM 이론) (26편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -39,6 +39,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `mesarovicfleck2000_dissimilar_elastoplastic_indentation` | 비대칭(dissimilar) 탄소성 구의 무마찰 압입 — Mesarović & Fleck (Int. J. Solids Struct. 2000) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `oh2026_bimodal_composite_cathode` | Oh 2026 (ACS Energy Letters 11, 2103-2114) — Bimodal 복합양극: 큰 다결정 + 작은 단결정 CAM → packing·porosity·tortuosity 최적화 ★★★ 우리 정확한 소재계 + 정확한 조건 + 우리 a9_50 P:S sweep의 HEADLINE 실험 검증 | experiment | 2026-07-28 | 🖼 35 |
 | `pasha2014_linear_elastoplastic_adhesive_contact` | 선형 탄소성·점착 접촉 변형 모델 (미세 점착분말용 piecewise-linear LAW) — Pasha (Granular Matter 2014) | DEM (contact-LAW theory + EDEM 구현/검증) | 2026-06-26 | 🖼 23 |
+| `paulick2015_elastic_particle_properties_dem_review` | DEM 결과에 대한 입자 탄성 물성(Young's modulus E · shear modulus G · 접촉강성 contact stiffness)의 영향 리뷰 — 조밀계 vs 희박계 · 오버랩 1 % 규칙 · "밀할수록 강성이 중요해진다" — Paulick, Morgeneyer, Kwade (Powder Technolog | DEM (review — 탄성 파라미터 민감도) | 2026-08-25 | — |
 | `schreiner2020_dem_calendering_lib` | LIB 전극 calendering(압연)을 DEM으로 — NMC622 양극 · EDEM(상용) + EEPA 탄소성 접촉 + Bonding(Potyondy–Cundall) · 3-모듈 "USER TOOL"(공정 파라미터 예측) — Schreiner·Klinger·Reinhart (Procedia CIRP 2020, 짧은 학 | DEM (EDEM 상용, EEPA+Bonding; 나노압입 보정 + 공정 USER TOOL) | 2026-06-27 | 🖼 6 |
 | `shi2019_high_am_loading_particle_size_assb` | 입자 크기비 λ=D_CAM/D_SE 로 고-CAM 로딩(>50 vol%) 달성 — 우리와 같은 LIGGGHTS DEM + Hertz 로 "작은 SE + 큰 CAM"을 모델+실험 동시 증명 — Shi (Ceder 그룹, Adv. Energy Mater. 2019/2020) | mixed (DEM-LIGGGHTS modeling + experiment) | 2026-06-26 | 🖼 7 |
 | `so2022_dem_contact_model_assb_compaction_sintering` | ASSB 전극 압밀·소결 DEM을 위한 접촉모델 (탄성+소성+점탄성 + 소결 + 면적/스프링 인자) — So (MethodsX 2022) | DEM | 2026-06-26 | 🖼 10 |
