@@ -275,5 +275,17 @@
   "★_GENERALIZABLE_RULE": "UMA-MD 를 **새 조성**에 쓰기 전에 골격 게이트를 먼저 통과시킨다. CLAUDE.md 의 'UMA 는 Li₃N 에 사용 금지'(2026-06)에 이어 **두 번째 실패 조성**이다. 금지 목록을 늘리는 것보다 **조성마다 검사하는 것**이 맞다: `msd_diffusive_check.py --framework` 를 신규 조성 MD 의 필수 관문으로.",
   "rescue_B_closed": "공동계 재계산 9/9 rearrangement (남는 몫 0.95–1.00) — **구제 불가 확정**. b2o3 MD 축은 여기서 닫는다.",
   "why_CORRECTED": "⚠ **표현 정정 (2026-08-25)**: '골격이 Li 를 업고 가서 D 가 부풀려졌다' 는 **틀렸다** — 측정이 반박한다. 골격 MSD 는 Li 의 2–6 %(800 K: 2.8–9.9 vs 134–170 Å²)이고, COM 제거 후 Li MSD 가 279.9 → 281.6 으로 안 변한다. **덧셈 오염이 아니다.** 진짜 이유는 다르다: 골격 MSD 를 제곱근으로 보면 800 K 에서 RMS 1.7–3.1 Å 로 **결합 길이보다 크다** = 골격 원자가 제 자리를 떠났다(1200 K 는 10.2 Å). ⇒ 문제는 D 의 크기가 아니라 **무엇의 D 인가**다. 딱딱한 골격에서는 Li 가 고정된 자리 사이를 뛰어 Ea 가 이동 장벽이 되지만, 무른 골격에서는 **자리 지도 자체가 런 도중에 바뀐다**. 아레니우스 기울기는 'Li 도약 + 골격 이완' 의 혼합이고 둘은 온도 의존성이 다르다 — **구간 Ea 가 0.224 → 0.078 → 0.371 로 비단조였던 이유**다. 단일 메커니즘은 그럴 수 없다. 한 줄로: **200 ps 뒤의 셀이 우리가 재려던 그 결정이 아니다.** D 가 빠른 것 자체가 문제가 아니다(modelc 1000 K 6.8e-05 가 b2o3 3.7e-05 보다 빠르다) — b2o3 의 그 숫자가 **무엇을 잰 것인지 정의되지 않는다**는 것이 문제다."
+ },
+ "framework_split_preregistration_2026_08_25": {
+  "what": "b2o3 서술③('자유 음이온 부격자가 이동') 판정 — 결합S/자유S 분리 β",
+  "tool": "msd_diffusive_check.py --framework_split (aimd_mlip unwrap + b2o3_all_bond_lengths 결합창 재사용 — 복사 없음)",
+  "pre_registered_criteria": {
+   "free_anion_sublattice_mobile": "bonded-S β < 0.30 AND (free-S ≥ 0.30 OR Cl ≥ 0.30) → 서술③ 확정",
+   "polyanion_frame_mobile": "bonded-S β ≥ 0.30 → 서술③ 기각 (골격 자체가 움직임 — UMA 의심 강화)",
+   "inconsistent_with_elementwise": "둘 다 < 0.30 → 원소별 검사와 모순, 재조사"
+  },
+  "validated": "합성 양·음성: 결합S 0.04/자유S 0.87/Cl 0.92 → 확정 · 전부 걷는 반례 → 기각. 분류 selftest 4건 (주기경계 포함)",
+  "limitation": "분류는 첫 프레임 결합 기준 — 결합 불변(9/9)이 먼저 확인된 계에서만 유효",
+  "status": "⏳ kgy 실행 대기"
  }
 }

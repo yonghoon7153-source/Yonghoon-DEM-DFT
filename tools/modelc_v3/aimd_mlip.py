@@ -34,7 +34,8 @@ from ase.md.langevin import Langevin
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 
 
-def compute_msd_per_element(traj_path: Path, dt_save_fs: float, com_exclude=None):
+def compute_msd_per_element(traj_path: Path, dt_save_fs: float, com_exclude=None,
+                            groups=None):
     """Read trajectory, return MSD vs t for each element.
 
     com_exclude : None | str | iterable[str]
@@ -79,9 +80,19 @@ def compute_msd_per_element(traj_path: Path, dt_save_fs: float, com_exclude=None
         com = (pos_unwrap[:, fmask] * m[None, :, None]).sum(axis=1) / m.sum()   # (T,3)
         pos_unwrap = pos_unwrap - com[:, None, :]
 
-    # MSD per element
+    # MSD per element (groups 가 주어지면 **그 부분집합별로도** — unwrap 을 두 번
+    #   구현하지 않기 위해 여기서 같이 낸다. 2026-08-25, 결합S/자유S 분리용)
     msd = {}
     times_ps = np.arange(n_frames) * dt_save_fs / 1000.0
+    msd_groups = {}
+    if groups:
+        for gname, idxs in groups.items():
+            idxs = [i for i in idxs if 0 <= i < n_atoms]
+            if not idxs:
+                continue
+            ref = pos_unwrap[0, idxs]
+            dsq = ((pos_unwrap[:, idxs] - ref) ** 2).sum(axis=-1)
+            msd_groups[gname] = dsq.mean(axis=-1)
     for elem in sorted(set(syms)):
         mask = syms == elem
         # MSD averaged over atoms of this element
@@ -93,7 +104,10 @@ def compute_msd_per_element(traj_path: Path, dt_save_fs: float, com_exclude=None
             "n_atoms_per_elem": {e: int((syms == e).sum())
                                   for e in sorted(set(syms))},
             "com_exclude": (sorted({com_exclude} if isinstance(com_exclude, str)
-                                   else set(com_exclude)) if com_exclude else None)}
+                                   else set(com_exclude)) if com_exclude else None),
+            "msd_per_group_A2": {k: v.tolist() for k, v in msd_groups.items()},
+            "n_atoms_per_group": {k: len([i for i in groups[k] if 0 <= i < n_atoms])
+                                  for k in msd_groups} if groups else {}}
 
 
 def fit_diffusion(times_ps, msd_A2, fit_window=(2.0, 20.0)):

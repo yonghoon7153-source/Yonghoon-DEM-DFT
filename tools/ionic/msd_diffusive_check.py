@@ -366,6 +366,109 @@ def framework_com_split(json_path, save_fs=None):
             "verdict": v}
 
 
+# ══ 결합S vs 자유S 분리 β (2026-08-25 — b2o3 서술③ 판정) ═══════════════════
+#   b2o3 골격 검사에서 worst 가 S(41)·Cl(16) 로 나왔지만, S 41개 중 29개는
+#   폴리음이온(PS₄·BS₃·PS₂O₂) 안의 **결합S** 고 12개만 **자유S** 다. 결합 검사
+#   (b2o3_all_bond_lengths --traj)는 공유결합이 9/9 불변임을 이미 보였다 —
+#   그러면 움직인 것은 자유 음이온 부격자여야 한다. 여기서 그걸 β 로 가른다.
+#
+#   판정 기준 (**데이터 보기 전 고정**):
+#     bonded-S β < 0.30 이고 (free-S β ≥ 0.30 또는 Cl β ≥ 0.30)
+#         → free_anion_sublattice_mobile  (서술③ 확정)
+#     bonded-S β ≥ 0.30 → polyanion_frame_mobile  (서술③ 기각 — 골격 자체가 움직임)
+#     둘 다 < 0.30     → inconsistent  (앞선 원소별 검사와 모순 — 재조사)
+#
+#   ⛔ 이 검사가 못 하는 것: 분류는 **첫 프레임** 결합 기준이다. 런 도중 결합이
+#     바뀌면 그 원자는 잘못 분류된다 — 단, 결합 불변(9/9)이 먼저 확인된 계에서만
+#     쓰라는 전제가 그래서 있다. 새 조성에 쓰려면 결합 검사부터 통과시킬 것.
+SPLIT_RIGID = 0.30
+
+_BOND_TOOL = pathlib.Path(__file__).resolve().parents[1] / "comp1_v3" / "b2o3_all_bond_lengths.py"
+
+
+def _load_bond_tool():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("_bt", _BOND_TOOL)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def classify_sulfur(syms, cart, cell):
+    """첫 프레임에서 S 를 결합S(P/B 결합창 안) / 자유S 로 가른다.
+
+    결합창·최소이미지는 b2o3_all_bond_lengths 의 것을 **그대로 빌려 쓴다**
+    (복사하면 규약이 갈라진다 — convention_check 대상).
+    """
+    bt = _load_bond_tool()
+    import numpy as np
+    syms = np.array(syms)
+    D = bt.min_image_D(np.asarray(cart), np.asarray(cell))
+    s_idx = [i for i, s in enumerate(syms) if s == "S"]
+    cations = {"P": bt.DECOMP_WINDOWS[("P", "S")], "B": bt.DECOMP_WINDOWS[("B", "S")]}
+    bonded, free = [], []
+    for i in s_idx:
+        hit = False
+        for cat, (lo, hi) in cations.items():
+            for j in [k for k, s in enumerate(syms) if s == cat]:
+                if lo <= D[i, j] <= hi:
+                    hit = True
+                    break
+            if hit:
+                break
+        (bonded if hit else free).append(i)
+    return {"bonded_S": bonded, "free_S": free,
+            "Cl": [i for i, s in enumerate(syms) if s == "Cl"],
+            "P": [i for i, s in enumerate(syms) if s == "P"],
+            "B": [i for i, s in enumerate(syms) if s == "B"],
+            "O": [i for i, s in enumerate(syms) if s == "O"]}
+
+
+def framework_split(json_path, lo, hi, save_fs=None):
+    """traj 에서 결합S/자유S/Cl 별 β → 서술③ 판정. → dict | None."""
+    import importlib.util
+    jp = pathlib.Path(json_path)
+    traj = jp.parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    src = pathlib.Path(__file__).resolve().parents[1] / "modelc_v3" / "aimd_mlip.py"
+    spec = importlib.util.spec_from_file_location("_aimd", src)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+        from ase.io import read as _aseread
+        f0 = _aseread(str(traj), index=0)
+    except BaseException as e:
+        print(f"   ⚠ 로드 실패: {type(e).__name__} {e}")
+        return None
+    groups = classify_sulfur(f0.get_chemical_symbols(), f0.get_positions(),
+                             f0.cell.array)
+    out = mod.compute_msd_per_element(traj, dt_save_fs=save_fs or 100.0,
+                                      groups=groups)
+    tps = out["times_ps"]
+    res = {}
+    for g, idxs in groups.items():
+        y = out["msd_per_group_A2"].get(g)
+        if y is None:
+            continue
+        res[g] = {"n": len(idxs), "beta": loglog_slope(tps, y, lo, hi),
+                  "msd_end_A2": round(y[-1], 2),
+                  "judged": len(idxs) >= FRAMEWORK_MIN_N}
+    bs, fs, cl = res.get("bonded_S"), res.get("free_S"), res.get("Cl")
+
+    def _b(x):
+        return x["beta"] if (x and x["judged"] and x["beta"] is not None) else None
+    v = "insufficient"
+    if _b(bs) is not None:
+        if _b(bs) >= SPLIT_RIGID:
+            v = "polyanion_frame_mobile"
+        elif any(b is not None and b >= SPLIT_RIGID for b in (_b(fs), _b(cl))):
+            v = "free_anion_sublattice_mobile"
+        elif all(b is not None and b < SPLIT_RIGID for b in (_b(fs), _b(cl))):
+            v = "inconsistent_with_elementwise"
+    return {"groups": res, "verdict": v, "li_msd_end": out["msd_per_elem_A2"]["Li"][-1]}
+
+
 def framework_check(d, lo, hi):
     """골격(비-Li) 원소가 확산하고 있나.
 
@@ -648,6 +751,20 @@ def selftest():
         chk(_curve(_d, mto=True, path=_p, rebuild=True)[1] == [5, 6],
             "[양성] MTO 가 있으면 그대로 쓴다 (재생성 안 함)")
 
+    # ── 결합S/자유S 분류 규약 (2026-08-25 — framework_split) ────────────────
+    import numpy as _np
+    _syms = ["P", "S", "S", "Cl"]
+    _cart = _np.array([[5.0, 5, 5], [7.05, 5, 5], [10.0, 5, 5], [15.0, 5, 5]])
+    _g = classify_sulfur(_syms, _cart, _np.eye(3) * 30)
+    chk(1 in _g["bonded_S"] and 1 not in _g["free_S"],
+        "분류: P 에서 2.05 Å 의 S 는 결합S (b2o3_all_bond_lengths 의 P–S 창 재사용)")
+    chk(2 in _g["free_S"], "[음성] 분류: P 에서 5 Å 의 S 는 자유S — 결합을 지어내지 않는다")
+    chk(_g["Cl"] == [3], "분류: Cl 은 항상 자유 음이온 그룹")
+    # 주기경계 — 셀 반대편이라도 최소이미지로 결합이면 결합S
+    _g2 = classify_sulfur(["P", "S"], _np.array([[0.5, 5, 5], [28.45, 5, 5]]),
+                          _np.eye(3) * 30)
+    chk(1 in _g2["bonded_S"], "[음성] 주기경계 건너 2.05 Å 도 결합S (최소이미지)")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -668,6 +785,10 @@ def main():
                          "독립 시드/config 는 같은 계의 다른 초기속도라 MSD 앙상블 평균이 "
                          "정당하다 — 홉이 적어 자기평균이 안 되는 궤적을 **재계산 없이** "
                          "살리는 유일한 수단.")
+    ap.add_argument("--framework_split", action="store_true",
+                    help="S 를 결합S(폴리음이온 안)/자유S 로 갈라 β 를 따로 잰다. "
+                         "b2o3 서술③('자유 음이온 부격자 이동') 판정용. "
+                         "⚠ 결합 불변이 먼저 확인된 계에서만 (분류가 첫 프레임 기준).")
     ap.add_argument("--framework_com", action="store_true",
                     help="골격이 움직일 때 그것이 **전역 흐름**인지 **자리 재배열**인지 "
                          "가른다. 골격 질량중심을 매 프레임 빼고 다시 재서, 남는 몫이 "
@@ -998,6 +1119,38 @@ def main():
             print("   ⚠ 전부 못 쟀다 — 이 실행은 **아무것도 판정하지 않았다**.")
 
     # ── --framework: 골격(비-Li)이 녹고 있나 ────────────────────────────
+    if a.framework_split:
+        print("\n결합S vs 자유S 분리 β — 무엇이 움직이는 부격자인가")
+        print(f"  분류: 첫 프레임의 P–S/B–S 결합창 (b2o3_all_bond_lengths 와 동일 규약)")
+        print(f"  판정(사전 고정): bonded-S β<{SPLIT_RIGID} & (free-S 또는 Cl ≥{SPLIT_RIGID})"
+              " → 자유 음이온 부격자 이동")
+        print(f"\n{'case':30s} {'그룹':>9s} {'n':>4s} {'beta':>6s} {'MSD끝':>8s}")
+        _vs = {}
+        for f in files:
+            tag = case_label(f)
+            try:
+                _sf = json.load(open(f)).get("save_fs")
+            except (OSError, ValueError):
+                _sf = None
+            r = framework_split(f, lo, hi, save_fs=_sf)
+            if r is None:
+                print(f"{tag:30s} — 궤적 없음"); continue
+            for g in ("bonded_S", "free_S", "Cl", "P", "B", "O"):
+                if g not in r["groups"]:
+                    continue
+                gg = r["groups"][g]
+                bstr = f"{gg['beta']:.2f}" if gg["beta"] is not None else "—"
+                note = "" if gg["judged"] else "  (n<8 참고용)"
+                print(f"{tag:30s} {g:>9s} {gg['n']:4d} {bstr:>6s} "
+                      f"{gg['msd_end_A2']:8.1f}{note}")
+            mk = {"free_anion_sublattice_mobile": "★ 자유 음이온 부격자 이동 — 서술③ 지지",
+                  "polyanion_frame_mobile": "⛔ 폴리음이온 골격 자체가 움직임 — 서술③ 기각",
+                  "inconsistent_with_elementwise": "⚠ 원소별 검사와 모순 — 재조사",
+                  "insufficient": "▫ 판정 불충분"}[r["verdict"]]
+            print(f"{'':30s} → {mk}\n")
+            _vs[r["verdict"]] = _vs.get(r["verdict"], 0) + 1
+        print("  합계: " + " · ".join(f"{k} {v}" for k, v in sorted(_vs.items())))
+
     if a.framework_com:
         print("\n골격 흐름 vs 재배열 — 골격이 움직일 때 **구제 가능한가**")
         print("  골격 질량중심을 매 프레임 빼고 다시 잰다 (재계산 0, 궤적만 있으면 됨).")
