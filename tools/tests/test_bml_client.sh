@@ -1048,6 +1048,17 @@ check "감독자도 우리 것으로 알아본다" \
 check "닫으면 자식 ssh 도 죽는다" \
   "$(grep -c "trap 'kill" "$BML")" "1"
 
+echo "맞추기가 먼저다 — 자기 갱신 재실행이 일을 두 번 시키지 않게"
+# sync_repo 는 자기 자신이 갱신되면 원래 명령줄로 다시 실행한다(exec).  뒤에
+# 두면 앞에서 이미 끝낸 접속이 통째로 한 번 더 돌고, 그 두 번째가 잠깐의
+# 네트워크 사정으로 실패하면 성공한 뒤에 빨간 ✕ 가 찍힌다 (실측 2회).
+check "in 은 sync 뒤에 붙는다" \
+  "$(grep -c 'shift; sync_repo; cmd_slot in' "$BML")" "1"
+check "out 도 sync 뒤에" \
+  "$(grep -c 'shift; sync_repo; cmd_slot out' "$BML")" "1"
+check "only 도 sync 뒤에" \
+  "$(grep -c 'shift; sync_repo; cmd_only' "$BML")" "1"
+
 echo "bmlonly — DNS 가 막힌 그 한 대에서만"
 # `bmlout` 은 어느 기계에서나 같은 뜻이어야 한다: "밖 주소로 붙어라".  DNS 가
 # 막힌 기계에서만 그것이 세 단계(공용 DNS → hosts → 접속)가 되는데, 그 셋을

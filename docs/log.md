@@ -3501,3 +3501,17 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
 - 파일로 쓰는 이유: 한 줄짜리 `bash -c` 는 따옴표가 겹겹이 되고 무엇이 도는지
   사람이 볼 수 없다. `cat .bml/tunnel-keepalive.sh` 한 번이면 읽힌다.
 - 회귀 테스트 5건 (`test_bml_client.sh` 270건, `test_bml_tunnel.sh` 96건).
+
+## [2026-08-26] fix | 맞추기를 먼저 — 자기 갱신 재실행이 접속을 두 번 시켰다
+- 앞에서 `cmd_only` 에 "이미 닿으면 아무것도 안 한다" 를 넣어 덮었는데,
+  **뿌리는 그대로였다.** 그 갈래도 잠깐의 네트워크 사정에는 못 버틴다 —
+  실제로 두 번째 실행이 `server_alive` 에서 걸려 공용 DNS 까지 내려갔고,
+  성공한 뒤에 다시 빨간 ✕ 가 찍혔다 (같은 증상 2회).
+- 진짜 원인은 순서다: `cmd_slot …; sync_repo; cmd_connect`. `sync_repo` 는
+  자기 자신이 갱신되면 **원래 명령줄로 다시 실행한다**(exec). 그래서 그 앞의
+  일이 통째로 한 번 더 돈다.
+- 순서를 뒤집었다: `sync_repo; cmd_slot …; cmd_connect`. 재실행은 아무 일도
+  하기 전에 일어나고, 두 번째 sync 는 "Already up to date" 라 exec 하지 않는다.
+  덤으로 **가장 새 bml 로 네트워크 작업을 한다** — 고친 진단이 그 자리에서
+  바로 쓰인다.
+- 회귀 테스트 3건.

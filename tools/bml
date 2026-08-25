@@ -4429,11 +4429,16 @@ main() {
     data)              shift; cmd_data "${1:-}" ;;
     host|public)       shift; cmd_host "${1:-}" ;;
     use|server)        shift; cmd_use "${1:-}" ;;
-    in|lan)            shift; cmd_slot in  "${1:-}"; sync_repo; cmd_connect ;;
-    out|wan)           shift; cmd_slot out "${1:-}"; sync_repo; cmd_connect ;;
+    # **맞추기가 먼저다.**  `sync_repo` 는 자기 자신이 갱신되면 원래 명령줄로
+    # 다시 실행한다(exec) -- 뒤에 두면 그 앞에서 이미 끝낸 일이 통째로 한 번
+    # 더 돌고, 그 두 번째가 잠깐의 네트워크 사정으로 실패하면 **성공한 뒤에
+    # 빨간 ✕ 가 찍힌다.**  사람은 마지막 줄을 믿는다.  앞에 두면 재실행은
+    # 아무 일도 하기 전에 일어나고, 두 번째 sync 는 "Already up to date" 다.
+    in|lan)            shift; sync_repo; cmd_slot in  "${1:-}"; cmd_connect ;;
+    out|wan)           shift; sync_repo; cmd_slot out "${1:-}"; cmd_connect ;;
     # `out` 과 나눠 둔 이유는 cmd_only 의 주석에 있다 -- 멀쩡한 기계에서 sudo 를
     # 묻거나 hosts 를 건드리게 되면 안 된다.
-    only)              shift; cmd_only "${1:-}"; sync_repo; cmd_connect ;;
+    only)              shift; sync_repo; cmd_only "${1:-}"; cmd_connect ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift
