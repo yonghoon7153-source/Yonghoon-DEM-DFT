@@ -1,0 +1,212 @@
+{
+ "title": "MLIP-MD 런 장부 — 어느 서버·어느 경로에 무엇이 있나 (2026-08-25)",
+ "date": "2026-08-25",
+ "schema": "md_run_ledger/v1",
+ "⛔_WHY_THIS_EXISTS": "**같은 경로 이름이 두 서버에 있고 내용이 다르다.** `highT_reseed_traj` 가 kgy 에는 b2o3, gabia 에는 modelc 다. 이걸 모르고 kgy 에서 modelc 를 중복 기동했다(2026-08-25). 메시지마다 반응하지 말고 **여기를 먼저 본다.**",
+ "locations": [
+  {
+   "host": "kgy",
+   "path": "~/work/runs/highT_reseed_traj",
+   "system": "b2o3",
+   "T_K": [
+    800,
+    1000,
+    1200
+   ],
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "traj": "✓ 9/9",
+   "status": "완료"
+  },
+  {
+   "host": "kgy",
+   "path": "~/work/runs/highT_reseed_1200",
+   "system": "b2o3",
+   "T_K": [
+    1200
+   ],
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "traj": "✓ 3/3",
+   "status": "완료",
+   "note": "위 traj 세트의 1200 과 **독립 반복**이다 — 평균이 9.275e-05 vs 7.819e-05 로 19 % 벌어진다"
+  },
+  {
+   "host": "kgy",
+   "path": "~/work/runs/highT_reseed",
+   "system": [
+    "b2o3",
+    "modelc"
+   ],
+   "T_K": [
+    800,
+    1000
+   ],
+   "traj": "✗ (F9)",
+   "status": "완료·궤적없음",
+   "note": "Ea 0.199/0.197 의 원자료 — **지우지 말 것**. 골격 게이트는 불가"
+  },
+  {
+   "host": "kgy",
+   "path": "~/work/runs/arrhenius_6pt_traj",
+   "system": [
+    "modelc",
+    "lpsocl",
+    "b2o3"
+   ],
+   "T_K": [
+    700,
+    900
+   ],
+   "traj": "✓",
+   "status": "진행 중 (T700_s2)",
+   "note": "18런 MTO 캠페인"
+  },
+  {
+   "host": "kgy",
+   "path": "~/work/runs/lpsocl_600_long",
+   "system": "modelc",
+   "T_K": [
+    500,
+    700,
+    900
+   ],
+   "traj": "✓ 3",
+   "status": "완료"
+  },
+  {
+   "host": "kgy",
+   "path": "~/work/runs/mto_pilot",
+   "system": "modelc",
+   "T_K": [
+    700
+   ],
+   "traj": "✓ 1",
+   "status": "완료"
+  },
+  {
+   "host": "gabia",
+   "path": "/data/work/runs/highT_reseed_traj",
+   "system": "modelc",
+   "T_K": [
+    600,
+    800,
+    1000
+   ],
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "traj": "✓ 7 (+1 진행)",
+   "status": "진행 중 (s3/T600, 11h 경과)",
+   "★": "**b2o3 와 비교할 대조군이 여기 있다.** kgy 에서 같은 것을 또 돌릴 필요 없다"
+  },
+  {
+   "host": "gabia",
+   "path": "/data/work/b2o3md/runs/b2o3_600_reseed",
+   "system": "b2o3",
+   "T_K": [
+    600
+   ],
+   "traj": "✓ 3",
+   "status": "완료",
+   "note": "b2o3 온도계열의 저온 끝"
+  }
+ ],
+ "framework_beta_b2o3_2026_08_25": {
+  "source": "kgy highT_reseed_traj + highT_reseed_1200",
+  "per_T": {
+   "800": [
+    {
+     "seed": "s2",
+     "worst": "Cl(16)",
+     "beta": 0.51,
+     "ratio": 0.064
+    },
+    {
+     "seed": "s3",
+     "worst": "P(8)",
+     "beta": 0.79,
+     "ratio": 0.11
+    },
+    {
+     "seed": "s4",
+     "worst": "Cl(16)",
+     "beta": 0.54,
+     "ratio": 0.048
+    }
+   ],
+   "1000": [
+    {
+     "seed": "s2",
+     "worst": "P(8)",
+     "beta": 0.5,
+     "ratio": 0.055
+    },
+    {
+     "seed": "s3",
+     "worst": "S(41)",
+     "beta": 0.78,
+     "ratio": 0.135
+    },
+    {
+     "seed": "s4",
+     "worst": "P(8)",
+     "beta": 0.47,
+     "ratio": 0.056
+    }
+   ],
+   "1200_trajset": [
+    {
+     "seed": "s2",
+     "worst": "Cl(16)",
+     "beta": 0.94
+    },
+    {
+     "seed": "s3",
+     "worst": "P(8)",
+     "beta": 1.15
+    },
+    {
+     "seed": "s4",
+     "worst": "S(41)",
+     "beta": 0.88
+    }
+   ],
+   "1200_1200set": [
+    {
+     "seed": "s2",
+     "worst": "S(41)",
+     "beta": 0.63
+    },
+    {
+     "seed": "s3",
+     "worst": "Cl(16)",
+     "beta": 1.01
+    },
+    {
+     "seed": "s4",
+     "worst": "Cl(16)",
+     "beta": 0.65
+    }
+   ]
+  },
+  "VERDICT": "사전 등록 기준(2026-08-25, 결과 보기 전 확정)의 **세 번째 갈래**: `800 ≥ 0.30 → 800 도 오염, b2o3 전도도 축 재수립`. 800·1000 모두 3/3 이 0.30 이상이다. **1200 만의 문제가 아니었다.**",
+  "⚠_caveat": "worst 가 `P(8)` 인 경우가 잦다 — 8원자는 도구 컷오프 경계라 한 원자가 한 번 뛰면 β 가 튄다. **Cl(16) 만 봐도 800 에서 0.51/0.54 라 결론은 안 바뀌지만**, s3/T800 은 P(8) 하나로 판정됐다. 종별 전체 표가 필요하다(도구는 worst 만 찍는다).",
+  "600K_missing": "gabia b2o3_600_reseed 에 궤적 3개가 있다 — **재실행 없이 측정 가능**"
+ },
+ "⛔_retracted_reference": "msd_diffusive_check.py L400 의 안내문 '실측: modelc 800/1000 K 는 0.03/0.08 인데 b2o3 는 0.59/0.63' 은 **철회된 값**이다. canonical_registry.json 2026-08-20a: '옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy) 에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound'. modelc 0.03/0.08 도 같은 세트다 ⇒ **'creep 이 b2o3 고유' 라고 말할 근거가 아직 없다.** gabia modelc 로 새로 재야 한다.",
+ "next": [
+  "① gabia modelc 골격 β (계산 0)",
+  "② gabia b2o3 600 K 골격 β (계산 0)",
+  "③ 종별 전체 표 — 도구에 --all_species 필요",
+  "④ 위 셋이 모이면 b2o3 전도도 축 판정"
+ ]
+}
