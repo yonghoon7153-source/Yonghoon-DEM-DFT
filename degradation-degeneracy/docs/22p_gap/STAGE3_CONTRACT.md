@@ -506,7 +506,28 @@ inference_role:      canonical | diagnostic | confounded | superseded | excluded
 |---|---|
 | `preservation_status` | 원자료가 **있는가** |
 | `validation_status` | 그것이 **검증됐는가**, 어느 세대 검증기로 |
-| `inference_role` | 그것을 **어디에 쓸 수 있는가** |
+| `inference_role` | 그것을 **현행 세대에서** 어디에 쓸 수 있는가 |
+
+**★ 30차 P2 — leg-level `inference_role` 은 "현행 세대에 대한" 판정이다.**
+초판은 이 칸을 "어디에 쓸 수 있는가" 라고만 적었고, 아래 제약이
+`canonical` 에 `full_bundle + current_validated` 를 요구한다. 그런데
+`paired_fixed5_v4` 는 leg-level 이 `diagnostic` 이면서 옛 세대 주장
+`LEGACY_PAIRED_FIXED5` 의 `canonical` 이다 — 24차 보충 리뷰가 "legacy claim
+scope 와 당시 protocol 을 명시한 채" 허용한 것이다. 두 진술이 모순처럼 읽혔고,
+30차 리뷰가 "새 helper 의 재해석이 authority 문서에 반영되지 않았다" 고 지적했다.
+
+두 층을 이름으로 가른다:
+
+| 층 | 무엇 | 정본 |
+|---|---|---|
+| leg-level `inference_role` | **현행 세대**에 대한 다리의 역할. 아래 제약이 그대로 적용된다 | 이 문서 |
+| per-claim `claim_roles[].inference_role` | 그 다리를 **특정 주장**에 쓸 때의 역할. 세대가 다르면 `role_compatibility` 표가 관장한다 | `CLAIM_STATUS.yaml` |
+
+leg-level 보다 **센** per-claim role 은 그 주장의 세대가 **현행이 아닐 때만**
+성립한다. 현행 세대 주장에는 leg-level 이 상한이다
+(`tests/test_docs_lint.py::_claim_role_problems`). "현행" 은 선언이 아니라
+산출물이 도달한 가장 새로운 세대로 도출한다 — `v6` 는 산출물이 없으므로
+현행이 될 수 없다.
 
 **raw bundle 이 없는 다리를 선택만으로 `historical_validated` 라고 부를 수
 없다** — 검증은 실제 보존·검증 증거가 있을 때만 붙는다.

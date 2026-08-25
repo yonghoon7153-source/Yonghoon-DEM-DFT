@@ -1,6 +1,6 @@
 import sys, pathlib, yaml
 sys.path.insert(0, ".")
-from tools.design_wire import (canonical_design_spec, pairing_design_sha256,
+from tools.design_wire import (design_binding, canonical_design_spec, pairing_design_sha256,
                                parameter_order_sha256, pair_group_id, bank_id,
                                candidate_id, coords_from_condition)
 
@@ -40,8 +40,11 @@ COORDS = [
 ]
 vectors = []
 for i, c in enumerate(COORDS):
-    pg = pair_group_id(pairing_design_sha256(spec), c, pos)
-    bk = bank_id(pg, "v6.0", BANK_SHA)
+    # ★ 30차 P1-4 — chain 을 봉인 design 에서 유도한다. objective_plan 을
+    #   손으로 다시 적으면 golden 이 design 과 갈릴 수 있다.
+    b = design_binding(design=spec, coords=c, parameter_order_sha256=pos,
+                       bank_version="v6.0", unit_cube_bank_sha256=BANK_SHA)
+    pg, bk = b["pair_group_id"], b["bank_id"]
     vectors.append({
         "name": f"halfcell_2x2_coord{i}", "coords": c,
         "pair_group_id": pg, "bank_id": bk,
@@ -49,8 +52,7 @@ for i, c in enumerate(COORDS):
         #   placeholder `{"i": 0}` 이었으므로 provenance 를 고정한 것이 아니었다.
         "candidate_payloads": {k: dict(v) for k, v in PAYLOADS.items()},
         "candidate_ids": {
-            src: candidate_id(bk, BOUNDS_SHA, src, PAYLOADS[src],
-                                objective_plan=["pocv_dvdq", "pocv_dvdq_dqdv"])
+            src: candidate_id(bk, BOUNDS_SHA, src, PAYLOADS[src], binding=b)
             for src in ("base_init", "warm", "random")},
     })
 pgg = pair_group_id(pairing_design_sha256(grid), COORDS[0], pos)

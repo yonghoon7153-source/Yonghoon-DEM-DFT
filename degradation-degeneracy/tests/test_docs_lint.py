@@ -2828,15 +2828,41 @@ def _leg_preservation() -> dict:
     return yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
 
 
+def _pick_sealed_digest(projections: dict[str, dict], active: str | None):
+    """cohort 여럿이 같은 다리를 담을 때 어느 값이 근거인가.
+
+    ★ 30차 P2 — 초판은 `_cohorts()` 를 돌며 **처음 찾은** 것을 돌려줬다.
+      cohort 목록의 순서가 답을 바꿨고, 두 cohort 가 서로 다른 값을 적어도
+      아무 일이 없었다. 규칙을 못 박는다:
+
+        · 값이 갈리면 **실패**한다 (조용히 하나를 고르지 않는다)
+        · 값이 같으면 active cohort 의 것을 돌려준다 — 어느 쪽을 돌려주든
+          같은 값이지만, 근거의 출처가 순서에 의존하지 않게 한다
+    """
+    if not projections:
+        return None
+    vals = {c: p.get("source_digest") for c, p in projections.items()}
+    if len(set(vals.values())) != 1:
+        raise AssertionError(f"cohort 마다 source_digest 가 다르다: {vals}")
+    if active in projections:
+        return projections[active].get("source_digest")
+    return next(iter(vals.values()))
+
+
 def _sealed_source_digest(leg_id: str) -> str | None:
     """봉인된 투영이 적은 `source_digest` — 가변 원장이 아니라 이것이 근거다."""
     import yaml
 
+    projections = {}
+    active = None
     for c in _cohorts():
+        if c.get("status") == "active":
+            active = c["cohort_id"]
         y = _REPO / c["dir"] / f"{leg_id}.projection.yaml"
         if y.is_file():
-            return yaml.safe_load(y.read_text(encoding="utf-8")).get("source_digest")
-    return None
+            projections[c["cohort_id"]] = yaml.safe_load(
+                y.read_text(encoding="utf-8"))
+    return _pick_sealed_digest(projections, active)
 
 
 def _current_generation(creg: dict) -> str:
@@ -3480,3 +3506,167 @@ def test_the_frozen_guard_covers_descendants_and_fails_closed(tmp_path):
     src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
     assert "원장이 없으면" in src or "fail-closed" in src, (
         "원장 부재 시 fail-closed 라는 근거가 코드에 없다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 30차 P2 — 세대 chain 을 **등록 실물**에 결속한다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _bundle_dir(leg_id: str):
+    d = _REPO / "artifacts" / leg_id
+    return d if (d / "manifest.yaml").is_file() else None
+
+
+def _manifest_bound_digest(leg_id: str) -> tuple[str, str] | None:
+    """봉인 manifest **바이트에서** 다시 뽑은 `(manifest_sha256, source_digest)`.
+
+    ★ 30차 P2 — 투영의 `manifest_sha256` 이 실제 manifest bytes 와 **재해시로
+    결속되지 않았다.** 투영이 적은 값을 투영이 증명하는 구조였다.
+    """
+    import hashlib
+
+    import yaml
+
+    d = _bundle_dir(leg_id)
+    if d is None:
+        return None
+    raw = (d / "manifest.yaml").read_bytes()
+    man = yaml.safe_load(raw.decode("utf-8"))
+    return hashlib.sha256(raw).hexdigest(), man["run_spec"]["source_digest"]
+
+
+def _sealed_projections(leg_id: str) -> dict[str, dict]:
+    """cohort 이름 → 그 cohort 의 봉인 투영."""
+    import yaml
+
+    out = {}
+    for c in _cohorts():
+        y = _REPO / c["dir"] / f"{leg_id}.projection.yaml"
+        if y.is_file():
+            out[c["cohort_id"]] = yaml.safe_load(y.read_text(encoding="utf-8"))
+    return out
+
+
+def test_a_projection_manifest_digest_is_rehashed_from_actual_bytes():
+    """★ 30차 P2 — 투영의 `manifest_sha256` 을 실물에서 다시 계산한다.
+
+    원자료가 남은 다리에서만 가능하다 (`available_raw_present`). 그 다리가
+    이 결속의 **유일한 앵커**이며, 나머지 일곱은 원자료가 없어 영구히 불가능
+    하다 — 그 사실 자체를 여기 고정한다.
+    """
+    reg = _leg_preservation()
+    anchored = []
+    for e in reg["legs"]:
+        leg = e["leg_id"]
+        got = _manifest_bound_digest(leg)
+        cap = (e.get("evidence") or {}).get("regeneration_capability")
+        if got is None:
+            assert cap == "unavailable_raw_lost", (
+                f"{leg}: 원자료가 있다는데 묶음이 없다")
+            continue
+        assert cap == "available_raw_present", f"{leg}: 묶음이 있는데 원장이 없다고 한다"
+        man_sha, src = got
+        for cohort, proj in _sealed_projections(leg).items():
+            assert proj["manifest_sha256"] == man_sha, (
+                f"{leg}/{cohort}: 투영의 manifest_sha256 이 실물 재해시와 다르다")
+            assert proj["source_digest"] == src, (
+                f"{leg}/{cohort}: 투영의 source_digest 가 봉인 manifest 의 "
+                f"run_spec.source_digest 와 다르다")
+        assert (e["evidence"]["leg_source_digest"] == src), (
+            f"{leg}: 원장의 leg_source_digest 가 봉인 manifest 와 다르다")
+        anchored.append(leg)
+    assert anchored == ["paired_fixed5_v4"], (
+        f"실물에 묶인 다리 목록이 바뀌었다: {anchored}")
+
+
+def test_a_leg_in_two_cohorts_must_report_the_same_source_digest():
+    """★ 30차 P2 — `_sealed_source_digest` 가 **처음 찾은** cohort 를 썼다.
+
+    같은 다리가 g1 과 g2 에 모두 있어도 둘의 equality 를 강제하지 않았고
+    active cohort 우선순위도 없었다. cohort 순서를 바꾸면 답이 달라졌다는 뜻이다.
+    """
+    reg = _leg_preservation()
+    multi = []
+    for e in reg["legs"]:
+        projs = _sealed_projections(e["leg_id"])
+        if len(projs) > 1:
+            multi.append(e["leg_id"])
+            vals = {c: p.get("source_digest") for c, p in projs.items()}
+            assert len(set(vals.values())) == 1, (
+                f"{e['leg_id']}: cohort 마다 source_digest 가 다르다 {vals}")
+    assert multi, "두 cohort 에 걸친 다리가 없으면 이 검사는 잠들어 있다"
+
+    # active cohort 를 먼저 본다 — 순서에 답이 의존하면 안 된다
+    assert _sealed_source_digest("paired_fixed5_v4") == \
+        _sealed_projections("paired_fixed5_v4")["g2_2026_08_25"]["source_digest"]
+
+    # 규칙을 **순수 함수로** 시험한다. 실제 원장은 두 cohort 가 같은 값을
+    # 적고 있어 disagreement 를 만들 수 없고, 그러면 이 시험이 규칙을 전혀
+    # 시험하지 못한다 (이름만 강한 시험이 되는 자리다).
+    same = {"g1": {"source_digest": "aaaa"}, "g2": {"source_digest": "aaaa"}}
+    assert _pick_sealed_digest(same, "g2") == "aaaa"
+    assert _pick_sealed_digest(same, None) == "aaaa"
+    assert _pick_sealed_digest({}, "g2") is None
+    with pytest.raises(AssertionError):
+        _pick_sealed_digest({"g1": {"source_digest": "aaaa"},
+                             "g2": {"source_digest": "bbbb"}}, "g2")
+
+
+def test_every_generation_entry_names_the_legs_that_attained_it():
+    """★ 30차 P2 — mapping 의 **값**에 봉인 근거가 없었다.
+
+    key 가 투영에 등장하는지만 봤으므로 `digest → generation` 의 값 쪽은
+    자유였다. 값마다 그것을 얻은 다리를 이름하게 하고, 그 다리의 봉인
+    투영이 실제로 그 digest 를 적었는지 본다.
+
+    **닫히지 않은 것을 그대로 적는다**: 실행이 남긴 어떤 산출물에도
+    "protocol generation" 이라는 필드는 없다. 그 이름은 이 원장의 분류다.
+    그래서 digest→generation 화살표는 *도출* 이 아니라 **선언**이며, 여기서
+    할 수 있는 것은 선언을 봉인물이 지지하는 digest 에 묶어 두는 것뿐이다.
+    묶음 9 로 등록되는 새 다리부터는 registered receipt 의
+    `planned_envelope.protocol_generation` 이 정본이 된다 (아래 검사).
+    """
+    creg = _claim_status()
+    reg = _leg_preservation()
+    ev = creg.get("source_digest_evidence") or {}
+    dg = creg.get("source_digest_generations") or {}
+    assert set(ev) == set(dg), (
+        f"근거 표와 세대 표의 digest 집합이 다르다: {sorted(set(ev) ^ set(dg))}")
+
+    known = {e["leg_id"] for e in reg["legs"]}
+    for d, legs in sorted(ev.items()):
+        assert legs, f"{d}: 근거 다리가 비었다"
+        for leg in legs:
+            assert leg in known, f"{d}: 원장에 없는 다리 {leg}"
+            projs = _sealed_projections(leg)
+            assert projs, f"{d}/{leg}: 봉인 투영이 없다"
+            for cohort, p in projs.items():
+                assert p.get("source_digest") == d, (
+                    f"{d}/{leg}/{cohort}: 봉인 투영이 다른 digest 를 적었다 "
+                    f"({p.get('source_digest')})")
+
+
+def test_a_registered_leg_binds_its_generation_to_the_receipt():
+    """★ 30차 P2 — 묶음 9 로 등록된 다리는 receipt 가 세대의 정본이다.
+
+    지금은 등록된 다리가 **없다** — 그래서 이 검사는 "없음" 을 고정한다.
+    등록이 생기는 순간 fail-closed 로 켜진다: registered receipt 의
+    `planned_envelope` 이 원장과 어긋나면 실패한다.
+    """
+    reg = _leg_preservation()
+    registered = [e["leg_id"] for e in reg["legs"]
+                  if (e.get("evidence") or {}).get("registered_receipt")]
+    creg = _claim_status()
+    dg = creg.get("source_digest_generations") or {}
+
+    for leg in registered:                      # 지금은 빈 목록이다
+        e = next(x for x in reg["legs"] if x["leg_id"] == leg)
+        env = e["evidence"]["registered_receipt"]["planned_envelope"]
+        assert env["source_digest"] == e["evidence"]["leg_source_digest"], (
+            f"{leg}: 등록 receipt 의 source_digest 가 원장과 다르다")
+        assert dg.get(env["source_digest"]) == env["protocol_generation"], (
+            f"{leg}: 등록 receipt 의 protocol_generation 이 세대표와 다르다")
+
+    assert registered == [], (
+        "등록된 다리가 생겼다 — 위 결속이 이제 실제로 돌아야 하고, "
+        "`docs/22p_gap/STAGE3_CONTRACT.md` §8 의 세대 권위도 갱신해야 한다")

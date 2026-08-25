@@ -54,6 +54,7 @@ content-addressed backend 로 트랜잭션 의미를 완전히 검증하면 된�
 
 from __future__ import annotations
 
+import datetime as dt
 import errno
 import hashlib
 import json
@@ -170,6 +171,14 @@ def _write_exact(path: Path, data: bytes) -> None:
 
 
 def _fsync_dir(d: Path) -> bool:
+    """directory entry 를 flush 한다. **실패를 삼키지 않는다.**
+
+    ★ 30차 P0-3 — 초판은 실패를 `False` 로 돌렸고 object publish 와 pin 은
+      그 반환값을 **무시했다**. CAS 와 index 가 다른 filesystem 이면 power
+      loss 뒤 journal 만 남는 ordering 이 그대로 가능했다. 지금은
+      `_fsync_dir_strict()` 가 오류로 전파하고, capability 가 아예 없는
+      filesystem 은 `dir_fsync_supported()` 가 **만들기 전에** 걸러낸다.
+    """
     try:
         fd = os.open(d, os.O_RDONLY)
     except OSError:
@@ -181,6 +190,82 @@ def _fsync_dir(d: Path) -> bool:
         return False
     finally:
         os.close(fd)
+
+
+def _fsync_dir_strict(d: Path, stage: str) -> None:
+    """이 filesystem 이 directory fsync 를 지원하면 **반드시** 성공해야 한다."""
+    if not dir_fsync_supported(d):
+        return                       # capability 없음 — publish 경로가 이미 막는다
+    if not _fsync_dir(d):
+        raise PreserveError(
+            stage, f"directory fsync 가 실패했다 ({d}) — 이름이 durable 하지 "
+                   "않으면 crash 뒤 journal 만 남는 ordering 이 가능하다")
+
+
+def _mkdir_durable(d: Path, stage: str) -> None:
+    """directory 를 만들고 **새로 만들어진 모든 층의 부모 edge** 를 flush 한다.
+
+    ★ 30차 P0-3 — 초판은 `objects/<prefix>` 와 `pins/<leg>` 를
+      `mkdir(parents=True)` 로 만든 뒤 **자기 자신만** flush 했다. 그 이름을
+      담는 `objects/` · `pins/` entry 는 flush 되지 않아, crash 뒤 상위
+      directory 에서 이름이 사라질 수 있었다.
+    """
+    d = Path(d)
+    if d.is_dir():
+        return
+    new = []
+    p = d
+    while not p.exists():
+        new.append(p)
+        p = p.parent
+    d.mkdir(parents=True, exist_ok=True)
+    for made in reversed(new):        # 얕은 층부터 — 부모 entry 를 먼저 굳힌다
+        _fsync_dir_strict(made.parent, stage)
+
+
+def _is_uuid_hex(s) -> bool:
+    return isinstance(s, str) and len(s) == 32 and all(c in "0123456789abcdef" for c in s)
+
+
+#: ★ 30차 P0-1 — `ok=True` 가 durable retention 을 뜻하면 안 된다.
+#:
+#:   리뷰의 문장: "그 전에는 `ok=True`를 durable retention 성공으로 부르면
+#:   안 된다." local filesystem 에서는 **어떤 검사를 몇 번 하든** 마지막
+#:   검사와 반환 사이의 창을 닫을 수 없다. 이 환경은 uid 0 이라 directory
+#:   mode bit 도 잠금이 아니다 (실측: `chmod 0o500` 뒤에도 unlink 가 성공).
+#:
+#:   그래서 검사를 더 두는 대신 **성공의 뜻을 좁힌다.** 강제 수준을 값으로
+#:   신고하고, durable retention 을 요구하는 자리는 그 값을 보고 거부한다.
+#:   비싼 본 실행을 승인하는 gate 가 그 자리다.
+ENFORCEMENT_ADVISORY = "advisory_local"
+ENFORCEMENT_OBJECT_LOCK = "object_lock"
+RETENTION_SCHEMA = "retention-lease/v1"
+STORE_SCHEMA = "cas-store/v1"
+
+#: 최소 보존 기간 정책 — lease·receipt 가 이보다 짧다고 적으면 거부한다
+MIN_RETENTION_DAYS = 365
+
+
+def pin_set_digest(leg_id: str, objects) -> str:
+    """pin 집합의 정본 digest — journal·lease·backend 가 **같은 함수**를 쓴다.
+
+    ★ 30차 P1-1 — 초판은 `backend.pin()` 안에만 이 계산이 있었고, journal 의
+      `pin_set_digest` 는 64-hex 모양만 검사했다. 기대 graph 로 다시 계산하지
+      않으니 **journal 자기 checksum** 이었다.
+    """
+    return digest({"leg_id": leg_id, "objects": sorted(set(objects))})
+
+
+def _is_unique_hex64_list(v) -> bool:
+    """정렬된 unique 64-hex 목록인가.
+
+    ★ 30차 P1-1 — 초판은 `set(journal.objects) == expected` 만 봤다. 정상
+      목록의 digest 하나를 **한 번 더** 넣어도 통과했다.
+    """
+    if not isinstance(v, list) or not all(_is_hex64(x) for x in v):
+        return False
+    return len(set(v)) == len(v) and v == sorted(v)
+
 
 
 def _file_sha(p: Path) -> str:
@@ -208,9 +293,44 @@ class CasBackend:
     retention_days: int = 3650
     readable: bool = True
 
+    #: 이 backend 가 강제할 수 있는 retention 수준. local filesystem 은
+    #: object-lock 을 **강제하지 못한다** — 이 저장소의 실행 환경은 uid 0 이라
+    #: mode bit 조차 잠금이 아니다. 그래서 `advisory_local` 이라고 신고하고,
+    #: `assert_durable_retention()` 이 그 값을 보고 거부한다 (30차 P0-1).
+    enforcement: str = ENFORCEMENT_ADVISORY
+
     @property
     def uri(self) -> str:
-        return f"file+cas://{self.root}"
+        """★ 30차 P0-2 — 초판은 `f"file+cas://{self.root}"` 였다.
+
+        `root=Path("cas")` 로 등록한 뒤 cwd 를 바꾸면 **다른** store 를 가리키면서
+        URI 는 그대로였다. 절대 경로로 정규화한다.
+        """
+        return f"file+cas://{Path(self.root).resolve()}"
+
+    @property
+    def store_id(self) -> str:
+        """store 를 만들 때 한 번 정해지는 불변 식별자.
+
+        ★ 30차 P0-2 — 경로는 재사용·재마운트·bind mount 로 겹칠 수 있다.
+        절대 URI 만으로는 "같은 store 인가" 를 답할 수 없어서, 생성 시각에
+        고정되는 UUID 를 store 안에 두고 receipt 에 결속한다.
+        """
+        p = Path(self.root) / "store.json"
+        if p.is_file():
+            rec = load_canonical(p.read_bytes())
+            sid = rec.get("store_id") if isinstance(rec, dict) else None
+            if not _is_hex64(sid or "") and not _is_uuid_hex(sid or ""):
+                raise PreserveError("store", f"store.json 의 store_id 가 이상하다: {sid!r}")
+            return sid
+        Path(self.root).mkdir(parents=True, exist_ok=True)
+        data = canonical_bytes({"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex})
+        _exclusive_write(p, data)                 # 경쟁하면 먼저 쓴 쪽이 이긴다
+        return load_canonical(p.read_bytes())["store_id"]
+
+    def identity(self) -> dict:
+        return {"uri": self.uri, "store_id": self.store_id,
+                "enforcement": self.enforcement}
 
     def _obj(self, dg: str) -> Path:
         return self.root / "objects" / dg[:2] / dg
@@ -225,18 +345,19 @@ class CasBackend:
             return {"digest": dg, "stored": False, "idempotent": True}
 
         staging = self.root / "staging"
-        staging.mkdir(parents=True, exist_ok=True)
+        _mkdir_durable(staging, "cas_put")
         tmp = staging / f"{dg}.{uuid.uuid4().hex}.part"
         payload = data[: len(data) // 2] if "partial_upload" in faults else data
         # ★ 28차 P1-2 / 29차 P1-1 — binary 로 전부 쓰고 fsync 한다.
         _write_exact(tmp, payload)
         if "partial_upload" in faults:
             raise PreserveError("cas_put", "업로드가 중간에 끊겼다 (주입)")
-        dst.parent.mkdir(parents=True, exist_ok=True)
+        # ★ 30차 P0-3 — `objects/<prefix>` 를 새로 만들면 그 이름을 담은
+        #   `objects/` entry 도 굳혀야 한다. 초판은 자기 자신만 flush 했다.
+        _mkdir_durable(dst.parent, "cas_put")
         os.replace(tmp, dst)
-        # ★ 29차 P0-2 — object directory 를 flush 하지 않으면 journal 은 남고
-        #   object name 이 사라지는 ordering 이 가능하다.
-        _fsync_dir(dst.parent)
+        # ★ 29차 P0-2 / 30차 P0-3 — 실패를 삼키지 않는다.
+        _fsync_dir_strict(dst.parent, "cas_put")
         return {"digest": dg, "stored": True, "idempotent": False}
 
     def read_back(self, dg: str, *, faults: frozenset[str] = frozenset()) -> bytes:
@@ -291,7 +412,8 @@ class CasBackend:
                 continue
             if not src.is_file():
                 raise PreserveError("pin", f"pin 할 object 가 없다: {dg[:16]}")
-            dst.parent.mkdir(parents=True, exist_ok=True)
+            # ★ 30차 P0-3 — `pins/<leg>` 를 새로 만들면 `pins/` entry 도 굳힌다
+            _mkdir_durable(dst.parent, "pin")
             try:
                 os.link(src, dst)
             except FileExistsError:               # 경쟁 — 위와 같은 규칙으로
@@ -307,10 +429,10 @@ class CasBackend:
                     pass
                 finally:
                     t.unlink(missing_ok=True)
-            _fsync_dir(dst.parent)
+            _fsync_dir_strict(dst.parent, "pin")
             made.append(dg)
         return {"leg_id": leg_id, "pinned": made,
-                "pin_set_digest": digest({"leg_id": leg_id, "objects": sorted(made)})}
+                "pin_set_digest": pin_set_digest(leg_id, made)}
 
     def pinned(self, leg_id: str) -> set:
         d = self.root / "pins" / leg_id
@@ -339,6 +461,157 @@ class CasBackend:
     def orphans(self) -> list[Path]:
         st = self.root / "staging"
         return sorted(st.glob("*.part")) if st.is_dir() else []
+
+    # ── retention primitive (★ 30차 P0-1) ───────────────────────────────
+    # 리뷰가 요구한 세 연산이다:
+    #
+    #     retain(graph, minimum_until) -> immutable retention receipt / lease
+    #     verify_retention(receipt, actual_backend)
+    #     retrieve_retained(receipt, digest)
+    #
+    # lease 자체가 CAS object 이고 pin 된다 — 그래프의 일부다. 그래서 lease 를
+    # 위조하려면 graph digest 를 통째로 바꿔야 하고, 그러면 journal 과 어긋난다.
+
+    def retain(self, leg_id: str, digests, *, min_retention_days: int) -> dict:
+        """graph 를 붙들고 **lease** 를 만든다. lease 도 pin 된다."""
+        check_id(leg_id)
+        if not isinstance(min_retention_days, int) or isinstance(min_retention_days, bool) \
+                or min_retention_days < MIN_RETENTION_DAYS:
+            raise PreserveError(
+                "retain", f"min_retention_days 가 정책 하한 미만이다: "
+                          f"{min_retention_days!r} < {MIN_RETENTION_DAYS}")
+        if self.retention_days < min_retention_days:
+            raise PreserveError(
+                "retain", f"backend 의 retention({self.retention_days}일)이 요구 "
+                          f"하한({min_retention_days}일)보다 짧다")
+        objs = sorted(set(digests))
+        # ★ 30차 자체 발견 — lease 에 `retain_until_utc` 가 들어가므로 부를
+        #   때마다 다른 바이트가 된다. 재실행이 초 경계를 넘으면 lease 가 하나
+        #   더 pin 되어 pin 집합에 여분이 생겼다 (전체 시험이 확률적으로
+        #   빨갰다). 같은 graph 를 담보하는 유효한 lease 가 이미 있으면
+        #   **그것을 돌려준다** — 재시도가 상태를 늘리지 않는다.
+        existing = self._existing_lease(leg_id, objs, min_retention_days)
+        if existing is not None:
+            return existing
+        self.pin(leg_id, objs)
+        until = (dt.datetime.now(dt.timezone.utc)
+                 + dt.timedelta(days=min_retention_days))
+        lease = {
+            "schema": RETENTION_SCHEMA,
+            "leg_id": leg_id,
+            "store_id": self.store_id,
+            "backend_uri": self.uri,
+            "enforcement": self.enforcement,
+            "min_retention_days": min_retention_days,
+            "retain_until_utc": until.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "objects": objs,
+            "pin_set_digest": pin_set_digest(leg_id, objs),
+        }
+        raw = canonical_bytes(lease)
+        l_obj = self.put_if_absent(raw)["digest"]
+        self.pin(leg_id, [l_obj])          # lease 도 graph 의 일부다
+        return dict(lease, lease_digest=l_obj)
+
+    def _existing_lease(self, leg_id: str, objs: list,
+                        min_retention_days: int) -> dict | None:
+        """이 leg 에 이미 있고 **같은 graph 를 같은 정책으로** 담보하는 lease.
+
+        pin 집합에서 graph object 를 뺀 나머지가 lease 후보다. 여러 개가 남아
+        있으면 이미 상태가 오염된 것이므로 `None` 을 돌려 새로 만들지 않고
+        아래 검증이 그것을 잡게 둔다.
+        """
+        extra = sorted(self.pinned(leg_id) - set(objs))
+        if len(extra) != 1:
+            return None
+        try:
+            lease = self.read_lease(leg_id, extra[0])
+        except (PreserveError, ValueError, UnicodeDecodeError):
+            return None
+        if lease.get("objects") != objs \
+                or lease.get("min_retention_days") != min_retention_days \
+                or lease.get("store_id") != self.store_id \
+                or lease.get("backend_uri") != self.uri \
+                or lease.get("enforcement") != self.enforcement:
+            return None
+        try:
+            return self.verify_retention(leg_id, extra[0], expected=set(objs))
+        except PreserveError:
+            return None       # 만료됐거나 어긋났다 — 새로 만든다
+
+    def read_lease(self, leg_id: str, lease_digest: str) -> dict:
+        """lease 를 **pin 에서** 읽는다."""
+        lease = load_canonical(self.read_pinned(leg_id, lease_digest))
+        if not isinstance(lease, dict):
+            raise PreserveError("retention", "lease 가 dict 가 아니다")
+        return lease
+
+    def verify_retention(self, leg_id: str, lease_digest: str,
+                         expected: set | None = None) -> dict:
+        """lease 가 **이 backend 에서 지금** 유효한가.
+
+        읽은 바이트가 아니라 **상태**를 본다 — 그래서 전수 읽기가 끝난 뒤에
+        한 번 더 부르면 그 사이의 삭제가 잡힌다 (30차 P0-1 의 마지막 창).
+        """
+        stage = "retention"
+        lease = self.read_lease(leg_id, lease_digest)
+        want = {"schema", "leg_id", "store_id", "backend_uri", "enforcement",
+                "min_retention_days", "retain_until_utc", "objects", "pin_set_digest"}
+        if set(lease) != want:
+            raise PreserveError(stage, f"lease 키가 계약과 다르다: "
+                                       f"{sorted(set(lease) ^ want)[:4]}")
+        if lease["schema"] != RETENTION_SCHEMA:
+            raise PreserveError(stage, f"lease schema 가 다르다: {lease['schema']!r}")
+        if lease["leg_id"] != leg_id:
+            raise PreserveError(stage, "lease 가 다른 leg 의 것이다")
+        # ★ 30차 P0-2 — 두 축을 **따로** 본다. store 를 통째로 복사하면
+        #   `store.json` 까지 딸려와 UUID 가 같아지므로 URI 축이 잡고,
+        #   같은 경로를 재사용하면 UUID 축이 잡는다. 어느 쪽이 어긋났는지
+        #   메시지가 말해야 반례를 다시 만들 수 있다.
+        if lease["backend_uri"] != self.uri:
+            raise PreserveError(
+                stage, f"lease 가 다른 backend 의 것이다 — "
+                       f"{lease['backend_uri']!r} ≠ {self.uri!r}")
+        if lease["store_id"] != self.store_id:
+            raise PreserveError(
+                stage, f"lease 가 다른 store 의 것이다 — backend URI 는 같은데 "
+                       f"store {lease['store_id'][:8]} ≠ {self.store_id[:8]}")
+        # ★ 30차 P1-3 — receipt 가 적은 숫자가 아니라 **지금 backend** 를 본다
+        if self.retention_days < lease["min_retention_days"]:
+            raise PreserveError(
+                stage, f"backend 의 현재 retention({self.retention_days}일)이 lease 의 "
+                       f"하한({lease['min_retention_days']}일)보다 짧다")
+        if lease["min_retention_days"] < MIN_RETENTION_DAYS:
+            raise PreserveError(stage, "lease 의 하한이 정책 하한 미만이다")
+        try:
+            until = dt.datetime.strptime(lease["retain_until_utc"], "%Y-%m-%dT%H:%M:%SZ")
+        except (TypeError, ValueError) as ex:
+            raise PreserveError(stage, f"retain_until_utc 가 이상하다: "
+                                       f"{lease.get('retain_until_utc')!r}") from ex
+        if until.replace(tzinfo=dt.timezone.utc) <= dt.datetime.now(dt.timezone.utc):
+            raise PreserveError(stage, "lease 가 이미 만료됐다")
+        objs = lease["objects"]
+        if not _is_unique_hex64_list(objs):
+            raise PreserveError(stage, "lease 의 objects 가 unique 64-hex 목록이 아니다")
+        if lease["pin_set_digest"] != pin_set_digest(leg_id, objs):
+            raise PreserveError(stage, "lease 의 pin_set_digest 가 objects 와 다르다")
+        if expected is not None and set(objs) != set(expected):
+            raise PreserveError(
+                stage, f"lease 가 유도한 graph 와 다르다 — 없음 "
+                       f"{sorted(set(expected) - set(objs))[:2]}")
+        on_disk = self.pinned(leg_id)
+        want_disk = set(objs) | {lease_digest}
+        if on_disk != want_disk:
+            raise PreserveError(
+                stage, f"pin 상태가 lease 와 다르다 — 없음 "
+                       f"{sorted(want_disk - on_disk)[:2]} · 여분 "
+                       f"{sorted(on_disk - want_disk)[:2]}")
+        return dict(lease, lease_digest=lease_digest)
+
+    def retrieve_retained(self, lease: dict, dg: str) -> bytes:
+        """lease 가 담보한 object 만 회수한다."""
+        if dg not in set(lease.get("objects") or []):
+            raise PreserveError("retention", f"lease 가 담보하지 않은 object: {dg[:16]}")
+        return self.read_pinned(lease["leg_id"], dg)
 
 
 #: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
@@ -390,6 +663,14 @@ def check_manifest(man) -> list[str]:
         if isinstance(m["bytes"], bool) or not isinstance(m["bytes"], int) \
                 or m["bytes"] < 0:
             bad.append(f"members[{i}].bytes 가 음이 아닌 정수가 아니다")
+        # ★ 30차 P1-2 — 초판은 member path 에 `_safe_member_path()` 를 적용하지
+        #   않았다. `path=7` · `../x` · absolute · backslash · colon 을 가진
+        #   self-consistent manifest 가 graph 검증을 통과하고 **실제 복원에서만**
+        #   실패했다. 경로 domain 을 seal·verify 양쪽에서 같은 함수로 본다.
+        try:
+            _safe_member_path(Path("/__manifest_domain__"), m["path"], "manifest")
+        except PreserveError as ex:
+            bad.append(f"members[{i}].path: {ex.msg}")
         paths.append(m["path"])
     dup = sorted({q for q in paths if paths.count(q) > 1})
     if dup:
@@ -490,28 +771,36 @@ class PlannedLeg:
     objectives: tuple[str, ...]
     total_start_budget: int
     candidate_mode: str
+    #: ★ 30차 P1-3 — 원래 요구한 retention 하한을 **봉인**한다. `Hooks` 에만
+    #:   있으면 나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
+    min_retention_days: int = MIN_RETENTION_DAYS
     design_label: str = ""          # 사람용 — hash 밖
     notes: str = ""
 
     def __post_init__(self):
-        if not _is_hex64(self.pairing_design_sha256):
-            raise PreserveError(
-                "planned_seal",
-                f"pairing_design_sha256 이 64-hex 가 아니다: "
-                f"{self.pairing_design_sha256!r} — 자유문자 label 을 정본으로 "
-                "쓰면 설계가 바뀌어도 planned_id 가 안 움직인다")
+        # ★ 30차 P1-2 — 초판은 design SHA 하나만 봤다. `protocol_generation=7`
+        #   `source_digest=7` `objectives=[7]` `total_start_budget=-1`
+        #   `candidate_mode=7` 이 domain 오류 없이 transaction 에 도달했다.
+        #   생성과 복구가 **같은 validator** 를 쓴다.
+        bad = check_envelope(self.envelope())
+        if bad:
+            raise PreserveError("planned_seal", "; ".join(bad[:4]))
 
     def envelope(self) -> dict:
         """hash 대상. **label 과 notes 는 들어가지 않는다** (사람용)."""
         return {
-            "schema": "planned-leg/v2",
+            "schema": "planned-leg/v3",
             "leg_id": self.leg_id,
             "protocol_generation": self.protocol_generation,
             "pairing_design_sha256": self.pairing_design_sha256,
             "source_digest": self.source_digest,
             "objectives": list(self.objectives),
-            "total_start_budget": int(self.total_start_budget),
+            # ★ 30차 P1-2 — 초판은 `int(...)` 로 **강제 변환**했다. `True` 가
+            #   `1` 이 되어 domain 검사에 도달하지 못했다. 값을 그대로 두고
+            #   validator 가 보게 한다.
+            "total_start_budget": self.total_start_budget,
             "candidate_mode": self.candidate_mode,
+            "min_retention_days": self.min_retention_days,
         }
 
     def planned_id(self) -> str:
@@ -592,7 +881,14 @@ def dir_fsync_supported(where: Path) -> bool:
       거부하므로 파일은 이미 보이는데 API 는 예외였다 — 상태를 바꿔 놓고
       실패한 것이다. capability 는 **아무 것도 만들기 전에** 확인한다.
     """
-    key = str(Path(where).resolve().anchor) or str(where)
+    # ★ 30차 P0-3 — 초판의 캐시 키는 `resolve().anchor` 였다. POSIX 에서는
+    #   서로 다른 ext4/NFS/FUSE mount 가 전부 `/` 하나로 합쳐져, 한 mount 의
+    #   capability 가 다른 mount 의 답이 됐다. mount 를 실제로 가르는 것은
+    #   device number 다.
+    try:
+        key = f"dev:{os.stat(where).st_dev}"
+    except OSError:
+        key = f"path:{where}"
     if key in _DIR_FSYNC:
         return _DIR_FSYNC[key]
     ok = True
@@ -702,34 +998,52 @@ def registration(index_path: Path, leg_id: str) -> dict | None:
         rec = load_canonical(p.read_bytes())
     except (ValueError, UnicodeDecodeError):
         return None
-    if not isinstance(rec, dict) or rec.get("leg_id") != leg_id:
+    if not isinstance(rec, dict) or set(rec) != _JOURNAL_KEYS:
+        # ★ 30차 P1-1 — 초판은 surplus key 를 허용했다. journal 은 등록 graph
+        #   의 exact typed 표현이어야 하므로 키가 남거나 모자라면 거부한다.
+        return None
+    if rec.get("leg_id") != leg_id:
         return None
     if not _is_hex64(rec.get("receipt_object") or ""):
         return None
-    if not isinstance(rec.get("objects"), list) or \
-            not _is_hex64(rec.get("pin_set_digest") or ""):
+    if not _is_hex64(rec.get("lease_digest") or ""):
+        return None
+    # ★ 30차 P1-1 — 초판은 `isinstance(list)` 였다. 정상 목록의 digest 를 한 번
+    #   더 넣은 duplicate journal 이 `set(...) == expected` 를 통과했다.
+    if not _is_unique_hex64_list(rec.get("objects")):
+        return None
+    # ★ 30차 — 여기서는 **모양**만 본다. `pin_set_digest` 가 journal 자기
+    #   목록과 맞는지 다시 세는 것은 자기일관성일 뿐이고, 실제 결속은
+    #   `verify_registered_graph()` 가 **유도한 graph** 로 재계산한다. 같은
+    #   계산을 두 곳에 두면 강한 쪽을 지워도 시험이 초록이 된다 (변이로 확인).
+    if not _is_hex64(rec.get("pin_set_digest") or ""):
         return None
     return rec
 
 
-def is_registered(index_path: Path, leg_id: str,
-                  backend: CasBackend | None = None) -> bool:
-    """등록됐는가.
+def has_registration_journal(index_path: Path, leg_id: str) -> bool:
+    """등록 journal 이 **있다는 주장**만 본다 — 보존 완료가 아니다.
 
-    journal 이 index 의 receipt 를 가리켜야 하고, **backend 를 주면 pin 집합이
-    완전하고 바이트가 맞는지까지** 본다. ★ 28차 P0-1 — 이것이 없으면 "등록됨"
-    을 "receipt 가 회수 가능함" 으로 정의할 수 없다.
+    ★ 30차 P0-2 — 초판은 `is_registered(index, leg)` 가 backend 없이도 참을
+      돌려줬다. 정상 등록 뒤 `pins/` 와 `objects/` 를 모두 지워도 참이었다.
+      이름 하나가 "journal 주장" 과 "보존 완료" 두 뜻을 가졌던 것이다.
+      판정 API 는 backend 를 **필수**로 받고, 주장 확인은 이 이름을 쓴다.
     """
     rec = registration(index_path, leg_id)
     if rec is None:
         return False
     e = index_entries(index_path).get(leg_id)
-    if not e or rec["receipt_object"] != e.get("receipt_object"):
+    return bool(e) and rec["receipt_object"] == e.get("receipt_object")
+
+
+def is_registered(index_path: Path, leg_id: str, backend: CasBackend) -> bool:
+    """**이 backend 에서** 등록이 지금 성립하는가.
+
+    저장된 비트가 아니라 backend 에 대고 평가하는 술어다. `backend` 는
+    필수다 (30차 P0-2).
+    """
+    if not has_registration_journal(index_path, leg_id):
         return False
-    if backend is None:
-        # journal 이 있다는 **주장**만 본다. 보존 완료가 아니다 — 이름이
-        # 두 뜻을 갖지 않도록 호출자는 backend 를 넘기는 쪽을 써야 한다.
-        return True
     try:
         verify_registered_graph(backend, index_path, leg_id)
     except PreserveError:
@@ -737,12 +1051,40 @@ def is_registered(index_path: Path, leg_id: str,
     return True
 
 
+def assert_durable_retention(backend: CasBackend, index_path: Path,
+                             leg_id: str) -> dict:
+    """등록이 **강제되는** retention 아래 있는지 — 아니면 거부한다.
+
+    ★ 30차 P0-1 — local filesystem 은 object-lock 을 강제하지 못하므로
+      `ok=True` 를 durable retention 성공이라고 부를 수 없다. 비싼 본 실행을
+      승인하는 자리는 이 함수를 통과해야 한다.
+    """
+    rec = verify_registered_graph(backend, index_path, leg_id)
+    j = registration(index_path, leg_id)
+    lease = backend.read_lease(leg_id, j["lease_digest"])
+    if lease.get("enforcement") != ENFORCEMENT_OBJECT_LOCK:
+        raise PreserveError(
+            "durable_retention",
+            f"이 backend 는 retention 을 강제하지 못한다 "
+            f"(enforcement={lease.get('enforcement')!r}). local filesystem 의 pin 은 "
+            "advisory 다 — 마지막 검사와 반환 사이의 창을 닫을 수 없고, uid 0 "
+            "에서는 mode bit 도 잠금이 아니다. object-lock 을 강제하는 backend "
+            "에서만 durable retention 을 주장한다")
+    return rec
+
+
+#: 등록 journal 의 닫힌 schema (★ 30차 P1-1)
+_JOURNAL_KEYS = frozenset({"leg_id", "receipt_object", "pin_set_digest",
+                           "objects", "lease_digest"})
+
+
 def _register(index_path: Path, leg_id: str, receipt_object: str,
-              pin_set_digest: str, objects: list) -> None:
+              pin_digest: str, objects: list, lease_digest: str) -> None:
     """durable 상태 변경. 기존 journal 이 다르면 **거부**한다."""
     data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object,
-                            "pin_set_digest": pin_set_digest,
-                            "objects": sorted(objects)})
+                            "pin_set_digest": pin_digest,
+                            "objects": sorted(set(objects)),
+                            "lease_digest": lease_digest})
     path = _reg_file(index_path, leg_id)
     if _exclusive_write(path, data):
         return
@@ -758,19 +1100,64 @@ def _register(index_path: Path, leg_id: str, receipt_object: str,
 # 산출 manifest schema — optional 이 아니다 (26차 P1-3)
 # ─────────────────────────────────────────────────────────────────────────────
 
-def check_output(out) -> list[str]:
-    """재채점 산출이 계약을 만족하는가. 비면 통과."""
+#: 산출 role 별 **필수** 필드 — tagged union 의 tag 가 `role` 이다.
+#:
+#: ★ 30차 P1-2 — 초판은 8개 키의 nonempty 여부만 봤다. 리뷰가 그대로 적었듯
+#:   `role = 7 · canonicalizer = {} · semantic_schema = [1] · producer = False`
+#:   에 실제 path/hash/size 를 붙이면 등록됐다. `measured_by`·`produced_from`
+#:   ·`source_file_sha256`·`n_rows`·`semantic_view_drops` 의 role 별 필수
+#:   여부와 타입은 아예 정의돼 있지 않았다.
+_OUTPUT_ROLES = {
+    "rescored_summary": frozenset({"measured_by", "produced_from",
+                                   "source_file_sha256", "n_rows",
+                                   "semantic_view_drops"}),
+    "rescored_rows": frozenset({"measured_by", "produced_from",
+                                "source_file_sha256", "n_rows"}),
+}
+#: 모든 role 이 공유하는 필수 필드
+_OUTPUT_BASE = ("role", "canonicalizer", "semantic_schema", "semantic_sha256",
+                "relative_path", "byte_size", "file_sha256", "producer",
+                "object_digest")
+
+
+#: wrapper 가 **측정해서** 붙이는 필드. hook 이 신고하는 것이 아니다 (28차 P1-1).
+_OUTPUT_MEASURED = ("object_digest", "measured_by")
+
+
+def check_output_claim(out) -> list[str]:
+    """hook 이 신고한 descriptor — wrapper 가 측정할 필드는 아직 없다."""
+    return check_output(out, measured=False)
+
+
+def check_output(out, *, measured: bool = True) -> list[str]:
+    """재채점 산출이 계약을 만족하는가. 비면 통과. role 별 tagged union 이다."""
     if not isinstance(out, dict):
         return [f"산출이 dict 가 아니다: {type(out).__name__}"]
     bad = []
+    if not set(out) <= _OUTPUT_KEYS:
+        bad.append(f"산출 키 집합이 닫혀 있지 않다: {sorted(set(out) - _OUTPUT_KEYS)}")
+    if not measured:
+        stray = [k for k in _OUTPUT_MEASURED if k in out]
+        if stray:
+            bad.append(f"hook 이 wrapper 측정 필드를 신고했다: {stray} — "
+                       "증명과 주장의 주체가 같으면 안 된다")
+    role = out.get("role")
+    if role not in _OUTPUT_ROLES:
+        bad.append(f"role 이 계약 enum 이 아니다: {role!r} "
+                   f"(허용: {sorted(_OUTPUT_ROLES)})")
     # ★ 27차 P1-5 — semantic digest 만 요구하면 "무슨 파일을 만들었는가" 가
     #   receipt 어디에도 없다. byte 축을 함께 강제한다 (25차 Q2 는 둘 다 요구).
-    for k in ("role", "canonicalizer", "semantic_schema", "semantic_sha256",
-              "relative_path", "byte_size", "file_sha256", "producer"):
-        if out.get(k) in (None, "", []):
+    # ★ 30차 P1-2 — nonempty 가 아니라 **타입**을 본다.
+    need = [k for k in _OUTPUT_BASE if measured or k not in _OUTPUT_MEASURED]
+    for k in need:
+        if k not in out:
             bad.append(f"산출에 {k} 가 없다")
-    for k in ("semantic_sha256", "file_sha256"):
-        if out.get(k) is not None and not _is_hex64(out.get(k)):
+    for k in ("canonicalizer", "semantic_schema", "producer", "relative_path"):
+        if k in out and not _nonempty_str(out[k]):
+            bad.append(f"{k} 가 비어 있지 않은 NFC 문자열이 아니다: {out.get(k)!r}")
+    for k in ("semantic_sha256", "file_sha256", "object_digest"):
+        if k in out and (measured or k not in _OUTPUT_MEASURED) \
+                and not _is_hex64(out.get(k)):
             bad.append(f"{k} 이 64-hex 가 아니다: {out.get(k)!r}")
     n = out.get("byte_size")
     if isinstance(n, bool) or not isinstance(n, int) or n < 0:
@@ -778,6 +1165,24 @@ def check_output(out) -> list[str]:
     rp = out.get("relative_path")
     if isinstance(rp, str) and (rp.startswith("/") or ".." in rp.split("/")):
         bad.append(f"relative_path 가 상대 경로가 아니다: {rp!r}")
+    # role 별 필수 필드와 타입
+    for k in sorted(_OUTPUT_ROLES.get(role, frozenset())):
+        if not measured and k in _OUTPUT_MEASURED:
+            continue
+        if k not in out:
+            bad.append(f"role={role} 에는 {k} 가 필수다")
+        elif k == "n_rows":
+            if isinstance(out[k], bool) or not isinstance(out[k], int) or out[k] < 0:
+                bad.append(f"n_rows 가 음이 아닌 정수가 아니다: {out[k]!r}")
+        elif k == "semantic_view_drops":
+            v = out[k]
+            if not isinstance(v, list) or not all(_nonempty_str(x) for x in v):
+                bad.append(f"semantic_view_drops 가 문자열 목록이 아니다: {v!r}")
+        elif k == "source_file_sha256":
+            if not _is_hex64(out[k]):
+                bad.append(f"source_file_sha256 이 64-hex 가 아니다: {out[k]!r}")
+        elif not _nonempty_str(out[k]):
+            bad.append(f"{k} 가 비어 있지 않은 NFC 문자열이 아니다: {out[k]!r}")
     return bad
 
 
@@ -828,6 +1233,30 @@ def _drop_from_cas(backend: CasBackend, man: dict, man_dg: str,
             p.write_bytes(bytes(b))
 
 
+def check_hook_validation(v) -> list[str]:
+    """validator hook 이 돌려준 것이 계약인가 (★ 30차 P1-2).
+
+    `ok` 는 **exact bool**, `checks` 는 dict, `fail` 은 문자열 목록이다.
+    """
+    if not isinstance(v, dict):
+        return [f"검증 결과가 dict 가 아니다: {type(v).__name__}"]
+    bad = []
+    if set(v) != {"ok", "fail", "checks"}:
+        bad.append(f"키 집합이 닫혀 있지 않다: {sorted(set(v) ^ {'ok', 'fail', 'checks'})}")
+        return bad
+    if v["ok"] is not True and v["ok"] is not False:
+        bad.append(f"ok 가 exact bool 이 아니다: {v['ok']!r}")
+    if not isinstance(v["checks"], dict) or not v["checks"]:
+        bad.append(f"checks 가 비어 있지 않은 dict 가 아니다: {v['checks']!r}")
+    elif not all(_nonempty_str(k) for k in v["checks"]):
+        bad.append("checks 의 키가 비어 있지 않은 NFC 문자열이 아니다")
+    if not isinstance(v["fail"], list) or not all(isinstance(x, str) for x in v["fail"]):
+        bad.append(f"fail 이 문자열 목록이 아니다: {v['fail']!r}")
+    elif bool(v["fail"]) == (v["ok"] is True):
+        bad.append(f"ok={v['ok']!r} 와 fail={v['fail']!r} 이 서로 모순이다")
+    return bad
+
+
 def _validate_and_rescore(root: Path, hooks: Hooks, backend: CasBackend,
                           faults: frozenset[str]) -> tuple[dict, dict]:
     if "validator_raises" in faults:
@@ -835,13 +1264,22 @@ def _validate_and_rescore(root: Path, hooks: Hooks, backend: CasBackend,
     v = hooks.validate(root)
     if "validator_fails" in faults:
         v = {"ok": False, "fail": ["주입된 실패"]}
-    if not v.get("ok"):
+    # ★ 30차 P1-2 — 초판은 `v.get("ok")` 를 **truthiness** 로 봤고 `checks` 가
+    #   dict 인지 확인하지 않았다. `{"ok": "yes", "checks": "x"}` 가 통과한 뒤
+    #   receipt 에는 `{"ok": true, "n_checks": 1}` 로 정규화됐다 — 저장된
+    #   nested object 가 exact 여도 그 값이 실제 validator 결과를 증명하지
+    #   못한다는 뜻이다. hook 결과의 domain 을 여기서 닫는다.
+    vbad = check_hook_validation(v)
+    if vbad:
+        raise PreserveError("validate", "검증기 결과가 계약이 아니다: "
+                                        + "; ".join(vbad[:3]))
+    if v["ok"] is not True:
         raise PreserveError("validate", f"검증 실패: {v.get('fail')}")
 
     if "score_raises" in faults:
         raise PreserveError("rescore", "재채점이 예외로 죽었다 (주입)")
     out = hooks.rescore(root)
-    bad = check_output(out)
+    bad = check_output_claim(out)
     if bad:
         raise PreserveError("rescore", "; ".join(bad))
     sem = ("f" * 64 if "wrong_semantic_digest" in faults
@@ -891,6 +1329,7 @@ def _hit_receipt(backend: CasBackend, r_obj: str, faults: frozenset[str],
 #: `validation` 이 없어도 등록됐다.
 _RECEIPT_KEYS = frozenset({
     "schema", "leg_id", "planned_id", "planned_envelope", "backend_uri",
+    "backend_store_id",
     "payload_root_digest", "payload_manifest_digest", "n_members",
     "total_bytes", "validation", "outputs", "retention_days", "receipt_digest",
 })
@@ -899,19 +1338,77 @@ _RECEIPT_KEYS = frozenset({
 #: `planned_envelope` 의 닫힌 키 집합 (`PlannedLeg.envelope()` 와 같은 규격).
 _ENVELOPE_KEYS = frozenset({
     "schema", "leg_id", "protocol_generation", "pairing_design_sha256",
-    "source_digest", "objectives", "total_start_budget", "candidate_mode"})
+    "source_digest", "objectives", "total_start_budget", "candidate_mode",
+    "min_retention_days"})
 _VALIDATION_KEYS = frozenset({"ok", "n_checks"})
+
+#: planned envelope 의 **값 domain** (★ 30차 P1-2)
+#:
+#: 초판은 design SHA 하나만 봤다. JSON 으로 표현 가능한 다음이 오류 없이
+#: transaction 에 도달했다 — 리뷰가 그대로 적었다:
+#:
+#:     protocol_generation = 7 · source_digest = 7 · objectives = [7]
+#:     total_start_budget = -1 · candidate_mode = 7
+_GENERATION_RE = re.compile(r"^v[0-9]+(_[a-z0-9]+)*$")
+_CANDIDATE_MODES = frozenset({"legacy_slot_replace", "warm_slot_replace",
+                              "random_only", "base_init_only"})
+
+
+def _nonempty_str(v) -> bool:
+    return isinstance(v, str) and v.strip() != "" and v == unicodedata.normalize("NFC", v)
+
+
+def _pos_int(v) -> bool:
+    return isinstance(v, int) and not isinstance(v, bool) and v > 0
+
+
+def check_envelope(env) -> list[str]:
+    """planned envelope 의 키 **와 값** 을 본다. 생성·복구가 같은 함수를 쓴다."""
+    if not isinstance(env, dict):
+        return [f"planned_envelope 가 dict 가 아니다: {type(env).__name__}"]
+    bad = []
+    if set(env) != _ENVELOPE_KEYS:
+        return [f"planned_envelope 가 닫혀 있지 않다: "
+                f"{sorted(set(env) ^ _ENVELOPE_KEYS)}"]
+    if env["schema"] != "planned-leg/v3":
+        bad.append(f"planned_envelope schema: {env['schema']!r}")
+    if not _nonempty_str(env["leg_id"]):
+        bad.append(f"leg_id 가 비어 있지 않은 NFC 문자열이 아니다: {env['leg_id']!r}")
+    if not _nonempty_str(env["protocol_generation"]) or \
+            not _GENERATION_RE.match(env["protocol_generation"]):
+        bad.append(f"protocol_generation 이 세대 문법이 아니다: "
+                   f"{env['protocol_generation']!r}")
+    if not _is_hex64(env["pairing_design_sha256"] or ""):
+        bad.append("pairing_design_sha256 이 64-hex 가 아니다")
+    if not _nonempty_str(env["source_digest"]) or \
+            not re.fullmatch(r"[0-9a-f]{16}", env["source_digest"]):
+        bad.append(f"source_digest 가 16-hex 가 아니다: {env['source_digest']!r}")
+    objs = env["objectives"]
+    if not isinstance(objs, list) or not objs or \
+            not all(_nonempty_str(o) for o in objs) or \
+            len(set(objs)) != len(objs) or objs != sorted(objs):
+        bad.append(f"objectives 가 정렬된 unique 문자열 목록이 아니다: {objs!r}")
+    if not _pos_int(env["total_start_budget"]):
+        bad.append(f"total_start_budget 이 양의 정수가 아니다: "
+                   f"{env['total_start_budget']!r}")
+    if env["candidate_mode"] not in _CANDIDATE_MODES:
+        bad.append(f"candidate_mode 가 계약 enum 이 아니다: {env['candidate_mode']!r}")
+    # ★ 30차 P1-3 — 원래 요구한 하한을 envelope 에 **봉인**한다. 이것이 없으면
+    #   나중 verifier 가 "무엇을 요구했었나" 를 복원할 수 없다.
+    if not _pos_int(env["min_retention_days"]) or \
+            env["min_retention_days"] < MIN_RETENTION_DAYS:
+        bad.append(f"min_retention_days 가 정책 하한 미만이다: "
+                   f"{env['min_retention_days']!r}")
+    return bad
 #: 산출 descriptor 의 닫힌 키 집합
 _OUTPUT_KEYS = frozenset({
     "role", "canonicalizer", "semantic_schema", "semantic_sha256",
     "relative_path", "byte_size", "file_sha256", "producer",
     "object_digest", "measured_by", "produced_from", "source_file_sha256",
     "n_rows", "semantic_view_drops"})
-#: 최소 보존 기간 정책 — receipt 가 이보다 짧다고 적으면 거부한다
-MIN_RETENTION_DAYS = 365
 
 
-def check_receipt(rec, entry: dict, backend_uri: str,
+def check_receipt(rec, entry: dict, backend: "CasBackend",
                   manifest: dict | None = None) -> list[str]:
     """receipt 를 exact schema 와 결속으로 검사한다 — run 과 finalize 가 공유.
 
@@ -934,23 +1431,23 @@ def check_receipt(rec, entry: dict, backend_uri: str,
         bad.append("receipt 안의 digest 가 자기 내용과 다르다")
     # ★ 계획이 실제로 그 계획인가 — 내용 주소를 다시 계산한다
     env = rec["planned_envelope"]
-    if not isinstance(env, dict) or set(env) != _ENVELOPE_KEYS:
-        bad.append(f"planned_envelope 가 닫혀 있지 않다: "
-                   f"{sorted(set(env) ^ _ENVELOPE_KEYS) if isinstance(env, dict) else env!r}")
-    else:
-        if env["schema"] != "planned-leg/v2":
-            bad.append(f"planned_envelope schema: {env['schema']!r}")
+    bad += check_envelope(env)
+    if isinstance(env, dict) and set(env) == _ENVELOPE_KEYS:
         if env["leg_id"] != rec["leg_id"]:
             bad.append("planned_envelope 의 leg_id 가 receipt 와 다르다")
-        if not _is_hex64(env.get("pairing_design_sha256") or ""):
-            bad.append("planned_envelope 의 design digest 가 64-hex 가 아니다")
         if digest(env) != rec["planned_id"]:
             bad.append("planned_id 가 planned_envelope 의 digest 와 다르다")
     # ★ **손에 든 backend** 와 대조한다. receipt·index 가 서로 같은 문자열만
     #   가지면 통과하던 것이 28차 P0-2 의 반례였다.
-    if rec["backend_uri"] != backend_uri:
+    # ★ 30차 P0-2 — URI 문자열만으로는 부족하다. `root=Path("cas")` 로 등록한
+    #   뒤 cwd 를 바꾸면 다른 store 를 가리키면서 URI 가 같았다. 생성 시각에
+    #   고정된 store UUID 를 함께 본다.
+    if rec["backend_uri"] != backend.uri:
         bad.append(f"receipt 의 backend_uri 가 실제 backend 와 다르다 "
-                   f"({rec['backend_uri']!r} ≠ {backend_uri!r})")
+                   f"({rec['backend_uri']!r} ≠ {backend.uri!r})")
+    if rec["backend_store_id"] != backend.store_id:
+        bad.append(f"receipt 의 backend_store_id 가 실제 store 와 다르다 "
+                   f"({str(rec['backend_store_id'])[:8]} ≠ {backend.store_id[:8]})")
     v = rec["validation"]
     if not isinstance(v, dict) or set(v) != _VALIDATION_KEYS:
         bad.append(f"validation 키 집합이 닫혀 있지 않다: {v!r}")
@@ -1038,55 +1535,95 @@ def verify_registered_graph(backend: CasBackend, index_path: Path,
     if not _is_hex64(r_obj or ""):
         raise PreserveError(stage, f"index 의 receipt_object 가 이상하다: {r_obj!r}")
 
-    # 1. **pin 에서** 읽는다 — `objects/` 가 비어도 회수돼야 한다
+    # 1. journal — **없으면 fail-closed**. 등록 상태 검증에 journal 은 필수다.
+    #    ★ 30차 P1-1 — 초판은 journal 이 None 이면 대조를 건너뛰고 성공했다.
+    #    등록 **전** graph 검증은 이름이 다른 함수를 쓴다.
+    j = registration(index_path, leg_id)
+    if j is None:
+        raise PreserveError(stage, f"{leg_id} 의 등록 journal 이 없거나 계약을 "
+                                   "만족하지 않는다")
+    if j["receipt_object"] != r_obj:
+        raise PreserveError(stage, "journal 이 다른 receipt 를 가리킨다")
+
+    # 2. **retention lease 를 먼저** 본다. 성공의 근거는 읽은 바이트가 아니라
+    #    상태다 (30차 P0-1).
+    lease = backend.verify_retention(leg_id, j["lease_digest"])
+
+    # 3. receipt·manifest 를 **lease 가 담보한 pin 에서** 읽는다
     try:
-        rec = load_canonical(backend.read_pinned(leg_id, r_obj))
+        rec = load_canonical(backend.retrieve_retained(lease, r_obj))
     except PreserveError as ex:
         raise PreserveError(stage, f"pinned receipt 를 회수하지 못했다: {ex.msg}") from ex
-
-    # 3. manifest 를 pin 에서
     if not isinstance(rec, dict) or not _is_hex64(rec.get("payload_manifest_digest") or ""):
         raise PreserveError(stage, "receipt 에 payload_manifest_digest 가 없다")
     try:
-        man = load_canonical(backend.read_pinned(leg_id, rec["payload_manifest_digest"]))
+        man = load_canonical(
+            backend.retrieve_retained(lease, rec["payload_manifest_digest"]))
     except PreserveError as ex:
         raise PreserveError(stage, f"pinned manifest 를 회수하지 못했다: {ex.msg}") from ex
     mbad = check_manifest(man)
     if mbad:
         raise PreserveError(stage, "manifest 가 깨졌다: " + "; ".join(mbad[:3]))
 
-    # 2. closed schema + 결속 (manifest 를 함께 넘겨 집계까지 본다)
-    bad = check_receipt(rec, e, backend.uri, manifest=man)
+    # 4. closed schema + 결속 (manifest 를 함께 넘겨 집계까지 본다)
+    bad = check_receipt(rec, e, backend, manifest=man)
     if bad:
         raise PreserveError(stage, "; ".join(bad[:4]))
 
-    # 4. expected graph 재유도
+    # 5. expected graph 재유도 · journal · lease · 디스크가 **정확히** 같아야
     expected = reachable_objects(dict(rec, receipt_object=r_obj), man)
-
-    # 5. journal · 디스크 pin 과 **정확히** 같아야 한다
-    j = registration(index_path, leg_id)
-    if j is not None:
-        if set(j.get("objects") or []) != expected:
-            raise PreserveError(
-                stage, "journal 의 objects 가 receipt 에서 유도한 graph 와 다르다 "
-                       f"(journal {len(j.get('objects') or [])} · 유도 {len(expected)})")
-        if j.get("receipt_object") != r_obj:
-            raise PreserveError(stage, "journal 이 다른 receipt 를 가리킨다")
-    on_disk = backend.pinned(leg_id)
-    if on_disk != expected:
+    if set(j["objects"]) != expected:
         raise PreserveError(
-            stage, f"pin 집합이 유도한 graph 와 다르다 — 없음 "
-                   f"{sorted(expected - on_disk)[:2]} · 여분 "
-                   f"{sorted(on_disk - expected)[:2]}")
+            stage, "journal 의 objects 가 receipt 에서 유도한 graph 와 다르다 "
+                   f"(journal {len(j['objects'])} · 유도 {len(expected)})")
+    # ★ 30차 P1-1 — journal 의 pin_set_digest 를 **기대 graph 로 재계산**한다.
+    #   초판은 64-hex 모양만 봤다 — journal 자기 checksum 이었다.
+    if j["pin_set_digest"] != pin_set_digest(leg_id, expected):
+        raise PreserveError(stage, "journal 의 pin_set_digest 가 유도한 graph 와 다르다")
+    if set(lease["objects"]) != expected:
+        raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
 
-    # 6. 모든 pinned bytes + output object 확인
+    # 6. 모든 retained bytes + output object 확인
     pbad = backend.verify_pins(leg_id, expected)
     if pbad:
         raise PreserveError(stage, "pin 이 불완전하다: " + "; ".join(pbad[:3]))
     for o in rec["outputs"]:
-        data = backend.read_pinned(leg_id, o["object_digest"])
+        data = backend.retrieve_retained(lease, o["object_digest"])
         if len(data) != o["byte_size"]:
             raise PreserveError(stage, f"산출 {o['role']} 의 크기가 object 와 다르다")
+
+    # 7. ★ 30차 P0-1 — 전수 읽기 **뒤에** lease 상태를 다시 본다.
+    #    초판은 `on_disk` snapshot 이 전수 읽기 **앞**이라, 읽는 족족 지우는
+    #    backend 에서 member pin 이 사라진 채 성공했다. 마지막 검사가 바이트가
+    #    아니라 상태여야 그 창이 닫힌다. (그 뒤의 창은 local 에서 닫을 수
+    #    없다 — 그래서 이 backend 는 `advisory_local` 이라고 신고한다.)
+    backend.verify_retention(leg_id, j["lease_digest"], expected=expected)
+    return rec
+
+
+def verify_graph_before_registration(backend: CasBackend, index_path: Path,
+                                     leg_id: str, lease: dict) -> dict:
+    """등록 **전** graph 검증 — journal 이 아직 없다.
+
+    ★ 30차 P1-1 — 초판은 `verify_registered_graph()` 하나가 두 상태를 겸했다.
+      journal 이 `None` 이면 대조를 건너뛰었으므로, 이름은 "registered" 인데
+      등록되지 않은 상태에도 성공했다. 이름과 API 를 가른다.
+    """
+    stage = "verify_before_commit"
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError(stage, f"{leg_id} 가 public index 에 없다")
+    rec = load_canonical(backend.retrieve_retained(lease, e["receipt_object"]))
+    man = load_canonical(backend.retrieve_retained(lease, rec["payload_manifest_digest"]))
+    if check_manifest(man):
+        raise PreserveError(stage, "manifest 가 깨졌다")
+    bad = check_receipt(rec, e, backend, manifest=man)
+    if bad:
+        raise PreserveError(stage, "; ".join(bad[:4]))
+    expected = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
+    if set(lease["objects"]) != expected:
+        raise PreserveError(stage, "lease 가 담보한 graph 가 유도한 graph 와 다르다")
+    backend.verify_retention(leg_id, lease["lease_digest"], expected=expected)
     return rec
 
 
@@ -1109,7 +1646,7 @@ def verify_registered_receipt(backend: CasBackend, index_path: Path,
     except PreserveError as ex:
         raise PreserveError(stage, f"receipt 를 회수하지 못했다: {ex.msg}") from ex
     rec = load_canonical(raw)
-    bad = check_receipt(rec, e, backend.uri)
+    bad = check_receipt(rec, e, backend)
     if bad:
         raise PreserveError(stage, "; ".join(bad[:4]))
     return rec
@@ -1218,6 +1755,9 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
             "planned_id": pid,
             "planned_envelope": envelope,
             "backend_uri": backend.uri,
+            # ★ 30차 P0-2 — 경로는 겹칠 수 있다. store 생성 시각에 고정된
+            #   UUID 를 함께 봉인해야 "같은 store 인가" 에 답할 수 있다.
+            "backend_store_id": backend.store_id,
             "payload_root_digest": root_digest,
             "payload_manifest_digest": man_dg,
             "n_members": man["n_members"],
@@ -1256,9 +1796,13 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
         # ── 10. 등록 = **object graph retention commit** ─────────────────
         if "crash_after_publish" in faults:
             raise PreserveError("register", "publish 뒤 등록 전에 죽었다 (주입)")
-        _commit_registration(backend, index_path, leg_id)
+        lease = _commit_registration(backend, index_path, leg_id)
+        # ★ 30차 P0-1 — `ok=True` 가 durable retention 을 뜻하지 않는다.
+        #   강제 수준을 값으로 돌려주고, 호출자가 그것을 보고 판단한다.
         return {"ok": True, "receipt": receipt, "planned_id": pid,
-                "payload_root_digest": root_digest, "receipt_object": r_obj}
+                "payload_root_digest": root_digest, "receipt_object": r_obj,
+                "retention": lease,
+                "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK}
     finally:
         shutil.rmtree(root, ignore_errors=True)
 
@@ -1282,19 +1826,21 @@ def _commit_registration(backend: CasBackend, index_path: Path,
         raise PreserveError("register", "receipt 가 가리키는 manifest 가 깨졌다")
 
     objs = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
-    pins = backend.pin(leg_id, objs)
-    bad = backend.verify_pins(leg_id, objs)
-    if bad:
-        raise PreserveError("register", "pin 이 불완전하다: " + "; ".join(bad[:3]))
 
-    _register(index_path, leg_id, e["receipt_object"], pins["pin_set_digest"],
-              sorted(objs))
+    # ★ 30차 P0-1 — pin 을 하나씩 만들고 나서 "다 있나" 를 세는 것이 아니라,
+    #   graph 를 **하나의 retention lease** 로 붙든다. lease 자체가 CAS object
+    #   이고 pin 되므로 위조하면 graph digest 가 어긋난다.
+    lease = backend.retain(leg_id, objs,
+                           min_retention_days=rec["planned_envelope"]["min_retention_days"])
+    verify_graph_before_registration(backend, index_path, leg_id, lease)
 
-    # ★ 29차 P0-2 — commit 뒤에 **다시** 본다. verify 와 commit 을 한
-    #   트랜잭션으로 묶을 수 없으므로, 최소한 "성공했다" 는 말이 그 순간에는
-    #   참이도록 만든다. 그 사이에 누가 지웠으면 성공이라고 하지 않는다.
+    _register(index_path, leg_id, e["receipt_object"],
+              pin_set_digest(leg_id, objs), sorted(objs), lease["lease_digest"])
+
+    # ★ 29차 P0-2 / 30차 P0-1 — commit 뒤에 **다시** 본다. 그 검증의 마지막
+    #   단계는 바이트 읽기가 아니라 lease 상태 확인이다.
     verify_registered_graph(backend, index_path, leg_id)
-    return pins
+    return lease
 
 
 def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:

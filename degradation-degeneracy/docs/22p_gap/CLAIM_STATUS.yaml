@@ -57,6 +57,29 @@ source_digest_generations:
   d842894dbbc2a0f9: v5        # fit_seed404_pe5mv
   a72c0f3a485c19bb: v6_prep   # 21~24차 내내 고정이던 현행 digest
 
+# ── 세대표의 **근거** (★ 30차 P2) ────────────────────────────────────────
+# 왜: 30차 리뷰가 "mapping key 가 projection 에 등장하는지만 본다.
+#   `digest → generation` **값**의 봉인 근거는 없다" 고 지적했다. 아래 표는
+#   각 digest 를 실제로 얻은 다리를 이름하고, 회귀
+#   (`test_every_generation_entry_names_the_legs_that_attained_it`) 가 그
+#   다리의 **봉인 투영**이 정말 그 digest 를 적었는지 확인한다.
+#
+# ⚠ 닫히지 않은 것을 그대로 적는다. 실행이 남긴 어떤 산출물에도
+#   "protocol generation" 이라는 필드는 **없다** — 그 이름은 이 원장의
+#   분류다. 그래서 `digest → generation` 화살표는 도출이 아니라 **선언**이고,
+#   여기서 할 수 있는 것은 그 선언을 봉인물이 지지하는 digest 에 묶어 두는
+#   것까지다. 묶음 9 로 등록되는 새 다리부터는 registered receipt 의
+#   `planned_envelope.protocol_generation` 이 정본이 되며
+#   (`test_a_registered_leg_binds_its_generation_to_the_receipt`),
+#   지금은 등록된 다리가 하나도 없으므로 그 검사가 "없음" 을 고정하고 있다.
+source_digest_evidence:
+  d50295f980ccaa81: [paired_fixed5_v4]
+  7250c6e689399381: [fit_22p_seed_404_hc]
+  d842894dbbc2a0f9: [fit_seed404_pe5mv]
+  a72c0f3a485c19bb: [paired_fixed5_v4_nowarm_now, paired_fixed5_v4_warm,
+                     fit_22p_seed_404_hc_nowarm, fit_22p_seed_404_hc_warm_now,
+                     fit_seed404_pe5mv_nowarm]
+
 # ── 세대 간 role 허용표 (★ 27차 P2-10) ───────────────────────────────────
 # 왜: 초판 회귀는 role 세대가 claim 세대와 다르면 **nonempty `reason` 하나만**
 #   있으면 통과시켰다. 리뷰가 준 반례 — `P22_STAGE3_PRIMARY` 의 v5 role 을
