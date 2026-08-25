@@ -1,7 +1,7 @@
 {
  "property": "Y site preference in Li6PS5Cl — Li_24g vs P_4b",
  "date": "2026-08-26",
- "★_verdict": "**Y 는 Li_24g 를 선호한다** (E_above_hull 67.6 vs 95.2 meV/atom, 여유 27.6). 우리 site-rule 이 지지되고 Wang 2025 Angew 의 P_4b 주장과 **반대** 방향이다.",
+ "★_verdict": "**Y 는 Li_24g 를 선호한다 — 배치 앙상블로 확정.** 6배치 vs 6배치가 **완전 분리**됐다 (Li_24g 최악 73.7 < P_4b 최선 89.6, 사이 빈 구간 15.9 meV/atom). 우리 site-rule 이 지지되고 Wang 2025 Angew 의 P_4b 주장과 반대 방향이다.",
  "method": "UMA-s-1p1(omat) 이완(FIRE, FrechetCellFilter, fmax 0.05) → UMA-일관 convex hull (MP Li-Y-P-S-Cl-O 318 엔트리를 같은 UMA 로 단일점). 판정은 E_above_hull 로만 한다.",
  "⚠_why_not_per_atom": "두 모델은 원자수가 다르다(108 vs 100). 전하 보상 방식도 다르다(P_4b 는 Li 추가, Li_24g 는 Li 제거). 총에너지를 원자수로 나눠 비교하면 화학퍼텐셜 μ_P−μ_Li 가 섞인다 — **Wang 2025 가 낸 바로 그 오류**다. E_above_hull 은 조성 차이를 화학퍼텐셜로 정확히 흡수한다.",
  "results": {
@@ -45,5 +45,53 @@
  },
  "raw": "gabia:/data/work/runs/y_site_test/ {relaxed/*.cif, ehull_sc_Li_24g.json, ehull_sc_P_4b.json}",
  "structures": "db/structures/y_site_test/ (xyz 4개 + README.json)",
- "site_rule": "tools/doping/site_preference.py::LITERATURE_SITES['Y'] — confidence 는 'cited' 유지. our_check 필드에 이 결과를 붙였다 (한계 때문에 승격 보류)."
+ "site_rule": "tools/doping/site_preference.py::LITERATURE_SITES['Y'] — **confidence 를 'verified' 로 승격**했다 (2026-08-26). 새 등급이며 validate_confidence_claims() 가 our_check 의 필수 필드(date·method·supports·scope·raw·⛔_caveat)를 강제한다 — 라벨만 바꿔서는 못 단다. site-rule 53종 중 **우리가 직접 계산해 확인한 첫 항목**이다.",
+ "ensemble_2026_08_26": {
+  "why": "배치 하나로 낸 여유 27.6 meV/atom 이 MLIP 정확도와 같은 자릿수라 '그 여유가 배치 산포보다 큰가' 를 물어야 했다.",
+  "how": "tools/doping/substitute_struct.py --permute_dopant — 조성을 **정확히 보존한 채** Y 만 같은 원소의 다른 자리로 옮긴다 (base 에서 다시 만들면 전하보상 배치까지 바뀌어 변수가 둘이 된다). 자리당 원본 1 + 치환 5 = 6배치.",
+  "ehull_meV_per_atom": {
+   "Li_24g": [
+    58.3,
+    64.5,
+    67.2,
+    67.6,
+    67.7,
+    73.7
+   ],
+   "P_4b": [
+    89.6,
+    92.3,
+    93.1,
+    96.1,
+    97.6,
+    99.9
+   ]
+  },
+  "stats": {
+   "mean": {
+    "Li_24g": 66.5,
+    "P_4b": 94.8
+   },
+   "sd": {
+    "Li_24g": 5.0,
+    "P_4b": 3.8
+   },
+   "margin_meV_per_atom": 28.3,
+   "separation_gap_meV_per_atom": 15.9,
+   "cohen_d": 6.4,
+   "exact_permutation_p": {
+    "one_sided": 0.00108,
+    "two_sided": 0.00216,
+    "note": "완전분리의 정확 p = 1/C(12,6). 방향은 데이터 전에 사전 등록돼 있었다(우리 site-rule = Li_24g)."
+   }
+  },
+  "★_reading": "배치 산포(σ 5.0 / 3.8)가 자리 차이(28.3)의 1/6 이다. 12배치 중 순서가 **한 번도 뒤집히지 않았다.** 27.6 은 배치 산포가 아니었다.",
+  "reproducibility_floor": "같은 sc_P_4b 를 다시 이완하니 -463.6500 → -463.5510 eV (0.9 meV/atom, FIRE 가 다른 국소최소). 신호의 3.2 % — 무시 가능하나 **이완 결과가 완전 결정론적이지는 않다**는 기록.",
+  "⛔_still_open": [
+   "**농도 한 점만** 잰 것이다. Y 자리분율 Li_24g 4.5 % / P_4b 25 % 에서만 확인했고, 분율이 오르면 뒤집히는지 **미검증**이다. 전하보상 부담이 두 자리에서 다르게 커진다 — Y³⁺→Li⁺ 는 Y 하나당 Li 공공 2개, Y³⁺→P⁵⁺ 는 여분 Li 2개. 어느 쪽이 더 빨리 나빠지는지는 선험적으로 자명하지 않다. ★ 검증할 구조가 이미 있다: db/structures/y_site_test/ 의 P_4b(56at, Y/P 50 %) · Li_24g(48at, Y/Li 10 %) — 2배 농도 대조군이고 이미 이완돼 있다.",
+   "Y **위치만** 치환했고 전하보상(공공/여분 Li) 배치는 고정 — 그 자유도는 미표집.",
+   "UMA-일관 hull 이지 DFT 아님.",
+   "둘 다 metastable (66.5 · 94.8 meV/atom). 어느 쪽도 hull 위가 아니다."
+  ]
+ }
 }

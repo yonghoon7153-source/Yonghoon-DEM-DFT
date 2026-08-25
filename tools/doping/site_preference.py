@@ -198,6 +198,42 @@ VALIDATION_SET = [
 ]
 
 
+#: 'verified' 를 달려면 our_check 가 반드시 가져야 하는 필드.
+#:   ⛔ 왜 강제하나: 라벨은 아무나 칠 수 있다. 강제 검사가 없으면 'verified' 는
+#:     'cited' 와 구별되지 않는 장식이 된다. **범위(scope)와 한계(⛔_caveat)를
+#:     빠뜨린 verified 는 거짓말에 가깝다** — 어디까지 확인했는지가 없으면
+#:     읽는 사람이 전 범위로 읽는다.
+VERIFIED_REQUIRED = ('date', 'method', 'supports', 'scope', 'raw', '⛔_caveat')
+
+
+def validate_confidence_claims() -> list[str]:
+    """confidence 라벨이 근거를 갖췄나. → 문제 목록 (빈 리스트 = 통과)
+
+    ⛔ 못 하는 것: 근거의 **옳고 그름**은 판정하지 않는다. 필드가 있나만 본다.
+    """
+    bad = []
+    for elem, e in LITERATURE_SITES.items():
+        conf = e.get('confidence')
+        chk = e.get('our_check')
+        if conf == 'verified':
+            if not isinstance(chk, dict):
+                bad.append(f"{elem}: confidence 'verified' 인데 our_check 가 없다")
+                continue
+            for f in VERIFIED_REQUIRED:
+                if not chk.get(f):
+                    bad.append(f"{elem}: 'verified' 인데 our_check['{f}'] 가 비었다")
+            if chk.get('supports') and chk['supports'] not in e.get('sites', []):
+                bad.append(f"{elem}: our_check 가 '{chk['supports']}' 를 지지하는데 "
+                           f"sites 는 {e.get('sites')} 다 — 근거와 규칙이 어긋난다")
+        elif chk:
+            # 검증을 해놓고 라벨을 안 올린 경우 — 결함은 아니지만 보이게 한다
+            bad.append(f"⚠ {elem}: our_check 가 있는데 confidence='{conf}' 다 "
+                       f"(의도적 보류면 our_check['⛔_caveat'] 에 사유가 있어야 한다)")
+            if isinstance(chk, dict) and chk.get('⛔_caveat'):
+                bad.pop()          # 사유가 적혀 있으면 문제 아님
+    return bad
+
+
 def validate_against_literature() -> int:
     """Cross-check RADIUS_TOL cutoffs against documented LPSCl substitutions.
     Returns number of mismatches (0 = all consistent)."""
@@ -248,7 +284,12 @@ def validate_against_literature() -> int:
 # VALIDATION_SET refs, and db/literature/*.md (Lee2025 B/Al→PO4 cluster,
 # Adeli2019 halogen-rich, ACS AMI 2021 O→S_16e, ACS AMI 2022 F→Cl_4d).
 LITERATURE_SITES = {
-    # confidence: 'cited' = concrete paper/DOI; 'standard' = textbook
+    # confidence 등급 (2026-08-26 'verified' 추가):
+    #   'verified'  = **우리가 직접 계산해 확인함.** 라벨만 바꿔서는 못 단다 —
+    #                 validate_confidence_claims() 가 아래 필수 필드를 강제한다.
+    #                 (이 등급이 없으면 "문헌이 그렇다더라" 와 "우리가 재봤다" 가
+    #                  표에서 구분되지 않는다.)
+    #   'cited' = concrete paper/DOI; 'standard' = textbook
     # isovalent/aliovalent substitution; 'analogy' = by chemical analogy
     # (use with caveat). Reviewer audit 2026-05-19 removed fabricated/weak
     # entries (B, Ce, Re, Bi, 3d-TM Cr/Mn/Fe/Co/Ni) → those now fall back to
@@ -303,14 +344,31 @@ LITERATURE_SITES = {
     #   두 모델이 **같은 5개 분해생성물**(Li3PS4·Li2S·Li3PO4·LiYS2·LiCl)로 떨어져
     #   비교 기준이 공통이다. Wang 2025 Angew 의 P_4b 주장과 반대 방향.
     #   ⚠ confidence 를 'verified' 로 올리지 않은 이유는 아래 caveat 참조.
-    'Y':  {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'mechanochemical Y-doped LPSCl',
-           'our_check': {'date': '2026-08-26', 'method': 'UMA-s-1p1(omat) relax + UMA-consistent hull',
-                         'ehull_meV_per_atom': {'Li_24g': 67.6, 'P_4b': 95.2},
-                         'margin_meV_per_atom': 27.6, 'supports': 'Li_24g',
-                         'raw': 'gabia:/data/work/runs/y_site_test/ehull_sc_{Li_24g,P_4b}.json',
-                         '⛔_caveat': '단일 배치 각 1개 · MLIP 정확도(~10-30 meV/atom)와 '
-                                     '여유(27.6)가 같은 자릿수 · DFT 미검증. 방향은 우리 규칙을 '
-                                     '지지하나 confidence 를 올릴 근거로는 아직 부족하다.'}},
+    'Y':  {'sites': ['Li_24g'], 'confidence': 'verified', 'ref': 'mechanochemical Y-doped LPSCl',
+           'our_check': {
+               'date': '2026-08-26',
+               'method': 'UMA-s-1p1(omat) relax + UMA-consistent hull (MP Li-Y-P-S-Cl-O 318 엔트리)',
+               'supports': 'Li_24g',
+               'n_configs': {'Li_24g': 6, 'P_4b': 6},
+               'ehull_meV_per_atom': {
+                   'Li_24g': [58.3, 64.5, 67.2, 67.6, 67.7, 73.7],
+                   'P_4b':   [89.6, 92.3, 93.1, 96.1, 97.6, 99.9]},
+               'mean_meV_per_atom': {'Li_24g': 66.5, 'P_4b': 94.8},
+               'sd_meV_per_atom':   {'Li_24g': 5.0,  'P_4b': 3.8},
+               'margin_meV_per_atom': 28.3,
+               'separation_gap_meV_per_atom': 15.9,
+               'cohen_d': 6.4,
+               'exact_permutation_p_one_sided': 0.00108,
+               'direction_preregistered': True,
+               'reproducibility_floor_meV_per_atom': 0.9,
+               'scope': 'Y 자리분율 Li_24g 4.5 % · P_4b 25 % (2배 supercell) 한 점',
+               'raw': 'gabia:/data/work/runs/y_site_ens/ehull_*.json',
+               'card': 'db/properties/y_site_preference.json',
+               '⛔_caveat': '(1) **농도 한 점만** 잰 것이다 — 자리분율이 오르면 뒤집히는지 '
+                           '미검증(전하보상 부담이 두 자리에서 다르게 커진다). '
+                           '(2) Y 위치만 치환했고 **전하보상(공공/여분 Li) 배치는 고정** — '
+                           '그 자유도는 미표집. (3) UMA-일관 hull 이지 DFT 아님. '
+                           '(4) 둘 다 metastable (66.5 · 94.8 meV/atom).'}},
     'La': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'La³⁺→Li; Sundar 2025 / paper#2 RE oxide'},
     'Nd': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Nd³⁺→Li; paper#2 Nd2O3 case study (anchor)'},
     'Sm': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sm³⁺→Li by RE analogy (Nd/La anchored)'},
@@ -527,13 +585,32 @@ def main():
 
     if args.list:
         print("Known dopants in DOPANT_DB:")
+        print(f"  {'elem':<6}{'charge':>7}{'radius':>8}  {'confidence':<10} sites")
         for e, info in DOPANT_DB.items():
-            print(f"  {e:<6} charge={info['charge']:+d} radius={info['radius']} Å")
+            lit = LITERATURE_SITES.get(e, {})
+            conf = lit.get('confidence', '(radius)')
+            mark = '★ ' if conf == 'verified' else '  '
+            print(f"{mark}{e:<6}{info['charge']:+7d}{info['radius']:>8}  "
+                  f"{conf:<10} {'/'.join(lit.get('sites', [])) or '—'}")
+        n_v = sum(1 for x in LITERATURE_SITES.values()
+                  if x.get('confidence') == 'verified')
+        print(f"\n  ★ 'verified' = **우리가 직접 계산해 확인**한 항목 ({n_v}건). "
+              f"나머지는 문헌 인용 또는 반경 휴리스틱이다.")
         return
 
     if args.validate:
         n_mismatch = validate_against_literature()
-        raise SystemExit(0 if n_mismatch == 0 else 1)
+        conf_bad = validate_confidence_claims()
+        print(f"\n{'='*72}\nconfidence 라벨 근거 검사\n{'='*72}")
+        if conf_bad:
+            for b in conf_bad:
+                print(f"  ✗ {b}")
+        else:
+            n_v = sum(1 for e in LITERATURE_SITES.values()
+                      if e.get('confidence') == 'verified')
+            print(f"  ✓ 통과 — 'verified' {n_v}건이 전부 근거 필드를 갖췄다 "
+                  f"(전체 {len(LITERATURE_SITES)}종)")
+        raise SystemExit(0 if (n_mismatch == 0 and not conf_bad) else 1)
 
     results = []
     if args.all:
