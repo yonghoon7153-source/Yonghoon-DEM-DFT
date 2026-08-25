@@ -468,5 +468,102 @@
   "planned_input": "kgy ~/work/runs/highT_reseed_traj/b2o3/s*/d0.00_cfg0/T*/msd.json (window 2–50 ps)",
   "status": "사전 등록 완료 — 데이터 미열람",
   "⛔_limits": "첫 프레임 결합 기준 분류다. 결합 불변(9/9)이 확인된 b2o3 에만 쓴다. MSD_end 비는 창 끝값 하나라 시드 산포를 담지 않는다 — 시드별로 따로 보고 부호가 갈리면 inconclusive 로 본다."
+ },
+ "unit_split_verdict_2026_08_25": {
+  "ran": "kgy ~/work/runs/highT_reseed_traj/b2o3/s{2,3,4}/d0.00_cfg0/T{800,1000,1200} — 9런, 재계산 0",
+  "tool": "tools/ionic/msd_diffusive_check.py --framework_split --window 2 50",
+  "criteria": "사전 등록: unit_split_preregistration_2026_08_25 (문턱 변경 없음)",
+  "★_headline": "BS3_driven **0/9**. 도핑이 넣은 BS₃ 단위는 유동화의 원인이 아니다.",
+  "counts": {
+   "BS3_driven": 0,
+   "host_wide": 5,
+   "both_mobile": 3,
+   "inconclusive": 1
+  },
+  "per_run": {
+   "s2/T800": {
+    "ratio_BS3_over_PS4": 0.4,
+    "PS4_beta": 0.0869,
+    "PS4_msd_end_A2": 2.1,
+    "BS3_beta": 0.0824,
+    "BS3_msd_end_A2": 0.8,
+    "verdict": "inconclusive"
+   },
+   "s3/T800": {
+    "ratio_BS3_over_PS4": 0.37,
+    "PS4_beta": 0.6936,
+    "PS4_msd_end_A2": 11.4,
+    "BS3_beta": -0.221,
+    "BS3_msd_end_A2": 4.2,
+    "verdict": "host_wide"
+   },
+   "s4/T800": {
+    "ratio_BS3_over_PS4": 0.1,
+    "PS4_beta": 0.3454,
+    "PS4_msd_end_A2": 3.5,
+    "BS3_beta": -0.408,
+    "BS3_msd_end_A2": 0.4,
+    "verdict": "host_wide"
+   },
+   "s2/T1000": {
+    "ratio_BS3_over_PS4": 0.78,
+    "PS4_beta": 0.4407,
+    "PS4_msd_end_A2": 15.3,
+    "BS3_beta": -0.0166,
+    "BS3_msd_end_A2": 11.9,
+    "verdict": "host_wide"
+   },
+   "s3/T1000": {
+    "ratio_BS3_over_PS4": 4.41,
+    "PS4_beta": 0.4605,
+    "PS4_msd_end_A2": 20.0,
+    "BS3_beta": 1.1716,
+    "BS3_msd_end_A2": 88.0,
+    "verdict": "both_mobile"
+   },
+   "s4/T1000": {
+    "ratio_BS3_over_PS4": 1.18,
+    "PS4_beta": 0.4207,
+    "PS4_msd_end_A2": 9.5,
+    "BS3_beta": 0.5323,
+    "BS3_msd_end_A2": 11.2,
+    "verdict": "host_wide"
+   },
+   "s2/T1200": {
+    "ratio_BS3_over_PS4": 0.93,
+    "PS4_beta": 0.6472,
+    "PS4_msd_end_A2": 12.9,
+    "BS3_beta": 0.8458,
+    "BS3_msd_end_A2": 12.0,
+    "verdict": "host_wide"
+   },
+   "s3/T1200": {
+    "ratio_BS3_over_PS4": 2.57,
+    "PS4_beta": 1.0095,
+    "PS4_msd_end_A2": 77.9,
+    "BS3_beta": 0.8047,
+    "BS3_msd_end_A2": 200.2,
+    "verdict": "both_mobile"
+   },
+   "s4/T1200": {
+    "ratio_BS3_over_PS4": 4.24,
+    "PS4_beta": 0.7416,
+    "PS4_msd_end_A2": 24.9,
+    "BS3_beta": 1.0579,
+    "BS3_msd_end_A2": 105.7,
+    "verdict": "both_mobile"
+   }
+  },
+  "reading_800K_UNANIMOUS": "800 K 3/3 에서 비 = 0.10 / 0.37 / 0.40 — **전부 1 미만**. BS₃ MSD 0.4 / 4.2 / 0.8 Å² 로 사실상 정지(β 0.08 / -0.22 / -0.41). 같은 런의 PS₄ 는 2.1 / 11.4 / 3.5 Å². ⇒ 아레니우스에 들어가는 최저온에서 **BS₃ 가 PS₄ 보다 딱딱하다**. ICOHP 순서(B–S -7.79 > P–S -6.02)와 같은 방향.",
+  "⚠_reading_1000_1200_NOT_unanimous": "1000 K 비 0.78 / 4.41 / 1.18, 1200 K 비 0.93 / 2.57 / 4.24 — **시드마다 갈린다**(5.7배 · 4.6배 폭). BS₃ 는 정지(0.4–12 Å²) 아니면 급발진(88–200 Å²)의 **양봉**이고 중간이 없다. 셀에 B 가 2개뿐이라 단위 8원자가 통째로 움직이면 **독립 객체는 사실상 2개** — 단발 사건 하나가 그룹 MSD 를 지배한다. ⇒ 800 K 이상에서 'BS₃ 가 딱딱하다/무르다' 어느 쪽도 단정하지 않는다.",
+  "★_why_verdict_survives_anyway": "BS3_driven 은 '비 ≥2.0 **그리고** PS₄ β<0.30' 이다. BS₃ 가 가장 날뛴 런(s3/T1000 비 4.41, MSD 88.0)에서도 PS₄ β = 0.46 으로 호스트가 같이 움직인다. **BS₃ 만 움직이고 호스트는 가만있는 런이 9개 중 하나도 없다.** 시드 산포와 무관하게 이 판정은 선다.",
+  "★_new_finding_seed_spread_at_800K": "같은 800 K · 같은 출발배치(cfg0) · 열욕 난수만 다른데 PS₄ β 가 0.087 / 0.345 / 0.694 로 **8배** 흔들린다. 수렴된 물리량의 모습이 아니다 — MD 축 은퇴 판정에 붙는 독립 근거 하나 추가.",
+  "verdict_on_mechanism": {
+   "cannot_write": "'B₂O₃ 도핑이 이동성 BS₃ 단위를 도입해 음이온 부격자를 유동화한다' — **반증됨(0/9)**",
+   "can_write": "무르게 움직이는 것은 **호스트 PS₄** 다 (host_wide 5/9, 나머지도 PS₄ β≥0.30)",
+   "weight": "MLIP 한계 쪽. 같은 UMA·같은 T 에서 modelc 호스트는 7/7 rigid(max β 0.27)인데 b2o3 의 같은 PS₄ 는 β 0.35–1.01. 그런데 0 K DFT 는 반대를 말한다 — ICOHP 호스트 결합 전부 5% 이내 불변 · B₀ +13% 더 딱딱. 호스트 결합이 안 변했는데 호스트만 무르다 = 결합 세기로 설명 불가.",
+   "⛔_not_proven": "'도펀트가 국소 좌절을 만들어 호스트를 진짜로 무르게 한다'는 물리 해석은 이 시험만으로 배제되지 않는다. 가르려면 AIMD 스팟체크나 다른 포텐셜이 필요하다. 세 시드가 같은 cfg0 을 쓰는 한계도 그대로."
+  },
+  "citation_status_unchanged": "b2o3 MD 축(D·Ea·σ)은 계속 인용 불가. 이 판정은 값을 살리지 않고 **원고 메커니즘 문장을 특정**한다."
  }
 }
