@@ -136,6 +136,16 @@ def coordination_summary(m):
 
 # ══ ④ 네트워크 지표 (지표/값 2열, `──` 는 섹션 머리글) ═══════════════════════════════
 #  (라벨, 키 후보…, 소수자리) — 키가 없으면 **행을 안 만든다**
+#: ★★ **정본** — "이 케이스에 MPM porosity 가 있나" 를 판정하는 열 이름 전부.
+#:   2026-08-25 실측: 이 목록이 **세 곳에 각자 적혀 있다가 갈라졌다** —
+#:     ① `_NET` 표 행            → 별칭 있었음  ✓
+#:     ② `mpm_metrics()`         → 없었음  → mpm_metrics.json 17건 누락
+#:     ③ `rebuild_cases_from_csv.GAP_AXES` → 없었음  → "MPM 결손 23건" 오보
+#:   같은 파일 안에서도 갈라졌으니 주석으로는 못 막는다.  ⇒ **여기 하나만 두고 나머지가
+#:   가져다 쓴다**, 그리고 selftest 가 일치를 강제한다.
+MPM_POROSITY_KEYS = ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct', 'mpm_porosity_pct')
+
+
 _NET = [
     ('── 구조 ──', None, None),
     ('Porosity(%)', ('porosity', 'porosity_spheresum'), 2),
@@ -183,7 +193,7 @@ _NET = [
     #  ── MPM (압밀 시뮬) ──  키가 두 갈래다: 중첩 `mpm.*`(case_master 27건) 와
     #     평평한 `mpm_*`(코퍼스 146건).  둘 다 후보로 넣어 **있는 쪽**을 쓴다.
     ('── MPM (압밀) ⚠ porosity 는 정본이 신뢰성 유보 (CL-04·플래튼 정본) ──', None, None),
-    ('MPM Porosity(%)', ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct', 'mpm_porosity_pct'), 2),
+    ('MPM Porosity(%)', MPM_POROSITY_KEYS, 2),
     ('MPM 압밀 Porosity(%)', ('mpm.compacted_porosity_pct', 'mpm_compacted_porosity_pct'), 2),
     ('MPM seed Porosity(%)', ('mpm.seed_porosity_pct', 'mpm_seed_porosity_pct'), 2),
     ('MPM 두께(μm)', ('mpm.thickness_mpm_um', 'mpm_thickness_mpm_um'), 2),
@@ -257,6 +267,7 @@ MPM_POROSITY_CAVEAT = (
     '⚠⚠ MPM porosity 는 **정본이 신뢰성을 유보한 축**이다 (CLAUDE.md 트랙 2 · docs/mpm_platen_kinematic_stop_defect.md · docs/reviews/fam_platen_prereg_20260812.md): ① porosity 는 **정지 프레임의 함수**이고 속도 사다리(sub 40/80/160)에서 14.38 → 12.76 → 11.08 % 로 **수렴하지 않는다** ② scaffold 런에서 `solid_vol` 은 씨앗 시점에 DEM dump 로 고정된 상수라 **porosity 가 독립 정보를 담지 않는다** (MPM 의 유일한 출력은 wall_z) ③ 정지 결함을 고치면 ε_sphere 1.13 % = 실험 대비 **14.5 %p 과압축** (CL-04) ④ 따라서 **DEM↔MPM porosity 일치를 validity 증명서로 쓰면 순환**이다 — `cross-validated` 배지를 그렇게 읽지 말 것.  ⇒ 살아 있는 MPM 산출물: **응력-정지 두께** · 형태(morphology) · 소성 변형장.')
 
 
+
 #: 같은 양인데 **표마다 열 이름이 다르다** → 명시적 별칭표.
 #:  ⚠⚠ 2026-08-25 실측 — 접미사 깎기 휴리스틱(`k[:-4]`)이 조용히 빗나갔다:
 #:    `porosity_mpm_pct` → `mpm_porosity_mpm` 을 찾는데 실제 열은 `mpm_porosity_pct` 라
@@ -266,9 +277,11 @@ MPM_POROSITY_CAVEAT = (
 #:    (135건 완전 일치).  어긋나는 4건은 corpus 열이 우선이라 영향 없다
 #:    (최대 input_1mAh_100_10 Δ 5.87 — 이 불일치 자체는 별도 항목).
 #:  ⇒ corpus 열(`mpm_<key>`)을 **먼저** 보고, 없을 때만 별칭을 쓴다.
+#:  ⇒ 표준 조회(`mpm.<k>` · `mpm_<k>`)로 **안 잡히는 것만** 별칭이다 — 손으로 안 적고 뺀다.
 _MPM_ALIASES = {
     #  mpm_dem_porosity_reliability.csv · case_3d_collection.csv 의 열 이름
-    'porosity_mpm_pct': ('mpm_porosity_pct',),
+    'porosity_mpm_pct': tuple(k for k in MPM_POROSITY_KEYS
+                              if k not in ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct')),
 }
 
 

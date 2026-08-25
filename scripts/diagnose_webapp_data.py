@@ -153,6 +153,9 @@ def _why(r, src=None):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
     ap.add_argument('--case', help='이 이름(또는 case id)만 자세히')
+    ap.add_argument('--live', nargs='?', const='http://127.0.0.1:5002', metavar='URL',
+                    help='**떠 있는 앱**이 실제로 내보내는 HTML 을 세어 본다 '
+                         '(디스크는 맞는데 화면이 아닐 때 — 옛 프로세스냐 브라우저 캐시냐)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -241,10 +244,52 @@ def main():
         print('   ② mpm_metrics.json 만들기 →')
         print('        python3 scripts/rebuild_tables_from_metrics.py --write')
     if not (n_stale or n_nomm) and _has_fix:
-        print('   ✓ 데이터는 맞다.  그래도 화면에 안 보이면 **앱이 옛 코드로 떠 있는 것**이다:')
-        print('        demstop && dem5002')
-    print('   ③ 그 뒤:  demstop && dem5002')
+        print('   ✓ 데이터는 맞다 — 남은 건 **디스크가 아니라 화면**이다.')
+        print('     떠 있는 앱이 실제로 뭘 내보내는지 세어 본다:')
+        print('        python3 scripts/diagnose_webapp_data.py --live')
+    else:
+        print('   ③ 그 뒤:  demstop && dem5002')
+    if a.live:
+        _live_check(a.live, badges)
     return 0
+
+
+def _live_check(url, want):
+    """**떠 있는 앱**의 HTML 에서 배지를 세어 디스크 기대치와 맞춰 본다.
+
+    ★ 왜: 디스크가 맞는데 화면이 아닐 때 원인은 둘 뿐이고 **서로 처방이 다르다** —
+      ⓐ 앱이 옛 프로세스/옛 코드로 떠 있다  → `demstop && dem5002`
+      ⓑ 서버는 맞는데 브라우저가 옛 HTML 을 보여 준다 → 강력 새로고침 (Ctrl-Shift-R)
+      HTML 을 직접 세면 이 둘이 **한 번에** 갈린다.  (사람이 눈으로 세지 않게)
+    """
+    import urllib.request
+    print(f'\n── 떠 있는 앱 확인 ({url}) ──')
+    try:
+        with urllib.request.urlopen(url, timeout=15) as r:
+            html = r.read().decode('utf-8', 'replace')
+    except Exception as e:
+        print(f'   ⛔ 못 붙었다: {e}')
+        print('      앱이 안 떠 있다 →  demstop && dem5002')
+        print('      다른 포트면 →  --live http://127.0.0.1:<포트>')
+        return
+    got = {b: html.count(b) for b in ('MPM ✓', 'MPM SE-rich', 'MPM SE-poor')}
+    ok = True
+    for b, n_want in sorted(want.items()):
+        if not b.startswith('MPM'):
+            continue
+        n_got = got.get(b, 0)
+        mark = '✓' if n_got == n_want else '⛔'
+        if n_got != n_want:
+            ok = False
+        print(f'   {mark} {b:14s} 디스크 {n_want:>4}  ↔  화면 {n_got:>4}')
+    if ok and any(got.values()):
+        print('\n   ✓ **서버는 배지를 내보내고 있다.**  그래도 안 보이면 브라우저 캐시다:')
+        print('        Ctrl-Shift-R (강력 새로고침)  ·  또는 시크릿 창으로 열어 볼 것')
+    else:
+        print('\n   ⛔ **서버가 안 내보내고 있다** = 앱이 옛 프로세스/옛 코드로 떠 있다:')
+        print('        demstop && dem5002')
+        print('     그래도 그대로면 앱이 다른 데이터 폴더를 보고 있는 것이다 —')
+        print('        WEBAPP_RESULTS_FOLDER 가 위 "데이터" 경로와 같은지 확인')
 
 
 def _selftest():

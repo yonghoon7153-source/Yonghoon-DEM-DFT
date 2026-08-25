@@ -163,11 +163,33 @@ def collect(root=None):
 
 
 #: 케이스가 "완전" 하려면 있어야 하는 축 — 없으면 **다시 돌려야** 하는 것.
+def _mpm_porosity_keys():
+    """MPM porosity 열 이름 — **정본은 `rebuild_tables_from_metrics.MPM_POROSITY_KEYS`**.
+
+    ⚠⚠ 2026-08-25: 이 목록을 여기서 따로 적고 있다가 `mpm_porosity_pct` 를 빠뜨려
+      "MPM 압밀 결손 23/169" 라는 **오보**를 냈다 (실제 결손은 6건).  같은 누락이
+      `mpm_metrics()` 에도 있어 파일 17건이 안 만들어졌다.  ⇒ 베끼지 않고 **가져온다**.
+      가져오기 실패 시에만 안전한 사본을 쓰고, selftest 가 둘의 일치를 강제한다.
+    """
+    try:
+        import sys as _s
+        _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from rebuild_tables_from_metrics import MPM_POROSITY_KEYS
+        return tuple(MPM_POROSITY_KEYS)
+    except Exception:
+        return ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct', 'mpm_porosity_pct')
+
+
 GAP_AXES = {
     'DEM σ 삼중항': ('sigma_ionic_full_mScm', 'electronic_sigma_full_mScm',
                      'thermal_sigma_full_mScm', 'sigma_ion', 'sigma_el'),
-    'MPM 압밀': ('mpm_porosity_mpm_pct', 'mpm', 'mpm_compacted_porosity_pct'),
-    '취성/파괴': ('fracture_severe_pct', 'frac_severe_force_pct'),
+    #  ★ 'mpm'(중첩 dict) · compacted 는 여기 고유 후보, porosity 열은 정본에서 가져온다
+    'MPM 압밀': _mpm_porosity_keys() + ('mpm', 'mpm_compacted_porosity_pct'),
+    #  ⚠ **severe 등급만** 센다.  결손이라는 23건도 `frac_fragmentation_*` 는 갖고 있다 —
+    #    그런데 그 둘은 **다른 양**이다 (둘 다 가진 146건에서 중앙 |Δ| 0.595 · 최대 39.13,
+    #    fragmentation ≥ severe = 더 넓은 등급).  ⇒ 별칭으로 묶지 않는다.  묶으면 없는
+    #    지표를 있다고 보고하게 된다 (MPM 쪽 누락을 고치면서 반대 실수를 하지 않는다).
+    '취성/파괴(severe 등급)': ('fracture_severe_pct', 'frac_severe_force_pct'),
 }
 
 
@@ -312,6 +334,17 @@ def _selftest():
         _coerce('1e5x') == '1e5x' and _coerce('2026-01-02') == '2026-01-02')
     chk('⑤ case_id → 시각', _created_from_id('260418_172642_6968ef') == '2026-04-18T17:26:42')
     chk('⑥ 형식이 다르면 **빈 문자열** (지어내지 않는다)', _created_from_id('weird') == '')
+    #  ★★ 세 곳에 흩어졌던 "MPM porosity 열 이름" 이 **한 곳에서 온다** (베낀 것이 아니라)
+    try:
+        import sys as _s
+        _s.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+        from rebuild_tables_from_metrics import MPM_POROSITY_KEYS as _CANON
+        chk(f'⑥a ★★ GAP_AXES 의 porosity 열이 **정본과 일치** ({len(_CANON)}개)',
+            set(_CANON) <= set(GAP_AXES['MPM 압밀']))
+        chk('⑥b ★ 옛 누락(`mpm_porosity_pct`)이 실제로 들어 있다 — 23건 오보의 원인',
+            'mpm_porosity_pct' in GAP_AXES['MPM 압밀'])
+    except ImportError:
+        chk('⑥a 정본 모듈을 못 읽었다 (사본으로 동작 — 확인 필요)', False)
     real = collect()
     chk(f'⑦ ★ 실제 표에서 케이스를 읽는다 ({len(real)}건)', len(real) >= 100)
     if real:
