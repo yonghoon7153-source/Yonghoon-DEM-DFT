@@ -63,6 +63,11 @@ run 'mpm_webapp_payload     --selftest-temperature' python3 scripts/mpm_webapp_p
 run 'step3_sigma            --selftest' python3 scripts/step3_sigma.py --selftest
 
 echo "── 리포 실물 (리포가 맞나 — selftest 가 **대신해 주지 않는다**) ──"
+#  ★★ 2026-08-25 — 배터리는 느려서 여기 없지만(~20분), **문법이라도** 본다.
+#    실사고: mutant 문자열 인용이 깨져 배터리가 시작하자마자 SyntaxError 로 죽었는데
+#    `check_all` 은 초록이었다.  돌지 않는 검사기는 없는 것과 같다 (규칙 K 의 교훈).
+run 'mutation_sweep (문법 — 배터리 자신이 도는가)' \
+  python3 -c "import ast,sys; ast.parse(open('scripts/mutation_sweep_20260825.py',encoding='utf-8').read())"
 run 'check_review_findings   (원장 + 철회값 스윕)' python3 scripts/check_review_findings.py
 run 'check_method_discipline (규칙 A~M + claims 원장)' python3 scripts/check_method_discipline.py
 

@@ -1481,8 +1481,11 @@ def main():
                           f'그 중 결함판이 뺏었을 PTFE/SWCNT = {_led["defect_would_steal"]}',
                           flush=True)
                 raise SystemExit(0)
-            _sig3 = np.array([0.0, a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
-                              0.0, a.sigma_ptfe, a.sigma_swcnt])   # ELECTRONIC table: SE = e-insulator;
+            #  ★ R5-CX-09 — 표는 `step3_sigma` 의 **공용 함수**가 만든다 (selftest 가 같은
+            #    것을 소비한다).  사본을 두면 회귀가 생산을 증언하지 못한다.
+            _sig3 = _s3.electronic_sigma_table(
+                a.sigma_am_s, a.sigma_am_p, a.sigma_vgcf, a.sigma_superp, a.sigma_sdcp,
+                a.sigma_ptfe, a.sigma_swcnt)                        # ELECTRONIC table: SE = e-insulator;
             #   idx7 = PTFE sensitivity hook (default 0 → sid7 미존재); idx8 = SWCNT sheath (A14, 도체)
             _ztop = float(sim_m.get('thickness_um') or ((top - FLOOR) * UM))   # PRESS PLANE (wall_z) —
             #   `top` has a +0.01-box (~0.4µm) void-cap padding that floats the plate off the bed
@@ -1844,8 +1847,8 @@ def main():
                 # idx8 SWCNT = 기본 SE-투명(σ_i=σ_ion_se): 실제 skin 2-10nm sub-voxel → 1-voxel
                 # 스탬프가 이온망을 끊으면 차단 40-200× 과대표현(trade-off 상한 이중계상).
                 # --swcnt-ion-block = 상한 시나리오 opt-in (σ_i=0 → 해당 복셀 이온 dof·BV면 소멸).
-                _sig3i = np.array([0.0, 0.0, 0.0, 0.0, 0.0, a.sigma_ion_sdcp, a.sigma_ion_se, 0.0,
-                                   0.0 if a.swcnt_ion_block else a.sigma_ion_se])
+                _sig3i = _s3.ionic_sigma_table(a.sigma_ion_sdcp, a.sigma_ion_se,
+                                               a.swcnt_ion_block)
                 #  ⚠ **끈 것과 못 푼 것을 구분한다** — n_dof=0 스텁으로 아래 분기를 건너뛰되
                 #    상태는 `disabled` 로 남긴다.  `not_solvable`(SE 미퍼콜) 로 적으면 거짓말이다.
                 if a.no_ion:

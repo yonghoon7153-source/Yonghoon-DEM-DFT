@@ -78,6 +78,28 @@ def temperature_provenance(T_C=None, ea_ev=None):
 # (DBE +45.4% 등) were solved at 150 — re-run needed for the 250-anchored numbers.
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0,
                  'SWCNT': 100.0}
+def electronic_sigma_table(sigma_am_s, sigma_am_p, sigma_vgcf, sigma_superp,
+                           sigma_sdcp, sigma_ptfe=0.0, sigma_swcnt=0.0):
+    """sid → 전자 σ 표 (**생산 규약**).  SE(6) 는 전자 절연, PTFE(7) 는 감도 훅.
+
+    ★★★ 2026-08-25 (R5-CX-09, Codex 5차) — 이 표가 `mpm_webapp_payload` 안에 **inline
+      배열**로만 있어서, plate/reaction 회귀가 상별 σ 를 **다시 하드코딩**했다.  그러면
+      producer 의 상 분기(특히 SWCNT sid 8)가 퇴행해도 회귀가 못 잡는다 — 두 곳이
+      **따로** 참이면 그 시험은 생산을 증언하지 않는다.
+      ⇒ producer 도 selftest 도 **이 함수 하나**를 쓴다 (사본 금지, 이 리포의 반복 교훈)."""
+    return np.array([0.0, sigma_am_s, sigma_am_p, sigma_vgcf, sigma_superp, sigma_sdcp,
+                     0.0, sigma_ptfe, sigma_swcnt], float)
+
+
+def ionic_sigma_table(sigma_ion_sdcp, sigma_ion_se, swcnt_ion_block=False):
+    """sid → 이온 σ 표 (**생산 규약**).  탄소(3,4)·AM(1,2)·PTFE(7) 는 이온 절연.
+
+    ⚠ SWCNT(8) 는 **기본 ion-transparent** 다 (sheath 가 SE 를 덮어도 이온이 지난다).
+      `swcnt_ion_block` 이 그것을 끈다 — 그 분기가 이 함수 안에 있어야 회귀가 본다."""
+    return np.array([0.0, 0.0, 0.0, 0.0, 0.0, sigma_ion_sdcp, sigma_ion_se, 0.0,
+                     0.0 if swcnt_ion_block else sigma_ion_se], float)
+
+
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE',
             8: 'SWCNT'}                                    # voxel σ-id → name
 #   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
@@ -1932,8 +1954,24 @@ def _selftest():
     #    뿐이라 **반응 분기가 회귀 봉인 밖**이었다 (구현은 옳은데 증인이 없다).
     #    ⇒ 두 망의 도체성이 다르므로 **망별 기대**를 따로 준다.
     #      전자망 도체 = AM(1,2)·carbon(3,4)·SDCP(5) · 이온망 도체 = SE(6)·SDCP(5)
-    _RX_E = {1: 0.010, 2: 0.010, 3: 100.0, 4: 5.0, 5: 250.0, 6: 0.0, 7: 0.0, 8: 0.0}
-    _RX_I = {1: 0.0, 2: 0.0, 3: 0.0, 4: 0.0, 5: 0.001, 6: 0.001, 7: 0.0, 8: 0.0}
+    #  ★★★ 2026-08-25 (R5-CX-09) — 표를 **생산 함수에서** 만든다.  옛 판은 여기서 다시
+    #    하드코딩했고, 그래서 sid 8(SWCNT)을 전자·이온 **둘 다 0** 으로 적어 두었다 —
+    #    생산 규약은 SWCNT 를 **전자 도체 · 기본 ion-transparent** 로 둔다.  두 곳이 따로
+    #    참이면 producer 의 SWCNT 분기가 퇴행해도 이 회귀가 못 잡는다 (Codex 지적).
+    #  ⚠ idx 0 은 **기공**이라 상이 아니다 (스탬프 대상이 아니므로 표에서 뺀다).
+    _RX_E = {i: v for i, v in enumerate(
+        electronic_sigma_table(0.010, 0.010, 100.0, 5.0, 250.0, 0.0, 100.0)) if i}
+    _RX_I = {i: v for i, v in enumerate(
+        ionic_sigma_table(0.001, 0.001, swcnt_ion_block=False)) if i}
+    #  ★ R5-CX-09 — 표가 **생산 규약을 말하는지** 직접 단언한다.  이 두 줄이 없으면
+    #    위가 공용 함수를 부르기만 하고 그 함수가 퇴행해도 조용하다.
+    _q_sw = (_RX_E[8] > 0 and _RX_I[8] > 0
+             and ionic_sigma_table(0.001, 0.001, swcnt_ion_block=True)[8] == 0.0
+             and _RX_E[6] == 0.0)
+    ok &= _q_sw
+    print(f"rxn-table-production: SWCNT(8) 전자도체 σ={_RX_E[8]:g} · 기본 ion-transparent "
+          f"σ={_RX_I[8]:g} · `--swcnt-ion-block` 이 끈다 · SE(6) 전자절연  "
+          f"{'OK' if _q_sw else 'FAIL'}  (옛 fixture 는 sid 8 을 둘 다 0 으로 하드코딩했다)")
 
     def _rxn_face(surf_sid, side, vox=0.15):
         """전자 slab(아래) + 이온 slab(위) 사이에 BV.  `side` 표면에 `surf_sid` 를 얹는다."""
