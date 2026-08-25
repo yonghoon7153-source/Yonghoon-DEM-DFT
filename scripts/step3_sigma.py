@@ -499,14 +499,19 @@ def solve_sigma_z(sid, sigma_of_sid, vox, return_field=False, z_top_um=None, pla
     _ii, _jj = np.meshgrid(np.arange(nx), np.arange(ny), indexing='ij')
     _surf_bot_cond = cond[_ii, _jj, k_first]               # 노출면이 이 수송의 도체인가
     _surf_top_cond = cond[_ii, _jj, k_last]
-    bot_m = any_c & _surf_bot_cond & (zc[k_first] - z_b <= band_bot)
+    #  ★★★ 2026-08-25 (R3-CX-07 ④, Codex 3차) — **band 비교가 signed 였다.**
+    #    `zc - z_b <= band` 는 셀이 판 **아래**(음수)여도 참이다.  대칭으로 top 도
+    #    `z_plate - zc <= band` 라 판보다 **위**인 셀이 접촉으로 뽑혔다 (Codex 실측:
+    #    물리 top plane 보다 0.825 µm 위인 셀이 band=0.25 에서 σ=0.0026667 을 냈다).
+    #    슬래브 밖 셀은 접촉이 아니라 **기하가 틀린 것**이다 ⇒ 절대값으로 본다.
+    bot_m = any_c & _surf_bot_cond & (np.abs(zc[k_first] - z_b) <= band_bot)
     # ANALYTIC contact mask (v3, optional): [nx,ny] bool from EXACT sphere/point z (payload computes
     # it — gap ≤ 0.1µm bare / ≤ 0.3µm film-wetted).  Voxel-centre bands cannot resolve below
     # ~half-voxel; the analytic mask removes that blur — the SELECTION is exact, only the coupling
     # conductance stays voxel-scale.
     if bot_allowed is not None:
         bot_m &= np.asarray(bot_allowed, bool)
-    top_m = any_c & _surf_top_cond & (z_plate - zc[k_last] <= band)
+    top_m = any_c & _surf_top_cond & (np.abs(z_plate - zc[k_last]) <= band)
     if not bot_m.any() or not top_m.any():
         return {'sigma_eff': 0.0, 'n_dof': int(cond.sum()), 'n_floating_dropped': 0, 'cg_info': 0,
                 'resid': 0.0, 'unconverged': False,
@@ -698,11 +703,30 @@ def phase_current_share(res, sid, sigma_of_sid, periodic_xy=None):
     #    internal-only 로 돌아갔다 = CDXR2-1 이 고친 바로 그 틀린 답(10/13)을 다시 낸다.
     #    `periodic_xy` 는 이미 fail-closed 인데 이쪽만 fail-open 이었다 (같은 함수 안에서
     #    두 규약이 갈려 있었다).  ⇒ 같은 규약으로 맞춘다.
+    #  ★★★ 2026-08-25 (R3-CX-07 ③, Codex 3차) — **원장이 완비돼야 한다.**  초판은
+    #    `_pe is None` 만 거부했다.  Codex 실측: `plate_edges={}` 는 옛 오답
+    #    (10/13, 3/13) 를, bottom-only 는 (0.869565, 0.130435) 를 **조용히** 냈다.
+    #    빈 dict 도 한쪽만 있는 dict 도 "원장이 있다" 가 아니다 — 부분 원장으로 계산한
+    #    분담은 항등식을 깨고, 그것이 CDXR2-1 이 고친 바로 그 결함이다.
+    #    ⇒ 두 판이 다 있고, 각각 (좌표, g, φ_plate) 3-튜플이며, 접점이 **비어 있지 않아야**
+    #      한다 (σ_eff > 0 인 해는 양쪽에 접점이 있었다 — 없으면 `no_plate_contact` 다).
     if _pe is None or _vox is None:
         raise ValueError('phase_current_share: 플레이트 원장이 없다 (plate_edges/vox_um) — '
                          'solve_sigma_z 의 새 res 를 쓸 것.  없이 계산하면 소산 분담이 '
                          '내부 면만 세어 항등식 w_a = ∂ln σ_eff/∂ln σ_a 를 깬다 (CDXR2-1).  '
                          '조용히 옛 값으로 돌아가지 않는다 (fail-closed)')
+    for _side in ('bot', 'top'):
+        _e = _pe.get(_side)
+        if not (isinstance(_e, (tuple, list)) and len(_e) == 3):
+            raise ValueError(f'phase_current_share: plate_edges 에 `{_side}` 가 없거나 '
+                             f'모양이 틀렸다 ({type(_e).__name__}) — **부분 원장**으로 계산한 '
+                             f'분담은 항등식을 깬다 (R3-CX-07 ③).  옛 오답으로 조용히 '
+                             f'돌아가지 않는다')
+        _c, _g, _ = _e
+        if _c is None or _g is None or len(np.asarray(_g).ravel()) == 0:
+            raise ValueError(f'phase_current_share: plate_edges[{_side!r}] 의 접점이 '
+                             f'비어 있다 — σ 를 낸 해라면 양쪽에 접점이 있었다 '
+                             f'(없었다면 solve 가 no_plate_contact 였다)')
     _use_plate = True
     _u = float(_vox)
     for sl_a, sl_b in pairs:
@@ -1279,9 +1303,10 @@ def solve_reaction_current(sid, sig_e_of_sid, sig_i_of_sid, pid, n_am, vox, gct_
     _kl = nz - 1 - np.argmax(_occ_r[:, :, ::-1], axis=2)
     _iir, _jjr = np.meshgrid(np.arange(nx), np.arange(ny), indexing='ij')
     any_e, k_first_e = _any_o, _kf
-    bot_e = _any_o & cond_e[_iir, _jjr, _kf] & (zc[_kf] - z_b <= band)   # 집전체 접점 (전자망만)
+    #  ★ R3-CX-07 ④ — 반응 솔버도 **절대값** band (슬래브 밖 셀은 접촉이 아니다)
+    bot_e = _any_o & cond_e[_iir, _jjr, _kf] & (np.abs(zc[_kf] - z_b) <= band)   # 집전체 접점
     any_i, k_last_i = _any_o, _kl
-    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (z_plate - zc[_kl] <= band)  # 분리막 접점 (이온망만)
+    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (np.abs(z_plate - zc[_kl]) <= band)  # 분리막 접점
     if not bot_e.any() or not top_i.any():
         return {**out0, 'reason': f'no_plate_contact(bot_e={int(bot_e.sum())},top_i={int(top_i.sum())})'}
     # anchored-component filter: 결합 그래프(전자·이온·BV 인접 = 모두 6-이웃 face)를 union 마스크
@@ -1809,6 +1834,138 @@ def _selftest():
     print(f"plate-share-identity-vox: **vox={_vv}** 에서도 항등식이 성립한다 "
           f"(A {_fdAv:.6f}/{_sh3v.get(1, 0):.6f} B {_fdBv:.6f}/{_sh3v.get(2, 0):.6f})  "
           f"{'OK' if _q5 else 'FAIL'}")
+
+    #  ── ★★★ R3-CX-07 (Codex 3차) — **sid × 면 × 솔버 매개변수화** ────────────────────
+    #    초판 회귀는 top-PTFE·bottom-PTFE 두 점뿐이었다.  Codex 가 남은 구멍 셋을 냈다:
+    #      · 반응 솔버의 **ionic-top** 만 옛 규약으로 되돌려도 통과 (내 fixture 는
+    #        bottom-electronic 만 봤다) — top PTFE 가 pore 와 **같은 I** 로 관통했다.
+    #      · occupied surface 에서 **sid 5(SDCP)** 만 제외해도 통과 (균일 SDCP column 이
+    #        σ 0.01 → 0, AM|SDCP 반응이 I 7.71e-4 → 0 이 되는데 아무도 안 본다).
+    #      · 슬래브 **밖** 셀이 signed band 로 접촉이 됐다.
+    #    ⇒ 상(相) × 면 × 두 솔버를 표로 돌린다.  새 상이 생기면 여기 한 줄이다.
+    _PHASE_SIG = {1: 0.010, 2: 0.0, 3: 100.0, 4: 5.0, 5: 250.0, 6: 0.0, 7: 0.0, 8: 0.0}
+    #   상 이름 (진단 메시지용) — 전자 솔브 기준 도체/절연
+    _PHASE_NM = {1: 'AM_S', 2: 'AM_P(σ=0)', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP',
+                 6: 'SE(σ=0)', 7: 'PTFE(σ=0)', 8: 'SWCNT(σ=0)'}
+
+    def _col_side(surf_sid, side, vox=0.15):
+        """도체 기둥의 `side` 표면에 `surf_sid` 를 얹고 σ_eff.  0 이면 pore(갭)."""
+        _a = np.zeros((3, 3, 5), np.int8)
+        _a[:, :, 1:4] = 1
+        if surf_sid:
+            _a[:, :, 4 if side == 'top' else 0] = surf_sid
+        _sg = np.zeros(9)
+        for _k, _v in _PHASE_SIG.items():
+            _sg[_k] = _v
+        return solve_sigma_z(_a, _sg, vox, z_top_um=5 * vox, z_bot_um=0.0)['sigma_eff']
+
+    #  ★ **균일 기둥** — 상 하나만으로 된 기둥이 그 상의 도체성대로 도는가.
+    #    Codex R3-CX-07 ②: occupied surface 에서 `sid 5`(SDCP) 만 제외해도 위 표는
+    #    통과한다 (표면 아래에 AM 이 있어 `k_last` 가 그리로 내려간다).  **균일 기둥**은
+    #    내려갈 곳이 없어 σ 0.01 → 0 이 되고, 그것이 이 결함의 유일한 증인이다.
+    def _col_uniform(sd, vox=0.15):
+        _a = np.full((3, 3, 5), sd, np.int8)
+        _sg = np.zeros(9)
+        for _k, _v in _PHASE_SIG.items():
+            _sg[_k] = _v
+        return solve_sigma_z(_a, _sg, vox, z_top_um=5 * vox, z_bot_um=0.0)['sigma_eff']
+    _uni_bad = [f'{_PHASE_NM[_sd]}: σ={_col_uniform(_sd):g}' for _sd in sorted(_PHASE_SIG)
+                if (_PHASE_SIG[_sd] > 0) != (_col_uniform(_sd) > 0)]
+    ok &= not _uni_bad
+    print(f"plate-uniform-column: 상 {len(_PHASE_SIG)} 개의 **균일 기둥**이 각자의 "
+          f"도체성대로 돈다 (occupied surface 에서 한 상만 빠져도 여기서 걸린다)  "
+          f"{'OK' if not _uni_bad else 'FAIL ' + str(_uni_bad)}")
+
+    _open = _col_side(0, 'top')                 # 양성 대조 = 갭
+    _pgrid_bad = []
+    for _sd in sorted(_PHASE_SIG):
+        _is_cond = _PHASE_SIG[_sd] > 0
+        for _side in ('top', 'bot'):
+            _sv = _col_side(_sd, _side)
+            #  도체 표면 → 접촉해야 한다 (σ > 0) · 절연 표면 → 막아야 한다 (σ == 0)
+            if _is_cond and not _sv > 0:
+                _pgrid_bad.append(f'{_PHASE_NM[_sd]}/{_side}: 도체인데 σ={_sv:g} (막혔다)')
+            if (not _is_cond) and _sv != 0.0:
+                _pgrid_bad.append(f'{_PHASE_NM[_sd]}/{_side}: 절연인데 σ={_sv:g} (관통했다)')
+    ok &= not _pgrid_bad
+    print(f"plate-phase-grid: 상 {len(_PHASE_SIG)} × 면 2 = {2 * len(_PHASE_SIG)} 조합이 "
+          f"도체/절연 규약을 지킨다 (갭 대조 σ={_open:g})  "
+          f"{'OK' if not _pgrid_bad else 'FAIL ' + str(_pgrid_bad[:3])}")
+
+    #  ★ 반응 솔버: **두 면 다** — 전자망은 아래판, 이온망은 위판.
+    def _rxn_side(surf_sid, side, vox=0.15):
+        _a = np.zeros((3, 3, 6), np.int8)
+        _a[:, :, 1:4] = 1                       # AM (전자망)
+        _a[:, :, 4] = 6                         # SE (이온망)
+        _a[:, :, 5 if side == 'top' else 0] = surf_sid
+        _se = np.zeros(9); _se[1] = 0.010
+        _si = np.zeros(9); _si[6] = 0.001
+        _pid = np.where(_a == 1, 0, -1).astype(np.int32)
+        return solve_reaction_current(_a, _se, _si, _pid, 1, vox, 1,
+                                      z_top_um=6 * vox, z_bot_um=0.0)
+
+    _rgrid_bad = []
+    for _side, _lbl in (('bot', '전자망 아래판'), ('top', '이온망 위판')):
+        _blk = _rxn_side(7, _side)              # PTFE = 두 망 모두 절연
+        _opn = _rxn_side(0, _side)              # 갭
+        if 'no_plate_contact' not in str(_blk.get('reason') or ''):
+            _rgrid_bad.append(f'{_lbl}: 절연 표면이 막지 않았다 (I={_blk.get("I_tot")!r})')
+        if str(_opn.get('reason') or '').startswith('no_plate_contact'):
+            _rgrid_bad.append(f'{_lbl}: 갭이 막혔다 (과잉차단)')
+    ok &= not _rgrid_bad
+    print(f"plate-rxn-grid: 반응 솔버가 **두 면 다** 절연 고체를 막는다 (갭은 통과)  "
+          f"{'OK' if not _rgrid_bad else 'FAIL ' + str(_rgrid_bad)}")
+
+    #  ★ 슬래브 **밖** 셀은 접촉이 아니다 (signed band 결함).
+    #    ⚠ 아래판은 정상이고 **위판만** 밖이어야 signed↔abs 가 갈린다 (양쪽 다 밖이면
+    #      어느 규약이든 `no_plate_contact` 라 판별력이 없다 — 초판이 그랬다).
+    _ta = np.zeros((1, 1, 8), np.int8)
+    _ta[0, 0, :] = 1                            # 바닥부터 꽉 찬 도체 기둥
+    _tsg = np.zeros(9); _tsg[1] = 0.010
+    #    물리 top plane 을 기둥 **한복판**에 둔다 → 최상단 셀은 판보다 한참 위다.
+    _tv = solve_sigma_z(_ta, _tsg, 0.25, z_top_um=1.0, z_bot_um=0.0)
+    _q7b = (_tv['sigma_eff'] == 0.0) and 'no_plate_contact' in str(_tv.get('reason') or '')
+    ok &= _q7b
+    print(f"plate-top-above-plane: 물리 top plane 보다 **위**인 최상단 셀은 접촉이 아니다 "
+          f"(σ={_tv['sigma_eff']:g})  {'OK' if _q7b else 'FAIL'}")
+    #  ★ 대칭 — 물리 bottom plane 보다 **아래**인 최하단 셀도 접촉이 아니다.
+    #    (위판만 시험하면 아래판 분기의 signed→abs 되돌림을 못 잡는다.)
+    _ba = np.zeros((1, 1, 8), np.int8)
+    _ba[0, 0, :] = 1
+    _bv = solve_sigma_z(_ba, _tsg, 0.25, z_top_um=2.0, z_bot_um=1.0)
+    _q7c = (_bv['sigma_eff'] == 0.0) and 'no_plate_contact' in str(_bv.get('reason') or '')
+    ok &= _q7c
+    print(f"plate-bot-below-plane: 물리 bottom plane 보다 **아래**인 최하단 셀은 접촉이 "
+          f"아니다 (σ={_bv['sigma_eff']:g})  {'OK' if _q7c else 'FAIL'}")
+
+    _oa = np.zeros((1, 1, 6), np.int8)
+    _oa[0, 0, 3:6] = 1                          # 도체가 위쪽에만
+    _osg = np.zeros(9); _osg[1] = 0.010
+    #  물리 판을 도체보다 **아래**에 둔다 → 위판 접점이 있으면 안 된다
+    _ov = solve_sigma_z(_oa, _osg, 0.25, z_top_um=0.55, z_bot_um=0.0)
+    _q7 = (_ov['sigma_eff'] == 0.0) and 'no_plate_contact' in str(_ov.get('reason') or '')
+    ok &= _q7
+    print(f"plate-outside-slab: 물리 판보다 **위**인 셀은 접촉이 아니다 "
+          f"(σ={_ov['sigma_eff']:g} reason={str(_ov.get('reason'))[:38]})  "
+          f"{'OK' if _q7 else 'FAIL'}")
+
+    #  ★ 부분 원장 = 거부 (R3-CX-07 ③): `{}` · 한쪽만 · 빈 접점
+    _ledger_bad = []
+    for _lbl, _pe in (('{}', {}),
+                      ('bottom-only', {'bot': _r3['plate_edges']['bot']}),
+                      ('top-only', {'top': _r3['plate_edges']['top']}),
+                      ('빈 접점', {'bot': ((np.array([], int),) * 3, np.array([]), 1.0),
+                                   'top': _r3['plate_edges']['top']})):
+        try:
+            phase_current_share(dict(_r3, plate_edges=_pe), _cid, _cs(1.0, 10.0),
+                                periodic_xy=False)
+            _ledger_bad.append(_lbl)
+        except ValueError:
+            pass
+    ok &= not _ledger_bad
+    print(f"plate-ledger-complete: 부분 원장 4종을 전부 거부한다 "
+          f"(통과해 버린 것: {_ledger_bad or '없음'})  "
+          f"{'OK' if not _ledger_bad else 'FAIL'}")
 
     #  ⓓ **원장 부재 = 거부**.  초판은 조용히 internal-only 로 돌아가 CDXR2-1 이 고친
     #     틀린 답(10/13)을 다시 냈다.  `periodic_xy` 는 이미 fail-closed 였는데 이쪽만
