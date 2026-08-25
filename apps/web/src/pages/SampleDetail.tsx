@@ -77,6 +77,11 @@ export function SampleDetail() {
   const [kneeMethod, setKneeMethod] = useState('segmented')
   const [override, setOverride] = useState<Sample | null>(null)
   const [refDraft, setRefDraft] = useState('')
+  // 스치기만 한 blur 가 PATCH 를 보내지 않도록, 손으로 고친 뒤에만 커밋한다.
+  // 자동으로 1번에 앵커된 셀은 blur 만으로 reference_cycle=1 이 저장되며
+  // 출처가 user 로 바뀌어 -- 나중에 formation 파일이 붙어도 1 에 영원히
+  // 고정된다.  고치지 않았으면 보낼 것도 없다.
+  const [refDirty, setRefDirty] = useState(false)
   const [settingsError, setSettingsError] = useState<string | null>(null)
 
   const sampleState = useAsync(() => api.getSample(sampleId), [sampleId], { live: true })
@@ -330,7 +335,10 @@ export function SampleDetail() {
   const referenceCycle = sample?.reference_cycle_effective ?? sample?.reference_cycle
   const referenceReason = sample?.reference_cycle_reason ?? 'default'
   useEffect(() => {
-    if (referenceCycle !== undefined) setRefDraft(String(referenceCycle))
+    if (referenceCycle !== undefined) {
+      setRefDraft(String(referenceCycle))
+      setRefDirty(false)
+    }
   }, [referenceCycle])
 
   // Origin 에 바로 붙여 넣을 블록.  누른 순간 화면에 있는 것을 그대로 복사한다
@@ -400,10 +408,12 @@ export function SampleDetail() {
   ].filter(Boolean)
 
   const commitReference = async () => {
+    if (!refDirty) return
     const value = Number(refDraft)
     if (!Number.isFinite(value) || value < 1) {
       setSettingsError('기준 사이클은 1 이상이어야 합니다.')
       setRefDraft(String(referenceCycle ?? sample.reference_cycle))
+      setRefDirty(false)
       return
     }
     // 쓰이는 값과 비교한다.  저장값과 비교하면, 자동으로 1번이 된 셀에 1 을
@@ -412,9 +422,11 @@ export function SampleDetail() {
     try {
       setSettingsError(null)
       setOverride(await api.updateSample(sample.id, { reference_cycle: value }))
+      setRefDirty(false)
     } catch (cause) {
       setSettingsError(cause instanceof Error ? cause.message : String(cause))
       setRefDraft(String(referenceCycle ?? sample.reference_cycle))
+      setRefDirty(false)
     }
   }
 
@@ -467,7 +479,10 @@ export function SampleDetail() {
             type="number"
             min={1}
             value={refDraft}
-            onChange={(event) => setRefDraft(event.target.value)}
+            onChange={(event) => {
+              setRefDraft(event.target.value)
+              setRefDirty(true)
+            }}
             onBlur={() => void commitReference()}
             onKeyDown={(event) => {
               if (event.key === 'Enter') event.currentTarget.blur()

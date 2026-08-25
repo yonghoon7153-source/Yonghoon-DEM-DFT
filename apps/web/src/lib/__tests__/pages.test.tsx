@@ -804,6 +804,40 @@ describe('SampleDetail', () => {
     await waitFor(() => expect(patched).toEqual([{ reference_cycle: 1 }]))
   })
 
+  it('고치지 않고 스쳐 간 blur 는 아무것도 보내지 않는다', async () => {
+    // 자동으로 1번에 앵커된 셀에서 칸을 클릭했다 떠나기만 해도 PATCH 가
+    // 나가면, 출처가 user 로 바뀌어 1 에 영원히 고정된다 -- 나중에 formation
+    // 파일이 붙어도 스케줄이 다시는 기준을 못 정한다.
+    const patched: unknown[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          patched.push(JSON.parse(String(init.body)))
+          return sample({ reference_cycle: 1 })
+        }
+        if (path(url) === '/api/samples/1') {
+          return sample({
+            reference_cycle: 3,
+            reference_cycle_effective: 1,
+            reference_cycle_reason: 'formationless',
+            formation: 'no',
+          })
+        }
+        return undefined
+      }),
+    )
+
+    renderSampleDetail()
+
+    const input = await screen.findByRole('spinbutton', { name: /기준 사이클/ })
+    await userEvent.click(input)
+    await userEvent.tab()
+
+    // waitFor 는 "아직 안 왔다" 도 통과시키므로, 다른 요청이 오갈 시간을 준다.
+    await new Promise((resolve) => setTimeout(resolve, 50))
+    expect(patched).toHaveLength(0)
+  })
+
   it('commits the reference cycle once, on blur, not on every keystroke', async () => {
     const patched: unknown[] = []
     installFetch(
