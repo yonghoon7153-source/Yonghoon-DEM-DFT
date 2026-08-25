@@ -28,6 +28,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
+| `giannis2021_stress_based_multicontact_dem` | 입자 응력텐서 trace 로 모든 접촉을 서로 묶은 non-binary DEM 접촉모델 (MC-stress) — Giannis (Granular Matter 2021) | DEM (contact-LAW theory, non-binary multi-contact) | 2026-08-25 | — |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |
 | `kogutetsion2002_ep_sphere_rigid_flat` | 변형 탄소성 구 ↔ 강체 평판 접촉의 탄소성 FEM 해석 (KE 모델) — Kogut & Etsion (J. Appl. Mech. 2002) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 8 |
 | `luding2008_cohesive_frictional_contact_models` | 점착·마찰 분말의 접촉모델 (인장 가능 LAW) — Luding (Granular Matter 2008) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 5 |

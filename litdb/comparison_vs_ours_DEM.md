@@ -145,6 +145,32 @@
 - **So 2021** (LPS+Si, real E=24 + **H-cap** F_th=2/3·H·A_con): 연화 없이 rel.density 0.30→**0.98**@600 MPa →
   **항복캡이 우리 18× 연화 역할**. ⇒ '연화 irreducible'은 강체 구 본질이 아니라 *우리 DEM에 항복캡 없는 탓*
   (`elasto_plastic_feasibility.md`). Varkey '<20% 안 함'도 물리 floor 아닌 계산비용.
+- ★★★ **정정 2026-08-25 — multi-contact `F_mc` 는 우리 18× 연화와 *부호가 반대다*** (원전 digest
+  `papers/giannis2021_stress_based_multicontact_dem.md`; 그동안 Varkey 2026 의 2차 인용으로만 갖고 있었다):
+  - 원전 결론 문장 그대로 — *"The new multi-contact approach is able to provide a **higher force at a given
+    displacement** than the classical DEM"*. Fig 7·9 도 **MC-stress 가 최대겹침을 가장 작게** 만든다.
+    ⇒ **침대를 뻣뻣하게 = 같은 압력에서 porosity ↑.** 우리 연화는 겹침을 **늘리는** 장치 = 반대 방향.
+  - 그래서 `elasto_plastic_feasibility.md §1 경로 B` 와 `papers/varkey2026_*.md §7` 의 *"같은 증상(치밀영역
+    **과강성**) 다른 처방"* 은 **틀린 서술**이다. 고쳐야 할 것은 과강성이 아니라 **under-stiffness**(고변형에서
+    힘을 과소예측). ⚠ varkey 카드의 **Supplementary 절은 이미 "TN 단독이 FEM 을 under-predict"** 라고 옳게
+    적어 두어 **본문 표와 SI 절이 서로 모순**이었다 — 이 정정으로 SI 쪽이 맞는 것으로 확정.
+  - **우리 침대에 대입한 크기** (★ 우리 유도, 논문 수치 아님 — 유도·검산은 카드 §7-4):
+    `ΔF/F = k·β·ν·C·(δ/d)`, k = 0.25…1.5 (논문 **자신의** 정규화 3종 × branch-vector 2종 = **6× 모호**),
+    β = 1.65–5.17 (논문 전 범위, **LPSCl 실측 n/a**), ν = 0.37, C ≈ 6.5.
+    | 우리 침대 | δ/d | ΔF/F | 필요 연화 18× → |
+    |---|---|---|---|
+    | pure-SE (Cronau ⟨δ⟩ ≈ 11 % of d) | 0.11 | **+11 … +205 %** | **20× … 55×** |
+    | production 복합 (AM 차폐, ⟨δ⟩ 1.75 %) | 0.0175 | **+2 … +33 %** | **18× … 24×** |
+    ⇒ **경로 B 는 18× 연화를 제거하지 못한다 — 오히려 늘린다.** 크기도 부족(힘 최대 3.05× vs 연화 18×).
+    복합양극에선 사실상 무시 수준(+2…+33 %)이고 의미가 생기는 곳은 **pure-SE separator/펠릿뿐**.
+  - **올바른 짝짓기**: 항복캡(경로 A)은 치밀영역을 *과도하게 물러지게* 만들고(Varkey SI Fig S1: Thornton–Ning
+    단독이 5 mm 에서 FEM 9.7 vs **5.7**×10⁴ N), **F_mc 가 바로 그것을 되돌리는 짝**이다.
+    ⇒ **F_mc = 연화의 경쟁자가 아니라 경로 A 의 파트너.** Varkey 스택(TN + F_mc)이 이미 조립된 레시피.
+  - ⚠ **압력·소재 전이 한계**: Giannis 2021 의 최대 응력은 **유리 45 MPa**(우리 300 MPa 의 1/6.7)이고
+    **porosity·상대밀도를 한 번도 보고하지 않는다.** "ρ>0.7 에서만 유효"는 **Varkey 의 서술이지 Giannis 의 것이 아님.**
+    소재도 하이드로겔(23.3 kPa)·고무(1.85 MPa)·**유리(65 GPa)** 뿐 — LPSCl(22–24 GPa)에 그나마 가까운 건 유리.
+    저자 outlook 이 *"elasto-plastic behaviour at **high stress levels**"* 를 **향후 과제**로 명시 = 우리 300 MPa 영역은
+    이 모델의 검증 밖. 유리도 *"brittle 이라 **elastic part 만** 본다"*.
 - **Bouvard 2000**: 경상↑ → 고압 porosity↑ (Astroloy 0.995→0.86 @0→35 vol% alumina) = 우리 AM↑→porosity↑;
   '온도↑→σ_y↓→압밀↑'은 우리 E_eff 연화의 실험적 정당화. **Martin–Bouvard 2003**: 거시응력이 E₂/E₁=10→100서
   <3% 변화 → **rigid-AM 가정 외부 면허**.
@@ -752,6 +778,13 @@
 - 우리: MPM 진짜 소성 형상변화(SEM 일치), void-fill flow, Σdg 변형장.
 - 왜: 강체 구 DEM·단상 연속체는 granular 재배열을 못 잡아 둘 다 연화 럼핑 필요 (frame [1]/[2]).
 - 인사이트: **morphology·소성 floor(<20 %)·변형장 = 우리 MPM이 메우는 간극** (Varkey가 스스로 인정 = frame[5] 확증).
+- ★★ **frame[5] 4중 확증 — 그것도 *우리 접촉법칙의 저자 본인*이** (2026-08-25, `papers/giannis2021_stress_based_multicontact_dem.md` §1):
+  **S. Luding 이 공저**한 Giannis 2021 이 서론에서 MPFEM·FEM-DEM·**MPM**·BPM 을 *"단일 입자의 **이방성 변형**과
+  **변형 후 임의 형상**을 다룰 수 있는 방법 — 그러나 **높은 계산비용이 많은 입자 수에서의 사용을 막는다**"* 로 정리하고,
+  그래서 **DEM + 접촉법칙 보정** 쪽을 택한다고 명시한다. ⇒ **"형상은 MPM, 규모는 DEM"** 이라는 우리 분업이
+  *우리 hooke/hysteresis 정의서를 쓴 사람 자신*의 문장으로 외부 확증된다. 우리 scaffold 커플링(DEM 골격 + SE 만 MPM)은
+  그가 지적한 **비용 장벽을 우회하는 형태**이므로, 이 문장은 우리 방법 선택의 정당화로도 그대로 쓸 수 있다.
+  ⚠ 단 Giannis 2021 자신은 **소성이 아예 없다**(기반 = 순수 Hertz) — 형상은커녕 **접촉 소성도 없다**. 층위 ① 탄성 non-binary.
 - **Martin–Bouvard 2003** 2-메커니즘 분해: 경상 force-network(K_h≈1.3@20→1.8@40 vol%, N₂₂/N₁₁→3.5) = 우리
   AM load-shielding / 연상 excluded-volume 과변형(+20–40%) = 우리 MPM void-fill → **복합 porosity 관계식 두 항**.
 - **So 2021** Fig5–6: Si AM-AM 응력집중(2.5→5.9 GPa, overlap 0.007)·SE-SE는 H_SE 캡 = 우리 real_14 AM-shielding
@@ -975,6 +1008,19 @@
     (우연히 둘 다 "중간 조성이 최적"이라 혼동하기 쉽다.)
 
 ## E. 우리 계산이 문헌을 "검증/교차검증"하는 지점 (강점으로 쓸 것)
+- ★★ **Giannis 2021 의 β 가 정말 자유변수인지 — 우리가 저자보다 잘 판정할 수 있다** (2026-08-25 신설,
+  카드 `papers/giannis2021_stress_based_multicontact_dem.md` §4.6):
+  eq 10 에서 β 와 ν 는 **항상 곱으로만** 등장하는데, 논문의 4개 보정값을 그 곱으로 다시 쓰면
+  **β·ν = 0.787 (고무 단일 구) / 0.800 (고무 침대) / 0.825 (하이드로겔 침대) / 1.241 (유리)** —
+  **E 가 23.3 kPa → 65 GPa 로 2.8×10⁶ 배 변하는 동안 1.58× 폭 안**에 들어오고 셋은 ±2.4 % 로 뭉친다.
+  저자들은 이 조합을 **보고하지 않았고**, β 단독의 3.1× 차이를 "뻣뻣하면 접촉면적이 작아서"로 설명한다 —
+  그 차이의 **2.08배는 그냥 ν(0.5→0.24)** 이고 남는 건 1.5× 뿐이다.
+  ⚠ **남은 1.5× 를 물리로 귀속할 수 없다**: 보정항은 **배위수 C 에 비례**하는데 유리 케이스는 입자 **17개**(원통)라
+  C 가 514-입자 침대보다 낮을 것이고, **논문이 C 를 한 번도 보고하지 않아** 분리 불가.
+  ★ **우리는 침대의 C 를 정확히 안다** ⇒ `ΔF/F = k·β·ν·C·(δ/d)` 를 우리 침대에 걸어 **C-보정된 β 를 재추출**하면
+  논문이 못 한 분리를 할 수 있다. 성공하면 결론은 **"β 는 자유변수가 아니다 (β ≈ 0.8/ν)"** — 원저자보다 앞선 기여.
+  (그 가설대로면 우리 LPSCl ν=0.37 → **β ≈ 2.1–3.4**, 새 보정 없이 쓸 값.)
+  ⚠ **논문의 주장이 아니라 우리 재분석**이다 — 4점·3재료·C 미보고. 인용 시 반드시 그렇게 표기.
 - **★ Minnmann 2021 JES = 우리 porosity·σ_ion·τ 앵커의 1차 출처 + 최강 same-material 실험 검증**:
   σ_ion,eff 0.17 mS/cm @42 vol% NCM ⊂ 우리 DEM σ_ionic 0.04–0.18; 복합 porosity 13–17 % ≈ 우리 real_14 15.6 %;
   τ_ion²(Eq 4) = 우리 τ_Laplace,eff 정의; "fine SE→σ_eff↑ = packing/τ" 결론 일치; utilization(ion+e 둘 다
@@ -1145,8 +1191,25 @@
   근거*로 사용(우리 f_perc/percolation 지수가 그들 β=0.41과 같은 universality class).
 - **다중압력 Heckel(LPSCl powder) 실측** — 우리 직접앵커 부족; Bazzoun σ-vs-P / Varkey P-vs-porosity로 보강.
 - **명시적 바인더(SBR/CB/PTFE) 역학·이온저항 R_b** — Varkey/Bazzoun 보유, 우리 미모델.
-- **multi-contact 구속항 F_mc** (Varkey) vs 우리 18× 연화 — 같은 증상(ρ>0.7 과강성) 다른 처방, 비교연구 거리.
+- ~~**multi-contact 구속항 F_mc** (Varkey) vs 우리 18× 연화 — 같은 증상(ρ>0.7 과강성) 다른 처방~~
+  ⛔ **2026-08-25 정정 (원전 Giannis 2021 digest)** — *같은 증상이 아니고 부호가 반대다*. §A 정정 블록 참조.
+  ★ **대신 이 자리에 남는 진짜 공백 = 배위수 의존 접촉강성.** `ΔF/F ∝ C` (카드 §7-2·7-4):
+  Hertz 도 `hooke/hysteresis` 도 **한 입자에 접촉이 몇 개인지 모른다.** 같은 겹침이라도 잘 구속된 입자의 접촉이
+  더 뻣뻣하다는 물리가 **우리 DEM 에 전혀 없다.** 우리는 C 를 **전달**(σ_ionic ∝ CN²)에만 쓰고 **역학엔 안 쓴다.**
+  ⇒ 새 예측(미시험): MC-stress 를 켜면 **SE-rich(고 C) 침대가 AM-rich 보다 더 뻣뻣해져 Furnas dip 의 SE-rich flank 가
+  올라간다** = "dip 은 순수 기하"(frame[3]) 판정에 대한 **직교 시험**.
+  ★ **이식 난이도 재평가**: 원전은 **Ansys Rocky 가 아니라 LIGGGHTS 에 구현**했고 **부록에 2-pass pseudo-code 를 공개**했다.
+  `Σ l⊗f` 는 LAMMPS/LIGGGHTS 의 **`compute stress/atom`(per-atom virial)** 그 자체 = 재료가 이미 있다
+  (⚠ V_p 로 안 나눔 · 부호 규약 확인 필요). 비용은 **classical 대비 5.7–6.4×**(514 입자 실측) — 우리 36k–73k 침대엔 실부담.
+  ⇒ 경로 B 는 "상용/커스텀 필요"에서 **"가능하지만 부호가 안 맞아 지금은 이득 없음"** 으로 재분류.
 - **항복캡 접촉**(So 2021 H-cap / Thornton–Ning p_y) — real E로 18× 연화 **제거** 가능 경로(1순위, `elasto_plastic_feasibility.md`).
+  ★ **Giannis 2021 이 이 우선순위를 강화한다**: 세 처방(우리 18× 연화 / 항복캡 / multi-contact) 중 **부호가 맞고
+  자유변수가 0인 것은 항복캡뿐**이다. Giannis 의 β 는 저자 표현 그대로 *"**adjustable dimensionless empirical**
+  geometric prefactor … **must be carefully calibrated depending on the type of the material**"* = **우리 E_eff 와 같은
+  1-파라미터 보정**(유도 아님, FEM 유도는 outlook). 단 구조는 그쪽이 낫다 — **β 는 별도 항에 격리되고 E·ν 는 실측값
+  그대로**인 반면 **우리 E_eff 는 측정 물성 자리를 덮어써 하위 계산(Hertz 접촉반경·k_n·k_t·파속·timestep·Stage-E 입력)
+  전체를 오염**시킨다. ⇒ 우리 연화의 진짜 약점은 "경험적"이 아니라 **"물성 자리를 점유한다"** 는 것이고, 그걸 없애는
+  것은 **경로 A** 다.
 - **비구형 입자**(Bouvard 각질 inclusion이 압밀 더 방해; Martin–Bouvard truncated sphere = SHAPE flow 없음) —
   우리 DEM·MPM 둘 다 구만 = 23년째 문헌 공통 한계(M&B2003→Varkey2026→Bazzoun2026), frame[5] 일관 확증.
 - **Storåkers 소성 접촉면적** A=2πc(m)²rh (Martin–Bouvard, c(m) 0.5→1.45) — 우리 Stage-E(Tabor+volume)와 A/B 비교 거리.
