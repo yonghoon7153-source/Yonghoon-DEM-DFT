@@ -383,7 +383,37 @@ def framework_com_split(json_path, save_fs=None):
 #     쓰라는 전제가 그래서 있다. 새 조성에 쓰려면 결합 검사부터 통과시킬 것.
 SPLIT_RIGID = 0.30
 
+# ── 단위별 판정 (2026-08-25, **데이터 보기 전 고정**) ────────────────────────
+#   질문: b2o3 가 넣은 BS₃ 가 유동화의 원인인가, 호스트 PS₄ 자체가 무른가.
+#   ⚠ 절대 β 는 온도마다 달라 계 간 비교가 안 된다. **같은 런 안의 비**로 본다.
+UNIT_RATIO_HI = 2.0     # BS₃ MSD / PS₄ MSD ≥ 2.0 → BS₃ 가 유의하게 더 움직임
+UNIT_RATIO_LO = 1.25    # ≤ 1.25 → 사실상 같이 움직임 (호스트 전체가 무름)
+#   판정:
+#     BS3_driven      : ratio ≥ 2.0  AND  PS4_unit β < 0.30   → 도핑 단위가 원인
+#     host_wide       : ratio ≤ 1.25 AND  PS4_unit β ≥ 0.30   → 호스트 전체가 무름
+#                                                                (UMA 아티팩트 쪽 무게↑)
+#     both_mobile     : ratio ≥ 2.0  AND  PS4_unit β ≥ 0.30   → BS₃ 가 더 심하나 호스트도 움직임
+#     inconclusive    : 그 외
+
 _BOND_TOOL = pathlib.Path(__file__).resolve().parents[1] / "comp1_v3" / "b2o3_all_bond_lengths.py"
+
+
+def unit_verdict(ratio, ps4_beta):
+    """BS₃/PS₄ 비와 PS₄ β 에서 판정 하나를 낸다. **순수 함수** — selftest 대상.
+
+    ⛔ 못 하는 것: 표본 수(n)·MSD 부호 검사는 호출부가 한다. 여기 오는 건
+      이미 걸러진 값이다. ps4_beta 가 None(β 미산출)이면 판정하지 않는다 —
+      '비만 크다' 로 BS3_driven 을 주면 호스트도 같이 뛰는 경우를 놓친다.
+    """
+    if ratio is None or ps4_beta is None:
+        return "inconclusive"
+    if ratio >= UNIT_RATIO_HI and ps4_beta < SPLIT_RIGID:
+        return "BS3_driven"
+    if ratio <= UNIT_RATIO_LO and ps4_beta >= SPLIT_RIGID:
+        return "host_wide"
+    if ratio >= UNIT_RATIO_HI and ps4_beta >= SPLIT_RIGID:
+        return "both_mobile"
+    return "inconclusive"
 
 
 def _load_bond_tool():
@@ -406,21 +436,32 @@ def classify_sulfur(syms, cart, cell):
     D = bt.min_image_D(np.asarray(cart), np.asarray(cell))
     s_idx = [i for i, s in enumerate(syms) if s == "S"]
     cations = {"P": bt.DECOMP_WINDOWS[("P", "S")], "B": bt.DECOMP_WINDOWS[("B", "S")]}
-    bonded, free = [], []
+    bonded, free, on_p, on_b = [], [], [], []
     for i in s_idx:
-        hit = False
+        host = None
         for cat, (lo, hi) in cations.items():
             for j in [k for k, s in enumerate(syms) if s == cat]:
                 if lo <= D[i, j] <= hi:
-                    hit = True
+                    host = cat
                     break
-            if hit:
+            if host:
                 break
-        (bonded if hit else free).append(i)
+        if host is None:
+            free.append(i)
+        else:
+            bonded.append(i)
+            (on_p if host == "P" else on_b).append(i)
+    P = [i for i, s in enumerate(syms) if s == "P"]
+    B = [i for i, s in enumerate(syms) if s == "B"]
+    # ★ 2026-08-25 — **단위(unit) 단위 그룹**. 원자별로는 B 가 n=2 라 컷오프(8) 아래여서
+    #   판정에서 빠졌다. 그런데 결합 검사가 B–S 6→6 불변을 보였으므로 B 와 그 S 3개는
+    #   **한 몸**이다 ⇒ BS₃ 단위(B 2 + S 6 = 8원자)를 하나의 그룹으로 보면 컷오프를 만족한다.
+    #   이 그룹이 "b2o3 가 넣은 것이 움직이나(BS₃) vs 호스트가 무르나(PS₄)" 를 가른다.
     return {"bonded_S": bonded, "free_S": free,
+            "S_on_P": on_p, "S_on_B": on_b,
+            "PS4_unit": sorted(P + on_p), "BS3_unit": sorted(B + on_b),
             "Cl": [i for i, s in enumerate(syms) if s == "Cl"],
-            "P": [i for i, s in enumerate(syms) if s == "P"],
-            "B": [i for i, s in enumerate(syms) if s == "B"],
+            "P": P, "B": B,
             "O": [i for i, s in enumerate(syms) if s == "O"]}
 
 
@@ -466,7 +507,20 @@ def framework_split(json_path, lo, hi, save_fs=None):
             v = "free_anion_sublattice_mobile"
         elif all(b is not None and b < SPLIT_RIGID for b in (_b(fs), _b(cl))):
             v = "inconsistent_with_elementwise"
-    return {"groups": res, "verdict": v, "li_msd_end": out["msd_per_elem_A2"]["Li"][-1]}
+
+    # ── 단위 판정: BS₃ vs PS₄ (사전 등록 기준) ──────────────────────────────
+    ps4, bs3 = res.get("PS4_unit"), res.get("BS3_unit")
+    unit = {"verdict": "no_BS3"}
+    if ps4 and bs3 and bs3["n"] >= FRAMEWORK_MIN_N and ps4["msd_end_A2"] > 0:
+        ratio = bs3["msd_end_A2"] / ps4["msd_end_A2"]
+        pb = _b(ps4)
+        uv = unit_verdict(ratio, pb)
+        unit = {"verdict": uv, "ratio_BS3_over_PS4": round(ratio, 2),
+                "PS4_beta": pb, "BS3_beta": _b(bs3),
+                "PS4_msd_end": ps4["msd_end_A2"], "BS3_msd_end": bs3["msd_end_A2"],
+                "n_PS4": ps4["n"], "n_BS3": bs3["n"]}
+    return {"groups": res, "verdict": v, "unit": unit,
+            "li_msd_end": out["msd_per_elem_A2"]["Li"][-1]}
 
 
 def framework_check(d, lo, hi):
@@ -764,6 +818,34 @@ def selftest():
     _g2 = classify_sulfur(["P", "S"], _np.array([[0.5, 5, 5], [28.45, 5, 5]]),
                           _np.eye(3) * 30)
     chk(1 in _g2["bonded_S"], "[음성] 주기경계 건너 2.05 Å 도 결합S (최소이미지)")
+
+    # ── 단위 그룹: BS₃ / PS₄ (2026-08-25) ──────────────────────────────────
+    #   B 는 홀로 n=2 라 컷오프(8) 아래다. 단위로 묶어야 판정 가능해진다.
+    _syms3 = ["P", "S", "S", "S", "S", "B", "S", "S", "S", "Cl"]
+    _c3 = _np.array([[5., 5, 5], [7.05, 5, 5], [5, 7.05, 5], [5, 5, 7.05], [2.95, 5, 5],
+                     [15., 5, 5], [16.8, 5, 5], [15, 6.8, 5], [15, 5, 6.8], [25., 5, 5]])
+    _g3 = classify_sulfur(_syms3, _c3, _np.eye(3) * 30)
+    chk(_g3["S_on_B"] == [6, 7, 8] and _g3["S_on_P"] == [1, 2, 3, 4],
+        "단위: S 를 P 쪽/B 쪽으로 가른다 (같은 S 를 양쪽에 넣지 않는다)")
+    chk(_g3["BS3_unit"] == [5, 6, 7, 8] and _g3["PS4_unit"] == [0, 1, 2, 3, 4],
+        "단위: BS₃ = B + B결합S, PS₄ = P + P결합S")
+    chk(not (set(_g3["BS3_unit"]) & set(_g3["PS4_unit"])),
+        "[음성] 단위: 두 단위가 원자를 공유하지 않는다 (공유하면 비가 자기상관)")
+    chk(9 not in _g3["BS3_unit"] and 9 not in _g3["PS4_unit"],
+        "[음성] 단위: Cl 은 어느 단위에도 안 들어간다")
+    # 사전 등록 판정 — 네 갈래 전부 (양성 2 · 음성 2)
+    chk(unit_verdict(5.0, 0.10) == "BS3_driven",
+        "판정: 비 큼 + PS₄ 굳음 → BS3_driven (도핑 단위가 원인)")
+    chk(unit_verdict(1.0, 0.90) == "host_wide",
+        "판정: 비 ~1 + PS₄ 도 움직임 → host_wide (계 전체가 무름)")
+    chk(unit_verdict(5.0, 0.90) == "both_mobile",
+        "[음성] 비만 크다고 BS3_driven 이 되지 않는다 — PS₄ 가 움직이면 both_mobile")
+    chk(unit_verdict(1.6, 0.10) == "inconclusive",
+        "[음성] 회색지대(1.25<비<2.0)는 판정 안 한다 — 사전 등록 문턱을 사후에 늘리지 않는다")
+    chk(unit_verdict(5.0, None) == "inconclusive",
+        "[음성] PS₄ β 가 없으면 판정 없음 — 비만으로 결론 내지 않는다")
+    chk(unit_verdict(None, 0.10) == "inconclusive",
+        "[음성] 비가 없으면 판정 없음")
 
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
@@ -1125,7 +1207,7 @@ def main():
         print(f"  판정(사전 고정): bonded-S β<{SPLIT_RIGID} & (free-S 또는 Cl ≥{SPLIT_RIGID})"
               " → 자유 음이온 부격자 이동")
         print(f"\n{'case':30s} {'그룹':>9s} {'n':>4s} {'beta':>6s} {'MSD끝':>8s}")
-        _vs = {}
+        _vs, _us = {}, {}
         for f in files:
             tag = case_label(f)
             try:
@@ -1135,7 +1217,19 @@ def main():
             r = framework_split(f, lo, hi, save_fs=_sf)
             if r is None:
                 print(f"{tag:30s} — 궤적 없음"); continue
-            for g in ("bonded_S", "free_S", "Cl", "P", "B", "O"):
+            u = r.get("unit") or {}
+            if u.get("verdict") != "no_BS3":
+                um = {"BS3_driven": "★ BS₃ 단위가 원인 — 도핑이 넣은 것이 움직인다",
+                      "host_wide": "⛔ 호스트 PS₄ 도 움직인다 — 계 전체가 무름 (UMA 의심↑)",
+                      "both_mobile": "⚠ BS₃ 가 더 심하나 PS₄ 도 움직인다",
+                      "inconclusive": "▫ 단위 판정 불충분"}[u["verdict"]]
+                print(f"{tag:30s} {'[단위]':>9s} BS₃/PS₄ = {u['ratio_BS3_over_PS4']:.2f}"
+                      f"  (PS₄ β={u['PS4_beta']}, MSD {u['PS4_msd_end']:.1f}"
+                      f" | BS₃ β={u['BS3_beta']}, MSD {u['BS3_msd_end']:.1f})")
+                print(f"{'':30s} {'':>9s} → {um}")
+                _us[u["verdict"]] = _us.get(u["verdict"], 0) + 1
+            for g in ("PS4_unit", "BS3_unit", "S_on_P", "S_on_B",
+                      "bonded_S", "free_S", "Cl", "P", "B", "O"):
                 if g not in r["groups"]:
                     continue
                 gg = r["groups"][g]
@@ -1149,7 +1243,12 @@ def main():
                   "insufficient": "▫ 판정 불충분"}[r["verdict"]]
             print(f"{'':30s} → {mk}\n")
             _vs[r["verdict"]] = _vs.get(r["verdict"], 0) + 1
-        print("  합계: " + " · ".join(f"{k} {v}" for k, v in sorted(_vs.items())))
+        print("  합계(부격자): " + " · ".join(f"{k} {v}" for k, v in sorted(_vs.items())))
+        if _us:
+            print("  ★ 합계(단위 BS₃ vs PS₄): "
+                  + " · ".join(f"{k} {v}" for k, v in sorted(_us.items())))
+            print(f"    기준(사전 고정): 비 ≥{UNIT_RATIO_HI} & PS₄ β<{SPLIT_RIGID} → BS3_driven / "
+                  f"비 ≤{UNIT_RATIO_LO} & PS₄ β≥{SPLIT_RIGID} → host_wide")
 
     if a.framework_com:
         print("\n골격 흐름 vs 재배열 — 골격이 움직일 때 **구제 가능한가**")

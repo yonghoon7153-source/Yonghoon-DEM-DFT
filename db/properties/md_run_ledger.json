@@ -445,5 +445,28 @@
   "co_run": "기존 러너(lpsocl T700 → b2o3 T700)와 동시 실행 — GPU 98 %, 3.2 GB/24 GB. 둘 다 감속하나 순차 대비 lp600 이 ~10 h 당겨짐 (사용자 결정: 대기자 없이 즉시)",
   "output": "arrhenius_6pt_traj/lpsocl/T600_s{2,3,4} — 200 ps · MTO · traj",
   "on_complete": "600 MTO 시드평균 β-bar 재판정 → 통과 시 lpsocl Ea 재적합 (보류 해제), 시드평균 MTO 곡선으로 논문 MSD 그림 정본 교체"
+ },
+ "unit_split_preregistration_2026_08_25": {
+  "question": "b2o3 골격이 움직인 원인이 도핑이 넣은 BS₃ 단위인가, 호스트 PS₄ 자체가 무른 것인가.",
+  "why_now": "원자별 판정에서 B 는 n=2 라 FRAMEWORK_MIN_N=8 컷오프 아래여서 빠져 있었다. 결합 검사가 B–S 6→6 불변을 보였으므로 B 와 그 S 3개를 한 몸으로 묶으면 BS₃ 단위 = 8원자로 컷오프를 만족한다.",
+  "tool": "tools/ionic/msd_diffusive_check.py --framework_split (unit_verdict 순수함수 + selftest 47)",
+  "criteria_fixed_before_data": {
+   "ratio": "BS₃ MSD_end / PS₄ MSD_end (같은 런 안의 비 — 절대 β 는 온도 의존이라 계 간 비교 불가)",
+   "UNIT_RATIO_HI": 2.0,
+   "UNIT_RATIO_LO": 1.25,
+   "SPLIT_RIGID": 0.3,
+   "BS3_driven": "비 ≥ 2.0 AND PS₄ β < 0.30",
+   "host_wide": "비 ≤ 1.25 AND PS₄ β ≥ 0.30",
+   "both_mobile": "비 ≥ 2.0 AND PS₄ β ≥ 0.30",
+   "inconclusive": "그 외 (회색지대 1.25<비<2.0 포함 — 문턱을 사후에 늘리지 않는다)"
+  },
+  "interpretation_stakes": {
+   "BS3_driven": "메커니즘 특정: B₂O₃ 도핑이 이동성 BS₃ 단위를 넣어 음이온 부격자를 유동화한다.",
+   "host_wide": "호스트 PS₄ 까지 무르다 ⇒ UMA 아티팩트 쪽 무게↑ (modelc 7/7 rigid 와 충돌)",
+   "both_mobile": "둘 다 — 물리와 아티팩트가 섞여 있어 단독 인용 불가"
+  },
+  "planned_input": "kgy ~/work/runs/highT_reseed_traj/b2o3/s*/d0.00_cfg0/T*/msd.json (window 2–50 ps)",
+  "status": "사전 등록 완료 — 데이터 미열람",
+  "⛔_limits": "첫 프레임 결합 기준 분류다. 결합 불변(9/9)이 확인된 b2o3 에만 쓴다. MSD_end 비는 창 끝값 하나라 시드 산포를 담지 않는다 — 시드별로 따로 보고 부호가 갈리면 inconclusive 로 본다."
  }
 }
