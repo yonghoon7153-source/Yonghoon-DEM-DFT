@@ -180,6 +180,29 @@ _NET = [
     ('σ_ionic [physics] (mS/cm)', ('sigma_full_mScm_physics',), 4),
     ('σ_electronic [physics] (mS/cm)', ('electronic_sigma_full_mScm_physics',), 2),
     ('σ_thermal [physics] (mS/cm equiv)', ('thermal_sigma_full_mScm_physics',), 3),
+    #  ── MPM (압밀 시뮬) ──  키가 두 갈래다: 중첩 `mpm.*`(case_master 27건) 와
+    #     평평한 `mpm_*`(코퍼스 146건).  둘 다 후보로 넣어 **있는 쪽**을 쓴다.
+    ('── MPM (압밀) ──', None, None),
+    ('MPM Porosity(%)', ('mpm.porosity_mpm_pct', 'mpm_porosity_mpm_pct', 'mpm_porosity_pct'), 2),
+    ('MPM 압밀 Porosity(%)', ('mpm.compacted_porosity_pct', 'mpm_compacted_porosity_pct'), 2),
+    ('MPM seed Porosity(%)', ('mpm.seed_porosity_pct', 'mpm_seed_porosity_pct'), 2),
+    ('MPM 두께(μm)', ('mpm.thickness_mpm_um', 'mpm_thickness_mpm_um'), 2),
+    ('MPM ρ_bulk(g/cm³)', ('mpm.bulk_density_g_cm3', 'mpm_bulk_density_g_cm3'), 3),
+    ('MPM SE 분율(%)', ('mpm.se_fraction_pct', 'mpm_se_fraction_pct'), 2),
+    ('  ├ Coverage AM_P Hertz(%)', ('mpm.coverage_AM_P_hertz_pct', 'mpm_coverage_AM_P_hertz_pct'), 1),
+    ('  ├ Coverage AM_P Tabor(%)', ('mpm.coverage_AM_P_tabor_pct', 'mpm_coverage_AM_P_tabor_pct'), 1),
+    ('  ├ Coverage AM_S Hertz(%)', ('mpm.coverage_AM_S_hertz_pct', 'mpm_coverage_AM_S_hertz_pct'), 1),
+    ('  └ Coverage AM_S Tabor(%)', ('mpm.coverage_AM_S_tabor_pct', 'mpm_coverage_AM_S_tabor_pct'), 1),
+    ('  · rigid 대조 AM_P Tabor(%)', ('mpm.coverage_AM_P_rigid_tabor_pct', 'mpm_coverage_AM_P_rigid_tabor_pct'), 1),
+    ('소성변형 dg_mean', ('mpm.dg_mean', 'mpm_dg_mean'), 4),
+    ('소성변형 dg_max', ('mpm.dg_max',), 4),
+    ('소성변형 nonzero(%)', ('mpm.dg_nonzero_pct',), 1),
+    ('MPM E_SE(GPa)', ('mpm.E_SE_GPa',), 2),
+    ('MPM σ_y(GPa)', ('mpm.sigma_y_GPa',), 3),
+    ('MPM ν_SE', ('mpm.nu_SE',), 3),
+    ('MPM 최종응력(GPa)', ('mpm.final_stress_GPa',), 3),
+    ('MPM protocol', ('mpm.protocol',), None),
+    ('MPM n_grid', ('mpm.n_grid',), 0),
     ('── 응력 ──', None, None),
     ('Stress CV(%)', ('stress_cv',), 1),
     ('σ_AM_P/σ_mean', ('stress_ratio_AM_P',), 3),
@@ -200,7 +223,7 @@ def network_summary(m):
         if pending:
             out.append({'지표': pending, '값': ''})
             pending = None
-        out.append({'지표': label, '값': _r(v, nd)})
+        out.append({'지표': label, '값': (v if nd is None else _r(v, nd))})
     #  Constriction 은 유도량 (1 − bulk_resistance_fraction)
     brf = _g(m, 'bulk_resistance_fraction')
     if brf is not None:

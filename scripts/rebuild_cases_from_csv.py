@@ -128,9 +128,15 @@ def collect(root=None):
                               'metrics': unflatten(flat), 'source': rel,
                               'n_fields': len(flat)}
     #  ── 이름으로 조인해 **빈 자리만** 보충 ────────────────────────────────────────────
+    #  ⚠⚠ 2026-08-25 실측 — `design_performance_corpus.csv` 의 `name` 열은 **섞여 있다**:
+    #    MPM 이 채워진 169행은 `name` 이 **케이스 ID**(`260418_172642_6968ef`)이고 나머지는
+    #    `input_*` 이름이다.  이름만으로 조인하니 MPM 열이 **169행 전부 빗나갔다**
+    #    (겹침 0).  그래서 케이스당 MPM 이 27건뿐이었다.
+    #    ⇒ 조인 키를 **이름 ∪ 케이스ID** 로 넓힌다.
     by_name = {}
     for cid, c in cases.items():
         by_name.setdefault(c['name'], cid)
+        by_name.setdefault(cid, cid)          # ★ 케이스 ID 로도 찾을 수 있게
     for rel, name_col in NAME_SOURCES:
         p2 = os.path.join(root, rel)
         if not os.path.isfile(p2):
