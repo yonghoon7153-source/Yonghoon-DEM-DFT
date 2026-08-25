@@ -80,8 +80,16 @@ esac
 mkdir -p "$DST" || { echo "[백업] ⛔ 대상을 만들 수 없다: $DST"; exit 1; }
 
 _before=$(_count "$DST")
-echo "[백업] rsync 중… (원본 파일 $_n_src)"
-rsync -a --delete --info=stats2 "$SRC/" "$DST/" \
+#  ⚠⚠ 2026-08-25 실측 — `/mnt/*` 는 DrvFs(NTFS)라 `rsync -a` 의 퍼미션·소유자 보존이
+#    `mkstemp … Operation not permitted` 로 **거부된다**.  파일은 옮겨졌는데 exit 23 이 난다.
+#    ⇒ 대상이 `/mnt/*` 면 **메타데이터 보존을 끈다** (-rlt).  내용·시각은 그대로 보존된다.
+#    ⚠ `--modify-window=1` 은 NTFS 의 2초 타임스탬프 해상도 때문 (없으면 매번 전량 재전송).
+RS=(-a)
+case "$DST" in
+  /mnt/*) RS=(-rlt --no-perms --no-owner --no-group --modify-window=1 --chmod=ugo=rwX);;
+esac
+echo "[백업] rsync 중… (원본 파일 $_n_src · 옵션 ${RS[*]})"
+rsync "${RS[@]}" --delete --info=stats2 "$SRC/" "$DST/" \
   --exclude '.last_backup' --exclude 'dem_webapp.log' --exclude 'dem_webapp.pid' \
   || { echo "[백업] ⛔ rsync 실패 — 스탬프를 남기지 않는다 (실패를 성공으로 기록하지 않는다)"; exit 1; }
 
