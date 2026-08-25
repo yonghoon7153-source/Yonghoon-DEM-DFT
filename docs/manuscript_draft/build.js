@@ -106,6 +106,19 @@ function mkTable(widths, header, rows, centerFrom=2) {
 // =========================================================================
 const body = [];
 
+//  ★★ 2026-08-25 — **배너를 생성기가 만든다.**  이 배너는 원래 .docx 에만 손으로
+//  넣어 두었는데, 그러면 `node build.js` 를 한 번 돌리는 순간 사라진다.  배너가
+//  사라지면 원고 전체가 철회-문자열 스윕의 **파일 면제**를 잃고, D 절의 설명 문단들이
+//  전부 누수로 잡힌다 (그리고 더 나쁘게는, 아무도 hold 를 못 본 채 원고가 돈다).
+//  ⇒ 표 셀을 비운 것과 같은 이유로 **생성기 쪽에 둔다** — 출력만 고친 수정은
+//  내구적이지 않다.
+body.push(new Paragraph({ children: [ new TextRun({
+  text: '⛔ DRAFT STATUS (2026-08-25, R5-CX-06) — the transport ratio and σ_e values '
+      + 'in this draft were solved under the legacy p1 plate rule and are ON HOLD '
+      + 'pending re-measurement under p2 (occupied-surface-first). Do NOT cite them. '
+      + 'Canonical ledger: docs/reviews/claims.json, claims CL-33 / CL-41 / CL-58 '
+      + '(status hold). 인용 금지.',
+  font: FONT, size: 19, bold: true, color: 'B00000' }) ], spacing: { after: 200 } }));
 body.push(new Paragraph({ children: [ new TextRun({
   text: 'DEM / microstructure-modelling sections — revised draft v1',
   font: FONT, size: 28, bold: true }) ], spacing: { after: 80 } }));
@@ -205,7 +218,7 @@ body.push(Cap('**Table S3.** Structural and transport parameters obtained from t
    ['','Electronic connectivity','—','—','%'],
    ['Transport','Effective electronic conductivity','—','—','S cm^−1^'],
    ['','Effective ionic conductivity','—','—','S cm^−1^'],
-   ['','DBE / SBE electronic conductivity ratio','SPAN:1.1232 ± 0.0011','','–'],
+   ['','DBE / SBE electronic conductivity ratio','SPAN:—','','–'],
    ['','DBE / SBE ionic conductivity ratio','SPAN:—','','–'],
   ];
   body.push(mkTable(w, ['Category','Parameter','SBE','DBE','Unit'], rows, 2));
@@ -247,15 +260,17 @@ NOTE('D1.', '**삭제 — "a resolution validated against measured ionic conduct
 + 'discretisation, all comparisons are reported as ratios between electrodes solved on identical '
 + 'grids* (근거 = 절대값 27 % 이동 vs 비 2 %p 이동; 수렴 질문을 미리 막는다).  '
 + '**(C)** SI 에 격자 3점(1.1232 / 1.1438 / 1.1554)을 싣고 보고값이 하한임을 명시 — 리뷰어가 물었을 때 '
-+ '꺼내는 쪽이 낫다.  ⚠ 어느 쪽이든 격자에 대해 validated / verified 계열 표현은 수렴 시험을 같이 '
++ '꺼내는 쪽이 낫다.  ⚠ 단 **그 세 값은 지금 인용 금지다** (CL-33/CL-41, p1 plate rule 산물) — '
++ '(C) 를 고르려면 p2 로 다시 재고 나서다.  ⚠ 어느 쪽이든 격자에 대해 validated / verified 계열 표현은 수렴 시험을 같이 '
 + '보이지 않는 한 쓰지 않는다.  ⚠ Bazzoun 을 σ_ion_ 앵커로 다시 쓰지 않는다 — 조성이 다르고 intrinsic σ '
 + '도 안 맞다 (정규화하면 formation factor 0.388 / 0.973 / 1.235 로 어느 격자도 일치가 아니다).');
 
 NOTE('D2.', '**수송 수치 전면 교체 (잠정).** v5.1 의 값(전자 1.98 → 3.00 S cm^−1^, 이온 '
 + '2.03 → 2.15 × 10^−4^ S cm^−1^)은 0.4 μm 격자에서 SDCP 를 입자당 복셀 하나로 찍은 것이고, '
 + '그러면 SDCP 부피가 참값의 약 네 배가 된다.  위 표의 값은 생산 규약(0.15 μm 복셀 · SDCP 를 '
-+ '참 직경 구로 · 격자 원점 8팔)에서 나온 것이다.  전자 이득은 +12.3 % 이며, 이 값도 아직 '
-+ '격자 수렴이 확인되지 않았으므로 잠정으로 다룬다.');
++ '참 직경 구로 · 격자 원점 8팔)에서 나온 것이다.  ⚠ **전자 이득의 값은 여기 적지 않는다** — '
++ '그 수치는 p1 plate rule 로 푼 것이라 **철회 상태**이고 (원장 `docs/reviews/claims.json`, '
++ 'CL-33 / CL-41 status hold), 격자 수렴도 확인되지 않았다.  p2 재측정 뒤에 채운다.');
 
 NOTE('D3.', '**Table S2 의 기계 물성 = AFM 값 (PTFE 1.8 · SDCP 9.0 GPa).  값은 확정이고, 아직 그 값으로 '
 + '돌린 모델이 없을 뿐이다.** 여기 실린 미세구조는 그 이전 세대(PTFE 0.30 · SDCP 23.6 GPa)로 압밀한 '

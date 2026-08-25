@@ -109,7 +109,19 @@ BAN_SCAN_GLOBS = ('CLAUDE.md', 'docs/**/*.md', 'wiki/**/*.md',
                   # ⚠ 2026-08-23 — 리더(`BAN_ZIP_EXT`)는 처음부터 .docx 를 읽을 수 있었는데
                   #   글롭이 .pptx 만 걸어 **원고·SI 가 스윕 밖에 있었다** (CDXIJ-9 와 같은
                   #   구조의 매체 구멍 — 철회값이 가장 크게 새는 자리가 정작 안 읽혔다).
-                  'docs/**/*.docx')
+                  'docs/**/*.docx',
+                  # ⚠⚠ 2026-08-25 (A-track 자체점검) — **출력은 읽고 생성기는 안 읽었다.**
+                  #   `docs/manuscript_draft/build.js` 가 Table S3 셀에 hold 값
+                  #   (CL-33 비)을 그대로 들고 있는데 스윕은 "누수 0" 을 냈다.  원고 .docx
+                  #   자신은 머리 배너(claims.json 지목)로 **파일 전체가 면제**라 안 걸리고,
+                  #   생성기는 글롭 밖이라 안 읽혔다 ⇒ `build.js` 를 다시 돌리면 철회값이
+                  #   표에 **되살아난다** (docx 만 고친 커밋이 내구적이지 않았다).
+                  #   덱 생성기(`scripts/seminar_deck/*.js`)를 넣은 것과 같은 이유인데
+                  #   원고 쪽만 빠져 있었다 = CDXIJ-4/9 와 같은 매체 구멍.
+                  #   ★ 생성기에는 **파일 전체 면제를 주지 않는다** — 출력이 배너로 면제되는
+                  #     이상, 표 셀을 실제로 지키는 자리는 여기뿐이다 (설명 문단은 줄-근처
+                  #     표지로 개별 통과시킨다).
+                  'docs/**/*.js')
 
 #: 이 경로들은 **박제된 원문**이라 철회값이 들어 있는 것이 정상이다 (원장 자신 · 감사 원문 ·
 #: 사전등록 계약 · 외부 리뷰 요청서 = 리뷰 시점의 상태를 보존해야 하는 문서).
@@ -174,6 +186,9 @@ def _ban_files(repo_root):
     out = []
     for pat in BAN_SCAN_GLOBS:
         out += _glob.glob(os.path.join(repo_root, pat), recursive=True)
+    #: 남의 코드는 우리 주장이 아니다 — `docs/**/*.js` 가 없으면 원고 디렉터리의
+    #: `node_modules` 145 개가 끌려온다 (검사 시간만 늘고 판정에는 기여 0).
+    out = [f for f in out if 'node_modules' not in f.replace(os.sep, '/').split('/')]
     return sorted(set(out))
 
 
@@ -740,6 +755,25 @@ def _selftest():
             _p10, _nf10, _ = ban_sweep(_dr)
             ok('22e) ★ 글롭이 .docx 를 발견한다 — 원고·SI 가 스윕 안에 있다',
                _nf10 >= 1 and any(_pat in x and 'manuscript.docx' in x for x in _p10))
+
+            #  ⓕ ★★ **출력만 읽고 생성기를 안 읽으면 고침이 내구적이지 않다** (2026-08-25).
+            #     원고 .docx 는 머리 배너(원장 지목)로 **파일 전체가 면제**라, 표 셀을 실제로
+            #     지키는 자리는 생성기뿐이다.  그런데 `docs/**/*.js` 가 글롭에 없어
+            #     `build.js` 가 Table S3 셀에 hold 값을 들고도 스윕은 "누수 0" 을 냈다
+            #     = 덱을 다시 돌리면 철회값이 표에 **되살아난다**.
+            _d6 = os.path.join(_dr, 'docs', 'draft')
+            os.makedirs(os.path.join(_d6, 'node_modules', 'dep'), exist_ok=True)
+            with open(os.path.join(_d6, 'build.js'), 'w', encoding='utf-8') as _f6:
+                _f6.write("rows.push(['ratio','%s']);\n" % _pat)
+            #     남의 코드가 같은 문자열을 가져도 우리 주장이 아니다.
+            with open(os.path.join(_d6, 'node_modules', 'dep', 'x.js'), 'w',
+                      encoding='utf-8') as _f7:
+                _f7.write("var v = '%s';\n" % _pat)
+            _p11, _, _ = ban_sweep(_dr)
+            ok('22f) ★★ 글롭이 **생성기**(docs/**/*.js) 도 발견한다 — docx 만 고치면 내구적이 아니다',
+               any('build.js' in x and _pat in x for x in _p11))
+            ok('22g) 그러나 node_modules 는 안 읽는다 (남의 코드는 우리 주장이 아니다)',
+               not any('node_modules' in x for x in _p11))
 
     ok('21) ★ 리포 전체가 지금 깨끗하다 (누수 0)',
        ban_sweep(here, _claims)[0] == [])

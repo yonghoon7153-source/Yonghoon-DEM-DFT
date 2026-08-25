@@ -685,6 +685,32 @@ def _selftest():
             status='complete', components={'electronic': {'status': 'complete'}})
         chk(check_arm(w('g6.json', _g6), 'point') is None,
             '8w) 음성 대조 — status=complete + electronic complete 는 통과')
+
+        #  ★★★ 8y1~8y4  2026-08-25 (R5-CX-03 의 **회귀가 없던 자리**) — 배터리가 잡았다.
+        #    `receipt` 대조는 R5 에서 넣었는데 **이 파일의 selftest 에 시험이 하나도
+        #    없었다**.  `run_contract` 의 H1~H8 은 순수 함수 `receipt_match` 를 지키지
+        #    이 호출부를 지키지 않는다 — 253행의 `if receipt:` 를 통째로 지워도
+        #    아무것도 안 물었다 (돌연변이 실측 rc=0).
+        #    ⇒ **함수를 시험한 것과 그 함수를 부르는 자리를 시험한 것은 다르다.**
+        _rman = {'vox_um': 0.4, 'bridge_um': 0.48, 'fibre_stamp': 'point',
+                 'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
+                 'sdcp_yield_to_vgcf': False, 'ptfe_stamp': 'off',
+                 'sigma_ptfe_S_cm': 0.0, 'sigma_vgcf_S_cm': 78.54, 'periodic_xy': False}
+        _rarm = _mk(0.0051, 'point')
+        _rarm['mpm_metrics']['step3']['manifest'].update(_rman)
+        _rp = w('rcpt_arm.json', _rarm)
+        _rcpt = dict(_rman)
+        chk(check_arm(_rp, 'point', receipt=_rcpt) is None,
+            '8y1) 정상 증인 — 러너 영수증과 팔이 같으면 재개를 허용한다')
+        _rbad = dict(_rcpt); _rbad['vox_um'] = 0.15
+        chk('영수증' in (check_arm(_rp, 'point', receipt=_rbad) or ''),
+            '8y2) ★★ 영수증의 vox 가 다르면 거부 — 다른 런의 팔을 재활용하지 않는다')
+        _rbad2 = dict(_rcpt); _rbad2['sigma_vgcf_S_cm'] = 100.0
+        chk(check_arm(_rp, 'point', receipt=_rbad2) is not None,
+            '8y3) ★ 재료계수(σ_VGCF)가 다른 팔도 거부')
+        #  ⚠ 영수증을 **안 주면** 옛 거동 그대로여야 한다 (러너 밖 호출을 막지 않는다)
+        chk(check_arm(_rp, 'point') is None,
+            '8y4) 음성 대조 — 영수증이 없으면 예전처럼 통과 (과잉차단 아님)')
         #  ★★★ 8x~8z 2026-08-25 (M-R3-04, Codex 재리뷰) — **전자 수렴 full-chain**.
         #    Codex 가 `cg_info=0 · unconverged=False · residual=NaN` 으로
         #    producer→check_arm→final seal 전 구간을 통과시켰다.  payload 의 finite 벨트가

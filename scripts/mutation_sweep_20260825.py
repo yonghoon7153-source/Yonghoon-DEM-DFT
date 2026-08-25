@@ -67,7 +67,10 @@ MUTANTS = [
     ('CX-04 required 를 계획에서 파생하지 않음', 'run_contract.py',
      "    if isinstance(plan, dict) and plan and plan_ok(plan)[0]:",
      "    if False:",
-     RC, ('E3',)),
+     #  ⚠ 기대를 넓힌다 — `required` 를 계획에서 못 뽑으면 pnm·collector 가 필수에서
+     #    빠지므로 G1·G3·G5 가 **정당하게** 같이 무너진다 (시험 얽힘이 아니라 그 축의
+     #    소비자들이다).  좁게 적어 두면 배터리가 매번 '과잉' 이라 잘못 보고한다.
+     RC, ('E3', 'G1', 'G3', 'G5')),
     ('CX-06 파생 필드 자동 허용 제거', 'sdcp_gain_verdict.py',
      "                if FIELD_CONTRACT.get(fld, {}).get('derived_from') and not same:",
      "                if False:",
@@ -201,18 +204,24 @@ MUTANTS = [
      "    if isinstance(pid, str) and pid.startswith(PROTOCOL_SCHEMA + '-') and 'unknown' not in pid:",
      "    if False:",
      RC, ('F2', 'F4')),
-    ('R5-CX-04 origin 을 개수만 보기 (임의 8점 허용 복원)', 'sdcp_gain_verdict.py',
-     "    _alien = sorted(_got_o - _expset)",
-     "    _alien = []",
-     VERDICT, ('㊺c',)),
-    ('R5-CX-04 전량 런 factorial 완비 검사 제거', 'sdcp_gain_verdict.py',
-     "    if require_arms is not None and int(require_arms) == len(_exp_o) and _got_o != _expset:",
-     "    if False:",
-     VERDICT, ('㊺e',)),
+    #  ★★ 2026-08-25 — 옛 판은 이 자리를 **두 줄로 갈라** 각각 물리기를 기대했는데,
+    #    두 게이트(`_alien` · factorial 완비)는 **서로 여분**이라 하나만 꺼도 다른 하나가
+    #    z-only 를 잡는다 ⇒ 단독 변이는 rc=0 이고 배터리는 그것을 '회귀 없음' 으로
+    #    잘못 보고했다.  여분은 결함이 아니라 방어의 층이다.  ⇒ **상류 한 점**을 눌러
+    #    둘을 동시에 죽인다: 기대집합을 받은 것 자신으로 두면 두 검사가 같이 무력해진다.
+    ('R5-CX-04 origin 기대집합을 받은 것 자신으로 (두 게이트 동시 무력화)',
+     'sdcp_gain_verdict.py',
+     "    _got_o, _expset = set(_org['SBE']), set(_exp_o)",
+     "    _got_o, _expset = set(_org['SBE']), set(_org['SBE'])",
+     VERDICT, ('㊺c', '㊺d')),
     ('R5-CX-05 PNM·collector 결과 계약 제거 (status-only 복원)', 'run_contract.py',
      "        _rspec = COMPONENT_RESULT.get(comp)",
      "        _rspec = None",
-     RC, ('G3', 'G4', 'G5', 'G6')),
+     #  ⚠ `_rspec=None` 이면 pnm·collector 가 `COMPONENT_EVIDENCE` 에 없어 **미등록 HOLD**
+     #    로 떨어진다 = 무엇이든 거부 ⇒ G3·G4·G6 같은 '거부해야 한다' 시험은 **거저**
+     #    통과한다.  이 변이를 실제로 무는 것은 **정상 증인 G2** 와 이유-메시지 G5 다.
+     #    (교훈: 음성 시험만으로는 '전부 거부' 회귀를 못 잡는다 — 양성 대조가 잡는다.)
+     RC, ('G2', 'G5')),
     ('R5-CX-05 미등록 component 조용한 통과 복원', 'run_contract.py',
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
@@ -224,12 +233,20 @@ MUTANTS = [
      VERDICT, ('㊷e',)),
     ('R5-CX-07 선언↔거동 일치 검사(M_UNWRITTEN) 제거', 'check_method_discipline.py',
      "        _unwritten = sorted({f for c, flds in _acct.values()",
-     "        _unwritten = [] or sorted({f for c, flds in _acct.values()",
+     #  ⚠ 옛 판은 `[] or sorted(...)` 였는데 `[] or X == X` 라 **완전한 no-op** 이었다.
+     #    변이가 아무것도 안 바꿨으니 rc=0 이 나오고 배터리는 '회귀 없음' 으로 보고했다.
+     #    `and` 로 바꿔야 실제로 빈 목록이 된다.
+     "        _unwritten = [] and sorted({f for c, flds in _acct.values()",
      DISC, ('M-13',)),
     ('R5-CX-03 영수증 대조 제거 (러너 의도 미봉인 복원)', 'sr01_stamp_compare.py',
      "    if receipt:\n        _rok, _rwhy = _RC.receipt_match(receipt, (s.get('manifest') or {}),",
      "    if False:\n        _rok, _rwhy = _RC.receipt_match(receipt, (s.get('manifest') or {}),",
-     RC, ('H2',)),
+     #  ★★ 2026-08-25 — 옛 판은 `sr01_stamp_compare.py` 를 변이시키고 **`run_contract`
+     #    selftest** 를 돌렸다.  H1~H8 은 순수 함수 `receipt_match` 를 지키지 이 **호출부**를
+     #    지키지 않으므로 무엇을 지워도 rc=0 이었다.  ⇒ 같은 파일의 selftest 로 바꾸고,
+     #    없던 회귀(8y1~8y4)를 그 파일에 새로 넣었다.
+     #    교훈: **함수를 시험한 것과 그 함수를 부르는 자리를 시험한 것은 다르다.**
+     SR01, ('8y2', '8y3')),
     ('R5-CX-03 영수증 digest 를 OUTDIR 에서 빼기 (캐시 충돌 복원)', 'sdcp_gain_vox015_8arm.sh',
      '${LEAN_TAG}${_RCPT_TAG}}"',
      '${LEAN_TAG}}"',
@@ -330,6 +347,16 @@ def _run(script_dir, cmd):
     return r.returncode, r.stdout + r.stderr
 
 
+def _tid(name):
+    """시험 이름 → **ID**.  이름에는 런타임 값이 박혀 있으므로 ID 만 떼어 비교한다.
+
+    ★★ 2026-08-25 (kgy 배터리가 잡음) — 이 리포의 시험 이름은 두 꼴이 섞여 있다:
+      `J-1: 설명` (콜론) 과 `B2 설명` (공백).  콜론만 보면 두 번째에서 ID 를 못 떼어
+      **기대 ID 가 하나도 안 맞았다** (실측 36건 중 다수가 그래서 `★놓침★` 이 됐다).
+    ⇒ 콜론·괄호·공백 중 **먼저 오는 것**에서 자른다."""
+    return name.split(':', 1)[0].split('(', 1)[0].strip().split(' ', 1)[0]
+
+
 def _tree(mutate_file=None, content=None):
     """리포 사본(심볼릭) + 필요하면 파일 하나만 실체로 교체."""
     d = tempfile.mkdtemp()
@@ -376,13 +403,25 @@ def main():
         _mut_txt = src.replace(old, new)
         #  ★ R4-CX-06 — **실행 전에** 컴파일해 본다.  문법 오류는 시험 결과가 아니라
         #    harness 사고다 (Traceback 없는 SyntaxError 의 소스 줄이 `FAIL` 처럼 보였다).
-        try:
-            compile(_mut_txt, fname, 'exec')
-        except SyntaxError as _se:
-            rows.append((label, 'HARNESS_ERROR',
-                         f'mutant 가 문법 오류다 ({_se.lineno}행) — 시험이 문 것이 아니다'))
-            bad.append(label)
-            continue
+        #  ⚠ **언어를 보고 검사한다.**  옛 판은 `.sh` 도 `compile(..., 'exec')` 로 넘겨
+        #    파이썬 문법으로 읽었고, 그래서 **모든 셸 mutant 가 "문법 오류"** 로 분류됐다
+        #    (kgy 실측 2건).  파이썬은 compile, 셸은 `bash -n`.
+        if fname.endswith('.py'):
+            try:
+                compile(_mut_txt, fname, 'exec')
+            except SyntaxError as _se:
+                rows.append((label, 'HARNESS_ERROR',
+                             f'mutant 가 문법 오류다 ({_se.lineno}행) — 시험이 문 것이 아니다'))
+                bad.append(label)
+                continue
+        elif fname.endswith('.sh'):
+            _bn = subprocess.run(['bash', '-n'], input=_mut_txt,
+                                 capture_output=True, text=True, timeout=60)
+            if _bn.returncode != 0:
+                rows.append((label, 'HARNESS_ERROR',
+                             f'mutant 셸 문법 오류 — {(_bn.stderr or "").strip()[:70]}'))
+                bad.append(label)
+                continue
         d = _tree(fname, _mut_txt)
         try:
             rc, out = _run(os.path.join(d, 'scripts'), cmd)
@@ -424,8 +463,12 @@ def main():
         #    않았다.**  그래서 돌연변이가 시험을 *사라지게* 만들어도(수집 실패·조기 종료)
         #    "FAIL 이 났으니 적발" 로 셌다.  ⇒ baseline 에 있던 시험이 **없어졌으면** 그것은
         #    적발이 아니라 harness 사고다 (그 시험은 물린 것이 아니라 안 돈 것이다).
-        _p_now, _ = _parse(out)
-        _vanished = sorted(set(_b_pass) - set(_p_now) - set(f))
+        #  ⚠ **이름이 아니라 ID 로 비교한다.**  이 리포의 시험 이름에는 런타임 값이 박혀
+        #    있어서 (`㉗a 감소율 산술이 맞다 (30.95…)`) 거동이 바뀌면 **이름도 바뀐다** —
+        #    이름으로 비교하면 정상 적발이 전부 "사라졌다" 로 오판된다 (kgy 실측).
+        _p_now, _f_now = _parse(out)
+        _vanished = sorted({_tid(x) for x in _b_pass}
+                           - {_tid(x) for x in _p_now} - {_tid(x) for x in _f_now})
         if _vanished:
             rows.append((label, 'HARNESS_ERROR',
                          f'baseline 시험 {len(_vanished)}개가 **사라졌다** '
@@ -456,9 +499,6 @@ def main():
         #  ★★ `startswith` → **정확 일치**.  접두사 매칭은 `L-12` 가 `L-12(변수 참조)` 와
         #    `L-12: 봉인 실패…` 를 **같은 것으로** 세게 만든다 (이 세션에서 실제로 겪었다).
         #    시험 이름은 `id: 설명` 또는 `id(변형): 설명` 이므로 그 id 만 떼어 비교한다.
-        def _tid(name):
-            _h = name.split(':', 1)[0].strip()
-            return _h.split('(', 1)[0].strip() if '(' in _h else _h
         _fail_ids = {_tid(x) for x in f}
         hit = sorted({w for w in want if w in _fail_ids})
         extra = sorted({x for x in f if _tid(x) not in set(want)})
