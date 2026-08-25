@@ -192,10 +192,57 @@ def main():
     p.add_argument('--xyz', nargs='+', help='Individual xyz files')
     p.add_argument('--xyz_dir', help='Directory to scan recursively')
     p.add_argument('--out', required=True, help='Output JSON')
+    p.add_argument('--backfill', action='store_true',
+                  help='이미 있는 json 에 li_mobility_score 만 채운다 (**새 계산 0**). '
+                       '입력 두 개(migration_volume_fraction · bvs_li_proxy_score)가 '
+                       '이미 저장돼 있으므로 산수만 하면 된다. 구조·격자 재계산 없음. '
+                       '멱등 — 이미 있으면 값이 같은지 확인만 하고 넘어간다.')
     p.add_argument('--grid_resolution', type=int, default=20,
                   help='Migration volume grid (default 20³ = 8000 points; '
                        'increase to 30 for finer scan at ~3× cost)')
     args = p.parse_args()
+
+    # ── --backfill (2026-08-25) ────────────────────────────────────────────
+    #   왜: li_mobility_score 를 저장 뒤에 계산하던 버그로 이 값이 한 번도 json 에
+    #     안 들어갔다(cascade_v23_all.csv 에서 0/3615). 그 결과 combine_rankings 의
+    #     이동도 30 % 가 전원 상수가 됐다. 입력 두 개는 저장돼 있으니 **재계산 없이**
+    #     채울 수 있다. MD 를 접고 BVSE 로 간 결정이 그제서야 랭킹에 반영된다.
+    #   ⛔ 못 하는 것: 순위를 다시 매기지 않는다. 그건 combine_rankings 의 일이고,
+    #     결과가 바뀌는 일이라 사람이 판단할 사안이다.
+    if args.backfill:
+        src = Path(args.out)
+        if not src.is_file():
+            print(f"⛔ 없다: {src}")
+            return 2
+        d = json.loads(src.read_text())
+        recs = d.get('records', [])
+        filled = skipped = same = 0
+        for r in recs:
+            if 'migration_volume_fraction' not in r or 'bvs_li_proxy_score' not in r:
+                skipped += 1
+                continue
+            v = 3 * r['migration_volume_fraction'] + r['bvs_li_proxy_score']
+            if 'li_mobility_score' in r:
+                same += abs(r['li_mobility_score'] - v) < 1e-9
+                continue
+            r['li_mobility_score'] = v
+            filled += 1
+        print(f"backfill: 채움 {filled} · 이미 있음 {same} · 입력 부족 {skipped} "
+              f"/ 전체 {len(recs)}")
+        if filled:
+            bak = src.with_suffix(src.suffix + '.bak_backfill')
+            if not bak.exists():
+                bak.write_text(src.read_text())
+                print(f"  · 원본 보존 → {bak.name}")
+            d['_backfill'] = {'field': 'li_mobility_score',
+                              'formula': '3*migration_volume_fraction + bvs_li_proxy_score',
+                              'n_filled': filled,
+                              'why': '저장 뒤 계산 버그로 누락됐던 값 (재계산 0)'}
+            src.write_text(json.dumps(d, indent=2, default=str))
+            print(f"  ✓ {src}")
+        else:
+            print("  · 채울 것이 없다 (전부 이미 있거나 입력이 없다)")
+        return 0
 
     def winner_name(xyz_path):
         """NEW-D fix (v4.5.17): cascade outputs like
