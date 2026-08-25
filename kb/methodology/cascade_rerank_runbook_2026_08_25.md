@@ -3,7 +3,7 @@ title: cascade 재랭킹 런북 ①~⑤ — li_mobility_score 복구 후 실행
 date: 2026-08-25
 updated: 2026-08-25
 tags: [cascade, doping, bvse, ranking, runbook, blocked-on]
-status: 진행중-①
+status: 진행중-②판정대기
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -79,6 +79,72 @@ python3 tools/doping/axis_corr_csv.py                       # 정본 CSV 기준
 python3 tools/doping/analyze_screening.py --results <...> --out <...> \
     --axis_corr --pareto
 ```
+
+## 2-1. ⛔ ① 직후 발견 — **결측이 "최악" 으로 채점되고 있다** (2026-08-25)
+
+`--status` 실측:
+
+```
+AlI3_x002    구조 5    stability 5/5   modulus 1/5    mobility 1/5
+B2O3_x005    구조 20   stability 20/20 modulus 2/20   mobility 2/20
+Y2O3_lowx    구조 60   stability 60/60 modulus 0/60   mobility 6/60
+AlI3_x050    구조 5    stability 5/5   modulus 1/5    mobility 1/5
+```
+
+**backfill 은 됐다** — BVSE 가 돈 구조에는 `li_mobility_score` 가 다 있다.
+낮은 커버리지(10–20 %)는 결함이 아니라 설계다 (하류가 `--top 10` 만 처리).
+
+문제는 다른 데 있다. `normalize()` 의 마지막 줄:
+
+```python
+return [float(x) if not np.isnan(x) else 0.0 for x in norm]
+#                                        ^^^ 결측 → 0.0 = **최하점**
+```
+
+**미측정 = 최악**으로 채점된다. B2O3_x005 실측 재현:
+
+```
+mobility 정규화 → [0.0 × 18개, 1.0]
+측정된 구조가 얻는 가산 : 0.3
+미측정 구조가 받는 값   : 0.0
+순위 격차               : 0.3 점 (만점 1.0)
+```
+
+modulus 까지 합치면 **가중치 0.6 이 "측정됐나" 하나로 갈린다.**
+
+### 왜 이게 순위를 망가뜨리나 — 자기강화
+
+1. stability 상위 10개만 BVSE·elastic 을 받는다
+2. 그 10개만 modulus·mobility 에서 최대 +0.6 을 받는다
+3. 나머지는 0.0 → 11위 이하는 **영원히 못 올라온다**
+
+⇒ 이동도가 뛰어난 구조를 **발견할 수 없는 구조**다. 안정성을 사실상 두 번 세는 셈.
+
+### ⚠ ① 이 이 문제를 **악화시켰다**
+
+| | modulus | mobility |
+|---|---|---|
+| ① 이전 | 2/20 = 살아있음 → **이미 18개에 0.0 을 주고 있었다** | 0/N = 전부 결측 → 0.5 상수 → **무해** |
+| ① 이후 | 동일 | 2/20 = 살아남 → **18개에 0.0 을 주기 시작** |
+
+- **modulus 는 처음부터 이러고 있었다** (커버리지가 부분인 모든 캐스케이드에서).
+- **mobility 는 ① 전까지 무해했다** — 전부 결측이라 0.5 로 평평했으니 순위에 기여가 0 이었다.
+  ① 이 값을 채우면서 **비로소 이 왜곡에 합류했다.**
+
+⇒ **② 를 지금 그대로 돌리면 안 된다.** "3축 랭킹 복구" 가 아니라
+"측정 여부 가산점 0.6 점짜리 랭킹" 이 나온다.
+
+### 판정 대기 — 세 갈래
+
+| | 방식 | 장점 | 단점 |
+|---|---|---|---|
+| **A** | 측정된 부분집합끼리만 3축, 전체는 stability-only 로 별도 표기 | 데이터를 지어내지 않는다 · `--top 10` 설계와 일치 | 캐스케이드별 FINAL_RANKING 의 의미가 "top-10 재정렬" 로 좁아진다 |
+| **B** | 결측을 0.0 대신 **축 중앙값**으로 | 20개를 한 표에 유지 · 미측정에 벌점 없음 | 중앙값도 없는 정보를 지어내는 것 |
+| **C** | 현행 유지 (결측=0.0) | 변경 없음 | 안정성을 두 번 세는 왜곡이 남는다 |
+
+**권고: A.** 유일하게 없는 값을 만들어내지 않는다.
+
+---
 
 ## 3. ⏸ 왜 AlI₃ 완주를 기다리나
 
