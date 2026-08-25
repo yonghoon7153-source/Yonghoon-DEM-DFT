@@ -52,6 +52,20 @@ AXES = [
     ("migration_volume_fraction", "이동부피비", True),
 ]
 
+#: ⛔ **파생 축** — 다른 축들의 산술 조합이라 그 축들과의 상관이 **정의상** 높다.
+#:   그걸 '독립성이 깨졌다' 로 읽으면 안 된다. 발견이 아니라 공식이다.
+#:   li_mobility_score = 3*migration_volume_fraction + bvs_li_proxy_score
+#:     (tools/doping/bvse_proxy.py backfill_one)
+#:   실측: ρ(이동도, 이동부피비)=+0.77 · ρ(이동도, BVS)=+0.48 — 3:1 가중과 정확히 정합.
+DERIVED = {
+    "li_mobility_score": ("migration_volume_fraction", "bvs_li_proxy_score"),
+}
+
+
+def is_definitional(a, b):
+    """두 축이 '파생 축 ↔ 그 재료' 관계인가. → bool"""
+    return b in DERIVED.get(a, ()) or a in DERIVED.get(b, ())
+
 
 def _f(x):
     try:
@@ -115,12 +129,14 @@ def analyse(rows, min_n=MIN_N):
             if len(va) < min_n:
                 pairs.append({"a": a, "b": b, "la": cols[a][0], "lb": cols[b][0],
                               "rho": None, "n": len(va), "collinear": False,
+                              "definitional": is_definitional(a, b),
                               "why": "표본 부족"})
                 continue
             rho = spearman(va, vb)
             pairs.append({"a": a, "b": b, "la": cols[a][0], "lb": cols[b][0],
                           "rho": rho, "n": len(va),
                           "collinear": bool(rho is not None and abs(rho) >= COLLINEAR),
+                          "definitional": is_definitional(a, b),
                           "why": None if rho is not None else "한쪽이 상수"})
     pairs.sort(key=lambda p: -(abs(p["rho"]) if p["rho"] is not None else -1))
     return {"pairs": pairs, "coverage": cover, "n_rows": len(rows), "min_n": min_n}
@@ -137,16 +153,22 @@ def report(rep):
         mark = "✅" if n >= rep["min_n"] else "·"
         print(f"    {mark} {label:12s} {n:5d}/{tot} ({pct:5.1f} %)  {key}")
     print("\n  ── 축 쌍 ──")
-    col = [p for p in rep["pairs"] if p["collinear"]]
+    col = [p for p in rep["pairs"] if p["collinear"] and not p.get("definitional")]
+    defn = [p for p in rep["pairs"] if p.get("definitional") and p["rho"] is not None]
     trade = [p for p in rep["pairs"]
-             if p["rho"] is not None and p["rho"] <= -0.3 and not p["collinear"]]
+             if p["rho"] is not None and p["rho"] <= -0.3
+             and not p["collinear"] and not p.get("definitional")]
     for p in rep["pairs"]:
         if p["rho"] is None:
             print(f"    ·  {p['la']:12s} ↔ {p['lb']:12s}   ρ = —      ({p['why']}, n={p['n']})")
             continue
-        m = "⛔" if p["collinear"] else ("🔻" if p["rho"] <= -0.3 else
-                                        ("🟡" if abs(p["rho"]) >= 0.6 else "✅"))
-        print(f"    {m} {p['la']:12s} ↔ {p['lb']:12s}   ρ = {p['rho']:+.3f}   n={p['n']}")
+        if p.get("definitional"):
+            m, tail = "📐", "   ← 정의상 (파생축 ↔ 그 재료)"
+        else:
+            m = "⛔" if p["collinear"] else ("🔻" if p["rho"] <= -0.3 else
+                                            ("🟡" if abs(p["rho"]) >= 0.6 else "✅"))
+            tail = ""
+        print(f"    {m} {p['la']:12s} ↔ {p['lb']:12s}   ρ = {p['rho']:+.3f}   n={p['n']}{tail}")
     print()
     if col:
         print(f"  ⛔ **사실상 한 축인 쌍 {len(col)}건** — 그 축들끼리는 Pareto 가 선택지를 못 준다:")
@@ -156,6 +178,18 @@ def report(rep):
         print(f"  🔻 **상충하는 쌍 {len(trade)}건** — 여기가 다목적이 실제로 일하는 자리다:")
         for p in trade[:6]:
             print(f"       {p['la']} ↔ {p['lb']}  (ρ {p['rho']:+.3f})")
+    if defn:
+        print(f"  📐 **정의상 붙은 쌍 {len(defn)}건 — 판정에서 제외했다.**")
+        for p in defn:
+            print(f"       {p['la']} ↔ {p['lb']}  (ρ {p['rho']:+.3f})  "
+                  f"{p['a'] if p['a'] in DERIVED else p['b']} 가 상대의 산술 조합이다")
+        print(f"     발견이 아니라 공식이다 — 독립성 판정의 근거로 쓰면 안 된다.")
+    free = [p for p in rep["pairs"]
+            if p["rho"] is not None and not p.get("definitional")]
+    if free:
+        top = max(free, key=lambda p: abs(p["rho"]))
+        print(f"  ▸ **정의상 쌍을 뺀 최대 |ρ| = {abs(top['rho']):.3f}** "
+              f"({top['la']} ↔ {top['lb']}) — 공선성 문턱 {COLLINEAR} 대비")
     if not col and not trade:
         print("  ✅ 뚜렷한 공선성도 상충도 없다 — 축이 대체로 독립이다.")
     print("\n  ⛔ 인과는 말하지 않는다. 상관이 낮다고 그 축이 중요한 것도 아니다(독립일 뿐).")
@@ -189,6 +223,16 @@ def _selftest():
     p = rep["pairs"][0]
     say(p["rho"] is not None and p["rho"] > 0.99,
         f"⑤ 낮을수록 좋은 두 축은 부호 통일 뒤 ρ>0 ({p['rho']})")
+    # ── 파생 축 (2026-08-25) ────────────────────────────────────────────
+    say(is_definitional("li_mobility_score", "migration_volume_fraction"),
+        "⑥ 파생축 ↔ 그 재료를 '정의상' 으로 잡는다")
+    say(is_definitional("migration_volume_fraction", "li_mobility_score"),
+        "⑥ 순서를 바꿔도 잡는다")
+    say(not is_definitional("screen_de_per_atom", "elastic_G_hill_GPa"),
+        "⑥ [음성] 무관한 두 축을 정의상으로 오인하지 않는다")
+    say(not is_definitional("migration_volume_fraction", "bvs_li_proxy_score"),
+        "⑥ [음성] 같은 공식의 **재료끼리**는 정의상 아니다 (서로 독립 측정)")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
 
