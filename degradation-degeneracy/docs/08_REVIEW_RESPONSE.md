@@ -2848,3 +2848,104 @@ validate/rescore 호출 횟수를 세어 0 인지 확인한다 — "안 불렀�
 | frozen | CLI 인자 검사 | **쓰기 지점** 검사 |
 
 리뷰가 준 요약이 정확하다 — 검사는 가장 낮은 공통 지점에 두어야 한다.
+
+## 37. 28차 리뷰 대응 — 검사 시점을 하나 더 두는 것으로는 안 된다
+
+> 2026-08-25. 27차의 hook-free `finalize_only` 와 OS 독립 receipt core 는
+> 닫혔다. **receipt lifecycle P0 는 아직 열려 있었다.** 리뷰가 한 문장으로
+> 정리했고 그것이 이 라운드의 전부다:
+>
+> **read-before-register 는 retention 구조가 아니라 또 하나의 검사 시점이다.**
+
+### 37.1 반례를 직접 재현했다
+
+마지막 receipt read 가 bytes 를 돌려준 직후 object 를 지우는 backend 로 돌렸다:
+
+```
+transaction ok     : True
+is_registered      : True
+receipt 회수 가능?  : False
+finalize_only      : {'ok': True, 'already': True}
+```
+
+`finalize_only()` 는 journal 과 index 의 digest 가 같으면 backend 를 **보지도
+않고** `already=True` 를 돌려줬다. `is_registered()` 는 backend 인자조차 없어
+"등록됨" 을 "receipt 가 회수 가능함" 으로 정의할 수 없었다.
+
+receipt 만의 문제도 아니었다. manifest·member 를 restore read 직후 지워도
+receipt 만 남긴 채 등록됐다. `retention_days=3650` 은 backend 가 보존을
+강제했다는 증거가 아니라 dataclass 의 **자기신고 숫자**였다.
+
+### 37.2 고침 — 등록을 retention commit 으로
+
+성공 불변식을 문장이 아니라 구조로 적는다:
+
+```text
+registered(leg) ⇒ receipt · manifest · member · 산출 전부 회수 가능
+```
+
+local 에서 object-lock 의 대응물은 **hardlink** 다. `pins/<leg>/<dg>` 가
+inode 를 붙들므로 `objects/` 를 통째로 비워도 회수된다. 등록 기록은 pin 집합
+digest 를 이름하고, `is_registered(index, leg, backend)` 가 pin 완전성과
+바이트를 확인한다. `finalize_only` 는 등록된 뒤에도 graph 를 다시 본다.
+
+같은 반례를 다시 돌리면 이제 **pin 단계에서 멈춘다**:
+
+```
+✓ 등록이 막혔다: [pin] pin 할 object 가 없다: 510f1fe46deafd1a
+  is_registered(backend 포함): False
+```
+
+### 37.3 receipt validator 를 닫았다
+
+일곱 키만 있는 self-consistent receipt 가 등록됐고, `backend_uri` 가
+`file+cas:///foreign` 이어도 receipt·index 가 서로 같은 문자열이면 통과했다.
+`planned_envelope`·`outputs`·`validation` 이 없어도 됐다.
+
+`check_receipt(rec, entry, backend_uri)` 하나로 exact key set ·
+`planned_id == H(planned_envelope)` · **손에 든 backend** URI · outputs schema
+를 보고, run 경로와 finalize 경로가 그것을 공유한다.
+
+### 37.4 산출이 자기신고였고 성공 뒤 사라졌다
+
+`check_output()` 은 root 를 받지 않아 파일을 열지 않았다. 다음이 오류 0건으로
+통과했다:
+
+```text
+relative_path = C:\missing\escape.bin
+byte_size     = 999
+file_sha256   = bbbb...bbbb
+producer      = invented/producer
+```
+
+더 결정적인 것은 산출 파일이 restore temp root 와 함께 삭제됐다는 점이다 —
+payload manifest 는 rescore **전에** 봉인됐으므로 산출을 담지 않는다.
+descriptor 는 회수 가능한 증거가 아니라 "있는 필드" 였다.
+
+wrapper 가 봉쇄된 경로에서 bytes 를 한 번 읽어 size/SHA 를 **측정**하고 CAS 에
+올린다. 자기신고가 실측과 다르면 실패한다. 증명과 주장의 주체를 갈랐다.
+
+### 37.5 나머지 P1·P2
+
+| # | 무엇이 열려 있었나 | 고침 |
+|---|---|---|
+| 2 | Windows 에서 hardlink 를 만든 **뒤** parent fsync 가 거부돼 상태를 바꿔 놓고 실패했다 (리뷰 환경 17건) | capability 를 **만들기 전에** 재고, 못 하면 그 자리에서 멈춘다. staged object 도 fsync |
+| 3 | `True == 1` 이라 manifest 집계를 bool 로 바꿔도 통과 · `truly empty root` 가 비어 있지 않아도 성공 | 둘 다 거부 |
+| 4 | `make_receipt` 는 `_F4_주의` 를 넣었는데 `row_projection` 비교기는 계속 뗐다 — **두 감사 경로가 또 갈렸다** | `SEMANTIC_SKIP` 정본을 한 곳에 두고 import |
+| 5 | frozen guard 가 exact root 만 봤고 원장 부재 시 fail-open | 자손까지, 원장 없으면 fail-closed |
+| 6 | design validator 가 top-level 만 닫아 nested 변이 다섯이 통과 · dict **키** NFC 미검사 | nested 재귀 검증 · 키 NFC · 부모 digest domain · provider objective membership |
+| P2 | role 과 `protocol_generation` 을 **함께** 바꾸면 통과 — `reason` loophole 이 두 필드 loophole 로 옮겨갔다 | role 행에서 세대를 없애고 봉인된 `leg_source_digest` 에서 **도출** |
+
+### 37.6 세 라운드째 같은 자리
+
+24차 보충 발견 5-2 · 25차 발견 3 · 26차 P0 · 27차 P0 · 28차 P0 가 전부 한
+형태다. 이번 리뷰가 그것을 다시 짚었다 — "manifest-last 라는 이름이 set
+atomicity 보다 강했다".
+
+지난 라운드에 "구조로 바꿨다" 고 적은 네 항목 중 셋은 실제로 구조였지만,
+**등록만 검사 두 번**이었다. 검사를 한 번 더 두는 것과 불변식을 구조로 만드는
+것의 차이가 이번 P0 다.
+
+남은 것 중 같은 위험이 있는 자리를 미리 적어 둔다 — `row_projection` 의
+승격은 아직 **fixed-name 세 파일**이라 set atomicity 가 아니다 (리뷰 P1-5).
+immutable generation directory + 단일 pointer 로 바꾸는 것이 다음 checkpoint 다.
