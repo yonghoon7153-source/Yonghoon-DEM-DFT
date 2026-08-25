@@ -827,6 +827,18 @@ def _selftest():
         chk(f'㉘b 팔 수를 보고한다 ({_sc[0][1]})', _sc[0][1] == '2/2')
         chk('㉘c ★ 빈/무관 디렉터리는 목록에 안 뜬다 (없는 경로를 고르게 두지 않는다)',
             all(r[0] != 'noise_dir' for r in _sc))
+        #  ── ㉘d 2026-08-25 실사고 — `--collect-only --out x.json` 이 **파일을 안 만들고**
+        #     exit 0 을 냈다.  18개 런을 그렇게 돌려 "✓" 18번을 보고 커밋했는데 실제로는
+        #     아무것도 없었다 = 백업이 없는 상태에서 백업을 뜬 줄 알았다.
+        import subprocess as _sub
+        _od = os.path.join(_sr, 'digest.json')
+        _rr = _sub.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                        'sdcp_gain_verdict.py'), '--dir',
+                        os.path.join(_sr, 'prereg_v2_vox015_sph_b048_lean'),
+                        '--collect-only', '--out', _od], capture_output=True, text=True)
+        chk(f'㉘d ★★ `--collect-only --out` 이 **파일을 실제로 만든다** (조용한 no-op 금지)',
+            _rr.returncode == 0 and os.path.exists(_od)
+            and len(json.load(open(_od, encoding='utf-8')).get('rows') or []) == 4)
 
     #  ── ㉙ FA-06 — **침대 정체성 필드**를 침대 사이에서 비교하면 안 된다 ────────────────
     #     실사고 (2026-08-20): 도핑 baseline 8팔이 `additive_E_GPa` 로 HOLD 를 맞았다.
@@ -1082,6 +1094,16 @@ if __name__ == '__main__':
               f'{str(r["n_dof"]):>12} {str(r["origin_shift_um"]):>22} {str(r["cg_info"]):>4}')
     print(f'\n  수집: SBE {len(arms["SBE"])} 팔 · DBE {len(arms["DBE"])} 팔')
     if a.collect_only:
+        #  ⚠⚠ 2026-08-25 실사고 — 옛 판은 여기서 **`--out` 을 쓰기 전에** 빠져나갔다.
+        #    `--collect-only --out x.json` 이 파일을 **하나도 안 만들고 exit 0** 을 냈고,
+        #    18개 런을 그렇게 돌려 "✓" 18번을 보고 커밋했더니 실제로는 아무것도 없었다
+        #    (백업이 없는 상태에서 백업을 뜬 줄 알았다 = 가장 나쁜 종류의 조용한 no-op).
+        #    ⇒ 수집만 해도 `--out` 은 **쓴다** (판정이 없을 뿐이다).
+        if a.out:
+            json.dump({'rows': rows, 'dir': os.path.abspath(a.dir),
+                       'verdict': None, 'collect_only': True},
+                      open(a.out, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+            print(f'  → {a.out} ({len(rows)} 팔, 판정 없음)')
         print('  (--collect-only — 판정하지 않는다)')
         raise SystemExit(0)
     v = verdict(arms, seed_ensemble=a.seed_ensemble,
