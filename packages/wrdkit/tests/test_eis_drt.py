@@ -214,3 +214,58 @@ def test_when_every_candidate_is_out_of_band_none_is_recommended():
     index, reason = lcurve_corner(results)
     assert index == -1
     assert "모든 후보" in reason
+
+
+# --- 리뷰 재현 회귀 (Codex #4·#5·#20) ---------------------------------------
+
+def test_a_clean_one_rc_keeps_its_whole_resistance():
+    """활성집합(BVLS)이어야 하는 이유.  step 상한이 있는 반복해(TRF)는 어떤
+    플랫폼에서 KKT 최적점에 못 미친 채 멈추는데, status 를 안 보면 그 답이
+    그대로 나간다 — 리뷰 재현에서 깨끗한 단일 RC 가 저항 절반과 가짜 봉우리
+    8개로 보였다."""
+    frequency = np.logspace(6, -2, 60)
+    z = 20.0 / (1.0 + 1j * 2 * np.pi * frequency * 20e-3)
+    result = drt(Spectrum(frequency, z.real, z.imag), regularisation=1e-4)
+    assert len(result.peaks) == 1
+    assert result.total_polarisation_ohm == pytest.approx(20.0, rel=0.02)
+    assert result.residual_norm < 1.0
+
+
+def test_more_smoothing_never_buys_a_better_residual():
+    """정확한 해라면 λ 를 키울 때 residual 은 줄 수 없다.  멈춘 해는 이
+    단조성을 깨는데, 리뷰 재현에서 λ=1e-4 의 residual 이 λ=1e-2 의 300배였다."""
+    spectrum = two_process_spectrum(noise=0.01)
+    results = sweep(spectrum)
+    residuals = [r.residual_norm for r in results]
+    for smaller, larger in zip(residuals, residuals[1:]):
+        assert larger >= smaller - 1e-9, residuals
+
+
+def test_the_reported_total_is_the_model_dc_limit():
+    """커널과 보고값이 같은 구적을 써야 한다.  커널이 끝점에 전체 간격을,
+    보고가 절반 간격을 주면 화면의 "전체 분극" 이 그린 곡선과 다른 숫자가
+    된다 — 끝점 질량에서 7-10 %, 끝점만 있으면 정확히 2배."""
+    from wrdkit.eis.drt import _log_weights
+
+    frequency = np.logspace(5, 3, 40)          # 1..100 kHz
+    z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * frequency / (2 * np.pi * 1e7))
+    result = drt(Spectrum(frequency, z.real, z.imag), regularisation=1e-4)
+    identity = float(np.sum(result.gamma_ohm * _log_weights(result.tau_s)))
+    assert result.total_polarisation_ohm == pytest.approx(identity, rel=1e-12)
+
+
+def test_gamma_climbing_into_the_grid_edge_counts_as_out_of_band():
+    """격자 끝으로 밀린 과정은 극대가 없어 find_peaks 에 안 잡힌다.  그래도
+    아무 주파수도 재지 않은 곳에 서 있는 것은 같으므로, L 곡선 추천이 그
+    λ 를 건너뛰고 이유에 격자 끝을 말해야 한다."""
+    frequency = np.logspace(5, 3, 40)          # 1..100 kHz 만 측정
+    tau_out = 1.0 / (2 * np.pi * 1e7)          # 과정은 10 MHz
+    z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * frequency * tau_out)
+    spectrum = Spectrum(frequency, z.real, z.imag)
+    results = sweep(spectrum)
+    index, reason = lcurve_corner(results)
+    if index >= 0:
+        assert not any("격자 끝" in text
+                       for text in __import__("wrdkit.eis.drt", fromlist=["x"])
+                       ._peaks_outside_band(results[index]))
+    assert "격자 끝" in reason or index == -1

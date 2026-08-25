@@ -96,17 +96,32 @@ def _tau_grid(frequency_hz: np.ndarray, per_decade: int,
     return np.logspace(start, stop, count)
 
 
+def _log_weights(tau_s: np.ndarray) -> np.ndarray:
+    """Trapezoid weights over ``ln tau`` -- the one quadrature everything uses.
+
+    The kernel and the reported totals must integrate gamma with the *same*
+    weights.  The first version gave the kernel ``np.gradient`` weights (full
+    step at the endpoints) and the report ``np.trapezoid`` (half step), so on
+    a spectrum with endpoint mass the model's DC limit and the printed
+    "total polarisation" were two different numbers -- 7-10 % apart in the
+    review reproduction, a clean factor 2 for endpoint-only gamma.
+    """
+    weights = np.gradient(np.log(tau_s))
+    weights[0] /= 2.0
+    weights[-1] /= 2.0
+    return weights
+
+
 def _kernel(frequency_hz: np.ndarray, tau_s: np.ndarray) -> np.ndarray:
     """Complex ``A`` with ``Z_polarisation = A @ gamma``.
 
-    The integral is over ``ln tau``, so each column carries its own ``d ln
-    tau``: with a log grid that is one constant, but writing it per column
+    The integral is over ``ln tau``, so each column carries its own weight:
+    with a log grid that is one constant inside, but writing it per column
     keeps the arithmetic right if the grid is ever made non-uniform.
     """
     omega = 2 * np.pi * frequency_hz[:, None]
     kernel = 1.0 / (1.0 + 1j * omega * tau_s[None, :])
-    d_ln_tau = np.gradient(np.log(tau_s))
-    return kernel * d_ln_tau[None, :]
+    return kernel * _log_weights(tau_s)[None, :]
 
 
 def _difference_matrix(size: int, order: int) -> np.ndarray:
@@ -171,8 +186,22 @@ def drt(spectrum: Spectrum, *, regularisation: float = 1e-3,
 
     lower = np.concatenate([np.zeros(len(tau)), np.full(n_extra, -np.inf)])
     upper = np.full(augmented.shape[1], np.inf)
-    solution = lsq_linear(augmented, augmented_target, bounds=(lower, upper),
-                          max_iter=200)
+    # BVLS on unit-norm columns, not TRF.  TRF is iterative and was run with a
+    # step cap; on some platforms it stalls far from the optimum and the code
+    # accepted the stalled answer without looking at ``status`` -- the review
+    # reproduced a clean one-RC spectrum coming back with half its resistance
+    # and eight phantom peaks.  BVLS is an exact active-set solve, and with
+    # the columns scaled it is also the fastest of the three options tried
+    # (5 ms against TRF's 41 ms on the same system).  Bounds scale with the
+    # columns: zero and infinity survive the multiplication unchanged.
+    scale = np.linalg.norm(augmented, axis=0)
+    scale[scale == 0] = 1.0
+    solution = lsq_linear(augmented / scale, augmented_target,
+                          bounds=(lower * scale, upper), method="bvls")
+    if not solution.success:
+        raise ValueError(f"DRT 해가 수렴하지 않았습니다 (λ={regularisation:g}): "
+                         f"{solution.message}")
+    solution.x = solution.x / scale
 
     gamma = solution.x[:len(tau)]
     r_inf = float(solution.x[len(tau)])
@@ -199,7 +228,9 @@ def drt(spectrum: Spectrum, *, regularisation: float = 1e-3,
         frequency_hz=frequency,
         fitted=model,
         dropped_inductive=dropped,
-        total_polarisation_ohm=float(np.trapezoid(gamma, np.log(tau)))
+        # The same weights the kernel used, so this IS the model's DC limit:
+        # Z(0) - R_inf equals this number exactly, and a test holds it there.
+        total_polarisation_ohm=float(np.sum(gamma * _log_weights(tau)))
         if len(tau) > 1 else 0.0,
     )
 
@@ -330,14 +361,32 @@ def lcurve_corner(results: list[DrtResult]) -> tuple[int, str]:
 
 
 def _peaks_outside_band(result: DrtResult) -> list[str]:
-    """Peaks at frequencies this spectrum never measured.
+    """Peaks -- and edge pile-ups -- at frequencies this spectrum never measured.
 
     Returned as text because that is what the caller does with them -- the
     number itself is only useful inside the sentence explaining the skip.
     """
-    if not len(result.frequency_hz) or not result.peaks:
+    if not len(result.frequency_hz):
         return []
     low = float(np.min(result.frequency_hz))
     high = float(np.max(result.frequency_hz))
-    return [f"{peak.frequency_hz:.3g} Hz" for peak in result.peaks
-            if not low <= peak.frequency_hz <= high]
+    outside = [f"{peak.frequency_hz:.3g} Hz" for peak in result.peaks
+               if not low <= peak.frequency_hz <= high]
+    # A process past the end of the grid has no interior maximum for
+    # ``find_peaks`` to report -- gamma just climbs into the edge and stops.
+    # That is still a claim about frequencies nobody measured, and it slipped
+    # through when only the peaks list was checked: the review's 10 MHz
+    # process on a 100 kHz measurement produced "0 peaks" and got its lambda
+    # recommended.  An edge the curve rises into, tall enough to matter,
+    # counts as out of band like any peak there would.
+    gamma = result.gamma_ohm
+    if len(gamma) >= 2 and np.any(gamma > 0):
+        tallest = float(np.max(gamma))
+        for index in (0, len(gamma) - 1):
+            neighbour = 1 if index == 0 else len(gamma) - 2
+            if gamma[index] <= gamma[neighbour] or gamma[index] < 0.02 * tallest:
+                continue
+            edge_hz = float(1.0 / (2 * np.pi * result.tau_s[index]))
+            if not low <= edge_hz <= high:
+                outside.append(f"{edge_hz:.3g} Hz (격자 끝)")
+    return outside
