@@ -25,7 +25,7 @@ python3 scripts/env_db.py --env         # STEP4 솔버 노브 기본값·의미�
 |---|---|---|---|
 | **V100 (runyour.ai)** | MPM+STEP3+STEP4 GPU 런 | `~/Yonghoon-DEM-DFT` + `venv` | 인스턴스마다 host/pem 바뀜 → ① |
 | **kgy (esp-Z590)** | 보조 GPU 런 | conda env `mpm`(py3.11) 필요 | 구 glibc(<2.32) → taichi 1.6.0 자동폴백 |
-| **로컬 WSL (DESKTOP-K1BLBIJ)** | webapp(dem-web:5002)·데이터 보관 | 코드 `/home/yonghoon/dem-web`, venv `~/Yonghoon-DEM-DFT/venv` | `dem5002` alias / `bash ~/run_dem5002.sh` |
+| **로컬 WSL (DESKTOP-K1BLBIJ)** | webapp(dem-web:5002)·데이터 보관 | 코드 `/home/yonghoon/dem-web`, venv `~/Yonghoon-DEM-DFT/venv` | `dem5002` alias → **`bash <repo>/scripts/run_dem_webapp.sh`** (아래 ⑤) |
 | 클라우드(Claude) | 코드 수정·커밋 정본 | branch `claude/stoic-knuth-NObVQ` | GPU/sklearn 없음 — 정적검사만 |
 
 ## ① 새 인스턴스 접속 설정 (로컬 WSL에서, 인스턴스 새로 팔 때마다)
@@ -104,3 +104,38 @@ DL="/mnt/c/Users/안용훈/Downloads"; cp <파일> "$DL/"                # 윈�
 
 ⚠ 이 런북과 setup 스크립트가 **정본**이다 — 새 지뢰를 밟으면 여기와 setup_gpu_server.sh 에
 같이 추가할 것 (둘이 어긋나면 setup 스크립트가 우선).
+
+## ⑤ webapp 런처 · alias (2026-08-25 — 홈이 아니라 **리포**에 둔다)
+
+⚠ **왜 옮겼나**: 옛 런처가 `~/run_dem5002.sh` 라 홈에만 있었고, 윈도우 재설치로 WSL 이
+통째로 날아가면서 **같이 사라졌다**.  리포에 두면 `git clone` 한 번으로 돌아온다.
+
+```bash
+# ~/.bashrc 에 한 번만 (경로는 코드 worktree)
+echo 'export DEM_WEB_CODE=$HOME/dem-web' >> ~/.bashrc
+echo 'export DEM_WEB_DATA=$HOME/Yonghoon-DEM-DFT' >> ~/.bashrc
+echo 'alias dem5002="bash $DEM_WEB_CODE/scripts/run_dem_webapp.sh --bg --open"' >> ~/.bashrc
+echo 'alias demfg="bash $DEM_WEB_CODE/scripts/run_dem_webapp.sh --open"' >> ~/.bashrc
+echo 'alias demstop="kill \$(cat $DEM_WEB_DATA/webapp/dem_webapp.pid) 2>/dev/null && echo stopped"' >> ~/.bashrc
+echo 'alias demlog="tail -f $DEM_WEB_DATA/webapp/dem_webapp.log"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+| alias | 무엇 |
+|---|---|
+| `dem5002` | git pull → 백그라운드 기동 → **브라우저 자동 열기** (셸을 안 잡는다) |
+| `demfg` | 포그라운드 (로그를 눈으로 보며, Ctrl-C 로 종료) |
+| `demstop` · `demlog` | 종료 · 로그 따라보기 |
+
+런처가 하는 일: ① 현재 브랜치로 `git pull --ff-only` (실패해도 **멈추지 않는다**)
+② venv 탐색(`DATA/venv` → `CODE/venv`) ③ **`WEBAPP_*_FOLDER` 4개 배선** — 코드 worktree 와
+데이터 폴더가 갈려 있어 이걸 안 하면 웹앱이 빈 폴더를 보고 "케이스 0건" 으로 뜬다
+④ 포트 대기 후 브라우저.  `PORT=5050 dem5002` 로 포트 변경, `--no-pull` 로 오프라인.
+
+⚠ WSL 이 아예 새로 깔린 경우엔 리포부터:
+```bash
+git clone -b claude/stoic-knuth-NObVQ https://github.com/yonghoon7153-source/Yonghoon-DEM-DFT.git ~/dem-web
+python3 -m venv ~/Yonghoon-DEM-DFT/venv && ~/Yonghoon-DEM-DFT/venv/bin/pip install -q flask numpy scipy
+```
+⚠ **데이터(`~/Yonghoon-DEM-DFT/webapp/{uploads,results,archive,mpm_lab}`)는 git 에 없다** —
+백업에서 복원해야 한다.  없으면 웹앱은 뜨지만 케이스가 0건이다.
