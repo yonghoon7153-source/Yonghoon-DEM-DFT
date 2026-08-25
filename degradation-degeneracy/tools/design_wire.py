@@ -29,7 +29,7 @@ from decimal import Decimal, InvalidOperation
 
 from tools.preserve import canonical_bytes, digest
 
-SCHEMA = "pairing-design/v6.1"
+SCHEMA = "pairing-design/v6.2"
 
 #: 좌표로 허용되는 십진 문자열. 지수표기·후행 쓰레기를 막는다.
 _DECIMAL = re.compile(r"^-?(0|[1-9][0-9]*)(\.[0-9]+)?$")
@@ -113,6 +113,10 @@ def assert_wire_safe(obj, path: str = "$") -> None:
         for k, v in obj.items():
             if not isinstance(k, str):
                 raise WireError(f"{path}: dict 키가 문자열이 아니다 ({k!r})")
+            # ★ 28차 P1-6 — 값만 NFC 검사하고 **키는 안 봤다**. 분해형 키가
+            #   그대로 통과해 같은 이름이 다른 digest 를 냈다.
+            if unicodedata.normalize("NFC", k) != k:
+                raise WireError(f"{path}: dict 키가 NFC 가 아니다 ({k!r})")
             assert_wire_safe(v, f"{path}.{k}")
         return
     raise WireError(f"{path}: wire 에 실을 수 없는 타입 {type(obj).__name__}")
@@ -309,14 +313,80 @@ def pairing_design_sha256(spec: dict) -> str:
         raise WireError(
             f"design spec 키 집합이 닫혀 있지 않다: 남음 {sorted(set(spec) - _DESIGN_KEYS)} "
             f"· 모자람 {sorted(_DESIGN_KEYS - set(spec))}")
-    if not spec.get("arms") or not spec.get("parameter_order") \
-            or not spec.get("objective_plan"):
-        raise WireError("arms · parameter_order · objective_plan 은 비울 수 없다")
+    bad = _check_design_nested(spec)
+    if bad:
+        raise WireError("design spec nested schema 위반: " + "; ".join(bad[:4]))
     assert_wire_safe(spec)
     return digest(spec)
 
 
+def _check_design_nested(spec: dict) -> list[str]:
+    """★ 28차 P1-6 — 초판 validator 는 **top-level 키만** 닫았다.
+
+    factory 는 엄격했지만 역직렬화한 외부 spec 을 해시하는 validator 는 nested
+    를 다시 보지 않았다. 리뷰가 준 다섯 변이가 전부 정상 digest 를 냈다:
+    `empty_coordinate` · `fake_arm` · `duplicate_objectives` ·
+    `open_serialization` · `empty_candidate_schema`.
+    """
+    bad = []
+    co = spec.get("coordinate")
+    if not isinstance(co, dict) or set(co) != {
+            "unit", "representation", "binary_float_allowed", "decimal_places"}:
+        bad.append(f"coordinate 블록이 닫혀 있지 않다: {co!r}")
+    elif co["representation"] != "exact_decimal_string" or co["binary_float_allowed"]:
+        bad.append("coordinate 정책이 계약과 다르다")
+    elif isinstance(co["decimal_places"], bool) or \
+            not isinstance(co["decimal_places"], int) or \
+            not 1 <= co["decimal_places"] <= 30:
+        bad.append(f"decimal_places: {co['decimal_places']!r}")
+
+    arms = spec.get("arms")
+    if not isinstance(arms, dict) or not arms:
+        bad.append("arms 가 비었다")
+    else:
+        for a, v in arms.items():
+            if a not in ARM_REGISTRY:
+                bad.append(f"등록되지 않은 arm: {a!r}")
+            elif v != dict(ARM_REGISTRY[a], arm_id=a):
+                bad.append(f"arm {a} 의 내용이 registry 와 다르다")
+
+    po = spec.get("parameter_order")
+    if not isinstance(po, list) or not po or len(set(po)) != len(po):
+        bad.append(f"parameter_order 가 비었거나 중복이다: {po!r}")
+    op = spec.get("objective_plan")
+    if not isinstance(op, list) or not op or len(set(op)) != len(op):
+        bad.append(f"objective_plan 이 비었거나 중복이다: {op!r}")
+
+    ser = spec.get("serialization")
+    want_ser = {"encoding": "utf-8", "key_order": "sorted",
+                "separators": [",", ":"], "trailing_newline": False,
+                "nan_inf": "forbidden", "binary_float": "forbidden",
+                "dict_keys": "string_only", "unicode": "nfc_utf8_no_escape"}
+    if ser != want_ser:
+        bad.append("serialization 블록이 정본과 다르다")
+
+    cps = spec.get("candidate_payload_schema")
+    if cps != {k: dict(v) for k, v in CANDIDATE_PAYLOAD_SCHEMA.items()}:
+        bad.append("candidate_payload_schema 가 정본과 다르다")
+
+    pcs = spec.get("parameter_coordinate_schema")
+    if not isinstance(pcs, dict) or set(pcs) != {
+            "pair_axes", "value_type", "type_axes_value_type"}:
+        bad.append("parameter_coordinate_schema 가 닫혀 있지 않다")
+
+    ba = spec.get("bank")
+    if not isinstance(ba, dict) or set(ba) != {
+            "generator", "version", "seed_derivation", "dtype", "endian", "space"}:
+        bad.append("bank 블록이 닫혀 있지 않다")
+    elif ba["endian"] not in ("little", "big") or ba["space"] != "unit_cube":
+        bad.append("bank 정책이 계약과 다르다")
+    return bad
+
+
 def parameter_order_sha256(order: list[str]) -> str:
+    if not isinstance(order, list) or not order or len(set(order)) != len(order) \
+            or not all(isinstance(x, str) and x for x in order):
+        raise WireError(f"parameter_order 가 비었거나 중복이거나 문자열이 아니다: {order!r}")
     return digest({"schema": "parameter-order/v1", "order": list(order)})
 
 
@@ -326,6 +396,10 @@ def pair_group_id(design_sha: str, coords: dict, param_order_sha: str) -> str:
     좌표는 `lli · lam_pe · lam_ne` 와 두 `*_type` 이다. 값은 십진 문자열이어야
     하고, type 은 문자열이다.
     """
+    # ★ 28차 P1-6 — 부모 digest 의 domain 을 검사하지 않았다.
+    for name, v in (("design_sha", design_sha), ("param_order_sha", param_order_sha)):
+        if not _is_hex64(v):
+            raise WireError(f"{name} 가 64-hex 가 아니다: {v!r}")
     need = ("lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type")
     missing = [k for k in need if k not in coords]
     if missing:
@@ -338,22 +412,40 @@ def pair_group_id(design_sha: str, coords: dict, param_order_sha: str) -> str:
     for k in ("lam_pe_type", "lam_ne_type"):
         if not isinstance(coords[k], str) or not coords[k]:
             raise WireError(f"{k}: 문자열이어야 한다 ({coords[k]!r})")
+        if unicodedata.normalize("NFC", coords[k]) != coords[k]:
+            raise WireError(f"{k}: NFC 가 아니다 ({coords[k]!r}) — 같은 글자의 "
+                            "두 표현이 다른 pair_group_id 를 받는다")
         canon[k] = coords[k]
     return digest({"schema": "pair-group/v1", "design": design_sha,
                    "coords": canon, "parameter_order": param_order_sha})
 
 
 def bank_id(pair_group: str, bank_version: str, unit_cube_bank_sha: str) -> str:
+    for name, v in (("pair_group_id", pair_group),
+                    ("unit_cube_bank_sha256", unit_cube_bank_sha)):
+        if not _is_hex64(v):
+            raise WireError(f"{name} 가 64-hex 가 아니다: {v!r}")
+    if not isinstance(bank_version, str) or not bank_version:
+        raise WireError(f"bank_version: {bank_version!r}")
     return digest({"schema": "bank/v1", "pair_group_id": pair_group,
                    "bank_version": bank_version,
                    "unit_cube_bank_sha256": unit_cube_bank_sha})
 
 
 def candidate_id(bank: str, exact_bounds_sha: str, source: str,
-                 source_payload: dict) -> str:
-    """source 별 **닫힌** provenance schema 를 강제한다 (계약 §4.2 / P1-8)."""
+                 source_payload: dict, objective_plan: list | None = None) -> str:
+    """source 별 **닫힌** provenance schema 를 강제한다 (계약 §4.2 / P1-8).
+
+    ★ 28차 P1-6 — `objective_plan` 을 받지 않아 warm 의
+      `provider_objective='not-in-design'` 을 거부할 수 없었다.
+    """
     if not _is_hex64(bank) or not _is_hex64(exact_bounds_sha):
         raise WireError("bank_id·exact_bounds_sha256 는 64-hex 여야 한다")
+    if source == "warm" and objective_plan is not None:
+        po = (source_payload or {}).get("provider_objective")
+        if po not in objective_plan:
+            raise WireError(f"provider_objective 가 design 의 objective 가 "
+                            f"아니다: {po!r} ∉ {list(objective_plan)}")
     bad = check_candidate_payload(source, source_payload)
     if bad:
         raise WireError(f"{source} payload: " + "; ".join(bad))

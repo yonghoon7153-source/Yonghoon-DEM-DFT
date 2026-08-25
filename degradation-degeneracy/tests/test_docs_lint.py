@@ -864,7 +864,7 @@ def _active_text(text: str) -> tuple[str, set[str]]:
 def test_claim_status_registry_is_wellformed():
     """원장 자신이 깨지면 아래 검사가 조용히 통과한다 — 먼저 막는다."""
     reg = _claim_status()
-    assert reg.get("schema_version") == 4
+    assert reg.get("schema_version") == 5
     ids = [c["id"] for c in reg["claims"]]
     assert len(ids) == len(set(ids)), f"claim id 중복: {ids}"
 
@@ -2772,7 +2772,7 @@ def test_exactly_one_cohort_is_active_and_it_tracks_the_current_tree():
     drift = [k for k in _PIN_KEYS if c["pin"].get(k) != cur.get(k)]
     assert not drift, (
         f"활성 cohort `{c['cohort_id']}` 가 현행 트리에서 벗어났다: {drift}\n"
-        f"  `python3 docs/22p_gap/row_projection.py --all --out {c['dir']}` 로 "
+        f"  `python3 docs/22p_gap/row_projection.py <leg> --cohort {c['cohort_id']}` 로 "
         "재생성하거나, 새 cohort 를 만들어라")
 
     for c in _cohorts():
@@ -2846,6 +2846,8 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
     gens = creg.get("protocol_generations") or []
     compat = {(r["source"], r["target"]): set(r["allowed_roles"])
               for r in (creg.get("role_compatibility") or [])}
+    digest_gen = creg.get("source_digest_generations") or {}
+    assert digest_gen, "`source_digest_generations` 가 없다 — 세대를 도출할 수 없다"
     assert compat, "`role_compatibility` 가 없다 — 세대 간 role 이 자유문장이 된다"
     known = {c["id"]: c for c in (creg.get("active_claims") or [])}
     retracted = {c["id"] for c in creg["claims"]}
@@ -2879,10 +2881,18 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
             # ★ 27차 P2-10 — `reason` 하나로 legacy canonical 승격이 됐다.
             #   (role 세대, claim 세대) 쌍의 **허용표**로 본다. 표에 없는 쌍은
             #   fail-closed 다.
-            rg = r.get("protocol_generation")
+            # ★ 28차 P2 — role 행의 자기신고를 믿지 않는다. 다리의 봉인된
+            #   `leg_source_digest` 에서 세대를 **도출**한다. 자기신고와 role 을
+            #   함께 바꾸는 두 필드 loophole 을 막는다.
+            if "protocol_generation" in r:
+                bad.append(f"{leg}/{cid}: role 행에 protocol_generation 을 "
+                           "적지 않는다 — 봉인된 digest 에서 도출한다")
+            src_digest = (e.get("evidence") or {}).get("leg_source_digest")
+            rg = digest_gen.get(src_digest)
             tg = known[cid]["protocol_generation"]
-            if rg not in gens:
-                bad.append(f"{leg}/{cid}: protocol_generation={rg!r} ∉ {gens}")
+            if rg is None:
+                bad.append(f"{leg}: source digest {src_digest!r} 의 세대가 "
+                           "`source_digest_generations` 에 없다")
             elif (rg, tg) not in compat:
                 bad.append(f"{leg}/{cid}: ({rg} → {tg}) 조합이 "
                            "`role_compatibility` 에 없다 — 규칙을 먼저 적어라")
@@ -3244,3 +3254,50 @@ def test_promotion_happens_only_after_the_recomputation_verdict():
     # manifest-last — YAML 이 마지막에 옮겨져야 세대가 섞이지 않는다
     assert "endswith(\".projection.yaml\")" in src[i:j], (
         "YAML 을 마지막에 옮기지 않는다 (manifest-last)")
+
+
+def test_both_audit_paths_share_one_semantic_view():
+    """★ 28차 P1-4 — 두 감사 경로의 semantic 계약이 또 갈렸다.
+
+    `make_receipt` 는 `_F4_주의` 를 정규 view 에 다시 넣었는데
+    `row_projection` 의 비교기는 계속 떼고 있었다. 봉인 summary 의 인용 금지
+    경고를 "안전" 으로 바꿔도 `재계산_검증.전체_일치` 에 diff 가 안 생겼다.
+
+    정본은 `row_projection.SEMANTIC_SKIP` 하나다. `make_receipt` 는 그것을
+    import 한다 — 복제하지 않는다.
+    """
+    rp_src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    mr_src = (_REPO / "docs" / "22p_gap" / "make_receipt.py").read_text(encoding="utf-8")
+
+    assert "SEMANTIC_SKIP = (" in rp_src, "정본이 `row_projection` 에 없다"
+    assert '"_F4_주의"' not in rp_src.split("SEMANTIC_SKIP = (")[1].split(")")[0], (
+        "`_F4_주의` 를 아직 떼고 있다 — `summarize()` 가 만드는 인용 금지 경고다")
+    assert "SEMANTIC_SKIP = (" not in mr_src, (
+        "`make_receipt` 가 semantic view 를 **따로 정의**한다 (28차 P1-4)")
+    assert "_row_projection().SEMANTIC_SKIP" in mr_src
+
+    rp = _row_projection_module()
+    mr = _receipt_module()
+    assert tuple(rp.SEMANTIC_SKIP) == mr._semantic_skip()
+    assert "_F4_주의" not in rp.SEMANTIC_SKIP
+
+
+def test_the_frozen_guard_covers_descendants_and_fails_closed(tmp_path):
+    """★ 28차 P1-5 — frozen guard 가 root **exact equality** 만 거부했다.
+
+    `frozen_dir/child` 는 frozen tree 안인데 통과했고, 원장이 없으면 frozen
+    set 을 빈 dict 로 돌려 **fail-open** 했다.
+    """
+    rp = _row_projection_module()
+    frozen = next(iter(rp._frozen_cohort_dirs().values()))
+
+    with pytest.raises(SystemExit):
+        rp._assert_writable(frozen)                    # exact
+    with pytest.raises(SystemExit):
+        rp._assert_writable(frozen / "child")          # descendant
+    with pytest.raises(SystemExit):
+        rp._assert_writable(frozen / "a" / "b")
+
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    assert "원장이 없으면" in src or "fail-closed" in src, (
+        "원장 부재 시 fail-closed 라는 근거가 코드에 없다")

@@ -28,7 +28,9 @@ import pytest
 from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError,
                             canonical_bytes, digest, finalize_only, index_entries,
                             is_registered, load_canonical, publish, restore_from_cas,
-                            run_transaction, seal_payload, verify_payload)
+                            run_transaction, seal_payload, verify_payload,
+                            verify_registered_receipt)
+from tools.preserve import _is_hex64 as _is_hex64_str
 
 #: 고정 fixture 바이트 — 여기서 기대 semantic digest 가 결정된다.
 _FITS = b"PAR1" + b"\x11" * 512 + b"PAR1"
@@ -692,3 +694,219 @@ def test_output_manifest_must_bind_real_bytes(kit):
         run_transaction(PLANNED, run, backend, index, h)
     assert ei.value.stage == "rescore"
     assert index_entries(index) == {}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 28차 P0 — 등록은 **object graph retention commit** 이어야 한다
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _DropAfterRead(CasBackend):
+    """읽은 직후 object 를 지우는 backend — TOCTOU 를 구조로 재현한다.
+
+    ★ 28차 P0-1 — "등록 직전 한 번 더 읽는다" 는 **또 하나의 검사 시점**일 뿐
+      retention 구조가 아니다. 마지막 read 가 bytes 를 돌려준 직후 지우면
+      초판은 `ok=True · is_registered=True` 인데 receipt 가 없었다.
+    """
+
+    def __init__(self, *a, victims=(), **kw):
+        super().__init__(*a, **kw)
+        object.__setattr__(self, "_victims", set(victims))
+        object.__setattr__(self, "_armed", False)
+
+    def arm(self):
+        object.__setattr__(self, "_armed", True)
+
+    def read_back(self, dg, *, faults=frozenset()):
+        data = super().read_back(dg, faults=faults)
+        if self._armed and (not self._victims or dg in self._victims):
+            self._obj(dg).unlink(missing_ok=True)
+        return data
+
+
+def test_registration_requires_the_whole_graph_to_survive_deletion(tmp_path):
+    """★ 28차 P0-1 — `registered ⇒ 도달 가능한 graph 전체가 회수 가능하다`.
+
+    receipt 만이 아니다. manifest·member·산출까지 **pin** 아래 있어야 한다.
+    읽은 직후 `objects/` 에서 지워도 등록이 살아 있어야 하고, pin 까지 지우면
+    등록이 죽어야 한다.
+    """
+    run = _make_run(tmp_path)
+    backend = _DropAfterRead(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    assert res["ok"]
+
+    # pin 이 있으므로 `objects/` 를 통째로 비워도 등록은 유효하다
+    shutil.rmtree(backend.root / "objects")
+    assert is_registered(index, PLANNED.leg_id, backend), (
+        "pin 이 graph 를 붙들지 못했다")
+
+    # pin 까지 지우면 등록이 죽는다 — 존재만으로 완료가 아니다
+    shutil.rmtree(backend.root / "pins")
+    assert not is_registered(index, PLANNED.leg_id, backend)
+
+
+def test_deleting_an_object_right_after_the_final_read_blocks_registration(tmp_path):
+    """마지막 read 직후 삭제되는 backend 에서는 등록이 성립하면 안 된다."""
+    run = _make_run(tmp_path)
+    backend = _DropAfterRead(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    backend.arm()                                   # 모든 read 뒤 삭제
+    with pytest.raises(PreserveError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    assert not is_registered(index, PLANNED.leg_id, backend)
+
+
+def test_finalize_only_rechecks_the_graph_even_when_already_registered(tmp_path):
+    """★ 28차 P0-1 — `already=True` 를 backend 를 안 보고 돌려줬다.
+
+    등록된 뒤에 receipt·member·산출을 하나씩 잃으면 fail-closed 여야 한다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+    assert finalize_only(PLANNED.leg_id, backend, index)["already"] is True
+
+    # pin 안의 object 하나를 잃으면 더는 등록 상태가 아니다
+    pins = sorted((backend.root / "pins" / PLANNED.leg_id).iterdir())
+    assert pins, "pin 이 하나도 없다"
+    pins[0].unlink()
+    shutil.rmtree(backend.root / "objects", ignore_errors=True)
+    assert not is_registered(index, PLANNED.leg_id, backend)
+    with pytest.raises(PreserveError):
+        finalize_only(PLANNED.leg_id, backend, index)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 28차 P0-2 — receipt validator 가 닫혀 있지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_forged_seven_key_receipt_is_refused(tmp_path):
+    """★ 28차 P0-2 — self-consistent 한 일곱 키 receipt 가 등록됐다.
+
+    `verify_registered_receipt()` 는 exact key set, `planned_id ==
+    H(planned_envelope)`, 실제 backend URI, outputs schema 를 보지 않았다.
+    """
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    forged = {"schema": "execution-receipt/v1", "leg_id": "x",
+              "planned_id": "p" * 64, "payload_root_digest": "r" * 64,
+              "payload_manifest_digest": "m" * 64,
+              "backend_uri": "file+cas:///foreign"}
+    forged["receipt_digest"] = digest(forged)
+    obj = backend.put_if_absent(canonical_bytes(forged))["digest"]
+    publish(index, {"leg_id": "x", "planned_id": forged["planned_id"],
+                    "receipt_digest": forged["receipt_digest"],
+                    "receipt_object": obj,
+                    "payload_root_digest": forged["payload_root_digest"],
+                    "payload_manifest_digest": forged["payload_manifest_digest"],
+                    "backend_uri": "file+cas:///foreign"})
+    with pytest.raises(PreserveError) as ei:
+        finalize_only("x", backend, index)
+    assert ei.value.stage in ("verify_before_register", "receipt_schema")
+    assert not is_registered(index, "x", backend)
+
+
+def test_a_receipt_naming_another_backend_is_refused(tmp_path):
+    """receipt 와 index 가 서로 같은 문자열만 가지면 통과하면 안 된다.
+
+    **실제로 손에 든 backend 의 URI** 와 대조해야 한다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+    other = CasBackend(root=tmp_path / "cas2")
+    shutil.copytree(backend.root, other.root, dirs_exist_ok=True)
+    with pytest.raises(PreserveError) as ei:
+        verify_registered_receipt(other, index, PLANNED.leg_id)
+    assert "backend" in str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 28차 P1-1 — 산출은 자기신고가 아니라 측정·보존돼야 한다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_output_bytes_are_measured_by_the_wrapper_and_kept_in_cas(tmp_path):
+    """★ 28차 P1-1 — hook 이 자기 파일의 SHA 와 producer 를 자기신고했다.
+
+    `check_output()` 은 root 를 받지 않아 파일을 열지 않았고, 산출 파일은
+    restore temp root 와 함께 삭제됐다. descriptor 는 "있는 필드" 일 뿐
+    회수 가능한 증거가 아니었다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    out = res["receipt"]["outputs"][0]
+    assert _is_hex64_str(out["object_digest"]), out
+    got = backend.read_back(out["object_digest"])       # temp root 삭제 뒤에도
+    assert hashlib.sha256(got).hexdigest() == out["file_sha256"]
+    assert out["byte_size"] == len(got)
+
+
+def test_a_lying_output_descriptor_is_overruled_by_measurement(tmp_path):
+    """자기신고 size/SHA 가 실물과 다르면 실패해야 한다."""
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    h = _hooks()
+    base = h.rescore
+
+    def lying(root):
+        d = dict(base(root))
+        d["file_sha256"] = "b" * 64
+        d["byte_size"] = 999
+        return d
+
+    h.rescore = lying
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, h)
+    assert ei.value.stage == "rescore"
+    assert index_entries(index) == {}
+
+
+@pytest.mark.parametrize("rel", ["../escape.bin", "/abs/x", "C:\\x", "", "."])
+def test_an_output_path_cannot_escape_the_restore_root(tmp_path, rel):
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    h = _hooks()
+    base = h.rescore
+    h.rescore = lambda root: dict(base(root), relative_path=rel)
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, h)
+    assert ei.value.stage == "rescore"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 28차 P1-3 — manifest 집계 타입 · 빈 root
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_boolean_aggregates_are_not_integers(kit):
+    """`True == 1` 이므로 한 member 짜리 manifest 의 집계를 bool 로 바꿔도 통과했다."""
+    run, backend, index = kit
+    man = seal_payload(run)
+    man = dict(man, members=man["members"][:1])
+    man["n_members"] = True
+    man["total_bytes"] = True
+    man["root_digest"] = digest({k: v for k, v in man.items() if k != "root_digest"})
+    dg = backend.put_if_absent(canonical_bytes(man))["digest"]
+    with pytest.raises(PreserveError):
+        restore_from_cas(backend, dg, Path(tempfile.mkdtemp()))
+
+
+def test_restore_refuses_a_root_that_is_not_empty(kit):
+    """이름이 `truly empty root` 인데 기존 파일이 있어도 성공했다."""
+    run, backend, index = kit
+    man = seal_payload(run)
+    dg = backend.put_if_absent(canonical_bytes(man))["digest"]
+    for m in man["members"]:
+        backend.put_if_absent((run / m["path"]).read_bytes())
+    root = Path(tempfile.mkdtemp())
+    (root / "stowaway.bin").write_bytes(b"x")
+    with pytest.raises(PreserveError) as ei:
+        restore_from_cas(backend, dg, root)
+    assert ei.value.stage == "cas_restore"
+    assert (root / "stowaway.bin").exists(), "남의 파일을 지우지도 않는다"

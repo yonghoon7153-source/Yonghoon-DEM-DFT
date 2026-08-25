@@ -146,6 +146,18 @@ def score_canonical(df):
     return apply_bias_correction(df, bias, DEFAULT_TOL)
 
 
+#: 두 감사 경로가 **공유하는** semantic view. 비교 전에 양쪽에서 떼는 키다.
+#:
+#: ★ 28차 P1-4 — `make_receipt` 는 `_F4_주의` 를 다시 넣었는데 여기 비교기는
+#:   계속 떼고 있었다. 봉인 summary 의 인용 금지 경고를 "안전" 으로 바꿔도
+#:   `재계산_검증.전체_일치` 에 diff 가 안 생겼다. 두 audit 경로의 semantic
+#:   계약이 또 갈린 것이다. **한 곳에서 정의하고 양쪽이 import 한다.**
+#:
+#: `_채점원본` 만 남는다 — `run_scoring` 이 붙이는 실행 메타라 재채점이 만들
+#: 수 없다. 그 안의 인용 안전 flag 는 `make_receipt._citation_safety` 가
+#: 값으로 검사한다.
+SEMANTIC_SKIP = ("_채점원본",)
+
 #: restart `source` 로 허용되는 값. 여기 없는 값은 코드가 바뀐 것이다.
 _RESTART_SOURCES = frozenset({"base_init", "warm", "random"})
 
@@ -533,7 +545,7 @@ def build(leg: str, out: Path | None = None) -> dict:
     verdict: dict = {"봉인_summary": str(sealed_path.relative_to(REPO))}
 
     #: 재계산이 만들 수 없는 키 — 채점이 아니라 실행 메타다.
-    _SKIP = {"_채점원본", "_F4_주의"}
+    _SKIP = set(SEMANTIC_SKIP)
 
     def _cmp(a, b, path: str, out: list) -> None:
         if isinstance(a, dict) and isinstance(b, dict):
@@ -669,7 +681,10 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
 
     reg_path = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
     if not reg_path.is_file():
-        return {}
+        # ★ 28차 P1-5 — 원장이 없으면 빈 dict 를 돌려 **fail-open** 했다.
+        #   보호 장치가 없다는 뜻이므로 쓰지 못하게 막는 것이 맞다 (fail-closed).
+        raise SystemExit(f"✗ 보존 원장이 없다: {reg_path} — frozen cohort 를 "
+                         "구별할 수 없으므로 아무 데도 쓰지 않는다")
     reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
     return {c["cohort_id"]: (REPO / c["dir"]).resolve()
             for c in (reg.get("cohorts") or []) if c.get("status") == "frozen"}
@@ -679,7 +694,9 @@ def _assert_writable(dest: Path) -> None:
     """frozen cohort 로는 쓸 수 없다. **쓰기 지점**에서 막는다 (27차 P1-8)."""
     d = Path(dest).resolve()
     for cid, frozen in _frozen_cohort_dirs().items():
-        if d == frozen:
+        # ★ 28차 P1-5 — exact equality 만 봤다. `frozen/child` 는 frozen tree
+        #   **안**인데 통과했다. 자손까지 막는다.
+        if d == frozen or frozen in d.parents:
             raise SystemExit(
                 f"✗ `{cid}` 는 frozen cohort 다 ({d}) — 쓸 수 없다.\n"
                 f"  원자료를 잃은 투영이 들어 있어 덮으면 복구할 수 없다.\n"

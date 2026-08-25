@@ -67,7 +67,6 @@ CANONICALIZER = "score-semantic/v3"
 #: 만들 수 없다. 다만 그 안에는 `canonical`·`봉인상태`·`인용가능` 같은
 #: **인용 안전 flag** 가 있으므로 통째로 버리지 않고 §citation_safety 로
 #: 따로 검사한다 (아래 `_citation_safety`).
-SEMANTIC_SKIP = ("_채점원본",)
 
 
 def _row_projection():
@@ -99,9 +98,18 @@ def _plain(o):
     return _plain(item()) if callable(item) else str(o)
 
 
+def _semantic_skip() -> tuple:
+    """★ 28차 P1-4 — semantic view 를 여기서 **정의하지 않는다.**
+
+    `row_projection.py` 의 비교기와 갈리면 한쪽이 안전 문구를 떼고도 통과한다
+    (실제로 그랬다). 정본은 `row_projection.SEMANTIC_SKIP` 하나다.
+    """
+    return tuple(_row_projection().SEMANTIC_SKIP)
+
+
 def _semantic_view(obj):
     """비교 대상 정규 view. 실행 메타를 떼고 JSON 기본형으로 낮춘다."""
-    return _plain({k: v for k, v in obj.items() if k not in SEMANTIC_SKIP}
+    return _plain({k: v for k, v in obj.items() if k not in _semantic_skip()}
                   if isinstance(obj, dict) else obj)
 
 
@@ -272,7 +280,7 @@ def _score_manifest(run_dir: Path) -> list[dict]:
         "n_rows": int(len(df)),
         "semantic_schema": "degeneracy-summary/v5",
         "canonicalizer": CANONICALIZER,
-        "semantic_view_drops": list(SEMANTIC_SKIP),
+        "semantic_view_drops": list(_semantic_skip()),
         "semantic_sha256": _semantic(summary),
     }]
 
@@ -292,7 +300,7 @@ def _score_manifest(run_dir: Path) -> list[dict]:
             "file_sha256": _sha(sealed),
             "semantic_schema": "degeneracy-summary/v5",
             "canonicalizer": CANONICALIZER,
-            "semantic_view_drops": list(SEMANTIC_SKIP),
+            "semantic_view_drops": list(_semantic_skip()),
             "semantic_sha256": _semantic(sd),
         })
     return out

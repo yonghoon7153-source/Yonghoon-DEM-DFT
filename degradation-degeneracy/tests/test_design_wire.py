@@ -325,7 +325,82 @@ def test_numeric_and_unicode_domains_are_closed(golden):
                 seed_derivation="s", dtype="float64", endian="little",
                 coordinate_unit="fraction", decimal_places=places)
     # NFC — 같은 글자의 두 표현이 다른 digest 를 내면 안 된다
-    assert_wire_safe({"a": "é"})                      # NFC 는 통과
+    import unicodedata
+    comp = unicodedata.normalize("NFC", "\u00e9")
+    deco = unicodedata.normalize("NFD", "\u00e9")
+    assert comp != deco, "전제: 두 표현이 실제로 달라야 한다"
+    assert_wire_safe({"a": comp})                     # NFC 는 통과
     with pytest.raises(WireError) as e:
-        assert_wire_safe({"a": "é"})            # 분해형은 거부
+        assert_wire_safe({"a": deco})                 # 분해형 **값**은 거부
     assert "NFC" in str(e.value)
+    with pytest.raises(WireError) as e:                # 분해형 **키**도 거부
+        assert_wire_safe({deco: "x"})
+    assert "NFC" in str(e.value)
+
+
+def test_nested_design_blocks_are_validated_not_just_top_level_keys(golden):
+    """★ 28차 P1-6 — 초판 validator 는 top-level 키만 닫았다.
+
+    factory 는 엄격했지만 **역직렬화한 외부 spec** 을 해시하는 validator 는
+    nested 를 다시 보지 않았다. 리뷰가 준 다섯 변이가 전부 정상 digest 를 냈다.
+    """
+    order = golden["parameter_order"]
+    spec = _spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order)
+    assert pairing_design_sha256(spec)
+
+    muts = {
+        "empty_coordinate": dict(spec, coordinate={}),
+        "fake_arm": dict(spec, arms=dict(spec["arms"], ZZ={"arm_id": "ZZ"})),
+        "duplicate_objectives": dict(spec, objective_plan=["o", "o"]),
+        "open_serialization": dict(spec, serialization={"encoding": "utf-8"}),
+        "empty_candidate_schema": dict(spec, candidate_payload_schema={}),
+        "empty_parameter_order": dict(spec, parameter_order=[]),
+        "bogus_bank": dict(spec, bank={"generator": "g"}),
+        "arm_content_changed": dict(
+            spec, arms=dict(spec["arms"],
+                            A=dict(spec["arms"]["A"], role="다른 역할"))),
+    }
+    for name, m in muts.items():
+        with pytest.raises(WireError):
+            pairing_design_sha256(m)
+
+
+def test_parent_digest_domains_and_type_axis_nfc_are_checked(golden):
+    """부모 digest 가 64-hex 인지, type 축이 NFC 인지 검사한다."""
+    order = golden["parameter_order"]
+    hc = pairing_design_sha256(_spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order))
+    pos = parameter_order_sha256(order)
+    coords = dict(golden["vectors"][0]["coords"])
+
+    with pytest.raises(WireError):
+        pair_group_id("짧다", coords, pos)
+    with pytest.raises(WireError):
+        pair_group_id(hc, coords, "짧다")
+    with pytest.raises(WireError):
+        bank_id("짧다", "v6.0", "f" * 64)
+    with pytest.raises(WireError):
+        parameter_order_sha256([])
+    with pytest.raises(WireError):
+        parameter_order_sha256(["a", "a"])
+
+    # type 축의 분해형 문자열 — 같은 글자가 다른 ID 를 받으면 안 된다.
+    # (리터럴로 쓰면 편집기·heredoc 이 NFC 로 합쳐 버리므로 만들어 쓴다.)
+    import unicodedata
+    decomposed = unicodedata.normalize("NFD", "capacit\u00e9")
+    assert decomposed != unicodedata.normalize("NFC", decomposed), "전제"
+    with pytest.raises(WireError) as e:
+        pair_group_id(hc, dict(coords, lam_pe_type=decomposed), pos)
+    assert "NFC" in str(e.value)
+
+
+def test_a_warm_candidate_must_name_an_objective_in_the_design(golden):
+    """★ 28차 P1-6 — `provider_objective='not-in-design'` 이 통과했다."""
+    plan = ["pocv_dvdq", "pocv_dvdq_dqdv"]
+    good = {"provider_objective": "pocv_dvdq",
+            "provider_artifact_sha256": "2" * 64, "solution_map_sha256": "3" * 64}
+    assert candidate_id("a" * 64, "b" * 64, "warm", good, objective_plan=plan)
+    with pytest.raises(WireError) as e:
+        candidate_id("a" * 64, "b" * 64, "warm",
+                     dict(good, provider_objective="not-in-design"),
+                     objective_plan=plan)
+    assert "objective" in str(e.value)

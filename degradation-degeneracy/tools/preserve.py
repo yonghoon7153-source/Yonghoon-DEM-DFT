@@ -192,7 +192,17 @@ class CasBackend:
         staging = self.root / "staging"
         staging.mkdir(parents=True, exist_ok=True)
         tmp = staging / f"{dg}.{uuid.uuid4().hex}.part"
-        tmp.write_bytes(data[: len(data) // 2] if "partial_upload" in faults else data)
+        payload = data[: len(data) // 2] if "partial_upload" in faults else data
+        # ★ 28차 P1-2 — 같은 프로세스의 read-back 은 page cache 검증일 수 있다.
+        #   power-loss durability 가 되려면 staged object 를 fsync 해야 한다.
+        fd = os.open(tmp, os.O_CREAT | os.O_WRONLY | os.O_TRUNC, 0o644)
+        try:
+            n = 0
+            while n < len(payload):
+                n += os.write(fd, payload[n:])
+            os.fsync(fd)
+        finally:
+            os.close(fd)
         if "partial_upload" in faults:
             raise PreserveError("cas_put", "업로드가 중간에 끊겼다 (주입)")
         dst.parent.mkdir(parents=True, exist_ok=True)
@@ -216,6 +226,62 @@ class CasBackend:
 
     def has(self, dg: str) -> bool:
         return self._obj(dg).is_file()
+
+    # ── retention / pin ─────────────────────────────────────────────────
+    # ★ 28차 P0-1 — "등록 직전 한 번 더 읽는다" 는 **또 하나의 검사 시점**일
+    #   뿐 retention 구조가 아니다. 마지막 read 가 bytes 를 돌려준 직후 지우면
+    #   등록이 성립하면서 receipt 가 사라졌다.
+    #
+    #   local 에서 object-lock 의 대응물은 **hardlink** 다. `pins/<leg>/<dg>`
+    #   가 inode 를 붙들므로 `objects/` 에서 지워도 회수 가능성이 유지된다.
+    #   원격 backend 에서는 object-lock / retention-until 로 구현한다.
+
+    def _pin(self, leg_id: str, dg: str) -> Path:
+        return self.root / "pins" / leg_id / dg
+
+    def pin(self, leg_id: str, digests) -> dict:
+        """도달 가능한 object 를 전부 붙든다. 하나라도 없으면 실패한다."""
+        check_id(leg_id)
+        made = []
+        for dg in sorted(set(digests)):
+            src, dst = self._obj(dg), self._pin(leg_id, dg)
+            if dst.is_file():
+                made.append(dg)
+                continue
+            if not src.is_file():
+                raise PreserveError("pin", f"pin 할 object 가 없다: {dg[:16]}")
+            dst.parent.mkdir(parents=True, exist_ok=True)
+            try:
+                os.link(src, dst)
+            except OSError:                       # pragma: no cover - FS 의존
+                dst.write_bytes(src.read_bytes())
+            made.append(dg)
+        return {"leg_id": leg_id, "pinned": made,
+                "pin_set_digest": digest({"leg_id": leg_id, "objects": sorted(made)})}
+
+    def pinned(self, leg_id: str) -> set:
+        d = self.root / "pins" / leg_id
+        return {p.name for p in d.iterdir()} if d.is_dir() else set()
+
+    def read_pinned(self, leg_id: str, dg: str) -> bytes:
+        """**pin 에서** 읽는다. `objects/` 가 비어도 회수돼야 한다."""
+        p = self._pin(leg_id, dg)
+        if not p.is_file():
+            raise PreserveError("pin", f"pin 이 없다: {dg[:16]}")
+        data = p.read_bytes()
+        if hashlib.sha256(data).hexdigest() != dg:
+            raise PreserveError("pin", f"pin 바이트가 digest 와 다르다: {dg[:16]}")
+        return data
+
+    def verify_pins(self, leg_id: str, digests) -> list:
+        """pin 집합이 완전하고 **바이트가 맞는지** 확인한다."""
+        bad = []
+        for dg in sorted(set(digests)):
+            try:
+                self.read_pinned(leg_id, dg)
+            except PreserveError as e:
+                bad.append(f"{dg[:16]}: {e.msg}")
+        return bad
 
     def orphans(self) -> list[Path]:
         st = self.root / "staging"
@@ -275,6 +341,10 @@ def check_manifest(man) -> list[str]:
     dup = sorted({q for q in paths if paths.count(q) > 1})
     if dup:
         bad.append(f"중복 member 경로: {dup[:3]}")
+    for k in ("n_members", "total_bytes"):
+        if isinstance(man[k], bool) or not isinstance(man[k], int) or man[k] < 0:
+            bad.append(f"{k} 가 음이 아닌 정수가 아니다: {man[k]!r} "
+                       "(`True == 1` 이므로 bool 을 따로 막는다)")
     if man["n_members"] != len(ms):
         bad.append(f"n_members={man['n_members']} ≠ 실제 {len(ms)}")
     tot = sum(m["bytes"] for m in ms if isinstance(m, dict)
@@ -308,6 +378,10 @@ def restore_from_cas(backend: CasBackend, manifest_digest: str, root: Path, *,
 
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
+    # ★ 28차 P1-3 — 이름이 `truly empty root` 인데 기존 파일이 있어도 성공했다.
+    stray = [p.name for p in root.iterdir()]
+    if stray:
+        raise PreserveError(stage, f"복원 root 가 비어 있지 않다: {stray[:3]}")
     written = []
     members = man["members"]
     if "restore_incomplete" in faults:
@@ -439,7 +513,35 @@ def _reg_file(index_path: Path, leg_id: str) -> Path:
     return Path(index_path) / "registered" / f"{leg_id}.json"
 
 
-def _exclusive_write(path: Path, data: bytes) -> bool:
+_DIR_FSYNC: dict[str, bool] = {}
+
+
+def dir_fsync_supported(where: Path) -> bool:
+    """이 filesystem 에서 directory fsync 가 되는가 — 한 번만 재 본다.
+
+    ★ 28차 P1-2 — 초판은 final hardlink 를 만든 **뒤** parent 를
+      `os.open(..., O_RDONLY)` 해 fsync 했다. Windows 는 directory open 을
+      거부하므로 파일은 이미 보이는데 API 는 예외였다 — 상태를 바꿔 놓고
+      실패한 것이다. capability 는 **아무 것도 만들기 전에** 확인한다.
+    """
+    key = str(Path(where).resolve().anchor) or str(where)
+    if key in _DIR_FSYNC:
+        return _DIR_FSYNC[key]
+    ok = True
+    try:
+        fd = os.open(where, os.O_RDONLY)
+        try:
+            os.fsync(fd)
+        finally:
+            os.close(fd)
+    except OSError:
+        ok = False
+    _DIR_FSYNC[key] = ok
+    return ok
+
+
+def _exclusive_write(path: Path, data: bytes, *,
+                     require_durable: bool = True) -> bool:
     """**완성된 파일**에만 final name 을 붙인다. 이미 있으면 False.
 
     ★ 27차 P1-3 — 초판은 final pathname 을 먼저 `O_EXCL` 로 만들고 `os.write`
@@ -451,6 +553,14 @@ def _exclusive_write(path: Path, data: bytes) -> bool:
       (link 는 대상이 있으면 EEXIST 로 실패하는 원자적 연산이다).
     """
     path.parent.mkdir(parents=True, exist_ok=True)
+    # ★ capability 를 먼저 본다. 못 하면 **만들기 전에** 실패한다.
+    durable = dir_fsync_supported(path.parent)
+    if require_durable and not durable:
+        raise PreserveError(
+            "durability",
+            f"이 filesystem 은 directory fsync 를 지원하지 않는다 ({path.parent}) — "
+            "이름이 durable 하지 않으면 crash 뒤 pointer 가 사라질 수 있다. "
+            "backend capability 를 확인하고 publish 전에 멈춘다")
     tmp = path.parent / f"{path.name}.tmp-{uuid.uuid4().hex}"
     fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
     try:
@@ -471,7 +581,7 @@ def _exclusive_write(path: Path, data: bytes) -> bool:
         created = False
     finally:
         tmp.unlink(missing_ok=True)
-    if created:
+    if created and durable:
         dfd = os.open(path.parent, os.O_RDONLY)
         try:
             os.fsync(dfd)           # 이름이 durable 해야 crash 뒤에도 보인다
@@ -528,21 +638,41 @@ def registration(index_path: Path, leg_id: str) -> dict | None:
         return None
     if not _is_hex64(rec.get("receipt_object") or ""):
         return None
+    if not isinstance(rec.get("objects"), list) or \
+            not _is_hex64(rec.get("pin_set_digest") or ""):
+        return None
     return rec
 
 
-def is_registered(index_path: Path, leg_id: str) -> bool:
-    """등록됐는가 — journal 이 **index 가 가리키는 receipt 와 같아야** 한다."""
+def is_registered(index_path: Path, leg_id: str,
+                  backend: CasBackend | None = None) -> bool:
+    """등록됐는가.
+
+    journal 이 index 의 receipt 를 가리켜야 하고, **backend 를 주면 pin 집합이
+    완전하고 바이트가 맞는지까지** 본다. ★ 28차 P0-1 — 이것이 없으면 "등록됨"
+    을 "receipt 가 회수 가능함" 으로 정의할 수 없다.
+    """
     rec = registration(index_path, leg_id)
     if rec is None:
         return False
     e = index_entries(index_path).get(leg_id)
-    return bool(e) and rec["receipt_object"] == e.get("receipt_object")
+    if not e or rec["receipt_object"] != e.get("receipt_object"):
+        return False
+    if backend is None:
+        return True
+    objs = rec.get("objects") or []
+    if not objs or rec.get("pin_set_digest") != digest(
+            {"leg_id": leg_id, "objects": sorted(objs)}):
+        return False
+    return not backend.verify_pins(leg_id, objs)
 
 
-def _register(index_path: Path, leg_id: str, receipt_object: str) -> None:
+def _register(index_path: Path, leg_id: str, receipt_object: str,
+              pin_set_digest: str, objects: list) -> None:
     """durable 상태 변경. 기존 journal 이 다르면 **거부**한다."""
-    data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object})
+    data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object,
+                            "pin_set_digest": pin_set_digest,
+                            "objects": sorted(objects)})
     path = _reg_file(index_path, leg_id)
     if _exclusive_write(path, data):
         return
@@ -628,7 +758,7 @@ def _drop_from_cas(backend: CasBackend, man: dict, man_dg: str,
             p.write_bytes(bytes(b))
 
 
-def _validate_and_rescore(root: Path, hooks: Hooks,
+def _validate_and_rescore(root: Path, hooks: Hooks, backend: CasBackend,
                           faults: frozenset[str]) -> tuple[dict, dict]:
     if "validator_raises" in faults:
         raise PreserveError("validate", "검증기가 예외로 죽었다 (주입)")
@@ -649,7 +779,28 @@ def _validate_and_rescore(root: Path, hooks: Hooks,
     if sem != hooks.expected_semantic:
         raise PreserveError("rescore",
                             f"재채점 semantic digest 가 봉인과 다르다: {sem!r}")
-    return v, dict(out, semantic_sha256=sem)
+
+    # ★ 28차 P1-1 — hook 이 자기 파일의 SHA·크기·producer 를 **자기신고**했다.
+    #   `check_output()` 은 root 를 받지 않아 파일을 열지도 않았고, 산출은
+    #   temp root 와 함께 삭제됐다. 증명과 주장이 같은 주체였다.
+    #   wrapper 가 안전한 경로에서 bytes 를 **한 번 읽어** 측정하고 CAS 에 넣는다.
+    fp = _safe_member_path(root, out["relative_path"], "rescore")
+    if not fp.is_file():
+        raise PreserveError("rescore",
+                            f"산출 파일이 없다: {out['relative_path']!r}")
+    data = fp.read_bytes()
+    measured_sha = hashlib.sha256(data).hexdigest()
+    if out["file_sha256"] != measured_sha or out["byte_size"] != len(data):
+        raise PreserveError(
+            "rescore",
+            f"산출 descriptor 가 실물과 다르다 — 신고 "
+            f"{out['file_sha256'][:16]}/{out['byte_size']} vs 실측 "
+            f"{measured_sha[:16]}/{len(data)}")
+    obj = backend.put_if_absent(data)["digest"]
+    backend.read_back(obj)
+    return v, dict(out, semantic_sha256=sem, file_sha256=measured_sha,
+                   byte_size=len(data), object_digest=obj,
+                   measured_by="tools.preserve")
 
 
 def _hit_receipt(backend: CasBackend, r_obj: str, faults: frozenset[str],
@@ -663,6 +814,70 @@ def _hit_receipt(backend: CasBackend, r_obj: str, faults: frozenset[str],
         b = bytearray(p.read_bytes())
         b[0] ^= 0x01
         p.write_bytes(bytes(b))
+
+
+#: receipt 의 **닫힌** 키 집합. ★ 28차 P0-2 — 초판 validator 는 일곱 키만 있는
+#: self-consistent receipt 도 통과시켰다. `planned_envelope`·`outputs`·
+#: `validation` 이 없어도 등록됐다.
+_RECEIPT_KEYS = frozenset({
+    "schema", "leg_id", "planned_id", "planned_envelope", "backend_uri",
+    "payload_root_digest", "payload_manifest_digest", "n_members",
+    "total_bytes", "validation", "outputs", "retention_days", "receipt_digest",
+})
+
+
+def check_receipt(rec, entry: dict, backend_uri: str) -> list[str]:
+    """receipt 를 exact schema 와 결속으로 검사한다 — run 과 finalize 가 공유."""
+    if not isinstance(rec, dict):
+        return [f"receipt 가 dict 가 아니다: {type(rec).__name__}"]
+    bad = []
+    if set(rec) != _RECEIPT_KEYS:
+        bad.append(f"키 집합이 닫혀 있지 않다: 남음 {sorted(set(rec) - _RECEIPT_KEYS)} "
+                   f"· 모자람 {sorted(_RECEIPT_KEYS - set(rec))}")
+        return bad
+    if rec["schema"] != "execution-receipt/v1":
+        bad.append(f"schema: {rec['schema']!r}")
+    want = digest({k: v for k, v in rec.items() if k != "receipt_digest"})
+    if rec["receipt_digest"] != want:
+        bad.append("receipt 안의 digest 가 자기 내용과 다르다")
+    # ★ 계획이 실제로 그 계획인가 — 내용 주소를 다시 계산한다
+    if digest(rec["planned_envelope"]) != rec["planned_id"]:
+        bad.append("planned_id 가 planned_envelope 의 digest 와 다르다")
+    # ★ **손에 든 backend** 와 대조한다. receipt·index 가 서로 같은 문자열만
+    #   가지면 통과하던 것이 28차 P0-2 의 반례였다.
+    if rec["backend_uri"] != backend_uri:
+        bad.append(f"receipt 의 backend_uri 가 실제 backend 와 다르다 "
+                   f"({rec['backend_uri']!r} ≠ {backend_uri!r})")
+    v = rec["validation"]
+    if not isinstance(v, dict) or v.get("ok") is not True \
+            or not isinstance(v.get("n_checks"), int):
+        bad.append(f"validation 블록이 이상하다: {v!r}")
+    outs = rec["outputs"]
+    if not isinstance(outs, list) or not outs:
+        bad.append("outputs 가 비었다")
+    else:
+        for i, o in enumerate(outs):
+            for e in check_output(o):
+                bad.append(f"outputs[{i}]: {e}")
+            if not _is_hex64(o.get("object_digest") or ""):
+                bad.append(f"outputs[{i}]: object_digest 가 없다")
+    for k in ("n_members", "total_bytes", "retention_days"):
+        if isinstance(rec[k], bool) or not isinstance(rec[k], int) or rec[k] < 0:
+            bad.append(f"{k} 가 음이 아닌 정수가 아니다: {rec[k]!r}")
+    for k in ("leg_id", "planned_id", "payload_root_digest",
+              "payload_manifest_digest", "backend_uri", "receipt_digest"):
+        if rec[k] != entry.get(k):
+            bad.append(f"receipt.{k} 가 index 와 다르다")
+    return bad
+
+
+def reachable_objects(rec: dict, manifest: dict) -> set:
+    """receipt 가 도달할 수 있는 object 전부 — pin 대상이다."""
+    objs = {rec["payload_manifest_digest"], rec["receipt_object"]} \
+        if "receipt_object" in rec else {rec["payload_manifest_digest"]}
+    objs |= {m["sha256"] for m in manifest["members"]}
+    objs |= {o["object_digest"] for o in rec["outputs"]}
+    return {o for o in objs if _is_hex64(o)}
 
 
 def verify_registered_receipt(backend: CasBackend, index_path: Path,
@@ -684,21 +899,9 @@ def verify_registered_receipt(backend: CasBackend, index_path: Path,
     except PreserveError as ex:
         raise PreserveError(stage, f"receipt 를 회수하지 못했다: {ex.msg}") from ex
     rec = load_canonical(raw)
-    if not isinstance(rec, dict):
-        raise PreserveError(stage, "receipt 가 dict 가 아니다")
-    if rec.get("schema") != "execution-receipt/v1":
-        raise PreserveError(stage, f"receipt schema: {rec.get('schema')!r}")
-    want = digest({k: v for k, v in rec.items() if k != "receipt_digest"})
-    if rec.get("receipt_digest") != want:
-        raise PreserveError(stage, "receipt 안의 digest 가 자기 내용과 다르다")
-    for k, ik in (("leg_id", "leg_id"), ("planned_id", "planned_id"),
-                  ("payload_root_digest", "payload_root_digest"),
-                  ("payload_manifest_digest", "payload_manifest_digest"),
-                  ("backend_uri", "backend_uri")):
-        if rec.get(k) != e.get(ik):
-            raise PreserveError(stage, f"receipt.{k} 가 index 와 다르다")
-    if rec.get("receipt_digest") != e.get("receipt_digest"):
-        raise PreserveError(stage, "receipt_digest 가 index 와 다르다")
+    bad = check_receipt(rec, e, backend.uri)
+    if bad:
+        raise PreserveError(stage, "; ".join(bad[:4]))
     return rec
 
 
@@ -796,7 +999,7 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
             raise PreserveError("empty_root_restore", "; ".join(rbad[:4]))
 
         # ── 6~7. 검증 + 복원본만으로 재채점 ─────────────────────────────
-        v, out = _validate_and_rescore(root, hooks, faults)
+        v, out = _validate_and_rescore(root, hooks, backend, faults)
 
         # ── 8. receipt 를 **CAS 에 저장**하고 되읽는다 (P0-2) ───────────
         receipt = {
@@ -840,15 +1043,43 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
 
         _hit_receipt(backend, r_obj, faults, "after_publish")
 
-        # ── 10. 등록 **직전** 재회수 대조 → durable 등록 ─────────────────
+        # ── 10. 등록 = **object graph retention commit** ─────────────────
         if "crash_after_publish" in faults:
             raise PreserveError("register", "publish 뒤 등록 전에 죽었다 (주입)")
-        verify_registered_receipt(backend, index_path, leg_id)
-        _register(index_path, leg_id, r_obj)
+        _commit_registration(backend, index_path, leg_id)
         return {"ok": True, "receipt": receipt, "planned_id": pid,
                 "payload_root_digest": root_digest, "receipt_object": r_obj}
     finally:
         shutil.rmtree(root, ignore_errors=True)
+
+
+def _commit_registration(backend: CasBackend, index_path: Path,
+                         leg_id: str) -> dict:
+    """도달 가능한 graph 를 **전부 pin 한 뒤**에만 등록 기록을 남긴다.
+
+    ★ 28차 P0-1 — 초판은 receipt 를 한 번 더 읽고 journal 을 썼다. 두 연산이
+      같은 retention 안에 없으므로, 마지막 read 직후 지우면 등록이 성립하면서
+      회수가 불가능해졌다. 성공 불변식을 구조로 만든다:
+
+        registered(leg) ⇒ receipt · manifest · member · 산출 전부 회수 가능
+    """
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError("register", f"{leg_id} 가 public index 에 없다")
+    rec = verify_registered_receipt(backend, index_path, leg_id)
+    man = load_canonical(backend.read_back(rec["payload_manifest_digest"]))
+    if check_manifest(man):
+        raise PreserveError("register", "receipt 가 가리키는 manifest 가 깨졌다")
+
+    objs = reachable_objects(dict(rec, receipt_object=e["receipt_object"]), man)
+    pins = backend.pin(leg_id, objs)
+    bad = backend.verify_pins(leg_id, objs)
+    if bad:
+        raise PreserveError("register", "pin 이 불완전하다: " + "; ".join(bad[:3]))
+
+    _register(index_path, leg_id, e["receipt_object"], pins["pin_set_digest"],
+              sorted(objs))
+    return pins
 
 
 def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
@@ -868,9 +1099,15 @@ def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
     if e is None:
         raise PreserveError("finalize_only",
                             f"{leg_id} 가 public index 에 없다 — 이어 붙일 것이 없다")
-    if is_registered(index_path, leg_id):
+    # ★ 28차 P0-1 — 초판은 journal 만 보고 `already=True` 를 돌려줬다.
+    #   등록된 뒤에 object 를 잃으면 그 말이 거짓이 된다. 항상 graph 를 본다.
+    already = is_registered(index_path, leg_id)
+    if already and not is_registered(index_path, leg_id, backend):
+        raise PreserveError("finalize_only",
+                            f"{leg_id} 는 등록돼 있지만 pin 된 graph 가 "
+                            "회수 불가능하다 — 보존이 깨졌다")
+    if already:
         return {"ok": True, "already": True}
-    rec = verify_registered_receipt(backend, index_path, leg_id)
-    _register(index_path, leg_id, e["receipt_object"])
-    return {"ok": True, "already": False, "receipt": rec,
+    pins = _commit_registration(backend, index_path, leg_id)
+    return {"ok": True, "already": False, "pin_set_digest": pins["pin_set_digest"],
             "receipt_object": e["receipt_object"]}
