@@ -419,8 +419,33 @@ def sdcp_wave1():
         content=html, data=D.sdcp_wave1_rows(),
         parent={"url": "/log", "label": "Work Log"},
         artifact="https://claude.ai/code/artifact/5b5d48c5-e23c-47a1-8493-b42dedb9a121",
+        child={"url": "/sdcp/self-doping",
+               "label": "⚗️ 자기도핑이란 무엇인가 (배경지식 0 기준)"},
         subtitle="VASP 외주 30잡 · 두 자기 시드 교차확인 · "
                  "db/properties/sdcp_wave1_results.json")
+
+
+@app.route("/sdcp/self-doping")
+def sdcp_self_doping():
+    """자기도핑이 무엇인가 — **배경지식 0 기준** 해설.
+
+    왜 별도 페이지인가: 원고의 한 단어("removing the sulfonate proton")가 계산의
+      charge/multiplicity 를 바꾼다. 프로톤 제거는 음이온 162 전자 singlet, 수소 원자
+      제거는 중성 161 전자 doublet 이고 **분자식은 둘 다 C11H15O6S2 라 구분이 안 된다.**
+      우리 설정(charge 0 · tot_magnetization 1.0)과 에너지 검산이 후자를 확정한다.
+    ⛔ 이 페이지가 못 하는 것: 실험에서 실제로 무엇이 떨어지는지 말하지 않는다.
+      전도도도 말하지 않는다 (캐리어 생성 ≠ 잘 흐른다).
+    """
+    md = D.load_sdcp_selfdoping_md()
+    if not md:
+        abort(404)
+    return render_template(
+        "doc.html", active="sdcp",
+        title="⚗️ 자기도핑이란 무엇인가",
+        content=md_html(md, ("tables", "fenced_code", "toc")),
+        parent={"url": "/sdcp", "label": "SDCP wave1"},
+        subtitle="프로톤이 아니라 수소 원자를 뗀다 — 원고 문장 하나가 "
+                 "charge/multiplicity 를 바꾸는 이유")
 
 
 @app.route("/todo")

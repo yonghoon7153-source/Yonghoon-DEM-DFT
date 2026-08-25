@@ -11,6 +11,7 @@
   </div>
   <div class="page-actions">
     {% if artifact %}<a class="btn" href="{{ artifact }}" target="_blank" rel="noopener">🔗 읽기용 페이지</a>{% endif %}
+    {% if child %}<a class="btn" href="{{ child.url }}">{{ child.label }}</a>{% endif %}
     {% if parent %}<a class="btn" href="{{ parent.url }}">↖ {{ parent.label }}</a>{% endif %}
     <a class="btn" href="/">▦ Dashboard</a>
   </div>

@@ -1,10 +1,10 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 244
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 245
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
-## concepts/ (10)
+## concepts/ (11)
 - `kb/concepts/bandgap.md` — Band gap — 밴드 갭 (전자 밴드 간극)
 - `kb/concepts/beta-gate.md` — β 게이트 — 확산영역 판정 (diffusive-regime gate)
 - `kb/concepts/bvse.md` — BVSE — Bond Valence Site Energy (결합가 자리 에너지)
@@ -15,6 +15,7 @@
 - `kb/concepts/neb.md` — NEB / CI-NEB — 최소에너지경로 (Nudged Elastic Band)
 - `kb/concepts/ordered_vs_disordered.md` — Ordered vs Disordered — 어떤 LPSCl 구조로 계산할 것인가
 - `kb/concepts/oxidation_vs_mechanical.md` — 산화안정성과 기계적물성 — 정의부터 DFT 계산까지 ○미열람
+- `kb/concepts/sdcp_self_doping_explainer_2026_08_26.md` — 자기도핑(self-doping)이란 무엇인가 — 프로톤이 아니라 수소 원자를 뗀다 ○미열람
 
 ## physics/ (6)
 - `kb/physics/260617_Nd2O3_doping_bandgap_narrowing_mechanism.md` — Nd₂O₃ 도핑 LPSCl 밴드갭: 왜 O 도핑인데 갭이 좁아지나

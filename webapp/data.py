@@ -119,11 +119,20 @@ def load_canonical_methods() -> str:
 
 
 SDCP_WAVE1_MD = KB / "results" / "sdcp_wave1_explainer_2026_08_25.md"
+#: 자기도핑 개념 해설 — 배경지식 0 기준. 원고 문장("proton" vs "hydrogen atom")
+#:   하나가 charge/multiplicity 를 바꾸는 문제라 화면에 둔다.
+SDCP_SELFDOPING_MD = KB / "concepts" / "sdcp_self_doping_explainer_2026_08_26.md"
 SDCP_WAVE1_JSON = DB / "properties" / "sdcp_wave1_results.json"
 
 
 def load_sdcp_wave1_md() -> str:
     return SDCP_WAVE1_MD.read_text(encoding="utf-8") if SDCP_WAVE1_MD.exists() else ""
+
+
+def load_sdcp_selfdoping_md() -> str:
+    """자기도핑 개념 해설 md. 없으면 빈 문자열 — 화면이 그렇게 말한다."""
+    return (SDCP_SELFDOPING_MD.read_text(encoding="utf-8")
+            if SDCP_SELFDOPING_MD.exists() else "")
 
 
 def sdcp_wave1_rows() -> dict:
