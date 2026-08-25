@@ -256,15 +256,22 @@ def read_poscar_struct(path):
         i += 1
     direct = L[i].strip()[:1].upper() in ("D", "")
     i += 1
-    sym, pos = [], []
+    sym, pos, flags = [], [], []
     for nm, c in zip(names, counts):
         for _ in range(c):
             v = L[i].split()
             p = np.array([float(v[0]), float(v[1]), float(v[2])])
             pos.append(p @ cell if direct else p * scale)
             sym.append(nm)
+            # ⛔ 2026-08-25 (codex E) — Selective Dynamics 플래그를 버리면 슬랩마다
+            #   **고정 원자 144개가 조용히 풀린다.** SCF 엔 무관하지만 relax 에
+            #   넣는 순간 기하가 흘러가고, 화면은 정상으로 보인다.
+            flags.append([x.upper() == "T" for x in v[3:6]] if sel and len(v) >= 6
+                         else [True, True, True])
+            sym[-1] = nm
             i += 1
-    return {"cell": cell, "sym": sym, "pos": np.array(pos), "sel": sel}
+    return {"cell": cell, "sym": sym, "pos": np.array(pos), "sel": sel,
+            "move": flags}
 
 
 def write_xyz(path, st, comment=""):
@@ -274,14 +281,20 @@ def write_xyz(path, st, comment=""):
     그래서 .vasp 를 항상 짝으로 낸다 (kb 규약).
     """
     lat = " ".join(f"{x:.6f}" for x in st["cell"].reshape(-1))
+    mv = st.get("move")
+    props = "species:S:1:pos:R:3" + (":move_mask:I:3" if st.get("sel") else "")
     with open(path, "w") as f:
         f.write(f"{len(st['sym'])}\n")
-        f.write(f'Lattice="{lat}" Properties=species:S:1:pos:R:3 {comment}\n')
-        for s, p in zip(st["sym"], st["pos"]):
-            f.write(f"{s:<3s} {p[0]:14.8f} {p[1]:14.8f} {p[2]:14.8f}\n")
+        f.write(f'Lattice="{lat}" Properties={props} {comment}\n')
+        for k, (s, p) in enumerate(zip(st["sym"], st["pos"])):
+            row = f"{s:<3s} {p[0]:14.8f} {p[1]:14.8f} {p[2]:14.8f}"
+            if st.get("sel"):
+                m = mv[k] if mv else [True] * 3
+                row += "  " + " ".join("1" if x else "0" for x in m)
+            f.write(row + "\n")
 
 
-def write_qe_struct(path, st, mag_idx=None, title=""):
+def write_qe_struct(path, st, mag_idx=None, title="", radical=False):
     """QE 구조블록 (CELL_PARAMETERS + ATOMIC_POSITIONS + 종별 스핀 힌트).
 
     ⛔ 이 함수가 못 하는 것 — **이대로는 돌아가지 않는다.**
@@ -305,6 +318,10 @@ def write_qe_struct(path, st, mag_idx=None, title=""):
     with open(path, "w") as f:
         f.write(f"! {title}\n")
         f.write("! ⛔ 구조블록만이다 — 정본 scf 템플릿에 스플라이스해서 쓸 것.\n")
+        if radical:
+            f.write("! ⛔⛔ 라디칼(홀전자) 계 — tot_charge / tot_magnetization(또는\n"
+                    "!     nspin·starting_magnetization) 을 **결정하기 전에는 돌리지 말 것.**\n"
+                    "!     미지정으로 돌리면 QE 기본값이 조용히 들어가 다른 스핀 상태를 잰다.\n")
         f.write("!    pseudo · ecutwfc · U · k-mesh 는 여기에 없다.\n")
         f.write(f"!    nat = {len(sym)} · ntyp = {len(species)}\n\n")
         f.write("ATOMIC_SPECIES\n")
@@ -315,8 +332,19 @@ def write_qe_struct(path, st, mag_idx=None, title=""):
         for r in st["cell"]:
             f.write(f"  {r[0]:16.10f} {r[1]:16.10f} {r[2]:16.10f}\n")
         f.write("\nATOMIC_POSITIONS angstrom\n")
-        for s, p in zip(sym, st["pos"]):
-            f.write(f"  {s:<4s} {p[0]:16.10f} {p[1]:16.10f} {p[2]:16.10f}\n")
+        mv = st.get("move")
+        for k, (s, p) in enumerate(zip(sym, st["pos"])):
+            row = f"  {s:<4s} {p[0]:16.10f} {p[1]:16.10f} {p[2]:16.10f}"
+            # ⛔ 2026-08-25 (codex E) — VASP Selective Dynamics 를 QE if_pos 로 승계.
+            #   안 쓰면 relax 에서 고정 원자 144개가 **조용히 전부 풀린다.**
+            #   QE 규약: if_pos 0 = 고정, 1 = 자유 (VASP F/T 와 같은 방향).
+            if st.get("sel"):
+                m = mv[k] if mv else [True] * 3
+                row += "   " + " ".join("1" if x else "0" for x in m)
+            f.write(row + "\n")
+        if st.get("sel") and mv:
+            nfix = sum(1 for m in mv if not all(m))
+            f.write(f"\n! 고정 원자 {nfix}개 (if_pos 0 0 0) — VASP Selective Dynamics 승계\n")
         if any(s.startswith("Ni") and s != "Ni" for s in species):
             f.write("\n! &SYSTEM 에 넣을 것 (종 순서 기준):\n")
             for k, s in enumerate(species, 1):
@@ -357,16 +385,30 @@ def export_structures(root, out, verbose=False):
             if m:
                 mag = {int(k): v for k, v in m.items()}
         (out / name).mkdir(exist_ok=True)
+        # ⚠ .qe-structure.inc — **실행 불가 확장자** (codex E). .in 으로 두면 완성
+        #   입력으로 오인해 그대로 돌린다. 가장 비싼 실패는 즉시 크게 터지는 조각이
+        #   아니라 **조용히 정상 실행되는 잘못된 물리 입력**이다.
+        rad = "doped" in name
         shutil.copy(src, out / name / f"{name}.vasp")
         write_xyz(out / name / f"{name}.xyz", st, comment=f'name="{name}"')
-        write_qe_struct(out / name / f"{name}.scf-frag.in", st, mag, title=name)
+        write_qe_struct(out / name / f"{name}.qe-structure.inc", st, mag,
+                        title=name, radical=rad)
         counts = {}
         for s in st["sym"]:
             counts[s] = counts.get(s, 0) + 1
         # ⚠ 이름 하나에 행 하나다. POSCAR 를 먼저 훑고 CONTCAR 로 덮으므로
         #   append 하면 같은 구조가 두 줄이 된다 (38 vs 실제 30). dict 로 덮어쓴다.
+        import hashlib
+        sha = lambda q: hashlib.sha256(Path(q).read_bytes()).hexdigest()[:16]
+        nfix = sum(1 for m in (st.get("move") or []) if not all(m))
         rows.append({"name": name, "nat": len(st["sym"]), "src": src.name,
                      "final": final, "afm": bool(mag),
+                     "n_fixed_atoms": nfix, "selective_dynamics": bool(st.get("sel")),
+                     "radical_needs_charge_decision": rad,
+                     "sha256_16": {"source": sha(src),
+                                   "vasp": sha(out / name / f"{name}.vasp"),
+                                   "xyz": sha(out / name / f"{name}.xyz"),
+                                   "qe_inc": sha(out / name / f"{name}.qe-structure.inc")},
                      "formula": " ".join(f"{k}{v}" for k, v in counts.items()),
                      "cell_A": [round(float(np.linalg.norm(r)), 3) for r in st["cell"]]})
         if verbose:
@@ -377,8 +419,18 @@ def export_structures(root, out, verbose=False):
         if r.get("error") or r["name"] not in uniq or r.get("final"):
             uniq[r["name"] + ("!" if r.get("error") else "")] = r
     rows = list(uniq.values())
+    import subprocess
+    try:
+        ver = subprocess.run(["git", "-C", str(Path(__file__).resolve().parents[2]),
+                              "rev-parse", "--short", "HEAD"],
+                             capture_output=True, text=True, timeout=5).stdout.strip()
+    except Exception:
+        ver = "unknown"
     (out / "STRUCTURES.json").write_text(
-        json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+        json.dumps({"schema": "sdcp_structures/v2", "converter": "qe_to_vasp.py",
+                    "converter_git": ver,
+                    "⚠_qe_inc": "실행 불가 조각 — 정본 템플릿과 assembler 로만 완성 입력을 만들 것",
+                    "structures": rows}, ensure_ascii=False, indent=1), encoding="utf-8")
     return rows
 
 
@@ -407,6 +459,26 @@ def _selftest_reverse():
         t = (d / "a.in").read_text()
         chk("Ni1" in t and "Ni2" in t, "AFM 부호가 Ni1/Ni2 종분리로 살아남는다")
         chk("starting_magnetization" in t, "스핀 시드 힌트를 남긴다")
+        # ── Selective Dynamics 승계 (codex E — 잃으면 relax 에서 조용히 전부 풀린다)
+        PS = ("t\n1.0\n 4 0 0\n 0 4 0\n 0 0 8\n Li Ni\n 1 2\nSelective dynamics\n"
+              "Direct\n0.0 0.0 0.0 F F F\n0.5 0.5 0.25 T T T\n0.5 0.5 0.75 F F F\n")
+        (d / "PS").write_text(PS)
+        s2 = read_poscar_struct(d / "PS")
+        chk(s2["sel"] and s2["move"] == [[False]*3, [True]*3, [False]*3],
+            f"고정 플래그를 원자별로 읽는다 {s2['move']}")
+        write_qe_struct(d / "b.inc", s2, None, radical=True)
+        t2 = (d / "b.inc").read_text()
+        chk("0 0 0" in t2 and "고정 원자 2개" in t2,
+            "⛔음성: if_pos 0 0 0 이 승계된다 (안 하면 relax 에서 전부 풀림)")
+        chk("돌리지 말 것" in t2 and "tot_charge" in t2,
+            "⛔음성: 라디칼 계는 전하/스핀 결정 전 실행 금지가 파일 안에 박힌다")
+        write_xyz(d / "b.xyz", s2)
+        chk("move_mask:I:3" in (d / "b.xyz").read_text().splitlines()[1],
+            "xyz 에도 move_mask 열이 실린다")
+        # 고정 없는 구조에는 if_pos 열이 **없어야** 한다 (QE 는 열 수가 달라지면 오독)
+        write_qe_struct(d / "c.inc", st, None)
+        chk("   1 1 1" not in (d / "c.inc").read_text(),
+            "⛔음성: Selective 아닌 구조에 if_pos 열을 지어내지 않는다")
         chk("⛔" in t and "스플라이스" in t,
             "⛔음성: 완성 입력이 아님을 파일 안에 박는다 (그대로 돌리는 사고 방지)")
         # 주석의 "ecutwfc 는 여기 없다" 까지 잡히면 안 된다 — **대입 줄**만 본다.
