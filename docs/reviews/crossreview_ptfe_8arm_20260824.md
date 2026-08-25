@@ -1,3 +1,7 @@
+<!-- ⛔ **이력 문서** — 이 안의 σ_e 비·이득 정량값은 2026-08-25 (R5-CX-06) 부로
+     **인용 금지**다.  p1 plate rule 산물이고 정본 원장 `docs/reviews/claims.json` 의
+     CL-33 · CL-41 · CL-58 이 `hold` 상태로 보존한다.  당시 기록으로만 읽을 것. -->
+
 # 교차리뷰 — Codex ↔ Claude, PTFE 8팔 요청서 (2026-08-24)
 
 **입력**: 요청서 `codex_review_request_ptfe_8arm_20260824.md` ·
