@@ -122,10 +122,17 @@ if [ "${1:-}" = "--jobs" ]; then
     sec "cage NEB"
     run_if "$R/tools/neb_diffusion/watch_cage_neb.sh" bash "$R/tools/neb_diffusion/watch_cage_neb.sh"
     sec "cascade (전용 워처 없음 — 로그 꼬리)"
-    _cl=$(find /data/work/runs -maxdepth 3 \( -name 'cascade*.log' -o -name '*as2s3*.log' \
-          -o -name 'ali3*.log' \) 2>/dev/null | head -1)
+    # ⛔ 2026-08-25 — 첫 판은 `find … | head -1` 이라 **아무거나** 집었다. 실제로
+    #   6월자 BaO_x002/cascade.log (Stage 00 FAILED) 를 물어와, 3일째 돌던 As2S3 를
+    #   두고 "실패" 를 보여줬다. 시간순 최신을 고르고, 후보도 실제 쓰는 로그로 좁힌다.
+    # ⛔ 그리고 이 로그는 scipy RuntimeWarning(logm/탄성텐서) 으로 도배된다 —
+    #   거르지 않으면 tail 이 전부 경고라 진행을 못 본다.
+    _cl=$(ls -t /data/work/runs/ali3.log /data/work/runs/as2s3_recover/run.log \
+             /data/work/runs/cascade*.log 2>/dev/null | head -1)
     if [ -n "$_cl" ]; then
-        echo "   $_cl  ($(date -r "$_cl" '+%m-%d %H:%M'))"; tail -8 "$_cl" | sed 's/^/     /'
+        echo "   $_cl  ($(date -r "$_cl" '+%m-%d %H:%M'))"
+        grep -avE 'RuntimeWarning|return f\(\*arrays|warnings\.warn|FutureWarning|^[[:space:]]*$' \
+            "$_cl" 2>/dev/null | tail -8 | sed 's/^/     /'
     else
         echo "   (로그를 못 찾았다 — tmux ali3 안을 직접 볼 것: tmux capture-pane -pt ali3 | tail -20)"
     fi
