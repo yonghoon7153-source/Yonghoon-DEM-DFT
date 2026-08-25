@@ -84,7 +84,7 @@ PSEUDOS = {
 
 
 def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
-                 kpoints='2 2 1', pseudo_dir=None) -> str:
+                 kpoints='2 2 1', pseudo_dir=None, pp_names=None) -> str:
     # ⛔ pseudo_dir 를 KISTI 로 박아두면 다른 머신에서 pw.x 가 조용히 죽는다
     #   (gabia 는 /data/work/pseudo). 호출부가 줄 수 있게 열어둔다.
     species = sorted(set(atoms.get_chemical_symbols()))
@@ -136,6 +136,8 @@ def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
     lines.append("ATOMIC_SPECIES")
     for s in species:
         mass, ppf = PSEUDOS[s]
+        # pp_names 로 실제 머신의 파일명을 덮어쓴다 (같은 pseudo 라도 구두점이 다르다)
+        ppf = (pp_names or {}).get(s, ppf)
         lines.append(f"  {s}  {mass}  {ppf}")
     lines.append("CELL_PARAMETERS angstrom")
     for row in cell:

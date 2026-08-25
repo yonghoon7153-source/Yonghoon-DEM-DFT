@@ -57,8 +57,10 @@ DEFAULT_BASIS = {
     "LiCl":   {"Li": 1, "Cl": 1},
 }
 #: MP 에서 받을 때 쓸 대표 mp-id (없으면 조성 검색으로 가장 안정한 것)
+#:   ⚠ LiCl 은 조성 검색이 e_hull 0.0039 인 다형체를 집는다 (검색 결과 2건뿐).
+#:     암염 LiCl(mp-22905)이 바닥이므로 직접 지정한다.
 BASIS_MPID = {"Li3PS4": None, "Li2S": None, "Li3PO4": None,
-              "LiYS2": None, "LiCl": None}
+              "LiYS2": None, "LiCl": "mp-22905"}
 
 BALANCE_TOL = 1e-8      #: 원소 수지 잔차 허용 (원자 개수 단위)
 NEG_TOL = -1e-9         #: 계수 음수 허용 한계
@@ -128,6 +130,35 @@ def parse_qe_total(path) -> float | None:
     return float(hits[-1]) * 13.605693122994
 
 
+
+def find_pseudo(el: str, pdir: Path, prefer: str = None):
+    """pseudo_dir 에서 원소 el 의 UPF 를 찾는다. → (파일명, 사유) | (None, 사유)
+
+    왜 자동 탐색인가 (2026-08-26): 같은 pseudo 인데 머신마다 **구두점 표기가**
+      다르다 — KISTI 사본은 `li_pbe_v1_4_uspp_F.UPF`, gabia SSSP 원본은
+      `li_pbe_v1.4.uspp.F.UPF`. 이름을 하드코딩하면 머신을 옮길 때마다 깨진다.
+
+    ⛔ 후보가 여럿이면 **고르지 않는다.** 아무거나 집으면 어떤 pseudo 로 계산했는지
+      기록이 없어지고, 같은 이름의 다른 판(PAW vs USPP, PBE vs PBEsol)이 섞인다.
+      후보를 다 보여주고 사람이 --pseudo_map 으로 정하게 한다.
+    """
+    if prefer and (pdir / prefer).is_file():
+        return prefer, "지정 이름 그대로"
+    import re as _re
+    pat = _re.compile(rf"^{_re.escape(el)}[._\-]", _re.I)
+    cands = sorted(f.name for f in pdir.glob("*.UPF") if pat.match(f.name))
+    cands += sorted(f.name for f in pdir.glob("*.upf") if pat.match(f.name))
+    # 정확히 원소 기호만인 것(예: 'Y.UPF')도 후보
+    cands += [f.name for f in pdir.glob("*.[Uu][Pp][Ff]")
+              if f.stem.lower() == el.lower() and f.name not in cands]
+    cands = sorted(set(cands))
+    if not cands:
+        return None, f"{pdir} 에 {el} 로 시작하는 UPF 가 없다"
+    if len(cands) > 1:
+        return None, f"후보가 {len(cands)}개다 — 사람이 골라야 한다: {cands}"
+    return cands[0], "자동 탐색"
+
+
 def _selftest() -> int:
     n_ok = n_bad = 0
 
@@ -193,6 +224,29 @@ def _selftest() -> int:
         chk(parse_qe_total(Path(td) / "nope.out") is None,
             "[음성] 없는 파일도 None")
 
+    # ── pseudo 자동 탐색 ────────────────────────────────────────────────
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as td:
+        d = Path(td)
+        (d / "li_pbe_v1.4.uspp.F.UPF").write_text("x")
+        (d / "O.pbe-n-kjpaw_psl.0.1.UPF").write_text("x")
+        n, why = find_pseudo("Li", d)
+        chk(n == "li_pbe_v1.4.uspp.F.UPF",
+            "★ 구두점이 달라도 찾는다 (li_pbe_v1_4… ↔ li_pbe_v1.4…)")
+        chk(find_pseudo("O", d)[0] == "O.pbe-n-kjpaw_psl.0.1.UPF",
+            "대문자 원소도 찾는다")
+        chk(find_pseudo("Y", d)[0] is None,
+            "[음성] 없으면 None — 아무거나 집지 않는다")
+        (d / "Li.pbe-s-kjpaw_psl.1.0.0.UPF").write_text("x")
+        n2, why2 = find_pseudo("Li", d)
+        chk(n2 is None and "후보가 2개" in why2,
+            "★ [음성] 후보가 여럿이면 **거부** — PAW/USPP 가 섞이면 계산이 달라진다")
+        chk(find_pseudo("Li", d, prefer="Li.pbe-s-kjpaw_psl.1.0.0.UPF")[0]
+            == "Li.pbe-s-kjpaw_psl.1.0.0.UPF",
+            "지정 이름이 있으면 그걸 쓴다 (사람이 고른 것 우선)")
+        chk(find_pseudo("Li", d, prefer="nope.UPF")[0] is None,
+            "[음성] 지정 이름이 없으면 자동으로 넘어가되 모호하면 여전히 거부")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -216,6 +270,9 @@ def main():
                          "/data/work/pseudo · KISTI /scratch/x3430a02/kgy/"
                          "manuscript_support/pseudo. 안 주면 KISTI 기본값이고, "
                          "다른 머신에서는 pw.x 가 조용히 죽는다.")
+    ap.add_argument("--pseudo_map",
+                    help="원소=파일명 쉼표 목록 (예 'Li=li_x.UPF,S=s_y.UPF'). "
+                         "자동 탐색이 후보를 여럿 찾아 거부할 때 사람이 정한다.")
     ap.add_argument("--allow_offhull_basis", action="store_true",
                     help="기저 상이 MP hull 위가 아니어도 진행 (기본은 거부). "
                          "고에너지 다형체를 기저로 쓰면 비교 전체가 그만큼 밀린다.")
@@ -241,20 +298,27 @@ def main():
         if not a.targets:
             print("⛔ --targets 가 필요하다")
             return 2
-        (out / "in").mkdir(parents=True, exist_ok=True)
         from mp_api.client import MPRester
         from pymatgen.io.ase import AseAtomsAdaptor
         from generate_dft_inputs import PSEUDOS, PSEUDO_DIR_KISTI
         ad = AseAtomsAdaptor()
-        offhull, need_pp = [], set()
-        pdir = a.pseudo_dir or PSEUDO_DIR_KISTI
+        offhull, need_pp, pending = [], set(), []
+        pdir = Path(a.pseudo_dir or PSEUDO_DIR_KISTI)
         print(f"pseudo_dir = {pdir}"
               + ("" if a.pseudo_dir else "   ⚠ 기본값(KISTI) — 다른 머신이면 --pseudo_dir 를 줄 것"))
+        pp_names = dict(x.split("=", 1) for x in (a.pseudo_map or "").split(",") if x)
+        if pp_names:
+            print(f"  · 수동 지정 {pp_names}")
         with MPRester(key) as mpr:
             for name in DEFAULT_BASIS:
+                mpid = BASIS_MPID.get(name)
+                kw = ({"material_ids": [mpid]} if mpid else {"formula": name})
                 docs = mpr.materials.summary.search(
-                    formula=name, fields=["material_id", "structure",
-                                          "energy_above_hull"])
+                    fields=["material_id", "structure", "energy_above_hull"], **kw)
+                if mpid and not docs:
+                    print(f"  ⛔ {name}: 지정한 {mpid} 를 못 찾았다")
+                    offhull.append(name)
+                    continue
                 if not docs:
                     print(f"  ⛔ {name}: MP 에서 못 찾았다")
                     continue
@@ -271,35 +335,49 @@ def main():
                         offhull.append(name)
                         continue
                 at = ad.get_atoms(d.structure)
-                (out / "in" / f"{name}.in").write_text(
-                    generate_pwin(at, name, a.ecutwfc, a.ecutrho, a.kpoints_phase,
-                                  pseudo_dir=a.pseudo_dir))
+                pending.append((name, at, a.kpoints_phase))
                 need_pp.update(at.get_chemical_symbols())
                 print(f"  ✓ {name:<8} {d.material_id}  {len(at)} atoms  "
                       f"(MP e_hull {d.energy_above_hull:.4f})")
-        for t in a.targets:
-            at = read(t)
-            stem = Path(t).stem
-            (out / "in" / f"{stem}.in").write_text(
-                generate_pwin(at, stem, a.ecutwfc, a.ecutrho, a.kpoints,
-                              pseudo_dir=a.pseudo_dir))
+        for tf in a.targets:
+            at = read(tf)
+            stem = Path(tf).stem
+            pending.append((stem, at, a.kpoints))
             need_pp.update(at.get_chemical_symbols())
             print(f"  ✓ {stem:<8} {len(at)} atoms  (target)")
 
-        # pseudo 파일이 실제로 있나 — 없으면 pw.x 가 런타임에 죽는다
-        pd = Path(pdir)
-        if pd.is_dir():
-            miss = [PSEUDOS[e][1] for e in sorted(need_pp)
-                    if e in PSEUDOS and not (pd / PSEUDOS[e][1]).is_file()]
-            if miss:
-                print(f"\n  ⛔ pseudo 파일이 {pdir} 에 없다 ({len(miss)}개):")
-                for m in miss:
-                    print(f"       {m}")
-                print(f"     → 파일명이 머신마다 다를 수 있다 "
-                      f"(gabia 는 SSSP 1.3.0). ls {pdir} 로 확인하고 "
-                      f"generate_dft_inputs.py::PSEUDOS 를 맞출 것.")
-            else:
-                print(f"\n  ✓ pseudo {len(need_pp)}종 전부 {pdir} 에 있다")
+        # ★ pseudo 를 **입력을 쓰기 전에** 전부 해결한다.
+        #   반쯤 쓰고 실패하면 '입력이 있으니 돌리면 되겠지' 로 돌렸다가 런타임에 죽는다.
+        resolved, unresolved = {}, {}
+        if pdir.is_dir():
+            for e in sorted(need_pp):
+                nm, why = find_pseudo(e, pdir,
+                                      prefer=pp_names.get(e) or
+                                      (PSEUDOS[e][1] if e in PSEUDOS else None))
+                if nm:
+                    resolved[e] = nm
+                else:
+                    unresolved[e] = why
+        else:
+            resolved = {e: PSEUDOS[e][1] for e in sorted(need_pp) if e in PSEUDOS}
+
+        if unresolved:
+            print(f"\n  ⛔ pseudo 를 못 정한 원소 {len(unresolved)}개 — "
+                  f"**입력을 하나도 쓰지 않았다**:")
+            for e, why in unresolved.items():
+                print(f"      {e:<3} {why}")
+            print(f"     → --pseudo_map 'Li=…,S=…' 로 지정하거나 파일을 넣을 것")
+            return 3
+        (out / "in").mkdir(parents=True, exist_ok=True)
+        for name, at, kp in pending:
+            (out / "in" / f"{name}.in").write_text(
+                generate_pwin(at, name, a.ecutwfc, a.ecutrho, kp,
+                              pseudo_dir=str(pdir), pp_names=resolved))
+
+        if pdir.is_dir():
+            print(f"\n  ▸ pseudo 해결 ({len(resolved)}종)")
+            for e in sorted(resolved):
+                print(f"      {e:<3} {resolved[e]}")
         else:
             print(f"\n  ⚠ pseudo_dir 이 이 머신에 없다({pdir}) — 계산 머신에서 확인할 것")
 
