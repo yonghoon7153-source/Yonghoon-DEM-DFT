@@ -79,7 +79,7 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
     return (
       <Card title="임피던스 (EIS)">
         <Empty title="이 셀에 붙은 스펙트럼이 없습니다" icon="∿">
-          <Link to="/eis">EIS 로 가서 올리기</Link>
+          <Link to="/eis/upload">EIS 업로드로 가기</Link>
         </Empty>
       </Card>
     )

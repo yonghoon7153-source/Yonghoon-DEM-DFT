@@ -117,7 +117,10 @@ describe('셀의 임피던스', () => {
   it('스펙트럼이 없으면 어디로 가야 하는지 말한다', async () => {
     renderCard((url) => (path(url) === '/api/eis/spectra' ? [] : []))
     expect(await screen.findByText('이 셀에 붙은 스펙트럼이 없습니다')).toBeInTheDocument()
-    expect(screen.getByRole('link', { name: /올리기/ })).toHaveAttribute('href', '/eis')
+    // 올릴 곳으로 바로 보낸다.  대시보드로 보내면 거기서 업로드를 한 번 더
+    // 찾아야 하고, 이 화면에 온 사람은 이미 "없다" 를 본 참이다.
+    expect(screen.getByRole('link', { name: /업로드/ }))
+      .toHaveAttribute('href', '/eis/upload')
   })
 
   it('그 셀의 스펙트럼만 부른다', async () => {

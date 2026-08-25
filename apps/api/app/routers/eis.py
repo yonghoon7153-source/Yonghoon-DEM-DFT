@@ -42,6 +42,8 @@ from ..schemas import (
     DrtOut,
     DrtPeakOut,
     DrtSweepOut,
+    EisDashboardOut,
+    EisDashboardRow,
     ScanOut,
     ScanPointOut,
     SpectrumDetailOut,
@@ -382,6 +384,86 @@ def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
     """The measured points, raw ohms and hertz (ADR 0001)."""
     record = _get(session, spectrum_id)
     return _points_out(record, _load_points(record))
+
+
+# --------------------------------------------------------------------------
+# 대시보드 -- 셀 한 줄
+# --------------------------------------------------------------------------
+def _series_resistance(parameters: list[dict]) -> float | None:
+    """직렬 저항 (R0/Rs).  결정되지 않았으면 `None` 이다.
+
+    이름으로 찾는다.  회로마다 순서가 다르고, 저장할 때 고주파 아크가 앞으로
+    오도록 다시 정렬하므로 위치는 믿을 것이 못 된다.
+    """
+    for entry in parameters:
+        if entry.get("name") in ("R0", "Rs") and entry.get("determined"):
+            return float(entry["value"])
+    return None
+
+
+@router.get("/dashboard", response_model=EisDashboardOut)
+def dashboard(session: Session = Depends(get_session)):
+    """셀마다 한 줄: 몇 개 쟀고, 몇 개 맞췄고, 저항이 얼마인가.
+
+    충방전 대시보드와 같은 자리에 서는 화면이라 같은 규칙을 따른다 -- 맞춘 적이
+    없으면 저항 칸은 비고, 0 이 아니다 (§0.4).  전해질 종류가 한 셀 안에서
+    갈리면 종류 칸도 비운다: 액체와 전고체의 아크는 이름부터 다르므로
+    (ADR 0019) 둘을 한 줄로 요약하면 그 줄이 거짓말을 한다.
+    """
+    records = session.exec(select(SpectrumRecord)).all()
+    by_sample: dict[int, list[SpectrumRecord]] = {}
+    unattached = 0
+    for record in records:
+        if record.sample_id is None:
+            unattached += 1
+            continue
+        by_sample.setdefault(record.sample_id, []).append(record)
+
+    rows = []
+    for sample_id, items in by_sample.items():
+        sample = session.get(Sample, sample_id)
+        if sample is None:
+            # 셀이 지워졌는데 스펙트럼이 남아 있다.  붙어 있지 않은 것과 같이
+            # 세는 편이 정확하다 -- 갈 곳 없는 것은 마찬가지다.
+            unattached += len(items)
+            continue
+        items = sorted(items, key=lambda r: (r.measured_at or r.uploaded_at,
+                                             r.sweep_index))
+        kinds = {r.kind for r in items}
+        configs = {r.cell_config for r in items if r.cell_config}
+        # 스캔은 **파일** 단위다.  스윕 21개를 스캔 21개로 세면 이 셀이 스물한
+        # 번 측정한 것처럼 보인다.
+        scans = {r.sha256 for r in items if r.sweep_count > 1}
+
+        latest = items[-1]
+        fit = _best_fit(session, latest.id or 0)
+        parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
+        total = None
+        if parameters:
+            total = total_resistance(_FitStub(
+                circuit=fit.circuit,
+                parameters=[_ParameterStub(**p) for p in parameters]))
+
+        rows.append(EisDashboardRow(
+            sample_id=sample_id,
+            sample_name=sample.name,
+            group_name=sample.group.name if sample.group else "",
+            owner=sample.created_by or "",
+            kind=next(iter(kinds)) if len(kinds) == 1 else "",
+            cell_config=next(iter(configs)) if len(configs) == 1 else "",
+            spectra=len(items),
+            scans=len(scans),
+            fitted=sum(1 for r in items if _best_fit(session, r.id or 0)),
+            purposes=sorted({r.purpose for r in items if r.purpose}),
+            last_circuit=fit.circuit if fit else "",
+            last_at_cycle=latest.at_cycle,
+            series_resistance_ohm=_series_resistance(parameters),
+            total_resistance_ohm=total,
+            measured_at=latest.measured_at or latest.uploaded_at,
+        ))
+
+    rows.sort(key=lambda r: (r.group_name, r.sample_name))
+    return EisDashboardOut(rows=rows, unattached=unattached)
 
 
 # --------------------------------------------------------------------------

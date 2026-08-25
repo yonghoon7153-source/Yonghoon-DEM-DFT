@@ -967,3 +967,75 @@ class MeasurementsOut(BaseModel):
     @property
     def total(self) -> int:
         return len(self.cycling) + len(self.eis) + len(self.gitt)
+
+
+# --------------------------------------------------------------------------
+# EIS 대시보드 — 셀 한 줄
+# --------------------------------------------------------------------------
+class EisDashboardRow(BaseModel):
+    """임피던스를 가진 셀 하나.
+
+    충방전 대시보드가 "이 셀이 지금 어디쯤인가" 를 한 줄로 말하듯, 이쪽은
+    "이 셀의 임피던스가 몇 개 있고, 맞췄고, 저항이 얼마인가" 를 한 줄로 말한다.
+    """
+
+    sample_id: int | None = None
+    sample_name: str = ""
+    group_name: str = ""
+    owner: str = ""
+    #: "liquid" | "solid" | "" (한 셀에 둘이 섞여 있으면 빈 문자열)
+    kind: str = ""
+    cell_config: str = ""
+    #: 스펙트럼 몇 개, 그중 스윕이 여럿인 **파일**(SOC 스캔)이 몇 개.
+    spectra: int = 0
+    scans: int = 0
+    fitted: int = 0
+    #: 이 셀에 적힌 목적들 — 자유 입력이라 목록이 아니라 모아 보여 준다.
+    purposes: list[str] = []
+    #: 가장 최근 스펙트럼의 가장 잘 맞은 피팅에서.  없으면 전부 `None` 이다:
+    #: 안 맞췄다는 것과 저항이 0 이라는 것은 다른 말이다 (§0.4).
+    last_circuit: str = ""
+    last_at_cycle: int | None = None
+    series_resistance_ohm: float | None = None
+    total_resistance_ohm: float | None = None
+    measured_at: datetime | None = None
+
+
+class EisDashboardOut(BaseModel):
+    rows: list[EisDashboardRow] = []
+    #: 셀에 안 붙은 스펙트럼의 수.  0 이면 안 보여 준다 -- 붙이는 것은 일이고,
+    #: 그 일이 남아 있다는 사실은 여기서만 보인다.
+    unattached: int = 0
+
+
+# --------------------------------------------------------------------------
+# GITT 대시보드 — 셀 한 줄
+# --------------------------------------------------------------------------
+class GittDashboardRow(BaseModel):
+    """GITT 를 가진 셀 하나.
+
+    확산계수가 이 섹션의 답이므로 한 줄의 요점도 그것이다: 낼 수 있는가,
+    낼 수 없다면 무엇이 없어서인가.
+    """
+
+    sample_id: int | None = None
+    sample_name: str = ""
+    group_name: str = ""
+    owner: str = ""
+    records: int = 0
+    pulses: int = 0
+    #: D 를 낼 수 있는 기록의 수.  재료 상수가 없으면 못 낸다 (ADR 0020).
+    ready: int = 0
+    #: 아직 없는 재료 상수의 이름들 -- 이 셀에서 다음에 할 일이 곧 이것이다.
+    missing: list[str] = []
+    #: 낼 수 있는 기록들의 D 중 최소·최대 (cm²/s).  하나뿐이면 둘이 같다.
+    #: 평균을 내지 않는 이유는 D 가 SOC 를 따라 자릿수로 움직이기 때문이다 --
+    #: 한 숫자로 줄이면 그 숫자가 아무 SOC 도 뜻하지 않는다.
+    diffusion_low: float | None = None
+    diffusion_high: float | None = None
+    measured_at: datetime | None = None
+
+
+class GittDashboardOut(BaseModel):
+    rows: list[GittDashboardRow] = []
+    unattached: int = 0

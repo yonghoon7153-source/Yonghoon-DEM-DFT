@@ -224,3 +224,56 @@ def test_deleting_forgets_the_record_but_not_the_original(client):
     assert client.delete(f"/api/gitt/runs/{out['id']}").status_code == 204
     assert client.get(f"/api/gitt/runs/{out['id']}").status_code == 404
     assert original.exists()
+
+
+# --- 대시보드: 셀 한 줄 -----------------------------------------------------
+
+def _attach(client, name="g.wrd", **overrides):
+    sample_id = client.post("/api/samples", json={"name": "CELL"}).json()["id"]
+    made = client.post("/api/gitt/runs/upload", params={"sample_id": sample_id},
+                       files={"file": (name, gitt_bytes(**overrides),
+                                       "application/octet-stream")}).json()
+    return sample_id, made
+
+
+def test_the_dashboard_says_what_is_missing_rather_than_a_number(client):
+    """§0.4 — 재료 상수가 없으면 D 가 없는 것이지 0 이 아니다.
+
+    그리고 **무엇이** 없는지가 곧 이 셀에서 다음에 할 일이다 (ADR 0020).
+    """
+    _attach(client)
+    row = client.get("/api/gitt/dashboard").json()["rows"][0]
+    assert row["records"] == 1
+    assert row["ready"] == 0
+    assert row["diffusion_low"] is None
+    assert row["diffusion_high"] is None
+    assert len(row["missing"]) == 4
+
+
+def test_the_dashboard_gives_a_range_not_an_average(client):
+    """D 는 SOC 를 따라 자릿수로 움직인다.
+
+    평균을 내면 그 숫자가 아무 SOC 도 뜻하지 않는다 -- 최소와 최대는 적어도
+    둘 다 실제로 나온 값이다.
+    """
+    _sample, made = _attach(client)
+    client.patch(f"/api/gitt/runs/{made['id']}", json={
+        "molar_volume_cm3": 20.0, "molar_mass_g": 96.0,
+        "active_mass_g": 0.01, "area_cm2": 1.3})
+
+    row = client.get("/api/gitt/dashboard").json()["rows"][0]
+    assert row["ready"] == 1
+    assert row["missing"] == []
+    assert row["diffusion_low"] is not None
+    assert row["diffusion_low"] <= row["diffusion_high"]
+    # 확산계수는 자릿수가 아주 작다 -- 값이 뒤집혀 나오면 여기서 걸린다.
+    assert 0 < row["diffusion_low"] < 1e-3
+
+
+def test_the_dashboard_counts_what_is_not_attached_yet(client):
+    client.post("/api/gitt/runs/upload",
+                files={"file": ("loose.wrd", gitt_bytes(),
+                                "application/octet-stream")})
+    body = client.get("/api/gitt/dashboard").json()
+    assert body["unattached"] == 1
+    assert body["rows"] == []

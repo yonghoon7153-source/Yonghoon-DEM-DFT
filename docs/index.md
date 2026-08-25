@@ -27,6 +27,7 @@
 | [0021](adr/0021-double-bacon-watts-onset-and-point.md) | Double Bacon-Watts 로 knee-onset 과 knee-point 를 함께 구한다 | 검출되면 primary, 승격·유효성 게이트, sub-linear 한계 명시 |
 | [0022](adr/0022-one-mpr-can-hold-many-spectra.md) | `.mpr` 한 파일이 스펙트럼 여럿을 담는다 (SOC 스캔) | 행 위치를 풀어서 정하고, 스윕마다 전위·용량을 들려 보낸다 |
 | [0023](adr/0023-memoise-on-the-inputs-not-on-a-clock.md) | 캐시 키는 입력 그 자체다 (무효화하지 않는 캐시) | 컬럼과 knee 를 메모리에 남긴다, 상한은 바이트, `wrdkit` 은 캐시 없이 둔다 |
+| [0024](adr/0024-three-sections-one-cell.md) | 세 섹션은 독립이고, 셀 하나가 그것들을 잇는다 | 섹션마다 대시보드·라이브러리·비교·업로드, 관계는 `sample_id` 하나, SOC 스캔은 올릴 때 정한다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -66,7 +67,8 @@
 `adr/0020-gitt-pairs-two-different-samples.md` ·
 `adr/0021-double-bacon-watts-onset-and-point.md` ·
 `adr/0022-one-mpr-can-hold-many-spectra.md` ·
-`adr/0023-memoise-on-the-inputs-not-on-a-clock.md`
+`adr/0023-memoise-on-the-inputs-not-on-a-clock.md` ·
+`adr/0024-three-sections-one-cell.md`
 
 ## 스펙
 

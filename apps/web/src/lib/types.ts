@@ -602,6 +602,59 @@ export interface Spectrum {
   best_circuit: string
 }
 
+/** EIS 대시보드 한 줄 — 임피던스를 가진 셀 하나. */
+export interface EisDashboardRow {
+  sample_id: number | null
+  sample_name: string
+  group_name: string
+  owner: string
+  /** 한 셀에 액체와 전고체가 섞여 있으면 빈 문자열이다 — 둘은 아크 이름부터 다르다. */
+  kind: EisKind | ''
+  cell_config: CellConfig | ''
+  spectra: number
+  /** 스윕이 여럿인 **파일**의 수.  스윕 21개는 스캔 1개다. */
+  scans: number
+  fitted: number
+  purposes: string[]
+  last_circuit: string
+  last_at_cycle: number | null
+  /** 맞춘 적이 없으면 `null`.  0 과는 다른 말이다. */
+  series_resistance_ohm: number | null
+  total_resistance_ohm: number | null
+  measured_at: string | null
+}
+
+export interface EisDashboard {
+  rows: EisDashboardRow[]
+  /** 셀에 안 붙은 스펙트럼의 수.  붙이는 것은 일이고, 남아 있다는 사실은
+   *  여기서만 보인다. */
+  unattached: number
+}
+
+/** GITT 대시보드 한 줄 — GITT 를 가진 셀 하나. */
+export interface GittDashboardRow {
+  sample_id: number | null
+  sample_name: string
+  group_name: string
+  owner: string
+  records: number
+  pulses: number
+  /** D 를 낼 수 있는 기록의 수 — 재료 상수가 다 있는 것. */
+  ready: number
+  /** 아직 없는 재료 상수의 이름들.  이 셀에서 다음에 할 일이 곧 이것이다. */
+  missing: string[]
+  /** 낼 수 있는 D 의 최소·최대 (cm²/s).  평균이 아닌 이유는 D 가 SOC 를 따라
+   *  자릿수로 움직여서 한 숫자가 아무 SOC 도 뜻하지 않기 때문이다. */
+  diffusion_low: number | null
+  diffusion_high: number | null
+  measured_at: string | null
+}
+
+export interface GittDashboard {
+  rows: GittDashboardRow[]
+  unattached: number
+}
+
 /** 한 셀에 붙어 있는 측정 하나 — 세 종류를 한 모양으로. */
 export interface Measurement {
   kind: 'cycling' | 'eis' | 'gitt'

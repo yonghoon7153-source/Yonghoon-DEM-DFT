@@ -5,8 +5,15 @@ import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
 import { Dashboard } from './pages/Dashboard'
 import { Eis } from './pages/Eis'
-import { Gitt } from './pages/Gitt'
+import { EisCompare } from './pages/EisCompare'
+import { EisDashboard } from './pages/EisDashboard'
+import { EisLibrary } from './pages/EisLibrary'
+import { EisUpload } from './pages/EisUpload'
+import { GittCompare } from './pages/GittCompare'
+import { GittDashboard } from './pages/GittDashboard'
 import { GittDetail } from './pages/GittDetail'
+import { GittLibrary } from './pages/GittLibrary'
+import { GittUpload } from './pages/GittUpload'
 import { Library } from './pages/Library'
 import { SampleDetail } from './pages/SampleDetail'
 import { ScanDetail } from './pages/ScanDetail'
@@ -33,18 +40,30 @@ const SECTIONS: NavSection[] = [
     ],
   },
   {
-    // SOC 스캔이 스펙트럼 목록과 같은 섹션에 있는 이유: 같은 `.mpr` 이고 같은
-    // 회로로 맞춘다.  다른 링크인 이유: 스캔은 파일 하나가 한 줄이고 x축이
-    // SOC 다.  스펙트럼 목록에 풀어 놓으면 한 파일이 스무 줄을 먹는다 (ADR 0022).
+    // 충방전과 **같은 네 화면**이다.  측정 종류가 다르다고 쓰는 방식까지
+    // 다를 이유가 없다: 어느 섹션에서도 대시보드에서 시작해 라이브러리에서
+    // 찾고 비교에서 겹쳐 보고 업로드로 넣는다.
+    //
+    // SOC 스캔이 링크에서 빠진 것은 없애서가 아니라 **올릴 때 정하는 것**이
+    // 됐기 때문이다.  같은 `.mpr` 이고 같은 회로로 맞추므로 화면을 가를
+    // 이유가 없고, 다른 것은 파일 하나가 스윕 하나냐 스물이냐 뿐이라
+    // 라이브러리의 거르개 하나면 된다 (ADR 0022).
     label: 'EIS · DRT',
     links: [
-      { to: '/eis', label: '스펙트럼' },
-      { to: '/scans', label: 'SOC 스캔' },
+      { to: '/eis', label: '대시보드' },
+      { to: '/eis/library', label: '라이브러리' },
+      { to: '/eis/compare', label: '비교' },
+      { to: '/eis/upload', label: '업로드' },
     ],
   },
   {
     label: 'GITT',
-    links: [{ to: '/gitt', label: 'pseudo-OCV · 확산계수' }],
+    links: [
+      { to: '/gitt', label: '대시보드' },
+      { to: '/gitt/library', label: '라이브러리' },
+      { to: '/gitt/compare', label: '비교' },
+      { to: '/gitt/upload', label: '업로드' },
+    ],
   },
 ]
 
@@ -71,11 +90,21 @@ export function App() {
         <Route path="/samples" element={<Library />} />
         <Route path="/samples/:id" element={<SampleDetail />} />
         <Route path="/compare" element={<Compare />} />
-        <Route path="/eis" element={<Eis />} />
+        <Route path="/eis" element={<EisDashboard />} />
+        <Route path="/eis/library" element={<EisLibrary />} />
+        <Route path="/eis/compare" element={<EisCompare />} />
+        <Route path="/eis/upload" element={<EisUpload />} />
+        {/* 스펙트럼 하나를 맞추는 화면은 그대로다 — 목록에서 들어온다.
+            `/eis/spectra` 는 옛 `/eis` 를 대신한다: 즐겨찾기와 남이 준
+            링크가 살아 있어야 한다. */}
+        <Route path="/eis/spectra" element={<Eis />} />
         <Route path="/eis/:id" element={<SpectrumDetail />} />
         <Route path="/scans" element={<Scans />} />
         <Route path="/scans/:sha256" element={<ScanDetail />} />
-        <Route path="/gitt" element={<Gitt />} />
+        <Route path="/gitt" element={<GittDashboard />} />
+        <Route path="/gitt/library" element={<GittLibrary />} />
+        <Route path="/gitt/compare" element={<GittCompare />} />
+        <Route path="/gitt/upload" element={<GittUpload />} />
         <Route path="/gitt/:id" element={<GittDetail />} />
         <Route path="/upload" element={<Upload />} />
         <Route

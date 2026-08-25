@@ -11,7 +11,7 @@ import type {
   Activity, ChangeNote, CircuitCombination,
   CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
-  GittRun, Group, Measurements, Meta, Pocv,
+  EisDashboard, GittDashboard, GittRun, Group, Measurements, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Scan, Spectrum, SpectrumDetail,
   SpectrumFit, SpectrumPoints,
 } from './types'
@@ -194,6 +194,7 @@ export const api = {
   listSpectra: (params?: Params) =>
     request<Spectrum[]>(`/api/eis/spectra${query(params)}`),
   /** 스윕이 여럿인 원본만 — SOC 스캔 목록.  점은 안 실려 온다. */
+  eisDashboard: () => request<EisDashboard>('/api/eis/dashboard'),
   listScans: (params?: Params) => request<Scan[]>(`/api/eis/scans${query(params)}`),
   /** 이 셀에 붙어 있는 충방전·임피던스·GITT 전부 (섹션끼리 서로를 찾는 길). */
   measurements: (sampleId: number) =>
@@ -235,13 +236,15 @@ export const api = {
     }>(`/api/eis/fit-batch${query(params)}`, json('POST', ids)),
 
   // -- GITT (ADR 0020) ------------------------------------------------------
+  gittDashboard: () => request<GittDashboard>('/api/gitt/dashboard'),
   listGittRuns: (params?: Params) =>
     request<GittRun[]>(`/api/gitt/runs${query(params)}`),
   getGittRun: (id: number) => request<GittRun>(`/api/gitt/runs/${id}`),
-  uploadGittRun: (file: File) => {
+  uploadGittRun: (file: File, params?: Params) => {
     const form = new FormData()
     form.append('file', file)
-    return request<GittRun>('/api/gitt/runs/upload', { method: 'POST', body: form })
+    return request<GittRun>(`/api/gitt/runs/upload${query(params)}`,
+                            { method: 'POST', body: form })
   },
   updateGittRun: (id: number, body: Record<string, unknown>) =>
     request<GittRun>(`/api/gitt/runs/${id}`, json('PATCH', body)),

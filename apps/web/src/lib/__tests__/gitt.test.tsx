@@ -15,7 +15,8 @@ vi.hoisted(() => {
   globalThis.matchMedia = globalThis.matchMedia ?? (media as never)
 })
 
-import { Gitt } from '../../pages/Gitt'
+import { GittLibrary } from '../../pages/GittLibrary'
+import { GittUpload } from '../../pages/GittUpload'
 import { GittDetail } from '../../pages/GittDetail'
 import type { Diffusion, GittRun, Pocv } from '../types'
 
@@ -100,7 +101,7 @@ function detailHandler(extra: Handler = () => undefined): Handler {
   }
 }
 
-describe('GITT 목록', () => {
+describe('GITT 업로드', () => {
   it('사이클링 파일을 올리면 관찰을 그대로 보여 준다 — 삼키지 않는다', async () => {
     installFetch((url, init) => {
       if (path(url) === '/api/gitt/runs/upload' && init?.method === 'POST') {
@@ -111,7 +112,7 @@ describe('GITT 목록', () => {
       if (path(url) === '/api/gitt/runs') return []
       return []
     })
-    render(<MemoryRouter><Gitt /></MemoryRouter>)
+    render(<MemoryRouter><GittUpload /></MemoryRouter>)
 
     const input = await screen.findByLabelText('GITT 파일')
     await userEvent.upload(
@@ -120,17 +121,65 @@ describe('GITT 목록', () => {
     expect(await screen.findByText(/GITT 기록이 맞는지/)).toBeInTheDocument()
   })
 
+})
+
+describe('GITT 라이브러리', () => {
   it('확산계수를 낼 수 있는지 표에서 보인다', async () => {
     installFetch((url) => (path(url) === '/api/gitt/runs'
       ? [run({ id: 1, name: 'a' }),
          run({ id: 2, name: 'b', missing_for_diffusion: [] })]
       : []))
-    render(<MemoryRouter><Gitt /></MemoryRouter>)
+    render(<MemoryRouter><GittLibrary /></MemoryRouter>)
 
     const first = (await screen.findByText('a')).closest('tr')!
     const second = screen.getByText('b').closest('tr')!
     expect(within(first).getByText('4개 부족')).toBeInTheDocument()
     expect(within(second).getByText('가능')).toBeInTheDocument()
+  })
+
+  it('목록에서 바로 셀에 붙인다 — 파일부터 올리는 순서가 흔하다', async () => {
+    const sent: { url: string; body: string }[] = []
+    installFetch((url, init) => {
+      if (path(url) === '/api/gitt/runs') {
+        return [run({ id: 1, name: 'a', sample_id: null, sample_name: null })]
+      }
+      if (path(url) === '/api/samples') {
+        return [{ id: 7, name: 'CELL-7', resolved_cell: {} }]
+      }
+      if (path(url) === '/api/gitt/runs/1' && init?.method === 'PATCH') {
+        sent.push({ url: path(url), body: String(init.body) })
+        return run({ id: 1, name: 'a', sample_id: 7, sample_name: 'CELL-7' })
+      }
+      return []
+    })
+    render(<MemoryRouter><GittLibrary /></MemoryRouter>)
+
+    const picker = await screen.findByLabelText('a 셀')
+    await userEvent.selectOptions(picker, '7')
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(JSON.parse(sent[0]!.body)).toEqual({ sample_id: 7 })
+  })
+
+  it('떼어낼 때는 clear 를 보낸다 — null 은 "안 보냄" 과 구별되지 않는다', async () => {
+    const sent: string[] = []
+    installFetch((url, init) => {
+      if (path(url) === '/api/gitt/runs') {
+        return [run({ id: 1, name: 'a', sample_id: 7, sample_name: 'CELL-7' })]
+      }
+      if (path(url) === '/api/samples') {
+        return [{ id: 7, name: 'CELL-7', resolved_cell: {} }]
+      }
+      if (path(url) === '/api/gitt/runs/1' && init?.method === 'PATCH') {
+        sent.push(String(init.body))
+        return run({ id: 1, name: 'a' })
+      }
+      return []
+    })
+    render(<MemoryRouter><GittLibrary /></MemoryRouter>)
+
+    await userEvent.selectOptions(await screen.findByLabelText('a 셀'), '')
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(JSON.parse(sent[0]!)).toEqual({ clear: ['sample_id'] })
   })
 })
 

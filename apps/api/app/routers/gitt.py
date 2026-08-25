@@ -27,6 +27,8 @@ from ..models import GittRun, Sample
 from ..schemas import (
     DiffusionOut,
     DiffusionPointOut,
+    GittDashboardOut,
+    GittDashboardRow,
     GittRunOut,
     GittRunUpdate,
     PocvOut,
@@ -322,3 +324,79 @@ def run_diffusion(gitt_id: int, session: Session = Depends(get_session)):
         usable=len(result.usable),
         total=len(points),
     )
+
+
+# --------------------------------------------------------------------------
+# 대시보드 -- 셀 한 줄
+# --------------------------------------------------------------------------
+@router.get("/dashboard", response_model=GittDashboardOut)
+def dashboard(session: Session = Depends(get_session)):
+    """셀마다 한 줄: D 를 낼 수 있는가, 없다면 무엇이 없어서인가.
+
+    확산계수의 **범위**를 주고 평균은 주지 않는다.  D 는 SOC 를 따라 자릿수로
+    움직이므로 (ADR 0020), 한 숫자로 줄이면 그 숫자가 아무 SOC 도 뜻하지
+    않는다 -- 최소와 최대는 적어도 둘 다 실제로 나온 값이다.
+
+    D 를 세려면 기록을 실제로 계산해 봐야 한다.  펄스가 수백 개인 파일이
+    여럿이면 무거워지므로, **재료 상수가 다 갖춰진 기록만** 계산한다: 없는
+    것은 어차피 `None` 이 나오고, 없다는 사실은 파싱 없이도 안다.
+    """
+    records = session.exec(select(GittRun)).all()
+    by_sample: dict[int, list[GittRun]] = {}
+    unattached = 0
+    for record in records:
+        if record.sample_id is None:
+            unattached += 1
+            continue
+        by_sample.setdefault(record.sample_id, []).append(record)
+
+    rows = []
+    for sample_id, items in by_sample.items():
+        sample = session.get(Sample, sample_id)
+        if sample is None:
+            # 셀이 지워졌는데 기록이 남아 있다 -- 갈 곳 없는 것은 마찬가지다.
+            unattached += len(items)
+            continue
+        items = sorted(items, key=lambda r: (r.start_time or r.uploaded_at))
+
+        missing: list[str] = []
+        values: list[float] = []
+        for record in items:
+            gaps = _missing(record)
+            for name in gaps:
+                if name not in missing:
+                    missing.append(name)
+            if gaps:
+                continue
+            try:
+                result = diffusion(
+                    _load(record),
+                    molar_volume_cm3=record.molar_volume_cm3,
+                    molar_mass_g=record.molar_mass_g,
+                    mass_g=record.active_mass_g,
+                    area_cm2=record.area_cm2,
+                    min_rest_s=record.min_rest_s,
+                )
+            except HTTPException:
+                # 원본이 사라진 기록.  대시보드가 그 한 줄 때문에 통째로
+                # 500 이 되면 나머지 셀도 못 본다.
+                continue
+            values.extend(p.d_cm2_s for p in result.usable if p.d_cm2_s)
+
+        latest = items[-1]
+        rows.append(GittDashboardRow(
+            sample_id=sample_id,
+            sample_name=sample.name,
+            group_name=sample.group.name if sample.group else "",
+            owner=sample.created_by or "",
+            records=len(items),
+            pulses=sum(r.n_pulses for r in items),
+            ready=sum(1 for r in items if not _missing(r)),
+            missing=missing,
+            diffusion_low=min(values) if values else None,
+            diffusion_high=max(values) if values else None,
+            measured_at=latest.start_time or latest.uploaded_at,
+        ))
+
+    rows.sort(key=lambda r: (r.group_name, r.sample_name))
+    return GittDashboardOut(rows=rows, unattached=unattached)

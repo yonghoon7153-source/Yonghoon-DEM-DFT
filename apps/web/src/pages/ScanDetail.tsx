@@ -90,7 +90,7 @@ export function ScanDetail() {
         <div style={{ minWidth: 0 }}>
           <h1>{head.name}</h1>
           <div className="sub">
-            <Link to="/scans">SOC 스캔</Link>
+            <Link to="/eis/library">EIS 라이브러리</Link>
             {' · '}
             {head.kind === 'solid' ? '전고체' : '액체'}
             {head.cell_config ? ` · ${CONFIG_LABEL[head.cell_config] ?? head.cell_config}` : ''}

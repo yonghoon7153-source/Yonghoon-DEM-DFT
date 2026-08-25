@@ -548,6 +548,68 @@ def test_each_sweep_of_a_scan_plots_on_its_own(client):
         assert item["frequency_hz"][0] > item["frequency_hz"][-1]
 
 
+# --- 대시보드: 셀 한 줄 -----------------------------------------------------
+
+def test_the_dashboard_counts_scans_by_file_not_by_sweep(client, sample_id):
+    """스윕 21개는 스캔 **1개**다.
+
+    스윕으로 세면 이 셀이 스물한 번 측정한 것처럼 보인다 -- 실제로는 파일
+    하나를 SOC 를 훑으며 한 번 잰 것이다 (ADR 0022).
+    """
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "sample_id": sample_id},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=4),
+                                "application/octet-stream")})
+    upload(client, sample_id=sample_id)
+
+    rows = client.get("/api/eis/dashboard").json()["rows"]
+    assert len(rows) == 1
+    assert rows[0]["spectra"] == 5           # 스윕 4 + 단일 1
+    assert rows[0]["scans"] == 1             # 파일 하나
+    assert rows[0]["sample_name"] == "TEST-01"
+
+
+def test_the_dashboard_leaves_resistance_blank_until_something_is_fitted(client,
+                                                                         sample_id):
+    """§0.4 — 안 맞췄다는 것과 저항이 0 이라는 것은 다른 말이다."""
+    made = upload(client, sample_id=sample_id)
+    row = client.get("/api/eis/dashboard").json()["rows"][0]
+    assert row["fitted"] == 0
+    assert row["series_resistance_ohm"] is None
+    assert row["total_resistance_ohm"] is None
+    assert row["last_circuit"] == ""
+
+    client.post(f"/api/eis/spectra/{made['id']}/fit",
+                params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"})
+    row = client.get("/api/eis/dashboard").json()["rows"][0]
+    assert row["fitted"] == 1
+    assert row["series_resistance_ohm"] == pytest.approx(5.0, rel=0.1)
+    assert row["total_resistance_ohm"] == pytest.approx(65.0, rel=0.1)
+
+
+def test_a_cell_with_both_kinds_says_neither(client, sample_id):
+    """액체와 전고체의 아크는 이름부터 다르다 (ADR 0019).
+
+    둘을 한 줄로 요약하면 그 줄이 거짓말을 한다 -- 종류 칸을 비우는 편이 맞다.
+    """
+    upload(client, sample_id=sample_id)                       # solid
+    upload(client, name="b.mpr", rs=9.0, kind="liquid", cell_config="half",
+           sample_id=sample_id)
+    row = client.get("/api/eis/dashboard").json()["rows"][0]
+    assert row["kind"] == ""
+    # 셀 구성도 갈리면 같은 이유로 비운다.
+    assert row["cell_config"] == ""
+
+
+def test_the_dashboard_counts_what_is_not_attached_yet(client, sample_id):
+    """붙이는 것은 일이고, 그 일이 남아 있다는 사실은 여기서만 보인다."""
+    upload(client)                                  # 안 붙임
+    upload(client, name="b.mpr", rs=9.0, sample_id=sample_id)
+    body = client.get("/api/eis/dashboard").json()
+    assert body["unattached"] == 1
+    assert len(body["rows"]) == 1
+
+
 # --- 스캔 섹션: 파일 하나를 SOC 축으로 (ADR 0022) ---------------------------
 
 def _scan_with_fits(client, sweeps=4, circuit="R0-p(R1,CPE1)"):
