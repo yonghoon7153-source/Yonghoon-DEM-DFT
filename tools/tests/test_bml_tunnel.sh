@@ -412,11 +412,14 @@ check "없는 파일은 안 쓴다" \
   "$(WORKBENCH_TUNNEL_KEY=/does/not/exist tunnel_ssh_key || echo none)" "none"
 check "키가 있으면 그것으로" \
   "$(WORKBENCH_TUNNEL_KEY="$HERE/../bml" tunnel_ssh_key)" "$HERE/../bml"
-# nokey@ 는 익명이라 붙을 때마다 새 이름을 받는다.  키 쪽은 사용자 이름이 없다.
+# nokey@ 는 익명이라 붙을 때마다 새 이름을 받는다.  키 쪽은 사용자 이름 없이
+# `-i` 로 붙는다 (지금은 되살리는 감독자 스크립트 안에 있다).
 check "키 쪽은 nokey@ 를 안 쓴다" \
-  "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$HERE/../bml" | grep -c 'IdentitiesOnly=yes')" "1"
+  "$(grep -c 'IdentitiesOnly=yes' "$HERE/../bml")" "1"
+# 두 곳이다: nokey 경로와 감독자 안.  keepalive 가 빠지면 학교망이 유휴 TCP 를
+# 끊어도 이쪽은 모르고, 살아 있는 것처럼 보이는데 엣지는 503 을 돌려준다.
 check "양쪽 다 keepalive 를 건다" \
-  "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$HERE/../bml" | grep -c 'ServerAliveInterval=30')" "2"
+  "$(grep -c 'ServerAliveInterval=30' "$HERE/../bml")" "2"
 
 echo
 if [ "$fail" -eq 0 ]; then

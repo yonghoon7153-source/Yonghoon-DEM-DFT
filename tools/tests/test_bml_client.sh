@@ -1029,6 +1029,25 @@ check "남의 서버만 볼 거면 필요 없다고 말한다" \
 check "그때 칠 명령도 함께 준다" \
   "$(grep -c 'bmlout <터널 주소>' "$BML")" "1"
 
+echo "끊기면 다시 붙는다 — 등록한 키가 있을 때만"
+# nokey@ 는 붙을 때마다 새 이름을 받으므로, 되살아나면 주소가 바뀌어서 받는
+# 쪽은 어차피 다시 쳐야 한다 -- "스스로 낫는다" 가 아니라 "조용히 딴 데를
+# 가리킨다" 가 된다.  등록한 키라야 주소가 그대로다.
+check "감독자는 키가 있을 때만" \
+  "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$BML" | grep -c 'write_tunnel_keepalive')" "1"
+check "끊기면 다시 붙는 고리가 있다" \
+  "$(grep -c 'wait "\\$child"' "$BML")" "1"
+# 무한히 두드리지 않는다 -- 키가 지워졌거나 계정이 막힌 것은 고쳐지지 않는다.
+check "곧바로 계속 끊기면 멈춘다" \
+  "$(grep -c '계속 곧바로 끊겨서 멈춥니다' "$BML")" "1"
+# 감독자를 우리 것으로 못 알아보면 status 가 못 보고, close_tunnel 이 안 닫는다.
+check "감독자도 우리 것으로 알아본다" \
+  "$(grep -c 'tunnel-keepalive.sh"\*) return 0' "$BML")" "1"
+# 신호를 받으면 자식 ssh 까지 데리고 죽는다 -- 안 그러면 감독자만 죽고 터널이
+# 주인 없이 남는다.
+check "닫으면 자식 ssh 도 죽는다" \
+  "$(grep -c "trap 'kill" "$BML")" "1"
+
 echo "bmlonly — DNS 가 막힌 그 한 대에서만"
 # `bmlout` 은 어느 기계에서나 같은 뜻이어야 한다: "밖 주소로 붙어라".  DNS 가
 # 막힌 기계에서만 그것이 세 단계(공용 DNS → hosts → 접속)가 되는데, 그 셋을
@@ -1052,6 +1071,15 @@ check "이미 닿으면 아무것도 안 한다" \
 # 것이 그것이고, 이름 풀이는 대리 지표일 뿐이라 어긋날 수 있다.
 check "이름이 아니라 응답으로 판정한다" \
   "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'server_alive "\$url"')" "1"
+# WSL 에서 이 명령이 고치는 것은 **WSL 의** /etc/hosts 인데, 브라우저는
+# Windows 에 있고 그 파일을 안 본다.  그래서 bml 은 붙었다고 하는데 크롬은
+# ERR_CONNECTION_CLOSED 를 낸다 -- 화면 둘이 정반대를 말한다 (실측).
+check "브라우저는 Windows 것이라는 걸 말한다" \
+  "$(grep -c '브라우저로 보려면 Windows 에도 같은 줄이 있어야 합니다' "$BML")" "1"
+check "Windows 쪽 명령도 준다" \
+  "$(grep -cF 'Add-Content' "$BML")" "1"
+check "지우는 법까지" \
+  "$(grep -c "notmatch 'lhr" "$BML")" "1"
 check "끝은 bmlout 과 같은 길로" \
   "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'cmd_slot out "\$url"')" "2"
 

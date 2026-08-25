@@ -3471,3 +3471,33 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   등록이 끝나면 필요한 것은 22번 SSH 뿐이고 그것은 이 망에서 잘 된다
   (터널이 여러 번 열린 것이 그 증거다).
 - `bml share key` 가 그 사실을 적는다: 사이트가 안 열리면 테더링으로 한 번만.
+
+## [2026-08-26] fix | bmlonly 는 WSL 의 hosts 를 고치는데 브라우저는 Windows 에 있다
+- `bmlonly` 가 **성공했는데** 크롬은 `ERR_CONNECTION_CLOSED` 였다. 화면 둘이
+  정반대를 말했고, 어느 쪽을 믿어야 하는지 알 방법이 없었다.
+- 원인: 이 명령이 고치는 것은 **WSL 의** `/etc/hosts` 이고, 브라우저는
+  **Windows** 프로그램이라 그 파일을 아예 안 본다 (Windows 는
+  `%WINDIR%\System32\drivers\etc\hosts` 를 본다). curl 은 WSL 안이라 됐고,
+  그래서 `✓ 터널이 살아 있습니다 (HTTP 200)` 까지 나왔다.
+- WSL 이면 **Windows 쪽 한 줄**을 함께 준다 (관리자 PowerShell 의
+  `Add-Content`, 그리고 지우는 명령). WSL 이 hosts 를 다시 만드는 이야기보다
+  이쪽이 먼저다 — 재부팅 전에 이미 안 되기 때문이다.
+- 회귀 테스트 3건.
+
+## [2026-08-26] feat | 끊기면 다시 붙는다 (등록한 키가 있을 때만)
+- 주소 고정을 실측으로 확인했다: 계정에 키를 등록하니 `authn: user … 
+  authenticated` 가 뜨고, 끊었다 다시 붙여도 **같은 서브도메인**이 나왔다.
+  그래서 이제 되살리는 것이 뜻을 가진다.
+- `write_tunnel_keepalive` 가 감독자 스크립트를 `.bml/tunnel-keepalive.sh` 로
+  써 두고 `bml share` 가 그것을 띄운다. ssh 가 끝나면 5초 뒤 다시 붙는다.
+- **`nokey@` 에는 안 붙인다.** 익명은 붙을 때마다 새 이름을 받으므로 되살아나면
+  주소가 바뀐다 — "스스로 낫는다" 가 아니라 **"조용히 딴 데를 가리킨다"** 가
+  된다. 받는 쪽은 옛 주소를 그대로 들고 있다.
+- 곧바로 끊기는 것이 20번 이어지면 멈춘다. 키가 지워졌거나 계정이 막힌 것은
+  두드려서 낫지 않고, 로그에 이유가 남아야 한다.
+- `trap` 으로 자식 ssh 까지 데리고 죽는다 — 안 그러면 `bml share stop` 이
+  감독자만 죽이고 터널이 주인 없이 남는다. `looks_like_our_tunnel` 도 감독자
+  경로를 알아본다 (못 알아보면 `bml status` 가 못 보고 `close_tunnel` 이 안 닫는다).
+- 파일로 쓰는 이유: 한 줄짜리 `bash -c` 는 따옴표가 겹겹이 되고 무엇이 도는지
+  사람이 볼 수 없다. `cat .bml/tunnel-keepalive.sh` 한 번이면 읽힌다.
+- 회귀 테스트 5건 (`test_bml_client.sh` 270건, `test_bml_tunnel.sh` 96건).
