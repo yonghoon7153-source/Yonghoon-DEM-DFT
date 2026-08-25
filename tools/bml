@@ -1370,9 +1370,7 @@ cmd_data() {
       say "데이터: ${B}${REPO}/data${OFF} ${DIM}(기본 — 이 기계만의 데이터)${OFF}"
     fi
     if [ -d "$DATA_DIR" ]; then
-      local uploads=0
-      [ -d "$DATA_DIR/uploads" ] && uploads="$(find "$DATA_DIR/uploads" -maxdepth 1 -name '*.wrd' 2>/dev/null | wc -l | tr -d ' ')"
-      say "  ${DIM}.wrd ${uploads}개${OFF}"
+      say "  ${DIM}원본 $(uploads_count "$DATA_DIR/uploads")개 ${DIM}(.wrd · .mpr · .mpt · .mps)${OFF}"
     else
       printf '%s✕%s 그 폴더가 지금 없습니다.\n' "$RED" "$OFF" >&2
       data_dir_help "$DATA_DIR"
@@ -1409,9 +1407,19 @@ cmd_data() {
 
   if ! write_env_key WORKBENCH_DATA "$want"; then env_write_failed; return 1; fi
   ok "데이터: ${B}${want}${OFF}"
-  local uploads=0
-  [ -d "$want/uploads" ] && uploads="$(find "$want/uploads" -maxdepth 1 -name '*.wrd' 2>/dev/null | wc -l | tr -d ' ')"
-  say "  ${DIM}.wrd ${uploads}개  ·  적용하려면: bml restart${OFF}"
+  say "  ${DIM}원본 $(uploads_count "$want/uploads")개  ·  적용하려면: bml restart${OFF}"
+}
+
+#: uploads/ 안의 원본 개수 — 종류를 가리지 않고 전부 센다.
+#:
+#: `-name '*.wrd'` 로 세던 자리다.  충방전만 있던 시절의 흔적인데, 그 뒤로
+#: EIS 의 `.mpr`/`.mpt`/`.mps` 와 GITT 파일이 **같은 폴더**에 들어오면서
+#: 임피던스만 담긴 외장하드가 "0개" 로 보였다 — 백업이 안 됐다는 뜻으로
+#: 읽히는 화면이다 (`tools/backup.py` 는 처음부터 전부 복사한다).
+uploads_count() {
+  local dir="$1"
+  [ -d "$dir" ] || { printf '0'; return 0; }
+  find "$dir" -maxdepth 1 -type f 2>/dev/null | wc -l | tr -d ' '
 }
 
 #: `bml host` — 이 서버가 이 기계 안에서만 열릴지, 네트워크에 열릴지.
@@ -3684,7 +3692,7 @@ cmd_status() {
   local whose=""
   [ -n "$SERVER" ] && whose="  ${DIM}— 이 기계 것 (중추 서버를 볼 때는 안 쓰입니다)${OFF}"
   if [ -d "$DATA_DIR" ]; then
-    say "데이터      ${DATA_DIR}  ${DIM}(원본 $(ls "$DATA_DIR/uploads" 2>/dev/null | wc -l | tr -d ' ')개)${OFF}${whose}"
+    say "데이터      ${DATA_DIR}  ${DIM}(원본 $(uploads_count "$DATA_DIR/uploads")개)${OFF}${whose}"
   elif [ -n "$SERVER" ]; then
     say "데이터      ${DIM}없음${OFF}${whose}"
   else

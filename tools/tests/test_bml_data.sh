@@ -122,7 +122,20 @@ check "새 경로를 적는다"                "$(grep -c "WORKBENCH_DATA=$TMP/d
 check "다른 줄은 그대로"                "$(grep -c 'WORKBENCH_HOST=0.0.0.0' "$RUN_DIR/env")"    "1"
 # 몇 개가 보이는지 말한다.  0개면 그 자리가 아니라는 뜻이고, 그것을 지금
 # 알아야 한다 — 띄운 다음에 빈 화면을 보고 알면 데이터가 날아간 것으로 읽힌다.
-check ".wrd 개수를 말한다"              "$(has '.wrd 2개' "$out")"              "yes"
+check "원본 개수를 말한다"              "$(has '원본 2개' "$out")"              "yes"
+
+# 세는 것은 충방전만이 아니다.  EIS 의 .mpr/.mps 와 GITT 파일이 같은
+# uploads/ 에 들어오는데 `-name '*.wrd'` 로 세던 시절에는 임피던스만 담긴
+# 외장하드가 "0개" 로 나왔다 — 백업이 안 됐다는 뜻으로 읽히는 화면이고,
+# 실제로는 `tools/backup.py` 가 처음부터 전부 복사하고 있었다.
+mkdir -p "$TMP/eisdrive/uploads"
+: > "$TMP/eisdrive/uploads/spec.mpr"
+: > "$TMP/eisdrive/uploads/spec.mps"
+: > "$TMP/eisdrive/uploads/other.mpt"
+out="$(cmd_data "$TMP/eisdrive" 2>&1)"
+check "임피던스 원본도 센다"            "$(has '원본 3개' "$out")"              "yes"
+check "0개라고 하지 않는다"             "$(has '원본 0개' "$out")"              "no"
+cmd_data "$TMP/drive" >/dev/null 2>&1
 
 check "없는 폴더는 적지 않는다"         "$(cmd_data "$TMP/nowhere" >/dev/null 2>&1; printf '%s' $?)" "1"
 check "실패했으면 값이 안 바뀐다"       "$(grep -c "WORKBENCH_DATA=$TMP/drive" "$RUN_DIR/env")" "1"
