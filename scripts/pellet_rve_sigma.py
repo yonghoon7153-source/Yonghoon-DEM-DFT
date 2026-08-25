@@ -185,7 +185,8 @@ def run(a):
               f"(F={row['formation_factor_ion'] if row['formation_factor_ion'] is None else round(row['formation_factor_ion'], 4)}) · "
               f"σ_e {row['sigma_e_eff_S_cm']:.4e} S/cm · binder {frac * 100:.2f} vol% "
               f"({len(cen)} 구) · blocked {n_blk} · spans_z={spans}", flush=True)
-    out = {'arm': vars(a) | {'out': None}, 'rows': rows}
+    #  ⚠ dict-union `|` 금지 — kgy dem-venv 는 Python 3.8 이다 (실측 TypeError, 2026-08-25)
+    out = {'arm': {**vars(a), 'out': None}, 'rows': rows}
     if len(rows) > 1:
         li = np.log10([r['sigma_ion_eff_S_cm'] for r in rows if r['sigma_ion_eff_S_cm'] > 0])
         le = np.log10([r['sigma_e_eff_S_cm'] for r in rows if r['sigma_e_eff_S_cm'] > 0])

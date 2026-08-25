@@ -2229,10 +2229,20 @@ def _selftest():
     import tempfile as _tl, shutil as _sl
     _RSRC = open(os.path.join(ROOT, L_RUNNER), encoding='utf-8').read()
 
+    #  ★★ 변이 러너 파일명은 **프로세스-고유**여야 한다 (2026-08-25 실측 사고):
+    #    고정 이름 `mutant_runner.sh` 를 쓰던 시절, 이 selftest 두 인스턴스가 같은 리포에서
+    #    **동시에** 돌자 서로의 변이체를 읽고 지워 L-11 이 `(0건)` 오탐 FAIL — check_all 과
+    #    돌연변이 배터리를 병렬로 돌리면 재현된다.  파일은 SCR 해석 때문에 scripts/ 안에
+    #    있어야 하므로 (러너의 `$(dirname BASH_SOURCE)` 참조) 위치는 두고 이름만 가른다.
+    def _rmut_path():
+        _fd, _abs = _tl.mkstemp(dir=os.path.join(ROOT, 'scripts'),
+                                prefix='mutant_runner_', suffix='.sh')
+        os.close(_fd)
+        return os.path.relpath(_abs, ROOT), _abs
+
     def _rmut_src(src_):
         """완성된 러너 소스 문자열로 규칙 L 을 돌린다 (여러 겹을 동시에 지울 때)."""
-        _rel = os.path.join('scripts', 'mutant_runner.sh')
-        _abs = os.path.join(ROOT, _rel)
+        _rel, _abs = _rmut_path()
         with open(_abs, 'w', encoding='utf-8') as _f:
             _f.write(src_)
         try:
@@ -2242,16 +2252,13 @@ def _selftest():
 
     def _rmut(old_, new_):
         assert _RSRC.count(old_) == 1, (old_[:40], _RSRC.count(old_))
-        _d = _tl.mkdtemp()
-        _rel = os.path.join('scripts', 'mutant_runner.sh')
-        _abs = os.path.join(ROOT, _rel)
+        _rel, _abs = _rmut_path()
         with open(_abs, 'w', encoding='utf-8') as _f:
             _f.write(_RSRC.replace(old_, new_))
         try:
             return check_runner_integration(verbose=False, runner=_rel)[0]
         finally:
             os.remove(_abs)
-            _sl.rmtree(_d, ignore_errors=True)
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
