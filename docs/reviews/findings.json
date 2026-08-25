@@ -1108,7 +1108,7 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "`vc.load_am(a.scaffold, dz=a.dilate_z)` 의 결과가 그대로 `_s3.rasterize` 로 들어가는데 (payload:988 → :1403) `dilate_z` 는 매니페스트에도 `PROTOCOL_FIELDS` 에도 없었다.  `input_digest` 는 파일 **내용**만 덮으므로 같은 scaffold 를 다른 dz 로 늘린 두 팔이 digest 동일로 통과한다.\n같은 부류로 SE 점구름이 **합성**일 수 있다 — `if a.se_proxy or not a.se:` 라 `--se` 를 빠뜨리기만 해도 proxy 로 내려앉고 그 구름이 `se_pts=` 로 rasterize 에 들어간다.\n★ 고침: `dilate_z` · `se_source`(합성일 때만 frac@n_vox 를 싣는다) 를 규약 축으로 신설하고 producer 가 기록한다.",
+   "note": "`vc.load_am(a.scaffold, dz=a.dilate_z)` 의 결과가 그대로 `_s3.rasterize` 로 들어가는데 (payload:988 → :1403) `dilate_z` 는 매니페스트에도 `PROTOCOL_FIELDS` 에도 없었다.  `input_digest` 는 파일 **내용**만 덮으므로 같은 scaffold 를 다른 dz 로 늘린 두 팔이 digest 동일로 통과한다.\n같은 부류로 SE 점구름이 **합성**일 수 있다 — `if a.se_proxy or not a.se:` 라 `--se` 를 빠뜨리기만 해도 proxy 로 내려앉고 그 구름이 `se_pts=` 로 rasterize 에 들어간다.\n★ 고침: `dilate_z` · `se_source`(합성일 때만 frac@n_vox 를 싣는다) 를 규약 축으로 신설하고 producer 가 기록한다.\n★★ 2026-08-25 kgy 실측 확인 — **가정이 아니었다**: 생산 킷 두 개가 전부 `--dilate-z 1.0719` 로 돈다 (`~/sdcp/kit_{SBE,DBE}/run_mpm.sh`).  침대를 z 로 7.19 % 늘려 놓고 그 값이 매니페스트에 **한 번도 안 적혔다**.  두 킷이 같은 값이라 과거 SBE↔DBE 대조 자체가 오염된 것은 아니지만, 한쪽만 바뀌어도 게이트가 통과했다 = 보증이 없었다.",
    "claimed_fixed_sha": "69ee2fb5"
   },
   {
@@ -1134,7 +1134,7 @@
    "evidence_tests": [
     "scripts/sdcp_gain_verdict.py --selftest"
    ],
-   "note": "payload 분기 `if a.se_proxy or not a.se:` → `v3.proxy_se(...)` 가 만든 구름이 `se_pts=` 로 `_s3.rasterize` 에 들어간다.  읽은 파일이 없으므로 `input_digest` 가 **원리적으로** 못 덮는다.\n★ 고침: producer 가 `se_source` 를 적고(`proxy:<frac>@<n_vox>` / `npy`), 판정기가 `hold_code='SE_PROXY'` 로 막는다.  생산 경로는 막지 않는다 — 만드는 것은 자유고 그것으로 σ 를 주장하는 것만 막는다.  회귀 ㊹g(차단) · ㊹h(정상 증인) · 배터리 mutant 1종.\n⚠ **미확인**: 킷 `run_mpm.sh` 가 `--se` 를 정말 넘기는지 (이 리포에 킷이 없다).  C 를 돌릴 때 `se_source` 기록으로 처음 확인된다.",
+   "note": "payload 분기 `if a.se_proxy or not a.se:` → `v3.proxy_se(...)` 가 만든 구름이 `se_pts=` 로 `_s3.rasterize` 에 들어간다.  읽은 파일이 없으므로 `input_digest` 가 **원리적으로** 못 덮는다.\n★ 고침: producer 가 `se_source` 를 적고(`proxy:<frac>@<n_vox>` / `npy`), 판정기가 `hold_code='SE_PROXY'` 로 막는다.  생산 경로는 막지 않는다 — 만드는 것은 자유고 그것으로 σ 를 주장하는 것만 막는다.  회귀 ㊹g(차단) · ㊹h(정상 증인) · 배터리 mutant 1종.\n⚠ **미확인**: 킷 `run_mpm.sh` 가 `--se` 를 정말 넘기는지 (이 리포에 킷이 없다).  C 를 돌릴 때 `se_source` 기록으로 처음 확인된다.\n★ 2026-08-25 kgy 실측 확인 — 생산 킷 두 개 다 `--se se_dump.npy` 를 넘긴다 ⇒ **실침대였다** (합성 침대 우려는 닫혔다).  게이트는 재발 방지로 남는다.",
    "claimed_fixed_sha": "69ee2fb5"
   }
  ]

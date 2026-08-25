@@ -13,10 +13,31 @@ cd "$ROOT"
 OUT="${1:-$ROOT/../sdcp_review_$(git rev-parse --short HEAD).bundle}"
 
 #  ⚠ 커밋 안 된 변경이 있으면 번들에 **안 들어간다** — 그것이 곧 "리뷰 대상과 다른 코드" 다.
-if [ -n "$(git status --porcelain)" ]; then
-  echo "⛔ 작업 트리가 더럽다 — 번들은 커밋된 것만 싣는다.  먼저 커밋할 것:" >&2
-  git status --short >&2
+#  ★★ 2026-08-25 첫 실사용에서 **과잉차단**이 났다 (내 게이트가 낸 7번째).  옛 판은
+#    `git status --porcelain` 을 썼는데 그것은 **추적 안 되는 파일까지** 더럽다고 센다.
+#    kgy 의 `tmp/`·`db/`·출력 zip 처럼 애초에 번들에 들어갈 일이 없는 지역 산출물이
+#    번들 생성을 막았다.  ⇒ 두 경우를 **가른다**:
+#      · 추적 파일의 수정/스테이징 = **중단**.  리뷰어가 볼 코드와 다르다.
+#      · 추적 안 되는 파일 = **사람이 판단**.  대개 지역 산출물이지만, 커밋 안 한 **새 소스
+#        파일**이면 번들에서 빠져 리뷰가 반쪽이 된다 (지난 R4 가 정확히 그 상태였다).
+#        이름으로 짐작하지 않는다 — 목록을 보여 주고 `ALLOW_UNTRACKED=1` 로 명시하게 한다.
+_DIRTY="$(git status --porcelain --untracked-files=no)"
+if [ -n "$_DIRTY" ]; then
+  echo "⛔ 추적 파일에 커밋 안 된 변경이 있다 — 번들은 커밋된 것만 싣는다.  먼저 커밋할 것:" >&2
+  printf '%s\n' "$_DIRTY" >&2
   exit 2
+fi
+_UNTRACKED="$(git ls-files --others --exclude-standard)"
+if [ -n "$_UNTRACKED" ]; then
+  echo "⚠ 추적 안 되는 파일이 있다 (번들에 **안 들어간다**):" >&2
+  printf '  %s\n' $_UNTRACKED >&2
+  if [ "${ALLOW_UNTRACKED:-0}" != "1" ]; then
+    echo "" >&2
+    echo "이 중 **커밋해야 할 새 소스**가 있으면 지금 커밋할 것.  전부 지역 산출물이면:" >&2
+    echo "    ALLOW_UNTRACKED=1 bash scripts/make_review_bundle.sh" >&2
+    exit 2
+  fi
+  echo "  → ALLOW_UNTRACKED=1 이므로 지역 산출물로 보고 계속한다." >&2
 fi
 
 git bundle create "$OUT" --all
