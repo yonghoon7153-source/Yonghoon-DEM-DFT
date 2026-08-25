@@ -276,21 +276,17 @@ def _order_arcs_by_frequency(model, values, stderrs):
     """
     names = list(model.parameter_names)
     branches = []
-    for i, name in enumerate(names):
-        if not name.endswith("_Q"):
-            continue
-        stem = name[:-2]
-        n_at = names.index(stem + "_n")
-        r_at = None
-        for j in range(i - 1, -1, -1):
-            if "_" not in names[j] and names[j][0] == "R":
-                r_at = j
-                break
-        if r_at is None:
-            return values, stderrs
-        r, q, n = values[r_at], values[i], values[n_at]
+    # 짝은 괄호가 정의한다.  "CPE 바로 앞의 맨 R" 로 찾던 첫 구현은
+    # p(CPE1,R1) 표기에서 직렬저항을 아크와 맞바꿨다 -- 재정렬된 값으로
+    # fitted 까지 다시 계산되어, chi² 는 완벽한데 곡선은 데이터와 35 Ω
+    # 어긋나는 보고서가 나왔다.
+    for r_name, cpe_name in model.parallel_rc_branches():
+        r_at = names.index(r_name)
+        q_at = names.index(cpe_name + "_Q")
+        n_at = names.index(cpe_name + "_n")
+        r, q, n = values[r_at], values[q_at], values[n_at]
         omega = (r * q) ** (-1.0 / n) if r > 0 and q > 0 and n > 0 else 0.0
-        branches.append((omega, (r_at, i, n_at)))
+        branches.append((omega, (r_at, q_at, n_at)))
 
     if len(branches) < 2:
         return values, stderrs

@@ -198,3 +198,26 @@ def test_a_real_solid_electrolyte_spectrum_fits_two_arcs(sample_mpr):
     # The high-frequency branch really is the faster one.
     assert (values["R1"] * values["CPE1_Q"]) ** (-1 / values["CPE1_n"]) > \
            (values["R2"] * values["CPE2_Q"]) ** (-1 / values["CPE2_n"])
+
+
+def test_a_paper_style_branch_order_does_not_swap_the_series_resistance():
+    """`p(CPE1,R1)` — 논문에서 베낀 표기를 파서가 허용하는 만큼, 짝짓기도
+    그 표기를 견뎌야 한다.
+
+    리뷰 재현: "CPE 바로 앞의 맨 R" 휴리스틱이 CPE1 을 직렬저항 R0 와
+    짝지어, R0=5 가 40 으로 보고되고 fitted 곡선이 데이터와 35 Ω 어긋나는데
+    χ² 는 1e-31 로 완벽했다 — seed 0 과 1 이 서로 다른 "측정값" 을 냈다.
+    """
+    data = spectrum()
+    for seed in range(4):
+        result = fit_circuit(data, "R0-p(CPE1,R1)-p(R2,CPE2)", seed=seed)
+        values = result.values()
+        assert values["R0"] == pytest.approx(TRUTH["rs"], rel=1e-2), seed
+        assert values["R1"] == pytest.approx(TRUTH["r1"], rel=1e-2), seed
+        assert values["R2"] == pytest.approx(TRUTH["r2"], rel=1e-2), seed
+        # 보고된 값으로 다시 계산한 곡선이 데이터와 맞아야 한다 — 순열이
+        # 잘못되면 chi² 만 옳고 곡선은 틀린다.
+        z = data.sorted_by_frequency().select(
+            np.ones(len(data), dtype=bool)).z
+        mismatch = np.max(np.abs(result.fitted - z) / np.abs(z))
+        assert mismatch < 1e-3, seed

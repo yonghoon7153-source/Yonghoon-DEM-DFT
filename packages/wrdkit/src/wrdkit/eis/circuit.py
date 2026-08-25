@@ -232,6 +232,46 @@ class Circuit:
 
         return walk(self._root)
 
+    def parallel_rc_branches(self) -> list[tuple[str, str]]:
+        """(R 이름, CPE 이름) — ``p(...)`` 블록 안에서 실제로 짝인 것들.
+
+        분기 정렬이 이것을 쓴다.  "CPE 바로 앞의 맨 R" 같은 **이름 순서**로
+        짝을 찾으면 ``p(CPE1,R1)`` 처럼 논문에서 베낀 표기(우리 파서가 허용
+        한다)에서 CPE1 이 직렬저항 R0 와 짝지어져, 직렬저항 값이 아크 슬롯과
+        맞바꿔진 채 보고된다 — 리뷰 재현에서 R0=5 가 40 으로 나왔다.  짝은
+        괄호가 정의하므로 괄호에서 읽는다.
+        """
+        out: list[tuple[str, str]] = []
+
+        def walk(node) -> None:
+            if isinstance(node, _Leaf):
+                return
+            if isinstance(node, _Parallel):
+                leaves = [part for part in node.parts if isinstance(part, _Leaf)]
+                resistors = [leaf.name for leaf in leaves if leaf.kind == "R"]
+                cpes = [leaf.name for leaf in leaves if leaf.kind == "CPE"]
+                if len(resistors) == 1 and len(cpes) == 1:
+                    out.append((resistors[0], cpes[0]))
+            for part in getattr(node, "parts", ()):
+                walk(part)
+
+        walk(self._root)
+        return out
+
+    def series_element_names(self) -> list[str]:
+        """최상위 직렬 경로에 그대로 놓인 소자들의 이름.
+
+        "회로 문자열이 R 로 시작하는가" 는 위치 휴리스틱이고,
+        ``p(R1,CPE1)-p(R2,CPE2)-R0`` 처럼 직렬 R 을 뒤에 쓴 (물리적으로 동일한)
+        회로에서 틀린다.  직렬인지 아닌지는 구조가 정한다.
+        """
+        if isinstance(self._root, _Leaf):
+            return [self._root.name]
+        if isinstance(self._root, _Series):
+            return [part.name for part in self._root.parts
+                    if isinstance(part, _Leaf)]
+        return []
+
     def element_names(self) -> list[str]:
         """Instance names in evaluation order -- ``['R0', 'R1', 'CPE1']``."""
         names: list[str] = []
