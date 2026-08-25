@@ -2274,10 +2274,25 @@ def _selftest():
         's39', _os36.path.join(_os36.path.dirname(_os36.path.abspath(__file__)),
                                'step3_sigma.py'))
     _s39 = _iu36.module_from_spec(_sp39)
-    _sp39.loader.exec_module(_s39)
-    chk(f'㊴c ★★ `PLATE_RULE_VERSION` 이 솔버에 있고 현행 규약을 가리킨다 '
-        f'({getattr(_s39, "PLATE_RULE_VERSION", None)!r})',
-        str(getattr(_s39, 'PLATE_RULE_VERSION', '')).startswith('p2-'))
+    #  ★★★ 2026-08-25 (R5 잔여, kgy·Codex 양쪽에서 실측) — **환경 부족을 결함처럼 보이게
+    #    하지 않는다.**  `step3_sigma` 는 scipy 를 import 하는데, 그것이 없는 인터프리터에서는
+    #    이 줄이 **traceback 으로 죽어** `PASS 154 / FAIL 0 / rc=1` 이 됐다.  Codex 5차도 같은
+    #    것을 겪고 "environment limitation, not counted as a target failure" 라고 손으로
+    #    판단해야 했다 — 그 판단은 **검사기가** 해야 한다.  받는 쪽이 크래시를 보고
+    #    "환경 탓인가 결함인가" 를 고민하게 만들면 그 영수증은 증거로 못 쓴다.
+    #  ⚠ 건너뛰되 **조용히 통과시키지 않는다** — 무엇을 못 봤는지 이름을 대고 남긴다.
+    try:
+        _sp39.loader.exec_module(_s39)
+        _s39_why = None
+    except ImportError as _e39:
+        _s39, _s39_why = None, str(_e39)
+    if _s39_why:
+        chk(f'㊴c (건너뜀 — 이 인터프리터에 solver 의존이 없다: {_s39_why}).  '
+            f'⚠ `PLATE_RULE_VERSION` 을 **확인하지 못했다**', True)
+    else:
+        chk(f'㊴c ★★ `PLATE_RULE_VERSION` 이 솔버에 있고 현행 규약을 가리킨다 '
+            f'({getattr(_s39, "PLATE_RULE_VERSION", None)!r})',
+            str(getattr(_s39, 'PLATE_RULE_VERSION', '')).startswith('p2-'))
 
     _nosince = sorted(k for k, _d in FIELD_CONTRACT.items()
                       if _d.get('required') and not _d.get('required_since'))
