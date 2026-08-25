@@ -182,6 +182,43 @@ def _de_of(r):
     return r.get('de_per_atom_post_anneal') or r.get('de_per_atom_screen')
 
 
+AXIS_FIELD = {'stability': None, 'modulus': 'E_young_GPa',
+              'mobility': 'li_mobility_score'}
+
+
+def axes_present(rows):
+    """이 캐스케이드에서 **실제로 값이 있는** 축 이름들. stability 는 항상 후보."""
+    out = []
+    if any(_de_of(r) is not None for r in rows):
+        out.append('stability')
+    for ax in ('modulus', 'mobility'):
+        if any(r.get(AXIS_FIELD[ax]) is not None for r in rows):
+            out.append(ax)
+    return out
+
+
+def rows_with_axes(rows, axis_set):
+    """축 집합의 **모든** 축에 값이 있는 행만. (없는 축은 요구하지 않는다)"""
+    def ok(r):
+        for ax in axis_set:
+            v = _de_of(r) if ax == 'stability' else r.get(AXIS_FIELD[ax])
+            if v is None:
+                return False
+        return True
+    return [r for r in rows if ok(r)]
+
+
+def renorm_weights(w_raw, axis_set):
+    """살아있는 축에만 가중치를 주고 합이 1 이 되게 재정규화.
+
+    ⛔ 못 하는 것: 축이 빠진 사실을 보정하지 못한다. 2축 점수와 3축 점수는
+      **다른 척도**다 — 캐스케이드 간에 score_combined 를 직접 비교하면 안 된다.
+      그래서 출력에 axis_set 을 반드시 같이 남긴다.
+    """
+    s = sum(w_raw[a] for a in axis_set) or 1.0
+    return {a: w_raw[a] / s for a in axis_set}
+
+
 def no_rows_message(cd):
     """구조 0개일 때의 설명. **죽은 축과 구별해서** 말한다.
 
@@ -345,6 +382,26 @@ def _selftest():
         chk(find_cascades(str(pathlib.Path(td) / 'nope*')) == [],
             "[음성] 못 찾으면 빈 리스트 — 지어내지 않는다")
 
+        # 축 집합 일반화 (dualx: elastic 미실행이라 modulus 가 아예 없다)
+        chk(axes_present(rows) == ['stability', 'modulus', 'mobility'],
+            "axes_present: 값이 있는 축을 모두 잡는다")
+        no_mod = [{k: v for k, v in r.items() if k != 'E_young_GPa'} for r in rows]
+        chk(axes_present(no_mod) == ['stability', 'mobility'],
+            "[음성] ★ 축이 아예 없는 캠페인(dualx)은 그 축을 빼고 2축으로 간다")
+        chk(len(rows_with_axes(no_mod, ['stability', 'mobility'])) == 2,
+            "[음성] 없는 축을 요구하지 않는다 — 그 캠페인 전체를 버리지 않는다")
+        w2 = renorm_weights({'stability': .4, 'modulus': .3, 'mobility': .3},
+                            ['stability', 'mobility'])
+        chk(abs(sum(w2.values()) - 1.0) < 1e-12 and 'modulus' not in w2,
+            "renorm_weights: 살아있는 축만, 합 1")
+        chk(abs(w2['stability'] - 4/7) < 1e-12,
+            "[음성] 빠진 축의 가중치를 남은 축에 비례 배분한다 (0.4/0.7)")
+        chk(_looks_superseded('multi_category_v22_OLD_radiusonly') and
+            not _looks_superseded('multi_category_2026_05_26_v23'),
+            "구세대 표식(OLD/bak/legacy)을 잡는다")
+        chk(_looks_superseded('x.bak_5250') and not _looks_superseded('dualx_v23'),
+            "[음성] 'dualx' 의 x 를 bak 으로 오인하지 않는다")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -368,6 +425,16 @@ def find_cascades(pattern):
     return out
 
 
+def _looks_superseded(name):
+    """이름만 보고 '구세대 의심' 을 표시한다. **자동으로 빼지 않는다.**
+
+    ⛔ 못 하는 것: 실제로 대체됐는지 판정하지 못한다 — 이름 규약을 볼 뿐이다.
+      조용히 제외하면 '왜 314개가 아니라 287개지' 를 나중에 못 답한다.
+    """
+    low = name.lower()
+    return any(k in low for k in ('_old', 'old_', '.bak', 'bak_', 'legacy', 'deprecated'))
+
+
 def _batch(args):
     """--cascade_glob: 전수 인구조사. **집계만 하고 순위 파일은 쓰지 않는다.**
 
@@ -376,41 +443,64 @@ def _batch(args):
       "전체 풀이 몇 개이고 3축 비교가 가능한 게 몇 개인가" 만 센다.
     """
     dirs = find_cascades(args.cascade_glob)
+    if args.exclude:
+        n0 = len(dirs)
+        dirs = [d for d in dirs if not any(x in str(d) for x in args.exclude)]
+        print(f"⚙ --exclude {args.exclude} → {n0} → {len(dirs)}개 "
+              f"({n0-len(dirs)}개 제외)")
     if not dirs:
         print(f"⛔ 02_screen 을 가진 디렉터리를 못 찾았다: {args.cascade_glob}")
         return 2
     print(f"캐스케이드 {len(dirs)}개 발견\n")
-    tot_s = tot_m = 0
-    n_none = n_thin = 0
-    per = []
+    import collections
+    per, fam = [], collections.defaultdict(
+        lambda: {'casc': 0, 'struct': 0, 'meas': 0, 'axes': collections.Counter()})
     for d in dirs:
         rows = load_rows(d)
-        meas = [r for r in rows
-                if r.get('E_young_GPa') is not None
-                and r.get('li_mobility_score') is not None]
-        tot_s += len(rows); tot_m += len(meas)
-        if not meas:
-            n_none += 1
-        elif len(meas) < 2:
-            n_thin += 1
-        per.append((d.parent.name + '/' + d.name, len(rows), len(meas)))
-    print(f"{'cascade':<46}{'구조':>6}{'3축':>6}")
-    for name, ns, nm in per[:40]:
-        flag = '  ⛔' if nm == 0 else ('  ⚠n=1' if nm < 2 else '')
-        print(f"{name[:44]:<46}{ns:>6}{nm:>6}{flag}")
-    if len(per) > 40:
-        print(f"  … 그 외 {len(per)-40}개 (전체는 --out_csv 로)")
+        aset = axes_present(rows)
+        meas = rows_with_axes(rows, aset)
+        family = d.parent.name
+        f = fam[family]
+        f['casc'] += 1; f['struct'] += len(rows); f['meas'] += len(meas)
+        f['axes']['+'.join(aset) or 'none'] += 1
+        per.append((family + '/' + d.name, len(rows), len(meas),
+                    '+'.join(aset) or 'none'))
+
+    print(f"{'family':<44}{'casc':>5}{'구조':>7}{'채점':>6}  축집합 분포")
+    for name, f in sorted(fam.items()):
+        dist = ' · '.join(f"{k}×{v}" for k, v in f['axes'].most_common())
+        print(f"{name[:42]:<44}{f['casc']:>5}{f['struct']:>7}{f['meas']:>6}  {dist}")
+
+    tot_s = sum(f['struct'] for f in fam.values())
+    tot_m = sum(f['meas'] for f in fam.values())
+    n_none = sum(1 for _, _, m, _ in per if m == 0)
+    n_thin = sum(1 for _, _, m, _ in per if m == 1)
+    n_2ax = sum(1 for _, _, _, a in per if a.count('+') == 1)
     print(f"\n▸ 전수 집계")
     print(f"  캐스케이드      {len(dirs)}")
     print(f"  구조 전체       {tot_s}")
-    print(f"  3축 측정완료    {tot_m}  ({100.0*tot_m/tot_s:.1f}%)" if tot_s else "")
-    print(f"  ⛔ 3축 0개      {n_none}개 캐스케이드 — 이 캐스케이드는 3축 순위가 안 나온다")
-    print(f"  ⚠ 3축 1개       {n_thin}개 — 표본 1개는 정규화가 상수라 순위 의미 없음")
+    if tot_s:
+        print(f"  채점 대상       {tot_m}  ({100.0*tot_m/tot_s:.1f}%)")
+    print(f"  ⚠ 2축짜리       {n_2ax}개 캐스케이드 — 3축과 **다른 척도**다 "
+          f"(캐스케이드 간 score_combined 직접 비교 금지)")
+    print(f"  ⛔ 채점 0개      {n_none}개")
+    print(f"  ⚠ 채점 1개       {n_thin}개 — 표본 1개는 정규화가 상수라 순위 의미 없음")
+
+    sup = sorted(n for n in fam if _looks_superseded(n))
+    if sup:
+        n_c = sum(fam[n]['casc'] for n in sup)
+        n_s = sum(fam[n]['struct'] for n in sup)
+        print(f"\n  ⚠⚠ **세대 중복 의심 {len(sup)}개 family** (캐스케이드 {n_c} · 구조 {n_s})")
+        for n in sup:
+            print(f"       {n}")
+        print(f"     이름에 OLD/bak/구버전 표식이 있다. 같은 도판트가 여러 세대에 "
+              f"들어 있으면 **한 도판트를 여러 번 세게 된다.**")
+        print(f"     → 포함/제외는 사람이 정한다. 빼려면 --exclude 로 지정.")
     if args.out_csv:
         import csv
         with open(args.out_csv, 'w', newline='') as fh:
             w = csv.writer(fh)
-            w.writerow(['cascade', 'n_structures', 'n_measured_3axis'])
+            w.writerow(['cascade', 'n_structures', 'n_scored', 'axis_set'])
             w.writerows(per)
         print(f"\n  ✓ 전체 목록 → {args.out_csv}")
     return 0
@@ -439,6 +529,10 @@ def main():
                        '순위에 기여하는지 확인용 (--out 은 무시된다). '
                        'li_mobility_score 가 전원 결측이라 3축이 실제로 2축이었던 '
                        '2026-08-25 사고 이후 추가.')
+    p.add_argument('--exclude', action='append', default=[],
+                  help='제외할 경로 부분문자열 (여러 번 지정 가능). '
+                       '세대 중복(v22 vs v23 등)을 뺄 때 쓴다. **자동 제외는 없다** — '
+                       '조용히 빠지면 개수 차이를 나중에 설명 못 한다.')
     p.add_argument('--out_csv', help='--cascade_glob 전수 목록 CSV')
     p.add_argument('--selftest', action='store_true',
                   help='정규화·축건강 로직만 검증 (음성 경로 포함) — 데이터 없이 돈다')
@@ -495,7 +589,6 @@ def main():
 
     # Composite axis scores (min-max normalized)
     de_axis = [_de_of(r) for r in rows]
-    _W = {'stability': args.w_stab, 'modulus': args.w_mod, 'mobility': args.w_mob}
     if not rows:
         print(f"\n구조 0개 · cascade_dir {cd}")
         print(no_rows_message(cd))
@@ -507,32 +600,39 @@ def main():
     #     못 올라온다(안정성을 두 번 세는 셈). 없는 값을 지어내지 않는 유일한 길이
     #     '측정된 것끼리만 비교' 다. 전체 목록은 stability-only 로 따로 낸다.
     #   ⛔ 못 하는 것: 미측정 구조가 실제로 좋은지 나쁜지 말하지 않는다. **모른다**.
-    measured = [r for r in rows
-                if r.get('E_young_GPa') is not None
-                and r.get('li_mobility_score') is not None]
-    de_axis_m = [_de_of(r) for r in measured]
-    de_norm = normalize(de_axis_m, invert=True, label='stability')
-    mod_norm = normalize([r.get('E_young_GPa') for r in measured], label='modulus')
-    mob_norm = normalize([r.get('li_mobility_score') for r in measured],
-                         label='mobility')
+    #   ⚠ 2026-08-25 확장: 축이 **아예 안 돌아간 캠페인**이 있다 (dualx_v23 는
+    #     elastic 미실행 → modulus 0/N, 그러나 mobility 는 있다). '둘 다' 를 고집하면
+    #     그 캠페인 전체를 버리게 된다. 그래서 **존재하는 축으로만** 채점하고
+    #     가중치를 재정규화한 뒤 **축 집합을 이름으로 남긴다** (axis_set).
+    #     A안의 원칙("없는 값을 지어내지 않는다")은 그대로다 — 축 수를 속이지 않을 뿐.
+    axis_set = axes_present(rows)
+    measured = rows_with_axes(rows, axis_set)
+    W_RAW = {'stability': args.w_stab, 'modulus': args.w_mod, 'mobility': args.w_mob}
+    W = renorm_weights(W_RAW, axis_set)
+    de_norm = normalize([_de_of(r) for r in measured], invert=True, label='stability')
+    mod_norm = (normalize([r.get('E_young_GPa') for r in measured], label='modulus')
+                if 'modulus' in axis_set else [0.0] * len(measured))
+    mob_norm = (normalize([r.get('li_mobility_score') for r in measured], label='mobility')
+                if 'mobility' in axis_set else [0.0] * len(measured))
 
     if args.status:
-        print(f"\n구조 {len(rows)}개 · 3축 측정완료 {len(measured)}개 "
-              f"({100.0*len(measured)/len(rows):.0f}%) · {cd}")
-        if not measured:
-            print("  ⛔ 3축 비교 불가 — modulus·mobility 를 **둘 다** 가진 구조가 없다.")
+        print(f"\n구조 {len(rows)}개 · 채점대상 {len(measured)}개 "
+              f"({100.0*len(measured)/len(rows):.0f}%) · 축집합 {'+'.join(axis_set)} · {cd}")
+        if not measured or len(axis_set) < 2:
+            print(f"  ⛔ 순위 불가 — 살아있는 축이 {len(axis_set)}개뿐이다 "
+                  f"({'+'.join(axis_set) or '없음'}).")
             return 3
-        report_axis_health(_W)
+        report_axis_health(W)
         return 0
 
     for r, ds, ms, mb in zip(measured, de_norm, mod_norm, mob_norm):
         r['score_stability'] = ds
         r['score_modulus'] = ms
         r['score_mobility'] = mb
-        r['score_combined'] = (args.w_stab * ds
-                              + args.w_mod * ms
-                              + args.w_mob * mb)
-        r['scored_on'] = 'measured_subset_3axis'
+        r['score_combined'] = (W.get('stability', 0) * ds
+                              + W.get('modulus', 0) * ms
+                              + W.get('mobility', 0) * mb)
+        r['scored_on'] = 'measured_subset_' + '+'.join(axis_set)
 
     # 미측정 구조: 3축 점수를 **주지 않는다** (0.0 도 0.5 도 아니고 없음).
     #   '모른다' 를 숫자로 바꾸는 순간 순위가 그 가짜 숫자를 믿기 시작한다.
@@ -541,7 +641,7 @@ def main():
         r['score_stability_all'] = ds
         if 'score_combined' not in r:
             r['score_combined'] = None
-            r['scored_on'] = 'stability_only_not_measured'
+            r['scored_on'] = 'not_measured_on_' + '+'.join(axis_set)
 
     measured.sort(key=lambda r: -r['score_combined'])
     rows.sort(key=lambda r: -r['score_stability_all'])
