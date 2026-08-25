@@ -291,6 +291,56 @@
     ⚠ 공정하게: 젖은 슬러리와 마른 전극을 **다른 FF 로 표현하는 것 자체는 물리적으로 타당**하고, **그 단계 전이는
     우리가 갖고 있지 않다**.
 
+- **★★★ Coetzee 2017 (Powder Technol. 310, 104–142, `papers/coetzee2017_dem_calibration_review.md`) —
+  "E_eff = 1.35 GPa 18× 연화가 정당한 방법론인가"에 대한 *방법론 정본*.  A 축에 붙이는 이유: porosity floor
+  논쟁의 근거가 되는 그 E_eff 를 **어떻게 정했느냐**가 여기서 판정되기 때문.**
+  (⚠ 배터리 무관 — 파쇄암·모래·곡물·유리구슬의 **저응력 벌크 핸들링** 리뷰.  `Heckel` 0회, `plastic` **1회**.
+   **방법론만 전이, 파라미터·가드레일 전이 금지.**)
+  - **① 벌크 역보정은 표준이다 — 이 축의 헤드라인.**  리뷰는 두 학파를 명명하고
+    (**Direct Measuring** vs **Bulk Calibration**), 역보정을 *"a calibration approach in the **true sense of
+    the word**"*(p.106) · *"**by far the most popular** approach"*(p.138) 로 규정한다.  결정적 문장(§9 p.138):
+    *"the particle **shape can be simplified** and **assumptions in terms of the contact model can be made**.
+    The calibration process will then **reduce the effect that these simplifications … might have** on the bulk
+    behaviour since **the other parameters will compensate for it.**"*
+    ⇒ **우리 18× 연화의 인식론(frame[2]: "결손 럼핑 프록시")을 문헌 규범으로 뒷받침하는 유일한 카드.**
+  - **② 직접 측정은 우리 입경대에서 원리적으로 불가.**  리뷰: 직접측정 시도는 전부 *"**millimetre and above**
+    size range"*(p.106), 최소 사례가 **500 µm** 입자의 접촉 마찰[218](p.134).  우리 LPSCl SE ≈ **직경 1–3 µm**
+    = **2–3 자릿수 아래** ⇒ *"the Direct Measuring Approach is not available at our particle scale"* 는
+    **인용으로 방어되는 문장**.
+  - **③ 우리 시험 종류가 리뷰의 표준 목록 안에 있다.**  Table 1 (p.124) `Uniaxial compression test (bulk
+    stiffness)` + Table 3 (p.137) `Confined bulk stiffness (**oedometer**)` — **그 행에서 관계가 조사된 유일한
+    파라미터가 접촉강성**.  이유(§5.5 p.131): *"the confined uniaxial compression test was **only** influenced
+    by the particle stiffness while the particle-particle friction coefficient had **no significant effect**"*
+    ⇒ **구속 단축압축 = 강성을 고립시키는 시험**.  우리 300 MPa 냉간압축이 정확히 이 칸.
+  - **④ 강성 낮추기의 두 갈래를 절대 섞지 말 것 (인용 규율).**
+    · **(a) 보정**: 측정된 벌크응답에 맞춰 강성을 정함 (Table 1 의 8개 시험족).  ← **우리는 여기.**
+    · **(b) 속도**: 타임스텝을 키우려 강성 감소 (§7 p.135–136).  정당성 조건 = **"벌크가 안 변할 것"**.
+      실측 폭: Hart ÷100(÷1000까지 무해) · Goetsch ÷21(더 줄이면 유량 변화) · Yan **E 0.02→200 GPa 거시량 무영향** ·
+      Xu **70 MPa vs 70 GPa, 배출률 편차 2.7 %·계산 31.6×** · Chung&Ooi ÷10⁴ (평균력 무영향, **힘 요동만 감소**).
+      가드레일: Cleary **0.1–0.5 %** · Paulick **≤ 반지름의 1 %** · Höhner **≤4 %**(그 계 한정).
+    ⚠ **(b)의 가드레일로 우리를 방어해도, 그것으로 우리를 재도 안 된다** — 우리는 벌크가 *바뀌기를* 원해서 낮췄다.
+    다만 **사실 고지**: 우리 pure-SE ⟨δ⟩ ≈ **직경의 11–12 % = 반지름의 22–24 %** → Paulick 기준의 **~22×**.
+    (그 영역에서 ε_sphere↔ε_union 규약차가 커진다 — 우리 실측 **1.251 %p**.  porosity 규약 명시 필수.)
+  - **⑤ "밀할수록 강성이 더 중요하다" — Paulick [235] (p.136)**: *"the **denser** the system, the **more
+    important** the stiffness value becomes"* + **접촉강성↔벌크강성 선형**(Lommen [81] 구속압축에서도 확인).
+    ⇒ 300 MPa 로 잼된 침대에서 **E 는 최대 민감 레버**라는 방향이 전이되고, **우리 MPM 의 "E 가 지배 레버,
+    σ_y 아님"** 관측과 부호가 같다.
+  - **⑥ 연화의 *방향*에 문헌 기전이 하나 있다 (배수는 n/a).**  §8 (p.136) **Van Lew et al. [236]** —
+    세라믹 펠릿 42개 E 를 개별 측정해 **Weibull 분포**로 DEM 단축압축에 넣으면 *"the sample with a distribution
+    in Young's modulus showed a **softer response** compared to the sample with a constant Young's modulus"*
+    (+ 파단 입자 비율도 낮아짐).  같은 방향 두 번째 사례 = **Molenda [230]** μ 분포 → 더 무른 응답.
+    ⇒ **불균질을 단일 유효값으로 럼핑하면 그 유효값은 재료값보다 낮아야 한다**는 *방향*만 인용 가능.
+    ⛔ **배수(18×)를 이 문헌으로 정당화 금지** — 두 논문 모두 배수 미보고.
+  - **⑦ 응력 규칙 — 우리에게 유리하고 동시에 불리하다.**  리뷰는 응용 응력의 수치를 **거의 명시하지 않는다**
+    (`kPa` 유효 0회; "<10 kPa" 는 **논문 stated 가 아니라 우리 추론**).  대신 **응력 의존을 두 번 규정**:
+    Li [189] (p.129) *"the parameter and property values are **stress dependent** and the stress levels used
+    in the calibration experiment should be **carefully selected**"* · Franco [196] (p.130) *"perform the shear
+    tests … **in the range of normal stresses expected in the final application**"*.
+    ✅ 우리는 **300 에서 보정 → 300 에서 사용** = 규칙 충족.  ⚠ 그러나 **100/200/600 MPa 로 쓰는 것은 외삽**
+    → Heckel 4압력을 **적합이 아니라 예측 정확도**로 보고해야 방어된다 (§F 신설 항목 참조).
+  - ⛔ **넘지 말 것**: *"Coetzee 가 우리 18× 를 승인한다"* (강성을 **치밀화 목표**에 맞춘 사례는 리뷰에 **0건**) ·
+    *"리뷰가 Heckel 을 표준 시험으로 든다"* (`Heckel` **0회**) · 리뷰 안의 **μ·E·COR 수치를 우리 표로 옮기는 것**.
+
 ## B. 전달 삼중항 — σ_ionic은 교차검증, σ_e/σ_thermal은 우리만
 - **★ Minnmann 2021 JES (NCM622+LPSCl, 우리 소재계, EIS-TLM 1차 측정)**: σ_ion,eff **0.17 mS/cm @ 42 vol% NCM**
   (= 우리 DEM σ_ionic 0.04–0.18 상단과 일치!), **τ_ion 2.07 (=√(τ²=4.3))**, σ_el,eff 0.56 (τ_el²=7.4).
@@ -988,6 +1038,63 @@
     축**으로 쓸 것.
 
 ## F. 우리가 아직 못 하는 것 / 흡수할 것 (정직 목록 → 향후)
+
+- **★★★ 보정 규범 미충족 4건 — Coetzee 2017 기준 (2026-08-25 신설, `papers/coetzee2017_dem_calibration_review.md`).**
+  리뷰가 요구하는 것 중 **우리가 아직 못 한 것**만 모았다.  §A 의 Coetzee 항목(우리에게 유리한 쪽)과 짝이다.
+  - **F-C1 · 유일성을 한 번도 시험하지 않았다.**  리뷰 처방(§5 p.123): *"more than one experiment should be
+    conducted and **each experiment should isolate a single parameter** …, or the combined results from more
+    than one experiment should provide a unique set."*  우리는 **1 관측량(porosity@300) → 1 파라미터(E_eff)**
+    이고, μ·COR·ν 는 문헌값 고정이다.  형식상 유일하지만, "구속 단축압축이 마찰에 둔감하다"는 근거가
+    **Coetzee & Els [25]/[205] 의 파쇄암·옥수수·저응력 결과**를 빌려온 것이고 **우리 계에서 재현된 적이 없다**.
+    → **실행**: E_eff 고정, μ_pp·μ_pw·COR ∈ {0.2, 0.4, 0.6} OAT 로 ε@300 을 재는 **민감도표 1장**
+    (기존 pure-SE 침대 재압축 6–9 런).  ∂ε/∂μ ≈ 0 이 나와야 "우리 보정은 파라미터를 고립시킨다"고 **쓸 자격**이 생긴다.
+    ★ 설계는 베낄 것이 있다 — `bazzoun2025_dem_parameter_sensitivity_assb_cathode` 가 **우리 소재계·같은 LIGGGHTS**
+    에서 8입력 OAT 를 이미 했다(μ_CAM-SE 최강 민감).
+  - **F-C2 · 검증이 보정과 "충분히 다르지" 않다.**  리뷰(§2 p.106): *"the calibration experiment **is different
+    from** the final experiment"*; (§5.2 p.125, Derakhshani 비판): *"It would be better to perform a validation
+    experiment **totally different** … because if it is very similar, the mechanisms involved would be similar
+    and **one would expect good results**."*  우리 3대 검증을 이 자로 재면 —
+    · **Heckel 4압력** = 같은 시험의 다른 하중 (같은 기전) · **Cronau overlap 11–12 %** = 같은 런의 다른 관측량 ·
+    · **독립 MPM 이 같은 18× 요구** = §8 (p.136) 이 허용하는 *"results from other numerical analyses"* ✅ 유효,
+      단 인용 시 **frame[4] 조건(서로에게 맞추지 않았음)** 을 반드시 병기해야 순환이 아니다.
+    → **가장 규범-정합적인 한 수** = 압밀 보정을 **전달 실험**(Bazzoun σ_eff,ion EIS · Minnmann EIS-TLM · Oh bimodal)
+    으로 검증 (기전이 완전히 다름).
+  - **F-C2′ · 그런데 리뷰의 두 번째 요구가 그 길을 막을 수 있다.**  리뷰는 *검증시험이 그 파라미터에 **민감**해야*
+    한다고 요구한다(§5.2 p.125).  그런데 우리 사내 실측은 **σ 가 E_eff 에 둔감**하다고 말한다 —
+    *"σ_ionic 은 E 가 아니라 porosity 를 따른다"*, *"E 1.35 ≡ 1.5 는 구조·역학·전달 전 축에서 동일 regime"*.
+    ⇒ **σ-검증을 쓰기 전에 σ 의 E-민감도를 먼저 재야 한다.**  둔감으로 판명되면 후보를 바꾼다:
+    (a) 조성 스윕 **Furnas dip 위치**(기하 지배 → E 의존성이 porosity 와 다름) (b) **다압력 두께·스프링백**.
+    ★ 부작용은 오히려 기회다 — σ 가 porosity 에만 민감하다면 **실질 보정변수는 porosity** 이고,
+    *"E_eff is the **micro parameter** adjusted so that the assembly reproduces the measured **macro** porosity;
+    it is a **model parameter**, not the SE Young's modulus"* 가 리뷰 §1(p.105)과 정확히 같은 어법이 된다.
+  - **F-C3 · 강성↔배위수 결합이 전달 그래프를 오염시킬 수 있다 (미측정).**  **Ng & Asce [193]** (p.130):
+    *"**Decreasing the particle stiffness resulted in a higher coordination number** and these two effects
+    balanced each other"* — 역학은 상쇄돼도 **접촉망은 바뀐다**.  우리는 E_eff 를 **역학(porosity)** 으로 정한 뒤
+    **그 침대의 접촉망**으로 σ 삼중항을 푼다 ⇒ **역학 보정이 전달 그래프를 정의한다**.  사내 확인은
+    **1.35 ↔ 1.5 구간뿐**(overlap 1.75 vs 1.74 %, ⟨δ⟩ 0.0739 vs 0.0743 µm = 동일 regime)이고
+    **24 → 1.35 구간은 미측정**.
+    → **실행**: 같은 침대를 E = {24, 5, 1.35} 로 압축해 **Z(배위수)·접촉면적 분포·σ 삼중항**을 나란히.
+    Stage-E(Tabor+volume) 면적 재유도가 이 오염을 얼마나 흡수하는지가 그 표에서 보인다.
+  - **F-C4 · 다압력 사용은 리뷰 기준 외삽이다.**  Li [189] (p.129) / Franco [196] (p.130) 의 "보정 응력 = 응용
+    응력" 규칙은 300 MPa 에서는 지켜지지만 **100/200/600 으로 확장하는 순간 우리를 문다**.  방어 가능한 유일한
+    서술: *"E_eff 는 300 MPa 에서만 맞추었고 나머지 압력은 **예측**"* + Heckel R²=0.965 를 **적합도가 아니라
+    예측 정확도**로 제시.  ⚠ **원고·CLAUDE.md 현행 표기("DEM pure-SE 4압력")는 적합만 적혀 있어 오해 소지** — 문구 점검 필요.
+  - **F-C5 · 구(sphere) + rolling friction 없음의 원리적 한계 (해소 불가, 고지 대상).**  **Coetzee [62]** (p.113):
+    *"Spherical particles without rolling friction … **could not be calibrated** … **even when high particle
+    friction coefficients were used**."*  + **Santos [170]** (p.125): 구형 입자는 보정값이 *"**cannot be
+    generalised**"*.  우리 타깃은 마찰이 아니라 porosity 라 직격은 아니나, **우리 침대의 전단강도는 원리적으로
+    과소**이고 그 결손도 E_eff 에 흘러든다.  ⇒ `E_eff = 1.35 GPa` 은 **{구 근사 + hooke/hysteresis + 재배열·
+    GB slide·미세파괴 결손}의 합산 상수**로만 보고할 것 (우리 frame[2] 서술 그대로 — 리뷰가 그것을 **지지**한다).
+  - **F-C6 · 보고 서식 (저비용, 즉시 흡수).**  리뷰 §1 (p.105) 은 *"**whether they were measured or calibrated
+    is not clear**"* 를 문헌의 결함으로 지목하고, 리뷰 자신은 **Table 1(bulk-calibrated) / Table 2(directly
+    measured)** 로 **provenance 별로 표를 가른다**.  → 우리 SI 파라미터 표에 **`source`(measured/calibrated/
+    literature/assumed) + `code` + `contact law` + `value type`(particle vs contact)** 열 추가.
+    ⚠ **"리뷰가 이 서식을 규정한다"고 쓰면 과장** — 명시 처방은 없다(=n/a).  근거는 §1 의 결함 지적 + 리뷰의 자기 실천.
+    ★ 특히 §4 (p.122): 코드에 따라 **입자강성 지정 vs 접촉강성 지정**이 다르고 후자는 **직렬 두 스프링 = 절반**
+    이므로, `E_eff` 가 **재료(입자) 입력값**임을 표에 못 박아야 한다.
+  - **F-C7 · 그림 양식 2종 (즉시 흡수).**  **Fig 32/33** = *보정 곡선 + 실험 min/avg/max 수평 밴드*
+    (우리 `ε vs E_eff` 곡선 + Minnmann 밴드로 바로 재현 가능) · **Fig 25** = *두 관측량의 등고선 교차 = 유일해*
+    (F-C1 과 F-C2 를 **한 장에** 해결하는 목표 그림).
 
 - **★★ Duquesnoy 2023 (Franco/ARTISTIC, LIB NMC111 습식) = 우리 5-Phase 로드맵의 *published archetype* — 최적화 loop 전체가
   흡수 대상** (digest `papers/duquesnoy2023_ml_multiobjective_manufacturing_optimization.md`, CSV

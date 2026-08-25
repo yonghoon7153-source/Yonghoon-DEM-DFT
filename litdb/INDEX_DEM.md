@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 101편 · 생성 2026-08-25
+> digest 102편 · 생성 2026-08-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -19,12 +19,13 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `nam2026_dpe_microstructure_review` | Nam 2026 (Materials Horizons REVIEW, 13, 3149-3177) — 건식전극(DPE) 미세구조 엔지니어링 리뷰 ★ 우리 DEM+MPM 프로젝트의 FRAMEWORK/POSITIONING 논문 | DEM | 2026-07-28 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (19편)
+## 접촉역학 · 소성 (DEM 이론) (20편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `alabdali2023_cgmd_wet_manufacturing_ssb_cathode` | ASSB 양극 습식 제조 사슬 전체(슬러리→건조→압연)를 CGMD(LAMMPS, LJ + Granular-Hertz) 로 — 유변학(점도·밀도)으로 force field 를 보정하고 GeoDict 로 δ_e·τ_g 산출 — Franco 그룹 ASSB 제조모델 1호(구형 AM) — Alabdali / Zanotto / Du | CGMD/DEM (LAMMPS, Lennard-Jones + Granular-Hertzian; 슬러리 NPT | 2026-08-19 | 🖼 11 |
 | `bouvard2000_hard_soft_powder_densification` | 경/연 분말 혼합물의 가압 압밀 거동 — Bouvard (Powder Technology 2000) | exp+theory(review) | 2026-06-23 | — |
+| `coetzee2017_dem_calibration_review` | DEM 파라미터 보정(calibration) 방법론 리뷰 — 두 학파(직접측정 vs 벌크 역보정)·해의 비유일성·접촉강성(contact stiffness) 감소 — Coetzee (Powder Technology 2017) | DEM (review — 보정 방법론) | 2026-08-25 | — |
 | `dmt1975_adhesion_contact_deformation` | Effect of Contact Deformations on the Adhesion of Particles (DMT 이론) — Derjaguin, Muller, Toporov (J. Colloid Interface Sci. 1975) | continuum (점착 접촉역학 이론) | 2026-06-26 | 🖼 2 |
 | `electromechanical_contact_model_particulate_systems` | An electro-mechanical contact model for particulate systems — Chao Zhang (Powder Technology 2024) | DEM (Hertz-Mindlin 역학 + Holm/constriction 전기접촉저항 + Kirchhoff | 2026-06-26 | 🖼 22 |
 | `jacksongreen2005_fem_elastoplastic_hemispherical_contact` | 탄소성 반구–강체평판 접촉의 유한요소 연구 — Jackson & Green (J. Tribology 2005) | FEM (continuum, single-contact) | 2026-06-26 | 🖼 13 |
