@@ -233,6 +233,64 @@ def write(cases, data_root=None, force=False):
     return made, skipped
 
 
+def refill(cases, data_root=None):
+    """이미 복원해 둔 케이스의 `full_metrics.json` 에 **빠진 키만** 채운다.
+
+    ⚠⚠ 왜 이게 따로 필요한가 (2026-08-25 실측):  `write()` 는 파일이 하나라도 있으면
+      케이스를 **통째로** 건너뛴다 — 진짜 런을 지키려면 그게 옳다.  그런데 복원 코드가
+      **좋아졌을 때** (예: 조인 키를 고쳐 MPM 열이 146건 새로 들어왔을 때) 이미 복원해 둔
+      케이스는 **영원히 옛 상태로 남는다**.  다시 돌려도 `건너뜀 169건` 만 찍히고
+      아무 일도 안 일어나는데 **출력은 성공처럼 보인다** = 선언과 실행이 갈라진다
+      (오늘 하루 반복해서 잡은 그 병).  ⇒ 갱신 경로를 **이름 있는 동작**으로 만든다.
+
+    안전장치 셋 — 이게 `--force` 와 다른 점이다:
+      · `status == 'reconstructed'` 인 케이스만 건드린다 (**진짜 런은 손대지 않는다**)
+      · **있는 키는 절대 안 덮는다** — 빈 자리만 채운다 (case_master 가 정본)
+      · 새 케이스를 만들지 않는다 (그건 `write()` 소관)
+
+    반환: (건드린 케이스, 채운 키 총합, 실런이라 건너뛴 케이스, 아직 없어 건너뛴 케이스)
+    """
+    dr = data_root or _data_root()
+    up = os.path.join(dr, 'webapp', 'uploads')
+    rs = os.path.join(dr, 'webapp', 'results')
+    touched = added = kept_real = absent = 0
+    for cid, c in sorted(cases.items()):
+        mf = os.path.join(up, cid, 'meta.json')
+        ff = os.path.join(rs, cid, 'full_metrics.json')
+        if not os.path.exists(ff):
+            absent += 1                      # 아직 복원 안 된 케이스 → `--write` 소관
+            continue
+        #  ★ 실런 보호 — meta 가 없거나 reconstructed 가 아니면 **읽고 끝낸다**
+        try:
+            with open(mf, encoding='utf-8') as f:
+                meta = json.load(f) or {}
+        except Exception:
+            meta = {}
+        if meta.get('status') != 'reconstructed':
+            kept_real += 1
+            continue
+        try:
+            with open(ff, encoding='utf-8') as f:
+                cur = json.load(f) or {}
+        except Exception:
+            kept_real += 1                   # 못 읽으면 **건드리지 않는다**
+            continue
+        new = {k: v for k, v in c['metrics'].items() if k not in cur}
+        if not new:
+            continue
+        cur.update(new)
+        st = cur.get('_reconstructed')
+        if isinstance(st, dict):
+            st['refilled_fields'] = int(st.get('refilled_fields') or 0) + len(new)
+            st['refilled_note'] = ('복원 코드가 좋아져 **빠져 있던 키를 나중에 채웠다**.  '
+                                   '기존 값은 하나도 안 덮었다.')
+        with open(ff, 'w', encoding='utf-8') as f:
+            json.dump(cur, f, ensure_ascii=False, indent=1)
+        touched += 1
+        added += len(new)
+    return touched, added, kept_real, absent
+
+
 def _selftest():
     import tempfile
     n = [0, 0]
@@ -293,6 +351,46 @@ def _selftest():
         chk(f'⑭ ★ 한 종류만 → standard ({ms["mode"]})', ms['mode'] == 'standard')
         chk('⑮ 유도 근거를 적는다', 'mode_source' in mb and '추측 아님' in mb['mode_source'])
 
+    # ── ⑯ `--refill` — 옛 복원본에 빠진 키를 채운다 (오늘 실제로 겪은 결함) ──────────────
+    with tempfile.TemporaryDirectory() as d:
+        old = {'C1': {'name': 'c', 'source': 's', 'n_fields': 1,
+                      'metrics': {'porosity': 15.0}}}
+        write(old, data_root=d)
+        ff = os.path.join(d, 'webapp', 'results', 'C1', 'full_metrics.json')
+        #  복원 코드가 좋아져 MPM 열이 새로 생긴 상황 + 기존 값은 **다르게** 바뀐 상황
+        new = {'C1': {'name': 'c', 'source': 's', 'n_fields': 3,
+                      'metrics': {'porosity': 99.0, 'mpm_porosity_mpm_pct': 16.7,
+                                  'mpm_thickness_mpm_um': 30.7}}}
+        made2, skipped2 = write(new, data_root=d)
+        chk('⑯a ★ 재실행은 **아무것도 안 한다** — 이것이 오늘의 결함이었다',
+            made2 == 0 and skipped2 == 1
+            and 'mpm_porosity_mpm_pct' not in json.load(open(ff, encoding='utf-8')))
+        t, added, kept, absent = refill(new, data_root=d)
+        cur = json.load(open(ff, encoding='utf-8'))
+        chk(f'⑯b --refill 이 빠진 키를 채운다 (케이스 {t} · 키 {added})',
+            t == 1 and added == 2 and cur.get('mpm_porosity_mpm_pct') == 16.7)
+        chk('⑯c ★ 기존 값은 **안 덮는다** (99 로 안 바뀌고 15 그대로)',
+            cur.get('porosity') == 15.0)
+        chk('⑯d 보충 사실을 기록에 남긴다',
+            (cur.get('_reconstructed') or {}).get('refilled_fields') == 2)
+        t2, added2, _, _ = refill(new, data_root=d)
+        chk('⑯e 멱등 — 두 번째는 0건 (매번 다시 쓰지 않는다)', t2 == 0 and added2 == 0)
+        #  ★★ 실런 보호 — status 가 reconstructed 가 아니면 **손대지 않는다**
+        mf = os.path.join(d, 'webapp', 'uploads', 'C1', 'meta.json')
+        mm = json.load(open(mf, encoding='utf-8')); mm['status'] = 'done'
+        json.dump(mm, open(mf, 'w', encoding='utf-8'))
+        json.dump({'porosity': 15.0}, open(ff, 'w', encoding='utf-8'))
+        t3, added3, kept3, _ = refill(new, data_root=d)
+        chk('⑯f ★★ 진짜 런(status≠reconstructed)은 **건드리지 않는다**',
+            t3 == 0 and added3 == 0 and kept3 == 1
+            and 'mpm_porosity_mpm_pct' not in json.load(open(ff, encoding='utf-8')))
+        #  ★ 아직 복원 안 된 케이스는 refill 이 **만들지 않는다** (write 소관)
+        t4, _, _, absent4 = refill({'ZZ': {'name': 'z', 'source': 's', 'n_fields': 1,
+                                           'metrics': {'porosity': 1.0}}}, data_root=d)
+        chk('⑯g 없는 케이스를 refill 이 **만들어 내지 않는다**',
+            t4 == 0 and absent4 == 1
+            and not os.path.exists(os.path.join(d, 'webapp', 'results', 'ZZ')))
+
     print(f'\nrebuild_cases_from_csv selftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1
 
@@ -302,6 +400,8 @@ if __name__ == '__main__':
     ap.add_argument('--check', action='store_true')
     ap.add_argument('--write', action='store_true')
     ap.add_argument('--force', action='store_true', help='(예약 — 기존 파일은 어떤 경우에도 안 덮는다)')
+    ap.add_argument('--refill', action='store_true',
+                    help='이미 복원된 케이스에 **빠진 키만** 채운다 (실런·기존 값은 안 건드린다)')
     ap.add_argument('--selftest', action='store_true')
     a = ap.parse_args()
     if a.selftest:
@@ -327,11 +427,25 @@ if __name__ == '__main__':
         mark = '⛔' if n == len(cs) else ('⚠' if n else '✅')
         ex = f'  예: {miss[0]}' if 0 < n <= len(cs) else ''
         print(f'   {mark} {ax:<22} 결손 {n:>4}/{len(cs)}{ex}')
-    if a.write:
+    if a.refill:
+        touched, added, kept_real, absent = refill(cs)
+        print(f'\n✓ 보충한 케이스 {touched}건 · 채운 키 {added}개')
+        print(f'  · 실런이라 손대지 않음 {kept_real}건 · 아직 복원 안 됨 {absent}건 (--write 소관)')
+        if touched:
+            print('  → 이어서:  python3 scripts/rebuild_tables_from_metrics.py --write')
+        else:
+            print('  (채울 것이 없었다 — 이미 최신이다)')
+    elif a.write:
         made, skipped = write(cs)
         print(f'\n✓ 새로 만든 케이스 {made}건 · 이미 있어 건너뜀 {skipped}건')
         print('  ⚠ 전부 `status: reconstructed` 로 표시된다 — **재실행이 아니다**.')
         print('  ⛔ 그림·report·3D·원본 덤프는 없다 (원자료가 있어야 한다).')
+        #  ★ 건너뛴 케이스는 **옛 복원 상태로 남는다** — 그 사실을 여기서 말한다.
+        #    (안 말하면 "0건 새로 만듦 = 할 일 없음" 으로 읽힌다 = 오늘의 그 병)
+        if skipped:
+            print(f'  ⚠⚠ 건너뛴 {skipped}건은 **옛 복원 상태 그대로**다.  복원 코드가 그 뒤로')
+            print('      좋아졌다면 빠진 열이 남아 있다 →  이 스크립트를 `--refill` 로 한 번 더:')
+            print('        python3 scripts/rebuild_cases_from_csv.py --refill')
         print('  → `dem5002` 로 다시 띄워 목록을 확인할 것.')
     else:
         print('\n(--check 모드 — 쓰지 않았다.  실제로 쓰려면 --write)')
