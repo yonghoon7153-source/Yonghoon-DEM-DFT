@@ -387,6 +387,7 @@ export function KneeDetail({
       <div className="tiny faint">
         기준이 하나가 아닙니다. 전부 계산해서 보여 주고, 열화가 실제로 가속될 때만 knee
         로 인정합니다. 행을 누르면 그래프의 세로선이 바뀝니다.
+        {' '}<b>마우스를 올려 두면 그 기준의 상세 내용(숫자와 문턱값)이 나옵니다.</b>
       </div>
       <div className="knee-choices">
         {knee.results.map((result) => {

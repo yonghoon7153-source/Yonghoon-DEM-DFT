@@ -999,9 +999,22 @@ tbody tr:last-child td { border-bottom: none; }
    카드 안에 접어 두면(details) 카드가 버튼이라 클릭이 겹치고, 늘 펴 두면
    기준 다섯 개가 표 다섯 개가 된다.  그래서 떠 있는 판이다. */
 .choice { position: relative; }
+/* **가리지 않게 한다.**  판은 카드 밖으로 넘치는데, 조상 중 하나라도 잘라내면
+   (`overflow: hidden`) 거기서 잘리고, 다음 카드가 위에 그려지면 그 뒤로 숨는다
+   -- 실제로 둘 다 일어나서, 표가 반만 보이고 그 반도 다음 카드에 덮였다.
+   잘라내지 않게 열어 두고, 올라간 조각을 통째로 위로 띄운다. */
+.under-trend, .knee-choices { overflow: visible; }
+.choice:hover, .choice:focus-visible { z-index: 30; }
+/* 카드가 저마다 쌓임 맥락을 만들므로, 조각의 z-index 만으로는 **다음 카드**를
+   이기지 못한다.  올라간 조각을 품은 카드째로 올린다. */
+.card:has(.choice:hover), .card:has(.choice:focus-visible) {
+  position: relative;
+  z-index: 30;
+  overflow: visible;
+}
 .knee-evidence {
   position: absolute;
-  z-index: 20;
+  z-index: 30;
   top: calc(100% + 4px);
   left: 0;
   min-width: 260px;
