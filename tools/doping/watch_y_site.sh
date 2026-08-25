@@ -68,8 +68,17 @@ for S in sc_P_4b sc_Li_24g P_4b Li_24g; do
   python3 - "$F" "$S" <<'PY' 2>/dev/null || echo "  $S: 읽기 실패"
 import json, sys
 d = json.load(open(sys.argv[1]))
-e = d.get("e_above_hull_eV_per_atom", d.get("e_above_hull"))
-print(f"  {sys.argv[2]:<12} E_hull = {e}  ({d.get('reduced') or d.get('composition','')})")
+# key 이름을 틀리면 조용히 None 이 찍힌다 — 없으면 **없다고 말한다**.
+if "E_above_hull_eV_per_atom" not in d:
+    print(f"  {sys.argv[2]:<12} \u26d4 E_above_hull_eV_per_atom 키가 없다 "
+          f"(있는 키: {sorted(d)[:6]})")
+else:
+    e = d["E_above_hull_eV_per_atom"]
+    tag = "ON HULL" if d.get("on_hull") else "metastable"
+    print(f"  {sys.argv[2]:<12} {e*1000:8.1f} meV/atom  {tag:<11} {d.get('reduced','')}")
+    dec = ", ".join(f"{k} {v}" for k, v in list((d.get("decomposition") or {}).items())[:3])
+    if dec:
+        print(f"  {'':<12} -> {dec}")
 PY
 done
 [ "$FOUND" = 0 ] && echo "  · 아직 없음 (이완이 끝난 뒤 hull 블록을 돌린다 · MP_API_KEY 필요)"
@@ -81,15 +90,27 @@ nvidia-smi --query-gpu=utilization.gpu,memory.used,memory.total \
   '{u=$1;m=$2;t=$3;gsub(/[^0-9]/,"",m);gsub(/[^0-9]/,"",t);
     printf "  util %s · %s/%s MiB · 여유 %d MiB\n", u, m, t, t-m}'
 
-if pgrep -f "[d]isorder_ensemble_diffusion" >/dev/null; then
-  MP=$(pgrep -f "[d]isorder_ensemble_diffusion" | head -1)
-  echo "  ✅ modelc T600 살아있음 (PID $MP · $(ps -o etime= -p "$MP" 2>/dev/null | tr -d ' '))"
+# ⛔ 어느 런인지 이름표로 짐작하지 않는다 — **실행중 프로세스의 인자**를 읽는다.
+#   (초판은 pgrep -f "run_arrhenius_6pt" 로 T900 을 판별했는데, T900 을 **기다리는**
+#    대기 bash 의 명령줄에도 그 문자열이 들어 있어 대기중을 '시작됨' 으로 오탐했다.)
+MDPID=$(pgrep -f "[d]isorder_ensemble_diffusion" | head -1)
+if [ -n "$MDPID" ]; then
+  CMD=$(tr '\0' ' ' < "/proc/$MDPID/cmdline" 2>/dev/null)
+  MDT=$(echo "$CMD" | grep -oE '\-\-temperatures[= ]+[0-9]+' | grep -oE '[0-9]+$')
+  MDR=$(echo "$CMD" | grep -oE '\-\-out_root[= ]+[^ ]+' | sed 's|.*runs/||; s|/.*||')
+  echo "  ✅ MD 실행중  T=${MDT:-?} K · run=${MDR:-?} · PID $MDPID · $(ps -o etime= -p "$MDPID" 2>/dev/null | tr -d ' ')"
 else
-  if ls /data/work/runs/highT_reseed_traj/modelc/s4/*/T600/msd.json >/dev/null 2>&1; then
-    echo "  ★ modelc T600 **완료** — msd.json 있음 (다음: T900 체인)"
-  else
-    echo "  ⛔ modelc T600 프로세스도 없고 msd.json 도 없다 — **죽었을 수 있다**"
-    tail -3 /data/work/mc600.log 2>/dev/null | sed 's/^/      /'
-  fi
+  echo "  ·  disorder_ensemble_diffusion 프로세스 없음"
 fi
-pgrep -f "[r]un_arrhenius_6pt" >/dev/null && echo "  ✅ T900 시작됨"
+for T in 600 900; do
+  N=$(ls /data/work/runs/*/modelc/s*/*/T$T/msd.json 2>/dev/null | wc -l)
+  [ "$N" -gt 0 ] && echo "  ★ modelc T$T 완료 msd.json ${N}개"
+done
+if [ -z "$MDPID" ] && ! ls /data/work/runs/*/modelc/s*/*/T600/msd.json >/dev/null 2>&1; then
+  echo "  ⛔ MD 프로세스도 없고 T600 msd.json 도 없다 — **죽었을 수 있다**"
+  tail -3 /data/work/mc600.log 2>/dev/null | sed 's/^/      /'
+fi
+# 대기 체인이 걸려 있나 — '시작됨' 과 구별한다
+if pgrep -f "[w]hile pgrep -f" >/dev/null; then
+  echo "  ⏸ T900 체인 **대기중** (T600 이 끝나면 시작)"
+fi
