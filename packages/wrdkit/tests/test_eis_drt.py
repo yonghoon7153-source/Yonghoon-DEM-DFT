@@ -9,7 +9,7 @@ import numpy as np
 import pytest
 import synthetic_eis as S
 
-from wrdkit.eis.drt import drt, find_peaks, lcurve_corner, sweep
+from wrdkit.eis.drt import DrtPeak, drt, find_peaks, lcurve_corner, sweep
 from wrdkit.eis.spectrum import Spectrum
 
 #: Ideal RC pairs (n = 1), so each process has one exact relaxation time:
@@ -139,3 +139,78 @@ def test_a_real_solid_electrolyte_spectrum_shows_its_two_transport_steps(sample_
     assert len(big) >= 2
     assert big[0].frequency_hz > big[1].frequency_hz
     assert result.total_polarisation_ohm > 0
+
+
+def test_a_solution_with_a_peak_outside_the_measured_band_is_not_recommended():
+    """아무 주파수도 재지 않은 곳에서 "과정을 찾았다" 는 답은 추천하지 않는다.
+
+    τ 격자는 측정 대역 밖으로 조금 넘겨 잡는다 — 대역 바로 밖의 실제 과정이
+    어깨를 놓을 자리가 필요해서다.  그 연장 구간에 **봉우리**가 서 있으면
+    그것은 정칙화가 막으려던 과대적합 그 자체다.
+
+    실측 파일에서 이것이 갈랐다: 곡률 최대가 λ=1e-5 였는데 그 답에는 측정
+    대역(≤1.39 MHz) 밖 2.19 MHz 봉우리가 있었다.
+    """
+    results = sweep(two_process_spectrum(noise=0.02))
+    band = (float(np.min(results[0].frequency_hz)),
+            float(np.max(results[0].frequency_hz)))
+    index, reason = lcurve_corner(results)
+    if index < 0:
+        pytest.skip(f"이 스펙트럼에는 추천할 수 있는 λ 가 없다: {reason}")
+    for peak in results[index].peaks:
+        assert band[0] <= peak.frequency_hz <= band[1], reason
+
+
+def _fake_lcurve() -> list:
+    """A hand-made L curve whose corner is known.
+
+    Built rather than measured so the test says one thing.  The residual is
+    flat along the first arm and the penalty is flat along the second, so the
+    sharpest bend is unambiguously at index 2 -- and that is where the
+    out-of-band peak is planted.
+    """
+    from wrdkit.eis.drt import DrtResult
+
+    shape = [(1e-6, 1.00, 0.010), (1e-5, 0.98, 0.011), (1e-4, 0.95, 0.013),
+             (1e-3, 0.60, 0.10), (1e-2, 0.30, 0.40), (1e-1, 0.20, 0.90)]
+    band = np.array([1e5, 1e0, 1e-2])
+    out = []
+    for regularisation, penalty, residual in shape:
+        result = DrtResult(tau_s=np.array([1e-4, 1e-2, 1.0]),
+                           gamma_ohm=np.array([1.0, 2.0, 0.5]))
+        result.regularisation = regularisation
+        result.penalty_norm = penalty
+        result.residual_norm = residual
+        result.frequency_hz = band
+        result.peaks = [DrtPeak(tau_s=1e-2, frequency_hz=15.9, gamma_ohm=2.0,
+                                resistance_ohm=10.0, tau_low_s=1e-3,
+                                tau_high_s=1e-1)]
+        out.append(result)
+    return out
+
+
+def test_the_corner_moves_off_a_candidate_with_an_out_of_band_peak():
+    clean = _fake_lcurve()
+    corner, _ = lcurve_corner(clean)
+
+    planted = _fake_lcurve()
+    planted[corner].peaks = list(planted[corner].peaks) + [DrtPeak(
+        tau_s=1e-9, frequency_hz=1e7, gamma_ohm=1.0, resistance_ohm=1.0,
+        tau_low_s=1e-10, tau_high_s=1e-8)]
+    moved, reason = lcurve_corner(planted)
+
+    assert moved != corner
+    assert "측정 대역 밖" in reason
+    assert "1e+07 Hz" in reason
+
+
+def test_when_every_candidate_is_out_of_band_none_is_recommended():
+    """하나를 골라 주는 것보다 못 고르겠다고 하는 편이 낫다 (§0.4)."""
+    results = _fake_lcurve()
+    for result in results:
+        result.peaks = [DrtPeak(tau_s=1e-9, frequency_hz=1e7, gamma_ohm=1.0,
+                                resistance_ohm=1.0, tau_low_s=1e-10,
+                                tau_high_s=1e-8)]
+    index, reason = lcurve_corner(results)
+    assert index == -1
+    assert "모든 후보" in reason

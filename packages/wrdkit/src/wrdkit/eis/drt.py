@@ -300,7 +300,44 @@ def lcurve_corner(results: list[DrtResult]) -> tuple[int, str]:
     if not np.any(curvature > 0):
         return -1, "L 곡선이 거의 직선이라 모서리가 없습니다"
 
-    index = usable[int(np.argmax(curvature))]
-    chosen = results[index]
-    return index, (f"L 곡선의 곡률이 가장 큰 지점 (λ={chosen.regularisation:g}, "
-                   f"봉우리 {len(chosen.peaks)}개)")
+    # 곡률이 큰 순서로 훑되, **측정하지 않은 주파수에 봉우리가 있는 답은
+    # 추천하지 않는다.**  τ 격자는 측정 대역 밖으로 조금 넘겨 잡는다 -- 대역
+    # 바로 밖의 실제 과정이 어깨를 놓을 자리가 필요해서다.  하지만 그 연장
+    # 구간에 *봉우리*(극대)가 서 있다면 그것은 아무 주파수도 재지 않은 곳에서
+    # "과정을 찾았다" 는 뜻이고, 정칙화가 막으려던 바로 그 과대적합이다.
+    #
+    # 실측 파일에서 이것이 갈랐다: 곡률 최대는 λ=1e-5 인데 그 답에는 측정
+    # 대역(≤1.39 MHz) 밖 2.19 MHz 봉우리가 있었다.  건너뛰고 그 이유를 말한다.
+    skipped: list[str] = []
+    for rank in np.argsort(-curvature):
+        index = usable[int(rank)]
+        chosen = results[index]
+        if curvature[rank] <= 0:
+            continue
+        outside = _peaks_outside_band(chosen)
+        if outside:
+            skipped.append(f"λ={chosen.regularisation:g} 은 측정 대역 밖 "
+                           f"({', '.join(outside)}) 에 봉우리가 있어 건너뜁니다")
+            continue
+        reason = (f"L 곡선의 곡률이 가장 큰 지점 (λ={chosen.regularisation:g}, "
+                  f"봉우리 {len(chosen.peaks)}개)")
+        if skipped:
+            reason += " — " + "; ".join(skipped)
+        return index, reason
+    if skipped:
+        return -1, "모든 후보에 측정 대역 밖 봉우리가 있습니다: " + "; ".join(skipped)
+    return -1, "L 곡선에서 모서리를 찾지 못했습니다"
+
+
+def _peaks_outside_band(result: DrtResult) -> list[str]:
+    """Peaks at frequencies this spectrum never measured.
+
+    Returned as text because that is what the caller does with them -- the
+    number itself is only useful inside the sentence explaining the skip.
+    """
+    if not len(result.frequency_hz) or not result.peaks:
+        return []
+    low = float(np.min(result.frequency_hz))
+    high = float(np.max(result.frequency_hz))
+    return [f"{peak.frequency_hz:.3g} Hz" for peak in result.peaks
+            if not low <= peak.frequency_hz <= high]
