@@ -118,6 +118,9 @@ textarea:focus-visible,[tabindex]:focus-visible,.tabs button:focus-visible{
 .nav-links li a.active .dot{outline:2px solid rgba(255,255,255,.5)}
 .nav-links .ic{font-size:.95rem;width:18px;text-align:center;opacity:.85}
 .nav-links.compact li a{padding:5px 10px;font-size:.82rem}
+/* 하위 메뉴 — 들여쓰기 + 세로선으로 소속을 보인다 (2026-08-25) */
+.nav-links li.nav-sub{margin-left:12px;border-left:2px solid var(--border2);padding-left:6px}
+.nav-links li.nav-sub a{font-size:.84rem;padding:6px 10px}
 .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
 .sidebar-footer{margin-top:auto;padding:14px 8px 4px;font-size:.7rem;color:var(--dim);border-top:1px solid var(--border2)}
 .menu-toggle{display:none;position:fixed;top:12px;left:12px;z-index:60;background:var(--surface);

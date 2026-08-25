@@ -92,3 +92,23 @@ def test_requests_page_renders(client):
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_requests_is_a_child_of_worklog(client):
+    """1저자 요청은 Work Log **하위**다 — 두 방향 모두 이어져 있어야 한다.
+
+    ⚠ 사이드바에만 넣으면 Work Log 로 들어온 사람이 하위가 있는 줄 모른다.
+    """
+    log = client.get("/log").data.decode()
+    assert "/requests" in log, "Work Log 에서 하위 페이지로 가는 길이 없다"
+    req = client.get("/requests").data.decode()
+    assert "/log" in req, "1저자 요청에서 상위(Work Log)로 돌아가는 길이 없다"
+
+
+def test_worklog_stays_active_on_child(client):
+    """[음성] 하위에 있을 때 부모(Work Log)도 활성이어야 한다 —
+    아니면 어느 묶음에 속한 페이지인지 사이드바가 말해주지 않는다."""
+    body = client.get("/requests").data.decode()
+    import re
+    m = re.search(r'href="/log"[^>]*class="active"', body)
+    assert m, "하위 페이지인데 사이드바의 Work Log 가 활성이 아니다"
