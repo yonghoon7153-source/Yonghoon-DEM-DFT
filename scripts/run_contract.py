@@ -89,6 +89,8 @@ CLI_ACCOUNTING = {
     #  ★ 2026-08-25 (SELF-11 / Q-B2) — SDCP 접촉 브리지.  **σ 침대를 바꾸므로 규약 축이다**
     #    (등재를 빠뜨리면 SELF-04 와 같은 결함: 해시에는 없고 cross-dir 검사도 안 지난다).
     '--step3-sdcp-bridge': ('protocol', ('sdcp_bridge_um',)),
+    #  ★ 2026-08-25 (G2, D13 원장 ②) — PTFE 이온 차단.  σ 침대(sid 6→9)를 바꾸므로 규약 축.
+    '--step3-ptfe-block-um': ('protocol', ('ptfe_block_um',)),
     #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
     '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
     '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
@@ -323,7 +325,8 @@ PROTOCOL_SCHEMA = 'p2'
 
 #: 규약을 정하는 축.  ⚠ **producer 도 소비자도 이 목록 하나만 쓴다** (사본 금지).
 PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                   'sdcp_yield_to_vgcf', 'sdcp_bridge_um', 'ptfe_stamp', 'ptfe_zero_dof',
+                   'sdcp_yield_to_vgcf', 'sdcp_bridge_um', 'ptfe_block_um',
+                   'ptfe_stamp', 'ptfe_zero_dof',
                    'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
                    'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                    'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c',
@@ -411,7 +414,7 @@ STRICT_TYPES = {
     'periodic_xy': bool, 'ptfe_zero_dof': bool, 'sdcp_yield_to_vgcf': bool,
     'physics_protocol_match': bool,
     'vox_um': float, 'bridge_um': float, 'sdcp_sphere_d_um': float,
-    'sdcp_bridge_um': float,
+    'sdcp_bridge_um': float, 'ptfe_block_um': float,
     'sigma_vgcf_S_cm': float, 'sigma_sdcp_S_cm': float, 'sigma_ptfe_S_cm': float,
     'sigma_ion_se_S_cm': float, 'sigma_ion_sdcp_S_cm': float,
     'sigma_am_s_S_cm': float, 'sigma_am_p_S_cm': float,

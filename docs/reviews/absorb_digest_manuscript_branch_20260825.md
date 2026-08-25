@@ -63,3 +63,47 @@
 - 검사기 프로브 **환경 밀폐** (`_hermetic_env`) — kgy 오탐 L_LEANDEFAULT 의 원인 제거
   (env 만드는 함수가 둘이라 한쪽만 고치면 안 됐다), SBRG_FLAG seed, 변이 리터럴 2건 갱신
 - bridge prereg §7 실행 표기 수정 (판정선 불변, 런 전, 결과 0건 상태)
+- **★ G2 구현 완료** (커밋 2 = 이 파일과 같은 커밋): PTFE 이온 차단 노브
+  `apply_ptfe_blocking` (SE sid 6 → **신설 sid 9 `SE_blk`**, 이온·전자 양쪽 σ=0, 열은 k_SE) ·
+  세 σ/k 표를 10 칸으로 확장 · `electronic_sigma_table(sigma_se=…)` = 원장 ④ 전용 훅
+  (기본 0 = 생산 불변) · 전극 CLI `--step3-ptfe-block-um` + 규약 축 `ptfe_block_um`
+  (PROTOCOL_FIELDS · STRICT_TYPES · FIELD_CONTRACT required_since 2026-08-25 · 매니페스트) ·
+  selftest 8종 (`ptfe-block-*`) · **돌연변이 5종** (기대집합을 스크래치에서 선검증 — 5/5 정확).
+  ⚠ 배터리 도중 대상 파일을 편집해 그 런을 **오염으로 폐기**하고 재실행한 것도 기록해 둔다
+  (심볼릭 트리라 mid-run 편집이 결과를 섞는다 — 다음 세션 주의).
+- **펠릿 RVE 측정기 `pellet_rve_sigma.py`** (selftest 11/11) + 러너 `run_pellet_calib.sh`
+  (STAGE 1: neat/+SDCP/+PTFE 차단그리드/ρ·d 감도, 시드 4, 팔당 ~4 s CPU) — prereg §8 이행.
+  wt→vol 산술이 prereg §1 (9.17/14.60 vol%) 과 selftest 로 맞물림.  T2 스패닝 검출은
+  x/y wrap 을 union-find 로 합침 (안 합치면 비퍼콜 주장이 거저 통과한다).
+  `apply_ptfe_blocking(periodic_xy=True)` — 전극과 **같은 함수** (R5-CX-09 단일 소스 규약).
+
+## F. 오늘 독해로 추가 확정된 것 (2차분)
+
+- **build.js 전문**: 생성기에는 이미 **S3 전 칸 공백 + ⛔ 배너 + Ref S6~S8** 이 들어 있다 —
+  v6 docx 의 철회값은 **옛 생성기 산출**이라는 뜻.  W4 뒤 `node build.js` 재생성이 정답이고
+  docx 손편집은 금지 (SELF-08).  D-메모 특기: D9 (식 (2) Joule 를 남기려면 Results 소비처
+  필요) · D14 (**AM 클래스 확인 — 침대는 AM_S 10 mS/cm 인데 원고는 polycrystalline 서술 =
+  AM_P 5 와 2배 차, 사용자 확인 필요**; VGCF E=10 GPa placeholder → D3 재압밀에 감도 팔 권장) ·
+  D16 (DFT 브랜치와 수식 번호 (3)·Ref S1~S5·서지 스타일 맞물림).
+- **codex_absorb_verdict (R1~R4 전문)**: 4차까지 전부 NO-GO→대응 완료의 사이클.  GPU 재실행
+  조건 = 새 p2 스키마 · clean SHA · 영수증 · census · p1/p2 불혼합 (지금 러너가 충족).
+  **Q1: 비(ratio)의 공통모드 상쇄는 보장되지 않는다** (κ_DBE=κ_SBE 근거 없음) — A 트랙
+  판별 런이 정확히 이것을 잰다.
+- **R5 판정 + R6 요청**: R5 = HOLD (R5-CX-01~11, 전부 대응 커밋 확인).  R6 요청은 스코프를
+  **"원고 주장에 코드가 충분한가"** 로 좁혔고 **Codex 회신 대기 상태**다.  R6 요청서가
+  자기신고한 것: `_tid` 3연속 결함 → **기대집합 실재 관문(HARNESS_ERROR)** 신설 · `.py` 생성기
+  정책 구멍(오늘은 셋 다 깨끗해서 무사했을 뿐).
+- **claude_selfreview_ptfe_8arm (독립 자기리뷰)**: ★ B 트랙에 직결 —
+  **F-A**: σ_ion(SDCP) 는 MG 역산으로 점 0.066 · **±5 % 오차면 밴드 [0, 0.6]** (절연 극한에서
+  둔감) ⇒ 펠릿 RVE 보정(③)도 **밴드로 보고**해야 한다.  **N-5**: 전극 재실행(B-5)에서 PTFE
+  스탬프 + σ_i(SDCP) 앵커를 동시에 켜면 이온 비에 반대 방향 두 힘 = **부호 검정으로 등록
+  가능한 진짜 미지** (B-5 사전등록에 넣을 것).  **N-1**: 차세대 규약 = PTFE **σ=0 스탬프**
+  (`ptfe_zero_dof` 필드가 그 이행 흔적).  **N-2**: PTFE 는 직경 분포(정부피 인발)라 튜브
+  스탬프는 성립 안 함 — 절연체의 불변량은 부피가 아니라 **절단 위상**.  **N-4**: σ_SDCP
+  필름/펠릿 불확실성의 비 영향 ~1 % 유계.  **Part 4**: **첨가제 web 실현 n=1** — origin 8팔이
+  못 덮는 축, SBE/DBE 비에서 상쇄 안 됨 (SI 문장은 "grid-origin ensemble SE" 한정 유지).
+- **sdcp_master.md**: ADD_E_SET 정본 = PTFE 1.80 · SDCP 9.00 GPa (⚠ "출처 = 사용자 지정,
+  근거 미기재" — Table S2 는 "This work Fig 2g/S6-7" 로 적는다: v6 실물이 measured 로 확인).
+  σ_e(SDCP 소재) 150 은 2026-07-10 INTERIM — 현행 250 assumed 와 **계보가 다르다** (250
+  출처 질의는 여전히 사용자 회신 대기).  S12: SDCP 단독 dough 불가 → dual-binder 가 물리.
+  E_bind DFT 는 오분자로 무효화 → 재계산 스펙만 확정 (방향 doped≫neutral 만 생존).

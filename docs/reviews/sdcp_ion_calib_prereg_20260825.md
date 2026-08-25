@@ -110,3 +110,19 @@ neat 정규화를 선험 입력으로 센 계산이고, 이 원장이 더 보수
 펠릿 RVE 생성 → 이온 보정(①②③) → **파라미터 동결** → 전자 축(④⑤⑥ + T1–T3) →
 감도 스윕(ρ_SDCP 1.1/1.7).  구체 명령은 ② 구현 커밋에 러너와 함께 붙인다 (G2).
 커밋 전 `bash scripts/check_all.sh` + `python3 scripts/mutation_sweep_20260825.py` 초록.
+
+**[G2 이행 — 2026-08-25, 런 전·결과 0건.  §2–§7 판정선 불변.]**  G2 게이트 충족:
+② = `step3_sigma.apply_ptfe_blocking` (SE sid 6 → 9, 이온·전자 양쪽 σ=0; 전극
+`--step3-ptfe-block-um` 과 **같은 함수**) — 기본 no-op 은 selftest `ptfe-block-off` 가,
+계약 4건은 돌연변이 5종이 문다.  실행:
+
+```bash
+# STAGE 1 (측정 — 팔당 ~4 s CPU, 전체 수 분):
+bash scripts/run_pellet_calib.sh          # → docs/data/pellet_calib_20260825/*.json
+# STAGE 2 (①②③ 동결 후 전자축) — 러너 말미가 템플릿을 출력한다.
+```
+
+실행 규약의 구체화 (러너 머리말에 동일 선언): binder 구 Ø0.30 µm (SDCP = 리포 규약;
+PTFE = 같은 값의 **임의 규약** — 실측 입도 없음, d ∈ {0.6, 1.2} 스윕을 감도 관측량으로
+기록) · box 6 µm · vox 0.12 (d/vox 2.5) · 차단 그리드 {0.12, 0.24, 0.36} µm (vox 양자화 —
+`block < vox` 는 0 셀이라 노브 분해능이 vox 로 제한된다는 v1 한계 명시).

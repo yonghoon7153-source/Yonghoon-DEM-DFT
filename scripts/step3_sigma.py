@@ -79,29 +79,37 @@ def temperature_provenance(T_C=None, ea_ev=None):
 SIGMA_DEFAULT = {'AM_S': 0.010, 'AM_P': 0.005, 'VGCF': 100.0, 'SuperP': 10.0, 'SDCP': 250.0,
                  'SWCNT': 100.0}
 def electronic_sigma_table(sigma_am_s, sigma_am_p, sigma_vgcf, sigma_superp,
-                           sigma_sdcp, sigma_ptfe=0.0, sigma_swcnt=0.0):
+                           sigma_sdcp, sigma_ptfe=0.0, sigma_swcnt=0.0, sigma_se=0.0):
     """sid → 전자 σ 표 (**생산 규약**).  SE(6) 는 전자 절연, PTFE(7) 는 감도 훅.
 
     ★★★ 2026-08-25 (R5-CX-09, Codex 5차) — 이 표가 `mpm_webapp_payload` 안에 **inline
       배열**로만 있어서, plate/reaction 회귀가 상별 σ 를 **다시 하드코딩**했다.  그러면
       producer 의 상 분기(특히 SWCNT sid 8)가 퇴행해도 회귀가 못 잡는다 — 두 곳이
       **따로** 참이면 그 시험은 생산을 증언하지 않는다.
-      ⇒ producer 도 selftest 도 **이 함수 하나**를 쓴다 (사본 금지, 이 리포의 반복 교훈)."""
+      ⇒ producer 도 selftest 도 **이 함수 하나**를 쓴다 (사본 금지, 이 리포의 반복 교훈).
+    ★ 2026-08-25 (G2/D13) — `sigma_se` 신설: **펠릿 보정 전용** 훅 (원장 ④ — neat 펠릿의
+      전자 σ 0.30e-7 S/cm 는 SE 매트릭스 자신의 잔여 전자전도다).  기본 0.0 = 생산 불변.
+    ⚠ sid 9 (SE_blk = PTFE-차단 SE) 는 **항상 0** — `sigma_ptfe` 감도 훅을 줘도 차단 셀은
+      전자 도체가 되지 않는다 (재질이 SE 지 PTFE 가 아니다).  이온도 0 (차단이 노브의 목적),
+      전자만 SE 를 따르게 두면(sigma_se) 차단 노브가 전자망을 **개선**하는 역설이 생기므로
+      전자도 0 으로 둔다 — 표면 피복은 양쪽 계면을 다 막는다는 보수적 규약."""
     return np.array([0.0, sigma_am_s, sigma_am_p, sigma_vgcf, sigma_superp, sigma_sdcp,
-                     0.0, sigma_ptfe, sigma_swcnt], float)
+                     sigma_se, sigma_ptfe, sigma_swcnt, 0.0], float)
 
 
 def ionic_sigma_table(sigma_ion_sdcp, sigma_ion_se, swcnt_ion_block=False):
     """sid → 이온 σ 표 (**생산 규약**).  탄소(3,4)·AM(1,2)·PTFE(7) 는 이온 절연.
 
     ⚠ SWCNT(8) 는 **기본 ion-transparent** 다 (sheath 가 SE 를 덮어도 이온이 지난다).
-      `swcnt_ion_block` 이 그것을 끈다 — 그 분기가 이 함수 안에 있어야 회귀가 본다."""
+      `swcnt_ion_block` 이 그것을 끈다 — 그 분기가 이 함수 안에 있어야 회귀가 본다.
+    ⚠ sid 9 (SE_blk) = **0 고정** — PTFE 피복이 이온 경로를 끊는다는 것이 G2 노브의
+      정의 그 자체다 (`apply_ptfe_blocking`).  여기가 0 이 아니면 노브는 존재하지 않는다."""
     return np.array([0.0, 0.0, 0.0, 0.0, 0.0, sigma_ion_sdcp, sigma_ion_se, 0.0,
-                     0.0 if swcnt_ion_block else sigma_ion_se], float)
+                     0.0 if swcnt_ion_block else sigma_ion_se, 0.0], float)
 
 
 SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7: 'PTFE',
-            8: 'SWCNT'}                                    # voxel σ-id → name
+            8: 'SWCNT', 9: 'SE_blk'}                       # voxel σ-id → name
 #   sid 7 (PTFE) = SENSITIVITY-ONLY: production은 PTFE를 전도 격자에 아예 안 넣음(절연 = void와
 #   동일 취급, bulk PTFE σ~1e-16 S/cm).  --sigma-ptfe > 0 민감도 런에서만 payload가 phase-4 점을
 #   _apts에 포함시켜 여기로 스탬프됨.
@@ -224,7 +232,8 @@ def _solve_cg(L, b):
 
 def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_um=0.10, se_pts=None,
               sdcp_sphere_d_um=0.0, sdcp_yield_to_vgcf=False, sdcp_bridge_um=0.0,
-              add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None):
+              add_fid=None, fid_gap_tol=2.0, add_kind=None, bridge_um=None,
+              ptfe_block_um=0.0):
     """Voxel σ-id grid: 0 = non-conductive, 1 = AM_S, 2 = AM_P, 3.. = additives (2,3,5 → 3,4,5).
     Also returns per-voxel AM particle index (-1 = not AM) for per-particle currents.
     am_t: 1 = AM_P, 2 = AM_S (LIGGGHTS type convention).  All coords in one frame (µm).
@@ -448,7 +457,52 @@ def rasterize(am_c, am_r, am_t, add_pts, add_phase, box_lo, box_hi, vox, tol_am_
                     q = q[sid[q[:, 0], q[:, 1], q[:, 2]] != 3]
                 if len(q):
                     sid[q[:, 0], q[:, 1], q[:, 2]] = s
+    #  ★ G2 (D13 원장 ②) — 맨 마지막: 차단은 **완성된** PTFE 배치를 봐야 한다 (브리지·상
+    #    루프가 끝난 뒤).  기본 0.0 = 바이트 동일 (함수 자체가 no-op 계약을 진다).
+    apply_ptfe_blocking(sid, vox, ptfe_block_um)
     return sid, pid
+
+
+def apply_ptfe_blocking(sid, vox, block_um, periodic_xy=False):
+    """★ G2 (2026-08-25, D13 원장 ② — `sdcp_ion_calib_prereg_20260825.md`) — PTFE 표면
+    피복의 이온 차단을 **스칼라 노브 1개**로 표현한다: PTFE(sid 7) 셀에서 유클리드 거리
+    `block_um` 안의 **SE(sid 6) 셀만** sid 9(SE_blk) 로 바꾼다.  σ 표가 sid 9 를 이온·전자
+    **양쪽 0** 으로 정의하므로 (`ionic_sigma_table`/`electronic_sigma_table`), 차단 셀은
+    두 망 모두에서 죽는다 — Figure 2 의 실측이 그렇다 (PTFE 는 양쪽을 다 깎는다).
+
+    왜 이 모양인가 — 펠릿 산술(D13)이 이미 확정했다: PTFE 9.17 vol% 의 **부피 희석만**으로는
+    3.09 mS/cm 가 나와야 하는데 실측이 0.97 = 희석의 **0.31배**다.  부피가 아니라 표면
+    피복(피브릴)이 깎는다 ⇒ 참 vol% 로 스탬프(그건 이미 `--ptfe-stamp`)하고, 희석 초과분을
+    이 두께 하나로 보정한다.  ⚠ 노브는 **유효 표현**이지 피브릴 물리가 아니다 (prereg §7).
+
+    계약 (돌연변이 배터리가 문다):
+      · `block_um ≤ 0` → **셀 하나도 안 바꾼다** (기본 = off = 생산 바이트 동일).
+      · **sid 6 만** 바꾼다 — 도체(AM·탄소·SDCP)를 강등하지 않고 pore(0)를 채우지 않는다
+        (그쪽은 이온 σ 이미 0 이라 물리 효과가 없고, 부피 원장만 오염한다).
+      · PTFE 가 없는 침대에는 **셀 단위 no-op** (음성 대조 규약, 브리지와 동일).
+      · 거리 = 셀 중심 간 유클리드 (µm, EDT).  면-이웃이 정확히 `vox` 이므로
+        `block_um < vox` 는 0 셀 = **분해능 이하 두께는 표현 불가** — 격자 양자화의 v1
+        한계를 목-면적 규약과 같은 방식으로 문서화한다 (보정이 vox 를 알고 이뤄져야 한다).
+    `periodic_xy=True` (펠릿 RVE 전용): EDT 를 x/y wrap 패딩 위에서 계산해 경계 너머의
+    PTFE 도 차단 반경에 넣는다.  기본 False = 전극 경로 비트 동일.
+    반환: 바뀐 셀 수 (매니페스트 원장용)."""
+    if float(block_um) <= 0.0:
+        return 0
+    pt = sid == 7
+    if not pt.any():
+        return 0
+    from scipy.ndimage import distance_transform_edt
+    if periodic_xy:
+        w = int(np.ceil(float(block_um) / float(vox))) + 1
+        ptp = np.pad(pt, ((w, w), (w, w), (0, 0)), mode='wrap')
+        d = distance_transform_edt(~ptp, sampling=float(vox))[w:-w, w:-w, :]
+    else:
+        d = distance_transform_edt(~pt, sampling=float(vox))
+    blk = (d <= float(block_um)) & (sid == 6)
+    n = int(blk.sum())
+    if n:
+        sid[blk] = 9
+    return n
 
 
 #: ★ fid 가 **경로(폴리라인)** 를 뜻하는 상(相)만.  phase 2=VGCF · 4=PTFE · 6=SWCNT sheath.
@@ -880,7 +934,8 @@ def thermal_k_table(k_am=K_AM_THERMAL, k_se=K_SE_THERMAL, k_carbon=None, k_sdcp=
             'caveats': 'k_eff = 문헌/ASSUMED k 입력의 복셀-solve 전파값 — 열전도 실험 앵커 없음(Kapitza 계면 '
                        '열저항 무시 → 상한); network_conductivity thermal과 같은 k 앵커 공유 → 표현(복셀-field '
                        'vs 입자-graph)-일치만이지 입력·물리 검증 아님, 스케일도 다름(W/mK vs mScm-eq), 독립 아님'}
-    return np.array([k_pore, k_am, k_am, kc, kc, ks, k_se, k_ptfe, kc], float), prov
+    #  sid 9 (SE_blk, G2) = 재질이 SE — 열은 k_se 그대로 (차단은 전하 계면 규약이지 열이 아니다)
+    return np.array([k_pore, k_am, k_am, kc, kc, ks, k_se, k_ptfe, kc, k_se], float), prov
 
 
 def solve_thermal(sid, vox, z_top_um, z_bot_um=0.0, k_table=None, field_sids=None, field_max=90000,
@@ -1867,6 +1922,97 @@ def _selftest():
     ok &= _e4
     print(f"sdcp-bridge-sbe-noop: SDCP 없는 침대에 셀 단위 no-op  {'OK' if _e4 else 'FAIL'}")
 
+    # ── ★ G2 (D13 원장 ②) — PTFE 이온 차단 노브 `ptfe_block_um` ──────────────────────
+    #   계약 7개: ⓐ 기본 off = 바이트 동일 ⓑ 0.0 = off (변환 0 셀) ⓒ 반경이 셀 수를
+    #   정확히 정한다 (face 6 / +edge 18) ⓓ **SE(6)만** 바꾼다 ⓔ PTFE 없는 침대 no-op
+    #   ⓕ σ/k 표의 sid 9 규약 ⓖ end-to-end: 차단이 실제 이온 솔브 σ 를 낮춘다.
+    #   픽스처: 5×5×5 SE 블록(셀 중심점) 가운데에 PTFE 점 1개 (vox 0.15).
+    _seA = np.stack(np.meshgrid(*[(np.arange(8, 13) + 0.5) * 0.15] * 3,
+                                indexing='ij'), -1).reshape(-1, 3)
+    _pP = np.array([[(10 + 0.5) * 0.15] * 3]); _phP = np.array([4], np.int8)   # phase 4 = PTFE
+    _g_na, _ = rasterize(_bx, _br0, None, _pP, _phP, (0, 0, 0), (3., 3., 3.), 0.15,
+                         se_pts=_seA)                                   # 인자 자체를 안 준다
+    _g_0, _ = rasterize(_bx, _br0, None, _pP, _phP, (0, 0, 0), (3., 3., 3.), 0.15,
+                        se_pts=_seA, ptfe_block_um=0.0)
+    _e5a = bool((_g_na == _g_0).all()) and int((_g_0 == 9).sum()) == 0
+    ok &= _e5a
+    print(f"ptfe-block-off: 기본 = 명시 0.0 = 바이트 동일 · sid9 셀 0  {'OK' if _e5a else 'FAIL'}")
+    #  ⓑ+ⓒ 반경 → 셀 수 (셀 중심 유클리드: face 0.15 · edge-diag 0.2121 · corner 0.2598)
+    _g_f, _ = rasterize(_bx, _br0, None, _pP, _phP, (0, 0, 0), (3., 3., 3.), 0.15,
+                        se_pts=_seA, ptfe_block_um=0.16)
+    _g_e, _ = rasterize(_bx, _br0, None, _pP, _phP, (0, 0, 0), (3., 3., 3.), 0.15,
+                        se_pts=_seA, ptfe_block_um=0.22)
+    _n_f = int((_g_f == 9).sum()); _n_e = int((_g_e == 9).sum())
+    _e5b = (_n_f == 6) and (_n_e == 18)
+    ok &= _e5b
+    print(f"ptfe-block-radius: 0.16µm→face 6 셀 (실측 {_n_f}) · 0.22µm→+edge 18 셀 "
+          f"(실측 {_n_e})  {'OK' if _e5b else 'FAIL'}")
+    #  ⓓ SE 만 바꾼다 — PTFE 점 주위에 VGCF·SDCP 점과 AM 구를 붙여도 그 셀은 불변.
+    #    (변환 전 sid ∈ {6} ∧ 변환 후 sid ∈ {9} 를 **차집합으로** 단언한다.)
+    _pM = np.vstack([_pP, [[(11 + 0.5) * 0.15, (10 + 0.5) * 0.15, (10 + 0.5) * 0.15]],
+                     [[(10 + 0.5) * 0.15, (11 + 0.5) * 0.15, (10 + 0.5) * 0.15]]])
+    _phM = np.array([4, 2, 5], np.int8)                     # PTFE + VGCF + SDCP 이웃
+    _amcM = np.array([[(10 + 0.5) * 0.15, (10 + 0.5) * 0.15, (9 + 0.5) * 0.15]])
+    _amrM = np.array([0.07]); _amtM = np.array([2], np.int8)
+    _m_off, _ = rasterize(_amcM, _amrM, _amtM, _pM, _phM, (0, 0, 0), (3., 3., 3.), 0.15,
+                          se_pts=_seA)
+    _m_blk, _ = rasterize(_amcM, _amrM, _amtM, _pM, _phM, (0, 0, 0), (3., 3., 3.), 0.15,
+                          se_pts=_seA, ptfe_block_um=0.16)
+    _chg = _m_off != _m_blk
+    _e5c = (_chg.any() and set(np.unique(_m_off[_chg])) == {6}
+            and set(np.unique(_m_blk[_chg])) == {9})
+    ok &= _e5c
+    print(f"ptfe-block-se-only: 바뀐 셀 {int(_chg.sum())} 개 전부 6→9 (도체·pore 불변)  "
+          f"{'OK' if _e5c else 'FAIL'}")
+    #  ⓔ PTFE 없는 침대 → 셀 단위 no-op (음성 대조)
+    _q0, _ = rasterize(_bx, _br0, None, np.zeros((0, 3)), np.zeros(0, np.int8),
+                       (0, 0, 0), (3., 3., 3.), 0.15, se_pts=_seA)
+    _q1, _ = rasterize(_bx, _br0, None, np.zeros((0, 3)), np.zeros(0, np.int8),
+                       (0, 0, 0), (3., 3., 3.), 0.15, se_pts=_seA, ptfe_block_um=0.5)
+    _e5d = bool((_q0 == _q1).all())
+    ok &= _e5d
+    print(f"ptfe-block-noop-no-ptfe: PTFE 없는 침대에 no-op  {'OK' if _e5d else 'FAIL'}")
+    #  ⓕ 표 규약 — sid 9 는 이온·전자 **양쪽 0** (감도 훅 sigma_ptfe 를 줘도), 열은 SE.
+    _ti = ionic_sigma_table(1.0, 2.0)
+    _te = electronic_sigma_table(1., 2., 3., 4., 5., sigma_ptfe=123.0, sigma_swcnt=6.,
+                                 sigma_se=7.0)
+    _te0 = electronic_sigma_table(1., 2., 3., 4., 5.)
+    _tk, _ = thermal_k_table()
+    _e5e = (len(_ti) == 10 and _ti[9] == 0.0
+            and len(_te) == 10 and _te[9] == 0.0 and _te[6] == 7.0
+            and _te0[6] == 0.0                               # 생산 기본: SE 전자 절연 불변
+            and len(_tk) == 10 and _tk[9] == _tk[6]
+            and SID_NAME.get(9) == 'SE_blk')
+    ok &= _e5e
+    print(f"ptfe-block-tables: sid9 σ_ion={_ti[9]:g} σ_e={_te[9]:g} (sigma_ptfe=123 에도) · "
+          f"k=k_SE · 기본 σ_e(SE)=0  {'OK' if _e5e else 'FAIL'}")
+    #  ⓖ end-to-end — SE 기둥 가운데 PTFE 점: 차단을 켜면 이온 σ_eff 가 **엄격히** 준다.
+    _seC = np.stack(np.meshgrid((np.arange(5) + 0.5) * 0.15, (np.arange(5) + 0.5) * 0.15,
+                                (np.arange(20) + 0.5) * 0.15, indexing='ij'),
+                    -1).reshape(-1, 3)
+    _pQ = np.array([[(2 + 0.5) * 0.15, (2 + 0.5) * 0.15, (10 + 0.5) * 0.15]])
+    _cQ, _ = rasterize(_bx, _br0, None, _pQ, np.array([4], np.int8),
+                       (0, 0, 0), (0.75, 0.75, 3.0), 0.15, se_pts=_seC)
+    _cB, _ = rasterize(_bx, _br0, None, _pQ, np.array([4], np.int8),
+                       (0, 0, 0), (0.75, 0.75, 3.0), 0.15, se_pts=_seC, ptfe_block_um=0.16)
+    _tio = ionic_sigma_table(0.0, 1.0)
+    _rQ = solve_sigma_z(_cQ, _tio, 0.15, z_top_um=3.0)
+    _rB = solve_sigma_z(_cB, _tio, 0.15, z_top_um=3.0)
+    _e5f = (_rQ['sigma_eff'] > _rB['sigma_eff'] > 0.0)
+    ok &= _e5f
+    print(f"ptfe-block-ion-drop: σ_ion {_rQ['sigma_eff']:.4f} → {_rB['sigma_eff']:.4f} "
+          f"(차단이 솔브까지 관통)  {'OK' if _e5f else 'FAIL'}")
+    #  ⓗ 주기 wrap (펠릿 RVE 전용) — x 경계의 PTFE 가 **반대편 끝** SE 를 wrap 거리로
+    #    차단한다.  비주기에서는 같은 배치가 (실거리 > 반경이라) 아무것도 안 바꾼다.
+    _wp = np.full((8, 4, 4), 6, np.int8); _wp[0, 1, 1] = 7
+    _wq = _wp.copy()
+    _nw = apply_ptfe_blocking(_wp, 0.15, 0.16, periodic_xy=True)     # x wrap: 7↔끝 셀 거리 0.15
+    _nn = apply_ptfe_blocking(_wq, 0.15, 0.16, periodic_xy=False)
+    _e5g = (_wp[7, 1, 1] == 9) and (_wq[7, 1, 1] == 6) and _nw > _nn
+    ok &= _e5g
+    print(f"ptfe-block-periodic: x-wrap 반대편 셀 차단 (주기 {_nw} > 비주기 {_nn} 셀)  "
+          f"{'OK' if _e5g else 'FAIL'}")
+
     # ── σ-치환 판별 팔 (CL-43) — `sdcp_yield_to_vgcf` ────────────────────────────────
     #   ① VGCF 와 겹친 SDCP 셀은 sid 3 으로 남고, ② 안 겹친 SDCP 셀은 그대로 sid 5 이며,
     #   ③ 기본값(False)은 **비트 단위로 옛 거동**이어야 한다 (생산 규약 불변).
@@ -2048,10 +2194,13 @@ def _selftest():
     #        σ 0.01 → 0, AM|SDCP 반응이 I 7.71e-4 → 0 이 되는데 아무도 안 본다).
     #      · 슬래브 **밖** 셀이 signed band 로 접촉이 됐다.
     #    ⇒ 상(相) × 면 × 두 솔버를 표로 돌린다.  새 상이 생기면 여기 한 줄이다.
-    _PHASE_SIG = {1: 0.010, 2: 0.0, 3: 100.0, 4: 5.0, 5: 250.0, 6: 0.0, 7: 0.0, 8: 0.0}
-    #   상 이름 (진단 메시지용) — 전자 솔브 기준 도체/절연
-    _PHASE_NM = {1: 'AM_S', 2: 'AM_P(σ=0)', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP',
-                 6: 'SE(σ=0)', 7: 'PTFE(σ=0)', 8: 'SWCNT(σ=0)'}
+    _PHASE_SIG = {1: 0.010, 2: 0.0, 3: 100.0, 4: 5.0, 5: 250.0, 6: 0.0, 7: 0.0, 8: 0.0,
+                  9: 0.0}                                  # 9 = SE_blk (G2, 양망 절연)
+    #   상 이름 (진단 메시지용) — 전자 솔브 기준 도체/절연.  ★ SID_NAME(단일 소스)에서
+    #   유도한다: 지역 사본이 sid 9 신설 때 뒤처져 **위반 보고 중** KeyError 로 죽었다
+    #   (2026-08-25 배터리 CX-07① HARNESS_ERROR — 시험이 잡고도 보고에서 넘어진 사례).
+    _PHASE_NM = {_s: (_n if _PHASE_SIG.get(_s, 0.0) > 0 else f'{_n}(σ=0)')
+                 for _s, _n in SID_NAME.items()}
 
     def _col_side(surf_sid, side, vox=0.15):
         """도체 기둥의 `side` 표면에 `surf_sid` 를 얹고 σ_eff.  0 이면 pore(갭)."""
@@ -2059,7 +2208,7 @@ def _selftest():
         _a[:, :, 1:4] = 1
         if surf_sid:
             _a[:, :, 4 if side == 'top' else 0] = surf_sid
-        _sg = np.zeros(9)
+        _sg = np.zeros(1 + max(_PHASE_SIG))            # 표 길이 = 상 등재의 함수 (sid 9 포함)
         for _k, _v in _PHASE_SIG.items():
             _sg[_k] = _v
         return solve_sigma_z(_a, _sg, vox, z_top_um=5 * vox, z_bot_um=0.0)['sigma_eff']
@@ -2070,7 +2219,7 @@ def _selftest():
     #    내려갈 곳이 없어 σ 0.01 → 0 이 되고, 그것이 이 결함의 유일한 증인이다.
     def _col_uniform(sd, vox=0.15):
         _a = np.full((3, 3, 5), sd, np.int8)
-        _sg = np.zeros(9)
+        _sg = np.zeros(1 + max(_PHASE_SIG))            # 표 길이 = 상 등재의 함수 (sid 9 포함)
         for _k, _v in _PHASE_SIG.items():
             _sg[_k] = _v
         return solve_sigma_z(_a, _sg, vox, z_top_um=5 * vox, z_bot_um=0.0)['sigma_eff']
@@ -2154,7 +2303,7 @@ def _selftest():
         _a[:, :, 1:4] = 1                       # AM (전자망)
         _a[:, :, 4:6] = 6                       # SE (이온망)
         _a[:, :, 6 if side == 'top' else 0] = surf_sid
-        _se = np.zeros(9); _si = np.zeros(9)
+        _se = np.zeros(1 + max(_RX_E)); _si = np.zeros(1 + max(_RX_I))   # 표 길이 = 생산 함수 소관
         for _k, _v in _RX_E.items():
             _se[_k] = _v
         for _k, _v in _RX_I.items():
@@ -2192,7 +2341,7 @@ def _selftest():
         _a[:, :, 0] = 5                         # 노출면 = SDCP (전자·이온 양쪽 도체)
         _a[:, :, 1:4] = 1                       # AM 본체 (BV 를 만드는 유일한 상)
         _a[:, :, 4:8] = 6                       # SE (이온망)
-        _se = np.zeros(9); _si = np.zeros(9)
+        _se = np.zeros(1 + max(_RX_E)); _si = np.zeros(1 + max(_RX_I))   # 표 길이 = 생산 함수 소관
         for _k, _v in _RX_E.items():
             _se[_k] = _v
         for _k, _v in _RX_I.items():

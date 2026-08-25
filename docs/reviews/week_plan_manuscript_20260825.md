@@ -39,7 +39,7 @@ PTFE E **1.8 GPa (Measured)** 를 선언하는데, S3 의 수치는 **vox 0.4 ·
 |---|---|---|---|---|
 | **W1** | **A 판별 런 4개** (기존 침대 — 재압밀 안 기다림) | kgy V100 | 1–2일 | σ_e 비의 보고 규약 결정 (브리지 규약 or "Ø0.30 이 이산화로 못 푼다" 문장) |
 | **W2** | **재압밀** — SBE/DBE 침대를 Table S2 의 측정 E (SDCP 9.0 · PTFE 1.8)로 | kgy | 수 시간 | 새 침대 (S2↔S3 세대 일치) |
-| **W3** | **B G2 구현** (PTFE 이온 차단 노브, 기본 no-op + selftest) → **B 펠릿 런** (사전등록대로) | CPU | 코드 ~1일 + 런 짧음 | 이온 행 개방 여부 판정 + **σ_SDCP=250 을 Figure 2 앵커 값으로 대체** |
+| **W3** | **B G2 구현 ✅ (2026-08-25)** — `apply_ptfe_blocking`(sid 6→9) + `--step3-ptfe-block-um` + 펠릿 측정기 `pellet_rve_sigma.py`(selftest 11/11) + 러너 `run_pellet_calib.sh`.  → **B 펠릿 런** (kgy, 팔당 ~4 s) | CPU | 런 수 분 | 이온 행 개방 여부 판정 + **σ_SDCP=250 을 Figure 2 앵커 값으로 대체** |
 | **W4** | **STEP3 최종** — 새 침대 × 8팔 × vox 0.15 구 스탬프, A 가 정한 규약 + B 가 준 σ 표 | kgy V100 | ~1일 | **Table S3 전량 재생성** (두께·porosity·면적용량·coverage·σ) |
 | **W5** | **Methods(Simulation) 최종문** — 비중 축소 · 수식 3개 · "porosity 타겟팅" 보정 서술 · 참고문헌 절 내 삽입 | 문서 | — | 원고 절 |
 | **W6** | **금요일: σ 문헌 레인지 문단** (§4 초안 완성돼 있음 — litdb 기반) | 문서 | — | 제출용 문단 + 참고문헌 |
@@ -103,9 +103,12 @@ PTFE E **1.8 GPa (Measured)** 를 선언하는데, S3 의 수치는 **vox 0.4 ·
 ```bash
 # kgy venv
 source ~/dem-venv/bin/activate        # 또는 직접: ~/dem-venv/bin/python3
-# A 트랙 (사전등록 고정, 그대로)
+# A 트랙 (사전등록 고정.  ⚠ 표기 갱신 2026-08-25: P2_EXTRA 로 브리지를 넘기는 옛 표기는
+# allowlist 가 옳게 거부한다 — 정식 축 SDCP_BRIDGE 를 쓴다, bridge prereg §7 개정과 동일)
 ARMS=8 LEAN=2 VOX=0.15  bash scripts/sdcp_gain_vox015_8arm.sh
 ARMS=8 LEAN=2 VOX=0.125 bash scripts/sdcp_gain_vox015_8arm.sh
-ARMS=8 LEAN=2 VOX=0.15  P2_EXTRA="--step3-sdcp-bridge 0.01" bash scripts/sdcp_gain_vox015_8arm.sh
-ARMS=8 LEAN=2 VOX=0.125 P2_EXTRA="--step3-sdcp-bridge 0.01" bash scripts/sdcp_gain_vox015_8arm.sh
+ARMS=8 LEAN=2 VOX=0.15  SDCP_BRIDGE=0.01 bash scripts/sdcp_gain_vox015_8arm.sh
+ARMS=8 LEAN=2 VOX=0.125 SDCP_BRIDGE=0.01 bash scripts/sdcp_gain_vox015_8arm.sh
+# B 트랙 STAGE 1 (W3 — G2 구현 완료, CPU 수 분)
+bash scripts/run_pellet_calib.sh      # → docs/data/pellet_calib_20260825/*.json
 ```

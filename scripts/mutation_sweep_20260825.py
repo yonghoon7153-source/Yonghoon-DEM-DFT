@@ -234,6 +234,32 @@ MUTANTS = [
      "        sub[m & (sub == 0)] = s",
      "        sub[m] = s",
      STEP3, ('sdcp-bridge-no-downgrade',)),
+    #  ── G2 / D13 원장 ② (PTFE 이온 차단 노브) ───────────────────────────────────
+    #  ⚠ 페이로드 CLI→rasterize 배선(_pbl3)은 이 배터리의 selftest 명령으로는 못 문다
+    #    (payload 실행이 필요) — 그 층은 규율 J(초소형 픽스처 실행)와 L-13(P2_EXTRA
+    #    allowlist)이 지킨다.  여기는 물리·와이어링·σ 표 3층이다.
+    ('G2 차단 기본값을 off 가 아니게 (생산 규약 오염)', 'step3_sigma.py',
+     "              ptfe_block_um=0.0):",
+     "              ptfe_block_um=0.3):",
+     #  기본이 0.3 이면: off(기본 팔이 변환) · se-only(_m_off 가 더 넓게 변환돼 방향 역전) ·
+     #  ion-drop(무-인자 대조 팔이 0.3 으로 더 막혀 부등호 뒤집힘) 셋이 문다.
+     STEP3, ('ptfe-block-off', 'ptfe-block-se-only', 'ptfe-block-ion-drop')),
+    ('G2 차단 배선 절단 (노브가 조용히 죽는 회귀 — 2026-08-12 --fibre 부류)', 'step3_sigma.py',
+     "    apply_ptfe_blocking(sid, vox, ptfe_block_um)",
+     "    apply_ptfe_blocking(sid, vox, 0.0)",
+     STEP3, ('ptfe-block-radius', 'ptfe-block-se-only', 'ptfe-block-ion-drop')),
+    ('G2 차단이 SE 아닌 셀도 바꾸게 (pore·도체 오염)', 'step3_sigma.py',
+     "    blk = (d <= float(block_um)) & (sid == 6)",
+     "    blk = (d <= float(block_um)) & (sid != 7)",
+     STEP3, ('ptfe-block-se-only',)),
+    ('G2 이온 표의 sid9 를 도체로 (차단 셀이 전도 — 노브 소멸)', 'step3_sigma.py',
+     "    return np.array([0.0, 0.0, 0.0, 0.0, 0.0, sigma_ion_sdcp, sigma_ion_se, 0.0,\n                     0.0 if swcnt_ion_block else sigma_ion_se, 0.0], float)",
+     "    return np.array([0.0, 0.0, 0.0, 0.0, 0.0, sigma_ion_sdcp, sigma_ion_se, 0.0,\n                     0.0 if swcnt_ion_block else sigma_ion_se, sigma_ion_se], float)",
+     STEP3, ('ptfe-block-tables', 'ptfe-block-ion-drop')),
+    ('G2 전자 표의 sid9 를 sigma_ptfe 로 (감도 훅이 차단 셀을 도체화)', 'step3_sigma.py',
+     "                     sigma_se, sigma_ptfe, sigma_swcnt, 0.0], float)",
+     "                     sigma_se, sigma_ptfe, sigma_swcnt, sigma_ptfe], float)",
+     STEP3, ('ptfe-block-tables',)),
     ('R5-CX-05 미등록 component 조용한 통과 복원', 'run_contract.py',
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",

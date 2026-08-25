@@ -748,6 +748,16 @@ def main():
                          '(0.24× @0.15 ~ 4.53× @0.4).  구 스탬프는 2.4 %% 안이다.  '
                          '⚠ d/vox ≥ 2 필요 — 그 아래는 fail-closed 로 거부한다.  '
                          'prereg v2 판정(h1) 의 대응, CL-33')
+    ap.add_argument('--step3-ptfe-block-um', type=float, default=0.0, metavar='UM',
+                    help='★ G2 (D13 원장 ②) — PTFE 표면 피복의 **이온 차단 두께**(µm).  PTFE '
+                         '셀에서 이 유클리드 거리 안의 SE 셀을 sid 9(SE_blk, 이온·전자 양쪽 '
+                         'σ=0)로 바꾼다.  0 = off (기본, 바이트 동일).  펠릿 산술(D13): PTFE '
+                         '9.17 vol%% 의 부피 희석만으론 3.09 mS/cm 여야 하는데 실측 0.97 = '
+                         '희석의 0.31배 ⇒ 초과분은 표면 피복이고 이 노브 하나로 보정한다 '
+                         '(유효 표현이지 피브릴 물리가 아니다 — ion-calib prereg §7).  '
+                         '⚠ --ptfe-stamp 로 PTFE 가 격자에 있어야 발화 (없으면 셀 단위 no-op).  '
+                         '⚠ block < vox 는 0 셀 = 분해능 이하 두께는 표현 불가 (보정은 vox 를 '
+                         '알고 한다).')
     ap.add_argument('--step3-sdcp-bridge', type=float, default=0.0, metavar='UM',
                     help='★ **진단 전용** (SELF-11 / Q-B2) — SDCP 구의 **접촉 브리지** 반경(µm). '
                          '0 = off (기본, 바이트 동일).  이 파일 docstring 이 이미 적은 결함 — '
@@ -1429,9 +1439,13 @@ def main():
                       f'팔을 수렴시키기 위한 것이지 규약 변경이 아니다', flush=True)
             _yv3 = bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False))
             _sbr3 = float(getattr(a, 'step3_sdcp_bridge', 0.0) or 0.0)
+            _pbl3 = float(getattr(a, 'step3_ptfe_block_um', 0.0) or 0.0)
             if _sbr3 > 0:
                 print(f'  STEP3: ★ **진단 팔** — SDCP 접촉 브리지 {_sbr3:g} µm (SELF-11 / '
                       f'Q-B2).  ⚠ 생산 규약 아님', flush=True)
+            if _pbl3 > 0:
+                print(f'  STEP3: ★ G2 — PTFE 이온 차단 {_pbl3:g} µm (SE→SE_blk, D13 원장 ②).  '
+                      f'⚠ 생산 규약 아님 (펠릿 보정 노브)', flush=True)
             if _yv3:
                 print('  STEP3: ★ **진단 팔** — SDCP 가 VGCF 셀에 양보한다 (σ-치환 채널 OFF, '
                       'CL-43).  ⚠ 생산 규약 아님', flush=True)
@@ -1439,7 +1453,7 @@ def main():
                                        se_pts=_septs, add_fid=_afid, bridge_um=_bru,
                                        sdcp_sphere_d_um=getattr(a, 'step3_sdcp_sphere_d', 0.0),
                                        sdcp_yield_to_vgcf=_yv3,
-                                       sdcp_bridge_um=_sbr3,
+                                       sdcp_bridge_um=_sbr3, ptfe_block_um=_pbl3,
                                        # ⚠ 도메인은 `se` 다 — `_m` 은 se 위의 마스크라
                                        #   `_kind_all[_m]` 이 성립하려면 len(_kind_all)==len(se).
                                        #   옛 코드는 `len(_fid_all)` 과 비교해 ⓐ 길이 불일치로
@@ -1456,7 +1470,7 @@ def main():
                 import json as _rj
                 _led = {'vox_um': a.step3_vox, 'origin_shift_um': [float(x) for x in _osh],
                         'bridge_um': _bru, 'sdcp_yield_to_vgcf': _yv3,
-                        'sdcp_bridge_um': _sbr3,
+                        'sdcp_bridge_um': _sbr3, 'ptfe_block_um': _pbl3,
                         'sdcp_sphere_d_um': float(
                             getattr(a, 'step3_sdcp_sphere_d', 0.0) or 0.0),
                         'grid_shape': [int(x) for x in sid3.shape],
@@ -1471,6 +1485,7 @@ def main():
                         _am_c, _am_r, t, _apts, _aph, _lo3, _hi, a.step3_vox, se_pts=_septs,
                         add_fid=_afid, bridge_um=_bru, sdcp_sphere_d_um=0.0,
                         sdcp_yield_to_vgcf=_yv3, sdcp_bridge_um=_sbr3,   # 양쪽 같은 규약 (like-for-like)
+                        ptfe_block_um=_pbl3,
                         add_kind=(_kind_all[_m] if _kind_all is not None
                                   and len(_kind_all) == len(se) else None))   # 도메인 = se (위 주석)
                     #  결함판 재현: 구 셀을 **나중에** 덮어쓴다 (SDCP 가 PTFE/SWCNT 를 먹는다)
@@ -2346,6 +2361,8 @@ def main():
             'sdcp_yield_to_vgcf': bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False)),
             #  ★ 2026-08-25 (SELF-11) — 브리지는 σ 침대를 바꾸므로 **규약 축**이다.
             'sdcp_bridge_um': float(getattr(a, 'step3_sdcp_bridge', 0.0) or 0.0),
+            #  ★ 2026-08-25 (G2, D13 원장 ②) — PTFE 차단도 σ 침대를 바꾼다 = 규약 축.
+            'ptfe_block_um': float(getattr(a, 'step3_ptfe_block_um', 0.0) or 0.0),
             #  ★★ 2026-08-25 (A1 2차) — 침대 기하(z 늘림)와 SE 점구름 **출처**.
             #    둘 다 `_s3.rasterize` 로 들어가는데 규약에 없었다 (digest 는 파일
             #    내용만 덮는다).  `se_source` 는 합성일 때만 모양(frac@n_vox)을 싣는다.
