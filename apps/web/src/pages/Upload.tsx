@@ -1,9 +1,10 @@
 /** Drop .wrd files, attach them to a cell, and see what the instrument said. */
 
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import { DropZone, UploadTargetFields, useUploadTarget } from '../components/UploadTarget'
+import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { bytes, dateTime, num } from '../lib/format'
 import { useAsync } from '../lib/hooks'
@@ -16,32 +17,13 @@ interface Result {
 }
 
 export function Upload() {
-  const [over, setOver] = useState(false)
   const [busy, setBusy] = useState(false)
   const [results, setResults] = useState<Result[]>([])
-  const [targetSample, setTargetSample] = useState<number | null>(null)
-  const [newSampleName, setNewSampleName] = useState('')
-  //: 그룹을 여기서 정한다.  나중에 셀 화면에서 하나씩 붙이면, 같은 실험 묶음을
-  //: 열 개씩 올리고 나서 열 번 다시 들어가야 한다.
-  const [groupId, setGroupId] = useState<number | null>(null)
-  //: 셀이 수십 개가 되면 드롭다운에서 눈으로 찾는 것이 느리다.  타이핑으로
-  //: 좁힌다.
-  const [sampleQuery, setSampleQuery] = useState('')
-  //: 파일 하나가 셀 하나인 실험이 많다 (컷오프만 바꾼 열네 개짜리 묶음 같은).
-  //: 그럴 때 이름을 열네 번 타이핑하게 두지 않는다.
-  const [nameFromFile, setNameFromFile] = useState(false)
-  const inputRef = useRef<HTMLInputElement>(null)
 
-  const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
-  const groups = useAsync(() => api.listGroups(), [results.length], { live: true })
-
-  const matches = useMemo(() => {
-    const all = samples.data ?? []
-    const needle = sampleQuery.trim().toLowerCase()
-    const inGroup = groupId === null ? all : all.filter((s) => s.group_id === groupId)
-    if (!needle) return inGroup
-    return inGroup.filter((s) => s.name.toLowerCase().includes(needle))
-  }, [samples.data, sampleQuery, groupId])
+  // 그룹 · 새 셀 · 기존 셀 · 파일 이름을 셀 이름으로 — 세 업로드 화면이 같은
+  // 부품을 쓴다 (ADR 0024).  같은 일을 세 번 적어 두면 한 번 고칠 때 두 곳이
+  // 남는다.
+  const pick = useUploadTarget(results.length)
   const orphans = useAsync(() => api.listRuns({ unassigned: true }), [results.length],
                          { live: true })
 
@@ -50,68 +32,30 @@ export function Upload() {
       const list = [...files]
       if (!list.length) return
       setBusy(true)
-
-      let sampleId = targetSample
       try {
-        if (!sampleId && newSampleName.trim()) {
-          // A file name like No_1_dry_0.0316g_13pi_80wt%_0.2C_... already
-          // carries the conditions, but reading them out of it would be
-          // guesswork; the schedule inside the file is authoritative and gets
-          // applied server-side after upload.
-          const created = await api.createSample({
-            name: newSampleName.trim(),
-            ...(groupId === null ? {} : { group_id: groupId }),
-          })
-          sampleId = created.id
-          setTargetSample(created.id)
-          setNewSampleName('')
-        }
-      } catch (cause) {
-        setResults((current) => [
-          { file: newSampleName, error: String(cause instanceof Error ? cause.message : cause) },
-          ...current,
-        ])
-        setBusy(false)
-        return
-      }
-
-      // 같은 이름을 두 번 만들지 않도록, 이번 드롭에서 만든 것을 기억한다.
-      const madeHere = new Map<string, number>()
-
-      for (const file of list) {
-        try {
-          let target = sampleId
-          if (nameFromFile) {
-            const wanted = cellNameFor(file.name)
-            const existing =
-              madeHere.get(wanted) ??
-              (samples.data ?? []).find((s) => s.name === wanted)?.id
-            if (existing) {
-              target = existing
-            } else {
-              const created = await api.createSample({
-                name: wanted,
-                ...(groupId === null ? {} : { group_id: groupId }),
-              })
-              madeHere.set(wanted, created.id)
-              target = created.id
-            }
-          }
-          const run = await api.uploadRun(file, target)
-          setResults((current) => [{ file: file.name, run }, ...current])
-        } catch (cause) {
-          setResults((current) => [
-            {
+        const plan = await pick.planFor(list)
+        for (const [index, file] of list.entries()) {
+          try {
+            const run = await api.uploadRun(file, plan[index] ?? null)
+            setResults((current) => [{ file: file.name, run }, ...current])
+          } catch (cause) {
+            setResults((current) => [{
               file: file.name,
               error: String(cause instanceof Error ? cause.message : cause),
-            },
-            ...current,
-          ])
+            }, ...current])
+          }
         }
+      } catch (cause) {
+        // 셀을 만들다 실패했다.  파일은 하나도 안 올라갔으므로 그렇게 말한다.
+        setResults((current) => [{
+          file: '셀 만들기',
+          error: String(cause instanceof Error ? cause.message : cause),
+        }, ...current])
+      } finally {
+        setBusy(false)
       }
-      setBusy(false)
     },
-    [targetSample, newSampleName, groupId, nameFromFile, samples.data],
+    [pick],
   )
 
   return (
@@ -130,133 +74,13 @@ export function Upload() {
         <div className="col" style={{ gap: 14 }}>
           <Card title="파일 선택" tight>
             <div style={{ padding: 14 }}>
-              {/* 그룹을 먼저 고른다.  아래 "기존 셀" 목록도 그 그룹으로 좁혀지고,
-                  새로 만드는 셀은 그 그룹에 들어간다 — 한 실험 묶음을 통째로
-                  올릴 때 나중에 하나씩 붙이지 않아도 된다. */}
-              <Field
-                label="① 그룹"
-                hint="새 셀이 들어갈 곳 · 아래 목록도 좁혀집니다"
-              >
-                <select
-                  value={groupId ?? ''}
-                  aria-label="그룹"
-                  onChange={(event) => {
-                    const next = event.target.value ? Number(event.target.value) : null
-                    setGroupId(next)
-                    // 좁힌 목록에 없는 셀이 골라진 채로 남으면, 화면에는
-                    // 안 보이는 셀에 파일이 붙는다.
-                    setTargetSample(null)
-                  }}
-                >
-                  <option value="">그룹 없음</option>
-                  {groups.data?.map((group) => (
-                    <option key={group.id} value={group.id}>
-                      {group.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <UploadTargetFields pick={pick} />
 
-              <div className="grid cols-2" style={{ gap: 10, margin: '10px 0 12px' }}>
-                <Field
-                  label="② 새 셀 만들기"
-                  hint={nameFromFile ? '파일마다 셀 하나' : '이름만 입력'}
-                >
-                  <input
-                    type="text"
-                    value={newSampleName}
-                    placeholder="No_1_dry_0.0316g"
-                    disabled={targetSample !== null || nameFromFile}
-                    onChange={(event) => setNewSampleName(event.target.value)}
-                  />
-                  <label className="tiny" style={{ display: 'block', marginTop: 6 }}>
-                    <input
-                      type="checkbox"
-                      checked={nameFromFile}
-                      onChange={(event) => {
-                        setNameFromFile(event.target.checked)
-                        if (event.target.checked) {
-                          setNewSampleName('')
-                          setTargetSample(null)
-                        }
-                      }}
-                      style={{ marginRight: 6 }}
-                    />
-                    파일 이름을 셀 이름으로
-                  </label>
-                </Field>
-                <Field
-                  label="② 또는 기존 셀에 연결"
-                  hint={
-                    matches.length && sampleQuery.trim()
-                      ? `${matches.length}개 일치`
-                      : '이름을 쳐서 좁힐 수 있습니다'
-                  }
-                >
-                  {/* 라벨은 Field 안의 첫 폼 요소에 붙는다.  검색칸이 먼저 오므로
-                      select 는 자기 라벨을 따로 들어야 이름 없는 컨트롤이 되지
-                      않는다. */}
-                  <input
-                    type="text"
-                    value={sampleQuery}
-                    placeholder="이름 일부…"
-                    aria-label="셀 이름으로 찾기"
-                    disabled={newSampleName.trim() !== ''}
-                    onChange={(event) => {
-                      setSampleQuery(event.target.value)
-                      setTargetSample(null)
-                    }}
-                    style={{ marginBottom: 6 }}
-                  />
-                  <select
-                    value={targetSample ?? ''}
-                    aria-label="기존 셀에 연결"
-                    disabled={newSampleName.trim() !== ''}
-                    onChange={(event) =>
-                      setTargetSample(event.target.value ? Number(event.target.value) : null)
-                    }
-                  >
-                    <option value="">연결 안 함 (나중에 지정)</option>
-                    {matches.map((sample) => (
-                      <option key={sample.id} value={sample.id}>
-                        {sample.name}
-                      </option>
-                    ))}
-                  </select>
-                </Field>
-              </div>
-
-              <div
-                className={`dropzone${over ? ' over' : ''}`}
-                onDragOver={(event) => {
-                  event.preventDefault()
-                  setOver(true)
-                }}
-                onDragLeave={() => setOver(false)}
-                onDrop={(event) => {
-                  event.preventDefault()
-                  setOver(false)
-                  void send(event.dataTransfer.files)
-                }}
-                onClick={() => inputRef.current?.click()}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(event) => event.key === 'Enter' && inputRef.current?.click()}
-              >
-                <div className="big">여기에 .wrd 파일을 끌어다 놓으세요</div>
-                <div className="small">또는 눌러서 선택 · 여러 개 한 번에 가능</div>
-                <input
-                  ref={inputRef}
-                  type="file"
-                  accept=".wrd"
-                  multiple
-                  hidden
-                  onChange={(event) => {
-                    if (event.target.files) void send(event.target.files)
-                    event.target.value = ''
-                  }}
-                />
-              </div>
+              <DropZone
+                accept=".wrd"
+                label="여기에 .wrd 파일을 끌어다 놓으세요"
+                onFiles={send}
+              />
 
               {busy ? (
                 <div style={{ marginTop: 12 }}>
@@ -295,7 +119,7 @@ export function Upload() {
                   <OrphanRun
                     key={run.id}
                     run={run}
-                    samples={samples.data ?? []}
+                    samples={pick.samples}
                     onAttached={() => orphans.reload()}
                   />
                 ))}

@@ -1,28 +1,31 @@
-/** EIS 업로드 — 올리면서 무엇을 잰 것인지 분류한다.
+/** EIS 업로드 — 충방전 업로드와 같은 양식.
  *
- *  **SOC 스캔이 별도 화면이 아닌 이유.**  SOC 스캔과 단일 스펙트럼은 같은
- *  `.mpr` 이고 같은 회로로 맞춘다.  다른 것은 파일 하나가 스윕 하나냐 스물이냐
- *  뿐이고, 그건 파일이 스스로 말한다 (ADR 0022).  그러니 목록을 둘로 가르는
- *  대신 **올릴 때 한 번 정하고**, 그 다음부터는 라이브러리에서 걸러 보면 된다.
+ *  왼쪽에서 **그룹 → 셀 → 파일** 순으로 정하고 끌어다 놓는다.  오른쪽은 아직
+ *  셀에 안 붙은 것들이다.  충방전 쪽과 순서·이름·모양을 맞춘 이유는 이 셋이
+ *  실제로 같은 일이기 때문이다 — 측정 종류가 다르다고 손에 익은 순서까지
+ *  달라지면 매번 다시 배워야 한다 (ADR 0024).
  *
- *  파일이 말하는 것은 파일에게 묻는다 (§0.3).  스윕 수는 파싱하면 나오므로
- *  종류는 서버가 정하고, 이 화면의 드롭박스는 **덮어쓰기**다 — 사람이 "이건
- *  SOC 스캔이 아니라 온도별이다" 라고 말할 수 있어야 하고, 그때 그 말이 이긴다.
+ *  EIS 에만 있는 것은 가운데 한 줄이다: **무엇을 잰 것인가** (전해질 · 셀 구성 ·
+ *  목적).  그 조합이 기본 회로와 아크의 이름을 정하므로 (ADR 0019) 올릴 때
+ *  물어 두는 편이 낫다.
+ *
+ *  SOC 스캔인지 단일 스펙트럼인지는 **묻지 않는다.**  스윕 수는 파일이 스스로
+ *  말하고 (§0.3), 올린 뒤 표가 그렇게 적어 준다.
  */
 
-import { useMemo, useRef, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { DropZone, UploadTargetFields, useUploadTarget } from '../components/UploadTarget'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, EisKind, Spectrum } from '../lib/types'
 
 const KINDS: { value: EisKind; label: string; hint: string }[] = [
-  { value: 'liquid', label: '액체 전해질',
-    hint: '두 아크가 SEI 와 전하이동' },
+  { value: 'liquid', label: '액체 전해질', hint: '두 아크가 SEI 와 전하이동' },
   { value: 'solid', label: '전고체',
-    hint: '같은 두 아크가 벌크와 입계 — 이름이 다르다 (ADR 0019)' },
+    hint: '같은 두 아크가 벌크와 입계 — 이름이 다릅니다' },
 ]
 
 const CONFIGS: { value: CellConfig | ''; label: string }[] = [
@@ -36,191 +39,218 @@ const CONFIGS: { value: CellConfig | ''; label: string }[] = [
  *  만들어서다 — 고정하면 그때마다 코드를 고쳐야 한다. */
 const PURPOSES = ['SOC별', '사이클별', '200 사이클', '구동 전', '온도별']
 
+interface Result {
+  file: string
+  spectrum?: Spectrum
+  error?: string
+}
+
 export function EisUpload() {
   const [kind, setKind] = useState<EisKind>('liquid')
   const [config, setConfig] = useState<CellConfig | ''>('')
   const [purpose, setPurpose] = useState('')
-  const [attachTo, setAttachTo] = useState('')
   const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [made, setMade] = useState<Spectrum[]>([])
-  const fileRef = useRef<HTMLInputElement>(null)
-  const settingsRef = useRef<HTMLInputElement>(null)
+  const [results, setResults] = useState<Result[]>([])
 
-  const samples = useAsync(() => api.listSamples(), [])
-  const active = useMemo(
-    () => KINDS.find((entry) => entry.value === kind) ?? KINDS[0]!, [kind])
+  const pick = useUploadTarget(results.length)
+  const orphans = useAsync(
+    () => api.listSpectra().then((all) => all.filter((item) => !item.sample_id)),
+    [results.length], { live: true })
 
-  async function upload(files: FileList | null) {
-    if (!files?.length) return
+  const send = useCallback(async (files: FileList | File[]) => {
+    const all = [...files]
+    if (!all.length) return
     setBusy(true)
-    setError(null)
-    setMade([])
-    const added: Spectrum[] = []
-    const problems: string[] = []
-    // `.mps` 는 스펙트럼이 아니라 그 옆에 놓이는 설정 파일이다.  같이 골랐으면
+    // `.mps` 는 스펙트럼이 아니라 그 옆에 놓이는 설정 파일이다.  같이 던졌으면
     // 스펙트럼마다 곁들여 보내고, 혼자 왔으면 올릴 것이 없다.
-    const settings = [...files].find((f) => f.name.toLowerCase().endsWith('.mps'))
-    const spectra = [...files].filter((f) => f !== settings)
+    const settings = all.find((f) => f.name.toLowerCase().endsWith('.mps'))
+    const list = all.filter((f) => f !== settings)
     try {
-      for (const file of spectra) {
+      const plan = await pick.planFor(list)
+      for (const [index, file] of list.entries()) {
         try {
-          const out = await api.uploadSpectrum(
+          const spectrum = await api.uploadSpectrum(
             file,
             {
               kind,
               cell_config: config || undefined,
               purpose: purpose.trim() || undefined,
-              sample_id: attachTo || undefined,
+              sample_id: plan[index] ?? undefined,
             },
             settings ?? null,
           )
-          added.push(out)
+          setResults((current) => [{ file: file.name, spectrum }, ...current])
         } catch (cause) {
-          // 한 파일이 실패했다고 나머지를 안 올리면, 스무 개를 고른 사람이
+          // 한 파일이 실패했다고 나머지를 안 올리면, 스무 개를 던진 사람이
           // 어디까지 됐는지 모른 채 처음부터 다시 하게 된다.
-          problems.push(`${file.name}: ${
-            cause instanceof Error ? cause.message : String(cause)}`)
+          setResults((current) => [{
+            file: file.name,
+            error: cause instanceof Error ? cause.message : String(cause),
+          }, ...current])
         }
       }
-      setMade(added)
-      if (problems.length) setError(problems.join('\n'))
+    } catch (cause) {
+      setResults((current) => [{
+        file: '셀 만들기',
+        error: cause instanceof Error ? cause.message : String(cause),
+      }, ...current])
     } finally {
       setBusy(false)
-      if (fileRef.current) fileRef.current.value = ''
-      if (settingsRef.current) settingsRef.current.value = ''
     }
-  }
+  }, [pick, kind, config, purpose])
 
   return (
     <main className="page">
       <div className="page-head">
-        <div style={{ minWidth: 0 }}>
+        <div>
           <h1>EIS 업로드</h1>
           <div className="sub">
-            EC-Lab 의 <code>.mpr</code>·<code>.mpt</code> 를 그대로 —
-            SOC 스캔인지 단일 스펙트럼인지는 파일이 말합니다
+            EC-Lab 의 <code>.mpr</code>·<code>.mpt</code> 를 그대로 올리면 주파수·
+            임피던스를 한 번에 읽습니다. 같은 파일을 다시 올려도 중복되지 않습니다.
           </div>
         </div>
       </div>
 
-      {error ? <Alert kind="warn">{error}</Alert> : null}
+      <div className="split">
+        <div className="col" style={{ gap: 14 }}>
+          <Card title="파일 선택" tight>
+            <div style={{ padding: 14 }}>
+              <UploadTargetFields pick={pick} />
 
-      <Card title="무엇을 잰 것인가">
-        <div className="grid cols-3" style={{ padding: 12, gap: 10 }}>
-          <Field label="전해질" hint={active.hint}>
-            <select
-              aria-label="전해질"
-              value={kind}
-              onChange={(event) => setKind(event.target.value as EisKind)}
-            >
-              {KINDS.map((entry) => (
-                <option key={entry.value} value={entry.value}>{entry.label}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="셀 구성" hint="아크의 뜻과 기본 회로를 정합니다">
-            <select
-              aria-label="셀 구성"
-              value={config}
-              onChange={(event) => setConfig(event.target.value as CellConfig | '')}
-            >
-              {CONFIGS.map((entry) => (
-                <option key={entry.value} value={entry.value}>{entry.label}</option>
-              ))}
-            </select>
-          </Field>
-          <Field label="목적" hint="비우면 파일이 말하는 대로 (SOC 스캔은 자동)">
-            <input
-              aria-label="목적"
-              list="eis-purposes"
-              value={purpose}
-              placeholder="예: SOC별, 200 사이클"
-              onChange={(event) => setPurpose(event.target.value)}
-            />
-            <datalist id="eis-purposes">
-              {PURPOSES.map((value) => <option key={value} value={value} />)}
-            </datalist>
-          </Field>
-          <Field label="셀에 붙이기" hint="비우면 안 붙임 — 나중에 붙여도 됩니다">
-            <select
-              aria-label="셀에 붙이기"
-              value={attachTo}
-              onChange={(event) => setAttachTo(event.target.value)}
-            >
-              <option value="">— 안 붙임</option>
-              {(samples.data ?? []).map((sample) => (
-                <option key={sample.id} value={sample.id}>{sample.name}</option>
-              ))}
-            </select>
-          </Field>
-        </div>
-      </Card>
+              <div className="grid cols-3" style={{ gap: 10, marginBottom: 12 }}>
+                <Field label="③ 전해질"
+                       hint={KINDS.find((e) => e.value === kind)?.hint}>
+                  <select
+                    aria-label="전해질"
+                    value={kind}
+                    onChange={(event) => setKind(event.target.value as EisKind)}
+                  >
+                    {KINDS.map((entry) => (
+                      <option key={entry.value} value={entry.value}>{entry.label}</option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="③ 셀 구성" hint="아크의 뜻과 기본 회로를 정합니다">
+                  <select
+                    aria-label="셀 구성"
+                    value={config}
+                    onChange={(event) => setConfig(event.target.value as CellConfig | '')}
+                  >
+                    {CONFIGS.map((entry) => (
+                      <option key={entry.value} value={entry.value}>{entry.label}</option>
+                    ))}
+                  </select>
+                </Field>
+                <Field label="③ 목적" hint="비우면 파일이 말하는 대로">
+                  <input
+                    aria-label="목적"
+                    list="eis-purposes"
+                    value={purpose}
+                    placeholder="예: SOC별, 200 사이클"
+                    onChange={(event) => setPurpose(event.target.value)}
+                  />
+                  <datalist id="eis-purposes">
+                    {PURPOSES.map((value) => <option key={value} value={value} />)}
+                  </datalist>
+                </Field>
+              </div>
 
-      <Card title="파일">
-        <div className="row" style={{ padding: 12, gap: 10, flexWrap: 'wrap' }}>
-          <input
-            ref={fileRef}
-            type="file"
-            multiple
-            accept=".mpr,.mpt,.mps"
-            aria-label="스펙트럼 파일"
-            onChange={(event) => void upload(event.target.files)}
-            style={{ display: 'none' }}
-          />
-          <button type="button" className="primary" disabled={busy}
-                  onClick={() => fileRef.current?.click()}>
-            파일 고르기
-          </button>
-          {busy ? <Spinner label="올리는 중" /> : null}
-          <span className="tiny dim">
-            <code>.mps</code> 를 같이 고르면 진폭·장비 이름이 함께 들어갑니다.
-          </span>
-        </div>
-      </Card>
+              <DropZone
+                accept=".mpr,.mpt,.mps"
+                label="여기에 .mpr 파일을 끌어다 놓으세요"
+                hint="또는 눌러서 선택 · 여러 개 한 번에 가능 · .mps 를 같이 던지면 진폭·장비 이름이 함께 들어갑니다"
+                onFiles={send}
+              />
 
-      <Card title={made.length ? `올린 것 ${made.length}개` : '올린 것'} tight>
-        {made.length ? (
-          <div className="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>종류</th>
-                  <th>점</th>
-                  <th style={{ textAlign: 'left' }}>목적</th>
-                  <th style={{ textAlign: 'left' }}>셀</th>
-                </tr>
-              </thead>
-              <tbody>
-                {made.map((item) => (
-                  <tr key={item.id}>
-                    <td className="text">
-                      <Link to={`/eis/${item.id}`}>{item.name}</Link>
-                      {/* 같은 바이트를 다시 올린 것은 새 행이 아니다.  조용히
-                          넘어가면 "올렸는데 개수가 안 늘었다" 가 된다. */}
-                      {item.duplicate ? <span className="tiny dim"> (이미 있던 것)</span> : null}
-                    </td>
-                    <td className="text dim">
-                      {(item.sweep_count ?? 1) > 1
-                        ? `SOC 스캔 — 스윕 ${item.sweep_count}개`
-                        : '단일 스펙트럼'}
-                    </td>
-                    <td>{item.n_points}</td>
-                    <td className="text dim">{item.purpose || '—'}</td>
-                    <td className="text dim">{item.sample_name ?? '— 안 붙임'}</td>
-                  </tr>
+              {busy ? (
+                <div style={{ marginTop: 12 }}>
+                  <Spinner label="읽는 중 — 스윕이 여럿이면 줄이 여러 개 생깁니다" />
+                </div>
+              ) : null}
+            </div>
+          </Card>
+
+          {results.length ? (
+            <Card title="업로드 결과" tight>
+              <div className="col" style={{ padding: 14, gap: 10 }}>
+                {results.map((result, index) => (
+                  <Result key={`${result.file}-${index}`} result={result} />
                 ))}
-              </tbody>
-            </table>
+              </div>
+            </Card>
+          ) : null}
+        </div>
+
+        <Card
+          title={`셀에 안 붙은 스펙트럼 · ${orphans.error ? '—' : `${orphans.data?.length ?? 0}개`}`}
+          tight
+        >
+          <div style={{ padding: 14 }}>
+            {/* "모두 붙어 있습니다" 는 단정이다.  실패한 조회는 그것을 알 수
+                없고, 오류를 그 문장 뒤에 숨기면 셀에 못 들어간 파일에서
+                사람을 돌려보내게 된다. */}
+            {orphans.error ? (
+              <Alert kind="error">{orphans.error}</Alert>
+            ) : orphans.loading && !orphans.data ? (
+              <Spinner />
+            ) : orphans.data?.length ? (
+              <div className="col" style={{ gap: 8 }}>
+                {orphans.data.map((item) => (
+                  <div key={item.id} className="row" style={{ gap: 8 }}>
+                    <Link to={`/eis/${item.id}`}>{item.name}</Link>
+                    <span className="tiny dim">{item.n_points}점</span>
+                  </div>
+                ))}
+                <div className="tiny faint">
+                  <Link to="/eis/library">라이브러리</Link>에서 셀을 정할 수 있습니다.
+                </div>
+              </div>
+            ) : (
+              <Empty title="모두 붙어 있습니다" />
+            )}
           </div>
-        ) : (
-          <Empty title="아직 올린 것이 없습니다" icon="↑">
-            스윕이 여럿인 파일은 <b>스윕마다 한 줄</b>이 되고, 그 묶음이 SOC
-            스캔입니다 — 라이브러리에서 종류로 걸러 볼 수 있습니다.
-          </Empty>
-        )}
-      </Card>
+        </Card>
+      </div>
     </main>
+  )
+}
+
+function Result({ result }: { result: Result }) {
+  if (result.error) {
+    return (
+      <Alert kind="error">
+        <strong>{result.file}</strong> — {result.error}
+      </Alert>
+    )
+  }
+  const item = result.spectrum
+  if (!item) return null
+  const sweeps = item.sweep_count ?? 1
+  return (
+    <div className="col" style={{ gap: 4 }}>
+      <div className="row" style={{ gap: 8 }}>
+        <strong>{item.original_name || item.name}</strong>
+        <span className="badge finished">읽음</span>
+        {/* 같은 바이트를 다시 올린 것은 새 행이 아니다.  조용히 넘어가면
+            "올렸는데 개수가 안 늘었다" 가 된다. */}
+        {item.duplicate ? <span className="tiny dim">이미 있던 것</span> : null}
+        {item.sample_name ? (
+          <Link className="tiny" to={`/samples/${item.sample_id}`}>
+            {item.sample_name}
+          </Link>
+        ) : <span className="tiny dim">셀 안 붙임</span>}
+      </div>
+      <div className="tiny dim">
+        {sweeps > 1 ? `SOC 스캔 — 스윕 ${sweeps}개` : '단일 스펙트럼'}
+        {` · ${item.n_points}점`}
+        {item.purpose ? ` · ${item.purpose}` : ''}
+        {sweeps > 1 ? (
+          <>
+            {' · '}
+            <Link to={`/scans/${item.sha256}`}>스캔 보기</Link>
+          </>
+        ) : null}
+      </div>
+    </div>
   )
 }

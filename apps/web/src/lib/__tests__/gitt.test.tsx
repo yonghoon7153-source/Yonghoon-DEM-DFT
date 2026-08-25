@@ -114,7 +114,7 @@ describe('GITT 업로드', () => {
     })
     render(<MemoryRouter><GittUpload /></MemoryRouter>)
 
-    const input = await screen.findByLabelText('GITT 파일')
+    const input = await screen.findByLabelText('여기에 .wrd 파일을 끌어다 놓으세요')
     await userEvent.upload(
       input, new File(['x'], 'cycling.wrd', { type: 'application/octet-stream' }))
 
