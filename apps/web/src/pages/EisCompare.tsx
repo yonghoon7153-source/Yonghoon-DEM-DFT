@@ -20,6 +20,7 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
 import { useAsync } from '../lib/hooks'
+import { inductiveCount, nyquistXy } from '../lib/eis'
 import { nyquistWideTsv } from '../lib/origin'
 import type { EisKind, Spectrum } from '../lib/types'
 
@@ -40,6 +41,9 @@ export function EisCompare() {
   const [sampleId, setSampleId] = useState<number | null>(null)
   const [search, setSearch] = useState('')
   const [chosen, setChosen] = useState<number[]>([])
+  // 기본은 끄기.  실측을 화면에서 지우는 것은 사람이 결정한다 (ADR 0019) —
+  // 유도성 아크가 진짜인 셀도 있다 (리튬 도금 같은).
+  const [dropInductive, setDropInductive] = useState(false)
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
@@ -105,16 +109,24 @@ export function EisCompare() {
 
   const series = useMemo<PlotSeries[]>(() => {
     if (!fresh) return []
-    return (points.data ?? []).map((item) => ({
-      label: label(rows.find((row) => row.id === item.id) ?? ({} as Spectrum)),
-      x: item.z_re,
-      // 나이퀴스트 세로축은 −Z″ 다.
-      y: item.z_im.map((value) => -value),
-      color: seriesColor(rows.findIndex((row) => row.id === item.id)),
-      points: true,
-      width: 1,
-    }))
-  }, [points.data, fresh, rows])
+    return (points.data ?? []).map((item) => {
+      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
+      return {
+        label: label(rows.find((row) => row.id === item.id) ?? ({} as Spectrum)),
+        x,
+        y,
+        color: seriesColor(rows.findIndex((row) => row.id === item.id)),
+        points: true,
+        width: 1,
+      }
+    })
+  }, [points.data, fresh, rows, dropInductive])
+
+  // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
+  // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
+  const inductive = useMemo(
+    () => (points.data ?? []).reduce((sum, item) => sum + inductiveCount(item.z_im), 0),
+    [points.data])
 
   return (
     <main className="page">
@@ -201,8 +213,25 @@ export function EisCompare() {
         ) : points.loading && !points.data ? (
           <Spinner />
         ) : series.length ? (
-          <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
-                height={380} legend equalAspect positiveFit />
+          <>
+            <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
+                  height={380} legend equalAspect positiveFit />
+            {inductive ? (
+              <label className="row tiny faint" style={{ gap: 6, padding: '8px 0 0' }}>
+                <input
+                  type="checkbox"
+                  checked={dropInductive}
+                  onChange={(event) => setDropInductive(event.target.checked)}
+                  style={{ width: 'auto' }}
+                />
+                실수축 위의 점 {inductive}개 빼기
+                <span className="dim">
+                  — 고주파에서 Z″ 가 양수인 구간입니다 (케이블·셀 홀더의 인덕턴스).
+                  아크 밑으로 꽂히는 수직선이 그것입니다.
+                </span>
+              </label>
+            ) : null}
+          </>
         ) : null}
       </Card>
 

@@ -19,6 +19,7 @@ import { api } from '../lib/api'
 import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
+import { inductiveCount, nyquistXy } from '../lib/eis'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
@@ -79,12 +80,14 @@ export function SpectrumDetail() {
 
   const nyquist = useMemo<PlotSeries[]>(() => {
     if (!points.data) return []
+    // 세로축은 −Z″ 다.  허수부를 그대로 그리면 아크가 아래로 뒤집혀서,
+    // 파일이 왜 −Im(Z) 를 저장하는지가 화면에서 되풀이된다.
+    const measured = nyquistXy(points.data.z_re, points.data.z_im, dropInductive,
+                               (value) => perArea(value, area))
     const series: PlotSeries[] = [{
       label: '측정',
-      x: points.data.z_re.map((value) => perArea(value, area)),
-      // 나이퀴스트 세로축은 −Z″ 다.  허수부를 그대로 그리면 아크가 아래로
-      // 뒤집혀서, 파일이 왜 −Im(Z) 를 저장하는지가 화면에서 되풀이된다.
-      y: points.data.z_im.map((value) => perArea(-value, area)),
+      x: measured.x,
+      y: measured.y,
       color: seriesColor(0),
       points: true,
       width: 0,
@@ -94,16 +97,23 @@ export function SpectrumDetail() {
       // 회로를 재구성하던 때는 L·Ws·Wo·중첩이 조용히 빠져 다른 곡선이
       // "맞춤" 으로 그려졌다 (리뷰 #6).  서버가 곡선을 못 주면 선을 그리지
       // 않고 이유(fitted_note)를 아래에 적는다.
+      // 맞춤 곡선도 같은 규칙으로 자른다.  회로에 L 이 있으면 이 곡선도
+      // 고주파에서 유도성이라, 측정만 자르면 맞춤선 혼자 밑으로 꽂힌다.
+      const fitted = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
+                               (value) => perArea(value, area))
       series.push({
         label: `맞춤 (${fit.circuit})`,
-        x: fit.fitted_z_re.map((value) => perArea(value, area)),
-        y: fit.fitted_z_im.map((value) => perArea(-value, area)),
+        x: fitted.x,
+        y: fitted.y,
         color: seriesColor(1),
         width: 2,
       })
     }
     return series
-  }, [points.data, fit, area])
+  }, [points.data, fit, area, dropInductive])
+
+  const inductive = useMemo(
+    () => (points.data ? inductiveCount(points.data.z_im) : 0), [points.data])
 
   // 보드는 두 패널이다 (리뷰 #27).  8 decade 의 주파수를 선형 x 에 놓으면
   // 10 kHz 아래 전부가 폭 1% 에 뭉치고, Ω 와 도(°)를 한 선형 y 에 겹치면
@@ -258,6 +268,19 @@ export function SpectrumDetail() {
           ) : (
             <Spinner />
           )}
+          {/* 뺐으면 뺐다고 적는다 (ADR 0019).  스위치를 여기 또 만들지는
+              않는다 -- 아래 피팅 설정의 것과 같은 뜻이고, 둘이 따로 놀면
+              그림과 맞춘 곡선이 서로 다른 점 위에 서게 된다. */}
+          {inductive ? (
+            <div className="tiny faint" style={{ paddingTop: 8 }}>
+              {dropInductive
+                ? `실수축 위의 점 ${inductive}개를 뺐습니다 — 고주파에서 Z″ 가 `
+                  + '양수인 구간 (케이블·셀 홀더의 인덕턴스). 아래 "고주파 유도성 점 '
+                  + '빼기" 를 끄면 그대로 보입니다.'
+                : `실수축 위에 점 ${inductive}개가 있습니다 — 아크 밑으로 꽂히는 `
+                  + '수직선이 그것입니다. 아래 "고주파 유도성 점 빼기" 로 뺄 수 있습니다.'}
+            </div>
+          ) : null}
         </Card>
 
         <Card title="보드">
@@ -331,6 +354,7 @@ export function SpectrumDetail() {
               />
               <span className="tiny">
                 고주파 유도성 점 빼기 — 배선이지 셀이 아닙니다
+                <span className="faint"> · 위 나이퀴스트도 함께 바뀝니다</span>
               </span>
             </label>
             <div className="row">
