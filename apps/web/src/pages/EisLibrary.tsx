@@ -11,6 +11,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -47,6 +48,9 @@ export function EisLibrary() {
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
+  const group = useGroupChoice()
+  // 그룹은 셀의 성질이라 셀 표가 있어야 거를 수 있다 (비교 화면과 같다).
+  const samples = useAsync(() => api.listSamples(), [], { live: true })
 
   const purposes = useMemo(() => {
     const seen = new Set<string>()
@@ -54,18 +58,24 @@ export function EisLibrary() {
     return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
   }, [spectra.data])
 
+  const inGroup = group.includes
   const shown = useMemo(() => {
     const needle = search.trim().toLowerCase()
+    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
     return (spectra.data ?? []).filter((item) => {
       if (shape === 'scan' && !isScan(item)) return false
       if (shape === 'single' && isScan(item)) return false
       if (purpose && item.purpose !== purpose) return false
+      if (group.effective !== null) {
+        const cell = item.sample_id === null ? undefined : byId.get(item.sample_id)
+        if (!cell || !inGroup(cell.group_id)) return false
+      }
       if (needle && !(item.name.toLowerCase().includes(needle)
         || item.original_name.toLowerCase().includes(needle)
         || (item.sample_name ?? '').toLowerCase().includes(needle))) return false
       return true
     })
-  }, [spectra.data, shape, purpose, search])
+  }, [spectra.data, samples.data, shape, purpose, search, group.effective, inGroup])
 
   // 스캔은 파일 단위로 세어야 뜻이 맞는다 — 스윕 21개는 스캔 1개다.
   const scanFiles = useMemo(
@@ -92,6 +102,7 @@ export function EisLibrary() {
 
       <Card title="거르기" tight>
         <div className="grid cols-4" style={{ padding: 12, gap: 10 }}>
+          <GroupFilterFields pick={group} hint="셀에 붙은 것만 남습니다" />
           <Field label="종류" hint="파일이 말하는 것 — 스윕 수로 갈립니다">
             <select
               aria-label="종류"

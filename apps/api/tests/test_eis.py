@@ -601,13 +601,39 @@ def test_a_cell_with_both_kinds_says_neither(client, sample_id):
     assert row["cell_config"] == ""
 
 
-def test_the_dashboard_counts_what_is_not_attached_yet(client, sample_id):
-    """붙이는 것은 일이고, 그 일이 남아 있다는 사실은 여기서만 보인다."""
+def test_the_dashboard_shows_what_is_not_attached_yet_as_its_own_row(client, sample_id):
+    """붙이는 것은 일이고, 그 일이 **무엇에** 남아 있는지가 여기서 보여야 한다.
+
+    수만 세면 "하나 있습니다" 까지만 알고 그게 어느 파일인지는 다른 화면에
+    가야 안다.  줄로 내고, 셀 칸이 비어 있는 것 자체를 정보로 쓴다.
+    """
     upload(client)                                  # 안 붙임
     upload(client, name="b.mpr", rs=9.0, sample_id=sample_id)
     body = client.get("/api/eis/dashboard").json()
     assert body["unattached"] == 1
+    assert len(body["rows"]) == 2
+
+    attached, loose = body["rows"]
+    # 붙은 줄이 먼저다 -- 표의 첫인상이 "아직 정리 안 된 파일" 이면 안 된다.
+    assert attached["attached"] is True
+    assert attached["sample_id"] == sample_id
+    assert attached["name"] == "b.mpr"      # 셀 이름 말고 그 측정의 원래 이름
+    assert loose["attached"] is False
+    assert loose["sample_id"] is None
+    assert loose["name"]
+
+
+def test_one_unattached_scan_is_one_row_not_twenty(client):
+    """스윕이 스물인 SOC 스캔 하나가 스무 줄이 되면 표가 그것만으로 덮인다."""
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=4),
+                                "application/octet-stream")})
+    body = client.get("/api/eis/dashboard").json()
+    assert body["unattached"] == 4
     assert len(body["rows"]) == 1
+    assert body["rows"][0]["spectra"] == 4
+    assert body["rows"][0]["scans"] == 1
 
 
 # --- 스캔 섹션: 파일 하나를 SOC 축으로 (ADR 0022) ---------------------------

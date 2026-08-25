@@ -34,6 +34,18 @@ export function GittDetail() {
     const data = pocv.data
     if (!data) return []
     const out: PlotSeries[] = []
+    // 원본을 **먼저** 넣는다: 나중 계열이 위에 그려지므로, pOCV 의 점이 선에
+    // 가리지 않는다.  같은 색의 점선이라 어느 곡선의 원본인지도 분명하다.
+    const raw = (trace: { capacity_mah: number[]; voltage_v: number[] } | undefined,
+                 label: string, color: string) => {
+      if (!trace?.capacity_mah.length) return
+      out.push({
+        label, x: trace.capacity_mah, y: trace.voltage_v,
+        color, width: 1, dash: [3, 3],
+      })
+    }
+    raw(data.charge_raw, '충전 측정 전압', seriesColor(0))
+    raw(data.discharge_raw, '방전 측정 전압', seriesColor(1))
     if (data.charge.length) {
       out.push({
         label: '충전 pOCV',

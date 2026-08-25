@@ -7,8 +7,11 @@
  *  맞춘 적이 없으면 저항 칸은 비어 있다.  0 이 아니다 (§0.4).
  */
 
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { DeleteSampleButton } from '../components/DeleteSample'
+import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -20,7 +23,13 @@ const CONFIG_LABEL: Record<string, string> = {
 
 export function EisDashboard() {
   const board = useAsync(() => api.eisDashboard(), [], { live: true })
-  const rows = board.data?.rows ?? []
+  const group = useGroupChoice()
+  // 지우기 실패는 표 바깥에 한 번만 그린다 -- 행 안에 끼우면 열이 밀린다.
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const inGroup = group.includes
+  const rows = useMemo(
+    () => (board.data?.rows ?? []).filter((row) => inGroup(row.group_id)),
+    [board.data, inGroup])
   const unattached = board.data?.unattached ?? 0
 
   return (
@@ -32,6 +41,8 @@ export function EisDashboard() {
             임피던스를 가진 셀이 한 줄씩 — 몇 개 쟀고, 맞췄고, 저항이 얼마인가
           </div>
         </div>
+        <span className="spacer" />
+        <GroupFilterFields pick={group} compact />
       </div>
 
       {/* 붙이는 것은 일이고, 그 일이 남아 있다는 사실은 여기서만 보인다.
@@ -39,10 +50,12 @@ export function EisDashboard() {
       {unattached ? (
         <Alert kind="info">
           셀에 안 붙은 스펙트럼이 {unattached}개 있습니다 —{' '}
-          <Link to="/eis/library">라이브러리</Link>에서 셀을 정해 주면 이 표에
-          들어옵니다.
+          <Link to="/eis/library">라이브러리</Link>에서 셀을 정해 주면 그 셀의
+          줄로 합쳐집니다 — 그전까지는 아래에 이름만으로 나옵니다.
         </Alert>
       ) : null}
+
+      {deleteError ? <Alert kind="error">{deleteError}</Alert> : null}
 
       <Card title={`셀 ${rows.length}개`} tight>
         {board.error ? (
@@ -54,6 +67,7 @@ export function EisDashboard() {
             <table>
               <thead>
                 <tr>
+                  <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
                   <th style={{ textAlign: 'left' }}>그룹</th>
                   <th style={{ textAlign: 'left' }}>측정</th>
@@ -66,15 +80,27 @@ export function EisDashboard() {
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>마지막</th>
                   <th style={{ textAlign: 'left' }}>작성자</th>
+                  {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
+                      글자가 먼저 읽힌다 -- 셀 라이브러리와 같은 규칙이다. */}
+                  <th />
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={row.sample_id ?? row.sample_name}>
+                  <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
+                      className={row.attached ? undefined : 'dim'}>
+                    <td className="text">{row.name || '—'}</td>
                     <td className="text">
-                      <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
+                      {/* 셀 칸이 비어 있다는 것 자체가 이 줄의 정보다: 아직
+                          붙일 일이 남아 있다는 뜻이고, 그 일은 라이브러리에서
+                          한다 (§0.4 — 없는 소속을 지어내지 않는다). */}
+                      {row.attached
+                        ? <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
+                        : <Link className="tiny" to="/eis/library">셀 안 붙음</Link>}
                     </td>
-                    <td className="text dim">{row.group_name || '—'}</td>
+                    <td className="text dim">
+                      {groupPath(row.group_name, row.group_parent_name) || '—'}
+                    </td>
                     <td className="text dim">
                       {/* 한 셀에 액체와 전고체가 섞여 있으면 서버가 종류를
                           비워 보낸다.  둘을 한 줄로 요약하면 그 줄이 거짓말을
@@ -101,6 +127,18 @@ export function EisDashboard() {
                     <td className="text dim">{row.purposes.join(', ') || '—'}</td>
                     <td className="dim">{dateTime(row.measured_at)}</td>
                     <td className="text dim">{row.owner || '—'}</td>
+                    <td>
+                      {/* 셀을 기록에서 내린다.  원본 파일은 남는다 (불변 규칙 2) --
+                          같은 바이트를 다시 올리면 sha256 이 같아 되살아난다. */}
+                      {row.sample_id === null ? null : (
+                        <DeleteSampleButton
+                          sampleId={row.sample_id}
+                          sampleName={row.sample_name}
+                          onDeleted={() => board.reload()}
+                          onError={setDeleteError}
+                        />
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

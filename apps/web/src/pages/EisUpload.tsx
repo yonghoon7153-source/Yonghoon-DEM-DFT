@@ -118,7 +118,7 @@ export function EisUpload() {
               <UploadTargetFields pick={pick} />
 
               <div className="grid cols-3" style={{ gap: 10, marginBottom: 12 }}>
-                <Field label="③ 전해질"
+                <Field label="④ 전해질"
                        hint={KINDS.find((e) => e.value === kind)?.hint}>
                   <select
                     aria-label="전해질"
@@ -130,7 +130,7 @@ export function EisUpload() {
                     ))}
                   </select>
                 </Field>
-                <Field label="③ 셀 구성" hint="아크의 뜻과 기본 회로를 정합니다">
+                <Field label="⑤ 셀 구성" hint="아크의 뜻과 기본 회로를 정합니다">
                   <select
                     aria-label="셀 구성"
                     value={config}
@@ -141,7 +141,7 @@ export function EisUpload() {
                     ))}
                   </select>
                 </Field>
-                <Field label="③ 목적" hint="비우면 파일이 말하는 대로">
+                <Field label="⑥ 목적" hint="비우면 파일이 말하는 대로">
                   <input
                     aria-label="목적"
                     list="eis-purposes"

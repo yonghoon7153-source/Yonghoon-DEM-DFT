@@ -13,11 +13,15 @@ import { useCallback, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { DropZone, UploadTargetFields, useUploadTarget } from '../components/UploadTarget'
-import { Alert, Card, Empty, Spinner } from '../components/ui'
+import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num } from '../lib/format'
 import { useAsync } from '../lib/hooks'
 import type { GittRun } from '../lib/types'
+
+/** 자유 입력의 보기.  EIS 와 같은 이유로 목록을 고정하지 않는다 -- 랩이 새
+ *  목적을 계속 만들고, 고정하면 그때마다 코드를 고쳐야 한다. */
+const PURPOSES = ['SOC별', '저온', '고온', '코팅 전후', '두께별']
 
 interface Result {
   file: string
@@ -26,6 +30,7 @@ interface Result {
 }
 
 export function GittUpload() {
+  const [purpose, setPurpose] = useState('')
   const [busy, setBusy] = useState(false)
   const [results, setResults] = useState<Result[]>([])
 
@@ -43,8 +48,10 @@ export function GittUpload() {
       for (const [index, file] of list.entries()) {
         try {
           const sampleId = plan[index]
-          const run = await api.uploadGittRun(
-            file, sampleId ? { sample_id: sampleId } : undefined)
+          const run = await api.uploadGittRun(file, {
+            ...(sampleId ? { sample_id: sampleId } : {}),
+            ...(purpose.trim() ? { purpose: purpose.trim() } : {}),
+          })
           setResults((current) => [{ file: file.name, run }, ...current])
         } catch (cause) {
           // 한 파일이 실패했다고 나머지를 멈추지 않는다.
@@ -62,7 +69,7 @@ export function GittUpload() {
     } finally {
       setBusy(false)
     }
-  }, [pick])
+  }, [pick, purpose])
 
   return (
     <main className="page">
@@ -81,6 +88,21 @@ export function GittUpload() {
           <Card title="파일 선택" tight>
             <div style={{ padding: 14 }}>
               <UploadTargetFields pick={pick} />
+
+              <div className="grid cols-2" style={{ gap: 10, marginBottom: 12 }}>
+                <Field label="④ 목적" hint="무엇을 보려고 잰 기록인가 · 비워도 됩니다">
+                  <input
+                    aria-label="목적"
+                    list="gitt-purposes"
+                    value={purpose}
+                    placeholder="예: SOC별, 저온"
+                    onChange={(event) => setPurpose(event.target.value)}
+                  />
+                  <datalist id="gitt-purposes">
+                    {PURPOSES.map((value) => <option key={value} value={value} />)}
+                  </datalist>
+                </Field>
+              </div>
 
               <DropZone
                 accept=".wrd"
@@ -171,7 +193,7 @@ function Result({ result }: { result: Result }) {
         ) : <span className="tiny dim">셀 안 붙임</span>}
       </div>
       <div className="tiny dim">
-        펄스 {run.n_pulses}개 · {run.n_points}점
+        {run.purpose ? `${run.purpose} · ` : ''}펄스 {run.n_pulses}개 · {run.n_points}점
         {run.duration_h === null ? '' : ` · ${num(run.duration_h, 3)} h`}
       </div>
       {/* 사이클링 파일을 여기 올렸다면 이 한 줄이 유일한 신호다.  판정이 아니라

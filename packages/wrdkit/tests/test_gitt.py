@@ -316,3 +316,41 @@ def test_diffusion_points_carry_their_rest_evidence():
     for point, reference in zip(result.points, pocv.charge, strict=True):
         assert point.rest_s == pytest.approx(600.0, rel=0.05)
         assert point.drift_mv == pytest.approx(reference.drift_mv)
+
+
+# --- 원본 전압 곡선 (pOCV 밑에 깔리는 선) --------------------------------------
+
+
+def test_the_raw_trace_shares_the_curves_x_axis():
+    """점과 선이 같은 자리를 말해야 한다.
+
+    x 축은 그 갈래의 **첫 점**에서 0 이고 (`_from_baseline` 과 같은 규칙).
+    선이 그 규칙을 안 따르면 곡선 **옆에** 그려지고, 그 어긋남이 두 값의 실제
+    차이처럼 보인다.
+    """
+    curve = pseudo_ocv(gitt(n_pulses=3))
+    assert curve.charge, "이 픽스처에는 충전 펄스가 있어야 한다"
+    assert curve.charge_raw.capacity_mah, "곡선이 있으면 그 밑의 선도 있어야 한다"
+    assert len(curve.charge_raw.capacity_mah) == len(curve.charge_raw.voltage_v)
+    # 각 점은 제 구간의 **끝**이므로, 선의 끝 x 는 마지막 점의 x 와 같다.
+    assert curve.charge_raw.capacity_mah[-1] == pytest.approx(
+        curve.charge[-1].capacity_mah, rel=1e-9)
+    # 그리고 선은 곡선보다 촘촘하다 -- 펄스와 완화를 다 담기 때문이다.
+    assert len(curve.charge_raw.capacity_mah) > len(curve.charge)
+
+
+def test_the_raw_trace_moves_the_same_way_as_its_branch():
+    """방전 갈래도 왼쪽에서 오른쪽으로 간다 — 점과 같은 방향이다."""
+    charge = synthetic.make_gitt(n_pulses=2, trailing_rest=False)
+    discharge = synthetic.make_gitt(n_pulses=3, charging=False, v_start=3.4)
+    curve = pseudo_ocv(read_wrd_bytes(synthetic.build_wrd(charge + discharge)))
+    assert curve.discharge_raw.capacity_mah, "방전 점이 있으면 선도 있어야 한다"
+    assert curve.discharge_raw.capacity_mah[-1] >= curve.discharge_raw.capacity_mah[0]
+
+
+def test_a_skipped_pulse_leaves_no_raw_line():
+    """점이 없는 구간에 선만 그리면, 곡선이 '없다' 고 한 자리에 선이 남는다."""
+    curve = pseudo_ocv(gitt(n_pulses=3), min_rest_s=10 ** 9)
+    assert not curve.charge and not curve.discharge
+    assert not curve.charge_raw.capacity_mah
+    assert not curve.discharge_raw.capacity_mah

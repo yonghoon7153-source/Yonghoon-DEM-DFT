@@ -21,12 +21,24 @@ def _now() -> datetime:
 
 
 class ExperimentGroup(SQLModel, table=True):
-    """A set of cells meant to be compared -- one experiment, one series."""
+    """A set of cells meant to be compared -- one experiment, one series.
+
+    Groups nest one level: a group may hold sub-groups, a sub-group holds only
+    cells (ADR 0025).  A cell names exactly one node in ``Sample.group_id`` --
+    its sub-group when it has one -- so "which group is this cell in" never has
+    two answers.  Reading a parent group therefore means reading its children
+    too; ``group_scope()`` is the one place that expands it.
+    """
 
     __tablename__ = "experiment_group"
 
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
+    #: 이 그룹을 담고 있는 그룹.  None 이면 최상위다.  깊이는 2 로 제한한다 --
+    #: 화면이 드롭다운 둘로 표현하는 구조이고, 임의 깊이를 허용하면 표현할 수
+    #: 없는 상태를 저장할 수 있게 된다 (ADR 0025).
+    parent_id: int | None = Field(default=None, foreign_key="experiment_group.id",
+                                  index=True)
     description: str = ""
     #: Plot colour hint for the web UI; not interpreted by the backend.
     color: str = ""
@@ -466,6 +478,11 @@ class GittRun(SQLModel, table=True):
     #: Rests shorter than this are not treated as equilibrium.  0 = keep all,
     #: and report the drift per point instead.
     min_rest_s: float = 0.0
+    #: 무엇을 보려고 잰 측정인가 — "SOC별", "저온", "코팅 전후".  EIS 와 같은
+    #: 자유 입력이다 (`SpectrumRecord.purpose` 를 보라): 목록을 고정하면 랩이
+    #: 새 목적을 만들 때마다 코드를 고쳐야 한다.  파일은 이것을 말하지 않으므로
+    #: 비어 있는 것이 정상이고, 비었다고 지어내지 않는다 (§0.4).
+    purpose: str = Field(default="", index=True)
 
     parse_error: str = ""
     #: 펄스 수에 대한 한 줄, 올릴 때 적어 둔다.  판정이 아니라 관찰이다 --

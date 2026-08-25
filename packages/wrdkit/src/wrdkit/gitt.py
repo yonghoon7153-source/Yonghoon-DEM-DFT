@@ -84,9 +84,31 @@ class PseudoOcvPoint:
 
 
 @dataclass
+class RawTrace:
+    """The measured voltage behind a branch of the pOCV curve.
+
+    Same x axis as the branch it belongs to, sample by sample: the pulse that
+    moved the capacity and the rest that followed it.  Drawn under the pOCV
+    points it shows *how* the cell got to each of them -- the polarisation
+    during the pulse and the relaxation afterwards -- which is exactly what
+    the equilibrium curve throws away.
+
+    Only the samples that produced a point are here.  A pulse that was skipped
+    (no rest after it) has no point to sit under, and drawing it anyway would
+    put a line where the curve says there is nothing.
+    """
+
+    capacity_mah: list[float] = field(default_factory=list)
+    voltage_v: list[float] = field(default_factory=list)
+
+
+@dataclass
 class PseudoOcv:
     charge: list[PseudoOcvPoint] = field(default_factory=list)
     discharge: list[PseudoOcvPoint] = field(default_factory=list)
+    #: 위 두 곡선 밑에 깔리는 실제 측정 전압.  같은 x 축을 쓴다.
+    charge_raw: RawTrace = field(default_factory=RawTrace)
+    discharge_raw: RawTrace = field(default_factory=RawTrace)
     #: Pulses with no rest after them.  Counted, never silently dropped: a
     #: truncated file ends on a pulse, and so does a protocol that forgot the
     #: last rest, and the two look identical in the curve.
@@ -223,10 +245,15 @@ def pseudo_ocv(wrd: WrdFile, *, min_rest_s: float = 0.0,
     """
     blocks = segment_pulses(wrd, rest_threshold_a=rest_threshold_a)
     voltage = np.asarray(wrd.data["voltage"], dtype=float)
+    signed = _signed_capacity_mah(wrd)
     out = PseudoOcv()
 
     charge_points: list[PseudoOcvPoint] = []
     discharge_points: list[PseudoOcvPoint] = []
+    #: 점을 만든 구간의 원본 샘플 범위 (pulse.start, rest.stop).  점과 같은
+    #: 규칙으로 걸러야 곡선과 그 밑의 선이 같은 구간을 말한다.
+    charge_spans: list[tuple[int, int]] = []
+    discharge_spans: list[tuple[int, int]] = []
     for i, block in enumerate(blocks):
         if block.mode == "rest":
             continue
@@ -257,11 +284,43 @@ def pseudo_ocv(wrd: WrdFile, *, min_rest_s: float = 0.0,
             rest_s=following.duration_s,
             drift_mv=_drift_mv(voltage, following),
         )
-        (charge_points if block.mode == "charge" else discharge_points).append(point)
+        if block.mode == "charge":
+            charge_points.append(point)
+            charge_spans.append((block.start, following.stop))
+        else:
+            discharge_points.append(point)
+            discharge_spans.append((block.start, following.stop))
 
     out.charge = _from_baseline(charge_points, charging=True)
     out.discharge = _from_baseline(discharge_points, charging=False)
+    out.charge_raw = _raw_trace(signed, voltage, charge_spans,
+                                charge_points, charging=True)
+    out.discharge_raw = _raw_trace(signed, voltage, discharge_spans,
+                                   discharge_points, charging=False)
     return out
+
+
+def _raw_trace(signed: np.ndarray, voltage: np.ndarray,
+               spans: list[tuple[int, int]], points: list[PseudoOcvPoint],
+               *, charging: bool) -> RawTrace:
+    """The measured samples behind one branch, on that branch's own x axis.
+
+    The baseline is the branch's first *point*, not its first sample, and the
+    direction is the branch's own -- the same two rules ``_from_baseline``
+    applies to the points.  Any other choice would draw the raw line beside
+    the curve instead of under it, and the offset would look like a real
+    difference between the two.
+    """
+    if not spans or not points:
+        return RawTrace()
+    baseline = points[0].capacity_mah
+    capacity: list[float] = []
+    values: list[float] = []
+    for start, stop in spans:
+        piece = signed[start:stop]
+        capacity.extend(float(v - baseline if charging else baseline - v) for v in piece)
+        values.extend(float(v) for v in voltage[start:stop])
+    return RawTrace(capacity_mah=capacity, voltage_v=values)
 
 
 def _from_baseline(points: list[PseudoOcvPoint], *, charging: bool

@@ -114,10 +114,12 @@ export const api = {
 
   // -- groups --------------------------------------------------------------
   listGroups: () => request<Group[]>('/api/groups'),
-  createGroup: (body: { name: string; description?: string; color?: string }) =>
-    request<Group>('/api/groups', json('POST', body)),
-  updateGroup: (id: number, body: { name: string; description?: string; color?: string }) =>
-    request<Group>(`/api/groups/${id}`, json('PATCH', body)),
+  createGroup: (body: {
+    name: string; description?: string; color?: string; parent_id?: number | null
+  }) => request<Group>('/api/groups', json('POST', body)),
+  updateGroup: (id: number, body: {
+    name?: string; description?: string; color?: string; parent_id?: number | null
+  }) => request<Group>(`/api/groups/${id}`, json('PATCH', body)),
   deleteGroup: (id: number) => request<void>(`/api/groups/${id}`, { method: 'DELETE' }),
 
   // -- composition presets --------------------------------------------------

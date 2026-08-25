@@ -16,6 +16,8 @@ from wrdkit import BASES, Basis
 
 class GroupIn(BaseModel):
     name: str
+    #: 이 그룹을 담을 상위 그룹.  None 이면 최상위 그룹이다 (ADR 0025).
+    parent_id: int | None = None
     description: str = ""
     color: str = ""
 
@@ -30,6 +32,9 @@ class GroupUpdate(BaseModel):
     """
 
     name: str | None = None
+    #: 여기만 ``null`` 이 뜻을 갖는다: "최상위로 꺼내라".  나머지 세 열은
+    #: NOT NULL 이라 아래 검사기가 막는다.
+    parent_id: int | None = None
     description: str | None = None
     color: str | None = None
 
@@ -51,10 +56,17 @@ class GroupUpdate(BaseModel):
 class GroupOut(BaseModel):
     id: int
     name: str
+    parent_id: int | None = None
+    #: 상위 그룹 이름.  화면이 그룹 목록만 받고도 "부모 · 자식" 을 그릴 수
+    #: 있도록 같이 낸다 -- 안 그러면 매 행마다 그룹을 한 번 더 물어야 한다.
+    parent_name: str = ""
+    subgroup_count: int = 0
     description: str
     color: str
     created_at: datetime
     updated_at: datetime
+    #: 소그룹에 든 셀까지 센다.  그래야 드롭다운의 수와 그걸 골랐을 때 보이는
+    #: 목록이 같다 -- 상위 그룹은 제 셀을 하나도 직접 갖지 않을 수 있다.
     sample_count: int = 0
     run_count: int = 0
     created_by: str = ""
@@ -280,6 +292,8 @@ class SampleOut(BaseModel):
     name: str
     group_id: int | None
     group_name: str | None = None
+    #: 그룹이 소그룹이면 그 위 그룹의 이름.  최상위 그룹이면 빈 문자열이다.
+    group_parent_name: str = ""
     test_date: str | None
     cathode_type: str
     cathode_detail: str
@@ -862,6 +876,8 @@ class GittRunOut(BaseModel):
     active_mass_g: float | None
     area_cm2: float | None
     min_rest_s: float
+    #: 무엇을 보려고 잰 측정인가 (자유 입력).  비어 있는 것이 정상이다.
+    purpose: str = ""
     parse_error: str
     #: 펄스 수에 대한 관찰 한 줄.  비어 있으면 할 말이 없다는 뜻이다.
     pulse_note: str = ""
@@ -875,6 +891,7 @@ class GittRunOut(BaseModel):
 class GittRunUpdate(BaseModel):
     name: str | None = None
     sample_id: int | None = None
+    purpose: str | None = None
     molar_volume_cm3: PositiveMass | None = None
     molar_mass_g: PositiveMass | None = None
     active_mass_g: PositiveMass | None = None
@@ -892,10 +909,21 @@ class PocvPointOut(BaseModel):
     drift_mv: float
 
 
+class RawTraceOut(BaseModel):
+    """pOCV 곡선 밑에 깔리는 실제 측정 전압.  같은 x 축이다."""
+
+    capacity_mah: list[float] = []
+    voltage_v: list[float] = []
+
+
 class PocvOut(BaseModel):
     gitt_id: int
     charge: list[PocvPointOut] = []
     discharge: list[PocvPointOut] = []
+    #: 위 두 곡선의 원본.  점선으로 겹쳐 그리면 각 점에 **어떻게** 도달했는지
+    #: (펄스의 분극과 그 뒤의 완화) 가 보인다 -- 평형 곡선이 버리는 것이다.
+    charge_raw: RawTraceOut = RawTraceOut()
+    discharge_raw: RawTraceOut = RawTraceOut()
     #: 휴지가 뒤따르지 않아 뺀 펄스 수.  조용히 버리면 잘린 파일과 정상 파일이
     #: 곡선에서 구분되지 않는다.
     skipped_charge: int = 0
@@ -981,7 +1009,18 @@ class EisDashboardRow(BaseModel):
 
     sample_id: int | None = None
     sample_name: str = ""
+    #: 이 줄이 무엇에서 온 것인가 -- 붙은 줄은 가장 최근 스펙트럼의 원래 이름,
+    #: 안 붙은 줄은 그 파일 자신의 이름이다.  파일 이름에 조건이 적혀 있는
+    #: 일이 많아서, 셀 이름만으로는 어느 측정인지 모른다.
+    name: str = ""
+    #: 셀에 붙어 있는가.  안 붙은 것도 줄로 나온다 -- 배너로만 세면 "하나
+    #: 있습니다" 만 알고 그게 무엇인지는 다른 화면에 가야 안다.
+    attached: bool = True
+    #: 소속 그룹.  id 는 화면이 그룹·소그룹으로 거를 수 있게, 이름 둘은 그걸
+    #: 다시 물어보지 않고 "부모 · 자식" 으로 적을 수 있게 함께 낸다.
+    group_id: int | None = None
     group_name: str = ""
+    group_parent_name: str = ""
     owner: str = ""
     #: "liquid" | "solid" | "" (한 셀에 둘이 섞여 있으면 빈 문자열)
     kind: str = ""
@@ -1020,8 +1059,16 @@ class GittDashboardRow(BaseModel):
 
     sample_id: int | None = None
     sample_name: str = ""
+    #: EIS 대시보드와 같은 둘 -- 안 붙은 기록도 이름으로 한 줄 나온다.
+    name: str = ""
+    attached: bool = True
+    #: EIS 대시보드와 같은 셋 -- 화면이 그룹·소그룹으로 거를 수 있게.
+    group_id: int | None = None
     group_name: str = ""
+    group_parent_name: str = ""
     owner: str = ""
+    #: 이 셀의 GITT 기록들에 적힌 목적들 (자유 입력).
+    purposes: list[str] = []
     records: int = 0
     pulses: int = 0
     #: D 를 낼 수 있는 기록의 수.  재료 상수가 없으면 못 낸다 (ADR 0020).

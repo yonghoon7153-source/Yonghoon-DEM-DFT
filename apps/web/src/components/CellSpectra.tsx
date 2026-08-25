@@ -163,6 +163,7 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
             height={320}
             legend
             equalAspect
+            positiveFit
           />
         ) : null}
 

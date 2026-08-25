@@ -12,6 +12,7 @@ import { ActivityFeed } from '../components/ActivityFeed'
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { PatchNotes } from '../components/PatchNotes'
 import { BasisSelect } from '../components/BasisSelect'
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
 import { Alert, Card, Empty, StateBadge, TableSkeleton } from '../components/ui'
@@ -31,13 +32,12 @@ const FILTERS: [Filter, string][] = [
 
 export function Dashboard() {
   const [basis, setBasis] = useStickyState<Basis>('workbench.basis', 'mAh/g')
-  const [groupId, setGroupId] = useState<number | null>(null)
   const [filter, setFilter] = useState<Filter>('all')
   const [hiddenSeries, setHiddenSeries] = useState<string[]>([])
 
   // 그룹으로 서버에서 거르지 않는다.  칩마다 개수를 보여주려면 전체가 필요하고,
   // 그룹을 누를 때마다 다시 받아오지 않아도 되므로 전환이 즉시 된다.
-  const groups = useAsync(() => api.listGroups(), [], { live: true })
+  const group = useGroupChoice()
   // 남이 무엇을 바꾸면 바로(`live`), 그리고 아무 편집이 없어도 30초마다
   // (`refreshMs`) 다시 읽는다.  둘 다 필요하다: 편집은 알림이 오지만, 구동 중인
   // 셀에 사이클이 붙는 것은 아무도 "편집" 하지 않으므로 알림이 오지 않는다.
@@ -46,12 +46,11 @@ export function Dashboard() {
                          { live: true, refreshMs: 30_000 })
 
   const everything = useMemo(() => board.data?.rows ?? [], [board.data])
+  // 상위 그룹을 고르면 그 소그룹의 셀도 남는다 -- `includes` 가 그 한 곳이다.
+  const inGroup = group.includes
   const all = useMemo(
-    () =>
-      groupId === null
-        ? everything
-        : everything.filter((row) => (row.group_id ?? 0) === groupId),
-    [everything, groupId],
+    () => everything.filter((row) => inGroup(row.group_id)),
+    [everything, inGroup],
   )
   const rows = useMemo(
     () => (filter === 'all' ? all : all.filter((row) => row.state === filter)),
@@ -114,26 +113,7 @@ export function Dashboard() {
         </div>
         <span className="spacer" />
         <div className="row">
-          <select
-            value={groupId ?? ''}
-            onChange={(event) =>
-              setGroupId(event.target.value ? Number(event.target.value) : null)
-            }
-            style={{ width: 190 }}
-            aria-label="그룹 필터"
-          >
-            <option value="">모든 그룹</option>
-            {groups.error ? (
-              <option value="" disabled>
-                그룹을 불러오지 못했습니다
-              </option>
-            ) : null}
-            {groups.data?.map((group) => (
-              <option key={group.id} value={group.id}>
-                {group.name} ({group.sample_count})
-              </option>
-            ))}
-          </select>
+          <GroupFilterFields pick={group} compact />
           <BasisSelect value={basis} onChange={setBasis} />
         </div>
       </div>

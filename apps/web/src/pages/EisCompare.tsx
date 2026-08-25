@@ -9,10 +9,11 @@
  *  고를 때 보는 것이 바로 그 차이다.
  */
 
-import { useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -34,18 +35,58 @@ function label(item: Spectrum): string {
 
 export function EisCompare() {
   const [kind, setKind] = useState<EisKind | ''>('')
+  const [purpose, setPurpose] = useState('')
+  const [sampleId, setSampleId] = useState<number | null>(null)
   const [search, setSearch] = useState('')
   const [chosen, setChosen] = useState<number[]>([])
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
+  const group = useGroupChoice()
+  // 어느 셀이 어느 그룹인지는 스펙트럼이 아니라 셀이 안다.  그룹으로 거르려면
+  // 그 표가 필요하고, 같은 표가 "충방전으로 가는 링크" 의 근거이기도 하다.
+  const samples = useAsync(() => api.listSamples(), [], { live: true })
 
+  /** 이 스펙트럼이 붙은 셀.  안 붙어 있으면 `undefined`. */
+  const cellOf = useCallback(
+    (item: Spectrum) => (samples.data ?? []).find((s) => s.id === item.sample_id),
+    [samples.data])
+
+  /** 지금 데이터에 실제로 있는 목적들.  목록을 고정하지 않는 이유는 목적이
+   *  자유 입력이라서다 — 랩이 새 목적을 만들면 여기에 저절로 나타난다. */
+  const purposes = useMemo(() => {
+    const seen = new Set<string>()
+    for (const item of spectra.data ?? []) if (item.purpose) seen.add(item.purpose)
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [spectra.data])
+
+  /** 셀에 붙은 것만, 그룹 안에서.  붙지 않은 스펙트럼은 그룹이 없으므로
+   *  그룹을 고른 순간 후보에서 빠진다 — 없는 소속을 지어내지 않는다 (§0.4). */
+  const inGroup = group.includes
   const rows = useMemo(() => {
     const needle = search.trim().toLowerCase()
-    return (spectra.data ?? []).filter((item) => !needle
-      || item.name.toLowerCase().includes(needle)
-      || (item.sample_name ?? '').toLowerCase().includes(needle))
-  }, [spectra.data, search])
+    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
+    return (spectra.data ?? []).filter((item) => {
+      if (purpose && (item.purpose ?? '') !== purpose) return false
+      if (sampleId !== null && item.sample_id !== sampleId) return false
+      if (group.effective !== null) {
+        const cell = item.sample_id === null ? undefined : byId.get(item.sample_id)
+        if (!cell || !inGroup(cell.group_id)) return false
+      }
+      return !needle
+        || item.name.toLowerCase().includes(needle)
+        || (item.sample_name ?? '').toLowerCase().includes(needle)
+    })
+  }, [spectra.data, samples.data, search, purpose, sampleId, group.effective, inGroup])
+
+  /** 드롭다운에 올릴 셀 — 스펙트럼이 하나라도 있는 것만. */
+  const cells = useMemo(() => {
+    const seen = new Map<number, string>()
+    for (const item of spectra.data ?? []) {
+      if (item.sample_id !== null && item.sample_name) seen.set(item.sample_id, item.sample_name)
+    }
+    return [...seen].sort((a, b) => a[1].localeCompare(b[1], 'ko'))
+  }, [spectra.data])
 
   // 목록에서 사라진 것을 고른 채로 두면 그래프와 칩이 어긋난다.
   const selected = useMemo(
@@ -101,7 +142,35 @@ export function EisCompare() {
       <Card
         title={`고른 것 ${selected.length} / ${OVERLAY_LIMIT}`}
         actions={
-          <div className="row" style={{ gap: 6 }}>
+          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+            <GroupFilterFields pick={group} compact />
+            <Field label="셀" hint="충방전과 같은 셀">
+              <select
+                aria-label="셀"
+                value={sampleId ?? ''}
+                style={{ width: 150 }}
+                onChange={(event) =>
+                  setSampleId(event.target.value ? Number(event.target.value) : null)}
+              >
+                <option value="">전체</option>
+                {cells.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
+              <select
+                aria-label="목적"
+                value={purpose}
+                style={{ width: 130 }}
+                onChange={(event) => setPurpose(event.target.value)}
+              >
+                <option value="">전체</option>
+                {purposes.map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
             <Field label="전해질">
               <select
                 aria-label="전해질"
@@ -180,7 +249,7 @@ export function EisCompare() {
           <Spinner />
         ) : series.length ? (
           <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
-                height={380} legend equalAspect />
+                height={380} legend equalAspect positiveFit />
         ) : null}
       </Card>
 
@@ -192,10 +261,14 @@ export function EisCompare() {
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>목적</th>
                   <th>사이클</th>
                   <th>점</th>
                   <th>χ²</th>
                   <th style={{ textAlign: 'left' }}>회로</th>
+                  {/* 이 임피던스가 어느 충방전 곡선 옆에서 나온 것인지.  두
+                      섹션은 따로 서지만 셀 하나로 이어져 있다 (ADR 0024). */}
+                  <th style={{ textAlign: 'left' }}>충방전</th>
                 </tr>
               </thead>
               <tbody>
@@ -204,12 +277,26 @@ export function EisCompare() {
                     <td className="text">
                       <Link to={`/eis/${row.id}`}>{row.name}</Link>
                     </td>
-                    <td className="text dim">{row.sample_name ?? '—'}</td>
+                    <td className="text dim">
+                      {row.sample_id === null
+                        ? '—'
+                        : <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>}
+                    </td>
+                    <td className="text dim">{row.purpose || '—'}</td>
                     <td>{row.at_cycle === null ? '—' : row.at_cycle}</td>
                     <td>{row.n_points}</td>
                     <td>{row.best_chi_squared === null
                       ? '—' : num(row.best_chi_squared, 3)}</td>
                     <td className="text dim mono">{row.best_circuit || '—'}</td>
+                    <td className="text">
+                      {cellOf(row)?.run_count
+                        ? <Link className="tiny" to={`/samples/${row.sample_id}#cycles`}>
+                            사이클 {cellOf(row)?.cycle_count}
+                          </Link>
+                        : <span className="tiny faint">
+                            {row.sample_id === null ? '셀 안 붙음' : '충방전 없음'}
+                          </span>}
+                    </td>
                   </tr>
                 ))}
               </tbody>

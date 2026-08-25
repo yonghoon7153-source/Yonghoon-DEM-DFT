@@ -430,3 +430,95 @@ def test_a_sample_with_no_file_cannot_say(client):
     assert out["formation"] == "unclear"
     assert out["reference_cycle_effective"] == 3
     assert out["reference_cycle_reason"] == "default"
+
+
+# --- 소그룹: 그룹 아래 한 단계 (ADR 0025) --------------------------------------
+
+
+def test_a_parent_group_counts_the_cells_in_its_subgroups(client, sample_id):
+    """드롭다운의 수와 그걸 골랐을 때 보이는 목록은 같아야 한다.
+
+    셀은 소그룹에만 들어가므로 상위 그룹의 '직접 가진 셀' 은 0 이다.  그 0 을
+    그대로 내보내면 셀이 가득한 그룹이 비어 보인다.
+    """
+    parent = client.post("/api/groups", json={"name": "건식 시리즈"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "80wt%", "parent_id": parent["id"]}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": child["id"]})
+
+    refreshed = client.get(f"/api/groups/{parent['id']}").json()
+    assert refreshed["sample_count"] == 1
+    assert refreshed["subgroup_count"] == 1
+    assert client.get(f"/api/groups/{child['id']}").json()["parent_name"] == "건식 시리즈"
+
+
+def test_filtering_by_the_parent_group_includes_the_subgroups(client, sample_id):
+    parent = client.post("/api/groups", json={"name": "부모"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "자식", "parent_id": parent["id"]}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": child["id"]})
+
+    by_parent = client.get("/api/samples", params={"group_id": parent["id"]}).json()
+    by_child = client.get("/api/samples", params={"group_id": child["id"]}).json()
+    assert [s["id"] for s in by_parent] == [sample_id]
+    assert [s["id"] for s in by_child] == [sample_id]
+    assert by_child[0]["group_parent_name"] == "부모"
+
+
+def test_groups_nest_one_level_only(client):
+    """화면이 드롭다운 둘로 그리는 구조다.  3단은 저장되고 나서 안 보인다."""
+    parent = client.post("/api/groups", json={"name": "1단"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "2단", "parent_id": parent["id"]}).json()
+
+    deep = client.post("/api/groups", json={"name": "3단", "parent_id": child["id"]})
+    assert deep.status_code == 422
+    assert "one level" in deep.json()["detail"]
+
+    # 이미 소그룹을 가진 그룹을 남의 밑으로 밀어 넣는 것도 같은 3단이다.
+    other = client.post("/api/groups", json={"name": "다른 곳"}).json()
+    pushed = client.patch(f"/api/groups/{parent['id']}",
+                          json={"parent_id": other["id"]})
+    assert pushed.status_code == 422
+    assert "sub-group" in pushed.json()["detail"]
+
+
+def test_a_group_cannot_be_its_own_subgroup(client):
+    group = client.post("/api/groups", json={"name": "혼자"}).json()
+    reply = client.patch(f"/api/groups/{group['id']}", json={"parent_id": group["id"]})
+    assert reply.status_code == 422
+
+
+def test_deleting_a_parent_group_lifts_its_subgroups_to_the_top(client, sample_id):
+    """폴더를 지운 것이 그 안의 실험을 지운다는 뜻은 아니다."""
+    parent = client.post("/api/groups", json={"name": "부모"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "자식", "parent_id": parent["id"]}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": child["id"]})
+
+    assert client.delete(f"/api/groups/{parent['id']}").status_code == 204
+    survivor = client.get(f"/api/groups/{child['id']}").json()
+    assert survivor["parent_id"] is None
+    assert client.get(f"/api/samples/{sample_id}").json()["group_id"] == child["id"]
+
+
+def test_a_subgroup_can_be_pulled_back_to_the_top(client):
+    """`parent_id: null` 은 여기서만 뜻을 갖는다 — '최상위로 꺼내라'."""
+    parent = client.post("/api/groups", json={"name": "부모"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "자식", "parent_id": parent["id"]}).json()
+    lifted = client.patch(f"/api/groups/{child['id']}", json={"parent_id": None}).json()
+    assert lifted["parent_id"] is None
+    assert lifted["parent_name"] == ""
+
+
+def test_the_dashboard_group_filter_follows_the_subgroups(client, sample_id, wrd_bytes):
+    parent = client.post("/api/groups", json={"name": "부모"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "자식", "parent_id": parent["id"]}).json()
+    client.patch(f"/api/samples/{sample_id}", json={"group_id": child["id"]})
+    client.post("/api/runs/upload", params={"sample_id": sample_id},
+                files={"file": ("c_012.wrd", wrd_bytes, "application/octet-stream")})
+
+    rows = client.get("/api/dashboard", params={"group_id": parent["id"]}).json()["rows"]
+    assert [row["sample_id"] for row in rows] == [sample_id]

@@ -216,6 +216,7 @@ export function SpectrumDetail() {
               legend
               // 반원이 반원으로 보여야 찌그러진 아크를 알아본다.
               equalAspect
+              positiveFit
             />
           ) : (
             <Spinner />

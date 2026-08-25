@@ -22,7 +22,7 @@ from wrdkit.ica import (
 )
 
 from ..db import get_session
-from ..deps import get_run, get_sample, resolved_cell_out, validate_basis
+from ..deps import get_run, get_sample, group_scope, resolved_cell_out, validate_basis
 from ..models import CycleRecord, Sample
 from ..schemas import (
     CycleOut,
@@ -1006,7 +1006,7 @@ def dashboard(session: Session = Depends(get_session),
     validate_basis(basis)
     statement = select(Sample)
     if group_id is not None:
-        statement = statement.where(Sample.group_id == group_id)
+        statement = statement.where(Sample.group_id.in_(group_scope(session, group_id)))
     samples = session.exec(statement.order_by(Sample.name)).all()
 
     rows = []

@@ -8,8 +8,11 @@
  *  그 숫자가 아무 SOC 도 뜻하지 않는다.
  */
 
+import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { DeleteSampleButton } from '../components/DeleteSample'
+import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime } from '../lib/format'
@@ -23,7 +26,13 @@ function scientific(value: number | null): string {
 
 export function GittDashboard() {
   const board = useAsync(() => api.gittDashboard(), [], { live: true })
-  const rows = board.data?.rows ?? []
+  const group = useGroupChoice()
+  // 지우기 실패는 표 바깥에 한 번만 그린다 -- 행 안에 끼우면 열이 밀린다.
+  const [deleteError, setDeleteError] = useState<string | null>(null)
+  const inGroup = group.includes
+  const rows = useMemo(
+    () => (board.data?.rows ?? []).filter((row) => inGroup(row.group_id)),
+    [board.data, inGroup])
   const unattached = board.data?.unattached ?? 0
 
   return (
@@ -36,15 +45,19 @@ export function GittDashboard() {
             없어서인지
           </div>
         </div>
+        <span className="spacer" />
+        <GroupFilterFields pick={group} compact />
       </div>
 
       {unattached ? (
         <Alert kind="info">
           셀에 안 붙은 GITT 기록이 {unattached}개 있습니다 —{' '}
-          <Link to="/gitt/library">라이브러리</Link>에서 셀을 정해 주면 이 표에
-          들어옵니다.
+          <Link to="/gitt/library">라이브러리</Link>에서 셀을 정해 주면 그 셀의
+          줄로 합쳐집니다 — 그전까지는 아래에 이름만으로 나옵니다.
         </Alert>
       ) : null}
+
+      {deleteError ? <Alert kind="error">{deleteError}</Alert> : null}
 
       <Card title={`셀 ${rows.length}개`} tight>
         {board.error ? (
@@ -56,6 +69,7 @@ export function GittDashboard() {
             <table>
               <thead>
                 <tr>
+                  <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
                   <th style={{ textAlign: 'left' }}>그룹</th>
                   <th>기록</th>
@@ -63,17 +77,27 @@ export function GittDashboard() {
                   <th>계산 가능</th>
                   <th style={{ textAlign: 'left' }}>D (cm²/s)</th>
                   <th style={{ textAlign: 'left' }}>없는 것</th>
+                  <th style={{ textAlign: 'left' }}>목적</th>
                   <th>마지막</th>
                   <th style={{ textAlign: 'left' }}>작성자</th>
+                  {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
+                      글자가 먼저 읽힌다 -- 셀 라이브러리와 같은 규칙이다. */}
+                  <th />
                 </tr>
               </thead>
               <tbody>
                 {rows.map((row) => (
-                  <tr key={row.sample_id ?? row.sample_name}>
+                  <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
+                      className={row.attached ? undefined : 'dim'}>
+                    <td className="text">{row.name || '—'}</td>
                     <td className="text">
-                      <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
+                      {row.attached
+                        ? <Link to={`/samples/${row.sample_id}`}>{row.sample_name}</Link>
+                        : <Link className="tiny" to="/gitt/library">셀 안 붙음</Link>}
                     </td>
-                    <td className="text dim">{row.group_name || '—'}</td>
+                    <td className="text dim">
+                      {groupPath(row.group_name, row.group_parent_name) || '—'}
+                    </td>
                     <td>{row.records}</td>
                     <td>{row.pulses}</td>
                     <td className={row.ready ? '' : 'dim'}>
@@ -91,8 +115,21 @@ export function GittDashboard() {
                       {/* 이 셀에서 다음에 할 일이 곧 이 칸이다. */}
                       {row.missing.length ? row.missing.join(', ') : '—'}
                     </td>
+                    <td className="text dim">{row.purposes.join(', ') || '—'}</td>
                     <td className="dim">{dateTime(row.measured_at)}</td>
                     <td className="text dim">{row.owner || '—'}</td>
+                    <td>
+                      {/* 셀을 기록에서 내린다.  원본 파일은 남는다 (불변 규칙 2) --
+                          같은 바이트를 다시 올리면 sha256 이 같아 되살아난다. */}
+                      {row.sample_id === null ? null : (
+                        <DeleteSampleButton
+                          sampleId={row.sample_id}
+                          sampleName={row.sample_name}
+                          onDeleted={() => board.reload()}
+                          onError={setDeleteError}
+                        />
+                      )}
+                    </td>
                   </tr>
                 ))}
               </tbody>

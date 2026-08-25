@@ -4,8 +4,9 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
-import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
+import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, basisUnit, seriesColor } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
@@ -51,13 +52,14 @@ export function Compare() {
   const [smoothing, setSmoothing] = useStickyState<number>('workbench.smoothing', 5)
   const [polyOrder, setPolyOrder] = useStickyState<number>('workbench.polyOrder', 2)
   const [picked, setPicked] = useState<number[]>([])
-  const [groupId, setGroupId] = useState<number | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
   const [truncated, setTruncated] = useState(false)
 
-  const groups = useAsync(() => api.listGroups(), [], { live: true })
-  const samples = useAsync(() => api.listSamples({ group_id: groupId }), [groupId],
-                         { live: true })
+  const group = useGroupChoice()
+  // 서버가 상위 그룹을 소그룹까지 펴 준다 (`deps.group_scope`) -- 여기서 다시
+  // 거르지 않는다.  두 곳에서 거르면 규칙이 갈라진다.
+  const samples = useAsync(() => api.listSamples({ group_id: group.effective }),
+                           [group.effective], { live: true })
 
   // An empty comparison is never what someone came here for; start with the
   // cells in view and let them narrow down.
@@ -279,7 +281,11 @@ export function Compare() {
         </div>
       </div>
 
-      <div className="split">
+      {/* 그래프를 오른쪽 340px 레일에 눌리지 않게 폭 전체로 두고, 셀 선택을
+          그 아래로 눕혔다.  고르는 조건이 그룹·소그룹까지 늘어나 레일에 넣으면
+          체크박스 한 줄이 이름 하나도 못 담는다 -- 반대로 아래는 가로가 넓어서
+          체크박스를 여러 열로 깔 수 있다. */}
+      <div className="col" style={{ gap: 14 }}>
         <div className="col" style={{ gap: 14 }}>
           <Card
             title={mode === 'cycles' ? '사이클 추세' : `${cycle}번 사이클 · ${MODE_LABELS[mode]}`}
@@ -474,21 +480,9 @@ export function Compare() {
 
         <Card title={`셀 선택 · ${picked.length}개`}>
           <div className="col" style={{ gap: 10 }}>
-            <Field label="그룹">
-              <select
-                value={groupId ?? ''}
-                onChange={(event) =>
-                  setGroupId(event.target.value ? Number(event.target.value) : null)
-                }
-              >
-                <option value="">전체</option>
-                {groups.data?.map((group) => (
-                  <option key={group.id} value={group.id}>
-                    {group.name} ({group.sample_count})
-                  </option>
-                ))}
-              </select>
-            </Field>
+            <div className="grid cols-2" style={{ gap: 10 }}>
+              <GroupFilterFields pick={group} hint="소그룹까지 골라 좁힐 수 있습니다" />
+            </div>
 
             <div className="row">
               <button
@@ -522,7 +516,7 @@ export function Compare() {
               </Alert>
             ) : null}
 
-            <div className="col" style={{ gap: 3, maxHeight: 420, overflow: 'auto' }}>
+            <div className="pick-grid">
               {samples.data?.map((sample) => (
                 <label
                   key={sample.id}

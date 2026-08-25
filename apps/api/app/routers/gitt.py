@@ -18,12 +18,12 @@ import numpy as np
 from fastapi import APIRouter, Depends, File, HTTPException, Query, UploadFile
 from sqlmodel import Session, select
 
-from wrdkit import WrdError, read_wrd_bytes
+from wrdkit import WrdError, lttb_indices, read_wrd_bytes
 from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
-from ..models import GittRun, Sample
+from ..models import ExperimentGroup, GittRun, Sample
 from ..schemas import (
     DiffusionOut,
     DiffusionPointOut,
@@ -33,6 +33,7 @@ from ..schemas import (
     GittRunUpdate,
     PocvOut,
     PocvPointOut,
+    RawTraceOut,
 )
 from ..settings import settings
 
@@ -53,6 +54,21 @@ def _get(session: Session, gitt_id: int) -> GittRun:
         raise HTTPException(404, f"gitt run {gitt_id} not found")
     return record
 
+
+
+def _group_names(session: Session, sample) -> tuple[int | None, str, str]:
+    """(그룹 id, 그룹 이름, 상위 그룹 이름).
+
+    셋을 함께 내는 이유는 화면이 이 한 줄로 두 가지를 하기 때문이다: 그룹·
+    소그룹으로 거르기(id)와 "부모 · 자식" 으로 적기(이름 둘).  id 만 주면
+    화면이 그룹 표를 한 번 더 물어야 하고, 이름만 주면 소그룹으로 거를 수
+    없다 (ADR 0025).
+    """
+    group = sample.group
+    if group is None:
+        return None, "", ""
+    parent = session.get(ExperimentGroup, group.parent_id) if group.parent_id else None
+    return group.id, group.name, parent.name if parent else ""
 
 def _missing(record: GittRun) -> list[str]:
     return [label for field, label in MATERIAL_FIELDS
@@ -139,6 +155,7 @@ def list_runs(session: Session = Depends(get_session),
 @router.post("/runs/upload", response_model=GittRunOut, status_code=201)
 async def upload_run(file: UploadFile = File(...),
                      sample_id: int | None = Query(None, description="이 셀에 붙인다"),
+                     purpose: str = Query("", description="무엇을 보려고 잰 측정인가"),
                      session: Session = Depends(get_session)):
     """Store one GITT ``.wrd`` and count what is in it.
 
@@ -169,6 +186,12 @@ async def upload_run(file: UploadFile = File(...),
         if sample_id is not None and existing.sample_id is None:
             existing.sample_id = sample_id
             session.add(existing)
+        # 목적도 같다: 비어 있을 때만 채운다.  다시 올리면서 빈 칸을 두었다고
+        # 먼저 적어 둔 것을 지우지 않는다.
+        if purpose and not existing.purpose:
+            existing.purpose = purpose
+            session.add(existing)
+        if session.dirty:
             session.commit()
             session.refresh(existing)
         return _out(existing, session)
@@ -190,6 +213,7 @@ async def upload_run(file: UploadFile = File(...),
     seconds = wrd.seconds("test_time")
     record = GittRun(
         sample_id=sample_id,
+        purpose=purpose.strip(),
         name=(file.filename or "gitt").rsplit(".", 1)[0],
         original_name=file.filename or "",
         sha256=digest,
@@ -236,7 +260,11 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
                 422, f"{field!r} 은 비울 수 없습니다 — 계측기 파일에서 온 "
                      f"값입니다 (비울 수 있는 것: "
                      f"{', '.join(sorted(CLEARABLE_GITT_FIELDS))})")
-        setattr(record, field, None)
+        # 비어 있음의 모양은 열마다 다르다: 숫자 열은 NULL 이지만 `purpose`
+        # 는 NOT NULL 문자열이라 None 을 쓰면 IntegrityError 로 500 이 난다.
+        # 지금 저장된 값의 종류로 정한다 -- 컬럼을 하나 더 나열하지 않는다.
+        blank = "" if isinstance(getattr(record, field), str) else None
+        setattr(record, field, blank)
     record.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
     session.add(record)
     session.commit()
@@ -245,7 +273,8 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
 
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 사람이 입력하는 재료 상수들이다.
-CLEARABLE_GITT_FIELDS = {"molar_volume_cm3", "molar_mass_g", "active_mass_g",
+CLEARABLE_GITT_FIELDS = {"purpose",
+                         "molar_volume_cm3", "molar_mass_g", "active_mass_g",
                          "area_cm2",
                          # 셀에서 떼어내는 길.  붙이는 것과 달리 값이 `None`
                          # 이라 `sample_id: null` 로는 "안 보냄" 과 구별되지
@@ -270,6 +299,22 @@ def delete_run(gitt_id: int, session: Session = Depends(get_session)):
 # --------------------------------------------------------------------------
 # 분석
 # --------------------------------------------------------------------------
+#: 원본 곡선 한 갈래에 보낼 점의 상한.  펄스 하나가 수천 점이라 그대로 보내면
+#: 응답이 수 MB 가 되는데, 화면은 380 px 짜리 그래프다.  LTTB 는 봉우리와 골을
+#: 남기고 줄이므로 (`wrdkit.downsample`), 펄스의 분극 폭이 죽지 않는다.
+RAW_TRACE_POINTS = 2000
+
+
+def _raw_out(trace) -> RawTraceOut:
+    x = np.asarray(trace.capacity_mah, dtype=float)
+    y = np.asarray(trace.voltage_v, dtype=float)
+    if x.size > RAW_TRACE_POINTS:
+        keep = lttb_indices(x, y, RAW_TRACE_POINTS)
+        x, y = x[keep], y[keep]
+    return RawTraceOut(capacity_mah=[float(v) for v in x],
+                       voltage_v=[float(v) for v in y])
+
+
 @router.get("/runs/{gitt_id}/pocv", response_model=PocvOut)
 def run_pocv(gitt_id: int, session: Session = Depends(get_session)):
     """준평형 전압 곡선 — 재료 상수 없이 나온다.
@@ -287,6 +332,8 @@ def run_pocv(gitt_id: int, session: Session = Depends(get_session)):
         discharge=[PocvPointOut(**{k: getattr(point, k) for k in
                                    ("capacity_mah", "voltage_v", "rest_s", "drift_mv")})
                    for point in curve.discharge],
+        charge_raw=_raw_out(curve.charge_raw),
+        discharge_raw=_raw_out(curve.discharge_raw),
         skipped_charge=curve.skipped_charge,
         skipped_discharge=curve.skipped_discharge,
         # 같은 문장이 스무 번 반복되면 읽히지 않는다.
@@ -343,10 +390,11 @@ def dashboard(session: Session = Depends(get_session)):
     """
     records = session.exec(select(GittRun)).all()
     by_sample: dict[int, list[GittRun]] = {}
-    unattached = 0
+    #: 셀에 안 붙은 기록은 저마다 한 줄이다 (EIS 대시보드와 같은 규칙).
+    loose: list[GittRun] = []
     for record in records:
         if record.sample_id is None:
-            unattached += 1
+            loose.append(record)
             continue
         by_sample.setdefault(record.sample_id, []).append(record)
 
@@ -355,7 +403,7 @@ def dashboard(session: Session = Depends(get_session)):
         sample = session.get(Sample, sample_id)
         if sample is None:
             # 셀이 지워졌는데 기록이 남아 있다 -- 갈 곳 없는 것은 마찬가지다.
-            unattached += len(items)
+            loose.extend(items)
             continue
         items = sorted(items, key=lambda r: (r.start_time or r.uploaded_at))
 
@@ -384,10 +432,15 @@ def dashboard(session: Session = Depends(get_session)):
             values.extend(p.d_cm2_s for p in result.usable if p.d_cm2_s)
 
         latest = items[-1]
+        group_id, group_name, parent_name = _group_names(session, sample)
         rows.append(GittDashboardRow(
             sample_id=sample_id,
             sample_name=sample.name,
-            group_name=sample.group.name if sample.group else "",
+            name=latest.original_name or latest.name,
+            group_id=group_id,
+            group_name=group_name,
+            group_parent_name=parent_name,
+            purposes=sorted({r.purpose for r in items if r.purpose}),
             owner=sample.created_by or "",
             records=len(items),
             pulses=sum(r.n_pulses for r in items),
@@ -398,5 +451,26 @@ def dashboard(session: Session = Depends(get_session)):
             measured_at=latest.start_time or latest.uploaded_at,
         ))
 
-    rows.sort(key=lambda r: (r.group_name, r.sample_name))
-    return GittDashboardOut(rows=rows, unattached=unattached)
+    # 안 붙은 기록도 줄로.  셀 칸이 비어 있다는 것 자체가 "이 파일에는 아직
+    # 할 일이 있다" 이고, 수만 세면 그게 무엇인지는 다른 화면에 가야 안다.
+    for record in sorted(loose, key=lambda r: (r.start_time or r.uploaded_at)):
+        rows.append(GittDashboardRow(
+            sample_id=None,
+            sample_name="",
+            name=record.original_name or record.name,
+            attached=False,
+            purposes=[record.purpose] if record.purpose else [],
+            owner=record.created_by or "",
+            records=1,
+            pulses=record.n_pulses,
+            ready=0 if _missing(record) else 1,
+            missing=_missing(record),
+            # D 는 계산하지 않는다.  붙지 않은 기록은 재료 상수가 비어 있는 것이
+            # 보통이고, 그때 이 칸은 어차피 빈다 (§0.4).
+            diffusion_low=None,
+            diffusion_high=None,
+            measured_at=record.start_time or record.uploaded_at,
+        ))
+
+    rows.sort(key=lambda r: (not r.attached, r.group_name, r.sample_name, r.name))
+    return GittDashboardOut(rows=rows, unattached=len(loose))

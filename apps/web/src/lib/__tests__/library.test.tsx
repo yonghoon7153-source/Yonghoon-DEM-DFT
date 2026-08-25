@@ -1,7 +1,7 @@
 /** 셀 라이브러리의 묶기.
  *
- * 그룹은 사람이 만들어 붙이는 것이라, 그룹을 만들기 전에는 "같은 조건 세 번
- * 돌린 것" 을 나란히 볼 방법이 없었다. 이름으로 묶으면 그 전에도 보인다.
+ * 이미 셀에 적혀 있는 것(공정·양극재·작성자)과 사람이 붙인 것(그룹·소그룹)
+ * 으로 묶는다.
  *
  * 틀릴 수 있는 방식이 둘이다. 서로 다른 셀을 한 묶음에 넣거나(그러면 세 배로
  * 보이는 반복 실험이 실은 다른 조건이다), 같은 것을 갈라 놓거나.
@@ -152,15 +152,14 @@ describe('라이브러리 묶기', () => {
     expect(sections()).toEqual([])
   })
 
-  it('이름으로 묶으면 반복 실험이 한 덩어리가 된다', async () => {
+  it('같은 조건끼리 한 덩어리가 된다', async () => {
     installFetch()
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
 
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
 
-    // `_1_17.5mg` 과 `_2_18.1mg` 은 같은 조건을 두 번 돌린 것이다.
-    await waitFor(() => expect(sections()).toEqual(['4.0V_post_formation · 1개', '4.6V · 2개']))
+    await waitFor(() => expect(sections()).toEqual(['dry · 2개', 'wet · 1개']))
   })
 
   it('묶어도 셀이 사라지지 않는다', async () => {
@@ -168,7 +167,7 @@ describe('라이브러리 묶기', () => {
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
 
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
 
     await waitFor(() => expect(sections()).toHaveLength(2))
     for (const item of SAMPLES) {
@@ -195,7 +194,7 @@ describe('라이브러리 묶기', () => {
     installFetch()
     const first = renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
     await waitFor(() => expect(sections()).toHaveLength(2))
     first.unmount()
 
@@ -212,7 +211,7 @@ describe('라이브러리 묶기', () => {
     await screen.findByText('4.6V_1_17.5mg')
     const flat = document.querySelectorAll('thead th').length
 
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
     await waitFor(() => expect(sections()).toHaveLength(2))
 
     expect(document.querySelectorAll('thead th')).toHaveLength(flat)
@@ -228,7 +227,7 @@ describe('라이브러리 묶기', () => {
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
 
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
     await waitFor(() => expect(sections()).toHaveLength(2))
 
     const table = document.querySelector('table') as HTMLTableElement
@@ -297,7 +296,7 @@ describe('셀 지우기', () => {
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
 
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
     await waitFor(() => expect(document.querySelector('tr.section th')).not.toBeNull())
 
     const header = document.querySelector('tr.section th') as HTMLTableCellElement
@@ -325,7 +324,7 @@ describe('셀 이름 열을 고정한다', () => {
     installFetch()
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
-    await userEvent.click(screen.getByRole('button', { name: '이름 묶음' }))
+    await userEvent.click(screen.getByRole('button', { name: '공정' }))
     await waitFor(() => expect(document.querySelector('tr.section')).not.toBeNull())
     expect(document.querySelector('.table-wrap.pin-first')).not.toBeNull()
   })
@@ -369,47 +368,7 @@ describe('app.css 첫 열 고정 규칙', () => {
   })
 })
 
-describe('이름으로 좁히기', () => {
-  const pick = () => screen.getByLabelText('이름 묶음') as HTMLSelectElement
-
-  it('묶기와 같은 규칙으로 선택지를 만든다', async () => {
-    // 표에서 한 덩어리로 보이던 것이 필터에서 다른 덩어리면 둘 중 하나는
-    // 거짓말이다.
-    installFetch()
-    renderLibrary()
-    await screen.findByText('4.6V_1_17.5mg')
-
-    const options = [...pick().options].map((option) => option.textContent)
-    expect(options).toEqual(['전체', '4.0V_post_formation', '4.6V'])
-  })
-
-  it('고르면 그 묶음만 남는다', async () => {
-    installFetch()
-    renderLibrary()
-    await screen.findByText('4.6V_1_17.5mg')
-
-    await userEvent.selectOptions(pick(), '4.6V')
-
-    await waitFor(() =>
-      expect(screen.queryByText('4.0V_post_formation_18.9mg')).toBeNull(),
-    )
-    expect(screen.getByText('4.6V_1_17.5mg')).toBeInTheDocument()
-    expect(screen.getByText('4.6V_2_18.1mg')).toBeInTheDocument()
-  })
-
-  it('골라도 다른 묶음으로 옮겨 갈 수 있다', async () => {
-    // 서버에 같이 보내면 고른 순간 선택지가 그 하나로 줄어서, 되돌아올 길이
-    // '전체' 뿐이 된다.
-    installFetch()
-    renderLibrary()
-    await screen.findByText('4.6V_1_17.5mg')
-
-    await userEvent.selectOptions(pick(), '4.6V')
-    await waitFor(() => expect(pick().value).toBe('4.6V'))
-
-    expect([...pick().options].map((option) => option.value)).toContain('4.0V_post_formation')
-  })
-
+describe('작성자로 좁히기', () => {
   it('작성자로 좁힌다 — 한 서버를 여럿이 쓰면 이것이 첫 거르개다', async () => {
     // "이름" 이 이름 묶음(nameFamily)만 뜻하던 자리다.  사람이 뜻한 것은
     // **누가 올렸나** 였고, 둘 다 필요한 것이었다 (ADR 0012 — 이름은
@@ -447,7 +406,10 @@ describe('이름으로 좁히기', () => {
     expect(groups.join('|')).toContain('안용훈')
   })
 
-  it('표에도 그 묶음이 열로 있다 — 묶기를 안 켜도 반복분이 보인다', async () => {
+  it('이름 묶음 열은 없다 — 묶기는 그룹·작성자로 한다', async () => {
+    // 한 번 있었던 열이다.  같은 조건 반복분을 이름 앞자리로 묶어 보여 줬는데,
+    // 소그룹이 생기고 나서는 그 일을 그룹이 한다 (ADR 0025) -- 두 길이 나란히
+    // 있으면 같은 셋이 화면마다 다른 덩어리로 보인다.
     installFetch()
     renderLibrary()
     await screen.findByText('4.6V_1_17.5mg')
@@ -455,10 +417,22 @@ describe('이름으로 좁히기', () => {
     const head = [...document.querySelectorAll('thead th')].map((n) => n.textContent)
     expect(head[0]).toBe('셀')
     expect(head[1]).toBe('작성자')
-    expect(head[2]).toBe('이름 묶음')
-    expect(head[3]).toBe('그룹')
+    expect(head[2]).toBe('그룹')
+    expect(head).not.toContain('이름 묶음')
+    expect(screen.queryByLabelText('이름 묶음')).toBeNull()
+  })
 
-    const first = document.querySelector('tbody tr')!
-    expect(first.querySelectorAll('td')[2]!.textContent).toBe('4.6V')
+  it('소그룹에 든 셀은 그룹 칸에 "부모 · 자식" 으로 나온다', async () => {
+    // 자식 이름만 쓰면 '80wt%' 같은 이름이 여러 실험에 있어 어느 것인지 모른다.
+    installFetch([
+      sample(1, 'A_1_10mg', { group_name: '80wt%', group_parent_name: '건식 시리즈' }),
+      sample(2, 'B_1_10mg', { group_name: '삼성SDI' }),
+    ])
+    renderLibrary()
+    await screen.findByText('A_1_10mg')
+
+    const rows = [...document.querySelectorAll('tbody tr')]
+    expect(rows[0]!.querySelectorAll('td')[2]!.textContent).toBe('건식 시리즈 · 80wt%')
+    expect(rows[1]!.querySelectorAll('td')[2]!.textContent).toBe('삼성SDI')
   })
 })

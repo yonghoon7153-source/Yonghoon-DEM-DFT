@@ -9,6 +9,7 @@
 import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -17,19 +18,36 @@ import { useAsync } from '../lib/hooks'
 export function GittLibrary() {
   const [search, setSearch] = useState('')
   const [owner, setOwner] = useState('')
+  const [purpose, setPurpose] = useState('')
   const [reloadKey, bumpReload] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const runs = useAsync(() => api.listGittRuns({ search: search || undefined }),
                         [search, reloadKey], { live: true })
   const samples = useAsync(() => api.listSamples(), [reloadKey])
+  const group = useGroupChoice(reloadKey)
+
+  const purposes = useMemo(() => {
+    const seen = new Set<string>()
+    for (const run of runs.data ?? []) if (run.purpose) seen.add(run.purpose)
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [runs.data])
+
+  const inGroup = group.includes
   const rows = useMemo(() => {
-    const all = runs.data ?? []
-    // '' 는 "안 붙임" 을 뜻하는 값이라 전체(null)와 구별해야 한다.
-    if (owner === '') return all
-    if (owner === 'none') return all.filter((run) => !run.sample_id)
-    return all.filter((run) => String(run.sample_id) === owner)
-  }, [runs.data, owner])
+    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
+    return (runs.data ?? []).filter((run) => {
+      // '' 는 "안 붙임" 을 뜻하는 값이라 전체(null)와 구별해야 한다.
+      if (owner === 'none' && run.sample_id) return false
+      if (owner && owner !== 'none' && String(run.sample_id) !== owner) return false
+      if (purpose && (run.purpose ?? '') !== purpose) return false
+      if (group.effective !== null) {
+        const cell = run.sample_id ? byId.get(run.sample_id) : undefined
+        if (!cell || !inGroup(cell.group_id)) return false
+      }
+      return true
+    })
+  }, [runs.data, samples.data, owner, purpose, group.effective, inGroup])
 
   async function attach(id: number, sampleId: string) {
     setError(null)
@@ -58,35 +76,48 @@ export function GittLibrary() {
 
       {error ? <Alert kind="error">{error}</Alert> : null}
 
-      <Card
-        title={`GITT 기록 ${rows.length}개`}
-        actions={
-          <div className="row" style={{ gap: 6 }}>
-            <Field label="셀">
-              <select
-                aria-label="셀"
-                value={owner}
-                onChange={(event) => setOwner(event.target.value)}
-              >
-                <option value="">전체</option>
-                <option value="none">— 안 붙인 것</option>
-                {(samples.data ?? []).map((sample) => (
-                  <option key={sample.id} value={sample.id}>{sample.name}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="검색">
-              <input
-                aria-label="검색"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-                placeholder="이름 또는 파일명"
-              />
-            </Field>
-          </div>
-        }
-        tight
-      >
+      {/* 거르기 줄의 모양은 셀 라이브러리를 그대로 따른다 -- 세 섹션이 서로를
+          답습해야 한 번 배운 순서가 나머지 둘에서도 그대로 통한다 (ADR 0024). */}
+      <Card title="필터" tight>
+        <div className="grid cols-4" style={{ padding: 12, gap: 10 }}>
+          <GroupFilterFields pick={group} hint="셀에 붙은 것만 남습니다" />
+          <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
+            <select
+              aria-label="목적"
+              value={purpose}
+              onChange={(event) => setPurpose(event.target.value)}
+            >
+              <option value="">전체</option>
+              {purposes.map((value) => (
+                <option key={value} value={value}>{value}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="셀" hint="충방전과 같은 셀">
+            <select
+              aria-label="셀"
+              value={owner}
+              onChange={(event) => setOwner(event.target.value)}
+            >
+              <option value="">전체</option>
+              <option value="none">— 안 붙인 것</option>
+              {(samples.data ?? []).map((sample) => (
+                <option key={sample.id} value={sample.id}>{sample.name}</option>
+              ))}
+            </select>
+          </Field>
+          <Field label="검색" hint="이름 · 파일명">
+            <input
+              aria-label="검색"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="이름 또는 파일명"
+            />
+          </Field>
+        </div>
+      </Card>
+
+      <Card title={`GITT 기록 ${rows.length}개`} tight>
         {runs.error ? (
           <Alert kind="error">{runs.error}</Alert>
         ) : runs.loading && !runs.data ? (
@@ -98,6 +129,7 @@ export function GittLibrary() {
                 <tr>
                   <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>목적</th>
                   <th>펄스</th>
                   <th>점</th>
                   <th>기간</th>
@@ -126,6 +158,7 @@ export function GittLibrary() {
                         ))}
                       </select>
                     </td>
+                    <td className="text dim">{run.purpose || '—'}</td>
                     <td>{run.n_pulses}</td>
                     <td>{run.n_points}</td>
                     <td className="dim">

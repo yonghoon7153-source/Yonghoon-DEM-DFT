@@ -12,7 +12,7 @@ from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 
 from .. import storage
 from ..db import get_session
-from ..deps import get_sample, resolved_cell_out, validate_basis
+from ..deps import get_sample, group_scope, resolved_cell_out, validate_basis
 from ..models import (
     CycleRecord,
     ExperimentGroup,
@@ -46,9 +46,13 @@ def _out(session: Session, sample: Sample) -> SampleOut:
     runs = session.exec(select(Run).where(Run.sample_id == sample.id)).all()
     cycles = sum(run.complete_cycle_count for run in runs)
     group_name = None
+    parent_name = ""
     if sample.group_id:
         group = session.get(ExperimentGroup, sample.group_id)
         group_name = group.name if group else None
+        if group is not None and group.parent_id:
+            parent = session.get(ExperimentGroup, group.parent_id)
+            parent_name = parent.name if parent else ""
     composition = sample_composition(sample)
     # 저장된 기준 사이클과 **실제로 쓰이는** 기준 사이클은 다를 수 있다:
     # formation 이 없는 스케줄은 1번에 앵커한다 (ADR 0018).  둘 다 낸다 --
@@ -58,6 +62,7 @@ def _out(session: Session, sample: Sample) -> SampleOut:
     return SampleOut(
         **sample.model_dump(exclude={"composition_json"}),
         group_name=group_name,
+        group_parent_name=parent_name,
         run_count=len(runs),
         cycle_count=cycles,
         composition=[ComponentOut(**c) for c in composition.to_json()],
@@ -83,7 +88,8 @@ def list_samples(
     """Filter the library the way the bench does: by group, chemistry, date."""
     statement = select(Sample)
     if group_id is not None:
-        statement = statement.where(Sample.group_id == group_id)
+        # 상위 그룹을 고르면 소그룹의 셀도 같이 나온다 (ADR 0025).
+        statement = statement.where(Sample.group_id.in_(group_scope(session, group_id)))
     if cathode_type:
         statement = statement.where(Sample.cathode_type == cathode_type)
     if process:

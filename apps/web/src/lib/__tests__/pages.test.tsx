@@ -1010,8 +1010,9 @@ describe('업로드 그룹', () => {
     const attach = await screen.findByRole('combobox', { name: /기존 셀에 연결/ })
     await waitFor(() => expect(within(attach).getAllByRole('option').length).toBe(3))
 
+    // '그룹' 과 '소그룹' 이 둘 다 있으므로 정확한 이름으로 고른다.
     await userEvent.selectOptions(
-      screen.getByRole('combobox', { name: /그룹/ }),
+      screen.getByRole('combobox', { name: '그룹' }),
       '3',
     )
     await waitFor(() =>

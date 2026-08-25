@@ -10,6 +10,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
+import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -26,15 +27,46 @@ function label(run: GittRun): string {
 
 export function GittCompare() {
   const [search, setSearch] = useState('')
+  const [purpose, setPurpose] = useState('')
+  const [sampleId, setSampleId] = useState<number | null>(null)
   const [chosen, setChosen] = useState<number[]>([])
 
   const runs = useAsync(() => api.listGittRuns(), [], { live: true })
+  const group = useGroupChoice()
+  // 그룹은 셀의 성질이라 셀 표가 있어야 거를 수 있다.  EIS 비교와 같은 이유,
+  // 같은 모양이다 (ADR 0024).
+  const samples = useAsync(() => api.listSamples(), [], { live: true })
+
+  const purposes = useMemo(() => {
+    const seen = new Set<string>()
+    for (const run of runs.data ?? []) if (run.purpose) seen.add(run.purpose)
+    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
+  }, [runs.data])
+
+  const cells = useMemo(() => {
+    const seen = new Map<number, string>()
+    for (const run of runs.data ?? []) {
+      if (run.sample_id && run.sample_name) seen.set(run.sample_id, run.sample_name)
+    }
+    return [...seen].sort((a, b) => a[1].localeCompare(b[1], 'ko'))
+  }, [runs.data])
+
+  const inGroup = group.includes
   const rows = useMemo(() => {
     const needle = search.trim().toLowerCase()
-    return (runs.data ?? []).filter((run) => !needle
-      || run.name.toLowerCase().includes(needle)
-      || (run.sample_name ?? '').toLowerCase().includes(needle))
-  }, [runs.data, search])
+    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
+    return (runs.data ?? []).filter((run) => {
+      if (purpose && (run.purpose ?? '') !== purpose) return false
+      if (sampleId !== null && run.sample_id !== sampleId) return false
+      if (group.effective !== null) {
+        const cell = run.sample_id ? byId.get(run.sample_id) : undefined
+        if (!cell || !inGroup(cell.group_id)) return false
+      }
+      return !needle
+        || run.name.toLowerCase().includes(needle)
+        || (run.sample_name ?? '').toLowerCase().includes(needle)
+    })
+  }, [runs.data, samples.data, search, purpose, sampleId, group.effective, inGroup])
 
   const selected = useMemo(
     () => chosen.filter((id) => rows.some((run) => run.id === id)), [chosen, rows])
@@ -107,7 +139,35 @@ export function GittCompare() {
       <Card
         title={`고른 것 ${selected.length} / ${OVERLAY_LIMIT}`}
         actions={
-          <div className="row" style={{ gap: 6 }}>
+          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
+            <GroupFilterFields pick={group} compact />
+            <Field label="셀" hint="충방전과 같은 셀">
+              <select
+                aria-label="셀"
+                value={sampleId ?? ''}
+                style={{ width: 150 }}
+                onChange={(event) =>
+                  setSampleId(event.target.value ? Number(event.target.value) : null)}
+              >
+                <option value="">전체</option>
+                {cells.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
+              <select
+                aria-label="목적"
+                value={purpose}
+                style={{ width: 130 }}
+                onChange={(event) => setPurpose(event.target.value)}
+              >
+                <option value="">전체</option>
+                {purposes.map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
             <Field label="검색" hint="이름 · 셀">
               <input
                 aria-label="검색"
@@ -155,6 +215,55 @@ export function GittCompare() {
           </Empty>
         )}
       </Card>
+
+      {selected.length ? (
+        <Card title="고른 것" tight>
+          <div className="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th style={{ textAlign: 'left' }}>이름</th>
+                  <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>목적</th>
+                  <th>펄스</th>
+                  {/* 이 GITT 가 어느 충방전 곡선 옆에서 나온 것인지 (ADR 0024). */}
+                  <th style={{ textAlign: 'left' }}>충방전</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.filter((run) => selected.includes(run.id)).map((run) => {
+                  const cell = run.sample_id
+                    ? (samples.data ?? []).find((s) => s.id === run.sample_id)
+                    : undefined
+                  return (
+                    <tr key={run.id}>
+                      <td className="text">
+                        <Link to={`/gitt/${run.id}`}>{run.name}</Link>
+                      </td>
+                      <td className="text dim">
+                        {run.sample_id
+                          ? <Link to={`/samples/${run.sample_id}`}>{run.sample_name}</Link>
+                          : '—'}
+                      </td>
+                      <td className="text dim">{run.purpose || '—'}</td>
+                      <td>{run.n_pulses}</td>
+                      <td className="text">
+                        {cell?.run_count
+                          ? <Link className="tiny" to={`/samples/${run.sample_id}#cycles`}>
+                              사이클 {cell.cycle_count}
+                            </Link>
+                          : <span className="tiny faint">
+                              {run.sample_id ? '충방전 없음' : '셀 안 붙음'}
+                            </span>}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      ) : null}
 
       <Card title="pseudo-OCV">
         <CopyBar

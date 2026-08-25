@@ -68,6 +68,12 @@ export interface ChangeNote {
 export interface Group {
   id: number
   name: string
+  /** 이 그룹을 담고 있는 그룹.  `null` 이면 최상위다 (ADR 0025). */
+  parent_id?: number | null
+  /** 상위 그룹 이름.  최상위면 빈 문자열. */
+  parent_name?: string
+  /** 이 그룹이 담은 소그룹 수. */
+  subgroup_count?: number
   description: string
   color: string
   created_at: string
@@ -83,6 +89,8 @@ export interface Sample {
   name: string
   group_id: number | null
   group_name: string | null
+  /** 그 그룹이 소그룹이면 그 위 그룹의 이름.  최상위면 빈 문자열. */
+  group_parent_name?: string
   test_date: string | null
   cathode_type: string
   cathode_detail: string
@@ -610,7 +618,16 @@ export interface Spectrum {
 export interface EisDashboardRow {
   sample_id: number | null
   sample_name: string
+  /** 이 줄의 원래 이름 — 붙은 줄은 가장 최근 스펙트럼의, 안 붙은 줄은 그 파일
+   *  자신의 것.  파일 이름에 조건이 적혀 있는 일이 많다. */
+  name: string
+  /** 셀에 붙어 있는가.  안 붙은 것도 줄로 나온다. */
+  attached: boolean
+  /** 그룹·소그룹으로 거르려면 id 가, "부모 · 자식" 으로 적으려면 이름 둘이
+   *  필요하다 (ADR 0025). */
+  group_id: number | null
   group_name: string
+  group_parent_name: string
   owner: string
   /** 한 셀에 액체와 전고체가 섞여 있으면 빈 문자열이다 — 둘은 아크 이름부터 다르다. */
   kind: EisKind | ''
@@ -639,8 +656,15 @@ export interface EisDashboard {
 export interface GittDashboardRow {
   sample_id: number | null
   sample_name: string
+  /** EIS 대시보드와 같은 둘 — 안 붙은 기록도 이름으로 한 줄 나온다. */
+  name: string
+  attached: boolean
+  group_id: number | null
   group_name: string
+  group_parent_name: string
   owner: string
+  /** 이 셀의 GITT 기록들에 적힌 목적들 (자유 입력). */
+  purposes: string[]
   records: number
   pulses: number
   /** D 를 낼 수 있는 기록의 수 — 재료 상수가 다 있는 것. */
@@ -863,6 +887,8 @@ export interface GittRun {
   area_cm2: number | null
   /** 이보다 짧은 휴지는 평형으로 치지 않는다. 0 이면 전부 쓴다. */
   min_rest_s: number
+  /** 무엇을 보려고 잰 기록인가 (자유 입력).  비어 있는 것이 정상이다. */
+  purpose?: string
   parse_error: string
   /** 펄스와 휴지 길이에 대한 관찰 한 줄. 판정이 아니다. */
   pulse_note: string
@@ -881,10 +907,20 @@ export interface PocvPoint {
   drift_mv: number
 }
 
+/** pOCV 곡선 밑에 깔리는 실제 측정 전압.  같은 x 축이다. */
+export interface RawTrace {
+  capacity_mah: number[]
+  voltage_v: number[]
+}
+
 export interface Pocv {
   gitt_id: number
   charge: PocvPoint[]
   discharge: PocvPoint[]
+  /** 위 두 곡선의 원본 — 점선으로 겹쳐 그린다.  각 점에 **어떻게** 도달했는지
+   *  (펄스의 분극과 그 뒤의 완화) 가 보인다. */
+  charge_raw?: RawTrace
+  discharge_raw?: RawTrace
   skipped_charge: number
   skipped_discharge: number
   skipped_reasons: string[]

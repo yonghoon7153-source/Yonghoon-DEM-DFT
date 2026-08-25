@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from fastapi import HTTPException
-from sqlmodel import Session
+from sqlmodel import Session, select
 
 from wrdkit import BASES, ResolvedCell, basis_label
 
@@ -30,6 +30,24 @@ def get_group(session: Session, group_id: int) -> ExperimentGroup:
     if group is None:
         raise HTTPException(404, f"group {group_id} not found")
     return group
+
+
+def group_scope(session: Session, group_id: int) -> list[int]:
+    """The group ids a filter on ``group_id`` should actually match.
+
+    A cell sits in exactly one node, so a parent group holds no cells of its
+    own once its cells have been sorted into sub-groups -- filtering by the
+    parent alone would show an empty list for a group that plainly has cells
+    in it.  Every count and every filter goes through here so the number on a
+    dropdown always matches what selecting it shows.
+
+    Nesting is one level deep (ADR 0025), so this is the parent and its
+    children -- no recursion, and no cycle to guard against.
+    """
+    children = session.exec(
+        select(ExperimentGroup.id).where(ExperimentGroup.parent_id == group_id)
+    ).all()
+    return [group_id, *[int(c) for c in children]]
 
 
 def validate_basis(basis: str) -> str:

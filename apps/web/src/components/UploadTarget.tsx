@@ -11,10 +11,11 @@
 
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
 
+import { GroupFilterFields, useGroupChoice, type GroupChoice } from './GroupFilter'
 import { Field } from './ui'
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
-import type { Group, Sample } from '../lib/types'
+import type { Sample } from '../lib/types'
 
 /** 파일 이름에서 셀 이름을 뽑는다 — 끝의 파일 순번(`_011`)만 뗀다.
  *
@@ -28,8 +29,8 @@ export function cellNameFor(fileName: string): string {
 }
 
 export interface UploadTarget {
-  groupId: number | null
-  setGroupId: (value: number | null) => void
+  /** 그룹 · 소그룹.  새 셀이 들어갈 자리이자 아래 목록을 좁히는 조건이다. */
+  group: GroupChoice
   newName: string
   setNewName: (value: string) => void
   target: number | null
@@ -38,7 +39,6 @@ export interface UploadTarget {
   setQuery: (value: string) => void
   nameFromFile: boolean
   setNameFromFile: (value: boolean) => void
-  groups: Group[]
   samples: Sample[]
   matches: Sample[]
   /** 파일마다 어느 셀에 붙일지.  필요하면 셀을 만든다.
@@ -51,22 +51,24 @@ export interface UploadTarget {
 }
 
 export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
-  const [groupId, setGroupId] = useState<number | null>(null)
   const [newName, setNewName] = useState('')
   const [target, setTarget] = useState<number | null>(null)
   const [query, setQuery] = useState('')
   const [nameFromFile, setNameFromFile] = useState(false)
 
   const samples = useAsync(() => api.listSamples(), [reloadKey], { live: true })
-  const groups = useAsync(() => api.listGroups(), [reloadKey], { live: true })
+  const group = useGroupChoice(reloadKey)
+  const { includes, effective } = group
 
   const matches = useMemo(() => {
     const all = samples.data ?? []
     const needle = query.trim().toLowerCase()
-    const inGroup = groupId === null ? all : all.filter((s) => s.group_id === groupId)
+    // 상위 그룹을 고르면 그 소그룹의 셀도 후보다 -- 서버의 `group_scope` 와
+    // 같은 규칙이고, 여기서만 다르면 목록의 수가 드롭다운의 수와 어긋난다.
+    const inGroup = all.filter((s) => includes(s.group_id))
     if (!needle) return inGroup
     return inGroup.filter((s) => s.name.toLowerCase().includes(needle))
-  }, [samples.data, query, groupId])
+  }, [samples.data, query, includes])
 
   const planFor = useCallback(async (files: File[]) => {
     if (target !== null) return files.map(() => target)
@@ -74,7 +76,7 @@ export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
     if (newName.trim()) {
       const created = await api.createSample({
         name: newName.trim(),
-        ...(groupId === null ? {} : { group_id: groupId }),
+        ...(effective === null ? {} : { group_id: effective }),
       })
       // 다음 드롭이 같은 이름으로 또 만들지 않도록 고른 셀로 옮겨 둔다.
       setTarget(created.id)
@@ -97,46 +99,52 @@ export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
       }
       const created = await api.createSample({
         name: wanted,
-        ...(groupId === null ? {} : { group_id: groupId }),
+        ...(effective === null ? {} : { group_id: effective }),
       })
       madeHere.set(wanted, created.id)
       out.push(created.id)
     }
     return out
-  }, [target, newName, groupId, nameFromFile, samples.data])
+  }, [target, newName, effective, nameFromFile, samples.data])
 
   return {
-    groupId, setGroupId, newName, setNewName, target, setTarget,
+    group, newName, setNewName, target, setTarget,
     query, setQuery, nameFromFile, setNameFromFile,
-    groups: groups.data ?? [], samples: samples.data ?? [], matches,
+    samples: samples.data ?? [], matches,
     planFor,
   }
 }
 
-/** ① 그룹 · ② 새 셀 만들기 / 기존 셀에 연결. */
+/** ① 그룹 · ② 소그룹 · ③ 새 셀 만들기 / 기존 셀에 연결. */
 export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
+  // 좁힌 목록에 없는 셀이 골라진 채로 남으면, 화면에는 안 보이는 셀에 파일이
+  // 붙는다.  그래서 그룹이 바뀌면 고른 셀을 놓는다.
+  const group: GroupChoice = useMemo(() => ({
+    ...pick.group,
+    setGroupId: (value: number | null) => {
+      pick.group.setGroupId(value)
+      pick.setTarget(null)
+    },
+    setSubGroupId: (value: number | null) => {
+      pick.group.setSubGroupId(value)
+      pick.setTarget(null)
+    },
+  }), [pick])
+
   return (
     <>
-      <Field label="① 그룹" hint="새 셀이 들어갈 곳 · 아래 목록도 좁혀집니다">
-        <select
-          value={pick.groupId ?? ''}
-          aria-label="그룹"
-          onChange={(event) => {
-            pick.setGroupId(event.target.value ? Number(event.target.value) : null)
-            // 좁힌 목록에 없는 셀이 골라진 채로 남으면, 화면에는 안 보이는
-            // 셀에 파일이 붙는다.
-            pick.setTarget(null)
-          }}
-        >
-          <option value="">그룹 없음</option>
-          {pick.groups.map((group) => (
-            <option key={group.id} value={group.id}>{group.name}</option>
-          ))}
-        </select>
-      </Field>
+      <div className="grid cols-2" style={{ gap: 10 }}>
+        <GroupFilterFields
+          pick={group}
+          groupLabel="① 그룹"
+          subLabel="② 소그룹"
+          hint="새 셀이 들어갈 곳 · 아래 목록도 좁혀집니다"
+          creatable
+        />
+      </div>
 
       <div className="grid cols-2" style={{ gap: 10, margin: '10px 0 12px' }}>
-        <Field label="② 새 셀 만들기"
+        <Field label="③ 새 셀 만들기"
                hint={pick.nameFromFile ? '파일마다 셀 하나' : '이름만 입력'}>
           <input
             type="text"
@@ -163,7 +171,7 @@ export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
           </label>
         </Field>
         <Field
-          label="② 또는 기존 셀에 연결"
+          label="③ 또는 기존 셀에 연결"
           hint={pick.matches.length && pick.query.trim()
             ? `${pick.matches.length}개 일치`
             : '이름을 쳐서 좁힐 수 있습니다'}

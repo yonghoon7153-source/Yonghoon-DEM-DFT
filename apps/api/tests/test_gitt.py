@@ -270,10 +270,60 @@ def test_the_dashboard_gives_a_range_not_an_average(client):
     assert 0 < row["diffusion_low"] < 1e-3
 
 
-def test_the_dashboard_counts_what_is_not_attached_yet(client):
+def test_the_dashboard_shows_what_is_not_attached_yet_as_its_own_row(client):
+    """안 붙은 기록도 이름으로 한 줄.  EIS 대시보드와 같은 규칙이다."""
     client.post("/api/gitt/runs/upload",
                 files={"file": ("loose.wrd", gitt_bytes(),
                                 "application/octet-stream")})
     body = client.get("/api/gitt/dashboard").json()
     assert body["unattached"] == 1
-    assert body["rows"] == []
+    assert len(body["rows"]) == 1
+    row = body["rows"][0]
+    assert row["attached"] is False
+    assert row["sample_id"] is None
+    assert row["name"] == "loose.wrd"
+    # 재료 상수가 없으므로 D 는 빈칸이고, 무엇이 없는지가 그 자리에 온다 (§0.4).
+    assert row["diffusion_low"] is None
+    assert len(row["missing"]) == 4
+
+
+def test_an_attached_row_carries_the_files_own_name_too(client):
+    """셀 이름만으로는 어느 측정인지 모른다 -- 파일 이름에 조건이 적혀 있다."""
+    sample_id, _ = _attach(client, name="0.1C_25C.wrd")
+    row = client.get("/api/gitt/dashboard").json()["rows"][0]
+    assert row["sample_id"] == sample_id
+    assert row["attached"] is True
+    assert row["name"] == "0.1C_25C.wrd"
+
+
+# --- 목적: 무엇을 보려고 잰 기록인가 ------------------------------------------
+
+
+def test_a_purpose_typed_at_upload_stays_on_the_record(client):
+    made = client.post("/api/gitt/runs/upload", params={"purpose": "SOC별"},
+                       files={"file": ("g.wrd", gitt_bytes(),
+                                       "application/octet-stream")}).json()
+    assert made["purpose"] == "SOC별"
+    assert client.get(f"/api/gitt/runs/{made['id']}").json()["purpose"] == "SOC별"
+
+
+def test_reuploading_does_not_wipe_a_purpose_already_written(client):
+    """빈 칸으로 다시 올린 것은 '지워라' 가 아니다 — 셀 붙이기와 같은 규칙."""
+    first = client.post("/api/gitt/runs/upload", params={"purpose": "저온"},
+                        files={"file": ("g.wrd", gitt_bytes(),
+                                        "application/octet-stream")}).json()
+    again = client.post("/api/gitt/runs/upload",
+                        files={"file": ("g.wrd", gitt_bytes(),
+                                        "application/octet-stream")}).json()
+    assert again["id"] == first["id"]
+    assert again["purpose"] == "저온"
+
+
+def test_a_purpose_can_be_edited_and_cleared(client):
+    made = upload(client)
+    patched = client.patch(f"/api/gitt/runs/{made['id']}",
+                           json={"purpose": "코팅 전후"}).json()
+    assert patched["purpose"] == "코팅 전후"
+    cleared = client.patch(f"/api/gitt/runs/{made['id']}",
+                           json={"clear": ["purpose"]}).json()
+    assert cleared["purpose"] == ""

@@ -4,15 +4,15 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
+import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
-import { nameFamily, num } from '../lib/format'
+import { num } from '../lib/format'
 import { useAsync, useDebounced, useStickyState } from '../lib/hooks'
-import type { Sample } from '../lib/types'
+import type { Group, Sample } from '../lib/types'
 
 export function Library() {
   const [search, setSearch] = useState('')
-  const [groupId, setGroupId] = useState<number | null>(null)
   const [cathode, setCathode] = useState('')
   const [process, setProcess] = useState('')
   const [dateFrom, setDateFrom] = useState('')
@@ -21,39 +21,31 @@ export function Library() {
   // 지우고 나서 목록이 그대로면 사라진 셀이 계속 보이고, 눌러 보면 404 다.
   const [reloadKey, bumpReload] = useState(false)
   const [groupBy, setGroupBy] = useStickyState<GroupKey>('workbench.libraryGroupBy', 'none')
-  // 이름 묶음 필터.  묶기와 **같은 규칙**(nameFamily)을 쓴다 — 표에서 한
-  // 덩어리로 보이던 것이 필터에서 다른 덩어리면 둘 중 하나는 거짓말이다.
-  const [family, setFamily] = useState('')
   // 작성자도 같은 자리에서 거른다.  서버에 보내면 고른 순간 선택지가 그 하나로
-  // 줄어서 다른 사람 것으로 옮겨 갈 수가 없다 -- 이름 묶음과 같은 이유다.
+  // 줄어서 다른 사람 것으로 옮겨 갈 수가 없다.
   const [owner, setOwner] = useState('')
 
   const debouncedSearch = useDebounced(search)
-  const groups = useAsync(() => api.listGroups(), [reloadKey], { live: true })
+  const group = useGroupChoice(reloadKey)
   const facets = useAsync(() => api.facets(), [], { live: true })
   const samples = useAsync(
     () =>
       api.listSamples({
         search: debouncedSearch,
-        group_id: groupId,
+        group_id: group.effective,
         cathode_type: cathode,
         process,
         date_from: dateFrom,
         date_to: dateTo,
       }),
-    [debouncedSearch, groupId, cathode, process, dateFrom, dateTo, reloadKey],
+    [debouncedSearch, group.effective, cathode, process, dateFrom, dateTo, reloadKey],
   )
 
-  // 이름 묶음은 **받아 온 뒤** 거른다.  서버에 같이 보내면 고른 순간 선택지가
-  // 그 하나로 줄어서, 다른 묶음으로 옮겨 갈 수가 없다.
-  const families = useMemo(() => {
-    const seen = new Set<string>()
-    for (const item of samples.data ?? []) {
-      const name = nameFamily(item.name)
-      if (name) seen.add(name)
-    }
-    return [...seen].sort((a, b) => a.localeCompare(b, 'ko'))
-  }, [samples.data])
+  // 브라우저에 남아 있던 옛 선택('이름 묶음')을 걸러 낸다.  없어진 값이 그대로
+  // 살아 있으면 묶기 줄에 아무 버튼도 안 켜지고, 표는 이유 없이 한 덩어리가
+  // 된다 -- 화면은 멀쩡해 보이는데 아무도 그렇게 고른 적이 없다.
+  const groupKey: GroupKey =
+    GROUP_KEYS.some(([value]) => value === groupBy) ? groupBy : 'none'
 
   const owners = useMemo(() => {
     const seen = new Set<string>()
@@ -64,10 +56,8 @@ export function Library() {
   }, [samples.data])
 
   const shown = useMemo(
-    () => (samples.data ?? []).filter(
-      (item) => (!family || nameFamily(item.name) === family)
-        && (!owner || item.created_by === owner)),
-    [samples.data, family, owner],
+    () => (samples.data ?? []).filter((item) => !owner || item.created_by === owner),
+    [samples.data, owner],
   )
 
   return (
@@ -80,7 +70,7 @@ export function Library() {
           </div>
         </div>
         <span className="spacer" />
-        <NewSampleButton groups={groups.data ?? []} onCreated={() => bumpReload((v) => !v)} />
+        <NewSampleButton groups={group.groups} onCreated={() => bumpReload((v) => !v)} />
       </div>
 
       <div className="split">
@@ -109,35 +99,7 @@ export function Library() {
                   ))}
                 </select>
               </Field>
-              <Field label="이름 묶음" hint="같은 조건 반복분을 한 덩어리로">
-                <select
-                  aria-label="이름 묶음"
-                  value={family}
-                  onChange={(event) => setFamily(event.target.value)}
-                >
-                  <option value="">전체</option>
-                  {families.map((value) => (
-                    <option key={value} value={value}>
-                      {value}
-                    </option>
-                  ))}
-                </select>
-              </Field>
-              <Field label="그룹">
-                <select
-                  value={groupId ?? ''}
-                  onChange={(event) =>
-                    setGroupId(event.target.value ? Number(event.target.value) : null)
-                  }
-                >
-                  <option value="">전체</option>
-                  {groups.data?.map((group) => (
-                    <option key={group.id} value={group.id}>
-                      {group.name}
-                    </option>
-                  ))}
-                </select>
-              </Field>
+              <GroupFilterFields pick={group} />
               <Field label="양극재">
                 <select value={cathode} onChange={(event) => setCathode(event.target.value)}>
                   <option value="">전체</option>
@@ -185,7 +147,7 @@ export function Library() {
                     <button
                       key={value}
                       type="button"
-                      className={groupBy === value ? 'on' : ''}
+                      className={groupKey === value ? 'on' : ''}
                       onClick={() => setGroupBy(value)}
                     >
                       {label}
@@ -207,7 +169,7 @@ export function Library() {
             ) : shown.length ? (
               <SampleTable
                 samples={shown}
-                groupBy={groupBy}
+                groupBy={groupKey}
                 onDeleted={() => bumpReload((v) => !v)}
               />
             ) : (
@@ -238,26 +200,21 @@ const GROUP_KEYS: [GroupKey, string][] = [
   // 누가 올린 셀인가.  한 서버를 여럿이 쓰면 표에서 남의 셀과 내 셀이 섞이고,
   // 이름만 보고는 알 수 없다 (ADR 0012 — 이름은 기록이지 신원 확인이 아니다).
   ['owner', '작성자'],
-  // 이름 **묶음**: 같은 조건을 세 번 돌린 것이 이름 뒤의 번호·질량만 다르다.
-  // '이름' 이라고만 적었더니 작성자로 읽혔다 -- 둘 다 필요한 것이었다.
-  ['name', '이름 묶음'],
   ['cathode', '양극재'],
   ['process', '공정'],
   ['temperature', '온도'],
 ]
 
-type GroupKey = 'none' | 'group' | 'owner' | 'name' | 'cathode' | 'process' | 'temperature'
+type GroupKey = 'none' | 'group' | 'owner' | 'cathode' | 'process' | 'temperature'
 
 /** 이 셀이 어느 묶음에 속하는가.  "" 는 값이 없다는 뜻이고, 그 묶음은 맨
  *  아래로 내린다 — 비어 있는 것이 목록의 첫인상이 되면 안 된다. */
 function bucketOf(sample: Sample, key: GroupKey): string {
   switch (key) {
     case 'group':
-      return sample.group_name ?? ''
+      return groupPath(sample.group_name, sample.group_parent_name)
     case 'owner':
       return sample.created_by ?? ''
-    case 'name':
-      return nameFamily(sample.name)
     case 'cathode':
       return sample.cathode_detail || sample.cathode_type || ''
     case 'process':
@@ -360,10 +317,8 @@ function SampleHead() {
         <th>셀</th>
         {/* 누가 올렸나.  한 서버를 여럿이 쓰면 이것이 첫 번째 거르개다. */}
         <th style={{ textAlign: 'left' }}>작성자</th>
-        {/* 이름 묶음.  같은 조건을 세 번 돌린 것이 이름 뒤의 번호·질량만
-            다르므로, 그 앞자리를 따로 보여 주면 표를 훑으며 반복분을 셀 수
-            있다 — 묶기를 켜지 않아도. */}
-        <th style={{ textAlign: 'left' }}>이름 묶음</th>
+        {/* 그룹이 소그룹이면 "부모 · 자식" 으로 (ADR 0025).  자식 이름만 쓰면
+            '80wt%' 같은 이름이 여러 실험에 있어 어느 것인지 알 수 없다. */}
         <th style={{ textAlign: 'left' }}>그룹</th>
         <th>날짜</th>
         <th style={{ textAlign: 'left' }}>양극재</th>
@@ -388,7 +343,7 @@ function SampleHead() {
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 16
+const COLUMN_COUNT = 15
 
 function SampleRow({
   sample,
@@ -406,8 +361,9 @@ function SampleRow({
         <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
       </td>
       <td className="text dim">{sample.created_by || '—'}</td>
-      <td className="text dim">{nameFamily(sample.name) || '—'}</td>
-      <td className="text dim">{sample.group_name ?? '—'}</td>
+      <td className="text dim">
+        {groupPath(sample.group_name, sample.group_parent_name) || '—'}
+      </td>
       <td>{sample.test_date ?? '—'}</td>
       <td className="text dim">{sample.cathode_detail || sample.cathode_type || '—'}</td>
       <td className="text dim">{sample.process || '—'}</td>
@@ -448,6 +404,10 @@ function SampleRow({
 function GroupManager({ onChanged }: { onChanged: () => void }) {
   const groups = useAsync(() => api.listGroups(), [])
   const [name, setName] = useState('')
+  //: 새 그룹을 어디에 만드는가.  `null` 이면 최상위, 아니면 그 그룹의 소그룹.
+  //  소그룹을 만들 자리가 여기밖에 없으면 안 되므로 업로드 화면에도 넣었지만,
+  //  정리하는 자리는 여기다 (ADR 0025).
+  const [parentId, setParentId] = useState<number | null>(null)
   const [error, setError] = useState<string | null>(null)
   // 그룹을 지우면 그 안의 셀은 남고 "그룹 없음" 이 된다 (FK 는 SET NULL 이 아니라
   // 모델이 nullable 이다). 그래도 한 번 눌러 사라지면 안 되므로 확인을 받는다.
@@ -473,7 +433,10 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
   async function create() {
     if (!name.trim()) return
     try {
-      await api.createGroup({ name: name.trim() })
+      await api.createGroup({
+        name: name.trim(),
+        ...(parentId === null ? {} : { parent_id: parentId }),
+      })
       setName('')
       setError(null)
       groups.reload()
@@ -494,15 +457,35 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
           onChange={(event) => setName(event.target.value)}
           onKeyDown={(event) => event.key === 'Enter' && create()}
         />
+        <select
+          aria-label="어디에 만들까"
+          value={parentId ?? ''}
+          style={{ width: 150 }}
+          onChange={(event) =>
+            setParentId(event.target.value ? Number(event.target.value) : null)}
+        >
+          <option value="">최상위 그룹으로</option>
+          {(groups.data ?? []).filter((group) => !group.parent_id).map((group) => (
+            <option key={group.id} value={group.id}>{group.name} 아래</option>
+          ))}
+        </select>
         <button type="button" className="primary sm" onClick={create}>
           추가
         </button>
       </div>
       {groups.data?.length ? (
         <div className="col" style={{ gap: 6 }}>
-          {groups.data.map((group) => (
-            <div key={group.id} className="row" style={{ justifyContent: 'space-between' }}>
-              <span>{group.name}</span>
+          {treeOrder(groups.data).map((group) => (
+            <div key={group.id} className="row"
+                 style={{ justifyContent: 'space-between',
+                          paddingLeft: group.parent_id ? 14 : 0 }}>
+              <span>
+                {group.parent_id ? <span className="faint">↳ </span> : null}
+                {group.name}
+                {group.subgroup_count
+                  ? <span className="tiny faint"> · 소그룹 {group.subgroup_count}</span>
+                  : null}
+              </span>
               <span className="row tiny faint" style={{ gap: 8, alignItems: 'center' }}>
                 셀 {group.sample_count} · 파일 {group.run_count}
                 {confirming === group.id ? (
@@ -529,7 +512,7 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
                     type="button"
                     className="ghost icon"
                     aria-label={`${group.name} 그룹 지우기`}
-                    title="그룹만 지웁니다. 안에 있던 셀은 남고 그룹 없음이 됩니다."
+                    title="그룹만 지웁니다. 안에 있던 셀과 소그룹은 남습니다."
                     onClick={() => {
                       setError(null)
                       setConfirming(group.id)
@@ -549,11 +532,24 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
   )
 }
 
+/** 부모 바로 뒤에 그 자식들.  두 단계뿐이라 재귀가 필요 없다 (ADR 0025). */
+function treeOrder(groups: Group[]): Group[] {
+  const out: Group[] = []
+  for (const group of groups.filter((item) => !item.parent_id)) {
+    out.push(group)
+    out.push(...groups.filter((item) => item.parent_id === group.id))
+  }
+  // 부모가 사라진 소그룹은 서버가 최상위로 올리므로 보통 없지만, 목록에서
+  // 조용히 빠지는 것보다는 끝에라도 보이는 편이 낫다.
+  out.push(...groups.filter((item) => !out.includes(item)))
+  return out
+}
+
 function NewSampleButton({
   groups,
   onCreated,
 }: {
-  groups: { id: number; name: string }[]
+  groups: Group[]
   onCreated: () => void
 }) {
   const [open, setOpen] = useState(false)
@@ -585,9 +581,9 @@ function NewSampleButton({
         style={{ width: 150 }}
       >
         <option value="">그룹 없음</option>
-        {groups.map((group) => (
+        {treeOrder(groups).map((group) => (
           <option key={group.id} value={group.id}>
-            {group.name}
+            {groupPath(group.name, group.parent_name)}
           </option>
         ))}
       </select>

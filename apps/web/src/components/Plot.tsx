@@ -49,6 +49,12 @@ interface Props {
   yRange?: [number | null, number | null]
   xRange?: [number | null, number | null]
   legend?: boolean
+  /** "y ≥ 0" 버튼을 붙인다 (나이퀴스트).
+   *
+   *  임피던스는 고주파 끝에서 −Z″ 가 음수로 내려간다 (측정선의 인덕턴스).
+   *  그 꼬리 때문에 세로축이 아래로 늘어나면 정작 보려던 아크가 위쪽 절반에
+   *  눌려 납작해진다.  누르면 −Z″ ≥ 0 인 점들에만 화면을 맞춘다. */
+  positiveFit?: boolean
   /** 두 축의 한 단위를 화면에서 같은 길이로 (나이퀴스트).
    *
    *  반원이 반원으로 보여야 한다.  세로가 눌리면 찌그러진 아크(CPE 지수가 낮은
@@ -326,6 +332,7 @@ export function Plot({
   xRange,
   legend = false,
   equalAspect = false,
+  positiveFit = false,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
@@ -747,6 +754,58 @@ export function Plot({
     })
   }
 
+  /** −Z″ ≥ 0 인 점들에만 딱 맞춘다.
+   *
+   *  세로 아래끝은 **0 으로 고정**한다.  데이터의 최솟값에 맞추면 누를 때마다
+   *  기준이 달라지고, 이 버튼의 이름이 곧 약속이다.
+   *
+   *  `equalAspect` 가 켜져 있으면 두 축의 단위/픽셀을 맞춘 뒤 세로를 **옮겨서**
+   *  0 에서 시작하게 한다 — 다시 좁히면 비율이 깨지고, 나이퀴스트에서 비율은
+   *  물리다 (반원이 반원으로 보여야 한다).
+   */
+  const fitPositive = () => {
+    const plot = plotRef.current
+    if (!plot) return
+    let xMin = Infinity
+    let xMax = -Infinity
+    let yMax = -Infinity
+    for (const item of visible) {
+      for (let i = 0; i < item.x.length; i += 1) {
+        const value = item.y[i]
+        const at = item.x[i]
+        if (value === null || value === undefined || !Number.isFinite(value)) continue
+        if (value < 0 || at === undefined || !Number.isFinite(at)) continue
+        if (at < xMin) xMin = at
+        if (at > xMax) xMax = at
+        if (value > yMax) yMax = value
+      }
+    }
+    // 아무 점도 0 위에 없으면 아무 일도 하지 않는다.  빈 화면으로 옮기는 것보다
+    // 안 움직이는 편이 낫다 -- 버튼이 회색이므로 눌리지도 않는다.
+    if (!Number.isFinite(xMin) || !Number.isFinite(yMax)) return
+    // 점 하나뿐이면 폭이 0 이다.  uPlot 은 min === max 를 그리지 못한다.
+    const pad = (span: number, value: number) => (span > 0 ? span : Math.abs(value) * 0.1 || 1)
+    let x: [number, number] = [xMin, xMax + (xMax > xMin ? 0 : pad(0, xMax))]
+    let y: [number, number] = [0, yMax > 0 ? yMax : pad(0, 1)]
+    if (equalAspect) {
+      const fitted = equalAspectRanges(x, y, plot.bbox.width || 1, plot.bbox.height || 1)
+      x = fitted.x
+      // 폭은 그대로 두고 0 에서 시작하도록 옮긴다.
+      y = [0, fitted.y[1] - fitted.y[0]]
+    }
+    overrideLock.current = true
+    plot.batch(() => {
+      plot.setScale('x', { min: x[0], max: x[1] })
+      plot.setScale('y', { min: y[0], max: y[1] })
+    })
+  }
+
+  /** 0 위에 그릴 것이 하나라도 있는가.  없으면 버튼을 끈다. */
+  const hasPositive = useMemo(
+    () => visible.some((item) => item.y.some(
+      (value) => value !== null && value !== undefined && Number.isFinite(value) && value >= 0)),
+    [visible])
+
   const resetZoom = () => {
     const plot = plotRef.current
     const home = homeRef.current
@@ -787,6 +846,18 @@ export function Plot({
             >
               🔍−
             </button>
+            {positiveFit ? (
+              <button
+                type="button"
+                className="sm ghost"
+                onClick={fitPositive}
+                disabled={!homeReady || !hasPositive}
+                aria-label="y 0 이상만"
+                title="−Z″ 가 0 이상인 곳에만 화면을 맞춥니다 — 고주파 인덕턴스 꼬리 때문에 아크가 납작해질 때"
+              >
+                y ≥ 0
+              </button>
+            ) : null}
             <button
               type="button"
               className="sm ghost"

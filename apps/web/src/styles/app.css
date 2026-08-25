@@ -1240,3 +1240,15 @@ table tr.section > th > .section-label {
   display: inline-block;
   padding: 0 var(--s4);
 }
+
+/* 비교 화면의 셀 목록.  그래프 밑으로 내려오면서 가로가 넓어졌으므로 한 줄에
+   하나씩 쌓지 않는다 — 스무 개짜리 묶음이 세로로 스무 줄이면 아래쪽 절반은
+   스크롤해야 보인다.  높이 상한은 그대로 둔다: 목록이 화면을 밀어내면 그래프가
+   위로 사라진다. */
+.pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 3px var(--s3);
+  max-height: 320px;
+  overflow: auto;
+}

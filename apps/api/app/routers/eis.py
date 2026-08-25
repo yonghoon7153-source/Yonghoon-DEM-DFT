@@ -37,7 +37,7 @@ from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
 from ..db import get_session
-from ..models import Sample, SpectrumFit, SpectrumRecord
+from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
     DrtOut,
     DrtPeakOut,
@@ -389,6 +389,21 @@ def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
 # --------------------------------------------------------------------------
 # 대시보드 -- 셀 한 줄
 # --------------------------------------------------------------------------
+
+def _group_names(session: Session, sample) -> tuple[int | None, str, str]:
+    """(그룹 id, 그룹 이름, 상위 그룹 이름).
+
+    셋을 함께 내는 이유는 화면이 이 한 줄로 두 가지를 하기 때문이다: 그룹·
+    소그룹으로 거르기(id)와 "부모 · 자식" 으로 적기(이름 둘).  id 만 주면
+    화면이 그룹 표를 한 번 더 물어야 하고, 이름만 주면 소그룹으로 거를 수
+    없다 (ADR 0025).
+    """
+    group = sample.group
+    if group is None:
+        return None, "", ""
+    parent = session.get(ExperimentGroup, group.parent_id) if group.parent_id else None
+    return group.id, group.name, parent.name if parent else ""
+
 def _series_resistance(parameters: list[dict]) -> float | None:
     """직렬 저항 (R0/Rs).  결정되지 않았으면 `None` 이다.
 
@@ -412,10 +427,12 @@ def dashboard(session: Session = Depends(get_session)):
     """
     records = session.exec(select(SpectrumRecord)).all()
     by_sample: dict[int, list[SpectrumRecord]] = {}
-    unattached = 0
+    #: 셀에 안 붙은 것은 **파일**로 묶는다.  스윕이 스물인 SOC 스캔 하나가
+    #: 스무 줄이 되면 표가 그것만으로 덮인다 (ADR 0022 와 같은 셈법).
+    loose: dict[str, list[SpectrumRecord]] = {}
     for record in records:
         if record.sample_id is None:
-            unattached += 1
+            loose.setdefault(record.sha256, []).append(record)
             continue
         by_sample.setdefault(record.sample_id, []).append(record)
 
@@ -424,8 +441,9 @@ def dashboard(session: Session = Depends(get_session)):
         sample = session.get(Sample, sample_id)
         if sample is None:
             # 셀이 지워졌는데 스펙트럼이 남아 있다.  붙어 있지 않은 것과 같이
-            # 세는 편이 정확하다 -- 갈 곳 없는 것은 마찬가지다.
-            unattached += len(items)
+            # 다루는 편이 정확하다 -- 갈 곳 없는 것은 마찬가지다.
+            for orphan in items:
+                loose.setdefault(orphan.sha256, []).append(orphan)
             continue
         items = sorted(items, key=lambda r: (r.measured_at or r.uploaded_at,
                                              r.sweep_index))
@@ -444,10 +462,14 @@ def dashboard(session: Session = Depends(get_session)):
                 circuit=fit.circuit,
                 parameters=[_ParameterStub(**p) for p in parameters]))
 
+        group_id, group_name, parent_name = _group_names(session, sample)
         rows.append(EisDashboardRow(
             sample_id=sample_id,
             sample_name=sample.name,
-            group_name=sample.group.name if sample.group else "",
+            name=latest.original_name or latest.name,
+            group_id=group_id,
+            group_name=group_name,
+            group_parent_name=parent_name,
             owner=sample.created_by or "",
             kind=next(iter(kinds)) if len(kinds) == 1 else "",
             cell_config=next(iter(configs)) if len(configs) == 1 else "",
@@ -462,7 +484,46 @@ def dashboard(session: Session = Depends(get_session)):
             measured_at=latest.measured_at or latest.uploaded_at,
         ))
 
-    rows.sort(key=lambda r: (r.group_name, r.sample_name))
+    # 안 붙은 파일도 줄로.  셀 칸이 비어 있다는 것 자체가 이 줄의 정보다 --
+    # 그것이 곧 "이 파일에는 아직 할 일이 있다" 이고, 배너로만 세면 몇 개인지만
+    # 알고 무엇인지는 다른 화면에 가야 안다.
+    unattached = 0
+    for items in loose.values():
+        items = sorted(items, key=lambda r: (r.measured_at or r.uploaded_at,
+                                             r.sweep_index))
+        unattached += len(items)
+        kinds = {r.kind for r in items}
+        configs = {r.cell_config for r in items if r.cell_config}
+        latest = items[-1]
+        fit = _best_fit(session, latest.id or 0)
+        parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
+        total = None
+        if parameters:
+            total = total_resistance(_FitStub(
+                circuit=fit.circuit,
+                parameters=[_ParameterStub(**p) for p in parameters]))
+        rows.append(EisDashboardRow(
+            sample_id=None,
+            sample_name="",
+            name=latest.original_name or latest.name,
+            attached=False,
+            owner=latest.created_by or "",
+            kind=next(iter(kinds)) if len(kinds) == 1 else "",
+            cell_config=next(iter(configs)) if len(configs) == 1 else "",
+            spectra=len(items),
+            scans=1 if latest.sweep_count > 1 else 0,
+            fitted=sum(1 for r in items if _best_fit(session, r.id or 0)),
+            purposes=sorted({r.purpose for r in items if r.purpose}),
+            last_circuit=fit.circuit if fit else "",
+            last_at_cycle=latest.at_cycle,
+            series_resistance_ohm=_series_resistance(parameters),
+            total_resistance_ohm=total,
+            measured_at=latest.measured_at or latest.uploaded_at,
+        ))
+
+    # 붙은 것이 먼저, 그 안에서 그룹·셀 이름순.  안 붙은 것은 아래로 모인다 --
+    # 표의 첫인상이 "아직 정리 안 된 파일" 이 되면 안 된다.
+    rows.sort(key=lambda r: (not r.attached, r.group_name, r.sample_name, r.name))
     return EisDashboardOut(rows=rows, unattached=unattached)
 
 
