@@ -128,105 +128,8 @@ export function EisCompare() {
         </div>
       </div>
 
-      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`).  한 화면에서 익힌
-          손이 다른 화면에서 통해야 한다 -- 예전에는 여기만 칩 줄이라
-          "모두 선택" 이 없었고, 고른 수도 제목에 안 나왔다. */}
-      <PickGrid
-        title="스펙트럼 선택"
-        group={group}
-        groupHint="이 측정 또는 붙은 셀의 묶음"
-        limit={OVERLAY_LIMIT}
-        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
-        items={rows.map((row, index) => ({
-          id: row.id,
-          name: label(row),
-          note: [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
-                 row.sample_name ? `셀: ${row.sample_name}` : null]
-            .filter(Boolean).join(' · '),
-          color: seriesColor(index),
-        }))}
-        picked={selected}
-        onChange={setChosen}
-        empty={(
-          <Empty title="고를 스펙트럼이 없습니다" icon="∿">
-            <Link to="/eis/upload">업로드</Link>에서 올려 주세요.
-          </Empty>
-        )}
-        extra={
-          <>
-            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
-              <select
-                aria-label="관계셀"
-                value={sampleId ?? ''}
-                style={{ width: 150 }}
-                onChange={(event) =>
-                  setSampleId(event.target.value ? Number(event.target.value) : null)}
-              >
-                <option value="">전체</option>
-                {cells.map(([id, name]) => (
-                  <option key={id} value={id}>{name}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
-              <select
-                aria-label="목적"
-                value={purpose}
-                style={{ width: 130 }}
-                onChange={(event) => setPurpose(event.target.value)}
-              >
-                <option value="">전체</option>
-                {purposes.map((value) => (
-                  <option key={value} value={value}>{value}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="전해질">
-              <select
-                aria-label="전해질"
-                value={kind}
-                onChange={(event) => setKind(event.target.value as EisKind | '')}
-              >
-                <option value="">전체</option>
-                <option value="liquid">액체</option>
-                <option value="solid">전고체</option>
-              </select>
-            </Field>
-            <Field label="검색" hint="이름 · 셀">
-              <input
-                aria-label="검색"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </Field>
-          </>
-        }
-      />
       {spectra.error ? <Alert kind="error">{spectra.error}</Alert> : null}
       {spectra.loading && !spectra.data ? <Spinner /> : null}
-
-      <Card title="나이퀴스트">
-        <CopyBar
-          items={[{
-            label: '나이퀴스트',
-            title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
-            disabled: !fresh || !points.data?.length,
-            build: () => nyquistTsv(points.data ?? []),
-          }]}
-        />
-        {points.error ? <Alert kind="error">{points.error}</Alert> : null}
-        {!selected.length ? (
-          // 빈 그래프는 고장처럼 보인다.
-          <div className="tiny faint" style={{ padding: 12 }}>
-            위에서 스펙트럼을 골라 주세요.
-          </div>
-        ) : points.loading && !points.data ? (
-          <Spinner />
-        ) : series.length ? (
-          <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
-                height={380} legend equalAspect positiveFit />
-        ) : null}
-      </Card>
 
       {selected.length ? (
         <Card title="고른 것" tight>
@@ -279,6 +182,107 @@ export function EisCompare() {
           </div>
         </Card>
       ) : null}
+
+      <Card title="나이퀴스트">
+        <CopyBar
+          items={[{
+            label: '나이퀴스트',
+            title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
+            disabled: !fresh || !points.data?.length,
+            build: () => nyquistTsv(points.data ?? []),
+          }]}
+        />
+        {points.error ? <Alert kind="error">{points.error}</Alert> : null}
+        {!selected.length ? (
+          // 빈 그래프는 고장처럼 보인다.
+          <div className="tiny faint" style={{ padding: 12 }}>
+            아래 목록에서 스펙트럼을 골라 주세요.
+          </div>
+        ) : points.loading && !points.data ? (
+          <Spinner />
+        ) : series.length ? (
+          <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
+                height={380} legend equalAspect positiveFit />
+        ) : null}
+      </Card>
+
+      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`).  한 화면에서 익힌
+          손이 다른 화면에서 통해야 한다 -- 예전에는 여기만 칩 줄이라
+          "모두 선택" 이 없었고, 고른 수도 제목에 안 나왔다.
+
+          그림 **밑**에 둔다.  고르개는 스펙트럼이 늘수록 아래로 자라는데,
+          위에 있으면 그만큼 그림이 화면 밖으로 밀린다 -- 스무 개쯤 쌓이면
+          비교하러 온 사람이 매번 스크롤부터 해야 한다. */}
+      <PickGrid
+        title="스펙트럼 선택"
+        group={group}
+        groupHint="이 측정 또는 붙은 셀의 묶음"
+        limit={OVERLAY_LIMIT}
+        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
+        items={rows.map((row, index) => ({
+          id: row.id,
+          name: label(row),
+          note: [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
+                 row.sample_name ? `셀: ${row.sample_name}` : null]
+            .filter(Boolean).join(' · '),
+          color: seriesColor(index),
+        }))}
+        picked={selected}
+        onChange={setChosen}
+        empty={(
+          <Empty title="고를 스펙트럼이 없습니다" icon="∿">
+            <Link to="/eis/upload">업로드</Link>에서 올려 주세요.
+          </Empty>
+        )}
+        extra={
+          <>
+            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
+              <select
+                aria-label="관계셀"
+                value={sampleId ?? ''}
+                onChange={(event) =>
+                  setSampleId(event.target.value ? Number(event.target.value) : null)}
+              >
+                <option value="">전체</option>
+                {cells.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
+              <select
+                aria-label="목적"
+                value={purpose}
+                onChange={(event) => setPurpose(event.target.value)}
+              >
+                <option value="">전체</option>
+                {purposes.map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="전해질">
+              <select
+                aria-label="전해질"
+                value={kind}
+                onChange={(event) => setKind(event.target.value as EisKind | '')}
+              >
+                <option value="">전체</option>
+                <option value="liquid">액체</option>
+                <option value="solid">전고체</option>
+              </select>
+            </Field>
+            <Field label="검색" hint="이름 · 셀">
+              <input
+                aria-label="검색"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </Field>
+          </>
+        }
+      />
+
     </main>
   )
 }

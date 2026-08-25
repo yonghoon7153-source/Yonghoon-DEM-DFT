@@ -127,67 +127,6 @@ export function GittCompare() {
         </div>
       </div>
 
-      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`) — EIS 와 같은 이유. */}
-      <PickGrid
-        title="기록 선택"
-        group={group}
-        groupHint="이 측정 또는 붙은 셀의 묶음"
-        limit={OVERLAY_LIMIT}
-        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지입니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
-        items={rows.map((run, index) => ({
-          id: run.id,
-          name: label(run),
-          note: [`펄스 ${run.n_pulses}개`, run.purpose,
-                 run.sample_name ? `셀: ${run.sample_name}` : null]
-            .filter(Boolean).join(' · '),
-          color: seriesColor(index),
-        }))}
-        picked={selected}
-        onChange={setChosen}
-        empty={(
-          <Empty title="고를 GITT 기록이 없습니다" icon="↯">
-            <Link to="/gitt/upload">업로드</Link>에서 올려 주세요.
-          </Empty>
-        )}
-        extra={
-          <>
-            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
-              <select
-                aria-label="관계셀"
-                value={sampleId ?? ''}
-                style={{ width: 150 }}
-                onChange={(event) =>
-                  setSampleId(event.target.value ? Number(event.target.value) : null)}
-              >
-                <option value="">전체</option>
-                {cells.map(([id, name]) => (
-                  <option key={id} value={id}>{name}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
-              <select
-                aria-label="목적"
-                value={purpose}
-                style={{ width: 130 }}
-                onChange={(event) => setPurpose(event.target.value)}
-              >
-                <option value="">전체</option>
-                {purposes.map((value) => (
-                  <option key={value} value={value}>{value}</option>
-                ))}
-              </select>
-            </Field>
-            <Field label="검색" hint="이름 · 셀">
-              <input
-                aria-label="검색"
-                value={search}
-                onChange={(event) => setSearch(event.target.value)}
-              />
-            </Field>
-          </>
-        }
-      />
       {runs.error ? <Alert kind="error">{runs.error}</Alert> : null}
       {runs.loading && !runs.data ? <Spinner /> : null}
 
@@ -268,7 +207,7 @@ export function GittCompare() {
         ) : null}
         {!selected.length ? (
           <div className="tiny faint" style={{ padding: 12 }}>
-            위에서 기록을 골라 주세요.
+            아래 목록에서 기록을 골라 주세요.
           </div>
         ) : curves.loading && !curves.data ? (
           <Spinner />
@@ -277,6 +216,67 @@ export function GittCompare() {
                 height={380} legend />
         ) : null}
       </Card>
+
+      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`) — EIS 와 같은 이유. */}
+      <PickGrid
+        title="기록 선택"
+        group={group}
+        groupHint="이 측정 또는 붙은 셀의 묶음"
+        limit={OVERLAY_LIMIT}
+        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지입니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
+        items={rows.map((run, index) => ({
+          id: run.id,
+          name: label(run),
+          note: [`펄스 ${run.n_pulses}개`, run.purpose,
+                 run.sample_name ? `셀: ${run.sample_name}` : null]
+            .filter(Boolean).join(' · '),
+          color: seriesColor(index),
+        }))}
+        picked={selected}
+        onChange={setChosen}
+        empty={(
+          <Empty title="고를 GITT 기록이 없습니다" icon="↯">
+            <Link to="/gitt/upload">업로드</Link>에서 올려 주세요.
+          </Empty>
+        )}
+        extra={
+          <>
+            <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
+              <select
+                aria-label="관계셀"
+                value={sampleId ?? ''}
+                onChange={(event) =>
+                  setSampleId(event.target.value ? Number(event.target.value) : null)}
+              >
+                <option value="">전체</option>
+                {cells.map(([id, name]) => (
+                  <option key={id} value={id}>{name}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="목적" hint={purposes.length ? `${purposes.length}가지` : '아직 없음'}>
+              <select
+                aria-label="목적"
+                value={purpose}
+                onChange={(event) => setPurpose(event.target.value)}
+              >
+                <option value="">전체</option>
+                {purposes.map((value) => (
+                  <option key={value} value={value}>{value}</option>
+                ))}
+              </select>
+            </Field>
+            <Field label="검색" hint="이름 · 셀">
+              <input
+                aria-label="검색"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </Field>
+          </>
+        }
+      />
+
     </main>
   )
 }

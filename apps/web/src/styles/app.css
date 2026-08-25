@@ -902,6 +902,12 @@ tbody tr:last-child td { border-bottom: none; }
   align-items: flex-start;
 }
 .alert + .alert { margin-top: var(--s2); }
+
+/* Origin 클립보드 줄.  마커 클래스만 있고 여백이 없어서 바로 아래 오는 경고
+   상자나 그래프가 단추에 붙어 한 덩어리로 읽혔다 -- 눌러야 하는 것과 읽어야
+   하는 것 사이는 떼어 둔다. */
+.copy-bar { margin-bottom: var(--s3); }
+.copy-bar:last-child { margin-bottom: 0; }
 .alert.error { background: var(--neg-wash); border-color: color-mix(in srgb, var(--neg) 32%, transparent); color: var(--neg); }
 .alert.warn { background: var(--warn-wash); border-color: color-mix(in srgb, var(--warn) 32%, transparent); color: var(--warn); }
 .alert.info { background: var(--accent-wash); border-color: var(--accent-line); color: var(--accent); }
@@ -1299,11 +1305,46 @@ table tr.section > th > .section-label {
    위로 사라진다. */
 .pick-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 3px var(--s3);
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  /* 위쪽 맞춤.  두 줄짜리(설명 있는) 항목과 한 줄짜리가 섞이는데, stretch 로
+     두면 짧은 쪽 체크박스가 칸 가운데로 내려가 줄이 어긋나 보인다. */
+  align-items: start;
+  gap: var(--s1) var(--s3);
   max-height: 320px;
   overflow: auto;
+  /* 스크롤 막대가 마지막 글자를 덮지 않게. */
+  padding-right: 2px;
 }
+
+/* 한 항목 = [체크박스][글]. grid 라서 이름이 길어도 **줄바꿈이 없다** —
+   `.row` 는 `flex-wrap: wrap` 이라 긴 이름이 다음 줄로 내려가고 체크박스만
+   윗줄에 혼자 남았다.  글 칸은 `minmax(0, 1fr)` 이라야 잘림(truncate)이 먹는다. */
+.pick-item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0 var(--s2);
+  padding: 3px 0;
+  min-width: 0;
+}
+
+.pick-item > input[type='checkbox'] { width: auto; margin: 0; }
+
+.pick-item .swatch { margin-right: 5px; vertical-align: baseline; }
+
+/* 화면마다 다른 추가 필터(관계셀·목적·전해질·검색).  칸마다 폭을 손으로
+   적어 두면 글자 수에 따라 들쭉날쭉해지므로, 같은 폭으로 나눠 아래끝을
+   맞춘다. */
+.pick-extra {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  align-items: end;
+  gap: var(--s2) var(--s3);
+}
+
+.pick-extra > .field { min-width: 0; }
+.pick-extra select,
+.pick-extra input { width: 100%; }
 
 /* --------------------------------------------------------------- 셀 고르기 */
 /* 드롭다운이 아니라 버튼 + 창인 이유는 `CellPicker` 의 머리말에 있다.  버튼은

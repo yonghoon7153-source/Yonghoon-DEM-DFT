@@ -78,7 +78,7 @@ export function PickGrid({
           </div>
         ) : null}
 
-        {extra ? <div className="row" style={{ gap: 8, flexWrap: 'wrap' }}>{extra}</div> : null}
+        {extra ? <div className="pick-extra">{extra}</div> : null}
 
         <div className="row">
           <button
@@ -111,9 +111,9 @@ export function PickGrid({
               return (
                 <label
                   key={item.id}
-                  className="row small"
+                  className="pick-item small"
+                  title={item.note ? `${item.name}\n${item.note}` : item.name}
                   style={{
-                    gap: 7,
                     // 더 못 켜는 것은 흐리게.  누를 수는 있게 두면 아무 일도
                     // 안 일어나는 클릭이 되고, 그것이 고장으로 읽힌다.
                     cursor: !on && full ? 'default' : 'pointer',
@@ -125,25 +125,22 @@ export function PickGrid({
                     checked={on}
                     disabled={!on && full}
                     onChange={() => toggle(item.id)}
-                    style={{ width: 'auto' }}
                   />
-                  <span style={{ minWidth: 0, display: 'flex', gap: 6, alignItems: 'baseline' }}>
-                    {item.color ? (
-                      <span
-                        className="swatch"
-                        style={{ background: on ? item.color : 'var(--line-strong)' }}
-                      />
-                    ) : null}
-                    <span style={{ minWidth: 0 }}>
-                      <span className="truncate" style={{ display: 'block' }}>
-                        {item.name}
-                      </span>
-                      {item.note ? (
-                        <span className="tiny faint truncate" style={{ display: 'block' }}>
-                          {item.note}
-                        </span>
+                  <span style={{ minWidth: 0 }}>
+                    <span className="truncate" style={{ display: 'block' }}>
+                      {item.color ? (
+                        <span
+                          className="swatch"
+                          style={{ background: on ? item.color : 'var(--line-strong)' }}
+                        />
                       ) : null}
+                      {item.name}
                     </span>
+                    {item.note ? (
+                      <span className="tiny faint truncate" style={{ display: 'block' }}>
+                        {item.note}
+                      </span>
+                    ) : null}
                   </span>
                 </label>
               )
