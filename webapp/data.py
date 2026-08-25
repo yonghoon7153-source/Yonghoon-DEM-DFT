@@ -125,6 +125,53 @@ def load_open_items_md() -> str:
     return OPEN_ITEMS_MD.read_text(encoding="utf-8") if OPEN_ITEMS_MD.exists() else ""
 
 
+#: 1저자 요청 대장. 이 캠페인에서 **가장 자주 되돌아오는 문서**라 라우트를 준다
+#: (그동안 경로를 기억하거나 grep 해서 찾아야 했다).
+REQUESTS_MD = KB / "reports" / "paper_first_author_requests_2026_08.md"
+
+
+def load_requests_md() -> str:
+    return REQUESTS_MD.read_text(encoding="utf-8") if REQUESTS_MD.exists() else ""
+
+
+def requests_ledger() -> list:
+    """요청 대장 표(§ '📋 요청 대장')를 파싱해 요청별 상태만 뽑는다.
+
+    ⚠ 본문 전체를 읽기 전에 **어디가 닫혔고 어디가 안 닫혔나**를 먼저 보여주려는 것이다.
+    ⛔ 이 함수가 못 하는 것: 상태의 옳고 그름을 판정하지 않는다. 표를 옮길 뿐이다.
+      표 형식이 바뀌면 조용히 빈 리스트가 되므로, 화면은 비었을 때 그렇게 말해야 한다.
+    """
+    md = load_requests_md()
+    rows, seen = [], False
+    for ln in md.splitlines():
+        if ln.startswith("| 요청 |"):
+            seen = True
+            continue
+        if seen:
+            if not ln.startswith("|"):
+                if rows:
+                    break
+                continue
+            c = [x.strip() for x in ln.strip().strip("|").split("|")]
+            if len(c) < 4 or set(c[0]) <= set("-: "):
+                continue
+            num = c[0].replace("*", "").strip()
+            if not num or not num[0].isdigit():
+                continue
+            st = c[2]
+            mark = ("done" if "✅" in st else "blocked" if "🔴" in st
+                    else "partial" if ("🟡" in st or "⚠" in st) else "open")
+            # ⚠ 이모지와 문장이 어긋나는 행이 실제로 있다 (요청 5: 🔴 인데 "재작성 완료").
+            #   한쪽을 골라 조용히 정하면 화면이 원문과 다른 말을 하게 된다.
+            #   → 어긋났다고 **표시**하고 판단은 사람에게 넘긴다.
+            says_done = ("완료" in st or "닫" in st) and "미완" not in st
+            conflict = (mark == "blocked" and says_done) or (mark == "done" and "미완" in st)
+            rows.append({"n": num, "what": c[1].replace("**", ""),
+                         "status": st, "mark": mark, "conflict": conflict,
+                         "where": c[3] if len(c) > 3 else ""})
+    return rows
+
+
 def open_items_summary() -> dict:
     """kb/open_items.md → 대시보드 카드용 요약. mtime 캐시(실시간 동기)."""
     return _open_items_c(_mtime_ns(OPEN_ITEMS_MD))

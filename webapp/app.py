@@ -412,6 +412,23 @@ def todo():
                            subtitle="kb/open_items.md · 판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응")
 
 
+@app.route("/requests")
+def requests_page():
+    """1저자 요청 대장 — 이 캠페인에서 가장 자주 되돌아오는 문서.
+
+    ⚠ 본문 전에 **어디가 닫혔고 어디가 안 닫혔나**를 먼저 보여준다. 문서가 1000줄이라
+      매번 처음부터 읽으면 상태 파악에만 시간이 간다.
+    ⛔ 상태의 옳고 그름을 판정하지 않는다 — 표를 옮길 뿐이다. 이모지와 문장이
+      어긋나는 행은 한쪽을 고르지 않고 **어긋났다고 표시**한다 (요청 5 가 그렇다).
+    """
+    md = D.load_requests_md()
+    if not md:
+        abort(404)
+    return render_template("requests.html", active="requests",
+                           ledger=D.requests_ledger(),
+                           content=md_html(md, ("tables", "fenced_code", "toc")))
+
+
 @app.route("/governance")
 def governance_page():
     """판례·평가·산출물 원장을 한 화면에 — **판정이 어디에 근거하는지**를 보여준다.

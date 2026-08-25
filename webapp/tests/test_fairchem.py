@@ -187,6 +187,5 @@ def test_nav_link_present(client):
     r = client.get("/")
     assert '/fairchem' in r.data.decode(), "사이드바에 링크가 없다"
 
-
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
