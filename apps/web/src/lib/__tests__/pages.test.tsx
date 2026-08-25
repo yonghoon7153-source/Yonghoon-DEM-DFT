@@ -336,6 +336,51 @@ describe('비교 · dQ/dV 와 dV/dQ', () => {
     expect(screen.getByText(/봉우리 사이의 가로 거리가/)).toBeInTheDocument()
   })
 
+  it('사이클을 여러 개 적으면 그대로 물어본다 — 3,4', async () => {
+    const asked: string[] = []
+    installFetch(compareHandler((url) => {
+      if (path(url) === '/api/compare/profiles') {
+        asked.push(url.toString())
+        return { basis: 'mAh', basis_label: 'mAh', requested_basis: 'mAh',
+                 resolved_cell: CELL, series: [] }
+      }
+      return undefined
+    }))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: '충방전 프로파일' }))
+    const box = await screen.findByLabelText('사이클 번호')
+    await userEvent.clear(box)
+    await userEvent.type(box, '3,4')
+    await userEvent.tab()
+
+    const specs = asked.map((url) =>
+      new URL(url, 'http://x').searchParams.get('cycles'))
+    // 타이핑 중간의 "3," 로는 요청이 나가지 않는다 — 칸을 떠날 때 한 번이다.
+    await waitFor(() => expect(specs).toContain('3,4'))
+    expect([...new Set(specs)]).toEqual(['3', '3,4'])
+    expect(await screen.findByText(/3,4번 사이클 · 충방전 프로파일/)).toBeInTheDocument()
+  })
+
+  it('전체 버튼은 all 을 보내고 제목이 그렇게 바뀐다', async () => {
+    const asked: string[] = []
+    installFetch(compareHandler((url) => {
+      if (path(url) === '/api/compare/profiles') {
+        asked.push(url.toString())
+        return { basis: 'mAh', basis_label: 'mAh', requested_basis: 'mAh',
+                 resolved_cell: CELL, series: [] }
+      }
+      return undefined
+    }))
+    renderCompare()
+
+    await userEvent.click(await screen.findByRole('button', { name: '충방전 프로파일' }))
+    await userEvent.click(await screen.findByRole('button', { name: '전체' }))
+    await waitFor(() => expect(asked.some((url) => url.includes('cycles=all'))).toBe(true))
+    // 몇 번인지는 고른 셀마다 달라 화면이 알 수 없다 — 서버가 정한다.
+    expect(await screen.findByText(/전체 사이클 · 충방전 프로파일/)).toBeInTheDocument()
+  })
+
   it('선택한 모든 셀에 같은 평활을 건다 — 봉우리 높이는 그래야 비교된다', async () => {
     const asked: string[] = []
     installFetch(compareHandler((url) => {

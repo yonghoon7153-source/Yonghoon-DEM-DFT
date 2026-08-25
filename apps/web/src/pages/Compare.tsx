@@ -39,11 +39,24 @@ const METRICS = [
   { value: 'voltage_hysteresis', label: '전압 이력' },
 ]
 
+/** 사이클 지정을 제목으로.  `"all"` 은 몇 번인지 여기서 알 수 없다 --
+ *  고른 셀마다 다르므로 서버가 정하고, 화면은 "전체" 라고만 적는다. */
+function cycleTitle(spec: string): string {
+  const text = spec.trim()
+  if (!text || text.toLowerCase() === 'all') return '전체 사이클'
+  return `${text}번 사이클`
+}
+
 export function Compare() {
   const [basis, setBasis] = useStickyState<Basis>('workbench.basis', 'mAh/g')
   const [mode, setMode] = useState<Mode>('cycles')
   const [metric, setMetric] = useState('discharge_capacity')
-  const [cycle, setCycle] = useState(3)
+  // 사이클은 숫자 하나가 아니라 **지정**이다: "3", "3,4", "1-5", "all".
+  // 한 셀의 3번과 20번을 겹쳐 놓고 열화를 보는 일이 흔한데, 숫자 칸 하나로는
+  // 그것을 시킬 방법이 없었다.  문법은 내보내기 화면과 같다.
+  const [cycleSpec, setCycleSpec] = useState('3')
+  // 타이핑 중간의 "3," 로 요청이 나가지 않게, 칸을 떠날 때/엔터에만 옮긴다.
+  const [cycleDraft, setCycleDraft] = useState('3')
   const [branches, setBranches] = useState<('charge' | 'discharge')[]>(['discharge'])
   // 비교 화면에서 평활이 특히 중요하다.  봉우리 *높이* 는 창·필터·차수가 모두
   // 같은 곡선끼리만 비교되는데(ADR 0013), 여기가 바로 사람이 높이를 눈으로 재는
@@ -79,11 +92,11 @@ export function Compare() {
     () =>
       api.compareProfiles({
         sample_ids: ids,
-        cycle,
+        cycles: cycleSpec,
         basis,
         branches: branches.join(','),
       }),
-    [ids, cycle, basis, branches.join(',')],
+    [ids, cycleSpec, basis, branches.join(',')],
     { enabled: mode === 'profiles' && picked.length > 0 && branches.length > 0 },
   )
 
@@ -93,16 +106,16 @@ export function Compare() {
     ...(smoother === 'savgol' ? { poly_order: polyOrder } : {}),
   }
   const smoothingKey = `${smoother}|${smoothing}|${polyOrder}`
-  const curveDeps = [ids, cycle, basis, branches.join(','), smoothingKey]
+  const curveDeps = [ids, cycleSpec, basis, branches.join(','), smoothingKey]
 
   const dqdvCompare = useAsync(
-    () => api.compareDqdv({ sample_ids: ids, cycle, basis,
+    () => api.compareDqdv({ sample_ids: ids, cycles: cycleSpec, basis,
                             branches: branches.join(','), ...smoothingParams }),
     curveDeps,
     { enabled: mode === 'dqdv' && picked.length > 0 && branches.length > 0 },
   )
   const dvdqCompare = useAsync(
-    () => api.compareDvdq({ sample_ids: ids, cycle, basis,
+    () => api.compareDvdq({ sample_ids: ids, cycles: cycleSpec, basis,
                             branches: branches.join(','), ...smoothingParams }),
     curveDeps,
     { enabled: mode === 'dvdq' && picked.length > 0 && branches.length > 0 },
@@ -288,7 +301,9 @@ export function Compare() {
       <div className="col" style={{ gap: 14 }}>
         <div className="col" style={{ gap: 14 }}>
           <Card
-            title={mode === 'cycles' ? '사이클 추세' : `${cycle}번 사이클 · ${MODE_LABELS[mode]}`}
+            title={mode === 'cycles'
+              ? '사이클 추세'
+              : `${cycleTitle(cycleSpec)} · ${MODE_LABELS[mode]}`}
             actions={
               mode === 'cycles' ? (
                 <select
@@ -322,14 +337,34 @@ export function Compare() {
                       </button>
                     ))}
                   </div>
-                  <input
-                    type="number"
-                    min={1}
-                    value={cycle}
-                    onChange={(event) => setCycle(Math.max(1, Number(event.target.value)))}
-                    style={{ width: 80 }}
-                    aria-label="사이클 번호"
-                  />
+                  <div className="row" style={{ gap: 6 }}>
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      value={cycleDraft}
+                      placeholder="3,4"
+                      onChange={(event) => setCycleDraft(event.target.value)}
+                      onBlur={() => setCycleSpec(cycleDraft.trim() || '3')}
+                      onKeyDown={(event) => {
+                        if (event.key === 'Enter') event.currentTarget.blur()
+                      }}
+                      style={{ width: 96 }}
+                      aria-label="사이클 번호"
+                      title="여러 개 가능 — 3,4 또는 1-5"
+                    />
+                    <button
+                      type="button"
+                      className={cycleSpec === 'all' ? 'sm on' : 'ghost sm'}
+                      onClick={() => {
+                        setCycleDraft('all')
+                        setCycleSpec('all')
+                      }}
+                      title="이 셀들이 가진 사이클 전부 — 곡선이 너무 많으면 몇 개인지 말해 줍니다"
+                    >
+                      전체
+                    </button>
+                    <span className="tiny faint">여러 개 가능 · 3,4 · 1-5</span>
+                  </div>
                 </div>
               )
             }
@@ -383,8 +418,8 @@ export function Compare() {
                 ) : null}
                 {missingCells ? (
                   <div className="tiny" style={{ padding: '8px 14px 0', color: 'var(--warn)' }}>
-                    고른 셀 중 {missingCells}개는 {cycle}번 사이클을 완료하지 않았거나 이 곡선을
-                    만들지 못해 빠졌습니다.
+                    고른 셀 중 {missingCells}개는 {cycleTitle(cycleSpec)}을 완료하지 않았거나
+                    이 곡선을 만들지 못해 빠졌습니다.
                   </div>
                 ) : null}
                 <Plot

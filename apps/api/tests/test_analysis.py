@@ -386,6 +386,66 @@ def test_dashboard_gives_one_line_per_cell(client, loaded):
     assert row["loading_mg_cm2"] == pytest.approx(19.045, rel=1e-3)
 
 
+def test_compare_profiles_can_overlay_several_cycles(client, loaded):
+    """한 셀의 3번과 4번을 겹쳐 놓고 보는 일이 실제로 있다."""
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    body = client.get("/api/compare/profiles",
+                      params={"sample_ids": str(sample_id), "cycles": "3,4",
+                              "branches": "discharge"}).json()
+    labels = [s["label"] for s in body["series"]]
+    assert len(labels) == 2
+    assert any("cycle 3" in label for label in labels)
+    assert any("cycle 4" in label for label in labels)
+
+
+def test_a_cycle_range_is_the_same_as_writing_them_out(client, loaded):
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    by_range = client.get("/api/compare/profiles",
+                          params={"sample_ids": str(sample_id), "cycles": "3-5"}).json()
+    by_list = client.get("/api/compare/profiles",
+                         params={"sample_ids": str(sample_id), "cycles": "5,3,4"}).json()
+    assert [s["label"] for s in by_range["series"]] == \
+           [s["label"] for s in by_list["series"]]
+
+
+def test_all_means_the_cycles_these_cells_actually_have(client, loaded):
+    """1..N 을 지어내지 않는다 -- 없는 사이클을 세면 한도 검사가 엉뚱해진다."""
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    rows = client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]
+    complete = [r["cycle"] for r in rows if r["complete"]]
+    body = client.get("/api/compare/profiles",
+                      params={"sample_ids": str(sample_id), "cycles": "all",
+                              "branches": "discharge"}).json()
+    assert len(body["series"]) == len(complete)
+
+
+def test_too_many_curves_is_refused_not_quietly_trimmed(client, loaded):
+    """앞의 몇 개만 그리면 그 그림이 "이게 전부" 로 읽힌다."""
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    answer = client.get("/api/compare/profiles",
+                        params={"sample_ids": str(sample_id), "cycles": "1-200",
+                                "branches": "charge,discharge"})
+    assert answer.status_code == 422
+    assert "400" in answer.json()["detail"]     # 1 × 200 × 2
+
+
+def test_an_unreadable_cycle_selection_is_a_422(client, loaded):
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    answer = client.get("/api/compare/profiles",
+                        params={"sample_ids": str(sample_id), "cycles": "셋"})
+    assert answer.status_code == 422
+
+
+def test_dqdv_takes_the_same_cycle_list(client, loaded):
+    sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]
+    body = client.get("/api/compare/dqdv",
+                      params={"sample_ids": str(sample_id), "cycles": "3,4",
+                              "branches": "discharge"}).json()
+    labels = [s["label"] for s in body["series"]]
+    assert any("cycle 3" in label for label in labels)
+    assert any("cycle 4" in label for label in labels)
+
+
 def test_dashboard_names_the_parent_group_too(client, loaded):
     """소그룹 이름은 실험마다 되풀이된다 -- "3차" 만으로는 어느 3차인지 모른다."""
     sample_id = client.get("/api/dashboard").json()["rows"][0]["sample_id"]

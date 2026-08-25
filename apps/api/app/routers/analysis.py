@@ -71,6 +71,62 @@ def _validate_smoother(smoother: str) -> None:
 #: an error on one tab and a quietly incomplete plot on the other.
 _COMPARE_LIMIT = 30
 
+#: 한 비교에 담을 수 있는 **곡선** 수 (셀 × 사이클 × 브랜치).
+#:
+#: 셀 수와 따로 세는 이유는 곱이기 때문이다: 셀 여섯에 사이클 열이면 브랜치
+#: 하나라도 예순 줄이고, 범례가 그림보다 커진다.  잘라서 그리지 않고 **거절
+#: 하고 몇 개인지 말한다** -- 조용히 앞의 몇 개만 그리면 그 그림은 "이게
+#: 전부" 로 읽힌다.
+_COMPARE_CURVE_LIMIT = 60
+
+
+def _compare_cycles(session, ids: list[int], spec: str | None,
+                    fallback: int | None) -> list[int]:
+    """비교 화면이 그릴 사이클 번호들.
+
+    `"3,4"` · `"1-5"` · `"3, 7-9"` 를 받는다 -- 사람이 실제로 그렇게 적고,
+    열 개를 겹쳐 보려고 쉼표로 열 번 쓰지는 않기 때문이다.  문법은 내보내기
+    쪽과 같은 `_parse_cycles` 를 쓴다: 한 화면에서 되는 표기가 다른 화면에서
+    안 되면 그것이 곧 버그로 보고된다.
+
+    `"all"` 은 **고른 셀들이 실제로 가진** 사이클 전부다.  1..N 을 지어내지
+    않는다 -- 없는 사이클을 세면 아래 곡선 수 검사가 엉뚱한 수로 거절한다.
+    비어 있으면 `fallback` 하나 (옛 링크의 `cycle=` 이 그것이다).
+    """
+    if spec is None or not spec.strip():
+        if fallback is None:
+            raise HTTPException(
+                422, "그릴 사이클을 정해 주세요 -- cycle=3 또는 cycles=3,4")
+        return [fallback]
+    wanted = _parse_cycles(spec)
+    if wanted is None:                                  # "all"
+        wanted = set()
+        for sample_id in ids:
+            sample = session.get(Sample, sample_id)
+            if sample is None:
+                continue
+            wanted.update(r.cycle_number for r in sample_cycle_records(session, sample)
+                          if r.complete)
+    if any(number < 1 for number in wanted):
+        raise HTTPException(422, "사이클 번호는 1 부터입니다")
+    ordered = sorted(wanted)
+    if ordered:
+        return ordered
+    if fallback is None:
+        # "all" 인데 완료된 사이클이 하나도 없다.  없는 것을 지어내지 않는다:
+        # 빈 응답이 나가고 화면이 "이 사이클을 낼 수 없는 셀" 로 셈한다.
+        return []
+    return [fallback]
+
+
+def _check_curve_count(cells: int, cycles: int, branches: int) -> None:
+    total = cells * cycles * branches
+    if total > _COMPARE_CURVE_LIMIT:
+        raise HTTPException(
+            422, f"곡선이 {total}개입니다 (셀 {cells} × 사이클 {cycles} × "
+                 f"{branches}) -- 한 번에 {_COMPARE_CURVE_LIMIT}개까지 그립니다. "
+                 f"셀이나 사이클을 줄여 주세요.")
+
 router = APIRouter(prefix="/api", tags=["analysis"])
 
 
@@ -794,12 +850,16 @@ def compare_cycles(
 def compare_profiles(
     session: Session = Depends(get_session),
     sample_ids: str = Query(...),
-    cycle: int = Query(..., ge=1),
+    #: 옛 이름 -- 하나만 그릴 때.  `cycles` 가 있으면 그쪽이 이긴다.
+    cycle: int | None = Query(None, ge=1),
+    #: 여러 사이클을 한 번에 -- `"3,4"` 나 `"1-5"`.  주면 `cycle` 대신 쓴다.
+    #: `cycle` 을 남겨 두는 것은 옛 링크와 저장된 북마크를 위해서다.
+    cycles: str | None = Query(None),
     branches: str = Query("discharge"),
     basis: str = Query(Basis.ABSOLUTE),
     max_points: int | None = Query(None, ge=50, le=20000),
 ):
-    """The same cycle from several cells, overlaid."""
+    """The same cycle(s) from several cells, overlaid."""
     validate_basis(basis)
     try:
         ids = [int(part) for part in sample_ids.split(",") if part.strip()]
@@ -811,6 +871,8 @@ def compare_profiles(
         raise HTTPException(
             422, f"at most {_COMPARE_LIMIT} cells can be compared at once "
                  f"({len(ids)} requested)")
+    wanted = _compare_cycles(session, ids, cycles, cycle)
+    _check_curve_count(len(ids), len(wanted), len(requested_branches))
 
     limit = max_points or settings.default_plot_points
     series: list[ProfileSeriesOut] = []
@@ -820,24 +882,28 @@ def compare_profiles(
         if sample is None:
             continue
         cell = resolve_cell(sample)
-        record = next((r for r in sample_cycle_records(session, sample)
-                       if r.cycle_number == cycle and r.complete), None)
-        if record is None:
-            continue
-        run = next((r for r in sample.runs if r.id == record.run_id), None)
-        if run is None:
-            continue
+        # 셀마다 한 번만 읽는다 -- 사이클 열 개면 이 목록을 열 번 만들게 된다.
+        records = sample_cycle_records(session, sample)
         drew = False
-        for branch in requested_branches:
-            payload = profile_series(run, record, branch, cell, basis, max_points=limit)
-            if payload["points"]:
-                drew = True
-                series.append(ProfileSeriesOut(
-                    **payload, run_id=run.id,
-                    label=f"{sample.name} · cycle {cycle} {branch}",
-                    basis_fallback_reason=(
-                        cell.missing_for(basis)
-                        if payload["basis"] != basis else None)))
+        for number in wanted:
+            record = next((r for r in records
+                           if r.cycle_number == number and r.complete), None)
+            if record is None:
+                continue
+            run = next((r for r in sample.runs if r.id == record.run_id), None)
+            if run is None:
+                continue
+            for branch in requested_branches:
+                payload = profile_series(run, record, branch, cell, basis,
+                                         max_points=limit)
+                if payload["points"]:
+                    drew = True
+                    series.append(ProfileSeriesOut(
+                        **payload, run_id=run.id,
+                        label=f"{sample.name} · cycle {number} {branch}",
+                        basis_fallback_reason=(
+                            cell.missing_for(basis)
+                            if payload["basis"] != basis else None)))
         if drew:
             drawn_cells.append(cell)
 
@@ -868,8 +934,8 @@ def _compare_ids(sample_ids: str) -> list[int]:
     return ids
 
 
-def _compare_differential(session, ids, cycle, requested_branches, basis, build):
-    """Walk the selected cells for one cycle and let *build* make each curve.
+def _compare_differential(session, ids, wanted, requested_branches, basis, build):
+    """Walk the selected cells for the wanted cycles and let *build* make each curve.
 
     dQ/dV and dV/dQ differ only in which service function runs and which
     schema wraps it; everything around that -- skipping a cell that has no such
@@ -884,23 +950,27 @@ def _compare_differential(session, ids, cycle, requested_branches, basis, build)
         if sample is None:
             continue
         cell = resolve_cell(sample)
-        record = next((r for r in sample_cycle_records(session, sample)
-                       if r.cycle_number == cycle and r.complete), None)
-        if record is None:
-            continue
-        run = next((r for r in sample.runs if r.id == record.run_id), None)
-        if run is None:
-            continue
+        # 셀마다 한 번만 읽는다 -- 사이클 열 개면 이 목록을 열 번 만들게 된다.
+        records = sample_cycle_records(session, sample)
         drew = False
-        for branch in requested_branches:
-            payload = build(run, record, branch, cell)
-            # 비교 화면에서는 빈 곡선을 싣지 않는다.  상세 화면과 다른 선택인데
-            # 이유가 있다: 거기서는 "이 사이클이 왜 없나" 를 셀 하나에 대해
-            # 말해 줘야 하고, 여기서는 서른 셀의 빈 항목이 범례를 덮는다.
-            if not payload["points"]:
+        for number in wanted:
+            record = next((r for r in records
+                           if r.cycle_number == number and r.complete), None)
+            if record is None:
                 continue
-            drew = True
-            out.append((payload, run, sample, branch, cell))
+            run = next((r for r in sample.runs if r.id == record.run_id), None)
+            if run is None:
+                continue
+            for branch in requested_branches:
+                payload = build(run, record, branch, cell)
+                # 비교 화면에서는 빈 곡선을 싣지 않는다.  상세 화면과 다른
+                # 선택인데 이유가 있다: 거기서는 "이 사이클이 왜 없나" 를 셀
+                # 하나에 대해 말해 줘야 하고, 여기서는 서른 셀의 빈 항목이
+                # 범례를 덮는다.
+                if not payload["points"]:
+                    continue
+                drew = True
+                out.append((payload, run, sample, branch, cell, number))
         if drew:
             drawn_cells.append(cell)
 
@@ -916,7 +986,10 @@ def _compare_differential(session, ids, cycle, requested_branches, basis, build)
 def compare_dqdv(
     session: Session = Depends(get_session),
     sample_ids: str = Query(...),
-    cycle: int = Query(..., ge=1),
+    #: 옛 이름 -- 하나만 그릴 때.  `cycles` 가 있으면 그쪽이 이긴다.
+    cycle: int | None = Query(None, ge=1),
+    #: 여러 사이클을 한 번에 -- `"3,4"` 나 `"1-5"`.  주면 `cycle` 대신 쓴다.
+    cycles: str | None = Query(None),
     branches: str = Query("discharge"),
     basis: str = Query(Basis.ABSOLUTE),
     voltage_step: float = Query(DEFAULT_VOLTAGE_STEP, gt=0.0001, le=0.2),
@@ -936,18 +1009,20 @@ def compare_dqdv(
     _validate_smoother(smoother)
     ids = _compare_ids(sample_ids)
     requested_branches = _parse_branches(branches)
+    wanted = _compare_cycles(session, ids, cycles, cycle)
+    _check_curve_count(len(ids), len(wanted), len(requested_branches))
     limit = max_points or settings.default_plot_points
 
     built, used, mixed, shown_cell = _compare_differential(
-        session, ids, cycle, requested_branches, basis,
+        session, ids, wanted, requested_branches, basis,
         lambda run, record, branch, cell: dqdv_series(
             run, record, branch, cell, basis, voltage_step=voltage_step,
             smoothing=smoothing, smoother=smoother, poly_order=poly_order,
             max_points=limit))
 
     series = [DqdvSeriesOut(**payload, run_id=run.id,
-                            label=f"{sample.name} · cycle {cycle} {branch}")
-              for payload, run, sample, branch, _cell in built]
+                            label=f"{sample.name} · cycle {number} {branch}")
+              for payload, run, sample, branch, _cell, number in built]
     return DqdvOut(basis=used, basis_label=basis_label(used),
                    requested_basis=basis, mixed_basis=mixed,
                    resolved_cell=resolved_cell_out(shown_cell), series=series,
@@ -959,7 +1034,10 @@ def compare_dqdv(
 def compare_dvdq(
     session: Session = Depends(get_session),
     sample_ids: str = Query(...),
-    cycle: int = Query(..., ge=1),
+    #: 옛 이름 -- 하나만 그릴 때.  `cycles` 가 있으면 그쪽이 이긴다.
+    cycle: int | None = Query(None, ge=1),
+    #: 여러 사이클을 한 번에 -- `"3,4"` 나 `"1-5"`.  주면 `cycle` 대신 쓴다.
+    cycles: str | None = Query(None),
     branches: str = Query("discharge"),
     basis: str = Query(Basis.ABSOLUTE),
     capacity_step: float | None = Query(None, gt=0),
@@ -979,18 +1057,20 @@ def compare_dvdq(
     _validate_smoother(smoother)
     ids = _compare_ids(sample_ids)
     requested_branches = _parse_branches(branches)
+    wanted = _compare_cycles(session, ids, cycles, cycle)
+    _check_curve_count(len(ids), len(wanted), len(requested_branches))
     limit = max_points or settings.default_plot_points
 
     built, used, mixed, shown_cell = _compare_differential(
-        session, ids, cycle, requested_branches, basis,
+        session, ids, wanted, requested_branches, basis,
         lambda run, record, branch, cell: dvdq_series(
             run, record, branch, cell, basis, capacity_step=capacity_step,
             smoothing=smoothing, smoother=smoother, poly_order=poly_order,
             max_points=limit))
 
     series = [DvdqSeriesOut(**payload, run_id=run.id,
-                            label=f"{sample.name} · cycle {cycle} {branch}")
-              for payload, run, sample, branch, _cell in built]
+                            label=f"{sample.name} · cycle {number} {branch}")
+              for payload, run, sample, branch, _cell, number in built]
     return DvdqOut(basis=used, basis_label=basis_label(used),
                    requested_basis=basis, mixed_basis=mixed,
                    resolved_cell=resolved_cell_out(shown_cell), series=series,
