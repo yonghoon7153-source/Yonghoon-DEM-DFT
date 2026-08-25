@@ -1,0 +1,49 @@
+{
+ "property": "Y site preference in Li6PS5Cl — Li_24g vs P_4b",
+ "date": "2026-08-26",
+ "★_verdict": "**Y 는 Li_24g 를 선호한다** (E_above_hull 67.6 vs 95.2 meV/atom, 여유 27.6). 우리 site-rule 이 지지되고 Wang 2025 Angew 의 P_4b 주장과 **반대** 방향이다.",
+ "method": "UMA-s-1p1(omat) 이완(FIRE, FrechetCellFilter, fmax 0.05) → UMA-일관 convex hull (MP Li-Y-P-S-Cl-O 318 엔트리를 같은 UMA 로 단일점). 판정은 E_above_hull 로만 한다.",
+ "⚠_why_not_per_atom": "두 모델은 원자수가 다르다(108 vs 100). 전하 보상 방식도 다르다(P_4b 는 Li 추가, Li_24g 는 Li 제거). 총에너지를 원자수로 나눠 비교하면 화학퍼텐셜 μ_P−μ_Li 가 섞인다 — **Wang 2025 가 낸 바로 그 오류**다. E_above_hull 은 조성 차이를 화학퍼텐셜로 정확히 흡수한다.",
+ "results": {
+  "sc_Li_24g": {
+   "composition": "Li42 Y2 P8 S37 O3 Cl8",
+   "n_atoms": 100,
+   "Y_on": "Li_24g",
+   "charge_compensation": "Li 제거",
+   "E_uma_eV": -441.4984,
+   "E_per_atom": -4.41498,
+   "E_above_hull_meV_per_atom": 67.6,
+   "on_hull": false
+  },
+  "sc_P_4b": {
+   "composition": "Li52 Y2 P6 S37 O3 Cl8",
+   "n_atoms": 108,
+   "Y_on": "P_4b",
+   "charge_compensation": "Li 추가",
+   "E_uma_eV": -463.65,
+   "E_per_atom": -4.29306,
+   "E_above_hull_meV_per_atom": 95.2,
+   "on_hull": false
+  }
+ },
+ "★_common_decomposition_basis": "두 모델이 **같은 5개 생성물**로 떨어진다 — Li3PS4 · Li2S · Li3PO4 · LiYS2 · LiCl. 분해 채널이 같으므로 비교가 공통 기준 위에 선다 (다른 채널로 떨어지면 여유의 뜻이 흐려진다). 비율만 다르다: Li_24g {Li3PS4 0.58, Li2S 0.12} vs P_4b {Li3PS4 0.389, Li2S 0.333}.",
+ "⛔_limits": [
+  "**단일 배치 각 1개.** 무질서 배치를 표집하지 않았다 — 다른 Y 배치에서 뒤집힐 수 있다.",
+  "**여유 27.6 meV/atom 이 MLIP 정확도(~10–30 meV/atom)와 같은 자릿수다.** 방향은 재현적으로 보이지만 이 한 판으로 확정할 크기가 아니다.",
+  "**UMA-일관 hull 이지 DFT 가 아니다.** 우리 구조와 경쟁상을 같은 MLIP 으로 단일점해 내부 일관성만 확보했다 (도구 note 가 명시).",
+  "둘 다 metastable 이다 (67.6 · 95.2 meV/atom). 어느 쪽도 hull 위가 아니다 — 도핑 아르지로다이트에서 예상되는 바다.",
+  "경쟁상 건너뜀 수를 이 실행에서는 기록하지 않았다 (도구에 그 보고를 2026-08-26 에 추가). 건너뛴 상이 있으면 hull 이 낮아져 E_above_hull 이 실제보다 낮게 나온다."
+ ],
+ "what_would_settle_it": [
+  "site 당 Y 배치를 3–5개 표집해 여유의 배치 산포를 재기 (재계산 있음, UMA 라 저렴)",
+  "두 챔피언 배치를 DFT 로 재확인 (조성이 달라 여기서도 E_above_hull 로)"
+ ],
+ "vs_literature": {
+  "wang2025_angew": "−4.27846(P_4b) vs −4.26615(Li_24g) eV/atom 으로 P_4b 를 주장했다. 그 값들은 조성이 다른 계의 per-atom 응집에너지라 자리 선호가 아니다 (전하 보상 없음 · 고립원자 기준). litdb §19.4 에서 무효 판정.",
+  "our_direction": "hull 기준으로는 **Li_24g 가 낮다** — 논문과 반대다.",
+  "⚠": "우리 값도 MLIP 이고 배치 하나다. '논문이 틀렸다' 가 아니라 '그 논문의 판정 방법으로는 답이 안 나오고, 제대로 된 방법으로 재면 반대가 나온다' 로 쓴다."
+ },
+ "raw": "gabia:/data/work/runs/y_site_test/ {relaxed/*.cif, ehull_sc_Li_24g.json, ehull_sc_P_4b.json}",
+ "structures": "db/structures/y_site_test/ (xyz 4개 + README.json)",
+ "site_rule": "tools/doping/site_preference.py::LITERATURE_SITES['Y'] — confidence 는 'cited' 유지. our_check 필드에 이 결과를 붙였다 (한계 때문에 승격 보류)."
+}

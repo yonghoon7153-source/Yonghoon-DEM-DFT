@@ -296,7 +296,21 @@ LITERATURE_SITES = {
     'Ga': {'sites': ['Li_24g'], 'confidence': 'standard', 'ref': 'Ga³⁺→Li aliovalent (group-13)'},
     'In': {'sites': ['Li_24g'], 'confidence': 'standard', 'ref': 'In³⁺→Li aliovalent (too large for P-site)'},
     'Sc': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sc³⁺→Li aliovalent (Y analogue)'},
-    'Y':  {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'mechanochemical Y-doped LPSCl'},
+    # ★ 2026-08-26 — 우리 쪽 **능동 검증**이 붙은 첫 site-rule 항목.
+    #   UMA 이완 + UMA-일관 convex hull (MP Li-Y-P-S-Cl-O 318 엔트리):
+    #     Y on Li_24g  E_hull = 67.6 meV/atom   ← 낮다
+    #     Y on P_4b    E_hull = 95.2 meV/atom
+    #   두 모델이 **같은 5개 분해생성물**(Li3PS4·Li2S·Li3PO4·LiYS2·LiCl)로 떨어져
+    #   비교 기준이 공통이다. Wang 2025 Angew 의 P_4b 주장과 반대 방향.
+    #   ⚠ confidence 를 'verified' 로 올리지 않은 이유는 아래 caveat 참조.
+    'Y':  {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'mechanochemical Y-doped LPSCl',
+           'our_check': {'date': '2026-08-26', 'method': 'UMA-s-1p1(omat) relax + UMA-consistent hull',
+                         'ehull_meV_per_atom': {'Li_24g': 67.6, 'P_4b': 95.2},
+                         'margin_meV_per_atom': 27.6, 'supports': 'Li_24g',
+                         'raw': 'gabia:/data/work/runs/y_site_test/ehull_sc_{Li_24g,P_4b}.json',
+                         '⛔_caveat': '단일 배치 각 1개 · MLIP 정확도(~10-30 meV/atom)와 '
+                                     '여유(27.6)가 같은 자릿수 · DFT 미검증. 방향은 우리 규칙을 '
+                                     '지지하나 confidence 를 올릴 근거로는 아직 부족하다.'}},
     'La': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'La³⁺→Li; Sundar 2025 / paper#2 RE oxide'},
     'Nd': {'sites': ['Li_24g'], 'confidence': 'cited',    'ref': 'Nd³⁺→Li; paper#2 Nd2O3 case study (anchor)'},
     'Sm': {'sites': ['Li_24g'], 'confidence': 'analogy',  'ref': 'Sm³⁺→Li by RE analogy (Nd/La anchored)'},
