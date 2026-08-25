@@ -473,6 +473,9 @@ function CellFields({
 }) {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
+  // 셀 목록은 붙일 때만 필요하다.  화면을 열 때마다 받아 두면 스펙트럼만
+  // 보려는 사람도 셀 전체를 한 번 받아 온다.
+  const samples = useAsync(() => api.listSamples(), [])
   const [thickness, setThickness] = useState(
     record.thickness_um === null ? '' : String(record.thickness_um),
   )
@@ -518,6 +521,28 @@ function CellFields({
           {CONFIG_OPTIONS.map((option) => (
             <option key={option.value} value={option.value}>
               {option.label}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      {/* 셀에 붙이는 자리.  API 는 처음부터 됐는데 화면이 읽기만 해서, 셀
+          상세의 임피던스 카드가 영영 비어 있었다 — 붙일 방법이 없으니까. */}
+      <Field label="셀" hint="붙이면 셀 화면에서 함께 보입니다">
+        <select
+          aria-label="셀"
+          value={record.sample_id ?? ''}
+          disabled={busy || samples.loading}
+          onChange={(event) => void save(
+            event.target.value === ''
+              ? { clear: ['sample_id'] }
+              : { sample_id: Number(event.target.value) },
+          )}
+        >
+          <option value="">— 안 붙임</option>
+          {(samples.data ?? []).map((sample) => (
+            <option key={sample.id} value={sample.id}>
+              {sample.name}
             </option>
           ))}
         </select>

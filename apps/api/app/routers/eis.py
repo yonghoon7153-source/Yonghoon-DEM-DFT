@@ -296,6 +296,11 @@ async def upload_spectrum(
     """
     _validate_kind(kind)
     _validate_config(cell_config)
+    # PATCH 는 확인하는데 업로드는 안 하고 있었다.  없는 셀 번호로 올리면
+    # 스펙트럼이 아무 데도 안 붙은 채 조용히 저장되고, 셀 화면에서는 영영
+    # 안 보인다 -- 붙였다고 생각한 사람에게는 사라진 것과 같다.
+    if sample_id is not None and session.get(Sample, sample_id) is None:
+        raise HTTPException(404, f"sample {sample_id} not found")
     if file.size is not None and file.size > settings.max_upload_bytes:
         raise HTTPException(413, f"file is {file.size / 1e6:.0f} MB; the limit is "
                                  f"{settings.max_upload_bytes / 1e6:.0f} MB")

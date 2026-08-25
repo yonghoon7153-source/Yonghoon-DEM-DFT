@@ -405,3 +405,36 @@ def test_an_impossible_regularisation_is_refused(client):
     out = upload(client)
     assert client.get(f"/api/eis/spectra/{out['id']}/drt",
                       params={"regularisation": 0}).status_code == 422
+
+
+# --- 셀에 붙이기 ------------------------------------------------------------
+#
+# API 는 처음부터 됐는데 화면이 읽기만 해서, 셀 상세의 임피던스 카드가 영영
+# 비어 있었다 -- 붙일 방법이 없었기 때문이다.
+
+def test_a_spectrum_can_be_attached_after_the_fact(client, sample_id):
+    out = upload(client)
+    assert out["sample_id"] is None
+    attached = client.patch(f"/api/eis/spectra/{out['id']}",
+                            json={"sample_id": sample_id})
+    assert attached.status_code == 200, attached.text
+    assert attached.json()["sample_name"] == "TEST-01"
+    assert len(client.get("/api/eis/spectra",
+                          params={"sample_id": sample_id}).json()) == 1
+
+
+def test_a_spectrum_can_be_detached(client, sample_id):
+    out = upload(client, sample_id=sample_id)
+    detached = client.patch(f"/api/eis/spectra/{out['id']}",
+                            json={"clear": ["sample_id"]})
+    assert detached.status_code == 200, detached.text
+    assert detached.json()["sample_id"] is None
+
+
+def test_uploading_onto_a_cell_that_does_not_exist_is_refused(client):
+    """조용히 안 붙은 채 저장되면, 붙였다고 생각한 사람에게는 사라진 것과 같다."""
+    response = client.post("/api/eis/spectra/upload",
+                           params={"kind": "solid", "sample_id": 9999},
+                           files={"file": ("s.mpr", mpr(),
+                                           "application/octet-stream")})
+    assert response.status_code == 404

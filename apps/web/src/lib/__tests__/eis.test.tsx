@@ -198,6 +198,28 @@ describe('EIS 목록', () => {
     expect(await screen.findByText(/벌크 아크/)).toBeInTheDocument()
   })
 
+  it('올릴 때 셀을 정해 두면 그 셀로 붙는다', async () => {
+    let sent: URLSearchParams | null = null
+    installFetch((url, init) => {
+      if (path(url) === '/api/eis/spectra/upload' && init?.method === 'POST') {
+        sent = params(url)
+        return spectrum({ sample_id: 3 })
+      }
+      if (path(url) === '/api/samples') return [{ id: 3, name: 'No_1_dry' }]
+      if (path(url) === '/api/eis/spectra') return []
+      return []
+    })
+
+    renderList()
+    await userEvent.selectOptions(await screen.findByLabelText('셀에 붙이기'), '3')
+    await userEvent.upload(
+      screen.getByLabelText('스펙트럼 파일'),
+      new File(['x'], 'a.mpr', { type: 'application/octet-stream' }))
+
+    await waitFor(() => expect(sent).not.toBeNull())
+    expect(sent!.get('sample_id')).toBe('3')
+  })
+
   it('고른 것만 일괄로 맞춘다', async () => {
     let sent: unknown = null
     installFetch((url, init) => {
@@ -246,6 +268,7 @@ describe('스펙트럼 상세', () => {
       const supplied = extra(url, init)
       if (supplied !== undefined) return supplied
       if (path(url) === '/api/eis/circuits') return CIRCUITS
+      if (path(url) === '/api/samples') return [{ id: 3, name: 'No_1_dry' }]
       // DRT 패널도 같은 화면에 있다.  훑기 결과가 없으면 그 자리에서 "못
       // 풀었습니다" 가 뜨고, 나머지는 그대로 동작해야 한다.
       if (path(url) === '/api/eis/spectra/1/drt/sweep') {
@@ -436,6 +459,39 @@ describe('스펙트럼 상세', () => {
     // 제목 줄에 "구동 전" 이 뜨고, 칸에는 0 이 들어 있다 — 빈 칸이 아니다.
     expect(await screen.findByLabelText('사이클')).toHaveValue(0)
     expect(screen.getAllByText(/구동 전/).length).toBeGreaterThan(0)
+  })
+
+  it('셀에 붙일 수 있다 — 안 그러면 셀 화면의 카드가 영영 빈다', async () => {
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum({ sample_id: 3, sample_name: 'No_1_dry' })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    await userEvent.selectOptions(await screen.findByLabelText('셀'), '3')
+    await waitFor(() => expect(sent).toEqual({ sample_id: 3 }))
+  })
+
+  it('셀에서 떼어낼 수도 있다', async () => {
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum()
+      }
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({ sample_id: 3, sample_name: 'No_1_dry' })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    await userEvent.selectOptions(await screen.findByLabelText('셀'), '')
+    await waitFor(() => expect(sent).toEqual({ clear: ['sample_id'] }))
   })
 
   it('맞추지 못했으면 이유를 낸다', async () => {

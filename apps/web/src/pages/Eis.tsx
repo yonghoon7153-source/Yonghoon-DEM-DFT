@@ -33,11 +33,15 @@ export function Eis() {
   const [reloadKey, bumpReload] = useState(false)
   const [search, setSearch] = useState('')
   const [chosen, setChosen] = useState<number[]>([])
+  // 올릴 때 셀을 정해 두면 나중에 하나씩 붙일 일이 없다.  대부분 한 셀의
+  // 초기·200 사이클을 함께 올리므로, 파일마다 고르게 하지 않는다.
+  const [attachTo, setAttachTo] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [note, setNote] = useState<string | null>(null)
   const fileRef = useRef<HTMLInputElement>(null)
 
+  const samples = useAsync(() => api.listSamples(), [])
   const spectra = useAsync(
     () => api.listSpectra({ kind, search: search || undefined }),
     [kind, search, reloadKey],
@@ -66,7 +70,11 @@ export function Eis() {
         const stem = file.name.replace(/\.[^.]+$/, '')
         const mate = settings.find((s) => s.name.replace(/\.[^.]+$/, '') === stem)
           ?? (settings.length === 1 && data.length === 1 ? settings[0] : null)
-        await api.uploadSpectrum(file, { kind }, mate)
+        await api.uploadSpectrum(
+          file,
+          { kind, sample_id: attachTo || undefined },
+          mate,
+        )
         added += 1
       }
       setNote(added ? `${added}개 올렸습니다` : '올릴 데이터 파일이 없습니다')
@@ -121,6 +129,20 @@ export function Eis() {
             onChange={(event) => void upload(event.target.files)}
             style={{ display: 'none' }}
           />
+          <Field label="셀에 붙이기" hint="비우면 안 붙임">
+            <select
+              aria-label="셀에 붙이기"
+              value={attachTo}
+              onChange={(event) => setAttachTo(event.target.value)}
+            >
+              <option value="">— 안 붙임</option>
+              {(samples.data ?? []).map((sample) => (
+                <option key={sample.id} value={sample.id}>
+                  {sample.name}
+                </option>
+              ))}
+            </select>
+          </Field>
           <button
             type="button"
             className="primary"
