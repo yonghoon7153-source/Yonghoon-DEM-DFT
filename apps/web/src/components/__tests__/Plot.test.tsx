@@ -629,3 +629,33 @@ describe('돋보기', () => {
     expect(screen.queryByRole('button', { name: '확대' })).toBeNull()
   })
 })
+
+
+describe('equalAspectRanges (W3)', () => {
+  it('성긴 축에 다른 쪽을 맞춰 넓힌다 — 좁히지 않는다', async () => {
+    const { equalAspectRanges } = await import('../Plot')
+    // x 가 성기다 (10 단위/100px = 0.1/px, y 는 0.05/px) → y 를 넓힌다.
+    const wide = equalAspectRanges([0, 10], [0, 5], 100, 100)
+    expect(wide.x).toEqual([0, 10])
+    expect(wide.y[1] - wide.y[0]).toBeCloseTo(10)
+    // y 가 성기면 x 를 넓힌다 — 전에는 이 방향이 없어서 45° 가 눕거나 섰다.
+    const tall = equalAspectRanges([0, 5], [0, 50], 100, 100)
+    expect(tall.y).toEqual([0, 50])
+    expect(tall.x[1] - tall.x[0]).toBeCloseTo(50)
+    // 두 결과 모두 단위/픽셀이 같다.
+    for (const out of [wide, tall]) {
+      const xPer = (out.x[1] - out.x[0]) / 100
+      const yPer = (out.y[1] - out.y[0]) / 100
+      expect(xPer).toBeCloseTo(yPer)
+    }
+  })
+
+  it('중심을 지키며 넓힌다 — 데이터가 잘리지 않는다', async () => {
+    const { equalAspectRanges } = await import('../Plot')
+    const out = equalAspectRanges([10, 20], [100, 102], 200, 100)
+    // x: 10/200px = 0.05/px, y: 2/100 = 0.02/px → y 를 0.05*100=5 로.
+    expect(out.y[0]).toBeCloseTo(98.5)
+    expect(out.y[1]).toBeCloseTo(103.5)
+    expect(out.x).toEqual([10, 20])
+  })
+})

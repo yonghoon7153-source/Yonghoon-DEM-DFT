@@ -106,7 +106,10 @@ export function massFromName(name: string | null | undefined): number | null {
   let found: number | null = null
   // 두께와 같은 이유로 `\b` 를 쓰지 않는다: `17.5mg_2` 의 `mg` 뒤는 밑줄이고,
   // 밑줄은 단어 문자라 경계가 아니다.
-  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*mg(?![a-z0-9])/gi)) {
+  // 앞 경계도 본다 (리뷰 #33): `17,5mg` 나 `1e-3mg` 처럼 지원하지 않는
+  // 표기의 **꼬리만** 떼어 5, 3 을 힌트로 보여 주면, 진짜 근거처럼 읽힌다.
+  // 숫자 토큰 앞이 소수점·쉼표·지수·부호·숫자면 통째로 못 읽은 것이다.
+  for (const match of name.matchAll(/(?<![\d.,eE+-])(\d+(?:\.\d+)?)\s*mg(?![a-z0-9])/gi)) {
     const value = Number(match[1])
     if (Number.isFinite(value) && value > 0) found = value
   }
@@ -129,7 +132,7 @@ export function thicknessFromName(name: string | null | undefined): number | nul
   // `\b` 가 아니라 `(?![a-z0-9])` 다.  밑줄은 JS 정규식에서 **단어 문자**라
   // `70um_sym` 의 `um` 뒤에는 단어 경계가 없다 — 이 랩의 이름이 거의 다 그
   // 모양이므로, `\b` 로 쓰면 힌트가 거의 안 뜬다.
-  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*(um|µm|μm)(?![a-z0-9])/gi)) {
+  for (const match of name.matchAll(/(?<![\d.,eE+-])(\d+(?:\.\d+)?)\s*(um|µm|μm)(?![a-z0-9])/gi)) {
     const value = Number(match[1])
     if (Number.isFinite(value) && value > 0) found = value
   }

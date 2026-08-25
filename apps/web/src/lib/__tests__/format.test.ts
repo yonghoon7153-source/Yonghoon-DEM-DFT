@@ -201,3 +201,18 @@ describe('cellConfigFromName', () => {
     expect(cellConfigFromName(undefined)).toBeNull()
   })
 })
+
+
+describe('이름 힌트의 앞 경계 (리뷰 #33)', () => {
+  it('지원하지 않는 표기의 꼬리만 떼어 보여 주지 않는다', async () => {
+    const { massFromName, thicknessFromName } = await import('../format')
+    // 쉼표 소수점과 과학 표기 — 통째로 못 읽으면 null 이다.
+    expect(massFromName('cell_17,5mg')).toBeNull()
+    expect(massFromName('cell_1e-3mg')).toBeNull()
+    expect(thicknessFromName('pellet_70,5um')).toBeNull()
+    expect(thicknessFromName('pellet_1e2um')).toBeNull()
+    // 정상 표기는 그대로 읽힌다.
+    expect(massFromName('No_1_dry_17.5mg_13pi')).toBe(17.5)
+    expect(thicknessFromName('260719_No1_55_70um_sym_01')).toBe(70)
+  })
+})

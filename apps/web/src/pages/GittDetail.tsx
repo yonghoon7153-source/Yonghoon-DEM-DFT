@@ -57,7 +57,11 @@ export function GittDetail() {
   }, [pocv.data])
 
   const diffusionSeries = useMemo<PlotSeries[]>(() => {
-    const usable = (diffusion.data?.points ?? []).filter((point) => point.d_cm2_s)
+    // null 검사를 명시적으로 — truthy 필터는 D=0 을 버려서, 표·TSV 에는 있는
+    // 점이 그래프에서만 사라지고 "가정을 통과한 펄스 없음" 이 거짓이 됐다
+    // (리뷰 #32).  0 은 로그축에 못 그리므로 빼되, 아래 문구가 셈해 준다.
+    const usable = (diffusion.data?.points ?? [])
+      .filter((point) => point.d_cm2_s !== null && point.d_cm2_s > 0)
     if (!usable.length) return []
     return [{
       label: 'log₁₀ D (cm²/s)',
@@ -70,6 +74,11 @@ export function GittDetail() {
       width: 1,
     }]
   }, [diffusion.data])
+  const zeroDiffusion = useMemo(
+    () => (diffusion.data?.points ?? [])
+      .filter((point) => point.d_cm2_s === 0).length,
+    [diffusion.data],
+  )
 
   if (run.error) {
     return <main className="page"><Alert kind="error">{run.error}</Alert></main>
@@ -154,11 +163,21 @@ export function GittDetail() {
               추정한 값으로 계산한 D 는 그 추정의 제곱만큼 틀립니다.
             </Alert>
           ) : diffusionSeries.length ? (
-            <Plot series={diffusionSeries} xLabel="용량 (mAh)"
-                  yLabel="log₁₀ D (cm²/s)" height={340} legend />
+            <div className="col" style={{ gap: 6 }}>
+              <Plot series={diffusionSeries} xLabel="용량 (mAh)"
+                    yLabel="log₁₀ D (cm²/s)" height={340} legend />
+              {zeroDiffusion ? (
+                <div className="tiny faint">
+                  D=0 인 점 {zeroDiffusion}개는 로그축에 그릴 수 없어 뺐습니다 —
+                  표와 클립보드에는 있습니다.
+                </div>
+              ) : null}
+            </div>
           ) : diffusion.loading ? <Spinner /> : (
             <Alert kind="info">
-              가정을 통과한 펄스가 없습니다 — 아래 표의 이유를 보세요.
+              {zeroDiffusion
+                ? `양수 D 가 없습니다 — D=0 인 점 ${zeroDiffusion}개는 로그축에 못 그립니다 (표에 있습니다).`
+                : '가정을 통과한 펄스가 없습니다 — 아래 표의 이유를 보세요.'}
             </Alert>
           )}
         </Card>

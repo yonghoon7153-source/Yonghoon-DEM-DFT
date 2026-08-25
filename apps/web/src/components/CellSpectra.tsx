@@ -19,16 +19,23 @@ import { num, seriesColor } from '../lib/format'
 import { nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 
+//: 서버의 /api/eis/points 겹치기 상한과 같은 수.
+const OVERLAY_LIMIT = 12
+
 export function CellSpectra({ sampleId }: { sampleId: number }) {
   const [chosen, setChosen] = useState<number[] | null>(null)
   const spectra = useAsync(() => api.listSpectra({ sample_id: sampleId }),
                            [sampleId], { live: true })
   const rows = useMemo(() => spectra.data ?? [], [spectra.data])
 
-  // 처음에는 전부 켠다.  둘을 비교하려고 들어온 화면에서 아무것도 안 켜져
-  // 있으면, 켜는 법을 찾기 전에 그래프가 비어 있는 이유부터 찾게 된다.
+  // 처음에는 켤 수 있는 만큼 켠다.  둘을 비교하려고 들어온 화면에서 아무것도
+  // 안 켜져 있으면, 켜는 법을 찾기 전에 그래프가 비어 있는 이유부터 찾게
+  // 된다.  단 서버는 한 번에 12개까지만 겹쳐 주므로 13개째부터는 꺼 둔다 —
+  // 전부 보내면 첫 화면부터 422 다 (리뷰 #30).
   useEffect(() => {
-    if (chosen === null && rows.length) setChosen(rows.map((row) => row.id))
+    if (chosen === null && rows.length) {
+      setChosen(rows.slice(0, OVERLAY_LIMIT).map((row) => row.id))
+    }
   }, [rows, chosen])
 
   const selected = useMemo(
@@ -39,19 +46,27 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
     () => (selected.length ? api.spectraPoints(selected) : Promise.resolve([])),
     [selected.join(',')],
   )
+  // 응답이 지금 고른 집합의 것인지.  선택을 바꾸는 사이 옛 응답이 남아
+  // 있으면 칩은 꺼져 있는데 그래프와 클립보드는 켜진 집합을 말한다 (#30).
+  const fresh = useMemo(() => {
+    const got = (points.data ?? []).map((item) => item.id).sort().join(',')
+    return got === [...selected].sort().join(',')
+  }, [points.data, selected])
 
   const series = useMemo<PlotSeries[]>(() => {
+    if (!fresh) return []
     const data = points.data ?? []
-    return data.map((item, index) => ({
+    return data.map((item) => ({
       label: spectrumLabel(item),
       x: item.z_re,
       // 나이퀴스트 세로축은 −Z″ 다.
       y: item.z_im.map((value) => -value),
-      color: seriesColor(index),
+      // 색은 행 순서로 — 곡선을 하나 꺼도 남은 곡선의 색이 칩과 같아야 한다.
+      color: seriesColor(rows.findIndex((row) => row.id === item.id)),
       points: true,
       width: 1,
     }))
-  }, [points.data])
+  }, [points.data, fresh, rows])
 
   if (spectra.error) {
     return (
@@ -75,8 +90,9 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
       title={`임피던스 (EIS) ${rows.length}개`}
       actions={
         <div className="row" style={{ gap: 6 }}>
-          <button type="button" onClick={() => setChosen(rows.map((row) => row.id))}>
-            전부
+          <button type="button"
+                  onClick={() => setChosen(rows.slice(0, OVERLAY_LIMIT).map((row) => row.id))}>
+            {rows.length > OVERLAY_LIMIT ? `처음 ${OVERLAY_LIMIT}개` : '전부'}
           </button>
           <button type="button" onClick={() => setChosen([])}>
             비우기
@@ -99,10 +115,10 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
                 aria-pressed={on}
                 onClick={() =>
                   setChosen((current) => {
-                    const now = current ?? rows.map((item) => item.id)
-                    return now.includes(row.id)
-                      ? now.filter((id) => id !== row.id)
-                      : [...now, row.id]
+                    const now = current ?? rows.slice(0, OVERLAY_LIMIT).map((item) => item.id)
+                    if (now.includes(row.id)) return now.filter((id) => id !== row.id)
+                    if (now.length >= OVERLAY_LIMIT) return now  // 안내는 아래 문구가
+                    return [...now, row.id]
                   })
                 }
               >
@@ -113,11 +129,19 @@ export function CellSpectra({ sampleId }: { sampleId: number }) {
           })}
         </div>
 
+        {rows.length > OVERLAY_LIMIT ? (
+          <div className="tiny faint">
+            한 번에 {OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 나머지는 칩을 꺼서
+            바꿔 켜 주세요.
+          </div>
+        ) : null}
+
         <CopyBar
           items={[{
             label: '나이퀴스트',
             title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
-            disabled: !points.data?.length,
+            // 고른 집합의 응답이 아직 안 왔으면 옛 집합을 복사하게 된다.
+            disabled: !fresh || !points.data?.length,
             build: () => nyquistTsv(points.data ?? []),
           }]}
         />

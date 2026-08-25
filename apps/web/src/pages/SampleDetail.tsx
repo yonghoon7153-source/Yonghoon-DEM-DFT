@@ -1129,14 +1129,27 @@ function CellName({
 }) {
   const [editing, setEditing] = useState(false)
   const [draft, setDraft] = useState(sample.name)
+  // 편집을 시작한 시점의 이름과, 실제로 글자를 쳤는지.  이 둘이 없으면
+  // 열어만 둔 편집기의 blur 가 남의 동시 수정을 옛 이름으로 덮는다 (#31):
+  // A 가 'Old' 에서 focus 만 한 사이 B 가 'New' 로 바꾸면, draft('Old') 와
+  // live('New') 가 달라 "고쳤다" 로 읽혔다.
+  const [base, setBase] = useState(sample.name)
+  const [touched, setTouched] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
 
-  // 다른 사람이 이름을 고쳤을 수 있다.  편집 중에는 덮어쓰지 않는다 —
-  // 치고 있는 글자가 남의 저장에 지워지면 무엇을 잃었는지도 모른다.
+  // 다른 사람이 이름을 고쳤을 수 있다.  안 친 편집기는 따라가고, 치고 있는
+  // 글자는 덮지 않는다 — 지워지면 무엇을 잃었는지도 모른다.
   useEffect(() => {
-    if (!editing) setDraft(sample.name)
-  }, [sample.name, editing])
+    if (!editing) {
+      setDraft(sample.name)
+      return
+    }
+    if (!touched) {
+      setDraft(sample.name)
+      setBase(sample.name)
+    }
+  }, [sample.name, editing, touched])
 
   const commit = async () => {
     if (busy) return
@@ -1145,9 +1158,19 @@ function CellName({
       setError('이름은 비울 수 없습니다.')
       return
     }
-    if (name === sample.name) {
+    if (!touched || name === sample.name) {
       setEditing(false)
       setError(null)
+      return
+    }
+    if (sample.name !== base) {
+      // 편집하는 사이 다른 곳에서 이름이 바뀌었다.  조용히 덮지 않고 묻는다;
+      // 기준을 지금 값으로 옮겨 두므로, 보고도 저장하면 그때는 진짜 의도다.
+      setError(
+        `편집하는 사이 이름이 '${sample.name}' 으로 바뀌었습니다 — ` +
+          '덮어쓰려면 다시 저장하세요.',
+      )
+      setBase(sample.name)
       return
     }
     setBusy(true)
@@ -1171,6 +1194,8 @@ function CellName({
           title="눌러서 이름 고치기"
           onClick={() => {
             setDraft(sample.name)
+            setBase(sample.name)
+            setTouched(false)
             setError(null)
             setEditing(true)
           }}
@@ -1194,7 +1219,10 @@ function CellName({
         autoFocus
         value={draft}
         disabled={busy}
-        onChange={(event) => setDraft(event.target.value)}
+        onChange={(event) => {
+          setDraft(event.target.value)
+          setTouched(true)
+        }}
         onBlur={() => void commit()}
         onKeyDown={(event) => {
           if (event.key === 'Enter') {

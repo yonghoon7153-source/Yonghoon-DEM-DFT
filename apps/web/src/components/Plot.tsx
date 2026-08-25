@@ -247,6 +247,35 @@ function readScales(plot: uPlot): HomeScales {
  * tolerance is loose enough that uPlot's own float round-trips do not read as
  * a zoom, which would leave 초기화 lit on a plot nobody touched.
  */
+/** 같은 단위/픽셀을 두 축 모두에 (리뷰 W3).
+ *
+ *  나이퀴스트의 45° 는 기울기가 물리다.  전에는 y 만 x 의 단위/픽셀에
+ *  맞춰 **넓혔는데**, y 의 데이터 폭이 이미 그보다 크면 아무것도 하지 않아
+ *  두 축의 단위/픽셀이 달랐다 — Warburg 꼬리가 화면 비율에 따라 눕거나
+ *  섰다.  둘 중 성긴 쪽(단위/픽셀이 큰 쪽)에 다른 쪽을 맞춰 넓힌다;
+ *  좁히는 일은 없으므로 데이터가 잘리지 않는다. */
+export function equalAspectRanges(
+  x: [number, number],
+  y: [number, number],
+  width: number,
+  height: number,
+): { x: [number, number]; y: [number, number] } {
+  const safeWidth = Math.max(width, 1)
+  const safeHeight = Math.max(height, 1)
+  const xPerPx = (x[1] - x[0]) / safeWidth
+  const yPerPx = (y[1] - y[0]) / safeHeight
+  const perPx = Math.max(xPerPx, yPerPx, 0)
+  if (perPx <= 0) return { x, y }
+  const xCentre = (x[0] + x[1]) / 2
+  const yCentre = (y[0] + y[1]) / 2
+  const xHalf = (perPx * safeWidth) / 2
+  const yHalf = (perPx * safeHeight) / 2
+  return {
+    x: [xCentre - xHalf, xCentre + xHalf],
+    y: [yCentre - yHalf, yCentre + yHalf],
+  }
+}
+
 export function sameView(home: HomeScales, now: HomeScales): boolean {
   for (const key of Object.keys(home)) {
     const was = home[key]!
@@ -325,6 +354,28 @@ export function Plot({
 
   const visible = useMemo(() => series.filter((s) => !s.hidden && s.x.length > 0), [series])
 
+  // equalAspect 의 두 축 공동 해를 위해, 보이는 데이터의 극값을 한 번 잰다.
+  const dataExtents = useMemo(() => {
+    if (!visible.length) return null
+    let xMin = Infinity
+    let xMax = -Infinity
+    let yMin = Infinity
+    let yMax = -Infinity
+    for (const item of visible) {
+      for (const value of item.x) {
+        if (value < xMin) xMin = value
+        if (value > xMax) xMax = value
+      }
+      for (const value of item.y) {
+        if (value === null || Number.isNaN(value)) continue
+        if (value < yMin) yMin = value
+        if (value > yMax) yMax = value
+      }
+    }
+    if (!Number.isFinite(xMin) || !Number.isFinite(yMin)) return null
+    return { x: [xMin, xMax] as [number, number], y: [yMin, yMax] as [number, number] }
+  }, [visible])
+
   // Callers build these inline, so their identity changes on every render of
   // the parent; the plot only needs to be rebuilt when the values differ.
   const markerKey = markers
@@ -349,6 +400,10 @@ export function Plot({
   useEffect(() => {
     const node = nodeRef.current
     if (!node || !data || width < 80) return
+
+    // 새 데이터로 다시 짓는 순간 이전 확대의 잠금 해제가 남아 있으면, 새
+    // 그래프의 첫 눈금부터 equalAspect/축 고정이 꺼진 채 잡힌다 (W3).
+    overrideLock.current = false
 
     const text = colors.text
     const grid = colors.grid
@@ -388,30 +443,29 @@ export function Plot({
       scales: {
         x: {
           time: false,
-          range: steadyXRange
-            ? (_u, min, max) =>
-                overrideLock.current
-                  ? [min, max]
-                  : [steadyXRange[0] ?? min, steadyXRange[1] ?? max]
-            : undefined,
-        },
-        y: {
           range: equalAspect
             ? (u, min, max) => {
                 // 확대 중에는 손대지 않는다.  드래그로 고른 블록을 다시
                 // 늘리면 사람이 고른 범위가 아닌 것이 나온다.
-                if (overrideLock.current) return [min, max]
-                const xScale = u.scales.x
-                const plotWidth = u.bbox.width || 1
-                const plotHeight = u.bbox.height || 1
-                if (xScale?.min === undefined || xScale?.max === undefined) {
-                  return [min, max]
-                }
-                const perPixel = (xScale.max - xScale.min) / plotWidth
-                const wanted = perPixel * plotHeight
-                const centre = (min + max) / 2
-                const half = Math.max(wanted, max - min) / 2
-                return [centre - half, centre + half]
+                if (overrideLock.current || !dataExtents) return [min, max]
+                return equalAspectRanges(
+                  [min, max], dataExtents.y,
+                  u.bbox.width || 1, u.bbox.height || 1).x
+              }
+            : steadyXRange
+              ? (_u, min, max) =>
+                  overrideLock.current
+                    ? [min, max]
+                    : [steadyXRange[0] ?? min, steadyXRange[1] ?? max]
+              : undefined,
+        },
+        y: {
+          range: equalAspect
+            ? (u, min, max) => {
+                if (overrideLock.current || !dataExtents) return [min, max]
+                return equalAspectRanges(
+                  dataExtents.x, [min, max],
+                  u.bbox.width || 1, u.bbox.height || 1).y
               }
             : steadyRange
               ? (_u, min, max) =>
