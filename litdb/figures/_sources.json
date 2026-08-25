@@ -150,6 +150,13 @@
    "DEM 논문/47. Understanding mechanical stresses upon solid-state battery electrode cycling using discrete element method.pdf"
   ]
  },
+ "demirtas2021_mpfem_hollow_sphere_die_compaction": {
+  "figures": 14,
+  "generated": "2026-08-25",
+  "pdfs": [
+   "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf"
+  ]
+ },
  "deng2016_elastic_superionic_electrolytes_dft": {
   "figures": 1,
   "generated": "2026-08-05",

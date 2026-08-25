@@ -72,13 +72,14 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `yoo2026_porosity_gradient_dry_electrode` | Yoo 2026 (Energy Storage Materials, ENSM 105331) — Porosity-구배 건식 흑연 전극 + 변형성 Primer Layer | MPM | 2026-07-28 | 🖼 7 |
 | `zhang2026_dryprocess_electrode_architecture_cell_level` | 건식(dry-process) 후막 NMC811 전극 — VGCF–PTFE 전단 커플링이 CBD 도전망 percolation 연결성을 17.1 → 61.2 % 로 올려 99 wt% 활물질 · >5 mAh cm⁻² · 4.70 V 를 연다 — CGMD(LAMMPS) + PFIB-SEM 3D + COMSOL 전자전류 + Tau | exp 주도 + CGMD (LAMMPS, Martini-3 유래 LJ 12-6; VGCF+PTFE 2성분 전 | 2026-08-19 | 🖼 42 |
 
-## 공정 — 캘린더링 · 압축 · 건식전극 (24편)
+## 공정 — 캘린더링 · 압축 · 건식전극 (25편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
 | `bak2024_binder_distribution_multilayer` | Bak 2024 (Chemical Engineering Journal 483, 148913) — 바인더 z-분포 제어 다층 모델전극 + Digital-Twin | MPM | 2026-07-28 | 🖼 6 |
 | `bzox_dry_zro2x_nmc_shell_coating_sulfide_assb` | → superseded by `choi2026_bzox_dry_zro2x_nmc_shell_coating.md` |  | — | — |
 | `cho2024_conflicting_roles_conductive_additive` | 필독 / 우리-랩 — Conflicting roles of conductive additives in controlling cathode performance in ASSBs — Cho, Yun, Kang, Kim, Lee (Electrochimica Acta 2024) | exp + AC-impedance decoupling (modified TLM) + DC-polarizati | 2026-06-26 | 🖼 6 |
+| `demirtas2021_mpfem_hollow_sphere_die_compaction` | 중공(hollow) 구의 다이 압밀을 3D MPFEM(입자마다 FE 메시 = 진짜 형상 소성)으로 — ★★★ 저자들이 본문에서 "DEM 은 압밀 중 변형된 입자 표면을 보정할 수 없다" 고 명시 = 우리 3층 지도 층③(입자 형상 소성 = 연속체 소관) 의 제3자 근거 — Demirtas & Klinzing (Merck, | MPFEM (Abaqus/Explicit 3D 다입자 유한요소; 입자당 C3D8R ~1650 요소, elas | 2026-08-25 | 🖼 14 |
 | `duquesnoy2023_ml_multiobjective_manufacturing_optimization` | 물리기반 시뮬 합성데이터 + ML(SISSO+베이지안 다목적최적화)로 LIB 전극 제조 역설계 — Duquesnoy (Energy Storage Mater. 2023) | mixed (CGMD+DEM physics-sim + SISSO ML + Bayesian multi-obje | 2026-07-10 | 🖼 17 |
 | `frankenberg2024_dem_high_intensity_mixer_assb` | ASSB 복합양극을 고강도 믹서(high-intensity mixer) 로 만드는 공정을 DEM으로 — coarse-graining + force-scaling(접촉력 스케일링) + 3단계 보정으로 stressing condition을 추출하고, 그것을 미세구조·풀셀 용량에 연결 — Frankenberg (Powder T | DEM (Rocky 2023 R1, coarse-grained + force-scaling, 3-step c | 2026-06-26 | — |
 | `han2025_icep_conductive_elastic_binder` | 이온전도성 탄성 고분자(ICEP) 바인더로 초고로딩 NCM811 전극 — Han (Adv. Mater. 2025) | exp (+DFT 흡착) | 2026-07-08 | — |

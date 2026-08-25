@@ -1,0 +1,291 @@
+{
+ "slug": "demirtas2021_mpfem_hollow_sphere_die_compaction",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-25",
+ "sources": [
+  "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Fig. 1. (a) Simple schematic of the DEM model, which is used to generate the initial particle conﬁguration coordinates for MPFEM. (b) Die ﬁlling with DEM particles showing different stages.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    563.1,
+    239.7
+   ],
+   "w": 2214,
+   "h": 803,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.643
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Fig. 2. Schematic of detailed MPFEM model.",
+   "rotated_deg": 0,
+   "bbox": [
+    57.7,
+    580.3,
+    269.6,
+    732.1
+   ],
+   "w": 884,
+   "h": 634,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.541
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Fig. 3. The details of the particles used in the mesh study. 37",
+   "rotated_deg": 0,
+   "bbox": [
+    92.5,
+    158.1,
+    502.8,
+    732.1
+   ],
+   "w": 1711,
+   "h": 2393,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.819
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Fig. 4. (a) In die particle orientation for the eight-particle mesh study and (b) the ﬁnal deformed shape at 0.9 RD.",
+   "rotated_deg": 0,
+   "bbox": [
+    120.9,
+    47.2,
+    474.6,
+    194.2
+   ],
+   "w": 1475,
+   "h": 614,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.419
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Fig. 5. Mesh study results, on the simple cubic eight-particle model (a) the stress response, (b) normalized contact area (N.C.Area), and on full-size model with 520 particles (c) stress response, and (d) N.C.Area. Different colors represent various time points during compression. Markers indicate the mesh used in the model. The element numbers of 600, 1059, 1650, 1800, and 3363 are represented with cross, circle, square, triangle, and diamond, respectively.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    234.7,
+    563.1,
+    526.6
+   ],
+   "w": 2214,
+   "h": 1218,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.938
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Fig. 6. The compaction stress (Σy) vs. relative density (RD) for the early stages of compression. Stresses are shown from the zero-stress level to the point where the difference in stress between the large and small particle models of the same d/w ratio approach zero. Models with large and small particles are represented with solid and dashed lines, respectively. The inlays show the stress level where it is not present or negligible.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    497.0,
+    295.2,
+    679.3
+   ],
+   "w": 1097,
+   "h": 761,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.927
+  },
+  {
+   "key": "f7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "Fig. 7. The stress (Σy) vs. relative density (RD) response of simulations. (a) Models with d/w of 10, 5, and 2.5. (b) Only r = 0.75 models, and (c) only r = 1 models. (d) The compaction stress transition between different d/w ratios on the r = 1 model. Models with large and small particles were represented with solid and dashed lines, respectively. The d/w ratio of 2.5, 5, 6.25, 8, 10, and 12.5 was illustrated with black, red, cyan, pink, blue, and green colors, respectively. Note that (f) is an alternative presentation of the stress response as a function of volumetric strain.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    563.2,
+    492.6
+   ],
+   "w": 2214,
+   "h": 1857,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.95
+  },
+  {
+   "key": "f8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "Fig. 8. The ratio of yielded element volume (YV) to the total elemental volume (TV), shown as a function of (a) relative density and (b) stress. Note that the vertical axes in both graphs are identical (YV/TV).",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    295.2,
+    347.7
+   ],
+   "w": 1097,
+   "h": 1253,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "Fig. 9. Mises stress distribution of each model on the same cross-section. The contour shows the low and high-stress levels with blue and red colors, respectively. From left to right, each column is for a d/w ratio of 2.5, 5, and 10. (a) The top three rows are the cross-sections of models with large particles. (b) The bottom three are the cross-sections of models with small particles. Each row is also marked with 1 s, 2.5 s, and 5 s. These show the simulation time in which the cross-section image is captured. Note that total compaction time during simulation is 5 s.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    563.1,
+    432.6
+   ],
+   "w": 2214,
+   "h": 1607,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.579
+  },
+  {
+   "key": "f10",
+   "kind": "figure",
+   "label": "10",
+   "page": 9,
+   "file": "fig_10.png",
+   "caption": "Fig. 10. The ESEM and XRCT images of free powders. (a) and (d) show the XRCT images of uncompressed powder produced at 45 °C and 80 °C, respectively. (b-c) and (e-f) are the ESEM images generated from 2 random locations showing the uncompressed powder produced at 45 °C and 80 °C, respectively. The white scale bar on each image corresponds to a length of 100 μm. 42",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    465.6,
+    563.2,
+    721.2
+   ],
+   "w": 2214,
+   "h": 1066,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.236
+  },
+  {
+   "key": "f11",
+   "kind": "figure",
+   "label": "11",
+   "page": 10,
+   "file": "fig_11.png",
+   "caption": "Fig. 11. The stress (Σy) vs. relative density (RD) response of (a) experimental compaction (b) MPFEM results. In both graphs, large thin-shell particles are represented with blue-colored solid lines, and thick shell small particles are represented with black-colored dash lines. The inlet shows the initial experimental compaction process. The red arrow shows the 0.9 RD on experimental compaction, which is the target relative density value for both experimental and MPFEM studies.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    563.2,
+    277.2
+   ],
+   "w": 2214,
+   "h": 959,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.931
+  },
+  {
+   "key": "f12",
+   "kind": "figure",
+   "label": "12",
+   "page": 10,
+   "file": "fig_12.png",
+   "caption": "Fig. 12. The eSEM images of tablet manufactured with the powder produced at 80 °C and its corresponding MPFEM (r1–10) simulation result. (a) top view of the experimental particles, (b) cross-section view of the experimental particles, (c) top view of the r1–10 results, and (d) cross-section side view of the r1–10.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    340.1,
+    563.2,
+    687.2
+   ],
+   "w": 2214,
+   "h": 1447,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.488
+  },
+  {
+   "key": "f13",
+   "kind": "figure",
+   "label": "13",
+   "page": 11,
+   "file": "fig_13.png",
+   "caption": "Fig. 13. Release stage midplane cross-section comparison between (a) simulations and (b) experiments. (a) From left to right, each column is for a d/w ratio of 2.5, 5, and 10, respectively. The top row, marked with r1 on the left side, is the cross-sections of models with large particles, and the bottom, marked with r0.75, is the cross-sections of models with small particles. The red vertical lines with diamonds on both ends show the recoil distance on each model. Note that the contour is the Mises stress distribution. (b) The concave and convex curves are shown with red-colored dash lines. The marked blue region shows a deformed particle and its similarity to particle deformation in the simulation.",
+   "rotated_deg": 0,
+   "bbox": [
+    32.2,
+    47.2,
+    563.3,
+    369.2
+   ],
+   "w": 2214,
+   "h": 1343,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.553
+  },
+  {
+   "key": "t2",
+   "kind": "table",
+   "label": "2",
+   "page": 5,
+   "file": "tab_2.png",
+   "caption": "Table 2 Measured tablet dimensions and weight after the tablet formation process.",
+   "rotated_deg": 0,
+   "bbox": [
+    33.2,
+    32.7,
+    562.2,
+    750.3
+   ],
+   "w": 2205,
+   "h": 2991,
+   "dpi": 300,
+   "src": "a997a14a-Understanding_die_compaction_of_hollow_spheres_using_the_multiparticle_finite_element_method_MPFEM.pdf",
+   "blank": 0.853
+  }
+ ]
+}
