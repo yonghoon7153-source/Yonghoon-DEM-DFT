@@ -13,7 +13,8 @@
  ],
  "_history": {
   "2026-08-20a": "신설. codex 3차 권고대로 12시드가 아니라 **core 5** 로 시작한다. core 4(source-authority · hash-bound-carry · no-fallback · defect-cell-metric)에 no-retro-gate-without-artifact 를 5번째로 편입했다 — b2o3 가 vertical slice 이고 그 slice 가 실증하는 것이 바로 이 결정이기 때문. gap-eigenvalue · uma-li3n-ban 2건은 read-only schema fixture 로만 동봉하며 consumer/preflight 에 연결하지 않으므로 end-to-end 검증에는 세지 않는다.",
-  "2026-08-20b": "1저자 승인 — core 5 를 proposed → ratified/active 로. 승인은 decision_digest 로 그 시점 내용에 결속된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인이 요구된다). commit bb9f9c5d6534… (원장에는 full 40-hex)."
+  "2026-08-20b": "1저자 승인 — core 5 를 proposed → ratified/active 로. 승인은 decision_digest 로 그 시점 내용에 결속된다 (승인 뒤 statement·enforcement 를 고치면 지문이 어긋나 재승인이 요구된다). commit bb9f9c5d6534… (원장에는 full 40-hex).",
+  "2026-08-25": "랭킹 정규화 결정 추가 (D-2026-08-25-missing-axis-is-unknown-not-worst). cascade 재랭킹 ①~③ 실행 — 1등이 24% 캐스케이드에서 바뀌었다."
  },
  "decisions": [
   {
@@ -448,6 +449,85 @@
     ],
     "_note": "1저자 승인 2026-08-20. agent 제안(claude) + agent 기술검증(codex) 뒤의 사람 승인이다 — 앞의 둘은 독립 승인 두 표가 아니다."
    }
+  },
+  {
+   "id": "D-2026-08-25-missing-axis-is-unknown-not-worst",
+   "schema_version": 2,
+   "kind": "policy",
+   "scope": "ranking.normalization",
+   "slot": "missing_value_semantics",
+   "applies_to": {
+    "systems": [
+     "*"
+    ],
+    "tasks": [
+     "cascade",
+     "ranking"
+    ],
+    "methods": [
+     "*"
+    ],
+    "use_cases": [
+     "*"
+    ]
+   },
+   "title": "랭킹 축에서 미측정은 '모른다' 이며 '최악' 이 아니다",
+   "statement": "다축 결합점수는 축 집합의 **모든** 축에 값이 있는 구조들 안에서만 정규화·산출한다. 미측정 구조는 score_combined = null 이며 0.0 도 0.5 도 받지 않는다. 캠페인마다 돌아간 스테이지가 달라 축 수가 다르면 살아있는 축에 가중치를 비례 배분하고 axis_set 을 산출물에 남긴다 — 축 수가 다른 캐스케이드끼리 결합점수를 직접 비교하지 않는다. 채점 대상이 1개뿐이면 정규화가 상수라 점수에 정보가 없으므로 산출물에 그 사실을 표시한다.",
+   "decision_state": "active",
+   "evidence": [
+    "combine_rankings.normalize() 가 결측을 0.0(최하)으로 채점하고 있었다 — 코드에서 직접 확인",
+    "실측 재현(B2O3_x005, 구조 20): mobility 정규화 → [0.0×18, 1.0]. 측정된 구조가 얻는 가산 0.3 vs 미측정 0.0 — 만점 1.0 중 0.3점 격차. modulus 까지 0.6",
+    "자기강화: stability 상위 10개만 BVSE·elastic 을 받으므로 그 10개만 +0.6 을 받는다 ⇒ 11위 이하는 구조적으로 못 올라옴 (안정성 이중계산)",
+    "★ 전후 실측(사과-대-사과, 채점된 행끼리의 상대 순서): 비교 가능한 225개 캐스케이드 중 순서 변경 90개(40%), **1등 변경 53개(24%)**, Kendall 거리 22.4% (160/714 쌍)",
+    "미측정 2,934행이 옛 방식에서는 조작된 0.0 점으로 순위를 받고 있었다 — 새 방식에서 null 로 전환",
+    "backfill 이 이 결함을 **악화**시켰다: mobility 는 전부 결측일 때 0.5 로 평평해 무해했는데(기여 0), 값이 채워지면서 비로소 왜곡에 합류. modulus 는 처음부터 이러고 있었다"
+   ],
+   "method_ref": null,
+   "card": "kb/methodology/cascade_rerank_runbook_2026_08_25.md",
+   "reopen_criteria": "미측정을 최하점으로 두는 편이 옳은 사례 — 즉 '측정 안 됨' 자체가 그 구조의 결함을 뜻하는 파이프라인. 현재 cascade 는 상위 N 만 측정하는 설계라 그렇지 않다.",
+   "enforcement": {
+    "require": true,
+    "implemented_by": [
+     "tools/doping/combine_rankings.py::score_rows / axes_present / renorm_weights",
+     "tools/doping/combine_rankings.py::report_axis_health (죽은 축이면 rc=2)",
+     "tools/doping/collect_dataset.py (axis_set · rank_combined · combined_score_is_informative 열)"
+    ],
+    "fixtures": [
+     "tools/doping/combine_rankings.py --selftest (31건, 음성 포함: 옛 방식이 미측정에 0.0 을 줬다는 대조 · 없는 축을 요구하지 않음 · 가중치 비례배분)",
+     "tools/doping/collect_dataset.py 픽스처 e2e (rank_combined 가 안정성 순위가 아님을 확인)"
+    ]
+   },
+   "proposed_by": [
+    {
+     "actor_type": "agent",
+     "actor_id": "claude",
+     "date": "2026-08-25"
+    }
+   ],
+   "reviewed_by": [
+    {
+     "actor_type": "human",
+     "actor_id": "yonghoon",
+     "date": "2026-08-25",
+     "note": "A/B/C 세 갈래 제시 후 A 채택. 범위는 47종이 아니라 전수(302 캐스케이드)로 지시."
+    }
+   ],
+   "outputs_changed": {
+    "db/properties/cascade_v23_all.csv": "3615행 유지(이름·범위 불변). li_mobility_score 0→681행, rank_combined 가 채점된 681행에만. 새 열: rank_stability_all·axis_set·scored_on·cascade·family·n_scored_in_cascade·combined_score_is_informative",
+    "db/properties/cascade_all_302_2026_08_25.csv": "신규. 302 캐스케이드 4,125행 (v23 3615 + dualx_v23 450 + as2s3_recover 60). 결합점수 741행, 그중 뜻이 있는 행 692",
+    "runs/*/FINAL_RANKING.json": "293개 재작성, 기존은 .bak_rerank 로 첫 1회 보존 (gabia)"
+   },
+   "scope_decisions": {
+    "excluded": "multi_category_2026_05_19_v22 및 _v22_OLD_radiusonly (12 캐스케이드 535행) — 담고 있는 도판트가 Li2O·Na2O·Cu2O 셋뿐이고 x-level(x002/005/010)까지 v23 과 같아 순수 중복. 자동 제외가 아니라 --exclude 로 명시 지정했다.",
+    "kept": "as2s3_recover 는 x-level 이 x020/050/100 으로 v23(x002/005/010)과 달라 중복이 아니다. dualx_v23 은 이중치환 설계로 별개.",
+    "note": "47종은 ESW 게이트 통과 부분집합이지 풀 전체가 아니다 — 전수는 302 캐스케이드 4,125 구조."
+   },
+   "⛔_limits": [
+    "축 수가 다른 캐스케이드끼리 combined_score 를 비교하면 안 된다 (2축 0.571/0.429 vs 3축 0.4/0.3/0.3 — 척도가 다르다). axis_set 열로 갈라 볼 것.",
+    "rank_combined 는 **캐스케이드 안에서의** 순위다. 전역 순위가 아니다.",
+    "채점 대상이 1개인 캐스케이드 49개의 결합점수는 상수 0.5 로 정보가 없다 (combined_score_is_informative=false).",
+    "이 결정은 미측정 구조가 좋은지 나쁜지 말하지 않는다 — 여전히 모른다. 커버리지 18.0% 는 그대로다."
+   ]
   }
  ]
 }
