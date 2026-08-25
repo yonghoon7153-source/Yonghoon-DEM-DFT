@@ -52,20 +52,31 @@ LREAL 은 `Auto`/`On` 을 되울림만으로 못 가른다 — 실공간/역공�
 
 ### (B) sdcp_doped 라디칼 스핀 분기 — 4잡 (seed 무관)
 
-## 3. ★ basin 벌점을 **측정**했다 — 50 meV
+## 3. ★ ~50 meV 는 **branch offset 진단값**이다 (측정 아님 — 2026-08-25 codex E-4 로 정정)
 
-A/B 가 섞인 잡의 어긋남이 전부 같은 크기다. 서로 독립인 네 경로에서:
+> ⛔ **이 절의 첫 판("독립 네 경로에서 측정, 50.2 ± 0.2")은 과대주장이었다.** 네 값은
+> 서로 **상관된 contrast** 다: 같은 조각의 ΔE식·E_ads식이 pose 에너지를 공유하고,
+> E_ads 두 식은 같은 clean 쌍(net4−pm1 = **128.292 meV**)도 공유한다.
+> 항등식 `ΔE차 = E_ads(Ni)차 − E_ads(Li)차` 로 닫으면 조각당 잔차 +0.93 / −0.47 meV —
+> **독립 표본 4개가 아니라 사실상 조각당 1개**다. ±0.2 는 SEM 이 아니며 의미 없다.
 
-| 경로 | 값 |
-|---|---|
-| ΔE ptfe_c10 (100.2 − 49.8) | **+50.4 meV** |
-| ΔE sdcp_neutral (9.3 − (−40.7)) | **+50.0 meV** |
-| E_ads ptfe_c10 Litop | **50 meV** |
-| E_ads sdcp_neutral Nitop | **51 meV** |
+| contrast | 값 (meV) |
+|---|---:|
+| ptfe_c10 ΔE 의 branch 차 | +50.45 |
+| sdcp_neutral ΔE 의 branch 차 | −49.96 |
+| ptfe_c10 Litop E_ads 의 branch 차 | −49.53 |
+| sdcp_neutral Nitop E_ads 의 branch 차 | −50.44 |
 
-⇒ **Ni #82 를 뒤집는 값은 분자와 무관하게 50.2 ± 0.2 meV**, 그리고
-**basin A 가 50 meV 낮다** = net4 clean slab 은 **제 바닥이 아니다**.
-게이트가 막은 건 옳았고, 이제 막힌 이유가 숫자로 설명된다.
+**허용 문구**: *두 분자 맥락에서 얻은 서로 상관된 contrast 들이 **49.5–50.5 meV 의
+magnetic-branch offset** 과 일치했다. 인과적인 "Ni #82 반전 비용" 이 아니라 진단값이다.*
+
+- clean net4−pm1 자체는 **128.3 meV** 다 — 50 은 clean spin-flip 비용의 직접 측정이 아니다.
+- "언제나 #82" 는 우리 db(`sdcp_wave1_results.json` 의 `flipped_ni_poscar_idx`)에 기계기록돼
+  있으나 외주 첨부 RESULTS 에는 없었다 → 분석기 v2 가 `flip_indices_poscar` 를 RESULTS 에
+  싣도록 고쳤다 (2026-08-25).
+- 반전 **비용**을 재려면 같은 구조·같은 Hamiltonian 에서 #82 상태만 다른
+  constrained/paired 계산이 필요하다 (noncollinear — 현재 범위 밖, 미착수).
+- **보정에 쓰지 않은 결정은 유지** — codex 도 옳다고 확인.
 
 ## 4. 쓸 수 있는 값 (pm1 = A/A 완결)
 
@@ -73,7 +84,7 @@ A/B 가 섞인 잡의 어긋남이 전부 같은 크기다. 서로 독립인 네
 
 | 조각 | pm1 | net4 | 판정 |
 |---|---:|---:|---|
-| ptfe_dimer | +36.1 | **+36.2** | ★ **2-seed 0.1 meV 일치** — basin 이 달라도 같다 |
+| ptfe_dimer | +36.07 | **+36.16** | ★ matched-pose ΔE 가 두 sampled branch 에서 **0.09 meV 차이** (branch×site 상호작용). ⚠ k-미검증이라 "0.1 meV 정확도" 아님 · basin 무관성의 **증명 아님** — 공통 shift 상쇄의 정의가 곧 이 작은 상호작용 |
 | ptfe_c10 | +49.8 | (A/B 오염) | 1-seed |
 | sdcp_neutral | +9.3 | (B/A 오염) | 1-seed · 값이 작다 |
 | sdcp_doped | +86.4 | −18.9 | ⛔ 라디칼 분기 — 미해결 |

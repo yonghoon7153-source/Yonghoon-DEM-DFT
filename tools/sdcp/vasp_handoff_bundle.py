@@ -2069,6 +2069,10 @@ def main():
                 small = [i for i, m in got.items() if abs(m) < MOM_MIN]
                 rec["geom"]["magnetic"] = {
                     "n_ni": len(ni), "global_sign": sg, "n_partial_flip": len(flip),
+                    # ⛔ 2026-08-25 (codex E-4) — 개수만 남기면 "항상 같은 자리 #82"
+                    #   라는 관측을 **아무도 재검증할 수 없다**. 인덱스를 기계기록.
+                    "flip_indices_poscar": sorted(flip),
+                    "flip_moments_muB": {str(i): round(got[i], 3) for i in flip},
                     "n_small": len(small), "min_abs_muB": round(min(map(abs, got.values())), 3),
                     "abs_mean_muB": round(sum(map(abs, got.values())) / len(got), 3),
                     "total_muB": st.get("mag_total")}
