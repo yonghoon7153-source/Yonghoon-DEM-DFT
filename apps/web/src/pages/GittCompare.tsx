@@ -17,6 +17,7 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { seriesColor } from '../lib/format'
 import { useAsync } from '../lib/hooks'
+import { pseudoOcvWideTsv } from '../lib/origin'
 import type { GittRun, Pocv } from '../lib/types'
 
 /** 한 번에 겹칠 수 있는 기록 수.  하나가 요청 하나라 무한정 늘릴 수 없다. */
@@ -183,17 +184,9 @@ export function GittCompare() {
         <CopyBar
           items={[{
             label: 'pseudo-OCV',
+            title: '기록마다 용량·전압 두 열',
             disabled: !fresh || !series.length,
-            build: () => {
-              const head = series.map((s) => [`${s.label} 용량`, `${s.label} 전압`])
-              const depth = Math.max(...series.map((s) => s.x.length), 0)
-              const lines = [head.flat().join('\t')]
-              for (let i = 0; i < depth; i += 1) {
-                lines.push(series.map((s) => [
-                  s.x[i] ?? '', s.y[i] ?? '']).flat().join('\t'))
-              }
-              return lines.join('\n')
-            },
+            build: () => pseudoOcvWideTsv(series),
           }]}
         />
         {curves.error ? <Alert kind="error">{curves.error}</Alert> : null}

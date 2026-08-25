@@ -11,7 +11,7 @@ import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, basisUnit, seriesColor } from '../lib/format'
 import {
-  compareCyclesTsv, dqdvTsv, dvdqTsv, profileTsv, skippedForCopy,
+  compareCyclesWideTsv, dqdvWideTsv, dvdqWideTsv, profileWideTsv, skippedForCopy,
 } from '../lib/origin'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { Basis, Smoother } from '../lib/types'
@@ -389,27 +389,27 @@ export function Compare() {
                 items={mode === 'cycles' ? [{
                   label: MODE_LABELS.cycles,
                   title: `사이클 · ${METRICS.find((m) => m.value === metric)?.label ?? '값'}`
-                    + ' — 셀마다 두 열로 쌓습니다',
+                    + ' — 셀마다 두 열',
                   disabled: !(cycleCompare.data?.series ?? []).length,
-                  build: () => compareCyclesTsv(cycleCompare.data?.series ?? []),
+                  build: () => compareCyclesWideTsv(cycleCompare.data?.series ?? []),
                 }] : mode === 'profiles' ? [{
                   label: MODE_LABELS.profiles,
-                  title: '용량 · 전압 — 곡선마다 두 열로 쌓습니다',
+                  title: '용량 · 전압 — 곡선마다 두 열 (셀 → 사이클 순)',
                   disabled: !(profileCompare.data?.series ?? []).length,
-                  build: () => profileTsv(profileCompare.data?.series ?? []),
+                  build: () => profileWideTsv(profileCompare.data?.series ?? []),
                   skipped: skippedForCopy(profileCompare.data?.series ?? []),
                   skippedNote: (n) => `구동 중이라 마지막 사이클이 잘린 셀 ${n}개는 뺐습니다`,
                 }] : mode === 'dqdv' ? [{
                   label: MODE_LABELS.dqdv,
-                  title: '전압 · dQ/dV — 곡선마다 두 열로 쌓습니다',
+                  title: '전압 · dQ/dV — 곡선마다 두 열 (셀 → 사이클 순)',
                   disabled: !(dqdvCompare.data?.series ?? []).length,
-                  build: () => dqdvTsv(dqdvCompare.data?.series ?? []),
+                  build: () => dqdvWideTsv(dqdvCompare.data?.series ?? []),
                 }] : [{
                   label: MODE_LABELS.dvdq,
                   // dQ/dV 의 거울이라 열 순서를 헷갈리기 쉽다 -- 여기 적어 둔다.
-                  title: '용량 · dV/dQ — 곡선마다 두 열로 쌓습니다 (dQ/dV 와 x 가 반대)',
+                  title: '용량 · dV/dQ — 곡선마다 두 열 (dQ/dV 와 x 가 반대)',
                   disabled: !(dvdqCompare.data?.series ?? []).length,
-                  build: () => dvdqTsv(dvdqCompare.data?.series ?? []),
+                  build: () => dvdqWideTsv(dvdqCompare.data?.series ?? []),
                 }]}
               />
             </div>

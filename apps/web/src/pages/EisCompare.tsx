@@ -20,7 +20,7 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
 import { useAsync } from '../lib/hooks'
-import { nyquistTsv } from '../lib/origin'
+import { nyquistWideTsv } from '../lib/origin'
 import type { EisKind, Spectrum } from '../lib/types'
 
 /** 서버의 `/api/eis/points` 겹치기 상한과 같은 수. */
@@ -187,9 +187,9 @@ export function EisCompare() {
         <CopyBar
           items={[{
             label: '나이퀴스트',
-            title: '고른 곡선을 Z′·−Z″ 두 열로 쌓아서',
+            title: '스펙트럼마다 Z′·−Z″ 두 열',
             disabled: !fresh || !points.data?.length,
-            build: () => nyquistTsv(points.data ?? []),
+            build: () => nyquistWideTsv(points.data ?? []),
           }]}
         />
         {points.error ? <Alert kind="error">{points.error}</Alert> : null}

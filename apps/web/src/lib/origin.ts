@@ -150,6 +150,62 @@ export function dvdqTsv(series: DvdqSeries[]): string {
   return stackedPairs(series, (item) => [item.capacity, item.dvdq])
 }
 
+/** 곡선마다 제 (x, y) 두 열 — 겹쳐 보려고 고른 것들을 Origin 에서도 가른다.
+ *
+ *  위 머리말의 "두 열" 규칙은 **한 셀의 여러 사이클**을 두고 쓴 것이다.  그
+ *  때는 쌓는 편이 낫다: 곡선이 하나의 데이터셋이 되어 plot 명령 한 번에
+ *  그려지고, 어차피 같은 셀이라 색이 같아도 잃는 것이 없다.
+ *
+ *  비교 화면은 반대다.  거기서 고른 곡선들은 **서로 다른 셀**이고, 서로 다른
+ *  것으로 보이는 것이 그 화면의 전부다.  쌓아서 붙이면 Origin 에서 한 색
+ *  한 범례가 되어, 화면에서 구분해 놓은 것을 붙여 넣는 순간 도로 잃는다.
+ *  그래서 여기서는 곡선마다 두 열이다 — `bodeTsv` 가 이미 같은 배치다.
+ *
+ *  순서는 서버가 준 그대로 두었다.  서버는 셀 바깥 · 사이클 안쪽으로 도므로
+ *  (`analysis.py`: `for sample_id … for number …`) 3·4 번을 고르면 열이
+ *  [셀1 3번][셀1 4번][셀2 3번][셀2 4번] 순으로 나온다.
+ */
+function widePairs<T>(series: T[], pick: (item: T) => [number[], number[]]): string {
+  const columns: string[][] = []
+  for (const item of series) {
+    const [xs, ys] = pick(item)
+    // 점이 없는 곡선은 열을 차지하지 않는다.  빈 열 두 개는 Origin 에서
+    // 데이터셋 두 개로 잡히고, 그리면 아무것도 없는 범례 항목이 된다.
+    if (!xs.length) continue
+    columns.push(xs.map(cell), ys.map(cell))
+  }
+  return columns.length ? tsvColumns(columns) : ''
+}
+
+/** 겹쳐 본 사이클 추세 — 곡선마다 (사이클, 값) 두 열. */
+export function compareCyclesWideTsv(
+  series: { points: { cycle: number; value: number }[] }[],
+): string {
+  return widePairs(series, (item) => [
+    item.points.map((point) => point.cycle),
+    item.points.map((point) => point.value),
+  ])
+}
+
+/** 겹쳐 본 충방전 프로파일 — 곡선마다 (용량, 전압) 두 열.
+ *
+ *  구동 중이라 잘린 곡선은 여기서도 뺀다 (`profileTsv` 와 같은 이유).
+ */
+export function profileWideTsv(series: ProfileSeries[]): string {
+  return widePairs(series.filter((item) => !stillRunning(item)),
+                   (item) => [item.capacity, item.voltage])
+}
+
+/** 겹쳐 본 dQ/dV — 곡선마다 (전압, dQ/dV) 두 열. */
+export function dqdvWideTsv(series: DqdvSeries[]): string {
+  return widePairs(series, (item) => [item.voltage, item.dqdv])
+}
+
+/** 겹쳐 본 dV/dQ — 곡선마다 (용량, dV/dQ) 두 열.  x 가 용량인 것에 주의. */
+export function dvdqWideTsv(series: DvdqSeries[]): string {
+  return widePairs(series, (item) => [item.capacity, item.dvdq])
+}
+
 /** Stack `(x, y)` pairs from many curves into two columns with `--` between.
  *
  * Curves that could not be computed are skipped rather than emitted as a lone
@@ -268,6 +324,27 @@ export async function copyText(text: string): Promise<void> {
  */
 export function nyquistTsv(spectra: SpectrumPoints[]): string {
   return stackedXy(spectra.map((item) => [item.z_re, item.z_im.map((v) => -v)]))
+}
+
+/** 겹쳐 본 나이퀴스트 — 스펙트럼마다 (Z′, −Z″) 두 열.
+ *
+ *  비교 화면 것이라 쌓지 않는다 (`widePairs` 머리말).  상세 화면의
+ *  `nyquistTsv` 는 그대로 쌓는다 — 거기는 한 스펙트럼이다.
+ */
+export function nyquistWideTsv(spectra: SpectrumPoints[]): string {
+  return widePairs(spectra, (item) => [item.z_re, item.z_im.map((v) => -v)])
+}
+
+/** 겹쳐 본 pseudo-OCV — 기록마다 (용량, 전압) 두 열.
+ *
+ *  예전에는 이 자리에서 `이름 용량` `이름 전압` 머리글 줄을 함께 냈다.
+ *  붙여 넣은 워크시트에서 머리글은 **데이터 첫 행**으로 앉아 도로 잘라내야
+ *  하는 것이 되고, 그 규칙은 이 파일 머리말이 이미 정해 둔 것이다.
+ */
+export function pseudoOcvWideTsv(
+  series: { x: number[]; y: number[] }[],
+): string {
+  return widePairs(series, (item) => [item.x, item.y])
 }
 
 /** 보드: 주파수, |Z|, 위상 — 세 열.

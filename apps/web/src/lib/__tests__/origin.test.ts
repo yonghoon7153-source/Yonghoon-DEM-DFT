@@ -17,8 +17,14 @@ import {
   efficiencyTsv,
   fitParametersTsv,
   nyquistTsv,
+  nyquistWideTsv,
   pocvTsv,
   profileTsv,
+  profileWideTsv,
+  compareCyclesTsv,
+  compareCyclesWideTsv,
+  dqdvWideTsv,
+  pseudoOcvWideTsv,
   tsvColumns,
   skippedDiffusionPoints,
   skippedForCopy,
@@ -359,5 +365,99 @@ describe('diffusionTsv', () => {
       { capacity_mah: 0.5, d_cm2_s: 1e-6, rest_s: 60, drift_mv: 20 },
     ])
     expect(text).toBe('0.5\t0.000001\t60\t20')
+  })
+})
+
+
+describe('비교 화면은 곡선마다 제 열을 갖는다', () => {
+  // 쌓기와 넓게 펴기는 배치가 다른 것이 아니라 **용도가 다르다**.  한 셀의
+  // 여러 사이클은 쌓는 편이 낫고 (plot 명령 한 번), 여러 셀을 겹쳐 본
+  // 화면은 펴야 한다 — 쌓으면 Origin 에서 한 색 한 범례가 되어 그 화면이
+  // 하려던 구분이 붙여 넣는 순간 사라진다.
+  it('셀 둘이면 네 열이 되고, 쌓을 때의 -- 구분 줄은 없다', () => {
+    const text = profileWideTsv([
+      series({ capacity: [0, 1], voltage: [2.5, 4.3] }),
+      series({ run_id: 2, capacity: [0, 2], voltage: [2.6, 4.2] }),
+    ])
+    expect(text.split('\n')).toEqual([
+      '0\t2.5\t0\t2.6',
+      '1\t4.3\t2\t4.2',
+    ])
+    expect(text).not.toContain('--\t--')
+  })
+
+  it('서버가 준 순서를 그대로 둔다 — 셀 바깥, 사이클 안쪽', () => {
+    // analysis.py 가 `for sample_id … for number …` 로 돌기 때문에 3·4 번을
+    // 고르면 [셀1 3번][셀1 4번][셀2 3번][셀2 4번] 로 온다.  화면이 순서를
+    // 다시 만지면 열과 범례가 어긋난다.
+    const text = profileWideTsv([
+      series({ run_id: 1, cycle: 3, capacity: [11], voltage: [1] }),
+      series({ run_id: 1, cycle: 4, capacity: [12], voltage: [2] }),
+      series({ run_id: 2, cycle: 3, capacity: [21], voltage: [3] }),
+      series({ run_id: 2, cycle: 4, capacity: [22], voltage: [4] }),
+    ])
+    expect(text).toBe('11\t1\t12\t2\t21\t3\t22\t4')
+  })
+
+  it('길이가 다른 곡선은 짧은 쪽을 -- 로 채운다', () => {
+    // 쌓을 때와 달리 여기서는 길이가 곧 열 높이라, 채우지 않으면 열이
+    // 어긋나 다음 곡선의 값이 위로 딸려 올라간다.
+    const text = profileWideTsv([
+      series({ capacity: [0, 1, 2], voltage: [4.3, 3.7, 2.5] }),
+      series({ run_id: 2, capacity: [0], voltage: [4.3] }),
+    ])
+    expect(text.split('\n')).toEqual([
+      '0\t4.3\t0\t4.3',
+      '1\t3.7\t--\t--',
+      '2\t2.5\t--\t--',
+    ])
+  })
+
+  it('점이 없는 곡선은 빈 열 두 개를 남기지 않는다', () => {
+    const base: DqdvSeries = {
+      cycle: 3, branch: 'discharge', basis: 'mAh/g', points: 0,
+      voltage: [], dqdv: [], run_id: 1, label: '없음',
+      voltage_step: 0.005, smoothing: 5, points_dropped: 0, reason: '',
+    }
+    const text = dqdvWideTsv([
+      base,
+      { ...base, cycle: 4, points: 1, voltage: [3.7], dqdv: [-1.5], label: '있음' },
+    ])
+    expect(text).toBe('3.7\t-1.5')
+  })
+
+  it('구동 중이라 잘린 곡선은 넓게 펼 때도 뺀다', () => {
+    const text = profileWideTsv([
+      series({ complete: false, incomplete_reason: 'truncated' }),
+      series({ run_id: 2, capacity: [0], voltage: [4.3] }),
+    ])
+    expect(text).toBe('0\t4.3')
+  })
+
+  it('사이클 추세도 셀마다 두 열', () => {
+    const points = [{ cycle: 1, value: 100 }, { cycle: 2, value: 99 }]
+    const wide = compareCyclesWideTsv([{ points }, { points: [{ cycle: 1, value: 80 }] }])
+    expect(wide.split('\n')).toEqual(['1\t100\t1\t80', '2\t99\t--\t--'])
+    // 쌓는 쪽은 그대로 살아 있다 — 상세 화면들이 아직 쓴다.
+    expect(compareCyclesTsv([{ points }])).toBe('1\t100\n2\t99')
+  })
+
+  it('나이퀴스트도 스펙트럼마다 두 열이고 −Z″ 로 뒤집는다', () => {
+    const spectrum = (re: number[], im: number[]) => spectrumPoints({
+      frequency_hz: re.map(() => 1), z_re: re, z_im: im,
+      magnitude: re, phase_deg: re,
+    })
+    expect(nyquistWideTsv([spectrum([10], [-5]), spectrum([20], [-6])]))
+      .toBe('10\t5\t20\t6')
+    // 상세 화면의 쌓는 판은 그대로다.
+    expect(nyquistTsv([spectrum([10], [-5])])).toBe('10\t5')
+  })
+
+  it('pseudo-OCV 는 머리글 없이 숫자만 낸다', () => {
+    // 예전에는 "이름 용량" 머리글 줄을 함께 냈다.  붙여 넣으면 데이터 첫
+    // 행으로 앉아 도로 잘라내야 하는 것이 된다.
+    const text = pseudoOcvWideTsv([{ x: [0, 1], y: [4.2, 4.1] }])
+    expect(text.split('\n')[0]).toBe('0\t4.2')
+    expect(text).not.toContain('용량')
   })
 })
