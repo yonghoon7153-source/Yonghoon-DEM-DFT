@@ -23,6 +23,7 @@
 | [0017](adr/0017-the-axis-lock-sets-the-default-view.md) | 축 고정은 기본 화면을 정한다 | 확대·이동 중에는 잠시 놓고, '전체' 가 그 화면으로 되돌린다 |
 | [0018](adr/0018-formationless-schedules-anchor-at-cycle-one.md) | formation 이 없으면 1번 사이클에 앵커한다 | 루프 밖에 충방전이 없으면 formation 도 없다, ADR 0004 의 예외 |
 | [0019](adr/0019-eis-is-its-own-section-with-two-fitting-worlds.md) | EIS 는 독자 섹션, 그 안에서 액체와 전고체를 가른다 | 같은 두 반원이 다른 것을 뜻한다, 저장은 Ω·Hz 만 |
+| [0020](adr/0020-gitt-pairs-two-different-samples.md) | GITT 의 한 점은 서로 다른 두 샘플에서 온다 | 펄스 끝의 용량 + 휴지 끝의 전압, 가정을 검사한 뒤에만 D |
 
 ## 리뷰 (외부 교차검증)
 
@@ -57,7 +58,8 @@
 `adr/0016-smart-interface-213-is-a-second-file-shape.md` ·
 `adr/0017-the-axis-lock-sets-the-default-view.md` ·
 `adr/0018-formationless-schedules-anchor-at-cycle-one.md` ·
-`adr/0019-eis-is-its-own-section-with-two-fitting-worlds.md`
+`adr/0019-eis-is-its-own-section-with-two-fitting-worlds.md` ·
+`adr/0020-gitt-pairs-two-different-samples.md`
 
 ## 스펙
 

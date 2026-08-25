@@ -11,6 +11,7 @@ It doubles as executable documentation of the format.
 
 from __future__ import annotations
 
+import math
 import struct
 import zlib
 from dataclasses import dataclass
@@ -759,3 +760,81 @@ def _write_schedule(writer: Writer, steps: tuple[SchedStep, ...],
 
     _write_list(writer, ids, "WbcsFile.Sch.SeqData", write_sequence, 1)
 
+
+
+def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 30,
+              pulse_s: float = 60.0, rest_s: float = 600.0,
+              current_a: float = 1.0e-3, capacity_per_pulse_mah: float = 0.5,
+              v_start: float = 3.0, dv_per_pulse: float = 0.05,
+              polarisation_v: float = 0.03, ir_v: float = 0.01,
+              charging: bool = True, trailing_rest: bool = True,
+              start_ticks: int | None = None) -> list[Sample]:
+    """A GITT series: pulse, rest, pulse, rest.
+
+    Built so the two things GITT is for can be checked against known numbers.
+
+    *The relaxed voltage steps by ``dv_per_pulse`` per pulse*, so the pOCV curve
+    is a known straight line and a reader that took the polarised voltage
+    instead lands ``polarisation_v`` away from it -- far outside any tolerance.
+
+    *The pulse transient is linear in sqrt(t)*, which is what Weppner-Huggins
+    assumes.  ``ir_v`` is an instantaneous ohmic jump on top of it, so a fitter
+    that includes the first sample sees a curve that is not a line and the
+    linearity check has something real to catch.
+
+    ``trailing_rest=False`` ends on a pulse, which is what a truncated file
+    looks like -- the case where a point has to be skipped and counted.
+    """
+    samples: list[Sample] = []
+    date = (start_ticks if start_ticks is not None
+            else DOTNET_UNIX_EPOCH_TICKS + 1_700_000_000 * TICKS_PER_SECOND)
+    test_ticks = 0
+    total_step = 0
+    charge_q = 0.0
+    discharge_q = 0.0
+    sign = 1.0 if charging else -1.0
+
+    def push(*, cell_status: int, voltage: float, current: float,
+             seconds: float) -> None:
+        nonlocal date, test_ticks
+        samples.append(Sample(
+            date_ticks=date, test_ticks=test_ticks, step_ticks=0,
+            cycle_ticks=test_ticks, step_index=total_step % 2,
+            total_step=total_step, cycle_index=0, cell_status=cell_status,
+            i_range="10mA", voltage=voltage, current=current,
+            charge_q=charge_q / 1000.0, discharge_q=discharge_q / 1000.0))
+        date += int(seconds * TICKS_PER_SECOND)
+        test_ticks += int(seconds * TICKS_PER_SECOND)
+
+    relaxed = v_start
+    for index in range(n_pulses):
+        # -- pulse ---------------------------------------------------------
+        total_step += 1
+        step = pulse_s / max(pulse_points - 1, 1)
+        for i in range(pulse_points):
+            fraction = i / max(pulse_points - 1, 1)
+            # sqrt(t) transient plus an instantaneous ohmic jump.
+            transient = polarisation_v * math.sqrt(fraction)
+            voltage = relaxed + sign * (ir_v + transient)
+            delivered = capacity_per_pulse_mah * fraction
+            if charging:
+                charge_q = index * capacity_per_pulse_mah + delivered
+            else:
+                discharge_q = index * capacity_per_pulse_mah + delivered
+            push(cell_status=3 if charging else 4,
+                 voltage=voltage, current=sign * current_a, seconds=step)
+
+        if index == n_pulses - 1 and not trailing_rest:
+            break
+
+        # -- rest ----------------------------------------------------------
+        total_step += 1
+        relaxed = v_start + sign * dv_per_pulse * (index + 1)
+        step = rest_s / max(rest_points - 1, 1)
+        for i in range(rest_points):
+            fraction = i / max(rest_points - 1, 1)
+            # Exponential relaxation onto the new equilibrium.
+            voltage = relaxed + sign * polarisation_v * math.exp(-6.0 * fraction)
+            push(cell_status=1, voltage=voltage, current=0.0, seconds=step)
+
+    return samples

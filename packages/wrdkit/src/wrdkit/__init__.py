@@ -41,6 +41,16 @@ from .export import (
     write_raw_csv,
     write_xlsx,
 )
+from .gitt import (
+    DiffusionPoint,
+    DiffusionResult,
+    PseudoOcv,
+    PseudoOcvPoint,
+    PulseBlock,
+    diffusion,
+    pseudo_ocv,
+    segment_pulses,
+)
 from .ica import (
     SMOOTHERS,
     DifferentialCapacity,
@@ -98,4 +108,12 @@ __all__ = [
     "write_profiles_csv", "raw_csv_string", "cycles_csv_string",
     "profiles_csv_string", "write_dqdv_csv", "dqdv_csv_string",
     "write_dvdq_csv", "dvdq_csv_string", "write_xlsx",
+    "DiffusionPoint",
+    "DiffusionResult",
+    "PseudoOcv",
+    "PseudoOcvPoint",
+    "PulseBlock",
+    "diffusion",
+    "pseudo_ocv",
+    "segment_pulses",
 ]
