@@ -117,19 +117,25 @@ def test_a_minimum_rest_drops_points_and_says_why():
 # --- 확산계수 ---------------------------------------------------------------
 
 def test_the_diffusion_coefficient_matches_the_closed_form():
-    """D = (4/(pi tau)) (m V_M / (M_B S))^2 (dE_s/dE_t)^2 를 손으로 확인한다."""
+    """D = (4/(pi tau)) (m V_M / (M_B S))^2 (dE_s/dE_t)^2 를 **픽스처 참값**으로.
+
+    처음 버전은 결과 자신의 ΔE_s/ΔE_t 로 기대값을 만들었다 — 순환 검증이라
+    ΔE_t 가 2.14배 틀려도 통과했고, 리뷰가 그 구멍으로 들어왔다.  픽스처는
+    ΔE_s=dv_per_pulse, ΔE_t=polarisation_v, τ=pulse_s 를 **설계값으로 알고
+    있으므로** 기대값은 거기서만 만든다.
+    """
     result = diffusion(gitt(n_pulses=4, pulse_s=60.0, dv_per_pulse=0.05,
                             polarisation_v=0.03, ir_v=0.01), **MATERIAL)
     assert result.missing == []
     usable = result.usable
     assert len(usable) == 3          # 첫 펄스는 ΔE_s 가 없다
 
-    point = usable[0]
     geometry = (MATERIAL["mass_g"] * MATERIAL["molar_volume_cm3"]) / (
         MATERIAL["molar_mass_g"] * MATERIAL["area_cm2"])
-    expected = ((4.0 / (math.pi * point.pulse_s)) * geometry ** 2
-                * (point.delta_es_v / point.delta_et_v) ** 2)
-    assert point.d_cm2_s == pytest.approx(expected, rel=1e-9)
+    expected = (4.0 / (math.pi * 60.0)) * geometry ** 2 * (0.05 / 0.03) ** 2
+    for point in usable:
+        assert point.delta_et_v == pytest.approx(0.03, rel=1e-6)
+        assert point.d_cm2_s == pytest.approx(expected, rel=1e-6)
 
 
 def test_the_first_pulse_of_a_series_gets_no_number():
@@ -177,13 +183,16 @@ def test_the_ohmic_jump_is_left_out_of_the_transient():
     """IR 강하는 순간이고 확산 과도가 아니다.
 
     포함하면 시작점이 꺾여 R² 가 떨어지고, 멀쩡한 펄스가 가정 위반으로 버려진다.
+    ΔE_t 는 피팅된 √t 직선의 **전체 펄스 진폭**이다 — V(end)−V(skip) 으로 재면
+    건너뛴 1/10 이 이미 과도의 √0.1=31.6% 를 담고 있어 모든 D 가 2.14배로
+    부풀고, 그것을 rel=0.35 짜리 느슨한 허용치가 덮고 있었다.
     """
     result = diffusion(gitt(n_pulses=4, ir_v=0.05, polarisation_v=0.03), **MATERIAL)
     assert result.usable, "IR 강하를 빼지 않으면 여기서 전부 버려진다"
     for point in result.usable:
         assert point.sqrt_t_r_squared > 0.99
-        # ΔE_t 에 IR 이 남아 있으면 0.03 이 아니라 0.08 근처가 된다.
-        assert point.delta_et_v == pytest.approx(0.03, rel=0.35)
+        # IR(0.05)이 조금이라도 새면 0.03 을 크게 벗어난다.
+        assert point.delta_et_v == pytest.approx(0.03, rel=1e-3)
 
 
 def test_a_cycle_reset_does_not_fold_the_capacity_axis():

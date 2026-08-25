@@ -333,6 +333,28 @@ def _sqrt_t_fit(seconds: np.ndarray, voltage: np.ndarray,
     return float(slope), float(1.0 - residual / total)
 
 
+def _transient_step_v(slope: float, duration_s: float) -> float:
+    """ΔE_t: the amplitude of the fitted sqrt(t) line over the whole pulse.
+
+    Not ``V(end) - V(skip)``.  The skipped tenth removes the ohmic jump, but
+    ``V(skip)`` already contains ``sqrt(0.1) = 31.6 %`` of the diffusion
+    transient itself -- a pure sqrt(t) transient has covered that much of its
+    amplitude by a tenth of the pulse.  Subtracting from there under-reads
+    ΔE_t by the factor ``1 - sqrt(0.1)`` and, since D goes as ``1/ΔE_t²``,
+    over-reads **every** D by ``(1 - sqrt(0.1))⁻² = 2.14`` -- with R² = 1 and
+    no reason, so nothing on screen says so.  The review caught it because the
+    closed-form test was circular: it built its expectation from the result's
+    own ΔE_t.
+
+    The fitted line already knows the answer: ``V(t) = a + b·sqrt(t)`` with
+    the origin at the pulse start, so the transient from 0⁺ to the end of the
+    pulse is exactly ``b·sqrt(tau)``.
+    """
+    if duration_s <= 0:
+        return 0.0
+    return float(slope * np.sqrt(duration_s))
+
+
 #: Below this the transient is not a line against sqrt(t), and the
 #: Weppner-Huggins derivation does not hold for it.  0.98 is strict on purpose:
 #: the whole method is the assumption, so a point that fails it is not a
@@ -396,10 +418,7 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
                                        float(seconds[block.start]))
 
         delta_es = 0.0 if previous_relaxed is None else relaxed - previous_relaxed
-        # The transient, after the ohmic jump: from the first fitted sample to
-        # the end of the pulse.
-        delta_et = (float(voltage[block.stop - 1] - voltage[skip])
-                    if block.stop - skip >= 2 else 0.0)
+        delta_et = _transient_step_v(slope, block.duration_s)
 
         reason = ""
         value: float | None = None
