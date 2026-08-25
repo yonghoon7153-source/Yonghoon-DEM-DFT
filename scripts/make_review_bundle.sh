@@ -66,7 +66,11 @@ if [ "${BUNDLE_ALL:-0}" = "1" ]; then
   git bundle create "$OUT" --all
 else
   echo "· 이 브랜치만 싣는다: $_BR  (전 ref 는 BUNDLE_ALL=1)"
-  git bundle create "$OUT" "$_BR"
+  #  ★★ `HEAD` 를 **같이** 싣는다.  브랜치 ref 만 담으면 번들에 HEAD 가 없어서 clone 된
+  #    저장소에 **체크아웃된 브랜치가 없다** (`git rev-list HEAD` 가 "ambiguous argument").
+  #    실측으로 잡았다 — 번들은 만들어졌는데 검증 블록이 거기서 죽어 **원장 검사가 아예
+  #    안 돌았고**, 호출부는 `| tail` 때문에 rc=0 을 봤다 = 내 검증 스크립트 자신의 가짜 초록.
+  git bundle create "$OUT" HEAD "$_BR"
 fi
 echo "번들 → $OUT  ($(du -h "$OUT" | cut -f1))"
 
@@ -74,9 +78,16 @@ echo "번들 → $OUT  ($(du -h "$OUT" | cut -f1))"
 #    지난번 실패는 만들 때가 아니라 **열 때** 드러났다.
 TMP="$(mktemp -d)"
 trap 'rm -rf "$TMP"' EXIT
+#  ⚠ 아래 검증은 **실패하면 반드시 말한다**.  `set -e` 로 조용히 죽으면 호출부가
+#    파이프(`| tail`) 뒤에서 rc=0 을 보고 "됐다" 고 읽는다 (실측으로 그렇게 됐다).
+_verify_fail() { echo "⛔ 번들 검증 실패: $1" >&2; exit 4; }
 if git clone --quiet "$OUT" "$TMP/repo" 2>"$TMP/err"; then
-  _n="$(git -C "$TMP/repo" rev-list --count HEAD)"
-  _h="$(git -C "$TMP/repo" rev-parse --short HEAD)"
+  git -C "$TMP/repo" rev-parse --verify HEAD >/dev/null 2>&1 \
+    || _verify_fail "clone 에 HEAD 가 없다 — 번들이 ref 를 덜 실었다 (체크아웃 불가)"
+  _n="$(git -C "$TMP/repo" rev-list --count HEAD)" || _verify_fail "커밋을 셀 수 없다"
+  _h="$(git -C "$TMP/repo" rev-parse --short HEAD)" || _verify_fail "HEAD 를 읽을 수 없다"
+  [ -f "$TMP/repo/scripts/check_review_findings.py" ] \
+    || _verify_fail "clone 에 작업 트리가 없다 (체크아웃 안 됨)"
   echo "✓ 빈 저장소에서 clone 성공 — HEAD $_h · 커밋 $_n 개"
   #  ★ clone 이 되는 것과 **우리 검사가 거기서 도는 것**은 다른 주장이다.  원장 검사는
   #    `claimed_fixed_sha` 가 실재 커밋인지 보므로 이력이 잘리면 여기서 빨간불이 난다
