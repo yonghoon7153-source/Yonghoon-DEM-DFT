@@ -237,7 +237,7 @@ def test_more_smoothing_never_buys_a_better_residual():
     spectrum = two_process_spectrum(noise=0.01)
     results = sweep(spectrum)
     residuals = [r.residual_norm for r in results]
-    for smaller, larger in zip(residuals, residuals[1:]):
+    for smaller, larger in zip(residuals, residuals[1:], strict=False):
         assert larger >= smaller - 1e-9, residuals
 
 

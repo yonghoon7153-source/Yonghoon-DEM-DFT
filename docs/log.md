@@ -2672,3 +2672,7 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   용량축·기준선 무효화·증거 동반 계약을 추가 결정으로 명문화. DBW 자체
   적대 리뷰(공격 14지점)에서 bootstrap n_boot<=0 가드 1건 수정, Codex 용
   DBW 리뷰 과제 문서 작성 (docs/reviews/codex-review-dbw-knee.md).
+## [2026-08-25] lint | ADR 0021 인덱스 등재 + import 정렬 + zip strict
+- make check 전체 게이트가 잡은 셋: docs/index.md 에 ADR 0021 등재 누락,
+  eis.py 의 import 순서(재추가하며 흐트러진 것), 새 DRT 단조성 테스트의
+  zip strict 누락. 게이트는 이제 전부 초록.

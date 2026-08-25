@@ -27,12 +27,12 @@ git merge --no-ff origin/claude/battery-charge-discharge-webapp-dq4ja3
 ```
 
 `feat: DBW — knee-onset 과 knee-point 를 한 적합으로 (ADR 0021)` (6adb04e3) 와
-그 뒤 `feat: DBW 를 API·화면에` (cb44dcd1 언저리) 가 보이면 준비된 것이다.
+그 뒤 `feat: DBW 를 API·화면에` (5f1479e7) 가 보이면 준비된 것이다.
 
 ## 2. 리뷰 과제 (붙여넣기)
 
 ```text
-DBW knee 기준(커밋 6adb04e3, cb44dcd1 및 후속)을 적대적으로 리뷰해줘. 결과는
+DBW knee 기준(커밋 6adb04e3, 5f1479e7 및 후속)을 적대적으로 리뷰해줘. 결과는
 docs/reviews/2026-08-26-codex-dbw-result.md 로 같은 브랜치에 커밋해줘.
 
 먼저 읽을 것 (코드보다 먼저):

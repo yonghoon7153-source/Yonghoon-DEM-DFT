@@ -11,8 +11,8 @@ bar swallows it, points dropped before fitting.  See ADR 0019.
 from __future__ import annotations
 
 import hashlib
-import re
 import json
+import re
 from datetime import datetime, timezone
 
 import numpy as np
