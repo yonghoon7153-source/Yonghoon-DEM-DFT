@@ -1178,9 +1178,12 @@ def check_cli_accounting(verbose=True, payload=None):
     _opts, _err = _payload_options(_p)
     if _err:
         return [_err], warns
+    _src = open(_p, encoding='utf-8').read()
+    _mi = _src.find("step3['manifest'] = {")
+    _mblk = _src[_mi:_src.index('\n        }', _mi)] if _mi >= 0 else ''
     problems += cli_accounting_problems(_opts, _rc_m.CLI_ACCOUNTING,
                                         _rc_m.PROTOCOL_FIELDS, _rc_m.PROTOCOL_CODE_CONST,
-                                        _rc_m.CLI_CATEGORIES)
+                                        _rc_m.CLI_CATEGORIES, _mblk)
     if verbose and not problems:
         _n = _collections.Counter(c for c, _f in _rc_m.CLI_ACCOUNTING.values())
         print(f'  ✓ 규칙 M — 실물 파서 CLI {len(_opts) - 1}개가 전부 회계에 있다 ('
@@ -1189,7 +1192,8 @@ def check_cli_accounting(verbose=True, payload=None):
     return problems, warns
 
 
-def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _categories):
+def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _categories,
+                            _manifest_blk=''):
     """→ 문제 목록.  규칙 M 의 **순수 부분** — 잡은 옵션 목록과 회계를 대조한다.
 
     ★ 분리한 이유: 음성 대조를 돌리려면 "새 옵션이 하나 생겼다" 를 모방해야 하는데,
@@ -1221,7 +1225,29 @@ def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _catego
     if _bad_p:
         problems.append(f'M_NOTINPROTOCOL| `protocol`/`derived` 로 적었는데 그 필드가 '
                         f'`PROTOCOL_FIELDS` 에 없다(또는 비었다) {_bad_p} — 선언과 거동이 갈렸다')
-    #  ⑤ 반대 방향 — 규약 축인데 **어떤 CLI 도** 그것을 못 가리키면 죽은 축이거나 회계 누락
+    #  ★★★ ⑤ 2026-08-25 (R5-CX-07 / A3 잔여) — **선언과 거동의 일치**를 한 칸 더.
+    #    Codex 실측: `--step3-maxiter→mode` · `--step3-amg→report` · `--ea-ion-ev→mode` ·
+    #    `--allow-mixed-t-ionic→mode` 범주 flip 이 **전부 문제 0** 이었다.  규칙 M 은
+    #    옵션 **존재**만 보증하고 의미 분류는 보증하지 않았다.
+    #  ⇒ 검사 가능한 절반을 세운다: `protocol`/`derived` 가 이름을 댄 축은 **producer 가
+    #    실제로 매니페스트에 적어야** 한다.  안 적으면 그 선언은 거동이 없는 주장이다.
+    #  ⚠ 나머지 절반(범주를 **낮게** 잘못 적는 것)은 정적으로 못 잡는다 — 옵션을 토글해
+    #    규약 해시가 움직이는지 봐야 하고 그것은 solver 런이다.  **미해결로 남긴다**
+    #    (없는 보증을 있다고 적지 않는다 — 이 리포의 반복 교훈).
+    _mblk = _manifest_blk
+    if not _mblk:
+        problems.append('M_NOMANIFEST| producer 의 매니페스트 블록을 못 찾았다 — '
+                        '규약 축이 실제로 기록되는지 확인할 수 없다')
+    else:
+        _unwritten = sorted({f for c, flds in _acct.values()
+                             if c in ('protocol', 'derived') and flds for f in flds}
+                            - {f for f in _PF if f"'{f}':" in _mblk}
+                            - set(_code_const))
+        if _unwritten:
+            problems.append(
+                f'M_UNWRITTEN| `protocol`/`derived` 로 선언했는데 producer 가 매니페스트에 '
+                f'**안 적는** 축 {_unwritten} — 선언만 있고 거동이 없다 (R5-CX-07)')
+    #  ⑥ 반대 방향 — 규약 축인데 **어떤 CLI 도** 그것을 못 가리키면 죽은 축이거나 회계 누락
     _covered = {f for c, flds in _acct.values()
                 if c in ('protocol', 'derived') and flds for f in flds}
     _orphan = sorted(f for f in _PF if f not in _covered
@@ -2302,6 +2328,10 @@ def _selftest():
     chk('M-3: 리포 실물이 지금 통과한다 (79 옵션 · 규약 축 전수 도달)',
         check_cli_accounting(verbose=False)[0] == [])
 
+    _MBLK = (lambda _t: _t[_t.find("step3['manifest'] = {"):
+                     _t.index('\n        }', _t.find("step3['manifest'] = {"))])(
+        open(os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py'), encoding='utf-8').read())
+
     def _mprob(opts=None, acct=None, pf=None, cc=None, cats=None):
         """합성 입력으로 규칙 M 의 **판정부**를 직접 문다 (리포를 안 건드린다)."""
         return cli_accounting_problems(
@@ -2309,7 +2339,7 @@ def _selftest():
             dict(acct if acct is not None else _rcM.CLI_ACCOUNTING),
             tuple(pf if pf is not None else _rcM.PROTOCOL_FIELDS),
             tuple(cc if cc is not None else _rcM.PROTOCOL_CODE_CONST),
-            tuple(cats if cats is not None else _rcM.CLI_CATEGORIES))
+            tuple(cats if cats is not None else _rcM.CLI_CATEGORIES), _MBLK)
 
     chk('M-4: 새 옵션이 회계 없이 생기면 → M_UNACCOUNTED',
         any(x.startswith('M_UNACCOUNTED') and '--brand-new-sigma' in x
@@ -2334,6 +2364,14 @@ def _selftest():
         not any(x.startswith('M_ORPHAN_FIELD') and 'lonely_axis' in x for x in
                 _mprob(pf=tuple(_rcM.PROTOCOL_FIELDS) + ('lonely_axis',),
                        cc=tuple(_rcM.PROTOCOL_CODE_CONST) + ('lonely_axis',))))
+    #  ★★ R5-CX-07 / A3 — **선언과 거동의 일치**.  `protocol` 로 선언했는데 producer 가
+    #    매니페스트에 안 적으면 그 선언은 거동이 없는 주장이다.
+    chk('M-12: ★★ `protocol` 축은 producer 가 **실제로 기록**한다 (선언만 있는 축 없음)',
+        not any(x.startswith('M_UNWRITTEN') for x in _mprob()))
+    chk('M-13: ★★ 안 적히는 축을 `protocol` 로 선언하면 → M_UNWRITTEN',
+        any(x.startswith('M_UNWRITTEN') and 'ghost_axis' in x for x in
+            _mprob(acct=dict(_rcM.CLI_ACCOUNTING, **{'--cam': ('protocol', ('ghost_axis',))}),
+                   pf=tuple(_rcM.PROTOCOL_FIELDS) + ('ghost_axis',))))
     _acct_cat = dict(_rcM.CLI_ACCOUNTING); _acct_cat['--cam'] = ('protokol', ('cam',))
     chk('M-10: 범주 어휘 오타 → M_BADCAT',
         any(x.startswith('M_BADCAT') and '--cam' in x for x in _mprob(acct=_acct_cat)))

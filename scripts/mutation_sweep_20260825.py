@@ -183,7 +183,7 @@ MUTANTS = [
      "    for _f in FIELD_CONTRACT:\n        if row.get(_f) is None:\n            row[_f] = man.get(_f)",
      "    for _f in ():\n        if row.get(_f) is None:\n            row[_f] = man.get(_f)",
      #  ★ `broad` — 자동 채움은 **기전**이라 14개 시험이 그것에 기댄다 (그 수 자체가 증거다).
-     VERDICT, ('*broad*', '㊹d')),
+     VERDICT, ('*broad*20', '㊹d')),
     ('A1 합성 SE 구름 게이트 제거 (proxy 침대로 σ 주장)', 'sdcp_gain_verdict.py',
      "    if _px:\n        return dict(decision='HOLD', hold_code='SE_PROXY',",
      "    if False:\n        return dict(decision='HOLD', hold_code='SE_PROXY',",
@@ -217,6 +217,15 @@ MUTANTS = [
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      RC, ('G7',)),
+    #  ★ Codex R5 가 "146 PASS / FAIL 0" 으로 통과시킨 그 선언 뒤집기
+    ('R5-CX-07 `backend.across_dir` 뒤집기 (선언만 바꾼다)', 'sdcp_gain_verdict.py',
+     "    'backend':              dict(scope='numeric', across_dir=True, required=True,",
+     "    'backend':              dict(scope='numeric', across_dir=False, required=True,",
+     VERDICT, ('㊷e',)),
+    ('R5-CX-07 선언↔거동 일치 검사(M_UNWRITTEN) 제거', 'check_method_discipline.py',
+     "        _unwritten = sorted({f for c, flds in _acct.values()",
+     "        _unwritten = [] or sorted({f for c, flds in _acct.values()",
+     DISC, ('M-13',)),
     ('R4-CX-06 규칙 K 제어흐름 무시', 'check_method_discipline.py',
      "    if not _live_after(toks):\n        return False", "    if False:\n        return False",
      DISC, ('K-5',)),
@@ -390,18 +399,57 @@ def main():
             rows.append((label, '★놓침★', 'mutant 인데 rc=0 (아무 시험도 안 물었다)'))
             bad.append(label)
             continue
+        #  ★★★ 2026-08-25 (R5-CX-07, Codex 5차) — **baseline PASS 목록을 읽고도 비교하지
+        #    않았다.**  그래서 돌연변이가 시험을 *사라지게* 만들어도(수집 실패·조기 종료)
+        #    "FAIL 이 났으니 적발" 로 셌다.  ⇒ baseline 에 있던 시험이 **없어졌으면** 그것은
+        #    적발이 아니라 harness 사고다 (그 시험은 물린 것이 아니라 안 돈 것이다).
+        _p_now, _ = _parse(out)
+        _vanished = sorted(set(_b_pass) - set(_p_now) - set(f))
+        if _vanished:
+            rows.append((label, 'HARNESS_ERROR',
+                         f'baseline 시험 {len(_vanished)}개가 **사라졌다** '
+                         f'(예: {_vanished[0][:40]}) — 물린 것이 아니라 안 돈 것이다'))
+            bad.append(label)
+            continue
         #  ★★ 2026-08-25 (A2 배터리) — **`broad`** 표식.  기전 자체를 들어내는 돌연변이
         #    (리더의 레지스트리 자동 채움 제거 같은 것)는 수십 개 시험이 그 기전에 기대므로
         #    "기대 밖 실패 0" 이 원리적으로 성립하지 않는다.  그것은 얽힘이 아니라
         #    **그 기전이 얼마나 많이 쓰이는가**의 측정이다.  ⇒ `broad` 는 부분집합만 본다.
         #    ⚠ 게이트 하나를 끄는 돌연변이에는 **절대 쓰지 않는다** — 거기서 기대 밖 실패는
         #      진짜 얽힘 신호다 (그것을 보려고 이 배터리를 만들었다).
-        _broad = len(want) > 0 and want[0] == '*broad*'
-        want = tuple(w for w in want if w != '*broad*')
-        hit = sorted({w for w in want if any(x.startswith(w) for x in f)})
-        extra = sorted({x for x in f if not any(x.startswith(w) for w in want)})
-        if _broad and len(hit) == len(want):
-            rows.append((label, '적발(broad)', f'{list(want)} + 기전 의존 {len(extra)}건'))
+        #  ★★ 2026-08-25 (R5-CX-07) — `broad` 가 **무제한 wildcard** 였다.  실제 broad row 에
+        #    기대 밖 실패가 15건 있었는데 최종 문구는 여전히 `기대 밖 실패 0` 이었다
+        #    (Codex 실측).  ⇒ **한도**를 요구한다: `*broad*<N>` 으로 최대 개수를 적는다.
+        #    한도를 안 적으면 배터리가 거부한다 — 면죄부를 무제한으로 두지 않는다.
+        _broad_cap = None
+        if want and str(want[0]).startswith('*broad*'):
+            _tail = str(want[0])[len('*broad*'):]
+            if not _tail.isdigit():
+                rows.append((label, 'HARNESS_ERROR',
+                             "`*broad*` 에 한도가 없다 — `*broad*<N>` 으로 최대 기대-밖 "
+                             "실패 수를 적을 것 (무제한 면제 금지, R5-CX-07)"))
+                bad.append(label)
+                continue
+            _broad_cap = int(_tail)
+            want = tuple(want[1:])
+        #  ★★ `startswith` → **정확 일치**.  접두사 매칭은 `L-12` 가 `L-12(변수 참조)` 와
+        #    `L-12: 봉인 실패…` 를 **같은 것으로** 세게 만든다 (이 세션에서 실제로 겪었다).
+        #    시험 이름은 `id: 설명` 또는 `id(변형): 설명` 이므로 그 id 만 떼어 비교한다.
+        def _tid(name):
+            _h = name.split(':', 1)[0].strip()
+            return _h.split('(', 1)[0].strip() if '(' in _h else _h
+        _fail_ids = {_tid(x) for x in f}
+        hit = sorted({w for w in want if w in _fail_ids})
+        extra = sorted({x for x in f if _tid(x) not in set(want)})
+        if _broad_cap is not None and len(hit) == len(want):
+            if len(extra) > _broad_cap:
+                rows.append((label, '과잉',
+                             f'broad 한도 {_broad_cap} 를 넘었다 — 기대 밖 실패 {len(extra)}건 '
+                             f'(예: {extra[0][:44]})'))
+                bad.append(label)
+                continue
+            rows.append((label, f'적발(broad≤{_broad_cap})',
+                         f'{list(want)} + 기전 의존 {len(extra)}건'))
             continue
         if len(hit) != len(want):
             rows.append((label, '★놓침★',

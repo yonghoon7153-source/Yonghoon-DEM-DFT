@@ -2157,9 +2157,15 @@ def _selftest():
     chk(f'㊷d ★★★ 규약 축 {len(_RC.PROTOCOL_FIELDS)} 개가 매니페스트에서 빠지면 **전부** '
         f'HOLD (선언과 무관한 재계산 경로) — 위반: {_pf_bad[:2]}',
         not _pf_bad)
-    _nx = sorted(f for f in set(_GEN_FIELDS) | {f for f in _RC.PROTOCOL_FIELDS
-                                                if f in FIELD_CONTRACT}
-                 if not FIELD_CONTRACT[f].get('across_dir'))
+    #  ★★★ 2026-08-25 (R5-CX-07, Codex 5차) — 옛 판은 **세대 축 ∪ 규약 축**만 봤다.
+    #    `backend` 는 `scope='numeric'` 이라 그 밖이었고, 그래서 `backend.across_dir` 을
+    #    True→False 로 뒤집어도 **selftest 146 PASS / FAIL 0** 이었다 (Codex 실측).
+    #    그 상태에서는 GPU↔CPU cross-directory 차이가 비교축에서 **사라진다**.
+    #  ⇒ 불변량을 **레지스트리 전체**로 넓힌다.  근거: 축이 두 디렉터리에서 달라지는 것은
+    #    런마다 `expect_differ` 로 **허가**하는 것이지, 계약에 영구히 적어 두는 것이 아니다.
+    #    ⇒ `FIELD_CONTRACT` 의 모든 항목은 `across_dir` 이어야 한다 (예외를 두려면 왜
+    #      그 축만 영구히 자유로운지 여기 적어야 한다).
+    _nx = sorted(f for f, v in FIELD_CONTRACT.items() if not v.get('across_dir'))
     #  ★ ㊷f — `physics_protocol_id.required` 는 **중복 방어**다.  이 플래그를 꺼도
     #    `protocol_ok` 의 재계산이 저장값 부재를 HOLD 로 잡는다 (아래에서 실측한다).
     #    Codex 가 "이 플래그를 뒤집어도 selftest 가 초록" 이라고 지적한 것은 사실이고,
@@ -2179,8 +2185,9 @@ def _selftest():
         '않게).  이 시험이 플래그 뒤집기를 잡는 유일한 자리다',
         FIELD_CONTRACT['physics_protocol_id'].get('required') is True)
 
-    chk(f'㊷e ★★★ 세대 축과 규약 축은 **전부** `across_dir` 다 (아닌 것: {_nx}) — '
-        f'선언을 뒤집으면 cross-dir 시험에서 빠진다',
+    chk(f'㊷e ★★★ **레지스트리 전 축**이 `across_dir` 다 (아닌 것: {_nx}) — 선언을 '
+        f'뒤집으면 그 축이 cross-dir 비교에서 조용히 빠진다 (R5-CX-07: `backend` 가 '
+        f'바로 그 상태였다)',
         not _nx)
 
     chk(f'㊷c ★★ `_GEN_FIELDS` 가 레지스트리 파생과 **같은 집합**이다 '
