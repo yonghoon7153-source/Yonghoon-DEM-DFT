@@ -389,14 +389,21 @@ function Conductivity({ fit }: { fit: SpectrumFit }) {
     )
   }
   return (
-    <KeyValues
-      rows={[
-        ['벌크 σ', value.bulk_s_cm ? `${value.bulk_s_cm.toExponential(3)} S/cm` : '—'],
-        ['입계 σ', value.grain_boundary_s_cm ? `${value.grain_boundary_s_cm.toExponential(3)} S/cm` : '—'],
-        // 두 σ 의 합이 아니다 — 저항이 직렬이므로 저항을 더해서 나눈다.
-        ['전체 σ', value.total_s_cm ? `${value.total_s_cm.toExponential(3)} S/cm` : '—'],
-      ]}
-    />
+    <div className="col" style={{ gap: 6 }}>
+      <KeyValues
+        rows={[
+          ['벌크 σ', value.bulk_s_cm ? `${value.bulk_s_cm.toExponential(3)} S/cm` : '—'],
+          ['입계 σ', value.grain_boundary_s_cm ? `${value.grain_boundary_s_cm.toExponential(3)} S/cm` : '—'],
+          // 두 σ 의 합이 아니다 — 저항이 직렬이므로 저항을 더해서 나눈다.
+          ['전체 σ', value.total_s_cm ? `${value.total_s_cm.toExponential(3)} S/cm` : '—'],
+        ]}
+      />
+      {value.excluded?.length ? (
+        // 세 번째 아크는 전극 계면일 수 있어 전해질 σ 에 넣지 않는다.
+        // 조용히 빼면 회로를 바꿨을 때 σ 가 왜 움직였는지 알 수 없다.
+        <div className="tiny faint">σ 합계에서 뺀 아크: {value.excluded.join(' · ')}</div>
+      ) : null}
+    </div>
   )
 }
 

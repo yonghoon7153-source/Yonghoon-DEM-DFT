@@ -623,6 +623,8 @@ export interface SpectrumFit {
     total_s_cm?: number | null
     total_ohm?: number
     missing?: string[]
+    /** σ 합계에서 뺀 아크들 (세 번째부터 — 전극 계면일 수 있어서). */
+    excluded?: string[]
   }
   dropped_inductive: number
   dropped_out_of_range: number

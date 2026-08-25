@@ -6,6 +6,7 @@ labelled "charge transfer" is a number under the wrong name in a report nobody
 re-derives.
 """
 
+import numpy as np
 import pytest
 import synthetic_eis as S
 
@@ -146,3 +147,51 @@ def test_a_total_resistance_built_on_an_undetermined_number_is_withheld():
     result = fitted()
     result.parameters[1].stderr = 1e6      # R1 is now meaningless
     assert total_resistance(result) is None
+
+
+def test_a_series_resistor_written_last_is_still_the_series_resistor():
+    """`p(R1,CPE1)-p(R2,CPE2)-R0` 는 물리적으로 같은 회로다.
+
+    "문자열이 R 로 시작하나" 휴리스틱은 이 표기에서 배선 저항을 아크로
+    분류해 σ 합계에 넣었다 (리뷰 재현: σ_total 8% 오차).  직렬인지는 구조가
+    정한다.
+    """
+    frequency = S.log_sweep(1e6, 1e-2, 12)
+    z = S.randles(frequency, rs=5.0, r1=20.0, q1=1e-5, n1=0.9,
+                  r2=40.0, q2=1e-3, n2=0.8)
+    result = fit_circuit(Spectrum(frequency, z.real, z.imag),
+                         "p(R1,CPE1)-p(R2,CPE2)-R0")
+    labels = {m.parameter: m.label for m in label_arcs(result, SOLID, SYMMETRIC)}
+    assert labels["R0"] == "직렬 저항"
+    assert labels["R1"] == "벌크 저항"
+    assert labels["R2"] == "입계 저항"
+
+    out = ionic_conductivity(result, thickness_cm=0.007, area_cm2=0.785,
+                             config=SYMMETRIC)
+    expected = 0.007 / ((20.0 + 40.0) * 0.785)
+    assert out["total_s_cm"] == pytest.approx(expected, rel=0.02)
+
+
+def test_a_third_arc_is_kept_out_of_the_ionic_total_and_named():
+    """세 번째 아크는 자기 라벨부터 '전극 계면일 수 있습니다' 다.
+
+    σ 합계에 넣으면 전해질 전도도가 그만큼 과소평가된다 — 리뷰 재현에서
+    100 Ω 계면 아크가 σ_total 을 2.7배 깎았다, 표시 없이.  빼고, 뺐다고
+    말한다.
+    """
+    frequency = S.log_sweep(1e6, 1e-3, 12)
+    z = S.randles(frequency, rs=5.0, r1=20.0, q1=1e-6, n1=0.95,
+                  r2=40.0, q2=1e-4, n2=0.9)
+    # 세 번째 아크(계면 100 Ω)를 손으로 직렬로 얹는다.
+    w = 2 * np.pi * frequency
+    z = z + 1.0 / (1.0 / 100.0 + 1e-2 * (1j * w) ** 0.85)
+    result = fit_circuit(Spectrum(frequency, z.real, z.imag),
+                         "R0-p(R1,CPE1)-p(R2,CPE2)-p(R3,CPE3)", restarts=12)
+    assert result.converged
+
+    out = ionic_conductivity(result, thickness_cm=0.007, area_cm2=0.785,
+                             config=SYMMETRIC)
+    expected = 0.007 / ((20.0 + 40.0) * 0.785)
+    assert out["total_s_cm"] == pytest.approx(expected, rel=0.1)
+    assert len(out["excluded"]) == 1
+    assert "R3" in out["excluded"][0]

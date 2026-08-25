@@ -15,6 +15,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from .circuit import CircuitError, parse_circuit
 from .fit import FitResult
 
 __all__ = ["CONFIGS", "FULL", "HALF", "LIQUID", "SOLID", "SYMMETRIC",
@@ -134,30 +135,47 @@ def label_arcs(result: FitResult, kind: str, config: str = "") -> list[ArcMeanin
     specific = BY_CONFIG.get((kind, config))
     if specific:
         scheme["arcs"] = specific
+    series = _series_resistor_names(result)
     plain = [p for p in result.parameters if "_" not in p.name and p.name[0] == "R"]
     out: list[ArcMeaning] = []
-    for i, parameter in enumerate(plain):
-        if i == 0 and _has_series_element(result):
+    arc_index = 0
+    for parameter in plain:
+        if parameter.name in series:
             label, note = scheme["series"]
         else:
-            arc_index = i - 1 if _has_series_element(result) else i
             names = scheme["arcs"]
             label, note = names[min(arc_index, len(names) - 1)]
+            arc_index += 1
         out.append(ArcMeaning(parameter=parameter.name, label=label, note=note,
                               value_ohm=parameter.value,
                               determined=parameter.determined))
     return out
 
 
-def _has_series_element(result: FitResult) -> bool:
-    """Whether the circuit starts with a bare resistance.
+def _series_resistor_names(result: FitResult) -> set[str]:
+    """Which plain resistances sit in the top-level series path.
 
-    ``R0-p(R1,CPE1)`` does; ``p(R1,CPE1)-p(R2,CPE2)`` does not, and in that one
-    the first resistance is an arc, not a series term.  Read from the circuit
-    text because that is what the person wrote.
+    Structure, not position: the first version asked "does the circuit text
+    start with R", and ``p(R1,CPE1)-p(R2,CPE2)-R0`` -- physically identical, a
+    series resistor written last -- got its wiring resistance labelled as an
+    arc and summed into the ionic conductivity (review reproduction: σ_total
+    off by 8 %, R0 labelled "세 번째 아크").
     """
-    text = result.circuit.strip()
-    return bool(text) and text[0] == "R" and not text.startswith("p(")
+    try:
+        parsed = parse_circuit(result.circuit)
+    except (CircuitError, Exception):
+        text = result.circuit.strip()
+        if text and text[0] == "R" and not text.startswith("p("):
+            first = next((p.name for p in result.parameters
+                          if "_" not in p.name and p.name[0] == "R"), None)
+            return {first} if first else set()
+        return set()
+    return {name for name in parsed.series_element_names()
+            if name and name[0] == "R" and "_" not in name}
+
+
+def _has_series_element(result: FitResult) -> bool:
+    return bool(_series_resistor_names(result)) and not text.startswith("p(")
 
 
 def total_resistance(result: FitResult) -> float | None:
@@ -205,10 +223,11 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
     are not ionic transport, and dividing a cell thickness by them produces a
     number with the units of a conductivity and the meaning of nothing.
     """
+    series = _series_resistor_names(result)
     arcs = [meaning for meaning in label_arcs(result, SOLID, config)
-            if meaning.parameter != _series_name(result)]
+            if meaning.parameter not in series]
     out: dict = {"bulk_s_cm": None, "grain_boundary_s_cm": None,
-                 "total_s_cm": None, "missing": []}
+                 "total_s_cm": None, "missing": [], "excluded": []}
     if (SOLID, config) not in CONDUCTIVITY_CONFIGS:
         # 풀셀의 저주파 아크는 계면이지 전해질이 아니다.  거기에 두께를 나누면
         # 단위는 S/cm 이고 뜻은 전도도가 아니다.
@@ -227,21 +246,21 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
         out["missing"].append("결정되지 않은 저항")
         return out
 
-    for key, meaning in zip(("bulk_s_cm", "grain_boundary_s_cm"), arcs,
+    # 전해질은 벌크와 입계, 두 아크다.  세 번째 아크는 자기 라벨부터
+    # "전극 계면일 수 있습니다" 인데 σ 합계에 넣으면 전해질 전도도가 그만큼
+    # 과소평가된다 -- 리뷰 재현에서 100 Ω 계면 아크 하나가 σ_total 을 2.7배
+    # 깎았다, 아무 표시 없이.  넣지 않고, 뺐다는 사실을 함께 낸다.
+    electrolyte = arcs[:2]
+    out["excluded"] = [f"{meaning.parameter} ({meaning.label}, "
+                       f"{meaning.value_ohm:.4g} Ω)" for meaning in arcs[2:]]
+    for key, meaning in zip(("bulk_s_cm", "grain_boundary_s_cm"), electrolyte,
                             strict=False):
         out[key] = conductivity(meaning.value_ohm, thickness_cm=thickness_cm,
                                 area_cm2=area_cm2)
-    total_ohm = sum(meaning.value_ohm for meaning in arcs)
+    total_ohm = sum(meaning.value_ohm for meaning in electrolyte)
     out["total_s_cm"] = conductivity(total_ohm, thickness_cm=thickness_cm,
                                      area_cm2=area_cm2)
     out["total_ohm"] = total_ohm
     return out
 
 
-def _series_name(result: FitResult) -> str | None:
-    if not _has_series_element(result):
-        return None
-    for parameter in result.parameters:
-        if "_" not in parameter.name and parameter.name[0] == "R":
-            return parameter.name
-    return None
