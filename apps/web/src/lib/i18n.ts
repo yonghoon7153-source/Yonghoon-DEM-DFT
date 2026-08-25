@@ -17,6 +17,13 @@ const KNEE_REASONS: Rule[] = [
     /^(.*); another criterion puts it at cycle ([\d.]+)$/,
     (m) => `${apply(KNEE_REASONS, m[1]!)} · 다른 기준은 ${m[2]}번을 짚습니다`,
   ],
+  // 블록을 빼고 다시 얻은 이유에 붙는 꼬리표.  앞 문장을 먼저 번역하고 다시
+  // 붙이지 않으면 한국어 패널의 한 줄이 통째로 영어로 남는다.
+  [
+    /^(.*); cycles ([\d.]+)-([\d.]+) were measured differently and were left out$/,
+    (m) =>
+      `${apply(KNEE_REASONS, m[1]!)} · ${m[2]}–${m[3]}번은 측정 조건이 달라 뺐습니다`,
+  ],
   [
     /^retention crossed (\S+)% at cycle ([\d.]+)$/,
     (m) => `유지율이 ${m[2]}번 사이클에서 ${m[1]}% 를 통과했습니다`,

@@ -163,7 +163,7 @@ export function Dashboard() {
             </span>
           ) : null}
           <span className="tiny faint">
-            스파크라인은 기준 사이클 대비 유지율 · 점선은 급감 시작
+            스파크라인은 기준 사이클 대비 유지율 · 점선은 급감이 자리 잡는 지점
           </span>
         </div>
 
@@ -274,7 +274,7 @@ function DashboardTable({
             <th>방전용량 ({basisUnit(basis)})</th>
             <th>유지율 (%)</th>
             <th style={{ textAlign: 'center' }}>추세</th>
-            <th>급감 시작</th>
+            <th>급감 (이탈→정착)</th>
             <th>초기 CE (%)</th>
             <th>기준</th>
             <th>로딩 (mg/cm²)</th>
@@ -360,7 +360,13 @@ function DashboardTable({
                 />
               </td>
               <td title={row.knee_method ?? undefined}>
-                {row.knee_cycle ? Math.round(row.knee_cycle) : '—'}
+                {/* onset 이 있으면 둘 다 적는다.  point 하나만 적어 놓고 열
+                    머리말이 "급감 시작" 이면 화면이 거짓을 말한다. */}
+                {row.knee_cycle
+                  ? row.knee_onset_cycle
+                    ? `${Math.round(row.knee_onset_cycle)}→${Math.round(row.knee_cycle)}`
+                    : Math.round(row.knee_cycle)
+                  : '—'}
               </td>
               <td>{pct(row.initial_coulombic_efficiency)}</td>
               <td>

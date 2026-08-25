@@ -25,6 +25,7 @@
 | [0019](adr/0019-eis-is-its-own-section-with-two-fitting-worlds.md) | EIS 는 독자 섹션, 그 안에서 액체와 전고체를 가른다 | 같은 두 반원이 다른 것을 뜻한다, 저장은 Ω·Hz 만 |
 | [0020](adr/0020-gitt-pairs-two-different-samples.md) | GITT 의 한 점은 서로 다른 두 샘플에서 온다 | 펄스 끝의 용량 + 휴지 끝의 전압, 가정을 검사한 뒤에만 D |
 | [0021](adr/0021-double-bacon-watts-onset-and-point.md) | Double Bacon-Watts 로 knee-onset 과 knee-point 를 함께 구한다 | 검출되면 primary, 승격·유효성 게이트, sub-linear 한계 명시 |
+| [0022](adr/0022-one-mpr-can-hold-many-spectra.md) | `.mpr` 한 파일이 스펙트럼 여럿을 담는다 (SOC 스캔) | 행 위치를 풀어서 정하고, 스윕마다 전위·용량을 들려 보낸다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -62,7 +63,8 @@
 `adr/0018-formationless-schedules-anchor-at-cycle-one.md` ·
 `adr/0019-eis-is-its-own-section-with-two-fitting-worlds.md` ·
 `adr/0020-gitt-pairs-two-different-samples.md` ·
-`adr/0021-double-bacon-watts-onset-and-point.md`
+`adr/0021-double-bacon-watts-onset-and-point.md` ·
+`adr/0022-one-mpr-can-hold-many-spectra.md`
 
 ## 스펙
 

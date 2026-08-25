@@ -85,7 +85,9 @@ def test_a_rising_then_falling_series_is_a_knee():
     segmented = analysis.by_method("segmented")
     assert segmented.detected
     assert segmented.cycle == pytest.approx(35, abs=3)
-    assert analysis.primary.method == "segmented"
+    # dbw 가 검출하면 primary 다 (ADR 0021) — 여기서는 같은 35번을 짚는다.
+    assert analysis.primary.method in ("dbw", "segmented")
+    assert analysis.primary.cycle == pytest.approx(35, abs=3)
 
 
 def test_a_missing_reference_cycle_does_not_fall_back_to_formation():
@@ -1078,7 +1080,13 @@ def test_a_block_and_a_knee_together_are_a_known_limit():
     # 의 3선/excursion 기계가 없는 매끈한 전역 적합의 한계다.  여기서
     # 올라가면 다른 것이 깨진 것이고, 내려가면 joint event model 이 들어왔다는
     # 뜻이니 이 숫자를 같이 내린다.
-    assert wrong <= 17, f"{wrong}/{total} — 더 나빠졌다"
+    # segmented primary 이던 때 15/30, dbw primary 로 17/30, Codex 리뷰가
+    # 짚은 자유도 두 곳을 고치고 γ 상한을 기록 길이에 맞추면서 18/30 이 됐다.
+    # 고친 쪽이 옳다는 근거는 따로 있다: 심어 둔 두 전환(60, 90)을 59.0/90.0
+    # 으로 회수하고 직선 200개 오탐이 여전히 0이다.  블록과 knee 가 겹친
+    # 배치는 excursion 탐지가 블록을 놓칠 때 dbw 가 복귀 에지를 읽는, 이미
+    # 알려진 한계다.
+    assert wrong <= 18, f"{wrong}/{total} — 더 나빠졌다"
 
 
 # --- Double Bacon-Watts: onset 과 point 를 함께 (ADR 0021) --------------------
@@ -1087,7 +1095,12 @@ def test_a_block_and_a_knee_together_are_a_known_limit():
 # 수렴하므로, 아래는 "언제 말하고 언제 물러나는가" 를 모양별로 고정한다.
 
 def _two_phase(c):
-    """문헌의 knee 모양: 완만한 이탈 → 점점 급해지는 손실 (Fermin-Cueto 2020)."""
+    """완만한 이탈 → 점점 급해지는 손실.
+
+    전환이 **하나로 이어진** 모양이라, 폭 제한을 풀어 주면 tanh 하나가 이
+    곡선을 더 잘 설명한다 (SSE 37 → 10).  onset/point 쌍의 예가 아니라
+    "전환이 하나면 onset 을 지어내지 않는다" 의 예로 쓴다.
+    """
     if c <= 60:
         return 100.0 - 0.10 * (c - 3)
     if c <= 90:
@@ -1095,18 +1108,39 @@ def _two_phase(c):
     return 83.2 - 1.0 * (c - 90) - 0.02 * (c - 90) ** 2
 
 
+def _three_slope(c):
+    """완만 → 중간 → 급락.  전환이 둘 다 뚜렷해 onset 과 point 가 갈린다."""
+    return (100
+            - 0.05 * (min(c, 60) - 3)
+            - 0.30 * max(min(c, 90) - 60, 0)
+            - 1.20 * max(c - 90, 0))
+
+
 def test_dbw_reports_the_onset_and_the_point_of_one_event():
-    analysis = detect_knee(*_curve(130, _two_phase), reference_cycle=3)
+    """심어 둔 두 전환(60, 90)을 되찾아야 한다."""
+    analysis = detect_knee(*_curve(150, _three_slope), reference_cycle=3)
     dbw = analysis.by_method("dbw")
     assert dbw.detected, dbw.reason
     assert dbw.onset_cycle is not None
     assert dbw.onset_cycle < dbw.cycle
-    # 이탈은 60번에서 시작해 90번부터 빠르게 잃는다.  onset 은 완만한 이탈
-    # 구간에, point 는 급감이 자리 잡는 곳에 있어야 한다.
-    assert 60 <= dbw.onset_cycle <= 80
-    assert 88 <= dbw.cycle <= 110
+    assert dbw.onset_cycle == pytest.approx(60, abs=4), dbw.reason
+    assert dbw.cycle == pytest.approx(90, abs=4), dbw.reason
     assert analysis.primary.method == "dbw"
     assert analysis.primary.onset_cycle == dbw.onset_cycle
+
+
+def test_a_single_wide_transition_is_not_split_into_a_pair():
+    """전환이 하나로 이어진 곡선에 onset 을 지어내지 않는다.
+
+    폭 제한이 20 으로 고정돼 있을 때는 tanh 두 개가 억지로 붙어 "onset 67,
+    point 99" 가 나왔는데, 제한을 기록 길이에 맞춰 넓히면 폭 42 짜리 전환
+    하나가 답이다 (SSE 37 → 10, Codex #5).
+    """
+    analysis = detect_knee(*_curve(130, _two_phase), reference_cycle=3)
+    dbw = analysis.by_method("dbw")
+    assert dbw.detected, dbw.reason
+    assert dbw.onset_cycle is None
+    assert "no separate onset" in dbw.reason
 
 
 def test_dbw_does_not_invent_an_onset_on_a_plain_hinge():
@@ -1184,7 +1218,7 @@ def test_dbw_without_scipy_says_so(monkeypatch):
 def test_dbw_confidence_interval_brackets_the_estimates():
     from wrdkit.knee import dbw_confidence_interval, smooth_series
 
-    cycles, q = _curve(130, _two_phase)
+    cycles, q = _curve(150, _three_slope)
     analysis = detect_knee(cycles, q, reference_cycle=3)
     dbw = analysis.by_method("dbw")
     # 기준(3번)부터의 유지율을 기준과 같은 스무딩으로 -- docstring 의
@@ -1211,3 +1245,84 @@ def test_dbw_stays_fast_enough_for_the_report_path():
     started = time.perf_counter()
     detect_knee(cycles, q, reference_cycle=3)
     assert time.perf_counter() - started < 1.5
+
+
+# --- Codex 리뷰 회귀 (DBW) ---------------------------------------------------
+
+def test_the_promotion_score_counts_the_right_degrees_of_freedom():
+    """단일 BW(5) → 이중 BW(8) 의 추가 자유도는 3이다.
+
+    2 로 세면 점수가 1.5배 부풀어, 두 번째 전환이 기준을 못 넘는데도 onset 을
+    만들어 낸다 (Codex #3).  직선(2) → 단일 BW(5) 는 반대 방향이었다: 4/6 으로
+    세면 점수가 낮아져 진짜 꺾임이 지워진다 (Codex #4).
+    """
+    from wrdkit.knee import _bw_fit, _bw_model, _dbw_fit, _f_gain, _linear_fit
+
+    cycles = np.arange(3, 123, dtype=float)
+    planted = _bw_model(cycles, 97.5199988, -0.09, -0.05, 65.0, 8.0)
+    values = planted + np.random.default_rng(826).normal(0, 0.9, len(cycles))
+    line = _linear_fit(cycles, values)[2]
+    bw = _bw_fit(cycles, values)[0]
+    wrong = _f_gain(line, bw, len(cycles), 4, parameters=6)
+    right = _f_gain(line, bw, len(cycles), 3, parameters=5)
+    assert right > wrong                      # 옛 계산이 점수를 낮췄다
+    assert right / wrong == pytest.approx(4 / 3 * 115 / 114, rel=0.05)
+
+    double = _dbw_fit(cycles, values)
+    assert double is not None
+    inflated = _f_gain(bw, double[0], len(cycles), 2, parameters=8)
+    honest = _f_gain(bw, double[0], len(cycles), 3, parameters=8)
+    assert inflated == pytest.approx(honest * 1.5, rel=1e-9)
+
+
+def test_a_transition_wider_than_we_allow_is_not_an_answer():
+    """폭이 상한에 붙으면 폭을 잰 것이 아니라 자리가 모자란 것이다.
+
+    상한을 20 으로 고정했을 때 이 곡선의 onset 이 67 이었는데 상한을 40 으로
+    넓히자 40 으로 옮겨 갔다 — 임의의 한계가 답을 27사이클 움직인다면 그것은
+    측정이 아니다 (Codex #5).  이제 상한이 기록 길이를 따라간다.
+    """
+    from wrdkit.knee import _dbw_fit, _gamma_bounds
+
+    cycles, q = _curve(130, _two_phase)
+    retention = smooth_series(100.0 * q[2:] / q[2], 5)
+    low, high = _gamma_bounds(cycles[2:])
+    assert high > 20.0                         # 기록이 길면 넓어진다
+    sse, popt = _dbw_fit(cycles[2:], retention)
+    widths = sorted((float(popt[6]), float(popt[7])))
+    assert widths[1] < high * 0.999            # 상한에 붙지 않았다
+
+
+def test_a_confidence_interval_needs_a_knee_to_be_about():
+    """검출되지 않은 기록에 구간을 내지 않는다 (Codex #6).
+
+    직선을 재표집하면 온갖 x1·x2 가 나오는데, 그것을 구간이라고 부르면
+    측정값처럼 보인다 — 관측 끝을 넘는 point 상한까지 나왔다.
+    """
+    from wrdkit.knee import dbw_confidence_interval
+
+    cycles = np.arange(3, 51, dtype=float)
+    straight = 100.0 - 0.1 * (cycles - 3)
+    assert dbw_confidence_interval(cycles, straight, n_boot=20, seed=0) is None
+    # 전환이 하나뿐인 곡선도 onset 이 없으므로 구간이 없다.
+    hinge_cycles, hinge_q = _curve(200, _flat_then_accelerate)
+    hinge = smooth_series(100.0 * hinge_q[2:] / hinge_q[2], 5)
+    assert dbw_confidence_interval(hinge_cycles[2:], hinge, n_boot=20, seed=0) is None
+
+
+def test_a_confidence_interval_does_not_count_impossible_resamples():
+    """재표집에도 같은 경계를 건다 (Codex #7).
+
+    경계 없이 풀면 허용 범위 밖 해가 "수렴" 으로 세어져 구간이 크게 벌어졌다.
+    그리고 절반 규칙은 올림이다 — 홀수 n_boot 에서 소수가 구간을 만들거나
+    빈 배열에서 죽었다 (Codex #10).
+    """
+    from wrdkit.knee import dbw_confidence_interval
+
+    cycles, q = _curve(150, _three_slope)
+    retention = smooth_series(100.0 * q[2:] / q[2], 5)
+    interval = dbw_confidence_interval(cycles[2:], retention, n_boot=40, seed=0)
+    assert interval is not None
+    assert interval["onset_low"] <= interval["onset_high"]
+    assert interval["point_high"] <= float(cycles[-1])     # 관측 밖으로 안 나간다
+    assert dbw_confidence_interval(cycles[2:], retention, n_boot=1, seed=0) is None

@@ -450,6 +450,9 @@ export interface DashboardRow {
   reference_available: boolean
   initial_coulombic_efficiency: number | null
   knee_cycle: number | null
+  /** 이탈이 시작되는 곳 — dbw 가 두 전환을 분해했을 때만 (ADR 0021). */
+  knee_onset_cycle?: number | null
+  knee_onset_trend_index?: number | null
   knee_method: string | null
   /** 확정 knee 가 아니어도 무엇인지 구분된다 — `null` 하나로 접지 않는다. */
   knee_status?: KneeStatus | null

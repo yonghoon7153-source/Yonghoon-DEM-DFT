@@ -1029,6 +1029,13 @@ def dashboard(session: Session = Depends(get_session),
             "trend_last_cycle": trend["last_cycle"],
             "knee_trend_index": _trend_index(
                 trend, knee.cycle if knee and knee.detected else None),
+            # 이탈이 시작되는 곳도 함께 보낸다 (ADR 0021).  point 하나만 보내
+            # 놓고 화면이 그것을 "급감 시작" 이라고 적으면 화면이 거짓을
+            # 말하는 것이다 (Codex #8).
+            "knee_onset_cycle": (knee.onset_cycle
+                                 if knee and knee.detected else None),
+            "knee_onset_trend_index": _trend_index(
+                trend, knee.onset_cycle if knee and knee.detected else None),
             "sample_id": sample.id,
             "sample_name": sample.name,
             "group_id": sample.group_id,

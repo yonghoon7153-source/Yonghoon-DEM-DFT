@@ -444,5 +444,13 @@ def _summarize(report: CellReport) -> str:
             f"cycle {report.reference.cycle} CE {report.reference.coulombic_efficiency:.2f}%"
         )
     if report.knee and report.knee.primary.detected:
-        parts.append(f"knee at cycle {report.knee.primary.cycle:.0f}")
+        # Both ends when the fit resolved them (ADR 0021).  Saying only the
+        # point loses half of what the primary criterion measured, and the
+        # summary is what the log and the API row carry.
+        onset = getattr(report.knee.primary, "onset_cycle", None)
+        if onset is not None:
+            parts.append(f"knee onset at cycle {onset:.0f}, "
+                         f"point at cycle {report.knee.primary.cycle:.0f}")
+        else:
+            parts.append(f"knee at cycle {report.knee.primary.cycle:.0f}")
     return "; ".join(parts)

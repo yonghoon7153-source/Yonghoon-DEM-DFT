@@ -215,3 +215,17 @@ describe('백엔드 문구 커버리지', () => {
     expect(ko.untranslated().length).toBe(before)
   })
 })
+
+
+describe('블록을 뺀 뒤의 knee 이유 (Codex #11)', () => {
+  it('꼬리표가 붙어도 한국어로 나온다', async () => {
+    const { ko } = await import('../i18n')
+    const text = ko.kneeReason(
+      'fade rate steepens 3.20x at cycle 50 (-0.050 -> -0.160 %/cycle); ' +
+        'cycles 20-37 were measured differently and were left out',
+    )
+    expect(text).toContain('50번 사이클에서 열화율이')
+    expect(text).toContain('20–37번은 측정 조건이 달라 뺐습니다')
+    expect(text).not.toContain('were left out')
+  })
+})

@@ -158,8 +158,20 @@ DBW_GRID = 15
 #: linear in the alphas once x1, x2 and the gammas are fixed), so only the
 #: winners need scipy.
 DBW_REFINE_SEEDS = 3
-#: Transition sharpness bounds, in cycles, from the supplied procedure.
+#: Transition sharpness bounds, in cycles.  The lower one is the supplied
+#: procedure's; the upper one **scales with the record** (see
+#: ``_gamma_bounds``).  A fixed 20 truncated real curves: the archetype whose
+#: second transition wants a width of 39 fitted at the bound instead, and the
+#: reported onset moved 27 cycles when the bound was widened -- an answer that
+#: depends on an arbitrary limit is not a measurement (Codex #5).
 DBW_GAMMA_BOUNDS = (0.1, 20.0)
+#: How many resamples must survive before percentiles mean anything.  A stated
+#: convention, like ``MIN_FOLLOWUP_CYCLES``: the 2.5th percentile of five
+#: numbers is just the smallest of them.
+DBW_MIN_RESAMPLES = 20
+#: A transition cannot be meaningfully wider than a third of what was watched;
+#: past that the "two lines" the model is made of stop existing.
+DBW_GAMMA_SPAN_FRACTION = 1.0 / 3.0
 #: Convergence tolerance for the Bacon-Watts fits.  The solver's default 1e-8
 #: polishes transition estimates to a millionth of a cycle -- three orders
 #: below the data's own resolution -- and on a knee-less record it wanders a
@@ -1172,6 +1184,13 @@ def _curvature_knee(cycles: np.ndarray, values: np.ndarray, window: int) -> Knee
                       f"maximum curvature at cycle {cycle:.0f}", detail)
 
 
+def _gamma_bounds(cycles: np.ndarray) -> tuple[float, float]:
+    """Allowed transition widths for this record, in cycles."""
+    low, high = DBW_GAMMA_BOUNDS
+    span = float(cycles[-1] - cycles[0])
+    return low, max(high, span * DBW_GAMMA_SPAN_FRACTION)
+
+
 def _dbw_model(x, a0, a1, a2, a3, x1, x2, g1, g2):
     """Double Bacon-Watts (Fermin-Cueto et al. 2020, eq. as supplied).
 
@@ -1250,7 +1269,8 @@ def _transition_seeds(cycles, values, columns):
     scored = []
     # Two sharpness seeds: gamma=1 (the procedure's start) finds cliff knees,
     # gamma=5 keeps a gentle bend from scoring as noise on the grid pass.
-    for gamma in (1.0, 5.0):
+    wide = max(_gamma_bounds(cycles)[1] * 0.5, 10.0)
+    for gamma in (1.0, 5.0, wide):
         for x1 in x1_grid:
             for x2 in x2_grid:
                 if x2 <= x1:
@@ -1272,7 +1292,7 @@ def _dbw_fit(cycles, values):
     from scipy.optimize import curve_fit
 
     lo, hi = float(cycles[0]), float(cycles[-1])
-    gamma_lo, gamma_hi = DBW_GAMMA_BOUNDS
+    gamma_lo, gamma_hi = _gamma_bounds(cycles)
 
     def columns(x1, x2, gamma):
         u = cycles - x1
@@ -1303,7 +1323,7 @@ def _bw_fit(cycles, values):
     from scipy.optimize import curve_fit
 
     lo, hi = float(cycles[0]), float(cycles[-1])
-    gamma_lo, gamma_hi = DBW_GAMMA_BOUNDS
+    gamma_lo, gamma_hi = _gamma_bounds(cycles)
 
     seen = set()
 
@@ -1401,6 +1421,19 @@ def _judge_bacon_watts(cycles, values, detail, point, onset, slope_before,
     )
 
 
+def _at_a_bound(value: float, low: float, high: float,
+                tolerance: float = 1e-6) -> bool:
+    """Is this parameter pressed against the edge of what we allowed?
+
+    A fit that stops at a bound has not measured that parameter -- it has run
+    out of room.  Reporting the number anyway is the boundary case the
+    circuit fitter already refuses (``_standard_errors``), and it applies to
+    a transition width just as much.
+    """
+    span = max(high - low, 1e-30)
+    return (value - low) / span < tolerance or (high - value) / span < tolerance
+
+
 def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
     """Knee-onset and knee-point from a Double Bacon-Watts fit (ADR 0021).
 
@@ -1445,9 +1478,18 @@ def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
         if x2 < x1:
             # Same curve, labels crossed (see _dbw_model).  The onset is the
             # earlier transition by definition.
+            #
+            # Only the transition *locations* are used after this, so the
+            # intercept is left alone.  Reconstructing the fitted curve from
+            # the relabelled parameters would need a0' = a0 + a1(x2 - x1) as
+            # well; nothing does that today, and this note is here for the
+            # day something wants to (Codex).
             x1, x2, g1, g2, a2, a3 = x2, x1, g2, g1, a3, a2
         escalate = (single is None
-                    or _f_gain(single[0], sse, n, 2, parameters=8)
+                    # 5 파라미터 → 8 파라미터이므로 추가 자유도는 3이다.
+                    # 2 로 쓰면 점수가 1.5배 부풀어, 두 번째 전환이 기준을
+                    # 못 넘는데도 onset 을 만들어 낸다 (Codex #3).
+                    or _f_gain(single[0], sse, n, 3, parameters=8)
                     >= MIN_FIT_GAIN_F)
         if escalate:
             detail = {
@@ -1508,7 +1550,10 @@ def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
             "breakpoint": x1, "gamma_point": g1,
             "slope_before": a1 - a2, "slope_after": a1 + a2,
             "rss_bw": sse, "rss_single_line": rss_single,
-            "fit_gain_score": _f_gain(rss_single, sse, n, 4, parameters=6),
+            # 직선 2 파라미터 → 단일 BW 5 파라미터: 추가 자유도 3, 전체 5.
+            # 4/6 으로 쓰면 점수가 낮아져 진짜 꺾임이 "곧은 선보다 나을 게
+            # 없다" 로 지워진다 (Codex #4 — 두 오산이 서로 반대 방향이다).
+            "fit_gain_score": _f_gain(rss_single, sse, n, 3, parameters=5),
             "transitions": 1.0,
         }
         judged_single = _judge_bacon_watts(
@@ -1527,7 +1572,7 @@ def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
 
 
 def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
-                            seed: int = 0) -> dict | None:
+                            seed: int = 0) -> dict | None:  # noqa: C901
     """Case-resampling bootstrap 95 % CI for (onset, point) -- Fermin-Cueto 2020.
 
     ``values`` is the same series the criterion fitted: retention from the
@@ -1544,12 +1589,29 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
     values = np.asarray(values, dtype=np.float64)
     if n_boot <= 0:
         return None
+    # An interval only means something for a knee the detector actually
+    # reported with two transitions.  Without this the helper happily built
+    # an onset/point interval for a dead-straight line -- the review resampled
+    # ``100 - 0.1(x-3)`` and got onset [17.9, 32.2] and a point interval whose
+    # upper end ran past the last observed cycle.  The gates live in
+    # ``_dbw_knee``, so ask it rather than repeating them here.
+    verdict = _dbw_knee(cycles, values)
+    if not verdict.detected or verdict.onset_cycle is None:
+        return None
     fit = _dbw_fit(cycles, values)
     if fit is None:
         return None
     from scipy.optimize import curve_fit
 
     _, popt = fit
+    lo, hi = float(cycles[0]), float(cycles[-1])
+    gamma_lo, gamma_hi = _gamma_bounds(cycles)
+    # The same bounds the base fit had.  Unbounded resamples counted solutions
+    # outside the allowed range as convergence: 65 of 200 came back with a
+    # gamma below 0.1 or above 20, and the onset interval was [33.0, 67.3]
+    # where the bounded one is [65.1, 68.8].
+    bounds = ([-np.inf] * 4 + [lo, lo, gamma_lo, gamma_lo],
+              [np.inf] * 4 + [hi, hi, gamma_hi, gamma_hi])
     rng = np.random.default_rng(seed)
     onsets, points = [], []
     n = len(cycles)
@@ -1557,15 +1619,24 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
         index = rng.choice(n, size=n, replace=True)
         try:
             resampled, _ = curve_fit(_dbw_model, cycles[index], values[index],
-                                     p0=popt, jac=_dbw_jacobian,
+                                     p0=popt, jac=_dbw_jacobian, bounds=bounds,
                                      ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
                                      maxfev=20000)
-        except RuntimeError:
+        except (RuntimeError, ValueError):
             continue
+        if _at_a_bound(resampled[6], gamma_lo, gamma_hi) or \
+                _at_a_bound(resampled[7], gamma_lo, gamma_hi):
+            continue          # a pressed transition width is not an estimate
         low, high = sorted((float(resampled[4]), float(resampled[5])))
         onsets.append(low)
         points.append(high)
-    if len(onsets) < n_boot // 2:
+    # Half, rounded **up**: with an odd n_boot the floor let a minority speak.
+    # One success out of three passed ``1 < 3 // 2`` and returned a
+    # zero-width interval; zero out of one passed ``0 < 0`` and crashed on an
+    # empty percentile.  And a handful of resamples is not an interval however
+    # unanimous they are -- a 2.5th percentile of five numbers is the smallest
+    # of them.
+    if len(onsets) < max(-(-n_boot // 2), DBW_MIN_RESAMPLES):
         return None
     onset_lo, onset_hi = np.percentile(onsets, [2.5, 97.5])
     point_lo, point_hi = np.percentile(points, [2.5, 97.5])
