@@ -93,27 +93,84 @@ export function basisUnit(basis: string): string {
   }
 }
 
-/** The mass written into a cell's name, in mg.
+/** 이름이 mg 로 적은 질량.  **글자 하나 바꾸지 않았다** -- 이 규칙은 이 랩의
+ *  파일 이름 수백 개를 이미 통과한 것이라, g 를 붙이면서 건드리지 않는다.
  *
- * This lab names its files with the electrode mass on the end --
- * `..._4.6V_1_17.5mg`.  That number is the one thing the `.wrd` does not know
- * (ADR 0003), so it has to be typed in by hand; showing what the name says
- * next to the field is how a typo gets caught before every mAh/g is wrong.
- * The last match wins: `..._3.8V_1_18.5mg` has one mass, but a name that
- * mentions two puts the electrode's own last. */
-export function massFromName(name: string | null | undefined): number | null {
+ * 두께와 같은 이유로 `\b` 를 쓰지 않는다: `17.5mg_2` 의 `mg` 뒤는 밑줄이고,
+ * 밑줄은 단어 문자라 경계가 아니다.
+ * 앞 경계도 본다 (리뷰 #33): `17,5mg` 나 `1e-3mg` 처럼 지원하지 않는 표기의
+ * **꼬리만** 떼어 5, 3 을 힌트로 보여 주면, 진짜 근거처럼 읽힌다.  숫자 토큰
+ * 앞이 소수점·쉼표·지수·부호·숫자면 통째로 못 읽은 것이다.
+ */
+const MASS_MG = /(?<![\d.,eE+-])(\d+(?:\.\d+)?)\s*mg(?![a-z0-9])/gi
+
+/** 이름이 g 로 적은 질량 -- mg 규칙보다 **훨씬 좁다**.
+ *
+ * `g` 는 한 글자이고 이름 어디에나 있다.  `mg` 는 그 자체로 거의 질량이지만
+ * `g` 는 `NCM811g`, `2x3g`, `avg` 의 g 일 수 있고, 힌트가 틀리면 있느니만
+ * 못하다 (`cellConfigFromName` 의 `symmetry` 와 같은 자리다).  그래서 셋을
+ * 함께 요구한다:
+ *
+ *  1. **숫자 앞이 구분자**여야 한다 (줄 시작 · 공백 · `_` · `-` · 괄호).
+ *     `NCM811g` 는 숫자가 글자에 붙어 있으므로 통째로 이름의 일부다.
+ *  2. **`g` 앞이 숫자나 공백**이어야 한다.  `mg` · `kg` · `µg` · `ug` 의 g 가
+ *     여기서 걸러진다 -- 접두를 하나씩 나열하지 않아도 된다.
+ *  3. 뒤에 글자·숫자가 오면 안 된다 (`5gr`, `3g2`).  밑줄과 끝은 허용한다.
+ *
+ * 그리고 **크기까지 본다** (`G_RANGE`).  위 셋을 통과해도 `811 g` 는 이
+ * 저장소가 다루는 전극의 질량이 아니다.  거절이지 추정이 아니므로 §0.4 에
+ * 어긋나지 않는다 -- 못 읽으면 힌트가 안 뜰 뿐이고, 사람이 칸에 적으면 된다.
+ */
+const MASS_G = /(?:^|[\s_\-([])(\d+(?:\.\d+)?)\s*g(?![a-z0-9])/gi
+
+/** g 로 적힌 값이 전극 질량으로 말이 되는 범위 (g).  0.1 mg ~ 5 g.
+ *
+ * 이 랩이 실제로 쓰는 값은 0.3 mg ~ 176 mg 이다.  넉넉하게 잡되 `811g` 나
+ * `2024g` 같은 이름 조각은 확실히 떨어지는 자리에 뒀다. */
+const G_RANGE = { min: 0.0001, max: 5 } as const
+
+/** 이름이 말하는 질량 -- mg 로 환산한 값과, 이름에 **적힌 그대로**.
+ *
+ * 이 랩은 파일 이름 끝에 전극 질량을 적는다 (`..._4.6V_1_17.5mg`, 그리고
+ * 사람에 따라 `..._0.0175g`).  그 숫자는 `.wrd` 가 모르는 유일한 값이라
+ * (ADR 0003) 손으로 넣어야 하는데, 옆에 이름이 말하는 값을 적어 두면 오타가
+ * 모든 mAh/g 를 조용히 바꾸기 전에 눈에 걸린다.
+ *
+ * 적힌 그대로를 함께 내는 이유는 **환산이 보이지 않으면 힌트가 거짓말처럼
+ * 보이기 때문**이다: 이름에 `0.0175g` 라고 썼는데 화면이 `17.5mg` 만 보여
+ * 주면, 어디서 온 수인지 모르는 사람은 그것을 다른 값으로 읽는다.
+ *
+ * 마지막 것이 이긴다 -- 이름이 질량을 둘 말하면 전극 자신의 것이 뒤에 온다.
+ * mg 와 g 를 함께 훑고 **위치로** 고르므로, 어느 단위로 적었든 규칙이 같다.
+ */
+export function massHintFromName(
+  name: string | null | undefined,
+): { mg: number; wrote: string } | null {
   if (!name) return null
-  let found: number | null = null
-  // 두께와 같은 이유로 `\b` 를 쓰지 않는다: `17.5mg_2` 의 `mg` 뒤는 밑줄이고,
-  // 밑줄은 단어 문자라 경계가 아니다.
-  // 앞 경계도 본다 (리뷰 #33): `17,5mg` 나 `1e-3mg` 처럼 지원하지 않는
-  // 표기의 **꼬리만** 떼어 5, 3 을 힌트로 보여 주면, 진짜 근거처럼 읽힌다.
-  // 숫자 토큰 앞이 소수점·쉼표·지수·부호·숫자면 통째로 못 읽은 것이다.
-  for (const match of name.matchAll(/(?<![\d.,eE+-])(\d+(?:\.\d+)?)\s*mg(?![a-z0-9])/gi)) {
-    const value = Number(match[1])
-    if (Number.isFinite(value) && value > 0) found = value
+  const hits: { mg: number; wrote: string; at: number }[] = []
+  const take = (mg: number, wrote: string, at: number) => {
+    if (Number.isFinite(mg) && mg > 0) hits.push({ mg, wrote, at })
   }
-  return found
+  for (const match of name.matchAll(MASS_MG)) {
+    take(Number(match[1]), `${match[1]} mg`, match.index ?? 0)
+  }
+  for (const match of name.matchAll(MASS_G)) {
+    const grams = Number(match[1])
+    if (!(grams >= G_RANGE.min && grams <= G_RANGE.max)) continue
+    // 0.0175 * 1000 이 17.499999999999996 로 나오는 자리다.  힌트가 오타를
+    // 잡으라고 있는 것인데 힌트 자신이 지저분하면 그 일을 못 한다.
+    take(Number((grams * 1000).toPrecision(12)), `${match[1]} g`, match.index ?? 0)
+  }
+  if (!hits.length) return null
+  // 두 단위를 따로 훑었으므로 **위치로** 고른다 -- 훑은 순서로 고르면 g 로
+  // 적은 값이 늘 이기고, "마지막 것이 이긴다" 가 단위마다 달라진다.
+  const last = hits.reduce((best, hit) => (hit.at >= best.at ? hit : best))
+  return { mg: last.mg, wrote: last.wrote }
+}
+
+/** The mass written into a cell's name, in mg.  `massHintFromName` 의 숫자만. */
+export function massFromName(name: string | null | undefined): number | null {
+  return massHintFromName(name)?.mg ?? null
 }
 
 /** Thickness the file name mentions, in micrometres.

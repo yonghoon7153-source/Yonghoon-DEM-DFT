@@ -8,7 +8,7 @@
 import { useEffect, useRef, useState } from 'react'
 
 import { api } from '../lib/api'
-import { massFromName, num } from '../lib/format'
+import { massHintFromName, num, plain } from '../lib/format'
 import { ko } from '../lib/i18n'
 import type { Sample } from '../lib/types'
 import { Alert, Field, NumberField } from './ui'
@@ -99,10 +99,10 @@ export function CellSpecPanel({
     setDraft((previous) => ({ ...previous, [key]: value }))
   }
 
-  // 파일 이름이 질량을 들고 다닌다 (`..._4.6V_1_17.5mg`).  .wrd 는 그 값을
-  // 모르므로 손으로 넣어야 하는데, 옆에 이름이 말하는 값을 적어 두면 오타가
-  // 모든 mAh/g 를 조용히 바꾸기 전에 눈에 걸린다.
-  const named = massFromName(sample.name)
+  // 파일 이름이 질량을 들고 다닌다 (`..._4.6V_1_17.5mg`, 또는 `..._0.0175g`).
+  // .wrd 는 그 값을 모르므로 손으로 넣어야 하는데, 옆에 이름이 말하는 값을
+  // 적어 두면 오타가 모든 mAh/g 를 조용히 바꾸기 전에 눈에 걸린다.
+  const named = massHintFromName(sample.name)
 
   return (
     <div className="col">
@@ -112,7 +112,18 @@ export function CellSpecPanel({
         <NumberField
           label="전극 총 질량 (집전체 제외)"
           hint="mg · 이 값에 활물질 wt% 를 곱한다"
-          note={named === null ? undefined : <span title="셀 이름에 적힌 값">#{named}mg</span>}
+          note={named === null ? undefined : (
+            // 이름이 g 로 적었으면 **적힌 그대로**를 함께 보인다.  환산만
+            // 보여 주면 어디서 온 수인지 모르는 사람은 다른 값으로 읽는다.
+            <span title={`셀 이름에 적힌 값: ${named.wrote}`}>
+              {/* `num` 이 아니라 `plain` -- 이름이 17.5 라고 적었으면 힌트도
+                  17.5 여야 한다.  17.50 은 사람이 넣지 않은 정밀도다. */}
+              #{plain(named.mg)}mg
+              {named.wrote.endsWith('g') && !named.wrote.endsWith('mg')
+                ? <span className="faint"> ({named.wrote})</span>
+                : null}
+            </span>
+          )}
           value={draft.total_mass_mg}
           onChange={set('total_mass_mg')}
           min={0}

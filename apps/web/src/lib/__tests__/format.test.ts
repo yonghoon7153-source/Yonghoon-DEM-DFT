@@ -118,6 +118,57 @@ describe('massFromName', () => {
   })
 })
 
+describe('massFromName 의 g 표기 (가드)', () => {
+  it('g 로 적은 질량을 mg 로 환산해 읽는다', () => {
+    expect(massFromName('CAM_LPSCl_4.6V_1_0.0175g')).toBe(17.5)
+    expect(massFromName('cell_0.0003g')).toBe(0.3)
+    expect(massFromName('cell_0.1764 g')).toBe(176.4)
+  })
+
+  it('mg·kg·µg 의 g 를 질량으로 읽지 않는다 — g 앞은 숫자나 공백이어야 한다', () => {
+    expect(massFromName('cell_17.5kg')).toBeNull()
+    expect(massFromName('cell_17.5µg')).toBeNull()
+    expect(massFromName('cell_17.5ug')).toBeNull()
+    // mg 는 mg 규칙이 잡는다 — g 규칙이 아니라.
+    expect(massFromName('cell_17.5mg')).toBe(17.5)
+  })
+
+  it('숫자가 글자에 붙어 있으면 이름의 일부다 — 앞이 구분자여야 한다', () => {
+    // 힌트가 틀리면 있느니만 못하다.  이런 이름은 아무 말도 안 하는 게 맞다.
+    expect(massFromName('NCM811g_cathode')).toBeNull()
+    expect(massFromName('cell_2x3g')).toBeNull()
+  })
+
+  it('뒤에 글자나 숫자가 오면 다른 낱말이다', () => {
+    expect(massFromName('cell_5gr')).toBeNull()
+    expect(massFromName('cell_5g2')).toBeNull()
+    // 밑줄과 끝은 허용한다 — mg 와 같은 이유다.
+    expect(massFromName('cell_0.0175g_repeat')).toBe(17.5)
+  })
+
+  it('전극 질량으로 말이 안 되는 크기는 읽지 않는다', () => {
+    // 위 가드를 다 통과해도 811 g 은 이 저장소가 다루는 전극이 아니다.
+    expect(massFromName('run_811 g_note')).toBeNull()
+    expect(massFromName('run_2024g')).toBeNull()
+    expect(massFromName('blank_0g')).toBeNull()
+    // 경계 -- 0.1 mg 은 읽고, 그 아래는 안 읽는다.
+    expect(massFromName('cell_0.0001g')).toBe(0.1)
+    expect(massFromName('cell_0.00005g')).toBeNull()
+  })
+
+  it('둘을 적었으면 단위와 상관없이 뒤의 것이 이긴다', () => {
+    expect(massFromName('sep_5mg_cathode_0.0175g')).toBe(17.5)
+    expect(massFromName('sep_0.005g_cathode_17.5mg')).toBe(17.5)
+  })
+
+  it('적힌 그대로를 함께 낸다 — 환산만 보이면 다른 값으로 읽힌다', async () => {
+    const { massHintFromName } = await import('../format')
+    expect(massHintFromName('cell_0.0175g')).toEqual({ mg: 17.5, wrote: '0.0175 g' })
+    expect(massHintFromName('cell_17.5mg')).toEqual({ mg: 17.5, wrote: '17.5 mg' })
+    expect(massHintFromName('cell_no_mass')).toBeNull()
+  })
+})
+
 describe('nameFamily', () => {
   it('반복 실험을 하나로 묶는다 — 개체를 가리키는 꼬리만 뗀다', () => {
     expect(nameFamily('4.6V_1_17.5mg')).toBe('4.6V')
