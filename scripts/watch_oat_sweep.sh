@@ -39,9 +39,11 @@ _one() {
   if [ -z "$cur" ]; then echo "  로그 없음 — 아직 시작 안 함"; return; fi
   run=$(basename "$cur" .txt); run=${run#log.}
 
-  #  ⚠ thermo 줄만 고른다: 4열 이상 · 1·2열이 정수 · 마지막 열이 CPU 초.
-  #    (옛 판은 grep -oE 로 잡으려다 실패해 "아직 설정 단계" 라고 오보했다 — 실제 109,000 스텝)
-  read -r step cpus < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; c=$NF}
+  #  ⚠ thermo 줄만 고른다: 4열 이상 · 1·2열이 정수.
+  #    ⚠⚠ CPU 는 **4번째 열 고정**이다 — `$NF` 를 쓰면 안 된다.  단계마다 thermo_style 이
+  #    달라서(`… ke cpu` 4열 / `… ke cpu v_pressMPa` 5열 / `step atoms c_zmax` 3열),
+  #    stabilize 단계에선 마지막 열이 **압력**이고 그게 0 이라 속도·ETA 가 통째로 사라졌다.
+  read -r step cpus < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; c=$4}
                              END{print s, c}' "$cur")
   echo "  현재 런 : $run     ($n_done / $n_all 완료)"
   if [ -n "${step:-}" ]; then
