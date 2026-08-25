@@ -352,12 +352,32 @@
     important** the stiffness value becomes"* + **접촉강성↔벌크강성 선형**(Lommen [81] 구속압축에서도 확인).
     ⇒ 300 MPa 로 잼된 침대에서 **E 는 최대 민감 레버**라는 방향이 전이되고, **우리 MPM 의 "E 가 지배 레버,
     σ_y 아님"** 관측과 부호가 같다.
-  - **⑥ 연화의 *방향*에 문헌 기전이 하나 있다 (배수는 n/a).**  §8 (p.136) **Van Lew et al. [236]** —
-    세라믹 펠릿 42개 E 를 개별 측정해 **Weibull 분포**로 DEM 단축압축에 넣으면 *"the sample with a distribution
-    in Young's modulus showed a **softer response** compared to the sample with a constant Young's modulus"*
-    (+ 파단 입자 비율도 낮아짐).  같은 방향 두 번째 사례 = **Molenda [230]** μ 분포 → 더 무른 응답.
-    ⇒ **불균질을 단일 유효값으로 럼핑하면 그 유효값은 재료값보다 낮아야 한다**는 *방향*만 인용 가능.
-    ⛔ **배수(18×)를 이 문헌으로 정당화 금지** — 두 논문 모두 배수 미보고.
+  - **⑥ 연화의 *방향*에 문헌 기전이 하나 있다.**  §8 (p.136) **Van Lew et al. [236]** ·
+    **Molenda [230]**(μ 분포 → 더 무른 응답, **배수 미보고**).
+    ⚠⚠ **2026-08-25 정정 — Van Lew 1차 출처를 열어 확인했다.  옛 서술 4곳이 드리프트였다.**
+    정정 전문 = **`papers/vanlew2015_modifying_youngs_modulus_distribution.md` §9-c** (요지):
+    · ⛔ *"the sample with a **distribution** … showed a **softer response** … constant Young's modulus"* 는
+      **Van Lew 원문에 없는 문장**이다 (Coetzee 의 패러프레이즈).  **Van Lew 직접인용 금지** —
+      원문의 대응 문장은 *"beds with **smaller** Young's modulus … are more compliant"* = **평균** 얘기다.
+    · ⛔ **"불균질 → 더 무름" 은 Van Lew 가 지지하지 않는다.**  그의 Set B 는 분포를 가지면서 **동시에 평균이
+      1.84× 낮고**, **상수 Ē = 49 GPa 통제군이 없다** ⇒ 분포 효과와 평균 효과가 **원리적으로 분리 불가**.
+      (거시 변형비 **1.37×** 는 순수 평균-E Hertz 예측 **1.50×** 와 **모순이 없다** = 분포 고유효과 증거 0.)
+    · ⚠ **"세라믹 펠릿 42개"** → 측정 대상은 **pebble(구)** 이고 **pellet 은 문헌 기준값(E_bulk)의 형태**다(뒤바뀜);
+      **42 = Li₂TiO₃ 배치**(그림에 나온 것)이고 **DEM 에 들어간 것은 Li₄SiO₄ 31개**(그 분포는 **미게재**).
+    · ⚠ **"Weibull"** 은 맞지만 **Fig 2b 부캡션 딱 1회 · 모수 0개**이고, **본문은 "discrete/experimental",
+      Fig 4 캡션은 "Gaussian"** = **한 논문이 세 이름** ⇒ 단정 인용 금지.
+    · ⚠ **"파단 입자 비율도 낮아짐"** 은 **원문 자신의 과장**이다 — Table 1 의 짝 3쌍 중
+      **1쌍(A.1 = 0.3 vs B.1 = 0.6)이 반대**인데 Abstract 는 *"in all cases"* 라고 쓴다.
+    · ★ **"배수 n/a" 는 상향 정정된다** — Van Lew 는 **90 GPa 와 49 GPa 를 둘 다 stated 로** 주므로
+      **평균 연화 = 1.84× (κ̄ = 0.544)** 가 산술로 나오고, 변형 **1.9 → 2.6 %** 도 stated 다.
+    ⇒ **인용 가능한 명제가 바뀐다**: ~~"불균질 → 무름"~~ → **"실측된 개별 입자의 겉보기 E 가 소결 벌크
+      문헌값보다 낮다 (κ̄ ≈ 0.54, 배치 내 산포 ~7× digitized)"**.  **이쪽이 더 강하고 더 방어된다.**
+    ⛔ **배수(18×)를 이 문헌으로 정당화 금지 — 이유가 바뀌었다**: 미보고라서가 아니라 **보고된 값이
+      1.84× 로 우리 18× 의 1/10 이기 때문**이다.
+    ★ **대신 얻은 것 = 18× 의 분해 서술**: `E_eff = E_bulk × κ_material × κ_model` —
+      κ_material(=실측 대상, 세라믹계에서 **0.4–0.55**) 은 **다른 계에서 측정된 실재 현상**이고,
+      κ_model 은 **재배열·GB 슬라이딩·미세파쇄 럼핑**(frame[2])이라는 **이름 붙은 잔차**다.
+      ⇒ *"설명 없는 18×"* → *"측정 가능한 한 조각 + 명명된 나머지"*.  **방어 등급이 다르다.**
   - **⑦ 응력 규칙 — 우리에게 유리하고 동시에 불리하다.**  리뷰는 응용 응력의 수치를 **거의 명시하지 않는다**
     (`kPa` 유효 0회; "<10 kPa" 는 **논문 stated 가 아니라 우리 추론**).  대신 **응력 의존을 두 번 규정**:
     Li [189] (p.129) *"the parameter and property values are **stress dependent** and the stress levels used
@@ -367,6 +387,51 @@
     → Heckel 4압력을 **적합이 아니라 예측 정확도**로 보고해야 방어된다 (§F 신설 항목 참조).
   - ⛔ **넘지 말 것**: *"Coetzee 가 우리 18× 를 승인한다"* (강성을 **치밀화 목표**에 맞춘 사례는 리뷰에 **0건**) ·
     *"리뷰가 Heckel 을 표준 시험으로 든다"* (`Heckel` **0회**) · 리뷰 안의 **μ·E·COR 수치를 우리 표로 옮기는 것**.
+
+- **★★★ Van Lew 2015 (Fusion Eng. Des. 98–99, 1893, `papers/vanlew2015_modifying_youngs_modulus_distribution.md`) —
+  위 ⑥ 의 1차 출처.  "E_eff 의 출처가 있나" 에 대해 *방향은 주고 크기는 뺏는* 카드.**
+  (⚠ **소재 = 핵융합 블랭킷 세라믹 breeder pebble Li₄SiO₄ / Li₂TiO₃**, 황화물 무관 · **압력 6 MPa**(우리 300 의 1/50) ·
+   **porosity·Heckel 0회** ⇒ **절차와 방향만** 전이, 절대값·배수 전이 **전면 금지**.)
+  - **① 이 논문이 실제로 확립한 것** — "분포가 무르게 한다" 가 아니라 **"입자를 낱개로 재보니 소결 벌크
+    문헌값보다 무르다"** 다.  pebble **73개**(Li₄SiO₄ 31 + Li₂TiO₃ 42)를 앤빌 사이에서 압쇄해 Hertz 식
+    `F = (1/3)E*√(d_p s³)` 을 역으로 피팅, **입자마다** 겉보기 E 를 뽑고 `κ = E_peb/E_bulk` 를 정의한다.
+    · **κ̄ = 49/90 = 0.544 ⇒ 평균 연화 1.84×** (둘 다 stated 수치의 산술).
+    · **배치 내 산포 κ ≈ 0.14 → 1.0 = E 로 ~7×** (Fig 2b digitized, TREND only, Li₂TiO₃ 한정).
+    ⇒ ★ **"단일 E 는 이미 분포의 mean-field 붕괴"** 라는 우리 3층 보고 규약(real / DEM-eff / MPM)이
+    **실측으로 뒷받침**된다.  Coetzee §1(*"DEM 입력 E 는 물성이 아니라 모델 파라미터"*)의 실측판.
+  - **② 우리 18× 에 대한 판정 — 방향 ✅ / 크기 ⛔ / 범주 ⚠.**
+    · 방향: 지지.  · 크기: **1.84× 는 18× 의 1/10**, 배치 내 **최연약 개체(~7×)로도 2.6배 부족**.
+    · ⚠⚠ **범주가 다르다**: 그들 κ = **실제 입자가 실제로 무름**(내부 기공·미세결함 → 겉보기 탄성률 하락)
+      = **물성 측정**.  우리 18× = **강체구 DEM 이 못 하는 재배열/GB-slide/미세파쇄의 럼핑**
+      = **모델 결손 보상**(frame[2]).  **같은 숫자축이라도 같은 양이 아니다 — 한 표에 나란히 놓지 말 것.**
+  - **③ ★ 그래서 얻는 것 = 18× 의 분해.**  `E_eff = E_bulk × κ_material × κ_model`.
+    κ_material 이 **0 이 아니고 세라믹계에서 0.4–0.55** 라는 것이 이 논문의 기여다.
+    ⇒ 원고 서술을 *"24 → 1.35, 18× 연화"* 에서 *"측정 가능한 물성 조각 × 명명된 모델 잔차"* 로 바꿀 수 있다.
+    ⛔ **경계선**: 1.84× 라는 *배수* 를 LPSCl 에 옮겨 적지 말 것 — **존재와 방향만**.
+  - **④ 그들 길(실측 → E)로 갈아탈 수 있나? ⛔ 드롭-인 불가, 이유 3개.**
+    · **영역**: 그들 절차는 **탄성 Hertz 에서만** 정의된다.  Eq.(2) 대수에서 `s = 2δ` 가 확정되므로 그들의
+      실측 겹침은 **δ/d ≤ 1.7 %**(양 배치 동일) — 우리 pure-SE `⟨δ⟩ = 직경의 11–12 %` 의 **1/7**.
+      우리는 그들 검증구간 **밖**에서, 게다가 **소성**으로 돈다.
+    · **크기**: Coetzee 는 직접측정을 *"millimetre and above"*(최소 500 µm)로 기록하는데
+      ★ **Van Lew 의 0.5 mm pebble 이 정확히 그 하한을 실증한다** ⇒ *"the Direct Measuring Approach is not
+      available at our particle scale"*(우리 1–3 µm = **2–3 자릿수 아래**)가 **리뷰 + 1차 사례 두 겹**으로 방어된다.
+    · **검증**: ⛔ **그들 침대는 어떤 실험과도 대조되지 않았다** — 논문이 자인
+      (*"A pebble bed geometry more directly comparable to oedometric compression experiments **should be used
+      to allow direct comparison and validation**"*).  ⇒ 갈아타면 **보정을 잃고 검증을 못 얻는 교환**이다.
+    ⇒ **쓸 자리는 대체가 아니라 분해.**  필요 측정 목록(우리 보유 여부는 미판정) = 카드 §9-b 표:
+      LPSCl **단일입자 압축 F–δ ≥30개** · 개별 직경 · **압자 E·ν 명시**(Van Lew 의 결함을 반복하지 말 것) ·
+      ν_SE(우리 DFT 0.360 ✅) · E_bulk 기준(우리 DFT E_VRH 22.06 ✅ — **Van Lew 가 못 한 출처 명시를 우리는 한다**) ·
+      **소성까지 가는 시험**(탄성 Hertz 피팅 대신 Zunker MDR 계열 접촉모델 피팅).
+  - **⑤ ⚠ 이 논문 자체의 결함이 많다 — 인용 전 카드 §12 (15개 목록) 필독.**  특히:
+    **Abstract 의 *"in all cases … fewer predicted crushed pebbles"* 가 자기 Table 1 에 반증**(A.1 0.3 < B.1 0.6,
+    독립 추출기 2개로 확인) · **상수 Ē 통제군 부재** · **분포 이름이 셋(discrete/Weibull/Gaussian), 모수 0개** ·
+    **DEM 이 쓴 Li₄SiO₄ 분포는 미게재** · **ν·앤빌 E 미보고 ⇒ κ 재현 불가** · **DEM 코드명 없음** ·
+    **침대 기하가 산술 모순**(8000 입자 / 40×30×20 R_p³ ⇒ φ = **1.40 > 1**) · **시드 1개, 오차막대 0** ·
+    **침대 검증 0** · **습도 비제어인데 κ 산포를 전적으로 "미세구조"에 귀속**(리튬 세라믹 = 흡습성).
+  - **⑥ 이 논문이 A 축(압밀/porosity)에 주는 데이터: 없다.**  `porosity`·`Heckel`·상대밀도 **0회**,
+    압력 **6 MPa 단일점**, 침대 기하 모순으로 **packing fraction 재구성조차 불가**.
+    ⇒ *"E-강성이 porosity floor 를 정한다"* 축의 정량은 계속 **Varkey(halide E 10.58 → floor 21/37 %)** 가 소유한다.
+    여기 있는 것은 **E 를 어떻게 정하느냐의 방법론**뿐이다.
 
 - **★★★ Zunker & Kamrin 3부작 (2026-08-25 신설) — 우리 18× 연화의 가장 강한 반례 후보**
   (digest `papers/zunker2024_mdr_contact_model_partI.md` · `papers/zunker2024_bulk_elastic_partII.md` ·
@@ -1477,6 +1542,36 @@
     충돌 점검 대상: `--sigma-am-e`(voxel) · `--cam nca` 프리셋 · coating 프리셋.
   - ⚠ **선행 조건**: 위 §B 의 **σ_AM 감도 프로브**가 먼저다.  비(ratio)가 σ_AM 에 둔감하다는 것이
     확인돼야 "SOC 축 추가가 상대비교 결론을 흔들지 않는다"고 쓸 수 있다.
+
+- **★★ F-V1 · 우리 E-보정은 *거시 평균*에 맞췄고, 파단이 사는 *힘의 꼬리*는 고정하지 못한다**
+  (2026-08-25 신설, `papers/vanlew2015_modifying_youngs_modulus_distribution.md` §6.2·§11-②).
+  Van Lew 의 7침대 실측이 이 분업을 깨끗하게 보여준다:
+  · **거시 응력–변형은 E 가 지배** — *"the **largest contributor** to stress–strain response is the Young's
+    modulus.  The coefficient of friction and radius distribution had comparatively **insignificant** influence."*
+  · **그러나 접촉력 분포의 *본체*는 7침대 전부 겹치고**(*"the majority of the contacts in all the beds are
+    **equally small**"*), **갈리는 것은 꼬리뿐**이며 **그 꼬리는 μ 가 지배한다**
+    (*"higher coefficients of friction generally have **higher peak contact forces**"*).
+  ⇒ **우리는 E_eff 를 porosity(거시 평균)에 맞췄다 ⇒ 그 보정은 꼬리를 고정하지 않는다.**
+     그런데 우리 **Auerbach 취성 · fracture-aware Holm(f_intact)** 은 전부 **꼬리 사건**이다.
+  → **실행**: `f_broken@300 = f(μ_pp, μ_pw, COR)` at E_eff 고정 OAT 1장.
+     ★ **F-C1 의 `ε@300` OAT 와 같은 런에서 동시에 뽑힌다** — 비용 공유, 별도 런 불필요.
+
+- **★★ F-V2 · 연화가 파단 *문턱*까지 내리는가 — 감사되지 않은 부작용 후보 (사전등록 대상).**
+  Van Lew Eq.(7): 랩 압쇄 변형에너지를 침대 접촉에 이전하면 **임계력 `F_c = C·(E*)^{2/5}(R*)^{1/5}(W_ε,l)^{3/5}`**,
+  즉 **F_c ∝ E^{2/5}** 다.  ⇒ **E 를 낮추면 접촉력만 내려가는 게 아니라 압쇄 문턱도 같이 내려간다**
+  (그들 1.84× 연화 → 문턱 **−21 %**).  ★ **논문은 이 역효과를 인지하지 못했고, 그 결과 자기 Table 1 에서
+  한 쌍이 뒤집혔다**(A.1 0.3 < B.1 0.6, 하필 최저마찰·단분산 기준 케이스 — 카드 §5.3 이 이것을
+  "꼬리 삭감 vs 문턱 하락의 경합"으로 설명한다).
+  → **우리 질문 (미확인)**: 우리 **Auerbach 임계하중이 E_SE 에 의존하는가?**  일반적으로 cone-crack
+    임계하중은 E 를 통과한다.  의존한다면 **18× 연화가 파단 예측에 감사되지 않은 부작용**을 남기고 있다.
+  → **판정 설계**: E_SE ∈ {1.35, 2.0, 24} pure-SE 침대에서 **접촉력 분포**와 **f_broken** 을 **따로** 찍어
+    *"힘이 줄어서"* 인지 *"문턱이 내려가서"* 인지 **분리**한다.  ⚠ 방향 예상이 갈리므로 **런 전 사전등록**할 것.
+
+- **★ F-V3 · 강도(strength)에 분포를 주지 않고 있다.**  Van Lew 는 **E 뿐 아니라 압쇄강도(W_ε,l)도
+  입자마다 실측 분포에서 무작위 배정**한다.  세라믹 파단의 정본 통계는 Weibull 이므로 방향은 물리적으로 옳다.
+  우리 AM/SE 파쇄 판정은 (확인 필요) 결정론적 문턱으로 보인다.
+  ⚠ **선행조건 = NMC811 / LPSCl 단일입자 압쇄강도 *분포* 실측.**  없으면 §F1 훅만 — 값 날조 금지.
+  ⚠ 또한 Van Lew 자신은 **W_ε,l 분포의 모수를 하나도 보고하지 않는다** ⇒ 그의 수치를 빌려올 수도 없다.
 
 - **★★★ 보정 규범 미충족 4건 — Coetzee 2017 기준 (2026-08-25 신설, `papers/coetzee2017_dem_calibration_review.md`).**
   리뷰가 요구하는 것 중 **우리가 아직 못 한 것**만 모았다.  §A 의 Coetzee 항목(우리에게 유리한 쪽)과 짝이다.

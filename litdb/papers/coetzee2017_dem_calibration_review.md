@@ -258,6 +258,22 @@ Table 3 (p.137, "micro-macro relations investigated") 에는 **`Confined bulk st
   **더 무르고**(asymptote 도달 변형 0.003 → 0.03) 평균은 같다.
   ⇒ **"불균질성 → 거시적으로 더 무름"** 은 리뷰가 두 독립 사례로 기록한 방향이다.  단일 유효 E 로 럼핑하면
   그 유효값은 재료 E 보다 **낮아야** 한다는 *방향*의 문헌 근거.  ⚠ **크기(배수)는 n/a** — 두 논문 모두 배수 미보고.
+  ⚠⚠ **2026-08-25 — Van Lew [236] 1차 출처 대조 완료.  위 요약(= 리뷰가 전한 그대로)에 4건의 드리프트가 있다.**
+  정본 = **`vanlew2015_modifying_youngs_modulus_distribution.md` §9-c**.  요지만:
+  ① 인용문은 **Van Lew 원문에 없다**(Coetzee 의 패러프레이즈) → **Van Lew 직접인용 금지**, 원문 대응은
+     *"beds with **smaller** Young's modulus … are more compliant"* = **평균** 얘기.
+  ② **"불균질 → 무름" 을 Van Lew 는 지지하지 않는다** — 그의 분포 침대는 **평균도 1.84× 낮고
+     상수-Ē 통제군이 없다** ⇒ 분포 효과와 평균 효과 **분리 불가**.
+  ③ **"세라믹 펠릿 42개"** → **pebble(구)** 이고 **pellet 은 기준값의 형태**(뒤바뀜); 42 = **Li₂TiO₃** 배치이며
+     **DEM 에 들어간 것은 Li₄SiO₄ 31개**(그 분포는 논문에 **미게재**).
+  ④ **"Weibull"** 은 사실이나 **Fig 2b 부캡션 1회·모수 0개**이고 본문은 "discrete/experimental",
+     Fig 4 캡션은 "Gaussian" = **한 논문이 세 이름**.
+  ⑤ **"파단 입자 비율이 더 낮았다"** 는 **원문 자신의 과장** — Table 1 의 짝 3쌍 중 **1쌍이 반대**다.
+  ★ 반대로 **"배수 n/a" 는 상향 정정**된다: Van Lew 는 90 GPa 와 49 GPa 를 **둘 다 stated** 로 주므로
+     **평균 연화 1.84×** 가 산술로 나온다 — 그리고 그것이 **우리 18× 의 1/10** 임을 정량한다.
+  ⚠ **Molenda [230] 은 여전히 배수 미보고**이므로 그쪽에 대한 "n/a" 는 유효하다.
+  ⚠ 이 리뷰 자체의 책임은 아니다 — §13 이 이미 *"절대값을 원고에 쓰려면 **1차 출처 확인이 필수**"* 라고
+     적어 두었고, 이 대조가 정확히 그 규율의 실행 결과다.
 - ★ 반대 방향 경고 1건 — **Ng & Asce [193]**(삼축, p.130): 입자 강성을 아주 넓게 바꿔도 **초기 벌크 영률과
   체적변형이 유의하게 안 변했다**.  기전: *"**Decreasing the particle stiffness resulted in a higher coordination
   number** and these two effects balanced each other in such a way that the bulk elastic modulus remained
@@ -644,7 +660,10 @@ approach for each DEM parameter"**(p.134).  즉 *같은 파라미터라도 어�
 - 자연재의 **최소 형상 종수**: Stahl & Konietzky 6종이면 자갈 벌크밀도 양호; Coetzee 10종; 종수↑ → 오차↓.
 - **PSD 선택**: Smith et al. [137] — 계산비·재현성·정확도 절충으로 **균등분포 2.5–10 mm** 가 최선,
   범위가 좁아 log-normal 보다 나았다.
-- **파라미터의 분포**(위 Q2(c)): Van Lew [236] Weibull-E → 더 무른 응답 · 파단 입자 감소;
+- **파라미터의 분포**(위 Q2(c)): Van Lew [236] Weibull-E → 더 무른 응답 · 파단 입자 감소
+  — ⚠ **리뷰의 요약이며 1차 출처와 어긋난다** (§Q2(c) 정정 배너 · 정본
+  `vanlew2015_modifying_youngs_modulus_distribution.md`): 원문은 **평균 E 도 1.84× 낮춰** 분포 효과를
+  분리하지 못하고, **"파단 감소"는 원문 Table 1 이 3쌍 중 1쌍에서 반증**한다;
   Molenda [230] μ 분포 → 더 무른 응답(완두 μ̄ 0.29, sd 0.09);
   Wang [221] E·COR 이 알갱이 형상별로도, **같은 알갱이의 위치별로도** 다름;
   Hastie [223] — 값 하나를 정하기보다 **변동에 대한 민감도 해석**을 하라.
@@ -836,9 +855,14 @@ Li [189]/Franco [196] 규칙(보정 응력 = 응용 응력)을 300 MPa 에서는
 2. **보정 응력 = 응용 응력** (300 MPa).  리뷰의 명시 요구 충족.
 3. **크기 스케일업 없음.**  리뷰가 §3.2 전체를 할애한 최대 오류원이 우리에겐 없다.
 4. **3층 물성 보고**(real / DEM-eff / MPM) — 리뷰가 §1 에서 "문헌이 흔히 안 한다"고 지적한 바로 그 구분.
-5. **연화의 *방향*에 문헌 기전이 있다** — Van Lew [236](E 분포 → 더 무른 거시응답) + Molenda [230](μ 분포 → 더 무름).
-   ⚠ **배수는 n/a** (두 논문 모두 미보고) → *"직접 측정된 E 분포를 단일 유효값으로 럼핑하면 그 유효값은
-   재료 E 보다 낮아야 한다"* 까지만 인용 가능.
+5. **연화의 *방향*에 문헌 기전이 있다** — Van Lew [236] + Molenda [230](μ 분포 → 더 무름, **배수 미보고**).
+   ⚠⚠ **2026-08-25 정정 (Van Lew 1차 출처 대조 — `vanlew2015_modifying_youngs_modulus_distribution.md` §9-c)**:
+   ~~"E 분포 → 더 무른 거시응답"~~ 은 **Van Lew 가 분리하지 못한 명제**다 (분포 침대의 **평균도 1.84× 낮고
+   상수-Ē 통제군이 없다**).  **인용 가능한 형태로 바꿀 것** → *"단일입자 압쇄 실측에서 **개별 입자의 겉보기 E 가
+   소결 벌크 문헌값보다 낮다** (κ̄ = E_peb/E_bulk ≈ 0.54, 배치 내 산포 ~7× digitized)"* — **이쪽이 더 강하다.**
+   ★ **"배수 n/a" 도 Van Lew 에 한해 상향 정정**: **1.84× (90 → 49 GPa, 둘 다 stated)**.
+   ⛔ 그리고 그 값이 **우리 18× 의 1/10** 이므로 **이 문헌으로 18× 를 정당화할 수 없다** —
+   근거는 "미보고"가 아니라 **"보고된 값이 10배 부족"** 으로 바뀐다.
 6. **접촉법칙 계열의 유일한 head-to-head 에서 이력 모델이 이겼다** — Ucgul [136]: Walton–Braun 이력 spring >
    Hertz (토양-공구).  ⚠ n=1, 토양, 저응력 → **"유리한 단일 사례"** 이상으로 쓰지 말 것.
 7. **σ 삼중항·Stage-E·MPM 형상소성**은 리뷰의 지도에 **칸 자체가 없다** = 우리 고유 (frame[5]).
@@ -904,13 +928,24 @@ Li [189]/Franco [196] 규칙(보정 응력 = 응용 응력)을 300 MPa 에서는
    > as the physical material."*
 9. **코드 의존성** — p.105 / p.138:
    > *"…the calibrated parameter values might be code dependent."* / *"…might be software and contact model dependent."*
-10. **불균질성 → 더 무른 거시응답 (연화의 *방향*)** — p.136, Van Lew et al. [236] 요약:
+10. ⚠⚠ **[사용 중지 → 대체] 불균질성 → 더 무른 거시응답** — p.136, Van Lew et al. [236] 요약:
     > *"…the sample with a distribution in Young's modulus showed a softer response compared to the sample
     > with a constant Young's modulus."*
+    **2026-08-25 1차 출처 대조 결과 이 문장을 원고에 쓰지 않는다.**
+    (전문 = `vanlew2015_modifying_youngs_modulus_distribution.md` §9-c)
+    · 이 문장은 **Van Lew 원문에 존재하지 않는다** — Coetzee 의 패러프레이즈다.
+    · Van Lew 의 "distribution" 침대는 **평균 E 도 1.84× 낮고**(90 → 49 GPa) **상수-Ē 통제군이 없어**
+      *분포 효과*와 *평균 효과*를 **분리하지 못한다**.  ⇒ 원문이 지지하는 명제가 아니다.
+    ✅ **대체 문장 (1차 출처 직접인용 가능, 더 강함)** — Van Lew §5:
+    > *"…values of Young's modulii used in numerical models are taken from values measured for
+    > **large sintered pellets** of ceramic materials."*
+    + 실측 결론: **κ̄ = E_peb/E_bulk ≈ 0.54 (1.84× 연화), 배치 내 산포 ~7× (digitized)**.
 
 ⚠ 위 1–9 는 **리뷰 저자 Coetzee 자신의 서술**(인용 시 Coetzee 2017).
-10 은 **리뷰가 요약한 1차 출처**(Van Lew et al., Fusion Eng. Des. 98-99 (2015) 1893) → 인용은
-*"as summarised by Coetzee (2017)"* 또는 1차 출처 직접 확인 후.
+10 은 **리뷰가 요약한 1차 출처**(Van Lew et al., Fusion Eng. Des. 98-99 (2015) 1893) → **1차 출처 확인 완료
+(2026-08-25) 결과 재인용에 드리프트가 있었다** ⇒ *"as summarised by Coetzee (2017)"* 로도 쓰지 말고
+**위 대체 문장으로 교체**할 것.  ★ 이 사례가 §13 의 *"절대값을 원고에 쓰려면 1차 출처 확인이 필수"* 규율이
+**추상적 원칙이 아니라 실측된 오류율**임을 보여주는 리뷰 자신의 첫 사례다.
 
 ---
 

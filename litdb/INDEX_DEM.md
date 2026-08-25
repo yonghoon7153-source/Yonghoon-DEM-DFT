@@ -2,7 +2,7 @@
 
 > **이 파일은 `tools/litdb/build_index.py` 가 생성한다 — 손으로 고치지 말 것.**
 > 논평·우선순위가 붙는 SE 축 인덱스는 `INDEX.md` (사람이 큐레이션).
-> digest 110편 · 생성 2026-08-25
+> digest 112편 · 생성 2026-08-25
 
 왜 따로 두나 — `INDEX.md` 는 argyrodite 전해질 축이라 접촉역학·MPM·건식전극
 digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱스에도 없었다**
@@ -20,7 +20,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `pycompact2025_dem_mpfem_workflow` | PyCompact — LIGGGHTS DEM → MPFEM(OpenRadioss) 분말압축 오픈소스 워크플로 ★★ 우리 DEM→MPM scaffold 인계의 독립 선례 (인계 시점은 정반대) — Mohammadhosseinzadeh (SoftwareX 2026) | DEM+MPFEM (workflow/software) | 2026-08-25 | — |
 | `stomakhin2013_mpm_snow_elastoplastic` | 눈(snow) 시뮬레이션을 위한 Material Point Method — Stomakhin (ACM TOG 2013, SIGGRAPH) | MPM | 2026-06-26 | 🖼 12 |
 
-## 접촉역학 · 소성 (DEM 이론) (26편)
+## 접촉역학 · 소성 (DEM 이론) (27편)
 
 | slug | 논문 | 유형 | digest | 그림 |
 |---|---|---|---|---|
@@ -46,6 +46,7 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `storakers1997_similarity_inelastic_contact` | 비탄성 접촉의 자기상사(similarity) 해석 — Storåkers, Biwa & Larsson (Int. J. Solids Struct. 1997) | continuum (self-similar inelastic single/pair contact theory | 2026-06-26 | 🖼 5 |
 | `thakur2014_eepa_adhesive_elastoplastic_dem` | EEPA 점착 탄소성 접촉모델 (면적의존 점착) — 응집 분말의 미시역학 — Thakur (Granular Matter 2014) | DEM (contact-LAW theory + uniaxial calibration) | 2026-06-26 | 🖼 22 |
 | `thorntonning1998_adhesive_elastoplastic_contact` | 점착 탄소성 구의 stick/bounce — 항복압 캡(p_y) 접촉 LAW의 정의서 — Thornton & Ning (Powder Technology 1998) | DEM (contact-LAW theory) | 2026-06-26 | 🖼 7 |
+| `vanlew2015_modifying_youngs_modulus_distribution` | 단일 pebble 압쇄실험의 E 분포로 DEM 입자별 Young률을 수정 (Hertz 접촉) — Van Lew (Fusion Eng. Des. 2015) | DEM (Hertz 접촉 + 단일입자 압쇄실험 → 입자별 E) | 2026-08-25 | 🖼 5 |
 | `varkey2026_multicontact_elastoplastic_dem` | 응력기반 multi-contact 탄소성 모델로 SE separator·양극 압밀 DEM — Varkey (Adv. Powder Tech. 2026) | DEM | 2026-06-23 | — |
 | `zunker2024_bulk_elastic_partII` | 벌크탄성 구간 — 점착 탄소성 입자의 접촉모델 Part II (A mechanically-derived contact model for adhesive elastic-perfectly plastic particles, Part II: Contact under high compaction—modeling a bulk ela | contact-mechanics theory (bulk-elastic 추가) + FEM(Abaqus 3D)  | 2026-08-25 | — |
 | `zunker2024_mdr_contact_model_partI` | 층(2.75) 발견 — 점착 탄소성 입자의 역학적으로 유도된 접촉모델, Part I: 차원축소법(MDR) — Zunker & Kamrin (J. Mech. Phys. Solids 2024) | contact-mechanics theory (MDR) + FEM(Abaqus) 검증 | 2026-08-25 | — |
