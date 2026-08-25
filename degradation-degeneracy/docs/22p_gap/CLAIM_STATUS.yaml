@@ -30,7 +30,18 @@
 #   "두 오류가 동시에 ~1%" 와 "판정선을 어디에 두든" 이 각각 배너가 명시적으로
 #   **유지**한다고 적은 문장과 정반대 주장을 잡았다. 원장이 참인 문장을 금지하면
 #   문서를 거짓으로 만든다 — 금지어를 넣기 전에 그 배너가 무엇을 유지하는지 읽어라.
-schema_version: 2
+schema_version: 3
+
+# ── protocol 세대의 닫힌 집합 (★ 26차 P2-11) ─────────────────────────────
+# 왜: 초판 회귀는 role 의 `protocol_generation` 을 claim 의 것과 대조하지
+#   않았다. `v6_prep` 을 `v999` 로 바꿔도 통과했다. 세대를 여기 못 박고,
+#   role 의 세대가 claim 의 세대와 다르면 **명시적 compatibility** 를
+#   요구한다 (한 다리가 옛 세대 claim 에는 canonical, 새 세대 claim 에는
+#   diagnostic 일 수 있으므로 단일 equality 는 틀렸다).
+protocol_generations:
+  - v5          # 옛 fixed-budget / no-warm 세대
+  - v6_prep     # 현행 digest 의 warm-probe 준비 실행
+  - v6          # 단계 3 (아직 산출물 없음)
 
 # ── 활성 주장 원장 (★ 25차 발견 6) ─────────────────────────────────────────
 # 왜 여기 있나: `LEG_PRESERVATION.yaml` 의 `claim_roles` 가 자유문장이라

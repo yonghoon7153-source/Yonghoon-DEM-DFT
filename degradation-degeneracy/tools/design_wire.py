@@ -59,8 +59,111 @@ EXCLUDED_FROM_PAIR_ID: dict[str, str] = {
 }
 
 
+#: ★ 26차 P1-8 — source 마다 **다른** provenance 가 필요하다 (계약 §4.2).
+#:   초판은 source enum 만 보고 임의 dict 를 그대로 해시했다. golden 도 셋 다
+#:   같은 placeholder `{"i": 0}` 을 썼으므로 "candidate provenance 를 고정했다"
+#:   는 말이 성립하지 않았다. 닫힌 schema 로 만든다 — 남거나 모자라면 거부.
+CANDIDATE_PAYLOAD_SCHEMA: dict[str, dict[str, str]] = {
+    "base_init": {
+        "base_coord_sha256": "hex64",       # base 좌표의 exact-bytes digest
+    },
+    "warm": {
+        "provider_objective": "str",        # 어느 목적함수가 seed 를 줬는가
+        "provider_artifact_sha256": "hex64",
+        "solution_map_sha256": "hex64",
+    },
+    "random": {
+        "bank_index": "int",               # unit cube bank 의 행
+        "unit_cube_bytes_sha256": "hex64",
+    },
+}
+
+
 class WireError(ValueError):
     """wire schema 위반. 조용히 넘어가지 않는다."""
+
+
+def _is_hex64(v) -> bool:
+    return (isinstance(v, str) and len(v) == 64
+            and all(c in "0123456789abcdef" for c in v))
+
+
+def assert_wire_safe(obj, path: str = "$") -> None:
+    """wire 에 실을 수 있는 형태인가 — **재귀적으로** 본다.
+
+    ★ 26차 P1-8 — 공통 serializer 가 좌표 **밖**의 이진 float 를 그대로
+      받았다. 좌표만 막아 봐야 payload 로 들어오면 같은 문제다.
+    """
+    if isinstance(obj, bool) or obj is None or isinstance(obj, (int, str)):
+        return
+    if isinstance(obj, float):
+        raise WireError(f"{path}: wire 에 이진 부동소수를 넣을 수 없다 ({obj!r})")
+    if isinstance(obj, (list, tuple)):
+        for i, v in enumerate(obj):
+            assert_wire_safe(v, f"{path}[{i}]")
+        return
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            if not isinstance(k, str):
+                raise WireError(f"{path}: dict 키가 문자열이 아니다 ({k!r})")
+            assert_wire_safe(v, f"{path}.{k}")
+        return
+    raise WireError(f"{path}: wire 에 실을 수 없는 타입 {type(obj).__name__}")
+
+
+def check_candidate_payload(source: str, payload) -> list[str]:
+    """source 별 **닫힌** schema. 키가 남거나 모자라면 거부한다."""
+    spec = CANDIDATE_PAYLOAD_SCHEMA.get(source)
+    if spec is None:
+        return [f"모르는 restart source: {source!r}"]
+    if not isinstance(payload, dict):
+        return [f"payload 가 dict 가 아니다: {type(payload).__name__}"]
+    bad = []
+    for k in sorted(set(payload) - set(spec)):
+        bad.append(f"schema 에 없는 키: {k}")
+    for k, kind in sorted(spec.items()):
+        if k not in payload:
+            bad.append(f"필수 키 없음: {k}")
+            continue
+        v = payload[k]
+        if kind == "hex64" and not _is_hex64(v):
+            bad.append(f"{k}: 64-hex 가 아니다 ({v!r})")
+        elif kind == "int" and (isinstance(v, bool) or not isinstance(v, int)):
+            bad.append(f"{k}: 정수가 아니다 ({v!r})")
+        elif kind == "str" and (not isinstance(v, str) or not v):
+            bad.append(f"{k}: 비어 있지 않은 문자열이어야 한다 ({v!r})")
+    return bad
+
+
+def decimal_from_float(x: float, places: int) -> str:
+    """float 좌표 → **정확한 십진 문자열**. 왕복하지 않으면 거부한다.
+
+    ★ 26차 P1-8 — `src/grid.py` 의 `Condition` 은 float 다. 그것을 wire 로
+      옮기는 다리가 없으면 ID 체계가 실제 격자와 결속되지 않는다. 다만 조용히
+      반올림하면 **다른 조건이 같은 ID 로 합쳐질 수 있다.** 그래서 변환 뒤
+      `float(s) == x` 를 확인하고, 어긋나면 실패한다 — 자릿수를 올리든 격자를
+      고치든 사람이 결정하게 만든다.
+    """
+    if isinstance(x, bool) or not isinstance(x, (int, float)):
+        raise WireError(f"좌표가 수가 아니다: {x!r}")
+    s = _canon_decimal(f"{float(x):.{int(places)}f}")
+    if float(s) != float(x):
+        raise WireError(
+            f"{x!r} 을 {places}자리 십진으로 왕복시키지 못했다 (얻은 값 {s!r}). "
+            "조용히 반올림하면 다른 조건이 같은 ID 로 합쳐진다 — "
+            "`decimal_places` 를 올리거나 격자 값을 고쳐라")
+    return s
+
+
+def coords_from_condition(cond, places: int) -> dict:
+    """`src.grid.Condition` → wire 좌표. 제외 축(noise·seed)은 담지 않는다."""
+    return {
+        "lli": decimal_from_float(cond.lli, places),
+        "lam_pe": decimal_from_float(cond.lam_pe, places),
+        "lam_ne": decimal_from_float(cond.lam_ne, places),
+        "lam_pe_type": cond.lam_pe_type,
+        "lam_ne_type": cond.lam_ne_type,
+    }
 
 
 def _check_decimal(name: str, v) -> str:
@@ -106,8 +209,14 @@ def canonical_design_spec(*, label: str, arms: list[str],
                           objective_plan: list[str],
                           bank_generator: str, bank_version: str,
                           seed_derivation: str, dtype: str, endian: str,
-                          coordinate_unit: str) -> dict:
-    """계약 §4.2 표의 최소 구성. 빠진 항목이 있으면 만들 수 없다."""
+                          coordinate_unit: str, decimal_places: int = 12) -> dict:
+    """계약 §4.2 표의 최소 구성. 빠진 항목이 있으면 만들 수 없다.
+
+    ★ 26차 P1-7 — `label` 은 **hash 에 들어가지 않는다.** 계약 §4.2 가
+      `pairing_design_label`(사람용)과 `pairing_design_sha256`(정본)을 나누라고
+      했는데 초판은 label 을 해시 대상 dict 안에 넣었다. 그러면 뜻이 같은
+      설계의 별칭만 바꿔도 모든 pair ID 가 바뀐다.
+    """
     unknown = [a for a in arms if a not in ARM_REGISTRY]
     if unknown:
         raise WireError(f"등록되지 않은 arm: {unknown} (registry: {sorted(ARM_REGISTRY)})")
@@ -120,11 +229,13 @@ def canonical_design_spec(*, label: str, arms: list[str],
 
     return {
         "schema": SCHEMA,
-        "label": label,                     # 사람용 별칭 — 정본은 digest
+        # ★ `label` 은 여기 없다 — 사람용 별칭은 hash 밖이다 (P1-7).
+        #   `design_label()` 로 따로 들고 다닌다.
         "coordinate": {
             "unit": coordinate_unit,
             "representation": "exact_decimal_string",
             "binary_float_allowed": False,
+            "decimal_places": int(decimal_places),
         },
         "arms": {a: dict(ARM_REGISTRY[a], arm_id=a) for a in sorted(arms)},
         "excluded_from_pair_id": dict(EXCLUDED_FROM_PAIR_ID),
@@ -145,13 +256,22 @@ def canonical_design_spec(*, label: str, arms: list[str],
             "separators": [",", ":"],
             "trailing_newline": False,
             "nan_inf": "forbidden",
+            "binary_float": "forbidden",
+            "dict_keys": "string_only",
+            "unicode": "nfc_utf8_no_escape",
         },
+        "candidate_payload_schema": {k: dict(v)
+                                     for k, v in CANDIDATE_PAYLOAD_SCHEMA.items()},
     }
 
 
 def pairing_design_sha256(spec: dict) -> str:
     if spec.get("schema") != SCHEMA:
         raise WireError(f"schema 가 {SCHEMA} 가 아니다: {spec.get('schema')!r}")
+    if "label" in spec:
+        raise WireError("label 은 hash 대상이 아니다 — 별칭을 바꾸면 모든 "
+                        "pair ID 가 바뀐다 (계약 §4.2 / 26차 P1-7)")
+    assert_wire_safe(spec)
     return digest(spec)
 
 
@@ -190,14 +310,21 @@ def bank_id(pair_group: str, bank_version: str, unit_cube_bank_sha: str) -> str:
 
 def candidate_id(bank: str, exact_bounds_sha: str, source: str,
                  source_payload: dict) -> str:
-    if source not in ("base_init", "warm", "random"):
-        raise WireError(f"모르는 restart source: {source!r}")
-    return digest({"schema": "candidate/v1", "bank_id": bank,
+    """source 별 **닫힌** provenance schema 를 강제한다 (계약 §4.2 / P1-8)."""
+    if not _is_hex64(bank) or not _is_hex64(exact_bounds_sha):
+        raise WireError("bank_id·exact_bounds_sha256 는 64-hex 여야 한다")
+    bad = check_candidate_payload(source, source_payload)
+    if bad:
+        raise WireError(f"{source} payload: " + "; ".join(bad))
+    assert_wire_safe(source_payload)
+    return digest({"schema": "candidate/v2", "bank_id": bank,
                    "exact_bounds_sha256": exact_bounds_sha,
                    "source": source, "source_payload": source_payload})
 
 
-__all__ = ["SCHEMA", "ARM_REGISTRY", "EXCLUDED_FROM_PAIR_ID", "WireError",
-           "canonical_design_spec", "pairing_design_sha256",
-           "parameter_order_sha256", "pair_group_id", "bank_id", "candidate_id",
-           "canonical_bytes"]
+__all__ = ["SCHEMA", "ARM_REGISTRY", "EXCLUDED_FROM_PAIR_ID",
+           "CANDIDATE_PAYLOAD_SCHEMA", "WireError", "assert_wire_safe",
+           "check_candidate_payload", "decimal_from_float",
+           "coords_from_condition", "canonical_design_spec",
+           "pairing_design_sha256", "parameter_order_sha256", "pair_group_id",
+           "bank_id", "candidate_id", "canonical_bytes"]

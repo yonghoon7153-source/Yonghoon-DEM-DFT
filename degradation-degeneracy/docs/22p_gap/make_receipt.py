@@ -35,7 +35,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import os
 import platform
 import shutil
 import subprocess
@@ -53,7 +52,13 @@ sys.path.insert(0, str(REPO))          # `tools.` import 보다 **먼저** 와�
 from tools.preserve import canonical_bytes    # noqa: E402
 
 #: 산출 manifest 의 semantic digest 규격. 표현이 바뀌어도 내용이 같으면 같다.
-CANONICALIZER = "score-semantic/v1"
+CANONICALIZER = "score-semantic/v2"
+
+#: 정규 view — 두 summary 를 비교하기 전에 **양쪽에서** 떼는 키.
+#: ★ 26차 P1-6 — 봉인 summary 에는 재채점이 만들 수 없는 실행 메타가 있다
+#:   (`row_projection._SKIP` 과 같은 목록이다). 그것을 남긴 채 해시하면 같은
+#:   과학 내용이 영원히 다른 digest 를 받는다. v1 이 정확히 그 상태였다.
+SEMANTIC_SKIP = ("_채점원본", "_F4_주의")   # 재채점이 만들 수 없는 실행 메타
 
 
 def _row_projection():
@@ -85,6 +90,12 @@ def _plain(o):
     return _plain(item()) if callable(item) else str(o)
 
 
+def _semantic_view(obj):
+    """비교 대상 정규 view. 실행 메타를 떼고 JSON 기본형으로 낮춘다."""
+    return _plain({k: v for k, v in obj.items() if k not in SEMANTIC_SKIP}
+                  if isinstance(obj, dict) else obj)
+
+
 def _semantic(obj) -> str:
     """dict → 정규 직렬화 digest. 키 순서·YAML 표현에 무관하다.
 
@@ -93,7 +104,7 @@ def _semantic(obj) -> str:
       manifest 에 `canonicalizer: score-semantic/v1` 이라고 적었으므로 **한
       버전 라벨이 두 바이트 스트림을 가리켰다.** 정규화는 한 곳이어야 한다.
     """
-    return hashlib.sha256(canonical_bytes(_plain(obj))).hexdigest()
+    return hashlib.sha256(canonical_bytes(_semantic_view(obj))).hexdigest()
 
 
 def _git(*args: str) -> str:
@@ -129,13 +140,13 @@ def build(leg: str) -> dict:
             raise SystemExit(f"✗ empty-root 복원 실패: {res.get('conflict')[:3]}")
         run_dir = Path(res["run_dir"])
 
-        # ── 3. 복원본 검증 — cwd 를 빈 root 로 옮겨 원본에 손이 닿지 않게 ──
-        cwd = Path.cwd()
-        os.chdir(root)
-        try:
-            v = validate_provenance(run_dir)
-        finally:
-            os.chdir(cwd)
+        # ── 3. 복원본 검증 ──────────────────────────────────────────────
+        # ★ 26차 P1-5 — `os.chdir` 로는 검증 root 가 바뀌지 않는다. 검증기는
+        #   cwd 가 아니라 `src/io.py` 가 있는 저장소를 root 로 잡으므로
+        #   (`src/io.py:1328`), 봉인 입력을 **원본 checkout** 에서 풀었다.
+        #   그래서 이 컨테이너에서는 통과하고 리뷰어의 clean checkout 에서는
+        #   `producer_곡선일치`·`입력_digest_재해시` 로 실패했다.
+        v = validate_provenance(run_dir, repo_root=root)
         if not v.get("ok"):
             raise SystemExit(f"✗ 복원본 validate 실패: {v.get('fail')}")
 
@@ -179,6 +190,9 @@ def build(leg: str) -> dict:
                 "make_receipt_sha256": _sha(Path(__file__).resolve())[:16],
             },
             "outputs": outputs,
+            # ★ 26차 P1-6 — 대조 **결과**를 적는다. 초판은 두 digest 를 나란히
+            #   두기만 하고 비교하지 않았고, 실제로 달랐다.
+            "outputs_agree": _outputs_agree(outputs),
         }
         return {
             "schema_version": 2,
@@ -215,19 +229,37 @@ def _score_manifest(run_dir: Path) -> list[dict]:
     fits = run_dir / "fits.parquet"
     df = pd.read_parquet(fits)
     # `row_projection.py` 의 **정본** 채점 경로를 그대로 부른다 — 복제하지 않는다.
-    summary = summarize(_row_projection().score_canonical(df), DEFAULT_TOL)
+    rp = _row_projection()
+    scored = rp.score_canonical(df)
+    summary = summarize(scored, DEFAULT_TOL)
+    # ★ 26차 P1-6 — `summarize()` 는 `multistart`·`multistart_random_only` 를
+    #   만들지 않는다 (`run_scoring` 이 restart trace 에서 따로 붙인다). 그것을
+    #   빼고 봉인본과 비교하면 **영원히 다르다** — 초판이 정확히 그 상태였고,
+    #   두 digest 를 나란히 적어 놓고 비교는 안 했으므로 아무도 몰랐다.
+    rp._add_multistart_blocks(scored, summary)
+
+    # 재채점 결과를 **실제 파일로** 떨궈 byte digest 도 남긴다 (25차 Q2 는
+    # file SHA 와 semantic digest 를 **둘 다** 요구한다)
+    rescored_path = run_dir / "_rescored_summary.yaml"
+    rescored_path.write_text(
+        yaml.safe_dump(_plain(summary), allow_unicode=True, sort_keys=True),
+        encoding="utf-8")
 
     out = [{
         "role": "rescored_summary",
         "produced_from": "restored fits.parquet only",
         "source_file_sha256": _sha(fits),
+        "relative_path": rescored_path.name,
+        "byte_size": rescored_path.stat().st_size,
+        "file_sha256": _sha(rescored_path),
         "n_rows": int(len(df)),
         "semantic_schema": "degeneracy-summary/v5",
         "canonicalizer": CANONICALIZER,
+        "semantic_view_drops": list(SEMANTIC_SKIP),
         "semantic_sha256": _semantic(summary),
     }]
 
-    # 봉인된 summary 가 묶음 안에 있으면 자리별로 대조한다
+    # 봉인된 summary 를 **정규 view 로 대조**한다 — append 만 하지 않는다
     sealed = run_dir / "degeneracy_summary.yaml"
     if sealed.is_file():
         sd = yaml.safe_load(sealed.read_text(encoding="utf-8"))
@@ -238,9 +270,28 @@ def _score_manifest(run_dir: Path) -> list[dict]:
             "file_sha256": _sha(sealed),
             "semantic_schema": "degeneracy-summary/v5",
             "canonicalizer": CANONICALIZER,
+            "semantic_view_drops": list(SEMANTIC_SKIP),
             "semantic_sha256": _semantic(sd),
         })
     return out
+
+
+def _outputs_agree(outputs: list[dict]) -> bool:
+    """같은 schema·canonicalizer 를 쓰는 산출끼리 semantic digest 가 같은가.
+
+    다르면 `build()` 가 여기서 멈춘다 — 영수증에 `false` 를 적어 두고 통과시키면
+    "대조했다" 는 말이 다시 거짓이 된다.
+    """
+    by: dict[tuple, set] = {}
+    for o in outputs:
+        by.setdefault((o["semantic_schema"], o["canonicalizer"]),
+                      set()).add(o["semantic_sha256"])
+    bad = [k for k, v in by.items() if len(v) > 1]
+    if bad:
+        raise SystemExit(
+            f"✗ 같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: {bad}\n"
+            "  같은 object 가 아니면 schema/role 을 갈라라 (26차 P1-6)")
+    return True
 
 
 def _dump(rec: dict) -> str:

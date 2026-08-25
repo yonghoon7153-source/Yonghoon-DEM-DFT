@@ -18,6 +18,8 @@ from __future__ import annotations
 
 import hashlib
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -862,7 +864,7 @@ def _active_text(text: str) -> tuple[str, set[str]]:
 def test_claim_status_registry_is_wellformed():
     """원장 자신이 깨지면 아래 검사가 조용히 통과한다 — 먼저 막는다."""
     reg = _claim_status()
-    assert reg.get("schema_version") == 2
+    assert reg.get("schema_version") == 3
     ids = [c["id"] for c in reg["claims"]]
     assert len(ids) == len(set(ids)), f"claim id 중복: {ids}"
 
@@ -873,9 +875,13 @@ def test_claim_status_registry_is_wellformed():
     assert len(aids) == len(set(aids)), f"active claim id 중복: {aids}"
     both = sorted(set(aids) & set(ids))
     assert not both, f"같은 id 가 철회 원장과 활성 원장에 동시에 있다: {both}"
+    gens = reg.get("protocol_generations") or []
+    assert gens, "protocol_generations 가 없다 — 세대가 자유문자가 된다"
     for c in act:
         assert re.fullmatch(r"[A-Z0-9_]+", c["id"]), c["id"]
-        assert c.get("protocol_generation"), f"{c['id']}: protocol_generation 없음"
+        assert c.get("protocol_generation") in gens, (
+            f"{c['id']}: protocol_generation={c.get('protocol_generation')!r} "
+            f"∉ {gens}")
         assert isinstance(c.get("requires_leg"), bool), f"{c['id']}: requires_leg"
         assert c.get("무엇"), f"{c['id']}: 설명 없음"
     for c in reg["claims"]:
@@ -1209,19 +1215,33 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
     """
     import yaml
 
-    need = sorted({l for l, _ in _WARM_CLAIMS}
-                  | {l for p in _WARM_PAIRS for l in p}
-                  | {l for a, b, _ in _CONFOUNDED_PAIRS for l in (a, b)}
-                  | {l for p in _XDIGEST_PAIRS for l in p})
-    missing = [l for l in need if not (_WARM / f"{l}.projection.yaml").is_file()]
+    # ★ 26차 P1-9·P1-10 — 초판은 `_WARM`(= frozen g1) 과 **현행** spec 을
+    #   박아 뒀다. 그러면 (a) schema 를 올리는 순간 raw-lost g1 이 다시 충족
+    #   불가능해지고, (b) 새 cohort 의 gzip payload 는 아무도 열지 않는다.
+    #   실제로 `proj_g2/*.csv.gz` 를 지워도 통과했다. cohort 를 순회한다.
+    claim_legs = sorted({l for l, _ in _WARM_CLAIMS}
+                        | {l for p in _WARM_PAIRS for l in p}
+                        | {l for a, b, _ in _CONFOUNDED_PAIRS for l in (a, b)}
+                        | {l for p in _XDIGEST_PAIRS for l in p})
+    targets: list[tuple[str, str, Path, int]] = []      # (cohort, leg, dir, schema)
+    for c in _cohorts():
+        d = _REPO / c["dir"]
+        for leg in c["legs"]:
+            targets.append((c["cohort_id"], leg, d, c["pin"]["schema_version"]))
+
+    covered = {leg for _, leg, _, _ in targets}
+    missing = [l for l in claim_legs if l not in covered]
     assert not missing, (
-        "행 수준 투영이 없는 다리 (원자료가 있는 기계에서 "
-        "`python docs/22p_gap/row_projection.py --all` 을 돌려 커밋할 것):\n  "
-        + "\n  ".join(missing))
+        "인용되는 다리가 어느 cohort 에도 없다:\n  " + "\n  ".join(missing))
 
     bad = []
-    for leg in need:
-        m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+    for cohort, leg, _WARM, want_schema in targets:
+        y = _WARM / f"{leg}.projection.yaml"
+        if not y.is_file():
+            bad.append(f"{cohort}/{leg}: 투영 YAML 이 없다")
+            continue
+        leg = f"{cohort}/{leg}"
+        m = yaml.safe_load(y.read_text(encoding="utf-8"))
         gz = _WARM / m["projection_file"]
         if not gz.is_file():
             bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
@@ -1231,13 +1251,14 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         #   형태다 (값이 바뀌는 곳에 리터럴). 정본은 `ANALYSIS_SPEC` 하나이므로
         #   거기서 읽는다. 하한 검사 대신 **정확히 같아야** 한다 — 낡은 산출물도
         #   앞선 스키마도 둘 다 거부해야 재생성 신호가 정확해진다.
-        want_schema = _current_projection_schema()
+        # ★ 정본은 **그 cohort 의 pin** 이다. 현행 spec 이 아니다 — frozen
+        #   cohort 는 현행을 따라올 수 없기 때문이다 (25차 발견 1).
         if m.get("projection_schema") != want_schema:
             bad.append(
                 f"{leg}: 투영 스키마가 {m.get('projection_schema')} 다 "
-                f"({want_schema} 필요 — `ANALYSIS_SPEC.schema_version`). "
-                f"원자료가 있는 기계에서 "
-                f"`python docs/22p_gap/row_projection.py --all` 을 다시 돌려라")
+                f"(이 cohort 의 pin 은 {want_schema}). 활성 cohort 면 "
+                f"`row_projection.py --out <cohort dir>` 로 재생성하고, "
+                f"frozen 이면 손대지 마라")
             continue
         import gzip
         raw = gzip.decompress(gz.read_bytes())
@@ -1252,6 +1273,13 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         head, body = lines[0], lines[1:]
         cols = head.split("\t")
         oi = cols.index("objective")
+        # ★ 깨진 행에서 IndexError 로 죽으면 "무엇이 틀렸는지" 가 사라진다 —
+        #   발견으로 보고한다 (변이 시험에서 실제로 크래시했다).
+        ragged = [i for i, ln in enumerate(body, 2) if len(ln.split("\t")) != len(cols)]
+        if ragged:
+            bad.append(f"{leg}: 열 수가 머리와 다른 행 {ragged[:3]} "
+                       f"(총 {len(ragged)}건)")
+            continue
         for obj, want in (m.get("by_objective_sha256") or {}).items():
             sub = [ln for ln in body if ln.split("\t")[oi] == obj]
             blob = ("\n".join([head, *sub]) + "\n").encode("utf-8")
@@ -2145,8 +2173,11 @@ def test_preservation_registry_covers_every_warm_probe_leg():
     assert reg.get("schema_version") == 3
 
     recorded = {l["leg_id"]: l for l in reg["legs"]}
+    # ★ 26차 P1-9 — 초판은 frozen g1 디렉터리 하나와 정확히 같기를 요구했다.
+    #   새 cohort 에만 있는 다리는 영원히 `extra` 가 된다. cohort 전체를 본다.
     have = {p.name[: -len(".projection.yaml")]
-            for p in _WARM.glob("*.projection.yaml")}
+            for c in _cohorts()
+            for p in (_REPO / c["dir"]).glob("*.projection.yaml")}
 
     missing = sorted(have - set(recorded))
     assert not missing, (
@@ -2789,6 +2820,7 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
     enums = _contract_status_enums()
     roles_ok = enums["inference_role"]
     creg = _claim_status()
+    gens = creg.get("protocol_generations") or []
     known = {c["id"]: c for c in (creg.get("active_claims") or [])}
     retracted = {c["id"] for c in creg["claims"]}
 
@@ -2815,8 +2847,17 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
             if r.get("inference_role") not in roles_ok:
                 bad.append(f"{leg}/{cid}: inference_role={r.get('inference_role')!r} "
                            f"∉ 계약 enum")
-            if not (r.get("protocol_generation") or r.get("reason")):
-                bad.append(f"{leg}/{cid}: protocol_generation 도 reason 도 없다")
+            # ★ 26차 P2-11 — 초판은 둘 중 **하나만** 있으면 통과시켰고,
+            #   role 의 세대를 claim 의 세대와 대조하지 않았다. `v6_prep` 을
+            #   `v999` 로 바꿔도 통과했다.
+            rg = r.get("protocol_generation")
+            if rg not in gens:
+                bad.append(f"{leg}/{cid}: protocol_generation={rg!r} ∉ {gens}")
+            elif rg != known[cid]["protocol_generation"] and not r.get("reason"):
+                bad.append(
+                    f"{leg}/{cid}: role 세대 {rg} ≠ claim 세대 "
+                    f"{known[cid]['protocol_generation']} 인데 `reason` 이 없다 "
+                    "— 세대를 넘어 쓰려면 근거를 적어라")
             # ★ leg-level 보다 **센** role 은 세대가 달라야만 성립한다
             if r.get("inference_role") == "canonical":
                 if cap != "available_raw_present":
@@ -2880,3 +2921,168 @@ def test_semantic_digests_use_one_canonicalization():
         "`make_receipt.py` 가 `tools.preserve.canonical_bytes` 를 쓰지 않는다")
     assert "json.dumps(" not in mr, (
         "`make_receipt.py` 가 직렬화를 따로 적는다 — 정규화는 한 곳이어야 한다")
+
+
+def test_receipt_validation_actually_reads_the_restored_root():
+    """★ 26차 P1-5 — 초판 영수증의 "빈 root" 도 원본 checkout 을 읽었다.
+
+    `make_receipt.py` 는 `os.chdir(root)` 만 하고 `validate_provenance` 에
+    `repo_root` 를 넘기지 않았다. 검증기는 cwd 가 아니라 **`src/io.py` 가 있는
+    저장소**를 root 로 잡으므로 (`src/io.py:1328`), 봉인 입력을 원본
+    checkout 에서 풀었다. 이 컨테이너에는 `results/grid_curves_v4` 가 남아
+    있어서 통과했을 뿐이다 — 리뷰어의 clean checkout 에서는
+    `producer_곡선일치`·`입력_digest_재해시` 로 실패했다.
+
+    여기서 직접 확인한다: 복원 root 에서 봉인 입력 하나를 지우면
+    `repo_root=root` 검증이 **실패해야** 한다. 실패하지 않으면 검증기가
+    원본을 보고 있다는 뜻이다.
+    """
+    import sys
+    import tempfile
+
+    if str(_REPO) not in sys.path:
+        sys.path.insert(0, str(_REPO))
+    from src.io import validate_provenance
+    from tools.archive_bundle import restore
+
+    root = Path(tempfile.mkdtemp(prefix="receipt_root_"))
+    try:
+        res = restore(_REPO / "artifacts" / "paired_fixed5_v4", repo_root=root)
+        assert res["ok"] and not res["conflict"], res.get("conflict")
+        run_dir = Path(res["run_dir"])
+
+        good = validate_provenance(run_dir, repo_root=root)
+        assert good["ok"], f"복원본이 통과해야 한다: {good['fail']}"
+
+        # 복원 root **안에서만** 봉인 입력을 지운다. 원본은 그대로다.
+        curves = root / "results" / "grid_curves_v4" / "curves.parquet"
+        assert curves.is_file(), "전제: 봉인 곡선이 복원 root 에 있다"
+        curves.unlink()
+
+        bad = validate_provenance(run_dir, repo_root=root)
+        assert not bad["ok"], (
+            "복원 root 에서 봉인 입력을 지웠는데 통과했다 — 검증기가 원본 "
+            "checkout 을 보고 있다 (26차 P1-5 의 false-green)")
+    finally:
+        import shutil
+        shutil.rmtree(root, ignore_errors=True)
+
+
+def test_make_receipt_binds_the_validator_to_the_restored_root():
+    """구조적으로도 막는다 — `repo_root` 를 넘기고 `os.chdir` 에 기대지 않는다."""
+    mr = (_REPO / "docs" / "22p_gap" / "make_receipt.py").read_text(encoding="utf-8")
+    assert "repo_root=" in mr, (
+        "`make_receipt.py` 가 `validate_provenance` 에 `repo_root` 를 넘기지 않는다")
+    # 주석에서 "왜 안 쓰는가" 를 설명하는 것은 괜찮다 — **호출**이 없어야 한다.
+    code = "\n".join(ln for ln in mr.splitlines()
+                     if not ln.lstrip().startswith("#"))
+    assert "os.chdir(" not in code, (
+        "cwd 를 옮기는 것으로는 검증 root 가 바뀌지 않는다 (26차 P1-5)")
+
+
+def test_receipt_compares_the_rescored_summary_against_the_sealed_one():
+    """★ 26차 P1-6 — 영수증이 semantic 불일치를 **성공으로 기록**했다.
+
+    `_score_manifest()` 는 재채점 결과와 봉인 summary 를 각각 append 할 뿐
+    비교하지 않았다. 주석은 "자리별로 대조" 한다고 했지만 assertion 이 없었고,
+    실제로 같은 `degeneracy-summary/v5` · `score-semantic/v1` 라벨 아래 두
+    digest 가 달랐다.
+
+    같은 semantic object 라면 정규 view 를 정의해 equality 를 강제해야 한다.
+    """
+    import yaml
+
+    rec = yaml.safe_load(
+        (DOCS / "22p_gap" / "receipts" / "paired_fixed5_v4.validate.yaml")
+        .read_text(encoding="utf-8"))
+    outs = {o["role"]: o for o in rec["core"]["outputs"]}
+    assert {"rescored_summary", "sealed_summary"} <= set(outs), sorted(outs)
+
+    a, b = outs["rescored_summary"], outs["sealed_summary"]
+    assert a["semantic_schema"] == b["semantic_schema"]
+    assert a["canonicalizer"] == b["canonicalizer"]
+    assert a["semantic_sha256"] == b["semantic_sha256"], (
+        "같은 schema·canonicalizer 인데 semantic digest 가 다르다 — "
+        "같은 object 가 아니면 schema/role 을 갈라라")
+    assert rec["core"]["outputs_agree"] is True, (
+        "영수증이 대조 결과를 명시하지 않는다")
+
+
+def test_evidence_cohorts_and_the_cohort_registry_agree_both_ways():
+    """★ 26차 P1-10 — `evidence.cohorts` 가 nonempty 인지만 봤다.
+
+    다리가 "나는 g1·g2 에 있다" 고 적어도 cohort 쪽 `legs` 와 대조하지 않으면
+    아무 것도 보장되지 않는다. 양방향으로 묶는다.
+    """
+    import yaml
+
+    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+    by_cohort = {c["cohort_id"]: set(c["legs"]) for c in _cohorts()}
+    bad = []
+    for e in reg["legs"]:
+        declared = set((e.get("evidence") or {}).get("cohorts") or [])
+        actual = {cid for cid, legs in by_cohort.items() if e["leg_id"] in legs}
+        if declared != actual:
+            bad.append(f"{e['leg_id']}: evidence.cohorts={sorted(declared)} ≠ "
+                       f"cohort registry {sorted(actual)}")
+        unknown = sorted(declared - set(by_cohort))
+        if unknown:
+            bad.append(f"{e['leg_id']}: 존재하지 않는 cohort {unknown}")
+    assert not bad, "cohort 선언이 양방향으로 맞지 않는다:\n  " + "\n  ".join(bad)
+
+
+def test_the_projection_builder_refuses_to_write_into_a_frozen_cohort():
+    """★ 26차 P1-9 — `--out` 을 생략하면 frozen g1 을 **직접 덮었다.**
+
+    게다가 검증을 끝내기 전에 gzip payload 부터 썼다. 잃어버린 다리의 유일한
+    사본을 실수 한 번으로 덮을 수 있는 상태였다. 목적지는 cohort 로만 고르고,
+    frozen 이면 코드가 거부해야 한다.
+    """
+    rp = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    assert "_frozen_cohort_dirs" in rp, (
+        "`row_projection.py` 가 frozen cohort 목록을 읽지 않는다")
+    assert "--cohort" in rp, "cohort 이름으로 목적지를 고르는 인자가 없다"
+
+    import subprocess
+    r = subprocess.run(
+        [sys.executable, str(_REPO / "docs" / "22p_gap" / "row_projection.py"),
+         "paired_fixed5_v4", "--out", "docs/22p_gap/warm_probe"],
+        capture_output=True, text=True, cwd=_REPO)
+    assert r.returncode != 0, "frozen cohort 로 쓰라는 명령이 성공했다"
+    assert "frozen" in (r.stdout + r.stderr), (r.stdout + r.stderr)[:400]
+
+
+def test_committed_gate_requests_are_self_contained():
+    """★ 26차 P2-12 — 커밋된 요청문에 template placeholder 가 남아 있었다.
+
+    `git add -A` 로 채우기 **전** 판을 함께 커밋했고, 리뷰 대상 커밋에서
+    `__TARGET__`·`__TARGET_FULL__`·`__PYTEST__` 가 그대로 보였다. 외부 첨부만
+    완성돼 있었으니 "committed 문서 자기완결" 은 닫히지 않았다.
+
+    그리고 요청문이 인용하는 영수증 core sha 가 실물과 다르면 그것도 stale 이다.
+    """
+    import yaml
+
+    rec = yaml.safe_load(
+        (DOCS / "22p_gap" / "receipts" / "paired_fixed5_v4.validate.yaml")
+        .read_text(encoding="utf-8"))
+    core = rec["core_sha256"]
+
+    bad = []
+    for md in sorted((DOCS / "22p_gap").glob("GATE*_REQUEST.md")):
+        txt = md.read_text(encoding="utf-8")
+        for ph in re.findall(r"__[A-Z_]+__", txt):
+            bad.append(f"{md.name}: 채우지 않은 placeholder {ph}")
+        # 40-hex 전체 SHA 를 적었다면 실재하는 커밋이어야 한다
+        for sha in set(re.findall(r"(?m)^[^`]*\b([0-9a-f]{40})\b", txt)):
+            r = subprocess.run(["git", "cat-file", "-e", f"{sha}^{{commit}}"],
+                               cwd=_REPO_ROOT, capture_output=True)
+            if r.returncode != 0:
+                bad.append(f"{md.name}: 존재하지 않는 커밋 {sha[:12]}")
+        # 영수증 core sha 를 인용했다면 현행이어야 한다
+        quoted = set(re.findall(r"core[_ ]sha\S*\s*[는은]?\s*`?([0-9a-f]{16,64})", txt))
+        for q in quoted:
+            if not core.startswith(q):
+                bad.append(f"{md.name}: 인용한 영수증 core sha {q[:16]} 가 낡았다 "
+                           f"(현행 {core[:16]})")
+    assert not bad, "커밋된 요청문이 자기완결적이지 않다:\n  " + "\n  ".join(bad)

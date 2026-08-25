@@ -43,6 +43,8 @@ RUN_SCOPE 밖이다
 from __future__ import annotations
 
 import argparse
+import os
+import tempfile
 import gzip
 import math
 import hashlib
@@ -498,14 +500,17 @@ def build(leg: str, out: Path | None = None) -> dict:
     r_lines += ["\t".join(_cell(v) for v in row) for row in rrows]
     r_text = "\n".join(r_lines) + "\n"
     r_sha = hashlib.sha256(r_text.encode("utf-8")).hexdigest()
+    # ★ 26차 P1-9 — 초판은 **검증 전에** gzip payload 부터 목적지에 썼다.
+    #   실수 한 번으로 잃어버린 다리의 유일한 사본을 덮을 수 있었다. 이제
+    #   staging 에 쓰고 마지막에 원자적으로 옮긴다.
     _out = out or WARM                       # ★ 25차 발견 1 — cohort 디렉터리
-    r_csv = _out / f"{leg}.restarts.csv.gz"
     _out.mkdir(parents=True, exist_ok=True)
+    _stage = Path(tempfile.mkdtemp(prefix=f".stage_{leg}_", dir=_out))
+    r_csv = _stage / f"{leg}.restarts.csv.gz"
     with gzip.GzipFile(r_csv, "wb", compresslevel=9, mtime=0) as fh:
         fh.write(r_text.encode("utf-8"))
 
-    out_csv = _out / f"{leg}.projection.csv.gz"
-    _out.mkdir(parents=True, exist_ok=True)
+    out_csv = _stage / f"{leg}.projection.csv.gz"
     # mtime=0 은 timestamp 만 고정한다. **deflate 구현 차이는 고정하지 않는다** —
     # 22차 리뷰가 zlib-ng 1.3.1 에서 다른 바이트를 실측했다 (zlib 1.3 끼리는 같다).
     # git noise 를 줄이는 효과는 있지만, 정본 앵커는 아래 `full_sha`(압축 전)다.
@@ -620,9 +625,47 @@ def build(leg: str, out: Path | None = None) -> dict:
         meta["source_digest"] = rs.get("source_digest")
         meta["warm_start"] = rs.get("warm_start")
 
-    (_out / f"{leg}.projection.yaml").write_text(
+    (_stage / f"{leg}.projection.yaml").write_text(
         yaml.safe_dump(meta, allow_unicode=True, sort_keys=False), encoding="utf-8")
+    # ── 원자적 승격 — 여기까지 왔다는 것은 전 검증을 통과했다는 뜻이다 ──
+    for f in sorted(_stage.iterdir()):
+        os.replace(f, _out / f.name)
+    _stage.rmdir()
+
     return meta
+
+
+def _frozen_cohort_dirs() -> dict[str, Path]:
+    """`LEG_PRESERVATION.yaml` 이 frozen 이라고 선언한 cohort 디렉터리.
+
+    ★ 26차 P1-9 — `--out` 을 생략하면 기본값이 `warm_probe`(= frozen g1)라
+      원자료를 잃은 여덟 투영을 실수로 덮을 수 있었다. 목적지는 cohort 로
+      고르고, frozen 이면 여기서 막는다.
+    """
+    import yaml
+
+    reg_path = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    if not reg_path.is_file():
+        return {}
+    reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
+    return {c["cohort_id"]: (REPO / c["dir"]).resolve()
+            for c in (reg.get("cohorts") or []) if c.get("status") == "frozen"}
+
+
+def _cohort_dir(cohort_id: str) -> Path:
+    import yaml
+
+    reg_path = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
+    for c in reg.get("cohorts") or []:
+        if c["cohort_id"] == cohort_id:
+            if c.get("status") == "frozen":
+                raise SystemExit(
+                    f"✗ `{cohort_id}` 는 frozen cohort 다 — 쓸 수 없다.\n"
+                    f"  원자료를 잃은 투영이 들어 있어 덮으면 복구할 수 없다.\n"
+                    f"  새 세대는 새 cohort 를 만들어라 (계약 v4 §13.3).")
+            return REPO / c["dir"]
+    raise SystemExit(f"✗ 모르는 cohort: {cohort_id!r}")
 
 
 def main() -> int:
@@ -630,12 +673,29 @@ def main() -> int:
     ap.add_argument("legs", nargs="*")
     ap.add_argument("--all", action="store_true",
                     help="warm_probe 에 summary 가 있는 다리 전부")
+    ap.add_argument("--cohort", default=None, help=(
+        "쓸 cohort id (`LEG_PRESERVATION.yaml` 의 `cohorts`). "
+        "frozen cohort 는 거부한다 — 권장 경로다."))
     ap.add_argument("--out", default=None, help=(
         "투영을 쓸 디렉터리 (repo 상대). 기본은 warm_probe. "
         "★ 25차 발견 1 — analyzer 세대가 바뀌면 옛 cohort 를 덮지 않고 "
         "새 디렉터리에 쓴다. 봉인 summary/manifest 는 언제나 warm_probe 에서 읽는다."))
     a = ap.parse_args()
-    out_dir = (REPO / a.out) if a.out else None
+    if a.cohort and a.out:
+        ap.error("--cohort 와 --out 을 함께 쓰지 마세요")
+    if a.cohort:
+        out_dir = _cohort_dir(a.cohort)
+    else:
+        out_dir = (REPO / a.out) if a.out else None
+        # ★ 26차 P1-9 — 목적지가 frozen cohort 면 거부한다. `--out` 생략도
+        #   기본값이 frozen g1 이므로 같은 검사를 받는다.
+        dest = (out_dir or WARM).resolve()
+        frozen = {d: cid for cid, d in _frozen_cohort_dirs().items()}
+        if dest in frozen:
+            raise SystemExit(
+                f"✗ `{frozen[dest]}` 는 frozen cohort 다 ({dest}) — 쓸 수 없다.\n"
+                f"  원자료를 잃은 투영이 들어 있어 덮으면 복구할 수 없다.\n"
+                f"  활성 cohort 를 지정하세요: --cohort <id>")
 
     legs = list(a.legs)
     if a.all:

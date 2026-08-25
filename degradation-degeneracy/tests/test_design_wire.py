@@ -15,9 +15,11 @@ from pathlib import Path
 import pytest
 import yaml
 
-from tools.design_wire import (ARM_REGISTRY, EXCLUDED_FROM_PAIR_ID, SCHEMA,
-                               WireError, bank_id, candidate_id,
-                               canonical_design_spec, pair_group_id,
+from tools.design_wire import (ARM_REGISTRY, CANDIDATE_PAYLOAD_SCHEMA,
+                               EXCLUDED_FROM_PAIR_ID, SCHEMA, WireError,
+                               assert_wire_safe, bank_id, candidate_id,
+                               canonical_design_spec, coords_from_condition,
+                               decimal_from_float, pair_group_id,
                                pairing_design_sha256, parameter_order_sha256)
 
 GOLDEN = Path(__file__).resolve().parent.parent / "tools" / "design_golden.yaml"
@@ -63,7 +65,8 @@ def test_golden_vectors_recompute_exactly(golden):
         bk = bank_id(pg, "v6.0", golden["unit_cube_bank_sha256"])
         assert bk == v["bank_id"], f"{v['name']}: bank_id 가 움직였다"
         for src, want in v["candidate_ids"].items():
-            got = candidate_id(bk, golden["exact_bounds_sha256"], src, {"i": 0})
+            got = candidate_id(bk, golden["exact_bounds_sha256"], src,
+                               v["candidate_payloads"][src])
             assert got == want, f"{v['name']}/{src}: candidate_id 가 움직였다"
 
 
@@ -170,3 +173,95 @@ def test_design_schema_version_is_pinned_in_the_golden_file(golden):
     assert spec["schema"] == SCHEMA
     with pytest.raises(WireError):
         pairing_design_sha256(dict(spec, schema="pairing-design/v99"))
+
+
+def test_candidate_payloads_follow_a_closed_per_source_schema(golden):
+    """★ 26차 P1-8 — 초판은 source enum 만 보고 임의 dict 를 해시했다.
+
+    golden 도 셋 다 placeholder `{"i": 0}` 이었으므로 "candidate provenance 를
+    고정했다" 는 말이 성립하지 않았다. 계약 §4.2 는 source 마다 다른 것을
+    요구한다.
+    """
+    bank, bounds = "a" * 64, "b" * 64
+    good = golden["vectors"][0]["candidate_payloads"]
+    for src, payload in good.items():
+        assert candidate_id(bank, bounds, src, payload)          # 정상
+        # 키 하나를 빼면 거부
+        for k in payload:
+            with pytest.raises(WireError):
+                candidate_id(bank, bounds, src, {x: v for x, v in payload.items()
+                                                 if x != k})
+        # 남는 키도 거부 (닫힌 schema)
+        with pytest.raises(WireError):
+            candidate_id(bank, bounds, src, dict(payload, __extra__="x"))
+    # 빈 payload · float · 다른 source 의 payload 전부 거부
+    for src in CANDIDATE_PAYLOAD_SCHEMA:
+        with pytest.raises(WireError):
+            candidate_id(bank, bounds, src, {})
+    with pytest.raises(WireError):
+        candidate_id(bank, bounds, "random",
+                     {"bank_index": 1.0, "unit_cube_bytes_sha256": "c" * 64})
+    with pytest.raises(WireError):
+        candidate_id(bank, bounds, "warm", good["random"])
+    with pytest.raises(WireError):
+        candidate_id("짧은-id", bounds, "base_init", good["base_init"])
+
+
+def test_a_design_alias_change_does_not_move_any_id(golden):
+    """★ 26차 P1-7 — 사람용 label 이 정본 hash 안에 있었다.
+
+    뜻이 같은 설계의 별칭만 바꿔도 모든 pair ID 가 바뀌면, label 을 분리한
+    의미가 없다 (계약 §4.2).
+    """
+    order = golden["parameter_order"]
+    a = _spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order)
+    b = _spec("완전히-다른-별칭", ["A", "B", "C", "D"], order)
+    assert pairing_design_sha256(a) == pairing_design_sha256(b)
+    with pytest.raises(WireError):
+        pairing_design_sha256(dict(a, label="사람용"))
+
+
+def test_wire_refuses_binary_floats_anywhere_not_just_coordinates():
+    """좌표만 막아도 payload 로 들어오면 같은 문제다 — 재귀로 본다."""
+    assert_wire_safe({"a": [1, {"b": "c"}], "d": None, "e": True})
+    for bad in ({"a": 0.5}, {"a": [1, [2, 3.0]]}, {"a": {"b": {"c": 1e-3}}}):
+        with pytest.raises(WireError):
+            assert_wire_safe(bad)
+    with pytest.raises(WireError):
+        assert_wire_safe({1: "int key"})
+
+
+def test_grid_conditions_bridge_to_wire_coordinates(golden):
+    """★ 26차 P1-8 — 실제 `src.grid.Condition` (float) 과 결속한다.
+
+    이 다리가 없으면 ID 체계가 격자와 무관한 장난감이다. 그리고 변환은
+    **왕복 검증**을 한다 — 조용히 반올림하면 다른 조건이 같은 ID 로 합쳐진다.
+    """
+    from src.grid import Condition
+
+    places = golden["decimal_places"]
+    order = golden["parameter_order"]
+    hc = pairing_design_sha256(_spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order))
+    pos = parameter_order_sha256(order)
+
+    for row in golden["grid_linkage"]["rows"]:
+        wc = row["wire_coords"]
+        c = Condition(lli=float(wc["lli"]), lam_pe=float(wc["lam_pe"]),
+                      lam_ne=float(wc["lam_ne"]),
+                      lam_pe_type=wc["lam_pe_type"], lam_ne_type=wc["lam_ne_type"],
+                      noise=0.001, seed=404)
+        assert coords_from_condition(c, places) == wc
+        assert pair_group_id(hc, wc, pos) == row["pair_group_id"]
+
+    # 왕복하지 않는 값은 **거부**한다 (조용한 반올림 금지)
+    with pytest.raises(WireError) as e:
+        decimal_from_float(0.1 + 0.2, 3)
+    assert "왕복" in str(e.value)
+
+    # noise·seed 는 조건 정체성에 들어가지 않는다 — 같은 좌표면 같은 ID
+    c1 = Condition(lli=0.17, lam_pe=0.13, lam_ne=0.13, lam_pe_type="capacity",
+                   lam_ne_type="capacity", noise=0.0, seed=1)
+    c2 = Condition(lli=0.17, lam_pe=0.13, lam_ne=0.13, lam_pe_type="capacity",
+                   lam_ne_type="capacity", noise=0.005, seed=999)
+    assert c1.cond_id != c2.cond_id, "전제: 격자 cond_id 는 noise·seed 를 본다"
+    assert coords_from_condition(c1, places) == coords_from_condition(c2, places)

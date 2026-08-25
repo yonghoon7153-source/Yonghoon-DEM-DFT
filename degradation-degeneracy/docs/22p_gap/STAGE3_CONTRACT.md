@@ -784,37 +784,57 @@ receipt · atomic promotion 을 넣으면 그 순간 digest 가 움직인다. �
 | # | 묶음 | 상태 | 있는 것 / 없는 것 |
 |---|---|---|---|
 | 1 | `planned_protocol` ↔ `execution_receipt` 분리 | **부분** | `tools/preserve.py::PlannedLeg` 가 최소 envelope 과 `planned_id`(내용 주소)를 갖고, 트랜잭션이 `execution_receipt` 를 따로 낸다. **없는 것**: stage×objective×arm 별 예산/실현 count, 실제 leg index 결속 |
-| 2 | canonical design wire schema · arm registry · hash domain · golden vectors | **부분** | `tools/design_wire.py` + `tools/design_golden.yaml`. arm registry 가 계약 §5 2×2 와 회귀로 묶였고, 좌표는 **이진 float 금지 + 십진 정규화**, ID 사슬 `pair_group_id→bank_id→candidate_id` 가 golden 으로 고정됐다. **없는 것**: `src/grid.py` 의 실제 좌표 생성과의 결속 |
+| 2 | canonical design wire schema · arm registry · hash domain · golden vectors | **부분** | arm registry ↔ 계약 §5 2×2 결속 · 이진 float 금지(**재귀**) · 십진 정규화 · **source 별 닫힌 candidate payload schema** · `src.grid.Condition` 결속(왕복 검증 실패 시 거부) · label 을 hash **밖**으로. **없는 것**: 실제 v6 격자 실행과의 end-to-end 결속, Unicode 정규화 실측 |
 | 3 | provider materialize→seal→consumer DAG · `p_ini` arm 별 solution map | **미착수** | |
 | 4 | `mono_tol` / `material_tol` 분리 · stratum · budget adoption · max-failure | **미착수** | |
 | 5 | 실제 `sentinel_panel.yaml` | **미착수** | |
 | 6 | 구 `pairing_design_id`·`inference_status` 제거 · per-key linkage mutation test | **미착수** | 묶음 9 의 final gate 는 이것 없이 닫을 수 없다 (25차 Q3) |
 | 7 | 상태 schema 단일 authority | **부분** | §8 이 **제약**을 적고 회귀가 조합을 생성한다 (열거표가 아니다). `claim_roles` 는 `CLAIM_STATUS.yaml` 의 claim ID 와 role enum·protocol generation 에 묶였고, 중복·철회주장·원자료 없는 canonical 을 거부한다. **없는 것**: planned lifecycle (묶음 9) |
-| 8 | immutable bundle index · receipt schema | **부분** | `docs/22p_gap/make_receipt.py` 가 member 전수 재해시 → **빈 root 복원** → validate → 복원본만으로 재채점 → 두 digest(file·semantic) 산출 manifest 를 한 YAML 로 낸다. core/stamp 를 갈라 **core 가 바이트 동일하게 재생성**된다. **없는 것**: 비-git backend URI 형식, legacy 다리의 외부 store 사본 |
-| 9 | 트랜잭션 보존 gate | **부분 — 이번 라운드의 본체** | §13.2 |
-| 10 | historical projection version dispatch | **부분** | §13.3 |
+| 8 | immutable bundle index · receipt schema | **부분** | member 전수 재해시 → 빈 root 복원 → **`repo_root` 로 검증기를 그 root 에 결속**(26차 P1-5 정정) → 복원본만으로 재채점 → file·semantic 두 digest → **봉인본과 semantic equality 강제**(26차 P1-6 정정). core/stamp 분리로 core 가 바이트 동일 재생성. **없는 것**: 비-git backend URI 형식, legacy 다리의 외부 store 사본 |
+| 9 | 트랜잭션 보존 gate | **부분** | §13.2 — 26차 P0 둘(CAS 복원·영수증 저장)을 고쳤다. 배선·backend canary·planned index 가 남았다 |
+| 10 | historical projection version dispatch | **부분** | §13.3 — 26차 P1-9·P1-10 으로 전역 회귀 둘을 cohort 화하고 frozen 목적지 쓰기를 코드가 거부하게 했다 |
 
 ### 13.2 묶음 9 — two-phase 보존 트랜잭션
 
-구현: `tools/preserve.py` · 회귀: `tests/test_preserve.py` (hermetic, 26건).
+구현: `tools/preserve.py` · 회귀: `tests/test_preserve.py` (hermetic).
+
+> **★ 26차 리뷰가 초판을 P0 둘로 반려했다. 둘 다 false-green 이었다.**
+>
+> **P0-1** 복원이 CAS 가 아니라 **원본 `run_dir` 를 복사**했다. member 와
+> manifest 를 backend 에 넣고 되읽기까지 했지만 되읽은 bytes 는 해시만 확인하고
+> 버렸다. 리뷰가 read-back 직후 CAS 를 통째로 비우자 그대로 publish 까지
+> 성공했다. "빈 root 로 복원해 검증했다" 는 주장이 거짓이었다.
+>
+> **P0-2** receipt 를 메모리에서 만들고 **digest 만** index 에 적었다. 그
+> digest 로 아무 것도 회수할 수 없었고, "등록" 은 상태 변경이 아니라 단순
+> `return` 이었다. crash 뒤 "재시도" 는 계산 전체를 다시 도는 것이었다 —
+> 실제 사고에서 원본 계산은 12시간짜리다.
+
+고친 순서:
 
 ```text
-planned_leg seal            내용 주소 planned_id. 실행이 다른 계획을 가리키면 멈춘다
-→ private temp 로 실행
-→ payload seal              exact member manifest (경로·바이트·sha256) + root digest
-→ CAS staging put-if-absent staging 에 쓰고 os.replace 로만 objects/ 로 승격
-→ remote read-back          backend 에서 되읽어 다시 해시
-→ truly empty root 복원      원본 results/ 에 접근하지 않는다
-→ validate + score/analyze  복원본만으로. 검증 hook 이 없으면 시작조차 안 한다
-→ immutable receipt         계획·payload·backend·검증·산출을 한 digest 로 묶는다
-→ final index 의 atomic publish
-→ 그 뒤에만 execution/status/claim 등록
+planned_leg seal            내용 주소. run_spec 이 **없으면 시작하지 않는다**
+→ private temp 로 실행 (호출자)
+→ payload seal              exact member manifest + root digest
+→ CAS staging put-if-absent staging → os.replace 로만 objects/ 승격
+→ read-back                 backend 에서 되읽어 다시 해시
+→ **CAS 에서만** 빈 root 복원  `restore_from_cas(backend, manifest_digest, root)`
+                            — 함수가 원본 경로를 **받지 않는다**
+→ validate + rescore        복원본만으로. expected_semantic 이 없으면 거부
+→ receipt 를 CAS 에 저장     + read-back 대조
+→ per-leg **배타 생성** publish  O_EXCL. read-modify-write 가 아니다
+→ durable registration      journal 파일. `return` 이 아니다
 ```
 
-**불변식**: 어느 단계에서 멈추든 public index 는 오염되지 않는다. 끊긴 업로드는
-`objects/` 로 승격되지 않고 `staging/` 에 orphan 으로 남는다 (GC 대상).
+**두 단계 불변식** — 초판의 "어느 단계에서 멈추든 index 가 깨끗하다" 는
+틀렸다. publish 뒤 crash 는 durable 한 중간 상태를 남긴다. 숨기지 않고 적는다:
 
-주입 가능한 실패 17종이 `FAULTS` 에 있고,
+| 언제 실패 | 남는 상태 | 닫는 법 |
+|---|---|---|
+| publish **전** | public index 에 항목 없음 | 처음부터 다시 |
+| publish **후** | 항목은 durable, **등록 안 됨** | `finalize_only()` — **재계산 없이** CAS 만으로 |
+
+주입 가능한 실패 21종이 `FAULTS` 에 있고,
 `test_every_declared_fault_has_a_regression` 이 목록만 늘고 검사가 안 늘어나는
 것을 막는다.
 
@@ -823,20 +843,25 @@ planned_leg seal            내용 주소 planned_id. 실행이 다른 계획을
 | member 1비트 변경 · 누락 · 추가 · stale index | `payload_seal` |
 | 끊긴 업로드 | `cas_put` |
 | 되읽기 손상 · 읽기 권한 없음 | `read_back` |
+| **CAS 에서 member·manifest 삭제 · 전체 삭제 · 바이트 변조** | `cas_restore` |
 | 복원 누락 | `empty_root_restore` |
 | 검증기 예외 · 검증 실패 | `validate` |
-| 재채점 예외 · semantic digest 불일치 | `rescore` |
-| 다른 계획 · 다른 code identity | `planned_seal` |
+| 재채점 예외 · semantic 불일치 · 산출 schema 위반 | `rescore` |
+| `run_spec` 없음 · 다른 계획 · 다른 code identity | `planned_seal` |
+| `expected_semantic` 없음 | `hooks` |
 | 보존 기간 부족 | `capability` |
 | publish 직전 crash | `publish` |
-| publish 직후 crash | `register` (index 는 남고 재시도가 닫는다) |
+| publish 직후 crash | `register` → `finalize_only` 로만 닫힌다 |
+
+**증명 장치**: `run_transaction(..., drop_source_after_seal=True)` 는 업로드
+직후 원본을 지운다. 그러고도 끝까지 간다면 복원이 backend 에서 나온 것이
+확실하다. 회귀가 그 경로를 돈다.
 
 **아직 아닌 것** (그래서 "닫음" 이 아니다):
 
-1. `run.sh` · smoke 의 **필수 gate 로 배선되지 않았다.** 지금은 호출하지 않으면
-   그만이다 — 그것이 8월 20일 사고의 형태였다.
-2. 실제 운영 backend 의 canary 가 없다. 25차 Q1 대로 local `file+cas://` 로
-   트랜잭션 **의미**만 검증했다. 첫 pilot 전 별도 gate 다.
+1. `run.sh` · smoke 의 **필수 gate 로 배선되지 않았다.**
+2. 실제 운영 backend canary 가 없다 (25차 Q1 대로 local `file+cas://` 로
+   트랜잭션 **의미**만 검증했다).
 3. `planned_leg_index` 가 실제 leg 원장과 결속되지 않았다 — 묶음 1·6 필요.
 
 ### 13.3 묶음 10 — cohort 기반 세대 dispatch
@@ -855,6 +880,17 @@ planned_leg seal            내용 주소 planned_id. 실행이 다른 계획을
 cohort 에 재생성했더니 `projection_sha256`·`restart_projection_sha256`·
 `fits_sha256` 이 **g1 과 바이트 동일**했다. 계산 의미는 안 바뀌었고 identity
 회계만 엄격해졌다는 뜻이다 (25차 발견 2 의 수정이 정확히 그 목적이었다).
+
+**★ 26차 P1-9·P1-10 으로 더 고친 것:**
+
+| 무엇이 남아 있었나 | 고침 |
+|---|---|
+| 투영 자기정합 회귀가 frozen g1 과 **현행 spec** 을 박아 뒀다 | cohort 를 순회하고 **그 cohort 의 pin** 과 대조한다 |
+| 보존 원장 coverage 가 g1 디렉터리 하나와 정확히 같기를 요구했다 | cohort 전체의 투영 집합과 대조한다 |
+| 활성 cohort 의 gzip payload 를 **아무도 열지 않았다** | 같은 순회가 g2 의 payload 도 압축 해제·재해시한다 (삭제 변이로 확인) |
+| `--out` 을 생략하면 frozen g1 을 **직접 덮었다** | `--cohort` 로 고르고, frozen 목적지는 코드가 거부한다 |
+| 검증 **전에** gzip 부터 목적지에 썼다 | staging 에 쓰고 전 검증 통과 뒤 원자적으로 승격한다 |
+| `evidence.cohorts` 가 nonempty 인지만 봤다 | cohort registry 와 **양방향** 대조 |
 
 **아직 아닌 것**: v6 투영을 새 schema 로 만들 때 새 디렉터리·새 cohort 로
 가야 한다는 규칙은 적었지만, v6 투영 자체가 없어 실측되지 않았다.
