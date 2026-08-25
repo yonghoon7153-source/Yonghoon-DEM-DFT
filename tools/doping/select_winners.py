@@ -39,6 +39,13 @@ def main():
                   help='Skip records with |ΔV/V0| > this (default 30%%)')
     p.add_argument('--require_converged', action='store_true',
                   help='Drop non-converged records before selecting winners')
+    p.add_argument('--fixed_n', type=int, default=None,
+                  help='best-of-N 보정: 그룹마다 **같은 수 N 개**만 보고 챔피언을 고른다. '
+                       '후보 수가 그룹마다 다르면(우리는 15~150) 많이 뽑힌 그룹이 '
+                       '최댓값도 높아진다 — 성능이 아니라 표본 수가 만든 순위다. '
+                       'N 미만인 그룹은 **탈락시키지 않고 표시**한다(그것도 정보다).')
+    p.add_argument('--fixed_n_seed', type=int, default=0,
+                  help='--fixed_n 의 부분표본 추출 시드. 결정론적으로 고정한다.')
     args = p.parse_args()
 
     data = json.loads(Path(args.results).read_text())
@@ -61,6 +68,30 @@ def main():
     for r in pre:
         key = tuple(r.get(k, 'unknown') for k in args.group_by)
         groups[key].append(r)
+
+    # ── best-of-N 보정 (2026-08-25) ────────────────────────────────────────
+    #   ⛔ 실측: 종별 후보 수 15~150 (10배) · 후보 수 ↔ 챔피언 점수 r = +0.321.
+    #     많이 뽑힌 종이 최댓값도 높다 = **best-of-N 인공물**이고, 후보 수는 성능이
+    #     아니라 화학(치환 가능 자리 수)이 정한다. 같은 N 으로 잘라야 비교가 성립한다.
+    #   ⚠ 잘라낸 것을 **버리지 않는다** — 표본이 모자란 그룹을 탈락시키면 그 자체가
+    #     또 다른 선택 편향이다. 모자란다고 **표시**하고 남긴다.
+    n_short = []
+    if args.fixed_n:
+        import random as _rnd
+        rng = _rnd.Random(args.fixed_n_seed)
+        cut = {}
+        for key, group in groups.items():
+            if len(group) < args.fixed_n:
+                n_short.append((key, len(group)))
+                cut[key] = group                      # 그대로 둔다
+            else:
+                cut[key] = rng.sample(group, args.fixed_n)
+        groups = cut
+        print(f"  best-of-N 보정: 그룹당 {args.fixed_n}개로 균등화 "
+              f"(시드 {args.fixed_n_seed}) · 표본 부족 {len(n_short)}그룹")
+        for key, n in sorted(n_short, key=lambda x: x[1])[:5]:
+            print(f"    ⚠ {'/'.join(map(str, key))}: {n}개 < {args.fixed_n} "
+                  f"— 균등화 못 함(그대로 둠, 이 그룹의 순위는 여전히 부풀 수 있다)")
 
     winners = []
     for key, group in groups.items():
