@@ -222,3 +222,20 @@ def test_cascade_carries_ml_transfer_insight(client):
     # 관계형 — 근거 문서들로 가는 길
     for link in ("/literature", "/fairchem", "microstructure_ml_transfer_to_cascade"):
         assert link in body, f"근거 링크 '{link}' 가 없다"
+
+
+def test_cascade_is_readable_for_first_timers(client):
+    """처음 보는 사람이 **숫자 네 개의 뜻**과 **말할 수 있는 것/없는 것**을 알 수 있어야.
+
+    ⚠ 이 페이지는 3615/681/90/47 이 돌아다니는데 그게 뭔지 어디에도 없었다.
+      그리고 난이도 표시가 없어 어디부터 어려운지 구분이 안 됐다.
+    """
+    body = client.get("/cascade").data.decode()
+    assert "이 페이지가 무엇인가" in body, "오리엔테이션이 없다"
+    for n in ("3,615", "681", "90", "47"):
+        assert n in body, f"숫자 {n} 의 설명이 없다"
+    assert "ESW" in body and "가른 축은" in body, "47 vs 90 을 가른 축 설명이 없다"
+    # 난이도 표시 — 기초/심화가 둘 다 있어야 구분이 된다
+    assert 'lv-b' in body and 'lv-a' in body, "난이도 배지가 없다"
+    # 심화 카드에는 '한 줄로' 요약이 붙어야 한다
+    assert body.count("한 줄로:") >= 2, "심화 카드에 평문 요약이 없다"

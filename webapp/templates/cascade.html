@@ -32,6 +32,89 @@
     <div class="sub">{{ casc.meta.scope }}</div></div>
 </div>
 
+{# ══ 처음 보는 사람용 (2026-08-25) ══════════════════════════════════════
+   이 페이지는 숫자가 네 개(3615/681/90/47) 돌아다니는데 그게 각각 뭔지 어디에도
+   안 적혀 있었다. 첫 화면에서 그것부터 준다. 심화 내용은 ⚙ 로 표시하고 접는다. #}
+<style>
+  .lv{display:inline-block;padding:1px 7px;border-radius:99px;font-size:.68rem;
+      font-weight:700;vertical-align:middle;margin-left:6px}
+  .lv-b{background:#d1fae5;color:#065f46}   /* 기초 */
+  .lv-a{background:#fef3c7;color:#92400e}   /* 심화 */
+  .fn{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+  .fn-c{border:1px solid var(--border);border-radius:10px;padding:10px 12px}
+  .fn-n{font-size:1.5rem;font-weight:800;line-height:1.1}
+  .fn-t{font-size:.78rem;font-weight:700;margin-top:2px}
+  .fn-d{font-size:.74rem;color:var(--muted);margin-top:3px;line-height:1.45}
+</style>
+
+<div class="card" style="border-left:4px solid #7c3aed">
+  <h3 style="margin-top:0">이 페이지가 무엇인가 <span class="lv lv-b">기초</span></h3>
+  <p style="font-size:.94rem;line-height:1.65;margin:6px 0">
+    황화물 고체전해질(Li₆PS₅Cl)에 <b>다른 원소를 조금 섞으면 더 좋아지는가</b> —
+    이걸 실험 대신 계산으로 미리 걸러내는 파이프라인이다.
+    수천 개 후보를 <b>싼 계산부터 비싼 계산 순서로</b> 통과시키며 떨어뜨린다.
+    그래서 <b>cascade</b>(폭포)다. 힘은 머신러닝 퍼텐셜(<b>UMA</b>)이 계산한다 —
+    DFT 보다 10³~10⁴ 배 빨라서 수천 개를 볼 수 있지만, 그만큼 <b>순위를 믿는 데
+    조건이 붙는다</b>(아래 ⚠ 카드).
+  </p>
+
+  <h4 style="margin:14px 0 4px;font-size:.9rem">숫자 네 개가 각각 무엇인가 <span class="lv lv-b">기초</span></h4>
+  <div class="fn">
+    <div class="fn-c"><div class="fn-n">3,615</div><div class="fn-t">계산한 구조</div>
+      <div class="fn-d">조성 × 도펀트 자리 × 시드. 한 화합물이 여러 자리·배열을 갖는다.</div></div>
+    <div class="fn-c"><div class="fn-n">681</div><div class="fn-t">하류까지 간 구조</div>
+      <div class="fn-d">BVSE·어닐링·탄성까지 받은 것. 상위 10개만 내려보내는 <b>설계</b>지
+        결손이 아니다.</div></div>
+    <div class="fn-c"><div class="fn-n">90</div><div class="fn-t">완주한 화합물</div>
+      <div class="fn-d">산화물 37 · 염화물 19 · 불화물 10 · 황화물 10 · 브롬 5 · 질화 5 · 요오드 4</div></div>
+    <div class="fn-c" style="border-color:#7c3aed"><div class="fn-n">47</div><div class="fn-t">순위표에 오른 것</div>
+      <div class="fn-d"><b>산화물 37 + 불화물 10.</b> 나머지 43종은 <b>전기화학 창(ESW)</b>이
+        아직 없어서 빠졌다 — 성적이 나빠서가 아니다.</div></div>
+  </div>
+  <p class="muted" style="font-size:.8rem;margin:2px 0 0">
+    ⇒ <b>47 vs 90 을 가른 축은 ESW 하나다.</b> 탄성·BVSE 는 90종 전부 있었다.</p>
+
+  <h4 style="margin:16px 0 4px;font-size:.9rem">지금 말할 수 있는 것 / 없는 것 <span class="lv lv-b">기초</span></h4>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px">
+    <div style="border:1px solid #0d9488;border-radius:8px;padding:9px 12px">
+      <b style="color:#0d9488">✅ 말할 수 있다</b>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.85rem;line-height:1.6">
+        <li>어떤 도펀트가 <b>구조를 덜 흔드는가</b> (같은 프로토콜 안에서의 순서)</li>
+        <li>계열별 <b>경향</b> — 예: Br 이 늘면 부착일이 준다</li>
+        <li>어느 축이 <b>서로 충돌하는가</b> (아래 축 상관)</li>
+      </ul>
+    </div>
+    <div style="border:1px solid #be123c;border-radius:8px;padding:9px 12px">
+      <b style="color:#be123c">⛔ 말할 수 없다</b>
+      <ul style="margin:6px 0 0;padding-left:18px;font-size:.85rem;line-height:1.6">
+        <li><b>절대값</b> — 전도도 mS/cm, 장벽 eV 를 그대로 인용 금지</li>
+        <li><b>승인된 1위</b> — current ranking 0종이다</li>
+        <li><b>이온전도도 순위</b> — MD σ 는 비용 때문에 <b>안 돌렸다</b>(설계 결정).
+            대신 정적 BVSE 프록시를 쓴다 — <b>그건 전도도가 아니다</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <details style="margin-top:14px">
+    <summary style="cursor:pointer;font-weight:700;font-size:.9rem">
+      ⚙ 파이프라인 20 단계는 무엇을 하나 <span class="lv lv-a">심화</span></summary>
+    <div style="font-size:.86rem;line-height:1.7;margin-top:8px">
+      <pre style="font-size:.8rem;white-space:pre-wrap">00 preflight   전제 확인 (구조·의사퍼텐셜·자원)
+01 구조 생성    도펀트를 어느 자리에 몇 개 넣을지 열거
+02 UMA screen  전부 완화 → 에너지·부피변화. 여기서 대부분 떨어진다
+03 winners     그룹마다 대표 하나
+04 anneal      500 K 로 50 ps 흔들어 국소최소 탈출 → 다시 완화
+05 BVSE        Li 가 지나갈 통로가 있나 (정적 계산 · MD 아님)
+06~08 EOS·탄성  부피-에너지 곡선 → 체적탄성률·전단탄성률
+09f ESW        전기화학 안정 창 (산화·환원 전위)
+10 σ MD        ⛔ 껐다 (비용) — TOP_K_SIGMA=0
+11 W_ad        ⛔ 미실행</pre>
+      <p style="margin:6px 0 0">총 투입 <b>~1,100 GPU-시간</b>. 10·11 을 켰으면
+        4,600 시간이었을 것이다 — 그래서 껐고, 그 결정이 이 페이지의 가장 큰 단서다.</p>
+    </div>
+  </details>
+</div>
+
 <div class="card cascade-method">
   <div class="cm-grid">
     <div><span class="cm-l">엔진</span>{{ casc.meta.engine }}</div>
@@ -154,7 +237,8 @@
      엔진(UMA)이 바로 그 구간에서 가장 약하다는 외부 증거가 이번에 들어왔다.
      결과 표 아래에 각주로 달면 아무도 안 본다 — 맨 위에 세운다. #}
   <div class="card" style="border-left:4px solid #be123c">
-    <h3>⚠ 이 축의 근본 한계 — <b>평균이 좋아도 순위는 틀린다</b></h3>
+    <h3>⚠ 이 축의 근본 한계 — <b>평균이 좋아도 순위는 틀린다</b><span class="lv lv-a">심화</span></h3>
+    <p style="font-size:.88rem;background:rgba(190,18,60,.06);padding:8px 11px;border-radius:8px;margin:6px 0"><b>한 줄로:</b> 우리가 쓰는 계산 엔진은 <b>평균 오차는 아주 작은데, 비슷비슷한 후보끼리의 순서는 자주 틀린다.</b> 그런데 스크리닝이 하는 일이 바로 그 순서 매기기다 — 그래서 이 페이지의 순위를 결론으로 쓰지 않는다.</p>
     <p style="font-size:.9rem;margin:6px 0">
       스크리닝은 <b>후보들 사이의 순위</b>를 매기는 일이다. 그런데 MLIP 의 강점은
       <b>평균 오차</b>이고, 평균이 감추는 것이 정확히 <b>근접 후보 간 순위</b>다.
@@ -200,8 +284,13 @@
      출처는 DEM 축 문헌(양수영 세미나), 적용 대상은 이 DFT 축 cascade.
      화학은 안 겹치고 **절차만** 이전한다. 근거: kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md #}
   <div class="card" style="border-left:4px solid #0284c7">
-    <h3>🔍 우리가 안 한 세 단계 <span class="muted" style="font-weight:400;font-size:.8rem">
+    <h3>🔍 우리가 안 한 세 단계 <span class="lv lv-a">심화</span>
+      <span class="muted" style="font-weight:400;font-size:.8rem">
       — 같은 문제를 먼저 푼 사례에서 절차만 이전</span></h3>
+    <p style="font-size:.88rem;background:rgba(2,132,199,.07);padding:8px 11px;
+       border-radius:8px;margin:6px 0"><b>한 줄로:</b> 같은 종류의 ML 설계를 먼저 한
+      사례와 비교해 보니, 우리는 <b>설계공간을 다 안 쓰고 · 표본을 스스로 정하지 않았고 ·
+      목적들이 서로 충돌하는지 본 적이 없다.</b> 셋 다 계산을 더 돌리지 않고 고칠 수 있다.</p>
     <p style="font-size:.9rem;margin:6px 0">
       비교 대상은 <b>양수영(BML) 방사형 NCM 미세구조 ML</b>. <b>화학은 하나도 안 겹친다</b>
       (액체계 NCM 입자 형상 ↔ 황화물 도핑 조성). 베낄 것은 R² 가 아니라
@@ -250,7 +339,7 @@
   </div>
 
   <div class="card">
-    <h3>축별 완성도 <span class="muted" style="font-weight:400;font-size:.8rem">파생물마다 완성도가 다르다 — 하나로 뭉뚱그리지 않는다</span></h3>
+    <h3>축별 완성도 <span class="lv lv-a">심화</span> <span class="muted" style="font-weight:400;font-size:.8rem">파생물마다 완성도가 다르다 — 하나로 뭉뚱그리지 않는다</span></h3>
     <div class="tbl-scroll"><table class="data-table"><thead><tr>
       <th>축</th><th>등급</th><th>내용</th></tr></thead><tbody>
     {% set _axl = {'raw':'원자료 (champions · litransport)','oxidation':'grand-potential ESW',
