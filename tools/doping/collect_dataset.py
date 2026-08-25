@@ -80,6 +80,9 @@ FEATURE_COLUMNS = [
     #     ranking_scored_only 를 봐야 한다. 채점 안 된 구조는 빈칸(None)이다.
     'combined_score', 'rank_combined', 'rank_stability_all',
     'axis_set', 'scored_on', 'cascade', 'family',
+    #   ⚠ n_scored_in_cascade < 2 면 정규화가 상수(0.5)라 combined_score 에 정보가 없다.
+    #     '점수가 있다' 와 '점수가 뜻이 있다' 는 다르다 — 하류가 거를 수 있게 열로 낸다.
+    'n_scored_in_cascade', 'combined_score_is_informative',
 ]
 
 
@@ -118,7 +121,10 @@ def _collect_many(dirs, args):
     print(f"\n▸ 모음 결과")
     for f, n in sorted(per_fam.items()):
         print(f"  {f:<44}{n:>6} 행")
+    info = sum(1 for r in all_rows if r.get('combined_score_is_informative'))
     print(f"  {'합계':<44}{len(all_rows):>6} 행 · 결합점수 있는 행 {scored}")
+    print(f"  {'':<44}{'':>6}   그중 **뜻이 있는** 행 {info} "
+          f"(나머지 {scored-info}개는 캐스케이드에 채점 대상이 1개뿐이라 상수 0.5)")
     print(f"  축집합 분포: " + ' · '.join(f"{k or 'none'}×{v}" for k, v in ax.most_common()))
     if n_fail:
         print(f"  ⚠ 실패 {n_fail}개 캐스케이드 (위 ✗ 참조) — 조용히 빼지 않았다")
@@ -333,6 +339,9 @@ def collect_one(cd, verbose=True):
             'scored_on': rank_pair[1].get('scored_on'),
             'cascade': cd.name,
             'family': cd.parent.name,
+            'n_scored_in_cascade': len(combined_rank),
+            'combined_score_is_informative': (
+                bool(combined_rank.get(name)) and len(combined_rank) >= 2),
         }
         # composition counts
         comp = s_uma.get('composition') or {}
