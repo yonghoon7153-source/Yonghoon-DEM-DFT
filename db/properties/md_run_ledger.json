@@ -204,10 +204,13 @@
  },
  "⛔_retracted_reference": "msd_diffusive_check.py L400 의 안내문 '실측: modelc 800/1000 K 는 0.03/0.08 인데 b2o3 는 0.59/0.63' 은 **철회된 값**이다. canonical_registry.json 2026-08-20a: '옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy) 에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound'. modelc 0.03/0.08 도 같은 세트다 ⇒ **'creep 이 b2o3 고유' 라고 말할 근거가 아직 없다.** gabia modelc 로 새로 재야 한다.",
  "next": [
-  "① gabia modelc 골격 β (계산 0)",
-  "② gabia b2o3 600 K 골격 β (계산 0)",
-  "③ 종별 전체 표 — 도구에 --all_species 필요",
-  "④ 위 셋이 모이면 b2o3 전도도 축 판정"
+  "✅ ① gabia modelc 골격 β — 완료 (7/7 rigid)",
+  "✅ ② gabia b2o3 600 K — 완료 (2/3 rigid, s2 만 0.55)",
+  "✅ ③ 구제 시도 B — 완료 (9/9 재배열, 구제 불가)",
+  "✅ ④ b2o3 전도도 축 판정 — **인용 불가로 종결**",
+  "⏳ modelc s3/T600 (gabia) — 끝나면 대조군 3시드 완성",
+  "⏳ 18런 MTO 캠페인 (kgy T700 진행) — 요청 #1 임계경로",
+  "❓ mto900 대기자 자기참조 여부 — cmdline 확인 대기"
  ],
  "★_VERDICT_2026_08_25": {
   "headline": "골격 creep 은 **b2o3 고유**다 — UMA 전반의 문제가 아니다.",
@@ -269,6 +272,7 @@
    "살아 있는 b2o3 축은 **0 K DFT** 뿐 — 밴드갭 1.9671 eV · 탄성 +13 % · ELF/ICOHP B–S·P–O.",
    "modelc 의 MD 는 **영향 없다** (7/7 rigid). 비교 기준선은 그대로 선다."
   ],
-  "★_GENERALIZABLE_RULE": "UMA-MD 를 **새 조성**에 쓰기 전에 골격 게이트를 먼저 통과시킨다. CLAUDE.md 의 'UMA 는 Li₃N 에 사용 금지'(2026-06)에 이어 **두 번째 실패 조성**이다. 금지 목록을 늘리는 것보다 **조성마다 검사하는 것**이 맞다: `msd_diffusive_check.py --framework` 를 신규 조성 MD 의 필수 관문으로."
+  "★_GENERALIZABLE_RULE": "UMA-MD 를 **새 조성**에 쓰기 전에 골격 게이트를 먼저 통과시킨다. CLAUDE.md 의 'UMA 는 Li₃N 에 사용 금지'(2026-06)에 이어 **두 번째 실패 조성**이다. 금지 목록을 늘리는 것보다 **조성마다 검사하는 것**이 맞다: `msd_diffusive_check.py --framework` 를 신규 조성 MD 의 필수 관문으로.",
+  "rescue_B_closed": "공동계 재계산 9/9 rearrangement (남는 몫 0.95–1.00) — **구제 불가 확정**. b2o3 MD 축은 여기서 닫는다."
  }
 }
