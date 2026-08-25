@@ -134,6 +134,26 @@ fix m8 all property/global coefficientPlasticityDepth peratomtypepair 2 0.005 0.
 fix m9 all property/global characteristicVelocity scalar 2.0"""
 
 
+#: ⚠⚠⚠ 2026-08-25 실측 — **원본 `heckel/*.liggghts` 는 실행 가능한 입력이 아니다.**
+#:   Python `.format()` **템플릿이 렌더 안 된 채로 커밋**돼 있다: `${{dt}}` 처럼 중괄호가
+#:   이중이라 LIGGGHTS 가 `Substitution for illegal variable (input.cpp:505)` 로 죽는다.
+#:   4개 파일(100/200/300/400 MPa) 전부 동일하게 **8종 · 17회**.  단일 `${x}` 는 **0회**.
+#:   ⇒ 즉 이 파일들은 **그대로 돌아간 적이 없다** — 옛 기록을 만든 것은 렌더된 사본이다.
+#:   ★ 참조 변수 8개(dt · r_SE · plate_margin · target_press · z_max · plate_z ·
+#:     press_speed · current_press)는 **전부 같은 파일 안에 `variable … equal` 로 정의**돼
+#:     있으므로, 기계적 de-escape 하나면 자기완결적으로 복원된다.
+#:   ⚠ 이 변환은 **13런 전부에 똑같이** 적용된다 → 대조의 유효성은 유지된다
+#:     (`orig_1type` 이 `base` 와 다른 것은 여전히 type 리팩터 하나뿐).
+#:     다만 `orig_1type` 의 성격이 *"원본과 바이트 동일"* 에서
+#:     *"원본 + 문서화된 기계 변환"* 으로 바뀐다 — 원본은 애초에 못 돌리므로 불가피하다.
+_TEMPLATE_BRACE = re.compile(r'\$\{\{([A-Za-z_][A-Za-z0-9_]*)\}\}')
+
+
+def derender(text):
+    """`${{var}}` → `${var}`.  **이름 있는 변수 참조만** 바꾼다 (다른 중괄호는 안 건드린다)."""
+    return _TEMPLATE_BRACE.sub(r'${\1}', text)
+
+
 def render(name, desc, p, base_text=None):
     """원본 입력을 읽어 이 런의 입력으로 바꾼다.
 
@@ -148,7 +168,7 @@ def render(name, desc, p, base_text=None):
     #  ★ p is None = **빌드 대조**.  원본을 한 글자도 안 고치고 **출력 경로만** 바꾼다.
     #    (type 도 물성도 그대로 1-type — 그래야 옛 기록과 like-for-like 비교가 된다)
     if p is None:
-        t = t.replace('SE_heckel_300', f'oat_{name}')
+        t = derender(t.replace('SE_heckel_300', f'oat_{name}'))
         hdr0 = (f'# ============================================================\n'
                 f'# {name}: {desc}\n'
                 f'#\n'
@@ -157,6 +177,12 @@ def render(name, desc, p, base_text=None):
                 f'#    윈도우 재설치로 옛 LIGGGHTS 바이너리가 사라졌으므로, 기준선이 옛 기록과\n'
                 f'#    안 맞을 때 그 원인이 **type 리팩터**인지 **다른 빌드**인지 가르려면\n'
                 f'#    이 런이 있어야 한다.  이것 없이 base 만 돌리면 두 원인이 섞인다.\n'
+                f'#\n'
+                f'# ⚠ 단 하나 더 바뀐 것: 템플릿 de-escape (이중 중괄호 → LIGGGHTS 변수 표기).\n'
+                f'#   원본은 Python .format() 미렌더 상태라 LIGGGHTS 가 input.cpp:505 로 죽는다.\n'
+                f'#   13런 **전부에 똑같이** 적용되므로 대조는 유효하다.\n'
+                f'#   ⚠ 이 주석에 그 리터럴을 안 적는 이유 — LIGGGHTS 는 주석 줄에도 변수 치환을\n'
+                f'#     시도할 수 있어서 예시를 적는 순간 그 줄이 같은 오류를 낸다.\n'
                 f'# ============================================================\n')
         return re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', hdr0, t, count=1)
 
@@ -177,6 +203,9 @@ def render(name, desc, p, base_text=None):
 
     #  ④ 출력 경로·이름을 런별로 (겹쳐 쓰지 않게)
     t = t.replace('SE_heckel_300', f'oat_{name}')
+
+    #  ④-b ⚠ 템플릿 de-escape (원본이 `.format()` 미렌더 상태라 그대로는 안 돈다)
+    t = derender(t)
 
     #  ⑤ 머리말 — **무엇이 왜 바뀌었는지 파일 자신이 말하게**
     hdr = (f'# ============================================================\n'
@@ -342,7 +371,7 @@ def _selftest():
         re.search(r'coefficientFriction peratomtypepair 2 0\.5 0\.5 0\.5 0\.5', t) is not None)
     chk('⑩ ★ peratomtype 이 값 2개', 'poissonsRatio peratomtype 0.30 0.30' in t)
     #  ★★ 최소 치환 — 물리·수치 설정을 건드리지 않았나
-    for keep in ('timestep        ${{dt}}', 'seed 78049', 'variable target_press equal 0.300',
+    for keep in ('timestep        ${dt}', 'seed 78049', 'variable target_press equal 0.300',
                  'volumefraction_region 0.281', 'pair_style      gran model hooke/hysteresis'):
         chk(f'⑪ 원본 설정 보존: `{keep[:38]}`', keep in t)
     chk('⑫ ★ 출력 경로가 런별로 분리 (원본 이름 안 남음)',
@@ -377,8 +406,10 @@ def _selftest():
     o = render('orig_1type', 'x', None, bt)
     o_body = re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', '', o, count=1)
     b_body = re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', '', bt, count=1)
-    chk('⑲ ★★ 빌드 대조는 출력 경로만 다르다 (본문 완전 동일)',
-        o_body == b_body.replace('SE_heckel_300', 'oat_orig_1type'))
+    #  ⚠ 기준은 **de-render 한** 원본이다 — 원본은 미렌더 템플릿이라 그대로는 못 돈다.
+    #    즉 빌드 대조가 원본과 다른 것은 ① 출력 경로 ② 템플릿 de-escape, **둘뿐**이어야 한다.
+    chk('⑲ ★★ 빌드 대조는 출력 경로 + de-escape 만 다르다 (그 외 본문 완전 동일)',
+        o_body == derender(b_body.replace('SE_heckel_300', 'oat_orig_1type')))
     chk('⑳ ★ 빌드 대조는 **1-type 그대로** (create_box 1, 물성 값 1개)',
         'create_box      1 reg_box' in o and 'poissonsRatio peratomtype 0.30\n' in o
         and 'primitive type 1 zplane' in o)
@@ -387,10 +418,24 @@ def _selftest():
     chk('㉒ ★ 러너가 대조 2건을 먼저, 실패 시 중단',
         'in.orig_1type.liggghts' in RUNNER and 'CONTROLS' in RUNNER
         and '나머지를 돌리지 않는다' in RUNNER)
-    #  ⚠ 원본을 건드리지 않았나
+    #  ★★★ 템플릿 de-escape — 이게 없으면 LIGGGHTS 가 input.cpp:505 로 죽는다
+    chk('㉗ ★★★ `${{dt}}` → `${dt}` de-escape', derender('timestep ${{dt}}') == 'timestep ${dt}')
+    chk('㉘ ★ 이름 없는 중괄호는 **안 건드린다**',
+        derender('print "a {b} c"') == 'print "a {b} c"'
+        and derender('x ${{ }} y') == 'x ${{ }} y')
+    chk('㉙ ★★ 생성물에 이중 중괄호가 **하나도 안 남는다** (13런 전부)',
+        all('${{' not in render(nm, d_, p_, bt) for nm, d_, p_ in plan()))
+    chk('㉚ ★★ 참조 변수 8종이 전부 `${x}` 로 살아 있다',
+        all(('${%s}' % v) in t for v in
+            ('dt', 'r_SE', 'plate_margin', 'target_press', 'z_max', 'plate_z',
+             'press_speed', 'current_press')))
+    chk('㉛ ★ 빌드 대조도 de-escape 됐다 (안 그러면 그것만 죽는다)',
+        '${{' not in o and '${dt}' in o)
+    #  ⚠ 원본을 건드리지 않았나 (1-type · 미렌더 템플릿 그대로)
     with open(BASE, encoding='utf-8') as f:
-        chk('⑱ ★ 원본 파일은 **읽기만** 했다 (1-type 그대로)',
-            'create_box      1 reg_box' in f.read())
+        _orig = f.read()
+    chk('⑱ ★ 원본 파일은 **읽기만** 했다 (1-type · `${{` 그대로)',
+        'create_box      1 reg_box' in _orig and '${{dt}}' in _orig)
 
     print(f'\ngen_dem_oat_sweep selftest: {n[0]}/{n[1]} PASS')
     return 0 if n[0] == n[1] else 1

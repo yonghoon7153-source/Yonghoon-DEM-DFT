@@ -19,7 +19,7 @@ variable target_press equal 0.300
 variable r_SE    equal 0.5e-3
 variable dt      equal 1.0e-6
 variable plate_margin equal 0.003
-timestep        ${{dt}}
+timestep        ${dt}
 
 region reg_box block 0.0 0.05 0.0 0.05 -0.01 1.0 units box
 create_box      2 reg_box
@@ -48,7 +48,7 @@ compute cpl all pair/gran/local pos id force force_normal force_tangential torqu
 
 fix zwall_bot all wall/gran model hooke/hysteresis tangential history rolling_friction cdt primitive type 2 zplane 0.0
 
-fix pts1 all particletemplate/sphere 32452843 atom_type 1 density constant 2000 radius constant ${{r_SE}}
+fix pts1 all particletemplate/sphere 32452843 atom_type 1 density constant 2000 radius constant ${r_SE}
 fix pdd_mix all particledistribution/discrete 49979687 1 pts1 1.0
 
 region reg_mix block 0.0 0.05 0.0 0.05 0.005 0.035 units box
@@ -79,22 +79,22 @@ thermo_style    custom step atoms c_zmax
 thermo          1
 run 1
 variable z_max equal c_zmax
-variable plate_z equal ${{z_max}}+${{r_SE}}+${{plate_margin}}
-print "====== PLATE HEIGHT: ${{plate_z}} ======"
+variable plate_z equal ${z_max}+${r_SE}+${plate_margin}
+print "====== PLATE HEIGHT: ${plate_z} ======"
 
 print "solid plate" file plate_oat_oat_mu_pw0p6.stl screen no
 print "facet normal 0 0 -1" append plate_oat_oat_mu_pw0p6.stl screen no
 print "outer loop" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.0 0.0 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.05 0.05 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.05 0.0 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.05 0.0 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
 print "endloop" append plate_oat_oat_mu_pw0p6.stl screen no
 print "endfacet" append plate_oat_oat_mu_pw0p6.stl screen no
 print "facet normal 0 0 -1" append plate_oat_oat_mu_pw0p6.stl screen no
 print "outer loop" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.0 0.0 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.0 0.05 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
-print "vertex 0.05 0.05 ${{plate_z}}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.0 0.0 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.0 0.05 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
+print "vertex 0.05 0.05 ${plate_z}" append plate_oat_oat_mu_pw0p6.stl screen no
 print "endloop" append plate_oat_oat_mu_pw0p6.stl screen no
 print "endfacet" append plate_oat_oat_mu_pw0p6.stl screen no
 print "endsolid plate" append plate_oat_oat_mu_pw0p6.stl screen no
@@ -116,14 +116,14 @@ print "====== PHASE 3: COMPRESSION to 300 MPa ======"
 dump dmp_atom all custom 5000 post_oat_oat_mu_pw0p6/atom_*.liggghts id type x y z radius vx vy vz c_strs[1] c_strs[2] c_strs[3] c_ke
 fix_modify      zwall_top energy yes
 variable press_speed equal 0.01
-fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${{press_speed}}
+fix move_press all move/mesh mesh top_mesh linear 0.0 0.0 -${press_speed}
 restart 50000 restart_oat_oat_mu_pw0p6/restart_compress_*.bin
 
 label loop_press
     run 5000
     variable current_press equal "abs(f_top_mesh[3]) / 0.0025 / 1000000"
-    print "Current Pressure: ${{current_press}} MPa (Target: ${{target_press}})"
-    if "${{current_press}} < ${{target_press}}" then "jump SELF loop_press"
+    print "Current Pressure: ${current_press} MPa (Target: ${target_press})"
+    if "${current_press} < ${target_press}" then "jump SELF loop_press"
 
 unfix move_press
 
