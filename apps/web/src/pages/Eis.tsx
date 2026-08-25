@@ -152,7 +152,7 @@ export function Eis() {
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1>임피던스 (EIS)</h1>
+          <h1>여러 개 한꺼번에 맞추기</h1>
           <div className="sub">{active.hint}</div>
         </div>
         <span className="spacer" />

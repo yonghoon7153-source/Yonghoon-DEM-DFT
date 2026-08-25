@@ -83,6 +83,13 @@ export function EisLibrary() {
         </div>
       </div>
 
+      {/* 여러 개를 한 회로로 한꺼번에 맞추는 자리로 가는 길.  SOC 스캔은
+          스윕이 스물이 넘으므로 이 길이 없으면 하나씩 맞춰야 한다. */}
+      <div className="row" style={{ marginBottom: 10, gap: 8 }}>
+        <Link className="link-btn" to="/eis/spectra">여러 개 한꺼번에 맞추기</Link>
+        <Link className="link-btn" to="/eis/upload">업로드</Link>
+      </div>
+
       <Card title="거르기" tight>
         <div className="grid cols-4" style={{ padding: 12, gap: 10 }}>
           <Field label="종류" hint="파일이 말하는 것 — 스윕 수로 갈립니다">

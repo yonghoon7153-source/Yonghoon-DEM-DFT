@@ -115,8 +115,9 @@ export function ScanDetail() {
 
       {head.fitted === 0 ? (
         <Alert kind="info">
-          아직 맞춘 회로가 없습니다. EIS 화면에서 이 파일의 스윕들을 골라
-          한꺼번에 피팅하면 (여러 개 선택 → 일괄 피팅) 여기에 추세가 그려집니다.
+          아직 맞춘 회로가 없습니다.{' '}
+          <Link to="/eis/spectra">여러 개 한꺼번에 맞추기</Link>에서 이 파일의
+          스윕들을 골라 한 회로로 맞추면 여기에 추세가 그려집니다.
         </Alert>
       ) : null}
 
