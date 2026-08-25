@@ -1996,6 +1996,26 @@ def check_pin(jobdir):
     bad = []
     if not spec:
         bad.append("job.json 에 potcar_spec 이 없다 — POTCAR TITEL 검증 불가 (fail-closed)")
+    # ⛔ codex E-4차 P0-1 — phase_gates 는 kmesh 결측을 **조용히 건너뛴다** (wave1
+    #   호환 때문). release 사슬에서는 그 관용이 fail-open 이다 — 여기서 막는다.
+    if not (meta.get("kmesh") or {}).get("static_pin"):
+        bad.append("job.json 에 kmesh.static_pin 이 없다 — KPOINTS 검증 불가 (fail-closed)")
+    # 배포 기준과 pin INCAR 대조 (MANIFEST_RESCUE — 있으면 강제, 없으면 거부)
+    _mr = jd / "MANIFEST_RESCUE.json"
+    if not _mr.is_file():
+        bad.append("MANIFEST_RESCUE.json 없음 — 배포 기준 해시 부재 (fail-closed)")
+    else:
+        try:
+            _man = (json.load(open(_mr)) or {}).get("sha256") or {}
+            _inc = jd / "static_pin" / "INCAR"
+            if _inc.is_file() and _man.get("static_pin/INCAR"):
+                _h = hashlib.sha256(open(_inc, "rb").read()).hexdigest()
+                if _h != _man["static_pin/INCAR"]:
+                    bad.append("static_pin/INCAR 가 배포본과 다르다 (변조/수정)")
+            else:
+                bad.append("pin INCAR 또는 그 배포 해시가 없다")
+        except ValueError:
+            bad.append("MANIFEST_RESCUE 파싱 실패")
     oc = read_outcar(str(jd / "static_pin" / "OUTCAR"))
     # 상 게이트 전체 — release 사슬에서 하나라도 걸리면 여기서 끝난다
     bad += phase_gates(oc, "static_pin", meta, spec)
@@ -2044,36 +2064,83 @@ def check_pin(jobdir):
 
 
 def rescue_provenance_ok(jd):
-    """supersede 의 추가 조건 — r.ok 만으로는 부족하다 (codex E-3차 필수4).
+    """supersede 의 추가 조건 — **모든 필드가 fail-closed** (codex E-4차 P0 5건).
 
-    → (ok, why). 요구: PIN_CHECK.pass · RUN_PROVENANCE 존재 · 부모 입력 대조 통과 ·
-      CHGCAR pin/static 사본 sha 동일 · static 의 charge-read 증거가 NOT_FOUND 아님.
+    v1 의 구멍 (전부 적대 재현됨):
+      · parent_match={} → all({})==True 로 우회      → 키별 is True 요구
+      · identical 플래그만 믿음 (거짓 기록 가능)      → pin/static sha 직접 비교
+      · PIN_CHECK 에 chgcar 없으면 교차검증 생략       → 없으면 거부
+      · 'could not be read' 같은 **부정문도 증거로 통과** → 부정 마커 필터
+      · 배포 입력(MANIFEST_RESCUE)과 대조 없음         → 기록·디스크 양쪽 대조
+
+    → (ok, why)
     """
     jd = pathlib.Path(jd)
     pc_p = jd / "static_pin" / "PIN_CHECK.json"
     pv_p = jd / "RUN_PROVENANCE.json"
-    if not pc_p.is_file():
-        return False, "PIN_CHECK.json 없음 — pin 수용검사 미실행"
-    if not pv_p.is_file():
-        return False, "RUN_PROVENANCE.json 없음 — 해시·승계 증거 미기록"
+    mr_p = jd / "MANIFEST_RESCUE.json"
+    for f, w in ((pc_p, "PIN_CHECK.json 없음 — pin 수용검사 미실행"),
+                 (pv_p, "RUN_PROVENANCE.json 없음 — 해시·승계 증거 미기록"),
+                 (mr_p, "MANIFEST_RESCUE.json 없음 — 배포 기준 해시 부재")):
+        if not f.is_file():
+            return False, w
     try:
-        pc = json.load(open(pc_p))
-        pv = json.load(open(pv_p))
+        pc, pv, mr = (json.load(open(x)) for x in (pc_p, pv_p, mr_p))
     except ValueError as e:
         return False, f"provenance 파싱 실패: {e}"
     if not pc.get("pass"):
         return False, "PIN_CHECK.pass=false"
-    if not all((pv.get("parent_match") or {}).values()):
-        return False, f"부모 입력 대조 실패: {pv.get('parent_match')}"
+    if not (pv.get("run_id") and pv.get("utc")):
+        return False, "run_id/utc 없음"
+    # 부모 대조 — 빈 dict 는 통과가 아니다: 키별로 is True 를 요구한다
+    pm = pv.get("parent_match") or {}
+    for k in ("POSCAR", "KPOINTS"):
+        if pm.get(k) is not True:
+            return False, f"부모 대조 결측/실패: {k}={pm.get(k)!r}"
+    # 배포 기준(MANIFEST_RESCUE) ↔ 실행 기록 ↔ 현재 디스크 3중 대조
+    man = mr.get("sha256") or {}
+    rec = pv.get("inputs_sha256") or {}
+    for f in ("POSCAR", "KPOINTS", "static_pin/INCAR", "static/INCAR"):
+        if not man.get(f):
+            return False, f"MANIFEST_RESCUE 에 {f} 해시 없음"
+        if rec.get(f) != man[f]:
+            return False, f"실행 기록 해시 ≠ 배포 해시: {f}"
+        fp = jd / f
+        if fp.is_file():
+            h = hashlib.sha256(open(fp, "rb").read()).hexdigest()
+            if h != man[f]:
+                return False, f"디스크 파일이 배포본과 다름(사후 변조?): {f}"
+    # phase 디렉터리 사본 — **VASP 가 실제로 읽는 파일** (P0-2·3)
+    for f in ("static_pin/KPOINTS", "static/KPOINTS",
+              "static_pin/POSCAR", "static/POSCAR",
+              "static_pin/POTCAR", "static/POTCAR"):
+        if not rec.get(f):
+            return False, f"실행 기록에 phase 사본 해시 없음: {f}"
+    if rec["static_pin/KPOINTS"] != man["KPOINTS"] or rec["static/KPOINTS"] != man["KPOINTS"]:
+        return False, "phase KPOINTS 사본이 배포본과 다르다"
+    if rec["static_pin/POSCAR"] != man["POSCAR"] or rec["static/POSCAR"] != man["POSCAR"]:
+        return False, "phase POSCAR 사본이 배포본과 다르다"
+    if not (rec.get("POTCAR") and rec["static_pin/POTCAR"] == rec["POTCAR"]
+            and rec["static/POTCAR"] == rec["POTCAR"]):
+        return False, "POTCAR 조립본과 phase 사본이 서로 다르다"
+    # CHGCAR 승계 — 플래그를 믿지 않는다: sha 문자열 직접 비교 + PIN_CHECK 교차
     ch = pv.get("chgcar_sha256") or {}
-    if not ch.get("identical"):
-        return False, "CHGCAR pin/static 사본 sha 불일치 또는 미기록"
-    if ((pc.get("chgcar") or {}).get("sha256")
-            and ch.get("pin") != pc["chgcar"]["sha256"]):
+    if not (ch.get("pin") and ch.get("static_copy")):
+        return False, "CHGCAR sha 미기록"
+    if ch["pin"] != ch["static_copy"]:
+        return False, "CHGCAR pin/사본 sha 불일치"
+    pc_sha = (pc.get("chgcar") or {}).get("sha256")
+    if not pc_sha:
+        return False, "PIN_CHECK 에 CHGCAR sha 없음 — 교차검증 불가"
+    if ch["pin"] != pc_sha:
         return False, "PIN_CHECK 의 CHGCAR sha 와 provenance 가 다르다 (다른 실행 혼입?)"
-    ev = pv.get("chgcar_read_evidence") or ["NOT_FOUND"]
-    if ev[0] == "NOT_FOUND":
-        return False, "static 의 charge-read 증거 없음 (vasp.log)"
+    # charge-read 증거 — **부정문은 증거가 아니다** (P0-5)
+    NEG = re.compile(r"not|error|fail|could|unable|cannot|warn", re.I)
+    ev = [x for x in (pv.get("chgcar_read_evidence") or []) if x != "NOT_FOUND"]
+    pos = [x for x in ev if not NEG.search(x)]
+    if not pos:
+        return False, ("charge-read 증거 없음/부정문뿐: "
+                       + (ev[0][:60] if ev else "NOT_FOUND"))
     return True, "ok"
 
 
@@ -4632,14 +4699,23 @@ def selftest() -> int:
 
     # ── --check_pin v2 (E-3차 필수1) — **전체 phase_gates** 경유 수용/거부 ─────
     def _pin_job(dirp, flip_one=False, nup_echo="4.0000", ldauu_echo="0.0 6.2 0.0",
-                 double_run=False):
+                 double_run=False, kmesh=True, incar_tamper=False):
         jd = Path(dirp); (jd / "static_pin").mkdir(parents=True)
         sign = {"0": 1.0, "1": -1.0, "2": 1.0, "3": 1.0}
-        (jd / "job.json").write_text(json.dumps(
-            {"ni_sign_poscar_idx": sign, "counts": [4], "species_order": ["Ni"],
-             "potcar_spec": {"Ni": "Ni_pv"}, "kmesh": {"static_pin": "1 1 1"},
-             "incar_expected": {"static_pin": {"NUPDOWN": "4",
-                                               "LDAUU": "0.0 6.2 0.0"}}}))
+        _meta = {"ni_sign_poscar_idx": sign, "counts": [4], "species_order": ["Ni"],
+                 "potcar_spec": {"Ni": "Ni_pv"},
+                 "incar_expected": {"static_pin": {"NUPDOWN": "4",
+                                                   "LDAUU": "0.0 6.2 0.0"}}}
+        if kmesh:
+            _meta["kmesh"] = {"static_pin": "1 1 1"}
+        (jd / "job.json").write_text(json.dumps(_meta))
+        import hashlib as _hh
+        (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\n")
+        _isha = _hh.sha256((jd / "static_pin" / "INCAR").read_bytes()).hexdigest()
+        (jd / "MANIFEST_RESCUE.json").write_text(json.dumps(
+            {"sha256": {"static_pin/INCAR": _isha}}))
+        if incar_tamper:
+            (jd / "static_pin" / "INCAR").write_text("NUPDOWN = 4\nENCUT = 400\n")
         mom = [1.2, -1.2, 1.2, 1.2]
         if flip_one:
             mom[1] = 1.2                       # 시드 − 인데 + 로 (topology 위반)
@@ -4671,31 +4747,70 @@ def selftest() -> int:
             "⛔check_pin 음성: **LDAUU=5.0 pin → 거부** (E-3차가 재현한 그 구멍)")
         chk(_az.check_pin(_pin_job(Path(_d) / "mr", double_run=True)) == 1,
             "⛔check_pin 음성: 이어붙은 2실행 pin → 거부 (MULTI_RUN)")
+        chk(_az.check_pin(_pin_job(Path(_d) / "km", kmesh=False)) == 1,
+            "⛔check_pin 음성(P0-1): kmesh 결측 → phase_gates 관용을 여기서 막는다")
+        chk(_az.check_pin(_pin_job(Path(_d) / "it", incar_tamper=True)) == 1,
+            "⛔check_pin 음성: pin INCAR 이 배포 해시와 다르면 거부")
 
-    # ── rescue_provenance_ok (E-3차 필수4) — supersede 의 추가 조건 ───────────
-    def _prov_job(dirp, pin_pass=True, ident=True, ev="grid : charge from CHGCAR",
-                  with_pv=True):
-        jd = Path(dirp); (jd / "static_pin").mkdir(parents=True)
-        (jd / "static_pin" / "PIN_CHECK.json").write_text(json.dumps(
-            {"pass": pin_pass, "chgcar": {"sha256": "aa"}}))
-        if with_pv:
-            (jd / "RUN_PROVENANCE.json").write_text(json.dumps(
-                {"parent_match": {"POSCAR": True, "KPOINTS": True},
-                 "chgcar_sha256": {"pin": "aa", "static_copy": "aa" if ident else "bb",
-                                   "identical": ident},
-                 "chgcar_read_evidence": [ev]}))
+    # ── rescue_provenance_ok v2 (E-4차 P0) — 전 필드 fail-closed ─────────────
+    def _prov_job(dirp, **kw):
+        import hashlib as _hh
+        jd = Path(dirp); (jd / "static_pin").mkdir(parents=True); (jd / "static").mkdir()
+        for f, body in (("POSCAR", "pos"), ("KPOINTS", "kp"),
+                        ("static_pin/INCAR", "i1"), ("static/INCAR", "i2"),
+                        ("job.json", "{}"), ("run_job.sh", "rj")):
+            (jd / f).write_text(body)
+        sha = lambda f: _hh.sha256((jd / f).read_bytes()).hexdigest()
+        man = {f: sha(f) for f in ("POSCAR", "KPOINTS", "static_pin/INCAR",
+                                   "static/INCAR", "job.json", "run_job.sh")}
+        (jd / "MANIFEST_RESCUE.json").write_text(json.dumps({"sha256": man}))
+        rec = {f: man[f] for f in ("POSCAR", "KPOINTS", "static_pin/INCAR", "static/INCAR")}
+        rec["POTCAR"] = "pt"
+        for ph in ("static_pin", "static"):
+            rec[f"{ph}/POSCAR"] = man["POSCAR"]; rec[f"{ph}/KPOINTS"] = man["KPOINTS"]
+            rec[f"{ph}/POTCAR"] = "pt"
+        pv = {"run_id": "r1", "utc": "2026-08-25T00:00:00Z",
+              "parent_match": {"POSCAR": True, "KPOINTS": True},
+              "inputs_sha256": rec,
+              "chgcar_sha256": {"pin": "aa", "static_copy": "aa", "identical": True},
+              "chgcar_read_evidence": ["grid : charge from CHGCAR file"]}
+        pv.update(kw.pop("pv_patch", {}))
+        (jd / "RUN_PROVENANCE.json").write_text(json.dumps(pv))
+        pc = {"pass": True, "chgcar": {"sha256": "aa"}}
+        pc.update(kw.pop("pc_patch", {}))
+        (jd / "static_pin" / "PIN_CHECK.json").write_text(json.dumps(pc))
+        if kw.pop("tamper_incar", False):
+            (jd / "static_pin" / "INCAR").write_text("i1-modified")
         return jd
     with _tf.TemporaryDirectory() as _d:
         chk(_az.rescue_provenance_ok(_prov_job(Path(_d) / "g"))[0] is True,
-            "provenance 양성: PIN_CHECK + PROVENANCE 완비 → supersede 허용")
-        chk(_az.rescue_provenance_ok(_prov_job(Path(_d) / "nopv", with_pv=False))[0] is False,
-            "⛔provenance 음성: RUN_PROVENANCE 없음 → supersede 거부")
-        chk(_az.rescue_provenance_ok(_prov_job(Path(_d) / "sha", ident=False))[0] is False,
-            "⛔provenance 음성: CHGCAR 사본 sha 불일치 → 거부")
-        chk(_az.rescue_provenance_ok(_prov_job(Path(_d) / "ev", ev="NOT_FOUND"))[0] is False,
-            "⛔provenance 음성: charge-read 증거 없음 → 거부")
-        chk(_az.rescue_provenance_ok(_prov_job(Path(_d) / "pf", pin_pass=False))[0] is False,
-            "⛔provenance 음성: PIN_CHECK.pass=false → 거부")
+            "provenance 양성: 완비 → supersede 허용")
+        for nm, kw, why in (
+            ("p1", {"pv_patch": {"parent_match": {}}},
+             "⛔P0-4: parent_match={} (all({})==True 우회) → 거부"),
+            ("p2", {"pv_patch": {"chgcar_sha256": {"pin": "aa", "static_copy": "bb",
+                                                    "identical": True}}},
+             "⛔P0-4: identical 거짓 플래그 — sha 직접 비교로 거부"),
+            ("p3", {"pc_patch": {"chgcar": None}},
+             "⛔P0-4: PIN_CHECK 에 CHGCAR sha 없음 → 교차검증 불가 거부"),
+            ("p4", {"pv_patch": {"chgcar_read_evidence":
+                                 ["ERROR: charge density could not be read"]}},
+             "⛔P0-5: 부정문('could not be read')은 증거가 아니다 → 거부"),
+            ("p5", {"pv_patch": {"inputs_sha256": None}},
+             "⛔P0-3: 실행 기록 해시 없음 → 배포 대조 불가 거부"),
+            ("p7", {"tamper_incar": True},
+             "⛔사후 변조: 디스크 INCAR ≠ 배포 해시 → 거부"),
+        ):
+            _r = _az.rescue_provenance_ok(_prov_job(Path(_d) / nm, **kw))
+            chk(_r[0] is False, f"{why} ({_r[1][:40]})")
+        # P0-2: phase KPOINTS 사본이 다르면 거부
+        _jd = _prov_job(Path(_d) / "p6")
+        _pv = json.loads((_jd / "RUN_PROVENANCE.json").read_text())
+        _pv["inputs_sha256"]["static/KPOINTS"] = "deadbeef"
+        (_jd / "RUN_PROVENANCE.json").write_text(json.dumps(_pv))
+        chk(_az.rescue_provenance_ok(_jd)[0] is False,
+            "⛔P0-2: VASP 가 실제 읽는 phase KPOINTS 사본이 배포본과 다르면 거부")
+
     m_ak = re.search(r"^AUDIT_KEYS_RUNTIME = \((.*?)\)", az, re.M | re.S)
     if m_ak:
         _rk = {x.strip().strip('"') for x in m_ak.group(1).split(",") if x.strip()}
@@ -5222,16 +5337,32 @@ import hashlib, json, sys, time
 sha = lambda f: hashlib.sha256(open(f, "rb").read()).hexdigest()
 meta = json.load(open("job.json"))
 want = meta["rescue"]["parent_sha256"]
+man = json.load(open("MANIFEST_RESCUE.json"))["sha256"]
+# ⚠ VASP 가 실제로 읽는 것은 **phase 디렉터리 사본**이다 (codex E-4차 P0-2·3).
+#   루트만 기록하면 사본 변조가 provenance 밖에 남는다 — 전부 기록·대조한다.
+files = ("POTCAR", "POSCAR", "KPOINTS", "static_pin/INCAR", "static/INCAR",
+         "static_pin/POSCAR", "static/POSCAR", "static_pin/KPOINTS",
+         "static/KPOINTS", "static_pin/POTCAR", "static/POTCAR")
 pv = {"run_id": sys.argv[1], "utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
-      "inputs_sha256": {f: sha(f) for f in
-                        ("POTCAR", "POSCAR", "KPOINTS",
-                         "static_pin/INCAR", "static/INCAR")},
+      "inputs_sha256": {f: sha(f) for f in files},
       "parent_match": {"POSCAR": sha("POSCAR") == want["POSCAR"],
                        "KPOINTS": sha("KPOINTS") == want["KPOINTS"]}}
-if not all(pv["parent_match"].values()):
-    json.dump(pv, open("RUN_PROVENANCE.json", "w"), indent=1)
-    raise SystemExit("⛔ POSCAR/KPOINTS 가 부모 해시와 다르다 — 실행 중단")
+bad = []
+for k in ("POSCAR", "KPOINTS"):
+    if pv["parent_match"].get(k) is not True:
+        bad.append(f"부모 대조 실패: {k}")
+for f in ("POSCAR", "KPOINTS", "static_pin/INCAR", "static/INCAR",
+          "job.json", "run_job.sh"):
+    if sha(f) != man.get(f):
+        bad.append(f"배포 해시 불일치: {f}")
+for ph in ("static_pin", "static"):
+    for base in ("POSCAR", "KPOINTS", "POTCAR"):
+        if pv["inputs_sha256"][f"{ph}/{base}"] != pv["inputs_sha256"][base]:
+            bad.append(f"phase 사본 불일치: {ph}/{base}")
+pv["preflight_problems"] = bad
 json.dump(pv, open("RUN_PROVENANCE.json", "w"), indent=1)
+if bad:
+    raise SystemExit("⛔ preflight 실패 — 실행 중단: " + "; ".join(bad))
 PY
 ( cd static_pin && mpirun -np ${NP:-48} ${VASP:-vasp_std} 2>&1 | tee vasp.log )
 python3 ../../analyze_results.py --check_pin . \
@@ -5253,9 +5384,14 @@ python3 - <<'PY'
 import json, re
 pv = json.load(open("RUN_PROVENANCE.json"))
 log = open("static/vasp.log", errors="replace").read()
+NEG = re.compile(r"not|error|fail|could|unable|cannot|warn", re.I)
 hits = [ln.strip() for ln in log.splitlines()
         if re.search(r"charg", ln, re.I) and re.search(r"read|from file", ln, re.I)]
-pv["chgcar_read_evidence"] = hits[:5] or ["NOT_FOUND"]
+pos = [ln for ln in hits if not NEG.search(ln)]
+# ⚠ 부정문('could not be read')은 증거가 아니다 (codex E-4차 P0-5) —
+#   양성만 증거로, 부정문은 따로 남겨 재협상 근거로 쓴다.
+pv["chgcar_read_evidence"] = pos[:5] or ["NOT_FOUND"]
+pv["chgcar_read_negatives"] = [ln for ln in hits if NEG.search(ln)][:5]
 json.dump(pv, open("RUN_PROVENANCE.json", "w"), indent=1)
 print("charge-read 증거:", pv["chgcar_read_evidence"][0])
 PY

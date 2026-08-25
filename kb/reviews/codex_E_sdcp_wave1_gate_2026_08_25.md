@@ -3,7 +3,7 @@ title: "교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 �
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, sdcp, vasp, gate, wave15]
-status: 3차리뷰-반영완료-4차대기
+status: 4차리뷰-반영완료-5차대기
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -121,3 +121,26 @@ selftest: check_pin 6건(양2·음4) · provenance 5건(양1·음4) · rescue 17
 ⚠ charge-read 증거의 grep 패턴(`charg`+`read|from file`)은 VASP 빌드별 문구 변형
 위험이 있다 — NOT_FOUND 로 오면 supersede 가 막히고 PROVENANCE 원문으로 재협상
 (fail-closed 쪽으로 실패).
+
+
+---
+
+## 📥 E-4차 판정 (2026-08-25) — "보류 · fail-open P0 5건"
+
+내 적대 재현이 목록 도착 전에 3건을 독립 확인했고(결측 provenance 통과 · 부정문
+증거 · 배포 대조 없음), **kmesh 결측 통과 · phase KPOINTS 가 provenance 밖**
+2건은 codex 만 잡았다.
+
+**5건 반영 (v4, zip sha256 76bba0d5…):**
+
+| P0 | 지적 | 반영 |
+|---|---|---|
+| 1 | kmesh 결측이 통과 | phase_gates 의 관용(wave1 호환)을 check_pin 에서 차단 — kmesh.static_pin 결측 = 거부 |
+| 2 | 실제 KPOINTS(phase 사본)가 provenance 밖 | preflight 가 **루트+phase 사본 전부**(11파일) 해시 기록·대조. 사본 ≠ 루트 = 실행 전 중단 |
+| 3 | POTCAR·배포 입력 미대조 | MANIFEST_RESCUE ↔ 실행 기록 ↔ 디스크 **3중 대조** (job.json·run_job.sh 포함). POTCAR 는 조립본 ↔ phase 사본 일치 강제 |
+| 4 | 결측 provenance 통과 (`all({})==True`) | 키별 `is True` 요구 · identical 플래그 불신(sha 직접 비교) · PIN_CHECK CHGCAR sha 필수 + 교차 |
+| 5 | charge-read 부정문 양성 처리 | 부정 마커(not·error·fail·could·unable·cannot·warn) 필터 — runner 는 부정문을 따로 기록(재협상 근거), 판정기는 양성 클린 라인만 인정 |
+
+추가 봉인: pin INCAR 사후 변조(디스크 ≠ 배포 해시) 거부.
+음성 selftest: check_pin +2 (kmesh·INCAR 변조) · provenance 7건 (P0 다섯 + 기록해시
+부재 + 사후 변조). 배포본 상대 적대 재확인 5/5 닫힘.
