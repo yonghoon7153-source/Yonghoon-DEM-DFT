@@ -1314,6 +1314,18 @@
    ],
    "note": "요청서는 bundle 생성을 주장했지만 리뷰어가 접근 가능한 자료에 `.bundle` 이 없었다 (공개 origin 을 따로 clone 해 감사).  ⇒ **네트워크 없이 단독 재현 가능한 전달**은 입증되지 않았다.\n또한 bundle smoke check 가 clone 에 어떤 HEAD 가 있다는 것만 보고 **intended SHA 와 같은지**는 안 본다.\n종료조건: 다음 패키지에 실제 full bundle 과 SHA-256 을 포함하고, 빈 repo clone HEAD 가 intended full SHA 와 **정확히 같은지** 검사.",
    "claimed_fixed_sha": "672dedb1"
+  },
+  {
+   "id": "SELF-07",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
+   "title": "원고 Table S3 의 **유일한 값**이 `hold` 상태였다",
+   "evidence_tests": [
+    "scripts/check_review_findings.py --ban-sweep"
+   ],
+   "note": "R5-CX-06 대응에서 원고 `.docx` 에 상태 배너만 달고 **표 안의 숫자는 그대로 뒀다**.  Table S3 은 전 항목이 `—` 인데 `DBE/SBE electronic conductivity ratio` 칸만 값이 있어서, 다른 칸이 '아직 안 정함' 으로 읽히는 가운데 **저것만 확정 결과처럼** 보였다.\n★ CLAUDE.md ④ (\"수치를 철회하는 커밋은 같은 커밋에서 파생 문서를 고친다\") 의 나머지 절반을 안 한 것이다 — 배너는 파일을 설명하지 셀을 고치지 않는다.\n⇒ 그 셀만 `—` 로 (문단 240개 중 **1개만** 변경, 기계 확인).  D1·D15 산문 메모의 같은 값은 **상황 설명**이라 그대로 둔다 (파일 배너가 덮는다).\n⚠ 표를 채우려면: 두께·porosity·면적용량은 지금 가능(압밀 결과, `docs/sdcp_318_base_sbe_dbe_comparison.md` §2, case 260714_145738_778fa4 = 킷과 동일 확인) · coverage·접촉수·연결률은 **vox 0.15 재추출** 필요(D4, CPU 가능) · σ 3행은 **C(GPU) 대기**."
   }
  ]
 }
