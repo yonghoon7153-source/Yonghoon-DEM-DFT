@@ -861,6 +861,10 @@ class DiffusionPointOut(BaseModel):
     #: √t 에 대한 직선성.  Weppner-Huggins 의 가정이 곧 이것이다.
     sqrt_t_r_squared: float
     reason: str = ""
+    #: ΔE_s 가 기대는 휴지의 길이와, 그 끝에서 전압이 아직 움직인 양 (mV).
+    #: D 와 같은 행에 있어야 하는 증거다 (ADR 0020, 리뷰 #17).
+    rest_s: float | None = None
+    drift_mv: float | None = None
 
 
 class DiffusionOut(BaseModel):

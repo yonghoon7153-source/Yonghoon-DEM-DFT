@@ -290,6 +290,13 @@ class DiffusionPoint:
     #: Empty when the point is usable.
     reason: str = ""
     pulse_start: int = 0
+    #: How long the following rest was, s -- ``None`` when there was none.
+    #: ΔE_s leans on this rest being an equilibrium; the pOCV carries the same
+    #: evidence, and a D whose rest is not shown next to it reads as more
+    #: certain than it is (ADR 0020, review #17).
+    rest_s: float | None = None
+    #: How much the voltage still moved over the last tenth of that rest, mV.
+    drift_mv: float | None = None
 
 
 @dataclass
@@ -422,8 +429,31 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
 
         following = blocks[i + 1] if i + 1 < len(blocks) else None
         if following is None or following.mode != "rest":
-            # 휴지 없는 펄스는 점을 못 만든다 (pOCV 와 같은 이유).  파일 끝이
-            # 아니면 방향 전환 직전인데, 전환은 위에서 기준선을 이미 지웠다.
+            # 휴지 없는 펄스.  행째 사라지면 화면의 "펄스 N개" 와 이유 목록이
+            # 함께 거짓이 된다 (리뷰 #25) -- 이유 있는 행으로 남긴다.  전압은
+            # 평형이 없으므로 펄스 끝의 분극된 값이고, 그렇다고 적는다.
+            # 기준선도 지운다: 휴지 없이 펄스가 이어지는 파일에서 다음 ΔE_s 가
+            # 두 펄스를 걸치면 D 가 4배가 된다 (짧은 휴지와 같은 규칙).
+            if series_base is None:
+                series_base = block.capacity_end_mah
+            capacity = (block.capacity_end_mah - series_base
+                        if block.mode == "charge"
+                        else series_base - block.capacity_end_mah)
+            points.append(DiffusionPoint(
+                capacity_mah=capacity,
+                voltage_v=float(voltage[block.stop - 1]),
+                d_cm2_s=None,
+                delta_es_v=0.0,
+                delta_et_v=0.0,
+                pulse_s=block.duration_s,
+                sqrt_t_r_squared=0.0,
+                reason="휴지가 뒤따르지 않는 펄스입니다 — 평형 전압도 ΔE_s 도 "
+                       "없습니다 (전압은 펄스 끝의 분극된 값)",
+                pulse_start=block.start,
+                rest_s=None,
+                drift_mv=None,
+            ))
+            previous_relaxed = None
             continue
 
         relaxed = float(voltage[following.stop - 1])
@@ -476,6 +506,8 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
             sqrt_t_r_squared=r_squared,
             reason=reason,
             pulse_start=block.start,
+            rest_s=following.duration_s,
+            drift_mv=_drift_mv(voltage, following),
         ))
         previous_relaxed = None if short_rest else relaxed
 

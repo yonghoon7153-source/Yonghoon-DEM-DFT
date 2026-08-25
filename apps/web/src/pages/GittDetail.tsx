@@ -120,7 +120,7 @@ export function GittDetail() {
             },
             {
               label: '확산계수',
-              title: '용량 · D 두 열 — 숫자가 나온 점만',
+              title: '용량 · D · 휴지(s) · 드리프트(mV) — 숫자가 나온 점만, 증거와 함께',
               disabled: !diffusion.data?.points.length,
               build: () => diffusionTsv(diffusion.data?.points ?? []),
               skipped: skippedDiffusionPoints(diffusion.data?.points ?? []),
@@ -252,6 +252,11 @@ function DiffusionTable({
               <th>ΔE_s (V)</th>
               <th>ΔE_t (V)</th>
               <th>펄스</th>
+              <th>휴지</th>
+              {/* 휴지 끝에서 전압이 아직 움직인 양.  D 는 그 휴지가 평형이라는
+                  가정 위에 있고, 이 증거 없이 숫자만 있으면 실제보다 확실해
+                  보인다 (ADR 0020). */}
+              <th>드리프트 (mV)</th>
               <th>√t R²</th>
               <th style={{ textAlign: 'left' }}>왜 안 나왔나</th>
             </tr>
@@ -264,6 +269,12 @@ function DiffusionTable({
                 <td className="dim">{num(point.delta_es_v, 4)}</td>
                 <td className="dim">{num(point.delta_et_v, 4)}</td>
                 <td className="dim">{num(point.pulse_s, 4)} s</td>
+                <td className="dim">
+                  {point.rest_s == null ? '—' : `${num(point.rest_s, 4)} s`}
+                </td>
+                <td className={point.drift_mv != null && point.drift_mv > 5 ? 'warn' : 'dim'}>
+                  {point.drift_mv == null ? '—' : num(point.drift_mv, 2)}
+                </td>
                 {/* Weppner-Huggins 의 가정이 곧 이 값이다. */}
                 <td className={point.sqrt_t_r_squared >= 0.98 ? 'dim' : 'warn'}>
                   {num(point.sqrt_t_r_squared, 4)}

@@ -264,3 +264,30 @@ def test_a_short_rest_invalidates_the_next_baseline_too():
     assert abs(recovered.delta_es_v) == pytest.approx(0.05, rel=1e-3)
     normal = result.points[1]
     assert recovered.d_cm2_s == pytest.approx(normal.d_cm2_s, rel=1e-6)
+
+
+# --- 증거 보존과 행 보존 (리뷰 #17·#25) ---------------------------------------
+
+def test_every_pulse_gets_a_row_even_without_a_rest():
+    """마지막 휴지가 없는 파일 — 펄스 3개면 행도 3개다.
+
+    행째 사라지면 화면의 "펄스 N개" 와 이유 목록이 함께 거짓이 된다.
+    """
+    wrd = gitt(n_pulses=3, trailing_rest=False)
+    result = diffusion(wrd, **MATERIAL)
+    assert len(result.points) == 3
+    last = result.points[-1]
+    assert last.d_cm2_s is None
+    assert "휴지가 뒤따르지 않는" in last.reason
+    assert last.rest_s is None
+
+
+def test_diffusion_points_carry_their_rest_evidence():
+    """D 는 휴지가 평형이라는 가정 위에 있다.  휴지 길이와 잔여 드리프트가
+    같은 행에 실려야 표·클립보드에서 그 가정을 검증할 수 있다 (ADR 0020)."""
+    wrd = gitt(n_pulses=3)
+    result = diffusion(wrd, **MATERIAL)
+    pocv = pseudo_ocv(wrd)
+    for point, reference in zip(result.points, pocv.charge, strict=True):
+        assert point.rest_s == pytest.approx(600.0, rel=0.05)
+        assert point.drift_mv == pytest.approx(reference.drift_mv)

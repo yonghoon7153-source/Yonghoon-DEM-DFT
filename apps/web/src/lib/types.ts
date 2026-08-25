@@ -770,6 +770,9 @@ export interface DiffusionPoint {
   /** √t 직선성 — Weppner-Huggins 의 가정이 곧 이것이다. */
   sqrt_t_r_squared: number
   reason: string
+  /** ΔE_s 가 기대는 휴지의 길이(s)와 그 끝의 잔여 드리프트(mV) — D 의 증거다. */
+  rest_s?: number | null
+  drift_mv?: number | null
 }
 
 export interface Diffusion {

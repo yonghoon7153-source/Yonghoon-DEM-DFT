@@ -257,7 +257,8 @@ def run_diffusion(gitt_id: int, session: Session = Depends(get_session)):
         capacity_mah=point.capacity_mah, voltage_v=point.voltage_v,
         d_cm2_s=point.d_cm2_s, delta_es_v=point.delta_es_v,
         delta_et_v=point.delta_et_v, pulse_s=point.pulse_s,
-        sqrt_t_r_squared=point.sqrt_t_r_squared, reason=point.reason)
+        sqrt_t_r_squared=point.sqrt_t_r_squared, reason=point.reason,
+        rest_s=point.rest_s, drift_mv=point.drift_mv)
         for point in result.points]
     return DiffusionOut(
         gitt_id=gitt_id,

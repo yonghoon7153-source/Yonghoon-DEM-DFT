@@ -344,12 +344,20 @@ describe('diffusionTsv', () => {
     // `--` 로 끼워 넣으면 Origin 에서는 선이 끊긴 자리로만 보이고, 왜 끊겼는지는
     // 화면에만 남는다 — 워크시트에서는 측정하지 않은 것과 구분되지 않는다.
     const text = diffusionTsv([
-      { capacity_mah: 0, d_cm2_s: null },
-      { capacity_mah: 0.5, d_cm2_s: 1.27e-6 },
+      { capacity_mah: 0, d_cm2_s: null, rest_s: 600, drift_mv: 0.5 },
+      { capacity_mah: 0.5, d_cm2_s: 1.27e-6, rest_s: 600, drift_mv: 0.7 },
     ])
-    expect(text).toBe('0.5\t0.00000127')
+    expect(text).toBe('0.5\t0.00000127\t600\t0.7')
     expect(skippedDiffusionPoints([
       { d_cm2_s: null }, { d_cm2_s: 1e-6 },
     ])).toBe(1)
+  })
+
+  it('휴지·드리프트 증거가 D 와 같은 행으로 나간다 (ADR 0020)', () => {
+    // 엑셀에 D 만 붙으면 이완이 덜 된 휴지의 D 가 확정값처럼 읽힌다.
+    const text = diffusionTsv([
+      { capacity_mah: 0.5, d_cm2_s: 1e-6, rest_s: 60, drift_mv: 20 },
+    ])
+    expect(text).toBe('0.5\t0.000001\t60\t20')
   })
 })

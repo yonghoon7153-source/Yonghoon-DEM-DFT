@@ -307,12 +307,18 @@ export function pocvTsv(pocv: {
 export function diffusionTsv(points: {
   capacity_mah: number
   d_cm2_s: number | null
+  rest_s?: number | null
+  drift_mv?: number | null
 }[]): string {
   const usable = points.filter((point) => point.d_cm2_s !== null)
   if (!usable.length) return ''
+  // 휴지 길이와 잔여 드리프트는 D 의 증거라 함께 나간다 (ADR 0020, 리뷰
+  // #17): 엑셀에 D 만 붙으면 이완이 덜 된 휴지의 D 가 확정값처럼 읽힌다.
   return tsvColumns([
     usable.map((point) => cell(point.capacity_mah)),
     usable.map((point) => cell(point.d_cm2_s)),
+    usable.map((point) => cell(point.rest_s ?? null)),
+    usable.map((point) => cell(point.drift_mv ?? null)),
   ])
 }
 
