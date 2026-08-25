@@ -854,7 +854,21 @@ ensure_deps() {
     py="$(python_bin)"
     if [ ! -x "$REPO/.venv/bin/python" ] && [ -z "${VIRTUAL_ENV:-}" ]; then
       say "  ${DIM}가상환경 생성 (.venv)${OFF}"
-      python3 -m venv "$REPO/.venv" || die "venv 생성 실패"
+      # 여기서 그냥 죽으면 화면에 파이썬의 영어 안내만 남는다.  그것은 "이
+      # 패키지를 까세요" 까지만 말하고, **이 기계에 그게 정말 필요한지**는
+      # 말해 주지 않는다 -- 남의 서버만 볼 기계라면 필요 없다 (ADR 0011).
+      if ! python3 -m venv "$REPO/.venv"; then
+        printf '%s✕%s venv 생성 실패\n' "$RED" "$OFF" >&2
+        say ""
+        say "  ${B}이 기계에서 서버를 띄울 거라면${OFF} ${DIM}— 파이썬의 venv 패키지가 없습니다:${OFF}"
+        say "    ${GREEN}sudo apt install -y python3-venv${OFF}   ${DIM}(안 되면 위 안내가 짚어 준 python3.XX-venv)${OFF}"
+        say ""
+        say "  ${B}남의 서버(중추 서버)만 볼 거라면${OFF} ${DIM}— 필요 없습니다. 주소만 정하면 됩니다:${OFF}"
+        say "    ${GREEN}bmlin  <랩 안 주소>${OFF}    ${DIM}같은 공유기 안일 때${OFF}"
+        say "    ${GREEN}bmlout <터널 주소>${OFF}    ${DIM}다른 공유기일 때 (중추 서버에서 bml share)${OFF}"
+        say "    ${DIM}그러면 이 기계는 브라우저 노릇만 하므로 파이썬이 아예 필요 없습니다.${OFF}"
+        exit 1
+      fi
       py="$REPO/.venv/bin/python"
     fi
     say "  ${DIM}python 패키지 설치…${OFF}"
@@ -4127,7 +4141,19 @@ main() {
         promise_kept
       fi
       ;;
-    pull|sync|update)  sync_repo; ensure_deps; ok "최신 상태입니다." ;;
+    pull|sync|update)
+      # 중추 서버가 정해져 있으면 이 기계는 **브라우저**다 (ADR 0011) -- 파서도
+      # API 도 여기서 돌지 않으므로 파이썬 환경이 필요 없다.  `serve` 분기는
+      # 이미 이 규칙을 지키고 있었는데 `pull` 만 빠져서, 남의 서버만 보는
+      # 기계에서 1~3분짜리 설치가 돌고 python3-venv 가 없으면 거기서 죽었다.
+      # 저장소는 맞춘다 -- bml·문서·스킬이 전부 거기서 온다.
+      sync_repo
+      if [ -n "$SERVER" ]; then
+        ok "최신 상태입니다. ${DIM}(중추 서버 ${SERVER} 를 보는 기계라 의존성은 건너뜁니다)${OFF}"
+      else
+        ensure_deps; ok "최신 상태입니다."
+      fi
+      ;;
     status|st)         cmd_status ;;
     mirrored|mirror)   cmd_mirrored ;;
     check|test)        cmd_check ;;

@@ -988,6 +988,28 @@ check "restart 는 멈추기 전에 sync_repo 를 부른다" \
   "$(grep -cE 'sync_repo; (ensure_deps; )?cmd_stop --keep-tunnel' "$BML")" "2"
 
 echo
+echo "남의 서버만 보는 기계는 파이썬 환경이 필요 없다"
+# 실제로 일어난 일: 다른 공유기의 노트북에서 `bml pull` 이 1~3분짜리 의존성
+# 설치를 시작했고, python3-venv 가 없어 거기서 죽었다.  그 기계는 브라우저
+# 노릇만 할 참이라 파서도 API 도 거기서 돌지 않는다 (ADR 0011).
+# `serve` 분기는 이미 이 규칙을 지키고 있었는데 `pull` 만 빠져 있었다.
+check "pull 도 중추 서버가 있으면 건너뛴다" \
+  "$(grep -c '중추 서버 ${SERVER} 를 보는 기계라 의존성은 건너뜁니다' "$BML")" "1"
+check "그래도 저장소는 맞춘다" \
+  "$(awk '/pull\|sync\|update\)/,/^      ;;/' "$BML" | grep -c 'sync_repo')" "1"
+
+echo "venv 를 못 만들면 두 갈래를 다 말한다"
+# 파이썬이 찍는 영어 안내는 "이 패키지를 까세요" 까지만 말하고, 이 기계에
+# 그게 정말 필요한지는 말해 주지 않는다.  둘 다 없으면 사람은 필요도 없는
+# 패키지를 설치하려고 sudo 를 찾아 헤맨다.
+check "서버를 띄울 거면 깔 것을 짚는다" \
+  "$(grep -c '이 기계에서 서버를 띄울 거라면' "$BML")" "1"
+check "남의 서버만 볼 거면 필요 없다고 말한다" \
+  "$(grep -c '남의 서버(중추 서버)만 볼 거라면' "$BML")" "1"
+check "그때 칠 명령도 함께 준다" \
+  "$(grep -c 'bmlout <터널 주소>' "$BML")" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '통과 %d건.\n' "$pass"
 else
