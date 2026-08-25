@@ -2666,3 +2666,9 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   구제하는 결함). 자유 증가 + 초과 슬롯은 폴백. A4(ids 422)는 확인 결과
   이미 모든 경로가 처리하고 있었다 — compare 두 곳 try/int→422, eis points
   숫자 검사, fit-batch 는 pydantic list[int].
+## [2026-08-25] docs | 교차검증 전량 마감 + ADR 0020 계약 명문화 + DBW 리뷰 과제
+- 교차표를 최종 현황으로 갱신: Codex 33 전부 닫힘(수정 31 + 이미-수정 2),
+  Claude 단독 9 닫힘(수정 8 + 이미-처리 1), 반박 0. ADR 0020 에 시리즈 상대
+  용량축·기준선 무효화·증거 동반 계약을 추가 결정으로 명문화. DBW 자체
+  적대 리뷰(공격 14지점)에서 bootstrap n_boot<=0 가드 1건 수정, Codex 용
+  DBW 리뷰 과제 문서 작성 (docs/reviews/codex-review-dbw-knee.md).

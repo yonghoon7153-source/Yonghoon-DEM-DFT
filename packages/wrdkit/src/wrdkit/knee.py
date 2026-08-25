@@ -1542,6 +1542,8 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
     """
     cycles = np.asarray(cycles, dtype=np.float64)
     values = np.asarray(values, dtype=np.float64)
+    if n_boot <= 0:
+        return None
     fit = _dbw_fit(cycles, values)
     if fit is None:
         return None
