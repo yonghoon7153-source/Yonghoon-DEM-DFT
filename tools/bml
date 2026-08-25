@@ -2354,6 +2354,46 @@ dns_public_state() {
   dns_public_json_verdict "$out"
 }
 
+#: 공용 DNS 가 준 A 레코드 하나 (IPv4).  못 얻으면 빈 문자열.
+#:
+#: `dns_public_state` 와 따로 두는 이유는 쓰임이 다르기 때문이다.  저쪽은
+#: "이 망이 막는가" 만 알면 되지만, 이쪽은 **그 주소로 실제로 찔러 보려고**
+#: IP 를 원한다.  이름을 못 쓰는 기계에서 터널이 살아 있는지 아는 유일한 길이다.
+dns_public_ip() {
+  local host="${1:-}" out
+  [ -n "$host" ] || return 0
+  if command -v dig >/dev/null 2>&1; then
+    out="$(dig +short +time=4 +tries=1 @1.1.1.1 "$host" A 2>/dev/null \
+           | grep -E '^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$' | head -n 1)"
+    [ -n "$out" ] && { printf '%s' "$out"; return 0; }
+  fi
+  if command -v nslookup >/dev/null 2>&1; then
+    # 첫 두 줄은 물어본 서버 자신의 주소다 -- 그것을 집으면 1.1.1.1 을 찌른다.
+    out="$(nslookup "$host" 1.1.1.1 2>/dev/null | sed -n '/^Name:/,$p' \
+           | sed -n 's/^Address: *\([0-9.]*\)$/\1/p' | head -n 1)"
+    [ -n "$out" ] && { printf '%s' "$out"; return 0; }
+  fi
+  # dnsutils 가 없는 기계가 흔하다.  curl 은 있으므로 DNS-over-HTTPS 로.
+  out="$(curl -sS -m 6 -H 'accept: application/dns-json' \
+         "https://1.1.1.1/dns-query?name=${host}&type=A" 2>/dev/null)"
+  printf '%s' "$out" | tr ',{}' '\n\n\n' \
+    | sed -n 's/.*"data":"\([0-9][0-9.]*\)".*/\1/p' | head -n 1
+}
+
+#: 이름을 건너뛰고 **IP 로 직접** 워크벤치인지 물어본다.  HTTP 코드를 낸다.
+#:
+#: `curl --resolve` 는 이 기계의 resolver 를 통째로 건너뛰므로, DNS 만 막힌
+#: 망에서도 진짜 답이 나온다.  이것이 있기 전에는 "이름이 잡히는 것과 터널이
+#: 살아 있는 것은 다릅니다 -- 휴대폰으로 열어 봐야 압니다" 까지가 끝이었다.
+#: 사람에게 다른 기계를 꺼내라고 하기 전에, 여기서 알 수 있는 것은 여기서 안다.
+tunnel_probe_by_ip() {
+  local url="$1" ip="$2" host port
+  host="$(url_host "$url")" || { printf '000'; return; }
+  case "$url" in https://*) port=443 ;; *) port=80 ;; esac
+  curl -sS -o /dev/null -m 12 --resolve "${host}:${port}:${ip}" \
+    -w '%{http_code}' "$url/api/health" 2>/dev/null || printf '000'
+}
+
 tunnel_block_layer() {
   local host
   host="$(url_host "${1:-}")" || { printf 'unknown'; return; }
@@ -2551,11 +2591,44 @@ server_unreachable_help() {
             # 와일드카드라 아무 이름이나 같은 IP 로 잡힌다 (실측으로 확인).
             # 그 둘을 뭉뚱그리면 죽은 터널을 기다리게 만든다.
             say "  ${B}→ 공용 DNS 에서는 잡힙니다 — 이 망의 DNS 가 막는 것입니다.${OFF}"
+            # 여기서 멈추지 않는다.  IP 를 얻었으면 이름을 건너뛰고 직접
+            # 찔러 볼 수 있고, 그러면 "터널이 살아 있는가" 까지 **여기서**
+            # 답이 난다 -- 사람에게 휴대폰을 꺼내라고 하기 전에.
+            local tip="" tcode=""
+            tip="$(dns_public_ip "$uhost")"
+            if [ -n "$tip" ]; then
+              say "    ${DIM}이름을 건너뛰고 그 주소(${tip})로 직접 물어봅니다...${OFF}"
+              tcode="$(tunnel_probe_by_ip "$url" "$tip")"
+            fi
+            case "$tcode" in
+              200)
+                say "  ${B}→ 터널은 살아 있습니다.${OFF} ${DIM}막는 것은 이 기계의 DNS 하나뿐입니다.${OFF}"
+                say "    ${DIM}브라우저도 같은 DNS 를 쓰므로, 그대로는 이 기계에서 열리지 않습니다. 셋 중 하나입니다:${OFF}"
+                say "    ${DIM}1.${OFF} ${B}같은 랩 안이면 터널 말고 LAN 주소${OFF} ${DIM}— 중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 줄. 가장 빠릅니다.${OFF}"
+                say "    ${DIM}2. 휴대폰 테더링으로 바꿉니다.${OFF}"
+                say "    ${DIM}3. 이 주소만 이름표를 손으로 박아 둡니다 (이 터널에만, 임시로):${OFF}"
+                say "       ${GREEN}echo '${tip} ${uhost}' | sudo tee -a /etc/hosts${OFF}"
+                say "       ${DIM}터널을 다시 열면 주소가 바뀌므로, 끝나면 지웁니다:${OFF}"
+                say "       ${GREEN}sudo sed -i '/${uhost}/d' /etc/hosts${OFF}"
+                say ""
+                return 0
+                ;;
+              000|'')
+                if [ -n "$tip" ]; then
+                  say "  ${B}→ 그 주소로도 못 나갑니다.${OFF} ${DIM}DNS 만이 아니라 나가는 길 자체가 막혔거나, 터널이 닫혔습니다.${OFF}"
+                  say "    ${DIM}둘을 가르려면 휴대폰(모바일 데이터)으로 그 주소를 열어 보세요.${OFF}"
+                fi
+                ;;
+              *)
+                say "  ${B}→ 그 주소는 닿는데 우리 서버가 아닙니다:${OFF} ${DIM}$(tunnel_code_meaning "$tcode")${OFF}"
+                say "    ${DIM}중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '공유 주소' 줄을 그대로 씁니다.${OFF}"
+                say ""
+                return 0
+                ;;
+            esac
             say "    ${DIM}같은 랩 안이라면 터널 말고 LAN 주소를 쓰세요 — 중추 서버의${OFF} ${GREEN}bml status${OFF} ${DIM}의 '접속 주소' 줄.${OFF}"
             say "    ${DIM}밖에서 봐야 한다면 휴대폰 테더링으로 바꿉니다. (이 기계의 DNS 를 1.1.1.1 로 바꾸는 것은${OFF}"
             say "    ${DIM}권하지 않습니다 — 이런 망은 바깥 53 번도 막는 일이 많아, 그러면 DNS 가 통째로 죽습니다.)${OFF}"
-            say "    ${DIM}단, 이름이 잡히는 것과 터널이 살아 있는 것은 다릅니다 (lhr.life 는 어떤 이름이든${OFF}"
-            say "    ${DIM}잡히는 와일드카드입니다). 터널 자체는 휴대폰으로 그 주소를 열어 봐야 압니다.${OFF}"
             say ""
             return 0
             ;;

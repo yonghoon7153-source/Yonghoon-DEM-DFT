@@ -262,6 +262,33 @@ check "대답이 없으면 모른다"       "$(dns_public_json_verdict '')"     
 check "모르는 모양이면 모른다"     "$(dns_public_json_verdict 'garbage')" "unknown"
 
 echo
+echo "이름이 막혔어도 IP 로 직접 물어본다 — 여기서 알 수 있는 것은 여기서 안다"
+# 이름이 잡히는 것과 터널이 살아 있는 것은 다르다 (lhr.life 는 와일드카드라
+# 아무 이름이나 같은 IP 로 잡힌다).  예전에는 거기서 멈추고 "휴대폰으로 열어
+# 봐야 압니다" 로 끝났는데, 공용 DNS 가 IP 를 줬으면 `curl --resolve` 로
+# resolver 를 건너뛰고 진짜 답을 받을 수 있다.
+check "DoH 응답에서 A 레코드를 뽑는다" \
+  "$(printf '%s' '{"Status":0,"Answer":[{"name":"a.lhr.life","type":1,"data":"64.227.135.145"}]}' \
+     | tr ',{}' '\n\n\n' | sed -n 's/.*"data":"\([0-9][0-9.]*\)".*/\1/p' | head -n 1)" \
+  "64.227.135.145"
+# CNAME 이 먼저 실려 오는 응답에서 이름을 IP 로 착각하면 curl 이 죽는다.
+check "IP 가 아닌 data 는 건너뛴다" \
+  "$(printf '%s' '{"Status":0,"Answer":[{"type":5,"data":"tunnel.example.com."},{"type":1,"data":"10.0.0.9"}]}' \
+     | tr ',{}' '\n\n\n' | sed -n 's/.*"data":"\([0-9][0-9.]*\)".*/\1/p' | head -n 1)" \
+  "10.0.0.9"
+check "IP 없이 부르면 조용히 빈 값" "$(dns_public_ip '')" ""
+# 막힌 갈래가 실제로 그 길을 타는지 -- 함수만 있고 안 부르면 화면은 그대로다.
+check "막힌 갈래에서 IP 로 찔러 본다" \
+  "$(grep -c 'tunnel_probe_by_ip "$url" "$tip"' "$HERE/../bml")" "1"
+check "살아 있으면 그렇게 말한다" \
+  "$(grep -c '막는 것은 이 기계의 DNS 하나뿐입니다' "$HERE/../bml")" "1"
+# 사람에게 다른 기계를 꺼내라고 하기 전에, 이 기계에서 쓸 수 있는 길을 준다.
+check "브라우저까지 열 길도 함께 준다" \
+  "$(grep -c 'sudo tee -a /etc/hosts' "$HERE/../bml")" "1"
+check "임시라는 것과 지우는 법도" \
+  "$(grep -c 'sudo sed -i' "$HERE/../bml")" "1"
+
+echo
 echo "주소에서 호스트만 (셸에 넘기기 전에 좁힌다)"
 check "스킴과 경로를 뗀다"      "$(url_host https://a.lhr.life/api/health)" "a.lhr.life"
 check "포트도 뗀다"             "$(url_host http://192.168.0.7:5003)"      "192.168.0.7"
