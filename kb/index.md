@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-24 · managed-files: 235
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 236
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -66,7 +66,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (86)
+## results/ (87)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -121,6 +121,7 @@
 - `kb/results/lpscl_vs_lpscl16_FULL_report_2026_06_17.md` — LPSCl (comp1) vs LPSCl1.6 (modelC) — 종합 비교 보고
 - `kb/results/lpscl_vs_lpscl16_v3_comparison.md` — LPSCl vs LPSCl1.6 — v3 완성형 비교 (Pipeline v2 §8)
 - `kb/results/lpsocl_box_size_600K_2026_08_18.md` — LPSOCl 600 K 상자 크기 — D 는 1.5~1.7× 눌렸고, β 는 MTO 잣대에서 +0.05 움직인다 ○미열람
+- `kb/results/md_beta_estimator_disagreement_2026_08_25.md` — β 는 시간·이온 대조를 못 가른다 — MTO/STO 가 순위를 뒤집는다 ○미열람
 - `kb/results/mlip_md_diffusive_gate_2026_08_01.md` — MLIP-MD 확산영역 게이트 — 저이동도 계의 Ea 는 전부 인용 보류 (2026-08-01)
 - `kb/results/nd2o3_FINAL_summary_2026_06_24.md` — Nd₂O₃-doped LPSCl1.6 — **최종 종합 (FINAL capstone)**
 - `kb/results/nd2o3_O_effect_transfer_2026_06_24.md` — Nd₂O₃-LPSCl1.6 — **O 효과 중심** 정리 (transfer용)
