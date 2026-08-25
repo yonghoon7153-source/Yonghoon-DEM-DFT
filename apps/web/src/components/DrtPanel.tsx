@@ -20,6 +20,43 @@ import { drtTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { Drt } from '../lib/types'
 
+/** 그 시간대에 무엇이 사는가 — **관례적인 구간**이고 판정이 아니다.
+ *
+ *  DRT 는 τ 를 주지 이름을 주지 않는다.  이름은 문헌의 관례이고, 같은 τ 라도
+ *  셀 구성에 따라 다른 것이 앉는다 (전고체 대칭셀의 저주파 아크는 계면이지만
+ *  풀셀에서는 확산이다 — ADR 0019 가 아크 이름에서 이미 다룬 구분이다).
+ *  그래서 문장이 "…대" 로 끝나고 단정하지 않는다.
+ */
+export function tauBand(logTau: number): string {
+  const tau = 10 ** logTau
+  const hz = 1 / (2 * Math.PI * tau)
+  const where = hz >= 1000 ? `${(hz / 1000).toFixed(1)} kHz`
+    : hz >= 1 ? `${hz.toFixed(1)} Hz` : `${(hz * 1000).toFixed(1)} mHz`
+  const what = tau < 1e-5 ? '벌크 이온전도 · 배선 인덕턴스가 섞이는 대'
+    : tau < 1e-3 ? '입계 · 계면 필름(SEI/CEI) 대'
+      : tau < 1e-1 ? '전하이동 대'
+        : tau < 10 ? '복합전극 전송선 · 고체 내 확산 대'
+          : '아주 느린 확산 · 상변태 대 (측정 대역 끝)'
+  return `≈ ${where} · ${what}`
+}
+
+const LAMBDA_NOTE =
+  'λ 는 "얼마나 매끄럽게 볼까" 입니다. 키우면 봉우리가 넓어지고 서로 합쳐지며 ' +
+  '**전체 분극이 줄어듭니다** — 과하게 매끄러우면 실제 분극을 깎습니다. 줄이면 ' +
+  '데이터에 더 붙는 대신 잡음이 봉우리로 올라옵니다. 슬라이더를 움직이며 아래 ' +
+  'χ² 와 전체 분극이 함께 어떻게 움직이는지 보는 것이 고르는 방법입니다.'
+
+const ORDER_NOTE =
+  '평활 차수는 **무엇을** 매끄럽게 볼지입니다. 0 = 값 자체를 작게 (봉우리가 ' +
+  '낮아집니다), 1 = 기울기를 (기본), 2 = 곡률을 (넓지만 어깨가 살아남습니다).'
+
+const WIDTH_NOTE =
+  '봉우리가 넓은 데는 이유가 셋이고 셋 다 정상일 수 있습니다. ① DRT 자체의 ' +
+  '해상도 한계 — 이상적인 R‖C 하나도 λ=1e-5 에서 0.5 decade 로 나옵니다. ' +
+  '② CPE 지수 n<1 은 진짜로 넓습니다 (합성 스펙트럼에서 n=0.8 이면 1.3, ' +
+  'n=0.6 이면 1.9 decade). ③ 복합전극의 전송선은 이완 시간이 하나가 아니라 ' +
+  '**띠**입니다 — 봉우리가 아니라 넓은 언덕이 정상입니다 (ADR 0028).'
+
 export function DrtPanel({ spectrumId }: { spectrumId: number }) {
   const [order, setOrder] = useState(1)
   const [index, setIndex] = useState<number | null>(null)
@@ -98,7 +135,7 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
       title="DRT (이완 시간 분포)"
       actions={
         <div className="row" style={{ gap: 6 }}>
-          <span className="tiny faint">평활 차수</span>
+          <span className="tiny faint" title={ORDER_NOTE}>평활 차수 ⓘ</span>
           <div className="segmented">
             {[0, 1, 2].map((value) => (
               <button
@@ -117,8 +154,8 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
       <div className="col" style={{ gap: 10 }}>
         <div className="col" style={{ gap: 4 }}>
           <label className="row" style={{ gap: 8 }}>
-            <span className="tiny faint" style={{ minWidth: 74 }}>
-              벌점 λ
+            <span className="tiny faint" style={{ minWidth: 74 }} title={LAMBDA_NOTE}>
+              벌점 λ ⓘ
             </span>
             <input
               type="range"
@@ -153,13 +190,24 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
           )}
         </div>
 
+        {/* 설정이 무엇을 하는지 화면에 적어 둔다.  λ 를 옮기면 봉우리 폭과
+            전체 분극이 함께 움직이는데, 그 사실을 모르면 슬라이더를 "더 예쁜
+            그림" 쪽으로 밀고 그 분극을 그대로 보고하게 된다. */}
+        <div className="tiny faint">{LAMBDA_NOTE}</div>
+
         <Plot
           series={series}
           xLabel="log₁₀ τ (s)"
           yLabel="γ (Ω)"
           height={280}
           legend
+          describeX={tauBand}
         />
+
+        <details className="tiny faint">
+          <summary>봉우리가 넓은데 왜인가요?</summary>
+          <div style={{ marginTop: 6 }}>{WIDTH_NOTE}</div>
+        </details>
 
         <CopyBar
           items={[{

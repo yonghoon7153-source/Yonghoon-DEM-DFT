@@ -163,13 +163,18 @@ def test_the_curve_is_right_even_when_parallel_members_are_swapped(client):
 
 
 def test_the_default_circuit_follows_the_kind(client):
-    """전고체의 기본 회로에는 블로킹 CPE 가 있고 액체에는 없다."""
+    """전고체의 기본 회로는 전송선이고 액체는 아크다 (ADR 0028).
+
+    복합전극의 저주파는 계면 하나가 아니라 두께 전체에 퍼진 반응이다 -- 랩이
+    실제로 쓰는 모델이 전송선이고, 아크 회로는 그것을 숫자가 아무 뜻도 없는
+    값으로만 흉내낸다.
+    """
     liquid = upload(client, name="a.mpr", kind="liquid")
     solid = upload(client, name="b.mpr", kind="solid", rs=6.0)
     liquid_fit = client.post(f"/api/eis/spectra/{liquid['id']}/fit").json()
     solid_fit = client.post(f"/api/eis/spectra/{solid['id']}/fit").json()
-    assert "CPE3" not in liquid_fit["circuit"]
-    assert "CPE3" in solid_fit["circuit"]
+    assert "TL" not in liquid_fit["circuit"]
+    assert "TL" in solid_fit["circuit"]
 
 
 def test_the_same_numbers_get_different_names_by_kind(client):

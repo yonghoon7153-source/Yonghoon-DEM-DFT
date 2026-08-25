@@ -49,6 +49,12 @@ interface Props {
   yRange?: [number | null, number | null]
   xRange?: [number | null, number | null]
   legend?: boolean
+  /** 커서 팝업에 한 줄 더.  지금 가리키는 x 가 무엇을 뜻하는지.
+   *
+   *  DRT 의 τ 처럼 **좌표 자체가 물리를 말하는** 축이 있다.  숫자만 읽어 주면
+   *  사람이 매번 머릿속에서 τ → 주파수 → 그 시간대의 현상을 되짚어야 한다.
+   *  판정이 아니라 관례적인 구간 이름이므로, 부르는 쪽이 그렇게 적는다. */
+  describeX?: (x: number) => string | null
   /** "y ≥ 0" 버튼을 붙인다 (나이퀴스트).
    *
    *  임피던스는 고주파 끝에서 −Z″ 가 음수로 내려간다 (측정선의 인덕턴스).
@@ -333,6 +339,7 @@ export function Plot({
   legend = false,
   equalAspect = false,
   positiveFit = false,
+  describeX,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
@@ -920,6 +927,9 @@ export function Plot({
               </b>
             </div>
           )}
+          {describeX?.(readout.x) ? (
+            <div className="tip-note">{describeX(readout.x)}</div>
+          ) : null}
         </div>
       ) : null}
     </div>

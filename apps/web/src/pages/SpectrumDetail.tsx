@@ -16,6 +16,7 @@ import { DrtPanel } from '../components/DrtPanel'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
+import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
@@ -65,14 +66,25 @@ export function SpectrumDetail() {
     [fits, showFit],
   )
 
+  /** 면적이 적혀 있으면 Ω → Ω·cm².  없으면 1 배 (= 안 나눈다).
+   *
+   *  같은 전극이라도 지름 10 mm 와 16 mm 는 저항이 2.5 배 다르다.  셀끼리
+   *  비교하려면 면적으로 나눈 값이라야 하고, 논문의 값도 대개 그것이다.
+   *  **모르면 안 나눈다** — 추정 면적으로 나눈 수는 실측 ASR 과 똑같이 생겼다
+   *  (§0.4).  그래서 면적을 적는 순간 세 곳이 한꺼번에 바뀐다: 나이퀴스트,
+   *  보드의 |Z|, 그리고 피팅 파라미터의 저항들.
+   */
+  const area = record?.area_cm2_effective ?? null
+  const zUnit = area ? 'Ω·cm²' : 'Ω'
+
   const nyquist = useMemo<PlotSeries[]>(() => {
     if (!points.data) return []
     const series: PlotSeries[] = [{
       label: '측정',
-      x: points.data.z_re,
+      x: points.data.z_re.map((value) => perArea(value, area)),
       // 나이퀴스트 세로축은 −Z″ 다.  허수부를 그대로 그리면 아크가 아래로
       // 뒤집혀서, 파일이 왜 −Im(Z) 를 저장하는지가 화면에서 되풀이된다.
-      y: points.data.z_im.map((value) => -value),
+      y: points.data.z_im.map((value) => perArea(-value, area)),
       color: seriesColor(0),
       points: true,
       width: 0,
@@ -84,14 +96,14 @@ export function SpectrumDetail() {
       // 않고 이유(fitted_note)를 아래에 적는다.
       series.push({
         label: `맞춤 (${fit.circuit})`,
-        x: fit.fitted_z_re,
-        y: fit.fitted_z_im.map((value) => -value),
+        x: fit.fitted_z_re.map((value) => perArea(value, area)),
+        y: fit.fitted_z_im.map((value) => perArea(-value, area)),
         color: seriesColor(1),
         width: 2,
       })
     }
     return series
-  }, [points.data, fit])
+  }, [points.data, fit, area])
 
   // 보드는 두 패널이다 (리뷰 #27).  8 decade 의 주파수를 선형 x 에 놓으면
   // 10 kHz 아래 전부가 폭 1% 에 뭉치고, Ω 와 도(°)를 한 선형 y 에 겹치면
@@ -101,15 +113,16 @@ export function SpectrumDetail() {
     if (!points.data) return []
     return [
       {
-        label: 'log₁₀|Z|',
+        label: `log₁₀|Z| (${zUnit})`,
         x: points.data.frequency_hz.map((value) => Math.log10(value)),
-        y: points.data.magnitude.map((value) => Math.log10(value)),
+        // |Z| 도 임피던스라 같이 나눈다.  위상은 무차원이라 그대로다.
+        y: points.data.magnitude.map((value) => Math.log10(perArea(value, area))),
         color: seriesColor(0),
         points: true,
         width: 1,
       },
     ]
-  }, [points.data])
+  }, [points.data, area, zUnit])
   const bodePhase = useMemo<PlotSeries[]>(() => {
     if (!points.data) return []
     return [
@@ -234,8 +247,8 @@ export function SpectrumDetail() {
           ) : nyquist.length ? (
             <Plot
               series={nyquist}
-              xLabel="Z′ (Ω)"
-              yLabel="−Z″ (Ω)"
+              xLabel={`Z′ (${zUnit})`}
+              yLabel={`−Z″ (${zUnit})`}
               height={360}
               legend
               // 반원이 반원으로 보여야 찌그러진 아크를 알아본다.
@@ -251,7 +264,7 @@ export function SpectrumDetail() {
           {bodeMagnitude.length ? (
             <div className="col" style={{ gap: 6 }}>
               <Plot series={bodeMagnitude} xLabel="log₁₀ f (Hz)"
-                    yLabel="log₁₀|Z| (Ω)" height={180} legend />
+                    yLabel={`log₁₀|Z| (${zUnit})`} height={180} legend />
               <Plot series={bodePhase} xLabel="log₁₀ f (Hz)" yLabel="위상 (°)"
                     height={180} legend />
             </div>
@@ -328,7 +341,7 @@ export function SpectrumDetail() {
         </Card>
 
         <Card title="파라미터">
-          {fit ? <FitReport fit={fit} kind={record.kind} /> : (
+          {fit ? <FitReport fit={fit} kind={record.kind} area={area} /> : (
             <div className="tiny faint" style={{ padding: 4 }}>
               아직 맞춘 적이 없습니다.
             </div>
@@ -367,7 +380,12 @@ export function SpectrumDetail() {
   )
 }
 
-function FitReport({ fit, kind }: { fit: SpectrumFit; kind: EisKind }) {
+function FitReport({ fit, kind, area }: {
+  fit: SpectrumFit
+  kind: EisKind
+  /** 면적이 있으면 저항 파라미터를 Ω·cm² 로 (없으면 null). */
+  area: number | null
+}) {
   const arcs = new Map(fit.arcs.map((arc) => [arc.parameter, arc]))
   return (
     <div className="col" style={{ gap: 10 }}>
@@ -421,14 +439,20 @@ function FitReport({ fit, kind }: { fit: SpectrumFit; kind: EisKind }) {
                       {arc?.label ?? '—'}
                     </td>
                     <td className={parameter.determined ? '' : 'faint'}>
-                      {num(parameter.value, 4)} {parameter.unit}
+                      {/* 저항만 나눈다.  CPE 의 S·sⁿ 는 오히려 곱해야 하고 그
+                          규칙이 지수 n 에 따라 달라서, 여기서 조용히 처리하면
+                          틀린 수가 맞는 수와 같은 모습으로 나온다 (§0.4). */}
+                      {num(perArea(parameter.value, scalesWithArea(parameter.unit)
+                        ? area : null), 4)} {areaUnit(parameter.unit, area)}
                       {parameter.determined ? null : (
                         // 숫자처럼 보이는 것이 문제이므로 숫자 옆에 붙인다.
                         <span className="tiny warn"> 미결정</span>
                       )}
                     </td>
                     <td className="dim">
-                      {parameter.stderr === null ? '—' : num(parameter.stderr, 2)}
+                      {parameter.stderr === null ? '—' : num(
+                        perArea(parameter.stderr,
+                                scalesWithArea(parameter.unit) ? area : null), 2)}
                     </td>
                   </tr>
                 )

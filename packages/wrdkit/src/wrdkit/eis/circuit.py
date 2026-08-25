@@ -113,6 +113,88 @@ class _Wo(Element):
         return r / (x * np.tanh(x))
 
 
+def _coth(x: np.ndarray) -> np.ndarray:
+    """``coth`` that does not overflow.
+
+    ``sinh``/``cosh`` overflow above |x| ~ 710 and lose the answer well before
+    that, but ``coth(x) -> 1`` as ``Re x -> +inf`` and the arguments here always
+    have a positive real part.  Cutting over at 30 is exact to double precision
+    (``coth(30) - 1 < 1e-26``) and keeps the high-frequency end of a
+    transmission line finite instead of NaN.
+    """
+    out = np.ones_like(x)
+    near = np.abs(x.real) < 30
+    out[near] = np.cosh(x[near]) / np.sinh(x[near])
+    return out
+
+
+def _over_sinh(x: np.ndarray) -> np.ndarray:
+    """``1/sinh(x)``, which is 0 for large ``Re x`` rather than an overflow."""
+    out = np.zeros_like(x)
+    near = np.abs(x.real) < 30
+    out[near] = 1.0 / np.sinh(x[near])
+    return out
+
+
+def transmission_line(r_ion: float, r_electron: float,
+                      interfacial: np.ndarray) -> np.ndarray:
+    """Bisquert's general transmission line — two rails and what joins them.
+
+    A composite electrode is not a surface.  Ions travel through the pore
+    network (``r_ion``) and electrons through the solid (``r_electron``), and
+    the reaction happens *along the way*, distributed over the thickness.  The
+    45-degree stub at high frequency and the ``R_ion/3`` offset at low
+    frequency both come out of this geometry -- an R-CPE circuit can only
+    imitate them with numbers that mean nothing.
+
+    Rails are given as **totals** (Ω), which is the same as PyEIS's per-length
+    values with the thickness set to 1: only the products enter the formula, and
+    a separate thickness parameter would be one more number the spectrum cannot
+    determine.
+
+    Ref.: Bisquert, J. Phys. Chem. B 104 (2000) 2287; de Levie (1973).
+    Cross-checked term by term against PyEIS 1.0.10 ``cir_RsTL``.
+    """
+    total = r_ion + r_electron
+    lam = np.sqrt(interfacial / total)
+    x = 1.0 / lam
+    joint = (r_electron * r_ion) / total
+    rails = (r_electron ** 2 + r_ion ** 2) / total
+    return joint * (1.0 + 2.0 * lam * _over_sinh(x)) + lam * rails * _coth(x)
+
+
+class _TLR(Element):
+    """전송선 — 계면이 ``Rct ∥ CPE`` 인 것.  확산 꼬리가 안 보일 때.
+
+    이온 레일(``Ri``)·전자 레일(``Re``)과 그 사이의 계면 임피던스.  전고체
+    복합전극처럼 반응이 두께 전체에 퍼져 있는 전극의 모양이다.
+    """
+
+    def impedance(self, values, omega):
+        r_ion, r_electron, rct, q, n = values
+        z_cpe = 1.0 / (q * (1j * omega) ** n)
+        interfacial = 1.0 / (1.0 / z_cpe + 1.0 / rct)
+        return transmission_line(r_ion, r_electron, interfacial)
+
+
+class _TL(Element):
+    """전송선 — 계면이 ``CPE ∥ (Rct + 유한확산 W)`` 인 것.
+
+    PyEIS 의 ``cir_RsTL_1Dsolid`` 와 같은 계면 구성이다: 전하이동 저항과 유한
+    공간 Warburg 가 **직렬**이고, 그 둘에 CPE 가 **병렬**이다.  Warburg 는
+    ``Z = Wr·coth(x)/x``, ``x = (Wt·jω)^Wn`` -- 이상적인 1D 확산이면
+    ``Wn = 0.5`` 이고, 그보다 낮으면 입자 크기가 고르지 않다는 뜻이다.
+    """
+
+    def impedance(self, values, omega):
+        r_ion, r_electron, rct, q, n, w_r, w_n, w_tau = values
+        x = (w_tau * 1j * omega) ** w_n
+        z_w = w_r * _coth(x) / x
+        z_cpe = 1.0 / (q * (1j * omega) ** n)
+        interfacial = 1.0 / (1.0 / z_cpe + 1.0 / (rct + z_w))
+        return transmission_line(r_ion, r_electron, interfacial)
+
+
 #: Registry.  Bounds are physical claims, so they are written down once here
 #: rather than passed in at each call site where they could drift apart.
 ELEMENTS: dict[str, Element] = {
@@ -126,6 +208,15 @@ ELEMENTS: dict[str, Element] = {
               "유한 확산 (짧은 경계)"),
     "Wo": _Wo("Wo", ("_R", "_tau"), ((1e-9, 1e9), (1e-6, 1e6)), ("Ω", "s"),
               "유한 확산 (열린 경계)"),
+    "TLR": _TLR("TLR", ("_Ri", "_Re", "_Rct", "_Q", "_n"),
+                ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0)),
+                ("Ω", "Ω", "Ω", "S·sⁿ", ""),
+                "전송선 — 이온·전자 레일 + 계면 (Rct∥CPE)"),
+    "TL": _TL("TL", ("_Ri", "_Re", "_Rct", "_Q", "_n", "_Wr", "_Wn", "_Wt"),
+              ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0),
+               (1e-9, 1e9), (0.1, 1.0), (1e-6, 1e6)),
+              ("Ω", "Ω", "Ω", "S·sⁿ", "", "Ω", "", "s"),
+              "전송선 — 계면에 유한 확산까지 (CPE∥(Rct+W))"),
 }
 
 

@@ -31,6 +31,7 @@
 | [0025](adr/0025-groups-nest-one-level.md) | 그룹은 한 단계만 겹친다, 그리고 셀은 한 자리에만 산다 | 그룹 → 소그룹 → 셀, `parent_id` 하나로 깊이 2, 상위로 거를 때는 `group_scope` 가 자손까지 편다 |
 | [0026](adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md) | 확산 꼬리는 시작점·시작 개수·회로 셋이 함께 정한다 | σ 를 실축 폭(Ω)으로 시작하던 차원 오류, 확산 회로의 재시작 8→24, `(전고체,풀셀)` 프리셋에 Ws 추가, `circuit=auto` |
 | [0027](adr/0027-a-measurement-has-its-own-conditions.md) | 측정은 제 조건을 갖는다, 셀은 빈 칸만 채운다 | EIS·GITT 에 그룹·시험일·양극재·공정·온도, 물려받기는 빈 칸만 (`inherited` 로 표시), 셀 고르기는 드롭다운이 아니라 창 |
+| [0028](adr/0028-solid-state-is-a-transmission-line.md) | 전고체 복합전극은 아크가 아니라 전송선이다 | Bisquert 전송선을 회로 원소로 (PyEIS `cir_RsTL` 대조), 전고체 프리셋 교체, 면적이 있으면 Ω·cm² |
 
 ## 리뷰 (외부 교차검증)
 
@@ -74,7 +75,8 @@
 `adr/0024-three-sections-one-cell.md` ·
 `adr/0025-groups-nest-one-level.md` ·
 `adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md` ·
-`adr/0027-a-measurement-has-its-own-conditions.md`
+`adr/0027-a-measurement-has-its-own-conditions.md` ·
+`adr/0028-solid-state-is-a-transmission-line.md`
 
 ## 스펙
 

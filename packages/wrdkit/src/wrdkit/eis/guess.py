@@ -289,7 +289,11 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
     used_series_r = False
     for i, name in enumerate(names):
         kind = element_kinds[name]
-        if kind == "R":
+        if kind in ("TL", "TLR"):
+            # 전송선은 제 칸을 먼저 가져간다.  아래의 `_Q`·`_n` 규칙은 R-CPE
+            # 아크의 것이라 여기에 걸리면 엉뚱한 R 과 짝지어진다.
+            values[i] = _tl_start(name, spectrum, arcs, span)
+        elif kind == "R":
             if not used_series_r:
                 values[i] = rs
                 used_series_r = True
@@ -332,6 +336,39 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
         else:
             values[i] = 1.0
     return np.clip(values, circuit.lower, circuit.upper)
+
+
+#: 전송선의 시작값.  스펙트럼이 직접 말해 주는 것은 실축의 폭뿐이고, 이온
+#: 레일과 계면은 그 폭을 나눠 갖는다 -- 저주파에서 `Z' → R_ct + R_ion/3` 이므로
+#: 셋을 같은 자리에서 출발시키면 최적화가 나눠 준다.  Warburg 의 시간상수만
+#: 잰 것에서 온다: 화면 안에서 안 꺾였으면 마지막 주파수가 그 하한이다.
+def _tl_start(name: str, spectrum: Spectrum, arcs: list[Arc], span: float) -> float:
+    suffix = name.split("_")[-1]
+    if suffix == "Ri":
+        return max(span, 1e-6)
+    if suffix == "Re":
+        # 전자 레일은 대개 이온 레일보다 훨씬 작다 (탄소가 이온보다 잘 흐른다).
+        return max(span / 20.0, 1e-6)
+    if suffix in ("Rct", "Wr"):
+        return max(span / 2.0, 1e-6)
+    if suffix == "Q":
+        arc = arcs[-1] if arcs else None
+        if arc and arc.peak_hz > 0 and span > 0:
+            return float(np.clip(1.0 / (span * 2 * np.pi * arc.peak_hz), 1e-12, 1e2))
+        return 1e-3
+    if suffix == "n":
+        return 0.85
+    if suffix == "Wn":
+        # 이상적인 1D 확산이 0.5 다.  거기서 출발한다.
+        return 0.5
+    if suffix == "Wt":
+        ordered = spectrum.sorted_by_frequency(descending=True)
+        usable = ordered.select(~inductive_mask(ordered))
+        if len(usable) == 0:
+            return 1.0
+        omega = 2 * np.pi * float(usable.frequency_hz[-1])
+        return float(np.clip(_WS_PEAK_OMEGA_TAU / omega, 1e-6, 1e6)) if omega > 0 else 1.0
+    return 1.0
 
 
 def _kinds_by_name(circuit: Circuit) -> dict[str, str]:

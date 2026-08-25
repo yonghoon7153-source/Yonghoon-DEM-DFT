@@ -1302,3 +1302,16 @@ table tr.section > th > .section-label {
 .cell-row .when { grid-area: when; align-self: center; white-space: nowrap; }
 .cell-row:hover { background: var(--surface-2); }
 .cell-row.on { border-color: var(--accent); background: var(--accent-wash); }
+
+/* 커서 팝업의 마지막 줄 — 그 좌표가 무엇을 뜻하는지 (DRT 의 τ 구간 같은).
+   숫자와 같은 굵기로 두면 관례적인 이름이 측정값처럼 읽힌다. */
+.plot-tip .tip-note {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px solid var(--line);
+  max-width: 210px;
+  color: var(--ink-2);
+  font-size: 10.5px;
+  line-height: 1.35;
+  white-space: normal;
+}

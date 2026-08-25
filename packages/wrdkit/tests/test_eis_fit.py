@@ -344,3 +344,92 @@ def test_the_diffusion_ladder_is_tried_whatever_the_seed():
               for seed in range(3)}
     # 재시작이 0 이어도 시작점은 1 개가 아니다: 기본 + tau 사다리 4 개.
     assert counts == {5}
+
+
+# --- 전송선 (ADR 0028) ---------------------------------------------------------
+#
+# 복합전극은 표면이 아니다.  이온은 기공을 따라, 전자는 고체를 따라 흐르고
+# 반응은 **가는 도중에** 두께 전체에 퍼져 일어난다.  고주파의 45° 꼬리와
+# 저주파의 `R_ion/3` 이 둘 다 그 구조에서 나오는 것이라, R-CPE 로는 숫자가
+# 아무 뜻도 없는 값으로만 흉내낼 수 있다.
+
+
+def _tl_spectrum(text: str, truth: list[float], f_hi=1e6, f_lo=1e-2, n=70):
+    circuit = parse_circuit(text)
+    frequency = np.logspace(np.log10(f_hi), np.log10(f_lo), n)
+    z = circuit.impedance(np.asarray(truth, float), frequency)
+    return Spectrum(frequency, z.real, z.imag), circuit
+
+
+def test_the_transmission_line_matches_the_classic_porous_solution():
+    """전자 레일이 0 이면 고전 해 `sqrt(Ri·Z)·coth(sqrt(Ri/Z))` 와 같아야 한다.
+
+    PyEIS 1.0.10 의 `cir_RsTL` 과 항별로 대조한 식이다 (Bisquert 2000).
+    """
+    from wrdkit.eis.circuit import transmission_line
+
+    omega = 2 * np.pi * np.logspace(5, -2, 40)
+    interfacial = 1.0 / (1e-3 * (1j * omega) ** 0.9) + 5.0
+    r_ion = 40.0
+    ours = transmission_line(r_ion, 1e-9, interfacial)
+    classic = np.sqrt(r_ion * interfacial) / np.tanh(np.sqrt(r_ion / interfacial))
+    assert np.max(np.abs(ours - classic) / np.abs(classic)) < 1e-8
+
+
+def test_the_low_frequency_offset_is_the_famous_r_ion_over_three():
+    """저주파에서 `Z → Z_계면 + R_ion/3`.  이 3 이 전송선의 서명이다."""
+    from wrdkit.eis.circuit import transmission_line
+
+    omega = 2 * np.pi * np.array([1e-6])
+    interfacial = 1.0 / (1e-3 * (1j * omega) ** 0.9) + 5.0
+    z = transmission_line(40.0, 1e-9, interfacial)
+    assert float((z - interfacial).real[0]) == pytest.approx(40.0 / 3, rel=1e-6)
+
+
+def test_the_high_frequency_end_is_finite_not_nan():
+    """`sinh` 는 |x|>710 에서 넘친다.  고주파 끝이 통째로 NaN 이 되던 자리다."""
+    from wrdkit.eis.circuit import transmission_line
+
+    omega = 2 * np.pi * np.array([1e6, 1e7, 1e9])
+    interfacial = 1.0 / (1e-3 * (1j * omega) ** 0.9)
+    z = transmission_line(40.0, 1e-9, interfacial)
+    assert np.all(np.isfinite(z))
+    assert np.all(z.real > 0)
+
+
+def test_a_transmission_line_spectrum_gives_back_its_own_parameters():
+    """랩의 회로 그대로 — 배선 인덕턴스 + 직렬저항 + 보정 아크 + 전송선."""
+    truth = [1e-6, 12.0, 5.0, 1e-5, 0.9,
+             40.0, 2.0, 3.0, 1e-2, 0.8, 30.0, 0.5, 60.0]
+    spectrum_, circuit = _tl_spectrum("L1-R0-p(R1,CPE1)-TL1", truth)
+    result = fit_circuit(spectrum_, circuit, restarts=24, seed=0)
+    assert result.converged
+    for name, real in zip(circuit.parameter_names, truth, strict=True):
+        assert result.values()[name] == pytest.approx(real, rel=0.05), name
+
+
+def test_the_interfacial_warburg_is_pyeis_shape():
+    """계면은 `CPE ∥ (Rct + W)` 이고 `Z_W = Wr·coth(x)/x`, `x = (Wt·jω)^Wn`.
+
+    PyEIS `cir_RsTL_1Dsolid` 와 같은 구성이다.  직렬·병렬을 바꿔 놓으면 곡선이
+    그럴듯하게 나오면서 값만 틀린다.
+    """
+    from wrdkit.eis.circuit import transmission_line
+
+    circuit = parse_circuit("TL1")
+    omega = 2 * np.pi * np.array([1e3, 1.0, 1e-2])
+    values = np.array([40.0, 2.0, 3.0, 1e-2, 0.8, 30.0, 0.5, 60.0])
+
+    x = (60.0 * 1j * omega) ** 0.5
+    z_w = 30.0 * (np.cosh(x) / np.sinh(x)) / x
+    z_cpe = 1.0 / (1e-2 * (1j * omega) ** 0.8)
+    interfacial = 1.0 / (1.0 / z_cpe + 1.0 / (3.0 + z_w))
+    expected = transmission_line(40.0, 2.0, interfacial)
+    assert np.allclose(circuit.impedance(values, omega / (2 * np.pi)), expected)
+
+
+def test_the_tail_free_transmission_line_has_five_parameters():
+    """확산 꼬리가 안 보이면 W 세 개는 결정되지 않는다 -- 그때는 TLR 을 쓴다."""
+    circuit = parse_circuit("R0-TLR1")
+    assert list(circuit.parameter_names) == [
+        "R0", "TLR1_Ri", "TLR1_Re", "TLR1_Rct", "TLR1_Q", "TLR1_n"]

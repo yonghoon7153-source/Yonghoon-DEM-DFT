@@ -14,7 +14,7 @@ vi.hoisted(() => {
   globalThis.matchMedia = globalThis.matchMedia ?? (media as never)
 })
 
-import { DrtPanel } from '../DrtPanel'
+import { DrtPanel, tauBand } from '../DrtPanel'
 
 type Handler = (url: string) => unknown
 
@@ -148,3 +148,20 @@ function fireRange(input: HTMLInputElement, value: number) {
   setter.call(input, String(value))
   input.dispatchEvent(new Event('input', { bubbles: true }))
 }
+
+describe('τ 구간 이름', () => {
+  it('τ 를 주파수와 그 시간대의 이름으로 옮긴다', () => {
+    // 관례적인 구간이고 판정이 아니다 — 문장이 "…대" 로 끝난다.
+    expect(tauBand(-6)).toContain('kHz')
+    expect(tauBand(-6)).toContain('벌크')
+    expect(tauBand(-4)).toContain('입계')
+    expect(tauBand(-2)).toContain('전하이동')
+    expect(tauBand(0)).toContain('전송선')
+    expect(tauBand(2)).toContain('측정 대역 끝')
+  })
+
+  it('τ 와 주파수는 ω τ = 1 로 이어져 있다', () => {
+    // log τ = -2 → τ=0.01 s → f = 1/(2π·0.01) ≈ 15.9 Hz
+    expect(tauBand(-2)).toContain('15.9 Hz')
+  })
+})
