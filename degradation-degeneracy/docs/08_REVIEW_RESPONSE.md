@@ -2949,3 +2949,129 @@ atomicity 보다 강했다".
 남은 것 중 같은 위험이 있는 자리를 미리 적어 둔다 — `row_projection` 의
 승격은 아직 **fixed-name 세 파일**이라 set atomicity 가 아니다 (리뷰 P1-5).
 immutable generation directory + 단일 pointer 로 바꾸는 것이 다음 checkpoint 다.
+
+## 38. 29차 리뷰 대응 — 저널의 자기신고가 권위였다
+
+> 2026-08-25. 28차의 hardlink pin 은 방향은 맞았지만 **권위가 여전히 저널의
+> 자기신고**였고, pin 자체가 CAS 원본을 파괴하는 경로를 갖고 있었다.
+> 리뷰가 준 반례 셋을 전부 재현했고, 이번에는 검사를 더 두는 대신 **그래프를
+> 다시 도출하는 단일 권위**를 만들었다.
+
+### 38.1 P0-1 — 저널이 적은 것이 곧 등록이었다
+
+`is_registered` 는 journal 이 나열한 digest 가 pin 으로 존재하는지만 봤다.
+그래서 journal 이 **부분집합**을 적으면 그 부분집합만 확인하고 통과했고,
+등록 전체를 다른 backend 로 복사해도 그 backend 의 pin 이 self-consistent 하면
+통과했다. 저널을 쓰는 쪽과 검증하는 쪽이 같은 문서를 봤다는 뜻이다.
+
+`verify_registered_graph(backend, index_path, leg_id)` 하나가 권위가 된다.
+여섯 단계 전부 **pin 에서 읽은** 영수증에서 출발한다:
+
+```text
+1  pin 에서 receipt 를 읽는다 (objects/ 가 비어도 회수돼야 한다)
+2  닫힌 스키마 + 손에 든 backend 의 URI 로 receipt 를 검증
+3  pin 에서 manifest 를 읽어 receipt 집계와 결속
+4  receipt+manifest 로 기대 그래프를 다시 도출
+5  expected == journal.objects == 디스크 pin 이름  (삼면 일치)
+6  pin 된 바이트 전수 + 산출 객체 크기 확인
+```
+
+반례 둘이 이제 fail-closed 다:
+
+```
+반례1 subset journal  → registered: False
+반례2 foreign backend → registered: False
+```
+
+### 38.2 P0-4 — pin 이 CAS 원본을 0바이트로 만들었다
+
+hardlink 불가 FS 예비 경로가 목적지를 열어 썼다. 목적지는 **같은 inode 의 CAS
+원본**이었다. 재현:
+
+```
+원본 바이트 이후: b''
+원본 digest 유효: False
+```
+
+보존 도구가 보존 대상을 파괴하는 형태다. 목적지를 직접 여는 경로를 없앴다:
+
+| 상황 | 이제 |
+|---|---|
+| 이미 pin 이 있다 | 바이트를 대조한다. 다르면 실패. symlink 면 거부 |
+| 경쟁 `EEXIST` | 같은 규칙으로 내용 확인 |
+| hardlink 불가 | 임시파일에 쓰고 `os.link` 로 원자 배치, temp 는 항상 정리 |
+
+### 38.3 P1 — 스키마·바이트·플랫폼
+
+| # | 무엇이 열려 있었나 | 고침 |
+|---|---|---|
+| 1 | receipt 의 `planned_envelope`·`validation`·`outputs` 가 **중첩에서** 열려 있었다 | 세 곳 전부 닫힌 키 집합 + manifest 집계 결속 + 산출 객체 바이트 크기 확인 |
+| 2 | manifest 경로가 대소문자·NFC 로 충돌 가능했다 | 두 충돌 모두 거부, 비-NFC 경로 자체를 거부 |
+| 3 | Windows 텍스트 모드가 CRLF 를 변환할 수 있었다 | `os.O_BINARY` 명시 + LF/CRLF/NUL/BOM/비-UTF8 6종 왕복 회귀 |
+| 4 | `retention_days` 가 정책 하한 없이 자기신고 | `MIN_RETENTION_DAYS = 365` |
+
+### 38.4 P2 — 세대 계약이 가변 YAML 을 믿었다
+
+claim role 의 세대를 `evidence.leg_source_digest` 에서 도출하도록 28차에
+바꿨지만, `evidence` 는 여전히 **가변 YAML** 이다. evidence 와 role 을 함께
+바꾸는 변형이 통과했다. 이제 **봉인된 투영이 적은** `source_digest` 와
+대조한다.
+
+그리고 이 자리에서 반대 방향 실수를 하나 만들었다 — 기록한다.
+
+29차 초판은 28차가 죽여 놓은 조건(`r.get("protocol_generation")` 을 금지해
+놓고 그 필드를 다시 비교)을 `rg == tg` 로 되살렸다. **너무 넓었다.**
+`paired_fixed5_v4`(v5) 가 v5 legacy 주장의 정본이 되는 것까지 막았고, 그것은
+24차 보충 리뷰가 명시적으로 허용한 것이다 — "legacy claim scope 와 당시
+protocol 을 명시한 채 유지할 수 있다". 전체 시험이 그 자리에서 빨갛게 됐다.
+
+원인은 leg-level `inference_role` 이 **무엇에 대한 판정인지**를 잘못 읽은
+것이다. 원장이 그 다리를 `diagnostic` 이라고 적은 근거는 원장 안에 그대로
+있다 — "**현행 정본은 아니다**: run_spec 의 `source_digest` 가 현행과 다르다".
+즉 leg-level 은 **현행 세대에 대한** 역할이지 모든 세대에 대한 상한이 아니다.
+비교 대상은 `current` 이고, 옛 세대는 `role_compatibility` 가 관장한다.
+
+`current` 를 자유필드로 두면 한 줄 고쳐서 옮길 수 있으므로 **도출**한다 —
+`protocol_generations` 순서에서 실제 source digest 가 도달한 가장 새로운 세대
+(그래서 산출물 없는 `v6` 은 현행이 될 수 없다). 세대표에 가짜 digest 한 줄을
+더해 현행을 옮기는 경로는, 표의 모든 digest 가 **봉인된 투영에 묶여** 있어야
+한다는 검사로 막는다.
+
+네 규칙이 실제로 무는 것을 변이로 확인했다:
+
+| 변이 | 실패하는 회귀 |
+|---|---|
+| leg-level 조항을 `False` 로 | `..._legacy_claim...` · `..._self_promote...` |
+| `tg == current` 를 `rg == tg` 로 되돌림 | 위 둘 + 본 계약 시험 |
+| 세대표 anchoring 삭제 | `..._anchored_to_sealed_projections` |
+| `current` 도출을 선언으로 | 셋 |
+
+이 변이를 걸 수 있게 하려고 계약 본문을 `_claim_role_problems` 순수 함수로
+꺼냈다. 인라인일 때는 규칙을 고쳐도 "고친 규칙이 실제로 무는가" 를 보일
+방법이 없었다 — 35.7 이 적은 "이름이 검사보다 강한 시험" 의 다른 얼굴이다.
+
+### 38.5 자체 발견 — spec 이 거짓을 선언하고 있었다
+
+`ANALYSIS_SPEC.summary_comparison.skip_top_level_keys` 가
+`[_채점원본, _F4_주의]` 라고 적혀 있었지만 비교기는 `SEMANTIC_SKIP` 을 썼다.
+이력을 확인했다:
+
+* 23차 `f49cd66e` — 비교기도 둘 다 뗐다. 그때는 선언이 참이었다.
+* 28차 — 비교기를 `("_채점원본",)` 로 좁히면서 **선언은 안 고쳤다**. 직전
+  커밋 `2e505317` 에 `_SKIP = set(SEMANTIC_SKIP)` 과 옛 선언이 공존한다.
+* 29차 — spec 이 `SEMANTIC_SKIP` 을 읽는다.
+
+그 결과 `analysis_spec_sha256` 이 `f1898eb6…` → `43d74dd3…` 로 움직였다.
+**비교 규칙이 바뀐 것이 아니라 거짓 선언이 사라진 것**이며, 원장 g2 항목이
+이 값을 g1 과 바이트 동일이라고 적고 있었으므로 그 산문도 정정했다. 행
+바이트(`projection_sha256`·`restart_projection_sha256`·`fits_sha256`)는 g1 과
+여전히 동일하다.
+
+### 38.6 다음 checkpoint — 아직 안 한 것
+
+리뷰가 요구한 최소 증거 9항 중 **두 항이 열려 있다**. 닫았다고 적지 않는다.
+
+| 항 | 상태 |
+|---|---|
+| 4 | object/pin 디렉터리 fsync **순서**는 고쳤다. **crash/reopen drill 은 없다** |
+| 9 | immutable cohort generation + 단일 `CURRENT` 승격 (P1-5) — **미착수**. `row_projection` 승격은 여전히 fixed-name 세 파일이라 set atomicity 가 아니다 |
