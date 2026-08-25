@@ -409,6 +409,21 @@ def main():
         print(f'  {mark}{cmd[0]:<28} rc={rc} PASS {len(p)} FAIL {len(f)}')
         if rc != 0 or f:
             print(f'      HARNESS_ERROR — baseline 이 초록이 아니다.  돌연변이 결과는 뜻이 없다.')
+            #  ★ 2026-08-25 (kgy 실측) — `rc≠0` 인데 `PASS 0 FAIL 0` 이면 **시험이 하나도
+            #    안 돈 것**이다 = 대개 import 실패(환경)이지 코드 결함이 아니다.  옛 판은
+            #    "초록이 아니다" 만 적어서, 사용자가 **코드가 깨진 줄 알고** 원인을 엉뚱한
+            #    데서 찾게 했다.  ⇒ 그 구분을 여기서 말해 준다 (환경 부족을 결함처럼
+            #    보이게 하지 않는다 — `44be96e5` 와 같은 원칙).
+            if rc != 0 and not p and not f:
+                _tail = [x for x in out.strip().split('\n') if x.strip()][-3:]
+                print(f'      ↳ 시험이 **하나도 안 돌았다** (PASS 0 · FAIL 0) — 결함이 아니라 '
+                      f'**실행 자체가 실패**했다.')
+                print(f'      ↳ 대개 환경이다.  이 배터리를 띄운 파이썬: {sys.executable}')
+                print(f'      ↳ GPU 호스트라면:  '
+                      f'nohup ~/dem-venv/bin/python3 -u scripts/mutation_sweep_20260825.py '
+                      f'> ~/bat.log 2>&1 &')
+                for _l in _tail:
+                    print(f'      │ {_l[:110]}')
             return 2
 
     #  ── ⓐ' ★★★ **기대집합 자신을 검증한다** (2026-08-25) ─────────────────────────────
