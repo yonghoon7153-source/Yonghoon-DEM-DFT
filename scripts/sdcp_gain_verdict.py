@@ -94,22 +94,22 @@ FIELD_CONTRACT = {
     'backend':              dict(scope='numeric', across_dir=True, required=True,
                             required_since='2026-08-20'),
     # ── 세대 인자 (옛 `_GEN_FIELDS`) — 전부 physics 다.  섞이면 다른 실험이다. ──
-    'sigma_ion_se_S_cm':    dict(scope='physics', across_dir=True),
-    'sigma_ion_sdcp_S_cm':  dict(scope='physics', across_dir=True),
-    'sigma_am_s_S_cm':      dict(scope='physics', across_dir=True),
-    'sigma_am_p_S_cm':      dict(scope='physics', across_dir=True),
-    'cam':                  dict(scope='physics', across_dir=True),
-    'temp_c':               dict(scope='physics', across_dir=True),
-    'ea_ion_ev':            dict(scope='physics', across_dir=True),
-    'se_E_GPa':             dict(scope='physics', across_dir=True),
-    'se_nu':                dict(scope='physics', across_dir=True),
-    'se_sigma_y_GPa':       dict(scope='physics', across_dir=True),
-    'mpm_seed':             dict(scope='physics', across_dir=True),
+    'sigma_ion_se_S_cm':    dict(scope='physics', across_dir=True, generation=True),
+    'sigma_ion_sdcp_S_cm':  dict(scope='physics', across_dir=True, generation=True),
+    'sigma_am_s_S_cm':      dict(scope='physics', across_dir=True, generation=True),
+    'sigma_am_p_S_cm':      dict(scope='physics', across_dir=True, generation=True),
+    'cam':                  dict(scope='physics', across_dir=True, generation=True),
+    'temp_c':               dict(scope='physics', across_dir=True, generation=True),
+    'ea_ion_ev':            dict(scope='physics', across_dir=True, generation=True),
+    'se_E_GPa':             dict(scope='physics', across_dir=True, generation=True),
+    'se_nu':                dict(scope='physics', across_dir=True, generation=True),
+    'se_sigma_y_GPa':       dict(scope='physics', across_dir=True, generation=True),
+    'mpm_seed':             dict(scope='physics', across_dir=True, generation=True),
     # ── 침대 정체성 — 침대 **안**에서만 고정 (FA-06: SBE 에 SDCP 가 없는 것은 정상) ──
-    'additive_E_GPa':       dict(scope='bed', across_dir=True),
-    'input_digest':         dict(scope='bed', across_dir=True),
+    'additive_E_GPa':       dict(scope='bed', across_dir=True, generation=True),
+    'input_digest':         dict(scope='bed', across_dir=True, generation=True),
     # ── 코드 정체성 — 침대와 무관하지만 **섞이면 다른 실험**이다 (CDXIJ-10 ③). ──
-    'code_sha':             dict(scope='numeric', across_dir=True),
+    'code_sha':             dict(scope='numeric', across_dir=True, generation=True),
     #  ★★ 2026-08-25 (CDXR3-3) — **물리 규약 정체성**.  적용된 인자들에서 파생된 해시라
     #    개별 필드가 하나라도 다르면 이것도 달라진다 = 요약 봉인.  required 로 둔다 —
     #    기록이 없으면 어느 규약인지 확정할 수 없다.
@@ -127,7 +127,7 @@ FIELD_CONTRACT = {
 }
 
 
-def contract_fields(scope=None, across_dir=None, required=None):
+def contract_fields(scope=None, across_dir=None, required=None, generation=None):
     """레지스트리에서 필드 이름을 뽑는다 — **모든 게이트의 유일한 출처**.
 
     ★ `required` (Codex 의 `required_since`) — **있어야 하는가** 와 **달라지면 안 되는가**
@@ -137,7 +137,8 @@ def contract_fields(scope=None, across_dir=None, required=None):
                  if (scope is None or v['scope'] in (scope if isinstance(scope, (tuple, list))
                                                      else (scope,)))
                  and (across_dir is None or v.get('across_dir') is across_dir)
-                 and (required is None or bool(v.get('required', False)) is required))
+                 and (required is None or bool(v.get('required', False)) is required)
+                 and (generation is None or bool(v.get('generation', False)) is generation))
 
 
 #: 팔 간 고정 인자 (같은 디렉터리) — physics + numeric.  bed 는 제외 (침대끼리 다르다).
@@ -149,7 +150,15 @@ _BED_FIELDS_C = contract_fields(scope='bed')
 #: cross-directory 대조에서 고정할 축 — **세대 인자와 침대까지** 포함한다.
 _XDIR_FIELDS = contract_fields(across_dir=True)
 
-_GEN_FIELDS = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
+#  ★★★ 2026-08-25 (R3-CX-06, Codex 3차) — **이 목록도 레지스트리에서 파생한다.**
+#    사본으로 두니 갈라졌고, Codex 가 세 pass-mutant 로 증명했다: `required` 를 뒤집어도
+#    `across_dir` 을 뒤집어도 이 목록에서 `temp_c` 를 지워도 **selftest 126/126 초록**이었다
+#    (선언만 있고 거동이 시험되지 않았다).  ⇒ ⓐ 목록을 파생시키고 ⓑ 아래 ㊷ 가
+#    **레지스트리를 읽어 거동을 생성**한다 (선언을 바꾸면 시험이 따라 바뀐다).
+_GEN_FIELDS = contract_fields(generation=True)
+
+#: (역사) 옛 하드코딩 목록 — ㊷i 가 레지스트리 파생과 **같은 집합**임을 강제한다.
+_GEN_FIELDS_LEGACY = ('sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam',
                'temp_c', 'ea_ion_ev', 'mpm_seed',
                'se_E_GPa', 'se_nu', 'se_sigma_y_GPa',
@@ -763,7 +772,13 @@ def _selftest():
                 sigma_ion_se_S_cm=0.003, sigma_ion_sdcp_S_cm=0.001,
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
-                se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30)
+                se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30,
+                #  ★ 2026-08-25 (R3-CX-06, ㊷ 가 잡음) — 현행 팔은 이 둘도 항상 싣는다.
+                #    픽스처에 없으면 "전부 없음" 이라 세대-혼합 게이트가 발화하지 않아
+                #    생성된 거동 시험이 **거짓 통과**한다.
+                code_sha='abc1234')
+    #  ⚠ `input_digest` 는 **침대마다 달라야** 한다 (같으면 같은 침대를 읽는 것이다,
+    #    FA-06/㉙d) — 그래서 `_FIX` 공통이 아니라 `mk()` 가 침대별로 넣는다.
 
     #  ★★★ 2026-08-25 (R3-CX-03) — 픽스처의 **raw manifest** 를 만들고 id 를 그것에서
     #    계산한다.  판정기는 저장값을 믿지 않고 재계산해 대조하므로, 픽스처도 실제
@@ -800,10 +815,12 @@ def _selftest():
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
         return {'SBE': [dict(f, file=f'p2_SBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i))
+                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i),
+                             **({} if 'input_digest' in over else {'input_digest': 'AA'}))
                         for i, v in enumerate(sbe)],
                 'DBE': [dict(f, file=f'p2_DBE_a{i}.json', sigma_e=v, cg_info=cg,
-                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i))
+                             cg_resid=resid, unconverged=False, origin_shift_um=_ori(i),
+                             **({} if 'input_digest' in over else {'input_digest': 'BB'}))
                         for i, v in enumerate(dbe)]}
 
     base = [1.0000, 1.0020, 0.9980, 1.0010, 0.9990, 1.0005, 0.9995, 1.0000]
@@ -1435,7 +1452,15 @@ def _selftest():
     _v26c = verdict(_c6c)
     chk(f'㉖c ★ code SHA 가 다르면 HOLD ({_v26c["decision"]})',
         _v26c['decision'] == 'HOLD' and 'code_sha' in (_v26c.get('reason') or ''))
-    _v26d = verdict(mk(base, [v * 1.12 for v in base]), require_digest=True)
+    #  ★ 2026-08-25: `_FIX` 가 이제 digest 를 싣는다 (현행 팔) ⇒ "기록이 없는 옛 payload"
+    #    는 **명시적으로** 비워야 한다.  픽스처가 현행이 된 만큼 옛 세대 시험은 스스로
+    #    옛 상태를 만들어야 한다 (기본값에 기대면 이 시험이 조용히 무력해진다).
+    _c6d = mk(base, [v * 1.12 for v in base])
+    for _k6 in _c6d:
+        for _r6 in _c6d[_k6]:
+            _r6['input_digest'] = None
+            _r6['code_sha'] = None
+    _v26d = verdict(_c6d, require_digest=True)
     chk(f'㉖d ★ --require-digest 인데 기록이 없으면 HOLD (옛 payload) ({_v26d["decision"]})',
         _v26d['decision'] == 'HOLD' and 'input_digest' in (_v26d.get('reason') or ''))
     _c6e = _perbed(mk(base, [v * 1.12 for v in base], code_sha='1da6cbd+dirty'))
@@ -1642,6 +1667,155 @@ def _selftest():
         _c41b = compare_dirs(_A, _B, {'sdcp_yield_to_vgcf'})
         chk(f'㊶b ★★ raw 축은 같은데 id 만 다르면 HOLD ({_c41b["decision"]})',
             _c41b['decision'] == 'HOLD')
+
+    #  ── ㊷ 2026-08-25 (R3-CX-06, Codex 3차) — **레지스트리에서 거동을 생성한다** ────────
+    #    Codex 가 독립 pass-mutant 셋으로 증명했다 — `physics_protocol_id.required` 를
+    #    뒤집어도, `temp_c.across_dir` 을 뒤집어도, `_GEN_FIELDS` 에서 `temp_c` 를 지워도
+    #    **selftest 126/126 이 초록**이었다.  선언만 있고 **거동이 시험되지 않았다**.
+    #    ⇒ 목록을 하나로 파생시키고(`generation=True`), 여기서 레지스트리를 **읽어**
+    #      필드마다 선언대로 무는지 확인한다.  선언을 바꾸면 시험이 따라 바뀐다 =
+    #      "선언과 거동" 이 갈라질 자리가 없어진다.
+    _sw_bad = []
+
+    def _one_arm_missing(fld):
+        """DBE 팔 하나에서 `fld` 를 뺀 8팔 (평탄 + 매니페스트 둘 다)."""
+        _c = mk(base, [v * 1.12 for v in base])
+        _c['DBE'][0] = dict(_c['DBE'][0])
+        _c['DBE'][0][fld] = None
+        _mm = {k: v for k, v in _FIX_MAN.items() if k != fld}
+        _c['DBE'][0]['_manifest'] = _mm if fld in _RC.PROTOCOL_FIELDS else _FIX_MAN
+        return _c
+
+    def _one_arm_differs(fld, alt):
+        _c = mk(base, [v * 1.12 for v in base])
+        _c['DBE'][0] = dict(_c['DBE'][0], **{fld: alt})
+        if fld in _RC.PROTOCOL_FIELDS:
+            _c['DBE'][0]['_manifest'] = _stamp_pid(dict(_FIX_MAN, **{fld: alt}))
+        return _c
+
+    _ALT = {str: 'ALT', float: 9.75, int: 4321, bool: True, dict: {'ZZ': 1.0}, type(None): 'ALT'}
+    for _f, _d in sorted(FIELD_CONTRACT.items()):
+        _cur = _FIX.get(_f)
+        _alt = _ALT.get(type(_cur), 'ALT')
+        if isinstance(_cur, bool):
+            _alt = not _cur
+        #  ⓐ `required=True` → 그 필드가 **없는** 팔이 있으면 HOLD
+        if _d.get('required'):
+            _v = verdict(_one_arm_missing(_f))
+            if _v['decision'] != 'HOLD':
+                _sw_bad.append(f'{_f}: required 선언인데 부재가 통과 ({_v["decision"]})')
+        #  ⓑ 같은 디렉터리 안에서 **달라지면** HOLD (scope 별로 범위가 다르다)
+        if _d.get('scope') in ('physics', 'numeric', 'bed') and _cur is not None:
+            _v = verdict(_one_arm_differs(_f, _alt))
+            if _v['decision'] != 'HOLD':
+                _sw_bad.append(f'{_f}: scope={_d["scope"]} 인데 팔간 차이가 통과 '
+                               f'({_v["decision"]})')
+        #  ⓒ `generation=True` → 기록이 **섞이면** HOLD (전부 없으면 통과 = ⑲ 규약)
+        if _d.get('generation'):
+            _v = verdict(_one_arm_missing(_f))
+            if _v['decision'] != 'HOLD':
+                _sw_bad.append(f'{_f}: generation 선언인데 혼합이 통과 ({_v["decision"]})')
+    chk(f'㊷a ★★★ 레지스트리 {len(FIELD_CONTRACT)} 필드의 **선언대로** 무는가 '
+        f'(위반: {_sw_bad[:2]}{"…" if len(_sw_bad) > 2 else ""})',
+        not _sw_bad)
+    #  ⓓ cross-dir: `across_dir=True` 인 필드가 두 디렉터리에서 다르면 HOLD
+    #  ⚠ 주입이 **판정기의 리더에 실제로 보이는지** 먼저 확인한다.  안 보이는 축을
+    #    조용히 건너뛰면 "시험했다" 가 거짓이 된다 (이 파일이 여러 번 겪은 부류).
+    #    보이지 않으면 그것 자체를 위반으로 보고한다 — 픽스처를 고치라는 뜻이다.
+    _XAXIS = 'sdcp_yield_to_vgcf'         # 등록 축 (여기서 다른 것이 **정상**이다)
+    #    필드 → 매니페스트에 어떻게 써야 `_read` 가 보는가 (평탄 키가 아닌 것만)
+    #  ⚠ 리더가 **평탄 키와 다른 이름**으로 읽는 축은 여기 적는다.  안 적으면 위 가드가
+    #    "주입이 안 보인다" 로 **실패**시킨다 — 조용히 건너뛰지 않는다 (그것이 이 sweep 의
+    #    요점이다: 시험하지 못한 축은 통과가 아니다).
+    _INJ = {'backend': lambda v: {'backend_last_solve': {'requested': 'gpu', 'used': v,
+                                                        'precond': 'jacobi'},
+                                  'components': {'electronic': {
+                                      'status': 'complete',
+                                      'backend': {'used': v, 'precond': 'jacobi'}}}},
+            'vox': lambda v: {'vox_um': v},          # 리더: `man['vox_um'] → r['vox']`
+            }
+    _xd_bad = []
+    for _f in sorted(_XDIR_FIELDS):
+        if _f == _XAXIS or FIELD_CONTRACT[_f].get('derived_from'):
+            continue          # 등록 축은 달라야 정상 · 파생은 ㊶ 소관
+        if _f == 'input_digest':
+            continue          # 두 침대는 **반드시** 다르다 (FA-06) — ㉗d 가 짝별로 본다
+        _cur = _FIX.get(_f)
+        _alt = (not _cur) if isinstance(_cur, bool) else _ALT.get(type(_cur), 'ALT')
+        if _f == 'vox':
+            _alt = 0.125                       # 숫자 축은 숫자로 (규약 해시에도 들어간다)
+        _kw = _INJ[_f](_alt) if _f in _INJ else {_f: _alt}
+        with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+            _mk2(_A, yvgcf=False, dbe_mul=1.42)
+            _mk2(_B, yvgcf=True, dbe_mul=1.29, **_kw)
+            #  주입이 리더에 보이는가 (안 보이면 이 시험은 아무것도 안 한 것이다)
+            #  ⚠ 기준은 **A 디렉터리**다.  `_FIX` 와 비교하면 두 픽스처의 기본값이 다른
+            #    축(`vox` 0.15 vs 0.4)에서 "주입이 보였다" 고 **잘못** 판정한다.
+            #    실제로 그래서 `vox` 축이 조용히 안 시험되고 있었다 (이 sweep 이 잡았다).
+            _sA = {_canon(_r.get(_f)) for _r in collect(_A)[1]['SBE']}
+            _sB = {_canon(_r.get(_f)) for _r in collect(_B)[1]['SBE']}
+            if _sA == _sB:
+                _xd_bad.append(f'{_f}: 주입이 리더에 **안 보인다** (A={_sA} B={_sB}) — '
+                               f'픽스처가 이 축을 시험하지 못한다.  `_INJ` 에 이 축의 '
+                               f'매니페스트 표기를 추가할 것')
+                continue
+            _c = compare_dirs(_A, _B, {_XAXIS})
+            if _c['decision'] != 'HOLD':
+                _xd_bad.append(f'{_f} ({_c["decision"]})')
+    chk(f'㊷b ★★ `across_dir` 선언 {len(_XDIR_FIELDS)} 필드가 cross-dir 에서 정말 고정인가 '
+        f'(위반: {_xd_bad[:2]}{"…" if len(_xd_bad) > 2 else ""})', not _xd_bad)
+    #  ★★★ ㊷d/e — **선언 자체를 뒤집는 mutant** 를 잡는다.  ⓐ~ⓓ 는 선언에서 시험을
+    #    생성하므로, 선언을 뒤집으면 그 필드가 **시험 대상에서 빠져** 조용히 초록이 된다
+    #    (Codex 실측: `required=True→False` · `across_dir=True→False` 둘 다 126/126 PASS).
+    #    ⇒ 선언과 **무관한** 불변식을 따로 건다.
+    #  ⓓ **거동으로** 건다 (플래그가 아니라).  규약 축이 매니페스트에서 빠진 팔은
+    #    `protocol_ok` 의 재계산이 `unknown:` 을 내므로 HOLD 여야 한다 — 이 경로는
+    #    `required`/`across_dir` 선언과 **무관**하다.  그래서 선언을 뒤집어도 안 뚫린다.
+    #    ⚠ 세대 축(σ_AM·temp_c…)은 일부러 `required` 가 아니다 (옛 팔 호환, ⑲/㉖f).
+    #      그렇다고 규약이 느슨해지는 것은 아니다 — 규약 재계산이 따로 잡는다.
+    _pf_bad = []
+    for _f in _RC.PROTOCOL_FIELDS:
+        _cD = mk(base, [v * 1.12 for v in base])
+        _mD = {k: v for k, v in _FIX_MAN.items() if k != _f}
+        _mD['physics_protocol_id'] = _FIX['physics_protocol_id']   # stored 는 그대로 (stale)
+        for _kD in _cD:
+            for _rD in _cD[_kD]:
+                _rD['_manifest'] = _mD
+        _vD = verdict(_cD)
+        if _vD['decision'] != 'HOLD':
+            _pf_bad.append(f'{_f} ({_vD["decision"]})')
+    chk(f'㊷d ★★★ 규약 축 {len(_RC.PROTOCOL_FIELDS)} 개가 매니페스트에서 빠지면 **전부** '
+        f'HOLD (선언과 무관한 재계산 경로) — 위반: {_pf_bad[:2]}',
+        not _pf_bad)
+    _nx = sorted(f for f in set(_GEN_FIELDS) | {f for f in _RC.PROTOCOL_FIELDS
+                                                if f in FIELD_CONTRACT}
+                 if not FIELD_CONTRACT[f].get('across_dir'))
+    #  ★ ㊷f — `physics_protocol_id.required` 는 **중복 방어**다.  이 플래그를 꺼도
+    #    `protocol_ok` 의 재계산이 저장값 부재를 HOLD 로 잡는다 (아래에서 실측한다).
+    #    Codex 가 "이 플래그를 뒤집어도 selftest 가 초록" 이라고 지적한 것은 사실이고,
+    #    그 이유가 **구멍이 아니라 중복**임을 여기서 명시한다 — 다만 두 겹을 유지하려면
+    #    플래그가 켜져 있어야 하므로 그것도 같이 못 박는다 (조용히 한 겹이 되지 않게).
+    _cF = mk(base, [v * 1.12 for v in base])
+    _mF = {k: v for k, v in _FIX_MAN.items() if k != 'physics_protocol_id'}
+    for _kF in _cF:
+        for _rF in _cF[_kF]:
+            _rF['physics_protocol_id'] = None
+            _rF['_manifest'] = _mF
+    _vF = verdict(_cF)
+    chk(f'㊷f ★★ 저장된 규약 id 가 **없으면** HOLD — `required` 플래그와 무관한 '
+        f'재계산 경로 ({_vF["decision"]}/{_vF.get("hold_code")})',
+        _vF['decision'] == 'HOLD' and _vF.get('hold_code') == 'PROTOCOL_ID_MISSING')
+    chk('㊷g ★ 그래도 `required` 플래그는 켜 둔다 (두 겹 유지 — 한 겹이 조용히 사라지지 '
+        '않게).  이 시험이 플래그 뒤집기를 잡는 유일한 자리다',
+        FIELD_CONTRACT['physics_protocol_id'].get('required') is True)
+
+    chk(f'㊷e ★★★ 세대 축과 규약 축은 **전부** `across_dir` 다 (아닌 것: {_nx}) — '
+        f'선언을 뒤집으면 cross-dir 시험에서 빠진다',
+        not _nx)
+
+    chk(f'㊷c ★★ `_GEN_FIELDS` 가 레지스트리 파생과 **같은 집합**이다 '
+        f'(차이: {sorted(set(_GEN_FIELDS) ^ set(_GEN_FIELDS_LEGACY))})',
+        set(_GEN_FIELDS) == set(_GEN_FIELDS_LEGACY))
 
     #  ── ㊴ 2026-08-25 (Codex 재리뷰 조건 4) — **새 규약 축 둘** ────────────────────────
     #    `periodic_xy` (seam 면이 회로에 드는가) 와 `plate_rule` (CDXR3-6 이 바꾼 결합 규약,

@@ -98,6 +98,24 @@ MUTANTS = [
      "    _use_plate = True\n    _u = float(_vox)",
      "    _use_plate = True\n    _u = 1.0",
      STEP3, ('plate-share-identity-vox',)),
+    #  ── R3-CX-06: **선언을 뒤집는** mutant.  ㊷ 가 레지스트리에서 거동을 생성하므로
+    #     선언을 뒤집으면 그 필드가 시험에서 빠져 조용히 초록이 되던 부류다 (Codex 실측).
+    ('CX-06 physics_protocol_id.required 뒤집기', 'sdcp_gain_verdict.py',
+     "'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True,",
+     "'physics_protocol_id':  dict(scope='physics', across_dir=True, required=False,",
+     VERDICT, ('㊷g',)),
+    ('CX-06 temp_c.across_dir 뒤집기', 'sdcp_gain_verdict.py',
+     "    'temp_c':               dict(scope='physics', across_dir=True, generation=True),",
+     "    'temp_c':               dict(scope='physics', across_dir=False, generation=True),",
+     VERDICT, ('㊷e',)),
+    ('CX-06 temp_c.generation 제거', 'sdcp_gain_verdict.py',
+     "    'temp_c':               dict(scope='physics', across_dir=True, generation=True),",
+     "    'temp_c':               dict(scope='physics', across_dir=True),",
+     VERDICT, ('㊷b', '㊷c')),
+    ('CX-06 vox.required 뒤집기', 'sdcp_gain_verdict.py',
+     "    'vox':                  dict(scope='physics', across_dir=True, required=True,",
+     "    'vox':                  dict(scope='physics', across_dir=True, required=False,",
+     VERDICT, ('㉞e',)),
     ('조건5 compare_dirs 계약 제거', 'sdcp_gain_verdict.py',
      "    for _tag, _ar in (('A', arms_a), ('B', arms_b)):\n"
      "        _h, _ = validate_contract(_ar, where=f'디렉터리 {_tag}')\n"
