@@ -3310,13 +3310,26 @@ def test_committed_gate_requests_are_self_contained():
     완성돼 있었으니 "committed 문서 자기완결" 은 닫히지 않았다.
 
     그리고 요청문이 인용하는 영수증 core sha 가 실물과 다르면 그것도 stale 이다.
+
+    ★ 30차 자체 발견 — 초판은 **모든** 요청문의 인용을 **오늘의** 영수증과
+    대조했다. 요청문은 그 회차의 기록이므로, 다음 회차에 영수증이 바뀌면
+    지나간 요청문이 전부 거짓이 된다 (실제로 그 자리에서 빨갛게 됐다).
+    그렇다고 "최신 것만 본다" 로 약화하면 archive 는 아무도 안 보게 된다.
+
+    옳은 결속은 **그 요청문이 이름한 대상 커밋의 영수증**이다. 그것이
+    자기완결의 뜻이기도 하다 — 요청문 하나와 그것이 이름한 커밋만으로
+    검증이 닫힌다.
     """
     import yaml
 
-    rec = yaml.safe_load(
-        (DOCS / "22p_gap" / "receipts" / "paired_fixed5_v4.validate.yaml")
-        .read_text(encoding="utf-8"))
-    core = rec["core_sha256"]
+    _RECEIPT = "degradation-degeneracy/docs/22p_gap/receipts/paired_fixed5_v4.validate.yaml"
+
+    def core_at(commit: str) -> str | None:
+        r = subprocess.run(["git", "show", f"{commit}:{_RECEIPT}"],
+                           cwd=_REPO_ROOT, capture_output=True)
+        if r.returncode != 0:
+            return None
+        return yaml.safe_load(r.stdout.decode("utf-8")).get("core_sha256")
 
     bad = []
     for md in sorted((DOCS / "22p_gap").glob("GATE*_REQUEST.md")):
@@ -3329,12 +3342,22 @@ def test_committed_gate_requests_are_self_contained():
                                cwd=_REPO_ROOT, capture_output=True)
             if r.returncode != 0:
                 bad.append(f"{md.name}: 존재하지 않는 커밋 {sha[:12]}")
-        # 영수증 core sha 를 인용했다면 현행이어야 한다
         quoted = set(re.findall(r"core[_ ]sha\S*\s*[는은]?\s*`?([0-9a-f]{16,64})", txt))
+        if not quoted:
+            continue
+        target = re.search(r"(?m)^대상 커밋:\s*`?([0-9a-f]{40})", txt)
+        if not target:
+            bad.append(f"{md.name}: core sha 를 인용했는데 대상 커밋이 없다 — "
+                       "무엇에 대고 대조할지 알 수 없다")
+            continue
+        core = core_at(target.group(1))
+        if core is None:
+            bad.append(f"{md.name}: 대상 커밋 {target.group(1)[:12]} 에 영수증이 없다")
+            continue
         for q in quoted:
             if not core.startswith(q):
-                bad.append(f"{md.name}: 인용한 영수증 core sha {q[:16]} 가 낡았다 "
-                           f"(현행 {core[:16]})")
+                bad.append(f"{md.name}: 인용한 영수증 core sha {q[:16]} 가 대상 커밋 "
+                           f"{target.group(1)[:12]} 의 것과 다르다 ({core[:16]})")
     assert not bad, "커밋된 요청문이 자기완결적이지 않다:\n  " + "\n  ".join(bad)
 
 
