@@ -74,7 +74,7 @@ export function SampleDetail() {
   const [chosen, setChosen] = useState<number[] | null>(null)
   const [hidden, setHidden] = useState<string[]>([])
   const [lifeMetric, setLifeMetric] = useState<LifeMetric>('discharge')
-  const [kneeMethod, setKneeMethod] = useState('segmented')
+  const [kneeMethod, setKneeMethod] = useState('dbw')
   const [override, setOverride] = useState<Sample | null>(null)
   const [refDraft, setRefDraft] = useState('')
   // 스치기만 한 blur 가 PATCH 를 보내지 않도록, 손으로 고친 뒤에만 커밋한다.
@@ -351,6 +351,14 @@ export function SampleDetail() {
     const result = reportState.data?.knee?.results.find((r) => r.method === kneeMethod)
     if (!result) return []
     if (result.detected && result.cycle !== null) {
+      // DBW 는 한 사건의 앞끝과 뒷끝을 함께 준다 (ADR 0021): 이탈이 시작되는
+      // onset 은 흐린 선, 급감이 자리 잡는 point 는 진한 선.
+      if (result.onset_cycle != null) {
+        return [
+          { x: result.onset_cycle, label: `이탈 ${Math.round(result.onset_cycle)}`, tentative: true },
+          { x: result.cycle, label: `급감 ${Math.round(result.cycle)}` },
+        ]
+      }
       return [{ x: result.cycle, label: `급감 ${Math.round(result.cycle)}` }]
     }
     // 확정이 아니어도 짚은 곳은 그린다 — 흐리게, 물음표를 달아서.  아무것도 안

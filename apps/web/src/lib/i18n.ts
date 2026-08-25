@@ -134,6 +134,62 @@ const KNEE_REASONS: Rule[] = [
     () => '가장 잘 맞는 절점 이후로도 열화가 가속되지 않습니다',
   ],
   [/^capacity is not fading$/, () => '용량이 감소하지 않습니다'],
+  // Double Bacon-Watts (ADR 0021) — onset 과 point 를 한 적합으로.
+  [
+    /^fade leaves its early trend at cycle ([\d.]+) \(onset\) and settles in by cycle ([\d.]+), steepening ([\d.]+)x \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) =>
+      `${m[1]}번부터 초기 추세를 벗어나기 시작해(onset) ${m[2]}번에 급감이 ` +
+      `자리 잡습니다(point) — ${m[3]}배 (${m[4]} → ${m[5]} %/cycle)`,
+  ],
+  [
+    /^fade begins at cycle ([\d.]+) \(onset\) and settles in by cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) =>
+      `${m[1]}번에서 열화가 시작돼(onset) ${m[2]}번에 자리 잡습니다(point) ` +
+      `(${m[3]} → ${m[4]} %/cycle)`,
+  ],
+  [
+    /^fade leaves its early trend at cycle ([\d.]+) \(one transition; no separate onset resolved\), steepening ([\d.]+)x \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) =>
+      `${m[1]}번에서 꺾입니다 — 전환이 하나뿐이라 별도의 onset 은 없습니다 ` +
+      `(${m[2]}배, ${m[3]} → ${m[4]} %/cycle)`,
+  ],
+  [
+    /^fade begins at cycle ([\d.]+) \(one transition; no separate onset resolved\) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    (m) =>
+      `${m[1]}번에서 열화가 시작됩니다 — 전환이 하나뿐이라 별도의 onset 은 ` +
+      `없습니다 (${m[2]} → ${m[3]} %/cycle)`,
+  ],
+  [
+    /^fade does not accelerate across the fitted transition$/,
+    () => '적합된 전환을 지나도 열화가 가속되지 않습니다',
+  ],
+  [
+    /^the later transition \(cycle ([\d.]+)\) eases the fade rather than steepening it -- a crash that eases off or a lull, not an onset-to-point knee; the segmented criterion handles that shape$/,
+    (m) =>
+      `뒤쪽 전환(${m[1]}번)이 열화를 늦춥니다 — 급감 후 완화이거나 소강이라 ` +
+      `onset→point 모양이 아닙니다. 이 모양은 직선 분할 기준이 다룹니다`,
+  ],
+  [
+    /^the two fitted transitions \(([\d.]+) and ([\d.]+)\) are separate events, not one knee's onset and point -- the stretch between them is straight; the segmented criterion reports the earliest$/,
+    (m) =>
+      `두 전환(${m[1]}번, ${m[2]}번)은 별개의 사건입니다 — 사이가 직선이라 한 ` +
+      `knee 의 onset·point 가 아닙니다. 직선 분할 기준이 이른 쪽을 짚습니다`,
+  ],
+  [
+    /^the fitted knee-point sits at cycle ([\d.]+), within the last (\d+) cycles of the record -- either the bend is too recent to confirm, or the fit pushed it to the edge, which is what this model does on sub-linear fades$/,
+    (m) =>
+      `적합된 knee-point 가 기록 끝 ${m[2]}사이클 안(${m[1]}번)에 있습니다 — ` +
+      `너무 최근이라 확인할 수 없거나, sub-linear 곡선에서 이 모델이 끝으로 ` +
+      `밀어낸 것입니다`,
+  ],
+  [
+    /^the fit converged from none of the seeded starts$/,
+    () => '어느 초기값에서도 적합이 수렴하지 않았습니다',
+  ],
+  [
+    /^scipy is not installed, so the Bacon-Watts fits were skipped \(pip install 'wrdkit\[eis\]'\)$/,
+    () => "scipy 가 없어 Bacon-Watts 적합을 건너뛰었습니다 (pip install 'wrdkit[eis]')",
+  ],
   [/^needs at least (\d+) cycles, has (\d+)$/, (m) => `사이클이 ${m[2]}개뿐입니다 (${m[1]}개 이상 필요)`],
   [/^series too short after edge trimming$/, () => '가장자리를 제외하면 데이터가 너무 짧습니다'],
   [/^no complete cycles$/, () => '완료된 사이클이 없습니다'],

@@ -101,7 +101,9 @@ export function ReportCard({ report }: { report: Report }) {
           label="용량 급감 시작"
           value={
             knee?.primary.detected
-              ? cycleNumber(knee.primary.cycle)
+              ? knee.primary.onset_cycle != null
+                ? `${cycleNumber(knee.primary.onset_cycle)}→${cycleNumber(knee.primary.cycle)}`
+                : cycleNumber(knee.primary.cycle)
               : knee?.primary.status === 'insufficient'
                 ? `${cycleNumber(knee.primary.candidate_cycle)}?`
                 : knee?.primary.status === 'indeterminate'
@@ -222,12 +224,18 @@ function summarize(report: Report): string {
     parts.push(`${report.reference.cycle}번 CE ${pct(report.reference.coulombic_efficiency)}%`)
   }
   if (report.knee?.primary.detected && report.knee.primary.cycle !== null) {
-    parts.push(`급감 ${Math.round(report.knee.primary.cycle)}번`)
+    const onset = report.knee.primary.onset_cycle
+    parts.push(
+      onset != null
+        ? `급감 ${Math.round(onset)}→${Math.round(report.knee.primary.cycle)}번`
+        : `급감 ${Math.round(report.knee.primary.cycle)}번`,
+    )
   }
   return parts.join(' · ')
 }
 
 const METHOD_LABELS: Record<string, string> = {
+  dbw: 'Double Bacon-Watts',
   segmented: '두 직선 교점',
   slope_ratio: '초기 대비 열화율 배수',
   threshold: '유지율 임계 통과',
@@ -236,6 +244,7 @@ const METHOD_LABELS: Record<string, string> = {
 }
 
 const METHOD_HINTS: Record<string, string> = {
+  dbw: '이탈 시작(onset)과 급감 정착(point)을 한 적합으로 (ADR 0021)',
   segmented: '두 직선으로 볼 때 꺾이는 지점',
   slope_ratio: '열화율이 초기의 k배가 된 시점',
   threshold: 'EOL(기본 80%)을 넘은 시점',
@@ -256,7 +265,7 @@ export function KneeDetail({
   return (
     <div className="col" style={{ gap: 8 }}>
       <div className="tiny faint">
-        기준이 하나가 아닙니다. 넷 다 계산해서 보여 주고, 열화가 실제로 가속될 때만 knee
+        기준이 하나가 아닙니다. 전부 계산해서 보여 주고, 열화가 실제로 가속될 때만 knee
         로 인정합니다. 행을 누르면 그래프의 세로선이 바뀝니다.
       </div>
       <div className="knee-choices">
@@ -279,7 +288,9 @@ export function KneeDetail({
                       "안 꺾였다" 와 "아직 확인할 데이터가 없다" 를 같이
                       쓰면, 일찍 뽑은 셀이 안 꺾인 셀과 똑같아 보인다. */}
                   {result.detected
-                    ? `${cycleNumber(result.cycle)}번`
+                    ? result.onset_cycle != null
+                      ? `${cycleNumber(result.onset_cycle)}→${cycleNumber(result.cycle)}번`
+                      : `${cycleNumber(result.cycle)}번`
                     : result.status === 'insufficient' && result.candidate_cycle !== null
                       ? `${cycleNumber(result.candidate_cycle)}번?`
                       : result.status === 'indeterminate'

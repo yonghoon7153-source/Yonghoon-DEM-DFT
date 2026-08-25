@@ -369,7 +369,7 @@ def test_report_capacities_follow_the_basis(client, loaded):
 def test_report_includes_every_knee_criterion(client, loaded):
     knee = client.get(f"/api/samples/{loaded}/report").json()["knee"]
     methods = {r["method"] for r in knee["results"]}
-    assert methods == {"threshold", "segmented", "slope_ratio", "curvature"}
+    assert methods == {"threshold", "segmented", "slope_ratio", "curvature", "dbw"}
     assert knee["search_start_cycle"] == 3
     # A linear fade must not produce a knee, and must say so.
     assert all(r["reason"] for r in knee["results"] if not r["detected"])

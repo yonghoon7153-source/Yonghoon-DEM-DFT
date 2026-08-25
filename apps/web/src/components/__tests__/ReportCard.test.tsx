@@ -144,3 +144,50 @@ describe('숫자가 하나도 없을 때', () => {
     expect(screen.queryByText(/방전이 없습니다/)).toBeNull()
   })
 })
+
+
+describe('DBW onset·point (ADR 0021)', () => {
+  const dbw = {
+    method: 'dbw' as const,
+    cycle: 24.2,
+    detected: true,
+    reason:
+      'fade leaves its early trend at cycle 20 (onset) and settles in by cycle 24, ' +
+      'steepening 8.00x (-0.100 -> -0.800 %/cycle)',
+    detail: {},
+    status: 'detected' as const,
+    candidate_cycle: 24.2,
+    onset_cycle: 20.4,
+  }
+  const withKnee: Report = {
+    ...REPORT,
+    knee: {
+      primary: dbw,
+      results: [dbw],
+      reference_cycle: 3,
+      reference_capacity_mah: 5.25,
+      search_start_cycle: 3,
+      n_points: 44,
+      fade_rate_early_pct_per_cycle: -0.1,
+      fade_rate_late_pct_per_cycle: -0.8,
+      projected_cycle_at_80pct: null,
+      reference_note: '',
+    },
+  }
+
+  it('타일이 onset→point 쌍을 보여 준다', () => {
+    render(<ReportCard report={withKnee} />)
+    expect(screen.getByText('20.4→24.2')).toBeInTheDocument()
+  })
+
+  it('onset 이 없으면 point 하나만 보인다', () => {
+    const single = { ...dbw, onset_cycle: null }
+    render(
+      <ReportCard
+        report={{ ...withKnee, knee: { ...withKnee.knee!, primary: single, results: [single] } }}
+      />,
+    )
+    expect(screen.getByText('24.2')).toBeInTheDocument()
+    expect(screen.queryByText(/→/)).not.toBeInTheDocument()
+  })
+})

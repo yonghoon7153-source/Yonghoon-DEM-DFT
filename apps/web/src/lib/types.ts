@@ -362,7 +362,7 @@ export interface DvdqResponse {
 export type KneeStatus = 'detected' | 'insufficient' | 'none' | 'indeterminate'
 
 export interface KneeResult {
-  method: 'threshold' | 'segmented' | 'slope_ratio' | 'curvature' | 'none'
+  method: 'threshold' | 'segmented' | 'slope_ratio' | 'curvature' | 'dbw' | 'none'
   cycle: number | null
   detected: boolean
   reason: string
@@ -371,6 +371,8 @@ export interface KneeResult {
   status: KneeStatus
   /** 확정 여부와 무관하게 이 기준이 짚고 있는 사이클. */
   candidate_cycle: number | null
+  /** 완만한 이탈이 시작되는 knee-onset (ADR 0021). dbw 만 채운다; `cycle` 은 knee-point. */
+  onset_cycle?: number | null
 }
 
 export interface KneeAnalysis {

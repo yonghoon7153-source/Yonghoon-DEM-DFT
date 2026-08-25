@@ -221,6 +221,7 @@ def meta() -> dict:
         "bases": [choice.model_dump() for choice in basis_choices()],
         "states": ["auto", "running", "finished"],
         "knee_methods": [
+            {"value": "dbw", "label": "Double Bacon-Watts (onset + point)"},
             {"value": "segmented", "label": "Segmented fit (two-line break point)"},
             {"value": "slope_ratio", "label": "Fade rate multiple of early life"},
             {"value": "threshold", "label": "Retention threshold crossing"},
