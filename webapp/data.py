@@ -3418,6 +3418,9 @@ def dashboard_highlights() -> list:
         else:
             head = f"{_fmt(lo[1])} 최저"
         hi.append({
+            # ⚠ 테스트가 이 카드를 **key 로** 집는다. 제목 문자열("Ea")로 고르면 다른 카드가
+            #   먼저 걸린다 — 2026-08-25 에 b2o3 굽음 카드("단일 Ea 철회")가 그렇게 오검됐다.
+            "key": "md_ea_ranking",
             "d": "2026-08-07", "t": "이온 전도 Ea (UMA) — **멀티시드 묶음 안에서만 비교**",
             "v": head,
             "n": " · ".join(_fmt(c) for _, c in rows)

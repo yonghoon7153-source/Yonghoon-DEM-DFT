@@ -374,8 +374,10 @@ def test_non_canonical_status_is_visible_on_screen():
 
 def test_dashboard_ea_card_is_protocol_honest():
     """첫 화면 Ea 카드가 단일시드 값을 '멀티시드'라 부르면 안 된다."""
-    cards = [h for h in D.dashboard_highlights() if "Ea" in h["t"]]
-    assert cards, "Ea 카드가 없다"
+    # ⚠ 제목 문자열로 고르면 안 된다 — "Ea" 를 담은 다른 카드가 먼저 걸린다
+    #   (2026-08-25: b2o3 "단일 Ea 철회" 카드가 이 검사에 오검됐다). key 로 집는다.
+    cards = [h for h in D.dashboard_highlights() if h.get("key") == "md_ea_ranking"]
+    assert cards, "MD Ea 순위 카드가 없다 (key=md_ea_ranking)"
     txt = " ".join(cards[0][k] for k in ("t", "v", "n"))
     assert "0.224" not in cards[0]["v"], "단일시드 0.224 가 다시 카드 값으로 올라왔다"
     assert "멀티시드" in txt
