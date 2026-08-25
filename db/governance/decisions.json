@@ -536,6 +536,22 @@
      "④_why_nondestructive": "select_winners --fixed_n 으로 winners 를 재선택하면 이미 그 winners 로 돌아간 anneal·bvse·elastic 산출물이 그 구조를 안 가리킨다 — 파이프라인이 끊긴다. 그래서 --diagnose_best_of_n 은 재기만 하고 아무것도 쓰지 않는다.",
      "⛔_my_first_reading_was_wrong": "대조 전에는 '재랭킹이 best-of-N 신호를 지웠다' 로 읽었다. 대조(후·전체 +0.263)가 그것을 반박한다 — 재랭킹은 신호를 거의 안 움직였다. 기록으로 남긴다."
     }
+   },
+   "ratification": {
+    "state": "ratified",
+    "actor_id": "yonghoon",
+    "role": "scientific_owner",
+    "timestamp": "2026-08-25T00:00:00Z",
+    "commit": "f2aac333cc4e4e7d59f6cb8b11a41cd3debbbc81",
+    "decision_digest": "sha256:f07041314ab42babd5da0d336c94a6ff5e29038eeda655cf86bf3f77de8ee8ba",
+    "evidence_digest": "sha256:7bbd0cb5f717ab648e395b8d57c69951fc45f747f44f65ddc72cee99f8a631d4",
+    "max_release_status": "approved",
+    "max_allowed_uses": [
+     "public_audit",
+     "comparison",
+     "ranking"
+    ],
+    "_note": "1저자가 A/B/C 세 갈래 중 **A** 를 직접 골랐다 (2026-08-25 대화, 'A인데 지금 47종보다 더 많은거 맞지' — 범위도 전수 302 캐스케이드로 지시). agent(claude) 제안 + 같은 agent 의 구현·검증 뒤의 사람 승인이며, 독립 승인 두 표가 아니다. manuscript 는 허용 용도에 넣지 않았다 — 재랭킹 결과가 아직 원고에 들어간 적이 없다."
    }
   }
  ]

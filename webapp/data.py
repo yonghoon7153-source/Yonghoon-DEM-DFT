@@ -4891,6 +4891,48 @@ SEMINAR_DOCS = [
      "co-doping ML 과 acquisition"),
 ]
 
+#: 2026-08-25 cascade 재랭킹이 이 덱에 걸리는가 — **감사 결과**.
+#:   왜 화면에 박나: 재랭킹으로 캐스케이드 1등이 24 % 에서 바뀌었다. 덱을 다시 볼 때
+#:   "그럼 내 발표 숫자도 바뀐 거 아닌가" 가 **반드시** 나온다. 그 답을 파일 어딘가가
+#:   아니라 덱 화면 첫 자리에 둔다. 근거 없이 "안 바뀐다" 라고만 쓰면 그게 더 위험하다.
+#:   ⛔ 이 상수가 못 하는 것: 자동 검사가 아니다. 덱이 새 CSV 를 읽도록 바뀌면
+#:     이 문구는 조용히 거짓이 된다 — verified_by 의 경로가 바뀌었는지 사람이 본다.
+SEMINAR_RERANK_AUDIT = {
+    "date": "2026-08-25",
+    "verdict": "unaffected",
+    "headline": "이 덱은 2026-08-25 cascade 재랭킹의 영향을 받지 않는다.",
+    "what_changed_elsewhere": [
+        ("이동도 축", "0/3615 전원 상수 0.5 (기여 0) → 741행에 실제 기여"),
+        ("캐스케이드 1등", "225개 중 **53개(24 %)** 에서 바뀜"),
+        ("순위 갖는 행", "3,615 (미측정에 조작된 0.0 점) → 741 (측정된 것만)"),
+        ("풀 정의", "47종 → 302 캐스케이드 · 4,125 구조"),
+    ],
+    "why_deck_is_safe": [
+        ("덱은 결합점수를 안 쓴다",
+         "발표의 funnel 은 가중합 score_combined 가 아니라 **post-hoc G1–G4 게이트**다 "
+         "(47 → 25 → 11). 바뀐 것은 score_combined / rank_combined 쪽이다."),
+        ("덱은 자기 CSV 를 읽는다",
+         "plot_cascade_seminar_47.py 가 읽는 것은 cascade_seminar_*.csv (2026-06-25 "
+         "frozen) 이고 cascade_v23_all.csv 가 아니다. 그림을 다시 그려도 같은 숫자다."),
+        ("게이트 입력이 파생값이 아니다",
+         "G4 의 transport_norm 은 **bvs_li_proxy_score**(BVSE 원출력)에서 나온다. "
+         "깨져 있던 것은 li_mobility_score = 3×mvf + bvs 라는 **파생값**이다."),
+        ("backfill 은 추가만 했다",
+         "① 은 li_mobility_score 를 채웠을 뿐 bvs_li_proxy_score · "
+         "migration_volume_fraction 을 건드리지 않았다 — 덱의 입력은 문자 그대로 그대로다."),
+    ],
+    "still_watch_out": "덱이 '3축 랭킹' 이라는 표현을 쓰면 그건 2026-08-25 이전엔 "
+                       "사실이 아니었다 (실제로는 안정성+탄성 2축이었다). 현재 대본·Q&A 는 "
+                       "그 표현을 쓰지 않는다 — 게이트 방식으로 간 것이 결과적으로 이 결함을 피했다.",
+    "verified_by": [
+        "tools/figures/plot_cascade_seminar_47.py (입력 CSV 경로 확인)",
+        "db/properties/cascade_seminar_scorecard_47.csv (열 구성 확인)",
+        "tools/doping/bvse_proxy.py::backfill_one (li_mobility_score 만 기록)",
+    ],
+    "card": "kb/methodology/cascade_rerank_runbook_2026_08_25.md",
+    "decision": "db/governance/decisions.json → D-2026-08-25-missing-axis-is-unknown-not-worst",
+}
+
 #: 다운로드 허용 덱 (경로 주입 차단 — 화이트리스트 밖은 404)
 SEMINAR_DECKS = {
     "release": (SEMINAR_DECK, "정본 · 29장 (본문 21 + 부록 8)"),

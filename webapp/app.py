@@ -828,7 +828,7 @@ def seminar():
                            docs=docs, runsheet=runsheet,
                            total_min=total_sec // 60, total_sec=total_sec % 60,
                            n_body=sum(len(p["slides"]) for p in runsheet),
-                           decks=decks)
+                           decks=decks, rerank=D.SEMINAR_RERANK_AUDIT)
 
 
 @app.route("/glossary")

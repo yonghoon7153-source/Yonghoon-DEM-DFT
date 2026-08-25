@@ -25,6 +25,54 @@
 </div>
 {% endif %}
 
+{# 재랭킹 감사 — 덱 화면 **첫 자리**에 둔다.
+   2026-08-25 재랭킹으로 캐스케이드 1등이 24 % 에서 바뀌었다. 덱을 다시 여는 사람은
+   반드시 "내 발표 숫자도 바뀌었나" 를 묻는다. 그 답을 kb 파일 어딘가가 아니라 여기 둔다.
+   근거 없이 '안 바뀐다' 만 쓰면 더 위험하므로 검증 경로까지 같이 편다. #}
+{% if rerank %}
+<div class="rr" style="margin-top:14px;border:1px solid #86efac;border-left:4px solid #16a34a;
+     border-radius:8px;background:#f0fdf4;padding:12px 14px">
+  <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+    <b style="font-size:.95rem">✅ {{ rerank.headline }}</b>
+    <span class="muted mono" style="font-size:.72rem">{{ rerank.date }} 감사</span>
+  </div>
+
+  <details style="margin-top:9px">
+    <summary style="cursor:pointer;font-size:.83rem">
+      <b>cascade 쪽에서는 무엇이 바뀌었나</b> — 덱 밖의 이야기 ({{ rerank.what_changed_elsewhere|length }}건)
+    </summary>
+    <table style="margin-top:7px;font-size:.8rem"><tbody>
+      {% for what, how in rerank.what_changed_elsewhere %}
+      <tr><td style="white-space:nowrap;padding-right:12px"><b>{{ what }}</b></td>
+          <td>{{ how }}</td></tr>
+      {% endfor %}
+    </tbody></table>
+  </details>
+
+  <details style="margin-top:6px" open>
+    <summary style="cursor:pointer;font-size:.83rem"><b>그런데 왜 이 덱은 안 걸리나</b> — 확인한 근거</summary>
+    <ol style="margin:7px 0 0;padding-left:20px;font-size:.8rem;line-height:1.55">
+      {% for claim, why in rerank.why_deck_is_safe %}
+      <li style="margin-bottom:5px"><b>{{ claim }}</b> — {{ why }}</li>
+      {% endfor %}
+    </ol>
+  </details>
+
+  <div style="margin-top:9px;font-size:.79rem;padding:7px 10px;background:#fef9c3;
+       border-radius:6px;border:1px solid #fde047">
+    ⚠ <b>그래도 조심할 것</b> — {{ rerank.still_watch_out }}
+  </div>
+
+  <div class="muted mono" style="margin-top:8px;font-size:.68rem;line-height:1.5">
+    검증 경로: {% for v in rerank.verified_by %}{{ v }}{% if not loop.last %} · {% endif %}{% endfor %}<br>
+    근거 카드: {{ rerank.card }}<br>
+    판정 기록: {{ rerank.decision }}<br>
+    ⛔ 이 패널은 <b>자동 검사가 아니다</b> — 덱이 새 CSV 를 읽도록 바뀌면 위 문구는
+    조용히 거짓이 된다. 검증 경로가 그대로인지 사람이 본다.
+  </div>
+</div>
+{% endif %}
+
 {% if runsheet %}
 <div class="sem-run">
   <div class="sem-run-top">
