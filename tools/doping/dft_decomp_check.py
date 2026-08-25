@@ -57,10 +57,18 @@ DEFAULT_BASIS = {
     "LiCl":   {"Li": 1, "Cl": 1},
 }
 #: MP 에서 받을 때 쓸 대표 mp-id (없으면 조성 검색으로 가장 안정한 것)
-#:   ⚠ LiCl 은 조성 검색이 e_hull 0.0039 인 다형체를 집는다 (검색 결과 2건뿐).
-#:     암염 LiCl(mp-22905)이 바닥이므로 직접 지정한다.
 BASIS_MPID = {"Li3PS4": None, "Li2S": None, "Li3PO4": None,
-              "LiYS2": None, "LiCl": "mp-22905"}
+              "LiYS2": None, "LiCl": None}
+
+#: MP e_hull 이 이보다 크면 **다른 다형체를 집었을 수 있다**고 보고 경고한다.
+#:   ⚠ 2026-08-26 정정 — 처음엔 1e-4 로 잡고 넘으면 거부했는데 **과했다.**
+#:     MP 의 e_hull 은 MP 내부 보정 기준(예: Cl₂ gas anion correction)이 섞인
+#:     값이라, LiCl 처럼 명백히 안정한 상도 0 이 안 나온다(전 엔트리 최저 0.0039,
+#:     암염 mp-22905 는 0.0243). 그리고 **우리는 MP 에너지를 쓰지 않는다** —
+#:     구조만 가져와 우리 QE 설정으로 다시 계산하므로 MP e_hull 의 절대값은
+#:     비교에 들어가지 않는다. 진짜로 막아야 할 것은 "그 조성의 최저가 아닌 것을
+#:     집는 것" 이고, 그건 min(docs) 가 이미 한다. 이 문턱은 **눈에 띄게만** 한다.
+OFFHULL_WARN = 0.05
 
 BALANCE_TOL = 1e-8      #: 원소 수지 잔차 허용 (원자 개수 단위)
 NEG_TOL = -1e-9         #: 계수 음수 허용 한계
@@ -302,7 +310,7 @@ def main():
         from pymatgen.io.ase import AseAtomsAdaptor
         from generate_dft_inputs import PSEUDOS, PSEUDO_DIR_KISTI
         ad = AseAtomsAdaptor()
-        offhull, need_pp, pending = [], set(), []
+        offhull, need_pp, pending, mp_used = [], set(), [], {}
         pdir = Path(a.pseudo_dir or PSEUDO_DIR_KISTI)
         print(f"pseudo_dir = {pdir}"
               + ("" if a.pseudo_dir else "   ⚠ 기본값(KISTI) — 다른 머신이면 --pseudo_dir 를 줄 것"))
@@ -323,19 +331,20 @@ def main():
                     print(f"  ⛔ {name}: MP 에서 못 찾았다")
                     continue
                 d = min(docs, key=lambda x: x.energy_above_hull)
-                # ⛔ 기저 상이 hull 위가 아니면 그 상의 에너지가 실제보다 높고,
-                #   ΔE_decomp 가 **두 타깃에서 서로 다르게** 밀린다(계수/원자수가
-                #   달라 정확히 상쇄되지 않는다). 조용히 넘기지 않는다.
-                if d.energy_above_hull > 1e-4:
-                    msg = (f"  {'⚠' if a.allow_offhull_basis else '⛔'} {name:<8} "
-                           f"{d.material_id}  MP e_hull {d.energy_above_hull:.4f} "
-                           f"eV/atom — **바닥상태가 아니다** (검색 결과 {len(docs)}건 중 최저)")
-                    print(msg)
+                # 그 조성에서 **MP 가 가진 것 중 최저**를 골랐다는 것이 요점이다.
+                #   e_hull 절대값은 MP 보정 기준이라 우리 비교에 안 들어간다(위 주석).
+                if d.energy_above_hull > OFFHULL_WARN:
+                    print(f"  {'⚠' if a.allow_offhull_basis else '⛔'} {name:<8} "
+                          f"{d.material_id}  MP e_hull {d.energy_above_hull:.4f} "
+                          f"eV/atom > {OFFHULL_WARN} — **다른 다형체를 집었을 수 있다** "
+                          f"(검색 {len(docs)}건 중 최저)")
                     if not a.allow_offhull_basis:
                         offhull.append(name)
                         continue
                 at = ad.get_atoms(d.structure)
                 pending.append((name, at, a.kpoints_phase))
+                mp_used[name] = {"mp_id": d.material_id, "n_atoms": len(at),
+                                 "mp_e_above_hull": float(d.energy_above_hull)}
                 need_pp.update(at.get_chemical_symbols())
                 print(f"  ✓ {name:<8} {d.material_id}  {len(at)} atoms  "
                       f"(MP e_hull {d.energy_above_hull:.4f})")
@@ -386,7 +395,21 @@ def main():
             print(f"     이대로면 --collect 가 '상 에너지가 없다' 로 거부한다. "
                   f"MP 검색을 고치거나 --allow_offhull_basis 로 진행할 것.")
             return 3
+        (out / "prepare_provenance.json").write_text(json.dumps({
+            "date_note": "생성 시각은 git 커밋으로 추적",
+            "pseudo_dir": str(pdir), "pseudos_used": resolved,
+            "⚠_pseudo_note": "머신마다 파일명 구두점이 다르고 판(USPP/PAW)도 다를 수 있다. "
+                             "gabia SSSP 는 Y 가 USPP(Y_pbe_v1.uspp.F.UPF)이고 우리 "
+                             "PSEUDOS 목록의 PAW 와 다르다 — **모든 계산에 같은 것을 쓰므로 "
+                             "내부 일관성은 유지되나, 다른 머신 결과와 섞으면 안 된다.**",
+            "ecutwfc": a.ecutwfc, "ecutrho": a.ecutrho,
+            "kpoints_target": a.kpoints, "kpoints_phase": a.kpoints_phase,
+            "basis": DEFAULT_BASIS, "basis_mp": mp_used,
+            "targets": [str(x) for x in a.targets],
+            "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 안의 상대 비교다.",
+        }, indent=2, ensure_ascii=False))
         print(f"\n✓ 입력 → {out/'in'}   (기저 {len(DEFAULT_BASIS)} + 타깃 {len(a.targets)})")
+        print(f"✓ 설정 기록 → {out/'prepare_provenance.json'}")
         return 0
 
     if a.collect:
