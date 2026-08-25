@@ -29,8 +29,21 @@ if [ -n "$_DIRTY" ]; then
 fi
 _UNTRACKED="$(git ls-files --others --exclude-standard)"
 if [ -n "$_UNTRACKED" ]; then
-  echo "⚠ 추적 안 되는 파일이 있다 (번들에 **안 들어간다**):" >&2
-  printf '  %s\n' $_UNTRACKED >&2
+  _N="$(printf '%s\n' "$_UNTRACKED" | wc -l)"
+  echo "⚠ 추적 안 되는 파일 $_N 개 (번들에 **안 들어간다**):" >&2
+  #  ★★ 2026-08-25 두 번째 실사용 교훈 — **목록이 길면 사람은 안 본다.**  첫 판은 kgy 에서
+  #    300줄을 그대로 찍었고 (거의 전부 Quantum ESPRESSO scratch), 정작 판단해야 할 세
+  #    항목이 그 안에 묻혔다.  "사람이 보고 판단하라" 는 게이트가 목록 길이 때문에
+  #    형식만 남는다 = 내가 막으려던 것(안 보고 통과)의 재발.
+  #  ⇒ 30개를 넘으면 **디렉터리별 집계**로 접는다.  숨기는 것이 아니다 — 최상위 경로는
+  #    전부 나오고 개수가 붙으므로, 큰 덩어리가 무엇인지 한눈에 보이고 그 다음 판단이 선다.
+  if [ "$_N" -le 30 ]; then
+    printf '  %s\n' $_UNTRACKED >&2
+  else
+    echo "  (30개 초과 — 최상위 경로별로 접는다.  전체는 \`git status -u\`)" >&2
+    printf '%s\n' "$_UNTRACKED" | awk -F/ '{print (NF>1 ? $1"/" : $1)}' \
+      | sort | uniq -c | sort -rn | awk '{printf "  %6d  %s\n", $1, $2}' >&2
+  fi
   if [ "${ALLOW_UNTRACKED:-0}" != "1" ]; then
     echo "" >&2
     echo "이 중 **커밋해야 할 새 소스**가 있으면 지금 커밋할 것.  전부 지역 산출물이면:" >&2
