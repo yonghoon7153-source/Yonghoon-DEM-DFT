@@ -187,5 +187,20 @@ def test_nav_link_present(client):
     r = client.get("/")
     assert '/fairchem' in r.data.decode(), "사이드바에 링크가 없다"
 
+def test_screening_page_carries_the_ranking_limit(client):
+    """스크리닝 화면이 **순위 한계**를 결과보다 먼저 말해야 한다.
+
+    ⚠ 이 축의 일이 곧 '근접 후보 순위' 인데, 우리 엔진이 바로 거기서 약하다.
+      각주로 달면 아무도 안 본다 — 화면에 있는지 기계가 본다.
+    """
+    body = client.get("/cascade").data.decode()
+    assert "평균이 좋아도 순위는 틀린다" in body, "순위 한계 카드가 없다"
+    for k in ("44", "16배", "best-of-N"):
+        assert k in body, f"근거 수치 '{k}' 가 화면에 없다"
+    # ⛔ 저자 면책을 우리 실패에 쓰지 말라는 경고가 같이 있어야 한다
+    assert "6.63" in body and ("130" in body or "320" in body), \
+        "near-degenerate 면책을 우리 실패에 적용하면 안 된다는 경고가 없다"
+
+
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
