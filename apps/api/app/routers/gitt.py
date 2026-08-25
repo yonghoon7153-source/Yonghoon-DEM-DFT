@@ -141,6 +141,10 @@ async def upload_run(file: UploadFile = File(...),
     digest = hashlib.sha256(content).hexdigest()
     existing = session.exec(select(GittRun).where(GittRun.sha256 == digest)).first()
     if existing is not None:
+        # The recovery path.  Analysis re-parses the immutable original; when
+        # that file is gone the screen says "다시 올려 주세요", and a dedup
+        # that returned without storing made the advice a lie (#23).
+        storage.store_upload(content, digest)
         return _out(existing)
 
     try:

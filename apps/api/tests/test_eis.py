@@ -270,6 +270,100 @@ def test_deleting_forgets_the_points_but_not_the_original(client):
     assert original.exists()
 
 
+# --- 무결성: 캐시·원본·재귀속 (리뷰 #9·#12·#22·#23) --------------------------
+
+def test_a_swapped_cache_is_not_served_as_this_spectrum(client):
+    """캐시는 id 폴더에 살지만 내용은 해시로 자신을 증명해야 한다.
+
+    리뷰 재현: B 의 points.npz 를 A 자리에 복사하면 A 조회가 B 의 임피던스를
+    A 의 이름으로 돌려줬다.  이제 해시가 다르면 캐시를 버리고 불변 원본에서
+    다시 파싱한다 — 답은 A 의 숫자다.
+    """
+    import shutil
+
+    from app import storage
+    a = upload(client, name="a.mpr", rs=5.0)
+    b = upload(client, name="b.mpr", rs=50.0)
+    shutil.copyfile(storage.spectrum_points_path(b["id"]),
+                    storage.spectrum_points_path(a["id"]))
+
+    points = client.get(f"/api/eis/spectra/{a['id']}/points").json()
+    assert points["z_re"][0] == pytest.approx(5.0, abs=1.0)      # A 의 R_s
+
+
+def test_a_lost_cache_heals_from_the_immutable_original(client):
+    from app import storage
+    out = upload(client)
+    storage.drop_spectrum_cache(out["id"])
+    assert not storage.spectrum_points_path(out["id"]).exists()
+
+    points = client.get(f"/api/eis/spectra/{out['id']}/points")
+    assert points.status_code == 200
+    assert storage.spectrum_points_path(out["id"]).exists()      # 다시 캐시됨
+
+
+def test_reuploading_known_bytes_restores_a_lost_original(client):
+    """"다시 올려 주세요" 라는 안내가 실제로 통해야 한다 (#23).
+
+    dedup 이 저장 전에 반환하면 안내대로 해도 영원히 409 다.
+    """
+    from app import storage
+    out = upload(client)
+    storage.drop_spectrum_cache(out["id"])
+    storage.spectrum_upload_path(out["sha256"], "mpr").unlink()
+    assert client.get(f"/api/eis/spectra/{out['id']}/points").status_code == 409
+
+    again = client.post("/api/eis/spectra/upload", params={"kind": "solid"},
+                        files={"file": ("copy.mpr", mpr(),
+                                        "application/octet-stream")})
+    assert again.status_code == 201
+    assert again.json()["duplicate"] is True
+    assert client.get(f"/api/eis/spectra/{out['id']}/points").status_code == 200
+
+
+def test_a_duplicate_upload_fills_blanks_and_overwrites_nothing(client, sample_id):
+    """빈 칸은 나중 업로드가 채울 수 있지만, 채워진 칸은 그대로다 (#22)."""
+    first = upload(client, cell_config="")
+    assert first["cell_config"] == ""
+
+    again = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "solid", "cell_config": "sym", "sample_id": sample_id,
+                "at_cycle": 200},
+        files={"file": ("copy.mpr", mpr(), "application/octet-stream")})
+    body = again.json()
+    assert body["duplicate"] is True
+    assert body["cell_config"] == "sym"
+    assert body["sample_id"] == sample_id
+    assert body["at_cycle"] == 200
+
+    conflicting = client.post(
+        "/api/eis/spectra/upload", params={"kind": "solid", "cell_config": "full"},
+        files={"file": ("copy2.mpr", mpr(), "application/octet-stream")})
+    assert conflicting.json()["cell_config"] == "sym"            # 안 덮인다
+
+
+def test_a_fresh_upload_is_not_marked_duplicate(client):
+    assert upload(client)["duplicate"] is False
+
+
+def test_deleting_a_sample_detaches_its_spectra(client):
+    """SQLite 는 행 id 를 재사용한다.  붙은 채 남으면 다음에 만든 셀이 죽은
+    셀의 임피던스를 자기 측정으로 물려받는다 (#9)."""
+    created = client.post("/api/samples", json={"name": "EIS-DEAD"}).json()
+    spectrum = upload(client, sample_id=created["id"])
+    assert client.delete(f"/api/samples/{created['id']}").status_code == 204
+
+    detail = client.get(f"/api/eis/spectra/{spectrum['id']}").json()
+    assert detail["sample_id"] is None
+
+    reborn = client.post("/api/samples", json={"name": "EIS-REBORN"}).json()
+    assert reborn["id"] == created["id"]                          # id 재사용 확인
+    attached = client.get("/api/eis/spectra",
+                          params={"sample_id": reborn["id"]}).json()
+    assert attached == []
+
+
 def test_the_circuit_presets_say_what_each_one_is_for(client):
     body = client.get("/api/eis/circuits").json()
     kinds = {entry["kind"]: entry for entry in body["kinds"]}

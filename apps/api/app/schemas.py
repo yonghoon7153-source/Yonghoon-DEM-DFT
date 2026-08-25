@@ -644,6 +644,10 @@ DEFAULT_BASIS = Basis.ABSOLUTE
 # 임피던스 (ADR 0019)
 # --------------------------------------------------------------------------
 class SpectrumOut(BaseModel):
+    #: True when the upload was the same bytes as an existing record and
+    #: that record was returned -- "올렸습니다" 와 "이미 있었습니다" 는
+    #: 다른 일이고, 화면이 구별해 말해야 한다 (Codex #22).
+    duplicate: bool = False
     id: int
     sample_id: int | None
     sample_name: str | None = None

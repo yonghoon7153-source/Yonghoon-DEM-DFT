@@ -52,21 +52,29 @@ def spectrum_points_path(spectrum_id: int) -> Path:
     return spectrum_dir(spectrum_id) / "points.npz"
 
 
-def cache_spectrum(spectrum_id: int, spectrum) -> Path:
-    """Persist the parsed points so a plot need not re-read the original."""
+def cache_spectrum(spectrum_id: int, spectrum, sha256: str = "") -> Path:
+    """Persist the parsed points so a plot need not re-read the original.
+
+    The source hash rides along inside the archive: the cache lives under the
+    spectrum *id*, and a file under the wrong id -- a copy, a restore gone
+    astray -- carries numbers that read fine and belong to another cell.
+    """
     directory = spectrum_dir(spectrum_id)
     directory.mkdir(parents=True, exist_ok=True)
     target = spectrum_points_path(spectrum_id)
     payload = {"frequency_hz": spectrum.frequency_hz,
-               "z_re": spectrum.z_re, "z_im": spectrum.z_im}
+               "z_re": spectrum.z_re, "z_im": spectrum.z_im,
+               "meta::sha256": np.array(sha256)}
     payload.update({f"col::{name}": values
                     for name, values in spectrum.columns.items()})
     _write_atomically(target, lambda handle: np.savez_compressed(handle, **payload))
     return target
 
 
-def load_spectrum(spectrum_id: int):
-    """The cached points, or ``None`` when the cache is gone or unreadable."""
+def load_spectrum(spectrum_id: int, expected_sha256: str = ""):
+    """The cached points, or ``None`` when the cache is gone, unreadable, or
+    **not this spectrum's** -- the review swapped two caches on disk and the
+    wrong cell's impedance came back under the right cell's name (#12)."""
     from wrdkit.eis import Spectrum
 
     path = spectrum_points_path(spectrum_id)
@@ -74,6 +82,11 @@ def load_spectrum(spectrum_id: int):
         return None
     try:
         with np.load(path, allow_pickle=False) as archive:
+            if expected_sha256:
+                stored = (str(archive["meta::sha256"])
+                          if "meta::sha256" in archive.files else "")
+                if stored != expected_sha256:
+                    return None
             frequency = archive["frequency_hz"]
             z_re = archive["z_re"]
             z_im = archive["z_im"]

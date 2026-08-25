@@ -13,7 +13,7 @@ from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 from .. import storage
 from ..db import get_session
 from ..deps import get_sample, resolved_cell_out, validate_basis
-from ..models import CycleRecord, ExperimentGroup, Run, Sample
+from ..models import CycleRecord, ExperimentGroup, Run, Sample, SpectrumRecord
 from ..schemas import ComponentOut, SampleIn, SampleOut, SampleUpdate
 from ..services import (
     apply_composition,
@@ -215,6 +215,14 @@ def delete_sample(sample_id: int, session: Session = Depends(get_session),
         else:
             run.sample_id = None
             session.add(run)
+    # Spectra too.  A row left pointing at a deleted sample id is a live wire:
+    # SQLite reuses row ids, so the next cell created inherited the dead
+    # cell's impedance as its own measurement (review #9).  Detach, never
+    # delete -- the spectrum is a measurement in its own right.
+    for spectrum in session.exec(
+            select(SpectrumRecord).where(SpectrumRecord.sample_id == sample_id)).all():
+        spectrum.sample_id = None
+        session.add(spectrum)
     session.delete(sample)
     session.commit()
 

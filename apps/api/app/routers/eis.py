@@ -108,7 +108,8 @@ def _validate_config(config: str) -> str:
     return config
 
 
-def _out(session: Session, record: SpectrumRecord) -> SpectrumOut:
+def _out(session: Session, record: SpectrumRecord, *,
+         duplicate: bool = False) -> SpectrumOut:
     sample_name = None
     if record.sample_id:
         sample = session.get(Sample, record.sample_id)
@@ -123,6 +124,7 @@ def _out(session: Session, record: SpectrumRecord) -> SpectrumOut:
         fit_count=len(fits),
         best_chi_squared=best.chi_squared if best else None,
         best_circuit=best.circuit if best else "",
+        duplicate=duplicate,
     )
 
 
@@ -204,6 +206,41 @@ def read_spectrum(spectrum_id: int, session: Session = Depends(get_session)):
     )
 
 
+def _load_points(record: SpectrumRecord):
+    """This spectrum's points -- from the cache, or rebuilt from the original.
+
+    The cache is verified against the record's hash (a swapped or stale file
+    under the right id returned another cell's impedance, review #12), and a
+    missing or wrong cache is not the user's problem while the immutable
+    original is still on disk: it is re-parsed and re-cached here.  Only when
+    the original is gone too does this ask for a re-upload -- and the upload
+    path restores originals even for known hashes, so that advice now works.
+    """
+    spectrum = storage.load_spectrum(record.id, record.sha256)
+    if spectrum is not None:
+        return spectrum
+    path = storage.spectrum_upload_path(record.sha256, record.source_format)
+    try:
+        content = path.read_bytes()
+    except OSError:
+        raise HTTPException(
+            409, f"{record.name}: 파싱 결과도 원본도 없습니다 — "
+                 f"파일을 다시 올려 주세요") from None
+    if hashlib.sha256(content).hexdigest() != record.sha256:
+        raise HTTPException(
+            409, f"{record.name}: 저장된 원본이 기록과 다릅니다 — "
+                 f"파일을 다시 올려 주세요")
+    try:
+        spectrum, _ = _parse(content, record.original_name or record.name)
+    except HTTPException:
+        raise
+    except (UnknownColumn, ValueError) as exc:
+        raise HTTPException(409, f"{record.name}: 원본을 다시 읽지 못했습니다 "
+                                 f"— {exc}") from exc
+    storage.cache_spectrum(record.id, spectrum, record.sha256)
+    return spectrum
+
+
 @router.get("/points", response_model=list[SpectrumPointsOut])
 def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트럼 id"),
                 session: Session = Depends(get_session)):
@@ -230,11 +267,7 @@ def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트
     out = []
     for spectrum_id in wanted:
         record = _get(session, spectrum_id)
-        spectrum = storage.load_spectrum(spectrum_id)
-        if spectrum is None:
-            raise HTTPException(
-                409, f"{record.name}: 파싱 결과가 없습니다 — 파일을 다시 올려 주세요")
-        out.append(_points_out(record, spectrum))
+        out.append(_points_out(record, _load_points(record)))
     return out
 
 
@@ -256,11 +289,7 @@ def _points_out(record: SpectrumRecord, spectrum) -> SpectrumPointsOut:
 def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
     """The measured points, raw ohms and hertz (ADR 0001)."""
     record = _get(session, spectrum_id)
-    spectrum = storage.load_spectrum(spectrum_id)
-    if spectrum is None:
-        raise HTTPException(
-            409, "이 스펙트럼의 파싱 결과가 없습니다 — 파일을 다시 올려 주세요")
-    return _points_out(record, spectrum)
+    return _points_out(record, _load_points(record))
 
 
 # --------------------------------------------------------------------------
@@ -312,12 +341,52 @@ async def upload_spectrum(
     existing = session.exec(
         select(SpectrumRecord).where(SpectrumRecord.sha256 == digest)).first()
     if existing is not None:
+        # Re-uploading known bytes is also the recovery path: the screen says
+        # "올려 주세요" when the original or the cache is gone, and a dedup
+        # that returns before storing anything made that advice a lie (#23).
+        storage.store_bytes(content, storage.spectrum_upload_path(
+            digest, existing.source_format))
+        if storage.load_spectrum(existing.id, existing.sha256) is None:
+            try:
+                spectrum, _ = _parse(content, file.filename or "upload")
+                storage.cache_spectrum(existing.id, spectrum, existing.sha256)
+            except (HTTPException, UnknownColumn, ValueError):
+                pass          # the read paths will say what is wrong
+        # Blank fields the first upload did not carry may be filled by a
+        # later one -- filled ones are never overwritten (§0.3 spirit).
+        # ``kind`` stays as it is: its default is a real value, so a repeat
+        # upload cannot tell "chose liquid" from "did not choose" (#22).
+        changed = False
         if sample_id is not None and existing.sample_id is None:
             existing.sample_id = sample_id
+            changed = True
+        if cell_config and not existing.cell_config:
+            existing.cell_config = cell_config
+            changed = True
+        if at_cycle is not None and existing.at_cycle is None:
+            existing.at_cycle = at_cycle
+            changed = True
+        if settings_file is not None and not existing.settings_json:
+            raw = await settings_file.read()
+            if raw:
+                try:
+                    meta = read_mps_text(raw.decode("latin-1", errors="replace"))
+                except ValueError:
+                    meta = {}
+                if meta:
+                    existing.settings_json = json.dumps(meta, ensure_ascii=False)
+                    if existing.amplitude_mv is None:
+                        existing.amplitude_mv = _float(meta.get("amplitude_mv"))
+                    if not existing.device:
+                        existing.device = str(meta.get("Device", ""))
+                    if not existing.technique:
+                        existing.technique = str(meta.get("technique", ""))
+                    changed = True
+        if changed:
             session.add(existing)
             session.commit()
             session.refresh(existing)
-        return _out(session, existing)
+        return _out(session, existing, duplicate=True)
 
     try:
         spectrum, source_format = _parse(content, file.filename or "upload")
@@ -360,7 +429,7 @@ async def upload_spectrum(
     session.add(record)
     session.commit()
     session.refresh(record)
-    storage.cache_spectrum(record.id, spectrum)
+    storage.cache_spectrum(record.id, spectrum, record.sha256)
     return _out(session, record)
 
 
@@ -510,9 +579,7 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
     thing and waits for the same answer.
     """
     record = _get(session, spectrum_id)
-    spectrum = storage.load_spectrum(spectrum_id)
-    if spectrum is None:
-        raise HTTPException(409, "이 스펙트럼의 파싱 결과가 없습니다")
+    spectrum = _load_points(record)
 
     text = circuit or PRESETS[record.kind][0]["circuit"]
     window = None
@@ -642,10 +709,8 @@ def spectrum_drt(spectrum_id: int,
     수십 밀리초면 끝난다.  저장하면 λ 를 바꿔 볼 때마다 행이 쌓이는데, λ 를
     바꿔 보는 것이 이 화면에서 하는 일의 전부다.
     """
-    _get(session, spectrum_id)
-    spectrum = storage.load_spectrum(spectrum_id)
-    if spectrum is None:
-        raise HTTPException(409, "이 스펙트럼의 파싱 결과가 없습니다")
+    record = _get(session, spectrum_id)
+    spectrum = _load_points(record)
     module = _drt_module()
     try:
         result = module.drt(spectrum, regularisation=regularisation,
@@ -667,10 +732,8 @@ def spectrum_drt_sweep(spectrum_id: int,
     실패 모드 -- 잡음 봉우리의 숲과 하나로 뭉친 덩어리 -- 가 함께 보여야 가운데가
     선택으로 읽힌다.  모서리가 없으면 없다고 말한다.
     """
-    _get(session, spectrum_id)
-    spectrum = storage.load_spectrum(spectrum_id)
-    if spectrum is None:
-        raise HTTPException(409, "이 스펙트럼의 파싱 결과가 없습니다")
+    record = _get(session, spectrum_id)
+    spectrum = _load_points(record)
     module = _drt_module()
     results = module.sweep(spectrum, derivative_order=derivative_order,
                            drop_inductive=drop_inductive)

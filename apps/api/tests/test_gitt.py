@@ -160,6 +160,22 @@ def test_a_negative_material_constant_is_refused(client):
                         json={"area_cm2": -1}).status_code == 422
 
 
+def test_reuploading_known_bytes_restores_a_lost_original(client):
+    """pOCV 는 불변 원본을 재파싱한다.  원본이 사라졌을 때 화면은 "다시 올려
+    주세요" 라고 하는데, dedup 이 저장 전에 반환하면 그 안내는 거짓이다 (#23)."""
+    from app import storage
+    out = upload(client)
+    storage.upload_path(out["sha256"]).unlink()
+    assert client.get(f"/api/gitt/runs/{out['id']}/pocv").status_code == 409
+
+    again = client.post("/api/gitt/runs/upload",
+                        files={"file": ("copy.wrd", gitt_bytes(),
+                                        "application/octet-stream")})
+    assert again.status_code == 201
+    assert again.json()["id"] == out["id"]
+    assert client.get(f"/api/gitt/runs/{out['id']}/pocv").status_code == 200
+
+
 def test_deleting_forgets_the_record_but_not_the_original(client):
     from app import storage
     out = upload(client)

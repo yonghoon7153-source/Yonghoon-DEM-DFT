@@ -2578,3 +2578,12 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   번호와 함께 거절, 꼬리 탭 하나만 눈감음. (4) 필수 3열 비유한·비양수
   주파수를 파서 경계에서 행 번호와 함께 거절 (빈 셀 NaN 이 fit 에서야
   죽던 것).
+## [2026-08-25] fix | 캐시·원본·재귀속 — 저장 계층의 무결성 구멍 넷
+- Codex #9·#12·#22·#23 (Claude A1~A3 겹침). (1) points.npz 에 원본 sha 를
+  넣고 읽을 때 검증 — 바꿔치기된 캐시가 남의 셀 임피던스를 그 셀 이름으로
+  돌려줬다. (2) 캐시가 없거나 안 맞으면 불변 원본에서 자동 재파싱해 다시
+  캐시 (읽기 경로 전부: points/fit/drt/sweep). (3) dedup 업로드가 원본·캐시
+  복구와 빈 메타데이터 backfill(cell_config/at_cycle/.mps — 채워진 값은 절대
+  안 덮음, kind 는 기본값과 구별 불가라 제외·주석) + duplicate 플래그.
+  GITT dedup 도 원본 재저장. (4) 셀 삭제가 SpectrumRecord 를 detach — SQLite
+  id 재사용으로 죽은 셀의 임피던스가 다음 셀 측정으로 둔갑하던 것. 회귀 8건.
