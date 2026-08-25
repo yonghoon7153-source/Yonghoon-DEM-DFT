@@ -85,8 +85,21 @@ _before=$(_count "$DST")
 #    ⇒ 대상이 `/mnt/*` 면 **메타데이터 보존을 끈다** (-rlt).  내용·시각은 그대로 보존된다.
 #    ⚠ `--modify-window=1` 은 NTFS 의 2초 타임스탬프 해상도 때문 (없으면 매번 전량 재전송).
 RS=(-a)
+#  ★ 2026-08-25 — `/etc/wsl.conf` 에 metadata 를 켜면 DrvFs 도 퍼미션·시각을 보존한다.
+#    그러면 아래 우회가 **필요 없을 뿐 아니라 해롭다** (시각 미보존 → 매번 전량 재전송).
+#    ⇒ 켜져 있으면 감지해서 `-a` 그대로 간다.  **켜졌는지 추측하지 않고 마운트를 읽는다.**
+_MNT="$(echo "$DST" | cut -d/ -f1-3)"
+_HAS_META=0
+case "$DST" in
+  /mnt/*) awk -v m="$_MNT" '$2==m && $4 ~ /(^|,)metadata(,|$)/ {found=1} END{exit !found}' \
+            /proc/mounts 2>/dev/null && _HAS_META=1;;
+esac
+if [ "$_HAS_META" = 1 ]; then
+  echo "[백업] DrvFs **metadata 켜짐** — 표준 -a 로 간다 (증분 동작)"
+fi
 case "$DST" in
   /mnt/*)
+    if [ "$_HAS_META" = 1 ]; then :; else
     #  ⚠⚠ DrvFs(NTFS) 실측 2026-08-25 — 두 가지가 순서대로 걸렸다:
     #    ① `mkstemp … Operation not permitted`  → `--inplace` (임시파일→rename 을 없앤다)
     #    ② `failed to set times … not permitted` → **`--no-times`** (mtime 설정 자체가 막힌다)
@@ -104,6 +117,8 @@ case "$DST" in
     echo "[백업] DrvFs 모드 · 비교 = $_CMPW"
     echo "[백업]   ★ 영구 해결책은 metadata 마운트다 (그러면 -a 로 정상 동작):"
     echo "[백업]     /etc/wsl.conf 에  [automount]  options = \"metadata,uid=1000,gid=1000\""
+    echo "[백업]     그 뒤 PowerShell 에서  wsl --shutdown  (한 번만)"
+    fi
     ;;
 esac
 echo "[백업] rsync 중… (원본 파일 $_n_src)"
