@@ -398,7 +398,25 @@ echo "보여 준다고 해 놓고 침묵하지 않는다"
 # 걸러 냈더니 남는 게 없었던 것인데(배너만 찍고 죽는 경우), 사람은 자기 화면이
 # 잘린 줄 안다.  없으면 없다고 말하고, 그때 할 일까지 준다.
 check "빈 로그면 없다고 말한다"   "$(grep -c '남은 말이 없습니다' "$HERE/../bml")" "1"
-check "그때 다시 열라고 안내한다" "$(grep -c 'ExitOnForwardFailure' "$HERE/../bml")" "2"
+# 세 곳이다: nokey 로 여는 곳, 등록한 키로 여는 곳, 그리고 그 옵션이 왜
+# 있는지 설명하는 안내 문구.  포워딩이 실패했는데 조용히 붙어 있으면 주소만
+# 받고 아무것도 안 열린다.
+check "그때 다시 열라고 안내한다" "$(grep -c 'ExitOnForwardFailure' "$HERE/../bml")" "3"
+
+echo "등록한 키로 열면 주소가 안 바뀐다 (설정한 사람만)"
+# localhost.run 은 등록하지 않은 키를 거부한다 (Permission denied (publickey) --
+# 실측).  등록 전에 키를 강제하면 그때부터 bml share 가 죽으므로, 키를 적어 둔
+# 사람만 그 길을 탄다.
+check "키가 없으면 nokey 그대로" "$(WORKBENCH_TUNNEL_KEY= ; tunnel_ssh_key || echo none)" "none"
+check "없는 파일은 안 쓴다" \
+  "$(WORKBENCH_TUNNEL_KEY=/does/not/exist tunnel_ssh_key || echo none)" "none"
+check "키가 있으면 그것으로" \
+  "$(WORKBENCH_TUNNEL_KEY="$HERE/../bml" tunnel_ssh_key)" "$HERE/../bml"
+# nokey@ 는 익명이라 붙을 때마다 새 이름을 받는다.  키 쪽은 사용자 이름이 없다.
+check "키 쪽은 nokey@ 를 안 쓴다" \
+  "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$HERE/../bml" | grep -c 'IdentitiesOnly=yes')" "1"
+check "양쪽 다 keepalive 를 건다" \
+  "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$HERE/../bml" | grep -c 'ServerAliveInterval=30')" "2"
 
 echo
 if [ "$fail" -eq 0 ]; then

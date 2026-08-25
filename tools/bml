@@ -18,6 +18,7 @@
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
 #   bml share stop 그 터널을 닫는다
+#   bml share key <경로>  등록한 SSH 키로 연다 — 주소가 매번 바뀌지 않는다
 #   bml feed       이 브랜치에서 무슨 일이 있었나 (커밋 ↔ docs/log.md 짝)
 #   bml check      커밋 전 검사 (테스트·타입·린트·문서)
 #   bml pull       실행 없이 최신으로만 맞춘다
@@ -3002,11 +3003,38 @@ tunnel_via_cloudflare() {
 #: 7844 가 막힌 망에서 유일하게 남는 길이다.  `nokey@` 는 키 없이 붙으라는
 #: localhost.run 의 사용자 이름이고, StrictHostKeyChecking=accept-new 가 없으면
 #: 첫 접속의 "계속할까요?" 에서 조용히 멈춘다 — nohup 이라 그 물음도 안 보인다.
+#: 등록한 키가 있으면 그것으로 붙는다 (`.bml/env` 의 `WORKBENCH_TUNNEL_KEY`).
+#:
+#: localhost.run 은 **등록하지 않은 키를 거부한다** (`Permission denied
+#: (publickey)` -- 실측). 무료 계정에 공개키를 올리면 그때부터 "더 오래 가는
+#: 도메인 이름" 을 주는데, 그것이 이 랩의 진짜 문제를 푼다: 주소가 매번 바뀌면
+#: 받는 쪽이 그때마다 `/etc/hosts` 를 다시 박아야 한다 (`bmlonly`).
+#:
+#: 키가 없으면 `nokey@` 그대로다.  등록 전에 키를 강제하면 그때부터 `bml share`
+#: 가 Permission denied 로 죽으므로, **설정한 사람만** 이 길을 탄다.
+tunnel_ssh_key() {
+  local key="${WORKBENCH_TUNNEL_KEY:-}"
+  [ -n "$key" ] || return 1
+  case "$key" in "~/"*) key="$HOME/${key#\~/}" ;; esac
+  [ -r "$key" ] || return 1
+  printf '%s' "$key"
+}
+
 tunnel_via_ssh() {
-  local keep="${1:-0}"
+  local keep="${1:-0}" key label
   if ! command -v ssh >/dev/null 2>&1; then
     warn "ssh 가 없습니다 — SSH 터널을 쓸 수 없습니다."
     return 1
+  fi
+  if key="$(tunnel_ssh_key)"; then
+    label="터널 여는 중 ${DIM}(localhost.run · SSH · 등록한 키)${OFF}"
+    try_tunnel "$keep" "$label" \
+      ssh -T -i "$key" -o IdentitiesOnly=yes \
+        -o StrictHostKeyChecking=accept-new \
+        -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
+        -o ExitOnForwardFailure=yes \
+        -R "80:localhost:$PORT" localhost.run
+    return
   fi
   try_tunnel "$keep" "터널 여는 중 ${DIM}(localhost.run · SSH)${OFF}" \
     ssh -T \
@@ -3014,6 +3042,43 @@ tunnel_via_ssh() {
       -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \
       -o ExitOnForwardFailure=yes \
       -R "80:localhost:$PORT" nokey@localhost.run
+}
+
+#: `bml share key <경로>` — 어느 키로 붙을지 적어 둔다.
+#:
+#: 등록은 사람이 하는 일이라 (localhost.run 계정에 공개키를 올린다), 여기서는
+#: **경로가 읽히는지만** 보고 등록 여부는 묻지 않는다.  안 된 채로 적어 두면
+#: 다음 `bml share` 가 Permission denied 로 죽고 화면이 그렇게 말한다.
+cmd_share_key() {
+  local raw="${1:-}" key
+  case "$raw" in
+    '')
+      if key="$(tunnel_ssh_key)"; then
+        say "터널 키  ${B}${key}${OFF}   ${DIM}(.bml/env)${OFF}"
+        say "  ${DIM}이 키의 공개키를 localhost.run 계정에 올려 두어야 합니다:${OFF}"
+        say "    ${GREEN}cat ${key}.pub${OFF}  ${DIM}→ https://admin.localhost.run/${OFF}"
+      else
+        say "${DIM}터널 키가 없습니다 — 주소가 열 때마다 바뀝니다 (nokey).${OFF}"
+        say "  ${GREEN}ssh-keygen -t ed25519 -N \"\" -f ~/.ssh/localhost_run -C 'bml tunnel'${OFF}"
+        say "  ${GREEN}cat ~/.ssh/localhost_run.pub${OFF}  ${DIM}→ https://admin.localhost.run/ 에 등록${OFF}"
+        say "  ${GREEN}bml share key ~/.ssh/localhost_run${OFF}"
+      fi
+      return 0
+      ;;
+    off|none|해제)
+      if ! write_env_key WORKBENCH_TUNNEL_KEY ""; then env_write_failed; return 1; fi
+      ok "터널 키를 지웠습니다 — 다시 nokey 로 붙습니다 (주소가 매번 바뀝니다)."
+      return 0
+      ;;
+  esac
+  key="$raw"
+  case "$key" in "~/"*) key="$HOME/${key#\~/}" ;; esac
+  [ -r "$key" ] || die "그 키를 읽지 못합니다: $key"
+  if ! write_env_key WORKBENCH_TUNNEL_KEY "$key"; then env_write_failed; return 1; fi
+  ok "터널 키 → ${B}${key}${OFF}"
+  say "  ${DIM}공개키가 localhost.run 계정에 등록돼 있어야 합니다:${OFF}"
+  say "    ${GREEN}cat ${key}.pub${OFF}  ${DIM}→ https://admin.localhost.run/${OFF}"
+  say "  ${DIM}그다음${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
 }
 
 #: 다른 공유기에 있는 사람도 볼 수 있게 임시 터널을 연다 (ADR 0014).
@@ -4316,7 +4381,12 @@ main() {
     # 묻거나 hosts 를 건드리게 되면 안 된다.
     only)              shift; cmd_only "${1:-}"; sync_repo; cmd_connect ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
-    share|tunnel)      shift; cmd_share "${1:-}" ;;
+    share|tunnel)
+      shift
+      # `bml share key ...` 는 터널을 열지 않는다 -- 어느 키로 열지만 적는다.
+      if [ "${1:-}" = "key" ]; then shift; cmd_share_key "${1:-}"; else
+        cmd_share "${1:-}"; fi
+      ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
     help|-h|--help)    cmd_help ;;
     *) cmd_unknown "$1" ;;

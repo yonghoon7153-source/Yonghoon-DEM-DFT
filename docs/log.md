@@ -3442,3 +3442,24 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   등록이다. 그러면 `bml share` 가 `nokey@` 대신 `-i <키>` 로 붙으면 된다.
   아직 안 붙였다 — 등록은 사람이 하는 일이고, 하기 전에 붙여 놓으면 그때부터
   `bml share` 가 `Permission denied` 로 죽는다.
+
+## [2026-08-26] feat | bml share key — 등록한 키로 열면 주소가 안 바뀐다
+- 이 랩의 진짜 걸림돌은 터널이 죽는 것보다 **주소가 매번 바뀌는 것**이다.
+  바뀔 때마다 받는 쪽이 `/etc/hosts` 를 다시 박아야 한다 (`bmlonly`).
+- localhost.run 이 스스로 답을 말한다: `create an account and add your key
+  for a longer lasting domain name`. 등록하지 않은 키는 거부하지만
+  (`Permission denied (publickey)` — 실측 2회), 무료 계정에 공개키를 올리면
+  오래 가는 이름을 준다.
+- `.bml/env` 의 `WORKBENCH_TUNNEL_KEY` 가 있으면 `tunnel_via_ssh` 가
+  `nokey@` 대신 `-i <키>` 로 붙는다. `bml share key <경로>` 로 적고,
+  `bml share key` 로 지금 무엇이 적혀 있는지, `bml share key off` 로 지운다.
+- **키가 없으면 예전 그대로다.** 등록 전에 키를 강제하면 그때부터 `bml share`
+  가 Permission denied 로 죽는다 — 적어 둔 사람만 이 길을 탄다.
+- 양쪽 다 `ServerAliveInterval=30` / `ExitOnForwardFailure=yes` 를 건다.
+  손으로 `ssh -R ...` 을 칠 때 이것들이 빠지는 것이 실제로 문제가 됐다:
+  학교망이 유휴 TCP 를 끊어도 이쪽 ssh 는 모르고 **살아 있는 것처럼 보이는데**,
+  저쪽은 이미 정리해서 엣지가 503 을 돌려준다. 손 명령이 `bml share` 보다
+  나쁜 이유가 이것이다.
+- 자동 재접속은 아직 안 붙였다. 주소가 고정된 뒤에야 뜻이 있다 — 지금 붙이면
+  다시 붙을 때마다 주소가 바뀌어 받는 쪽이 어차피 다시 쳐야 한다.
+- 회귀 테스트 5건 (`test_bml_tunnel.sh`, 이제 96건).
