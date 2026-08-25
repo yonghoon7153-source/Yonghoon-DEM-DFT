@@ -178,7 +178,7 @@ def precond_of(step3):
     return None
 
 
-def check_arm(path, want, expect_backend=None):
+def check_arm(path, want, expect_backend=None, receipt=None):
     """→ None(완전) 또는 **왜 불완전한지** 문자열.  러너 재개(`SKIP`) 판정용.
 
     ★ 여기서 느슨하면 불완전한 팔을 "이미 됐다" 고 건너뛰어 Δ 가 조용히 거짓이 된다.
@@ -246,6 +246,16 @@ def check_arm(path, want, expect_backend=None):
                 return (f'required component `{_need}` 가 complete 가 아니다 '
                         f'({_cv if _cv is not None else "부재"}) — σ_e 를 낸 solve 가 '
                         f'끝나지 않았다')
+    #  ★★★ 2026-08-25 (R5-CX-03) — **러너의 의도와 대조**한다.  옛 판은 stamp/backend 만
+    #    받아서, HEAD·vox·구경·periodic·code SHA·input digest 가 전부 달라도 캐시된 팔을
+    #    "완전" 으로 읽고 SKIP 했다 (Codex 실측: vox 0.20 · code_sha deadbeef 로도 h0).
+    #    ⇒ 팔들이 **서로** 일치하는 것은 옳음이 아니다 — 같이 낡았어도 일치한다 (H4 부류).
+    if receipt:
+        _rok, _rwhy = _RC.receipt_match(receipt, (s.get('manifest') or {}),
+                                        origin=(s.get('manifest') or {}).get('origin_shift_um'))
+        if not _rok:
+            return (f'러너 영수증과 다르다 — {_rwhy}.  이 팔은 지금 요청한 런의 것이 '
+                    f'아니므로 재활용할 수 없다')
     if s.get('status') == 'failed':
         return (f'STEP3 가 실패로 기록됐다 (status=failed: {s.get("reason")!r}) — '
                 f'σ_e 가 있어도 그 런은 도중에 죽었다.  재활용하지 말 것')
@@ -717,6 +727,10 @@ def main(argv=None):
     ap.add_argument('--check-arm', default='',
                     help='payload 하나가 **쓸 수 있는 팔 결과인지** 검사 (러너 재개용).  '
                          '완전하면 exit 0, 아니면 이유를 찍고 exit 1.  --stamp 로 어느 팔인지 지정.')
+    ap.add_argument('--receipt', default='', metavar='JSON',
+                    help='러너 **영수증** — 이 런이 무엇으로 돌라고 했는지.  주면 팔의 '
+                         '매니페스트를 축별로 대조한다 (vox·구경·periodic·σ_VGCF·code SHA·'
+                         'origin 일정).  R5-CX-03: 없으면 캐시된 옛 팔이 SKIP 으로 통과한다.')
     ap.add_argument('--expect-backend', default='', choices=('', 'cpu', 'gpu'),
                     help='--check-arm 과 함께: 지금 돌면 쓸 backend.  기존 팔이 다른 backend 로 '
                          '돌았으면 SKIP 하지 않는다 (cupy 를 깔면 다음 팔이 자동 GPU 가 되므로).')
@@ -725,7 +739,11 @@ def main(argv=None):
     if x.selftest:
         return _selftest()
     if x.check_arm:
-        why = check_arm(x.check_arm, x.stamp, x.expect_backend or None)
+        _rcpt = None
+        if x.receipt:
+            with open(x.receipt, encoding='utf-8') as _rf:
+                _rcpt = json.load(_rf)
+        why = check_arm(x.check_arm, x.stamp, x.expect_backend or None, _rcpt)
         print(why if why else f'완전 ({x.stamp})')
         return 1 if why else 0
     if x.extract_payload:

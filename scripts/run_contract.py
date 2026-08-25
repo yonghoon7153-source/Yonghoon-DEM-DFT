@@ -194,6 +194,84 @@ SCHEMA_VERSION = 3
 EVIDENCE_SINCE_SCHEMA = 3
 
 
+#: ★★★ **런 영수증** (R5-CX-03, Codex 5차).  러너가 **무엇으로 돌라고 했는지**를 한 곳에
+#  적고, cache/fresh/final 세 지점이 전부 그 값을 요구한다.
+#
+#  ⚠ 왜 필요한가 — Codex 실측: HEAD 가 `edec17a2`, 러너 기본 vox 가 0.15 인데 모든 팔에
+#    `vox_um=0.20` · `code_sha=deadbeef` · 임의 digest 를 넣어도 producer·`check_arm`·final 이
+#    전부 `None/None/h0` 였다.  러너는 `check_arm` 에 stamp/backend 만 넘기고, final 은
+#    digest 의 **존재와 팔 사이 일관성**만 봤다.  ⇒ "팔들이 서로 일치한다" 는 **같이 낡았어도**
+#    성립한다 (H4 가 이미 같은 부류였다).  일치는 옳음이 아니다.
+#
+#  ★ 영수증은 **선언**이고 매니페스트는 **결과**다.  둘을 필드별로 대조하면 어느 축이
+#    갈렸는지까지 말할 수 있다 (해시 하나만 비교하면 "다르다" 밖에 못 말한다).
+RECEIPT_AXES = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
+                'sdcp_yield_to_vgcf', 'ptfe_stamp', 'sigma_ptfe_S_cm', 'sigma_vgcf_S_cm',
+                'periodic_xy')
+#: 영수증이 담지만 **매니페스트 축이 아닌** 것 (따로 대조한다).
+RECEIPT_META = ('code_sha', 'origins', 'arms', 'expect_backend')
+
+
+def expected_origins_for(vox):
+    """`vox` → 사전등록 origin factorial `{0, vox/2}³` (정렬된 8튜플).
+
+    ★ 판정기(`sdcp_gain_verdict.expected_origins`)와 **같은 정의**다 — 러너·판정기가
+      사본을 두면 갈라진다 (이 리포의 반복 사고).  판정기가 여기서 import 한다."""
+    h = round(float(vox) / 2.0, 9)
+    if not (h > 0):
+        return []
+    return sorted({(x, y, z) for x in (0.0, h) for y in (0.0, h) for z in (0.0, h)})
+
+
+def receipt_digest(rec):
+    """영수증 → 짧은 안정 해시.  OUTDIR 이름에 넣어 **캐시가 설정을 넘나들지 못하게** 한다."""
+    import hashlib as _h
+    import json as _j
+    _body = {k: rec.get(k) for k in sorted(set(RECEIPT_AXES) | set(RECEIPT_META))}
+    return _h.sha256(_j.dumps(_body, sort_keys=True, ensure_ascii=False,
+                              separators=(',', ':')).encode()).hexdigest()[:12]
+
+
+def receipt_match(rec, man, origin=None):
+    """영수증 ↔ 매니페스트 대조 → `(ok, reason|None)`.
+
+    ⚠ **없는 것은 통과가 아니다** — 영수증이 축을 선언했는데 매니페스트에 그 축이 없으면
+      그 팔은 무슨 규약으로 돌았는지 확정할 수 없다 = HOLD (H5 와 같은 논리).
+    """
+    if not isinstance(rec, dict) or not isinstance(man, dict):
+        return False, 'RCPT|shape| 영수증이나 매니페스트가 dict 가 아니다'
+    for k in RECEIPT_AXES:
+        if k not in rec:
+            continue                       # 러너가 그 축을 안 정했다 (킷 기본값을 쓴다)
+        if k not in man:
+            return False, (f'RCPT|{k}|missing| 러너는 이 축을 `{rec[k]!r}` 로 정했는데 '
+                           f'매니페스트에 **기록이 없다** — 확인 불가')
+        if _canon_num(man[k]) != _canon_num(rec[k]):
+            return False, (f'RCPT|{k}|differ| 러너 선언 `{rec[k]!r}` ≠ 결과 `{man[k]!r}` — '
+                           f'이 팔은 러너가 의도한 규약으로 돌지 않았다')
+    _rs, _ms = rec.get('code_sha'), man.get('code_sha')
+    if _rs and _ms and not (str(_ms).startswith(str(_rs)) or str(_rs).startswith(str(_ms))):
+        return False, (f'RCPT|code_sha|differ| 러너 `{_rs}` ≠ 결과 `{_ms}` — '
+                       f'다른 코드로 돈 팔이 섞였다')
+    if origin is not None and rec.get('origins'):
+        _o = tuple(round(float(x), 9) for x in origin)
+        _known = {tuple(round(float(x), 9) for x in o) for o in rec['origins']}
+        if _o not in _known:
+            return False, (f'RCPT|origin|alien| {_o} 는 영수증의 origin 일정에 없다 — '
+                           f'{len(_known)}개 중 어느 것도 아니다')
+    return True, None
+
+
+def _canon_num(v):
+    """수치는 부동소수 표기 차이를 흡수하고, 그 밖은 문자열로 비교한다."""
+    if isinstance(v, bool):
+        return v
+    if isinstance(v, (int, float)):
+        return round(float(v), 9)
+    return v
+
+
+
 def observed_generation(man):
     """매니페스트가 **실제로 담고 있는 것**으로 판정한 세대 → `int|None`.
 
@@ -829,6 +907,44 @@ def _selftest():
     #    없으면 그것은 통과가 아니라 HOLD 다 (이 구멍이 pnm·collector 를 열어 뒀다).
     chk(not component_evidence_ok(_g_full(), tuple(_greq) + ('brand_new_comp',))[0],
         'G7 ★★ 계약이 **등록 안 된** component 를 계획하면 HOLD (조용한 통과 금지)')
+
+    #  ── H: 런 영수증 (R5-CX-03, Codex 5차 실측) ────────────────────────────────────
+    #    HEAD 가 `edec17a2`, 러너 기본 vox 0.15 인데 모든 팔에 `vox_um=0.20` ·
+    #    `code_sha=deadbeef` · 임의 digest 를 넣어도 producer/check_arm/final 이
+    #    `None/None/h0` 였다.  러너의 **의도**가 결과와 대조된 적이 없었다.
+    _h8 = [list(o) for o in sorted({(x, y, z) for x in (0.0, 0.075)
+                                    for y in (0.0, 0.075) for z in (0.0, 0.075)})]
+    _hrec = {'vox_um': 0.15, 'bridge_um': 0.48, 'fibre_stamp': 'segment',
+             'sdcp_stamp': 'sphere', 'sdcp_sphere_d_um': 0.30,
+             'sdcp_yield_to_vgcf': False, 'ptfe_stamp': 'off', 'sigma_ptfe_S_cm': 0.0,
+             'sigma_vgcf_S_cm': 78.54, 'periodic_xy': False,
+             'code_sha': 'edec17a2', 'arms': 8, 'expect_backend': 'gpu',
+             'origins': _h8}
+    _hman = {k: _hrec[k] for k in RECEIPT_AXES}
+    _hman['code_sha'] = 'edec17a2'
+    chk(receipt_match(_hrec, _hman, origin=_h8[3])[0],
+        'H1 정상 증인 — 러너 선언과 결과가 같으면 통과')
+    for _k, _v in (('vox_um', 0.20), ('code_sha', 'deadbeef'),
+                   ('sdcp_sphere_d_um', 0.40), ('periodic_xy', True),
+                   ('sigma_vgcf_S_cm', 100.0), ('fibre_stamp', 'point')):
+        _hm = dict(_hman); _hm[_k] = _v
+        chk(not receipt_match(_hrec, _hm, origin=_h8[3])[0],
+            f'H2({_k}) ★★ 러너 의도와 다른 결과를 **잡는다** (Codex 통과 변형)')
+    _hm = dict(_hman); del _hm['vox_um']
+    chk('missing' in (receipt_match(_hrec, _hm)[1] or ''),
+        'H3 ★ 선언한 축의 기록이 **없으면** HOLD (부재는 통과가 아니다)')
+    chk('alien' in (receipt_match(_hrec, _hman, origin=[0.0, 0.0, 0.03])[1] or ''),
+        'H4 ★★ 영수증 일정 밖 origin 을 잡는다 (z-only 우회, R5-CX-04 와 두 겹)')
+    #  ★ 설정이 다르면 digest 가 다르다 — OUTDIR 이 갈려 캐시가 섞이지 않는다
+    chk(receipt_digest(_hrec) != receipt_digest(dict(_hrec, vox_um=0.20)),
+        'H5 ★★ 설정이 다르면 영수증 digest 가 다르다 (캐시가 설정을 넘나들지 못한다)')
+    chk(receipt_digest(_hrec) != receipt_digest(dict(_hrec, sdcp_sphere_d_um=0.40)),
+        'H6 ★ 구 직경만 달라도 digest 가 갈린다 (`.30`/`.40` 이 같은 `_sph` 를 쓰던 구멍)')
+    chk(receipt_digest(_hrec) == receipt_digest(dict(_hrec)),
+        'H7 digest 는 같은 입력에 안정하다')
+    #  ⚠ 정상 증인 — 러너가 **안 정한** 축은 요구하지 않는다 (킷 기본값 경로를 막지 않는다)
+    chk(receipt_match({'vox_um': 0.15}, {'vox_um': 0.15, 'bridge_um': 0.9})[0],
+        'H8 ★ 영수증이 선언하지 않은 축은 자유다 (과잉차단 없음)')
 
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))

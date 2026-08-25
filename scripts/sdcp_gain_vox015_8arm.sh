@@ -53,7 +53,9 @@ fi
 #    빈 값이면 현행 점 스탬프 = 사전등록 v2 판별 런과 같은 규약.
 #    `SDCP_SPHERE_D=0.30` 을 주면 참 직경 구로 굽는다 — 태그와 OUTDIR 이 갈려 섞이지 않는다.
 SDCP_SPHERE_D="${SDCP_SPHERE_D:-}"
-SCR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#  ★ 2026-08-25 — `bash -s`(stdin) 로 설정부만 돌리면 `BASH_SOURCE` 가 없다 (규칙 L 이 그렇게 돈다).
+#    `P2_SCR` 를 먼저 보고, 없으면 `$0` 로 떨어진다 — 리포에 이미 있는 규약이다.
+SCR="${P2_SCR:-$(cd "$(dirname "${BASH_SOURCE[0]:-$0}")" && pwd)}"
 SD_FLAG=""; SD_TAG=""
 if [ -n "$SDCP_SPHERE_D" ]; then
   SD_FLAG=" --step3-sdcp-sphere-d $SDCP_SPHERE_D"; SD_TAG="_sph"
@@ -198,7 +200,48 @@ esac
 FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}}"
+#  ★★★ 2026-08-25 (R5-CX-03, Codex 5차) — **런 영수증**.  러너가 무엇으로 돌라고 했는지
+#    한 곳에 적고, cache/fresh/final 이 전부 이 값을 요구한다.
+#    ⚠ 왜: Codex 실측에서 HEAD·vox·구경·code SHA·input digest 가 전부 달라도 캐시된 팔이
+#      SKIP 으로 통과하고 final 이 `h0` 였다.  `check_arm` 은 stamp/backend 만 받았고
+#      final 은 digest 의 **존재와 팔 사이 일관성**만 봤다 — 팔들이 **같이 낡았으면**
+#      그 검사는 통과한다 (H4 와 같은 부류).  **일치는 옳음이 아니다.**
+#  ⚠ `SIGMA` 는 여기 없다 — 그것은 **팔마다** 계산된다 (직경-보존 재척도 또는 override).
+#    러너가 **정한 것만** 선언한다.  σ_VGCF 축은 `--expect-physics` 가 팔 단위로 봉인하고
+#    payload 가 불일치면 exit 4 를 낸다 (다른 겹).  선언하지 않은 축은 `receipt_match` 가
+#    요구하지 않는다 — 모르는 것을 아는 척하지 않는다.
+_RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE_D:-}" \
+                  "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
+                  "${SIGMA_VGCF_OVERRIDE:-}" \
+                  "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" <<'PYRCPT'
+import json, os, sys
+sys.path.insert(0, sys.argv[1])
+import run_contract as RC
+_scr, _vox, _br, _fs, _sd, _yv, _ps, _pt, _sg, _per, _arms, _bk = sys.argv[1:13]
+vox = float(_vox)
+rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
+       'sdcp_stamp': ('sphere' if _sd else 'point'),
+       'sdcp_sphere_d_um': (float(_sd) if _sd else 0.0),
+       'sdcp_yield_to_vgcf': (_yv == '1'), 'ptfe_stamp': _ps,
+       'periodic_xy': (_per == '1'),
+       'arms': int(_arms), 'expect_backend': _bk,
+       'origins': [list(o) for o in RC.expected_origins_for(vox)]}
+if _pt:
+    rec['sigma_ptfe_S_cm'] = float(_pt)
+if _sg:
+    rec['sigma_vgcf_S_cm'] = float(_sg)      # 명시 override 일 때만 (러너가 정한 것)
+#  ★ code SHA 는 payload 와 **같은 함수**로 (사본을 두면 갈라진다)
+try:
+    import mpm_webapp_payload as _P
+    rec['code_sha'] = _P._code_sha(_scr)
+except Exception:
+    pass
+rec['receipt_digest'] = RC.receipt_digest(rec)
+print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
+PYRCPT
+)" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
+_RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
@@ -235,6 +278,20 @@ if [ -d "$_LEGACY" ] && [ ! -d "$OUTDIR" ]; then
   echo "     옛 팔을 이어 쓰려면:  OUTDIR=\"$_LEGACY\" bash \$0 …"
 fi
 mkdir -p "$OUTDIR"
+#  ★★★ R5-CX-03 — 영수증을 **런 디렉터리에 남긴다**.  cache/fresh 검사가 이 파일을 읽어
+#    팔의 매니페스트와 축별로 대조한다.  ⚠ 이미 있고 **다르면** 중단 — 같은 디렉터리에
+#    다른 설정의 팔이 섞이는 것이 바로 H4·R5-CX-03 이 잡은 그 사고다.
+if [ -s "$OUTDIR/run_receipt.json" ]; then
+  if ! printf '%s' "$_RCPT_JSON" | diff -q - "$OUTDIR/run_receipt.json" >/dev/null 2>&1; then
+    echo "[p2] ABORT — 이 디렉터리의 영수증이 지금 설정과 다르다: $OUTDIR/run_receipt.json"
+    echo "     같은 디렉터리에 다른 설정의 팔을 섞을 수 없다.  OUTDIR 을 갈라 쓸 것."
+    diff <(printf '%s' "$_RCPT_JSON") "$OUTDIR/run_receipt.json" | sed 's/^/     /' | head -12
+    exit 2
+  fi
+else
+  printf '%s' "$_RCPT_JSON" > "$OUTDIR/run_receipt.json"
+  echo "[p2] 런 영수증 → $OUTDIR/run_receipt.json"
+fi
 
 if [ -z "${VIRTUAL_ENV:-}" ] && [ -z "${MPM_NO_VENV:-}" ]; then
   for _v in "$HOME/dem-venv" "$SCR/../venv" "$SCR/../.venv"; do
@@ -299,11 +356,13 @@ run_arm() {   # $1=kit dir  $2="sx sy sz"  $3=tag
   #    **쓸 수 있는 결과인가**로 올린다 — 그 검사기는 이미 있었고 이 러너만 안 썼다.
   if [ -s "$OUT" ]; then
     if python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp "$FIBRE_STAMP" \
+         --receipt "$OUTDIR/run_receipt.json" \
          --expect-backend "${EXPECT_BACKEND:-gpu}" >/dev/null 2>&1; then
       echo "[p2] SKIP (완전) $TAG"; return 0
     fi
     echo "[p2] ⚠ 기존 $TAG 이 불완전 — 다시 돈다:"
     python3 "$SCR/sr01_stamp_compare.py" --check-arm "$OUT" --stamp "$FIBRE_STAMP" \
+      --receipt "$OUTDIR/run_receipt.json" \
       --expect-backend "${EXPECT_BACKEND:-gpu}" 2>&1 | sed 's/^/     /'
     rm -f "$OUT"
   fi
@@ -442,9 +501,11 @@ PY
   local FRESH="$RUN/$(basename "$OUT")"
   [ -s "$FRESH" ] || { echo "[p2] ABORT — $TAG 이 산출물을 안 남겼다 ($FRESH)"; return 1; }
   if ! python3 "$SCR/sr01_stamp_compare.py" --check-arm "$FRESH" --stamp "$FIBRE_STAMP" \
+       --receipt "$OUTDIR/run_receipt.json" \
        --expect-backend "${EXPECT_BACKEND:-gpu}" >/dev/null 2>&1; then
     echo "[p2] ABORT — 갓 만든 $TAG 이 불완전하다.  **옮기지 않는다** (캐시 오염 방지):"
     python3 "$SCR/sr01_stamp_compare.py" --check-arm "$FRESH" --stamp "$FIBRE_STAMP" \
+      --receipt "$OUTDIR/run_receipt.json" \
       --expect-backend "${EXPECT_BACKEND:-gpu}" 2>&1 | sed 's/^/     /'
     echo "     원본을 남겨 둔다: $FRESH"
     return 1

@@ -206,14 +206,16 @@ MANIFEST_DERIVED_OF = {
 #      있었다 (이 세션에서 네 번째 — 픽스처가 결함을 인코딩한 사례).  ⇒ 픽스처를 먼저 고치고
 #      게이트를 세웠다.  순서를 반대로 하면 새 게이트가 옛 픽스처를 통과시켜 또 초록이 난다.
 def expected_origins(vox):
-    """`vox` → 사전등록 origin 집합 (정렬된 8튜플).  vox 를 모르면 None."""
+    """`vox` → 사전등록 origin 집합 (정렬된 8튜플).  vox 를 모르면 None.
+
+    ★ 정의는 `run_contract.expected_origins_for` **하나**다 — 러너도 그것을 쓴다.
+      사본을 두면 갈라지고, 갈라지면 러너가 찍은 origin 과 판정기가 기대하는 origin 이
+      조용히 달라진다 (이 리포가 반복해 겪은 사고 부류)."""
     try:
-        h = round(float(vox) / 2.0, 9)
+        _e = _RC.expected_origins_for(vox)
     except (TypeError, ValueError):
         return None
-    if not (h > 0):
-        return None
-    return sorted({(x, y, z) for x in (0.0, h) for y in (0.0, h) for z in (0.0, h)})
+    return _e or None
 
 
 def manifest_unswept_keys(man_a, man_b):

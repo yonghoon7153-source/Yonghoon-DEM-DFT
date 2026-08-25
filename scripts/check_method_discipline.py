@@ -911,6 +911,9 @@ def runner_config(env, runner=None):
         'printf "%s=%s\\n" ' + k + ' "${' + k + '-<UNSET>}"' for k in _keys)
     _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
     _env.setdefault('MPM_NO_VENV', '1')
+    #  ★ 2026-08-25 — 설정부를 `bash -s` 로 돌리면 `BASH_SOURCE` 가 없어 러너가
+    #    자기 스크립트 위치를 못 찾는다.  리포에 이미 있는 `P2_SCR` 규약으로 준다.
+    _env.setdefault('P2_SCR', os.path.join(ROOT, 'scripts'))
     r = _sp.run(['bash', '-s'], input=probe, capture_output=True, text=True,
                 timeout=60, env=_env, cwd=_tf.gettempdir())
     if r.returncode != 0:
@@ -2284,6 +2287,45 @@ def _selftest():
     chk(f'L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** ({len(_m10)}건)',
         any(x.startswith('L_NODIGEST') for x in _m10))
     _m11 = _rmut('  for _tok in $P2_EXTRA; do', '  for _tok in ; do')
+    #  ── R5-CX-03 (2026-08-25) — **런 영수증**이 설정을 갈라 놓는가 ────────────────────
+    #    Codex 실측: `SDCP_SPHERE_D=.30` 과 `.40` 이 **같은 `_sph` OUTDIR** 을 쓰고
+    #    `MPM_PERIODIC_SIGMA=0/1` 도 namespace 가 같아, 캐시된 옛 팔이 SKIP 으로 통과했다.
+    _rc_base = runner_config({'ARMS': '8', 'VOX': '0.15'})
+    chk('L-14a: OUTDIR 에 영수증 digest 가 붙는다',
+        '_r' in (_rc_base.get('OUTDIR') or '').rsplit('/', 1)[-1])
+    _seen_dirs = {}
+    for _e, _lbl in (({'ARMS': '8', 'VOX': '0.15'}, 'base'),
+                     ({'ARMS': '8', 'VOX': '0.125'}, 'vox'),
+                     ({'ARMS': '8', 'VOX': '0.15', 'SDCP_SPHERE_D': '0.30'}, 'sph30'),
+                     ({'ARMS': '8', 'VOX': '0.15', 'SDCP_SPHERE_D': '0.40'}, 'sph40'),
+                     ({'ARMS': '8', 'VOX': '0.15', 'MPM_PERIODIC_SIGMA': '1'}, 'periodic'),
+                     ({'ARMS': '8', 'VOX': '0.15', 'PTFE_STAMP': 'centerline'}, 'ptfe')):
+        _seen_dirs[_lbl] = (runner_config(_e).get('OUTDIR') or f'<abort:{_lbl}>')
+    chk(f'L-14b: ★★ 설정이 다르면 OUTDIR 이 **전부 다르다** '
+        f'({len(set(_seen_dirs.values()))}/{len(_seen_dirs)} 고유) — 캐시가 설정을 '
+        f'넘나들 수 없다 (R5-CX-03: `.30`/`.40` 이 같은 `_sph` 를 쓰던 구멍)',
+        len(set(_seen_dirs.values())) == len(_seen_dirs))
+    #  ★ cache/fresh 두 검사 지점이 **영수증을 실제로 넘기는가** (안 넘기면 대조가 없다)
+    #  ⚠ **주석을 세지 않는다** — 초판이 안내 주석 한 줄을 호출로 세어 4/5 로 빨간불을
+    #    냈다.  리포에 이미 있는 `k_live_invocation` 을 쓴다 (사본 금지, 규칙 K 와 같은 판정기).
+    _rlines = open(os.path.join(ROOT, L_RUNNER), encoding='utf-8').read().splitlines()
+    _live = [ln for ln in _rlines
+             if k_live_invocation(ln, 'sr01_stamp_compare.py', '--check-arm')]
+    #  호출이 줄이음(`\`)으로 이어지므로, 그 줄부터 `--stamp` 가 끝나는 곳까지의 덩어리에
+    #  `--receipt` 가 있는지 본다.
+    _ok_rcpt = 0
+    for _i, ln in enumerate(_rlines):
+        if not k_live_invocation(ln, 'sr01_stamp_compare.py', '--check-arm'):
+            continue
+        _blk, _j = ln, _i
+        while _blk.rstrip().endswith('\\') and _j + 1 < len(_rlines):
+            _j += 1
+            _blk += '\n' + _rlines[_j]
+        if '--receipt' in _blk:
+            _ok_rcpt += 1
+    chk(f'L-14c: ★★ **살아 있는** `--check-arm` 호출 {len(_live)}개가 전부 `--receipt` 를 '
+        f'넘긴다 ({_ok_rcpt}개) — 안 넘기면 러너 의도와 대조가 없다 (R5-CX-03)',
+        len(_live) > 0 and _ok_rcpt == len(_live))
     #  ── R5-CX-01 (2026-08-25, Codex 5차) — **2단계 shell 확장 우회** ────────────────
     #    허용 목록은 옵션 **이름**만 봤고 `for _tok in $P2_EXTRA` 는 한 번만 확장한다.
     #    `--step3-maxiter=$MPM_ATTACK` 은 리터럴로 통과한 뒤, 생성 스크립트가 실행될 때
