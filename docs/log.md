@@ -2624,3 +2624,12 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   지운다 (짧은 휴지와 같은 규칙). (3) #18(방전 용량축 부호)은 746d1722 의
   시리즈-상대 재영점이 이미 고쳤음을 합성으로 확인 — pOCV 와 diffusion 둘 다
   [0, 0.5, 1.0, 1.5]. TSV 는 용량·D·휴지·드리프트 네 열.
+## [2026-08-25] fix | clear 가 계측기 사실을 지웠고, .mps 원문이 안 남았다
+- Codex #24·#21 (Claude A5 겹침). (1) PATCH clear 가 hasattr 전체를 열어 둬
+  주파수 범위·측정 시각·duration 같은 파일 유래 값까지 지웠다 — 지우면 dedup
+  재업로드로도 안 돌아온다. 사람이 넣는 필드만 화이트리스트 (EIS: sample_id·
+  at_cycle·thickness_um·area_cm2·measured_at / GITT: 재료 상수 4), 그 밖은
+  422 로 목록과 함께 거절. (2) .mps 는 파서가 이해한 subset(settings_json)만
+  남고 원문이 버려졌다 — 내용 해시로 원문 보존, SpectrumRecord 에
+  settings_sha256·settings_name (추가 컬럼은 _add_missing_columns 가 처리).
+  dedup 재업로드도 빈 경우 원문을 채운다.

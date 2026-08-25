@@ -197,13 +197,24 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
     for key, value in values.items():
         setattr(record, key, value)
     for field in payload.clear:
-        if hasattr(record, field):
-            setattr(record, field, None)
+        # 재료 상수만 — duration/start_time 같은 파일 유래 값은 사실이라
+        # 지울 수 없다 (리뷰 #24).
+        if field not in CLEARABLE_GITT_FIELDS:
+            raise HTTPException(
+                422, f"{field!r} 은 비울 수 없습니다 — 계측기 파일에서 온 "
+                     f"값입니다 (비울 수 있는 것: "
+                     f"{', '.join(sorted(CLEARABLE_GITT_FIELDS))})")
+        setattr(record, field, None)
     record.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
     session.add(record)
     session.commit()
     session.refresh(record)
     return _out(record)
+
+
+#: PATCH ``clear`` 가 비울 수 있는 필드 — 사람이 입력하는 재료 상수들이다.
+CLEARABLE_GITT_FIELDS = {"molar_volume_cm3", "molar_mass_g", "active_mass_g",
+                         "area_cm2"}
 
 
 @router.delete("/runs/{gitt_id}", status_code=204)

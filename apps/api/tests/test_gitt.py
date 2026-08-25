@@ -160,6 +160,19 @@ def test_a_negative_material_constant_is_refused(client):
                         json={"area_cm2": -1}).status_code == 422
 
 
+def test_clear_refuses_file_facts(client):
+    """duration·start_time 은 파일에서 온 사실이다 (#24) — 재료 상수만 비운다."""
+    out = upload(client)
+    refused = client.patch(f"/api/gitt/runs/{out['id']}",
+                           json={"clear": ["duration_h"]})
+    assert refused.status_code == 422
+    client.patch(f"/api/gitt/runs/{out['id']}", json={"molar_mass_g": 96.0})
+    ok = client.patch(f"/api/gitt/runs/{out['id']}",
+                      json={"clear": ["molar_mass_g"]})
+    assert ok.status_code == 200
+    assert ok.json()["molar_mass_g"] is None
+
+
 def test_reuploading_known_bytes_restores_a_lost_original(client):
     """pOCV 는 불변 원본을 재파싱한다.  원본이 사라졌을 때 화면은 "다시 올려
     주세요" 라고 하는데, dedup 이 저장 전에 반환하면 그 안내는 거짓이다 (#23)."""

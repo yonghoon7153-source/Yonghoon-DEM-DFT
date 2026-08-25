@@ -380,6 +380,44 @@ def test_a_duplicate_upload_fills_blanks_and_overwrites_nothing(client, sample_i
     assert conflicting.json()["cell_config"] == "sym"            # 안 덮인다
 
 
+def test_the_mps_original_survives_verbatim(client):
+    """파서가 모르는 설정 줄은 원문 바이트에서만 되찾는다 (§0.2 정신, #21).
+
+    settings_json 은 이해한 부분집합일 뿐이다 — 파서를 고친 뒤 되찾을 바이트가
+    없으면 그 설정은 영영 사라진 것이다.
+    """
+    from app import storage
+    raw = (b"EC-LAB SETTING FILE\r\n"
+           b"Custom correction ENABLED\r\n"
+           b"Safety limit 99\r\n")
+    out = client.post(
+        "/api/eis/spectra/upload", params={"kind": "solid"},
+        files={"file": ("A_C01.mpr", mpr(), "application/octet-stream"),
+               "settings_file": ("A.mps", raw, "application/octet-stream")}).json()
+    assert out["id"]
+    import hashlib
+    sha = hashlib.sha256(raw).hexdigest()
+    stored = storage.spectrum_upload_path(sha, "mps")
+    assert stored.exists()
+    assert stored.read_bytes() == raw                      # 바이트 그대로
+
+
+def test_clear_refuses_instrument_facts(client):
+    """clear 는 사람이 넣은 것만 비운다 (#24).  주파수 범위는 파일에서 온
+    사실이라, 지우면 dedup 재업로드로도 안 돌아온다."""
+    out = upload(client)
+    response = client.patch(f"/api/eis/spectra/{out['id']}",
+                            json={"clear": ["frequency_start_hz"]})
+    assert response.status_code == 422
+    assert "비울 수 없습니다" in response.json()["detail"]
+    # 사람이 넣는 두께는 비울 수 있다.
+    client.patch(f"/api/eis/spectra/{out['id']}", json={"thickness_um": 70})
+    ok = client.patch(f"/api/eis/spectra/{out['id']}",
+                      json={"clear": ["thickness_um"]})
+    assert ok.status_code == 200
+    assert ok.json()["thickness_um"] is None
+
+
 def test_a_settings_file_for_another_experiment_is_refused(client):
     """EC-Lab 접미사(_C01)를 뗀 실험 이름이 달라야 남의 조건이다 (#13).
 

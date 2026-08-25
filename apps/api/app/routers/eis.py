@@ -398,8 +398,14 @@ async def upload_spectrum(
             existing.at_cycle = at_cycle
             changed = True
         if settings_file is not None and not existing.settings_json:
+            _check_settings_stem(file.filename, settings_file.filename)
             raw = await settings_file.read()
             if raw:
+                existing.settings_sha256 = hashlib.sha256(raw).hexdigest()
+                existing.settings_name = settings_file.filename or ""
+                storage.store_bytes(raw, storage.spectrum_upload_path(
+                    existing.settings_sha256, "mps"))
+                changed = True
                 try:
                     meta = read_mps_text(raw.decode("latin-1", errors="replace"))
                 except ValueError:
@@ -412,7 +418,6 @@ async def upload_spectrum(
                         existing.device = str(meta.get("Device", ""))
                     if not existing.technique:
                         existing.technique = str(meta.get("technique", ""))
-                    changed = True
         if changed:
             session.add(existing)
             session.commit()
@@ -427,10 +432,19 @@ async def upload_spectrum(
         raise HTTPException(422, f"could not read {file.filename!r}: {exc}") from exc
 
     meta: dict = {}
+    settings_sha = ""
+    settings_name = ""
     if settings_file is not None:
         _check_settings_stem(file.filename, settings_file.filename)
         raw = await settings_file.read()
         if raw:
+            # 원문 보존이 먼저다 (§0.2 정신, 리뷰 #21).  settings_json 은
+            # 파서가 이해한 부분집합이고, 파서가 모르는 줄은 원문 바이트에서만
+            # 되찾는다.
+            settings_sha = hashlib.sha256(raw).hexdigest()
+            settings_name = settings_file.filename or ""
+            storage.store_bytes(raw, storage.spectrum_upload_path(settings_sha,
+                                                                  "mps"))
             try:
                 meta = read_mps_text(raw.decode("latin-1", errors="replace"))
             except ValueError:
@@ -457,6 +471,8 @@ async def upload_spectrum(
         device=str(meta.get("Device", "")),
         technique=str(meta.get("technique", spectrum.metadata.get("technique", ""))),
         settings_json=json.dumps(meta, ensure_ascii=False) if meta else "",
+        settings_sha256=settings_sha,
+        settings_name=settings_name,
     )
     session.add(record)
     session.commit()
@@ -492,13 +508,25 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
     for key, value in values.items():
         setattr(record, key, value)
     for field in payload.clear:
-        if hasattr(record, field):
-            setattr(record, field, None)
+        # 사람이 넣은 것만 비울 수 있다.  hasattr 전체를 열어 두면 주파수
+        # 범위·측정 시각 같은 **계측기가 준** 값까지 지워지는데(리뷰 #24),
+        # 그것은 파일에서 온 사실이라 지우면 재업로드 dedup 로도 안 돌아온다.
+        if field not in CLEARABLE_SPECTRUM_FIELDS:
+            raise HTTPException(
+                422, f"{field!r} 은 비울 수 없습니다 — 계측기 파일에서 온 "
+                     f"값입니다 (비울 수 있는 것: "
+                     f"{', '.join(sorted(CLEARABLE_SPECTRUM_FIELDS))})")
+        setattr(record, field, None)
     record.updated_at = datetime.now(timezone.utc).replace(tzinfo=None)
     session.add(record)
     session.commit()
     session.refresh(record)
     return _out(session, record)
+
+
+#: PATCH ``clear`` 가 비울 수 있는 필드 — 전부 사람이 입력하는 것들이다.
+CLEARABLE_SPECTRUM_FIELDS = {"sample_id", "at_cycle", "thickness_um",
+                             "area_cm2", "measured_at"}
 
 
 @router.delete("/spectra/{spectrum_id}", status_code=204)

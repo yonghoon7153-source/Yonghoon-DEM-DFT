@@ -344,6 +344,11 @@ class SpectrumRecord(SQLModel, table=True):
     measured_at: datetime | None = None
     #: Everything else the settings file carried, verbatim.
     settings_json: str = ""
+    #: 올라온 `.mps` 원문의 내용 해시와 원래 이름.  파서가 이해한 부분집합
+    #: (settings_json)과 별개로 원문 바이트를 보존한다 (§0.2 정신, 리뷰 #21) —
+    #: 파서가 모르는 설정 줄은 여기서만 되찾을 수 있다.
+    settings_sha256: str = ""
+    settings_name: str = ""
 
     #: Cell geometry for conductivity.  Kept on the spectrum rather than only
     #: on the sample because a pellet gets measured at several thicknesses and
