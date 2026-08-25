@@ -94,7 +94,23 @@ POTCAR_SPEC = {"Li": "Li_sv", "Ni": "Ni_pv", "O": "O", "S": "S", "C": "C", "F": 
                "H": "H", "B": "B", "P": "P", "Cl": "Cl", "Na": "Na_pv"}
 KMESH = {"relax": "2 3 1", "static": "3 4 1", "dense": "4 6 1"}   # a=18.3 > b=11.5 Å
 #: 분석기가 OUTCAR 되울림과 대조할 INCAR 태그 (프로토콜을 규정하는 것들)
-AUDIT_KEYS = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL")
+# ⛔ 2026-08-25 (codex E-1) — 7키만 등록돼 있어 LDAUU 등은 **비교 대상에 든 적이
+#   없었다** (0 UNVERIFIED 는 통과가 아니라 미등록이었다). MAGMOM·ADDGRID 는 OUTCAR
+#   가 되울리지 않아(실측) 등록해도 검증 불가 — 분석기의 _ECHO_ABSENT 로 명시 보고.
+AUDIT_KEYS = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
+              "ISPIN", "ISYM", "LASPH", "IDIPOL", "NUPDOWN",
+              "LDAUTYPE", "LDAUL", "LDAUU", "LDAUJ")
+
+
+def _incar_expected_from(txt):
+    """INCAR 원문 → {key: 정규화값}. **줄 끝까지** 캡처한다 (한 토큰이면
+    `LDAUU = 0.0 6.2 0.0` 이 `0.0` 으로 잘린다 — codex E-1). 주석(#/!)은 버린다."""
+    out = {}
+    for k in AUDIT_KEYS:
+        m = re.search(rf"^{k}\s*=\s*([^\n#!]+)", txt, re.M)
+        if m:
+            out[k] = " ".join(m.group(1).split())
+    return out
 
 # ── INCAR 3종 — Codex §2.2 템플릿 + 실납품 승계값(U 6.2 · IVDW 11 · ENCUT 520) ──
 _COMMON = """GGA      = PE
@@ -817,8 +833,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         kmesh[ph] = km
         # ⚠ 기대값을 손으로 적지 않고 **배포한 INCAR 을 되읽는다** — 손으로 적으면
         #   템플릿을 고쳤을 때 조용히 어긋난다 (Codex P0-5).
-        incar_exp[ph] = {k: m.group(1) for k in AUDIT_KEYS
-                         for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)] if m}
+        incar_exp[ph] = _incar_expected_from(txt)
     # ★ 조건부 dense 후보 (Codex 6차 §3) — 입력만 만들고 **run_job.sh 는 안 본다**
     #   (러너는 pre/relax/static/dense 만 돈다). coarse 를 보고 승격되면
     #   run_dense_selected.sh 가 dense_cand → dense 로 옮겨 같은 러너로 돌린다.
@@ -829,9 +844,7 @@ def _emit_slab_job(jd: Path, atoms, nslab: int, freeze: float, frag: str,
         km = kmesh_over.get("dense", KMESH["dense"])
         (jd / "dense_cand" / "KPOINTS").write_text(f"auto\n0\nGamma\n{km}\n0 0 0\n")
         kmesh["dense_cand"] = km
-        incar_exp["dense_cand"] = {k: m.group(1) for k in AUDIT_KEYS
-                                   for m in [re.search(rf"^{k}\s*=\s*(\S+)", txt, re.M)]
-                                   if m}
+        incar_exp["dense_cand"] = _incar_expected_from(txt)
     _write_potcar_asm(jd, pos["species_order"])
     # ★ POTCAR 는 **잡마다 다르다** (Codex 7차 §11) — POSCAR 종 순서가 조각마다
     #   다르므로 하나의 concatenated POTCAR 를 공용할 수 없다. 조립 명령을 잡 안에 둔다.
@@ -969,7 +982,24 @@ FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤
 #:  둘이 따로 적혀 있어 한쪽만 늘리면 조용히 갈린다 (Codex 5차 P1-3).
 #:  물리 규약 키(LASPH/ADDGRID/ISYM/NUPDOWN/LDAUU)도 넣어 외주처의 우발적 수정을 잡는다.
 AUDIT_KEYS_RUNTIME = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
-                      "LASPH", "ADDGRID", "ISYM", "NUPDOWN", "LDAUU", "LDAUTYPE", "IDIPOL")
+                      "LASPH", "ADDGRID", "ISYM", "NUPDOWN", "LDAUU", "LDAUTYPE", "IDIPOL",
+                      "ISPIN", "LDAUL", "LDAUJ", "MAGMOM")
+
+# ── 되울림 형식 3종 (2026-08-25 실측, wave1 43개 OUTCAR) ─────────────────────
+#   ① 행두형: `   ENCUT  =  520.0 eV …` · `   NUPDOWN=      -1.0000` (= 앞 공백 0개 허용)
+#   ② 산문형: LDA+U 계열은 행 **중간**에 있다 —
+#        ` LDA+U is selected, type is set to LDAUTYPE =  2`
+#        `   U (eV)           for each species LDAUU =   0.0  6.2  0.0  0.0  0.0`
+#      행두 앵커로는 한 줄도 안 잡힌다. 고정 산문을 앵커로 쓴다.
+#   ③ 미되울림: MAGMOM · ADDGRID 는 OUTCAR 어디에도 없다(grep 0건) —
+#      **원리적으로 검증 불가**이므로 영원히 unverified 로 보고한다 (조용한 통과 금지).
+_ECHO_PROSE = {
+    "LDAUTYPE": r"type is set to LDAUTYPE\s*=\s*(\S+)",
+    "LDAUL": r"for each species LDAUL\s*=\s*([^\n]+)",
+    "LDAUU": r"for each species LDAUU\s*=\s*([^\n]+)",
+    "LDAUJ": r"for each species LDAUJ\s*=\s*([^\n]+)",
+}
+_ECHO_ABSENT = ("MAGMOM", "ADDGRID")
 
 # ── OUTCAR 되울림 ↔ INCAR 선언 대조 (2026-08-25) ─────────────────────────────
 #   VASP 는 INCAR 표기를 그대로 되울리지 않는다: 520 → `520.0`, `.TRUE.` → `T`,
@@ -984,39 +1014,79 @@ _LREAL_RECIP = set(_FALSE)
 def _echo_val(text, key):
     """OUTCAR 의 **파라미터 줄**에서 key 의 값을 읽는다 (산문·경고문 제외).
 
-    VASP 파라미터 줄은 행두 공백 몇 칸으로 시작한다(`   ENCUT  =  520.0 eV ...`).
-    권고문·경고 상자는 `|` 로 시작하므로 행두 고정만으로 걸러진다.
+    행두형은 행두 공백 앵커로(권고 상자는 `|` 시작이라 걸러진다), LDA+U 계열은
+    고정 산문 앵커로 읽는다(행 중간이라 행두 앵커가 못 잡는다 — 2026-08-25 실측).
+    목록 키는 **줄 끝까지** 캡처해 공백 정규화한다 — 한 토큰만 읽으면
+    `LDAUU = 0.0 6.2 0.0` 이 `0.0` 으로 잘려 실제 U 차이를 못 잡는다 (codex E-1).
 
-    이 함수가 못 하는 것: OUTCAR 가 되울리지 **않는** 키는 영원히 None 이다
-    (호출부에서 INCAR_UNVERIFIED 로 남는다 — 통과가 아니라 미검증이다).
+    이 함수가 못 하는 것: MAGMOM·ADDGRID 는 OUTCAR 가 되울리지 않아 **원리적으로
+    None** 이다 — 호출부가 unverified 로 보고한다 (통과도 실패도 아니다).
     """
+    if key in _ECHO_ABSENT:
+        return None
+    pat = _ECHO_PROSE.get(key)
+    if pat:
+        m = re.search(pat, text)
+        return " ".join(m.group(1).split()) if m else None
     m = re.search(r"^[ \t]{0,8}" + key + r"\s*=\s*([-\w.]+)", text, re.M)
     return m.group(1) if m else None
 
 
-def _incar_equal(key, got, want):
-    """되울림 got 과 선언 want 가 **같은 값**인가 (표기 차이는 무시).
+def _incar_match(key, got, want):
+    """되울림 got 과 선언 want 대조 → (일치 여부, 종류).
 
-    이 함수가 못 하는 것: LREAL 의 `Auto` 와 `On` 구분. VASP 는 둘 다 `T` 로만
-    되울리므로 되울림 검증으로는 실공간/역공간까지만 갈라진다. 모르는 표기는
-    통과시키지 않고 **불일치로 남긴다**(느슨하게 푸는 쪽으로 실패하지 않기).
+    종류 (codex E-2 분류):
+      "exact"             — 같은 값 (표기 차이만: 520.0↔520, T↔.TRUE., 목록 원소별)
+      "equivalence_class" — **같은 값임을 보증 못 하고 같은 계열임만 보증**.
+                            LREAL 의 Auto/On/.TRUE. 는 알고리즘이 서로 다른데
+                            VASP 가 전부 `T` 로만 되울려 계열까지만 갈라진다.
+      "mismatch"          — 다르다.
+
+    수치는 **Decimal** 로 비교한다 (codex E-1) — float 는 `1e309` 가 inf 로 붙어
+    서로 다른 두 값이 같아질 수 있고, 큰 정수에서 정밀도를 잃는다.
+    비유한값(inf/nan 표기)은 일치로 치지 않는다.
     """
+    from decimal import Decimal, InvalidOperation
+
+    def _nonfinite(s):
+        for tok in s.split():
+            try:
+                if not Decimal(tok).is_finite():
+                    return True
+            except (InvalidOperation, ValueError):
+                pass
+        return False
+
     g, w = str(got).strip(), str(want).strip()
+    # ⚠ 비유한값 검사가 문자열 지름길보다 **먼저**다 — "inf"=="inf" 가 문자열로
+    #   같아서 통과해 버리면 이 가드는 죽은 코드가 된다 (selftest 가 실제로 잡았다).
+    if _nonfinite(g) or _nonfinite(w):
+        return False, "mismatch"
     gu, wu = g.upper(), w.upper()
     if gu.strip(".") == wu.strip("."):          # .TRUE. ↔ TRUE 도 여기서 걸린다
-        return True
+        return True, "exact"
     if key == "LREAL":
         known = _LREAL_REAL | _LREAL_RECIP
         if gu in known and wu in known:
-            return (gu in _LREAL_REAL) == (wu in _LREAL_REAL)
-        return False
+            same = (gu in _LREAL_REAL) == (wu in _LREAL_REAL)
+            return (True, "equivalence_class") if same else (False, "mismatch")
+        return False, "mismatch"
     if gu in _TRUE | _FALSE and wu in _TRUE | _FALSE:
-        return (gu in _TRUE) == (wu in _TRUE)
+        return ((gu in _TRUE) == (wu in _TRUE)), "exact"
     try:                                         # 520.0 ↔ 520 · LDAUU 목록도 원소별
-        gf, wf = [float(x) for x in g.split()], [float(x) for x in w.split()]
-    except ValueError:
-        return False
-    return len(gf) == len(wf) and all(a == b for a, b in zip(gf, wf))
+        gd = [Decimal(x) for x in g.split()]
+        wd = [Decimal(x) for x in w.split()]
+    except (InvalidOperation, ValueError):
+        return False, "mismatch"
+    if any(not x.is_finite() for x in gd + wd):
+        return False, "mismatch"
+    ok = len(gd) == len(wd) and all(a == b for a, b in zip(gd, wd))
+    return ok, ("exact" if ok else "mismatch")
+
+
+def _incar_equal(key, got, want):
+    """(하위호환 래퍼) — 일치 여부만. 종류가 필요하면 _incar_match 를 쓸 것."""
+    return _incar_match(key, got, want)[0]
 
 RCOV = {"H": 0.31, "B": 0.84, "C": 0.76, "N": 0.71, "O": 0.66, "F": 0.57,
         "Na": 1.66, "P": 1.07, "S": 1.05, "Cl": 1.02, "Li": 1.28, "Ni": 1.24}
@@ -1133,10 +1203,81 @@ def _pk(path, root):
     return os.path.relpath(path, root).replace(os.sep, "/").replace("\\", "/").strip("/")
 
 
+# ══ OUTCAR 엄격 판독 (2026-08-25 codex E-3) ══════════════════════════════════
+#   errors="ignore" 금지 — 깨진 바이트가 낀 `ENC\xffUT` 이 `ENCUT` 으로 붙어
+#   **거짓 정상**을 만들고, 잘린 gzip 은 예외로 분석기 전체를 죽이며, UTF-16 은
+#   NUL 이 낀 채 조용히 오독된다. 전부 판독 실패(OUTCAR_READ_ERROR)로 승격한다.
+def _read_outcar_raw(p):
+    """→ (text|None, meta). meta = {read_error, format, suffix_magic_mismatch}.
+
+    이 함수가 못 하는 것: 내용의 물리적 타당성. **읽기 신뢰성**까지만 책임진다.
+    """
+    meta = {"read_error": None, "format": None, "suffix_magic_mismatch": False}
+    base = p[:-3] if p.endswith(".gz") else p
+    plain, gz = os.path.isfile(base), os.path.isfile(base + ".gz")
+    if plain and gz:
+        meta["read_error"] = "OUTCAR 와 OUTCAR.gz 가 둘 다 있다 — 어느 쪽이 정본인지 판정 불가"
+        return None, meta
+    path = base if plain else (base + ".gz" if gz else None)
+    if path is None:
+        return None, meta                      # 파일 없음 = NOT_RUN (read_error 아님)
+    try:
+        raw = open(path, "rb").read()
+    except OSError as e:
+        meta["read_error"] = f"open 실패: {e}"
+        return None, meta
+    is_gz_magic = raw[:2] == b"\x1f\x8b"
+    meta["suffix_magic_mismatch"] = (path.endswith(".gz") != is_gz_magic)
+    if is_gz_magic:
+        try:
+            raw = gzip.decompress(raw)         # CRC·절단이 여기서 예외로 드러난다
+        except (OSError, EOFError, gzip.BadGzipFile) as e:
+            meta["read_error"] = f"gzip 손상/절단: {type(e).__name__} {e}"
+            return None, meta
+    if b"\x00" in raw[:4096]:
+        meta["read_error"] = "NUL 바이트 검출 — UTF-16/바이너리 오염 의심"
+        return None, meta
+    try:
+        text = raw.decode("utf-8", errors="strict")
+    except UnicodeDecodeError as e:
+        meta["read_error"] = f"디코드 실패(비ASCII 오염): offset {e.start}"
+        return None, meta
+    meta["format"] = "gzip" if is_gz_magic else "plain"
+    return text, meta
+
+
+def _last_run_segment(text):
+    """이어붙은 OUTCAR 를 실행 단위로 갈라 **마지막 완결 실행**을 고른다.
+
+    (2026-08-25 codex E) 여러 실행이 한 파일에 이어지면 옛 코드는 파라미터를 첫
+    실행에서, 에너지를 마지막에서, 정상종료를 아무 데서나 읽어 **서로 다른 실행을
+    섞었다.** 실행 경계는 버전 배너(행두 ` vasp.`)다.
+
+    → (segment_text, {"n": 배너수, "used": "only|last_complete|last_incomplete",
+                       "used_index": i})
+    """
+    starts = [m.start() for m in re.finditer(r"(?m)^ vasp\.[\w.]+", text)]
+    if len(starts) <= 1:
+        return text, {"n": max(len(starts), 1) if text.strip() else 0,
+                      "used": "only", "used_index": 0}
+    segs = [text[s:e] for s, e in zip(starts, starts[1:] + [len(text)])]
+    for i in range(len(segs) - 1, -1, -1):
+        if "General timing and accounting" in segs[i]:
+            return segs[i], {"n": len(segs), "used": "last_complete", "used_index": i}
+    return segs[-1], {"n": len(segs), "used": "last_incomplete",
+                      "used_index": len(segs) - 1}
+
+
 def read_outcar(p):
-    t = _read_text(p)
+    t, rmeta = _read_outcar_raw(p)
+    if rmeta["read_error"]:
+        return {"read_error": rmeta["read_error"], "normal_end": False, "E0": None,
+                "nelm_hit": False, "ionic_conv": False, "nions": None, "nkpts": None,
+                "titels": [], "incar_echo": {}, "moments": None, "mag_total": None,
+                "run_segments": None}
     if t is None:
         return None
+    t, seg = _last_run_segment(t)
     e = re.findall(r"energy\(sigma->0\)\s*=\s*(-?[\d.]+)", t)
     nions = re.search(r"NIONS\s*=\s*(\d+)", t)
     nk = re.search(r"NKPTS\s*=\s*(\d+)", t)
@@ -1192,6 +1333,8 @@ def read_outcar(p):
             "moments": read_moments(t), "forces": forces,
             "positions": positions,
             "ldau": read_ldau(t),
+            "run_segments": seg, "read_format": rmeta["format"],
+            "suffix_magic_mismatch": rmeta["suffix_magic_mismatch"],
             # ⛔ 2026-08-25 (sdcp_wave1 회신) — 이 검색은 **앵커가 없어서 산문도 물었다.**
             #   분자 박스 OUTCAR 129행의 VASP 권고문
             #     `|      So try LREAL= Auto  in the INCAR   file.  |`
@@ -1679,10 +1822,29 @@ def selftest_k() -> int:
 
 
 def phase_gates(oc, ph, meta, spec, want_ionic=False):
-    """상 하나의 fail-closed 검사. oc 가 None 이면 NOT_RUN."""
+    """상 하나의 fail-closed 검사. oc 가 None 이면 NOT_RUN.
+
+    ⚠ **게이트 통과가 보증하는 것** (codex E-2, 과대해석 금지):
+      "제공된 단일 완결 실행 세그먼트에서, incar_expected 에 등록된 유한한 키
+       집합이 되울림과 일치했다" — 딱 여기까지다.
+    보증하지 못하는 것: 등록되지 않은 키 전부 · 정확한 k-grid shift · POTCAR 원문
+    해시 · WAVECAR/CHGCAR 실제 내용과 승계 계보 · 기본값/명시값 구분 · LREAL 의
+    정확한 모드(등가류까지만). ISTART/ICHARG 되울림은 재시작 파일이 **실제로
+    쓰였다는 증거가 아니다.** 각 상의 incar_audit(4분류)가 이 경계의 기계 기록이다.
+    """
     g = []
     if oc is None:
         return [f"NOT_RUN({ph})"]
+    if oc.get("read_error"):
+        # 판독 실패는 NOT_RUN 이 아니다 — 파일은 있는데 믿고 읽을 수 없는 상태
+        return [f"OUTCAR_READ_ERROR({ph}: {oc['read_error']})"]
+    seg = oc.get("run_segments") or {}
+    if seg.get("n", 1) > 1:
+        g.append(f"MULTI_RUN_OUTCAR({ph}: 실행 {seg['n']}개 이어붙음 — "
+                 f"{seg['used']}(#{seg['used_index']}) 세그먼트만 읽음. "
+                 "단일 실행 계약과 어긋난다 — 출처 확인 전 인용 금지)")
+    if oc.get("suffix_magic_mismatch"):
+        g.append(f"OUTCAR_FORMAT_MISMATCH({ph}: 확장자와 실제 형식({oc.get('read_format')})이 다름)")
     if not oc["normal_end"]:
         g.append(f"NOT_TERMINATED({ph} — General timing 없음, 잘린 OUTCAR)")
     if oc["E0"] is None:
@@ -1719,12 +1881,34 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
             g.append(f"KMESH_UNVERIFIED({ph} — OUTCAR 에 NKPTS 없음)")
         elif oc["nkpts"] > prod:
             g.append(f"KMESH_MISMATCH({ph}: NKPTS {oc['nkpts']} > 격자 {want_k} 의 {prod})")
-    for k2, want in (meta.get("incar_expected") or {}).get(ph, {}).items():
+    audit = {"verified_exact": [], "verified_equivalence_class": [],
+             "unverified": [], "mismatch": []}
+    expected = (meta.get("incar_expected") or {}).get(ph, {})
+    for k2 in AUDIT_KEYS_RUNTIME:
         got2 = (oc.get("incar_echo") or {}).get(k2)
+        want = expected.get(k2)
+        if k2 in _ECHO_ABSENT:
+            # 원리적 검증불가 — 게이트 없이 **명시적으로** unverified (조용한 통과 금지)
+            audit["unverified"].append(f"{k2}(OUTCAR 미되울림 — 원리적 검증불가, "
+                                       "선언은 INCAR sha256 무결성으로만 보증)")
+            continue
+        if want is None:
+            if got2 is not None:
+                audit["unverified"].append(f"{k2}(기대값 미등록 — 되울림 {got2} 은 비교 안 됨)")
+            continue
         if got2 is None:
+            audit["unverified"].append(k2)
             g.append(f"INCAR_UNVERIFIED({ph}.{k2})")
-        elif not _incar_equal(k2, got2, want):
+            continue
+        ok, kind = _incar_match(k2, got2, want)
+        if not ok:
+            audit["mismatch"].append(k2)
             g.append(f"INCAR_MISMATCH({ph}.{k2}: {got2}!={want})")
+        elif kind == "equivalence_class":
+            audit["verified_equivalence_class"].append(k2)
+        else:
+            audit["verified_exact"].append(k2)
+    oc["incar_audit"] = audit                  # RESULTS.json 에 그대로 실린다
     return g
 
 
@@ -2141,9 +2325,19 @@ def main():
 
     results = {"delta_eV": delta, "pairs": {}, "fragments": {}, "e_ads": {},
                "numerical_gates": {}, "warnings": [], "integrity": integrity,
+               # incar_audit (codex E-2) — 게이트 통과가 **무엇까지 보증하는지**의
+               #   기계 기록: verified_exact / verified_equivalence_class /
+               #   unverified / mismatch + 실행 세그먼트 정보. 사람용 요약(README)과
+               #   어긋나면 이쪽이 정본이다.
                "jobs": {j: {"ok": r["ok"], "gates": r["gates"],
                             "E0_static": (r["static"] or {}).get("E0"),
                             "vasp_version": (r["static"] or {}).get("vasp_version"),
+                            "incar_audit": {ph: (r.get(ph) or {}).get("incar_audit")
+                                            for ph in ("static", "dense")
+                                            if (r.get(ph) or {}).get("incar_audit")},
+                            "run_segments": {ph: (r.get(ph) or {}).get("run_segments")
+                                             for ph in ("static", "dense")
+                                             if (r.get(ph) or {}).get("run_segments")},
                             "geom": r.get("geom")} for j, r in jobs.items()}}
     if potcar_warn:
         results["warnings"].append(potcar_warn)
@@ -3622,8 +3816,19 @@ def _fake_phase(jd: Path, meta: Dict[str, Any], e_static: float,
         # ⚠ 실제 OUTCAR 는 NKPTS 와 INCAR 태그를 되울린다. 안 쓰면 새 검사들이 전부
         #   UNVERIFIED 로 걸려 **양성 경로가 통째로 죽는다** (2026-08-12 실측).
         inc = (jd / ph / "INCAR").read_text() if (jd / ph / "INCAR").is_file() else ""
-        echo = "\n".join(f"   {k} = {m.group(1)}" for k in AUDIT_KEYS
-                          for m in [re.search(rf"^{k}\s*=\s*(\S+)", inc, re.M)] if m)
+        # ⚠ 실제 형식대로 되울린다 (2026-08-25): LDA+U 계열은 **산문형**(행 중간),
+        #   나머지는 행두형. 옛 fixture 는 전부 행두 + 한 토큰이라 새 파서와 어긋났다
+        #   — fixture 가 현실과 다르면 selftest 는 파서가 아니라 fixture 를 검사한다.
+        _exp = _incar_expected_from(inc)
+        _el = []
+        for k, v in _exp.items():
+            if k == "LDAUTYPE":
+                _el.append(f" LDA+U is selected, type is set to LDAUTYPE =  {v}")
+            elif k in ("LDAUL", "LDAUU", "LDAUJ"):
+                _el.append(f"   (fixture)      for each species {k} =   {v}")
+            else:
+                _el.append(f"   {k} = {v}")
+        echo = "\n".join(_el)
         nk = 1
         for v in str((meta.get("kmesh") or {}).get(ph, "1 1 1")).split():
             nk *= int(v)
@@ -4143,6 +4348,78 @@ def selftest() -> int:
             ("ISMEAR", "0", "1", False, "⛔정수 실제 차이"),
     ):
         chk(_incar_equal(_k, _g, _w) is _ok, f"되울림 대조 {_k} {_g}!={_w}: {_why}")
+    for _k, _g, _w, _ok, _why in (
+            ("ENCUT", "1e309", "2e309", False,
+             "⛔Decimal: 1e309≠2e309 (float 이면 둘 다 inf 로 붙어 같아진다)"),
+            ("ENCUT", "inf", "inf", False, "⛔비유한값은 일치로 치지 않는다"),
+            ("LDAUU", "0.0 6.2 0.0", "0.0  6.2  0.0", True, "목록 공백 정규화"),
+    ):
+        chk(_incar_equal(_k, _g, _w) is _ok, f"되울림 대조 {_k}: {_why}")
+
+    # ── end-to-end: OUTCAR **파일** → read_outcar → phase_gates (codex E-1 필수) ──
+    #   문자열 단위 검사는 통합 경로의 결함(예: 한 토큰 잘림)을 못 잡는다 —
+    #   wave1 에서 실제로 그랬다. 실제 파일로 전 경로를 통과시킨다.
+    import gzip as _gz
+    import tempfile as _tf
+    _BODY = (" vasp.5.4.4.18Apr17-6-g9f103f2a35 (build test) complex\n"
+             "|      So try LREAL= Auto  in the INCAR   file.        |\n"
+             "   ENCUT  =  520.0 eV  38.22 Ry\n"
+             "   ISPIN  =      2    spin polarized calculation?\n"
+             "   LREAL  =      T    real-space projection\n"
+             "   LDIPOL =      T    correct potential\n"
+             "   NUPDOWN=      4.0000    fix difference up-down\n"
+             " LDA+U is selected, type is set to LDAUTYPE =  2\n"
+             "   angular momentum for each species LDAUL =    -1    2   -1\n"
+             "   U (eV)           for each species LDAUU =   0.0  6.2  0.0\n"
+             "   J (eV)           for each species LDAUJ =   0.0  0.0  0.0\n"
+             "  energy(sigma->0) =     -100.000000\n"
+             " General timing and accounting\n")
+    _EXP = {"ENCUT": "520", "LREAL": "Auto", "LDIPOL": ".TRUE.", "ISPIN": "2",
+            "NUPDOWN": "4", "LDAUTYPE": "2", "LDAUL": "-1 2 -1",
+            "LDAUU": "0.0 6.2 0.0", "LDAUJ": "0.0 0.0 0.0"}
+
+    def _e2e(body_bytes, want=None, gz_trunc=False, both=False):
+        with _tf.TemporaryDirectory() as _d:
+            _o = os.path.join(_d, "OUTCAR")
+            if gz_trunc:
+                full = _gz.compress(body_bytes)
+                open(_o + ".gz", "wb").write(full[:len(full) // 2])
+            elif both:
+                open(_o, "wb").write(body_bytes)
+                open(_o + ".gz", "wb").write(_gz.compress(body_bytes))
+            else:
+                open(_o, "wb").write(body_bytes)
+            _oc = _az.read_outcar(_o)
+            _g2 = _az.phase_gates(_oc, "static",
+                                  {"incar_expected": {"static": want or _EXP}}, {})
+            return _oc, _g2
+
+    _oc, _g2 = _e2e(_BODY.encode())
+    chk(not any("INCAR" in x for x in _g2), f"e2e 정상: INCAR 게이트 0건 ({_g2})")
+    _au = _oc["incar_audit"]
+    chk("LDAUU" in _au["verified_exact"] and "NUPDOWN" in _au["verified_exact"],
+        f"e2e: LDAUU 목록·NUPDOWN(4.0000↔4) 이 exact ({_au['verified_exact']})")
+    chk("LREAL" in _au["verified_equivalence_class"],
+        "e2e: LREAL 은 equal 이 아니라 **등가류** (Auto/On 구분 불가를 기록)")
+    chk(any(x.startswith("MAGMOM") for x in _au["unverified"]),
+        "e2e: MAGMOM 은 **명시적 unverified** (조용한 통과 금지)")
+    _oc, _g2 = _e2e(_BODY.encode(), want=dict(_EXP, LDAUU="0.0 5.0 0.0"))
+    chk(any("INCAR_MISMATCH(static.LDAUU" in x for x in _g2),
+        f"⛔e2e음성: LDAUU 실제 차이(6.2 vs 5.0)가 **전 경로**에서 잡힌다")
+    _oc, _g2 = _e2e(_BODY.encode().replace(b"ENCUT", b"ENC\xffUT"))
+    chk(any("OUTCAR_READ_ERROR" in x for x in _g2),
+        f"⛔e2e음성: 깨진 바이트(ENC\\xffUT) → 판독 실패 (조용한 오독 금지) ({_g2[:1]})")
+    _oc, _g2 = _e2e(_BODY.encode(), gz_trunc=True)
+    chk(any("OUTCAR_READ_ERROR" in x and "gzip" in x for x in _g2),
+        "⛔e2e음성: 잘린 gzip → 예외가 아니라 판독 실패 게이트")
+    _oc, _g2 = _e2e(_BODY.encode(), both=True)
+    chk(any("OUTCAR_READ_ERROR" in x and "둘 다" in x for x in _g2),
+        "⛔e2e음성: OUTCAR + OUTCAR.gz 공존 → 정본 판정 불가")
+    _TWO = (_BODY.replace("-100.000000", "-1.000000") + _BODY.replace("-100.000000",
+                                                                      "-2.000000"))
+    _oc, _g2 = _e2e(_TWO.encode())
+    chk(any("MULTI_RUN_OUTCAR" in x for x in _g2) and _oc["E0"] == -2.0,
+        f"⛔e2e음성: 이어붙은 2실행 → MULTI_RUN + **마지막 완결 실행만** 읽음 (E0={_oc['E0']})")
     m_ak = re.search(r"^AUDIT_KEYS_RUNTIME = \((.*?)\)", az, re.M | re.S)
     if m_ak:
         _rk = {x.strip().strip('"') for x in m_ak.group(1).split(",") if x.strip()}
