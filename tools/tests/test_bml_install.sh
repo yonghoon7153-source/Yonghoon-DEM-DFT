@@ -416,6 +416,27 @@ else
   bad_ "\$HOME 으로 적힌 줄을 못 알아보고 또 넣었다"
 fi
 
+echo "나중에 늘어난 이름은 스스로 채운다"
+# 실제로 일어난 일: `bmlonly` 를 만들었는데, 이미 install 을 한 기계에서는
+# 그 이름이 영영 안 생겼다.  화면은 그 명령을 쓰라고 안내하는데 셸은
+# `command not found` 를 냈다 — 안내와 실물이 어긋나는 그 자리가 가장 오래
+# 붙잡는다.  `bml` 이 도는 김에 옆을 보고 채운다.
+HEAL="$TMP/heal"
+mkdir -p "$HEAL"
+write_launcher "$HEAL/bml" bml >/dev/null 2>&1
+rm -f "$HEAL/bmlonly"
+( PATH="$HEAL:$PATH"; heal_launchers >/dev/null 2>&1 )
+[ -x "$HEAL/bmlonly" ] && ok_ "빠진 이름을 채운다" || bad_ "빠진 이름이 그대로다"
+# 남의 `bml` 옆에 우리 이름을 뿌리지 않는다 -- PATH 어딘가의 동명이인이 있다.
+OTHER="$TMP/other"
+mkdir -p "$OTHER"
+printf '#!/bin/sh\necho not ours\n' > "$OTHER/bml"; chmod +x "$OTHER/bml"
+( PATH="$OTHER:$PATH"; heal_launchers >/dev/null 2>&1 )
+[ -e "$OTHER/bmlonly" ] && bad_ "남의 bml 옆에 뿌렸다" || ok_ "남의 bml 옆에는 안 뿌린다"
+# 이미 다 있으면 아무 말도 안 한다 -- 매번 "설치했습니다" 가 뜨면 소음이다.
+( PATH="$HEAL:$PATH"; out="$(heal_launchers 2>&1)"; [ -z "$out" ]; ) \
+  && ok_ "다 있으면 조용하다" || bad_ "다 있는데도 뭔가 출력했다"
+
 echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
