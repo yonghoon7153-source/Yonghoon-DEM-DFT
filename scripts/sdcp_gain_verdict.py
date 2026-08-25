@@ -26,6 +26,11 @@ import math
 import os
 import sys
 
+#  ★★★ 실행 계약의 단일 출처 (R3-CX-01/05/06).  자리·수렴·backend·required 를 여기서
+#    가져온다 — 사본을 두면 갈라지고, 실제로 네 번 갈라졌다.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import run_contract as _RC                                              # noqa: E402
+
 # ── prereg §3/§4 에서 **런 전에** 고정된 상수.  바꾸면 사전등록이 무효다 ─────────────
 H0_MIN_RATIO = 1.05          # h0 (이득은 물리)
 H1_RATIO = 1.015             # h1 (SDCP 부피 인공물)
@@ -108,8 +113,15 @@ FIELD_CONTRACT = {
     #  ★★ 2026-08-25 (CDXR3-3) — **물리 규약 정체성**.  적용된 인자들에서 파생된 해시라
     #    개별 필드가 하나라도 다르면 이것도 달라진다 = 요약 봉인.  required 로 둔다 —
     #    기록이 없으면 어느 규약인지 확정할 수 없다.
+    #  ★★★ 2026-08-25 (R3-CX-06, Codex 3차) — **파생 필드**다.  raw 축들의 해시이므로
+    #    독립 실험 축이 아니다.  두 가지를 강제한다:
+    #      ⓐ cross-dir 에서 이 필드의 차이는 **등록된 raw 축 변화로 설명되면 허용**한다.
+    #         옛 판은 `sdcp_yield_to_vgcf` 한 축만 바꾼 정상 A/B 를 "id 도 다르다" 는
+    #         이유로 HOLD 했다 = 과잉차단 (Codex 실측).
+    #      ⓑ `--expect-differ physics_protocol_id` 는 **거부**한다.  raw 축은 그대로 두고
+    #         id 만 바꿔 `measured` 를 얻는 경로가 있었다 (Codex 실측).
     'physics_protocol_id':  dict(scope='physics', across_dir=True, required=True,
-                            required_since='2026-08-25'),
+                            required_since='2026-08-25', derived_from='PROTOCOL_FIELDS'),
     #  요청↔적용 불일치 (payload 가 기록).  False 면 그 팔은 요청과 다른 규약으로 돌았다.
     'physics_protocol_match': dict(scope='physics', across_dir=True),
 }
@@ -203,6 +215,14 @@ def _read(path):
             #    기본값으로 접으면 missing 게이트가 원리적으로 발화하지 못한다).
             'ptfe_stamp': man.get('ptfe_stamp'),
             'physics_protocol_id': man.get('physics_protocol_id'),
+            #  ★★ 2026-08-25 (R3-CX-04) — 기록만 되고 **소비되지 않던** 둘.
+            'component_plan': man.get('component_plan'),
+            'ptfe_cells_observed': man.get('ptfe_cells_observed'),
+            'components': man.get('components'),
+            #  ★★★ 2026-08-25 (R3-CX-03) — **raw manifest 를 들고 다닌다.**  저장된
+            #    `physics_protocol_id` 만 읽으면 stale·손으로 쓴 값·축 키 부재를 못 잡는다
+            #    (Codex 가 셋 다 통과시켰다).  재계산하려면 원본이 있어야 한다.
+            '_manifest': man,
             'physics_protocol_match': (None if man.get('physics_protocol_match') is None
                                        else bool(man.get('physics_protocol_match'))),
             'ptfe_zero_dof': (None if man.get('ptfe_zero_dof') is None
@@ -275,29 +295,21 @@ def _stats(vals):
     return {'n': n, 'mean': m, 'sd': sd, 'se': sd / math.sqrt(n)}
 
 
-#: 솔버가 수렴이라고 부르는 문턱 (`step3_sigma.py:590` 과 **같은 값**이어야 한다).
-CG_RESID_MAX = 1e-6
+#: 솔버가 수렴이라고 부르는 문턱.  ★ 값은 `run_contract` 가 정본이고 여기는 별칭이다
+#  (사본을 두면 갈라진다 — 이 파일의 `_conv_ok` 가 정확히 그렇게 갈라졌다).
+CG_RESID_MAX = _RC.CG_RESID_MAX
 
 
 def _conv_ok(ci, un, rs):
     """(cg_info, unconverged, resid) → (통과?, 사유코드).  전자·이온 **공통** 검사.
 
-    ★ Codex M-R3-04/05/06: 초판은 축마다 다른 강도로 봤고 residual 문턱을 안 썼다.
-      NaN 전자 residual 이 producer→check_arm→final seal 전 구간을 통과했고,
-      ionic residual `None`·`1e100` 도 `h0` 였다.
-    ⇒ **conjunction**: cg_info 는 진짜 정수 0 · unconverged 는 진짜 bool False ·
-      resid 는 유한한 수이고 0 ≤ resid ≤ CG_RESID_MAX.  누락·모순·타입오류는 전부 실패."""
-    if ci is None or un is None or rs is None:
-        return False, 'blind'
-    if not isinstance(un, bool) or isinstance(ci, bool) or not isinstance(ci, (int, float)):
-        return False, 'type'
-    if isinstance(rs, bool) or not isinstance(rs, (int, float)):
-        return False, 'type'
-    if bool(un) or int(ci) != 0:
-        return False, 'unconv'
-    if rs != rs or rs in (float('inf'), float('-inf')) or rs < 0 or rs > CG_RESID_MAX:
-        return False, 'resid'
-    return True, ''
+    ★★★ 2026-08-25 (R3-CX-05/06, Codex 3차) — **본문을 `run_contract` 로 옮겼다.**
+      여기 사본이 있던 동안 `check_arm` 의 것과 미묘하게 달라졌고, 둘 다
+      `isinstance(ci, (int, float))` + `int(ci)` 라 **`cg_info = 0.5` 가 절삭돼 통과**했다
+      (Codex 실측: `_conv_ok(0.5, False, 1e-9) → (True, '')`).
+      ⇒ 계약은 한 곳에만 산다.  이 함수는 얇은 별칭이다 (호출부를 안 건드리려고 남긴다).
+    """
+    return _RC.conv_ok(ci, un, rs)
 
 
 def seal_lines(v):
@@ -470,20 +482,60 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                     reason=f'전자 수렴이 확인되지 않는 팔 {len(_eb)}개 '
                            f'({_eb[0][0]}: {_eb[0][1]}) — cg_info=0 ∧ unconverged=False ∧ '
                            f'0 ≤ resid ≤ {CG_RESID_MAX:g} 를 모두 만족해야 한다 (M-R3-04)'), info
+    #  ★★★ 2026-08-25 (R3-CX-04, Codex 3차) — **계획과 관측을 소비한다.**
+    #    옛 판은 `component_plan` 과 `ptfe_cells_observed` 를 매니페스트에 적기만 하고
+    #    아무도 읽지 않았다 = 증거가 아니라 장식.  Codex 가 둘 다 통과시켰다:
+    #      · `component_plan.ionic=False` + ionic disabled + σ_ion 없음  → rc 0
+    #      · `ptfe_stamp=centerline` + `ptfe_cells_observed=0`           → rc 0
+    #    ⇒ ⓐ 계획한 component 가 complete 인가 ⓑ 도장이 실제 효과를 냈는가.
+    _pl = []
+    for _k in arms:
+        for _r in arms[_k]:
+            _plan = _r.get('component_plan')
+            if not isinstance(_plan, dict) or not _plan:
+                continue                       # 옛 세대는 계획이 없다 (아래 필수 게이트 소관)
+            _cmp = _r.get('components') or {}
+            for _c in _RC.required_components(plan=_plan):
+                _st = (_cmp.get(_c) or {}).get('status') if isinstance(_cmp, dict) else None
+                if _st != 'complete':
+                    _pl.append((_r['file'], _c, _st))
+    if _pl:
+        return dict(decision='HOLD', hold_code='PLAN_NOT_MET',
+                    reason=f'계획한 component 가 완료되지 않은 팔 {len(_pl)}개 '
+                           f'({_pl[0][0]}: `{_pl[0][1]}` = {_pl[0][2]!r}) — '
+                           f'`component_plan` 은 무엇을 돌리기로 했는지의 기록이다.  '
+                           f'계획과 결과가 다르면 그 팔은 계획한 실험이 아니다 (R3-CX-04)'), info
+    _ps = [(r['file'], r.get('ptfe_stamp')) for k in arms for r in arms[k]
+           if r.get('ptfe_stamp') not in (None, '', 'off')
+           and r.get('ptfe_cells_observed') == 0]
+    if _ps:
+        return dict(decision='HOLD', hold_code='STAMP_NO_EFFECT',
+                    reason=f'PTFE 도장이 찍혔는데 관측 셀이 **0** 인 팔 {len(_ps)}개 '
+                           f'({_ps[0][0]}: `{_ps[0][1]}`) — 격자에 아무것도 안 그려졌다.  '
+                           f'그 팔의 PTFE 규약은 미스탬프와 구분되지 않는다 (R3-CX-04)'), info
     _pm = [r['file'] for k in arms for r in arms[k] if r.get('physics_protocol_match') is False]
     if _pm:
         return dict(decision='HOLD', hold_code='PROTOCOL_MISMATCH',
                     reason=f'요청한 규약과 **적용된 규약이 다른** 팔이 {len(_pm)}개 '
                            f'({_pm[0]} …) — 러너가 요청한 것과 payload 가 실제로 한 것이 '
                            f'갈렸다.  다시 돌릴 것 (CDXR3-3)'), info
-    #  ★ `unknown:` 접두 = 규약을 확정할 수 없다 (필드가 빠졌다).  통과시키지 않는다.
-    _pu = [r['file'] for k in arms for r in arms[k]
-           if isinstance(r.get('physics_protocol_id'), str)
-           and r['physics_protocol_id'].startswith('unknown:')]
+    #  ★★★ 2026-08-25 (R3-CX-03, Codex 3차) — **저장된 id 를 믿지 않고 재계산한다.**
+    #    옛 판은 문자열을 읽어 `unknown:` 접두만 봤다.  Codex 가 셋을 통과시켰다:
+    #      · 16 팔 전부 `periodic_xy`/`plate_rule` 키가 **없는데** stored 는 `p1-…`
+    #      · 팔마다 `periodic_xy` 를 True/False 로 바꿔 놓고 stored 만 같게
+    #      · 모든 팔에 `physics_protocol_id = "garbage"`
+    #    셋 다 "서로 같으니 통과" 였다.  **문자열 일치는 규약 일치가 아니다.**
+    _pu = []
+    for _k in arms:
+        for _r in arms[_k]:
+            _ok3, _why3 = _RC.protocol_ok(_r.get('_manifest') or {})
+            if not _ok3:
+                _pu.append((_r['file'], _why3))
     if _pu:
-        return dict(decision='HOLD', hold_code='PROTOCOL_UNKNOWN',
-                    reason=f'규약을 확정할 수 없는 팔이 {len(_pu)}개 ({_pu[0]} …) — '
-                           f'payload 가 규약 인자를 다 싣지 않았다.  현행 payload 로 다시 돌릴 것'), info
+        return dict(decision='HOLD',
+                    hold_code=str(_pu[0][1]).split('|', 1)[0],
+                    reason=f'규약 기록을 신뢰할 수 없는 팔 {len(_pu)}개 — '
+                           f'{_pu[0][0]}: {_pu[0][1].split("| ", 1)[-1]}'), info
     #  ★ 2026-08-25 (Codex 재리뷰 조건 5) — **`required_since` 를 사유에 싣는다.**
     #    "없으면 HOLD" 만 말하면 운영자는 이것이 *버그* 인지 *옛 세대* 인지 모른다.
     #    producer 가 그 필드를 쓰기 시작한 날짜를 같이 말해 주면 "그 이전 payload 를
@@ -700,7 +752,11 @@ def _selftest():
                 #    미스탬프가 구분되지 않으므로 규약 자체가 고정 인자다.
                 ptfe_stamp='off', ptfe_zero_dof=False,
                 #  ★ 2026-08-25 (CDXR3-3) — 현행 세대는 규약 id 를 항상 기록한다.
-                physics_protocol_id='p1-testfixture0001', physics_protocol_match=True,
+                #  ★★★ R3-CX-03: id 는 **손으로 적지 않는다**.  아래에서 raw manifest 로
+                #    계산해 넣는다 — 임의 문자열을 넣으면 그것이 곧 Codex 가 통과시킨
+                #    "garbage id" 상태이고, 픽스처가 그 구멍을 지키게 된다.
+                physics_protocol_match=True,
+                periodic_xy=False, plate_rule='p2-occupied-surface-first',
                 # ★ 2026-08-19 (A5) — 세대 인자도 픽스처에 싣는다.  안 실으면 위와 같은
                 #   이유로 새 게이트가 selftest 에서 **검증된 적 없는 코드**가 된다.
                 additive_E_GPa={'VGCF': 10.0, 'PTFE': 0.3, 'SDCP': 23.6},
@@ -708,6 +764,33 @@ def _selftest():
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
                 se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30)
+
+    #  ★★★ 2026-08-25 (R3-CX-03) — 픽스처의 **raw manifest** 를 만들고 id 를 그것에서
+    #    계산한다.  판정기는 저장값을 믿지 않고 재계산해 대조하므로, 픽스처도 실제
+    #    payload 처럼 원본을 갖고 있어야 한다 (그렇지 않으면 정상 팔이 전부 HOLD 다).
+    def _stamp_pid(man):
+        """raw manifest 에 **계산된** `physics_protocol_id` 를 박아 돌려준다.
+
+        ★ R3-CX-03: 판정기가 저장값을 믿지 않고 재계산해 대조하므로, 픽스처도 실제
+          payload 처럼 계산값을 실어야 한다.  손으로 적으면 그것이 곧 Codex 가
+          통과시킨 stale/garbage 상태이고, 픽스처가 그 구멍을 지킨다."""
+        #  현행 producer 는 **19 축을 전부** 적는다.  픽스처가 일부만 적으면 재계산이
+        #  `unknown:` 이 되고, 그 상태는 "옛 세대" 지 "현행 팔" 이 아니다.  ⇒ 빠진 축을
+        #  현행 기본값으로 채워 **완비된 현행 팔**을 흉내낸다 (옛 세대 시험은 따로 있다).
+        _DEF = {'periodic_xy': False, 'plate_rule': 'p2-occupied-surface-first',
+                'sigma_ion_se_S_cm': 0.003, 'sigma_ion_sdcp_S_cm': 0.001,
+                'sigma_am_s_S_cm': 0.010, 'sigma_am_p_S_cm': 0.005,
+                'cam': 'nmc811', 'temp_c': 25.0}
+        for _k, _v in _DEF.items():
+            man.setdefault(_k, _v)
+        man['physics_protocol_id'] = _RC.physics_protocol_id(man)
+        return man
+
+    _FIX_MAN = {k: _FIX[k] for k in _RC.PROTOCOL_FIELDS if k in _FIX}
+    _FIX_MAN['vox_um'] = _FIX['vox']
+    _FIX['physics_protocol_id'] = _RC.physics_protocol_id(_FIX_MAN)
+    _FIX_MAN['physics_protocol_id'] = _FIX['physics_protocol_id']
+    _FIX['_manifest'] = _FIX_MAN
 
     #  ★ 2026-08-20 (CDXIJ-10 ①) — 픽스처가 **origin 을 갖는다**.  팔 계약이 origin 기록·
     #    unique·두 침대 집합 동일을 요구하므로, 없는 픽스처는 (옳게) 전부 HOLD 가 된다.
@@ -905,16 +988,24 @@ def _selftest():
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
-              'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
+              #  ★ R3-CX-03: id 는 손으로 적지 않는다 — 아래 `_stamp_pid` 가 raw manifest 에서
+              #    계산해 넣는다 (손으로 적은 값 = Codex 가 통과시킨 'garbage id' 상태).
+              'physics_protocol_match': True,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
+    _stamp_pid(_man22)
 
     def _write_dir(_d, drop=None):
         """8팔 × 2침대를 **실제 payload JSON** 으로 쓴다.  `drop` 키는 매니페스트에서 뺀다."""
         for _k, _vals in (('SBE', base), ('DBE', [v * 1.12 for v in base])):
             for _i, _v in enumerate(_vals):
                 _m = {kk: vv for kk, vv in _man22.items() if kk != drop}
+                #  ★ R3-CX-03: 규약 축을 지우면 **재계산이 unknown** 이 되므로 저장된
+                #    id 도 같이 지운다 (그래야 "옛 세대 payload" 를 정직하게 흉내낸다 —
+                #    축은 없는데 id 만 최신인 것이 곧 Codex 의 stale mutant 다).
+                if drop in _RC.PROTOCOL_FIELDS:
+                    _m.pop('physics_protocol_id', None)
                 if drop == 'backend':
                     _m.pop('backend_last_solve', None)
                     _m.pop('components', None)          # 정본을 지워야 진짜 "기록 없음" 이다
@@ -951,7 +1042,9 @@ def _selftest():
               'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
               #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
               'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
-              'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
+              #  ★ R3-CX-03: id 는 손으로 적지 않는다 — 아래 `_stamp_pid` 가 raw manifest 에서
+              #    계산해 넣는다 (손으로 적은 값 = Codex 가 통과시킨 'garbage id' 상태).
+              'physics_protocol_match': True,
               'backend_last_solve': {'requested': 'gpu', 'used': 'gpu',
                                      'fallback_reason': None, 'precond': 'jacobi'},
               'components': _comps()}
@@ -1130,17 +1223,54 @@ def _selftest():
     chk(f'㊱a ★★ 요청↔적용 규약이 **다른** 팔이 있으면 HOLD (팔끼리는 같아도) '
         f'{_v36a["decision"]}/{_v36a.get("hold_code")}',
         _v36a['decision'] == 'HOLD' and _v36a.get('hold_code') == 'PROTOCOL_MISMATCH')
+    #  ★ R3-CX-03: 판정기는 **raw manifest 로 재계산**하므로 평탄 키만 바꾸면 안 된다.
+    #    실제 옛 payload 는 축 자체가 없다 ⇒ 매니페스트에서 축을 뺀다.
+    _m36b = {k: v for k, v in _FIX_MAN.items() if k not in ('vox_um', 'bridge_um')}
+    _m36b['physics_protocol_id'] = 'unknown:bridge_um,vox_um'
     _v36b = verdict(mk(base, [v * 1.12 for v in base],
-                       physics_protocol_id='unknown:vox_um,bridge_um'))
+                       physics_protocol_id=_m36b['physics_protocol_id'],
+                       _manifest=_m36b))
     chk(f'㊱b ★ 규약을 **확정할 수 없으면** HOLD (필드가 빠졌다) '
         f'{_v36b["decision"]}/{_v36b.get("hold_code")}',
         _v36b['decision'] == 'HOLD' and _v36b.get('hold_code') == 'PROTOCOL_UNKNOWN')
     _mix36 = mk(base, [v * 1.12 for v in base])
+    #  ★ 규약이 실제로 갈린 팔 = **raw 축이 다른** 팔 (id 만 손으로 바꾼 것은 R3-CX-03 의
+    #    stale mutant 이고 그것은 ㊱h 가 따로 본다).
+    _m36c = _stamp_pid(dict(_FIX_MAN, vox_um=0.125))
     for _r36 in _mix36['DBE']:
-        _r36['physics_protocol_id'] = 'p1-otherprotocol01'    # 규약이 갈린 팔
+        _r36['physics_protocol_id'] = _m36c['physics_protocol_id']
+        _r36['_manifest'] = _m36c
+        _r36['vox'] = 0.125
     _v36c = verdict(_mix36)
-    chk(f'㊱c ★ 규약 id 가 팔마다 다르면 HOLD ({_v36c["decision"]})',
-        _v36c['decision'] == 'HOLD' and 'physics_protocol_id' in (_v36c.get('reason') or ''))
+    chk(f'㊱c ★ 규약이 갈린 팔이 섞이면 HOLD ({_v36c["decision"]}: '
+        f'{(_v36c.get("reason") or "")[:60]})',
+        _v36c['decision'] == 'HOLD'
+        and any(_t in (_v36c.get('reason') or '')
+                for _t in ('physics_protocol_id', 'vox')))
+    #  ★★★ ㊱h (R3-CX-03) — **stored id 만 손으로 바꾼** 팔.  raw 축은 그대로다.
+    #    Codex 실측: 옛 판은 "서로 같으니 통과" 였고, 전부 `"garbage"` 여도 통과했다.
+    for _lbl36, _bad36 in (('손으로 쓴 값', 'p2-handwritten00'), ('쓰레기', 'garbage')):
+        _mh = mk(base, [v * 1.12 for v in base])
+        for _k36 in _mh:
+            for _r36h in _mh[_k36]:
+                _r36h['physics_protocol_id'] = _bad36
+                _r36h['_manifest'] = dict(_FIX_MAN, physics_protocol_id=_bad36)
+        _vh = verdict(_mh)
+        chk(f'㊱h ★★ stored id 가 {_lbl36} 이면 HOLD — **팔끼리 같아도**.  '
+            f'문자열 일치는 규약 일치가 아니다 ({_vh["decision"]}/{_vh.get("hold_code")})',
+            _vh['decision'] == 'HOLD' and _vh.get('hold_code') == 'PROTOCOL_ID_STALE')
+    #  ★ 축 키가 아예 없는 옛 세대 (Codex 의 16-팔 mutant)
+    _mo = mk(base, [v * 1.12 for v in base])
+    _mano = {k: v for k, v in _FIX_MAN.items() if k not in ('periodic_xy', 'plate_rule')}
+    _mano['physics_protocol_id'] = 'p1-old17fieldhash0'
+    for _k36 in _mo:
+        for _r36o in _mo[_k36]:
+            _r36o['physics_protocol_id'] = _mano['physics_protocol_id']
+            _r36o['_manifest'] = _mano
+    _vo = verdict(_mo)
+    chk(f'㊱i ★★ 축 키가 **없는** 옛 세대는 HOLD (stored 가 `p1-…` 라도) '
+        f'({_vo["decision"]}/{_vo.get("hold_code")})',
+        _vo['decision'] == 'HOLD' and _vo.get('hold_code') == 'PROTOCOL_UNKNOWN')
     _v36d = verdict(mk(base, [v * 1.12 for v in base]))
     chk(f'㊱d 음성 대조 — 규약이 일치하면 통과 ({_v36d["decision"]})',
         _v36d['decision'] == 'h0')
@@ -1155,7 +1285,7 @@ def _selftest():
     _id1 = _p36.physics_protocol_id(_man36)
     _id2 = _p36.physics_protocol_id(dict(_man36, vox_um=0.125))
     chk(f'㊱e ★ 규약 id 가 인자에 **반응한다** (vox 만 바꿔도 달라진다) {_id1[:10]} vs {_id2[:10]}',
-        _id1 != _id2 and _id1.startswith('p1-'))
+        _id1 != _id2 and _id1.startswith(_RC.PROTOCOL_SCHEMA + '-'))
     chk('㊱f ★ 같은 인자면 같은 id (결정론)',
         _p36.physics_protocol_id(dict(_man36)) == _id1)
     _man36b = dict(_man36)
@@ -1323,9 +1453,15 @@ def _selftest():
                'sigma_vgcf_S_cm': sig_vgcf, 'sigma_sdcp_S_cm': 250.0,
                'sdcp_yield_to_vgcf': yvgcf, 'sigma_ptfe_S_cm': 0.0,
                'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
-               'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
+               #  ★ R3-CX-03: id 는 손으로 적지 않는다 — 아래 `_stamp_pid` 가 raw manifest 에서
+              #    계산해 넣는다 (손으로 적은 값 = Codex 가 통과시킨 'garbage id' 상태).
+              'physics_protocol_match': True,
                'code_sha': 'abc1234', 'components': _comps()}
         _m0.update(_gen)                        # 세대 인자 노브 (㉗e/f 용)
+        #  ★ R3-CX-03: 노브를 반영한 **뒤에** id 를 계산한다 (그래야 축이 바뀌면 id 도
+        #    바뀌는 실제 거동을 픽스처가 재현한다 — 손으로 적으면 그 결합이 사라진다).
+        if 'physics_protocol_id' not in _gen:
+            _stamp_pid(_m0)
         for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
             for _i in range(n):
                 _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
@@ -1340,7 +1476,8 @@ def _selftest():
         _mk2(_A, yvgcf=False, dbe_mul=1.42)          # 대조 = 생산 규약
         _mk2(_B, yvgcf=True, dbe_mul=1.29)           # 실험 = σ-치환 OFF
         _c = compare_dirs(_A, _B, _EXP)
-        chk(f'㉗a 정상 증인 — 한 축만 다르면 measured ({_c["decision"]})',
+        chk(f'㉗a 정상 증인 — 한 축만 다르면 measured ({_c["decision"]}: '
+            f'{(_c.get("reason") or "")[:90]})',
             _c['decision'] == 'measured')
         chk(f'㉗a 감소율 산술이 맞다 ({_c.get("reduction_pct")})',
             _c['decision'] == 'measured'
@@ -1414,8 +1551,10 @@ def _selftest():
         _mk2(_A, yvgcf=False, dbe_mul=1.42)
         _mk2(_B, yvgcf=True, dbe_mul=1.29, physics_protocol_id='unknown:vox_um')
         _c = compare_dirs(_A, _B, _EXP)
-        chk(f'㊳d ★ `unknown:` 규약이 B 에 있으면 HOLD (SELF-01 이 만든 상태) ({_c["decision"]})',
-            _c['decision'] == 'HOLD' and '규약을 확정할 수 없는' in (_c.get('reason') or '')
+        chk(f'㊳d ★ `unknown:` 규약이 B 에 있으면 HOLD (SELF-01 이 만든 상태) '
+            f'({_c["decision"]}/{_c.get("hold_code")})',
+            _c['decision'] == 'HOLD'
+            and _c.get('hold_code') in ('PROTOCOL_UNKNOWN', 'PROTOCOL_ID_STALE')
             and (_c.get('reason') or '').startswith('[디렉터리 B]'))
     #  ★ 구조 — 두 게이트가 **같은 함수**를 부른다.  인라인 사본이 다시 생기면 여기서 걸린다.
     #  ⚠ 함수 본문은 **AST 로** 잘라낸다.  문자열 `.index('def verdict(')` 로 자르면
@@ -1450,6 +1589,60 @@ def _selftest():
     _vcr = [_f for _f in _ast38.parse(_self).body
             if isinstance(_f, _ast38.FunctionDef) and _f.name == '_validate_contract_raw'][0]
     _rets = _own_returns(_vcr)
+    #  ── ㊵ 2026-08-25 (R3-CX-04, Codex 3차) — **계획·관측을 소비하는가** ──────────────
+    #    Codex 가 통과시킨 두 payload 를 그대로 상주 회귀로 만든다.
+    #  ⓐ 계획은 ionic 을 켰는데 component 는 disabled
+    _c40 = (mk(base, [v * 1.12 for v in base],
+                      component_plan={'electronic': True, 'ionic': True, 'thermal': False,
+                                      'pore': False, 'collector': False},
+                      components={'electronic': {'status': 'complete'},
+                                  'ionic': {'status': 'disabled'}}))
+    _v40 = verdict(_c40)
+    chk(f'㊵a ★★ 계획한 `ionic` 이 disabled 면 HOLD — 옛 판은 기록만 하고 안 읽어 rc 0 '
+        f'이었다 ({_v40["decision"]})',
+        _v40['decision'] == 'HOLD' and _v40.get('hold_code') == 'PLAN_NOT_MET')
+    #  ⓑ 계획대로 다 complete → 통과 (과잉차단 아님)
+    _c40b = (mk(base, [v * 1.12 for v in base],
+                       component_plan={'electronic': True, 'ionic': False, 'thermal': False,
+                                       'pore': False, 'collector': False},
+                       components={'electronic': {'status': 'complete'},
+                                   'ionic': {'status': 'disabled'}}))
+    chk(f'㊵b ★ 계획이 ionic 을 **끄고** disabled 면 통과 (LEAN=2 생산 경로)',
+        verdict(_c40b)['decision'] != 'HOLD'
+        or verdict(_c40b).get('hold_code') != 'PLAN_NOT_MET')
+    #  ⓒ 도장은 centerline 인데 관측 셀 0
+    _c40c = (mk(base, [v * 1.12 for v in base],
+                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=0))
+    _v40c = verdict(_c40c)
+    chk(f'㊵c ★★ PTFE 도장 + 관측 셀 0 이면 HOLD — 미스탬프와 구분되지 않는다 '
+        f'({_v40c["decision"]})',
+        _v40c['decision'] == 'HOLD' and _v40c.get('hold_code') == 'STAMP_NO_EFFECT')
+    _c40d = (mk(base, [v * 1.12 for v in base],
+                       ptfe_stamp='centerline', ptfe_zero_dof=True, ptfe_cells_observed=41234))
+    chk('㊵d ★ 관측 셀이 있으면 통과 (과잉차단 아님)',
+        verdict(_c40d).get('hold_code') != 'STAMP_NO_EFFECT')
+
+    #  ── ㊶ 2026-08-25 (R3-CX-06) — **파생 id 는 축이 아니다** (과잉·누락 양방향) ────────
+    #    Codex 실측 두 건:
+    #      ⓐ 과잉차단 — `sdcp_yield_to_vgcf` 한 축만 바꾼 **정상** A/B 를, 파생 id 도
+    #         달라졌다는 이유로 별도 고정축 불일치로 세어 HOLD 했다.
+    #      ⓑ 누락차단 — raw 축은 그대로 두고 stored id 만 바꿔
+    #         `--expect-differ physics_protocol_id` 로 주면 `measured` 가 났다.
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42)
+        _mk2(_B, yvgcf=True, dbe_mul=1.29)
+        _c41 = compare_dirs(_A, _B, {'sdcp_yield_to_vgcf'})
+        chk(f'㊶a ★★ 등록 축이 실제로 바뀌면 **파생 id 변화는 결과**다 → measured '
+            f'({_c41["decision"]}: {(_c41.get("reason") or "")[:60]})',
+            _c41['decision'] == 'measured')
+    #  ⓑ raw 축은 같은데 id 만 다르다 = 기록이 손으로 바뀐 것
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42)
+        _mk2(_B, yvgcf=False, dbe_mul=1.29, physics_protocol_id='p2-handedited00000')
+        _c41b = compare_dirs(_A, _B, {'sdcp_yield_to_vgcf'})
+        chk(f'㊶b ★★ raw 축은 같은데 id 만 다르면 HOLD ({_c41b["decision"]})',
+            _c41b['decision'] == 'HOLD')
+
     #  ── ㊴ 2026-08-25 (Codex 재리뷰 조건 4) — **새 규약 축 둘** ────────────────────────
     #    `periodic_xy` (seam 면이 회로에 드는가) 와 `plate_rule` (CDXR3-6 이 바꾼 결합 규약,
     #    σ_e **절대값**이 달라진다) 이 `PROTOCOL_FIELDS` 에 들어갔다.  판정기는 해시로만
@@ -1507,8 +1700,11 @@ def _selftest():
                'sdcp_yield_to_vgcf': False, 'sigma_ptfe_S_cm': 0.0,
                #  ★ 2026-08-24 (CDXR2-6) — 현행 세대 payload 는 PTFE 규약을 항상 기록한다.
                'ptfe_stamp': 'off', 'ptfe_zero_dof': False,
-               'physics_protocol_id': 'p1-testfixture0001', 'physics_protocol_match': True,
+               #  ★ R3-CX-03: id 는 손으로 적지 않는다 — 아래 `_stamp_pid` 가 raw manifest 에서
+              #    계산해 넣는다 (손으로 적은 값 = Codex 가 통과시킨 'garbage id' 상태).
+              'physics_protocol_match': True,
                'code_sha': 'abc1234', 'components': _comps()}
+        _stamp_pid(_m0)                       # ★ R3-CX-03: 재계산 대조를 통과하는 현행 팔
         for _k, _mul, _ad, _ad2, _dg in (('SBE', 1.0, s_add, s_add2, s_dig),
                                          ('DBE', 1.12, d_add, d_add2, d_dig)):
             for _i in range(n):
@@ -1620,6 +1816,20 @@ def compare_dirs(dir_a, dir_b, expect_differ):
             #    사이에서 **자유롭게 달라져도 `measured`** 를 냈다 (Codex 실측).
             for fld in _XDIR_FIELDS:
                 same = _canon(ra.get(fld)) == _canon(rb.get(fld))
+                #  ★★★ 2026-08-25 (R3-CX-06) — **파생 필드는 스스로 축이 아니다.**
+                #    `physics_protocol_id` 는 raw 축들의 해시다.  등록 축이 정말 달라졌다면
+                #    id 가 달라지는 것은 **결과**이지 위반이 아니다.  옛 판은 그것을 별도
+                #    고정축 불일치로 세어 정상 한-축 실험을 HOLD 했다 (Codex 실측 과잉차단).
+                #    ⇒ 등록 축이 실제로 달라진 경우에만 id 차이를 자동 허용한다.
+                #      (등록 축이 안 달라졌는데 id 만 다르면 그것은 여전히 위반이다.)
+                if FIELD_CONTRACT.get(fld, {}).get('derived_from') and not same:
+                    if any(_canon(ra.get(_x)) != _canon(rb.get(_x)) for _x in expect_differ):
+                        continue
+                    return dict(out, decision='HOLD',
+                                reason=f'{bed} {key} 에서 파생 필드 `{fld}` 가 다른데 등록 축 '
+                                       f'{sorted(expect_differ)} 는 **같다** — id 는 raw 축의 '
+                                       f'해시이므로 이런 조합은 기록이 손으로 바뀐 것이다 '
+                                       f'(R3-CX-06)')
                 if fld in expect_differ:
                     if not same:
                         differed.add(fld)
@@ -1764,6 +1974,15 @@ if __name__ == '__main__':
         _bad = _exp - set(_FIXED_FIELDS)
         if _bad:
             raise SystemExit(f'알 수 없는 인자 {sorted(_bad)} — 가능: {list(_FIXED_FIELDS)}')
+        #  ★★★ 2026-08-25 (R3-CX-06) — **파생 필드는 실험 축이 아니다.**  Codex 실측:
+        #    raw 축은 그대로 두고 stored id 만 바꿔 `--expect-differ physics_protocol_id`
+        #    로 주면 `measured` 가 났다.  id 는 raw 축의 해시이므로 그것을 "바꾼" 실험은
+        #    물리 실험이 아니라 **기록 조작**이다.
+        _der = sorted(f for f in _exp if FIELD_CONTRACT.get(f, {}).get('derived_from'))
+        if _der:
+            raise SystemExit(f'`--expect-differ` 에 파생 필드 {_der} 는 쓸 수 없다 — '
+                             f'raw 축의 해시이지 독립 축이 아니다.  바꾸려는 raw 축을 '
+                             f'직접 등록할 것 (R3-CX-06)')
         c = compare_dirs(a.dir, a.compare_dir, _exp)
         print(f'\n══ 대조쌍 검증 ══\n  결정: **{c["decision"]}**\n  근거: {c["reason"]}')
         if c['decision'] == 'measured':

@@ -46,6 +46,9 @@ run() {
 }
 
 echo "── selftest (검사기가 맞나) ──"
+#  ★★★ 2026-08-25 (R3-CX-01/05/06) — 실행 계약의 **단일 출처**.  이것이 맞아야
+#    producer·check_arm·판정기가 같은 계약을 쓴다 (세 사본이 갈린 것이 R3 의 뿌리).
+run 'run_contract          --selftest' python3 scripts/run_contract.py --selftest
 run 'check_review_findings   --selftest' python3 scripts/check_review_findings.py --selftest
 run 'check_method_discipline --selftest' python3 scripts/check_method_discipline.py --selftest
 run 'sdcp_gain_verdict       --selftest' python3 scripts/sdcp_gain_verdict.py --selftest

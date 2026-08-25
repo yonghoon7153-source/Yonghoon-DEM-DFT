@@ -786,6 +786,7 @@ def check_claims_ledger(path=LEDGER, verbose=True):
 #   ⚠ 목록에 더할 때는 실제로 두 파일에 배선하고 나서 더할 것 — 이 목록만 늘리면
 #     규칙 K 자신이 "선언만 있고 실행이 없는" 그것이 된다.
 K_REQUIRED_SELFTESTS = (
+    ('scripts/run_contract.py', '--selftest'),
     ('scripts/check_review_findings.py', '--selftest'),
     ('scripts/check_method_discipline.py', '--selftest'),
     ('scripts/sdcp_gain_verdict.py', '--selftest'),
@@ -1007,6 +1008,19 @@ def check_runner_integration(verbose=True, runner=None):
                 f'L_SEALORDER| `--collect-only` 가 봉인보다 **먼저** 나온다 '
                 f'(줄 {[i + 1 for i in _early]} vs 봉인 {_seal_i + 1}) — 원값 표를 보고 '
                 f'봉인을 통과시킬지 고를 수 있으면 눈먼 봉인이 아니다 (조건 1)')
+    #  ⓕ ★★ 2026-08-25 (R3-CX-04) — 생산 봉인이 **digest 를 요구**하는가, 그리고
+    #     `P2_EXTRA` 가 규약 인자를 **거부**하는가 (주의 문구는 게이트가 아니다).
+    if '--require-digest' not in '\n'.join(_rl):
+        problems.append('L_NODIGEST| 최종 봉인이 `--require-digest` 를 넘기지 않는다 — '
+                        '같은 침대·재현 가능한 코드라는 증거 없이 통과한다 (R3-CX-04)')
+    _pb = _sp.run(['bash', '-c',
+                   f'set -e; sed -n "1,140p" {_p!r} > "$0"; P2_EXTRA="--periodic" bash "$0"',
+                   os.path.join(_tf.gettempdir(), 'l_p2extra_probe.sh')],
+                  capture_output=True, text=True, timeout=120)
+    if 'P2_EXTRA' not in (_pb.stdout or '') + (_pb.stderr or ''):
+        problems.append('L_P2EXTRA| `P2_EXTRA="--periodic"` 가 **거부되지 않는다** — '
+                        'P2_EXTRA 는 조립 문자열 맨 뒤라 러너의 `--expect-physics` 선언을 '
+                        '덮는다.  주의 주석은 게이트가 아니다 (R3-CX-04)')
     if verbose and not problems:
         print(f'  ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 {len(_need)}플래그 · '
               f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리 · '
@@ -1300,12 +1314,22 @@ def smoke_assert_payload(out, label, errs, warns, expect=None):
     #    ⇒ 여기서 **접두사**를 본다.  `unknown:` 뒤에 빠진 필드 이름이 그대로 실려 있으므로
     #      이 한 줄이 "규약 필드를 새로 넣고 producer 에 안 쓴" 부류를 전부 잡는다.
     #    ⚠ 필드 목록을 여기 **다시 적지 않는다** — 그것이 backend/bridge_um 두 사고의 원인이다.
-    _pid = ((s3.get('manifest') or {}).get('physics_protocol_id'))
-    if not (isinstance(_pid, str) and _pid.startswith('p1-')):
-        errs.append(f'J_PROTOCOL| {label}: physics_protocol_id 가 확정되지 않았다 '
-                    f'({_pid!r}) — `unknown:` 뒤가 producer 가 매니페스트에 **안 쓴** '
-                    f'PROTOCOL_FIELDS 다.  그 상태의 id 는 모든 팔에서 같은 상수라 '
-                    f'규약 게이트가 무발화한다 (2026-08-25 vox_um 실사고)')
+    #  ⚠ 접두사를 **여기 적지 않는다** — 스키마를 올릴 때마다 이 줄이 낡는다 (실제로
+    #    `p1-` 하드코딩이 `p2` 승격에서 규칙 J 를 빨갛게 만들었다).
+    #  ★ 그리고 접두사만 보지 않는다 — `run_contract.protocol_ok` 로 **재계산 대조**까지
+    #    한다 (저장값이 raw manifest 와 다른 stale/손으로 쓴 값을 producer 단계에서 잡는다).
+    try:
+        if os.path.join(ROOT, 'scripts') not in sys.path:
+            sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+        import run_contract as _rc_j
+        _ok_j, _why_j = _rc_j.protocol_ok(s3.get('manifest') or {})
+        if not _ok_j:
+            errs.append(f'J_PROTOCOL| {label}: 규약 기록이 계약을 만족하지 않는다 — '
+                        f'{_why_j}.  producer 가 축을 다 싣지 않았거나 저장값이 raw '
+                        f'manifest 와 다르다 (R3-CX-03; 2026-08-25 vox_um 실사고)')
+    except Exception as _e_j:                          # noqa: BLE001
+        errs.append(f'J_PROTOCOL_ERR| {label}: 규약 대조가 죽었다 '
+                    f'({type(_e_j).__name__}: {_e_j}) — 확인 못 한 것을 통과시키지 않는다')
     return (bad, comps)
 
 
@@ -1329,9 +1353,14 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         if not se_p:
             return (['J_NO_NUMPY| numpy 가 없어 스모크 픽스처를 만들 수 없다 — '
                      '확인 못 한 것을 통과시키지 않는다 (fail-closed)'], warns)
+        #  ★ 2026-08-25 (R3-CX-04) — `collector_geom` 도 **명시**한다.  성공 경로가
+        #    도장을 안 찍고 있었는데 기대 맵에 없어서 안 보였다 (계획은 True 인데
+        #    component 는 아예 없는 상태 = "껐다" 와 "죽었다" 를 구분 못 함).
         _EXP_STD = {'electronic': 'complete', 'thermal': 'complete',
+                    'collector_geom': 'complete',
                     'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
         _EXP_LEAN = {'electronic': 'complete', 'thermal': 'disabled',
+                     'collector_geom': 'disabled',
                      'ionic': 'disabled', 'pore': 'disabled', 'pnm': 'disabled'}
         arms = [('plain  (--fibre 없음 = 첨가제 없는 킷)',
                  ['--scaffold', am, '--se', se_p], _EXP_STD),
@@ -1376,6 +1405,38 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
                 _st = ', '.join('%s=%s' % (k, (v or {}).get('status'))
                                 for k, v in comps.items())
                 print(f'  ✓ {label} — {_st}')
+        #  ★★★ 2026-08-25 (R3-CX-01, Codex 3차) — **producer → check_arm → move 통합.**
+        #    `check_arm` 의 `_STEP3_PATHS` 가 `metrics` 오타라 **모든 실제 팔을 거부**했다
+        #    (러너의 cache·fresh 두 경로가 이것을 부른다 = 생산 전면 차단).  selftest 는
+        #    75/75 초록이었다 — 내 fixture 가 실제 producer 가 아니라 **틀린 자리**에
+        #    쓰고 있었기 때문이다.  픽스처가 버그를 인코딩하면 selftest 는 그 버그를 지킨다.
+        #    ⇒ 이 부류의 유일한 증인은 **실제 producer 산출물을 CLI 에 그대로 먹이는 것**.
+        #      손으로 만든 payload 는 producer 를 증명하지 못한다.
+        _arm = os.path.join(d, 'p_0.json')          # 위 plain 팔이 실제로 만든 것
+        if os.path.exists(_arm):
+            _chk = os.path.join(ROOT, 'scripts', 'sr01_stamp_compare.py')
+            _cr = _sp.run([sys.executable, _chk, '--check-arm', _arm, '--stamp', 'point'],
+                          capture_output=True, text=True, timeout=300, cwd=d)
+            if _cr.returncode != 0:
+                errs.append(f'J_ARMCHK| **실제 producer 산출물을 `check_arm` 이 거부한다** '
+                            f'(exit {_cr.returncode}: '
+                            f'{((_cr.stdout or "") + (_cr.stderr or "")).strip()[-160:]}) — '
+                            f'러너의 cache·fresh 두 경로가 이것을 부르므로 생산이 전면 차단된다 '
+                            f'(R3-CX-01)')
+            elif verbose:
+                print('  ✓ producer → check_arm — 실제 산출물을 그대로 받아들인다')
+            #  ★ 판별력 자기증명 — 스탬프를 **틀리게** 주면 거부해야 한다 (관대해서 통과가
+            #    아니라 정말 읽고 있다는 증거).
+            _cw = _sp.run([sys.executable, _chk, '--check-arm', _arm, '--stamp', 'segment'],
+                          capture_output=True, text=True, timeout=300, cwd=d)
+            if _cw.returncode == 0:
+                errs.append('J_ARMCHK_BLIND| `check_arm` 이 **틀린 스탬프**(segment vs 실제 '
+                            'point)도 통과시킨다 — 자리를 못 찾아 조용히 넘어가는 것과 '
+                            '구분되지 않는다')
+        else:
+            errs.append('J_ARMCHK_NOFILE| plain 팔 산출물이 없어 통합 회귀를 돌리지 못했다 — '
+                        '확인 못 한 것을 통과시키지 않는다')
+
         #  ★★★ 2026-08-25 (Codex 재리뷰 조건 7) — **실패 경로도 실물로 태운다.**
         #    여태 규칙 J 는 성공 팔만 돌렸다.  그래서 `_payload_reject_reason` 이
         #    ⓐ 정확히 어떤 코드로 끝나는지 ⓑ 최종 파일명을 정말 안 쓰는지 ⓒ 진단본을
@@ -1842,6 +1903,15 @@ def _selftest():
         any(x.startswith('L_PROBE') for x in _m5))
     _m6 = _rmut('  echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"',
                 '  python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only')
+    _m10 = _rmut('--require-arms "$PREREG_ARMS" --require-digest',
+                 '--require-arms "$PREREG_ARMS"')
+    chk(f'L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** ({len(_m10)}건)',
+        any(x.startswith('L_NODIGEST') for x in _m10))
+    _m11 = _rmut("""for _b in $_P2_BANNED; do""",
+                 'for _b in ; do')
+    chk(f'L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 '
+        f'아니다 ({len(_m11)}건)',
+        any(x.startswith('L_P2EXTRA') for x in _m11))
     _m7 = _rmut('$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$PS_FLAG$EP_FLAG$FS_FLAG')
     chk(f'L-8: ★★ 러너 자기설정 선언(`$XP_FLAG`)이 인자열에서 빠지면 **잡는다** — '
         f'첫 팔의 id 를 베끼면 첫 팔이 진리가 된다 (조건 4) ({len(_m7)}건)',

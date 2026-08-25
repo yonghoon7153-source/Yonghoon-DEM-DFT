@@ -23,6 +23,11 @@ import json
 import importlib.util
 import os as _os
 import sys as _sys
+
+#  ★★★ 실행 계약의 단일 출처 (R3-CX-01/04/05/06).  자리·수렴·수치·backend·required 를
+#    여기서 가져온다 — producer 와 두 소비자가 **같은 함수**를 써야 계약이 갈라지지 않는다.
+_sys.path.insert(0, _os.path.dirname(_os.path.abspath(__file__)))
+import run_contract as _RC                                              # noqa: E402
 import numpy as np
 
 _THIS_DIR = _os.path.dirname(_os.path.abspath(__file__))
@@ -479,49 +484,13 @@ PTFE_STAMP_NEEDS_DIA = ('capsule',)
 #   이것은 **물리 의미**다 — 둘 중 하나가 다른 하나를 대신하지 못한다 (Codex).
 #   여기 적힌 인자가 하나라도 다르면 **다른 규약**이고, 그 결과는 섞으면 안 된다.
 #   ⚠ 값은 **적용된 것**(applied)이지 요청값이 아니다.  요청↔적용 불일치는 별 필드로 남긴다.
-#  ★★ 2026-08-25 (Codex 재리뷰 조건 4) — 둘을 **더 넣는다**.
-#    · `periodic_xy` : x·y 경계 규약.  seam 면이 회로에 들어가는지가 달라진다 (Codex #7)
-#      — 물리 인자인데 규약 해시에 없어서 주기 팔과 비주기 팔이 섞여도 안 걸렸다.
-#    · `plate_rule`  : 플레이트 결합 규약 판 (`step3_sigma.PLATE_RULE_VERSION`).
-#      CDXR3-6 이 이 규칙을 바꿔 **σ_e 절대값이 바뀌었다** — 옛 판 산출물과 새 판
-#      산출물은 같은 침대·같은 vox 라도 다른 수를 낸다.  섞이면 안 되므로 해시에 넣는다.
-#  ⚠ 축을 늘리면 **모든 id 가 바뀐다**.  그것이 의도다 — 규약이 실제로 달라졌으므로
-#    옛 팔과 새 팔은 다른 실험이고, 판정기가 그것을 섞지 못하게 해야 한다.
-PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sphere_d_um',
-                   'sdcp_yield_to_vgcf', 'ptfe_stamp', 'ptfe_zero_dof',
-                   'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
-                   'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
-                   'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c',
-                   'periodic_xy', 'plate_rule')
-
-
-def physics_protocol_id(man):
-    """적용된 규약 dict → 안정 해시 문자열.  **선언이 아니라 결과**다.
-
-    ★ 왜 (Codex CDXR3-3): 러너가 요청한 규약과 payload 가 실제로 적용한 규약을
-      **end-to-end 로 대조할 방법이 없었다**.  `_ptscenterline` OUTDIR 에서 모든 팔이
-      조용히 `off` 로 돌아도 서로만 같으면 초록이었다.
-    ⚠ 값이 하나라도 **없으면** 규약을 확정할 수 없다 → `unknown:<빠진 필드>` 를 낸다
-      (임의 기본값으로 채우지 않는다 — 그것이 fail-open 이다)."""
-    import hashlib as _hl
-    #  ★★ 2026-08-25 (M-R3-02, Codex 재리뷰) — **`None` 이 곧 missing 은 아니다.**
-    #    `temp_c=None` 은 "온도 기능 OFF" 라는 **유효값**이고 생산 기본이다 (러너가
-    #    `--temp-c` 를 안 준다).  옛 판은 그것을 missing 으로 읽어 정상 16팔이 전부
-    #    `unknown:temp_c` 가 됐고, 내가 넣은 게이트가 그것을 HOLD 로 잡았다 =
-    #    **내가 만든 생산 과잉차단**.  ⇒ OFF 가 정당한 축은 sentinel 로 정규화한다.
-    _OFF_OK = ('temp_c',)          # None = 명시적 OFF 인 축
-    _v = {}
-    for k in PROTOCOL_FIELDS:
-        if man.get(k) is None and k in _OFF_OK:
-            _v[k] = '__OFF__'      # 값이 없는 것과 **끈 것**을 구분해 해시에 넣는다
-        else:
-            _v[k] = man.get(k)
-    _miss = [k for k in PROTOCOL_FIELDS if _v[k] is None]
-    if _miss:
-        return 'unknown:' + ','.join(sorted(_miss))
-    _canon = json.dumps(_v, sort_keys=True,
-                        ensure_ascii=False, separators=(',', ':'))
-    return 'p1-' + _hl.sha256(_canon.encode('utf-8')).hexdigest()[:16]
+#  ★★★ 2026-08-25 (R3-CX-03, Codex 3차) — **규약 정의를 여기 적지 않는다.**
+#    producer 와 두 소비자가 각자 목록을 갖고 있었고, 소비자는 저장된 id 를 **읽기만**
+#    했다.  그래서 Codex 가 셋을 통과시켰다: 축 키가 아예 없는 옛 팔 · 팔마다 축이
+#    다른데 stored id 만 같은 팔 · `physics_protocol_id="garbage"` 인 팔.
+#    **문자열 일치는 규약 일치가 아니다.**  ⇒ 정의도 계산도 `run_contract` 하나만 쓴다.
+PROTOCOL_FIELDS = _RC.PROTOCOL_FIELDS
+physics_protocol_id = _RC.physics_protocol_id
 
 #: PTFE 스탬프 규약 이름들.  '' = 옛 규약 유도 (매니페스트에 legacy-unversioned).
 PTFE_STAMPS = ('off', 'centerline', 'capsule')
@@ -585,12 +554,19 @@ def _payload_reject_reason(a, step3):
                 f'설정**을 기준으로 한다 (첫 팔을 베끼면 첫 팔이 진리가 된다)')
     if _m.get('status') == 'disabled':
         return None
-    _req = ['electronic'] + ([] if a.no_ion else ['ionic'])
+    #  ★★★ 2026-08-25 (R3-CX-04, Codex 3차) — **계획한 것을 전부 센다.**  옛 판은
+    #    `electronic` + 조건부 `ionic` 만 하드코딩했다 ⇒ LEAN=0 에서 thermal·pore·pnm·
+    #    collector_geom 을 하나씩 `failed` 로 바꿔도 reject reason 이 **전부 None** 이었다
+    #    (Codex 실측).  `component_plan` 을 기록만 하고 **소비하지 않았다**.
+    #    ⇒ required 는 `run_contract.required_components` 가 계획에서 파생한다
+    #      (계획 키 `collector` ↔ component 이름 `collector_geom` 불일치도 거기서 흡수).
+    _req = list(_RC.required_components(plan=_m.get('component_plan'),
+                                        no_ion=bool(a.no_ion), no_thermal=bool(a.no_thermal),
+                                        no_pore=bool(a.no_pore),
+                                        no_collector=bool(a.no_collector)))
     _cmp = _m.get('components') or {}
-    #  ★ 2026-08-25 (Codex 재리뷰 조건 7) — **required 만 센다.**  초판은 `failed`/`missing`
-    #    목록을 통째로 붙여, `--no-ion --no-thermal` 런에서 사유가
-    #    `['electronic', 'ionic(missing)', 'pnm(missing)', 'pore(missing)', 'thermal(missing)']`
-    #    처럼 나왔다 — **원인 하나가 잡음 넷에 묻힌다**.  required 밖은 애초에 요구가 아니다.
+    #  ★ 2026-08-25 (조건 7) — **required 만 센다.**  초판은 `failed`/`missing` 목록을 통째로
+    #    붙여 원인 하나가 잡음 넷에 묻혔다.  required 밖은 애초에 요구가 아니다.
     _bad = [f'{c}({(_cmp.get(c) or {}).get("status") or "absent"})' for c in _req
             if not isinstance(_cmp.get(c), dict) or _cmp[c].get('status') != 'complete']
     _bad += [f'{c}(failed)' for c in (_m.get('failed') or []) if c in _req]
@@ -599,6 +575,26 @@ def _payload_reject_reason(a, step3):
         #  ★ 인과 코드 — 러너·규칙 J 가 문자열이 아니라 **코드**로 짝지을 수 있게 (조건 7).
         return (f'STEP3_REQUIRED_INCOMPLETE: required component 가 완료되지 않았다: '
                 f'{sorted(set(_bad))} (required={_req}).  `--allow-partial-step3` 로만 연다')
+    #  ★★★ R3-CX-05 — **수치 증거**.  옛 판은 status 문자열만 봐서 `sigma_e=None` ·
+    #    `cg_resid=NaN` · `cg_info=99` 인 payload 를 전부 게시했다 (Codex 실측 4종).
+    #    게시 순서를 고친 것과 **검사 내용**은 다른 문제다.
+    if not a.allow_partial_step3:
+        _nok, _nwhy = _RC.numeric_ok(step3)
+        if not _nok:
+            return f'STEP3_NUMERIC_EVIDENCE: {_nwhy}'
+        #  ★ required component 는 **자기 backend 도장**이 있어야 한다 (폴백 금지).
+        _nb = [c for c in _req if _RC.component_backend(step3, c) is None]
+        if _nb:
+            return (f'STEP3_BACKEND_UNKNOWN: required component {sorted(_nb)} 에 backend '
+                    f'기록이 없다 — 무엇으로 돌았는지 모르는 결과는 게시하지 않는다 '
+                    f'(다른 component 의 도장을 빌려오지 않는다, R3-CX-05)')
+    #  ★★ R3-CX-04 — **PTFE 도장과 실제 효과**.  `centerline` 이라 적혀 있는데 관측
+    #    셀이 0 이면 아무 일도 안 난 것이다 (도장만 남고 물리는 없다).
+    if (_m.get('ptfe_stamp') not in (None, '', 'off')
+            and _m.get('ptfe_cells_observed') == 0):
+        return (f'STEP3_STAMP_NO_EFFECT: `ptfe_stamp={_m.get("ptfe_stamp")}` 인데 관측 '
+                f'sid7 셀이 **0** 이다 — 도장은 찍혔지만 격자에 아무것도 안 그려졌다.  '
+                f'그 팔의 PTFE 규약은 미스탬프와 구분되지 않는다')
     return None
 
 
@@ -1702,6 +1698,18 @@ def main():
                         'note': 'MODEL OUTPUT (emergent): contact SELECTION analytic (no voxel blur); '
                                 'coupling conductance voxel-scale.  R_geom = L(1/σ_bare − 1/σ_wetted); '
                                 'measured R_int − R_geom = chemistry/degradation share'}
+                    #  ★★★ 2026-08-25 (R3-CX-04, 규칙 J 가 잡음) — **성공 경로가 도장을
+                    #    안 찍고 있었다.**  `disabled` 분기만 `_s3mark` 를 불러서, 계획이
+                    #    `collector: True` 인데 component 는 **아예 없는** 상태가 됐다 =
+                    #    "의도적으로 껐다" 와 "조용히 죽었다" 를 구분할 근거가 없다
+                    #    (그 구분이 `component_plan` 을 넣은 이유 그 자체다).
+                    #  ⚠ 이것을 안 고치고 required 만 계획에서 파생시켰더니 규칙 J 의
+                    #    plain·fibre 팔이 즉시 exit 3 이 됐다 — **생산 과잉차단 5번째**.
+                    #    검사기를 느슨하게 하는 대신 **producer 의 기록 결손**을 고친다.
+                    _s3mark('collector_geom',
+                            'failed' if _rgeom is None else 'complete',
+                            None if _rgeom is not None else
+                            'solve degenerate (bare/wetted 중 하나가 비퍼콜)')
                     _cgm = step3['collector_geometric']
                     _rgs = 'n/a (solve degenerate)' if _cgm['R_geom_ohm_cm2'] is None else f"{_cgm['R_geom_ohm_cm2']:.3g}"
                     print(f"  STEP3 collector geometry (MODEL output): wetted {_cgm['wetted_sigma_S_cm']:.3g} "

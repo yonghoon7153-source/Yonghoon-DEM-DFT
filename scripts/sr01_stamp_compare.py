@@ -26,8 +26,20 @@ import os
 import re
 import sys
 
-#: payload 안에서 STEP3 결과가 사는 자리 (mpm_webapp_payload: mpm_metrics['step3'] = step3).
-_STEP3_PATHS = (('metrics', 'step3'), ('step3',))
+#  ★★★ 2026-08-25 (R3-CX-01, Codex 3차) — **자리 목록을 여기 적지 않는다.**
+#    옛 판은 자기 튜플을 갖고 있었고 그 안이 `metrics` **오타**였다 (producer 는
+#    `mpm_metrics['step3']` 에 쓴다).  ⇒ `check_arm` 이 **모든 실제 팔을 거부**했다
+#    = 생산 전면 차단 (러너는 cache·fresh 두 경로에서 이것을 부른다).
+#  ⚠⚠ selftest 75/75 가 초록이었던 이유: 픽스처가 **같은 오타**를 쓰고 있었다
+#    = 픽스처가 버그를 인코딩하면 selftest 는 그 버그를 지킨다.
+#    실물 증인은 규칙 J 의 `producer → check_arm → move` 통합 회귀(J_ARMCHK)다.
+#  ⇒ 계약은 `run_contract` 하나에만 산다 (판정기·producer 도 같은 것을 쓴다).
+#  ⚠ 다른 디렉터리에서 import 될 수 있으므로 자기 폴더를 경로에 넣는다 (없으면
+#    `run_contract` 를 못 찾아 **계약 없이 도는** 것이 아니라 import 에서 죽는다 = fail-closed).
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import run_contract as _RC                                              # noqa: E402
+
+_STEP3_PATHS = _RC.STEP3_PATHS
 
 #: 비교할 스칼라 — (키, 라벨, 상대변화를 볼 것인가)
 _FIELDS = (
@@ -141,18 +153,12 @@ def backend_of(step3):
     backend 게이트가 통과했다 (Codex mutant 실측).  ⇒ 관심 component 를 먼저 본다."""
     if not isinstance(step3, dict):
         return None
-    _comp = dig(step3, ('manifest', 'components')) or {}
-    for _c in ('electronic', 'ionic'):                 # σ 를 낸 solve 가 정본
-        _b = (_comp.get(_c) or {}).get('backend') if isinstance(_comp.get(_c), dict) else None
-        if isinstance(_b, dict) and _b.get('used'):
-            return str(_b['used'])
-        if isinstance(_b, str) and _b:
-            return _b
-    for p in (('manifest', 'backend_last_solve'), ('manifest', 'backend')):
-        got = dig(step3, p)
-        if isinstance(got, dict) and got.get('used'):
-            return str(got['used'])
-    return None
+    #  ★★★ 2026-08-25 (R3-CX-05, Codex 3차) — **폴백을 전부 없앴다.**  옛 판은
+    #    electronic → ionic → last-solve 순으로 내려갔고 Codex 가 셋을 통과시켰다:
+    #    전자 backend **없음** + ionic gpu · 전자 없음 + last-solve gpu · 전자 gpu + ionic cpu.
+    #    다른 component 의 backend 는 **이 component 에 대한 증거가 아니다**.
+    #    ⇒ 전자망 자신의 도장만 본다.  없으면 None 이고 `check_arm` 이 거부한다.
+    return _RC.component_backend(step3, 'electronic')
 
 
 def precond_of(step3):
@@ -252,25 +258,13 @@ def check_arm(path, want, expect_backend=None):
     #  ★★ 2026-08-25 (M-R3-04) — 판정기와 **같은 규약**으로.  옛 판은 `unconverged` 만
     #    보고 `cg_info`·residual 을 안 봤다 ⇒ residual=NaN(payload 에서 null 로 바뀐다)이
     #    이 검사기를 그대로 통과해 캐시됐다 (Codex full-chain mutant).
-    _ci, _un, _rs = s.get('cg_info'), s.get('unconverged'), s.get('cg_resid')
-    if _ci is None or _un is None or _rs is None:
-        return (f'CG 수렴 증거가 불완전하다 (cg_info={_ci!r} unconverged={_un!r} '
-                f'resid={_rs!r}) — 모르는 것을 재활용하지 않는다')
-    if not isinstance(_un, bool) or isinstance(_ci, bool) or not isinstance(_ci, (int, float)):
-        return f'CG 수렴 필드의 타입이 틀렸다 (cg_info={_ci!r} unconverged={_un!r})'
-    if isinstance(_rs, bool) or not isinstance(_rs, (int, float)):
-        return f'CG residual 의 타입이 틀렸다 ({_rs!r})'
-    if _rs != _rs or _rs in (float('inf'), float('-inf')) or _rs < 0 or _rs > 1e-6:
-        return (f'CG residual 이 규약 밖이다 ({_rs!r}) — 0 ≤ resid ≤ 1e-6 '
-                f'(step3_sigma:590 과 같은 문턱)')
-    if bool(_un) or int(_ci) != 0:
-        return 'CG 미수렴 (σ UNRELIABLE) — 다시 돌아야 한다'
-    v = s.get('sigma_e_eff_S_cm')
-    if not isinstance(v, (int, float)) or isinstance(v, bool) or not v > 0:
-        return f'σ_e 가 없거나 0 ({v!r})'
-    #  ★ 2026-08-25 (CDXR3-2) — **유한해야 한다.**  옛 판은 `> 0` 만 봐서 `inf` 가 통과했다.
-    if v != v or v == float('inf'):
-        return f'σ_e 가 비유한이다 ({v!r})'
+    #  ★★★ 2026-08-25 (R3-CX-05/06) — 수렴·수치 계약을 **공용 함수**로.  사본을 두니
+    #    `isinstance(ci,(int,float))` + `int(ci)` 로 **`cg_info = 0.5` 가 절삭돼 통과**했고
+    #    (Codex 실측) 판정기의 사본도 똑같이 뚫려 있었다.  ⇒ `run_contract` 하나만 본다.
+    #    `numeric_ok` 는 σ_e 유한 양수 · dof 양의 정수 · 수렴 conjunction 을 한 번에 본다.
+    _nok, _nwhy = _RC.numeric_ok(s)
+    if not _nok:
+        return f'수치 증거가 계약을 만족하지 않는다 — {_nwhy}'
     if expect_backend:
         got = backend_of(s)
         #  ★ 2026-08-25 (CDXR3-2) — **fail-closed**.  옛 판은 `got` 이 비면 통과시켰다
@@ -392,18 +386,32 @@ def render(row, warn):
 
 def _mk(sig, stamp, applied=True, n_dof=1000, vox=0.4, share=None, backend='cpu', cg_info=0,
         precond='jacobi'):
-    """★ 실제 payload 의 **중첩 그대로** 짓는다 (metrics.step3.manifest.fibre_stamp).
+    """★ 실제 payload 의 **중첩 그대로** 짓는다 (mpm_metrics.step3.manifest.fibre_stamp).
     평평하게 지으면 판독기가 도장을 못 찾는 것을 selftest 가 놓친다 — 실제로 처음
-    구현이 한 단계 얕아서 stamp_of 가 항상 None 이었다 (2026-08-11)."""
-    return {'metrics': {'step3': {
+    구현이 한 단계 얕아서 stamp_of 가 항상 None 이었다 (2026-08-11).
+
+    ★★★ 2026-08-25 (R3-CX-01) — 최상위 키가 `metrics` 였다.  producer 는
+      `mpm_metrics` 에 쓴다.  `_STEP3_PATHS` 의 오타와 **짝이 맞아** selftest 75/75 가
+      초록인 채로 `check_arm` 이 모든 실제 팔을 거부했다.
+      **픽스처가 버그를 인코딩하면 selftest 는 그 버그를 지킨다.**  실물 증인은
+      규칙 J 의 `producer → check_arm` 통합 회귀(J_ARMCHK)다."""
+    return {'mpm_metrics': {'step3': {
         'sigma_e_eff_S_cm': sig, 'vox_um': vox, 'n_dof': n_dof,
         'n_floating_dropped': 7, 'cg_resid': 1e-9,
         'cg_info': cg_info,
         #  ★ 2026-08-25 (M-R3-04) — 현행 payload 는 `unconverged` 를 항상 싣는다.
         #    검사기가 그것을 요구하므로 픽스처도 실제 payload 를 따른다.
         'unconverged': bool(cg_info),
+        #  ★★★ 2026-08-25 (R3-CX-05) — 픽스처가 **실제 producer 의 모양**을 쓴다:
+        #    component 별 `backend` dict.  옛 픽스처는 `backend_last_solve` 만 있어서
+        #    폴백 경로를 **필요하게 만들었고**, 그 폴백이 Codex 의 위장 mutant 3종을
+        #    통과시켰다.  픽스처가 실물과 다르면 검사기는 실물이 아니라 픽스처를 지킨다.
         'manifest': {'schema_version': 2, 'status': 'complete',
                      'fibre_stamp': stamp, 'fibre_stamp_applied': applied,
+                     'components': {'electronic': {
+                         'status': 'complete',
+                         'backend': {'requested': 'gpu', 'used': backend,
+                                     'fallback_reason': None, 'precond': precond}}},
                      'backend_last_solve': {'requested': 'gpu', 'used': backend,
                                             'precond': precond}},
         'dissipation_share': share or {'AM_S': 0.6, 'VGCF': 0.4}}}}
@@ -430,28 +438,28 @@ def _selftest():
     _, w2b = compare(a, _mk(0.01, 'segment', applied=False))
     chk(any('applied=False' in x for x in w2b), '6) ★ applied=False 를 잡는다 (Δ≈0 오독 방지)')
     # ★ 도장 자리가 실제 payload 중첩(manifest 밑)과 맞는가 — 여기가 한 번 틀렸던 자리
-    chk(stamp_of(a['metrics']['step3']) == ('point', True), '6b) ★ manifest 밑 도장을 읽는다')
+    chk(stamp_of(a['mpm_metrics']['step3']) == ('point', True), '6b) ★ manifest 밑 도장을 읽는다')
     chk(stamp_of({'sigma_e_eff_S_cm': 1.0}) == (None, None), '6c) 도장 없으면 None (거짓 확신 금지)')
-    _, w2c = compare({'metrics': {'step3': {'sigma_e_eff_S_cm': 0.01, 'vox_um': 0.4}}},
-                     {'metrics': {'step3': {'sigma_e_eff_S_cm': 0.02, 'vox_um': 0.4}}})
+    _, w2c = compare({'mpm_metrics': {'step3': {'sigma_e_eff_S_cm': 0.01, 'vox_um': 0.4}}},
+                     {'mpm_metrics': {'step3': {'sigma_e_eff_S_cm': 0.02, 'vox_um': 0.4}}})
     chk(any('확인 불가' in x for x in w2c), '6d) 도장 없는 쌍은 "인용하지 말라" 경고')
 
     # 공통모드가 깨진 쌍 (vox 가 다름) — Δ 를 스탬프 탓으로 읽으면 안 된다
     _, w3 = compare(a, _mk(0.012, 'segment', vox=0.2))
     chk(any('vox_um' in x for x in w3), '7) vox 불일치 경고 (공통모드 상쇄 깨짐)')
     # ★ backend 갈림 — arm A 도는 중 cupy 를 깔면 생기는 실제 시나리오
-    chk(backend_of(a['metrics']['step3']) == 'cpu', '7b) backend 도장을 읽는다')
+    chk(backend_of(a['mpm_metrics']['step3']) == 'cpu', '7b) backend 도장을 읽는다')
     _, w3b = compare(a, _mk(0.012, 'segment', backend='gpu'))
     chk(any('backend' in x for x in w3b), '7c) ★ backend 불일치 경고 (cpu vs gpu)')
     # ★ SR-03: backend 는 같은데 전처리만 갈리는 경우 (--step3-amg 를 한쪽 팔에만 준 실수)
-    chk(precond_of(a['metrics']['step3']) == 'jacobi', '7p1) 전처리 도장을 읽는다')
+    chk(precond_of(a['mpm_metrics']['step3']) == 'jacobi', '7p1) 전처리 도장을 읽는다')
     _, w3d = compare(a, _mk(0.012, 'segment', precond='amg'))
     chk(any('전처리' in x for x in w3d), '7p2) ★ 전처리 불일치 경고 (jacobi vs amg)')
     _, w3e = compare(a, _mk(0.012, 'segment'))
     chk(not any('전처리' in x for x in w3e), '7p3) 같은 전처리면 조용')
     old = _mk(0.012, 'segment')
-    del old['metrics']['step3']['manifest']['backend_last_solve']['precond']
-    chk(precond_of(old['metrics']['step3']) is None and
+    del old['mpm_metrics']['step3']['manifest']['backend_last_solve']['precond']
+    chk(precond_of(old['mpm_metrics']['step3']) is None and
         not any('전처리' in x for x in compare(a, old)[1]),
         '7p4) 옛 payload(전처리 키 없음)는 조용히 통과')
     _, w3c = compare(a, _mk(0.012, 'segment', cg_info=1))
@@ -463,7 +471,7 @@ def _selftest():
 
     # step3 없는 payload 는 조용히 0 을 만들지 말고 멈춘다
     try:
-        compare({'metrics': {}}, b)
+        compare({'mpm_metrics': {}}, b)
         chk(False, '10) step3 없으면 중단')
     except SystemExit:
         chk(True, '10) step3 없으면 중단')
@@ -539,22 +547,24 @@ def _selftest():
         # ★ 강등 런 (실사고 재현): 선분을 요청했는데 --fibre 로드 실패로 점이 됐다.
         #   옛 코드는 도장에 **요청값**(segment)을 적어 검사를 통과시켰다.
         _deg = _mk(0.0051, 'point', applied=False)
-        _deg['metrics']['step3']['manifest']['fibre_stamp_requested'] = 'segment'
+        _deg['mpm_metrics']['step3']['manifest']['fibre_stamp_requested'] = 'segment'
         _degp = w('deg.json', _deg)
         chk(check_arm(_degp, 'segment') is not None, '8a2) 강등 런은 segment 팔로 거부')
         chk('요청' in (check_arm(_degp, 'point') or ''),
             '8a3) ★ 강등 런은 **point 팔로도** 거부 (요청≠적용 — 그 런은 실패를 겪었다)')
         # 대조군: 요청=적용이면 통과해야 한다 (과잉차단 아님)
-        _ok = _mk(0.0051, 'point'); _ok['metrics']['step3']['manifest']['fibre_stamp_requested'] = 'point'
+        _ok = _mk(0.0051, 'point'); _ok['mpm_metrics']['step3']['manifest']['fibre_stamp_requested'] = 'point'
         chk(check_arm(w('ok.json', _ok), 'point') is None, '8a4) 요청=적용이면 통과 (대조군)')
         chk('point' in (check_arm(good, 'segment') or ''), '8b) ★ 스탬프가 다르면 거부 (A 를 B 로 착각하지 않는다)')
         chk(check_arm(os.path.join(td, 'no.json'), 'point') == '파일 없음', '8c) 없는 파일')
         chk('JSON 읽기 실패' in (check_arm(w('t.json', '{"metr'), 'point') or ''), '8d) ★ 잘린 JSON (중단된 런)')
-        chk('step3 블록 없음' in (check_arm(w('e.json', {'metrics': {}}), 'point') or ''), '8e) step3 블록 없음')
-        bad = _mk(0.0051, 'point'); bad['metrics']['step3']['unconverged'] = True
-        chk('CG 미수렴' in (check_arm(w('u.json', bad), 'point') or ''), '8f) ★ 미수렴은 재개 대상이 아니라 재실행 대상')
+        chk('step3 블록 없음' in (check_arm(w('e.json', {'mpm_metrics': {}}), 'point') or ''), '8e) step3 블록 없음')
+        bad = _mk(0.0051, 'point'); bad['mpm_metrics']['step3']['unconverged'] = True
+        chk('CONV|unconv|' in (check_arm(w('u.json', bad), 'point') or ''),
+            '8f) ★ 미수렴은 재개 대상이 아니라 재실행 대상 (코드 `CONV|unconv|`)')
         z = _mk(0.0, 'point')
-        chk('σ_e' in (check_arm(w('z.json', z), 'point') or ''), '8g) σ_e 가 0 이면 거부')
+        chk('SIGMA_E|' in (check_arm(w('z.json', z), 'point') or ''),
+            '8g) σ_e 가 0 이면 거부 (코드 `SIGMA_E|`)')
         na = _mk(0.0051, 'segment', applied=False)
         chk('적용되지 않음' in (check_arm(w('n.json', na), 'segment') or ''), '8h) ★ 선분 요청이 적용 안 된 팔은 거부 (조용한 점-되돌아감)')
         chk(main([good, '--check-arm', good, '--stamp', 'point']) == 0, '8i) CLI: 완전하면 exit 0')
@@ -568,59 +578,78 @@ def _selftest():
         #    payload 의 `except Exception` 은 σ_e 솔브 **뒤**의 작업(STEP4 grid 저장 등)까지
         #    감싸므로, 값은 다 나온 뒤 죽으면 `status='failed'` 만 붙고 exit 0 으로 끝난다.
         #    옛 검사는 σ_e 가 양수라 **통과**시켰고 그 팔이 영구 캐시됐다 (실사고 재현).
-        _f1 = _mk(0.0051, 'point'); _f1['metrics']['step3']['status'] = 'failed'
-        _f1['metrics']['step3']['reason'] = 'NameError: geom'
+        _f1 = _mk(0.0051, 'point'); _f1['mpm_metrics']['step3']['status'] = 'failed'
+        _f1['mpm_metrics']['step3']['reason'] = 'NameError: geom'
         chk('status=failed' in (check_arm(w('f1.json', _f1), 'point') or ''),
             '8n) ★ σ_e 는 멀쩡한데 status=failed 인 팔은 거부 (정상 완주한 뒤 죽은 런)')
         _f2 = _mk(0.0051, 'point')
-        _f2['metrics']['step3'].setdefault('manifest', {})['components'] = {
+        _f2['mpm_metrics']['step3'].setdefault('manifest', {})['components'] = {
             'electronic': {'status': 'complete'}, 'ionic': {'status': 'unconverged'}}
         chk('component' in (check_arm(w('f2.json', _f2), 'point') or ''),
             '8o) ★ manifest component 가 unconverged 면 거부 (부분 실패한 런)')
         _f3 = _mk(0.0051, 'point')
-        _f3['metrics']['step3'].setdefault('manifest', {})['components'] = {
+        _f3['mpm_metrics']['step3'].setdefault('manifest', {})['components'] = {
             'electronic': {'status': 'complete'}, 'ionic': {'status': 'disabled'}}
         chk(check_arm(w('f3.json', _f3), 'point') is None,
             '8p) 음성 대조 — `disabled`(LEAN=2 로 끈 것)는 실패가 아니다.  통과해야 한다')
-        _f4 = _mk(0.0051, 'point'); _f4['metrics']['step3']['status'] = 'complete'
+        _f4 = _mk(0.0051, 'point'); _f4['mpm_metrics']['step3']['status'] = 'complete'
         chk(check_arm(w('f4.json', _f4), 'point') is None,
             '8q) 음성 대조 — status=complete 는 통과 (과잉차단 아님)')
         #  ★★★ 8r~8w 2026-08-25 (CDXR3-2) — **Codex 가 통과시킨 mutant 4종**을 상주 회귀로.
         #    R-1("check_arm 이 producer nonzero exit 를 대체한다")이 틀렸음을 보인 것들이다.
         _g1 = _mk(0.0051, 'point')
-        _g1['metrics']['step3'].setdefault('manifest', {}).update(
+        _g1['mpm_metrics']['step3'].setdefault('manifest', {}).update(
             status='partial', missing=['electronic'],
             components={'thermal': {'status': 'complete'}})
         chk('실패/누락' in (check_arm(w('g1.json', _g1), 'point') or ''),
             '8r) ★★ `missing=[electronic]` 을 거부 (Codex mutant ①)')
         _g1b = _mk(0.0051, 'point')                    # LEAN=2 = ionic 을 **의도적으로** 끔
-        _g1b['metrics']['step3'].setdefault('manifest', {}).update(
+        _g1b['mpm_metrics']['step3'].setdefault('manifest', {}).update(
             status='partial', missing=[], failed=[],
             components={'electronic': {'status': 'complete'}, 'ionic': {'status': 'disabled'}})
         chk(check_arm(w('g1b.json', _g1b), 'point') is None,
             '8r2) ★★ 음성 대조 — `disabled`(LEAN=2) 로 인한 aggregate partial 은 통과해야 '
             '한다 (초판은 생산 스윕 팔 전부를 거부할 뻔했다)')
         _g2 = _mk(0.0051, 'point')
-        _g2['metrics']['step3'].setdefault('manifest', {})['components'] = {
+        _g2['mpm_metrics']['step3'].setdefault('manifest', {})['components'] = {
             'thermal': {'status': 'complete'}}          # electronic 자체가 없다
         chk('required component' in (check_arm(w('g2.json', _g2), 'point') or ''),
             '8s) ★★ required component `electronic` 부재를 거부')
+        #  ★ 2026-08-25 (R3-CX-05) — **부재**는 이제 *전자망 자신의* 도장이 없는 것이다.
+        #    `backend_last_solve` 를 지우는 것만으로는 부재가 아니다 (그것은 폴백원이었고
+        #    폴백은 없앴다).  ⇒ 권위 있는 자리를 지우고, **다른 자리에 gpu 를 남겨** 둔다 —
+        #    옛 판은 그 ionic/last-solve 도장을 빌려와 통과했다 (Codex mutant ③).
         _g3 = _mk(0.0051, 'point')
-        _g3['metrics']['step3'].setdefault('manifest', {}).pop('backend_last_solve', None)
-        _g3['metrics']['step3']['manifest'].pop('backend', None)
+        _g3m = _g3['mpm_metrics']['step3']['manifest']
+        _g3m['components']['electronic'].pop('backend', None)
+        _g3m['components']['ionic'] = {'status': 'complete', 'backend': {'used': 'gpu'}}
+        _g3m['backend_last_solve'] = {'used': 'gpu'}
         chk('backend 기록이 **없다**' in (check_arm(w('g3.json', _g3), 'point', 'gpu') or ''),
-            '8t) ★★ backend 기록 부재를 거부 — 옛 판은 통과시켰다 (Codex mutant ③)')
+            '8t) ★★ 전자망 backend 부재를 거부 — ionic·last-solve 의 gpu 를 **빌려오지 '
+            '않는다** (Codex R3-CX-05 mutant 3종)')
         _g4 = _mk(0.0051, 'point')
-        _g4['metrics']['step3'].setdefault('manifest', {}).update(
+        _g4['mpm_metrics']['step3'].setdefault('manifest', {}).update(
             backend_last_solve={'used': 'gpu'},          # 마지막 solve 는 GPU 인데
             components={'electronic': {'status': 'complete', 'backend': {'used': 'cpu'}}})
         chk('cpu' in (check_arm(w('g4.json', _g4), 'point', 'gpu') or ''),
             '8u) ★★ electronic=cpu·last-solve=gpu 위장을 거부 (component 가 정본, mutant ④)')
         _g5 = _mk(float('inf'), 'point')
-        chk('비유한' in (check_arm(w('g5.json', _g5), 'point') or ''),
-            '8v) ★ σ_e 가 inf 면 거부 (옛 판은 `> 0` 만 봤다)')
+        chk('SIGMA_E|' in (check_arm(w('g5.json', _g5), 'point') or ''),
+            '8v) ★ σ_e 가 inf 면 거부 (코드 `SIGMA_E|`; 옛 판은 `> 0` 만 봤다)')
+        #  ★★★ 2026-08-25 (R3-CX-05, Codex 3차) — **producer validator 가 통과시킨 4종**을
+        #    그대로 상주시킨다.  넷 다 옛 판에서 `reject_reason = None` 이었다.
+        for _v6, _c6, _l6 in ((dict(cg_resid=None), 'CONV|blind|', 'cg_resid=None'),
+                              (dict(cg_resid=float('nan')), 'CONV|resid|', 'cg_resid=NaN'),
+                              (dict(sigma_e_eff_S_cm=None), 'SIGMA_E|', 'sigma_e=None'),
+                              (dict(cg_info=99), 'CONV|unconv|', 'cg_info=99'),
+                              (dict(cg_info=0.5), 'CONV|type|', 'cg_info=0.5 (float 절삭)'),
+                              (dict(n_dof=0), 'N_DOF|', 'n_dof=0')):
+            _a6 = _mk(0.0051, 'point')
+            _a6['mpm_metrics']['step3'].update(_v6)
+            chk(_c6 in (check_arm(w(f'x6_{_l6[:6]}.json', _a6), 'point') or ''),
+                f'8w) ★★ {_l6} 을 `{_c6}` 로 거부 — 옛 판은 status 만 봐서 통과시켰다')
         _g6 = _mk(0.0051, 'point')
-        _g6['metrics']['step3'].setdefault('manifest', {}).update(
+        _g6['mpm_metrics']['step3'].setdefault('manifest', {}).update(
             status='complete', components={'electronic': {'status': 'complete'}})
         chk(check_arm(w('g6.json', _g6), 'point') is None,
             '8w) 음성 대조 — status=complete + electronic complete 는 통과')
@@ -634,9 +663,9 @@ def _selftest():
                                 ('1e-9', 1e-9, False), ('1e-6(문턱)', 1e-6, False)):
             _gz = _mk(0.0051, 'point')
             if _rs is None:
-                _gz['metrics']['step3'].pop('cg_resid')
+                _gz['mpm_metrics']['step3'].pop('cg_resid')
             else:
-                _gz['metrics']['step3']['cg_resid'] = _rs
+                _gz['mpm_metrics']['step3']['cg_resid'] = _rs
             _r8 = check_arm(w(f'gz_{_lbl}.json', _gz), 'point')
             chk((_r8 is not None) == _blk,
                 f'8x[{_lbl}] 전자 residual — {"거부" if _blk else "통과"} 기대, '

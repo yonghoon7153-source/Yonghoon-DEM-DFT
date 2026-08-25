@@ -107,8 +107,26 @@ fi
 #     ⚠ `LEAN=1` 의 뜻은 **바꾸지 않는다** — 이미 그 값으로 돈 팔(STEP 2/3/5)의 규약을
 #       소급해 흔들지 않기 위해서다.  스윕만 2 를 쓴다.
 #  ★ 2026-08-20 — 진단 팔이 코드 수정 없이 payload 플래그를 더할 수 있게.
-#    예: `P2_EXTRA="--step3-maxiter 200000"`.  ⚠ 태그·OUTDIR 에는 안 들어가므로
-#    **규약을 바꾸는 플래그는 여기로 주지 말 것** (섞이면 판정기가 못 잡는다).
+#    예: `P2_EXTRA="--step3-maxiter 200000"`.
+#  ★★★ 2026-08-25 (R3-CX-04, Codex 3차) — **주의 문구로는 못 막는다.**  옛 판은
+#    "규약을 바꾸는 플래그는 여기로 주지 말 것" 이라고 **적어만** 뒀고, `P2_EXTRA` 가
+#    조립 문자열의 **맨 뒤**에 붙어 앞의 선언을 전부 덮을 수 있었다
+#    (`--periodic` · `--no-ion` · `--sigma-vgcf` …).  주의는 게이트가 아니다.
+#    ⇒ 금지 목록을 **거부**한다 (fail-closed).  진짜로 필요하면 러너에 축을 만든다.
+_P2_BANNED='--periodic --no-ion --no-thermal --no-pore --no-collector --sigma-vgcf
+--sigma-sdcp --sigma-ptfe --ptfe-stamp --step3-vox --step3-bridge-um --step3-fibre-stamp
+--step3-sdcp-sphere-d --step3-sdcp-yield-to-vgcf --step3-origin-shift --expect-physics
+--expect-protocol --cam --temp-c --sigma-am-s --sigma-am-p --allow-partial-step3'
+for _b in $_P2_BANNED; do
+  case " ${P2_EXTRA:-} " in
+    *" $_b "*|*" $_b="*)
+      echo "ABORT — P2_EXTRA 에 규약 인자 \`$_b\` 가 있다."
+      echo "  P2_EXTRA 는 조립 문자열 **맨 뒤**라 러너의 선언을 덮는다 — 그러면"
+      echo "  \`--expect-physics\` 선언과 실제 적용이 갈리고, 판정기는 그것을 못 잡는다."
+      echo "  규약을 바꾸려면 러너에 축을 만들 것 (VOX·SIGMA_PTFE·PTFE_STAMP·LEAN …)."
+      exit 2;;
+  esac
+done
 LEAN_FLAGS=""
 [ "${LEAN:-0}" = "1" ] && LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field"
 #     ★ 2026-08-18 2차: `--no-collector` 도 넣는다.  1차 LEAN=2 시도가 **집전체 기하 솔브**
@@ -382,8 +400,12 @@ echo
 #                             진단에는 원값이 필요하다)
 if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
   echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"
+  #  ★★ 2026-08-25 (R3-CX-04) — 생산 봉인은 **입력 digest·code SHA** 를 요구한다.
+  #    옛 판은 안 넘겨서, 같은 침대라는 증거도 재현 가능한 코드라는 증거도 없이 통과했다.
+  #  ⚠ `--require-ionic` 은 **넘기지 않는다** — LEAN=2 는 σ_e 전용이고 이온을 안 푼다.
+  #    이온축이 결론인 트랙은 LEAN 을 끄고 그 옵션을 켠 채로 따로 봉인한다.
   if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
-       --require-arms "$PREREG_ARMS"; then
+       --require-arms "$PREREG_ARMS" --require-digest; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
     echo "──── 진단용 원값 (봉인이 이미 기각했으므로 창을 옮길 수 없다) ────"
     python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true
