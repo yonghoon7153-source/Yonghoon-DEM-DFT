@@ -578,8 +578,15 @@ export function Plot({
             })
           },
         ],
-        draw: steadyMarkers.length
-          ? [
+        // **키를 아예 넣지 않는다.**  `draw: undefined` 는 다르다 -- uPlot 의
+        // `fire()` 는 `evName in hooks` 로 걸러서 (uPlot 1.6.32, `fire`),
+        // 키가 있으면 값이 undefined 여도 `hooks.draw.forEach` 를 부른다.
+        // 표시선이 없는 그래프(거의 전부)는 그래서 **다시 그릴 때마다**
+        // TypeError 를 냈고, 그 예외가 commit 을 중간에 끊었다: 끌어서 확대한
+        // 사각형이 눈금까지 못 가고 그냥 사라졌다.  화면에는 오류가 안 보이니
+        // "확대가 안 된다" 로만 보인다.
+        ...(steadyMarkers.length ? {
+          draw: [
               (u: uPlot) => {
                 const ctx = u.ctx
                 ctx.save()
@@ -608,8 +615,8 @@ export function Plot({
                 }
                 ctx.restore()
               },
-            ]
-          : undefined,
+          ],
+        } : {}),
       },
     }
 

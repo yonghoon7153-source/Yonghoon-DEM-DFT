@@ -24,7 +24,7 @@ import { SERIES_COLORS } from '../../lib/format'
 type BuiltOptions = {
   series: { stroke: string }[]
   axes: { stroke: string }[]
-  hooks?: { setScale?: ((u: unknown, key: string) => void)[] }
+  hooks?: { setScale?: ((u: unknown, key: string) => void)[]; draw?: unknown }
   cursor?: {
     drag?: { x?: boolean; y?: boolean; dist?: number; uni?: number }
     bind?: {
@@ -185,6 +185,34 @@ describe('Plot colours', () => {
     } finally {
       media.restore()
     }
+  })
+})
+
+describe('uPlot 훅 목록', () => {
+  const restore: (() => void)[] = []
+  beforeEach(() => {
+    built.length = 0
+    restore.push(installWidth())
+  })
+  afterEach(() => restore.splice(0).forEach((fn) => fn()))
+
+  it('그릴 표시선이 없으면 draw 키를 아예 넣지 않는다', () => {
+    // uPlot 의 `fire()` 는 `evName in hooks` 로 거른다 (1.6.32).  `draw: undefined`
+    // 는 키가 **있는** 것이라 `hooks.draw.forEach` 를 부르고 TypeError 를 낸다 --
+    // 다시 그릴 때마다.  그 예외가 commit 을 끊으면 끌어서 만든 사각형이 눈금까지
+    // 못 가고, 화면에는 오류가 안 보이니 "확대가 안 된다" 로만 보인다.
+    render(<Plot series={SERIES} xLabel="x" yLabel="y" markers={MARKERS} />)
+    const hooks = built.at(-1)!.options.hooks!
+    expect('draw' in hooks).toBe(false)
+  })
+
+  it('표시선이 있으면 draw 는 함수 배열이다', () => {
+    render(
+      <Plot series={SERIES} xLabel="x" yLabel="y"
+            markers={[{ x: 1, label: 'knee' }]} />,
+    )
+    const hooks = built.at(-1)!.options.hooks!
+    expect(Array.isArray(hooks.draw)).toBe(true)
   })
 })
 
