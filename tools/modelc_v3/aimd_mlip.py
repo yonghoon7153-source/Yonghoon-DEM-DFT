@@ -34,8 +34,21 @@ from ase.md.langevin import Langevin
 from ase.md.velocitydistribution import MaxwellBoltzmannDistribution
 
 
-def compute_msd_per_element(traj_path: Path, dt_save_fs: float):
-    """Read trajectory, return MSD vs t for each element."""
+def compute_msd_per_element(traj_path: Path, dt_save_fs: float, com_exclude=None):
+    """Read trajectory, return MSD vs t for each element.
+
+    com_exclude : None | str | iterable[str]
+        주면 **그 원소를 뺀 나머지(=골격)의 질량중심**을 매 프레임 빼고 나서 MSD 를 잰다
+        (골격 공동계 co-moving frame). `com_exclude="Li"` 가 표준 용법이다.
+
+        왜 (2026-08-25): 골격 β 가 높을 때 그것이 **통째로 흐르는 것(drift)** 인지
+        **자리 재배열(rearrangement)** 인지 갈라야 한다. 전자면 공동계에서 Li 확산을
+        구제할 수 있고, 후자면 못 한다.
+
+        ⛔ 못 하는 것: 국소 재배열은 못 지운다. COM 은 **전역 1개**라, 골격 절반이
+          왼쪽·절반이 오른쪽으로 가면 COM 은 0 이고 내부 MSD 는 그대로 남는다
+          (그게 이 진단이 노리는 바다 — 지워지지 않으면 재배열이다).
+    """
     frames = read(str(traj_path), index=":")
     n_frames = len(frames)
     if n_frames < 2:
@@ -57,6 +70,15 @@ def compute_msd_per_element(traj_path: Path, dt_save_fs: float):
                 jump = np.round(dr[:, i] / L_diag[i])
                 pos_unwrap[t:, :, i] -= jump * L_diag[i]
 
+    if com_exclude is not None:
+        ex = {com_exclude} if isinstance(com_exclude, str) else set(com_exclude)
+        fmask = ~np.isin(syms, sorted(ex))
+        if not fmask.any():
+            raise ValueError(f"com_exclude={sorted(ex)} 를 빼면 원자가 하나도 안 남는다")
+        m = np.array(frames[0].get_masses())[fmask]
+        com = (pos_unwrap[:, fmask] * m[None, :, None]).sum(axis=1) / m.sum()   # (T,3)
+        pos_unwrap = pos_unwrap - com[:, None, :]
+
     # MSD per element
     msd = {}
     times_ps = np.arange(n_frames) * dt_save_fs / 1000.0
@@ -69,7 +91,9 @@ def compute_msd_per_element(traj_path: Path, dt_save_fs: float):
     return {"times_ps": times_ps.tolist(),
             "msd_per_elem_A2": {k: v.tolist() for k, v in msd.items()},
             "n_atoms_per_elem": {e: int((syms == e).sum())
-                                  for e in sorted(set(syms))}}
+                                  for e in sorted(set(syms))},
+            "com_exclude": (sorted({com_exclude} if isinstance(com_exclude, str)
+                                   else set(com_exclude)) if com_exclude else None)}
 
 
 def fit_diffusion(times_ps, msd_A2, fit_window=(2.0, 20.0)):

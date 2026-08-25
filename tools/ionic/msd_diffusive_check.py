@@ -305,6 +305,67 @@ def n_per_elem_from_traj(json_path):
     return {e: syms.count(e) for e in sorted(set(syms))}
 
 
+# ══ 골격 흐름(drift) vs 재배열(rearrangement) 판별 — 2026-08-25 ════════════
+#   골격 β 가 높다고 곧바로 'Li D 폐기' 가 아니다. 골격이 **통째로 흐르는 것**이면
+#   공동계(co-moving frame)에서 Li 확산을 구제할 수 있고, **자리 재배열**이면 못 한다.
+#   판정 기준은 **결과를 보기 전에** 고정한다:
+DRIFT_KEEP = 0.30      # COM 제거 후 골격 MSD 가 원래의 30 % 이하 → 흐름 지배 = 구제 가능
+DRIFT_LOST = 0.70      # 70 % 이상 남으면 재배열 = 구제 불가
+
+
+def framework_com_split(json_path, save_fs=None):
+    """골격 MSD 를 **전역 흐름분과 내부 재배열분으로 가른다** (재계산 0, 궤적만 있으면 됨).
+
+    돌려주는 값: None 또는
+      {'frame_total','frame_internal','kept_frac','li_total','li_internal','verdict'}
+      (MSD 는 창 끝 값 Å², kept_frac = internal/total)
+
+    ⛔ 이 함수가 못 하는 것
+      · 국소 재배열을 지우지 못한다. COM 은 **전역 1개**라 골격 절반이 왼쪽·절반이
+        오른쪽으로 가면 COM 은 0 이고 내부 MSD 는 그대로 남는다 — 그게 노림수다.
+      · '구제 가능' 이 곧 '값 인용 가능' 은 아니다. 공동계 Li D 를 **다시 게이트에
+        통과시켜야** 한다 (β·케이지 검사를 새로).
+    """
+    import importlib.util
+    jp = pathlib.Path(json_path)
+    traj = jp.parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    src = pathlib.Path(__file__).resolve().parents[1] / "modelc_v3" / "aimd_mlip.py"
+    if not src.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("_aimd", src)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+        raw = mod.compute_msd_per_element(traj, dt_save_fs=save_fs or 100.0)
+        com = mod.compute_msd_per_element(traj, dt_save_fs=save_fs or 100.0,
+                                          com_exclude=LI)
+    except BaseException as e:
+        print(f"   ⚠ COM 분해 실패: {type(e).__name__} {e}")
+        return None
+
+    def _frame_end(o):
+        m, n = o["msd_per_elem_A2"], o.get("n_atoms_per_elem", {})
+        els = [e for e in m if e != LI and n.get(e, 0) >= FRAMEWORK_MIN_N]
+        if not els:
+            return None
+        # 원자수 가중 평균 — 종마다 개수가 달라 단순평균은 소수 종에 끌려간다
+        tot = sum(n[e] for e in els)
+        return sum(m[e][-1] * n[e] for e in els) / tot
+
+    ft, fi = _frame_end(raw), _frame_end(com)
+    if ft is None or fi is None or ft <= 0:
+        return None
+    kept = fi / ft
+    v = ("drift_dominated" if kept <= DRIFT_KEEP else
+         "rearrangement" if kept >= DRIFT_LOST else "mixed")
+    return {"frame_total": ft, "frame_internal": fi, "kept_frac": kept,
+            "li_total": raw["msd_per_elem_A2"][LI][-1],
+            "li_internal": com["msd_per_elem_A2"][LI][-1],
+            "verdict": v}
+
+
 def framework_check(d, lo, hi):
     """골격(비-Li) 원소가 확산하고 있나.
 
@@ -607,6 +668,11 @@ def main():
                          "독립 시드/config 는 같은 계의 다른 초기속도라 MSD 앙상블 평균이 "
                          "정당하다 — 홉이 적어 자기평균이 안 되는 궤적을 **재계산 없이** "
                          "살리는 유일한 수단.")
+    ap.add_argument("--framework_com", action="store_true",
+                    help="골격이 움직일 때 그것이 **전역 흐름**인지 **자리 재배열**인지 "
+                         "가른다. 골격 질량중심을 매 프레임 빼고 다시 재서, 남는 몫이 "
+                         f"{int(DRIFT_KEEP*100)} %% 이하면 흐름(구제 가능) · "
+                         f"{int(DRIFT_LOST*100)} %% 이상이면 재배열(구제 불가). 재계산 0.")
     ap.add_argument("--framework", action="store_true",
                     help="골격(비-Li) 원소가 녹고 있는지 같이 본다. Zhang npj 2026 이 "
                          "MACE-MP-0 의 LGPS 골격이 1050 K 부터 인위적으로 녹는 걸 잡았고, "
@@ -932,6 +998,40 @@ def main():
             print("   ⚠ 전부 못 쟀다 — 이 실행은 **아무것도 판정하지 않았다**.")
 
     # ── --framework: 골격(비-Li)이 녹고 있나 ────────────────────────────
+    if a.framework_com:
+        print("\n골격 흐름 vs 재배열 — 골격이 움직일 때 **구제 가능한가**")
+        print("  골격 질량중심을 매 프레임 빼고 다시 잰다 (재계산 0, 궤적만 있으면 됨).")
+        print(f"  남는 몫 ≤{DRIFT_KEEP:.0%} → 흐름 지배(공동계에서 Li 구제 가능) · "
+              f"≥{DRIFT_LOST:.0%} → 자리 재배열(구제 불가)")
+        print("  ⛔ '구제 가능' 이 곧 '인용 가능' 은 아니다 — 공동계 Li D 를 **게이트에")
+        print("     다시 통과시켜야** 한다.")
+        print(f"\n{'case':34s} {'골격MSD':>9s} {'COM제거후':>10s} {'남는몫':>7s} "
+              f"{'Li(원)':>8s} {'Li(공동계)':>10s}  판정")
+        _cnt = {}
+        for f in files:
+            tag = case_label(f)
+            try:
+                _sf = json.load(open(f)).get("save_fs")
+            except (OSError, ValueError):
+                _sf = None
+            r = framework_com_split(f, save_fs=_sf)
+            if r is None:
+                print(f"{tag:34s} {'—':>9s} {'—':>10s} {'—':>7s} {'—':>8s} {'—':>10s}"
+                      "  궤적 없음 — 판정 불가")
+                _cnt["none"] = _cnt.get("none", 0) + 1
+                continue
+            mk = {"drift_dominated": "⭕ 흐름 — 구제 가능",
+                  "mixed": "⚠ 섞임 — 구제 불확실",
+                  "rearrangement": "⛔ 재배열 — 구제 불가"}[r["verdict"]]
+            _cnt[r["verdict"]] = _cnt.get(r["verdict"], 0) + 1
+            print(f"{tag:34s} {r['frame_total']:9.1f} {r['frame_internal']:10.1f} "
+                  f"{r['kept_frac']:7.2f} {r['li_total']:8.1f} {r['li_internal']:10.1f}  {mk}")
+        print("\n  합계: " + " · ".join(f"{k} {v}" for k, v in sorted(_cnt.items())))
+        if _cnt.get("rearrangement"):
+            print("  ⛔ 재배열이 하나라도 있으면 그 온도점의 Li D 는 공동계로도 못 살린다.")
+        if _cnt.get("drift_dominated"):
+            print("  ⭕ 흐름 지배분은 공동계 Li MSD 로 D 를 다시 뽑고 **β 게이트를 새로** 걸 것.")
+
     if a.framework:
         print("\n골격(비-Li) 검사 — Li 만 움직여야 한다")
         print("  왜: Zhang npj 2026 이 MACE-MP-0 의 LGPS 골격이 **1050–1500 K 에서**")
