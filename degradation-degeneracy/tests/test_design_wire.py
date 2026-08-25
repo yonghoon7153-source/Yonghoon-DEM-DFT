@@ -265,3 +265,67 @@ def test_grid_conditions_bridge_to_wire_coordinates(golden):
                    lam_ne_type="capacity", noise=0.005, seed=999)
     assert c1.cond_id != c2.cond_id, "전제: 격자 cond_id 는 noise·seed 를 본다"
     assert coords_from_condition(c1, places) == coords_from_condition(c2, places)
+
+
+def test_the_design_spec_key_set_is_closed(golden):
+    """★ 27차 P1-9 — `{"schema": ...}` 하나로도 정상 digest 가 나왔다.
+
+    extra key 도 통과했다. schema 문자열과 label 부재만 봤기 때문이다.
+    """
+    order = golden["parameter_order"]
+    spec = _spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order)
+    assert pairing_design_sha256(spec)
+
+    with pytest.raises(WireError):
+        pairing_design_sha256({"schema": SCHEMA})
+    with pytest.raises(WireError):
+        pairing_design_sha256(dict(spec, __extra__="x"))
+    for k in ("arms", "parameter_order", "objective_plan", "bank",
+              "parameter_coordinate_schema"):
+        with pytest.raises(WireError):
+            pairing_design_sha256({x: v for x, v in spec.items() if x != k})
+
+
+def test_objective_order_is_part_of_design_identity(golden):
+    """★ 27차 P1-9 — 초판은 `objective_plan` 을 정렬해 **순서를 지웠다.**
+
+    계약의 objective order 와 warm provider 의미를 design identity 가 잃는다.
+    """
+    order = golden["parameter_order"]
+    a = canonical_design_spec(
+        label="x", arms=["A"], parameter_order=order,
+        bounds_policy="p", objective_plan=["pocv_dvdq", "pocv_dvdq_dqdv"],
+        bank_generator="pcg64", bank_version="v6.0", seed_derivation="s",
+        dtype="float64", endian="little", coordinate_unit="fraction")
+    b = canonical_design_spec(
+        label="x", arms=["A"], parameter_order=order,
+        bounds_policy="p", objective_plan=["pocv_dvdq_dqdv", "pocv_dvdq"],
+        bank_generator="pcg64", bank_version="v6.0", seed_derivation="s",
+        dtype="float64", endian="little", coordinate_unit="fraction")
+    assert pairing_design_sha256(a) != pairing_design_sha256(b)
+
+    with pytest.raises(WireError):          # 중복 objective
+        canonical_design_spec(
+            label="x", arms=["A"], parameter_order=order, bounds_policy="p",
+            objective_plan=["o", "o"], bank_generator="g", bank_version="v",
+            seed_derivation="s", dtype="float64", endian="little",
+            coordinate_unit="fraction")
+
+
+def test_numeric_and_unicode_domains_are_closed(golden):
+    """음수 bank index · 이상한 decimal_places · 비-NFC 문자열을 거부한다."""
+    with pytest.raises(WireError):
+        candidate_id("a" * 64, "b" * 64, "random",
+                     {"bank_index": -1, "unit_cube_bytes_sha256": "c" * 64})
+    for places in (True, 0, -3, 99, 2.5):
+        with pytest.raises(WireError):
+            canonical_design_spec(
+                label="x", arms=["A"], parameter_order=["lli"], bounds_policy="p",
+                objective_plan=["o"], bank_generator="g", bank_version="v",
+                seed_derivation="s", dtype="float64", endian="little",
+                coordinate_unit="fraction", decimal_places=places)
+    # NFC — 같은 글자의 두 표현이 다른 digest 를 내면 안 된다
+    assert_wire_safe({"a": "é"})                      # NFC 는 통과
+    with pytest.raises(WireError) as e:
+        assert_wire_safe({"a": "é"})            # 분해형은 거부
+    assert "NFC" in str(e.value)

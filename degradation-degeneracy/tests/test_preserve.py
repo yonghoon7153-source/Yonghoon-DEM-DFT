@@ -20,6 +20,7 @@ from __future__ import annotations
 import hashlib
 import json
 import shutil
+import tempfile
 from pathlib import Path
 
 import pytest
@@ -71,10 +72,18 @@ def _hooks(expected: str | None = _EXPECTED_SEM) -> Hooks:
 
     def rescore(root):
         data = (Path(root) / "fits.parquet").read_bytes()
+        # 실제 산출 파일을 만든다 — byte 축이 없으면 "무엇을 만들었는가" 가
+        # receipt 어디에도 없다 (27차 P1-5).
+        out = Path(root) / "_rescored.json"
+        out.write_bytes(canonical_bytes({"n": len(data)}))
         return {"role": "rescored_summary",
                 "canonicalizer": "score-semantic/v1",
                 "semantic_schema": "degeneracy-summary/v6",
-                "semantic_sha256": hashlib.sha256(data).hexdigest()}
+                "semantic_sha256": hashlib.sha256(data).hexdigest(),
+                "relative_path": "_rescored.json",
+                "byte_size": out.stat().st_size,
+                "file_sha256": hashlib.sha256(out.read_bytes()).hexdigest(),
+                "producer": "test-fixture/v1"}
 
     return Hooks(validate=validate, rescore=rescore,
                  min_retention_days=365, expected_semantic=expected)
@@ -126,6 +135,7 @@ def test_same_leg_id_with_different_bytes_is_refused(kit):
         publish(index, {"leg_id": PLANNED.leg_id, "planned_id": "다른",
                         "receipt_digest": "x", "receipt_object": "o",
                         "payload_root_digest": "y",
+                        "payload_manifest_digest": "m",
                         "backend_uri": backend.uri})
     assert "immutable" in str(ei.value)
 
@@ -193,7 +203,7 @@ def test_crash_after_publish_leaves_the_entry_but_not_a_registration(kit):
     assert list(index_entries(index)) == [PLANNED.leg_id]
     assert not is_registered(index, PLANNED.leg_id)
     # 재시도로 닫힌다 — 계산을 다시 돌리지 않는다 (`finalize_only`)
-    assert finalize_only(PLANNED.leg_id, backend, index, _hooks())["ok"]
+    assert finalize_only(PLANNED.leg_id, backend, index)["ok"]
 
 
 def test_partial_upload_leaves_an_orphan_not_an_object(kit):
@@ -256,7 +266,9 @@ def test_every_declared_fault_has_a_regression():
     이것이 없으면 실패 모드 목록이 문서처럼 늘어나기만 하고 아무도 검사하지
     않는다 — 이 저장소가 여러 번 겪은 형태다.
     """
-    covered = {f for f, _ in _FAULT_STAGE} | {"crash_after_publish"}
+    covered = ({f for f, _ in _FAULT_STAGE} | {"crash_after_publish"}
+               | {"receipt_drop_after_readback", "receipt_mutate_after_readback",
+                  "receipt_drop_after_publish"})
     missing = sorted(FAULTS - covered)
     assert not missing, f"회귀가 없는 fault: {missing}"
     stray = sorted(covered - FAULTS)
@@ -345,7 +357,7 @@ def test_crash_after_publish_resumes_with_finalize_only(kit):
     assert not is_registered(index, PLANNED.leg_id), "등록은 아직 아니다"
 
     shutil.rmtree(run)                                    # 원본이 없다
-    out = finalize_only(PLANNED.leg_id, backend, index, _hooks())
+    out = finalize_only(PLANNED.leg_id, backend, index)
     assert out["ok"] and is_registered(index, PLANNED.leg_id)
 
 
@@ -421,7 +433,9 @@ def test_concurrent_publish_of_different_legs_loses_nothing(tmp_path):
         try:
             publish(index, {"leg_id": f"leg_{i}", "planned_id": f"p{i}",
                             "receipt_digest": "d" * 64, "receipt_object": "o" * 64,
-                            "payload_root_digest": "r" * 64, "backend_uri": "x"})
+                            "payload_root_digest": "r" * 64,
+                            "payload_manifest_digest": "m" * 64,
+                            "backend_uri": "x"})
         except BaseException as e:                        # noqa: BLE001
             errs.append(e)
 
@@ -445,7 +459,9 @@ def test_concurrent_publish_of_the_same_leg_admits_exactly_one(tmp_path):
         try:
             publish(index, {"leg_id": "same", "planned_id": f"p{i}",
                             "receipt_digest": "d" * 64, "receipt_object": "o" * 64,
-                            "payload_root_digest": "r" * 64, "backend_uri": "x"})
+                            "payload_root_digest": "r" * 64,
+                            "payload_manifest_digest": "m" * 64,
+                            "backend_uri": "x"})
             ok.append(i)
         except PreserveError:
             refused.append(i)
@@ -458,3 +474,221 @@ def test_concurrent_publish_of_the_same_leg_admits_exactly_one(tmp_path):
     assert len(ok) == 1, f"성공 {len(ok)}건 — 정확히 하나여야 한다"
     assert len(refused) == 11
     assert len(index_entries(index)) == 1
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 27차 P0 — receipt lifecycle 과 등록이 다시 false-green 이었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("fault", ["receipt_drop_after_readback",
+                                   "receipt_mutate_after_readback",
+                                   "receipt_drop_after_publish"])
+def test_losing_the_receipt_after_readback_stops_the_transaction(kit, fault):
+    """★ 27차 P0-1 — 한 번의 read-back 은 회수 가능성 불변식이 아니다.
+
+    `_drop_from_cas()` 는 receipt 가 만들어지기 **전에만** 돌았다. 그래서
+    receipt 를 되읽은 직후 지워도 트랜잭션이 성공하고 등록까지 됐다 —
+    index 가 다시 **회수 불가능한** receipt 를 가리켰다. 26차 P0-2 의 결과가
+    그대로 재현된 것이다.
+
+    등록 직전에 index 가 가리키는 receipt 를 **다시 회수해** 대조한다.
+    """
+    run, backend, index = kit
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, _hooks(),
+                        faults=frozenset({fault}))
+    assert ei.value.stage in ("receipt", "verify_before_register"), ei.value.stage
+    assert not is_registered(index, PLANNED.leg_id), "등록되면 안 된다"
+
+
+def test_finalize_only_never_recomputes(kit):
+    """★ 27차 P0-2 — `finalize_only()` 가 validate/rescore 를 다시 돌렸다.
+
+    `_finalize()` 를 다시 호출했으므로 CAS payload restore → validate →
+    rescore → **새 receipt 생성**까지 반복했다. "재계산 없이 CAS 만으로" 는
+    사실이 아니었고, analyzer 환경이 조금만 달라도 새 receipt 가 달라져
+    immutable publish 에서 복구가 실패한다.
+
+    이제 hook 을 **인자로 받지 않는다** — 구조적으로 재계산이 불가능하다.
+    """
+    run, backend, index = kit
+    calls = {"validate": 0, "rescore": 0}
+    h = _hooks()
+    v0, r0 = h.validate, h.rescore
+    h.validate = lambda root: (calls.__setitem__("validate", calls["validate"] + 1)
+                               or v0(root))
+    h.rescore = lambda root: (calls.__setitem__("rescore", calls["rescore"] + 1)
+                              or r0(root))
+
+    with pytest.raises(PreserveError):
+        run_transaction(PLANNED, run, backend, index, h,
+                        faults=frozenset({"crash_after_publish"}))
+    before = dict(calls)
+    shutil.rmtree(run)
+
+    out = finalize_only(PLANNED.leg_id, backend, index)      # ← hooks 없음
+    assert out["ok"] and is_registered(index, PLANNED.leg_id)
+    assert calls == before, (
+        f"finalize_only 가 다시 계산했다: {before} → {calls}")
+
+
+def test_finalize_only_fails_closed_without_a_retrievable_receipt(kit):
+    """indexed receipt 가 없거나 다르면 **재생성하지 말고 멈춘다**."""
+    run, backend, index = kit
+    with pytest.raises(PreserveError):
+        run_transaction(PLANNED, run, backend, index, _hooks(),
+                        faults=frozenset({"crash_after_publish"}))
+    e = index_entries(index)[PLANNED.leg_id]
+    backend._obj(e["receipt_object"]).unlink()               # receipt 를 잃는다
+
+    with pytest.raises(PreserveError) as ei:
+        finalize_only(PLANNED.leg_id, backend, index)
+    assert ei.value.stage in ("finalize_only", "read_back",
+                              "verify_before_register")
+    assert not is_registered(index, PLANNED.leg_id)
+
+
+def test_a_foreign_registration_journal_is_refused(kit):
+    """★ 27차 P0-2 — journal 이 "파일이 있다" 만으로 등록 완료였다.
+
+    `_register()` 는 `_exclusive_write` 가 False 를 돌려줘도 기존 내용을
+    비교하지 않았고, `is_registered()` 는 JSON 을 읽지도 않았다. 다른
+    `receipt_object` 를 가진 journal 을 미리 심어 두면 트랜잭션이 `ok=True` 를
+    돌려주면서 등록은 남의 것을 가리켰다.
+    """
+    run, backend, index = kit
+    j = index / "registered" / f"{PLANNED.leg_id}.json"
+    j.parent.mkdir(parents=True, exist_ok=True)
+    j.write_bytes(canonical_bytes({"leg_id": PLANNED.leg_id,
+                                   "receipt_object": "f" * 64}))
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    assert ei.value.stage == "register"
+
+
+@pytest.mark.parametrize("blob", [b"", b"{oops", b"null"])
+def test_a_truncated_registration_journal_is_not_a_registration(kit, blob):
+    """잘린 파일·빈 파일·JSON 아닌 것은 등록이 아니다."""
+    run, backend, index = kit
+    j = index / "registered" / f"{PLANNED.leg_id}.json"
+    j.parent.mkdir(parents=True, exist_ok=True)
+    j.write_bytes(blob)
+    assert not is_registered(index, PLANNED.leg_id)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 27차 P1-3 — 배타 생성은 crash-atomic durable record 가 아니었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_partially_written_index_entry_is_never_visible(tmp_path):
+    """★ 27차 P1-3 — final pathname 을 먼저 만들고 한 번 `os.write` 했다.
+
+    부분 쓰기를 확인하지 않고 parent directory 도 fsync 하지 않았다. 5 bytes 만
+    쓰이면 `publish_created=True` 인데 다음 `index_entries()` 는
+    `JSONDecodeError` 였고, immutable 파일 때문에 재시도로도 복구가 안 됐다.
+
+    final name 은 **완성된 파일**에만 붙어야 한다.
+    """
+    index = tmp_path / "index"
+    entry = {"leg_id": "x", "planned_id": "p", "receipt_digest": "d" * 64,
+             "receipt_object": "o" * 64, "payload_root_digest": "r" * 64,
+             "payload_manifest_digest": "m" * 64, "backend_uri": "u"}
+    publish(index, entry)
+    assert index_entries(index)["x"] == entry
+
+    # 중간에 죽은 흔적(temp)이 남아도 index 는 읽힌다
+    (index / "legs" / "x.json.tmp.deadbeef").write_bytes(b"{trunc")
+    assert index_entries(index)["x"] == entry
+
+
+def test_publish_requires_the_fields_finalize_only_will_use(tmp_path):
+    """`publish()` 가 안 받는 키를 `finalize_only()` 가 무조건 쓰면 KeyError 다."""
+    index = tmp_path / "index"
+    with pytest.raises(PreserveError):
+        publish(index, {"leg_id": "x", "planned_id": "p",
+                        "receipt_digest": "d" * 64, "backend_uri": "u",
+                        "payload_root_digest": "r" * 64})   # receipt_object 없음
+    assert index_entries(index) == {}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 27차 P1-4 — manifest·ID 가 closed schema 로 결속되지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_manifest_member_cannot_escape_the_restore_root(kit):
+    """★ 27차 P1-4 — `../escaped.bin` 이 restore root **밖에** 파일을 썼다."""
+    run, backend, index = kit
+    man = seal_payload(run)
+    man["members"][0]["path"] = "../escaped.bin"
+    man["root_digest"] = digest({k: v for k, v in man.items() if k != "root_digest"})
+    dg = backend.put_if_absent(canonical_bytes(man))["digest"]
+
+    root = Path(tempfile.mkdtemp())
+    with pytest.raises(PreserveError) as ei:
+        restore_from_cas(backend, dg, root)
+    assert ei.value.stage == "cas_restore"
+    assert not (root.parent / "escaped.bin").exists()
+
+
+@pytest.mark.parametrize("mut", [
+    ("schema", "bogus/v9"),
+    ("n_members", 999),
+    ("total_bytes", 1),
+    ("root_digest", "0" * 64),
+])
+def test_a_manifest_that_lies_about_itself_is_refused(kit, mut):
+    """schema·집계·root digest 가 실물과 어긋나면 거부한다."""
+    run, backend, index = kit
+    man = dict(seal_payload(run))
+    man[mut[0]] = mut[1]
+    dg = backend.put_if_absent(canonical_bytes(man))["digest"]
+    with pytest.raises(PreserveError) as ei:
+        restore_from_cas(backend, dg, Path(tempfile.mkdtemp()))
+    assert ei.value.stage == "cas_restore"
+
+
+def test_duplicate_member_paths_are_refused(kit):
+    run, backend, index = kit
+    man = seal_payload(run)
+    man["members"].append(dict(man["members"][0]))
+    man["n_members"] = len(man["members"])
+    man["total_bytes"] = sum(m["bytes"] for m in man["members"])
+    man["root_digest"] = digest({k: v for k, v in man.items() if k != "root_digest"})
+    dg = backend.put_if_absent(canonical_bytes(man))["digest"]
+    with pytest.raises(PreserveError):
+        restore_from_cas(backend, dg, Path(tempfile.mkdtemp()))
+
+
+@pytest.mark.parametrize("bad", ["../../escaped", "a/b", ".", "..", "", "x" * 200,
+                                 "CON", "with space"])
+def test_a_leg_id_cannot_escape_the_index_directory(tmp_path, bad):
+    """★ 27차 P1-4 — `leg_id` 가 path component 로 그대로 보간됐다.
+
+    `leg_id='../../escaped'` publish 가 `index/` **밖에** 파일을 만들고
+    `index_entries()` 에는 아무 항목도 남기지 않았다.
+    """
+    index = tmp_path / "index"
+    with pytest.raises(PreserveError) as ei:
+        publish(index, {"leg_id": bad, "planned_id": "p",
+                        "receipt_digest": "d" * 64, "receipt_object": "o" * 64,
+                        "payload_root_digest": "r" * 64,
+                        "payload_manifest_digest": "m" * 64, "backend_uri": "u"})
+    assert "leg_id" in str(ei.value)
+    assert not list(tmp_path.rglob("*escaped*"))
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 27차 P1-5 — 산출 manifest 가 byte output 을 증명하지 않았다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_output_manifest_must_bind_real_bytes(kit):
+    """`relative_path`·`byte_size`·`file_sha256`·producer 없이 publish 되면 안 된다."""
+    run, backend, index = kit
+    h = _hooks()
+    h.rescore = lambda root: {"role": "r", "canonicalizer": "c",
+                              "semantic_schema": "s",
+                              "semantic_sha256": _EXPECTED_SEM}
+    with pytest.raises(PreserveError) as ei:
+        run_transaction(PLANNED, run, backend, index, h)
+    assert ei.value.stage == "rescore"
+    assert index_entries(index) == {}

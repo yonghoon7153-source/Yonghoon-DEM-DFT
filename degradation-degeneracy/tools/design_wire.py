@@ -24,11 +24,12 @@ wire schema · arm registry · hash domain · golden vector 가 먼저 고정돼
 from __future__ import annotations
 
 import re
+import unicodedata
 from decimal import Decimal, InvalidOperation
 
 from tools.preserve import canonical_bytes, digest
 
-SCHEMA = "pairing-design/v6.0"
+SCHEMA = "pairing-design/v6.1"
 
 #: 좌표로 허용되는 십진 문자열. 지수표기·후행 쓰레기를 막는다.
 _DECIMAL = re.compile(r"^-?(0|[1-9][0-9]*)(\.[0-9]+)?$")
@@ -94,7 +95,13 @@ def assert_wire_safe(obj, path: str = "$") -> None:
     ★ 26차 P1-8 — 공통 serializer 가 좌표 **밖**의 이진 float 를 그대로
       받았다. 좌표만 막아 봐야 payload 로 들어오면 같은 문제다.
     """
-    if isinstance(obj, bool) or obj is None or isinstance(obj, (int, str)):
+    if isinstance(obj, str):
+        # ★ 27차 P1-9 — wire 가 `nfc_utf8_no_escape` 를 선언만 하고 강제하지
+        #   않았다. NFC 로 같은 `é` 와 `e\u0301` 가 다른 digest 를 냈다.
+        if unicodedata.normalize("NFC", obj) != obj:
+            raise WireError(f"{path}: NFC 정규화되지 않은 문자열이다 ({obj!r})")
+        return
+    if isinstance(obj, bool) or obj is None or isinstance(obj, int):
         return
     if isinstance(obj, float):
         raise WireError(f"{path}: wire 에 이진 부동소수를 넣을 수 없다 ({obj!r})")
@@ -130,6 +137,8 @@ def check_candidate_payload(source: str, payload) -> list[str]:
             bad.append(f"{k}: 64-hex 가 아니다 ({v!r})")
         elif kind == "int" and (isinstance(v, bool) or not isinstance(v, int)):
             bad.append(f"{k}: 정수가 아니다 ({v!r})")
+        elif kind == "int" and k == "bank_index" and v < 0:
+            bad.append(f"{k}: 음수 bank index 는 없다 ({v!r})")
         elif kind == "str" and (not isinstance(v, str) or not v):
             bad.append(f"{k}: 비어 있지 않은 문자열이어야 한다 ({v!r})")
     return bad
@@ -226,6 +235,11 @@ def canonical_design_spec(*, label: str, arms: list[str],
         raise WireError(f"parameter 중복: {parameter_order}")
     if endian not in ("little", "big"):
         raise WireError(f"endian: {endian!r}")
+    if isinstance(decimal_places, bool) or not isinstance(decimal_places, int) \
+            or not 1 <= decimal_places <= 30:
+        raise WireError(f"decimal_places 는 1~30 정수여야 한다: {decimal_places!r}")
+    if len(set(objective_plan)) != len(objective_plan) or not objective_plan:
+        raise WireError(f"objective_plan 이 비었거나 중복이다: {objective_plan}")
 
     return {
         "schema": SCHEMA,
@@ -241,7 +255,9 @@ def canonical_design_spec(*, label: str, arms: list[str],
         "excluded_from_pair_id": dict(EXCLUDED_FROM_PAIR_ID),
         "parameter_order": list(parameter_order),
         "bounds_equivalence_policy": bounds_policy,
-        "objective_plan": sorted(objective_plan),
+        # ★ 27차 P1-9 — 초판은 정렬해서 **순서를 지웠다**. 계약의 objective
+        #   order 와 warm provider 의미를 design identity 가 잃는다.
+        "objective_plan": list(objective_plan),
         "bank": {
             "generator": bank_generator,
             "version": bank_version,
@@ -262,15 +278,40 @@ def canonical_design_spec(*, label: str, arms: list[str],
         },
         "candidate_payload_schema": {k: dict(v)
                                      for k, v in CANDIDATE_PAYLOAD_SCHEMA.items()},
+        # 계약 §4.2 최소 구성 — 초판이 통째로 빠뜨렸다 (27차 P1-9)
+        "parameter_coordinate_schema": {
+            "pair_axes": ["lli", "lam_pe", "lam_ne", "lam_pe_type", "lam_ne_type"],
+            "value_type": "exact_decimal_string",
+            "type_axes_value_type": "str",
+        },
     }
 
 
+#: design spec 의 **닫힌** 키 집합. ★ 27차 P1-9 — 초판은 schema 문자열과
+#: label 부재만 봤다. `{"schema": "pairing-design/v6.0"}` 하나로도 정상 digest 가
+#: 나왔고 extra key 도 통과했다.
+_DESIGN_KEYS = frozenset({
+    "schema", "coordinate", "arms", "excluded_from_pair_id", "parameter_order",
+    "bounds_equivalence_policy", "objective_plan", "bank", "serialization",
+    "candidate_payload_schema", "parameter_coordinate_schema",
+})
+
+
 def pairing_design_sha256(spec: dict) -> str:
+    if not isinstance(spec, dict):
+        raise WireError(f"design spec 이 dict 가 아니다: {type(spec).__name__}")
     if spec.get("schema") != SCHEMA:
         raise WireError(f"schema 가 {SCHEMA} 가 아니다: {spec.get('schema')!r}")
     if "label" in spec:
         raise WireError("label 은 hash 대상이 아니다 — 별칭을 바꾸면 모든 "
                         "pair ID 가 바뀐다 (계약 §4.2 / 26차 P1-7)")
+    if set(spec) != _DESIGN_KEYS:
+        raise WireError(
+            f"design spec 키 집합이 닫혀 있지 않다: 남음 {sorted(set(spec) - _DESIGN_KEYS)} "
+            f"· 모자람 {sorted(_DESIGN_KEYS - set(spec))}")
+    if not spec.get("arms") or not spec.get("parameter_order") \
+            or not spec.get("objective_plan"):
+        raise WireError("arms · parameter_order · objective_plan 은 비울 수 없다")
     assert_wire_safe(spec)
     return digest(spec)
 

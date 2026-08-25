@@ -30,7 +30,7 @@
 #   "두 오류가 동시에 ~1%" 와 "판정선을 어디에 두든" 이 각각 배너가 명시적으로
 #   **유지**한다고 적은 문장과 정반대 주장을 잡았다. 원장이 참인 문장을 금지하면
 #   문서를 거짓으로 만든다 — 금지어를 넣기 전에 그 배너가 무엇을 유지하는지 읽어라.
-schema_version: 3
+schema_version: 4
 
 # ── protocol 세대의 닫힌 집합 (★ 26차 P2-11) ─────────────────────────────
 # 왜: 초판 회귀는 role 의 `protocol_generation` 을 claim 의 것과 대조하지
@@ -42,6 +42,37 @@ protocol_generations:
   - v5          # 옛 fixed-budget / no-warm 세대
   - v6_prep     # 현행 digest 의 warm-probe 준비 실행
   - v6          # 단계 3 (아직 산출물 없음)
+
+# ── 세대 간 role 허용표 (★ 27차 P2-10) ───────────────────────────────────
+# 왜: 초판 회귀는 role 세대가 claim 세대와 다르면 **nonempty `reason` 하나만**
+#   있으면 통과시켰다. 리뷰가 준 반례 — `P22_STAGE3_PRIMARY` 의 v5 role 을
+#   `diagnostic` → `canonical` 로 바꿔도 기존 `reason` 때문에 통과했다.
+#   그 문서가 적은 `v5_to_v6_promotion_forbidden` 의 **정반대**다.
+#
+#   (role 세대, claim 세대) 쌍마다 허용 role 을 못 박는다. 표에 없는 쌍은
+#   fail-closed 다 — 새 세대를 만들면 여기 규칙을 먼저 적어야 한다.
+role_compatibility:
+  - source: v5
+    target: v5
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
+  - source: v5
+    target: v6_prep
+    allowed_roles: [diagnostic, confounded, excluded]
+    왜: 세대가 다르면 인과 크기를 옮길 수 없다 — 교란의 **존재**까지만
+  - source: v5
+    target: v6
+    allowed_roles: [diagnostic, excluded]
+    왜: v5 → v6 승격 금지 (계약 §2.1). `canonical` 은 표에 없다
+  - source: v6_prep
+    target: v6_prep
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
+  - source: v6_prep
+    target: v6
+    allowed_roles: [diagnostic, excluded]
+    왜: 준비 실행은 단계 3 primary 를 지지할 수 없다
+  - source: v6
+    target: v6
+    allowed_roles: [canonical, diagnostic, confounded, superseded, excluded]
 
 # ── 활성 주장 원장 (★ 25차 발견 6) ─────────────────────────────────────────
 # 왜 여기 있나: `LEG_PRESERVATION.yaml` 의 `claim_roles` 가 자유문장이라

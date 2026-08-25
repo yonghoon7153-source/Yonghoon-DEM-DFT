@@ -44,6 +44,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import shutil
 import tempfile
 import gzip
 import math
@@ -504,6 +505,10 @@ def build(leg: str, out: Path | None = None) -> dict:
     #   실수 한 번으로 잃어버린 다리의 유일한 사본을 덮을 수 있었다. 이제
     #   staging 에 쓰고 마지막에 원자적으로 옮긴다.
     _out = out or WARM                       # ★ 25차 발견 1 — cohort 디렉터리
+    # ★ 27차 P1-8 — frozen 거부가 `main()` 에만 있었다. public `build(leg, out)`
+    #   는 frozen `WARM` 을 그대로 받아 썼고 회귀도 CLI subprocess 만 봤다.
+    #   검사를 **쓰기 지점**으로 내린다.
+    _assert_writable(_out)
     _out.mkdir(parents=True, exist_ok=True)
     _stage = Path(tempfile.mkdtemp(prefix=f".stage_{leg}_", dir=_out))
     r_csv = _stage / f"{leg}.restarts.csv.gz"
@@ -627,8 +632,26 @@ def build(leg: str, out: Path | None = None) -> dict:
 
     (_stage / f"{leg}.projection.yaml").write_text(
         yaml.safe_dump(meta, allow_unicode=True, sort_keys=False), encoding="utf-8")
-    # ── 원자적 승격 — 여기까지 왔다는 것은 전 검증을 통과했다는 뜻이다 ──
-    for f in sorted(_stage.iterdir()):
+    # ── 승격 — **verdict 가 통과했을 때만** ──────────────────────────────
+    # ★ 27차 P1-8 — 초판은 semantic verdict 가 false 여도 세 파일을 먼저
+    #   승격하고 CLI 가 나중에 exit 1 을 냈다. staging 이 promotion gate 가
+    #   아니었다. 이제 실패하면 staging 째로 버린다.
+    _v = meta.get("재계산_검증") or {}
+    _ok = (_v.get("전체_일치") is True and _v.get("fits_삼중일치") is True
+           and meta.get("fits_봉인일치") is True)
+    if not _ok:
+        shutil.rmtree(_stage, ignore_errors=True)
+        raise SystemExit(
+            f"✗ {leg}: 재계산 검증이 실패해 승격하지 않는다 — "
+            f"전체={_v.get('전체_일치')} fits삼중={_v.get('fits_삼중일치')} "
+            f"봉인일치={meta.get('fits_봉인일치')} · 불일치={_v.get('불일치')}")
+
+    # YAML 을 **마지막에** 옮긴다 (manifest-last). YAML 이 나머지 둘의 digest 를
+    # 들고 있으므로, 중간에 죽으면 옛 YAML 이 옛 payload 를 계속 가리켜
+    # 세대가 섞이지 않는다.
+    _files = sorted(_stage.iterdir(),
+                    key=lambda f: (f.name.endswith(".projection.yaml"), f.name))
+    for f in _files:
         os.replace(f, _out / f.name)
     _stage.rmdir()
 
@@ -650,6 +673,17 @@ def _frozen_cohort_dirs() -> dict[str, Path]:
     reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
     return {c["cohort_id"]: (REPO / c["dir"]).resolve()
             for c in (reg.get("cohorts") or []) if c.get("status") == "frozen"}
+
+
+def _assert_writable(dest: Path) -> None:
+    """frozen cohort 로는 쓸 수 없다. **쓰기 지점**에서 막는다 (27차 P1-8)."""
+    d = Path(dest).resolve()
+    for cid, frozen in _frozen_cohort_dirs().items():
+        if d == frozen:
+            raise SystemExit(
+                f"✗ `{cid}` 는 frozen cohort 다 ({d}) — 쓸 수 없다.\n"
+                f"  원자료를 잃은 투영이 들어 있어 덮으면 복구할 수 없다.\n"
+                f"  활성 cohort 를 지정하세요: --cohort <id>")
 
 
 def _cohort_dir(cohort_id: str) -> Path:

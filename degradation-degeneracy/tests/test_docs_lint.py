@@ -864,7 +864,7 @@ def _active_text(text: str) -> tuple[str, set[str]]:
 def test_claim_status_registry_is_wellformed():
     """원장 자신이 깨지면 아래 검사가 조용히 통과한다 — 먼저 막는다."""
     reg = _claim_status()
-    assert reg.get("schema_version") == 3
+    assert reg.get("schema_version") == 4
     ids = [c["id"] for c in reg["claims"]]
     assert len(ids) == len(set(ids)), f"claim id 중복: {ids}"
 
@@ -1242,6 +1242,15 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
             continue
         leg = f"{cohort}/{leg}"
         m = yaml.safe_load(y.read_text(encoding="utf-8"))
+        # ★ 27차 P1-8 — `projection_file` 을 cohort dir 와 단순 join 하면
+        #   `../warm_probe/...` 로 **다른 cohort 의 bytes** 를 대신 재해시할 수
+        #   있다 (g2 payload 를 지우고 frozen g1 을 가리키는 false-green).
+        for key in ("projection_file", "restart_projection_file"):
+            rel = m.get(key) or ""
+            if "/" in rel or "\\" in rel or rel in ("", ".", ".."):
+                bad.append(f"{leg}: {key} 가 cohort 밖을 가리킨다 {rel!r}")
+        if bad and bad[-1].startswith(f"{leg}: "):
+            continue
         gz = _WARM / m["projection_file"]
         if not gz.is_file():
             bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
@@ -1288,6 +1297,15 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
             if len(sub) != want["n_rows"]:
                 bad.append(f"{leg}/{obj}: 행 수 {len(sub)} vs 기록 {want['n_rows']}")
 
+        # ★ 27차 P1-8 — 압축 해제 행 수를 top-level 기록과 대조한다.
+        if len(body) != m.get("n_rows"):
+            bad.append(f"{leg}: 투영 행 수 {len(body)} ≠ 기록 {m.get('n_rows')}")
+        objs = {ln.split("\t")[oi] for ln in body}
+        keyed = set((m.get("by_objective_sha256") or {}))
+        if objs != keyed:
+            bad.append(f"{leg}: by_objective key 가 불완전하다 "
+                       f"(TSV {sorted(objs)} vs 기록 {sorted(keyed)})")
+
         # ★ 22차 발견 5 — 전체 semantic 대조와 fits 삼중 일치를 요구한다.
         v = m.get("재계산_검증") or {}
         if v.get("전체_일치") is not True:
@@ -1302,9 +1320,14 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
         rp = m.get("restart_projection_file")
         if not rp or not (_WARM / rp).is_file():
             bad.append(f"{leg}: restart 수준 투영이 없다")
-        elif hashlib.sha256(gzip.decompress((_WARM / rp).read_bytes())).hexdigest() \
-                != m.get("restart_projection_sha256"):
-            bad.append(f"{leg}: restart 투영이 digest 와 다르다")
+        else:
+            r_raw = gzip.decompress((_WARM / rp).read_bytes())
+            if hashlib.sha256(r_raw).hexdigest() != m.get("restart_projection_sha256"):
+                bad.append(f"{leg}: restart 투영이 digest 와 다르다")
+            r_body = r_raw.decode("utf-8").splitlines()[1:]
+            if len(r_body) != m.get("n_restart_rows"):
+                bad.append(f"{leg}: restart 행 수 {len(r_body)} ≠ 기록 "
+                           f"{m.get('n_restart_rows')}")
     assert not bad, "행 수준 투영이 자기 근거와 어긋난다:\n  " + "\n  ".join(bad)
 
 
@@ -2821,6 +2844,9 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
     roles_ok = enums["inference_role"]
     creg = _claim_status()
     gens = creg.get("protocol_generations") or []
+    compat = {(r["source"], r["target"]): set(r["allowed_roles"])
+              for r in (creg.get("role_compatibility") or [])}
+    assert compat, "`role_compatibility` 가 없다 — 세대 간 role 이 자유문장이 된다"
     known = {c["id"]: c for c in (creg.get("active_claims") or [])}
     retracted = {c["id"] for c in creg["claims"]}
 
@@ -2850,14 +2876,23 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
             # ★ 26차 P2-11 — 초판은 둘 중 **하나만** 있으면 통과시켰고,
             #   role 의 세대를 claim 의 세대와 대조하지 않았다. `v6_prep` 을
             #   `v999` 로 바꿔도 통과했다.
+            # ★ 27차 P2-10 — `reason` 하나로 legacy canonical 승격이 됐다.
+            #   (role 세대, claim 세대) 쌍의 **허용표**로 본다. 표에 없는 쌍은
+            #   fail-closed 다.
             rg = r.get("protocol_generation")
+            tg = known[cid]["protocol_generation"]
             if rg not in gens:
                 bad.append(f"{leg}/{cid}: protocol_generation={rg!r} ∉ {gens}")
-            elif rg != known[cid]["protocol_generation"] and not r.get("reason"):
+            elif (rg, tg) not in compat:
+                bad.append(f"{leg}/{cid}: ({rg} → {tg}) 조합이 "
+                           "`role_compatibility` 에 없다 — 규칙을 먼저 적어라")
+            elif r.get("inference_role") not in compat[(rg, tg)]:
                 bad.append(
-                    f"{leg}/{cid}: role 세대 {rg} ≠ claim 세대 "
-                    f"{known[cid]['protocol_generation']} 인데 `reason` 이 없다 "
-                    "— 세대를 넘어 쓰려면 근거를 적어라")
+                    f"{leg}/{cid}: ({rg} → {tg}) 에서 "
+                    f"`{r.get('inference_role')}` 은 허용되지 않는다 "
+                    f"(허용: {sorted(compat[(rg, tg)])})")
+            elif rg != tg and not r.get("reason"):
+                bad.append(f"{leg}/{cid}: 세대를 넘어 쓰는데 `reason` 이 없다")
             # ★ leg-level 보다 **센** role 은 세대가 달라야만 성립한다
             if r.get("inference_role") == "canonical":
                 if cap != "available_raw_present":
@@ -3086,3 +3121,126 @@ def test_committed_gate_requests_are_self_contained():
                 bad.append(f"{md.name}: 인용한 영수증 core sha {q[:16]} 가 낡았다 "
                            f"(현행 {core[:16]})")
     assert not bad, "커밋된 요청문이 자기완결적이지 않다:\n  " + "\n  ".join(bad)
+
+
+def _receipt_module():
+    import importlib.util
+    src = _REPO / "docs" / "22p_gap" / "make_receipt.py"
+    spec = importlib.util.spec_from_file_location("_mr", src)
+    m = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(m)
+    return m
+
+
+def test_citation_safety_metadata_is_not_thrown_out_of_the_hash():
+    """★ 27차 P1-6 — 안전 문구를 정규 view 에서 빼면 뒤집어도 digest 가 같다.
+
+    v2 의 `SEMANTIC_SKIP` 은 `_F4_주의` 까지 뗐다. 그런데 그것은 실행 메타가
+    아니라 `summarize()` 가 결정론적으로 만드는 **인용 금지 경고**다
+    (`src/scoring.py:369`). 리뷰가 준 반례가 정확히 이것이다:
+
+        `_F4_주의: "do not cite"` → `"safe to cite"` ⇒ semantic_equal=True
+
+    지금은 양쪽이 다 만드는 값이므로 비교된다.
+    """
+    mr = _receipt_module()
+    base = {"overall": {"n": 3}, "_F4_주의": "이 블록의 두 지표는 그대로 인용하지 말 것."}
+    flipped = dict(base, _F4_주의="인용해도 안전하다")
+    assert mr._semantic(base) != mr._semantic(flipped), (
+        "안전 문구를 뒤집었는데 semantic digest 가 같다")
+
+
+@pytest.mark.parametrize("mut", [
+    {"canonical": False}, {"봉인상태": "손상"}, {"인용가능": False},
+    {"fits_sha256": "0" * 64},
+])
+def test_citation_safety_flags_are_checked_by_value(mut):
+    """`_채점원본` 은 재채점이 못 만들지만 그 안의 flag 는 검사해야 한다.
+
+    통째로 정규 view 에서 빼면 `인용가능` 을 뒤집어도 digest 가 같다.
+    equality 로 못 보는 것은 **명시적 assertion** 으로 본다.
+    """
+    mr = _receipt_module()
+    fits_sha = "a" * 64
+    good = {"_채점원본": {"fits": "results/x/fits.parquet", "canonical": True,
+                       "fits_sha256": fits_sha, "봉인상태": "정상", "인용가능": True}}
+    assert mr._citation_safety(good, fits_sha)["fits_sha256_bound"] is True
+
+    bad = {"_채점원본": dict(good["_채점원본"], **mut)}
+    with pytest.raises(SystemExit) as e:
+        mr._citation_safety(bad, fits_sha)
+    assert "인용 안전" in str(e.value)
+
+
+def test_a_receipt_with_nothing_to_compare_is_not_agreement():
+    """산출이 하나뿐이면 "일치" 가 아니라 **비교 불가**다 (27차 P1-6)."""
+    mr = _receipt_module()
+    one = [{"role": "rescored_summary", "semantic_schema": "s",
+            "canonicalizer": "c", "semantic_sha256": "a" * 64}]
+    with pytest.raises(SystemExit) as e:
+        mr._outputs_agree(one)
+    assert "대조할 짝이 없다" in str(e.value)
+
+    two_same = one + [dict(one[0], role="sealed_summary")]
+    assert mr._outputs_agree(two_same) is True
+    two_diff = one + [dict(one[0], role="sealed_summary", semantic_sha256="b" * 64)]
+    with pytest.raises(SystemExit):
+        mr._outputs_agree(two_diff)
+
+
+def test_receipt_core_paths_are_os_independent():
+    """★ 27차 P1-7 — core 에 `\\` 가 섞이면 OS 마다 다른 bytes 가 된다.
+
+    리뷰가 Windows 에서 실측했다: core 의 세 경로가 backslash 로 바뀌고
+    생성 YAML 이 CRLF 가 되어 8877 → 9087 bytes, core sha 불일치.
+    """
+    import yaml
+
+    rec = yaml.safe_load(
+        (DOCS / "22p_gap" / "receipts" / "paired_fixed5_v4.validate.yaml")
+        .read_text(encoding="utf-8"))
+    core = rec["core"]
+    for path in (core["bundle"]["uri"], core["bundle"]["payload_index"],
+                 core["restore"]["run_dir_relative"]):
+        assert "\\" not in path, f"core 경로에 backslash 가 있다: {path!r}"
+        assert not path.startswith("/"), path
+
+    mr = (_REPO / "docs" / "22p_gap" / "make_receipt.py").read_text(encoding="utf-8")
+    code = "\n".join(ln for ln in mr.splitlines() if not ln.lstrip().startswith("#"))
+    assert "write_text(" not in code, (
+        "`write_text` 는 기본 newline 변환을 쓴다 — LF 를 명시하라 (27차 P1-7)")
+    assert "as_posix()" in code, "core 경로를 POSIX 로 고정하지 않았다"
+
+
+def test_the_frozen_guard_lives_at_the_write_primitive_not_the_cli():
+    """★ 27차 P1-8 — frozen 거부가 `main()` 에만 있어 public API 로 우회됐다.
+
+    `build(leg, out=WARM)` 이 frozen cohort 를 그대로 받아 썼고, 회귀는 CLI
+    subprocess 만 검사했다. 이번 라운드의 다른 발견들과 같은 형태다 —
+    **가장 낮은 공통 지점**에 두지 않으면 우회된다.
+    """
+    rp = _row_projection_module()
+    with pytest.raises(SystemExit) as e:
+        rp.build("paired_fixed5_v4", rp.WARM)
+    assert "frozen" in str(e.value)
+
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    assert "_assert_writable(_out)" in src, (
+        "쓰기 지점에서 frozen 을 막지 않는다")
+
+
+def test_promotion_happens_only_after_the_recomputation_verdict():
+    """★ 27차 P1-8 — staging 이 promotion gate 가 아니었다.
+
+    초판은 semantic verdict 가 false 여도 세 파일을 먼저 승격하고 CLI 가 나중에
+    exit 1 을 냈다. 검증 실패는 **승격 자체가 없어야** 한다.
+    """
+    src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
+    i = src.index("_v = meta.get(\"재계산_검증\")")
+    j = src.index("os.replace(f, _out / f.name)")
+    assert i < j, "승격이 verdict 검사보다 먼저 온다"
+    assert "shutil.rmtree(_stage" in src[i:j], (
+        "verdict 가 실패해도 staging 을 버리지 않는다")
+    # manifest-last — YAML 이 마지막에 옮겨져야 세대가 섞이지 않는다
+    assert "endswith(\".projection.yaml\")" in src[i:j], (
+        "YAML 을 마지막에 옮기지 않는다 (manifest-last)")

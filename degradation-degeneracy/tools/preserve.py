@@ -58,6 +58,7 @@ import errno
 import hashlib
 import json
 import os
+import re
 import shutil
 import tempfile
 import uuid
@@ -87,11 +88,31 @@ FAULTS = frozenset({
     "wrong_semantic_digest",  # 재채점 결과가 봉인과 다르다
     "wrong_planned_id",       # 실행이 다른 planned leg 를 가리킨다
     "wrong_source_digest",    # run_spec 의 code identity 가 계획과 다르다
+    "receipt_drop_after_readback",   # ★ receipt 를 되읽은 직후 지운다
+    "receipt_mutate_after_readback",  # ★ 되읽은 직후 바이트를 바꾼다
+    "receipt_drop_after_publish",     # ★ publish 뒤 등록 전에 지운다
     "retention_too_short",    # backend 의 보존 기간이 요구를 못 채운다
     "no_read_access",         # backend 를 되읽을 권한이 없다
 })
 
 _HEX64 = 64
+
+#: opaque ID 의 허용 문자·길이. ★ 27차 P1-4 — `leg_id` 가 path component 로
+#: 그대로 보간돼 `../../escaped` 가 index 디렉터리 **밖에** 파일을 만들었다.
+_ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
+#: Windows 예약 device 이름 — 파일로 만들 수 없거나 이상하게 동작한다
+_RESERVED = frozenset({"con", "prn", "aux", "nul"}
+                      | {f"com{i}" for i in range(1, 10)}
+                      | {f"lpt{i}" for i in range(1, 10)})
+
+
+def check_id(name: str, kind: str = "leg_id") -> None:
+    """separator · `.`/`..` · device name · 길이를 닫는다."""
+    if not isinstance(name, str) or not _ID_RE.match(name):
+        raise PreserveError("id", f"{kind} 가 허용 형식이 아니다: {name!r} "
+                                  "(첫 글자 영숫자, 이후 [A-Za-z0-9_.-], 64자 이내)")
+    if name in (".", "..") or name.lower().split(".")[0] in _RESERVED:
+        raise PreserveError("id", f"{kind} 로 쓸 수 없는 이름이다: {name!r}")
 
 
 class PreserveError(RuntimeError):
@@ -201,6 +222,72 @@ class CasBackend:
         return sorted(st.glob("*.part")) if st.is_dir() else []
 
 
+#: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
+_MANIFEST_KEYS = {"schema", "n_members", "total_bytes", "members", "root_digest"}
+_MEMBER_KEYS = {"path", "bytes", "sha256"}
+MANIFEST_SCHEMA = "payload-manifest/v1"
+
+
+def _safe_member_path(root: Path, rel: str, stage: str) -> Path:
+    """member 경로를 root **안**으로 가둔다.
+
+    ★ 27차 P1-4 — `../escaped.bin` 이 restore root 밖에 파일을 썼다. CAS
+      object 의 content SHA 만 확인하고 안의 경로는 아무 것도 안 봤기 때문이다.
+    """
+    if not isinstance(rel, str) or not rel or rel != rel.strip():
+        raise PreserveError(stage, f"member 경로가 이상하다: {rel!r}")
+    if "\\" in rel or rel.startswith("/") or ":" in rel:
+        raise PreserveError(stage, f"member 경로는 상대 POSIX 여야 한다: {rel!r}")
+    parts = rel.split("/")
+    if any(pt in ("", ".", "..") for pt in parts):
+        raise PreserveError(stage, f"member 경로에 traversal 이 있다: {rel!r}")
+    root = Path(root).resolve()
+    out = (root / rel).resolve()
+    if root not in out.parents and out != root:
+        raise PreserveError(stage, f"member 경로가 root 밖이다: {rel!r}")
+    return out
+
+
+def check_manifest(man) -> list[str]:
+    """schema · 집계 · root digest · 중복 경로를 **전부** 본다."""
+    if not isinstance(man, dict):
+        return [f"manifest 가 dict 가 아니다: {type(man).__name__}"]
+    bad = []
+    if set(man) != _MANIFEST_KEYS:
+        bad.append(f"키 집합이 다르다: {sorted(set(man) ^ _MANIFEST_KEYS)}")
+        return bad
+    if man["schema"] != MANIFEST_SCHEMA:
+        bad.append(f"schema={man['schema']!r} ≠ {MANIFEST_SCHEMA}")
+    ms = man["members"]
+    if not isinstance(ms, list):
+        return bad + ["members 가 목록이 아니다"]
+    paths = []
+    for i, m in enumerate(ms):
+        if not isinstance(m, dict) or set(m) != _MEMBER_KEYS:
+            bad.append(f"members[{i}] 키 집합이 다르다")
+            continue
+        if not _is_hex64(m["sha256"]):
+            bad.append(f"members[{i}].sha256 이 64-hex 가 아니다")
+        if isinstance(m["bytes"], bool) or not isinstance(m["bytes"], int) \
+                or m["bytes"] < 0:
+            bad.append(f"members[{i}].bytes 가 음이 아닌 정수가 아니다")
+        paths.append(m["path"])
+    dup = sorted({q for q in paths if paths.count(q) > 1})
+    if dup:
+        bad.append(f"중복 member 경로: {dup[:3]}")
+    if man["n_members"] != len(ms):
+        bad.append(f"n_members={man['n_members']} ≠ 실제 {len(ms)}")
+    tot = sum(m["bytes"] for m in ms if isinstance(m, dict)
+              and isinstance(m.get("bytes"), int))
+    if man["total_bytes"] != tot:
+        bad.append(f"total_bytes={man['total_bytes']} ≠ 합계 {tot}")
+    want = digest({k: v for k, v in man.items() if k != "root_digest"})
+    if man["root_digest"] != want:
+        bad.append(f"root_digest 가 재계산과 다르다 ({man['root_digest'][:16]} "
+                   f"≠ {want[:16]})")
+    return bad
+
+
 def restore_from_cas(backend: CasBackend, manifest_digest: str, root: Path, *,
                      faults: frozenset[str] = frozenset()) -> dict:
     """**backend 에서만** 복원한다. 원본 run_dir 은 쳐다보지 않는다.
@@ -214,6 +301,11 @@ def restore_from_cas(backend: CasBackend, manifest_digest: str, root: Path, *,
     except PreserveError as e:
         raise PreserveError(stage, f"manifest 를 회수하지 못했다: {e.msg}") from e
 
+    bad = check_manifest(man)
+    if bad:
+        raise PreserveError(stage, "manifest 가 자기 자신과 어긋난다: "
+                                   + "; ".join(bad[:4]))
+
     root = Path(root)
     root.mkdir(parents=True, exist_ok=True)
     written = []
@@ -226,7 +318,7 @@ def restore_from_cas(backend: CasBackend, manifest_digest: str, root: Path, *,
         except PreserveError as e:
             raise PreserveError(stage,
                                 f"member 를 회수하지 못했다 {m['path']}: {e.msg}") from e
-        out = root / m["path"]
+        out = _safe_member_path(root, m["path"], stage)
         out.parent.mkdir(parents=True, exist_ok=True)
         out.write_bytes(data)
         written.append(m["path"])
@@ -348,22 +440,44 @@ def _reg_file(index_path: Path, leg_id: str) -> Path:
 
 
 def _exclusive_write(path: Path, data: bytes) -> bool:
-    """없을 때만 만든다. 이미 있으면 False (내용 비교는 호출자 몫)."""
+    """**완성된 파일**에만 final name 을 붙인다. 이미 있으면 False.
+
+    ★ 27차 P1-3 — 초판은 final pathname 을 먼저 `O_EXCL` 로 만들고 `os.write`
+      를 한 번 호출했다. 부분 쓰기를 확인하지 않고 parent 도 fsync 하지 않아,
+      5 bytes 만 쓰이면 "생성 성공" 인데 다음 읽기가 `JSONDecodeError` 였고
+      immutable 파일 때문에 재시도로도 복구가 안 됐다.
+
+      temp 에 **전부** 쓰고 fsync 한 뒤 `os.link` 로 no-replace commit 한다
+      (link 는 대상이 있으면 EEXIST 로 실패하는 원자적 연산이다).
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.parent / f"{path.name}.tmp-{uuid.uuid4().hex}"
+    fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
     try:
-        fd = os.open(path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
-    except FileExistsError:
-        return False
-    except OSError as e:                                  # pragma: no cover
-        if e.errno != errno.EEXIST:
-            raise
-        return False
-    try:
-        os.write(fd, data)
+        n = 0
+        while n < len(data):
+            n += os.write(fd, data[n:])
         os.fsync(fd)
     finally:
         os.close(fd)
-    return True
+    try:
+        os.link(tmp, path)          # 원자적 · 대상이 있으면 실패
+        created = True
+    except FileExistsError:
+        created = False
+    except OSError as e:                                  # pragma: no cover
+        if e.errno != errno.EEXIST:
+            raise
+        created = False
+    finally:
+        tmp.unlink(missing_ok=True)
+    if created:
+        dfd = os.open(path.parent, os.O_RDONLY)
+        try:
+            os.fsync(dfd)           # 이름이 durable 해야 crash 뒤에도 보인다
+        finally:
+            os.close(dfd)
+    return created
 
 
 def publish(index_path: Path, entry: dict) -> dict:
@@ -371,10 +485,13 @@ def publish(index_path: Path, entry: dict) -> dict:
 
     같은 leg 를 다른 내용으로 덮지 않는다 (immutable). 같은 내용이면 멱등이다.
     """
-    for k in ("leg_id", "planned_id", "receipt_digest", "payload_root_digest",
-              "backend_uri"):
+    # ★ 27차 P1-3 — `finalize_only()` 가 무조건 쓰는 키를 필수 목록에서
+    #   빠뜨렸다. publish 성공 뒤 finalize 가 KeyError 로 죽을 수 있었다.
+    for k in ("leg_id", "planned_id", "receipt_digest", "receipt_object",
+              "payload_root_digest", "payload_manifest_digest", "backend_uri"):
         if not entry.get(k):
             raise PreserveError("publish", f"index entry 에 {k} 가 없다")
+    check_id(entry["leg_id"])
     path = _leg_file(index_path, entry["leg_id"])
     data = canonical_bytes(entry)
     if _exclusive_write(path, data):
@@ -394,15 +511,47 @@ def index_entries(index_path: Path) -> dict:
     return {p.stem: load_canonical(p.read_bytes()) for p in sorted(d.glob("*.json"))}
 
 
+def registration(index_path: Path, leg_id: str) -> dict | None:
+    """등록 journal 을 **파싱해서** 돌려준다. 깨졌으면 None.
+
+    ★ 27차 P0-2 — `is_registered()` 가 파일 존재만 봤다. 빈 파일·잘린 JSON·
+      남의 `receipt_object` 를 가진 journal 도 "등록 완료" 였다.
+    """
+    p = _reg_file(index_path, leg_id)
+    if not p.is_file():
+        return None
+    try:
+        rec = load_canonical(p.read_bytes())
+    except (ValueError, UnicodeDecodeError):
+        return None
+    if not isinstance(rec, dict) or rec.get("leg_id") != leg_id:
+        return None
+    if not _is_hex64(rec.get("receipt_object") or ""):
+        return None
+    return rec
+
+
 def is_registered(index_path: Path, leg_id: str) -> bool:
-    return _reg_file(index_path, leg_id).is_file()
+    """등록됐는가 — journal 이 **index 가 가리키는 receipt 와 같아야** 한다."""
+    rec = registration(index_path, leg_id)
+    if rec is None:
+        return False
+    e = index_entries(index_path).get(leg_id)
+    return bool(e) and rec["receipt_object"] == e.get("receipt_object")
 
 
 def _register(index_path: Path, leg_id: str, receipt_object: str) -> None:
-    """★ 26차 P0-2 — 등록은 `return` 이 아니라 **durable 상태 변경**이다."""
-    _exclusive_write(_reg_file(index_path, leg_id),
-                     canonical_bytes({"leg_id": leg_id,
-                                      "receipt_object": receipt_object}))
+    """durable 상태 변경. 기존 journal 이 다르면 **거부**한다."""
+    data = canonical_bytes({"leg_id": leg_id, "receipt_object": receipt_object})
+    path = _reg_file(index_path, leg_id)
+    if _exclusive_write(path, data):
+        return
+    old = path.read_bytes()
+    if old != data:
+        raise PreserveError(
+            "register",
+            f"{leg_id} 의 등록 journal 이 이미 다른 내용이다 — 남의 receipt 를 "
+            f"가리키거나 잘린 파일이다 ({old[:40]!r})")
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -414,11 +563,21 @@ def check_output(out) -> list[str]:
     if not isinstance(out, dict):
         return [f"산출이 dict 가 아니다: {type(out).__name__}"]
     bad = []
-    for k in ("role", "canonicalizer", "semantic_schema", "semantic_sha256"):
-        if not out.get(k):
+    # ★ 27차 P1-5 — semantic digest 만 요구하면 "무슨 파일을 만들었는가" 가
+    #   receipt 어디에도 없다. byte 축을 함께 강제한다 (25차 Q2 는 둘 다 요구).
+    for k in ("role", "canonicalizer", "semantic_schema", "semantic_sha256",
+              "relative_path", "byte_size", "file_sha256", "producer"):
+        if out.get(k) in (None, "", []):
             bad.append(f"산출에 {k} 가 없다")
-    if out.get("semantic_sha256") is not None and not _is_hex64(out.get("semantic_sha256")):
-        bad.append(f"semantic_sha256 이 64-hex 가 아니다: {out.get('semantic_sha256')!r}")
+    for k in ("semantic_sha256", "file_sha256"):
+        if out.get(k) is not None and not _is_hex64(out.get(k)):
+            bad.append(f"{k} 이 64-hex 가 아니다: {out.get(k)!r}")
+    n = out.get("byte_size")
+    if isinstance(n, bool) or not isinstance(n, int) or n < 0:
+        bad.append(f"byte_size 가 음이 아닌 정수가 아니다: {n!r}")
+    rp = out.get("relative_path")
+    if isinstance(rp, str) and (rp.startswith("/") or ".." in rp.split("/")):
+        bad.append(f"relative_path 가 상대 경로가 아니다: {rp!r}")
     return bad
 
 
@@ -491,6 +650,56 @@ def _validate_and_rescore(root: Path, hooks: Hooks,
         raise PreserveError("rescore",
                             f"재채점 semantic digest 가 봉인과 다르다: {sem!r}")
     return v, dict(out, semantic_sha256=sem)
+
+
+def _hit_receipt(backend: CasBackend, r_obj: str, faults: frozenset[str],
+                 when: str) -> None:
+    """receipt object 를 훼손하는 주입 (27차 P0-1 의 반례를 fixture 로 고정)."""
+    p = backend._obj(r_obj)
+    if f"receipt_drop_{when}" in faults:
+        p.unlink(missing_ok=True)
+    if when == "after_readback" and "receipt_mutate_after_readback" in faults \
+            and p.is_file():
+        b = bytearray(p.read_bytes())
+        b[0] ^= 0x01
+        p.write_bytes(bytes(b))
+
+
+def verify_registered_receipt(backend: CasBackend, index_path: Path,
+                              leg_id: str) -> dict:
+    """index 가 가리키는 receipt 를 **다시 회수해** 전 결속을 대조한다.
+
+    ★ 27차 P0-1·P0-2 — 이것이 없으면 "등록됐다" 가 "그 순간 한 번 읽혔다" 밖에
+      뜻하지 않는다. 등록 직전과 `finalize_only()` 가 같은 함수를 쓴다.
+    """
+    stage = "verify_before_register"
+    e = index_entries(index_path).get(leg_id)
+    if not e:
+        raise PreserveError(stage, f"{leg_id} 가 public index 에 없다")
+    r_obj = e.get("receipt_object")
+    if not _is_hex64(r_obj or ""):
+        raise PreserveError(stage, f"index entry 의 receipt_object 가 이상하다: {r_obj!r}")
+    try:
+        raw = backend.read_back(r_obj)
+    except PreserveError as ex:
+        raise PreserveError(stage, f"receipt 를 회수하지 못했다: {ex.msg}") from ex
+    rec = load_canonical(raw)
+    if not isinstance(rec, dict):
+        raise PreserveError(stage, "receipt 가 dict 가 아니다")
+    if rec.get("schema") != "execution-receipt/v1":
+        raise PreserveError(stage, f"receipt schema: {rec.get('schema')!r}")
+    want = digest({k: v for k, v in rec.items() if k != "receipt_digest"})
+    if rec.get("receipt_digest") != want:
+        raise PreserveError(stage, "receipt 안의 digest 가 자기 내용과 다르다")
+    for k, ik in (("leg_id", "leg_id"), ("planned_id", "planned_id"),
+                  ("payload_root_digest", "payload_root_digest"),
+                  ("payload_manifest_digest", "payload_manifest_digest"),
+                  ("backend_uri", "backend_uri")):
+        if rec.get(k) != e.get(ik):
+            raise PreserveError(stage, f"receipt.{k} 가 index 와 다르다")
+    if rec.get("receipt_digest") != e.get("receipt_digest"):
+        raise PreserveError(stage, "receipt_digest 가 index 와 다르다")
+    return rec
 
 
 def run_transaction(planned: PlannedLeg, run_dir: Path, backend: CasBackend,
@@ -604,11 +813,16 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
             "outputs": [out],
             "retention_days": retention,
         }
-        receipt["receipt_digest"] = digest(receipt)
+        receipt["receipt_digest"] = digest(receipt)   # 이 시점엔 키가 없다
         r_obj = backend.put_if_absent(canonical_bytes(receipt), faults=faults)["digest"]
         back = load_canonical(backend.read_back(r_obj, faults=faults))
         if back != receipt:
             raise PreserveError("receipt", "저장한 receipt 를 되읽었더니 다르다")
+
+        # ★ 27차 P0-1 — 한 번의 read-back 은 **회수 가능성 불변식이 아니다.**
+        #   되읽은 직후 지워도 초판은 publish 와 등록까지 갔다. 주입으로
+        #   그 상황을 만들고, 등록 직전에 다시 회수해 대조한다.
+        _hit_receipt(backend, r_obj, faults, "after_readback")
 
         # ── 9. per-leg 배타 publish ─────────────────────────────────────
         if "crash_before_publish" in faults:
@@ -624,9 +838,12 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
                              "payload_manifest_digest": man_dg,
                              "backend_uri": backend.uri})
 
-        # ── 10. durable 등록 ────────────────────────────────────────────
+        _hit_receipt(backend, r_obj, faults, "after_publish")
+
+        # ── 10. 등록 **직전** 재회수 대조 → durable 등록 ─────────────────
         if "crash_after_publish" in faults:
             raise PreserveError("register", "publish 뒤 등록 전에 죽었다 (주입)")
+        verify_registered_receipt(backend, index_path, leg_id)
         _register(index_path, leg_id, r_obj)
         return {"ok": True, "receipt": receipt, "planned_id": pid,
                 "payload_root_digest": root_digest, "receipt_object": r_obj}
@@ -634,21 +851,26 @@ def _finalize(leg_id: str, pid: str, envelope: dict, man_dg: str,
         shutil.rmtree(root, ignore_errors=True)
 
 
-def finalize_only(leg_id: str, backend: CasBackend, index_path: Path,
-                  hooks: Hooks, *, faults: frozenset[str] = frozenset()) -> dict:
-    """publish 는 됐는데 등록 전에 죽은 다리를 **원본 없이** 닫는다.
+def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
+    """publish 는 됐는데 등록 전에 죽은 다리를 **회수만으로** 닫는다.
 
-    ★ 26차 P0-2 — 초판의 "재시도" 는 같은 결정론 hook 으로 계산을 통째로 다시
-      돌리는 것이었다. 실제 사고에서 원본 계산은 12시간짜리고 crash 뒤 남은
-      것은 CAS 와 index 뿐이다. 그 상태에서 이어서 끝낼 수 있어야 한다.
+    ★ 27차 P0-2 — 초판은 `_finalize()` 를 다시 호출했다. 그러면 CAS payload
+      restore → validate → `hooks.rescore` → **새 receipt 생성**까지 반복한다.
+      원본 12시간 fitting 을 다시 돌리지 않는다는 좁은 뜻은 맞지만, "재계산
+      없이 CAS 만으로" 는 사실이 아니었다. analyzer 환경이 조금만 달라도 새
+      receipt 가 달라져 immutable publish 에서 복구가 실패한다.
+
+      이제 **hook 을 인자로 받지 않는다.** 재계산이 구조적으로 불가능하다.
+      receipt 가 없거나 결속이 어긋나면 재생성하지 말고 멈춘다.
     """
-    _require_hooks(hooks)
+    check_id(leg_id)
     e = index_entries(index_path).get(leg_id)
     if e is None:
         raise PreserveError("finalize_only",
                             f"{leg_id} 가 public index 에 없다 — 이어 붙일 것이 없다")
     if is_registered(index_path, leg_id):
         return {"ok": True, "already": True}
-    return _finalize(leg_id, e["planned_id"], e.get("planned_envelope") or {},
-                     e["payload_manifest_digest"], e["payload_root_digest"],
-                     backend, index_path, hooks, backend.retention_days, faults)
+    rec = verify_registered_receipt(backend, index_path, leg_id)
+    _register(index_path, leg_id, e["receipt_object"])
+    return {"ok": True, "already": False, "receipt": rec,
+            "receipt_object": e["receipt_object"]}

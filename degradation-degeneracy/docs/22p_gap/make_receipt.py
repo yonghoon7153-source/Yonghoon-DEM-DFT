@@ -35,6 +35,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import platform
 import shutil
 import subprocess
@@ -52,13 +53,21 @@ sys.path.insert(0, str(REPO))          # `tools.` import 보다 **먼저** 와�
 from tools.preserve import canonical_bytes    # noqa: E402
 
 #: 산출 manifest 의 semantic digest 규격. 표현이 바뀌어도 내용이 같으면 같다.
-CANONICALIZER = "score-semantic/v2"
+CANONICALIZER = "score-semantic/v3"
 
 #: 정규 view — 두 summary 를 비교하기 전에 **양쪽에서** 떼는 키.
-#: ★ 26차 P1-6 — 봉인 summary 에는 재채점이 만들 수 없는 실행 메타가 있다
-#:   (`row_projection._SKIP` 과 같은 목록이다). 그것을 남긴 채 해시하면 같은
-#:   과학 내용이 영원히 다른 digest 를 받는다. v1 이 정확히 그 상태였다.
-SEMANTIC_SKIP = ("_채점원본", "_F4_주의")   # 재채점이 만들 수 없는 실행 메타
+#:
+#: ★ 27차 P1-6 — v2 는 `_F4_주의` 까지 떼고 있었다. 그런데 그것은 실행 메타가
+#:   아니라 `summarize()` 가 **결정론적으로 만드는 인용 금지 경고**다
+#:   (`src/scoring.py:369`). 떼어 놓으니 "이 블록을 인용하지 말 것" 을
+#:   "인용해도 안전" 으로 바꿔도 semantic digest 가 같았다. 안전 문구를
+#:   hash 밖으로 버린 것이다. → 뺐다. 양쪽이 다 만드는 값이므로 비교된다.
+#:
+#: 남는 것은 `_채점원본` 하나다 — `run_scoring` 이 붙이는 실행 메타라 재채점이
+#: 만들 수 없다. 다만 그 안에는 `canonical`·`봉인상태`·`인용가능` 같은
+#: **인용 안전 flag** 가 있으므로 통째로 버리지 않고 §citation_safety 로
+#: 따로 검사한다 (아래 `_citation_safety`).
+SEMANTIC_SKIP = ("_채점원본",)
 
 
 def _row_projection():
@@ -156,10 +165,10 @@ def build(leg: str) -> dict:
         core = {
             "leg_id": leg,
             "bundle": {
-                "uri": str(bundle.relative_to(REPO)),
+                "uri": bundle.relative_to(REPO).as_posix(),
                 "files": len(members),
                 "bytes": sum(p.stat().st_size for p in members),
-                "payload_index": str(payload_index.relative_to(REPO)),
+                "payload_index": payload_index.relative_to(REPO).as_posix(),
                 "payload_index_sha256": _sha(payload_index),
                 "member_rehash": "tools.archive_bundle.check",
                 "member_mismatches": 0,
@@ -170,7 +179,7 @@ def build(leg: str) -> dict:
                 "command": ("python3 -c \"from tools.archive_bundle import restore; "
                             f"restore('artifacts/{leg}', repo_root=<empty>)\""),
                 "files_written": len(res["written"]),
-                "run_dir_relative": str(run_dir.relative_to(root)),
+                "run_dir_relative": Path(os.path.relpath(run_dir, root)).as_posix(),
                 "conflicts": 0,
             },
             "validation": {
@@ -188,6 +197,11 @@ def build(leg: str) -> dict:
                 "src_scoring_sha256": _sha(REPO / "src" / "scoring.py")[:16],
                 "archive_bundle_sha256": _sha(REPO / "tools" / "archive_bundle.py")[:16],
                 "make_receipt_sha256": _sha(Path(__file__).resolve())[:16],
+                # ★ 27차 P1-6 — 정본 채점 경로가 여기 있는데 identity 에
+                #   없었다. `docs/` 는 RUN_SCOPE 밖이라 source_digest 도 안 본다.
+                "row_projection_sha256": _sha(
+                    REPO / "docs" / "22p_gap" / "row_projection.py")[:16],
+                "row_projection_compute_sha256": _row_projection()._compute_sha256(),
             },
             "outputs": outputs,
             # ★ 26차 P1-6 — 대조 **결과**를 적는다. 초판은 두 digest 를 나란히
@@ -241,9 +255,12 @@ def _score_manifest(run_dir: Path) -> list[dict]:
     # 재채점 결과를 **실제 파일로** 떨궈 byte digest 도 남긴다 (25차 Q2 는
     # file SHA 와 semantic digest 를 **둘 다** 요구한다)
     rescored_path = run_dir / "_rescored_summary.yaml"
-    rescored_path.write_text(
-        yaml.safe_dump(_plain(summary), allow_unicode=True, sort_keys=True),
-        encoding="utf-8")
+    # ★ 27차 P1-7 — `write_text` 는 기본 newline 변환을 쓴다. Windows 에서
+    #   CRLF 가 되어 byte size·file SHA·core sha 가 OS 마다 달라졌다
+    #   (리뷰 실측: 8877 → 9087 bytes). LF 로 고정한다.
+    rescored_path.write_bytes(
+        yaml.safe_dump(_plain(summary), allow_unicode=True,
+                       sort_keys=True).encode("utf-8"))
 
     out = [{
         "role": "rescored_summary",
@@ -259,10 +276,15 @@ def _score_manifest(run_dir: Path) -> list[dict]:
         "semantic_sha256": _semantic(summary),
     }]
 
-    # 봉인된 summary 를 **정규 view 로 대조**한다 — append 만 하지 않는다
+    # 봉인된 summary 를 **정규 view 로 대조**한다 — append 만 하지 않는다.
+    # ★ 27차 P1-6 — 없으면 "일치" 가 아니라 **비교 불가**다.
     sealed = run_dir / "degeneracy_summary.yaml"
-    if sealed.is_file():
+    if not sealed.is_file():
+        raise SystemExit(f"✗ 봉인 summary 가 없다: {sealed} — 대조 없이 영수증을 "
+                         "만들지 않는다 (27차 P1-6)")
+    if True:
         sd = yaml.safe_load(sealed.read_text(encoding="utf-8"))
+        _citation_safety(sd, _sha(fits))
         out.append({
             "role": "sealed_summary",
             "relative_path": sealed.name,
@@ -276,17 +298,45 @@ def _score_manifest(run_dir: Path) -> list[dict]:
     return out
 
 
+def _citation_safety(sealed: dict, fits_sha: str) -> dict:
+    """봉인 summary 의 **인용 안전 flag** 를 값으로 검사한다.
+
+    ★ 27차 P1-6 — `_채점원본` 을 통째로 정규 view 에서 빼면 그 안의
+      `canonical`·`봉인상태`·`인용가능` 을 반대로 바꿔도 digest 가 같다.
+      equality 로는 못 보므로 **명시적 assertion** 으로 본다.
+    """
+    src = (sealed or {}).get("_채점원본") or {}
+    want = {"canonical": True, "봉인상태": "정상", "인용가능": True}
+    bad = [f"{k}={src.get(k)!r} ≠ {v!r}" for k, v in want.items()
+           if src.get(k) != v]
+    if src.get("fits_sha256") != fits_sha:
+        bad.append(f"fits_sha256 이 재채점한 파일과 다르다 "
+                   f"({str(src.get('fits_sha256'))[:16]} ≠ {fits_sha[:16]})")
+    if bad:
+        raise SystemExit("✗ 봉인 summary 의 인용 안전 flag 가 어긋난다: "
+                         + "; ".join(bad) + "\n  (27차 P1-6)")
+    return {"checked": sorted(want), "fits_sha256_bound": True,
+            "fits_path_basename": str(src.get("fits", "")).rsplit("/", 1)[-1]}
+
+
 def _outputs_agree(outputs: list[dict]) -> bool:
     """같은 schema·canonicalizer 를 쓰는 산출끼리 semantic digest 가 같은가.
 
     다르면 `build()` 가 여기서 멈춘다 — 영수증에 `false` 를 적어 두고 통과시키면
     "대조했다" 는 말이 다시 거짓이 된다.
     """
-    by: dict[tuple, set] = {}
+    by: dict[tuple, list] = {}
     for o in outputs:
         by.setdefault((o["semantic_schema"], o["canonicalizer"]),
-                      set()).add(o["semantic_sha256"])
-    bad = [k for k, v in by.items() if len(v) > 1]
+                      []).append(o["semantic_sha256"])
+    # ★ 27차 P1-6 — 초판은 산출이 **하나뿐이어도** `True` 였다. 비교 대상이
+    #   없는데 "일치" 라고 적으면 그 말이 다시 거짓이 된다. 짝이 없으면 실패.
+    lonely = [k for k, v in by.items() if len(v) < 2]
+    if lonely:
+        raise SystemExit(
+            f"✗ 대조할 짝이 없다: {lonely} — 산출이 하나뿐이면 "
+            "'일치' 가 아니라 **비교 불가**다 (27차 P1-6)")
+    bad = [k for k, v in by.items() if len(set(v)) > 1]
     if bad:
         raise SystemExit(
             f"✗ 같은 schema·canonicalizer 인데 semantic digest 가 갈렸다: {bad}\n"
@@ -325,7 +375,7 @@ def main(argv=None) -> int:
             if not same:
                 rc = 1
             continue
-        path.write_text(text, encoding="utf-8")
+        path.write_bytes(text.encode("utf-8"))   # LF 고정 (27차 P1-7)
         print(f"✅ {leg}: {path.relative_to(REPO)} · "
               f"검사 {rec['core']['validation']['n_checks']}건 · "
               f"산출 {len(rec['core']['outputs'])}건 · "

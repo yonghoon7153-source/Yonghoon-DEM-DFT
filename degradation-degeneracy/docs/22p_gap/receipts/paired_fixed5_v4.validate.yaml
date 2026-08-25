@@ -1,7 +1,7 @@
 schema_version: 2
 _주의: 이 파일은 손으로 쓰지 않는다. `python3 docs/22p_gap/make_receipt.py <leg>` 가 만들고 `--check` 가 **core 바이트 동일**
   재생성을 확인한다.
-core_sha256: 5a1e094856b4102e5ba162346ffabbffb2060cfe3ce32f2197cd4deea74483cc
+core_sha256: d1b5f1eefd97a455fd478ff6c1427bf638abbd10adba2f9043926e8febeec171
 core:
   leg_id: paired_fixed5_v4
   bundle:
@@ -61,11 +61,13 @@ core:
       필수_입력_존재: 통과
       행별_서명: 통과
   identity:
-    validator_source_digest: d3b1644f7ebe5bda
+    validator_source_digest: 62f45be76f526ce8
     src_io_sha256: fcef6c662f72ae6d
     src_scoring_sha256: 69e69cb046f4b4ae
     archive_bundle_sha256: 4b0b373997b1edaa
-    make_receipt_sha256: a7e020be4d4ccae6
+    make_receipt_sha256: 1c121b3ab055e6e5
+    row_projection_sha256: 41f977142560c73f
+    row_projection_compute_sha256: 9695ee2cbcbce7d8
   outputs:
   - role: rescored_summary
     produced_from: restored fits.parquet only
@@ -75,27 +77,25 @@ core:
     file_sha256: 0fd679bcee1d3c94028af8df7915daa31dac280056d8317294e48d83b395e276
     n_rows: 6138
     semantic_schema: degeneracy-summary/v5
-    canonicalizer: score-semantic/v2
+    canonicalizer: score-semantic/v3
     semantic_view_drops:
     - _채점원본
-    - _F4_주의
-    semantic_sha256: 4190bd805be97e9939f818227fd64f3b47507101589a7d4e0997cb532c733444
+    semantic_sha256: a644a692bf405372716db73d26d0bb4ad5b9e7d4f06781cf7fa6b7bd7aa795ef
   - role: sealed_summary
     relative_path: degeneracy_summary.yaml
     byte_size: 9080
     file_sha256: 020945db71731bf8019f8705085a5d20e84a4480bc9731f77f7610aa7722021c
     semantic_schema: degeneracy-summary/v5
-    canonicalizer: score-semantic/v2
+    canonicalizer: score-semantic/v3
     semantic_view_drops:
     - _채점원본
-    - _F4_주의
-    semantic_sha256: 4190bd805be97e9939f818227fd64f3b47507101589a7d4e0997cb532c733444
+    semantic_sha256: a644a692bf405372716db73d26d0bb4ad5b9e7d4f06781cf7fa6b7bd7aa795ef
   outputs_agree: true
 stamp:
   _주의: 기록용. core 재생성 대조에서 제외된다.
-  validator_commit: f8ee62bfb7e243c449e933c4155cf5f9c4ec2d71
-  validator_tree_dirty: false
-  generated_at_utc: '2026-08-25T00:02:34Z'
+  validator_commit: ac3af2dcc681efe0010e7a11328fd0c1e5c7b44b
+  validator_tree_dirty: true
+  generated_at_utc: '2026-08-25T00:48:45Z'
   runtime:
     python: 3.11.15
     platform: Linux-6.18.44-fc-v21-x86_64-with-glibc2.39
