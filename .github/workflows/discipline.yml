@@ -42,10 +42,10 @@ jobs:
       - name: 원장 자기일관성 + 철회값 스윕 (리포 실물)
         run: python scripts/check_review_findings.py
 
-      - name: 방법 규율 A~L (selftest — 음성 대조 포함)
+      - name: 방법 규율 A~M (selftest — 음성 대조 포함)
         run: python scripts/check_method_discipline.py --selftest
 
-      - name: 방법 규율 A~L (리포 실물 — 규칙 J·L 은 엔트리포인트·러너를 실제로 돌린다)
+      - name: 방법 규율 A~M (리포 실물 — 규칙 J·L 은 엔트리포인트·러너를 실제로 돌린다)
         run: python scripts/check_method_discipline.py
 
       - name: 사전등록 판정기 (selftest)

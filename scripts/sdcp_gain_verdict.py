@@ -93,6 +93,26 @@ FIELD_CONTRACT = {
                             required_since='2026-08-24'),
     'backend':              dict(scope='numeric', across_dir=True, required=True,
                             required_since='2026-08-20'),
+    #  ★★★ 2026-08-25 (A2 가 적발) — **규약 축인데 이 레지스트리에 없던 일곱.**
+    #    `PROTOCOL_FIELDS` 에는 있어서 해시에는 들어갔지만, `compare_dirs` 는
+    #    `_XDIR_FIELDS`(= 이 레지스트리) 만 보므로 **두 디렉터리 사이에서 자유롭게
+    #    달라져도 `measured`** 였다.  `periodic_xy`·`plate_rule` 은 R4 때 규약 축이 됐고
+    #    나머지 다섯은 A1 에서 새로 축이 됐는데, 둘 다 여기 등재를 잊었다.
+    #    ⇒ 아래 ㊹ 가 `PROTOCOL_FIELDS ⊆ FIELD_CONTRACT` 를 **상시 강제**한다.
+    'periodic_xy':          dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'plate_rule':           dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'sigma_superp_S_cm':    dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'sigma_swcnt_S_cm':     dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'swcnt_ion_block':      dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'dilate_z':             dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
+    'se_source':            dict(scope='physics', across_dir=True, required=True,
+                            required_since='2026-08-25'),
     # ── 세대 인자 (옛 `_GEN_FIELDS`) — 전부 physics 다.  섞이면 다른 실험이다. ──
     'sigma_ion_se_S_cm':    dict(scope='physics', across_dir=True, generation=True),
     'sigma_ion_sdcp_S_cm':  dict(scope='physics', across_dir=True, generation=True),
@@ -140,6 +160,82 @@ def contract_fields(scope=None, across_dir=None, required=None, generation=None)
                  and (required is None or bool(v.get('required', False)) is required)
                  and (generation is None or bool(v.get('generation', False)) is generation))
 
+
+
+#: ★★★ **A2 (2026-08-25) — 선언 밖 매니페스트 키 훑기.**
+#   `FIELD_CONTRACT` 는 손으로 유지된다.  producer 가 새 키를 실으면 그 키는 **아무
+#   게이트도 안 지나고** 팔 사이에서 자유롭게 달라질 수 있다.  R3·R4 가 반복해 잡은
+#   "선언은 있는데 거동이 없다" 의 거울상이다 — 여기서는 **선언조차 없다**.
+#   실제 증거: 이번 A1 에서 producer 에 `dilate_z`·`se_source` 를 새로 실었는데,
+#   `FIELD_CONTRACT` 에 안 넣었다면 두 팔이 다른 z-늘림으로 돌아도 판정은 초록이었다.
+#   ⇒ 매니페스트 키를 **전수**로 대조하고, 아래 두 종류만 면제한다.
+#     · `MANIFEST_RESULT_KEYS` — 런의 **결과·기록**이다.  다르면 그것이 실험의 결과다.
+#     · `MANIFEST_DERIVED_OF`  — 다른 축의 그림자.  그 축이 등록되면 같이 움직이는 것이 정상.
+#   ⚠ 새 키를 추가하면 셋 중 하나를 골라야 한다 (`FIELD_CONTRACT` · RESULT · DERIVED_OF).
+#     고르지 않으면 아래 ⑥ 이 이름을 대며 HOLD 한다 — **fail-closed 가 기본값**이다.
+MANIFEST_RESULT_KEYS = {
+    'status': '런 결과 (component 상태 요약)',
+    'expected': '상수 목록 (`STEP3_EXPECTED`)',
+    'missing': '런 결과', 'failed': '런 결과',
+    'components': '런 결과 — component 별 수렴 반복수·잔차가 들어 있다',
+    'backend_last_solve': '런 결과 (하위호환 요약; 정본은 `backend`)',
+    'mesh_unavailable': '런 결과',
+    'plate_z_grid_um': '래스터화 **결과** (침대·vox 가 정하는 값이지 입력이 아니다)',
+    'ptfe_cells_observed': '침대 **측정치** — 스탬프 규약이 바뀌면 따라 바뀐다',
+    'input_files': '경로는 디렉터리마다 다르다.  **내용**은 `input_digest` 가 덮는다',
+    'schema_version': '세대 표시.  세대 계약은 `schema_of` 가 따로 본다',
+    'component_plan': '무엇을 돌렸나 — LEAN 팔과 전량 팔이 섞이면 `_XDIR_FIELDS` 밖의 '
+                      '증거 계약이 잡는다 (여기서 고정하면 정상 LEAN 대조가 막힌다)',
+}
+
+#: 다른 축의 **그림자**.  값 = 그것을 설명하는 raw 축 이름.
+MANIFEST_DERIVED_OF = {
+    'fibre_stamp_requested': 'fibre_stamp',
+    'fibre_stamp_applied': 'fibre_stamp',
+    'ptfe_stamp_requested': 'ptfe_stamp',
+    'bridge_um_explicit': 'bridge_um',
+    'sigma_ion_se_ref_S_cm': 'sigma_ion_se_S_cm',   # 온도 재척도 **이전** 값
+    'physics_protocol_expected': 'physics_protocol_id',
+}
+
+
+def manifest_unswept_keys(man_a, man_b):
+    """→ 두 매니페스트에서 **아무 계약도 안 지나는** 키 목록 (정렬).
+
+    ★ 값이 같든 다르든 상관없이 **분류되지 않은 키**를 돌려준다 — 분류를 강제하는 것이
+      목적이다.  "지금은 우연히 같다" 는 계약이 아니다."""
+    _known = (set(FIELD_CONTRACT) | set(MANIFEST_RESULT_KEYS) | set(MANIFEST_DERIVED_OF)
+              #  `vox_um` 은 레지스트리에서 `vox` 라는 짧은 이름을 쓴다 (리더가 접는다).
+              | {'vox_um', 'origin_shift_um'})
+    return sorted(k for k in (set(man_a or {}) | set(man_b or {})) if k not in _known)
+
+
+def manifest_raw_diff(man_a, man_b, expect_differ):
+    """→ 등록 축으로 설명되지 **않는** 매니페스트 차이 목록 (정렬).
+
+    파생 키는 그 부모 축이 `expect_differ` 에 있으면 면제한다."""
+    _exp = set(expect_differ or ())
+    out = []
+    for k in sorted(set(man_a or {}) | set(man_b or {})):
+        if k in MANIFEST_RESULT_KEYS or k in _exp:
+            continue
+        #  ★ 레지스트리가 **파생**이라고 선언한 필드는 위 `_XDIR_FIELDS` 루프가 이미
+        #    정확히 다룬다 (등록 축이 실제로 달라졌을 때만 허용).  여기서 다시 세면
+        #    정상 한-축 실험이 HOLD 된다 = R3-CX-06 과잉차단의 재발.
+        if FIELD_CONTRACT.get(k, {}).get('derived_from'):
+            continue
+        #  ★ 그림자 필드 — 부모 축이 등록됐거나 **실제로 달라졌으면** 따라 움직이는 것이 정상.
+        #    부모가 같은데 그림자만 다르면 그것은 기록이 손으로 바뀐 것이다 → 아래로 떨어진다.
+        _par = MANIFEST_DERIVED_OF.get(k)
+        if _par and (_par in _exp
+                     or _canon((man_a or {}).get(_par)) != _canon((man_b or {}).get(_par))):
+            continue
+        #  `vox` ↔ `vox_um` 이름 접기 — 레지스트리 이름으로도 등록할 수 있게 한다.
+        if k == 'vox_um' and 'vox' in _exp:
+            continue
+        if _canon((man_a or {}).get(k)) != _canon((man_b or {}).get(k)):
+            out.append(k)
+    return out
 
 #: 팔 간 고정 인자 (같은 디렉터리) — physics + numeric.  bed 는 제외 (침대끼리 다르다).
 _FIXED_FIELDS = contract_fields(scope=('physics', 'numeric'))
@@ -200,7 +296,7 @@ def _read(path):
     d = json.load(open(path, encoding='utf-8'))
     s = d.get('step3') or (d.get('mpm_metrics') or {}).get('step3') or {}
     man = s.get('manifest') or {}
-    return {'file': os.path.basename(path),
+    row = {'file': os.path.basename(path),
             'sigma_e': s.get('sigma_e_eff_S_cm'),
             'sigma_ion': s.get('sigma_ion_eff_S_cm'),
             #  ★ 2026-08-24 (CDXR2-4) — 이온 수렴 봉인.  `None` = 그 세대 payload 가
@@ -283,6 +379,16 @@ def _read(path):
             #      json 정규화로 dict 를 비교할 수 있다).  하나도 없으면 None → missing 게이트.
             'backend': _component_backends(man),
             'fibre_stamp': man.get('fibre_stamp')}
+    #  ★★★ A2 (2026-08-25) — **레지스트리 필드는 자동으로 채운다.**  옛 판은 리더가 필드를
+    #    손으로 골라 담았고, 그래서 `FIELD_CONTRACT` 에 축을 추가해도 리더가 안 담으면
+    #    게이트가 `None` 만 봐서 **원리적으로 발화하지 못했다** (H5·CDX-IJ-01 과 같은 부류의
+    #    가짜 보증).  실제로 `periodic_xy`·`plate_rule`·σ_SuperP·σ_SWCNT·`swcnt_ion_block`·
+    #    `dilate_z`·`se_source` 일곱이 그 상태였다.  ⇒ 목록을 두 곳에 두지 않는다.
+    #    ⚠ 위에서 **명시적으로 정규화한 값**(bool 접기 등)은 덮지 않는다 (None 일 때만 채운다).
+    for _f in FIELD_CONTRACT:
+        if row.get(_f) is None:
+            row[_f] = man.get(_f)
+    return row
 
 
 def collect(d):
@@ -585,6 +691,19 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                                f'({_miss[0]} …) — 기록되지 않은 인자는 고정을 확인할 수 없다.  '
                                f'현행 payload 는 {_since} 부터 이것을 항상 적는다 ⇒ 그 이전 '
                                f'세대로 돈 팔이다.  다시 돌릴 것'), info
+    #  ★★★ 2026-08-25 (A1 이 드러낸 것) — **합성 침대는 물리 주장을 못 받친다.**
+    #    payload 의 `if a.se_proxy or not a.se:` 분기는 `--se` 를 **빠뜨리기만 해도** 열리고,
+    #    그 합성 구름이 `se_pts=` 로 rasterize 에 들어간다.  `input_digest` 는 읽은 파일이
+    #    없으므로 그것을 못 덮는다.  ⇒ 기록을 신설한 김에 **판정에서 막는다** (생산 경로를
+    #    막지 않는다 — 만드는 것은 자유고, 그것으로 σ 를 주장하는 것만 막는다).
+    _px = sorted({r['file'] for k in arms for r in arms[k]
+                  if isinstance(r.get('se_source'), str)
+                  and r['se_source'].startswith('proxy:')})
+    if _px:
+        return dict(decision='HOLD', hold_code='SE_PROXY',
+                    reason=f'SE 점구름이 **합성**인 팔이 {len(_px)}개 ({_px[0]} …) — '
+                           f'`--se-proxy` 이거나 `--se` 를 빠뜨린 런이다.  합성 구름은 '
+                           f'`input_digest` 가 못 덮고 실침대가 아니므로 σ 주장을 못 받친다'), info
     # ── ★★ 팔 계약 (CDXIJ-10 ①, Codex 재검증 §③) ─────────────────────────────────────
     #   Codex 실측으로 드러난 것: **2팔씩만 있어도** 판정 · origin 이 전부 없어도 통과 ·
     #   SBE origins 0..7 과 DBE origins 100..107 처럼 **완전히 다른 집합**이어도 h0 였다.
@@ -798,6 +917,10 @@ def _selftest():
                 sigma_am_s_S_cm=0.010, sigma_am_p_S_cm=0.005, cam='nmc811',
                 temp_c=25.0, ea_ion_ev=0.29, mpm_seed=3,
                 se_E_GPa=1.53, se_nu=0.49, se_sigma_y_GPa=0.30,
+                #  ★ 2026-08-25 (A1) — σ 표에 들어가는 셋 (규약 축)
+                sigma_superp_S_cm=5.0, sigma_swcnt_S_cm=0.0, swcnt_ion_block=False,
+                #  ★ 2026-08-25 (A1 2차) — 침대 기하·SE 출처 (규약 축)
+                dilate_z=1.0, se_source='npy',
                 #  ★ 2026-08-25 (R3-CX-06, ㊷ 가 잡음) — 현행 팔은 이 둘도 항상 싣는다.
                 #    픽스처에 없으면 "전부 없음" 이라 세대-혼합 게이트가 발화하지 않아
                 #    생성된 거동 시험이 **거짓 통과**한다.
@@ -818,9 +941,11 @@ def _selftest():
         #  `unknown:` 이 되고, 그 상태는 "옛 세대" 지 "현행 팔" 이 아니다.  ⇒ 빠진 축을
         #  현행 기본값으로 채워 **완비된 현행 팔**을 흉내낸다 (옛 세대 시험은 따로 있다).
         _DEF = {'periodic_xy': False, 'plate_rule': 'p2-occupied-surface-first',
+                'sigma_superp_S_cm': 5.0, 'sigma_swcnt_S_cm': 0.0, 'swcnt_ion_block': False,
                 'sigma_ion_se_S_cm': 0.003, 'sigma_ion_sdcp_S_cm': 0.001,
                 'sigma_am_s_S_cm': 0.010, 'sigma_am_p_S_cm': 0.005,
-                'cam': 'nmc811', 'temp_c': 25.0}
+                'cam': 'nmc811', 'temp_c': 25.0,
+                'dilate_z': 1.0, 'se_source': 'npy'}
         for _k, _v in _DEF.items():
             man.setdefault(_k, _v)
         #  ★ 2026-08-25 (R4-CX-02) — 파일 픽스처는 전부 이 함수를 지난다.  **현행 세대**로
@@ -1755,6 +1880,71 @@ def _selftest():
         chk(f'㊶b ★★ raw 축은 같은데 id 만 다르면 HOLD ({_c41b["decision"]})',
             _c41b['decision'] == 'HOLD')
 
+
+    #  ── ㊹ 2026-08-25 (A2) — **선언 밖 매니페스트 키 훑기** ────────────────────────────
+    #    A1 에서 producer 에 새 축을 실었더니, `PROTOCOL_FIELDS` 에는 들어가는데
+    #    `FIELD_CONTRACT` 에는 안 들어가 **cross-dir 에서 자유롭게 달라져도 measured** 인
+    #    상태가 드러났다 (`periodic_xy`·`plate_rule` 은 R4 부터, σ_SuperP·σ_SWCNT·
+    #    `swcnt_ion_block`·`dilate_z`·`se_source` 는 A1 부터 그 상태였다).
+    #    ⇒ ⓐ 구조 불변식으로 재발을 막고 ⓑ 거동을 두 방향으로 문다.
+    _ALIAS = {'vox_um': 'vox'}          # 리더가 접는 이름 (레지스트리는 짧은 이름을 쓴다)
+    _pf_miss = sorted(f for f in _RC.PROTOCOL_FIELDS
+                      if _ALIAS.get(f, f) not in FIELD_CONTRACT)
+    chk(f'㊹a ★★ 규약 축은 **전부** `FIELD_CONTRACT` 에 있다 (누락: {_pf_miss})',
+        not _pf_miss)
+    #  ⓑ-1 분류되지 않은 키 — **값이 같아도** HOLD 다 ("지금은 우연히 같다" 는 계약이 아니다)
+    #  ⚠ 두 디렉터리를 **완전히 같게** 둔다 — 등록 축을 같이 바꾸면 파생 id 차이를 다루는
+    #    앞 루프가 먼저 물어(다른 이유로 HOLD) 이 시험이 뜻을 잃는다 (배터리가 '과잉' 으로
+    #    잡았다: `CX-06 파생 필드 자동 허용 제거` 가 여기까지 물었다).
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42, brand_new_axis=7)
+        _mk2(_B, yvgcf=False, dbe_mul=1.42, brand_new_axis=7)
+        _c42 = compare_dirs(_A, _B, _EXP)
+        chk(f'㊹b ★★ 분류 안 된 매니페스트 키는 **같아도** HOLD ({_c42["decision"]})',
+            _c42['decision'] == 'HOLD' and 'brand_new_axis' in (_c42.get('reason') or ''))
+    #  ⓑ-2 R4 이후 규약 축이 된 `periodic_xy` — 등록 없이 달라지면 HOLD
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42, periodic_xy=False)
+        _mk2(_B, yvgcf=True, dbe_mul=1.29, periodic_xy=True)
+        _c43 = compare_dirs(_A, _B, _EXP)
+        chk(f'㊹c ★★ `periodic_xy` 가 등록 없이 두 디렉터리에서 다르면 HOLD '
+            f'({_c43["decision"]})',
+            _c43['decision'] == 'HOLD' and 'periodic_xy' in (_c43.get('reason') or ''))
+    #  ⓒ 리더가 레지스트리 축을 **자동으로** 담는가 (손으로 고르면 또 갈라진다)
+    with _tf22.TemporaryDirectory() as _A:
+        _mk2(_A, yvgcf=False, periodic_xy=True, dilate_z=1.25, se_source='npy')
+        _row = _read(os.path.join(_A, 'p2_SBE_a0.json'))
+        chk('㊹d ★★ 리더가 레지스트리 축을 자동으로 담는다 (H5 부류 재발 차단)',
+            _row.get('periodic_xy') is True and _row.get('dilate_z') == 1.25
+            and _row.get('se_source') == 'npy'
+            and all(_row.get(f) is not None for f in ('plate_rule', 'sigma_superp_S_cm')))
+    #  ⓓ **그림자 필드**가 부모 없이 혼자 다르면 잡는다 — 이것이 전수 훑기(`_rawd`)의
+    #    고유 사정권이다 (레지스트리 축은 앞 루프가 이미 본다).  요청↔적용 기록이
+    #    두 디렉터리에서 갈리면 한쪽 팔이 요청과 다른 규약으로 돈 것이다.
+    with _tf22.TemporaryDirectory() as _A, _tf22.TemporaryDirectory() as _B:
+        _mk2(_A, yvgcf=False, dbe_mul=1.42, fibre_stamp_requested='segment')
+        _mk2(_B, yvgcf=False, dbe_mul=1.42, fibre_stamp_requested='point')
+        _c44 = compare_dirs(_A, _B, _EXP)
+        chk(f'㊹e ★★ 그림자 필드가 부모 없이 다르면 HOLD ({_c44["decision"]})',
+            _c44['decision'] == 'HOLD'
+            and 'fibre_stamp_requested' in (_c44.get('reason') or ''))
+    #  ⓔ **구조 불변식** — 계약된 축을 면제 목록으로 옮기는 길을 막는다.  면제의 사정권은
+    #    분류 안 된 키뿐이어야 하고, 계약 ∩ 면제 ≠ ∅ 이면 그 축은 두 규칙 중 느슨한 쪽으로
+    #    샌다 (배터리가 이 구멍을 알려 줬다: σ_VGCF 를 '런 결과' 로 적어도 아무 시험도 안 물었다).
+    _ovl = sorted((set(MANIFEST_RESULT_KEYS) | set(MANIFEST_DERIVED_OF)) & set(FIELD_CONTRACT))
+    chk(f'㊹f ★★ 계약된 축은 면제 목록에 **없다** (겹침: {_ovl})', not _ovl)
+    #  ⓕ 합성 SE 구름 — 만드는 것은 자유지만 그것으로 σ 를 주장할 수는 없다
+    #  ⚠ 행의 값과 매니페스트를 **둘 다** 합성으로 둔다 — 실제 `_read` 는 매니페스트에서
+    #    행 필드를 채우므로, 하나만 바꾸면 픽스처가 실제 경로와 어긋난다.
+    _vpx = verdict(mk(base, [v * 1.12 for v in base], se_source='proxy:0.27@192',
+                      _manifest=_stamp_pid(dict(_FIX_MAN, se_source='proxy:0.27@192'))))
+    chk(f'㊹g ★★ 합성 SE 구름(proxy) 팔은 HOLD ({_vpx["decision"]}/{_vpx.get("hold_code")})',
+        _vpx['decision'] == 'HOLD' and _vpx.get('hold_code') == 'SE_PROXY')
+    #  ⚠ 정상 증인 — 실 점구름(`npy`)은 막히지 않는다 (과잉차단 확인)
+    _vnp = verdict(mk(base, [v * 1.12 for v in base]))
+    chk(f'㊹h 정상 증인 — `se_source=npy` 는 통과 ({_vnp["decision"]})',
+        _vnp.get('hold_code') != 'SE_PROXY')
+
     #  ── ㊷ 2026-08-25 (R3-CX-06, Codex 3차) — **레지스트리에서 거동을 생성한다** ────────
     #    Codex 가 독립 pass-mutant 셋으로 증명했다 — `physics_protocol_id.required` 를
     #    뒤집어도, `temp_c.across_dir` 을 뒤집어도, `_GEN_FIELDS` 에서 `temp_c` 를 지워도
@@ -2127,6 +2317,25 @@ def compare_dirs(dir_a, dir_b, expect_differ):
                                        f'다르다 ({ra.get(fld)} vs {rb.get(fld)}) — 대조쌍은 '
                                        f'`{sorted(expect_differ)}` **하나만** 달라야 한다.  '
                                        f'prereg v3 STEP 5 가 정확히 이것으로 거짓 경보를 냈다')
+            #  ★★★ A2 (2026-08-25) — **선언 밖 키까지** 훑는다.  위 루프는 `_XDIR_FIELDS`
+            #    (= 손으로 유지되는 레지스트리)만 본다.  producer 가 새 키를 실었는데
+            #    레지스트리에 안 넣으면 그 축은 두 디렉터리 사이에서 **자유롭게 달라져도**
+            #    `measured` 가 난다 — R3·R4 가 반복해 잡은 "선언은 있는데 거동이 없다" 의
+            #    거울상(선언조차 없다).  ⇒ 매니페스트 전수 대조 + **분류 강제**.
+            _ma, _mb = ra.get('_manifest') or {}, rb.get('_manifest') or {}
+            _uns = manifest_unswept_keys(_ma, _mb)
+            if _uns:
+                return dict(out, decision='HOLD',
+                            reason=f'{bed} {key} 의 매니페스트에 **아무 계약도 안 지나는** 키가 '
+                                   f'있다 {_uns[:8]} — `FIELD_CONTRACT` · `MANIFEST_RESULT_KEYS` · '
+                                   f'`MANIFEST_DERIVED_OF` 중 하나로 분류할 것.  분류 없는 축은 '
+                                   f'두 디렉터리 사이에서 조용히 달라진다 (A2)')
+            _rawd = manifest_raw_diff(_ma, _mb, expect_differ)
+            if _rawd:
+                return dict(out, decision='HOLD',
+                            reason=f'{bed} {key} 에서 등록 밖 축 {_rawd[:8]} 이 두 디렉터리 사이에 '
+                                   f'다르다 — 대조쌍은 `{sorted(expect_differ)}` **만** 달라야 한다 '
+                                   f'(A2: 레지스트리가 아니라 매니페스트 전수로 본다)')
         pairs.append((bed, ka, kb))
     _no = sorted(set(expect_differ) - differed)
     if _no:

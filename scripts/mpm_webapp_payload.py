@@ -994,9 +994,15 @@ def main():
             'v3', __file__.replace('mpm_webapp_payload', 'viz_mpm_morphology_3d'))
         v3 = importlib.util.module_from_spec(v3p); v3p.loader.exec_module(v3)
         se = v3.proxy_se(c, r, a.se_frac, top, max(96, a.n_vox), np.random.default_rng(0))
-        print(f'proxy SE: {len(se):,} pts (test only)')
+        #  ★★ 2026-08-25 (A1 2차) — **합성 구름은 `input_digest` 가 못 덮는다** (읽은
+        #    파일이 없다).  게다가 이 분기는 `--se` 를 **빠뜨리기만 해도** 열린다.
+        #    그 구름이 `se_pts=` 로 rasterize 에 들어가므로 σ 침대 자체가 달라진다
+        #    ⇒ 출처를 규약 축으로 적는다 (합성일 때만 그 모양을 싣는다).
+        _se_source = f'proxy:{float(a.se_frac):g}@{max(96, int(a.n_vox))}'
+        print(f'proxy SE: {len(se):,} pts (test only) — se_source {_se_source}')
     else:
         se = np.load(a.se).astype(np.float64)
+        _se_source = 'npy'                                 # 내용은 `input_digest` 가 덮는다
         print(f'loaded {len(se):,} SE pts from {a.se}')
         top = (float((c[:, 2] + r).max()) if len(r) else float(se[:, 2].max())) + 0.01
 
@@ -2305,6 +2311,11 @@ def main():
             # ★ 2026-08-18 (CL-43) — 진단 팔은 **매니페스트에 남아야** 한다.  안 그러면
             #   σ-치환 OFF 팔과 생산 팔이 섞여도 고정-인자 게이트가 못 잡는다 (H5 와 같은 실수).
             'sdcp_yield_to_vgcf': bool(getattr(a, 'step3_sdcp_yield_to_vgcf', False)),
+            #  ★★ 2026-08-25 (A1 2차) — 침대 기하(z 늘림)와 SE 점구름 **출처**.
+            #    둘 다 `_s3.rasterize` 로 들어가는데 규약에 없었다 (digest 는 파일
+            #    내용만 덮는다).  `se_source` 는 합성일 때만 모양(frac@n_vox)을 싣는다.
+            'dilate_z': float(a.dilate_z),
+            'se_source': _se_source,
             # ★★ 2026-08-18 (심층 리뷰 ① H5) — `bridge_um` 이 **매니페스트에 없었다**.
             #   그래서 `sdcp_gain_verdict.py:107` 의 고정-인자 게이트가 이 필드에 대해
             #   항상 None 을 보고 **한 번도 발화하지 않았다** = 가짜 보증.  prereg §5 가
@@ -2353,6 +2364,10 @@ def main():
             #   > 0 = 진단 팔(phase-4 를 격자에 찍어 탄소망을 끊는다).  기록 없으면 게이트가
             #   못 잡는다 (H5 와 같은 실수 방지).
             'sigma_ptfe_S_cm': float(getattr(a, 'sigma_ptfe', 0.0) or 0.0),
+            #  ★ 2026-08-25 (A1) — σ 표에 실제로 들어가는 셋을 규약 기록에 싣는다.
+            'sigma_superp_S_cm': float(getattr(a, 'sigma_superp', 0.0) or 0.0),
+            'sigma_swcnt_S_cm': float(getattr(a, 'sigma_swcnt', 0.0) or 0.0),
+            'swcnt_ion_block': bool(getattr(a, 'swcnt_ion_block', False)),
             # ★★ 2026-08-19 (코팅·도핑 리뷰 A5) — **σ_ion 축과 침대 세대가 게이트 밖에 있었다.**
             #   ⓐ `sigma_ion_table_S_cm`(:1397) 은 매니페스트 **밖**이라 `sdcp_gain_verdict._read`
             #      가 못 보고, 게다가 `if _res3i['n_dof']:` 안이라 **`--no-ion`(LEAN=2 = 현행

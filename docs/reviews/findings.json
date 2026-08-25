@@ -1081,6 +1081,57 @@
     "scripts/step3_sigma.py --selftest"
    ],
    "note": "`user_arm2` 를 production 으로 가리키는 symlink 를 만들면 문자열 검사는 통과하고 resolved path 는 production 이 된다.\n★ 고침: `pwd -P` 실경로 충돌이면 abort.  실측 재현·차단 확인.\n⚠ 리뷰 bundle 이 base prerequisite 를 안 실어 단독 재현이 안 됐다 — 다음 패키지는 full bundle."
+  },
+  {
+   "id": "SELF-02",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/next_steps_20260825.md",
+   "title": "CLI 회계 초판이 **두 겹의 부분집합 필터**로 가짜 초록을 냈다 (규칙 M)",
+   "evidence_tests": [
+    "scripts/check_method_discipline.py --selftest",
+    "scripts/run_contract.py --selftest"
+   ],
+   "note": "초판 규칙 M 은 ⓐ payload 파일만 AST 로 훑고 ⓑ 이름 조각(`CLI_PHYSICS_HINT`)으로 '물리 후보' 를 걸렀다.\nⓐ 때문에 `se_material.temperature_argparse(ap)` 가 등록하는 `--temp-c`·`--ea-ion-ev` 가 안 보였고 (오히려 `--temp-c` 를 'M_STALE = 파서에 없다' 로 **거꾸로** 보고했다), ⓑ 때문에 `--dilate-z`·`--k-carbon`·`--i0-a-m2`·`--joule-heat` 는 후보조차 아니었다.\n★ 고침: 파서를 **실행해서**(`parse_args` 가로채기) 잡고, `--help` 를 뺀 **전 79 옵션**이 등재를 요구한다.  회귀 M-1~M-11 + 배터리 mutant 4종."
+  },
+  {
+   "id": "SELF-03",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/next_steps_20260825.md",
+   "title": "`--dilate-z`·SE proxy 가 **규약 축 없이** σ 침대를 바꾸고 있었다",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "`vc.load_am(a.scaffold, dz=a.dilate_z)` 의 결과가 그대로 `_s3.rasterize` 로 들어가는데 (payload:988 → :1403) `dilate_z` 는 매니페스트에도 `PROTOCOL_FIELDS` 에도 없었다.  `input_digest` 는 파일 **내용**만 덮으므로 같은 scaffold 를 다른 dz 로 늘린 두 팔이 digest 동일로 통과한다.\n같은 부류로 SE 점구름이 **합성**일 수 있다 — `if a.se_proxy or not a.se:` 라 `--se` 를 빠뜨리기만 해도 proxy 로 내려앉고 그 구름이 `se_pts=` 로 rasterize 에 들어간다.\n★ 고침: `dilate_z` · `se_source`(합성일 때만 frac@n_vox 를 싣는다) 를 규약 축으로 신설하고 producer 가 기록한다."
+  },
+  {
+   "id": "SELF-04",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/next_steps_20260825.md",
+   "title": "규약 축 7개가 `FIELD_CONTRACT` 밖이라 **cross-dir 에서 자유롭게 달라져도 measured**",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "`compare_dirs` 는 `_XDIR_FIELDS`(= 손으로 유지되는 레지스트리)만 본다.  `periodic_xy`·`plate_rule` 은 R4 부터, `sigma_superp_S_cm`·`sigma_swcnt_S_cm`·`swcnt_ion_block`·`dilate_z`·`se_source` 는 A1 부터 규약 축이었는데 레지스트리 등재를 잊었다 = 해시에는 들어가지만 cross-dir 고정 검사는 **안 지난다**.\n★ 고침 3겹: ⓐ 일곱을 등재 ⓑ 리더가 레지스트리 축을 **자동으로** 담는다 (손으로 고르면 또 갈라진다 — H5·CDX-IJ-01 부류) ⓒ **매니페스트 전수 훑기**(A2) — 분류 안 된 키는 값이 같아도 HOLD.  회귀 ㊹a~d + 배터리 mutant 5종."
+  },
+  {
+   "id": "SELF-05",
+   "severity": "P1",
+   "status": "open",
+   "owner": "claude",
+   "opened_in": "docs/reviews/next_steps_20260825.md",
+   "title": "`--se` 를 빠뜨리기만 해도 SE 점구름이 **합성**되는데 기록이 없었다",
+   "evidence_tests": [
+    "scripts/sdcp_gain_verdict.py --selftest"
+   ],
+   "note": "payload 분기 `if a.se_proxy or not a.se:` → `v3.proxy_se(...)` 가 만든 구름이 `se_pts=` 로 `_s3.rasterize` 에 들어간다.  읽은 파일이 없으므로 `input_digest` 가 **원리적으로** 못 덮는다.\n★ 고침: producer 가 `se_source` 를 적고(`proxy:<frac>@<n_vox>` / `npy`), 판정기가 `hold_code='SE_PROXY'` 로 막는다.  생산 경로는 막지 않는다 — 만드는 것은 자유고 그것으로 σ 를 주장하는 것만 막는다.  회귀 ㊹g(차단) · ㊹h(정상 증인) · 배터리 mutant 1종.\n⚠ **미확인**: 킷 `run_mpm.sh` 가 `--se` 를 정말 넘기는지 (이 리포에 킷이 없다).  C 를 돌릴 때 `se_source` 기록으로 처음 확인된다."
   }
  ]
 }

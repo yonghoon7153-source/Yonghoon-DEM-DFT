@@ -108,14 +108,17 @@ MUTANTS = [
      "        if t is bool:\n            if type(v) is not bool:      # noqa: E721",
      "        if t is bool:\n            if False:",
      VERDICT, ('㊸a',)),
+    #  ⚠ **faithful** — `_miss` 만 끄면 바로 아래 타입 분기가 대신 문다 (`.get` 이 없는
+    #    키에 None 을 주고 `type(None) is not bool` 이므로).  두 분기는 **중복 방어**라
+    #    하나만 끄는 mutant 는 무력하다.  ⇒ 검사 자체를 무력화한다.
     ('R4 계획 스키마 검사 제거', 'run_contract.py',
-     "    _miss = [k for k in PLAN_KEYS if k not in plan]",
-     "    _miss = []",
+     "    if not isinstance(plan, dict):",
+     "    if True:\n        return True, None\n    if not isinstance(plan, dict):",
      VERDICT, ('㊸b',)),
     ('R4 PTFE 기록 계약 제거', 'run_contract.py',
      "    if sv >= EVIDENCE_SINCE_SCHEMA and v is None:",
      "    if False:",
-     VERDICT, ('㊸c', '㊵e')),
+     VERDICT, ('㊸c',)),
     ('R4-CX-07 reaction sid5 제외', 'step3_sigma.py',
      "    _occ_r = sid != 0", "    _occ_r = (sid != 0) & (sid != 5)",
      STEP3, ('plate-rxn-sdcp-face',)),
@@ -127,6 +130,64 @@ MUTANTS = [
      "    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (np.abs(z_plate - zc[_kl]) <= band)  # 분리막 접점",
      "    top_i = _any_o & cond_i[_iir, _jjr, _kl] & (z_plate - zc[_kl] <= band)  # 분리막 접점",
      STEP3, ('plate-rxn-outside-slab',)),
+    #  ── A1 (2026-08-25) — CLI 회계.  ★ 두 축을 따로 문다: **포획**(실물 파서를
+    #     잡는가)과 **판정**(회계 대조를 하는가).  초판은 포획이 새서 초록이었다.
+    ('A1 규칙 M 을 옛 AST 훑기로 (helper 모듈 옵션 실명)', 'check_method_discipline.py',
+     "    _out = _sp.run([sys.executable, '-c', _M_PROBE % _mod],",
+     "    return [o for o in __import__('re').findall(r\"add_argument\\('(--[a-z0-9-]+)\",\n"
+     "                                                 open(payload, encoding='utf-8').read())], None\n"
+     "    _out = _sp.run([sys.executable, '-c', _M_PROBE % _mod],",
+     DISC, ('M-2', 'M-3')),
+    ('A1 미등재 옵션 검사 제거', 'check_method_discipline.py',
+     "    _un = sorted(o for o in _opts if o != '--help' and o not in _acct)",
+     "    _un = []",
+     DISC, ('M-4',)),
+    ('A1 고아 규약 축 검사 제거', 'check_method_discipline.py',
+     "    _orphan = sorted(f for f in _PF if f not in _covered\n"
+     "                     and f not in _code_const)",
+     "    _orphan = []",
+     #  ⚠ M-3(리포 실물 초록)은 **안 물린다** — 리포에 고아가 없으므로 검사를 지워도
+     #    실물 판정은 그대로 초록이다.  음성 대조(M-8)가 유일한 파수꾼이다.
+     DISC, ('M-8',)),
+    ('A1 `--dilate-z` 를 규약 축에서 빼기 (침대 z 늘림이 조용해진다)', 'run_contract.py',
+     "    '--dilate-z': ('protocol', ('dilate_z',)),",
+     "    '--dilate-z': ('mode', None),",
+     DISC, ('M-3', 'M-11')),
+    #  ── A2 (2026-08-25) — 선언 밖 매니페스트 키 훑기 ─────────────────────────────
+    ('A2 매니페스트 전수 훑기 제거 (선언 밖 축이 조용해진다)', 'sdcp_gain_verdict.py',
+     "            _uns = manifest_unswept_keys(_ma, _mb)",
+     "            _uns = []",
+     VERDICT, ('㊹b',)),
+    ('A2 등록 밖 raw 차이 검사 제거', 'sdcp_gain_verdict.py',
+     "            _rawd = manifest_raw_diff(_ma, _mb, expect_differ)",
+     "            _rawd = []",
+     #  ⚠ `㊹c`(periodic_xy) 는 **안 물린다** — 그 축은 레지스트리에 있어 앞 루프가 먼저 잡는다.
+     #    전수 훑기의 **고유** 사정권은 레지스트리 밖 그림자 필드다 (㊹e).  손으로 확인함.
+     VERDICT, ('㊹e',)),
+    ('A2 σ_VGCF 를 "런 결과" 로 면제 (전수 훑기를 우회하는 길)', 'sdcp_gain_verdict.py',
+     "    'mesh_unavailable': '런 결과',",
+     "    'mesh_unavailable': '런 결과', 'sigma_vgcf_S_cm': '(잘못된 면제)',",
+     #  ⚠ `㉗b` 는 **안 물린다** — 레지스트리 루프가 먼저 잡기 때문이다.  면제의 유일한
+     #    사정권은 **분류 안 된 키**이므로, 위험은 "계약된 축을 면제로 옮기는 것" 이고
+     #    그것을 구조 불변식 ㊹f 가 막는다 (배터리가 이 사실을 알려 줬다).
+     VERDICT, ('㊹f',)),
+    #  ★ A3 부류 — **선언 뒤집기**.  `across_dir=False` 면 레지스트리 루프가 이 축을 건너뛴다.
+    #    그때 잡는 것은 A2 의 매니페스트 전수 훑기뿐이다 (= `_rawd` 가 하는 일).
+    ('A3 `periodic_xy.across_dir` 뒤집기 (선언만 바꾼다)', 'sdcp_gain_verdict.py',
+     "    'periodic_xy':          dict(scope='physics', across_dir=True, required=True,",
+     "    'periodic_xy':          dict(scope='physics', across_dir=False, required=True,",
+     #  ⚠ 실제로 무는 것은 **구조 불변식** ㊷e ("규약 축은 전부 across_dir") 다.  거동
+     #    시험 ㊹c 는 전수 훑기가 대신 잡아 여전히 통과한다 = 두 겹이 겹쳐 있다.  손으로 확인함.
+     VERDICT, ('㊷e',)),
+    ('A2 리더의 레지스트리 자동 채움 제거 (H5 부류 복원)', 'sdcp_gain_verdict.py',
+     "    for _f in FIELD_CONTRACT:\n        if row.get(_f) is None:\n            row[_f] = man.get(_f)",
+     "    for _f in ():\n        if row.get(_f) is None:\n            row[_f] = man.get(_f)",
+     #  ★ `broad` — 자동 채움은 **기전**이라 14개 시험이 그것에 기댄다 (그 수 자체가 증거다).
+     VERDICT, ('*broad*', '㊹d')),
+    ('A1 합성 SE 구름 게이트 제거 (proxy 침대로 σ 주장)', 'sdcp_gain_verdict.py',
+     "    if _px:\n        return dict(decision='HOLD', hold_code='SE_PROXY',",
+     "    if False:\n        return dict(decision='HOLD', hold_code='SE_PROXY',",
+     VERDICT, ('㊹g',)),
     ('R4-CX-06 규칙 K 제어흐름 무시', 'check_method_discipline.py',
      "    if not _live_after(toks):\n        return False", "    if False:\n        return False",
      DISC, ('K-5',)),
@@ -145,7 +206,9 @@ MUTANTS = [
     ('CX-06 temp_c.generation 제거', 'sdcp_gain_verdict.py',
      "    'temp_c':               dict(scope='physics', across_dir=True, generation=True),",
      "    'temp_c':               dict(scope='physics', across_dir=True),",
-     VERDICT, ('㊷b', '㊷c')),
+     #  ⚠ 2026-08-25 정정: A2 의 리더 자동 채움 이후 `㊷b`(across_dir 거동)는 **안 물린다**
+     #    — `across_dir` 선언은 그대로이기 때문이다.  세대 축 시험 `㊷c` 만 문다.
+     VERDICT, ('㊷c',)),
     ('CX-06 vox.required 뒤집기', 'sdcp_gain_verdict.py',
      "    'vox':                  dict(scope='physics', across_dir=True, required=True,",
      "    'vox':                  dict(scope='physics', across_dir=True, required=False,",
@@ -158,6 +221,8 @@ MUTANTS = [
     ('조건7 규칙 K 를 옛 부분문자열로', 'check_method_discipline.py',
      "            _hit = any(k_live_invocation(ln, _base, _flag) for ln in _txt.splitlines())",
      "            _hit = any(_base in ln and _flag in ln for ln in _txt.splitlines())",
+     #  ⚠ 2026-08-25 정정: 옛 기대는 `L-11` 도 물릴 것으로 적었는데 **틀렸다** — L-11 은
+     #    `P2_EXTRA` 금지 검사이고 `k_live_invocation` 과 무관하다 (배터리가 잡았다).
      DISC, ('K-7',)),
     ('조건2 게시-전-검증 되돌림', 'mpm_webapp_payload.py',
      "    _fail_reason = _payload_reject_reason(a, step3)\n"
@@ -270,7 +335,18 @@ def main():
         #    옛 판은 출력 문자열만 읽어, Traceback 없는 SyntaxError 의 **소스 줄**이
         #    `㊷g: FAIL` 처럼 보이면 그것을 정상 적발로 분류했다.  ⇒ mutant 파일을
         #    실행 전에 컴파일해 보고, 실패면 harness 사고로 뺀다 (시험 결과가 아니다).
-        if 'Traceback' in out and 'SystemExit' not in out.split('Traceback')[-1][:400]:
+        #  ★★★ 2026-08-25 (A0) — **크래시 판별을 마지막 줄로 한다.**  옛 조건은
+        #    "traceback 안에 `SystemExit` 이 없으면 크래시" 였는데, selftest 는
+        #    `raise SystemExit(_selftest())` 로 끝나므로 **어떤 크래시든** traceback 에
+        #    `SystemExit` 이 섞인다 ⇒ 크래시가 **한 번도** harness 사고로 분류되지 않았다.
+        #    (실측: `KeyError: 'ionic'` 로 죽은 mutant 가 `★놓침★` 으로 보고됐다 —
+        #     "회귀가 없다" 와 "코드가 터졌다" 는 완전히 다른 결론이다.)
+        #  ⇒ traceback 의 **마지막 예외 줄**을 본다.  `SystemExit: <int>` 는 정상 종료다.
+        _last = [l for l in out.strip().split('\n') if l and not l.startswith(' ')]
+        _crash = ('Traceback' in out and _last
+                  and not _last[-1].startswith('SystemExit')
+                  and ':' in _last[-1] and 'Error' in _last[-1].split(':')[0])
+        if _crash:
             _elines = [l for l in out.split('\n') if 'Error' in l]
             rows.append((label, 'HARNESS_ERROR',
                          'mutant 가 예외로 죽었다 (시험이 문 것이 아니다) — '
@@ -285,8 +361,19 @@ def main():
             rows.append((label, '★놓침★', 'mutant 인데 rc=0 (아무 시험도 안 물었다)'))
             bad.append(label)
             continue
+        #  ★★ 2026-08-25 (A2 배터리) — **`broad`** 표식.  기전 자체를 들어내는 돌연변이
+        #    (리더의 레지스트리 자동 채움 제거 같은 것)는 수십 개 시험이 그 기전에 기대므로
+        #    "기대 밖 실패 0" 이 원리적으로 성립하지 않는다.  그것은 얽힘이 아니라
+        #    **그 기전이 얼마나 많이 쓰이는가**의 측정이다.  ⇒ `broad` 는 부분집합만 본다.
+        #    ⚠ 게이트 하나를 끄는 돌연변이에는 **절대 쓰지 않는다** — 거기서 기대 밖 실패는
+        #      진짜 얽힘 신호다 (그것을 보려고 이 배터리를 만들었다).
+        _broad = len(want) > 0 and want[0] == '*broad*'
+        want = tuple(w for w in want if w != '*broad*')
         hit = sorted({w for w in want if any(x.startswith(w) for x in f)})
         extra = sorted({x for x in f if not any(x.startswith(w) for w in want)})
+        if _broad and len(hit) == len(want):
+            rows.append((label, '적발(broad)', f'{list(want)} + 기전 의존 {len(extra)}건'))
+            continue
         if len(hit) != len(want):
             rows.append((label, '★놓침★',
                          f'기대 {list(want)} 중 {hit} 만 물었다 (FAIL {len(f)}건)'))

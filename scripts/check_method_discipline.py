@@ -876,6 +876,8 @@ def k_live_invocation(line, base, flag):
     return False
 
 
+import ast as _ast                          # 규칙 K 가 소스를 훑는다
+import collections as _collections          # 규칙 M 회계 집계
 import subprocess as _sp                    # 규칙 J·L 이 실물을 **실행**한다
 import tempfile as _tf
 
@@ -1104,6 +1106,130 @@ def check_runner_integration(verbose=True, runner=None):
               f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리 · '
               f'봉인이 원값보다 먼저)')
     return problems, warns
+
+
+#: 규칙 M 이 **실제 파서**를 잡을 때 쓰는 조각.  `parse_args` 를 가로채 그 시점의
+#  파서를 통째로 들고 나온다 — 그때는 helper 모듈이 등록한 옵션까지 전부 붙어 있다.
+_M_PROBE = r'''
+import argparse, importlib, json, sys
+class _Got(Exception):
+    def __init__(self, ap): self.ap = ap
+def _hook(self, *a, **k): raise _Got(self)
+argparse.ArgumentParser.parse_args = _hook
+argparse.ArgumentParser.parse_known_args = _hook
+sys.argv = [sys.argv[0]]
+m = importlib.import_module(%r)
+try:
+    m.main()
+except _Got as g:
+    print(json.dumps(sorted({s for act in g.ap._actions
+                             for s in act.option_strings if s.startswith('--')})))
+    raise SystemExit(0)
+raise SystemExit('NO_PARSE_ARGS')
+'''
+
+
+def _payload_options(payload):
+    """→ (옵션 목록, 오류|None).  **파서를 실행해서** 잡는다.
+
+    ★★ 2026-08-25 (A1 2차) — 초판은 payload 파일을 AST 로 훑었다.  그런데
+      `--temp-c`·`--ea-ion-ev` 는 `se_material.temperature_argparse(ap)` 가 **다른
+      모듈**에서 등록해 AST 에 안 보였고, 초판은 그것을 "회계에 있으나 파서에 없다"
+      (M_STALE) 로 **거꾸로** 보고했다.  ⇒ 정적 훑기를 버리고 실물을 잡는다."""
+    _mod = os.path.splitext(os.path.basename(payload))[0]
+    _out = _sp.run([sys.executable, '-c', _M_PROBE % _mod],
+                          cwd=os.path.dirname(payload), capture_output=True,
+                          text=True, timeout=180)
+    if _out.returncode != 0:
+        return [], (f'M_INTROSPECT| 파서를 못 잡았다 (rc={_out.returncode}) '
+                    f'{(_out.stderr or "").strip().splitlines()[-1:] or ""}')
+    try:
+        return json.loads(_out.stdout.strip().splitlines()[-1]), None
+    except Exception as e:                                  # noqa: BLE001
+        return [], f'M_INTROSPECT| 파서 목록을 못 읽었다 ({e})'
+
+
+def check_cli_accounting(verbose=True, payload=None):
+    """→ (문제 목록, 경고).  규칙 M — **CLI 가 전부 회계에 있는가**.
+
+    ★★★ 2026-08-25 (A1, Codex R4-CX-03 잔여): 허용/금지 목록을 손으로 유지하면 새 옵션이
+      조용히 밖에 남는다.  실제로 `--sigma-superp` 가 전자 σ 표에 들어가는데
+      `PROTOCOL_FIELDS` 에 없었고, 전수 대조로 `--sigma-swcnt`·`--swcnt-ion-block` 이
+      같이 나왔다.  ⇒ **파서를 훑어** 미등재를 오류로 낸다.
+    ⚠ 등재는 "회계 범주를 밝힌다" 는 뜻이지 "규약 축이다" 가 아니다 —
+      `mode`/`numeric` 도 유효한 답이고, 다만 **답을 적어야** 한다.
+    ★★ 2026-08-25 (A1 2차) — 초판의 초록은 **가짜 보증**이었다.  ⓐ payload 파일만 AST 로
+      훑어 helper 모듈이 등록한 `--temp-c`·`--ea-ion-ev` 를 못 봤고, ⓑ 이름 조각으로
+      "물리 후보" 를 걸러 `--dilate-z`(침대 z 늘림)·`--k-carbon`·`--i0-a-m2` 를 후보에서
+      제외했다.  ⇒ **부분집합 필터를 전부 버린다** — 실물 파서의 전 옵션이 등재를 요구한다.
+      그 결과 `--dilate-z`·`--se-proxy`(+`--se-frac`/`--n-vox`) 가 규약 축 없이 σ 침대를
+      바꾸고 있었다는 것이 드러나 `dilate_z`·`se_source` 를 신설했다.
+    """
+    problems, warns = [], []
+    _p = payload or os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py')
+    if not os.path.exists(_p):
+        return [f'M_MISSING| payload 가 없다 ({_p})'], warns
+    try:
+        if os.path.join(ROOT, 'scripts') not in sys.path:
+            sys.path.insert(0, os.path.join(ROOT, 'scripts'))
+        import run_contract as _rc_m
+    except Exception as e:                              # noqa: BLE001
+        return [f'M_IMPORT| run_contract 를 못 읽는다 ({e})'], warns
+    _opts, _err = _payload_options(_p)
+    if _err:
+        return [_err], warns
+    problems += cli_accounting_problems(_opts, _rc_m.CLI_ACCOUNTING,
+                                        _rc_m.PROTOCOL_FIELDS, _rc_m.PROTOCOL_CODE_CONST,
+                                        _rc_m.CLI_CATEGORIES)
+    if verbose and not problems:
+        _n = _collections.Counter(c for c, _f in _rc_m.CLI_ACCOUNTING.values())
+        print(f'  ✓ 규칙 M — 실물 파서 CLI {len(_opts) - 1}개가 전부 회계에 있다 ('
+              + ' · '.join(f'{k} {_n[k]}' for k in _rc_m.CLI_CATEGORIES if _n[k])
+              + f' · 규약 축 {len(_rc_m.PROTOCOL_FIELDS)} 전수 도달)')
+    return problems, warns
+
+
+def cli_accounting_problems(_opts, _acct, _protocol_fields, _code_const, _categories):
+    """→ 문제 목록.  규칙 M 의 **순수 부분** — 잡은 옵션 목록과 회계를 대조한다.
+
+    ★ 분리한 이유: 음성 대조를 돌리려면 "새 옵션이 하나 생겼다" 를 모방해야 하는데,
+      그것을 위해 리포의 payload 를 건드릴 수는 없다.  준비 단계(파서 포획)와
+      판정 단계를 나누면 판정을 합성 입력으로 직접 물을 수 있다."""
+    problems = []
+    #  ① 파서에 있는데 회계에 없다 = 규약 밖에서 물리가 바뀔 수 있다
+    _un = sorted(o for o in _opts if o != '--help' and o not in _acct)
+    if _un:
+        problems.append(
+            f'M_UNACCOUNTED| CLI {len(_un)}개가 `CLI_ACCOUNTING` 에 없다 {_un[:8]} — '
+            f'각각 {"/".join(_categories)} 중 무엇인지 적을 것.  '
+            f'적지 않으면 규약 밖에서 물리가 바뀐다 (R4-CX-03: `--sigma-superp`)')
+    #  ② 회계에 있는데 파서에 없다 = 낡은 등재 (이름이 바뀌었거나 옵션이 사라졌다)
+    _stale = sorted(set(_acct) - set(_opts))
+    if _stale:
+        problems.append(f'M_STALE| 회계에 있으나 파서에 없는 옵션 {_stale[:8]} — '
+                        f'이름이 바뀌었거나 옵션이 사라졌다')
+    #  ③ 범주 어휘 오타
+    _badcat = sorted(o for o, (c, _f) in _acct.items() if c not in _categories)
+    if _badcat:
+        problems.append(f'M_BADCAT| 모르는 회계 범주 {_badcat[:8]} — 허용: {_categories}')
+    #  ④ `protocol`/`derived` 로 적은 것은 **정말** 규약 축을 가리켜야 한다
+    #     ⚠ heuristic 을 쓰지 않는다 — 회계가 **필드명을 직접** 적는다 (이름 규칙 추측 금지).
+    _PF = set(_protocol_fields)
+    _bad_p = sorted(o for o, (c, flds) in _acct.items()
+                    if c in ('protocol', 'derived')
+                    and (not flds or any(f not in _PF for f in flds)))
+    if _bad_p:
+        problems.append(f'M_NOTINPROTOCOL| `protocol`/`derived` 로 적었는데 그 필드가 '
+                        f'`PROTOCOL_FIELDS` 에 없다(또는 비었다) {_bad_p} — 선언과 거동이 갈렸다')
+    #  ⑤ 반대 방향 — 규약 축인데 **어떤 CLI 도** 그것을 못 가리키면 죽은 축이거나 회계 누락
+    _covered = {f for c, flds in _acct.values()
+                if c in ('protocol', 'derived') and flds for f in flds}
+    _orphan = sorted(f for f in _PF if f not in _covered
+                     and f not in _code_const)
+    if _orphan:
+        problems.append(f'M_ORPHAN_FIELD| CLI 로 못 바꾸는 규약 축 {_orphan} — '
+                        f'코드 상수면 `PROTOCOL_CODE_CONST` 에, 아니면 회계에 적을 것')
+    return problems
 
 
 def check_selftest_wiring(verbose=True, check_all=None, ci_yml=None):
@@ -1706,6 +1832,8 @@ def run_all(verbose=True):
                        check_selftest_wiring),
                       ('규칙 L — 러너 배선을 **실행으로** 확인 (LEAN·규약·팔 수)',
                        check_runner_integration),
+                      ('규칙 M — CLI 회계 (실물 파서 전 옵션이 등재됐는가)',
+                       check_cli_accounting),
                       ('규칙 J — 생산 엔트리포인트 스모크 (기본 경로가 정말 도는가)',
                        check_entrypoint_smoke),
                       ('규칙 F — 지역 import 그림자 (조용한 기능 꺼짐)', check_local_import_shadows)):
@@ -2144,6 +2272,60 @@ def _selftest():
     chk(f'L-7: ★★ 원값 덤프(`--collect-only`)가 봉인보다 앞서면 **잡는다** — '
         f'결과를 보고 봉인을 통과시킬지 고를 수 있으면 눈먼 봉인이 아니다 ({len(_m6)}건)',
         any(x.startswith('L_SEALORDER') for x in _m6))
+
+    # ── 규칙 M (2026-08-25, A1 / R4-CX-03 잔여) — CLI 회계 ────────────────────────────
+    import run_contract as _rcM
+    _MOPT, _MERR = _payload_options(os.path.join(ROOT, 'scripts', 'mpm_webapp_payload.py'))
+    chk('M-1: 실물 파서를 잡는다 (parse_args 가로채기)', _MERR is None and len(_MOPT) > 40)
+    #  ★★ 이것이 초판의 구멍이다 — `--temp-c`·`--ea-ion-ev` 는 `se_material.temperature_argparse`
+    #    가 **다른 모듈**에서 등록한다.  payload 파일만 AST 로 훑던 판은 이 둘을 못 봤고,
+    #    오히려 "회계에 있는데 파서에 없다" 고 **거꾸로** 보고했다.  정적 훑기로 되돌리면
+    #    여기서 빨간불이 난다.
+    chk('M-2: helper 모듈이 등록한 옵션도 잡힌다 (--temp-c·--ea-ion-ev — 초판 AST 가 놓쳤다)',
+        '--temp-c' in _MOPT and '--ea-ion-ev' in _MOPT)
+    chk('M-3: 리포 실물이 지금 통과한다 (79 옵션 · 규약 축 전수 도달)',
+        check_cli_accounting(verbose=False)[0] == [])
+
+    def _mprob(opts=None, acct=None, pf=None, cc=None, cats=None):
+        """합성 입력으로 규칙 M 의 **판정부**를 직접 문다 (리포를 안 건드린다)."""
+        return cli_accounting_problems(
+            list(opts if opts is not None else _MOPT),
+            dict(acct if acct is not None else _rcM.CLI_ACCOUNTING),
+            tuple(pf if pf is not None else _rcM.PROTOCOL_FIELDS),
+            tuple(cc if cc is not None else _rcM.PROTOCOL_CODE_CONST),
+            tuple(cats if cats is not None else _rcM.CLI_CATEGORIES))
+
+    chk('M-4: 새 옵션이 회계 없이 생기면 → M_UNACCOUNTED',
+        any(x.startswith('M_UNACCOUNTED') and '--brand-new-sigma' in x
+            for x in _mprob(opts=_MOPT + ['--brand-new-sigma'])))
+    _acct_stale = dict(_rcM.CLI_ACCOUNTING); _acct_stale['--gone-knob'] = ('mode', None)
+    chk('M-5: 파서에서 사라진 옵션이 회계에 남으면 → M_STALE',
+        any(x.startswith('M_STALE') and '--gone-knob' in x for x in _mprob(acct=_acct_stale)))
+    _acct_bad = dict(_rcM.CLI_ACCOUNTING); _acct_bad['--sigma-vgcf'] = ('protocol', ('no_such_axis',))
+    chk('M-6: `protocol` 인데 규약 축에 없는 필드를 대면 → M_NOTINPROTOCOL',
+        any(x.startswith('M_NOTINPROTOCOL') and '--sigma-vgcf' in x for x in _mprob(acct=_acct_bad)))
+    #  ★ `derived` 도 같은 잣대다 — "다른 축이 흡수한다" 는 주장은 그 축이 실재해야 성립한다
+    _acct_bd = dict(_rcM.CLI_ACCOUNTING); _acct_bd['--ea-ion-ev'] = ('derived', ('no_such_axis',))
+    chk('M-7: `derived` 가 없는 축을 가리켜도 → M_NOTINPROTOCOL',
+        any(x.startswith('M_NOTINPROTOCOL') and '--ea-ion-ev' in x for x in _mprob(acct=_acct_bd)))
+    chk('M-8: 규약 축을 아무 CLI 도 못 가리키면 → M_ORPHAN_FIELD',
+        any(x.startswith('M_ORPHAN_FIELD') and 'lonely_axis' in x
+            for x in _mprob(pf=tuple(_rcM.PROTOCOL_FIELDS) + ('lonely_axis',))))
+    #  ⚠ **그 축에 대해서만** 묻는다.  옛 판은 `M_ORPHAN_FIELD` 가 하나도 없을 것을
+    #    요구해, 리포의 **다른** 축이 고아가 되는 변형(`--dilate-z` 강등)에도 같이
+    #    빨간불이 났다 = 시험 얽힘 (배터리가 '과잉' 으로 잡았다).
+    chk('M-9: 코드 상수로 선언하면 고아가 아니다 (plate_rule 규약)',
+        not any(x.startswith('M_ORPHAN_FIELD') and 'lonely_axis' in x for x in
+                _mprob(pf=tuple(_rcM.PROTOCOL_FIELDS) + ('lonely_axis',),
+                       cc=tuple(_rcM.PROTOCOL_CODE_CONST) + ('lonely_axis',))))
+    _acct_cat = dict(_rcM.CLI_ACCOUNTING); _acct_cat['--cam'] = ('protokol', ('cam',))
+    chk('M-10: 범주 어휘 오타 → M_BADCAT',
+        any(x.startswith('M_BADCAT') and '--cam' in x for x in _mprob(acct=_acct_cat)))
+    #  ★★ A1 이 실제로 적발한 것 — 이 둘이 규약 축이 아니면 침대가 조용히 달라진다
+    chk('M-11: `--dilate-z`·`--se-proxy` 가 규약 축을 가리킨다 (A1 2차 적발)',
+        _rcM.CLI_ACCOUNTING['--dilate-z'] == ('protocol', ('dilate_z',))
+        and _rcM.CLI_ACCOUNTING['--se-proxy'][1] == ('se_source',)
+        and {'dilate_z', 'se_source'} <= set(_rcM.PROTOCOL_FIELDS))
 
     # ── 규칙 J (2026-08-20) — 생산 엔트리포인트 스모크 ────────────────────────────────
     #   J-2 가 이 규칙의 존재 이유다: "지금 리포가 통과한다" 만으로는 검사기가 **정말**

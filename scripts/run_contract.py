@@ -49,6 +49,141 @@ def step3_of(payload):
     return None
 
 
+#: ★★★ **CLI 회계** (A1, R4-CX-03 잔여) — payload 의 CLI 옵션이 **어디서 설명되는가**.
+#   값은 `(범주, 대응 규약 필드들|None)` 이다.
+#
+#     'protocol' — `PROTOCOL_FIELDS` 축으로 기록된다 (규약 해시에 들어간다).
+#                  필드명을 **직접** 적는다 — 이름 규칙 추측 금지.  한 옵션이 여러 축을
+#                  움직이면 (`--ptfe-stamp` → `ptfe_stamp` + `ptfe_zero_dof`) 전부 적는다.
+#     'derived'  — 물리를 바꾸지만 그 효과가 **다른 규약 축에 흡수**된다.  흡수하는 축을
+#                  적는다.  예: `--ea-ion-ev` 는 `sigma_ion_se_S_cm` 을 그 자리에서
+#                  재척도해 기록하므로, 별도 축이 없어도 규약이 그것을 말한다.
+#     'plan'     — `component_plan` 이 담는다 (무엇을 돌리기로 했는가)
+#     'numeric'  — 수치 방법 (backend/precond/maxiter — 해에 영향, 규약은 아님).
+#                  매니페스트의 `backend` 기록이 담는다.
+#     'solve'    — σ_e/σ_ion **밖 채널**의 solve 를 바꾼다 (thermal k · STEP4 i0 · Joule).
+#                  이득 판정이 비교하지 않는 축이라 해시에 없다 — 대신 **여기 적혀야** 한다.
+#     'input'    — 입력 데이터.  내용은 `input_digest`(실제로 읽은 파일들의 해시)가 덮는다.
+#     'report'   — 보고 스칼라만 바꾼다 (porosity/thickness/coverage 권위값).  해에 영향 없음.
+#     'mode'     — 산출물 **형태**만 바꾼다 (미리보기 해상도·rasterize-only·selftest).
+#     'record'   — 값이 기록으로만 남는다 (origin 처럼 별도 게이트가 본다)
+#
+#  ⚠ 새 옵션을 추가하면 여기 **반드시** 한 줄 적어야 한다 — 규칙 M 이 **실제 파서**를
+#    잡아 미등재 옵션을 오류로 낸다.
+#  ★★ 2026-08-25 (A1 2차) — 초판은 ⓐ payload 파일만 AST 로 훑고 ⓑ 이름 조각
+#    (`CLI_PHYSICS_HINT`) 으로 "물리 후보" 를 골랐다.  **둘 다 새는 필터**였다:
+#    ⓐ `--temp-c`·`--ea-ion-ev` 는 `se_material.temperature_argparse(ap)` 가 **다른 모듈**
+#      에서 등록해 AST 에 안 보였고 (그래서 `--temp-c` 가 M_STALE 로 나왔다),
+#    ⓑ `--k-carbon`·`--i0-a-m2`·`--joule-heat`·`--dilate-z` 는 이름에 조각이 없어
+#      "후보" 조차 아니었다.  ⇒ 초판의 초록은 **가짜 보증**이었다.
+#    지금은 파서를 **실행해서** 잡고(부분집합 필터 없음), `--help` 를 뺀 **전 옵션**이
+#    등재를 요구한다.
+CLI_ACCOUNTING = {
+    # ── protocol (규약 해시 축) ─────────────────────────────────────────────
+    '--step3-vox': ('protocol', ('vox_um',)),
+    '--step3-bridge-um': ('protocol', ('bridge_um',)),
+    '--step3-fibre-stamp': ('protocol', ('fibre_stamp',)),
+    #  ★ 한 옵션이 두 축을 움직인다 — 지름을 주면 도장이 sphere 로 바뀐다.
+    '--step3-sdcp-sphere-d': ('protocol', ('sdcp_sphere_d_um', 'sdcp_stamp')),
+    '--step3-sdcp-yield-to-vgcf': ('protocol', ('sdcp_yield_to_vgcf',)),
+    #  ★ `ptfe_zero_dof` = (스탬프 ON) ∧ (σ_PTFE == 0) — 두 옵션이 함께 정한다.
+    '--ptfe-stamp': ('protocol', ('ptfe_stamp', 'ptfe_zero_dof')),
+    '--sigma-ptfe': ('protocol', ('sigma_ptfe_S_cm', 'ptfe_zero_dof')),
+    '--sigma-vgcf': ('protocol', ('sigma_vgcf_S_cm',)),
+    '--sigma-sdcp': ('protocol', ('sigma_sdcp_S_cm',)),
+    '--sigma-superp': ('protocol', ('sigma_superp_S_cm',)),
+    '--sigma-swcnt': ('protocol', ('sigma_swcnt_S_cm',)),
+    '--swcnt-ion-block': ('protocol', ('swcnt_ion_block',)),
+    '--sigma-ion-se': ('protocol', ('sigma_ion_se_S_cm',)),
+    '--sigma-ion-sdcp': ('protocol', ('sigma_ion_sdcp_S_cm',)),
+    '--sigma-am-s': ('protocol', ('sigma_am_s_S_cm',)),
+    '--sigma-am-p': ('protocol', ('sigma_am_p_S_cm',)),
+    '--cam': ('protocol', ('cam',)),
+    #  ★ 온도는 자기 축으로도 남고 (혼합-T 게이트가 본다) σ_ion(SE) 도 재척도한다.
+    '--temp-c': ('protocol', ('temp_c', 'sigma_ion_se_S_cm')),
+    '--periodic': ('protocol', ('periodic_xy',)),
+    #  ★★ 2026-08-25 (A1 2차, 신규 적발) — **침대 기하를 바꾸는데 규약에 없었다.**
+    #    `vc.load_am(a.scaffold, dz=a.dilate_z)` 의 결과가 그대로 `_s3.rasterize` 로
+    #    들어간다 (payload:988 → :1403).  `input_digest` 는 **파일 내용**만 덮으므로
+    #    같은 scaffold 를 다른 dz 로 늘린 두 팔이 digest 동일로 통과한다.
+    '--dilate-z': ('protocol', ('dilate_z',)),
+    #  ★★ 같은 부류 — SE 점구름이 **합성**일 수 있다.  `if a.se_proxy or not a.se:` 라
+    #    `--se` 를 **빠뜨리기만 해도** 조용히 proxy 로 내려앉는다 (payload:991).
+    #    그 구름이 `se_pts=` 로 rasterize 에 들어가므로 σ 침대 자체가 달라진다.
+    #    ⇒ `se_source` 하나로 출처를 적고, 합성일 때만 그 모양(frac@n_vox)을 싣는다
+    #      (항상 싣지 않는 이유 = 실침대 팔이 안 쓰는 인자로 거짓 HOLD 되지 않게).
+    '--se-proxy': ('protocol', ('se_source',)),
+    '--se-frac': ('protocol', ('se_source',)),
+    '--n-vox': ('protocol', ('se_source',)),
+    # ── derived (효과가 다른 규약 축에 흡수된다) ────────────────────────────
+    #  σ_ion(SE) 는 매니페스트에 실릴 때 **이미 아레니우스 재척도된 값**이다
+    #  (`a.sigma_ion_se = se_material.scale_sigma_ion(a.sigma_ion_se, a.temp_c, a.ea_ion_ev)`).
+    '--ea-ion-ev': ('derived', ('sigma_ion_se_S_cm',)),
+    # ── plan (무엇을 돌리기로 했는가 — `component_plan`) ────────────────────
+    '--no-ion': ('plan', None), '--no-thermal': ('plan', None),
+    '--no-pore': ('plan', None), '--no-collector': ('plan', None),
+    '--no-step3': ('plan', None),
+    # ── numeric (수치 방법.  해에 영향은 있으나 규약은 아니다) ──────────────
+    '--step3-gpu': ('numeric', None), '--step3-amg': ('numeric', None),
+    '--step3-maxiter': ('numeric', None),
+    # ── solve (σ_e/σ_ion 밖 채널) ───────────────────────────────────────────
+    '--k-carbon': ('solve', None),        # thermal k 표 (`_s3.thermal_k_table`)
+    '--i0-a-m2': ('solve', None),         # STEP4 교환전류 (σ_e 를 다시 풀지 않는다)
+    '--joule-heat': ('solve', None),      # #29 발열맵 — σ 해 뒤의 후처리
+    '--no-step4': ('solve', None),
+    '--no-trackb': ('solve', None),       # τ_geo 추가 솔브 1회 (σ_e 와 별개)
+    # ── input (내용은 `input_digest` 가 덮는다) ─────────────────────────────
+    '--scaffold': ('input', None), '--se': ('input', None),
+    '--se-dump': ('input', None), '--phase': ('input', None),
+    '--dg': ('input', None), '--eps': ('input', None),
+    '--metrics-json': ('input', None),
+    #  ★ 입력 데이터.  적용 결과는 `fibre_stamp` 가 말하고, 내용은 `input_digest` 가 덮는다.
+    #    (파일 경로 자체는 규약이 아니다 — 같은 이름으로 다른 침대를 놓을 수 있으므로
+    #     digest 가 정본이다.)
+    '--fibre': ('input', None), '--fibre-dia': ('input', None),
+    # ── report (보고 스칼라만) ──────────────────────────────────────────────
+    '--porosity': ('report', None), '--thickness': ('report', None),
+    '--cov-p': ('report', None), '--cov-s': ('report', None),
+    '--coverage-um': ('report', None), '--cov-tabor-um': ('report', None),
+    '--cov-sub': ('report', None), '--case': ('report', None),
+    # ── mode (산출물 형태만.  σ 해에 영향 없음) ────────────────────────────
+    '--out': ('mode', None), '--step3-rasterize-only': ('mode', None),
+    '--fibre-max': ('mode', None), '--selftest-temperature': ('mode', None),
+    '--show-results': ('mode', None), '--allow-partial-step3': ('mode', None),
+    '--expect-protocol': ('mode', None), '--expect-physics': ('mode', None),
+    '--void-max': ('mode', None), '--tri-step': ('mode', None),
+    '--target-porosity': ('mode', None), '--target-coverage': ('mode', None),
+    '--se-min-count': ('mode', None), '--denoise': ('mode', None),
+    '--smooth': ('mode', None), '--strain-pts': ('mode', None),
+    '--additive-pts': ('mode', None), '--field-max-points': ('mode', None),
+    '--no-field': ('mode', None), '--save-step4-grid': ('mode', None),
+    #  ★ collector 는 **후처리 진단**이다 (σ_e 를 다시 풀지 않는다 — R_int 시나리오 대입).
+    '--collector-name': ('mode', None), '--collector-rint': ('mode', None),
+    '--collector-scenario': ('mode', None),
+    # ── record (기록으로만 남고 **별도 게이트**가 본다) ─────────────────────
+    '--step3-origin-shift': ('record', None),
+    #  ★ 온도 혼합 허용 = **게이트를 여는 플래그**다.  물리값이 아니라 허가라서 protocol
+    #    축이 아니지만, 열면 서로 다른 T 의 σ_ion 이 섞일 수 있으므로 기록으로 남는다.
+    '--allow-mixed-t-ionic': ('record', None),
+}
+
+#: 회계 범주 어휘.  이 밖의 값은 오타다 (규칙 M 이 거부한다).
+CLI_CATEGORIES = ('protocol', 'derived', 'plan', 'numeric', 'solve',
+                  'input', 'report', 'mode', 'record')
+
+#: 규약 축인데 **CLI 로 못 바꾸는** 것 = 코드 상수.  여기 적힌 것만 고아 검사에서 빠진다.
+PROTOCOL_CODE_CONST = ('plate_rule',)
+
+
+def cli_protocol_coverage():
+    """→ `protocol`/`derived` 회계가 **이름을 대는** 규약 필드 집합."""
+    out = set()
+    for cat, flds in CLI_ACCOUNTING.values():
+        if cat in ('protocol', 'derived') and flds:
+            out.update(flds)
+    return out
+
+
 #: 매니페스트 **스키마 세대**.  ★ 3 = component 별 증거(수렴 3필드·backend `used`)와
 #  `component_plan` 을 **항상** 싣는 세대.  2 = 그 이전 (전자 top-level 만 실었다).
 #  ⚠ 새 필드를 **과거 결과에 소급 필수화하면 과잉차단**이다 (Codex R4 §5).  그래서
@@ -81,7 +216,18 @@ PROTOCOL_FIELDS = ('vox_um', 'bridge_um', 'fibre_stamp', 'sdcp_stamp', 'sdcp_sph
                    'sigma_vgcf_S_cm', 'sigma_sdcp_S_cm', 'sigma_ptfe_S_cm',
                    'sigma_ion_se_S_cm', 'sigma_ion_sdcp_S_cm',
                    'sigma_am_s_S_cm', 'sigma_am_p_S_cm', 'cam', 'temp_c',
-                   'periodic_xy', 'plate_rule')
+                   'periodic_xy', 'plate_rule',
+                   #  ★★ 2026-08-25 (A1, R4-CX-03 잔여) — **전자/이온 σ 표에 실제로 들어가는데
+                   #    규약에 없던 셋**.  `_sig3` 는 SuperP·SWCNT 를 그대로 쓰고
+                   #    (`mpm_webapp_payload.py` ELECTRONIC table), `swcnt_ion_block` 은
+                   #    이온 σ 표의 SE 항을 0 으로 만든다.  Codex 가 superp 를 지목했고
+                   #    파서 전수 대조로 나머지 둘이 같이 나왔다.
+                   'sigma_superp_S_cm', 'sigma_swcnt_S_cm', 'swcnt_ion_block',
+                   #  ★★ 2026-08-25 (A1 2차) — **침대 기하·SE 출처**.  둘 다 rasterize 로
+                   #    들어가는데 규약에 없었다.  `input_digest` 는 파일 **내용**만 덮으므로
+                   #    같은 scaffold 를 다른 `--dilate-z` 로 늘리거나, `--se` 를 빠뜨려
+                   #    proxy 구름으로 내려앉은 팔이 digest 동일로 통과한다.
+                   'dilate_z', 'se_source')
 
 #: `None` 이 **명시적 OFF** 인 축 (값 부재가 아니다).
 PROTOCOL_OFF_OK = ('temp_c',)
@@ -158,8 +304,10 @@ STRICT_TYPES = {
     'sigma_ion_se_S_cm': float, 'sigma_ion_sdcp_S_cm': float,
     'sigma_am_s_S_cm': float, 'sigma_am_p_S_cm': float,
     'fibre_stamp': str, 'sdcp_stamp': str, 'ptfe_stamp': str, 'cam': str,
+    'se_source': str, 'dilate_z': float,
     'plate_rule': str, 'physics_protocol_id': str,
     'ptfe_cells_observed': int,
+    'sigma_superp_S_cm': float, 'sigma_swcnt_S_cm': float, 'swcnt_ion_block': bool,
 }
 
 
@@ -254,7 +402,9 @@ def plan_ok(plan):
     _extra = [k for k in plan if k not in PLAN_KEYS]
     if _extra:
         return False, f'PLAN|extra| 모르는 키 {sorted(_extra)}'
-    _bad = [k for k in PLAN_KEYS if type(plan[k]) is not bool]   # noqa: E721
+    #  ⚠ `.get` — 앞 검사가 꺼져도 **터지지 않는다**.  검사기가 터지면 소비자는
+    #    "계약 위반" 이 아니라 "확인 못 함" 을 얻고, 그 둘은 다른 결론이다.
+    _bad = [k for k in PLAN_KEYS if type(plan.get(k)) is not bool]   # noqa: E721
     if _bad:
         return False, f'PLAN|type| bool 이 아닌 키 {sorted(_bad)}'
     if plan['electronic'] is not True:

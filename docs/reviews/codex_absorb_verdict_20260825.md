@@ -317,13 +317,54 @@ full-component 팔이 exit 3.  SE 비퍼콜은 **정상 물리 결과**다.  매
 ★ **검사기의 sed 범위가 낡아 대상 밖으로 나가 있었다** — 규칙 L 의 P2_EXTRA probe 가
 `sed -n "1,140p"` 라 러너가 길어지자 그 블록을 못 봤다.  표지 기준으로 바꿨다.
 
+## R4 잔여 — A 트랙 진행 (2026-08-25, 같은 날 이어서)
+
+| 항목 | 상태 | 무엇이 나왔나 |
+|---|---|---|
+| A0 배터리 잔여 3 | ✅ | 셋 다 **실제 결함**이었다 (기대집합 정정이 아니다).  harness 의 crash 판정이 `'SystemExit' not in traceback` 인데 selftest 는 전부 `raise SystemExit(...)` 로 끝나 **모든 crash 가 정상 실패로 접혔다** |
+| A1 CLI 전수 (R4-CX-03) | ✅ 규칙 M | ★★ **초판이 가짜 초록**이었다 — payload 파일만 AST 로 훑어 helper 모듈이 등록한 `--temp-c`·`--ea-ion-ev` 를 못 보고 오히려 "파서에 없다" 로 거꾸로 보고했고, 이름 조각 필터가 `--dilate-z`·`--k-carbon`·`--i0-a-m2` 를 후보에서 뺐다.  ⇒ 파서를 **실행해서** 잡고 전 79 옵션 등재 강제 |
+| A2 cross-dir 전수 (R4-CX-05) | ✅ | 레지스트리 대신 **매니페스트 전수 훑기**.  분류 안 된 키는 **값이 같아도** HOLD |
+| A3 선언 뒤집기 (R4-CX-05) | 🔶 | ㊷ 가 레지스트리에서 거동을 생성 · ㊹a `PROTOCOL_FIELDS ⊆ FIELD_CONTRACT` · ㊹f `계약 ∩ 면제 = ∅` · 배터리가 **선언만 바꾸는** mutant(`periodic_xy.across_dir`)를 문다.  **범주 오선택**만 잔여 |
+| A4 구조화 selftest (R4-CX-06) | ⬜ | |
+| A5 standalone full bundle (R4-CX-08) | ✅ | `scripts/make_review_bundle.sh` — `--all` + **받는 쪽 검증까지** (빈 디렉터리 clone).  지난 실패는 만들 때가 아니라 **열 때** 드러났다 |
+| A6 합성 SE 침대 게이트 (A1 파생) | ✅ | `--se` 를 **빠뜨리기만 해도** SE 구름이 합성되고 그것이 rasterize 로 들어간다.  `input_digest` 가 원리적으로 못 덮는다 ⇒ `se_source` 기록 + `SE_PROXY` HOLD |
+
+★★★ **A1·A2 가 규약 밖 물리 축을 아홉 개 찾아냈다** (원장 SELF-02~04):
+
+· `--dilate-z` — `vc.load_am(scaffold, dz=…)` 의 결과가 그대로 `_s3.rasterize` 로 들어간다
+  (payload:988 → :1403).  **`input_digest` 는 파일 내용만 덮으므로** 같은 scaffold 를 다른
+  dz 로 늘린 두 팔이 digest 동일로 통과했다.
+· SE 점구름 **합성 여부** — `if a.se_proxy or not a.se:` 라 `--se` 를 **빠뜨리기만 해도**
+  proxy 구름이 되고, 그것이 `se_pts=` 로 rasterize 에 들어간다.  기록이 없었다.
+· `sigma_superp_S_cm`·`sigma_swcnt_S_cm`·`swcnt_ion_block` — σ 표에 실제로 들어가는데
+  `PROTOCOL_FIELDS` 밖 (R4-CX-03 이 지목한 것의 전수판).
+· `periodic_xy`·`plate_rule`·(+위 다섯) — `PROTOCOL_FIELDS` 에는 있는데
+  **`FIELD_CONTRACT` 밖**이라 `compare_dirs` 가 고정을 안 봤다 = 두 디렉터리 사이에서
+  자유롭게 달라져도 `measured`.
+
+⇒ 규약 축 19 → **24**, 스키마 접두사는 `p2-` 유지지만 **해시가 달라진다**.  이미 p1→p2 로
+  전 팔 재실행이 필요한 상태였으므로 추가 비용은 없다.  ⚠ **C(GPU) 는 이 축들이 기록되는
+  payload 로만 돌려야 한다** — 옛 팔은 `unknown:` 규약이라 fail-closed 로 HOLD 된다.
+
+★ **배터리가 내 시험 넷을 정정했다** (이번에도 배터리가 나보다 정확했다):
+· `㊹b` 가 등록 축까지 같이 바꾸는 픽스처라 **앞 게이트가 먼저 물어** 뜻을 잃고 있었다 (얽힘).
+· `MANIFEST_RESULT_KEYS` 면제는 **계약된 축을 못 약화시킨다** (레지스트리 루프가 먼저 문다)
+  ⇒ 진짜 위험은 "계약된 축을 면제로 옮기는 것" 이고, 그것을 ㊹f 로 막았다.
+· 기전 자체를 들어내는 돌연변이(리더 자동 채움 제거)는 14개 시험이 그 기전에 기대므로
+  "기대 밖 실패 0" 이 원리적으로 성립하지 않는다 ⇒ **`broad` 표식**을 신설했다
+  (게이트 하나를 끄는 돌연변이에는 **금지** — 거기서 기대 밖 실패는 진짜 얽힘 신호다).
+· `조건7`·`temp_c.generation` 의 기대집합은 **내가 잘못 적은 것**이었다.
+· 전수 훑기(`_rawd`)의 **고유 사정권**이 내가 생각한 것보다 좁았다 — 레지스트리에 있는
+  축은 앞 루프가 먼저 잡으므로, `_rawd` 만 잡는 것은 **레지스트리 밖 그림자 필드**뿐이다
+  (`fibre_stamp_requested` 가 부모 없이 갈리는 경우 = ㊹e).  선언 뒤집기도 실제로 무는 것은
+  거동 시험이 아니라 **구조 불변식** ㊷e 였다.  ⇒ "무엇이 무는가" 를 손으로 확인해 적었다.
+
 ## 아직 못 한 것
 
-· solver-affecting CLI **전수**를 parser 에서 생성해 schema 등재를 검사 (R4-CX-03 잔여)
-· cross-dir raw diff-set 을 `expect_differ` 와 **정확히** 일치시키기 (R4-CX-05 잔여)
-· `backend.across_dir` 류 **선언 뒤집기** pass-mutant (R4-CX-05 잔여)
 · selftest 를 구조화 결과(JSON/JUnit)로 내고 harness 가 exact ID multiset 을 검증 (R4-CX-06 잔여)
-· standalone full bundle (R4-CX-08 잔여)
+· 회계 **범주 오선택**을 잡는 검사 (A3 잔여)
+· 킷 `run_mpm.sh` 가 `--se` 를 넘기는지 — **이 리포에 킷이 없다**.  C 를 돌릴 때
+  `se_source` 기록이 처음으로 답한다 (SELF-05)
 · `σ_SDCP = 250` 출처 · `ρ_SDCP` — **사용자 회신 대기**
 
 ## Q1 재확인 (Codex 와 같은 결론)
