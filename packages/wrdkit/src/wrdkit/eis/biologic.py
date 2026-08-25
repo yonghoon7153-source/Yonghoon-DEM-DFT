@@ -130,6 +130,16 @@ def read_mpr_bytes(data: bytes) -> Spectrum:
             "no data module in this .mpr -- found " + (", ".join(modules) or "nothing"))
     start, length, _version = modules["VMP data"]
     end = start + length
+    # The rows are anchored on this end, so the end has to be *right*: one
+    # corrupted byte in the length field shifts every row by one and the
+    # numbers still look like floats -- the review fed a length of N+1 and got
+    # a 31-point spectrum of garbage accepted.  A correct length lands exactly
+    # on the next module header or on the end of the file; anything else is a
+    # truncated or corrupted container.
+    if end > len(data) or (end != len(data) and data[end:end + 6] != b"MODULE"):
+        raise ValueError(
+            f"the data module claims {length} bytes but does not end on a "
+            f"module boundary -- the file is truncated or corrupted")
 
     n_points, n_columns = struct.unpack_from("<IH", data, start)
     ids = struct.unpack_from(f"<{n_columns}H", data, start + 6)
@@ -170,12 +180,53 @@ def read_mpr_bytes(data: bytes) -> Spectrum:
 
 def _spectrum_from_columns(columns: dict[str, np.ndarray],
                            metadata: dict) -> Spectrum:
-    """Turn named columns into a Spectrum, refusing to guess a missing one."""
+    """Turn named columns into a Spectrum, refusing to guess a missing one.
+
+    The essential three columns must also be *numbers*: a blank cell in an
+    export parses to NaN, and a NaN frequency used to ride through upload and
+    save, failing only later inside a fit with no mention of the file.  And
+    where the record carries its own |Z| and phase, they are checked against
+    Re/Im -- redundancy the instrument wrote, and the strongest alignment
+    check there is: misplaced row bytes do not stay on the circle.
+    """
     missing = [name for name in ("freq/Hz", "Re(Z)/Ohm", "-Im(Z)/Ohm")
                if name not in columns]
     if missing:
         raise ValueError("this record is not an impedance sweep -- no "
                          + ", ".join(missing) + " column")
+    frequency = columns["freq/Hz"]
+    re_z = columns["Re(Z)/Ohm"]
+    im_stored = columns["-Im(Z)/Ohm"]
+    for name, series in (("freq/Hz", frequency), ("Re(Z)/Ohm", re_z),
+                         ("-Im(Z)/Ohm", im_stored)):
+        bad = np.flatnonzero(~np.isfinite(series))
+        if len(bad):
+            raise ValueError(f"{name} is not a number at row {int(bad[0]) + 1} "
+                             f"({len(bad)} rows in total)")
+    non_positive = np.flatnonzero(frequency <= 0)
+    if len(non_positive):
+        raise ValueError(f"freq/Hz is not positive at row "
+                         f"{int(non_positive[0]) + 1} -- not a frequency sweep")
+    if "|Z|/Ohm" in columns:
+        stored = columns["|Z|/Ohm"]
+        magnitude = np.hypot(re_z, im_stored)
+        with np.errstate(invalid="ignore", divide="ignore"):
+            relative = np.abs(magnitude - stored) / np.maximum(np.abs(stored),
+                                                               1e-30)
+        median = float(np.median(relative))
+        if np.isfinite(median) and median > 1e-3:
+            raise ValueError(
+                f"|Z| does not match sqrt(Re^2+Im^2) (median relative error "
+                f"{median:.3g}) -- the rows are misaligned or corrupted")
+    if "Phase(Z)/deg" in columns:
+        # The file stores -Im(Z); the phase matches angle(Re - j*(-Im)).
+        computed = np.degrees(np.arctan2(-im_stored, re_z))
+        difference = float(np.median(np.abs(computed
+                                            - columns["Phase(Z)/deg"])))
+        if np.isfinite(difference) and difference > 0.1:
+            raise ValueError(
+                f"Phase(Z) does not match atan2(Im, Re) (median difference "
+                f"{difference:.3g} deg) -- the rows are misaligned or corrupted")
     return Spectrum(
         frequency_hz=columns["freq/Hz"],
         z_re=columns["Re(Z)/Ohm"],
@@ -205,13 +256,23 @@ def read_mpt_text(text: str) -> Spectrum:
         raise ValueError(f"header line count {count} does not fit the file")
 
     names = [name.strip() for name in lines[count - 1].split("\t")]
-    body = [line for line in lines[count:] if line.strip()]
     values: list[list[float]] = []
-    for line in body:
-        cells = line.split("\t")
-        if len(cells) < len(names):
+    for line_number, line in enumerate(lines[count:], start=count + 1):
+        if not line.strip():
             continue
-        values.append([_number(cell) for cell in cells[:len(names)]])
+        cells = line.split("\t")
+        # A trailing tab makes one empty cell; that is formatting, not data.
+        while cells and not cells[-1].strip():
+            cells.pop()
+        # Anything else is misalignment.  Dropping a short row silently loses
+        # a point; reading a long row left-to-right puts the extra cell in
+        # ``freq`` and every later value one column to the right -- the review
+        # fed one inserted cell and got Re(Z)=123 accepted as a measurement.
+        if len(cells) != len(names):
+            raise ValueError(
+                f"line {line_number} has {len(cells)} columns where the "
+                f"header names {len(names)} -- the export is damaged")
+        values.append([_number(cell) for cell in cells])
     if not values:
         raise ValueError(f"no data rows after {count} header lines")
 
