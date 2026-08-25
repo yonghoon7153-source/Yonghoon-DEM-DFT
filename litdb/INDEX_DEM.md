@@ -143,3 +143,11 @@ digest 가 들어갈 자리가 없다. 그래서 한때 64편이 **어느 인덱
 | `shenouda2020_dem_metal_powder_am_liggghts_tutorial` | 금속분말 AM을 위한 DEM 해석 + LIGGGHTS-PUBLIC 시뮬레이션 튜토리얼 — Shenouda & Hoff (LLNL 기술보고서 2020) | DEM (LIGGGHTS-PUBLIC; AM 분말 흐름/안식각 + 단계별 튜토리얼) | 2026-06-26 | 🖼 25 |
 | `song2025_electrochemo_mechanical_microelectrode_ees` | Song 2025 (Energy & Environmental Science 18, 3129-3147) — 미세전극(microelectrode) electrochemo-mechanical 디지털트윈: FIB-SEM 재구성 + 전성분 고유물성 → 셀전압 >98% 검증 + 입자↔셀 괴리 3메커니즘 + 폴리머 바인더 VISCOP | FEM·electrochemo-mechanical | 2026-07-28 | — |
 | `zhang2023_pfib_multiscale_imaging_4d_thick_cathode` | 후막(80 µm · 6 mAh/cm²) NMC811 양극을 PFIB-SEM 으로 전(全)두께 3D 실측 → 그 복셀을 그대로 4D(공간+시간) Newman 모델에 넣어 열화 기전 규명 — Zhang & Chouchane / Meng (UCSD) + Franco (LRCS) (Joule 2023) | exp (PFIB-SEM 3D 대용적 + cryo-(S)TEM/EDX + 코인셀) + 3D-resolved  | 2026-08-19 | 🖼 19 |
+
+## 🎤 발표 덱 (1편) — ⚠ 인용 등급이 papers/ 보다 한 단계 낮다
+
+> `litdb/talks/README.md` 의 인용 규율. **덱 수치는 우리 db 절대값과 같은 표에 넣지 않는다.**
+
+| slug | 발표자 | 주제 | 발표 | 그림 |
+|---|---|---|---|---|
+| `yang2026_ncm_radial_microstructure_ml` | 양수영 (한양대 BML) | 방사형 NCM 2차 입자 미세구조의 멀티피직스 + ML 설계 | **BML Research Seminar**, 한양대 Battery Materials Laboratory | 🖼 21 |

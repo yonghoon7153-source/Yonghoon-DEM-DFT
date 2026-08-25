@@ -50,7 +50,20 @@ _dft_tree_clean() {          # $1 = repo.  0 깨끗 · 1 추적파일 수정(위
 }
 
 # ── 명령 ─────────────────────────────────────────────────────────────────────
-dft()     { cd "$DFT_REPO" || return 1; git -C "$DFT_REPO" status -sb | head -3; }
+# ⭐ 한 번에 다 한다 — 받고, 띄우고, 주소를 준다. 예전엔 상태 한 줄만 찍어
+#   "그래서 뭘 하라는 거지" 가 됐다. 매번 dftpull → dftwebbg 를 손으로 이어 붙였다.
+#   ⚠ 로컬 수정이 있으면 pull 을 건너뛴다 (dftpull 의 가드를 그대로 탄다 — 안 버린다).
+dft() {
+  cd "$DFT_REPO" || return 1
+  dftpull || echo "· pull 을 건너뛰었다 (위 사유) — 있는 코드로 띄운다"
+  if _dft_web_alive; then
+    echo "✅ 이미 떠 있다 → http://127.0.0.1:${DFT_PORT}"
+  else
+    dftwebbg || return 1
+  fi
+  git -C "$DFT_REPO" log --oneline -1
+}
+dftst()   { cd "$DFT_REPO" || return 1; git -C "$DFT_REPO" status -sb | head -3; }  # 예전 dft
 
 dftpull() {                  # 최신 받기. -f 를 줘야만 로컬 변경을 버린다.
   local force=0
@@ -178,7 +191,8 @@ kgyjobs() { kgyst --jobs; }
 
 dfthelp() {
   cat <<'EOT'
-  dft         repo 로 이동 + 상태 3줄
+  dft         ★ 받고 + webapp 띄우고 + 주소 (한 번에)
+  dftst       repo 로 이동 + 상태 3줄 (예전 dft)
   dftpull     최신 받기 (로컬 변경이 있으면 멈춘다 · 버리려면 dftpull -f)
   dftsetup    ★ 처음 한 번 — venv + 의존성 설치
   dftweb      webapp 앞단 실행        dftwebbg  백그라운드 + 건강검진
@@ -197,6 +211,12 @@ if [ "${1:-}" = "--selftest" ]; then
   [ -d "$DFT_REPO/webapp" ] && say "✓" "① repo 자동 인식: $DFT_REPO" \
                             || say "✗" "① repo 를 못 찾았다: $DFT_REPO"
   [ -f "$DFT_REPO/webapp/app.py" ] && say "✓" "② webapp/app.py 있다" || say "✗" "② app.py 없다"
+  # ★ dft 는 "받고 + 띄우고 + 주소" 를 다 해야 한다 — 셋 중 하나라도 빠지면 손으로 잇게 된다
+  _b=$(declare -f dft 2>/dev/null)
+  case "$_b" in *dftpull*) say "✓" "②' dft 가 pull 을 한다";; *) say "✗" "②' dft 에 pull 이 없다";; esac
+  case "$_b" in *dftwebbg*|*_dft_web_alive*) say "✓" "②' dft 가 webapp 을 띄운다";;
+                *) say "✗" "②' dft 가 webapp 을 안 띄운다";; esac
+  case "$_b" in *127.0.0.1*) say "✓" "②' dft 가 주소를 찍는다";; *) say "✗" "②' 주소를 안 찍는다";; esac
 
   T=$(mktemp -d)
   # [음성] git repo 가 아니면 2 를 돌려줘야 한다 (0 이면 더러운 트리를 깨끗하다고 본다)
