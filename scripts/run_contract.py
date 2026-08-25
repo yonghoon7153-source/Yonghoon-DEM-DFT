@@ -559,6 +559,18 @@ COMPONENT_EVIDENCE = {
     'pore':           (('cg_info', 'unconverged', 'resid'), 'tau', 'pore'),
 }
 
+#: CG 수렴이 없는 component 의 **결과 계약** (R5-CX-05).  기하·위상 산출물이라 수렴이
+#  아니라 **무엇이 나왔는가**로 본다.  ⚠ 위치는 producer 안에 있다 — 몰랐던 것이 아니라
+#  안 적었던 것이다 (`mpm_webapp_payload.py:2162` · `:1765`).
+COMPONENT_RESULT = {
+    'pnm': dict(path=('pore', 'pnm'), ints=('n_pores', 'n_throats'),
+                reason_means_incomplete=True),
+    'collector_geom': dict(path=('collector_geometric',),
+                           #  ⚠ `R_geom_ohm_cm2` 는 **정당하게 None** 일 수 있다
+                           #    (bare/wetted 중 하나가 reason 을 냈을 때) ⇒ 요구하지 않는다.
+                           positives=('wetted_sigma_S_cm', 'bare_sigma_S_cm')),
+}
+
 
 def component_evidence_ok(step3, required):
     """**계획된 component 마다** 수치·수렴·backend 증거가 있는가 → `(ok, reason|None)`.
@@ -587,9 +599,39 @@ def component_evidence_ok(step3, required):
         #    호출자(`--require-ionic` 등)가 따로 본다.
         if (_cmp.get(comp) or {}).get('status') == 'not_solvable':
             continue
+        #  ★★★ 2026-08-25 (R5-CX-05, Codex 5차) — **PNM·collector 는 status 만 봤다.**
+        #    schema 3 full plan 에서 `step3.pore.pnm` 과 `step3.collector_geometric` 을
+        #    **둘 다 지워도** producer/check_arm/final = `None/None/h0` 였다.
+        #    "증거 위치를 모른다" 는 것이 옛 주석의 이유였는데, 위치는 producer 안에 있다
+        #    (`payload:2162` · `:1765`) — 몰랐던 것이 아니라 **안 적었던** 것이다.
+        #  ⚠ 이 둘은 CG 수렴이 없다 (기하·위상 결과) ⇒ 계약 모양이 다르다.
+        _rspec = COMPONENT_RESULT.get(comp)
+        if _rspec is not None:
+            _blk = s
+            for _k in _rspec['path']:
+                _blk = (_blk or {}).get(_k) if isinstance(_blk, dict) else None
+            if not isinstance(_blk, dict):
+                return False, (f'EVID|{comp}|block| `step3.' + '.'.join(_rspec['path'])
+                               + '` 결과 블록이 없다 — status 만으로는 무엇이 나왔는지 모른다')
+            #  ★ 이유만 담아 돌아온 것은 `complete` 가 아니다 (실패를 완료로 적지 않는다)
+            if _rspec.get('reason_means_incomplete') and _blk.get('reason'):
+                return False, (f'EVID|{comp}|reason| 결과가 이유만 담고 있다 '
+                               f'({_blk.get("reason")!r}) — 그것은 `complete` 가 아니다')
+            for _kf in _rspec.get('ints', ()):
+                _v = _blk.get(_kf)
+                if isinstance(_v, bool) or not isinstance(_v, int) or _v < 0:
+                    return False, f'EVID|{comp}|result| {_kf}={_v!r} (음이 아닌 정수여야 한다)'
+            for _kf in _rspec.get('positives', ()):
+                _v = _blk.get(_kf)
+                if isinstance(_v, bool) or not isinstance(_v, (int, float)) \
+                        or not math.isfinite(_v) or _v <= 0:
+                    return False, f'EVID|{comp}|result| {_kf}={_v!r} (유한한 양수여야 한다)'
+            continue
         spec = COMPONENT_EVIDENCE.get(comp)
         if spec is None:
-            continue
+            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 '
+                           f'등록되지 않았다 — 계획했는데 무엇을 확인해야 하는지 모른다면 '
+                           f'그것은 통과가 아니라 HOLD 다 (R5-CX-05)')
         (ki, ku, kr), kres, sub = spec
         blk = (s.get(sub) or {}) if sub else s
         if not isinstance(blk, dict):
@@ -742,6 +784,51 @@ def _selftest():
     _old['schema_version'] = 2
     chk(schema_of(_old)[0] == 2,
         'F5 ★ 정상 증인 — 진짜 옛 세대는 통과한다 (소급 과잉차단 없음)')
+
+    #  ── G: PNM·collector 결과 계약 (R5-CX-05, Codex 5차 실측) ──────────────────────
+    #    schema 3 full plan 에서 `step3.pore.pnm` 과 `step3.collector_geometric` 을
+    #    **둘 다 지워도** producer/check_arm/final 이 `None/None/h0` 였다.
+    #    옛 주석은 "증거 위치를 모른다" 였는데 위치는 producer 안에 있었다 —
+    #    몰랐던 것이 아니라 **안 적었던** 것이다.
+    def _g_full():
+        _m = dict(_fman)
+        _m['component_plan'] = {'electronic': True, 'ionic': True, 'thermal': True,
+                                'pore': True, 'collector': True}
+        _m['components'] = {c: {'status': 'complete', 'backend': {'used': 'cpu'}}
+                            for c in ('electronic', 'ionic', 'thermal', 'pore',
+                                      'pnm', 'collector_geom')}
+        return {'manifest': _m, 'sigma_e_eff_S_cm': 0.073, 'cg_info': 0,
+                'unconverged': False, 'cg_resid': 1e-8,
+                'sigma_ion_eff_S_cm': 2e-4, 'ion_cg_info': 0,
+                'ion_unconverged': False, 'ion_resid': 1e-8,
+                'thermal': {'k_eff_W_mK': 0.5, 'cg_info': 0,
+                            'unconverged': False, 'cg_resid': 1e-8},
+                'pore': {'tau': 3.1, 'cg_info': 0, 'unconverged': False, 'resid': 1e-8,
+                         'pnm': {'n_pores': 1200, 'n_throats': 3400}},
+                'collector_geometric': {'wetted_sigma_S_cm': 0.08,
+                                        'bare_sigma_S_cm': 0.05}}
+
+    _greq = required_components(plan={'electronic': True, 'ionic': True, 'thermal': True,
+                                      'pore': True, 'collector': True})
+    chk({'pnm', 'collector_geom'} <= set(_greq), 'G1 전량 계획에 pnm·collector 가 들어간다')
+    chk(component_evidence_ok(_g_full(), _greq)[0],
+        'G2 정상 증인 — 완비된 결과는 통과한다')
+    _gs = _g_full(); _gs['pore'].pop('pnm')
+    chk(not component_evidence_ok(_gs, _greq)[0],
+        'G3 ★★ `step3.pore.pnm` 을 지우면 잡는다 (Codex 통과 변형)')
+    _gs = _g_full(); _gs.pop('collector_geometric')
+    chk(not component_evidence_ok(_gs, _greq)[0],
+        'G4 ★★ `step3.collector_geometric` 을 지우면 잡는다 (Codex 통과 변형)')
+    _gs = _g_full(); _gs['pore']['pnm'] = {'reason': 'no pores found'}
+    chk('reason' in (component_evidence_ok(_gs, _greq)[1] or ''),
+        'G5 ★ PNM 이 **이유만** 담으면 `complete` 가 아니다')
+    _gs = _g_full(); _gs['collector_geometric']['bare_sigma_S_cm'] = 0.0
+    chk(not component_evidence_ok(_gs, _greq)[0],
+        'G6 ★ collector σ 가 0 이면 잡는다 (유한 양수여야 한다)')
+    #  ★★ 그리고 **모르는 component 를 조용히 통과시키지 않는다** — 계획했는데 계약이
+    #    없으면 그것은 통과가 아니라 HOLD 다 (이 구멍이 pnm·collector 를 열어 뒀다).
+    chk(not component_evidence_ok(_g_full(), tuple(_greq) + ('brand_new_comp',))[0],
+        'G7 ★★ 계약이 **등록 안 된** component 를 계획하면 HOLD (조용한 통과 금지)')
 
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))
