@@ -28,8 +28,17 @@ else
   echo "⛔ 실행 중 MD 없음 (끝났거나 죽음)"
 fi
 
+# ── 살아있는 MD 의 out_root 수집 ─────────────────────────────────────────────
+#   ⛔ 2026-08-25 — 옛 판은 md.log 가 있으면 무조건 '▶ 진행' 이었다. 그래서 **죽인 런이
+#     영원히 진행으로 보였다** (kill 후에도 `~7.03/105 ps` 로 남음). 로그의 마지막 줄은
+#     프로세스가 살아 있다는 증거가 아니다 — 살아 있는 out_root 와 대조한다.
+LIVE=$(for p in $(pgrep -f disorder_ensemble_diffusion.py 2>/dev/null); do
+         tr '\0' ' ' < /proc/$p/cmdline 2>/dev/null \
+           | grep -o -- '--out_root [^ ]*' | awk '{print $2}'
+       done)
+
 # ── 런별 상태 (재귀) ─────────────────────────────────────────────────────────
-DONE=0; RUNNING=0; TRAJ=0
+DONE=0; RUNNING=0; STALLED=0; TRAJ=0
 echo "── 런별 상태 ──"
 while IFS= read -r d; do
   [ -z "$d" ] && continue
@@ -45,11 +54,20 @@ try:
     print('D_Li = %.3e cm2/s'%v if v else 'D n/a')
 except Exception as e: print('읽기 실패: %s'%e)" 2>/dev/null)"
   elif [ -f "$d/md.log" ]; then
-    RUNNING=$((RUNNING+1))
     l=$(tail -1 "$d/md.log" 2>/dev/null)
     ps=$(echo "$l" | awk '{print $1}'); K=$(echo "$l" | awk '{print $NF}')
-    printf "  %-34s ▶ 진행  traj %s  ~%s%s ps  (%s K)\n" "$rel" "$t" "$ps" \
-      "${TOTAL_PS:+/$TOTAL_PS}" "$K"
+    # 이 런 디렉터리를 out_root 로 갖는 살아있는 프로세스가 있나
+    alive=""
+    for lr in $LIVE; do case "$d" in "$lr"*) alive=1;; esac; done
+    if [ -n "$alive" ]; then
+      RUNNING=$((RUNNING+1))
+      printf "  %-34s ▶ 진행  traj %s  ~%s%s ps  (%s K)\n" "$rel" "$t" "$ps" \
+        "${TOTAL_PS:+/$TOTAL_PS}" "$K"
+    else
+      STALLED=$((STALLED+1))
+      printf "  %-34s ⚠ 중단  traj %s  ~%s%s ps 에서 멈춤 (프로세스 없음)\n" \
+        "$rel" "$t" "$ps" "${TOTAL_PS:+/$TOTAL_PS}"
+    fi
   else
     printf "  %-34s · 대기  traj %s\n" "$rel" "$t"
   fi
@@ -62,7 +80,8 @@ done < <(find "$R" -type d -name 'T[0-9]*' -path '*/d[0-9]*' 2>/dev/null | sort)
 #              `d<disorder>_cfg<N>` 아래에 있다.
 
 echo "── 합계 ──"
-echo "  완료 $DONE · 진행 $RUNNING · 궤적 $TRAJ"
+echo "  완료 $DONE · 진행 $RUNNING · 중단 $STALLED · 궤적 $TRAJ"
+[ "$STALLED" -gt 0 ] && echo "  ⚠ '중단' 은 로그는 있는데 프로세스가 없는 것 — 죽었거나 우리가 죽인 것."
 if [ "$DONE" -gt 0 ] && [ "$TRAJ" -lt "$DONE" ]; then
   echo "  ⛔⛔ 완료 $DONE 인데 궤적은 $TRAJ 개다 — --save_traj 가 빠졌거나 resume 이 건너뛰었다."
   echo "       이대로 끝나면 골격 게이트를 **소급으로 못 돌린다** (2026-07 F9 재발)."
