@@ -1312,9 +1312,12 @@ def main():
     ap.add_argument("--only", default="", help="--inbox 에서 slug 에 이 문자열이 든 것만")
     ap.add_argument("--skip-done", action="store_true",
                     help="--inbox 에서 이미 figures.json 이 있는 논문은 건너뛴다")
-    ap.add_argument("--dpi", type=int, default=300)
-    ap.add_argument("--maxpx", type=int, default=3000,
-                    help="긴 변 픽셀 상한. 0 이면 --dpi 그대로")
+    # ⚠ 기본값을 None 으로 두고 아래에서 모드별로 푼다 — 덱(--slides)은 **쪽 통째로** 렌더라
+    #   같은 3000 px 를 쓰면 21장에 11 MB 가 된다(2026-08-25 실측). repo 에 커밋하는 파일이므로
+    #   덱 기본은 1600 px. 사용자가 명시하면 그 값이 이긴다.
+    ap.add_argument("--dpi", type=int, default=None, help="기본: 논문 300 · 덱(--slides) 150")
+    ap.add_argument("--maxpx", type=int, default=None,
+                    help="긴 변 픽셀 상한. 0 이면 --dpi 그대로. 기본: 논문 3000 · 덱(--slides) 1600")
     ap.add_argument("--dry", action="store_true", help="파일 안 쓰고 표만 출력")
     ap.add_argument("--clean", action="store_true", help="기존 <slug> 폴더를 지우고 새로")
     ap.add_argument("--audit-src", dest="audit_src", action="store_true",
@@ -1338,6 +1341,10 @@ def main():
     a = ap.parse_args()
     if a.pdf:                       # [[a,b],[c]] → [a,b,c]
         a.pdf = [x for grp in a.pdf for x in grp]
+    if a.dpi is None:               # 모드별 기본값 (위 주석 참고)
+        a.dpi = 150 if a.slides else 300
+    if a.maxpx is None:
+        a.maxpx = 1600 if a.slides else 3000
 
     if a.selftest:
         return selftest()
@@ -1473,7 +1480,7 @@ def main():
     if a.slides:
         if len(a.pdf) > 1:
             raise SystemExit("⛔ --slides 는 덱 1개만 받는다 (덱마다 슬라이드 번호가 다르다).")
-        meta, skipped = extract_slides(a.pdf[0], a.slug, dpi=a.dpi or 150,
+        meta, skipped = extract_slides(a.pdf[0], a.slug, dpi=a.dpi,
                                        dry=a.dry, maxpx=a.maxpx)
         _report(a.slug, meta, skipped, a.dry)
         if not a.dry:
