@@ -11,8 +11,9 @@
  * 그 사실이 보여야 한다.
  */
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { GroupFilterFields, useGroupChoice } from './GroupFilter'
 import { api } from '../lib/api'
 import { plain } from '../lib/format'
 import type { Sample, Schedule } from '../lib/types'
@@ -58,6 +59,10 @@ export function TestConditionsPanel({
 }) {
   const [text, setText] = useState(() => pickText(sample))
   const [numbers, setNumbers] = useState(() => pickNumbers(sample))
+  // 그룹은 여기서도 고친다.  라이브러리에서만 붙일 수 있으면, 셀을 열어 조건을
+  // 적다가 "이건 그 시리즈였지" 를 깨달았을 때 화면을 나갔다 와야 한다.
+  const group = useGroupChoice()
+  const { setFromGroupId, loaded: groupsLoaded } = group
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
   // 남의 편집으로도 이 화면이 다시 읽히므로, 치는 중이면 덮지 않는다 (ADR 0012).
@@ -70,9 +75,15 @@ export function TestConditionsPanel({
     setTouched(false)
     setText(pickText(sample))
     setNumbers(pickNumbers(sample))
-  }, [sample, touched])
+    // 저장된 값이 화면에 앉으려면 그룹 목록이 먼저 와야 한다: 소그룹의 부모를
+    // 그 목록에서 찾기 때문이다.  안 기다리면 소그룹에 든 셀이 잠깐 "그룹
+    // 없음" 으로 보이고, 그 상태로 저장을 누르면 정말로 떨어져 나간다.
+    if (groupsLoaded) setFromGroupId(sample.group_id)
+  }, [sample, touched, groupsLoaded, setFromGroupId])
 
+  const groupChanged = groupsLoaded && group.effective !== (sample.group_id ?? null)
   const dirty =
+    groupChanged ||
     TEXT_KEYS.some((key) => text[key] !== (sample[key] ?? '')) ||
     NUMBER_KEYS.some((key) => (numbers[key] ?? null) !== (sample[key] ?? null))
 
@@ -93,6 +104,12 @@ export function TestConditionsPanel({
           body[key] = value
         }
       }
+      if (groupChanged) {
+        // 그룹에서 빼는 것은 `group_id: null` 이 아니라 clear 다 -- PATCH 에서
+        // null 은 "안 보냄" 과 구별되지 않는다.
+        if (group.effective === null) clear.push('group_id')
+        else body.group_id = group.effective
+      }
       if (clear.length) body.clear = clear
       const updated = await api.updateSample(sample.id, body)
       setTouched(false)
@@ -103,6 +120,24 @@ export function TestConditionsPanel({
       setSaving(false)
     }
   }
+
+  // 드롭다운을 만지는 것도 편집이다.  안 그러면 남의 편집으로 이 화면이 다시
+  // 읽힐 때 방금 고른 그룹이 저장된 값으로 되돌아간다 (ADR 0012).
+  const groupPick = useMemo(() => ({
+    ...group,
+    setGroupId: (value: number | null) => {
+      setTouched(true)
+      group.setGroupId(value)
+    },
+    setSubGroupId: (value: number | null) => {
+      setTouched(true)
+      group.setSubGroupId(value)
+    },
+    create: async (name: string, parentId: number | null) => {
+      setTouched(true)
+      await group.create(name, parentId)
+    },
+  }), [group])
 
   const setWord = (key: TextKey) => (value: string) => {
     setTouched(true)
@@ -125,6 +160,10 @@ export function TestConditionsPanel({
       {error ? <Alert kind="error">{error}</Alert> : null}
 
       <div className="grid cols-3" style={{ gap: 9 }}>
+        {/* 그룹이 맨 앞이다 -- 나머지 칸이 "이 셀은 무엇인가" 라면 이것은
+            "무엇과 나란히 놓을 것인가" 이고, 라이브러리에서 셋을 고를 때
+            제일 먼저 쓰는 축이다 (ADR 0025). */}
+        <GroupFilterFields pick={groupPick} hint="비교 묶음 · 라이브러리의 축" creatable />
         <Field label="시험일" hint="YYYY-MM-DD">
           <input
             type="date"
@@ -214,6 +253,7 @@ export function TestConditionsPanel({
               setTouched(false)
               setText(pickText(sample))
               setNumbers(pickNumbers(sample))
+              setFromGroupId(sample.group_id)
             }}
           >
             되돌리기

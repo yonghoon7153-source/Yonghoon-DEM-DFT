@@ -31,6 +31,16 @@ export interface GroupChoice {
   effective: number | null
   /** 이 그룹 id 가 지금 고른 범위에 드는가.  안 골랐으면 전부 든다. */
   includes: (groupId: number | null | undefined) => boolean
+  /** 그룹 목록이 도착했는가.  도착 전에 `setFromGroupId` 를 부르면 부모를
+   *  찾을 수 없어 "그룹 없음" 으로 읽힌다 — 저장된 값을 화면에 앉히는 쪽은
+   *  이것을 기다려야 한다. */
+  loaded: boolean
+  /** 저장된 `group_id` 하나로 두 드롭다운을 맞춘다.
+   *
+   *  셀은 한 노드만 가리키므로 (ADR 0025) 그것이 소그룹이면 위 칸에는 그
+   *  **부모**가 와야 한다.  이 계산이 화면마다 흩어지면 어떤 화면은 소그룹에
+   *  든 셀을 "그룹 없음" 으로 그린다. */
+  setFromGroupId: (groupId: number | null) => void
   /** 방금 만든 그룹이 목록에 나오도록. */
   reload: () => void
   /** 그룹/소그룹을 그 자리에서 만든다.  만들고 나서 골라 둔다. */
@@ -62,6 +72,22 @@ export function useGroupChoice(reloadKey: unknown = 0): GroupChoice {
     return all.some((g) => g.id === candidate && g.parent_id === groupId)
   }, [all, groupId, subGroupId])
 
+  const setFromGroupId = useCallback((id: number | null) => {
+    const found = id === null ? undefined : all.find((group) => group.id === id)
+    if (!found) {
+      setGroupIdRaw(null)
+      setSubGroupId(null)
+      return
+    }
+    if (found.parent_id) {
+      setGroupIdRaw(found.parent_id)
+      setSubGroupId(found.id)
+    } else {
+      setGroupIdRaw(found.id)
+      setSubGroupId(null)
+    }
+  }, [all])
+
   const create = useCallback(async (name: string, parentId: number | null) => {
     const made = await api.createGroup({
       name, ...(parentId === null ? {} : { parent_id: parentId }),
@@ -75,7 +101,8 @@ export function useGroupChoice(reloadKey: unknown = 0): GroupChoice {
     groupId, subGroupId, setGroupId, setSubGroupId,
     groups: all, tops, subs,
     effective: subGroupId ?? groupId,
-    includes, reload: groups.reload, create,
+    includes, loaded: groups.data !== null && groups.data !== undefined,
+    setFromGroupId, reload: groups.reload, create,
   }
 }
 

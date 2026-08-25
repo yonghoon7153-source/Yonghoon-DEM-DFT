@@ -1653,6 +1653,19 @@ describe('숫자 없는 사이클도 그리기', () => {
 
 // --- 시험 조건 ---------------------------------------------------------------
 
+/** 그룹 하나와 그 밑의 소그룹 둘 (ADR 0025). */
+const GROUPS = [
+  { id: 1, name: '건식 시리즈', parent_id: null, parent_name: '', subgroup_count: 2,
+    description: '', color: '', created_at: '2026-08-01T00:00:00',
+    updated_at: '2026-08-01T00:00:00', sample_count: 2, run_count: 0 },
+  { id: 2, name: '80wt%', parent_id: 1, parent_name: '건식 시리즈', subgroup_count: 0,
+    description: '', color: '', created_at: '2026-08-01T00:00:00',
+    updated_at: '2026-08-01T00:00:00', sample_count: 1, run_count: 0 },
+  { id: 3, name: '70wt%', parent_id: 1, parent_name: '건식 시리즈', subgroup_count: 0,
+    description: '', color: '', created_at: '2026-08-01T00:00:00',
+    updated_at: '2026-08-01T00:00:00', sample_count: 1, run_count: 0 },
+]
+
 describe('시험 조건 입력', () => {
   it('라이브러리에서 비어 보이던 칸들을 여기서 채운다', async () => {
     const sent: Record<string, unknown>[] = []
@@ -1673,6 +1686,76 @@ describe('시험 조건 입력', () => {
 
     await waitFor(() => expect(sent).toHaveLength(1))
     expect(sent[0]).toMatchObject({ process: 'dry', temperature_c: 60 })
+  })
+
+  it('이미 소그룹에 든 셀이면 그 두 칸이 채워져 나온다', async () => {
+    // 셀은 한 노드만 가리키므로 (ADR 0025) 저장된 것은 소그룹 하나다.  위 칸에
+    // 부모를 앉히지 않으면 소그룹에 든 셀이 "그룹 없음" 으로 보이고, 그 상태로
+    // 저장을 누르면 정말로 떨어져 나간다.
+    installFetch(
+      sampleDetailHandler((url) => {
+        if (path(url) === '/api/groups') return GROUPS
+        if (path(url) === '/api/samples/1') return sample({ group_id: 2 })
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    const top = await screen.findByRole('combobox', { name: '그룹' })
+    await waitFor(() => expect((top as HTMLSelectElement).value).toBe('1'))
+    expect((screen.getByRole('combobox', { name: '소그룹' }) as HTMLSelectElement).value)
+      .toBe('2')
+    // 아무것도 안 바꿨으면 저장할 것도 없다.  여기서 '저장' 이 켜져 있다면
+    // 화면이 저장된 그룹과 다른 것을 들고 있다는 뜻이다.
+    expect(screen.queryByRole('button', { name: '저장' })).toBeNull()
+  })
+
+  it('여기서 소그룹을 바꾸면 그 값이 저장된다', async () => {
+    const sent: Record<string, unknown>[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/groups') return GROUPS
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          sent.push(JSON.parse(String(init.body)))
+          return sample({ group_id: 3 })
+        }
+        if (path(url) === '/api/samples/1') return sample({ group_id: 2 })
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await waitFor(() => expect(
+      (screen.getByRole('combobox', { name: '소그룹' }) as HTMLSelectElement).value).toBe('2'))
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: '소그룹' }), '3')
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(sent[0]).toEqual({ group_id: 3 })
+  })
+
+  it('그룹에서 빼는 것은 clear 다 — null 은 "안 보냄" 과 구별되지 않는다', async () => {
+    const sent: Record<string, unknown>[] = []
+    installFetch(
+      sampleDetailHandler((url, init) => {
+        if (path(url) === '/api/groups') return GROUPS
+        if (path(url) === '/api/samples/1' && init?.method === 'PATCH') {
+          sent.push(JSON.parse(String(init.body)))
+          return sample()
+        }
+        if (path(url) === '/api/samples/1') return sample({ group_id: 2 })
+        return undefined
+      }),
+    )
+    renderSampleDetail()
+
+    await waitFor(() => expect(
+      (screen.getByRole('combobox', { name: '그룹' }) as HTMLSelectElement).value).toBe('1'))
+    await userEvent.selectOptions(screen.getByRole('combobox', { name: '그룹' }), '')
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(sent[0]).toEqual({ clear: ['group_id'] })
   })
 
   it('스케줄이 말한 C-rate 를 옆에 적어 둔다 — 덮어쓴 것이 보여야 한다', async () => {
