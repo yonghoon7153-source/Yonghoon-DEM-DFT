@@ -375,10 +375,18 @@ a:hover { text-decoration: underline; }
    "이 값이 어느 셀 것인가" 를 볼 때마다 스크롤이 오르내렸다. */
 .fit-row {
   display: grid;
-  grid-template-columns: 300px minmax(0, 1fr) minmax(0, 1.25fr);
+  /* 셋의 폭을 비슷하게 두고 `stretch` 로 키를 맞춘다.  `align-items: start` 면
+     가장 긴 칸(파라미터 표)만 아래로 삐죽 나와서, 세 카드가 한 줄이 아니라
+     계단처럼 읽힌다.  가운데 칸은 설명 문장이라 넓힐수록 짧아지므로, 폭을
+     주는 것이 곧 키를 줄이는 것이다. */
+  grid-template-columns: minmax(240px, 0.85fr) minmax(0, 1.05fr) minmax(0, 1.1fr);
   gap: var(--s3);
-  align-items: start;
+  align-items: stretch;
 }
+/* 왼쪽 칸은 카드 둘을 세로로 쌓은 것이다.  칸이 늘어나도 카드는 제 키를
+   유지하므로, 아래 카드가 남는 자리를 먹게 해서 바닥을 맞춘다. */
+.fit-row > .col { height: 100%; }
+.fit-row > .col > .card:last-child { flex: 1; }
 @media (max-width: 1400px) { .fit-row { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); } }
 @media (max-width: 1180px) { .split { grid-template-columns: minmax(0, 1fr); } }
 

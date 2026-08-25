@@ -13,7 +13,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
-import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import { useGroupChoice } from '../components/GroupFilter'
+import { PickGrid } from '../components/PickGrid'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -115,16 +116,6 @@ export function EisCompare() {
     }))
   }, [points.data, fresh, rows])
 
-  function toggle(id: number) {
-    setChosen((now) => {
-      if (now.includes(id)) return now.filter((item) => item !== id)
-      // 상한을 넘겨 보내면 첫 화면부터 422 다.  조용히 무시하고 아래 문구가
-      // 왜 안 켜지는지 말한다.
-      if (now.length >= OVERLAY_LIMIT) return now
-      return [...now, id]
-    })
-  }
-
   return (
     <main className="page">
       <div className="page-head">
@@ -137,11 +128,32 @@ export function EisCompare() {
         </div>
       </div>
 
-      <Card
-        title={`고른 것 ${selected.length} / ${OVERLAY_LIMIT}`}
-        actions={
-          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
-            <GroupFilterFields pick={group} compact />
+      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`).  한 화면에서 익힌
+          손이 다른 화면에서 통해야 한다 -- 예전에는 여기만 칩 줄이라
+          "모두 선택" 이 없었고, 고른 수도 제목에 안 나왔다. */}
+      <PickGrid
+        title="스펙트럼 선택"
+        group={group}
+        groupHint="이 측정 또는 붙은 셀의 묶음"
+        limit={OVERLAY_LIMIT}
+        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
+        items={rows.map((row, index) => ({
+          id: row.id,
+          name: label(row),
+          note: [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
+                 row.sample_name ? `셀: ${row.sample_name}` : null]
+            .filter(Boolean).join(' · '),
+          color: seriesColor(index),
+        }))}
+        picked={selected}
+        onChange={setChosen}
+        empty={(
+          <Empty title="고를 스펙트럼이 없습니다" icon="∿">
+            <Link to="/eis/upload">업로드</Link>에서 올려 주세요.
+          </Empty>
+        )}
+        extra={
+          <>
             <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
               <select
                 aria-label="관계셀"
@@ -187,46 +199,11 @@ export function EisCompare() {
                 onChange={(event) => setSearch(event.target.value)}
               />
             </Field>
-            <button type="button" onClick={() => setChosen([])}>비우기</button>
-          </div>
+          </>
         }
-      >
-        {spectra.error ? (
-          <Alert kind="error">{spectra.error}</Alert>
-        ) : spectra.loading && !spectra.data ? (
-          <Spinner />
-        ) : rows.length ? (
-          <div className="col" style={{ gap: 10 }}>
-            <div className="chips">
-              {rows.map((row, index) => {
-                const on = selected.includes(row.id)
-                return (
-                  <button
-                    key={row.id}
-                    type="button"
-                    className={on ? 'chip on' : 'chip'}
-                    aria-pressed={on}
-                    onClick={() => toggle(row.id)}
-                  >
-                    <span className="dot" style={{ background: seriesColor(index) }} />
-                    {label(row)}
-                  </button>
-                )
-              })}
-            </div>
-            {selected.length >= OVERLAY_LIMIT ? (
-              <div className="tiny faint">
-                한 번에 {OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 하나를 꺼야 다른
-                것을 켤 수 있습니다.
-              </div>
-            ) : null}
-          </div>
-        ) : (
-          <Empty title="고를 스펙트럼이 없습니다" icon="∿">
-            <Link to="/eis/upload">업로드</Link>에서 올려 주세요.
-          </Empty>
-        )}
-      </Card>
+      />
+      {spectra.error ? <Alert kind="error">{spectra.error}</Alert> : null}
+      {spectra.loading && !spectra.data ? <Spinner /> : null}
 
       <Card title="나이퀴스트">
         <CopyBar

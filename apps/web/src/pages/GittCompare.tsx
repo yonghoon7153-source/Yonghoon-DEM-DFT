@@ -10,7 +10,8 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
-import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
+import { useGroupChoice } from '../components/GroupFilter'
+import { PickGrid } from '../components/PickGrid'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -114,14 +115,6 @@ export function GittCompare() {
       (sum: number, c: Pocv) => sum + c.skipped_charge + c.skipped_discharge, 0),
     [curves.data])
 
-  function toggle(id: number) {
-    setChosen((now) => {
-      if (now.includes(id)) return now.filter((item) => item !== id)
-      if (now.length >= OVERLAY_LIMIT) return now
-      return [...now, id]
-    })
-  }
-
   return (
     <main className="page">
       <div className="page-head">
@@ -134,11 +127,30 @@ export function GittCompare() {
         </div>
       </div>
 
-      <Card
-        title={`고른 것 ${selected.length} / ${OVERLAY_LIMIT}`}
-        actions={
-          <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
-            <GroupFilterFields pick={group} compact />
+      {/* 세 비교 화면이 같은 고르개를 쓴다 (`PickGrid`) — EIS 와 같은 이유. */}
+      <PickGrid
+        title="기록 선택"
+        group={group}
+        groupHint="이 측정 또는 붙은 셀의 묶음"
+        limit={OVERLAY_LIMIT}
+        limitNote={`한 번에 ${OVERLAY_LIMIT}개까지입니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
+        items={rows.map((run, index) => ({
+          id: run.id,
+          name: label(run),
+          note: [`펄스 ${run.n_pulses}개`, run.purpose,
+                 run.sample_name ? `셀: ${run.sample_name}` : null]
+            .filter(Boolean).join(' · '),
+          color: seriesColor(index),
+        }))}
+        picked={selected}
+        onChange={setChosen}
+        empty={(
+          <Empty title="고를 GITT 기록이 없습니다" icon="↯">
+            <Link to="/gitt/upload">업로드</Link>에서 올려 주세요.
+          </Empty>
+        )}
+        extra={
+          <>
             <Field label="관계셀" hint="이 측정이 붙어 있는 충방전 셀">
               <select
                 aria-label="관계셀"
@@ -173,46 +185,11 @@ export function GittCompare() {
                 onChange={(event) => setSearch(event.target.value)}
               />
             </Field>
-            <button type="button" onClick={() => setChosen([])}>비우기</button>
-          </div>
+          </>
         }
-      >
-        {runs.error ? (
-          <Alert kind="error">{runs.error}</Alert>
-        ) : runs.loading && !runs.data ? (
-          <Spinner />
-        ) : rows.length ? (
-          <div className="col" style={{ gap: 10 }}>
-            <div className="chips">
-              {rows.map((run, index) => {
-                const on = selected.includes(run.id)
-                return (
-                  <button
-                    key={run.id}
-                    type="button"
-                    className={on ? 'chip on' : 'chip'}
-                    aria-pressed={on}
-                    onClick={() => toggle(run.id)}
-                  >
-                    <span className="dot" style={{ background: seriesColor(index) }} />
-                    {label(run)}
-                  </button>
-                )
-              })}
-            </div>
-            {selected.length >= OVERLAY_LIMIT ? (
-              <div className="tiny faint">
-                한 번에 {OVERLAY_LIMIT}개까지입니다 — 하나를 꺼야 다른 것을 켤 수
-                있습니다.
-              </div>
-            ) : null}
-          </div>
-        ) : (
-          <Empty title="고를 GITT 기록이 없습니다" icon="↯">
-            <Link to="/gitt/upload">업로드</Link>에서 올려 주세요.
-          </Empty>
-        )}
-      </Card>
+      />
+      {runs.error ? <Alert kind="error">{runs.error}</Alert> : null}
+      {runs.loading && !runs.data ? <Spinner /> : null}
 
       {selected.length ? (
         <Card title="고른 것" tight>
