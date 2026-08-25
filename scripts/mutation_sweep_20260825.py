@@ -226,7 +226,10 @@ MUTANTS = [
     ('SELF-11 브리지 기본값을 off 가 아니게 (생산 규약 오염)', 'step3_sigma.py',
      "        if sdcp_sphere_d_um and float(sdcp_bridge_um) > 0.0:",
      "        if sdcp_sphere_d_um and float(sdcp_bridge_um) >= 0.0:",
-     STEP3, ('sdcp-bridge-off',)),
+     #  ⚠ 기대는 `sdcp-bridge-off` 가 **아니다** — 그 시험은 `기본` 과 `명시 0.0` 을
+     #    비교하는데 둘이 **같은 값**이라 변이판에서 둘 다 브리지가 돌아 차이가 안 난다
+     #    (실측 `★놓침★`).  "0.0 은 곧 off" 를 보는 것은 불변식 시험 쪽이다.
+     STEP3, ('sdcp-bridge-zero-is-off',)),
     ('SELF-11 브리지가 배정된 셀을 덮게 (강등 복원)', 'step3_sigma.py',
      "        sub[m & (sub == 0)] = s",
      "        sub[m] = s",
