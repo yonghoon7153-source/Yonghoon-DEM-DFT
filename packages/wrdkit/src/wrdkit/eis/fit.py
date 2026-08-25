@@ -503,11 +503,18 @@ def _edge_misfit(frequency: np.ndarray, residuals: np.ndarray,
 
     rest = float(per_point.sum() - per_point[tail].sum())
     without = rest / max(dof, 1)
-    cut = float(frequency[order[take - 1]])
+    dropped_max = float(frequency[order[take - 1]])
+    kept_min = float(frequency[order[take]])
+    # 타이핑할 수 있는 문턱을 준다.  뺄 점들의 맨 위와 남길 점들의 맨 아래
+    # **사이**를 고른다 (로그 중점) -- 경계에 있는 점의 주파수를 그대로 적으면
+    # 반올림 한 자리에 따라 그 점이 들어가기도 하고 빠지기도 한다.
+    threshold = float(np.sqrt(dropped_max * kept_min))
     return (f"오차의 {share * 100:.0f}% 가 가장 낮은 {take}개 점"
-            f"(≤ {cut:.3g} Hz)에 몰려 있습니다 — 그 위쪽만 보면 χ² 는 "
-            f"{without:.2e} 입니다. 정점이 측정 대역 아래에 있는 과정을 "
-            "스윕이 끝까지 담지 못했을 때 이렇게 됩니다")
+            f"(≤ {dropped_max:.3g} Hz)에 몰려 있습니다 — 정점이 측정 대역 "
+            "아래에 있는 과정을 스윕이 끝까지 담지 못했을 때 이렇게 됩니다. "
+            f"맞출 주파수 하한을 {threshold:.3g} Hz 로 두고 다시 맞춰 보세요 "
+            f"(그 점들을 뺀 채로 지금 값의 χ² 가 {without:.2e} 이고, 다시 "
+            "맞추면 더 내려갑니다)")
 
 
 def _order_arcs_by_frequency(model, values, stderrs):

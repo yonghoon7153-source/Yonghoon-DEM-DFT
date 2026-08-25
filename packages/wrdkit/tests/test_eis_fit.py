@@ -641,7 +641,20 @@ def test_edge_misfit_names_the_tail_when_the_sweep_stopped_early():
         tail[index] = 1.0
         tail[index + total] = 1.0
     note = _edge_misfit(frequency, tail, 1e-4, total)
-    assert "가장 낮은" in note and "그 위쪽만 보면" in note
+    assert "가장 낮은" in note
+
+    # **타이핑할 수 있는 문턱**을 준다.  경계에 선 점의 주파수를 그대로 적으면
+    # 반올림 한 자리에 따라 그 점이 들어가기도 하고 빠지기도 한다 -- 그래서
+    # 뺄 것의 맨 위와 남길 것의 맨 아래 사이를 고르고, 그 값이 실제로 그
+    # 사이에 있는지를 여기서 잰다.
+    import re
+
+    match = re.search(r"하한을 ([\d.e+-]+) Hz", note)
+    assert match, note
+    threshold = float(match.group(1))
+    order = np.argsort(frequency)
+    take = max(3, total // 10)
+    assert frequency[order[take - 1]] < threshold < frequency[order[take]]
 
     # 점이 적으면 "가장 낮은 몇 개" 가 통계가 아니라 우연이다.
     assert _edge_misfit(frequency[:8], tail[:16], 1e-4, 8) == ""

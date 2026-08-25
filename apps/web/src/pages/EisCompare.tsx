@@ -41,9 +41,14 @@ export function EisCompare() {
   const [sampleId, setSampleId] = useState<number | null>(null)
   const [search, setSearch] = useState('')
   const [chosen, setChosen] = useState<number[]>([])
-  // 기본은 끄기.  실측을 화면에서 지우는 것은 사람이 결정한다 (ADR 0019) —
-  // 유도성 아크가 진짜인 셀도 있다 (리튬 도금 같은).
-  const [dropInductive, setDropInductive] = useState(false)
+  // 기본은 켜기.  겹쳐 보는 화면에서는 세로 눈금이 **하나**라, 한 스펙트럼의
+  // 유도성 꼬리가 −20 Ω 까지 내려가면 나머지 전부의 아크가 그만큼 납작해진다
+  // -- 비교하러 온 사람이 제일 먼저 잃는 것이 그 높이다.
+  //
+  // 지우는 것이 아니라 접어 두는 것이다 (ADR 0019: 뺐으면 뺐다고 말한다).
+  // 몇 점을 뺐는지 그림 밑에 적고, 그 자리에서 도로 켤 수 있다 — 유도성
+  // 아크가 진짜인 셀(리튬 도금 같은)을 보러 온 사람이 막히지 않게.
+  const [dropInductive, setDropInductive] = useState(true)
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
@@ -217,17 +222,20 @@ export function EisCompare() {
             <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
                   height={380} legend equalAspect positiveFit />
             {inductive ? (
-              <label className="row tiny faint" style={{ gap: 6, padding: '8px 0 0' }}>
+              <label className="row small" style={{ gap: 6, padding: '8px 0 0' }}>
                 <input
                   type="checkbox"
                   checked={dropInductive}
                   onChange={(event) => setDropInductive(event.target.checked)}
                   style={{ width: 'auto' }}
                 />
-                실수축 위의 점 {inductive}개 빼기
-                <span className="dim">
-                  — 고주파에서 Z″ 가 양수인 구간입니다 (케이블·셀 홀더의 인덕턴스).
-                  아크 밑으로 꽂히는 수직선이 그것입니다.
+                <span>
+                  실수축 위의 점 {inductive}개 빼기
+                  <span className="tiny faint">
+                    {' '}— 고주파에서 Z″ 가 양수인 구간 (케이블·셀 홀더의
+                    인덕턴스). 끄면 아크 밑으로 수직선이 되어 꽂히고, 세로
+                    눈금이 늘어나 모든 아크가 납작해집니다.
+                  </span>
                 </span>
               </label>
             ) : null}
