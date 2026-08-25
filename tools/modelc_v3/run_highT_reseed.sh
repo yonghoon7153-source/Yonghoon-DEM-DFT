@@ -97,6 +97,16 @@ echo "OUT=$OUTROOT  DEVICE=$DEVICE  SYSTEMS=$SYSTEMS  TEMPS=${TEMPS:-800 1000}  
 echo "⚠ 재실행분은 **새 런**이다 — D 와 beta 를 이 궤적들에서 같이 뽑아 Ea 를 다시 적합할 것."
 [ "$SYSTEMS" = "b2o3 modelc" ] || \
   echo "⚠ 계를 갈라 돌린다 ($SYSTEMS) — 나머지 계를 다른 서버에서 돌리고 **합친 뒤** Ea 재적합."
+# ── COLLECT_ONLY / env 함정 (2026-08-25 실측) ────────────────────────────────
+#   드라이버는 **전부 resume-skip 인 경우에도** fairchem 을 import 한다 — (base)
+#   env 에서 "수집만" 하려던 호출이 ModuleNotFoundError 로 죽고, set -e 라 collect
+#   까지 못 갔다. ① COLLECT_ONLY=1 이면 드라이버 루프를 건너뛰고 수집만 한다.
+#   ② 아니면 fairchem 존재를 먼저 확인하고 명확한 메시지로 죽는다.
+if [ "${COLLECT_ONLY:-0}" != "1" ]; then
+  python3 - <<'PYCHK' || { echo "⛔ fairchem 없음 — 'conda activate uma' 후 실행하거나, 수집만 원하면 COLLECT_ONLY=1"; exit 1; }
+import importlib.util, sys
+sys.exit(0 if importlib.util.find_spec("fairchem") else 1)
+PYCHK
 for SYS in $SYSTEMS; do
   for S in 2 3 4; do
     echo "===================== $SYS  ${TEMPS:-800 1000} K (${PROD_PS:-100} ps)  reseed s${S} ====================="
@@ -110,6 +120,7 @@ for SYS in $SYSTEMS; do
       --uma_model uma-s-1p1 --uma_task omat --device "$DEVICE"
   done
 done
+fi
 
 echo ""; echo "===================== collect (TEMPS 순서를 그대로 따라간다) ====================="
 # ⛔ 2026-08-25 — 여기가 `(0,800),(1,1000)` 로 **하드코딩**돼 있었다. TEMPS 를 바꿔
