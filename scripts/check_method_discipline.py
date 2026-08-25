@@ -821,6 +821,17 @@ def k_live_invocation(line, base, flag):
     if ' #' in st and st.count('"') % 2 == 0 and st.count("'") % 2 == 0:
         st = st.split(' #', 1)[0]
     toks = st.replace('"', ' ').replace("'", ' ').split()
+    #  ★★★ 2026-08-25 (R3-CX-08, Codex 3차) — **죽은 가지와 실패 삼킴도 배선이 아니다.**
+    #    Codex 실측: `false && python … --selftest` 와 `python … --selftest || true` 가
+    #    live 로 세어졌다.  앞은 **절대 안 돌고**, 뒤는 **실패해도 초록**이라 둘 다
+    #    "규율이 돈다" 의 증거가 못 된다 (규칙 K 의 존재 이유가 정확히 그것이다).
+    _DEADG = ('false', ':')                 # `false && …` · `: && …`
+    if any(toks[_j] in _DEADG and _j + 1 < len(toks) and toks[_j + 1] in ('&&', ';')
+           for _j in range(len(toks) - 1)):
+        return False
+    if any(toks[_j] == '||' and _j + 1 < len(toks) and toks[_j + 1] in ('true', ':')
+           for _j in range(len(toks) - 1)):
+        return False
     for _i, _t in enumerate(toks[:-1]):
         if _t.rsplit('/', 1)[-1] not in ('python', 'python3'):
             continue
@@ -997,8 +1008,13 @@ def check_runner_integration(verbose=True, runner=None):
     #      규칙 K 가 방금 그 부류로 false-green 이었다.
     with open(_p, encoding='utf-8') as f:
         _rl = [ln for ln in f.read().splitlines() if not ln.strip().startswith('#')]
-    _seal_i = next((i for i, ln in enumerate(_rl) if '--seal-only' in ln), None)
-    _coll = [i for i, ln in enumerate(_rl) if '--collect-only' in ln]
+    #  ★★★ 2026-08-25 (R3-CX-08, Codex 3차) — **live 호출만 센다.**  옛 판은 주석만
+    #    걸러 `echo "… --seal-only"` 안내문도 순서 증거가 됐다.  `k_live_invocation` 을
+    #    재사용해 인터프리터 호출 형태만 인정한다 (규칙 K 와 **같은 판정기**).
+    def _live(ln, flag):
+        return k_live_invocation(ln, 'sdcp_gain_verdict.py', flag)
+    _seal_i = next((i for i, ln in enumerate(_rl) if _live(ln, '--seal-only')), None)
+    _coll = [i for i, ln in enumerate(_rl) if _live(ln, '--collect-only')]
     if _seal_i is None:
         problems.append('L_NOSEAL| 러너가 `--seal-only` 를 부르지 않는다 — 계약 봉인이 없다')
     else:
@@ -1030,8 +1046,7 @@ def check_runner_integration(verbose=True, runner=None):
         _end = next((i for i in range(_seal_i2, min(_seal_i2 + 30, len(_rl)))
                      if _rl[i].strip() == 'exit 1'), _seal_i2)
         _after = _rl[_seal_i2:_end + 1]
-        _auto = [ln for ln in _after
-                 if '--collect-only' in ln and not ln.lstrip().startswith('echo')]
+        _auto = [ln for ln in _after if _live(ln, '--collect-only')]
         if _auto:
             problems.append(f'L_FAILDUMP| 봉인 실패 경로가 `--collect-only` 를 **자동 실행**한다 '
                             f'({_auto[0].strip()[:70]}) — metadata 를 일부러 깨뜨려 봉인을 '
@@ -1566,12 +1581,31 @@ def smoke_negative_control(verbose=True):
     #    **더 강한 포착**이다.  둘 다 "돌연변이를 잡았다" 이므로 둘 다 인정하되,
     #    `plain` 팔이라는 것과 **둘 중 하나여야 한다**는 것은 그대로 고정한다
     #    (무엇이든 오류가 나면 통과, 로 느슨해지면 CDX-IJ-05 가 막으려던 그것이 된다).
-    caught = [x for x in e
-              if (x.startswith('J_SKIPPED') or x.startswith('J_EXIT')) and 'plain' in x]
+    #  ★★★ 2026-08-25 (R3-CX-08, Codex 3차) — **"무엇이든 nonzero" 를 적발로 세지 않는다.**
+    #    옛 판은 `J_EXIT` 이면 통과였다 ⇒ 무관한 SyntaxError exit 99 도 "잡았다" 가 된다
+    #    (Codex 실측).  ⇒ 이 돌연변이가 재현하는 **그 실패**인지 확인한다:
+    #      · `NameError`/`UnboundLocalError` 로 STEP3 가 죽는다 (①번 사고의 형태)
+    #      · 또는 STEP3 가 조용히 건너뛰어진다 (`J_SKIPPED`)
+    #    문법·import 오류는 **배터리 사고**이지 포착이 아니다.
+    _NEEDLE = ('NameError', 'UnboundLocalError', 'not defined', 'STEP3')
+    _HARNESS = ('SyntaxError', 'IndentationError', 'ModuleNotFoundError', 'ImportError')
+    caught, harness = [], []
+    for x in e:
+        if 'plain' not in x:
+            continue
+        if any(h in x for h in _HARNESS):
+            harness.append(x)
+        elif x.startswith('J_SKIPPED') or (x.startswith('J_EXIT')
+                                           and any(n in x for n in _NEEDLE)):
+            caught.append(x)
+    if harness:
+        return ([f'J_NEG_HARNESS| ★ 음성 대조가 **배터리 사고**로 죽었다 '
+                 f'({harness[0][:120]}) — 돌연변이가 재현한 실패가 아니다.  '
+                 f'사본 만들기가 깨진 것이므로 "잡았다" 로 세지 않는다'], [])
     if not caught:
         return (['J_NEG_BLIND| ★ 규칙 J 가 돌연변이를 **못 잡았다** — hoist 를 '
-                 f'지웠는데 plain 팔이 통과했다 (얻은 오류: {e or "없음"}).  검사가 '
-                 '무의미하다'], [])
+                 f'지웠는데 plain 팔이 그 실패 형태로 죽지 않았다 (얻은 오류: '
+                 f'{e or "없음"}).  검사가 무의미하거나 다른 이유로 죽은 것이다'], [])
     if verbose:
         print(f'  ✓ 음성 대조 — 돌연변이(plain 팔)를 잡았다: {caught[0][:110]}')
     return [], []
@@ -1875,6 +1909,11 @@ def _selftest():
          "run 'step3_sigma.py --selftest' python3 scripts/other.py --selftest"),
         ('플래그 없음', 'python3 scripts/step3_sigma.py'),
         ('인터프리터 없음', 'scripts/step3_sigma.py --selftest'),
+        #  ★ R3-CX-08 — 죽은 가지 · 실패 삼킴 (Codex 실측 2종)
+        ('죽은 가지 (false &&)', 'false && python3 scripts/step3_sigma.py --selftest'),
+        ('죽은 가지 (: &&)', ': && python3 scripts/step3_sigma.py --selftest'),
+        ('실패 삼킴 (|| true)', 'python3 scripts/step3_sigma.py --selftest || true'),
+        ('실패 삼킴 (|| :)', 'python3 scripts/step3_sigma.py --selftest || :'),
     )
     _dead_pass = [_lb for _lb, _ln in _DEAD
                   if k_live_invocation(_ln, 'step3_sigma.py', '--selftest')]
@@ -1975,8 +2014,18 @@ def _selftest():
         any(x.startswith('L_PROBE') for x in _m5))
     _m6 = _rmut('  echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"',
                 '  python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only')
+    #  ★ R3-CX-08 — `echo` 안내문이 순서 증거가 되면 안 된다 (옛 판은 됐다).
+    #  실제 봉인 호출을 **안내문으로 바꾼다** — 옛 판은 그 echo 를 순서 증거로 셌다.
+    _m14 = _rmut('''  if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \\
+       --require-arms "$PREREG_ARMS" --require-digest; then''',
+                 '''  echo "먼저 돌릴 것: python3 $SCR/sdcp_gain_verdict.py --seal-only"
+  if false; then''')
+    chk(f'L-14: ★★ `echo "… --seal-only"` 안내문은 순서 증거가 아니다 (live 호출만 센다) '
+        f'({len(_m14)}건)',
+        any(x.startswith(('L_NOSEAL', 'L_SEALORDER')) for x in _m14))
+    #  ⚠ `|| true` 는 이제 live 가 아니다 (실패 삼킴) — 순수 호출로 되돌려야 재현된다.
     _m12 = _rmut('''    echo "     원값이 필요하면 **명시로** 칠 것 — 자동으로 찍지 않는다:"''',
-                 '''    python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true''')
+                 '''    python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only''')
     chk(f'L-12: ★★ 봉인 **실패** 경로가 원값을 자동으로 찍으면 잡는다 — metadata 를 '
         f'일부러 깨뜨려 raw table 을 보는 경로 (R3-CX-02) ({len(_m12)}건)',
         any(x.startswith('L_FAILDUMP') for x in _m12))

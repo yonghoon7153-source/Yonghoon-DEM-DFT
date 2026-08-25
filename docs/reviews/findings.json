@@ -826,6 +826,141 @@
    ],
    "note": "자체발견 (R3-F2 검증 중, 2026-08-25).  `PROTOCOL_FIELDS` 는 `vox_um` 을 요구하는데 producer 의 매니페스트 리터럴이 그 키를 **안 썼다** → `physics_protocol_id` 가 실제 런에서 `unknown:vox_um` 으로 내려앉았다.\n★ 영향은 **거짓 초록이 아니라 생산 과잉차단**이다 — `verdict()` 의 `PROTOCOL_UNKNOWN` 게이트가 fail-closed 라, 현행 payload 로 도는 팔은 전부 HOLD 된다.  `--expect-protocol` 을 준 러너 팔은 그보다 앞서 exit 4 로 죽는다.  temp_c(M-R3-02)·thermal(M-R3-03) 과 **같은 부류**: 내가 넣은 게이트가 정상 생산을 막았다.\n★ 왜 안 잡혔나: 규칙 J 스모크가 매니페스트의 고정 인자는 봤지만 `physics_protocol_id` 자신은 **한 번도 안 봤다**.  이 필드는 판정기 리더의 blank 목록에도 없었다 (값이 있긴 했으니까).\n★ 고침: ⓐ 매니페스트에 `vox_um` 을 적는다 ⓑ 규칙 J 가 id 의 `p1-` 접두사를 요구한다 — `unknown:` 뒤에 빠진 필드 이름이 실려 있으므로 이 한 줄이 '규약 필드를 새로 넣고 producer 에 안 쓴' 부류를 전부 잡는다.  필드 목록을 검사기에 **다시 적지 않는다** (backend·bridge_um 두 사고의 원인).\n★ 돌연변이 1:1 확인: 매니페스트의 그 한 줄만 지우면 규칙 J 가 `J_PROTOCOL| … ('unknown:vox_um')` 으로 빨간불.",
    "claimed_fixed_sha": "d8d134a0"
+  },
+  {
+   "id": "R3CX-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "79888279",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`check_arm` 의 `_STEP3_PATHS` 가 `metrics` 오타 — **모든 실제 팔을 거부**",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "Codex 3차.  producer 는 `mpm_metrics['step3']` 에 쓰는데 소비자 목록이 `metrics` 였다 (윗줄 주석은 옳게 적혀 있었다).  러너의 cache·fresh 두 경로가 이것을 부르므로 **생산 전면 차단**.\n★ selftest 75/75 가 초록이었던 이유 — **픽스처가 같은 오타를 썼다**.  픽스처가 버그를 인코딩하면 selftest 는 그 버그를 지킨다.\n★ 고침: 자리 목록을 `run_contract.STEP3_PATHS` 하나로 통합 + 규칙 J 에 `producer → check_arm` 통합 회귀(J_ARMCHK) + 틀린 스탬프 거부 자기증명.  돌연변이(옛 오타 복원) → J-1 빨간불."
+  },
+  {
+   "id": "R3CX-02",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "4cc032e1",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "봉인 전에 producer stdout 이 σ_e/σ_ion 을 그대로 노출",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "최종 `--seal-only` 를 `--collect-only` 앞으로 옮긴 것만으로는 부족했다 — 러너가 팔마다 producer stdout 을 보여 주므로 운영자는 **팔이 끝날 때마다** 결과를 봤다.\n★ 고침: producer 가 기본에서 값을 가린다(`--show-results` 로 열림).  진단(dof·resid·시간)은 안 가린다.  봉인 **실패** 경로도 원값을 자동으로 안 찍고 변경 불가능한 기각 영수증을 남긴다 (metadata 를 깨뜨려 raw 를 보는 경로 차단)."
+  },
+  {
+   "id": "R3CX-03",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "79888279",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "규약 id 가 canonical identity 가 아니라 **신뢰된 문자열**",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "Codex 가 셋을 통과시켰다: 축 키가 **없는** 옛 팔 · 팔마다 축이 다른데 stored 만 같은 팔 · `physics_protocol_id=\"garbage\"`.  **문자열 일치는 규약 일치가 아니다.**\n★ 고침: `protocol_ok` 가 raw manifest 로 **재계산**해 저장값과 대조.  키 부재 ↔ 명시적 OFF 구분.  스키마 `p1` → `p2` (축 17 → 19 인데 접두사가 그대로였다)."
+  },
+  {
+   "id": "R3CX-04",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "79888279",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`component_plan`·`ptfe_cells_observed` 가 기록만 되고 소비되지 않음",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "LEAN=0 에서 thermal/pore/pnm/collector 를 `failed` 로 바꿔도 reject reason 이 전부 None 이었다.\n★ 고침: required 를 **계획에서 파생**(`collector` ↔ `collector_geom` 흡수) · 도장 있는데 관측 셀 0 이면 거부 · 러너가 `--require-digest` · `P2_EXTRA` 의 규약 인자 거부.\n⚠ 켜자마자 **생산 과잉차단 5번째**를 잡았다 — 성공 경로가 `collector_geom` 도장을 안 찍고 있었다.  검사기를 느슨하게 하는 대신 producer 의 기록 결손을 고쳤다."
+  },
+  {
+   "id": "R3CX-05",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "79888279",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "producer·`check_arm` 의 수치·backend validator 가 권위적이지 않음",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "`cg_info=0.5` 가 `int()` 절삭으로 통과 · backend 가 electronic → ionic → last-solve 로 폴백해 위장 3종 통과 · producer 가 status 문자열만 봐서 `sigma_e=None`·`cg_resid=NaN`·`cg_info=99` 를 게시.\n★ 고침: `run_contract` 의 `conv_ok`/`numeric_ok`/`component_backend` 를 세 소비자가 공유.  `type(x) is int` · 폴백 전면 제거 · 안정 진단 코드(`SIGMA_E|` `N_DOF|` `CONV|<why>|`)."
+  },
+  {
+   "id": "R3CX-06",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "575a64f6",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`FIELD_CONTRACT` 가 single source 가 아니고 **양방향**으로 틀림",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "독립 pass-mutant 셋: `required` 뒤집기 · `across_dir` 뒤집기 · `_GEN_FIELDS` 에서 필드 삭제 — 전부 126/126 초록.  선언만 있고 거동이 시험되지 않았다.\n★ 과잉차단도 있었다: `sdcp_yield_to_vgcf` 한 축만 바꾼 정상 A/B 를 파생 id 차이로 HOLD.  누락차단: raw 축은 그대로 두고 id 만 바꿔 `measured`.\n★ 고침: `_GEN_FIELDS` 파생 · ㊷ 가 레지스트리를 읽어 **거동을 생성** · 선언과 무관한 불변식(㊷d/e) · `derived_from` 선언으로 파생 id 를 축에서 제외."
+  },
+  {
+   "id": "R3CX-07",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "a99dd42e",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "plate 회귀의 사각지대 4종",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "반응 솔버 ionic-top · occupied surface 에서 상 하나 제외 · 부분 원장(`{}`·한쪽만) · signed band(슬래브 밖 셀).\n★ 고침: 상 8 × 면 2 격자 · 균일 기둥 · 두 면 반응 격자 · 완비 원장 요구 · 절대값 band.  돌연변이 6종 1:1.\n⚠ 옛 배터리의 reaction revert 가 faithful 하지 않았다는 Codex 지적도 확인해 고쳤다."
+  },
+  {
+   "id": "R3CX-08",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "4cc032e1",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "J/K/L 과 돌연변이 배터리가 '의도한 실패' 를 보증하지 않음",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "배터리가 baseline 을 안 잡고 **어떤 nonzero 든** 적발로 셌다 · J 가 무관한 exit 99 도 통과 · K 가 `false &&`·`|| true` 를 live 로 셈 · L 이 `echo` 를 순서 증거로 셈.\n★ 고침: mutant 마다 **기대 시험 id** 선언 + baseline PASS + 기대 밖 실패 0 + harness 사고 분리.  J 음성대조가 실패 형태를 확인.  K 가 죽은 가지·실패 삼킴 거부.  L 이 `k_live_invocation` 재사용.\n⚠⚠ 엄격하게 만든 첫 실행에서 **harness 자신의 false-negative** 가 드러났다 — `_parse` 가 step3 표기를 못 읽어 CX-07①② 를 '회귀 없음' 으로 잘못 보고했다 (실제로는 잡고 있었다)."
+  },
+  {
+   "id": "R3CX-09",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "4cc032e1",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "진단 런이 생산 이름공간을 쓸 수 있었다",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/check_method_discipline.py --selftest"
+   ],
+   "note": "`ARMS > 8` 허용(shift 8개라 조용히 잘림) + 명시 `OUTDIR` 이 `_armN` 태그를 덮음.\n★ 고침: `1 ≤ ARMS ≤ 8` 강제 + ARMS≠8 이면 사용자 OUTDIR 에도 접미사 강제.  회귀 L-13, L-5 를 두 겹 동시 제거로 재작성."
   }
  ]
 }
