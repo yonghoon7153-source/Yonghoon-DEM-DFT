@@ -399,15 +399,31 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
     voltage = np.asarray(wrd.data["voltage"], dtype=float)
     seconds = wrd.seconds("test_time")
 
+    #: The relaxed voltage of the last *trustworthy* rest.  ΔE_s is the step
+    #: between two equilibria of **one pulse apart in one direction**; the
+    #: baseline is dropped whenever that stops being true, because τ in the
+    #: formula is one pulse and a ΔE_s spanning k+1 pulses inflates D by
+    #: (k+1)² -- with nothing on screen to say so.
     previous_relaxed: float | None = None
+    previous_mode: str | None = None
+    #: Capacity at the start of the current series, so charge and discharge
+    #: each count up from zero -- the same rule pseudo_ocv applies.
+    series_base: float | None = None
     points: list[DiffusionPoint] = []
     for i, block in enumerate(blocks):
         if block.mode == "rest":
             continue
+        if previous_mode is not None and block.mode != previous_mode:
+            # 충전→방전 전환.  두 가지 사이의 OCV 이력 간극은 한 펄스의 ΔE_s
+            # 가 아니다 -- 리뷰 재현에서 첫 방전 점의 D 가 이웃의 9배였다.
+            previous_relaxed = None
+            series_base = None
+        previous_mode = block.mode
+
         following = blocks[i + 1] if i + 1 < len(blocks) else None
         if following is None or following.mode != "rest":
-            continue
-        if min_rest_s and following.duration_s < min_rest_s:
+            # 휴지 없는 펄스는 점을 못 만든다 (pOCV 와 같은 이유).  파일 끝이
+            # 아니면 방향 전환 직전인데, 전환은 위에서 기준선을 이미 지웠다.
             continue
 
         relaxed = float(voltage[following.stop - 1])
@@ -417,13 +433,27 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
         slope, r_squared = _sqrt_t_fit(seconds[window], voltage[window],
                                        float(seconds[block.start]))
 
+        if series_base is None:
+            series_base = block.capacity_end_mah
+        capacity = (block.capacity_end_mah - series_base
+                    if block.mode == "charge"
+                    else series_base - block.capacity_end_mah)
+
+        short_rest = bool(min_rest_s and following.duration_s < min_rest_s)
         delta_es = 0.0 if previous_relaxed is None else relaxed - previous_relaxed
         delta_et = _transient_step_v(slope, block.duration_s)
 
         reason = ""
         value: float | None = None
-        if previous_relaxed is None:
-            reason = "직전 휴지가 없어 ΔE_s 를 잴 수 없습니다 (시리즈의 첫 펄스)"
+        if short_rest:
+            # 이 휴지의 전압은 평형이 아니므로 이 점의 D 도, 다음 점의 기준선도
+            # 될 수 없다.  건너뛰지 않고 이유와 함께 남긴다 -- 조용히 빠지면
+            # 다음 점의 ΔE_s 가 두 펄스를 걸치고 D 가 정확히 4배가 된다.
+            reason = (f"휴지가 {following.duration_s:.0f} s 뿐이라 평형이 "
+                      "아닙니다 — 이 점의 D 도, 다음 점의 ΔE_s 기준선도 못 됩니다")
+        elif previous_relaxed is None:
+            reason = ("직전에 온전한 휴지가 없어 ΔE_s 를 잴 수 없습니다 "
+                      "(시리즈의 첫 펄스이거나 직전 휴지가 짧았습니다)")
         elif result.missing:
             reason = "재료 상수가 없습니다: " + ", ".join(result.missing)
         elif delta_et == 0 or block.duration_s <= 0:
@@ -437,7 +467,7 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
                           * geometry ** 2 * (delta_es / delta_et) ** 2)
 
         points.append(DiffusionPoint(
-            capacity_mah=block.capacity_end_mah,
+            capacity_mah=capacity,
             voltage_v=relaxed,
             d_cm2_s=value,
             delta_es_v=delta_es,
@@ -447,11 +477,7 @@ def diffusion(wrd: WrdFile, *, molar_volume_cm3: float | None = None,
             reason=reason,
             pulse_start=block.start,
         ))
-        previous_relaxed = relaxed
+        previous_relaxed = None if short_rest else relaxed
 
-    if points:
-        baseline = points[0].capacity_mah
-        for point in points:
-            point.capacity_mah -= baseline
     result.points = points
     return result

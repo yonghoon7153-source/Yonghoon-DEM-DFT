@@ -769,6 +769,7 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
               polarisation_v: float = 0.03, ir_v: float = 0.01,
               charging: bool = True, trailing_rest: bool = True,
               pulses_per_cycle: int | None = None,
+              short_rest_index: int | None = None, short_rest_s: float = 30.0,
               start_ticks: int | None = None) -> list[Sample]:
     """A GITT series: pulse, rest, pulse, rest.
 
@@ -846,7 +847,10 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
         # -- rest ----------------------------------------------------------
         total_step += 1
         relaxed = v_start + sign * dv_per_pulse * (index + 1)
-        step = rest_s / max(rest_points - 1, 1)
+        # 한 펄스만 짧게 쉬는 프로토콜 결함을 재현하기 위한 손잡이.  짧은 휴지
+        # 하나가 그 점과 **다음 점의 기준선**을 함께 무너뜨리는 경로를 지난다.
+        this_rest_s = short_rest_s if index == short_rest_index else rest_s
+        step = this_rest_s / max(rest_points - 1, 1)
         for i in range(rest_points):
             fraction = i / max(rest_points - 1, 1)
             # Exponential relaxation onto the new equilibrium.

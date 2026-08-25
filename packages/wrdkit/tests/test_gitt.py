@@ -214,3 +214,53 @@ def test_a_discharge_series_survives_a_cycle_reset_too():
                             capacity_per_pulse_mah=0.5, pulses_per_cycle=2))
     capacities = [point.capacity_mah for point in curve.discharge]
     assert capacities == pytest.approx([0.0, 0.5, 1.0, 1.5, 2.0, 2.5], abs=1e-6)
+
+
+def test_a_direction_change_resets_the_delta_es_baseline():
+    """충전 가지와 방전 가지 사이의 OCV 이력 간극은 한 펄스의 ΔE_s 가 아니다.
+
+    리뷰 재현: 간극 0.1 V 가 ΔE_s 에 얹혀 첫 방전 점의 D 가 이웃의 9배였다.
+    전환에서 기준선을 지우면 그 점은 '첫 펄스' 로 보고되고, 그 다음부터는
+    한 계단(0.05 V)씩만 잰다.
+    """
+    charge = synthetic.make_gitt(n_pulses=2, trailing_rest=False)
+    discharge = synthetic.make_gitt(n_pulses=3, charging=False, v_start=3.4)
+    record = read_wrd_bytes(synthetic.build_wrd(charge + discharge))
+
+    result = diffusion(record, **MATERIAL)
+    usable = result.usable
+    assert usable, "방전 두 번째 점부터는 나와야 한다"
+    for point in usable:
+        assert abs(point.delta_es_v) == pytest.approx(0.05, rel=1e-3)
+    # 방전 시리즈의 용량은 자기 시리즈 기준으로 0 부터 센다 (pOCV 와 같은 규칙).
+    first_discharge = result.points[-3]
+    assert "첫 펄스" in first_discharge.reason
+    assert first_discharge.capacity_mah == pytest.approx(0.0, abs=1e-3)
+    assert result.points[-1].capacity_mah == pytest.approx(1.0, abs=1e-3)
+
+
+def test_a_short_rest_invalidates_the_next_baseline_too():
+    """짧은 휴지의 전압은 평형이 아니다 — 이 점에도, 다음 점의 기준선에도.
+
+    리뷰 재현: 건너뛰기만 하면 다음 점의 ΔE_s 가 두 계단(0.1 V)이 되어 D 가
+    정확히 4배가 됐다.  이제 그 점은 이유와 함께 남고, 그 다음 점은 기준선이
+    없다고 말하며, 회복된 뒤의 점은 다시 정상 D 를 낸다.
+    """
+    record = gitt(n_pulses=5, rest_s=600.0, short_rest_index=2,
+                  short_rest_s=60.0)
+    result = diffusion(record, min_rest_s=100.0, **MATERIAL)
+    assert len(result.points) == 5
+
+    short = result.points[2]
+    assert short.d_cm2_s is None
+    assert "평형이 아닙니다" in short.reason
+
+    after = result.points[3]
+    assert after.d_cm2_s is None
+    assert "첫 펄스이거나 직전 휴지가" in after.reason
+
+    recovered = result.points[4]
+    assert recovered.d_cm2_s is not None
+    assert abs(recovered.delta_es_v) == pytest.approx(0.05, rel=1e-3)
+    normal = result.points[1]
+    assert recovered.d_cm2_s == pytest.approx(normal.d_cm2_s, rel=1e-6)
