@@ -7,6 +7,7 @@
  */
 
 import { OtherMeasurements } from '../components/OtherMeasurements'
+import { RelatedCellCard } from '../components/RelatedCell'
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -39,6 +40,8 @@ export function SpectrumDetail() {
   const spectrum = useAsync(() => api.getSpectrum(id), [id, reloadKey])
   const points = useAsync(() => api.spectrumPoints(id), [id])
   const circuits = useAsync(() => api.eisCircuits(), [])
+  // 관계셀 드롭다운이 쓸 목록.  아래 카드가 이 화면에서 붙이거나 뗄 수 있게.
+  const allSamples = useAsync(() => api.listSamples(), [])
 
   const record = spectrum.data
   const kinds: CircuitKind[] = circuits.data?.kinds ?? []
@@ -334,6 +337,21 @@ export function SpectrumDetail() {
             ]}
           />
         </Card>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <RelatedCellCard
+          sampleId={record.sample_id}
+          sampleName={record.sample_name}
+          samples={allSamples.data ?? []}
+          onPick={async (picked) => {
+            // 빈 값은 떼어내기다 -- `sample_id: null` 은 "안 보냄" 과 구별되지
+            // 않아 서버가 clear 를 따로 받는다.
+            await api.updateSpectrum(record.id, picked
+              ? { sample_id: picked }
+              : { clear: ['sample_id'] })
+            bumpReload((value) => !value)
+          }}
+        />
       </div>
       <div style={{ marginTop: 14 }}>
         <OtherMeasurements sampleId={record.sample_id}

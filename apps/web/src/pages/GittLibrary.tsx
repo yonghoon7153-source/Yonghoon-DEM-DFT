@@ -149,18 +149,20 @@ export function GittLibrary() {
                       ) : null}
                     </td>
                     <td className="text">
-                      <RelatedCellSelect
-                        value={run.sample_id}
-                        samples={samples.data ?? []}
-                        label={`${run.name} 관계셀`}
-                        onPick={(sampleId) =>
-                          void attach(run.id, sampleId ? String(sampleId) : '')}
-                      />
-                      {run.sample_id ? (
-                        <Link className="tiny" to={`/samples/${run.sample_id}`}>
-                          셀 화면
-                        </Link>
-                      ) : null}
+                      <div className="col" style={{ gap: 3, minWidth: 0, width: 200 }}>
+                        <RelatedCellSelect
+                          value={run.sample_id}
+                          samples={samples.data ?? []}
+                          label={`${run.name} 관계셀`}
+                          onPick={(sampleId) =>
+                            void attach(run.id, sampleId ? String(sampleId) : '')}
+                        />
+                        {run.sample_id ? (
+                          <Link className="tiny truncate" to={`/samples/${run.sample_id}`}>
+                            셀 화면 →
+                          </Link>
+                        ) : null}
+                      </div>
                     </td>
                     <td className="text dim">{run.purpose || '—'}</td>
                     <td>{run.n_pulses}</td>

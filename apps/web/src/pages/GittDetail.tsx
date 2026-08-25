@@ -6,6 +6,7 @@
  */
 
 import { OtherMeasurements } from '../components/OtherMeasurements'
+import { RelatedCellCard } from '../components/RelatedCell'
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
@@ -29,6 +30,8 @@ export function GittDetail() {
   const run = useAsync(() => api.getGittRun(id), [id, reloadKey])
   const pocv = useAsync(() => api.gittPocv(id), [id, reloadKey])
   const diffusion = useAsync(() => api.gittDiffusion(id), [id, reloadKey])
+  // 관계셀 드롭다운이 쓸 목록 -- EIS 상세와 같은 카드를 쓴다.
+  const allSamples = useAsync(() => api.listSamples(), [])
 
   const pocvSeries = useMemo<PlotSeries[]>(() => {
     const data = pocv.data
@@ -217,6 +220,19 @@ export function GittDetail() {
             ['올린 때', dateTime(record.uploaded_at)],
           ]} />
         </Card>
+      </div>
+      <div style={{ marginTop: 14 }}>
+        <RelatedCellCard
+          sampleId={record.sample_id ?? null}
+          sampleName={record.sample_name ?? null}
+          samples={allSamples.data ?? []}
+          onPick={async (picked) => {
+            await api.updateGittRun(record.id, picked
+              ? { sample_id: picked }
+              : { clear: ['sample_id'] })
+            bumpReload((value) => !value)
+          }}
+        />
       </div>
       <div style={{ marginTop: 14 }}>
         <OtherMeasurements sampleId={record.sample_id ?? null}

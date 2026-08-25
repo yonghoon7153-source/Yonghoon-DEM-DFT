@@ -13,7 +13,10 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
-import { TrashIcon } from './ui'
+import { TestConditionsPanel } from './TestConditionsPanel'
+import { Alert, Card, Spinner, TrashIcon } from './ui'
+import { api } from '../lib/api'
+import { useAsync } from '../lib/hooks'
 import type { Sample } from '../lib/types'
 
 /** 관계셀 하나를 고르는 드롭다운.  빈 값은 "떼어내기" 다. */
@@ -31,11 +34,15 @@ export function RelatedCellSelect({
   disabled?: boolean
   onPick: (sampleId: number | null) => void
 }) {
+  // `<select>` 는 제 가장 긴 선택지만큼 넓어진다.  셀 이름이 길면 그 폭이 표의
+  // 열을 밀고 나가 옆 칸 글자와 겹쳐 그려진다 -- 열 너비는 그대로인데 안에
+  // 든 것만 커지기 때문이다.  칸 안에 가둔다.
   return (
     <select
       aria-label={label}
       value={value ? String(value) : ''}
       disabled={disabled}
+      style={{ width: '100%', maxWidth: '100%', minWidth: 0 }}
       onChange={(event) =>
         onPick(event.target.value ? Number(event.target.value) : null)}
     >
@@ -213,5 +220,86 @@ export function RelatedCellIndex({
         <div className="tiny faint">{emptyLabel}</div>
       )}
     </div>
+  )
+}
+
+/** 관계셀 카드 — 어느 셀의 것인지 고르고, 그 셀의 시험 조건을 그 자리에서 고친다.
+ *
+ *  EIS·GITT 상세에서 조건을 보려면 셀 화면으로 건너갔다 와야 했다.  그런데
+ *  임피던스를 들여다보다가 "이거 60도짜리였나" 를 확인하는 일은 늘 그 화면
+ *  **안에서** 생긴다.
+ *
+ *  조건이 셀의 것이지 측정의 것이 아니라는 점은 그대로다 — 여기서 고치는 것도
+ *  셀이고, 같은 셀에 붙은 다른 측정에서도 같은 값이 보인다.  그래서 관계셀이
+ *  정해지기 전에는 고칠 것이 없고, 그 사실을 적어 둔다 (§0.4).
+ */
+export function RelatedCellCard({
+  sampleId,
+  sampleName,
+  samples,
+  onPick,
+}: {
+  sampleId: number | null
+  sampleName: string | null
+  samples: Sample[]
+  onPick: (sampleId: number | null) => Promise<void>
+}) {
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [reloadKey, bumpReload] = useState(false)
+  const sample = useAsync(
+    () => (sampleId ? api.getSample(sampleId) : Promise.resolve(null)),
+    [sampleId, reloadKey],
+  )
+
+  return (
+    <Card title="관계셀" tight>
+      <div className="col" style={{ padding: 14, gap: 10 }}>
+        {error ? <Alert kind="error">{error}</Alert> : null}
+        <div className="row" style={{ gap: 8 }}>
+          <div style={{ minWidth: 0, width: 260 }}>
+            <RelatedCellSelect
+              value={sampleId}
+              samples={samples}
+              label="관계셀"
+              disabled={busy}
+              onPick={async (picked) => {
+                setBusy(true)
+                try {
+                  setError(null)
+                  await onPick(picked)
+                } catch (cause) {
+                  setError(cause instanceof Error ? cause.message : String(cause))
+                } finally {
+                  setBusy(false)
+                }
+              }}
+            />
+          </div>
+          {sampleId ? (
+            <Link className="tiny" to={`/samples/${sampleId}`}>
+              {sampleName || '셀 화면'} →
+            </Link>
+          ) : null}
+        </div>
+
+        {!sampleId ? (
+          <div className="tiny faint">
+            시험 조건(그룹·소그룹·시험일·양극재·공정·C-rate·온도)은 셀에 붙어
+            있습니다 — 관계셀을 정하면 여기서 바로 고칠 수 있습니다. 안 붙여도
+            이 측정의 분석은 그대로 됩니다.
+          </div>
+        ) : sample.error ? (
+          <Alert kind="error">{sample.error}</Alert>
+        ) : sample.data ? (
+          <TestConditionsPanel
+            sample={sample.data}
+            onSaved={() => bumpReload((value) => !value)}
+          />
+        ) : (
+          <Spinner />
+        )}
+      </div>
+    </Card>
   )
 }

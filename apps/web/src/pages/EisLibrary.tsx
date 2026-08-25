@@ -215,17 +215,19 @@ export function EisLibrary() {
                     <td className="text dim">
                       {/* 붙이는 일을 여기서 한다 -- 다른 화면으로 갔다 오지 않게.
                           붙지 않은 채로 두는 것도 정상이다 (§0.4). */}
-                      <RelatedCellSelect
-                        value={item.sample_id}
-                        samples={samples.data ?? []}
-                        label={`${item.name} 관계셀`}
-                        onPick={(sampleId) => void attach(item.id, sampleId)}
-                      />
-                      {item.sample_id ? (
-                        <Link className="tiny" to={`/samples/${item.sample_id}`}>
-                          셀 화면
-                        </Link>
-                      ) : null}
+                      <div className="col" style={{ gap: 3, minWidth: 0, width: 200 }}>
+                        <RelatedCellSelect
+                          value={item.sample_id}
+                          samples={samples.data ?? []}
+                          label={`${item.name} 관계셀`}
+                          onPick={(sampleId) => void attach(item.id, sampleId)}
+                        />
+                        {item.sample_id ? (
+                          <Link className="tiny truncate" to={`/samples/${item.sample_id}`}>
+                            셀 화면 →
+                          </Link>
+                        ) : null}
+                      </div>
                     </td>
                     <td className="text dim">
                       {item.kind === 'solid' ? '전고체' : '액체'}

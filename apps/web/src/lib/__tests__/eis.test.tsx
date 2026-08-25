@@ -336,6 +336,66 @@ describe('스펙트럼 상세', () => {
     }
   }
 
+  /** 관계셀 카드가 읽는 셀.  시험 조건 패널이 보는 칸들만 있으면 된다. */
+  const SAMPLE = {
+    id: 3, name: 'No_1_dry', group_id: null, group_name: null,
+    test_date: null, cathode_type: '', cathode_detail: '', process: '',
+    c_rate: null, c_rate_formation: null, temperature_c: null,
+  }
+
+  /** 셀 하나와 그 셀이 든 소그룹.  관계셀 카드가 이 둘을 함께 읽는다. */
+  const CELL_GROUPS = [
+    { id: 1, name: '건식 시리즈', parent_id: null, parent_name: '', subgroup_count: 1,
+      description: '', color: '', created_at: '2026-08-01T00:00:00',
+      updated_at: '2026-08-01T00:00:00', sample_count: 1, run_count: 0 },
+    { id: 2, name: '80wt%', parent_id: 1, parent_name: '건식 시리즈', subgroup_count: 0,
+      description: '', color: '', created_at: '2026-08-01T00:00:00',
+      updated_at: '2026-08-01T00:00:00', sample_count: 1, run_count: 0 },
+  ]
+
+  it('관계셀 카드에서 그 셀의 시험 조건을 그대로 고친다', async () => {
+    // 임피던스를 보다가 "이거 60도짜리였나" 를 확인하는 일은 늘 이 화면
+    // **안에서** 생기는데, 그때마다 셀 화면으로 건너갔다 와야 했다.
+    const sent: Record<string, unknown>[] = []
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/groups') return CELL_GROUPS
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({ sample_id: 3, sample_name: 'No_1_dry' })
+      }
+      if (path(url) === '/api/samples/3' && init?.method === 'PATCH') {
+        sent.push(JSON.parse(String(init.body)))
+        return SAMPLE
+      }
+      if (path(url) === '/api/samples/3') return { ...SAMPLE, group_id: 2 }
+      return undefined
+    }))
+    renderDetail()
+
+    // 저장된 소그룹이 두 칸에 그대로 앉아 있어야 한다 (ADR 0025).
+    const top = await screen.findByRole('combobox', { name: '그룹' })
+    await waitFor(() => expect((top as HTMLSelectElement).value).toBe('1'))
+    expect((screen.getByRole('combobox', { name: '소그룹' }) as HTMLSelectElement).value)
+      .toBe('2')
+
+    await userEvent.type(screen.getByLabelText(/^온도/), '60')
+    await userEvent.click(screen.getByRole('button', { name: '저장' }))
+    await waitFor(() => expect(sent).toHaveLength(1))
+    expect(sent[0]).toMatchObject({ temperature_c: 60 })
+  })
+
+  it('관계셀이 없으면 고칠 것이 없다고 말한다 — 붙여야 조건이 생긴다', async () => {
+    installFetch(detailHandler((url) => {
+      if (path(url) === '/api/groups') return CELL_GROUPS
+      return undefined
+    }))
+    renderDetail()
+
+    expect(await screen.findByRole('combobox', { name: '관계셀' })).toBeInTheDocument()
+    expect(screen.queryByRole('combobox', { name: '소그룹' })).toBeNull()
+    expect(screen.getByText(/관계셀을 정하면 여기서 바로 고칠 수 있습니다/))
+      .toBeInTheDocument()
+  })
+
   function drtResult(order: number, lam: number) {
     return {
       spectrum_id: 1,
