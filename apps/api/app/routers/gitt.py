@@ -219,8 +219,14 @@ CLEARABLE_GITT_FIELDS = {"molar_volume_cm3", "molar_mass_g", "active_mass_g",
 
 @router.delete("/runs/{gitt_id}", status_code=204)
 def delete_run(gitt_id: int, session: Session = Depends(get_session)):
-    """Forget the record.  The original ``.wrd`` stays (§0.2)."""
+    """Forget the record and its parse cache.  The original ``.wrd`` stays (§0.2)."""
     record = _get(session, gitt_id)
+    others = session.exec(select(GittRun).where(GittRun.sha256 == record.sha256,
+                                                GittRun.id != record.id)).first()
+    if others is None:
+        # 캐시는 원본 해시로 열리므로, 같은 바이트를 가리키는 행이 하나라도
+        # 남아 있으면 지우지 않는다.
+        storage.drop_gitt_cache(record.sha256)
     session.delete(record)
     session.commit()
 

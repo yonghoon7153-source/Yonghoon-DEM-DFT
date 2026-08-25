@@ -487,6 +487,20 @@ def test_a_soc_scan_upload_becomes_one_spectrum_per_sweep(client):
     assert len({round(row["potential_v"], 4) for row in listed}) == 4
 
 
+def test_a_scan_lists_its_sweeps_in_measurement_order(client):
+    """SOC 스캔의 행들은 사이클 번호가 없고 시각도 같다 — 스윕 번호가 순서다.
+
+    없으면 DB 가 주는 대로 나오는데, SOC 순서로 안 보이면 21행을 훑어야 한다.
+    """
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=5),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    assert [row["sweep_index"] for row in rows] == [1, 2, 3, 4, 5]
+    capacities = [row["capacity_mah"] for row in rows]
+    assert capacities == sorted(capacities)      # SOC 가 단조로 증가한다
+
+
 def test_a_scan_names_its_own_purpose(client):
     """계측기가 아는 것을 사람에게 다시 묻지 않는다 (§0.3).
 

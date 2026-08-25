@@ -266,9 +266,13 @@ def list_spectra(session: Session = Depends(get_session),
         statement.order_by(SpectrumRecord.uploaded_at.desc())).all()
     # 사이클 번호가 있으면 그 순서가 사람이 보고 싶은 순서다 — 올린 순서는
     # 누가 파일을 어떤 순으로 끌어다 놓았느냐일 뿐이다.  번호 없는 것은 뒤로.
+    #
+    # 스윕 번호가 마지막 기준이다: SOC 스캔의 21행은 사이클 번호가 전부
+    # 비어 있고 같은 커밋에서 나와 시각도 같으므로, 이것이 없으면 순서가
+    # DB 가 주는 대로다.  스윕 순서는 곧 측정 순서이고 SOC 순서다 (ADR 0022).
     records = sorted(records, key=lambda r: (r.at_cycle is None,
                                              r.at_cycle if r.at_cycle is not None else 0,
-                                             r.uploaded_at))
+                                             r.uploaded_at, r.sweep_index))
     if search:
         needle = search.lower()
         records = [r for r in records

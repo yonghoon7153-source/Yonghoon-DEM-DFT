@@ -83,10 +83,20 @@ class Settings:
         """
         return self.data_dir / "spectra"
 
+    @property
+    def gitt_dir(self) -> Path:
+        """GITT parse caches, one file per original.
+
+        Keyed by content hash rather than by row id, because a GITT record is
+        its own table (ADR 0020) and two rows can point at the same bytes.
+        """
+        return self.data_dir / "gitt"
+
     def ensure_dirs(self) -> None:
         self.uploads_dir.mkdir(parents=True, exist_ok=True)
         self.runs_dir.mkdir(parents=True, exist_ok=True)
         self.spectra_dir.mkdir(parents=True, exist_ok=True)
+        self.gitt_dir.mkdir(parents=True, exist_ok=True)
 
 
 settings = Settings()

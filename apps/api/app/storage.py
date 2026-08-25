@@ -98,20 +98,91 @@ def load_spectrum(spectrum_id: int, expected_sha256: str = ""):
                     columns=columns)
 
 
-def load_gitt(sha256: str) -> WrdFile | None:
-    """A GITT record, re-read from its immutable original.
+#: The columns GITT analysis reads.  The cache stores exactly these and
+#: records the list, so a later change here invalidates every old cache
+#: rather than serving one that is missing a column.
+GITT_CACHE_COLUMNS = ("test_time", "voltage", "current", "charge_q",
+                      "discharge_q", "cell_status", "cycle_index")
 
-    No parse cache, unlike cycling.  The cycling cache exists because a profile
-    request needs a few columns out of a 20 MB file and there are dozens of
-    such requests per screen; a GITT screen asks twice, for the whole record,
-    and a second copy of the same numbers is a second thing to keep in step
-    with the original.  If this turns out slow on a real file, the cache goes
-    in then -- with a reason.
+
+def gitt_cache_path(sha256: str) -> Path:
+    return settings.gitt_dir / f"{sha256}.npz"
+
+
+def cache_gitt(sha256: str, wrd: WrdFile) -> Path:
+    """Persist the columns GITT reads, keyed to the original's hash.
+
+    ADR 0020 left the cache out and said it would go in when a real file
+    showed it was needed, with a reason.  Here is the reason, measured on the
+    lab's 108 MB anode record: reading the bytes takes 0.06 s and parsing them
+    takes **1.31 s**, and a screen asks twice.  The seven columns this
+    analysis actually reads come to 4 MB compressed and load in 0.13 s -- ten
+    times faster, against 2.1x for caching all twenty-two.
     """
+    target = gitt_cache_path(sha256)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    payload = {name: np.asarray(wrd.data[name]) for name in GITT_CACHE_COLUMNS
+               if name in wrd.data}
+    payload["meta::sha256"] = np.array(sha256)
+    payload["meta::row_count"] = np.array(len(wrd))
+    payload["meta::unit_coulomb"] = np.array(bool(wrd.metadata.unit_coulomb))
+    _write_atomically(target, lambda handle: np.savez_compressed(handle, **payload))
+    return target
+
+
+def _gitt_from_cache(sha256: str) -> WrdFile | None:
+    """The cached columns as a WrdFile, or ``None`` if it cannot prove itself.
+
+    Two proofs, both cheap: the hash of the original it was built from, and
+    the exact column list.  Without the second, adding a column to the
+    analysis would read an old cache that silently lacks it.
+    """
+    from wrdkit.wrd import WrdMetadata
+
+    path = gitt_cache_path(sha256)
+    if not path.exists():
+        return None
     try:
-        return reparse(sha256)
+        with np.load(path, allow_pickle=False) as archive:
+            if str(archive["meta::sha256"]) != sha256:
+                return None
+            data = {name: archive[name] for name in archive.files
+                    if not name.startswith("meta::")}
+            if set(data) != set(GITT_CACHE_COLUMNS):
+                return None
+            metadata = WrdMetadata(
+                source_name=f"{sha256}.wrd", sha256=sha256, file_size=0,
+                row_count=int(archive["meta::row_count"]),
+                unit_coulomb=bool(archive["meta::unit_coulomb"]))
+    except (OSError, ValueError, KeyError):
+        return None
+    return WrdFile(metadata=metadata, data=data)
+
+
+def load_gitt(sha256: str) -> WrdFile | None:
+    """A GITT record: from the parse cache, else from its immutable original.
+
+    The original is never the fallback in the sense of "less correct" -- it is
+    the source of truth, and the cache is rebuilt from it whenever the cache
+    cannot prove it belongs to these bytes.
+    """
+    cached = _gitt_from_cache(sha256)
+    if cached is not None:
+        return cached
+    try:
+        wrd = reparse(sha256)
     except (FileNotFoundError, StorageError):
         return None
+    try:
+        cache_gitt(sha256, wrd)
+    except OSError:
+        pass          # a full disk must not stop the analysis
+    return wrd
+
+
+def drop_gitt_cache(sha256: str) -> None:
+    """Remove a GITT parse cache.  The original upload stays (0.2)."""
+    gitt_cache_path(sha256).unlink(missing_ok=True)
 
 
 def drop_spectrum_cache(spectrum_id: int) -> None:

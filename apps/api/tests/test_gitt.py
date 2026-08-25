@@ -178,6 +178,9 @@ def test_reuploading_known_bytes_restores_a_lost_original(client):
     주세요" 라고 하는데, dedup 이 저장 전에 반환하면 그 안내는 거짓이다 (#23)."""
     from app import storage
     out = upload(client)
+    # 캐시까지 없어야 진짜 "다시 올려 주세요" 상황이다 — 캐시가 남아 있으면
+    # 원본이 사라져도 분석은 계속 답한다 (그쪽이 옳은 동작이다).
+    storage.drop_gitt_cache(out["sha256"])
     storage.upload_path(out["sha256"]).unlink()
     assert client.get(f"/api/gitt/runs/{out['id']}/pocv").status_code == 409
 
@@ -187,6 +190,30 @@ def test_reuploading_known_bytes_restores_a_lost_original(client):
     assert again.status_code == 201
     assert again.json()["id"] == out["id"]
     assert client.get(f"/api/gitt/runs/{out['id']}/pocv").status_code == 200
+
+
+def test_the_analysis_is_served_from_a_cache_that_proves_itself(client):
+    """파싱이 요청 비용의 전부다 — 실측 108 MB 에서 읽기 0.06s, 파싱 1.31s.
+
+    캐시는 원본 해시와 컬럼 목록으로 자신을 증명하고, 증명 못 하면 불변
+    원본에서 다시 만든다 (ADR 0020 이 미뤄 둔 결정).
+    """
+    from app import storage
+    out = upload(client)
+    first = client.get(f"/api/gitt/runs/{out['id']}/pocv")
+    assert first.status_code == 200
+    assert storage.gitt_cache_path(out["sha256"]).exists()
+
+    # 남의 해시로 만든 캐시는 자신을 증명하지 못한다.
+    import numpy as np
+    path = storage.gitt_cache_path(out["sha256"])
+    with np.load(path, allow_pickle=False) as archive:
+        payload = {name: archive[name] for name in archive.files}
+    payload["meta::sha256"] = np.array("0" * 64)
+    np.savez_compressed(path, **payload)
+    again = client.get(f"/api/gitt/runs/{out['id']}/pocv")
+    assert again.status_code == 200                    # 원본에서 되살렸다
+    assert again.json() == first.json()
 
 
 def test_deleting_forgets_the_record_but_not_the_original(client):
