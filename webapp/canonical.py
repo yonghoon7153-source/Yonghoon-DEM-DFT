@@ -464,6 +464,23 @@ def validate(reg: dict, root=None) -> list:
     """(entry, 문제) 목록. 빈 목록 = 레지스트리가 원자료와 일치한다."""
     bad = []
     for e in reg.get("entries", []):
+        # ── status=retracted ────────────────────────────────────────────────
+        # ⛔ 2026-08-25 — 철회된 값은 **원자료에 살아 있으면 안 된다**(철회하면서 키를
+        #   _RETRACTED_… 로 옮기거나 문자열로 바꾼다). 그래서 수치 대조가 성립하지 않는다.
+        #   그렇다고 그냥 건너뛰면 "철회" 가 검사를 피하는 뒷문이 된다 —
+        #   **사유와 대체값을 원장 안에** 요구한다. (b2o3 MD_Ea 0.199 가 첫 사례)
+        if e.get("status") == "retracted":
+            r = e.get("retracted")
+            if not isinstance(r, dict):
+                bad.append((e, "status=retracted 인데 retracted 절이 없다 — "
+                               "철회는 사유가 원장 안에 있어야 한다(파일명·기억은 판정이 아니다)"))
+                continue
+            for k in ("why", "usable_instead"):
+                if not r.get(k):
+                    bad.append((e, f"retracted.{k} 가 없다 — "
+                                   f"{'왜 철회했는지' if k == 'why' else '대신 무엇을 쓰는지'}를 "
+                                   f"적지 않으면 다음 사람이 같은 값을 다시 인용한다"))
+            continue
         # ⚠ live 로드가 이미 원자료를 채택하고 어긋남을 value_drift 에 적어 뒀다면,
         #   아래 수치 대조는 (값을 덮어썼으므로) 통과해 버린다 — 여기서 먼저 잡는다.
         #   이게 없으면 "화면은 새 값을 쓰는데 검사는 통과" 라는 최악의 조합이 된다.
