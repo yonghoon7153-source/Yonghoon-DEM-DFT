@@ -12,10 +12,14 @@ command -v "$LIGGGHTS" >/dev/null 2>&1 || {
   echo "⛔ '$LIGGGHTS' 를 못 찾았다.  LIGGGHTS=<실행파일> 로 지정하거나 PATH 에 넣을 것."
   exit 1; }
 
-#  ★ 기준선을 **먼저** 돌린다 — 원본을 재현 못 하면 나머지는 볼 필요가 없다.
-ORDER=$(ls in.*.liggghts | sed 's/^/ /' | tr -d '\n')
-FIRST="in.base.liggghts"
-[ -f "$FIRST" ] || { echo "⛔ $FIRST 가 없다"; exit 1; }
+#  ★★ 대조 **두 개**를 먼저, 정해진 순서로 돌린다 (2×2):
+#     ① orig_1type (새 빌드, 원본 1-type) vs 옛 기록  → **빌드 효과**
+#     ② base (2-type)         vs orig_1type          → **type 리팩터 효과**
+#     둘 다 0 이어야 OAT 를 믿는다.  하나만 돌리면 두 원인이 섞인다.
+CONTROLS=("in.orig_1type.liggghts" "in.base.liggghts")
+for c in "${CONTROLS[@]}"; do
+  [ -f "$c" ] || { echo "⛔ $c 가 없다 — 생성기를 다시 돌릴 것"; exit 1; }
+done
 
 run_one() {
   local f="$1"; local n="${f#in.}"; n="${n%.liggghts}"
@@ -29,14 +33,21 @@ run_one() {
   return $rc
 }
 
-run_one "$FIRST" || { echo; echo "⛔⛔ 기준선이 실패했다.  나머지를 돌리지 않는다."; exit 1; }
+for c in "${CONTROLS[@]}"; do
+  run_one "$c" || { echo; echo "⛔⛔ 대조 런이 실패했다.  나머지를 돌리지 않는다."; exit 1; }
+done
 echo
-echo "★★ 기준선 완료.  **다음을 계속하기 전에 확인할 것**:"
-echo "   post_oat_base/ 의 최종 porosity 가 원본(1-type) 결과와 같은가?"
-echo "   다르면 type 리팩터가 무언가를 바꾼 것이고 OAT 결과는 무효다."
+echo "★★ 대조 2건 완료.  **계속하기 전에 두 비교를 확인할 것**:"
+echo "   ① post_oat_orig_1type/ 최종 porosity  vs  옛 기록(docs/data/heckel_pure_se_dem.csv)"
+echo "      → 다르면 **빌드가 다르다**.  그 차이를 먼저 기록하고, OAT 는 새 빌드 안에서만 해석."
+echo "   ② post_oat_base/ (2-type)  vs  post_oat_orig_1type/ (1-type)"
+echo "      → 다르면 **type 리팩터가 무언가를 바꿨다**.  OAT 결과는 무효다."
+echo "   ⚠ ①만 보고 ②를 건너뛰면 두 원인이 섞인다.  둘 다 볼 것."
 echo
 for f in in.*.liggghts; do
-  [ "$f" = "$FIRST" ] && continue
+  skip=0
+  for c in "${CONTROLS[@]}"; do [ "$f" = "$c" ] && skip=1; done
+  [ "$skip" = 1 ] && continue
   run_one "$f"
 done
-echo "완료.  결과 수집:  python3 ../../scripts/collect_oat_sweep.py"
+echo "완료."

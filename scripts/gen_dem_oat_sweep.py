@@ -19,8 +19,7 @@
 ## 두 표
 
 **표 A — OAT 민감도** (E_eff 고정 1.35 GPa):
-  `mu_pp` · `mu_pw` · `cor` 를 각각 {0.2, 0.4, 0.6} 으로 흔들고 나머지는 생산값.
-  9 런 + **기준선 1 런** = 10.
+  `mu_pp` · `mu_pw` · `cor` 를 각각 {0.2, 0.4, 0.6} 으로 흔들고 나머지는 생산값.  9 런.
 
 **표 B — E 스윕** (생산 마찰 고정): E ∈ {24, 5, 1.35} GPa.
   출력은 porosity 뿐 아니라 **배위수 · 접촉면적 · σ 삼중항**.
@@ -37,9 +36,13 @@
 ⇒ 이 생성기는 **type 을 2개로 늘리고 벽에 type 2 를 준다** (입자는 type 1).
    `peratomtype` 는 값 2개, `peratomtypepair` 는 2×2 = 4개가 된다.
 
-⚠⚠ **이건 검증된 입력의 구조를 바꾸는 것**이므로, **기준선 런이 음성 대조다**:
-   2-type 기준선이 1-type 원본의 porosity 를 재현하지 못하면 **type 리팩터가 뭔가를
-   깨뜨린 것**이고, 그 경우 OAT 결과 전체가 무효다.  `--check` 가 이것을 상기시킨다.
+⚠⚠ **이건 검증된 입력의 구조를 바꾸는 것**이므로 **대조 런이 필요하다.  그런데 하나로는
+   부족하다** — 윈도우 재설치로 옛 LIGGGHTS 바이너리가 사라져 새로 빌드해야 하므로,
+   기준선이 옛 기록과 안 맞아도 원인이 **type 리팩터**인지 **다른 빌드**인지 못 가른다.
+   ⇒ 대조를 **둘** 돌린다 (합 13 런):
+     · `orig_1type` (새 빌드 · 원본 1-type, 출력 경로만 변경)  vs 옛 기록  → **빌드 효과**
+     · `base`       (새 빌드 · 2-type 생산값)  vs `orig_1type`  → **리팩터 효과**
+   둘 다 0 이어야 OAT 를 믿는다.  러너가 이 순서로 먼저 돌리고 실패하면 멈춘다.
 
     python3 scripts/gen_dem_oat_sweep.py --check          # 계획만 (쓰지 않음)
     python3 scripts/gen_dem_oat_sweep.py --write          # dem_scripts/oat_sweep/ 에 생성
@@ -80,8 +83,18 @@ def _tag(knob, val):
 
 
 def plan():
-    """만들 런 목록.  (name, 설명, 파라미터 dict)"""
-    runs = [('base', '기준선 — 생산값 (⚠ 2-type 음성 대조)', dict(PROD))]
+    """만들 런 목록.  (name, 설명, 파라미터 dict)
+
+    ⚠⚠ 첫 두 런이 **2×2 대조**다 (2026-08-25 추가).  윈도우 재설치로 옛 LIGGGHTS 바이너리가
+      사라졌을 수 있는데, 그러면 기준선이 옛 기록과 안 맞아도 그 원인이
+      **① type 리팩터** 인지 **② 다른 빌드** 인지 가를 수 없다.  ⇒ 원본(1-type)을 **새 빌드로
+      같이 돌린다**:
+        · `orig_1type`(새 빌드) vs 옛 기록      → **빌드 효과**
+        · `base`(2-type)  vs `orig_1type`      → **type 리팩터 효과**
+      둘 다 0 이어야 OAT 결과를 믿을 수 있다.  하나만 돌리면 두 원인이 섞인다.
+    """
+    runs = [('orig_1type', '⚠ 빌드 대조 — 원본 1-type 그대로 (출력 경로만 변경)', None),
+            ('base', '기준선 — 생산값, 2-type (⚠ type 리팩터 음성 대조)', dict(PROD))]
     for knob in OAT_KNOBS:
         for lv in OAT_LEVELS:
             if abs(PROD[knob] - lv) < 1e-12:
@@ -132,6 +145,21 @@ def render(name, desc, p, base_text=None):
             base_text = f.read()
     t = base_text
 
+    #  ★ p is None = **빌드 대조**.  원본을 한 글자도 안 고치고 **출력 경로만** 바꾼다.
+    #    (type 도 물성도 그대로 1-type — 그래야 옛 기록과 like-for-like 비교가 된다)
+    if p is None:
+        t = t.replace('SE_heckel_300', f'oat_{name}')
+        hdr0 = (f'# ============================================================\n'
+                f'# {name}: {desc}\n'
+                f'#\n'
+                f'# ⚠⚠ **빌드 대조다.**  원본 heckel/input_SE_heckel_300.liggghts 와\n'
+                f'#    **출력 경로 말고는 한 글자도 다르지 않다** (1-type 그대로).\n'
+                f'#    윈도우 재설치로 옛 LIGGGHTS 바이너리가 사라졌으므로, 기준선이 옛 기록과\n'
+                f'#    안 맞을 때 그 원인이 **type 리팩터**인지 **다른 빌드**인지 가르려면\n'
+                f'#    이 런이 있어야 한다.  이것 없이 base 만 돌리면 두 원인이 섞인다.\n'
+                f'# ============================================================\n')
+        return re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', hdr0, t, count=1)
+
     #  ① 물성 블록 통째 교체 (fix m1 ~ fix m9)
     blk = re.search(r'fix m1 all property/global youngsModulus.*?fix m9 all property/global'
                     r' characteristicVelocity scalar 2\.0', t, re.S)
@@ -179,10 +207,14 @@ command -v "$LIGGGHTS" >/dev/null 2>&1 || {
   echo "⛔ '$LIGGGHTS' 를 못 찾았다.  LIGGGHTS=<실행파일> 로 지정하거나 PATH 에 넣을 것."
   exit 1; }
 
-#  ★ 기준선을 **먼저** 돌린다 — 원본을 재현 못 하면 나머지는 볼 필요가 없다.
-ORDER=$(ls in.*.liggghts | sed 's/^/ /' | tr -d '\\n')
-FIRST="in.base.liggghts"
-[ -f "$FIRST" ] || { echo "⛔ $FIRST 가 없다"; exit 1; }
+#  ★★ 대조 **두 개**를 먼저, 정해진 순서로 돌린다 (2×2):
+#     ① orig_1type (새 빌드, 원본 1-type) vs 옛 기록  → **빌드 효과**
+#     ② base (2-type)         vs orig_1type          → **type 리팩터 효과**
+#     둘 다 0 이어야 OAT 를 믿는다.  하나만 돌리면 두 원인이 섞인다.
+CONTROLS=("in.orig_1type.liggghts" "in.base.liggghts")
+for c in "${CONTROLS[@]}"; do
+  [ -f "$c" ] || { echo "⛔ $c 가 없다 — 생성기를 다시 돌릴 것"; exit 1; }
+done
 
 run_one() {
   local f="$1"; local n="${f#in.}"; n="${n%.liggghts}"
@@ -196,17 +228,24 @@ run_one() {
   return $rc
 }
 
-run_one "$FIRST" || { echo; echo "⛔⛔ 기준선이 실패했다.  나머지를 돌리지 않는다."; exit 1; }
+for c in "${CONTROLS[@]}"; do
+  run_one "$c" || { echo; echo "⛔⛔ 대조 런이 실패했다.  나머지를 돌리지 않는다."; exit 1; }
+done
 echo
-echo "★★ 기준선 완료.  **다음을 계속하기 전에 확인할 것**:"
-echo "   post_oat_base/ 의 최종 porosity 가 원본(1-type) 결과와 같은가?"
-echo "   다르면 type 리팩터가 무언가를 바꾼 것이고 OAT 결과는 무효다."
+echo "★★ 대조 2건 완료.  **계속하기 전에 두 비교를 확인할 것**:"
+echo "   ① post_oat_orig_1type/ 최종 porosity  vs  옛 기록(docs/data/heckel_pure_se_dem.csv)"
+echo "      → 다르면 **빌드가 다르다**.  그 차이를 먼저 기록하고, OAT 는 새 빌드 안에서만 해석."
+echo "   ② post_oat_base/ (2-type)  vs  post_oat_orig_1type/ (1-type)"
+echo "      → 다르면 **type 리팩터가 무언가를 바꿨다**.  OAT 결과는 무효다."
+echo "   ⚠ ①만 보고 ②를 건너뛰면 두 원인이 섞인다.  둘 다 볼 것."
 echo
 for f in in.*.liggghts; do
-  [ "$f" = "$FIRST" ] && continue
+  skip=0
+  for c in "${CONTROLS[@]}"; do [ "$f" = "$c" ] && skip=1; done
+  [ "$skip" = 1 ] && continue
   run_one "$f"
 done
-echo "완료.  결과 수집:  python3 ../../scripts/collect_oat_sweep.py"
+echo "완료."
 """
 
 
@@ -228,11 +267,16 @@ def write_all(outdir=None):
     #  매니페스트 — 무엇을 왜 돌렸는지 나중에 알 수 있게
     mp = os.path.join(outdir, 'manifest.csv')
     with open(mp, 'w', encoding='utf-8') as f:
-        f.write('run,table,mu_pp,mu_pw,cor,roll,E_GPa,desc\n')
+        f.write('run,table,mu_pp,mu_pw,cor,roll,E_GPa,n_atom_types,desc\n')
         for name, desc, p in plan():
-            tbl = 'A' if name.startswith('oat_') else ('B' if name.startswith('esweep') else 'base')
-            f.write(f'{name},{tbl},{p["mu_pp"]},{p["mu_pw"]},{p["cor"]},{p["roll"]},'
-                    f'{p["E_GPa"]},"{desc}"\n')
+            tbl = ('A' if name.startswith('oat_') else
+                   'B' if name.startswith('esweep') else 'control')
+            if p is None:                       # 빌드 대조 — 원본 값 그대로, 1-type
+                f.write(f'{name},{tbl},{PROD["mu_pp"]},{PROD["mu_pw"]},{PROD["cor"]},'
+                        f'{PROD["roll"]},{PROD["E_GPa"]},1,"{desc}"\n')
+            else:
+                f.write(f'{name},{tbl},{p["mu_pp"]},{p["mu_pw"]},{p["cor"]},{p["roll"]},'
+                        f'{p["E_GPa"]},2,"{desc}"\n')
     return made, rp, mp
 
 
@@ -250,8 +294,9 @@ def _selftest():
     runs = plan()
     names = [r[0] for r in runs]
     #  기준선 1 + 표A 9(3노브×3수준, 생산값과 겹치는 수준 없음) + 표B 2(1.35 는 기준선이 겸함)
-    chk(f'③ 런 목록 {len(runs)}개 = 1 + 9 + 2', len(runs) == 12)
-    chk('④ 기준선이 **첫 번째** (음성 대조를 먼저 돌린다)', names[0] == 'base')
+    chk(f'③ 런 목록 {len(runs)}개 = 대조2 + 9 + 2', len(runs) == 13)
+    chk('④ ★★ 대조 **둘**이 맨 앞, 빌드 대조가 먼저',
+        names[0] == 'orig_1type' and names[1] == 'base')
     chk('⑤ 생산값과 같은 수준은 중복 생성 안 함 (mu 0.5·E 1.35 없음)',
         'oat_mu_pp0p5' not in names and 'esweep_E1p35' not in names)
     a = [x for x in names if x.startswith('oat_')]
@@ -287,8 +332,22 @@ def _selftest():
     chk('⑯ ★★ 머리말이 type 리팩터와 음성 대조를 경고한다',
         'atom type 1 → 2' in t and '음성 대조' in t)
     #  ★ 러너가 기준선을 먼저 돌리고, 실패하면 멈추는가
-    chk('⑰ ★★ 러너가 기준선 먼저 + 실패 시 중단',
+    chk('⑰ ★★ 러너가 대조 먼저 + 실패 시 중단',
         'in.base.liggghts' in RUNNER and '나머지를 돌리지 않는다' in RUNNER)
+    #  ★★ 빌드 대조 — 출력 경로 말고는 원본과 **한 글자도 달라선 안 된다**
+    o = render('orig_1type', 'x', None, bt)
+    o_body = re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', '', o, count=1)
+    b_body = re.sub(r'^# =+\n(?:#.*\n)*?# =+\n', '', bt, count=1)
+    chk('⑲ ★★ 빌드 대조는 출력 경로만 다르다 (본문 완전 동일)',
+        o_body == b_body.replace('SE_heckel_300', 'oat_orig_1type'))
+    chk('⑳ ★ 빌드 대조는 **1-type 그대로** (create_box 1, 물성 값 1개)',
+        'create_box      1 reg_box' in o and 'poissonsRatio peratomtype 0.30\n' in o
+        and 'primitive type 1 zplane' in o)
+    chk('㉑ ★★ 머리말이 왜 이 런이 필요한지 말한다 (빌드 vs 리팩터 분리)',
+        '빌드 대조' in o and 'type 리팩터' in o and '섞인다' in o)
+    chk('㉒ ★ 러너가 대조 2건을 먼저, 실패 시 중단',
+        'in.orig_1type.liggghts' in RUNNER and 'CONTROLS' in RUNNER
+        and '나머지를 돌리지 않는다' in RUNNER)
     #  ⚠ 원본을 건드리지 않았나
     with open(BASE, encoding='utf-8') as f:
         chk('⑱ ★ 원본 파일은 **읽기만** 했다 (1-type 그대로)',
@@ -309,11 +368,13 @@ if __name__ == '__main__':
         raise SystemExit(_selftest())
     runs = plan()
     print(f'생성할 런 **{len(runs)}개**  (원본: {os.path.relpath(BASE, _ROOT)})\n')
-    print(f'  {"run":26s} {"표":3s} {"mu_pp":>6s} {"mu_pw":>6s} {"COR":>5s} {"E(GPa)":>7s}')
+    print(f'  {"run":26s} {"표":4s} {"mu_pp":>6s} {"mu_pw":>6s} {"COR":>5s} {"E(GPa)":>7s}  types')
     for name, desc, p in runs:
-        tbl = 'A' if name.startswith('oat_') else ('B' if name.startswith('esweep') else '—')
-        print(f'  {name:26s} {tbl:3s} {p["mu_pp"]:6.2f} {p["mu_pw"]:6.2f} '
-              f'{p["cor"]:5.2f} {p["E_GPa"]:7.2f}')
+        tbl = ('A' if name.startswith('oat_') else
+               'B' if name.startswith('esweep') else '대조')
+        q = PROD if p is None else p            # 빌드 대조는 생산값 그대로 (1-type)
+        print(f'  {name:26s} {tbl:4s} {q["mu_pp"]:6.2f} {q["mu_pw"]:6.2f} '
+              f'{q["cor"]:5.2f} {q["E_GPa"]:7.2f}  {"1-type" if p is None else "2-type"}')
     print('\n⚠ 구조 변경 1건: atom type 1 → 2 (벽을 분리해야 mu_pw 가 독립 노브가 된다).')
     print('  ⇒ `base` 런은 **음성 대조**다 — 원본(1-type) porosity 를 재현해야 한다.')
     print('  ⇒ 재현 못 하면 OAT 결과 전체가 무효다.  러너가 기준선을 먼저 돌리고 멈춘다.')
