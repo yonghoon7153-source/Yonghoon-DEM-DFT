@@ -35,7 +35,9 @@ export function GittUpload() {
   const [busy, setBusy] = useState(false)
   const [results, setResults] = useState<Result[]>([])
 
-  const pick = useUploadTarget(results.length)
+  // 파일 이름으로 셀을 만들지 않는다 — 여기서 파일은 셀이 아니라
+  // 셀의 측정이다 (`UploadTargetFields` 머리말).
+  const pick = useUploadTarget(results.length, false)
   const runs = useAsync(() => api.listGittRuns(), [results.length], { live: true })
   const samples = useAsync(() => api.listSamples(), [results.length], { live: true })
 

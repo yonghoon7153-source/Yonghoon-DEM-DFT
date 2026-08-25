@@ -5,10 +5,13 @@
  */
 
 import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { useState } from 'react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
-import { DropZone, cellNameFor } from '../UploadTarget'
+import {
+  DropZone, UploadTargetFields, cellNameFor, useUploadTarget,
+} from '../UploadTarget'
 
 afterEach(() => vi.unstubAllGlobals())
 
@@ -77,5 +80,68 @@ describe('DropZone', () => {
 
     fireEvent.dragLeave(zone)
     expect(zone.className).not.toContain('over')
+  })
+})
+
+
+describe('파일 이름으로 셀 만들기는 충방전만', () => {
+  /** 훅과 화면을 같이 세우는 탐침.  `planFor` 가 무엇을 돌려주는지가
+   *  이 테스트의 본체라 버튼 하나로 눌러서 꺼낸다. */
+  function Probe({ perFileCell }: { perFileCell: boolean }) {
+    const pick = useUploadTarget(0, perFileCell)
+    const [got, setGot] = useState<string>('')
+    return (
+      <>
+        <UploadTargetFields pick={pick} />
+        <button
+          type="button"
+          onClick={async () => {
+            const plan = await pick.planFor([new File(['x'], 'cellA_01_C01.mpr')])
+            setGot(JSON.stringify(plan))
+          }}
+        >
+          계획
+        </button>
+        <output>{got}</output>
+      </>
+    )
+  }
+
+  function installFetch(made: unknown[]) {
+    vi.stubGlobal('fetch', vi.fn(async (_url: string, init?: RequestInit) => {
+      if (init?.method === 'POST') {
+        made.push(JSON.parse(String(init.body)))
+        return new Response(JSON.stringify({ id: 99, name: 'x' }),
+                            { headers: { 'content-type': 'application/json' } })
+      }
+      return new Response('[]', { headers: { 'content-type': 'application/json' } })
+    }))
+  }
+
+  it('충방전에는 체크박스가 있다', async () => {
+    installFetch([])
+    render(<Probe perFileCell />)
+    expect(await screen.findByLabelText('파일 이름을 셀 이름으로')).toBeInTheDocument()
+  })
+
+  it('EIS·GITT 에는 체크박스가 없고, 대신 나중에 붙이라고 말한다', async () => {
+    installFetch([])
+    render(<Probe perFileCell={false} />)
+    await screen.findByLabelText('새 셀 이름')
+    expect(screen.queryByLabelText('파일 이름을 셀 이름으로')).toBeNull()
+    expect(screen.getByText(/나중에 아래 색인에서 붙일 수 있습니다/)).toBeInTheDocument()
+  })
+
+  it('길을 안 열면 셀을 만들지 않는다 — 체크박스만 숨기는 것으로는 부족하다', async () => {
+    // 여기가 실제로 샜던 자리다.  EIS 업로드가 `.mpr` 이름으로 충방전 셀을
+    // 만들어서, EC-Lab 채널 번호까지 붙은 (`..._01_C01`) 파일 0개짜리 셀이
+    // 셀 목록·대시보드·관계셀 고르개에 쌓였다.
+    const made: unknown[] = []
+    installFetch(made)
+    render(<Probe perFileCell={false} />)
+    await screen.findByLabelText('새 셀 이름')
+    await userEvent.click(screen.getByRole('button', { name: '계획' }))
+    await waitFor(() => expect(screen.getByRole('status').textContent).toBe('[null]'))
+    expect(made).toEqual([])
   })
 })

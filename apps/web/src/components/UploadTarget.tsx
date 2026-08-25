@@ -30,6 +30,9 @@ export function cellNameFor(fileName: string): string {
 }
 
 export interface UploadTarget {
+  /** 파일 이름으로 셀을 만드는 길을 열어 둘지.  충방전만 참 — 이유는
+   *  `UploadTargetFields` 머리말에 있다. */
+  perFileCell: boolean
   /** 그룹 · 소그룹.  새 셀이 들어갈 자리이자 아래 목록을 좁히는 조건이다. */
   group: GroupChoice
   newName: string
@@ -51,7 +54,8 @@ export interface UploadTarget {
   planFor: (files: File[]) => Promise<(number | null)[]>
 }
 
-export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
+export function useUploadTarget(reloadKey: unknown = 0,
+                                perFileCell = true): UploadTarget {
   const [newName, setNewName] = useState('')
   const [target, setTarget] = useState<number | null>(null)
   const [query, setQuery] = useState('')
@@ -85,7 +89,9 @@ export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
       return files.map(() => created.id)
     }
 
-    if (!nameFromFile) return files.map(() => null)
+    // 화면이 그 길을 안 열어 두면 여기서도 안 만든다.  체크박스만 숨기면
+    // 남아 있는 state 로 셀이 조용히 만들어질 수 있다.
+    if (!perFileCell || !nameFromFile) return files.map(() => null)
 
     // 같은 이름을 두 번 만들지 않도록 이번 드롭에서 만든 것을 기억한다.
     const madeHere = new Map<string, number>()
@@ -106,9 +112,10 @@ export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
       out.push(created.id)
     }
     return out
-  }, [target, newName, effective, nameFromFile, samples.data])
+  }, [target, newName, effective, nameFromFile, perFileCell, samples.data])
 
   return {
+    perFileCell,
     group, newName, setNewName, target, setTarget,
     query, setQuery, nameFromFile, setNameFromFile,
     samples: samples.data ?? [], matches,
@@ -116,8 +123,21 @@ export function useUploadTarget(reloadKey: unknown = 0): UploadTarget {
   }
 }
 
-/** ① 그룹 · ② 소그룹 · ③ 새 셀 만들기 / 기존 셀에 연결. */
+/** ① 그룹 · ② 소그룹 · ③ 새 셀 만들기 / 기존 셀에 연결.
+ *
+ *  `perFileCell` 은 "파일 이름을 셀 이름으로" 를 낼지다.  충방전에서만 켠다:
+ *  거기서는 파일 하나가 셀 하나인 묶음이 흔해서 (컷오프만 바꾼 열네 개짜리
+ *  같은) 이름을 열네 번 타이핑하지 않게 해 준다.
+ *
+ *  EIS·GITT 에서는 낸 적이 있었고, 그것이 틀렸다.  거기서 파일은 셀이 아니라
+ *  **셀의 측정**이다 — 같은 셀을 SOC 별로 다섯 번 재면 `.mpr` 이 다섯 개고
+ *  셀은 하나다.  게다가 EC-Lab 이 채널 번호를 이름에 붙이므로
+ *  (`..._#02_1_C01`) 만들어진 셀 이름은 그 셀의 `.wrd` 이름과 영영 안 맞는다.
+ *  결과는 파일 0개짜리 충방전 셀이 셀 목록·대시보드·관계셀 고르개에 쌓이는
+ *  것이었다.
+ */
 export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
+  const perFileCell = pick.perFileCell
   // 좁힌 목록에 없는 셀이 골라진 채로 남으면, 화면에는 안 보이는 셀에 파일이
   // 붙는다.  그래서 그룹이 바뀌면 고른 셀을 놓는다.
   const group: GroupChoice = useMemo(() => ({
@@ -146,7 +166,7 @@ export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
 
       <div className="grid cols-2" style={{ gap: 10, margin: '10px 0 12px' }}>
         <Field label="③ 새 셀 만들기"
-               hint={pick.nameFromFile ? '파일마다 셀 하나' : '이름만 입력'}>
+               hint={perFileCell && pick.nameFromFile ? '파일마다 셀 하나' : '이름만 입력'}>
           <input
             type="text"
             value={pick.newName}
@@ -155,21 +175,27 @@ export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
             disabled={pick.target !== null || pick.nameFromFile}
             onChange={(event) => pick.setNewName(event.target.value)}
           />
-          <label className="tiny" style={{ display: 'block', marginTop: 6 }}>
-            <input
-              type="checkbox"
-              checked={pick.nameFromFile}
-              onChange={(event) => {
-                pick.setNameFromFile(event.target.checked)
-                if (event.target.checked) {
-                  pick.setNewName('')
-                  pick.setTarget(null)
-                }
-              }}
-              style={{ marginRight: 6 }}
-            />
-            파일 이름을 셀 이름으로
-          </label>
+          {perFileCell ? (
+            <label className="tiny" style={{ display: 'block', marginTop: 6 }}>
+              <input
+                type="checkbox"
+                checked={pick.nameFromFile}
+                onChange={(event) => {
+                  pick.setNameFromFile(event.target.checked)
+                  if (event.target.checked) {
+                    pick.setNewName('')
+                    pick.setTarget(null)
+                  }
+                }}
+                style={{ marginRight: 6 }}
+              />
+              파일 이름을 셀 이름으로
+            </label>
+          ) : (
+            <span className="tiny faint" style={{ display: 'block', marginTop: 6 }}>
+              안 정해도 됩니다 — 나중에 아래 색인에서 붙일 수 있습니다.
+            </span>
+          )}
         </Field>
         <Field
           label="③ 또는 기존 셀에 연결"
