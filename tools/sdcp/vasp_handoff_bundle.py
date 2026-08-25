@@ -1324,7 +1324,16 @@ def read_outcar(p):
                     break
             else:
                 break
+    # CHGCAR 를 **실제로 읽었는가** — vasp.log 가 아니라 OUTCAR 자체의 마커 (실측):
+    #   ICHARG=1: `initial charge density was supplied:` 만 있고
+    #   ICHARG=2: 그 밑에 `charge density of overlapping atoms calculated`
+    #             (원자에서 새로 만듦) 가 따라온다. 후자가 있으면 파일을 안 읽은 것.
+    _sup = "initial charge density was supplied" in t
+    _atoms = "charge density of overlapping atoms calculated" in t
+    chg_from_file = (True if (_sup and not _atoms) else
+                     False if _atoms else None)
     return {"E0": float(e[-1]) if e else None,
+            "chgcar_from_file": chg_from_file,
             "ionic_conv": "reached required accuracy" in t,
             # ⚠ 정상종료를 안 보면 **잘린 OUTCAR 도 에너지만 있으면 통과**한다
             "normal_end": "General timing and accounting" in t,
@@ -1932,22 +1941,39 @@ def selftest_k() -> int:
         ):
             chk(check_pin(_pin_job(_D / nm, **kw)) == 1, why)
 
-    # ── provenance 스위트 (배포본 상주) ──────────────────────────────────────
+    # ── provenance 스위트 (배포본 상주 · E-6차 계약) ─────────────────────────
+    _OC_FILE = (" vasp.5.4.4 test\n initial charge density was supplied:\n"
+                " keeping initial charge density in first step\n"
+                "  energy(sigma->0) =  -1.0\n General timing and accounting\n")
+    _OC_ATOMS = (" vasp.5.4.4 test\n initial charge density was supplied:\n"
+                 " charge density of overlapping atoms calculated\n"
+                 " keeping initial charge density in first step\n"
+                 "  energy(sigma->0) =  -1.0\n General timing and accounting\n")
+
     def _prov_job(dirp, pv_patch=None, pc_patch=None, skip_disk=(), man_drop=(),
-                  tamper_incar=False):
+                  tamper_incar=False, static_outcar=_OC_FILE, parent_break=False):
         jd = pathlib.Path(dirp)
         (jd / "static_pin").mkdir(parents=True); (jd / "static").mkdir()
-        files = {"POSCAR": "p", "KPOINTS": "k", "static_pin/INCAR": "i1",
-                 "static/INCAR": "i2", "static_pin/KPOINTS": "k",
-                 "static/KPOINTS": "k", "job.json": "{}", "run_job.sh": "r"}
+        base = {"POSCAR": "p", "KPOINTS": "k", "static_pin/INCAR": "i1",
+                "static/INCAR": "i2", "static_pin/KPOINTS": "k",
+                "static/KPOINTS": "k", "run_job.sh": "r"}
         man = {}
-        for f, body in files.items():
+        for f, body in base.items():
             if f not in skip_disk:
                 (jd / f).write_text(body)
             man[f] = hashlib.sha256(body.encode()).hexdigest()
+        # job.json 은 부모 해시를 담아야 하므로 마지막에 (자기 해시는 그 뒤 계산)
+        par = {"POSCAR": ("deadbeef" if parent_break else man["POSCAR"]),
+               "KPOINTS": man["KPOINTS"]}
+        jj = json.dumps({"rescue": {"parent_sha256": par}})
+        if "job.json" not in skip_disk:
+            (jd / "job.json").write_text(jj)
+        man["job.json"] = hashlib.sha256(jj.encode()).hexdigest()
         for f in man_drop:
             man.pop(f, None)
         (jd / "MANIFEST_RESCUE.json").write_text(json.dumps({"sha256": man}))
+        if static_outcar is not None:
+            (jd / "static" / "OUTCAR").write_text(static_outcar)
         rec = {f: man.get(f, "x") for f in ("POSCAR", "KPOINTS",
                                             "static_pin/INCAR", "static/INCAR")}
         rec["POTCAR"] = "pt"
@@ -1955,9 +1981,9 @@ def selftest_k() -> int:
             rec[ph + "/POSCAR"] = rec["POSCAR"]
             rec[ph + "/KPOINTS"] = rec["KPOINTS"]
             rec[ph + "/POTCAR"] = "pt"
-        pv = {"run_id": "r1", "utc": "t", "preflight_problems": [],
+        pv = {"run_id": "20260825T000000Z_host", "utc": "2026-08-25T00:00:00Z",
+              "preflight_problems": [], "inputs_sha256": rec,
               "parent_match": {"POSCAR": True, "KPOINTS": True},
-              "inputs_sha256": rec,
               "chgcar_sha256": {"pin": "aa", "static_copy": "aa", "identical": True},
               "chgcar_read_evidence": ["grid : charge from CHGCAR file"]}
         pv.update(pv_patch or {})
@@ -1971,7 +1997,7 @@ def selftest_k() -> int:
     with tempfile.TemporaryDirectory() as _d:
         _D = pathlib.Path(_d)
         chk(rescue_provenance_ok(_prov_job(_D / "g"))[0] is True,
-            "provenance 양성: 완비 → supersede 허용")
+            "provenance 양성: 완비(OUTCAR 승계 마커 포함) → supersede 허용")
         for nm, kw, why in (
             ("q1", {"pv_patch": {"parent_match": {}}},
              "⛔provenance P0-4: parent_match={} → 거부"),
@@ -1980,27 +2006,30 @@ def selftest_k() -> int:
              "⛔provenance P0-4: identical 거짓 플래그 → sha 직접 비교 거부"),
             ("q3", {"pc_patch": {"chgcar": None}},
              "⛔provenance P0-4: PIN_CHECK 에 CHGCAR sha 없음 → 거부"),
-            ("q4", {"pv_patch": {"chgcar_read_evidence":
-                                 ["ERROR: charge density could not be read"]}},
-             "⛔provenance P0-5: 부정문은 증거가 아니다 → 거부"),
-            ("q5", {"pv_patch": {"chgcar_read_evidence": ["hello"]}},
-             "⛔provenance P0-5(E-5차): 양성 패턴 없는 임의 문자열 → 거부"),
-            ("q6", {"pv_patch": {"chgcar_read_evidence": "NOT_FOUND"}},
-             "⛔provenance P0-5(E-5차): 문자열 타입(문자 단위 순회 함정) → 거부"),
-            ("q7", {"pv_patch": {"preflight_problems": ["bad"]}},
-             "⛔provenance (E-5차): preflight_problems 비어있지 않음 → 거부"),
-            ("q8", {"pv_patch": {"preflight_problems": None}},
-             "⛔provenance (E-5차): preflight 필드 위조/부재 → 거부"),
-            ("q9", {"skip_disk": ("static/INCAR",)},
-             "⛔provenance P0-3(E-5차): 배포 파일이 디스크에 없으면 거부"),
-            ("qa", {"skip_disk": ("static/KPOINTS",)},
+            ("q4", {"static_outcar": _OC_ATOMS},
+             "⛔provenance E-6차: OUTCAR 가 'overlapping atoms 새로 만듦' → 승계 안 됨 거부"),
+            ("q5", {"static_outcar": " vasp.5\n General timing and accounting\n"},
+             "⛔provenance E-6차: 승계 마커 부재(판별 불가) → 거부"),
+            ("q6", {"static_outcar": None},
+             "⛔provenance E-6차: static OUTCAR 자체가 없으면 거부"),
+            ("q7", {"pv_patch": {"chgcar_read_evidence": "NOT_FOUND"}},
+             "⛔provenance P0-5: 문자열 타입(문자 순회 함정) → 형식 거부"),
+            ("q8", {"pv_patch": {"preflight_problems": ["bad"]}},
+             "⛔provenance E-5차: preflight_problems 비어있지 않음 → 거부"),
+            ("q9", {"pv_patch": {"preflight_problems": None}},
+             "⛔provenance E-5차: preflight 필드 위조/부재 → 거부"),
+            ("qa", {"skip_disk": ("static/INCAR",)},
+             "⛔provenance P0-3: 배포 파일 디스크 부재 → 거부"),
+            ("qb", {"skip_disk": ("static/KPOINTS",)},
              "⛔provenance P0-2: phase KPOINTS 디스크 부재 → 거부"),
-            ("qb", {"man_drop": ("static_pin/KPOINTS",)},
+            ("qc", {"man_drop": ("static_pin/KPOINTS",)},
              "⛔provenance: MANIFEST 에 phase KPOINTS 해시 없음 → 거부"),
-            ("qc", {"tamper_incar": True},
+            ("qd", {"tamper_incar": True},
              "⛔provenance: 디스크 INCAR 사후 변조 → 거부"),
-            ("qd", {"pv_patch": {"inputs_sha256": None}},
+            ("qe", {"pv_patch": {"inputs_sha256": None}},
              "⛔provenance P0-3: 실행 기록 해시 없음 → 거부"),
+            ("qf", {"parent_break": True},
+             "⛔provenance E-6차: 배포≠부모 (재계산 사슬) → 기록 불리언과 무관하게 거부"),
         ):
             _r = rescue_provenance_ok(_prov_job(_D / nm, **kw))
             chk(_r[0] is False, f"{why} ({_r[1][:38]})")
@@ -2212,8 +2241,10 @@ def rescue_provenance_ok(jd):
         return False, f"provenance 파싱 실패: {e}"
     if not pc.get("pass"):
         return False, "PIN_CHECK.pass=false"
-    if not (pv.get("run_id") and pv.get("utc")):
-        return False, "run_id/utc 없음"
+    if not re.match(r"^\d{8}T\d{6}Z_\S+$", str(pv.get("run_id") or "")):
+        return False, f"run_id 형식 오류: {pv.get('run_id')!r}"
+    if not re.match(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$", str(pv.get("utc") or "")):
+        return False, f"utc 형식 오류: {pv.get('utc')!r}"
     # ⛔ E-5차 — runner 는 preflight_problems 를 **항상** [] 로 기록한다.
     #   필드 부재(위조 pv)도, 비어있지 않음도 전부 거부다.
     if pv.get("preflight_problems") != []:
@@ -2243,6 +2274,19 @@ def rescue_provenance_ok(jd):
     for f in ("POSCAR", "KPOINTS", "static_pin/INCAR", "static/INCAR"):
         if rec.get(f) != man[f]:
             return False, f"실행 기록 해시 ≠ 배포 해시: {f}"
+    # ⛔ E-6차 — parent_match 는 runner 가 **기록한 불리언**이라 위조 가능하다.
+    #   재계산 사슬로 검증한다: 디스크==배포해시(위에서 확인) 이고, 배포해시==부모해시
+    #   (job.json 은 자체가 해시 앵커됨) 이면 부모 대조가 독립적으로 선다.
+    try:
+        _meta = json.load(open(jd / "job.json"))
+    except ValueError as e:
+        return False, f"job.json 파싱 실패: {e}"
+    _par = ((_meta.get("rescue") or {}).get("parent_sha256") or {})
+    for f in ("POSCAR", "KPOINTS"):
+        if not _par.get(f):
+            return False, f"job.json 에 부모 해시 없음: {f}"
+        if man[f] != _par[f]:
+            return False, f"배포 {f} 가 부모와 다르다 (재계산 대조 실패)"
     # phase 디렉터리 사본 — **VASP 가 실제로 읽는 파일** (P0-2·3)
     for f in ("static_pin/KPOINTS", "static/KPOINTS",
               "static_pin/POSCAR", "static/POSCAR",
@@ -2267,22 +2311,27 @@ def rescue_provenance_ok(jd):
         return False, "PIN_CHECK 에 CHGCAR sha 없음 — 교차검증 불가"
     if ch["pin"] != pc_sha:
         return False, "PIN_CHECK 의 CHGCAR sha 와 provenance 가 다르다 (다른 실행 혼입?)"
-    # charge-read 증거 (P0-5, E-5차 강화) — 세 겹:
-    #   ① 타입: list[str] 이어야 한다. 문자열 "NOT_FOUND" 를 그대로 두면 파이썬이
-    #     **문자 단위로 순회**해 한 글자짜리 '증거' 가 생긴다 (E-5차 재현).
-    #   ② 양성 패턴 필수: charg + (read|from file). 'hello' 같은 임의 문자열은
-    #     부정 마커가 없다는 이유만으로 통과했었다 (E-5차 재현).
-    #   ③ 부정 마커 배제.
-    NEG = re.compile(r"not|error|fail|could|unable|cannot|warn", re.I)
-    # ⚠ 'from CHGCAR file' 처럼 사이에 낱말이 끼는 형이 실제 형이다 — 인접 강제 금지
-    P1, P2 = re.compile(r"charg", re.I), re.compile(r"read|from\s+\S*\s*file", re.I)
+    # ── CHGCAR 승계 증거 (E-6차 전면 교체) ────────────────────────────────
+    #   vasp.log 문자열 게이트는 **블랙리스트 두더지잡기**였다 — 'hello'(양성 패턴
+    #   부재), "NOT_FOUND" 문자순회, 부정문 변형("can't", "skipped", …)이 계속
+    #   나온다. 판별자는 stdout 이 아니라 **회신된 static OUTCAR 자체**에 있다
+    #   (wave1 실측: ICHARG=1 은 `initial charge density was supplied:` 만,
+    #   ICHARG=2 는 그 밑에 `charge density of overlapping atoms calculated`).
+    #   stdout 기록(chgcar_read_evidence)은 정보용으로 강등 — 게이트하지 않되
+    #   타입 오염(str 순회 함정)만은 거부한다.
     ev = pv.get("chgcar_read_evidence")
-    if not isinstance(ev, list) or not all(isinstance(x, str) for x in ev):
-        return False, f"charge-read 증거 형식 오류 (list[str] 아님): {type(ev).__name__}"
-    pos = [x for x in ev if P1.search(x) and P2.search(x) and not NEG.search(x)]
-    if not pos:
-        return False, ("charge-read 양성 증거 없음: "
-                       + (ev[0][:60] if ev else "빈 목록"))
+    if ev is not None and (not isinstance(ev, list)
+                           or not all(isinstance(x, str) for x in ev)):
+        return False, f"chgcar_read_evidence 형식 오류 (list[str] 아님): {type(ev).__name__}"
+    st_oc = read_outcar(str(jd / "static" / "OUTCAR"))
+    if st_oc is None or st_oc.get("read_error"):
+        return False, ("static OUTCAR 판독 불가 — CHGCAR 승계 검증 불가: "
+                       + str((st_oc or {}).get("read_error", "파일 없음")))
+    cff = st_oc.get("chgcar_from_file")
+    if cff is not True:
+        return False, ("static OUTCAR 에 CHGCAR 승계 증거 없음 "
+                       + ("(overlapping atoms 로 새로 만듦 — ICHARG=1 미작동)"
+                          if cff is False else "(마커 부재 — 판별 불가)"))
     return True, "ok"
 
 

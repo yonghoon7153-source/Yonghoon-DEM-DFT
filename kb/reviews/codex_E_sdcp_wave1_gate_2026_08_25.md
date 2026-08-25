@@ -3,7 +3,7 @@ title: "교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 �
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, sdcp, vasp, gate, wave15]
-status: 5차리뷰-반영완료-6차대기
+status: 종결-실행승인(내부 max 리뷰)
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -168,3 +168,46 @@ selftest: check_pin 6건(양2·음4) · provenance 5건(양1·음4) · rescue 17
 부수: 증거 패턴이 `from file` 인접을 강제해 실제 형("from CHGCAR file")을
 놓치던 것을 runner·판정기 **양쪽 동일 패턴**으로 정렬 (배포본 양성 fixture 가 잡았다).
 빌더 MANIFEST_RESCUE 에 phase KPOINTS 2종 추가 (7 → 9 파일).
+
+
+---
+
+## 🏁 E-트랙 종결 (2026-08-25) — 외부 리뷰 토큰 소진, 내부 max 리뷰로 판정
+
+E-6차 판정문이 "이전 P0 두 건 + 부정문 변형 하나" 에서 잘린 채 도착했고 외부
+리뷰는 더 불가. **판정 책임을 내재화**해 전체 사슬을 자체 공격한 뒤 종결한다.
+
+### 마지막 라운드에서 바꾼 것 (v6, zip sha256 979625b4…)
+
+1. **CHGCAR 승계 증거를 stdout grep → OUTCAR 마커로 전면 교체.**
+   wave1 실측(dense=ICHARG1 vs static=ICHARG2 대조): `initial charge density
+   was supplied` + `overlapping atoms calculated` **부재** = 파일 승계.
+   이로써 부정문 블랙리스트 두더지잡기("can't", "skipped", …)와 특이도 없는
+   양성 패턴(`atomic valenz-charges read in` 은 ICHARG=2 에도 있음 — 잘린
+   지적의 정체로 추정) 클래스가 통째로 제거됐다. stdout 기록은 정보용 강등.
+2. **parent_match 불리언 불신** — 재계산 사슬(디스크==배포해시==부모해시,
+   job.json 은 자체 해시앵커)로 독립 검증. 기록 위조 무력화.
+3. run_id/utc 형식 강제.
+
+### 자체 공격 배터리 (배포본 상대, 전부 닫힘)
+
+과거 codex 재현 전건 + 신규: **pin OUTCAR 를 static 에 복사**(ICHARG=2 흔적으로
+검출 — codex 도 안 던진 공격) · **2실행 이어붙임**(마지막 완결 세그먼트만) ·
+.gz 변형 · NOT_FOUND 타입 함정 · 부모 재계산 불일치. 배포본 selftest **53건**.
+
+### 판정: **실행 승인** — 잔여 위험 4건 명시 (은폐하지 않는다)
+
+| 잔여 | 완화 |
+|---|---|
+| 전 산출물(OUTCAR 포함) 일관 위조 | 위협모델 밖 — 실수·스크립트 우회 방지가 목적. OUTCAR 위조까지 가면 어떤 감사도 무력 |
+| MANIFEST_RESCUE 자기서명 부재 (재생성 공격) | 분석은 **우리 트리**(배포 원본)에서 수행 + zip sha 를 kb 에 공표 |
+| check_pin 이 CHGCAR 크기 하한을 안 봄 | 깨진 CHGCAR 는 release VASP 가 즉시 실패 + OUTCAR 마커 게이트가 백스톱 |
+| 외주측 runner 수정 자체는 미검출 | 산출물 게이트(OUTCAR 감사·마커·해시 대조)가 백스톱 — runner 는 편의, 진실은 산출물 |
+
+### 교훈 (다음 외주 패키지의 시작점)
+
+- **검사는 배포본 한 곳에만** — 번들은 배포본을 실행해 개수·rc 만 본다. 같은
+  실수를 두 번 했다(E-2·E-5차).
+- **게이트 입력은 로그 문자열이 아니라 산출물의 구조적 마커** — 블랙리스트는 진다.
+- **기록된 불리언은 증거가 아니다** — 재계산 가능한 것은 재계산한다.
+- 적대 검증을 리뷰어에게 미루지 말 것 — 만들 때 공격 케이스를 같이 만든다.
