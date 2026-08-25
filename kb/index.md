@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 236
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 237
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -24,7 +24,7 @@
 - `kb/physics/vacancy_effects.md` — Vacancy Effects in Argyrodite
 - `kb/physics/vacancy_mechanism_corrected_2026_05_08.md` — Vacancy + Halogen Distribution → Adhesion: Corrected Mechanism
 
-## methodology/ (40)
+## methodology/ (41)
 - `kb/methodology/PHASE1_QUICKSTART_doping.md` — Phase 1 Quickstart Guide
 - `kb/methodology/adhesion_calibration_decision_2026_05_17.md` — Adhesion Calibration Decision — 2026-05-17
 - `kb/methodology/adhesion_energy.md` — Adhesion Energy (Wad) Calculation
@@ -59,6 +59,7 @@
 - `kb/methodology/litdb_shared_branch_convention_2026_08_19.md` — litdb 는 브랜치를 넘어 공유된다 — DEM 세션과 같은 서랍을 쓴다 ○미열람
 - `kb/methodology/llm_wiki_adoption_2026_08_11.md` — LLM 위키 규율 채택 기록 — Karpathy 패턴(llm-wiki-kit 260730)의 이 repo 번안 ○미열람
 - `kb/methodology/md_conductivity_protocol.md` — MD 이온전도도 추출 프로토콜 (논문용 — 고정 설정)
+- `kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md` — microstructure_ml_transfer_to_cascade_2026_08_25 ○미열람
 - `kb/methodology/modelC_v2_slab_fix.md` — modelC v2 Slab Construction — Convention Fix
 - `kb/methodology/nd_vs_O_isolation_campaign_2026_06_18.md` — Nd vs O 분리 — "Nd가 특별한가, O 운반체일 뿐인가" 정량 캠페인
 - `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나 ○미열람
@@ -271,4 +272,4 @@
 ## elements/ — 118개 (생성물/템플릿, 목록 생략)
 ## templates/ — 1개 (생성물/템플릿, 목록 생략)
 
-## litdb/ — digest 178개 (정본 목록: litdb/INDEX.md)
+## litdb/ — digest 180개 (정본 목록: litdb/INDEX.md)
