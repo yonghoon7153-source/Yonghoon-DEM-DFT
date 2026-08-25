@@ -1,0 +1,298 @@
+{
+ "title": "SDCP wave1 — LiNiO2(104) 위 PTFE/SDCP 조각 흡착 (VASP 외주 회신)",
+ "date": "2026-08-25",
+ "wave": "wave1",
+ "bundle": "sdcp_wave1_2026_08_12",
+ "code": "VASP 5.4.4.18Apr17 · potpaw_PBE.54 · PBE+U(Dudarev) · IVDW · LDIPOL",
+ "n_jobs": 30,
+ "n_outcar": 43,
+ "molecule_reference_box": "box24 (box20 대비 0.06–0.32 meV 수렴)",
+ "box_convergence_meV": {
+  "ptfe_c10": 0.07,
+  "ptfe_dimer": 0.06,
+  "sdcp_neutral": 0.32,
+  "sdcp_doped": 0.06
+ },
+ "clean_slab": {
+  "net4": {
+   "E_eV": -944.846393,
+   "basin": "B"
+  },
+  "pm1": {
+   "E_eV": -944.974686,
+   "basin": "A"
+  }
+ },
+ "molecules_eV": {
+  "ptfe_c10": {
+   "box20": -177.970705,
+   "box24": -177.970639
+  },
+  "ptfe_dimer": {
+   "box20": -75.478542,
+   "box24": -75.478599
+  },
+  "sdcp_neutral": {
+   "box20": -205.448886,
+   "box24": -205.448564
+  },
+  "sdcp_doped": {
+   "box20": -200.345288,
+   "box24": -200.345352
+  }
+ },
+ "jobs": [
+  {
+   "job": "tier1/ptfe_c10__fib04vfib04_r090__Litop__afm2424_net4",
+   "fragment": "ptfe_c10",
+   "pose": "Litop",
+   "seed": "net4",
+   "E_total_eV": -1123.278937,
+   "basin": "A",
+   "slab_basin": "B",
+   "basin_consistent": false,
+   "E_ads_eV": -0.4619,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier1/ptfe_c10__fib04vfib04_r090__Litop__afm2424_pm1",
+   "fragment": "ptfe_c10",
+   "pose": "Litop",
+   "seed": "pm1",
+   "E_total_eV": -1123.357704,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.4124,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier1/ptfe_c10__fib04vfib04_r090__Nitop__afm2424_net4",
+   "fragment": "ptfe_c10",
+   "pose": "Nitop",
+   "seed": "net4",
+   "E_total_eV": -1123.178717,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.3617,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier1/ptfe_c10__fib04vfib04_r090__Nitop__afm2424_pm1",
+   "fragment": "ptfe_c10",
+   "pose": "Nitop",
+   "seed": "pm1",
+   "E_total_eV": -1123.307937,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.3626,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier1/ptfe_dimer__fib08vfib08_r180__Litop__afm2424_net4",
+   "fragment": "ptfe_dimer",
+   "pose": "Litop",
+   "seed": "net4",
+   "E_total_eV": -1020.691105,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.3661,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier1/ptfe_dimer__fib08vfib08_r180__Litop__afm2424_pm1",
+   "fragment": "ptfe_dimer",
+   "pose": "Litop",
+   "seed": "pm1",
+   "E_total_eV": -1020.819563,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.3663,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier1/ptfe_dimer__fib08vfib08_r180__Nitop__afm2424_net4",
+   "fragment": "ptfe_dimer",
+   "pose": "Nitop",
+   "seed": "net4",
+   "E_total_eV": -1020.654948,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.33,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier1/ptfe_dimer__fib08vfib08_r180__Nitop__afm2424_pm1",
+   "fragment": "ptfe_dimer",
+   "pose": "Nitop",
+   "seed": "pm1",
+   "E_total_eV": -1020.783492,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.3302,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_doped__fib10vfib10_r000__Litop__afm2424_net4",
+   "fragment": "sdcp_doped",
+   "pose": "Litop",
+   "seed": "net4",
+   "E_total_eV": -1146.112336,
+   "basin": "A",
+   "slab_basin": "B",
+   "basin_consistent": false,
+   "E_ads_eV": -0.9206,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_doped__fib10vfib10_r000__Litop__afm2424_pm1",
+   "fragment": "sdcp_doped",
+   "pose": "Litop",
+   "seed": "pm1",
+   "E_total_eV": -1146.296306,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.9763,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_doped__fib10vfib10_r000__Nitop__afm2424_net4",
+   "fragment": "sdcp_doped",
+   "pose": "Nitop",
+   "seed": "net4",
+   "E_total_eV": -1146.131282,
+   "basin": "A",
+   "slab_basin": "B",
+   "basin_consistent": false,
+   "E_ads_eV": -0.9395,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_doped__fib10vfib10_r000__Nitop__afm2424_pm1",
+   "fragment": "sdcp_doped",
+   "pose": "Nitop",
+   "seed": "pm1",
+   "E_total_eV": -1146.209857,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.8898,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__Litop__afm2424_net4",
+   "fragment": "sdcp_neutral",
+   "pose": "Litop",
+   "seed": "net4",
+   "E_total_eV": -1151.062932,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.768,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__Litop__afm2424_pm1",
+   "fragment": "sdcp_neutral",
+   "pose": "Litop",
+   "seed": "pm1",
+   "E_total_eV": -1151.190751,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7675,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__Nitop__afm2424_net4",
+   "fragment": "sdcp_neutral",
+   "pose": "Nitop",
+   "seed": "net4",
+   "E_total_eV": -1151.103629,
+   "basin": "A",
+   "slab_basin": "B",
+   "basin_consistent": false,
+   "E_ads_eV": -0.8087,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__Nitop__afm2424_pm1",
+   "fragment": "sdcp_neutral",
+   "pose": "Nitop",
+   "seed": "pm1",
+   "E_total_eV": -1151.181486,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7582,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__cross_Li_at_Ni_pose__afm2424_net4",
+   "fragment": "sdcp_neutral",
+   "pose": "cross_Li_at_Ni_pose",
+   "seed": "net4",
+   "E_total_eV": -1151.068361,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7734,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__cross_Li_at_Ni_pose__afm2424_pm1",
+   "fragment": "sdcp_neutral",
+   "pose": "cross_Li_at_Ni_pose",
+   "seed": "pm1",
+   "E_total_eV": -1151.196001,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7728,
+   "flipped_ni_poscar_idx": []
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__cross_Ni_at_Li_pose__afm2424_net4",
+   "fragment": "sdcp_neutral",
+   "pose": "cross_Ni_at_Li_pose",
+   "seed": "net4",
+   "E_total_eV": -1151.057557,
+   "basin": "B",
+   "slab_basin": "B",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7626,
+   "flipped_ni_poscar_idx": [
+    82
+   ]
+  },
+  {
+   "job": "tier2/sdcp_neutral__fib04vfib04_r180__cross_Ni_at_Li_pose__afm2424_pm1",
+   "fragment": "sdcp_neutral",
+   "pose": "cross_Ni_at_Li_pose",
+   "seed": "pm1",
+   "E_total_eV": -1151.18656,
+   "basin": "A",
+   "slab_basin": "A",
+   "basin_consistent": true,
+   "E_ads_eV": -0.7633,
+   "flipped_ni_poscar_idx": []
+  }
+ ]
+}

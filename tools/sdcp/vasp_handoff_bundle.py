@@ -971,6 +971,53 @@ FP_JACCARD = 0.80         # 접촉 지문 겹침 — 경계 원자 하나로 뒤
 AUDIT_KEYS_RUNTIME = ("ENCUT", "ISMEAR", "IVDW", "LREAL", "ISTART", "ICHARG", "LDIPOL",
                       "LASPH", "ADDGRID", "ISYM", "NUPDOWN", "LDAUU", "LDAUTYPE", "IDIPOL")
 
+# ── OUTCAR 되울림 ↔ INCAR 선언 대조 (2026-08-25) ─────────────────────────────
+#   VASP 는 INCAR 표기를 그대로 되울리지 않는다: 520 → `520.0`, `.TRUE.` → `T`,
+#   `Auto` → `T`. 문자열 비교로는 전부 불일치로 잡혀 게이트가 30/30 오탐을 냈다.
+_TRUE = {"T", "TRUE", ".TRUE."}
+_FALSE = {"F", "FALSE", ".FALSE."}
+#   LREAL 은 Auto·On·A·O 가 전부 "실공간" 이고 되울림은 `T` 하나뿐이다.
+_LREAL_REAL = {"AUTO", "A", "ON", "O"} | _TRUE
+_LREAL_RECIP = set(_FALSE)
+
+
+def _echo_val(text, key):
+    """OUTCAR 의 **파라미터 줄**에서 key 의 값을 읽는다 (산문·경고문 제외).
+
+    VASP 파라미터 줄은 행두 공백 몇 칸으로 시작한다(`   ENCUT  =  520.0 eV ...`).
+    권고문·경고 상자는 `|` 로 시작하므로 행두 고정만으로 걸러진다.
+
+    이 함수가 못 하는 것: OUTCAR 가 되울리지 **않는** 키는 영원히 None 이다
+    (호출부에서 INCAR_UNVERIFIED 로 남는다 — 통과가 아니라 미검증이다).
+    """
+    m = re.search(r"^[ \t]{0,8}" + key + r"\s*=\s*([-\w.]+)", text, re.M)
+    return m.group(1) if m else None
+
+
+def _incar_equal(key, got, want):
+    """되울림 got 과 선언 want 가 **같은 값**인가 (표기 차이는 무시).
+
+    이 함수가 못 하는 것: LREAL 의 `Auto` 와 `On` 구분. VASP 는 둘 다 `T` 로만
+    되울리므로 되울림 검증으로는 실공간/역공간까지만 갈라진다. 모르는 표기는
+    통과시키지 않고 **불일치로 남긴다**(느슨하게 푸는 쪽으로 실패하지 않기).
+    """
+    g, w = str(got).strip(), str(want).strip()
+    gu, wu = g.upper(), w.upper()
+    if gu.strip(".") == wu.strip("."):          # .TRUE. ↔ TRUE 도 여기서 걸린다
+        return True
+    if key == "LREAL":
+        known = _LREAL_REAL | _LREAL_RECIP
+        if gu in known and wu in known:
+            return (gu in _LREAL_REAL) == (wu in _LREAL_REAL)
+        return False
+    if gu in _TRUE | _FALSE and wu in _TRUE | _FALSE:
+        return (gu in _TRUE) == (wu in _TRUE)
+    try:                                         # 520.0 ↔ 520 · LDAUU 목록도 원소별
+        gf, wf = [float(x) for x in g.split()], [float(x) for x in w.split()]
+    except ValueError:
+        return False
+    return len(gf) == len(wf) and all(a == b for a, b in zip(gf, wf))
+
 RCOV = {"H": 0.31, "B": 0.84, "C": 0.76, "N": 0.71, "O": 0.66, "F": 0.57,
         "Na": 1.66, "P": 1.07, "S": 1.05, "Cl": 1.02, "Li": 1.28, "Ni": 1.24}
 BOND_F = 1.25             # 결합 = d < BOND_F × (r_i + r_j)
@@ -991,6 +1038,13 @@ SEMICORE = ("_pv", "_sv", "_h", "_s", "_d")
 def _read_text(path):
     try:
         if os.path.isfile(path):
+            # ⛔ 2026-08-25 — `.gz` 경로를 그대로 주면 gzip 바이너리를 errors="ignore"
+            #   로 읽어 **깨진 문자열을 조용히 돌려줬다**. 그러면 모든 정규식이 안
+            #   맞아 E0·NIONS·되울림이 전부 None 이 되는데, None 은 "없음" 으로만
+            #   보여 원인이 안 드러난다. 매직바이트로 판별한다 (확장자 말고).
+            with open(path, "rb") as fh:
+                if fh.read(2) == b"\x1f\x8b":
+                    return gzip.open(path, "rt", errors="ignore").read()
             return open(path, errors="ignore").read()
         if os.path.isfile(path + ".gz"):
             return gzip.open(path + ".gz", "rt", errors="ignore").read()
@@ -1138,9 +1192,12 @@ def read_outcar(p):
             "moments": read_moments(t), "forces": forces,
             "positions": positions,
             "ldau": read_ldau(t),
-            "incar_echo": {k2: (re.search(k2 + r"\s*=\s*([-\w.]+)", t).group(1)
-                                if re.search(k2 + r"\s*=\s*([-\w.]+)", t) else None)
-                           for k2 in AUDIT_KEYS_RUNTIME}}
+            # ⛔ 2026-08-25 (sdcp_wave1 회신) — 이 검색은 **앵커가 없어서 산문도 물었다.**
+            #   분자 박스 OUTCAR 129행의 VASP 권고문
+            #     `|      So try LREAL= Auto  in the INCAR   file.  |`
+            #   이 첫 매치라, 실제 파라미터 줄이 `LREAL = F` 인데도 got="Auto" 가 나와
+            #   `LREAL: Auto!=.FALSE.` 오탐이 났다. 파라미터 줄만 보도록 행두 고정.
+            "incar_echo": {k2: _echo_val(t, k2) for k2 in AUDIT_KEYS_RUNTIME}}
 
 
 def read_poscar(p):
@@ -1666,7 +1723,7 @@ def phase_gates(oc, ph, meta, spec, want_ionic=False):
         got2 = (oc.get("incar_echo") or {}).get(k2)
         if got2 is None:
             g.append(f"INCAR_UNVERIFIED({ph}.{k2})")
-        elif str(got2).strip().upper().rstrip(".") != str(want).strip().upper().rstrip("."):
+        elif not _incar_equal(k2, got2, want):
             g.append(f"INCAR_MISMATCH({ph}.{k2}: {got2}!={want})")
     return g
 
@@ -4052,6 +4109,40 @@ def selftest() -> int:
             "RCOV 사본 일치 (빌더 ↔ 분석기)")
         chk(abs(float(m_r.group(2)) - BOND_F_B) < 1e-12,
             f"BOND_F 사본 일치 ({m_r.group(2)})")
+    # ── INCAR 되울림 대조 (2026-08-25 sdcp_wave1 오탐 30/30 재발 방지) ────────
+    #   양성만 있으면 "전부 True 반환" 도 통과한다 — 음성 경로를 같이 건다.
+    _WARNBOX = ("|      So try LREAL= Auto  in the INCAR   file.        |\n"
+                "|      reciprocal projection scheme  (i.e. LREAL=.FALSE.)  |\n"
+                "   ENCUT  =  520.0 eV  38.22 Ry    6.18 a.u.\n"
+                "   LREAL  =      F    real-space projection\n"
+                "   LDIPOL =      T    correct potential\n")
+    #   ⚠ 이 함수들은 **생성된** analyze_results.py 안에 산다 — 사본을 다시 짜지 말고
+    #     방금 쓴 산출물을 그대로 로드해서 건다 (사본이 갈라지면 검사가 거짓말한다).
+    import importlib.util as _ilu
+    _spec = _ilu.spec_from_file_location("_az_probe", out_sp / "analyze_results.py")
+    _az = _ilu.module_from_spec(_spec)
+    _spec.loader.exec_module(_az)
+    _echo_val, _incar_equal = _az._echo_val, _az._incar_equal
+    chk(_echo_val(_WARNBOX, "LREAL") == "F",
+        "되울림: 권고문(`| So try LREAL= Auto`)이 아니라 파라미터 줄을 읽는다")
+    chk(_echo_val(_WARNBOX, "ENCUT") == "520.0", "되울림: ENCUT 파라미터 줄")
+    chk(_echo_val(_WARNBOX, "NOSUCHKEY") is None,
+        "되울림 ⛔음성: 없는 키는 None (통과가 아니라 미검증으로 남아야 한다)")
+    for _k, _g, _w, _ok, _why in (
+            ("ENCUT", "520.0", "520", True, "520.0 ↔ 520 수치 동일"),
+            ("LDIPOL", "T", ".TRUE.", True, "T ↔ .TRUE."),
+            ("LREAL", "T", "Auto", True, "Auto 는 실공간 → T 로 되울린다"),
+            ("LREAL", "F", ".FALSE.", True, "F ↔ .FALSE."),
+            ("LDAUU", "0.00 4.00 0.00", "0 4 0", True, "목록도 원소별 수치 비교"),
+            # ⛔ 음성 — 여기가 뚫리면 게이트가 의미를 잃는다
+            ("ENCUT", "400.0", "520", False, "⛔ENCUT 실제 차이는 계속 잡힌다"),
+            ("LDIPOL", "F", ".TRUE.", False, "⛔논리값 실제 반전은 계속 잡힌다"),
+            ("LREAL", "F", "Auto", False, "⛔역공간인데 Auto 선언은 실제 차이다"),
+            ("LREAL", "T", "Bogus", False, "⛔모르는 표기는 통과시키지 않는다"),
+            ("LDAUU", "0.00 4.00", "0 4 0", False, "⛔목록 길이가 다르면 불일치"),
+            ("ISMEAR", "0", "1", False, "⛔정수 실제 차이"),
+    ):
+        chk(_incar_equal(_k, _g, _w) is _ok, f"되울림 대조 {_k} {_g}!={_w}: {_why}")
     m_ak = re.search(r"^AUDIT_KEYS_RUNTIME = \((.*?)\)", az, re.M | re.S)
     if m_ak:
         _rk = {x.strip().strip('"') for x in m_ak.group(1).split(",") if x.strip()}
