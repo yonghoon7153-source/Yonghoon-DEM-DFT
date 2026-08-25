@@ -130,10 +130,40 @@ def test_project_rules_survive_official_support():
 
 # ── 라우트 · API ───────────────────────────────────────────────────────
 def test_page_renders(client):
+    """⚠ 제목 문구로 단언하지 않는다 — 문구를 다듬으면 깨지는 나쁜 테스트가 된다
+    (실제로 1판이 그랬다). 화면에 **반드시 있어야 하는 사실**로 건다."""
     r = client.get("/fairchem")
     assert r.status_code == 200
     body = r.data.decode()
-    assert "Fair-Chem" in body and "Our LPSCl Use" in body
+    assert FC.OUR_PINNED["model_id"] in body, "우리가 쓰는 모델이 화면에 없다"
+    assert FC.OUR_PINNED["task"] in body, "우리가 쓰는 task 가 화면에 없다"
+    assert "PBE" in body, "omat 의 기준 DFT 가 화면에 없다 — 이게 없으면 에너지의 정체를 모른다"
+    assert len(body) > 8000, "페이지가 껍데기만 렌더됐다"
+
+
+def test_bans_are_on_the_page(client):
+    """공식이 지원해도 막아 둔 것은 **화면에서** 보여야 한다.
+    db 에만 있고 화면에 없으면 아무도 안 본다."""
+    body = client.get("/fairchem").data.decode()
+    assert "Li₃N" in body or "Li3N" in body, "Li3N 금지가 화면에 없다"
+    assert "Materials Project" in body, "OMat↔MP 혼합 금지가 화면에 없다"
+
+
+def test_pinned_model_is_in_the_official_registry():
+    """[음성] 우리가 고정한 모델이 공식 레지스트리에 없으면 오타이거나
+    upstream 이 내린 것이다 — 조용히 지나가면 안 된다."""
+    ids = {m.get("model_id") for m in FC.entities("models")}
+    assert FC.OUR_PINNED["model_id"] in ids, \
+        f"{FC.OUR_PINNED['model_id']} 가 레지스트리에 없다 (있는 것: {sorted(ids)})"
+
+
+def test_newer_models_are_flagged_not_auto_adopted():
+    """[음성] 더 새 UMA 가 있으면 알리기만 한다 — 핀이 저절로 바뀌면 안 된다."""
+    newer = FC.newer_models()
+    assert FC.OUR_PINNED["model_id"] not in newer, "핀이 '더 새 것' 목록에 섞였다"
+    if newer:
+        body = app.test_client().get("/fairchem").data.decode()
+        assert any(m in body for m in newer), "새 버전이 있는데 화면이 알리지 않는다"
 
 
 def test_api_envelope_shape(client):

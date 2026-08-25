@@ -2,228 +2,226 @@
 {% block title %}Fair-Chem · UMA · DFT{% endblock %}
 {% block content %}
 {#
-  Fair-Chem/UMA 공식 지식 화면.
-  ⚠ 중심 질문이 공식 사이트와 다르다: "무슨 기능이 있나" 가 아니라
-    **"어느 model/task 가 어떤 증거와 적용성 판정을 가졌나"** 다.
-  ⚠ 세 축을 한 배지로 합치지 않는다 — http_status · execution_status · project_status.
-    합치면 200 인데 실행 실패한 튜토리얼이 "정상" 으로 보인다.
-  ⛔ 우리 수치를 여기에 복사하지 않는다. crosswalk 는 FK 이지 값이 아니다.
+  Fair-Chem/UMA 화면.
+  ⛔ 2026-08-25 1판 반성 — entity 를 표로 전부 쏟아부었더니 **읽을 수가 없었다**
+    (모델 13행 · 문서 66행 · 논문 42행). 번들에 뭐가 들었나가 아니라
+    **사람이 실제로 갖는 질문 순서**로 다시 짠다:
+      ① 우리가 뭘 쓰고 있나 → ② 써도 되나·어디까지 → ③ 왜 조심해야 하나
+      → ④ 근거는 어디 → ⑤ 원자료(접어둔다)
+  ⚠ 세 축(http/execution/project)은 여전히 합치지 않는다.
 #}
+<style>
+  .fc-hero{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-start}
+  .fc-pin{flex:1 1 300px;border:2px solid #7c3aed;border-radius:10px;padding:14px 16px;
+          background:linear-gradient(180deg,rgba(124,58,237,.06),transparent)}
+  .fc-pin code{font-size:1.05rem;font-weight:700}
+  .fc-kv{display:grid;grid-template-columns:max-content 1fr;gap:4px 12px;margin-top:8px;
+         font-size:.84rem}
+  .fc-kv dt{color:var(--dim);white-space:nowrap}
+  .fc-ban{border-left:4px solid #be123c;padding:8px 14px;margin:10px 0;background:rgba(190,18,60,.04)}
+  .fc-ban b{display:block;font-size:.95rem}
+  .fc-ban span{font-size:.82rem;color:var(--text2)}
+  .fc-verdict{border:1px solid var(--border);border-left-width:4px;border-radius:8px;
+              padding:10px 14px;margin:9px 0}
+  .fc-v-ok{border-left-color:#0d9488}.fc-v-cond{border-left-color:#c05621}
+  .fc-v-no{border-left-color:#be123c}.fc-v-na{border-left-color:#9ca3af}
+  .fc-pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:.7rem;font-weight:700}
+  .fc-tabs a{display:inline-block;padding:5px 11px;margin:2px 3px 2px 0;border:1px solid var(--border);
+             border-radius:99px;font-size:.8rem;text-decoration:none}
+  .fc-tabs a:hover{background:var(--bg)}
+</style>
+
 <div class="page-header">
   <div><h1>⚛ Fair-Chem · UMA</h1>
-    <div class="sub">공식 스냅샷 + <strong>우리 적용성 판정</strong> ·
-      db/knowledge/fairchem/ (읽기 전용)</div></div>
-  <div class="page-actions">
-    <a class="btn" href="/api/fairchem/v1/manifest">manifest</a>
-    <a class="btn" href="/api/fairchem/v1/integrity">integrity</a>
-    <a class="btn" href="/">▦ Dashboard</a></div>
+    <div class="sub">공식이 <em>무엇을 할 수 있나</em> 가 아니라 —
+      <strong>우리가 무엇을 써도 되나</strong></div></div>
+  <div class="page-actions"><a class="btn" href="/">▦ Dashboard</a></div>
 </div>
 
 {% if not ready %}
 <div class="card" style="border-left:4px solid #be123c">
   <h2>⛔ 번들이 설치되지 않았다</h2>
-  <p><code>db/knowledge/fairchem/_release_manifest.json</code> 이 없다.
-     릴리스 ZIP 을 풀어 <code>db/knowledge/fairchem/</code> 에 넣을 것.</p>
-  <p class="sub">이 화면은 값을 만들지 않는다 — 번들이 없으면 보여줄 것도 없다(빈 표를 지어내지 않는다).</p>
+  <p><code>db/knowledge/fairchem/_release_manifest.json</code> 이 없다.</p>
+  <p class="sub">이 화면은 값을 만들지 않는다 — 번들이 없으면 빈 표를 지어내지 않고 여기서 멈춘다.</p>
 </div>
 {% else %}
 
-{# ── 무결성: 이 화면이 "공식 스냅샷" 이라고 말할 자격이 있나 ─────────────── #}
-{% set ig = summary.integrity %}
-{% if ig.ok %}
-<div class="card" style="border-left:4px solid #0d9488">
-  <strong>✅ 번들 무결성 통과</strong> — sha256 {{ ig.checked }}/{{ ig.declared }} 일치.
-  공식 commit <code>{{ summary.source_commit[:12] }}</code> ({{ summary.commit_time }})
-</div>
-{% else %}
-<div class="card" style="border-left:4px solid #be123c">
-  <h2>⛔ 번들 무결성 실패 — 이 화면의 내용을 공식 스냅샷이라고 인용하지 말 것</h2>
-  {% if ig.mismatch %}<p><strong>내용이 다름 {{ ig.mismatch|length }}건</strong>:
-    {% for f in ig.mismatch[:8] %}<code>{{ f }}</code> {% endfor %}</p>{% endif %}
-  {% if ig.missing %}<p><strong>파일 없음 {{ ig.missing|length }}건</strong>:
-    {% for f in ig.missing[:8] %}<code>{{ f }}</code> {% endfor %}</p>{% endif %}
-</div>
-{% endif %}
-
-{# ── Overview ─────────────────────────────────────────────────────────── #}
+{# ── ① 우리가 쓰는 것 ─────────────────────────────────────────────────── #}
 <div class="card">
-  <h2 id="overview">Overview</h2>
-  <p class="sub">릴리스 <code>{{ summary.release_id }}</code> ·
-     공식 repo 스냅샷을 <strong>링크</strong>로만 들고 있다 (체크포인트·PDF 재배포 없음).</p>
-  <div style="display:flex;flex-wrap:wrap;gap:10px;margin:10px 0">
-    {% for k, v in summary.counts.items() %}
-    <div style="border:1px solid var(--border);border-radius:8px;padding:8px 12px;min-width:104px">
-      <div style="font-size:1.3rem;font-weight:700">{{ v }}</div>
-      <div class="sub" style="font-size:.72rem">{{ k }}</div>
+  <div class="fc-hero">
+    <div class="fc-pin">
+      <div class="sub" style="font-size:.74rem;letter-spacing:.06em">우리가 고정해 쓰는 조합</div>
+      <div style="margin:4px 0"><code>{{ pinned.model_id }}</code>
+        <span style="color:var(--dim)">·</span> <code>{{ pinned.task }}</code></div>
+      <dl class="fc-kv">
+        <dt>왜</dt><dd>{{ pinned.why }}</dd>
+        <dt>MD</dt><dd>{{ pinned.protocol }}</dd>
+        <dt>분석</dt><dd>{{ pinned.analysis }}</dd>
+      </dl>
     </div>
-    {% endfor %}
+    <div style="flex:1 1 300px">
+      <p style="margin-top:0"><strong><code>omat</code> 의 기준계가 우리 에너지의 정체다.</strong></p>
+      {% for t in tasks if t.task_id == pinned.task %}
+      <p style="font-size:.92rem">→ <code>{{ t.reference_method }}</code></p>
+      {% endfor %}
+      <p class="sub" style="font-size:.82rem">
+        즉 UMA 로 뽑은 에너지 차는 <strong>PBE 층위의 값</strong>이지 그보다 높은 이론이 아니다.
+        실험과 나란히 놓을 때 이 한 줄이 근거가 된다.</p>
+      {% if newer %}
+      <p style="font-size:.84rem;color:#c05621">⚠ 레지스트리에 더 새 UMA 가 있다:
+        {% for m in newer %}<code>{{ m }}</code>{% if not loop.last %} · {% endif %}{% endfor %}
+        — <strong>자동으로 올리지 않는다.</strong> 올리면 옛 값과 새 값을 병합하지 말고 전부 다시 뽑는다.</p>
+      {% endif %}
+    </div>
   </div>
-  {% set la = summary.link_audit %}
-  <p>공식 문서 링크 감사: 대상 {{ la.checked }} · HTTP 200 <strong>{{ la.http_200 }}</strong> ·
-     깨짐 <strong style="color:#be123c">{{ la.broken }}</strong> ·
-     렌더 실행오류 <strong style="color:#c05621">{{ la.render_errors }}</strong></p>
-  <p class="sub">⚠ <strong>HTTP 200 · 예제 실행 성공 · 우리 프로젝트 검증</strong>은 서로 다른 축이다.
-     200 이라고 예제가 도는 것도, 예제가 돈다고 우리 계에 쓸 수 있는 것도 아니다.</p>
 </div>
 
-{# ── Our LPSCl Use — 우리 차별점. 위로 올린다 ───────────────────────────── #}
-<div class="card" style="border-left:4px solid #7c3aed">
-  <h2 id="lpscl">Our LPSCl Use — 적용성 판정</h2>
-  <p class="sub">공식 지원이 우리 규율을 덮지 않는다. 아래 <code>project_rule</code> 이 우선한다.</p>
-  <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr>
-    <th>capability</th><th>official task</th><th>우리 용도</th>
-    <th>project_status</th><th>규칙</th></tr></thead><tbody>
+{# ── ② 우리 금지 사항 — 공식 지원이 이걸 덮지 않는다 ────────────────────── #}
+<div class="card" style="border-left:4px solid #be123c">
+  <h2 style="margin-top:0">공식이 지원해도 우리가 막아 둔 것</h2>
+  {% for title, why in bans %}
+  <div class="fc-ban"><b>⛔ {{ title }}</b><span>{{ why }}</span></div>
+  {% endfor %}
+</div>
+
+{# ── ③ 적용성 판정 — 표가 아니라 판정 카드 ──────────────────────────────── #}
+<div class="card">
+  <h2 id="lpscl">우리 계(LPSCl)에 대한 적용성 판정 <span class="sub">{{ crosswalk|length }}건</span></h2>
+  <p class="sub">공식 기능 ↔ 우리 용도를 잇고, <strong>우리 규칙</strong>을 붙였다.
+     여기엔 수치가 없다 — 수치의 정본은 <code>db/properties</code> 다.</p>
   {% for c in crosswalk %}
     {% set st = c.project_status or 'not_assessed' %}
-    <tr>
-      <td>{{ c.capability }}</td>
-      <td><code>{{ c.official_task or '—' }}</code></td>
-      <td>{{ c.project_use }}</td>
-      <td><span style="padding:2px 7px;border-radius:99px;font-size:.72rem;font-weight:700;
-        {% if 'validated' in st %}background:#d1fae5;color:#065f46
-        {% elif st == 'conditional' %}background:#fef9c3;color:#854d0e
-        {% elif 'banned' in st or 'fail' in st %}background:#fee2e2;color:#991b1b
-        {% else %}background:#e5e7eb;color:#374151{% endif %}">{{ st }}</span></td>
-      <td style="font-size:.82rem">{{ c.project_rule }}</td>
-    </tr>
+    {% set cls = 'fc-v-ok' if 'validated' in st else ('fc-v-cond' if st == 'conditional'
+                 else ('fc-v-no' if ('banned' in st or 'fail' in st) else 'fc-v-na')) %}
+    {% set bg  = '#d1fae5;color:#065f46' if 'validated' in st else
+                 ('#fef9c3;color:#854d0e' if st == 'conditional' else
+                 ('#fee2e2;color:#991b1b' if ('banned' in st or 'fail' in st) else '#e5e7eb;color:#374151')) %}
+  <div class="fc-verdict {{ cls }}">
+    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+      <strong>{{ c.capability }}</strong>
+      <span class="fc-pill" style="background:{{ bg }}">{{ st }}</span>
+      {% if c.official_task %}<span class="sub" style="font-size:.74rem">task
+        <code>{{ c.official_task }}</code></span>{% endif %}
+    </div>
+    <div style="font-size:.86rem;margin-top:3px">우리 용도 — {{ c.project_use }}</div>
+    <div style="font-size:.86rem;margin-top:3px;color:var(--text2)">📏 {{ c.project_rule }}</div>
+  </div>
   {% endfor %}
-  </tbody></table></div>
-  <p class="sub">📄 원고 문구는 <code>paper_language</code> 필드에 따로 있다 —
-     <a href="/api/fairchem/v1/lpscl-crosswalk">API</a> 로 확인.</p>
 </div>
 
-{# ── Models & Tasks ───────────────────────────────────────────────────── #}
+{# ── ④ task 기준계 — 왜 섞으면 안 되나 ─────────────────────────────────── #}
 <div class="card">
-  <h2 id="models">Models &amp; Tasks</h2>
-  <p class="sub">⚠ legacy 모델 카탈로그를 current UMA 와 한 표에서 섞지 않는다 —
-     <code>registry_status</code> 로 갈라 보인다.</p>
+  <h2>task 마다 기준 DFT 가 다르다</h2>
+  <p class="sub">이게 이 페이지에서 제일 실수하기 쉬운 지점이다.
+     아래 <code>reference</code> 가 다르면 <strong>두 값의 차이는 물리가 아니라 규약 차이</strong>다.</p>
   <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>model_id</th><th>registry</th><th>repo</th>
-    <th>file</th><th>source</th></tr></thead><tbody>
-  {% for m in models %}
-    <tr>
-      <td><code>{{ m.model_id }}</code></td>
-      <td><span class="sub">{{ m.registry_status }}</span></td>
-      <td style="font-size:.8rem">{{ m.repo_id or '—' }}</td>
-      <td style="font-size:.78rem">{{ m.filename or '—' }}</td>
-      <td style="font-size:.72rem"><code>{{ m.source_path }}</code></td>
-    </tr>
-  {% endfor %}
-  </tbody></table></div>
-
-  <h3 style="margin-top:16px">Tasks — DFT 규약이 task 마다 다르다</h3>
-  <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>task</th><th>domain</th><th>reference method</th>
-    <th>charge/spin</th><th>공식 주의</th></tr></thead><tbody>
+  <table class="tbl"><thead><tr><th>task</th><th>대상</th><th>기준 DFT</th></tr></thead><tbody>
   {% for t in tasks %}
-    <tr><td><code>{{ t.task_id }}</code></td><td>{{ t.domain }}</td>
-      <td style="font-size:.8rem">{{ t.reference_method or '—' }}</td>
-      <td style="font-size:.78rem">{{ t.charge_spin_contract or '—' }}</td>
-      <td style="font-size:.78rem">{{ (t.official_cautions or [])|join(' · ') }}</td></tr>
+    <tr {% if t.task_id == pinned.task %}style="background:rgba(124,58,237,.07);font-weight:600"{% endif %}>
+      <td><code>{{ t.task_id }}</code>{% if t.task_id == pinned.task %} ←우리{% endif %}</td>
+      <td style="font-size:.84rem">{{ t.domain }}</td>
+      <td style="font-size:.82rem"><code>{{ t.reference_method or '—' }}</code></td></tr>
   {% endfor %}
   </tbody></table></div>
-  <p class="sub">⛔ <strong>OMat 에너지를 Materials Project hull 값과 섞지 않는다</strong> —
-     기준계가 다르다. 위 crosswalk 의 <code>lpscl-energy-reference</code> 참조.</p>
+  <p class="sub">예: <code>oc20</code> 는 RPBE 에 분산항이 <strong>없고</strong>,
+     <code>omc</code>·<code>odac</code> 는 PBE+D3 다. 우리 <code>omat</code> 값과 나란히 놓을 수 없다.</p>
 </div>
 
-{# ── Datasets ─────────────────────────────────────────────────────────── #}
+{# ── ⑤ 논문 — 네 단계 ─────────────────────────────────────────────────── #}
 <div class="card">
-  <h2 id="datasets">Datasets &amp; Benchmarks</h2>
-  <div style="overflow-x:auto">
-  <table class="tbl"><thead><tr><th>dataset</th><th>domain</th><th>labels</th>
-    <th>role</th><th>license</th></tr></thead><tbody>
-  {% for d in datasets %}
-    <tr><td><code>{{ d.dataset_id }}</code></td><td>{{ d.domain }}</td>
-      <td style="font-size:.8rem">{{ (d.primary_labels or [])|join(', ') }}</td>
-      <td style="font-size:.8rem">{{ d.role }}</td>
-      <td style="font-size:.75rem">{{ d.license_note or '—' }}</td></tr>
-  {% endfor %}
-  </tbody></table></div>
-  <p class="sub">⚠ 소프트웨어 MIT 와 <strong>gated model/dataset 라이선스는 다르다</strong> —
-     같은 칸에 합치지 않는다.</p>
-</div>
-
-{# ── Papers — 네 단계를 따로 보여준다 ───────────────────────────────────── #}
-<div class="card">
-  <h2 id="papers">Papers ({{ papers|length }})</h2>
-  <p class="sub">⚠ <strong>색인됨 ≠ 읽음 ≠ 그림 확인 ≠ 사람 승인.</strong>
-     네 단계를 하나로 합치면 "읽었다" 가 과장된다.</p>
-  <div style="display:flex;gap:10px;flex-wrap:wrap;margin:8px 0">
+  <h2 id="papers">논문 {{ papers|length }}편</h2>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;margin:8px 0">
+  {% set lab = {'indexed':'색인됨','digest_read':'digest 읽음','figure_reviewed':'그림 확인','human_approved':'사람 승인'} %}
   {% for s in stages %}
-    <div style="border:1px solid var(--border);border-radius:8px;padding:6px 12px">
-      <strong>{{ summary.papers_progress[s] }}</strong> / {{ papers|length }}
-      <span class="sub" style="font-size:.72rem">{{ s }}</span></div>
+    <div style="border:1px solid var(--border);border-radius:8px;padding:7px 14px;text-align:center">
+      <div style="font-size:1.25rem;font-weight:700">{{ summary.papers_progress[s] }}</div>
+      <div class="sub" style="font-size:.72rem">{{ lab[s] }}</div></div>
   {% endfor %}
   </div>
-  <details><summary>논문 42편 목록 (litdb 연결 상태 포함)</summary>
+  <p class="sub">⚠ <strong>색인됨 ≠ 읽음 ≠ 그림 확인 ≠ 승인.</strong> 합치면 "읽었다" 가 과장된다.
+     digest 는 논문 에이전트가 <code>litdb/papers/</code> 에 만들면 자동으로 이어진다
+     — 값을 복사하지 않고 파일 존재만 본다.</p>
+  {% set linked = papers|selectattr('litdb_slug')|list %}
+  {% if linked %}
+  <p><strong>litdb 연결됨:</strong>
+    {% for p in linked %}<a href="/literature">{{ p.litdb_slug }}</a>{% if not loop.last %} · {% endif %}{% endfor %}</p>
+  {% endif %}
+  <details style="margin-top:6px"><summary>전체 목록 보기</summary>
   <div style="overflow-x:auto;margin-top:8px">
-  <table class="tbl"><thead><tr><th>paper_id</th><th>title</th><th>category</th>
-    <th>litdb digest</th><th>링크</th></tr></thead><tbody>
+  <table class="tbl"><thead><tr><th>title</th><th>category</th><th>digest</th><th>링크</th></tr></thead><tbody>
   {% for p in papers %}
-    <tr>
-      <td style="font-size:.74rem"><code>{{ p.paper_id }}</code></td>
-      <td style="font-size:.8rem">{{ p.title }}</td>
+    <tr><td style="font-size:.8rem">{{ p.title }}</td>
       <td class="sub" style="font-size:.74rem">{{ p.category }}</td>
-      <td>{% if p.litdb_slug %}<a href="/literature">✓ {{ p.litdb_slug }}</a>
-          {% else %}<span class="sub">미연결</span>{% endif %}</td>
+      <td>{% if p.litdb_slug %}✓{% else %}<span class="sub">—</span>{% endif %}</td>
       <td style="font-size:.74rem">
         {% if p.arxiv_url %}<a href="{{ p.arxiv_url }}" rel="noopener">arXiv</a>{% endif %}
-        {% if p.doi_url %} <a href="{{ p.doi_url }}" rel="noopener">DOI</a>{% endif %}</td>
-    </tr>
+        {% if p.doi_url %} <a href="{{ p.doi_url }}" rel="noopener">DOI</a>{% endif %}</td></tr>
   {% endfor %}
   </tbody></table></div></details>
-  <p class="sub" style="margin-top:8px">📥 새 논문은 <strong>논문 에이전트(litdb-curator)</strong> 로
-     digest 를 만들면 위 <code>litdb digest</code> 칸이 자동으로 연결된다 —
-     값을 복사하지 않고 <strong>파일 존재</strong>만 본다.</p>
 </div>
 
-{# ── Decisions & Limitations ──────────────────────────────────────────── #}
+{# ── ⑥ 공식 주장 ─────────────────────────────────────────────────────── #}
 <div class="card">
-  <h2 id="claims">Decisions &amp; Limitations</h2>
-  <p class="sub">공식 사실(<code>official_fact</code>)과 우리 해석을 섞지 않는다.</p>
+  <h2 id="claims">공식이 밝힌 사실과 주의 <span class="sub">{{ claims|length }}건</span></h2>
   {% for c in claims %}
   <div style="border-left:3px solid {% if c.claim_type=='official_fact' %}#2563eb{% else %}#c05621{% endif %};
-              padding:6px 12px;margin:10px 0">
-    <div><strong>{{ c.statement }}</strong></div>
-    <div class="sub" style="font-size:.76rem">
-      <code>{{ c.claim_id }}</code> · {{ c.claim_type }} · 허용 용도: {{ c.allowed_use }}
+              padding:5px 12px;margin:9px 0">
+    <div style="font-size:.94rem"><strong>{{ c.statement }}</strong></div>
+    {% if c.caveat %}<div style="font-size:.82rem;color:var(--text2);margin-top:2px">⚠ {{ c.caveat }}</div>{% endif %}
+    <div class="sub" style="font-size:.72rem">{{ c.claim_type }} · 허용 용도 {{ c.allowed_use }}
       · 근거 {{ (c.sources or [])|length }}건</div>
-    {% if c.caveat %}<div style="font-size:.82rem;margin-top:3px">⚠ {{ c.caveat }}</div>{% endif %}
   </div>
   {% endfor %}
 </div>
 
-{# ── Source & Provenance ──────────────────────────────────────────────── #}
+{# ── ⑦ 출처·무결성 — 접어둔다 ─────────────────────────────────────────── #}
 <div class="card">
-  <h2 id="provenance">Source &amp; Provenance</h2>
-  <p>공식 repo: <a href="{{ snap.official_repo }}" rel="noopener">{{ snap.official_repo }}</a>
-     · commit <code>{{ snap.source_commit }}</code></p>
-  <p class="sub">{{ snap.source_commit_subject }}</p>
-  <details><summary>문서 페이지 {{ pages|length }}개 — 상태 세 축을 따로</summary>
-  <div style="overflow-x:auto;margin-top:8px">
-  <table class="tbl"><thead><tr><th>source_path</th><th>제목</th><th>nav</th>
-    <th>TOC</th><th>http</th><th>content</th><th>execution</th></tr></thead><tbody>
-  {% for p in pages %}
-    <tr><td style="font-size:.72rem"><code>{{ p.source_path }}</code></td>
-      <td style="font-size:.78rem">{{ p.title }}</td>
-      <td class="sub" style="font-size:.72rem">{{ p.nav_section or '—' }}</td>
+  <h2 id="provenance">출처 · 무결성</h2>
+  {% set ig = summary.integrity %}
+  {% if ig.ok %}
+    <p>✅ <strong>sha256 {{ ig.checked }}/{{ ig.declared }} 일치</strong> ·
+       공식 commit <code>{{ summary.source_commit[:12] }}</code>
+       <span class="sub">({{ summary.commit_time }})</span></p>
+  {% else %}
+    <p style="color:#be123c">⛔ <strong>무결성 실패 — 이 화면을 공식 스냅샷이라고 인용하지 말 것.</strong>
+      {% if ig.mismatch %}내용 다름 {{ ig.mismatch|length }}건{% endif %}
+      {% if ig.missing %} · 없음 {{ ig.missing|length }}건{% endif %}</p>
+  {% endif %}
+  {% set la = summary.link_audit %}
+  <p class="sub">공식 문서 링크 감사 — 대상 {{ la.checked }} · 200 {{ la.http_200 }} ·
+     깨짐 {{ la.broken }} · 렌더 실행오류 {{ la.render_errors }}.
+     <strong>HTTP 200 · 예제 실행 성공 · 우리 검증</strong>은 서로 다른 축이다.</p>
+  <div class="fc-tabs" style="margin-top:8px">
+    {% for n in ['manifest','integrity','models','tasks','datasets','technologies',
+                 'claims','papers','pages','lpscl-crosswalk'] %}<a
+      href="/api/fairchem/v1/{{ n }}">{{ n }}</a>{% endfor %}
+  </div>
+  <details style="margin-top:10px"><summary>모델 레지스트리 {{ models|length }}개</summary>
+    <div style="overflow-x:auto;margin-top:8px"><table class="tbl">
+    <thead><tr><th>model_id</th><th>repo</th><th>file</th></tr></thead><tbody>
+    {% for m in models %}<tr {% if m.model_id == pinned.model_id %}style="background:rgba(124,58,237,.08);font-weight:600"{% endif %}>
+      <td><code>{{ m.model_id }}</code>{% if m.model_id == pinned.model_id %} ←우리{% endif %}</td>
+      <td style="font-size:.78rem">{{ m.repo_id or '—' }}</td>
+      <td style="font-size:.76rem">{{ m.filename or '—' }}</td></tr>{% endfor %}
+    </tbody></table></div></details>
+  <details><summary>데이터셋 {{ datasets|length }}개</summary>
+    <ul style="margin-top:8px">{% for d in datasets %}
+      <li><code>{{ d.dataset_id }}</code> <span class="sub">({{ d.domain }})</span> — {{ d.role }}
+        {% if d.license_note %}<span class="sub"> · {{ d.license_note }}</span>{% endif %}</li>
+    {% endfor %}</ul></details>
+  <details><summary>공식 문서 {{ pages|length }}쪽 — 상태 세 축</summary>
+    <div style="overflow-x:auto;margin-top:8px"><table class="tbl">
+    <thead><tr><th>source_path</th><th>TOC</th><th>http</th><th>content</th><th>execution</th></tr></thead><tbody>
+    {% for p in pages %}<tr><td style="font-size:.72rem"><code>{{ p.source_path }}</code></td>
       <td>{% if p.in_toc %}✓{% else %}<span class="sub">orphan</span>{% endif %}</td>
       <td>{{ p.http_status or '—' }}</td>
       <td style="font-size:.74rem">{{ p.content_status or '—' }}</td>
-      <td style="font-size:.74rem">{{ p.execution_status }}</td></tr>
-  {% endfor %}
-  </tbody></table></div></details>
-  <details style="margin-top:8px"><summary>라이선스 관측 {{ licenses|length }}건</summary>
+      <td style="font-size:.74rem">{{ p.execution_status }}</td></tr>{% endfor %}
+    </tbody></table></div></details>
+  <details><summary>라이선스 관측 {{ licenses|length }}건</summary>
     <ul style="margin-top:8px">{% for l in licenses %}
       <li><strong>{{ l.subject }}</strong>: {{ l.license }}
-        <span class="sub">— {{ l.scope_note }}</span></li>{% endfor %}</ul>
-  </details>
-  <p class="sub" style="margin-top:10px">
-    API: {% for n in ['manifest','integrity','models','tasks','datasets','technologies',
-                      'claims','papers','pages','lpscl-crosswalk'] %}<a
-      href="/api/fairchem/v1/{{ n }}"><code>{{ n }}</code></a>{% if not loop.last %} · {% endif %}{% endfor %}
-  </p>
+        <span class="sub">— {{ l.scope_note }}</span></li>{% endfor %}</ul></details>
 </div>
 {% endif %}
 {% endblock %}

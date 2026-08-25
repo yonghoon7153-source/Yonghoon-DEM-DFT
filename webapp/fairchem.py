@@ -58,6 +58,43 @@ ENUMS = {
 #: paper 진행은 네 단계를 **따로** 보여준다 (하나로 합치면 '읽었다' 가 과장된다)
 PAPER_STAGES = ["indexed", "digest_read", "figure_reviewed", "human_approved"]
 
+#: 우리가 고정해 쓰는 조합. **번들이 아니라 우리 규율**이라 여기 상수로 둔다
+#:   — 번들(공식 스냅샷)에 우리 결정을 써 넣으면 두 번째 정본이 된다.
+#: 근거: CLAUDE.md(MLIP-MD 규율) · db/properties/li_transport.json
+OUR_PINNED = {
+    "model_id": "uma-s-1p1",
+    "task": "omat",
+    "why": "무기물 계(황화물 SE)라 omat. 모델·task·프로토콜을 함께 고정한다.",
+    "protocol": "Langevin NVT · dt 2 fs · friction 0.02 · equilib 5 ps / prod 200 ps",
+    "analysis": "MSD 창 2–50 ps 고정 · 자유절편 D · 아레니우스 600/800/1000 K",
+}
+
+#: 공식이 지원해도 **우리 쪽에서 막아 둔 것**. 화면 위쪽에 크게 세운다.
+OUR_BANS = [
+    ("UMA 를 Li₃N 에 쓰지 않는다",
+     "2026-06 결정론적 편향 판정. 공식 omat 지원 범위 안이어도 이 금지가 우선한다."),
+    ("OMat 에너지를 Materials Project hull 과 섞지 않는다",
+     "omat 기준계는 PBE/PBE+U(VASP 5.4) 다. MP 의 hull·grand-potential 은 다른 기준계라 "
+     "빼면 그 차이가 물리로 둔갑한다."),
+    # ⚠ 이 문자열은 HTML 로 그대로 렌더된다 — 마크다운 ** 를 쓰면 별표가 화면에 보인다
+    ("MLIP 절대값을 인용하지 않는다 (σ · W_ad)",
+     "같은 프로토콜 안의 순서·비율만 쓴다. 비율도 멀티시드로 판정한 것만."),
+    ("모델 버전을 섞지 않는다",
+     "레지스트리에 uma-s-1p2 · 1p2p1 이 있지만 우리는 1p1 에 고정돼 있다. "
+     "버전을 올리면 옛 값과 새 값을 자동 병합하지 말고 전부 다시 뽑는다."),
+]
+
+
+def newer_models():
+    """레지스트리에 우리 핀보다 새 UMA 가 있나 — 있으면 화면이 알린다(자동 갱신 금지)."""
+    ours = OUR_PINNED["model_id"]
+    out = []
+    for m in entities("models"):
+        mid = m.get("model_id") or ""
+        if mid.startswith("uma-") and mid != ours:
+            out.append(mid)
+    return sorted(out)
+
 
 def _read(name):
     p = os.path.join(FCDIR, name)

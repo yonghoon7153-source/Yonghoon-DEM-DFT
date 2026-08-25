@@ -471,7 +471,8 @@ def fairchem_page():
         crosswalk=FC.crosswalk_rows(), papers=FC.papers_rows(),
         pages=FC.page_status_rows(), audit=FC.blob("live_link_audit"),
         licenses=FC.entities("license_observations"),
-        stages=FC.PAPER_STAGES)
+        stages=FC.PAPER_STAGES, pinned=FC.OUR_PINNED, bans=FC.OUR_BANS,
+        newer=FC.newer_models())
 
 
 @app.route("/api/fairchem/v1/<name>")
