@@ -211,6 +211,14 @@ def main():
     ap.add_argument("--ecutwfc", type=float, default=60)
     ap.add_argument("--ecutrho", type=float, default=480)
     ap.add_argument("--kpoints", default="2 2 1")
+    ap.add_argument("--pseudo_dir",
+                    help="pw.x pseudo_dir. **머신마다 다르다** — gabia "
+                         "/data/work/pseudo · KISTI /scratch/x3430a02/kgy/"
+                         "manuscript_support/pseudo. 안 주면 KISTI 기본값이고, "
+                         "다른 머신에서는 pw.x 가 조용히 죽는다.")
+    ap.add_argument("--allow_offhull_basis", action="store_true",
+                    help="기저 상이 MP hull 위가 아니어도 진행 (기본은 거부). "
+                         "고에너지 다형체를 기저로 쓰면 비교 전체가 그만큼 밀린다.")
     ap.add_argument("--kpoints_phase", default="4 4 4",
                     help="기저 상은 작아서 k 를 더 촘촘히 (기본 4 4 4)")
     a = ap.parse_args()
@@ -236,7 +244,12 @@ def main():
         (out / "in").mkdir(parents=True, exist_ok=True)
         from mp_api.client import MPRester
         from pymatgen.io.ase import AseAtomsAdaptor
+        from generate_dft_inputs import PSEUDOS, PSEUDO_DIR_KISTI
         ad = AseAtomsAdaptor()
+        offhull, need_pp = [], set()
+        pdir = a.pseudo_dir or PSEUDO_DIR_KISTI
+        print(f"pseudo_dir = {pdir}"
+              + ("" if a.pseudo_dir else "   ⚠ 기본값(KISTI) — 다른 머신이면 --pseudo_dir 를 줄 것"))
         with MPRester(key) as mpr:
             for name in DEFAULT_BASIS:
                 docs = mpr.materials.summary.search(
@@ -246,17 +259,55 @@ def main():
                     print(f"  ⛔ {name}: MP 에서 못 찾았다")
                     continue
                 d = min(docs, key=lambda x: x.energy_above_hull)
+                # ⛔ 기저 상이 hull 위가 아니면 그 상의 에너지가 실제보다 높고,
+                #   ΔE_decomp 가 **두 타깃에서 서로 다르게** 밀린다(계수/원자수가
+                #   달라 정확히 상쇄되지 않는다). 조용히 넘기지 않는다.
+                if d.energy_above_hull > 1e-4:
+                    msg = (f"  {'⚠' if a.allow_offhull_basis else '⛔'} {name:<8} "
+                           f"{d.material_id}  MP e_hull {d.energy_above_hull:.4f} "
+                           f"eV/atom — **바닥상태가 아니다** (검색 결과 {len(docs)}건 중 최저)")
+                    print(msg)
+                    if not a.allow_offhull_basis:
+                        offhull.append(name)
+                        continue
                 at = ad.get_atoms(d.structure)
                 (out / "in" / f"{name}.in").write_text(
-                    generate_pwin(at, name, a.ecutwfc, a.ecutrho, a.kpoints_phase))
+                    generate_pwin(at, name, a.ecutwfc, a.ecutrho, a.kpoints_phase,
+                                  pseudo_dir=a.pseudo_dir))
+                need_pp.update(at.get_chemical_symbols())
                 print(f"  ✓ {name:<8} {d.material_id}  {len(at)} atoms  "
                       f"(MP e_hull {d.energy_above_hull:.4f})")
         for t in a.targets:
             at = read(t)
             stem = Path(t).stem
             (out / "in" / f"{stem}.in").write_text(
-                generate_pwin(at, stem, a.ecutwfc, a.ecutrho, a.kpoints))
+                generate_pwin(at, stem, a.ecutwfc, a.ecutrho, a.kpoints,
+                              pseudo_dir=a.pseudo_dir))
+            need_pp.update(at.get_chemical_symbols())
             print(f"  ✓ {stem:<8} {len(at)} atoms  (target)")
+
+        # pseudo 파일이 실제로 있나 — 없으면 pw.x 가 런타임에 죽는다
+        pd = Path(pdir)
+        if pd.is_dir():
+            miss = [PSEUDOS[e][1] for e in sorted(need_pp)
+                    if e in PSEUDOS and not (pd / PSEUDOS[e][1]).is_file()]
+            if miss:
+                print(f"\n  ⛔ pseudo 파일이 {pdir} 에 없다 ({len(miss)}개):")
+                for m in miss:
+                    print(f"       {m}")
+                print(f"     → 파일명이 머신마다 다를 수 있다 "
+                      f"(gabia 는 SSSP 1.3.0). ls {pdir} 로 확인하고 "
+                      f"generate_dft_inputs.py::PSEUDOS 를 맞출 것.")
+            else:
+                print(f"\n  ✓ pseudo {len(need_pp)}종 전부 {pdir} 에 있다")
+        else:
+            print(f"\n  ⚠ pseudo_dir 이 이 머신에 없다({pdir}) — 계산 머신에서 확인할 것")
+
+        if offhull:
+            print(f"\n  ⛔ **기저 상 {len(offhull)}개를 건너뛰었다** (hull 위가 아님): {offhull}")
+            print(f"     이대로면 --collect 가 '상 에너지가 없다' 로 거부한다. "
+                  f"MP 검색을 고치거나 --allow_offhull_basis 로 진행할 것.")
+            return 3
         print(f"\n✓ 입력 → {out/'in'}   (기저 {len(DEFAULT_BASIS)} + 타깃 {len(a.targets)})")
         return 0
 

@@ -84,7 +84,9 @@ PSEUDOS = {
 
 
 def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
-                 kpoints='2 2 1') -> str:
+                 kpoints='2 2 1', pseudo_dir=None) -> str:
+    # ⛔ pseudo_dir 를 KISTI 로 박아두면 다른 머신에서 pw.x 가 조용히 죽는다
+    #   (gabia 는 /data/work/pseudo). 호출부가 줄 수 있게 열어둔다.
     species = sorted(set(atoms.get_chemical_symbols()))
     ntyp = len(species)
     nat = len(atoms)
@@ -101,7 +103,7 @@ def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
     lines.append("    calculation = 'relax'")
     lines.append(f"    prefix      = '{prefix}'")
     lines.append("    outdir      = './tmp'")
-    lines.append(f"    pseudo_dir  = '{PSEUDO_DIR_KISTI}'")
+    lines.append(f"    pseudo_dir  = '{pseudo_dir or PSEUDO_DIR_KISTI}'")
     lines.append("    tprnfor     = .true.")
     lines.append("    tstress     = .true.")
     lines.append("    etot_conv_thr = 1.0d-6")
