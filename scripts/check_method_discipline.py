@@ -887,6 +887,26 @@ L_RUNNER = 'scripts/sdcp_gain_vox015_8arm.sh'
 L_MARKER = 'RUNNER_CONFIG_END'
 
 
+
+#: 러너 축 변수 — 프로브 env 에서 **반드시 걷어낸다** (2026-08-25 kgy 실측: 사용자가
+#: `LEAN=2 bash 러너` 로 부르면 그 env 가 러너→검사기→프로브까지 상속돼 "_std(미지정)"
+#: 프로브가 오염된다 → L_LEANDEFAULT 오탐이 **정상 런을 막았다**).
+#: ⚠ 한 곳에만 고치면 안 된다 — env 를 만드는 함수가 둘(runner_config · runner_extra_flags)
+#:   이라 처음에 한쪽만 고쳤다가 같은 오탐이 남았다.  그래서 헬퍼로 뽑았다.
+_RUNNER_AXES = ('LEAN', 'VOX', 'ARMS', 'SIGMA_PTFE', 'PTFE_STAMP', 'FIBRE_STAMP',
+                'SDCP_SPHERE_D', 'SDCP_YIELD_VGCF', 'SDCP_BRIDGE', 'SIGMA_VGCF_OVERRIDE',
+                'P2_EXTRA', 'EXPECT_PROTOCOL', 'EXPECT_BACKEND', 'OUTDIR', 'BRIDGE_UM')
+
+
+def _hermetic_env(env):
+    """os.environ 에서 러너 축을 전부 걷어낸 뒤 **명시 override 만** 얹는다."""
+    _e = dict(os.environ)
+    for _ax in _RUNNER_AXES:
+        _e.pop(_ax, None)
+    _e.update({k: str(v) for k, v in env.items()})
+    return _e
+
+
 def runner_config(env, runner=None):
     """러너의 **설정 조립부를 실제로 실행**해 조립된 변수를 돌려준다.
 
@@ -909,7 +929,7 @@ def runner_config(env, runner=None):
     #    "기본에서 LEAN_FLAGS 가 비었는가" 를 물을 수 없게 만든다 (초판이 그랬다).
     probe = head + '\n' + '\n'.join(
         'printf "%s=%s\\n" ' + k + ' "${' + k + '-<UNSET>}"' for k in _keys)
-    _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
+    _env = _hermetic_env(env)
     _env.setdefault('MPM_NO_VENV', '1')
     #  ★ 2026-08-25 — 설정부를 `bash -s` 로 돌리면 `BASH_SOURCE` 가 없어 러너가
     #    자기 스크립트 위치를 못 찾는다.  리포에 이미 있는 `P2_SCR` 규약으로 준다.
@@ -957,12 +977,14 @@ def runner_extra_flags(env, runner=None):
            if ('XP=' in ln or 'XP_FLAG=' in ln) and not ln.strip().startswith('#')]
     _seed = ['SIGMA=SIG', 'VOX=0.15', 'BRIDGE_UM=0.48', 'SH=SHIFT', 'FIBRE_STAMP=segment',
              'SD_FLAG=', 'YV_FLAG=', 'PT_FLAG=', 'PS_FLAG=', 'FS_FLAG=',
+             #  ★ SBRG_FLAG = SDCP_BRIDGE 판별 축 (2026-08-25).  조립 줄에 새 변수를 넣으면
+             #    **여기에도 seed 해야 한다** — set -u 프로브가 unbound 로 통째로 죽고,
+             #    그 죽음이 L_LEANDEFAULT('None') 같은 엉뚱한 오류로 위장된다 (실측).
+             'SBRG_FLAG=',
              'LEAN_FLAGS=', 'P2_EXTRA=', 'XP_FLAG=']
     probe = '\n'.join(['set -u', *_seed, *_ep, *_xp,
                         'printf "%s\\n" "' + _lit + '"'])
-    _env = dict(os.environ, **{k: str(v) for k, v in env.items()})
-    _env.pop('EXPECT_PROTOCOL', None)
-    _env.update({k: str(v) for k, v in env.items()})
+    _env = _hermetic_env(env)
     r = _sp.run(['bash', '-s'], input=probe, capture_output=True, text=True,
                 timeout=60, env=_env, cwd=_tf.gettempdir())
     if r.returncode != 0:
@@ -2234,7 +2256,9 @@ def _selftest():
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
         any(x.startswith('L_LEAN2') and 'no-collector' in x for x in _m1))
-    _m2 = _rmut('$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$PS_FLAG$XP_FLAG$FS_FLAG')
+    #  ⚠ 조립 문자열에 SBRG_FLAG(SDCP_BRIDGE 축, 2026-08-25)가 끼면서 리터럴 갱신 —
+    #    변이의 **의도는 불변**(EP_FLAG 를 빼도 검사기가 무는가)
+    _m2 = _rmut('$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$XP_FLAG$FS_FLAG')
     chk(f'L-3: ★★ `$EP_FLAG` 를 인자열에서 빼면 **잡는다** — 변수는 그대로 있고 '
         f'**쓰이지 않을 뿐**이라 grep 으로는 안 보인다 ({len(_m2)}건)',
         any(x.startswith('L_EXPECT') for x in _m2))
@@ -2360,7 +2384,7 @@ def _selftest():
     chk(f'L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 '
         f'아니다 ({len(_m11)}건)',
         any(x.startswith('L_P2EXTRA') for x in _m11))
-    _m7 = _rmut('$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$PS_FLAG$EP_FLAG$FS_FLAG')
+    _m7 = _rmut('$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$EP_FLAG$FS_FLAG')
     chk(f'L-8: ★★ 러너 자기설정 선언(`$XP_FLAG`)이 인자열에서 빠지면 **잡는다** — '
         f'첫 팔의 id 를 베끼면 첫 팔이 진리가 된다 (조건 4) ({len(_m7)}건)',
         any(x.startswith('L_EXPECTPHYS') for x in _m7))

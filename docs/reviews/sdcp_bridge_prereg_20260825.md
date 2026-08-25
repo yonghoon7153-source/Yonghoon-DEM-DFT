@@ -73,9 +73,15 @@ CL-43 이 걸린 함정: *"노브가 vox 하나뿐이라 vox 에 단조인 양�
 # 브리지 off (대조) 와 on 을 같은 침대·같은 origin 8팔로
 ARMS=8 LEAN=2 VOX=0.15  bash scripts/sdcp_gain_vox015_8arm.sh
 ARMS=8 LEAN=2 VOX=0.125 bash scripts/sdcp_gain_vox015_8arm.sh
-ARMS=8 LEAN=2 VOX=0.15  P2_EXTRA="--step3-sdcp-bridge 0.01" bash scripts/sdcp_gain_vox015_8arm.sh
-ARMS=8 LEAN=2 VOX=0.125 P2_EXTRA="--step3-sdcp-bridge 0.01" bash scripts/sdcp_gain_vox015_8arm.sh
+ARMS=8 LEAN=2 VOX=0.15  SDCP_BRIDGE=0.01 bash scripts/sdcp_gain_vox015_8arm.sh
+ARMS=8 LEAN=2 VOX=0.125 SDCP_BRIDGE=0.01 bash scripts/sdcp_gain_vox015_8arm.sh
 ```
+
+> ⚠ **실행 표기 수정 (2026-08-25, 런 전 · 결과 0건 상태)** — 초판의
+> `P2_EXTRA="--step3-sdcp-bridge …"` 는 러너의 P2_EXTRA **허용 목록**(진단·수치 전용)에
+> 막혀 **실행 자체가 불가능했다** (kgy 실측 ABORT).  그 가드가 옳으므로 러너에 정식
+> 물리 축 `SDCP_BRIDGE` 를 만들어 대체했다 (영수증 `sdcp_bridge_um` · 태그 `_sbrg` ·
+> OUTDIR 분리).  **§4 의 가설·판정선·SE 요건은 한 글자도 바뀌지 않았다.**
 ⚠ `sdcp_bridge_um` 은 **규약 축**이라 `physics_protocol_id` 에 들어간다.  브리지 팔과
 대조 팔은 규약 id 가 다르고, 그것이 **정상**이다 (`--expect-differ` 로 등록 축이 실제로
 달라졌는지 검사할 것).

@@ -61,6 +61,20 @@ if [ -n "$SDCP_SPHERE_D" ]; then
   SD_FLAG=" --step3-sdcp-sphere-d $SDCP_SPHERE_D"; SD_TAG="_sph"
   echo "[p2] ★ SDCP **부피-보존 구 스탬프** Ø$SDCP_SPHERE_D µm (점 스탬프가 아니다)"
 fi
+
+#  ★ 판별 축 (2026-08-25, sdcp_bridge_prereg_20260825) — SDCP 접촉 브리지.
+#    P2_EXTRA 허용 목록이 물리 플래그를 막는 것이 **옳으므로**, 사전등록 §7 의
+#    `P2_EXTRA="--step3-sdcp-bridge …"` 표기는 이 축으로 대체된다 (판정선 불변).
+#    ⚠ 기존 `BRIDGE_UM` 은 **AM–AM 접촉 브리지**로 다른 축이다 — 이름을 갈랐다.
+SBRG_FLAG=""; SBRG_TAG=""
+if [ -n "${SDCP_BRIDGE:-}" ]; then
+  case "$SDCP_BRIDGE" in
+    *[!0-9.]*|"") echo "[p2] ABORT — SDCP_BRIDGE 는 µm 숫자여야 한다 (받은 값: $SDCP_BRIDGE)"; exit 2;;
+  esac
+  SBRG_FLAG=" --step3-sdcp-bridge $SDCP_BRIDGE"; SBRG_TAG="_sbrg${SDCP_BRIDGE//./}"
+  echo "[p2] ★ **판별 팔** — SDCP 접촉 브리지 tol=$SDCP_BRIDGE µm.  생산 규약 아님"        "(sdcp_bridge_prereg_20260825 — 진단 전용, 기본 off)"
+fi
+
 # ★★ 2026-08-18 (심층 리뷰 ① H4) — OUTDIR 이 vox·(구/점) 만 구분해서, 같은 vox 를 **다른
 #   브리지·다른 σ** 로 다시 돌리면 `[ -s "$OUT" ] && SKIP` 이 옛 팔을 전부 재사용하고
 #   새 라벨로 보고했다.  판정기의 고정-인자 게이트는 팔들이 **같이 낡았으면** 통과한다.
@@ -213,11 +227,12 @@ LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] 
 _RCPT_JSON="$(python3 - "$SCR" "$VOX" "$BRIDGE_UM" "$FIBRE_STAMP" "${SDCP_SPHERE_D:-}" \
                   "${SDCP_YIELD_VGCF:-0}" "${PTFE_STAMP:-off}" "${SIGMA_PTFE:-}" \
                   "${SIGMA_VGCF_OVERRIDE:-}" \
-                  "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" <<'PYRCPT'
+                  "$PERIODIC_ON" "$ARMS" "${EXPECT_BACKEND:-gpu}" "${SDCP_BRIDGE:-}" <<'PYRCPT'
 import json, os, sys
 sys.path.insert(0, sys.argv[1])
 import run_contract as RC
 _scr, _vox, _br, _fs, _sd, _yv, _ps, _pt, _sg, _per, _arms, _bk = sys.argv[1:13]
+_sbrg = sys.argv[13] if len(sys.argv) > 13 else ''
 vox = float(_vox)
 rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'sdcp_stamp': ('sphere' if _sd else 'point'),
@@ -226,6 +241,8 @@ rec = {'vox_um': vox, 'bridge_um': float(_br), 'fibre_stamp': _fs,
        'periodic_xy': (_per == '1'),
        'arms': int(_arms), 'expect_backend': _bk,
        'origins': [list(o) for o in RC.expected_origins_for(vox)]}
+if _sbrg:
+    rec['sdcp_bridge_um'] = float(_sbrg)   # 판별 축 — 러너가 정한 것만 선언
 if _pt:
     rec['sigma_ptfe_S_cm'] = float(_pt)
 if _sg:
@@ -241,7 +258,7 @@ print(json.dumps(rec, ensure_ascii=False, sort_keys=True))
 PYRCPT
 )" || { echo "[p2] ABORT — 런 영수증을 못 만들었다"; exit 2; }
 _RCPT_TAG="_r$(printf '%s' "$_RCPT_JSON" | python3 -c 'import json,sys; print(json.load(sys.stdin)["receipt_digest"])')"
-OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
+OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}${_RCPT_TAG}}"
 #  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
 #    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
 if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
@@ -252,7 +269,7 @@ fi
 #    production 디렉터리로 가리키는 junction/symlink 를 만들면 문자열 검사는 통과하고
 #    **resolved path 는 production** 이 된다 (Codex 실측).  ⇒ 실경로로 충돌을 본다.
 if [ "$ARMS" -ne 8 ]; then
-  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${LEAN_TAG}"
+  _PROD="$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${SBRG_TAG}${FS_TAG}${LEAN_TAG}"
   mkdir -p "$OUTDIR" 2>/dev/null || true
   _R_OUT="$(cd "$OUTDIR" 2>/dev/null && pwd -P || echo "$OUTDIR")"
   _R_PROD="$([ -d "$_PROD" ] && cd "$_PROD" && pwd -P || echo "$_PROD")"
@@ -292,6 +309,7 @@ else
   printf '%s' "$_RCPT_JSON" > "$OUTDIR/run_receipt.json"
   echo "[p2] 런 영수증 → $OUTDIR/run_receipt.json"
 fi
+
 
 if [ -z "${VIRTUAL_ENV:-}" ] && [ -z "${MPM_NO_VENV:-}" ]; then
   for _v in "$HOME/dem-venv" "$SCR/../venv" "$SCR/../.venv"; do
@@ -435,7 +453,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.
