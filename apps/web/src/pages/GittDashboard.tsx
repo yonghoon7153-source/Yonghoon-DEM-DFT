@@ -70,10 +70,8 @@ export function GittDashboard() {
             <table>
               <thead>
                 <tr>
-                  {/* 이름 다음이 그룹이다 — EIS 대시보드·셀 라이브러리와
-                      같은 순서.  관계셀은 그 다음이다. */}
+                  {/* 그룹·작성자는 이름 칸 안의 이름표다 — EIS 대시보드와 같다. */}
                   <th style={{ textAlign: 'left' }}>이름</th>
-                  <th style={{ textAlign: 'left' }}>그룹</th>
                   <th style={{ textAlign: 'left' }}>관계셀</th>
                   <th>기록</th>
                   <th>펄스</th>
@@ -82,7 +80,6 @@ export function GittDashboard() {
                   <th style={{ textAlign: 'left' }}>없는 것</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>마지막</th>
-                  <th style={{ textAlign: 'left' }}>작성자</th>
                   {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
                       글자가 먼저 읽힌다 -- 셀 라이브러리와 같은 규칙이다. */}
                   <th />
@@ -93,14 +90,26 @@ export function GittDashboard() {
                   <tr key={row.attached ? `s${row.sample_id}` : `f${row.name}`}
                       className={row.attached ? undefined : 'dim'}>
                     <td className="text">
+                      {/* 그룹과 작성자를 이름 앞에 이름표로 — 충방전 대시보드와
+                          같은 모양이다.  열로 따로 두면 이름과 "누구의 어느
+                          묶음인가" 가 표 폭만큼 떨어져, 한 줄을 읽는 데 눈이
+                          세 번 움직인다. */}
+                      {row.group_name ? (
+                        <span className="group-tag"
+                              title={`그룹: ${groupPath(row.group_name, row.group_parent_name)}`}>
+                          {row.group_name}
+                        </span>
+                      ) : null}
+                      {row.owner ? (
+                        <span className="owner-tag" title={`올린 사람: ${row.owner}`}>
+                          {row.owner}
+                        </span>
+                      ) : null}
                       {/* 이름이 곧 그 측정으로 가는 길이다 -- 셀 이름만으로는
                           어느 측정인지 모른다 (파일 이름에 조건이 적혀 있다). */}
                       {row.gitt_id
                         ? <Link to={`/gitt/${row.gitt_id}`}>{row.name}</Link>
                         : (row.name || '—')}
-                    </td>
-                    <td className="text dim">
-                      {groupPath(row.group_name, row.group_parent_name) || '—'}
                     </td>
                     <td className="text">
                       {row.attached
@@ -126,7 +135,6 @@ export function GittDashboard() {
                     </td>
                     <td className="text dim">{row.purposes.join(', ') || '—'}</td>
                     <td className="dim">{dateTime(row.measured_at)}</td>
-                    <td className="text dim">{row.owner || '—'}</td>
                     <td>
                       {/* 셀을 기록에서 내린다.  원본 파일은 남는다 (불변 규칙 2) --
                           같은 바이트를 다시 올리면 sha256 이 같아 되살아난다. */}

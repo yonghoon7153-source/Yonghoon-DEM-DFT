@@ -274,7 +274,29 @@ export function SpectrumDetail() {
         </Card>
       </div>
 
-      <div className="grid cols-2" style={{ marginTop: 14 }}>
+      <div className="fit-row" style={{ marginTop: 14 }}>
+        {/* 왼쪽 기둥: 이 스펙트럼이 무엇의 것인가.  파라미터 표 바로 옆에
+            있어야 "이 값이 어느 셀·어느 면적의 것인가" 를 눈만 옮겨 본다. */}
+        <div className="col" style={{ gap: 14 }}>
+          <Card title="셀" padSmall>
+            <CellFields record={record} onSaved={() => bumpReload((value) => !value)} />
+          </Card>
+          <Card title="측정 정보" padSmall>
+            <KeyValues
+              rows={[
+                ['파일', record.original_name || '—'],
+                ['형식', record.source_format || '—'],
+                ['테크닉', record.technique || '—'],
+                ['주파수', frequencySpan(record)],
+                ['진폭', record.amplitude_mv ? `${record.amplitude_mv} mV` : '—'],
+                ['면적', record.area_cm2_effective
+                  ? `${num(record.area_cm2_effective, 4)} cm²` : '—'],
+                ['올린 때', dateTime(record.uploaded_at)],
+              ]}
+            />
+          </Card>
+        </div>
+
         <Card title="등가회로 피팅">
           <div className="col" style={{ gap: 10 }}>
             <Field label="회로" hint="비우면 이 종류의 기본 회로">
@@ -286,7 +308,7 @@ export function SpectrumDetail() {
                 placeholder="R0-p(R1,CPE1)-p(R2,CPE2)"
               />
             </Field>
-            <div className="col" style={{ gap: 4 }}>
+            <div className="col preset-list" style={{ gap: 4 }}>
               {presets.map((preset) => (
                 <button
                   key={preset.circuit}
@@ -353,25 +375,6 @@ export function SpectrumDetail() {
         <DrtPanel spectrumId={record.id} />
       </div>
 
-      <div className="grid cols-2" style={{ marginTop: 14 }}>
-        <Card title="셀" padSmall>
-          <CellFields record={record} onSaved={() => bumpReload((value) => !value)} />
-        </Card>
-
-        <Card title="측정 정보" padSmall>
-          <KeyValues
-            rows={[
-              ['파일', record.original_name || '—'],
-              ['형식', record.source_format || '—'],
-              ['테크닉', record.technique || '—'],
-              ['주파수', frequencySpan(record)],
-              ['진폭', record.amplitude_mv ? `${record.amplitude_mv} mV` : '—'],
-              ['면적', record.area_cm2_effective ? `${num(record.area_cm2_effective, 4)} cm²` : '—'],
-              ['올린 때', dateTime(record.uploaded_at)],
-            ]}
-          />
-        </Card>
-      </div>
       <div style={{ marginTop: 14 }}>
         <OtherMeasurements sampleId={record.sample_id}
                            exclude={{ kind: 'eis', id: record.id }} />

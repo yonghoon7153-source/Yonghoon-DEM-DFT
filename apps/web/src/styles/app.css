@@ -369,6 +369,17 @@ a:hover { text-decoration: underline; }
 .grid.cols-4 { grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
 
 .split { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: var(--s3); }
+
+/* 임피던스 상세의 가운데 줄: 왼쪽에 셀·측정정보를 세로로 쌓고, 그 옆에 피팅과
+   파라미터.  넷을 2×2 로 두면 셀 카드와 파라미터 표가 서로 다른 줄에 있어
+   "이 값이 어느 셀 것인가" 를 볼 때마다 스크롤이 오르내렸다. */
+.fit-row {
+  display: grid;
+  grid-template-columns: 300px minmax(0, 1fr) minmax(0, 1.25fr);
+  gap: var(--s3);
+  align-items: start;
+}
+@media (max-width: 1400px) { .fit-row { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); } }
 @media (max-width: 1180px) { .split { grid-template-columns: minmax(0, 1fr); } }
 
 /* 추세 그래프 바로 아래 줄: knee 판정과 그 판정을 바꾸는 설정.  그래프를
@@ -560,6 +571,10 @@ button {
   transition: background 0.12s, border-color 0.12s, color 0.12s, transform 0.06s;
 }
 button:hover:not(:disabled) { background: var(--surface-2); border-color: var(--line-strong); }
+/* 설명이 딸린 버튼은 줄바꿈이 필요하다.  `button` 의 nowrap 은 짧은 이름표를
+   위한 것인데, 그 규칙이 회로 프리셋의 두 줄짜리 설명을 오른쪽에서 잘라
+   버렸다 -- 말줄임표도 없어서 문장이 끝난 것처럼 보인다. */
+.preset-list button { white-space: normal; line-height: 1.45; }
 button:active:not(:disabled) { transform: translateY(0.5px); }
 button:disabled { opacity: 0.45; cursor: not-allowed; }
 button.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
@@ -803,6 +818,12 @@ tbody tr:last-child td { border-bottom: none; }
   flex-wrap: wrap;
   gap: 5px;
   padding: var(--s2) var(--s4) var(--s3);
+}
+/* 조각들과 같은 들여쓰기로 세운다.  그래프 왼쪽 모서리에 붙어 있으면 이 버튼이
+   범례의 일부가 아니라 카드에 얹힌 다른 것처럼 보인다. */
+.legend-toggle {
+  align-self: flex-start;
+  margin: var(--s2) var(--s4) 0;
 }
 .legend-chip {
   display: inline-flex;
