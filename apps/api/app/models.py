@@ -307,6 +307,15 @@ class SpectrumRecord(SQLModel, table=True):
     #: "liquid" | "solid".  Not inferred from the data: the two look alike and
     #: only the person who built the cell knows which it was (§0.4).
     kind: str = Field(default="liquid", index=True)
+    #: "sym" | "full" | "half" | "" (모름).  Which cell was measured, which is
+    #: a different question from what the electrolyte was -- and it changes
+    #: what the arcs mean.  A solid **symmetric** cell with ion-blocking
+    #: electrodes shows grain interior and grain boundary; a solid **full**
+    #: cell shows those plus the electrode interfaces, and calling the second
+    #: arc "grain boundary" there is simply wrong.  The file name usually says
+    #: (`..._70um_sym_01`), but a name is a hint, not a record -- so it is
+    #: shown beside the field and the person chooses (ADR 0019).
+    cell_config: str = Field(default="", index=True)
 
     original_name: str = ""
     #: Content hash of the original.  Duplicate uploads are the same row.

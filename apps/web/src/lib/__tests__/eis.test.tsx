@@ -52,6 +52,7 @@ function spectrum(overrides: Partial<Spectrum> = {}): Spectrum {
     sample_name: null,
     name: 'sym_01',
     kind: 'solid',
+    cell_config: 'sym',
     original_name: 'sym_01.mpr',
     sha256: 'abc',
     size_bytes: 2048,
@@ -331,6 +332,75 @@ describe('스펙트럼 상세', () => {
     renderDetail()
     expect(await screen.findByText('유도성 7점 뺌')).toBeInTheDocument()
     expect(screen.getByText('시작점 9/9')).toBeInTheDocument()
+  })
+
+  it('셀 구성을 고르면 저장한다 — 아크의 이름이 여기 걸려 있다', async () => {
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum({ cell_config: 'full' })
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    await userEvent.selectOptions(await screen.findByLabelText('셀 구성'), 'full')
+    await waitFor(() => expect(sent).toEqual({ cell_config: 'full' }))
+  })
+
+  it('이름이 두께를 들고 있으면 옆에 회색으로 적는다 — 채워 넣지는 않는다', async () => {
+    // 이름은 누군가 그렇게 부르기로 한 것이지 기록이 아니다.  오타에서 나온
+    // 전도도는 측정된 것과 똑같이 생겼다.
+    installFetch(detailHandler((url) =>
+      path(url) === '/api/eis/spectra/1'
+        ? detail({ name: '260719_No1_55_70um_sym_01', thickness_um: null })
+        : undefined))
+
+    renderDetail()
+    expect(await screen.findByText('#70µm')).toBeInTheDocument()
+    expect(screen.getByLabelText('두께')).toHaveValue(null)
+  })
+
+  it('이미 그 값이면 힌트를 띄우지 않는다 — 같은 말을 두 번 하지 않는다', async () => {
+    installFetch(detailHandler((url) =>
+      path(url) === '/api/eis/spectra/1'
+        ? detail({ name: '260719_No1_55_70um_sym_01', thickness_um: 70,
+                   cell_config: 'sym' })
+        : undefined))
+
+    renderDetail()
+    await screen.findByLabelText('두께')
+    expect(screen.queryByText('#70µm')).toBeNull()
+    expect(screen.queryByText('#대칭셀')).toBeNull()
+  })
+
+  it('두께를 비우면 지운다', async () => {
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum()
+      }
+      if (path(url) === '/api/eis/spectra/1') return detail({ thickness_um: 70 })
+      return undefined
+    }))
+
+    renderDetail()
+    const input = await screen.findByLabelText('두께')
+    await userEvent.clear(input)
+    await userEvent.tab()
+    await waitFor(() => expect(sent).toEqual({ clear: ['thickness_um'] }))
+  })
+
+  it('전고체 풀셀이면 전도도를 안 낸다고 미리 말한다', async () => {
+    installFetch(detailHandler((url) =>
+      path(url) === '/api/eis/spectra/1'
+        ? detail({ kind: 'solid', cell_config: 'full' })
+        : undefined))
+
+    renderDetail()
+    expect(await screen.findByText(/이온 블로킹 대칭셀에서만/)).toBeInTheDocument()
   })
 
   it('맞추지 못했으면 이유를 낸다', async () => {

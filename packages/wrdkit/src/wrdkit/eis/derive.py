@@ -17,11 +17,19 @@ from dataclasses import dataclass
 
 from .fit import FitResult
 
-__all__ = ["LIQUID", "SOLID", "ArcMeaning", "KINDS", "conductivity",
-           "ionic_conductivity", "label_arcs", "total_resistance"]
+__all__ = ["CONFIGS", "FULL", "HALF", "LIQUID", "SOLID", "SYMMETRIC",
+           "ArcMeaning", "KINDS", "conductivity", "ionic_conductivity",
+           "label_arcs", "total_resistance"]
 
 LIQUID = "liquid"
 SOLID = "solid"
+
+#: Which cell was measured.  A different question from what the electrolyte
+#: was, and it changes what the arcs are.
+SYMMETRIC = "sym"
+FULL = "full"
+HALF = "half"
+CONFIGS = (SYMMETRIC, FULL, HALF)
 
 
 @dataclass
@@ -53,16 +61,55 @@ KINDS: dict[str, dict] = {
         "label": "전고체",
         "series": ("직렬 저항", "배선·접촉 저항 — 전해질 저항이 아닙니다"),
         "arcs": [
-            ("벌크 저항", "R_b — grain 내부 이온 이동 (고주파 아크)"),
-            ("입계 저항", "R_gb — grain boundary 를 넘는 이동 (저주파 아크)"),
+            ("고주파 아크", "이온 블로킹 대칭셀이면 벌크입니다 — 셀 구성을 정해 주세요"),
+            ("저주파 아크", "이온 블로킹 대칭셀이면 입계입니다 — 셀 구성을 정해 주세요"),
             ("세 번째 아크", "전극 계면일 수 있습니다 — 셀 구성을 보고 판단합니다"),
         ],
         "tail": ("이온 블로킹", "리튬이 막혀 생기는 커패시터 거동 — 저항이 아닙니다"),
     },
 }
 
+#: What the arcs are once the **cell** is known as well as the electrolyte.
+#:
+#: Two arcs in a solid symmetric cell with ion-blocking electrodes are grain
+#: interior and grain boundary.  The same two arcs in a solid *full* cell are
+#: not: the electrodes are active, so their interfaces contribute, and the
+#: second arc is at least as likely to be an interface as a boundary.  Naming
+#: it "grain boundary" there and dividing a thickness by it produces an ionic
+#: conductivity for something that is not ionic transport.
+#:
+#: So the specific names appear only where the cell earns them, and where it
+#: does not the label says which question is unanswered (§0.4).
+BY_CONFIG: dict[tuple[str, str], list[tuple[str, str]]] = {
+    (SOLID, SYMMETRIC): [
+        ("벌크 저항", "R_b — grain 내부 이온 이동 (고주파 아크)"),
+        ("입계 저항", "R_gb — grain boundary 를 넘는 이동 (저주파 아크)"),
+        ("세 번째 아크", "전극 계면일 수 있습니다"),
+    ],
+    (SOLID, FULL): [
+        ("전해질 저항", "고체 전해질의 이온 이동 — 벌크와 입계가 합쳐져 보입니다"),
+        ("계면 저항", "전극/전해질 계면 — 풀셀에서는 이것이 저주파 아크를 지배합니다"),
+        ("세 번째 아크", "두 전극 중 어느 쪽인지는 이 측정만으로 못 가릅니다"),
+    ],
+    (SOLID, HALF): [
+        ("전해질 저항", "고체 전해질의 이온 이동"),
+        ("계면 저항", "작동 전극/전해질 계면"),
+        ("세 번째 아크", "상대 전극 쪽일 수 있습니다"),
+    ],
+    (LIQUID, SYMMETRIC): [
+        ("필름 저항", "양쪽 전극이 같으므로 한쪽 값은 절반입니다"),
+        ("계면 저항", "양쪽 전극이 같으므로 한쪽 값은 절반입니다"),
+        ("세 번째 아크", "셀 구성을 보고 판단합니다"),
+    ],
+}
 
-def label_arcs(result: FitResult, kind: str) -> list[ArcMeaning]:
+#: Which (kind, config) pairs let a thickness be divided by a resistance.
+#: Only the ion-blocking symmetric cell: there the arcs *are* the electrolyte,
+#: end to end, which is what a conductivity means.
+CONDUCTIVITY_CONFIGS = {(SOLID, SYMMETRIC)}
+
+
+def label_arcs(result: FitResult, kind: str, config: str = "") -> list[ArcMeaning]:
     """Name each fitted resistance for the cell it came from.
 
     Resistances are taken in circuit order: the first plain ``R`` is the series
@@ -70,11 +117,23 @@ def label_arcs(result: FitResult, kind: str) -> list[ArcMeaning]:
     the fit use, so a circuit written any other way gets the labels its own
     order implies -- and the note says what the label rests on rather than
     asserting a physics we cannot check.
+
+    ``config`` is what the cell was (``sym`` / ``full`` / ``half``).  Without
+    it the solid-electrolyte arcs are named "high-frequency" and
+    "low-frequency" and the note asks for the missing answer, because the same
+    two arcs mean different things in a blocking symmetric cell and in a full
+    cell.
     """
     if kind not in KINDS:
         raise ValueError(f"unknown measurement kind {kind!r}; "
                          f"known: {', '.join(sorted(KINDS))}")
-    scheme = KINDS[kind]
+    if config and config not in CONFIGS:
+        raise ValueError(f"unknown cell configuration {config!r}; "
+                         f"known: {', '.join(CONFIGS)}")
+    scheme = dict(KINDS[kind])
+    specific = BY_CONFIG.get((kind, config))
+    if specific:
+        scheme["arcs"] = specific
     plain = [p for p in result.parameters if "_" not in p.name and p.name[0] == "R"]
     out: list[ArcMeaning] = []
     for i, parameter in enumerate(plain):
@@ -130,7 +189,7 @@ def conductivity(resistance_ohm: float, *, thickness_cm: float | None,
 
 
 def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
-                       area_cm2: float | None) -> dict:
+                       area_cm2: float | None, config: str = SYMMETRIC) -> dict:
     """Bulk, boundary and total ionic conductivity of a solid electrolyte.
 
     The total is what the lecture calls for, and it is **not** the sum of the
@@ -146,10 +205,16 @@ def ionic_conductivity(result: FitResult, *, thickness_cm: float | None,
     are not ionic transport, and dividing a cell thickness by them produces a
     number with the units of a conductivity and the meaning of nothing.
     """
-    arcs = [meaning for meaning in label_arcs(result, SOLID)
+    arcs = [meaning for meaning in label_arcs(result, SOLID, config)
             if meaning.parameter != _series_name(result)]
     out: dict = {"bulk_s_cm": None, "grain_boundary_s_cm": None,
                  "total_s_cm": None, "missing": []}
+    if (SOLID, config) not in CONDUCTIVITY_CONFIGS:
+        # 풀셀의 저주파 아크는 계면이지 전해질이 아니다.  거기에 두께를 나누면
+        # 단위는 S/cm 이고 뜻은 전도도가 아니다.
+        out["missing"].append("이온 블로킹 대칭셀" if config
+                              else "셀 구성 (대칭셀이어야 전도도를 냅니다)")
+        return out
     if not thickness_cm or thickness_cm <= 0:
         out["missing"].append("두께")
     if not area_cm2 or area_cm2 <= 0:

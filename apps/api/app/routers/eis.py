@@ -30,6 +30,7 @@ from wrdkit.eis import (
     read_mpt_text,
     total_resistance,
 )
+from wrdkit.eis.derive import CONFIGS
 
 from .. import storage
 from ..db import get_session
@@ -46,6 +47,10 @@ from ..settings import settings
 router = APIRouter(prefix="/api/eis", tags=["eis"])
 
 KINDS = (LIQUID, SOLID)
+
+#: 무엇을 쟀나.  전해질이 무엇이냐와는 다른 질문이고, 아크의 뜻을 바꾼다 —
+#: 전고체 **대칭셀**의 두 아크는 벌크와 입계지만 **풀셀**의 두 아크는 아니다.
+CELL_CONFIGS = CONFIGS
 
 #: Circuits offered on screen, per measurement kind.  The first is the default.
 #: These are the ones this lab actually uses -- the liquid list comes from the
@@ -90,6 +95,14 @@ def _validate_kind(kind: str) -> str:
     if kind not in KINDS:
         raise HTTPException(422, f"kind must be one of {', '.join(KINDS)}")
     return kind
+
+
+def _validate_config(config: str) -> str:
+    """빈 문자열은 "아직 안 정함" 이다 — 틀린 값이 아니라 없는 값."""
+    if config and config not in CELL_CONFIGS:
+        raise HTTPException(
+            422, f"cell_config must be one of {', '.join(CELL_CONFIGS)} (or empty)")
+    return config
 
 
 def _out(session: Session, record: SpectrumRecord) -> SpectrumOut:
@@ -147,11 +160,15 @@ def circuits():
 @router.get("/spectra", response_model=list[SpectrumOut])
 def list_spectra(session: Session = Depends(get_session),
                  kind: str | None = Query(None),
+                 cell_config: str | None = Query(None),
                  sample_id: int | None = Query(None),
                  search: str | None = Query(None)):
     statement = select(SpectrumRecord)
     if kind:
         statement = statement.where(SpectrumRecord.kind == _validate_kind(kind))
+    if cell_config:
+        statement = statement.where(
+            SpectrumRecord.cell_config == _validate_config(cell_config))
     if sample_id is not None:
         statement = statement.where(SpectrumRecord.sample_id == sample_id)
     records = session.exec(
@@ -221,6 +238,7 @@ async def upload_spectrum(
     settings_file: UploadFile | None = File(None),
     sample_id: int | None = Query(None),
     kind: str = Query(LIQUID),
+    cell_config: str = Query(""),
     session: Session = Depends(get_session),
 ):
     """Store one ``.mpr`` or ``.mpt``, with its ``.mps`` when there is one.
@@ -229,6 +247,7 @@ async def upload_spectrum(
     measurement reaches us from the instrument PC and from somebody's laptop.
     """
     _validate_kind(kind)
+    _validate_config(cell_config)
     if file.size is not None and file.size > settings.max_upload_bytes:
         raise HTTPException(413, f"file is {file.size / 1e6:.0f} MB; the limit is "
                                  f"{settings.max_upload_bytes / 1e6:.0f} MB")
@@ -271,6 +290,7 @@ async def upload_spectrum(
         sample_id=sample_id,
         name=name,
         kind=kind,
+        cell_config=cell_config,
         original_name=file.filename or "",
         sha256=digest,
         size_bytes=len(content),
@@ -304,6 +324,8 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
     values = payload.model_dump(exclude_unset=True, exclude={"clear"})
     if "kind" in values:
         _validate_kind(values["kind"])
+    if "cell_config" in values:
+        values["cell_config"] = _validate_config(values["cell_config"] or "")
     if "name" in values:
         name = (values["name"] or "").strip()
         if not name:
@@ -357,13 +379,14 @@ def _fit_out(session: Session, record: SpectrumRecord,
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
             _ParameterStub(**p) for p in parameters])
-        for meaning in label_arcs(stub, record.kind):
+        for meaning in label_arcs(stub, record.kind, record.cell_config):
             arcs.append({"parameter": meaning.parameter, "label": meaning.label,
                          "note": meaning.note, "value_ohm": meaning.value_ohm,
                          "determined": meaning.determined})
         if record.kind == SOLID:
             conductivity = ionic_conductivity(stub, thickness_cm=thickness_cm,
-                                              area_cm2=area)
+                                              area_cm2=area,
+                                              config=record.cell_config)
         total = total_resistance(stub)
         if total is not None:
             conductivity.setdefault("total_ohm", total)

@@ -1,5 +1,6 @@
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 
+import { NavMenu, type NavSection } from './components/NavMenu'
 import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
 import { Dashboard } from './pages/Dashboard'
@@ -11,12 +12,15 @@ import { Upload } from './pages/Upload'
 
 /** 내비게이션은 **측정 종류**로 묶는다 (ADR 0019).
  *
- *  충방전은 `.wrd`, 임피던스는 `.mpr` 이고 축도 화면도 다르다.  한 줄에 나란히
- *  놓으면 '비교' 와 '스펙트럼' 이 같은 층위로 읽히는데, 하나는 충방전 안의
- *  화면이고 하나는 다른 측정 전체다.  GITT 도 여기 한 칸으로 들어온다. */
-const SECTIONS: { label: string; links: { to: string; label: string }[] }[] = [
+ *  섹션이 셋이 되면서 링크를 한 줄로 늘어놓을 수 없게 됐다.  '비교' 는 충방전
+ *  안의 화면이고 'DRT' 는 다른 측정인데, 한 줄에 나란히 서면 같은 층위로
+ *  읽힌다.  섹션 이름만 두고 그 안은 눌러서 편다.
+ *
+ *  GITT 는 아직 화면이 없다.  메뉴에서 빼는 대신 눌리지 않게 두는 것은,
+ *  무엇이 올지 보이는 편이 "그건 없어요" 를 두 번 말하는 것보다 낫기 때문이다. */
+const SECTIONS: NavSection[] = [
   {
-    label: '충방전',
+    label: '충방전 프로파일 · 사이클',
     links: [
       { to: '/dashboard', label: '대시보드' },
       { to: '/samples', label: '셀 라이브러리' },
@@ -25,8 +29,12 @@ const SECTIONS: { label: string; links: { to: string; label: string }[] }[] = [
     ],
   },
   {
-    label: 'EIS',
+    label: 'EIS · DRT',
     links: [{ to: '/eis', label: '스펙트럼' }],
+  },
+  {
+    label: 'GITT',
+    links: [{ to: '/gitt', label: '확산계수 · pseudo-OCV', soon: true }],
   },
 ]
 
@@ -39,20 +47,8 @@ export function App() {
           Battery Lab Workbench
         </NavLink>
         <nav className="nav">
-          {SECTIONS.map((section, index) => (
-            <span className="nav-section" key={section.label}>
-              {index > 0 ? <span className="nav-divider" aria-hidden="true" /> : null}
-              <span className="nav-label">{section.label}</span>
-              {section.links.map((link) => (
-                <NavLink
-                  key={link.to}
-                  to={link.to}
-                  className={({ isActive }) => (isActive ? 'active' : '')}
-                >
-                  {link.label}
-                </NavLink>
-              ))}
-            </span>
+          {SECTIONS.map((section) => (
+            <NavMenu key={section.label} section={section} />
           ))}
         </nav>
         <span className="spacer" />

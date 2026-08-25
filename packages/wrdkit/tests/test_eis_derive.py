@@ -10,8 +10,10 @@ import pytest
 import synthetic_eis as S
 
 from wrdkit.eis.derive import (
+    FULL,
     LIQUID,
     SOLID,
+    SYMMETRIC,
     conductivity,
     ionic_conductivity,
     label_arcs,
@@ -35,11 +37,36 @@ def fitted(**overrides):
 def test_the_same_fit_gets_different_names_in_the_two_worlds():
     result = fitted()
     liquid = {m.parameter: m.label for m in label_arcs(result, LIQUID)}
-    solid = {m.parameter: m.label for m in label_arcs(result, SOLID)}
+    solid = {m.parameter: m.label for m in label_arcs(result, SOLID, SYMMETRIC)}
     assert liquid["R1"] == "SEI 저항"
     assert liquid["R2"] == "전하이동 저항"
     assert solid["R1"] == "벌크 저항"
     assert solid["R2"] == "입계 저항"
+
+
+def test_a_solid_full_cell_does_not_get_the_symmetric_cell_names():
+    """같은 두 아크가 대칭셀에서는 벌크·입계고 풀셀에서는 아니다.
+
+    풀셀은 전극이 활물질이므로 저주파 아크를 계면이 지배한다.  거기에
+    '입계 저항' 이라는 이름을 붙이고 두께를 나누면, 전도도가 아닌 것에
+    S/cm 이 붙는다.
+    """
+    result = fitted()
+    full = {m.parameter: m.label for m in label_arcs(result, SOLID, FULL)}
+    assert full["R1"] == "전해질 저항"
+    assert full["R2"] == "계면 저항"
+
+
+def test_without_a_cell_configuration_the_solid_arcs_are_not_named():
+    """모르면 모른다고 하고, 무엇을 물어야 하는지 함께 말한다 (§0.4)."""
+    arcs = {m.parameter: m for m in label_arcs(fitted(), SOLID)}
+    assert arcs["R1"].label == "고주파 아크"
+    assert "셀 구성" in arcs["R1"].note
+
+
+def test_an_unknown_cell_configuration_is_refused():
+    with pytest.raises(ValueError, match="unknown cell configuration"):
+        label_arcs(fitted(), SOLID, "coin")
 
 
 def test_the_first_resistance_is_a_series_term_only_when_the_circuit_says_so():
@@ -49,7 +76,7 @@ def test_the_first_resistance_is_a_series_term_only_when_the_circuit_says_so():
                   r2=40.0, q2=1e-3, n2=0.8)
     result = fit_circuit(Spectrum(frequency, z.real, z.imag),
                          "p(R1,CPE1)-p(R2,CPE2)")
-    names = {m.parameter: m.label for m in label_arcs(result, SOLID)}
+    names = {m.parameter: m.label for m in label_arcs(result, SOLID, SYMMETRIC)}
     assert names["R1"] == "벌크 저항"
     assert names["R2"] == "입계 저항"
 
@@ -68,6 +95,21 @@ def test_conductivity_needs_both_a_thickness_and_an_area():
 def test_conductivity_is_length_over_resistance_times_area():
     assert conductivity(100.0, thickness_cm=0.01, area_cm2=0.5) == \
         pytest.approx(0.01 / (100.0 * 0.5))
+
+
+def test_a_full_cell_gets_no_conductivity_at_all():
+    """저주파 아크가 계면이면 그것은 이온 전도가 아니다.  숫자를 내지 않는다."""
+    out = ionic_conductivity(fitted(), thickness_cm=0.007, area_cm2=0.785,
+                             config=FULL)
+    assert out["total_s_cm"] is None
+    assert out["missing"]
+
+
+def test_without_a_cell_configuration_no_conductivity_is_offered():
+    out = ionic_conductivity(fitted(), thickness_cm=0.007, area_cm2=0.785,
+                             config="")
+    assert out["total_s_cm"] is None
+    assert "셀 구성" in " ".join(out["missing"])
 
 
 def test_the_total_ionic_conductivity_comes_from_the_summed_resistance():

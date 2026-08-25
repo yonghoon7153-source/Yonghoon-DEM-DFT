@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { basisAxis, basisUnit, massFromName, nameFamily, num, parseCycleSpec, pct, spread } from '../format'
+import {
+  basisAxis, basisUnit, cellConfigFromName, massFromName, nameFamily, num,
+  parseCycleSpec, pct, spread, thicknessFromName,
+} from '../format'
 
 describe('num', () => {
   it('keeps significant figures rather than decimal places', () => {
@@ -147,5 +150,54 @@ describe('nameFamily', () => {
   it('빈 이름은 빈 문자열', () => {
     expect(nameFamily('')).toBe('')
     expect(nameFamily(null)).toBe('')
+  })
+})
+
+describe('massFromName 의 단어 경계', () => {
+  it('밑줄이 뒤따라도 읽는다 — 밑줄은 단어 문자다', () => {
+    // `\b` 로 쓰면 여기서 조용히 못 읽고, 힌트가 그냥 안 뜬다.
+    expect(massFromName('4.6V_1_17.5mg_repeat')).toBe(17.5)
+  })
+
+  it('다른 단위에 붙은 mg 는 읽지 않는다', () => {
+    expect(massFromName('cell_5mgml')).toBeNull()
+  })
+})
+
+describe('thicknessFromName', () => {
+  it('이름에 적힌 두께를 읽는다', () => {
+    expect(thicknessFromName('260719_No1_55_70um_sym_01')).toBe(70)
+    expect(thicknessFromName('pellet_120 um')).toBe(120)
+    expect(thicknessFromName('pellet_85µm')).toBe(85)
+  })
+
+  it('마지막 것이 이긴다 — 둘을 적었으면 재는 쪽이 뒤에 온다', () => {
+    expect(thicknessFromName('coat_20um_pellet_70um')).toBe(70)
+  })
+
+  it('없으면 없다고 한다', () => {
+    expect(thicknessFromName('No_1_dry_17.5mg')).toBeNull()
+    expect(thicknessFromName(null)).toBeNull()
+  })
+})
+
+describe('cellConfigFromName', () => {
+  it('대칭셀·풀셀·하프셀을 알아본다', () => {
+    expect(cellConfigFromName('260719_No1_55_70um_sym_01')).toBe('sym')
+    expect(cellConfigFromName('LPSCl_symmetric_02')).toBe('sym')
+    expect(cellConfigFromName('NCM_full_cell_03')).toBe('full')
+    expect(cellConfigFromName('Li_half_04')).toBe('half')
+  })
+
+  it('단어 경계를 지킨다 — symmetry 는 대칭셀이 아니다', () => {
+    // 이름을 헐겁게 읽으면 회색 힌트가 틀린 것을 권한다.  힌트는 오타를
+    // 잡으려고 있는 것이므로, 힌트가 틀리면 있느니만 못하다.
+    expect(cellConfigFromName('symmetry_study_01')).toBeNull()
+    expect(cellConfigFromName('fullerene_test')).toBeNull()
+  })
+
+  it('아무 말도 없으면 null 이다', () => {
+    expect(cellConfigFromName('No_1_dry')).toBeNull()
+    expect(cellConfigFromName(undefined)).toBeNull()
   })
 })

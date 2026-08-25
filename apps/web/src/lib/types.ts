@@ -549,6 +549,9 @@ export interface Facets {
 
 /** 같은 두 반원이 무엇으로 불릴지를 정하는 것. */
 export type EisKind = 'liquid' | 'solid'
+/** 무엇을 쟀나.  전해질이 무엇이냐와는 다른 질문이고, 아크의 뜻을 바꾼다 —
+ *  전고체 대칭셀의 두 아크는 벌크와 입계지만 풀셀의 두 아크는 아니다. */
+export type CellConfig = 'sym' | 'full' | 'half'
 
 export interface Spectrum {
   id: number
@@ -556,6 +559,8 @@ export interface Spectrum {
   sample_name: string | null
   name: string
   kind: EisKind
+  /** 빈 문자열은 "아직 안 정함" 이다. */
+  cell_config: CellConfig | ''
   original_name: string
   sha256: string
   size_bytes: number

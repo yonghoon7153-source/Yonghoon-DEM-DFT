@@ -192,6 +192,8 @@ export function Eis() {
                   <th style={{ width: 30 }} />
                   <th style={{ textAlign: 'left' }}>이름</th>
                   <th style={{ textAlign: 'left' }}>셀</th>
+                  <th style={{ textAlign: 'left' }}>셀 구성</th>
+                  <th>두께</th>
                   <th>점</th>
                   <th>주파수</th>
                   <th>피팅</th>
@@ -229,6 +231,12 @@ export function Eis() {
   )
 }
 
+const CONFIG_LABELS: Record<string, string> = {
+  sym: '대칭셀',
+  full: '풀셀',
+  half: '하프셀',
+}
+
 function Row({
   spectrum,
   checked,
@@ -258,6 +266,10 @@ function Row({
           '—'
         )}
       </td>
+      {/* 아크의 이름과 전도도가 이 두 칸에 걸려 있다.  표에서 비어 있는 것이
+          보여야 채우러 들어간다. */}
+      <td className="text dim">{CONFIG_LABELS[spectrum.cell_config] ?? '—'}</td>
+      <td className="dim">{spectrum.thickness_um ? `${spectrum.thickness_um} µm` : '—'}</td>
       <td>{spectrum.n_points}</td>
       <td className="dim">{frequencySpan(spectrum)}</td>
       <td>{spectrum.fit_count || '—'}</td>

@@ -104,11 +104,56 @@ export function basisUnit(basis: string): string {
 export function massFromName(name: string | null | undefined): number | null {
   if (!name) return null
   let found: number | null = null
-  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*mg\b/gi)) {
+  // 두께와 같은 이유로 `\b` 를 쓰지 않는다: `17.5mg_2` 의 `mg` 뒤는 밑줄이고,
+  // 밑줄은 단어 문자라 경계가 아니다.
+  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*mg(?![a-z0-9])/gi)) {
     const value = Number(match[1])
     if (Number.isFinite(value) && value > 0) found = value
   }
   return found
+}
+
+/** Thickness the file name mentions, in micrometres.
+ *
+ * Same bargain as `massFromName`: the instrument does not record how thick the
+ * pellet was, so somebody types it -- and this lab already writes it into the
+ * name (`260719_No1_55_70um_sym_01`).  Shown beside the field as a reference,
+ * never filled in silently: a name is what somebody meant to call the file,
+ * and a conductivity computed from a typo looks exactly like a measured one.
+ *
+ * The last match wins, as with mass: a name that mentions two thicknesses puts
+ * the one being measured last. */
+export function thicknessFromName(name: string | null | undefined): number | null {
+  if (!name) return null
+  let found: number | null = null
+  // `\b` 가 아니라 `(?![a-z0-9])` 다.  밑줄은 JS 정규식에서 **단어 문자**라
+  // `70um_sym` 의 `um` 뒤에는 단어 경계가 없다 — 이 랩의 이름이 거의 다 그
+  // 모양이므로, `\b` 로 쓰면 힌트가 거의 안 뜬다.
+  for (const match of name.matchAll(/(\d+(?:\.\d+)?)\s*(um|µm|μm)(?![a-z0-9])/gi)) {
+    const value = Number(match[1])
+    if (Number.isFinite(value) && value > 0) found = value
+  }
+  return found
+}
+
+/** Cell configuration the file name mentions.
+ *
+ * `sym` for a symmetric cell, `full` for a full cell, `half` for a half cell.
+ * `null` when the name does not say -- which is most names, and is why this is
+ * a hint next to a control rather than the control's value.
+ *
+ * Word boundaries matter: `symmetry` is not `sym`, and a cell called
+ * `LiFull_01` should not be read as a full cell because of a capital F. */
+export function cellConfigFromName(
+  name: string | null | undefined,
+): 'sym' | 'full' | 'half' | null {
+  if (!name) return null
+  const text = name.toLowerCase()
+  const has = (pattern: RegExp) => pattern.test(text)
+  if (has(/(^|[^a-z])sym(m|metric|metrical)?([^a-z]|$)/)) return 'sym'
+  if (has(/(^|[^a-z])half([^a-z]|$)/)) return 'half'
+  if (has(/(^|[^a-z])full(cell)?([^a-z]|$)/)) return 'full'
+  return null
 }
 
 /** The part of a cell name shared by its replicates.

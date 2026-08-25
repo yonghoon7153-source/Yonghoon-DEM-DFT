@@ -12,9 +12,11 @@ import { Link, useParams } from 'react-router-dom'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
-import { dateTime, num, seriesColor } from '../lib/format'
+import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
+  from '../lib/format'
 import { useAsync } from '../lib/hooks'
-import type { CircuitKind, EisKind, SpectrumFit } from '../lib/types'
+import type { CellConfig, CircuitKind, EisKind, SpectrumDetail as Detail, SpectrumFit }
+  from '../lib/types'
 import { frequencySpan, hertz } from './Eis'
 
 const KIND_LABEL: Record<EisKind, string> = { liquid: '액체 전해질', solid: '전고체' }
@@ -245,7 +247,11 @@ export function SpectrumDetail() {
         </Card>
       </div>
 
-      <div style={{ marginTop: 14 }}>
+      <div className="grid cols-2" style={{ marginTop: 14 }}>
+        <Card title="셀" padSmall>
+          <CellFields record={record} onSaved={() => bumpReload((value) => !value)} />
+        </Card>
+
         <Card title="측정 정보" padSmall>
           <KeyValues
             rows={[
@@ -254,7 +260,6 @@ export function SpectrumDetail() {
               ['테크닉', record.technique || '—'],
               ['주파수', frequencySpan(record)],
               ['진폭', record.amplitude_mv ? `${record.amplitude_mv} mV` : '—'],
-              ['두께', record.thickness_cm ? `${(record.thickness_cm * 1e4).toFixed(1)} µm` : '—'],
               ['면적', record.area_cm2_effective ? `${num(record.area_cm2_effective, 4)} cm²` : '—'],
               ['올린 때', dateTime(record.uploaded_at)],
             ]}
@@ -430,4 +435,118 @@ function parallelRCpe(r: number, q: number, n: number, w: number): [number, numb
   const denominator = yr * yr + yi * yi
   if (!denominator) return [0, 0]
   return [yr / denominator, -yi / denominator]
+}
+
+
+const CONFIG_OPTIONS: { value: CellConfig | ''; label: string }[] = [
+  { value: '', label: '— 안 정함' },
+  { value: 'sym', label: '대칭셀' },
+  { value: 'full', label: '풀셀' },
+  { value: 'half', label: '하프셀' },
+]
+
+const CONFIG_LABEL: Record<string, string> = {
+  sym: '대칭셀', full: '풀셀', half: '하프셀', '': '안 정함',
+}
+
+/** 셀 구성과 두께 — 아크의 이름과 전도도가 여기에 걸려 있다.
+ *
+ *  이름에 대개 적혀 있지만(`..._70um_sym_01`) 채워 넣지는 않는다.  이름은
+ *  누군가 그렇게 부르기로 한 것이지 기록이 아니고, 오타에서 나온 전도도는
+ *  측정된 것과 똑같이 생겼다.  활물질 질량과 같은 방식으로 `#` 참고 표시만
+ *  옆에 둔다.
+ */
+function CellFields({
+  record,
+  onSaved,
+}: {
+  record: Detail
+  onSaved: () => void
+}) {
+  const [error, setError] = useState<string | null>(null)
+  const [busy, setBusy] = useState(false)
+  const [thickness, setThickness] = useState(
+    record.thickness_um === null ? '' : String(record.thickness_um),
+  )
+
+  const namedThickness = thicknessFromName(record.name) ?? thicknessFromName(record.original_name)
+  const namedConfig = cellConfigFromName(record.name) ?? cellConfigFromName(record.original_name)
+
+  async function save(body: Record<string, unknown>) {
+    setBusy(true)
+    setError(null)
+    try {
+      await api.updateSpectrum(record.id, body)
+      onSaved()
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : String(cause))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  return (
+    <div className="col" style={{ gap: 9 }}>
+      {error ? <Alert kind="error">{error}</Alert> : null}
+
+      <Field
+        label="셀 구성"
+        hint="아크의 이름을 정합니다"
+        note={
+          namedConfig && namedConfig !== record.cell_config ? (
+            <span title="파일 이름에 적힌 값">#{CONFIG_LABEL[namedConfig]}</span>
+          ) : undefined
+        }
+      >
+        <select
+          aria-label="셀 구성"
+          value={record.cell_config}
+          disabled={busy}
+          onChange={(event) => void save({ cell_config: event.target.value })}
+        >
+          {CONFIG_OPTIONS.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+      </Field>
+
+      <Field
+        label="두께"
+        hint="µm · 전도도의 분자 · Enter 로 적용"
+        note={
+          namedThickness !== null && namedThickness !== record.thickness_um ? (
+            <span title="파일 이름에 적힌 값">#{namedThickness}µm</span>
+          ) : undefined
+        }
+      >
+        <input
+          aria-label="두께"
+          type="number"
+          min={0}
+          value={thickness}
+          disabled={busy}
+          onChange={(event) => setThickness(event.target.value)}
+          onBlur={() => {
+            const value = thickness.trim()
+            if (value === '' && record.thickness_um === null) return
+            if (Number(value) === record.thickness_um) return
+            void save(value === ''
+              ? { clear: ['thickness_um'] }
+              : { thickness_um: Number(value) })
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur()
+          }}
+        />
+      </Field>
+
+      <div className="tiny faint">
+        {record.kind === 'solid' && record.cell_config !== 'sym'
+          ? '전도도는 이온 블로킹 대칭셀에서만 냅니다 — 풀셀의 저주파 아크는 계면입니다.'
+          : '전도도는 조회할 때 계산합니다 — 두께를 고치면 바로 따라옵니다.'}
+      </div>
+    </div>
+  )
 }

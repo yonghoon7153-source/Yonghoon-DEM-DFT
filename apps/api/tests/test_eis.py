@@ -20,8 +20,9 @@ def mpr(**overrides) -> bytes:
     return S.build_mpr(S.spectrum_columns(frequency, z))
 
 
-def upload(client, name="sym_01.mpr", kind="solid", sample_id=None, **overrides):
-    params = {"kind": kind}
+def upload(client, name="sym_01.mpr", kind="solid", sample_id=None,
+           cell_config="sym", **overrides):
+    params = {"kind": kind, "cell_config": cell_config}
     if sample_id is not None:
         params["sample_id"] = sample_id
     response = client.post("/api/eis/spectra/upload", params=params,
@@ -133,20 +134,46 @@ def test_the_default_circuit_follows_the_kind(client):
 
 
 def test_the_same_numbers_get_different_names_by_kind(client):
-    """같은 두 아크가 액체에서는 SEI·전하이동, 전고체에서는 벌크·입계다."""
-    out = upload(client, kind="liquid")
+    """같은 두 아크가 액체 풀셀에서는 SEI·전하이동, 전고체 대칭셀에서는 벌크·입계다."""
+    out = upload(client, kind="liquid", cell_config="full")
     fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
                       params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
     labels = {arc["parameter"]: arc["label"] for arc in fit["arcs"]}
     assert labels["R1"] == "SEI 저항"
 
-    client.patch(f"/api/eis/spectra/{out['id']}", json={"kind": "solid"})
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"kind": "solid", "cell_config": "sym"})
     detail = client.get(f"/api/eis/spectra/{out['id']}").json()
     relabelled = {arc["parameter"]: arc["label"] for arc in detail["fits"][0]["arcs"]}
     assert relabelled["R1"] == "벌크 저항"
     # 다시 맞추지 않았다는 사실은 남는다.
     assert detail["fits"][0]["kind"] == "liquid"
     assert detail["fits"][0]["kind_now"] == "solid"
+
+
+def test_a_full_cell_is_offered_no_conductivity(client):
+    """풀셀의 저주파 아크는 계면이지 전해질이 아니다.
+
+    거기에 두께를 나누면 단위는 S/cm 이고 뜻은 전도도가 아니다.  두께가 있어도
+    내지 않는다 — 없어서 못 내는 것과 내면 안 되는 것은 다른 일이다.
+    """
+    out = upload(client, kind="solid", cell_config="full")
+    client.patch(f"/api/eis/spectra/{out['id']}",
+                 json={"thickness_um": 70, "area_cm2": 0.785})
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    assert fit["conductivity"]["total_s_cm"] is None
+    assert fit["conductivity"]["missing"]
+    labels = {arc["parameter"]: arc["label"] for arc in fit["arcs"]}
+    assert labels["R2"] == "계면 저항"
+
+
+def test_an_unknown_cell_configuration_is_refused(client):
+    response = client.post("/api/eis/spectra/upload",
+                           params={"kind": "solid", "cell_config": "coin"},
+                           files={"file": ("s.mpr", mpr(),
+                                           "application/octet-stream")})
+    assert response.status_code == 422
 
 
 def test_conductivity_needs_a_thickness_and_says_so(client):

@@ -650,6 +650,9 @@ class SpectrumOut(BaseModel):
     name: str
     #: "liquid" | "solid" — 같은 두 아크가 무엇으로 불릴지를 정한다.
     kind: str
+    #: "sym" | "full" | "half" | "" — 무엇을 쟀나.  전해질과는 다른 질문이고,
+    #: 대칭셀이 아니면 전도도를 내지 않는다.
+    cell_config: str = ""
     original_name: str
     sha256: str
     size_bytes: int
@@ -726,6 +729,8 @@ class SpectrumUpdate(BaseModel):
 
     name: str | None = None
     kind: str | None = None
+    #: 빈 문자열은 "아직 안 정함" 이다.
+    cell_config: str | None = None
     sample_id: int | None = None
     thickness_um: PositiveLength | None = None
     area_cm2: PositiveLength | None = None
