@@ -317,11 +317,109 @@ def generate_for_dopant(base_atoms: Atoms, dopant_entry: dict,
     return generated
 
 
+
+def permute_dopant(atoms, dopant: str, host: str, seed: int):
+    """이미 도핑된 구조에서 **도판트를 같은 원소의 다른 자리로 옮긴다**.
+
+    왜 이게 필요한가 (2026-08-26, Y 자리선호):
+      배치 하나로 낸 E_above_hull 여유(27.6 meV/atom)가 MLIP 정확도와 같은 자릿수라
+      "그 여유가 배치 산포보다 큰가" 를 물어야 한다. base 에서 다시 만들면 전하보상
+      배치까지 같이 바뀌어 변수가 둘이 된다. **조성을 정확히 보존한 채 도판트 위치만**
+      바꾸려면 도판트와 같은 원소 원자의 기호를 맞바꾸는 것이 가장 깨끗하다.
+
+    ⛔ 못 하는 것
+      · 공공(vacancy) 위치는 그대로 둔다 — 즉 Y–vacancy 거리는 따라 변한다.
+        그것도 배치 자유도의 일부이므로 의도된 것이지만, '공공 배치 산포' 를
+        따로 잰 것은 아니다.
+      · 대칭 동등성을 판정하지 않는다. 같은 자리를 두 번 뽑을 수 있다 —
+        중복은 호출부가 에너지로 걸러라(같은 값이 나온다).
+    """
+    import random
+    sym = atoms.get_chemical_symbols()
+    dop_idx = [i for i, s in enumerate(sym) if s == dopant]
+    host_idx = [i for i, s in enumerate(sym) if s == host]
+    if not dop_idx:
+        raise SystemExit(f"⛔ 구조에 {dopant} 가 없다")
+    if len(host_idx) < len(dop_idx):
+        raise SystemExit(f"⛔ {host} 자리가 {len(host_idx)}개뿐이라 "
+                         f"{dopant} {len(dop_idx)}개를 옮길 수 없다")
+    rng = random.Random(seed)
+    picks = rng.sample(host_idx, len(dop_idx))
+    new = atoms.copy()
+    s2 = list(sym)
+    for d, h in zip(dop_idx, picks):
+        s2[d], s2[h] = s2[h], s2[d]          # 기호만 맞바꾼다 → 조성 불변
+    new.set_chemical_symbols(s2)
+    moved = sum(1 for a, b in zip(sym, s2) if a != b)
+    return new, {"seed": seed, "from": dop_idx, "to": sorted(picks),
+                 "n_changed": moved,
+                 "same_as_input": sorted(picks) == sorted(dop_idx)}
+
+
+def _selftest_permute():
+    """permute_dopant 만 검증 (음성 포함)."""
+    from ase import Atoms
+    n_ok = n_bad = 0
+
+    def chk(c, m):
+        nonlocal n_ok, n_bad
+        print(("  ✓ " if c else "  ✗ ") + m)
+        n_ok, n_bad = n_ok + bool(c), n_bad + (not c)
+
+    import collections
+    a = Atoms("Y2Li6S2", positions=[[i, 0, 0] for i in range(10)], cell=[20, 20, 20], pbc=True)
+    b, meta = permute_dopant(a, "Y", "Li", seed=1)
+    chk(collections.Counter(b.get_chemical_symbols()) ==
+        collections.Counter(a.get_chemical_symbols()),
+        "★ 조성이 정확히 보존된다 (hull 비교가 성립하려면 필수)")
+    chk(b.get_chemical_symbols() != a.get_chemical_symbols(),
+        "Y 가 실제로 다른 자리로 간다")
+    chk(sum(1 for s in b.get_chemical_symbols() if s == "Y") == 2,
+        "도판트 개수 불변")
+    b2, _ = permute_dopant(a, "Y", "Li", seed=1)
+    chk(b2.get_chemical_symbols() == b.get_chemical_symbols(),
+        "같은 seed 는 같은 결과 (재현 가능)")
+    b3, _ = permute_dopant(a, "Y", "Li", seed=99)
+    chk(b3.get_chemical_symbols() != b.get_chemical_symbols(),
+        "다른 seed 는 다른 배치 (seed 가 실제로 먹는다)")
+    chk(all(s != "S" for i, s in enumerate(b.get_chemical_symbols())
+            if a.get_chemical_symbols()[i] == "Y"),
+        "[음성] 지정한 host 원소(Li)로만 옮긴다 — S 로 가지 않는다")
+    try:
+        permute_dopant(a, "Zr", "Li", seed=1)
+        chk(False, "[음성] 없는 도판트는 거부해야 한다")
+    except SystemExit:
+        chk(True, "[음성] 구조에 없는 도판트는 거부한다")
+    try:
+        permute_dopant(a, "Y", "S", seed=1)   # S 2개, Y 2개 → 가능
+        ok = True
+    except SystemExit:
+        ok = False
+    chk(ok, "host 자리 수가 딱 맞으면 통과")
+    try:
+        permute_dopant(Atoms("Y3Li1", positions=[[i, 0, 0] for i in range(4)],
+                             cell=[9, 9, 9], pbc=True), "Y", "Li", seed=1)
+        chk(False, "[음성] host 자리가 모자라면 거부해야 한다")
+    except SystemExit:
+        chk(True, "[음성] host 자리가 모자라면 거부한다 (조용히 일부만 옮기지 않는다)")
+    print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
+    return 1 if n_bad else 0
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__,
                                     formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('--base', required=True,
+    parser.add_argument('--base',
                        help='LPSCl base structure (cif/xyz/POSCAR)')
+    parser.add_argument('--permute_dopant', metavar='DOPANT',
+                       help='이미 도핑된 구조에서 **도판트만 같은 원소의 다른 자리로** '
+                            '옮겨 배치 앙상블을 만든다 (--base 를 입력 구조로 쓴다). '
+                            '조성이 정확히 보존되므로 E_above_hull 비교가 그대로 성립한다. '
+                            '--host_element 와 --n_seeds 를 같이 준다.')
+    parser.add_argument('--host_element',
+                       help='--permute_dopant 가 옮겨갈 자리의 원소 (Li_24g→Li, P_4b→P)')
+    parser.add_argument('--selftest', action='store_true',
+                       help='permute_dopant 로직만 검증 (음성 경로 포함)')
     parser.add_argument('--site_pref', help='site_preference_initial.json')
     parser.add_argument('--dopant', help='Single dopant (e.g., Mg)')
     parser.add_argument('--site', help='Single site (e.g., Li_24g)')
@@ -329,7 +427,7 @@ def main():
     parser.add_argument('--concentrations', nargs='+', type=float,
                        default=[0.05, 0.10, 0.20],
                        help='Concentration list (mole fraction)')
-    parser.add_argument('--out', required=True, help='Output directory')
+    parser.add_argument('--out', help='Output directory')
     parser.add_argument('--polymorph', default='unknown',
                        choices=['unknown', 'cubic_F-43m', 'pseudo_cubic_P1',
                                 'monoclinic_Pm'],
@@ -353,6 +451,44 @@ def main():
     parser.add_argument('--seed', type=int, default=42,
                        help='Base RNG seed (used directly when --method!=random).')
     args = parser.parse_args()
+
+    if args.selftest:
+        return _selftest_permute()
+
+    if args.permute_dopant:
+        if not (args.base and args.host_element and args.out):
+            print("⛔ --permute_dopant 는 --base --host_element --out 이 필요하다")
+            return 2
+        src = read(args.base)
+        od = Path(args.out); od.mkdir(parents=True, exist_ok=True)
+        stem = Path(args.base).stem
+        meta_all, n_same = [], 0
+        for k in range(args.n_seeds):
+            new, meta = permute_dopant(src, args.permute_dopant,
+                                       args.host_element, seed=args.seed + k)
+            if meta["same_as_input"]:
+                n_same += 1
+            f = od / f"{stem}_perm{k:02d}.xyz"
+            write(f, new)
+            meta_all.append({**meta, "file": f.name})
+            print(f"  [{k}] seed {args.seed+k} → {f.name}  "
+                  f"{args.permute_dopant} {meta['from']} → {meta['to']}"
+                  f"{'   ⚠ 입력과 같은 자리' if meta['same_as_input'] else ''}")
+        (od / f"{stem}_permute_meta.json").write_text(json.dumps({
+            "source": str(args.base), "dopant": args.permute_dopant,
+            "host_element": args.host_element, "n_seeds": args.n_seeds,
+            "base_seed": args.seed, "configs": meta_all,
+            "n_identical_to_input": n_same,
+            "⛔_note": "조성은 정확히 보존된다. 공공 위치는 그대로이므로 "
+                       "도판트-공공 거리는 배치마다 달라진다 (의도된 자유도).",
+        }, indent=2, ensure_ascii=False))
+        print(f"✓ {args.n_seeds}개 배치 → {od}"
+              + (f"   ⚠ 그중 {n_same}개는 입력과 같은 자리다" if n_same else ""))
+        return 0
+
+    if not args.base or not args.out:
+        print("⛔ --base 와 --out 이 필요하다")
+        return 2
 
     if args.method == 'random' and args.n_seeds < 2:
         print("⚠ --method=random with --n_seeds=1 gives a single configuration "
@@ -424,4 +560,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main() or 0)
