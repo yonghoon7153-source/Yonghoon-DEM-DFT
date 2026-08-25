@@ -23,10 +23,13 @@
                                    --out /data/work/runs/sdcp_v2/phaseB_vasp
 """
 import argparse
+import json
 import os
 import re
+import shutil
 import sys
 from collections import OrderedDict
+from pathlib import Path
 
 import numpy as np
 
@@ -224,7 +227,230 @@ NCORE = 4
     return vasp_species, counts, len(sym)
 
 
+# ══ 역방향: VASP POSCAR/CONTCAR → QE 구조블록 · xyz · .vasp (2026-08-25) ═══
+#   wave1 회신본에서 구조를 되가져오려고 붙였다. 새 파일을 만들지 않는 이유는
+#   격자·종순서·Ni1/Ni2 규약이 이 파일에 이미 한 벌 있기 때문이다 — 두 벌이 되면 갈라진다.
+
+def read_poscar_struct(path):
+    """POSCAR/CONTCAR → {cell, sym, pos(cartesian Å), sel}.
+
+    ⛔ 이 함수가 못 하는 것
+      · **속도(velocity) 블록을 읽지 않는다** — 구조만 가져온다.
+      · POSCAR 5.x 종이름 줄이 없는 구판(VASP4)은 지원하지 않는다. 종이름이
+        숫자로 파싱되면 예외를 낸다 (조용히 잘못 읽느니 멈춘다).
+    """
+    L = [ln.rstrip("\n") for ln in open(path, errors="ignore").read().splitlines()]
+    if len(L) < 8:
+        raise ValueError(f"{path}: 줄이 너무 적다 ({len(L)})")
+    scale = float(L[1].split()[0])
+    cell = np.array([[float(x) for x in L[i].split()[:3]] for i in (2, 3, 4)]) * scale
+    names = L[5].split()
+    if not names or any(re.match(r"^[-\d.]+$", x) for x in names):
+        raise ValueError(f"{path}: 6행이 종이름이 아니다 (VASP4 구판은 미지원)")
+    counts = [int(x) for x in L[6].split()]
+    if len(names) != len(counts):
+        raise ValueError(f"{path}: 종 {len(names)}개 vs 개수 {len(counts)}개")
+    i = 7
+    sel = L[i].strip()[:1].upper() == "S"
+    if sel:
+        i += 1
+    direct = L[i].strip()[:1].upper() in ("D", "")
+    i += 1
+    sym, pos = [], []
+    for nm, c in zip(names, counts):
+        for _ in range(c):
+            v = L[i].split()
+            p = np.array([float(v[0]), float(v[1]), float(v[2])])
+            pos.append(p @ cell if direct else p * scale)
+            sym.append(nm)
+            i += 1
+    return {"cell": cell, "sym": sym, "pos": np.array(pos), "sel": sel}
+
+
+def write_xyz(path, st, comment=""):
+    """확장 xyz — VESTA 로 여는 용도. **격자가 없다**(Boundary 타일링은 .vasp 로).
+
+    Lattice= 를 comment 줄에 실어 두면 ASE/OVITO 는 읽지만 VESTA 는 무시한다.
+    그래서 .vasp 를 항상 짝으로 낸다 (kb 규약).
+    """
+    lat = " ".join(f"{x:.6f}" for x in st["cell"].reshape(-1))
+    with open(path, "w") as f:
+        f.write(f"{len(st['sym'])}\n")
+        f.write(f'Lattice="{lat}" Properties=species:S:1:pos:R:3 {comment}\n')
+        for s, p in zip(st["sym"], st["pos"]):
+            f.write(f"{s:<3s} {p[0]:14.8f} {p[1]:14.8f} {p[2]:14.8f}\n")
+
+
+def write_qe_struct(path, st, mag_idx=None, title=""):
+    """QE 구조블록 (CELL_PARAMETERS + ATOMIC_POSITIONS + 종별 스핀 힌트).
+
+    ⛔ 이 함수가 못 하는 것 — **이대로는 돌아가지 않는다.**
+      pseudopotential 파일명 · ecutwfc · U · k-mesh · 수렴 임계를 쓰지 않는다.
+      캠페인 정본 scf 템플릿에 이 블록을 **스플라이스**해서 쓰라는 뜻이다
+      (kb 규약: verified-carry — 마지막 ATOMIC_POSITIONS 스플라이스 + 검증).
+      완성된 입력처럼 보이면 그대로 돌려버리기 때문에 일부러 조각으로 낸다.
+
+    mag_idx: {원자인덱스: 부호} 가 있으면 Ni 를 Ni1/Ni2 로 갈라 적는다
+      (AFM 배치를 잃지 않기 위함 — 종을 안 가르면 QE 는 AFM 을 못 세운다).
+    """
+    sym = list(st["sym"])
+    if mag_idx:
+        for i, s in enumerate(sym):
+            if s.startswith("Ni") and i in mag_idx:
+                sym[i] = "Ni1" if mag_idx[i] > 0 else "Ni2"
+    species = []
+    for s in sym:
+        if s not in species:
+            species.append(s)
+    with open(path, "w") as f:
+        f.write(f"! {title}\n")
+        f.write("! ⛔ 구조블록만이다 — 정본 scf 템플릿에 스플라이스해서 쓸 것.\n")
+        f.write("!    pseudo · ecutwfc · U · k-mesh 는 여기에 없다.\n")
+        f.write(f"!    nat = {len(sym)} · ntyp = {len(species)}\n\n")
+        f.write("ATOMIC_SPECIES\n")
+        for s in species:
+            base = "Ni" if s.startswith("Ni") else s
+            f.write(f"  {s:<4s} -1.0  {base}.UPF          ! ← 정본 파일명으로 교체\n")
+        f.write("\nCELL_PARAMETERS angstrom\n")
+        for r in st["cell"]:
+            f.write(f"  {r[0]:16.10f} {r[1]:16.10f} {r[2]:16.10f}\n")
+        f.write("\nATOMIC_POSITIONS angstrom\n")
+        for s, p in zip(sym, st["pos"]):
+            f.write(f"  {s:<4s} {p[0]:16.10f} {p[1]:16.10f} {p[2]:16.10f}\n")
+        if any(s.startswith("Ni") and s != "Ni" for s in species):
+            f.write("\n! &SYSTEM 에 넣을 것 (종 순서 기준):\n")
+            for k, s in enumerate(species, 1):
+                if s in ("Ni1", "Ni2"):
+                    f.write(f"!   starting_magnetization({k}) = "
+                            f"{'0.5' if s == 'Ni1' else '-0.5'}   ! {s}\n")
+
+
+def export_structures(root, out, verbose=False):
+    """번들(또는 임의 트리)의 POSCAR/CONTCAR 를 .vasp + .xyz + .scf-frag.in 3종으로 낸다.
+
+    CONTCAR 가 있으면 **CONTCAR 를 쓴다**(이완 최종). 없으면 POSCAR (static 잡은
+    입력이 곧 최종이라 같은 구조다).
+    """
+    root, out = Path(root), Path(out)
+    out.mkdir(parents=True, exist_ok=True)
+    rows = []
+    seen = set()
+    for src in sorted(root.rglob("POSCAR")) + sorted(root.rglob("CONTCAR")):
+        job = src.parent
+        # 상 폴더(relax/static/dense) 안이면 잡 이름은 그 부모다
+        name = (job.parent.name if job.name in ("relax", "static", "dense", "dense_cand")
+                else job.name)
+        key = name
+        final = src.name == "CONTCAR"
+        if key in seen and not final:
+            continue          # CONTCAR 를 이미 냈으면 POSCAR 로 덮지 않는다
+        try:
+            st = read_poscar_struct(src)
+        except Exception as e:                       # 조용히 건너뛰지 않는다
+            rows.append({"name": name, "error": f"{type(e).__name__}: {e}"})
+            continue
+        seen.add(key)
+        mag = None
+        jf = (job.parent if job.name in ("relax", "static", "dense") else job) / "job.json"
+        if jf.exists():
+            m = json.loads(jf.read_text(encoding="utf-8")).get("ni_sign_poscar_idx")
+            if m:
+                mag = {int(k): v for k, v in m.items()}
+        (out / name).mkdir(exist_ok=True)
+        shutil.copy(src, out / name / f"{name}.vasp")
+        write_xyz(out / name / f"{name}.xyz", st, comment=f'name="{name}"')
+        write_qe_struct(out / name / f"{name}.scf-frag.in", st, mag, title=name)
+        counts = {}
+        for s in st["sym"]:
+            counts[s] = counts.get(s, 0) + 1
+        # ⚠ 이름 하나에 행 하나다. POSCAR 를 먼저 훑고 CONTCAR 로 덮으므로
+        #   append 하면 같은 구조가 두 줄이 된다 (38 vs 실제 30). dict 로 덮어쓴다.
+        rows.append({"name": name, "nat": len(st["sym"]), "src": src.name,
+                     "final": final, "afm": bool(mag),
+                     "formula": " ".join(f"{k}{v}" for k, v in counts.items()),
+                     "cell_A": [round(float(np.linalg.norm(r)), 3) for r in st["cell"]]})
+        if verbose:
+            print(f"  ✓ {name:58s} nat={len(st['sym']):4d} ← {src.name}")
+    uniq = {}
+    for r in rows:
+        # 실패 행은 이름이 겹쳐도 지우지 않는다 (조용한 누락 방지)
+        if r.get("error") or r["name"] not in uniq or r.get("final"):
+            uniq[r["name"] + ("!" if r.get("error") else "")] = r
+    rows = list(uniq.values())
+    (out / "STRUCTURES.json").write_text(
+        json.dumps(rows, ensure_ascii=False, indent=1), encoding="utf-8")
+    return rows
+
+
+def _selftest_reverse():
+    """역방향 selftest — **음성 경로 포함**. 양성만 있으면 아무것도 보증 못 한다."""
+    import tempfile
+    ok = [0, 0]
+
+    def chk(c, msg):
+        ok[0] += 1
+        ok[1] += bool(c)
+        print(("  ✔ " if c else "  ✘ ") + msg)
+
+    P = ("t\n1.0\n 4 0 0\n 0 4 0\n 0 0 8\n Li Ni\n 1 2\nDirect\n"
+         "0.0 0.0 0.0\n0.5 0.5 0.25\n0.5 0.5 0.75\n")
+    with tempfile.TemporaryDirectory() as d:
+        d = Path(d)
+        (d / "POSCAR").write_text(P)
+        st = read_poscar_struct(d / "POSCAR")
+        chk(st["sym"] == ["Li", "Ni", "Ni"], f"종 순서 보존 {st['sym']}")
+        chk(abs(st["pos"][1][2] - 2.0) < 1e-9,
+            f"Direct→Cartesian 변환 (0.25×8 = 2.0, 받은 값 {st['pos'][1][2]:.3f})")
+        write_xyz(d / "a.xyz", st)
+        chk((d / "a.xyz").read_text().splitlines()[0] == "3", "xyz 원자수 줄")
+        write_qe_struct(d / "a.in", st, {1: 1.0, 2: -1.0})
+        t = (d / "a.in").read_text()
+        chk("Ni1" in t and "Ni2" in t, "AFM 부호가 Ni1/Ni2 종분리로 살아남는다")
+        chk("starting_magnetization" in t, "스핀 시드 힌트를 남긴다")
+        chk("⛔" in t and "스플라이스" in t,
+            "⛔음성: 완성 입력이 아님을 파일 안에 박는다 (그대로 돌리는 사고 방지)")
+        # 주석의 "ecutwfc 는 여기 없다" 까지 잡히면 안 된다 — **대입 줄**만 본다.
+        chk(not re.search(r"^\s*(ecutwfc|ecutrho|conv_thr|nspin)\s*=", t, re.M)
+            and not re.search(r"^\s*K_POINTS", t, re.M),
+            "⛔음성: 없는 설정을 지어내지 않는다 (주석 언급은 허용, 대입은 금지)")
+        # ⛔ 음성 — 깨진 입력을 잡아내나
+        for bad, why in (
+                ("t\n1.0\n 4 0 0\n 0 4 0\n 0 0 8\n 1 2\n 1 2\nDirect\n0 0 0\n",
+                 "⛔음성: 종이름 줄이 숫자면 거부 (VASP4 구판을 조용히 오독하지 않는다)"),
+                ("t\n1.0\n 4 0 0\n 0 4 0\n 0 0 8\n Li Ni\n 1\nDirect\n0 0 0\n",
+                 "⛔음성: 종 개수와 이름 개수가 어긋나면 거부"),
+                ("t\n1.0\n", "⛔음성: 잘린 파일은 거부")):
+            (d / "B").write_text(bad)
+            try:
+                read_poscar_struct(d / "B")
+                chk(False, why)
+            except (ValueError, IndexError):
+                chk(True, why)
+    print(f"\n역방향 selftest {ok[1]}/{ok[0]}")
+    return 0 if ok[0] == ok[1] else 1
+
+
 def main():
+    if "--selftest" in sys.argv:
+        return _selftest_reverse()
+    if "--from_vasp" in sys.argv:
+        ap = argparse.ArgumentParser()
+        ap.add_argument("--from_vasp", required=True, help="번들 루트 (POSCAR/CONTCAR 를 재귀 탐색)")
+        ap.add_argument("--out", required=True)
+        ap.add_argument("--verbose", action="store_true")
+        ap.add_argument("--zip", action="store_true")
+        a = ap.parse_args()
+        rows = export_structures(a.from_vasp, a.out, a.verbose)
+        bad = [r for r in rows if r.get("error")]
+        print(f"구조 {len(rows) - len(bad)}건 → {a.out}"
+              + (f"  ⛔ 실패 {len(bad)}건" if bad else ""))
+        for r in bad:
+            print(f"  ⛔ {r['name']}: {r['error']}")
+        if a.zip:
+            z = shutil.make_archive(str(Path(a.out)), "zip",
+                                    str(Path(a.out).parent), Path(a.out).name)
+            print(f"zip → {z} ({os.path.getsize(z) / 1024:.0f} KB)")
+        return 1 if bad else 0
     ap = argparse.ArgumentParser()
     ap.add_argument("--src", default="/data/work/runs/sdcp_v2/phaseB_v3")
     ap.add_argument("--out", default="/data/work/runs/sdcp_v2/phaseB_vasp")
