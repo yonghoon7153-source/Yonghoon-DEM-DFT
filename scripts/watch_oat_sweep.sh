@@ -1,87 +1,76 @@
 #!/usr/bin/env bash
-# OAT 스윕 진행 감시 — 어느 런이 · 몇 스텝 · 얼마나 남았나.
+# OAT 스윕 진행판 — 13런을 한 화면에.
 #
-# ★ 왜: 이 스윕은 런당 5시간 이상, 13런이면 며칠이다.  `tail -f` 는 지금 이 순간만
-#   보여 주고, 로그가 조용하면 살았는지 죽었는지 구분이 안 된다 (오늘 39분을 그렇게 썼다).
-#   ⇒ **살았나 · 어디까지 갔나 · 언제 끝나나** 를 한 화면에.
+# ★ 왜: 런당 3~5시간, 13런이면 며칠이다.  `tail -f` 는 지금 이 순간만 보여 주고,
+#   로그가 조용하면 살았는지 죽었는지 구분이 안 된다 (2026-08-25 에 39분을 그렇게 썼다).
 #
-#   bash scripts/watch_oat_sweep.sh          # 1회 출력
-#   bash scripts/watch_oat_sweep.sh -w       # 20초마다 갱신 (Ctrl-C 로 종료)
+#   bash scripts/watch_oat_sweep.sh                             # 1회
+#   watch -n 300 'bash ~/dem-web/scripts/watch_oat_sweep.sh'    # 5분마다
+#
+# ⚠⚠ 이 스크립트가 세 번 오보한 이력 — 전부 "열의 뜻을 확인 않고 위치만 봤다":
+#   ① `post_oat_*/` 존재를 완료로 셌다 → 압축 **시작 전에** 만들어진다.  ⇒ `Finished!` 로 판정.
+#   ② `$NF` 를 CPU 로 봤다 → stabilize 는 `v_pressMPa` 가 붙어 마지막이 **압력**.  ⇒ 4열 고정.
+#   ③ CPU 열을 누적으로 봤다 → `run` 마다 **0 으로 리셋**.  ⇒ 프로세스 `etimes` 로 나눈다.
 set -uo pipefail
 D="$(cd "$(dirname "${BASH_SOURCE[0]}")/../dem_scripts/oat_sweep" && pwd)"
 
-#: 입력의 총 스텝 (settling 200k + stabilize 200k + 이완 100k + 압축 루프).
-#: ⚠ 압축 루프는 300 MPa 도달까지라 **가변**이다 → ETA 는 **하한**으로 읽을 것.
-TOTAL=500000
+TARGET=0.300          # 입력의 target_press (스케일계)
+TOTAL=500000          # settling 200k + stabilize 200k + 이완 100k (+ 압축 루프 가변)
 
-_one() {
-  local n_done n_all cur run pid step rate eta esec et cpu rss cpus
-  n_all=$(ls "$D"/in.*.liggghts 2>/dev/null | wc -l)
-  #  ⚠⚠ 완료 = **디렉터리 존재가 아니다**.  `post_oat_*/` 은 LIGGGHTS 가 압축 시작 **전에**
-  #     만든다 (입력 §shell mkdir).  존재를 완료로 세면 도는 런을 끝났다고 보고한다 —
-  #     실제로 그렇게 오보했다.  ⇒ 로그의 **종료 문구**로 센다.
-  n_done=$(grep -l 'Finished!' "$D"/log.*.txt 2>/dev/null | wc -l)
-  echo "═══ OAT 스윕  ($(date '+%H:%M:%S')) ═══"
+echo "══════════════════════════════════════════════════════════════════════════"
+echo "  OAT 민감도 + E 스윕 — pure-SE 300 MPa   ($(date '+%m-%d %H:%M:%S'))"
+echo "══════════════════════════════════════════════════════════════════════════"
 
-  #  ★ 프로세스가 있나 — 없으면 끝났거나 죽은 것이고, 그 둘은 다르다
-  pid=$(pgrep -f 'lmp_(serial|auto|mpi)' | head -1)
-  if [ -n "$pid" ]; then
-    read -r et cpu rss < <(ps -o etime=,%cpu=,rss= -p "$pid" | tr -s ' ')
-    #  ★ 초 단위 경과 — 속도 계산에 쓴다 (아래 참조)
-    esec=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
-    echo "  프로세스 PID $pid · 경과 $et · CPU ${cpu}% · RSS $((rss/1024)) MB"
-    #  ⚠ CPU 0 이면 계산 중이 아니다 (오늘의 MPI 행이 그랬다)
-    case "$cpu" in 0.0|0) echo "  ⚠ CPU 0 % — 계산 중이 아니다.  기동 중이거나 막혔다";; esac
-  else
-    echo "  ⚠ 실행 중인 LIGGGHTS 프로세스 **없음** (완료 또는 중단)"
-  fi
-
-  #  ★ 가장 최근에 쓰인 로그 = 지금 도는 런
-  cur=$(ls -t "$D"/log.*.txt 2>/dev/null | head -1)
-  if [ -z "$cur" ]; then echo "  로그 없음 — 아직 시작 안 함"; return; fi
-  run=$(basename "$cur" .txt); run=${run#log.}
-
-  #  ⚠ thermo 줄만 고른다: 4열 이상 · 1·2열이 정수.
-  #    ⚠⚠ CPU 는 **4번째 열 고정**이다 — `$NF` 를 쓰면 안 된다.  단계마다 thermo_style 이
-  #    달라서(`… ke cpu` 4열 / `… ke cpu v_pressMPa` 5열 / `step atoms c_zmax` 3열),
-  #    stabilize 단계에선 마지막 열이 **압력**이고 그게 0 이라 속도·ETA 가 통째로 사라졌다.
-  read -r step cpus < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; c=$4}
-                             END{print s, c}' "$cur")
-  echo "  현재 런 : $run     ($n_done / $n_all 완료)"
-  if [ -n "${step:-}" ]; then
-    #  진행률·속도·ETA — CPU 열(4번째)이 LIGGGHTS 가 찍는 경과초다
-    printf "  스텝    : %s / ~%s  (%.1f %%)\n" "$step" "$TOTAL" \
-           "$(awk -v a="$step" -v b="$TOTAL" 'BEGIN{print a*100/b}')"
-    #  ⚠⚠ LIGGGHTS 의 **CPU 열은 `run` 명령마다 0 으로 리셋된다** (누적이 아니다).
-    #    입력은 run 을 5번 넘게 부르므로, `누적 스텝 ÷ 그 단계 CPU` 는 배수로 부풀어 오른다 —
-    #    실제로 39.3 을 **226.7 step/s** 로 오보했다.
-    #    ⇒ 프로세스의 **실제 경과시간(etimes)** 으로 나눈다.  스텝은 누적이라 짝이 맞는다.
-    if [ -n "${esec:-}" ] && [ "$esec" -gt 0 ] 2>/dev/null; then
-      rate=$(awk -v s="$step" -v e="$esec" 'BEGIN{printf "%.1f", s/e}')
-      eta=$(awk -v s="$step" -v t="$TOTAL" -v e="$esec" \
-            'BEGIN{r=s/e; if(r>0) printf "%.1f", (t-s)/r/3600; else print "?"}')
-      echo "  속도    : ${rate} step/s     남은 시간 ≈ ${eta} h  (⚠ 압축 루프 가변 → **하한**)"
-    fi
-  else
-    echo "  스텝    : 아직 (삽입/설정 단계) — 마지막 줄:"
-    tail -1 "$cur" | sed 's/^/            /'
-  fi
-
-  #  ★★ 대조 2건은 특별히 따로 본다 — 이게 어긋나면 나머지는 의미가 없다
-  echo "  ── 대조 ──"
-  for c in orig_1type base; do
-    if [ -f "$D/log.$c.txt" ] && grep -q 'Finished!' "$D/log.$c.txt" 2>/dev/null; then
-      echo "    ✓ $c **완료** (덤프 $(ls "$D/post_oat_$c" 2>/dev/null | wc -l)개)"
-    elif [ -f "$D/log.$c.txt" ]; then
-      echo "    … $c 진행 중 (덤프 $(ls "$D/post_oat_$c" 2>/dev/null | wc -l)개)"
-    else
-      echo "    · $c 대기"
-    fi
-  done
-}
-
-if [ "${1:-}" = "-w" ]; then
-  while true; do clear; _one; echo; echo "(20초마다 갱신 · Ctrl-C 종료)"; sleep 20; done
+n_all=$(ls "$D"/in.*.liggghts 2>/dev/null | wc -l)
+n_fin=$(grep -l 'Finished!' "$D"/log.*.txt 2>/dev/null | wc -l)
+n_err=$(grep -lE 'ERROR|MPI_ABORT' "$D"/log.*.txt 2>/dev/null | wc -l)
+pid=$(pgrep -f 'lmp_(serial|auto|mpi)' | head -1)
+esec=""
+if [ -n "$pid" ]; then
+  read -r et cpu rss < <(ps -o etime=,%cpu=,rss= -p "$pid" | tr -s ' ')
+  esec=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
+  st="PID $pid · $et · CPU ${cpu}% · $((rss/1024)) MB"
+  case "$cpu" in 0.0|0) st="$st  ⚠ CPU 0 % (계산 중 아님)";; esac
 else
-  _one
+  st="⚠ 실행 프로세스 **없음** (완료 또는 중단)"
 fi
+echo "  완료 $n_fin/$n_all   오류 $n_err   $st"
+echo ""
+printf "  %-16s %-11s %-7s %-8s %-6s %-9s %s\n" \
+       "런" "단계" "atoms" "압력" "목표%" "step" "비고"
+echo "  ──────────────────────────────────────────────────────────────────────"
+
+for f in "$D"/in.*.liggghts; do
+  n=$(basename "$f" .liggghts); n=${n#in.}
+  L="$D/log.$n.txt"
+  if [ ! -f "$L" ]; then
+    printf "  %-16s %-11s\n" "$n" "· 대기"; continue
+  fi
+  PH=$(grep -hoE 'INSERTING|SETTLING|STABILIZE|COMPRESSION|RELAXATION|Finished' "$L" 2>/dev/null | tail -1)
+  read -r S A < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; a=$2} END{print s, a}' "$L")
+  #  압력 — 입력이 압축 루프마다 찍는 print 를 쓴다 (thermo 열 위치에 안 기댄다)
+  P=$(grep -oE 'Current Pressure: [0-9.eE+-]+' "$L" 2>/dev/null | tail -1 | awk '{print $3}')
+  PCT=""; [ -n "${P:-}" ] && PCT=$(awk -v p="$P" -v t="$TARGET" 'BEGIN{printf "%.0f%%", p/t*100}')
+  NOTE=""
+  if grep -q 'Finished!' "$L" 2>/dev/null; then
+    NOTE="✓ 완료 (덤프 $(ls "$D/post_oat_$n" 2>/dev/null | wc -l))"
+  elif grep -qE 'ERROR|MPI_ABORT' "$L" 2>/dev/null; then
+    NOTE="⛔ $(grep -hoE 'ERROR[^(]*' "$L" | tail -1 | cut -c1-34)"
+  elif [ -n "$esec" ] && [ -n "${S:-}" ] && [ "$esec" -gt 0 ] 2>/dev/null; then
+    NOTE=$(awk -v s="$S" -v e="$esec" -v t="$TOTAL" \
+      'BEGIN{r=s/e; if(r>0) printf "%.0f st/s · 남은 ~%.1f h", r, (t-s)/r/3600}')
+  fi
+  printf "  %-16s %-11s %-7s %-8s %-6s %-9s %s\n" \
+         "$n" "${PH:-시작}" "${A:-?}" "${P:-—}" "${PCT:-—}" "${S:-?}" "$NOTE"
+done
+
+echo ""
+echo "  ★ 대조 2건이 먼저다 — 어긋나면 나머지 11런은 의미가 없다"
+for c in orig_1type base; do
+  if grep -q 'Finished!' "$D/log.$c.txt" 2>/dev/null; then
+    echo "     ✓ $c 완료  → docs/data/heckel_pure_se_dem.csv 300 MPa 행과 대조할 것"
+  elif [ -f "$D/log.$c.txt" ]; then echo "     … $c 진행 중"
+  else echo "     · $c 대기"; fi
+done
+echo "  ⚠ '남은 시간' 은 **하한** — 압축 루프가 300 MPa 도달까지라 스텝이 가변이다"
+echo "══════════════════════════════════════════════════════════════════════════"
