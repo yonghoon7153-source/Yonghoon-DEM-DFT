@@ -261,3 +261,21 @@ def test_methods_page_has_no_retracted_value_as_live(client):
     body = client.get("/methods").data.decode()
     if "0.199" in body:
         assert "철회" in body, "0.199 가 있는데 철회 표시가 없다"
+
+
+def test_glossary_has_sto_mto_and_axes(client):
+    """STO/MTO 와 시간·이온 축이 용어집에 있어야 한다.
+
+    ⚠ 2026-08-25 에 "MTO 가 시간이고 STO 가 공간이냐" 는 질문이 실제로 나왔다.
+      이름이 헷갈리는 축이라 **둘 다 시간**이라는 것이 용어집에 있어야 한다.
+    """
+    import glossary as G
+    ids = {g["id"] for g in G.GLOSSARY}
+    assert {"sto-mto", "time-vs-ions"} <= ids, "STO/MTO 항목이 없다"
+    e = next(g for g in G.GLOSSARY if g["id"] == "sto-mto")
+    body = " ".join(str(v) for v in e.values())
+    assert "공간" in body and "무관" in body, "'둘 다 시간축' 이라는 구분이 없다"
+    assert "save_traj" in body, "궤적 없으면 소급 불가라는 결론이 없다"
+    # 화면에도 떠야 한다
+    page = client.get("/glossary").data.decode()
+    assert "STO / MTO" in page, "용어집 화면에 안 뜬다"
