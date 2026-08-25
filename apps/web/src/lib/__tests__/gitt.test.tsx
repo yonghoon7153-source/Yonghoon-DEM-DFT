@@ -207,6 +207,50 @@ describe('GITT 상세', () => {
     expect(screen.getByText(/추정의 제곱만큼/)).toBeInTheDocument()
   })
 
+  it('면적이 있으면 가로축이 mAh/cm² 로 열린다 — GITT 가 쓰는 축이다', async () => {
+    renderDetail(detailHandler((url) =>
+      path(url) === '/api/gitt/runs/1'
+        ? run({ area_cm2: 2, area_cm2_effective: 2 })
+        : undefined))
+
+    expect(await screen.findByText('pOCV 점 2개')).toBeInTheDocument()
+    const table = screen.getByText('휴지').closest('table')!
+    // 표의 머리도 그래프와 같은 기준이어야 한다 — 어긋나면 그래프에서 읽은
+    // 자리를 표에서 못 찾는다.
+    expect(within(table).getByText('용량 (mAh/cm²)')).toBeInTheDocument()
+    expect(within(table).getByText('0.250')).toBeInTheDocument()   // 0.5 / 2
+
+    // 질량이 없으니 mAh/g 은 못 쓴다 — 지우지 않고 막고 이유를 적는다.
+    const perGram = screen.getByRole('button', { name: 'mAh/g' })
+    expect(perGram).toBeDisabled()
+    expect(perGram).toHaveAttribute('title', '활물질 질량이 없습니다')
+  })
+
+  it('면적이 없으면 mAh 로 열린다 — 없는 면적으로 나누지 않는다', async () => {
+    renderDetail(detailHandler())
+    expect(await screen.findByText('pOCV 점 2개')).toBeInTheDocument()
+    const table = screen.getByText('휴지').closest('table')!
+    expect(within(table).getByText('용량 (mAh)')).toBeInTheDocument()
+    expect(within(table).getByText('0.500')).toBeInTheDocument()
+  })
+
+  it('지름에서 나온 면적을 힌트로 적는다 — 빈 칸이 "없다" 로 읽히지 않게', async () => {
+    renderDetail(detailHandler((url) =>
+      path(url) === '/api/gitt/runs/1'
+        ? run({ diameter_mm: 13, area_cm2_effective: 1.3273 })
+        : undefined))
+    expect(await screen.findByText(/지름에서: 1.327 cm²/)).toBeInTheDocument()
+  })
+
+  it('전극 질량 × wt% 에서 나온 활물질 질량도 힌트로 적는다', async () => {
+    renderDetail(detailHandler((url) =>
+      path(url) === '/api/gitt/runs/1'
+        ? run({ electrode_mass_g: 0.025, active_wt_percent: 80,
+                active_mass_g_effective: 0.02 })
+        : undefined))
+    expect(await screen.findByText(/전극 질량 × wt% 에서: 0.0200 g/)).toBeInTheDocument()
+  })
+
   it('재료 상수를 넣으면 저장한다', async () => {
     let sent: unknown = null
     renderDetail(detailHandler((url, init) => {

@@ -23,7 +23,7 @@ from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
-from ..deps import resolve_conditions
+from ..deps import circle_cm2, resolve_conditions
 from ..models import ExperimentGroup, GittRun, Sample
 from ..schemas import (
     DiffusionOut,
@@ -41,12 +41,53 @@ from ..settings import settings
 router = APIRouter(prefix="/api/gitt", tags=["gitt"])
 
 #: 확산계수에 필요한, 파일에 없는 것들.  화면과 같은 말을 쓴다.
+#:
+#: 뒤의 둘은 **직접 적어도 되고 계산돼도 되는** 값이라, 있는지 없는지를
+#: `getattr` 이 아니라 `_effective` 함수에 묻는다.
 MATERIAL_FIELDS = (
     ("molar_volume_cm3", "몰부피 V_M"),
     ("molar_mass_g", "몰질량 M_B"),
     ("active_mass_g", "활물질 질량"),
     ("area_cm2", "계면 면적 S"),
 )
+
+
+def effective_area_cm2(record: GittRun) -> float | None:
+    """이 기록에 실제로 쓰이는 계면 면적 (cm²).
+
+    잰 것은 지름이고 면적은 거기서 나온 수다.  그래도 **적어 넣은 면적이
+    이긴다**: 원이 아닌 전극이 있고, 그때 지름은 잴 수 있는 값이 아니다
+    (EIS `_geometry` 와 같은 규칙).
+    """
+    if record.area_cm2:
+        return record.area_cm2
+    if record.diameter_mm:
+        return circle_cm2(record.diameter_mm)
+    return None
+
+
+def effective_active_mass_g(record: GittRun) -> float | None:
+    """이 기록의 활물질 질량 (g).
+
+    저울이 읽는 것은 전극 전체이고, 활물질은 거기에 wt% 를 곱한 몫이다 (§3).
+    그래도 **적어 넣은 활물질 질량이 이긴다** -- 조성이 아니라 따로 단 값을
+    쓰는 경우가 있고, 그때 계산값이 이기면 잰 값이 조용히 버려진다.
+    """
+    if record.active_mass_g:
+        return record.active_mass_g
+    if record.electrode_mass_g and record.active_wt_percent:
+        return record.electrode_mass_g * record.active_wt_percent / 100.0
+    return None
+
+
+#: 라벨 -> 실제로 쓰이는 값.  `_missing` 과 `diffusion()` 이 같은 것을 본다.
+def _material(record: GittRun) -> dict[str, float | None]:
+    return {
+        "molar_volume_cm3": record.molar_volume_cm3,
+        "molar_mass_g": record.molar_mass_g,
+        "active_mass_g": effective_active_mass_g(record),
+        "area_cm2": effective_area_cm2(record),
+    }
 
 
 def _get(session: Session, gitt_id: int) -> GittRun:
@@ -72,8 +113,9 @@ def _group_names(session: Session, sample) -> tuple[int | None, str, str]:
     return group.id, group.name, parent.name if parent else ""
 
 def _missing(record: GittRun) -> list[str]:
+    values = _material(record)
     return [label for field, label in MATERIAL_FIELDS
-            if not getattr(record, field) or getattr(record, field) <= 0]
+            if not values[field] or values[field] <= 0]
 
 
 def _out(record: GittRun, session: Session | None = None) -> GittRunOut:
@@ -88,6 +130,8 @@ def _out(record: GittRun, session: Session | None = None) -> GittRunOut:
         sample_name = sample.name if sample else None
     conditions = resolve_conditions(session, record) if session is not None else {}
     return GittRunOut(**record.model_dump(), **conditions, sample_name=sample_name,
+                      active_mass_g_effective=effective_active_mass_g(record),
+                      area_cm2_effective=effective_area_cm2(record),
                       missing_for_diffusion=_missing(record))
 
 
@@ -282,7 +326,8 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 사람이 입력하는 재료 상수들이다.
 CLEARABLE_GITT_FIELDS = {"purpose", "group_id", "temperature_c",
                          "molar_volume_cm3", "molar_mass_g", "active_mass_g",
-                         "area_cm2",
+                         "electrode_mass_g", "active_wt_percent",
+                         "area_cm2", "diameter_mm",
                          # 셀에서 떼어내는 길.  붙이는 것과 달리 값이 `None`
                          # 이라 `sample_id: null` 로는 "안 보냄" 과 구별되지
                          # 않는다 -- 그래서 clear 를 쓴다.
@@ -356,8 +401,8 @@ def run_diffusion(gitt_id: int, session: Session = Depends(get_session)):
         _load(record),
         molar_volume_cm3=record.molar_volume_cm3,
         molar_mass_g=record.molar_mass_g,
-        mass_g=record.active_mass_g,
-        area_cm2=record.area_cm2,
+        mass_g=effective_active_mass_g(record),
+        area_cm2=effective_area_cm2(record),
         min_rest_s=record.min_rest_s,
     )
     points = [DiffusionPointOut(
@@ -428,8 +473,8 @@ def dashboard(session: Session = Depends(get_session)):
                     _load(record),
                     molar_volume_cm3=record.molar_volume_cm3,
                     molar_mass_g=record.molar_mass_g,
-                    mass_g=record.active_mass_g,
-                    area_cm2=record.area_cm2,
+                    mass_g=effective_active_mass_g(record),
+                    area_cm2=effective_area_cm2(record),
                     min_rest_s=record.min_rest_s,
                 )
             except HTTPException:

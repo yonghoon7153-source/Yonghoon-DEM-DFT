@@ -37,7 +37,7 @@ from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
 from ..db import get_session
-from ..deps import resolve_conditions
+from ..deps import circle_cm2, resolve_conditions
 from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
     DrtOut,
@@ -237,12 +237,6 @@ def _out(session: Session, record: SpectrumRecord, *,
         best_circuit=best.circuit if best else "",
         duplicate=duplicate,
     )
-
-
-def circle_cm2(diameter_mm: float) -> float:
-    """원형 펠릿의 면적 (cm²).  지름은 mm 로 받는다 -- 캘리퍼가 그렇게 읽는다."""
-    radius_cm = diameter_mm / 20.0
-    return float(np.pi * radius_cm ** 2)
 
 
 def _geometry(session: Session, record: SpectrumRecord) -> tuple[float | None, float | None]:

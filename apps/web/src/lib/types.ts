@@ -904,7 +904,16 @@ export interface GittRun {
   molar_volume_cm3: number | null
   molar_mass_g: number | null
   active_mass_g: number | null
+  /** 저울이 읽는 전극 전체와 그 안의 활물질 비율. 활물질 질량을 안 적었으면
+   *  이 둘의 곱이 쓰인다 — 적어 넣은 값이 늘 이긴다. */
+  electrode_mass_g?: number | null
+  active_wt_percent?: number | null
   area_cm2: number | null
+  /** 캘리퍼가 읽는 지름. 면적을 안 적었으면 여기서 나온다. */
+  diameter_mm?: number | null
+  /** 실제로 계산에 들어가는 두 값 (적은 것 → 계산한 것 순). */
+  active_mass_g_effective?: number | null
+  area_cm2_effective?: number | null
   /** 이보다 짧은 휴지는 평형으로 치지 않는다. 0 이면 전부 쓴다. */
   min_rest_s: number
   /** 무엇을 보려고 잰 기록인가 (자유 입력).  비어 있는 것이 정상이다. */

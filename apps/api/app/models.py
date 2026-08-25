@@ -495,8 +495,17 @@ class GittRun(SQLModel, table=True):
     molar_mass_g: float | None = None
     #: g of active material in this electrode.
     active_mass_g: float | None = None
+    #: 저울이 읽는 것은 **전극 전체**이고, 활물질은 거기에 wt% 를 곱한 몫이다.
+    #: 둘을 적어 두면 활물질 질량을 계산해 쓴다 -- 그래도 `active_mass_g` 를
+    #: 적어 넣었으면 그것이 이긴다 (`diameter_mm`/`area_cm2` 와 같은 규칙).
+    #: mAh/g 의 분모가 전극 전체가 아니라 활물질인 이유는 §3 에 있다.
+    electrode_mass_g: float | None = None
+    active_wt_percent: float | None = None
     #: cm², the electrode/electrolyte interfacial area.
     area_cm2: float | None = None
+    #: mm, 원형 펠릿의 지름.  캘리퍼가 읽는 것은 이쪽이고 면적은 거기서 나온
+    #: 수다.  적어 넣은 면적이 이긴다 -- 원이 아닌 전극이 있다.
+    diameter_mm: float | None = None
     #: Rests shorter than this are not treated as equilibrium.  0 = keep all,
     #: and report the drift per point instead.
     min_rest_s: float = 0.0

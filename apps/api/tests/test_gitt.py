@@ -138,6 +138,69 @@ def test_filling_the_constants_makes_the_numbers_appear(client):
     assert values[0] == pytest.approx(values[-1], rel=0.05)
 
 
+def test_the_area_can_come_from_the_diameter(client):
+    """캘리퍼가 읽는 것은 지름이다.  면적을 두 번 재게 하지 않는다."""
+    out = upload(client, n_pulses=4)
+    values = dict(MATERIAL)
+    values.pop("area_cm2")
+    values["diameter_mm"] = 13.0
+    patched = client.patch(f"/api/gitt/runs/{out['id']}", json=values).json()
+
+    assert patched["area_cm2"] is None            # 적은 적이 없다
+    assert patched["area_cm2_effective"] == pytest.approx(1.3273, rel=1e-3)
+    assert patched["missing_for_diffusion"] == []  # 그래도 D 가 나온다
+
+    body = client.get(f"/api/gitt/runs/{out['id']}/diffusion").json()
+    assert body["area_cm2"] == pytest.approx(1.3273, rel=1e-3)
+    assert body["usable"] > 0
+
+
+def test_a_written_area_beats_the_diameter(client):
+    """원이 아닌 전극이 있고, 그때 지름은 잴 수 있는 값이 아니다."""
+    out = upload(client, n_pulses=3)
+    patched = client.patch(f"/api/gitt/runs/{out['id']}",
+                           json={**MATERIAL, "diameter_mm": 13.0}).json()
+    assert patched["area_cm2_effective"] == pytest.approx(1.33)
+
+
+def test_the_active_mass_can_come_from_the_electrode_mass_and_wt_percent(client):
+    """저울이 읽는 것은 전극 전체다 (§3).  분모는 활물질이어야 한다."""
+    out = upload(client, n_pulses=4)
+    values = dict(MATERIAL)
+    values.pop("active_mass_g")
+    values["electrode_mass_g"] = 0.025
+    values["active_wt_percent"] = 80.0
+    patched = client.patch(f"/api/gitt/runs/{out['id']}", json=values).json()
+
+    assert patched["active_mass_g"] is None
+    assert patched["active_mass_g_effective"] == pytest.approx(0.02)
+    assert patched["missing_for_diffusion"] == []
+
+    body = client.get(f"/api/gitt/runs/{out['id']}/diffusion").json()
+    assert body["mass_g"] == pytest.approx(0.02)
+
+
+def test_a_written_active_mass_beats_the_electrode_mass(client):
+    """활물질만 따로 단 경우가 있다 -- 계산값이 이기면 잰 값이 조용히 버려진다."""
+    out = upload(client, n_pulses=3)
+    patched = client.patch(
+        f"/api/gitt/runs/{out['id']}",
+        json={**MATERIAL, "electrode_mass_g": 0.05, "active_wt_percent": 50.0},
+    ).json()
+    assert patched["active_mass_g_effective"] == pytest.approx(0.02)
+
+
+def test_half_of_a_derived_pair_is_still_missing(client):
+    """wt% 없이 전극 질량만 있으면 활물질 질량을 모른다 -- 지어내지 않는다."""
+    out = upload(client, n_pulses=3)
+    values = dict(MATERIAL)
+    values.pop("active_mass_g")
+    values["electrode_mass_g"] = 0.025
+    patched = client.patch(f"/api/gitt/runs/{out['id']}", json=values).json()
+    assert patched["active_mass_g_effective"] is None
+    assert patched["missing_for_diffusion"] == ["활물질 질량"]
+
+
 def test_the_first_pulse_says_why_it_has_no_number(client):
     out = upload(client, n_pulses=3)
     client.patch(f"/api/gitt/runs/{out['id']}", json=MATERIAL)

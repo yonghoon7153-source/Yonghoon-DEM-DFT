@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import math
+
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
@@ -9,6 +11,15 @@ from wrdkit import BASES, ResolvedCell, basis_label
 
 from .models import ExperimentGroup, Run, Sample
 from .schemas import ComponentOut, ResolvedCellOut
+
+
+def circle_cm2(diameter_mm: float) -> float:
+    """원형 펠릿의 면적 (cm²).  지름은 mm 로 받는다 -- 캘리퍼가 그렇게 읽는다.
+
+    EIS(전도도의 분모)와 GITT(확산계수의 계면 면적)가 같은 원을 잰다.  두 벌로
+    두면 한쪽만 고쳐지고, 그러면 같은 셀의 두 화면이 다른 면적을 말한다.
+    """
+    return float(math.pi * (diameter_mm / 20.0) ** 2)
 
 
 def get_sample(session: Session, sample_id: int) -> Sample:

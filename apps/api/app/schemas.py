@@ -903,7 +903,17 @@ class GittRunOut(BaseModel):
     molar_volume_cm3: float | None
     molar_mass_g: float | None
     active_mass_g: float | None
+    #: 저울이 읽는 전극 전체와 그 안의 활물질 비율.  둘이 있으면 활물질 질량이
+    #: 여기서 나온다 -- 적어 넣은 `active_mass_g` 가 늘 이긴다.
+    electrode_mass_g: float | None = None
+    active_wt_percent: float | None = None
     area_cm2: float | None
+    #: 캘리퍼가 읽는 지름.  면적이 비어 있으면 여기서 나온다.
+    diameter_mm: float | None = None
+    #: 실제로 계산에 들어가는 두 값.  화면이 "지름에서: 0.7854 cm²" 처럼
+    #: 적을 수 있게 계산 결과를 함께 낸다 -- 없으면 `None` 이다 (§0.4).
+    active_mass_g_effective: float | None = None
+    area_cm2_effective: float | None = None
     min_rest_s: float
     #: 무엇을 보려고 잰 측정인가 (자유 입력).  비어 있는 것이 정상이다.
     purpose: str = ""
@@ -950,7 +960,10 @@ class GittRunUpdate(BaseModel):
     molar_volume_cm3: PositiveMass | None = None
     molar_mass_g: PositiveMass | None = None
     active_mass_g: PositiveMass | None = None
+    electrode_mass_g: PositiveMass | None = None
+    active_wt_percent: Percent | None = None
     area_cm2: PositiveLength | None = None
+    diameter_mm: PositiveLength | None = None
     min_rest_s: NonNegativeMass | None = None
     clear: list[str] = Field(default_factory=list)
 
