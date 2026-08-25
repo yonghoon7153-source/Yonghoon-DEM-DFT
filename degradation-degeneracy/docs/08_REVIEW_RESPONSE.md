@@ -3075,3 +3075,150 @@ protocol 을 명시한 채 유지할 수 있다". 전체 시험이 그 자리에
 |---|---|
 | 4 | object/pin 디렉터리 fsync **순서**는 고쳤다. **crash/reopen drill 은 없다** |
 | 9 | immutable cohort generation + 단일 `CURRENT` 승격 (P1-5) — **미착수**. `row_projection` 승격은 여전히 fixed-name 세 파일이라 set atomicity 가 아니다 |
+
+## 39. 30차 리뷰 대응 — retention 의 권위를 backend 로 옮겼다
+
+> 2026-08-25. 리뷰가 세 회차의 병을 한 줄로 정리했다:
+>
+> ```text
+> Gate28: receipt read → journal 사이
+> Gate29: pin read → journal 사이
+> Gate30: post-commit graph verification 의 pin read → return 사이
+> ```
+>
+> 그리고 처방도 함께 줬다 — "다음 checkpoint 는 더 많은 read 가 아니라
+> **retention state 의 authority 를 backend transaction/lease 로 옮기는 것**".
+> 이 라운드는 그 문장을 그대로 구현한 것이다.
+
+### 39.1 P0-1 — 전수 읽기 도중 사라져도 성공했다
+
+`verify_registered_graph()` 의 순서가 이랬다:
+
+```text
+receipt pin read → manifest pin read → on_disk snapshot
+→ verify_pins() 전수 읽기 → output 만 다시 읽기 → 성공
+```
+
+`on_disk` snapshot 이 전수 읽기 **앞**이고 두 번째 읽기는 output 뿐이다.
+그래서 member pin 을 읽은 직후 지우면 receipt·manifest·member 가 사라진 채
+성공이 반환됐다. 리뷰가 준 그대로 재현했고, 29차의 `_DropAfterRead` 로는
+잡히지 않는다는 지적도 맞았다 — 그것은 `read_back()` 의 `objects/` 만
+건드린다. member 는 전수 읽기에서 **딱 한 번** 읽히므로 그것을 겨냥해
+`_DropPinAfterRead` 를 새로 만들었다.
+
+리뷰가 요구한 세 primitive 를 만들었다:
+
+```text
+retain(graph, min_retention_days) -> lease
+verify_retention(lease, actual_backend)
+retrieve_retained(lease, digest)
+```
+
+lease 는 그 자체가 CAS object 이고 pin 된다 — graph 의 일부라서 위조하면
+graph digest 가 어긋난다. 등록 검증의 **마지막 단계가 바이트 읽기가 아니라
+lease 상태 확인**이므로 전수 읽기 도중의 삭제가 잡힌다.
+
+### 39.2 그 뒤의 창은 닫지 않았다 — 대신 성공의 뜻을 좁혔다
+
+local filesystem 에서 마지막 검사와 반환 사이는 **닫을 수 없다.** 이 저장소의
+실행 환경은 uid 0 이라 directory mode bit 도 잠금이 아니다 (실측: `chmod 0o500`
+뒤에도 unlink 가 성공했다). 검사를 하나 더 두면 창이 한 칸 뒤로 갈 뿐이고,
+그것이 28·29·30차가 같은 자리에 선 이유다.
+
+그래서 검사를 늘리는 대신 **`ok=True` 의 뜻을 좁혔다.** lease 가 강제 수준을
+값으로 신고한다:
+
+| 값 | 뜻 |
+|---|---|
+| `advisory_local` | pin 은 붙들지만 강제하지 못한다. local 이 여기다 |
+| `object_lock` | backend 가 retention 을 강제한다 |
+
+`run_transaction` 은 `durable: False` 를 함께 돌려주고,
+`assert_durable_retention()` 은 `object_lock` 이 아니면 거부한다. 비싼 본
+실행을 승인하는 gate 가 그 자리다. 리뷰의 문장 — "그 전에는 `ok=True` 를
+durable retention 성공으로 부르면 안 된다" — 을 타입으로 적은 것이다.
+
+### 39.3 P0-2 · P0-3
+
+| # | 무엇이 열려 있었나 | 고침 |
+|---|---|---|
+| P0-2 | `is_registered(index, leg)` 가 backend 없이 참을 돌려줬다 — `pins/`·`objects/` 를 다 지워도 참 | backend **필수**. journal 주장은 `has_registration_journal()` 로 분리 |
+| P0-2 | identity 가 `file+cas://{self.root}` 문자열뿐 — `root=Path("cas")` 로 등록 뒤 cwd 를 바꾸면 다른 store 를 가리키며 URI 가 같다 | URI 를 절대 경로로 정규화 · 생성 시각에 고정되는 store UUID 를 receipt 와 lease 에 결속 |
+| P0-3 | `_fsync_dir()` 실패를 `False` 로 돌리고 **무시**했다 | `_fsync_dir_strict()` 가 오류로 전파 |
+| P0-3 | `objects/<prefix>`·`pins/<leg>` 를 만들고 **자기 자신만** flush | `_mkdir_durable()` 이 새로 만든 모든 층의 부모 edge 를 flush |
+| P0-3 | capability 캐시 키가 `resolve().anchor` — POSIX 의 모든 mount 가 `/` 하나로 합쳐졌다 | `st_dev` |
+
+그리고 요청문이 "없다" 고 신고했던 **crash/reopen drill** 을 넣었다. 예외
+주입은 `finally` 를 돌지만 kill 은 아무 것도 돌지 않는다 — 자식 프로세스를
+`os._exit(9)` 로 죽이고 부모가 다시 열어 `journal visible ⇒ full graph
+retrievable` 을 확인한다. commit 순서를 뒤집는 변이로 물리는 것을 봤다.
+
+### 39.4 P1 넷
+
+| # | 무엇 | 고침 |
+|---|---|---|
+| 1 | journal 의 duplicate·surplus key·거짓 `pin_set_digest` 가 통과 (`set(...) == expected` 만 봤다) | 닫힌 키 집합 · unique 정렬 64-hex · **유도한 graph 로** 재계산 · journal 없으면 fail-closed. 등록 전 검증은 `verify_graph_before_registration()` 으로 이름을 갈랐다 |
+| 2 | planned envelope 의 값 domain 이 없었다 (`protocol_generation=7` 등) · hook 의 `ok` 를 truthiness 로 봤다 · output 이 role 무관 8키 nonempty · manifest member path 에 domain 없음 | `check_envelope()` · `check_hook_validation()` · role 별 tagged union · seal 시점 `_safe_member_path` |
+| 3 | retention 하한이 receipt 의 자기신고 숫자 | `min_retention_days` 를 envelope 에 봉인하고 lease 검증이 **지금 backend** 를 재조회 |
+| 4 | `objective_plan` 이 caller 의 자유 인자 | `design_binding()` 이 봉인 design 에서 chain 을 유도하고 `candidate_id` 는 그것만 받는다 |
+
+P1-2 에서 하나 더 나왔다 — `envelope()` 이 `int(self.total_start_budget)` 로
+**강제 변환**하고 있어서 `True` 가 `1` 이 되어 domain 검사에 도달하지 못했다.
+변환을 없앴다.
+
+P1-4 의 golden vector 는 **바이트 동일**하다. ID domain 은 안 움직였고 움직인
+것은 plan 의 권위 위치다.
+
+### 39.5 P2 — 세대 chain, 그리고 닫지 못한 것
+
+닫은 것:
+
+* 투영의 `manifest_sha256` 을 봉인 manifest **바이트에서 재해시**한다
+* 투영의 `source_digest` 를 그 manifest 의 `run_spec.source_digest` 와 대조
+* cohort 가 갈리면 실패하고 active cohort 를 우선한다 (초판은 처음 찾은 것)
+* 세대표의 **값**에 근거를 붙였다 (`source_digest_evidence`)
+* `STAGE3_CONTRACT.md` §8 에 leg-level 과 per-claim 두 층을 명시 — 리뷰가
+  지적한 "authority 문서에 반영되지 않은 재해석"
+
+닫지 **못한** 것을 그대로 적는다. 실행이 남긴 어떤 산출물에도
+"protocol generation" 이라는 필드가 **없다** — 그 이름은 이 원장의 분류다.
+그러므로 `digest → generation` 화살표는 도출이 아니라 **선언**이고, 여기서 할
+수 있는 것은 그 선언을 봉인물이 지지하는 digest 에 묶어 두는 것까지다. 묶음 9
+등록이 생기는 순간 registered receipt 의 `planned_envelope` 이 정본이 되도록
+fail-closed 검사를 미리 켜 뒀고, 지금은 그 검사가 "등록된 다리 없음" 을
+고정하고 있다.
+
+### 39.6 자체 발견 둘
+
+**lease 가 재실행마다 늘었다.** `retain_until_utc` 때문에 부를 때마다 lease
+바이트가 달라져, 재실행이 초 경계를 넘으면 lease 가 하나 더 pin 됐다. 전체
+시험을 열두 번 돌려 두 번 빨갰고 원인이 시계라 재현이 확률적이었다. 시계를
+강제로 전진시키는 결정적 회귀로 고정하고 `retain()` 을 멱등으로 만들었다.
+
+**요청문 lint 가 archive 를 거짓으로 만들었다.**
+`test_committed_gate_requests_are_self_contained` 가 **모든** 요청문의 인용을
+**오늘의** 영수증과 대조했다. 요청문은 그 회차의 기록이므로 다음 회차에
+영수증이 바뀌면 지나간 요청문이 전부 거짓이 된다. "최신 것만 본다" 로
+약화하면 archive 는 아무도 안 보게 되므로, **그 요청문이 이름한 대상 커밋의
+영수증**과 대조하도록 바꿨다 — 그것이 자기완결의 뜻이기도 하다.
+
+### 39.7 변이로 확인했고, 물지 않은 것 셋
+
+이번에 넣은 규칙을 전부 변이로 시험했다. **물지 않은 변이가 셋** 있었고 전부
+시험이 다른 축에 업혀 통과하던 자리였다:
+
+| 물지 않은 변이 | 왜 | 처리 |
+|---|---|---|
+| URI 정규화 삭제 | `relative_root` 시험이 lease 의 store UUID 축으로 통과 | store 를 `store.json` 째 복사해 UUID 축을 무력화한 시험으로 고쳤다 |
+| receipt 의 `backend_store_id` 결속 삭제 | end-to-end 로는 lease 검사가 먼저 걸린다 | validator 를 직접 시험하는 회귀를 따로 만들었다 |
+| journal 의 자기 `pin_set_digest` 재계산 삭제 | `verify_registered_graph` 가 **유도한 graph 로** 다시 계산한다 | 실제 중복이므로 **약한 쪽을 지웠다** — 같은 계산이 두 곳에 있으면 강한 쪽을 지워도 초록이다 |
+
+35.7 이 적은 "이름이 검사보다 강한 시험" 이 이번에는 **변이가 통과하는 시험**
+의 형태로 나타났다. 규칙을 넣을 때마다 지워 보는 것을 절차로 굳힌다.
+
+### 39.8 여전히 미착수
+
+묶음 9 의 immutable cohort generation + 단일 `CURRENT` 승격 (리뷰 최소 증거
+9항) 은 이번에도 **미착수**다. `row_projection` 의 승격이 여전히 fixed-name 세
+파일이라 set atomicity 가 아니다. 계약 §13 의 열 묶음도 "닫음" 으로 바꾸지
+않았다.
