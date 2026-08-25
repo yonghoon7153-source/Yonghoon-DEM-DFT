@@ -398,3 +398,13 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 | slug | 논문 | 축 |
 |---|---|---|
 | `papers/lee2026_mechanical_halogen_argyrodite_drycoating.md` | **[자체·공저]** Y. Lee 외, **Yonghoon An (제2저자 = 계산 담당)**, 교신 **Jong-Won Lee**(한양대), "**Beyond Electrochemistry: Tailoring Mechanical Properties of Halogen-Substituted Argyrodites for Conformal Dry Coating and Enhanced Battery Performance**" (**ACS Nano 2026**, DOI 10.1021/acsnano.6c09375; 본문 14 pp + SI 30 pp) — exp 주도 + **계산 보조**(MLIP/DFT 계면 W_ad + FEM 충돌 + 기하 coverage 모델) | ⚠ **`Fig. 6` 은 우리 계산인데 논문의 Eq. (1) 로 재현되지 않는다** — 식에 **`− α·ΔW_strain` 항이 빠졌다**(α=1.0, dW=0.44). 인용·리비전 시 이 식을 그대로 쓰면 안 된다. 우리 db 논리와의 정합은 digest §비교 참조 |
+
+## ⚡ CAM(양극활물질) **고유** 전달물성 앵커 — σ_e / σ_ion / D̃ (2026-08-25 신설)
+
+> 왜 따로 두나 — 리포의 σ 앵커는 거의 전부 **SE(이온)** 이거나 **복합체 유효값**이다.
+> **AM 상 자체의 재료값**(첨가제·바인더 없는 단상 시료)을 준 논문은 드물고, 그것이 우리
+> σ_e 폼의 재료 프리팩터(`σ_AM` / `σ_S` / `σ_P`)를 검증할 유일한 자리다.
+
+| slug | 논문 | 축 |
+|---|---|---|
+| `papers/aminchiang2016_nmc_electronic_ionic_transport_vs_li.md` | **Ruhul Amin & Yet-Ming Chiang** (MIT + QEERI), "Characterization of Electronic and Ionic Transport in Li₁₋ₓNi₀.₃₃Mn₀.₃₃Co₀.₃₃O₂ (NMC333) and Li₁₋ₓNi₀.₅₀Mn₀.₂₀Co₀.₃₀O₂ (NMC523) as a Function of Li Content" — **J. Electrochem. Soc. 163 (8) A1512–A1517 (2016)**, Open Access, DOI 10.1149/2.0131608jes (⚠ **erratum** 10.1149/2.0881610jes: **NMC523 → NMC532**, Mn₀.₃₀Co₀.₂₀). **첨가제 없는 단상 소결 펠릿**(340 MPa 성형 + 900 °C/12 h → 96–98 % 상대밀도)에서 **이온차단(Ag/NMC/Ag)·전자차단(Li/PEO/NMC/PEO/Li)** 셀로 σ_e·σ_ion·D̃ 를 **분리 측정**. ★★★ **σ_e 가 x = 0 → 0.75 에서 ∼10⁻⁷ → ∼10⁻² S cm⁻¹ (4–5 자릿수) 상승**(E_a 0.42–0.48 → 0.05–0.10 eV, small polaron / Ni³⁺-Ni⁴⁺). **우리 σ_e 재료앵커 판정**: σ_S 10 · σ_P 5 mS cm⁻¹ = **밴드 안이지만 충전 끝단(x ≈ 0.64–0.71)** ✅ / **σ_AM 50 mS cm⁻¹ = 30 °C 측정 최대(13.8)보다 3.6× 위, 코드가 라벨한 `discharged` 상태 대비 10⁶× ⛔ → "NCM811 literature reference" 라벨 사용 불가**. 보너스: σ_ion(NMC) ≈ 9.1 × 10⁻⁹ S cm⁻¹ (51 °C) = LPSCl 의 **1/(3 × 10⁵)** ⇒ **"AM = 이온 절연" 가정의 실측 근거**. D̃(RT) 1.3–5.0 × 10⁻¹⁰ cm² s⁻¹ (⚠ x > 0.5 는 저자 스스로 **미세균열 artifact** 라 명시). | experiment · **AM 전달물성 앵커** |

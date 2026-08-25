@@ -1,0 +1,131 @@
+{
+ "slug": "aminchiang2016_nmc_electronic_ionic_transport_vs_li",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-25",
+ "sources": [
+  "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 3,
+   "file": "fig_1.png",
+   "caption": "Figure 1. (a) Impedance spectra of as-sintered fully lithiated NMC523 (LiNi0.50Mn0.20Co0.30O2) at two different temperatures measured using the symmetrical cell conﬁguration Ag/NMC/Ag, (b) equivalent circuit used to evaluate the impedance spectra, and (c) time dependent voltage in polarization measurements performed at partially delithiated NMC333 (LiNi0.33Mn0.33Co0.33O2) in the same cell conﬁguration under constant ap- plied current.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    341.5,
+    556.0,
+    687.3
+   ],
+   "w": 1080,
+   "h": 1441,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.934
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 4,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Electronic conductivity of lithiated and partially delithi- ated (a) NMC523 (LiNi0.50Mn0.20Co0.30O2) and (b) NMC333 (LiNi0.33Mn0.33Co0.33O2) (as a function of inverse temperature obtain from DC measurement and calculated activation energy using the Arrhenius equation. AC impedance also exhibit same magnitude of conductivity). (c) The electronic conductivity of NMC (Li1-xNMC) as a function of x value in Li1-xNMC at 30◦C obtained from DC measurement. After electrochemical delithiation to the desired compositions, the cells were allowed to relax under open circuit voltage conditions.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    171.8,
+    555.2,
+    508.1
+   ],
+   "w": 1081,
+   "h": 1403,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.915
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 5,
+   "file": "fig_3.png",
+   "caption": "Figure 3. (a) Impedance spectra of NMC333 (LiNi0.33Mn0.33Co0.33O2) ob- tained at 61◦C from the electron blocking cell conﬁguration Li/PEO/NMC/ PEO/Li. Inset shows the enlarged high frequency spectra. Similar impedance spectra were measured for NMC523 (LiNi0.50Mn0.20Co0.30O2) (b) Equivalent circuit used to ﬁt the impedance spectra.",
+   "rotated_deg": 0,
+   "bbox": [
+    29.9,
+    61.8,
+    289.1,
+    321.5
+   ],
+   "w": 1081,
+   "h": 1083,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.929
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. (a) Time dependent of DC polarization voltage at ∼50◦C obtained from the electron blocking cell Li/PEO/NMC/PEO/Li. (b) Polarization and depolarization results are ﬁtted with Eq. 1 in order to obtain ionic conductivity and diffusivity.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.9,
+    62.3,
+    556.1,
+    365.1
+   ],
+   "w": 1080,
+   "h": 1263,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.908
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 6,
+   "file": "fig_5.png",
+   "caption": "Figure 5. (a) Time dependent cell voltage measured on the NMC523 (LiNi0.50Mn0.20Co0.30O2) plate by titrating a ﬁxed amount of lithium and holding at open circuit conditions. (b) Fit of the depolarization cell voltage to Eq. 1 in order to extract the chemical diffusivity of lithium ion and similar measurements were performed for NMC333 (LiNi0.33Mn0.33Co0.33O2).",
+   "rotated_deg": 0,
+   "bbox": [
+    29.1,
+    61.6,
+    288.2,
+    351.1
+   ],
+   "w": 1080,
+   "h": 1207,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.922
+  },
+  {
+   "key": "f6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "Figure 6. Comparison of diffusivity of NMC333 and NMC523 as a function of lithium content at room temperature obtained from depolarization experiments shown in Figure 5a.",
+   "rotated_deg": 0,
+   "bbox": [
+    296.1,
+    62.2,
+    555.2,
+    208.1
+   ],
+   "w": 1081,
+   "h": 609,
+   "dpi": 300,
+   "src": "Amin_Chiang_2016_JES_NMC333_NMC523_electronic_ionic_transport.pdf",
+   "blank": 0.94
+  }
+ ]
+}
