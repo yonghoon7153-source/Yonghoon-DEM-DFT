@@ -435,5 +435,15 @@
    "sto_flags_resolution": "STO 플래그 3건(0.70/0.77/0.70)은 전부 **시간원점 잡음** — MTO 에서 0.82–0.95 로 회복. 스캔 c-행 판독(케이지 절편/느린 전이)과 정합",
    "refit_rule": "Ea 재적합은 600 K 3시드 + MTO 시드평균 β-bar 통과 후 — 부분 적합 발표 금지"
   }
+ },
+ "lpsocl_600_rerun_2026_08_25": {
+  "what": "lpsocl 600 재실행 3시드 — 0.2867 보류 해제의 열쇠 (보류 사유 = 600 게이트 탈락)",
+  "started": "2026-08-25 22:12 kgy (tmux lp600)",
+  "nat": 62,
+  "min_dist_gate": "1.559 Å OK",
+  "how": "ONLY=lpsocl TEMP_PROD='' LPSOCL_EXTRA='600:200' SEEDS='2 3 4' LOCK=/tmp/arr6_lp600.lock — 별도 lock (기존 러너 lock 에 튕기는 함정 회피)",
+  "co_run": "기존 러너(lpsocl T700 → b2o3 T700)와 동시 실행 — GPU 98 %, 3.2 GB/24 GB. 둘 다 감속하나 순차 대비 lp600 이 ~10 h 당겨짐 (사용자 결정: 대기자 없이 즉시)",
+  "output": "arrhenius_6pt_traj/lpsocl/T600_s{2,3,4} — 200 ps · MTO · traj",
+  "on_complete": "600 MTO 시드평균 β-bar 재판정 → 통과 시 lpsocl Ea 재적합 (보류 해제), 시드평균 MTO 곡선으로 논문 MSD 그림 정본 교체"
  }
 }
