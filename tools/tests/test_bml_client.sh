@@ -1029,6 +1029,26 @@ check "남의 서버만 볼 거면 필요 없다고 말한다" \
 check "그때 칠 명령도 함께 준다" \
   "$(grep -c 'bmlout <터널 주소>' "$BML")" "1"
 
+echo "bmlonly — DNS 가 막힌 그 한 대에서만"
+# `bmlout` 은 어느 기계에서나 같은 뜻이어야 한다: "밖 주소로 붙어라".  DNS 가
+# 막힌 기계에서만 그것이 세 단계(공용 DNS → hosts → 접속)가 되는데, 그 셋을
+# bmlout 에 섞으면 멀쩡한 기계에서도 sudo 를 묻고 hosts 를 건드리게 된다.
+check "이름이 따로 있다"        "$(grep -c 'bmlonly) set -- only' "$BML")" "1"
+check "분기도 따로 있다"        "$(grep -c '^    only)' "$BML")" "1"
+check "설치가 별칭을 만든다"    "$(grep -c 'for name in bml bmlin bmlout bmlonly' "$BML")" "1"
+check "도움말에 있다"           "$(grep -c '#   bmlonly \[주소\]' "$BML")" "1"
+# 살아 있는 것을 못 봤으면 hosts 를 건드리지 않는다 -- 죽은 IP 를 박아 두면
+# 그 뒤로 이 기계만 조용히 엉뚱한 곳을 본다 (§0.4).
+check "확인 전에는 hosts 를 안 건드린다" \
+  "$(grep -c '/etc/hosts 는 건드리지 않았습니다' "$BML")" "1"
+check "옛 터널 이름을 먼저 지운다" \
+  "$(grep -c "sudo sed -i '/\\\\.lhr\\\\.life\\\$/d;/\\\\.localhost\\\\.run\\\$/d" "$BML")" "1"
+# 막히지도 않은 기계에서 쳤으면 그냥 넘겨 준다 -- 쓸데없이 sudo 를 묻지 않는다.
+check "안 막힌 기계면 그냥 붙는다" \
+  "$(grep -c 'hosts 를 건드릴 것 없이 그냥 붙습니다' "$BML")" "1"
+check "끝은 bmlout 과 같은 길로" \
+  "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'cmd_slot out "\$url"')" "2"
+
 echo
 if [ "$fail" -eq 0 ]; then
   printf '통과 %d건.\n' "$pass"

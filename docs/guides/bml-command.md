@@ -73,7 +73,7 @@ DFT 판도 쓰고 있다면 위 "프로젝트가 둘" 절의 `worktree` 방법�
 
 ### `bml: command not found` — 실제로 걸린 자리
 
-`install` 은 `~/.local/bin/` 에 `bml` · `bmlin` · `bmlout` 세 개를 쓰고,
+`install` 은 `~/.local/bin/` 에 `bml` · `bmlin` · `bmlout` · `bmlonly` 네 개를 쓰고,
 `$SHELL` 에 맞는 셸 설정(`~/.bashrc` 또는 `~/.zshrc`)에 PATH 한 줄을 넣습니다.
 같은 줄을 두 번 넣지는 않습니다.
 
@@ -142,7 +142,7 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 ```
 
 `install` 쪽을 권합니다. **어느 디렉터리에서 쳐도** 동작하는 것은 둘 다
-같지만, alias 는 `bmlin`/`bmlout` 을 따로 걸어야 하고, 파일이 사라졌을 때
+같지만, alias 는 `bmlin`/`bmlout`/`bmlonly` 를 따로 걸어야 하고, 파일이 사라졌을 때
 셸이 주는 것은 여전히 `No such file or directory` 한 줄뿐입니다.
 
 ## 쓰는 법
@@ -168,6 +168,7 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml mirrored` | WSL 을 mirrored 네트워크로 — 다른 기계가 이 서버를 보게 (WSL 에서 실행) |
 | `bmlin [주소]` | 랩 안(LAN) 주소로 갈아 끼우고 연다 — 주소는 한 번만 적으면 됩니다 |
 | `bmlout [주소]` | 밖(터널) 주소로 갈아 끼우고 연다 — 터널은 열 때마다 주소가 바뀔 수 있습니다 |
+| `bmlonly [주소]` | **이 기계의 DNS 가 터널 도메인을 거를 때만.** 공용 DNS 로 IP 를 얻고 → 터널이 살아 있는지 IP 로 직접 확인하고 → `/etc/hosts` 에 이름표를 박고 → 붙습니다. `sudo` 를 한 번 묻습니다 |
 | `bml check` | 커밋 전 검사 (pytest · tsc · vitest · eslint · ruff · docs · bml 회귀) |
 | `bml doctor` | 환경 점검 — 안 되면 여기부터 |
 | `bml repair` | 파이썬 환경을 새로 만든다 (의존성이 꼬였을 때) |
