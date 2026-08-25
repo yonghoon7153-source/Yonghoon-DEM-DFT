@@ -52,34 +52,152 @@ STAGE_FILE_CANDIDATES = {
 }
 
 
-def normalize(values, invert=False):
+#: 축별 건강 상태 — normalize() 가 채운다. --status 와 실행 말미 경고가 읽는다.
+#   ⛔ 왜 있나: normalize 의 "전부 결측이면 0.5" 규칙이 **조용히** 축 하나를 상수로
+#     만들었다. li_mobility_score 가 3,615행 전원 결측이었는데 아무 경고 없이
+#     0.5 로 메워져 '3축 랭킹' 이 실제로는 2축이었다 (2026-08-25 발견).
+#     같은 일이 다른 축에서 또 나도 안 보이는 것이 진짜 결함이다.
+AXIS_HEALTH: dict = {}
+
+
+def normalize(values, invert=False, label=None):
+    """min-max 정규화. 결측/상수 축은 0.5 로 메우되 **그 사실을 기록한다**.
+
+    ⛔ 이 함수가 못 하는 것: 결측을 복구하지 않는다. 0.5 는 '기여 없음' 이지
+      '중간값' 이 아니다 — 그 축은 순위에 아무 영향을 못 준다.
+    """
+    n = len(values)
     arr = np.array([v if v is not None else np.nan for v in values],
                    dtype=float)
+    n_ok = int(np.count_nonzero(~np.isnan(arr)))
+    state = "ok"
     if np.all(np.isnan(arr)):
-        return [0.5] * len(values)
+        state = "all_missing"
+    elif np.nanmax(arr) - np.nanmin(arr) < 1e-12:
+        state = "constant"
+    if label:
+        AXIS_HEALTH[label] = {"n": n, "n_present": n_ok,
+                              "coverage_pct": round(100.0 * n_ok / n, 1) if n else 0.0,
+                              "state": state,
+                              "contributes_to_ranking": state == "ok"}
+    if state != "ok":
+        return [0.5] * n
     lo = np.nanmin(arr); hi = np.nanmax(arr)
-    if hi - lo < 1e-12:
-        return [0.5] * len(values)
     norm = (arr - lo) / (hi - lo)
     if invert:
         norm = 1 - norm
     return [float(x) if not np.isnan(x) else 0.0 for x in norm]
 
 
+def report_axis_health(weights=None):
+    """축 건강을 한 화면으로. 죽은 축이 있으면 조용히 넘어가지 않는다. → 죽은 축 수."""
+    print("\n▸ 축 건강 (normalize 실측)")
+    dead = []
+    for lab, h in AXIS_HEALTH.items():
+        w = (weights or {}).get(lab)
+        wtxt = f" · 가중치 {w:g}" if w is not None else ""
+        if h["state"] == "ok":
+            print(f"  ✅ {lab:<12} {h['n_present']}/{h['n']} ({h['coverage_pct']}%){wtxt}")
+        else:
+            dead.append((lab, h, w))
+            why = ("전부 결측" if h["state"] == "all_missing" else "전 행 동일값")
+            print(f"  ⛔ {lab:<12} {h['n_present']}/{h['n']} ({h['coverage_pct']}%) "
+                  f"— {why} → 0.5 상수{wtxt}")
+    if dead:
+        lost = sum(w for _, _, w in dead if w is not None)
+        print(f"\n  ⚠ 죽은 축 {len(dead)}개. 이 축들은 **순위에 기여하지 않는다.**")
+        if lost:
+            print(f"    가중치 {lost:g} 만큼이 상수로 흡수됐다 — "
+                  f"결과를 '{len(AXIS_HEALTH)}축 랭킹' 이라고 부르면 안 된다.")
+        print("    → 입력 결측이면 tools/doping/bvse_proxy.py --backfill_glob 먼저.")
+    else:
+        print("  ✅ 모든 축이 순위에 실제로 기여한다.")
+    return len(dead)
+
+
+def _selftest():
+    """normalize / report_axis_health 만 검증. 음성 경로 포함."""
+    n_ok = n_bad = 0
+
+    def chk(c, m):
+        nonlocal n_ok, n_bad
+        print(("  ✓ " if c else "  ✗ ") + m)
+        n_ok, n_bad = n_ok + bool(c), n_bad + (not c)
+
+    AXIS_HEALTH.clear()
+    v = normalize([1.0, 2.0, 3.0], label='good')
+    chk(v == [0.0, 0.5, 1.0], "정상 축은 0..1 로 편다")
+    chk(AXIS_HEALTH['good']['contributes_to_ranking'] is True,
+        "정상 축은 기여함으로 기록된다")
+
+    v = normalize([1.0, 2.0, 3.0], invert=True, label='inv')
+    chk(v == [1.0, 0.5, 0.0], "invert 는 뒤집는다 (낮을수록 좋은 축)")
+
+    # ★ 이 사고를 재현하는 음성 경로
+    v = normalize([None, None, None], label='dead')
+    chk(v == [0.5, 0.5, 0.5], "[음성] 전부 결측이면 0.5 상수")
+    chk(AXIS_HEALTH['dead']['contributes_to_ranking'] is False,
+        "[음성] ★ 전부 결측 축은 **기여 안 함**으로 기록된다 — 조용히 넘어가지 않는다")
+    chk(AXIS_HEALTH['dead']['state'] == 'all_missing',
+        "[음성] 사유가 all_missing 으로 남는다")
+
+    v = normalize([7.0, 7.0, 7.0], label='const')
+    chk(AXIS_HEALTH['const']['state'] == 'constant' and
+        AXIS_HEALTH['const']['contributes_to_ranking'] is False,
+        "[음성] 전 행 동일값도 죽은 축이다 (결측만 잡으면 놓친다)")
+
+    chk(AXIS_HEALTH['dead']['coverage_pct'] == 0.0 and
+        AXIS_HEALTH['const']['coverage_pct'] == 100.0,
+        "[음성] 커버리지와 기여는 다른 것이다 — const 는 100% 인데도 죽었다")
+
+    # 부분 결측은 살아 있어야 한다 (과잉 차단 방지)
+    AXIS_HEALTH.clear()
+    v = normalize([1.0, None, 3.0], label='partial')
+    chk(AXIS_HEALTH['partial']['contributes_to_ranking'] is True and
+        AXIS_HEALTH['partial']['n_present'] == 2,
+        "[음성] 일부 결측은 죽은 축이 아니다 — 과잉 차단하지 않는다")
+    chk(v[1] == 0.0, "결측 행은 0.0 (최하) 으로 — 0.5 로 메우지 않는다")
+
+    dead = report_axis_health({'partial': 0.3})
+    chk(dead == 0, "죽은 축이 없으면 0 을 돌려준다")
+    AXIS_HEALTH['x'] = {"n": 3, "n_present": 0, "coverage_pct": 0.0,
+                        "state": "all_missing", "contributes_to_ranking": False}
+    chk(report_axis_health({'x': 0.3}) == 1, "죽은 축이 있으면 개수를 돌려준다")
+
+    print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
+    return 1 if n_bad else 0
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--cascade_dir', required=True,
+    p.add_argument('--cascade_dir',
                   help='tier_cascade output directory')
-    p.add_argument('--out', required=True)
+    p.add_argument('--out', help='출력 JSON (--status/--selftest 면 생략)')
     p.add_argument('--w_stab', type=float, default=0.4,
                   help='Weight: stability (post-anneal ΔE)')
     p.add_argument('--w_mod', type=float, default=0.3,
                   help='Weight: modulus (E_young)')
     p.add_argument('--w_mob', type=float, default=0.3,
                   help='Weight: Li mobility (BVSE proxy)')
+    p.add_argument('--status', action='store_true',
+                  help='축 커버리지만 보고 **아무것도 안 쓴다**. 어느 축이 실제로 '
+                       '순위에 기여하는지 확인용 (--out 은 무시된다). '
+                       'li_mobility_score 가 전원 결측이라 3축이 실제로 2축이었던 '
+                       '2026-08-25 사고 이후 추가.')
+    p.add_argument('--selftest', action='store_true',
+                  help='정규화·축건강 로직만 검증 (음성 경로 포함) — 데이터 없이 돈다')
     args = p.parse_args()
 
+    if args.selftest:
+        return _selftest()
+
+    if not args.cascade_dir:
+        print("⛔ --cascade_dir 이 필요하다")
+        return 2
+    if not args.status and not args.out:
+        print("⛔ --out 이 필요하다 (또는 --status 로 보기만)")
+        return 2
     cd = Path(args.cascade_dir)
     recs: dict[str, dict] = {}
 
@@ -193,9 +311,16 @@ def main():
 
     # Composite axis scores (min-max normalized)
     de_axis = [r.get('de_per_atom_post_anneal') or r.get('de_per_atom_screen') for r in rows]
-    de_norm = normalize(de_axis, invert=True)  # lower ΔE = higher score
-    mod_norm = normalize([r.get('E_young_GPa') for r in rows], invert=False)
-    mob_norm = normalize([r.get('li_mobility_score') for r in rows], invert=False)
+    de_norm = normalize(de_axis, invert=True, label='stability')
+    mod_norm = normalize([r.get('E_young_GPa') for r in rows], invert=False,
+                         label='modulus')
+    mob_norm = normalize([r.get('li_mobility_score') for r in rows], invert=False,
+                         label='mobility')
+    _W = {'stability': args.w_stab, 'modulus': args.w_mod, 'mobility': args.w_mob}
+    if args.status:
+        print(f"\n구조 {len(rows)}개 · cascade_dir {cd}")
+        report_axis_health(_W)
+        return 0
 
     for r, ds, ms, mb in zip(rows, de_norm, mod_norm, mob_norm):
         r['score_stability'] = ds
@@ -246,6 +371,12 @@ def main():
               f"{r['score_combined']:>7.3f}")
     print(f"\n✓ {len(rows)} structures → {out}")
 
+    # ★ 축 건강은 **표 뒤에 반드시 찍는다.** 죽은 축이 조용히 지나가면
+    #   '3축 랭킹' 이라는 잘못된 이름이 그대로 하류로 간다 (2026-08-25 사고).
+    n_dead = report_axis_health({'stability': args.w_stab, 'modulus': args.w_mod,
+                                 'mobility': args.w_mob})
+    return 2 if n_dead else 0
+
 
 if __name__ == '__main__':
-    main()
+    sys.exit(main() or 0)
