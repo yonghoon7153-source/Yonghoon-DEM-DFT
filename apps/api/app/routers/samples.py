@@ -8,6 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
 from wrdkit import BASES
+from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 
 from .. import storage
 from ..db import get_session
@@ -122,6 +123,11 @@ def create_sample(payload: SampleIn, session: Session = Depends(get_session)):
         raise HTTPException(422, f"declared_state must be one of {sorted(VALID_STATES)}")
     values = payload.model_dump(exclude={"composition", "composition_text"})
     values["name"] = payload.name.strip()
+    if "reference_cycle" in payload.model_fields_set:
+        # 스키마 기본값 3 도 model_dump 에 실려 오므로, 보낸 값과 기본값은
+        # model_fields_set 으로만 구별된다.  적어 두지 않으면 formation 없는
+        # 스케줄이 POST 로 준 기준을 영원히 1 로 덮어쓴다 (ADR 0018).
+        values["reference_cycle_source"] = "user"
     sample = Sample(**values)
     apply_composition(sample, payload.composition, payload.composition_text,
                       explicit_wt_percent=payload.active_wt_percent is not None)
@@ -170,6 +176,12 @@ def update_sample(sample_id: int, payload: SampleUpdate,
     for field in payload.clear:
         if field == "composition":
             sample.composition_json = ""
+        elif field == "reference_cycle":
+            # 고정 해제이지 NULL 이 아니다.  컬럼은 NOT NULL 이고 SampleOut 도
+            # int 라 None 은 500 이 된다.  기본값으로 되돌리고 출처를 지워서
+            # 자동 해석(기본 3, formation 없으면 1)이 다시 일하게 한다.
+            sample.reference_cycle = DEFAULT_REFERENCE_CYCLE
+            sample.reference_cycle_source = ""
         elif hasattr(sample, field):
             setattr(sample, field, None)
     if "composition" in sent or "composition_text" in sent:

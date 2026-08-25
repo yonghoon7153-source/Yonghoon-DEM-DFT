@@ -365,6 +365,65 @@ def test_a_typed_reference_cycle_survives_a_formationless_schedule(
     assert out["reference_cycle_reason"] == "user"
 
 
+def test_a_reference_cycle_given_at_creation_counts_as_typed(
+        client, formationless_wrd_bytes):
+    """POST 본문의 reference_cycle 도 사람이 친 값이다.
+
+    스키마 기본값 3 이 model_dump 에 실려 오므로, 보낸 값을 출처 없이 저장하면
+    formation 없는 스케줄이 그것을 1 로 덮어쓴다 -- PATCH 로 친 값만 살아남고
+    POST 로 준 값은 죽는 비대칭이 있었다.
+    """
+    sample = client.post("/api/samples",
+                         json={"name": "NOFORM-04", "reference_cycle": 3}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+
+    out = client.get(f"/api/samples/{sample['id']}").json()
+    assert out["reference_cycle_effective"] == 3
+    assert out["reference_cycle_reason"] == "user"
+
+
+def test_clearing_the_reference_cycle_unpins_it(client, formationless_wrd_bytes):
+    """clear 는 고정 해제다: 기본값 3 으로 돌아가고 자동 해석이 다시 일한다.
+
+    None 을 그대로 넣으면 NOT NULL 컬럼과 ``SampleOut.reference_cycle: int``
+    검증이 깨져 이후 모든 조회가 500 이 된다.
+    """
+    sample = client.post("/api/samples", json={"name": "NOFORM-05"}).json()
+    client.patch(f"/api/samples/{sample['id']}", json={"reference_cycle": 5})
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+    pinned = client.get(f"/api/samples/{sample['id']}").json()
+    assert pinned["reference_cycle_effective"] == 5
+
+    response = client.patch(f"/api/samples/{sample['id']}",
+                            json={"clear": ["reference_cycle"]})
+    assert response.status_code == 200
+    out = client.get(f"/api/samples/{sample['id']}").json()
+    assert out["reference_cycle"] == 3
+    assert out["reference_cycle_effective"] == 1        # formationless again
+    assert out["reference_cycle_reason"] == "formationless"
+
+
+def test_the_report_names_who_decided_the_anchor(client, formationless_wrd_bytes):
+    """리포트 카드도 이유를 말한다.  빼먹으면 스키마 기본값 "default" 가 나가서
+    formation 없이 1 에 앵커된 카드가 기본값이라고 주장한다."""
+    sample = client.post("/api/samples", json={"name": "NOFORM-06"}).json()
+    client.post("/api/runs/upload", params={"sample_id": sample["id"]},
+                files={"file": ("n_011.wrd", formationless_wrd_bytes,
+                                "application/octet-stream")})
+
+    report = client.get(f"/api/samples/{sample['id']}/report").json()
+    assert report["reference_cycle_requested"] == 1
+    assert report["reference_cycle_reason"] == "formationless"
+
+    client.patch(f"/api/samples/{sample['id']}", json={"reference_cycle": 5})
+    report = client.get(f"/api/samples/{sample['id']}/report").json()
+    assert report["reference_cycle_reason"] == "user"
+
+
 def test_a_sample_with_no_file_cannot_say(client):
     """파일이 없으면 스케줄도 없다.  모르면 기본값을 그대로 둔다 (§0.4)."""
     out = client.post("/api/samples", json={"name": "BARE-01"}).json()

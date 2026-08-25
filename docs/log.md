@@ -2522,3 +2522,11 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
 이다. 내부 연질 축퇴(두 가지가 한 아크를 나눠 갖되 국소적으로는 구속된 경우)는
 건드리지 않는다 — 그 stderr 는 국소적으로 정당하고, 모든 CNLS 도구가 같은 것을
 보고한다.
+## [2026-08-25] fix | 기준 사이클의 출처가 POST·clear·리포트에서 샜다
+- 리뷰 S1·S3·S6. (1) POST 본문에 reference_cycle 을 줘도 출처가 안 적혀
+  formation 없는 스케줄이 1 로 덮어썼다 — model_fields_set 으로 보낸 값만
+  user 로 적는다 (스키마 기본값 3 이 항상 실려 오기 때문). (2) clear 는
+  None 을 넣어 NOT NULL 컬럼·SampleOut(int) 검증을 깨뜨렸다 — 이제 3 +
+  출처 "" 로 되돌려 자동 해석이 다시 일한다 (고정 해제 의미).
+  (3) ReportOut 에 reason 전달이 빠져 카드가 항상 "default" 라고 말했다.
+  네 갈래 테스트에 3건 추가.

@@ -678,6 +678,10 @@ def sample_report(
         planned_cycles=planned,
         in_progress_cycle=report.in_progress_cycle,
         reference_cycle_requested=report.reference_cycle_requested,
+        # 앵커를 누가 정했는지 (ADR 0018).  빼먹으면 스키마 기본값 "default" 가
+        # 나가서, 사용자가 고정했거나 formation 이 없어 1 로 앵커된 카드도
+        # 기본값이라고 말한다.
+        reference_cycle_reason=sample_reference_cycle(sample)[1],
         reference_available=report.reference_available,
         retention_pct=report.retention_pct,
         retention_note=report.retention_note,
