@@ -412,6 +412,15 @@ def _read(path):
 
 def collect(d):
     rows = [_read(p) for p in sorted(glob.glob(os.path.join(d, 'p2_*.json')))]
+    #  ★★★ 2026-08-25 (R5-CX-08, Codex 5차) — **기각 receipt 가 판정에 안 읽혔다.**
+    #    러너는 봉인이 깨지면 `.rejected_<UTC>` 를 쓰는데 `collect()` 는 `p2_*.json` 만
+    #    글롭했다.  실측: 정상 16팔 디렉터리에 receipt 를 넣기 **전후가 둘 다 `h0`**.
+    #    ⇒ 기각 기록을 남기고 그것을 아무도 안 보면 그 기록은 장식이다.
+    #    기각된 tree 는 **즉시 격리**한다 — 무엇이 왜 기각됐는지는 그 파일이 말한다.
+    _rej = sorted(glob.glob(os.path.join(d, '.rejected_*')))
+    if _rej:
+        rows = [dict(r, _rejected=[os.path.basename(x) for x in _rej]) for r in rows] or [
+            {'file': '<none>', '_rejected': [os.path.basename(x) for x in _rej]}]
     #  ★ 2026-08-18 (리뷰 ① M1) — 옛 판은 `_SBE_`/`_DBE_` 로만 갈랐다.  구 팔 파일명
     #    `p2_DBE_sph_a0` 도 `_DBE_` 를 포함하므로 점 팔과 구 팔이 **한 디렉터리에 섞이면
     #    조용히 합쳐진다**.  매니페스트의 `sdcp_stamp` 가 정본이므로 그것도 고정 인자에
@@ -715,6 +724,13 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
     #    그 합성 구름이 `se_pts=` 로 rasterize 에 들어간다.  `input_digest` 는 읽은 파일이
     #    없으므로 그것을 못 덮는다.  ⇒ 기록을 신설한 김에 **판정에서 막는다** (생산 경로를
     #    막지 않는다 — 만드는 것은 자유고, 그것으로 σ 를 주장하는 것만 막는다).
+    #  ★ R5-CX-08 — 기각 receipt 가 있는 tree 는 **판정하지 않는다** (격리).
+    _rj = sorted({x for k in arms for r in arms[k] for x in (r.get('_rejected') or ())})
+    if _rj:
+        return dict(decision='HOLD', hold_code='REJECTED_TREE',
+                    reason=f'이 디렉터리에 **기각 receipt** 가 있다 ({_rj[:2]}) — 러너가 '
+                           f'봉인 실패를 기록한 tree 다.  그 안의 팔로는 판정하지 않는다 '
+                           f'(무엇이 왜 기각됐는지는 그 파일이 말한다)'), info
     _px = sorted({r['file'] for k in arms for r in arms[k]
                   if isinstance(r.get('se_source'), str)
                   and r['se_source'].startswith('proxy:')})
@@ -2029,6 +2045,24 @@ def _selftest():
             _r['origin_shift_um'] = list(_e8[_i])
     chk('㊺f ★ 정상 증인 — ARMS<8 진단 런은 부분집합이면 통과 (과잉차단 없음)',
         verdict(_a2).get('hold_code') not in ('ORIGIN_SET', 'ORIGIN_VOX'))
+
+    #  ── ㊻ 2026-08-25 (R5-CX-08) — **기각 receipt 는 판정을 멈춘다** ────────────────────
+    #    옛 판: 러너가 `.rejected_*` 를 쓰는데 `collect()` 는 `p2_*.json` 만 글롭했다.
+    #    실측 — 정상 16팔 디렉터리에 receipt 를 넣기 **전후가 둘 다 `h0`** (Codex).
+    #    기록을 남기고 아무도 안 보면 그 기록은 장식이다.
+    with _tf22.TemporaryDirectory() as _A:
+        _mk2(_A, yvgcf=False, dbe_mul=1.12, n=8)
+        _r0, _a0 = collect(_A)
+        _v0 = verdict(_a0)
+        chk(f'㊻a 정상 증인 — receipt 없으면 판정이 난다 ({_v0["decision"]})',
+            _v0.get('hold_code') != 'REJECTED_TREE')
+        with open(os.path.join(_A, '.rejected_20260825T000000Z'), 'w', encoding='utf-8') as _rf:
+            _rf.write('reason=seal_broken\n')
+        _r1, _a1 = collect(_A)
+        _v1 = verdict(_a1)
+        chk(f'㊻b ★★ 기각 receipt 가 있으면 **판정하지 않는다** '
+            f'({_v1["decision"]}/{_v1.get("hold_code")})',
+            _v1['decision'] == 'HOLD' and _v1.get('hold_code') == 'REJECTED_TREE')
     #  ⚠ 행의 값과 매니페스트를 **둘 다** 합성으로 둔다 — 실제 `_read` 는 매니페스트에서
     #    행 필드를 채우므로, 하나만 바꾸면 픽스처가 실제 경로와 어긋난다.
     _vpx = verdict(mk(base, [v * 1.12 for v in base], se_source='proxy:0.27@192',

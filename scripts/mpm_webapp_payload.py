@@ -521,6 +521,21 @@ def resolve_ptfe_stamp(requested, sigma_ptfe):
 #   ⚠ 진단 정보(dof·resid·시간·backend)는 **가리지 않는다** — 그것으로는 창을 못 옮기고,
 #     가리면 실패를 디버깅할 수 없다.  가리는 것은 **값 그 자체**뿐이다.
 #   ⚠ 기본은 **가림**이다 (생산이 기본).  값을 stdout 으로 보려면 명시로 연다.
+def _regime_label(r_bulk, blind):
+    """R_bulk regime 라벨.  **봉인 중에는 데이터 무관 상수**를 돌려준다.
+
+    ★★★ 2026-08-25 (R5-CX-10, Codex 5차) — 옛 판은 이 라벨을 그대로 찍었다.  내 R4 주석은
+      "regime 라벨은 남긴다 — 진단이다" 였는데 **그 판단이 틀렸다**: `R_bulk = L/σ_e` 이므로
+      이 라벨은 σ_e 의 **3구간 공개**이고, 같이 찍히는 두께와 합치면 범위가 좁혀진다.
+    ⇒ 직접값만 가리고 **파생·범주화 변환**을 놓친 것이 이 세션에서 반복된 그 부류다
+      (`ideal_R0` 이름 바꾸기 · 부분집합 필터).  봉인은 "σ_e 로 계산된 것" 전부에 걸린다.
+    """
+    if blind:
+        return '[봉인]'
+    return ('≪ 계면' if r_bulk < 3.0 else
+            '≈ 계면과 동급 — carbon-free/희박 배선 regime' if r_bulk < 100.0 else '≫ 계면(!)')
+
+
 def _blind(a):
     return not bool(getattr(a, 'show_results', False))
 
@@ -1671,8 +1686,7 @@ def main():
                 _ca = step3['collector']['sigma_apparent_S_cm']
                 # carbon-free/희박 배선 케이스는 R_bulk가 계면(30-110)과 동급까지 올라옴 — "≪" 고정
                 # 문구가 그 regime에서 거짓이 되던 것을 조건화 (260714 carbon-free: R_bulk 12 Ωcm²)
-                _rel = ('≪ 계면' if _Rbulk < 3.0 else
-                        '≈ 계면과 동급 — carbon-free/희박 배선 regime' if _Rbulk < 100.0 else '≫ 계면(!)')
+                _rel = _regime_label(_Rbulk, _blind(a))
                 #  ★★★ 2026-08-25 (R4-CX-01, Codex 4차) — **`ideal_R0` 는 σ_e 자신이다.**
                 #    `R_bulk = L/σ_e` 이고 `ideal_R0` 는 `R_int = 0` 이므로
                 #    `L/(R_bulk+0) = σ_e` — 대수적으로 **같은 수**다.  옛 판은 이 줄을

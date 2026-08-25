@@ -1154,7 +1154,7 @@
   {
    "id": "R5CX-01",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "`P2_EXTRA` allowlist 가 **두 단계 shell 확장**으로 우회된다",
@@ -1163,12 +1163,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "1차 검사는 옵션 이름만 보고 `P2_EXTRA` 문자열을 생성 shell source 에 그대로 삽입한다 (`sdcp_gain_vox015_8arm.sh:132-148,358-398`).\n실측: `P2_EXTRA='--step3-maxiter=$MPM_ATTACK'` + `MPM_ATTACK='1 --show-results'` → allowlist PASS 인데 실제 producer argv 는 `--step3-maxiter=1` + `--show-results` 두 토큰.  후행 `--expect-physics` 주입도 같은 방식으로 되고 argparse 는 **마지막 값**을 쓴다.\n⇒ R4 의 blind-result 노출과 expected-config 우회가 **다시 열렸다**.\n종료조건: `P2_EXTRA` 를 재해석되는 shell source 로 나르지 않는다.  허용 key/value 를 **한 번만** argv 배열로 파싱하고 각 토큰을 인용한다.  `$`·명령치환·개행·후행 중복 옵션 변이가 producer 실행 **전** 같은 코드로 거부돼야 한다."
+   "note": "1차 검사는 옵션 이름만 보고 `P2_EXTRA` 문자열을 생성 shell source 에 그대로 삽입한다 (`sdcp_gain_vox015_8arm.sh:132-148,358-398`).\n실측: `P2_EXTRA='--step3-maxiter=$MPM_ATTACK'` + `MPM_ATTACK='1 --show-results'` → allowlist PASS 인데 실제 producer argv 는 `--step3-maxiter=1` + `--show-results` 두 토큰.  후행 `--expect-physics` 주입도 같은 방식으로 되고 argparse 는 **마지막 값**을 쓴다.\n⇒ R4 의 blind-result 노출과 expected-config 우회가 **다시 열렸다**.\n종료조건: `P2_EXTRA` 를 재해석되는 shell source 로 나르지 않는다.  허용 key/value 를 **한 번만** argv 배열로 파싱하고 각 토큰을 인용한다.  `$`·명령치환·개행·후행 중복 옵션 변이가 producer 실행 **전** 같은 코드로 거부돼야 한다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-02",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "editable `schema_version` 한 줄이 p2 증거 계약을 끈다",
@@ -1177,12 +1178,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "`run_contract.py` 가 schema 1~3 을 다 받고 p2 protocol hash 에 schema 가 **없다**.  `component_evidence_ok()` 는 `schema<3` 이면 무조건 통과.\n실측(같은 p2 manifest, schema 만 3→2): pid 동일 `p2-56bab3833fbad9ac` 인데 producer `STEP3_EVIDENCE` → `None`, final **HOLD → h0**.\n⇒ payload 가 **스스로 validator 강도를 낮출 수 있다**.  `MANIFEST_RESULT_KEYS` 의 `schema_version` 면제가 직접 우회축이 됐다 (내가 ㊹f 로 막았다고 생각한 그 부류).\n종료조건: 현행 producer 세대에는 schema 3 을 강제하고, 세대를 protocol 또는 불변 run receipt 에 묶는다.  legacy adapter 는 payload 가 **주장한 숫자**가 아니라 신뢰 가능한 producer/code provenance 로만 선택돼야 한다."
+   "note": "`run_contract.py` 가 schema 1~3 을 다 받고 p2 protocol hash 에 schema 가 **없다**.  `component_evidence_ok()` 는 `schema<3` 이면 무조건 통과.\n실측(같은 p2 manifest, schema 만 3→2): pid 동일 `p2-56bab3833fbad9ac` 인데 producer `STEP3_EVIDENCE` → `None`, final **HOLD → h0**.\n⇒ payload 가 **스스로 validator 강도를 낮출 수 있다**.  `MANIFEST_RESULT_KEYS` 의 `schema_version` 면제가 직접 우회축이 됐다 (내가 ㊹f 로 막았다고 생각한 그 부류).\n종료조건: 현행 producer 세대에는 schema 3 을 강제하고, 세대를 protocol 또는 불변 run receipt 에 묶는다.  legacy adapter 는 payload 가 **주장한 숫자**가 아니라 신뢰 가능한 producer/code provenance 로만 선택돼야 한다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-03",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "현재 runner 의도(vox·구경·periodic·SHA·input)가 cache/fresh/final 에 안 묶인다",
@@ -1191,12 +1193,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "HEAD `edec17a2`·runner 기본 vox 0.15 인데 모든 팔에 `vox_um=0.20`·`code_sha=deadbeef`·임의 digest 를 넣어도 producer/check_arm/final = `None/None/h0`.\nrunner 는 cache/fresh `check_arm` 에 stamp/backend 만 넘기고(`:283-290,411-420`), final 은 digest **존재와 팔 사이 일관성**만 본다.  `SDCP_SPHERE_D=.30/.40` 둘 다 `_sph` OUTDIR 이고 `--expect-physics` 에 `sdcp_sphere_d_um` 이 없다.  periodic 0/1 도 namespace 분리 없음.\n종료조건: resolved config·정확한 origin schedule·clean full SHA·실제 input digest·backend 를 담는 **단일 run receipt** 를 만들고 cache/fresh/final 이 그 정확한 값을 요구한다.  OUTDIR 도 receipt digest 로 분리."
+   "note": "HEAD `edec17a2`·runner 기본 vox 0.15 인데 모든 팔에 `vox_um=0.20`·`code_sha=deadbeef`·임의 digest 를 넣어도 producer/check_arm/final = `None/None/h0`.\nrunner 는 cache/fresh `check_arm` 에 stamp/backend 만 넘기고(`:283-290,411-420`), final 은 digest **존재와 팔 사이 일관성**만 본다.  `SDCP_SPHERE_D=.30/.40` 둘 다 `_sph` OUTDIR 이고 `--expect-physics` 에 `sdcp_sphere_d_um` 이 없다.  periodic 0/1 도 namespace 분리 없음.\n종료조건: resolved config·정확한 origin schedule·clean full SHA·실제 input digest·backend 를 담는 **단일 run receipt** 를 만들고 cache/fresh/final 이 그 정확한 값을 요구한다.  OUTDIR 도 receipt digest 로 분리.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-04",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "정확한 `{0, vox/2}³` factorial 이 아니라 **임의의 8점**을 받는다",
@@ -1205,12 +1208,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "`sdcp_gain_verdict.py:713-734` 는 origin 존재·유일성·SBE/DBE 집합 일치·개수만 본다.  z-only 8점 `[0,0,0.00]…[0,0,0.07]` 이 `require_arms=8` 에서 `h0`.\n⚠ **내장 fixture 도 z-only 패턴**이라 이 오류를 정상 증인으로 고정하고 있다 (= 내 픽스처가 결함을 인코딩한 또 한 사례).\n종료조건: manifest vox 또는 run receipt 에서 expected origin multiset 을 **계산해** equality 를 본다.  좌표 누락·대체·중복·축 편향 변이가 각각 거부돼야 한다."
+   "note": "`sdcp_gain_verdict.py:713-734` 는 origin 존재·유일성·SBE/DBE 집합 일치·개수만 본다.  z-only 8점 `[0,0,0.00]…[0,0,0.07]` 이 `require_arms=8` 에서 `h0`.\n⚠ **내장 fixture 도 z-only 패턴**이라 이 오류를 정상 증인으로 고정하고 있다 (= 내 픽스처가 결함을 인코딩한 또 한 사례).\n종료조건: manifest vox 또는 run receipt 에서 expected origin multiset 을 **계산해** equality 를 본다.  좌표 누락·대체·중복·축 편향 변이가 각각 거부돼야 한다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-05",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "계획된 PNM·collector 가 **status-only** 증거로 통과한다",
@@ -1219,12 +1223,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "공용 evidence registry 에 electronic/ionic/thermal/pore 만 있고 PNM·collector 는 '모르는 component' 로 건너뛴다.  schema 3 full plan 에서 `step3.pore.pnm` 과 `step3.collector_geometric` 을 **둘 다 지워도** producer/check_arm/final = `None/None/h0`.\n종료조건: PNM·collector 에도 필수 result path·수치·domain invariant 를 등록.  결과 검증 뒤에만 `complete` 를 적고, PNM 의 reason-only 반환을 `complete` 와 구분한다."
+   "note": "공용 evidence registry 에 electronic/ionic/thermal/pore 만 있고 PNM·collector 는 '모르는 component' 로 건너뛴다.  schema 3 full plan 에서 `step3.pore.pnm` 과 `step3.collector_geometric` 을 **둘 다 지워도** producer/check_arm/final = `None/None/h0`.\n종료조건: PNM·collector 에도 필수 result path·수치·domain invariant 를 등록.  결과 검증 뒤에만 `complete` 를 적고, PNM 의 reason-only 반환을 `complete` 와 구분한다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-06",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "★ canonical NO-GO — 인용 금지 선언과 **정본 원장이 반대**다",
@@ -1233,12 +1238,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "리뷰 요청서와 next_steps 는 p1 σ_e 절대값·비를 인용 금지로 두는데, `claims.json` 은 CL-33/41/58 을 **`live`** 로 두고 CL-58 이 원고용 측정 문장을 허용한다.  `CLAUDE.md` 도 그 값들을 현재 요약으로 유지한다.  `quotation_ban` 12개 패턴에 그 값들이 **없어서** `--ban-sweep` 이 rc 0 · '누수 없음' 을 낸다.\n⇒ CLAUDE.md ④ 가 적은 그 실패의 재발이다 — **정본은 밖으로 강제되지 않으면 새어나간다**.  이번엔 강제 장치(ban 등록부) 자체가 그 값을 안 담고 있었다.\n★ plate rule 은 같은 conductivity solve 를 쓰므로 σ_ion·STEP4 에도 영향 — 이온값을 자동 예외로 둘 근거도 없다.\n종료조건: 역사 기록은 보존하되 CL-33/41/58 의 p1 정량값·해석을 `hold`/명시적 legacy 로 내리고, exact/format variant ban 과 CLAUDE.md·next-steps·원고용 원장을 **같은 커밋에서** 일치시킨다."
+   "note": "리뷰 요청서와 next_steps 는 p1 σ_e 절대값·비를 인용 금지로 두는데, `claims.json` 은 CL-33/41/58 을 **`live`** 로 두고 CL-58 이 원고용 측정 문장을 허용한다.  `CLAUDE.md` 도 그 값들을 현재 요약으로 유지한다.  `quotation_ban` 12개 패턴에 그 값들이 **없어서** `--ban-sweep` 이 rc 0 · '누수 없음' 을 낸다.\n⇒ CLAUDE.md ④ 가 적은 그 실패의 재발이다 — **정본은 밖으로 강제되지 않으면 새어나간다**.  이번엔 강제 장치(ban 등록부) 자체가 그 값을 안 담고 있었다.\n★ plate rule 은 같은 conductivity solve 를 쓰므로 σ_ion·STEP4 에도 영향 — 이온값을 자동 예외로 둘 근거도 없다.\n종료조건: 역사 기록은 보존하되 CL-33/41/58 의 p1 정량값·해석을 `hold`/명시적 legacy 로 내리고, exact/format variant ban 과 CLAUDE.md·next-steps·원고용 원장을 **같은 커밋에서** 일치시킨다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-07",
    "severity": "P1",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "registry·mutation harness 가 여전히 pass-mutant 를 성공으로 센다",
@@ -1247,12 +1253,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "· `backend.across_dir=True→False` 가 verdict selftest **146 PASS / FAIL 0** — GPU↔CPU cross-dir 차이가 비교축에서 사라지는데 아무도 안 문다.\n· 회계 **범주 flip** 넷(`--step3-maxiter→mode`·`--step3-amg→report`·`--ea-ion-ev→mode`·`--allow-mixed-t-ionic→mode`) 전부 문제 0.  규칙 M 은 옵션 **존재**만 보증하고 의미 분류는 보증하지 않는다 (내가 A3 잔여로 적어 둔 바로 그것).\n· harness 가 baseline PASS 목록 `_b_pass` 를 읽고도 **비교하지 않는다** · expected ID 를 `startswith` 로 맞춘다 · `*broad*` 가 **모든** extra failure 를 면제한다.  실제 broad row 에 extra 15건이 있는데 최종 문구는 '기대 밖 실패 0'.\n· 원본 harness 는 Windows 에서 `os.symlink` 권한 오류로 baseline 전에 중단 — 41/41 은 **적응판**의 결과다.\n· 규칙 K 가 `if: ${{ false }}`·`continue-on-error: true`·`if false; then … fi` 를 live 로 센다.\n종료조건: selftest 가 exact structured ID/status 를 내고 harness 가 baseline 전체 PASS·exact failed-ID multiset·exact rc·timeout/예외를 따로 검증.  `broad` 는 명시적 허용 집합과 **한도**를 갖는다.  registry category·`across_dir` 에 선언 독립 per-field invariant.  K 는 shell/YAML 제어흐름과 실패 전파를 본다."
+   "note": "· `backend.across_dir=True→False` 가 verdict selftest **146 PASS / FAIL 0** — GPU↔CPU cross-dir 차이가 비교축에서 사라지는데 아무도 안 문다.\n· 회계 **범주 flip** 넷(`--step3-maxiter→mode`·`--step3-amg→report`·`--ea-ion-ev→mode`·`--allow-mixed-t-ionic→mode`) 전부 문제 0.  규칙 M 은 옵션 **존재**만 보증하고 의미 분류는 보증하지 않는다 (내가 A3 잔여로 적어 둔 바로 그것).\n· harness 가 baseline PASS 목록 `_b_pass` 를 읽고도 **비교하지 않는다** · expected ID 를 `startswith` 로 맞춘다 · `*broad*` 가 **모든** extra failure 를 면제한다.  실제 broad row 에 extra 15건이 있는데 최종 문구는 '기대 밖 실패 0'.\n· 원본 harness 는 Windows 에서 `os.symlink` 권한 오류로 baseline 전에 중단 — 41/41 은 **적응판**의 결과다.\n· 규칙 K 가 `if: ${{ false }}`·`continue-on-error: true`·`if false; then … fi` 를 live 로 센다.\n종료조건: selftest 가 exact structured ID/status 를 내고 harness 가 baseline 전체 PASS·exact failed-ID multiset·exact rc·timeout/예외를 따로 검증.  `broad` 는 명시적 허용 집합과 **한도**를 갖는다.  registry category·`across_dir` 에 선언 독립 per-field invariant.  K 는 shell/YAML 제어흐름과 실패 전파를 본다.\n★ 2026-08-25 부분 종료: `backend.across_dir` flip 은 불변량을 레지스트리 전 축으로 넓혀 잡는다 · harness 셋(baseline 사라짐·정확 ID·bounded broad) 고침 · `M_UNWRITTEN` 으로 '선언만 있고 안 적히는 축' 을 잡는다.\n⚠ **미해결**: 범주를 낮게 잘못 적는 것(`--step3-maxiter→mode`)은 정적으로 못 잡는다 — 옵션을 토글해 규약 해시가 움직이는지 봐야 하고 그것은 solver 런이다.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-08",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "기각 receipt 가 판정에 **소비되지 않는다**",
@@ -1261,7 +1268,8 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "runner 가 `.rejected_*` 를 쓰지만 `collect()` 는 `p2_*.json` 만 읽는다.  정상 16팔 디렉터리에 receipt 를 넣기 전후가 **둘 다 `h0`**.  `chmod 444` 는 삭제 불가 append-only 기록이 아니다.\n종료조건: receipt 가 있는 tree 는 즉시 HOLD/격리.  필요하면 output tree **밖** append-only ledger 에 서명된 run identity 와 함께 기록."
+   "note": "runner 가 `.rejected_*` 를 쓰지만 `collect()` 는 `p2_*.json` 만 읽는다.  정상 16팔 디렉터리에 receipt 를 넣기 전후가 **둘 다 `h0`**.  `chmod 444` 는 삭제 불가 append-only 기록이 아니다.\n종료조건: receipt 가 있는 tree 는 즉시 HOLD/격리.  필요하면 output tree **밖** append-only ledger 에 서명된 run identity 와 함께 기록.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-09",
@@ -1280,7 +1288,7 @@
   {
    "id": "R5CX-10",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "blind log 가 σ_e **파생 regime bucket** 을 노출한다",
@@ -1289,12 +1297,13 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "정확한 σ 와 `ideal_R0` 는 가렸는데 `Rbulk=L/σ_e` 에서 계산한 `≪ 계면 / 동급 / ≫ 계면` bucket 이 blind stdout 에 남아 있다 (`mpm_webapp_payload.py:1595,1674-1687`).  두께 출력과 합치면 결과 범위가 드러난다.\n종료조건: blind 에서 그 bucket 을 없애거나 데이터 무관 상수 문구로.  **직접값뿐 아니라 파생·범주화 변환도** 음성 대조."
+   "note": "정확한 σ 와 `ideal_R0` 는 가렸는데 `Rbulk=L/σ_e` 에서 계산한 `≪ 계면 / 동급 / ≫ 계면` bucket 이 blind stdout 에 남아 있다 (`mpm_webapp_payload.py:1595,1674-1687`).  두께 출력과 합치면 결과 범위가 드러난다.\n종료조건: blind 에서 그 bucket 을 없애거나 데이터 무관 상수 문구로.  **직접값뿐 아니라 파생·범주화 변환도** 음성 대조.",
+   "claimed_fixed_sha": "672dedb1"
   },
   {
    "id": "R5CX-11",
    "severity": "P2",
-   "status": "open",
+   "status": "claimed_fixed",
    "owner": "codex",
    "opened_in": "docs/reviews/codex_r5_verdict_20260825.md",
    "title": "standalone bundle 전달이 이번 자료로 **확인되지 않았다**",
@@ -1303,7 +1312,8 @@
     "scripts/sdcp_gain_verdict.py --selftest",
     "scripts/check_method_discipline.py --selftest"
    ],
-   "note": "요청서는 bundle 생성을 주장했지만 리뷰어가 접근 가능한 자료에 `.bundle` 이 없었다 (공개 origin 을 따로 clone 해 감사).  ⇒ **네트워크 없이 단독 재현 가능한 전달**은 입증되지 않았다.\n또한 bundle smoke check 가 clone 에 어떤 HEAD 가 있다는 것만 보고 **intended SHA 와 같은지**는 안 본다.\n종료조건: 다음 패키지에 실제 full bundle 과 SHA-256 을 포함하고, 빈 repo clone HEAD 가 intended full SHA 와 **정확히 같은지** 검사."
+   "note": "요청서는 bundle 생성을 주장했지만 리뷰어가 접근 가능한 자료에 `.bundle` 이 없었다 (공개 origin 을 따로 clone 해 감사).  ⇒ **네트워크 없이 단독 재현 가능한 전달**은 입증되지 않았다.\n또한 bundle smoke check 가 clone 에 어떤 HEAD 가 있다는 것만 보고 **intended SHA 와 같은지**는 안 본다.\n종료조건: 다음 패키지에 실제 full bundle 과 SHA-256 을 포함하고, 빈 repo clone HEAD 가 intended full SHA 와 **정확히 같은지** 검사.",
+   "claimed_fixed_sha": "672dedb1"
   }
  ]
 }

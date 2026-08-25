@@ -73,6 +73,8 @@ else
   git bundle create "$OUT" HEAD "$_BR"
 fi
 echo "번들 → $OUT  ($(du -h "$OUT" | cut -f1))"
+#  ★ R5-CX-11 — 리뷰 패키지에 **SHA-256 을 같이** 싣는다 (전달물 동일성 확인용).
+echo "  SHA-256 $(sha256sum "$OUT" | cut -d' ' -f1)"
 
 #  ★ **받는 쪽 검증까지 여기서 한다** (번들이 정말 단독으로 열리는가).
 #    지난번 실패는 만들 때가 아니라 **열 때** 드러났다.
@@ -85,10 +87,15 @@ if git clone --quiet "$OUT" "$TMP/repo" 2>"$TMP/err"; then
   git -C "$TMP/repo" rev-parse --verify HEAD >/dev/null 2>&1 \
     || _verify_fail "clone 에 HEAD 가 없다 — 번들이 ref 를 덜 실었다 (체크아웃 불가)"
   _n="$(git -C "$TMP/repo" rev-list --count HEAD)" || _verify_fail "커밋을 셀 수 없다"
-  _h="$(git -C "$TMP/repo" rev-parse --short HEAD)" || _verify_fail "HEAD 를 읽을 수 없다"
+  _h="$(git -C "$TMP/repo" rev-parse HEAD)" || _verify_fail "HEAD 를 읽을 수 없다"
   [ -f "$TMP/repo/scripts/check_review_findings.py" ] \
     || _verify_fail "clone 에 작업 트리가 없다 (체크아웃 안 됨)"
-  echo "✓ 빈 저장소에서 clone 성공 — HEAD $_h · 커밋 $_n 개"
+  #  ★★★ 2026-08-25 (R5-CX-11, Codex 5차) — 옛 판은 clone 에 **어떤** HEAD 가 있다는
+  #    사실만 봤고 **의도한 SHA 와 같은지**는 안 봤다.  다른 커밋이 실려도 초록이었다.
+  _want="$(git rev-parse HEAD)"
+  [ "$_h" = "$_want" ] \
+    || _verify_fail "clone 된 HEAD 가 의도한 SHA 와 다르다: $_h ≠ $_want"
+  echo "✓ 빈 저장소에서 clone 성공 — HEAD ${_h:0:8} (의도한 SHA 와 **일치**) · 커밋 $_n 개"
   #  ★ clone 이 되는 것과 **우리 검사가 거기서 도는 것**은 다른 주장이다.  원장 검사는
   #    `claimed_fixed_sha` 가 실재 커밋인지 보므로 이력이 잘리면 여기서 빨간불이 난다
   #    (= 번들을 더 줄이려는 시도를 막는 실측 가드).

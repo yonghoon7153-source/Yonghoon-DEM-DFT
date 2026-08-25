@@ -2326,6 +2326,21 @@ def _selftest():
     chk(f'L-14c: ★★ **살아 있는** `--check-arm` 호출 {len(_live)}개가 전부 `--receipt` 를 '
         f'넘긴다 ({_ok_rcpt}개) — 안 넘기면 러너 의도와 대조가 없다 (R5-CX-03)',
         len(_live) > 0 and _ok_rcpt == len(_live))
+    #  ── R5-CX-10 (2026-08-25) — **봉인은 파생·범주화 변환에도 걸린다** ───────────────
+    #    직접값(`σ_e`·`ideal_R0`)은 가렸는데 `R_bulk = L/σ_e` 에서 만든 regime 라벨
+    #    (`≪ 계면` / `동급` / `≫ 계면`)이 blind stdout 에 남아 있었다 = **σ_e 의 3구간
+    #    공개**.  같이 찍히는 두께와 합치면 범위가 좁혀진다.
+    #    ⚠ 내 R4 주석은 "regime 라벨은 남긴다 — 진단이다" 였다.  그 판단이 틀렸다.
+    #  ⇒ **이름이 아니라 거동**으로 시험한다: 봉인 중 이 라벨은 값과 무관하게 상수여야 한다.
+    import importlib as _il_p
+    _pay = _il_p.import_module('mpm_webapp_payload')
+    _rv = [1e-6, 0.5, 2.99, 3.0, 42.0, 99.99, 100.0, 1e9]
+    chk(f'J-4a: ★★ 봉인 중 regime 라벨이 **값과 무관하게 상수**다 (R5-CX-10) — '
+        f'{sorted({_pay._regime_label(v, True) for v in _rv})}',
+        len({_pay._regime_label(v, True) for v in _rv}) == 1)
+    chk('J-4b: ★ 봉인이 아니면 라벨이 값을 구분한다 (진단 기능은 살아 있다)',
+        len({_pay._regime_label(v, False) for v in _rv}) == 3)
+
     #  ── R5-CX-01 (2026-08-25, Codex 5차) — **2단계 shell 확장 우회** ────────────────
     #    허용 목록은 옵션 **이름**만 봤고 `for _tok in $P2_EXTRA` 는 한 번만 확장한다.
     #    `--step3-maxiter=$MPM_ATTACK` 은 리터럴로 통과한 뒤, 생성 스크립트가 실행될 때
