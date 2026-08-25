@@ -1,6 +1,7 @@
-﻿"# Plotted Li MSD curves for docs/figures/msd_4sys.png."
+"# Plotted Li MSD curves for docs/figures/msd_4sys.png."
 "# Single-seed, illustrative hierarchy ONLY — do not read D from these slopes."
 "# Dashed guides = linear fit over 2.0-50.0 ps (campaign window)."
+"# ⛔ CORRECTION 2026-08-25: all b2o3 columns are DIAGNOSTIC-ONLY. The B2O3 UMA-MD conductivity axis (D/Ea/sigma incl. the old Ea 0.21+/-0.03 note) is RETIRED — anion-sublattice mobility, see b2o3_md_arrhenius.json. Do NOT read Li transport from b2o3 slopes."
 t_ps,LPSCl_600K,LPSCl_800K,LPSCl_1000K,LPSCl1.6_600K,LPSCl1.6_800K,LPSCl1.6_1000K,lpsocl_600K,lpsocl_800K,lpsocl_1000K,b2o3_600K,b2o3_800K,b2o3_1000K
 0.0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 1.0,0.960,4.412,6.161,1.652,4.350,5.311,2.576,3.155,3.913,1.335,2.437,4.238

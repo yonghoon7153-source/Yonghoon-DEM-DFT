@@ -1,3 +1,4 @@
+"# ⛔ CORRECTION 2026-08-25: all b2o3 columns are DIAGNOSTIC-ONLY. The B2O3 UMA-MD conductivity axis (D/Ea/sigma incl. the old Ea 0.21+/-0.03 note) is RETIRED — anion-sublattice mobility, see b2o3_md_arrhenius.json. Do NOT read Li transport from b2o3 slopes."
 t_ps,b2o3_600,LPSCl1.6_600,b2o3_800,LPSCl1.6_800,b2o3_1000,LPSCl1.6_1000
 0.0000,0.0000,0.0000,0.0000,0.0000,0.0000,0.0000
 1.0000,1.3350,1.6524,2.4370,4.3500,4.2380,5.3105

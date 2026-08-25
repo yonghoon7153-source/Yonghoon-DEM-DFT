@@ -1,4 +1,4 @@
-﻿"# Li MSD (A^2) vs time, MLIP-MD. Common 0-199 ps @ 1 ps grid (linear interpolation, display only)."
+"# Li MSD (A^2) vs time, MLIP-MD. Common 0-199 ps @ 1 ps grid (linear interpolation, display only)."
 "# D = slope/6 over 2-50 ps. Raw single-seed MSD = ILLUSTRATIVE HIERARCHY ONLY. Quantitative D/Ea/sigma: the multiseed *_md_arrhenius.json files."
 "# LPSCl1.6 600K ← d0.00_cfg0/T600/msd.json (D=1.4151e-05 cm2/s, traj 200 ps)"
 "# LPSCl1.6 800K ← d0.00_cfg0/T800/msd.json (D=1.8611e-05 cm2/s, traj 200 ps)"
@@ -6,6 +6,7 @@
 "# b2o3 600K ← d0.00_cfg0/T600/msd.json (D=1.1196e-05 cm2/s, traj 200 ps)"
 "# b2o3 800K ← d0.00_cfg0/T800/msd.json (D=2.4137e-05 cm2/s, traj 200 ps)"
 "# b2o3 1000K ← d0.00_cfg0/T1000/msd.json (D=4.2671e-05 cm2/s, traj 200 ps)"
+"# ⛔ CORRECTION 2026-08-25: all b2o3 columns are DIAGNOSTIC-ONLY. The B2O3 UMA-MD conductivity axis (D/Ea/sigma incl. the old Ea 0.21+/-0.03 note) is RETIRED — anion-sublattice mobility, see b2o3_md_arrhenius.json. Do NOT read Li transport from b2o3 slopes."
 t_ps,LPSCl_600K,LPSCl_800K,LPSCl_1000K,lpsocl_600K,lpsocl_800K,lpsocl_1000K,LPSCl1.6_600K,LPSCl1.6_800K,LPSCl1.6_1000K,b2o3_600K,b2o3_800K,b2o3_1000K
 0.0,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 1.0,2.396,4.117,2.969,2.576,3.155,3.913,2.696,3.116,4.897,2.093,2.785,3.953
