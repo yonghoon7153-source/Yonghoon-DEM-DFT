@@ -55,7 +55,9 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || {
 #   traj.xyz 는 영영 안 생긴다** — 그런데 화면은 정상 종료처럼 보인다.
 #   그래서 여기서 즉사시킨다: msd.json 은 있는데 traj.xyz 가 없는 디렉터리가 하나라도
 #   있으면 새 OUTROOT 를 쓰라고 알리고 멈춘다 (경고 후 계속 아님).
-if [ -d "$OUTROOT" ]; then
+# ⚠ 이 가드는 **재실행 함정** 방지다 — COLLECT_ONLY(수집 전용)는 traj 없는
+#   구판 트리에서도 정당하므로 건너뛴다.
+if [ -d "$OUTROOT" ] && [ "${COLLECT_ONLY:-0}" != "1" ]; then
   STALE=$(find "$OUTROOT" -name msd.json 2>/dev/null | while read -r m; do
             [ -f "$(dirname "$m")/traj.xyz" ] || echo "$m"; done | wc -l)
   if [ "$STALE" -gt 0 ]; then
@@ -122,28 +124,41 @@ for SYS in $SYSTEMS; do
 done
 fi
 
-echo ""; echo "===================== collect (TEMPS 순서를 그대로 따라간다) ====================="
-# ⛔ 2026-08-25 — 여기가 `(0,800),(1,1000)` 로 **하드코딩**돼 있었다. TEMPS 를 바꿔
-#   돌리면(예: "600 800 1000") D_per_T 인덱스가 밀려 **라벨이 조용히 어긋난다**
-#   — 800 자리에 600 값이 찍히고도 화면은 정상으로 보인다. TEMPS 를 넘겨 받는다.
-python3 - "$OUTROOT" "${TEMPS:-800 1000}" "$SYSTEMS" <<'PY'
-import json, os, sys, statistics as st
-root=sys.argv[1]
-temps=[int(float(x)) for x in sys.argv[2].split()]
-systems=sys.argv[3].split() if len(sys.argv) > 3 and sys.argv[3].strip() else ["b2o3","modelc"]
+echo ""; echo "===================== collect (msd.json 경로 기반 — 위치 인덱스 아님) ====================="
+# ⛔⛔ 2026-08-25 2차 수정 — TEMPS 인덱스 매핑도 틀렸다 (gabia 실측):
+#   시드별 실행 이력이 달라(s2/s3 는 600 추가 패스, s4 는 800/1000 만)
+#   ensemble_results.json 의 D_per_T 가 **시드마다 길이·순서가 다르다**
+#   (파일은 마지막 드라이버 호출만 반영). 600 행에 s4 의 800 값이 끼었다.
+#   위치 기반은 원리적으로 불안전 — **msd.json 경로의 T<K> 에서 라벨을 읽는다.**
+python3 - "$OUTROOT" "$SYSTEMS" <<'PY'
+import glob, json, os, re, statistics as st, sys
+root, systems = sys.argv[1], (sys.argv[2].split() if len(sys.argv) > 2 and sys.argv[2].strip()
+                              else ["b2o3", "modelc"])
 for sysn in systems:
-    for idx,T in enumerate(temps):
-        vals=[]
-        for s in (2,3,4):
-            p=os.path.join(root,sysn,f"s{s}","ensemble_results.json")
-            try: vals.append(json.load(open(p))["levels"][0]["configs"][0]["D_per_T"][idx])
-            except (IndexError, KeyError) as e:
-                print(f"  ⛔ ({sysn} s{s} {T}K: D_per_T 에 인덱스 {idx} 가 없다 — "
-                      f"TEMPS 와 실제 런 온도가 어긋났나? {e})")
-            except Exception as e: print(f"  ({sysn} s{s} {T}K miss: {e})")
-        if vals:
-            m=sum(vals)/len(vals); sd=st.pstdev(vals)
-            print(f"{sysn:7s} {T}K: "+"  ".join(f"{v:.3e}" for v in vals)+f"   mean={m:.3e} +/- {sd:.1e} ({sd/m*100:.0f}%)")
+    per_T = {}
+    for m in sorted(glob.glob(os.path.join(root, sysn, "s*", "d*", "T*", "msd.json"))):
+        mt = re.search(r"T(\d+)[/\\]msd\.json$", m)
+        if not mt:
+            continue
+        T = int(mt.group(1))
+        try:
+            D = json.load(open(m)).get("D_Li_cm2_s")
+        except (OSError, ValueError) as e:
+            print(f"  ⛔ {m}: 읽기 실패 {e}")
+            continue
+        seed = re.search(r"[/\\](s\d+)[/\\]", m)
+        if D:
+            per_T.setdefault(T, []).append((seed.group(1) if seed else "?", D))
+    for T in sorted(per_T):
+        vals = per_T[T]
+        ds = [d for _, d in vals]
+        m_ = sum(ds) / len(ds)
+        sd = st.pstdev(ds) if len(ds) > 1 else 0.0
+        who = " ".join(f"{s}={d:.3e}" for s, d in vals)
+        print(f"{sysn:7s} {T}K (n={len(ds)}): {who}   mean={m_:.3e} +/- {sd:.1e}"
+              f" ({(sd / m_ * 100) if m_ else 0:.0f}%)")
+    if not per_T:
+        print(f"{sysn}: msd.json 없음")
 PY
 echo ""
 echo "NEXT: 위 mean 줄을 그대로 붙여넣을 것 (계 × TEMPS 조합 수만큼) -> 600 K 3시드와"
