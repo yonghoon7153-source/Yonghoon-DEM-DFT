@@ -77,6 +77,18 @@ COLUMNS = [
 RESTART_COLUMNS = ["cond_id", "objective", "i", "source", "J",
                    "p0", "p1", "p2", "p3", "warm"]
 
+#: 두 감사 경로가 **공유하는** semantic view. 비교 전에 양쪽에서 떼는 키다.
+#:
+#: ★ 28차 P1-4 — `make_receipt` 는 `_F4_주의` 를 다시 넣었는데 여기 비교기는
+#:   계속 떼고 있었다. 봉인 summary 의 인용 금지 경고를 "안전" 으로 바꿔도
+#:   `재계산_검증.전체_일치` 에 diff 가 안 생겼다. 두 audit 경로의 semantic
+#:   계약이 또 갈린 것이다. **한 곳에서 정의하고 양쪽이 import 한다.**
+#:
+#: `_채점원본` 만 남는다 — `run_scoring` 이 붙이는 실행 메타라 재채점이 만들
+#: 수 없다. 그 안의 인용 안전 flag 는 `make_receipt._citation_safety` 가
+#: 값으로 검사한다.
+SEMANTIC_SKIP = ("_채점원본",)
+
 #: 이 투영이 무엇을 어떻게 만들었는지 — 바뀌면 digest 비교가 의미를 잃는다.
 #: ★ 23차 발견 5 — `projection_schema: 2` 를 산출물에 쓰면서 여기는 `1` 이었다.
 #:   그리고 spec 에 restart 투영·전면 대조·fits 결속이 아예 없었다. 산출물이
@@ -94,7 +106,9 @@ ANALYSIS_SPEC = {
         "digest": "sha256 of the uncompressed canonical TSV",
     },
     "summary_comparison": {
-        "skip_top_level_keys": ["_채점원본", "_F4_주의"],
+        # ★ 29차 P1-4 — spec 이 `_F4_주의` 도 뗀다고 **선언**하고 있었다.
+        #   실제 `SEMANTIC_SKIP` 과 모순이다. 값을 두 곳에 두지 않는다.
+        "skip_top_level_keys": list(SEMANTIC_SKIP),
         "type_policy": "exact",      # int↔float·str↔float 를 같다고 보지 않는다
     },
     "fits_binding": {
@@ -145,18 +159,6 @@ def score_canonical(df):
     bias = clean_bias(df)
     return apply_bias_correction(df, bias, DEFAULT_TOL)
 
-
-#: 두 감사 경로가 **공유하는** semantic view. 비교 전에 양쪽에서 떼는 키다.
-#:
-#: ★ 28차 P1-4 — `make_receipt` 는 `_F4_주의` 를 다시 넣었는데 여기 비교기는
-#:   계속 떼고 있었다. 봉인 summary 의 인용 금지 경고를 "안전" 으로 바꿔도
-#:   `재계산_검증.전체_일치` 에 diff 가 안 생겼다. 두 audit 경로의 semantic
-#:   계약이 또 갈린 것이다. **한 곳에서 정의하고 양쪽이 import 한다.**
-#:
-#: `_채점원본` 만 남는다 — `run_scoring` 이 붙이는 실행 메타라 재채점이 만들
-#: 수 없다. 그 안의 인용 안전 flag 는 `make_receipt._citation_safety` 가
-#: 값으로 검사한다.
-SEMANTIC_SKIP = ("_채점원본",)
 
 #: restart `source` 로 허용되는 값. 여기 없는 값은 코드가 바뀐 것이다.
 _RESTART_SOURCES = frozenset({"base_init", "warm", "random"})

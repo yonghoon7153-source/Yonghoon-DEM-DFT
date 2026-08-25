@@ -29,7 +29,8 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             canonical_bytes, digest, finalize_only, index_entries,
                             is_registered, load_canonical, publish, restore_from_cas,
                             run_transaction, seal_payload, verify_payload,
-                            verify_registered_receipt)
+                            verify_registered_receipt, check_receipt,
+                            check_manifest, load_canonical)
 from tools.preserve import _is_hex64 as _is_hex64_str
 
 #: 고정 fixture 바이트 — 여기서 기대 semantic digest 가 결정된다.
@@ -910,3 +911,192 @@ def test_restore_refuses_a_root_that_is_not_empty(kit):
         restore_from_cas(backend, dg, root)
     assert ei.value.stage == "cas_restore"
     assert (root / "stowaway.bin").exists(), "남의 파일을 지우지도 않는다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 29차 P0 — 정본은 journal 자기신고가 아니라 **pinned receipt graph** 다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_pinning_twice_never_truncates_the_cas_original(tmp_path):
+    """★ 29차 P0-4 — pin fallback 이 CAS 원본을 **파괴**했다.
+
+    `os.link` 의 모든 `OSError` 를 잡아 `dst.write_bytes(src.read_bytes())` 로
+    떨어졌다. `EEXIST` 도 그리로 갔고, `dst` 는 CAS `src` 와 **같은 inode** 라
+    `O_TRUNC` 로 열리는 순간 content-addressed 원본까지 잘렸다.
+
+    보존 체계가 보존 대상을 지우는 경로였다.
+    """
+    backend = CasBackend(root=tmp_path / "cas")
+    dg = backend.put_if_absent(b"abc")["digest"]
+    backend.pin("legx", [dg])
+    backend.pin("legx", [dg])                       # 두 번째 — EEXIST 경로
+    assert backend.read_back(dg) == b"abc", "CAS 원본이 손상됐다"
+    assert backend.read_pinned("legx", dg) == b"abc"
+
+    # 미리 심어 둔 **다른 내용**의 pin 은 거부돼야 한다
+    other = backend._pin("legy", dg)
+    other.parent.mkdir(parents=True, exist_ok=True)
+    other.write_bytes(b"not abc")
+    with pytest.raises(PreserveError):
+        backend.pin("legy", [dg])
+    assert backend.read_back(dg) == b"abc"
+
+
+def test_a_journal_that_declares_a_subset_is_not_a_registration(tmp_path):
+    """★ 29차 P0-1 — 등록 graph 의 정본이 journal 자기신고였다.
+
+    `is_registered()` 는 journal 의 `objects` 목록과 그것으로 다시 계산한
+    `pin_set_digest` 만 봤다. pinned receipt 를 열어 graph 를 **재유도**하지
+    않으므로, receipt 하나만 적은 journal 도 스스로 일관되면 "등록 완료" 였다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+    assert is_registered(index, PLANNED.leg_id, backend)
+
+    e = index_entries(index)[PLANNED.leg_id]
+    j = index / "registered" / f"{PLANNED.leg_id}.json"
+    subset = [e["receipt_object"]]
+    j.unlink()
+    j.write_bytes(canonical_bytes({
+        "leg_id": PLANNED.leg_id, "receipt_object": e["receipt_object"],
+        "objects": subset,
+        "pin_set_digest": digest({"leg_id": PLANNED.leg_id, "objects": subset})}))
+    assert not is_registered(index, PLANNED.leg_id, backend), (
+        "journal 이 스스로 적은 subset 을 그대로 믿었다")
+    with pytest.raises(PreserveError):
+        finalize_only(PLANNED.leg_id, backend, index)
+
+
+def test_a_registration_copied_to_another_backend_is_not_registered(tmp_path):
+    """★ 29차 P0-1 — already-registered 경로가 actual backend 를 우회했다.
+
+    CAS 와 pins 를 다른 backend root 로 복사하면 `is_registered` 도
+    `finalize_only` 도 통과했다 — receipt 의 `backend_uri` 는 옛 backend 인데도.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas1")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+
+    other = CasBackend(root=tmp_path / "cas2")
+    shutil.copytree(backend.root, other.root, dirs_exist_ok=True)
+    assert not is_registered(index, PLANNED.leg_id, other), (
+        "다른 backend 인데 등록됐다고 한다")
+    with pytest.raises(PreserveError) as ei:
+        finalize_only(PLANNED.leg_id, other, index)
+    assert "backend" in str(ei.value)
+
+
+def test_deleting_a_pin_after_commit_makes_the_leg_unregistered(tmp_path):
+    """★ 29차 P0-2 — `verify_pins()` 와 `_register()` 사이 TOCTOU.
+
+    성공 반환과 journal 존재가 retention 을 뜻할 수 없다. **`registered` 는
+    저장된 비트가 아니라 backend 에 대고 지금 평가하는 술어**여야 한다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+    assert is_registered(index, PLANNED.leg_id, backend)
+
+    e = index_entries(index)[PLANNED.leg_id]
+    backend._pin(PLANNED.leg_id, e["receipt_object"]).unlink()
+    shutil.rmtree(backend.root / "objects", ignore_errors=True)
+    assert not is_registered(index, PLANNED.leg_id, backend)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 29차 P0-3 — receipt validator 가 바깥 키만 닫혔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("mut", [
+    {"planned_envelope": {"anything": "goes"}},
+    {"validation": {"ok": True, "n_checks": True}},
+    {"validation": {"ok": True, "n_checks": 3, "surplus": "x"}},
+    {"n_members": 999},
+    {"total_bytes": 999},
+    {"payload_root_digest": "b" * 64},
+    {"retention_days": 0},
+])
+def test_nested_receipt_contract_is_closed(tmp_path, mut):
+    """★ 29차 P0-3 — nested 값이 무엇이든 통과했다.
+
+    `planned_envelope` 가 exact `planned-leg/v2` 인지, `validation` 의 키가
+    닫혔는지, receipt 의 집계·root 가 **실제 manifest** 와 같은지, retention 이
+    정책을 넘는지 — 전부 안 봤다.
+    """
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+
+    rec = dict(res["receipt"], **mut)
+    rec.pop("receipt_digest", None)
+    rec["receipt_digest"] = digest(rec)
+    e = dict(index_entries(index)[PLANNED.leg_id])
+    for k in ("payload_root_digest", "receipt_digest"):
+        if k in rec:
+            e[k] = rec[k]
+    bad = check_receipt(rec, e, backend.uri, manifest=load_canonical(
+        backend.read_back(rec["payload_manifest_digest"])))
+    assert bad, f"{mut} 가 통과했다"
+
+
+def test_an_output_descriptor_must_match_its_cas_object(tmp_path):
+    """산출 descriptor 의 `file_sha256` 이 `object_digest` 와 달라도 통과했다."""
+    run = _make_run(tmp_path)
+    backend = CasBackend(root=tmp_path / "cas")
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    rec = dict(res["receipt"])
+    rec["outputs"] = [dict(rec["outputs"][0], object_digest="c" * 64)]
+    rec.pop("receipt_digest")
+    rec["receipt_digest"] = digest(rec)
+    e = dict(index_entries(index)[PLANNED.leg_id], receipt_digest=rec["receipt_digest"])
+    bad = check_receipt(rec, e, backend.uri, manifest=load_canonical(
+        backend.read_back(rec["payload_manifest_digest"])))
+    assert bad
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 29차 P1-1 — Windows 에서 CAS 가 바이트를 바꿨다
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("blob", [
+    b"a\nb", b"a\r\nb", b"\x00\x01\x02", bytes(range(256)), b"", b"\x1a",
+])
+def test_cas_round_trips_arbitrary_bytes(tmp_path, blob):
+    """★ 29차 P1-1 — `os.open` 에 `O_BINARY` 가 없어 newline 이 번역됐다.
+
+    리뷰 실측: `b'a\\nb'` → 저장된 것이 `b'a\\r\\nb'`. digest 가 어긋나
+    happy path 부터 무너졌다 (native Windows 44건 실패).
+    """
+    backend = CasBackend(root=tmp_path / "cas")
+    dg = backend.put_if_absent(blob)["digest"]
+    assert backend.read_back(dg) == blob
+    backend.pin("legx", [dg])
+    assert backend.read_pinned("legx", dg) == blob
+
+
+def test_manifest_paths_cannot_collide_by_case_or_unicode(kit):
+    """★ 29차 P1-3 — exact 문자열 중복만 봤다.
+
+    `A.txt`/`a.txt` 와 NFC/NFD 짝이 같은 대상 파일이 되는 filesystem 이 있다.
+    """
+    import unicodedata
+
+    run, backend, index = kit
+    base = seal_payload(run)
+    for a, b in (("A.txt", "a.txt"),
+                 (unicodedata.normalize("NFC", "é.txt"),
+                  unicodedata.normalize("NFD", "é.txt"))):
+        man = dict(base)
+        m0 = dict(base["members"][0])
+        man["members"] = [dict(m0, path=a), dict(m0, path=b)]
+        man["n_members"] = 2
+        man["total_bytes"] = 2 * m0["bytes"]
+        man["root_digest"] = digest({k: v for k, v in man.items()
+                                     if k != "root_digest"})
+        assert check_manifest(man), f"{a!r}/{b!r} 충돌을 놓쳤다"

@@ -7,6 +7,9 @@ parameter_order:
 - lam_ne
 - p_ini_scale
 - shift
+objective_plan:
+- pocv_dvdq
+- pocv_dvdq_dqdv
 parameter_order_sha256: f111a1c5c6fbeade5df422badf326581795ed6eaf0b8c1a8f67d18a04a02d8ce
 unit_cube_bank_sha256: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
 exact_bounds_sha256: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
@@ -17,12 +20,12 @@ designs:
     - B
     - C
     - D
-    pairing_design_sha256: ee8d49dd54455b9f296932eef736eac8913a04e23c2e8951de28015389da2bf8
+    pairing_design_sha256: 95102a063f58eb2f3094ef3831bac60be16946830060caf2185b7d07d3348740
   p22_grid_primary_v6:
     arms:
     - G_A
     - G_C
-    pairing_design_sha256: a7c54196d4539882cb903e8a0f9ee47082be248e6b8d2a74f9b513023d7a1f5a
+    pairing_design_sha256: 4eda6a805a6f6eb0326f591240c120517d4f0d667f3ffbeeade8c4d60f4f2c69
 vectors:
 - name: halfcell_2x2_coord0
   coords:
@@ -31,8 +34,8 @@ vectors:
     lam_ne: '0.13'
     lam_pe_type: capacity
     lam_ne_type: capacity
-  pair_group_id: 866c0c82f25f669923cbfdb9c1fd914dcef213d2c1cdcda95eb7bc9ebac587eb
-  bank_id: bf65d74958c1959b5e88ac664a55b207bfcab04972270eb250c4168264df84b1
+  pair_group_id: 3ae679dc26e04d68c1c0a3fc99aea485aa4742e75a21140435fc20496c03dc07
+  bank_id: 22b95eabb6769c4aed41fcf2efc94aa76f89ab509f873b4a5b010f004eff9552
   candidate_payloads:
     base_init:
       base_coord_sha256: '1111111111111111111111111111111111111111111111111111111111111111'
@@ -44,9 +47,9 @@ vectors:
       bank_index: 7
       unit_cube_bytes_sha256: '4444444444444444444444444444444444444444444444444444444444444444'
   candidate_ids:
-    base_init: a66eeba20c6ba910cdbb973e651d6f32cb938eece35f59ed05814236e321375d
-    warm: 2249a2af8b8419ecdfb398eb0ca1cf74fe9b83a2d494bda186d2d080b54b700c
-    random: 301aa88b449914b004df8c04484e48d6a087dd6b408292bc38c01c1b35af39f0
+    base_init: 7976ed0da0003426258d60e416f5ffb1125fdcd441319a363a49029a7ce8c4da
+    warm: 10343509ef96d5b1378140698bada8d5522b931f480c9dd5c1e9e767a09ada57
+    random: 50f51bcc7bec671ed5a739cb9286bb41392e0c00127e371a01aa77988a69cae5
 - name: halfcell_2x2_coord1
   coords:
     lli: '0.170'
@@ -54,8 +57,8 @@ vectors:
     lam_ne: '0.13'
     lam_pe_type: capacity
     lam_ne_type: capacity
-  pair_group_id: 866c0c82f25f669923cbfdb9c1fd914dcef213d2c1cdcda95eb7bc9ebac587eb
-  bank_id: bf65d74958c1959b5e88ac664a55b207bfcab04972270eb250c4168264df84b1
+  pair_group_id: 3ae679dc26e04d68c1c0a3fc99aea485aa4742e75a21140435fc20496c03dc07
+  bank_id: 22b95eabb6769c4aed41fcf2efc94aa76f89ab509f873b4a5b010f004eff9552
   candidate_payloads:
     base_init:
       base_coord_sha256: '1111111111111111111111111111111111111111111111111111111111111111'
@@ -67,9 +70,9 @@ vectors:
       bank_index: 7
       unit_cube_bytes_sha256: '4444444444444444444444444444444444444444444444444444444444444444'
   candidate_ids:
-    base_init: a66eeba20c6ba910cdbb973e651d6f32cb938eece35f59ed05814236e321375d
-    warm: 2249a2af8b8419ecdfb398eb0ca1cf74fe9b83a2d494bda186d2d080b54b700c
-    random: 301aa88b449914b004df8c04484e48d6a087dd6b408292bc38c01c1b35af39f0
+    base_init: 7976ed0da0003426258d60e416f5ffb1125fdcd441319a363a49029a7ce8c4da
+    warm: 10343509ef96d5b1378140698bada8d5522b931f480c9dd5c1e9e767a09ada57
+    random: 50f51bcc7bec671ed5a739cb9286bb41392e0c00127e371a01aa77988a69cae5
 - name: halfcell_2x2_coord2
   coords:
     lli: '0'
@@ -77,8 +80,8 @@ vectors:
     lam_ne: '0'
     lam_pe_type: capacity
     lam_ne_type: capacity
-  pair_group_id: 0087e3065749f18dc2f46e04329e6fcd58650aa233726b32d357e659bda5d348
-  bank_id: d3161385d5c6b7072f9b48841af848ff3e8dc0dcff7500a8bffac7d3fac5987d
+  pair_group_id: aa49cd46c26c2265eeb586241b597ffba9ce012a315488e28cc6d2817a491ee0
+  bank_id: bd766910ceaa28cc7a47aa017969de7478535f26e4c5c8a3b04c856f0c7ecdf8
   candidate_payloads:
     base_init:
       base_coord_sha256: '1111111111111111111111111111111111111111111111111111111111111111'
@@ -90,9 +93,9 @@ vectors:
       bank_index: 7
       unit_cube_bytes_sha256: '4444444444444444444444444444444444444444444444444444444444444444'
   candidate_ids:
-    base_init: 5915c9d402d0c66779012516b1023ab7f82bb899970abd2c6eb7c81567e940e8
-    warm: 2e1dd0241ceb1b28b74a9793e8dfe916fffbf458ef891bdfaa7494108342e287
-    random: d8ef02539b1a56cff325ae041ae2f59eb256b6e4df91d8225ac457229084def9
+    base_init: e3b88866770415d3684c72cc0c1d9d8c8651a8b4d75e506c190bee64196317c5
+    warm: 02fb35ba3b614be35c80456f18f98a69ff57f5055f02d9ee99211c5bc9b62c46
+    random: 66e6b7d14303311e3401c340b6c75ac2501924bdfd6c557b11dbc50ee93d0152
 decimal_places: 12
 grid_linkage:
   note: '`src.grid.Condition` 의 float 좌표를 십진 문자열로 옮긴 것. 왕복하지 않으면 `decimal_from_float` 가 거부한다 — 조용한 반올림으로
@@ -105,7 +108,7 @@ grid_linkage:
       lam_ne: '0.13'
       lam_pe_type: capacity
       lam_ne_type: capacity
-    pair_group_id: 866c0c82f25f669923cbfdb9c1fd914dcef213d2c1cdcda95eb7bc9ebac587eb
+    pair_group_id: 3ae679dc26e04d68c1c0a3fc99aea485aa4742e75a21140435fc20496c03dc07
   - cond_id: 8dacb12bd0e7
     wire_coords:
       lli: '0'
@@ -113,7 +116,7 @@ grid_linkage:
       lam_ne: '0'
       lam_pe_type: capacity
       lam_ne_type: capacity
-    pair_group_id: 0087e3065749f18dc2f46e04329e6fcd58650aa233726b32d357e659bda5d348
+    pair_group_id: aa49cd46c26c2265eeb586241b597ffba9ce012a315488e28cc6d2817a491ee0
   - cond_id: d13e3583349c
     wire_coords:
       lli: '0.055'
@@ -121,8 +124,8 @@ grid_linkage:
       lam_ne: '0.13'
       lam_pe_type: de
       lam_ne_type: capacity
-    pair_group_id: 8e606bf1838e7a28d223c149084cba0d8bb95336c899ec65cdcde3ee47f02230
+    pair_group_id: 86761d139318a50355693bf329f3e76b3675ce65621865b6a7b04bbc338b427b
 cross_design_same_coords:
   note: 같은 좌표라도 설계가 다르면 다른 pair_group_id 여야 한다
-  halfcell: 866c0c82f25f669923cbfdb9c1fd914dcef213d2c1cdcda95eb7bc9ebac587eb
-  grid: 4c5d87510604d77efcdc1f16dd2786f9ca426ddc6c037368a4c9e1b998b8d487
+  halfcell: 3ae679dc26e04d68c1c0a3fc99aea485aa4742e75a21140435fc20496c03dc07
+  grid: 267f7452bbb62974a73e10776ddfc2dd73e9b5aafb0df1e2b1311adcbed859ff

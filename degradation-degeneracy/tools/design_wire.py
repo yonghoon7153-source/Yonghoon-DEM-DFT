@@ -29,7 +29,7 @@ from decimal import Decimal, InvalidOperation
 
 from tools.preserve import canonical_bytes, digest
 
-SCHEMA = "pairing-design/v6.2"
+SCHEMA = "pairing-design/v6.3"
 
 #: 좌표로 허용되는 십진 문자열. 지수표기·후행 쓰레기를 막는다.
 _DECIMAL = re.compile(r"^-?(0|[1-9][0-9]*)(\.[0-9]+)?$")
@@ -320,6 +320,16 @@ def pairing_design_sha256(spec: dict) -> str:
     return digest(spec)
 
 
+def _nonempty_str(v) -> bool:
+    return isinstance(v, str) and bool(v) and \
+        unicodedata.normalize("NFC", v) == v
+
+
+def _exact_bool(v) -> bool:
+    """`False == 0` 이므로 bool 을 따로 본다 (29차 P1-6)."""
+    return isinstance(v, bool)
+
+
 def _check_design_nested(spec: dict) -> list[str]:
     """★ 28차 P1-6 — 초판 validator 는 **top-level 키만** 닫았다.
 
@@ -333,8 +343,11 @@ def _check_design_nested(spec: dict) -> list[str]:
     if not isinstance(co, dict) or set(co) != {
             "unit", "representation", "binary_float_allowed", "decimal_places"}:
         bad.append(f"coordinate 블록이 닫혀 있지 않다: {co!r}")
-    elif co["representation"] != "exact_decimal_string" or co["binary_float_allowed"]:
-        bad.append("coordinate 정책이 계약과 다르다")
+    elif (not _nonempty_str(co.get("unit"))
+          or co["representation"] != "exact_decimal_string"
+          or not _exact_bool(co.get("binary_float_allowed"))
+          or co["binary_float_allowed"]):
+        bad.append(f"coordinate 정책이 계약과 다르다: {co!r}")
     elif isinstance(co["decimal_places"], bool) or \
             not isinstance(co["decimal_places"], int) or \
             not 1 <= co["decimal_places"] <= 30:
@@ -350,12 +363,17 @@ def _check_design_nested(spec: dict) -> list[str]:
             elif v != dict(ARM_REGISTRY[a], arm_id=a):
                 bad.append(f"arm {a} 의 내용이 registry 와 다르다")
 
-    po = spec.get("parameter_order")
-    if not isinstance(po, list) or not po or len(set(po)) != len(po):
-        bad.append(f"parameter_order 가 비었거나 중복이다: {po!r}")
-    op = spec.get("objective_plan")
-    if not isinstance(op, list) or not op or len(set(op)) != len(op):
-        bad.append(f"objective_plan 이 비었거나 중복이다: {op!r}")
+    for name in ("parameter_order", "objective_plan"):
+        v = spec.get(name)
+        if not isinstance(v, list) or not v or len(set(v)) != len(v):
+            bad.append(f"{name} 이 비었거나 중복이다: {v!r}")
+        elif not all(_nonempty_str(x) for x in v):
+            bad.append(f"{name} 의 원소가 비어 있거나 NFC 가 아니다: {v!r}")
+    if not _nonempty_str(spec.get("bounds_equivalence_policy")):
+        bad.append(f"bounds_equivalence_policy: {spec.get('bounds_equivalence_policy')!r}")
+    ex = spec.get("excluded_from_pair_id")
+    if ex != dict(EXCLUDED_FROM_PAIR_ID):
+        bad.append("excluded_from_pair_id 가 정본과 다르다 — 제외 결정 자체가 설계다")
 
     ser = spec.get("serialization")
     want_ser = {"encoding": "utf-8", "key_order": "sorted",
@@ -373,20 +391,28 @@ def _check_design_nested(spec: dict) -> list[str]:
     if not isinstance(pcs, dict) or set(pcs) != {
             "pair_axes", "value_type", "type_axes_value_type"}:
         bad.append("parameter_coordinate_schema 가 닫혀 있지 않다")
+    elif (pcs["pair_axes"] != ["lli", "lam_pe", "lam_ne",
+                               "lam_pe_type", "lam_ne_type"]
+          or pcs["value_type"] != "exact_decimal_string"
+          or pcs["type_axes_value_type"] != "str"):
+        bad.append(f"parameter_coordinate_schema 값이 계약과 다르다: {pcs!r}")
 
     ba = spec.get("bank")
     if not isinstance(ba, dict) or set(ba) != {
             "generator", "version", "seed_derivation", "dtype", "endian", "space"}:
         bad.append("bank 블록이 닫혀 있지 않다")
-    elif ba["endian"] not in ("little", "big") or ba["space"] != "unit_cube":
-        bad.append("bank 정책이 계약과 다르다")
+    elif (ba["endian"] not in ("little", "big") or ba["space"] != "unit_cube"
+          or not all(_nonempty_str(ba[k]) for k in
+                     ("generator", "version", "seed_derivation", "dtype"))):
+        bad.append(f"bank 정책이 계약과 다르다: {ba!r}")
     return bad
 
 
 def parameter_order_sha256(order: list[str]) -> str:
     if not isinstance(order, list) or not order or len(set(order)) != len(order) \
-            or not all(isinstance(x, str) and x for x in order):
-        raise WireError(f"parameter_order 가 비었거나 중복이거나 문자열이 아니다: {order!r}")
+            or not all(_nonempty_str(x) for x in order):
+        raise WireError(f"parameter_order 가 비었거나 중복이거나 NFC 문자열이 "
+                        f"아니다: {order!r}")
     return digest({"schema": "parameter-order/v1", "order": list(order)})
 
 
@@ -425,8 +451,8 @@ def bank_id(pair_group: str, bank_version: str, unit_cube_bank_sha: str) -> str:
                     ("unit_cube_bank_sha256", unit_cube_bank_sha)):
         if not _is_hex64(v):
             raise WireError(f"{name} 가 64-hex 가 아니다: {v!r}")
-    if not isinstance(bank_version, str) or not bank_version:
-        raise WireError(f"bank_version: {bank_version!r}")
+    if not _nonempty_str(bank_version):
+        raise WireError(f"bank_version 이 비었거나 NFC 가 아니다: {bank_version!r}")
     return digest({"schema": "bank/v1", "pair_group_id": pair_group,
                    "bank_version": bank_version,
                    "unit_cube_bank_sha256": unit_cube_bank_sha})
@@ -441,7 +467,13 @@ def candidate_id(bank: str, exact_bounds_sha: str, source: str,
     """
     if not _is_hex64(bank) or not _is_hex64(exact_bounds_sha):
         raise WireError("bank_id·exact_bounds_sha256 는 64-hex 여야 한다")
-    if source == "warm" and objective_plan is not None:
+    # ★ 29차 P1-6 — `objective_plan is not None` 일 때만 봤고 generator 도
+    #   넘기지 않아 `provider_objective='not-in-design'` 이 그대로 통과했다.
+    #   warm 은 **반드시** design 의 objective 를 이름해야 한다.
+    if source == "warm":
+        if objective_plan is None:
+            raise WireError("warm candidate 는 objective_plan 을 넘겨야 한다 — "
+                            "provider 가 design 밖 목적함수를 이름할 수 있다")
         po = (source_payload or {}).get("provider_objective")
         if po not in objective_plan:
             raise WireError(f"provider_objective 가 design 의 objective 가 "

@@ -49,7 +49,8 @@ for i, c in enumerate(COORDS):
         #   placeholder `{"i": 0}` 이었으므로 provenance 를 고정한 것이 아니었다.
         "candidate_payloads": {k: dict(v) for k, v in PAYLOADS.items()},
         "candidate_ids": {
-            src: candidate_id(bk, BOUNDS_SHA, src, PAYLOADS[src])
+            src: candidate_id(bk, BOUNDS_SHA, src, PAYLOADS[src],
+                                objective_plan=["pocv_dvdq", "pocv_dvdq_dqdv"])
             for src in ("base_init", "warm", "random")},
     })
 pgg = pair_group_id(pairing_design_sha256(grid), COORDS[0], pos)
@@ -74,6 +75,7 @@ golden = {
             "재생성: python3 tools/gen_design_golden.py"),
     "schema_version": 1,
     "parameter_order": ORDER,
+    "objective_plan": ["pocv_dvdq", "pocv_dvdq_dqdv"],
     "parameter_order_sha256": pos,
     "unit_cube_bank_sha256": BANK_SHA,
     "exact_bounds_sha256": BOUNDS_SHA,

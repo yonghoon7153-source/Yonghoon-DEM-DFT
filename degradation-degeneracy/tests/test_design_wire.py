@@ -66,7 +66,8 @@ def test_golden_vectors_recompute_exactly(golden):
         assert bk == v["bank_id"], f"{v['name']}: bank_id 가 움직였다"
         for src, want in v["candidate_ids"].items():
             got = candidate_id(bk, golden["exact_bounds_sha256"], src,
-                               v["candidate_payloads"][src])
+                               v["candidate_payloads"][src],
+                               objective_plan=golden["objective_plan"])
             assert got == want, f"{v['name']}/{src}: candidate_id 가 움직였다"
 
 
@@ -183,28 +184,34 @@ def test_candidate_payloads_follow_a_closed_per_source_schema(golden):
     요구한다.
     """
     bank, bounds = "a" * 64, "b" * 64
+    plan = golden["objective_plan"]
     good = golden["vectors"][0]["candidate_payloads"]
     for src, payload in good.items():
-        assert candidate_id(bank, bounds, src, payload)          # 정상
-        # 키 하나를 빼면 거부
-        for k in payload:
+        assert candidate_id(bank, bounds, src, payload, objective_plan=plan)
+        for k in payload:                                   # 키 하나를 빼면 거부
             with pytest.raises(WireError):
-                candidate_id(bank, bounds, src, {x: v for x, v in payload.items()
-                                                 if x != k})
-        # 남는 키도 거부 (닫힌 schema)
-        with pytest.raises(WireError):
-            candidate_id(bank, bounds, src, dict(payload, __extra__="x"))
-    # 빈 payload · float · 다른 source 의 payload 전부 거부
+                candidate_id(bank, bounds, src,
+                             {x: v for x, v in payload.items() if x != k},
+                             objective_plan=plan)
+        with pytest.raises(WireError):                      # 남는 키도 거부
+            candidate_id(bank, bounds, src, dict(payload, __extra__="x"),
+                         objective_plan=plan)
     for src in CANDIDATE_PAYLOAD_SCHEMA:
         with pytest.raises(WireError):
-            candidate_id(bank, bounds, src, {})
+            candidate_id(bank, bounds, src, {}, objective_plan=plan)
     with pytest.raises(WireError):
         candidate_id(bank, bounds, "random",
-                     {"bank_index": 1.0, "unit_cube_bytes_sha256": "c" * 64})
+                     {"bank_index": 1.0, "unit_cube_bytes_sha256": "c" * 64},
+                     objective_plan=plan)
     with pytest.raises(WireError):
-        candidate_id(bank, bounds, "warm", good["random"])
+        candidate_id(bank, bounds, "warm", good["random"], objective_plan=plan)
     with pytest.raises(WireError):
-        candidate_id("짧은-id", bounds, "base_init", good["base_init"])
+        candidate_id("짧은-id", bounds, "base_init", good["base_init"],
+                     objective_plan=plan)
+    # ★ 29차 P1-6 — warm 은 objective_plan 없이 부를 수 없다
+    with pytest.raises(WireError) as e:
+        candidate_id(bank, bounds, "warm", good["warm"])
+    assert "objective_plan" in str(e.value)
 
 
 def test_a_design_alias_change_does_not_move_any_id(golden):
@@ -404,3 +411,38 @@ def test_a_warm_candidate_must_name_an_objective_in_the_design(golden):
                      dict(good, provider_objective="not-in-design"),
                      objective_plan=plan)
     assert "objective" in str(e.value)
+
+
+@pytest.mark.parametrize("mut", [
+    {"coordinate": {"unit": None, "representation": "exact_decimal_string",
+                    "binary_float_allowed": False, "decimal_places": 12}},
+    {"coordinate": {"unit": "fraction", "representation": "exact_decimal_string",
+                    "binary_float_allowed": 0, "decimal_places": 12}},
+    {"parameter_order": [None]},
+    {"objective_plan": [None]},
+    {"bounds_equivalence_policy": None},
+    {"excluded_from_pair_id": {}},
+    {"parameter_coordinate_schema": {"pair_axes": [], "value_type": "x",
+                                     "type_axes_value_type": "y"}},
+])
+def test_nested_design_values_are_domain_checked(golden, mut):
+    """★ 29차 P1-6 — nested **키**는 닫혔지만 **값**이 열려 있었다.
+
+    `None`, `False == 0`, 빈 목록이 전부 정상 digest 를 냈다.
+    """
+    order = golden["parameter_order"]
+    spec = _spec("p22_halfcell_2x2_v6", ["A", "B", "C", "D"], order)
+    with pytest.raises(WireError):
+        pairing_design_sha256(dict(spec, **mut))
+
+
+def test_bank_and_parameter_order_ids_enforce_nfc(golden):
+    """ID 사슬 전체가 NFC 를 강제한다 — 한 곳만 빠져도 같은 이름이 갈린다."""
+    import unicodedata
+
+    deco = unicodedata.normalize("NFD", "café")
+    assert deco != unicodedata.normalize("NFC", deco), "전제"
+    with pytest.raises(WireError):
+        parameter_order_sha256([deco])
+    with pytest.raises(WireError):
+        bank_id("a" * 64, deco, "f" * 64)

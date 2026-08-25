@@ -13,10 +13,10 @@ by_objective_sha256:
 restart_projection_file: paired_fixed5_v4.restarts.csv.gz
 restart_projection_sha256: 84333ad3c19625ca7dcd2f1bb8a0f1c78cc4296dd46deef4bb17dd57b94467bd
 n_restart_rows: 30690
-analysis_spec_sha256: f1898eb6117c89b8e43b9d7c76ba4c2abb1cc880f36ccbbdd8d6d329cf4cf727
+analysis_spec_sha256: 43d74dd385b1f66d28cc371dd7ebbd00fc0289323e0a515114eb2b8d45d56271
 analyzer:
-  compute_sha256: fe9d7473b6ef0e87
-  row_projection_py_sha256: 9f7dde01a0308856
+  compute_sha256: 3084596353e63426
+  row_projection_py_sha256: d42a7f3544e17cb3
   src_scoring_py_sha256: 69e69cb046f4b4ae
   python: 3.11.15
   platform: Linux-6.18.44-fc-v21-x86_64-with-glibc2.39
@@ -72,7 +72,6 @@ analysis_spec:
   summary_comparison:
     skip_top_level_keys:
     - _채점원본
-    - _F4_주의
     type_policy: exact
   fits_binding:
     actual_bytes: true

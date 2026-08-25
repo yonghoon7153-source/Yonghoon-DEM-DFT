@@ -2822,28 +2822,56 @@ def test_cohort_membership_is_consistent_in_both_directions():
     assert not bad, "cohort 구성원이 어긋난다:\n  " + "\n  ".join(bad)
 
 
-def test_claim_roles_are_a_machine_contract_not_free_prose():
-    """★ 25차 발견 6 — `claim_roles` 가 자유문장이면 기계 계약이 아니다.
-
-    초판은 `claim: "…한국어 문장…"` · `role: 인용가능` 이었고 회귀는 목록이
-    비었는지만 봤다. 다음이 전부 빠져 있었다:
-
-      · claim ID 가 원장(`CLAIM_STATUS.yaml`)에 실재하는가
-      · role 이 계약 enum 인가 · protocol generation 이 있는가
-      · `claim_id × leg_id` 중복
-      · leg-level `inference_role` 과의 양립
-      · claim 원장 양방향 coverage
-
-    한 다리가 옛 protocol 주장에는 쓸 수 있고 새 protocol 주장에는 못 쓰는
-    구분은 **필요하다** (25차 발견 3). 다만 그것을 자유문장으로 적으면 묶음 7
-    을 닫은 것이 아니다.
-    """
+def _leg_preservation() -> dict:
     import yaml
 
-    enums = _contract_status_enums()
-    roles_ok = enums["inference_role"]
-    creg = _claim_status()
+    return yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
+
+
+def _sealed_source_digest(leg_id: str) -> str | None:
+    """봉인된 투영이 적은 `source_digest` — 가변 원장이 아니라 이것이 근거다."""
+    import yaml
+
+    for c in _cohorts():
+        y = _REPO / c["dir"] / f"{leg_id}.projection.yaml"
+        if y.is_file():
+            return yaml.safe_load(y.read_text(encoding="utf-8")).get("source_digest")
+    return None
+
+
+def _current_generation(creg: dict) -> str:
+    """**현행** protocol 세대 — 자유신고가 아니라 산출물에서 도출한다.
+
+    ★ 30차 — 다리의 leg-level `inference_role` 이 무엇에 대한 판정인지가
+    이 함수의 존재 이유다. `paired_fixed5_v4` 의 leg-level 이 `diagnostic`
+    인 근거는 원장이 직접 적었듯 "**현행 정본은 아니다** — run_spec 의
+    `source_digest` 가 현행과 다르다" 이다. 즉 leg-level 은 **현행 세대에
+    대한** 역할이지 모든 세대에 대한 상한이 아니다. 옛 세대 주장
+    (`LEGACY_PAIRED_FIXED5`) 의 정본이 되는 것은 그 판정과 모순되지 않는다.
+
+    도출 규칙: `protocol_generations` 의 선언 순서에서, **실제 source digest
+    가 도달한** 가장 새로운 세대. `v6` 는 아직 산출물이 없으므로 현행이 될
+    수 없다. `source_digest_generations` 의 모든 digest 는 아래
+    `_claim_role_problems` 가 **봉인된 다리에 묶여 있는지** 검사하므로,
+    "현행 = v6" 을 위조하려면 v6 digest 로 실제 투영을 봉인해야 한다.
+    """
+    order = list(creg.get("protocol_generations") or [])
+    attained = set((creg.get("source_digest_generations") or {}).values())
+    live = [g for g in order if g in attained]
+    assert live, "어떤 세대에도 산출물이 없다 — 현행 세대를 도출할 수 없다"
+    return live[-1]
+
+
+def _claim_role_problems(reg: dict, creg: dict, roles_ok: set[str],
+                         sealed: dict[str, str | None]) -> list[str]:
+    """`claim_roles` 계약 위반 목록. 순수 함수 — 변이 시험이 디스크를 안 탄다.
+
+    ★ 30차 — 초판은 이 본문이 테스트 안에 인라인이라 **변이를 걸 수가
+    없었다.** 규칙을 고쳐도 "고친 규칙이 실제로 무는가" 를 보일 방법이
+    없었다는 뜻이다. 순수 함수로 꺼내 원장 사본을 변형해 물리는지 본다.
+    """
     gens = creg.get("protocol_generations") or []
+    assert gens, "protocol_generations 가 없다 — 세대가 자유문자가 된다"
     compat = {(r["source"], r["target"]): set(r["allowed_roles"])
               for r in (creg.get("role_compatibility") or [])}
     digest_gen = creg.get("source_digest_generations") or {}
@@ -2851,11 +2879,22 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
     assert compat, "`role_compatibility` 가 없다 — 세대 간 role 이 자유문장이 된다"
     known = {c["id"]: c for c in (creg.get("active_claims") or [])}
     retracted = {c["id"] for c in creg["claims"]}
+    current = _current_generation(creg)
 
-    reg = yaml.safe_load(_PRESERVE.read_text(encoding="utf-8"))
     seen: set[tuple[str, str]] = set()
     used: set[str] = set()
-    bad = []
+    bad: list[str] = []
+
+    # ★ 30차 — 세대표가 **봉인되지 않은 digest** 를 담으면 `_current_generation`
+    #   이 위조된다. 원장에 `deadbeef: v6` 한 줄을 더하는 것만으로 현행 세대가
+    #   v6 이 되고, v6_prep 다리의 leg-level 상한이 통째로 풀린다. 표의 모든
+    #   digest 는 **봉인된 투영이 실제로 적은** 다리 digest 여야 한다.
+    anchored = {d for d in sealed.values() if d}
+    for dg in sorted(digest_gen):
+        if dg not in anchored:
+            bad.append(f"`source_digest_generations` 의 {dg!r} 가 어떤 봉인된 "
+                       "투영에도 없다 — 세대표를 봉인물에 묶어라")
+
     for e in reg["legs"]:
         leg = e["leg_id"]
         cap = (e.get("evidence") or {}).get("regeneration_capability")
@@ -2888,6 +2927,12 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
                 bad.append(f"{leg}/{cid}: role 행에 protocol_generation 을 "
                            "적지 않는다 — 봉인된 digest 에서 도출한다")
             src_digest = (e.get("evidence") or {}).get("leg_source_digest")
+            # ★ 29차 P2 — `evidence` 는 **가변 YAML** 이다. 봉인된 투영의
+            #   `source_digest` 와 대조하지 않으면 evidence 와 role 을 함께
+            #   바꾸는 변형이 그대로 통과한다.
+            if sealed.get(leg) is not None and sealed[leg] != src_digest:
+                bad.append(f"{leg}: evidence.leg_source_digest={src_digest!r} 가 "
+                           f"봉인된 투영의 source_digest={sealed[leg]!r} 와 다르다")
             rg = digest_gen.get(src_digest)
             tg = known[cid]["protocol_generation"]
             if rg is None:
@@ -2903,23 +2948,157 @@ def test_claim_roles_are_a_machine_contract_not_free_prose():
                     f"(허용: {sorted(compat[(rg, tg)])})")
             elif rg != tg and not r.get("reason"):
                 bad.append(f"{leg}/{cid}: 세대를 넘어 쓰는데 `reason` 이 없다")
-            # ★ leg-level 보다 **센** role 은 세대가 달라야만 성립한다
+            # ★ leg-level 보다 **센** role 의 성립 조건
             if r.get("inference_role") == "canonical":
                 if cap != "available_raw_present":
                     bad.append(f"{leg}/{cid}: 원자료가 없는데 canonical")
-                if e.get("inference_role") != "canonical" and \
-                        r.get("protocol_generation") == known[cid]["protocol_generation"] \
-                        and known[cid]["protocol_generation"] == "v6":
+                # ★ 29차 — 초판은 여기서 `r.get("protocol_generation")` 을 다시
+                #   비교했다. 위에서 그 필드를 **금지**했으므로 dead condition
+                #   이었다.
+                # ★ 30차 — dead condition 을 `rg == tg` 로 되살렸더니 이번엔
+                #   **너무 넓었다**: v5 다리가 v5 legacy 주장의 정본이 되는
+                #   것까지 막았다 (24차 보충이 명시적으로 허용한 것 —
+                #   "legacy claim scope 와 당시 protocol 을 명시한 채 유지할 수
+                #   있다"). leg-level 은 **현행 세대에 대한** 판정이므로
+                #   비교 대상은 `current` 다. 옛 세대는 위의 `role_compatibility`
+                #   가 이미 관장한다.
+                if e.get("inference_role") != "canonical" and tg == current:
                     bad.append(f"{leg}/{cid}: leg 는 {e.get('inference_role')} 인데 "
-                               f"같은 세대 주장에 canonical 을 붙였다")
+                               f"현행 세대({current}) 주장에 canonical 을 붙였다")
 
     # 양방향 — `requires_leg: true` 인 주장은 적어도 한 다리가 지지해야 한다
     orphan = sorted(cid for cid, c in known.items()
                     if c.get("requires_leg") and cid not in used)
     if orphan:
         bad.append(f"지지 다리가 없는 활성 주장: {orphan}")
+    return bad
 
+
+def test_claim_roles_are_a_machine_contract_not_free_prose():
+    """★ 25차 발견 6 — `claim_roles` 가 자유문장이면 기계 계약이 아니다.
+
+    초판은 `claim: "…한국어 문장…"` · `role: 인용가능` 이었고 회귀는 목록이
+    비었는지만 봤다. 다음이 전부 빠져 있었다:
+
+      · claim ID 가 원장(`CLAIM_STATUS.yaml`)에 실재하는가
+      · role 이 계약 enum 인가 · protocol generation 이 있는가
+      · `claim_id × leg_id` 중복
+      · leg-level `inference_role` 과의 양립
+      · claim 원장 양방향 coverage
+
+    한 다리가 옛 protocol 주장에는 쓸 수 있고 새 protocol 주장에는 못 쓰는
+    구분은 **필요하다** (25차 발견 3). 다만 그것을 자유문장으로 적으면 묶음 7
+    을 닫은 것이 아니다.
+    """
+    enums = _contract_status_enums()
+    reg = _leg_preservation()
+    creg = _claim_status()
+    sealed = {e["leg_id"]: _sealed_source_digest(e["leg_id"]) for e in reg["legs"]}
+    bad = _claim_role_problems(reg, creg, enums["inference_role"], sealed)
     assert not bad, "claim_roles 가 기계 계약이 아니다:\n  " + "\n  ".join(bad)
+
+
+def _live_contract() -> tuple[dict, dict, set[str], dict[str, str | None]]:
+    """실제 원장의 **깊은 사본** — 변이 시험이 디스크를 건드리지 않게."""
+    import copy
+
+    reg = _leg_preservation()
+    creg = _claim_status()
+    sealed = {e["leg_id"]: _sealed_source_digest(e["leg_id"]) for e in reg["legs"]}
+    return (copy.deepcopy(reg), copy.deepcopy(creg),
+            _contract_status_enums()["inference_role"], sealed)
+
+
+def test_the_current_generation_is_derived_from_artifacts_not_declared():
+    """★ 30차 — `v6` 는 선언돼 있지만 **산출물이 없다**. 현행이 될 수 없다.
+
+    이것을 자유필드(`current_generation: v6`)로 적었다면 그 한 줄을 고치는
+    것만으로 v6_prep 다리들의 leg-level 상한이 풀렸을 것이다.
+    """
+    _, creg, _, _ = _live_contract()
+    assert _current_generation(creg) == "v6_prep"
+
+    # 산출물이 생기면 — 그리고 **그때만** — 현행이 옮겨간다
+    creg["source_digest_generations"]["ffffffffffffffff"] = "v6"
+    assert _current_generation(creg) == "v6"
+
+
+def test_the_generation_table_must_be_anchored_to_sealed_projections():
+    """★ 30차 — 세대표가 봉인물에 묶이지 않으면 `현행 세대`가 위조된다.
+
+    변이: 어떤 다리도 쓰지 않는 digest 한 줄(`ffff…: v6`)을 표에 더한다.
+    이것만으로 `_current_generation` 이 v6 이 되고, v6_prep 다리들이
+    leg-level 상한 없이 canonical 을 붙일 수 있게 된다. 표의 모든 digest 가
+    **봉인된 투영이 실제로 적은** 값이어야 한다는 검사가 이 경로를 막는다.
+    """
+    reg, creg, roles_ok, sealed = _live_contract()
+    assert _claim_role_problems(reg, creg, roles_ok, sealed) == []
+
+    creg["source_digest_generations"]["ffffffffffffffff"] = "v6"
+    bad = _claim_role_problems(reg, creg, roles_ok, sealed)
+    assert any("어떤 봉인된" in b and "ffffffffffffffff" in b for b in bad), bad
+
+
+def test_a_leg_may_be_canonical_for_a_legacy_claim_but_not_the_current_one():
+    """★ 30차 — 29차의 `rg == tg` 는 **너무 넓었다**.
+
+    `paired_fixed5_v4` 의 leg-level 은 `diagnostic` 이다. 그 근거는 원장이
+    적은 "현행 정본은 아니다" 이고, 그것은 **현행 세대에 대한** 판정이다.
+    24차 보충 리뷰가 명시적으로 허용한 것 — 옛 `RESULTS_PAIRED_FIXED5.md`
+    가 지지하던 v5 주장의 citation-grade 지위는 "legacy claim scope 와 당시
+    protocol 을 명시한 채" 유지할 수 있다 — 을 `rg == tg` 가 막았다.
+
+    이 시험은 **양쪽**을 고정한다. 옛 세대 정본은 통과하고, 같은 role 을
+    현행 세대 주장으로 옮기면 물린다. 한쪽만 고정하면 규칙을 통째로 지워도
+    시험이 초록이다.
+    """
+    reg, creg, roles_ok, sealed = _live_contract()
+    leg = next(e for e in reg["legs"] if e["leg_id"] == "paired_fixed5_v4")
+    role = next(r for r in leg["claim_roles"]
+                if r["claim_id"] == "LEGACY_PAIRED_FIXED5")
+    assert leg["inference_role"] == "diagnostic"
+    assert role["inference_role"] == "canonical"
+    assert _claim_role_problems(reg, creg, roles_ok, sealed) == []
+
+    # 같은 다리·같은 role 을 **현행 세대** 주장으로 옮기면 물린다
+    creg_now = copy_with_claim_generation(creg, "LEGACY_PAIRED_FIXED5", "v6_prep")
+    bad = _claim_role_problems(reg, creg_now, roles_ok, sealed)
+    assert any("현행 세대(v6_prep)" in b for b in bad), bad
+
+
+def copy_with_claim_generation(creg: dict, claim_id: str, gen: str) -> dict:
+    import copy
+
+    out = copy.deepcopy(creg)
+    for c in out["active_claims"]:
+        if c["id"] == claim_id:
+            c["protocol_generation"] = gen
+    return out
+
+
+def test_a_current_generation_leg_cannot_self_promote_to_canonical():
+    """★ 30차 — 규칙이 **현행 세대 안에서** 실제로 무는지.
+
+    변이: `paired_fixed5_v4_nowarm_now` (leg-level `diagnostic`, 원자료
+    소실) 가 현행 세대 주장 `P22_NOWARM_PRIMARY` 에 canonical 을 붙인다.
+    원자료 조항이 먼저 물어서 leg-level 조항이 **한 번도 실행되지 않는**
+    가짜 초록을 피하려고, 원자료 조항을 만족시킨 채로도 물리는지 따로 본다.
+    """
+    reg, creg, roles_ok, sealed = _live_contract()
+    leg = next(e for e in reg["legs"]
+               if e["leg_id"] == "paired_fixed5_v4_nowarm_now")
+    role = next(r for r in leg["claim_roles"]
+                if r["claim_id"] == "P22_NOWARM_PRIMARY")
+    role["inference_role"] = "canonical"
+
+    bad = _claim_role_problems(reg, creg, roles_ok, sealed)
+    assert any("원자료가 없는데 canonical" in b for b in bad), bad
+
+    # 원자료 조항을 만족시켜도 leg-level 조항이 남는다
+    leg["evidence"]["regeneration_capability"] = "available_raw_present"
+    bad = _claim_role_problems(reg, creg, roles_ok, sealed)
+    assert not any("원자료가 없는데" in b for b in bad), bad
+    assert any("현행 세대(v6_prep)" in b and "nowarm_now" in b for b in bad), bad
 
 
 def test_the_two_audit_tools_share_one_canonical_score_path():
