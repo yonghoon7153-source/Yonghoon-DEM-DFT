@@ -343,17 +343,28 @@ def permute_dopant(atoms, dopant: str, host: str, seed: int):
     if len(host_idx) < len(dop_idx):
         raise SystemExit(f"⛔ {host} 자리가 {len(host_idx)}개뿐이라 "
                          f"{dopant} {len(dop_idx)}개를 옮길 수 없다")
+    # ★ 2026-08-26 수정 — **합집합에서 다시 고른다.**
+    #   초판은 도판트 전부를 host 원자와 1:1 로 맞바꿨다. 그러면 '하나만 옮기기'(부분 이동)가
+    #   불가능하다. host 자리가 많은 큰 셀에서는 티가 안 나지만, 작은 셀에서는 치명적이다:
+    #   P_4b(56at)은 P 2개 · Y 2개라 실제 배치 공간이 C(4,2)=6 인데 초판 방식은 1가지만 낸다.
+    #   올바른 모형은 "동등한 자리 전체에서 도판트가 앉을 자리를 다시 고른다" 이다.
+    pool = sorted(dop_idx + host_idx)
     rng = random.Random(seed)
-    picks = rng.sample(host_idx, len(dop_idx))
+    picks = sorted(rng.sample(pool, len(dop_idx)))
     new = atoms.copy()
     s2 = list(sym)
-    for d, h in zip(dop_idx, picks):
-        s2[d], s2[h] = s2[h], s2[d]          # 기호만 맞바꾼다 → 조성 불변
+    for i in pool:
+        s2[i] = host                          # 일단 전부 host 로
+    for i in picks:
+        s2[i] = dopant                        # 고른 자리에만 도판트
     new.set_chemical_symbols(s2)
     moved = sum(1 for a, b in zip(sym, s2) if a != b)
-    return new, {"seed": seed, "from": dop_idx, "to": sorted(picks),
+    import math
+    return new, {"seed": seed, "from": sorted(dop_idx), "to": picks,
                  "n_changed": moved,
-                 "same_as_input": sorted(picks) == sorted(dop_idx)}
+                 "n_pool": len(pool),
+                 "n_possible": math.comb(len(pool), len(dop_idx)),
+                 "same_as_input": picks == sorted(dop_idx)}
 
 
 def _selftest_permute():
@@ -402,6 +413,26 @@ def _selftest_permute():
         chk(False, "[음성] host 자리가 모자라면 거부해야 한다")
     except SystemExit:
         chk(True, "[음성] host 자리가 모자라면 거부한다 (조용히 일부만 옮기지 않는다)")
+
+    # ★ 작은 셀: 부분 이동이 되나 (2026-08-26 수정의 핵심)
+    small = Atoms("Y2P2S4", positions=[[i, 0, 0] for i in range(8)],
+                  cell=[20, 20, 20], pbc=True)
+    seen = set()
+    for s in range(40):
+        b, m = permute_dopant(small, "Y", "P", seed=s)
+        seen.add(tuple(i for i, x in enumerate(b.get_chemical_symbols()) if x == "Y"))
+        chk_pool = m["n_pool"]
+    chk(chk_pool == 4 and m["n_possible"] == 6,
+        "작은 셀: 풀 = 도판트+host 4자리, 가능 배치 C(4,2)=6 으로 센다")
+    chk(len(seen) == 6,
+        "★ [음성] Y2P2 에서 **6가지 배치를 전부** 낸다 — 초판은 1가지밖에 못 냈다")
+    chk(any(len(set(x) & {0, 1}) == 1 for x in seen),
+        "★ [음성] **부분 이동**(Y 하나만 옮기기)이 실제로 나온다")
+    import collections as _c
+    chk(all(_c.Counter(permute_dopant(small, "Y", "P", seed=s)[0]
+            .get_chemical_symbols()) ==
+            _c.Counter(small.get_chemical_symbols()) for s in range(10)),
+        "작은 셀에서도 조성 보존")
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -462,28 +493,44 @@ def main():
         src = read(args.base)
         od = Path(args.out); od.mkdir(parents=True, exist_ok=True)
         stem = Path(args.base).stem
-        meta_all, n_same = [], 0
+        meta_all, n_same, n_dup, seen = [], 0, 0, set()
         for k in range(args.n_seeds):
             new, meta = permute_dopant(src, args.permute_dopant,
                                        args.host_element, seed=args.seed + k)
+            key = tuple(meta["to"])
+            dup = key in seen
+            seen.add(key)
             if meta["same_as_input"]:
                 n_same += 1
+            if dup:
+                n_dup += 1
             f = od / f"{stem}_perm{k:02d}.xyz"
             write(f, new)
-            meta_all.append({**meta, "file": f.name})
+            meta_all.append({**meta, "file": f.name, "duplicate": dup})
+            flags = ("   ⚠ 입력과 같은 자리" if meta["same_as_input"] else "") + \
+                    ("   ⚠ 앞 배치와 중복" if dup else "")
             print(f"  [{k}] seed {args.seed+k} → {f.name}  "
-                  f"{args.permute_dopant} {meta['from']} → {meta['to']}"
-                  f"{'   ⚠ 입력과 같은 자리' if meta['same_as_input'] else ''}")
+                  f"{args.permute_dopant} {meta['from']} → {meta['to']}{flags}")
+        # ⛔ 배치 공간이 좁으면 seed 를 늘려도 새 배치가 안 나온다. 그걸 말해준다 —
+        #   중복을 독립 표본으로 세면 산포가 실제보다 작아 보인다.
+        n_poss = meta_all[0]["n_possible"] if meta_all else 0
+        if args.n_seeds >= n_poss:
+            print(f"  ⚠⚠ 가능한 배치가 **{n_poss}가지뿐**인데 {args.n_seeds}개를 뽑았다 "
+                  f"(고유 {len(seen)}가지). 중복을 독립 표본으로 세면 산포가 "
+                  f"실제보다 작게 나온다 — 통계에 쓸 때는 고유 배치만 센다.")
         (od / f"{stem}_permute_meta.json").write_text(json.dumps({
             "source": str(args.base), "dopant": args.permute_dopant,
             "host_element": args.host_element, "n_seeds": args.n_seeds,
             "base_seed": args.seed, "configs": meta_all,
             "n_identical_to_input": n_same,
+            "n_duplicate": n_dup, "n_unique": len(seen),
+            "n_possible": (meta_all[0]["n_possible"] if meta_all else None),
             "⛔_note": "조성은 정확히 보존된다. 공공 위치는 그대로이므로 "
                        "도판트-공공 거리는 배치마다 달라진다 (의도된 자유도).",
         }, indent=2, ensure_ascii=False))
-        print(f"✓ {args.n_seeds}개 배치 → {od}"
-              + (f"   ⚠ 그중 {n_same}개는 입력과 같은 자리다" if n_same else ""))
+        print(f"✓ {args.n_seeds}개 배치 → {od}  (고유 {len(seen)} / 가능 {n_poss})"
+              + (f"   ⚠ 입력과 같은 자리 {n_same}개" if n_same else "")
+              + (f"   ⚠ 중복 {n_dup}개" if n_dup else ""))
         return 0
 
     if not args.base or not args.out:
