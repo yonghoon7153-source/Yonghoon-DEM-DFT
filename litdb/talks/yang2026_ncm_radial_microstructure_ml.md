@@ -635,9 +635,13 @@ C33 =  11.85 GPa    C44 =  74.14 GPa
 ## 17. 판독 메타 (재현용)
 
 - **덱 렌더**: `python3 tools/litdb/extract_figures.py --slides --clean --slug yang2026_ncm_radial_microstructure_ml --pdf <덱>`
-  → `litdb/figures/yang2026_ncm_radial_microstructure_ml/fig_1..21.png` (**21/21, 3000×2250 px**).
+  → `litdb/figures/yang2026_ncm_radial_microstructure_ml/fig_1..21.png` (**21/21**).
   ※ `--slides` 는 이번에 **새로 추가한 모드**다 — 기존 캡션 앵커 방식은 PPT 덱에서 0장이 나온다
   (저널 캡션이 없으므로). selftest 20/20 통과(음성 경로 `백지 슬라이드 제거`·`덱 1개 제한` 포함).
+  - **판독 배율**: 1차 렌더 **3000×2250 px** 로 전 슬라이드를 읽었다(수치·축·마커 확인은 이 배율).
+  - **repo 커밋본은 1500×1125 px** (폴더 11 MB → **4.2 MB**). 덱은 쪽 통째 렌더라 논문 크롭보다
+    커져서, `--slides` 기본을 `dpi 150 / maxpx 1600` 으로 낮췄다(도구 주석에 사유 기록).
+    **다시 3000 px 로 보려면**: 위 명령에 `--maxpx 3000 --dpi 300` 을 붙인다.
 - **텍스트**: `pdftotext -layout` (텍스트 레이어 있음 — 스캔 아님). 표·수치는 **PDF 텍스트가 정본**.
 - **실제로 이미지로 본 슬라이드 (13/21)**: **3, 4, 5, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19**
   ← 14장. 주장·축·마커 위치를 원해상도(3000×2250)로 확인했다.

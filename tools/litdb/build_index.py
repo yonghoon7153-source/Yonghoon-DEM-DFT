@@ -126,8 +126,16 @@ def build(dry=False):
     return dem, txt
 
 
+_AXIS_RE = re.compile(r"^>.*?\baxis:\s*[`*]*([a-z0-9_\-]+)", re.I)
+
+
 def _talk_axis(slug):
-    """덱 digest 헤더의 `axis:` 값 (없으면 ''). DEM 축 덱만 이 인덱스에 싣기 위한 판정.
+    """덱 digest **메타 블록**의 `axis:` 값 (없으면 ''). DEM 축 덱만 인덱스에 싣기 위한 판정.
+
+    ⚠ 왜 `^>` 를 요구하나 (2026-08-25 실측 사고): 처음엔 아무 줄에서나 `axis:` 를 찾았더니,
+      **"저쪽 파일에는 `axis: dem-microstructure` 태그가 있다"고 *설명하는 산문*** 이 걸려
+      통합 stub 이 인덱스에 같이 실렸다. 태그는 항상 머리말 인용블록(`> slug … · axis: … ·`)에
+      있으므로 **줄이 `>` 로 시작할 때만** 태그로 인정한다.
 
     이 함수가 못 하는 것: `axis:` 태그가 없는 옛 덱은 항상 ''를 돌려주므로 실리지 않는다
     (소급 태깅은 사람이 한다 — 자동 추측하면 축이 섞인다).
@@ -135,12 +143,47 @@ def _talk_axis(slug):
     f = LITDB / "talks" / f"{slug}.md"
     try:
         for line in f.read_text(encoding="utf-8", errors="ignore").splitlines()[:20]:
-            m = re.search(r"axis:\s*`?([a-z0-9_\-]+)", line, re.I)
+            m = _AXIS_RE.match(line)
             if m:
                 return m.group(1).lower()
     except Exception:
         pass
     return ""
+
+
+def selftest():
+    """_talk_axis 자체 점검 — **음성 경로 포함** (산문 오탐이 실제로 났던 자리)."""
+    import tempfile
+    global LITDB
+    ok = fail = 0
+
+    def chk(name, cond):
+        nonlocal ok, fail
+        print(("  ⭕ " if cond else "  ⛔ ") + name)
+        ok, fail = ok + bool(cond), fail + (not cond)
+
+    with tempfile.TemporaryDirectory() as td:
+        keep, LITDB = LITDB, Path(td)
+        (LITDB / "talks").mkdir(parents=True)
+        w = lambda n, s: (LITDB / "talks" / f"{n}.md").write_text(s, encoding="utf-8")
+        w("pos_plain", "# T\n\n> slug `x` · type `talk` ·\n> **axis: `dem-microstructure`** ·\n")
+        w("pos_nostar", "# T\n\n> axis: dem-microstructure\n")
+        w("neg_prose", "# T\n\n4. **`axis: dem-microstructure` 태그**가 있어 인덱스가\n")
+        w("neg_none", "# T\n\n> slug `x` · type `talk` ·\n")
+        w("neg_late", "# T\n" + "\n" * 25 + "> axis: dem-microstructure\n")
+        try:
+            chk("양성: 메타 블록의 `> **axis: `…`**`", _talk_axis("pos_plain") == "dem-microstructure")
+            chk("양성: 백틱/별표 없어도", _talk_axis("pos_nostar") == "dem-microstructure")
+            chk("음성①: **산문 속 axis: 는 태그가 아니다** (통합 stub 오탐 재발 방지)",
+                _talk_axis("neg_prose") == "")
+            chk("음성②: 태그가 없으면 ''", _talk_axis("neg_none") == "")
+            chk("음성③: 21줄 이후는 안 본다", _talk_axis("neg_late") == "")
+            chk("음성④: 파일이 없으면 '' (예외 안 터짐)", _talk_axis("no_such_slug") == "")
+        finally:
+            LITDB = keep
+
+    print(f"\nselftest: {ok} 통과 / {fail} 실패")
+    return 1 if fail else 0
 
 
 def check():
@@ -179,7 +222,11 @@ def check_comparison(papers):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="점검만 (파일 안 씀)")
+    ap.add_argument("--selftest", action="store_true", help="자체 점검 (양성 + 음성 경로)")
     a = ap.parse_args()
+
+    if a.selftest:
+        return selftest()
 
     if not a.check:
         dem, _ = build()
