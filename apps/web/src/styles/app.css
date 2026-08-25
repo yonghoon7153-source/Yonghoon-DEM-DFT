@@ -1001,46 +1001,22 @@ tbody tr:last-child td { border-bottom: none; }
 .choice .head .cycle { font-family: var(--mono); font-weight: 620; margin-left: auto; }
 /* 확정이 아닌 후보.  숫자는 보여 주되 확정과 같은 무게로 읽히면 안 된다. */
 .choice .head .cycle.tentative { color: var(--ink-3); font-weight: 520; }
-/* 사퇴한 기준의 근거 — 올려놓으면 나온다.
-   카드 안에 접어 두면(details) 카드가 버튼이라 클릭이 겹치고, 늘 펴 두면
-   기준 다섯 개가 표 다섯 개가 된다.  그래서 떠 있는 판이다. */
-.choice { position: relative; }
-/* **가리지 않게 한다.**  판은 카드 밖으로 넘치는데, 조상 중 하나라도 잘라내면
-   (`overflow: hidden`) 거기서 잘리고, 다음 카드가 위에 그려지면 그 뒤로 숨는다
-   -- 실제로 둘 다 일어나서, 표가 반만 보이고 그 반도 다음 카드에 덮였다.
-   잘라내지 않게 열어 두고, 올라간 조각을 통째로 위로 띄운다. */
-.under-trend, .knee-choices { overflow: visible; }
-.choice:hover, .choice:focus-visible { z-index: 30; }
-/* 카드가 저마다 쌓임 맥락을 만들므로, 조각의 z-index 만으로는 **다음 카드**를
-   이기지 못한다.  올라간 조각을 품은 카드째로 올린다. */
-.card:has(.choice:hover), .card:has(.choice:focus-visible) {
-  position: relative;
-  z-index: 30;
-  overflow: visible;
-}
+/* 사퇴한 기준의 근거는 한 판에 하나만 편다.  카드마다 접어 두면(details)
+   카드가 버튼이라 클릭이 겹치고, 다섯 개를 늘 펴 두면 표가 다섯 개가 된다. */
+/* 근거 판은 **줄 밑 제자리**다.  예전에는 카드에 붙어 뜨는 판이었는데, 판이
+   카드보다 커서 늘 무언가를 덮었다 -- 밑의 사이클 표를 가리거나 옆 카드 위로
+   걸쳤고, z-index 를 올려도 "가리지 않게" 가 되지는 않았다 (무엇을 가릴지가
+   정해질 뿐이다).  흐름 안에 두면 그 경우가 아예 안 생긴다.
+
+   덤: 손가락에는 hover 가 없어서 태블릿에서는 이 판을 못 봤다. */
 .knee-evidence {
-  position: absolute;
-  z-index: 30;
-  top: calc(100% + 4px);
-  left: 0;
-  min-width: 260px;
-  max-width: 340px;
   padding: 8px 10px;
-  background: var(--surface);
+  background: var(--surface-2);
   border: 1px solid var(--line);
   border-radius: var(--r2);
-  box-shadow: var(--shadow-2);
-  /* 마우스가 판 위로 올라가면 카드에서 벗어난 것이 되어 판이 사라진다.
-     읽기만 하는 판이므로 아예 안 받는다. */
-  pointer-events: none;
-  opacity: 0;
-  visibility: hidden;
-  transition: opacity .12s ease;
-}
-.choice:hover .knee-evidence,
-.choice:focus-visible .knee-evidence {
-  opacity: 1;
-  visibility: visible;
+  /* 기준을 훑을 때 밑의 표가 들썩이지 않게.  근거는 두 줄짜리도 다섯
+     줄짜리도 있는데, 그 차이만큼 페이지가 위아래로 뛰면 읽던 자리를 잃는다. */
+  min-height: 104px;
 }
 .knee-evidence table { font-size: 11.5px; margin-top: 4px; }
 .knee-evidence th {

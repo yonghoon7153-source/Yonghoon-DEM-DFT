@@ -5,6 +5,8 @@
  * efficiency; and where the fade knee is.
  */
 
+import { useState } from 'react'
+
 import { basisUnit, cycleNumber, num, pct } from '../lib/format'
 import { ko } from '../lib/i18n'
 import type { Report } from '../lib/types'
@@ -381,24 +383,47 @@ export function KneeDetail({
   onSelect: (method: string) => void
 }) {
   const knee = report.knee
+  // 훅은 이른 return 위에.  `knee` 가 없다고 먼저 나가 버리면 그 다음 렌더에서
+  // 훅 수가 달라진다.
+  const [hovered, setHovered] = useState<string | null>(null)
   if (!knee) return null
+
+  // 근거 판을 **줄 밑 제자리**에 놓는다.  예전에는 카드에 붙어 뜨는 판이라,
+  // 카드 밖으로 넘치면서 밑의 표를 덮고 옆 카드 위로 걸쳤다 -- z-index 를
+  // 올려도 "가리지 않게" 는 못 되고 "무엇을 가릴지" 만 정해질 뿐이다.
+  //
+  // 덤이 둘이다.  손가락에는 hover 가 없어서 태블릿에서는 이 판을 아예 못
+  // 봤는데, 이제 고른 기준의 근거가 늘 떠 있다.  그리고 판이 늘 같은 자리에
+  // 있으니 다섯 기준을 훑을 때 눈이 따라다니지 않아도 된다.
+  const shownMethod = hovered ?? selected
+  const shown = knee.results.find((result) => result.method === shownMethod)
+  const shownEvidence = shown ? kneeEvidence(shown.detail, knee.thresholds ?? {}) : []
+
   return (
     <div className="col" style={{ gap: 8 }}>
       <div className="tiny faint">
         기준이 하나가 아닙니다. 전부 계산해서 보여 주고, 열화가 실제로 가속될 때만 knee
         로 인정합니다. 행을 누르면 그래프의 세로선이 바뀝니다.
-        {' '}<b>마우스를 올려 두면 그 기준의 상세 내용(숫자와 문턱값)이 나옵니다.</b>
+        {' '}<b>줄 밑에 그 기준의 상세 내용(숫자와 문턱값)이 나옵니다 — 마우스를
+        올리면 그 기준의 것으로 바뀝니다.</b>
       </div>
       <div className="knee-choices">
         {knee.results.map((result) => {
           const on = selected === result.method
-          const evidence = kneeEvidence(result.detail, knee.thresholds ?? {})
           return (
             <button
               key={result.method}
               type="button"
               className={`choice${on ? ' on' : ''}`}
               onClick={() => onSelect(result.method)}
+              onMouseEnter={() => setHovered(result.method)}
+              onMouseLeave={() => setHovered(
+                (current) => (current === result.method ? null : current))}
+              // 키보드로 훑을 때도 같이 바뀐다.  focus 는 hover 와 달리
+              // 눌러서 고르는 것과 별개라, 훑기만 해도 근거가 따라온다.
+              onFocus={() => setHovered(result.method)}
+              onBlur={() => setHovered(
+                (current) => (current === result.method ? null : current))}
             >
               <span className="head">
                 <strong>{METHOD_LABELS[result.method] ?? result.method}</strong>
@@ -422,29 +447,35 @@ export function KneeDetail({
               </span>
               <span className="why">{METHOD_HINTS[result.method]}</span>
               <span className="why">{ko.kneeReason(result.reason)}</span>
-              {/* 올려놓으면 근거가 나온다.  이유 한 줄은 결론이고, 사람이
-                  다음에 묻는 것은 "얼마나?" 다 — 그 숫자는 이미 있는데 화면이
-                  버리고 있었다.  걸린 게이트만 굵게. */}
-              {evidence.length ? (
-                <span className="knee-evidence" role="note">
-                  <span className="tiny faint">{ko.kneeReason(result.reason)}</span>
-                  <table>
-                    <tbody>
-                      {evidence.map((row) => (
-                        <tr key={row.label} className={row.failed ? 'failed' : ''}>
-                          <th>{row.label}</th>
-                          <td>{row.value}</td>
-                          <td className="dim">{row.need ? `필요: ${row.need}` : ''}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </span>
-              ) : null}
             </button>
           )
         })}
       </div>
+
+      {/* 걸린 게이트만 굵게.  이유 한 줄은 결론이고, 사람이 다음에 묻는 것은
+          "얼마나?" 다 — 그 숫자는 이미 있는데 화면이 버리고 있었다. */}
+      {shown && shownEvidence.length ? (
+        <div className="knee-evidence" role="note">
+          <div className="row" style={{ gap: 6, alignItems: 'baseline' }}>
+            <strong className="tiny">
+              {METHOD_LABELS[shown.method] ?? shown.method}
+            </strong>
+            <span className="tiny faint">{ko.kneeReason(shown.reason)}</span>
+          </div>
+          <table>
+            <tbody>
+              {shownEvidence.map((row) => (
+                <tr key={row.label} className={row.failed ? 'failed' : ''}>
+                  <th>{row.label}</th>
+                  <td>{row.value}</td>
+                  <td className="dim">{row.need ? `필요: ${row.need}` : ''}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : null}
+
       <div className="tiny faint">
         기준 사이클 {knee.reference_cycle}번 ({num(knee.reference_capacity_mah)} mAh
         {report.basis !== 'mAh' ? ` · 표시는 ${basisUnit(report.basis)}` : ''}) · 탐색 시작{' '}

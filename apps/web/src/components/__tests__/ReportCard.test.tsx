@@ -5,11 +5,12 @@
  * nothing while the real evidence list sat at the bottom of the card.
  */
 
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 
-import { kneeEvidence, ReportCard } from '../ReportCard'
-import type { Report, ResolvedCell } from '../../lib/types'
+import { KneeDetail, kneeEvidence, ReportCard } from '../ReportCard'
+import type { KneeResult, Report, ResolvedCell } from '../../lib/types'
 
 const CELL: ResolvedCell = {
   active_mass_g: null,
@@ -227,5 +228,71 @@ describe('DBW onset·point (ADR 0021)', () => {
     expect(screen.getByText('24.2')).toBeInTheDocument()
     // 열화율 지표의 "a → b" 는 화살표 양옆에 공백이 있다; knee 쌍(공백 없음)만 본다.
     expect(screen.queryByText(/\d→/)).not.toBeInTheDocument()
+  })
+})
+
+
+describe('근거 판은 줄 밑 제자리에 있다', () => {
+  /** 기준 둘 — 하나는 잡혔고 하나는 게이트에 걸렸다. */
+  function report(): Report {
+    const base = {
+      detected: false, cycle: null, onset_cycle: null,
+      candidate_cycle: null, status: 'none',
+    } satisfies Partial<KneeResult>
+    const dbwHit: KneeResult = {
+      ...base, method: 'dbw', detected: true, cycle: 24, status: 'detected',
+      reason: 'x', detail: { breakpoint: 34, slope_ratio: 3 },
+    }
+    const missed: KneeResult = {
+      ...base, method: 'slope_ratio', reason: 'y', detail: { slope_ratio: 1.2 },
+    }
+    return {
+      ...REPORT,
+      knee: {
+        primary: dbwHit,
+        results: [dbwHit, missed],
+        reference_cycle: 3,
+        reference_capacity_mah: 5.25,
+        search_start_cycle: 3,
+        n_points: 44,
+        fade_rate_early_pct_per_cycle: -0.1,
+        fade_rate_late_pct_per_cycle: -0.8,
+        projected_cycle_at_80pct: null,
+        reference_note: '',
+      },
+    }
+  }
+
+  function panel(): HTMLElement {
+    return screen.getByRole('note')
+  }
+
+  it('판이 카드 안에 있지 않다 — 그래서 무엇도 덮지 않는다', () => {
+    // 예전에는 카드에 붙어 뜨는 판이었고, 카드보다 커서 늘 무언가를 덮었다:
+    // 밑의 사이클 표를 가리거나 옆 카드 위로 걸쳤다.  흐름 안에 두면 그
+    // 경우가 구조적으로 안 생기므로, 여기서 고정하는 것은 위치가 아니라
+    // **판이 어느 카드의 자식도 아니라는 것** 이다.
+    render(<KneeDetail report={report()} selected="dbw" onSelect={() => {}} />)
+    expect(panel().closest('.choice')).toBeNull()
+    expect(panel().closest('.knee-choices')).toBeNull()
+  })
+
+  it('아무것도 안 올려도 고른 기준의 근거가 떠 있다', () => {
+    // 손가락에는 hover 가 없다.  뜨는 판이던 시절 태블릿에서는 이 숫자를
+    // 아예 못 봤다.
+    render(<KneeDetail report={report()} selected="dbw" onSelect={() => {}} />)
+    expect(within(panel()).getByText('전환 지점')).toBeInTheDocument()
+    expect(within(panel()).getByText('34번')).toBeInTheDocument()
+  })
+
+  it('카드에 마우스를 올리면 그 기준의 것으로 바뀌고, 떼면 돌아온다', async () => {
+    render(<KneeDetail report={report()} selected="dbw" onSelect={() => {}} />)
+    const cards = screen.getAllByRole('button')
+    await userEvent.hover(cards[1]!)
+    expect(within(panel()).getByText('1.2배')).toBeInTheDocument()
+    expect(within(panel()).queryByText('34번')).toBeNull()
+
+    await userEvent.unhover(cards[1]!)
+    expect(within(panel()).getByText('34번')).toBeInTheDocument()
   })
 })
