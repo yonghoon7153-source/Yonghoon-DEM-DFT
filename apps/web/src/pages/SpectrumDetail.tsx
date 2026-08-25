@@ -18,7 +18,7 @@ import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
-import type { CellConfig, CircuitKind, EisKind, SpectrumDetail as Detail, SpectrumFit }
+import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
   from '../lib/types'
 import { frequencySpan, hertz } from './Eis'
 
@@ -41,7 +41,16 @@ export function SpectrumDetail() {
 
   const record = spectrum.data
   const kinds: CircuitKind[] = circuits.data?.kinds ?? []
-  const presets = kinds.find((entry) => entry.kind === record?.kind)?.presets ?? []
+  // 회로 프리셋은 **여섯 조합**을 따른다 (액체/전고체 × 풀셀·하프셀·대칭셀).
+  // 아크의 이름이 이미 이 축에서 갈리므로 회로도 같이 갈린다 — 리튬 대극
+  // 하프셀은 대극 계면이 아크를 하나 더 얹고, 대칭셀은 아크가 두 배다.
+  const combinations = circuits.data?.combinations ?? []
+  const presets: CircuitPreset[] =
+    combinations.find(
+      (entry) => entry.kind === record?.kind && entry.cell_config === record?.cell_config,
+    )?.presets
+    ?? kinds.find((entry) => entry.kind === record?.kind)?.presets
+    ?? []
   const chosenCircuit = circuit || record?.last_circuit || presets[0]?.circuit || ''
 
   // `record?.fits ?? []` 를 그대로 두면 매 렌더마다 새 배열이라 아래 useMemo 가
@@ -464,6 +473,7 @@ function CellFields({
   const [cycle, setCycle] = useState(
     record.at_cycle === null ? '' : String(record.at_cycle),
   )
+  const [purpose, setPurpose] = useState(record.purpose ?? '')
 
   const namedThickness = thicknessFromName(record.name) ?? thicknessFromName(record.original_name)
   const namedConfig = cellConfigFromName(record.name) ?? cellConfigFromName(record.original_name)
@@ -485,24 +495,13 @@ function CellFields({
     <div className="col" style={{ gap: 9 }}>
       {error ? <Alert kind="error">{error}</Alert> : null}
 
-      {/* 업로드 때 탭을 잘못 골랐으면 여기서 고친다 (리뷰 #29).  전에는
-          백엔드 PATCH 만 있고 화면 경로가 없어서, 맞는 탭에 재업로드해도
-          dedup 이 옛 종류를 유지한 채 "올렸습니다" 라고 했다. */}
-      <Field label="종류" hint="아크의 의미가 통째로 바뀝니다 — 기존 피팅에는 옛 종류가 남습니다">
-        <select
-          aria-label="종류"
-          value={record.kind}
-          disabled={busy}
-          onChange={(event) => void save({ kind: event.target.value })}
-        >
-          <option value="liquid">액체 전해질</option>
-          <option value="solid">전고체</option>
-        </select>
-      </Field>
-
+      {/* 액체/전고체 × 풀셀·하프셀·대칭셀 — 여섯 조합을 한 번에 고른다.
+          둘을 따로 고르게 두면 "액체 · 미정" 같은 반쯤 정해진 상태가 남는데,
+          아크의 이름도 기본 회로도 두 축이 **함께** 정해져야 나온다.  종류를
+          바꾸면 기존 피팅에는 옛 종류가 남는다 (그 사실은 아래가 말한다). */}
       <Field
-        label="셀 구성"
-        hint="아크의 이름을 정합니다"
+        label="측정 구성"
+        hint="아크의 이름과 기본 회로가 여기서 정해집니다"
         note={
           namedConfig && namedConfig !== record.cell_config ? (
             <span title="파일 이름에 적힌 값">#{CONFIG_LABEL[namedConfig]}</span>
@@ -510,17 +509,52 @@ function CellFields({
         }
       >
         <select
-          aria-label="셀 구성"
-          value={record.cell_config}
+          aria-label="측정 구성"
+          value={`${record.kind}|${record.cell_config}`}
           disabled={busy}
-          onChange={(event) => void save({ cell_config: event.target.value })}
+          onChange={(event) => {
+            const [kind, cellConfig] = event.target.value.split('|')
+            void save({ kind, cell_config: cellConfig })
+          }}
         >
-          {CONFIG_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
+          {(['liquid', 'solid'] as const).map((kind) =>
+            CONFIG_OPTIONS.map((option) => (
+              <option key={`${kind}|${option.value}`} value={`${kind}|${option.value}`}>
+                {kind === 'liquid' ? '액체' : '전고체'} ·{' '}
+                {option.value === '' ? '구성 미정' : CONFIG_LABEL[option.value]}
+              </option>
+            )),
+          )}
         </select>
+      </Field>
+
+      {/* 무엇을 보려고 잰 측정인가.  자유 입력이되 흔한 것은 한 번에 —
+          랩이 새 목적을 계속 만들어서 목록을 고정하면 그때마다 코드를
+          고쳐야 한다.  SOC 스캔처럼 파일이 스스로 말하는 것은 업로드가
+          채워 둔다 (§0.3). */}
+      <Field label="목적" hint="무엇을 보려고 잰 측정인가 · Enter 로 적용">
+        <input
+          aria-label="목적"
+          list="eis-purposes"
+          value={purpose}
+          disabled={busy}
+          placeholder="예: SOC별, 200 사이클, 온도별"
+          onChange={(event) => setPurpose(event.target.value)}
+          onBlur={() => {
+            if (purpose.trim() === record.purpose) return
+            void save({ purpose: purpose.trim() })
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur()
+          }}
+        />
+        <datalist id="eis-purposes">
+          <option value="SOC별" />
+          <option value="사이클별" />
+          <option value="200 사이클" />
+          <option value="구동 전" />
+          <option value="온도별" />
+        </datalist>
       </Field>
 
       {/* 셀에 붙이는 자리.  API 는 처음부터 됐는데 화면이 읽기만 해서, 셀

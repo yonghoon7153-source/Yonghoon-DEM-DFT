@@ -31,8 +31,9 @@ from wrdkit.eis import (
     read_mpt_text,
     total_resistance,
 )
+from wrdkit.eis.biologic import read_mpr_sweeps, read_mpt_sweeps
 from wrdkit.eis.circuit import CircuitError, parse_circuit
-from wrdkit.eis.derive import CONFIGS
+from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
 from ..db import get_session
@@ -87,6 +88,75 @@ PRESETS: dict[str, list[dict]] = {
          "note": "벌크와 입계가 분리되지 않을 때."},
     ],
 }
+
+#: 무엇을 쟀는지가 **어떤 회로를 기본으로 줄지**까지 정한다.
+#:
+#: 전해질 종류만으로는 부족하다.  같은 액체 전해질이라도 리튬 대극을 쓴
+#: 하프셀은 대극의 계면이 아크를 하나 더 얹고, 대칭셀은 같은 전극이 둘이라
+#: 아크가 두 배로 나온다 (한쪽 값은 절반이다).  풀셀은 두 전극이 겹쳐 보여
+#: 분리가 안 된다.  아크의 *이름*은 이미 이 구분을 따르므로(ADR 0019,
+#: derive.BY_CONFIG), 회로도 같은 축에 놓는다.
+#:
+#: 여기 없는 조합은 종류별 기본(``PRESETS``)으로 떨어진다.
+PRESETS_BY_CONFIG: dict[tuple[str, str], list[dict]] = {
+    (LIQUID, HALF): [
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "대극 계면 + 전하이동 + 확산",
+         "note": "리튬 대극 하프셀. 고주파 아크는 대개 리튬 표면 필름, "
+                 "저주파 아크가 작동전극의 전하이동, 끝의 45° 가 확산."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-Ws3",
+         "label": "확산이 유한할 때 (Ws)",
+         "note": "저주파에서 45° 직선이 꺾여 반원으로 닫히면 유한 확산이다."},
+        {"circuit": "R0-p(R1,CPE1)-W2",
+         "label": "아크 하나 + 확산",
+         "note": "대극 아크와 작동전극 아크가 겹쳐 하나로 보일 때."},
+    ],
+    (LIQUID, FULL): [
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "SEI + 전하이동 + 확산",
+         "note": "풀셀은 두 전극이 함께 보인다 — 어느 쪽 아크인지는 이 "
+                 "측정만으로 못 가른다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
+         "label": "두 아크 (절차서 기본)",
+         "note": "확산 꼬리가 안 보이거나 저주파를 안 잰 경우."},
+        {"circuit": "R0-p(R1,CPE1)",
+         "label": "한 아크",
+         "note": "반원이 하나만 보일 때."},
+    ],
+    (LIQUID, SYMMETRIC): [
+        {"circuit": "R0-p(R1,CPE1)-W2",
+         "label": "대칭셀 — 한 아크 + 확산",
+         "note": "같은 전극이 둘이라 아크는 두 전극의 합이다. "
+                 "한쪽 전극 값은 절반으로 본다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
+         "label": "두 아크",
+         "note": "필름과 전하이동이 갈려 보일 때. 역시 한쪽은 절반이다."},
+    ],
+    (SOLID, SYMMETRIC): PRESETS[SOLID],
+    (SOLID, FULL): [
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "전해질 + 계면 + 확산",
+         "note": "전고체 풀셀. 저주파 아크는 전극/전해질 계면이 지배하고, "
+                 "벌크와 입계는 대개 하나로 합쳐 보인다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
+         "label": "전해질 + 계면",
+         "note": "확산 꼬리가 안 보일 때."},
+    ],
+    (SOLID, HALF): [
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-W3",
+         "label": "전해질 + 작동전극 계면 + 확산",
+         "note": "전고체 하프셀. 상대 전극(리튬/인듐) 계면이 아크를 더할 수 "
+                 "있어 아크 수가 늘기도 한다."},
+        {"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)-CPE3",
+         "label": "블로킹 꼬리로 끝날 때",
+         "note": "저주파가 45° 가 아니라 수직으로 서면 확산이 아니라 블로킹이다."},
+    ],
+}
+
+
+def presets_for(kind: str, config: str = "") -> list[dict]:
+    """The circuits to offer for this measurement, most likely first."""
+    return PRESETS_BY_CONFIG.get((kind, config)) or PRESETS[kind]
 
 
 def _get(session: Session, spectrum_id: int) -> SpectrumRecord:
@@ -159,9 +229,20 @@ def _geometry(session: Session, record: SpectrumRecord) -> tuple[float | None, f
 @router.get("/circuits")
 def circuits():
     """The circuits the screen offers, and what each one is for."""
-    return {"kinds": [{"kind": kind,
-                       "label": "액체 전해질" if kind == LIQUID else "전고체",
-                       "presets": PRESETS[kind]} for kind in KINDS]}
+    kind_label = {LIQUID: "액체 전해질", SOLID: "전고체"}
+    config_label = {SYMMETRIC: "대칭셀", FULL: "풀셀", HALF: "하프셀"}
+    return {
+        "kinds": [{"kind": kind, "label": kind_label[kind],
+                   "presets": PRESETS[kind]} for kind in KINDS],
+        # 여섯 조합 — 화면의 드롭박스 하나가 이것을 그대로 쓴다.  아크의
+        # 이름과 회로가 같은 축에서 갈리므로, 고르는 것도 한 번이어야 한다.
+        "combinations": [
+            {"kind": kind, "cell_config": config,
+             "label": f"{kind_label[kind]} · {config_label[config]}",
+             "presets": presets_for(kind, config)}
+            for kind in KINDS for config in CELL_CONFIGS
+        ],
+    }
 
 
 @router.get("/spectra", response_model=list[SpectrumOut])
@@ -297,8 +378,21 @@ def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
 # --------------------------------------------------------------------------
 # writing
 # --------------------------------------------------------------------------
+def _parse_sweeps(content: bytes, filename: str):
+    """Every impedance sweep in the upload, by content not by name (ADR 0022)."""
+    if content[:22] == b"BIO-LOGIC MODULAR FILE":
+        return read_mpr_sweeps(content), "mpr"
+    text = content.decode("latin-1", errors="replace")
+    if "Nb header lines" in text:
+        return read_mpt_sweeps(text), "mpt"
+    raise HTTPException(
+        422,
+        f"{filename!r} 은 BioLogic .mpr 도 EC-Lab .mpt 도 아닙니다 — "
+        "EC-Lab 에서 저장한 원본이나 텍스트 내보내기를 올려 주세요")
+
+
 def _parse(content: bytes, filename: str) -> tuple[Spectrum, str]:
-    """Read whichever of the two formats this is, by content not by name."""
+    """The single sweep in an upload -- used by the cache-repair path."""
     if content[:22] == b"BIO-LOGIC MODULAR FILE":
         return read_mpr_bytes(content), "mpr"
     text = content.decode("latin-1", errors="replace")
@@ -347,6 +441,7 @@ async def upload_spectrum(
     kind: str = Query(LIQUID),
     cell_config: str = Query(""),
     at_cycle: int | None = Query(None, ge=0),
+    purpose: str = Query("", description="무엇을 보려고 잰 측정인가 (자유 입력)"),
     session: Session = Depends(get_session),
 ):
     """Store one ``.mpr`` or ``.mpt``, with its ``.mps`` when there is one.
@@ -397,6 +492,9 @@ async def upload_spectrum(
         if at_cycle is not None and existing.at_cycle is None:
             existing.at_cycle = at_cycle
             changed = True
+        if purpose and not existing.purpose:
+            existing.purpose = purpose
+            changed = True
         if settings_file is not None and not existing.settings_json:
             _check_settings_stem(file.filename, settings_file.filename)
             raw = await settings_file.read()
@@ -425,11 +523,13 @@ async def upload_spectrum(
         return _out(session, existing, duplicate=True)
 
     try:
-        spectrum, source_format = _parse(content, file.filename or "upload")
+        sweeps, source_format = _parse_sweeps(content, file.filename or "upload")
     except UnknownColumn as exc:
         raise HTTPException(422, str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(422, f"could not read {file.filename!r}: {exc}") from exc
+    if not sweeps:
+        raise HTTPException(422, f"{file.filename!r} 에 임피던스 스윕이 없습니다")
 
     meta: dict = {}
     settings_sha = ""
@@ -453,32 +553,58 @@ async def upload_spectrum(
     storage.store_bytes(content,
                         storage.spectrum_upload_path(digest, source_format))
 
-    name = (file.filename or "spectrum").rsplit(".", 1)[0]
-    record = SpectrumRecord(
-        sample_id=sample_id,
-        name=name,
-        kind=kind,
-        cell_config=cell_config,
-        at_cycle=at_cycle,
-        original_name=file.filename or "",
-        sha256=digest,
-        size_bytes=len(content),
-        source_format=source_format,
-        n_points=len(spectrum),
-        frequency_start_hz=float(np.max(spectrum.frequency_hz)),
-        frequency_end_hz=float(np.min(spectrum.frequency_hz)),
-        amplitude_mv=_float(meta.get("amplitude_mv")),
-        device=str(meta.get("Device", "")),
-        technique=str(meta.get("technique", spectrum.metadata.get("technique", ""))),
-        settings_json=json.dumps(meta, ensure_ascii=False) if meta else "",
-        settings_sha256=settings_sha,
-        settings_name=settings_name,
-    )
-    session.add(record)
+    stem = (file.filename or "spectrum").rsplit(".", 1)[0]
+    # 파일이 스스로 말하는 것은 묻지 않는다 (§0.3).  스윕이 여럿이고 용량이
+    # 스윕마다 다르면 그것이 SOC 스캔이라는 뜻이다.
+    measured_purpose = purpose
+    if not measured_purpose and len(sweeps) > 1:
+        # 용량이 먼저다.  용량 컬럼이 없는 내보내기도 있어서, 그때는 전위가
+        # SOC 의 대리값이다 -- 같은 SOC 를 온도만 바꿔 잰 파일은 둘 다
+        # 안 움직이므로 목적을 지어내지 않는다 (§0.4).
+        for values, floor in ((
+                [sw.capacity_mah for sw in sweeps if sw.capacity_mah is not None], 1e-6),
+                ([sw.potential_v for sw in sweeps if sw.potential_v is not None], 0.01)):
+            if len(values) > 1 and max(values) - min(values) > floor:
+                measured_purpose = "SOC별"
+                break
+
+    created: list[SpectrumRecord] = []
+    for sweep in sweeps:
+        spectrum = sweep.spectrum
+        record = SpectrumRecord(
+            sample_id=sample_id,
+            # 스윕이 여럿이면 이름으로 구별돼야 한다 -- 같은 파일에서 나온
+            # 21개가 전부 같은 이름이면 목록에서 고를 수가 없다.
+            name=stem if len(sweeps) == 1 else f"{stem} #{sweep.index}",
+            kind=kind,
+            cell_config=cell_config,
+            at_cycle=at_cycle,
+            purpose=measured_purpose,
+            sweep_index=sweep.index,
+            sweep_count=len(sweeps),
+            potential_v=sweep.potential_v,
+            capacity_mah=sweep.capacity_mah,
+            original_name=file.filename or "",
+            sha256=digest,
+            size_bytes=len(content),
+            source_format=source_format,
+            n_points=len(spectrum),
+            frequency_start_hz=float(np.max(spectrum.frequency_hz)),
+            frequency_end_hz=float(np.min(spectrum.frequency_hz)),
+            amplitude_mv=_float(meta.get("amplitude_mv")),
+            device=str(meta.get("Device", "")),
+            technique=str(meta.get("technique", spectrum.metadata.get("technique", ""))),
+            settings_json=json.dumps(meta, ensure_ascii=False) if meta else "",
+            settings_sha256=settings_sha,
+            settings_name=settings_name,
+        )
+        session.add(record)
+        created.append(record)
     session.commit()
-    session.refresh(record)
-    storage.cache_spectrum(record.id, spectrum, record.sha256)
-    return _out(session, record)
+    for record, sweep in zip(created, sweeps, strict=True):
+        session.refresh(record)
+        storage.cache_spectrum(record.id, sweep.spectrum, record.sha256)
+    return _out(session, created[0])
 
 
 def _float(value) -> float | None:
@@ -672,7 +798,7 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
     record = _get(session, spectrum_id)
     spectrum = _load_points(record)
 
-    text = circuit or PRESETS[record.kind][0]["circuit"]
+    text = circuit or presets_for(record.kind, record.cell_config)[0]["circuit"]
     window = None
     if frequency_low_hz is not None or frequency_high_hz is not None:
         window = (frequency_low_hz or 0.0,

@@ -556,6 +556,14 @@ export type EisKind = 'liquid' | 'solid'
 export type CellConfig = 'sym' | 'full' | 'half'
 
 export interface Spectrum {
+  /** 무엇을 보려고 잰 측정인가 (자유 입력). */
+  purpose?: string
+  /** 한 파일 안에서 몇 번째 스윕인지와 전부 몇 개인지 (ADR 0022). */
+  sweep_index?: number
+  sweep_count?: number
+  /** 그 스윕의 셀 상태 — SOC 스캔의 x축. */
+  potential_v?: number | null
+  capacity_mah?: number | null
   /** 이번 업로드가 같은 바이트의 기존 항목을 돌려준 것인가 (서버 dedup). */
   duplicate?: boolean
   id: number
@@ -673,6 +681,15 @@ export interface CircuitPreset {
 
 export interface CircuitKind {
   kind: EisKind
+  label: string
+  presets: CircuitPreset[]
+}
+
+/** 액체/전고체 × 풀셀·하프셀·대칭셀 여섯 조합.  아크의 이름과 기본 회로가
+ *  같은 축에서 갈리므로, 화면에서도 한 번에 고른다. */
+export interface CircuitCombination {
+  kind: EisKind
+  cell_config: string
   label: string
   presets: CircuitPreset[]
 }

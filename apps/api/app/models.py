@@ -12,6 +12,7 @@ correcting a mass never requires touching a stored number (ADR 0001).
 
 from datetime import datetime, timezone
 
+from sqlalchemy import UniqueConstraint
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -300,6 +301,8 @@ class SpectrumRecord(SQLModel, table=True):
     """
 
     __tablename__ = "spectrum"
+    __table_args__ = (UniqueConstraint("sha256", "sweep_index",
+                                      name="uq_spectrum_sha_sweep"),)
 
     id: int | None = Field(default=None, primary_key=True)
     sample_id: int | None = Field(default=None, foreign_key="sample.id", index=True)
@@ -318,8 +321,11 @@ class SpectrumRecord(SQLModel, table=True):
     cell_config: str = Field(default="", index=True)
 
     original_name: str = ""
-    #: Content hash of the original.  Duplicate uploads are the same row.
-    sha256: str = Field(default="", index=True, unique=True)
+    #: Content hash of the original.  **Not** unique on its own any more: one
+    #: SOC-scan file holds twenty sweeps and they all came from these bytes
+    #: (ADR 0022).  The pair with ``sweep_index`` is what identifies a row, so
+    #: re-uploading the same file is still a duplicate rather than a copy.
+    sha256: str = Field(default="", index=True)
     size_bytes: int = 0
     #: "mpr" | "mpt".  Which reader made the points, so a re-parse is not a guess.
     source_format: str = ""
@@ -344,6 +350,18 @@ class SpectrumRecord(SQLModel, table=True):
     measured_at: datetime | None = None
     #: Everything else the settings file carried, verbatim.
     settings_json: str = ""
+    #: 무엇을 보려고 잰 측정인가 — "SOC별", "200 사이클", "온도별".  자유
+    #: 입력이다: 랩이 새 목적을 계속 만들고, 목록을 고정하면 그때마다 코드를
+    #: 고쳐야 한다.  SOC 스캔처럼 파일이 스스로 말하는 경우에는 채워 준다
+    #: (§0.3 — 계측기가 아는 것을 사람에게 다시 묻지 않는다).
+    purpose: str = Field(default="", index=True)
+    #: 한 `.mpr` 이 스윕 여럿을 담을 때 몇 번째인가, 그리고 전부 몇 개인가
+    #: (ADR 0022).  같은 원본 sha 를 공유하므로 이 번호가 행을 가른다.
+    sweep_index: int = 1
+    sweep_count: int = 1
+    #: 그 스윕을 찍은 셀 상태.  SOC 스캔의 x축이라 스펙트럼과 함께 산다.
+    potential_v: float | None = None
+    capacity_mah: float | None = None
     #: 올라온 `.mps` 원문의 내용 해시와 원래 이름.  파서가 이해한 부분집합
     #: (settings_json)과 별개로 원문 바이트를 보존한다 (§0.2 정신, 리뷰 #21) —
     #: 파서가 모르는 설정 줄은 여기서만 되찾을 수 있다.

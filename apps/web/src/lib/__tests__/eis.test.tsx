@@ -401,6 +401,26 @@ describe('스펙트럼 상세', () => {
     expect(screen.getByText('0.01')).toBeInTheDocument()
   })
 
+  it('목적은 자유 입력이되 흔한 것을 제안한다', async () => {
+    // 랩이 새 목적을 계속 만들어서 목록을 고정하면 그때마다 코드를 고쳐야
+    // 한다.  datalist 는 둘 다 준다 — 타이핑도 되고 한 번에 고를 수도 있다.
+    let sent: unknown = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
+        sent = JSON.parse(String(init.body))
+        return spectrum({})
+      }
+      return undefined
+    }))
+    renderDetail()
+
+    const input = await screen.findByLabelText('목적')
+    expect(input).toHaveAttribute('list')
+    await userEvent.type(input, '200 사이클')
+    await userEvent.tab()
+    await waitFor(() => expect(sent).toEqual({ purpose: '200 사이클' }))
+  })
+
   it('회로 프리셋을 누르면 입력란에 들어간다', async () => {
     installFetch(detailHandler())
     renderDetail()
@@ -485,7 +505,9 @@ describe('스펙트럼 상세', () => {
     expect(screen.getByText('시작점 9/9')).toBeInTheDocument()
   })
 
-  it('셀 구성을 고르면 저장한다 — 아크의 이름이 여기 걸려 있다', async () => {
+  it('측정 구성 하나로 종류와 셀 구성을 함께 정한다', async () => {
+    // 둘을 따로 고르게 두면 "액체 · 미정" 같은 반쯤 정해진 상태가 남는데,
+    // 아크의 이름도 기본 회로도 두 축이 함께 정해져야 나온다.
     let sent: unknown = null
     installFetch(detailHandler((url, init) => {
       if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
@@ -496,8 +518,9 @@ describe('스펙트럼 상세', () => {
     }))
 
     renderDetail()
-    await userEvent.selectOptions(await screen.findByLabelText('셀 구성'), 'full')
-    await waitFor(() => expect(sent).toEqual({ cell_config: 'full' }))
+    await userEvent.selectOptions(await screen.findByLabelText('측정 구성'), 'liquid|full')
+    await waitFor(() =>
+      expect(sent).toEqual({ kind: 'liquid', cell_config: 'full' }))
   })
 
   it('이름이 두께를 들고 있으면 옆에 회색으로 적는다 — 채워 넣지는 않는다', async () => {

@@ -394,6 +394,14 @@ def _sweeps_from_columns(columns: dict[str, np.ndarray],
     if "freq/Hz" not in columns:
         raise ValueError("this record is not an impedance sweep -- no "
                          "freq/Hz column")
+    # Zero means "this row is not an impedance point" -- a SOC scan is mostly
+    # cycling rows (ADR 0022).  Not-a-number means the row *is* one and is
+    # damaged, and dropping it silently would hide a blank cell in an export.
+    frequency = columns["freq/Hz"]
+    bad = np.flatnonzero(~np.isfinite(frequency))
+    if len(bad):
+        raise ValueError(f"freq/Hz is not a number at row {int(bad[0]) + 1} "
+                         f"({len(bad)} rows in total)")
     out: list[Sweep] = []
     for number, rows in enumerate(_sweep_pieces(columns["freq/Hz"]), start=1):
         piece = {name: values[rows] for name, values in columns.items()}
@@ -503,6 +511,12 @@ _HEADER_LINES = re.compile(r"Nb header lines\s*:\s*(\d+)")
 
 
 def read_mpt_text(text: str) -> Spectrum:
+    """The one impedance sweep in an EC-Lab ASCII export."""
+    columns, metadata = _mpt_columns(text)
+    return _only_sweep(_sweeps_from_columns(columns, metadata), "mpt")
+
+
+def _mpt_columns(text: str) -> tuple[dict[str, np.ndarray], dict]:
     """Parse an EC-Lab ASCII export (``.mpt``).
 
     ``Nb header lines`` counts the whole preamble **including** the column-name
@@ -546,7 +560,17 @@ def read_mpt_text(text: str) -> Spectrum:
         found = re.search(pattern, text, re.MULTILINE)
         if found:
             metadata[key] = found.group(0)
-    return _spectrum_from_columns(columns, metadata)
+    return columns, metadata
+
+
+def read_mpt_sweeps(text: str) -> list[Sweep]:
+    """Every impedance sweep in an EC-Lab ASCII export (ADR 0022).
+
+    An export of a SOC scan carries the same shape the binary does: cycling
+    rows with impedance rows among them.
+    """
+    columns, metadata = _mpt_columns(text)
+    return _sweeps_from_columns(columns, metadata)
 
 
 def _number(cell: str) -> float:

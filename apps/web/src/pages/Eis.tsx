@@ -36,6 +36,9 @@ export function Eis() {
   // 올릴 때 셀을 정해 두면 나중에 하나씩 붙일 일이 없다.  대부분 한 셀의
   // 초기·200 사이클을 함께 올리므로, 파일마다 고르게 하지 않는다.
   const [attachTo, setAttachTo] = useState('')
+  // 목적은 올릴 때 적어 두는 것이 가장 정확하다 — 나중에 21개 행을 하나씩
+  // 고치는 것보다.  SOC 스캔은 파일이 스스로 말하므로 비워 둬도 된다.
+  const [purpose, setPurpose] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [note, setNote] = useState<string | null>(null)
@@ -95,7 +98,8 @@ export function Eis() {
       for (const { file, matches } of pairs) {
         const out = await api.uploadSpectrum(
           file,
-          { kind, sample_id: attachTo || undefined },
+          { kind, sample_id: attachTo || undefined,
+            purpose: purpose.trim() || undefined },
           matches[0] ?? null,
         )
         if (out.duplicate) already += 1
@@ -162,6 +166,22 @@ export function Eis() {
             onChange={(event) => void upload(event.target.files)}
             style={{ display: 'none' }}
           />
+          <Field label="목적" hint="비우면 파일이 말하는 대로 (SOC 스캔은 자동)">
+            <input
+              aria-label="목적"
+              list="eis-upload-purposes"
+              value={purpose}
+              placeholder="예: SOC별, 200 사이클"
+              onChange={(event) => setPurpose(event.target.value)}
+            />
+            <datalist id="eis-upload-purposes">
+              <option value="SOC별" />
+              <option value="사이클별" />
+              <option value="200 사이클" />
+              <option value="구동 전" />
+              <option value="온도별" />
+            </datalist>
+          </Field>
           <Field label="셀에 붙이기" hint="비우면 안 붙임">
             <select
               aria-label="셀에 붙이기"

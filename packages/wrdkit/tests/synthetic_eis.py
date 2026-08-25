@@ -163,7 +163,7 @@ def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 
     different float that is still a float.
     """
     layout = ([(i, f) for i, f in SCAN_FLAGS]
-              + [(131, "<H"), (39, "<H"), (4, "<d"), (6, "<f"),
+              + [(131, "<H"), (39, "<H"), (4, "<d"), (6, "<f"), (13, "<d"),
                  (32, "<f"), (36, "<f"), (35, "<f")])
     record = sum({"<B": 1, "<H": 2, "<d": 8, "<f": 4}[f] for _, f in layout)
     record += sum(width for _, width in SCAN_TAIL)
@@ -174,13 +174,15 @@ def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 
     frequency = np.logspace(5, -1, points)
     for sweep in range(sweeps):
         for _ in range(cycling_rows):          # 사이클링: 주파수 0
-            rows += _scan_row(clock, 3.6 + 0.1 * sweep, 0.0, 0.0, 0.0, ns=2 * sweep)
+            rows += _scan_row(clock, 3.6 + 0.1 * sweep, 0.0, 0.0, 0.0,
+                              ns=2 * sweep, capacity=0.5 * sweep)
             clock += 1.0
             n += 1
         for f in frequency:                    # 스윕: 7 MHz → 0.1 Hz 하강
             z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * f * 1e-3)
             rows += _scan_row(clock, 3.6 + 0.1 * sweep, f, abs(z),
-                              np.degrees(np.angle(z)), ns=2 * sweep + 1)
+                              np.degrees(np.angle(z)), ns=2 * sweep + 1,
+                              capacity=0.5 * sweep)
             clock += 1.0
             n += 1
 
@@ -198,11 +200,12 @@ def build_mpr_soc_scan(*, sweeps: int = 3, points: int = 8, cycling_rows: int = 
 
 
 def _scan_row(t: float, ewe: float, freq: float, magnitude: float,
-              phase_deg: float, *, ns: int) -> bytes:
+              phase_deg: float, *, ns: int, capacity: float = 0.0) -> bytes:
     row = struct.pack("<BBBBBB", 0, 0, 0, 0, 0, 0)
     row += struct.pack("<HH", ns, 39)
     row += struct.pack("<d", t)
     row += struct.pack("<f", ewe)
+    row += struct.pack("<d", capacity)
     row += struct.pack("<fff", freq, magnitude, phase_deg)
     row += b"\x00" * sum(width for _, width in SCAN_TAIL)
     return row

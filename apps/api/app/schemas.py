@@ -648,6 +648,14 @@ class SpectrumOut(BaseModel):
     #: that record was returned -- "올렸습니다" 와 "이미 있었습니다" 는
     #: 다른 일이고, 화면이 구별해 말해야 한다 (Codex #22).
     duplicate: bool = False
+    #: 무엇을 보려고 잰 측정인가 (자유 입력).
+    purpose: str = ""
+    #: 한 파일 안에서 몇 번째 스윕인지와 전부 몇 개인지 (ADR 0022).
+    sweep_index: int = 1
+    sweep_count: int = 1
+    #: 그 스윕의 셀 상태 — SOC 스캔의 x축.
+    potential_v: float | None = None
+    capacity_mah: float | None = None
     id: int
     sample_id: int | None
     sample_name: str | None = None
@@ -751,6 +759,8 @@ class SpectrumUpdate(BaseModel):
     thickness_um: PositiveLength | None = None
     area_cm2: PositiveLength | None = None
     measured_at: datetime | None = None
+    #: 무엇을 보려고 잰 측정인가.  빈 문자열이 "안 적음" 이므로 clear 는 필요 없다.
+    purpose: str | None = None
     #: 숫자 필드를 비우려면 이름을 여기에 담는다.
     clear: list[str] = Field(default_factory=list)
 

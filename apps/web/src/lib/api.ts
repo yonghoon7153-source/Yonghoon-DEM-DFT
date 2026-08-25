@@ -8,7 +8,8 @@
 import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
-  Activity, ChangeNote, CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
+  Activity, ChangeNote, CircuitCombination,
+  CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
   GittRun, Group, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Spectrum, SpectrumDetail, SpectrumFit,
@@ -186,7 +187,10 @@ export const api = {
     request<DvdqResponse>(`/api/compare/dvdq${query(params)}`),
 
   // -- 임피던스 (ADR 0019) -------------------------------------------------
-  eisCircuits: () => request<{ kinds: CircuitKind[] }>('/api/eis/circuits'),
+  eisCircuits: () =>
+    request<{ kinds: CircuitKind[]; combinations: CircuitCombination[] }>(
+      '/api/eis/circuits',
+    ),
   listSpectra: (params?: Params) =>
     request<Spectrum[]>(`/api/eis/spectra${query(params)}`),
   getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),

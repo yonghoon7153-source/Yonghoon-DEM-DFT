@@ -464,6 +464,76 @@ def test_deleting_a_sample_detaches_its_spectra(client):
     assert attached == []
 
 
+# --- SOC 스캔: 한 업로드가 스펙트럼 여럿을 만든다 (ADR 0022) -----------------
+
+def scan_mpr(**overrides) -> bytes:
+    return S.build_mpr_soc_scan(**overrides)
+
+
+def test_a_soc_scan_upload_becomes_one_spectrum_per_sweep(client):
+    response = client.post(
+        "/api/eis/spectra/upload", params={"kind": "liquid", "cell_config": "half"},
+        files={"file": ("scan.mpr", scan_mpr(sweeps=4), "application/octet-stream")})
+    assert response.status_code == 201
+    body = response.json()
+    assert body["sweep_count"] == 4
+    assert body["sweep_index"] == 1
+
+    listed = client.get("/api/eis/spectra", params={"kind": "liquid"}).json()
+    assert len(listed) == 4
+    # 같은 파일에서 나온 넷이 이름으로 구별돼야 목록에서 고를 수 있다.
+    assert len({row["name"] for row in listed}) == 4
+    # SOC 스캔의 x축은 스윕마다 다른 전위·용량이다.
+    assert len({round(row["potential_v"], 4) for row in listed}) == 4
+
+
+def test_a_scan_names_its_own_purpose(client):
+    """계측기가 아는 것을 사람에게 다시 묻지 않는다 (§0.3).
+
+    스윕이 여럿이고 용량이 스윕마다 다르면 그것이 SOC 스캔이다.
+    """
+    out = client.post(
+        "/api/eis/spectra/upload", params={"kind": "liquid"},
+        files={"file": ("scan.mpr", scan_mpr(sweeps=3), "application/octet-stream")}).json()
+    assert out["purpose"] == "SOC별"
+
+
+def test_a_typed_purpose_wins_over_the_guess(client):
+    out = client.post(
+        "/api/eis/spectra/upload",
+        params={"kind": "liquid", "purpose": "200 사이클"},
+        files={"file": ("scan.mpr", scan_mpr(sweeps=3), "application/octet-stream")}).json()
+    assert out["purpose"] == "200 사이클"
+
+
+def test_a_single_sweep_file_is_not_given_a_purpose(client):
+    """한 장짜리 측정에 목적을 지어내지 않는다 (§0.4)."""
+    assert upload(client)["purpose"] == ""
+    assert upload(client, name="b.mpr", rs=9.0)["sweep_count"] == 1
+
+
+def test_the_purpose_can_be_typed_later(client):
+    out = upload(client)
+    patched = client.patch(f"/api/eis/spectra/{out['id']}",
+                           json={"purpose": "온도별"})
+    assert patched.status_code == 200
+    assert patched.json()["purpose"] == "온도별"
+
+
+def test_each_sweep_of_a_scan_plots_on_its_own(client):
+    """스윕마다 캐시가 따로 있어야 겹쳐 그릴 수 있다."""
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    ids = ",".join(str(row["id"]) for row in rows)
+    points = client.get("/api/eis/points", params={"ids": ids}).json()
+    assert len(points) == 3
+    for item in points:
+        assert len(item["frequency_hz"]) == 8
+        assert item["frequency_hz"][0] > item["frequency_hz"][-1]
+
+
 def test_the_circuit_presets_say_what_each_one_is_for(client):
     body = client.get("/api/eis/circuits").json()
     kinds = {entry["kind"]: entry for entry in body["kinds"]}
