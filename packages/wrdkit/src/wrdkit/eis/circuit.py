@@ -408,6 +408,51 @@ class Circuit:
         return names
 
 
+def series_blocks(circuit: Circuit) -> list[tuple[str, tuple[int, ...]]]:
+    """Top-level series parts, in written order, with the parameters each owns.
+
+    ``R0-p(R1,CPE1)-Ws1`` gives three blocks: ``R0`` with one parameter,
+    ``p(R1,CPE1)`` with three, ``Ws1`` with two.  A circuit that is not a
+    series at the top (one element, or a single parallel block) gives one.
+
+    The order matters and it is not arbitrary.  Impedance circuits are written
+    high frequency first -- the series resistance, then the fast arc, then the
+    slow one, then whatever diffuses -- because that is the order the features
+    appear in as the sweep comes down.  Staged fitting walks these blocks in
+    that order, and a circuit written backwards would simply stage backwards;
+    nothing here enforces the convention, it only follows what was written.
+    """
+    root = circuit._root
+    parts = root.parts if isinstance(root, _Series) else (root,)
+
+    sizes: list[int] = []
+    for part in parts:
+        count = 0
+
+        def walk(node):
+            nonlocal count
+            if isinstance(node, _Leaf):
+                count += ELEMENTS[node.kind].size
+                return
+            for child in node.parts:
+                walk(child)
+
+        walk(part)
+        sizes.append(count)
+
+    out: list[tuple[str, tuple[int, ...]]] = []
+    at = 0
+    for size in sizes:
+        names = circuit.parameter_names[at:at + size]
+        # 이름표는 사람이 읽는 것뿐이다 -- 한 원소면 그 이름, 여러 개면
+        # 접미사를 뗀 이름들을 모은다 (`p(R1,CPE1)` -> "R1+CPE1").
+        label = "+".join(dict.fromkeys(
+            name.split("_")[0] for name in names))
+        out.append((label, tuple(range(at, at + size))))
+        at += size
+    return out
+
+
 def parse_circuit(text: str) -> Circuit:
     """Read a circuit string.  Raises ``CircuitError`` rather than guessing."""
     root = _node(text)

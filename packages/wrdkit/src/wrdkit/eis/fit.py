@@ -27,7 +27,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from .circuit import Circuit, parse_circuit
+from .circuit import Circuit, parse_circuit, series_blocks
 from .guess import inductive_mask, initial_guess
 from .spectrum import Spectrum
 
@@ -162,6 +162,80 @@ def _from_unbounded(free, lower, upper):
     return np.exp(np.log(lower) + frac * span)
 
 
+def _staged_start(model: Circuit, frequency: np.ndarray, z: np.ndarray,
+                  weights: np.ndarray, start: np.ndarray,
+                  least_squares) -> np.ndarray | None:
+    """One starting point built the way a person builds one in ZView.
+
+    Nobody types nine numbers and presses fit.  They fit the high-frequency
+    end with the first element or two, freeze those, widen the window, let the
+    next element go, and so on -- and the reason it works is that a series
+    circuit is separable in frequency: at 100 kHz the diffusion element is a
+    short and the slow arc has not started, so the intercept and the fast arc
+    are the only things the data there can be about.  Fitting nine parameters
+    against all of it at once asks the optimiser to find that structure by
+    itself, from one guess, in a space with several shallow minima.
+
+    So this walks `series_blocks` in written order.  Stage *k* frees the
+    parameters of the first *k* blocks and fits them against the top *k/N* of
+    the points by frequency; the last stage is everything against everything.
+
+    **It returns a starting point, not an answer.**  Staging can also walk into
+    a corner -- the early window may not contain enough of a feature to place
+    it, and a badly placed frozen parameter drags the rest -- so the value goes
+    into the multistart pool beside the data-driven guess and the ladder, and
+    the same two-stage search picks whichever wins on the full spectrum.  That
+    way this can only add a minimum, never replace a better one.
+
+    Returns ``None`` when there is nothing to stage: a one-block circuit, or
+    too few points for the early windows to hold their own parameters.
+    """
+    blocks = series_blocks(model)
+    if len(blocks) < 2:
+        return None
+    total = len(frequency)
+
+    # 주파수 내림차순.  `fit_circuit` 이 이미 그렇게 정렬해 두지만, 이 함수가
+    # 그 사실에 기대는 것이 요점이라 여기서 다시 세운다.
+    order = np.argsort(-frequency)
+    frequency, z, weights = frequency[order], z[order], weights[order]
+
+    values = start.copy()
+    free: list[int] = []
+    for step, (_, indices) in enumerate(blocks, start=1):
+        free.extend(indices)
+        if step == len(blocks):
+            take = total
+        else:
+            # 자유 파라미터보다 점이 적으면 맞출 것이 없다.  창은 블록 수에
+            # 비례해 넓히되, 최소한 파라미터 수의 두 배는 준다.
+            take = max(int(round(total * step / len(blocks))), 2 * len(free))
+            take = min(take, total)
+        if take < len(free):
+            return None
+        picked = np.asarray(free, dtype=int)
+        lower, upper = model.lower[picked], model.upper[picked]
+
+        def residual(unbounded, picked=picked, lower=lower, upper=upper,
+                     take=take):
+            full = values.copy()
+            full[picked] = _from_unbounded(unbounded, lower, upper)
+            return _residuals(full, model, frequency[:take], z[:take],
+                              weights[:take])
+
+        try:
+            solution = least_squares(
+                residual, _to_unbounded(values[picked], lower, upper),
+                method="lm", max_nfev=_SCREEN_NFEV)
+        except (ValueError, FloatingPointError):
+            return None
+        if not np.all(np.isfinite(solution.fun)):
+            return None
+        values[picked] = _from_unbounded(solution.x, lower, upper)
+
+    return np.clip(values, model.lower * 1.0001, model.upper * 0.9999)
+
+
 def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                 guess: np.ndarray | None = None,
                 drop_inductive: bool = True,
@@ -184,6 +258,15 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     reporting chi-square 1.0e-3 or 9.6e-3 depending on nothing the user can
     see.  Twenty-four reached it on five of six, and the two-stage search below
     made that no slower than eight used to be.
+
+    One of the starts is built the way a person builds one in ZView -- the
+    first block against the high-frequency end, frozen, then the next block
+    against a wider window, and so on (`_staged_start`, ADR 0029).  It is a
+    start and not the answer: it goes into the same pool and the same search
+    picks whichever wins on the whole spectrum, so it can add a minimum and
+    never replace a better one.  On the lab's six real spectra crossed with
+    three circuits it changed one of eighteen answers, for the better (3.6x),
+    and cost about a tenth of the run time.
     """
     try:
         from scipy.optimize import least_squares
@@ -249,6 +332,13 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
                                          model.lower[i] * 1.0001,
                                          model.upper[i] * 0.9999))
             starts.append(candidate)
+
+    # ZView 관행 한 판 — 고주파에서 앞쪽 원소부터 맞춰 나간 값.  답이 아니라
+    # 시작점 하나로 넣는다 (`_staged_start` 머리말).
+    staged = _staged_start(model, working.frequency_hz, z, weights, start,
+                           least_squares)
+    if staged is not None:
+        starts.append(staged)
 
     for _ in range(max(0, restarts)):
         scatter = np.exp(rng.uniform(-np.log(5.0), np.log(5.0), size=n_params))
@@ -352,6 +442,9 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         notes.append(", ".join(f"{name}_Ri ↔ {name}_Re" for name in swappable)
                      + " 는 맞바꿔도 같은 곡선입니다 — 스펙트럼은 둘의 짝만 "
                        "정하고 어느 쪽이 이온인지는 말하지 않습니다")
+    edge = _edge_misfit(working.frequency_hz, residuals, chi2, dof)
+    if edge:
+        notes.append(edge)
     reason = " / ".join(notes)
 
     return FitResult(
@@ -368,6 +461,53 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         dropped_inductive=dropped_inductive,
         dropped_out_of_range=dropped_range,
     )
+
+
+def _edge_misfit(frequency: np.ndarray, residuals: np.ndarray,
+                 chi2: float, dof: int) -> str:
+    """Say so when nearly all of the misfit sits at the low-frequency end.
+
+    A chi-square is one number for the whole sweep, and it cannot tell apart
+    two very different situations: a circuit that is wrong everywhere, and a
+    circuit that is right over the measured features and wrong only where the
+    sweep stopped early.  The second is common here and it is not a fitting
+    problem -- the lab's full cell has a process whose apex is below 10 mHz,
+    so the last few points are the *start* of a feature nobody measured, and
+    any element made to chase them is reporting a shape the data never showed.
+
+    On that spectrum: the seven points below 0.05 Hz carry 68% of the misfit,
+    and the same circuit fitted above 0.05 Hz comes back 22x better.  Without
+    this line the screen says "chi-square 6.5e-4" and the reader concludes the
+    circuit is wrong.
+
+    A tenth of the points (at least three) counting for more than half of the
+    squared residual is the trigger.  It is a report, not an action: nothing
+    is dropped, and the fit already used every point.
+    """
+    total = len(frequency)
+    if total < 12:
+        return ""
+    # `residuals` 는 실수부·허수부를 이어 붙인 것이라 점 하나가 두 자리다.
+    if len(residuals) != 2 * total:
+        return ""
+    per_point = residuals[:total] ** 2 + residuals[total:] ** 2
+    if not np.isfinite(per_point).all() or per_point.sum() <= 0:
+        return ""
+
+    order = np.argsort(frequency)                   # 낮은 주파수부터
+    take = max(3, total // 10)
+    tail = order[:take]
+    share = float(per_point[tail].sum() / per_point.sum())
+    if share <= 0.5:
+        return ""
+
+    rest = float(per_point.sum() - per_point[tail].sum())
+    without = rest / max(dof, 1)
+    cut = float(frequency[order[take - 1]])
+    return (f"오차의 {share * 100:.0f}% 가 가장 낮은 {take}개 점"
+            f"(≤ {cut:.3g} Hz)에 몰려 있습니다 — 그 위쪽만 보면 χ² 는 "
+            f"{without:.2e} 입니다. 정점이 측정 대역 아래에 있는 과정을 "
+            "스윕이 끝까지 담지 못했을 때 이렇게 됩니다")
 
 
 def _order_arcs_by_frequency(model, values, stderrs):

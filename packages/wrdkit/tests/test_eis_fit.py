@@ -166,9 +166,13 @@ def test_a_flat_spectrum_has_no_arcs_to_find():
 
 def test_every_start_is_tried_and_the_count_is_reported():
     """One start finds one local minimum.  The count is in the result so a
-    spectrum where most starts failed can be spotted."""
+    spectrum where most starts failed can be spotted.
+
+    기본 추측 1 + 순차 피팅 1 + 재시작 5.  (이 회로에는 폭넓은 파라미터가
+    없어 사다리 항이 붙지 않는다.)
+    """
     result = fit_circuit(spectrum(noise=0.01), LIQUID, restarts=5)
-    assert result.starts == 6
+    assert result.starts == 7
     assert result.starts_converged >= 1
 
 
@@ -342,8 +346,9 @@ def test_the_diffusion_ladder_is_tried_whatever_the_seed():
                                     [10, 40, 1e-4, .85, 80, 30.0])
     counts = {fit_circuit(spectrum_, circuit, restarts=0, seed=seed).starts
               for seed in range(3)}
-    # 재시작이 0 이어도 시작점은 1 개가 아니다: 기본 + tau 사다리 4 개.
-    assert counts == {5}
+    # 재시작이 0 이어도 시작점은 1 개가 아니다: 기본 + tau 사다리 4 개 +
+    # 순차 피팅 1 개.
+    assert counts == {6}
 
 
 # --- 전송선 (ADR 0028) ---------------------------------------------------------
@@ -534,3 +539,109 @@ def test_the_tail_free_transmission_line_has_five_parameters():
     circuit = parse_circuit("R0-TLR1")
     assert list(circuit.parameter_names) == [
         "R0", "TLR1_Ri", "TLR1_Re", "TLR1_Rct", "TLR1_Q", "TLR1_n"]
+
+
+# --- ZView 관행: 순차 피팅과 대역 끝 경고 ----------------------------------
+
+def test_series_blocks_follows_the_written_order():
+    """직렬로 쓴 순서 그대로 나눈다 — 순차 피팅이 그 순서를 밟는다."""
+    from wrdkit.eis.circuit import series_blocks
+
+    blocks = series_blocks(parse_circuit("R0-p(R1,CPE1)-p(R2,CPE2)-Ws1"))
+    assert [name for name, _ in blocks] == ["R0", "R1+CPE1", "R2+CPE2", "Ws1"]
+    assert [indices for _, indices in blocks] == [(0,), (1, 2, 3), (4, 5, 6), (7, 8)]
+
+    # 나눌 것이 없는 회로도 답이 있어야 한다 — 부르는 쪽이 예외를 안 받는다.
+    assert [n for n, _ in series_blocks(parse_circuit("R0"))] == ["R0"]
+    assert [n for n, _ in series_blocks(parse_circuit("p(R1,CPE1)"))] == ["R1+CPE1"]
+
+
+def test_staged_start_walks_the_blocks_and_lands_near_the_answer():
+    """사람이 ZView 에서 하는 것 — 고주파부터 원소를 하나씩 풀어 간다.
+
+    여기서 고정하는 것은 "쓸 만한 시작점이 나온다" 이지 "이것이 답이다" 가
+    아니다.  값은 다중시작 주머니에 하나로 들어가고, 전체 스펙트럼에서 이긴
+    것이 답이 된다 (`_staged_start` 머리말).
+    """
+    from scipy.optimize import least_squares
+
+    from wrdkit.eis.fit import _residuals, _staged_start
+
+    data = spectrum()
+    model = parse_circuit(LIQUID)
+    weights = 1.0 / np.abs(data.z)
+    guess = initial_guess(data, model)
+    staged = _staged_start(model, data.frequency_hz, data.z, weights, guess,
+                           least_squares)
+    assert staged is not None
+
+    def cost(values):
+        return float(np.sum(_residuals(values, model, data.frequency_hz,
+                                       data.z, weights) ** 2))
+
+    # 시작점으로서 처음 추측보다 나쁘지 않아야 뜻이 있다.
+    assert cost(staged) <= cost(guess)
+    # 그리고 값 자체가 답 근처여야 한다.  잡음 없는 합성이라 여기서는 사실상
+    # 답에 닿는데, 두 비용이 모두 부동소수 0 이라 비율로는 못 잰다.
+    truth = {"R0": TRUTH["rs"], "R1": TRUTH["r1"], "CPE1_Q": TRUTH["q1"],
+             "CPE1_n": TRUTH["n1"], "R2": TRUTH["r2"], "CPE2_Q": TRUTH["q2"],
+             "CPE2_n": TRUTH["n2"]}
+    got = dict(zip(model.parameter_names, staged, strict=True))
+    for name, want in truth.items():
+        assert got[name] == pytest.approx(want, rel=0.05), name
+
+
+def test_staged_start_says_no_when_there_is_nothing_to_stage():
+    """블록이 하나면 순서가 없다.  억지로 한 판 더 돌리지 않는다."""
+    from scipy.optimize import least_squares
+
+    from wrdkit.eis.fit import _staged_start
+
+    data = spectrum()
+    model = parse_circuit("p(R1,CPE1)")
+    assert _staged_start(model, data.frequency_hz, data.z,
+                         1.0 / np.abs(data.z), initial_guess(data, model),
+                         least_squares) is None
+
+
+def test_staged_start_never_makes_the_answer_worse():
+    """주머니에 하나 더 넣는 것이므로, 켜고 끈 결과가 나빠질 수는 없다."""
+    data = spectrum(noise=0.01)
+    with_staged = fit_circuit(data, LIQUID)
+
+    import wrdkit.eis.fit as module
+    real = module._staged_start
+    module._staged_start = lambda *args, **kwargs: None
+    try:
+        without = fit_circuit(data, LIQUID)
+    finally:
+        module._staged_start = real
+    # 같거나 낫다.  수치 오차만큼의 여유를 준다.
+    assert with_staged.chi_squared <= without.chi_squared * 1.000001
+
+
+def test_edge_misfit_names_the_tail_when_the_sweep_stopped_early():
+    """χ² 하나로는 "회로가 틀렸다" 와 "스윕이 일찍 끝났다" 가 구분되지 않는다.
+
+    실측 전고체 풀셀이 그렇다: 0.05 Hz 아래 일곱 점이 오차의 절반 이상을
+    내는데, 그 위쪽만 보면 같은 회로가 훨씬 잘 맞는다.  그 일곱 점은 정점이
+    측정 대역 아래에 있는 과정의 **시작**이다.
+    """
+    from wrdkit.eis.fit import _edge_misfit
+
+    frequency = S.log_sweep(1e5, 1e-2, 6)
+    total = len(frequency)
+    order = np.argsort(frequency)
+
+    flat = np.full(2 * total, 0.01)
+    assert _edge_misfit(frequency, flat, 1e-4, total) == ""
+
+    tail = np.full(2 * total, 0.001)
+    for index in order[:max(3, total // 10)]:
+        tail[index] = 1.0
+        tail[index + total] = 1.0
+    note = _edge_misfit(frequency, tail, 1e-4, total)
+    assert "가장 낮은" in note and "그 위쪽만 보면" in note
+
+    # 점이 적으면 "가장 낮은 몇 개" 가 통계가 아니라 우연이다.
+    assert _edge_misfit(frequency[:8], tail[:16], 1e-4, 8) == ""
