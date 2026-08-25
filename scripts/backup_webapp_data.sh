@@ -86,17 +86,32 @@ _before=$(_count "$DST")
 #    ⚠ `--modify-window=1` 은 NTFS 의 2초 타임스탬프 해상도 때문 (없으면 매번 전량 재전송).
 RS=(-a)
 case "$DST" in
-  #  `--inplace` 가 핵심: DrvFs 는 rsync 의 **임시파일 → rename** 방식을 거부한다
-  #  (`mkstemp … Operation not permitted`).  직접 쓰면 그 단계가 사라진다.
-  #  `--omit-dir-times` 는 디렉터리 mtime 설정이 NTFS 에서 자주 실패하기 때문.
-  /mnt/*) RS=(-rlt --no-perms --no-owner --no-group --omit-dir-times --inplace
-              --modify-window=1);;
+  /mnt/*)
+    #  ⚠⚠ DrvFs(NTFS) 실측 2026-08-25 — 두 가지가 순서대로 걸렸다:
+    #    ① `mkstemp … Operation not permitted`  → `--inplace` (임시파일→rename 을 없앤다)
+    #    ② `failed to set times … not permitted` → **`--no-times`** (mtime 설정 자체가 막힌다)
+    #  ⇒ 시간을 못 보존하면 rsync 의 기본 비교(크기+시각)가 **매번 전량 재전송**이 된다.
+    #    그래서 비교 기준을 바꾼다: 작으면 **체크섬**(정확), 크면 **크기만**(빠름).
+    #    ⚠ 크기만 비교는 **같은 크기로 내용만 바뀐 파일을 놓친다** — 그래서 어느 쪽을 쓰는지
+    #      매번 찍는다 (조용히 부정확해지지 않게).
+    _sz=$(du -sm "$SRC" 2>/dev/null | cut -f1)
+    if [ "${_sz:-0}" -le "${DEM_BACKUP_CKSUM_MB:-500}" ]; then
+      _CMP=(--checksum); _CMPW="체크섬 (원본 ${_sz} MB — 정확)"
+    else
+      _CMP=(--size-only); _CMPW="크기만 (원본 ${_sz} MB — 빠름.  ⚠ 같은 크기 수정은 못 잡는다)"
+    fi
+    RS=(-rl --no-times --no-perms --no-owner --no-group --omit-dir-times --inplace "${_CMP[@]}")
+    echo "[백업] DrvFs 모드 · 비교 = $_CMPW"
+    echo "[백업]   ★ 영구 해결책은 metadata 마운트다 (그러면 -a 로 정상 동작):"
+    echo "[백업]     /etc/wsl.conf 에  [automount]  options = \"metadata,uid=1000,gid=1000\""
+    ;;
 esac
 echo "[백업] rsync 중… (원본 파일 $_n_src)"
 #  ⚠ 실패 경로를 **버리지 않는다** — 앞선 판은 tail 에 묻혀 무엇이 안 됐는지 알 수 없었다.
 _ERR="$(mktemp)"
 rsync "${RS[@]}" --delete --info=stats2 "$SRC/" "$DST/" \
   --exclude '.last_backup' --exclude 'dem_webapp.log' --exclude 'dem_webapp.pid' \
+  --exclude '__pycache__/' --exclude '*.pyc' \
   2> >(tee "$_ERR" >&2)
 _RC=$?
 if [ "$_RC" != 0 ]; then
