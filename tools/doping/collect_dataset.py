@@ -75,7 +75,11 @@ FEATURE_COLUMNS = [
     'rerank_de_pre_anneal', 'rerank_de_post_anneal',
     'rerank_delta_E_anneal_meV',
     # Combined
-    'combined_score', 'rank_combined',
+    #   ⚠ 2026-08-25: rank_combined 는 **결합점수 순위**다. FINAL_RANKING 의
+    #     rows 는 안정성 단일축으로 정렬되므로 그 순서를 쓰면 안 된다 —
+    #     ranking_scored_only 를 봐야 한다. 채점 안 된 구조는 빈칸(None)이다.
+    'combined_score', 'rank_combined', 'rank_stability_all',
+    'axis_set', 'scored_on', 'cascade', 'family',
 ]
 
 
@@ -89,14 +93,63 @@ def safe_get(d, *keys, default=None):
     return d
 
 
-def main():
-    p = argparse.ArgumentParser(description=__doc__,
-                               formatter_class=argparse.RawDescriptionHelpFormatter)
-    p.add_argument('--cascade_dir', required=True)
-    p.add_argument('--out', required=True)
-    args = p.parse_args()
+def _collect_many(dirs, args):
+    """여러 캐스케이드를 모아 CSV 하나로. **행마다 cascade/family/axis_set 이 붙는다.**
 
-    cd = Path(args.cascade_dir)
+    ⛔ 못 하는 것: 축 집합이 다른 행을 섞어도 막지 않는다 — 막을 수 없다(한 표에 다 넣는
+      게 목적이므로). 대신 axis_set 열을 반드시 채워 하류가 스스로 갈라 볼 수 있게 한다.
+    """
+    all_rows, comp_cols, per_fam = [], set(), {}
+    n_fail = 0
+    for d in dirs:
+        try:
+            rows, cc = collect_one(d, verbose=False)
+        except Exception as e:                       # 한 캐스케이드가 죽어도 전체는 산다
+            print(f"  ✗ {d.parent.name}/{d.name}: {type(e).__name__} {e}")
+            n_fail += 1
+            continue
+        all_rows.extend(rows)
+        comp_cols.update(cc)
+        per_fam[d.parent.name] = per_fam.get(d.parent.name, 0) + len(rows)
+
+    import collections
+    ax = collections.Counter(r.get('axis_set') or 'none' for r in all_rows)
+    scored = sum(1 for r in all_rows if r.get('rank_combined') is not None)
+    print(f"\n▸ 모음 결과")
+    for f, n in sorted(per_fam.items()):
+        print(f"  {f:<44}{n:>6} 행")
+    print(f"  {'합계':<44}{len(all_rows):>6} 행 · 결합점수 있는 행 {scored}")
+    print(f"  축집합 분포: " + ' · '.join(f"{k or 'none'}×{v}" for k, v in ax.most_common()))
+    if n_fail:
+        print(f"  ⚠ 실패 {n_fail}개 캐스케이드 (위 ✗ 참조) — 조용히 빼지 않았다")
+
+    out = Path(args.out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    headers = FEATURE_COLUMNS + sorted(comp_cols)
+    with out.open('w', newline='') as fh:
+        w = csv.DictWriter(fh, fieldnames=headers, extrasaction='ignore')
+        w.writeheader()
+        w.writerows(all_rows)
+    (out.with_suffix('.json')).write_text(json.dumps({
+        'provenance': get_provenance(),
+        'n_rows': len(all_rows), 'n_cascades': len(dirs), 'n_failed': n_fail,
+        'columns': headers,
+        'rows_per_family': per_fam,
+        'axis_set_distribution': dict(ax),
+        'excluded': args.exclude,
+        '⛔_do_not': 'axis_set 이 다른 행끼리 combined_score 를 직접 비교하지 말 것 '
+                    '(척도가 다르다). rank_combined 는 **캐스케이드 안에서의** 순위다.',
+    }, indent=2, default=str))
+    print(f"\n✓ {len(all_rows)} rows × {len(headers)} cols → {out}")
+    return 0
+
+
+def collect_one(cd, verbose=True):
+    """캐스케이드 하나 → (rows, composition_cols). 배치와 단일이 이걸 공유한다.
+
+    ⛔ 못 하는 것: 캐스케이드 간 비교 가능성을 보장하지 않는다 — 축 집합이 다르면
+      combined_score 척도가 다르다. 그래서 axis_set 열을 같이 낸다.
+    """
 
     # Load each stage's records
     def load(rel, key):
@@ -143,16 +196,24 @@ def main():
 
     # Final ranking (already aggregated)
     final_path = cd / 'FINAL_RANKING.json'
-    final_rows = []
+    final_rows, final_meta = [], {}
     if final_path.exists():
-        final_rows = json.loads(final_path.read_text()).get('rows', [])
+        _fj = json.loads(final_path.read_text())
+        final_rows = _fj.get('rows', [])
+        final_meta = {'axis_set': '+'.join(_fj.get('axis_set') or []),
+                      'scored_order': _fj.get('ranking_scored_only')
+                                      or _fj.get('ranking_3axis_measured_only') or []}
+    # rows 는 안정성 단일축 정렬이다 → 그 순번은 rank_stability_all 이지 결합순위가 아니다.
     final_by_name = {r.get('name'): (i, r) for i, r in enumerate(final_rows, 1)}
+    combined_rank = {n: i for i, n in enumerate(final_meta.get('scored_order', []), 1)}
 
     # Union of all names (Stage 10/11 names added — DT-2 fix)
     all_names = (set(screen) | set(winners) | set(bvse) | set(anneal) |
                  set(eos) | set(elastic) | set(postproc) |
                  set(sigma_md) | set(cathode_winners) | set(rerank))
-    print(f"Joining {len(all_names)} unique structures")
+    if verbose:
+        if verbose:
+            print(f"Joining {len(all_names)} unique structures")
 
     # Discover composition keys (Li, P, S, Cl, Nd, Al, ...)
     composition_elements = set()
@@ -266,13 +327,52 @@ def main():
             'rerank_delta_E_anneal_meV': rr.get('delta_E_anneal_meV_per_atom'),
 
             'combined_score': rank_pair[1].get('score_combined'),
-            'rank_combined': rank_pair[0],
+            'rank_combined': combined_rank.get(name),      # 채점 안 됐으면 빈칸
+            'rank_stability_all': rank_pair[0],
+            'axis_set': final_meta.get('axis_set'),
+            'scored_on': rank_pair[1].get('scored_on'),
+            'cascade': cd.name,
+            'family': cd.parent.name,
         }
         # composition counts
         comp = s_uma.get('composition') or {}
         for el in composition_elements:
             row[f'composition_{el}'] = comp.get(el, 0)
         rows.append(row)
+    return rows, composition_cols
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__,
+                               formatter_class=argparse.RawDescriptionHelpFormatter)
+    p.add_argument('--cascade_dir')
+    p.add_argument('--cascade_glob',
+                  help='여러 캐스케이드를 **한 프로세스에서** 모아 CSV 하나로. '
+                       '02_screen 을 가진 디렉터리만 고른다. 300개를 쉘 for 문으로 '
+                       '돌리면 python 을 300번 띄운다.')
+    p.add_argument('--exclude', action='append', default=[],
+                  help='제외할 경로 부분문자열 (세대 중복 정리용). 자동 제외는 없다.')
+    p.add_argument('--out', required=True)
+    args = p.parse_args()
+
+    if args.cascade_glob:
+        import sys as _s
+        _s.path.insert(0, str(Path(__file__).parent))
+        from combine_rankings import find_cascades
+        dirs = find_cascades(args.cascade_glob)
+        if args.exclude:
+            n0 = len(dirs)
+            dirs = [d for d in dirs if not any(x in str(d) for x in args.exclude)]
+            print(f"⚙ --exclude {args.exclude} → {n0} → {len(dirs)}개")
+        if not dirs:
+            print(f"⛔ 캐스케이드를 못 찾았다: {args.cascade_glob}")
+            return 2
+        return _collect_many(dirs, args)
+    if not args.cascade_dir:
+        print("⛔ --cascade_dir 또는 --cascade_glob 이 필요하다")
+        return 2
+    cd = Path(args.cascade_dir)
+    rows, composition_cols = collect_one(cd)
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
