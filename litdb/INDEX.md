@@ -328,6 +328,16 @@ Status 범례: ✅ digest 완료 · ⬜ PDF만(미digest) · 📄 Excel만
 - 중복 주의: ECER 황화물 안정성 리뷰는 양쪽에서 각각 digest됨 — **정본 = fan2026_sulfide_assb_stability_review_ECERD2600097.md** (본 INDEX 최상단), DEM 브랜치의 li2026_... 버전은 가져오지 않음.
 - 이후 신규 digest는 어느 세션에서 만들든 이 브랜치(claude/friendly-meitner-lldvar)의 litdb에 커밋할 것 (로컬 워처도 여기로 푸시).
 
+## 🔗 DEM → 연속체 **커플링 워크플로** (2026-08-25 신설)
+
+> 우리 파이프라인(LIGGGHTS DEM 압축 → AM 골격을 고정 scaffold 로 → MPM 이 SE 소성변형)과
+> **같은 종류의 인계**를 하는 외부 연구를 모으는 칸.  DEM 축 전체 목록은 `INDEX_DEM.md`,
+> 우리 대비 비교노트는 `comparison_vs_ours_DEM.md`.
+
+| slug | 논문 | 왜 중요한가 |
+|---|---|---|
+| `papers/pycompact2025_dem_mpfem_workflow.md` | **Mohammadhosseinzadeh, Ghorbani-Menghari, Ji Hoon Kim\*** (**부산대 기계공학**), "**PyCompact: An integrated workflow for discrete element method – multi-particle finite element method for powder compaction simulation**" (***SoftwareX* 33 (2026) 102495**, DOI 10.1016/j.softx.2025.102495, open access CC BY-NC; 본문 9 pp·Fig 1–4·Table 1–3·refs 32·**SI 없음**) — **FreeCAD + LIGGGHTS-PUBLIC 3.8 + ParaView + LS-PrePost(무료·독점, *optional*) + OpenRadioss r2024** 를 파이썬 노트북 2개(`InputGen.ipynb`·`MeshMatGen.ipynb`)로 잇는 **전(全)오픈소스 DEM→MPFEM 워크플로**.  코드 **MIT · GitHub 공개** | ★★★ **우리 DEM→MPM scaffold 인계의 독립 선례** — 그런데 **인계 시점이 정반대**다: 그들은 **중력 침강 직후(P≈0)** 의 `(x,y,z,r)` CSV 를 넘기고 **압축 전체를 MPFEM 이** 하고(`Fig. 1` 화살표 라벨 = *"Initial powder configuration (size, center)"*), 우리는 **300 MPa 압축이 끝난** 좌표를 넘겨 AM 을 얼린다.  ⇒ 그들 결과는 **DEM 강성에 둔감**하고 우리 결과는 **E_eff 1.35 보정에 종속**된다 = 인식론이 갈리는 칸. ★★ **우리 원고 논거의 제3자 진술 확보**: DEM 은 *"assumptions of rigid or simplified particle shapes that **neglect internal deformation**"*, MPFEM 은 *"each particle is modeled as a **deformable finite element body**"* 이고 그것이 *"**essential** for accurately predicting high-pressure compaction behaviour"*; 대칭으로 균질화 FEM 은 *"overlooks the discrete nature of particles … **low-density stages where particle rearrangement dominates**"* ⇒ **frame[5] 분업이 우리 편의가 아니라 방법론의 구조**라는 논증이 외부 문장으로 닫힌다. ★★ **판정 (a)** MPFEM 은 **층 3(입자 형상 소성)을 진짜로 한다**(PEEQ 1.3, 구→다면체) ⇒ "층 3 은 접촉 LAW 가 아니라 연속체 소관" 의 직접 근거. **판정 (b)** ⚠ **우리에게 불리한 사실 포함** — MPFEM 은 **접촉이 명시적**(penalty + Coulomb µ=0.2)이라 **변형 접촉면적 a(δ)** 를 직접 읽을 수 있고, 그것은 우리 MPM(격자 암묵접촉 = 사실상 no-slip 융합)이 **못 하는 것**이자 우리가 **Stage-E 로 우회**하는 자리다.  그럼에도 우리 규모에선 MPM 이 옳다 — `derived(ours)` 그들 실측 스케일(569입자 **9 h/24 CPU**, 입자수 지수 **1.3–2.4**)로 우리 32,832 SE 입자를 환산하면 **≈1년**(⌀1 µm 의 explicit dt 벌금 16× 포함). **판정 (c)** 훔칠 것 = **porosity–pressure 하중+제하 루프 그림**·**민감도 3종+비용표 형식**·**소형 SE-only REV MPFEM 으로 Stage-E 외부검증**(신규 백로그) ⚠⚠ **소재 전이 금지**: **Fe–Si–Al–P 금속분말**(E **170 GPa** real, Swift K=1380·n=0.254·ε₀=0.0354 ⇒ σ_y 0.59→1.39 GPa) @ **1400–2000 MPa**.  무차원 **P/σ_y 1.44–3.39** 만 우리 1.0–2.0 과 겹친다.  RD **83–87 %(제하 후)** = porosity **13–17 %** ⇒ **우리 관심 RD 0.90 에 6.7배 압력에서도 안 닿는다**(하중 중에는 4–5 %).  **σ 삼중항 0건 · 파괴 0 · bimodal 0 · 다상 0 · 시드앙상블/오차막대 0 · 펀치속도(재하율) 미기재 · DEM 영률 미기재(n/a)**.  ⚠ **검증 루프가 그룹 내부**([15][16][17] 전부 자기 그룹) → frame[4] 외부앵커 아님.  ⚠ **내부 불일치 9건**(digest §18): **Fig 4(g)/(h) 패널 문자 뒤집힘**(범례가 맞다) · "convergence" 라벨인데 2000→2500 el 에서 −5 % 단조감소(실제 선택 근거는 **9 h vs 36 h**) · **제하 후 RD 삼각형 미폐합 ≈5–7 %p**(Fig 4a 유도 90.3 / Fig 4b 종단 83–84 / stated 85.4) · 초록 "2.5 %" 는 **상대**값(절대 **2.1 %p**) |
+
 ## 🧰 방법론(ML) 카드 (배터리 아님 — 도구)
 | slug | 논문 | 축 |
 |---|---|---|

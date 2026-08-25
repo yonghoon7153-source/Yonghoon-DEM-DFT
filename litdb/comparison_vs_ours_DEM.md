@@ -958,6 +958,48 @@
     인공적으로 꺾인 뒤에 생긴 최대다(δ_e↓·τ_g↓ 구간에서 비의 최대 위치는 분자의 인공붕괴가 정한다).
     ⇒ **그 40 % 를 정량 인용하지 말 것.**
 
+- **★★★ PyCompact 2026 (`pycompact2025_dem_mpfem_workflow`) — 층 3(입자 형상 소성)이 *연속체 소관*임을
+  제3자가 문장으로 적고 구현했다.  단 우리에게 불리한 칸이 하나 있다.**
+  (⚠⚠ **Fe–Si–Al–P 금속분말 @1400–2000 MPa** — 절대값 전이 0건, 방법론만.)
+  - **① 인용 가능한 제3자 진술 3종** (원문): DEM 은 *"assumptions of rigid or simplified particle shapes
+    that **neglect internal deformation**"* / MPFEM 은 *"each particle is modeled as a **deformable finite
+    element body** … localized plasticity at contact points"* 이고 그것이 *"**essential** for accurately
+    predicting high-pressure compaction behaviour"* / 대칭으로 균질화 FEM 은 *"**overlooks the discrete
+    nature of particles**, leading to inaccuracies in modeling **low-density stages where particle
+    rearrangement dominates**"*.  ⇒ **frame[5] 분업(DEM=재배열·패킹 / 연속체=형상소성)이 우리 편의가
+    아니라 방법론의 구조**라는 논증이 외부 문장으로 닫힌다.  ⚠ "essential" 은 **그들의 고압 금속압축
+    맥락**이므로 한정어와 함께 인용할 것.
+  - **② 층위지도 갱신** — 이 논문은 **접촉 LAW 층(Luding/EEPA/Thornton–Ning, 우리 "경로 A")을 통째로
+    우회**하고 입자마다 tet 메시를 깐다.  PEEQ **1.3(=130 %)**, 구 → 다면체(Fig 4e/f).
+    ⇒ 한 줄 규칙: **"층 3 에 도달하는 길은 둘뿐 — 입자마다 연속체를 메시하거나(MPFEM), 입자 없는
+    연속체로 상 전체를 흘리거나(MPM).  접촉 LAW 를 아무리 정교화해도 층 3 에는 못 간다."**
+  - **③ ★ PEEQ 무늬가 우리 MPM champion 과 같다** — 접촉/네크 붉음(0.8–1.3) + **코어 파랑**(0.1–0.3)
+    = **core-preserved + boundary-flattening**.  우리가 SEM 으로 맞춘(`vis_zoom ④`, E 1.53/σ_y 0.15)
+    그 무늬를 **다른 재료·다른 이산화(Lagrangian FE)** 가 재현한다 ⇒ 형상소성 morphology 가
+    **재료·이산화에 둔감한 보편 무늬**라는 (약한) 증거.
+  - **④ ⚠ 우리에게 불리한 칸 = 접촉과 형상소성을 *한 이산화 안에서 동시에* 갖는다.**
+    | | 명시적 접촉 | 진짜 형상소성 | 그래서 필요한 우회로 |
+    |---|---|---|---|
+    | **우리 DEM** | ✓ 강체 구 접촉망 | ✗ | **Stage-E** (겹침 δ → 소성 접촉면적, Tabor/volume 캡) |
+    | **우리 MPM** | ✗ 격자 암묵(같은 셀 = no-slip 융합) | ✓ | **기하/변형 coverage** (Hertz 0.13 / Tabor 0.26 µm 밴드) |
+    | **MPFEM** | ✓ penalty + Coulomb µ | ✓ | 없음 |
+    ⇒ MPFEM 이면 **변형 접촉면적 a(δ) 위에서 Holm 협착저항**을 바로 계산할 수 있다 =
+    **Stage-E 근사의 상위 대체재가 원리적으로 존재한다.**  그들 Fig 3(f) 는 µ 0.1→0.3 이 RD 를
+    **84.2→86.0 %**(digitized) 움직인다고 보여준다 = 우리 MPM 이 통째로 못 갖는 자유도.
+    ⚠ 단 **이 논문은 전달물성을 한 번도 계산하지 않는다** — 가능성이지 실증이 아니다.
+  - **⑤ 그럼에도 우리 규모에선 MPM 이 옳다 (비용이 자릿수)**: 그들 실측 **569 입자 / 2000 el = 9 h /
+    24 CPU**, 입자수 스케일 지수 **1.34–2.43**(Table 1).  `derived(ours)` 우리 real_14 의 **SE 32,832 개**
+    로 환산하면 입자수만으로 **22–164일**, ⌀1 µm 의 **explicit dt 벌금 ×16** 을 곱하면 **≈1년**(24 CPU),
+    요소 **65.7 M**.  ⇒ 방어 가능한 문장: *"MPM 을 고른 이유는 침대 규모와 대변형 견고성이지 접촉
+    표현의 우수성이 아니다."*
+  - **⑥ ★ 실행 가능한 절충 (신규 백로그)**: **소형 SE-only REV(100–500 입자)** 를 OpenRadioss MPFEM 으로
+    한 번 돌려 **변형 접촉면적 a(δ) 분포**를 뽑고, 그것을 **우리 Stage-E 의 외부 검증**으로 쓴다.
+    그들 실측 스케일이면 **수 시간~하루 급**.  성공하면 *"Stage-E 는 근사인가 정당한가"* 를 처음으로
+    외부에서 잰다.
+  - ⚠ **그들 쪽 결함도 함께 기록**: **"convergence" 라고 적었지만 Fig 3(e) 는 2000→2500 el 에서
+    `derived(ours)` **−5 %** 로 단조 감소 중**이고 실제 선택 근거는 본문이 밝힌 **런타임 9 h vs 36 h** 다.
+    우리 CL-41(vox 0.15→0.115 미수렴)과 **같은 상황·다른 라벨** — 인용할 때 그 차이를 살릴 것.
+
 ## D. 패킹 / Furnas dip — DEM·기하 소유, 소성 MPM 불가
 > ★ **할라이드 cross-check (Varkey ↔ Kim 2025):** Varkey 2026 (할라이드 Li₃YBrCl₆) = 할라이드 *압밀/σ* (E=10.58 →
 > stiffer → floor 21/37 %); **Kim 2025 (할라이드 Li₂ZrCl₆ LZC) = 할라이드 *계면 kinetics*** (bulk σ 0.51 < LPSCl
@@ -1377,6 +1419,27 @@
   - ★ **흡수 판단**: ①은 **ASSB 습식을 다루게 될 때만** 흡수(현재 우선순위 낮음), ②③은 **경로가 달라 흡수 불요**,
     ④는 **우리 쪽에서 먼저 닫아야 할 것**.  ⇒ 이 논문에서 실제로 가져올 것은 **유변학 방법론이 아니라
     §C-3 의 수치 목록**(SE PSD 7계급 · 상별 σ 입력 · δ_e/τ_g/formation factor · ε–압연도 3점)이다.
+
+- **★★ PyCompact 2026 (`pycompact2025_dem_mpfem_workflow`) — 우리에게 없는 축 2개 + 잠재 결함 1개.**
+  - **① 제하(unloading) / springback 을 우리는 안 푼다.**  그들은 하중–제하를 끝까지 풀고 **상대밀도를
+    제하 후**(제하 중 **5 MPa** 도달 시점 규약)에 잰다.  우리는 하중 중/플래튼 정지 시점의 porosity 를
+    보고한다.  ⇒ **규약이 다르다** — 문헌 절대값과 나란히 놓을 때 이 칸을 먼저 확인해야 한다.
+    ★ 훔칠 형식 = **porosity–pressure 하중+제하 루프 한 장**(그들 Fig 4b).  점이 아니라 루프로 그리면
+    springback 이 눈에 보인다.
+  - **② ⚠ 잠재 결함 — 18× 연화는 제하 축에서 비물리적일 것이다.**  `derived(ours)` 탄성 회복변형 P/E:
+    그들 **2000 MPa / 170 GPa = 1.2 %** · 우리 **MPM**(300 MPa, K=25.5 GPa @ν0.49) = **체적 1.2 %** ✓
+    · 우리 **DEM**(300 MPa, E_eff 1.35, ν0.3 ⇒ K 1.125 GPa) = **체적 26.7 %** ⚠.
+    ⇒ **우리 MPM 의 stiff-bulk(ν=0.49) 선택이 제하 축에서 정확히 실재 분말과 같은 자리**에 있고,
+    **DEM 의 연화는 제하를 풀면 무너진다**.  지금은 제하를 안 풀어 **노출되지 않은 잠재 한계**다.
+    ⚠⚠ **미해결 질문**: 우리 실험 앵커(**Minnmann pure-SE 10 % @300 MPa**, **Cronau overlap 11–12 %**)가
+    **가압 중** 측정인지 **해압 후** 측정인지 — 후자면 우리 DEM porosity 를 **다른 규약의 값에 맞춘 것**이
+    된다.  ⇒ **문헌 재확인 필요** (이 카드가 만든 질문, 미해결).
+  - **③ 오픈 도구 정보**: **OpenRadioss(AGPL, 무료) = explicit 대변형 접촉 FE**.  ABAQUS 대비
+    **7 h vs 5 h**(Table 3, 같은 문제·24 CPU) = **1.4배 느림이 라이선스 0원의 대가**.
+    ⇒ 위 §C-⑥(소형 SE-only REV 로 Stage-E 외부검증)의 **실행 수단**이 확보된 셈.
+  - ⚠ **흡수하지 않을 것**: 그들의 `MeshMatGen.ipynb` 자동메시(구 재생성 → tet)는 **LS-PrePost 포맷·GUI
+    proj→k 라운드트립 해킹**에 묶여 있고, 우리는 애초에 **구를 다시 만들지 않는다**(복셀 union 으로 상을
+    굽는다 — 압축된 침대를 넘기는 우리에겐 겹침 δ 가 커서 구 재생성이 **원리적으로 불가**).
 
 ## G. AM 입자 **내부**(sub-particle) 미세구조 — 우리 축 **아래 한 칸**, 접점은 방법론뿐 (2026-08-25 신설)
 
