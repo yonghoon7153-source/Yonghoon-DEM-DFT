@@ -272,6 +272,11 @@ def _live_check(url, want):
         print('      앱이 안 떠 있다 →  demstop && dem5002')
         print('      다른 포트면 →  --live http://127.0.0.1:<포트>')
         return
+    #  ⚠ **배지가 0 인 것에는 여러 뜻이 있다** — 옛 코드 / 로그인 리다이렉트 / 다른 페이지.
+    #    행 자체가 있는지부터 세지 않으면 셋을 구분 못 한다 (0 을 보고 "옛 코드" 라고
+    #    단정하면 또 헛다리다).
+    n_rows = html.count('보관함 저장')
+    print(f'   페이지 {len(html):,} 바이트 · 케이스 행 {n_rows}개')
     got = {b: html.count(b) for b in ('MPM ✓', 'MPM SE-rich', 'MPM SE-poor')}
     ok = True
     for b, n_want in sorted(want.items()):
@@ -285,11 +290,87 @@ def _live_check(url, want):
     if ok and any(got.values()):
         print('\n   ✓ **서버는 배지를 내보내고 있다.**  그래도 안 보이면 브라우저 캐시다:')
         print('        Ctrl-Shift-R (강력 새로고침)  ·  또는 시크릿 창으로 열어 볼 것')
+        return
+    if n_rows == 0:
+        print('\n   ⛔ **케이스 목록 자체가 없다** — 배지 문제가 아니다.')
+        print('      로그인 페이지이거나(WEBAPP_REQUIRE_AUTH) 다른 화면일 수 있다.')
     else:
-        print('\n   ⛔ **서버가 안 내보내고 있다** = 앱이 옛 프로세스/옛 코드로 떠 있다:')
-        print('        demstop && dem5002')
-        print('     그래도 그대로면 앱이 다른 데이터 폴더를 보고 있는 것이다 —')
-        print('        WEBAPP_RESULTS_FOLDER 가 위 "데이터" 경로와 같은지 확인')
+        print(f'\n   ⛔ 목록은 {n_rows}건 나오는데 **배지만 0** = 앱이 옛 코드로 떠 있거나')
+        print('      다른 데이터 폴더를 보고 있다.')
+    _live_process(url)
+
+
+def _live_process(url):
+    """그 포트를 **실제로 물고 있는 프로세스**가 무엇을 보고 있는지 읽는다.
+
+    ★ 왜: "옛 코드다" vs "다른 폴더다" 는 처방이 다른데, 지금까지는 사용자에게
+      확인을 **떠넘기고** 있었다 (`WEBAPP_RESULTS_FOLDER 가 같은지 확인`).
+      /proc 에서 직접 읽으면 답이 나온다 — 추측을 사람에게 넘기지 않는다.
+    """
+    port = url.rsplit(':', 1)[-1].rstrip('/')
+    pids = []
+    try:
+        out = subprocess.run(('ss', '-ltnp'), capture_output=True, text=True,
+                             timeout=10).stdout
+        for ln in out.splitlines():
+            if f':{port} ' in ln or ln.rstrip().endswith(f':{port}'):
+                for tok in ln.split('pid='):
+                    p = tok.split(',')[0].strip()
+                    if p.isdigit():
+                        pids.append(p)
+    except Exception:
+        pass
+    #  ⚠⚠ `ss` 는 **그 포트만** 집는다 = 안전.  pgrep 은 `app.py` 를 **전부** 집는다
+    #    (다른 포트의 웹앱·다른 프로젝트 포함).  그 목록으로 `kill` 을 찍어 주면
+    #    엉뚱한 프로세스를 죽인다.  ⇒ 출처를 기억해 두고, 폴백이면 **kill 을 안 찍는다**.
+    exact = bool(pids)
+    if not pids:
+        try:
+            out = subprocess.run(('pgrep', '-f', 'app.py'), capture_output=True,
+                                 text=True, timeout=10).stdout
+            pids = [p for p in out.split() if p.isdigit()]
+        except Exception:
+            pass
+    if not pids:
+        print('\n   (그 포트를 문 프로세스를 못 찾았다 — ss/pgrep 없음)')
+        print('   ⇒ 그냥 다시 띄운다:  demstop && dem5002')
+        return
+    if exact:
+        print(f'\n── 포트 {port} 를 물고 있는 프로세스 ──')
+    else:
+        print('\n── ⚠ 포트를 못 짚어 `app.py` 프로세스를 **전부** 나열한다 ──')
+        print('     (아래에 이 포트와 무관한 것이 섞여 있을 수 있다 — 보고 고를 것)')
+    for pid in dict.fromkeys(pids):
+        print(f'   PID {pid}')
+        try:
+            print(f'     cwd  {os.readlink(f"/proc/{pid}/cwd")}')
+        except OSError:
+            pass
+        try:
+            with open(f'/proc/{pid}/environ', 'rb') as f:
+                env = dict(kv.split('=', 1) for kv in
+                           f.read().decode('utf-8', 'replace').split('\0') if '=' in kv)
+            got = env.get('WEBAPP_RESULTS_FOLDER')
+            want = os.path.join(_data_root(), 'webapp', 'results')
+            if got:
+                mark = '✓' if os.path.realpath(got) == os.path.realpath(want) else '⛔'
+                print(f'     {mark} WEBAPP_RESULTS_FOLDER  {got}')
+                if mark == '⛔':
+                    print(f'       기대  {want}')
+                    print('       ⇒ **앱이 다른 폴더를 보고 있다.**  런처로 다시 띄울 것')
+            else:
+                print('     ⚠ WEBAPP_RESULTS_FOLDER **미설정** — 앱이 코드 폴더 안의')
+                print('       빈 results 를 볼 수 있다.  런처(run_dem_webapp.sh)로 띄워야 한다.')
+        except OSError:
+            print('     (environ 을 못 읽었다 — 다른 사용자 소유 프로세스)')
+    print('\n   ⇒ 확실하게 다시 띄우기 (alias 에 안 기대는 방법):')
+    if exact:
+        print(f'        kill {" ".join(dict.fromkeys(pids))}')
+    else:
+        #  ★ 포트를 못 짚었으면 **kill 을 만들어 주지 않는다** — 남의 프로세스를 죽인다.
+        print(f'        # 위 목록에서 포트 {port} 인 것만 골라 kill 할 것 (전부 죽이지 말 것)')
+        print(f'        # 포트 확인:  ss -ltnp | grep :{port}')
+    print('        bash ~/dem-web/scripts/run_dem_webapp.sh --bg --open')
 
 
 def _selftest():
