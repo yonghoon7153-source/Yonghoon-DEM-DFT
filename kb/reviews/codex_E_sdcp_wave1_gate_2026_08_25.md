@@ -3,7 +3,7 @@ title: "교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 �
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, sdcp, vasp, gate, wave15]
-status: 2차리뷰-반영완료-3차대기
+status: 3차리뷰-반영완료-4차대기
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -98,3 +98,26 @@ evidenceScope: multi-source
 
 **미반영 유지** (범위 밖 선언): POSCAR/CONTCAR 용 `_read_text(errors=ignore)` (우리
 파일 + sha 무결성 하에 허용), E-6 유효성 플래그, QE assembler.
+
+
+---
+
+## 📥 E-3차 판정 (2026-08-25) — "5/6 확인 · 3번 사슬에 blocker 4"
+
+핵심 재현: **LDAUU=5.0 으로 바꾼 pin 도 check_pin 을 통과** — v1 check_pin 이
+자기만의 축소판 검사(NUPDOWN·topology)였기 때문. 물리 레시피·W 문구는 추가 이견 없음.
+
+**4건 반영 (v3 패키지, zip sha256 ebb0e848…):**
+
+| # | 지적 | 반영 |
+|---|---|---|
+| 1 | check_pin 이 전체 게이트를 안 씀 | **phase_gates 전체를 태운다** — 등록된 INCAR 기대키 18개·MULTI_RUN·판독오류·형식·E0·NIONS·POTCAR TITEL·k 상한 + topology/모멘트/CHGCAR. 빌더가 kmesh·potcar_spec 을 잡 안에 주입(없으면 fail-closed). **LDAUU=5.0 케이스를 음성으로 봉인** + 2실행 pin 거부 |
+| 2 | CHGCAR 만 지워 산출물 혼입 | 지우지 않는다 — **기존 산출물이 하나라도 있으면 실행 거부** (1회용 선언, README 명시) |
+| 3 | 해시가 콘솔에만 | `RUN_PROVENANCE.json` 영구 기록: run-id·UTC·입력/POTCAR sha·**부모 POSCAR/KPOINTS 대조(불일치 시 실행 중단)**·CHGCAR pin/사본 sha·charge-read 증거(grep 원문). 회신물 목록에 포함 |
+| 4 | supersede 가 r.ok 만 봄 | `rescue_provenance_ok()` — PIN_CHECK.pass · PROVENANCE 존재 · 부모 대조 · CHGCAR sha 일치(PIN_CHECK 와 교차) · read 증거. 하나라도 없으면 `rescue_rejected(사유)`. 음성 5건 봉인 |
+
+selftest: check_pin 6건(양2·음4) · provenance 5건(양1·음4) · rescue 17/17 · 전체 통과.
+
+⚠ charge-read 증거의 grep 패턴(`charg`+`read|from file`)은 VASP 빌드별 문구 변형
+위험이 있다 — NOT_FOUND 로 오면 supersede 가 막히고 PROVENANCE 원문으로 재협상
+(fail-closed 쪽으로 실패).
