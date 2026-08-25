@@ -39,6 +39,15 @@ SOURCES = (
     ('docs/case_summary.csv', 'case_id', None, 'fm__'),
 )
 
+#: ★ **이름(name)으로 조인해 보충**하는 표.  case_id 가 없고 `input_*` 이름만 있는 표들인데,
+#:   MPM 열이 case_master(27/163)보다 훨씬 잘 차 있다 (corpus 169/291).  ⇒ 있는 것을 다 쓴다.
+#:   ⚠ **덮지 않는다** — 이미 있는 키는 그대로 두고 **빈 자리만** 채운다 (case_master 가 정본).
+NAME_SOURCES = (
+    ('docs/data/design_performance_corpus.csv', 'name'),
+    ('docs/data/case_3d_collection.csv', 'case'),
+    ('docs/data/mpm_dem_porosity_reliability.csv', 'case'),
+)
+
 
 def _data_root():
     return os.environ.get('DEM_WEB_DATA') or os.path.join(os.path.expanduser('~'),
@@ -118,7 +127,54 @@ def collect(root=None):
                 cases[cid] = {'name': (row.get(name_col) or cid) if name_col else cid,
                               'metrics': unflatten(flat), 'source': rel,
                               'n_fields': len(flat)}
+    #  ── 이름으로 조인해 **빈 자리만** 보충 ────────────────────────────────────────────
+    by_name = {}
+    for cid, c in cases.items():
+        by_name.setdefault(c['name'], cid)
+    for rel, name_col in NAME_SOURCES:
+        p2 = os.path.join(root, rel)
+        if not os.path.isfile(p2):
+            continue
+        with open(p2, encoding='utf-8', errors='replace') as f:
+            for row in csv.DictReader(f):
+                nm = (row.get(name_col) or '').strip()
+                cid = by_name.get(nm)
+                if not cid:
+                    continue
+                m = cases[cid]['metrics']
+                added = 0
+                for k, v in row.items():
+                    if k == name_col or k in m:
+                        continue          # ⚠ 있는 키는 **안 덮는다** (case_master 가 정본)
+                    cv = _coerce(v)
+                    if cv is not None:
+                        m[k] = cv
+                        added += 1
+                if added:
+                    cases[cid]['n_fields'] += added
+                    cases[cid].setdefault('merged', []).append(f'{os.path.basename(rel)}(+{added})')
     return cases
+
+
+#: 케이스가 "완전" 하려면 있어야 하는 축 — 없으면 **다시 돌려야** 하는 것.
+GAP_AXES = {
+    'DEM σ 삼중항': ('sigma_ionic_full_mScm', 'electronic_sigma_full_mScm',
+                     'thermal_sigma_full_mScm', 'sigma_ion', 'sigma_el'),
+    'MPM 압밀': ('mpm_porosity_mpm_pct', 'mpm', 'mpm_compacted_porosity_pct'),
+    '취성/파괴': ('fracture_severe_pct', 'frac_severe_force_pct'),
+}
+
+
+def gap_report(cases):
+    """무엇이 없어서 **다시 돌려야** 하나 — 축별 결손 케이스 수."""
+    out = {}
+    for ax, keys in GAP_AXES.items():
+        miss = [c['name'] for c in cases.values()
+                if not any(k in c['metrics'] for k in keys)]
+        out[ax] = miss
+    #  뷰어/그림은 원자료가 있어야 하므로 **전부 결손**이다 (CSV 로 못 만든다)
+    out['3D 뷰어 · 그림 · report'] = [c['name'] for c in cases.values()]
+    return out
 
 
 def write(cases, data_root=None, force=False):
@@ -225,6 +281,15 @@ if __name__ == '__main__':
     fld = sorted(c['n_fields'] for c in cs.values())
     print(f'   케이스당 지표 중앙값 {fld[len(fld) // 2]}개 (최소 {fld[0]} · 최대 {fld[-1]})')
     print(f'   대상 데이터 루트: {_data_root()}')
+    _mg = sum(1 for c in cs.values() if c.get('merged'))
+    if _mg:
+        print(f'   이름 조인으로 보충된 케이스 {_mg}건')
+    print('\n── 결손 축 (다시 돌려야 하는 것) ──')
+    for ax, miss in gap_report(cs).items():
+        n = len(miss)
+        mark = '⛔' if n == len(cs) else ('⚠' if n else '✅')
+        ex = f'  예: {miss[0]}' if 0 < n <= len(cs) else ''
+        print(f'   {mark} {ax:<22} 결손 {n:>4}/{len(cs)}{ex}')
     if a.write:
         made, skipped = write(cs)
         print(f'\n✓ 새로 만든 케이스 {made}건 · 이미 있어 건너뜀 {skipped}건')
