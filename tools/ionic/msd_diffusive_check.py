@@ -89,7 +89,7 @@ def loglog_slope(t, y, lo, hi):
     return (n * sxy - sx * sy) / den if abs(den) > 1e-30 else None
 
 
-def _curve(d, mto=False):
+def _curve(d, mto=False, path=None, rebuild=False):
     """(t, y) 회수. --mto 면 msd_Li_A2_mto/times_ps_mto 를 쓴다.
 
     ⚠ MTO 가 없는 옛 런에서 조용히 STO 로 후퇴하지 않는다 — 어느 곡선을 본 것인지
@@ -97,6 +97,13 @@ def _curve(d, mto=False):
     """
     if mto:
         y = d.get("msd_Li_A2_mto")
+        if not y and rebuild and path:
+            # ⛔ 조용히 STO 로 후퇴하지 않는다 — **되살리기를 시도**하고, 실패하면
+            #   여전히 (None, None) 이다. 어느 곡선을 봤는지 모르면 판정을 못 쓴다.
+            got = mto_from_traj(path, d.get("save_fs") or d.get("dt_save_fs"))
+            if got:
+                d.update(got)
+                y = d.get("msd_Li_A2_mto")
         return (d.get("times_ps_mto") or d.get("times_ps"), y) if y else (None, None)
     return d.get("times_ps"), d.get("msd_Li_A2")
 
@@ -198,6 +205,80 @@ def elem_msd_from_traj(json_path, save_fs=None, cache=True):
             d["n_atoms_per_elem"] = out.get("n_atoms_per_elem", {})
             d.setdefault("times_ps", out["times_ps"])
             d["_elem_msd_source"] = f"recomputed from traj.xyz (save_fs={save_fs:g} fs)"
+            json.dump(d, open(jp, "w"))
+            print(f"   … {jp.name} 에 저장 (다음부터는 즉시)")
+        except (OSError, ValueError) as e:
+            print(f"   ⚠ 되쓰기 실패({type(e).__name__}) — 이번만 쓰고 버린다")
+    return out
+
+
+def mto_from_traj(json_path, save_fs=None, cache=True):
+    """`msd.json` 옆의 `traj.xyz` 에서 **MTO 곡선을 다시 만든다.** 없으면 None.
+
+    왜 (2026-08-25): 700/900 K 신규 21런은 `times_ps_mto`/`msd_Li_A2_mto` 가 없다
+      (그 캠페인이 MTO 저장 전에 돌았다). 그래서 `--mto` 판정이 21/36 에서 막혔고,
+      **세 계 공통 온도 집합**을 못 정해 1저자 요청 1·2 가 통째로 멈춰 있다.
+      단일 시간원점(STO) 은 27 Li × 1 원점이라 빠른 채널을 잡은 몇 이온이 곡선을
+      지배한다 — 그게 MTO 와 STO 가 순위를 뒤집은 원인이다(2026-08-25 실측).
+      궤적이 남아 있으면 **MD 재계산 0** 으로 되살릴 수 있다.
+
+    산식은 `tools/modelc_v3/disorder_ensemble_diffusion.py:msd_multi_origin` 을
+    **그대로 빌려 쓴다** — 복사하면 규약이 갈라진다(convention_check 대상).
+
+    ⚠ 시간축은 `save_fs`(프레임 간격)가 정한다. json 에 있으면 그걸 쓰고 없으면
+      캠페인 기본 100 fs 를 **가정하고 그 사실을 찍는다** — 조용히 가정하지 않는다.
+    ⛔ 이 함수가 못 하는 것: 궤적이 없는 런은 **원리적으로 복구 불가**다(새로 돌려야 한다).
+      그리고 MTO 를 만든다고 β 가 좋아진다는 보장은 없다 — 추정자를 바꾸는 것뿐이다.
+    """
+    import importlib.util
+    jp = pathlib.Path(json_path)
+    traj = jp.parent / "traj.xyz"
+    if not traj.exists():
+        return None
+    assumed = save_fs is None
+    if assumed:
+        save_fs = 100.0
+    src = pathlib.Path(__file__).resolve().parents[1] / "modelc_v3" / "disorder_ensemble_diffusion.py"
+    if not src.exists():
+        return None
+    spec = importlib.util.spec_from_file_location("_ded", src)
+    mod = importlib.util.module_from_spec(spec)
+    try:
+        spec.loader.exec_module(mod)
+    except BaseException:
+        return None
+    try:
+        frames = _read(str(traj), index=":")
+    except BaseException as e:
+        print(f"   ⚠ traj 읽기 실패: {type(e).__name__} {e}")
+        return None
+    if not frames or len(frames) < 8:
+        return None
+    import numpy as _np
+    sym = frames[0].get_chemical_symbols()
+    li = [i for i, s in enumerate(sym) if s == "Li"]
+    if not li:
+        print("   ⚠ traj 에 Li 가 없다")
+        return None
+    cart = _np.array([f.get_positions() for f in frames])
+    print(f"   … {traj.parent.name}/traj.xyz 에서 MTO 재생성 "
+          f"({len(frames)} 프레임 · Li {len(li)}"
+          + (f" · save_fs={save_fs:g} fs **가정**)" if assumed else f" · save_fs={save_fs:g} fs)"))
+    try:
+        tau, msd_mto, norig = mod.msd_multi_origin(cart[:, li], save_fs / 1000.0)
+    except BaseException as e:
+        print(f"   ⚠ 실패: {type(e).__name__} {e}")
+        return None
+    if not msd_mto:
+        return None
+    out = {"times_ps_mto": list(tau), "msd_Li_A2_mto": list(msd_mto),
+           "n_origins_mto": list(norig)}
+    if cache:
+        try:
+            d = json.load(open(jp))
+            d.update(out)
+            d["_mto_source"] = (f"recomputed from traj.xyz (save_fs={save_fs:g} fs"
+                                + (", ASSUMED" if assumed else "") + ")")
             json.dump(d, open(jp, "w"))
             print(f"   … {jp.name} 에 저장 (다음부터는 즉시)")
         except (OSError, ValueError) as e:
@@ -486,6 +567,22 @@ def selftest():
     chk("판정 불가" == framework_verdict_text("무엇"),
         "[음성④] 모르는 판정은 '판정 불가' 로 떨어진다")
 
+    # ── --rebuild_mto (2026-08-25) ──────────────────────────────────────────
+    #   ⛔ 음성 먼저: **궤적이 없으면 되살릴 수 없다.** None 을 돌려야지 조용히
+    #     STO 로 후퇴하면 어느 곡선을 본 건지 모르게 된다 — 이 축의 핵심 규율이다.
+    import tempfile as _tf
+    with _tf.TemporaryDirectory() as _td:
+        _p = os.path.join(_td, "msd.json")
+        json.dump({"times_ps": [1, 2, 3], "msd_Li_A2": [1, 2, 3]}, open(_p, "w"))
+        chk(mto_from_traj(_p) is None, "[음성] traj.xyz 가 없으면 MTO 재생성은 None")
+        _d = json.load(open(_p))
+        chk(_curve(_d, mto=True, path=_p, rebuild=True) == (None, None),
+            "[음성] rebuild 를 켜도 궤적이 없으면 STO 로 후퇴하지 않는다")
+        json.dump({"times_ps_mto": [1, 2], "msd_Li_A2_mto": [5, 6]}, open(_p, "w"))
+        _d = json.load(open(_p))
+        chk(_curve(_d, mto=True, path=_p, rebuild=True)[1] == [5, 6],
+            "[양성] MTO 가 있으면 그대로 쓴다 (재생성 안 함)")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -511,6 +608,10 @@ def main():
                          "MACE-MP-0 의 LGPS 골격이 1050 K 부터 인위적으로 녹는 걸 잡았고, "
                          "우리 아레니우스 상한 1000 K 가 그 바로 아래다. 골격이 녹으면 "
                          "Li 의 'D' 는 확산이 아니라 구조 붕괴다.")
+    ap.add_argument("--rebuild_mto", action="store_true",
+                    help="MTO 곡선이 없는 런을 **traj.xyz 에서 되살린다**(MD 재계산 0). "
+                         "700/900 K 신규 21런이 MTO 없이 저장돼 --mto 판정이 막혔다. "
+                         "궤적이 없는 런은 원리적으로 복구 불가 — 그렇게 보고한다.")
     ap.add_argument("--from_traj", action="store_true",
                     help="--framework 에서 종별 MSD 가 json 에 없으면 옆의 traj.xyz 에서 "
                          "다시 계산한다(재계산 0, 읽기만). 결과는 json 에 되써 둔다.")
@@ -566,7 +667,7 @@ def main():
         byST = {}
         for f in files:
             d = json.load(open(f))
-            t, y = _curve(d, a.mto)
+            t, y = _curve(d, a.mto, f, a.rebuild_mto)
             if not t or not y:
                 continue
             lab = case_label(f)
@@ -615,7 +716,7 @@ def main():
     unmeasured = []
     for f in files:
         d = json.load(open(f))
-        t, y = _curve(d, a.mto)
+        t, y = _curve(d, a.mto, f, a.rebuild_mto)
         D = d.get("D_Li_cm2_s")
         tag = case_label(f)
         # ⚠ P1-6 — D 가 null 인 msd.json 하나만 있어도 옛 코드는 TypeError 로 죽어
@@ -708,7 +809,7 @@ def main():
                 tag, t, y = _it
             else:
                 d = json.load(open(_it))
-                t, y = _curve(d, a.mto)
+                t, y = _curve(d, a.mto, _it, a.rebuild_mto)  # ⚠ 이 루프의 변수는 _it 다 (f 를 넘기면 남의 경로)
                 if not t or not y:
                     continue
                 tag = case_label(_it)
@@ -895,3 +996,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
