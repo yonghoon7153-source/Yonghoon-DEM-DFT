@@ -105,6 +105,33 @@ def _rest_threshold(current: np.ndarray) -> float:
     return max(typical * _REST_RATIO, _REST_FLOOR)
 
 
+def _signed_capacity_mah(wrd: WrdFile) -> np.ndarray:
+    """Accumulated capacity across the whole file: charge up, discharge down.
+
+    ``CHARGE Q`` / ``DISCHARGE Q`` are per-cycle running totals -- they reset
+    to zero at every cycle boundary (CLAUDE.md §3).  A plain difference across
+    the file (``C - C[0]``) therefore *contains* the resets: the counter drops
+    by a whole cycle's capacity in one sample, the capacity axis folds back on
+    itself, and a six-pulse discharge across a cycle boundary reads
+    0, .5, 1.0, 0, .5, 1.0 instead of 0..2.5.  (The first version here was
+    ``cumsum(diff(...))``, which is that identity with extra steps.)
+
+    So the sum is built from per-sample **increments**.  Within a cycle the
+    counters only grow, so a negative difference can only be a reset; the
+    increment at a reset is the counter's own value after it, because the
+    counter restarted from zero.
+    """
+    total = None
+    for column, sign in ((wrd.charge_mah(), 1.0), (wrd.discharge_mah(), -1.0)):
+        column = np.asarray(column, dtype=float)
+        increments = np.diff(column, prepend=column[:1])
+        reset = increments < 0
+        increments[reset] = column[reset]
+        contribution = sign * increments
+        total = contribution if total is None else total + contribution
+    return np.cumsum(total)
+
+
 def segment_pulses(wrd: WrdFile, *, rest_threshold_a: float | None = None
                    ) -> list[PulseBlock]:
     """Split a record into pulse and rest blocks.
@@ -121,11 +148,7 @@ def segment_pulses(wrd: WrdFile, *, rest_threshold_a: float | None = None
     current = np.asarray(wrd.data["current"], dtype=float)
     voltage = np.asarray(wrd.data["voltage"], dtype=float)
     seconds = wrd.seconds("test_time")
-    # Signed accumulated capacity: charge counts up, discharge counts down, so
-    # one running number spans a whole GITT series.  Both columns reset per
-    # cycle, so the difference is taken over the file rather than read off.
-    signed = np.cumsum(np.diff(wrd.charge_mah(), prepend=wrd.charge_mah()[0])
-                       - np.diff(wrd.discharge_mah(), prepend=wrd.discharge_mah()[0]))
+    signed = _signed_capacity_mah(wrd)
 
     threshold = (rest_threshold_a if rest_threshold_a is not None
                  else _rest_threshold(current))

@@ -768,6 +768,7 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
               v_start: float = 3.0, dv_per_pulse: float = 0.05,
               polarisation_v: float = 0.03, ir_v: float = 0.01,
               charging: bool = True, trailing_rest: bool = True,
+              pulses_per_cycle: int | None = None,
               start_ticks: int | None = None) -> list[Sample]:
     """A GITT series: pulse, rest, pulse, rest.
 
@@ -784,6 +785,12 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
 
     ``trailing_rest=False`` ends on a pulse, which is what a truncated file
     looks like -- the case where a point has to be skipped and counted.
+
+    ``pulses_per_cycle`` puts a cycle boundary after every N pulses: the
+    cycle index steps and ``CHARGE Q`` / ``DISCHARGE Q`` reset to zero, the
+    way the instrument writes them (CLAUDE.md §3).  This is the shape a
+    multi-cycle GITT protocol produces, and the one a whole-file capacity
+    difference silently folds on.
     """
     samples: list[Sample] = []
     date = (start_ticks if start_ticks is not None
@@ -792,6 +799,7 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
     total_step = 0
     charge_q = 0.0
     discharge_q = 0.0
+    cycle = 0
     sign = 1.0 if charging else -1.0
 
     def push(*, cell_status: int, voltage: float, current: float,
@@ -800,14 +808,22 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
         samples.append(Sample(
             date_ticks=date, test_ticks=test_ticks, step_ticks=0,
             cycle_ticks=test_ticks, step_index=total_step % 2,
-            total_step=total_step, cycle_index=0, cell_status=cell_status,
+            total_step=total_step, cycle_index=cycle, cell_status=cell_status,
             i_range="10mA", voltage=voltage, current=current,
             charge_q=charge_q / 1000.0, discharge_q=discharge_q / 1000.0))
         date += int(seconds * TICKS_PER_SECOND)
         test_ticks += int(seconds * TICKS_PER_SECOND)
 
     relaxed = v_start
+    #: 이 사이클이 시작된 시점까지 흘려보낸 용량.  카운터는 여기서부터 센다.
+    cycle_base = 0.0
     for index in range(n_pulses):
+        if pulses_per_cycle and index and index % pulses_per_cycle == 0:
+            cycle += 1
+            cycle_base = index * capacity_per_pulse_mah
+            charge_q = 0.0
+            discharge_q = 0.0
+
         # -- pulse ---------------------------------------------------------
         total_step += 1
         step = pulse_s / max(pulse_points - 1, 1)
@@ -816,11 +832,11 @@ def make_gitt(n_pulses: int = 8, *, pulse_points: int = 20, rest_points: int = 3
             # sqrt(t) transient plus an instantaneous ohmic jump.
             transient = polarisation_v * math.sqrt(fraction)
             voltage = relaxed + sign * (ir_v + transient)
-            delivered = capacity_per_pulse_mah * fraction
+            delivered = index * capacity_per_pulse_mah +                 capacity_per_pulse_mah * fraction - cycle_base
             if charging:
-                charge_q = index * capacity_per_pulse_mah + delivered
+                charge_q = delivered
             else:
-                discharge_q = index * capacity_per_pulse_mah + delivered
+                discharge_q = delivered
             push(cell_status=3 if charging else 4,
                  voltage=voltage, current=sign * current_a, seconds=step)
 

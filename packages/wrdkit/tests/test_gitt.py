@@ -184,3 +184,24 @@ def test_the_ohmic_jump_is_left_out_of_the_transient():
         assert point.sqrt_t_r_squared > 0.99
         # ΔE_t 에 IR 이 남아 있으면 0.03 이 아니라 0.08 근처가 된다.
         assert point.delta_et_v == pytest.approx(0.03, rel=0.35)
+
+
+def test_a_cycle_reset_does_not_fold_the_capacity_axis():
+    """CHARGE Q/DISCHARGE Q 는 사이클마다 0 으로 리셋된다 (CLAUDE.md §3).
+
+    파일 전체 차분(C−C₀)은 그 리셋을 그대로 담아, 사이클 경계를 지나는 GITT 의
+    용량축이 0, .5, 1.0, **0, .5, 1.0** 으로 접힌다 — 참값은 0..2.5 다.  리뷰가
+    잡았다: 처음 구현(cumsum(diff))은 항등변환이라 "리셋 대응" 이 존재하지
+    않았다.
+    """
+    curve = pseudo_ocv(gitt(n_pulses=6, capacity_per_pulse_mah=0.5,
+                            pulses_per_cycle=3))
+    capacities = [point.capacity_mah for point in curve.charge]
+    assert capacities == pytest.approx([0.0, 0.5, 1.0, 1.5, 2.0, 2.5], abs=1e-6)
+
+
+def test_a_discharge_series_survives_a_cycle_reset_too():
+    curve = pseudo_ocv(gitt(n_pulses=6, charging=False, v_start=3.4,
+                            capacity_per_pulse_mah=0.5, pulses_per_cycle=2))
+    capacities = [point.capacity_mah for point in curve.discharge]
+    assert capacities == pytest.approx([0.0, 0.5, 1.0, 1.5, 2.0, 2.5], abs=1e-6)
