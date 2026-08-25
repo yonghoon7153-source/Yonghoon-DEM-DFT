@@ -70,13 +70,25 @@ else
   echo "      만들려면:  python3 -m venv \"$DATA/venv\" && \"$DATA/venv/bin/pip\" install -q flask numpy scipy"
 fi
 
-python3 - <<'PY' || { echo "[dem] ⛔ flask 가 없다 — pip install flask numpy scipy"; exit 1; }
-import importlib.util, sys   # ⚠ `import importlib` 만으로는 `.util` 이 안 붙는다
-                             #   (그 오타로 flask 가 있는데 "없다" 고 거짓 보고했다)
-miss = [m for m in ('flask', 'numpy') if importlib.util.find_spec(m) is None]
-if miss:
-    sys.stderr.write(f'없는 모듈: {miss}\n'); raise SystemExit(1)
-PY
+#  ⚠⚠ 2026-08-25 — 옛 판은 `('flask','numpy')` **두 개만** 확인하고 통과시켰다.  그런데
+#    webapp 의 외부 의존은 13개고 `storage_sync` 가 최상위에서 `requests` 를 import 한다.
+#    → 검사는 초록인데 **앱이 곧바로 ModuleNotFoundError 로 죽었다** = 검사가 실물을 안 봤다.
+#    ⇒ 목록을 **추측하지 않는다**.  진짜 `app.py` 를 import 해 보고, 죽으면 없는 모듈 이름을
+#      그대로 뽑아 **설치 명령까지 만들어** 준다 (규칙 J 와 같은 원리: 실제 진입점을 돌린다).
+_DEP_ERR="$( (cd "$CODE/webapp" && python3 -c 'import app') 2>&1 >/dev/null )"
+if [ -n "$_DEP_ERR" ]; then
+  _MISS="$(printf '%s' "$_DEP_ERR" | sed -n "s/.*No module named '\([^']*\)'.*/\1/p" | sort -u | tr '\n' ' ')"
+  if [ -n "${_MISS// /}" ]; then
+    _PIP="$(printf '%s' "$_MISS" | sed 's/\bPIL\b/pillow/g; s/\bsklearn\b/scikit-learn/g')"
+    echo "[dem] ⛔ 없는 모듈: $_MISS"
+    echo "[dem]    설치:  ${VIRTUAL_ENV:+$VIRTUAL_ENV/bin/}pip install $_PIP"
+    echo "[dem]    핵심 한 벌:  pip install flask requests numpy scipy pandas matplotlib pillow markdown"
+    echo "[dem]    선택(없으면 그 기능만 꺼진다):  scikit-learn pybamm weasyprint anthropic"
+  else
+    echo "[dem] ⛔ app.py import 실패:"; printf '%s\n' "$_DEP_ERR" | tail -12
+  fi
+  exit 1
+fi
 
 # ── ③ 데이터 폴더 배선 (코드와 데이터가 갈려 있으므로 **명시로 잇는다**) ──────────────
 #  이걸 안 하면 웹앱이 코드 worktree 안의 빈 폴더를 보고 "케이스 0건" 으로 뜬다.
