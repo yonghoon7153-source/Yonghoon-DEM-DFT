@@ -287,5 +287,49 @@
   "validated": "합성 양·음성: 결합S 0.04/자유S 0.87/Cl 0.92 → 확정 · 전부 걷는 반례 → 기각. 분류 selftest 4건 (주기경계 포함)",
   "limitation": "분류는 첫 프레임 결합 기준 — 결합 불변(9/9)이 먼저 확인된 계에서만 유효",
   "status": "⏳ kgy 실행 대기"
+ },
+ "framework_split_verdict_2026_08_25": {
+  "result": "**서술③ 기각 — 7/9 polyanion_frame_mobile** (사전 등록 기준 그대로)",
+  "counts": {
+   "polyanion_frame_mobile": 7,
+   "free_anion_sublattice_mobile": 2
+  },
+  "free_anion_runs": [
+   "s4/T800 (bonded_S β=0.23)",
+   "s2/T800 (붙여넣기에서 잘림 — 합계로 확인)"
+  ],
+  "beta_bonded_S": {
+   "800": {
+    "s3": 0.53,
+    "s4": 0.23
+   },
+   "1000": {
+    "s3": 0.76,
+    "s4": 0.43
+   },
+   "1200": {
+    "s3": 0.94,
+    "s4": 0.85
+   }
+  },
+  "msd_end_bonded_S_A2": {
+   "800": {
+    "s3": 10.6,
+    "s4": 3.2
+   },
+   "1000": {
+    "s3": 33.5,
+    "s4": 10.1
+   },
+   "1200": {
+    "s3": 100.0,
+    "s4": 39.7
+   }
+  },
+  "★_classification_self_consistency": "분류기가 bonded_S=35 · free_S=6 을 냈다. 드라이버 라벨은 free-S=12 인데 — **둘 다 맞다**: 무도핑 argyrodite 기준 자유 S 12개 중 6개를 B 가 BS₃ 로 묶었다 (P결합 29 + B결합 6 = 35). ELF/ICOHP 의 'B–S 신규 motif' 와 정확히 정합 — 분류가 화학을 재발견했다.",
+  "★_rotation_cap_analysis": "회전만으로 가능한 bonded-S MSD 상한 ≈ 2r² ≈ 8.4 Å² (P–S 2.05 Å, 무상관 최종 배향). 실측: 800 K s4 3.2(회전 이하) · s3 10.6(경계) / 1000 K 10–34 / 1200 K 40–100 — **상한의 4–12배**. 게다가 중심원자 P 자체의 MSD 가 s3/T800 9.6 Å² (회전이면 P 는 안 움직인다) ⇒ ≥1000 K 는 회전이 아니라 **단위째 병진**이다.",
+  "new_description_4": "서술④ (현재 최선): **공유결합은 끊기지 않은 채(결합 교환 9/9 = 0) 온전한 폴리음이온 단위(PS₄·PS₃O·PS₂O₂·BS₃)가 통째로 이동한다.** 800 K 는 시드에 따라 회전(rotor)+자유음이온 단계, ≥1000 K 는 단위 병진 — 음이온 부격자 전체가 유동화. UMA 안에서 b2o3 고유(modelc 7/7 rigid).",
+  "still_unresolved": "이것이 실제 물리인가 UMA-s-1p1 의 B 기술 실패인가 — 이 데이터로는 못 가른다 (기존 A/B 미결 그대로)",
+  "unchanged": "인용 불가 결론 불변 · modelc 기준선 무영향"
  }
 }
