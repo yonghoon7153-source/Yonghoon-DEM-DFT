@@ -49,7 +49,7 @@ export function CopyBar({ items }: { items: CopyItem[] }) {
   }
 
   return (
-    <div className="col" style={{ gap: 6 }}>
+    <div className="col copy-bar" style={{ gap: 6 }}>
       <div className="row" style={{ gap: 6, flexWrap: 'wrap' }}>
         <span className="tiny faint">Origin 으로</span>
         {items.map((item) => (

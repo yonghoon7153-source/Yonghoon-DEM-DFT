@@ -336,6 +336,27 @@ describe('비교 · dQ/dV 와 dV/dQ', () => {
     expect(screen.getByText(/봉우리 사이의 가로 거리가/)).toBeInTheDocument()
   })
 
+  it('모드마다 다른 것을 복사한다 — 축이 다르면 두 열의 뜻도 다르다', async () => {
+    installFetch(compareHandler((url) =>
+      path(url) === '/api/compare/dvdq' ? body('dvdq') : undefined))
+    renderCompare()
+
+    // 첫 화면(사이클 추세)에서는 복사 단추가 그것을 낸다.  모드 단추와 이름이
+    // 같으므로 **복사 줄 안에서** 찾는다 — 둘을 뭉뚱그리면 무엇이 바뀐 건지
+    // 시험이 말해 주지 못한다.
+    const bar = () => document.querySelector('.copy-bar')!
+    await waitFor(() =>
+      expect(within(bar() as HTMLElement).getByRole('button', { name: /사이클 추세/ }))
+        .toBeInTheDocument())
+
+    await userEvent.click(screen.getByRole('button', { name: 'dV/dQ' }))
+    await waitFor(() =>
+      expect(within(bar() as HTMLElement).getByRole('button', { name: /dV\/dQ/ }))
+        .toBeInTheDocument())
+    expect(within(bar() as HTMLElement).queryByRole('button', { name: /사이클 추세/ }))
+      .toBeNull()
+  })
+
   it('사이클을 여러 개 적으면 그대로 물어본다 — 3,4', async () => {
     const asked: string[] = []
     installFetch(compareHandler((url) => {

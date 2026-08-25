@@ -4,11 +4,15 @@ import { useEffect, useMemo, useState } from 'react'
 
 import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
+import { CopyBar } from '../components/CopyBar'
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { basisAxis, basisUnit, seriesColor } from '../lib/format'
+import {
+  compareCyclesTsv, dqdvTsv, dvdqTsv, profileTsv, skippedForCopy,
+} from '../lib/origin'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { Basis, Smoother } from '../lib/types'
 
@@ -378,6 +382,37 @@ export function Compare() {
             }
             tight
           >
+            {/* Origin 으로 — 지금 보고 있는 것만 낸다.  모드마다 축이 다르므로
+                복사되는 두 열의 뜻도 달라진다 (EIS·GITT 와 같은 규칙). */}
+            <div style={{ padding: '12px 14px 0' }}>
+              <CopyBar
+                items={mode === 'cycles' ? [{
+                  label: MODE_LABELS.cycles,
+                  title: `사이클 · ${METRICS.find((m) => m.value === metric)?.label ?? '값'}`
+                    + ' — 셀마다 두 열로 쌓습니다',
+                  disabled: !(cycleCompare.data?.series ?? []).length,
+                  build: () => compareCyclesTsv(cycleCompare.data?.series ?? []),
+                }] : mode === 'profiles' ? [{
+                  label: MODE_LABELS.profiles,
+                  title: '용량 · 전압 — 곡선마다 두 열로 쌓습니다',
+                  disabled: !(profileCompare.data?.series ?? []).length,
+                  build: () => profileTsv(profileCompare.data?.series ?? []),
+                  skipped: skippedForCopy(profileCompare.data?.series ?? []),
+                  skippedNote: (n) => `구동 중이라 마지막 사이클이 잘린 셀 ${n}개는 뺐습니다`,
+                }] : mode === 'dqdv' ? [{
+                  label: MODE_LABELS.dqdv,
+                  title: '전압 · dQ/dV — 곡선마다 두 열로 쌓습니다',
+                  disabled: !(dqdvCompare.data?.series ?? []).length,
+                  build: () => dqdvTsv(dqdvCompare.data?.series ?? []),
+                }] : [{
+                  label: MODE_LABELS.dvdq,
+                  // dQ/dV 의 거울이라 열 순서를 헷갈리기 쉽다 -- 여기 적어 둔다.
+                  title: '용량 · dV/dQ — 곡선마다 두 열로 쌓습니다 (dQ/dV 와 x 가 반대)',
+                  disabled: !(dvdqCompare.data?.series ?? []).length,
+                  build: () => dvdqTsv(dvdqCompare.data?.series ?? []),
+                }]}
+              />
+            </div>
             {error ? (
               <div style={{ padding: 14 }}>
                 <Alert kind="error">{error}</Alert>

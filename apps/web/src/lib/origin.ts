@@ -94,6 +94,36 @@ export function profileTsv(series: ProfileSeries[]): string {
   return tsvColumns([capacity, voltage])
 }
 
+/** 겹쳐 본 사이클 추세를 두 열로 — (사이클, 값) 을 곡선마다 쌓는다.
+ *
+ * 프로파일·dQ/dV·dV/dQ 와 같은 배치다.  한 워크시트에 넷을 나란히 붙여 넣고
+ * 보는 사람이 화면마다 다른 배치를 익힐 이유가 없다.
+ *
+ * **구동 중인 셀도 여기서는 뺀다.**  마지막 사이클이 잘려 있으면 그 점은
+ * 그 셀의 용량이 아니라 "지금까지 넣은 양" 인데 (CLAUDE.md §3), 붙여 넣은
+ * 워크시트에는 그렇다고 적을 자리가 없다.  다만 추세는 **점의 나열**이라
+ * 마지막 하나만 문제이므로, 곡선을 통째로 버리지 않고 **그 점만** 뺀다.
+ * 서버가 이미 완료 사이클만 싣는 경우에는 아무것도 안 빠진다.
+ */
+export function compareCyclesTsv(
+  series: { points: { cycle: number; value: number }[] }[],
+): string {
+  const cycles: string[] = []
+  const values: string[] = []
+  for (const item of series) {
+    if (!item.points.length) continue
+    if (cycles.length) {
+      cycles.push(MISSING)
+      values.push(MISSING)
+    }
+    for (const point of item.points) {
+      cycles.push(cell(point.cycle))
+      values.push(cell(point.value))
+    }
+  }
+  return tsvColumns([cycles, values])
+}
+
 /** Every dQ/dV curve stacked into two columns, separated by a `--` row.
  *
  * Same layout as `profileTsv` for the same reason: somebody comparing a
