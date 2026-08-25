@@ -1,0 +1,50 @@
+{
+ "schema": "sdcp_wave1_citable/v1",
+ "date": "2026-08-25",
+ "derived_from": "db/properties/sdcp_wave1_results.json (총에너지에서 재유도 — 손 전사 아님)",
+ "what": "SDCP wave1 인용 확정본 — basin 일치분만. 값·단서가 한 몸이다.",
+ "⚠_caveats_MUST_QUOTE_WITH_VALUES": [
+  "기하는 MLIP(UMA, freeze 0.85) 이완 위 단일점 — DFT 최소점이 아니다. 절대 E_ads 인용 시 반드시 병기",
+  "진공·0 K·단분자 피복 — 실제 전극(용매·온도·피복률) 예측이 아니다",
+  "k 직접검증은 ptfe_c10 만(ΔE 0.0 · E_ads 0.2 meV). dimer·neutral 은 k-transfer-screened",
+  "VASP PAW 총에너지 기반 — 절대값을 타 코드/문헌과 직접 비교 금지. 내부 차이만 유효",
+  "net4 참조는 현재 basin-B — pm1 열이 정본. wave1.5 회신 시 net4 E_ads 가 열린다"
+ ],
+ "dE_site_meV": {
+  "ptfe_dimer_pm1": 36.07,
+  "ptfe_dimer_net4": 36.16,
+  "ptfe_dimer_branch_interaction": 0.09,
+  "ptfe_c10_pm1": 49.77,
+  "sdcp_neutral_pm1": 9.27
+ },
+ "dE_notes": {
+  "ptfe_dimer": "★ 두 sampled branch(서로 다른 basin!)에서 상호작용 0.09 meV — 허용 문구: 'matched-pose ΔE 가 두 branch 에서 0.09 meV 차이'. ⚠ k-미검증이므로 '0.1 meV 정확도' 라 쓰지 않는다 · basin 무관성의 증명 아님",
+  "ptfe_c10": "단일 branch (pm1 A/A). net4 쪽은 basin 혼합으로 무효 — wave1.5 후 재확인",
+  "sdcp_neutral": "단일 branch. |ΔE| < 10 meV — 사실상 무선호로 서술",
+  "sdcp_doped": "⛔ 인용 불가 (라디칼 스핀 분기, 두 branch 105 meV 어긋남) — 값 자체를 싣지 않는다"
+ },
+ "Eads_eV_box24_pm1": {
+  "ptfe_dimer_Litop": -0.3663,
+  "ptfe_dimer_Nitop": -0.3302,
+  "ptfe_c10_Nitop": -0.3626,
+  "sdcp_neutral_Litop": -0.7675,
+  "sdcp_neutral_Nitop": -0.7582,
+  "sdcp_neutral_cross_Li_at_Ni": -0.7728,
+  "sdcp_neutral_cross_Ni_at_Li": -0.7633
+ },
+ "cross_checks": {
+  "dimer_Litop_net4_basinB_pair": -0.3661,
+  "c10_Nitop_net4_basinB_pair": -0.3617,
+  "reading": "basin 이 (복합체=슬랩) 로 맞는 net4 쌍은 pm1 과 ≤1 meV — 재현성 근거. 단 net4 열은 wave1.5 전까지 정본으로 쓰지 않는다"
+ },
+ "headline_sentences_ko": [
+  "PTFE 조각과 SDCP 는 모두 LiNiO₂(104) 표면에서 Ni 자리보다 Li 자리를 선호한다 (ptfe_dimer ΔE = +36.1 meV, 두 자기 branch 에서 0.09 meV 차이).",
+  "SDCP(−0.77 eV)는 PTFE 조각(−0.33 ~ −0.37 eV)보다 약 2배 강하게 흡착한다.",
+  "흡착 기하는 MLIP 이완 위 단일점이며, 값은 내부 비교(차이)로만 사용한다."
+ ],
+ "not_citable": [
+  "sdcp_doped 전 항목",
+  "net4 E_ads (wave1.5 대기)",
+  "basin-branch offset ≈50 meV (진단값 — 수치 인용 금지)"
+ ]
+}

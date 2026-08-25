@@ -1,6 +1,6 @@
 # kb 카탈로그 (생성물 — 손으로 고치지 말 것)
 
-> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 243
+> `python3 tools/kb_wiki.py index` 가 만든다 · 2026-08-25 · managed-files: 244
 
 규칙: kb/SCHEMA.md · 열린 질문: kb/questions/ · 논지 카드: kb/syntheses/ · 원장: kb/open_items.md · 문헌: litdb/INDEX.md
 
@@ -68,7 +68,7 @@
 - `kb/methodology/site_preference_protocol_2026_08_11.md` — LiNiO₂(104) 자리 선호 · 자세 스크리닝 프로토콜 v1
 - `kb/methodology/terminology_register.md` — 🗣 용어 대장 — 우리 말 → 필드 표준어 → 근거
 
-## results/ (89)
+## results/ (90)
 - `kb/results/MASTER_structure_property_logic_2026_06_21.md` — Structure–Property Relationship of Argyrodite SEs — 통합 논리 (MASTER)
 - `kb/results/adhesion_100seeds_analysis.md` — Adhesion Energy — Complete Analysis (2026-04-17)
 - `kb/results/adhesion_final.md` — Adhesion Energy — Final Results (2026-04-14, CONFIRMED)
@@ -143,6 +143,7 @@
 - `kb/results/sdcp_master_summary_2026_07_16.md` — SDCP 종합 정리 — 오비탈 · 작용기 · DFT (마스터)
 - `kb/results/sdcp_ptfe_site_screen_summary_2026_08_11.md` — 자리 선호 스크리닝 — UMA 로 무엇을 봤고, 왜 값이 안 나왔고, VASP 에 무엇을 넘겼나
 - `kb/results/sdcp_slab_plateau_broken_2026_08_03.md` — SDCP 슬랩 plateau 를 깼다 — 원인은 계가 아니라 Broyden 이력 (2026-08-03)
+- `kb/results/sdcp_wave1_citable_2026_08_25.md` — SDCP wave1 인용 확정본 — 논문에 쓰는 값 한 장 (basin 일치분) ○미열람
 - `kb/results/sdcp_wave1_explainer_2026_08_25.md` — SDCP wave1 결과 읽는 법 — 바인더가 NCM 표면 어디에 붙나 ○미열람
 - `kb/results/sdcp_wave1_vasp_return_2026_08_25.md` — SDCP wave1 VASP 회신 — 자기 basin 이 갈랐다 (E_ads · 자리선호) ○미열람
 - `kb/results/section1_system_design.md` — Section 1 (Deep Dive) — 시스템 설계의 과학적 논리

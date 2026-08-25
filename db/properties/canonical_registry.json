@@ -635,6 +635,204 @@
    "status": "canonical",
    "note": "⚠ source 인 comp2_icohp_origin.csv 에는 **방법 정보가 없다** (값만 있다). 방법 근거는 db/compositions/comp2.json 의 ICOHP 절이다 — 값과 방법의 출처가 갈려 있으므로 인용할 때 둘 다 봐야 한다 (2026-08-07 Codex 5라운드).",
    "updated": "2026-08-07"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_dimer_pm1",
+   "value": 36.07,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_dimer_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "★ 2-branch (net4 +36.16, 상호작용 0.09 meV — '0.1 meV 정확도' 표현 금지, k-미검증)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_dimer_net4",
+   "value": 36.16,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_dimer_net4",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "pm1 과 쌍 — basin B 에서도 재현"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__ptfe_c10_pm1",
+   "value": 49.77,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/ptfe_c10_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "단일 branch — wave1.5 후 net4 재확인"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_dE_site_meV__sdcp_neutral_pm1",
+   "value": 9.27,
+   "unit": "meV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/dE_site_meV/sdcp_neutral_pm1",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-dE-site-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "단일 branch · |ΔE|<10 meV = 사실상 무선호"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_dimer_Litop",
+   "value": -0.3663,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Litop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_dimer_Nitop",
+   "value": -0.3302,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_dimer_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__ptfe_c10_Nitop",
+   "value": -0.3626,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/ptfe_c10_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_Litop",
+   "value": -0.7675,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Litop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_Nitop",
+   "value": -0.7582,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_Nitop",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Li_at_Ni",
+   "value": -0.7728,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Li_at_Ni",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
+  },
+  {
+   "system": "sdcp",
+   "metric": "SDCP_Eads_eV__sdcp_neutral_cross_Ni_at_Li",
+   "value": -0.7633,
+   "unit": "eV",
+   "source_path": "db/properties/sdcp_wave1_citable.json",
+   "source_key": "/Eads_eV_box24_pm1/sdcp_neutral_cross_Ni_at_Li",
+   "method_id": "vasp-544__pbe-u62__mlip-geom-sp__box24ref",
+   "comparison_group": "sdcp-wave1-Eads-box24-v1",
+   "status": "canonical",
+   "prohibitions": [
+    "absolute_vs_other_codes",
+    "cell_level_claims",
+    "net4_reference_until_wave15"
+   ],
+   "updated": "2026-08-25",
+   "note": "MLIP 기하 위 단일점 — DFT 최소 아님 (인용 시 병기)"
   }
  ],
  "_provenance_audit": {
@@ -646,5 +844,8 @@
   "confidence": "high",
   "note": "수치 대조가 의미 일치를 보증하지 않는다 — method_id 오배선 가능",
   "caveat": "이 블록은 **사후 추적** 결과다. 원본 계산 시점에 기록된 것이 아니라 repo·git·파일 내용에서 역추적했다. confidence 를 같이 보라."
+ },
+ "changelog": {
+  "2026-08-25b": "SDCP wave1 인용 확정분 등록 (basin 일치 · pm1 정본): dE_site 4건 + Eads 7건. comparison_group 을 sdcp-wave1-* 로 분리해 argyrodite 4축과 절대 섞이지 않게. sdcp_doped·net4 Eads·50 meV offset 은 등록하지 않음 (citable.json not_citable). 원자료 재유도 파이프라인: sdcp_wave1_results.json → citable.json → registry."
  }
 }
