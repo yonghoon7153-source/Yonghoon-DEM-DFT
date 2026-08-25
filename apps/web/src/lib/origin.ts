@@ -263,8 +263,16 @@ export function bodeTsv(spectra: SpectrumPoints[]): string {
  */
 export function fitParametersTsv(parameters: FitParameter[]): string {
   if (!parameters.length) return ''
+  // 미결정 파라미터는 값도 내보내지 않는다.  화면에서는 "못 믿음" 표시가
+  // 붙지만 엑셀에 붙은 순간 그 표시가 사라져 확정값처럼 읽힌다 (리뷰 #7) —
+  // 추정값을 실측값처럼 내보내지 않는다 (§0.4).  이름은 남는다: 어떤 행이
+  // 비었는지가 정보다.
   return parameters
-    .map((p) => [p.name, cell(p.value), cell(p.stderr)].join('\t'))
+    .map((p) =>
+      p.determined
+        ? [p.name, cell(p.value), cell(p.stderr)].join('\t')
+        : [p.name, '--', '--'].join('\t'),
+    )
     .join('\n')
 }
 

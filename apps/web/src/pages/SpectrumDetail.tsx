@@ -64,17 +64,18 @@ export function SpectrumDetail() {
       points: true,
       width: 0,
     }]
-    if (fit?.converged && fit.parameters.length) {
-      const curve = fitCurve(fit, points.data.frequency_hz)
-      if (curve) {
-        series.push({
-          label: `맞춤 (${fit.circuit})`,
-          x: curve.re,
-          y: curve.negIm,
-          color: seriesColor(1),
-          width: 2,
-        })
-      }
+    if (fit?.converged && fit.fitted_z_re && fit.fitted_z_im) {
+      // 서버가 같은 회로 AST 로 계산한 곡선이다.  화면이 파라미터 이름으로
+      // 회로를 재구성하던 때는 L·Ws·Wo·중첩이 조용히 빠져 다른 곡선이
+      // "맞춤" 으로 그려졌다 (리뷰 #6).  서버가 곡선을 못 주면 선을 그리지
+      // 않고 이유(fitted_note)를 아래에 적는다.
+      series.push({
+        label: `맞춤 (${fit.circuit})`,
+        x: fit.fitted_z_re,
+        y: fit.fitted_z_im.map((value) => -value),
+        color: seriesColor(1),
+        width: 2,
+      })
     }
     return series
   }, [points.data, fit])
@@ -320,6 +321,10 @@ function FitReport({ fit, kind }: { fit: SpectrumFit; kind: EisKind }) {
         </Alert>
       ) : null}
       {fit.converged && fit.reason ? <Alert kind="warn">{fit.reason}</Alert> : null}
+      {fit.converged && fit.fitted_note ? (
+        // 곡선을 못 그린 이유.  선이 그냥 없으면 "안 맞았다" 와 구분이 안 된다.
+        <Alert kind="warn">맞춤 곡선 없음 — {fit.fitted_note}</Alert>
+      ) : null}
 
       <div className="row tiny faint" style={{ gap: 12, flexWrap: 'wrap' }}>
         <span className="mono">{fit.circuit}</span>
@@ -406,80 +411,6 @@ function Conductivity({ fit }: { fit: SpectrumFit }) {
     </div>
   )
 }
-
-/** 맞춘 회로를 측정 주파수 위에 다시 그린다.
- *
- *  서버가 곡선을 보내지 않고 파라미터만 보내므로 여기서 계산한다.  회로 문자열을
- *  다시 해석하지 않고 **아크 목록**을 쓰는 것은, 화면이 회로 파서를 하나 더
- *  갖게 되면 서버와 조용히 어긋나기 때문이다.  지원하는 모양은 서버가 프리셋으로
- *  내주는 것들 — 직렬 R 과 R‖CPE 들, 그리고 끝의 CPE 나 W.
- */
-function fitCurve(fit: SpectrumFit, frequency: number[]):
-  { re: number[]; negIm: number[] } | null {
-  const values = new Map(fit.parameters.map((p) => [p.name, p.value]))
-  const names = fit.parameters.map((p) => p.name)
-  const plainR = names.filter((name) => !name.includes('_') && name.startsWith('R'))
-  const cpeStems = names
-    .filter((name) => name.endsWith('_Q'))
-    .map((name) => name.slice(0, -2))
-  if (!plainR.length && !cpeStems.length) return null
-
-  const hasSeries = fit.circuit.trim().startsWith('R') && !fit.circuit.trim().startsWith('p(')
-  const seriesR = hasSeries ? values.get(plainR[0]!) ?? 0 : 0
-  const arcRs = hasSeries ? plainR.slice(1) : plainR
-
-  const re: number[] = []
-  const negIm: number[] = []
-  for (const hz of frequency) {
-    const w = 2 * Math.PI * hz
-    let zr = seriesR
-    let zi = 0
-    for (let i = 0; i < arcRs.length; i += 1) {
-      const r = values.get(arcRs[i]!) ?? 0
-      const stem = cpeStems[i]
-      const q = stem ? values.get(`${stem}_Q`) ?? 0 : 0
-      const n = stem ? values.get(`${stem}_n`) ?? 1 : 1
-      const [pr, pi] = parallelRCpe(r, q, n, w)
-      zr += pr
-      zi += pi
-    }
-    // 남은 CPE (전고체의 블로킹 꼬리) 는 직렬로 붙는다.
-    for (let i = arcRs.length; i < cpeStems.length; i += 1) {
-      const stem = cpeStems[i]!
-      const [cr, ci] = cpe(values.get(`${stem}_Q`) ?? 0, values.get(`${stem}_n`) ?? 1, w)
-      zr += cr
-      zi += ci
-    }
-    const warburg = names.find((name) => !name.includes('_') && name.startsWith('W'))
-    if (warburg) {
-      const sigma = values.get(warburg) ?? 0
-      zr += sigma / Math.sqrt(w)
-      zi -= sigma / Math.sqrt(w)
-    }
-    re.push(zr)
-    negIm.push(-zi)
-  }
-  return { re, negIm }
-}
-
-/** CPE 임피던스: `1 / (Q (jw)^n)` — 극형식으로 풀어 쓴다. */
-function cpe(q: number, n: number, w: number): [number, number] {
-  if (!q || !w) return [0, 0]
-  const magnitude = 1 / (q * Math.pow(w, n))
-  const angle = -(n * Math.PI) / 2
-  return [magnitude * Math.cos(angle), magnitude * Math.sin(angle)]
-}
-
-function parallelRCpe(r: number, q: number, n: number, w: number): [number, number] {
-  if (!q) return [r, 0]
-  // Y = 1/R + Q(jw)^n, then Z = 1/Y.
-  const yr = (r ? 1 / r : 0) + q * Math.pow(w, n) * Math.cos((n * Math.PI) / 2)
-  const yi = q * Math.pow(w, n) * Math.sin((n * Math.PI) / 2)
-  const denominator = yr * yr + yi * yi
-  if (!denominator) return [0, 0]
-  return [yr / denominator, -yi / denominator]
-}
-
 
 const CONFIG_OPTIONS: { value: CellConfig | ''; label: string }[] = [
   { value: '', label: '— 안 정함' },

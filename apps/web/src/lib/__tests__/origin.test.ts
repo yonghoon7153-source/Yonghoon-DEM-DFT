@@ -311,7 +311,9 @@ describe('fitParametersTsv', () => {
       { name: 'R0', value: 7.99, unit: 'Ω', stderr: 0.31, determined: true },
       { name: 'CPE1_n', value: 0.58, unit: '', stderr: null, determined: false },
     ])
-    expect(text).toBe('R0\t7.99\t0.31\nCPE1_n\t0.58\t--')
+    // 미결정 행은 값도 나가지 않는다 — 엑셀에는 "못 믿음" 표시를 붙일 수
+    // 없어서, 숫자로 내보내는 순간 확정값이 된다 (리뷰 #7).
+    expect(text).toBe('R0\t7.99\t0.31\nCPE1_n\t--\t--')
   })
 })
 

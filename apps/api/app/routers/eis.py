@@ -31,6 +31,7 @@ from wrdkit.eis import (
     read_mpt_text,
     total_resistance,
 )
+from wrdkit.eis.circuit import CircuitError, parse_circuit
 from wrdkit.eis.derive import CONFIGS
 
 from .. import storage
@@ -528,6 +529,33 @@ def _fit_out(session: Session, record: SpectrumRecord,
     """
     parameters = json.loads(fit.parameters_json) if fit.parameters_json else []
     thickness_cm, area = _geometry(session, record)
+    fitted_frequency: list[float] | None = None
+    fitted_re: list[float] | None = None
+    fitted_im: list[float] | None = None
+    fitted_note = ""
+    if parameters:
+        # The curve the parameters mean, evaluated by the same AST that fitted
+        # them.  The screen used to rebuild it from the parameter names and
+        # silently drew a different curve for any circuit with L, Ws, Wo or
+        # nesting (review #6); now the server is the only evaluator.
+        try:
+            model = parse_circuit(fit.circuit)
+            spectrum = storage.load_spectrum(record.id, record.sha256)
+            if spectrum is not None:
+                # By name, not position: the stored list is re-ordered so the
+                # high-frequency arc comes first, which is not always the
+                # circuit's own parameter order.
+                by_name = {p["name"]: float(p["value"]) for p in parameters}
+                values = np.array([by_name[name]
+                                   for name in model.parameter_names])
+                z = model.impedance(values, spectrum.frequency_hz)
+                fitted_frequency = [float(v) for v in spectrum.frequency_hz]
+                fitted_re = [float(v) for v in z.real]
+                fitted_im = [float(v) for v in z.imag]
+            else:
+                fitted_note = "파싱 결과가 없어 곡선을 계산하지 못했습니다"
+        except (CircuitError, KeyError) as exc:
+            fitted_note = f"회로를 읽지 못해 곡선이 없습니다: {exc}"
     arcs: list[dict] = []
     conductivity: dict = {}
     if parameters:
@@ -550,6 +578,10 @@ def _fit_out(session: Session, record: SpectrumRecord,
         arcs=arcs,
         conductivity=conductivity,
         kind_now=record.kind,
+        fitted_frequency_hz=fitted_frequency,
+        fitted_z_re=fitted_re,
+        fitted_z_im=fitted_im,
+        fitted_note=fitted_note,
     )
 
 

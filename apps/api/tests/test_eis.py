@@ -125,6 +125,43 @@ def test_fitting_recovers_the_circuit_the_file_was_built_from(client):
     assert fit["chi_squared"] < 1e-6
 
 
+def test_the_fit_response_carries_the_curve_the_server_computed(client):
+    """화면은 회로를 다시 해석하지 않는다 (#6).
+
+    브라우저의 근사 재구성은 L·Ws·Wo·중첩을 못 그렸고 — 서버 R0-L1 이
+    1 kHz 에서 1+j6.283 인데 화면은 1+j0 — preset 밖 회로 문자열로 바로
+    도달하는 경로였다.  이제 서버가 같은 AST 로 계산한 곡선이 응답에 실린다.
+    """
+    out = upload(client, kind="liquid")
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    assert fit["converged"]
+    assert len(fit["fitted_frequency_hz"]) == out["n_points"]
+    assert len(fit["fitted_z_re"]) == out["n_points"]
+    # 수렴한 적합의 곡선은 측정과 닿아 있어야 한다 — 고주파 첫 점에서 비교.
+    points = client.get(f"/api/eis/spectra/{out['id']}/points").json()
+    assert fit["fitted_z_re"][0] == pytest.approx(points["z_re"][0], rel=0.05)
+
+
+def test_the_curve_is_right_even_when_parallel_members_are_swapped(client):
+    """`p(CPE1,R1)` 표기 — 저장 순서가 회로의 파라미터 순서와 다르다 (#2).
+
+    이름으로 짝지어 평가해야 한다; 위치로 넣으면 Q 가 R 자리로 들어간 곡선이
+    "맞춤" 으로 그려진다.
+    """
+    import numpy as np
+
+    out = upload(client, kind="liquid")
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(CPE1,R1)-p(CPE2,R2)"}).json()
+    assert fit["converged"]
+    points = client.get(f"/api/eis/spectra/{out['id']}/points").json()
+    measured = np.array(points["z_re"]) + 1j * np.array(points["z_im"])
+    fitted = np.array(fit["fitted_z_re"]) + 1j * np.array(fit["fitted_z_im"])
+    residual = float(np.median(np.abs(fitted - measured) / np.abs(measured)))
+    assert residual < 1e-2, residual
+
+
 def test_the_default_circuit_follows_the_kind(client):
     """전고체의 기본 회로에는 블로킹 CPE 가 있고 액체에는 없다."""
     liquid = upload(client, name="a.mpr", kind="liquid")

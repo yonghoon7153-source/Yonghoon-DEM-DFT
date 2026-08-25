@@ -610,6 +610,11 @@ export interface FitArc {
 }
 
 export interface SpectrumFit {
+  /** 서버가 같은 회로 AST 로 계산한 맞춤 곡선.  화면은 회로를 다시 해석하지 않는다 (#6). */
+  fitted_frequency_hz?: number[] | null
+  fitted_z_re?: number[] | null
+  fitted_z_im?: number[] | null
+  fitted_note?: string
   id: number
   spectrum_id: number
   circuit: string

@@ -698,6 +698,14 @@ class SpectrumFitOut(BaseModel):
     parameters: list[dict[str, Any]] = []
     #: 그 저항들이 이 셀에서 무엇인지.  읽을 때 붙인다 (이름은 고정값이 아니다).
     arcs: list[dict[str, Any]] = []
+    #: 맞춘 회로를 측정 주파수 전체에서 서버가 계산한 곡선 (ADR 0019).  화면이
+    #: 회로를 다시 해석하면 서버와 조용히 어긋난다 — L·Ws·Wo·중첩을 못 그리는
+    #: 근사 재구성이 실제로 다른 곡선을 "맞춤" 으로 그렸다 (리뷰 #6).  회로를
+    #: 못 읽으면 null 이고 ``fitted_note`` 가 이유를 말한다.
+    fitted_frequency_hz: list[float] | None = None
+    fitted_z_re: list[float] | None = None
+    fitted_z_im: list[float] | None = None
+    fitted_note: str = ""
     #: 전고체일 때의 전도도.  두께·면적이 없으면 무엇이 없는지 말한다.
     conductivity: dict[str, Any] = {}
     dropped_inductive: int = 0
