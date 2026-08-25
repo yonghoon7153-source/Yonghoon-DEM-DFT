@@ -413,11 +413,14 @@ def sdcp_wave1():
     """
     md = D.load_sdcp_wave1_md()
     html = md_html(md, ("tables", "fenced_code", "toc"))
-    return render_template("doc.html", active="sdcp",
-                           title="🧪 SDCP wave1 — 바인더가 NCM 표면 어디에 붙나",
-                           content=html, data=D.sdcp_wave1_rows(),
-                           subtitle="VASP 외주 30잡 · 두 자기 시드 교차확인 · "
-                                    "db/properties/sdcp_wave1_results.json")
+    return render_template(
+        "doc.html", active="sdcp",
+        title="🧪 SDCP wave1 — 바인더가 NCM 표면 어디에 붙나",
+        content=html, data=D.sdcp_wave1_rows(),
+        parent={"url": "/log", "label": "Work Log"},
+        artifact="https://claude.ai/code/artifact/5b5d48c5-e23c-47a1-8493-b42dedb9a121",
+        subtitle="VASP 외주 30잡 · 두 자기 시드 교차확인 · "
+                 "db/properties/sdcp_wave1_results.json")
 
 
 @app.route("/todo")

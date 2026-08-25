@@ -4,8 +4,16 @@
 <div class="page-header">
   {# ⚠ 부제를 하드코딩해서 /todo 가 /methods 의 출처를 자기 것처럼 표시했다(2026-07-29 감사).
      라우트가 subtitle 을 넘기고, 없으면 비운다. #}
-  <div><h1>{{ title }}</h1>{% if subtitle %}<div class="sub">{{ subtitle }}</div>{% endif %}</div>
-  <div class="page-actions"><a class="btn" href="/">▦ Dashboard</a></div>
+  <div>
+    {# 하위 페이지는 부모를 먼저 보여준다 — 어디 소속인지 모르면 되돌아갈 데를 못 찾는다. #}
+    {% if parent %}<div class="sub" style="margin-bottom:2px"><a href="{{ parent.url }}">{{ parent.label }}</a> ›</div>{% endif %}
+    <h1>{{ title }}</h1>{% if subtitle %}<div class="sub">{{ subtitle }}</div>{% endif %}
+  </div>
+  <div class="page-actions">
+    {% if artifact %}<a class="btn" href="{{ artifact }}" target="_blank" rel="noopener">🔗 읽기용 페이지</a>{% endif %}
+    {% if parent %}<a class="btn" href="{{ parent.url }}">↖ {{ parent.label }}</a>{% endif %}
+    <a class="btn" href="/">▦ Dashboard</a>
+  </div>
 </div>
 {# 데이터 표는 **설명문 위**에 둔다 — 값 보러 온 사람이 스크롤하지 않게.
    라우트가 data 를 안 넘기면 통째로 빠진다(/methods · /todo 는 영향 없음). #}
