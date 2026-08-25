@@ -178,20 +178,27 @@ def check_fairchem(root=ROOT):
 
 
 def check_litdb_index(root=ROOT):
-    """digest 파일 수와 INDEX 등재 수가 어긋나면 알린다 (색인 누락은 조용하다)."""
-    pdir = os.path.join(root, "litdb", "papers")
-    idx = os.path.join(root, "litdb", "INDEX.md")
-    if not os.path.isdir(pdir) or not os.path.isfile(idx):
-        return ("litdb", None, "litdb 없음 (건너뜀)")
-    files = {f[:-3] for f in os.listdir(pdir) if f.endswith(".md")
-             and not f.startswith("_")}
-    text = open(idx, encoding="utf-8", errors="replace").read()
-    missing = sorted(s for s in files if s not in text)
-    if missing:
+    """어느 인덱스에도 없는 digest 를 잡는다.
+
+    ⛔ 2026-08-25 — 첫 판은 `INDEX.md` **하나만** 봤다. litdb 는 축이 둘로 나뉘어 있고
+      (`INDEX.md` = SE/DFT 축, 사람 큐레이션 · `INDEX_DEM.md` = DEM 축, 생성)
+      DEM digest 66편을 전부 "미등재" 로 오보했다. 멀쩡한 분리를 결함으로 읽은 것이다.
+      판정 로직은 `tools/litdb/build_index.py --check` 하나뿐이다 — 복사하지 말고 쓴다.
+    """
+    tool = os.path.join(root, "tools", "litdb", "build_index.py")
+    if not os.path.isfile(tool):
+        return ("litdb", None, "build_index.py 없음 (건너뜀)")
+    rc, out = _run("python3 tools/litdb/build_index.py --check", root)
+    m = re.search(r"어느 인덱스에도 없는 것 (\d+)편", out)
+    if not m:
+        return ("litdb", False, f"점검 출력을 못 읽었다 (rc={rc})")
+    n = int(m.group(1))
+    if n:
+        names = re.findall(r"^\s+\[(\w+)\] (\S+)", out, re.M)[:3]
         return ("litdb", False,
-                f"INDEX 미등재 {len(missing)}건: {', '.join(missing[:3])}"
-                + (" …" if len(missing) > 3 else ""))
-    return ("litdb", True, f"digest {len(files)}편 전부 INDEX 등재")
+                f"어느 인덱스에도 없는 digest {n}편: "
+                + " · ".join(f"[{a}] {b}" for a, b in names))
+    return ("litdb", True, "digest 전부 인덱스 등재 (DFT·DEM 축 각각)")
 
 
 def check_uncommitted(root=ROOT):
@@ -281,15 +288,14 @@ def _selftest():
     say(rc == 1 and "점검 자체가 실패했다" in buf.getvalue(),
         "④ [음성] 점검이 예외를 던져도 죽지 않고 실패로 보고한다")
 
-    # ⑤ [음성] litdb 미등재를 잡는가
-    with tempfile.TemporaryDirectory() as td:
-        os.makedirs(os.path.join(td, "litdb", "papers"))
-        open(os.path.join(td, "litdb", "papers", "aaa.md"), "w").write("x")
-        open(os.path.join(td, "litdb", "INDEX.md"), "w").write("(비었다)")
-        name, good, msg = check_litdb_index(td)
-        say(good is False and "aaa" in msg, "⑤ [음성] INDEX 미등재 digest 를 잡는다")
-        open(os.path.join(td, "litdb", "INDEX.md"), "w").write("… aaa …")
-        say(check_litdb_index(td)[1] is True, "⑤ 등재되면 통과")
+    # ⑤ [음성] litdb 점검이 **두 축을 다 본다** — INDEX.md 만 보면 DEM digest 를
+    #   전부 미등재로 오보한다 (첫 판이 66편을 그렇게 잡았다). 소스를 뒤지지 말고
+    #   **동작**으로 건다: DEM 축 slug 가 미등재로 나오면 안 된다.
+    _n, _ok, _msg = check_litdb_index()
+    _dem_leak = any(k in _msg for k in ("dem_", "_dem", "cgmd", "bazzoun", "bucci"))
+    say(not _dem_leak,
+        f"⑤ [음성] DEM digest 를 미등재로 오보하지 않는다 ({_msg[:52]})")
+    say(_ok is not None, "⑤ litdb 점검이 판정을 낸다(건너뛰지 않는다)")
 
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
