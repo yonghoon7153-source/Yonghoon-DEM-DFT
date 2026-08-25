@@ -1,0 +1,23 @@
+{
+ "rows": [],
+ "verdict": {
+  "prereg": "docs/reviews/sdcp_gain_prereg_v2_20260816.md",
+  "thresholds": {
+   "h0_min_ratio": 1.05,
+   "h1_ratio": 1.015,
+   "undecided": [
+    1.025,
+    1.05
+   ],
+   "se_max_rel_pct": 1.17,
+   "se_max_pct": 1.17
+  },
+  "n_origin": 0,
+  "arms": {
+   "SBE": null,
+   "DBE": null
+  },
+  "decision": "HOLD",
+  "reason": "팔 수 불일치/부족 (SBE None · DBE None) — 판정 불가"
+ }
+}

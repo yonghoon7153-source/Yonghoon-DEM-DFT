@@ -1,0 +1,2980 @@
+{
+ "rows": [
+  {
+   "file": "p2_DBE_a0.json",
+   "sigma_e": 0.07427,
+   "sigma_ion": 0.0005688,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 9.9e-09,
+   "n_dof": 26501282,
+   "cg_info": null,
+   "cg_resid": 1e-08,
+   "unconverged": null,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a1.json",
+   "sigma_e": 0.07408,
+   "sigma_ion": 0.0005679,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26500605,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a2.json",
+   "sigma_e": 0.07298,
+   "sigma_ion": 0.0005678,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26523461,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.075,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.075,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a3.json",
+   "sigma_e": 0.07369,
+   "sigma_ion": 0.0005667,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 9.9e-09,
+   "n_dof": 26523979,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.075,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.075,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a4.json",
+   "sigma_e": 0.07382,
+   "sigma_ion": 0.0005675,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26522103,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.0,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a5.json",
+   "sigma_e": 0.07416,
+   "sigma_ion": 0.0005667,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26521722,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.0,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.0,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a6.json",
+   "sigma_e": 0.07383,
+   "sigma_ion": 0.0005666,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26543510,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.075,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.075,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_DBE_a7.json",
+   "sigma_e": 0.07385,
+   "sigma_ion": 0.0005655,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26543801,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.075,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.075,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a0.json",
+   "sigma_e": 0.07302,
+   "sigma_ion": 0.0005703,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 9.9e-09,
+   "n_dof": 26438915,
+   "cg_info": null,
+   "cg_resid": 1e-08,
+   "unconverged": null,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a1.json",
+   "sigma_e": 0.07298,
+   "sigma_ion": 0.0005694,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 9.9e-09,
+   "n_dof": 26437933,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a2.json",
+   "sigma_e": 0.07181,
+   "sigma_ion": 0.0005692,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26460951,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.075,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.075,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a3.json",
+   "sigma_e": 0.07263,
+   "sigma_ion": 0.0005682,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26461503,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.075,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.075,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a4.json",
+   "sigma_e": 0.0726,
+   "sigma_ion": 0.000569,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 9.9e-09,
+   "n_dof": 26459965,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.0,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a5.json",
+   "sigma_e": 0.07313,
+   "sigma_ion": 0.0005681,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26458788,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.0,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.0,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a6.json",
+   "sigma_e": 0.07252,
+   "sigma_ion": 0.0005679,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26481456,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.075,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.075,
+     0.0
+    ],
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_a7.json",
+   "sigma_e": 0.07252,
+   "sigma_ion": 0.0005669,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": 1e-08,
+   "n_dof": 26481287,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.075,
+    0.075,
+    0.075
+   ],
+   "vox": 0.15,
+   "bridge_um": null,
+   "sdcp_stamp": null,
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "ionic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "thermal": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pore": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "pnm": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "complete",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "ionic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "thermal": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pore": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "pnm": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.075,
+     0.075,
+     0.075
+    ],
+    "plate_z_grid_um": [
+     0.075,
+     72.60900000000001
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": null,
+   "sdcp_yield_to_vgcf": null,
+   "sigma_ptfe_S_cm": null,
+   "sigma_vgcf_S_cm": null,
+   "sigma_sdcp_S_cm": null,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu",
+    "ionic": "gpu",
+    "thermal": "gpu",
+    "pore": "gpu",
+    "pnm": "gpu"
+   },
+   "fibre_stamp": "segment"
+  }
+ ],
+ "verdict": {
+  "prereg": "docs/reviews/sdcp_gain_prereg_v2_20260816.md",
+  "thresholds": {
+   "h0_min_ratio": 1.05,
+   "h1_ratio": 1.015,
+   "undecided": [
+    1.025,
+    1.05
+   ],
+   "se_max_rel_pct": 1.17,
+   "se_max_pct": 1.17
+  },
+  "decision": "HOLD",
+  "hold_code": "ELECTRONIC_CONV",
+  "reason": "전자 수렴이 확인되지 않는 팔 2개 (p2_SBE_a0.json: blind) — cg_info=0 ∧ unconverged=False ∧ 0 ≤ resid ≤ 1e-06 를 모두 만족해야 한다 (M-R3-04)"
+ }
+}

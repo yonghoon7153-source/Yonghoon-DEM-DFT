@@ -1,0 +1,336 @@
+{
+ "rows": [
+  {
+   "file": "p2_DBE_sph_a0.json",
+   "sigma_e": 0.07152,
+   "sigma_ion": null,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": null,
+   "n_dof": 26942595,
+   "cg_info": 0,
+   "cg_resid": 9.9e-09,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": 0.48,
+   "sdcp_stamp": "sphere",
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "collector_geom": {
+     "status": "disabled",
+     "reason": "--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)"
+    },
+    "ionic": {
+     "status": "disabled",
+     "reason": "--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 σ_ion 은 어차피 인용 금지)"
+    },
+    "pore": {
+     "status": "disabled",
+     "reason": "--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)"
+    },
+    "pnm": {
+     "status": "disabled",
+     "reason": "--no-pore (σ_e 전용 스윕)"
+    },
+    "thermal": {
+     "status": "missing",
+     "reason": "이 실행에서 상태 표시가 없었다 (코드 경로가 건너뛰었거나 표시 누락)"
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "partial",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "collector_geom": {
+      "status": "disabled",
+      "reason": "--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)"
+     },
+     "ionic": {
+      "status": "disabled",
+      "reason": "--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 σ_ion 은 어차피 인용 금지)"
+     },
+     "pore": {
+      "status": "disabled",
+      "reason": "--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)"
+     },
+     "pnm": {
+      "status": "disabled",
+      "reason": "--no-pore (σ_e 전용 스윕)"
+     },
+     "thermal": {
+      "status": "missing",
+      "reason": "이 실행에서 상태 표시가 없었다 (코드 경로가 건너뛰었거나 표시 누락)"
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [
+     "thermal"
+    ],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "sdcp_stamp": "sphere",
+    "sdcp_sphere_d_um": 0.3,
+    "sdcp_yield_to_vgcf": false,
+    "bridge_um": 0.48,
+    "sigma_vgcf_S_cm": 78.5398,
+    "sigma_sdcp_S_cm": 250.0,
+    "sigma_ptfe_S_cm": 1e-16,
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": 0.3,
+   "sdcp_yield_to_vgcf": false,
+   "sigma_ptfe_S_cm": 1e-16,
+   "sigma_vgcf_S_cm": 78.5398,
+   "sigma_sdcp_S_cm": 250.0,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu"
+   },
+   "fibre_stamp": "segment"
+  },
+  {
+   "file": "p2_SBE_sph_a0.json",
+   "sigma_e": 0.05463,
+   "sigma_ion": null,
+   "ion_cg_info": null,
+   "ion_unconverged": null,
+   "ion_resid": null,
+   "n_dof": 26730657,
+   "cg_info": 0,
+   "cg_resid": 1e-08,
+   "unconverged": false,
+   "origin_shift_um": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "vox": 0.15,
+   "bridge_um": 0.48,
+   "sdcp_stamp": "sphere",
+   "ptfe_stamp": null,
+   "physics_protocol_id": null,
+   "component_plan": null,
+   "ptfe_cells_observed": null,
+   "components": {
+    "electronic": {
+     "status": "complete",
+     "backend": {
+      "requested": "gpu",
+      "used": "gpu",
+      "fallback_reason": null,
+      "precond": "jacobi"
+     }
+    },
+    "collector_geom": {
+     "status": "disabled",
+     "reason": "--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)"
+    },
+    "ionic": {
+     "status": "disabled",
+     "reason": "--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 σ_ion 은 어차피 인용 금지)"
+    },
+    "pore": {
+     "status": "disabled",
+     "reason": "--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)"
+    },
+    "pnm": {
+     "status": "disabled",
+     "reason": "--no-pore (σ_e 전용 스윕)"
+    },
+    "thermal": {
+     "status": "missing",
+     "reason": "이 실행에서 상태 표시가 없었다 (코드 경로가 건너뛰었거나 표시 누락)"
+    }
+   },
+   "_manifest": {
+    "schema_version": 2,
+    "status": "partial",
+    "components": {
+     "electronic": {
+      "status": "complete",
+      "backend": {
+       "requested": "gpu",
+       "used": "gpu",
+       "fallback_reason": null,
+       "precond": "jacobi"
+      }
+     },
+     "collector_geom": {
+      "status": "disabled",
+      "reason": "--no-collector (σ_e 전용 스윕; shift 팔에서는 _bot_mask 가 origin 을 안 더해 값 자체가 무효)"
+     },
+     "ionic": {
+      "status": "disabled",
+      "reason": "--no-ion (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 σ_ion 은 어차피 인용 금지)"
+     },
+     "pore": {
+      "status": "disabled",
+      "reason": "--no-pore (σ_e 전용 스윕; DR3-07 로 vox ≤ 0.125 pore-τ 는 어차피 인용 금지)"
+     },
+     "pnm": {
+      "status": "disabled",
+      "reason": "--no-pore (σ_e 전용 스윕)"
+     },
+     "thermal": {
+      "status": "missing",
+      "reason": "이 실행에서 상태 표시가 없었다 (코드 경로가 건너뛰었거나 표시 누락)"
+     }
+    },
+    "expected": [
+     "electronic",
+     "ionic",
+     "thermal",
+     "pore",
+     "pnm"
+    ],
+    "missing": [
+     "thermal"
+    ],
+    "failed": [],
+    "fibre_stamp": "segment",
+    "fibre_stamp_requested": "segment",
+    "fibre_stamp_applied": true,
+    "origin_shift_um": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "sdcp_stamp": "sphere",
+    "sdcp_sphere_d_um": 0.3,
+    "sdcp_yield_to_vgcf": false,
+    "bridge_um": 0.48,
+    "sigma_vgcf_S_cm": 78.5398,
+    "sigma_sdcp_S_cm": 250.0,
+    "sigma_ptfe_S_cm": 1e-16,
+    "plate_z_grid_um": [
+     0.0,
+     72.534
+    ],
+    "mesh_unavailable": null,
+    "backend_last_solve": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    },
+    "backend": {
+     "requested": "gpu",
+     "used": "gpu",
+     "fallback_reason": null,
+     "precond": "jacobi"
+    }
+   },
+   "physics_protocol_match": null,
+   "ptfe_zero_dof": null,
+   "sdcp_sphere_d_um": 0.3,
+   "sdcp_yield_to_vgcf": false,
+   "sigma_ptfe_S_cm": 1e-16,
+   "sigma_vgcf_S_cm": 78.5398,
+   "sigma_sdcp_S_cm": 250.0,
+   "sigma_ion_se_S_cm": null,
+   "sigma_ion_sdcp_S_cm": null,
+   "sigma_am_s_S_cm": null,
+   "sigma_am_p_S_cm": null,
+   "cam": null,
+   "temp_c": null,
+   "ea_ion_ev": null,
+   "se_E_GPa": null,
+   "se_nu": null,
+   "se_sigma_y_GPa": null,
+   "mpm_seed": null,
+   "additive_E_GPa": null,
+   "input_digest": null,
+   "code_sha": null,
+   "backend": {
+    "electronic": "gpu"
+   },
+   "fibre_stamp": "segment"
+  }
+ ],
+ "verdict": {
+  "prereg": "docs/reviews/sdcp_gain_prereg_v2_20260816.md",
+  "thresholds": {
+   "h0_min_ratio": 1.05,
+   "h1_ratio": 1.015,
+   "undecided": [
+    1.025,
+    1.05
+   ],
+   "se_max_rel_pct": 1.17,
+   "se_max_pct": 1.17
+  },
+  "decision": "HOLD",
+  "hold_code": "PROTOCOL_ID_MISSING",
+  "reason": "규약 기록을 신뢰할 수 없는 팔 2개 — p2_SBE_sph_a0.json: 저장된 id 가 없다 (재계산 = unknown:cam,periodic_xy,plate_rule,ptfe_stamp,ptfe_zero_dof,sigma_am_p_S_cm,sigma_am_s_S_cm,sigma_ion_sdcp_S_cm,sigma_ion_se_S_cm,temp_c,vox_um)"
+ }
+}
