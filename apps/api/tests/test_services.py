@@ -51,6 +51,22 @@ def _recency(report):
     return [e for e in report.evidence if e.signal == "recency"]
 
 
+def test_a_run_with_no_schedule_keeps_formation_uncertain():
+    """스케줄을 못 읽은 파일은 "모름" 이지 무표가 아니다 (§0.4).
+
+    건너뛰면 남은 파일 하나의 "no" 가 셀 전체의 "no" 가 되고, 기준이 1 로
+    옮겨 간다 -- formation 을 담은 파일이 바로 그 못 읽은 쪽일 수 있다.
+    """
+    from types import SimpleNamespace as NS
+    no = NS(schedule_json='{"formation": "no"}')
+    silent = NS(schedule_json="")
+    assert services.sample_formation(NS(runs=[no, silent])) == "unclear"
+    assert services.sample_formation(NS(runs=[no])) == "no"
+    yes = NS(schedule_json='{"formation": "yes"}')
+    assert services.sample_formation(NS(runs=[yes, silent])) == "yes"
+    assert services.sample_formation(NS(runs=[])) == "unclear"
+
+
 def test_a_cell_silent_for_hours_is_not_called_running(
         client, sample_id, wrd_bytes, instrument_clock):
     """The file's clock is the lab PC's, so ours has to be read the same way.

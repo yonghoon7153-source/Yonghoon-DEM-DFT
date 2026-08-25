@@ -340,11 +340,14 @@ def sample_formation(sample: Sample) -> str:
     """
     answers = set()
     for run in sample.runs:
-        if not run.schedule_json:
-            continue
-        verdict = json.loads(run.schedule_json).get("formation")
-        if verdict in ("yes", "no", "unclear"):
-            answers.add(verdict)
+        # 스케줄이 없는(못 읽은) 파일은 "모름" 이지 무표가 아니다.  건너뛰면
+        # 스케줄 있는 파일 하나가 "no" 라고 말할 때 셀 전체가 "no" 가 되는데,
+        # formation 을 담은 파일이 바로 그 못 읽은 쪽일 수 있다 (§0.4).
+        verdict = None
+        if run.schedule_json:
+            verdict = json.loads(run.schedule_json).get("formation")
+        answers.add(verdict if verdict in ("yes", "no", "unclear")
+                    else "unclear")
     if "yes" in answers:
         return "yes"
     if answers == {"no"}:

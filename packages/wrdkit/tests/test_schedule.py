@@ -120,6 +120,40 @@ def test_a_hold_after_a_charge_inherits_its_direction():
     assert _with_prelude(prelude).formation == "yes"
 
 
+def test_a_discharge_after_the_loop_is_not_formation():
+    """보관 전압까지 내리는 종료 방전.  1번 사이클보다 앞서지 않는다.
+
+    루프 밖 전부를 세면 이 스텝 하나가 "yes" 를 만들어 기준이 3 에 앵커되고,
+    formation 없는 셀의 1~2번 사이클이 조용히 버려진다.
+    """
+    steps = [
+        ScheduleStep(index=0, name="cyc_chg", control="CC",
+                     control_raw=0, current_a=2.6e-3),
+        ScheduleStep(index=1, name="cyc_dch", control="CC",
+                     control_raw=0, current_a=-2.6e-3,
+                     loop_count=50, loop_target="cyc_chg"),
+        ScheduleStep(index=2, name="storage_dch", control="CC",
+                     control_raw=0, current_a=-0.52e-3),
+    ]
+    assert Schedule(version="1.0", source_path=None, steps=steps).formation == "no"
+
+
+def test_a_prelude_still_counts_when_the_loop_has_a_tail():
+    """루프 앞 충전과 루프 뒤 방전이 같이 있으면, 앞의 것만이 답을 정한다."""
+    steps = [
+        ScheduleStep(index=0, name="form_chg", control="CC",
+                     control_raw=0, current_a=0.52e-3),
+        ScheduleStep(index=1, name="cyc_chg", control="CC",
+                     control_raw=0, current_a=2.6e-3),
+        ScheduleStep(index=2, name="cyc_dch", control="CC",
+                     control_raw=0, current_a=-2.6e-3,
+                     loop_count=50, loop_target="cyc_chg"),
+        ScheduleStep(index=3, name="storage_dch", control="CC",
+                     control_raw=0, current_a=-0.52e-3),
+    ]
+    assert Schedule(version="1.0", source_path=None, steps=steps).formation == "yes"
+
+
 def test_a_schedule_with_no_loop_cannot_say():
     """루프가 없으면 무엇이 formation 이고 무엇이 본 구동인지 가를 선이 없다."""
     steps = [

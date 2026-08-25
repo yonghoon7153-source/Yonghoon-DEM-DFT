@@ -2530,3 +2530,9 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   출처 "" 로 되돌려 자동 해석이 다시 일한다 (고정 해제 의미).
   (3) ReportOut 에 reason 전달이 빠져 카드가 항상 "default" 라고 말했다.
   네 갈래 테스트에 3건 추가.
+## [2026-08-25] fix | formation 판정이 루프 뒤 스텝과 못 읽은 파일에 속았다
+- 리뷰 S4·S5. (1) Schedule.formation 이 루프 밖 전부를 세서, 보관 전압까지
+  내리는 종료 방전 하나가 "yes" 를 만들었다 — 이제 루프 앞 prelude 만 본다
+  (docstring 은 원래 "앞에서" 라고 말하고 있었다). (2) sample_formation 이
+  스케줄 없는 run 을 건너뛰어, 남은 파일 하나의 "no" 가 셀 전체의 "no" 가
+  됐다 — 무표가 아니라 "모름" 으로 세고, 전원이 "no" 일 때만 "no" (§0.4).

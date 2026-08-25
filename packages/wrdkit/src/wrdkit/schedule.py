@@ -379,10 +379,17 @@ class Schedule:
             # 가를 선이 없다.  '루프 밖이 전부' 라고 읽으면 모든 스케줄이
             # formation 있음이 되고, '루프가 전부' 라고 읽으면 모두 없음이 된다.
             return "unclear"
-        outside = [s for s in self.steps if s.name not in looped]
-        if not outside:
+        # 루프 **앞** 구간만 본다.  루프 뒤에도 스텝이 올 수 있다 -- 보관
+        # 전압까지 내리는 종료 방전이 흔하다.  그것은 1번 사이클보다 앞서
+        # 일어나는 일이 아니므로 formation 의 증거가 못 된다.  종전에는 루프
+        # 밖 전부를 세어, 종료 방전 하나가 "yes" 를 만들어 기준을 3 에 앵커해
+        # formation 없는 셀의 1~2번 사이클을 조용히 버렸다.
+        first_looped = next(i for i, s in enumerate(self.steps)
+                            if s.name in looped)
+        prelude = self.steps[:first_looped]
+        if not prelude:
             return "no"
-        directions = self._effective_directions(outside)
+        directions = self._effective_directions(prelude)
         if "charge" in directions or "discharge" in directions:
             return "yes"
         if "unknown" in directions:
