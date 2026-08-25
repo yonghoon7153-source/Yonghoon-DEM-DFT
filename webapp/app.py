@@ -511,7 +511,14 @@ def list_cases():
             #   gap < −4  → SE-rich: DEM ε_sphere over-compresses          → use MPM   (blue)
             #   |gap| ≤ 4 → cross-validated (in-envelope)                  → use MPM   (green ✓)
             # docs/data/mpm_dem_porosity_reliability.csv + troubleshooting §16/§17.
-            if meta.get('has_mpm'):
+            #  ⚠⚠ 2026-08-25 — 게이트가 **틀린 것을 보고 있었다**.  `has_mpm` 은
+            #    `mpm_payload.json`(3D 점군, 수백 MB) 존재 여부인데, 아래 계산에 필요한 것은
+            #    `mpm_metrics.json` 의 `porosity_mpm_pct` **하나**다.  payload 없이 metrics 만
+            #    있는 케이스(복원분 146건)에서 regime(SE-rich/SE-poor/cross-validated)이
+            #    통째로 안 떴다.  ⇒ **필요한 것의 존재**로 연다.
+            #    ★ `has_mpm`(3D 버튼·배지)은 그대로 payload 기준이다 — 그건 진짜로 없다.
+            _mm_exists = os.path.exists(os.path.join(results_dir, 'mpm_metrics.json'))
+            if meta.get('has_mpm') or _mm_exists:
                 _dem_por = m.get('porosity_spheresum')
                 if _dem_por is None:
                     _dem_por = m.get('porosity')
