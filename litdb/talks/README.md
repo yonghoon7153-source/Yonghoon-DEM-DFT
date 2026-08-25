@@ -4,6 +4,11 @@
 슬라이드 수준이며, 수치가 축약·반올림돼 있다. 논문 digest와 같은 신뢰 등급으로 섞으면
 `comparison_vs_ours.md` 의 소환값 규율이 무너진다.
 
+⚠ **내부 랩 세미나(BML)** 도 여기 둔다 (`yang2026_bml_*`).  외부 심포지엄 덱과 **다른 점 둘**:
+① 발표자에게 **직접 물어 확인할 수 있다** — 불확실 항목은 추정하지 말고 물을 것.
+② **미출판·진행 중 연구**이므로 **외부 인용 금지**가 추가된다 (본인 논문화 예정).
+그 외 §1–4 규율은 동일하게 적용한다.
+
 ## 인용 규율 (papers/ 보다 한 단계 더 엄격)
 
 1. **덱 수치는 "발표 소환값"** — 우리 db 절대값과 같은 표에 넣지 않는다. `papers/` 소환값보다도
@@ -33,6 +38,7 @@
 | `lee2026_skku_mlip_materials_design.md` | 이상욱 (성균관대 화학공학, CMS Lab) | MLIP 기반 소재 물성 해석 및 설계 | **정면 경쟁·동일 물질계**. `papers/kim2024_mtp_argyrodite_disorder_gb.md` 가 이 그룹 논문. **덱 실물 전 18 pp 독립 재판독 2026-08-03** (사용자 분류 `(미분류)`) — 교정 14건·신규 8건·Q1/Q3 종결·"덱 오류" 3건 철회(digest §15) |
 | `moon2026_cau_llm_agent_battery_automation.md` | 문장혁 (중앙대 에너지시스템공학) | LLM 기반 연구 분석 → AI-Agent 전극 모델링 (**BEARS**) | **직교·인프라 축 + 04부는 미세구조 축**. 우리 repo 운영 방식과 대비. **덱 실물 전 22 pp 독립 재판독 2026-08-03** (사용자 분류 `(미분류)`) — 교정 16건·신규 20건·슬 12/19/28/31/32 신규 편입·Q1 종결(digest §15). DEM 축 대조는 `comparison_vs_ours_DEM.md` [Moon26-CAU] |
 | `lee2026_yonsei_dtbl_ai_electrode_digitaltwin.md` | **이용민** (연세대 화공생명, Digital Twin Battery Lab) | AI 전극 미세구조 디지털화 + 물리 기반 배터리 시뮬레이션 | **상류 계보·DEM/미세구조 축**. `papers/` 정본 4편(park2020·kim2024·lim2025·song2025)이 이 그룹 논문 — 덱은 그 지도 + 자기 한계 목록 |
+| `yang2026_bml_ml_radial_cathode.md` | **양수영** (한양대 **BML — 우리 랩**) | 멀티피직스(전기화학+기계) + ML 로 방사형 다결정 양극 **입자 내부** 미세구조 설계 | **방법 축만 겹친다** (대상계는 LIB 단일입자·COMSOL, 우리는 ASSB 전극·DEM+MPM). **SHAP 중요도 + 다목적 Pareto/HV 를 우리 ML 에 이식**(2026-08-25, `scripts/ml_shap_pareto.py`) — 단 근사 SHAP → **정확 Shapley 전수 열거**, 유도 특징 → **자유노브 한정**, **물리 경계 계약** 추가.  ⚠ 미출판·진행 중 → 외부 인용 금지 |
 
 경쟁 분석(우위/열위/적용)은 `kb/projects/symposium_2026_competitive_analysis.md`.
 DEM/미세구조 축 대조는 `comparison_vs_ours_DEM.md` (물성 4축 `comparison_vs_ours.md` 에는 **수치로 넣지 않는다**).
