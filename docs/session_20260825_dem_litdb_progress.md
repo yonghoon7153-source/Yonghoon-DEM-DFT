@@ -253,3 +253,156 @@ Stage-E 를 외부 검증** (그들 스케일로 수 시간~하루, 실행 가�
 3. **OAT 스윕 로컬 실행** (기준선 음성 대조 먼저)
 4. **Minnmann/Cronau 규약 확인** (가압 중 vs 해압 후)
 5. pure-SE `mdr` 런 사전등록
+
+---
+
+# 9. 후속 카드 4장 (같은 날, 압축 전 추가 기록)
+
+## 9-1. Paulick 2015 (Powder Tech. 283:66–76) — 강성 축 전용 리뷰
+
+⚠⚠ **재인용 오류 정정**: 오버랩 가드레일은 **"1 % of the particle *diameter*"** 다 (§4·§5 둘 다).
+"radius" 는 Cleary & Hoyer 의 *다른 통계*(평균 0.6 % of radius)였다.
+⇒ **우리 위반 배수는 22–24× 가 아니라 11–12×.**
+⚠ 그리고 "1 %" 는 예리한 문턱이 아니다 — 같은 리뷰 안에 네 형태(1–10 % / <1 % 지름 최대 /
+≈0.5 % 지름 평균 / ≈0.6 % 반지름 평균)로 **20× 산포**. 같은 표가 *평균 0.6 % 일 때 최대 15 %*.
+
+★★★ **가드레일은 300 MPa 에서 원리적으로 만족 불가** (봉투계산, DERIVED-BY-US, order-of-magnitude):
+  E=24 GPa(실물) → δ/d ≈ **7.6 %** (6–8× 초과) · E=1.35 → 11–12 % · **1 % 를 지키려면 E ≈ 500 GPa**.
+  ⇒ 지목 대상은 우리 보정이 아니라 **"탄성 구 DEM 으로 배터리 압밀압을 누르는 것" 자체**.
+  방어 문장: *"1 % 기준은 우리가 어긴 게 아니라 그 압력에선 어느 탄성-구 DEM 도 못 지킨다.
+  그래서 DEM 옆에 소성 MPM 을 세웠다."*
+
+★ **18× 는 이 문헌군에서 작다**: Nakamura ÷475–4,750 · Xu ÷1,000 · Lommen 스윕 ÷10⁷ · **우리 ÷17.8**.
+  ⇒ *"18배가 허무맹랑하게 크다"* 는 이 자로는 성립 안 함.  성립하는 비판은 **배수가 아니라 응력 영역**
+  (리뷰 최대 ≈96 kPa vs 우리 300 MPa = **3,125×** ⇒ *"이 리뷰가 우리를 승인했다"* 는 불가).
+
+⚠ **허가와 청구서가 같은 문단에 있다 — 반드시 붙여서 인용할 것**:
+  §2.2 p.71 *"linear relationship … **enables the DEM user to scale down** the stiffness"*
+  **바로 다음** *"**However**, a scale down in stiffness leads to a different compression behaviour and,
+  thus, **different force chains and distributions of normal force values may develop**."*
+  Xu 실측(E ÷1000): 배출률 동일 · **평균힘 1.5× · 최대힘 8.98×** ⇒ **평균은 전이, 꼬리는 안 됨.**
+  ⇒ 정확한 판정 = **"porosity 는 맞춰도 되고, 힘 분포는 아직 못 믿는다."**  그 청구서가 우리 σ 삼중항
+  앞으로 온다 (접촉당 A(δ) → Holm 망 = 분포 민감).  최소 대응: 리포트에 `max δ/d` + p99 추가.
+
+★ **G 질문 답**: `E = 2G(1+ν)` 는 **항등식**(Eq. 1), 등방탄성 자유도 2 ⇒ G 는 입력이 아니다.
+  출처를 대야 하는 건 **(E, ν) 쌍**.  ⚠ **SI 에 맨 "1.53 GPa" 금지** — Landry 실증: 같은 0.15–2.0 MPa 를
+  E 로 넣으면 4.3×, G 로 넣으면 1.4× 로 갈린다.  **어느 모듈러스 + 어느 접촉모델**인지 병기 필수.
+  ⚠ ν 0.36→0.49 자체가 전단을 추가로 **1.096× 더 연화**시킨다 (2(1+ν): 2.72→2.98).
+
+⚠⚠ **F-C2′ 는 우리 쪽 오류다 (F-P1 로 등재)**: 우리는 *"E 1.35 ≡ 1.5 동일 regime"* 을
+  "σ 는 E 에 둔감"의 증거로 쓰는데 — **E 를 11 % 바꾼 실험**이고, 선형법칙 예측 응답도 11 %,
+  실측 ε 13.47 vs 12.77±0.31(3 seed)는 **시드 산포 안**.  ⇒ 둔감의 증거가 아니라 **"11 % 는 잡음 이하"**.
+  **리뷰어가 먼저 잡는다.**  ★ 우리 E-스윕 {1.35, 5, 24}(17.8× 폭)가 이걸 해소한다.
+
+⚠ **Paulick 과 Giannis 는 같은 그룹(Kwade)** — 독립 증거로 나란히 세우면 안 된다.
+★ 검증시험 후보 1개: **구속 벌크계수(제하–재하)** — porosity@300 과 **다른 시험**이면서 **E 에 민감**.
+  우리 `hooke/hysteresis` 의 **k₂** 가 지배.  ⚠ 실험 앵커(LPSCl 오이도미터 제하–재하) 리포에 없음.
+
+## 9-2. Demirtas & Klinzing 2021 (Powder Tech. 391:34–45) — MPFEM 중공구
+
+★★★ **인용 가능한 제3자 문장** (p.35 §1, verbatim):
+> *"DEM requires a plastic-contact law [23,24] to accurately represent the plastic deformation…
+> Another limitation of this method is the technique **cannot compensate for the deformed particle
+> surfaces during compaction, which plays an essential role in determining the contact pressure
+> between contact pairs**."*
+> *"unlike DEM, **particles are enriched with a full mesh of finite elements**… however, the
+> computational cost is the main limitation, **limiting the number of particles**."*
+  ★ [23]=Storåkers 1997 · [24]=Vu-Quoc 2001 (=층①②) · [27–31]=Gonzalez–Cuitiño / Harthong 등
+  (=DEM 최선 처방들, 저자가 *"require particular calibration methods"* 라고 적음).
+⚠ **인용 금지 구절**: 같은 문단의 *"particles are modeled with simple line elements"* 는 **부정확**하다
+  (DEM 입자는 강체 구).  볼드 세 문장으로 한정할 것 — 리뷰어에게 반격 여지를 준다.
+
+⚠⚠ **같은 서론이 연속체(=우리 MPM)도 비판한다** (p.34–35):
+> *"does not incorporate the individual particle characteristics, i.e., **neglecting the problem's
+> discrete nature** … does not allow for discrete prediction of particle–particle interactions or the
+> influence of particle physical properties (e.g., size and size distribution)."*
+  ⇒ 앞 절반만 인용하면 **§F1 위반**.  정직한 형태 = *"they name a DEM limit **and** a continuum limit —
+  our DEM+MPM division answers **both**"*.  (우리 CORRECTION 2 = 소성 MPM 이 Furnas dip 재현 불가 와 정합)
+
+★ **강체 구가 원리적으로 못 내는 사건**: Fig 9 에서 *"contact that was initially made has now opened"* —
+  **중심 간 거리는 계속 가까워지는데** 껍질이 꺼지며 접촉이 사라진다.  강체 구는 중심이 멀어져야만
+  접촉이 열린다.  ⚠ 우리 MPM 도 못 낸다 (단일 속도장 → 접촉면 용접).
+
+★ **비용 상한 (저자 자신)**: *"kept **under 2000** particles to maintain wall clock **< 60 h**"*.
+  우리 real_14 = AM 457 + SE 32,832 ≈ **33.3 k = 16.8배** ⇒ 선형 가정만으로도 **≈42일/케이스**,
+  코퍼스 132 케이스.  ⚠ 게다가 12:4:1 다분산이라 Δt 가 최소 SE(Ø1 µm)에 물린다 = **낙관적 하한**.
+  ⇒ MPM 선택의 근거 = **규모·전달물성·대변형 안정성**.  *"MPM 이 더 나은 물리"* 는 **틀린 서술**.
+
+⚠ **MPFEM 이 우리보다 나은 축 6개** (숨기지 말 것):
+  ① **느슨한 상태(RD 0.235)에서 시작** — 우리 scaffold 는 압밀 끝난 좌표를 씨앗으로 써
+     **씨앗이 정답을 인코딩**(CLAUDE.md 08-12: `solid_vol` 상수, 유일 출력 `wall_z`).
+     **MPFEM 구조엔 그 순환이 원리적으로 없다.**
+  ② 입자 개별성 → **마찰 재배열이 물리적으로 존재** (우리 18× 가 럼핑한 기전 중 하나).
+     ⚠ 단 이 논문이 그걸 검정하진 않았다 (E/σ_y=100 한 값) → 우리 가설로만.
+  ③ 접촉 개구 같은 **위상 사건** — 우리 완전 사각.
+  ④ **진짜 접촉면적을 직접 준다** = Stage-E 를 검증할 유일한 다중접촉 기준선.  ⚠ 단 그 면적이
+     메시 미수렴이라 기준선도 밴드로만.
+  ⑤ 실물 다이 + 벽 마찰 → 밀도구배.  우리는 주기 RVE.
+  ⑥ **곡선 대 곡선** 실험 검증.  우리 MPM 주력은 아직 Minnmann **단일점**.
+
+★★ **"응력 수렴 ≠ 접촉면적 수렴" 의 문헌 앵커** (Fig 5): 같은 메시 스윕(600→3363 요소)에서
+  **Σ_y 는 ≲2–5 %** 변하는데 **N.C.Area 는 −22~−43 % 단조 감소, plateau 없음**.
+  요소 5.6배 = 비용 4.7배(Fig 3 표).  ⇒ 우리 σ_e 격자 미수렴(CL-41)과 **같은 구조**.
+  ⚠ 우리 수치를 정당화하는 용도가 **아니라** *"면적형 관측량은 원래 늦게 수렴한다"* 는 일반 진술용.
+  **우리 값은 여전히 하한 표기 필수.**
+
+★ **판독 방향 선례**: 그들은 **RD 를 목표로 몰고 응력을 읽는다**.  우리 scaffold servo 는 반대인데,
+  우리 플래튼 정본이 이미 *"scaffold 런에서 porosity 는 독립 정보를 안 담고, 반증 가능한 출력은
+  응력-정지 두께 하나"* 라고 판정했다.  ⇒ **이 논문 규약이 우리 자체 결론의 제3자 선례.**
+  `fam_platen_prereg_20260812` 후속에 "목표 porosity 로 몰고 wallP 를 보고하는 팔" 을 얹으면
+  우리 판정이 문헌 관행 위에 선다.
+
+★ **즉시 실행 보너스**: **YV/TV**(비영 누적소성변형 부피분율) — 우리는 Σdg 를 이미 갖고 있어
+  **후처리 한 줄**.  Fig 8a 에서 아홉 곡선이 d/w 순으로 완전 정렬 = 판별력 확인됨.
+  DEM 이 원리적으로 못 내는 **MPM 고유 산출물**이 하나 더.
+
+⚠ **그들이 안 짚은 confound (에이전트가 찾음)**: 구동이 "5초에 RD 0.9" + 질량 고정 ⇒ 침대 높이 ∝ 1/RD,
+  초기 RD 0.235/0.453 → 스트로크 비 **2.87** ⇒ **가장 얇은 껍질 팔의 펀치가 2.9배 빠르다**.
+  하필 그게 헤드라인 팔.  ⇒ 우리 재하율 함정(`vmax ∝ 침대 높이`, 08-06)과 **같은 구조**이고
+  우리는 `--platen-mach` 로 고쳤다.  **이 축에서는 우리 규율이 문헌보다 앞선다.**
+⚠ 중공→NCM 다결정 연결은 **추측**이다 (위상·재료·AM 동결 셋에서 끊김).  훅으로만.
+
+## 9-3. Gonzalez & Cuitiño 2012 (JMPS 60:333–350) — 비국소 탄성
+
+⚠ **부호가 Giannis 와 같다 (우리에게 불리)**: Hertz 가 하중을 **UNDER-predict** ⇒ 처방은 **뻣뻣하게**.
+  Fig 4 캡션 *"behave **stiffer** than Hertz"*.  ν=0.37 대입 Δ = **6.1 / 14.7 / 21.9 %** @ ε = 1/5/10 %
+  (⚠ 절단급수라 **하한**).  ⇒ 넣으면 18× → **~22×**.
+★★ **독립 수렴**: 완전히 다른 정식화(응력기반 Giannis vs 비국소탄성 이 논문)가 **같은 결론** ⇒
+  *"18× 는 하한"* 이 **단일 문헌 의존이 아니다.**
+★ 자유변수 **0** (중첩 + Boussinesq 해석해).  ⚠ **탄성 전용** (중력·점착·마찰 전부 제외, 3회 반복 명시).
+⇒ 자리는 "압밀 처방 후보"가 아니라 **"다른 처방들이 무엇을 빠뜨렸는지 재는 자(ruler)"**.
+⚠ 에이전트가 초안에서 *"Giannis 의 strain-based 대조군 = 이 논문"* 이라 썼다가 **정정**:
+  실제 대조군은 **Brodu, Dijksman & Behringer, PRE 91 (2015) 032201**.  이 논문은 Giannis 참고문헌 [24].
+★ 전달 쪽 유도(⚠ 우리 유도, 논문에 없음): `a/a_Hertz = (1+Δ)^{1/3}` ⇒ Δ 15/23/50 % → **σ +4.7/+7.2/+14.5 %**.
+  ⚠⚠ **지금 곱하지 말 것** — Stage-E 가 이미 면적을 올리고 `min(caps)` 천장이 걸려 **이중계상 위험**.
+⚠ 열린 항목: 복합 침대 ε 규약 불일치 — `overlap 1.75 %` 를 δ/d 로 읽으면 0.0175 인데
+  `⟨δ⟩ 0.0739 µm ÷ SE 직경 ~1 µm` 은 **≈7 %** = **4배 차**.  길이 규약인지 부피 규약인지 **코드 확인 필요**.
+⛔ 확보 1순위: **Brodu 2015**(같은 축 유일 경쟁자 + 다입자 광탄성 실측) · **Harthong 2009**(IJSS 46:3357,
+  비국소 + **탄소성** + 고밀도 = 이 논문의 소성판).
+
+## 9-4. Amin & Chiang 2016 (JES 163:A1512) — σ_AM 앵커  ⚠⚠ 준희 Q7
+
+**측정 밴드** (첨가제 없는 단상 소결 펠릿 96–98 %, 30 °C, digitized ±0.05 dex):
+  x=0 → NMC333 **5.0×10⁻⁵ mS/cm** · NMC532 1.9×10⁻³ / x=0.75 → 7.9 · **13.8 (최대)**
+  ⇒ σ_e 가 x 에 따라 **4–5 자릿수** 상승 (E_a 0.42–0.48 → 0.05–0.10 eV).
+
+⚠⚠ **우리 `σ_AM = 50 mS/cm` 은 레거시 UI 상한이 아니다** — `network_conductivity.py:53` 의
+  **DEM 접촉망 솔버 σ_bulk** 이고 라벨이 `NCM811 grain interior, **discharged**`.
+  · **밴드 최댓값보다 3.6× 위**.  온도로 못 메움 (100 °C 로 올려도 16–20).
+  · 라벨이 `discharged`(σ_e **최저점**)인데 값은 **최고 쪽** = **라벨과 값이 반대 방향**.
+  · 조성 811 외삽 불가 (x ≥ 0.3 에서 Ni 우위 소멸: 37.6× → 0.9×).
+  ⇒ ⛔ **`(NCM811 literature reference)` 로 못 쓴다.**
+★ 좋은 소식: **생산값 σ_S 10 (x≈0.71) · σ_P 5 (x≈0.65) 는 밴드 안**이고, 코드가 이미
+  *"corpus-fit endpoints, NOT a measurement"* 라고 정직하게 적고 있다.  **고칠 건 솔버 라벨 하나.**
+★★ **우리에게 유리한 것**: σ_ion(NMC) ≈ 9.1×10⁻⁹ S/cm @51 °C = LPSCl 의 **1/(3×10⁵)**
+  (⚠ AM 51 °C vs SE 25 °C 라 RT 대비는 더 벌어짐 = **보수적 하한**), t_e ≈ 0.95–0.998
+  ⇒ **"AM = 전자망 / SE = 이온망" 상 배정이 실측으로 지지된다.**
+★ 문헌 산포의 정체: *"NMC σ_e 문헌이 수 자릿수 흩어진다"* 는 산포가 아니라 **SOC 축**이었다.
+  ⇒ *"밴드로 다뤄라"* 를 **"SOC 로 색인하라"** 로 승격.  **사다리 밖에 있는 건 우리 50 하나.**
+⚠ erratum: 논문 자신이 NMC523 → **NMC532**, Mn₀.₂₀Co₀.₃₀ → **Mn₀.₃₀Co₀.₂₀** (Ni 0.50 은 불변).
+⚠ STEP4 D_s: 우리 poly 기본 3×10⁻¹⁴ m²/s 가 이 논문 RT 밴드(1.3–5.0×10⁻¹⁴) 안이나
+  **"일치" 라고 쓰면 안 된다** — 화학확산 D̃ vs 고체확산 D_s · 확산길이 규약 상이 ·
+  x>0.5 는 저자 스스로 균열 artifact.  **plausibility check 이지 validation 아님.**
+★ 다음 한 수: **σ_AM 감도 프로브 (CL-48 형식, 런 전 사전등록)** — 솔버 σ_bulk 만 0.05 → **0.0138 S/cm**
+  (실측 최대)로 바꿔 σ_e **비**와 **절대값** 이동 측정.  **폼(Stage 22.5)은 건드리지 말 것.**
+  ⚠ CL-39 의 σ_VGCF ×1.44 결과는 **채널이 달라 못 옮긴다**.  비가 둔감하면 상대비교 결론 전부 안전.
