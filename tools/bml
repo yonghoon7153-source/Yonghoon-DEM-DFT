@@ -3300,9 +3300,16 @@ cmd_only() {
   url="$(normalize_server_url "$raw")"
   host="$(url_host "$url")" || die "주소를 읽지 못했습니다: $url"
 
-  # 막히지 않은 기계에서 이 명령을 칠 이유가 없다.  그대로 넘겨 준다.
-  if command -v getent >/dev/null 2>&1 && getent hosts "$host" >/dev/null 2>&1; then
-    say "${DIM}이 기계는 그 이름을 이미 찾습니다 — hosts 를 건드릴 것 없이 그냥 붙습니다.${OFF}"
+  # **이미 닿으면 아무것도 하지 않는다.**  이름이 잡히는지(`getent`)가 아니라
+  # 워크벤치가 답하는지를 본다 -- 우리가 알고 싶은 것이 그것이고, 이름 풀이는
+  # 그 대리 지표일 뿐이라 어긋날 수 있다.
+  #
+  # 이 갈래가 없으면 **성공한 뒤에 실패가 찍힌다.**  `sync_repo` 가 자기
+  # 갱신을 받으면 원래 명령줄로 다시 실행하는데(exec), 그러면 방금 끝낸
+  # 이름표 박기가 처음부터 한 번 더 돌고, 그 두 번째가 공용 DNS 에서 걸리면
+  # 화면의 마지막 줄이 빨간 ✕ 다 -- 실제로는 붙어 있는데.
+  if server_alive "$url" 4; then
+    say "${DIM}이미 닿습니다 — hosts 를 건드릴 것 없이 그대로 씁니다.${OFF}"
     cmd_slot out "$url"
     return 0
   fi
