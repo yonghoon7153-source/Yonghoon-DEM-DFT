@@ -2636,3 +2636,121 @@ core/stamp 분리가 의도대로 동작한다는 증거다.
 
 초판이 묶음 7·10 을 "닫았다" 고 적었고 리뷰가 둘 다 반례를 냈다. §13 은 이제
 **미착수 / 부분** 둘만 쓴다. 닫힘 판정은 리뷰가 한다.
+
+## 35. 26차 리뷰 대응 — 내가 통과한다고 적은 것 둘이 실제로는 거짓이었다
+
+> 2026-08-25. 판정은 **선행조건 3건 닫힘 / 4건 부분 / 3건 미결**, 묶음 9 배선과
+> 묶음 2 동결은 NO-GO. 리뷰가 P0 로 지목한 둘은 전부 **false-green** 이었고,
+> 둘 다 내가 §34 에서 "확인했다" 고 적은 항목이다.
+
+### 35.1 무엇이 거짓이었나
+
+**(1) "빈 root 로 복원해 검증했다" — 복원이 CAS 를 안 봤다.**
+
+`run_transaction()` 은 member 와 manifest 를 CAS 에 넣고 `read_back()` 으로
+되읽기까지 했다. 그런데 **되읽은 bytes 를 해시만 확인하고 버렸다.** 실제 복원은
+이 줄이었다:
+
+```python
+hooks.restore(man, run_dir, root)     # ← source 가 보존 전 **원본**이다
+```
+
+리뷰가 read-back 직후 CAS object 를 전부 지우자 트랜잭션이 `objects_remaining=0`
+인 채로 public index publish 까지 성공했다. 보존 체계가 아무 것도 보존하지
+않아도 통과하는 상태였다.
+
+내가 만들어 둔 `restore_incomplete` 시험은 validator 가 임시 root 를 읽는지만
+봤을 뿐, **그 root 가 backend 에서 나왔다는 것은 증명하지 않았다.** 시험의
+이름이 검사하는 내용보다 강했다 — 24차 보충 발견 5-2 와 같은 형태다.
+
+**(2) "영수증을 봉인했다" — 회수할 수 없는 digest 였다.**
+
+receipt 를 메모리 dict 로 만들고 digest 만 index 에 적었다. 그 digest 로
+아무 것도 되찾을 수 없으니 감사가 불가능하다. 그리고 마지막 "등록" 은 상태
+변경이 아니라 단순 `return` 이었다. crash 뒤 남는 것은:
+
+```text
+public index entry     있음
+receipt_digest         있음
+그 digest 로 회수할 receipt   없음
+등록                    없음
+resume cursor          없음
+```
+
+내 "재시도" 시험은 같은 결정론 hook 으로 **계산 전체를 다시 실행**했다. 실제
+사고에서 원본 계산은 12시간짜리고 crash 뒤 남는 것은 CAS 와 index 뿐이다.
+
+### 35.2 고친 방식 — 구조로 막는다
+
+| 무엇 | 어떻게 |
+|---|---|
+| CAS 복원 | `restore_from_cas(backend, manifest_digest, root)` 가 **원본 경로를 받지 않는다.** 인자에 없으면 재발이 불가능하다 |
+| 증명 | `drop_source_after_seal=True` — 업로드 직후 원본을 지운다. 그러고도 끝까지 가면 복원이 backend 에서 나온 것이 확실하다 |
+| 영수증 | canonical bytes 를 CAS 에 넣고 되읽어 대조. index 가 회수 가능한 `receipt_object` 를 가리킨다 |
+| 등록 | durable journal 파일 (`O_EXCL`). `is_registered()` 로 확인된다 |
+| crash 복구 | `finalize_only(leg_id, backend, index, hooks)` — **재계산 없이** CAS 만으로 닫는다 |
+| publish | leg 마다 독립 파일을 `O_EXCL` 로. read-modify-write 가 아니다 |
+
+**불변식도 정정했다.** "어느 단계에서 멈추든 public index 는 오염되지 않는다"
+는 틀렸다 — publish 뒤 crash 는 durable 한 중간 상태를 남긴다. 숨기지 않고
+두 단계로 적는다:
+
+```text
+publish 전 실패  →  항목 없음
+publish 후 실패  →  항목은 durable, **등록 안 됨**. finalize_only 로만 닫힌다
+```
+
+### 35.3 두 번째 false-green — 영수증의 "빈 root"
+
+`make_receipt.py` 도 같은 병이었다. `os.chdir(root)` 만 하고
+`validate_provenance` 에 `repo_root` 를 넘기지 않았다. 검증기는 cwd 가 아니라
+`src/io.py` 가 있는 저장소를 root 로 잡으므로 (`src/io.py:1328`) 봉인 입력을
+**원본 checkout** 에서 풀었다. 이 컨테이너에 `results/grid_curves_v4` 가 남아
+있어서 통과했을 뿐이고, 리뷰어의 clean checkout 에서는
+`producer_곡선일치`·`입력_digest_재해시` 로 실패했다.
+
+직접 확인하는 회귀를 넣었다: 복원 root 에서 봉인 입력 하나를 지우면
+`repo_root=root` 검증이 **실패해야** 한다. 실패하지 않으면 검증기가 원본을
+보고 있다는 뜻이다.
+
+### 35.4 세 번째 — 영수증이 semantic 불일치를 성공으로 기록했다
+
+재채점 결과와 봉인 summary 를 나란히 적어 놓고 **비교하지 않았다.** 주석에는
+"자리별로 대조한다" 고 썼지만 assertion 이 없었고, 실제로 두 digest 가 달랐다.
+
+원인을 찾았더니 `summarize()` 가 `multistart`·`multistart_random_only` 를
+만들지 않는다는 것이었다 — `run_scoring` 이 restart trace 에서 따로 붙인다
+(22차 발견 5 가 이미 지적한 것이다). `row_projection._add_multistart_blocks`
+를 쓰지 않았으므로 두 값은 **영원히 다를 수밖에** 없었다. 정규 view 를
+정의하고 equality 를 강제하니 이제 같다.
+
+### 35.5 나머지 P1·P2
+
+| # | 발견 | 대응 |
+|---|---|---|
+| 3 | 계획·semantic 결속이 optional | `run_spec` 누락 시 default 채우기 금지, `expected_semantic` 필수, 산출 schema 강제 |
+| 4 | publish 가 동시 writer 에서 항목 유실 | per-leg `O_EXCL`. 16-thread 동시 publish 무손실, 같은 leg 동시 쓰기는 정확히 하나 |
+| 7 | 사람용 label 이 정본 hash 안 | label 을 hash 밖으로, `PlannedLeg` 가 `pairing_design_sha256` 를 받는다 |
+| 8 | candidate provenance 가 schema 없음 | source 별 닫힌 schema + 재귀 float 금지 + `src.grid.Condition` 결속 |
+| 9 | cohort trap 둘 · frozen 목적지 쓰기 | 회귀를 cohort 순회로, `--cohort` 도입, frozen 거부, staging 후 원자적 승격 |
+| 10 | 활성 cohort payload 미검증 | 같은 순회가 g2 gzip 도 압축 해제·재해시 (삭제 변이 확인) |
+| 11 | claim role 세대가 자유문자 | `protocol_generations` 닫힌 집합 + 세대 불일치 시 `reason` 요구 |
+| 12 | 커밋된 요청문에 placeholder | placeholder·없는 커밋·낡은 sha 를 잡는 회귀 (GATE26 의 낡은 core sha 를 실제로 잡았다) |
+
+### 35.6 float→십진 다리에서 새로 정한 것
+
+`src.grid.Condition` 은 float 다. 그것을 wire 로 옮기는 다리가 없으면 ID 체계가
+격자와 무관한 장난감이다. 다만 **조용히 반올림하면 다른 조건이 같은 ID 로
+합쳐진다.** 그래서 `decimal_from_float(x, places)` 는 변환 뒤 `float(s) == x`
+를 확인하고, 어긋나면 실패한다 — 자릿수를 올리든 격자를 고치든 **사람이**
+결정하게 만든다. `0.1 + 0.2` 를 3자리로 옮기려 하면 거부한다.
+
+### 35.7 이번 라운드의 교훈 — 이름이 검사보다 강한 시험
+
+두 P0 와 §35.3·§35.4 가 전부 같은 형태다: **시험의 이름이 실제로 하는 일보다
+강했다.** `truly empty root`, `read-back`, `자리별로 대조` — 셋 다 그렇게
+불렀지만 그렇게 하지 않았다.
+
+이 저장소에서 반복된 형태이므로 (24차 보충 발견 5-2, 25차 발견 3) 대응도
+이름이 아니라 **구조**로 한다: 복원 함수가 원본 경로를 아예 받지 않게 하고,
+비교 결과를 영수증에 값으로 적고, 그 값이 틀리면 생성이 멈추게 했다.
