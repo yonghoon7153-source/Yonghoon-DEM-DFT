@@ -1,0 +1,453 @@
+{
+ "slug": "yang2026_ncm_radial_microstructure_ml",
+ "dpi": 300,
+ "maxpx": 3000,
+ "mode": "slides",
+ "generated": "2026-08-25",
+ "sources": [
+  "e7ac4cb0-2026.08.18__________.pdf"
+ ],
+ "figures": [
+  {
+   "key": "F1",
+   "kind": "figure",
+   "label": "1",
+   "page": 1,
+   "file": "fig_1.png",
+   "caption": "BML Research Seminar / Multiphysics and machine-learning-guided design of radial cathode microstructures / Soo Young Yang / Battery Materials Laboratory (BML) (E-mail : ysy5168@hanyang.ac.kr) / Aug 18, 2026 / 1",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.724,
+   "slide": true
+  },
+  {
+   "key": "F2",
+   "kind": "figure",
+   "label": "2",
+   "page": 2,
+   "file": "fig_2.png",
+   "caption": "Machine-Learning-Assisted Multiphysics / Modeling and Microstructural Optimization / of Ni-Rich Polycrystalline Cathode Particles / for Lithium-Ion Batteries / 2",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.827,
+   "slide": true
+  },
+  {
+   "key": "F3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "◼Microstructural design variables for radial polycrystalline cathode particles / • Secondary particle composed of radially aligned grains surrounding a central seed domain / • Five geometric design variables: D50, Dseed, Wseed, Wradial, and AR / • Reference geometry and parameter ranges for microstructure design-space exploration / [ Microstructural design variable ] / Design variable Reference Range Unit / AR / Secondary particle / size (D50) 11.5 10.0–15.0 (µm) / Dseed / Seed domain size / (Dseed) 2.5 0.5–4.5 (µm) / Wradial / Seed-grain size / (Wseed) 0.4 0.35–0.45 (µm) / Wseed / Radial-grain minor axis length (Wradial) 0.35 0.30–0.60 (µm) / Radial-grain aspect / ratio (AR) 7.0 2.1–14.0 – / D50 / 3",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.784,
+   "slide": true
+  },
+  {
+   "key": "F4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "◼Grain orientation and intraparticle Li transport in radial cathode particles / • Radially aligned grains with individually assigned crystallographic orientations and a / randomly oriented central seed domain / • Anisotropic Li diffusion along orientation-dependent pathways, resulting in a / heterogeneous intraparticle Li-flux distribution during charging / [ Grain orientation ] [ Intraparticle Li flux ] / Li flux / Design factor Reference Unit / Secondary particle / size (D50) 11.5 (µm) / Seed domain size / (Dseed) 2.5 (µm) / Seed-grain size / (Wseed) 0.4 (µm) / Radial-grain minor axis length (Wradial) 0.35 (µm) / Radial-grain aspect / ratio (AR) 7.0 – / Li flux magnitude (μmol m−2 s−1) 0 18 / Grain orientation angle (rad) −π π / 4",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.754,
+   "slide": true
+  },
+  {
+   "key": "F5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "◼Crystallographic strain and anisotropic elasticity of NCM96 / • Li-stoichiometry-dependent a- and c-axis lattice parameters for defining anisotropic / chemical strain during charge and discharge / • Literature-derived elastic stiffness tensor for capturing orientation-dependent deformation / and stress development within individual grains / [ Lattice parameters vs. Li stoichiometry ] / [ NCM elastic stiffness tensor ] / 14.5 / 2.88 / a -axis c -axis / ℂ / Lattice parameter (Å) / 0 0 0 0 𝐶14 𝐶11 −𝐶12 / 0 0 0 0 𝐶44 𝐶14 / 𝐶11 𝐶12 𝐶12 𝐶11 𝐶13 𝐶13 𝐶14 −𝐶14 0 0 0 0 / 𝐶13 𝐶13 𝐶33 / 𝐶14 −𝐶14 / 2.86 / 14.0 / 0 𝐶44 / = / 2.84 / 0 0 0 / 0 0 / 13.5 / 2.82 / 2 / 𝐶11= 194.89 GPa 𝐶13= 11.85 GPa 𝐶33= 11.85 GPa / 𝐶12= 133.74 GPa 𝐶14= 8.61 GPa 𝐶44= 74.14 GPa / 0.2 0.4 0.6 0.8 1.0 0 13.0 / 0.2 0.4 0.6 0.8 1.0 0 2.80 / x in LixMO2 / x in LixMO2 / Chem. Mater., 2018, 30, 1155−1163 / Extreme Mechanics Letter",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.941,
+   "slide": true
+  },
+  {
+   "key": "F6",
+   "kind": "figure",
+   "label": "6",
+   "page": 6,
+   "file": "fig_6.png",
+   "caption": "◼Electrochemical performance of NCM96 cathode material / • CC–CV charge–discharge testing at 30 °C and 0.1C, yielding an initial discharge capacity / of 234.2 mAh g−1 and an initial Coulombic efficiency of 92.7% / • Differential-capacity analysis identifying the H1–M, M–H2, and H2–H3 phase transitions / for electrochemical model parameterization / [ Electrochemical characterization ] / Sample NCM96 / H2–H3 / Li || NCM96 / 2 / 4.3 / Loading level 6.9 mg cm−2 / Voltage (V vs. Li/Li+) / dQ/dV (Ah g −1 V −1) / 1 / H1–M / M–H2 / 3.9 / Electrode / density 3.0 g cc−1 / 0 / 3.5 / Initial C.E. 92.7% / -1 / 3.1 / Areal capacity 1.5 mAh cm−2 / 30 °C Formation (0.1C) 2nd cycle (0.1C) / 0 50 100 150 200 250 2.7 / 3.4 3.6 3.8 4.0 4.2 4.4 -2 / Specific capacity 234.2 mAh g−1 / Specific capacity (mAh g−1) / Voltage (V vs. Li/Li+) / NCM96 : PVDF : Super P = 94 : 3 : 3 (wt%) / 6",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.897,
+   "slide": true
+  },
+  {
+   "key": "F7",
+   "kind": "figure",
+   "label": "7",
+   "page": 7,
+   "file": "fig_7.png",
+   "caption": "◼Electrochemical parameterization of NCM96 cathode material / • GITT measurements for quantifying state-of-charge-dependent Li diffusivity as an input / parameter for electrochemical simulations / • EIS analysis of half and symmetric cells at x = 0.5 (LixMO2) for separating interfacial / resistance and estimating the reference exchange current density / [ Charge-transfer resistance analysis ] [ GITT measurements ] / 7 / Half cell (Li || NCM96) / Half cell (Li || NCM96) / -Z'' (W cm2) / (x =0.5 in LixMO2) / Cell type Half cell Symmetric / 4.2 / Voltage (V vs. Li/Li+) / cell / Fitting / Rct (Ω) 2.23 1.79 / 0 7 14 21 0 / 3.8 / Active surface / 7 / Symmetric cell (NCM96 || NCM96) / area (m2 g−1) / 0.8 0.8 / -Z'' (W cm2) / (x =0.5 in LixMO2) / Fitting / 0.05C 10 min pulse, 50 min rest / Reference i0 / (A m2) 1.83 2.28 / 0 30 60 90 120 3.4 / 0 7 14 21 0 / Rct Wwarburg / RCEI / Time (h) / Z' (W",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.88,
+   "slide": true
+  },
+  {
+   "key": "F8",
+   "kind": "figure",
+   "label": "8",
+   "page": 8,
+   "file": "fig_8.png",
+   "caption": "◼Electrochemical behavior of the radially aligned cathode microstructure / • 1C charging simulation predicting a constant-current capacity of 203.9 mAh g−1and a / diffusion overpotential of 32.7 mV at the end of CC charging / • Spatial Li concentration heterogeneity quantified using the maximum-to-minimum / concentration differences across the entire particle, seed domain, and radial-grain region / [ Simulation result ] [ Diffusion overpotential ] [ Li concentration ] / Diffusion overpotential (mV) / 35 / Li || NCM96 / 4.3 / ηdiff = 32.7 mV / Voltage (V vs. Li/Li+) / 28 / 3.9 / 21 / 3.5 / 14 / Qcc = 203.9 mAh g−1 / 3.1 / 7 / 1C charging / 0 / 0 50 100 150 200 250 2.7 / 0 50 100 150 200 250 / Specific capacity (mAh g−1) / Specific capacity (mAh g−1) / Li concentration (mmol cm−3) 12000 13500 / ∆cparticle = cmax,particle − cmin,particle ∆cseed= cmax,seed − cmin,seed ∆cradial= cmax,radial −",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.9,
+   "slide": true
+  },
+  {
+   "key": "F9",
+   "kind": "figure",
+   "label": "9",
+   "page": 9,
+   "file": "fig_9.png",
+   "caption": "◼Mechanical behavior of the radially aligned cathode microstructure / • Electrochemical–mechanical simulation revealing von Mises stress localization near the / particle surface and seed domain at 80% SOC / • Grain-boundary damage associated with localized stress, quantified by the average stress / and damage across the entire particle, seed domain, and radial-grain region / [ von Mises stress ] [ Grain boundary damage ] / 1 / 2.2 / von Mises stress (GPa) / Damage / 0 / 0 / At SOC = 80% At SOC = 80% / σparticle = σ particle,average σ seed = σseed,average σ radial = σ radial,average / Damageparticle= Damageparticle,average Damageseed = Damageseed,average Damageradial= Damageradial,average / 9",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.789,
+   "slide": true
+  },
+  {
+   "key": "F10",
+   "kind": "figure",
+   "label": "10",
+   "page": 10,
+   "file": "fig_10.png",
+   "caption": "◼Machine-learning-assisted optimization of radial cathode microstructures / • High-throughput multiphysics simulations across five microstructural variables for / generating a design–performance dataset of electrochemical and mechanical responses / [ Surrogate model training ] [ Optimal design ] [ Multiphysics simulation ] / ■Optimization / [ Dataset generation] / ■Design principles / D50 Dseed Wseed Wradial AR / σparticle σ seed σ radial / Damageparticle Damageseed Damageradial / ∆cparticle ∆cseed ∆cradial / 10",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.82,
+   "slide": true
+  },
+  {
+   "key": "F11",
+   "kind": "figure",
+   "label": "11",
+   "page": 11,
+   "file": "fig_11.png",
+   "caption": "◼Automated generation of radial cathode microstructures / • Systematic variation of D50, Dseed, Wseed, Wradial, and AR to generate geometrically diverse / particles spanning the prescribed microstructural design space / • Automated construction of 2500 radial microstructures for consistent multiphysics / simulations, surrogate-model training, and subsequent design optimization / [ Radial microstructure generation ] / 2500 microstructures / 11",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.82,
+   "slide": true
+  },
+  {
+   "key": "F12",
+   "kind": "figure",
+   "label": "12",
+   "page": 12,
+   "file": "fig_12.png",
+   "caption": "◼Cross-validated prediction performance of the TabPFN surrogate model / • Five-fold out-of-fold validation ensuring that each of the simulated designs is evaluated / using a model trained without that sample / • Near-unity parity and predominantly zero-centered residuals demonstrating accurate and / minimally biased prediction of Qcc / [ QCC prediction residual ] [ Parity plot (QCC) ] / [ 5-Fold OOF CV ] / Fold 1 Fold 2 Fold 3 Fold 4 Fold 5 / Residual (actual - predicted) / 205 / 0.6 / Predicted QCC (mAh g-1) / 0.3 / 203 / 0 / 201 / −0.3 / 199 201 203 205 199 / 199 201 203 205 −0.6 / 시뮬레이션data : 1911개 / Actual QCC (mAh g-1) / Predicted QCC (mAh g-1) / Validation fold / Training folds / ML algorithm : TabPFN / 12",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.881,
+   "slide": true
+  },
+  {
+   "key": "F13",
+   "kind": "figure",
+   "label": "13",
+   "page": 13,
+   "file": "fig_13.png",
+   "caption": "◼Benchmarking surrogate models for electrochemical and mechanical prediction / • Cross-validated comparison of six regression algorithms using R2, MAE, and RMSE for / constant-current capacity and particle-averaged stress / • TabPFN selected as the final surrogate model based on its consistently higher predictive / accuracy and lower prediction errors across both descriptors / [ RMSE comparison ] [ MAE comparison ] [ R 2 comparison ] / 0.3 / 0.02 / 0.3 / 0.03 / Qcc σparticle / 1.0 / 0.2 / 0.2 / 0.02 / 0.8 / RMSE / MAE / 0.01 / R 2 / 0.1 / 0.1 / 0.01 / 0.6 / 0 / 0 / 0 / 0 / 0.4 / Rd / Rd / ET / ET / RF / RF / GB / GB / XGB / XGB / TabPFN / TabPFN / Rd / ET / RF / GB / XGB / TabPFN / Surrogate model / Surrogate model / Surrogate model / *Ridge regression (Rd): linear regression *Random forest (RF): decision-tree ensemble *Extra trees (ET): randomized decision-tree ensemble *Gradient boosti",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.866,
+   "slide": true
+  },
+  {
+   "key": "F14",
+   "kind": "figure",
+   "label": "14",
+   "page": 14,
+   "file": "fig_14.png",
+   "caption": "◼SHAP-based analysis of design-variable effects on electrochemical behavior / • Quantification of the magnitude and direction of each design variable’s influence / • D50 and AR identified as the dominant variables for particle-scale electrochemical behavior, / while Dseed primarily governs concentration heterogeneity within the seed domain / [ SHAP analysis of design variables for electrochemical behavior ] / D50 / Dseed / Wseed / Wradial / AR / −11 0 11 / −1.7 1.7 0 / −900 0 900 / −600 0 600 / −1100 0 1100 / SHAP value for hdiff (mV) / SHAP value / SHAP value / SHAP value / SHAP value / for QCC (mAh g-1) / for Dcparticle (mol m-3) / for Dcradial (mol m-3) / for Dcseed (mol m-3) / High value Low value / 14",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.924,
+   "slide": true
+  },
+  {
+   "key": "F15",
+   "kind": "figure",
+   "label": "15",
+   "page": 15,
+   "file": "fig_15.png",
+   "caption": "◼SHAP-based analysis of design-variable effects on mechanical behavior / • AR identified as the dominant variable for particle- and radial-region mechanics, while Dseed / primarily governs the stress and damage responses within the seed domain / [ SHAP analysis of design variables for mechanical behavior ] High value Low value / D50 / Dseed / Wseed / Wradial / AR / −0.07 0.07 0 / −0.35 0.35 0 / −0.07 0.07 0 / −0.2 0.2 0 / −0.2 0.2 0 / −0.07 0.07 0 / SHAP value for sparticle (GPa) / SHAP value for sseed (GPa) / SHAP value for sradial (GPa) / SHAP value for Damageparticle / SHAP value for Damageradial / SHAP value for Damageseed / 15",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.929,
+   "slide": true
+  },
+  {
+   "key": "F16",
+   "kind": "figure",
+   "label": "16",
+   "page": 16,
+   "file": "fig_16.png",
+   "caption": "◼Relative importance of microstructural design variables across descriptors / • Mean absolute SHAP values normalized to 100% for direct comparison of variable / contributions across electrochemical and mechanical responses / • D50 dominating capacity, overpotential, and radial concentration heterogeneity; Dseed / controlling seed-scale responses; and AR governing particle- and radial-region damage / [ Relative SHAP importance of design variables ] / 50 / D50 51.3% 43.0% 26.6% 54.2% 0.6% 32.9% 21.7% 12.5% 5.0% 4.5% 25.1% / Dseed / 13.7% 17.9% 53.0% 7.5% 94.6% 35.4% 50.2% 82.8% 18.7% 6.4% 36.9% / Mean |SHAP| (%) / Wseed / 0.6% 0.4% 2.9% 1.0% 3.7% 2.2% 2.4% 1.0% 0.4% 0.3% 2.3% / Wradial / 5.8% 8.1% 4.0% 8.3% 0.2% 5.4% 6.1% 0.7% 6.3% 9.6% 13.8% / AR / 28.6% 30.5% 13.5% 28.9% 0.9% 24.1% 19.5% 3.0% 69.6% 79.3% 21.8% / ０ / Dcradial / sradial / Damageradial / Dcparticle / sparticle / Damageparti",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.691,
+   "slide": true
+  },
+  {
+   "key": "F17",
+   "kind": "figure",
+   "label": "17",
+   "page": 17,
+   "file": "fig_17.png",
+   "caption": "◼Surrogate-model exploration of the electrochemical–mechanical design space / • Dense design-space exploration revealing an inverse relationship between constant-current / capacity and particle stress, together with a positive coupling between Li-concentration / heterogeneity and stress / [ Design-space exploration results ] / ML-explored design points / Reference / 17",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.908,
+   "slide": true
+  },
+  {
+   "key": "F18",
+   "kind": "figure",
+   "label": "18",
+   "page": 18,
+   "file": "fig_18.png",
+   "caption": "◼Multi-objective optimization of the radial cathode microstructure / • Pareto hypervolume converging toward 100%, indicating stable exploration of trade-offs / among capacity, Li-concentration heterogeneity, particle stress, and damage / • Balanced ML design increasing QCC from 203.9 to 204.9 mAh g−1 while reducing / concentration heterogeneity by 39.3%, stress by 2.9%, and damage by 64.5% / [ Pareto hypervolume during multi-objective optimization ] / parameter Reference ML / Descriptor Reference ML / 100 / Hypervolume (%) / QCC (mAh g−1) 203.9 204.9 / D50 (µm) 11.5 10 / 99 / Dseed (µm) 2.5 1.169 / Δcparticle (mol m−3) 1829.5 1110.9 / Wseed (µm) 0.4 0.437 / 98 / σparticle / (GPa) 1.40 1.36 / Wradial (µm) 0.35 0.302 / 0 20000 40000 60000 80000 97 / Damageparticle 0.287 0.102 / AR 7 11.83 / Trial number / 18",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.838,
+   "slide": true
+  },
+  {
+   "key": "F19",
+   "kind": "figure",
+   "label": "19",
+   "page": 19,
+   "file": "fig_19.png",
+   "caption": "◼Comparison of objective-specific and balanced microstructure designs / • Focused designs prioritize each performance descriptors at the expense of overall balance / • Balanced design simultaneously improves capacity, concentration uniformity, stress, and / damage / ● Reference Capacity-focused 205.0 QCC (mAh g-1) / Concentration-focused QCC (mAh g-1) / 205.0 / ● Focused optimum ● Balanced optimum / 1000 Dcparticle (mol m-3) / Dcparticle (mol m-3) / 0.05 Damageparticle / 0.05 Damageparticle / 200.5 / 200.5 / 4000 / 0.50 / 4000 / 1000 / 0.50 / 1.575 / 1.575 / sparticle (GPa) / 1.350 / 1.350sparticle (GPa) / Damage-focused 205.0 QCC (mAh g-1) / Stress-focused 205.0 QCC (mAh g-1) / 1000 Dcparticle (mol m-3) / 1000 Dcparticle (mol m-3) / 0.05 Damageparticle / 0.05 Damageparticle / 200.5 / 200.5 / 4000 / 0.50 / 4000 / 0.50 / 1.575 / 1.575 / 1.350sparticle (GPa) / 1.350sparticle (GPa) / 19",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.943,
+   "slide": true
+  },
+  {
+   "key": "F20",
+   "kind": "figure",
+   "label": "20",
+   "page": 20,
+   "file": "fig_20.png",
+   "caption": "논문화 추진 방향 및 향후 계획 / • 과제에서 구축한 미세구조 생성, 시뮬레이션 및 머신러닝 분석 방법론을 후속 연구로 발전시켜 논문화 추진 / • DGIST 김운혁 교수님 연구실과의 공동연구를 통해 실험과 모델링을 연계 예정 / • 적용할 양극재 소재와 조성은 아직 미정이며, 연구 차별성·물성 확보 가능성·실험 여건을 고려하여 선정 / • 급속충전 및 기계적 열화를 주요 연구 방향으로 검토하되, 명확한 스토리 설정 필요 / • 대상 소재와 실험 조건이 확정된 이후 비교군, 핵심 결과 및 논문의 전체 스토리라인을 구체화 / 20",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.965,
+   "slide": true
+  },
+  {
+   "key": "F21",
+   "kind": "figure",
+   "label": "21",
+   "page": 21,
+   "file": "fig_21.png",
+   "caption": "Thank you / For more information or any questions, Please e-mail at ysy5168@hanyang.ac.kr",
+   "rotated_deg": 0,
+   "bbox": [
+    0.0,
+    0.0,
+    720.0,
+    540.0
+   ],
+   "w": 3000,
+   "h": 2250,
+   "dpi": 300,
+   "src": "e7ac4cb0-2026.08.18__________.pdf",
+   "blank": 0.004,
+   "slide": true
+  }
+ ]
+}

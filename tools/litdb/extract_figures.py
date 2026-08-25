@@ -452,6 +452,63 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
     return meta, skipped
 
 
+def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
+                   keep_blank=0.995, relto=None):
+    """발표 덱(PPT→PDF)을 **슬라이드 1장 = 그림 1장**으로 자른다 (`--slides`).
+
+    왜 별도 모드인가 — 본체 extract() 는 "Fig. 1." 같은 **저널 캡션을 앵커**로 쓴다.
+    PPT 덱에는 그런 캡션이 아예 없어서 본체를 돌리면 **0장**이 나온다(litdb/talks 4편 실측).
+    덱은 슬라이드 자체가 그림이므로 쪽을 통째로 렌더하는 게 맞다.
+
+    캡션 = 그 슬라이드의 상단 텍스트(제목·불릿 앞부분). digest 에서 `Fig. 7` 로 쓰면
+    **슬라이드 7**을 가리키게 라벨을 쪽번호로 맞춘다 (덱 자체 인쇄 번호와 다를 수 있으니
+    digest 에 "PDF 쪽 = 슬라이드" 를 명시할 것).
+
+    이 모드가 못 하는 것: 한 슬라이드 안의 여러 패널을 나누지 않는다(a/b/c 분해 없음).
+    2-up 인쇄 자료집(한 쪽에 슬라이드 2장)도 나누지 못한다 — 그런 덱은 쪽 렌더가 곧 2장이다.
+    """
+    out_dir = OUT_ROOT / slug
+    doc = fitz.open(pdf_path)
+    found, skipped = [], []
+    for pno in range(doc.page_count):
+        page = doc[pno]
+        d_eff = dpi
+        if maxpx:
+            long_pt = max(page.rect.width, page.rect.height)
+            if long_pt > 0:
+                d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
+        pix = page.get_pixmap(dpi=d_eff)
+        br = blank_ratio(pix)
+        if br > keep_blank:                      # 표지 뒤 백지·간지
+            skipped.append((f"F{pno + 1}", pno + 1, f"거의 백지({br:.3f})"))
+            continue
+        # 캡션 = 위에서부터 텍스트 블록을 이어붙인다 (제목 + 첫 불릿이면 충분)
+        cap = " / ".join(
+            " ".join(b[4].split()) for b in sorted(text_blocks(page), key=lambda b: b[1])
+            if b[4].strip())[:900]
+        label = str(pno + 1)
+        fn = f"fig_{label}.png"
+        found.append({"key": f"F{label}", "kind": "figure", "label": label,
+                      "page": pno + 1, "file": fn, "caption": cap, "rotated_deg": 0,
+                      "bbox": [round(v, 1) for v in page.rect],
+                      "w": pix.width, "h": pix.height, "dpi": d_eff,
+                      "src": Path(pdf_path).name, "blank": round(br, 3),
+                      "slide": True})
+        if not dry:
+            out_dir.mkdir(parents=True, exist_ok=True)
+            pix.save(out_dir / fn)
+            _shrink(out_dir / fn)
+    doc.close()
+    meta = {"slug": slug, "dpi": dpi, "maxpx": maxpx, "mode": "slides",
+            "generated": time.strftime("%Y-%m-%d"),
+            "sources": [_relto(Path(pdf_path), relto)], "figures": found}
+    if not dry:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        (out_dir / "figures.json").write_text(
+            json.dumps(meta, ensure_ascii=False, indent=1), encoding="utf-8")
+    return meta, skipped
+
+
 # ── inbox 자동 매칭 ─────────────────────────────────────────────────────
 #   1저자가 `--slug <slug>` 를 그대로 붙여넣어 bash 오류를 냈다(2026-08-06).
 #   자리표시자를 직접 채우게 하지 말고, inbox 를 훑어 digest 와 자동으로 짝지어 준다.
@@ -1132,6 +1189,30 @@ def selftest():
         finally:
             OUT_ROOT = keep_root
 
+        # --- --slides 모드 (덱): 백지 슬라이드는 버리고 내용 슬라이드만 남겨야 한다
+        deck = root / "deck.pdf"
+        d = fitz.open()
+        p1 = d.new_page(width=720, height=540)          # 내용 있는 슬라이드
+        p1.insert_text((60, 90), "Design variables D50 Dseed", fontsize=28)
+        p1.draw_rect(fitz.Rect(60, 140, 660, 480), fill=(0.2, 0.4, 0.9))
+        d.new_page(width=720, height=540)               # 백지 간지 (음성 경로)
+        d.save(deck); d.close()
+        keep_root, OUT_ROOT = OUT_ROOT, root
+        try:
+            m, sk = extract_slides(str(deck), "deck_test", dpi=72, maxpx=900, relto=root)
+            chk("양성(--slides): 내용 슬라이드 1장만 남는다", len(m["figures"]) == 1)
+            chk("양성(--slides): 라벨=쪽번호, 파일명 fig_1.png",
+                m["figures"][0]["label"] == "1" and m["figures"][0]["file"] == "fig_1.png")
+            chk("양성(--slides): 캡션에 슬라이드 텍스트가 들어간다",
+                "D50" in m["figures"][0]["caption"])
+            chk("양성(--slides): mode 표시가 남는다", m.get("mode") == "slides")
+            chk("음성⑥(--slides): 백지 슬라이드는 버린다 (skipped 로 이유가 남음)",
+                len(sk) == 1 and "백지" in sk[0][2])
+            chk("음성⑦(--slides): PNG 도 1장만 쓰인다",
+                len(list((root / "deck_test").glob("*.png"))) == 1)
+        finally:
+            OUT_ROOT = keep_root
+
     print(f"\nselftest: {ok} 통과 / {fail} 실패")
     return 1 if fail else 0
 
@@ -1251,6 +1332,9 @@ def main():
                     help="그림 없는 digest × 미매칭 PDF 후보표 (pdf_map.tsv 채우기용)")
     ap.add_argument("--why", action="store_true",
                     help="--slug 과 함께: 각 캡션이 왜 살았는지/버려졌는지 좌표째로")
+    ap.add_argument("--slides", action="store_true",
+                    help="발표 덱(PPT→PDF): 캡션이 없으므로 **슬라이드 1장 = 그림 1장**으로 렌더 "
+                         "(litdb/talks 용. --slug --pdf 와 함께)")
     a = ap.parse_args()
     if a.pdf:                       # [[a,b],[c]] → [a,b,c]
         a.pdf = [x for grp in a.pdf for x in grp]
@@ -1385,6 +1469,16 @@ def main():
 
     if a.why:
         return why(a.slug, a.pdf)
+
+    if a.slides:
+        if len(a.pdf) > 1:
+            raise SystemExit("⛔ --slides 는 덱 1개만 받는다 (덱마다 슬라이드 번호가 다르다).")
+        meta, skipped = extract_slides(a.pdf[0], a.slug, dpi=a.dpi or 150,
+                                       dry=a.dry, maxpx=a.maxpx)
+        _report(a.slug, meta, skipped, a.dry)
+        if not a.dry:
+            _write_sources_index()
+        return 0
 
     meta, skipped = extract(a.pdf, a.slug, dpi=a.dpi, dry=a.dry, maxpx=a.maxpx)
     _report(a.slug, meta, skipped, a.dry)
