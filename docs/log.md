@@ -2657,3 +2657,12 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   필터가 D=0 을 버림 — null 검사 명시, 로그축 불가는 셈해 말한다. (5) #33:
   이름 힌트 정규식 앞 경계 — 17,5mg→5 로 읽던 것을 null 로.
   (이 항목은 해당 커밋이 push 된 뒤 보충됐다.)
+## [2026-08-25] fix | fit-batch 의 예외 하나가 스물을 세웠고, 초과 가지가 축퇴 시작점을 받았다
+- Claude A6·F5. (1) fit-batch 가 HTTPException 만 잡아 예기치 못한 예외
+  하나가 배치 전체를 500 으로 — 스펙트럼별 실패로 기록하고 계속 (타입명
+  포함). (2) initial_guess 의 arc_index 가 마지막 인덱스에 클램프돼
+  span/(n+1) 폴백이 사문 — 아크보다 R-CPE 가지가 많으면 초과 가지 전부가
+  마지막 아크의 지름·Q 를 그대로 받아 대칭·축퇴 시작점 (restarts 가 보통
+  구제하는 결함). 자유 증가 + 초과 슬롯은 폴백. A4(ids 422)는 확인 결과
+  이미 모든 경로가 처리하고 있었다 — compare 두 곳 try/int→422, eis points
+  숫자 검사, fit-batch 는 pydantic list[int].

@@ -237,3 +237,23 @@ def test_an_element_pressed_to_its_bound_reports_no_precision():
     for parameter in tail:
         assert parameter.stderr is None, parameter
         assert not parameter.determined, parameter
+
+
+def test_excess_branches_do_not_all_start_on_the_last_arc():
+    """아크 1개 + R-CPE 가지 2개 — 초과 가지는 폴백 시작값을 받아야 한다.
+
+    마지막 인덱스에 클램프하던 때는 두 가지가 같은 지름·Q 로 시작해 대칭
+    축퇴 시작점이 됐다 (리뷰 F5).  restarts 가 보통 구제하지만, 시작점 결함은
+    시작점에서 고친다.
+    """
+    from wrdkit.eis.circuit import parse_circuit
+    from wrdkit.eis.guess import initial_guess
+
+    frequency = S.log_sweep(1e5, 1e-1, 10)
+    z = S.randles(frequency, rs=5.0, r1=40.0, q1=1e-5, n1=0.95,
+                  r2=1e-9, q2=1e-9, n2=1.0)      # 사실상 아크 하나
+    spectrum = Spectrum(frequency, z.real, z.imag)
+    circuit = parse_circuit("R0-p(R1,CPE1)-p(R2,CPE2)")
+    values = dict(zip(circuit.parameter_names,
+                      initial_guess(spectrum, circuit), strict=True))
+    assert values["R1"] != pytest.approx(values["R2"])

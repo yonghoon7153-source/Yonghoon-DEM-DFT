@@ -169,17 +169,21 @@ def initial_guess(spectrum: Spectrum, circuit: Circuit) -> np.ndarray:
                 values[i] = rs
                 used_series_r = True
             else:
+                # arc_index 는 자유롭게 증가한다.  전에는 마지막 인덱스에
+                # 클램프해서 `else span/...` 폴백이 사문(死文)이 됐고, 아크보다
+                # R-CPE 가지가 많으면 초과 가지 전부가 마지막 아크의 지름을
+                # 그대로 받아 대칭·축퇴 시작점이 됐다 (리뷰 F5) — restarts 가
+                # 보통 구제하지만 시작점 결함은 시작점에서 고친다.
                 arc = arcs[arc_index] if arc_index < len(arcs) else None
                 values[i] = arc.diameter_ohm if arc else span / (len(arcs) + 1)
-                arc_index = min(arc_index + 1, max(len(arcs) - 1, 0)) \
-                    if arcs else arc_index
+                arc_index += 1
         elif name.endswith("_Q"):
             # w_peak = 1 / (R Q)^(1/n) for an R-CPE pair; with n near 1 that
             # is Q = 1 / (R w_peak), which turns the located arc into a
             # capacitance instead of a guess.
             slot = min(_cpe_slot(names, i), len(_CPE_FALLBACK_Q) - 1)
             paired_r = _preceding_arc_resistance(names, values, i)
-            arc = arcs[min(slot, len(arcs) - 1)] if arcs else None
+            arc = arcs[slot] if slot < len(arcs) else None
             if arc and paired_r > 0:
                 omega = 2 * np.pi * arc.peak_hz
                 values[i] = float(np.clip(1.0 / (paired_r * omega), 1e-12, 1e2))

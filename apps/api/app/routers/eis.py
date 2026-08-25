@@ -744,6 +744,12 @@ def fit_batch(spectrum_ids: list[int],
         except HTTPException as exc:
             failed.append({"spectrum_id": spectrum_id, "detail": exc.detail})
             continue
+        except Exception as exc:  # noqa: BLE001
+            # 하나의 예기치 못한 예외가 나머지 스물을 세우면 안 된다 — 이
+            # 함수의 존재 이유가 그것이다 (리뷰 A6).  무엇이었는지는 남긴다.
+            failed.append({"spectrum_id": spectrum_id,
+                           "detail": f"{type(exc).__name__}: {exc}"})
+            continue
         done.append(out)
     return {"fitted": done, "failed": failed,
             "requested": len(spectrum_ids),
