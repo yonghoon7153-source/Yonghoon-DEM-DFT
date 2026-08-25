@@ -509,6 +509,53 @@ describe('스펙트럼 상세', () => {
     await waitFor(() => expect(sent).not.toBeNull())
     expect(sent!.get('drop_inductive')).toBe('false')
     expect(sent!.get('circuit')).toBe('R0-p(R1,CPE1)-p(R2,CPE2)-CPE3')
+    // 창을 안 적었으면 창을 안 보낸다.  빈 칸이 0 Hz 로 둔갑하면 창이
+    // 조용히 넓어지고, 그 차이는 결과에만 나타난다.
+    expect(sent!.has('frequency_low_hz')).toBe(false)
+    expect(sent!.has('frequency_high_hz')).toBe(false)
+  })
+
+  it('맞출 주파수 창을 적으면 그것도 함께 보낸다 (ADR 0029)', async () => {
+    // 저주파 끝 몇 점이 오차의 절반을 내는 일이 흔한데, 그것이 회로 탓인지
+    // 스윕이 그 과정의 정점 전에 끝난 탓인지는 창을 좁혀 봐야 갈린다 —
+    // 실측 전고체 풀셀에서 f ≥ 0.05 Hz 로 좁히면 χ² 가 22배 좋아졌다.
+    let sent: URLSearchParams | null = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1/fit' && init?.method === 'POST') {
+        sent = params(url)
+        return fit()
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    await userEvent.type(await screen.findByLabelText('맞출 주파수 하한'), '0.05')
+    await userEvent.click(screen.getByRole('button', { name: '맞추기' }))
+
+    await waitFor(() => expect(sent).not.toBeNull())
+    expect(sent!.get('frequency_low_hz')).toBe('0.05')
+    // 한쪽만 적었으면 한쪽만 간다.
+    expect(sent!.has('frequency_high_hz')).toBe(false)
+  })
+
+  it('0 이나 음수는 창으로 보내지 않는다', async () => {
+    // 0 Hz 는 창이 아니라 "제한 없음" 과 같은 뜻이 되고, 음수는 아무 뜻도
+    // 없다.  숫자로 읽히는 것만, 그리고 양수만 보낸다.
+    let sent: URLSearchParams | null = null
+    installFetch(detailHandler((url, init) => {
+      if (path(url) === '/api/eis/spectra/1/fit' && init?.method === 'POST') {
+        sent = params(url)
+        return fit()
+      }
+      return undefined
+    }))
+
+    renderDetail()
+    await userEvent.type(await screen.findByLabelText('맞출 주파수 하한'), '0')
+    await userEvent.click(screen.getByRole('button', { name: '맞추기' }))
+
+    await waitFor(() => expect(sent).not.toBeNull())
+    expect(sent!.has('frequency_low_hz')).toBe(false)
   })
 
   it('아크에 이 셀에서의 이름이 붙는다', async () => {

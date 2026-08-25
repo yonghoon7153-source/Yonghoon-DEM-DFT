@@ -34,6 +34,11 @@ export function SpectrumDetail() {
 
   const [circuit, setCircuit] = useState('')
   const [dropInductive, setDropInductive] = useState(true)
+  // 맞출 주파수 창.  ZView 가 늘 하는 것이고 (ADR 0029), 여기서는 저주파 끝에
+  // 오차가 몰릴 때 그것이 회로 탓인지 스윕이 일찍 끝난 탓인지를 사람이 직접
+  // 재보는 자리다 — 빈 칸은 "끝까지" 다.
+  const [fitLow, setFitLow] = useState('')
+  const [fitHigh, setFitHigh] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [reloadKey, bumpReload] = useState(false)
@@ -147,14 +152,30 @@ export function SpectrumDetail() {
     ]
   }, [points.data])
 
+  // 잰 대역 — 빈 칸의 자리표시로 쓴다.  "비우면 끝까지" 가 어디까지인지를
+  // 숫자로 보여 주면 창을 좁힐 때 무엇을 잘라내는지가 보인다.
+  const measured = useMemo(() => {
+    const f = points.data?.frequency_hz
+    if (!f?.length) return null
+    return { low: Math.min(...f), high: Math.max(...f) }
+  }, [points.data])
+
   async function runFit(mode?: 'auto') {
     if (!record) return
     setBusy(true)
     setError(null)
     try {
+      const low = Number(fitLow)
+      const high = Number(fitHigh)
       const made = await api.fitSpectrum(record.id, {
         circuit: mode === 'auto' ? 'auto' : (chosenCircuit || undefined),
         drop_inductive: dropInductive,
+        // 숫자로 읽히는 것만 보낸다.  빈 칸과 오타가 0 Hz 로 둔갑하면
+        // 창이 조용히 넓어지고, 그 차이는 결과에만 나타난다.
+        ...(fitLow.trim() && Number.isFinite(low) && low > 0
+          ? { frequency_low_hz: low } : {}),
+        ...(fitHigh.trim() && Number.isFinite(high) && high > 0
+          ? { frequency_high_hz: high } : {}),
       })
       setShowFit(made.id)
       bumpReload((value) => !value)
@@ -357,6 +378,32 @@ export function SpectrumDetail() {
                 <span className="faint"> · 위 나이퀴스트도 함께 바뀝니다</span>
               </span>
             </label>
+
+            {/* 맞출 창.  저주파 끝 몇 점이 오차의 절반을 내는 일이 흔한데
+                (스윕이 그 과정의 정점 전에 끝났을 때 — ADR 0029), 그것이
+                회로 탓인지 측정 탓인지는 창을 좁혀 봐야 갈린다. */}
+            <div className="grid cols-2" style={{ gap: 8 }}>
+              <Field label="맞출 주파수 하한" hint="비우면 끝까지">
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  aria-label="맞출 주파수 하한"
+                  placeholder={measured ? `${num(measured.low, 3)}` : 'Hz'}
+                  value={fitLow}
+                  onChange={(event) => setFitLow(event.target.value)}
+                />
+              </Field>
+              <Field label="맞출 주파수 상한" hint="비우면 끝까지">
+                <input
+                  type="number"
+                  inputMode="decimal"
+                  aria-label="맞출 주파수 상한"
+                  placeholder={measured ? `${num(measured.high, 3)}` : 'Hz'}
+                  value={fitHigh}
+                  onChange={(event) => setFitHigh(event.target.value)}
+                />
+              </Field>
+            </div>
             <div className="row">
               <button type="button" className="primary" disabled={busy} onClick={() => void runFit()}>
                 {busy ? '맞추는 중…' : '맞추기'}
@@ -438,6 +485,10 @@ function FitReport({ fit, kind, area }: {
           시작점 {fit.starts_converged}/{fit.starts}
         </span>
         {fit.dropped_inductive ? <span>유도성 {fit.dropped_inductive}점 뺌</span> : null}
+        {/* 창을 좁혀 맞췄으면 몇 점이 밖에 남았는지.  이 수가 없으면 같은
+            회로의 두 χ² 가 왜 다른지 화면에 단서가 없다. */}
+        {fit.dropped_out_of_range
+          ? <span>창 밖 {fit.dropped_out_of_range}점 뺌</span> : null}
         {fit.frequency_low_hz && fit.frequency_high_hz ? (
           <span>
             {hertz(fit.frequency_high_hz)} → {hertz(fit.frequency_low_hz)}
