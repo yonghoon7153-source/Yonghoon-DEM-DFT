@@ -45,6 +45,27 @@ verificationStatus: unverified
 ICA 위에 얹는다. 피크 면적과 위치의 변화를 추적해 리튬 재고 손실과 활물질
 손실을 나눈다. **먼저 ICA 가 안정적으로 나와야 한다.**
 
+## 이미 붙은 것 (2026-08-25)
+
+아래 3~6번은 **끝났다.** 남긴 이유는 절차가 여전히 템플릿이기 때문이다 —
+다음 분석도 같은 순서로 붙인다.
+
+| 무엇 | 어디 | 결정 |
+|---|---|---|
+| EIS 읽기·피팅 | `wrdkit/eis/`, `/api/eis`, `/eis` | ADR 0019 |
+| DRT | `wrdkit/eis/drt.py` | ADR 0019 · 0005 과 같은 태도 |
+| GITT (pOCV · 확산계수) | `wrdkit/gitt.py`, `/api/gitt`, `/gitt` | ADR 0020 |
+
+실제로 해 보고 달라진 것 셋:
+
+- **scipy 를 받아들였다** (아래 4번의 예상대로). `wrdkit[eis]` extra 이고,
+  두 모듈 다 **함수 안에서** import 하므로 없는 기계에서도 읽기·그리기는 된다.
+- **파일 포맷은 `.wis` 가 아니었다.** EIS 는 BioLogic `.mpr`/`.mpt`/`.mps` 이고
+  장비 자체가 다르다 (`docs/raw/specs/biologic-mpr-format.md`).
+- **GITT 는 `.wrd` 가 맞았다.** `segment_steps` 가 아니라 전류 부호로 나눈다 —
+  GITT 스케줄은 루프 한 쌍으로 수백 펄스를 도는 일이 있어 스텝 카운터가
+  믿을 만하지 않다.
+
 ## 3. EIS — 파일 포맷 조사가 먼저
 
 `.wrd` 의 `eFormat` 은 관측 파일에서 0(사이클링)이었다. EIS 는 다른 확장자
