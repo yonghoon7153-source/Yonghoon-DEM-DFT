@@ -80,20 +80,29 @@ export function SpectrumDetail() {
     return series
   }, [points.data, fit])
 
-  const bode = useMemo<PlotSeries[]>(() => {
+  // 보드는 두 패널이다 (리뷰 #27).  8 decade 의 주파수를 선형 x 에 놓으면
+  // 10 kHz 아래 전부가 폭 1% 에 뭉치고, Ω 와 도(°)를 한 선형 y 에 겹치면
+  // 위상이 바닥에 눕는다 — 내보내기 코드가 이미 "두 y 단위는 쌓을 수 없다"
+  // 라고 말하는 그대로다.  x 는 log₁₀ f, |Z| 도 decade 를 넘나드니 log₁₀.
+  const bodeMagnitude = useMemo<PlotSeries[]>(() => {
     if (!points.data) return []
     return [
       {
-        label: '|Z| (Ω)',
-        x: points.data.frequency_hz,
-        y: points.data.magnitude,
+        label: 'log₁₀|Z|',
+        x: points.data.frequency_hz.map((value) => Math.log10(value)),
+        y: points.data.magnitude.map((value) => Math.log10(value)),
         color: seriesColor(0),
         points: true,
         width: 1,
       },
+    ]
+  }, [points.data])
+  const bodePhase = useMemo<PlotSeries[]>(() => {
+    if (!points.data) return []
+    return [
       {
         label: '위상 (°)',
-        x: points.data.frequency_hz,
+        x: points.data.frequency_hz.map((value) => Math.log10(value)),
         y: points.data.phase_deg,
         color: seriesColor(2),
         points: true,
@@ -204,9 +213,13 @@ export function SpectrumDetail() {
         </Card>
 
         <Card title="보드">
-          {bode.length ? (
-            <Plot series={bode} xLabel="주파수 (Hz)" yLabel="|Z| (Ω) · 위상 (°)"
-                  height={360} legend />
+          {bodeMagnitude.length ? (
+            <div className="col" style={{ gap: 6 }}>
+              <Plot series={bodeMagnitude} xLabel="log₁₀ f (Hz)"
+                    yLabel="log₁₀|Z| (Ω)" height={180} legend />
+              <Plot series={bodePhase} xLabel="log₁₀ f (Hz)" yLabel="위상 (°)"
+                    height={180} legend />
+            </div>
           ) : (
             <Spinner />
           )}
@@ -445,6 +458,9 @@ function CellFields({
   const [thickness, setThickness] = useState(
     record.thickness_um === null ? '' : String(record.thickness_um),
   )
+  const [area, setArea] = useState(
+    record.area_cm2 === null ? '' : String(record.area_cm2),
+  )
   const [cycle, setCycle] = useState(
     record.at_cycle === null ? '' : String(record.at_cycle),
   )
@@ -468,6 +484,21 @@ function CellFields({
   return (
     <div className="col" style={{ gap: 9 }}>
       {error ? <Alert kind="error">{error}</Alert> : null}
+
+      {/* 업로드 때 탭을 잘못 골랐으면 여기서 고친다 (리뷰 #29).  전에는
+          백엔드 PATCH 만 있고 화면 경로가 없어서, 맞는 탭에 재업로드해도
+          dedup 이 옛 종류를 유지한 채 "올렸습니다" 라고 했다. */}
+      <Field label="종류" hint="아크의 의미가 통째로 바뀝니다 — 기존 피팅에는 옛 종류가 남습니다">
+        <select
+          aria-label="종류"
+          value={record.kind}
+          disabled={busy}
+          onChange={(event) => void save({ kind: event.target.value })}
+        >
+          <option value="liquid">액체 전해질</option>
+          <option value="solid">전고체</option>
+        </select>
+      </Field>
 
       <Field
         label="셀 구성"
@@ -566,10 +597,39 @@ function CellFields({
         />
       </Field>
 
+      <Field
+        label="면적"
+        hint="cm² · 전도도의 분모 · 비우면 붙은 셀의 것"
+      >
+        {/* 전도도 안내는 "셀이나 스펙트럼에 면적을 적으라" 고 하는데, 정작
+            여기에 입력란이 없어 셀 없이 올린 스펙트럼은 그 안내를 따를 수
+            없었다 (리뷰 #28). */}
+        <input
+          aria-label="면적"
+          type="number"
+          min={0}
+          step="any"
+          value={area}
+          disabled={busy}
+          onChange={(event) => setArea(event.target.value)}
+          onBlur={() => {
+            const value = area.trim()
+            if (value === '' && record.area_cm2 === null) return
+            if (Number(value) === record.area_cm2) return
+            void save(value === ''
+              ? { clear: ['area_cm2'] }
+              : { area_cm2: Number(value) })
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') event.currentTarget.blur()
+          }}
+        />
+      </Field>
+
       <div className="tiny faint">
         {record.kind === 'solid' && record.cell_config !== 'sym'
           ? '전도도는 이온 블로킹 대칭셀에서만 냅니다 — 풀셀의 저주파 아크는 계면입니다.'
-          : '전도도는 조회할 때 계산합니다 — 두께를 고치면 바로 따라옵니다.'}
+          : '전도도는 조회할 때 계산합니다 — 두께·면적을 고치면 바로 따라옵니다.'}
       </div>
     </div>
   )
