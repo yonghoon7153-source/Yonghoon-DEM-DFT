@@ -1,0 +1,21 @@
+디렉터리                                       SBE/DBE     vox       섬유    SDCP     σ_VGCF   σ_ion        수렴
+prereg_v2_vox0115_sph_b048_lean2               8/8   0.115  segment  sphere    133.622    0/16         ✓
+prereg_v2_vox0125_sph_b048_lean                2/1   0.125  segment  sphere    113.097     3/3         ✓
+prereg_v2_vox0125_sph_b048_lean2               8/8   0.125  segment  sphere    113.097    0/16         ✓
+prereg_v2_vox015                               8/8    0.15  segment       —          —   16/16         ✓
+prereg_v2_vox015_sph                           8/8    0.15  segment  sphere          —   16/16         ✓
+prereg_v2_vox015_sph_b048_lean                 8/8    0.15  segment  sphere    78.5398   16/16         ✓
+prereg_v2_vox015_sph_b048_ptfe1e-16_lean2      1/1    0.15  segment  sphere    78.5398     0/2         ✓
+prereg_v2_vox015_sph_b048_sg0_lean             1/1    0.15  segment  sphere        0.0     2/2         ✓
+prereg_v2_vox015_sph_b048_sg113097_lean        1/1    0.15  segment  sphere    113.097     2/2         ✓
+prereg_v2_vox015_sph_b048_sg7854_lean2         1/0    0.15  segment  sphere     7854.0     0/1         ✓
+prereg_v2_vox015_sph_b048_yvgcf_lean           1/1    0.15  segment  sphere    78.5398     2/2         ✓
+prereg_v2_vox04_b048_lean2                     1/1     0.4  segment   point    11.0447     0/2         ✓
+prereg_v2_vox04_b048_sg100_fspt_lean2          8/8     0.4    point   point      100.0    0/16         ✓
+prereg_v2_vox04_b048_sg100_lean2               8/8     0.4  segment   point      100.0    0/16         ✓
+prereg_v2_vox04_b048_sg110447_fspt_lean2       8/8     0.4    point   point    11.0447    0/16         ✓
+prereg_v2_vox04_b048_sg110447_lean2            8/8     0.4  segment   point    11.0447    0/16         ✓
+prereg_v2_vox04_b048_yvgcf_lean2               1/1     0.4  segment   point    11.0447     0/2         ✓
+
+  σ_ion 열 = 이온값이 있는 팔 / 전체 (LEAN=2 는 0/N 이 정상)
+  → 판정: --dir <위 이름 중 하나>   ·  대조쌍: --dir A --compare-dir B --expect-differ <필드>
