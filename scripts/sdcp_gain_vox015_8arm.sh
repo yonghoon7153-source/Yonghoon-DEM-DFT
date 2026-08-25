@@ -24,6 +24,15 @@ set -uo pipefail
 VOX="${VOX:-0.15}"
 BRIDGE_UM="${BRIDGE_UM:-0.48}"          # prereg §5 — 격자와 무관하게 고정
 ARMS="${ARMS:-8}"
+#  ★★★ 2026-08-25 (R3-CX-09, Codex 3차) — **진단 런이 생산 이름공간을 못 쓴다.**
+#    옛 판은 ⓐ ARMS > 8 을 허용했고(실제 shift 는 8개뿐이라 조용히 8 로 잘린다)
+#    ⓑ 명시 `OUTDIR` 이 조립된 `_armN` 태그를 **통째로 덮어** `ARMS=2 OUTDIR=<생산경로>`
+#    로 진단 파일을 생산 이름에 쓸 수 있었다.
+#    ⇒ 상한을 강제하고, ARMS≠8 이면 사용자 OUTDIR 에도 접미사를 **붙인다**.
+if ! [ "$ARMS" -ge 1 ] 2>/dev/null || [ "$ARMS" -gt 8 ]; then
+  echo "ABORT — ARMS=$ARMS 는 1..8 이어야 한다 (SHIFTS 가 8개다; 초과는 조용히 잘린다)"
+  exit 2
+fi
 #  ★★ 2026-08-24 (CDXR3-7) — `ARMS` 는 **사전등록 계약이 아니다**.  옛 판은 마지막 봉인에
 #    `--require-arms "$ARMS"` 를 줘서 **자기가 설정한 값을 자기한테 요구**했다 — ARMS=2 도
 #    2팔을 요구하고 초록이 됐다 (실측).  prereg §4 가 고정한 것은 **8** 이다.
@@ -153,6 +162,12 @@ FS_TAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_TAG="_fspt"
 FS_FLAG=""; [ "$FIBRE_STAMP" = "point" ] && FS_FLAG=" --step3-fibre-stamp point"
 LEAN_TAG=""; [ "${LEAN:-0}" = "1" ] && LEAN_TAG="_lean"; [ "${LEAN:-0}" = "2" ] && LEAN_TAG="_lean2"
 OUTDIR="${OUTDIR:-$PWD/prereg_v2_vox${VOX/./}${SD_TAG}${BR_TAG}${SG_TAG}${YV_TAG}${PT_TAG}${PS_TAG}${FS_TAG}${AR_TAG}${LEAN_TAG}}"
+#  ★★★ R3-CX-09 — 진단 런(ARMS≠8)은 **사용자가 준 OUTDIR 에도** 접미사를 강제한다.
+#    안 그러면 `ARMS=2 OUTDIR=<생산경로>` 로 2팔 산출물이 8팔 디렉터리에 섞인다.
+if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then
+  OUTDIR="${OUTDIR}_arm${ARMS}"
+  echo "[p2] ⚠ 진단 런($ARMS 팔) — OUTDIR 에 강제 접미사: $OUTDIR"
+fi
 #  ★★★ RUNNER_CONFIG_END — 여기까지가 **순수 변수 조립**이다 (부작용 없음).
 #    규칙 L 이 이 지점까지를 서브셸에서 **실제로 실행해** 조립 결과를 검사한다.
 #    그 아래는 mkdir·venv·게이트라 실행하면 안 된다.  ⚠ 이 표지를 옮기면 규칙 L 이
@@ -407,8 +422,20 @@ if [ "$ARMS" -eq "$PREREG_ARMS" ]; then
   if ! python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --seal-only \
        --require-arms "$PREREG_ARMS" --require-digest; then
     echo "[p2] ✗ 계약 봉인이 깨졌다 — 위 근거를 고치고 다시 돌 것"
-    echo "──── 진단용 원값 (봉인이 이미 기각했으므로 창을 옮길 수 없다) ────"
-    python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true
+    #  ★★★ 2026-08-25 (R3-CX-02, Codex 3차) — **실패해도 원값을 자동으로 찍지 않는다.**
+    #    옛 판은 여기서 `--collect-only` 를 돌렸다.  "이미 기각됐으니 안전" 이라고 봤지만
+    #    Codex 가 반례를 냈다 — **metadata 를 일부러 깨뜨려 봉인을 실패시키고 raw table 을
+    #    보는 경로**가 열린다.  그리고 그 디렉터리는 고쳐서 다시 봉인할 수 있으므로,
+    #    "기각됐다" 가 "다시 못 쓴다" 를 뜻하지 않는다.
+    #    ⇒ 변경 불가능한 **기각 영수증**을 남기고, 원값을 보려면 사람이 명시로 친다.
+    _RCPT="$OUTDIR/.rejected_$(date -u +%Y%m%dT%H%M%SZ)"
+    { echo "rejected_utc=$(date -u +%FT%TZ)"; echo "arms=$ARMS"; echo "outdir=$OUTDIR";
+      echo "code_sha=$(git -C "$SCR/.." rev-parse --short=8 HEAD 2>/dev/null || echo unknown)";
+      echo "reason=seal_broken"; } > "$_RCPT"
+    chmod 444 "$_RCPT" 2>/dev/null || true
+    echo "[p2] 기각 영수증: $_RCPT  (이 디렉터리는 '한 번 기각됨' 으로 기록됐다)"
+    echo "     원값이 필요하면 **명시로** 칠 것 — 자동으로 찍지 않는다:"
+    echo "       python3 $SCR/sdcp_gain_verdict.py --dir \"$OUTDIR\" --collect-only"
     exit 1
   fi
   echo "[p2] ✓ 계약 봉인 통과 ($PREREG_ARMS 팔).  판정은 prereg §5 순서로 **따로** 돌 것"

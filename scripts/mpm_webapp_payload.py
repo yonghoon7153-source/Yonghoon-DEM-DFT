@@ -514,6 +514,24 @@ def resolve_ptfe_stamp(requested, sigma_ptfe):
     return ('centerline' if float(sigma_ptfe or 0.0) > 0 else 'off'), True
 
 
+#: ★★★ 2026-08-25 (R3-CX-02, Codex 3차) — **봉인 전에는 결과값을 stdout 에 안 낸다.**
+#   러너는 팔마다 이 stdout 을 그대로 보여 준다.  최종 `--seal-only` 를 `--collect-only`
+#   앞으로 옮긴 것만으로는 부족했다 — 운영자는 **팔이 끝날 때마다** σ_e·σ_ion 을 이미 봤다.
+#   사전등록의 요점은 "결과를 보고 창을 옮길 수 없게" 이므로, 결과-보유 출력은 가린다.
+#   ⚠ 진단 정보(dof·resid·시간·backend)는 **가리지 않는다** — 그것으로는 창을 못 옮기고,
+#     가리면 실패를 디버깅할 수 없다.  가리는 것은 **값 그 자체**뿐이다.
+#   ⚠ 기본은 **가림**이다 (생산이 기본).  값을 stdout 으로 보려면 명시로 연다.
+def _blind(a):
+    return not bool(getattr(a, 'show_results', False))
+
+
+def _sig_str(a, v, fmt='.4g'):
+    """봉인 모드면 `[봉인]`, 아니면 포맷된 값."""
+    if _blind(a):
+        return '[봉인 — --show-results 로 열림]'
+    return format(v, fmt)
+
+
 def _payload_reject_reason(a, step3):
     """의미적으로 실패한 payload 인가 → 사유 문자열 (없으면 None).
 
@@ -735,6 +753,13 @@ def main():
     #    러너의 `check_arm` 이 2차 방어를 하지만 그것으로 **대체할 수 없다** — Codex 가
     #    partial/missing·backend 위장 mutant 로 8팔 최종 봉인까지 통과시켰다.
     #    ⇒ 기본 fail-closed.  부분 payload 가 필요한 소비자(웹앱 미리보기 등)는 명시로 연다.
+    #  ★★★ 2026-08-25 (R3-CX-02) — 봉인 전에는 결과값을 stdout 에 안 낸다 (기본).
+    #    러너가 팔마다 stdout 을 그대로 보여 주므로, 옛 판에서는 운영자가 **봉인 전에**
+    #    16 팔의 σ_e·σ_ion 을 전부 봤다.  값은 payload JSON 에 그대로 있으므로 정보 손실은
+    #    없고, 사람이 **판정 전에 결과를 보는 경로**만 닫힌다.
+    ap.add_argument('--show-results', action='store_true',
+                    help='σ_e/σ_ion 값을 stdout 에 찍는다 (기본은 봉인).  ⚠ 사전등록 런에서는 '
+                         '쓰지 말 것 — 결과를 보고 판정 창을 옮길 수 있게 된다')
     ap.add_argument('--allow-partial-step3', action='store_true',
                     help='STEP3 가 실패/부분이어도 exit 0 으로 끝낸다 (기본은 nonzero).  '
                          '⚠ 과학 산출물에는 쓰지 말 것 — 부분 결과가 성공으로 캐시된다')
@@ -1577,9 +1602,12 @@ def main():
                                       'pristine_precision': f'{_pri_prec} — CSV precision 컬럼에서 유도'
                                                             '(정밀 디지타이즈 시 CSV만 갱신하면 일괄 반영); '
                                                             'docs/data/rint_eis_anchors.csv scenario keys'}
-                print(f"  STEP3 σ_e_eff = {step3['sigma_e_eff_S_cm']:.4g} S/cm  (vox {a.step3_vox}µm, "
-                      f"{_res3['n_dof']:,} dof, resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)  "
-                      f"share: " + " ".join(f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items()))
+                #  ★ R3-CX-02 — 값은 가리고 **진단은 남긴다** (dof·resid·시간).
+                print(f"  STEP3 σ_e_eff = {_sig_str(a, step3['sigma_e_eff_S_cm'])} S/cm  "
+                      f"(vox {a.step3_vox}µm, {_res3['n_dof']:,} dof, "
+                      f"resid {_res3['resid']:.1e}, {_time.time()-_t0:.0f}s)"
+                      + ('' if _blind(a) else '  share: ' + ' '.join(
+                          f"{k} {100*v:.0f}%" for k, v in step3['dissipation_share'].items())))
                 if _jhs is not None:                        # #29 Joule 발열 hot-spot 요약 (joule_field는 별도 export)
                     step3['joule'] = {'hot_frac_50': _jhs['hot_frac_50'], 'conc_ratio': round(_jhs['conc_ratio'], 2),
                                       'n_pts': _jhs['n'],
@@ -1818,10 +1846,12 @@ def main():
                     step3['temperature_provenance'] = dict(_temp_prov)
                     step3['sigma_ion_se_at_T_ref_S_cm'] = a._sigma_ion_se_ref
                     step3['ion_resid'] = float(_res3i['resid'])
-                    print(f"  STEP3 σ_ion_eff = {step3['sigma_ion_eff_S_cm']:.4g} S/cm  "
-                          f"({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, {_time.time()-_t1:.0f}s)  "
-                          f"share: " + " ".join(f"{k} {100*v:.0f}%"
-                                                for k, v in step3['ion_dissipation_share'].items()))
+                    print(f"  STEP3 σ_ion_eff = {_sig_str(a, step3['sigma_ion_eff_S_cm'])} "
+                          f"S/cm  ({_res3i['n_dof']:,} dof, resid {_res3i['resid']:.1e}, "
+                          f"{_time.time()-_t1:.0f}s)"
+                          + ('' if _blind(a) else '  share: ' + ' '.join(
+                              f"{k} {100*v:.0f}%"
+                              for k, v in step3['ion_dissipation_share'].items())))
                     # ★ Track-B — COMSOL 하이브리드(AM 해상구 + SE 연속체) 파라미터: τ_full/τ_geo/
                     #   κ_dom + AM 표면 face-walk 패치 분율.  κ_dom 이중계상 가드: 하이브리드는 AM
                     #   구를 기하로 해상하므로 AM-장애물 굴곡도는 모델이 스스로 만든다 → SE 연속체에

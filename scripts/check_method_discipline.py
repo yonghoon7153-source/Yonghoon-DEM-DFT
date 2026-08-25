@@ -1021,6 +1021,26 @@ def check_runner_integration(verbose=True, runner=None):
         problems.append('L_P2EXTRA| `P2_EXTRA="--periodic"` 가 **거부되지 않는다** — '
                         'P2_EXTRA 는 조립 문자열 맨 뒤라 러너의 `--expect-physics` 선언을 '
                         '덮는다.  주의 주석은 게이트가 아니다 (R3-CX-04)')
+    #  ⓖ ★★ 2026-08-25 (R3-CX-02/09) — 봉인 실패 시 **원값을 자동으로 안 찍는가**,
+    #     진단 런이 **생산 이름공간을 못 쓰는가**.
+    _seal_i2 = next((i for i, ln in enumerate(_rl) if '--seal-only' in ln), None)
+    #  ⚠ **실패 블록만** 본다.  진단 런(ARMS≠8) 분기의 `--collect-only` 는 정당하다
+    #    (그 분기는 "판정하지 말 것" 이라고 스스로 선언한다) — 거기까지 잡으면 과잉차단이다.
+    if _seal_i2 is not None:
+        _end = next((i for i in range(_seal_i2, min(_seal_i2 + 30, len(_rl)))
+                     if _rl[i].strip() == 'exit 1'), _seal_i2)
+        _after = _rl[_seal_i2:_end + 1]
+        _auto = [ln for ln in _after
+                 if '--collect-only' in ln and not ln.lstrip().startswith('echo')]
+        if _auto:
+            problems.append(f'L_FAILDUMP| 봉인 실패 경로가 `--collect-only` 를 **자동 실행**한다 '
+                            f'({_auto[0].strip()[:70]}) — metadata 를 일부러 깨뜨려 봉인을 '
+                            f'실패시키고 raw table 을 보는 경로가 열린다 (R3-CX-02)')
+    _a9 = runner_config({'ARMS': '2', 'OUTDIR': '/tmp/prod_dir'}, runner)
+    if not str(_a9.get('OUTDIR', '')).endswith('_arm2'):
+        problems.append(f'L_ARMNS| `ARMS=2 OUTDIR=<생산경로>` 가 그대로 쓰인다 '
+                        f'({_a9.get("OUTDIR")}) — 진단 산출물이 생산 이름공간에 섞인다 '
+                        f'(R3-CX-09)')
     if verbose and not problems:
         print(f'  ✓ 규칙 L — 러너 배선을 실행으로 확인 (LEAN=2 {len(_need)}플래그 · '
               f'EXPECT_PROTOCOL 통과 · PREREG_ARMS 상수 8 · 진단 런 분리 · '
@@ -1436,6 +1456,37 @@ def check_entrypoint_smoke(verbose=True, timeout=900, payload=None):
         else:
             errs.append('J_ARMCHK_NOFILE| plain 팔 산출물이 없어 통합 회귀를 돌리지 못했다 — '
                         '확인 못 한 것을 통과시키지 않는다')
+
+        #  ★★★ 2026-08-25 (R3-CX-02, Codex 3차) — **producer 가 기본에서 값을 가리는가.**
+        #    러너는 팔마다 producer stdout 을 그대로 보여 준다.  최종 봉인을 앞으로 옮긴
+        #    것만으로는 부족했다 — 운영자는 **팔이 끝날 때마다** σ_e·σ_ion 을 이미 봤다.
+        #    ⇒ 기본 실행의 stdout 에 σ 값이 **없어야** 하고, `--show-results` 로는 나와야
+        #      한다 (가리기만 하고 못 여는 것도 결함이다 — 디버깅이 막힌다).
+        _blind_out = os.path.join(d, 'blind.json')
+        _bc = [sys.executable, pay, '--scaffold', am, '--se', se_p,
+               '--n-vox', _SMOKE_NVOX, '--step3-vox', _SMOKE_VOX,
+               '--no-ion', '--no-pore', '--out', _blind_out]
+        try:
+            _rb = _sp.run(_bc, capture_output=True, text=True, timeout=timeout, cwd=d)
+            _rs = _sp.run(_bc[:-2] + ['--show-results', '--out', _blind_out + '.s'],
+                          capture_output=True, text=True, timeout=timeout, cwd=d)
+        except Exception as e:                              # noqa: BLE001
+            errs.append(f'J_BLINDRUN| 봉인 팔 실행 실패 ({type(e).__name__}: {e})')
+        else:
+            _lb = [x for x in ((_rb.stdout or '') + (_rb.stderr or '')).split('\n')
+                   if 'σ_e_eff' in x]
+            _ls = [x for x in ((_rs.stdout or '') + (_rs.stderr or '')).split('\n')
+                   if 'σ_e_eff' in x]
+            if not _lb or '봉인' not in _lb[0]:
+                errs.append(f'J_NOTBLIND| 기본 실행이 σ_e 값을 stdout 에 **찍는다** '
+                            f'({(_lb or ["(줄 없음)"])[0].strip()[:90]}) — 러너가 팔마다 '
+                            f'이것을 보여 주므로 운영자가 봉인 전에 결과를 본다 (R3-CX-02)')
+            if not _ls or '봉인' in _ls[0]:
+                errs.append(f'J_NOTOPENABLE| `--show-results` 로도 값이 안 나온다 '
+                            f'({(_ls or ["(줄 없음)"])[0].strip()[:90]}) — 가리기만 하고 '
+                            f'못 여는 것도 결함이다 (디버깅이 막힌다)')
+            elif verbose:
+                print('  ✓ producer 봉인 — 기본은 값을 가리고 `--show-results` 로 열린다')
 
         #  ★★★ 2026-08-25 (Codex 재리뷰 조건 7) — **실패 경로도 실물로 태운다.**
         #    여태 규칙 J 는 성공 팔만 돌렸다.  그래서 `_payload_reject_reason` 이
@@ -1869,6 +1920,17 @@ def _selftest():
     import tempfile as _tl, shutil as _sl
     _RSRC = open(os.path.join(ROOT, L_RUNNER), encoding='utf-8').read()
 
+    def _rmut_src(src_):
+        """완성된 러너 소스 문자열로 규칙 L 을 돌린다 (여러 겹을 동시에 지울 때)."""
+        _rel = os.path.join('scripts', 'mutant_runner.sh')
+        _abs = os.path.join(ROOT, _rel)
+        with open(_abs, 'w', encoding='utf-8') as _f:
+            _f.write(src_)
+        try:
+            return check_runner_integration(verbose=False, runner=_rel)[0]
+        finally:
+            os.remove(_abs)
+
     def _rmut(old_, new_):
         assert _RSRC.count(old_) == 1, (old_[:40], _RSRC.count(old_))
         _d = _tl.mkdtemp()
@@ -1893,9 +1955,19 @@ def _selftest():
     chk(f'L-4: ★★ 사전등록 팔 수가 `$ARMS` 를 따라가면 **잡는다** (자기가 자기한테 '
         f'요구하는 봉인) ({len(_m3)}건)',
         any(x.startswith('L_PREREG') for x in _m3))
+    #  ⚠ 2026-08-25: 진단 분리는 이제 **두 겹**이다 — 조립 태그(`AR_TAG`) 와 R3-CX-09 의
+    #    강제 접미사.  한 겹만 지우면 다른 겹이 막으므로(정상), 돌연변이는 **둘 다** 지운다.
+    #    그래야 "분리가 실제로 사라진 상태" 를 시험한다.
     _m4 = _rmut('${FS_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${LEAN_TAG}')
-    chk(f'L-5: ★ 진단 런(ARMS≠8)이 사전등록과 같은 OUTDIR 로 가면 **잡는다** ({len(_m4)}건)',
-        any(x.startswith('L_ARMTAG') for x in _m4))
+    _m4b = [x for x in _m4 if x.startswith(('L_ARMTAG', 'L_ARMNS'))]
+    chk(f'L-5a ★ 조립 태그만 지우면 **강제 접미사가 막는다** (과잉차단 아님, {len(_m4)}건)',
+        not _m4b)
+    _both = _RSRC.replace('${FS_TAG}${AR_TAG}${LEAN_TAG}', '${FS_TAG}${LEAN_TAG}')
+    _m4c = _rmut_src(_both.replace(
+        'if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then', 'if false; then'))
+    chk(f'L-5: ★★ 두 겹을 **다** 지우면 잡는다 — 진단 런이 생산 OUTDIR 에 쓴다 '
+        f'({len(_m4c)}건)',
+        any(x.startswith(('L_ARMTAG', 'L_ARMNS')) for x in _m4c))
     #  ★ 표지가 사라지면 **거부**한다 (잘못 자르면 진짜 러너를 돌려 버린다)
     _m5 = _rmut(L_MARKER, 'RUNNER_CONFIG_' + 'RENAMED')
     chk(f'L-6: ★★ `{L_MARKER}` 표지가 없으면 **거부**한다 (fail-closed — 어디까지가 '
@@ -1903,6 +1975,16 @@ def _selftest():
         any(x.startswith('L_PROBE') for x in _m5))
     _m6 = _rmut('  echo "[p2] 계약 봉인 — 데이터가 쓸 만한가 (판정 아님, 원값은 아직 안 본다)"',
                 '  python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only')
+    _m12 = _rmut('''    echo "     원값이 필요하면 **명시로** 칠 것 — 자동으로 찍지 않는다:"''',
+                 '''    python3 "$SCR/sdcp_gain_verdict.py" --dir "$OUTDIR" --collect-only || true''')
+    chk(f'L-12: ★★ 봉인 **실패** 경로가 원값을 자동으로 찍으면 잡는다 — metadata 를 '
+        f'일부러 깨뜨려 raw table 을 보는 경로 (R3-CX-02) ({len(_m12)}건)',
+        any(x.startswith('L_FAILDUMP') for x in _m12))
+    _m13 = _rmut('''if [ "$ARMS" -ne 8 ] && [ "${OUTDIR%_arm$ARMS}" = "$OUTDIR" ]; then''',
+                 'if false; then')
+    chk(f'L-13: ★★ 진단 런이 **사용자 OUTDIR** 을 그대로 쓰면 잡는다 — 2팔이 8팔 '
+        f'디렉터리에 섞인다 (R3-CX-09) ({len(_m13)}건)',
+        any(x.startswith('L_ARMNS') for x in _m13))
     _m10 = _rmut('--require-arms "$PREREG_ARMS" --require-digest',
                  '--require-arms "$PREREG_ARMS"')
     chk(f'L-10: ★ 최종 봉인에서 `--require-digest` 를 빼면 **잡는다** ({len(_m10)}건)',

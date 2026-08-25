@@ -234,10 +234,15 @@ def _selftest():
 
     #  ── 수렴 ────────────────────────────────────────────────────────────────────
     chk(conv_ok(0, False, 1e-9) == (True, ''), 'B1 정상 증인')
-    for _v, _lbl in ((0.5, 'float 0.5 (옛 판은 int() 절삭으로 통과시켰다)'),
-                     (True, 'bool True (bool 은 int 의 하위형)'),
-                     (None, 'None')):
-        chk(conv_ok(_v, False, 1e-9)[0] is False, f'B2 cg_info={_lbl} → 거부')
+    #  ⚠ **코드까지** 본다 (Codex R3-CX-08).  `[0] is False` 만 보면, 타입 검사를 옛
+    #    `isinstance` 로 되돌려도 `0.5 != 0` 이 `unconv` 로 대신 물어 **초록**이다 —
+    #    그러면 이 시험은 타입 검사를 인증하지 못한다 (실측으로 그랬다).
+    for _v, _code, _lbl in ((0.5, 'type', 'float 0.5 (옛 판은 int() 절삭으로 통과시켰다)'),
+                            (True, 'type', 'bool True (bool 은 int 의 하위형)'),
+                            (None, 'blind', 'None')):
+        _o, _w = conv_ok(_v, False, 1e-9)
+        chk(_o is False and _w == _code,
+            f'B2 cg_info={_lbl} → `{_code}` 로 거부 (받은 것: {_w!r})')
     chk(conv_ok(0, 0, 1e-9)[0] is False, 'B3 unconverged 가 bool 이 아니면 거부')
     for _r, _lbl in ((None, 'None'), (float('nan'), 'NaN'), (float('inf'), 'inf'),
                      (-1e-9, '음수'), (2e-6, '문턱 초과')):
