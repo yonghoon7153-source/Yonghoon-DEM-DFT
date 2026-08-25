@@ -143,15 +143,15 @@ const KNEE_REASONS: Rule[] = [
   [/^capacity is not fading$/, () => '용량이 감소하지 않습니다'],
   // Double Bacon-Watts (ADR 0021) — onset 과 point 를 한 적합으로.
   [
-    /^fade leaves its early trend at cycle ([\d.]+) \(onset\) and settles in by cycle ([\d.]+), steepening ([\d.]+)x \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    /^fade leaves its early trend at cycle ([\d.]+) \(onset\), knee-point at cycle ([\d.]+), steepening ([\d.]+)x \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
     (m) =>
-      `${m[1]}번부터 초기 추세를 벗어나기 시작해(onset) ${m[2]}번에 급감이 ` +
-      `자리 잡습니다(point) — ${m[3]}배 (${m[4]} → ${m[5]} %/cycle)`,
+      `${m[1]}번부터 초기 추세를 벗어나기 시작해(onset) ${m[2]}번이 ` +
+      `knee-point 입니다 — ${m[3]}배 (${m[4]} → ${m[5]} %/cycle)`,
   ],
   [
-    /^fade begins at cycle ([\d.]+) \(onset\) and settles in by cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
+    /^fade begins at cycle ([\d.]+) \(onset\), knee-point at cycle ([\d.]+) \(([-+\d.]+) -> ([-+\d.]+) %\/cycle\)$/,
     (m) =>
-      `${m[1]}번에서 열화가 시작돼(onset) ${m[2]}번에 자리 잡습니다(point) ` +
+      `${m[1]}번에서 열화가 시작되고(onset) ${m[2]}번이 knee-point 입니다 ` +
       `(${m[3]} → ${m[4]} %/cycle)`,
   ],
   [

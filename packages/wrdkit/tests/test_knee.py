@@ -1169,14 +1169,26 @@ def _three_slope(c):
 
 
 def test_dbw_reports_the_onset_and_the_point_of_one_event():
-    """심어 둔 두 전환(60, 90)을 되찾아야 한다."""
+    """심어 둔 두 전환(60, 90)을 되찾아야 한다.
+
+    onset 은 이중 적합의 첫 전환이고, point 는 **별도의 단일** Bacon-Watts
+    적합의 전환이다 (Fermin-Cueto 2020, Codex #1).  이중 적합의 두 번째
+    전환은 사라지지 않고 `second_transition` 으로 남는다 -- 전환이 언제
+    끝나는지도 읽을 값이다.
+    """
     analysis = detect_knee(*_curve(150, _three_slope), reference_cycle=3)
     dbw = analysis.by_method("dbw")
     assert dbw.detected, dbw.reason
     assert dbw.onset_cycle is not None
     assert dbw.onset_cycle < dbw.cycle
     assert dbw.onset_cycle == pytest.approx(60, abs=4), dbw.reason
-    assert dbw.cycle == pytest.approx(90, abs=4), dbw.reason
+    assert dbw.cycle == pytest.approx(90, abs=6), dbw.reason
+    # 논문 정의로 나온 값임을 표시한다 -- 폴백으로 나온 x2 와 구별되어야 한다.
+    assert dbw.detail["knee_point_from_single_bw"] == 1.0
+    assert dbw.detail["breakpoint"] == dbw.cycle
+    # point 는 두 전환 사이에 있다.  밖에 있으면 두 적합이 다른 사건을 본 것.
+    assert dbw.onset_cycle <= dbw.cycle <= dbw.detail["second_transition"]
+    assert dbw.detail["second_transition"] == pytest.approx(90, abs=4)
     assert analysis.primary.method == "dbw"
     assert analysis.primary.onset_cycle == dbw.onset_cycle
 
@@ -1402,4 +1414,12 @@ def test_an_exact_double_transition_input_is_recovered_to_machine_precision():
     dbw = analysis.by_method("dbw")
     assert dbw.detected, dbw.reason
     assert dbw.onset_cycle == pytest.approx(25.0, abs=0.5)
-    assert dbw.cycle == pytest.approx(55.0, abs=0.5)
+    # 이중 적합의 두 번째 전환은 여전히 기계 정밀도로 회수된다 ...
+    assert dbw.detail["second_transition"] == pytest.approx(55.0, abs=0.5)
+    # ... 그리고 보고되는 knee-point 는 단일 적합의 전환이라 그보다 조금
+    # 이르다 (53.8).  두 전환짜리 곡선을 굽은 직선 **하나**로 설명하면 그
+    # 굽이가 두 번째 전환에 닿기 직전에 놓이기 때문이고, 논문이 knee-point
+    # 라고 부르는 것이 바로 그 값이다.
+    assert dbw.detail["knee_point_from_single_bw"] == 1.0
+    assert 25.0 <= dbw.cycle <= 55.0
+    assert dbw.cycle == pytest.approx(53.8, abs=1.0)

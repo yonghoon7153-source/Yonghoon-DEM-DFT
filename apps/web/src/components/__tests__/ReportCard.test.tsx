@@ -152,7 +152,7 @@ describe('DBW onset·point (ADR 0021)', () => {
     cycle: 24.2,
     detected: true,
     reason:
-      'fade leaves its early trend at cycle 20 (onset) and settles in by cycle 24, ' +
+      'fade leaves its early trend at cycle 20 (onset), knee-point at cycle 24, ' +
       'steepening 8.00x (-0.100 -> -0.800 %/cycle)',
     detail: {},
     status: 'detected' as const,

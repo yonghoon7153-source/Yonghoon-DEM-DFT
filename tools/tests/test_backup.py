@@ -141,6 +141,57 @@ def check_a_partial_file_is_never_published_under_the_real_name() -> None:
         check("복사했다고 세지 않는다", report.copied == 0, f"copied={report.copied}")
 
 
+def check_every_original_is_copied_not_only_wrd() -> None:
+    """EIS 원본도 uploads/ 에 산다 (ADR 0019).
+
+    `*.wrd` 글롭이 `.mpr`·`.mpt`·`.mps` 를 지나쳐 놓고 "복사 2건" 을 보고했다.
+    백업이 낼 수 있는 최악의 실패다 -- 성공한 것처럼 보이고, 사라진 것은
+    복원할 때에야 안다.  확장자로 고르는 대신 uploads/ 안의 파일 전부를
+    복사한다: 여기 들어오는 것은 정의상 전부 원본이고, 새 형식이 생겨도
+    누가 알아채는 날이 아니라 도착하는 날부터 백업된다.
+    """
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        data, destination = root / "data", root / "backup"
+        database = _data_dir(data, "aaa")
+        for name, blob in (("scan.mpr", b"BIO-LOGIC MODULAR FILE\x1a"),
+                           ("scan.mps", b"EC-LAB SETTING FILE"),
+                           ("export.mpt", b"EC-Lab ASCII FILE")):
+            (data / "uploads" / name).write_bytes(blob)
+
+        report = run(destination, data, database)
+
+        copied = sorted(p.name for p in (destination / "uploads").iterdir())
+        check("EIS 원본도 복사한다",
+              copied == ["aaa.wrd", "export.mpt", "scan.mpr", "scan.mps"],
+              f"{copied}")
+        check("전부 복사했다고 센다", report.copied == 4, f"copied={report.copied}")
+        for name in ("scan.mpr", "scan.mps", "export.mpt"):
+            check(f"{name} 의 바이트가 그대로다",
+                  (destination / "uploads" / name).read_bytes()
+                  == (data / "uploads" / name).read_bytes())
+        # 임시 이름이 원본의 형식을 잘못 말하면 안 된다 (`with_suffix` 는
+        # 마지막 확장자를 갈아 끼워서 scan.mpr 을 scan.wrd.part 로 만든다).
+        check("임시 파일을 남기지 않는다",
+              not any(p.name.endswith(".part")
+                      for p in (destination / "uploads").iterdir()))
+
+
+def check_a_directory_in_uploads_does_not_stop_the_backup() -> None:
+    """누가 폴더째 끌어다 놓아도 나머지 원본은 넘어가야 한다."""
+    with tempfile.TemporaryDirectory() as temporary:
+        root = Path(temporary)
+        data, destination = root / "data", root / "backup"
+        database = _data_dir(data, "aaa")
+        (data / "uploads" / "어쩌다폴더").mkdir()
+
+        report = run(destination, data, database)
+
+        check("폴더는 건너뛴다", not (destination / "uploads/어쩌다폴더").exists())
+        check("나머지는 복사한다", (destination / "uploads/aaa.wrd").exists())
+        check("실패로 세지 않는다", report.problems == [], f"{report.problems}")
+
+
 def check_a_missing_database_is_reported_not_invented() -> None:
     """오타 난 경로가 빈 DB 파일을 만들어 놓고 성공했다고 하면 안 된다."""
     with tempfile.TemporaryDirectory() as temporary:

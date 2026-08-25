@@ -1363,6 +1363,37 @@ def _bw_fit(cycles, values):
     return best
 
 
+def _knee_point(single, x1: float, x2: float, detail: dict) -> float:
+    """The paper's knee-point: the single Bacon-Watts transition.
+
+    Bounded by the double fit's own transitions.  The single bend, if the two
+    fits describe the same event, has to sit inside the stretch over which
+    that event happens -- measured across five shapes it does, comfortably
+    (60.00 in [60.00, 62.83]; 89.18 in [50.00, 90.00]).  Where it does not,
+    the two fits disagree about *what* they found, and taking the single one
+    anyway would put the knee-point outside the transition its own onset
+    opens.  Then x2 answers, and ``knee_point_from_single_bw`` says so: a
+    number that came from the fallback must not be read as the paper's.
+
+    ``single`` is ``None`` only when every seeded single fit failed while a
+    double one converged, which is the same disagreement in a louder form.
+    """
+    detail["knee_point_from_single_bw"] = 0.0
+    point = x2
+    if single is not None:
+        candidate = float(single[1][3])
+        if x1 <= candidate <= x2:
+            detail["knee_point_from_single_bw"] = 1.0
+            point = candidate
+        else:
+            detail["knee_point_outside_transitions"] = candidate
+    # 여기까지 `breakpoint` 는 x2 였다 -- 위쪽 사퇴 메시지들이 x2 를 말하기
+    # 때문이다.  knee 로 보고하는 순간부터는 이것이 knee-point 여야 한다:
+    # 화면도 내보내기도 이 열쇠를 읽는다.
+    detail["breakpoint"] = point
+    return point
+
+
 def _judge_bacon_watts(cycles, values, detail, point, onset, slope_before,
                        slope_after, gain) -> KneeResult:
     """The same gates the two-line fit passes, with Bacon-Watts wording.
@@ -1413,8 +1444,11 @@ def _judge_bacon_watts(cycles, values, detail, point, onset, slope_before,
     if onset is None:
         where = f"at cycle {point:.0f} (one transition; no separate onset resolved)"
     else:
-        where = (f"at cycle {onset:.0f} (onset) and settles in "
-                 f"by cycle {point:.0f}")
+        # "settles in by cycle Y" 였다.  Y 가 이중 적합의 두 번째 전환일
+        # 때는 맞는 말이었지만, 이제 Y 는 단일 적합의 굽이 -- knee 그 자체다.
+        # 전환이 *끝나는* 자리는 `second_transition` 이 따로 든다.
+        where = (f"at cycle {onset:.0f} (onset), knee-point "
+                 f"at cycle {point:.0f}")
     if not np.isfinite(ratio):
         return KneeResult(
             "dbw", point, True,
@@ -1444,11 +1478,25 @@ def _at_a_bound(value: float, low: float, high: float,
 
 
 def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
-    """Knee-onset and knee-point from a Double Bacon-Watts fit (ADR 0021).
+    """Knee-onset and knee-point from the Bacon-Watts pair (ADR 0021).
 
-    One fit estimates both ends of the same event: where the fade first
-    leaves its early trend (x1, the onset) and where the rapid loss settles
-    in (x2, the point).  The other criteria answer only the second question.
+    Two fits, one for each question, as Fermin-Cueto 2020 defines them:
+
+    * **knee-onset** is the *double* fit's first transition (x1) -- where the
+      curve first leaves its early trend.
+    * **knee-point** is a separate *single* Bacon-Watts fit's transition --
+      the one place a single bend best describes the whole record.
+
+    Reporting the double fit's **second** transition as the knee-point was
+    the obvious reading of "x1 and x2" and it is not the paper's estimator
+    (Codex #1).  x2 is where the transition *finishes*, so it lands late --
+    8.4 cycles late on the review's curve -- and every number we published
+    under the paper's name would have been biased against every number
+    published by anyone else using it.  x2 is still measured and still
+    reported, under its own name (``second_transition``).
+
+    Both fits already run here: the single one is the null model the double
+    has to beat, so the paper's definition costs nothing.
 
     The second transition has to earn itself, exactly as the third line does
     in ``_segmented_knee``: on a curve that one transition describes -- a
@@ -1503,6 +1551,10 @@ def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
         if escalate:
             detail = {
                 "knee_onset": x1, "breakpoint": x2,
+                # 이중 적합의 두 번째 전환.  더 이상 knee-point 가 아니지만
+                # 지우지 않는다 -- 전환이 언제 *끝나는지* 는 그 자체로 읽을
+                # 값이고, 정의를 다시 논의할 때 필요한 숫자다.
+                "second_transition": x2,
                 "gamma_onset": g1, "gamma_point": g2,
                 "slope_before": a1 - a2 - a3, "slope_after": a1 + a2 + a3,
                 "rss_dbw": sse, "rss_single_line": rss_single,
@@ -1544,8 +1596,9 @@ def _dbw_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
             # not the onset of the fade; the knee is the closing transition
             # alone.
             onset = x1 if a2 < 0 else None
+            point = _knee_point(single, x1, x2, detail)
             judged_double = _judge_bacon_watts(
-                cycles, values, detail, x2, onset,
+                cycles, values, detail, point, onset,
                 a1 - a2 - a3, a1 + a2 + a3, detail["fit_gain_score"],
             )
             if judged_double.detected:
@@ -1590,6 +1643,11 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
     resample is one fit, and 200 of them belong in a report script, not in
     every dashboard render (ADR 0021).
 
+    Each resample refits **both** models, because the two estimates come from
+    two different fits (see ``_dbw_knee``).  Taking the double fit's x2 as the
+    point interval -- which is what this did while x2 *was* the point -- would
+    now hand back an interval for a quantity the criterion no longer reports.
+
     ``None`` when the base fit fails or fewer than half the resamples
     converge -- an interval built from the surviving quarter would look exact
     and mean nothing (0.4).
@@ -1621,6 +1679,11 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
     # where the bounded one is [65.1, 68.8].
     bounds = ([-np.inf] * 4 + [lo, lo, gamma_lo, gamma_lo],
               [np.inf] * 4 + [hi, hi, gamma_hi, gamma_hi])
+    single = _bw_fit(cycles, values)
+    if single is None:
+        return None
+    single_bounds = ([-np.inf] * 3 + [lo, gamma_lo],
+                     [np.inf] * 3 + [hi, gamma_hi])
     rng = np.random.default_rng(seed)
     onsets, points = [], []
     n = len(cycles)
@@ -1631,14 +1694,26 @@ def dbw_confidence_interval(cycles, values, *, n_boot: int = 200,
                                      p0=popt, jac=_dbw_jacobian, bounds=bounds,
                                      ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
                                      maxfev=20000)
+            bent, _ = curve_fit(_bw_model, cycles[index], values[index],
+                                p0=single[1], jac=_bw_jacobian,
+                                bounds=single_bounds,
+                                ftol=DBW_FIT_TOL, xtol=DBW_FIT_TOL,
+                                maxfev=20000)
         except (RuntimeError, ValueError):
             continue
         if _at_a_bound(resampled[6], gamma_lo, gamma_hi) or \
-                _at_a_bound(resampled[7], gamma_lo, gamma_hi):
+                _at_a_bound(resampled[7], gamma_lo, gamma_hi) or \
+                _at_a_bound(bent[4], gamma_lo, gamma_hi):
             continue          # a pressed transition width is not an estimate
         low, high = sorted((float(resampled[4]), float(resampled[5])))
+        point = float(bent[3])
+        # 점 추정에 건 것과 같은 조건 (`_knee_point`).  두 적합이 서로 다른
+        # 사건을 본 재표집은 구간에 넣지 않는다 -- 넣으면 구간이 넓어진 것이
+        # 불확실성인지 불일치인지 알 수 없게 된다.
+        if not (low <= point <= high):
+            continue
         onsets.append(low)
-        points.append(high)
+        points.append(point)
     # Half, rounded **up**: with an odd n_boot the floor let a minority speak.
     # One success out of three passed ``1 < 3 // 2`` and returned a
     # zero-width interval; zero out of one passed ``0 < 0`` and crashed on an

@@ -1,16 +1,23 @@
 #!/usr/bin/env python3
 """Copy the parts of ``data/`` that cannot be recreated.
 
-Two of the three things in there are irreplaceable and one is not:
+Some of what is in there is irreplaceable and some of it is not:
 
-* ``uploads/`` — the original ``.wrd`` files.  Irreplaceable, and the reason
-  this script exists.  A file lost here is a measurement lost.
+* ``uploads/`` — the originals.  Irreplaceable, and the reason this script
+  exists.  A file lost here is a measurement lost.
+
+  **Every** file, not only ``.wrd``.  EIS put ``.mpr``, ``.mpt`` and ``.mps``
+  in the same directory (ADR 0019), and a ``*.wrd`` glob walked straight past
+  them while reporting success — the exact failure this module says below is
+  the worst one a backup can have.  Originals are content-addressed
+  (CLAUDE.md §0.2), so "everything in here" is the honest rule and any new
+  format is covered the day it arrives rather than the day somebody notices.
 * ``workbench.db`` — every mass, composition, group and preset anybody typed.
   Small, and hours of work.
-* ``runs/`` — the parsed-column cache.  **Skipped.**  It rebuilds itself from
-  the originals (ADR 0003) and it is the bulk of the directory; copying it
-  would multiply the time and the space for something the app throws away on
-  its own when it looks doubtful.
+* ``runs/``, ``spectra/``, ``gitt/`` — the parse caches.  **Skipped.**  They
+  rebuild themselves from the originals (ADR 0003, 0020, 0022) and they are
+  the bulk of the directory; copying them would multiply the time and the
+  space for something the app throws away on its own when it looks doubtful.
 
 The database is copied through SQLite's own backup API, not as a file.  A live
 SQLite database has pages in flight, and ``cp`` of one while the server is
@@ -89,7 +96,12 @@ def backup_uploads(source: Path, destination: Path, report: Report) -> None:
         report.problems.append(f"업로드 폴더가 없습니다: {source}")
         return
     destination.mkdir(parents=True, exist_ok=True)
-    for item in sorted(source.glob("*.wrd")):
+    for item in sorted(source.iterdir()):
+        # 확장자로 고르지 않는다 -- 여기 들어오는 것은 정의상 전부 원본이다.
+        # 디렉터리만 건너뛴다: uploads/ 는 평평하지만, 누가 폴더째 끌어다
+        # 놓았을 때 copy2 가 IsADirectoryError 로 죽는 대신 넘어가야 한다.
+        if not item.is_file():
+            continue
         target = destination / item.name
         size = item.stat().st_size
         # Same name means same bytes -- the name *is* the hash.  A size
@@ -98,7 +110,10 @@ def backup_uploads(source: Path, destination: Path, report: Report) -> None:
         if target.exists() and target.stat().st_size == size:
             report.skipped += 1
             continue
-        temporary = target.with_suffix(".wrd.part")
+        # `with_suffix` 를 쓰지 않는다: `abc.mpr` 의 마지막 확장자를 갈아
+        # 끼우므로 `.wrd.part` 를 주면 `abc.wrd.part` 가 되어, 임시 이름이
+        # 원본의 형식을 잘못 말하게 된다.
+        temporary = target.with_name(item.name + ".part")
         try:
             shutil.copy2(item, temporary)
             os.replace(temporary, target)
