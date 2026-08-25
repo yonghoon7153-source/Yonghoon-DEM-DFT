@@ -1904,6 +1904,33 @@ def _selftest():
         f'(차이: {sorted(set(_GEN_FIELDS) ^ set(_GEN_FIELDS_LEGACY))})',
         set(_GEN_FIELDS) == set(_GEN_FIELDS_LEGACY))
 
+    #  ── ㊸ 2026-08-25 (R4, 배터리가 잡은 구멍) — **각 계약이 홀로 물리는가** ────────────
+    #    강화한 배터리가 셋을 `★놓침★` 으로 냈다: 엄격 타입·계획 스키마·PTFE 기록 검사를
+    #    각각 꺼도 rc=0 이었다 — **다른 게이트가 대신 물어** 회귀가 그 검사를 인증하지
+    #    못했다 (R3-CX-08 에서 `B2` 가 겪은 것과 같은 부류, 이번엔 셋).
+    #    ⇒ **그 검사만** 물 수 있는 입력을 준다.
+    #  ⓐ 타입 — `periodic_xy` 를 문자열로.  PTFE·계획은 정상이라 `TYPE` 밖에 물 수 없다.
+    _v43a = verdict(mk(base, [v * 1.12 for v in base],
+                       _manifest=dict(_FIX_MAN, periodic_xy='False')))
+    chk(f'㊸a ★★ `periodic_xy="False"`(문자열) → **`TYPE`** 으로 HOLD '
+        f'({_v43a["decision"]}/{_v43a.get("hold_code")})',
+        _v43a['decision'] == 'HOLD' and _v43a.get('hold_code') == 'TYPE')
+    #  ⓑ 계획 스키마 — 키가 **빠진** 계획.  타입·PTFE 는 정상이다.
+    _v43b = verdict(mk(base, [v * 1.12 for v in base],
+                       _manifest=_stamp_pid(dict(_FIX_MAN,
+                                                 component_plan={'electronic': True}))))
+    chk(f'㊸b ★★ 계획에 키가 빠지면 **`PLAN`** 으로 HOLD (`plan_ok` 만 물 수 있다) '
+        f'({_v43b["decision"]}/{_v43b.get("hold_code")})',
+        _v43b['decision'] == 'HOLD' and _v43b.get('hold_code') == 'PLAN')
+    #  ⓒ PTFE 기록 — 키를 **지운다**.  타입 검사는 부재를 건너뛰므로 `PTFE` 밖에 없다.
+    #  ⚠ `_stamp_pid` 가 `setdefault` 로 다시 채우므로 **찍은 뒤에** 지운다.
+    _m43c = _stamp_pid(dict(_FIX_MAN))
+    _m43c.pop('ptfe_cells_observed', None)
+    _v43c = verdict(mk(base, [v * 1.12 for v in base], _manifest=_m43c))
+    chk(f'㊸c ★★ `ptfe_cells_observed` 키 부재 → **`PTFE`** 로 HOLD (타입 검사는 부재를 '
+        f'건너뛴다) ({_v43c["decision"]}/{_v43c.get("hold_code")})',
+        _v43c['decision'] == 'HOLD' and _v43c.get('hold_code') == 'PTFE')
+
     #  ── ㊴ 2026-08-25 (Codex 재리뷰 조건 4) — **새 규약 축 둘** ────────────────────────
     #    `periodic_xy` (seam 면이 회로에 드는가) 와 `plate_rule` (CDXR3-6 이 바꾼 결합 규약,
     #    σ_e **절대값**이 달라진다) 이 `PROTOCOL_FIELDS` 에 들어갔다.  판정기는 해시로만

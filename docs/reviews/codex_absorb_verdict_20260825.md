@@ -269,3 +269,69 @@ raw manifest 재계산을 통과한 receipt · input digest + required component
 seal · bed × origin × side × phase 별 p1→p2 접촉 수 census** 를 갖춰 돌린다.
 옛 팔과 새 팔은 섞지 않는다 — 그리고 이제 `plate_rule` 이 규약 해시에 들어가 그 금지가
 **기계로 집행된다** (옛 팔은 `p1-`, 새 팔은 `p2-`).
+
+---
+
+# 4차 독립 재리뷰 (Codex, 2026-08-25) — **NO-GO** → 9건 대응
+
+Codex 판정의 핵심 문장: *"이번 22-mutant 영수증은 '그 22개가 그 실행에서 기대 prefix 를
+냈다' 는 증거로는 유효할 수 있지만, **R3-CX-02~06/08 이 닫혔거나 새 8팔을 안전하게 봉인할
+수 있다는 증거는 아니다.**"*  맞다.  Codex 는 실제 producer payload 를 8×2 로 확장해
+`collect()` 의 **진짜 `_read()` 경로**로 재현했고, 내 회귀는 그 경로를 안 탔다.
+
+| # | 요지 | 커밋 |
+|---|---|---|
+| 01 | `ideal_R0` 라는 **다른 이름으로 σ_e 노출** (대수적으로 같은 수) | `c0ac0ad8` |
+| 02 | plan·PTFE·PNM·비전자 수치가 fail-open — 실제-read 16팔이 **전부 h0** | `c0ac0ad8` |
+| 03 | argparse **축약**으로 금지 목록 우회 · 숨은 env · hash 밖 축 | `c0ac0ad8` |
+| 04 | backend 가 `requested` 로 **실제 사용값을 위장** | `c0ac0ad8` |
+| 05 | 타입을 **강제**해 `bool("false") == True` | `c0ac0ad8` |
+| 06 | K 가 `true \|\|`·`\|\| echo`·`; true`·`\| tee`·`exit 0;`·`&` 를 live 로 셈 | `c0ac0ad8` |
+| 07 | 반응 솔버 두 분기가 회귀 봉인 **밖** (구현은 옳으나 증인이 없다) | `c0ac0ad8` |
+| 08 | 진단 namespace 접미사가 **문자열** — junction/symlink 우회 | `c0ac0ad8` |
+| 09 | (=08 의 bundle 항목) 리뷰 bundle 이 base 를 안 실어 단독 재현 불가 | 다음 패키지 |
+
+## 이 라운드의 교훈
+
+★★★ **이름을 바꾼 것은 가린 것이 아니다.**  `ideal_R0` 는 `L/(R_bulk+0)` 이고
+`R_bulk = L/σ_e` 이므로 **σ_e 그 자체**다.  세 자리까지 그대로 찍히고 있었다.
+⇒ 회귀를 **값 기반**으로 바꿨다 — payload 에서 결과값을 뽑아 stdout 을 훑는다.
+이름 목록을 손으로 유지하는 방식은 다음 파생값에서 또 진다.
+
+★★★ **"없으면 건너뛴다" 는 삭제로 무력화된다.**  `component_plan` 을 지우면 required 를
+파생할 수 없어 검사가 통째로 꺼졌고, `ptfe_cells_observed` 를 지우면 `== 0` 검사가 안 돌았다.
+⇒ **부재 자체가 위반**이어야 한다.  단, 소급 필수화는 과잉차단이므로 `schema_version`
+세대 어댑터를 뒀다 (옛 세대는 옛 계약, **모르는 세대는 HOLD**).
+
+★★★ **강제(coercion)는 기록을 바꾸는 것이다.**  `bool("false") == True` 라 리더의
+`bool(...)` 이 JSON 문자열을 뒤집었다.  ⇒ 강제하지 않고 **거부**한다.
+
+★★ **배터리를 강화하니 자기 구멍 셋이 더 나왔다** — 엄격 타입·계획 스키마·PTFE 기록
+검사를 각각 꺼도 rc=0 이었다 (**다른 게이트가 대신 물어** 그 검사가 인증되지 않았다).
+⇒ 그 검사만 물 수 있는 입력으로 ㊸a/b/c 를 세웠다.  R3 의 `B2` 와 같은 부류가 이번엔 셋.
+
+★ **생산 과잉차단이 또 났다** (6번째) — `not_solvable` 을 `failed` 와 같이 취급했더니
+full-component 팔이 exit 3.  SE 비퍼콜은 **정상 물리 결과**다.  매번 그렇듯, 검사기를
+느슨하게 하는 대신 의미를 갈랐다.
+
+★ **검사기의 sed 범위가 낡아 대상 밖으로 나가 있었다** — 규칙 L 의 P2_EXTRA probe 가
+`sed -n "1,140p"` 라 러너가 길어지자 그 블록을 못 봤다.  표지 기준으로 바꿨다.
+
+## 아직 못 한 것
+
+· solver-affecting CLI **전수**를 parser 에서 생성해 schema 등재를 검사 (R4-CX-03 잔여)
+· cross-dir raw diff-set 을 `expect_differ` 와 **정확히** 일치시키기 (R4-CX-05 잔여)
+· `backend.across_dir` 류 **선언 뒤집기** pass-mutant (R4-CX-05 잔여)
+· selftest 를 구조화 결과(JSON/JUnit)로 내고 harness 가 exact ID multiset 을 검증 (R4-CX-06 잔여)
+· standalone full bundle (R4-CX-08 잔여)
+· `σ_SDCP = 250` 출처 · `ρ_SDCP` — **사용자 회신 대기**
+
+## Q1 재확인 (Codex 와 같은 결론)
+
+CL-33/41/58 의 절대 σ_e 는 현재 규약의 과학값으로 인용 불가 — 역사 기록이면
+`legacy conductive-surface tunnelling protocol` 이라고 명시한다.  ratio 의 공통모드
+상쇄는 **보장되지 않는다** (`κ_DBE = κ_SBE` 의 근거가 없다).  합성 census 의
+bottom −28.7 % · top −32.8 % 는 **합성 침대의 접촉 기둥 수**이지 실침대 σ 감소율이 아니다.
+어느 면이 지배하는지도 실침대에서 따로 세기 전에는 말할 수 없다.
+
+**흡수·GPU 재실행 모두 HOLD 유지.**

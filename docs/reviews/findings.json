@@ -961,6 +961,126 @@
     "scripts/check_method_discipline.py --selftest"
    ],
    "note": "`ARMS > 8` 허용(shift 8개라 조용히 잘림) + 명시 `OUTDIR` 이 `_armN` 태그를 덮음.\n★ 고침: `1 ≤ ARMS ≤ 8` 강제 + ARMS≠8 이면 사용자 OUTDIR 에도 접미사 강제.  회귀 L-13, L-5 를 두 겹 동시 제거로 재작성."
+  },
+  {
+   "id": "R4CX-01",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "봉인 producer 가 `ideal_R0` 라는 **다른 이름으로 σ_e 를 노출**",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "`R_bulk = L/σ_e` · `ideal_R0` 는 `R_int=0` ⇒ `L/(R_bulk+0) = σ_e` — 대수적으로 같은 수인데 `_blind()` 없이 `bulk 0.00105` 로 찍혔다.  **이름을 바꾼 것은 가린 것이 아니다.**\n★ 고침: 결과-보유 파생값 전부 봉인 + 회귀를 **값 기반**으로 (payload 에서 σ·κ·R·τ·면적을 뽑아 stdout 을 훑는다).  새 출력이 생겨도 자동으로 걸린다.\n★ 실측: `ideal_R0` 만 되돌리면 3건, collector geometry 만 되돌리면 2건 적발."
+  },
+  {
+   "id": "R4CX-02",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "plan·PTFE·PNM·비전자 수치 계약이 **fail-open** (실제-read 16팔이 전부 h0)",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "Codex 가 실제 producer payload 를 8×2 로 확장해 `collect()` 의 진짜 `_read()` 경로로 재현했다: plan 삭제 · `{'electronic':True}` · PTFE observed 키 삭제 · PNM missing · thermal/pore `resid=1e100` · 계획된 ionic 증거 전삭 — **전부 h0**.\n★ 고침: `strict_type_ok`·`plan_ok`/`plan_required`·`component_evidence_ok`·`ptfe_record_ok` 를 `run_contract` 에 신설하고 세 소비자가 공유.  `pore ⇒ pnm`.\n⚠ **소급 필수화는 과잉차단**이므로 `schema_version` 2→3 세대 어댑터를 뒀다 (모르는 세대는 HOLD).\n⚠ 그러다 잡은 것 — `not_solvable` 은 정상 물리 결과다 (SE 비퍼콜).  `failed` 취급했더니 full-component 팔이 exit 3 = 생산 과잉차단 6번째."
+  },
+  {
+   "id": "R4CX-03",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "러너의 resolved 물리 설정이 봉인되지 않는다 (argparse 축약·숨은 env)",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "정확 문자열 금지가 **축약**으로 뚫렸다 (`--period` → `--periodic`).  `--show-results`·`--sigma-ion-se`·`--sigma-superp`·`--swcnt-ion-block`·`--step3-amg` 도 통과.  `${MPM_PERIODIC_SIGMA:+--periodic}` 은 값 `0` 도 켰다 (킷 생성기는 `= \"1\"`).\n★ 고침: deny → **allow** 목록 · `allow_abbrev=False` · `MPM_PERIODIC_SIGMA` 를 `= 1` 로 · `periodic_xy` 를 러너 선언에 추가.\n⚠ 남은 것: solver-affecting CLI 전수를 parser 에서 **생성**해 schema 에 등재됐는지 보는 것은 미착수."
+  },
+  {
+   "id": "R4CX-04",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "backend 가 `requested` 로 **실제 사용값을 위장**",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "`b.get('used') or b.get('requested')` — `used` 만 지우고 `requested='cpu'` 를 남기면 component_backend → 'cpu' · producer None · check_arm None · 16팔 h0.\n★ 고침: 요청은 요청이고 사용은 사용이다.  `used` 만 권위값."
+  },
+  {
+   "id": "R4CX-05",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "`FIELD_CONTRACT` 가 raw 축·타입·독립 불변량의 단일 출처가 아니다",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "`periodic_xy`/`plate_rule` 이 `FIELD_CONTRACT` 와 `_read()` row 에 없었다.  타입도 registry 가 강제하지 않아 `bool(\"false\") == True` 로 16팔이 h0 였다.\n★ 고침: `STRICT_TYPES` 로 **강제하지 않고 거부**한다 (강제는 기록을 바꾸는 것이다).\n⚠ 남은 것: cross-dir raw diff-set 을 `expect_differ` 와 **정확히** 일치시키는 것과, `backend.across_dir` 같은 선언-뒤집기 pass-mutant 는 미완."
+  },
+  {
+   "id": "R4CX-06",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "규칙 K 와 배터리가 잘못된 적발을 성공으로 센다",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "K 가 여섯을 live 로 셌다: `true ||` · `|| echo` · `; true` · `| tee` · `exit 0;` · `&`.  배터리는 출력 문자열을 읽어 Traceback 없는 SyntaxError 의 소스 줄을 정상 적발로 분류했다.\n★ 고침: K 가 **제어흐름**을 본다 (죽은 가드·rc 를 덮는 뒤꼬리·파이프·백그라운드).  배터리는 **실행 전 compile** 검사 + rc=0 이면 `★놓침★`.\n⚠ 그러다 잡은 것 — 규칙 L 의 P2_EXTRA probe 가 `sed -n \"1,140p\"` 로 잘라 러너가 길어지자 **대상 밖**으로 나가 있었다."
+  },
+  {
+   "id": "R4CX-07",
+   "severity": "P1",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "반응 솔버 두 분기가 회귀 봉인 밖 (구현은 옳으나 증인이 없다)",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "reaction 만 sid5 를 occupancy 에서 빼거나 양면 band 를 signed 로 되돌려도 **rc 0 · SELFTEST PASS** 였다.  상 시험과 outside-slab 음성 대조가 `solve_sigma_z` 만 불렀다.\n★ 고침: 반응 **상 8 × 면 2 망별 격자** · **AM|SDCP 노출면 증인**(판에서 한 셀 멀어지면 band 를 벗어나는 기하) · 반응 **양면 outside-slab**.\n⚠ 처음엔 탄소 균일 slab 을 증인으로 썼다가 틀렸다 — `am_m = (sid==1)|(sid==2)` 라 AM 만 BV 를 만든다.  탄소 I=0 은 정상이고 그것으로는 못 가른다."
+  },
+  {
+   "id": "R4CX-08",
+   "severity": "P2",
+   "status": "claimed_fixed",
+   "owner": "claude",
+   "claimed_fixed_sha": "c0ac0ad8",
+   "opened_in": "docs/reviews/codex_absorb_verdict_20260825.md",
+   "title": "진단 namespace 접미사가 **문자열**이라 junction/symlink 로 우회",
+   "evidence_tests": [
+    "scripts/run_contract.py --selftest",
+    "scripts/sdcp_gain_verdict.py --selftest",
+    "scripts/step3_sigma.py --selftest"
+   ],
+   "note": "`user_arm2` 를 production 으로 가리키는 symlink 를 만들면 문자열 검사는 통과하고 resolved path 는 production 이 된다.\n★ 고침: `pwd -P` 실경로 충돌이면 abort.  실측 재현·차단 확인.\n⚠ 리뷰 bundle 이 base prerequisite 를 안 실어 단독 재현이 안 됐다 — 다음 패키지는 full bundle."
   }
  ]
 }

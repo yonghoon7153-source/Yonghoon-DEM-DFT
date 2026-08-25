@@ -43,7 +43,7 @@ MUTANTS = [
      DISC, ('J-1',)),
     ('CX-03 규약 재계산 대조 제거', 'run_contract.py',
      "    if stored != recomputed:", "    if False:",
-     VERDICT, ('㊱h',)),
+     VERDICT, ('㊱h', '㊳d')),
     ('CX-03 키 부재 ↔ 명시 OFF 합침', 'run_contract.py',
      "        if k not in man:\n            _miss.append(k)                       # ★ 키 부재 = 모름 (OFF 가 아니다)\n            continue",
      "        if k not in man:\n            _v[k] = '__OFF__'\n            continue",
@@ -65,8 +65,8 @@ MUTANTS = [
      "    ok, why = conv_ok(s.get('cg_info'), s.get('unconverged'), s.get('cg_resid'))\n    if False:",
      RC, ('C2',)),
     ('CX-04 required 를 계획에서 파생하지 않음', 'run_contract.py',
-     "    if isinstance(plan, dict) and plan:\n        return tuple(_MAP[k] for k in _MAP if plan.get(k))",
-     "    if False:\n        return ()",
+     "    if isinstance(plan, dict) and plan and plan_ok(plan)[0]:",
+     "    if False:",
      RC, ('E3',)),
     ('CX-06 파생 필드 자동 허용 제거', 'sdcp_gain_verdict.py',
      "                if FIELD_CONTRACT.get(fld, {}).get('derived_from') and not same:",
@@ -77,7 +77,7 @@ MUTANTS = [
      "    _kli = nz - 1 - np.argmax(cond_i[:, :, ::-1], axis=2)\n"
      "    _kl = np.where(cond_i.any(2), _kli, _kl)\n"
      "    top_i = cond_i.any(2) & (np.abs(z_plate - zc[_kl]) <= band)",
-     STEP3, ('plate-rxn-grid',)),
+     STEP3, ('plate-rxn-grid', 'plate-rxn-phase-grid')),
     ('CX-07② occupied surface 에서 sid 5 제외', 'step3_sigma.py',
      "    occ = sid != 0\n    any_c = occ.any(2)",
      "    occ = (sid != 0) & (sid != 5)\n    any_c = occ.any(2)",
@@ -103,19 +103,19 @@ MUTANTS = [
     #  ── R4-CX (Codex 4차) ────────────────────────────────────────────────────────────
     ('R4 backend requested 로 폴백', 'run_contract.py',
      "        b = b.get('used')", "        b = b.get('used') or b.get('requested')",
-     RC, ('D3b',)),
+     RC, ('D3b', 'D3c')),
     ('R4 엄격 타입 검사 제거', 'run_contract.py',
      "        if t is bool:\n            if type(v) is not bool:      # noqa: E721",
      "        if t is bool:\n            if False:",
-     VERDICT, ('㊵e',)),
+     VERDICT, ('㊸a',)),
     ('R4 계획 스키마 검사 제거', 'run_contract.py',
      "    _miss = [k for k in PLAN_KEYS if k not in plan]",
      "    _miss = []",
-     VERDICT, ('㊵a',)),
+     VERDICT, ('㊸b',)),
     ('R4 PTFE 기록 계약 제거', 'run_contract.py',
      "    if sv >= EVIDENCE_SINCE_SCHEMA and v is None:",
      "    if False:",
-     VERDICT, ('㊵e',)),
+     VERDICT, ('㊸c', '㊵e')),
     ('R4-CX-07 reaction sid5 제외', 'step3_sigma.py',
      "    _occ_r = sid != 0", "    _occ_r = (sid != 0) & (sid != 5)",
      STEP3, ('plate-rxn-sdcp-face',)),
@@ -249,7 +249,17 @@ def main():
             rows.append((label, 'HARNESS_ERROR', f'needle {src.count(old)}회 — 배터리가 낡았다'))
             bad.append(label)
             continue
-        d = _tree(fname, src.replace(old, new))
+        _mut_txt = src.replace(old, new)
+        #  ★ R4-CX-06 — **실행 전에** 컴파일해 본다.  문법 오류는 시험 결과가 아니라
+        #    harness 사고다 (Traceback 없는 SyntaxError 의 소스 줄이 `FAIL` 처럼 보였다).
+        try:
+            compile(_mut_txt, fname, 'exec')
+        except SyntaxError as _se:
+            rows.append((label, 'HARNESS_ERROR',
+                         f'mutant 가 문법 오류다 ({_se.lineno}행) — 시험이 문 것이 아니다'))
+            bad.append(label)
+            continue
+        d = _tree(fname, _mut_txt)
         try:
             rc, out = _run(os.path.join(d, 'scripts'), cmd)
         except subprocess.TimeoutExpired:
@@ -260,14 +270,6 @@ def main():
         #    옛 판은 출력 문자열만 읽어, Traceback 없는 SyntaxError 의 **소스 줄**이
         #    `㊷g: FAIL` 처럼 보이면 그것을 정상 적발로 분류했다.  ⇒ mutant 파일을
         #    실행 전에 컴파일해 보고, 실패면 harness 사고로 뺀다 (시험 결과가 아니다).
-        _mut_src = open(os.path.join(d, 'scripts', fname), encoding='utf-8').read()
-        try:
-            compile(_mut_src, fname, 'exec')
-        except SyntaxError as _se:
-            rows.append((label, 'HARNESS_ERROR',
-                         f'mutant 가 문법 오류다 ({_se.lineno}행) — 시험이 문 것이 아니다'))
-            bad.append(label)
-            continue
         if 'Traceback' in out and 'SystemExit' not in out.split('Traceback')[-1][:400]:
             _elines = [l for l in out.split('\n') if 'Error' in l]
             rows.append((label, 'HARNESS_ERROR',
