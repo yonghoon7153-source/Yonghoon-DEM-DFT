@@ -209,3 +209,63 @@ grep 으로는 안 보인다.
 `check_selftest_wiring` **자신**을 돌린다.
 ★ 이것이 조건 8 이 존재하는 이유 그 자체다 — 돌연변이 배터리가 없었으면 이 구멍은
 **규칙 K 를 하드닝하는 커밋 안에** 그대로 남았을 것이다.
+
+---
+
+# 3차 재리뷰 (Codex, 2026-08-25) — **NO-GO / HOLD** → 9건 대응
+
+Codex 판정: *"현재 snapshot 은 두 상태를 동시에 가진다 — 정상 producer payload 를
+검사기가 못 읽어 **생산이 항상 막히는 false-red**, 그리고 그 한 줄을 고치면 곧바로
+활성화되는 **false-green 여럿**."*  그 진단이 정확했다.
+
+## R3-CX-01~09 대응
+
+| # | 요지 | 커밋 |
+|---|---|---|
+| 01 | `check_arm` 이 `metrics` 오타로 **모든 실제 팔을 거부** (생산 전면 차단) | `79888279` |
+| 02 | 봉인 전에 producer stdout 이 σ 를 노출 · 실패 후 raw 덤프 | `4cc032e1` |
+| 03 | 규약 id 가 canonical identity 가 아니라 신뢰된 문자열 | `79888279` |
+| 04 | `component_plan`·`ptfe_cells_observed` 가 미사용 metadata | `79888279` |
+| 05 | 수치·backend validator 가 권위적이지 않음 | `79888279` |
+| 06 | `FIELD_CONTRACT` 가 single source 가 아니고 양방향 오류 | `575a64f6` |
+| 07 | plate 회귀 사각지대 4종 | `a99dd42e` |
+| 08 | J/K/L·배터리가 "의도한 실패" 를 보증하지 않음 | `4cc032e1` · `a0a351d3` |
+| 09 | 진단 런이 생산 이름공간을 쓸 수 있었다 | `4cc032e1` |
+
+## 이 라운드가 남긴 것 (방법론)
+
+★★★ **픽스처가 버그를 인코딩하면 selftest 는 그 버그를 지킨다.**  R3-CX-01 이 가장 순수한
+사례다 — 소비자의 자리 목록이 `metrics` 오타였고, **픽스처도 같은 오타**를 썼기 때문에
+75/75 가 초록인 채로 `check_arm` 이 실제 팔을 전부 거부했다.  손으로 만든 payload 는
+producer 를 증명하지 못한다.  ⇒ `producer → check_arm → move` 통합 회귀(J_ARMCHK).
+
+★★★ **계약 사본은 반드시 갈라진다.**  자리·수렴·backend·required·규약 정의가 세 파일에
+따로 있었고 **넷 다** 조금씩 달랐다.  ⇒ `scripts/run_contract.py` 하나로 모으고 producer 와
+두 소비자가 같은 함수를 부른다.
+
+★★★ **선언은 거동이 아니다.**  `required`/`across_dir`/`generation` 을 뒤집어도 selftest 가
+초록이었다 — 선언만 있고 시험되지 않았기 때문이다.  ⇒ 레지스트리를 **읽어 시험을 생성**하고,
+선언을 뒤집는 mutant 는 선언과 **무관한** 불변식으로 잡는다.
+
+★★★ **배터리도 검사 대상이다.**  엄격하게 만든 **첫 실행에서 harness 자신의
+false-negative** 가 드러났다 (`_parse` 가 step3 표기를 못 읽어 실제로는 잡고 있던 두 건을
+"회귀 없음" 으로 보고).  그리고 진짜 구멍 둘을 더 잡았다 — `[0] is False` 만 보던 시험이
+다른 검사가 대신 물어 초록이던 것, faithful 하지 않던 mutant.
+
+★ **생산 과잉차단이 이 라운드에만 두 번 더 났다** (`collector_geom` 도장 결손 · `vox_um`
+누락).  둘 다 규칙 J 가 잡았다.  검사기를 느슨하게 하는 대신 **producer 의 기록 결손**을
+고치는 것이 매번 옳은 방향이었다.
+
+## 남은 것 (Codex 가 흡수 차단으로 세지 않은 항목)
+
+· partial-volume/cut-cell PTFE 표현 · 독립 침대 seed (paired 5–8)
+· `σ_SDCP = 250` 출처 (cast film ↔ pressed pellet) — **사용자 미회신**
+· `ρ_SDCP` 확인 (코드 주석이 PROXY 라고 적고 원고 값을 요구한다)
+
+## GPU 8팔 재실행 — 여전히 보류
+
+Codex 조건: R3-CX-01~08 을 닫은 뒤, **하나의 새 protocol 스키마 · 하나의 clean code SHA ·
+raw manifest 재계산을 통과한 receipt · input digest + required component/backend/convergence
+seal · bed × origin × side × phase 별 p1→p2 접촉 수 census** 를 갖춰 돌린다.
+옛 팔과 새 팔은 섞지 않는다 — 그리고 이제 `plate_rule` 이 규약 해시에 들어가 그 금지가
+**기계로 집행된다** (옛 팔은 `p1-`, 새 팔은 `p2-`).
