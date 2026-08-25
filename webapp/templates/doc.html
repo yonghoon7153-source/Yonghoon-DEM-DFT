@@ -24,6 +24,9 @@
      · 분자 기준 {{ data.meta.molecule_reference_box }}</p>
 
   <h3>자리 선호 ΔE = E(Ni_top) − E(Li_top) · 양수 = Li 자리 우세</h3>
+  <p class="sub">읽는 법: <b>ΔE 열이 양수면 그 분자는 Li 자리를 좋아한다.</b>
+     "basin" 은 계산이 도착한 자기(스핀) 상태 — 두 자세가 <b>같은</b> basin 이어야
+     뺄셈이 성립한다. 다른 행도 지우지 않고 경고와 함께 보여준다.</p>
   <table><thead><tr><th>조각</th><th>seed</th><th style="text-align:right">ΔE (meV)</th>
     <th>basin (Li/Ni)</th><th>판정</th></tr></thead><tbody>
   {% for r in data.dE %}
@@ -38,6 +41,8 @@
      (숨기면 "안 돌린 계산" 으로 보인다).</p>
 
   <h3>흡착에너지 E_ads (eV · 음수 = 잘 붙는다)</h3>
+  <p class="sub">읽는 법: <b>더 음수일수록 세게 붙는다.</b> net4/pm1 두 열이 거의
+     같으면(≤1 meV) 그 값은 자기 초기조건과 무관하게 재현된 것 — 그게 신뢰 근거다.</p>
   <table><thead><tr><th>잡</th><th>조각</th><th>자세</th><th>seed</th>
     <th style="text-align:right">E_ads</th><th>basin (잡/슬랩)</th></tr></thead><tbody>
   {% for j in data.jobs %}
