@@ -738,5 +738,9 @@ C33 =  11.85 GPa    C44 =  74.14 GPa
 - **입자 형상 ↔ 성능의 실험 카운터파트 (정본 보유)**: `papers/jung2023_single_crystal_ncm_morphology.md`,
   `papers/kang2025_toughened_bimodal_nca_lzo.md` (Voronoi 다결정 + cohesive-zone damage FEM — **이 덱의
   damage 모델과 가장 가까운 우리-랩 정본**), `papers/intergranular_cracking_nmc811_jmca2023.md`.
-- **축 대조**: `litdb/comparison_vs_ours_DEM.md` **§G** (신설) + `🎤 발표 덱` 절 `[Yang26-BML]`.
+- **축 대조 (DEM 축)**: `litdb/comparison_vs_ours_DEM.md` **§G** (신설) + `🎤 발표 덱` 절 `[Yang26-BML]`.
+- **★ 방법론 이전 (DFT 축 cascade)**: `kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md`
+  — **축을 넘나드는 카드**. 출처는 이 DEM 축 덱, 적용 대상은 `db/properties/cascade_v23_*.csv` ·
+  `tools/doping/` · webapp `/cascade`. 화학이 아니라 **설계·평가 절차만** 이전한다.
 - ⛔ **`litdb/comparison_vs_ours.md` (DFT 물성축 A–I) 에는 넣지 않았다** — 근거는 §14a.
+  cascade 적용 논의도 그 파일이 아니라 위 kb 카드로 갔다(축 문서 ≠ 방법론 카드).

@@ -102,10 +102,45 @@ def build(dry=False):
             L.append(f"| `{r['id']}` | {r['title']} | {r['type']} | "
                      f"{r['digested'] or '—'} | {('🖼 ' + str(n)) if n else '—'} |")
         L.append("")
+
+    # ── 발표 덱 (litdb/talks) ────────────────────────────────────────────
+    # ⚠ 덱은 peer-review 를 안 거쳐 **papers/ 와 인용 등급이 다르다**(talks/README.md).
+    #   그래서 위 표에 섞지 않고 **별도 절 + 편수도 따로** 낸다. 그래도 인덱스에 실어야
+    #   하는 이유: DEM 축 덱이 어느 인덱스에도 안 나와 검색으로만 찾이는 상태였다.
+    talks = [t for t in D.list_talks()
+             if "dem" in _talk_axis(t["id"]) or "microstructure" in _talk_axis(t["id"])]
+    if talks:
+        L += [f"## 🎤 발표 덱 ({len(talks)}편) — ⚠ 인용 등급이 papers/ 보다 한 단계 낮다", "",
+              "> `litdb/talks/README.md` 의 인용 규율. **덱 수치는 우리 db 절대값과 같은 표에 넣지 않는다.**",
+              "", "| slug | 발표자 | 주제 | 발표 | 그림 |", "|---|---|---|---|---|"]
+        for t in sorted(talks, key=lambda x: x["id"]):
+            n = figs.get(t["id"], 0)
+            L.append(f"| `{t['id']}` | {t.get('speaker') or '—'} | {t['title'][:150]} | "
+                     f"{t.get('session') or t.get('digested') or '—'} | "
+                     f"{('🖼 ' + str(n)) if n else '—'} |")
+        L.append("")
+
     txt = "\n".join(L)
     if not dry:
         DEM_INDEX.write_text(txt, encoding="utf-8")
     return dem, txt
+
+
+def _talk_axis(slug):
+    """덱 digest 헤더의 `axis:` 값 (없으면 ''). DEM 축 덱만 이 인덱스에 싣기 위한 판정.
+
+    이 함수가 못 하는 것: `axis:` 태그가 없는 옛 덱은 항상 ''를 돌려주므로 실리지 않는다
+    (소급 태깅은 사람이 한다 — 자동 추측하면 축이 섞인다).
+    """
+    f = LITDB / "talks" / f"{slug}.md"
+    try:
+        for line in f.read_text(encoding="utf-8", errors="ignore").splitlines()[:20]:
+            m = re.search(r"axis:\s*`?([a-z0-9_\-]+)", line, re.I)
+            if m:
+                return m.group(1).lower()
+    except Exception:
+        pass
+    return ""
 
 
 def check():

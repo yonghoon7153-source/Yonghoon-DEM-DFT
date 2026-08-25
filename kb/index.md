@@ -59,7 +59,7 @@
 - `kb/methodology/litdb_shared_branch_convention_2026_08_19.md` — litdb 는 브랜치를 넘어 공유된다 — DEM 세션과 같은 서랍을 쓴다 ○미열람
 - `kb/methodology/llm_wiki_adoption_2026_08_11.md` — LLM 위키 규율 채택 기록 — Karpathy 패턴(llm-wiki-kit 260730)의 이 repo 번안 ○미열람
 - `kb/methodology/md_conductivity_protocol.md` — MD 이온전도도 추출 프로토콜 (논문용 — 고정 설정)
-- `kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md` — microstructure_ml_transfer_to_cascade_2026_08_25 ○미열람
+- `kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md` — 미세구조 ML 세미나에서 cascade 로 이전 가능한 것 — 화학이 아니라 설계·평가 방법론 ○미열람
 - `kb/methodology/modelC_v2_slab_fix.md` — modelC v2 Slab Construction — Convention Fix
 - `kb/methodology/nd_vs_O_isolation_campaign_2026_06_18.md` — Nd vs O 분리 — "Nd가 특별한가, O 운반체일 뿐인가" 정량 캠페인
 - `kb/methodology/offline_archive_index_2026_08_20.md` — 오프라인 백업 인덱스 — repo 밖에 있는 원자료가 어디 있나 ○미열람
