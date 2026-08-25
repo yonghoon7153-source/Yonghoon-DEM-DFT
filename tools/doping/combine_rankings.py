@@ -28,6 +28,7 @@ Usage:
 """
 import argparse
 import json
+import pathlib
 from pathlib import Path
 import sys
 import numpy as np
@@ -87,6 +88,33 @@ def normalize(values, invert=False, label=None):
     if invert:
         norm = 1 - norm
     return [float(x) if not np.isnan(x) else 0.0 for x in norm]
+
+
+def no_rows_message(cd):
+    """구조 0개일 때의 설명. **죽은 축과 구별해서** 말한다.
+
+    ⛔ 왜 필요한가: rows 가 비면 모든 축이 0/0 → 'all_missing' 으로 찍혀
+      '축이 죽었다(=backfill 필요)' 처럼 보인다. 실제 원인은 **경로가 틀렸거나
+      스테이지 산출물이 없는 것**이라 처방이 정반대다 (2026-08-25).
+    """
+    lines = [f"⛔ 구조를 하나도 못 읽었다 — 축 문제가 **아니다**.",
+             f"   cascade_dir 은 스테이지 폴더를 **직접** 담은 디렉터리다:",
+             f"     <cascade_dir>/02_screen/uma_results.json  ← 이런 구조",
+             f"   준 경로: {cd}"]
+    kids = []
+    try:
+        kids = sorted(c.name for c in cd.iterdir()
+                      if c.is_dir() and (c / '02_screen').is_dir())
+    except OSError:
+        pass
+    if kids:
+        lines.append(f"   ★ 이 경로는 **상위 묶음**이다 — 안에 캐스케이드 {len(kids)}개가 있다.")
+        lines.append(f"     예: {cd / kids[0]}")
+    elif not cd.is_dir():
+        lines.append("   ⛔ 그런 디렉터리가 없다.")
+    else:
+        lines.append("   하위에 02_screen 을 가진 폴더도 없다 — 캐스케이드가 안 돌았거나 다른 위치다.")
+    return "\n".join(lines)
 
 
 def report_axis_health(weights=None):
@@ -157,6 +185,22 @@ def _selftest():
         AXIS_HEALTH['partial']['n_present'] == 2,
         "[음성] 일부 결측은 죽은 축이 아니다 — 과잉 차단하지 않는다")
     chk(v[1] == 0.0, "결측 행은 0.0 (최하) 으로 — 0.5 로 메우지 않는다")
+
+    # ★ 구조 0개를 '죽은 축' 과 구별하는가 (2026-08-25 오독 재현)
+    import tempfile
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        (root / 'AlI3_x002' / '02_screen').mkdir(parents=True)
+        msg = no_rows_message(root)
+        chk('상위 묶음' in msg and 'AlI3_x002' in msg,
+            "[음성] 상위 묶음 경로를 주면 '축 문제가 아니라 경로' 라고 말한다")
+        chk('backfill' not in msg,
+            "[음성] ★ 구조 0개에 backfill 처방을 내리지 않는다 (처방이 정반대)")
+        msg2 = no_rows_message(root / 'AlI3_x002')
+        chk('상위 묶음' not in msg2 and '02_screen 을 가진 폴더도 없' in msg2,
+            "[음성] 잎 경로인데 스테이지 산출물이 없으면 그렇게 말한다")
+        chk('그런 디렉터리가 없다' in no_rows_message(root / 'nope'),
+            "[음성] 없는 경로는 없다고 말한다")
 
     dead = report_axis_health({'partial': 0.3})
     chk(dead == 0, "죽은 축이 없으면 0 을 돌려준다")
@@ -319,6 +363,9 @@ def main():
     _W = {'stability': args.w_stab, 'modulus': args.w_mod, 'mobility': args.w_mob}
     if args.status:
         print(f"\n구조 {len(rows)}개 · cascade_dir {cd}")
+        if not rows:
+            print(no_rows_message(cd))
+            return 2
         report_axis_health(_W)
         return 0
 
