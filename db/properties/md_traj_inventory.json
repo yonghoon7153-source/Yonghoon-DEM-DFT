@@ -1,0 +1,117 @@
+{
+ "title": "MLIP-MD 궤적 재고 · 골격 게이트 상태 (traj 가 있어야 되살릴 수 있는 것들)",
+ "date": "2026-08-25",
+ "schema": "md_traj_inventory/v1",
+ "why": "궤적이 없으면 (a) MTO 로 β 를 다시 못 재고 (b) 종별 MSD 로 **골격 creep 판정**을 못 한다. 둘 다 MD 재실행 말고는 복구 경로가 없다. 무엇이 있고 없는지를 한곳에 박아 두지 않으면 같은 구멍을 또 만든다 (F9 가 그렇게 났다).",
+ "gates": {
+  "diffusive_beta": "MSD 창 2–50 ps 의 log-log 기울기. β<0.8 이면 케이지를 확산으로 오독.",
+  "framework_beta": "비-Li 원소의 β. <0.30 고체 · 0.30–0.60 구조이완 · ≥0.60 creep/융해. ≥0.60 이면 그 온도점은 아레니우스에서 뺀다.",
+  "framework_ref": "Zhang npj 2026 — MACE-MP-0 의 LGPS 골격이 1050–1500 K 에서 인위적으로 녹어 샘플링을 1050 K 로 낮췄다. 우리 상한 1000 K 가 그 선 바로 아래다."
+ },
+ "runs": [
+  {
+   "system": "b2o3",
+   "T_K": 1200,
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "config": "d0.00_cfg0",
+   "host": "kgy",
+   "root": "~/work/runs/highT_reseed_1200",
+   "traj": true,
+   "mto": true,
+   "D_cm2_s": [
+    8.157e-05,
+    8.779e-05,
+    6.522e-05
+   ],
+   "diffusive_beta": [
+    1.0,
+    1.0,
+    0.84
+   ],
+   "diffusive_verdict": "3/3 확산",
+   "framework": {
+    "s2": {
+     "worst": "S(41)",
+     "beta": 0.63
+    },
+    "s3": {
+     "worst": "Cl(16)",
+     "beta": 1.01
+    },
+    "s4": {
+     "worst": "Cl(16)",
+     "beta": 0.65
+    }
+   },
+   "framework_verdict": "⛔ 3/3 creep — **아레니우스에서 제외**",
+   "measured": "2026-08-25"
+  },
+  {
+   "system": "b2o3",
+   "T_K": [
+    600,
+    800,
+    1000
+   ],
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "host": "kgy",
+   "root": "~/work/runs/highT_reseed (구판)",
+   "traj": false,
+   "mto": false,
+   "D_source": "db/properties/b2o3_md_arrhenius.json ⛔_RETRACTED_2026_08_23.multiseed_3x3",
+   "framework_verdict": "❓ **판정 불가 — 궤적 없음**",
+   "⛔_blocking": "1200 K 가 3/3 creep 이므로 1000 K 도 의심해야 한다. 만약 1000 이 오염이면 2026-08-23 철회의 근거였던 '굽음' 자체가 골격 아티팩트가 된다.",
+   "cause": "F9 (2026-08-20 codex 3차) — run_highT_reseed.sh 에 --save_traj 가 없었다"
+  },
+  {
+   "system": [
+    "modelc",
+    "lpsocl",
+    "b2o3"
+   ],
+   "T_K": [
+    700,
+    900
+   ],
+   "seeds": [
+    "s2",
+    "s3",
+    "s4"
+   ],
+   "n_runs": 18,
+   "traj": true,
+   "mto": true,
+   "status_2026_08_25": {
+    "kgy": "T700 진행 중 (arrhenius_6pt_traj/modelc/T700_s2 관측)",
+    "gabia": "T900 9런 — tmux 'mto900' 대기자 살아있음(10:59 생성), modelc MD 뒤 자동 착수 예정"
+   },
+   "purpose": "MTO 효과 첫 실측 + 500 K 필요 prod 산정 (kb/open_items.md §1)",
+   "★_bonus": "**골격 β 를 700·900 에서 잴 수 있다.** 900 이 creep 이면 1000 은 볼 것도 없이 오염이고, 900 이 깨끗하면 1000 이 경계선이라는 뜻 — b2o3 재실행 여부가 여기서 갈린다"
+  }
+ ],
+ "runner_state_2026_08_25": {
+  "tools/modelc_v3/run_highT_reseed.sh": "✅ --save_traj 있음(L109) + resume 함정 가드(L52-60)",
+  "tools/ionic/run_arrhenius_6pt.sh": "✅ --save_traj 있음(L183)",
+  "⚠_note": "F9 는 **이미 고쳐졌다**. 2026-08-20 카드의 '고쳐지지 않았다' 서술은 그 시점 기준이다."
+ },
+ "⛔_resume_trap": "옛 OUTROOT 에 재실행하면 msd.json 이 있는 (config,T) 를 **통째로 skip** 해서 --save_traj 를 붙여도 traj 가 안 생긴다. 화면은 정상 종료처럼 보인다. run_highT_reseed.sh 가 L58-60 에서 즉사시키지만, **새 OUTROOT 를 쓰는 것이 원칙**이다 (1200 K 를 highT_reseed_1200 에 따로 판 이유).",
+ "decision_order": [
+  "① 18런(700/900) 그대로 진행 — 바꿀 것 없음",
+  "② 나오면 **골격 β 부터** 잰다 (msd_diffusive_check.py --framework)",
+  "③ 900 이 creep → b2o3 600/800/1000 재실행 확정 / 900 이 깨끗 → 1000 만 확인",
+  "④ 재실행 시 **반드시 새 OUTROOT**"
+ ],
+ "unchanged_regardless": [
+  "b2o3 는 σ 를 올리지 않는다 — 멀티시드 비율 1.08/0.82/1.15 = 동등 (1.33× 는 2026-07-09 철회)",
+  "b2o3 Ea 절대값 3건 전부 철회 (2026-08-23) · 300 K 외삽 차단",
+  "b2o3 의 살아있는 축은 밴드갭 1.9671 eV 와 계면이지 전도도가 아니다"
+ ]
+}

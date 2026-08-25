@@ -111,21 +111,29 @@ for SYS in $SYSTEMS; do
   done
 done
 
-echo ""; echo "===================== collect (D_per_T[0]=800, [1]=1000) ====================="
-python3 - "$OUTROOT" <<'PY'
+echo ""; echo "===================== collect (TEMPS 순서를 그대로 따라간다) ====================="
+# ⛔ 2026-08-25 — 여기가 `(0,800),(1,1000)` 로 **하드코딩**돼 있었다. TEMPS 를 바꿔
+#   돌리면(예: "600 800 1000") D_per_T 인덱스가 밀려 **라벨이 조용히 어긋난다**
+#   — 800 자리에 600 값이 찍히고도 화면은 정상으로 보인다. TEMPS 를 넘겨 받는다.
+python3 - "$OUTROOT" "${TEMPS:-800 1000}" "$SYSTEMS" <<'PY'
 import json, os, sys, statistics as st
 root=sys.argv[1]
-for sysn in ("b2o3","modelc"):
-    for idx,T in ((0,800),(1,1000)):
+temps=[int(float(x)) for x in sys.argv[2].split()]
+systems=sys.argv[3].split() if len(sys.argv) > 3 and sys.argv[3].strip() else ["b2o3","modelc"]
+for sysn in systems:
+    for idx,T in enumerate(temps):
         vals=[]
         for s in (2,3,4):
             p=os.path.join(root,sysn,f"s{s}","ensemble_results.json")
             try: vals.append(json.load(open(p))["levels"][0]["configs"][0]["D_per_T"][idx])
+            except (IndexError, KeyError) as e:
+                print(f"  ⛔ ({sysn} s{s} {T}K: D_per_T 에 인덱스 {idx} 가 없다 — "
+                      f"TEMPS 와 실제 런 온도가 어긋났나? {e})")
             except Exception as e: print(f"  ({sysn} s{s} {T}K miss: {e})")
         if vals:
             m=sum(vals)/len(vals); sd=st.pstdev(vals)
             print(f"{sysn:7s} {T}K: "+"  ".join(f"{v:.3e}" for v in vals)+f"   mean={m:.3e} +/- {sd:.1e} ({sd/m*100:.0f}%)")
 PY
 echo ""
-echo "NEXT: paste the 8 lines (b2o3/modelc x 800/1000 means) -> I combine with the"
+echo "NEXT: 위 mean 줄을 그대로 붙여넣을 것 (계 × TEMPS 조합 수만큼) -> 600 K 3시드와"
 echo "3-seed 600K to give FULLY symmetric Ea/sigma + resolved ratio + final CSV/fig."
