@@ -22,8 +22,8 @@ echo "  OAT 민감도 + E 스윕 — pure-SE 300 MPa   ($(date '+%m-%d %H:%M:%S'
 echo "══════════════════════════════════════════════════════════════════════════"
 
 n_all=$(ls "$D"/in.*.liggghts 2>/dev/null | wc -l)
-n_fin=$(grep -l 'Finished!' "$D"/log.*.txt 2>/dev/null | wc -l)
-n_err=$(grep -lE 'ERROR|MPI_ABORT' "$D"/log.*.txt 2>/dev/null | wc -l)
+n_fin=$(grep -al 'Finished!' "$D"/log.*.txt 2>/dev/null | wc -l)
+n_err=$(grep -alE 'ERROR|MPI_ABORT' "$D"/log.*.txt 2>/dev/null | wc -l)
 pid=$(pgrep -f 'lmp_(serial|auto|mpi)' | head -1)
 esec=""
 if [ -n "$pid" ]; then
@@ -46,16 +46,16 @@ for f in "$D"/in.*.liggghts; do
   if [ ! -f "$L" ]; then
     printf "  %-16s %-11s\n" "$n" "· 대기"; continue
   fi
-  PH=$(grep -hoE 'INSERTING|SETTLING|STABILIZE|COMPRESSION|RELAXATION|Finished' "$L" 2>/dev/null | tail -1)
+  PH=$(grep -ahoE 'INSERTING|SETTLING|STABILIZE|COMPRESSION|RELAXATION|Finished' "$L" 2>/dev/null | tail -1)
   read -r S A < <(awk '$1 ~ /^[0-9]+$/ && $2 ~ /^[0-9]+$/ && NF>=4 {s=$1; a=$2} END{print s, a}' "$L")
   #  압력 — 입력이 압축 루프마다 찍는 print 를 쓴다 (thermo 열 위치에 안 기댄다)
-  P=$(grep -oE 'Current Pressure: [0-9.eE+-]+' "$L" 2>/dev/null | tail -1 | awk '{print $3}')
+  P=$(grep -aoE 'Current Pressure: [0-9.eE+-]+' "$L" 2>/dev/null | tail -1 | awk '{print $3}')
   PCT=""; [ -n "${P:-}" ] && PCT=$(awk -v p="$P" -v t="$TARGET" 'BEGIN{printf "%.0f%%", p/t*100}')
   NOTE=""
-  if grep -q 'Finished!' "$L" 2>/dev/null; then
+  if grep -aq 'Finished!' "$L" 2>/dev/null; then
     NOTE="✓ 완료 (덤프 $(ls "$D/post_oat_$n" 2>/dev/null | wc -l))"
-  elif grep -qE 'ERROR|MPI_ABORT' "$L" 2>/dev/null; then
-    NOTE="⛔ $(grep -hoE 'ERROR[^(]*' "$L" | tail -1 | cut -c1-34)"
+  elif grep -aqE 'ERROR|MPI_ABORT' "$L" 2>/dev/null; then
+    NOTE="⛔ $(grep -ahoE 'ERROR[^(]*' "$L" | tail -1 | cut -c1-34)"
   elif [ -n "$esec" ] && [ -n "${S:-}" ] && [ "$esec" -gt 0 ] 2>/dev/null; then
     NOTE=$(awk -v s="$S" -v e="$esec" -v t="$TOTAL" \
       'BEGIN{r=s/e; if(r>0) printf "%.0f st/s · 남은 ~%.1f h", r, (t-s)/r/3600}')
@@ -67,7 +67,7 @@ done
 echo ""
 echo "  ★ 대조 2건이 먼저다 — 어긋나면 나머지 11런은 의미가 없다"
 for c in orig_1type base; do
-  if grep -q 'Finished!' "$D/log.$c.txt" 2>/dev/null; then
+  if grep -aq 'Finished!' "$D/log.$c.txt" 2>/dev/null; then
     echo "     ✓ $c 완료  → docs/data/heckel_pure_se_dem.csv 300 MPa 행과 대조할 것"
   elif [ -f "$D/log.$c.txt" ]; then echo "     … $c 진행 중"
   else echo "     · $c 대기"; fi
