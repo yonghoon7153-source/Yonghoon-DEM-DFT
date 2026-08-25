@@ -201,6 +201,80 @@ def check_litdb_index(root=ROOT):
     return ("litdb", True, "digest 전부 인덱스 등재 (DFT·DEM 축 각각)")
 
 
+def check_self_matching_waiters(root=ROOT):
+    """`while pgrep -f <패턴>` 대기 루프가 **자기 자신을 매칭**하는지 본다.
+
+    ⛔ 같은 사고가 두 번 났다 (둘 다 2026-08-25):
+       ① AlI3 — `while pgrep -f "COMPOUND_FILTER=As2S3"` 가 자기 명령줄을 잡아
+         **3일을 자기가 자기를 기다리며** sleep 했다.
+       ② 그걸 진단한 지 몇 시간 뒤 같은 세션이 `while pgrep -f
+         disorder_ensemble_diffusion` 을 또 만들었다.
+
+    ⚠⚠ 이 검사의 **한계를 먼저 적는다** — 첫 판은 repo 스크립트 3건을 잡았는데
+      **전부 오탐**이었고(변수 패턴을 못 풀어서), 정작 위 사고 둘은 **repo 파일이
+      아니라 손으로 친 tmux 한 줄**이라 여기 안 걸린다. 즉 이 검사는
+      **사고를 막지 못한다** — repo 에 같은 패턴이 굳는 것만 막는다.
+      진짜 방어는 명령을 만들 때 대괄호 트릭(`"[d]isorder..."`)을 쓰는 습관이다.
+
+    판정: 패턴을 리터럴로 풀 수 있고, 그 패턴이 **그 스크립트 자신의 파일명**과
+      겹칠 때만 위험으로 본다 (그때만 자기 커맨드라인에 들어간다).
+    """
+    import glob as _g
+    bad = []
+    loop = re.compile(r"while\s+pgrep\s+-[a-z]*f[a-z]*\s+([\"\']?)([^\"\'\s|;]+)\1")
+    assign = re.compile(r"^\s*([A-Z_]+)=[\"\']?([^\"\'\n]+)[\"\']?\s*$", re.M)
+    for f in _g.glob(os.path.join(root, "tools", "**", "*.sh"), recursive=True):
+        try:
+            txt = open(f, encoding="utf-8", errors="replace").read()
+        except OSError:
+            continue
+        env = {m.group(1): m.group(2) for m in assign.finditer(txt)}
+        base = os.path.basename(f)[:-3]
+        for m in loop.finditer(txt):
+            needle = m.group(2)
+            if needle.startswith("$"):
+                needle = env.get(needle.lstrip("${").rstrip("}"), "")
+            if not needle or needle.startswith("["):
+                continue                     # 못 풀었거나 대괄호 트릭 — 판정 안 함
+            if "$$" in txt[m.start():m.start() + 240]:
+                continue                     # self 제외가 이미 있다
+            # 자기 파일명과 겹칠 때만 위험 (그때만 자기 커맨드라인에 들어간다)
+            core = needle.strip("\\").replace("\\.", ".")
+            if core and (core in base or base in core):
+                bad.append((os.path.relpath(f, root), needle))
+    if bad:
+        return ("waiter", False,
+                f"자기매칭 대기루프 {len(bad)}건: "
+                + " · ".join(f"{a}:{b}" for a, b in bad[:3]))
+    return ("waiter", True, "repo 스크립트의 대기루프 자기매칭 없음 (손으로 친 한 줄은 못 본다)")
+
+
+def check_pending_runbooks(root=ROOT):
+    """`status: 대기` 인 런북이 **착수 조건을 만족했는데도 안 돌고 있나**.
+
+    ⛔ 2026-08-25 — cascade 재랭킹 ①~⑤ 가 "AlI3 완주 후" 로 대기 중이다. 이런 건
+      조건이 충족된 순간 아무도 안 알려줘서 며칠씩 잊힌다. 매일 기계가 본다.
+
+    ⛔ 못 하는 것: 착수 조건을 **판정하지 않는다**(서버를 못 본다). 대기 중인 런북이
+      무엇인지 띄워 주기만 한다 — 조건 충족 여부는 사람이 본다.
+    """
+    import glob as _g
+    kb = os.path.join(root, "kb")
+    out = []
+    for f in _g.glob(os.path.join(kb, "**", "*.md"), recursive=True):
+        try:
+            head = open(f, encoding="utf-8", errors="replace").read(1200)
+        except OSError:
+            continue
+        if re.search(r"^status:\s*대기\s*$", head, re.M):
+            out.append(os.path.relpath(f, root))
+    if not out:
+        return ("runbook", True, "대기 중인 런북 없음")
+    return ("runbook", None,
+            f"대기 중인 런북 {len(out)}건 — 착수 조건을 확인할 것: "
+            + " · ".join(os.path.basename(x)[:-3] for x in out[:3]))
+
+
 def check_md_trajectories(root=ROOT):
     """msd.json 은 있는데 **traj.xyz 가 없는 런**을 잡는다.
 
@@ -249,6 +323,7 @@ def check_uncommitted(root=ROOT):
 CHECKS = [check_dashboard_freshness, check_canonical, check_governance,
           check_kb_lint, check_conventions, check_requests_ledger,
           check_fairchem, check_litdb_index, check_md_trajectories,
+          check_pending_runbooks, check_self_matching_waiters,
           check_uncommitted]
 
 
