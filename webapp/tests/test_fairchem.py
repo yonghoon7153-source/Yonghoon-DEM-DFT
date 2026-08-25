@@ -279,3 +279,17 @@ def test_glossary_has_sto_mto_and_axes(client):
     # 화면에도 떠야 한다
     page = client.get("/glossary").data.decode()
     assert "STO / MTO" in page, "용어집 화면에 안 뜬다"
+
+
+def test_glossary_mto_states_the_precondition(client):
+    """[음성] 'MTO 는 공짜' 만 적고 **조건(궤적 필요)** 을 안 적으면 오해를 만든다.
+
+    실제로 2026-08-25 에 "STO/MTO 가 따로 계산이 필요 없다면 왜 18런을 다시 도나"
+    라는 질문이 나왔다 — 공짜의 전제가 문구에서 빠져 있었기 때문이다.
+    """
+    import glossary as G
+    e = next(g for g in G.GLOSSARY if g["id"] == "sto-mto")
+    body = " ".join(str(v) for v in e.values())
+    assert "traj.xyz" in body, "궤적이 필요하다는 전제가 없다"
+    assert "원리적으로 불가" in body, "궤적이 없으면 불가하다는 결론이 없다"
+    assert "평균에서 원본 좌표를 되돌릴 수는 없다" in body, "왜 불가한지가 없다"
