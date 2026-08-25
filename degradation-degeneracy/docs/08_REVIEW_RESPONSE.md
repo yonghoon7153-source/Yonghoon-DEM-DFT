@@ -2754,3 +2754,97 @@ publish 후 실패  →  항목은 durable, **등록 안 됨**. finalize_only �
 이 저장소에서 반복된 형태이므로 (24차 보충 발견 5-2, 25차 발견 3) 대응도
 이름이 아니라 **구조**로 한다: 복원 함수가 원본 경로를 아예 받지 않게 하고,
 비교 결과를 영수증에 값으로 적고, 그 값이 틀리면 생성이 멈추게 했다.
+
+## 36. 27차 리뷰 대응 — 같은 병의 세 번째 형태
+
+> 2026-08-25. 26차 P0-1(CAS 복원)은 닫혔다. **P0-2 는 아직 열려 있었다.**
+> 리뷰가 직접 돌린 반례 셋이 전부 재현됐고, 셋 다 §35.7 에 내가 적어 둔
+> 형태 그대로다 — *시험의 이름이 실제로 하는 일보다 강하다.*
+
+### 36.1 반례 셋
+
+**(1) receipt 를 되읽은 직후 지워도 성공하고 등록됐다.**
+`_drop_from_cas()` 는 receipt 가 만들어지기 **전에만** 돌았다. 그래서 CAS 훼손
+시험 넷은 member·manifest 만 건드렸고 receipt 는 손대지 못했다. 요청문 §3 은
+"member/manifest/**receipt** 훼손 시 publish 전 실패" 라고 적었는데, 나열한
+시험에는 receipt 가 없었다. **한 번의 read-back 은 회수 가능성 불변식이
+아니다.**
+
+**(2) `finalize_only()` 가 다시 계산했다.** `_finalize()` 를 재호출했으므로
+restore → validate → rescore → **새 receipt 생성**까지 반복했다. 원본 12시간
+fitting 을 다시 돌리지 않는다는 좁은 뜻은 맞지만, 계약과 요청문이 적은
+"재계산 없이 CAS 만으로" 는 사실이 아니었다. 리뷰가 `rescore_calls=2` 를
+실측했다.
+
+**(3) 등록 journal 이 존재만으로 완료였다.** `_register` 는 충돌 시 내용을
+비교하지 않았고 `is_registered` 는 JSON 을 읽지도 않았다. 남의
+`receipt_object` 를 가진 journal 을 심어 두면 트랜잭션이 `ok=True` 를
+돌려주면서 등록은 남의 것을 가리켰다. 5바이트 쓰레기 파일도 "등록 완료" 였다.
+
+### 36.2 이번에는 API 에서 없앴다
+
+(2)의 고침이 이 라운드의 요점이다. 검사를 더하는 대신 **인자를 없앴다**:
+
+```python
+finalize_only(leg_id, backend, index_path)     # hooks 가 없다
+```
+
+hook 을 받지 않으면 재계산이 **구조적으로 불가능**하다. receipt 를 회수하고
+결속을 대조하고 등록만 한다. 없거나 다르면 재생성하지 말고 멈춘다. 회귀는
+validate/rescore 호출 횟수를 세어 0 인지 확인한다 — "안 불렀다" 를 문장이
+아니라 카운터로 증명한다.
+
+같은 방식으로 (1)은 등록 **직전** 재회수 대조로, (3)은 journal 파싱 + index
+대조로 닫았다.
+
+### 36.3 P1 여덟
+
+| # | 무엇이 열려 있었나 | 고침 |
+|---|---|---|
+| 3 | 배타 생성이 crash-atomic 이 아니었다 — 5바이트만 쓰이면 "생성 성공" 인데 다음 읽기가 JSONDecodeError | temp 에 전부 쓰고 fsync → `os.link` no-replace commit → dir fsync |
+| 3 | `publish()` 필수 키에 `receipt_object`·`payload_manifest_digest` 가 없는데 `finalize_only` 가 무조건 썼다 | 필수 목록에 추가 |
+| 4 | `../escaped.bin` 이 restore root **밖에** 파일을 썼다 | manifest 닫힌 schema + 집계·root digest 재계산 + 중복 경로 거부 + 경로 봉쇄 |
+| 4 | `leg_id='../../escaped'` 가 index 밖에 파일을 만들었다 | `check_id()` — separator·`.`/`..`·device name·길이 |
+| 5 | 산출 manifest 가 byte output 을 증명하지 않았다 | relative_path·byte_size·file_sha256·producer 필수 |
+| 6 | 안전 문구를 hash 밖으로 버렸다 (§36.4) | `_F4_주의` 를 skip 에서 뺐다 |
+| 7 | receipt core 가 OS 독립이 아니었다 | `.as_posix()` + `write_bytes` 로 LF 고정 |
+| 8 | frozen 보호가 CLI 에만 있었다 | 검사를 **쓰기 지점**으로 |
+| 9 | design wire 의 domain 이 열려 있었다 | 닫힌 키 집합 · objective 순서 보존 · 수치 domain · NFC |
+| 10 | 세대 간 role 이 `reason` 하나로 뚫렸다 | (role 세대, claim 세대) 허용표, 표에 없으면 fail-closed |
+
+### 36.4 P1-6 — 안전 문구를 해시 밖으로 버렸다
+
+26차에 정규 view 를 만들면서 `SEMANTIC_SKIP` 에 `_F4_주의` 를 넣었다.
+"재채점이 만들 수 없는 실행 메타" 라고 적었는데 **틀렸다.** 그것은
+`summarize()` 가 결정론적으로 만드는 **인용 금지 경고**다
+(`src/scoring.py:369`):
+
+> "이 블록의 두 지표는 그대로 인용하지 말 것 …"
+
+떼어 놓으니 리뷰의 반례가 성립했다 — `"do not cite"` → `"safe to cite"` 로
+바꿔도 semantic digest 가 같다. **안전 문구를 해시 밖으로 버린 것이다.**
+
+`_채점원본` 은 `run_scoring` 이 붙이는 실행 메타라 재채점이 만들 수 없지만,
+그 안에 `canonical`·`봉인상태`·`인용가능` 이 있다. 통째로 빼면 `인용가능` 을
+뒤집어도 digest 가 같다. equality 로 못 보는 것은 **명시적 assertion** 으로
+본다 (`_citation_safety`).
+
+그리고 산출이 하나뿐일 때 `_outputs_agree()` 가 `True` 를 돌려줬다 —
+**비교 대상이 없는데 "일치"** 다. 이제 실패한다.
+
+### 36.5 이번 라운드에 배운 것
+
+§35.7 에서 "이름이 아니라 구조로" 라고 적었는데, 그 원칙을 절반만 적용했다.
+복원은 인자를 없애 구조로 막았지만 receipt·finalize·journal 은 **검사를 더하는
+방식**으로 뒀고, 그래서 검사가 닿지 않는 자리가 남았다.
+
+이번에는 셋 다 구조 쪽으로 옮겼다:
+
+| 무엇 | 검사로 막던 것 | 구조로 바꾼 것 |
+|---|---|---|
+| 재계산 | "hook 을 안 부른다" 는 주석 | hook 을 **인자에서 제거** |
+| 회수 가능성 | 한 번 read-back | 등록 직전 재회수가 **필수 경로** |
+| 등록 | 파일 존재 | index 결속 대조가 `is_registered` **정의** |
+| frozen | CLI 인자 검사 | **쓰기 지점** 검사 |
+
+리뷰가 준 요약이 정확하다 — 검사는 가장 낮은 공통 지점에 두어야 한다.
