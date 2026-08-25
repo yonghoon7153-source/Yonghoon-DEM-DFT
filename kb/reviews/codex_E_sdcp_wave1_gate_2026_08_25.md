@@ -3,7 +3,7 @@ title: "교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 �
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, sdcp, vasp, gate, wave15]
-status: 리뷰완료-반영중
+status: 2차리뷰-반영완료-3차대기
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -68,3 +68,33 @@ evidenceScope: multi-source
 
 `sdcp_wave15_basinA_2026_08_25.zip` — rescue 잡(2상) + 분석기 v2 + README ·
 새 추출 검증(analyzer selftest PASS · run_job 문법 OK).
+
+
+---
+
+## 📥 E-2차 판정 (2026-08-25 수령) — "레시피 조건부 승인 · 실행 패키지는 보완 전 승인 불가"
+
+**필수 6건 → 전부 반영 (v2 패키지 재발송):**
+
+| # | 지적 | 반영 |
+|---|---|---|
+| 1 | rescue 가 기존 분석에 연결 안 됨 | `rescue.supersedes` + 분석기 `ref_alias` — 통과 시 clean 참조 자동 교체, 실패 시 `reference_overrides` 에 거부 사유. **병합 트리 실측**: 미실행 rescue → `rescue_rejected(NOT_RUN)` + 원본 유지 + 17/30 불변 |
+| 2 | release 에 NUPDOWN=4 잔류해도 통과 | `incar_expected.static.NUPDOWN="-1"` 명시 — 잔류가 하드게이트 (e2e 음성으로 봉인) |
+| 3 | pin 검증 없이 release | `--check_pin` 신설: 정상종료·NELM·NUPDOWN 되울림·topology(flip 0)·모멘트 붕괴·CHGCAR sha256 → PIN_CHECK.json. run_job 은 통과 후에만 release, stale CHGCAR 사전 삭제, 복사본 sha 동일성 검증. 검증 4건(양성 2·음성 2) |
+| 4 | 광고한 e2e 가 배포본에 없음 | **배포 분석기 자신의 --selftest 에 파일수준 e2e 10건 내장** (산술 20 + e2e 10 = 30) |
+| 5 | static_pin provenance 유실 | rec 이 모든 상 보존 + RESULTS jobs 행이 phases 동적 순회 |
+| 6 | LDAU·LMAXMIX 미감사 | 감사키 추가. LDAU 는 "LDA+U is selected" 산문 존재로 판별 (꺼짐은 unverified — 비대칭 명시) |
+
+**E-4 후속**: `index_base:0` + 1-based 병기. **계보**: parent 를 /tmp 경로가 아니라
+이름+sha256(POSCAR/INCAR/KPOINTS) 로, 조립 POTCAR sha 는 run_job 이 출력.
+
+**W-1~3 문구 채택:**
+- W-1: "#82 단독 반전 금지" → **"총자화가 달라지는 반전의 억제"** (보상 반전 가능성
+  명시, topology 는 check_pin 이 별도 확인). site 별 hard pin 은 collinear 에 없음 인정.
+- W-2: 회신물에 **vasp.log 포함** (CHGCAR read 증거), CHGCAR sha 양측 동일 검증,
+  표기 `E(static | basin A, initialized from pinned CHGCAR)`.
+- W-3: 재반전 = "국소최소 아님" 증명이 아니다 → 허용 문구로 교체 ("unconstrained
+  stationary solution 입증되지 않음 · pin 실패면 미판정 · 새 signature 는 basin C").
+
+**미반영 유지** (범위 밖 선언): POSCAR/CONTCAR 용 `_read_text(errors=ignore)` (우리
+파일 + sha 무결성 하에 허용), E-6 유효성 플래그, QE assembler.
