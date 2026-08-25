@@ -15,7 +15,7 @@ D="$(cd "$(dirname "${BASH_SOURCE[0]}")/../dem_scripts/oat_sweep" && pwd)"
 TOTAL=500000
 
 _one() {
-  local n_done n_all cur run pid step rate eta
+  local n_done n_all cur run pid step rate eta esec et cpu rss cpus
   n_all=$(ls "$D"/in.*.liggghts 2>/dev/null | wc -l)
   #  ⚠⚠ 완료 = **디렉터리 존재가 아니다**.  `post_oat_*/` 은 LIGGGHTS 가 압축 시작 **전에**
   #     만든다 (입력 §shell mkdir).  존재를 완료로 세면 도는 런을 끝났다고 보고한다 —
@@ -27,6 +27,8 @@ _one() {
   pid=$(pgrep -f 'lmp_(serial|auto|mpi)' | head -1)
   if [ -n "$pid" ]; then
     read -r et cpu rss < <(ps -o etime=,%cpu=,rss= -p "$pid" | tr -s ' ')
+    #  ★ 초 단위 경과 — 속도 계산에 쓴다 (아래 참조)
+    esec=$(ps -o etimes= -p "$pid" 2>/dev/null | tr -d ' ')
     echo "  프로세스 PID $pid · 경과 $et · CPU ${cpu}% · RSS $((rss/1024)) MB"
     #  ⚠ CPU 0 이면 계산 중이 아니다 (오늘의 MPI 행이 그랬다)
     case "$cpu" in 0.0|0) echo "  ⚠ CPU 0 % — 계산 중이 아니다.  기동 중이거나 막혔다";; esac
@@ -50,10 +52,14 @@ _one() {
     #  진행률·속도·ETA — CPU 열(4번째)이 LIGGGHTS 가 찍는 경과초다
     printf "  스텝    : %s / ~%s  (%.1f %%)\n" "$step" "$TOTAL" \
            "$(awk -v a="$step" -v b="$TOTAL" 'BEGIN{print a*100/b}')"
-    if [ -n "${cpus:-}" ] && [ "$(awk -v c="$cpus" 'BEGIN{print (c>0)}')" = 1 ]; then
-      rate=$(awk -v s="$step" -v c="$cpus" 'BEGIN{printf "%.1f", s/c}')
-      eta=$(awk -v s="$step" -v t="$TOTAL" -v c="$cpus" \
-            'BEGIN{r=s/c; if(r>0) printf "%.1f", (t-s)/r/3600; else print "?"}')
+    #  ⚠⚠ LIGGGHTS 의 **CPU 열은 `run` 명령마다 0 으로 리셋된다** (누적이 아니다).
+    #    입력은 run 을 5번 넘게 부르므로, `누적 스텝 ÷ 그 단계 CPU` 는 배수로 부풀어 오른다 —
+    #    실제로 39.3 을 **226.7 step/s** 로 오보했다.
+    #    ⇒ 프로세스의 **실제 경과시간(etimes)** 으로 나눈다.  스텝은 누적이라 짝이 맞는다.
+    if [ -n "${esec:-}" ] && [ "$esec" -gt 0 ] 2>/dev/null; then
+      rate=$(awk -v s="$step" -v e="$esec" 'BEGIN{printf "%.1f", s/e}')
+      eta=$(awk -v s="$step" -v t="$TOTAL" -v e="$esec" \
+            'BEGIN{r=s/e; if(r>0) printf "%.1f", (t-s)/r/3600; else print "?"}')
       echo "  속도    : ${rate} step/s     남은 시간 ≈ ${eta} h  (⚠ 압축 루프 가변 → **하한**)"
     fi
   else
