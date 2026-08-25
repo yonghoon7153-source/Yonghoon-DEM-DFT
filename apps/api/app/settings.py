@@ -31,6 +31,11 @@ class Settings:
     max_upload_bytes: int = int(os.environ.get("WORKBENCH_MAX_UPLOAD_MB", "512")) * 1024 * 1024
     #: Points per curve sent to the browser; the server downsamples to this.
     default_plot_points: int = int(os.environ.get("WORKBENCH_PLOT_POINTS", "1200"))
+    #: 푼 컬럼을 메모리에 얼마나 들고 있을지 (`memo.py`).  긴 기록 하나가
+    #: 대략 10 MB 이므로 256 MB 면 여러 셀을 오가도 다시 풀지 않는다.  기계가
+    #: 작으면 줄이면 되고, 0 이면 캐시를 끈다.
+    columns_cache_bytes: int = int(
+        os.environ.get("WORKBENCH_COLUMN_CACHE_MB", "256")) * 1024 * 1024
     #: Shared password.  Empty means there is no door at all -- which is the
     #: normal state on a lab network.  `bml share` sets it before opening a
     #: tunnel, and refuses to open one without it (ADR 0014).

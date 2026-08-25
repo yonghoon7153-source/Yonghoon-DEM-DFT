@@ -17,6 +17,7 @@ other way, and the anchor moves to cycle 1 (ADR 0018).
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from datetime import datetime
 
@@ -325,11 +326,19 @@ def build_report(cycles: list[CycleSummary], *,
                  now: datetime | None = None,
                  schedule_finished: bool | None = None,
                  declared_state: str | None = None,
-                 knee_options: dict | None = None) -> CellReport:
+                 knee_options: dict | None = None,
+                 knee_fn: Callable[..., KneeAnalysis] = detect_knee) -> CellReport:
     """Build the running/finished readout for one cell.
 
     ``cycles`` is the full cycle list for the cell -- if the cell spans
     several files, concatenate them first so cycle numbers are continuous.
+
+    ``knee_fn`` exists so a caller that asks the same question repeatedly can
+    hand in a memoised ``detect_knee``.  The reference cycle it is called with
+    is worked out below, from a fallback rule the caller would otherwise have
+    to reproduce -- so the seam is a function, not a precomputed answer.  The
+    cache itself stays out of here: ``wrdkit`` is the part that must give the
+    same answer whether or not anything has been asked before.
     """
     complete = [c for c in cycles if c.complete]
     state, confidence, evidence = _classify(
@@ -406,7 +415,7 @@ def build_report(cycles: list[CycleSummary], *,
         "reference_cycle",
         report.reference.cycle if report.reference_available else reference_cycle,
     )
-    report.knee = detect_knee(
+    report.knee = knee_fn(
         [c.cycle_number for c in complete],
         [c.discharge_capacity_mah for c in complete],
         **options,

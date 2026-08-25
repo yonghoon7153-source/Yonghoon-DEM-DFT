@@ -12,6 +12,7 @@ from wrdkit.health import (
     build_report,
     resolve_reference_cycle,
 )
+from wrdkit.knee import detect_knee
 
 import synthetic
 
@@ -334,3 +335,33 @@ def test_an_old_row_that_is_three_follows_the_schedule():
 def test_nothing_stored_still_answers():
     assert resolve_reference_cycle(None, formation="unclear") == (3, "default")
     assert resolve_reference_cycle(None, formation="no") == (1, "formationless")
+
+
+# --------------------------------------------------------------------------
+# knee_fn -- 계산을 아끼려는 호출자를 위한 이음매
+# --------------------------------------------------------------------------
+def test_the_knee_is_asked_for_with_the_reference_this_module_resolved():
+    """이음매가 함수인 이유.
+
+    기준 사이클은 여기서 정해진다 -- 요청한 사이클이 기록에 없으면 그 뒤
+    가장 이른 사이클로 물러나는 규칙이 있고, 호출자가 답을 미리 계산해서
+    넘기려면 그 규칙을 베껴야 한다.  베낀 사본은 언젠가 갈라진다.
+    """
+    asked = {}
+
+    def spy(cycles, capacities, **options):
+        asked.update(options)
+        asked["n"] = len(list(cycles))
+        return None
+
+    report = build_report(_cycles(n_cycles=8), reference_cycle=3, knee_fn=spy)
+    assert asked["reference_cycle"] == 3
+    assert asked["n"] == report.cycles_complete
+    assert report.knee is None
+
+
+def test_without_a_knee_fn_the_answer_is_the_ordinary_one():
+    """기본값이 곧 `detect_knee` 다.  이음매가 답을 바꾸지 않는다."""
+    cycles = _cycles(n_cycles=8)
+    assert build_report(cycles).state_summary == build_report(
+        cycles, knee_fn=detect_knee).state_summary

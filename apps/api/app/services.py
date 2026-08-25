@@ -34,7 +34,7 @@ from wrdkit.health import CellReport, build_report, resolve_reference_cycle
 from wrdkit.ica import DifferentialCapacity, differential_capacity
 from wrdkit.knee import KneeAnalysis
 
-from . import storage
+from . import memo, storage
 from .models import CycleRecord, Run, Sample
 from .settings import settings
 
@@ -460,9 +460,15 @@ def _usable_last_sample_time(last_sample_time: datetime | None,
 
 
 def build_cell_report(session: Session, sample: Sample, *,
-                      knee_options: dict | None = None) -> CellReport:
-    """The running/finished readout for a sample, across all its files."""
-    records = sample_cycle_records(session, sample)
+                      knee_options: dict | None = None,
+                      records: list[CycleRecord] | None = None) -> CellReport:
+    """The running/finished readout for a sample, across all its files.
+
+    ``records`` lets a caller that already has the sample's cycles hand them
+    over instead of asking for them a second time.
+    """
+    if records is None:
+        records = sample_cycle_records(session, sample)
     summaries = records_to_summaries(records)
 
     planned = None
@@ -494,6 +500,10 @@ def build_cell_report(session: Session, sample: Sample, *,
         schedule_finished=schedule_finished,
         declared_state=declared,
         knee_options=knee_options,
+        # 같은 셀의 같은 사이클을 다시 묻는 일이 화면 하나에 여러 번 있다
+        # (대시보드는 셀마다, 리포트는 기준을 바꿀 때마다).  답은 입력에만
+        # 달려 있으므로 두 번째부터는 계산하지 않는다.
+        knee_fn=memo.knee_analysis,
     )
 
 
@@ -553,13 +563,22 @@ def effective_basis(cell: ResolvedCell, basis: str) -> str:
 # profiles
 # --------------------------------------------------------------------------
 def load_wrd_columns(run: Run) -> dict[str, np.ndarray]:
-    """Cached columns for a run, re-parsing the original if the cache is gone."""
-    columns = storage.load_columns(run.id, expect_sha256=run.sha256)
-    if columns is not None:
-        return columns
-    wrd = storage.reparse(run.sha256)
-    storage.cache_columns(run.id, wrd)
-    return wrd.data
+    """Cached columns for a run, re-parsing the original if the cache is gone.
+
+    Two caches, because there are two costs.  ``storage`` keeps the `.npz` so
+    the 20 MB original need not be parsed again; ``memo`` keeps the unpacked
+    arrays so the archive need not be *decompressed* again.  A twenty-cycle
+    profile calls this forty times and used to pay zlib forty times.
+    """
+    def load() -> dict[str, np.ndarray]:
+        columns = storage.load_columns(run.id, expect_sha256=run.sha256)
+        if columns is not None:
+            return columns
+        wrd = storage.reparse(run.sha256)
+        storage.cache_columns(run.id, wrd)
+        return wrd.data
+
+    return memo.columns(run.id, run.sha256, load)
 
 
 def profile_series(run: Run, record: CycleRecord, branch: str,

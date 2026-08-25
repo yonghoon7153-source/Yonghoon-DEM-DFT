@@ -19,6 +19,7 @@ import numpy as np
 
 from wrdkit import WrdFile, read_wrd
 
+from . import memo
 from .settings import settings
 
 
@@ -173,10 +174,10 @@ def load_gitt(sha256: str) -> WrdFile | None:
         wrd = reparse(sha256)
     except (FileNotFoundError, StorageError):
         return None
-    try:
+    # 캐시를 못 써도 분석은 나가야 한다 -- 디스크가 찼다고 화면이 죽으면
+    # 안 되고, 다음 요청이 다시 시도한다.
+    with contextlib.suppress(OSError):
         cache_gitt(sha256, wrd)
-    except OSError:
-        pass          # a full disk must not stop the analysis
     return wrd
 
 
@@ -356,7 +357,12 @@ def drop_run_cache(run_id: int) -> None:
     So the failure is swallowed, and ``meta.json`` is removed first: without
     it :func:`load_columns` cannot confirm the archive's identity, so the
     leftover is never trusted even if its bytes survive.
+
+    The in-memory copy goes with it.  Not for correctness -- ``memo`` keys on
+    the sha256 too, so a replaced file cannot be served from it -- but because
+    a deleted run has no reason to keep holding tens of megabytes.
     """
+    memo.columns_cache.forget(run_id)
     directory = run_dir(run_id)
     if not directory.exists():
         return

@@ -644,6 +644,58 @@ def test_the_exhaustive_break_search_matches_brute_force():
         assert (got[1], got[2]) == (brute[1], brute[2])
 
 
+def test_the_break_search_runs_once_per_analysis():
+    """가장 비싼 한 걸음을 두 번 걷지 않는다.
+
+    `_segmented_knee` 는 세 번째 구간을 붙일지 판정하려고 전수 탐색을 하고,
+    붙이기로 하면 `_three_segment` 가 **같은 인자로 같은 탐색** 을 다시 했다.
+    400 사이클에서 한 번이 80 ms 이고, 대시보드는 이것을 셀 수만큼 부른다.
+    답은 그대로여야 하므로 아래 두 가지를 같이 본다: 횟수와, 값.
+    """
+    from wrdkit import knee as knee_module
+
+    x, y = _curve(120, lambda c: 100 - (0.02 * c if c < 60 else 1.2 + 0.4 * (c - 60)),
+                  noise=0.0)
+
+    calls = []
+    original = knee_module._exact_three_break
+
+    def counted(cycles, values):
+        calls.append(1)
+        return original(cycles, values)
+
+    knee_module._exact_three_break = counted
+    try:
+        with_sharing = detect_knee(x, y, reference_cycle=3)
+    finally:
+        knee_module._exact_three_break = original
+
+    assert len(calls) == 1
+    plain = detect_knee(x, y, reference_cycle=3)
+    assert with_sharing.primary.cycle == plain.primary.cycle
+    assert with_sharing.primary.reason == plain.primary.reason
+
+
+def test_a_supplied_break_search_result_is_the_one_that_is_used():
+    """넘겨준 값을 쓴다 -- 그리고 안 넘기면 스스로 구한다."""
+    from wrdkit.knee import _exact_three_break, _linear_fit, _three_segment
+
+    x, y = _curve(120, lambda c: 100 - (0.02 * c if c < 60 else 1.2 + 0.4 * (c - 60)),
+                  noise=0.0)
+    rss_single = _linear_fit(x, y)[2]
+
+    own = _three_segment(x, y, rss_single)
+    given = _three_segment(x, y, rss_single, _exact_three_break(x, y))
+    assert own.cycle == given.cycle
+    assert own.reason == given.reason
+    assert own.detail == given.detail
+
+    # "아직 안 구했다" 와 "구했더니 없더라" 는 다른 답이다.
+    nothing = _three_segment(x, y, rss_single, None)
+    assert not nothing.detected
+    assert nothing.reason == "no three-line break point fits"
+
+
 def test_early_life_does_not_grow_with_the_record():
     """같은 셀을 더 오래 봤다고 초기 수명의 정의가 바뀌면 안 된다.
 

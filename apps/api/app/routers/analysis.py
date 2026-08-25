@@ -1012,14 +1012,17 @@ def dashboard(session: Session = Depends(get_session),
     rows = []
     for sample in samples:
         cell = resolve_cell(sample)
-        report = build_cell_report(session, sample)
+        # 사이클 행은 한 번만 읽는다.  리포트도 추세선도 같은 행을 쓰는데,
+        # 따로 물으면 셀 수만큼 조회가 두 배가 된다.
+        records = sample_cycle_records(session, sample)
+        report = build_cell_report(session, sample, records=records)
         used = effective_basis(cell, basis)
         knee = report.knee.primary if report.knee else None
 
         # A retention percentage says where the cell is; the shape says how it
         # got there.  A handful of points draws that inside a table cell and
         # keeps the payload small with fifty cells listed.
-        complete = [r for r in sample_cycle_records(session, sample) if r.complete]
+        complete = [r for r in records if r.complete]
         trend = _trend(complete, report.reference.cycle if report.reference else None)
 
         rows.append({

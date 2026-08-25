@@ -793,8 +793,14 @@ def _protocol_excursion(cycles: np.ndarray, values: np.ndarray,
     return float(cycles[start]), float(cycles[end]), offset, start, end
 
 
+#: "이 인자는 안 넘어왔다" 를 `None` 과 구별하기 위한 표시.  `_exact_three_break`
+#: 는 실패했을 때 `None` 을 돌려주므로, 기본값이 `None` 이면 "아직 안 구했다" 와
+#: "구했더니 없더라" 가 같은 값이 되어 없는 것을 매번 다시 구하게 된다.
+_NOT_GIVEN = object()
+
+
 def _three_segment(cycles: np.ndarray, values: np.ndarray,
-                   rss_single: float) -> KneeResult:
+                   rss_single: float, best=_NOT_GIVEN) -> KneeResult:
     """Flat, then steep, then something else -- what two lines cannot describe.
 
     This is the shape of a high-voltage or all-solid-state cell that sheds
@@ -815,7 +821,10 @@ def _three_segment(cycles: np.ndarray, values: np.ndarray,
                           f"a three-line fit needs at least {3 * MIN_SEGMENT + 1} "
                           f"cycles, has {n}")
 
-    best = _exact_three_break(cycles, values)
+    # 호출자가 이미 구해 놨으면 그것을 쓴다.  같은 `cycles`·`values` 에 대한
+    # 같은 전수 탐색이므로 답이 다를 수 없고, 400 사이클에서 한 번이 85 ms 다.
+    if best is _NOT_GIVEN:
+        best = _exact_three_break(cycles, values)
     if best is None:                                    # pragma: no cover - n guard
         return KneeResult("segmented", None, False, "no three-line break point fits")
 
@@ -949,14 +958,14 @@ def _segmented_knee(cycles: np.ndarray, values: np.ndarray) -> KneeResult:
     escalate = (three is not None
                 and _f_gain(rss, three[0], n, 1, parameters=4) >= MIN_FIT_GAIN_F)
     if escalate:
-        escalated = _three_segment(cycles, values, rss_single)
+        escalated = _three_segment(cycles, values, rss_single, three)
         if escalated.detected:
             return escalated
     if two_line.detected:
         return two_line
 
     if not escalate:
-        escalated = _three_segment(cycles, values, rss_single)
+        escalated = _three_segment(cycles, values, rss_single, three)
         if escalated.detected:
             return escalated
     # Neither model found a knee.  Prefer whichever rejection actually looked at

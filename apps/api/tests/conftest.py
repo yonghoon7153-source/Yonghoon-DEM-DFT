@@ -25,6 +25,7 @@ os.environ["WORKBENCH_DB"] = "sqlite://"
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlmodel import SQLModel  # noqa: E402
 
+from app import memo  # noqa: E402
 from app.db import engine, init_db  # noqa: E402
 from app.main import app  # noqa: E402
 
@@ -34,6 +35,11 @@ import synthetic  # noqa: E402
 @pytest.fixture
 def client():
     SQLModel.metadata.drop_all(engine)
+    # 메모리 캐시도 데이터베이스와 같이 비운다.  테스트마다 run 1 이 새로
+    # 생기고 픽스처가 같은 바이트를 올리므로, 안 비우면 앞 테스트의 컬럼이
+    # 그대로 맞아 버려서 "캐시를 지웠는데도 복구된다" 를 확인하는 테스트가
+    # 디스크를 아예 건드리지 않고 통과한다.
+    memo.clear()
     init_db()
     with TestClient(app) as test_client:
         yield test_client
