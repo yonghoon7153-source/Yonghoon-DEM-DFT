@@ -8,10 +8,11 @@
   ]
  },
  "alabdali2023_cgmd_wet_manufacturing_ssb_cathode": {
-  "figures": 4,
+  "figures": 11,
   "generated": "2026-08-19",
   "pdfs": [
-   "4be01023-60._Threedimensional_physical_modeling_of_the_wet_manufacturing_process_of_solidstate_battery_electrodes.pdf"
+   "4be01023-60._Threedimensional_physical_modeling_of_the_wet_manufacturing_process_of_solidstate_battery_electrodes.pdf",
+   "1-s2.0-S0378775323008030-mmc1.docx (SI)"
   ]
  },
  "anderson2024_llzo_comprehensive_dopant_screening": {
@@ -293,6 +294,13 @@
    "DFT 먹인 논문/41. Sup) High-throughput computational screening for solid-state Li-ion conductors.pdf"
   ]
  },
+ "kalikadien2026_uma_tm_catalyst_conformer_ranking": {
+  "figures": 5,
+  "generated": "2026-08-25",
+  "pdfs": [
+   "a8e0b114-65._Perforalysts.pdf"
+  ]
+ },
  "kang2025_highvoltage_parasitic_reaction_benefit_sulfide_assb": {
   "figures": 4,
   "generated": "2026-08-05",
@@ -312,6 +320,14 @@
   "generated": "2026-08-05",
   "pdfs": [
    "★ 랩실 논문/01. Intertwined nature of electrochemical reactions and mechanical instability in sulfide-based all-solid-state batteries.pdf"
+  ]
+ },
+ "kauwe2021_ml_materials_properties_dissertation_sparks": {
+  "figures": 15,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "ch2_Kauwe2021_MLguide.pdf",
+   "Sup) ch6_Kauwe2021_extraordinary.pdf"
   ]
  },
  "ke2025_orbital_hybridization_mgclo": {
@@ -937,6 +953,13 @@
    "01. Sup) Polycrystalline and Single Crystalline NCM CathodeMaterials—Quantifying Particle Cracking, Active SurfaceArea, and Lithium Diffusion.pdf"
   ]
  },
+ "uma2026_family_of_universal_models_for_atoms": {
+  "figures": 34,
+  "generated": "2026-08-25",
+  "pdfs": [
+   "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf"
+  ]
+ },
  "wang2022_sulfide_thermal_stability_th_descriptor": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -1032,10 +1055,16 @@
   "figures": 42,
   "generated": "2026-08-19",
   "pdfs": [
-   "57. Dry electrode architecture design to push energy density limits at the cell level.pdf",
-   "57. 41560_2026_1981_MOESM1_ESM.pdf"
-  ],
-  "note": "main-text Figs 1-6 = clip-rendered crops of the figure+caption region (PyMuPDF, 170-220 dpi, verified by eye). SI Figs S1-S29 + Tables S1-S7 adopted from the superseded slug '..._cgmd_ptfe_vgcf' (commit a3505890) before it was removed. All images are CROPPED -> figures.json w/h were refreshed from the files on disk and bbox fields dropped (bbox referred to original PDF coordinates and no longer corresponds)."
+   "57. Dry electrode architecture design to push energy density limits at the cell level.pdf"
+  ]
+ },
+ "zhang2026_minimum_abinitio_data_mlip_mace_finetune_nep_distill": {
+  "figures": 24,
+  "generated": "2026-08-19",
+  "pdfs": [
+   "61. Zhang2026_Minimum_AbInitio_Data_MLIP.pdf",
+   "61. Sup) Zhang2026_Minimum_AbInitio_Data_MLIP.pdf"
+  ]
  },
  "zhou2026_high_entropy_lgps_multicationic": {
   "figures": 25,

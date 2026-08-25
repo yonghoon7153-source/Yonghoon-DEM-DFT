@@ -1,0 +1,111 @@
+{
+ "slug": "kalikadien2026_uma_tm_catalyst_conformer_ranking",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-25",
+ "sources": [
+  "a8e0b114-65._Perforalysts.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Overview of the two data sets used in this study. Top: Data set 1 contains conformers of square-planar Ni-based rigid and flexible model structures relevant to nitrile arylation, each with one of 25 bisphosphine ligands. Bottom: Data set 2 includes octahedral Ir, Ru, and Mn complexes relevant to hydrogenation chemistry, each with one of 88 bisphosphine ligands. Details on Data set 2 are available in our previous work.22 Figure adapted from ref 22 by A.V Kalikadien, N.J. van der Lem, C. Valsecchi, L. Lefort and E.A. Pidko. Available under a CC-BY 3.0 license. Copyright RSC. extremely large number of TM complexes in the Open Molecules 2025 (OMOL25) data set, allowing for extensive sampling of conformer space and configurational flexibility across different DFT data sets and tasks.18 However, the ranking of conformers has only been evaluated for a subset of the data set (GEOM) aim",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    461.4
+   ],
+   "w": 2151,
+   "h": 1697,
+   "dpi": 300,
+   "src": "a8e0b114-65._Perforalysts.pdf",
+   "blank": 0.448
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Correlation between DFT and UMA relative single-point energies for Data set 1 conformers: (a) rigid and (b) flexible model structures.",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    228.4
+   ],
+   "w": 2151,
+   "h": 726,
+   "dpi": 300,
+   "src": "a8e0b114-65._Perforalysts.pdf",
+   "blank": 0.885
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 3,
+   "file": "fig_3.png",
+   "caption": "Figure 3. Spearman rank correlation (ρ) between UMA and DFT conformer energy rankings for Data set 1: (a) rigid and (b) flexible model structures. Bars are colored by reliability based on ρ > 0.6 (blue = reliable, p < 0.05 and ρ > 0.6; gray = not reliable). The red dashed line indicates the reliability threshold. The right-hand side shows representative bisphosphine ligands L2 (dCyhpp), L4 (Dcyppp), L7 (dppm), L8 (dppe), and L12 (dppb), illustrating differences in phosphorus substituents (phenyl, cyclohexyl, or pentyl) and linker length between donor atoms, which influence conformational flexibility and energy ranking performance. a more flexible [ligand]-Ni(II)-(CH3CN)(−pOMe(C6H4)) complex (top right), where asymmetry is introduced by the coordination environment which increases conformational freedom.23 These complexes are viewed as representative models of the precatalysts and relevan",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    247.5,
+    561.5,
+    633.1
+   ],
+   "w": 2151,
+   "h": 1608,
+   "dpi": 300,
+   "src": "a8e0b114-65._Perforalysts.pdf",
+   "blank": 0.718
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 4,
+   "file": "fig_4.png",
+   "caption": "Figure 4. Correlation between UMA and DFT relative energies for Data Set 2 (configurations). Points are colored by metal center: Ir (green), Ru (red), and Mn (blue). Data set 2 contains various octahedral complexes with Ir, Ru, or Mn metal centers in combination with 88 bisphosphine ligands relevant for homogeneous hydrogenation catalysis presented in our previous research.22 The studied ligand configurations (bottom) for the Ir, Ru, and Mn complexes are named according to the donor atoms of ligands in the axial position.22 For both data sets, the atomic structures of the coordination complexes including all possible stereoisomers were generated with our MACE Python package,24 comparison of relative energies computed by DFT and UMA on these structures (Figure 2) reveals excellent agreement, particularly for the rigid model’s conformers (R2 = 0.96, RMSE = 2.4 kJ/mol), and reasonable corre",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    243.0
+   ],
+   "w": 2151,
+   "h": 787,
+   "dpi": 300,
+   "src": "a8e0b114-65._Perforalysts.pdf",
+   "blank": 0.948
+  },
+  {
+   "key": "f5",
+   "kind": "figure",
+   "label": "5",
+   "page": 5,
+   "file": "fig_5.png",
+   "caption": "Figure 5. Spearman rank correlation (ρ) between UMA and DFT energy rankings for Data set 2: Mn(I)- and Ru(II)-based complexes. Cells are colored from red (low ρ) to green (high ρ). Ir(III) complexes are excluded due to insufficient configurations for ranking. The right panels show representative chiral bisphosphine ligands: L17 ((R)-BINAM-P) and L51 ((S)-iPr-BIPHEP) (green) achieve perfect agreement for both metals, while L133 ((R)-An-PhanePhos) and L149 ((R)-Tol-GarPhos) (orange) are reliable for Ru(II) but not for Mn(I). which contains ligand configurations that span a much broader range of relative energies. L8, and L12), which differ primarily in the nature of the substituents on the phosphorus donors (phenyl, cyclohexyl, or pentyl) and in the length of the carbon linker between them. L2 (dCyhpp) and L4 (Dcyppp) are reliably predicted for the rigid model structure but not for the fle",
+   "rotated_deg": 0,
+   "bbox": [
+    44.1,
+    51.5,
+    561.5,
+    437.0
+   ],
+   "w": 2157,
+   "h": 1607,
+   "dpi": 300,
+   "src": "a8e0b114-65._Perforalysts.pdf",
+   "blank": 0.513
+  }
+ ]
+}
