@@ -117,12 +117,15 @@ def _coth(x: np.ndarray) -> np.ndarray:
     """``coth`` that does not overflow.
 
     ``sinh``/``cosh`` overflow above |x| ~ 710 and lose the answer well before
-    that, but ``coth(x) -> 1`` as ``Re x -> +inf`` and the arguments here always
-    have a positive real part.  Cutting over at 30 is exact to double precision
-    (``coth(30) - 1 < 1e-26``) and keeps the high-frequency end of a
-    transmission line finite instead of NaN.
+    that, but ``coth(x) -> ±1`` as ``Re x -> ±inf``.  Cutting over at 30 is exact
+    to double precision (``|coth(30)| - 1 < 1e-26``) and keeps the high-frequency
+    end of a transmission line finite instead of NaN.
+
+    부호를 ``Re x`` 에서 가져온다.  이 파일의 호출자들은 실수부가 양수인 ``x``
+    만 넘기지만, 절댓값으로 자르고 +1 을 돌려주면 음의 실수부에서 **부호가
+    뒤집힌 답**이 나온다 -- 새 원소가 하나 붙는 날 조용히 틀리는 종류다.
     """
-    out = np.ones_like(x)
+    out = np.where(x.real < 0, -1.0, 1.0).astype(complex)
     near = np.abs(x.real) < 30
     out[near] = np.cosh(x[near]) / np.sinh(x[near])
     return out
@@ -151,6 +154,12 @@ def transmission_line(r_ion: float, r_electron: float,
     values with the thickness set to 1: only the products enter the formula, and
     a separate thickness parameter would be one more number the spectrum cannot
     determine.
+
+    **두 레일은 서로 바꿔도 같은 곡선이다.**  식에 들어가는 것은 두 값의 합과
+    곱과 제곱합뿐이라 ``r_ion`` 과 ``r_electron`` 을 맞바꾸면 임피던스가 **정확히**
+    같다 (합성 스펙트럼에서 차이 0.0).  그래서 한 스펙트럼은 둘의 **짝**만
+    정하고 어느 쪽이 이온인지는 말하지 않는다 -- 피팅이 그 사실을 `reason` 에
+    적는다.  물리로 가르려면 전자 전도도를 따로 재거나 블로킹 셀이 있어야 한다.
 
     Ref.: Bisquert, J. Phys. Chem. B 104 (2000) 2287; de Levie (1973).
     Cross-checked term by term against PyEIS 1.0.10 ``cir_RsTL``.
@@ -184,6 +193,25 @@ class _TL(Element):
     공간 Warburg 가 **직렬**이고, 그 둘에 CPE 가 **병렬**이다.  Warburg 는
     ``Z = Wr·coth(x)/x``, ``x = (Wt·jω)^Wn`` -- 이상적인 1D 확산이면
     ``Wn = 0.5`` 이고, 그보다 낮으면 입자 크기가 고르지 않다는 뜻이다.
+
+    **``Wn`` 의 상한이 0.8 인 것은 취향이 아니라 극점 때문이다.**  ``coth`` 는
+    허수축의 ``b = kπ`` 마다 극점을 가지고, ``|coth(a+jb)| <= coth(a)`` 이므로
+    실수부 ``a`` 가 1 보다 크면 그 근처에서도 1.31 을 넘지 않는다.  여기서는
+
+        Im x / Re x = tan(Wn·π/2)
+
+    이라, ``tan(Wn·π/2) < π`` 이면 ``Im x`` 가 π 를 넘는 순간 ``Re x`` 도 1 을
+    넘는다 -- 즉 극점에 닿을 수 없다.  그 경계가 ``Wn = 2·atan(π)/π = 0.8038``
+    이다.
+
+    상한이 1.0 이었을 때 실제로 일어난 일: ``Wn = 1`` 이면 ``x`` 가 **순허수**가
+    되어 (``Re x = 0``) ``coth(jb) = -j·cot(b)`` 가 되고, 이것은 확산 임피던스가
+    아니라 **무손실 선로**다.  주파수 점 사이에서 극점을 오가며 값이 튀는데,
+    적합도로는 그것이 이득이라 최적화가 상한에 눌러붙었다.  랩의 전고체 풀셀
+    스펙트럼에서 나이퀴스트 곡선이 저주파에서 톱니로 꺾인 것이 그 자국이다
+    (톱니 지표 15.6 vs 매끄러운 곡선의 1.0).  ``Wn <= 0.8`` 에서는 1.03 이다.
+
+    랩의 PyEIS 피팅이 실제로 낸 값도 0.75 로, 이 상한 안에 있다.
     """
 
     def impedance(self, values, omega):
@@ -212,9 +240,11 @@ ELEMENTS: dict[str, Element] = {
                 ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0)),
                 ("Ω", "Ω", "Ω", "S·sⁿ", ""),
                 "전송선 — 이온·전자 레일 + 계면 (Rct∥CPE)"),
+    # `_Wn` 의 상한이 1.0 이 아니라 0.8 인 이유는 `_TL` 의 docstring 에 있다:
+    # 그 위는 확산이 아니라 극점이 늘어선 무손실 선로다.
     "TL": _TL("TL", ("_Ri", "_Re", "_Rct", "_Q", "_n", "_Wr", "_Wn", "_Wt"),
               ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0),
-               (1e-9, 1e9), (0.1, 1.0), (1e-6, 1e6)),
+               (1e-9, 1e9), (0.1, 0.8), (1e-6, 1e6)),
               ("Ω", "Ω", "Ω", "S·sⁿ", "", "Ω", "", "s"),
               "전송선 — 계면에 유한 확산까지 (CPE∥(Rct+W))"),
 }

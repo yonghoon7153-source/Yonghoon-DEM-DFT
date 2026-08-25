@@ -398,14 +398,83 @@ def test_the_high_frequency_end_is_finite_not_nan():
 
 
 def test_a_transmission_line_spectrum_gives_back_its_own_parameters():
-    """랩의 회로 그대로 — 배선 인덕턴스 + 직렬저항 + 보정 아크 + 전송선."""
+    """랩의 회로 그대로 — 배선 인덕턴스 + 직렬저항 + 보정 아크 + 전송선.
+
+    두 레일만 **짝으로** 본다.  `transmission_line` 은 `Ri` 와 `Re` 를 맞바꿔도
+    정확히 같은 곡선을 내므로 (차이 0.0), 어느 쪽이 어느 쪽인지는 스펙트럼에
+    없는 정보다 -- 그것을 요구하는 테스트는 실은 최적화의 출발점 난수를
+    고정하고 있을 뿐이다.
+    """
     truth = [1e-6, 12.0, 5.0, 1e-5, 0.9,
              40.0, 2.0, 3.0, 1e-2, 0.8, 30.0, 0.5, 60.0]
     spectrum_, circuit = _tl_spectrum("L1-R0-p(R1,CPE1)-TL1", truth)
     result = fit_circuit(spectrum_, circuit, restarts=24, seed=0)
     assert result.converged
+    rails = {"TL1_Ri", "TL1_Re"}
     for name, real in zip(circuit.parameter_names, truth, strict=True):
+        if name in rails:
+            continue
         assert result.values()[name] == pytest.approx(real, rel=0.05), name
+
+    got = sorted(result.values()[name] for name in rails)
+    for value, real in zip(got, sorted([40.0, 2.0]), strict=True):
+        assert value == pytest.approx(real, rel=0.05)
+    # 그리고 그 사실을 결과가 말한다 -- 두 줄을 서로 다른 측정값처럼 읽으면 안 된다.
+    assert "TL1_Ri ↔ TL1_Re" in result.reason
+
+
+def test_every_element_draws_a_smooth_curve_across_its_own_bounds():
+    """경계 안의 어떤 값에서도 곡선이 **매끄러워야** 한다.
+
+    이 검사가 없어서 놓친 것: ``TL`` 의 ``Wn`` 상한이 1.0 이었고, 거기서
+    ``x = (Wt·jω)^1`` 이 순허수가 되어 ``coth`` 가 극점의 열이 된다.  확산이
+    아니라 무손실 선로이고, 나이퀴스트 곡선이 저주파에서 톱니로 꺾인다.
+    적합도만 보면 그것이 이득이라 최적화가 상한에 눌러붙었고, 사람이 화면에서
+    톱니를 보고 나서야 알았다.
+
+    "매끄럽다" 는 **이웃 걸음과 견줘서** 정한다.  저주파에서 임피던스가 크게
+    발산하는 것은 정상이므로 (블로킹 전극), 절대 크기로 재면 정상까지 걸린다.
+    """
+    from wrdkit.eis.circuit import ELEMENTS, parse_circuit
+
+    frequency = np.logspace(7, -2, 400)
+    rng = np.random.default_rng(0)
+    for kind in ELEMENTS:
+        circuit = parse_circuit(f"{kind}1")
+        lower = np.maximum(np.asarray(circuit.lower), 1e-9)
+        upper = np.minimum(np.asarray(circuit.upper), 1e6)
+        worst, worst_values = 0.0, None
+        for _ in range(200):
+            values = 10 ** rng.uniform(np.log10(lower), np.log10(upper))
+            z = circuit.impedance(values, frequency)
+            assert np.all(np.isfinite(z)), (kind, values)
+            step = np.abs(np.diff(z))
+            neighbours = np.maximum(step[:-2], step[2:])
+            # 곡선이 사실상 상수인 조합이 있다 (Rct 가 0 에 가까우면 전송선이
+            # 주파수를 안 탄다).  거기서는 걸음이 전부 부동소수점 먼지라
+            # 비율이 아무 뜻도 없으므로, 곡선 크기에 견줘 의미 있는 걸음만 센다.
+            worth = step[1:-1] > 1e-9 * np.abs(z).max()
+            ratio = np.where(worth & (neighbours > 0),
+                             step[1:-1] / np.where(neighbours > 0, neighbours, 1.0),
+                             0.0)
+            if ratio.max() > worst:
+                worst, worst_values = float(ratio.max()), values
+        # 매끄러운 곡선은 1 근처다.  Wn=1.0 이던 시절의 TL 은 15.6 이었다.
+        assert worst < 3.0, (kind, worst, worst_values)
+
+
+def test_the_diffusion_exponent_stops_below_the_pole_line():
+    """``Wn`` 상한은 취향이 아니라 ``coth`` 의 극점이 시작되는 자리다.
+
+    ``Im x / Re x = tan(Wn·π/2)`` 이므로, ``tan(Wn·π/2) < π`` 이면 ``Im x`` 가
+    π 를 넘는 순간 ``Re x`` 도 1 을 넘어 극점에 닿을 수 없다.  경계는
+    ``2·atan(π)/π = 0.8038``.
+    """
+    from wrdkit.eis.circuit import ELEMENTS
+
+    index = ELEMENTS["TL"].suffixes.index("_Wn")
+    _, upper = ELEMENTS["TL"].bounds[index]
+    assert upper <= 2 * np.arctan(np.pi) / np.pi
 
 
 def test_the_interfacial_warburg_is_pyeis_shape():

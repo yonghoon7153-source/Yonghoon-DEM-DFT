@@ -325,10 +325,20 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         # 얼마나 잘 쟀나" 가 아니라 "벽이 얼마나 단단한가" 이고, 작은 오차
         # 막대는 가장 정밀해 보이는 숫자를 가장 못 본 숫자에 붙인다 (§0.4).
         parameter.stderr = None
-    reason = ""
+    notes = []
     if at_bound:
-        reason = ("물리적 한계에 붙은 파라미터: " + ", ".join(at_bound)
-                  + " — 회로가 이 스펙트럼을 설명하지 못한다는 뜻일 수 있습니다")
+        notes.append("물리적 한계에 붙은 파라미터: " + ", ".join(at_bound)
+                     + " — 회로가 이 스펙트럼을 설명하지 못한다는 뜻일 수 있습니다")
+    # 전송선의 두 레일은 맞바꿔도 임피던스가 **정확히** 같다 (circuit.py 의
+    # `transmission_line` 을 보라).  둘을 서로 다른 측정값처럼 읽으면 안 되는데,
+    # 화면에는 이름이 다른 두 줄로 나오므로 여기서 한 번 말해 준다.
+    swappable = sorted({name.split("_")[0] for name in model.parameter_names
+                        if name.endswith(("_Ri", "_Re"))})
+    if swappable:
+        notes.append(", ".join(f"{name}_Ri ↔ {name}_Re" for name in swappable)
+                     + " 는 맞바꿔도 같은 곡선입니다 — 스펙트럼은 둘의 짝만 "
+                       "정하고 어느 쪽이 이온인지는 말하지 않습니다")
+    reason = " / ".join(notes)
 
     return FitResult(
         circuit=model.text,
