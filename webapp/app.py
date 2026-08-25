@@ -10485,6 +10485,34 @@ def predictor_structure():
         return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
 
 
+@app.route('/predictor/structure/shap', methods=['POST'])
+def predictor_structure_shap():
+    """설계 노브의 **정확 Shapley** 중요도 (타깃별 100 % 정규화 히트맵).
+
+    ★ 양수영 세미나(2026-08-18) 방법의 이식 — 단 근사 대신 **2⁶ 연합 전수 열거**이고,
+      유도 특징이 아니라 **자유노브**에만 건다.  litdb `talks/yang2026_bml_ml_radial_cathode`.
+    """
+    d = request.get_json() or {}
+    try:
+        return jsonify(structure_predictor.shap_importance(
+            n_explain=int(d.get('n_explain', 48)), n_bg=int(d.get('n_bg', 24)),
+            seed=int(d.get('seed', 0)), include_weak=bool(d.get('include_weak', True))))
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
+
+
+@app.route('/predictor/structure/pareto', methods=['POST'])
+def predictor_structure_pareto():
+    """다목적 Pareto front + 하이퍼볼륨 추이.  추천은 **물리 경계 안**에서만 고른다."""
+    d = request.get_json() or {}
+    try:
+        return jsonify(structure_predictor.pareto(
+            objectives=d.get('objectives'), n=int(d.get('n', 1200)),
+            seed=int(d.get('seed', 0)), include_weak=bool(d.get('include_weak', True))))
+    except Exception as e:                                     # noqa: BLE001
+        return jsonify({'ready': False, 'error': f'{type(e).__name__}: {e}'}), 200
+
+
 @app.route('/predictor/structure/surface', methods=['POST'])
 def predictor_structure_surface():
     """2 인자 응답면 (교호작용 지도) + 실제 코퍼스 산점."""

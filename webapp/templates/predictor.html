@@ -78,6 +78,56 @@
     </div>
   </div>
 
+  <!-- ════ 설계 인자 중요도 + 다목적 최적화 (양수영 세미나 2026-08-18 방법 이식) ════ -->
+  <div class="card" id="shap-card" style="border:1px solid #3a4a5a;margin-top:14px">
+    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+      <h3 style="margin:0">설계 인자 중요도 · 다목적 최적화</h3>
+      <span id="shap-badge" class="status-badge badge-yellow">대기</span>
+      <span style="color:#7a8794;font-size:11px">
+        방법 출처 = 양수영(BML) 세미나 2026-08-18 · litdb <code>talks/yang2026_bml_ml_radial_cathode</code></span>
+    </div>
+
+    <p style="color:#9aa7b4;font-size:12px;margin:8px 0 12px">
+      <b>정확 Shapley</b> — 자유노브 6개라 2⁶ = <b>64 연합을 전수 열거</b>합니다 (근사 아님).
+      <b>유도 특징이 아니라 자유노브에만</b> 겁니다: 유도량 7개는 노브의 대수적 함수라
+      거기에 걸면 한 노브의 기여가 자기 유도량들로 쪼개져 뜻을 잃습니다.
+    </p>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="btn" id="shap-run">중요도 계산</button>
+      <label style="color:#9aa7b4;font-size:12px">설명점
+        <input type="number" id="shap-nx" value="48" min="8" max="256" step="8"
+               style="width:70px;background:#141a21;color:#dfe6ec;border:1px solid #3a4a5a;border-radius:4px;padding:3px 6px"></label>
+      <label style="color:#9aa7b4;font-size:12px">배경
+        <input type="number" id="shap-nb" value="24" min="6" max="64" step="2"
+               style="width:70px;background:#141a21;color:#dfe6ec;border:1px solid #3a4a5a;border-radius:4px;padding:3px 6px"></label>
+    </div>
+    <div id="shap-warn" style="display:none;padding:8px 12px;margin-bottom:10px;border-radius:6px;
+         background:#3a2f16;color:#f0d68a;font-size:12px"></div>
+    <div id="shap-table" style="overflow-x:auto"></div>
+
+    <hr style="border:0;border-top:1px solid #2a343e;margin:16px 0">
+
+    <h4 style="margin:0 0 8px">다목적 Pareto (최대 4 목적)</h4>
+    <div id="pareto-objs" style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px"></div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button class="btn" id="pareto-run">Pareto 탐색</button>
+      <label style="color:#9aa7b4;font-size:12px">표본
+        <input type="number" id="pareto-n" value="1200" min="200" max="6000" step="200"
+               style="width:80px;background:#141a21;color:#dfe6ec;border:1px solid #3a4a5a;border-radius:4px;padding:3px 6px"></label>
+    </div>
+    <div id="pareto-out" style="color:#9aa7b4;font-size:12px"></div>
+    <canvas id="pareto-hv" width="720" height="150"
+            style="display:none;max-width:100%;background:#141a21;border-radius:6px;margin-top:10px"></canvas>
+    <p style="color:#7a8794;font-size:11px;margin:10px 0 0">
+      ⚠ Pareto 점은 <b>대리모델의 예측</b>입니다 — 물리가 아닙니다.  <b>물리 경계 밖</b> 점과
+      <b>외삽</b> 점을 버리지 않고 세어 보여줍니다 (버리면 왜 없는지 알 수 없으므로).
+      경계 밖 점이 나오는 건 정상입니다 — 최적화기는 그런 점을 <i>선호</i>합니다
+      (f_perc 103 %가 100 %보다 좋아 보이므로).  그래서 <b>추천은 경계 안에서만</b> 고릅니다.
+      실제 설계로 옮기기 전에 그 점에서 DEM/MPM 을 한 번 돌려 확인하세요.
+      HV %는 <b>이 표본에서 정한 상자</b> 기준이라 다른 표본과 직접 비교하지 마세요.</p>
+  </div>
+
   <!-- Input Section -->
   <div class="card">
     <h3 class="card-title">Design Parameters</h3>
@@ -1453,6 +1503,108 @@ async function structSurface(){
         .map(([k,v])=>`${k}=${(+v).toFixed(2)}`).join(', ');
   }catch(e){ lg.textContent = String(e); }
 }
+
+// ══ 설계 인자 중요도 (정확 Shapley) + 다목적 Pareto ══════════════════════════════════
+const _SHAP_TARGETS = [];
+function _heat(v){ const t=Math.min(1,v/60); return `rgba(79,142,247,${0.10+0.85*t})`; }
+
+document.getElementById('shap-run').addEventListener('click', async () => {
+  const bd = document.getElementById('shap-badge'), tb = document.getElementById('shap-table');
+  const wn = document.getElementById('shap-warn');
+  bd.textContent='계산 중…'; bd.className='status-badge badge-yellow'; tb.innerHTML='';
+  try{
+    const r = await fetch('/predictor/structure/shap', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({n_explain:+document.getElementById('shap-nx').value,
+                            n_bg:+document.getElementById('shap-nb').value})});
+    const d = await r.json();
+    if(!d.ready){ bd.textContent='실패'; bd.className='status-badge badge-red';
+      tb.innerHTML = `<p style="color:#e58e8e">${d.error||'?'}</p>`; return; }
+    bd.textContent = `정확 · 연합 ${d.n_coalitions}`; bd.className='status-badge badge-green';
+    if(d.corr && d.corr.warn){ wn.style.display='block';
+      wn.innerHTML = `⚠ ${d.corr.warn}<br><span style="color:#c9b57a">상위 상관: `
+        + d.corr.pairs.slice(0,3).map(p=>`${p.pair} r=${p.r}`).join(' · ') + '</span>'; }
+    else wn.style.display='none';
+    let h = '<table style="width:100%;border-collapse:collapse;font-size:12px">'
+      + '<thead><tr style="color:#9aa7b4;border-bottom:1px solid #3a4a5a">'
+      + '<th style="text-align:left;padding:5px 8px">타깃</th><th>판정</th>'
+      + d.knobs.map(k=>`<th style="padding:5px 8px">${k}</th>`).join('') + '</tr></thead><tbody>';
+    d.targets.forEach(t => {
+      const row = d.heatmap[t], sg = d.signed_mean[t];
+      h += `<tr style="border-bottom:1px solid #222b34"><td style="padding:5px 8px">${t}</td>`
+        + `<td style="text-align:center;color:${d.verdicts[t]==='USABLE'?'#7ddc9a':'#f0d68a'}">${d.verdicts[t]}</td>`;
+      row.forEach((v,i) => {
+        const dir = sg[i] > 0 ? '▲' : (sg[i] < 0 ? '▼' : '·');
+        h += `<td style="text-align:center;padding:5px 8px;background:${_heat(v)}"
+                  title="평균 방향 ${sg[i]}">${v.toFixed(1)}% <span style="opacity:.6">${dir}</span></td>`;
+      });
+      h += '</tr>';
+      if(!_SHAP_TARGETS.includes(t)) _SHAP_TARGETS.push(t);
+    });
+    h += '</tbody></table><p style="color:#7a8794;font-size:11px;margin:8px 0 0">'
+      + `행 합 = 100 %.  ▲/▼ 는 <b>평균 방향</b>(크기 비교는 % 로).  설명점 ${d.n_explain} · 배경 ${d.n_bg}.`
+      + '</p>';
+    tb.innerHTML = h;
+    _buildParetoObjs();
+  }catch(e){ bd.textContent='실패'; bd.className='status-badge badge-red';
+    tb.innerHTML = `<p style="color:#e58e8e">${e}</p>`; }
+});
+
+function _buildParetoObjs(){
+  const box = document.getElementById('pareto-objs');
+  if(box.dataset.built) return;
+  box.dataset.built = '1';
+  const defaults = {tau:'min', f_perc:'max'};
+  box.innerHTML = _SHAP_TARGETS.map(t => `
+    <label style="color:#9aa7b4;font-size:12px;display:flex;align-items:center;gap:4px;
+                  border:1px solid #2a343e;border-radius:4px;padding:3px 6px">
+      <input type="checkbox" class="po-chk" data-t="${t}" ${defaults[t]?'checked':''}>
+      ${t}
+      <select class="po-sense" data-t="${t}"
+              style="background:#141a21;color:#dfe6ec;border:1px solid #3a4a5a;border-radius:3px">
+        <option value="min" ${defaults[t]==='min'?'selected':''}>↓ 최소</option>
+        <option value="max" ${defaults[t]==='max'?'selected':''}>↑ 최대</option>
+      </select></label>`).join('');
+}
+
+document.getElementById('pareto-run').addEventListener('click', async () => {
+  const out = document.getElementById('pareto-out'), cv = document.getElementById('pareto-hv');
+  const objs = [...document.querySelectorAll('.po-chk')].filter(c=>c.checked)
+    .map(c => [c.dataset.t, document.querySelector(`.po-sense[data-t="${c.dataset.t}"]`).value]);
+  if(!objs.length){ out.textContent = '목적을 하나 이상 고르세요 (먼저 위에서 중요도를 계산하면 목록이 채워집니다).'; return; }
+  out.textContent = '탐색 중…'; cv.style.display='none';
+  try{
+    const r = await fetch('/predictor/structure/pareto', {method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({objectives:objs, n:+document.getElementById('pareto-n').value})});
+    const d = await r.json();
+    if(!d.ready){ out.innerHTML = `<span style="color:#e58e8e">${d.error||'?'}</span>`; return; }
+    const b = d.balanced;
+    out.innerHTML =
+      `front <b>${d.n_front}</b>점 / 표본 ${d.n_sampled} · HV <b>${d.hv_final_pct}%</b> · `
+      + `외삽 ${d.n_front_extrapolated}점 · <b style="color:${d.n_front_out_of_bounds?'#f0d68a':'#7ddc9a'}">`
+      + `물리 경계 밖 ${d.n_front_out_of_bounds}점</b><br>`
+      + (b ? `<b>추천(균형):</b> `
+            + Object.entries(b.design).map(([k,v])=>`${k}=${v}`).join(' · ')
+            + `<br>&nbsp;&nbsp;→ ` + Object.entries(b.objectives).map(([k,v])=>`<b>${k}</b>=${v}`).join(' · ')
+        : '<span style="color:#f0d68a">추천할 점이 없습니다.</span>')
+      + `<br><span style="color:#7a8794;font-size:11px">${d.balanced_why||''}</span>`;
+    // HV 추이
+    const t = d.hv_trace||[]; if(t.length < 2) return;
+    cv.style.display='block';
+    const ctx = cv.getContext('2d'); ctx.clearRect(0,0,cv.width,cv.height);
+    const L=52,B=26,W=cv.width-L-14,H=cv.height-B-12;
+    const y0=Math.min(...t.map(p=>p.hv_pct)), y1=Math.max(...t.map(p=>p.hv_pct));
+    const rg=(y1-y0)||1;
+    ctx.strokeStyle='#3a4a5a'; ctx.strokeRect(L,12,W,H);
+    ctx.beginPath(); ctx.strokeStyle='#4f8ef7'; ctx.lineWidth=2;
+    t.forEach((p,i)=>{ const x=L+W*i/(t.length-1), y=12+H-(p.hv_pct-y0)/rg*H;
+      i?ctx.lineTo(x,y):ctx.moveTo(x,y); }); ctx.stroke();
+    ctx.fillStyle='#9aa7b4'; ctx.font='11px sans-serif'; ctx.textAlign='right';
+    ctx.fillText(y1.toFixed(2)+'%', L-6, 18); ctx.fillText(y0.toFixed(2)+'%', L-6, 12+H);
+    ctx.textAlign='center'; ctx.fillText('표본 수 →', L+W/2, 12+H+18);
+  }catch(e){ out.innerHTML = `<span style="color:#e58e8e">${e}</span>`; }
+});
 </script>
 
 {% endblock %}
