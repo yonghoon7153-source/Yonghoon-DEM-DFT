@@ -548,6 +548,92 @@ def test_each_sweep_of_a_scan_plots_on_its_own(client):
         assert item["frequency_hz"][0] > item["frequency_hz"][-1]
 
 
+# --- 스캔 섹션: 파일 하나를 SOC 축으로 (ADR 0022) ---------------------------
+
+def _scan_with_fits(client, sweeps=4, circuit="R0-p(R1,CPE1)"):
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=sweeps),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    client.post("/api/eis/fit-batch",
+                json=[row["id"] for row in rows],
+                params={"circuit": circuit})
+    return rows
+
+
+def test_only_a_file_with_several_sweeps_is_a_scan(client):
+    """전·후 두 장은 스캔이 아니다 — 그건 목록 화면이 이미 하는 일이다."""
+    upload(client)                                     # 한 장짜리
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("two.mpr", scan_mpr(sweeps=2),
+                                "application/octet-stream")})
+    assert client.get("/api/eis/scans").json() == []
+
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3, points=8),
+                                "application/octet-stream")})
+    scans = client.get("/api/eis/scans").json()
+    assert len(scans) == 1
+    assert scans[0]["sweeps"] == 3
+
+
+def test_a_scan_lists_without_carrying_every_point(client):
+    """목록은 목록이다.  스무 스윕의 값을 다 실어 보내면 목록이 무거워진다."""
+    _scan_with_fits(client)
+    scans = client.get("/api/eis/scans").json()
+    assert scans[0]["points"] == []
+    assert scans[0]["sweeps"] == 4
+    assert scans[0]["fitted"] == 4
+    assert scans[0]["purpose"] == "SOC별"
+
+
+def test_a_scan_reads_back_as_an_soc_axis(client):
+    rows = _scan_with_fits(client)
+    scan = client.get(f"/api/eis/scans/{rows[0]['sha256']}").json()
+
+    assert [p["sweep_index"] for p in scan["points"]] == [1, 2, 3, 4]
+    capacities = [p["capacity_mah"] for p in scan["points"]]
+    assert capacities == sorted(capacities)
+    assert "R0" in scan["parameters"]
+    assert all("R0" in p["values"] for p in scan["points"])
+    # 저항이 이 셀에서 무엇인지도 같이 온다 -- 화면이 이름을 지어내지 않도록.
+    assert scan["points"][0]["labels"].get("R1")
+
+
+def test_an_unfitted_scan_says_so_instead_of_guessing(client):
+    """§0.4 — 맞춘 적이 없으면 값이 없는 것이지, 0 이 아니다."""
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    scan = client.get(f"/api/eis/scans/{rows[0]['sha256']}").json()
+    assert scan["fitted"] == 0
+    assert scan["parameters"] == []
+    assert all(p["fit_id"] is None and p["values"] == {} for p in scan["points"])
+    # x 축은 여전히 있다 -- 스캔을 열어서 무엇을 잰 것인지는 볼 수 있어야 한다.
+    assert all(p["potential_v"] is not None for p in scan["points"])
+
+
+def test_the_best_fit_is_the_one_on_the_trend_not_the_latest(client):
+    """SOC 스캔은 몇 점을 회로를 바꿔 다시 맞춘다.  추세선에는 잘 맞은 것이."""
+    rows = _scan_with_fits(client)
+    target = rows[1]["id"]
+    good = client.get(f"/api/eis/spectra/{target}").json()["fits"][0]
+
+    # 일부러 안 맞는 회로로 한 번 더 -- 이것이 '가장 최근' 이 된다.
+    client.post(f"/api/eis/spectra/{target}/fit", params={"circuit": "R0"})
+
+    scan = client.get(f"/api/eis/scans/{rows[0]['sha256']}").json()
+    point = next(p for p in scan["points"] if p["spectrum_id"] == target)
+    assert point["fit_id"] == good["id"]
+    assert point["chi_squared"] == good["chi_squared"]
+
+
+def test_a_missing_scan_is_a_404_not_an_empty_scan(client):
+    assert client.get("/api/eis/scans/" + "f" * 64).status_code == 404
+
+
 def test_the_circuit_presets_say_what_each_one_is_for(client):
     body = client.get("/api/eis/circuits").json()
     kinds = {entry["kind"]: entry for entry in body["kinds"]}

@@ -9,6 +9,8 @@ import { Gitt } from './pages/Gitt'
 import { GittDetail } from './pages/GittDetail'
 import { Library } from './pages/Library'
 import { SampleDetail } from './pages/SampleDetail'
+import { ScanDetail } from './pages/ScanDetail'
+import { Scans } from './pages/Scans'
 import { SpectrumDetail } from './pages/SpectrumDetail'
 import { Upload } from './pages/Upload'
 
@@ -31,8 +33,14 @@ const SECTIONS: NavSection[] = [
     ],
   },
   {
+    // SOC 스캔이 스펙트럼 목록과 같은 섹션에 있는 이유: 같은 `.mpr` 이고 같은
+    // 회로로 맞춘다.  다른 링크인 이유: 스캔은 파일 하나가 한 줄이고 x축이
+    // SOC 다.  스펙트럼 목록에 풀어 놓으면 한 파일이 스무 줄을 먹는다 (ADR 0022).
     label: 'EIS · DRT',
-    links: [{ to: '/eis', label: '스펙트럼' }],
+    links: [
+      { to: '/eis', label: '스펙트럼' },
+      { to: '/scans', label: 'SOC 스캔' },
+    ],
   },
   {
     label: 'GITT',
@@ -65,6 +73,8 @@ export function App() {
         <Route path="/compare" element={<Compare />} />
         <Route path="/eis" element={<Eis />} />
         <Route path="/eis/:id" element={<SpectrumDetail />} />
+        <Route path="/scans" element={<Scans />} />
+        <Route path="/scans/:sha256" element={<ScanDetail />} />
         <Route path="/gitt" element={<Gitt />} />
         <Route path="/gitt/:id" element={<GittDetail />} />
         <Route path="/upload" element={<Upload />} />

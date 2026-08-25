@@ -765,6 +765,44 @@ class SpectrumUpdate(BaseModel):
     clear: list[str] = Field(default_factory=list)
 
 
+class ScanPointOut(BaseModel):
+    """한 스윕과, 그 스윕에서 맞춘 값들."""
+
+    spectrum_id: int
+    sweep_index: int
+    name: str
+    #: SOC 축이 되는 두 값.  둘 다 없으면 이 점은 x 축에 놓을 자리가 없다.
+    capacity_mah: float | None = None
+    potential_v: float | None = None
+    #: 가장 잘 맞은 피팅 (수렴한 것 중 χ² 최소).  없으면 나머지가 전부 비어 있다.
+    fit_id: int | None = None
+    circuit: str = ""
+    chi_squared: float | None = None
+    #: 파라미터 이름 → 값.  미결정 파라미터는 **넣지 않는다** — SOC 추세선에
+    #: 못 믿을 점이 섞이면 추세 자체가 거짓이 된다 (§0.4).
+    values: dict[str, float] = {}
+    #: 그 저항들이 이 셀에서 무엇인지 (파라미터 이름 → 라벨).
+    labels: dict[str, str] = {}
+
+
+class ScanOut(BaseModel):
+    """한 파일에서 나온 스윕들 — SOC 스캔 하나 (ADR 0022)."""
+
+    sha256: str
+    name: str
+    original_name: str = ""
+    kind: str
+    cell_config: str = ""
+    purpose: str = ""
+    sample_id: int | None = None
+    sample_name: str | None = None
+    sweeps: int
+    fitted: int
+    #: 이 스캔에서 추세선을 그릴 수 있는 파라미터 이름들 (한 점이라도 있는 것).
+    parameters: list[str] = []
+    points: list[ScanPointOut] = []
+
+
 class DrtPeakOut(BaseModel):
     tau_s: float
     frequency_hz: float

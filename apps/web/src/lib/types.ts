@@ -602,6 +602,38 @@ export interface Spectrum {
   best_circuit: string
 }
 
+/** 한 스윕과, 그 스윕에서 가장 잘 맞은 피팅의 값들 (ADR 0022). */
+export interface ScanPoint {
+  spectrum_id: number
+  sweep_index: number
+  name: string
+  capacity_mah: number | null
+  potential_v: number | null
+  fit_id: number | null
+  circuit: string
+  chi_squared: number | null
+  /** 파라미터 이름 → 값.  **미결정 파라미터는 여기 없다** — 서버가 뺀다 (§0.4). */
+  values: Record<string, number>
+  labels: Record<string, string>
+}
+
+/** 파일 하나에서 나온 스윕들 — SOC 스캔 하나. */
+export interface Scan {
+  sha256: string
+  name: string
+  original_name: string
+  kind: EisKind
+  cell_config: CellConfig | ''
+  purpose: string
+  sample_id: number | null
+  sample_name: string | null
+  sweeps: number
+  fitted: number
+  parameters: string[]
+  /** 목록에서는 비어 있다.  한 스캔을 열었을 때만 채워진다. */
+  points: ScanPoint[]
+}
+
 export interface FitParameter {
   name: string
   value: number

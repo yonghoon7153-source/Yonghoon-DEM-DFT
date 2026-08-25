@@ -42,6 +42,8 @@ from ..schemas import (
     DrtOut,
     DrtPeakOut,
     DrtSweepOut,
+    ScanOut,
+    ScanPointOut,
     SpectrumDetailOut,
     SpectrumFitOut,
     SpectrumOut,
@@ -380,6 +382,120 @@ def spectrum_points(spectrum_id: int, session: Session = Depends(get_session)):
     """The measured points, raw ohms and hertz (ADR 0001)."""
     record = _get(session, spectrum_id)
     return _points_out(record, _load_points(record))
+
+
+# --------------------------------------------------------------------------
+# 스캔 -- 한 파일에서 나온 스윕들을 하나로 (ADR 0022)
+# --------------------------------------------------------------------------
+#: 스윕이 이보다 적으면 스캔이라고 부르지 않는다.  둘은 "전·후" 이고, 그것은
+#: 목록 화면이 이미 하는 일이다.  추세선은 셋부터 선이 된다.
+MIN_SCAN_SWEEPS = 3
+
+
+def _best_fit(session: Session, spectrum_id: int) -> SpectrumFit | None:
+    """수렴한 것 중 χ² 가 가장 작은 피팅.  없으면 ``None``.
+
+    가장 최근 것이 아니라 가장 잘 맞은 것을 고른다: SOC 스캔은 스물을 한꺼번에
+    피팅하고, 그중 몇은 회로를 바꿔 다시 맞춘다.  추세선에는 각 SOC 에서 **가장
+    잘 맞은** 값이 놓여야 서로 비교가 된다.
+    """
+    fits = session.exec(
+        select(SpectrumFit).where(SpectrumFit.spectrum_id == spectrum_id)).all()
+    usable = [f for f in fits if f.converged and f.chi_squared is not None]
+    if not usable:
+        return None
+    return min(usable, key=lambda f: f.chi_squared)
+
+
+def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
+    point = ScanPointOut(
+        spectrum_id=record.id or 0,
+        sweep_index=record.sweep_index,
+        name=record.name or record.original_name,
+        capacity_mah=record.capacity_mah,
+        potential_v=record.potential_v,
+    )
+    fit = _best_fit(session, record.id or 0)
+    if fit is None:
+        return point
+    point.fit_id = fit.id
+    point.circuit = fit.circuit
+    point.chi_squared = fit.chi_squared
+
+    parameters = json.loads(fit.parameters_json) if fit.parameters_json else []
+    # 미결정 파라미터는 빼고 넘긴다.  오차막대가 값을 삼킨 점을 추세선에
+    # 얹으면, 화면은 그것을 다른 점과 똑같이 그리고 사람은 그것이 측정값인 줄
+    # 안다 (§0.4).  뺀 자리는 선이 끊어져서 보인다.
+    point.values = {p["name"]: float(p["value"]) for p in parameters
+                    if p.get("determined")}
+    if parameters:
+        stub = _FitStub(circuit=fit.circuit, parameters=[
+            _ParameterStub(**p) for p in parameters])
+        point.labels = {m.parameter: m.label
+                        for m in label_arcs(stub, record.kind, record.cell_config)}
+    return point
+
+
+def _scan_out(session: Session, records: list[SpectrumRecord], *,
+              with_points: bool) -> ScanOut:
+    head = records[0]
+    sample = session.get(Sample, head.sample_id) if head.sample_id else None
+    points = [_scan_point(session, r) for r in records]
+    parameters: list[str] = []
+    for point in points:
+        for name in point.values:
+            if name not in parameters:
+                parameters.append(name)
+    return ScanOut(
+        sha256=head.sha256,
+        name=head.name or head.original_name,
+        original_name=head.original_name,
+        kind=head.kind,
+        cell_config=head.cell_config,
+        purpose=head.purpose,
+        sample_id=head.sample_id,
+        sample_name=sample.name if sample else None,
+        sweeps=len(records),
+        fitted=sum(1 for p in points if p.fit_id is not None),
+        parameters=parameters,
+        points=points if with_points else [],
+    )
+
+
+def _scan_records(session: Session, sha256: str) -> list[SpectrumRecord]:
+    records = session.exec(
+        select(SpectrumRecord).where(SpectrumRecord.sha256 == sha256)).all()
+    return sorted(records, key=lambda r: r.sweep_index)
+
+
+@router.get("/scans", response_model=list[ScanOut])
+def list_scans(session: Session = Depends(get_session),
+               sample_id: int | None = Query(None)):
+    """스윕이 여럿인 원본만 — SOC 스캔의 목록.
+
+    ``sha256`` 으로 묶는다.  ADR 0022 이후 한 행은 ``(sha256, sweep_index)``
+    이므로, 같은 sha 를 가진 행들이 곧 한 파일에서 나온 스윕들이다.
+    """
+    statement = select(SpectrumRecord)
+    if sample_id is not None:
+        statement = statement.where(SpectrumRecord.sample_id == sample_id)
+    grouped: dict[str, list[SpectrumRecord]] = {}
+    for record in session.exec(statement).all():
+        grouped.setdefault(record.sha256, []).append(record)
+
+    scans = [_scan_out(session, sorted(rows, key=lambda r: r.sweep_index),
+                       with_points=False)
+             for rows in grouped.values() if len(rows) >= MIN_SCAN_SWEEPS]
+    return sorted(scans, key=lambda s: (s.sample_name or "", s.name))
+
+
+@router.get("/scans/{sha256}", response_model=ScanOut)
+def read_scan(sha256: str, session: Session = Depends(get_session)):
+    """한 스캔의 모든 스윕과, 각 스윕에서 가장 잘 맞은 피팅의 값들."""
+    records = _scan_records(session, sha256)
+    if not records:
+        raise HTTPException(404, f"스캔 {sha256[:12]} 을 찾을 수 없습니다")
+    return _scan_out(session, records, with_points=True)
 
 
 # --------------------------------------------------------------------------

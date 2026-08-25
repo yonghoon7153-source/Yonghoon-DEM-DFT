@@ -12,8 +12,8 @@ import type {
   CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
   GittRun, Group, Meta, Pocv,
-  ProfileResponse, Report, Run, Sample, Spectrum, SpectrumDetail, SpectrumFit,
-  SpectrumPoints,
+  ProfileResponse, Report, Run, Sample, Scan, Spectrum, SpectrumDetail,
+  SpectrumFit, SpectrumPoints,
 } from './types'
 
 export class ApiError extends Error {
@@ -193,6 +193,9 @@ export const api = {
     ),
   listSpectra: (params?: Params) =>
     request<Spectrum[]>(`/api/eis/spectra${query(params)}`),
+  /** 스윕이 여럿인 원본만 — SOC 스캔 목록.  점은 안 실려 온다. */
+  listScans: (params?: Params) => request<Scan[]>(`/api/eis/scans${query(params)}`),
+  getScan: (sha256: string) => request<Scan>(`/api/eis/scans/${sha256}`),
   getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),
   spectrumPoints: (id: number) =>
     request<SpectrumPoints>(`/api/eis/spectra/${id}/points`),
