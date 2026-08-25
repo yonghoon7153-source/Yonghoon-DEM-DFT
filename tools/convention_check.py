@@ -72,6 +72,9 @@ EXEMPT = {
         "창 민감도 진단 도구 — 여러 창이 존재 이유",
     "tools/ionic/msd_diffusive_check.py":
         "창 스캔 진단 도구 — --scan 이 여러 창을 훑는다",
+    "tools/comp1_v3/b2o3_all_bond_lengths.py":
+        "MSD 창이 아니라 **결합길이 창(Å)** 이다 — DECOMP_WINDOWS[('B','S')]=(1.60,2.40) 처럼 "
+        "단위가 ps 가 아니라 Å 다. 시간창 규약과 무관한 오탐 (2026-08-25)",
 }
 
 

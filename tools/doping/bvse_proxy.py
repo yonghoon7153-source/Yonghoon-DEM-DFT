@@ -186,12 +186,100 @@ def compute_bvs_per_li(atoms) -> dict:
     }
 
 
+def backfill_one(src, quiet=False):
+    """json 하나에 li_mobility_score 를 채운다 (**새 계산 0**). → 집계 dict | None.
+
+    ⛔ 못 하는 것: 순위를 다시 매기지 않는다 (combine_rankings 의 일).
+      입력 두 개가 없는 레코드는 지어내지 않고 skipped 로 센다.
+    """
+    src = Path(src)
+    if not src.is_file():
+        if not quiet:
+            print(f"⛔ 없다: {src}")
+        return None
+    d = json.loads(src.read_text())
+    recs = d.get('records', [])
+    filled = skipped = same = 0
+    for r in recs:
+        if 'migration_volume_fraction' not in r or 'bvs_li_proxy_score' not in r:
+            skipped += 1
+            continue
+        v = 3 * r['migration_volume_fraction'] + r['bvs_li_proxy_score']
+        if 'li_mobility_score' in r:
+            same += abs(r['li_mobility_score'] - v) < 1e-9
+            continue
+        r['li_mobility_score'] = v
+        filled += 1
+    if not quiet:
+        print(f"backfill: 채움 {filled} · 이미 있음 {same} · 입력 부족 {skipped} "
+              f"/ 전체 {len(recs)}")
+    if filled:
+        bak = src.with_suffix(src.suffix + '.bak_backfill')
+        if not bak.exists():
+            bak.write_text(src.read_text())
+            if not quiet:
+                print(f"  · 원본 보존 → {bak.name}")
+        d['_backfill'] = {'field': 'li_mobility_score',
+                          'formula': '3*migration_volume_fraction + bvs_li_proxy_score',
+                          'n_filled': filled,
+                          'why': '저장 뒤 계산 버그로 누락됐던 값 (재계산 0)'}
+        src.write_text(json.dumps(d, indent=2, default=str))
+        if not quiet:
+            print(f"  ✓ {src}")
+    elif not quiet:
+        print("  · 채울 것이 없다 (전부 이미 있거나 입력이 없다)")
+    return {'filled': filled, 'same': same, 'skipped': skipped, 'recs': len(recs)}
+
+
+def _selftest_backfill():
+    """--backfill 경로만 검증 (음성 포함). 구조·격자 없이 돈다."""
+    import tempfile
+    n_ok = n_bad = 0
+
+    def chk(c, m):
+        nonlocal n_ok, n_bad
+        print(("  ✓ " if c else "  ✗ ") + m)
+        n_ok, n_bad = n_ok + bool(c), n_bad + (not c)
+
+    with tempfile.TemporaryDirectory() as td:
+        p = Path(td) / "bvs_report.json"
+        p.write_text(json.dumps({"records": [
+            {"migration_volume_fraction": 0.10, "bvs_li_proxy_score": 0.5},   # 채움
+            {"migration_volume_fraction": 0.20},                              # 입력 부족
+            {"migration_volume_fraction": 0.30, "bvs_li_proxy_score": 0.1,
+             "li_mobility_score": 1.0},                                       # 이미 있음
+        ]}))
+        r = backfill_one(p, quiet=True)
+        chk(r['filled'] == 1 and r['skipped'] == 1 and r['same'] == 1,
+            "채움 1 · 입력 부족 1 · 이미 있음 1 로 갈린다")
+        d = json.loads(p.read_text())
+        chk(abs(d['records'][0]['li_mobility_score'] - 0.8) < 1e-12,
+            "공식 3*mvf + bvs (0.3+0.5=0.8)")
+        chk('li_mobility_score' not in d['records'][1],
+            "[음성] 입력이 없으면 값을 지어내지 않는다")
+        chk((Path(td) / "bvs_report.json.bak_backfill").exists(),
+            "원본을 .bak_backfill 로 보존한다")
+        r2 = backfill_one(p, quiet=True)
+        chk(r2['filled'] == 0 and r2['same'] == 2,
+            "[음성] 멱등 — 두 번째 실행은 아무것도 안 바꾼다")
+        chk(backfill_one(Path(td) / "nope.json", quiet=True) is None,
+            "[음성] 없는 파일은 None — 0 으로 세어 '성공' 처럼 보이면 안 된다")
+    print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
+    return 1 if n_bad else 0
+
+
 def main():
     p = argparse.ArgumentParser(description=__doc__,
                                formatter_class=argparse.RawDescriptionHelpFormatter)
     p.add_argument('--xyz', nargs='+', help='Individual xyz files')
     p.add_argument('--xyz_dir', help='Directory to scan recursively')
-    p.add_argument('--out', required=True, help='Output JSON')
+    p.add_argument('--out', help='Output JSON (--backfill_glob 을 쓰면 생략)')
+    p.add_argument('--backfill_glob',
+                  help='여러 json 을 **한 프로세스에서** 채운다 (예: '
+                       '"/data/work/runs/**/bvs_report.json"). 쉘 for 문으로 파일마다 '
+                       'python 을 새로 띄우면 304개에 수 분이 걸리고 ssh 가 끊기면 '
+                       '통째로 죽는다 — 이 플래그는 인터프리터를 한 번만 띄운다. '
+                       '경로에 bak 이 들어간 파일은 자동 제외.')
     p.add_argument('--backfill', action='store_true',
                   help='이미 있는 json 에 li_mobility_score 만 채운다 (**새 계산 0**). '
                        '입력 두 개(migration_volume_fraction · bvs_li_proxy_score)가 '
@@ -200,7 +288,12 @@ def main():
     p.add_argument('--grid_resolution', type=int, default=20,
                   help='Migration volume grid (default 20³ = 8000 points; '
                        'increase to 30 for finer scan at ~3× cost)')
+    p.add_argument('--selftest', action='store_true',
+                  help='backfill 경로만 검증 (음성 경로 포함) — 서버·구조 없이 돈다')
     args = p.parse_args()
+
+    if args.selftest:
+        return _selftest_backfill()
 
     # ── --backfill (2026-08-25) ────────────────────────────────────────────
     #   왜: li_mobility_score 를 저장 뒤에 계산하던 버그로 이 값이 한 번도 json 에
@@ -209,39 +302,36 @@ def main():
     #     채울 수 있다. MD 를 접고 BVSE 로 간 결정이 그제서야 랭킹에 반영된다.
     #   ⛔ 못 하는 것: 순위를 다시 매기지 않는다. 그건 combine_rankings 의 일이고,
     #     결과가 바뀌는 일이라 사람이 판단할 사안이다.
-    if args.backfill:
-        src = Path(args.out)
-        if not src.is_file():
-            print(f"⛔ 없다: {src}")
-            return 2
-        d = json.loads(src.read_text())
-        recs = d.get('records', [])
-        filled = skipped = same = 0
-        for r in recs:
-            if 'migration_volume_fraction' not in r or 'bvs_li_proxy_score' not in r:
-                skipped += 1
-                continue
-            v = 3 * r['migration_volume_fraction'] + r['bvs_li_proxy_score']
-            if 'li_mobility_score' in r:
-                same += abs(r['li_mobility_score'] - v) < 1e-9
-                continue
-            r['li_mobility_score'] = v
-            filled += 1
-        print(f"backfill: 채움 {filled} · 이미 있음 {same} · 입력 부족 {skipped} "
-              f"/ 전체 {len(recs)}")
-        if filled:
-            bak = src.with_suffix(src.suffix + '.bak_backfill')
-            if not bak.exists():
-                bak.write_text(src.read_text())
-                print(f"  · 원본 보존 → {bak.name}")
-            d['_backfill'] = {'field': 'li_mobility_score',
-                              'formula': '3*migration_volume_fraction + bvs_li_proxy_score',
-                              'n_filled': filled,
-                              'why': '저장 뒤 계산 버그로 누락됐던 값 (재계산 0)'}
-            src.write_text(json.dumps(d, indent=2, default=str))
-            print(f"  ✓ {src}")
+    if args.backfill or args.backfill_glob:
+        if args.backfill_glob:
+            import glob as _glob
+            paths = [Path(p) for p in sorted(_glob.glob(args.backfill_glob,
+                                                        recursive=True))
+                     if 'bak' not in p]
+            if not paths:
+                print(f"⛔ 글롭이 아무것도 못 잡았다: {args.backfill_glob}")
+                return 2
+        elif args.out:
+            paths = [Path(args.out)]
         else:
-            print("  · 채울 것이 없다 (전부 이미 있거나 입력이 없다)")
+            print("⛔ --backfill 은 --out 이 필요하다 (또는 --backfill_glob)")
+            return 2
+
+        tot = {'filled': 0, 'same': 0, 'skipped': 0, 'recs': 0,
+               'files_changed': 0, 'files_missing': 0}
+        for src in paths:
+            r_ = backfill_one(src, quiet=bool(args.backfill_glob))
+            if r_ is None:
+                tot['files_missing'] += 1
+                continue
+            for k in ('filled', 'same', 'skipped', 'recs'):
+                tot[k] += r_[k]
+            tot['files_changed'] += bool(r_['filled'])
+        if args.backfill_glob:
+            print(f"backfill: 파일 {len(paths)} (변경 {tot['files_changed']} · "
+                  f"없음 {tot['files_missing']}) · 레코드 {tot['recs']} → "
+                  f"채움 {tot['filled']} · 이미 있음 {tot['same']} · "
+                  f"입력 부족 {tot['skipped']}")
         return 0
 
     def winner_name(xyz_path):
