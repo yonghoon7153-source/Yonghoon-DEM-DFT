@@ -5,7 +5,9 @@
 > 발표 2026-08-18 (**BML Research Seminar**, 한양대 Battery Materials Laboratory) ·
 > 발표자 **Soo Young Yang (양수영)** · ysy5168@hanyang.ac.kr ·
 > 원본 덱 `2026.08.18 발표자료.pdf` (PowerPoint→PDF, **21쪽 = 슬라이드 21장**, 720×540 pt) ·
-> 녹취 **2026-08-25 09:22, 40분 16초** (기록자 안용훈, CLOVA Note STT) ·
+> 녹취 **40분 16초** (기록자 안용훈, CLOVA Note STT) ·
+> ⚠ 녹취 파일 헤더의 `2026-08-25 09:22` 는 **발표 시각이 아니라 STT 업로드 시각**이다 —
+> 같은 09:22 가 `oh2026_kecs`(8/20 발표) 녹취에도 찍혀 있다. 발표일은 덱·일정으로 확인할 것. ·
 > digested 2026-08-25 · status ✅ (덱 21/21 렌더 · 구술 확보)
 >
 > `> elements:` **(none)** — 이 덱은 **기하 설계축**이다. 소재는 NCM96 **고정**이고 조성을 바꾸지 않는다.

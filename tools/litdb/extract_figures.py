@@ -452,6 +452,7 @@ def extract(pdf_paths, slug, dpi=200, dry=False, min_draw=6, keep_blank=0.985,
     return meta, skipped
 
 
+
 def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
                    keep_blank=0.995, relto=None, nup=1):
     """발표 덱(PPT→PDF)을 **슬라이드 1장 = 그림 1장**으로 자른다 (`--slides`).
@@ -487,6 +488,13 @@ def extract_slides(pdf_path, slug, dpi=150, dry=False, maxpx=1600,
                 d_eff = min(dpi, max(72, int(maxpx * 72.0 / long_pt)))
         # ── nup 분할 (2-up 자료집) ─────────────────────────────────────
         if nup > 1:
+            # ⚠ 2026-08-25 — 여백 자동탐지를 붙였다가 **되돌렸다.** digest 작성 쪽에서
+            #   "크롭이 반 슬라이드 어긋난다" 는 보고가 왔지만, fig_3a·fig_15b 를 직접
+            #   열어 보니 슬라이드가 온전하고 하단 소번호("1", "26")도 들어 있었다 —
+            #   **보고가 틀렸다.** 그리고 흰 띠 신호 자체가 못 믿을 것이었다
+            #   (중앙영역 최장 띠 중심이 쪽마다 362/568/316/431 로 제각각).
+            #   없는 버그를 고치려 불안정한 탐지기를 넣는 것이 더 나쁘다 → 균등 분할 유지.
+            #   레이아웃이 실제로 어긋나는 덱을 만나면 --nup-offset 을 여는 것이 맞다.
             h = page.rect.height / nup
             for k in range(nup):
                 clip = fitz.Rect(page.rect.x0, page.rect.y0 + k * h,
