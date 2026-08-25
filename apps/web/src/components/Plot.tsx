@@ -49,6 +49,13 @@ interface Props {
   yRange?: [number | null, number | null]
   xRange?: [number | null, number | null]
   legend?: boolean
+  /** 두 축의 한 단위를 화면에서 같은 길이로 (나이퀴스트).
+   *
+   *  반원이 반원으로 보여야 한다.  세로가 눌리면 찌그러진 아크(CPE 지수가 낮은
+   *  것)와 이상적인 반원이 화면에서 구분되지 않고, 사람이 회로를 고를 때 보는
+   *  것이 바로 그 차이다.  가로 범위는 데이터가 정하고, 세로는 그 범위에
+   *  그림 비율을 곱해 맞춘다 — 반대로 하면 아크의 폭이 화면 밖으로 나간다. */
+  equalAspect?: boolean
 }
 
 /** Merge every series' x values into one sorted, de-duplicated axis.
@@ -289,6 +296,7 @@ export function Plot({
   yRange,
   xRange,
   legend = false,
+  equalAspect = false,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
   const plotRef = useRef<uPlot | null>(null)
@@ -388,12 +396,29 @@ export function Plot({
             : undefined,
         },
         y: {
-          range: steadyRange
-            ? (_u, min, max) =>
-                overrideLock.current
-                  ? [min, max]
-                  : [steadyRange[0] ?? min, steadyRange[1] ?? max]
-            : undefined,
+          range: equalAspect
+            ? (u, min, max) => {
+                // 확대 중에는 손대지 않는다.  드래그로 고른 블록을 다시
+                // 늘리면 사람이 고른 범위가 아닌 것이 나온다.
+                if (overrideLock.current) return [min, max]
+                const xScale = u.scales.x
+                const plotWidth = u.bbox.width || 1
+                const plotHeight = u.bbox.height || 1
+                if (xScale?.min === undefined || xScale?.max === undefined) {
+                  return [min, max]
+                }
+                const perPixel = (xScale.max - xScale.min) / plotWidth
+                const wanted = perPixel * plotHeight
+                const centre = (min + max) / 2
+                const half = Math.max(wanted, max - min) / 2
+                return [centre - half, centre + half]
+              }
+            : steadyRange
+              ? (_u, min, max) =>
+                  overrideLock.current
+                    ? [min, max]
+                    : [steadyRange[0] ?? min, steadyRange[1] ?? max]
+              : undefined,
         },
       },
       padding: [12, 14, 0, 0],
@@ -614,6 +639,7 @@ export function Plot({
     steadyMarkers,
     steadyRange,
     steadyXRange,
+    equalAspect,
     legend,
     colors,
     wrapRef,

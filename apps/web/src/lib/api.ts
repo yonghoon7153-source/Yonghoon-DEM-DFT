@@ -8,8 +8,9 @@
 import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
-  Activity, ChangeNote, CompareResponse, CompositionPreset, DqdvResponse, DvdqResponse,
-  CycleTable, DashboardRow, Facets, Group, Meta, ProfileResponse, Report, Run, Sample,
+  Activity, ChangeNote, CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
+  DvdqResponse, CycleTable, DashboardRow, Facets, Group, Meta, ProfileResponse, Report,
+  Run, Sample, Spectrum, SpectrumDetail, SpectrumFit, SpectrumPoints,
 } from './types'
 
 export class ApiError extends Error {
@@ -181,6 +182,38 @@ export const api = {
     request<DqdvResponse>(`/api/compare/dqdv${query(params)}`),
   compareDvdq: (params: Params) =>
     request<DvdqResponse>(`/api/compare/dvdq${query(params)}`),
+
+  // -- 임피던스 (ADR 0019) -------------------------------------------------
+  eisCircuits: () => request<{ kinds: CircuitKind[] }>('/api/eis/circuits'),
+  listSpectra: (params?: Params) =>
+    request<Spectrum[]>(`/api/eis/spectra${query(params)}`),
+  getSpectrum: (id: number) => request<SpectrumDetail>(`/api/eis/spectra/${id}`),
+  spectrumPoints: (id: number) =>
+    request<SpectrumPoints>(`/api/eis/spectra/${id}/points`),
+  uploadSpectrum: (file: File, params?: Params, settingsFile?: File | null) => {
+    const form = new FormData()
+    form.append('file', file)
+    // `.mps` 는 곁들임이다 — 진폭도 장비 이름도 스펙트럼 안에는 없다.
+    if (settingsFile) form.append('settings_file', settingsFile)
+    return request<Spectrum>(`/api/eis/spectra/upload${query(params)}`, {
+      method: 'POST',
+      body: form,
+    })
+  },
+  updateSpectrum: (id: number, body: Record<string, unknown>) =>
+    request<Spectrum>(`/api/eis/spectra/${id}`, json('PATCH', body)),
+  deleteSpectrum: (id: number) =>
+    request<void>(`/api/eis/spectra/${id}`, { method: 'DELETE' }),
+  fitSpectrum: (id: number, params?: Params) =>
+    request<SpectrumFit>(`/api/eis/spectra/${id}/fit${query(params)}`,
+      { method: 'POST' }),
+  fitSpectra: (ids: number[], params?: Params) =>
+    request<{
+      fitted: SpectrumFit[]
+      failed: { spectrum_id: number; detail: string }[]
+      requested: number
+      converged: number
+    }>(`/api/eis/fit-batch${query(params)}`, json('POST', ids)),
 
   // -- exports (URLs, so the browser downloads them directly) --------------
   /** The uploaded .wrd, byte for byte -- so the original can be fetched back

@@ -543,3 +543,117 @@ export interface Facets {
   test_date: string[]
   bases: Basis[]
 }
+
+
+// -- 임피던스 (ADR 0019) ----------------------------------------------------
+
+/** 같은 두 반원이 무엇으로 불릴지를 정하는 것. */
+export type EisKind = 'liquid' | 'solid'
+
+export interface Spectrum {
+  id: number
+  sample_id: number | null
+  sample_name: string | null
+  name: string
+  kind: EisKind
+  original_name: string
+  sha256: string
+  size_bytes: number
+  source_format: string
+  uploaded_at: string
+  n_points: number
+  frequency_start_hz: number | null
+  frequency_end_hz: number | null
+  amplitude_mv: number | null
+  device: string
+  technique: string
+  measured_at: string | null
+  thickness_um: number | null
+  area_cm2: number | null
+  last_circuit: string
+  parse_error: string
+  created_by?: string
+  updated_by?: string
+  updated_at: string
+  fit_count: number
+  best_chi_squared: number | null
+  best_circuit: string
+}
+
+export interface FitParameter {
+  name: string
+  value: number
+  unit: string
+  stderr: number | null
+  /** 오차가 값의 절반을 넘으면 false — 그 숫자는 측정된 것이 아니다. */
+  determined: boolean
+  relative_error?: number | null
+}
+
+export interface FitArc {
+  parameter: string
+  label: string
+  note: string
+  value_ohm: number
+  determined: boolean
+}
+
+export interface SpectrumFit {
+  id: number
+  spectrum_id: number
+  circuit: string
+  /** 피팅 당시의 종류. `kind_now` 와 다르면 이름이 달라졌다는 뜻이다. */
+  kind: EisKind
+  kind_now: EisKind
+  converged: boolean
+  chi_squared: number | null
+  reason: string
+  parameters: FitParameter[]
+  arcs: FitArc[]
+  conductivity: {
+    bulk_s_cm?: number | null
+    grain_boundary_s_cm?: number | null
+    total_s_cm?: number | null
+    total_ohm?: number
+    missing?: string[]
+  }
+  dropped_inductive: number
+  dropped_out_of_range: number
+  frequency_low_hz: number | null
+  frequency_high_hz: number | null
+  starts: number
+  starts_converged: number
+  created_at: string
+  created_by?: string
+}
+
+export interface SpectrumDetail extends Spectrum {
+  settings: Record<string, unknown>
+  thickness_cm: number | null
+  area_cm2_effective: number | null
+  fits: SpectrumFit[]
+}
+
+export interface SpectrumPoints {
+  id: number
+  name: string
+  kind: EisKind
+  frequency_hz: number[]
+  /** z_im 은 허수부 자체다. 나이퀴스트 세로축은 그 음수. */
+  z_re: number[]
+  z_im: number[]
+  magnitude: number[]
+  phase_deg: number[]
+}
+
+export interface CircuitPreset {
+  circuit: string
+  label: string
+  note: string
+}
+
+export interface CircuitKind {
+  kind: EisKind
+  label: string
+  presets: CircuitPreset[]
+}

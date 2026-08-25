@@ -229,6 +229,24 @@ a:hover { text-decoration: underline; }
 .nav a:hover { background: var(--surface-2); color: var(--ink); text-decoration: none; }
 .nav a.active { background: var(--accent-wash); color: var(--accent); }
 
+/* 섹션으로 묶인 내비게이션.  구분선과 작은 이름표가 '비교'(충방전 안의 화면)와
+   '스펙트럼'(다른 측정)을 같은 층위로 읽히지 않게 한다. */
+.nav-section { display: flex; align-items: center; gap: 2px; }
+.nav-label {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+  padding: 0 6px 0 2px;
+}
+.nav-divider {
+  width: 1px;
+  height: 18px;
+  background: var(--line);
+  margin: 0 8px;
+}
+
 .topbar .spacer { flex: 1; }
 
 .page {
