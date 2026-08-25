@@ -3,7 +3,7 @@ title: cascade 재랭킹 런북 ①~⑤ — li_mobility_score 복구 후 실행
 date: 2026-08-25
 updated: 2026-08-25
 tags: [cascade, doping, bvse, ranking, runbook, blocked-on]
-status: 대기
+status: 진행중-①
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -17,7 +17,7 @@ evidenceScope: multi-source-primary
 
 # cascade 재랭킹 런북 ①~⑤ (2026-08-25)
 
-> **⏸ 착수 조건: AlI₃ cascade 완주.** 지금 실행하면 안 된다 — 이유는 §3.
+> ✅ **착수 조건 충족 (2026-08-25 20:58)** — AlI₃ x020/x050/x100 완주 (rc=0). ① 진행 중.
 
 ## 1. 왜 재랭킹이 필요한가
 
@@ -53,7 +53,9 @@ score_combined = 0.4×안정성 + 0.3×탄성 + 0.3×이동도
 ```bash
 # ── ① backfill — 새 계산 0. 입력 두 개가 이미 저장돼 있어 산수만 하면 된다
 cd /data/work/repo && git fetch origin claude/friendly-meitner-lldvar && git reset --hard FETCH_HEAD
-for f in $(find /data/work/runs -name 'bvse*.json' -not -name '*.bak_*' 2>/dev/null); do
+# ⛔ 2026-08-25 정정 — 정본 파일명은 **bvs_report.json** 이다 (bvse_proxy --out 예시
+#   그대로). 원판의 'bvse*.json' 패턴은 0건 매치라 ① 이 조용한 no-op 이 될 뻔했다.
+for f in $(find /data/work/runs -name 'bvs_report.json' -not -path '*bak*' 2>/dev/null); do
   python3 tools/doping/bvse_proxy.py --backfill --out "$f"
 done
 # 기대: "채움 N · 이미 있음 0 · 입력 부족 M". 멱등이라 두 번 돌려도 안전.
