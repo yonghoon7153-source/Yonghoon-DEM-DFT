@@ -63,13 +63,22 @@
     "s4"
    ],
    "host": "kgy",
-   "root": "~/work/runs/highT_reseed (구판)",
-   "traj": false,
+   "root": "~/work/runs/highT_reseed_traj (800·1000 K, 궤적 있음)",
+   "traj": {
+    "highT_reseed(구판)": false,
+    "highT_reseed_traj": true
+   },
    "mto": false,
    "D_source": "db/properties/b2o3_md_arrhenius.json ⛔_RETRACTED_2026_08_23.multiseed_3x3",
-   "framework_verdict": "❓ **판정 불가 — 궤적 없음**",
-   "⛔_blocking": "1200 K 가 3/3 creep 이므로 1000 K 도 의심해야 한다. 만약 1000 이 오염이면 2026-08-23 철회의 근거였던 '굽음' 자체가 골격 아티팩트가 된다.",
-   "cause": "F9 (2026-08-20 codex 3차) — run_highT_reseed.sh 에 --save_traj 가 없었다"
+   "framework_verdict": "⏳ 판정 가능 — 궤적이 있다. msd_diffusive_check --framework 대기",
+   "cause": "F9 (2026-08-20 codex 3차) — run_highT_reseed.sh 에 --save_traj 가 없었다",
+   "⛔_MY_ERROR_2026_08_25": "이 항목을 'traj 없음' 으로 적은 것은 **틀렸다.** 옛 경로 `highT_reseed` 에는 없지만, `highT_reseed_traj` 에 800·1000 K 궤적이 **이미 있다** — kb/results/b2o3_arrhenius_curvature_2026_08_23.md L105 가 그 경로를 적고 있었고 내가 grep 결과로 보고도 연결하지 못했다. 재실행을 걸었더니 드라이버가 전부 skip(0 min) 하며 옛 D 를 그대로 냈고, 러너의 resume 가드가 **걸리지 않은 것** (msd.json 마다 traj.xyz 가 짝으로 있어야 통과)이 궤적 실재의 증거다.",
+   "blocking_question": "1000 K 가 creep 인가. 1200 K 가 3/3 creep 이고 Zhang 선이 1050 K 라 의심 대상이다. **800 K 가 같은 프로토콜의 저온 대조군**이다.",
+   "pre_registered_thresholds_2026_08_25": {
+    "800<0.30 & 1000<0.30": "깨끗 — 8-23 철회의 굽음은 실제 Li 물리. 1200 만 제외하고 종결",
+    "800<0.30 & 1000>=0.60": "1000 오염 — 철회 사유가 골격 아티팩트. 아레니우스를 600–800 두 점으로",
+    "800>=0.30": "800 도 오염 — 600 K 도 재실행 필요, b2o3 전도도 축 재수립"
+   }
   },
   {
    "system": [
@@ -113,5 +122,6 @@
   "b2o3 는 σ 를 올리지 않는다 — 멀티시드 비율 1.08/0.82/1.15 = 동등 (1.33× 는 2026-07-09 철회)",
   "b2o3 Ea 절대값 3건 전부 철회 (2026-08-23) · 300 K 외삽 차단",
   "b2o3 의 살아있는 축은 밴드갭 1.9671 eV 와 계면이지 전도도가 아니다"
- ]
+ ],
+ "⚠_lesson_2026_08_25": "'새 OUTROOT 를 쓰라' 는 원칙은 맞지만, **그 경로가 정말 새 것인지 먼저 확인해야 한다.** 러너의 가드 메시지가 예시로 제시한 이름(highT_reseed_traj)이 이미 쓰인 이름이었다. 재고를 적기 전에 `find <경로> -name traj.xyz | wc -l` 한 줄을 돌렸으면 막혔다."
 }
