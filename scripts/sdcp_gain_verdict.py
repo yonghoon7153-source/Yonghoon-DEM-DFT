@@ -199,6 +199,23 @@ MANIFEST_DERIVED_OF = {
 }
 
 
+#: 사전등록 origin factorial — prereg §4 `{0, vox/2}³` (8점).
+#  ★★★ 2026-08-25 (R5-CX-04, Codex 5차) — 옛 게이트는 **존재·유일성·집합일치·개수**만 봤다.
+#    그래서 z-only 8점 `[0,0,0.00] … [0,0,0.07]` 이 `require_arms=8` 에서 `h0` 였다.
+#    ⚠⚠ 게다가 **내 픽스처가 바로 그 z-only 패턴**이라 이 오류를 "정상 증인" 으로 고정하고
+#      있었다 (이 세션에서 네 번째 — 픽스처가 결함을 인코딩한 사례).  ⇒ 픽스처를 먼저 고치고
+#      게이트를 세웠다.  순서를 반대로 하면 새 게이트가 옛 픽스처를 통과시켜 또 초록이 난다.
+def expected_origins(vox):
+    """`vox` → 사전등록 origin 집합 (정렬된 8튜플).  vox 를 모르면 None."""
+    try:
+        h = round(float(vox) / 2.0, 9)
+    except (TypeError, ValueError):
+        return None
+    if not (h > 0):
+        return None
+    return sorted({(x, y, z) for x in (0.0, h) for y in (0.0, h) for z in (0.0, h)})
+
+
 def manifest_unswept_keys(man_a, man_b):
     """→ 두 매니페스트에서 **아무 계약도 안 지나는** 키 목록 (정렬).
 
@@ -734,6 +751,31 @@ def _validate_contract_raw(arms, seed_ensemble=False, require_arms=None,
                            f'받은 것은 {len(_org["SBE"])}개 (CDXIJ-10 ①)'), info
     info['n_origin'] = len(_org['SBE'])
 
+    #  ★★★ 2026-08-25 (R5-CX-04) — **개수가 아니라 어떤 점인지**를 본다.
+    #    사전등록은 `{0, vox/2}³` 8팔 factorial 이다.  개수·유일성만 보면 한 축으로 늘어선
+    #    8점(z-only)도 통과하고, 그것은 **격자 위상 앙상블이 아니다** (한 축의 편향만 잰다).
+    #  ⚠ 팔 수를 줄인 진단 런(ARMS<8)은 막지 않는다 — 다만 **점 자체는 factorial 위**에
+    #    있어야 한다 (부분집합).  전량 런은 **정확한 일치**를 요구한다.
+    _vox = next((r.get('vox') for k in arms for r in arms[k] if r.get('vox') is not None), None)
+    _exp_o = expected_origins(_vox)
+    if _exp_o is None:
+        return dict(decision='HOLD', hold_code='ORIGIN_VOX',
+                    reason='origin factorial 을 확인할 `vox` 기록이 없다 — '
+                           '어떤 위상 집합이어야 하는지 계산할 수 없다 (R5-CX-04)'), info
+    _got_o, _expset = set(_org['SBE']), set(_exp_o)
+    _alien = sorted(_got_o - _expset)
+    if _alien:
+        return dict(decision='HOLD', hold_code='ORIGIN_SET',
+                    reason=f'사전등록 밖 origin {len(_alien)}개 (예: {_alien[0]}) — '
+                           f'vox={_vox:g} 의 factorial 은 {{0, {_vox / 2:g}}}³ 다.  '
+                           f'개수만 맞는 임의의 점 8개는 위상 앙상블이 아니다 (R5-CX-04)'), info
+    if require_arms is not None and int(require_arms) == len(_exp_o) and _got_o != _expset:
+        _miss_f = sorted(_expset - _got_o)
+        return dict(decision='HOLD', hold_code='ORIGIN_SET',
+                    reason=f'전량 런인데 factorial 이 **덜 찼다** — 빠진 점 {len(_miss_f)}개 '
+                           f'(예: {_miss_f[0]}).  `{{0, {_vox / 2:g}}}³` 8점이 전부 있어야 '
+                           f'한다 (R5-CX-04)'), info
+
     #  ★ CDXIJ-10 ③ — `require_digest` 면 **입력 digest·code SHA 가 있어야** 한다.
     #    기본은 끔 (옛 격자 팔 호환).  도핑 트랙은 켠다 — 그 실험의 전제가
     #    "pair 간 σ_ion 만 달랐다" 이고, 그것은 digest 없이는 확인할 수 없다.
@@ -977,8 +1019,12 @@ def _selftest():
 
     #  ★ 2026-08-20 (CDXIJ-10 ①) — 픽스처가 **origin 을 갖는다**.  팔 계약이 origin 기록·
     #    unique·두 침대 집합 동일을 요구하므로, 없는 픽스처는 (옳게) 전부 HOLD 가 된다.
+    #  ★★ R5-CX-04 — 픽스처를 **사전등록 factorial** 로 바꿨다.  옛 판은 z-only 라
+    #    "임의의 8점이 통과한다" 는 결함을 정상 증인으로 고정하고 있었다 (Codex 지적).
+    _FIX_VOX = _FIX['vox']
     def _ori(i):
-        return [0.0, 0.0, round(0.01 * i, 9)]
+        _e = expected_origins(_FIX_VOX)
+        return list(_e[i % len(_e)])
 
     def mk(sbe, dbe, cg=0, resid=1e-8, **over):
         f = dict(_FIX, **over)
@@ -1212,7 +1258,7 @@ def _selftest():
                     _m['components'] = {_c: {_k2: _v2 for _k2, _v2 in (_cv or {}).items()
                                              if _k2 != 'backend'}
                                         for _c, _cv in (_m.get('components') or {}).items()}
-                _m['origin_shift_um'] = [0.0, 0.0, _i * 0.01]
+                _m['origin_shift_um'] = list(expected_origins(_m.get('vox_um', 0.15))[_i % 8])
                 with open(os.path.join(_d, f'p2_{_k}_sph_a{_i}.json'), 'w',
                           encoding='utf-8') as _f:
                     json.dump({'mpm_metrics': {'step3': {
@@ -1284,7 +1330,7 @@ def _selftest():
                                  ('DBE', [v * 1.12 for v in base], 'cpu')):
             for _i, _v in enumerate(_vals):
                 _m = dict(_man22, components=_comps(elec=_elec),
-                          origin_shift_um=[0.0, 0.0, _i * 0.01])
+                          origin_shift_um=list(expected_origins(_FIX['vox'])[_i % 8]))
                 with open(os.path.join(_d24, f'p2_{_k}_sph_a{_i}.json'), 'w',
                           encoding='utf-8') as _f:
                     json.dump({'mpm_metrics': {'step3': {
@@ -1304,7 +1350,8 @@ def _selftest():
         _v25a['decision'] == 'HOLD' and 'origin' in (_v25a.get('reason') or ''))
     _c2 = mk(base, [v * 1.12 for v in base])
     for _i, _r in enumerate(_c2['DBE']):
-        _r['origin_shift_um'] = [0.0, 0.0, round(1.0 + 0.01 * _i, 9)]   # disjoint 집합
+        #  ⚠ 일부러 factorial **밖** — '집합이 다르다' 시험용 (그 게이트가 먼저 문다)
+        _r['origin_shift_um'] = [0.0, 0.0, round(1.0 + 0.01 * _i, 9)]
     _v25b = verdict(_c2)
     chk(f'㉕b ★ 두 침대의 origin 집합이 다르면 HOLD (Codex: 옛 판은 h0) ({_v25b["decision"]})',
         _v25b['decision'] == 'HOLD' and 'origin 집합' in (_v25b.get('reason') or ''))
@@ -1514,7 +1561,7 @@ def _selftest():
                        'cg_info': 0, 'cg_resid': 1e-9, 'unconverged': False,
                        'status': 'complete',
                        'manifest': dict({'vox_um': _FIX['vox'],
-                                         'origin_shift_um': [0.0, 0.0, round(0.01 * _i, 9)],
+                                         'origin_shift_um': list(expected_origins(0.15)[_i % 8]),
                                          'components': {'electronic': {'status': 'complete'}}},
                                         **{k: v for k, v in _FIX.items() if k != 'vox'})}
                 _s3.update(s3over)
@@ -1681,7 +1728,8 @@ def _selftest():
             _m0['physics_protocol_id'] = _pid_over
         for _k, _mul, _dg in (('SBE', 1.0, dig[0]), ('DBE', dbe_mul, dig[1])):
             for _i in range(n):
-                _m = dict(_m0, origin_shift_um=[0.0, 0.0, _i * 0.01], input_digest=_dg)
+                _m = dict(_m0, origin_shift_um=list(expected_origins(_m0['vox_um'])[_i % 8]),
+                          input_digest=_dg)
                 with open(os.path.join(d, f'p2_{_k}_a{_i}.json'), 'w', encoding='utf-8') as _f:
                     _s3d = {'sigma_e_eff_S_cm': 0.4448190919120597 * _mul, 'cg_info': 0,
                             'cg_resid': 1e-8, 'unconverged': False, 'manifest': _m}
@@ -1934,6 +1982,51 @@ def _selftest():
     _ovl = sorted((set(MANIFEST_RESULT_KEYS) | set(MANIFEST_DERIVED_OF)) & set(FIELD_CONTRACT))
     chk(f'㊹f ★★ 계약된 축은 면제 목록에 **없다** (겹침: {_ovl})', not _ovl)
     #  ⓕ 합성 SE 구름 — 만드는 것은 자유지만 그것으로 σ 를 주장할 수는 없다
+
+    #  ── ㊺ 2026-08-25 (R5-CX-04) — **origin 은 개수가 아니라 어떤 점인가** ──────────────
+    #    Codex 실측: z-only 8점 `[0,0,0.00]…[0,0,0.07]` 이 `require_arms=8` 에서 `h0`.
+    #    ⚠ 그리고 **내 픽스처가 바로 그 패턴**이라 결함을 정상 증인으로 고정하고 있었다.
+    #      ⇒ 픽스처를 먼저 factorial 로 고치고 게이트를 세웠다 (반대 순서면 또 초록이 난다).
+    _hv = _FIX['vox'] / 2.0
+    _e8 = expected_origins(_FIX['vox'])
+    chk('㊺a factorial 이 8점이고 {0, vox/2}^3 다',
+        len(_e8) == 8 and set(_e8) == {(x, y, z) for x in (0.0, _hv)
+                                       for y in (0.0, _hv) for z in (0.0, _hv)})
+    chk('㊺b 정상 증인 — factorial 픽스처는 통과한다',
+        verdict(mk(base, [v * 1.12 for v in base]),
+                require_arms=8).get('hold_code') != 'ORIGIN_SET')
+
+    def _mk_ori(oris):
+        #  주어진 origin 목록으로 8팔을 만든다 (다른 축은 전부 정상)
+        _a = mk(base, [v * 1.12 for v in base])
+        for _k in _a:
+            for _i, _r in enumerate(_a[_k]):
+                _r['origin_shift_um'] = list(oris[_i])
+        return _a
+
+    #  ⓐ Codex 가 통과시킨 그 패턴 — 한 축으로 늘어선 8점
+    _zonly = [(0.0, 0.0, round(0.01 * i, 9)) for i in range(8)]
+    _vz = verdict(_mk_ori(_zonly), require_arms=8)
+    chk(f'㊺c ★★ z-only 8점을 **거부**한다 ({_vz["decision"]}/{_vz.get("hold_code")}) — '
+        f'개수만 맞는 임의의 점은 위상 앙상블이 아니다 (R5-CX-04)',
+        _vz['decision'] == 'HOLD' and _vz.get('hold_code') == 'ORIGIN_SET')
+    #  ⓑ 한 점을 factorial **밖** 값으로 대체
+    _sub = list(_e8); _sub[3] = (0.0, 0.0, 0.999)
+    _vs = verdict(_mk_ori(_sub), require_arms=8)
+    chk(f'㊺d ★★ 한 점만 factorial 밖이어도 거부 ({_vs.get("hold_code")})',
+        _vs.get('hold_code') == 'ORIGIN_SET')
+    #  ⓒ factorial 위이지만 **덜 찬** 경우 (한 점을 중복) — 전량 런은 거부
+    _dup = list(_e8); _dup[7] = _e8[0]
+    _vd = verdict(_mk_ori(_dup), require_arms=8)
+    chk(f'㊺e ★★ factorial 위여도 **덜 차면** 전량 런은 거부 ({_vd.get("hold_code")})',
+        _vd['decision'] == 'HOLD')
+    #  ⓓ ⚠ 정상 증인 — 팔 수를 줄인 진단 런은 막지 않는다 (부분집합이면 통과)
+    _a2 = mk(base[:2], [v * 1.12 for v in base[:2]])
+    for _k in _a2:
+        for _i, _r in enumerate(_a2[_k]):
+            _r['origin_shift_um'] = list(_e8[_i])
+    chk('㊺f ★ 정상 증인 — ARMS<8 진단 런은 부분집합이면 통과 (과잉차단 없음)',
+        verdict(_a2).get('hold_code') not in ('ORIGIN_SET', 'ORIGIN_VOX'))
     #  ⚠ 행의 값과 매니페스트를 **둘 다** 합성으로 둔다 — 실제 `_read` 는 매니페스트에서
     #    행 필드를 채우므로, 하나만 바꾸면 픽스처가 실제 경로와 어긋난다.
     _vpx = verdict(mk(base, [v * 1.12 for v in base], se_source='proxy:0.27@192',
