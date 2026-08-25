@@ -3356,3 +3356,14 @@ CPE_n=1.000 은 stderr=1e-27, determined=True** 로 나왔다. 절단 SVD 가 �
   적이 없다 (ADR 0011). 대신 두 갈래를 적어 준다 — `bml` 이면 그때 설치하고,
   `bmlin`/`bmlout` 이면 파이썬이 아예 필요 없다.
 - 회귀 테스트 5건 더 (`test_bml_client.sh`, 이제 253건).
+
+## [2026-08-26] update | hosts 에 박은 뒤 한 번 더 쳐야 한다는 것, 그리고 WSL
+- `bmlout` 이 "DNS 만 막힌다" 를 확정하고 `/etc/hosts` 한 줄을 줬는데,
+  **그 줄만으로는 끝이 아니다.** 그 주소는 아직 저장돼 있지 않다 — 못 닿는
+  주소는 적지 않기 때문이다 (`cmd_use`). 그래서 hosts 만 고쳐 놓고 왜 `bml`
+  이 여전히 자기 서버를 띄우는지 몰라 한 바퀴 더 돈다. 이제 `그리고 나서 한
+  번 더: bmlout <주소>` 를 함께 적는다.
+- WSL 이면 한 줄 더: **켤 때마다 `/etc/hosts` 를 다시 만든다** (기본값). 적어
+  놓고 재부팅하면 사라지는데 화면에는 아무 말도 안 나온다. Windows 쪽 hosts
+  에 적거나 `/etc/wsl.conf` 의 `generateHosts=false` 를 짚어 준다.
+- 회귀 테스트 2건 (`test_bml_tunnel.sh`, 이제 92건).

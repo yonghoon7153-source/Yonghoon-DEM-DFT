@@ -2633,6 +2633,19 @@ server_unreachable_help() {
                 say "    ${DIM}2. 휴대폰 테더링으로 바꿉니다.${OFF}"
                 say "    ${DIM}3. 이 주소만 이름표를 손으로 박아 둡니다 (이 터널에만, 임시로):${OFF}"
                 say "       ${GREEN}echo '${tip} ${uhost}' | sudo tee -a /etc/hosts${OFF}"
+                # **두 단계라는 것을 말해 준다.**  이름표를 박아도 이 주소는
+                # 아직 저장돼 있지 않다 -- 못 닿는 주소는 적지 않기 때문이다.
+                # 이 줄이 없으면 사람은 hosts 만 고쳐 놓고 왜 `bml` 이 여전히
+                # 자기 서버를 띄우는지 몰라 한 바퀴 더 돈다.
+                say "       ${DIM}그리고 나서 한 번 더 (그때 주소가 저장됩니다):${OFF}"
+                say "       ${GREEN}bmlout ${url}${OFF}"
+                if is_wsl; then
+                  # WSL 은 켤 때마다 /etc/hosts 를 다시 만든다 (기본값).  적어
+                  # 놓고 재부팅하면 사라지는데, 화면에는 아무 말도 안 나온다.
+                  say "       ${DIM}WSL 은 켤 때마다 /etc/hosts 를 다시 만듭니다 — 남기려면 Windows 쪽${OFF}"
+                  say "       ${DIM}%WINDIR%\\System32\\drivers\\etc\\hosts 에 같은 줄을 적거나, /etc/wsl.conf 에${OFF}"
+                  say "       ${DIM}[network] generateHosts=false 를 둡니다.${OFF}"
+                fi
                 say "       ${DIM}터널을 다시 열면 주소가 바뀌므로, 끝나면 지웁니다:${OFF}"
                 say "       ${GREEN}sudo sed -i '/${uhost}/d' /etc/hosts${OFF}"
                 say ""
