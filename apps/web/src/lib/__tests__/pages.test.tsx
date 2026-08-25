@@ -1003,24 +1003,27 @@ describe('업로드 그룹', () => {
     )
   }
 
+  /** 셀 고르기 창을 열고, 그 안에 보이는 셀 이름들. */
+  async function openPicker(): Promise<string[]> {
+    await userEvent.click(
+      await screen.findByRole('button', { name: /기존 셀에 연결/ }))
+    const dialog = await screen.findByRole('dialog')
+    return within(dialog).getAllByRole('button')
+      .map((node) => node.querySelector('.name')?.textContent ?? '')
+      .filter(Boolean)
+  }
+
   it('그룹을 고르면 기존 셀 목록이 그 그룹으로 좁혀진다', async () => {
     installUpload([])
     renderUpload()
-
-    const attach = await screen.findByRole('combobox', { name: /기존 셀에 연결/ })
-    await waitFor(() => expect(within(attach).getAllByRole('option').length).toBe(3))
+    await screen.findByRole('button', { name: /기존 셀에 연결/ })
 
     // '그룹' 과 '소그룹' 이 둘 다 있으므로 정확한 이름으로 고른다.
     await userEvent.selectOptions(
       screen.getByRole('combobox', { name: '그룹' }),
       '3',
     )
-    await waitFor(() =>
-      expect(within(attach).getAllByRole('option').map((o) => o.textContent)).toEqual([
-        '연결 안 함 (나중에 지정)',
-        '고Ni-01',
-      ]),
-    )
+    expect(await openPicker()).toEqual(['고Ni-01'])
   })
 
   it('고른 그룹으로 새 셀이 만들어진다', async () => {
@@ -1084,19 +1087,19 @@ describe('업로드 그룹', () => {
     expect(created[0]).toMatchObject({ name: 'No_1_dry_60oC' })
   })
 
-  it('이름을 쳐서 좁힐 수 있다', async () => {
+  it('창 안에서 이름을 쳐서 좁힌다', async () => {
     installUpload([])
     renderUpload()
 
-    const attach = await screen.findByRole('combobox', { name: /기존 셀에 연결/ })
-    await userEvent.type(screen.getByPlaceholderText('이름 일부…'), '중Ni')
+    await userEvent.click(
+      await screen.findByRole('button', { name: /기존 셀에 연결/ }))
+    const dialog = await screen.findByRole('dialog')
+    await userEvent.type(within(dialog).getByLabelText('셀 검색'), '중Ni')
 
     await waitFor(() =>
-      expect(within(attach).getAllByRole('option').map((o) => o.textContent)).toEqual([
-        '연결 안 함 (나중에 지정)',
-        '중Ni-01',
-      ]),
-    )
+      expect(within(dialog).getAllByRole('button')
+        .map((node) => node.querySelector('.name')?.textContent ?? '')
+        .filter(Boolean)).toEqual(['중Ni-01']))
   })
 })
 

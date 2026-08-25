@@ -54,14 +54,12 @@ export function GittCompare() {
   const inGroup = group.includes
   const rows = useMemo(() => {
     const needle = search.trim().toLowerCase()
-    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
     return (runs.data ?? []).filter((run) => {
       if (purpose && (run.purpose ?? '') !== purpose) return false
       if (sampleId !== null && run.sample_id !== sampleId) return false
-      if (group.effective !== null) {
-        const cell = run.sample_id ? byId.get(run.sample_id) : undefined
-        if (!cell || !inGroup(cell.group_id)) return false
-      }
+      // 그룹은 이제 **측정 자신의 것**이 먼저다 (ADR 0027) -- 셀에 안 붙은
+      // 측정도 묶일 수 있고, `*_effective` 가 "자기 것 → 셀 것" 을 이미 편다.
+      if (!inGroup(run.group_id_effective ?? null)) return false
       return !needle
         || run.name.toLowerCase().includes(needle)
         || (run.sample_name ?? '').toLowerCase().includes(needle)

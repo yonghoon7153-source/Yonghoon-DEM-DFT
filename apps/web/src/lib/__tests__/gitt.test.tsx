@@ -154,8 +154,9 @@ describe('GITT 라이브러리', () => {
     })
     render(<MemoryRouter><GittLibrary /></MemoryRouter>)
 
-    const picker = await screen.findByLabelText('a 관계셀')
-    await userEvent.selectOptions(picker, '7')
+    // 드롭다운이 아니라 창이다 (셀이 늘면 목록이 화면 밖으로 넘친다).
+    await userEvent.click(await screen.findByRole('button', { name: 'a 관계셀' }))
+    await userEvent.click(await screen.findByRole('button', { name: /CELL-7/ }))
     await waitFor(() => expect(sent).toHaveLength(1))
     expect(JSON.parse(sent[0]!.body)).toEqual({ sample_id: 7 })
   })
@@ -177,7 +178,8 @@ describe('GITT 라이브러리', () => {
     })
     render(<MemoryRouter><GittLibrary /></MemoryRouter>)
 
-    await userEvent.selectOptions(await screen.findByLabelText('a 관계셀'), '')
+    await userEvent.click(await screen.findByRole('button', { name: 'a 관계셀' }))
+    await userEvent.click(await screen.findByRole('button', { name: '— 안 붙임' }))
     await waitFor(() => expect(sent).toHaveLength(1))
     expect(JSON.parse(sent[0]!)).toEqual({ clear: ['sample_id'] })
   })

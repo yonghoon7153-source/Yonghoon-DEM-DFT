@@ -36,16 +36,14 @@ export function GittLibrary() {
 
   const inGroup = group.includes
   const rows = useMemo(() => {
-    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
     return (runs.data ?? []).filter((run) => {
       // '' 는 "안 붙임" 을 뜻하는 값이라 전체(null)와 구별해야 한다.
       if (owner === 'none' && run.sample_id) return false
       if (owner && owner !== 'none' && String(run.sample_id) !== owner) return false
       if (purpose && (run.purpose ?? '') !== purpose) return false
-      if (group.effective !== null) {
-        const cell = run.sample_id ? byId.get(run.sample_id) : undefined
-        if (!cell || !inGroup(cell.group_id)) return false
-      }
+      // 그룹은 이제 **측정 자신의 것**이 먼저다 (ADR 0027) -- 셀에 안 붙은
+      // 측정도 묶일 수 있고, `*_effective` 가 "자기 것 → 셀 것" 을 이미 편다.
+      if (!inGroup(run.group_id_effective ?? null)) return false
       return true
     })
   }, [runs.data, samples.data, owner, purpose, group.effective, inGroup])

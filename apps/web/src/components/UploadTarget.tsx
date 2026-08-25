@@ -11,6 +11,7 @@
 
 import { useCallback, useMemo, useRef, useState, type ReactNode } from 'react'
 
+import { CellPicker } from './CellPicker'
 import { GroupFilterFields, useGroupChoice, type GroupChoice } from './GroupFilter'
 import { Field } from './ui'
 import { api } from '../lib/api'
@@ -172,36 +173,19 @@ export function UploadTargetFields({ pick }: { pick: UploadTarget }) {
         </Field>
         <Field
           label="③ 또는 기존 셀에 연결"
-          hint={pick.matches.length && pick.query.trim()
-            ? `${pick.matches.length}개 일치`
-            : '이름을 쳐서 좁힐 수 있습니다'}
+          hint={`고를 수 있는 셀 ${pick.matches.length}개`}
         >
-          {/* 라벨은 Field 안의 첫 폼 요소에 붙는다.  검색칸이 먼저 오므로
-              select 는 자기 라벨을 따로 들어야 이름 없는 컨트롤이 되지 않는다. */}
-          <input
-            type="text"
-            value={pick.query}
-            placeholder="이름 일부…"
-            aria-label="셀 이름으로 찾기"
+          {/* 드롭다운이 아니라 창이다.  셀이 늘면 목록이 화면 밖으로 넘치고,
+              길고 앞부분이 같은 이름들은 잘려서 구분되지 않는다.  창 안에서
+              그룹·소그룹과 검색으로 좁히고 최근에 고친 순서로 편다. */}
+          <CellPicker
+            value={pick.target}
+            samples={pick.matches}
+            label="기존 셀에 연결"
+            emptyLabel="연결 안 함 (나중에 지정)"
             disabled={pick.newName.trim() !== ''}
-            onChange={(event) => {
-              pick.setQuery(event.target.value)
-              pick.setTarget(null)
-            }}
-            style={{ marginBottom: 6 }}
+            onPick={(sampleId) => pick.setTarget(sampleId)}
           />
-          <select
-            value={pick.target ?? ''}
-            aria-label="기존 셀에 연결"
-            disabled={pick.newName.trim() !== ''}
-            onChange={(event) =>
-              pick.setTarget(event.target.value ? Number(event.target.value) : null)}
-          >
-            <option value="">연결 안 함 (나중에 지정)</option>
-            {pick.matches.map((sample) => (
-              <option key={sample.id} value={sample.id}>{sample.name}</option>
-            ))}
-          </select>
         </Field>
       </div>
     </>

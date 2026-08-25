@@ -697,6 +697,24 @@ class SpectrumOut(BaseModel):
     area_cm2: float | None
     #: 원형 펠릿의 지름.  면적이 비어 있으면 면적이 여기서 나온다.
     diameter_mm: float | None = None
+    #: 이 측정 자신의 조건 (ADR 0027).  비어 있으면 붙은 셀의 것이 `*_effective`
+    #: 로 나온다 -- 적어 넣은 값이 늘 이긴다.
+    group_id: int | None = None
+    test_date: str = ""
+    cathode_type: str = ""
+    process: str = ""
+    temperature_c: float | None = None
+    #: 실제로 쓰이는 값 (자기 것 → 셀 것 순).  화면이 회색으로 그릴 수 있게
+    #: 어디서 왔는지도 함께 낸다.
+    group_id_effective: int | None = None
+    group_label: str = ""
+    test_date_effective: str = ""
+    cathode_type_effective: str = ""
+    process_effective: str = ""
+    temperature_c_effective: float | None = None
+    #: 위 값 중 셀에서 빌려 온 칸들의 이름.  화면이 "이건 셀에서 온 값" 이라고
+    #: 적을 수 있어야 사람이 덮어쓸지 말지를 안다.
+    inherited: list[str] = []
     last_circuit: str
     parse_error: str
     created_by: str = ""
@@ -777,6 +795,13 @@ class SpectrumUpdate(BaseModel):
     #: 원형 펠릿의 지름.  면적이 비어 있을 때 면적이 여기서 나온다.
     diameter_mm: PositiveLength | None = None
     measured_at: datetime | None = None
+    #: 이 측정 자신의 조건 (ADR 0027).  빈 문자열이 "안 적음" 이다.
+    group_id: int | None = None
+    test_date: str | None = None
+    cathode_type: str | None = None
+    process: str | None = None
+    temperature_c: float | None = None
+
     #: 무엇을 보려고 잰 측정인가.  빈 문자열이 "안 적음" 이므로 clear 는 필요 없다.
     purpose: str | None = None
     #: 숫자 필드를 비우려면 이름을 여기에 담는다.
@@ -882,6 +907,25 @@ class GittRunOut(BaseModel):
     min_rest_s: float
     #: 무엇을 보려고 잰 측정인가 (자유 입력).  비어 있는 것이 정상이다.
     purpose: str = ""
+    #: 이 측정 자신의 조건 (ADR 0027).  비어 있으면 붙은 셀의 것이 `*_effective`
+    #: 로 나온다 -- 적어 넣은 값이 늘 이긴다.
+    group_id: int | None = None
+    test_date: str = ""
+    cathode_type: str = ""
+    process: str = ""
+    temperature_c: float | None = None
+    #: 실제로 쓰이는 값 (자기 것 → 셀 것 순).  화면이 회색으로 그릴 수 있게
+    #: 어디서 왔는지도 함께 낸다.
+    group_id_effective: int | None = None
+    group_label: str = ""
+    test_date_effective: str = ""
+    cathode_type_effective: str = ""
+    process_effective: str = ""
+    temperature_c_effective: float | None = None
+    #: 위 값 중 셀에서 빌려 온 칸들의 이름.  화면이 "이건 셀에서 온 값" 이라고
+    #: 적을 수 있어야 사람이 덮어쓸지 말지를 안다.
+    inherited: list[str] = []
+
     parse_error: str
     #: 펄스 수에 대한 관찰 한 줄.  비어 있으면 할 말이 없다는 뜻이다.
     pulse_note: str = ""
@@ -896,6 +940,13 @@ class GittRunUpdate(BaseModel):
     name: str | None = None
     sample_id: int | None = None
     purpose: str | None = None
+    #: 이 측정 자신의 조건 (ADR 0027).  빈 문자열이 "안 적음" 이다.
+    group_id: int | None = None
+    test_date: str | None = None
+    cathode_type: str | None = None
+    process: str | None = None
+    temperature_c: float | None = None
+
     molar_volume_cm3: PositiveMass | None = None
     molar_mass_g: PositiveMass | None = None
     active_mass_g: PositiveMass | None = None

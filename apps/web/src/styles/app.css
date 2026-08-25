@@ -1252,3 +1252,53 @@ table tr.section > th > .section-label {
   max-height: 320px;
   overflow: auto;
 }
+
+/* --------------------------------------------------------------- 셀 고르기 */
+/* 드롭다운이 아니라 버튼 + 창인 이유는 `CellPicker` 의 머리말에 있다.  버튼은
+   제 칸을 넘지 않는다 — `<select>` 가 옆 칸을 덮던 것이 이 부품이 생긴 이유의
+   절반이다. */
+.cell-pick {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  justify-content: space-between;
+  text-align: left;
+  font: inherit;
+}
+
+.cell-picker { width: min(720px, 100%); }
+
+.cell-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 46vh;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: var(--r2);
+  padding: 4px;
+}
+
+/* 한 줄에 이름·조건·고친 때.  이름이 길어 잘리더라도 오른쪽의 날짜는 늘 같은
+   자리에 있어야 훑으면서 시간순을 읽을 수 있다. */
+.cell-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "name when" "meta when";
+  gap: 0 var(--s3);
+  width: 100%;
+  padding: 7px 9px;
+  text-align: left;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--r1);
+  font: inherit;
+}
+.cell-row .name { grid-area: name; font-weight: 500; }
+.cell-row .tiny:not(.when) { grid-area: meta; }
+.cell-row .when { grid-area: when; align-self: center; white-space: nowrap; }
+.cell-row:hover { background: var(--surface-2); }
+.cell-row.on { border-color: var(--accent); background: var(--accent-wash); }

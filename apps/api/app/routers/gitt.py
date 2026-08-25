@@ -23,6 +23,7 @@ from wrdkit.gitt import diffusion, pseudo_ocv, segment_pulses
 
 from .. import storage
 from ..db import get_session
+from ..deps import resolve_conditions
 from ..models import ExperimentGroup, GittRun, Sample
 from ..schemas import (
     DiffusionOut,
@@ -85,7 +86,8 @@ def _out(record: GittRun, session: Session | None = None) -> GittRunOut:
     if session is not None and record.sample_id:
         sample = session.get(Sample, record.sample_id)
         sample_name = sample.name if sample else None
-    return GittRunOut(**record.model_dump(), sample_name=sample_name,
+    conditions = resolve_conditions(session, record) if session is not None else {}
+    return GittRunOut(**record.model_dump(), **conditions, sample_name=sample_name,
                       missing_for_diffusion=_missing(record))
 
 
@@ -250,6 +252,11 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
         # 없는 셀에 붙이면 목록에서 사라진 것처럼 보인다: 어느 셀 화면에도
         # 안 나오고, GITT 목록은 지워진 셀 이름을 못 찾아 빈칸을 그린다.
         raise HTTPException(404, f"sample {values['sample_id']} not found")
+    # 없는 그룹에 붙이면 목록에서 사라진 것처럼 보인다: 어느 그룹 필터에도
+    # 안 걸리고, 화면은 지워진 그룹 이름을 못 찾아 빈칸을 그린다.
+    if (values.get("group_id") is not None
+            and session.get(ExperimentGroup, values["group_id"]) is None):
+        raise HTTPException(404, f"group {values['group_id']} not found")
     for key, value in values.items():
         setattr(record, key, value)
     for field in payload.clear:
@@ -273,7 +280,7 @@ def update_run(gitt_id: int, payload: GittRunUpdate,
 
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 사람이 입력하는 재료 상수들이다.
-CLEARABLE_GITT_FIELDS = {"purpose",
+CLEARABLE_GITT_FIELDS = {"purpose", "group_id", "temperature_c",
                          "molar_volume_cm3", "molar_mass_g", "active_mass_g",
                          "area_cm2",
                          # 셀에서 떼어내는 길.  붙이는 것과 달리 값이 `None`

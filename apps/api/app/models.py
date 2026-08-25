@@ -392,6 +392,22 @@ class SpectrumRecord(SQLModel, table=True):
     #: 그때 지름은 잴 수 있는 값이 아니다 (ADR 0001 의 raw 우선과 같은 결).
     diameter_mm: float | None = None
 
+    # -- 이 측정 자신의 조건 (ADR 0027) ------------------------------------
+    #
+    # 셀에 붙지 않은 측정이 많다.  EIS 만 보려고 잰 것, 셀을 만들기 전에 올린
+    # 것, 남의 셀에서 떼어 온 것.  그때도 "언제, 무엇을, 어떤 공정으로, 몇 도
+    # 에서" 는 있다 -- 그 사실이 셀이 생기기 전에는 적을 데가 없었다.
+    #
+    # 붙어 있으면 **비어 있는 칸만** 셀에서 가져온다 (`thickness_um`/`area_cm2`
+    # 와 같은 규칙).  적어 넣은 값이 늘 이긴다: 같은 셀의 임피던스를 다른
+    # 온도에서 재는 일이 실제로 있고, 그때 셀의 온도는 이 측정의 온도가 아니다.
+    group_id: int | None = Field(default=None, foreign_key="experiment_group.id",
+                                 index=True)
+    test_date: str = ""
+    cathode_type: str = ""
+    process: str = ""
+    temperature_c: float | None = None
+
     #: The circuit last fitted here, so the screen can re-offer it.
     last_circuit: str = ""
     parse_error: str = ""
@@ -489,6 +505,22 @@ class GittRun(SQLModel, table=True):
     #: 새 목적을 만들 때마다 코드를 고쳐야 한다.  파일은 이것을 말하지 않으므로
     #: 비어 있는 것이 정상이고, 비었다고 지어내지 않는다 (§0.4).
     purpose: str = Field(default="", index=True)
+
+    # -- 이 측정 자신의 조건 (ADR 0027) ------------------------------------
+    #
+    # 셀에 붙지 않은 측정이 많다.  EIS 만 보려고 잰 것, 셀을 만들기 전에 올린
+    # 것, 남의 셀에서 떼어 온 것.  그때도 "언제, 무엇을, 어떤 공정으로, 몇 도
+    # 에서" 는 있다 -- 그 사실이 셀이 생기기 전에는 적을 데가 없었다.
+    #
+    # 붙어 있으면 **비어 있는 칸만** 셀에서 가져온다 (`thickness_um`/`area_cm2`
+    # 와 같은 규칙).  적어 넣은 값이 늘 이긴다: 같은 셀의 임피던스를 다른
+    # 온도에서 재는 일이 실제로 있고, 그때 셀의 온도는 이 측정의 온도가 아니다.
+    group_id: int | None = Field(default=None, foreign_key="experiment_group.id",
+                                 index=True)
+    test_date: str = ""
+    cathode_type: str = ""
+    process: str = ""
+    temperature_c: float | None = None
 
     parse_error: str = ""
     #: 펄스 수에 대한 한 줄, 올릴 때 적어 둔다.  판정이 아니라 관찰이다 --

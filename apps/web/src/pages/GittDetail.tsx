@@ -121,6 +121,25 @@ export function GittDetail() {
 
       {record.pulse_note ? <Alert kind="warn">{record.pulse_note}</Alert> : null}
 
+      <div style={{ marginBottom: 14 }}>
+        <RelatedCellCard
+          sampleId={record.sample_id ?? null}
+          sampleName={record.sample_name ?? null}
+          samples={allSamples.data ?? []}
+          record={record}
+          onSaveConditions={async (body) => {
+            await api.updateGittRun(record.id, body)
+            bumpReload((value) => !value)
+          }}
+          onPick={async (picked) => {
+            await api.updateGittRun(record.id, picked
+              ? { sample_id: picked }
+              : { clear: ['sample_id'] })
+            bumpReload((value) => !value)
+          }}
+        />
+      </div>
+
       <div className="segmented" role="tablist" style={{ marginBottom: 12 }}>
         <button type="button" role="tab" aria-selected={mode === 'pocv'}
                 className={mode === 'pocv' ? 'on accent' : ''}
@@ -220,19 +239,6 @@ export function GittDetail() {
             ['올린 때', dateTime(record.uploaded_at)],
           ]} />
         </Card>
-      </div>
-      <div style={{ marginTop: 14 }}>
-        <RelatedCellCard
-          sampleId={record.sample_id ?? null}
-          sampleName={record.sample_name ?? null}
-          samples={allSamples.data ?? []}
-          onPick={async (picked) => {
-            await api.updateGittRun(record.id, picked
-              ? { sample_id: picked }
-              : { clear: ['sample_id'] })
-            bumpReload((value) => !value)
-          }}
-        />
       </div>
       <div style={{ marginTop: 14 }}>
         <OtherMeasurements sampleId={record.sample_id ?? null}

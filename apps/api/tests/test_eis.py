@@ -963,3 +963,75 @@ def test_the_diameter_can_be_cleared(client):
     cleared = client.patch(f"/api/eis/spectra/{made['id']}",
                            json={"clear": ["diameter_mm"]}).json()
     assert cleared["diameter_mm"] is None
+
+
+# --- 측정 자신의 조건 (ADR 0027) ------------------------------------------------
+
+
+def test_a_spectrum_carries_its_own_conditions_without_a_cell(client):
+    """셀에 안 붙은 측정이 많다 — EIS 만 보려고 잰 것, 셀을 만들기 전에 올린 것.
+
+    그때도 "언제, 무엇을, 몇 도에서" 는 있다.  적을 데가 없던 것이 문제였다.
+    """
+    made = upload(client)
+    patched = client.patch(f"/api/eis/spectra/{made['id']}", json={
+        "test_date": "2026-08-20", "cathode_type": "High-Ni",
+        "process": "dry", "temperature_c": 60.0,
+    }).json()
+    assert patched["sample_id"] is None
+    assert patched["test_date_effective"] == "2026-08-20"
+    assert patched["temperature_c_effective"] == 60.0
+    # 빌려 온 것이 없다 -- 붙은 셀이 없으니 당연하다.
+    assert patched["inherited"] == []
+
+
+def test_a_blank_field_borrows_from_the_cell_and_says_so(client, sample_id):
+    client.patch(f"/api/samples/{sample_id}",
+                 json={"process": "wet", "temperature_c": 25.0})
+    made = upload(client, sample_id=sample_id)
+    out = client.get(f"/api/eis/spectra/{made['id']}").json()
+    assert out["process_effective"] == "wet"
+    assert out["temperature_c_effective"] == 25.0
+    # 화면이 회색으로 그리려면 어디서 왔는지를 알아야 한다 (§0.4).
+    assert set(out["inherited"]) >= {"process", "temperature_c"}
+
+
+def test_what_is_written_here_beats_the_cell(client, sample_id):
+    """같은 셀의 임피던스를 다른 온도에서 재는 일이 실제로 있다."""
+    client.patch(f"/api/samples/{sample_id}", json={"temperature_c": 25.0})
+    made = upload(client, sample_id=sample_id)
+    out = client.patch(f"/api/eis/spectra/{made['id']}",
+                       json={"temperature_c": -10.0}).json()
+    assert out["temperature_c_effective"] == -10.0
+    assert "temperature_c" not in out["inherited"]
+    # 비우면 셀의 값이 도로 비쳐 보인다 -- 그것이 이 칸의 뜻이다.
+    cleared = client.patch(f"/api/eis/spectra/{made['id']}",
+                           json={"clear": ["temperature_c"]}).json()
+    assert cleared["temperature_c_effective"] == 25.0
+    assert "temperature_c" in cleared["inherited"]
+
+
+def test_a_spectrum_can_sit_in_a_group_without_a_cell(client):
+    """EIS 만 보려고 잰 묶음이 있다 — 셀이 없어도 그룹으로 모을 수 있어야 한다."""
+    group = client.post("/api/groups", json={"name": "SOC 스캔 묶음"}).json()
+    made = upload(client)
+    out = client.patch(f"/api/eis/spectra/{made['id']}",
+                       json={"group_id": group["id"]}).json()
+    assert out["group_id_effective"] == group["id"]
+    assert out["group_label"] == "SOC 스캔 묶음"
+
+
+def test_a_subgroup_label_carries_its_parent(client):
+    parent = client.post("/api/groups", json={"name": "건식"}).json()
+    child = client.post("/api/groups",
+                        json={"name": "80wt%", "parent_id": parent["id"]}).json()
+    made = upload(client)
+    out = client.patch(f"/api/eis/spectra/{made['id']}",
+                       json={"group_id": child["id"]}).json()
+    assert out["group_label"] == "건식 · 80wt%"
+
+
+def test_a_group_that_does_not_exist_is_refused(client):
+    made = upload(client)
+    reply = client.patch(f"/api/eis/spectra/{made['id']}", json={"group_id": 9999})
+    assert reply.status_code == 404

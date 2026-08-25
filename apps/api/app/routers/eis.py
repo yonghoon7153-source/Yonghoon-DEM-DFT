@@ -37,6 +37,7 @@ from wrdkit.eis.derive import CONFIGS, FULL, HALF, SYMMETRIC
 
 from .. import storage
 from ..db import get_session
+from ..deps import resolve_conditions
 from ..models import ExperimentGroup, Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
     DrtOut,
@@ -223,6 +224,7 @@ def _out(session: Session, record: SpectrumRecord, *,
                key=lambda f: f.chi_squared, default=None)
     return SpectrumOut(
         **record.model_dump(exclude={"settings_json"}),
+        **resolve_conditions(session, record),
         sample_name=sample_name,
         fit_count=len(fits),
         best_chi_squared=best.chi_squared if best else None,
@@ -933,6 +935,11 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
     if (values.get("sample_id") is not None
             and session.get(Sample, values["sample_id"]) is None):
         raise HTTPException(404, f"sample {values['sample_id']} not found")
+    # 없는 그룹에 붙이면 목록에서 사라진 것처럼 보인다: 어느 그룹 필터에도
+    # 안 걸리고, 화면은 지워진 그룹 이름을 못 찾아 빈칸을 그린다.
+    if (values.get("group_id") is not None
+            and session.get(ExperimentGroup, values["group_id"]) is None):
+        raise HTTPException(404, f"group {values['group_id']} not found")
     for key, value in values.items():
         setattr(record, key, value)
     for field in payload.clear:
@@ -954,7 +961,10 @@ def update_spectrum(spectrum_id: int, payload: SpectrumUpdate,
 
 #: PATCH ``clear`` 가 비울 수 있는 필드 — 전부 사람이 입력하는 것들이다.
 CLEARABLE_SPECTRUM_FIELDS = {"sample_id", "at_cycle", "thickness_um",
-                             "area_cm2", "diameter_mm", "measured_at"}
+                             "area_cm2", "diameter_mm", "measured_at",
+                             # 측정 자신의 조건 (ADR 0027).  비우면 붙은 셀의
+                             # 값이 도로 비쳐 보인다 -- 그것이 이 칸의 뜻이다.
+                             "group_id", "temperature_c"}
 
 
 @router.delete("/spectra/{spectrum_id}", status_code=204)

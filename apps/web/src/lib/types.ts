@@ -606,6 +606,21 @@ export interface Spectrum {
   area_cm2: number | null
   /** 원형 펠릿의 지름 (mm).  면적이 비어 있으면 면적이 여기서 나온다. */
   diameter_mm?: number | null
+  /** 이 측정 자신의 조건 (ADR 0027).  셀에 안 붙어 있어도 쓸 수 있다. */
+  group_id?: number | null
+  test_date?: string
+  cathode_type?: string
+  process?: string
+  temperature_c?: number | null
+  /** 실제로 쓰이는 값 — 자기 것이 비어 있으면 붙은 셀의 것. */
+  group_id_effective?: number | null
+  group_label?: string
+  test_date_effective?: string
+  cathode_type_effective?: string
+  process_effective?: string
+  temperature_c_effective?: number | null
+  /** 위 값 중 셀에서 빌려 온 칸들.  화면이 "이건 셀에서 온 값" 이라고 적는다. */
+  inherited?: string[]
   last_circuit: string
   parse_error: string
   created_by?: string
@@ -894,6 +909,21 @@ export interface GittRun {
   min_rest_s: number
   /** 무엇을 보려고 잰 기록인가 (자유 입력).  비어 있는 것이 정상이다. */
   purpose?: string
+  /** 이 측정 자신의 조건 (ADR 0027).  셀에 안 붙어 있어도 쓸 수 있다. */
+  group_id?: number | null
+  test_date?: string
+  cathode_type?: string
+  process?: string
+  temperature_c?: number | null
+  /** 실제로 쓰이는 값 — 자기 것이 비어 있으면 붙은 셀의 것. */
+  group_id_effective?: number | null
+  group_label?: string
+  test_date_effective?: string
+  cathode_type_effective?: string
+  process_effective?: string
+  temperature_c_effective?: number | null
+  /** 위 값 중 셀에서 빌려 온 칸들.  화면이 "이건 셀에서 온 값" 이라고 적는다. */
+  inherited?: string[]
   parse_error: string
   /** 펄스와 휴지 길이에 대한 관찰 한 줄. 판정이 아니다. */
   pulse_note: string

@@ -336,13 +336,6 @@ describe('스펙트럼 상세', () => {
     }
   }
 
-  /** 관계셀 카드가 읽는 셀.  시험 조건 패널이 보는 칸들만 있으면 된다. */
-  const SAMPLE = {
-    id: 3, name: 'No_1_dry', group_id: null, group_name: null,
-    test_date: null, cathode_type: '', cathode_detail: '', process: '',
-    c_rate: null, c_rate_formation: null, temperature_c: null,
-  }
-
   /** 셀 하나와 그 셀이 든 소그룹.  관계셀 카드가 이 둘을 함께 읽는다. */
   const CELL_GROUPS = [
     { id: 1, name: '건식 시리즈', parent_id: null, parent_name: '', subgroup_count: 1,
@@ -353,47 +346,55 @@ describe('스펙트럼 상세', () => {
       updated_at: '2026-08-01T00:00:00', sample_count: 1, run_count: 0 },
   ]
 
-  it('관계셀 카드에서 그 셀의 시험 조건을 그대로 고친다', async () => {
-    // 임피던스를 보다가 "이거 60도짜리였나" 를 확인하는 일은 늘 이 화면
-    // **안에서** 생기는데, 그때마다 셀 화면으로 건너갔다 와야 했다.
+  it('조건은 이 측정의 것이다 — 셀에 안 붙어 있어도 적을 수 있다 (ADR 0027)', async () => {
+    // EIS 만 보려고 잰 것, 셀을 만들기 전에 올린 것.  그때도 "언제, 무엇을,
+    // 몇 도에서" 는 있는데 적을 데가 셀밖에 없었다.
     const sent: Record<string, unknown>[] = []
     installFetch(detailHandler((url, init) => {
       if (path(url) === '/api/groups') return CELL_GROUPS
-      if (path(url) === '/api/eis/spectra/1') {
-        return detail({ sample_id: 3, sample_name: 'No_1_dry' })
-      }
-      if (path(url) === '/api/samples/3' && init?.method === 'PATCH') {
+      if (path(url) === '/api/eis/spectra/1' && init?.method === 'PATCH') {
         sent.push(JSON.parse(String(init.body)))
-        return SAMPLE
+        return detail({ temperature_c: 60, temperature_c_effective: 60 })
       }
-      if (path(url) === '/api/samples/3') return { ...SAMPLE, group_id: 2 }
       return undefined
     }))
     renderDetail()
 
-    // 저장된 소그룹이 두 칸에 그대로 앉아 있어야 한다 (ADR 0025).
-    const top = await screen.findByRole('combobox', { name: '그룹' })
-    await waitFor(() => expect((top as HTMLSelectElement).value).toBe('1'))
-    expect((screen.getByRole('combobox', { name: '소그룹' }) as HTMLSelectElement).value)
-      .toBe('2')
-
-    await userEvent.type(screen.getByLabelText(/^온도/), '60')
+    await userEvent.type(await screen.findByLabelText('온도'), '60')
     await userEvent.click(screen.getByRole('button', { name: '저장' }))
     await waitFor(() => expect(sent).toHaveLength(1))
-    expect(sent[0]).toMatchObject({ temperature_c: 60 })
+    // 셀이 아니라 **이 스펙트럼**으로 간다.
+    expect(sent[0]).toEqual({ temperature_c: 60 })
   })
 
-  it('관계셀이 없으면 고칠 것이 없다고 말한다 — 붙여야 조건이 생긴다', async () => {
+  it('빈 칸은 셀에서 빌려 오고, 빌려 왔다고 적는다', async () => {
+    // 값만 보이면 셀을 고쳤을 때 왜 이 측정의 표시가 따라 바뀌는지 알 수 없다.
     installFetch(detailHandler((url) => {
       if (path(url) === '/api/groups') return CELL_GROUPS
+      if (path(url) === '/api/eis/spectra/1') {
+        return detail({
+          sample_id: 3, sample_name: 'No_1_dry',
+          group_id: null, group_id_effective: 2, group_label: '건식 시리즈 · 80wt%',
+          temperature_c: null, temperature_c_effective: 25,
+          process: '', process_effective: 'wet',
+          inherited: ['group_id', 'process', 'temperature_c'],
+        })
+      }
       return undefined
     }))
     renderDetail()
 
-    expect(await screen.findByRole('combobox', { name: '관계셀' })).toBeInTheDocument()
-    expect(screen.queryByRole('combobox', { name: '소그룹' })).toBeNull()
-    expect(screen.getByText(/관계셀을 정하면 여기서 바로 고칠 수 있습니다/))
+    // 힌트는 라벨 옆의 작은 글씨다 (`Field` 가 ' · ' 를 앞에 붙인다).
+    expect(await screen.findByText(/셀에서: 건식 시리즈 · 80wt%/))
       .toBeInTheDocument()
+    expect(screen.getByText(/셀에서: wet/)).toBeInTheDocument()
+    expect(screen.getByText(/셀에서: 25 °C/)).toBeInTheDocument()
+
+    // 물려받은 그룹은 칸에 앉지 않는다.  앉히면 아무것도 안 바꾸고 저장만 눌러도
+    // 그 값이 이 측정에 복사되어 물려받기가 조용히 끊긴다.
+    const top = screen.getByRole('combobox', { name: '그룹' }) as HTMLSelectElement
+    await waitFor(() => expect(top.value).toBe(''))
+    expect(screen.queryByRole('button', { name: '저장' })).toBeNull()
   })
 
   function drtResult(order: number, lam: number) {

@@ -13,13 +13,17 @@
 import { useMemo, useState, type ReactNode } from 'react'
 import { Link } from 'react-router-dom'
 
-import { TestConditionsPanel } from './TestConditionsPanel'
-import { Alert, Card, Spinner, TrashIcon } from './ui'
-import { api } from '../lib/api'
-import { useAsync } from '../lib/hooks'
+import { CellPicker } from './CellPicker'
+import { MeasurementConditions, type Conditions } from './MeasurementConditions'
+import { Alert, Card, TrashIcon } from './ui'
 import type { Sample } from '../lib/types'
 
-/** 관계셀 하나를 고르는 드롭다운.  빈 값은 "떼어내기" 다. */
+/** 관계셀 하나를 고른다.  빈 값은 "떼어내기" 다.
+ *
+ *  드롭다운이 아니라 창이다 (`CellPicker`).  셀이 늘면 목록이 화면 밖으로
+ *  넘치고, 길고 앞부분이 같은 이름들은 잘려서 구분이 안 된다 -- 그리고
+ *  `<select>` 는 제 가장 긴 선택지만큼 넓어져 표의 옆 칸을 덮는다.
+ */
 export function RelatedCellSelect({
   value,
   samples,
@@ -34,23 +38,9 @@ export function RelatedCellSelect({
   disabled?: boolean
   onPick: (sampleId: number | null) => void
 }) {
-  // `<select>` 는 제 가장 긴 선택지만큼 넓어진다.  셀 이름이 길면 그 폭이 표의
-  // 열을 밀고 나가 옆 칸 글자와 겹쳐 그려진다 -- 열 너비는 그대로인데 안에
-  // 든 것만 커지기 때문이다.  칸 안에 가둔다.
   return (
-    <select
-      aria-label={label}
-      value={value ? String(value) : ''}
-      disabled={disabled}
-      style={{ width: '100%', maxWidth: '100%', minWidth: 0 }}
-      onChange={(event) =>
-        onPick(event.target.value ? Number(event.target.value) : null)}
-    >
-      <option value="">— 안 붙임</option>
-      {samples.map((sample) => (
-        <option key={sample.id} value={sample.id}>{sample.name}</option>
-      ))}
-    </select>
+    <CellPicker value={value} samples={samples} label={label}
+                disabled={disabled} onPick={onPick} />
   )
 }
 
@@ -237,26 +227,27 @@ export function RelatedCellCard({
   sampleId,
   sampleName,
   samples,
+  record,
   onPick,
+  onSaveConditions,
 }: {
   sampleId: number | null
   sampleName: string | null
   samples: Sample[]
+  /** 이 측정 자신의 조건 (ADR 0027).  셀이 없어도 있는 값들이다. */
+  record: Conditions
   onPick: (sampleId: number | null) => Promise<void>
+  onSaveConditions: (body: Record<string, unknown>) => Promise<void>
 }) {
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
-  const [reloadKey, bumpReload] = useState(false)
-  const sample = useAsync(
-    () => (sampleId ? api.getSample(sampleId) : Promise.resolve(null)),
-    [sampleId, reloadKey],
-  )
 
   return (
-    <Card title="관계셀" tight>
+    <Card title="조건" tight>
       <div className="col" style={{ padding: 14, gap: 10 }}>
         {error ? <Alert kind="error">{error}</Alert> : null}
         <div className="row" style={{ gap: 8 }}>
+          <span className="tiny faint" style={{ minWidth: 44 }}>관계셀</span>
           <div style={{ minWidth: 0, width: 260 }}>
             <RelatedCellSelect
               value={sampleId}
@@ -283,22 +274,7 @@ export function RelatedCellCard({
           ) : null}
         </div>
 
-        {!sampleId ? (
-          <div className="tiny faint">
-            시험 조건(그룹·소그룹·시험일·양극재·공정·C-rate·온도)은 셀에 붙어
-            있습니다 — 관계셀을 정하면 여기서 바로 고칠 수 있습니다. 안 붙여도
-            이 측정의 분석은 그대로 됩니다.
-          </div>
-        ) : sample.error ? (
-          <Alert kind="error">{sample.error}</Alert>
-        ) : sample.data ? (
-          <TestConditionsPanel
-            sample={sample.data}
-            onSaved={() => bumpReload((value) => !value)}
-          />
-        ) : (
-          <Spinner />
-        )}
+        <MeasurementConditions record={record} onSave={onSaveConditions} />
       </div>
     </Card>
   )

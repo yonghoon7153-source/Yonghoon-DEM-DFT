@@ -327,3 +327,35 @@ def test_a_purpose_can_be_edited_and_cleared(client):
     cleared = client.patch(f"/api/gitt/runs/{made['id']}",
                            json={"clear": ["purpose"]}).json()
     assert cleared["purpose"] == ""
+
+
+# --- 측정 자신의 조건 (ADR 0027) ------------------------------------------------
+
+
+def test_a_gitt_record_carries_its_own_conditions(client):
+    """EIS 와 같은 규칙이다 — 셀이 없어도 조건은 있다."""
+    made = upload(client)
+    out = client.patch(f"/api/gitt/runs/{made['id']}", json={
+        "test_date": "2026-08-20", "process": "dry", "temperature_c": 45.0,
+    }).json()
+    assert out["sample_id"] is None
+    assert out["process_effective"] == "dry"
+    assert out["temperature_c_effective"] == 45.0
+    assert out["inherited"] == []
+
+
+def test_a_blank_gitt_field_borrows_from_the_cell(client):
+    sample_id, made = _attach(client)
+    client.patch(f"/api/samples/{sample_id}", json={"temperature_c": 25.0})
+    out = client.get(f"/api/gitt/runs/{made['id']}").json()
+    assert out["temperature_c_effective"] == 25.0
+    assert "temperature_c" in out["inherited"]
+
+
+def test_a_gitt_record_can_sit_in_a_group_without_a_cell(client):
+    group = client.post("/api/groups", json={"name": "GITT 묶음"}).json()
+    made = upload(client)
+    out = client.patch(f"/api/gitt/runs/{made['id']}",
+                       json={"group_id": group["id"]}).json()
+    assert out["group_id_effective"] == group["id"]
+    assert out["group_label"] == "GITT 묶음"

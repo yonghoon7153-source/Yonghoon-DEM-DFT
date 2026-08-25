@@ -30,6 +30,7 @@
 | [0024](adr/0024-three-sections-one-cell.md) | 세 섹션은 독립이고, 셀 하나가 그것들을 잇는다 | 섹션마다 대시보드·라이브러리·비교·업로드, 관계는 `sample_id` 하나, SOC 스캔은 올릴 때 정한다 |
 | [0025](adr/0025-groups-nest-one-level.md) | 그룹은 한 단계만 겹친다, 그리고 셀은 한 자리에만 산다 | 그룹 → 소그룹 → 셀, `parent_id` 하나로 깊이 2, 상위로 거를 때는 `group_scope` 가 자손까지 편다 |
 | [0026](adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md) | 확산 꼬리는 시작점·시작 개수·회로 셋이 함께 정한다 | σ 를 실축 폭(Ω)으로 시작하던 차원 오류, 확산 회로의 재시작 8→24, `(전고체,풀셀)` 프리셋에 Ws 추가, `circuit=auto` |
+| [0027](adr/0027-a-measurement-has-its-own-conditions.md) | 측정은 제 조건을 갖는다, 셀은 빈 칸만 채운다 | EIS·GITT 에 그룹·시험일·양극재·공정·온도, 물려받기는 빈 칸만 (`inherited` 로 표시), 셀 고르기는 드롭다운이 아니라 창 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -72,7 +73,8 @@
 `adr/0023-memoise-on-the-inputs-not-on-a-clock.md` ·
 `adr/0024-three-sections-one-cell.md` ·
 `adr/0025-groups-nest-one-level.md` ·
-`adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md`
+`adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md` ·
+`adr/0027-a-measurement-has-its-own-conditions.md`
 
 ## 스펙
 

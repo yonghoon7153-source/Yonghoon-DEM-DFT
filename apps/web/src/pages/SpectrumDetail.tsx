@@ -180,6 +180,27 @@ export function SpectrumDetail() {
 
       {error ? <Alert kind="error">{error}</Alert> : null}
 
+      <div style={{ marginBottom: 14 }}>
+        <RelatedCellCard
+          sampleId={record.sample_id}
+          sampleName={record.sample_name}
+          samples={allSamples.data ?? []}
+          record={record}
+          onSaveConditions={async (body) => {
+            await api.updateSpectrum(record.id, body)
+            bumpReload((value) => !value)
+          }}
+          onPick={async (picked) => {
+            // 빈 값은 떼어내기다 -- `sample_id: null` 은 "안 보냄" 과 구별되지
+            // 않아 서버가 clear 를 따로 받는다.
+            await api.updateSpectrum(record.id, picked
+              ? { sample_id: picked }
+              : { clear: ['sample_id'] })
+            bumpReload((value) => !value)
+          }}
+        />
+      </div>
+
       {/* 절차서의 마지막 단계가 "Copy to clipboard → 엑셀 → Origin" 이다. */}
       <div style={{ marginBottom: 12 }}>
         <CopyBar
@@ -337,21 +358,6 @@ export function SpectrumDetail() {
             ]}
           />
         </Card>
-      </div>
-      <div style={{ marginTop: 14 }}>
-        <RelatedCellCard
-          sampleId={record.sample_id}
-          sampleName={record.sample_name}
-          samples={allSamples.data ?? []}
-          onPick={async (picked) => {
-            // 빈 값은 떼어내기다 -- `sample_id: null` 은 "안 보냄" 과 구별되지
-            // 않아 서버가 clear 를 따로 받는다.
-            await api.updateSpectrum(record.id, picked
-              ? { sample_id: picked }
-              : { clear: ['sample_id'] })
-            bumpReload((value) => !value)
-          }}
-        />
       </div>
       <div style={{ marginTop: 14 }}>
         <OtherMeasurements sampleId={record.sample_id}

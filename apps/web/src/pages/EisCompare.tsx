@@ -65,14 +65,12 @@ export function EisCompare() {
   const inGroup = group.includes
   const rows = useMemo(() => {
     const needle = search.trim().toLowerCase()
-    const byId = new Map((samples.data ?? []).map((s) => [s.id, s]))
     return (spectra.data ?? []).filter((item) => {
       if (purpose && (item.purpose ?? '') !== purpose) return false
       if (sampleId !== null && item.sample_id !== sampleId) return false
-      if (group.effective !== null) {
-        const cell = item.sample_id === null ? undefined : byId.get(item.sample_id)
-        if (!cell || !inGroup(cell.group_id)) return false
-      }
+      // 그룹은 이제 **측정 자신의 것**이 먼저다 (ADR 0027) -- 셀에 안 붙은
+      // 측정도 묶일 수 있고, `*_effective` 가 "자기 것 → 셀 것" 을 이미 편다.
+      if (!inGroup(item.group_id_effective ?? null)) return false
       return !needle
         || item.name.toLowerCase().includes(needle)
         || (item.sample_name ?? '').toLowerCase().includes(needle)
