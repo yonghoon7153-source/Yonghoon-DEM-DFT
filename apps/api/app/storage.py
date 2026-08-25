@@ -85,6 +85,22 @@ def load_spectrum(spectrum_id: int):
                     columns=columns)
 
 
+def load_gitt(sha256: str) -> WrdFile | None:
+    """A GITT record, re-read from its immutable original.
+
+    No parse cache, unlike cycling.  The cycling cache exists because a profile
+    request needs a few columns out of a 20 MB file and there are dozens of
+    such requests per screen; a GITT screen asks twice, for the whole record,
+    and a second copy of the same numbers is a second thing to keep in step
+    with the original.  If this turns out slow on a real file, the cache goes
+    in then -- with a reason.
+    """
+    try:
+        return reparse(sha256)
+    except (FileNotFoundError, StorageError):
+        return None
+
+
 def drop_spectrum_cache(spectrum_id: int) -> None:
     """Remove a spectrum's parsed points.  The original upload stays (§0.2)."""
     directory = spectrum_dir(spectrum_id)

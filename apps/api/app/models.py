@@ -393,3 +393,55 @@ class SpectrumFit(SQLModel, table=True):
 
     created_at: datetime = Field(default_factory=_now)
     created_by: str = ""
+
+
+class GittRun(SQLModel, table=True):
+    """One GITT record: a ``.wrd`` full of pulses and rests.
+
+    A table of its own rather than a flag on ``Run`` (ADR 0020).  A GITT file
+    *is* a ``.wrd``, but summarising it the cycling way produces hundreds of
+    "cycles" whose capacities and efficiencies all mean nothing, and they would
+    sit in the library next to real ones with no way to tell them apart.
+    Cycling and GITT also do not meet in practice -- impedance gets measured
+    part-way through a cycling run, GITT almost never does.
+
+    The material constants live here because they belong to *this* measurement:
+    the same powder measured in two cells has two interfacial areas, and the
+    diffusion coefficient is proportional to the square of that.
+    """
+
+    __tablename__ = "gitt_run"
+
+    id: int | None = Field(default=None, primary_key=True)
+    name: str = Field(default="", index=True)
+    original_name: str = ""
+    #: Content hash of the ``.wrd``.  Duplicate uploads are the same row.
+    sha256: str = Field(default="", index=True, unique=True)
+    size_bytes: int = 0
+    uploaded_at: datetime = Field(default_factory=_now)
+
+    n_points: int = 0
+    n_pulses: int = 0
+    duration_h: float | None = None
+    start_time: datetime | None = None
+
+    # -- what the file cannot say (ADR 0020) -------------------------------
+    #: cm³/mol of the active material.
+    molar_volume_cm3: float | None = None
+    #: g/mol of the active material.
+    molar_mass_g: float | None = None
+    #: g of active material in this electrode.
+    active_mass_g: float | None = None
+    #: cm², the electrode/electrolyte interfacial area.
+    area_cm2: float | None = None
+    #: Rests shorter than this are not treated as equilibrium.  0 = keep all,
+    #: and report the drift per point instead.
+    min_rest_s: float = 0.0
+
+    parse_error: str = ""
+    #: 펄스 수에 대한 한 줄, 올릴 때 적어 둔다.  판정이 아니라 관찰이다 --
+    #: `.wrd` 에 사이클링과 GITT 를 가르는 표식은 없다.
+    pulse_note: str = ""
+    created_by: str = ""
+    updated_by: str = ""
+    updated_at: datetime = Field(default_factory=_now)

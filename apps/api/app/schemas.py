@@ -777,3 +777,90 @@ class DrtSweepOut(BaseModel):
     #: L 곡선 모서리가 가리키는 결과의 자리.  없으면 -1 이고 이유가 붙는다.
     suggested_index: int = -1
     suggested_reason: str = ""
+
+
+# --------------------------------------------------------------------------
+# GITT (ADR 0020)
+# --------------------------------------------------------------------------
+class GittRunOut(BaseModel):
+    id: int
+    name: str
+    original_name: str
+    sha256: str
+    size_bytes: int
+    uploaded_at: datetime
+    n_points: int
+    n_pulses: int
+    duration_h: float | None
+    start_time: datetime | None
+    molar_volume_cm3: float | None
+    molar_mass_g: float | None
+    active_mass_g: float | None
+    area_cm2: float | None
+    min_rest_s: float
+    parse_error: str
+    #: 펄스 수에 대한 관찰 한 줄.  비어 있으면 할 말이 없다는 뜻이다.
+    pulse_note: str = ""
+    created_by: str = ""
+    updated_by: str = ""
+    updated_at: datetime
+    #: 확산계수를 내려면 아직 무엇이 필요한가.  비어 있으면 낼 수 있다.
+    missing_for_diffusion: list[str] = []
+
+
+class GittRunUpdate(BaseModel):
+    name: str | None = None
+    molar_volume_cm3: PositiveMass | None = None
+    molar_mass_g: PositiveMass | None = None
+    active_mass_g: PositiveMass | None = None
+    area_cm2: PositiveLength | None = None
+    min_rest_s: NonNegativeMass | None = None
+    clear: list[str] = Field(default_factory=list)
+
+
+class PocvPointOut(BaseModel):
+    capacity_mah: float
+    voltage_v: float
+    #: 그 휴지가 얼마나 길었나, 그리고 끝에서도 얼마나 움직이고 있었나.
+    #: 짧은 휴지의 전압은 OCV 가 아니고, 얼마나 아닌지를 이 둘이 말한다.
+    rest_s: float
+    drift_mv: float
+
+
+class PocvOut(BaseModel):
+    gitt_id: int
+    charge: list[PocvPointOut] = []
+    discharge: list[PocvPointOut] = []
+    #: 휴지가 뒤따르지 않아 뺀 펄스 수.  조용히 버리면 잘린 파일과 정상 파일이
+    #: 곡선에서 구분되지 않는다.
+    skipped_charge: int = 0
+    skipped_discharge: int = 0
+    skipped_reasons: list[str] = []
+
+
+class DiffusionPointOut(BaseModel):
+    capacity_mah: float
+    voltage_v: float
+    #: cm²/s, 또는 낼 수 없으면 null 과 이유.
+    d_cm2_s: float | None
+    delta_es_v: float
+    delta_et_v: float
+    pulse_s: float
+    #: √t 에 대한 직선성.  Weppner-Huggins 의 가정이 곧 이것이다.
+    sqrt_t_r_squared: float
+    reason: str = ""
+
+
+class DiffusionOut(BaseModel):
+    gitt_id: int
+    points: list[DiffusionPointOut] = []
+    #: 없는 재료 상수의 이름들.  추정한 몰부피로 계산한 D 는 그 추정의
+    #: 제곱만큼 틀린다 (§0.4).
+    missing: list[str] = []
+    molar_volume_cm3: float | None = None
+    molar_mass_g: float | None = None
+    mass_g: float | None = None
+    area_cm2: float | None = None
+    #: 숫자가 나온 점의 수와 전체 점의 수.
+    usable: int = 0
+    total: int = 0

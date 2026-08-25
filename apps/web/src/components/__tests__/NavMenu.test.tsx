@@ -17,9 +17,10 @@ const CYCLING: NavSection = {
   ],
 }
 
-const GITT: NavSection = {
-  label: 'GITT',
-  links: [{ to: '/gitt', label: '확산계수 · pseudo-OCV', soon: true }],
+/** 아직 화면이 없는 섹션은 이렇게 생겼다 — 숨기지 않고 눌리지 않게 둔다. */
+const SOON: NavSection = {
+  label: '준비 중인 것',
+  links: [{ to: '/later', label: '나중에', soon: true }],
 }
 
 function renderMenu(section: NavSection, at = '/dashboard') {
@@ -63,9 +64,9 @@ describe('상단 메뉴', () => {
   })
 
   it('아직 없는 화면은 눌리지 않되 보인다', async () => {
-    renderMenu(GITT, '/dashboard')
-    await userEvent.click(screen.getByRole('button', { name: 'GITT' }))
-    const item = screen.getByRole('menuitem', { name: /확산계수/ })
+    renderMenu(SOON, '/dashboard')
+    await userEvent.click(screen.getByRole('button', { name: '준비 중인 것' }))
+    const item = screen.getByRole('menuitem', { name: /나중에/ })
     expect(item).toHaveAttribute('aria-disabled', 'true')
     expect(item.tagName).not.toBe('A')
   })

@@ -9,7 +9,8 @@ import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
   Activity, ChangeNote, CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
-  Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets, Group, Meta,
+  Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
+  GittRun, Group, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Spectrum, SpectrumDetail, SpectrumFit,
   SpectrumPoints,
 } from './types'
@@ -222,6 +223,22 @@ export const api = {
       requested: number
       converged: number
     }>(`/api/eis/fit-batch${query(params)}`, json('POST', ids)),
+
+  // -- GITT (ADR 0020) ------------------------------------------------------
+  listGittRuns: (params?: Params) =>
+    request<GittRun[]>(`/api/gitt/runs${query(params)}`),
+  getGittRun: (id: number) => request<GittRun>(`/api/gitt/runs/${id}`),
+  uploadGittRun: (file: File) => {
+    const form = new FormData()
+    form.append('file', file)
+    return request<GittRun>('/api/gitt/runs/upload', { method: 'POST', body: form })
+  },
+  updateGittRun: (id: number, body: Record<string, unknown>) =>
+    request<GittRun>(`/api/gitt/runs/${id}`, json('PATCH', body)),
+  deleteGittRun: (id: number) =>
+    request<void>(`/api/gitt/runs/${id}`, { method: 'DELETE' }),
+  gittPocv: (id: number) => request<Pocv>(`/api/gitt/runs/${id}/pocv`),
+  gittDiffusion: (id: number) => request<Diffusion>(`/api/gitt/runs/${id}/diffusion`),
 
   // -- exports (URLs, so the browser downloads them directly) --------------
   /** The uploaded .wrd, byte for byte -- so the original can be fetched back

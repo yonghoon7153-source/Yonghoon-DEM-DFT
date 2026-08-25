@@ -5,6 +5,8 @@ import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
 import { Dashboard } from './pages/Dashboard'
 import { Eis } from './pages/Eis'
+import { Gitt } from './pages/Gitt'
+import { GittDetail } from './pages/GittDetail'
 import { Library } from './pages/Library'
 import { SampleDetail } from './pages/SampleDetail'
 import { SpectrumDetail } from './pages/SpectrumDetail'
@@ -34,7 +36,7 @@ const SECTIONS: NavSection[] = [
   },
   {
     label: 'GITT',
-    links: [{ to: '/gitt', label: '확산계수 · pseudo-OCV', soon: true }],
+    links: [{ to: '/gitt', label: 'pseudo-OCV · 확산계수' }],
   },
 ]
 
@@ -63,6 +65,8 @@ export function App() {
         <Route path="/compare" element={<Compare />} />
         <Route path="/eis" element={<Eis />} />
         <Route path="/eis/:id" element={<SpectrumDetail />} />
+        <Route path="/gitt" element={<Gitt />} />
+        <Route path="/gitt/:id" element={<GittDetail />} />
         <Route path="/upload" element={<Upload />} />
         <Route
           path="*"

@@ -701,3 +701,74 @@ export interface DrtSweep {
   suggested_index: number
   suggested_reason: string
 }
+
+
+// -- GITT (ADR 0020) --------------------------------------------------------
+
+export interface GittRun {
+  id: number
+  name: string
+  original_name: string
+  sha256: string
+  size_bytes: number
+  uploaded_at: string
+  n_points: number
+  n_pulses: number
+  duration_h: number | null
+  start_time: string | null
+  molar_volume_cm3: number | null
+  molar_mass_g: number | null
+  active_mass_g: number | null
+  area_cm2: number | null
+  /** 이보다 짧은 휴지는 평형으로 치지 않는다. 0 이면 전부 쓴다. */
+  min_rest_s: number
+  parse_error: string
+  /** 펄스와 휴지 길이에 대한 관찰 한 줄. 판정이 아니다. */
+  pulse_note: string
+  created_by?: string
+  updated_by?: string
+  updated_at: string
+  /** 확산계수를 내려면 아직 무엇이 필요한가. 비어 있으면 낼 수 있다. */
+  missing_for_diffusion: string[]
+}
+
+export interface PocvPoint {
+  capacity_mah: number
+  voltage_v: number
+  rest_s: number
+  /** 휴지 마지막 1/10 구간의 전압 변화. 0 에 가까울수록 평형이다. */
+  drift_mv: number
+}
+
+export interface Pocv {
+  gitt_id: number
+  charge: PocvPoint[]
+  discharge: PocvPoint[]
+  skipped_charge: number
+  skipped_discharge: number
+  skipped_reasons: string[]
+}
+
+export interface DiffusionPoint {
+  capacity_mah: number
+  voltage_v: number
+  d_cm2_s: number | null
+  delta_es_v: number
+  delta_et_v: number
+  pulse_s: number
+  /** √t 직선성 — Weppner-Huggins 의 가정이 곧 이것이다. */
+  sqrt_t_r_squared: number
+  reason: string
+}
+
+export interface Diffusion {
+  gitt_id: number
+  points: DiffusionPoint[]
+  missing: string[]
+  molar_volume_cm3: number | null
+  molar_mass_g: number | null
+  mass_g: number | null
+  area_cm2: number | null
+  usable: number
+  total: number
+}
