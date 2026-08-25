@@ -246,6 +246,12 @@ describe('스펙트럼 상세', () => {
       const supplied = extra(url, init)
       if (supplied !== undefined) return supplied
       if (path(url) === '/api/eis/circuits') return CIRCUITS
+      // DRT 패널도 같은 화면에 있다.  훑기 결과가 없으면 그 자리에서 "못
+      // 풀었습니다" 가 뜨고, 나머지는 그대로 동작해야 한다.
+      if (path(url) === '/api/eis/spectra/1/drt/sweep') {
+        return { spectrum_id: 1, results: [], suggested_index: -1,
+                 suggested_reason: '' }
+      }
       if (path(url) === '/api/eis/spectra/1/points') return POINTS
       if (path(url) === '/api/eis/spectra/1') return detail()
       return []

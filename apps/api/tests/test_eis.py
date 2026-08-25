@@ -12,6 +12,8 @@ import synthetic_eis as S
 
 
 def mpr(**overrides) -> bytes:
+    # n=1 로 만들면 아크마다 이완 시간이 정확히 하나라 DRT 의 봉우리 위치를
+    # 닫힌 값과 대조할 수 있다.  기본값은 실제에 가까운 찌그러진 아크다.
     values = {"rs": 5.0, "r1": 20.0, "q1": 1e-5, "n1": 0.9,
               "r2": 40.0, "q2": 1e-3, "n2": 0.8}
     values.update(overrides)
@@ -352,3 +354,54 @@ def test_a_missing_spectrum_in_a_batch_is_an_error_not_a_gap(client):
 def test_a_batch_refuses_nonsense_ids(client):
     assert client.get("/api/eis/points", params={"ids": "1,abc"}).status_code == 422
     assert client.get("/api/eis/points", params={"ids": " "}).status_code == 422
+
+
+# --- DRT --------------------------------------------------------------------
+#
+# 등가회로는 아크가 몇 개인지를 회로를 그린 사람이 미리 정한다.  DRT 는 정하지
+# 않으므로 두 방법이 같은 답을 내면 그 아크는 가정이 아니라 스펙트럼 안에 있다.
+
+def test_the_drt_finds_the_processes_the_file_was_built_from(client):
+    out = upload(client, kind="solid", n1=1.0, n2=1.0)
+    body = client.get(f"/api/eis/spectra/{out['id']}/drt",
+                      params={"regularisation": 1e-3}).json()
+    big = [peak for peak in body["peaks"] if peak["resistance_ohm"] > 1.0]
+    assert len(big) == 2
+    assert big[0]["frequency_hz"] > big[1]["frequency_hz"]
+    assert body["r_inf_ohm"] == pytest.approx(5.0, rel=0.1)
+
+
+def test_the_peak_areas_are_the_resistances(client):
+    out = upload(client, kind="solid", n1=1.0, n2=1.0)
+    body = client.get(f"/api/eis/spectra/{out['id']}/drt",
+                      params={"regularisation": 1e-3}).json()
+    big = sorted((peak for peak in body["peaks"] if peak["resistance_ohm"] > 1.0),
+                 key=lambda peak: -peak["frequency_hz"])
+    assert big[0]["resistance_ohm"] == pytest.approx(20.0, rel=0.15)
+    assert big[1]["resistance_ohm"] == pytest.approx(40.0, rel=0.15)
+
+
+def test_the_regularisation_is_part_of_the_answer(client):
+    """λ 가 답을 정한다.  결과에 그 값이 없으면 그림이 무엇인지 알 수 없다."""
+    out = upload(client, kind="solid")
+    body = client.get(f"/api/eis/spectra/{out['id']}/drt",
+                      params={"regularisation": 0.05}).json()
+    assert body["regularisation"] == pytest.approx(0.05)
+
+
+def test_the_sweep_shows_both_failure_modes_and_names_a_corner(client):
+    out = upload(client, kind="solid", n1=1.0, n2=1.0)
+    body = client.get(f"/api/eis/spectra/{out['id']}/drt/sweep").json()
+    lambdas = [row["regularisation"] for row in body["results"]]
+    assert len(lambdas) >= 5
+    assert lambdas == sorted(lambdas)
+    # 큰 λ 에서는 봉우리가 뭉친다 — 벌점이 일을 하고 있다는 뜻이다.
+    assert len(body["results"][-1]["peaks"]) < len(body["results"][0]["peaks"]) + 1
+    assert body["suggested_index"] >= 0
+    assert "λ=" in body["suggested_reason"]
+
+
+def test_an_impossible_regularisation_is_refused(client):
+    out = upload(client)
+    assert client.get(f"/api/eis/spectra/{out['id']}/drt",
+                      params={"regularisation": 0}).status_code == 422

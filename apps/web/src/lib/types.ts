@@ -665,3 +665,39 @@ export interface CircuitKind {
   label: string
   presets: CircuitPreset[]
 }
+
+
+export interface DrtPeak {
+  tau_s: number
+  frequency_hz: number
+  gamma_ohm: number
+  /** 봉우리 아래 넓이 — 그 과정이 감당하는 저항. */
+  resistance_ohm: number
+  tau_low_s: number
+  tau_high_s: number
+}
+
+export interface Drt {
+  spectrum_id: number
+  /** 이 답을 만든 벌점 가중치. 결과의 일부다 — λ 가 답을 정한다. */
+  regularisation: number
+  derivative_order: number
+  tau_s: number[]
+  gamma_ohm: number[]
+  r_inf_ohm: number
+  inductance_h: number | null
+  chi_squared: number
+  residual_norm: number
+  penalty_norm: number
+  peaks: DrtPeak[]
+  total_polarisation_ohm: number
+  dropped_inductive: number
+}
+
+export interface DrtSweep {
+  spectrum_id: number
+  results: Drt[]
+  /** L 곡선 모서리가 가리키는 자리. 없으면 -1 이고 이유가 붙는다. */
+  suggested_index: number
+  suggested_reason: string
+}

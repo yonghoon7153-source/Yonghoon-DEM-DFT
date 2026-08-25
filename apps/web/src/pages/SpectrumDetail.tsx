@@ -9,6 +9,7 @@
 import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
+import { DrtPanel } from '../components/DrtPanel'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -248,6 +249,10 @@ export function SpectrumDetail() {
             </div>
           )}
         </Card>
+      </div>
+
+      <div style={{ marginTop: 14 }}>
+        <DrtPanel spectrumId={record.id} />
       </div>
 
       <div className="grid cols-2" style={{ marginTop: 14 }}>

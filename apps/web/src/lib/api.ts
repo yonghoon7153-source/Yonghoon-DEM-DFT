@@ -9,8 +9,9 @@ import { noteOwnWrite } from './live'
 import { actorHeader } from './who'
 import type {
   Activity, ChangeNote, CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
-  DvdqResponse, CycleTable, DashboardRow, Facets, Group, Meta, ProfileResponse, Report,
-  Run, Sample, Spectrum, SpectrumDetail, SpectrumFit, SpectrumPoints,
+  Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets, Group, Meta,
+  ProfileResponse, Report, Run, Sample, Spectrum, SpectrumDetail, SpectrumFit,
+  SpectrumPoints,
 } from './types'
 
 export class ApiError extends Error {
@@ -210,6 +211,10 @@ export const api = {
   fitSpectrum: (id: number, params?: Params) =>
     request<SpectrumFit>(`/api/eis/spectra/${id}/fit${query(params)}`,
       { method: 'POST' }),
+  spectrumDrt: (id: number, params?: Params) =>
+    request<Drt>(`/api/eis/spectra/${id}/drt${query(params)}`),
+  spectrumDrtSweep: (id: number, params?: Params) =>
+    request<DrtSweep>(`/api/eis/spectra/${id}/drt/sweep${query(params)}`),
   fitSpectra: (ids: number[], params?: Params) =>
     request<{
       fitted: SpectrumFit[]

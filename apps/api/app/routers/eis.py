@@ -36,6 +36,9 @@ from .. import storage
 from ..db import get_session
 from ..models import Sample, SpectrumFit, SpectrumRecord
 from ..schemas import (
+    DrtOut,
+    DrtPeakOut,
+    DrtSweepOut,
     SpectrumDetailOut,
     SpectrumFitOut,
     SpectrumOut,
@@ -591,3 +594,87 @@ def delete_fit(fit_id: int, session: Session = Depends(get_session)):
         raise HTTPException(404, f"fit {fit_id} not found")
     session.delete(fit)
     session.commit()
+
+
+# --------------------------------------------------------------------------
+# DRT
+# --------------------------------------------------------------------------
+def _drt_out(spectrum_id: int, result) -> DrtOut:
+    return DrtOut(
+        spectrum_id=spectrum_id,
+        regularisation=result.regularisation,
+        derivative_order=result.derivative_order,
+        tau_s=[float(v) for v in result.tau_s],
+        gamma_ohm=[float(v) for v in result.gamma_ohm],
+        r_inf_ohm=result.r_inf_ohm,
+        inductance_h=result.inductance_h,
+        chi_squared=result.chi_squared,
+        residual_norm=result.residual_norm,
+        penalty_norm=result.penalty_norm,
+        peaks=[DrtPeakOut(**vars(peak)) for peak in result.peaks],
+        total_polarisation_ohm=result.total_polarisation_ohm,
+        dropped_inductive=result.dropped_inductive,
+    )
+
+
+def _drt_module():
+    try:
+        from wrdkit.eis import drt as module
+    except ImportError as exc:                       # pragma: no cover
+        raise HTTPException(503, str(exc)) from exc
+    return module
+
+
+@router.get("/spectra/{spectrum_id}/drt", response_model=DrtOut)
+def spectrum_drt(spectrum_id: int,
+                 regularisation: float = Query(1e-3, gt=0),
+                 derivative_order: int = Query(1, ge=0, le=2),
+                 drop_inductive: bool = Query(True),
+                 session: Session = Depends(get_session)):
+    """이완 시간 분포 하나 — 주어진 λ 에서.
+
+    저장하지 않는다.  피팅과 달리 DRT 는 같은 입력에 같은 답을 주고(볼록 문제),
+    수십 밀리초면 끝난다.  저장하면 λ 를 바꿔 볼 때마다 행이 쌓이는데, λ 를
+    바꿔 보는 것이 이 화면에서 하는 일의 전부다.
+    """
+    _get(session, spectrum_id)
+    spectrum = storage.load_spectrum(spectrum_id)
+    if spectrum is None:
+        raise HTTPException(409, "이 스펙트럼의 파싱 결과가 없습니다")
+    module = _drt_module()
+    try:
+        result = module.drt(spectrum, regularisation=regularisation,
+                            derivative_order=derivative_order,
+                            drop_inductive=drop_inductive)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
+    return _drt_out(spectrum_id, result)
+
+
+@router.get("/spectra/{spectrum_id}/drt/sweep", response_model=DrtSweepOut)
+def spectrum_drt_sweep(spectrum_id: int,
+                       derivative_order: int = Query(1, ge=0, le=2),
+                       drop_inductive: bool = Query(True),
+                       session: Session = Depends(get_session)):
+    """λ 를 여섯 자리에 걸쳐 훑고, L 곡선 모서리를 이유와 함께 짚는다.
+
+    고르는 것이 아니라 **보여 주는** 것이다 (ADR 0005 와 같은 태도): 양 끝의
+    실패 모드 -- 잡음 봉우리의 숲과 하나로 뭉친 덩어리 -- 가 함께 보여야 가운데가
+    선택으로 읽힌다.  모서리가 없으면 없다고 말한다.
+    """
+    _get(session, spectrum_id)
+    spectrum = storage.load_spectrum(spectrum_id)
+    if spectrum is None:
+        raise HTTPException(409, "이 스펙트럼의 파싱 결과가 없습니다")
+    module = _drt_module()
+    results = module.sweep(spectrum, derivative_order=derivative_order,
+                           drop_inductive=drop_inductive)
+    if not results:
+        raise HTTPException(422, "이 스펙트럼으로는 DRT 를 풀지 못했습니다")
+    index, reason = module.lcurve_corner(results)
+    return DrtSweepOut(
+        spectrum_id=spectrum_id,
+        results=[_drt_out(spectrum_id, result) for result in results],
+        suggested_index=index,
+        suggested_reason=reason,
+    )

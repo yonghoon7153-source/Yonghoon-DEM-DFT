@@ -741,3 +741,39 @@ class SpectrumUpdate(BaseModel):
     measured_at: datetime | None = None
     #: 숫자 필드를 비우려면 이름을 여기에 담는다.
     clear: list[str] = Field(default_factory=list)
+
+
+class DrtPeakOut(BaseModel):
+    tau_s: float
+    frequency_hz: float
+    gamma_ohm: float
+    #: 봉우리 아래 넓이 — 그 과정이 감당하는 저항.  DRT 를 그림이 아니라 수로
+    #: 만드는 것이 이것이다.
+    resistance_ohm: float
+    tau_low_s: float
+    tau_high_s: float
+
+
+class DrtOut(BaseModel):
+    spectrum_id: int
+    #: 이 답을 만든 벌점 가중치.  결과의 일부다 — λ 가 답을 정한다 (ADR 0005).
+    regularisation: float
+    derivative_order: int
+    tau_s: list[float]
+    gamma_ohm: list[float]
+    r_inf_ohm: float
+    inductance_h: float | None = None
+    chi_squared: float
+    residual_norm: float
+    penalty_norm: float
+    peaks: list[DrtPeakOut] = []
+    total_polarisation_ohm: float = 0.0
+    dropped_inductive: int = 0
+
+
+class DrtSweepOut(BaseModel):
+    spectrum_id: int
+    results: list[DrtOut] = []
+    #: L 곡선 모서리가 가리키는 결과의 자리.  없으면 -1 이고 이유가 붙는다.
+    suggested_index: int = -1
+    suggested_reason: str = ""
