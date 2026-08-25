@@ -6,6 +6,66 @@
     <div class="sub">조성 + 계산 타입 선택 → canonical 레시피대로 <b>QE 입력 + 러너 스크립트</b> 자동 생성</div></div>
 </div>
 
+<style>
+  .lv{display:inline-block;padding:1px 7px;border-radius:99px;font-size:.68rem;
+      font-weight:700;vertical-align:middle;margin-left:6px}
+  .lv-b{background:#d1fae5;color:#065f46}.lv-a{background:#fef3c7;color:#92400e}
+  .rule{border-left:3px solid #be123c;padding:6px 12px;margin:8px 0;
+        background:rgba(190,18,60,.04);font-size:.86rem;line-height:1.6}
+  .rule b{display:block}
+</style>
+
+{# ══ 처음 보는 사람용 + 규율 (2026-08-25) ═══════════════════════════════
+   이 페이지는 **입력을 만드는 곳**이라, 하드코딩된 규율이 여기 있어야 실제로 지켜진다.
+   아래 다섯 줄은 전부 **실측 사고에서 나온 것**이고 각각 대가를 치렀다. #}
+<div class="card" style="border-left:4px solid #7c3aed">
+  <h3 style="margin-top:0">이 페이지가 무엇인가 <span class="lv lv-b">기초</span></h3>
+  <p style="font-size:.94rem;line-height:1.65;margin:6px 0">
+    조성과 계산 종류를 고르면 <b>그 계산의 표준 설정(canonical 레시피)</b>대로
+    입력 파일과 실행 스크립트를 만들어 준다. 설정값을 매번 기억하거나 옛 폴더에서
+    복사하지 않게 하려는 것이다 — <b>복사가 규약이 갈라지는 제일 흔한 경로</b>다.
+  </p>
+  <p style="font-size:.88rem;margin:4px 0">
+    ⚠ 나오는 것은 <b>템플릿</b>이다. 구조 좌표는 db 파일에서 삽입되지만,
+    <b>파티션·의사퍼텐셜 경로는 서버마다 다르므로 제출 전에 확인</b>해야 한다.
+    실제 실행은 서버 워크플로(붙여넣기 블록)로 한다.
+  </p>
+
+  <h4 style="margin:14px 0 6px;font-size:.9rem">⛔ 어기면 결과를 못 쓰는 규율
+    <span class="lv lv-a">심화</span></h4>
+  <p style="font-size:.85rem;color:var(--muted);margin:0 0 6px">
+    아래는 전부 <b>실제로 한 번씩 사고가 난 뒤</b> 생긴 규칙이다. 괄호 안이 그 대가.</p>
+
+  <div class="rule"><b>MD 는 <code>--save_traj</code> 없이 돌리지 않는다</b>
+    궤적이 없으면 나중에 다른 잣대(MTO 등)로 다시 재는 것이 <b>원리적으로 불가</b>하다.
+    2026-07 에 12런, 2026-08 에 21런이 궤적 없이 끝났고 <b>둘 다 화면상으로는 정상 완료</b>였다.
+    (지금 18런을 다시 돌리는 중 — 이틀)</div>
+
+  <div class="rule"><b>MSD 창은 2–50 ps 고정 · D 는 자유절편</b>
+    창을 바꾸면 D 가 1.75배까지 움직인다. 창을 옮겨 좋은 값을 고르는 것은 결과가 아니다.
+    (<code>tools/convention_check.py</code> 가 여러 파일에 복사된 이 규약이 갈라졌는지 매번 본다)</div>
+
+  <div class="rule"><b>아레니우스는 600/800/1000 K 3점 — 400/500 K 는 쓰지 않는다</b>
+    저온점은 노이즈 지배다(2026-07-02 판정: 400 K 에서 b2o3&lt;modelc 물리적 역전,
+    구간 Ea 가 0.41→0.03 지그재그). 그리고 <b>한 직선으로 기술되는지 먼저 확인</b>해야 한다 —
+    b2o3 는 800 K 위에서 굽어 단일 Ea 를 철회했다(2026-08-23).</div>
+
+  <div class="rule"><b>UMA 를 Li₃N 에 쓰지 않는다</b>
+    2026-06 결정론적 편향 판정. 공식 <code>omat</code> 지원 범위 안이어도 이 금지가 우선한다.
+    UMA 원논문 부록 G 가 <b>우리 버전·우리 task 의 진공/저배위 병리</b>를 직접 지목한다.</div>
+
+  <div class="rule"><b>pw.x 와 UMA 를 같은 GPU 에서 동시에 띄우지 않는다</b>
+    VRAM 47/48 GB 점유 사례. <code>nvidia-smi</code> 로 확인하고 건다.
+    (겹쳐 돌릴 땐 OOM 을 각오하고, 우선순위 낮은 쪽을 끊는다)</div>
+
+  <p style="font-size:.82rem;color:var(--muted);margin-top:10px">
+    전문 —
+    <a href="/methods">계산 방법 Canonical</a> ·
+    <a href="/fairchem">Fair-Chem·UMA (엔진 한계·task 별 기준 DFT)</a> ·
+    <a href="/governance">판정 원장</a>
+  </p>
+</div>
+
 <div class="cmp-controls card">
   <div class="cmp-row">
     <label class="cmp-lab" for="cmp-comp">조성</label>
@@ -31,7 +91,12 @@
 </div>
 
 <div class="card" style="margin-top:16px;background:color-mix(in srgb,var(--accent) 6%,var(--card))">
-  <div style="font-size:.85rem;line-height:1.6"><b>참고:</b> 생성물은 canonical 레시피를 따른 <b>템플릿</b>이에요 — 구조(CELL_PARAMETERS/ATOMIC_POSITIONS)는 db 구조파일에서 삽입하고, 제출 전 파티션·pseudo 경로를 서버에 맞게 확인하세요. 실제 실행은 서버 워크플로(붙여넣기 블록)로.</div>
+  <div style="font-size:.85rem;line-height:1.6"><b>서버별 확인:</b>
+  <b>KISTI</b> neuron — Slurm · QOS 제출 제한(scancel 직후 재제출 금지, 카운터 지연) ·
+  pseudo <code>/scratch/x3430a02/kgy/manuscript_support/pseudo</code> ·
+  <b>kgy</b> RTX3090 (QE-GPU + uma) · <b>gabia</b> A6000 단일 GPU (동시 실행 주의).
+  실행 스크립트에는 <b>중복실행 가드(pgrep)</b>를 붙이고, 출력 grep 은 <code>grep -a</code>
+  (NUL 오염 대비).</div>
 </div>
 
 <script>

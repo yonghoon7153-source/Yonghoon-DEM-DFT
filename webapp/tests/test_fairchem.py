@@ -239,3 +239,25 @@ def test_cascade_is_readable_for_first_timers(client):
     assert 'lv-b' in body and 'lv-a' in body, "난이도 배지가 없다"
     # 심화 카드에는 '한 줄로' 요약이 붙어야 한다
     assert body.count("한 줄로:") >= 2, "심화 카드에 평문 요약이 없다"
+
+
+def test_compute_carries_hard_won_rules(client):
+    """입력을 만드는 페이지에 **규율**이 있어야 실제로 지켜진다.
+
+    ⚠ 특히 --save_traj 는 2026-07(12런) · 2026-08(21런) 두 번 빠져서 궤적이 없고,
+      둘 다 화면상으로는 정상 완료였다. 그 대가가 지금 18런 재실행이다.
+    """
+    body = client.get("/compute").data.decode()
+    assert "save_traj" in body, "궤적 저장 규율이 화면에 없다"
+    assert "2–50 ps" in body or "2-50 ps" in body, "MSD 창 규약이 없다"
+    assert ("Li₃N" in body or "Li3N" in body), "UMA-Li3N 금지가 없다"
+    assert "600/800/1000" in body, "아레니우스 3점 규약이 없다"
+    # 규율마다 **왜 생겼는지**가 붙어 있어야 한다 (근거 없는 금지는 안 지켜진다)
+    assert "사고가 난 뒤" in body or "대가" in body, "규율의 유래가 없다"
+
+
+def test_methods_page_has_no_retracted_value_as_live(client):
+    """[음성] /methods 가 철회된 값을 살아있는 것처럼 말하면 안 된다."""
+    body = client.get("/methods").data.decode()
+    if "0.199" in body:
+        assert "철회" in body, "0.199 가 있는데 철회 표시가 없다"
