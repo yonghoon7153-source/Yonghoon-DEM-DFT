@@ -3,7 +3,7 @@ title: "교차리뷰 E — SDCP wave1 게이트 수정·물리 결론 (판정 �
 date: 2026-08-25
 updated: 2026-08-25
 tags: [codex, review, sdcp, vasp, gate, wave15]
-status: 4차리뷰-반영완료-5차대기
+status: 5차리뷰-반영완료-6차대기
 confidence: high
 verificationStatus: verified
 verifiedAt: 2026-08-25
@@ -144,3 +144,27 @@ selftest: check_pin 6건(양2·음4) · provenance 5건(양1·음4) · rescue 17
 추가 봉인: pin INCAR 사후 변조(디스크 ≠ 배포 해시) 거부.
 음성 selftest: check_pin +2 (kmesh·INCAR 변조) · provenance 7건 (P0 다섯 + 기록해시
 부재 + 사후 변조). 배포본 상대 적대 재확인 5/5 닫힘.
+
+
+---
+
+## 📥 E-5차 판정 (2026-08-25) — "보류 · P0-1·4 닫힘, P0-3·5 재현 4건"
+
+**같은 실수를 두 번 했다**: E-2차에서 지적받았던 "번들에만 있고 배포본에 없는
+검사" 를 새 스위트(음성 9건)에서 반복했다. 이번에 구조적으로 고쳤다 —
+**check_pin·provenance 스위트를 배포본 selftest_k 로 이사**하고 번들 쪽 사본을
+삭제, 번들 selftest 는 배포본을 실행해 존재(라벨 개수)와 통과(rc=0)만 검사한다.
+사본이 없으니 다시는 갈라질 수 없다. 배포본 selftest 30 → **51건**.
+
+**재현 4건 반영 (v5, zip sha256 dbf4a64a…):**
+
+| 재현 | 봉인 |
+|---|---|
+| `["hello"]` 가 증거로 통과 | 양성 패턴 필수 (charg + read/from…file) — 부정 마커 배제만으로는 부족했다 |
+| 문자열 `"NOT_FOUND"` 통과 | **타입 검사** — 문자열을 순회하면 한 글자짜리 '증거' 가 생긴다. list[str] 강제 |
+| static/INCAR 디스크 부재 통과 | '있으면 대조' 폐기 — 배포 파일 8종(phase KPOINTS 포함)은 **존재 자체가 필수** + 해시 일치 |
+| `preflight_problems=["bad"]` 통과 | 판정기가 그 필드를 아예 안 봤다 — `== []` 강제 (부재·위조·비어있지 않음 전부 거부) |
+
+부수: 증거 패턴이 `from file` 인접을 강제해 실제 형("from CHGCAR file")을
+놓치던 것을 runner·판정기 **양쪽 동일 패턴**으로 정렬 (배포본 양성 fixture 가 잡았다).
+빌더 MANIFEST_RESCUE 에 phase KPOINTS 2종 추가 (7 → 9 파일).
