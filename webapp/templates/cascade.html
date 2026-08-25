@@ -196,6 +196,59 @@
     </p>
   </div>
 
+  {# ══ 우리 파이프라인이 놓친 세 단계 (2026-08-25) ═══════════════════════
+     출처는 DEM 축 문헌(양수영 세미나), 적용 대상은 이 DFT 축 cascade.
+     화학은 안 겹치고 **절차만** 이전한다. 근거: kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md #}
+  <div class="card" style="border-left:4px solid #0284c7">
+    <h3>🔍 우리가 안 한 세 단계 <span class="muted" style="font-weight:400;font-size:.8rem">
+      — 같은 문제를 먼저 푼 사례에서 절차만 이전</span></h3>
+    <p style="font-size:.9rem;margin:6px 0">
+      비교 대상은 <b>양수영(BML) 방사형 NCM 미세구조 ML</b>. <b>화학은 하나도 안 겹친다</b>
+      (액체계 NCM 입자 형상 ↔ 황화물 도핑 조성). 베낄 것은 R² 가 아니라
+      <b>그 앞의 세 단계</b>다.
+    </p>
+    <div class="tbl-scroll"><table class="data-table"><thead><tr>
+      <th>단계</th><th>저쪽</th><th>우리</th><th>지금</th></tr></thead><tbody>
+      <tr><td><b>① 설계공간</b></td>
+          <td>연속 5축 · LHS 1911점</td>
+          <td><b style="color:#be123c">차원 하나가 상수</b> — <code>concentration</code> 3,615행 전부 0.25</td>
+          <td><span class="badge warn">미착수</span> A4(비용&gt;0)</td></tr>
+      <tr><td><b>② 표본 설계</b></td>
+          <td>사람이 균등하게 깖 → 함정 회피</td>
+          <td><b style="color:#be123c">화학이 표본을 정함</b> — 후보 15~150(10배),
+              후보 수↔챔피언 r=+0.321 = best-of-N 인공물</td>
+          <td><span class="badge ok">도구 준비</span> <code>--fixed_n</code></td></tr>
+      <tr><td><b>③ 목적 상관</b></td>
+          <td>Pareto <b>전에</b> 목적쌍 산점도 → σ↔Q_CC 가 좁은 띠라 σ 는 −2.9 %,
+              독립축 Damage 만 −64.5 %</td>
+          <td><b style="color:#be123c">한 번도 안 봄</b> — 가중합으로 충돌을 뭉갬</td>
+          <td><span class="badge ok">측정함</span> ↓</td></tr>
+    </tbody></table></div>
+
+    <p style="font-size:.9rem;margin:10px 0 4px"><b>③ 실측 (2026-08-25,
+      <code>tools/doping/axis_corr_csv.py</code>)</b> — 우리 축은 저쪽과 <b>반대</b>다:</p>
+    <pre style="font-size:.8rem;margin:4px 0">공선성(|ρ|≥0.85)  0건        최대 |ρ|  0.326
+상충 1건  안정성(ΔE) ↔ |ΔV/V0|   ρ = −0.326</pre>
+    <p style="font-size:.86rem;margin:4px 0">
+      ⇒ 저쪽은 축이 붙어서 Pareto 가 할 일이 없었는데 <b>우리는 축이 거의 독립이라
+      Pareto 가 실제로 선택지를 준다.</b> 가중합으로 뭉개면 그만큼 잃는다.</p>
+
+    <p style="font-size:.9rem;margin:10px 0 4px"><b>④ 검증 — 부러워할 숫자가 아니다</b></p>
+    <p style="font-size:.86rem;margin:4px 0">
+      저쪽 <code>R² 0.99</code> 는 <b>랜덤 폴드 + 노이즈 0 인 결정론적 시뮬레이터</b>다 —
+      매끄러운 함수의 보간이라 높은 R² 는 성취가 아니라 기대값이고, <b>실험 검증은 0건</b>이다.
+      우리 <code>LODO −0.1805</code> 는 <b>처음 보는 도펀트</b>를 맞히는 훨씬 어려운 시험이다.
+      <b>0.99 와 −0.18 의 차이는 모델이 아니라 CV 설계와 라벨 노이즈다.</b></p>
+
+    <p class="muted" style="font-size:.76rem;margin-top:8px">
+      근거 —
+      <a href="/literature">litdb <code>talks/yang2026_ncm_radial_microstructure_ml</code></a> (DEM 축) ·
+      <code>kb/methodology/microstructure_ml_transfer_to_cascade_2026_08_25.md</code> (이전 카드) ·
+      <code>db/properties/cascade_audit_ml_validation.csv</code> (우리 CV) ·
+      <a href="/fairchem">Fair-Chem·UMA</a> (엔진 한계)
+    </p>
+  </div>
+
   <div class="card">
     <h3>축별 완성도 <span class="muted" style="font-weight:400;font-size:.8rem">파생물마다 완성도가 다르다 — 하나로 뭉뚱그리지 않는다</span></h3>
     <div class="tbl-scroll"><table class="data-table"><thead><tr>

@@ -204,3 +204,21 @@ def test_screening_page_carries_the_ranking_limit(client):
 
 if __name__ == "__main__":
     sys.exit(pytest.main([__file__, "-q"]))
+
+
+def test_cascade_carries_ml_transfer_insight(client):
+    """스크리닝 화면이 **우리가 안 한 세 단계**를 말해야 한다.
+
+    ⚠ kb 카드에만 있고 화면에 없으면 아무도 안 본다. 그리고 축을 넘나드는
+      이전이므로 **출처가 DEM 축이라는 것**이 화면에 있어야 오해가 안 생긴다.
+    """
+    body = client.get("/cascade").data.decode()
+    assert "우리가 안 한 세 단계" in body, "이전 인사이트 카드가 없다"
+    for k in ("0.25", "0.321", "0.326", "LODO"):
+        assert k in body, f"근거 수치 '{k}' 가 화면에 없다"
+    # ⛔ 화학이 안 겹친다는 경고가 반드시 같이 있어야 한다 (억지 연결 방지)
+    assert "화학은 하나도 안 겹친다" in body or "화학은 안 겹친다" in body, \
+        "축이 다르다는 경고가 없다 — 억지 연결로 읽힌다"
+    # 관계형 — 근거 문서들로 가는 길
+    for link in ("/literature", "/fairchem", "microstructure_ml_transfer_to_cascade"):
+        assert link in body, f"근거 링크 '{link}' 가 없다"
