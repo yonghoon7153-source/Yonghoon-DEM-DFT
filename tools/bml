@@ -3057,6 +3057,9 @@ cmd_share_key() {
         say "터널 키  ${B}${key}${OFF}   ${DIM}(.bml/env)${OFF}"
         say "  ${DIM}이 키의 공개키를 localhost.run 계정에 올려 두어야 합니다:${OFF}"
         say "    ${GREEN}cat ${key}.pub${OFF}  ${DIM}→ https://admin.localhost.run/${OFF}"
+        say "  ${DIM}그 사이트가 이 망에서 안 열리면 (랩 망이 그 도메인을 통째로 끊습니다)${OFF}"
+        say "  ${DIM}휴대폰 테더링으로 잠깐 바꿔서 하세요 — 가입은 한 번뿐이고, 그 뒤로는${OFF}"
+        say "  ${DIM}터널만 열면 되므로 이 망에서 그대로 됩니다.${OFF}"
       else
         say "${DIM}터널 키가 없습니다 — 주소가 열 때마다 바뀝니다 (nokey).${OFF}"
         say "  ${GREEN}ssh-keygen -t ed25519 -N \"\" -f ~/.ssh/localhost_run -C 'bml tunnel'${OFF}"
@@ -3078,6 +3081,7 @@ cmd_share_key() {
   ok "터널 키 → ${B}${key}${OFF}"
   say "  ${DIM}공개키가 localhost.run 계정에 등록돼 있어야 합니다:${OFF}"
   say "    ${GREEN}cat ${key}.pub${OFF}  ${DIM}→ https://admin.localhost.run/${OFF}"
+  say "  ${DIM}그 사이트가 안 열리면 휴대폰 테더링으로 — 가입은 한 번뿐입니다.${OFF}"
   say "  ${DIM}그다음${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
 }
 
