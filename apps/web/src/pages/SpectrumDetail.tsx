@@ -20,6 +20,7 @@ import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { inductiveCount, nyquistXy } from '../lib/eis'
+import { isHeadline, paramMeaning } from '../lib/params'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
@@ -351,6 +352,27 @@ export function SpectrumDetail() {
                 ['올린 때', dateTime(record.uploaded_at)],
               ]}
             />
+            {/* 올린 바이트 그대로 다시 받는 길.  중앙에 모아 두는 이유가
+                "각자 노트북에서 원본이 사라지지 않게" 인데, 다시 못 받으면
+                올리는 것이 편도 여행이 되고 아무도 원본을 안 맡긴다. */}
+            <div className="row" style={{ gap: 10, marginTop: 8 }}>
+              <a
+                className="tiny"
+                href={api.spectrumOriginalUrl(record.id)}
+                title={`${record.original_name} 을(를) 그대로 내려받습니다`}
+              >
+                원본 .{record.source_format || 'mpr'}
+              </a>
+              {record.settings_name ? (
+                <a
+                  className="tiny"
+                  href={api.spectrumSettingsUrl(record.id)}
+                  title={`${record.settings_name} — 파서가 모르는 설정 줄까지 그대로`}
+                >
+                  설정 .mps
+                </a>
+              ) : null}
+            </div>
           </Card>
         </div>
 
@@ -550,13 +572,20 @@ function FitReport({ fit, kind, area }: {
             <tbody>
               {fit.parameters.map((parameter) => {
                 const arc = arcs.get(parameter.name)
+                // 서버의 아크 이름이 먼저다 — 그 저항이 이 셀에서 무엇인지는
+                // 셀 구성에 달렸고 그것은 서버가 안다.  없을 때만 회로 원소의
+                // 일반적인 뜻으로 받는다.
+                const meaning = arc?.label ?? paramMeaning(parameter.name)
+                // 보고서에 옮겨 적는 값만 굵게.  전부 굵으면 아무것도 굵지 않다.
+                const headline = isHeadline(parameter.name) && parameter.determined
                 return (
                   <tr key={parameter.name}>
                     <td className="text mono">{parameter.name}</td>
                     <td className="text dim" title={arc?.note}>
-                      {arc?.label ?? '—'}
+                      {meaning || '—'}
                     </td>
-                    <td className={parameter.determined ? '' : 'faint'}>
+                    <td className={
+                      parameter.determined ? (headline ? 'headline' : '') : 'faint'}>
                       {/* 저항만 나눈다.  CPE 의 S·sⁿ 는 오히려 곱해야 하고 그
                           규칙이 지수 n 에 따라 달라서, 여기서 조용히 처리하면
                           틀린 수가 맞는 수와 같은 모습으로 나온다 (§0.4). */}

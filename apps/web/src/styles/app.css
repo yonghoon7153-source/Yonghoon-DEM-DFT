@@ -907,6 +907,16 @@ tbody tr:last-child td { border-bottom: none; }
    상자나 그래프가 단추에 붙어 한 덩어리로 읽혔다 -- 눌러야 하는 것과 읽어야
    하는 것 사이는 떼어 둔다. */
 .copy-bar { margin-bottom: var(--s3); }
+
+/* 보고서에 실제로 옮겨 적는 값 — 저항.  전도도·면적저항으로 바로 이어지고
+   셀끼리 비교하는 수도 이것들이다.  지수나 축전 크기는 모양을 정하는 값이지
+   옮겨 적는 값이 아니라서 여기 안 든다: 전부 강조하면 아무것도 강조가 아니다.
+
+   색만으로 말하지 않는다 — 굵기도 함께 준다 (색을 못 가르는 눈도 있다). */
+td.headline {
+  color: var(--accent);
+  font-weight: 640;
+}
 .copy-bar:last-child { margin-bottom: 0; }
 .alert.error { background: var(--neg-wash); border-color: color-mix(in srgb, var(--neg) 32%, transparent); color: var(--neg); }
 .alert.warn { background: var(--warn-wash); border-color: color-mix(in srgb, var(--warn) 32%, transparent); color: var(--warn); }
