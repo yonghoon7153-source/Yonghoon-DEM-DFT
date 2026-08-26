@@ -11,6 +11,7 @@ import { Link } from 'react-router-dom'
 
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
+import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -141,6 +142,10 @@ export function GittLibrary() {
                 {rows.map((run) => (
                   <tr key={run.id}>
                     <td className="text">
+                      {/* EIS 라이브러리와 같은 이름표 — 두 표를 나란히 놓고 보는
+                          화면이라 한쪽에만 붙으면 그것이 먼저 눈에 띈다. */}
+                      <GroupTag name={leafOf(run.group_label)} path={run.group_label} />
+                      <OwnerTag owner={run.created_by} />
                       <Link to={`/gitt/${run.id}`}>{run.name}</Link>
                       {run.pulse_note ? (
                         <span className="tiny warn" title={run.pulse_note}> !</span>

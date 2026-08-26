@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 
 import { GroupFilterFields, useGroupChoice } from '../components/GroupFilter'
 import { DeleteMeasurementButton, RelatedCellSelect } from '../components/RelatedCell'
+import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num } from '../lib/format'
@@ -198,6 +199,11 @@ export function EisLibrary() {
                 {shown.map((item) => (
                   <tr key={item.id}>
                     <td className="text">
+                      {/* 그룹과 올린 사람을 이름 앞에 — 대시보드와 같은 모양이다.
+                          `group_label` 은 이미 "부모 · 자식" 한 줄이라 잎만
+                          칩에 적고 전체 길은 마우스로 돌린다. */}
+                      <GroupTag name={leafOf(item.group_label)} path={item.group_label} />
+                      <OwnerTag owner={item.created_by} />
                       <Link to={`/eis/${item.id}`}>{item.name}</Link>
                       {isScan(item) ? (
                         // 스캔의 한 줄에서 그 스캔 전체로 가는 길.  이것이

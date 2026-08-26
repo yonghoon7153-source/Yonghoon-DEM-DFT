@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
+import { GroupTag, OwnerTag } from '../components/RowTags'
 import { DeleteMeasurementButton } from '../components/RelatedCell'
 import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -94,17 +95,9 @@ export function GittDashboard() {
                           같은 모양이다.  열로 따로 두면 이름과 "누구의 어느
                           묶음인가" 가 표 폭만큼 떨어져, 한 줄을 읽는 데 눈이
                           세 번 움직인다. */}
-                      {row.group_name ? (
-                        <span className="group-tag"
-                              title={`그룹: ${groupPath(row.group_name, row.group_parent_name)}`}>
-                          {row.group_name}
-                        </span>
-                      ) : null}
-                      {row.owner ? (
-                        <span className="owner-tag" title={`올린 사람: ${row.owner}`}>
-                          {row.owner}
-                        </span>
-                      ) : null}
+                      <GroupTag name={row.group_name}
+                                path={groupPath(row.group_name, row.group_parent_name)} />
+                      <OwnerTag owner={row.owner} />
                       {/* 이름이 곧 그 측정으로 가는 길이다 -- 셀 이름만으로는
                           어느 측정인지 모른다 (파일 이름에 조건이 적혀 있다). */}
                       {row.gitt_id
