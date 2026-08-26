@@ -2556,11 +2556,16 @@ EOF
 #: 살아 있는 것은 다릅니다 -- 휴대폰으로 열어 봐야 압니다" 까지가 끝이었다.
 #: 사람에게 다른 기계를 꺼내라고 하기 전에, 여기서 알 수 있는 것은 여기서 안다.
 tunnel_probe_by_ip() {
-  local url="$1" ip="$2" host port
+  local url="$1" ip="$2" host port out
   host="$(url_host "$url")" || { printf '000'; return; }
   case "$url" in https://*) port=443 ;; *) port=80 ;; esac
-  curl -sS -o /dev/null -m 12 --resolve "${host}:${port}:${ip}" \
-    -w '%{http_code}' "$url/api/health" 2>/dev/null || printf '000'
+  # **curl 은 실패해도 `-w` 를 이미 찍는다** (`000`).  그 뒤에 `|| printf '000'`
+  # 을 붙여 뒀더니 둘이 이어져 화면에 `HTTP 000000` 이 나왔다 (실측).  숫자만
+  # 남기고 뒤 세 자리를 쓴다 — 코드가 세 자리라는 것이 이 값의 전부다.
+  out="$(curl -sS -o /dev/null -m 12 --resolve "${host}:${port}:${ip}" \
+         -w '%{http_code}' "$url/api/health" 2>/dev/null)"
+  out="$(printf '%s' "$out" | tr -dc '0-9' | tail -c 3)"
+  printf '%s' "${out:-000}"
 }
 
 #: 이름을 건너뛰고 **IP 로 직접** 터널을 확인한다.  받은 코드를 찍는다.
@@ -2802,7 +2807,18 @@ server_unreachable_help() {
       # 반복하게 된다 (랩 망이 터널 도메인을 거르는 일은 흔하다).
       local uhost=""
       uhost="$(url_host "$url" 2>/dev/null)" || uhost=""
-      if [ -n "$uhost" ] && command -v getent >/dev/null 2>&1 \
+      # **curl 이 방금 한 말과 어긋나면 curl 을 믿는다.**  실측: `getent` 는
+      # 못 찾는데 curl 은 `SSL_ERROR_SYSCALL ...:443` 을 냈다 — 이름은 (가로챈
+      # 답으로) 풀렸고 TLS 에서 끊긴 것이다.  그 화면에 대고 "이름 자체를 못
+      # 찾았습니다" 라고 하면, 바로 위에 찍힌 curl 의 말과 정반대가 된다.
+      local seen_layer=""
+      [ -n "$uhost" ] && seen_layer="$(tunnel_block_layer "$url")"
+      if [ "$seen_layer" = "tls" ] || [ "$seen_layer" = "tcp" ]; then
+        say "  ${B}이름은 풀렸는데 그 뒤에서 끊깁니다${OFF} ${DIM}($(block_layer_meaning "$seen_layer"))${OFF}"
+        say "  ${DIM}이 망의 장비가 도메인을 보고 끊는 신호입니다 — 이름을 IP 로 바꿔 줘도${OFF}"
+        say "  ${DIM}같은 이름으로 TLS 를 걸기 때문에${OFF} ${GREEN}bmlonly${OFF} ${DIM}도 안 됩니다.${OFF}"
+        say "  ${DIM}같은 랩 안이면${OFF} ${GREEN}bmlin${OFF}${DIM}, 밖에서 봐야 하면 우리 도메인이 답입니다 (ADR 0034).${OFF}"
+      elif [ -n "$uhost" ] && command -v getent >/dev/null 2>&1 \
          && ! getent hosts "$uhost" >/dev/null 2>&1; then
         say "  ${B}이름 자체를 못 찾았습니다.${OFF} ${DIM}공용 DNS 에 직접 물어봅니다 (이 기계의 DNS 를 건너뜁니다)...${OFF}"
         case "$(dns_public_state "$uhost")" in

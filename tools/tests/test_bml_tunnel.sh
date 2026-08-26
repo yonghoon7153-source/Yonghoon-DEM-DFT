@@ -681,6 +681,24 @@ check "휴대폰 갈래도 남긴다" \
   "$(grep -c '휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다' "$HERE/../bml")" "2"
 
 echo
+echo "화면이 curl 과 반대를 말하지 않는다"
+BC="$HERE/../bml"
+# 실측: curl 이 `SSL_ERROR_SYSCALL ...:443` 을 찍은 바로 아래에 화면이 "이름
+# 자체를 못 찾았습니다" 라고 했다.  이름은 (가로챈 답으로) 풀렸고 TLS 에서
+# 끊긴 것인데, 두 줄이 정반대를 말하면 사람은 어느 쪽도 못 믿는다.
+check "curl 이 본 층을 먼저 본다" \
+  "$(grep -c 'seen_layer="\$(tunnel_block_layer' "$BC")" "1"
+check "그때 bmlonly 도 안 된다고 말한다" \
+  "$(grep -c '도 안 됩니다' "$BC")" "1"
+# curl 은 실패해도 -w 를 이미 찍는다.  뒤에 `|| printf '000'` 을 붙이면 둘이
+# 이어져 `HTTP 000000` 이 된다 — 화면에 실제로 그렇게 나왔다.
+PB="$(awk '/^tunnel_probe_by_ip\(\) \{/,/^\}/' "$BC")"
+# 주석에 그 모양이 적혀 있으므로(왜 안 되는지 설명한다) 실행되는 줄만 본다.
+check "코드를 두 번 찍지 않는다" \
+  "$(printf '%s' "$PB" | grep -v '^ *#' | grep -c "curl.*|| printf '000'")" "0"
+check "세 자리로 자른다"          "$(printf '%s' "$PB" | grep -c "tail -c 3")" "1"
+
+echo
 echo "막다른 골목을 만들지 않는다"
 SHN="$(awk '/^cmd_share\(\) \{/,/^\}/' "$HERE/../bml")"
 # 실측 2026-08-26: 고정 주소를 설정해 뒀는데 그 길이 막힌 망에서 `bml share` 가
