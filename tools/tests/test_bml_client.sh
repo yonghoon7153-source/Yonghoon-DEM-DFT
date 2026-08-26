@@ -1133,6 +1133,24 @@ check "명령이 연결돼 있다"       "$(grep -c '^    reparse|재파싱)' "$
 # 숫자를 보는 상태가 이 저장소에서 제일 조용한 고장이다.
 check "도움말에 있다" \
   "$(awk 'NR > 1 { if ($0 !~ /^#/) exit; sub(/^# ?/, ""); print }' "$BML" | grep -c '^  bml reparse')" "1"
+# 바깥에 열려 있으면 문이 서 있다 (ADR 0014).  `/api/health` 만 문 밖이라
+# **서버가 살아 있는 것과 이 POST 가 들어갈 수 있는 것은 다른 일**이다.
+# 실측: server_alive 는 통과했는데 {"detail":"암호가 필요합니다."} 로 끝났다.
+check "문이 있으면 먼저 들어간다"  "$(printf '%s' "$RE" | grep -c 'gate_jar')" "1"
+# 쿠키 값을 셸에서 흉내 내면(gate.py 의 HMAC) 저쪽이 계산을 바꾸는 날 조용히
+# 401 이 되고, 증상은 이쪽에 뜨는데 원인은 저쪽에 있다.
+GJ="$(awk '/^gate_jar\(\) \{/,/^\}/' "$BML")"
+check "진짜 문으로 들어간다"      "$(printf '%s' "$GJ" | grep -c '__login')" "1"
+check "HMAC 을 흉내 내지 않는다"  "$(printf '%s' "$GJ" | grep -c 'hmac\|sha256')" "0"
+check "303 이 아니면 실패다"      "$(printf '%s' "$GJ" | grep -c '"303"')" "1"
+# 이 쿠키는 암호와 같은 값이다.  저장소 폴더(.bml/)에 남기지 않는다.
+check "쿠키를 저장소에 안 남긴다" "$(printf '%s' "$GJ" | grep -c 'RUN_DIR')" "0"
+check "쓰고 나서 지운다"          "$(printf '%s' "$RE" | grep -c 'rm -f "$jar"')" "2"
+# 401 을 "뜻 모를 답" 으로 뭉뚱그리면 고칠 방법이 안 보인다.  갈래가 둘이다:
+# 암호가 **틀린** 것(문에서 303 이 안 나옴)과 아예 **안 적힌** 것(POST 가 401).
+# 둘 다 같은 곳으로 안내한다.
+check "고칠 방법을 두 갈래 다"    "$(printf '%s' "$RE" | grep -c 'bml password')" "2"
+check "암호 401 을 알아본다"      "$(printf '%s' "$RE" | grep -c '\*암호\*)')" "1"
 
 # 별칭 + 자기 갱신 재실행에서 인자가 밀리지 않는가.
 #
