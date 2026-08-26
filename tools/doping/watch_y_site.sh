@@ -12,7 +12,8 @@
 #
 # 사용:
 #   watch -n 30 'bash tools/doping/watch_y_site.sh'
-#   bash tools/doping/watch_y_site.sh          # 1회
+#   OUT=… LOG=… NEXP=12 bash tools/doping/watch_y_site.sh     # 다른 이완 런
+#   DFT=~/work/runs/y_dft bash tools/doping/watch_y_site.sh   # DFT 칸 켜기
 set +e
 set +H
 
@@ -82,6 +83,51 @@ else:
 PY
 done
 [ "$FOUND" = 0 ] && echo "  · 아직 없음 (이완이 끝난 뒤 hull 블록을 돌린다 · MP_API_KEY 필요)"
+
+# ── 5-1. Y DFT 대조 (dft_decomp_check) ────────────────────────────────────
+#   DFT= 로 작업 디렉터리를 주면 이 칸이 켜진다. 안 주면 통째로 빠진다.
+if [ -n "${DFT:-}" ] && [ -d "$DFT" ]; then
+  echo "── Y DFT 대조 ($DFT) ──"
+  DPID=$(pgrep -f "[r]un_y_dft.sh" | head -1)
+  if [ -n "$DPID" ]; then
+    echo "  ✅ 실행중 PID=$DPID  경과 $(ps -o etime= -p "$DPID" 2>/dev/null | tr -d ' ')"
+  else
+    echo "  ·  runner 없음"
+  fi
+  NDONE=0; NTOT=0
+  for n in LiCl Li2S LiYS2 Li3PO4 Li3PS4 sc_Li_24g_perm00 sc_P_4b_perm03; do
+    [ -f "$DFT/in/$n.in" ] || continue
+    NTOT=$((NTOT+1))
+    O="$DFT/$n.out"
+    if grep -aq "JOB DONE" "$O" 2>/dev/null; then
+      NDONE=$((NDONE+1))
+      E=$(grep -a "^!" "$O" | tail -1 | awk '{print $5}')
+      printf "    ✓ %-20s E = %s Ry\n" "$n" "${E:-?}"
+    elif [ -f "$O" ]; then
+      # 진행중 — SCF 반복 횟수로 어디쯤인지
+      IT=$(grep -ac "iteration #" "$O" 2>/dev/null)
+      LE=$(grep -a "total energy" "$O" | tail -1 | awk '{print $4}')
+      printf "    ▶ %-20s scf 반복 %s · 최근 E %s\n" "$n" "${IT:-0}" "${LE:-…}"
+    else
+      printf "    ·  %-20s 대기\n" "$n"
+    fi
+  done
+  echo "    합계 $NDONE/$NTOT"
+  [ "$NDONE" = "$NTOT" ] && [ "$NTOT" -gt 0 ] && \
+    echo "    ★ 전부 끝 — python3 tools/doping/dft_decomp_check.py --collect --out $DFT"
+  if [ -f "$DFT/decomp_result.json" ]; then
+    python3 - "$DFT/decomp_result.json" <<'PY' 2>/dev/null
+import json, sys
+d = json.load(open(sys.argv[1]))
+tg = d.get("targets") or {}
+if tg:
+    print("  ── ΔE_decomp (클수록 안정) ──")
+    for k, v in sorted(tg.items(), key=lambda x: -x[1]["delta_E_decomp_eV_per_atom"]):
+        print(f"    {k:<24}{v['delta_E_decomp_eV_per_atom']*1000:+9.1f} meV/atom")
+    print("  ⛔ E_above_hull 이 아니다 — 5상 공통기저 안의 비교다")
+PY
+  fi
+fi
 
 # ── 6. GPU 와 **기존 런** — Y 때문에 T600 이 죽지 않았나 ──────────────────
 echo "── GPU ──"
