@@ -2,6 +2,7 @@ import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 
 import { FeedbackBell } from './components/FeedbackBell'
 import { NavMenu, type NavSection } from './components/NavMenu'
+import { UpdateBanner } from './components/UpdateBanner'
 import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
 import { Dashboard } from './pages/Dashboard'
@@ -89,6 +90,8 @@ export function App() {
         <FeedbackBell />
         <WhoAmI />
       </header>
+
+      <UpdateBanner />
 
       <Routes>
         <Route path="/" element={<Navigate to="/dashboard" replace />} />

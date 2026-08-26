@@ -106,3 +106,14 @@ def test_empty_never_opens():
     assert not gate.accepts_cookie(gate.token(""), "")
     assert not gate.accepts_password("", "")
     assert not gate.accepts_password(None, "x")
+
+
+def test_the_served_commit_stays_behind_the_door(client, locked):
+    """떠 있는 코드는 **문 안**에서만 보인다.
+
+    커밋 해시가 비밀은 아니다.  그런데 문 밖에 두는 것은 꼭 필요한 것만이어야
+    한다 — 그 줄이 한 번 넓어지면 다음에 무엇을 더 넣을지 정할 근거가 없어진다.
+    갱신 알림은 어차피 문 안에서 보는 화면의 일이다 (ADR 0014).
+    """
+    assert "served_commit" not in client.get("/api/health").json()
+    assert client.get("/api/revision").status_code == 401

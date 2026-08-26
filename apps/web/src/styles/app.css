@@ -1278,6 +1278,25 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   white-space: nowrap;
 }
 
+/* 갱신 알림 띠.  화면 맨 위 -- 아래에 두면 스크롤한 사람이 못 본다. */
+.update-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 8px 16px;
+  border-bottom: 1px solid color-mix(in srgb, var(--warn) 32%, transparent);
+  background: var(--warn-wash);
+  color: var(--warn);
+  font-size: 12.5px;
+}
+.update-banner code {
+  padding: 0 4px;
+  border-radius: 3px;
+  background: var(--surface-2);
+  font-family: var(--mono, ui-monospace, monospace);
+}
+
 /* 의견 게시판 (ADR 0033) --------------------------------------------------
    상단 막대의 단추와 그 위의 점.  점은 "내가 마지막으로 본 뒤에 뭔가 움직였나"
    하나만 말한다 — 숫자를 넣지 않는 이유는, 몇 건인지가 아니라 들어가 볼지
@@ -1293,6 +1312,19 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   background: var(--neg);
   box-shadow: 0 0 0 2px var(--surface-1);
 }
+
+/* 단축키 안내의 글쇠.  무엇을 칠지가 아니라 무엇을 누를지를 적는다. */
+kbd {
+  padding: 0 4px;
+  border: 1px solid var(--line-strong);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+  background: var(--surface-2);
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 0.92em;
+  line-height: 1.5;
+}
+.dim { opacity: 0.45; }
 
 .note-card {
   padding: 9px 11px;

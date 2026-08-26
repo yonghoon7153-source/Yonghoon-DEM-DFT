@@ -105,6 +105,9 @@ function json(method: string, body: unknown): RequestInit {
 
 export const api = {
   health: () => request<{ status: string; wrdkit: string }>('/api/health'),
+  /** 데이터 판(revision)과 **떠 있는 코드**.  문 안에 있다 — `/api/health` 는
+   *  문 밖이라 꼭 필요한 것만 담는다 (ADR 0014). */
+  revision: () => request<{ revision: number; served_commit?: string }>('/api/revision'),
   meta: () => request<Meta>('/api/meta'),
 
   // -- 누가 무엇을 했는지 ----------------------------------------------------

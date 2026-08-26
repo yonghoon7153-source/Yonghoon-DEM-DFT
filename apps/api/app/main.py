@@ -54,7 +54,7 @@ from .routers import (  # noqa: E402
     samples,
 )
 from .schemas import basis_choices  # noqa: E402
-from .settings import settings  # noqa: E402
+from .settings import REPO_ROOT, settings  # noqa: E402
 
 
 @asynccontextmanager
@@ -175,6 +175,25 @@ app.include_router(changelog.router)
 app.include_router(feedback.router)
 
 
+def _served_commit() -> str:
+    """이 서버가 **어느 코드로** 떠 있는가.
+
+    `bml` 이 서버를 띄울 때 `.bml/server.head` 에 그때의 HEAD 를 적는다.  지금
+    저장소의 HEAD 를 읽지 않는 이유가 여기 있다: `bml` 이 pull 만 하고 서버를
+    다시 안 띄웠으면 둘이 다르고, **사람이 보는 화면을 정하는 것은 떠 있는
+    쪽**이다.  저장소 쪽을 읽으면 아직 안 바뀐 화면을 두고 "갱신됐습니다" 라고
+    말하게 된다.
+
+    파일이 없으면 빈 문자열이다 (`make serve` 로 직접 띄운 경우).  모르면
+    모른다고 하고, 화면은 아무 말도 안 한다 -- 없는 것을 지어내지 않는다.
+    """
+    try:
+        return (REPO_ROOT / ".bml" / "server.head").read_text(
+            encoding="utf-8").strip()[:40]
+    except OSError:
+        return ""
+
+
 @app.get("/api/health")
 def health() -> dict:
     return {
@@ -187,8 +206,15 @@ def health() -> dict:
 
 @app.get("/api/revision")
 def read_revision() -> dict:
-    """What the database is at, for anything that cannot hold a stream."""
-    return {"revision": revision.value}
+    """What the database is at, for anything that cannot hold a stream.
+
+    떠 있는 코드도 함께 낸다.  `/api/health` 가 아니라 여기인 이유: health 는
+    **문 밖**이라 (ADR 0014) 거기 담기는 것은 암호를 모르는 사람도 본다.
+    커밋 해시가 비밀은 아니지만, 문 밖에 두는 것은 꼭 필요한 것만이어야 한다 --
+    그 줄이 한 번 넓어지면 다음에 무엇을 더 넣을지 정할 근거가 없어진다.
+    갱신 알림은 어차피 문 안에서 보는 화면의 일이다.
+    """
+    return {"revision": revision.value, "served_commit": _served_commit()}
 
 
 @app.get("/api/events")
