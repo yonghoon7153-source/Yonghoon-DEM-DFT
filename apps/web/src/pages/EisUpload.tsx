@@ -254,7 +254,12 @@ function Result({ result }: { result: Result }) {
   return (
     <div className="col" style={{ gap: 4 }}>
       <div className="row" style={{ gap: 8 }}>
-        <strong>{item.original_name || item.name}</strong>
+        {/* 올린 직후가 상세를 볼 가장 좋은 때다 — 방금 무엇을 올렸는지 아는
+            것이 지금뿐이고, 라이브러리로 돌아가 이름으로 다시 찾으면 같은
+            파일이 여러 개일 때 어느 것이 방금 것인지 모른다. */}
+        <strong>
+          <Link to={`/eis/${item.id}`}>{item.original_name || item.name}</Link>
+        </strong>
         <span className="badge finished">읽음</span>
         {/* 같은 바이트를 다시 올린 것은 새 행이 아니다.  조용히 넘어가면
             "올렸는데 개수가 안 늘었다" 가 된다. */}

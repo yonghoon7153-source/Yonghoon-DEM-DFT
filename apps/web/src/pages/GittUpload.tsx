@@ -200,7 +200,10 @@ function Result({ result }: { result: Result }) {
   return (
     <div className="col" style={{ gap: 4 }}>
       <div className="row" style={{ gap: 8 }}>
-        <strong>{run.original_name || run.name}</strong>
+        {/* EIS 업로드와 같은 이유로 이름이 곧 그 측정으로 가는 길이다. */}
+        <strong>
+          <Link to={`/gitt/${run.id}`}>{run.original_name || run.name}</Link>
+        </strong>
         <span className="badge finished">읽음</span>
         {run.sample_name ? (
           <Link className="tiny" to={`/samples/${run.sample_id}`}>{run.sample_name}</Link>
