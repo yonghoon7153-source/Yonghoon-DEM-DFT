@@ -695,9 +695,14 @@ MTP는 **고전 퍼텐셜**이다. 전자도, 전하이동도, 밴드도, 전위
 
 ## 18. 기법 용어 미니사전
 
-- **MTP (moment tensor potential)** — 국소 원자환경을 moment tensor 기저로 전개하는 **선형** MLIP(Shapeev 2016).
-  선형이라 학습이 빠르고, **D-optimality 기반 외삽등급 γ**를 자연스럽게 정의할 수 있는 게 결정적 장점.
+- **MTP (moment tensor potential)** — 국소 원자환경을 moment tensor `M_{μ,ν}(u) = Σ_i f_{μ,ν}(|u_i|) u_i^{⊗ν}` 의
+  **텐서 축약**으로 기술하고 그 스칼라 기저 `B_α` 의 **선형결합**으로 자리에너지를 쓰는 MLIP
+  (**Shapeev 2016**, `papers/shapeev2016_moment_tensor_potentials.md`). 선형이라 학습이 `Xc = g` 최소제곱이라 빠르고,
+  **설계행렬 `X` 가 존재하므로 그 위에 D-optimality/maxvol 을 얹을 수 있다** — 이것이 γ 의 *전제*다.
+  ⚠ **γ 자체는 Shapeev 2016 에 없다** (후속 논문 소관 — §19 N10 정정 참조).
 - **lev_max / R_cut** — 기저 복잡도와 근접 반경. 정확도↔비용의 두 손잡이. 여기선 16 / 6 Å (kim2024 대비 ~10× 비용).
+  ⚠ **`lev_max`(level) 라는 용어는 Shapeev 2016 에 없다** — MLIP 패키지(Novikov 2021) 명명이다.
+  원논문의 손잡이는 `deg(B_α) ≤ N` (+ `#α`/`μ`/`ν` 상한)이고, 오차는 기저 수에 대해 `(#A)^−0.227` 로 대수감쇠한다.
 - **passive vs active learning** — 미리 만든 훈련셋으로 한 번 학습(passive) vs **MD를 돌리며 외삽 배위만 골라
   DFT 라벨링 → 재학습**을 반복(active).
 - **γ (extrapolation grade)** — 새 배위가 훈련셋의 (선형기저 공간상) 볼록껍질에서 얼마나 벗어났는지의 척도.
@@ -825,9 +830,22 @@ MTP는 **고전 퍼텐셜**이다. 전자도, 전하이동도, 밴드도, 전위
   **아무것도 없다.** → **§19 의 SI 미확보는 우리 수집 실패가 아니라 프리프린트 자체의 결손**이다.
   (raw data 는 figshare `10.6084/m9.figshare.30272386.v1` 에 있다 — SI 대신 **원자료로 §19 항목을 채우는 경로**가 남아 있다.)
 - **N10 γ 형식론이 무인용으로 도입된다.** §2.4 에서 γ_select/γ_break 를 정의하는 문단 전체에 **참고문헌이 하나도 없다.**
-  maxvol/D-optimality 기반 active learning 의 원전인 **[39] Gubaev et al., Comput. Mater. Sci. 156 (2019) 148–156** 은
+  maxvol/D-optimality 기반 active learning 의 원전으로 흔히 지목되는 **[39] Gubaev et al., Comput. Mater. Sci. 156 (2019) 148–156** 은
   §2 서두에서 *"alloy systems"* **응용 예로만** 인용된다.
-  📌 **우리 T1 문서에서 γ 정의를 인용할 때는 이 논문이 아니라 [32] Shapeev 2016 · [39] Gubaev 2019 원전을 직접 쓸 것.**
+  🔴 **2026-08-26 정정 — 이 줄의 종전 서술("γ 정의는 [32] Shapeev 2016 · [39] Gubaev 2019 원전을 직접 쓸 것")은 틀렸다.**
+  `papers/shapeev2016_moment_tensor_potentials.md` 로 **본문을 확인한 결과**:
+  - **Shapeev 2016 에 γ(extrapolation grade)는 없다.** 전문 21 pp 전수검색 — `active learn` 0 ·
+    `maxvol` 0 · `D-optimal`/`optimality` 0 · `extrapolat` 0 · `grade` 0 · `uncertain` 0.
+    그 논문의 학습은 **완전히 passive**(DB 를 받아 `Xc = g` 한 번)다.
+  - ⚠⚠ **함정**: Shapeev 2016 에도 `γ` 기호가 나오는데 **ℓ₂ 정칙화 파라미터**다
+    (`Table 5.1`: MTP₁ **3·10⁻⁹** / MTP₂ **0**). 외삽등급과 **무관**. 두 γ 를 섞으면 T1 문서가 통째로 틀린다.
+  - **Shapeev 2016 이 정본인 범위 = γ 의 *전제*** — 선형 기저(`M_{μ,ν}` → `B_α`, Thm 3.1/3.2) +
+    설계행렬 `Xc = g`. *"UMA 는 비선형 GNN 이라 `X` 가 없어 maxvol/D-optimality 가 정의 불가"* 라는
+    우리 T1 논증의 **앞쪽 절반**은 이제 원전으로 쓸 수 있다.
+  - **γ 자체의 원전은 미확정.** 후보 = **Podryabinkin & Shapeev 2017**(Comput. Mater. Sci. **140**, 171–180,
+    arXiv 1611.09346) — ⚠ **서지만 확인, 본문 미확인**. 받아서 읽기 전에는 "2017 이 원전"이라고 쓰지 않는다.
+  📌 **현재 인용 규칙**: 기저·선형성 = **Shapeev 2016** / γ 문턱 숫자(2 · 10↔5↔2) = **아직 정본 없음**
+  (덱 `talks/lee2026_skku_mlip_materials_design.md` 슬 16 은 **citable = no**).
 
 **④ 인적·방법 계보 (N11·N13·N14)**
 

@@ -216,9 +216,15 @@ optB88-vdw로 학습한 MTP만이 AIMD·실험의 site-disorder 의존성(ordere
 - 실험 없음(순수 계산) — σExp는 전부 문헌 소환(Adeli/Jung/Deiseroth).
 
 ## 13. 기법 용어 미니사전
-- **MTP (moment tensor potential)**: 국소환경을 moment tensor 기저(레벨 lev_max로 복잡도 제어)로 전개하는 선형 MLIP — 학습 빠르고 저비용(Shapeev 2016; MLIP 패키지).
+- **MTP (moment tensor potential)**: 국소환경을 moment tensor 기저로 전개하는 **선형** MLIP — 학습 빠르고 저비용
+  (**Shapeev 2016** = 기저·선형성 원전, `papers/shapeev2016_moment_tensor_potentials.md`; **MLIP 패키지** = 실무 구현).
 - **lev_max / R_cut**: 기저 복잡도(2+4μ+ν)와 근접반경 — 정확도·비용 트레이드오프의 두 손잡이.
+  ⚠ **2026-08-26 정정**: `lev_max`(level)는 **MLIP 패키지(Novikov 2021) 용어이고 Shapeev 2016 에는 없다.**
+  원논문의 손잡이는 `deg(B_α) ≤ N`(+ `#α`/`μ`/`ν` 상한)이며, 힘 오차가 기저 수에 대해 `(#A)^−0.227` 로 대수감쇠한다
+  (⚠ 저자 명시: 이 지수는 **보편상수가 아니라 DB 의존**). 개념 계보는 이어지지만 **용어 출처는 갈라 적을 것.**
 - **passive vs active learning**: 미리 만든 훈련셋으로 한 번 학습(passive) vs MD 중 **외삽등급(γ)** 이 높은 구조만 골라 DFT 라벨링→재학습 반복(active; γ_select 초과 선별·γ_break 초과 중단).
+  ⚠ **γ 는 Shapeev 2016 에 없다** — 그 논문은 100 % passive 다(전수검색 `active learn`·`maxvol`·`extrapolat` 0회).
+  γ 문턱의 원전은 후속 논문 소관(**Podryabinkin & Shapeev 2017** 유력, ⚠ 본문 미확인).
 - **Σ5[100](021) tilt GB**: [100] 축 회전으로 만든 coincidence-site-lattice Σ5 경계, 경계면 (021); tilt=회전축이 경계면 내, twist=경계면 수직.
 - **random structure**: 6배열을 열역학 가중 개수로 27 unit cell에 무작위 배치한 대표 무질서 supercell.
 - **σ80% (χc 보정)**: σ_exp=σ_calc·χc^7.14 회귀에 χc=0.8을 넣은 "실험 결정화도 보정" 전도도 — 경험식.

@@ -354,6 +354,16 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
    **단일 시야·단일 시료**이며 우리 쪽 인용은 **"자릿수·두께 스케일이 맞다"** 수준까지만.
   ✅ **2026-08-26 종결** — Luo 2022 원논문 서지·초록 확인(*ACS Energy Lett.* **7**(9), 3064–3071, DOI `10.1021/acsenergylett.2c01543`, 제목 *"Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries"*): 초록이 **25 °C 단결정 Li₂S ≈12 nm** / **60 °C 다결정 Li₂S + disorder–order 전이**를 명시한다 ⇒ **덱의 `25 °C` / `60 °C` 라벨은 실재**이고, 우리가 한때 적었던 `80 °C` 는 우리 오독이 맞다(이미 철회). ⚠ **본문은 아직 안 봤다** — 두께 측정 방식·오차는 미확인.
 7. **LFP SOC(슬 30)** 는 학생 프로젝트 수준이고 우리 축과 무관. 인용 가치 없음.
+8. 🆕 **γ 는 이 덱의 것이지 MTP 원논문의 것이 아니다** (2026-08-26 · `papers/shapeev2016_moment_tensor_potentials.md` 본문 확인).
+   슬 16 의 `γ_select = 2` / `γ_break = 10 ↔ 5 ↔ 2` 를 인용할 때 **MTP 원전(Shapeev 2016)을 근거로 달면 안 된다** —
+   그 논문에는 `active learning`·`maxvol`·`D-optimality`·`extrapolation grade` 가 **전수검색 0회**다.
+   ⚠⚠ 더 위험한 함정: **Shapeev 2016 에도 `γ` 기호가 나오는데 ℓ₂ 정칙화 파라미터**다
+   (`Table 5.1`: MTP₁ **3·10⁻⁹** / MTP₂ **0**). 두 γ 를 섞으면 우리 T1 문서가 통째로 틀린다.
+   ⇒ γ **문턱 숫자의 정본은 아직 없다.** 확보 전까지는 **이 덱 인용(citable = no)** 이 유일한 출처이고,
+   원전 후보는 **3b′ Podryabinkin & Shapeev 2017**(⚠ 본문 미확인)이다.
+9. 🆕 **`Lev_max` 라는 말도 MTP 원논문에 없다** (같은 확인). 슬 16 의 `Lev_max = 12` 는 **MLIP 패키지(Novikov 2021) 용어**이고,
+   Shapeev 2016 의 복잡도 손잡이는 `deg(B_α) ≤ N` (+ `#α`/`μ`/`ν` 상한)이다. 개념 계보는 이어지지만 **용어 출처는 갈라 적을 것**
+   (같은 오기가 `papers/kim2024_mtp_argyrodite_disorder_gb.md` 에도 있어 함께 정정했다).
 
 ---
 
@@ -861,7 +871,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 |---|---|---|---|
 | **1** | `66. Kim2026_Argyrodite_Hydrolysis_SevenNet_Sn.pdf`<br>`66. Sup) …` | **⛔ 서지 확정 실패** — 제목 검색으로 안 나온다. 덱 표기 *"Adv. Funct. Mater. (revision)"*(2026-07). 확보 경로는 **저자 페이지**뿐: Google Scholar `Sang Uck Lee` (id `0PEgjTEAAAAJ`) → 2025–26 필터 / SKKU CMS Lab publications / SSRN 저자 페이지 | ⛔ **미확인** |
 | **2** | `lee2026_skku_program_toc.pdf` → `_transcripts/` | 심포지엄 **자료집 목차** (이상욱 섹션 pp.279–296 앞뒤 1–2 pp). 논문 아님 | ✅ |
-| **3a** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | A. V. Shapeev, **"Moment Tensor Potentials: A Class of Systematically Improvable Interatomic Potentials"**, *Multiscale Model. Simul.* **14**(3), 1153–1173 (2016) · arXiv **1512.06054** | ✅ **웹 확인** |
+| ~~**3a**~~ ✅ **완료 2026-08-26** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | A. V. Shapeev, **"Moment Tensor Potentials: A Class of Systematically Improvable Interatomic Potentials"**, *Multiscale Model. Simul.* **14**(3), 1153–1173 (2016) · arXiv **1512.06054** · DOI `10.1137/15M1054183` — **표지 대조 완료, 서지 정확**(단독저자·본문 21 pp·SI 없음·Fig 2·Table 1·refs 31). → **`papers/shapeev2016_moment_tensor_potentials.md`** | ✅ **표지 확인** |
 | **3b** | `68. Gubaev2019_Active_Learning_Alloy_MTP.pdf` | K. Gubaev, E. V. Podryabinkin, G. L. W. Hart, A. V. Shapeev, **"Accelerating high-throughput searches for new alloys with active learning of interatomic potentials"**, *Comput. Mater. Sci.* **156**, 148–156 (2019) · arXiv **1806.10567** | ✅ **웹 확인** |
 | **3b′** 🆕 | `68b. Podryabinkin2017_Active_Learning_Linearly_Parametrized.pdf` | E. V. Podryabinkin, A. V. Shapeev, **"Active learning of linearly parametrized interatomic potentials"**, *Comput. Mater. Sci.* **140**, 171–180 (2017) · arXiv **1611.09346** | ✅ **웹 확인** · 🔴 **우리 기록 정정 후보** — 아래 참조 |
 | **3c** | `69. Novikov2021_MLIP_Package.pdf` | I. S. Novikov, K. Gubaev, E. V. Podryabinkin, A. V. Shapeev, **"The MLIP package: moment tensor potentials with MPI and active learning"**, *Mach. Learn.: Sci. Technol.* **2**, 025002 (2021) · DOI `10.1088/2632-2153/abc9fe` · arXiv **2007.08555** | ✅ **웹 확인** |
@@ -879,8 +889,20 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 (*Comput. Mater. Sci.* 140, 171–180 · arXiv 1611.09346) 쪽으로 보인다. Gubaev 2019 는
 그 방법을 **합금 고속탐색에 적용**한 편이다.
 
-⚠ **아직 판정하지 않는다** — 제목·서지만 확인했고 **본문을 안 봤다**. 둘 다 받아서 읽고
-`kb/open_items.md` T1 의 γ 서술을 그때 정정한다. 지금 상태는 *"원전 지목이 흔들린다"* 까지다.
+🔴 **2026-08-26 갱신 — 절반이 판정됐다.** `67.` 을 받아 본문을 읽은 결과
+(`papers/shapeev2016_moment_tensor_potentials.md`):
+
+> **Shapeev 2016 에 γ 는 없다.** 전문 21 pp 전수검색 — `active learn` 0 · `maxvol` 0 ·
+> `D-optimal`/`optimality` 0 · `extrapolat` 0 · `grade` 0 · `uncertain` 0.
+> 그 논문의 학습은 **완전히 passive** 하다(DB 를 받아 `Xc = g` 를 한 번 푼다).
+> ⚠ 그 논문의 `γ` 는 **ℓ₂ 정칙화 파라미터**(`Table 5.1` MTP₁ 3·10⁻⁹ / MTP₂ 0) — 외삽등급과 무관.
+
+⇒ **`kim2026_…sei_reactive_md` §19 N10 의 "γ 정의는 [32] Shapeev 2016 원전을 직접 쓸 것" 은 틀렸다** (정정 완료).
+Shapeev 2016 이 정본인 것은 **γ 의 전제**까지다 — 선형 기저(`M_{μ,ν}` → `B_α`) + 설계행렬 `Xc = g`.
+
+⚠ **나머지 절반은 아직**: γ 자체의 원전이 **Podryabinkin & Shapeev 2017** 인지는 여전히 **서지만 확인**한 상태다.
+**3b′ 를 받아 읽기 전에는 "2017 이 원전" 이라고 쓰지 않는다.** 지금 쓸 수 있는 최대치는
+*"Shapeev 2016 에는 없다 → 후속 논문에서 확인 필요"* 까지다.
 
 #### 🆕 7번 — **이상욱 랩이 아닌데 우리에게 더 급할 수 있다**
 
@@ -902,7 +924,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 |---|---|---|
 | **1** | §7(슬 21–24) · §99-2(e) guided MD · §99-4 A3 | **Q4**(H₂S 정량) 종결 · **T2**(ICOHP 양성자화 기술자) 방법 원본 확보 · `air_hsab` 정성 tier 를 정량으로 교체할 수 있는지 판정 |
 | **2** | §99-5 **B1** · §99-6 **Q-T1** | 다음 발표자 이름(문장혁 ↔ STT `김장현`) 확정 · 세션 번호·발표 시각 확정 |
-| **3a·3b** | §5b(슬 16 γ_select 2 / γ_break 10↔5↔2) · §99-3 **A1** | **T1** 설계 — "γ 를 UMA 에 왜 못 옮기나"를 **원정의로** 쓸 수 있게 된다(지금은 덱 숫자만) |
+| ~~**3a**~~ ✅ · **3b** | §5b(슬 16 γ_select 2 / γ_break 10↔5↔2) · §99-3 **A1** | **3a 결과(2026-08-26)**: 🔴 **Shapeev 2016 에 γ 가 없다**(전수검색 `maxvol`·`D-optimal`·`extrapolat`·`grade` 전부 0회). 확보한 것은 **γ 의 전제** — 선형 기저 `V=Σc_α B̃_α` + 설계행렬 `Xc=g` ⇒ *"UMA 는 비선형 GNN 이라 `X` 가 없어 maxvol 이 정의 불가"* 를 **원정의로 쓸 수 있게 됐다**. **γ 문턱값 2/5/10 의 원전은 여전히 미확보** → **3b′(Podryabinkin 2017)** 로 넘어감. ⚠ 그때까지 문턱 숫자는 **덱 인용(citable=no)** 으로만 |
 | **3c** | §5b · §5c(5,400 구조) | MTP **훈련 실무**(w_e:w_f:w_s · R_cut · lev_max · 비용) 원본 |
 | **4** | §9(슬 6) · §99-1 08:02 | 강의 서사의 출발점. **"MLIP 없이는 불가능했다"** 주장의 실물 근거 |
 | **5** | §7a(슬 22) · §99-3 A1 · §99-4 **A1** | ★ **T1b 대조군** — SevenNet 은 **우리 UMA 와 같은 GNN 계열**이다. PES softening 이 **GNN 공통 성질**인지 **모델별**인지를 가르는 유일한 대조 |

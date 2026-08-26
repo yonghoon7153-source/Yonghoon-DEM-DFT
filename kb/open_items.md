@@ -866,7 +866,7 @@ digest는 `litdb/talks/`, 벤치마크 수치는 `db/properties/external_benchma
 
 | ID | 항목 | 왜 (우리 약점/기회) | 비용 | 우선 |
 |---|---|---|---|---|
-| **T1** | **UMA 외삽 대리지표 설계** (재정의 2026-07-28) | 우리 MLIP-MD는 **스냅샷 수준 외삽 판정이 전무**하다. ⚠ 이상욱 랩의 γ(=γ_select 2 / γ_break 10→5→2)는 **MTP 선형 기저 위 maxvol·D-optimality 정의라 UMA(비선형 등변 GNN)에는 정의 자체가 없다** — 숫자 이식 불가. 이식할 것은 논리뿐: ①대리지표 하나 정한다 ②**선별 문턱과 중단 문턱을 분리** ③중단 문턱을 조여 수렴 판정. 후보 대리지표: 궤적 스냅샷 UMA vs DFT 단일점 오차 분포 / 앙상블 분산 | 중 | **1** |
+| **T1** | **UMA 외삽 대리지표 설계** (재정의 2026-07-28 · **원전 확인 2026-08-26**) | 우리 MLIP-MD는 **스냅샷 수준 외삽 판정이 전무**하다. ⚠ 이상욱 랩의 γ(=γ_select 2 / γ_break 10→5→2)는 **MTP 선형 기저 위 maxvol·D-optimality 정의라 UMA(비선형 등변 GNN)에는 정의 자체가 없다** — 숫자 이식 불가. 이식할 것은 논리뿐: ①대리지표 하나 정한다 ②**선별 문턱과 중단 문턱을 분리** ③중단 문턱을 조여 수렴 판정. 후보 대리지표: 궤적 스냅샷 UMA vs DFT 단일점 오차 분포 / 앙상블 분산. 🆕 **2026-08-26 · Shapeev 2016 본문 확인** (`litdb/papers/shapeev2016_moment_tensor_potentials.md`): **⛔ 그 논문에 γ 는 없다** (전수검색 `active learn`·`maxvol`·`D-optimal`·`extrapolat`·`grade` 전부 0회 — 학습이 100 % passive). ⚠⚠ **그 논문의 `γ` 는 ℓ₂ 정칙화 파라미터**(`Table 5.1` MTP₁ 3·10⁻⁹ / MTP₂ 0) — **외삽등급과 섞으면 T1 이 통째로 틀린다**. **확보한 것 = γ 의 전제**: `V = Σ_α c_α B̃_α(u)` 는 **계수에 선형**이고 학습이 `Xc = g` 라 **설계행렬 `X` 가 존재**한다 ⇒ *"UMA 에는 `X` 가 없어 maxvol/D-optimality 가 정의 불가"* 를 **원전으로** 쓸 수 있게 됐다(전엔 덱 숫자뿐). **추가 논거**: MTP 는 기저 수 `#A` 를 42→9,300 으로 키워 힘오차를 5배 낮출 수 있는데(`Fig. 5`, `(#A)^−0.227`) **UMA 엔 그 손잡이가 없다** ⇒ 우리 신뢰 논증은 *"수렴을 보였다"* 가 못 되고 *"범위 안임을 보였다"* 여야 한다 = **T1 이 필수인 이유**. **남은 것**: γ 문턱(2 · 10↔5↔2)의 정본 — **Podryabinkin & Shapeev 2017**(CMS 140, 171–180) 유력하나 **본문 미확인**. 확보 전까지 문턱 숫자의 출처는 **덱(citable=no)** 뿐 | 중 | **1** |
 | **T7** | **3계층 스킬 로딩** (Level 1 YAML 메타 ~100토큰 신설) | 우리는 Level 2만 있다(CLAUDE.md + tools/). 매 세션 전체를 훑는 구조적 이유 | 소 | **1** |
 | **T2** | **ICOHP 기반 P–S 약화 기술자** | `air_hsab` 정성 tier를 정량으로. 그들은 양성자화 시 ICOHP −6.43 → −4.69 eV (27% 약화) | 중 | 2 |
 | **T4** | **반응좌표 기반 검증셋** | pre-mixing→reactants→TS→products 단계별 UMA vs DFT 단일점. 학습이 아니라 **검증**으로 전용 | 소 | 2 |
@@ -999,7 +999,7 @@ T1b 는 "범위 안이어도 참조 이론이 틀렸나" 를 잰다. 둘 다 있
 | ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (**17,230 Li·O 산화물** → Li₃Sc₂(PO₄)₃) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`). ⚠ 종전 표기 '17,233 Li-P-S-O'는 덱 저해상도 전사 오류 — 2026-08-03 철회 |
 | 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본. **3부작 중 유일한 공백** — Q4(H₂S 정량)+T2 가 한 번에 닫힌다 |
 | **2b** 🆕 | **자료집 목차 페이지** (이상욱 섹션 앞뒤 1–2 pp) | Q-T1(다음 발표자 이름 불일치). 비용 0 |
-| **8** 🆕 | **Shapeev 2016** MTP (Multiscale Model. Simul. 14, 1153) + **Novikov 2021** MLIP package (MLST 2, 025002) | **γ(maxvol/D-optimality) 원정의** — 지금 우리는 덱 슬 16 숫자(γ_select 2 / γ_break 10↔5↔2)만 안다. **T1 설계에 필요** |
+| ~~**8**~~ 🔶 **절반 완료 2026-08-26** | ~~**Shapeev 2016** MTP (Multiscale Model. Simul. 14, 1153)~~ ✅ **확보·정독** (`litdb/papers/shapeev2016_moment_tensor_potentials.md`) + **Novikov 2021** MLIP package (MLST 2, 025002) ⛔ 미확보 | **Shapeev 2016 에서 얻은 것 = 기저·선형성·설계행렬**(T1 논증의 앞쪽 절반). **얻지 못한 것 = γ 정의 그 자체** — 🔴 **그 논문에 γ 가 없다**(전수검색 0회). ⇒ 다음 표적은 **8b: Podryabinkin & Shapeev 2017** (Comput. Mater. Sci. **140**, 171–180, arXiv 1611.09346) + Novikov 2021 |
 | **9** 🆕 | **Merchant 2023 GNoME** (Nature 624, 80) | 강의 서사의 출발점(`[STT 08:02]` 2.2 M / 38만). 자체 digest 없이 참조로만 존재 |
 | **10** 🆕 | **Park 2024 SevenNet** (JCTC 20, 4857) | **우리 UMA 와 같은 GNN 계열** → "PES softening 이 GNN 공통인가 모델별인가" = **T1b 대조군** |
 | **11** 🆕 | **Luo 2022** ACS Energy Lett. 7, 3064–3071 | 슬 19 **실험 앵커 ~12 nm cryo-TEM** = **T3 대조군** |

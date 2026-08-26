@@ -278,7 +278,7 @@ Q&A A1 `[STT 26:50]`: 이 랩은 **MTP = 동력학 / universal potential = stati
 |---|---|---|
 | **1** | **Adv. Funct. Mater.** (가수분해 SevenNet) | 유지 — **3부작 중 유일한 공백**. Q4 + T2 가 한 번에 닫힌다 |
 | **2** 🆕 | **자료집 목차 페이지** | 신규 — Q-T1. 비용 사실상 0 |
-| **3** 🆕 | **Shapeev 2016 MTP** + **Novikov 2021 MLIP package** | 신규 — γ(maxvol/D-optimality) **원정의**. 지금 우리는 덱 숫자만 안다. **T1 설계에 필요** |
+| ~~**3**~~ 🔶 **절반 완료 2026-08-26** | ~~**Shapeev 2016 MTP**~~ ✅ 정독 (`litdb/papers/shapeev2016_moment_tensor_potentials.md`) + **Novikov 2021 MLIP package** ⛔ 미확보 | 🔴 **Shapeev 2016 에 γ 가 없다**(전수검색 `maxvol`·`D-optimal`·`extrapolat`·`grade` 0회; 그 논문의 `γ` 는 **ℓ₂ 정칙화 파라미터**). 확보한 것 = **γ 의 전제**(선형 기저 `V=Σc_α B̃_α` + 설계행렬 `Xc=g`) ⇒ "UMA 엔 `X` 가 없어 maxvol 정의 불가"를 **원전으로** 쓸 수 있다. **γ 문턱 원정의는 다음 표적 = Podryabinkin & Shapeev 2017**(CMS 140, 171, ⚠본문 미확인) |
 | **4** 🆕 | **Merchant 2023 GNoME** (Nature 624, 80) | 신규 — 강의 서사의 출발점인데 자체 digest 없음 |
 | **5** 🆕 | **Park 2024 SevenNet** (JCTC 20, 4857) | 신규 — **우리 UMA 와 같은 GNN 계열** → "softening 이 GNN 공통인가"의 **T1b 대조군** |
 | 6 🆕 | **Luo 2022** ACS Energy Lett. 7, 3064 | 신규 — 슬 19 실험 앵커(~12 nm). **T3 의 대조군** |
