@@ -1,0 +1,212 @@
+{
+ "slug": "luo2022_cryotem_li_dendrite_sulfide_interphase",
+ "dpi": 300,
+ "maxpx": 3000,
+ "generated": "2026-08-26",
+ "sources": [
+  "72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+  "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf"
+ ],
+ "figures": [
+  {
+   "key": "f1",
+   "kind": "figure",
+   "label": "1",
+   "page": 2,
+   "file": "fig_1.png",
+   "caption": "Figure 1. Impedance evolutions and Raman spectroscopy analysis for Li-LPSCl interface at various temperatures. Time-evolved impedance spectra of the cells Li|LPSCl|Li resting at (a) −20 °C, (b) 25 °C, and (c) 60 °C over 120 h. The insets show the equivalent circuit of EIS and corresponding temporal evolutions of interface resistance between Li metal and LPSCl electrolyte. Line-scanning Raman spectra of Li anode, Li-LPSCl interface and LPSCl electrolyte for the cells resting at (d) −20 °C, (e) 25 °C, and (f) 60 °C for 120 h. The inset in panel e shows the cross-section optical image of the Li-LPSCl interface. electrolytes have a narrow electrochemical window and the Li- P-S system will be reduced into Li2S and Li3P by Li metal, matching well with the reported experimental results. However, the existing studies mainly focus on determination of exact reaction products. The nanostructure of ",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    397.9
+   ],
+   "w": 2151,
+   "h": 1432,
+   "dpi": 300,
+   "src": "72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.85
+  },
+  {
+   "key": "f2",
+   "kind": "figure",
+   "label": "2",
+   "page": 3,
+   "file": "fig_2.png",
+   "caption": "Figure 2. Nanostructure of the interphase layer between a single Li dendrite and sulfide electrolyte at different temperatures. High-resolution TEM images of the formed interphase layer and their corresponding FFT patterns at (a) 25 °C and (b) 60 °C. The characteristic bright diffraction spots are from the (111) plane of Li2S. Schematics of interphase evolutions at (c) room temperature and (d) elevated temperature. and nanostructure of the interphase is the key issue to construct a stable interface. a new material. Through comparing the characteristic Raman peak with those of standard materials, it matched well with that of Li2S (Figure S2). To determine the composition of the interphase layer, Raman spectroscopy was utilized to detect the cross-sectional Li-LPSCl interface. The preparation of samples and the vacuum chamber designed for Raman measurements are illustrated in the Experimen",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    414.6
+   ],
+   "w": 2151,
+   "h": 1502,
+   "dpi": 300,
+   "src": "72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.468
+  },
+  {
+   "key": "f3",
+   "kind": "figure",
+   "label": "3",
+   "page": 4,
+   "file": "fig_3.png",
+   "caption": "Figure 3. AIMD simulations of the Li-LPSCl interface at various temperatures. (a) Li-LPSCl interface models after AIMD simulations (t = 10 ps) at 100 K and 500 K. RDF evolutions of (b, f) P−S, (c, g) Li−S, (d, h) Li−P and (e, (i) Li−Cl bonds during the simulation at (b−e) 100 K and (f−i) 500 K. The orange lines represent the RDFs of standard materials obtained from the Materials Project. The brightness can reflect the number of corresponding bonds. on the surface of the Li dendrite, and the thickness of the interphase layer at elevated temperature was obviously larger than that at room temperature (RT). decrease in crystallinity and the appearance of low-angle grain boundaries. Obvious grain boundaries and dislocations between Li2S grains can be observed in the green-dotted region, and the crystallinity of Li2S further deteriorates at these positions, as evidenced by the extended arcs in",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    424.7
+   ],
+   "w": 2151,
+   "h": 1544,
+   "dpi": 300,
+   "src": "72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.642
+  },
+  {
+   "key": "f4",
+   "kind": "figure",
+   "label": "4",
+   "page": 5,
+   "file": "fig_4.png",
+   "caption": "Figure 4. AIMD simulations of Li−artificial SEI layer−LPSCl interface at 500 K. Interface models with an artificial SEI layer of (a) Li2S, (b) LiF, (c) BN, (d) ZnO, (e) Li3PO4, and (f) Li5AlO4 after 10 ps simulations. (g) Net charge transfer of Li metal, LPSCl electrolyte, and artificial SEI layer after AIMD simulations. which display the RDF evolutions of P−S, Li−S, Li−P, and Li−Cl bonds during the simulation at 100 K and 500 K, respectively. As observed from Figure 3b,f, the brightness of P−S bonds (∼2 Å) at 500 K rapidly became weak with time, implying the accelerated break of P−S bonds at elevated temperature, while it merely had a slight reduction at 100 K. The RDF of Li−S bonds at 100 K (Figure 3c) was almost unchanged during MD. By contrast, the brightness of Li−S bonds at 500 K decayed in the first 2 ps and was gradually enhanced in the subsequent 8 ps, suggesting the break of Li",
+   "rotated_deg": 0,
+   "bbox": [
+    45.5,
+    54.4,
+    561.5,
+    414.9
+   ],
+   "w": 2151,
+   "h": 1503,
+   "dpi": 300,
+   "src": "72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.887
+  },
+  {
+   "key": "fS1",
+   "kind": "figure",
+   "label": "S1",
+   "page": 5,
+   "file": "fig_S1.png",
+   "caption": "Figure S1. Schematic diagram of the vacuum chamber designed for Raman measurements at solid electrolyte and Li metal electrode interface.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    46.6,
+    514.3,
+    260.5
+   ],
+   "w": 1793,
+   "h": 893,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.834
+  },
+  {
+   "key": "fS3",
+   "kind": "figure",
+   "label": "S3",
+   "page": 6,
+   "file": "fig_S3.png",
+   "caption": "Figure S3. TEM images of single dendrite growing at (a) 25 ℃ and (b) 60 ℃, respectively. The yellow-dotted boxes represent the regions of Figure 2a and 2b.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    26.0,
+    514.0,
+    262.5
+   ],
+   "w": 1792,
+   "h": 986,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.502
+  },
+  {
+   "key": "fS5",
+   "kind": "figure",
+   "label": "S5",
+   "page": 7,
+   "file": "fig_S5.png",
+   "caption": "Figure S5. Li-LPSCl interface models (a) at the initial state and (b) after optimization.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    70.2,
+    514.4,
+    277.3
+   ],
+   "w": 1794,
+   "h": 864,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.881
+  },
+  {
+   "key": "fS6",
+   "kind": "figure",
+   "label": "S6",
+   "page": 7,
+   "file": "fig_S6.png",
+   "caption": "Figure S6. Interface models of Li-SEI-LPSCl at the initial state with 5~6 Å thickness of artificial SEI layer.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    362.1,
+    514.3,
+    631.7
+   ],
+   "w": 1793,
+   "h": 1125,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.815
+  },
+  {
+   "key": "fS7",
+   "kind": "figure",
+   "label": "S7",
+   "page": 8,
+   "file": "fig_S7.png",
+   "caption": "Figure S7. Interface models of Li-SEI-LPSCl after structural optimization.",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    92.0,
+    501.5,
+    355.7
+   ],
+   "w": 1740,
+   "h": 1100,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.769
+  },
+  {
+   "key": "fS8",
+   "kind": "figure",
+   "label": "S8",
+   "page": 8,
+   "file": "fig_S8.png",
+   "caption": "Figure S8. Interface models of Li-Li2S-LPSCl (a) after optimization, (b) after AIMD 8",
+   "rotated_deg": 0,
+   "bbox": [
+    84.0,
+    401.5,
+    514.4,
+    746.2
+   ],
+   "w": 1794,
+   "h": 1437,
+   "dpi": 300,
+   "src": "72. Sup) Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf",
+   "blank": 0.885
+  }
+ ]
+}
