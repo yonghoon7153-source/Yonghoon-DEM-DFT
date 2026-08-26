@@ -71,10 +71,34 @@ if [ "$IS_GPU" = "1" ]; then
 fi
 # ⛔ OpenMP 를 안 묶으면 mpirun 랭크마다 스레드를 다 잡아 코어를 초과 구독한다
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
+
+# ⛔ **mpirun 을 무조건 쓰면 안 된다.** QE 가 serial 빌드면 mpirun -np N 이
+#   같은 계산을 N 번 통째로 돌리며 같은 파일에 동시에 쓴다 — 조용히 깨지거나
+#   즉시 죽는다. 빌드가 MPI 를 쓰는지 **확인하고** 정한다 (2026-08-26 kgy 실측).
+HAS_MPI=0
+if command -v ldd >/dev/null && ldd "$(command -v "$PWX")" 2>/dev/null \
+   | grep -qiE "libmpi|libmpich|libopenmpi"; then HAS_MPI=1; fi
+if [ "$HAS_MPI" = "1" ] && command -v mpirun >/dev/null && [ "$NP" -gt 1 ]; then
+  LAUNCH="mpirun -np $NP"
+  MPIKIND="MPI 빌드 · mpirun -np $NP"
+else
+  LAUNCH=""
+  if [ "$NP" -gt 1 ]; then
+    if [ "$HAS_MPI" = "0" ]; then
+      MPIKIND="⚠ **serial 빌드다** — NP=$NP 를 무시하고 단일 프로세스로 돈다"
+    else
+      MPIKIND="⚠ mpirun 이 PATH 에 없다 — 단일 프로세스로 돈다"
+    fi
+    MPIKIND="$MPIKIND (코어는 OMP_NUM_THREADS 로 쓸 것)"
+  else
+    MPIKIND="단일 프로세스 (NP=1)"
+  fi
+fi
 echo "════════ $(date '+%F %T') Y DFT 대조 ════════"
 echo "pw.x : $(command -v "$PWX")"
 echo "NP   : $NP   (OMP_NUM_THREADS=$OMP_NUM_THREADS)"
 echo "빌드 : $QEKIND"
+echo "병렬 : $MPIKIND"
 # ⛔ **바이너리 선택이 곧 장치 선택이다.** GPU 빌드인데 CUDA_VISIBLE_DEVICES 를
 #   비우면 pw.x 가 장치를 못 찾아 죽거나 조용히 이상하게 돈다. 초판이 그랬다.
 if [ "$IS_GPU" = "1" ]; then
@@ -101,7 +125,7 @@ for name in $ORDER; do
   echo ""
   echo "──▶ $name  (nat ${NAT:-?})  $(date '+%T')"
   T0=$(date +%s)
-  mpirun -np "$NP" "$PWX" -in "$IN" > "$OUT" 2>&1
+  $LAUNCH "$PWX" -in "$IN" > "$OUT" 2>&1
   RC=$?
   T1=$(date +%s)
   DT=$(( T1 - T0 ))
