@@ -66,17 +66,47 @@ def widths(cell):
             for i in range(3)], V
 
 
-def audit(cell, nat, msd):
+#: 포텐셜의 **유효 수용영역** [Å] = cutoff × 메시지패싱 층 수.
+#:   UMA-s-1p1 실측 2026-08-26: 층 4 (`mlip_committee.py info`) × cutoff 6 Å (uma2026 digest) = 24 Å.
+#:   근거: park2024_sevennet §"GNN-IPs require a broader region for communication,
+#:   reaching up to r_c multiplied by the number of message-passing steps".
+DEFAULT_RECEPTIVE_FIELD_A = 24.0
+
+
+def audit(cell, nat, msd, rf=DEFAULT_RECEPTIVE_FIELD_A):
+    """유한크기 감사 — **서로 다른 두 한계**를 각각 재고 섞지 않는다.
+
+    ① **MSD wrap** (동역학): 이온 변위가 상자를 가로지르면 늦은 시간 MSD 가 눌린다.
+       한계는 (d_min/2)².
+    ② **수용영역 겹침** (포텐셜, 2026-08-26 신설): 메시지패싱 GNN 은 cutoff 하나가 아니라
+       `cutoff × 층 수` 만큼 멀리 본다. d_min 이 그보다 작으면 **원자가 자기 주기이미지를
+       이웃으로 삼는다**.
+
+    ⛔ 둘은 다른 것이다. ①을 통과해도 ②는 못 통과할 수 있고 그 반대도 된다.
+    ⚠ ②를 **자동으로 '틀렸다' 로 읽지 마라.** 완전 주기결정에서는 이미지를 보는 것이
+      물리적으로 옳을 수도 있다. ②가 말하는 것은 *"이 셀에서는 그 가정이 검사되지 않았다"* 까지고,
+      실제 영향은 **셀을 키워 힘/에너지가 변하는지** 재야 안다 (--n 으로 만들어 비교).
+    """
     d, V = widths(cell)
     dmin = min(d)
     lim = (dmin / 2.0) ** 2
-    return {"widths_A": [round(x, 3) for x in d], "min_width_A": round(dmin, 3),
-            "volume_A3": round(V, 1), "n_atoms": nat,
-            "uncorrelated_msd_limit_A2": round(lim, 2),
-            "msd_over_limit": (round(msd / lim, 2) if msd else None),
-            "verdict": (None if not msd else
-                        ("⛔ 초과 — 이온이 상자를 가로질렀다" if msd / lim > 1 else
-                         "⚠ 경계" if msd / lim > 0.5 else "✅ 여유"))}
+    out = {"widths_A": [round(x, 3) for x in d], "min_width_A": round(dmin, 3),
+           "volume_A3": round(V, 1), "n_atoms": nat,
+           "uncorrelated_msd_limit_A2": round(lim, 2),
+           "msd_over_limit": (round(msd / lim, 2) if msd else None),
+           "verdict": (None if not msd else
+                       ("⛔ 초과 — 이온이 상자를 가로질렀다" if msd / lim > 1 else
+                        "⚠ 경계" if msd / lim > 0.5 else "✅ 여유"))}
+    if rf:
+        # 자기 이미지를 **안** 보려면 d_min > 2 × rf 여야 한다 (양쪽으로 rf 씩).
+        out["receptive_field_A"] = rf
+        out["rf_shells"] = round(rf / dmin, 2) if dmin else None
+        out["rf_verdict"] = (
+            "✅ 여유 (d_min > 2×수용영역)" if dmin > 2 * rf else
+            "⚠ 경계 (수용영역 < d_min ≤ 2×수용영역)" if dmin > rf else
+            f"🔴 원자가 자기 이미지를 본다 — 수용영역 {rf:g} Å 안에 이미지가 "
+            f"약 {out['rf_shells']}겹. **셀을 키워 힘이 변하는지 확인할 것**")
+    return out
 
 
 def min_dist(cell, at, cap=400):
@@ -259,6 +289,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("xyz", nargs="?", help="확장 xyz (Lattice= 포함)")
     ap.add_argument("--n", nargs=3, type=int, default=[3, 3, 1], metavar=("NA", "NB", "NC"))
+    ap.add_argument("--receptive_field", type=float, default=DEFAULT_RECEPTIVE_FIELD_A,
+                    help=f"포텐셜 유효 수용영역 Å (기본 {DEFAULT_RECEPTIVE_FIELD_A:g} = UMA 6×4). "
+                         f"0 이면 이 검사를 끈다")
     ap.add_argument("--msd", type=float, default=None,
                     help="실측 MSD [Å²] — 여유를 이 값에 대해 계산한다")
     ap.add_argument("--out", default=None)

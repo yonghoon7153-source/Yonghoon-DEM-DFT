@@ -118,6 +118,14 @@ def get_calc(engine, device):
     sys.exit(f"모르는 엔진: {engine}")
 
 
+#: 모델에서 못 읽었을 때만 쓰는 **문헌값**. (값, 출처) — 출처 없이 숫자만 두지 않는다.
+KNOWN_CUTOFF_A = {
+    "uma": (6.0, "litdb/papers/uma2026_family_of_universal_models_for_atoms.md "
+                 "§'공통: 6 Å cutoff' · §164 '6 Å 이내 쌍을 엣지로'"),
+    "sevennet": (5.0, "litdb/papers/park2024_sevennet_parallel_gnn_md.md — SevenNet-0 r_c = 5 Å"),
+}
+
+
 def engine_info(engine, device="cpu"):
     """엔진의 **유효 수용영역**을 알아낸다. → dict
 
@@ -177,24 +185,57 @@ def engine_info(engine, device="cpu"):
     else:
         out["notes"].append("⚠ 반복 블록 이름을 못 찾았다 — 층 수 미상(추측하지 않는다)")
 
-    # ② cutoff — 버퍼/속성 어디에 있는지 모델마다 다르다. 전부 훑는다.
+    # ② cutoff — 어디 있는지 모델마다 다르다. **전 서브모듈**을 훑는다.
+    #    (초판은 top-level 만 봐서 UMA 에서 못 찾았다 — 2026-08-26 실측)
     found = {}
+    KEYS = ("cutoff", "r_max", "rmax", "max_radius", "cutoff_radius", "radius_cutoff")
+    def _num(v):
+        try:
+            import torch
+            if isinstance(v, torch.Tensor) and v.numel() == 1:
+                return float(v)
+        except Exception:
+            pass
+        return float(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else None
     try:
         for n, b in mod.named_buffers():
-            if "cut" in n.lower() and b.numel() == 1:
-                found[n] = float(b)
+            if any(k in n.lower() for k in KEYS) and (x := _num(b)) is not None:
+                found[f"buffer:{n}"] = x
     except Exception:
         pass
-    for attr in ("cutoff", "r_max", "max_radius", "cutoff_radius"):
-        for obj, tag in ((calc, "calc"), (mod, "model")):
-            v = getattr(obj, attr, None)
-            if isinstance(v, (int, float)):
-                found[f"{tag}.{attr}"] = float(v)
-    if found:
-        out["cutoff_A"] = max(found.values())
-        out["source"]["cutoff_candidates"] = found
+    for name, sub in [("", mod)] + list(mod.named_modules()):
+        for attr in KEYS:
+            if (x := _num(getattr(sub, attr, None))) is not None:
+                found[f"{name or 'model'}.{attr}"] = x
+        # config/hparams 처럼 dict 로 들고 있는 경우
+        for cattr in ("config", "model_config", "hparams", "cfg", "backbone_config"):
+            d = getattr(sub, cattr, None)
+            if isinstance(d, dict):
+                for k, v in d.items():
+                    if any(kk in str(k).lower() for kk in KEYS) and (x := _num(v)) is not None:
+                        found[f"{name or 'model'}.{cattr}[{k}]"] = x
+    for attr in KEYS:
+        if (x := _num(getattr(calc, attr, None))) is not None:
+            found[f"calc.{attr}"] = x
+
+    # 물리적으로 말이 되는 것만 (0 < r < 20 Å). 0.0 이나 1e9 같은 잡값을 컷오프로 삼지 않는다.
+    sane = {k: v for k, v in found.items() if 0.5 < v < 20.0}
+    if sane:
+        out["cutoff_A"] = max(sane.values())
+        out["source"]["cutoff_candidates"] = sane
+        out["source"]["cutoff_source"] = "introspected"
+        if found and len(sane) < len(found):
+            out["notes"].append(f"⚠ 범위 밖 후보를 버렸다: "
+                                f"{ {k: v for k, v in found.items() if k not in sane} }")
+    elif engine in KNOWN_CUTOFF_A:
+        # ⛔ 마지막 수단. **측정한 값이 아니라 문헌값**이라는 것을 반드시 기록한다.
+        out["cutoff_A"] = KNOWN_CUTOFF_A[engine][0]
+        out["source"]["cutoff_source"] = "literature"
+        out["notes"].append(
+            f"⚠ 모델에서 cutoff 를 못 찾아 **문헌값 {KNOWN_CUTOFF_A[engine][0]} Å** 을 썼다 "
+            f"({KNOWN_CUTOFF_A[engine][1]}). **측정값이 아니다** — 체크포인트가 바뀌면 틀릴 수 있다.")
     else:
-        out["notes"].append("⚠ cutoff 를 못 찾았다 — 설정 파일에서 직접 확인할 것")
+        out["notes"].append("⚠ cutoff 를 못 찾았고 문헌값도 없다 — 설정 파일에서 직접 확인할 것")
 
     if out["cutoff_A"] and out["n_message_passing"]:
         out["effective_receptive_field_A"] = out["cutoff_A"] * out["n_message_passing"]
