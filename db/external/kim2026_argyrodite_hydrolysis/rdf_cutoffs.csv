@@ -1,0 +1,33 @@
+system,pair,source,search_rmax,n_pairs_in_search_range,r_peak,g_peak,g_min,cutoff_used,valley_lo,valley_hi,valley_width,CN_total_at_lo,CN_total_at_mid,CN_total_at_hi,cut_invariant,note
+LPSC-H2O,P-S,rdf_first_min,3.5,576,2.07,41.39,0.0,2.23,2.23,3.49,1.26,574,576,576,NO,
+LPSC-H2O,P-O,fallback,3.0,0,,,,2.1,,,,,,,,no signal in search range
+LPSC-H2O,H-O,rdf_first_min,1.6,608,0.99,134.09,0.337,1.11,1.11,1.59,0.48,574,586,608,NO,
+LPSC-H2O,H-S,rdf_first_min,1.9,19,1.37,0.82,0.0,1.51,1.51,1.83,0.32,17,17,17,YES,
+LPSC-H2O,H-Cl,fallback,2.0,4,,,,1.7,,,,,,,,peak at edge of search range
+LPSC-H2O,O-O,fallback,2.4,2,,,,1.8,,,,,,,,peak at edge of search range
+LPSC-H2O,Li-S,rdf_first_min,4.2,4417,2.41,6.72,0.487,2.99,2.99,3.57,0.58,2379,2587,2868,NO,
+LPSC-H2O,Li-O,rdf_first_min,3.6,400,1.91,4.68,0.022,2.45,2.45,3.29,0.84,307,321,341,NO,
+LPSC-H2O,H-H,fixed_documented,,0,,,,0.9,,,,,,,,H2 bond 0.741 A; H-H RDF is dominated by intramolecular H...H of H2O (1.5 A)
+LPSC-H2O,S-S,fixed_documented,,0,,,,2.4,,,,,,,,disulfide S-S 2.0-2.1 A; S-S RDF is dominated by intra-PS4 S...S (3.35 A)
+LPSC-ion,P-S,rdf_first_min,3.5,575,2.05,42.27,0.0,2.23,2.23,3.49,1.26,572,575,575,NO,
+LPSC-ion,P-O,fallback,3.0,0,,,,2.1,,,,,,,,no signal in search range
+LPSC-ion,H-O,rdf_first_min,1.6,602,0.99,130.72,0.832,1.11,1.11,1.59,0.48,555,577,602,NO,
+LPSC-ion,H-S,rdf_first_min,1.9,35,1.37,1.36,0.0,1.51,1.51,1.83,0.32,30,30,30,YES,
+LPSC-ion,H-Cl,fallback,2.0,5,,,,1.7,,,,,,,,no peak/valley contrast: g_min/g_peak=0.24 > 0.20
+LPSC-ion,O-O,fallback,2.4,6,,,,1.8,,,,,,,,peak at edge of search range
+LPSC-ion,Li-S,rdf_first_min,4.2,4279,2.47,6.46,0.433,3.07,3.07,3.57,0.5,2429,2605,2824,NO,
+LPSC-ion,Li-O,rdf_first_min,3.6,457,1.91,5.98,0.024,2.35,2.35,3.51,1.16,345,364,436,NO,
+LPSC-ion,H-H,fixed_documented,,2,,,,0.9,,,,,,,,H2 bond 0.741 A; H-H RDF is dominated by intramolecular H...H of H2O (1.5 A)
+LPSC-ion,S-S,fixed_documented,,0,,,,2.4,,,,,,,,disulfide S-S 2.0-2.1 A; S-S RDF is dominated by intra-PS4 S...S (3.35 A)
+LPSnSC-ion,P-S,rdf_first_min,3.5,432,2.07,37.99,0.0,2.23,2.23,3.49,1.26,430,431,432,NO,
+LPSnSC-ion,P-O,fallback,3.0,0,,,,2.1,,,,,,,,no signal in search range
+LPSnSC-ion,Sn-S,rdf_first_min,3.5,143,2.41,21.55,0.0,2.63,2.63,3.49,0.86,142,143,143,NO,
+LPSnSC-ion,Sn-O,fallback,3.0,0,,,,2.5,,,,,,,,no signal in search range
+LPSnSC-ion,H-O,rdf_first_min,1.6,608,0.99,137.42,0.306,1.11,1.11,1.59,0.48,566,586,607,NO,
+LPSnSC-ion,H-S,rdf_first_min,1.9,23,1.35,0.96,0.0,1.51,1.51,1.73,0.22,19,19,19,YES,
+LPSnSC-ion,H-Cl,rdf_first_min,2.0,5,1.93,0.75,0.142,1.97,1.97,1.99,0.02,4,5,5,NO,
+LPSnSC-ion,O-O,fallback,2.4,6,,,,1.8,,,,,,,,peak at edge of search range
+LPSnSC-ion,Li-S,rdf_first_min,4.2,4480,2.43,6.77,0.441,2.93,2.93,3.71,0.78,2462,2743,3147,NO,
+LPSnSC-ion,Li-O,rdf_first_min,3.6,434,1.99,4.0,0.0,2.45,2.45,3.23,0.78,328,336,357,NO,
+LPSnSC-ion,H-H,fixed_documented,,2,,,,0.9,,,,,,,,H2 bond 0.741 A; H-H RDF is dominated by intramolecular H...H of H2O (1.5 A)
+LPSnSC-ion,S-S,fixed_documented,,8,,,,2.4,,,,,,,,disulfide S-S 2.0-2.1 A; S-S RDF is dominated by intra-PS4 S...S (3.35 A)

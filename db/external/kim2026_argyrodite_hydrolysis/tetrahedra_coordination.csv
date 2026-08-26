@@ -1,0 +1,9 @@
+system,centre,CN_S,CN_O,species,count,n_centres,frac_percent
+LPSC-H2O,P,3,0,PS3,2,144,1.39
+LPSC-H2O,P,4,0,PS4,142,144,98.61
+LPSC-ion,P,3,0,PS3,4,144,2.78
+LPSC-ion,P,4,0,PS4,140,144,97.22
+LPSnSC-ion,P,3,0,PS3,2,108,1.85
+LPSnSC-ion,P,4,0,PS4,106,108,98.15
+LPSnSC-ion,Sn,3,0,SnS3,2,36,5.56
+LPSnSC-ion,Sn,4,0,SnS4,34,36,94.44
