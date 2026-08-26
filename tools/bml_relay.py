@@ -52,23 +52,36 @@ CHUNK = 64 * 1024
 TIMEOUT = 60
 
 
-def _open(host: str, ip: str, port: int) -> http.client.HTTPSConnection:
+def _open(host: str, ips: list[str], port: int) -> http.client.HTTPSConnection:
     """엣지로 가는 TLS 연결 하나 — **IP 로 붙고 이름으로 증명받는다.**
 
     `HTTPSConnection(host)` 만 쓰면 그 이름을 이 기계의 resolver 에 물어보는데,
     그 resolver 가 바로 막힌 곳이다.  그래서 소켓을 직접 열어 (IP) 붙이고,
     `server_hostname` 으로 SNI 와 인증서 검증 이름만 원래 이름으로 준다.
+
+    **IP 를 여러 개 받아 차례로 시도한다.**  터널 제공자의 엣지는 회전 풀이다 --
+    같은 이름이 실측에서 `3.208.46.244` 와 `3.234.18.192` 로 갈렸다.  하나만
+    박아 두면 그 노드가 빠질 때 502 가 되는데, 이 기계는 이름을 못 물어보므로
+    스스로 새 주소를 찾을 길이 없다.  받아 둔 것을 다 써 보는 편이 낫다.
     """
     context = ssl.create_default_context()
-    raw = socket.create_connection((ip, port), timeout=TIMEOUT)
-    try:
-        sock = context.wrap_socket(raw, server_hostname=host)
-    except Exception:
-        raw.close()
-        raise
-    conn = http.client.HTTPSConnection(host, port, timeout=TIMEOUT)
-    conn.sock = sock
-    return conn
+    last: Exception | None = None
+    for ip in ips:
+        try:
+            raw = socket.create_connection((ip, port), timeout=TIMEOUT)
+        except OSError as cause:
+            last = cause
+            continue
+        try:
+            sock = context.wrap_socket(raw, server_hostname=host)
+        except Exception as cause:                                   # noqa: BLE001
+            raw.close()
+            last = cause
+            continue
+        conn = http.client.HTTPSConnection(host, port, timeout=TIMEOUT)
+        conn.sock = sock
+        return conn
+    raise last if last is not None else OSError("붙을 IP 가 없습니다")
 
 
 class Relay(BaseHTTPRequestHandler):
@@ -100,7 +113,7 @@ class Relay(BaseHTTPRequestHandler):
         # 압축은 그대로 통과시킨다 (Content-Encoding 을 안 건드린다).
 
         try:
-            conn = _open(target.host, target.ip, target.port)
+            conn = _open(target.host, target.ips, target.port)
         except Exception as cause:                                   # noqa: BLE001
             self._fail(502, f"터널 엣지에 붙지 못했습니다: {cause}")
             return
@@ -172,16 +185,16 @@ class Relay(BaseHTTPRequestHandler):
 
 
 class Target:
-    __slots__ = ("host", "ip", "port")
+    __slots__ = ("host", "ips", "port")
 
-    def __init__(self, host: str, ip: str, port: int) -> None:
-        self.host, self.ip, self.port = host, ip, port
+    def __init__(self, host: str, ips: list[str], port: int) -> None:
+        self.host, self.ips, self.port = host, ips, port
 
 
 def check(target: Target) -> int:
     """한 번 물어보고 끝낸다 — 띄우기 전에 이 조합이 맞는지 보는 자리."""
     try:
-        conn = _open(target.host, target.ip, target.port)
+        conn = _open(target.host, target.ips, target.port)
         conn.request("GET", "/api/health", headers={"Host": target.host})
         code = conn.getresponse().status
         conn.close()
@@ -196,7 +209,8 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="터널을 이름 없이 보는 중계기")
     parser.add_argument("--listen", type=int, required=True, help="이 기계에서 열 포트")
     parser.add_argument("--host", required=True, help="터널 이름 (SNI · Host)")
-    parser.add_argument("--ip", required=True, help="그 이름의 IP")
+    parser.add_argument("--ip", required=True, action="append",
+                        help="그 이름의 IP (여러 번 줄 수 있다 — 차례로 시도한다)")
     parser.add_argument("--port", type=int, default=443, help="엣지 포트 (기본 443)")
     parser.add_argument("--check", action="store_true",
                         help="한 번 물어보고 끝낸다 (띄우지 않는다)")
@@ -211,8 +225,8 @@ def main(argv: list[str] | None = None) -> int:
     server = ThreadingHTTPServer(("127.0.0.1", args.listen), Relay)
     server.target = target                                           # type: ignore[attr-defined]
     server.daemon_threads = True
-    print(f"중계 중 127.0.0.1:{args.listen} → {target.host} ({target.ip})",
-          file=sys.stderr, flush=True)
+    print(f"중계 중 127.0.0.1:{args.listen} → {target.host} "
+          f"({', '.join(target.ips)})", file=sys.stderr, flush=True)
     try:
         server.serve_forever()
     except KeyboardInterrupt:

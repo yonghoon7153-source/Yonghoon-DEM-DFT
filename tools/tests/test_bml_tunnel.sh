@@ -462,11 +462,12 @@ check "물어볼 곳이 셋이다"          "$(grep -c '^8\.8\.8\.8|' "$HERE/../
 check "9.9.9.9 도 있다"             "$(grep -c '^9\.9\.9\.9|' "$HERE/../bml")" "1"
 check "이름이 아니라 IP 로 적는다"  "$(grep -c 'DNS_PROVIDERS="1\.1\.1\.1|' "$HERE/../bml")" "1"
 # 세 곳을 다 물어보는지 -- 목록만 있고 안 돌면 화면은 그대로다.
-check "dns_public_ip 가 목록을 돈다"    "$(grep -c 'done <<EOF' "$HERE/../bml")" "2"
+# 단수형과 복수형 둘 다 이 목록을 돈다 (복수형은 A 레코드를 전부 낸다).
+check "dns_public_ip 가 목록을 돈다"    "$(grep -c 'done <<EOF' "$HERE/../bml")" "3"
 
 # 그마저 막히면 남는 길: 이름을 아는 기계가 IP 를 대신 읽어 준다.
 check "bmlonly 가 IP 를 인자로 받는다" \
-  "$(grep -c 'local raw=.*given_ip=' "$HERE/../bml")" "1"
+  "$(grep -c 'if \[ \$# -gt 1 \]; then shift; given_ip="\$\*"; fi' "$HERE/../bml")" "1"
 check "받은 IP 면 DNS 를 안 탄다" \
   "$(grep -c '주소를 받아 왔습니다 — DNS 는 건너뜁니다' "$HERE/../bml")" "1"
 # 이 문구는 주석에도 한 번 나온다 (인자 밀림 사고의 증상으로) -- 실제로
@@ -497,7 +498,7 @@ check "막혔을 때 그 길을 알려 준다" \
 check "자기 resolver 를 먼저 쓴다" \
   "$(grep -c "getent ahostsv4" "$HERE/../bml")" "1"
 check "그다음이 공용 DNS 다" \
-  "$(grep -c '\[ -n "$ip" \] || ip="$(dns_public_ip "$host")"' "$HERE/../bml")" "1"
+  "$(grep -c '\[ -n "$out" \] || out="$(dns_public_ips "$host")"' "$HERE/../bml")" "1"
 # 조건문("못 찾는다고 하면")으로 두면 저쪽이 한 번 실패해 알려 주고 이쪽이
 # 그제서야 보내는 왕복이 주소가 바뀔 때마다 되풀이된다.  그냥 늘 준다.
 check "보낼 줄을 조건 없이 준다" \
@@ -506,6 +507,25 @@ check "보낼 줄을 조건 없이 준다" \
 # 터널을 닫았다 여는 일이 실제로 있었고, 그러면 주소가 바뀌어 문제가 하나 는다.
 check "status 에서도 같은 줄을 낸다" \
   "$(grep -c 'tunnel_ip_hint "$(tunnel_url)"' "$HERE/../bml")" "1"
+# 엣지가 회전 풀이다.  실측: 같은 이름이 3.208.46.244 와 3.234.18.192 로 갈렸다.
+# 하나만 건네면 그 노드가 빠질 때 받는 기계가 다시 물어봐야 하는데, 그 기계는
+# 물어볼 길이 없다 -- 그것이 이 명령이 있는 이유다.
+check "A 레코드를 전부 뽑는 길이 있다" \
+  "$(grep -c '^dns_public_ips() {' "$HERE/../bml")" "1"
+check "받는 사람에게 IP 를 여럿 준다" \
+  "$(grep -c 'ip="$(tunnel_ips "$host" | tr' "$HERE/../bml")" "1"
+# 카톡으로 옮겨 적는 줄이라 길어지면 그 자체가 오타의 자리가 된다.
+check "그래도 셋까지만" \
+  "$(grep -c 'head -n 3' "$HERE/../bml")" "2"
+check "중계기가 IP 를 여러 번 받는다" \
+  "$(grep -c 'action="append"' "$HERE/../bml_relay.py")" "1"
+check "붙다 실패하면 다음 IP 로 넘어간다" \
+  "$(grep -c 'for ip in ips:' "$HERE/../bml_relay.py")" "1"
+# 예전처럼 두 자리만 집으면 두 번째 IP 부터 조용히 버려진다.
+check "별칭이 인자를 전부 넘긴다" \
+  "$(grep -c 'cmd_only "\$@"; cmd_connect' "$HERE/../bml")" "1"
+check "IP 마다 하나씩 검사한다" \
+  "$(grep -c 'die "IP 로 안 보입니다: \$one"' "$HERE/../bml")" "1"
 # 세 곳 이름을 화면에 적는다 -- "공용 DNS" 라고만 하면 어디를 물어본 것인지
 # 모르고, 사내망 관리자에게 무엇을 열어 달라고 할지도 못 정한다.
 check "어디에 물어봤는지 적는다" \
