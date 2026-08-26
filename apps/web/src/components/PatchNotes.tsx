@@ -14,6 +14,7 @@ import { useState } from 'react'
 
 import { api } from '../lib/api'
 import { useAsync } from '../lib/hooks'
+import { Inline, Markdown } from '../lib/markdown'
 import type { ChangeNote } from '../lib/types'
 
 /** 아는 action 만 색을 준다.  파일에는 문서가 적어 둔 일곱 개 말고도 `feat`
@@ -95,7 +96,7 @@ function Note({
       <div className="row" style={{ alignItems: 'baseline', gap: 8 }}>
         <span className={`tag ${kind?.tone ?? ''}`}>{kind?.label ?? note.action}</span>
         <span className="what truncate" style={{ flex: 1 }}>
-          {note.subject}
+          <Inline text={note.subject} />
         </span>
         <span className="tiny faint nowrap">{noteDate(note.date)}</span>
       </div>
@@ -103,9 +104,16 @@ function Note({
         <>
           {/* 접혀 있을 때 한 줄이 보이는 것이 요점이다 -- 제목만 스무 개면
               무엇이 바뀌었는지가 아니라 "뭔가 바뀌었다" 만 읽힌다. */}
-          <div className={open ? 'tiny note-body' : 'tiny note-body truncate'}>
-            {open ? note.body : summary}
-          </div>
+          {/* `docs/log.md` 는 사람이 읽으라고 쓴 마크다운이다.  글자 그대로
+              뿌리면 강조하려고 적은 `**` 가 오히려 읽기를 방해한다 — 하필
+              제일 중요한 문장에만 붙어 있으니 거기서. */}
+          {open ? (
+            <Markdown body={note.body} className="tiny note-body" />
+          ) : (
+            <div className="tiny note-body truncate">
+              <Inline text={summary} />
+            </div>
+          )}
           <button
             type="button"
             className="link-btn tiny"

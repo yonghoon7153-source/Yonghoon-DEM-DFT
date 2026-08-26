@@ -1278,6 +1278,33 @@ button.icon:hover:not(:disabled) { background: var(--neg-wash); color: var(--neg
   white-space: nowrap;
 }
 
+/* 아주 작은 마크다운.  패치노트와 의견 게시판이 같은 규칙으로 그린다 --
+   둘 다 사람이 손으로 쓴 글이고, 한쪽만 예쁘면 다른 쪽이 잘못 보인다. */
+.md-p { margin: 0 0 6px; }
+.md-p:last-child { margin-bottom: 0; }
+.md-list { margin: 0 0 6px; padding-left: 18px; }
+.md-list li { margin: 1px 0; }
+/* 표와 실측값이 이 모양으로 적힌다.  자릿수가 맞아야 비교가 되므로 고정폭에
+   줄바꿈 그대로 두고, 넘치면 가로로 굴린다 — 접으면 자리가 어긋난다. */
+.md-pre {
+  margin: 0 0 6px;
+  padding: 6px 9px;
+  overflow-x: auto;
+  border-radius: var(--r-sm, 6px);
+  background: var(--surface-2);
+  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: pre;
+}
+.md-p code, .md-list code {
+  padding: 0 3px;
+  border-radius: 3px;
+  background: var(--surface-3);
+  font-family: var(--mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+  font-size: 0.94em;
+}
+
 /* 묶은 표의 구분 줄.  스크롤할 때 어느 묶음을 보고 있는지 잃지 않도록 붙어
    있게 한다 — 표가 길어질수록 그것이 묶는 이유의 절반이다. */
 table tr.section > th {
