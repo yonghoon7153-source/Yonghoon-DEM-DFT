@@ -95,6 +95,7 @@ test-tools: ## tools/ 회귀 테스트 (포트 소유 판정, lint 게이트, do
 	bash tools/tests/test_worklog.sh
 	bash tools/tests/test_bml_install.sh
 	bash tools/tests/test_bml_data.sh
+	bash tools/tests/test_data_untracked.sh
 	$(PY) tools/tests/test_wiki_lint.py
 	$(PY) tools/tests/test_backup.py
 

@@ -4011,3 +4011,45 @@ EIS·GITT 업로드 결과에서 파일 이름을 눌러 바로 상세로 들어
 같은 모양).  올린 직후가 상세를 볼 가장 좋은 때인데, 그전에는 라이브러리로
 돌아가 이름으로 다시 찾아야 했다 — 같은 이름의 파일이 여럿이면 어느 것이
 방금 올린 것인지 표에서는 알 수 없다.
+
+## [2026-08-26] fix | data/spectra 의 파싱 캐시 23개가 저장소에 실려 다녔다
+
+CI 의 `repo invariants` 가 **8월 25일부터 계속 빨간불**이었다.  이미 그 검사가
+있었다 (`git ls-files data/ | grep -vE '\.gitkeep$'`) — 아무도 안 봤을 뿐이다.
+
+새어 나간 길: `.gitignore` 가 `data/uploads/*` 와 `data/runs/*` 두 줄만 막고
+있었는데, EIS 를 붙이면서 캐시가 `data/spectra/` 라는 새 폴더로 갔다 (`bb1986c2`
+feat: 측정 구성 6분할).  두 줄 중 어느 것에도 안 걸려서 `.npz` 23개(336K)가
+커밋에 딸려 들어갔고 그 뒤로 pull 마다 오갔다:
+
+    data/spectra/1/points.npz | Bin 13250 -> 7133 bytes
+
+`data/*` + `!data/uploads/` `!data/runs/` + `.gitkeep` 뚫기로 넓혔다.  다음에
+캐시 폴더가 하나 더 늘어도 (`data/gitt/`, `data/drt/`) 저절로 맞는다.
+`git rm -r --cached data/spectra` — **디스크의 파일은 그대로다** (416K 남아
+있음).
+
+pull 하면 그 23개가 지워진다.  괜찮다: 캐시는 `_load_points` 가 불변 원본에서
+다시 만든다.  그리고 `data/workbench.db` 도 추적 대상이 아니라, 받는 쪽 DB 에는
+그 스펙트럼 행이 애초에 없었다 — 읽히지도 않는 파일이 오간 것이다.
+
+`tools/tests/test_data_untracked.sh` 8건 — `make test-tools` 와 `bml check` 가
+같이 돈다.
+
+## [2026-08-26] fix | 터널 테스트가 lhr.life 의 대답에 따라 갈렸다
+
+CI 의 `tools` 도 같은 기간 빨간불이었고, 원인은 위와 다르다.
+
+    같은 망에서는 '중추 서버에서 확인해 보라' 가 갈라 주지 못한다
+      FAIL 망 밖에서 찔러 보라고 한다        얻음: 0  기대: 1
+      FAIL 같은 망이면 안 갈린다고 말한다     얻음: 0  기대: 1
+
+이 두 줄만 `server_unreachable_help` 를 **아무것도 안 막고** 불렀다 — 옆의
+503 검사는 `http_code_of` 를 덮어쓰는데 여기만 진짜로 나갔다.  lhr.life 는
+와일드카드라 없는 서브도메인에도 503 을 돌려주므로, 밖으로 나갈 수 있는
+기계(CI 러너)에서는 502/503 갈래가 먼저 return 해서 두 줄이 아예 안 찍혔다.
+나갈 수 없는 기계에서는 000 이라 통과했다.  같은 코드가 망에 따라 갈렸다.
+
+세 갈림길을 다 고정한다: `http_code_of` → 000, `getent` → 성공(이름은 잡힘),
+`explain_unreachable` → 무음.  재려던 것은 "확정 코드가 없을 때 같은 망 안내가
+나오는가" 하나다.  114개 통과.

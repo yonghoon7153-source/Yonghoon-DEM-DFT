@@ -1,7 +1,16 @@
-# 업로드 원본과 파싱 캐시 — 절대 커밋하지 않는다.
+# 업로드 원본과 파싱 캐시 — 절대 커밋하지 않는다 (CLAUDE.md §2).
 # 디렉터리 자체는 유지하되 내용물만 무시한다.
+#
+# 자리마다 한 줄씩 적던 것을 `data/*` 로 넓혔다.  캐시 폴더가 늘 때마다
+# (`data/spectra/`, `data/gitt/` …) 여기 한 줄을 더 적어야 했고, 실제로
+# `data/spectra/*.npz` 23개가 그 사이로 새어 들어가 저장소에 실려 다녔다.
+# 넓게 막고 `.gitkeep` 만 뚫는 편이 새 폴더에도 저절로 맞는다.
+data/*
+!data/.gitkeep
+!data/uploads/
 data/uploads/*
 !data/uploads/.gitkeep
+!data/runs/
 data/runs/*
 !data/runs/.gitkeep
 *.wrd
