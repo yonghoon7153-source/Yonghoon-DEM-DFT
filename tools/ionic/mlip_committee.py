@@ -8,7 +8,15 @@ gamma_select ~ gamma_break 사이를 "Accurate region" 으로 관리한다
 (kim2026 SEI 논문 실물: gamma_select=2, gamma_break 10->5->2).
 
 ⛔ **그 gamma 를 우리가 쓸 수 없다.** gamma 는 MTP 의 **선형 기저 위 maxvol /
-D-optimality** 로 정의되는데 UMA 는 비선형 등변 GNN 이라 정의 자체가 없다.
+D-optimality** 로 정의된다 (원전 = Podryabinkin & Shapeev 2017, Comput. Mater. Sci. 140, 171).
+
+⚠ **2026-08-26 정정** — 초판은 여기에 *"UMA 는 비선형이라 **정의 자체가 없다**"* 라고 썼는데
+   **과했다.** Gubaev 2019 (Comput. Mater. Sci. 156, 148) 본문이 정반대를 말한다:
+   *"As the model in this paper has a **nonlinear dependence on its parameters**, we apply a
+   **generalization of the D-optimality criterion to the nonlinear case**."*
+   ⇒ 정의는 일반화될 수 있다. 우리를 막는 것은 **`X`(설계행렬)의 부재가 아니라 OMat24 훈련셋을
+   우리가 갖고 있지 않다는 것** — 원리적 장벽이 아니라 실무적 장벽이다.
+   이 편이 오히려 이 도구에 유리하다: *"원리적으로 불가"* 가 아니라 *"대리지표를 세우면 된다"* 가 된다.
 
 이식할 수 있는 것은 **논리 구조**뿐이다:
   ① 대리지표를 하나 정한다
@@ -26,8 +34,16 @@ D-optimality** 로 정의되는데 UMA 는 비선형 등변 GNN 이라 정의 �
   아키텍처가 아니라 **훈련 functional** 임을 보였고, lee2024 는 PBE 계열이 오히려
   틀리는 쪽(optB88 이 실험과 맞음)임을 보였다.
   → **세 모델이 일치해도 절대 sigma 인용 금지 규율은 그대로다.**
+
 - 이 지표가 재는 것은 "이 배열이 훈련 분포에서 이상한가" 뿐이고,
   그 목적에는 같은 functional 계열인 것이 **오히려 무해하다**.
+
+⚠ **위원회 구성의 함정 (2026-08-26, OMat24 보충자료)**
+  softening 은 **아키텍처가 아니라 훈련셋 다양성**에서 온다는 것이 측정됐다
+  (`db/external/omat24/README.md`: 5개 아키텍처 전부에서 MPtrj -> OMat24 계열로 개선).
+  그런데 이 위원회의 MACE-MP-0 과 SevenNet-0 은 **둘 다 MPtrj** 이고 UMA 만 OMat24 다.
+  ⇒ **불일치가 "UMA 가 이상하다" 가 아니라 "저 둘이 무르다" 여서 생길 수 있다.**
+  불일치의 **부호와 방향**을 봐야 하고, 다수결로 UMA 를 이상치 취급하면 안 된다.
 
 실행
 ----
@@ -100,6 +116,114 @@ def get_calc(engine, device):
             finally:
                 torch.load = _orig
     sys.exit(f"모르는 엔진: {engine}")
+
+
+def engine_info(engine, device="cpu"):
+    """엔진의 **유효 수용영역**을 알아낸다. → dict
+
+    왜 필요한가 (2026-08-26):
+      `park2024_sevennet_parallel_gnn_md` 가 명시한다 —
+      *"GNN-IPs require a broader region for communication, reaching up to **r_c multiplied by
+      the number of message-passing steps**"*. 즉 **유효 수용영역 = cutoff × 층 수** 다.
+      그런데 우리는 **UMA 의 층 수를 어디에도 안 적어놨다.** 층 수를 모르면
+      ① 슬랩 두께 하한(T3)을 못 정하고 ② 주기셀이 자기 이미지를 보는지 판정 못 한다.
+
+    ⛔ 이 함수가 **못 하는 것**
+      · 정확도를 말하지 않는다. 배선(topology)만 본다.
+      · 층 수 추정은 **모듈 이름 규칙**에 기댄다 — 이름이 바뀌면 못 찾는다.
+        못 찾으면 **0 이나 추측값을 넣지 않고 None 을 돌려준다**.
+      · cutoff 가 여러 개인 모델(원소쌍별 등)은 최대값만 본다.
+    """
+    import re
+    out = {"engine": engine, "device": device, "cutoff_A": None,
+           "n_message_passing": None, "n_params": None, "source": {}, "notes": []}
+    try:
+        calc = get_calc(engine, device)
+    except Exception as e:
+        out["notes"].append(f"⛔ calculator 를 못 만들었다: {type(e).__name__}: {e}")
+        return out
+
+    # calculator → nn.Module 을 찾는다. 엔진마다 감싸는 층이 달라 이름을 고정하지 않는다.
+    mod = None
+    for path in ("model", "predictor.model", "predict_unit.model", "calc.model",
+                 "predictor", "predict_unit"):
+        o = calc
+        try:
+            for p in path.split("."):
+                o = getattr(o, p)
+            if hasattr(o, "named_modules"):
+                mod, out["source"]["module_path"] = o, path
+                break
+        except AttributeError:
+            continue
+    if mod is None:
+        out["notes"].append("⛔ nn.Module 을 못 찾았다 — calculator 구조가 바뀌었다")
+        return out
+
+    names = [n for n, _ in mod.named_modules()]
+    out["source"]["n_modules"] = len(names)
+    try:
+        out["n_params"] = sum(p.numel() for p in mod.parameters())
+    except Exception:
+        pass
+
+    # ① 층 수 — 반복 블록의 최대 인덱스 + 1. 여러 후보 이름을 훑고 **가장 그럴듯한 하나**를 고른다.
+    nlay, cands = _detect_layers(names)
+    if cands:
+        out["n_message_passing"] = nlay
+        out["source"]["layer_patterns"] = {k: v for k, v in cands.items()}
+        if len(set(cands.values())) > 1:
+            out["notes"].append(f"⚠ 층 수 후보가 갈린다 {sorted(set(cands.values()))} — 최대값을 썼다")
+    else:
+        out["notes"].append("⚠ 반복 블록 이름을 못 찾았다 — 층 수 미상(추측하지 않는다)")
+
+    # ② cutoff — 버퍼/속성 어디에 있는지 모델마다 다르다. 전부 훑는다.
+    found = {}
+    try:
+        for n, b in mod.named_buffers():
+            if "cut" in n.lower() and b.numel() == 1:
+                found[n] = float(b)
+    except Exception:
+        pass
+    for attr in ("cutoff", "r_max", "max_radius", "cutoff_radius"):
+        for obj, tag in ((calc, "calc"), (mod, "model")):
+            v = getattr(obj, attr, None)
+            if isinstance(v, (int, float)):
+                found[f"{tag}.{attr}"] = float(v)
+    if found:
+        out["cutoff_A"] = max(found.values())
+        out["source"]["cutoff_candidates"] = found
+    else:
+        out["notes"].append("⚠ cutoff 를 못 찾았다 — 설정 파일에서 직접 확인할 것")
+
+    if out["cutoff_A"] and out["n_message_passing"]:
+        out["effective_receptive_field_A"] = out["cutoff_A"] * out["n_message_passing"]
+        out["notes"].append(
+            f"유효 수용영역 = cutoff {out['cutoff_A']:.2f} Å × {out['n_message_passing']} 층 "
+            f"= **{out['effective_receptive_field_A']:.1f} Å**. 주기셀 한 변이 이 값의 "
+            f"2배보다 작으면 원자가 자기 이미지를 본다.")
+    return out
+
+
+def cmd_info(a):
+    """엔진 배선을 찍는다 — 정확도가 아니라 **유효 수용영역**을 알기 위한 것."""
+    import json as _j
+    rows = []
+    for eng in a.engines:
+        r = engine_info(eng, a.device)
+        rows.append(r)
+        rf = r.get("effective_receptive_field_A")
+        print(f"\n══ {eng} ══")
+        print(f"  파라미터 {r['n_params']:,}" if r["n_params"] else "  파라미터 미상")
+        print(f"  cutoff {r['cutoff_A']} Å · 메시지패싱 {r['n_message_passing']} 층")
+        print(f"  **유효 수용영역 {rf:.1f} Å**" if rf else "  유효 수용영역 계산 불가")
+        for n in r["notes"]:
+            print(f"    {n}")
+    if a.out:
+        Path(a.out).write_text(_j.dumps(rows, ensure_ascii=False, indent=2))
+        print(f"\n✓ → {a.out}")
+    # ⛔ 하나라도 못 알아냈으면 성공으로 끝내지 않는다 — 조용히 넘어가면 '확인했다' 로 기록된다
+    return 0 if all(r.get("effective_receptive_field_A") for r in rows) else 4
 
 
 def cmd_predict(a):
@@ -264,6 +388,57 @@ def cmd_analyze(a):
     print(f"→ {d/'committee_verdict.json'}")
 
 
+def _detect_layers(names):
+    """모듈 이름 목록 → (층 수|None, 패턴별 후보). engine_info 가 쓰는 순수 함수.
+
+    분리해 둔 이유: 모델을 띄우지 않고도 이름 규칙을 시험할 수 있어야 한다.
+    """
+    import re
+    cands = {}
+    for pat in (r"(?:^|\.)blocks\.(\d+)(?:\.|$)", r"(?:^|\.)layers\.(\d+)(?:\.|$)",
+                r"(?:^|\.)interactions\.(\d+)(?:\.|$)", r"(?:^|\.)(\d+)_convolution",
+                r"(?:^|\.)(\d+)_self_interaction", r"(?:^|\.)messages\.(\d+)(?:\.|$)"):
+        idx = {int(m.group(1)) for n in names for m in [re.search(pat, n)] if m}
+        if idx:
+            cands[pat] = max(idx) + 1
+    return (max(cands.values()) if cands else None), cands
+
+
+def cmd_selftest(a=None):
+    bad = []
+    def chk(c, msg):
+        print(("  ✓ " if c else "  ✗ ") + msg)
+        if not c:
+            bad.append(msg)
+
+    # SevenNet-0 실측 이름 (2026-08-26 checkpoint_best.pth pickle 에서 뽑은 실제 형태)
+    n7 = [f"{i}_self_interaction_1" for i in range(5)] + \
+         [f"{i}_self_connection_intro.linear" for i in range(5)] + ["edge_embedding.spherical"]
+    k, c = _detect_layers(n7)
+    chk(k == 5, f"★ SevenNet 이름 규칙에서 5층을 읽는다 (실측 = SevenNet-0 사양) — 얻은 값 {k}")
+
+    chk(_detect_layers(["blocks.0.x", "blocks.1.x", "blocks.2.x"])[0] == 3,
+        "blocks.N 규칙")
+    chk(_detect_layers(["interactions.0", "interactions.1"])[0] == 2, "interactions.N 규칙")
+    chk(_detect_layers(["layers.0.a", "layers.11.a"])[0] == 12,
+        "인덱스가 10 이상이어도 센다 (문자열 정렬 함정 회피)")
+
+    # ── 음성 경로 ──
+    chk(_detect_layers(["embedding", "readout", "scale_shift"])[0] is None,
+        "★ [음성] 반복 블록이 없으면 None — **0 이나 1 을 지어내지 않는다**")
+    chk(_detect_layers([])[0] is None, "[음성] 빈 목록도 None")
+    chk(_detect_layers(["conv2d.0.weight", "blocks2.0"])[0] is None,
+        "★ [음성] 비슷하게 생긴 이름(blocks2)에 속지 않는다")
+
+    # 유효 수용영역 산술 — 값이 하나라도 없으면 계산하지 않는다
+    for cut, lay, want in ((6.0, 5, 30.0), (None, 5, None), (6.0, None, None)):
+        got = (cut * lay) if (cut and lay) else None
+        chk(got == want, f"수용영역 {cut} × {lay} → {want}")
+
+    print(f"selftest {'PASS' if not bad else 'FAIL'} — {8 + 3 - len(bad)} ok, {len(bad)} bad")
+    return 1 if bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
@@ -273,6 +448,12 @@ def main():
     p = sub.add_parser("predict"); p.add_argument("--dir", required=True)
     p.add_argument("--engine", required=True, choices=["uma", "mace", "sevennet"])
     p.add_argument("--device", default="cuda"); p.set_defaults(fn=cmd_predict)
+    t = sub.add_parser("selftest"); t.set_defaults(fn=cmd_selftest)
+    i = sub.add_parser("info", help="엔진 배선(cutoff·층 수·유효 수용영역)")
+    i.add_argument("--engines", nargs="+", default=["uma"],
+                   choices=["uma", "mace", "sevennet"])
+    i.add_argument("--device", default="cpu")
+    i.add_argument("--out", default=None); i.set_defaults(fn=cmd_info)
     n = sub.add_parser("analyze"); n.add_argument("--dir", required=True)
     n.add_argument("--baseline", default=None,
                    help="다른 표본에서 잡은 committee_verdict.json — 주면 **탐지 모드**")
