@@ -20,10 +20,11 @@ import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
 import { useAsync } from '../lib/hooks'
+import { perArea } from '../lib/areanorm'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, nyquistXy } from '../lib/eis'
-import { nyquistWideTsv, tsvColumns } from '../lib/origin'
-import type { EisKind, Spectrum, SpectrumPoints } from '../lib/types'
+import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
+import type { EisKind, Spectrum, SpectrumFit, SpectrumPoints } from '../lib/types'
 
 /** 서버의 `/api/eis/points` 겹치기 상한과 같은 수. */
 const OVERLAY_LIMIT = 12
@@ -43,6 +44,21 @@ function label(item: Spectrum): string {
  *  한다** (`lib/areanorm`).  논문의 값도 대개 그것이다.
  */
 type Unit = 'ohm' | 'ohmcm2'
+
+/** 어느 그림인가.
+ *
+ *  `fit` 은 나이퀴스트와 같은 축이지만 **실측 위에 맞춤 곡선을 얹은** 것이다.
+ *  따로 둔 이유는 맞춤이 스펙트럼마다 있을 수도 없을 수도 있기 때문이다 —
+ *  없는 것을 말없이 빼면 그림에 곡선이 하나 모자란 채로 남고, 그 그림은
+ *  "안 맞췄다" 를 아무 데도 적지 않는다 (§0.4).
+ */
+type Mode = 'nyquist' | 'fit' | 'drt'
+
+const MODE_TITLE: Record<Mode, string> = {
+  nyquist: '나이퀴스트',
+  fit: '맞춤 곡선',
+  drt: 'DRT (이완 시간 분포)',
+}
 
 /** 면적이 없는 것은 Ω·cm² 그림에서 **뺀다.**
  *
@@ -92,7 +108,7 @@ export function EisCompare() {
   const [unit, setUnit] = useState<Unit>('ohm')
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
-  const [mode, setMode] = useState<'nyquist' | 'drt'>('nyquist')
+  const [mode, setMode] = useState<Mode>('nyquist')
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
@@ -185,6 +201,32 @@ export function EisCompare() {
     [mode, selected.join(','), lambda],
   )
 
+  // 맞춤 곡선도 볼 때만 부른다.  회로를 다시 푸는 것은 아니지만 (서버가
+  // 저장된 파라미터로 계산해 준다) 스펙트럼마다 곡선 하나가 더 오는 응답이라,
+  // 나이퀴스트만 보려던 사람이 그 무게를 낼 이유가 없다.
+  const fits = useAsync(
+    () => (mode === 'fit' && selected.length
+      ? api.spectraFits(selected)
+      : Promise.resolve([] as SpectrumFit[])),
+    [mode, selected.join(',')],
+  )
+
+  /** 이 스펙트럼의 맞춤 곡선.  없으면 `undefined`. */
+  const fitOf = useCallback(
+    (id: number) => (fits.data ?? []).find((item) => item.spectrum_id === id),
+    [fits.data])
+
+  /** 맞춤 곡선을 못 그린 것들.  아직 안 맞췄거나, 맞췄는데 회로를 못 그린
+   *  것이다 — 어느 쪽이든 그림에 곡선이 없으므로 이름을 적는다. */
+  const unfitted = useMemo(() => {
+    if (mode !== 'fit' || fits.loading) return [] as Spectrum[]
+    return rows.filter((row) => {
+      if (!selected.includes(row.id)) return false
+      const fit = fitOf(row.id)
+      return !fit?.fitted_z_re || !fit.fitted_z_im
+    })
+  }, [mode, fits.loading, fitOf, rows, selected])
+
   const series = useMemo<PlotSeries[]>(() => {
     if (!fresh) return []
     if (mode === 'drt') {
@@ -203,18 +245,43 @@ export function EisCompare() {
         }]
       })
     }
-    return shown.kept.map((item) => {
+    return shown.kept.flatMap((item) => {
+      const index = rows.findIndex((row) => row.id === item.id)
+      const name = label(rows[index] ?? ({} as Spectrum))
       const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
-      return {
-        label: label(rows.find((row) => row.id === item.id) ?? ({} as Spectrum)),
+      const measured: PlotSeries = {
+        label: name,
         x,
         y,
-        color: seriesColor(rows.findIndex((row) => row.id === item.id)),
+        color: seriesColor(index),
         points: true,
-        width: 1,
+        // 맞춤을 볼 때는 실측이 **점**이라야 한다.  선으로 두면 두 선이
+        // 겹쳐서 어느 쪽이 모델이고 어느 쪽이 잰 것인지 안 보인다.
+        width: mode === 'fit' ? 0 : 1,
       }
+      if (mode !== 'fit') return [measured]
+
+      const fit = fitOf(item.id)
+      if (!fit?.fitted_z_re || !fit.fitted_z_im) return [measured]
+      // 서버가 같은 회로 AST 로 계산한 곡선이다 — 화면은 회로를 다시 해석하지
+      // 않는다.  맞춤 곡선도 실측과 같은 규칙으로 자른다: 회로에 L 이 있으면
+      // 이 곡선도 고주파에서 유도성이라, 측정만 자르면 맞춤선 혼자 밑으로
+      // 꽂힌다.
+      const area = unit === 'ohmcm2' ? areaOf(item.id) : null
+      const curve = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
+                              (value) => perArea(value, area))
+      return [measured, {
+        label: `${name} 맞춤`,
+        note: fit.circuit,
+        x: curve.x,
+        y: curve.y,
+        color: seriesColor(index),
+        width: 2,
+        // 실측과 같은 색이라 짝이 보이고, 파선이라 어느 쪽이 모델인지 보인다.
+        dash: [6, 4],
+      }]
     })
-  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf])
+  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf])
 
   // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
   // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
@@ -305,12 +372,14 @@ export function EisCompare() {
       ) : null}
 
       <Card
-        title={mode === 'drt' ? 'DRT (이완 시간 분포)' : '나이퀴스트'}
+        title={MODE_TITLE[mode]}
         actions={
           <div className="row" style={{ gap: 10, alignItems: 'center' }}>
             <div className="segmented" role="group" aria-label="그림">
               <button type="button" className={mode === 'nyquist' ? 'on' : ''}
                       onClick={() => setMode('nyquist')}>나이퀴스트</button>
+              <button type="button" className={mode === 'fit' ? 'on' : ''}
+                      onClick={() => setMode('fit')}>맞춤</button>
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
@@ -332,22 +401,32 @@ export function EisCompare() {
               label: '나이퀴스트',
               title: mode === 'nyquist'
                 ? `스펙트럼마다 Z′·−Z″ 두 열 (${unitLabel})`
-                : 'DRT 를 보고 있습니다 — 나이퀴스트로 바꾸면 켜집니다',
+                : `${MODE_TITLE[mode]} 를 보고 있습니다 — 나이퀴스트로 바꾸면 켜집니다`,
               disabled: mode !== 'nyquist' || !fresh || !shown.kept.length,
               build: () => nyquistWideTsv(shown.kept),
               skipped: shown.dropped.length,
               skippedNote: (n) => `면적이 없어 ${n}개를 뺐습니다`,
             },
             {
+              label: '맞춤',
+              // 실측과 맞춤이 **번갈아** 나온다 (측정 Z′·−Z″, 맞춤 Z′·−Z″).
+              // 맞춤만 내면 Origin 에서 무엇에 맞춘 곡선인지 알 수 없고, 그
+              // 판단이 이 그림을 보는 이유다.
+              title: mode === 'fit'
+                ? `스펙트럼마다 측정·맞춤 Z′·−Z″ 네 열 (${unitLabel})`
+                : `${MODE_TITLE[mode]} 를 보고 있습니다 — 맞춤으로 바꾸면 켜집니다`,
+              disabled: mode !== 'fit' || !fresh || !series.length,
+              build: () => seriesWideTsv(series),
+              skipped: unfitted.length,
+              skippedNote: (n) => `아직 피팅 데이터가 없어 ${n}개는 맞춤 열이 없습니다`,
+            },
+            {
               label: 'γ(τ)',
               title: mode === 'drt'
                 ? `스펙트럼마다 log₁₀τ·γ 두 열 (${unitLabel})`
-                : '나이퀴스트를 보고 있습니다 — DRT 로 바꾸면 켜집니다',
+                : `${MODE_TITLE[mode]} 를 보고 있습니다 — DRT 로 바꾸면 켜집니다`,
               disabled: mode !== 'drt' || !series.length,
-              build: () => tsvColumns(series.flatMap((line) => [
-                line.x.map((value) => String(value)),
-                line.y.map((value) => String(value)),
-              ])),
+              build: () => seriesWideTsv(series),
             },
           ]}
         />
@@ -366,6 +445,19 @@ export function EisCompare() {
             </span>
           </Alert>
         ) : null}
+        {/* 맞춤이 없는 것도 **이름을 적는다.**  실측 점은 그대로 그려지므로
+            곡선만 조용히 빠지는데, 그 그림은 "이 셀은 잘 맞았다" 처럼 보인다. */}
+        {mode === 'fit' && unfitted.length ? (
+          <Alert kind="warn">
+            아직 피팅 데이터가 없습니다 —{' '}
+            {unfitted.map((item) => item.name).join(' · ')}.
+            <span className="tiny faint">
+              {' '}실측 점은 그대로 그렸습니다. 스펙트럼 상세에서 회로를 골라
+              맞추면 이 그림과 클립보드에 곡선이 함께 나옵니다.
+            </span>
+          </Alert>
+        ) : null}
+        {fits.error ? <Alert kind="error">{fits.error}</Alert> : null}
         {points.error ? <Alert kind="error">{points.error}</Alert> : null}
         {!selected.length ? (
           // 빈 그래프는 고장처럼 보인다.
@@ -385,8 +477,16 @@ export function EisCompare() {
               <Plot series={series} xLabel={`Z′ (${unitLabel})`}
                     yLabel={`−Z″ (${unitLabel})`}
                     height={380} legend equalAspect positiveFit
-                    busy={points.loading || !fresh} />
+                    busy={points.loading || fits.loading || !fresh} />
             )}
+            {mode === 'fit' ? (
+              <div className="tiny faint" style={{ padding: '6px 0 0' }}>
+                점이 측정, 파선이 맞춤입니다 — 같은 색이 한 쌍이고, 회로 이름은
+                범례에 붙어 있습니다. 스펙트럼마다 가장 잘 맞은 것
+                하나(χ² 최소)를 그립니다. 맞춘 주파수 구간 안에서만 그리므로,
+                구간을 좁혀 맞췄으면 곡선이 실측보다 짧습니다.
+              </div>
+            ) : null}
             {mode === 'drt' ? (
               <div className="tiny faint" style={{ padding: '6px 0 0' }}>
                 벌점 λ = {lambda.toExponential(2)} · 평활 차수 0 — 스펙트럼

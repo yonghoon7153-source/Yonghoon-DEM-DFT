@@ -373,6 +373,16 @@ export function nyquistWideTsv(spectra: SpectrumPoints[], scale?: Scale): string
 export function pseudoOcvWideTsv(
   series: { x: number[]; y: number[] }[],
 ): string {
+  return seriesWideTsv(series)
+}
+
+/** 화면에 그려진 곡선 그대로 — 곡선마다 (x, y) 두 열.
+ *
+ *  축이 무엇인지 모르는 채로 옮기는 자리다: DRT 의 (log₁₀ τ, γ) 든 맞춤 곡선의
+ *  (Z′, −Z″) 든, 화면이 이미 계산해 둔 것을 그대로 낸다.  숫자를 여기서 다시
+ *  만들지 않으므로 **붙여 넣은 워크시트와 그림이 어긋날 수가 없다.**
+ */
+export function seriesWideTsv(series: { x: number[]; y: number[] }[]): string {
   return widePairs(series, (item) => [item.x, item.y])
 }
 

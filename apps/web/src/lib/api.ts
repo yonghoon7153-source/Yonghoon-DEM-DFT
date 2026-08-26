@@ -227,6 +227,10 @@ export const api = {
   /** 여러 개를 한 번에 — 겹쳐 그리려면 동시에 있어야 축이 한 번만 잡힌다. */
   spectraPoints: (ids: number[]) =>
     request<SpectrumPoints[]>(`/api/eis/points${query({ ids: ids.join(',') })}`),
+  /** 여러 개의 **가장 잘 맞은** 피팅 곡선.  안 맞춘 것은 목록에서 빠져
+   *  돌아온다 — 빠진 id 가 곧 "아직 피팅 데이터가 없다" 이다. */
+  spectraFits: (ids: number[]) =>
+    request<SpectrumFit[]>(`/api/eis/fits${query({ ids: ids.join(',') })}`),
   uploadSpectrum: (file: File, params?: Params, settingsFile?: File | null) => {
     const form = new FormData()
     form.append('file', file)

@@ -395,17 +395,14 @@ def _load_points(record: SpectrumRecord):
     return spectrum
 
 
-@router.get("/points", response_model=list[SpectrumPointsOut])
-def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트럼 id"),
-                session: Session = Depends(get_session)):
-    """여러 스펙트럼의 점을 한 번에.
+def _id_list(ids: str) -> list[int]:
+    """``"3,7,9"`` -> ``[3, 7, 9]``.
 
-    나이퀴스트를 겹쳐 그리려면 두세 개가 동시에 필요하고, 하나씩 부르면 화면이
-    부분적으로 채워지며 축이 두 번 다시 잡힌다.  못 읽은 것은 **조용히 빠지지
-    않고** 그 자리에서 404 로 말한다 — 곡선 하나가 없는 그림은 있는 그림과
+    겹쳐 그리는 화면이 쓰는 상한(12)이 여기 한 군데에 있다.  점과 맞춤 곡선이
+    서로 다른 상한을 쓰면 한쪽만 잘려 돌아오고, 그 그림은 곡선이 없는 그림과
     구분되지 않는다.
     """
-    wanted = []
+    wanted: list[int] = []
     for chunk in ids.split(","):
         chunk = chunk.strip()
         if not chunk:
@@ -417,6 +414,20 @@ def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트
         raise HTTPException(422, "고른 스펙트럼이 없습니다")
     if len(wanted) > 12:
         raise HTTPException(422, "한 번에 12개까지만 겹쳐 그립니다")
+    return wanted
+
+
+@router.get("/points", response_model=list[SpectrumPointsOut])
+def many_points(ids: str = Query(..., description="쉼표로 구분한 스펙트럼 id"),
+                session: Session = Depends(get_session)):
+    """여러 스펙트럼의 점을 한 번에.
+
+    나이퀴스트를 겹쳐 그리려면 두세 개가 동시에 필요하고, 하나씩 부르면 화면이
+    부분적으로 채워지며 축이 두 번 다시 잡힌다.  못 읽은 것은 **조용히 빠지지
+    않고** 그 자리에서 404 로 말한다 — 곡선 하나가 없는 그림은 있는 그림과
+    구분되지 않는다.
+    """
+    wanted = _id_list(ids)
 
     out = []
     for spectrum_id in wanted:
@@ -437,6 +448,29 @@ def _points_out(record: SpectrumRecord, spectrum) -> SpectrumPointsOut:
         magnitude=[float(v) for v in spectrum.magnitude],
         phase_deg=[float(v) for v in spectrum.phase_deg],
     )
+
+
+@router.get("/fits", response_model=list[SpectrumFitOut])
+def many_fits(ids: str = Query(..., description="쉼표로 구분한 스펙트럼 id"),
+              session: Session = Depends(get_session)):
+    """여러 스펙트럼의 **가장 잘 맞은** 피팅을 한 번에.
+
+    ``/points`` 와 짝이다.  겹쳐 보는 화면에서 맞춤 곡선을 실측 위에 얹으려면
+    고른 것 전부의 곡선이 동시에 필요하고, 하나씩 부르면 축이 열두 번 다시
+    잡힌다.
+
+    ``/points`` 와 달리 **없는 것은 404 가 아니다.**  피팅은 스펙트럼마다 있을
+    수도 없을 수도 있는 것이라, 없다는 사실 자체가 화면이 말해야 할 내용이다
+    (§0.4) -- 돌아온 목록에 없는 id 가 곧 "아직 안 맞췄다" 이고, 화면은 그
+    이름을 적는다.  스펙트럼 자체가 없으면 그때는 404 다.
+    """
+    out = []
+    for spectrum_id in _id_list(ids):
+        record = _get(session, spectrum_id)
+        fit = _best_fit(session, spectrum_id)
+        if fit is not None:
+            out.append(_fit_out(session, record, fit))
+    return out
 
 
 @router.get("/spectra/{spectrum_id}/points", response_model=SpectrumPointsOut)

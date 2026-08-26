@@ -389,6 +389,37 @@ def test_a_batch_reports_each_spectrum_separately(client):
     assert body["failed"][0]["spectrum_id"] == 9999
 
 
+def test_many_fits_returns_the_best_one_and_stays_quiet_about_the_unfitted(client):
+    """겹쳐 그릴 때 필요한 것은 **가장 잘 맞은** 곡선 하나씩이다.
+
+    ``/points`` 와 달리 안 맞춘 것은 404 가 아니다.  피팅은 스펙트럼마다 있을
+    수도 없을 수도 있는 것이라, 없다는 사실이 곧 화면이 적어야 할 내용이다
+    (§0.4) -- 돌아온 목록에서 빠진 id 가 "아직 안 맞췄다" 이고, 비교 화면은 그
+    이름을 경고에 적는다.  없는 스펙트럼은 그때도 404 다.
+    """
+    fitted = upload(client, name="a.mpr", kind="liquid")
+    bare = upload(client, name="b.mpr", kind="liquid", rs=7.0)
+    # 두 번 맞춘다.  둘 다 수렴하지만 χ² 가 다르므로, 돌아오는 것이 "가장 최근"
+    # 이 아니라 "가장 잘 맞은" 것인지가 여기서 갈린다.
+    rough = client.post(f"/api/eis/spectra/{fitted['id']}/fit",
+                        params={"circuit": "R0-p(R1,CPE1)"}).json()
+    good = client.post(f"/api/eis/spectra/{fitted['id']}/fit",
+                       params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    assert good["chi_squared"] < rough["chi_squared"]
+
+    body = client.get("/api/eis/fits",
+                      params={"ids": f"{fitted['id']},{bare['id']}"}).json()
+    assert [item["spectrum_id"] for item in body] == [fitted["id"]]
+    assert body[0]["id"] == good["id"]
+    # 곡선이 함께 와야 화면이 회로를 다시 해석하지 않는다 (CLAUDE.md §1 #6).
+    assert len(body[0]["fitted_z_re"]) == len(body[0]["fitted_z_im"]) > 0
+
+    assert client.get("/api/eis/fits", params={"ids": "9999"}).status_code == 404
+    assert client.get("/api/eis/fits", params={"ids": "a"}).status_code == 422
+    assert client.get("/api/eis/fits",
+                      params={"ids": ",".join("1" * 13)}).status_code == 422
+
+
 # --- 정리 ------------------------------------------------------------------
 
 def test_a_spectrum_can_be_attached_to_a_cell(client, sample_id):
