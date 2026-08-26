@@ -1040,18 +1040,20 @@ echo "끊기면 다시 붙는다 — 등록한 키가 있을 때만"
 # 가리킨다" 가 된다.  등록한 키라야 주소가 그대로다.
 check "감독자는 키가 있을 때만" \
   "$(awk '/^tunnel_via_ssh\(\) \{/,/^}/' "$BML" | grep -c 'write_tunnel_keepalive')" "1"
+# 감독자가 둘이다: localhost.run 쪽과 우리 VPS 쪽 (ADR 0034).  둘 다 같은
+# 고리를 가져야 한다 — 한쪽만 다시 붙으면 그쪽만 살아남는다.
 check "끊기면 다시 붙는 고리가 있다" \
-  "$(grep -c 'wait "\\$child"' "$BML")" "1"
+  "$(grep -c 'wait "\\$child"' "$BML")" "2"
 # 무한히 두드리지 않는다 -- 키가 지워졌거나 계정이 막힌 것은 고쳐지지 않는다.
 check "곧바로 계속 끊기면 멈춘다" \
-  "$(grep -c '계속 곧바로 끊겨서 멈춥니다' "$BML")" "1"
+  "$(grep -c '계속 곧바로 끊겨서 멈춥니다' "$BML")" "2"
 # 감독자를 우리 것으로 못 알아보면 status 가 못 보고, close_tunnel 이 안 닫는다.
 check "감독자도 우리 것으로 알아본다" \
   "$(grep -c 'tunnel-keepalive.sh"\*) return 0' "$BML")" "1"
 # 신호를 받으면 자식 ssh 까지 데리고 죽는다 -- 안 그러면 감독자만 죽고 터널이
 # 주인 없이 남는다.
 check "닫으면 자식 ssh 도 죽는다" \
-  "$(grep -c "trap 'kill" "$BML")" "1"
+  "$(grep -c "trap 'kill" "$BML")" "2"
 
 echo "맞추기가 먼저다 — 자기 갱신 재실행이 일을 두 번 시키지 않게"
 # sync_repo 는 자기 자신이 갱신되면 원래 명령줄로 다시 실행한다(exec).  뒤에

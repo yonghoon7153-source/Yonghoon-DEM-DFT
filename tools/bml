@@ -19,8 +19,10 @@
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
 #   bml share stop 그 터널을 닫는다
+#   bml share now  고정 주소 설정을 둔 채 이번 한 번만 랜덤 주소로 연다
 #   bml share key <경로>  등록한 SSH 키로 연다 — 주소가 매번 바뀌지 않는다
-#   bml share cf <토큰>   Cloudflare 터널 토큰을 적어 둔다 (무료 · 우리 도메인)
+#   bml share vps <사용자@호스트>  우리 VPS 로 연다 — 주소가 영영 안 바뀐다
+#   bml share cf <토큰>   Cloudflare 터널 토큰을 적어 둔다 (7844 가 열린 망에서만)
 #   bml share domain <이름>  그때 열 이름 — 이 둘이 다 있어야 주소가 고정된다
 #   bml feed       이 브랜치에서 무슨 일이 있었나 (커밋 ↔ docs/log.md 짝)
 #   bml check      커밋 전 검사 (테스트·타입·린트·문서)
@@ -3433,6 +3435,147 @@ KEEPALIVE
   printf '%s' "$path"
 }
 
+#: 우리 VPS.  `.bml/env` 의 `WORKBENCH_VPS` — `사용자@호스트[:포트]`.
+#:
+#: 여기가 붙으면 나머지 길은 안 탄다.  주소가 우리 것이고 안 바뀌기 때문이다.
+tunnel_vps() {
+  local target="${WORKBENCH_VPS:-}"
+  [ -n "$target" ] || return 1
+  printf '%s' "$target"
+}
+
+#: 끊기면 다시 붙는 감독자 — VPS 판.  경로를 돌려준다.
+#:
+#: `-R 5003:localhost:5003` 의 앞 5003 은 **VPS 안의 127.0.0.1** 에 열린다
+#: (`GatewayPorts no`).  그 앞에 nginx 가 서서 TLS 를 끝내고 넘긴다 -- 전달된
+#: 포트를 0.0.0.0 에 열면 인터넷 아무나 TLS 없이 그 포트로 들어온다.
+write_vps_keepalive() {
+  local target="$1" path="$RUN_DIR/vps-keepalive.sh" host port ssh_port
+  host="${target%%:*}"
+  ssh_port="22"
+  case "$target" in *:*) ssh_port="${target##*:}" ;; esac
+  port="${WORKBENCH_VPS_PORT:-$PORT}"
+  cat > "$path" <<KEEPALIVE
+#!/usr/bin/env bash
+# bml 이 만든 파일입니다 -- 고치지 마세요.  \`bml share\` 가 다시 씁니다.
+child=""
+trap 'kill "\$child" 2>/dev/null; exit 0' TERM INT
+quick=0
+while :; do
+  started=\$SECONDS
+  ssh -N -p ${ssh_port} \\
+      -o StrictHostKeyChecking=accept-new \\
+      -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \\
+      -o ExitOnForwardFailure=yes \\
+      -R ${port}:localhost:$PORT $(shquote "$host") &
+  child=\$!
+  wait "\$child"
+  # 붙자마자 죽는 것이 이어지면 고칠 수 있는 문제가 아니다 (키가 안 올라갔거나,
+  # 저쪽 포트가 이미 잡혀 있거나).  무한히 두드리지 않고 멈춘다.
+  if [ \$(( SECONDS - started )) -lt 5 ]; then
+    quick=\$(( quick + 1 ))
+    [ "\$quick" -ge 20 ] && { echo "bml: 계속 곧바로 끊겨서 멈춥니다 (키·포트를 보세요)"; exit 1; }
+  else
+    quick=0
+  fi
+  sleep 5
+done
+KEEPALIVE
+  chmod +x "$path" 2>/dev/null || true
+  printf '%s' "$path"
+}
+
+#: 우리 VPS 로 여는 길.  주소는 우리 도메인이고 안 바뀐다 (ADR 0034).
+tunnel_via_vps() {
+  local keep="${1:-0}" target dom
+  target="$(tunnel_vps)" || return 1
+  dom="$(tunnel_domain)" || return 1
+  if ! command -v ssh >/dev/null 2>&1; then
+    warn "ssh 가 없습니다 — VPS 터널을 쓸 수 없습니다."
+    return 1
+  fi
+  say "  ${DIM}VPS:${OFF} ${B}${target}${OFF}  ${DIM}→ 우리 이름${OFF} ${B}https://${dom}${OFF}"
+  try_tunnel_named "$keep" "터널 여는 중 ${DIM}(${dom} · 우리 VPS)${OFF}" "https://$dom" \
+    bash "$(write_vps_keepalive "$target")"
+}
+
+#: `bml share vps <사용자@호스트[:포트]|off>` — 우리 VPS 를 적어 둔다.
+cmd_share_vps() {
+  local raw="${1:-}" dom
+  case "$raw" in
+    '')
+      if raw="$(tunnel_vps)"; then
+        say "우리 VPS  ${B}${raw}${OFF}   ${DIM}(.bml/env)${OFF}"
+        if dom="$(tunnel_domain)"; then
+          say "  ${DIM}이 이름으로 열립니다 →${OFF} ${B}https://${dom}${OFF}"
+        else
+          warn "  그런데 도메인이 없습니다 — 어느 이름으로 나갔는지 확인할 수가 없습니다."
+          say "  ${GREEN}bml share domain bml.<우리도메인>${OFF} ${DIM}을 먼저 하세요.${OFF}"
+        fi
+        say "  ${DIM}없애려면${OFF} ${GREEN}bml share vps off${OFF}"
+      else
+        say "${DIM}우리 VPS 가 없습니다 — 주소가 열 때마다 바뀝니다.${OFF}"
+        vps_setup_steps
+      fi
+      return 0
+      ;;
+    off|none|해제)
+      if ! write_env_key WORKBENCH_VPS ""; then env_write_failed; return 1; fi
+      ok "우리 VPS 를 지웠습니다 — 다시 랜덤 주소로 열립니다."
+      return 0
+      ;;
+  esac
+
+  case "$raw" in
+    *@*) ;;
+    *) die "사용자@호스트 모양이어야 합니다 (예: ubuntu@1.2.3.4): $raw" ;;
+  esac
+  case "$raw" in *[!A-Za-z0-9@._:-]*) die "호스트 이름에 이상한 글자가 있습니다: $raw" ;; esac
+
+  if ! write_env_key WORKBENCH_VPS "$raw"; then env_write_failed; return 1; fi
+  ok "우리 VPS → ${B}${raw}${OFF}"
+  # 여기서 한 번 두드려 본다.  적어 두기만 하고 다음 `bml share` 에서 처음
+  # 실패하면, 그때는 무엇이 문제인지(키·방화벽·이름) 갈라 보기 어렵다.
+  if command -v ssh >/dev/null 2>&1; then
+    step "붙어 보는 중"
+    if ssh -o BatchMode=yes -o StrictHostKeyChecking=accept-new \
+           -o ConnectTimeout=10 "${raw%%:*}" true 2>/dev/null; then
+      ok "키로 붙습니다."
+    else
+      warn "아직 안 붙습니다 — 공개키가 저쪽에 없거나 사용자 이름이 다릅니다."
+      say "  ${GREEN}ssh-copy-id ${raw%%:*}${OFF}"
+    fi
+  fi
+  if ! dom="$(tunnel_domain)"; then
+    warn "이제 이름이 필요합니다 — VPS 만으로는 어느 주소로 나갔는지 알 수 없습니다."
+    say "  ${GREEN}bml share domain bml.<우리도메인>${OFF}"
+    return 0
+  fi
+  say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}— 그 이름이 진짜 열리는지 그 자리에서 확인합니다.${OFF}"
+}
+
+#: 우리 VPS 로 가는 절차.  두 곳에서 같은 것을 말해야 해서 한 군데 둔다.
+vps_setup_steps() {
+  say ""
+  say "  ${B}우리 VPS 한 대면 주소가 영영 안 바뀝니다.${OFF}"
+  say "  ${DIM}그리고 그 이름은 이 망의 DNS 차단 목록에 없어서, 받는 쪽에서${OFF}"
+  say "  ${GREEN}bmlonly${OFF}${DIM}·중계기·IP 전달이 통째로 필요 없어집니다.${OFF}"
+  say ""
+  say "  ${B}순서${OFF} ${DIM}(한 번만)${OFF}"
+  say "    1. ${DIM}공인 IP 가 있는 기계 한 대.  Oracle Cloud Always Free 의${OFF}"
+  say "       ${DIM}AMD micro (1 GB) 면 평생 무료이고 이 일에 충분합니다.${OFF}"
+  say "    2. ${DIM}Cloudflare DNS 에${OFF} ${GREEN}A  bml  →  <그 기계 IP>${OFF}"
+  say "       ${B}회색 구름(DNS only)${OFF} ${DIM}으로 두세요 — 주황 구름은 올리는 파일을${OFF}"
+  say "       ${DIM}100 MB 로 막습니다 (우리 상한은 512 MB).${OFF}"
+  say "    3. ${DIM}그 기계에서 한 번:${OFF}"
+  say "       ${GREEN}sudo bash vps-setup.sh bml.<우리도메인> <메일>${OFF}"
+  say "       ${DIM}(이 저장소의${OFF} ${GREEN}tools/vps-setup.sh${OFF}${DIM})${OFF}"
+  say "    4. ${GREEN}ssh-copy-id <사용자>@<그 기계>${OFF} ${DIM}— 이 PC 의 키를 올립니다${OFF}"
+  say "    5. ${GREEN}bml share vps <사용자>@<그 기계>${OFF}"
+  say "    6. ${GREEN}bml share domain bml.<우리도메인>${OFF}"
+  say "    7. ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+}
+
 tunnel_via_ssh() {
   local keep="${1:-0}" key label
   if ! command -v ssh >/dev/null 2>&1; then
@@ -3663,11 +3806,22 @@ cmd_share() {
   # 모르는 낱말을 **삼키지 않는다.**  예전에는 `bml share cf <토큰>` 이 그대로
   # 터널을 열었다 -- 인자를 안 보고 지나갔기 때문이다.  하려던 일은 안 됐는데
   # 화면은 성공이라, 사람은 다음 단계로 넘어가고 한참 뒤에 어긋난다.
+  # `bml share now` — 고정 주소 설정을 **그대로 둔 채** 이번 한 번만 랜덤으로.
+  #
+  # 실측 2026-08-26: 고정 주소를 설정해 뒀는데 그 길이 막힌 망에서 `bml share`
+  # 가 아무것도 못 열고 끝났다.  옳은 판단이었지만(랜덤으로 흘러가면 화면이
+  # 거짓말을 한다), **지금 당장 남에게 주소를 줘야 하는 사람에게 길이 없었다.**
+  # 설정을 지우라고 안내했는데, 그러면 나중에 다시 적어야 한다.
+  local once=0
+  case "${1:-}" in
+    now|한번|임시) once=1; shift ;;
+  esac
+
   case "${1:-}" in
     ''|stop|off|close|down) ;;
     *)
       printf '%s✕%s bml share 가 모르는 말입니다: %s\n' "$RED" "$OFF" "$1" >&2
-      say "  ${DIM}쓸 수 있는 것:${OFF} ${GREEN}bml share${OFF} · ${GREEN}bml share stop${OFF} · ${GREEN}bml share cf <토큰>${OFF} · ${GREEN}bml share domain <이름>${OFF} · ${GREEN}bml share key <경로>${OFF}"
+      say "  ${DIM}쓸 수 있는 것:${OFF} ${GREEN}bml share${OFF} · ${GREEN}bml share stop${OFF} · ${GREEN}bml share now${OFF} · ${GREEN}bml share vps <사용자@호스트>${OFF} · ${GREEN}bml share cf <토큰>${OFF} · ${GREEN}bml share domain <이름>${OFF} · ${GREEN}bml share key <경로>${OFF}"
       exit 1
       ;;
   esac
@@ -3742,12 +3896,41 @@ cmd_share() {
   [ -x "$CLOUDFLARED" ] || die "터널 프로그램을 준비하지 못했습니다."
 
   local url="" rc=1
-  # 우리 이름이 있으면 **그 길이 먼저이고, 그 길뿐이다.**
-  #
+  # 우리 VPS 가 있으면 그것이 먼저다.  남의 서비스를 거치지 않고, 주소가
+  # 우리 것이고, 저쪽 사정으로 바뀌지 않는다 (ADR 0034).
+  if [ "$once" = "1" ]; then
+    say "  ${DIM}이번 한 번만 랜덤 주소로 엽니다 — 설정은 그대로 둡니다.${OFF}"
+    tunnel_via_ssh 1; rc=$?
+  elif tunnel_vps >/dev/null && tunnel_domain >/dev/null; then
+    tunnel_via_vps 1; rc=$?
+    url="$(tunnel_url)"
+    if [ "$rc" -ne 0 ] && [ -z "$url" ]; then
+      printf '%s✕%s 우리 VPS 로 터널을 열지 못했습니다.\n' "$RED" "$OFF" >&2
+      say "  ${DIM}랜덤 주소로 대신 열지 않습니다 — 고정 주소를 설정해 두셨으므로.${OFF}"
+      say ""
+      say "  ${DIM}차례로 보세요:${OFF}"
+      say "    ${GREEN}ssh $(tunnel_vps 2>/dev/null)${OFF} ${DIM}— 키로 붙나요${OFF}"
+      say "    ${DIM}저쪽에서${OFF} ${GREEN}systemctl status nginx${OFF} ${DIM}· DNS 가 그 기계를 가리키나요${OFF}"
+      say "  ${DIM}$RUN_DIR/tunnel.log 에 ssh 가 남긴 말이 있습니다.${OFF}"
+      exit 1
+    fi
   # 실패했다고 랜덤 주소로 흘러가면 안 된다.  고정 주소를 설정해 둔 사람은
-  # 열렸다는 말을 보고 `bml.bmlwork.kr` 을 남에게 알려 주는데, 정작 열린 것은
-  # `xxxx.trycloudflare.com` 이다 -- 화면은 성공이고 상대는 아무것도 못 연다.
-  if tunnel_cf_token >/dev/null && tunnel_domain >/dev/null; then
+  # 열렸다는 말을 보고 그 이름을 남에게 알려 주는데, 정작 열린 것은 랜덤
+  # 주소다 -- 화면은 성공이고 상대는 아무것도 못 연다.
+  elif tunnel_cf_token >/dev/null && tunnel_domain >/dev/null; then
+    # 7844 가 막힌 것이 이미 보이면 2분을 쓰지 않는다.  quic·http2 를 다
+    # 기다려 봐야 답은 같고, 그 2분은 사람이 그냥 서 있는 시간이다.
+    case "$(edge_probe)" in
+      blocked*)
+        printf '%s✕%s 이 망이 7844 를 막아 Cloudflare 터널은 안 됩니다.\n' "$RED" "$OFF" >&2
+        say "  ${DIM}설정 문제가 아닙니다 (ADR 0031) — 시도해 봐야 2분 뒤 같은 답입니다.${OFF}"
+        say ""
+        say "  ${B}지금 당장 주소가 필요하면${OFF}  ${GREEN}bml share now${OFF} ${DIM}— 설정은 그대로 두고 랜덤으로 한 번${OFF}"
+        say "  ${B}이 랩에서 고정 주소를 쓰려면${OFF} ${GREEN}bml share vps <사용자@호스트>${OFF} ${DIM}(ADR 0034)${OFF}"
+        say "  ${DIM}Cloudflare 를 접으려면${OFF}      ${GREEN}bml share cf off${OFF}"
+        exit 1
+        ;;
+    esac
     tunnel_via_named 1; rc=$?
     url="$(tunnel_url)"
     if [ "$rc" -ne 0 ] && [ -z "$url" ]; then
@@ -5448,6 +5631,7 @@ main() {
       if [ "${1:-}" = "key" ]; then shift; cmd_share_key "${1:-}"
       elif [ "${1:-}" = "domain" ]; then shift; cmd_share_domain "${1:-}"
       elif [ "${1:-}" = "cf" ] || [ "${1:-}" = "token" ]; then shift; cmd_share_cf "${1:-}"
+      elif [ "${1:-}" = "vps" ] || [ "${1:-}" = "server" ]; then shift; cmd_share_vps "${1:-}"
       else cmd_share "${1:-}"; fi
       ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;

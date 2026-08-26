@@ -414,10 +414,10 @@ echo "보여 준다고 해 놓고 침묵하지 않는다"
 # 걸러 냈더니 남는 게 없었던 것인데(배너만 찍고 죽는 경우), 사람은 자기 화면이
 # 잘린 줄 안다.  없으면 없다고 말하고, 그때 할 일까지 준다.
 check "빈 로그면 없다고 말한다"   "$(grep -c '남은 말이 없습니다' "$HERE/../bml")" "1"
-# 세 곳이다: nokey 로 여는 곳, 등록한 키로 여는 곳, 그리고 그 옵션이 왜
-# 있는지 설명하는 안내 문구.  포워딩이 실패했는데 조용히 붙어 있으면 주소만
-# 받고 아무것도 안 열린다.
-check "그때 다시 열라고 안내한다" "$(grep -c 'ExitOnForwardFailure' "$HERE/../bml")" "3"
+# 네 곳이다: nokey 로 여는 곳, 등록한 키로 여는 곳, 우리 VPS 로 여는 곳, 그리고
+# 그 옵션이 왜 있는지 설명하는 안내 문구.  포워딩이 실패했는데 조용히 붙어
+# 있으면 주소만 받고 아무것도 안 열린다.
+check "그때 다시 열라고 안내한다" "$(grep -c 'ExitOnForwardFailure' "$HERE/../bml")" "4"
 
 echo "등록한 키로 열면 주소가 안 바뀐다 (설정한 사람만)"
 # localhost.run 은 등록하지 않은 키를 거부한다 (Permission denied (publickey) --
@@ -432,10 +432,11 @@ check "키가 있으면 그것으로" \
 # `-i` 로 붙는다 (지금은 되살리는 감독자 스크립트 안에 있다).
 check "키 쪽은 nokey@ 를 안 쓴다" \
   "$(grep -c 'IdentitiesOnly=yes' "$HERE/../bml")" "1"
-# 두 곳이다: nokey 경로와 감독자 안.  keepalive 가 빠지면 학교망이 유휴 TCP 를
-# 끊어도 이쪽은 모르고, 살아 있는 것처럼 보이는데 엣지는 503 을 돌려준다.
-check "양쪽 다 keepalive 를 건다" \
-  "$(grep -c 'ServerAliveInterval=30' "$HERE/../bml")" "2"
+# 세 곳이다: nokey 경로 · localhost.run 감독자 · 우리 VPS 감독자.  keepalive 가
+# 빠지면 학교망이 유휴 TCP 를 끊어도 이쪽은 모르고, 살아 있는 것처럼 보이는데
+# 저쪽은 503 을 돌려준다.
+check "모든 길에 keepalive 를 건다" \
+  "$(grep -c 'ServerAliveInterval=30' "$HERE/../bml")" "3"
 
 echo
 echo "주소가 왜 바뀌었는지 화면에서 갈린다"
@@ -680,6 +681,56 @@ check "휴대폰 갈래도 남긴다" \
   "$(grep -c '휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다' "$HERE/../bml")" "2"
 
 echo
+echo "막다른 골목을 만들지 않는다"
+SHN="$(awk '/^cmd_share\(\) \{/,/^\}/' "$HERE/../bml")"
+# 실측 2026-08-26: 고정 주소를 설정해 뒀는데 그 길이 막힌 망에서 `bml share` 가
+# 아무것도 못 열고 끝났다.  랜덤으로 흘러가지 않는 것은 옳지만(화면이 거짓말을
+# 하게 된다), **지금 당장 남에게 주소를 줘야 하는 사람에게 길이 없었다.**
+check "한 번만 랜덤으로 여는 길이 있다" \
+  "$(printf '%s' "$SHN" | grep -c 'now|한번|임시')" "1"
+check "그때 설정을 안 지운다" \
+  "$(printf '%s' "$SHN" | grep -c '설정은 그대로 둡니다')" "1"
+# 답이 뻔한데 2분을 쓰지 않는다.  그 2분은 사람이 그냥 서 있는 시간이다.
+check "막힌 줄 알면 시도하지 않는다" \
+  "$(printf '%s' "$SHN" | grep -c '시도해 봐야 2분 뒤 같은 답입니다')" "1"
+# 막다른 골목마다 같은 탈출구를 적어 준다 — 주석 하나와 화면 두 줄 (7844 가
+# 막혔을 때, 그리고 모르는 말을 거절할 때).
+check "그 자리에서 갈 길을 준다" \
+  "$(printf '%s' "$SHN" | grep '^ *say ' | grep -c 'bml share now')" "2"
+
+echo
+echo "우리 VPS로 여는 터널 (ADR 0034)"
+BV="$HERE/../bml"
+# VPS 와 이름이 **둘 다** 있어야 한다.  VPS 만 있으면 어느 주소로 나갔는지
+# 이쪽이 모르고, 이름만 있으면 그 이름이 가리키는 기계가 없다.
+( WORKBENCH_VPS="" WORKBENCH_TUNNEL_DOMAIN="bml.example.kr" ; tunnel_via_vps 0 ) >/dev/null 2>&1
+check "VPS 가 없으면 안 연다"   "$?" "1"
+( WORKBENCH_VPS="u@h" WORKBENCH_TUNNEL_DOMAIN="" ; tunnel_via_vps 0 ) >/dev/null 2>&1
+check "이름이 없으면 안 연다"   "$?" "1"
+
+# 전달된 포트를 0.0.0.0 에 열면 **인터넷 아무나 TLS 없이** 그 포트로 들어온다.
+# nginx 가 같은 기계 안에서 127.0.0.1 로 붙으므로 열 이유도 없다.
+KA="$(awk '/^write_vps_keepalive\(\) \{/,/^\}/' "$BV")"
+check "0.0.0.0 에 열지 않는다"  "$(printf '%s' "$KA" | grep -c '0\.0\.0\.0')" "0"
+check "-N 으로만 붙는다"        "$(printf '%s' "$KA" | grep -c 'ssh -N')" "1"
+check "끊기면 다시 붙는다"      "$(printf '%s' "$KA" | grep -c 'while :; do')" "1"
+# 붙자마자 죽는 것이 이어지면 고칠 수 있는 문제가 아니다 (키·포트).  무한히
+# 두드리면 로그가 그것으로만 차서 진짜 이유가 묻힌다.
+check "곧바로 끊기면 멈춘다"    "$(printf '%s' "$KA" | grep -c 'quick.*-ge 20')" "1"
+
+SETUP="$HERE/../vps-setup.sh"
+check "VPS 설치본이 있다"       "$([ -f "$SETUP" ] && echo yes)" "yes"
+# 같은 이유로 저쪽 sshd 도 GatewayPorts 를 끈다.
+check "저쪽도 GatewayPorts 를 끈다" "$(grep -c 'GatewayPorts no' "$SETUP")" "1"
+# SSE 를 버퍼링하면 화면이 남이 고친 것을 영영 못 받는다.
+check "SSE 버퍼링을 끈다"       "$(grep -c 'proxy_buffering off' "$SETUP")" "1"
+# 여기서 막으면 413 이 나는데, 그 413 은 워크벤치가 준 것이 아니라 화면이
+# 엉뚱한 곳을 가리킨다.
+check "업로드 상한을 맞춘다"    "$(grep -c 'client_max_body_size 512m' "$SETUP")" "1"
+# 회색 구름이어야 한다 — 주황 구름은 올리는 파일을 100 MB 로 막는다.
+check "회색 구름을 안내한다"    "$(grep -c '회색 구름' "$BV")" "1"
+
+echo
 echo "7844 이 막힌 것과 이름을 못 구한 것은 다르다"
 BML0="$HERE/../bml"
 # 이 망은 이름을 가로챈다 (ADR 0030).  이름이 엉뚱한 곳을 가리키면 붙을 리가
@@ -759,7 +810,12 @@ check "http2 로 한 번 더 시도한다"   "$(printf '%s' "$VIA" | grep -c -- 
 
 # 실패했다고 랜덤 주소로 흘러가지 않는다.  `cmd_share` 가 그 갈래를 아예 안 탄다.
 SH="$(awk '/^cmd_share\(\) \{/,/^\}/' "$BMLF")"
-check "우리 이름이 있으면 그 길뿐"   "$(printf '%s' "$SH" | grep -c '랜덤 주소로 대신 열지 않습니다')" "1"
+# 고정 주소 길이 둘이다 (우리 VPS · Cloudflare 터널).  **둘 다** 실패했다고
+# 랜덤 주소로 흘러가면 안 된다: 고정 주소를 설정한 사람은 열렸다는 말을 보고
+# 그 이름을 남에게 알려 주는데, 정작 열린 것은 랜덤 주소다.
+check "우리 이름이 있으면 그 길뿐"   "$(printf '%s' "$SH" | grep -c '랜덤 주소로 대신 열지 않습니다')" "2"
+check "VPS 가 먼저다" \
+  "$(printf '%s' "$SH" | grep -n 'tunnel_via_vps\|tunnel_via_named' | head -1 | grep -c 'tunnel_via_vps')" "1"
 check "그때 무엇을 볼지 말해 준다"   "$(printf '%s' "$SH" | grep -c 'one.dash.cloudflare.com')" "1"
 
 # 토큰은 암호와 같은 급이다 -- 가진 사람은 그 터널로 붙을 수 있고, 사람들은 이
