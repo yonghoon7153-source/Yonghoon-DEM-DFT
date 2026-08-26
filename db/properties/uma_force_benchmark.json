@@ -4,7 +4,6 @@
   "why": "T1 은 '우리 스냅샷이 훈련 분포 안인가' 를 묻는데, 우리는 우리 포텐셜의 힘 정확도를 우리 화학계에서 한 번도 안 쟀다. 문헌 데이터셋에 DFT 에너지·힘이 라벨로 붙어 있어 정답지가 생겼다.",
   "tool": "tools/ionic/mlip_committee.py bench (selftest 22, 음성 6)",
   "machine": "gabia · A6000 · uma env",
-
   "runs": {
     "lips": {
       "dataset": "lips.xyz — Li6.75P3S11 (Li27P12S44, 83 atoms)",
@@ -28,21 +27,59 @@
         "same_sign_frames": "251/251"
       },
       "raw": "gabia:/data/work/runs/bench_lips/bench_uma.{json,csv}"
+    },
+    "li3po4_melt_quench": {
+      "dataset": "li3po4-joint-together.xyz — Li3PO4 (Li72P24O96, 192 atoms)",
+      "source": "Musaelian 2023 Allegro 공개 데이터 · 앞 25k = melt(50 ps) / 뒤 25k = quench(50 ps)",
+      "n_frames_total": 50000,
+      "stride": 200,
+      "n_frames_used": 250,
+      "all": {
+        "mae_eVA": 0.0644,
+        "rmse_eVA": 0.0892,
+        "max_abs_eVA": 1.521,
+        "rms_ref_eVA": 1.708,
+        "rel_mae_pct": 3.77,
+        "pearson_r": 0.99864,
+        "softening_slope": 0.9991
+      },
+      "segments": {
+        "melt (frame < 25000)": {
+          "n": 125,
+          "mae_eVA": 0.0669,
+          "rel_mae_pct": 3.04,
+          "softening_slope": 0.9995,
+          "rms_ref_eVA": 2.199
+        },
+        "quench (frame >= 25000)": {
+          "n": 125,
+          "mae_eVA": 0.0619,
+          "rel_mae_pct": 6.19,
+          "softening_slope": 0.9973,
+          "rms_ref_eVA": 1.0
+        }
+      },
+      "delta_softening_quench_minus_melt": -0.0021,
+      "energy_per_atom_meV": {
+        "bias": -27.71,
+        "scatter_sd": 2.09,
+        "mae_after_bias_removal": 1.94,
+        "same_sign_frames": "250/250"
+      },
+      "raw": "gabia:/data/work/runs/bench_li3po4/bench_uma.{json,csv}"
     }
   },
-
   "★_reading": {
     "1_힘_정확도": "MAE 0.0221 eV/Å · 상대 3.61 %. 눈금 셋(MTP 자체학습 0.073 · SevenNet-0 base 0.070 · SevenNet 반응계 fine-tune 0.57) 중 **제일 좋은 것보다 3.2배 낫다**. 상대오차 3.61 % 는 Shapeev 2016 의 MTP **16-fold CV 값 3.4 %** 와 사실상 같은 자리인데, 그 MTP 는 텅스텐 단일원소를 **자기 데이터로 직접 학습**한 것이고 우리 UMA 는 이 계를 특별히 학습하지 않은 **범용 모델**이다.",
     "2_에너지_오차는_정확도가_아니다": "편향 −37.43 ± **0.51** meV/atom, **251/251 전부 같은 부호**, 편향 제거 후 MAE **0.41**. 순수한 상수 오프셋이다 — OMat24 와 이 데이터셋의 DFT 설정 차이에서 오고, **힘에 기여하지 않으며 에너지 차이에서 상쇄된다**. 이상욱 랩 가수분해 데이터에서 읽은 것(8.77 중 8.77 이 오프셋)과 **같은 구조**이고, 이제 두 번 독립 확인됐다.",
     "3_softening": "**0.9874 = 1.3 % 무름.** OMat24 보충자료의 `force_softening` 과 같은 척도다."
   },
-
   "softening_vs_omat24": {
     "⛔_주의": "OMat24 값은 **high-energy WBM set** 에서 잰 것이고 우리 값은 **LiPS AIMD 궤적** 이다. **시험셋이 다르므로 같은 표에 놓고 순위를 매기면 안 된다.** 아래는 자릿수 감각용이다.",
     "reference_medians": {
       "eqV2 S / OAM": 1.0015,
       "eSEN / OAM": 0.9965,
-      "eSEN / MPtrj": 0.9920,
+      "eSEN / MPtrj": 0.992,
       "OUR_UMA / lips": 0.9874,
       "sevenn / OAM": 0.9809,
       "mace / mpa": 0.9789,
@@ -54,7 +91,6 @@
     },
     "관찰": "우리 값이 **MPtrj 로 학습한 모든 모델보다 위**에 있고 OAM(OMat24 포함) 군 안에 든다. UMA 가 OMat24 로 학습됐다는 것과 정합한다. ⚠ 시험셋이 달라 이것은 정합이지 증명이 아니다."
   },
-
   "🔴_b2o3_에_대한_함의": {
     "질문": "1.3 % 힘 무름이 b2o3 골격을 rigid(β<0.30) → diffusive(β≥0.60) 로 바꿀 수 있나",
     "크기_논증": "힘이 1.3 % 작으면 유효 장벽도 대략 그만큼 낮아진다. 700 K 에서 kT ≈ 60 meV 이고 골격 장벽이 ~300 meV 규모라면 1.3 % = 약 4 meV → exp(4/60) ≈ **1.07**, 즉 속도 7 % 증가다. **정성적 전이를 만들 크기가 아니다.**",
@@ -67,17 +103,29 @@
     ],
     "다음_검사": "`li3po4-joint-together.xyz` — **앞 25k = melt, 뒤 25k = quench** 로 고에너지/저에너지가 프레임 번호로 갈려 있다. **두 구간의 softening 기울기 차이가 곧 '고에너지에서 더 무른가' 의 직접 측정**이다. 그것이 lips 값과 비슷하면 위 판정이 굳고, quench 쪽에서 크게 떨어지면 b2o3 재검토가 필요하다."
   },
-
   "⛔_do_not": [
     "이 값을 '우리 UMA 는 정확하다' 로 일반화하지 말 것 — **LiPS 한 계, 251 프레임, 한 stride** 의 값이다.",
     "OMat24 표와 같은 줄에 놓고 순위를 매기지 말 것 — 시험셋이 다르다.",
     "에너지 편향 −37.43 을 오차로 인용하지 말 것 — 상수 오프셋이다.",
     "σ 절대값 인용 금지 규율은 그대로다. 이 벤치마크는 **힘 정확도**를 재는 것이지 전도도를 재는 것이 아니다."
   ],
-
   "pending": {
-    "li3po4_melt_quench": "실행 대기 — 위 '다음_검사'",
+    "li3po4_melt_quench": "✅ 완료 2026-08-26",
     "lipo_quench": "선택 (li3po4 와 겹침)",
-    "hydrolysis_combined_xyz": "db/external/kim2026_argyrodite_hydrolysis/validation/*_combined.xyz 에 DFT 힘이 있다 — **황화물+물 반응계**에서 같은 측정 가능. 단 LPSC 는 frame 3==61 중복 dedupe 필요"
+    "hydrolysis_combined_xyz": "db/external/kim2026_argyrodite_hydrolysis/validation/*_combined.xyz 에 DFT 힘이 있다 — **황화물+물 반응계**에서 같은 측정 가능. 단 LPSC 는 frame 3==61 중복 dedupe 필요",
+    "frame_level_distribution": "구간 요약만 봤다. 프레임별 softening 분포는 CSV 로 볼 수 있다 — Δ 유의성 판정에 필요"
+  },
+  "★_T1b_verdict_2026_08_26": {
+    "분할이_제대로_됐나": "✅ melt 참조 RMS 2.199 vs quench 1.000 eV/Å — **힘 크기가 2.2배** 차이난다. 고온/저온이 실제로 갈렸다.",
+    "핵심": "**고에너지(melt) 쪽 softening 이 0.9995 — 사실상 없다.** 저에너지(quench) 0.9973 으로 오히려 **약간 더 무르다**(Δ = −0.0021).",
+    "이것이_왜_중요한가": "softening 가설의 예측은 **고에너지 영역에서 더 무르다** 이다(덱 슬 8 의 '빨간 점 = 보강이 필요한 고에너지 상태'). 실측은 **반대 방향**이고, 크기도 0.2 %p 로 무시할 수준이다. 우리가 가진 가장 힘이 센 영역(RMS 2.2 eV/Å = 융액)에서 **UMA 는 안 무르다.**",
+    "b2o3_판정": "b2o3 골격 붕괴(β<0.30 → ≥0.60)를 **softening 으로 설명하는 길이 사실상 닫힌다.** '조성 고유' 판정이 더 강해진다.",
+    "⛔_남은_한계": [
+      "**Li₃PO₄ 는 황화물이 아니고 B 가 없다.** 우리 b2o3 축의 두 특징이 다 빠져 있다.",
+      "**융액이지 700 K 결정 골격이 아니다.** 우리 현상은 '결정이어야 하는데 안 그렇다' 인데, 융액은 애초에 무질서다.",
+      "**단일 stride·단일 궤적.** 프레임별 softening 분포는 아직 안 봤다(CSV 에 원자료 있음).",
+      "**Δ = −0.0021 의 유의성 미검정.** 구간당 125 프레임이고 프레임 간 산포를 안 쟀다."
+    ],
+    "새로_보인_것": "**절대 힘오차가 힘 크기를 안 따라간다.** melt 0.0669 ↔ quench 0.0619 로 거의 같은데 참조 RMS 는 2.199 → 1.000 으로 반토막이다. 그래서 상대오차가 3.04 % → **6.19 %** 로 커진다. ⇒ **식으면서 상대 정확도가 나빠진다.** 우리 저온 MD(300–600 K)에 해당할 수 있는 성질이라 기록해 둔다. (⚠ 계 간에는 다르다 — lips 는 RMS 0.613 에 MAE 0.0221 이었다.)"
   }
 }
