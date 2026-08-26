@@ -456,9 +456,12 @@ def sdcp_self_doping():
 def todo():
     md = D.load_open_items_md()
     html = md_html(md, ("tables", "fenced_code", "toc"))
+    # ⚠ 날짜를 하드코딩하지 않는다 — 원장 파일이 늘어도 이 문구는 그대로 맞다.
+    banner = {"url": "/ledger", "label": "🧾 T·Q 원장",
+              "text": "이 리스트의 T 번호가 오늘 어디까지 움직였는지는 하루치 원장에서 본다"}
     return render_template("doc.html", active="todo",
                            title="📋 미결 리스트 (Open Items)",
-                           content=html,
+                           content=html, banner=banner,
                            subtitle="kb/open_items.md · 판정 대기 · PDF 확보 대기 · ML 후속 · 심포지엄 대응")
 
 
@@ -513,6 +516,104 @@ def governance_page():
                            decisions=dec, assessments=ass, artifacts=art,
                            single=single, lost=lost,
                            problems=_C.validate_governance() + _C.validate_artifacts())
+
+
+#: /ledger — T 상태 접두 이모지의 표시색 (해석이 아니라 표시다. 모르는 이모지는 기본색).
+_TQ_STATUS_COLOR = {"🔶": "#c05621", "⏳": "#9ca3af", "✅": "#0d9488",
+                    "⛔": "#6b7280", "🔴": "#be123c"}
+
+
+@app.route("/ledger")
+def ledger_page():
+    """T·Q 원장 — 심포지엄 판독 하루치를 원장 파일 그대로 편다.
+
+    데이터원은 **db/properties/tq_ledger_*.json 하나**다 (D.load_tq_ledger, 날짜 역순).
+    코드 체계 원본은 kb/CODES.md — 특히 **Q 번호는 문서마다 로컬**이라 화면의
+    Q 네 절 머리마다 경고를 박는다 (T·J·M 은 전역 번호).
+
+    ⚠ "원장 파일이 없다" / "원장을 못 읽었다" / "칸이 비어 있다(값 대기)" 는
+      세 다른 문장으로 화면에 나온다 (governance_page 교훈 — 잘못 읽은 원장이
+      조용히 빈 표가 되면 안 된다). '오늘' 칸이 "-" 인 항목은 **값 대기** 뱃지다.
+
+    ⛔ 이 페이지가 **못 하는 것**
+      · 상태·결과의 옳고 그름을 판정하지 않는다 — 원장 문자열을 옮길 뿐이다.
+      · '값 대기' 칸을 채우지 않는다 — 내일 원장 파일이 갱신돼야 채워진다.
+      · 도구 경로 중 /api/file 허용 뿌리(docs·db·litdb/figures) 밖(tools/ 등)은
+        링크로 열지 못한다 — 경로 문자열만 보인다 (safe_repo_path 가 거절).
+      · T 상태 이모지의 의미를 해석하지 않는다 — 접두 이모지 그대로 센다.
+    """
+    ledgers = D.load_tq_ledger()
+    broken = [l for l in ledgers if l.get("_error")]
+    good = [l for l in ledgers if not l.get("_error")]
+    led = good[0] if good else None
+    if led is None:
+        # 파일이 아예 없는 것(빈 리스트)과 있는데 못 읽은 것(broken)을 구분해 넘긴다.
+        return render_template("ledger.html", active="ledger", led=None, broken=broken)
+
+    # ── T 표: 상태칩 색 · '오늘' 마크다운 · 도구 링크(서빙 가능한 것만) ──
+    t_raw = led.get("T")
+    t_rows, t_counts, n_pending = [], {}, 0
+    for t in (t_raw or []):
+        status = str(t.get("상태") or "").strip()
+        skey = status[:1] if status[:1] in _TQ_STATUS_COLOR else ""
+        t_counts[skey or "기타"] = t_counts.get(skey or "기타", 0) + 1
+        today = str(t.get("오늘") or "").strip()
+        pending = today in ("", "-")
+        n_pending += pending
+        tool = str(t.get("도구") or "").strip()
+        path = tool.split()[0] if tool else ""
+        if "/" not in path:
+            path = ""
+        t_rows.append({"id": t.get("id", "?"), "what": t.get("무엇", ""),
+                       "status": status,
+                       "color": _TQ_STATUS_COLOR.get(skey, "var(--text2)"),
+                       "pending": pending,
+                       "today_html": "" if pending else md_html(today),
+                       "tool": tool, "tool_path": path,
+                       "tool_link": bool(path and D.safe_repo_path(path))})
+    # 요약 칩 순서 고정 (원장에 있는 것만 나온다)
+    t_counts = {k: t_counts[k] for k in ("🔶", "⏳", "✅", "⛔", "🔴", "기타")
+                if k in t_counts}
+
+    # ── Q 네 절: 항목 모양이 절마다 다르다(결과/내용/닫는_법) — 있는 키만 옮긴다 ──
+    def _q_rows(items):
+        rows = []
+        for q in (items or []):
+            ans = q.get("결과") or q.get("내용") or ""
+            close = q.get("닫는_법") or ""
+            rows.append({"id": q.get("id", "?"), "doc": q.get("문서", ""),
+                         "q_html": md_html(str(q.get("질문") or "")),
+                         "a_html": md_html(str(ans)) if ans else "",
+                         "close_html": md_html(str(close)) if close else ""})
+        return rows
+
+    qsec = []
+    for key, label in (("Q_닫힌_것", "닫힌 것"),
+                       ("Q_절반_닫힌_것", "절반 닫힌 것"),
+                       ("Q_새로_열린_것", "새로 열린 것"),
+                       ("Q_그대로_열려있는_것", "그대로 열려 있는 것")):
+        items = led.get(key)
+        qsec.append({"key": key, "label": label, "missing": items is None,
+                     "rows": _q_rows(items)})
+
+    # ── 들어온 것 / 정정 / 만든 도구: 원장에 절이 없으면 '값 대기' (None ≠ 빈 리스트) ──
+    raw_in = led.get("오늘_들어온_것")
+    intake = None
+    if isinstance(raw_in, dict):
+        # ⚠ 키 이름을 "items" 로 두면 Jinja 의 it.items 가 dict 메서드를 잡는다 → "li"
+        intake = [{"k": k,
+                   "li": [md_html(str(x)) for x in v] if isinstance(v, (list, tuple)) else [],
+                   "html": "" if isinstance(v, (list, tuple)) else md_html(str(v))}
+                  for k, v in raw_in.items()]
+    corr_raw = led.get("오늘_정정한_우리_기록")
+    tools_raw = led.get("오늘_만든_도구")
+    return render_template(
+        "ledger.html", active="ledger", led=led, broken=broken,
+        older=[l["_file"] for l in good[1:]],
+        t_rows=t_rows, t_counts=t_counts, t_missing=t_raw is None,
+        n_pending=n_pending, qsec=qsec, intake=intake,
+        corrections=None if corr_raw is None else [md_html(str(s)) for s in corr_raw],
+        made_tools=None if tools_raw is None else [md_html(str(s)) for s in tools_raw])
 
 
 @app.route("/fairchem")

@@ -113,6 +113,32 @@ def load_properties() -> dict:
             out.setdefault(f.stem, d)  # 스템 충돌 시 최상위 우선
     return out
 
+def load_tq_ledger() -> list:
+    """db/properties/tq_ledger_*.json 전부를 **날짜 역순 리스트**로 (최신이 [0]).
+
+    내일 tq_ledger_2026_08_27.json 이 추가되면 코드 수정 없이 잡힌다 (glob).
+    파일이 하나도 없으면 빈 리스트. 깨진 파일은 조용히 빼지 않고
+    {"_file", "_error"} 항목으로 남긴다 — "원장이 없다" 와 "원장을 못 읽었다" 는
+    화면에서 **다른 문장**이어야 한다 (governance_page 교훈, 2026-08-20).
+
+    이 로더가 **못 하는 것**:
+      · 스키마(tq_ledger/v1) 검증 — schema 문자열을 그대로 실을 뿐 거르지 않는다.
+      · 상태·결과 문자열의 옳고 그름 판정 — 원장을 그대로 옮긴다.
+      · 여러 날짜 원장의 병합/중복 제거 — 하루치 파일 단위로만 준다.
+    """
+    out = []
+    for f in (DB / "properties").glob("tq_ledger_*.json"):
+        d = _load_json(f)
+        if not isinstance(d, dict):
+            d = {"_error": "JSON 을 읽지 못했다 (깨졌거나 dict 가 아니다)"}
+        d = dict(d)
+        d["_file"] = f.name
+        out.append(d)
+    # date 필드 우선, 없으면 파일명(tq_ledger_YYYY_MM_DD)이 정렬을 대신한다
+    out.sort(key=lambda d: (str(d.get("date") or ""), d["_file"]), reverse=True)
+    return out
+
+
 def load_canonical_methods() -> str:
     p = KB / "methodology" / "computational_methods_canonical.md"
     return p.read_text(encoding="utf-8") if p.exists() else ""

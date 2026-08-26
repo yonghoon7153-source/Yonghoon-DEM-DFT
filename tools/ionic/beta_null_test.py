@@ -21,6 +21,14 @@
 
   python3 tools/ionic/beta_null_test.py --n_li 27 --n_frames 2000 --dt_ps 0.1
   python3 tools/ionic/beta_null_test.py --from_msd ~/work/runs/.../msd.json
+  python3 tools/ionic/beta_null_test.py --hop_sweep --csv db/properties/beta_gate_null_vs_hops_origin.csv
+
+이 도구가 못 하는 것
+  · MD 를 대신하지 못한다 — 게이트(추정기)를 검정할 뿐이다.
+  · 진짜 sub-diffusion 을 만들지 못한다 — 귀무는 전부 Fickian+케이지다. 그래서
+    "게이트가 잡음을 잰다" 는 말할 수 있어도 "실측 β 낮음 = 잡음" 은 단정 못 한다.
+  · --hop_sweep 의 n_hop 은 MSD/d_hop² 환산(상한 추정)이다 — 되돌아오는 홉을
+    세지 않으므로 실제 이벤트 수보다 낙관적이다 (hops_per_ion.py 와 같은 한계).
 """
 import argparse
 import json
@@ -88,6 +96,124 @@ def synth(n_li, n_frames, dt_ps, D_cm2_s, rng, cage_A2=0.0, tau_ps=1.0):
     return t, msd
 
 
+def ideal_beta(n_hop, cage_A2, tau_ps=1.0, prod_ps=200.0, d_hop=3.0,
+               lo=2.0, hi=50.0, dt_ps=0.1):
+    """잡음 0 인 이상 곡선 MSD(t)=2·cage_A2·(1−e^{−t/τ})+6Dt 의 창내 log-log 기울기.
+
+    n_hop 은 hops_per_ion.py 규약(= MSD@prod / d_hop², 상한 추정)으로 D 를 역산한다.
+    OU 케이지의 장시간 절편은 2·cage_A2 다 (분산 감쇠 항등식) — cage_A2 가 아니라.
+    """
+    if n_hop <= 0:
+        raise ValueError(f"n_hop 은 양수여야 한다: {n_hop}")
+    D_a2ps = n_hop * d_hop ** 2 / (6.0 * prod_ps)          # MSD@prod = n_hop·d_hop²
+    t = np.arange(dt_ps, hi + dt_ps, dt_ps)
+    y = 2.0 * cage_A2 * (1.0 - np.exp(-t / tau_ps)) + 6.0 * D_a2ps * t
+    return beta_of(t, y, lo, hi), D_a2ps * 1e-4            # (β_det, D[cm²/s])
+
+
+def hop_sweep(a):
+    """n_hop 축으로 귀무분포 스윕 — "홉이 몇 개면 β 게이트를 믿을 수 있나".
+
+    각 n_hop(200 ps 기준)에서: 이상곡선 β_det + MC 분포(중앙값·5–95%·P(β<gate)·
+    5% 분위수 β_crit). β_crit 이 곧 "이 홉 수에서 거짓탈락 5% 를 주는 문턱"이다.
+    """
+    rng = np.random.default_rng(a.seed)
+    lo, hi = 2.0, 50.0                                     # 캠페인 규약 창 고정
+    prod_ps = (a.n_frames - 1) * a.dt_ps
+    grid = [1.0, 2.0, 3.0, 5.0, 8.4, 10.0, 13.9, 20.0, 30.0]  # 8.4/13.9 = 우리 실측 계
+    print(f"홉 스윕 — 절편 2·cage = {2*a.cage_A2:.1f} Å² (실측: modelc 2.3 / b2o3 1.7 / "
+          f"lpsocl 4.0) · Li {a.n_li} · {prod_ps:.0f} ps · 창 {lo:g}–{hi:g} · {a.trials}회/점")
+    print(f"⚠ 모든 행이 **진짜 Fickian** 이다 — β<{a.gate} 는 전부 거짓탈락이다.\n")
+    hdr = (f"{'n_hop@200ps':>11s} {'D [cm²/s]':>10s} {'c/MSD@50':>9s} {'β_det':>6s} "
+           f"{'β 중앙값':>8s} {'β 5–95%':>12s} {f'P(β<{a.gate})':>10s} {'β_crit5%':>9s}")
+    print(hdr)
+    rows = []
+    for nh in grid:
+        b_det, D_cm2 = ideal_beta(nh, a.cage_A2, a.tau_ps, prod_ps, lo=lo, hi=hi,
+                                  dt_ps=a.dt_ps)
+        c_eff = 2.0 * a.cage_A2
+        msd50 = 6.0 * D_cm2 * 1e4 * hi + c_eff
+        bs = []
+        for _ in range(a.trials):
+            t, y = synth(a.n_li, a.n_frames, a.dt_ps, D_cm2, rng,
+                         cage_A2=a.cage_A2, tau_ps=a.tau_ps)
+            b = beta_of(t, y, lo, hi)
+            if b is not None:
+                bs.append(b)
+        bs = np.array(bs)
+        p_fail = float((bs < a.gate).mean())
+        crit5 = float(np.percentile(bs, 5))
+        rows.append({"n_hop_200ps": nh, "D_cm2_s": D_cm2,
+                     "c_over_msd50_pct": 100 * c_eff / msd50,
+                     "beta_deterministic": round(b_det, 3),
+                     "beta_median": round(float(np.median(bs)), 3),
+                     "beta_p5": round(float(np.percentile(bs, 5)), 3),
+                     "beta_p95": round(float(np.percentile(bs, 95)), 3),
+                     "false_fail_pct": round(100 * p_fail, 1),
+                     "beta_crit_5pct": round(crit5, 3)})
+        print(f"{nh:11.1f} {D_cm2:10.2e} {100*c_eff/msd50:8.1f}% {b_det:6.2f} "
+              f"{np.median(bs):8.2f} {f'{np.percentile(bs,5):.2f}–{np.percentile(bs,95):.2f}':>12s} "
+              f"{100*p_fail:9.1f}% {crit5:9.2f}")
+    # 게이트 0.8 이 건전해지는 최소 홉 수 (거짓탈락 <5%)
+    sound = [r for r in rows if r["false_fail_pct"] < 5.0]
+    print()
+    if sound:
+        print(f"→ **β≥{a.gate} 게이트가 건전한(거짓탈락<5%) 최소 홉 수: "
+              f"n_hop ≈ {sound[0]['n_hop_200ps']:g}** (이 절편 크기 기준)")
+    else:
+        print(f"→ ⛔ 이 절편({2*a.cage_A2:.1f} Å²)에서는 어떤 홉 수에서도 β≥{a.gate} "
+              f"게이트가 5% 기준을 못 넘는다 — 문턱을 β_crit5% 열에서 다시 골라야 한다")
+    print("   실측 대조: modelc 600 K (홉 13.9, β 0.87) · b2o3 600 K (13.9, 0.81) · "
+          "lpsocl 600 K (8.4, 0.61)")
+    if a.csv:
+        import csv as _csv
+        with open(a.csv, "w", newline="") as f:
+            f.write(f"# beta gate null distribution vs hop count. window {lo:g}-{hi:g} ps, "
+                    f"n_Li {a.n_li}, prod {prod_ps:.0f} ps, cage intercept {2*a.cage_A2:.1f} A^2, "
+                    f"{a.trials} trials, seed {a.seed}. All rows are TRUE Fickian - "
+                    f"false_fail_pct is the false-rejection rate of the beta>={a.gate} gate.\n")
+            f.write("# n_hop convention = MSD(prod)/d_hop^2, d_hop 3 A (hops_per_ion.py). "
+                    "beta_crit_5pct = 5th percentile of null beta = threshold giving 5% false fail.\n")
+            w = _csv.DictWriter(f, fieldnames=list(rows[0].keys()))
+            w.writeheader()
+            w.writerows(rows)
+        print(f"CSV → {a.csv}")
+    return 0
+
+
+def selftest():
+    """새 경로(ideal_beta/hop_sweep 수식)만 검정한다 — MC 본체는 통계 도구라 제외."""
+    bad = 0
+    # 양성: 절편 0 이면 이상곡선 β = 1 정확히
+    b, D = ideal_beta(10.0, 0.0)
+    if abs(b - 1.0) > 1e-6:
+        print(f"FAIL: cage 0 인데 β_det={b}"); bad += 1
+    # 양성: D 역산 — n_hop 10 · 200 ps · d_hop 3 → MSD@200 = 90 Å² → D = 7.5e-6 cm²/s
+    if abs(D - 90.0 / (6 * 200.0) * 1e-4) > 1e-12:
+        print(f"FAIL: D 역산 {D}"); bad += 1
+    # 양성: 절편이 커지면 β_det 는 단조 감소
+    b1, _ = ideal_beta(5.0, 1.0)
+    b2, _ = ideal_beta(5.0, 3.0)
+    if not (b2 < b1 < 1.0):
+        print(f"FAIL: 절편 단조성 {b1} {b2}"); bad += 1
+    # 양성: 홉이 많아지면 β_det → 1 (절편 고정)
+    b3, _ = ideal_beta(100.0, 1.0)
+    if not (b3 > b1):
+        print(f"FAIL: 홉 단조성 {b1} {b3}"); bad += 1
+    # 음성: n_hop ≤ 0 은 거부해야 한다
+    try:
+        ideal_beta(0.0, 1.0)
+        print("FAIL: n_hop 0 이 통과했다"); bad += 1
+    except ValueError:
+        pass
+    # 음성: 절편이 지배하면 β_det 가 0.8 아래로 떨어져야 한다 (게이트가 실제로 반응하는지)
+    b4, _ = ideal_beta(1.0, 2.0)      # 홉 1 · 절편 4 Å² → c/MSD@50 ≈ 64%
+    if not (b4 < 0.8):
+        print(f"FAIL: 절편 지배인데 β_det={b4} ≥ 0.8"); bad += 1
+    print(f"selftest {'PASS' if not bad else 'FAIL'} — {6 - bad} ok, {bad} bad")
+    return 1 if bad else 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--n_li", type=int, default=27, help="확산 이온 수 (MSD 를 평균할 표본)")
@@ -103,7 +229,16 @@ def main():
     ap.add_argument("--gate", type=float, default=0.80, help="검정할 게이트 임계")
     ap.add_argument("--seed", type=int, default=12345)
     ap.add_argument("--from_msd", help="실제 msd.json 에서 n_Li·프레임·dt·D 를 읽어 맞춘다")
+    ap.add_argument("--hop_sweep", action="store_true",
+                    help="n_hop 축 스윕 — '홉 몇 개부터 β 게이트를 믿을 수 있나' 표")
+    ap.add_argument("--csv", help="--hop_sweep 결과를 Origin-ready CSV 로 저장")
+    ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
+
+    if a.selftest:
+        sys.exit(selftest())
+    if a.hop_sweep:
+        sys.exit(hop_sweep(a))
 
     if a.from_msd:
         d = json.load(open(os.path.expanduser(a.from_msd)))

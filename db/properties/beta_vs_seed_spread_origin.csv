@@ -1,0 +1,17 @@
+# beta vs seed-to-seed D spread, 9 multiseed MD conditions (UMA-s-1p1/omat, STO seed-mean beta, window 2-50 ps).
+# Question (beta-gate.md S7-5 to-do 1): does a low beta predict seed divergence of D? Answer: hop count predicts it better.
+# Spearman(beta, CV_D) = -0.50 vs Spearman(n_hop, CV_D) = -0.78 (n=9) -> variance follows EVENT COUNT (He 2018 scaling), not the beta value.
+# n_hop = 6*D_mean*t_prod/d_hop^2, d_hop 3 A (hops_per_ion.py convention, upper-bound estimate).
+# CAUTION: CV from 3-4 seeds is itself noisy (~50% relative error); ranks, not absolute CVs, are the signal.
+# b2o3 rows: Li-transport axis RETIRED 2026-08-25 (anion-sublattice mobility) - rows kept as ESTIMATOR statistics only, never quote as transport.
+# Sources: beta = db/properties/msd_3sys_200ps_origin.csv headers; seeds = b2o3_vs_lpscl16_conductivity.csv (modelc, b2o3), lpsocl_md_arrhenius.json (lpsocl).
+system_T,beta_ensemble,n_seeds,traj_ps,n_hop_per_ion,CV_D_pct,D_max_over_min,D_seeds_1e5_cm2_s
+modelc/600K,0.868,3,199,13.8,25.3,1.64,"1.1718;1.2037;0.7351"
+modelc/800K,0.934,3,99,18.8,32.3,1.95,"2.8320;3.7720;1.9320"
+modelc/1000K,0.924,3,99,31.2,5.6,1.11,"5.0300;4.6210;4.5330"
+lpsocl/600K,0.615,4,199,8.3,33.4,2.31,"0.3887;0.6405;0.5820;0.8970"
+lpsocl/800K,0.856,4,199,32.1,20.7,1.53,"2.0850;2.7888;1.8962;2.8950"
+lpsocl/1000K,1.016,4,199,75.7,18.3,1.57,"5.5250;6.9621;4.4276;5.9217"
+b2o3_ESTIMATOR_ONLY/600K,0.806,3,199,13.8,24.4,1.63,"0.7980;1.3040;1.0210"
+b2o3_ESTIMATOR_ONLY/800K,0.828,3,99,14.3,23.1,1.51,"1.9410;2.7350;1.8140"
+b2o3_ESTIMATOR_ONLY/1000K,0.974,3,99,33.5,22.2,1.49,"4.6140;6.3670;4.2610"

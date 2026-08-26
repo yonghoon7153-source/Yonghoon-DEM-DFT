@@ -82,6 +82,8 @@
     <b style="font-size:.95rem">🎤 {{ talkprep.headline }}</b>
     <span class="muted mono" style="font-size:.72rem">{{ talkprep.date }} 판독</span>
     <a class="btn" href="/talk/{{ talkprep.slug }}" style="font-size:.7rem;padding:3px 9px">📖 전문 보기</a>
+    {# 하루치 T·Q 원장 — 이 판독이 T·Q 를 어디까지 움직였는지는 원장에 있다 #}
+    <a class="btn" href="/ledger" style="font-size:.7rem;padding:3px 9px">🧾 T·Q 원장</a>
   </div>
   <div style="margin-top:7px;font-size:.83rem">{{ talkprep.why|safe }}</div>
 

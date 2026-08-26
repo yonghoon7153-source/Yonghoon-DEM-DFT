@@ -31,6 +31,11 @@ import sys
 
 BETA_OK = (0.80, 1.20)
 MSD_MIN_A2 = 3.0            # 창 끝 MSD 하한 — 이보다 작으면 자리 이탈을 못 한 것
+D_HOP_A = 3.0               # 이웃 Li 자리 간격 [Å] — hops_per_ion.py 와 같은 규약
+# β 추정기 잡음 반폭 (귀무 5% 분위 ≈ 중앙값 − 0.12; Li 27개·STO·창 2–50 실측,
+# tools/ionic/beta_null_test.py --hop_sweep → db/properties/beta_gate_null_vs_hops_*.csv).
+# Li 가 더 많은 셀에서는 보수적(과대)이다 — 잡음은 ~1/√n_Li 로 준다.
+BETA_NOISE_5PCT = 0.12
 
 
 def lin_fit(t, y, lo, hi):
@@ -1024,7 +1029,30 @@ def main():
         if b is None:
             marks.append("β 못 잼")
         elif b < BETA_OK[0]:
-            marks.append(f"⛔ 케이지(β={b:.2f})")
+            # ★ 2026-08-26 잔차 게이트 — β<0.8 을 곧바로 '케이지'로 부르지 않는다.
+            #   같은 창의 자유절편 직선 (c, m) 이 함의하는 귀무 β (b_imp) 와 비교한다:
+            #   완벽한 Fickian 계도 절편 c>0 이면 β 는 결정론적으로 1 아래다
+            #   (홉 스윕 실측: 절편 2 Å²·홉 13.9 에서 귀무 β 중앙값이 정확히 0.80 —
+            #    우리 운영점에서 고정문턱 0.8 은 동전던지기다). 관측 β 가 b_imp 의
+            #   잡음 범위(−0.12) 안이면 '절편+통계로 설명됨'이고, 그보다 한참 아래일
+            #   때만 진짜 sub-diffusion 신호다.
+            lf = lin_fit(t, y, lo, hi)
+            n_hop = (max(y) / D_HOP_A ** 2) if y else float("nan")   # MSD@end/d²(상한)
+            b_imp = None
+            if lf and lf[1] > 0:
+                xx = [x for x in t if lo <= x <= hi and x > 0]
+                b_imp = loglog_slope(xx, [lf[1] + lf[0] * x for x in xx], lo, hi)
+            # ⚠ 단일 창에서는 매끈한 멱함수(진짜 sub-diff)도 직선 근사가 잘 돼
+            #   Δβ≈0 이 나온다 — 이 분기는 '케이지 확정'이 아니라 '단독판정 불가'다.
+            #   케이지 vs 멱함수 확정은 --scan 의 다중 창 c-추세만 가른다.
+            if b_imp is not None and (b - b_imp) >= -BETA_NOISE_5PCT:
+                marks.append(f"⛔ β{b:.2f}≈귀무{b_imp:.2f} — 절편+홉{n_hop:.0f} 설명가능 "
+                             f"(케이지/멱함수 미구분 — --scan c행으로 확정)")
+            elif b_imp is not None:
+                marks.append(f"⛔ β{b:.2f}≪귀무{b_imp:.2f} (Δ{b - b_imp:+.2f}) — "
+                             f"직선으로 근사 안 되는 창 (표본 파탄 또는 급전이 — --scan)")
+            else:
+                marks.append(f"⛔ β={b:.2f}<{BETA_OK[0]} (절편≤0 — 원인 불명)")
         elif b > BETA_OK[1]:
             marks.append(f"⚠ 드리프트(β={b:.2f})")
         if msd_hi < MSD_MIN_A2:

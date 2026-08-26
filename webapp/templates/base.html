@@ -76,6 +76,7 @@
     <li><a href="/notes" {% if active=='notes' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">📝</span> 메모</a></li>
     <li><a href="/todo" {% if active=='todo' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">📋</span> 미결 리스트</a></li>
     <li><a href="/governance" {% if active=='governance' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">⚖</span> 판정 원장</a></li>
+    <li><a href="/ledger" {% if active=='ledger' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">🧾</span> T·Q 원장</a></li>
     <li><a href="/seminar" {% if active=='seminar' %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">🎤</span> Seminar</a></li>
     <li><a href="/log" {% if active in ('log','requests','sdcp') %}aria-current="page" class="active"{% endif %}><span class="ic" aria-hidden="true">✎</span> Work Log</a></li>
     {# 1저자 요청은 Work Log 의 **하위**다 — 작업 기록의 한 갈래이지 별도 축이 아니다.

@@ -16,6 +16,13 @@
     <a class="btn" href="/">▦ Dashboard</a>
   </div>
 </div>
+{# 🧾 이웃 페이지 배너 한 줄 — 라우트가 banner 를 넘길 때만 나온다 (/todo → /ledger).
+   doc.html 은 여러 라우트가 공유한다 — 하드코딩하면 /methods 에도 떠 버린다. #}
+{% if banner %}
+<div class="doc" style="border-left:4px solid #0284c7;padding:12px 16px;margin-bottom:14px">
+  <a href="{{ banner.url }}"><b>{{ banner.label }}</b></a> — {{ banner.text }}
+</div>
+{% endif %}
 {# 🎤 발표자료 승격 배지 — manifest 를 **읽어서** 보인다. 화면이 판정하지 않는다.
    ⚠ manifest 가 없을 때 조용히 빠지면 "인용 가능" 으로 오해된다 → 없다고 말한다. #}
 {% if talk_manifest is defined and talk_manifest is not none %}
