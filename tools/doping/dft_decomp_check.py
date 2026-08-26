@@ -126,6 +126,54 @@ def decomp_energy(target_comp: dict, target_E: float, phase_E: dict,
             "n_atoms": nat, "coeffs": info["coeffs"]}, info
 
 
+def target_composition(stem: str, out, struct_dir=None):
+    """타깃 `stem` 의 조성을 정한다. → (comp|None, 출처, 왜 실패했나)
+
+    **우선순위가 중요하다.** 초판은 `Path(".").glob("**/<stem>.cif")` 로 **현재 디렉터리 밑만**
+    뒤졌다 — 구조가 repo 밖(계산 머신의 runs/)에 있으면 조용히 못 찾고 전부 건너뛴다.
+    실측 2026-08-26 (kgy): 7/7 계산이 다 끝났는데 타깃 2개가 통째로 빠지고 **빈 결과 JSON 이
+    성공처럼** 나왔다.
+
+    그래서 **우리가 직접 만든 QE 입력**(`<out>/in/<stem>.in`)을 1순위로 본다 — 그 계산을
+    돌렸다면 반드시 거기 있고, 실제로 계산된 원자 배열 그 자체다. cif 는 보조 경로다.
+
+    ⛔ 이 함수가 못 하는 것
+      · 입력과 출력이 같은 계인지 검사하지 않는다 (입력을 바꿔치기하면 못 잡는다).
+      · 구조의 옳고 그름을 판정하지 않는다 — 원소 개수만 센다.
+    """
+    import collections
+    from ase.io import read
+    from pathlib import Path as _P
+    tried = []
+
+    qein = _P(out) / "in" / f"{stem}.in"
+    tried.append(str(qein))
+    if qein.is_file():
+        try:
+            at = read(qein, format="espresso-in")
+            return (dict(collections.Counter(at.get_chemical_symbols())),
+                    f"QE 입력 {qein}", "")
+        except Exception as e:                      # 읽기 실패는 **말한다** — 조용히 cif 로 넘어가면
+            tried.append(f"  (읽기 실패: {type(e).__name__}: {e})")   # 어느 조성을 썼는지 모르게 된다
+
+    cands = [_P(out) / f"{stem}.cif", _P(out) / "struct" / f"{stem}.cif"]
+    if struct_dir:
+        cands.append(_P(struct_dir) / f"{stem}.cif")
+        cands += list(_P(struct_dir).glob(f"**/{stem}.cif"))
+    cands += list(_P(".").glob(f"**/{stem}.cif"))    # 마지막 보루 (초판의 유일한 경로였다)
+    for c in cands:
+        tried.append(str(c))
+        if c.is_file():
+            try:
+                return (dict(collections.Counter(read(c).get_chemical_symbols())),
+                        f"cif {c}", "")
+            except Exception as e:
+                tried.append(f"  (읽기 실패: {type(e).__name__}: {e})")
+    return None, "", ("찾은 곳: " + " · ".join(tried[:6])
+                      + (f" … (총 {len(tried)}곳)" if len(tried) > 6 else "")
+                      + "  → --struct_dir 로 구조 폴더를 지정할 것")
+
+
 def parse_qe_total(path) -> float | None:
     """QE 출력에서 **마지막** 총에너지(Ry→eV). 없으면 None (0 을 지어내지 않는다)."""
     try:
@@ -218,6 +266,35 @@ def _selftest() -> int:
     chk(r2 is None and "LiCl" in i3.get("why", ""),
         "★ [음성] 상 에너지가 하나 빠지면 None — 0 으로 채워 '공짜' 로 만들지 않는다")
 
+    # ── 타깃 조성 찾기 (2026-08-26 회귀: 구조를 CWD 밑에서만 찾아 전부 건너뛰었다) ──
+    import tempfile, os
+    from pathlib import Path as _P
+    with tempfile.TemporaryDirectory() as td:
+        td = _P(td)
+        (td / "in").mkdir()
+        # 우리가 만드는 것과 같은 꼴의 최소 QE 입력
+        (td / "in" / "tgt.in").write_text(
+            "&CONTROL\n calculation='scf'\n/\n&SYSTEM\n ibrav=0\n nat=3\n ntyp=2\n"
+            " ecutwfc=60\n/\n&ELECTRONS\n/\n"
+            "ATOMIC_SPECIES\n Li 6.94 li.upf\n Cl 35.45 cl.upf\n"
+            "CELL_PARAMETERS angstrom\n 5.0 0.0 0.0\n 0.0 5.0 0.0\n 0.0 0.0 5.0\n"
+            "ATOMIC_POSITIONS angstrom\n Li 0.0 0.0 0.0\n Li 2.5 0.0 0.0\n Cl 0.0 2.5 0.0\n"
+            "K_POINTS gamma\n")
+        c, src, why = target_composition("tgt", td, None)
+        chk(c == {"Li": 2, "Cl": 1}, "★ 조성을 **QE 입력**에서 읽는다 (구조 파일이 없어도 된다)")
+        chk("in" in src and "tgt.in" in src, "조성 출처를 기록한다 (어느 파일을 썼는지)")
+
+        # [음성] 입력도 cif 도 없으면 → None + **어디를 찾았는지** 말한다
+        cwd = os.getcwd()
+        try:
+            os.chdir(td)                      # CWD 밑에도 없게 만든다
+            c2, _, why2 = target_composition("nosuch", td, None)
+        finally:
+            os.chdir(cwd)
+        chk(c2 is None, "[음성] 구조를 못 찾으면 None (0 이나 빈 조성을 지어내지 않는다)")
+        chk("찾은 곳:" in why2 and "--struct_dir" in why2,
+            "★ [음성] 실패 사유에 **찾아본 경로**와 다음 수단을 적는다")
+
     # ── QE 파서 ────────────────────────────────────────────────────────
     import tempfile
     with tempfile.TemporaryDirectory() as td:
@@ -269,6 +346,9 @@ def main():
     ap.add_argument("--collect", action="store_true",
                     help="QE 출력을 읽어 ΔE_decomp 를 계산하고 두 구조를 비교")
     ap.add_argument("--targets", nargs="+", help="비교할 구조 파일 (cif/xyz)")
+    ap.add_argument("--struct_dir",
+                    help="--collect 이 타깃 구조(cif)를 찾을 폴더. 보통 필요 없다 — "
+                         "기본은 우리가 만든 QE 입력 <out>/in/<타깃>.in 에서 조성을 읽는다.")
     ap.add_argument("--out", help="작업 디렉터리")
     ap.add_argument("--ecutwfc", type=float, default=60)
     ap.add_argument("--ecutrho", type=float, default=480)
@@ -451,20 +531,26 @@ def main():
             if stem in DEFAULT_BASIS:
                 continue
             E = parse_qe_total(f)
-            src = next((p for p in (out / "in").glob(f"{stem}.*")), None)
-            struct = next((p for p in Path(".").glob(f"**/{stem}.cif")), None)
-            if E is None or struct is None:
-                print(f"  · {stem}: 에너지 또는 구조 없음 — 건너뜀")
+            comp, csrc, cwhy = target_composition(stem, out, a.struct_dir)
+            # ⛔ "에너지 또는 구조" 로 뭉뚱그리면 어느 쪽이 없는지 화면에서 알 수 없다.
+            #   (실측 2026-08-26: 에너지는 멀쩡한데 cif 를 CWD 밑에서만 찾아 전부 건너뛰었고,
+            #    그런데도 종료코드 0 + 빈 결과 JSON 이 나와 '성공' 처럼 보였다.)
+            if E is None:
+                print(f"  ⛔ {stem}: 총에너지를 못 읽었다 — {f} 에 '!' 줄이 없다 "
+                      f"(계산이 안 끝났거나 죽었다)")
                 continue
-            comp = dict(collections.Counter(read(struct).get_chemical_symbols()))
+            if comp is None:
+                print(f"  ⛔ {stem}: 조성을 못 정했다 — {cwhy}")
+                continue
             r, info = decomp_energy(comp, E, phase_E)
             if r is None:
                 print(f"  ⛔ {stem}: {info.get('why')}")
                 continue
+            r["composition_source"] = csrc          # 어느 파일에서 조성을 읽었는지 남긴다
             rows.append((stem, r))
             print(f"  {stem:<24} ΔE_decomp = "
                   f"{r['delta_E_decomp_eV_per_atom']*1000:+8.1f} meV/atom  "
-                  f"(원자 {r['n_atoms']})")
+                  f"(원자 {r['n_atoms']} · 조성 ← {csrc})")
         if len(rows) >= 2:
             rows.sort(key=lambda x: -x[1]["delta_E_decomp_eV_per_atom"])
             gap = (rows[0][1]["delta_E_decomp_eV_per_atom"]
@@ -472,12 +558,20 @@ def main():
             print(f"\n★ 더 안정: {rows[0][0]}  (차이 {gap:.1f} meV/atom)")
             print(f"  ⚠ 이것은 E_above_hull 이 아니다 — **5상 기저 안에서의** 비교다. "
                   f"기저 밖 더 낮은 분해 경로는 못 본다.")
+        # ⛔ 타깃이 0개인데 종료코드 0 을 주면 **빈 결과가 성공처럼** 보인다
+        #   (실측 2026-08-26: 7/7 계산이 끝났는데 조성을 못 찾아 0개였고, 그래도 '✓' 가 찍혔다).
+        if not rows:
+            print(f"\n⛔ **점수를 매긴 타깃이 0개다** — 결과 파일을 쓰지 않았다.")
+            print(f"   기저 {len(phase_E)}상은 다 읽혔으니 남은 문제는 **타깃 쪽**이다. "
+                  f"위 ⛔ 줄이 어느 단계에서 막혔는지 말해 준다.")
+            return 4
         (out / "decomp_result.json").write_text(json.dumps(
             {"phase_E_eV": phase_E, "basis": DEFAULT_BASIS,
              "targets": {k: v for k, v in rows},
+             "n_targets_scored": len(rows),
              "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 비교다."},
             indent=2, ensure_ascii=False))
-        print(f"\n✓ → {out/'decomp_result.json'}")
+        print(f"\n✓ 타깃 {len(rows)}개 → {out/'decomp_result.json'}")
         return 0
 
     print("⛔ --prepare / --collect / --selftest 중 하나를 골라라")
