@@ -3421,13 +3421,17 @@ cmd_share_domain() {
         say "  ${DIM}저쪽 배너가 직접 그렇게 적어 줍니다: custom domains → admin.localhost.run${OFF}"
         say ""
         say "  ${B}순서${OFF}"
-        say "    1. ${DIM}도메인을 하나 삽니다 (아무 등록기관·연 1~2만원)${OFF}"
-        say "    2. ${DIM}그 도메인의 DNS 를 localhost.run 이 시키는 대로 돌립니다${OFF}"
-        say "       ${GREEN}https://localhost.run/docs/custom-domains${OFF}"
+        say "    1. ${DIM}도메인을 하나 삽니다 (아무 등록기관).  커스텀 도메인은 유료 요금제입니다.${OFF}"
+        say "    2. ${DIM}그 도메인의 DNS 에 아래 중 하나를 넣습니다:${OFF}"
+        say "       ${GREEN}CNAME  <이름>  →  cd.localhost.run${OFF}"
+        say "       ${DIM}또는 A 레코드 셋:${OFF} ${GREEN}54.161.197.247 · 54.82.85.249 · 35.171.254.69${OFF}"
+        say "       ${DIM}하위 이름까지 쓰려면${OFF} ${GREEN}CNAME  *.<이름>  →  cd.localhost.run${OFF}"
         say "    3. ${DIM}admin.localhost.run 에 그 도메인을 등록합니다 (키도 같은 계정에)${OFF}"
         say "    4. ${GREEN}bml share domain <그 이름>${OFF} ${DIM}후${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
         say ""
         say "  ${DIM}2·3 은 랩 망에서 그 사이트가 안 열립니다 — 휴대폰 테더링으로 하세요.${OFF}"
+        say "  ${B}덤이 큽니다:${OFF} ${DIM}우리 도메인은 이 망의 DNS 차단 목록에 없습니다.${OFF}"
+        say "  ${DIM}그러면 받는 쪽도 이름이 그냥 풀려서${OFF} ${GREEN}bmlonly${OFF}${DIM}·중계기·IP 전달이 통째로 필요 없어집니다.${OFF}"
       fi
       return 0
       ;;
