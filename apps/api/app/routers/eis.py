@@ -311,15 +311,33 @@ def list_spectra(session: Session = Depends(get_session),
         statement = statement.where(SpectrumRecord.sample_id == sample_id)
     records = session.exec(
         statement.order_by(SpectrumRecord.uploaded_at.desc())).all()
-    # 사이클 번호가 있으면 그 순서가 사람이 보고 싶은 순서다 — 올린 순서는
-    # 누가 파일을 어떤 순으로 끌어다 놓았느냐일 뿐이다.  번호 없는 것은 뒤로.
+    # **한 셀 안이냐 전체 목록이냐로 순서가 갈린다.**
     #
-    # 스윕 번호가 마지막 기준이다: SOC 스캔의 21행은 사이클 번호가 전부
-    # 비어 있고 같은 커밋에서 나와 시각도 같으므로, 이것이 없으면 순서가
-    # DB 가 주는 대로다.  스윕 순서는 곧 측정 순서이고 SOC 순서다 (ADR 0022).
-    records = sorted(records, key=lambda r: (r.at_cycle is None,
-                                             r.at_cycle if r.at_cycle is not None else 0,
-                                             r.uploaded_at, r.sweep_index))
+    # 한 셀 안(`sample_id`)에서는 사이클 번호가 사람이 보고 싶은 순서다 — 3번
+    # 다음이 200번이지 올린 순서가 아니다.  스윕 번호가 마지막 기준인 것도
+    # 그 자리의 이야기다: SOC 스캔의 21행은 사이클 번호가 전부 비어 있고 같은
+    # 커밋에서 나와 시각도 같아서, 이것이 없으면 순서가 DB 가 주는 대로다.
+    # 스윕 순서는 곧 측정 순서이고 SOC 순서다 (ADR 0022).
+    #
+    # 그런데 **전체 목록에서는 그 규칙이 해롭다.**  서로 다른 셀의 1번들이 위에
+    # 모이고 방금 올린 200번은 한참 아래에 묻힌다 — 실측으로 그렇게 됐다.
+    # 여기서 사람이 찾는 것은 늘 방금 올린 것이므로 시각순을 그대로 둔다.
+    if sample_id is not None:
+        records = sorted(records, key=lambda r: (r.at_cycle is None,
+                                                 r.at_cycle if r.at_cycle is not None else 0,
+                                                 r.uploaded_at, r.sweep_index))
+    else:
+        # **초 단위로 자른다.**  SOC 스캔 한 파일의 21행은 한 번의 업로드에서
+        # 나오지만 행마다 `_now()` 가 따로 불려서 마이크로초가 다르다.  그대로
+        # 내림차순으로 세우면 한 스캔 안이 거꾸로 뒤집힌다 -- 21번 스윕이 맨 위,
+        # 1번이 맨 아래.  SOC 순서로 안 보이면 21행을 훑어야 한다 (ADR 0022).
+        #
+        # 같은 초에 들어온 것은 한 번의 업로드다.  그 안에서는 스윕 번호가
+        # 순서이고, 그것이 곧 측정 순서이자 SOC 순서다.
+        records = sorted(
+            records,
+            key=lambda r: (r.uploaded_at.replace(microsecond=0), -r.sweep_index),
+            reverse=True)
     if search:
         needle = search.lower()
         records = [r for r in records

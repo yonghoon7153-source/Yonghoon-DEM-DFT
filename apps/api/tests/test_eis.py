@@ -1186,3 +1186,35 @@ def test_the_dashboard_puts_the_newest_upload_on_top(client, sample_id):
     # 안 붙은 줄이 맨 위에 설 수 있어야 한다.  올린 직후가 바로 그 상태라,
     # 붙은 것을 위로 올리면 방금 올린 줄이 매번 아래로 밀린다.
     assert rows[0]["attached"] is False
+
+
+def test_the_whole_library_is_newest_first(client):
+    """전체 목록에서 사람이 찾는 것은 늘 **방금 올린 것**이다.
+
+    사이클 번호로 정렬하면 서로 다른 셀의 1번들이 위에 모이고, 방금 올린
+    200번은 한참 아래에 묻힌다 — 실측으로 그렇게 됐다.
+    """
+    old_one = upload(client, name="옛것")
+    client.patch(f"/api/eis/spectra/{old_one['id']}", json={"at_cycle": 1})
+    # 같은 바이트는 sha256 으로 하나로 묶인다 — 스윕 수를 바꿔 다른 파일로.
+    new_one = upload(client, name="새것", rs=5.5)
+    client.patch(f"/api/eis/spectra/{new_one['id']}", json={"at_cycle": 200})
+
+    names = [row["name"] for row in client.get("/api/eis/spectra").json()]
+    assert names[0] == "새것", names
+
+
+def test_one_cells_spectra_stay_in_cycle_order(client):
+    """한 셀 안에서는 사이클 번호가 사람이 보고 싶은 순서다 (ADR 0022).
+
+    3번 다음이 200번이지 올린 순서가 아니다.  SOC 스캔의 스윕도 마찬가지다.
+    """
+    sample = client.post("/api/samples", json={"name": "순서 셀"}).json()
+    late = upload(client, name="200번", sample_id=sample["id"])
+    early = upload(client, name="3번", sample_id=sample["id"], rs=5.5)
+    client.patch(f"/api/eis/spectra/{late['id']}", json={"at_cycle": 200})
+    client.patch(f"/api/eis/spectra/{early['id']}", json={"at_cycle": 3})
+
+    names = [row["name"] for row in
+             client.get("/api/eis/spectra", params={"sample_id": sample["id"]}).json()]
+    assert names == ["3번", "200번"], names
