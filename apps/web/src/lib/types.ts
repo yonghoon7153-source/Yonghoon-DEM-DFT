@@ -606,6 +606,8 @@ export interface Spectrum {
   sha256: string
   size_bytes: number
   source_format: string
+  /** 함께 올라온 .mps 의 원래 이름.  빈 문자열이면 안 올라왔다. */
+  settings_name?: string
   uploaded_at: string
   n_points: number
   frequency_start_hz: number | null

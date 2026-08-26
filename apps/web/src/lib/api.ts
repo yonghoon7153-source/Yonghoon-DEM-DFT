@@ -261,6 +261,11 @@ export const api = {
    *  measured it. */
   exportOriginalUrl: (runId: number) => `/api/export/runs/${runId}/original.wrd`,
   exportRawUrl: (runId: number) => `/api/export/runs/${runId}/raw.csv`,
+  /** 임피던스·GITT 원본.  중앙에 모아 두는 이유가 "각자 노트북에서 원본이
+   *  사라지지 않게" 인데, 다시 못 받으면 올리는 것이 편도 여행이 된다. */
+  spectrumOriginalUrl: (id: number) => `/api/export/spectra/${id}/original`,
+  spectrumSettingsUrl: (id: number) => `/api/export/spectra/${id}/settings`,
+  gittOriginalUrl: (id: number) => `/api/export/gitt/${id}/original`,
   exportCyclesUrl: (sampleId: number, params?: Params) =>
     `/api/export/samples/${sampleId}/cycles.csv${query(params)}`,
   exportProfilesUrl: (sampleId: number, params?: Params) =>

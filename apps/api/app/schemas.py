@@ -701,6 +701,9 @@ class SpectrumOut(BaseModel):
     sha256: str
     size_bytes: int
     source_format: str
+    #: 함께 올라온 `.mps` 의 원래 이름.  비어 있으면 안 올라온 것이고, 화면은
+    #: 그때 설정 파일 내려받기를 내지 않는다.
+    settings_name: str = ""
     uploaded_at: datetime
     n_points: int
     frequency_start_hz: float | None

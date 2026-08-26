@@ -25,6 +25,19 @@ MATERIAL = {"molar_volume_cm3": 20.0, "molar_mass_g": 96.0,
             "active_mass_g": 0.02, "area_cm2": 1.33}
 
 
+def test_the_original_wrd_comes_back_out_byte_for_byte(client):
+    """EIS 와 같은 이유, 같은 길 (CLAUDE.md §0.2)."""
+    content = gitt_bytes(n_pulses=6)
+    out = client.post("/api/gitt/runs/upload",
+                      files={"file": ("gitt_01.wrd", content,
+                                      "application/octet-stream")}).json()
+    got = client.get(f"/api/export/gitt/{out['id']}/original")
+    assert got.status_code == 200
+    assert got.content == content
+    assert "gitt_01.wrd" in got.headers["content-disposition"]
+    assert client.get("/api/export/gitt/9999/original").status_code == 404
+
+
 # --- 올리기 -----------------------------------------------------------------
 
 def test_a_gitt_wrd_becomes_its_own_record(client):

@@ -34,6 +34,28 @@ def upload(client, name="sym_01.mpr", kind="solid", sample_id=None,
     return response.json()
 
 
+def test_the_original_mpr_comes_back_out_byte_for_byte(client):
+    """올린 바이트 그대로 다시 받을 수 있어야 한다 (CLAUDE.md §0.2).
+
+    중앙에 모아 두는 이유가 "각자 노트북에서 원본이 사라지지 않게" 인데, 다시
+    못 받으면 올리는 것이 편도 여행이 되고 아무도 유일본을 안 맡긴다.
+    충방전 `.wrd` 는 처음부터 이 길이 있었고 EIS·GITT 만 없었다.
+    """
+    content = mpr()
+    out = client.post("/api/eis/spectra/upload",
+                      params={"kind": "solid", "cell_config": "sym"},
+                      files={"file": ("sym_01.mpr", content,
+                                      "application/octet-stream")}).json()
+    got = client.get(f"/api/export/spectra/{out['id']}/original")
+    assert got.status_code == 200
+    assert got.content == content
+    assert "sym_01.mpr" in got.headers["content-disposition"]
+
+    # `.mps` 를 안 올렸으면 없다고 말한다 — 빈 파일을 주지 않는다.
+    assert client.get(f"/api/export/spectra/{out['id']}/settings").status_code == 404
+    assert client.get("/api/export/spectra/9999/original").status_code == 404
+
+
 # --- 올리기 ----------------------------------------------------------------
 
 def test_an_mpr_becomes_a_spectrum(client):

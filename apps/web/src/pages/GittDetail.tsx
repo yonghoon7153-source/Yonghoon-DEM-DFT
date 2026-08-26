@@ -292,6 +292,18 @@ export function GittDetail() {
             ['시작', record.start_time ? dateTime(record.start_time) : '—'],
             ['올린 때', dateTime(record.uploaded_at)],
           ]} />
+          {/* 충방전 쪽과 같은 길.  중앙에 모아 두는 이유가 "각자 노트북에서
+              원본이 사라지지 않게" 인데, 다시 못 받으면 올리는 것이 편도
+              여행이 되고 아무도 원본을 안 맡긴다. */}
+          <div className="row" style={{ marginTop: 8 }}>
+            <a
+              className="tiny"
+              href={api.gittOriginalUrl(record.id)}
+              title={`${record.original_name} 을(를) 그대로 내려받습니다`}
+            >
+              원본 .wrd
+            </a>
+          </div>
         </Card>
       </div>
       <div style={{ marginTop: 14 }}>

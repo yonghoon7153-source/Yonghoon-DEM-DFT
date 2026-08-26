@@ -40,7 +40,7 @@ from wrdkit.ica import (  # noqa: E402
 from .. import storage
 from ..db import get_session
 from ..deps import get_run, get_sample, validate_basis
-from ..models import Run, Sample
+from ..models import GittRun, Run, Sample, SpectrumRecord
 from ..services import (
     _metadata_stub,
     _rebuild_steps,
@@ -100,6 +100,70 @@ def export_run_original(run_id: int, session: Session = Depends(get_session)):
         media_type="application/octet-stream",
         filename=_safe(run.original_name),
     )
+
+
+def _original(path, name: str, what: str) -> FileResponse:
+    """Serve one stored original, or say why it is not there.
+
+    Same rule as the ``.wrd`` above and for the same reason: the point of a
+    central instance is that the originals stop living on whichever laptop did
+    the measurement, and that only holds if they can be got back out.  EIS and
+    GITT files were reachable only through the machine that uploaded them.
+    """
+    if not path.exists():
+        raise HTTPException(
+            404,
+            f"{what} ({name}) 의 원본이 저장소에 없습니다 ({path.parent}) — "
+            "데이터 폴더가 외장하드에 있다면 연결부터 확인하세요")
+    return FileResponse(path, media_type="application/octet-stream",
+                        filename=_safe(name))
+
+
+@router.get("/spectra/{spectrum_id}/original")
+def export_spectrum_original(spectrum_id: int,
+                             session: Session = Depends(get_session)):
+    """The uploaded ``.mpr``/``.mpt``, byte for byte.
+
+    One SOC-scan file holds many sweeps and they all came from these bytes
+    (ADR 0022), so every sweep's page offers the same download -- the file is
+    the file.
+    """
+    record = session.get(SpectrumRecord, spectrum_id)
+    if record is None:
+        raise HTTPException(404, "그런 스펙트럼이 없습니다")
+    return _original(
+        storage.spectrum_upload_path(record.sha256, record.source_format),
+        record.original_name or f"{record.name}.{record.source_format}",
+        "스펙트럼")
+
+
+@router.get("/spectra/{spectrum_id}/settings")
+def export_spectrum_settings(spectrum_id: int,
+                             session: Session = Depends(get_session)):
+    """The ``.mps`` that came alongside, byte for byte.
+
+    Kept separately because the parser understands a subset of it; the lines
+    it does not understand exist only here (리뷰 #21).
+    """
+    record = session.get(SpectrumRecord, spectrum_id)
+    if record is None:
+        raise HTTPException(404, "그런 스펙트럼이 없습니다")
+    if not record.settings_sha256:
+        raise HTTPException(404, "이 스펙트럼에는 .mps 가 함께 올라오지 않았습니다")
+    return _original(
+        storage.spectrum_upload_path(record.settings_sha256, "mps"),
+        record.settings_name or f"{record.name}.mps",
+        "설정 파일")
+
+
+@router.get("/gitt/{gitt_id}/original")
+def export_gitt_original(gitt_id: int, session: Session = Depends(get_session)):
+    """The uploaded GITT ``.wrd``, byte for byte."""
+    run = session.get(GittRun, gitt_id)
+    if run is None:
+        raise HTTPException(404, "그런 GITT 기록이 없습니다")
+    return _original(storage.upload_path(run.sha256),
+                     run.original_name or f"{run.name}.wrd", "GITT 기록")
 
 
 @router.get("/runs/{run_id}/raw.csv")
