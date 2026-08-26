@@ -6,8 +6,9 @@
 #     100/108 원자를 몇 시간 돌리고 나서 알면 그 시간을 버린다.
 #   · **순차**로 돈다. 동시에 띄우면 메모리가 예측 불가능하고, 어느 것이
 #     터졌는지도 흐려진다.
-#   · 기본은 **CPU** 다. gabia GPU 는 UMA MD 가 물고 있고 CLAUDE.md 가
-#     pw.x ↔ UMA 동시 실행을 금지한다. GPU 로 돌리려면 USE_GPU=1.
+#   · **장치는 바이너리로 고른다.** PWX 를 CPU 빌드로 주면 CPU, GPU 빌드로 주면
+#     GPU 다. 별도 스위치를 두면 "GPU 빌드인데 CPU 모드" 같은 모순 조합이 생긴다.
+#     ⚠ GPU 빌드를 쓸 때는 nvidia-smi 로 여유를 먼저 본다 (CLAUDE.md: pw.x ↔ UMA).
 #
 # ⛔ 이 스크립트가 못 하는 것
 #   · 결과를 해석하지 않는다. 끝나면 dft_decomp_check.py --collect 를 돌려라.
@@ -17,14 +18,14 @@
 #
 # 사용:
 #   nohup bash tools/doping/run_y_dft.sh > /data/work/runs/y_dft/run.log 2>&1 &
-#   NP=16 USE_GPU=1 bash tools/doping/run_y_dft.sh        # 변형
+#   NP=1 OMP_NUM_THREADS=8 PWX=~/apps/qe-7.4.1-gpu/bin/pw.x \
+#       bash tools/doping/run_y_dft.sh                    # GPU 빌드
 set -u
 set +H
 
 D="${D:-/data/work/runs/y_dft}"
 NP="${NP:-$(( $(nproc) > 4 ? $(nproc) - 2 : 1 ))}"
 PWX="${PWX:-pw.x}"
-USE_GPU="${USE_GPU:-0}"
 
 # ── 중복 실행 가드 (캠페인 관례) ──────────────────────────────────────────
 #   ⛔ pgrep -fc 로 세면 **자기 자신을 두 번 센다**: $( ) 서브셸은 exec 전까지
@@ -39,10 +40,34 @@ fi
 
 command -v "$PWX" >/dev/null || { echo "⛔ $PWX 가 없다"; exit 1; }
 # QE 가 CPU 빌드면 GPU 충돌 걱정이 없다 — 그 사실을 화면에 남긴다
+IS_GPU=0
 if command -v ldd >/dev/null && ldd "$(command -v "$PWX")" 2>/dev/null | grep -qi "libcud"; then
-  QEKIND="GPU 빌드 ⚠ 다른 GPU 런과 충돌 가능"
+  IS_GPU=1
+  QEKIND="GPU 빌드 ⚠ 다른 GPU 런과 VRAM 을 나눠 쓴다"
 else
   QEKIND="CPU 빌드 ✅ GPU 를 안 건드린다"
+fi
+
+# ⛔ GPU 빌드에 랭크를 많이 주면 **랭크마다 GPU 컨텍스트를 잡아** 바로 OOM 이다.
+#   QE 관례는 **GPU 1개당 MPI 랭크 1개** + OpenMP 로 코어를 쓴다.
+#   이걸 모르고 CPU 때처럼 -np 12 를 주면 옆에서 도는 MD 까지 같이 죽는다.
+if [ "$IS_GPU" = "1" ] && [ "$NP" -gt 1 ]; then
+  NGPU=$(nvidia-smi --list-gpus 2>/dev/null | wc -l)
+  if [ "$NP" -gt "${NGPU:-1}" ]; then
+    echo "⛔ GPU 빌드인데 NP=$NP 다 (GPU ${NGPU:-1}개)."
+    echo "   랭크마다 GPU 컨텍스트를 잡아 VRAM 이 터지고, **옆에서 도는 런까지 죽는다.**"
+    echo "   → NP=${NGPU:-1} 로 두고 코어는 OMP_NUM_THREADS 로 쓴다:"
+    echo "     NP=${NGPU:-1} OMP_NUM_THREADS=8 PWX=$PWX bash \$0"
+    echo "   정말 여러 랭크로 돌리려면 ALLOW_MULTIRANK_GPU=1 를 준다."
+    [ "${ALLOW_MULTIRANK_GPU:-0}" = "1" ] || exit 1
+  fi
+fi
+
+# GPU 빌드면 시작 전 VRAM 여유를 남긴다 — 나중에 OOM 이 나면 이 줄이 근거가 된다
+if [ "$IS_GPU" = "1" ]; then
+  nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader \
+    | awk -F, '{u=$1;t=$2;gsub(/[^0-9]/,"",u);gsub(/[^0-9]/,"",t);
+        printf "VRAM : %s/%s MiB 사용 · 여유 %d MiB (시작 시점)\n",u,t,t-u}'
 fi
 # ⛔ OpenMP 를 안 묶으면 mpirun 랭크마다 스레드를 다 잡아 코어를 초과 구독한다
 export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
@@ -50,12 +75,13 @@ echo "════════ $(date '+%F %T') Y DFT 대조 ══════�
 echo "pw.x : $(command -v "$PWX")"
 echo "NP   : $NP   (OMP_NUM_THREADS=$OMP_NUM_THREADS)"
 echo "빌드 : $QEKIND"
-if [ "$USE_GPU" = "1" ]; then
-  echo "⚠ GPU 모드 — UMA MD 와 충돌 가능. nvidia-smi 확인했나?"
-  nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader
+# ⛔ **바이너리 선택이 곧 장치 선택이다.** GPU 빌드인데 CUDA_VISIBLE_DEVICES 를
+#   비우면 pw.x 가 장치를 못 찾아 죽거나 조용히 이상하게 돈다. 초판이 그랬다.
+if [ "$IS_GPU" = "1" ]; then
+  echo "장치 : GPU (GPU 빌드를 골랐으므로) — 옆 런과 VRAM 을 나눠 쓴다"
 else
   export CUDA_VISIBLE_DEVICES=""
-  echo "장치 : CPU (CUDA_VISIBLE_DEVICES 비움) — UMA MD 를 지키기 위함"
+  echo "장치 : CPU (CUDA_VISIBLE_DEVICES 비움) — 옆의 GPU 런을 건드리지 않는다"
 fi
 
 cd "$D" || { echo "⛔ $D 없음"; exit 1; }
