@@ -65,10 +65,29 @@ while gpu_busy; do
 done
 echo "[$(ts)] GPU 해방 — 후속 착수"
 
-# ── ① QE 단일점 (UMA 궤적 스냅샷 대조) ───────────────────────────────────
-# ② Li 슬랩 (T3 게이트)
-# ⚠ 아직 미작성. 여기 채우기 전까지 이 체인은 '해방 시각을 기록하는 알림'이다 —
-#    그것도 쓸모가 있어서 남긴다(언제 GPU 가 비었는지가 다음 계획의 입력).
-echo "READY_FOR_QE_AND_SLAB   at $(ts)"
-echo "다음: ① tools/ionic/mlip_committee.py 궤적 스냅샷 → QE 단일점 대조 (T1 절대 검증)"
-echo "      ② Li‖LPSCl 슬랩 (T3 게이트, open_items 참조)"
+# ── 후속 실행 ────────────────────────────────────────────────────────────
+# ⭐ 2026-08-26 — `AFTER=` 로 **아무 명령이나** 예약할 수 있게 열었다.
+#   종전에는 여기가 비어 있어서 이 체인이 "해방 시각 알림" 밖에 못 했다.
+#   대기 로직(GPU 점유 판정 · CPU QE 제외 · flock · 로그디렉터리 자동생성)은
+#   이미 실전에서 세 번 데어가며 다듬은 것이라 **그 자산을 살려 쓰는 게 맞다.**
+#
+#   예약:
+#     tmux new -d -s chain2 'AFTER="bash tools/ionic/run_comp1_supercell.sh" \
+#       V0XYZ=... LABEL=... bash tools/ionic/chain_gpu_release.sh'
+#
+# ⛔ 이 체인이 **못 하는 것**
+#   · AFTER 명령의 성공을 보장하지 않는다 — 종료코드만 옮긴다.
+#   · GPU 가 잠깐 비었다가 다른 사람이 채가는 경쟁은 못 막는다 (5분 폴링이다).
+#   · AFTER 가 비어 있으면 **아무것도 실행하지 않고** 알림만 남긴다 (종전 동작).
+echo "READY   at $(ts)"
+if [ -n "${AFTER:-}" ]; then
+  echo "[$(ts)] AFTER 실행: $AFTER"
+  # ⚠ eval 이다 — 예약 문자열을 그대로 셸에 넘긴다. 신뢰하는 입력만 줄 것.
+  eval "$AFTER"
+  rc=$?
+  echo "[$(ts)] AFTER 종료코드 $rc"
+  exit $rc
+fi
+echo "AFTER 가 비어 있다 — 실행 없이 알림만 남긴다."
+echo "다음 후보: ① mlip_committee.py 궤적 스냅샷 → QE 단일점 대조 (T1 절대 검증)"
+echo "          ② Li‖LPSCl 슬랩 (T3 게이트, open_items 참조)"
