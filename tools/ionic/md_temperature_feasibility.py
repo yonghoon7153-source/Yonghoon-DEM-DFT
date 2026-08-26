@@ -82,10 +82,95 @@ def verdict(t_need_ps):
     return "⛔ 직접 MD 불가"
 
 
+
+# ── 처리량 스케일링 (2026-08-26 신설) ────────────────────────────────────────
+def cmd_scaling(a):
+    """**셀을 키우면 실제로 몇 배 느려지나** 를 잰다. → 표 + JSON
+
+    왜 필요한가:
+      open_items #1·#2 가 *"200 ps 가 부족하다 → 셀 확대 또는 시간 연장"* 에서 멈춰 있다.
+      그런데 **셀을 9배로 키우면 9배 느려지는지 우리는 모른다.**
+      `park2024_sevennet_parallel_gnn_md` `Fig. S1` 이 보인 것: GNN-MD 는 **원자 수가 적으면
+      GPU 가 논다.** 62원자는 그 저이용 구간 한복판일 가능성이 크다 — 그렇다면 248·558원자로
+      키워도 **벽시계는 9배가 아니라 훨씬 덜 는다.**
+
+    ⛔ 이 도구가 못 하는 것
+      · 물리를 안 본다. **속도만** 잰다 (MSD·β 는 별개다).
+      · 짧은 구간(기본 20 스텝)의 속도라 **장시간 평균이 아니다** — 캐시·열 상태가 다르다.
+      · 다른 작업이 같은 GPU 를 쓰면 값이 오염된다. 실행 전 `nvidia-smi` 를 볼 것.
+    """
+    import json as _j, time
+    import numpy as np
+    from ase.io import read as _read
+    from ase.md.langevin import Langevin
+    from ase import units
+    from fairchem.core import pretrained_mlip, FAIRChemCalculator
+
+    at0 = _read(a.struct)
+    pred = pretrained_mlip.get_predict_unit("uma-s-1p1", device=a.device)
+    rows = []
+    print(f"  기준 구조 {a.struct} · {len(at0)}원자 · 스텝 {a.steps} · dt {a.dt} fs\n")
+    for rep in a.reps:
+        n = [int(x) for x in rep.split("x")]
+        at = at0.repeat(n)
+        at.calc = FAIRChemCalculator(pred, task_name="omat")
+        dyn = Langevin(at, a.dt * units.fs, temperature_K=a.temp,
+                       friction=0.02 / units.fs)
+        dyn.run(3)                                   # 워밍업 — 첫 호출은 컴파일·할당이 섞인다
+        t0 = time.perf_counter()
+        dyn.run(a.steps)
+        el = time.perf_counter() - t0
+        ps = a.steps * a.dt / 1000.0
+        rate = ps / el * 86400.0                      # ps/day
+        rows.append({"rep": rep, "n_atoms": len(at), "elapsed_s": round(el, 2),
+                     "ps_per_day": round(rate, 1),
+                     "atom_ps_per_day": round(rate * len(at), 1)})
+        print(f"   {rep:>7}  {len(at):>5}원자  {el:6.2f} s/{a.steps}스텝  "
+              f"→ {rate:8.1f} ps/day   {rate*len(at):.3e} atom·ps/day")
+    if len(rows) >= 2:
+        b = rows[0]
+        print(f"\n  ── 기준({b['rep']}, {b['n_atoms']}원자) 대비 ──")
+        for r in rows[1:]:
+            fa = r["n_atoms"] / b["n_atoms"]
+            ft = b["ps_per_day"] / r["ps_per_day"] if r["ps_per_day"] else float("inf")
+            eff = fa / ft if ft else 0
+            tag = ("✅ GPU 가 놀고 있었다 — 키워도 거의 안 느려진다" if ft < fa * 0.4 else
+                   "🔶 부분 이득" if ft < fa * 0.8 else "⛔ 원자수만큼 느려진다")
+            print(f"   {r['rep']:>7}  원자 ×{fa:.0f}  **벽시계 ×{ft:.1f}**  "
+                  f"(원자당 처리량 ×{eff:.2f})  {tag}")
+        print(f"\n  ⛔ 속도만 잰 것이다. 그 셀에서 물리가 맞는지는 별개다 "
+              f"(make_md_supercell.py 의 두 기준을 볼 것).")
+    if a.out:
+        pathlib.Path(a.out).write_text(_j.dumps(
+            {"struct": a.struct, "device": a.device, "steps": a.steps, "dt_fs": a.dt,
+             "temperature_K": a.temp, "rows": rows,
+             "⛔_do_not": "속도만이다. MSD·β·유한크기 판정과 섞지 말 것"},
+            ensure_ascii=False, indent=2))
+        print(f"\n✓ → {a.out}")
+    return 0
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--csv", help="Origin-ready CSV 로도 저장")
+    ap.add_argument("--scaling", action="store_true",
+                    help="**처리량 스케일링 측정 모드** — 셀을 키우며 벽시계를 잰다")
+    ap.add_argument("--struct", help="--scaling: 기준 구조")
+    ap.add_argument("--reps", nargs="+", default=["1x1x1", "2x2x1", "3x3x1"],
+                    help="--scaling: 시험할 배수 (기본 1x1x1 2x2x1 3x3x1)")
+    ap.add_argument("--steps", type=int, default=20, help="--scaling: 측정 스텝 수")
+    ap.add_argument("--dt", type=float, default=2.0, help="--scaling: dt (fs)")
+    ap.add_argument("--temp", type=float, default=600.0, help="--scaling: 온도 K")
+    ap.add_argument("--device", default="cuda")
+    ap.add_argument("--out", help="--scaling: JSON 출력")
     a = ap.parse_args()
+
+    if a.scaling:
+        if not a.struct:
+            import sys as _s
+            _s.exit("⛔ --scaling 에는 --struct 가 필요하다 "
+                    "(예: --struct db/structures/modelc_v3_62atom_V0.cif)")
+        return cmd_scaling(a)
 
     rows = []
     for name, s in SYS.items():
@@ -124,4 +209,5 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    import sys as _sys
+    _sys.exit(main() or 0)
