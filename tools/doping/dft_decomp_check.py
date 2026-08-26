@@ -174,6 +174,45 @@ def target_composition(stem: str, out, struct_dir=None):
                       + "  → --struct_dir 로 구조 폴더를 지정할 것")
 
 
+#: |ΔE_decomp| 이 이보다 크면 **정규화가 틀린 것**으로 보고 거부한다 (eV/atom).
+#:  분해 에너지는 물리적으로 수백 meV/atom 규모다. 2026-08-26 실측: 셀당 에너지를
+#:  화학식당처럼 써서 **−532 eV/atom** 이 나왔다. 그 값이 화면에 찍혔다는 게 문제였다.
+SANITY_MAX_DE_EV = 2.0
+
+
+def phase_energy_per_fu(name: str, cell_E: float, out, formula: dict):
+    """상의 **셀 총에너지**를 **화학식당** 에너지로 바꾼다. → (E_fu|None, Z|None, 왜)
+
+    왜 필요한가 (2026-08-26 회귀):
+      `balance()` 가 돌려주는 계수는 **화학식 단위**(LiCl 8개 …)인데,
+      `parse_qe_total` 이 주는 것은 **그 셀 전체**의 에너지다. MP 에서 받은 셀은
+      보통 화학식 여러 개(Z>1)를 담고 있어서 그대로 곱하면 Z 배 틀린다.
+      실측: LiCl 셀 −96.07 Ry 를 화학식당으로 착각 → ΔE_decomp −532 eV/atom.
+
+    Z 는 셀 조성 ÷ 화학식 조성으로 구하고, **정수가 아니면 거부**한다
+    (비정수면 그 셀이 이 화학식의 상이 아니거나 입력이 틀린 것이다).
+
+    ⛔ 이 함수가 못 하는 것
+      · 다형체를 구별하지 않는다 — Z 만 본다. 어느 다형체인지는 --prepare 쪽 책임이다.
+    """
+    comp, src, why = target_composition(name, out, None)
+    if comp is None:
+        return None, None, f"셀 조성을 못 읽었다 — {why}"
+    ratios = []
+    for e, n in formula.items():
+        if comp.get(e, 0) == 0:
+            return None, None, f"셀에 {e} 가 없다 (조성 {comp}, 기대 {formula})"
+        ratios.append(comp[e] / n)
+    if set(comp) != set(formula):
+        return None, None, f"셀 원소가 화학식과 다르다 (셀 {sorted(comp)}, 기대 {sorted(formula)})"
+    z = ratios[0]
+    if any(abs(r - z) > 1e-9 for r in ratios) or abs(z - round(z)) > 1e-6 or round(z) < 1:
+        return None, None, (f"화학식 배수가 정수가 아니다 (셀 {comp} ÷ {formula} → {ratios}) "
+                            f"— 이 셀은 {name} 의 상이 아닐 수 있다")
+    z = int(round(z))
+    return cell_E / z, z, src
+
+
 def parse_qe_total(path) -> float | None:
     """QE 출력에서 **마지막** 총에너지(Ry→eV). 없으면 None (0 을 지어내지 않는다)."""
     try:
@@ -294,6 +333,40 @@ def _selftest() -> int:
         chk(c2 is None, "[음성] 구조를 못 찾으면 None (0 이나 빈 조성을 지어내지 않는다)")
         chk("찾은 곳:" in why2 and "--struct_dir" in why2,
             "★ [음성] 실패 사유에 **찾아본 경로**와 다음 수단을 적는다")
+
+        # ── 셀당 → 화학식당 (2026-08-26 회귀: 이걸 안 해서 -532 eV/atom 이 찍혔다) ──
+        def _wr(stem, syms):
+            sp = sorted(set(syms))
+            (td / "in" / f"{stem}.in").write_text(
+                "&CONTROL\n calculation='scf'\n/\n&SYSTEM\n ibrav=0\n"
+                f" nat={len(syms)}\n ntyp={len(sp)}\n ecutwfc=60\n/\n&ELECTRONS\n/\n"
+                "ATOMIC_SPECIES\n" + "".join(f" {e} 1.0 {e.lower()}.upf\n" for e in sp)
+                + "CELL_PARAMETERS angstrom\n 9.0 0.0 0.0\n 0.0 9.0 0.0\n 0.0 0.0 9.0\n"
+                "ATOMIC_POSITIONS angstrom\n"
+                + "".join(f" {e} {i*0.7:.2f} 0.0 0.0\n" for i, e in enumerate(syms))
+                + "K_POINTS gamma\n")
+
+        _wr("LiCl", ["Li"] * 4 + ["Cl"] * 4)          # Z = 4 인 셀
+        efu, z, src2 = phase_energy_per_fu("LiCl", -400.0, td, {"Li": 1, "Cl": 1})
+        chk(z == 4 and abs(efu - (-100.0)) < 1e-9,
+            "★ 셀당 에너지를 화학식당으로 나눈다 (Z=4 → E/4) — 안 하면 Z 배 틀린다")
+
+        _wr("Li2S", ["Li"] * 5 + ["S"] * 2)           # Li:S = 5:2 → 배수 불일치
+        e3, z3, why3 = phase_energy_per_fu("Li2S", -10.0, td, {"Li": 2, "S": 1})
+        chk(e3 is None and "정수가 아니다" in why3,
+            "★ [음성] 화학식 배수가 정수가 아니면 거부 (그 셀은 그 상이 아니다)")
+
+        _wr("LiCl2", ["Li"] * 2 + ["Cl"] * 2 + ["O"])  # 원소가 하나 더 있다
+        e4, z4, why4 = phase_energy_per_fu("LiCl2", -10.0, td, {"Li": 1, "Cl": 1})
+        chk(e4 is None and "원소" in why4,
+            "[음성] 셀에 화학식에 없는 원소가 섞이면 거부")
+
+    # 정신차림 문턱 — 물리적으로 불가능한 크기를 '결과' 로 내보내지 않는다
+    chk(SANITY_MAX_DE_EV <= 2.0,
+        f"ΔE_decomp 상한이 {SANITY_MAX_DE_EV} eV/atom 로 잡혀 있다 (-532 사고 재발 방지)")
+    r_big, _ = decomp_energy(li, -1e6, E)
+    chk(abs(r_big["delta_E_decomp_eV_per_atom"]) > SANITY_MAX_DE_EV,
+        "★ [음성] 정규화가 틀린 입력은 상한을 넘는다 — collect 가 이걸 보고 죽는다")
 
     # ── QE 파서 ────────────────────────────────────────────────────────
     import tempfile
@@ -514,17 +587,30 @@ def main():
     if a.collect:
         import collections
         from ase.io import read
-        phase_E, missing = {}, []
-        for name in DEFAULT_BASIS:
+        phase_E, phase_Z, missing, badnorm = {}, {}, [], []
+        for name, formula in DEFAULT_BASIS.items():
             e = parse_qe_total(out / f"{name}.out")
             if e is None:
                 missing.append(name)
-            else:
-                phase_E[name] = e
+                continue
+            # ★ 셀 총에너지 → 화학식당. balance() 계수가 화학식 단위이므로 여기서 맞춰야 한다.
+            efu, z, why = phase_energy_per_fu(name, e, out, formula)
+            if efu is None:
+                badnorm.append((name, why))
+                continue
+            phase_E[name], phase_Z[name] = efu, z
         if missing:
             print(f"⛔ 기저 상 출력이 없다: {missing} — 빠진 상을 0 으로 두면 "
                   f"그 상이 '공짜' 가 되어 값이 통째로 틀린다. 계산을 마치고 다시.")
             return 3
+        if badnorm:
+            print(f"⛔ 기저 상 {len(badnorm)}개를 **화학식당으로 정규화하지 못했다** — "
+                  f"그대로 쓰면 Z 배 틀린 값이 나온다:")
+            for n, why in badnorm:
+                print(f"      {n:<8} {why}")
+            return 3
+        print(f"  기저 {len(phase_E)}상 (셀당 → 화학식당, Z = "
+              + ", ".join(f"{n}×{phase_Z[n]}" for n in phase_E) + ")")
         rows = []
         for f in sorted(out.glob("*.out")):
             stem = f.stem
@@ -546,6 +632,15 @@ def main():
             if r is None:
                 print(f"  ⛔ {stem}: {info.get('why')}")
                 continue
+            # ★ 정신차림 검사 — 물리적으로 불가능한 크기면 **찍지 말고 죽는다**.
+            #   화면에 -532 eV/atom 이 찍히고 '★ 더 안정' 까지 나온 게 실제 사고였다(2026-08-26).
+            de = r["delta_E_decomp_eV_per_atom"]
+            if abs(de) > SANITY_MAX_DE_EV:
+                print(f"  ⛔ {stem}: ΔE_decomp = {de:+.1f} eV/atom — "
+                      f"|{SANITY_MAX_DE_EV}| eV/atom 을 넘는다. 분해에너지는 이런 크기가 될 수 없다.")
+                print(f"     거의 확실히 **에너지 정규화**가 어긋난 것이다 "
+                      f"(셀당 ↔ 화학식당, 또는 pseudo/컷오프가 상마다 다름).")
+                return 5
             r["composition_source"] = csrc          # 어느 파일에서 조성을 읽었는지 남긴다
             rows.append((stem, r))
             print(f"  {stem:<24} ΔE_decomp = "
@@ -567,6 +662,8 @@ def main():
             return 4
         (out / "decomp_result.json").write_text(json.dumps(
             {"phase_E_eV": phase_E, "basis": DEFAULT_BASIS,
+             "phase_formula_units_Z": phase_Z,
+             "phase_E_note": "화학식당(eV/f.u.) 로 정규화된 값이다 — 셀 총에너지가 아니다",
              "targets": {k: v for k, v in rows},
              "n_targets_scored": len(rows),
              "⛔_do_not": "E_above_hull 로 인용 금지. 5상 공통기저 비교다."},
