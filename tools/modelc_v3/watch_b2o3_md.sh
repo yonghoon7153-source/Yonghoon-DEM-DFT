@@ -60,8 +60,17 @@ while IFS= read -r d; do
   # ⭐ 2026-08-26 — **원자 수**를 같이 찍는다. 슈퍼셀 런에서 `--supercell` 이 안 먹으면
   #   화면상 정상인 채로 62원자를 20시간 돌게 된다 (traj.xyz 0개 사고와 같은 부류).
   #   md.log 첫 줄이 `[label] NNN atoms | ...` 이다.
-  NAT=$(grep -aom1 "[0-9]\+ atoms" "$d/md.log" 2>/dev/null | head -1 | tr -d " atoms")
-  [ -z "$NAT" ] && NAT=$(grep -aom1 "[0-9]\+ atoms" "$d/../md.log" 2>/dev/null | head -1 | tr -d " atoms")
+  # ⚠ md.log 는 ASE MD 로거라 **원자 수가 없다.** 드라이버가 시작 즉시 쓰는
+  #   run_meta.json 을 본다 (2026-08-26 신설). 상위 두 단계까지 거슬러 찾는다.
+  NAT=""
+  for m in "$d/run_meta.json" "$d/../run_meta.json" "$d/../../run_meta.json" "$d/../../../run_meta.json"; do
+    [ -f "$m" ] || continue
+    NAT=$(grep -ao '"n_atoms"[[:space:]]*:[[:space:]]*[0-9]\+' "$m" 2>/dev/null | grep -o '[0-9]\+$' | head -1)
+    [ -n "$NAT" ] && break
+  done
+  # 폴백 — 끝난 런은 결과 JSON 에 있다
+  [ -z "$NAT" ] && [ -f "$d/../ensemble_results.json" ] && \
+    NAT=$(grep -ao '"n_atoms"[[:space:]]*:[[:space:]]*[0-9]\+' "$d/../ensemble_results.json" 2>/dev/null | grep -o '[0-9]\+$' | head -1)
   NATS=""; [ -n "$NAT" ] && NATS=" ${NAT}at"
   if [ -f "$d/msd.json" ]; then
     DONE=$((DONE+1))

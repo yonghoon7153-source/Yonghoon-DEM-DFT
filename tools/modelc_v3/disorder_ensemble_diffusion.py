@@ -333,7 +333,25 @@ def main():
     n_sites = len(free_S) + len(cl_idx)
     max_swaps = min(len(free_S), len(cl_idx))
     print(f"[{args.label}] {len(base)} atoms | free-S={len(free_S)} Cl={len(cl_idx)} "
-          f"| free-anion sites={n_sites} | max_swaps={max_swaps}")
+          f"| free-anion sites={n_sites} | max_swaps={max_swaps}", flush=True)
+
+    # ⭐ 2026-08-26 — **시작 즉시** run_meta.json 을 쓴다.
+    #   왜: 위 print 는 `| tee` 를 물리면 stdout 이 블록 버퍼가 되어 몇 분~몇십 분 뒤에야 나온다.
+    #   그 사이 `--supercell` 이 먹었는지 확인할 방법이 없어서, 62원자를 20시간 돌리는
+    #   사고를 화면상 정상인 채로 겪을 수 있다 (2026-08-26 gabia 실측).
+    #   ensemble_results.json 은 **끝나야** 나오므로 감시에 못 쓴다.
+    try:
+        out_root_p = Path(args.out_root); out_root_p.mkdir(parents=True, exist_ok=True)
+        (out_root_p / "run_meta.json").write_text(json.dumps({
+            "label": args.label, "n_atoms": len(base), "supercell": list(sc),
+            "v0_xyz": str(args.v0_xyz), "temperatures": list(args.temperatures),
+            "prod_ps": args.prod_ps, "equilib_ps": args.equilib_ps,
+            "seed": args.seed, "fit_window_ps": list(args.fit_window_ps),
+            "save_traj": bool(args.save_traj), "uma_model": args.uma_model,
+            "note": "MD 시작 직후 기록 — 감시용. 결과는 ensemble_results.json 을 볼 것",
+        }, ensure_ascii=False, indent=2))
+    except Exception as e:                       # 감시용 파일 때문에 계산이 죽으면 안 된다
+        print(f"  ⚠ run_meta.json 을 못 썼다 ({type(e).__name__}: {e}) — 계산은 계속한다")
 
     # one UMA load for the whole ensemble
     from fairchem.core import pretrained_mlip
