@@ -532,6 +532,12 @@ def _mpt_columns(text: str) -> tuple[dict[str, np.ndarray], dict]:
         raise ValueError(f"header line count {count} does not fit the file")
 
     names = [name.strip() for name in lines[count - 1].split("\t")]
+    # EC-Lab 은 **머리글 줄에도** 탭 하나를 더 찍는다 (`...\tRwe/Ohm\t\r\n`).
+    # 데이터 줄의 꼬리 탭은 아래에서 이미 떼고 있었는데 여기는 안 떼서, 이름
+    # 46 개와 값 45 개가 어긋나 멀쩡한 파일이 "the export is damaged" 로
+    # 거절됐다 -- 실측 `Dry_1.mpt` (EC-Lab v11.63) 가 그랬다.
+    while names and not names[-1]:
+        names.pop()
     values: list[list[float]] = []
     for line_number, line in enumerate(lines[count:], start=count + 1):
         if not line.strip():

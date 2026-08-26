@@ -238,6 +238,29 @@ def test_magnitude_that_disagrees_with_its_parts_is_refused():
         read_mpr_bytes(S.build_mpr(columns))
 
 
+def test_ec_labs_trailing_tab_on_the_header_is_not_damage():
+    """EC-Lab 은 머리글 줄 끝에도 탭을 하나 더 찍는다.
+
+    데이터 줄의 꼬리 탭은 떼면서 머리글의 것은 안 떼서, 이름 46 개와 값 45 개가
+    어긋나 **멀쩡한 파일이 "the export is damaged" 로 거절**됐다 -- 실측
+    `Dry_1.mpt` (EC-Lab v11.63, 89점) 가 그랬다.  서식이지 데이터가 아니다.
+    """
+    frequency = S.log_sweep(1e5, 1e0, 4)
+    z = S.randles(frequency)
+    columns = S.spectrum_columns(frequency, z)
+    read = read_mpt_text(S.build_mpt(columns, trailing_tab=True))
+    assert len(read) == len(frequency)
+    assert read.z_re[0] == pytest.approx(z.real[0], rel=1e-5)
+
+    # 그래도 **진짜** 어긋남은 여전히 거절해야 한다 -- 위 관용이 그 가드를
+    # 열어 주면 열 이동이 측정값으로 수용된다.
+    lines = S.build_mpt(columns, trailing_tab=True).splitlines()
+    first = next(i for i, line in enumerate(lines) if line and line[0].isdigit())
+    lines[first] = "123\t" + lines[first]
+    with pytest.raises(ValueError, match=r"line \d+ has"):
+        read_mpt_text("\n".join(lines))
+
+
 def test_an_mpt_row_with_the_wrong_column_count_is_refused_with_its_line():
     """모자란 행은 조용한 삭제였고 남는 행은 열 이동이었다.
 

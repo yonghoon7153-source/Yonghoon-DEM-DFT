@@ -121,16 +121,22 @@ def log_sweep(start_hz: float = 1e6, end_hz: float = 1e-2,
 
 
 def build_mpt(columns: dict[str, np.ndarray], *, comma_decimal: bool = False,
+              trailing_tab: bool = False,
               technique: str = "Potentio Electrochemical Impedance Spectroscopy"
               ) -> str:
-    """The ASCII export, header count and all."""
+    """The ASCII export, header count and all.
+
+    ``trailing_tab`` 은 EC-Lab 이 실제로 하는 짓이다 -- 머리글 줄 끝에 탭을
+    하나 더 찍는다 (`...\tRwe/Ohm\t\r\n`).  실측 `Dry_1.mpt` (v11.63).
+    """
     names = list(columns)
+    header = "\t".join(names) + ("\t" if trailing_tab else "")
     preamble = [
         "EC-Lab ASCII FILE",
         "Nb header lines : 5",
         "",
         technique,
-        "\t".join(names),
+        header,
     ]
     rows = []
     n = len(columns[names[0]])
