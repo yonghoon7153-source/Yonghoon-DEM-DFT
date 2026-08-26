@@ -2698,10 +2698,16 @@ write_env_key() {
 #: bml share" 를 시킨다 — 열지도 않은 터널을 닫으라는 말이다.  우리가 쓰는
 #: 제공자의 도메인만 그 절차로 보낸다.
 is_our_tunnel_url() {
-  local h; h="$(url_host "${1:-}")" || return 1
+  local h d; h="$(url_host "${1:-}")" || return 1
   case "$h" in
     *.lhr.life|*.localhost.run|*.trycloudflare.com) return 0 ;;
   esac
+  # 우리 도메인으로 열었으면 그것도 우리 터널이다.  안 넣으면 그 주소가 안
+  # 열릴 때 화면이 LAN 안내(방화벽·포트포워딩)를 주는데, 터널에는 아무 상관이
+  # 없는 것들이라 확인하느라 시간만 쓴다.
+  if d="$(tunnel_domain)"; then
+    case "$h" in "$d"|*.".$d") return 0 ;; esac
+  fi
   return 1
 }
 
@@ -2881,9 +2887,29 @@ count_chars() {
 tunnel_url_from() {
   # 도메인을 한정한다.  localhost.run 은 접속 안내에 admin.localhost.run 도 같이
   # 찍는데, 그것을 주소로 알려 주면 상대는 남의 관리 페이지를 연다.
+  local d out
+  # 우리 도메인으로 열었으면 그것이 먼저다.  저쪽이 그 이름을 그대로 찍어 준다.
+  if d="$(tunnel_domain)"; then
+    out="$(printf '%s' "$1" | grep -oF "https://$d" | head -1)"
+    [ -n "$out" ] && { printf '%s' "$out"; return 0; }
+  fi
   printf '%s' "$1" \
     | grep -oE 'https://[a-z0-9][a-z0-9-]*\.(trycloudflare\.com|lhr\.life)' \
     | head -1
+}
+
+#: 우리 도메인.  `.bml/env` 의 `WORKBENCH_TUNNEL_DOMAIN`.
+#:
+#: **주소가 열 때마다 바뀌는 문제의 유일한 해답이다.**  실측으로 갈라 놓은 것:
+#: 키를 등록해 인증까지 되는데도 (`authn: user … authenticated`) 주소는 계속
+#: 랜덤이었다 (653712d5fb509b → d1c47a7b4af191 → 928ae9cbe83d4e).  저쪽 배너가
+#: 스스로 답을 적어 준다 — "To set up and manage custom domains go to
+#: https://admin.localhost.run/".  인증은 고정 주소를 주지 않고, 우리 도메인이
+#: 준다.
+tunnel_domain() {
+  local d="${WORKBENCH_TUNNEL_DOMAIN:-}"
+  [ -n "$d" ] || return 1
+  printf '%s' "$d"
 }
 
 #: 터널 프로그램의 경로.  ensure_cloudflared 가 채운다.
@@ -3279,6 +3305,11 @@ tunnel_ssh_key() {
 #: 무엇이 도는지 사람이 볼 수 없다.  `cat` 한 번이면 읽히는 편이 낫다.
 write_tunnel_keepalive() {
   local key="$1" path="$RUN_DIR/tunnel-keepalive.sh"
+  # 우리 도메인이 있으면 그 이름에 묶는다.  SSH 의 원격 전달은 bind 주소를
+  # 앞에 적을 수 있고 (`-R <이름>:80:localhost:PORT`), localhost.run 은 그것으로
+  # "이 터널을 이 도메인에" 를 받는다.  없으면 예전대로 `80:` 만.
+  local bind="80"
+  local dom; dom="$(tunnel_domain)" && bind="${dom}:80"
   cat > "$path" <<KEEPALIVE
 #!/usr/bin/env bash
 # bml 이 만든 파일입니다 -- 고치지 마세요.  \`bml share\` 가 다시 씁니다.
@@ -3293,7 +3324,7 @@ while :; do
       -o StrictHostKeyChecking=accept-new \\
       -o ServerAliveInterval=30 -o ServerAliveCountMax=3 \\
       -o ExitOnForwardFailure=yes \\
-      -R 80:localhost:$PORT localhost.run &
+      -R ${bind}:localhost:$PORT localhost.run &
   child=\$!
   wait "\$child"
   # 붙자마자 죽는 것이 이어지면 고칠 수 있는 문제가 아니다 (키가 지워졌거나,
@@ -3328,7 +3359,13 @@ tunnel_via_ssh() {
     # 적어 두었다** 까지이고, 그 키가 localhost.run 계정에 실제로 올라가
     # 있는지는 저쪽만 안다.  단정하면 주소가 바뀌었을 때 사람이 엉뚱한 데를
     # 뒤진다 -- "등록했는데 왜 바뀌지" 로 시작하게 되므로.
-    label="터널 여는 중 ${DIM}(localhost.run · 지정한 키 · 끊기면 다시 붙음)${OFF}"
+    local dom
+    if dom="$(tunnel_domain)"; then
+      label="터널 여는 중 ${DIM}(localhost.run · 우리 도메인 ${dom} · 끊기면 다시 붙음)${OFF}"
+      say "  ${DIM}도메인: ${dom}${OFF}  ${DIM}— 이 이름이 나오면 주소는 이제 안 바뀝니다${OFF}"
+    else
+      label="터널 여는 중 ${DIM}(localhost.run · 지정한 키 · 끊기면 다시 붙음)${OFF}"
+    fi
     say "  ${DIM}키: ${key}${OFF}"
     local print_
     print_="$(ssh-keygen -lf "${key}.pub" 2>/dev/null || ssh-keygen -lf "$key" 2>/dev/null)"
@@ -3339,6 +3376,15 @@ tunnel_via_ssh() {
   # 키를 안 쓰면 주소가 **열 때마다 바뀐다** -- 받는 쪽은 그때마다 다시 쳐야
   # 한다.  그 사실을 여는 자리에서 말해 준다: 나중에 "또 바뀌었는데" 를 듣고
   # 나서야 설명하면, 그 사이에 오간 왕복이 전부 낭비다.
+  # 도메인만 적고 키가 없으면 그 도메인은 절대 안 나온다 -- 계정 없이는 저쪽이
+  # 어느 도메인인지 알 수 없다.  조용히 랜덤 주소로 열면 사람은 도메인이
+  # 되는 줄 알고 그 주소를 상대에게 준다.
+  if tunnel_domain >/dev/null; then
+    warn "도메인이 적혀 있는데 키가 없습니다 — 그 도메인으로는 못 엽니다."
+    say "  ${DIM}커스텀 도메인은 계정에 묶이고, 계정은 키로 증명합니다.${OFF}"
+    say "  ${GREEN}bml share key${OFF} ${DIM}를 먼저 하세요. 지금은 랜덤 주소로 엽니다.${OFF}"
+    say ""
+  fi
   say "  ${DIM}등록한 키 없이 엽니다 — 주소가 열 때마다 바뀝니다.${OFF}"
   say "  ${DIM}고정하려면${OFF} ${GREEN}bml share key${OFF}${DIM} (한 번만)${OFF}"
   try_tunnel "$keep" "터널 여는 중 ${DIM}(localhost.run · SSH)${OFF}" \
@@ -3354,6 +3400,65 @@ tunnel_via_ssh() {
 #: 등록은 사람이 하는 일이라 (localhost.run 계정에 공개키를 올린다), 여기서는
 #: **경로가 읽히는지만** 보고 등록 여부는 묻지 않는다.  안 된 채로 적어 두면
 #: 다음 `bml share` 가 Permission denied 로 죽고 화면이 그렇게 말한다.
+#: `bml share domain [이름|off]` — 우리 도메인을 적어 둔다.
+#:
+#: 등록은 사람이 한다 (도메인을 사고, DNS 를 저쪽으로 돌리고, admin 에 올린다).
+#: 여기서는 **어느 이름으로 열지**만 적는다.  그 이름이 실제로 나왔는지는
+#: 열어 본 뒤에 확인한다 -- 적어 둔 것과 저쪽이 준 것은 다른 일이다.
+cmd_share_domain() {
+  local raw="${1:-}" dom
+  case "$raw" in
+    '')
+      if dom="$(tunnel_domain)"; then
+        say "터널 도메인  ${B}${dom}${OFF}   ${DIM}(.bml/env)${OFF}"
+        say "  ${DIM}이 이름으로 열립니다 — 주소가 안 바뀝니다.${OFF}"
+        tunnel_ssh_key >/dev/null || warn "  키가 없습니다 — 그 도메인으로는 못 엽니다 (bml share key)."
+      else
+        say "${DIM}터널 도메인이 없습니다 — 주소가 열 때마다 바뀝니다.${OFF}"
+        say ""
+        say "  ${B}주소를 고정하는 유일한 길입니다.${OFF} ${DIM}키를 등록해 인증까지 돼도${OFF}"
+        say "  ${DIM}(authn: … authenticated) 무료 티어의 주소는 계속 랜덤이었습니다 — 실측.${OFF}"
+        say "  ${DIM}저쪽 배너가 직접 그렇게 적어 줍니다: custom domains → admin.localhost.run${OFF}"
+        say ""
+        say "  ${B}순서${OFF}"
+        say "    1. ${DIM}도메인을 하나 삽니다 (아무 등록기관·연 1~2만원)${OFF}"
+        say "    2. ${DIM}그 도메인의 DNS 를 localhost.run 이 시키는 대로 돌립니다${OFF}"
+        say "       ${GREEN}https://localhost.run/docs/custom-domains${OFF}"
+        say "    3. ${DIM}admin.localhost.run 에 그 도메인을 등록합니다 (키도 같은 계정에)${OFF}"
+        say "    4. ${GREEN}bml share domain <그 이름>${OFF} ${DIM}후${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+        say ""
+        say "  ${DIM}2·3 은 랩 망에서 그 사이트가 안 열립니다 — 휴대폰 테더링으로 하세요.${OFF}"
+      fi
+      return 0
+      ;;
+    off|none|해제)
+      if ! write_env_key WORKBENCH_TUNNEL_DOMAIN ""; then env_write_failed; return 1; fi
+      ok "터널 도메인을 지웠습니다 — 다시 랜덤 주소로 열립니다."
+      return 0
+      ;;
+  esac
+
+  dom="${raw#https://}"; dom="${dom#http://}"; dom="${dom%%/*}"
+  # 이름 모양만 본다.  진짜 확인은 열어 본 뒤에 한다 -- 여기서 통과해도 저쪽이
+  # 그 도메인을 모르면 안 나온다.
+  case "$dom" in
+    ''|*[!a-zA-Z0-9.-]*|-*|*-|.*|*.) die "도메인 이름으로 안 보입니다: $raw" ;;
+    *.*) ;;
+    *) die "점이 없습니다 — 전체 이름이 필요합니다 (예: bml.example.com): $raw" ;;
+  esac
+
+  if ! write_env_key WORKBENCH_TUNNEL_DOMAIN "$dom"; then env_write_failed; return 1; fi
+  ok "터널 도메인 → ${B}${dom}${OFF}"
+  if ! tunnel_ssh_key >/dev/null; then
+    warn "그런데 키가 없습니다 — 커스텀 도메인은 계정에 묶이고 계정은 키로 증명합니다."
+    say "  ${GREEN}bml share key <키 경로>${OFF} ${DIM}를 먼저 하세요.${OFF}"
+    return 0
+  fi
+  say "  ${DIM}그 도메인이 admin.localhost.run 에 등록돼 있고 DNS 가 돌아가 있어야 합니다.${OFF}"
+  say "  ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}— 그 이름이 나오는지 그 자리에서 확인합니다.${OFF}"
+  return 0
+}
+
 cmd_share_key() {
   local raw="${1:-}" key
   case "$raw" in
@@ -3598,6 +3703,31 @@ cmd_share() {
     exit 0
   fi
 
+  # **적어 둔 도메인과 저쪽이 준 주소는 다른 일이다.**  DNS 가 아직 안 돌았거나
+  # admin 에 등록이 안 됐으면 저쪽은 조용히 랜덤 주소를 준다.  그것을 "됐다" 로
+  # 읽으면 그 주소를 상대에게 주고, 다음에 열 때 또 바뀐다 -- 고정하려고 도메인을
+  # 산 사람에게 그것이 제일 나쁜 결말이다.
+  local want; if want="$(tunnel_domain)"; then
+    if [ "$(url_host "$url" 2>/dev/null)" = "$want" ]; then
+      ok "열렸습니다 → ${B}${url}${OFF}   ${DIM}(우리 도메인 · 이제 안 바뀝니다)${OFF}"
+      say ""
+      say "  ${B}받는 쪽은 한 번만 하면 됩니다${OFF} ${DIM}— 주소가 고정이라 다시 칠 일이 없습니다.${OFF}"
+      say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${url}${OFF}"
+      tunnel_ip_hint "$url"
+      say ""
+      say "  ${DIM}닫으려면${OFF} ${GREEN}bml share stop${OFF}"
+      return 0
+    fi
+    warn "적어 둔 도메인(${want})이 아니라 다른 주소가 나왔습니다."
+    say "  ${DIM}받은 주소: ${url}${OFF}"
+    say "  ${DIM}저쪽이 그 도메인을 아직 모릅니다 — 셋 중 하나입니다:${OFF}"
+    say "    ${DIM}1. DNS 가 아직 안 돌았습니다 (전파에 몇 분~몇 시간)${OFF}"
+    say "    ${DIM}2. admin.localhost.run 에 그 도메인이 등록되지 않았습니다${OFF}"
+    say "    ${DIM}3. 그 계정과 지금 쓰는 키가 다릅니다${OFF}"
+    tunnel_account_note
+    say "  ${DIM}이 주소로도 쓸 수는 있습니다 — 다만 다음에 열면 또 바뀝니다.${OFF}"
+    say ""
+  fi
   ok "열렸습니다 → ${B}${url}${OFF}"
   say ""
   say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${url}${OFF}   ${DIM}(한 번만 — 그다음부터는${OFF} ${GREEN}bmlout${OFF}${DIM})${OFF}"
@@ -5000,8 +5130,9 @@ main() {
     share|tunnel)
       shift
       # `bml share key ...` 는 터널을 열지 않는다 -- 어느 키로 열지만 적는다.
-      if [ "${1:-}" = "key" ]; then shift; cmd_share_key "${1:-}"; else
-        cmd_share "${1:-}"; fi
+      if [ "${1:-}" = "key" ]; then shift; cmd_share_key "${1:-}"
+      elif [ "${1:-}" = "domain" ]; then shift; cmd_share_domain "${1:-}"
+      else cmd_share "${1:-}"; fi
       ;;
     install)           shift; cmd_install "${1:-$HOME/.local/bin}" ;;
     help|-h|--help)    cmd_help ;;
