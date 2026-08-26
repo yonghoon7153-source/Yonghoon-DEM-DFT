@@ -468,6 +468,18 @@ def main():
           f"   (장벽·순위가 여기 달렸다)")
     print(f"■ **힘**            MAE {f['MAE_eV_per_A']:.4f} · RMSE {f['RMSE_eV_per_A']:.4f} eV/Å"
           f"   최악 {f['max_abs_eV_per_A']:.3f}")
+    # ⛔ JSON 에만 넣고 화면에 안 찍으면 **없는 것과 같다** (2026-08-26 실측: softening 을
+    #    dict 에는 넣었는데 print 를 안 고쳐서 사용자가 못 봤다).
+    if f.get("rel_MAE_pct") is not None:
+        print(f"     참조 RMS {f['rms_ref_eV_per_A']:.3f} eV/Å  →  **상대 {f['rel_MAE_pct']:.2f} %**"
+              f"   r={f['pearson_r']:.5f}")
+    sl = f.get("softening_slope")
+    if sl is not None:
+        tag = ("✅ 경직/중립" if sl >= 0.995 else
+               "⚠ 약한 softening" if sl >= 0.97 else "🔴 softening")
+        print(f"     **softening 기울기 {sl:.4f}**  ({tag})"
+              f"  — 1 보다 작으면 예측힘이 참조보다 작다. **r 로는 원리적으로 안 보인다**")
+        print(f"     📏 같은 시험셋 대조(lips 251프레임): UMA(OMat24) 0.9874 ↔ SevenNet-0(MPtrj) 0.7899")
     for el, d in f["per_element"].items():
         print(f"     {el:3s} MAE {d['MAE']:.4f} · RMSE {d['RMSE']:.4f} eV/Å")
     print(f"\n→ {out}")
