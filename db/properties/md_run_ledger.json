@@ -648,5 +648,38 @@
    "⛔_what_would_settle_it": "600 K 를 **더 길게** 돌려 늦은 창에서 β 가 1 로 수렴하는지 보는 것. 200 ps 로는 tmax 가 100 ps 라 50-100 이 마지막 창이다. 점 제거가 아니라 런 연장이 옳은 처방이라는 것이 β 모양의 읽기다.",
    "⚠_600K_is_the_weakest_point": "이 온도는 (1) β 가 문턱에 걸리고 (2) 시드 산포가 크다(D: 6.47e-06 / 1.705e-05 / 7.90e-06 — s3 가 s2 의 2.6배) (3) c 가 창 따라 2.8배 커진다. **Ea 를 인용할 때 600 K 가 지배적 잡음원**이라는 것을 같이 밝힐 것 (b2o3 에서 leave-one-out 으로 이미 확인된 것과 같은 방향)."
   }
+ },
+ "three_system_framework_contrast_2026_08_26": {
+  "★_verdict": "**골격 이완은 b2o3 조성 고유다.** modelc(무도핑)와 lpsocl(O 도핑) 둘 다 1000 K 까지 rigid 인데 b2o3 만 **700 K 부터** 샌다.",
+  "why_it_matters": "이전 대조는 modelc 하나뿐이라 '도핑하면 무르다' 와 'B2O3 라서 무르다' 를 못 갈랐다. lpsocl 은 **O 를 도핑한 계**인데 rigid 다 ⇒ 도핑 자체가 원인이 아니다.",
+  "tool": "tools/ionic/msd_diffusive_check.py --framework --from_traj --window 2 50",
+  "results": {
+   "lpsocl": {
+    "T600": "6런 (arrhenius_6pt_traj 3 + lpsocl_new 3) 전부 rigid",
+    "T700": "3런 rigid (β 0.12 / -0.04 / 0.03, worst Cl(8)·S(21))",
+    "T1000": "3런 rigid (β 0.17 / 0.03 / 0.04)",
+    "max_beta": 0.17,
+    "raw": "kgy ~/work/runs/{arrhenius_6pt_traj,arrhenius_6pt/lpsocl_new}"
+   },
+   "modelc": {
+    "T600_800_1000": "9런 rigid (max β 0.27) — highT_reseed_traj",
+    "T700": "3런 rigid (β 0.05 / 0.07 / 0.12)",
+    "max_beta": 0.27
+   },
+   "b2o3": {
+    "T700": "s2 ⛔ β≥0.60 — **골격이 확산 쪽**",
+    "T800_T1000": "3/3 β≥0.30",
+    "T1200": "6/6 β≥0.30",
+    "T600": "1/3 이 0.55",
+    "note": "실패 개시가 700 K 로 내려왔다 (이전 최저 실패는 800 K)"
+   }
+  },
+  "★_reading": "modelc(무도핑) · lpsocl(O 도핑) 둘 다 1000 K 까지 골격이 고정인데 b2o3(B2O3 도핑)만 700 K 부터 샌다. **B 가 들어간 계에서만** 나는 현상이고, 앞서 BS3/PS4 단위 분리에서 'BS3 가 원인이 아니다(0/9)' 를 확인했으므로 — 호스트 PS4 기술이 B 존재 하에서 흐트러진다는 읽기와 정합한다.",
+  "⛔_still_open": [
+   "lpsocl **800 K** 는 아직 골격 검사 안 함 (lpsocl_md/reseed_hiT/s*/T800 에 궤적 여부 미확인).",
+   "b2o3 T700 은 s2 하나만 봤다 — s3·s4 는 실행 중/대기.",
+   "β 문턱 0.60 은 확산 판정이고 0.30 은 rigid 판정이다. b2o3 T700_s2 가 0.60 을 넘었다는 것은 '기어가는(creep)' 이 아니라 확산 쪽이라는 뜻 — 더 강한 신호다.",
+   "재추출이 save_fs=100 fs 를 **가정**한다. 이 런들의 실제 인자와 일치하는지 확인 필요 (modelc 는 확인함, lpsocl_new 는 미확인)."
+  ]
  }
 }
