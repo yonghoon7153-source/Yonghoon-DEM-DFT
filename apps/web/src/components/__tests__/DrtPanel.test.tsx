@@ -1,6 +1,6 @@
 /** DRT 화면 — λ 가 답을 정하므로 그 값이 화면에 있어야 한다. */
 
-import { render, screen, waitFor, within } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 
@@ -72,13 +72,34 @@ afterEach(() => {
 })
 
 describe('DRT 화면', () => {
-  it('모서리가 있으면 거기서 시작하고 이유를 적는다', async () => {
+  it('모서리는 버튼에 남고, 시작 자리는 적어 둔 λ 다', async () => {
+    // 모서리(L 곡선)는 "데이터가 지지하는 가장 매끄러운 답" 이라 근거로는
+    // 옳지만, 이 실험실이 실제로 보는 자리는 그보다 왼쪽이다 — 전고체 셀은
+    // 봉우리 서넛이 겹쳐서 모서리 λ 에서는 한 언덕으로 합쳐진다.  그래서
+    // 시작 자리는 기억한 값이고, 모서리는 '거기로' 한 번 거리에 남는다.
+    window.localStorage.clear()
     installFetch((url) =>
       path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
     render(<DrtPanel spectrumId={1} />)
 
     expect(await screen.findByText(/L 곡선의 곡률이 가장 큰 지점/)).toBeInTheDocument()
-    expect(await screen.findByLabelText('벌점 λ')).toHaveValue('2')
+    // 아무것도 안 골랐으면 1e-5 에서 시작한다 — 이 목록에서 가장 가까운 것은
+    // 1e-6 (index 0) 이다.  로그 자로 잰다: λ 는 10배씩 움직인다.
+    expect(await screen.findByLabelText('벌점 λ')).toHaveValue('0')
+  })
+
+  it('옮긴 자리를 기억한다 — 다음에 열면 거기서 시작한다', async () => {
+    // 매번 슬라이더를 왼쪽 끝까지 끄는 것이 일이 됐다는 제보에서 나왔다.
+    window.localStorage.clear()
+    installFetch((url) =>
+      path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
+    const first = render(<DrtPanel spectrumId={1} />)
+    const slider = await screen.findByLabelText('벌점 λ')
+    fireEvent.change(slider, { target: { value: '3' } })   // λ = 1
+    first.unmount()
+
+    render(<DrtPanel spectrumId={1} />)
+    expect(await screen.findByLabelText('벌점 λ')).toHaveValue('3')
   })
 
   it('모서리가 없으면 하나를 골라 주지 않고 그렇게 말한다', async () => {

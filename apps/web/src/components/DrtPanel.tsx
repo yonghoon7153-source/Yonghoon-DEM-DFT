@@ -75,6 +75,56 @@ const WIDTH_NOTE =
  */
 const DEFAULT_ORDER = 0
 
+/** 처음 여는 λ, 그리고 이 브라우저가 마지막으로 고른 λ 를 적어 두는 자리.
+ *
+ *  예전에는 L 곡선 모서리에서 시작했다.  그것은 "데이터가 지지하는 가장
+ *  매끄러운 답" 이라 기본값으로 옳지만, 이 실험실이 실제로 보는 자리는 그보다
+ *  훨씬 왼쪽이다 — 전고체 셀은 봉우리 서넛이 겹쳐 있어서, 모서리 λ 에서는
+ *  그것이 한 언덕으로 합쳐진다.  매번 슬라이더를 왼쪽 끝까지 끄는 것이 일이
+ *  됐다.
+ *
+ *  그래서 **고른 값을 기억한다.**  기본값을 하나로 못 박지 않는 이유는 그
+ *  값이 사람마다·시료마다 다르기 때문이고, 기억하면 그 사람의 값이 곧 기본이
+ *  된다.  아직 아무것도 안 골랐으면 1e-5 에서 시작한다 (실측으로 이 랩이
+ *  쓰는 자리).  L 곡선 모서리는 없앤 것이 아니라 **'거기로' 버튼에 그대로
+ *  남는다** — 근거 있는 값이 한 번의 클릭 거리에 있어야 한다. */
+const LAMBDA_KEY = 'bml.drt.lambda'
+const FIRST_LAMBDA = 1e-5
+
+function rememberedLambda(): number {
+  try {
+    const saved = Number(window.localStorage.getItem(LAMBDA_KEY))
+    return Number.isFinite(saved) && saved > 0 ? saved : FIRST_LAMBDA
+  } catch {
+    // 사생활 보호 창에서는 localStorage 를 읽는 것만으로 던진다.  기억을
+    // 못 하는 것은 불편이지만, 그것 때문에 DRT 가 안 뜨면 고장이다.
+    return FIRST_LAMBDA
+  }
+}
+
+function rememberLambda(value: number): void {
+  try {
+    window.localStorage.setItem(LAMBDA_KEY, String(value))
+  } catch {
+    /* 못 적어도 이번 화면은 그대로 돈다 */
+  }
+}
+
+/** 적어 둔 λ 에 가장 가까운 자리.  로그 자로 잰다 — λ 는 10배씩 움직인다. */
+export function nearestLambdaIndex(values: number[], want: number): number {
+  let best = 0
+  let gap = Infinity
+  values.forEach((value, index) => {
+    if (!(value > 0)) return
+    const distance = Math.abs(Math.log10(value) - Math.log10(want))
+    if (distance < gap) {
+      gap = distance
+      best = index
+    }
+  })
+  return best
+}
+
 export function DrtPanel({ spectrumId }: { spectrumId: number }) {
   const [order, setOrder] = useState(DEFAULT_ORDER)
   const [index, setIndex] = useState<number | null>(null)
@@ -101,8 +151,8 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
     // 읽으면 화면 전체가 죽는데, 죽은 화면은 "DRT 를 못 풀었다" 보다 훨씬
     // 나쁜 소식이다 — 나이퀴스트도 파라미터도 함께 사라진다.
     if (!results.length) return
-    const suggested = sweep.data.suggested_index ?? -1
-    setIndex(suggested >= 0 ? suggested : Math.floor(results.length / 2))
+    // 적어 둔 λ 가 먼저다.  L 곡선 모서리는 '거기로' 버튼에 남는다.
+    setIndex(nearestLambdaIndex(results.map((r) => r.regularisation), rememberedLambda()))
   }, [sweep.data, fresh, results, index])
 
   useEffect(() => {
@@ -194,7 +244,13 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
               max={Math.max(results.length - 1, 0)}
               step={1}
               value={index ?? 0}
-              onChange={(event) => setIndex(Number(event.target.value))}
+              onChange={(event) => {
+                const next = Number(event.target.value)
+                setIndex(next)
+                // 옮긴 자리가 다음에 열 때의 기본값이 된다.
+                const picked = results[next]?.regularisation
+                if (picked) rememberLambda(picked)
+              }}
               style={{ flex: 1 }}
             />
             <span className="mono tiny" style={{ minWidth: 66, textAlign: 'right' }}>
@@ -208,7 +264,11 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
                 <button
                   type="button"
                   className="ghost tiny"
-                  onClick={() => setIndex(suggested)}
+                  onClick={() => {
+                    setIndex(suggested)
+                    const picked = results[suggested]?.regularisation
+                    if (picked) rememberLambda(picked)
+                  }}
                 >
                   거기로
                 </button>

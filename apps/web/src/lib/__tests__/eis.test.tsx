@@ -445,11 +445,14 @@ describe('스펙트럼 상세', () => {
         return undefined
       }),
     )
+    // 적어 둔 λ 가 없는 브라우저에서 시작한다 — 그래야 어느 λ 가 나오는지가
+    // **응답에서만** 온다 (기억한 값이 섞이면 이 시험이 무엇을 재는지 흐려진다).
+    window.localStorage.clear()
     renderDetail()
 
-    // 기본 차수(0) 응답: 추천 index 2 (λ=0.1) 로 열린다.
+    // 차수 0 의 목록은 [0.001, 0.01, 0.1] — 1e-5 에 가장 가까운 것은 0.001.
     const slider = await screen.findByLabelText('벌점 λ')
-    await waitFor(() => expect(slider).toHaveValue('2'))
+    await waitFor(() => expect(slider).toHaveValue('0'))
 
     await userEvent.click(screen.getByRole('button', { name: '2' }))
     // 지연 중: 옛 차수의 곡선/복사 대신 스피너.
@@ -457,7 +460,8 @@ describe('스펙트럼 상세', () => {
     expect(screen.queryByLabelText('벌점 λ')).not.toBeInTheDocument()
 
     releaseOrder2(null)
-    // 새 응답의 추천(index 0, λ=0.01)으로 선다 — 옛 index 2 가 아니라.
+    // 차수 2 의 목록은 [0.01, 0.1] — **새 응답의 값**이 서야 한다.  옛 목록이
+    // 남아 있으면 여기서 0.001 이 그대로 보인다 (그것이 #19 였다).
     await waitFor(() => expect(screen.getByLabelText('벌점 λ')).toHaveValue('0'))
     expect(screen.getByText('0.01')).toBeInTheDocument()
   })
