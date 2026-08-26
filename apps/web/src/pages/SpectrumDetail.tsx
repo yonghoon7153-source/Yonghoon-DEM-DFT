@@ -590,7 +590,9 @@ function FitReport({ fit, kind, area }: {
       </div>
 
       {fit.parameters.length ? (
-        <div className="table-wrap">
+        // 첫 열을 붙여 둔다.  가로로 굴려도 **어느 파라미터의 줄인지**를 잃지
+        // 않는다 — 잃으면 값만 남고 그 값이 무엇인지 모르게 된다.
+        <div className="table-wrap pin-first">
           <table>
             <thead>
               <tr>
@@ -616,8 +618,11 @@ function FitReport({ fit, kind, area }: {
                     <td className="text mono" title={parameter.name}>
                       <ParamName name={parameter.name} />
                     </td>
-                    <td className="text dim" title={arc?.note}>
-                      {meaning || '—'}
+                    {/* 설명이 길다.  `nowrap` 이면 이 한 칸이 값 열을 화면
+                        밖으로 밀어낸다 — 정작 보러 온 것이 값인데.  폭을
+                        묶고 줄바꿈을 허용한다. */}
+                    <td className="text dim" title={arc?.note ?? meaning}>
+                      <span className="cell-wrap">{meaning || '—'}</span>
                     </td>
                     <td className={
                       parameter.determined ? (headline ? 'headline' : '') : 'faint'}>

@@ -424,6 +424,10 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
   // 그룹을 지우면 그 안의 셀은 남고 "그룹 없음" 이 된다 (FK 는 SET NULL 이 아니라
   // 모델이 nullable 이다). 그래도 한 번 눌러 사라지면 안 되므로 확인을 받는다.
   const [confirming, setConfirming] = useState<number | null>(null)
+  //: 접어 둔 그룹.  기본은 **펼침**이다 — 처음 여는 사람에게 소그룹이 안
+  //  보이면 그것이 있다는 사실 자체를 모른다.  접는 것은 이미 아는 사람이
+  //  치우는 동작이다.
+  const [folded, setFolded] = useState<number[]>([])
   const [busy, setBusy] = useState(false)
 
   async function remove(id: number) {
@@ -487,12 +491,34 @@ function GroupManager({ onChanged }: { onChanged: () => void }) {
       </div>
       {groups.data?.length ? (
         <div className="col" style={{ gap: 6 }}>
-          {treeOrder(groups.data).map((group) => (
+          {treeOrder(groups.data)
+            .filter((group) => !group.parent_id || !folded.includes(group.parent_id))
+            .map((group) => (
             <div key={group.id} className="row"
                  style={{ justifyContent: 'space-between',
                           paddingLeft: group.parent_id ? 14 : 0 }}>
-              <span>
+              <span className="row" style={{ gap: 4, alignItems: 'baseline' }}>
                 {group.parent_id ? <span className="faint">↳ </span> : null}
+                {/* 소그룹이 있는 그룹만 접힌다.  없는 그룹에 삼각형을 두면
+                    눌러도 아무 일이 없는 단추가 되고, 그런 단추가 하나 있으면
+                    나머지 삼각형도 못 믿게 된다. */}
+                {group.subgroup_count ? (
+                  <button
+                    type="button"
+                    className="fold"
+                    aria-expanded={!folded.includes(group.id)}
+                    aria-label={`${group.name} 소그룹 ${
+                      folded.includes(group.id) ? '펼치기' : '접기'}`}
+                    onClick={() =>
+                      setFolded((current) =>
+                        current.includes(group.id)
+                          ? current.filter((id) => id !== group.id)
+                          : [...current, group.id])
+                    }
+                  >
+                    {folded.includes(group.id) ? '▸' : '▾'}
+                  </button>
+                ) : null}
                 {group.name}
                 {group.subgroup_count
                   ? <span className="tiny faint"> · 소그룹 {group.subgroup_count}</span>
