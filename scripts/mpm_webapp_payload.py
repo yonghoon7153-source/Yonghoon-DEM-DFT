@@ -418,6 +418,16 @@ def _code_sha(script_dir):
     """이 코드가 어느 커밋인가 (+ dirty 여부).  git 이 없으면 None.
 
     ⚠ dirty 면 `<sha>+dirty` — 커밋 안 된 수정으로 돈 런은 재현 불가임을 **드러낸다**.
+
+    ★★ dirty 의 정의 (2026-08-25 kgy 실측 사고로 정밀화) — **코드 재현성**만 본다:
+      · tracked 파일의 수정/스테이징 (`--untracked-files=no`) → dirty.  실행된 코드가
+        어느 커밋과도 다르다.
+      · **scripts/ 아래의 untracked 파일** → dirty.  파이썬 import 가 같은 디렉터리를
+        먼저 보므로 미커밋 모듈이 실행 코드를 **가릴 수 있다** (shadowing).
+      · 그 밖의 untracked (데이터 디렉터리·사용자 로컬 인프라·산출물) → dirty **아니다**.
+        실행된 코드를 바꿀 수 없는 파일이 재현성 딱지를 바꾸면 안 된다.
+      실사고: kgy 의 상주 로컬 디렉터리(anchor_params/ db/ tools/)가 porcelain 에 잡혀
+      **모든 생산 런이 `+dirty` → 판정기 무조건 HOLD** — GPU 8팔이 완주하고도 버려졌다.
     """
     import subprocess as _sp
     try:
@@ -425,9 +435,15 @@ def _code_sha(script_dir):
                       capture_output=True, text=True, timeout=10)
         if sha.returncode != 0:
             return None
-        st = _sp.run(['git', '-C', script_dir, 'status', '--porcelain'],
+        st = _sp.run(['git', '-C', script_dir, 'status', '--porcelain',
+                      '--untracked-files=no'],
                      capture_output=True, text=True, timeout=20)
         dirty = bool((st.stdout or '').strip())
+        if not dirty:
+            un = _sp.run(['git', '-C', script_dir, 'ls-files', '--others',
+                          '--exclude-standard', '--', script_dir],
+                         capture_output=True, text=True, timeout=20)
+            dirty = bool((un.stdout or '').strip())            # scripts/ 안 untracked = shadowing 위험
         return sha.stdout.strip() + ('+dirty' if dirty else '')
     except Exception:                                          # noqa: BLE001
         return None

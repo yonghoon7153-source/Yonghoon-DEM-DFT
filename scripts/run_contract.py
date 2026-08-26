@@ -954,6 +954,53 @@ def _selftest():
     chk(receipt_match({'vox_um': 0.15}, {'vox_um': 0.15, 'bridge_um': 0.9})[0],
         'H8 ★ 영수증이 선언하지 않은 축은 자유다 (과잉차단 없음)')
 
+    #  ── RCPT-sha — `_code_sha` 의 dirty **정의** (2026-08-25 kgy 실측 사고 회귀) ─────
+    #    옛 정의는 porcelain 전체(untracked 포함)라, kgy 상주 로컬 디렉터리(anchor_params/
+    #    db/ tools/)만으로 **모든 생산 런이 `+dirty` → 판정기 무조건 HOLD** 였다.
+    #    정의: tracked 수정 = dirty · scripts/ 안 untracked = dirty (import shadowing) ·
+    #    그 밖의 untracked = **dirty 아님** (코드를 못 바꾸는 파일은 재현성 딱지를 못 바꾼다).
+    import importlib as _il
+    import os
+    import shutil as _sl
+    import subprocess as _sp
+    import sys as _sy
+    import tempfile as _tf
+    _sy.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    _pay = _il.import_module('mpm_webapp_payload')
+    _git_ok = _sp.run(['git', '--version'], capture_output=True).returncode == 0
+    if not _git_ok:
+        print('  SKIP  RCPT-sha-* — git 없음 (이 환경에선 _code_sha 가 None 을 낸다)')
+    else:
+        _d = _tf.mkdtemp()
+        _sd = os.path.join(_d, 'scripts')
+        os.mkdir(_sd)
+        with open(os.path.join(_sd, 'x.py'), 'w') as _f:
+            _f.write('A = 1\n')
+        for _c in (['git', 'init', '-q'], ['git', 'add', '-A'],
+                   ['git', '-c', 'user.email=t@t', '-c', 'user.name=t',
+                    'commit', '-qm', 'i']):
+            _sp.run(_c, cwd=_d, capture_output=True)
+        _s0 = _pay._code_sha(_sd)
+        chk(bool(_s0) and '+dirty' not in _s0, 'RCPT-sha-clean 갓 커밋한 트리는 clean')
+        with open(os.path.join(_d, 'stray_data.txt'), 'w') as _f:
+            _f.write('x')
+        os.mkdir(os.path.join(_d, 'outputs_local'))
+        _s1 = _pay._code_sha(_sd)
+        chk(bool(_s1) and '+dirty' not in _s1,
+            'RCPT-sha-untracked ★★ scripts/ 밖 untracked 는 dirty 가 아니다 '
+            '(kgy 상주 디렉터리가 생산 전체를 HOLD 시키던 정의 결함)')
+        with open(os.path.join(_sd, 'shadow.py'), 'w') as _f:
+            _f.write('B = 2\n')
+        _s2 = _pay._code_sha(_sd)
+        chk(bool(_s2) and _s2.endswith('+dirty'),
+            'RCPT-sha-shadow ★ scripts/ 안 untracked 는 dirty (import shadowing 위험)')
+        os.remove(os.path.join(_sd, 'shadow.py'))
+        with open(os.path.join(_sd, 'x.py'), 'w') as _f:
+            _f.write('A = 3\n')
+        _s3 = _pay._code_sha(_sd)
+        chk(bool(_s3) and _s3.endswith('+dirty'), 'RCPT-sha-modified tracked 수정은 dirty')
+        _sl.rmtree(_d, ignore_errors=True)
+
     print(f'\nrun_contract selftest: {ok}/{ok + fail} PASS'
           + ('' if not fail else '   ✗ 실패 있음'))
     return 0 if not fail else 1

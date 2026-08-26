@@ -55,4 +55,10 @@ mpm_input_*.zip
 
 # 배터리가 mutant 마다 쓰고 지우는 임시 러너 (`mutation_sweep` finally 에서 제거).
 # 런이 중단된 순간에 남아 있으면 `git add -A` 에 딸려 들어간다 — 실제로 그렇게 커밋됐다.
-scripts/mutant_runner.sh
+scripts/mutant_runner*.sh
+# kgy 로컬 인프라·산출물 — 커밋 금지 (2026-08-25: git add -A 가 130 MB payload 디렉터리를
+# 삼키는 것을 막는다.  dirty 판정과는 무관 — _code_sha 는 이제 untracked 를 안 센다)
+/anchor_params/
+/db/
+/tools/
+/prereg_v2_*/
