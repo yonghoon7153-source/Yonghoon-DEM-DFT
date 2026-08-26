@@ -4942,6 +4942,66 @@ SEMINAR_RERANK_AUDIT = {
     "decision": "db/governance/decisions.json → D-2026-08-25-missing-axis-is-unknown-not-worst",
 }
 
+#: 🎤 논문세미나 준비 — 심포지엄 세션 판독 (덱 + 구술 STT)
+#
+#  왜 여기 있나: 이 패널은 **우리 발표 준비**의 일부다. 남의 강의를 정리한 것이지만
+#    쓰임새가 "우리가 어디에 서 있는지" 를 세미나에서 말하는 데 있다.
+#  ⛔ 이 패널이 못 하는 것: 인용 허가를 주지 않는다. 아래 항목은 전부 citable=no 이고,
+#    발표에서 **"저 교수님이 그랬다"** 를 논거로 쓰면 안 된다 (§12-1).
+SEMINAR_TALK_PREP = {
+    "date": "2026-08-26",
+    "headline": "이상욱 교수님(성균관대 CMS Lab) 세션 — 덱 31장 + 구술 31:44 전수 판독",
+    "slug": "lee2026_skku_mlip_materials_design",
+    "citable": False,
+    "why": "2026 전지기술 심포지엄 기술세션 3-3. **같은 물질(argyrodite)·같은 도구(MLIP)·다른 축** — "
+           "정면 경쟁이자 우리 방법론의 벤치마크다. 구술에서 사용자가 직접 질문했고, "
+           "그 답이 우리 b2o3 판정과 T1/T1b 에 바로 걸린다.",
+    "takeaways": [
+        ("★★★ MTP vs universal potential 분업",
+         "이 랩은 **MTP = 동력학 / uMLIP(M3GNet·SevenNet·MACE) = static** 으로 용도를 나눈다 `[STT 26:50]`. "
+         "덱 슬 8 이 배경을 인쇄해 놓았다 — `DFT PES ──softening──▶ uMLIP PES`. "
+         "우리 b2o3 β≥0.60 @700 K 은 **uMLIP 으로 얻은 동역학 결과**다."),
+        ("⛔ 그런데 우리 판정은 안 바뀐다",
+         "A1 은 STT 전용(citable=no)이고, 이유가 **속도인지 PES 품질인지도 미확정**(Q-T2). "
+         "근거는 여전히 우리 데이터 — modelc 12/12 rigid · lpsocl 12/12 rigid · b2o3 만 붕괴. "
+         "**정황이 늘었을 뿐이므로 T1b(vdW DFT 대조)를 실제로 돌려야 한다.**"),
+        ("★★ 멀티스케일은 '아직 요원하다'",
+         "좌장 질문에 대한 답 `[STT 28:47]`: 10여 년째 꿈이고 AI 로도 곧 안 된다, "
+         "적어도 **입계·입자까지 확장**하는 것도 큰 의미. → 우리 T8(P2D export)의 목표를 "
+         "'셀까지'가 아니라 '한 칸 위까지'로 다시 쓴다."),
+        ("★★ 지금 필요한 기초는 수학·코딩이 아니다",
+         "`[STT 30:34]` 도메인 지식 + LLM 활용력, 그리고 **만들어준 코드를 이해하고 쓰는 것**. "
+         "우리 repo 운영 방식(규율은 사람이 kb 에, 코드는 LLM 이, 검증은 --selftest)과 같은 모양."),
+        ("🔑 계면 결정화의 기구 — 음이온이 먼저",
+         "`[STT 18:09]` S 가 Li 보다 커서 **큰 음이온이 먼저 close-packing** → 핵생성 → "
+         "격자간에 Li 진입 → Li₂S interphase. 덱 슬 18 은 시점만 보여주고 이유를 안 적었다. "
+         "우리 **골격 β 게이트**가 이 순서의 정량판이다."),
+        ("🔴 우리 기록 정정 1건",
+         "계면 셀을 `3 nm × (10 nm 방향)` 으로 적어 왔는데 슬 18 을 **9× 확대**하니 "
+         "**Li 6 nm + LPSCl 10 nm = 총 16 nm**. STT `6나노 16나노` 가 독립 확인. "
+         "→ T3(Li|LPSCl 반응 MD)의 셀 규격 목표가 바뀐다."),
+        ("🔧 AI×소재 3병목 ↔ 우리 정직성 장치",
+         "`[STT 05:54]` ① DB 편재성·불일치 ② descriptor 문턱 ③ 자체생성 데이터 부족 — "
+         "우리 쪽 대응물이 각각 ① MP/QE 혼용 금지 ② G5 컷 지배 경고 ③ 302 cascade + "
+         "'결측은 최악이 아니다' 판정. **정직성 장치를 본론으로 낼 근거가 하나 늘었다.**"),
+    ],
+    "needed": [
+        ("1", "Adv. Funct. Mater. (revision) — argyrodite 가수분해 SevenNet",
+         "3부작 중 유일한 공백. Q4(H₂S 정량) + T2(ICOHP 기술자)가 한 번에 닫힌다"),
+        ("2", "자료집 목차 페이지 (이상욱 섹션 앞뒤 1–2 pp)",
+         "다음 발표자 이름 불일치(문장혁 vs STT `김장현`) 확인. 비용 0"),
+        ("3", "Shapeev 2016 MTP + Novikov 2021 MLIP package",
+         "γ(maxvol/D-optimality) 원정의 — 지금은 덱 숫자만 안다. T1 설계에 필요"),
+        ("4", "Merchant 2023 GNoME (Nature 624, 80)", "강의 서사의 출발점인데 자체 digest 없음"),
+        ("5", "Park 2024 SevenNet (JCTC 20, 4857)",
+         "우리 UMA 와 같은 GNN 계열 → 'softening 이 GNN 공통인가'의 T1b 대조군"),
+        ("6", "Luo 2022 ACS Energy Lett. 7, 3064", "슬 19 실험 앵커 ~12 nm = T3 대조군"),
+    ],
+    "blockers": "음성 미보유 · 권리 미상 · **Q&A 동의 미상** → 외부 사용·직접 인용 전면 금지",
+    "card": "litdb/talks/lee2026_skku_mlip_materials_design.md §99",
+    "analysis": "kb/projects/symposium_2026_competitive_analysis.md §8",
+}
+
 #: 다운로드 허용 덱 (경로 주입 차단 — 화이트리스트 밖은 404)
 SEMINAR_DECKS = {
     "release": (SEMINAR_DECK, "정본 · 29장 (본문 21 + 부록 8)"),

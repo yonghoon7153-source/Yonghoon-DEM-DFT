@@ -508,6 +508,13 @@
    "60. Sup) Lee2026_Beyond_Electrochemistry_Mechanical_Halogen_Argyrodite_DryCoating.pdf"
   ]
  },
+ "lee2026_skku_mlip_materials_design": {
+  "figures": 36,
+  "generated": "2026-08-26",
+  "pdfs": [
+   "lee2026_deck.pdf"
+  ]
+ },
  "li2024_inf3_argyrodite_ultrathin_film": {
   "figures": 40,
   "generated": "2026-08-05",
@@ -979,6 +986,13 @@
   "generated": "2026-08-25",
   "pdfs": [
    "64. Wood2026_UMA_A_Family_of_Universal_Models_for_Atoms.pdf"
+  ]
+ },
+ "vanlew2015_modifying_youngs_modulus_distribution": {
+  "figures": 5,
+  "generated": "2026-08-25",
+  "pdfs": [
+   "90f2f374-Modifying_Young_s_modulus_in_DEM_simulations_based_on_distributions_of_experimental_measurements.pdf"
   ]
  },
  "wang2022_sulfide_thermal_stability_th_descriptor": {

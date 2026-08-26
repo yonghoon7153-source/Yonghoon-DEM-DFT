@@ -150,6 +150,12 @@
           style="font-size:.7rem;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ t.id }}</span>
     {% if t.digested %}<span class="muted" style="font-size:.68rem;white-space:nowrap;flex:0 0 auto">📅 {{ t.digested }}</span>{% endif %}
   </div>
+  {# 모달은 훑기용이다. 40 KB 넘는 digest 를 정독하려면 전체 페이지가 필요하다.
+     ⚠ onclick 이 카드 전체에 걸려 있으므로 stopPropagation 하지 않으면 모달이 같이 뜬다. #}
+  <div style="margin-top:8px">
+    <a class="btn" href="/talk/{{ t.id }}" onclick="event.stopPropagation()"
+       style="font-size:.7rem;padding:3px 9px">📖 전체 페이지로 정독</a>
+  </div>
 </div>
 {% endfor %}
 </div>

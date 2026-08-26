@@ -16,6 +16,36 @@
     <a class="btn" href="/">▦ Dashboard</a>
   </div>
 </div>
+{# 🎤 발표자료 승격 배지 — manifest 를 **읽어서** 보인다. 화면이 판정하지 않는다.
+   ⚠ manifest 가 없을 때 조용히 빠지면 "인용 가능" 으로 오해된다 → 없다고 말한다. #}
+{% if talk_manifest is defined and talk_manifest is not none %}
+<div class="doc" style="border-left:4px solid {% if talk_manifest.citable %}#0d9488{% else %}#c05621{% endif %};
+     background:#fffbeb;padding:12px 16px;margin-bottom:18px">
+  <b style="font-size:.95rem">
+    {% if talk_manifest.citable %}✅ citable{% else %}⛔ citable = no — 내부 가설 생성 전용{% endif %}
+  </b>
+  <span class="muted mono" style="font-size:.72rem">
+    tier {{ talk_manifest.tier or '?' }} · 음성 {{ talk_manifest.audio_status or '?' }}
+    · STT {{ talk_manifest.stt_engine or '미상' }}</span>
+  {% if talk_manifest.promotion_blockers %}
+  <ul style="margin:8px 0 0;font-size:.85rem">
+    {% for b in talk_manifest.promotion_blockers %}<li><code>{{ b.field }}</code> — {{ b.why }}</li>{% endfor %}
+  </ul>
+  {% endif %}
+  {% if talk_manifest.coverage %}
+  <div class="sub" style="margin-top:8px;font-size:.78rem">
+    슬라이드 {{ talk_manifest.coverage.deck_read }}/{{ talk_manifest.coverage.slides_actual }} 판독 ·
+    구술 {{ talk_manifest.coverage.aligned }}/{{ talk_manifest.coverage.stt_blocks }} 블록 정렬 ·
+    미해결 {{ talk_manifest.coverage.unresolved }}건
+  </div>
+  {% endif %}
+</div>
+{% elif talk_manifest is defined %}
+<div class="doc" style="border-left:4px solid #6b7280;background:#f9fafb;padding:12px 16px;margin-bottom:18px">
+  <b>⚠ source manifest 가 없다</b> — 승격 상태(citable·권리·동의)를 알 수 없다.
+  <span class="muted mono" style="font-size:.72rem">talk_transcript.py --manifest 로 만든다</span>
+</div>
+{% endif %}
 {# 데이터 표는 **설명문 위**에 둔다 — 값 보러 온 사람이 스크롤하지 않게.
    라우트가 data 를 안 넘기면 통째로 빠진다(/methods · /todo 는 영향 없음). #}
 {% if data and data.jobs %}

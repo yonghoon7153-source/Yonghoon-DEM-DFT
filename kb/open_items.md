@@ -957,6 +957,23 @@ QE 이완 몇 개면 된다. 나오면 "PBE 계열이 황화물 골격을 무르
 **연결**: T1(외삽 대리지표)과 같은 뿌리다. T1 은 "우리 포텐셜이 범위 밖인가" 를 재고,
 T1b 는 "범위 안이어도 참조 이론이 틀렸나" 를 잰다. 둘 다 있어야 b2o3 판정이 닫힌다.
 
+**🎙 2026-08-26 구술 판독으로 붙은 정황** (`litdb/talks/lee2026_skku_mlip_materials_design.md` §99-3)
+사용자가 그 자리에서 **직접 질문**했고(A1), 답은 **"MTP = 동력학 / universal potential = static"** 이었다.
+덱 슬 8 이 그 배경을 인쇄해 놓았다 — `DFT PES ──softening──▶ uMLIP PES`,
+범례 *노란 점 = 평형 근처 훈련점 / 빨간 점 = 보강이 필요한 고에너지 상태*.
+
+| | |
+|---|---|
+| 우리 b2o3 β≥0.60 @700 K | **universal potential 로 얻은 동역학 결과** = A1 이 권하지 않는 조합 |
+| ⛔ **그런데 판정은 안 바뀐다** | A1 은 **STT 전용**(citable=no)이고, 이유가 **속도인지 PES 품질인지도 미확정**(Q-T2). 우리 근거는 여전히 modelc 12/12 · lpsocl 12/12 · b2o3 만 붕괴 라는 **우리 데이터**다 |
+| ⇒ | **정황이 늘었을 뿐 증거는 그대로** → **T1b 를 실제로 돌려야 한다**(우선순위 ↑) |
+
+⭐ **T1b 에 대조군이 하나 더 생겼다**: 슬 22 의 **fine-tuned SevenNet**(MAE_F **0.57 eV/Å**)과
+슬 14 의 **MTP**(**0.073 eV/Å**). 계·훈련셋이 달라 우열 비교는 금지지만,
+**"GNN 계열이 힘을 얼마나 거칠게 보는가"** 의 자릿수 감각을 준다.
+→ 우리 T1 대리지표(스냅샷 UMA vs DFT 단일점)의 **합격선을 정할 때 참고 눈금**이 된다:
+`MAE_F ≲ 0.1 eV/Å` 면 MTP 급, `≳ 0.5` 면 반응계 fine-tune 급.
+
 ### ⚠ σ 절대값 규율 — 근거 재정의 (2026-07-28)
 
 지금까지 "MLIP σ 절대값 인용 금지"의 근거는 `kim2024`(훈련 functional에 따라 σ₈₀%가 **8배** 갈림)
@@ -980,7 +997,12 @@ T1b 는 "범위 안이어도 참조 이론이 틀렸나" 를 잰다. 둘 다 있
 | 순위 | 논문 | 왜 |
 |---|---|---|
 | ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 스크리닝 (**17,230 Li·O 산화물** → Li₃Sc₂(PO₄)₃) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`). ⚠ 종전 표기 '17,233 Li-P-S-O'는 덱 저해상도 전사 오류 — 2026-08-03 철회 |
-| 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본 |
+| 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2 방법 원본. **3부작 중 유일한 공백** — Q4(H₂S 정량)+T2 가 한 번에 닫힌다 |
+| **2b** 🆕 | **자료집 목차 페이지** (이상욱 섹션 앞뒤 1–2 pp) | Q-T1(다음 발표자 이름 불일치). 비용 0 |
+| **8** 🆕 | **Shapeev 2016** MTP (Multiscale Model. Simul. 14, 1153) + **Novikov 2021** MLIP package (MLST 2, 025002) | **γ(maxvol/D-optimality) 원정의** — 지금 우리는 덱 슬 16 숫자(γ_select 2 / γ_break 10↔5↔2)만 안다. **T1 설계에 필요** |
+| **9** 🆕 | **Merchant 2023 GNoME** (Nature 624, 80) | 강의 서사의 출발점(`[STT 08:02]` 2.2 M / 38만). 자체 digest 없이 참조로만 존재 |
+| **10** 🆕 | **Park 2024 SevenNet** (JCTC 20, 4857) | **우리 UMA 와 같은 GNN 계열** → "PES softening 이 GNN 공통인가 모델별인가" = **T1b 대조군** |
+| **11** 🆕 | **Luo 2022** ACS Energy Lett. 7, 3064–3071 | 슬 19 **실험 앵커 ~12 nm cryo-TEM** = **T3 대조군** |
 | ~~3~~ ✅ | ~~**Chem. Eng. J.** (under review)~~ → 실물은 **SSRN preprint 6020397 (저널명 없음)** — Li\|argyrodite 계면 MTP | **확보·정독 완료** (`litdb/papers/kim2026_li_argyrodite_sei_reactive_md.md`; **본문 실물 독립 검증 2026-08-04**, inbox #3·폴더 `이상욱`). ⚠ "Chem. Eng. J. under review"는 **덱 표기일 뿐 논문에 근거 없음** — 인용 시 "[Kim, SSRN preprint 6020397, 미심사]" 병기. **⛔ SI 미확보 확정** (프리프린트의 SI 링크가 공란 → 대안은 figshare 원자료 `10.6084/m9.figshare.30272386.v1`) |
 | ~~4~~ ✅ | **JACS 2025, 147, 47381 — 준안정 3기술자** | **확보·정독 완료 + 본문 실물 독립 검증 2026-08-04** (`litdb/papers/kim2025_csp_metastable_edge_sharing_sse.md` §19). ⚠ **SI 24 pp 실물은 아직 미확보** — Table S1·S2, Fig S1–S12, eq 1–11 은 2026-07-28 판독 승계 |
 | 5 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5: config-variance 오차막대 추가됐나** — 우리 신규성 주장의 유효범위가 걸림 |

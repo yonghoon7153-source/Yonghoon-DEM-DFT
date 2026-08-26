@@ -800,6 +800,44 @@ def api_paper(pid):
                     "rel": str(p.relative_to(D.ROOT)).replace("\\", "/")})
 
 
+@app.route("/talk/<slug>")
+def talk_page(slug):
+    """학회 발표자료 digest **전체 페이지** (모달 말고 정독용).
+
+    왜 별도 라우트인가: /literature 의 모달은 훑기용이라 40 KB 넘는 digest 를
+      읽기 어렵다. 논문세미나를 준비할 때는 §99(구술 판독)처럼 긴 절을 **목차와 함께**
+      펼쳐 놓고 봐야 한다.
+
+    ⛔ 이 페이지가 못 하는 것
+      · 인용 가능 여부를 화면이 판정하지 않는다 — manifest 의 `citable` 이 정본이고,
+        아래 배지는 그 값을 **읽어서** 보일 뿐이다.
+      · 발표자 발언으로 승격시키지 않는다. `[STT]` 는 STT 문자열이라는 뜻이다.
+    """
+    import json as _json
+    p = D.LITDB / "talks" / f"{slug}.md"
+    if not p.exists() or slug.startswith("_"):
+        abort(404)
+    md = p.read_text(encoding="utf-8", errors="ignore")
+
+    # manifest 가 있으면 승격 상태를 머리에 띄운다. **없으면 없다고 말한다** —
+    # 조용히 빈 배지를 내면 "인용 가능" 으로 오해된다.
+    mf = D.LITDB / "talks" / "_transcripts" / f"{slug}_source_manifest.json"
+    man = None
+    if mf.exists():
+        try:
+            man = _json.loads(mf.read_text(encoding="utf-8"))
+        except Exception:
+            man = {"_error": "manifest 를 읽지 못했다"}
+
+    title = md.splitlines()[0].lstrip("# ").strip() if md.startswith("#") else slug
+    return render_template(
+        "doc.html", active="lit", title=f"🎤 {title}",
+        content=md_html(md, ("tables", "fenced_code", "toc")),
+        parent={"url": "/literature", "label": "문헌 · 발표자료"},
+        talk_manifest=man,
+        subtitle=f"litdb/talks/{slug}.md · 인용 규율은 litdb/talks/README.md")
+
+
 @app.route("/seminar/deck")
 def seminar_deck():
     """세미나 pptx 내려받기.
@@ -857,7 +895,8 @@ def seminar():
                            docs=docs, runsheet=runsheet,
                            total_min=total_sec // 60, total_sec=total_sec % 60,
                            n_body=sum(len(p["slides"]) for p in runsheet),
-                           decks=decks, rerank=D.SEMINAR_RERANK_AUDIT)
+                           decks=decks, rerank=D.SEMINAR_RERANK_AUDIT,
+                           talkprep=D.SEMINAR_TALK_PREP)
 
 
 @app.route("/glossary")

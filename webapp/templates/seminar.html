@@ -73,6 +73,53 @@
 </div>
 {% endif %}
 
+{# 🎤 논문세미나 준비 — 상위 랩 세션 판독.
+   재랭킹 감사 **다음** 자리다: 먼저 "내 숫자가 안 바뀌었나", 그 다음 "밖에서는 무슨 일인가". #}
+{% if talkprep %}
+<div class="rr" style="margin-top:14px;border:1px solid #fde047;border-left:4px solid #ca8a04;
+     border-radius:8px;background:#fffbeb;padding:12px 14px">
+  <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+    <b style="font-size:.95rem">🎤 {{ talkprep.headline }}</b>
+    <span class="muted mono" style="font-size:.72rem">{{ talkprep.date }} 판독</span>
+    <a class="btn" href="/talk/{{ talkprep.slug }}" style="font-size:.7rem;padding:3px 9px">📖 전문 보기</a>
+  </div>
+  <div style="margin-top:7px;font-size:.83rem">{{ talkprep.why|safe }}</div>
+
+  <div style="margin-top:9px;font-size:.79rem;padding:7px 10px;background:#fee2e2;
+       border-radius:6px;border:1px solid #fca5a5">
+    ⛔ <b>citable = no</b> — {{ talkprep.blockers|safe }}.
+    발표에서 <b>"저 교수님이 그랬다"</b> 를 논거로 쓰지 않는다. 우리 데이터로 말한다.
+  </div>
+
+  <details style="margin-top:9px" open>
+    <summary style="cursor:pointer;font-size:.83rem">
+      <b>가져올 것</b> — {{ talkprep.takeaways|length }}건</summary>
+    <ol style="margin:7px 0 0;padding-left:20px;font-size:.8rem;line-height:1.55">
+      {% for what, why in talkprep.takeaways %}
+      <li style="margin-bottom:6px"><b>{{ what }}</b> — {{ why|safe }}</li>
+      {% endfor %}
+    </ol>
+  </details>
+
+  <details style="margin-top:6px">
+    <summary style="cursor:pointer;font-size:.83rem">
+      <b>📌 사용자에게 요청 — litdb 에 없어서 필요한 논문</b> ({{ talkprep.needed|length }}건)</summary>
+    <table style="margin-top:7px;font-size:.8rem"><tbody>
+      {% for n, what, why in talkprep.needed %}
+      <tr><td style="white-space:nowrap;padding-right:8px;vertical-align:top"><b>{{ n }}</b></td>
+          <td style="padding-right:12px;vertical-align:top"><b>{{ what }}</b></td>
+          <td class="muted" style="vertical-align:top">{{ why }}</td></tr>
+      {% endfor %}
+    </tbody></table>
+  </details>
+
+  <div class="muted mono" style="margin-top:8px;font-size:.68rem;line-height:1.5">
+    정본: {{ talkprep.card }}<br>
+    경쟁 좌표 반영: {{ talkprep.analysis }}
+  </div>
+</div>
+{% endif %}
+
 {% if runsheet %}
 <div class="sem-run">
   <div class="sem-run-top">
