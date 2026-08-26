@@ -728,6 +728,14 @@
    "이용민 교수님/22. Sup) Digital Twin-Driven All-Solid-State Battery Unravelingthe Physical and Electrochemical Behaviors.pdf"
   ]
  },
+ "park2024_sevennet_parallel_gnn_md": {
+  "figures": 8,
+  "generated": "2026-08-26",
+  "pdfs": [
+   "71. Park2024_SevenNet_Parallel_GNN_MD.pdf",
+   "71. Sup) Park2024_SevenNet_Parallel_GNN_MD.pdf"
+  ]
+ },
  "park2026_thiolene_sbr_binder_assb": {
   "figures": 5,
   "generated": "2026-08-05",
@@ -853,7 +861,7 @@
   ]
  },
  "shapeev2016_moment_tensor_potentials": {
-  "figures": 1,
+  "figures": 2,
   "generated": "2026-08-26",
   "pdfs": [
    "67. Shapeev2016_Moment_Tensor_Potentials.pdf"
