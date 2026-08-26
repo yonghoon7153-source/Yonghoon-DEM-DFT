@@ -1105,6 +1105,38 @@ check "지우는 법까지" \
 check "세 갈래 다 bmlout 과 같은 길로" \
   "$(awk '/^cmd_only\(\) \{/,/^cmd_use\(\) \{/' "$BML" | grep -c 'cmd_slot out "\$url"')" "3"
 
+# 별칭 + 자기 갱신 재실행에서 인자가 밀리지 않는가.
+#
+# 실행기는 `BML_INVOKED_AS=bmlonly exec …/bml "$@"` 로 부르고, 그 값은 exec 를
+# 타고 넘어간다.  별칭을 편 뒤에 BML_ARGV 를 잡으면 재실행 때 한 번 더 펴져
+# 인자가 하나씩 밀린다 -- `bmlonly URL IP` 가 `cmd_only "only" "URL"` 이 됐다.
+echo
+echo "별칭을 편 뒤가 아니라 **앞에서** 원래 인자를 잡는다"
+
+order() {
+  # main() 안에서 BML_ARGV 대입이 case 보다 먼저 나오는지.
+  awk '/^  BML_ARGV=\(\)/ { argv = NR }
+       /bmlonly\) set -- only/ { alias = NR }
+       END { print (argv && alias && argv < alias) ? "before" : "after" }' "$HERE/../bml"
+}
+check "원래 인자를 먼저 잡는다" "$(order)" "before"
+
+# 그리고 실제로 밀리지 않는지 -- 별칭을 두 번 펴 본다.
+replay() {
+  set -- "$@"
+  local kept=("$@")
+  # main() 이 하는 그대로: 먼저 잡고, 그다음 편다.
+  case "bmlonly" in bmlonly) set -- only "$@" ;; esac
+  # 자기 갱신 재실행: 잡아 둔 것으로 다시 시작하고 별칭이 또 펴진다.
+  set -- "${kept[@]}"
+  case "bmlonly" in bmlonly) set -- only "$@" ;; esac
+  shift
+  printf '%s|%s' "${1:-}" "${2:-}"
+}
+check "재실행해도 URL·IP 가 제자리" \
+  "$(replay https://x.lhr.life 1.2.3.4)" "https://x.lhr.life|1.2.3.4"
+check "인자 없는 bmlout 도 그대로" "$(replay)" "|"
+
 echo
 if [ "$fail" -eq 0 ]; then
   printf '통과 %d건.\n' "$pass"

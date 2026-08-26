@@ -4436,15 +4436,23 @@ main() {
     return 0
   fi
 
+  # sync_repo 가 재실행할 때 쓸 **사람이 친 그대로**의 인자.
+  #
+  # 별칭을 편 **뒤에** 잡으면 안 된다.  실행기는 `BML_INVOKED_AS=bmlonly exec
+  # …/bml "$@"` 로 부르는데, 그 값은 exec 를 타고 넘어간다 -- 그래서 자기
+  # 갱신으로 다시 실행되면 아래 case 가 **한 번 더** 펴고 인자가 하나 밀린다:
+  #   bmlonly URL IP  →  only URL IP  →  (재실행)  →  only only URL IP
+  # 그러면 `cmd_only "only" "URL"` 이 되어 "IP 로 안 보입니다: https://…" 로
+  # 죽는다 (실측).  인자 없이 부르는 `bmlout` 도 같은 밀림을 겪었지만 빈
+  # 문자열이라 조용히 지나갔을 뿐이다.
+  BML_ARGV=()
+  [ $# -gt 0 ] && BML_ARGV=("$@")
+
   case "${BML_INVOKED_AS:-$(basename "${0:-bml}")}" in
     bmlin)  set -- in  "$@" ;;
     bmlout) set -- out "$@" ;;
     bmlonly) set -- only "$@" ;;
   esac
-
-  # sync_repo 가 재실행할 때 쓸 원래 인자.
-  BML_ARGV=()
-  [ $# -gt 0 ] && BML_ARGV=("$@")
 
   # 워크벤치 체크아웃일 때만 상태 폴더를 만든다.  guard_workbench_checkout 가
   # 잡아 주기 전에 bml 이 남의 저장소에 .bml 을 남기는 일을 막는다.
