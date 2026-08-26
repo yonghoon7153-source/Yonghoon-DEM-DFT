@@ -8,14 +8,47 @@
  * "그때 이렇게 정리했다" 가 보여야 한다.  대신 아래로 내린다.
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
+import { Alert, Card, Empty, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime } from '../lib/format'
 import { useAsync } from '../lib/hooks'
 import { Markdown } from '../lib/markdown'
 import { markSeen } from '../lib/seen'
 import type { FeedbackKind, FeedbackNote } from '../lib/types'
+
+/** Ctrl+B · Ctrl+I · Ctrl+` — 고른 글자를 표시로 감싼다.
+ *
+ *  `**굵게**` 를 손으로 치라고 안내하는 것보다 낫다.  안내를 읽어야 하는 칸은
+ *  안 쓰이고, 그 안내를 화면에 적으면 별표가 그대로 보여서 **마크다운이 안
+ *  된다는 증거처럼** 읽힌다.
+ *
+ *  고른 것이 없으면 표시만 넣고 그 사이에 커서를 둔다 — 그래야 바로 이어서
+ *  칠 수 있다.  이미 감싸여 있으면 벗긴다 (누르면 켜지고 다시 누르면 꺼진다).
+ */
+export function wrapSelection(
+  value: string, start: number, end: number, mark: string,
+): { value: string; start: number; end: number } {
+  const before = value.slice(0, start)
+  const picked = value.slice(start, end)
+  const after = value.slice(end)
+  const wrapped = before.endsWith(mark) && after.startsWith(mark)
+  if (wrapped) {
+    return {
+      value: before.slice(0, -mark.length) + picked + after.slice(mark.length),
+      start: start - mark.length,
+      end: end - mark.length,
+    }
+  }
+  return {
+    value: `${before}${mark}${picked}${mark}${after}`,
+    start: start + mark.length,
+    end: end + mark.length,
+  }
+}
+
+const MARKS: Record<string, string> = { b: '**', i: '*', e: '`' }
 
 const KINDS: { value: FeedbackKind; label: string; hint: string }[] = [
   { value: 'issue', label: '불편', hint: '쓰다가 막히거나 틀린 것' },
@@ -34,6 +67,7 @@ export function Feedback() {
   const [draft, setDraft] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const box = useRef<HTMLTextAreaElement>(null)
 
   // 이 화면을 연 것이 곧 읽은 것이다.  목록이 도착한 **뒤에** 찍는다 — 먼저
   // 찍으면 읽는 동안 올라온 글까지 읽은 것이 된다.
@@ -64,7 +98,7 @@ export function Feedback() {
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1>의견</h1>
+          <h1>F&amp;Q</h1>
           <p className="sub">
             쓰다가 걸린 것을 여기 적어 두세요 — 불편한 점, 궁금한 것, 이러면
             좋겠다 싶은 것. 정리되면 접히지만 사라지지는 않습니다.
@@ -72,12 +106,11 @@ export function Feedback() {
         </div>
       </div>
 
-      <section className="card">
-        <div className="card-head">
-          <h2>새로 적기</h2>
-          <span className="tiny faint">{kindOf(kind).hint}</span>
-        </div>
-        <div className="card-body col" style={{ gap: 8 }}>
+      <Card
+        title={<h2>새로 적기</h2>}
+        actions={<span className="tiny faint">{kindOf(kind).hint}</span>}
+      >
+        <div className="col" style={{ gap: 10 }}>
           <div className="segmented" role="group" aria-label="종류">
             {KINDS.map((choice) => (
               <button
@@ -91,58 +124,90 @@ export function Feedback() {
             ))}
           </div>
           <textarea
+            ref={box}
             aria-label="내용"
             rows={3}
             value={draft}
             placeholder="예: 사이클 클립보드가 고른 것만 안 나오고 전체가 나옵니다"
             onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              // 짧은 한 줄이 대부분이라 Ctrl+Enter 로 끝낼 수 있게 한다.
+              if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+                void submit()
+                return
+              }
+              if (!(event.ctrlKey || event.metaKey)) return
+              const mark = MARKS[event.key.toLowerCase()]
+              if (!mark) return
+              event.preventDefault()
+              const field = event.currentTarget
+              const next = wrapSelection(
+                field.value, field.selectionStart, field.selectionEnd, mark)
+              setDraft(next.value)
+              // 상태가 반영된 **뒤에** 커서를 놓는다.  지금 놓으면 React 가
+              // value 를 다시 그리면서 커서를 끝으로 보낸다.
+              window.requestAnimationFrame(() => {
+                box.current?.setSelectionRange(next.start, next.end)
+                box.current?.focus()
+              })
+            }}
           />
-          <div className="row" style={{ gap: 8 }}>
+          <div className="row" style={{ gap: 10, alignItems: 'center' }}>
             <button type="button" className="primary" disabled={!draft.trim() || busy}
                     onClick={submit}>
               {busy ? '올리는 중…' : '올리기'}
             </button>
+            {/* 무엇을 칠지가 아니라 **무엇을 누를지**를 적는다.  치라고
+                안내하는 칸은 안 쓰이고, 그 안내에 적힌 별표는 마크다운이 안
+                된다는 증거처럼 읽힌다. */}
             <span className="tiny faint">
-              **굵게** · `코드` 처럼 적으면 그대로 보입니다
+              Ctrl+<kbd>B</kbd> <strong>굵게</strong>
+              <span className="dim"> · </span>
+              Ctrl+<kbd>I</kbd> <em>기울임</em>
+              <span className="dim"> · </span>
+              Ctrl+<kbd>E</kbd> <code>코드</code>
+              <span className="dim"> · </span>
+              Ctrl+<kbd>Enter</kbd> 올리기
             </span>
           </div>
-          {error ? <div className="alert warn tiny">{error}</div> : null}
+          {error ? <Alert kind="warn">{error}</Alert> : null}
         </div>
-      </section>
+      </Card>
 
-      {board.error ? (
-        <div className="alert warn">의견을 읽지 못했습니다.</div>
-      ) : null}
+      {board.error ? <Alert kind="warn">F&amp;Q 를 읽지 못했습니다.</Alert> : null}
 
-      <section className="card">
-        <div className="card-head">
-          <h2>열려 있는 것 · {open.length}개</h2>
-        </div>
-        <div className="card-body col" style={{ gap: 10 }}>
-          {open.length ? (
-            open.map((note) => (
+      <Card title={<h2>열려 있는 것</h2>}
+            actions={<span className="tiny faint">{open.length}개</span>}>
+        {open.length ? (
+          <div className="col" style={{ gap: 10 }}>
+            {open.map((note) => (
               <NoteCard key={note.id} note={note} onChanged={() => board.reload()} />
-            ))
-          ) : (
-            <div className="tiny faint">
-              {board.loading ? '읽는 중…' : '열려 있는 것이 없습니다.'}
-            </div>
-          )}
-        </div>
-      </section>
+            ))}
+          </div>
+        ) : board.loading ? (
+          <Spinner label="읽는 중" />
+        ) : (
+          <Empty title="열려 있는 것이 없습니다">
+            <span className="tiny faint">
+              쓰다가 걸리는 것이 있으면 위에 한 줄 적어 두세요.
+            </span>
+          </Empty>
+        )}
+      </Card>
 
       {done.length ? (
-        <section className="card">
-          <div className="card-head">
-            <h2>정리된 것 · {done.length}개</h2>
-            <span className="tiny faint">지우지 않고 남겨 둡니다</span>
-          </div>
-          <div className="card-body col" style={{ gap: 10 }}>
+        <Card
+          title={<h2>정리된 것</h2>}
+          actions={
+            <span className="tiny faint">{done.length}개 · 지우지 않고 남겨 둡니다</span>
+          }
+        >
+          <div className="col" style={{ gap: 10 }}>
             {done.map((note) => (
               <NoteCard key={note.id} note={note} onChanged={() => board.reload()} />
             ))}
           </div>
-        </section>
+        </Card>
       ) : null}
     </main>
   )

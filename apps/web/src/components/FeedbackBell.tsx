@@ -1,4 +1,4 @@
-/** 상단 막대 오른쪽의 의견 단추 — 그리고 알림 점.
+/** 상단 막대 오른쪽의 F&Q 단추 — 그리고 알림 점.
  *
  * 점이 답하는 질문은 하나다: **내가 마지막으로 본 뒤에 뭔가 움직였나.**
  * 답글이 붙은 것도 움직인 것이라 `updated_at` 으로 재고 (서버가 답글에도 그
@@ -29,11 +29,11 @@ export function FeedbackBell() {
         fresh
           ? `${fresh}건이 새로 올라왔거나 답이 붙었습니다`
           : open
-            ? `열려 있는 의견 ${open}건`
+            ? `열려 있는 것 ${open}건`
             : '쓰다가 걸린 것을 적어 두는 곳'
       }
     >
-      의견
+      F&amp;Q
       {fresh ? <span className="bell-dot" aria-label={`새 소식 ${fresh}건`} /> : null}
     </NavLink>
   )

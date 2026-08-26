@@ -6,7 +6,7 @@ import { MemoryRouter } from 'react-router-dom'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { FeedbackBell } from '../../components/FeedbackBell'
-import { Feedback } from '../Feedback'
+import { Feedback, wrapSelection } from '../Feedback'
 import type { FeedbackNote } from '../../lib/types'
 
 function note(over: Partial<FeedbackNote> = {}): FeedbackNote {
@@ -51,7 +51,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-describe('의견 게시판', () => {
+describe('F&Q 게시판', () => {
   it('본문의 마크다운을 그대로 그린다', async () => {
     served = [note()]
     render(<MemoryRouter><Feedback /></MemoryRouter>)
@@ -63,14 +63,14 @@ describe('의견 게시판', () => {
     // 같은 불편이 두 달 뒤에 다시 올라올 때 "그때 이렇게 정리했다" 가 보여야 한다.
     served = [
       note({ id: 1, body: '아직 열려 있음' }),
-      note({ id: 2, body: '정리된 것', resolved_at: '2026-08-26T10:00:00',
+      note({ id: 2, body: '이미 고쳤음', resolved_at: '2026-08-26T10:00:00',
              resolved_by: '안용훈' }),
     ]
     render(<MemoryRouter><Feedback /></MemoryRouter>)
     expect(await screen.findByText('아직 열려 있음')).toBeInTheDocument()
-    expect(screen.getByText('정리된 것')).toBeInTheDocument()
-    expect(screen.getByText(/열려 있는 것 · 1개/)).toBeInTheDocument()
-    expect(screen.getByText(/정리된 것 · 1개/)).toBeInTheDocument()
+    expect(screen.getByText('이미 고쳤음')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '열려 있는 것' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: '정리된 것' })).toBeInTheDocument()
   })
 
   it('정리된 항목은 다시 열 수 있다', async () => {
@@ -111,12 +111,35 @@ describe('상단 막대의 점', () => {
     const board = render(<MemoryRouter><Feedback /></MemoryRouter>)
     // 목록이 도착한 뒤에 읽음이 찍힌다 — 먼저 찍으면 읽는 동안 올라온 것까지
     // 읽은 것이 된다.
-    await screen.findByText(/열려 있는 것/)
+    await screen.findByRole('heading', { name: '열려 있는 것' })
     await waitFor(() => expect(window.localStorage.getItem('bml.seen.feedback')).toBeTruthy())
     board.unmount()
 
     render(<MemoryRouter><FeedbackBell /></MemoryRouter>)
-    await screen.findByText('의견')
+    await screen.findByText('F&Q')
     expect(screen.queryByLabelText(/새 소식/)).not.toBeInTheDocument()
+  })
+})
+
+describe('Ctrl+B 로 감싸기', () => {
+  it('고른 글자를 감싼다', () => {
+    // `**굵게**` 를 손으로 치라고 안내하는 칸은 안 쓰인다.
+    expect(wrapSelection('앞가운데뒤', 1, 4, '**')).toEqual({
+      value: '앞**가운데**뒤', start: 3, end: 6,
+    })
+  })
+
+  it('고른 것이 없으면 표시만 넣고 그 사이에 커서를 둔다', () => {
+    // 그래야 바로 이어서 칠 수 있다.
+    expect(wrapSelection('앞뒤', 1, 1, '`')).toEqual({
+      value: '앞``뒤', start: 2, end: 2,
+    })
+  })
+
+  it('이미 감싸여 있으면 벗긴다', () => {
+    // 누르면 켜지고 다시 누르면 꺼진다.
+    expect(wrapSelection('앞**가운데**뒤', 3, 6, '**')).toEqual({
+      value: '앞가운데뒤', start: 1, end: 4,
+    })
   })
 })
