@@ -1,0 +1,46 @@
+data_5_t6_148_sym
+_audit_creation_date              2024-04-01
+_audit_creation_method            'Materials Studio'
+_symmetry_space_group_name_H-M    'P21/C'
+_symmetry_Int_Tables_number       14
+_symmetry_cell_setting            monoclinic
+loop_
+_symmetry_equiv_pos_as_xyz
+  x,y,z
+  -x,y+1/2,-z+1/2
+  -x,-y,-z
+  x,-y+1/2,z+1/2
+_cell_length_a                    6.4566
+_cell_length_b                    12.3218
+_cell_length_c                    6.5530
+_cell_angle_alpha                 90.0000
+_cell_angle_beta                  88.2453
+_cell_angle_gamma                 90.0000
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+_atom_site_occupancy
+Li0    Li    0.77291   0.16138   1.14337   0.00000  Uiso   1.00
+Li4    Li    0.19684   0.49792   0.82587   0.00000  Uiso   1.00
+Ge8    Ge    0.67150   0.66641   0.69093   0.00000  Uiso   1.00
+S12    S     0.19003   0.01650   0.69477   0.00000  Uiso   1.00
+S16    S     0.33196   0.66917   0.70161   0.00000  Uiso   1.00
+S20    S     0.18851   0.18567   1.13951   0.00000  Uiso   1.00
+loop_
+_geom_bond_atom_site_label_1
+_geom_bond_atom_site_label_2
+_geom_bond_distance
+_geom_bond_site_symmetry_2
+_ccdc_geom_bond_type
+Ge8    S12     2.194   2_656 S
+Ge8    S16     2.192   .     S
+Ge8    S20     2.333   2_656 S
+Ge8    S20     2.331   3_667 S
+S12    Ge8     2.194   2_646 S
+S20    Ge8     2.331   3_667 S
+S20    Ge8     2.333   2_646 S

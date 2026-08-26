@@ -1,0 +1,52 @@
+data_325_sym
+_audit_creation_date              2024-03-07
+_audit_creation_method            'Materials Studio'
+_symmetry_space_group_name_H-M    'P2/M'
+_symmetry_Int_Tables_number       10
+_symmetry_cell_setting            monoclinic
+loop_
+_symmetry_equiv_pos_as_xyz
+  x,y,z
+  -x,y,-z
+  -x,-y,-z
+  x,-y,z
+_cell_length_a                    6.7224
+_cell_length_b                    11.9662
+_cell_length_c                    6.6244
+_cell_angle_alpha                 90.0000
+_cell_angle_beta                  93.0341
+_cell_angle_gamma                 90.0000
+loop_
+_atom_site_label
+_atom_site_type_symbol
+_atom_site_fract_x
+_atom_site_fract_y
+_atom_site_fract_z
+_atom_site_U_iso_or_equiv
+_atom_site_adp_type
+_atom_site_occupancy
+Li0    Li    0.17208   0.17621   0.65828   0.00000  Uiso   1.00
+Li4    Li    0.32961   0.34256   0.15817   0.00000  Uiso   1.00
+S16    S     0.18754   0.17183   0.28921   0.00000  Uiso   1.00
+S20    S     0.30171   0.35373   0.78351   0.00000  Uiso   1.00
+Si8    Si    0.17429   0.50000   0.66391   0.00000  Uiso   1.00
+S14    S     0.15557   0.50000   0.32796   0.00000  Uiso   1.00
+Sn10   Sn    0.31221   0.00000   0.17498   0.00000  Uiso   1.00
+S12    S     0.31509   0.00000   0.79649   0.00000  Uiso   1.00
+loop_
+_geom_bond_atom_site_label_1
+_geom_bond_atom_site_label_2
+_geom_bond_distance
+_geom_bond_site_symmetry_2
+_ccdc_geom_bond_type
+S16    Sn10    2.360   .     S
+S20    Si8     2.086   .     S
+Si8    S20     2.086   4_565 S
+Si8    S14     2.222   .     S
+Si8    S14     2.221   2_556 S
+S14    Si8     2.221   2_556 S
+Sn10   S16     2.360   4     S
+Sn10   S12     2.508   1_554 S
+Sn10   S12     2.503   2_656 S
+S12    Sn10    2.508   1_556 S
+S12    Sn10    2.503   2_656 S
