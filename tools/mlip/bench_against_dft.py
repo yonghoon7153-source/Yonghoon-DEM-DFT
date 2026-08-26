@@ -222,11 +222,35 @@ def evaluate(structs, E_pred, F_pred, coef, elements, label, fkey="forces", ekey
             "MAE_eV_per_A": round(float(np.abs(dF).mean()), 5),
             "RMSE_eV_per_A": round(float(np.sqrt((dF ** 2).mean())), 5),
             "max_abs_eV_per_A": round(float(np.abs(dF).max()), 5),
+            # ★ 참조 RMS 로 정규화한 상대오차 (Shapeev 2016 관례).
+            #   같은 0.05 eV/Å 도 딱딱한 계에선 훌륭하고 무른 계에선 형편없다.
+            "rms_ref_eV_per_A": round(float(np.sqrt((Fd ** 2).mean())), 5),
+            "rel_MAE_pct": (round(float(np.abs(dF).mean() / np.sqrt((Fd ** 2).mean()) * 100), 2)
+                            if (Fd ** 2).mean() > 0 else None),
+            "pearson_r": (round(float(np.corrcoef(Fd, Fp)[0, 1]), 5) if Fd.size > 2 else None),
+            # ★★ softening 기울기 (2026-08-26 신설) — OMat24 보충자료의 `force_softening` 과 같은 척도.
+            #   s = Σ(F_ref·F_pred)/Σ(F_ref²), 원점을 지나는 최소제곱 기울기.
+            #   s < 1 = 예측힘이 참조보다 작다 = PES 가 무르다.
+            #   ⛔ **r 로는 원리적으로 못 본다** — r 은 척도불변이라 힘을 전부 절반으로 줄여도 1 이다.
+            #   실측 2026-08-26 (같은 시험셋 lips.xyz 251프레임):
+            #     UMA-s-1p1(OMat24)  0.9874   ↔   SevenNet-0(MPtrj)  0.7899
+            #   ⇒ OMat24 논문의 "softening 은 아키텍처가 아니라 훈련셋" 이 우리 화학계에서 재현.
+            "softening_slope": (round(float((Fd * Fp).sum() / (Fd ** 2).sum()), 5)
+                                if (Fd ** 2).sum() > 0 else None),
             "per_element": per_el},
         "worst5_structures": [{"index": int(ok[i]), "n_atoms": int(nat[i]),
                                "dE_eV_per_atom": round(float(dE_at[i]), 5)}
                               for i in worst],
     }
+
+
+def _softening_slope(Fd, Fp):
+    """원점을 지나는 최소제곱 기울기. evaluate() 와 **같은 식**을 쓰도록 분리해 둔다.
+
+    ⛔ 이 함수가 못 하는 것: 유의성을 판정하지 않는다. 기울기 하나만 돌려준다.
+    """
+    Fd, Fp = np.asarray(Fd, float).ravel(), np.asarray(Fp, float).ravel()
+    return float((Fd * Fp).sum() / (Fd ** 2).sum()) if (Fd ** 2).sum() > 0 else None
 
 
 def selftest():
@@ -236,6 +260,18 @@ def selftest():
         nonlocal ok
         print(("  ✓ " if c else "  ✗ ") + m)
         ok &= bool(c)
+
+    # ── softening 기울기 (2026-08-26 병합) ──
+    ref = np.array([1.0, -2.0, 0.5, 0.0, 3.0, -1.0])
+    chk(abs(_softening_slope(ref, ref) - 1.0) < 1e-12, "완전 일치면 softening 기울기 1")
+    chk(abs(_softening_slope(ref, ref * 0.5) - 0.5) < 1e-12,
+        "★ 힘을 절반으로 줄이면 기울기 0.5 — **이것이 softening 이다**")
+    chk(abs(float(np.corrcoef(ref, ref * 0.5)[0, 1]) - 1.0) < 1e-12,
+        "★ [음성] 그런데 그때도 **r 은 1** — r 로는 softening 을 원리적으로 못 본다")
+    chk(_softening_slope(np.zeros(6), ref) is None,
+        "[음성] 참조힘이 전부 0이면 None (0 나눗셈을 지어내지 않는다)")
+    chk(_softening_slope(ref, ref * 1.2) > 1.0,
+        "기울기 >1 도 나온다 (과대예측 = 과경직) — 1 을 상한으로 자르지 않는다")
 
     from ase import Atoms
     els = ["Li", "P", "S"]
