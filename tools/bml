@@ -161,6 +161,20 @@ TUNNEL_URL_FILE="$RUN_DIR/tunnel.url"
 TUNNEL="${WORKBENCH_TUNNEL:-auto}"
 STAMP="$RUN_DIR/deps.stamp"
 
+#: **이름이 막힌 기계에서 터널을 보는 중계기** (`bmlonly` 가 띄운다).
+#:
+#: 포트를 5003 이 아닌 것으로 둔다.  이 기계가 나중에 제 서버를 띄울 수도
+#: 있고, 그때 둘이 같은 포트를 다투면 "왜 남의 데이터가 보이지" 가 된다.
+RELAY_PORT="${WORKBENCH_RELAY_PORT:-5013}"
+RELAY_URL="http://127.0.0.1:$RELAY_PORT"
+RELAY_PID_FILE="$RUN_DIR/relay.pid"
+RELAY_LOG="$RUN_DIR/relay.log"
+#: 무엇을 중계하고 있는지 (`<터널 이름> <IP>`).  중계기는 기계를 끄면 죽으므로,
+#: 다음에 `bml` 을 칠 때 이 줄로 되살린다 -- 안 그러면 재부팅 때마다 사람이
+#: 주소를 다시 받아 와야 하고, 그것이 이 기능을 만든 이유였다.
+RELAY_TARGET_FILE="$RUN_DIR/relay.target"
+RELAY_SCRIPT="$REPO/tools/bml_relay.py"
+
 #: 실행 상태를 둘 폴더.  만드는 것은 실제로 쓸 때까지 미룬다 — 워크벤치가 아닌
 #: 체크아웃에서 bml 이 잘못 불려도 남의 저장소에 흔적을 남기지 않기 위해서다.
 need_run_dir() { mkdir -p "$RUN_DIR"; }
@@ -975,6 +989,12 @@ cmd_stop() {
   # 다시 띄울 것이 아니라면.
   if [ -z "$keep_tunnel" ] && close_tunnel; then
     ok "터널도 닫았습니다."
+    stopped=1
+  fi
+  # 중계기도 이 기계의 것이다.  남겨 두면 죽은 터널로 가는 127.0.0.1 포트가
+  # 계속 열려 있고, 그 포트는 502 만 돌려주면서 열려 있는 것처럼 보인다.
+  if relay_stop; then
+    ok "중계기도 내렸습니다."
     stopped=1
   fi
   for file in "$PID_FILE" "$DEV_PID_FILE"; do
@@ -2958,6 +2978,117 @@ close_tunnel() {
   return 1
 }
 
+# --------------------------------------------------------------------------
+# 중계기 -- 이름이 막힌 기계에서 터널을 보는 길
+# --------------------------------------------------------------------------
+#
+# 이 랩의 사정: 망이 터널 도메인을 DNS 에서 거른다.  그런데 **막힌 것은 이름
+# 뿐이고 길은 멀쩡하다** -- IP 를 알면 HTTPS 가 그대로 간다 (실측).
+#
+# 그래서 예전에는 `/etc/hosts` 에 이름표를 박았다.  이 랩에서는 그것이 특히
+# 나쁘다: 브라우저가 **Windows** 에 있어서 WSL 의 hosts 를 안 보므로 관리자
+# PowerShell 로 한 번 더 박아야 하고, WSL 은 켤 때마다 hosts 를 다시 만들어
+# 재부팅하면 사라지고, 터널 주소는 열 때마다 바뀌므로 그 둘을 매번 처음부터
+# 다시 한다.  주소 하나 바뀔 때마다 관리자 창을 여는 것이 실제 비용이었다.
+#
+# 중계기는 그 셋을 통째로 없앤다.  브라우저는 127.0.0.1 만 보고, 이름 풀이가
+# 아예 일어나지 않는다.  OS 파일을 안 건드리므로 sudo 도 관리자 창도 없고,
+# 주소가 바뀌면 이 프로그램만 다시 띄우면 된다.
+
+#: 중계기가 쓸 파이썬.  표준 라이브러리만 쓰므로 venv 도 pip 도 필요 없다 --
+#: 이 기계는 브라우저 노릇만 할 수 있고 (ADR 0011), 거기에 의존성을 만들면
+#: 그 자체가 새 걸림돌이 된다.
+relay_python() {
+  command -v python3 2>/dev/null || return 1
+}
+
+#: 이 pid 가 **우리 중계기**인가.  낡은 pid 파일이 가리키는 남의 프로세스를
+#: 죽이지 않기 위해서다 (CLAUDE.md 0.8 -- 우리 것임을 증명한 뒤에만 죽인다).
+owns_relay_pid() {
+  local pid="${1:-}" cmd=""
+  [ -n "$pid" ] || return 1
+  kill -0 "$pid" 2>/dev/null || return 1
+  cmd="$(tr '\0' ' ' < "/proc/$pid/cmdline" 2>/dev/null)" || return 1
+  [ -n "$cmd" ] || return 1
+  case "$cmd" in *bml_relay.py*) return 0 ;; esac
+  return 1
+}
+
+relay_running() {
+  local pid
+  pid="$(cat "$RELAY_PID_FILE" 2>/dev/null)" || return 1
+  owns_relay_pid "$pid"
+}
+
+#: 지금 중계 중인 대상 (`<터널 이름> <IP>`).  없으면 빈 줄.
+relay_target() { cat "$RELAY_TARGET_FILE" 2>/dev/null; }
+
+relay_stop() {
+  local pid
+  pid="$(cat "$RELAY_PID_FILE" 2>/dev/null)"
+  if owns_relay_pid "$pid"; then
+    kill "$pid" 2>/dev/null
+    rm -f "$RELAY_PID_FILE"
+    return 0
+  fi
+  rm -f "$RELAY_PID_FILE"
+  return 1
+}
+
+#: 중계기를 띄운다.  `relay_start <터널 이름> <IP>`
+#:
+#: **띄우기 전에 그 조합으로 한 번 물어본다** (`--check`).  안 닿는 대상으로
+#: 띄워 놓으면 브라우저에는 502 만 뜨고, 사람은 중계기가 아니라 워크벤치를
+#: 의심하며 엉뚱한 데를 뒤진다.
+relay_start() {
+  local host="$1" ip="$2" py pid
+  py="$(relay_python)" || return 2
+  [ -f "$RELAY_SCRIPT" ] || return 2
+  need_run_dir
+
+  "$py" "$RELAY_SCRIPT" --listen "$RELAY_PORT" --host "$host" --ip "$ip" \
+    --check >/dev/null 2>&1 || return 1
+
+  relay_stop >/dev/null 2>&1 || true
+  "$py" "$RELAY_SCRIPT" --listen "$RELAY_PORT" --host "$host" --ip "$ip" \
+    >>"$RELAY_LOG" 2>&1 &
+  pid=$!
+  disown "$pid" 2>/dev/null || true
+  echo "$pid" > "$RELAY_PID_FILE"
+  printf '%s %s\n' "$host" "$ip" > "$RELAY_TARGET_FILE"
+
+  # 실제로 열렸는지 본다.  pid 가 살아 있다는 것과 포트가 답한다는 것은 다르고,
+  # 여기서 안 보면 그 차이가 브라우저에서 드러난다.
+  if wait_until_alive "$RELAY_URL" 15 "$pid"; then
+    return 0
+  fi
+  relay_stop >/dev/null 2>&1 || true
+  return 1
+}
+
+#: 적어 둔 대상으로 중계기를 되살린다.  기계를 껐다 켜면 중계기는 죽어 있는데
+#: 저장된 서버 주소는 그대로 127.0.0.1 을 가리키므로, 이것이 없으면 `bml` 이
+#: "그 주소에서 워크벤치가 응답하지 않습니다" 로 끝난다 -- 정작 할 일은 다시
+#: 띄우는 것 하나인데.
+relay_revive() {
+  local target host ip
+  case "${SERVER:-}" in "$RELAY_URL") ;; *) return 0 ;; esac
+  relay_running && return 0
+  target="$(relay_target)"
+  [ -n "$target" ] || return 1
+  host="${target%% *}"; ip="${target##* }"
+  [ -n "$host" ] && [ -n "$ip" ] || return 1
+  step "중계기를 다시 띄우는 중 ${DIM}(${host})${OFF}"
+  if relay_start "$host" "$ip"; then
+    ok "중계 중 ${DIM}${RELAY_URL} → ${host}${OFF}"
+    return 0
+  fi
+  printf '%s✕%s 중계기를 다시 띄우지 못했습니다 (%s).\n' "$RED" "$OFF" "$host" >&2
+  say "  ${DIM}터널 주소가 바뀌었을 수 있습니다 — 중추 서버의${OFF} ${GREEN}bml share${OFF} ${DIM}가 적어 준 줄로:${OFF}"
+  say "    ${GREEN}bmlonly <새 주소> <그 IP>${OFF}"
+  return 1
+}
+
 #: 터널 하나를 띄우고, 그 주소가 실제로 열릴 때까지 기다린다.
 #:
 #: 성공하면 TUNNEL_PID_FILE·TUNNEL_URL_FILE 을 채우고 0.  실패하면 띄운 것을
@@ -3551,6 +3682,32 @@ cmd_only() {
   fi
   ok "터널이 살아 있습니다 ${DIM}(HTTP 200)${OFF}"
 
+  # **중계기가 있으면 OS 파일을 안 건드린다.**  이 기계에서 필요한 것은 "이
+  # 이름이 이 IP" 라는 사실 하나이고, 그것을 hosts 에 적는 대신 우리가 직접
+  # 들고 있으면 된다.  그러면 sudo 도, 관리자 PowerShell 도, 재부팅 뒤 복구도
+  # 사라진다 -- 이 셋이 주소가 바뀔 때마다 되풀이되던 비용의 전부였다.
+  if relay_python >/dev/null 2>&1 && [ -f "$RELAY_SCRIPT" ]; then
+    step "중계기를 띄우는 중 ${DIM}(이 기계 안에서만 · ${RELAY_URL})${OFF}"
+    if relay_start "$host" "$ip"; then
+      ok "중계 중 ${DIM}${RELAY_URL} → ${host} (${ip})${OFF}"
+      say "  ${DIM}브라우저는 127.0.0.1 만 봅니다 — 이름을 물어보는 일이 아예 없습니다.${OFF}"
+      if is_wsl; then
+        # WSL 은 localhost 를 Windows 와 나눠 쓰므로 크롬이 그대로 본다.
+        # hosts 를 고치던 때와 다른 점이 정확히 이것이다.
+        say "  ${DIM}Windows 의 크롬도 같은 주소로 열립니다 (WSL 이 localhost 를 넘겨 줍니다) —${OFF}"
+        say "  ${DIM}관리자 PowerShell 로 hosts 를 고칠 일이 없습니다.${OFF}"
+      fi
+      say "  ${DIM}주소가 바뀌면${OFF} ${GREEN}bmlonly <새 주소> <그 IP>${OFF} ${DIM}한 줄이면 됩니다 (sudo 없음).${OFF}"
+      say "  ${DIM}내리려면${OFF} ${GREEN}bml relay stop${OFF}"
+      cmd_slot out "$RELAY_URL"
+      return 0
+    fi
+    warn "중계기를 띄우지 못했습니다 — 예전 방식(/etc/hosts)으로 갑니다."
+    say "  ${DIM}자세한 것은 ${RELAY_LOG}${OFF}"
+  else
+    say "${DIM}python3 이 없어 중계기를 못 씁니다 — /etc/hosts 로 갑니다.${OFF}"
+  fi
+
   step "이름표를 박는 중 ${DIM}(/etc/hosts · sudo 를 묻습니다)${OFF}"
   say "  ${DIM}${ip} ${host}${OFF}"
   # 옛 터널 이름은 먼저 지운다.  열 때마다 이름이 바뀌므로 붙이기만 하면
@@ -3581,6 +3738,39 @@ cmd_only() {
 
   # 여기서부터는 보통 기계와 같다 -- 이름이 잡히므로 `bmlout` 과 똑같이 간다.
   cmd_slot out "$url"
+}
+
+#: `bml relay [stop]` -- 중계기를 보거나 내린다.
+#:
+#: 띄우는 것은 `bmlonly` 가 한다.  중계기 혼자 띄우는 명령을 따로 두지 않는
+#: 이유는, 무엇을 중계할지가 늘 "그 터널 주소" 라서다 -- 주소를 아는 자리가
+#: 곧 띄우는 자리다.
+cmd_relay() {
+  case "${1:-}" in
+    stop|off|down)
+      if relay_stop; then
+        ok "중계기를 내렸습니다."
+        # 저장된 서버 주소를 그대로 두면 다음 `bml` 이 죽은 127.0.0.1 을 본다.
+        # 대상은 남긴다 -- 다시 띄울 때 주소를 또 받아 올 필요가 없도록.
+        say "  ${DIM}저장된 서버 주소는 그대로입니다 —${OFF} ${GREEN}bml${OFF} ${DIM}를 치면 다시 띄웁니다.${OFF}"
+      else
+        say "${DIM}떠 있는 중계기가 없습니다.${OFF}"
+      fi
+      return 0
+      ;;
+  esac
+
+  local target="$(relay_target)"
+  if relay_running; then
+    ok "중계 중  ${B}${RELAY_URL}${OFF} ${DIM}→ ${target:-?}${OFF}"
+    say "  ${DIM}내리려면${OFF} ${GREEN}bml relay stop${OFF}"
+  elif [ -n "$target" ]; then
+    warn "중계기가 안 떠 있습니다. ${DIM}(마지막 대상: ${target})${OFF}"
+    say "  ${GREEN}bml${OFF} ${DIM}을 치면 이 대상으로 다시 띄웁니다.${OFF}"
+  else
+    say "${DIM}중계기를 쓴 적이 없습니다 — 이름이 막힌 기계에서${OFF} ${GREEN}bmlonly <주소> <IP>${OFF} ${DIM}가 띄웁니다.${OFF}"
+  fi
+  return 0
 }
 
 cmd_use() {
@@ -3674,9 +3864,24 @@ cmd_connect() {
     say "  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF} ${DIM}— 이 기계가 직접 띄우게 하세요.${OFF}"
     say ""
   fi
+  # 저장된 주소가 우리 중계기면, 기다려 보기 전에 그것부터 살린다.  기계를
+  # 껐다 켜면 중계기는 죽어 있는데 주소는 그대로라, 이것이 없으면 "응답하지
+  # 않습니다" 로 끝난다 -- 정작 할 일은 다시 띄우는 것 하나인데.
+  relay_revive || true
   if ! wait_until_alive "$SERVER" "${WORKBENCH_WAIT:-20}"; then
     printf '%s✕%s 중추 서버가 응답하지 않습니다: %s\n' "$RED" "$OFF" "$SERVER" >&2
-    server_unreachable_help "$SERVER"
+    # 중계기를 거쳐 보고 있으면 "그 주소" 는 127.0.0.1 이다.  터널 진단을
+    # 그대로 내면 죄 없는 로컬 포트를 두고 DNS 를 의심하게 된다.
+    case "$SERVER" in
+      "$RELAY_URL")
+        say ""
+        say "  ${DIM}이 주소는 이 기계 안의 중계기입니다 (→ $(relay_target)).${OFF}"
+        say "  ${DIM}중계기는 살아 있는데 그 뒤가 조용하면 터널이 바뀐 것입니다:${OFF}"
+        say "    ${GREEN}bmlonly <새 주소> <그 IP>${OFF}   ${DIM}(중추 서버의 bml share 가 두 값을 함께 적어 줍니다)${OFF}"
+        say "  ${DIM}중계기 기록:${OFF} ${RELAY_LOG}"
+        ;;
+      *) server_unreachable_help "$SERVER" ;;
+    esac
     exit 1
   fi
   ok "열었습니다 → ${SERVER}"
@@ -3787,6 +3992,14 @@ cmd_status() {
   # 뿐이라, "터널이 죽었다" 와 "애초에 안 열었다" 가 같은 화면이 된다.  실측
   # 2026-08-24: 그 침묵 때문에 서버가 내려간 줄 알고 엉뚱한 곳을 30분 팠다.
   # **없는 줄은 근거가 아니다.**  죽었으면 죽었다고 적는다.
+  # 중계기도 같은 이유로 적는다.  이름이 막힌 기계에서는 이 줄이 "지금 무엇을
+  # 통해 보고 있는가" 의 전부라, 없으면 127.0.0.1 이 어디로 가는지 알 길이 없다.
+  if relay_running; then
+    say "중계기     ${B}${RELAY_URL}${OFF} ${DIM}→ $(relay_target)  (bml relay stop 으로 내립니다)${OFF}"
+  elif [ -n "$(relay_target)" ]; then
+    warn "중계기     안 떠 있습니다 ${DIM}(마지막 대상: $(relay_target))${OFF}"
+    say "  ${GREEN}bml${OFF} ${DIM}을 치면 그 대상으로 다시 띄웁니다.${OFF}"
+  fi
   if ! tunnel_running && [ -n "$(tunnel_url)" ]; then
     warn "공유 주소   $(tunnel_url) — ${B}터널이 죽어 있습니다${OFF} ${DIM}(주소 기록만 남았습니다)${OFF}"
     say "  ${GREEN}bml share${OFF} ${DIM}로 다시 엽니다 — 주소가 바뀌므로 다른 기계에서${OFF} ${GREEN}bmlout <새 주소>${OFF}"
@@ -4550,6 +4763,7 @@ main() {
     # `out` 과 나눠 둔 이유는 cmd_only 의 주석에 있다 -- 멀쩡한 기계에서 sudo 를
     # 묻거나 hosts 를 건드리게 되면 안 된다.
     only)              shift; sync_repo; cmd_only "${1:-}" "${2:-}"; cmd_connect ;;
+    relay)             shift; cmd_relay "${1:-}" ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift

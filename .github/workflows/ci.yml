@@ -102,6 +102,9 @@ jobs:
       - run: bash tools/tests/test_worklog.sh
       - run: bash tools/tests/test_bml_install.sh
       - run: bash tools/tests/test_bml_data.sh
+      - run: bash tools/tests/test_data_untracked.sh
+      # 중계기는 진짜 소켓과 진짜 TLS 로 돈다 — 가짜 엣지를 띄워서 잰다.
+      - run: python3 tools/tests/test_bml_relay.py
 
   invariants:
     name: repo invariants

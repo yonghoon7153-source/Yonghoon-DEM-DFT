@@ -493,6 +493,48 @@ check "휴대폰 갈래도 남긴다" \
   "$(grep -c '휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다' "$HERE/../bml")" "2"
 
 echo
+echo "이름이 막힌 기계 — hosts 대신 중계기로"
+# 예전 방식(/etc/hosts)이 이 랩에서 특히 나빴던 이유는 셋이다: 브라우저가
+# Windows 에 있어서 WSL 의 hosts 를 안 보고(관리자 PowerShell 이 한 번 더),
+# WSL 이 켤 때마다 hosts 를 다시 만들고(재부팅하면 사라짐), 터널 주소가 열
+# 때마다 바뀐다(그래서 그 둘을 매번 처음부터).  중계기는 셋을 통째로 없앤다.
+check "중계기를 hosts 보다 먼저 시도한다" \
+  "$(grep -c 'if relay_python >/dev/null 2>&1 && \[ -f "\$RELAY_SCRIPT" \]; then' "$HERE/../bml")" "1"
+# 5003 이면 이 기계가 나중에 제 서버를 띄울 때 다툰다 -- 그때 "왜 남의
+# 데이터가 보이지" 가 된다.
+check "중계기 포트는 서버 포트와 다르다" \
+  "$(grep -c 'RELAY_PORT="\${WORKBENCH_RELAY_PORT:-5013}"' "$HERE/../bml")" "1"
+# 127.0.0.1 에만 연다.  0.0.0.0 이면 같은 망의 아무나 암호 화면까지 온다.
+check "바깥에 열지 않는다" \
+  "$(grep -c 'ThreadingHTTPServer(("127.0.0.1", args.listen), Relay)' "$HERE/../bml_relay.py")" "1"
+# 인증서를 끄면 IP 로 붙는 순간 중간자를 못 본다.  이름으로 검증해야 한다.
+check "인증서를 터널 이름으로 검증한다" \
+  "$(grep -c 'server_hostname=host' "$HERE/../bml_relay.py")" "1"
+check "검증을 끄는 길이 없다" \
+  "$(grep -c 'CERT_NONE\|check_hostname = False' "$HERE/../bml_relay.py")" "0"
+# 안 닿는 대상으로 띄우면 브라우저에 502 만 뜨고, 사람은 중계기가 아니라
+# 워크벤치를 의심한다.
+check "띄우기 전에 한 번 물어본다" \
+  "$(grep -c -- '--check >/dev/null 2>&1 || return 1' "$HERE/../bml")" "1"
+# 낡은 pid 파일이 가리키는 남의 프로세스를 죽이지 않는다 (CLAUDE.md 0.8).
+check "우리 중계기임을 확인하고 죽인다" \
+  "$(grep -c 'case "$cmd" in \*bml_relay.py\*) return 0 ;; esac' "$HERE/../bml")" "1"
+# 기계를 껐다 켜면 중계기는 죽고 주소는 남는다.  되살리지 않으면 그때부터
+# "응답하지 않습니다" 인데, 할 일은 다시 띄우는 것 하나다.
+check "다음 bml 이 중계기를 되살린다" \
+  "$(grep -c 'relay_revive || true' "$HERE/../bml")" "1"
+check "되살릴 대상을 적어 둔다" \
+  "$(grep -c 'RELAY_TARGET_FILE"$' "$HERE/../bml")" "1"
+# 중계기를 거쳐 볼 때 "그 주소" 는 127.0.0.1 이다.  터널 진단을 그대로 내면
+# 죄 없는 로컬 포트를 두고 DNS 를 의심하게 된다.
+check "중계기일 때는 터널 진단을 내지 않는다" \
+  "$(grep -c '이 주소는 이 기계 안의 중계기입니다' "$HERE/../bml")" "1"
+check "bml stop 이 중계기도 내린다" \
+  "$(grep -c '중계기도 내렸습니다' "$HERE/../bml")" "1"
+check "status 가 무엇을 통해 보는지 적는다" \
+  "$(grep -c '중계기     \${B}\${RELAY_URL}' "$HERE/../bml")" "1"
+
+echo
 if [ "$fail" -eq 0 ]; then
   printf '결과: %d개 통과\n' "$pass"
   exit 0

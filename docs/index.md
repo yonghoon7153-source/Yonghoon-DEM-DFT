@@ -33,6 +33,7 @@
 | [0027](adr/0027-a-measurement-has-its-own-conditions.md) | 측정은 제 조건을 갖는다, 셀은 빈 칸만 채운다 | EIS·GITT 에 그룹·시험일·양극재·공정·온도, 물려받기는 빈 칸만 (`inherited` 로 표시), 셀 고르기는 드롭다운이 아니라 창 |
 | [0028](adr/0028-solid-state-is-a-transmission-line.md) | 전고체 복합전극은 아크가 아니라 전송선이다 | Bisquert 전송선을 회로 원소로 (PyEIS `cir_RsTL` 대조), 전고체 프리셋 교체, 면적이 있으면 Ω·cm² |
 | [0029](adr/0029-fit-the-way-zview-users-fit.md) | ZView 처럼 순차로 맞추되, 그 결과는 답이 아니라 시작점이다 | 회로의 직렬 블록을 고주파부터 하나씩 풀어 시작점 하나를 만들고 다중시작 주머니에 넣는다 (켜서 나빠질 수 없다), 오차가 대역 끝에 몰리면 그렇다고 적는다 |
+| [0030](adr/0030-a-local-relay-instead-of-editing-hosts.md) | 이름이 막힌 기계에서는 hosts 를 고치지 말고 중계기를 띄운다 | `bmlonly` 가 `/etc/hosts` 대신 127.0.0.1:5013 에 중계기를 띄워 터널 엣지의 IP 로 넘긴다 (SNI·Host 는 터널 이름), sudo·관리자 PowerShell·재부팅 복구가 사라진다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -78,7 +79,8 @@
 `adr/0026-the-diffusion-tail-needs-a-start-a-ladder-and-a-choice.md` ·
 `adr/0027-a-measurement-has-its-own-conditions.md` ·
 `adr/0028-solid-state-is-a-transmission-line.md` ·
-`adr/0029-fit-the-way-zview-users-fit.md`
+`adr/0029-fit-the-way-zview-users-fit.md` ·
+`adr/0030-a-local-relay-instead-of-editing-hosts.md`
 
 ## 스펙
 
