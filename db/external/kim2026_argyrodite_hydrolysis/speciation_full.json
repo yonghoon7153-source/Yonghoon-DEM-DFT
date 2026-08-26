@@ -280,7 +280,12 @@
           "n_S_with_H": 17,
           "n_S_with_2H": 0
         }
-      ]
+      ],
+      "SH_location": {
+        "on_framework_S": 0,
+        "on_free_S_inside_slab": 7,
+        "on_free_S_in_fluid": 10
+      }
     },
     "oxygen": {
       "n_O": 299,
@@ -383,6 +388,10 @@
       "bin_width": 2.005590625,
       "n_H_inside_slab": 79,
       "n_H_S_inside_slab": 7,
+      "n_H_S_inside_lo_side": 4,
+      "n_H_S_inside_hi_side": 3,
+      "z_lo_side_raw": 3.008385937500009,
+      "z_hi_side_raw": 41.1146078125,
       "max_H_penetration_depth": 5.248999694300011,
       "max_H_S_penetration_depth": 3.3509729057000044,
       "mean_H_S_depth": -2.9181451187788223,
@@ -679,7 +688,12 @@
           "n_S_with_H": 28,
           "n_S_with_2H": 2
         }
-      ]
+      ],
+      "SH_location": {
+        "on_framework_S": 1,
+        "on_free_S_inside_slab": 15,
+        "on_free_S_in_fluid": 12
+      }
     },
     "oxygen": {
       "n_O": 299,
@@ -783,6 +797,10 @@
       "bin_width": 2.005590625,
       "n_H_inside_slab": 159,
       "n_H_S_inside_slab": 15,
+      "n_H_S_inside_lo_side": 6,
+      "n_H_S_inside_hi_side": 9,
+      "z_lo_side_raw": 1.5041929687500044,
+      "z_hi_side_raw": 41.616005468750004,
       "max_H_penetration_depth": 10.30427537895001,
       "max_H_S_penetration_depth": 10.30427537895001,
       "mean_H_S_depth": -0.5717533475156652,
@@ -1137,7 +1155,12 @@
           "n_S_with_H": 20,
           "n_S_with_2H": 1
         }
-      ]
+      ],
+      "SH_location": {
+        "on_framework_S": 4,
+        "on_free_S_inside_slab": 4,
+        "on_free_S_in_fluid": 10
+      }
     },
     "oxygen": {
       "n_O": 299,
@@ -1241,6 +1264,10 @@
       "bin_width": 1.9960848484848486,
       "n_H_inside_slab": 88,
       "n_H_S_inside_slab": 5,
+      "n_H_S_inside_lo_side": 1,
+      "n_H_S_inside_hi_side": 4,
+      "z_lo_side_raw": 1.9960848484848555,
+      "z_hi_side_raw": 41.91778181818182,
       "max_H_penetration_depth": 7.129106860181821,
       "max_H_S_penetration_depth": 3.5200457281818203,
       "mean_H_S_depth": -2.729382365354251,

@@ -480,6 +480,16 @@ def analyse(atoms, label, dr=0.02, rmax_nl=6.5, zbin=2.0, valley_frac=0.5):
     depth = np.where(z < z_lo, z - z_lo, np.where(z > z_hi, z_hi - z, np.minimum(z - z_lo, z_hi - z)))
     hs_idx = H[hcl == "H-S"]
     ho_idx = H[hcl == "H-O"]
+    # S-H 를 **어디에 붙었나**로 쪼갠다 — 이게 '반응이 골격에서 일어났나' 를 가른다.
+    sh_S = S[cSH[S] > 0]
+    out["sulfur"]["SH_location"] = {
+        "on_framework_S": int(((cSP + cSSn)[sh_S] > 0).sum()),
+        "on_free_S_inside_slab": int((((cSP + cSSn)[sh_S] == 0) & (depth[sh_S] > 0)).sum()),
+        "on_free_S_in_fluid": int((((cSP + cSSn)[sh_S] == 0) & (depth[sh_S] <= 0)).sum()),
+    }
+    # 표면 두 쪽을 따로 (LPSnSC 는 두 표면의 양이온 종단이 다르다)
+    lo_side = H[(hcl == "H-S") & (z[H] < 0.5 * (z_lo + z_hi)) & (depth[H] > 0)]
+    hi_side = H[(hcl == "H-S") & (z[H] >= 0.5 * (z_lo + z_hi)) & (depth[H] > 0)]
     out["zprofile"] = {
         "axis": int(ax), "axis_letter": "abc"[ax], "orthogonal_cell": ortho,
         "axis_diagnostics": axdiag, "origin_shift": shift, "fluid_gap_width": gap_w,
@@ -487,6 +497,9 @@ def analyse(atoms, label, dr=0.02, rmax_nl=6.5, zbin=2.0, valley_frac=0.5):
         "bin_width": float(L / nb),
         "n_H_inside_slab": int((depth[H] > 0).sum()),
         "n_H_S_inside_slab": int((depth[hs_idx] > 0).sum()) if hs_idx.size else 0,
+        "n_H_S_inside_lo_side": int(len(lo_side)),
+        "n_H_S_inside_hi_side": int(len(hi_side)),
+        "z_lo_side_raw": float((z_lo + shift) % L), "z_hi_side_raw": float((z_hi + shift) % L),
         "max_H_penetration_depth": float(depth[H].max()) if H.size else 0.0,
         "max_H_S_penetration_depth": float(depth[hs_idx].max()) if hs_idx.size else 0.0,
         "mean_H_S_depth": float(depth[hs_idx].mean()) if hs_idx.size else float("nan"),
@@ -638,6 +651,11 @@ def emit(results, outdir):
             "n_H2_molecules": r["hydrogen"]["n_H2_molecules"],
             "n_H_inside_slab": r["zprofile"]["n_H_inside_slab"],
             "n_H_S_inside_slab": r["zprofile"]["n_H_S_inside_slab"],
+            "n_H_S_inside_lo_side": r["zprofile"]["n_H_S_inside_lo_side"],
+            "n_H_S_inside_hi_side": r["zprofile"]["n_H_S_inside_hi_side"],
+            "n_SH_on_framework_S": r["sulfur"]["SH_location"]["on_framework_S"],
+            "n_SH_on_free_S_inside": r["sulfur"]["SH_location"]["on_free_S_inside_slab"],
+            "n_SH_on_free_S_in_fluid": r["sulfur"]["SH_location"]["on_free_S_in_fluid"],
             "max_H_penetration_A": round(r["zprofile"]["max_H_penetration_depth"], 2),
             "max_H_S_penetration_A": round(r["zprofile"]["max_H_S_penetration_depth"], 2),
             "slab_thickness_A": round(r["zprofile"]["slab_thickness"], 2),
