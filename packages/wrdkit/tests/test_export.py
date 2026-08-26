@@ -201,3 +201,49 @@ def test_keeping_it_blanks_the_numbers_rather_than_publishing_them():
     # 완료된 사이클은 손대지 않는다.
     assert rows[0]["cycle"] == "1"
     assert rows[0]["discharge_capacity (mAh)"] != ""
+
+
+def test_the_csv_carries_the_value_not_a_rounded_one():
+    """내보내는 숫자는 **원래 값**이다.  보기 좋게 자르는 것은 화면이 한다.
+
+    실제로 일어난 일: 예전 서식이 `.6g` 였고, 그것이 값을 바꿨다.
+
+      쿨롱효율 99.9999666...%  ->  `100`      (100 미만인데 100 으로 읽힌다)
+      용량 1234.56789 mAh      ->  `1234.57`  (소수 둘째 자리에서 잘린다)
+
+    다른 도구(Smart Interface 의 엑셀)와 맞춰 보다 어긋나면, 그 차이가 어디서
+    왔는지 되짚을 수 없게 된다 -- 우리가 이미 지워 버린 자리이므로.
+    """
+    import io
+
+    from wrdkit.cycles import CycleSummary
+    from wrdkit.export import write_cycles_csv
+
+    cycle = CycleSummary(cycle_index=0, cycle_number=1, start=0, stop=10)
+    # 효율이 100 에 아주 가깝지만 100 은 아닌 값 (2.999999 / 3.0).
+    cycle.charge_capacity_mah = 3.0
+    cycle.discharge_capacity_mah = 2.999999
+    cycle.charge_energy_wh = 1.23456789012
+    cycle.discharge_energy_wh = 1.2
+    cycle.mean_charge_voltage = 3.9
+    cycle.mean_discharge_voltage = 3.7
+    cycle.voltage_max = 4.3
+    cycle.voltage_min = 2.5
+    cycle.complete = True
+
+    stream = io.StringIO()
+    write_cycles_csv([cycle], CellSpec().resolve(), stream)
+    header, row = stream.getvalue().strip().split("\n")
+    # strict -- 열 수가 어긋나면 그것부터가 결함이다 (조용히 잘라 내지 않는다).
+    cells = dict(zip(header.split(","), row.split(","), strict=True))
+
+    efficiency = cells["coulombic_efficiency (%)"]
+    assert efficiency != "100", "100 미만인 효율이 100 으로 나가면 안 된다"
+    assert float(efficiency) == pytest.approx(99.9999666667, abs=1e-9)
+
+    # 잘리지 않았는지: 12 유효숫자면 이 값이 그대로 돌아온다.
+    assert float(cells["discharge_capacity (mAh)"]) == pytest.approx(2.999999, abs=1e-12)
+    assert float(cells["charge_energy (mWh)"]) == pytest.approx(1234.56789012, abs=1e-8)
+
+    # 그러면서 없던 자리는 지어내지 않는다 -- float 잡음이 새어 나오면 안 된다.
+    assert "0000000000" not in row, f"부동소수 잡음이 새어 나왔다: {row}"

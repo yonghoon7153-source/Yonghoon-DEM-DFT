@@ -145,23 +145,23 @@ def write_cycles_csv(cycles: Iterable[CycleSummary], cell: ResolvedCell,
         charge = normalize_capacity(cycle.charge_capacity_mah, cell, usable)
         discharge = normalize_capacity(cycle.discharge_capacity_mah, cell, usable)
         row = [cycle.cycle_number,
-               "" if blank else f"{charge:.6g}",
-               "" if blank else f"{discharge:.6g}",
+               "" if blank else f"{charge:.12g}",
+               "" if blank else f"{discharge:.12g}",
                "" if blank else _fmt(cycle.coulombic_efficiency)]
         if include_absolute and usable != Basis.ABSOLUTE:
             row += ["", ""] if blank else [
-                f"{cycle.charge_capacity_mah:.6g}",
-                f"{cycle.discharge_capacity_mah:.6g}"]
+                f"{cycle.charge_capacity_mah:.12g}",
+                f"{cycle.discharge_capacity_mah:.12g}"]
         row += [
-            "" if blank else f"{cycle.charge_energy_wh * 1000:.6g}",
-            "" if blank else f"{cycle.discharge_energy_wh * 1000:.6g}",
+            "" if blank else f"{cycle.charge_energy_wh * 1000:.12g}",
+            "" if blank else f"{cycle.discharge_energy_wh * 1000:.12g}",
             "" if blank else _fmt(cycle.energy_efficiency),
             "" if blank else _fmt(cycle.mean_charge_voltage),
             "" if blank else _fmt(cycle.mean_discharge_voltage),
             "" if blank else _fmt(cycle.voltage_hysteresis),
             "" if blank else _fmt(cycle.voltage_max),
             "" if blank else _fmt(cycle.voltage_min),
-            f"{cycle.duration_s / 3600:.4f}", cycle.n_points,
+            f"{cycle.duration_s / 3600:.12g}", cycle.n_points,
             "yes" if cycle.complete else "no",
         ]
         writer.writerow(row)
@@ -185,7 +185,7 @@ def write_profiles_csv(profiles: Sequence[Profile], cell: ResolvedCell,
     for i in range(depth):
         row = []
         for values in columns:
-            row.append(f"{values[i]:.6g}" if i < len(values) else "")
+            row.append(f"{values[i]:.12g}" if i < len(values) else "")
         writer.writerow(row)
 
 
@@ -218,7 +218,7 @@ def write_dqdv_csv(curves: Sequence[DifferentialCapacity], cell: ResolvedCell,
     for i in range(depth):
         row = []
         for values in columns:
-            row.append(f"{values[i]:.6g}" if i < len(values) else "")
+            row.append(f"{values[i]:.12g}" if i < len(values) else "")
         writer.writerow(row)
 
 
@@ -253,12 +253,25 @@ def write_dvdq_csv(curves: Sequence[DifferentialVoltage], cell: ResolvedCell,
     for i in range(depth):
         row = []
         for values in columns:
-            row.append(f"{values[i]:.6g}" if i < len(values) else "")
+            row.append(f"{values[i]:.12g}" if i < len(values) else "")
         writer.writerow(row)
 
 
+#: 표에 쓰는 숫자 하나.  **12 유효숫자** — 반올림하지 않는다는 뜻이다.
+#:
+#: 예전에는 `.6g` 였고, 그것이 실제로 값을 바꿨다.  쿨롱효율 99.99996% 가
+#: `100` 으로 찍힌다 -- 100 미만인 효율이 화면에서 정확히 100 이 되고, 다른
+#: 도구(Smart Interface 의 엑셀)와 맞춰 볼 때 그 차이가 우리 탓처럼 보인다.
+#: 큰 셀의 용량 1234.56789 mAh 도 `1234.57` 로 잘렸다.
+#:
+#: 12 를 고른 이유: double 은 유효숫자 15~17 자리라 12 는 잡음 아래이고
+#: (`0.1 + 0.2` 가 `0.30000000000000004` 이 아니라 `0.3` 으로 나온다), 어느
+#: 계측기의 분해능보다도 훨씬 깊다.  **없던 자리를 지어내지 않으면서 있던
+#: 자리를 안 버리는** 지점이다.
+#:
+#: 보기 좋게 자르는 것은 화면이 한다 (`num()`).  저장·내보내기는 원래 값이다.
 def _fmt(value: float | None) -> str:
-    return "" if value is None else f"{value:.6g}"
+    return "" if value is None else f"{value:.12g}"
 
 
 def raw_csv_string(wrd: WrdFile, **kwargs) -> str:

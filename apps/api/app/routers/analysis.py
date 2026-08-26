@@ -1243,7 +1243,10 @@ def _trend(records: list[CycleRecord], reference_cycle: int | None) -> dict:
         picked = [usable[round(i * step)] for i in range(_TREND_POINTS)]
 
     return {
-        "values": [round(100.0 * r.discharge_capacity_mah / base, 2) for r in picked],
+        # 반올림해서 넣지 않는다.  보기 좋게 자르는 것은 화면이 할 일이고,
+        # 여기서 자르면 그 값이 곧 그 셀의 유지율로 굳는다 -- 다른 도구와
+        # 맞춰 볼 때 그 차이가 어디서 왔는지 되짚을 수 없게 된다.
+        "values": [100.0 * r.discharge_capacity_mah / base for r in picked],
         # The cycle each point actually belongs to.  Without it the client can
         # only assume even spacing between the first and last, and cycles
         # 3, 4, 100 get drawn at 3, 51.5, 100 -- the shape of the fade and the
