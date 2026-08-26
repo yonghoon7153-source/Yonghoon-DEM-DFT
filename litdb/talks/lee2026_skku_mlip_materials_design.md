@@ -73,7 +73,7 @@ DFT PES → uMLIP PES 로 갈 때 **softening**(평활화)이 일어나고, **fi
 
 | 갈래 | 엔진 | 내용 | 출판 상태 (덱 표기) |
 |---|---|---|---|
-| **Anode interface RXN** | MTP | Li \| SSE 계면 반응 | *Under review* at **Chem. Eng. J.** |
+| **Anode interface RXN** | MTP | Li \| SSE 계면 반응 | 덱: *Under review* at Chem. Eng. J. ⛔→ 실제 **J. Power Sources (revision)** ([31], 2026-08-26 확정) |
 | **Cathode interface RXN** | SevenNet | **"17,230 Li, O crystal structure @ MP"**(덱 원문 그대로 = Li·O 함유 산화물) → **Electro-, interfacial, electronic stability** → **Li–Li networks (≤ 3.5 Å)** → **Best candidate: Li₃Sc₂(PO₄)₃** (+ 계면 MD `NCM523(104) ‖ Li₃Sc₂(PO₄)₃(101)`, Arrhenius σ 패널). **코팅 소재 스크리닝** | **Nano Converg. 2026, 13, 27** (= `papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md` 정본) |
 | **Dynamic properties** | MTP | Li-ion conductivity @ bulk & interface. **ordered anions → slow / disordered anions → superionic**; Li⁺–BH₄ 거리, B–H 각변위 | *Revision* in **Adv. Energy Mater.** / **Nano Energy 2024, 124, 109436** |
 | **Surface RXN** | SevenNet | 전기화학 물성 평가, fine-tuned universal MLIP, 반응물→전이상태→생성물, 대규모 MD, **RHS 가수분해 기구**, **Sn 도핑 억제** | *Revision* in **Adv. Funct. Mater.** |
@@ -391,10 +391,10 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 | # | 질문 | 닫는 방법 |
 |---|---|---|
 | ~~Q1~~ ✅ | 코팅 스크리닝 17,230 풀의 **입구 필터와 최종 후보 조성**은? | **종결** — 정본 `papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md` 확보(MP의 **Li·O 함유 산화물 17,230종** → ECW → 계면반응성 → gap → **Li–Li ≤ 3.5 Å** → 88 → 8 → **Li₃Sc₂(PO₄)₃** γ-phase). 덱 슬 13에도 같은 4단 깔때기 + 후보명이 그대로 적혀 있다(2026-08-03 재판독) |
-| Q2 | Li\|LPSCl 계면 MD에서 **어느 무질서 배열**을 썼나 (50 %만? 전수?) | Chem. Eng. J. under review / 구술. ⚠ 정본(SSRN `kim2026_li_argyrodite_sei_reactive_md`)도 **프로덕션 무질서배열 미명시** — 덱 훈련셋은 0 %와 50 % 두 배열뿐(슬 17) |
+| Q2 | Li\|LPSCl 계면 MD에서 **어느 무질서 배열**을 썼나 (50 %만? 전수?) | Chem. Eng. J. under review ⛔→ **J. Power Sources (revision)** / 구술. ⚠ 정본(SSRN `kim2026_li_argyrodite_sei_reactive_md`)도 **프로덕션 무질서배열 미명시** — 덱 훈련셋은 0 %와 50 % 두 배열뿐(슬 17) |
 | ~~Q3~~ ✅ | γ_select / γ_break **수치 기준**은? | **종결(2026-08-03)** — 덱 슬 16 흐름도에 **γ_select = 2, γ_break = 10 ↔ 5 ↔ 2**, 수렴 4조건(reliability 100 % · selected < 50 · MAE_E < 10 meV/atom · MAE_F < 0.3 eV/Å), 손실 가중치 w_e = 1 / w_f = 0.01 / w_s = 0.001. 정본과 일치 |
 | Q4 | 가수분해 MD의 **H₂S 발생량 정량**(우리 db의 Taklu 1.07→0.49 cm³/g와 대조 가능한가) | Adv. Funct. Mater. revision. ⏳ **구술로 못 닫힘**(2026-08-26) — 구술은 기구만 말하고 수량이 없다 → §99-6 |
-| Q5 | Adv. Energy Mater. revision(=Dynamic properties 후속)이 **BH₄ 계**인지 argyrodite인지 | ~~구술~~ ⏳ **구술로 못 닫힘**(2026-08-26) — 31분 전체에 후속 논문 언급 자체가 없다. **논문 확보만이 답** → §99-9 #7 |
+| ~~Q5~~ ✅ | Adv. Energy Mater. revision(=Dynamic properties 후속)이 **BH₄ 계**인지 argyrodite인지 | **종결 2026-08-26** — 이상욱 랩 2026 발표목록 실물: **[36]** `Two-Mode Rotational Dynamics of BH₄⁻ Enable Adaptive Li⁺ Transport in **Argyrodite** Solid Electrolytes` (submitted, *Adv. Energy Mater.*) ⇒ **둘 다다 — argyrodite 안의 BH₄⁻**. 🔑 **그리고 그 AEM 논문은 Kim 2024 의 오차막대 보강이 아니라 완전히 다른 주제다** ⇒ 우리 §3-2(config-variance 카드)의 유효범위 걱정이 크게 준다. 출판 짝은 **[20]** *Small* 2026, 22, e73722(Li₆PS₅X, 이미 출판). ~~구술~~ ⏳ 종전 판정 — 31분 전체에 후속 논문 언급 자체가 없다. **논문 확보만이 답** → §99-9 #7 |
 | ~~Q6~~ ✅ | CSP의 준안정 구조가 **합성 가능성** 검증을 받았나 | **종결** — 정본 `papers/kim2025_csp_metastable_edge_sharing_sse.md` 확보(E_hull 40구조 전부 0–42 meV/atom · phonopy G(T) 교차온도 보고). 구술도 *"실험하시는 분들이 이 준안정 구조를 만드시면"* 로 **미합성 상태임을 전제**한다 `[STT 24:27]` |
 | **Q-T1** 🆕 | 자료집 다음 발표자가 **문장혁**인가 STT 의 `김장현`인가 | 자료집 **목차 페이지** 필요 → §99-9 #2 |
 | **Q-T2** 🆕 | A1 "파라미터가 많아서"가 **속도**인가 **PES softening**인가 | 음성 재청취 / 본인 확인. **T1b 해석에 직결** → §99-3 |
@@ -877,6 +877,8 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | 6 | **Luo 2022** *ACS Energy Lett.* **7, 3064–3071** | 슬 19 의 **실험 앵커(~12 nm cryo-TEM)**. 우리가 Li\|LPSCl MD(T3)를 하면 **그대로 우리 대조군**이 된다 | ⛔ 없음 (수치만 전재) |
 | 7 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5**(config-variance 오차막대 보강 여부) — 우리 §3-2 최강 카드의 **유효범위**가 여기 걸려 있다 | ⛔ 없음 |
 
+> 🆕 **2026-08-26 랩 발표목록 실물로 추가**: **[30]** = 위 #1 의 정체 확정 (*Adv. Funct. Mater.* 2026, `Deciphering Surface Hydrolysis Mechanism in Argyrodite via Large-Scale Machine Learning Potential Simulations`, Ji Hoon Kim & Sang Uck Lee) · **[20]** *Small* 2026 (#8, 출판됨) · **[17]** *ACS Nano* 2026 (#9).
+>
 > ✅ **이미 있어서 요청하지 않는 것**: Nano Energy 2024(무질서·GB MTP) · SSRN 6020397(Li 계면 MTP) ·
 > JACS 2025 147, 47381(CSP 준안정) · Nano Convergence 2026 13, 27(코팅 스크리닝) ·
 > lee2024(다성분 argyrodite MTP) · UMA 원논문 · PET-MAD.
@@ -897,7 +899,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 
 | # | inbox 파일명 | 제목 · 서지 | 확인 |
 |---|---|---|---|
-| **1** | `66. Kim2026_Argyrodite_Hydrolysis_SevenNet_Sn.pdf`<br>`66. Sup) …` | **⛔ 서지 확정 실패** — 제목 검색으로 안 나온다. 덱 표기 *"Adv. Funct. Mater. (revision)"*(2026-07). 확보 경로는 **저자 페이지**뿐: Google Scholar `Sang Uck Lee` (id `0PEgjTEAAAAJ`) → 2025–26 필터 / SKKU CMS Lab publications / SSRN 저자 페이지 | ⛔ **미확인** |
+| **1** | `66. Kim2026_Argyrodite_Hydrolysis_MLIP.pdf`<br>`66. Sup) …` | ✅ **서지 확정 2026-08-26** (랩 2026 발표목록 **[30]**): `[CMS]` **Ji Hoon Kim**, **Sang Uck Lee\***, **"Deciphering Surface Hydrolysis Mechanism in Argyrodite via Large-Scale Machine Learning Potential Simulations"**, ***Adv. Funct. Mater.* 2026** (DOI 미발급). ⚠ 제목에 `SevenNet`·`Sn` 이 없다 — **엔진과 도펀트는 덱 정보**이고 논문 제목이 확인해 주지 않는다. ~~종전~~ **⛔ 서지 확정 실패** — 제목 검색으로 안 나온다. 덱 표기 *"Adv. Funct. Mater. (revision)"*(2026-07). 확보 경로는 **저자 페이지**뿐: Google Scholar `Sang Uck Lee` (id `0PEgjTEAAAAJ`) → 2025–26 필터 / SKKU CMS Lab publications / SSRN 저자 페이지 | ⛔ **미확인** |
 | **2** | `lee2026_skku_program_toc.pdf` → `_transcripts/` | 심포지엄 **자료집 목차** (이상욱 섹션 pp.279–296 앞뒤 1–2 pp). 논문 아님 | ✅ |
 | ~~**3a**~~ ✅ **완료 2026-08-26** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | A. V. Shapeev, **"Moment Tensor Potentials: A Class of Systematically Improvable Interatomic Potentials"**, *Multiscale Model. Simul.* **14**(3), 1153–1173 (2016) · arXiv **1512.06054** · DOI `10.1137/15M1054183` — **표지 대조 완료, 서지 정확**(단독저자·본문 21 pp·SI 없음·Fig 2·Table 1·refs 31). → **`papers/shapeev2016_moment_tensor_potentials.md`** | ✅ **표지 확인** |
 | **3b** | `68. Gubaev2019_Active_Learning_Alloy_MTP.pdf` | K. Gubaev, E. V. Podryabinkin, G. L. W. Hart, A. V. Shapeev, **"Accelerating high-throughput searches for new alloys with active learning of interatomic potentials"**, *Comput. Mater. Sci.* **156**, 148–156 (2019) · arXiv **1806.10567** | ✅ **웹 확인** |
@@ -907,6 +909,8 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | **4** | `70. Merchant2023_GNoME_Scaling_Deep_Learning.pdf` | A. Merchant, S. Batzner, S. S. Schoenholz, M. Aykol, G. Cheon, E. D. Cubuk (Google DeepMind), **"Scaling deep learning for materials discovery"**, *Nature* **624**, 80–85 (2023) · PMID 38030720 | ✅ **웹 확인** |
 | ~~**5**~~ ✅ **완료 2026-08-26** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf`<br>`71. Sup) …`(5 pp) | Y. Park, J. Kim, S. Hwang, S. Han (**서울대 재료공학부 MDIL + RIAM**; Han = KIAS 겸직), **"Scalable Parallel Algorithm for Graph Neural Network Interatomic Potentials in Molecular Dynamics Simulations"**, *J. Chem. Theory Comput.* **20**, 4857–4868 (2024) · DOI `10.1021/acs.jctc.4c00190` — **표지 대조 완료, 서지 정확**(본문 12 pp · SI 5 pp · Fig 6+S2 · **Table 0개** · refs 58 · 접수 2024-02-14/게재 2024-05-30). SevenNet = **S**calable **E**qui**V**ariance-**E**nabled **N**eural **NET**work, **NequIP 아키텍처 기반** ✅ 확인. → **`papers/park2024_sevennet_parallel_gnn_md.md`** | ✅ **표지 확인** |
 | **6** | `72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf` | **"Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries"**, *ACS Energy Lett.* **7**(9), 3064–3071 (2022) · DOI `10.1021/acsenergylett.2c01543` | ✅ **웹 확인** |
+| **8** 🆕 | `74. Kim2026_BH4_Rotation_Li_Transport_Small.pdf` | Yoonju Shin, Ji-Hoon Han, **Ji Seon Kim**, …, **Sang Uck Lee\***, Young Joo Lee\*, **"Enhancing Li⁺ Ion Transport via Dynamic Coupling with Borohydride Rotation in Li₆PS₅X Argyrodites"**, *Small* **2026**, 22, e73722 · DOI `10.1002/smll.73722` — **이미 출판**. 랩 목록 **[20]** | ✅ **목록 실물** |
+| **9** 🆕 | `75. Kim2026_GA_MLIP_Li_Staging_Graphite.pdf` | `[CMS]` Yong Hui Kim, Ji Hoon Kim, Seong Chan Cho, **Sang Uck Lee\***, **"Revealing Li Staging Reactions in Graphite via a Genetic Algorithm Coupled with a Machine-Learning Interatomic Potential"**, *ACS Nano* **2026**, 20, 13031 · DOI `10.1021/acsnano.6c00578`. 랩 목록 **[17]** | ✅ **목록 실물** |
 | **7** 🆕 | `73. KimYS2026_Moisture_Surface_Degradation_LPSC_DryRoom.pdf` | Y. S. Kim, J. D. Yi, S. Sung 외, **"Moisture-induced surface degradation mechanism of argyrodite Li₆PS₅Cl under dry-room conditions"**, *Nat. Commun.* (2026) · DOI `10.1038/s41467-026-75537-0` · Research Square rs-7583174 | ✅ **웹 확인** · **이상욱 랩 아님(다른 그룹)** — 아래 참조 |
 
 #### 🔴 3b′ — **우리 기록의 "γ 원전" 지목이 어긋났을 수 있다**
@@ -958,6 +962,8 @@ Shapeev 2016 이 정본인 것은 **γ 의 전제**까지다 — 선형 기저(`
 | ~~**5**~~ ✅ | §7a(슬 22) · §99-3 A1 · §99-4 **A1** · §12-10 · §12-11 | **5 결과(2026-08-26)**: 🔴 **T1b 는 닫히지 않는다** — 그 논문도 **softening 을 재지 않았다**(`soften` 0회 · NVE/드리프트/고온 재평가/포논/탄성/D·Ea/fine-tune 전후 **전부 0**). **얻은 것 = 반대 방향 정황 2개**: ①**결정만** 학습한 SevenNet-0 이 **5000 K 초가열–급랭**을 구조적으로 통과(우리 UMA 의 OMat24 는 **AIMD·Rattled 포함** = 비평형 방향으로 우리가 더 넓다) ②**base 힘 MAE 0.070 eV/Å ≈ MTP 0.073** ⇒ 슬 22 의 **0.57 은 계 탓**일 가능성 (→ **§99-3 표에 base 행 추가**, §12-11 정정). ⚠ 경고: 비정질 생성에선 **골격 연화가 원리적으로 안 보인다** ⇒ **T1b 는 우리가 직접**. 부수 소득: **T3 비용 = 1.58×10⁶ atom·ps/day per A100** ⇒ 7,000원자×20 ns **≈89 A100-day** = **Q-T2 의 속도 쪽 절반** |
 | **6** | §6(슬 19) · §99-4 **A4** · §12-6 | **T3** 실험 앵커(~12 nm cryo-TEM) 확보 — 우리가 Li\|LPSCl MD 를 돌리면 그대로 대조군 |
 | **7** 🆕 | §7b(슬 23) · §99-2(?) | **우리 LPSOCl(+O) 축과 정면** — O-rich `Li₆PO₅Cl-like` 표면이 그들에겐 열화 산물, 우리에겐 설계 목표다. ⚠ 실험 XPS + 0 K DFT 라 우리 MD 창과 직접 비교 불가 |
+| **8** 🆕 | §99-2 · 우리 이온수송 축 | **회전 자유도** — 우리는 정적 자리·채널만 본다. BH₄⁻ 가 도는 것이 Li⁺ 수송을 돕는다는 기구는 우리 도펀트 축에 **없는 발상**이다. **Li₆PS₅X = 우리 물질 그 자체** |
+| **9** 🆕 | §8(CSP) · 우리 disorder 앙상블 | **GA × MLIP 로 배열공간 탐색** — 우리는 "CSP 안 한다"고 정했지만 *배열을 훑는* 문제는 우리 disorder_ensemble 과 같다. 방법 이식 후보 |
 
 #### ⛔ curator 가 **하지 말아야 할 것**
 

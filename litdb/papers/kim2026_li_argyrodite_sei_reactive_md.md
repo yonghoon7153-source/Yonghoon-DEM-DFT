@@ -20,7 +20,7 @@
 > ## ⛔⛔ **PREPRINT — peer review 미통과**
 > 논문 매 페이지 하단에 *"This preprint research paper has not been peer reviewed."* 가 박혀 있다.
 > **본 digest에서 인용하는 모든 수치·주장은 반드시 "[Kim SSRN preprint, 미심사]" 를 병기할 것.**
-> 저널명은 본문 어디에도 없다 — 심포지엄 덱의 *"Chem. Eng. J. under review"* 는 **덱 표기이지 논문 표기가 아니다**
+> 저널명은 본문 어디에도 없다 — 심포지엄 덱의 *"Chem. Eng. J. under review ⛔→ **J. Power Sources (revision)**"* 는 **덱 표기이지 논문 표기가 아니다**
 > (Elsevier CRediT/서지 양식이라 Elsevier 투고본으로 보이나 **확인 불가**).
 >
 > 🔑 **이 논문 = `kb/open_items.md` T3 의 프로토콜 원본.** 우리는 Li 음극 계면 반응 MD가 **완전 공백**이고,
@@ -536,7 +536,7 @@ Fig 3d: MSD (Å²) 0–250 vs t 0–20 ns. **붉은 선 = 결정영역**(20 ns�
 | 12 | "well agreement" 주장 | 원문 *"closely matches"* — 11 vs 12 nm 단일 스칼라, 오차막대 없음 | **△ 정성 일치 1점** |
 | 13 | (덱에 없음) | **§3.4 S 중간층 처방 절 전체** (SEI 11→6 nm, PS₄ 18→34층) | **＋ 덱에 완전히 없던 결과** — 이 논문의 실제 결론부 |
 | 14 | (덱에 없음) | **대형 모델은 SEI 개시가 ~30 ns** (소형 11 ns) | **＋ 덱 누락** — 개시 시각은 계 크기 의존, 물질 상수 아님 |
-| 15 | 저널 "Chem. Eng. J. under review" | 본문에 **저널명 없음**. **SSRN abstract 6020397**, 매 페이지 "not been peer reviewed" | **△ 근거 없음** — SSRN 프리프린트로 표기할 것 |
+| 15 | 저널 "Chem. Eng. J. under review ⛔→ **J. Power Sources (revision)**" | 본문에 **저널명 없음**. **SSRN abstract 6020397**, 매 페이지 "not been peer reviewed" | **△ 근거 없음** — SSRN 프리프린트로 표기할 것 |
 
 > 🔑 **교훈 갱신 (2026-08-03, 덱 실물 원해상도 재판독 후)**: 위 표에서 **"덱 오류"로 세었던 3·4·11번은
 > 전부 덱이 아니라 우리 저해상도 전사의 오류**였다(덱 실물: D 둘 다 `×10⁻⁷`, 온도 라벨 `25 °C / 60 °C`).

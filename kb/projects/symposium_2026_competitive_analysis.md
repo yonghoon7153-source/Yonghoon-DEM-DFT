@@ -194,10 +194,10 @@ BEARS: Metadata(YAML ~100토큰, 항상) / Body(<5k, 트리거시) / Bundled fil
 | # | 질문 | 닫는 방법 | 상태 |
 |---|---|---|---|
 | ~~Q1~~ | 이상욱 랩 코팅 스크리닝(**17,230** → 최종 후보 **Li₃Sc₂(PO₄)₃**) 실체 | Nano Converg. 2026, 13, 27 정본 확보 + 덱 슬 13 원해상도 재판독 | ✅ **종결 2026-08-03** |
-| Q2 | Li\|LPSCl 계면 MD가 어느 무질서 배열을 썼나 | Chem. Eng. J. (under review) / 구술 | ⏳ |
+| Q2 | Li\|LPSCl 계면 MD가 어느 무질서 배열을 썼나 | ~~Chem. Eng. J. (under review)~~ → **J. Power Sources (revision)** / 구술 | ⏳ |
 | ~~Q3~~ | γ_select/γ_break 수치 기준 | 덱 슬 16 원해상도 재판독 = **γ_select 2 / γ_break 10↔5↔2** + 수렴 4조건(reliability 100 %·selected<50·MAE_E<10 meV/atom·MAE_F<0.3 eV/Å)·w_e:w_f:w_s=1:0.01:0.001 (정본 `kim2026_li_argyrodite_sei_reactive_md` 와 일치) | ✅ **종결 2026-08-03** |
 | Q4 | 가수분해 H₂S 발생량 정량 (Taklu 실험값과 대조 가능한가) | Adv. Funct. Mater. revision | ⏳ |
-| Q5 | *Adv. Energy Mater.* revision 이 **config-variance 오차막대를 추가했는가** | 논문 | ⏳ **3-2의 유효범위가 걸림** |
+| ~~Q5~~ ✅ | *Adv. Energy Mater.* revision 이 **config-variance 오차막대를 추가했는가** | **종결 2026-08-26** — 그 AEM 논문은 **[36] BH₄⁻ 회전동역학**이고 Kim 2024 후속이 아니다 (랩 2026 발표목록 실물). ⇒ **오차막대 보강이 일어나지 않았다** | ✅ **§3-2 유효범위 걱정 해소** |
 | Q6 | 그들 P2D 입력 스키마 | 구술 / 접촉 | ⏳ |
 
 ---
@@ -212,7 +212,7 @@ BEARS: Metadata(YAML ~100토큰, 항상) / Body(<5k, 트리거시) / Bundled fil
 |---|---|---|
 | ~~1~~ ✅ | **Nano Convergence 2026, 13, 27** — 코팅 소재 스크리닝 (**17,230 Li·O 산화물**) | **확보·정독 완료** (`litdb/papers/kim2026_hts_li3sc2po43_coating_midni_ncm.md`) — S6 감사 대조군 확보 |
 | 2 | **Adv. Funct. Mater.** (revision) — argyrodite 가수분해 SevenNet | T2(ICOHP 기술자)의 방법 원본 |
-| 3 | **Chem. Eng. J.** (under review) — Li\|argyrodite 계면 MTP | T3의 프로토콜 원본 |
+| 3 | ~~**Chem. Eng. J.** (under review)~~ → **J. Power Sources (revision)** — Li\|argyrodite 계면 MTP | T3의 프로토콜 원본 |
 | 4 | **JACS 2025, 147, 47381** — 준안정 구조 3기술자 | metastable 고찰 보강 |
 | 5 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5(오차막대) 판정** |
 | 6 | Rare Metals 2025, 44, 2366 | CSP 보조 |
@@ -267,7 +267,7 @@ Q&A A1 `[STT 26:50]`: 이 랩은 **MTP = 동력학 / universal potential = stati
 |---|---|
 | Q2 (계면 MD 무질서 배열) | ⏳ 유지 — 구술도 배열을 말하지 않는다 |
 | Q4 (H₂S 정량) | ⏳ 유지 — 구술은 기구만 |
-| Q5 (AEM revision 오차막대) | ⏳ 유지 — **31분 전체에 후속 논문 언급이 없다.** 논문 확보만이 답 |
+| ~~Q5~~ ✅ | **종결(2026-08-26, 랩 발표목록)** — AEM 후속은 **[36] BH₄⁻ 회전**이라 Kim 2024 의 오차막대 보강이 아니다. **§3-2 카드 유효** |
 | Q6 (P2D 입력 스키마) | ⏳ 유지 — A2 로 보아 **그들도 아직 없다**는 쪽이 유력 |
 | **Q-T1** 🆕 | 다음 발표자 이름(문장혁 vs STT `김장현`) — 자료집 목차 필요 |
 | **Q-T2** 🆕 | A1 의 이유가 속도인가 PES 품질인가 — **T1b 해석에 직결** |
