@@ -13,6 +13,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
 import { DrtPanel } from '../components/DrtPanel'
+import { ParamName, ParamText } from '../components/ParamName'
 import { EditableName } from '../components/EditableName'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
@@ -21,7 +22,7 @@ import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { inductiveCount, nyquistXy } from '../lib/eis'
-import { isHeadline, paramMeaning, splitSubscript } from '../lib/params'
+import { isHeadline, paramMeaning } from '../lib/params'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
@@ -540,10 +541,16 @@ function FitReport({ fit, kind, area }: {
   area: number | null
 }) {
   const arcs = new Map(fit.arcs.map((arc) => [arc.parameter, arc]))
+  // 문장 속에서 첨자로 바꿀 이름들.  **이 피팅이 실제로 가진 것만** 넘긴다 —
+  // 이름처럼 생긴 조각을 정규식으로 고르면 같은 문장의 회로 문자열
+  // (`L1-R0-p(R1,CPE1)-TL1`)까지 잘라 놓는다.
+  const paramNames = fit.parameters.map((parameter) => parameter.name)
   return (
     <div className="col" style={{ gap: 10 }}>
       {!fit.converged ? (
-        <Alert kind="error">맞추지 못했습니다 — {fit.reason}</Alert>
+        <Alert kind="error">
+          맞추지 못했습니다 — <ParamText text={fit.reason} names={paramNames} />
+        </Alert>
       ) : null}
       {fit.kind !== fit.kind_now ? (
         <Alert kind="warn">
@@ -551,7 +558,11 @@ function FitReport({ fit, kind, area }: {
           {KIND_LABEL[fit.kind_now]} 기준으로 붙어 있습니다 — 다시 맞추면 확실합니다.
         </Alert>
       ) : null}
-      {fit.converged && fit.reason ? <Alert kind="warn">{fit.reason}</Alert> : null}
+      {/* 문장 속 이름도 표와 같은 모습이어야 한다 — 한 화면에서 같은 것이
+          두 모습으로 나오면 다른 것으로 읽힌다. */}
+      {fit.converged && fit.reason ? (
+        <Alert kind="warn"><ParamText text={fit.reason} names={paramNames} /></Alert>
+      ) : null}
       {fit.converged && fit.fitted_note ? (
         // 곡선을 못 그린 이유.  선이 그냥 없으면 "안 맞았다" 와 구분이 안 된다.
         <Alert kind="warn">맞춤 곡선 없음 — {fit.fitted_note}</Alert>
@@ -600,10 +611,7 @@ function FitReport({ fit, kind, area }: {
                     {/* 첨자로 그리되 **원래 이름을 잃지 않는다** — 회로
                         칸에 쳐 넣는 것은 `CPE1_Q` 이지 `CPE₁,Q` 가 아니다. */}
                     <td className="text mono" title={parameter.name}>
-                      {(() => {
-                        const [base, index] = splitSubscript(parameter.name)
-                        return <>{base}{index ? <sub>{index}</sub> : null}</>
-                      })()}
+                      <ParamName name={parameter.name} />
                     </td>
                     <td className="text dim" title={arc?.note}>
                       {meaning || '—'}

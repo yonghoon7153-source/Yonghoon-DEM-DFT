@@ -442,8 +442,16 @@ check "받은 IP 면 DNS 를 안 탄다" \
   "$(grep -c '주소를 받아 왔습니다 — DNS 는 건너뜁니다' "$HERE/../bml")" "1"
 check "IP 가 아닌 것은 거른다" \
   "$(grep -c 'IP 로 안 보입니다' "$HERE/../bml")" "1"
-check "share 가 그 IP 를 같이 적는다" \
-  "$(grep -c 'bmlonly ${url} ${share_ip}' "$HERE/../bml")" "1"
+# 성공 갈래와 **실패 갈래 둘 다** 적어야 한다.  이 갈래로 오는 이유가 대개
+# "이 기계의 DNS 가 그 도메인을 거른다" 이고, 그러면 받는 쪽도 같은 랩 망이라
+# 같은 벽에 부딪힌다 -- 성공 갈래에만 있으면 정작 필요할 때 없다.
+check "IP 안내가 한 곳에 모여 있다" \
+  "$(grep -c 'bmlonly ${url} ${ip}' "$HERE/../bml")" "1"
+check "성공·실패 두 갈래에서 부른다" \
+  "$(grep -c 'tunnel_ip_hint "$url"' "$HERE/../bml")" "2"
+# 못 얻으면 조용하다 -- 이 줄은 덤이고, 시끄러운 실패는 진짜 실패를 묻는다.
+check "IP 를 못 얻으면 아무 말도 안 한다" \
+  "$(grep -c '\[ -n "$ip" \] || return 0' "$HERE/../bml")" "1"
 check "막혔을 때 그 길을 알려 준다" \
   "$(grep -c 'bmlonly ${url} <그 IP>' "$HERE/../bml")" "1"
 # 세 곳 이름을 화면에 적는다 -- "공용 DNS" 라고만 하면 어디를 물어본 것인지
