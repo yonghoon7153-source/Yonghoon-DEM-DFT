@@ -11,6 +11,7 @@ import { useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
+import { EditableName } from '../components/EditableName'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -149,7 +150,15 @@ export function GittDetail() {
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1 className="truncate">{record.name}</h1>
+          {/* 셀·스펙트럼 화면과 같은 부품, 같은 규칙 (`EditableName`). */}
+          <EditableName
+            name={record.name}
+            label="GITT 기록 이름"
+            onSave={async (name) => {
+              await api.updateGittRun(record.id, { name })
+              run.reload()
+            }}
+          />
           <div className="sub">
             {[`펄스 ${record.n_pulses}개`, `${record.n_points}점`,
               record.duration_h === null ? null : `${num(record.duration_h, 3)} h`]

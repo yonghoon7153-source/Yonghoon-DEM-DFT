@@ -13,6 +13,7 @@ import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
 import { DrtPanel } from '../components/DrtPanel'
+import { EditableName } from '../components/EditableName'
 import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -207,7 +208,16 @@ export function SpectrumDetail() {
     <main className="page">
       <div className="page-head">
         <div style={{ minWidth: 0 }}>
-          <h1 className="truncate">{record.name}</h1>
+          {/* 제목이 그냥 글자라 눌러도 아무 일이 없었다 — 이름을 고치려면
+              목록으로 돌아가야 했다.  셀 화면과 같은 부품, 같은 규칙. */}
+          <EditableName
+            name={record.name}
+            label="스펙트럼 이름"
+            onSave={async (name) => {
+              await api.updateSpectrum(record.id, { name })
+              bumpReload((value) => !value)
+            }}
+          />
           <div className="sub">
             {[
               KIND_LABEL[record.kind],

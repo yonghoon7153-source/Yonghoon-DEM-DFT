@@ -7,6 +7,7 @@ import { AxisLockControl, useAxisLock } from '../components/AxisLock'
 import { BasisSelect } from '../components/BasisSelect'
 import { CellSpecPanel } from '../components/CellSpecPanel'
 import { CellSpectra } from '../components/CellSpectra'
+import { EditableName } from '../components/EditableName'
 import { OtherMeasurements } from '../components/OtherMeasurements'
 import { CompositionEditor } from '../components/CompositionEditor'
 import { CyclePicker } from '../components/CyclePicker'
@@ -1124,15 +1125,9 @@ export function SampleDetail() {
 
 /** 셀 이름을 제목 자리에서 그대로 고친다.
  *
- *  이름은 이 셀을 부르는 유일한 이름이다 — 화면 어디에도 id 가 없다.  그래서
- *  두 가지를 지킨다.
- *
- *  1. **빈 이름으로 저장하지 않는다.**  서버도 422 로 막지만(POST 와 같은
- *     제약), 화면이 먼저 말해 줘야 왕복 한 번을 아낀다.
- *  2. **실패하면 편집을 닫지 않는다.**  닫아 버리면 방금 친 이름이 사라지고,
- *     화면에는 옛 이름이 그대로 있어 저장된 것처럼 보인다.
- *
- *  적용은 Enter 와 포커스 이탈, 취소는 Esc — 옆의 '기준 사이클' 과 같은 규칙이다. */
+ *  본체는 `EditableName` 이다 — 임피던스·GITT 상세도 같은 것을 쓴다.  여기는
+ *  그 부품에 이 화면의 저장 방법을 물려 주는 얇은 껍데기다.
+ */
 function CellName({
   sample,
   onSaved,
@@ -1140,119 +1135,15 @@ function CellName({
   sample: Sample
   onSaved: (updated: Sample) => void
 }) {
-  const [editing, setEditing] = useState(false)
-  const [draft, setDraft] = useState(sample.name)
-  // 편집을 시작한 시점의 이름과, 실제로 글자를 쳤는지.  이 둘이 없으면
-  // 열어만 둔 편집기의 blur 가 남의 동시 수정을 옛 이름으로 덮는다 (#31):
-  // A 가 'Old' 에서 focus 만 한 사이 B 가 'New' 로 바꾸면, draft('Old') 와
-  // live('New') 가 달라 "고쳤다" 로 읽혔다.
-  const [base, setBase] = useState(sample.name)
-  const [touched, setTouched] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [busy, setBusy] = useState(false)
-
-  // 다른 사람이 이름을 고쳤을 수 있다.  안 친 편집기는 따라가고, 치고 있는
-  // 글자는 덮지 않는다 — 지워지면 무엇을 잃었는지도 모른다.
-  useEffect(() => {
-    if (!editing) {
-      setDraft(sample.name)
-      return
-    }
-    if (!touched) {
-      setDraft(sample.name)
-      setBase(sample.name)
-    }
-  }, [sample.name, editing, touched])
-
-  const commit = async () => {
-    if (busy) return
-    const name = draft.trim()
-    if (!name) {
-      setError('이름은 비울 수 없습니다.')
-      return
-    }
-    if (!touched || name === sample.name) {
-      setEditing(false)
-      setError(null)
-      return
-    }
-    if (sample.name !== base) {
-      // 편집하는 사이 다른 곳에서 이름이 바뀌었다.  조용히 덮지 않고 묻는다;
-      // 기준을 지금 값으로 옮겨 두므로, 보고도 저장하면 그때는 진짜 의도다.
-      setError(
-        `편집하는 사이 이름이 '${sample.name}' 으로 바뀌었습니다 — ` +
-          '덮어쓰려면 다시 저장하세요.',
-      )
-      setBase(sample.name)
-      return
-    }
-    setBusy(true)
-    try {
-      onSaved(await api.updateSample(sample.id, { name }))
-      setEditing(false)
-      setError(null)
-    } catch (cause) {
-      setError(cause instanceof Error ? cause.message : String(cause))
-    } finally {
-      setBusy(false)
-    }
-  }
-
-  if (!editing) {
-    return (
-      <h1 className="truncate">
-        <button
-          type="button"
-          className="title-edit"
-          title="눌러서 이름 고치기"
-          onClick={() => {
-            setDraft(sample.name)
-            setBase(sample.name)
-            setTouched(false)
-            setError(null)
-            setEditing(true)
-          }}
-        >
-          {/* 이름이 길면 잘려야 한다 — 자르기는 글자를 들고 있는 칸에
-              걸어야 하고, inline-flex 인 버튼에 걸면 듣지 않는다. */}
-          <span className="truncate">{sample.name}</span>
-          <span className="pencil" aria-hidden="true">
-            ✎
-          </span>
-        </button>
-      </h1>
-    )
-  }
-
   return (
-    <div className="col" style={{ gap: 4 }}>
-      <input
-        className="title-input"
-        aria-label="셀 이름"
-        autoFocus
-        value={draft}
-        disabled={busy}
-        onChange={(event) => {
-          setDraft(event.target.value)
-          setTouched(true)
-        }}
-        onBlur={() => void commit()}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            event.preventDefault()
-            void commit()
-          }
-          if (event.key === 'Escape') {
-            setDraft(sample.name)
-            setError(null)
-            setEditing(false)
-          }
-        }}
-      />
-      {error ? <Alert kind="error">{error}</Alert> : null}
-    </div>
+    <EditableName
+      name={sample.name}
+      label="셀 이름"
+      onSave={async (name) => onSaved(await api.updateSample(sample.id, { name }))}
+    />
   )
 }
+
 
 function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
   const [busy, setBusy] = useState(false)
