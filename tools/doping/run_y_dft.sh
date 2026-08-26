@@ -38,6 +38,30 @@ if ! flock -n 9; then
   exit 1
 fi
 
+# ⛔ **conda 환경의 libgomp 가 NVHPC(QE-GPU) 런타임과 충돌한다** → `libgomp: TODO`.
+#   이 캠페인에서 이미 한 번 겪었다 (comp2 strain_11_p, elastic.json:
+#   "conda(uma)-env libgomp crash; env -i clean shell fixed it").
+#   conda deactivate 한 번은 uma → base 로만 내려가서 **여전히 붙어 있다.**
+#   여기서는 PATH·LD_LIBRARY_PATH 에서 conda 조각만 걷어낸다 — env -i 보다 덜 거칠고
+#   QE 가 필요로 하는 나머지 환경은 남는다.
+_strip_conda() {           # $1 = 원본 경로 문자열
+  echo "$1" | tr ':' '\n' \
+    | grep -vE 'conda|miniforge|mambaforge|anaconda' \
+    | paste -sd: -
+}
+if [ -n "${CONDA_PREFIX:-}" ] || echo "${PATH}" | grep -qE 'conda|forge'; then
+  _P_OLD="$PATH"; _L_OLD="${LD_LIBRARY_PATH:-}"
+  PATH="$(_strip_conda "$PATH")"
+  export PATH
+  if [ -n "$_L_OLD" ]; then
+    LD_LIBRARY_PATH="$(_strip_conda "$_L_OLD")"
+    export LD_LIBRARY_PATH
+  fi
+  unset CONDA_PREFIX CONDA_DEFAULT_ENV CONDA_SHLVL PYTHONPATH
+  echo "⚙ conda 경로를 PATH/LD_LIBRARY_PATH 에서 제거했다"
+  echo "   (conda 의 libgomp 가 NVHPC QE-GPU 와 충돌해 'libgomp: TODO' 로 죽는다)"
+fi
+
 command -v "$PWX" >/dev/null || { echo "⛔ $PWX 가 없다"; exit 1; }
 # QE 가 CPU 빌드면 GPU 충돌 걱정이 없다 — 그 사실을 화면에 남긴다
 IS_GPU=0
