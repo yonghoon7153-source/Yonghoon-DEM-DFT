@@ -402,7 +402,81 @@
         "Cl": 11,
         "P": 1
       }
-    }
+    },
+    "cation_layers": [
+      {
+        "layer": 0,
+        "z_mean": 0.69450554846,
+        "n_total": 1,
+        "n_P": 1,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 1,
+        "z_mean": 3.8299842065841174,
+        "n_total": 17,
+        "n_P": 17,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 2,
+        "z_mean": 8.997304169900001,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 3,
+        "z_mean": 13.934932799861109,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 4,
+        "z_mean": 18.942837325322223,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 5,
+        "z_mean": 23.872532730144442,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 6,
+        "z_mean": 28.835173303633333,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 7,
+        "z_mean": 33.78712452477778,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 8,
+        "z_mean": 39.181382462744445,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      }
+    ]
   },
   {
     "label": "LPSC-ion",
@@ -811,7 +885,105 @@
         "Cl": 11,
         "P": 3
       }
-    }
+    },
+    "cation_layers": [
+      {
+        "layer": 0,
+        "z_mean": 3.6369087813470586,
+        "n_total": 17,
+        "n_P": 17,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 1,
+        "z_mean": 8.907179166827778,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 2,
+        "z_mean": 13.847157457627778,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 3,
+        "z_mean": 18.858570429622223,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 4,
+        "z_mean": 23.852544568288888,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 5,
+        "z_mean": 28.736697912572215,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 6,
+        "z_mean": 33.791053699655556,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 7,
+        "z_mean": 38.94649909832666,
+        "n_total": 15,
+        "n_P": 15,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 8,
+        "z_mean": 42.2268923284,
+        "n_total": 1,
+        "n_P": 1,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 9,
+        "z_mean": 45.212238040799996,
+        "n_total": 1,
+        "n_P": 1,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 10,
+        "z_mean": 59.1452846941,
+        "n_total": 1,
+        "n_P": 1,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 11,
+        "z_mean": 64.0929644529,
+        "n_total": 1,
+        "n_P": 1,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      }
+    ]
   },
   {
     "label": "LPSnSC-ion",
@@ -1279,6 +1451,72 @@
         "P": 0,
         "Sn": 1
       }
-    }
+    },
+    "cation_layers": [
+      {
+        "layer": 0,
+        "z_mean": 3.837205379697778,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 1,
+        "z_mean": 9.046673715066666,
+        "n_total": 18,
+        "n_P": 9,
+        "n_Sn": 9,
+        "dopant_percent": 50.0
+      },
+      {
+        "layer": 2,
+        "z_mean": 14.366092126,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 3,
+        "z_mean": 19.48318105575556,
+        "n_total": 18,
+        "n_P": 9,
+        "n_Sn": 9,
+        "dopant_percent": 50.0
+      },
+      {
+        "layer": 4,
+        "z_mean": 24.633951921244446,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 5,
+        "z_mean": 29.72118674064445,
+        "n_total": 18,
+        "n_P": 9,
+        "n_Sn": 9,
+        "dopant_percent": 50.0
+      },
+      {
+        "layer": 6,
+        "z_mean": 34.74911588311111,
+        "n_total": 18,
+        "n_P": 18,
+        "n_Sn": 0,
+        "dopant_percent": 0.0
+      },
+      {
+        "layer": 7,
+        "z_mean": 40.342772731888886,
+        "n_total": 18,
+        "n_P": 9,
+        "n_Sn": 9,
+        "dopant_percent": 50.0
+      }
+    ]
   }
 ]
