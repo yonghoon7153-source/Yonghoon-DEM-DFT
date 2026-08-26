@@ -15,6 +15,9 @@
   5) 분자종: 유리 S(골격에 안 붙은 S)의 H 개수 -> S(2-), SH(-), **H2S**;
      O 의 H 개수 -> O(2-)/OH(-)/H2O/H3O(+); H2 분자; S-S 이황화
   6) H 원자별 분류 (컷오프 기반 + **컷오프 없는 최근접 원소** 교차확인)
+  7) `--frames-report`: extxyz 궤적/데이터셋 진단 — 프레임 수·조성/셀 고정 여부·
+     **중복 프레임**·`forces` 열이 `DFT_forces` 의 복사본인지(=MLP 힘이 실제로 없는지)·
+     (`--fidelity-csv` 를 주면) **프레임 -> Step 대응표와 파일순서=시간순서 여부**
 
 이 도구가 **못 하는 것** (읽는 사람이 반드시 알아야 함)
   · **동역학을 못 본다.** 스냅샷 한 장이다. "몇 개가 생겼나"는 세지만 "언제·어떤 경로로"는
@@ -230,6 +233,37 @@ def normal_axis(atoms, bin_w=1.0):
     # occ 가 가장 작은 축 — 동률이면 overlap 이 가장 작은 축
     best = min(diag, key=lambda d: (round(d["occ_framework"], 3), d["overlap"]))
     return best["axis"], diag
+
+
+def cation_layers(atoms, axis, cations=("P", "Sn"), gap=2.0):
+    """법선축을 따라 **사면체 중심 양이온 층**을 끊고 층별 조성을 낸다.
+
+    왜 필요한가 — 도펀트가 **무작위 고용체**인지 **층으로 정렬**돼 있는지에 따라
+    "도펀트가 표면을 보호한다" 는 해석이 완전히 달라진다. 층 종단이 다르면
+    두 표면이 화학적으로 다른 계다. 가정하지 말고 세어 본다.
+
+    ⛔ 못 하는 것: 층 안의 **면내 배열**(클러스터링 vs 무작위)은 안 본다. 축 방향만이다.
+    """
+    sym = np.array(atoms.get_chemical_symbols())
+    z = atoms.get_positions()[:, axis]
+    idx = np.where(np.isin(sym, list(cations)))[0]
+    if idx.size == 0:
+        return []
+    order = idx[np.argsort(z[idx])]
+    layers, cur = [], [order[0]]
+    for k in order[1:]:
+        if z[k] - z[cur[-1]] > gap:
+            layers.append(cur); cur = []
+        cur.append(k)
+    layers.append(cur)
+    out = []
+    for n, lay in enumerate(layers):
+        c = Counter(sym[lay].tolist())
+        tot = sum(c.values())
+        out.append({"layer": n, "z_mean": float(np.mean(z[lay])), "n_total": int(tot),
+                    **{f"n_{el}": int(c.get(el, 0)) for el in cations},
+                    "dopant_percent": round(100.0 * sum(c.get(el, 0) for el in cations[1:]) / tot, 2)})
+    return out
 
 
 def slab_origin_shift(atoms, axis, bin_w=1.0, frac=0.15):
@@ -507,6 +541,7 @@ def analyse(atoms, label, dr=0.02, rmax_nl=6.5, zbin=2.0, valley_frac=0.5):
         "n_framework_in_fluid": {el: int(((depth[sym == el]) < -1.0).sum())
                                  for el in ("Li", "S", "Cl", "P", "Sn") if el in present},
     }
+    out["cation_layers"] = cation_layers(atoms, ax)
     out["_profile_arrays"] = prof
     out["_rdf_curves"] = rdf_curves
     out["_depth"] = depth
@@ -515,27 +550,80 @@ def analyse(atoms, label, dr=0.02, rmax_nl=6.5, zbin=2.0, valley_frac=0.5):
 
 
 # ══ xyz 프레임 진단 ═════════════════════════════════════════════════════════
-def frames_report(path):
-    """combined.xyz 의 성격 — 프레임 수·조성 변화·셀 고정 여부."""
+def frames_report(path, fidelity_csv=None, energy_col="DFT (eV)"):
+    """combined.xyz 의 성격 — 프레임 수·조성·셀 고정·**중복 프레임**·시간순서 여부.
+
+    fidelity_csv 를 주면 프레임의 free_energy(없으면 energy) 를 CSV 의 DFT 에너지에
+    **탐욕 최근접 유일매칭**해서 프레임 -> Step 대응표를 만든다. 파일 저장 순서가
+    시간 순서가 아닐 수 있기 때문에 이 표가 있어야 궤적으로 쓸 수 있다.
+
+    ⛔ 못 하는 것: 에너지가 거의 겹치는 프레임이 있으면 매칭이 틀릴 수 있다.
+       그래서 매칭 잔차(max_match_residual_eV)를 같이 낸다 — 크면 믿지 마라.
+    """
     from ase.io import read
     frames = read(str(path), index=":")
     rows = []
+    pos = []
     for k, at in enumerate(frames):
         c = Counter(at.get_chemical_symbols())
+        e = fe = ""
+        try:
+            fe = float(at.calc.results.get("free_energy"))
+        except Exception:
+            fe = ""
+        try:
+            e = float(at.get_potential_energy())
+        except Exception:
+            e = ""
         rows.append({"frame": k, "n_atoms": len(at),
-                     "formula": "".join(f"{e}{c[e]}" for e in sorted(c)),
+                     "formula": "".join(f"{el}{c[el]}" for el in sorted(c)),
                      "a": round(float(at.cell.lengths()[0]), 4),
                      "b": round(float(at.cell.lengths()[1]), 4),
                      "c": round(float(at.cell.lengths()[2]), 4),
-                     "volume": round(float(at.get_volume()), 3)})
+                     "volume": round(float(at.get_volume()), 3),
+                     "energy_eV": e, "free_energy_eV": fe, "step": ""})
+        pos.append(at.get_positions())
     forms = {r["formula"] for r in rows}
     cells = {(r["a"], r["b"], r["c"]) for r in rows}
-    return {"file": str(path), "n_frames": len(frames),
-            "composition_constant": len(forms) == 1,
-            "distinct_formulas": sorted(forms)[:5],
-            "cell_constant": len(cells) == 1,
-            "distinct_cells": [list(c) for c in sorted(cells)][:5],
-            "rows": rows}
+    dups = [[k, m] for k in range(len(pos)) for m in range(k + 1, len(pos))
+            if pos[k].shape == pos[m].shape and np.allclose(pos[k], pos[m], atol=1e-6)]
+    # 저장된 `forces` 열이 `DFT_forces` 와 같은가 (= MLP 힘이 실제로는 없는가)
+    forces_alias = None
+    if "DFT_forces" in frames[0].arrays:
+        try:
+            forces_alias = all(np.array_equal(f.arrays["DFT_forces"], f.get_forces())
+                               for f in frames)
+        except Exception:
+            forces_alias = None
+    out = {"file": str(path), "n_frames": len(frames),
+           "composition_constant": len(forms) == 1,
+           "distinct_formulas": sorted(forms)[:5],
+           "cell_constant": len(cells) == 1,
+           "distinct_cells": [list(c) for c in sorted(cells)][:5],
+           "duplicate_frame_pairs": dups,
+           "n_unique_frames": len(frames) - len(dups),
+           "forces_column_equals_DFT_forces": forces_alias,
+           "rows": rows}
+    if fidelity_csv:
+        ref = list(csv.DictReader(open(fidelity_csv)))
+        kstep = list(ref[0].keys())[0]           # BOM 대비 — 첫 열이 Step
+        vals = [float(r[energy_col]) for r in ref]
+        steps = [float(r[kstep]) for r in ref]
+        pool = [float(r["free_energy_eV"]) if r["free_energy_eV"] != "" else
+                float(r["energy_eV"]) for r in rows]
+        used, order, resid = set(), [], []
+        for v in vals:
+            cand = [m for m in range(len(pool)) if m not in used]
+            best = min(cand, key=lambda m: abs(pool[m] - v))
+            used.add(best); order.append(best); resid.append(abs(pool[best] - v))
+        for st, m in zip(steps, order):
+            rows[m]["step"] = st
+        out["csv_rows"] = len(ref)
+        out["max_match_residual_eV"] = float(max(resid)) if resid else None
+        out["file_order_is_time_order"] = bool(order == sorted(order))
+        out["step_to_frame"] = [[st, m] for st, m in zip(steps, order)]
+        out["frames_without_csv_row"] = sorted(set(range(len(rows))) - used)
+    return out
 
 
 # ══ CSV 쓰기 ════════════════════════════════════════════════════════════════
@@ -698,6 +786,19 @@ def emit(results, outdir):
         write_csv(outdir / f"zprofile_{r['label']}.csv", rows,
                   ["z_Angstrom", "depth_from_surface_A"] + names[1:])
 
+    # 7b) 양이온 층 조성 (도펀트가 무작위인가 층정렬인가)
+    rows = []
+    for r in results:
+        for L in r.get("cation_layers", []):
+            rows.append({"system": r["label"], **L})
+    if rows:
+        hdr = []
+        for row in rows:
+            for k in row:
+                if k not in hdr:
+                    hdr.append(k)
+        write_csv(outdir / "cation_layers.csv", rows, hdr)
+
     # 8) JSON 전체
     dump = []
     for r in results:
@@ -813,6 +914,8 @@ def main():
     ap.add_argument("--outdir", default=None, help="CSV/JSON 출력 폴더")
     ap.add_argument("--frames-report", action="append", default=[],
                     metavar="PATH", help="combined.xyz 프레임 진단")
+    ap.add_argument("--fidelity-csv", action="append", default=[],
+                    metavar="PATH", help="--frames-report 와 같은 순서로. 프레임->Step 대응")
     ap.add_argument("--zbin", type=float, default=2.0, help="z-프로파일 빈 폭 (Å)")
     ap.add_argument("--dr", type=float, default=0.02, help="RDF 빈 폭 (Å)")
     ap.add_argument("--valley-frac", type=float, default=0.5,
@@ -825,14 +928,25 @@ def main():
 
     if a.frames_report:
         out = []
-        for p in a.frames_report:
-            fr = frames_report(p)
+        for k, p in enumerate(a.frames_report):
+            fc = a.fidelity_csv[k] if k < len(a.fidelity_csv) else None
+            fr = frames_report(p, fidelity_csv=fc)
             out.append(fr)
-            print(f"{fr['file']}: {fr['n_frames']} frames | "
+            print(f"{fr['file']}: {fr['n_frames']} frames "
+                  f"({fr['n_unique_frames']} unique) | "
                   f"composition_constant={fr['composition_constant']} | "
                   f"cell_constant={fr['cell_constant']}")
             print(f"  formulas: {fr['distinct_formulas']}")
             print(f"  cells:    {fr['distinct_cells']}")
+            print(f"  duplicate frame pairs: {fr['duplicate_frame_pairs']}")
+            print(f"  `forces` column == `DFT_forces`: "
+                  f"{fr['forces_column_equals_DFT_forces']}  "
+                  f"(True => no MLP forces stored)")
+            if fc:
+                print(f"  csv rows {fr['csv_rows']} | file order == time order: "
+                      f"{fr['file_order_is_time_order']} | max match residual "
+                      f"{fr['max_match_residual_eV']:.2e} eV | frames w/o csv row "
+                      f"{fr['frames_without_csv_row']}")
         if a.outdir:
             rows = []
             for fr in out:

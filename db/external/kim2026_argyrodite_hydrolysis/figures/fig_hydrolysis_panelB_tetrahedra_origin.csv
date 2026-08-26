@@ -1,0 +1,10 @@
+system,category,percent,count,n_centres
+LPSC-H2O,intact MS$_4$,100.0,144,144
+LPSC-ion,intact MS$_4$,99.306,143,144
+LPSnSC-ion,intact MS$_4$,98.611,142,144
+LPSC-H2O,MS$_3$ (broken),0.0,0,144
+LPSC-ion,MS$_3$ (broken),0.694,1,144
+LPSnSC-ion,MS$_3$ (broken),1.389,2,144
+LPSC-H2O,with any O,0.0,0,144
+LPSC-ion,with any O,0.0,0,144
+LPSnSC-ion,with any O,0.0,0,144
