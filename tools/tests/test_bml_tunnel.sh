@@ -694,7 +694,14 @@ probe_out="$( edge_probe() { local ip; ip=""; [ -z "$ip" ] && { printf 'no-dns';
 check "이름이 없으면 포트를 탓하지 않는다" "$probe_out" "no-dns"
 SH0="$(awk '/^cmd_share\(\) \{/,/^\}/' "$BML0")"
 check "화면도 둘을 갈라 말한다"  "$(printf '%s' "$SH0" | grep -c '엣지 이름을 못 구했습니다')" "1"
-check "막혔으면 어디에 못 붙었는지" "$(printf '%s' "$SH0" | grep -c '에 못 붙습니다')" "1"
+# 두 자리에서 말한다: 길을 고를 때(SSH 로 넘어가며), 그리고 우리 이름으로 열려다
+# 실패했을 때.  뒤쪽이 특히 중요하다 -- 거기서 7844 를 안 짚으면 사람은 대시보드
+# 설정을 몇 번이고 다시 본다.  설정 문제가 아닌데.
+check "막혔으면 어디에 못 붙었는지" "$(printf '%s' "$SH0" | grep -c '에 못 붙습니다')" "2"
+check "설정 탓이 아니라고 말한다" \
+  "$(printf '%s' "$SH0" | grep -c '설정 문제가 아니므로')" "1"
+check "quic 도 http2 도 7844 임을 적는다" \
+  "$(printf '%s' "$SH0" | grep -c 'quic 은 UDP, http2 는 TCP, 둘 다 7844')" "1"
 
 echo
 echo "모르는 말을 삼키지 않는다"
