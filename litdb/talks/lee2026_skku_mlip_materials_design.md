@@ -842,3 +842,70 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 > JACS 2025 147, 47381(CSP 준안정) · Nano Convergence 2026 13, 27(코팅 스크리닝) ·
 > lee2024(다성분 argyrodite MTP) · UMA 원논문 · PET-MAD.
 > **1·2번만 받아도 이 강의의 미해결이 절반으로 준다.**
+>
+> 📥 **파일명·slug·앵커·양방향 링크 규약은 §99-10 · §99-11** (논문 에이전트가 읽는 표).
+
+---
+
+### 99-10. 📥 논문 에이전트 인입 대기열 — **이 talk 과 관계를 맺어야 하는 6건**
+
+> 2026-08-26 확정. 사용자가 아래 6건을 `litdb/inbox/` 로 넣기로 했다.
+> **litdb-curator 는 이 표를 읽고 digest 를 만든 뒤 §99-11 의 양방향 링크를 반드시 건다.**
+>
+> ⚠ **서지 신뢰도를 열로 표시했다** — `✅확인` = 우리 digest/덱에 적혀 있어 재확인 가능,
+> `⚠재구성` = 내가 기억에서 복원한 것이라 **표지로 대조하기 전에는 인용하지 말 것**.
+> 파일을 받으면 curator 가 **표지에서 서지를 다시 읽어 이 표를 정정**한다.
+
+| # | inbox 파일명 (이대로 주면 좋다) | 예상 slug | 서지 | 신뢰 |
+|---|---|---|---|---|
+| **1** | `66. Kim2026_Argyrodite_Hydrolysis_SevenNet_Sn.pdf`<br>`66. Sup) …` | `kim2026_argyrodite_hydrolysis_sevennet_sn` ⚠저자·연도는 표지 보고 확정 | **Adv. Funct. Mater.**, 이상욱 랩. 덱 표기 *"revision"*(2026-07 시점) → **이미 출판됐을 수 있다**. 검색어: `argyrodite hydrolysis machine learning potential H2S Sn doping Sungkyunkwan` / `Li6PS5Cl H2O reactive MD SevenNet` | ⚠서지 미상 |
+| **2** | `lee2026_skku_program_toc.pdf` → `litdb/talks/_transcripts/` (논문 아님) | — | 심포지엄 **자료집 목차 페이지**. 이상욱 섹션(pp.279–296) 앞뒤 1–2 pp | ✅ |
+| **3a** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | `shapeev2016_moment_tensor_potentials` | A. V. Shapeev, *Multiscale Model. Simul.* **2016**, 14(3), 1153–1173 · DOI `10.1137/15M1054183` · arXiv 1512.06054 | ⚠재구성 (연도·저널은 ✅) |
+| **3b** | `68. Gubaev2019_Active_Learning_Alloy_MTP.pdf` | `gubaev2019_active_learning_alloy_mtp` | Gubaev·Podryabinkin·Hart·Shapeev, *Comput. Mater. Sci.* **156** (2019) **148–156** — **γ(maxvol/D-optimality) 원전** | ✅ 권·쪽은 `kim2026_li_argyrodite_sei_reactive_md` ref [39] 에 기록됨 |
+| **3c** | `69. Novikov2021_MLIP_Package.pdf` | `novikov2021_mlip_package_mpi_active_learning` | Novikov·Gubaev·Podryabinkin·Shapeev, *Mach. Learn.: Sci. Technol.* **2021**, 2, 025002 · DOI `10.1088/2632-2153/abc9fe` | ⚠재구성 |
+| **4** | `70. Merchant2023_GNoME_Scaling_Deep_Learning.pdf` | `merchant2023_gnome_scaling_deep_learning_discovery` | Merchant·Batzner·Schoenholz·Aykol·Cheon·Cubuk, *Nature* **2023**, 624, 80–85 · DOI `10.1038/s41586-023-06735-9` | ⚠재구성 (Nature 2023·GNoME 은 ✅ — `kim2025_csp…` ref 35) |
+| **5** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf` | `park2024_sevennet_parallel_gnn_md` | Park·Kim·Hwang·Han (SNU), *J. Chem. Theory Comput.* **2024**, 20, 4857–4868 · DOI `10.1021/acs.jctc.4c00190` | ⚠재구성 |
+| **6** | `72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf` | `luo2022_cryotem_li_dendrite_sulfide_interphase` | *ACS Energy Lett.* **2022**, 7, **3064–3071** — "single Li dendrite ‖ sulfide electrolyte" **cryo-TEM interphase** | ✅ 권·쪽 (덱 슬 19 + SSRN ref [49] 이중 확인) · ⚠제목·저자 재구성 |
+
+#### 각 편이 **이 talk 의 어디에 매달리나** (curator 가 걸 앵커)
+
+| # | talk 앵커 | 닫는 질문 / 여는 작업 |
+|---|---|---|
+| **1** | §7(슬 21–24) · §99-2(e) guided MD · §99-4 A3 | **Q4**(H₂S 정량) 종결 · **T2**(ICOHP 양성자화 기술자) 방법 원본 확보 · `air_hsab` 정성 tier 를 정량으로 교체할 수 있는지 판정 |
+| **2** | §99-5 **B1** · §99-6 **Q-T1** | 다음 발표자 이름(문장혁 ↔ STT `김장현`) 확정 · 세션 번호·발표 시각 확정 |
+| **3a·3b** | §5b(슬 16 γ_select 2 / γ_break 10↔5↔2) · §99-3 **A1** | **T1** 설계 — "γ 를 UMA 에 왜 못 옮기나"를 **원정의로** 쓸 수 있게 된다(지금은 덱 숫자만) |
+| **3c** | §5b · §5c(5,400 구조) | MTP **훈련 실무**(w_e:w_f:w_s · R_cut · lev_max · 비용) 원본 |
+| **4** | §9(슬 6) · §99-1 08:02 | 강의 서사의 출발점. **"MLIP 없이는 불가능했다"** 주장의 실물 근거 |
+| **5** | §7a(슬 22) · §99-3 A1 · §99-4 **A1** | ★ **T1b 대조군** — SevenNet 은 **우리 UMA 와 같은 GNN 계열**이다. PES softening 이 **GNN 공통 성질**인지 **모델별**인지를 가르는 유일한 대조 |
+| **6** | §6(슬 19) · §99-4 **A4** · §12-6 | **T3** 실험 앵커(~12 nm cryo-TEM) 확보 — 우리가 Li\|LPSCl MD 를 돌리면 그대로 대조군 |
+
+#### ⛔ curator 가 **하지 말아야 할 것**
+
+1. **덱/구술 수치를 논문 digest 에 정본으로 옮기지 않는다.** 이 talk 은 `citable = no` 다.
+   방향은 **논문 → talk** 이지 talk → 논문이 아니다(논문이 이기고, talk 의 오기를 정정한다).
+2. **#3a–#5 는 방법론 원전이라 `comparison_vs_ours.md` 의 물성 4축 표에 넣지 않는다.**
+   물성값이 없다 — 넣으면 표가 무의미해진다. `🔧 방법 원전` 블록으로 따로 둔다.
+3. **#6 은 실험 논문이다.** 우리 계산값과 같은 줄에 놓지 말고 **앵커(대조 대상)** 로만 쓴다.
+4. **#1 의 σ·H₂S 절대값을 우리 db 로 이식하지 않는다** — 방법(functional·셀·시간창)이 다르다.
+
+---
+
+### 99-11. 🔗 양방향 링크 규약 (talk ↔ paper)
+
+논문이 들어올 때마다 **양쪽을 다 고친다.** 한쪽만 고치면 6개월 뒤에 "이 덱에 그 얘기 있었는데
+논문이 어디 갔지" 가 반복된다.
+
+**① 논문 digest 쪽** — 머리 블록에 한 줄:
+```
+> 🎤 **관련 발표**: `talks/lee2026_skku_mlip_materials_design.md` §<절> (슬 <n>) ·
+>   ⛔ 그 talk 은 citable=no — **이 논문이 정본이고, 덱/구술과 어긋나면 이 논문이 이긴다**
+```
+
+**② 이 talk 쪽** — §99-10 표의 해당 행을 `~~#n~~ ✅` 로 긋고 slug 를 적는다. 그리고
+**덱/구술과 어긋난 것이 나오면 §12(주의/한계) 또는 §99-5 E 에 정정으로 남긴다.**
+(선례: `kim2025_csp…` 가 덱의 `10⁻⁴→2.4 mS/cm` 를 부인해 §14 에 인용금지가 생겼다.)
+
+**③ `INDEX.md`** — 논문 행 설명 끝에 `🎤 talks/lee2026_skku… 슬 <n> 의 정본` 을 붙인다
+(기존 `kim2026_hts_li3sc2po43…` 행이 그 형식이다).
+
+**④ `comparison_vs_ours.md`** — 물성값이 있는 편(#1·#6)만. #3a–#5 는 `🔧 방법 원전` 으로.
