@@ -644,14 +644,31 @@ check "나왔으면 안 바뀐다고 말한다" \
   "$(grep -c '우리 도메인 · 이제 안 바뀝니다' "$HERE/../bml")" "1"
 check "우리 도메인도 우리 터널로 본다" \
   "$(grep -c 'case "$h" in "$d"|\*.".$d") return 0 ;; esac' "$HERE/../bml")" "1"
-# DNS 를 어디로 돌릴지 화면이 직접 말한다.  "문서를 보세요" 로 끝내면 그 문서가
-# 이 망에서 안 열린다 (랩이 localhost.run 을 통째로 끊는다) -- 정작 그 값이
-# 필요한 사람이 못 본다.
-check "CNAME 대상을 적어 준다" \
-  "$(grep -c 'cd.localhost.run' "$HERE/../bml")" "2"
-# A 레코드 셋은 실측과 같다 (getent ahostsv4 localhost.run).
-check "A 레코드도 함께" \
-  "$(grep -c '54.161.197.247 · 54.82.85.249 · 35.171.254.69' "$HERE/../bml")" "1"
+# 고정 주소로 가는 길이 Cloudflare 로 바뀌었다 (ADR 0031).  localhost.run 의
+# 커스텀 도메인은 $9/월(연납)이고 Cloudflare 터널은 무료다 -- 결과가 같은데
+# 한쪽만 돈이 든다.  그래서 예전 CNAME(cd.localhost.run)·A 레코드 안내는
+# **일부러 지웠다**: 두 길을 나란히 적어 두면 비싼 쪽을 고르는 사람이 나온다.
+#
+# 화면이 절차를 직접 말한다.  "문서를 보세요" 로 끝내면 그 문서가 이 망에서
+# 안 열릴 수 있고, 정작 그 값이 필요한 사람이 못 본다.
+check "옛 유료 길을 안 권한다" \
+  "$(grep -c 'cd.localhost.run' "$HERE/../bml")" "0"
+check "대시보드 두 곳을 적어 준다" \
+  "$(grep -c 'one.dash.cloudflare.com' "$HERE/../bml")" "2"
+# 세 자리 모두 같은 것을 가리켜야 한다.  터널이 우리 이름으로 안 나오는 이유는
+# 거의 언제나 "대시보드에 그 이름이 없다" 이고, 그 셋이 사람이 여기 닿는 길의
+# 전부다: 처음 설정할 때 · 이름을 적을 때 · 못 열렸을 때.  총 개수로 세면
+# 한 자리를 지워도 다른 자리에 하나 늘리면 통과한다.
+check "설정 절차가 어디를 가리킬지 말한다" \
+  "$(awk '/^cf_setup_steps\(\) \{/,/^\}/' "$HERE/../bml" | grep -c 'Public Hostname')" "1"
+check "이름을 적을 때도 말한다" \
+  "$(awk '/^cmd_share_domain\(\) \{/,/^\}/' "$HERE/../bml" | grep -c 'Public Hostname')" "1"
+check "못 열렸을 때 거기를 보라고 한다" \
+  "$(awk '/^cmd_share\(\) \{/,/^\}/' "$HERE/../bml" | grep -c 'Public Hostname')" "1"
+# 무료 요금제의 100 MB 상한.  우리 서버 상한은 512 MB 라, 랩 안에서 되던
+# 파일이 밖에서만 안 되는 경우가 생긴다 -- 그때 화면은 우리 탓처럼 보인다.
+check "100 MB 상한을 미리 말한다" \
+  "$(grep -c '100 MB 를 넘으면 Cloudflare 가 막습니다' "$HERE/../bml")" "1"
 # 이게 진짜 이득이다 -- 우리 도메인은 이 망의 차단 목록에 없다.
 check "차단이 풀린다는 것도 말한다" \
   "$(grep -c '이 망의 DNS 차단 목록에 없습니다' "$HERE/../bml")" "1"
@@ -661,6 +678,68 @@ check "어디에 물어봤는지 적는다" \
   "$(grep -c '1\.1\.1\.1 · 8\.8\.8\.8 · 9\.9\.9\.9' "$HERE/../bml")" "1"
 check "휴대폰 갈래도 남긴다" \
   "$(grep -c '휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다' "$HERE/../bml")" "2"
+
+echo
+echo "우리 이름으로 여는 터널 (Cloudflare · ADR 0031)"
+BMLF="$HERE/../bml"
+# 토큰과 이름이 **둘 다** 있어야 한다.  하나만으로는 못 연다.
+#
+#   토큰만 → 어느 이름으로 나갔는지 이쪽이 모른다.  "열렸는가" 를 확인할
+#            주소가 없으니 확인을 건너뛰게 되고, 그 순간 화면이 거짓말을 한다.
+#   이름만 → 붙을 자격이 없다.  저쪽은 그 이름을 모르므로 아무 데도 안 나온다.
+#
+# 어느 쪽이든 조용히 랜덤 주소로 흘러가면 최악이다: 고정 주소를 설정한 사람은
+# 열렸다는 말을 보고 `bml.<도메인>` 을 남에게 알려 주는데, 정작 열린 것은
+# 랜덤 주소다.  화면은 성공이고 상대는 아무것도 못 연다.
+( WORKBENCH_CF_TOKEN="" WORKBENCH_TUNNEL_DOMAIN="" ; tunnel_via_named 0 ) >/dev/null 2>&1
+check "토큰도 이름도 없으면 안 연다" "$?" "1"
+( WORKBENCH_CF_TOKEN="$(printf 'x%.0s' $(seq 1 60))" WORKBENCH_TUNNEL_DOMAIN="" ; tunnel_via_named 0 ) >/dev/null 2>&1
+check "토큰만 있으면 안 연다"        "$?" "1"
+( WORKBENCH_CF_TOKEN="" WORKBENCH_TUNNEL_DOMAIN="bml.example.kr" ; tunnel_via_named 0 ) >/dev/null 2>&1
+check "이름만 있으면 안 연다"        "$?" "1"
+
+# 이름 붙인 터널은 로그에 주소를 안 찍는다 -- 어느 이름으로 나갈지가 대시보드에
+# 있고 cloudflared 는 그것을 모른 채 연결만 맺는다.  그래서 로그를 훑는
+# `try_tunnel` 로는 영영 주소를 못 얻고 60번 세다 실패로 끝난다.
+NAMED="$(awk '/^try_tunnel_named\(\) \{/,/^\}/' "$BMLF")"
+check "로그에서 주소를 찾지 않는다"  "$(printf '%s' "$NAMED" | grep -c 'tunnel_url_from')" "0"
+# 그래도 **열렸는지는 똑같이 확인한다.**  주소를 아는 것과 그 주소가 열린 것은
+# 다른 일이고, 그 확인을 건너뛰는 순간 이 명령은 믿을 수 없는 것이 된다.
+check "그래도 열렸는지는 확인한다"   "$(printf '%s' "$NAMED" | grep -c 'confirm_tunnel')" "1"
+# 두 길이 같은 확인을 써야 한다.  갈라 두면 한쪽만 고치는 날이 온다.
+check "확인은 한 군데서만 한다"      "$(grep -c '^confirm_tunnel() {' "$BMLF")" "1"
+check "랜덤 쪽도 같은 확인을 쓴다"   "$(awk '/^try_tunnel\(\) \{/,/^\}/' "$BMLF" | grep -c 'confirm_tunnel')" "1"
+
+# 이름 있는 터널은 `tunnel run --token`.  `--url` 은 랜덤 주소를 받는 쪽이다.
+VIA="$(awk '/^tunnel_via_named\(\) \{/,/^\}/' "$BMLF")"
+check "run --token 으로 붙는다"      "$(printf '%s' "$VIA" | grep -c -- 'tunnel --no-autoupdate run --token')" "1"
+check "랜덤 주소를 받지 않는다"      "$(printf '%s' "$VIA" | grep -c -- '--url')" "0"
+# QUIC(UDP)만 막힌 망이 있다.  http2 도 같은 7844 를 쓰지만 TCP 다 -- 랜덤 쪽과
+# 같은 두 번째 시도가 여기에도 있어야 한다.
+check "http2 로 한 번 더 시도한다"   "$(printf '%s' "$VIA" | grep -c -- '--protocol http2')" "1"
+
+# 실패했다고 랜덤 주소로 흘러가지 않는다.  `cmd_share` 가 그 갈래를 아예 안 탄다.
+SH="$(awk '/^cmd_share\(\) \{/,/^\}/' "$BMLF")"
+check "우리 이름이 있으면 그 길뿐"   "$(printf '%s' "$SH" | grep -c '랜덤 주소로 대신 열지 않습니다')" "1"
+check "그때 무엇을 볼지 말해 준다"   "$(printf '%s' "$SH" | grep -c 'one.dash.cloudflare.com')" "1"
+
+# 토큰은 암호와 같은 급이다 -- 가진 사람은 그 터널로 붙을 수 있고, 사람들은 이
+# 화면을 스크린샷으로 보낸다 (`bml password` 와 같은 이유).
+CF="$(awk '/^cmd_share_cf\(\) \{/,/^\}/' "$BMLF")"
+check "토큰 값을 다시 찍지 않는다"   "$(printf '%s' "$CF" | grep -c '값은 찍지 않습니다')" "1"
+check "설정됨만 말한다"              "$(printf '%s' "$CF" | grep -cE '\$\{?(raw|token|WORKBENCH_CF_TOKEN)\}?\$?\{?OFF' )" "0"
+# 잘려 붙은 토큰을 그대로 받으면, 다음 `bml share` 가 뜻 모를 오류로 죽는다.
+check "짧으면 잘렸다고 말한다"       "$(printf '%s' "$CF" | grep -c '잘려서 붙은 것 같습니다')" "1"
+
+# 우리 이름으로 연 터널에 localhost.run 계정 안내를 띄우면, 다 해 놓은 사람에게
+# 아직 안 했다고 말하는 셈이 된다.
+check "저쪽 계정 안내를 안 띄운다" \
+  "$(awk '/^tunnel_account_note\(\) \{/,/^\}/' "$BMLF" | grep -c 'tunnel_cf_token >/dev/null && tunnel_domain >/dev/null && return 0')" "1"
+# 열기 전에도 어긋남이 보여야 한다 -- 둘 중 하나만 적힌 상태는 열어 보기 전에는
+# 티가 안 난다.
+ST="$(awk '/^cmd_status\(\) \{/,/^\}/' "$BMLF")"
+check "status 가 고정 이름을 적는다" "$(printf '%s' "$ST" | grep -c '고정 — 열어도 안 바뀝니다')" "1"
+check "반쪽 설정을 status 가 잡는다" "$(printf '%s' "$ST" | grep -c '토큰만 있고 이름이 없습니다')" "1"
 
 echo
 echo "이름이 막힌 기계 — hosts 대신 중계기로"

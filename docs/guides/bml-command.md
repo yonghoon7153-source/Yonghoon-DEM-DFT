@@ -165,6 +165,8 @@ echo "alias bml='$HOME/bml/tools/bml'" >> ~/.zshrc   # 클론한 폴더 경로�
 | `bml password <암호>` | 바깥에 열 때 쓸 공유 암호 (6자 이상) |
 | `bml share` | 임시 터널 — 다른 공유기에 있는 사람도 접속 |
 | `bml share stop` | 그 터널을 닫는다 (`bml stop` 도 함께 닫는다) |
+| `bml share cf <토큰>` | **우리 이름으로 엽니다 — 주소가 안 바뀝니다.** Cloudflare 대시보드가 주는 터널 토큰입니다 (무료). 값은 화면에 다시 안 찍습니다 — 암호와 같은 급이라서요 (ADR 0031) |
+| `bml share domain <이름>` | 그때 열 이름 (`bml.bmlwork.kr`). **토큰과 이름이 둘 다 있어야** 우리 이름으로 열립니다 — 하나만 있으면 안 엽니다 |
 | `bml mirrored` | WSL 을 mirrored 네트워크로 — 다른 기계가 이 서버를 보게 (WSL 에서 실행) |
 | `bmlin [주소]` | 랩 안(LAN) 주소로 갈아 끼우고 연다 — 주소는 한 번만 적으면 됩니다 |
 | `bmlout [주소]` | 밖(터널) 주소로 갈아 끼우고 연다 — 터널은 열 때마다 주소가 바뀔 수 있습니다 |

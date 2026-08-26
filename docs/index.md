@@ -34,6 +34,7 @@
 | [0028](adr/0028-solid-state-is-a-transmission-line.md) | 전고체 복합전극은 아크가 아니라 전송선이다 | Bisquert 전송선을 회로 원소로 (PyEIS `cir_RsTL` 대조), 전고체 프리셋 교체, 면적이 있으면 Ω·cm² |
 | [0029](adr/0029-fit-the-way-zview-users-fit.md) | ZView 처럼 순차로 맞추되, 그 결과는 답이 아니라 시작점이다 | 회로의 직렬 블록을 고주파부터 하나씩 풀어 시작점 하나를 만들고 다중시작 주머니에 넣는다 (켜서 나빠질 수 없다), 오차가 대역 끝에 몰리면 그렇다고 적는다 |
 | [0030](adr/0030-a-local-relay-instead-of-editing-hosts.md) | 이름이 막힌 기계에서는 hosts 를 고치지 말고 중계기를 띄운다 | `bmlonly` 가 `/etc/hosts` 대신 127.0.0.1:5013 에 중계기를 띄워 터널 엣지의 IP 로 넘긴다 (SNI·Host 는 터널 이름), sudo·관리자 PowerShell·재부팅 복구가 사라진다 |
+| [0031](adr/0031-our-own-name-through-a-cloudflare-tunnel.md) | 고정 주소는 우리 도메인 + Cloudflare 터널로 얻는다 | 토큰과 이름이 둘 다 있을 때만 `cloudflared tunnel run --token` 으로 우리 이름을 열고, 실패해도 랜덤 주소로 흘러가지 않는다 — localhost.run 커스텀 도메인($9/월)과 결과가 같은데 무료다 |
 
 ## 리뷰 (외부 교차검증)
 
@@ -80,7 +81,8 @@
 `adr/0027-a-measurement-has-its-own-conditions.md` ·
 `adr/0028-solid-state-is-a-transmission-line.md` ·
 `adr/0029-fit-the-way-zview-users-fit.md` ·
-`adr/0030-a-local-relay-instead-of-editing-hosts.md`
+`adr/0030-a-local-relay-instead-of-editing-hosts.md` ·
+`adr/0031-our-own-name-through-a-cloudflare-tunnel.md`
 
 ## 스펙
 
