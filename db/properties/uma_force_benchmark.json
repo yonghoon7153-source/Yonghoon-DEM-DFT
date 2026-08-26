@@ -67,6 +67,26 @@
         "same_sign_frames": "250/250"
       },
       "raw": "gabia:/data/work/runs/bench_li3po4/bench_uma.{json,csv}"
+    },
+    "lips_sevennet0": {
+      "dataset": "lips.xyz — **UMA 와 완전히 같은 251 프레임·같은 정답지**",
+      "engine": "SevenNet-0 (7net-0) — **MPtrj 학습**, 0.84 M 파라미터, 5층, r_c 5 Å",
+      "force": {
+        "mae_eVA": 0.1222,
+        "rmse_eVA": 0.1633,
+        "max_abs_eVA": 1.036,
+        "rms_ref_eVA": 0.613,
+        "rel_mae_pct": 19.96,
+        "pearson_r": 0.9791,
+        "softening_slope": 0.7899
+      },
+      "energy_per_atom_meV": {
+        "bias": -57.8,
+        "scatter_sd": 2.19,
+        "mae_after_bias_removal": 1.75,
+        "same_sign_frames": "251/251"
+      },
+      "raw": "gabia:/data/work/runs/bench_lips_sevennet/bench_sevennet.{json,csv}"
     }
   },
   "★_reading": {
@@ -145,5 +165,33 @@
     "내_것이_더_나은_점": "**softening 기울기**(기존에 없음 — 이게 오늘의 실질) · `--split_at` 구간분할 · 25k–50k 프레임 **스트리밍 읽기**(기존은 전량 메모리) · `info`(유효 수용영역).",
     "처분": "**병합해야 한다** — softening 기울기와 split 을 `bench_against_dft.py` 로 옮기고 `mlip_committee.py bench` 는 그것을 부르거나 없앤다. **오늘은 기록만 하고 미실행.**",
     "그때까지의_규칙": "⚠ **조성이 섞인 데이터셋에는 `mlip_committee.py bench` 를 쓰지 마라** — 에너지 편향이 원소별로 갈리는데 전역 상수 하나로 빼기 때문이다. 힘은 무관하다."
+  },
+  "★★_동일_시험셋_대조_2026_08_26": {
+    "왜_중요한가": "OMat24 표를 인용할 때마다 *'시험셋이 달라 순위를 매기면 안 된다'* 는 단서를 달아야 했다. **이건 다르다** — UMA 와 SevenNet-0 을 **같은 251 프레임·같은 참조 DFT** 로 쟀다. **우리 화학계(Li–P–S)에서, 같은 자로.**",
+    "표": {
+      "UMA-s-1p1 (OMat24 학습, 146M/6M active)": {
+        "force_mae_eVA": 0.0221,
+        "rel_pct": 3.61,
+        "pearson_r": 0.99898,
+        "softening_slope": 0.9874
+      },
+      "SevenNet-0 (MPtrj 학습, 0.84M)": {
+        "force_mae_eVA": 0.1222,
+        "rel_pct": 19.96,
+        "pearson_r": 0.9791,
+        "softening_slope": 0.7899
+      }
+    },
+    "①_OMat24_주장이_우리_계에서_재현됐다": "OMat24 보충자료 값은 sevenn/**MPtrj 0.9248** ↔ sevenn/**OAM 0.9809** 였다. 우리 측정은 SevenNet-0(MPtrj) **0.7899** ↔ UMA(OMat24) **0.9874**. **순서와 방향이 정확히 같고 우리 쪽이 더 극단적**이다 — 우리 시험셋(유한온도 AIMD 궤적)이 그들 high-energy WBM 보다 이 축에서 가혹하거나, Li–P–S 가 MPtrj 에 덜 들어 있거나. ⇒ **'softening 은 아키텍처가 아니라 훈련셋' 이 우리 화학계에서 직접 확인됐다.**",
+    "②_softening_은_실재한다": "덱 슬 8 의 화살표가 개념도가 아니라는 것이 **우리 데이터로** 보였다. GNN 이 21 % 무를 수 있다. **다만 그 GNN 이 우리 모델이 아니다.**",
+    "③_b2o3_판정_추가_보강": "SevenNet-0 로 MD 를 돌렸다면 힘이 21 % 작아 **골격이 인위적으로 물러지고 확산이 빨라진다** — 우리가 b2o3 에서 걱정하던 바로 그 아티팩트다. **우리 UMA 는 1.3 % 다.** ⇒ b2o3 붕괴를 포텐셜 무름으로 설명하는 길이 **한 번 더 좁아진다.**",
+    "④_🔴_위원회_도구에_직접_영향": "`mlip_committee.py` 의 위원회는 **UMA + MACE-MP-0 + SevenNet-0** 인데 **뒤 둘이 다 MPtrj** 다. 이제 측정됐다 — MPtrj 쪽이 **21 % 무르다.** **다수결을 하면 정확한 UMA 가 이상치로 몰린다.** docstring 경고(2026-08-26)가 옳았고 이제 정량화됐다. ⇒ **위원회 불일치를 '누가 이상한가' 로 읽으면 안 되고, 반드시 부호·방향을 봐야 한다.**",
+    "⑤_스크리닝_엔진_판정": "⛔ **SevenNet-0 를 우리 계 스크리닝 MD 에 쓰면 안 된다.** 상대 힘오차 **19.96 %**, softening **0.79**. 빠른 대신 부정확한 게 아니라 **계통적으로 무른 쪽으로 틀린다** — 확산·골격 판정을 정확히 반대 방향으로 오염시킨다. ‘302 cascade 를 빨리 훑는다’ 는 이 엔진으로는 못 한다.",
+    "⛔_한계": [
+      "**한 계(Li–P–S)·251 프레임·한 stride.** 다른 화학계에서 같은 비율일 보장 없다.",
+      "**Cl 이 없다** — J-1 의 2026-08-19 캐비앳이 그대로 살아 있다. 세 번을 쟀는데 셋 다 Cl 없는 계다.",
+      "**7net-0 은 SevenNet 계열의 base 다.** repo 에는 `SevenNet-MF-ompa`·`l3i5` 등 **OMat24 계열 후속**이 있고, 그것들은 이 값이 아닐 것이다. **'SevenNet 이 무르다' 가 아니라 'MPtrj 로 학습한 SevenNet-0 이 무르다' 다.**",
+      "에너지 편향(−57.80)은 정확도가 아니다 — 251/251 같은 부호, 상수 오프셋."
+    ]
   }
 }
