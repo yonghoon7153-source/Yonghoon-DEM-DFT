@@ -563,7 +563,9 @@ describe('스펙트럼 상세', () => {
       path(url) === '/api/eis/spectra/1' ? detail({ fits: [fit()] }) : undefined))
 
     renderDetail()
-    const row = (await screen.findByText('R1')).closest('tr')!
+    // 이름은 첨자로 그려져 글자 노드가 쪼개진다 (R + <sub>1</sub>).  원래
+    // 이름은 title 에 남는다 — 회로 칸에 쳐 넣는 것이 그 글자다.
+    const row = (await screen.findByTitle('R1')).closest('tr')!
     expect(within(row).getByText('벌크 저항')).toBeInTheDocument()
   })
 
@@ -580,7 +582,7 @@ describe('스펙트럼 상세', () => {
       path(url) === '/api/eis/spectra/1' ? detail({ fits: [undetermined] }) : undefined))
 
     renderDetail()
-    const row = (await screen.findByText('CPE3_Q')).closest('tr')!
+    const row = (await screen.findByTitle('CPE3_Q')).closest('tr')!
     expect(within(row).getByText('미결정')).toBeInTheDocument()
     expect(screen.getByText(/물리적 한계에 붙은/)).toBeInTheDocument()
   })

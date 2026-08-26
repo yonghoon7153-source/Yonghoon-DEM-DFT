@@ -45,6 +45,23 @@ const BY_SUFFIX: [RegExp, string][] = [
   [/_P$/, '확산 지수 — 0.5 가 교과서 확산'],
 ]
 
+/** 이름을 밑첨자로 쪼갠다: `["CPE", "1,Q"]`.
+ *
+ *  화면이 `CPE1_Q` 라고 적으면 읽는 사람은 그것을 **변수 이름**으로 본다.
+ *  논문과 절차서에는 CPE₁,Q 라고 쓰고, 랩에서 주고받는 표(배영진 목록)도
+ *  `R2 (ohm)` · `C2 (F)` · `N2` 처럼 번호가 첨자다.  같은 것을 같게 적는다.
+ *
+ *  규칙은 둘뿐이다: 원소 이름 뒤의 **숫자**와, 밑줄 뒤의 **접미사**가 첨자다.
+ *  못 쪼개면 통째로 본체다 — 모르는 이름을 억지로 자르지 않는다.
+ */
+export function splitSubscript(name: string): [string, string] {
+  const match = /^([A-Za-z]+)(\d*)(?:_(.+))?$/.exec(name)
+  if (!match) return [name, '']
+  const [, base, index, suffix] = match
+  const parts = [index, suffix].filter((part) => part)
+  return [base ?? name, parts.join(',')]
+}
+
 /** 이 파라미터가 무엇인가.  모르면 빈 문자열 — 지어내지 않는다 (§0.4). */
 export function paramMeaning(name: string): string {
   const exact = EXACT[name]

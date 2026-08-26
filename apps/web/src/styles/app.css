@@ -758,6 +758,9 @@ tbody tr:last-child td { border-bottom: none; }
 }
 .plot-shell:hover .plot-zoom,
 .plot-zoom:focus-within { opacity: 1; }
+/* 단추 줄은 평소 흐리다 (0.35) — 그림을 방해하지 않으려고.  그런데 "새로 받는
+   중" 은 보라고 있는 것이라, 흐린 채로 두면 있으나 마나다. */
+.plot-zoom:has(.plot-busy) { opacity: 1; }
 .plot-zoom button {
   padding: 2px 7px;
   font-size: 11px;
@@ -959,6 +962,19 @@ td.headline {
   flex: none;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* 그림이 다시 받아오는 중이라는 표시.  단추 줄 왼쪽에 서서 그림을 안 가린다 —
+   겹치면 새로 고칠 때마다 데이터를 가린다.
+
+   그림을 비우지 않는 것이 옳다 (축이 튀고 화면이 깜빡인다).  그래서 옛 곡선이
+   그대로 서 있는데, 그러면 화면이 눌린 것을 못 알아들은 것처럼 보이고 사람은
+   같은 것을 한 번 더 누른다. */
+.plot-busy {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding-right: 4px;
+}
 
 /* -------------------------------------------------------------- misc */
 .mono { font-family: var(--mono); }

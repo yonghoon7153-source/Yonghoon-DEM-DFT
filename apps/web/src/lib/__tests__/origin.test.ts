@@ -319,7 +319,21 @@ describe('fitParametersTsv', () => {
     ])
     // 미결정 행은 값도 나가지 않는다 — 엑셀에는 "못 믿음" 표시를 붙일 수
     // 없어서, 숫자로 내보내는 순간 확정값이 된다 (리뷰 #7).
-    expect(text).toBe('R0\t7.99\t0.31\nCPE1_n\t--\t--')
+    // 단위는 한 열로 함께 나간다: `R0  7.99` 만 붙여 넣으면 그것이 Ω 인지
+    // Ω·cm² 인지 워크시트 안에서는 알 길이 없다.
+    expect(text).toBe('R0\t7.99\tΩ\t0.31\nCPE1_n\t--\t\t--')
+  })
+
+  it('화면이 면적으로 나눈 값을 보고 있으면 그 값 그대로 나간다', () => {
+    // 보는 수와 붙이는 수가 다르면 어느 쪽이 맞는지 확인하는 데 왕복이 든다.
+    const text = fitParametersTsv(
+      [{ name: 'R0', value: 8, unit: 'Ω', stderr: 0.4, determined: true }],
+      {
+        value: (parameter, raw) => (parameter.unit === 'Ω' ? raw / 2 : raw),
+        unit: (parameter) => (parameter.unit === 'Ω' ? 'Ω·cm²' : parameter.unit),
+      },
+    )
+    expect(text).toBe('R0\t4\tΩ·cm²\t0.2')
   })
 })
 

@@ -21,7 +21,7 @@ import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { inductiveCount, nyquistXy } from '../lib/eis'
-import { isHeadline, paramMeaning } from '../lib/params'
+import { isHeadline, paramMeaning, splitSubscript } from '../lib/params'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
 import { useAsync } from '../lib/hooks'
 import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
@@ -287,9 +287,16 @@ export function SpectrumDetail() {
             },
             {
               label: '피팅 파라미터',
-              title: '이름 · 값 · 1σ — 엑셀에 붙여 넣는 표',
+              title: '이름 · 값 · 단위 · 1σ — 엑셀에 붙여 넣는 표',
               disabled: !fit?.parameters.length,
-              build: () => fitParametersTsv(fit?.parameters ?? []),
+              // 화면이 면적으로 나눈 값을 보여 주고 있으면 그 값 그대로
+              // 나간다.  보는 수와 붙이는 수가 다르면 어느 쪽이 맞는지
+              // 확인하는 데 왕복이 든다.
+              build: () => fitParametersTsv(fit?.parameters ?? [], {
+                value: (parameter, raw) =>
+                  perArea(raw, scalesWithArea(parameter.unit) ? area : null),
+                unit: (parameter) => areaUnit(parameter.unit, area),
+              }),
             },
           ]}
         />
@@ -590,7 +597,14 @@ function FitReport({ fit, kind, area }: {
                 const headline = isHeadline(parameter.name) && parameter.determined
                 return (
                   <tr key={parameter.name}>
-                    <td className="text mono">{parameter.name}</td>
+                    {/* 첨자로 그리되 **원래 이름을 잃지 않는다** — 회로
+                        칸에 쳐 넣는 것은 `CPE1_Q` 이지 `CPE₁,Q` 가 아니다. */}
+                    <td className="text mono" title={parameter.name}>
+                      {(() => {
+                        const [base, index] = splitSubscript(parameter.name)
+                        return <>{base}{index ? <sub>{index}</sub> : null}</>
+                      })()}
+                    </td>
                     <td className="text dim" title={arc?.note}>
                       {meaning || '—'}
                     </td>

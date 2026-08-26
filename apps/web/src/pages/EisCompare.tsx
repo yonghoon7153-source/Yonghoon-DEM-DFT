@@ -220,7 +220,8 @@ export function EisCompare() {
         ) : series.length ? (
           <>
             <Plot series={series} xLabel="Z′ (Ω)" yLabel="−Z″ (Ω)"
-                  height={380} legend equalAspect positiveFit />
+                  height={380} legend equalAspect positiveFit
+                  busy={points.loading || !fresh} />
             {inductive ? (
               <label className="row small" style={{ gap: 6, padding: '8px 0 0' }}>
                 <input

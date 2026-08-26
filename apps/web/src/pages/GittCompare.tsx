@@ -206,7 +206,7 @@ export function GittCompare() {
           <Spinner />
         ) : series.length ? (
           <Plot series={series} xLabel="용량 (mAh)" yLabel="전압 (V)"
-                height={380} legend />
+                height={380} legend busy={curves.loading || !fresh} />
         ) : null}
       </Card>
 

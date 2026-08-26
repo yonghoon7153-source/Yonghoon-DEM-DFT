@@ -368,17 +368,34 @@ export function bodeTsv(spectra: SpectrumPoints[]): string {
  *  아니라 읽는 것이고, `R1` 없이 32.02 만 있는 열은 아무것도 아니다.
  *  절차서도 이 블록을 엑셀에 붙인다 ("Error값은 필요 없어 Delete 가능").
  */
-export function fitParametersTsv(parameters: FitParameter[]): string {
+export function fitParametersTsv(
+  parameters: FitParameter[],
+  /** 화면이 쓰는 것과 **같은** 단위로 내보내려고 받는다.  안 주면 날 것 그대로. */
+  scale?: {
+    value: (parameter: FitParameter, raw: number) => number
+    unit: (parameter: FitParameter) => string
+  },
+): string {
   if (!parameters.length) return ''
   // 미결정 파라미터는 값도 내보내지 않는다.  화면에서는 "못 믿음" 표시가
   // 붙지만 엑셀에 붙은 순간 그 표시가 사라져 확정값처럼 읽힌다 (리뷰 #7) —
   // 추정값을 실측값처럼 내보내지 않는다 (§0.4).  이름은 남는다: 어떤 행이
   // 비었는지가 정보다.
+  //
+  // **단위가 한 열로 함께 나간다.**  `R2  4.83` 만 붙여 넣으면 그것이 Ω 인지
+  // Ω·cm² 인지 워크시트 안에서는 알 길이 없고, 랩에서 주고받는 표는 늘
+  // `R2 (ohm)` 처럼 단위를 달고 다닌다.  그리고 화면이 면적으로 나눈 값을
+  // 보여 주고 있으면 **그 값 그대로** 나간다 — 보는 수와 붙이는 수가 다르면
+  // 어느 쪽이 맞는지 확인하는 데 왕복이 든다.
   return parameters
     .map((p) =>
       p.determined
-        ? [p.name, cell(p.value), cell(p.stderr)].join('\t')
-        : [p.name, '--', '--'].join('\t'),
+        ? [p.name,
+           cell(scale ? scale.value(p, p.value) : p.value),
+           scale ? scale.unit(p) : p.unit,
+           cell(p.stderr === null || p.stderr === undefined ? p.stderr
+                : scale ? scale.value(p, p.stderr) : p.stderr)].join('\t')
+        : [p.name, MISSING, scale ? scale.unit(p) : p.unit, MISSING].join('\t'),
     )
     .join('\n')
 }

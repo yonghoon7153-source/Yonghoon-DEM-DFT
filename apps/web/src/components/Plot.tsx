@@ -75,6 +75,13 @@ interface Props {
    *  것이 바로 그 차이다.  가로 범위는 데이터가 정하고, 세로는 그 범위에
    *  그림 비율을 곱해 맞춘다 — 반대로 하면 아크의 폭이 화면 밖으로 나간다. */
   equalAspect?: boolean
+  /** 지금 서버에서 다시 받아오는 중인가.
+   *
+   *  고른 것을 바꾸면 새 곡선이 올 때까지 **옛 곡선이 그대로 서 있다**
+   *  (`useAsync` 가 재요청 중 옛 값을 지키는 것은 옳다 — 그림을 비우면 화면이
+   *  깜빡이고 축이 튄다).  그런데 그러면 화면이 눌린 것을 못 알아들은 것처럼
+   *  보이고, 사람은 같은 것을 한 번 더 누른다.  돌아가는 표시 하나면 갈린다. */
+  busy?: boolean
 }
 
 /** Merge every series' x values into one sorted, de-duplicated axis.
@@ -346,6 +353,7 @@ export function Plot({
   legend = false,
   equalAspect = false,
   positiveFit = false,
+  busy = false,
   describeX,
 }: Props) {
   const [wrapRef, width] = useElementWidth<HTMLDivElement>()
@@ -837,6 +845,15 @@ export function Plot({
       {data ? (
         <>
           <div className="plot-zoom">
+            {/* 단추 줄 **맨 앞** -- 그림 위에 겹치지 않는 자리다.  겹치면 새로
+                고칠 때마다 데이터를 가리고, 하필 가려지는 것이 방금 바뀐
+                부분이다. */}
+            {busy ? (
+              <span className="plot-busy" role="status" aria-label="새로 받는 중">
+                <span className="spinner" aria-hidden="true" />
+                <span className="tiny faint">새로 받는 중</span>
+              </span>
+            ) : null}
             <button
               type="button"
               className="sm ghost"

@@ -706,3 +706,26 @@ describe('equalAspectRanges (W3)', () => {
     expect(out.x).toEqual([10, 20])
   })
 })
+
+describe('다시 받아오는 중이라는 표시', () => {
+  // 고른 것을 바꾸면 새 곡선이 올 때까지 옛 곡선이 그대로 서 있다 —
+  // `useAsync` 가 재요청 중 옛 값을 지키는 것은 옳다 (그림을 비우면 축이 튀고
+  // 화면이 깜빡인다).  그런데 그러면 화면이 눌린 것을 못 알아들은 것처럼
+  // 보이고, 사람은 같은 것을 한 번 더 누른다.
+  it('받는 중이면 표시가 뜬다', () => {
+    render(<Plot series={SERIES} xLabel="x" yLabel="y" busy />)
+    expect(screen.getByRole('status', { name: '새로 받는 중' })).toBeInTheDocument()
+  })
+
+  it('평소에는 없다 — 늘 떠 있으면 아무 뜻이 없다', () => {
+    render(<Plot series={SERIES} xLabel="x" yLabel="y" />)
+    expect(screen.queryByRole('status', { name: '새로 받는 중' })).toBeNull()
+  })
+
+  it('그림을 지우지 않는다 — 옛 곡선은 그대로 서 있는다', () => {
+    // 비우면 축이 튀고, 무엇과 무엇을 견주던 중이었는지도 잃는다.
+    const { container } = render(<Plot series={SERIES} xLabel="x" yLabel="y" busy />)
+    expect(container.querySelector('.plot-shell')).not.toBeNull()
+    expect(screen.queryByText('그릴 것이 없습니다')).toBeNull()
+  })
+})
