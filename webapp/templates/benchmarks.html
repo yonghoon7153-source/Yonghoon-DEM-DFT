@@ -355,6 +355,63 @@
 </div>
 {% endif %}
 
+{% if force_bench and force_bench.runs %}
+{% set F = force_bench %}
+{% set U = F.runs.lips %}{% set S = F.runs.lips_sevennet0 %}{% set P = F.runs.li3po4_melt_quench %}
+<h2 style="margin-top:34px;font-size:1rem">⚖ T1b — 힘 정확도 · softening <span class="muted"
+  style="font-weight:400;font-size:.8rem">(문헌 DFT 라벨이 정답지 · {{ F.date }})</span></h2>
+<div class="callout" style="margin-top:8px">
+  {# ⚠ 이 절의 요점은 UMA 의 절대 MAE 가 아니라 **같은 프레임 위의 두 엔진 대조**다.
+     한쪽만 보이면 "3.6 % 는 좋은가?" 를 잴 눈금이 없다. #}
+  <b>softening slope</b> = Σ(F<sub>ref</sub>·F<sub>pred</sub>)/Σ(F<sub>ref</sub>²) — 1.0 이 무연화.
+  <b>Pearson r 로는 안 보인다</b>(스케일 불변). 아래 두 엔진은 <b>완전히 같은 251 프레임·같은 정답지</b>다.
+</div>
+{% if U and S %}
+<table class="data-table" style="margin-top:10px">
+  <thead><tr><th>엔진</th><th>훈련셋</th><th>MAE [eV/Å]</th><th>상대 MAE</th>
+    <th>Pearson r</th><th>softening slope</th></tr></thead>
+  <tbody>
+    <tr><td><b>UMA-s-1p1</b></td><td>OMat24</td>
+      <td>{{ '%.4f'|format(U.force.mae_eVA) }}</td><td>{{ '%.2f'|format(U.force.rel_mae_pct) }} %</td>
+      <td>{{ '%.4f'|format(U.force.pearson_r) }}</td>
+      <td><b>{{ '%.4f'|format(U.force.softening_slope) }}</b></td></tr>
+    <tr><td>SevenNet-0</td><td>MPtrj</td>
+      <td>{{ '%.4f'|format(S.force.mae_eVA) }}</td><td>{{ '%.2f'|format(S.force.rel_mae_pct) }} %</td>
+      <td>{{ '%.4f'|format(S.force.pearson_r) }}</td>
+      <td><b>{{ '%.4f'|format(S.force.softening_slope) }}</b></td></tr>
+  </tbody>
+</table>
+<div class="muted" style="font-size:.78rem;margin-top:6px">
+  {{ U.dataset|mdlite }} · {{ U.source|mdlite }} · {{ U.n_frames_used }}/{{ U.n_frames_total }} 프레임
+</div>
+{% endif %}
+{% if P and P.segments %}
+<div style="margin-top:12px">
+  <div style="font-weight:600;font-size:.88rem">비평형 구간에서도 안 무너진다 <span class="muted"
+    style="font-weight:400;font-size:.74rem">Li₃PO₄ · {{ P.source|mdlite }}</span></div>
+  <table class="data-table" style="margin-top:6px">
+    <thead><tr><th>구간</th><th>n</th><th>MAE [eV/Å]</th><th>상대 MAE</th><th>softening slope</th></tr></thead>
+    <tbody>{% for k, v in P.segments.items() %}
+      <tr><td>{{ k|mdlite }}</td><td>{{ v.n }}</td><td>{{ '%.4f'|format(v.mae_eVA) }}</td>
+        <td>{{ '%.2f'|format(v.rel_mae_pct) }} %</td>
+        <td><b>{{ '%.4f'|format(v.softening_slope) }}</b></td></tr>
+    {% endfor %}</tbody>
+  </table>
+  <div class="muted" style="font-size:.78rem;margin-top:6px">
+    Δ(quench − melt) = <b>{{ '%+.4f'|format(P.delta_softening_quench_minus_melt) }}</b> ⇒
+    고에너지·비평형 프레임에서도 연화가 안 커진다.
+  </div>
+</div>
+{% endif %}
+<div class="callout cal-warn" style="margin-top:12px">
+  ⇒ OMat24 의 <b>"softening 은 아키텍처가 아니라 훈련 데이터"</b> 주장이 <b>우리 화학계에서 독립 재현</b>됐다.<br>
+  ⛔ 따라서 <b>b2o3 골격 붕괴는 softening 으로 설명되지 않는다</b> — 다른 원인이다.
+</div>
+<div class="muted mono" style="font-size:.71rem;margin-top:8px">
+  {{ F.tool|mdlite }} · {{ F.machine|mdlite }} · db/properties/uma_force_benchmark.json
+</div>
+{% endif %}
+
 <!-- ── 방법론 참조 ──────────────────────────────────────── -->
 <h2 style="margin-top:34px;font-size:1rem">🔧 방법론 참조 <span class="muted"
   style="font-weight:400;font-size:.8rem">(수치가 아니라 방법 — T1–T12의 출처)</span></h2>

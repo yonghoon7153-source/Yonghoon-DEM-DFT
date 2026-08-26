@@ -686,10 +686,14 @@ def benchmarks():
     b = D.external_benchmarks()
     if not b:
         abort(404)
+    # ⚠ 힘 벤치는 **물성이 아니라 방법**이다 — 위원회 기준선과 같은 축에 둔다.
+    #   UMA 단독 수치만 보이면 "3.6 % 면 좋은가?" 를 판단할 눈금이 없다. 같은 프레임의
+    #   SevenNet-0 행이 같이 있어야 softening 이 아키텍처가 아님이 읽힌다 (T1b).
     return render_template("benchmarks.html", active="bench", b=b,
                            ledger=D.deck_correction_ledger(),
                            revisions=D.verdict_revisions(),
                            committee=D.mlip_committee(),
+                           force_bench=D.uma_force_benchmark(),
                            lit_have={p["id"] for p in D.list_papers()},
                            talks_have={t["id"] for t in D.list_talks()})
 
