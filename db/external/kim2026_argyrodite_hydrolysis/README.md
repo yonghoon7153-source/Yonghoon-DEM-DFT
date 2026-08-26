@@ -89,3 +89,14 @@ repo 를 무겁게 만들 이유가 없다. 필요하면 upstream 에서 다시 
 
 - upstream: `github.com/jhkimmmmm/Hydrolysis-argyrodite` @ `25d8c62`
 - 우리가 계산한 통계는 `validation/*.csv` 로 재현 가능 (열: `Step, DFT (eV), DFT_a (eV/atom), MLP (eV), MLP_a (eV/atom)`)
+
+---
+
+## ⛔ 원본 파일은 이 repo 에 없다 (2026-08-26 정정)
+
+**이 repo 는 공개다**(`visibility: public`). LICENSE 없는 3자 자료를 커밋하면 **실제 재배포**가 된다.
+한 번 커밋했다가 **추적을 해제**했다(`.gitignore` 의 `db/external/*` 규칙).
+
+- **원본 재취득**: `github.com/jhkimmmmm/Hydrolysis-argyrodite` @ `25d8c62` 에서 다시 받는다.
+- **여기 남은 것**: 우리가 쓴 문서 · **우리가 계산한 CSV** · 우리가 그린 그림뿐이다.
+- ⚠ **git 히스토리에는 아직 남아 있다.** 지우려면 history rewrite + force-push 가 필요하고, 그건 사용자 판단 사항이다.
