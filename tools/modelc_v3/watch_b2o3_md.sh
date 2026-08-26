@@ -57,9 +57,15 @@ while IFS= read -r d; do
   [ -z "$d" ] && continue
   rel=${d#"$R"/}; rel=${rel%/}
   t="✗"; if [ -f "$d/traj.xyz" ]; then t="✓"; TRAJ=$((TRAJ+1)); fi
+  # ⭐ 2026-08-26 — **원자 수**를 같이 찍는다. 슈퍼셀 런에서 `--supercell` 이 안 먹으면
+  #   화면상 정상인 채로 62원자를 20시간 돌게 된다 (traj.xyz 0개 사고와 같은 부류).
+  #   md.log 첫 줄이 `[label] NNN atoms | ...` 이다.
+  NAT=$(grep -aom1 "[0-9]\+ atoms" "$d/md.log" 2>/dev/null | head -1 | tr -d " atoms")
+  [ -z "$NAT" ] && NAT=$(grep -aom1 "[0-9]\+ atoms" "$d/../md.log" 2>/dev/null | head -1 | tr -d " atoms")
+  NATS=""; [ -n "$NAT" ] && NATS=" ${NAT}at"
   if [ -f "$d/msd.json" ]; then
     DONE=$((DONE+1))
-    printf "  %-34s ✓ 완료  traj %s  %s\n" "$rel" "$t" \
+    printf "  %-30s%-7s ✓ 완료  traj %s  %s\n" "$rel" "$NATS" "$t" \
       "$(python3 -c "
 import json,sys
 try:
@@ -74,15 +80,15 @@ except Exception as e: print('읽기 실패: %s'%e)" 2>/dev/null)"
     for lr in $LIVE; do case "$d" in "$lr"*) alive=1;; esac; done
     if [ -n "$alive" ]; then
       RUNNING=$((RUNNING+1))
-      printf "  %-34s ▶ 진행  traj %s  ~%s%s ps  (%s K)\n" "$rel" "$t" "$ps" \
+      printf "  %-30s%-7s ▶ 진행  traj %s  ~%s%s ps  (%s K)\n" "$rel" "$NATS" "$t" "$ps" \
         "${TOTAL_PS:+/$TOTAL_PS}" "$K"
     else
       STALLED=$((STALLED+1))
-      printf "  %-34s ⚠ 중단  traj %s  ~%s%s ps 에서 멈춤 (프로세스 없음)\n" \
-        "$rel" "$t" "$ps" "${TOTAL_PS:+/$TOTAL_PS}"
+      printf "  %-30s%-7s ⚠ 중단  traj %s  ~%s%s ps 에서 멈춤 (프로세스 없음)\n" \
+        "$rel" "$NATS" "$t" "$ps" "${TOTAL_PS:+/$TOTAL_PS}"
     fi
   else
-    printf "  %-34s · 대기  traj %s\n" "$rel" "$t"
+    printf "  %-30s%-7s · 대기  traj %s\n" "$rel" "$NATS" "$t"
   fi
 done < <(find "$R" -type d -name 'T[0-9]*' -path '*/d[0-9]*' 2>/dev/null | sort)
 #        ↑ (a) T<K> 디렉터리는 **파일이 없어도** 낸다 — 드라이버가 폴더를 먼저 만들고 MD 를
