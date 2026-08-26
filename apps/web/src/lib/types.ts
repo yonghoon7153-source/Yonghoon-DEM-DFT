@@ -683,6 +683,9 @@ export interface EisDashboardRow {
   series_resistance_ohm: number | null
   total_resistance_ohm: number | null
   measured_at: string | null
+  /** 이 줄에 딸린 것 중 가장 늦게 올라온 때 — 표의 기본 정렬 (내림차순).
+   *  잰 때와 다르다: 지난달에 잰 파일을 오늘 올릴 수 있다. */
+  uploaded_at: string | null
 }
 
 export interface EisDashboard {
@@ -717,6 +720,8 @@ export interface GittDashboardRow {
   diffusion_low: number | null
   diffusion_high: number | null
   measured_at: string | null
+  /** `EisDashboardRow.uploaded_at` 과 같은 뜻 — 표의 기본 정렬. */
+  uploaded_at: string | null
 }
 
 export interface GittDashboard {

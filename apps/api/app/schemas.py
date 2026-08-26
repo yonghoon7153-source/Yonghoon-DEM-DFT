@@ -1146,6 +1146,11 @@ class EisDashboardRow(BaseModel):
     series_resistance_ohm: float | None = None
     total_resistance_ohm: float | None = None
     measured_at: datetime | None = None
+    #: 이 줄에 딸린 것 중 **가장 늦게 올라온** 때.  표의 기본 정렬이다.
+    #:
+    #: `measured_at` 과 다르다: 지난달에 잰 파일을 오늘 올릴 수 있고, 그때
+    #: 사람이 찾는 것은 "방금 올린 것" 이지 "가장 최근에 잰 것" 이 아니다.
+    uploaded_at: datetime | None = None
 
 
 class EisDashboardOut(BaseModel):
@@ -1191,6 +1196,8 @@ class GittDashboardRow(BaseModel):
     diffusion_low: float | None = None
     diffusion_high: float | None = None
     measured_at: datetime | None = None
+    #: `EisDashboardRow.uploaded_at` 과 같은 뜻 — 표의 기본 정렬.
+    uploaded_at: datetime | None = None
 
 
 class GittDashboardOut(BaseModel):

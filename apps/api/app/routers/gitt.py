@@ -512,6 +512,9 @@ def dashboard(session: Session = Depends(get_session)):
             diffusion_low=min(values) if values else None,
             diffusion_high=max(values) if values else None,
             measured_at=latest.start_time or latest.uploaded_at,
+            # 이 줄의 것 중 가장 늦게 올라온 때 — `latest` 는 잰 때로 고른
+            # 것이라 그 하나만 보면 나중에 올린 옛 측정을 놓친다.
+            uploaded_at=max(r.uploaded_at for r in items),
         ))
 
     # 안 붙은 기록도 줄로.  셀 칸이 비어 있다는 것 자체가 "이 파일에는 아직
@@ -538,7 +541,19 @@ def dashboard(session: Session = Depends(get_session)):
             diffusion_low=None,
             diffusion_high=None,
             measured_at=record.start_time or record.uploaded_at,
+            uploaded_at=record.uploaded_at,
         ))
 
-    rows.sort(key=lambda r: (not r.attached, r.group_name, r.sample_name, r.name))
+    # **가장 늦게 올라온 것이 맨 위다.**  이 표를 여는 가장 흔한 이유가 "방금
+    # 올린 것을 본다" 이고, 그때 그것이 어디 있는지 찾아야 하면 표가 일을 안 한
+    # 셈이다.  잰 때가 아니라 올린 때로 세는 이유는 지난달에 잰 파일을 오늘
+    # 올리는 일이 흔해서다.
+    #
+    # 붙은 것을 위로 올리던 규칙은 뺐다.  올린 직후가 바로 안 붙은 상태라,
+    # 그 규칙이 정확히 방금 올린 줄을 아래로 밀어냈다.
+    # 같은 때에 올라온 줄끼리는 예전 순서(그룹 · 셀 · 이름)를 지킨다.  파이썬의
+    # 정렬은 안정적이므로 두 번 부르면 "올린 때 내림차순, 동률은 이름순" 이
+    # 된다 — 한 key 에 reverse=True 로 묶으면 이름까지 거꾸로 간다.
+    rows.sort(key=lambda r: (r.group_name, r.sample_name, r.name))
+    rows.sort(key=lambda r: r.uploaded_at or datetime.min, reverse=True)
     return GittDashboardOut(rows=rows, unattached=len(loose))

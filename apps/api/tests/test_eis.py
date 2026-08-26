@@ -724,8 +724,10 @@ def test_the_dashboard_shows_what_is_not_attached_yet_as_its_own_row(client, sam
     assert body["unattached"] == 1
     assert len(body["rows"]) == 2
 
+    # 여기서 b.mpr 이 먼저인 것은 **나중에 올렸기** 때문이다 (아래 정렬 테스트).
+    # 한때는 "붙은 줄이 먼저" 라는 규칙이 따로 있었는데, 그 규칙이 정확히 방금
+    # 올린 줄(= 아직 안 붙은 줄)을 아래로 밀어내서 뺐다.
     attached, loose = body["rows"]
-    # 붙은 줄이 먼저다 -- 표의 첫인상이 "아직 정리 안 된 파일" 이면 안 된다.
     assert attached["attached"] is True
     assert attached["sample_id"] == sample_id
     assert attached["name"] == "b.mpr"      # 셀 이름 말고 그 측정의 원래 이름
@@ -1165,3 +1167,22 @@ def test_a_group_that_does_not_exist_is_refused(client):
     made = upload(client)
     reply = client.patch(f"/api/eis/spectra/{made['id']}", json={"group_id": 9999})
     assert reply.status_code == 404
+
+
+def test_the_dashboard_puts_the_newest_upload_on_top(client, sample_id):
+    """이 표를 여는 가장 흔한 이유가 "방금 올린 것을 본다" 이다.
+
+    그때 그것을 표에서 찾아야 하면 표가 일을 안 한 셈이다.  **잰 때가 아니라
+    올린 때**로 센다 -- 지난달에 잰 파일을 오늘 올리는 일이 흔하고, 그때 사람이
+    찾는 것은 "방금 올린 것" 이지 "가장 최근에 잰 것" 이 아니다.
+    """
+    upload(client, name="first.mpr", sample_id=sample_id)
+    second = client.post("/api/samples", json={"name": "둘째 셀"}).json()["id"]
+    upload(client, name="second.mpr", rs=9.0, sample_id=second)
+    upload(client, name="third.mpr", rs=11.0)       # 안 붙임 -- 그래도 맨 위다
+
+    rows = client.get("/api/eis/dashboard").json()["rows"]
+    assert [r["name"] for r in rows] == ["third.mpr", "second.mpr", "first.mpr"]
+    # 안 붙은 줄이 맨 위에 설 수 있어야 한다.  올린 직후가 바로 그 상태라,
+    # 붙은 것을 위로 올리면 방금 올린 줄이 매번 아래로 밀린다.
+    assert rows[0]["attached"] is False
