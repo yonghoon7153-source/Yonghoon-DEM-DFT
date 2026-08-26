@@ -758,14 +758,25 @@ class SpectrumFitOut(BaseModel):
     parameters: list[dict[str, Any]] = []
     #: 그 저항들이 이 셀에서 무엇인지.  읽을 때 붙인다 (이름은 고정값이 아니다).
     arcs: list[dict[str, Any]] = []
-    #: 맞춘 회로를 측정 주파수 전체에서 서버가 계산한 곡선 (ADR 0019).  화면이
-    #: 회로를 다시 해석하면 서버와 조용히 어긋난다 — L·Ws·Wo·중첩을 못 그리는
-    #: 근사 재구성이 실제로 다른 곡선을 "맞춤" 으로 그렸다 (리뷰 #6).  회로를
-    #: 못 읽으면 null 이고 ``fitted_note`` 가 이유를 말한다.
+    #: 맞춘 회로를 **맞추는 데 쓴 주파수 위에서** 서버가 계산한 곡선 (ADR 0019).
+    #: 화면이 회로를 다시 해석하면 서버와 조용히 어긋난다 — L·Ws·Wo·중첩을 못
+    #: 그리는 근사 재구성이 실제로 다른 곡선을 "맞춤" 으로 그렸다 (리뷰 #6).
+    #: 회로를 못 읽으면 null 이고 ``fitted_note`` 가 이유를 말한다.
+    #:
+    #: 한때 저장된 **전체** 주파수 위에서 그렸다.  창을 좁혀 맞추면 그 밖은
+    #: 외삽인데, 모델이 거기서 되돌아 나오며 저주파 끝에 갈고리를 만들었다 —
+    #: 맞춤이 실패한 것처럼 보이지만 사실은 아무 점도 없는 곳의 그림이다.
     fitted_frequency_hz: list[float] | None = None
     fitted_z_re: list[float] | None = None
     fitted_z_im: list[float] | None = None
     fitted_note: str = ""
+    #: 오차가 저주파 끝에 몰렸을 때, 거기를 빼려면 하한에 무엇을 적어야 하나.
+    #: 값이 있으면 그 자체가 "몰려 있다" 는 뜻이다 (`reason` 이 같은 것을
+    #: 문장으로 말한다).  읽을 때 다시 재므로 옛 피팅에도 붙는다.
+    suggested_low_hz: float | None = None
+    suggested_low_drops: int = 0
+    #: 이 피팅이 실제로 쓸 수 있는 상한 — 유도성 점을 뺀 뒤의 최고 주파수.
+    suggested_high_hz: float | None = None
     #: 전고체일 때의 전도도.  두께·면적이 없으면 무엇이 없는지 말한다.
     conductivity: dict[str, Any] = {}
     dropped_inductive: int = 0

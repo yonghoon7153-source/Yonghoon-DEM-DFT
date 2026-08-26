@@ -813,6 +813,11 @@ export interface SpectrumFit {
   }
   dropped_inductive: number
   dropped_out_of_range: number
+  /** 오차가 저주파 끝에 몰렸을 때 하한에 적을 값. null 이면 안 몰렸다는 뜻. */
+  suggested_low_hz?: number | null
+  suggested_low_drops?: number
+  /** 유도성 점을 뺀 뒤의 최고 주파수 — 상한에 적을 값. */
+  suggested_high_hz?: number | null
   frequency_low_hz: number | null
   frequency_high_hz: number | null
   starts: number

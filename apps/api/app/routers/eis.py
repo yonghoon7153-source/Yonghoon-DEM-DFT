@@ -24,6 +24,8 @@ from wrdkit.eis import (
     SOLID,
     Spectrum,
     UnknownColumn,
+    edge_misfit,
+    inductive_mask,
     ionic_conductivity,
     label_arcs,
     read_mpr_bytes,
@@ -1000,6 +1002,32 @@ def delete_spectrum(spectrum_id: int, session: Session = Depends(get_session)):
 # --------------------------------------------------------------------------
 # fitting
 # --------------------------------------------------------------------------
+def _fitted_band(spectrum: Spectrum, fit: SpectrumFit) -> Spectrum:
+    """The points the fit actually used, as best the stored row can say.
+
+    ``frequency_low_hz``/``frequency_high_hz`` are written from the fitter's
+    own working set, so they already carry both the frequency window and the
+    inductive drop -- the inductive points sit above the real axis at the top
+    of the sweep, so cutting at the highest *used* frequency removes them.
+
+    Interior points the inductive mask happened to catch (a noisy one crossing
+    the axis mid-curve) come back into the drawn curve.  That is harmless: one
+    extra frequency inside the fitted band is interpolation between points the
+    fit did use, not the extrapolation this function exists to stop.
+
+    Older rows without the two columns fall back to the whole spectrum, which
+    is what they got before.
+    """
+    low, high = fit.frequency_low_hz, fit.frequency_high_hz
+    if low is None or high is None:
+        return spectrum
+    mask = (spectrum.frequency_hz >= low) & (spectrum.frequency_hz <= high)
+    kept = spectrum.select(mask)
+    # 창이 어긋나 아무것도 안 남으면 옛 동작으로 돌아간다 -- 빈 곡선은 화면에서
+    # "회로를 못 읽었다" 와 구분되지 않는다.
+    return kept if len(kept) >= 2 else spectrum
+
+
 def _fit_out(session: Session, record: SpectrumRecord,
              fit: SpectrumFit) -> SpectrumFitOut:
     """A stored fit, with the labels and conductivities derived now.
@@ -1017,6 +1045,9 @@ def _fit_out(session: Session, record: SpectrumRecord,
     fitted_re: list[float] | None = None
     fitted_im: list[float] | None = None
     fitted_note = ""
+    suggested_low: float | None = None
+    suggested_low_drops = 0
+    suggested_high: float | None = None
     if parameters:
         # The curve the parameters mean, evaluated by the same AST that fitted
         # them.  The screen used to rebuild it from the parameter names and
@@ -1032,10 +1063,26 @@ def _fit_out(session: Session, record: SpectrumRecord,
                 by_name = {p["name"]: float(p["value"]) for p in parameters}
                 values = np.array([by_name[name]
                                    for name in model.parameter_names])
-                z = model.impedance(values, spectrum.frequency_hz)
-                fitted_frequency = [float(v) for v in spectrum.frequency_hz]
+                # **맞추는 데 쓴 구간에서만** 그린다.  창을 좁혀 맞췄으면 그
+                # 밖은 외삽이고, 모델은 거기서 무엇이든 할 수 있다 — 실측
+                # 전고체 풀셀에서 저주파 일곱 점을 빼고 맞췄더니 그 일곱 점
+                # 위의 곡선이 되돌아 나와 갈고리를 그렸다.  아무 점도 없는
+                # 곳의 그림인데 화면에서는 맞춤이 터진 것으로 읽힌다.
+                used = _fitted_band(spectrum, fit)
+                z = model.impedance(values, used.frequency_hz)
+                fitted_frequency = [float(v) for v in used.frequency_hz]
                 fitted_re = [float(v) for v in z.real]
                 fitted_im = [float(v) for v in z.imag]
+
+                # 추천 하한·상한.  읽을 때 다시 재므로 옛 피팅에도 붙는다.
+                edge = edge_misfit(used.frequency_hz, used.z, z,
+                                   len(model.parameter_names))
+                if edge is not None:
+                    suggested_low = edge.threshold_hz
+                    suggested_low_drops = edge.count
+                kept = spectrum.select(~inductive_mask(spectrum))
+                if len(kept):
+                    suggested_high = float(np.max(kept.frequency_hz))
             else:
                 fitted_note = "파싱 결과가 없어 곡선을 계산하지 못했습니다"
         except (CircuitError, KeyError) as exc:
@@ -1066,6 +1113,9 @@ def _fit_out(session: Session, record: SpectrumRecord,
         fitted_z_re=fitted_re,
         fitted_z_im=fitted_im,
         fitted_note=fitted_note,
+        suggested_low_hz=suggested_low,
+        suggested_low_drops=suggested_low_drops,
+        suggested_high_hz=suggested_high,
     )
 
 

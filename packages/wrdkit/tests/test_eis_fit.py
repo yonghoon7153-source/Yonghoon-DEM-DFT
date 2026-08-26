@@ -618,43 +618,32 @@ def test_staged_start_never_makes_the_answer_worse():
         module._staged_start = real
     # 같거나 낫다.  수치 오차만큼의 여유를 준다.
     assert with_staged.chi_squared <= without.chi_squared * 1.000001
-
-
-def test_edge_misfit_names_the_tail_when_the_sweep_stopped_early():
-    """χ² 하나로는 "회로가 틀렸다" 와 "스윕이 일찍 끝났다" 가 구분되지 않는다.
-
-    실측 전고체 풀셀이 그렇다: 0.05 Hz 아래 일곱 점이 오차의 절반 이상을
-    내는데, 그 위쪽만 보면 같은 회로가 훨씬 잘 맞는다.  그 일곱 점은 정점이
-    측정 대역 아래에 있는 과정의 **시작**이다.
-    """
-    from wrdkit.eis.fit import _edge_misfit
+def test_edge_misfit_measures_and_names_a_threshold_to_type():
+    """재는 것과 문장으로 말하는 것을 나눠 둔다 — API 도 같은 자를 쓴다."""
+    from wrdkit.eis.fit import _edge_misfit_note, edge_misfit
 
     frequency = S.log_sweep(1e5, 1e-2, 6)
     total = len(frequency)
     order = np.argsort(frequency)
+    z = 5.0 + 20.0 / (1.0 + 1j * 2 * np.pi * frequency * 1e-3)
 
-    flat = np.full(2 * total, 0.01)
-    assert _edge_misfit(frequency, flat, 1e-4, total) == ""
+    # 어디나 조금씩 어긋난 곡선에는 할 말이 없다.
+    assert edge_misfit(frequency, z, z * 1.01) is None
+    assert _edge_misfit_note(None) == ""
 
-    tail = np.full(2 * total, 0.001)
-    for index in order[:max(3, total // 10)]:
-        tail[index] = 1.0
-        tail[index + total] = 1.0
-    note = _edge_misfit(frequency, tail, 1e-4, total)
-    assert "가장 낮은" in note
-
-    # **타이핑할 수 있는 문턱**을 준다.  경계에 선 점의 주파수를 그대로 적으면
-    # 반올림 한 자리에 따라 그 점이 들어가기도 하고 빠지기도 한다 -- 그래서
-    # 뺄 것의 맨 위와 남길 것의 맨 아래 사이를 고르고, 그 값이 실제로 그
-    # 사이에 있는지를 여기서 잰다.
-    import re
-
-    match = re.search(r"하한을 ([\d.e+-]+) Hz", note)
-    assert match, note
-    threshold = float(match.group(1))
-    order = np.argsort(frequency)
+    # 저주파 끝만 크게 어긋난 곡선.
+    fitted = z * 1.001
     take = max(3, total // 10)
-    assert frequency[order[take - 1]] < threshold < frequency[order[take]]
+    fitted[order[:take]] = z[order[:take]] * 2.0
+    edge = edge_misfit(frequency, z, fitted)
+    assert edge is not None
+    assert edge.count == take
+    assert edge.share > 0.5
+    assert edge.upper_hz == pytest.approx(float(frequency[order[take - 1]]))
+    # 문턱은 뺄 것의 맨 위와 남길 것의 맨 아래 **사이**다.
+    assert frequency[order[take - 1]] < edge.threshold_hz < frequency[order[take]]
+    assert "하한을" in _edge_misfit_note(edge)
 
-    # 점이 적으면 "가장 낮은 몇 개" 가 통계가 아니라 우연이다.
-    assert _edge_misfit(frequency[:8], tail[:16], 1e-4, 8) == ""
+    # 길이가 안 맞거나 점이 적으면 아무 말도 하지 않는다.
+    assert edge_misfit(frequency, z, fitted[:-1]) is None
+    assert edge_misfit(frequency[:8], z[:8], fitted[:8]) is None

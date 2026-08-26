@@ -26,14 +26,16 @@ from .derive import (
     total_resistance,
 )
 from .drt import DrtPeak, DrtResult, lcurve_corner
-from .fit import FitResult, Parameter, fit_circuit
+from .fit import EdgeMisfit, FitResult, Parameter, edge_misfit, fit_circuit
 from .guess import Arc, find_arcs, inductive_mask, initial_guess
 from .spectrum import Spectrum
 
 __all__ = ["Arc", "CONFIGS", "Circuit", "CircuitError", "DrtPeak", "DrtResult",
-           "FULL", "FitResult", "HALF", "LIQUID", "Parameter", "SOLID",
+           "EdgeMisfit", "FULL", "FitResult", "HALF", "LIQUID", "Parameter",
+           "SOLID",
            "SYMMETRIC", "Spectrum", "UnknownColumn", "conductivity", "drt",
-           "find_arcs", "fit_circuit", "inductive_mask", "initial_guess",
+           "edge_misfit", "find_arcs", "fit_circuit", "inductive_mask",
+           "initial_guess",
            "ionic_conductivity", "label_arcs", "lcurve_corner", "parse_circuit",
            "read_mpr_bytes", "read_mps_text", "read_mpt_text",
            "total_resistance"]

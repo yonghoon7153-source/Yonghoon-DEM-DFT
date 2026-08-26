@@ -244,6 +244,40 @@ def test_a_circuit_that_cannot_be_read_is_a_422_not_a_500(client):
     assert "회로" in response.json()["detail"]
 
 
+def test_the_curve_stops_where_the_fit_stopped(client):
+    """맞춘 구간 **밖**에는 곡선을 그리지 않는다.
+
+    한때 저장된 전체 주파수 위에서 그렸다.  창을 좁혀 맞추면 그 밖은 외삽이고
+    모델은 거기서 무엇이든 할 수 있다 — 실측 전고체 풀셀에서 저주파 일곱 점을
+    빼고 맞췄더니 그 일곱 점 위의 곡선이 되돌아 나와 갈고리를 그렸다.  맞춤이
+    터진 것처럼 보이지만 아무 점도 없는 곳의 그림이었다.
+    """
+    out = upload(client, kind="liquid")
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)",
+                              "frequency_low_hz": 1.0}).json()
+    assert fit["converged"]
+    drawn = fit["fitted_frequency_hz"]
+    assert min(drawn) >= 1.0
+    assert len(drawn) < out["n_points"]
+    assert len(drawn) == out["n_points"] - fit["dropped_out_of_range"]
+    # 그리고 화면이 쓰는 세 배열의 길이는 늘 같아야 한다.
+    assert len(fit["fitted_z_re"]) == len(drawn)
+    assert len(fit["fitted_z_im"]) == len(drawn)
+
+
+def test_the_fit_suggests_the_bounds_to_type(client):
+    """추천 상한은 늘 있고(유도성만 보면 된다), 하한은 몰렸을 때만 있다."""
+    out = upload(client, kind="liquid")
+    fit = client.post(f"/api/eis/spectra/{out['id']}/fit",
+                      params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"}).json()
+    points = client.get(f"/api/eis/spectra/{out['id']}/points").json()
+    assert fit["suggested_high_hz"] == pytest.approx(max(points["frequency_hz"]))
+    # 이 합성 스펙트럼은 회로 그대로라 저주파 끝에 몰릴 것이 없다.
+    assert fit["suggested_low_hz"] is None
+    assert fit["suggested_low_drops"] == 0
+
+
 def test_a_failed_fit_is_stored_rather_than_hidden(client):
     """맞지 않는다는 것도 발견이다.  숨기면 다음 사람이 같은 것을 또 해 본다."""
     out = upload(client)

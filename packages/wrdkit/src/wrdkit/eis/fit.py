@@ -442,7 +442,9 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         notes.append(", ".join(f"{name}_Ri ↔ {name}_Re" for name in swappable)
                      + " 는 맞바꿔도 같은 곡선입니다 — 스펙트럼은 둘의 짝만 "
                        "정하고 어느 쪽이 이온인지는 말하지 않습니다")
-    edge = _edge_misfit(working.frequency_hz, residuals, chi2, dof)
+    fitted_z = model.impedance(values, working.frequency_hz)
+    edge = _edge_misfit_note(
+        edge_misfit(working.frequency_hz, z, fitted_z, n_params))
     if edge:
         notes.append(edge)
     reason = " / ".join(notes)
@@ -453,7 +455,7 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
         chi_squared=float(chi2),
         residuals=residuals,
         frequency_hz=working.frequency_hz,
-        fitted=model.impedance(values, working.frequency_hz),
+        fitted=fitted_z,
         converged=True,
         reason=reason,
         starts=len(starts),
@@ -463,58 +465,89 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     )
 
 
-def _edge_misfit(frequency: np.ndarray, residuals: np.ndarray,
-                 chi2: float, dof: int) -> str:
-    """Say so when nearly all of the misfit sits at the low-frequency end.
+@dataclass(frozen=True)
+class EdgeMisfit:
+    """How much of a fit's misfit sits at the low-frequency end, and where to cut.
 
-    A chi-square is one number for the whole sweep, and it cannot tell apart
-    two very different situations: a circuit that is wrong everywhere, and a
-    circuit that is right over the measured features and wrong only where the
-    sweep stopped early.  The second is common here and it is not a fitting
-    problem -- the lab's full cell has a process whose apex is below 10 mHz,
-    so the last few points are the *start* of a feature nobody measured, and
-    any element made to chase them is reporting a shape the data never showed.
+    A chi-square is one number for the whole sweep and it cannot tell apart two
+    very different situations: a circuit that is wrong everywhere, and a circuit
+    that is right over the measured features and wrong only where the sweep
+    stopped early.  The second is common here and it is not a fitting problem --
+    the lab's full cell has a process whose apex is below 10 mHz, so the last
+    few points are the *start* of a feature nobody measured, and any element
+    made to chase them is reporting a shape the data never showed.
 
-    On that spectrum: the seven points below 0.05 Hz carry 68% of the misfit,
-    and the same circuit fitted above 0.05 Hz comes back 22x better.  Without
-    this line the screen says "chi-square 6.5e-4" and the reader concludes the
-    circuit is wrong.
+    On that spectrum the seven points below 0.05 Hz carry 55% of the misfit,
+    and the same circuit fitted above 0.045 Hz comes back 22x better.
+    """
+
+    #: How many points at the bottom of the sweep are in question.
+    count: int
+    #: Their share of the squared residual, 0..1.
+    share: float
+    #: The highest frequency among them -- the top of what would be cut.
+    upper_hz: float
+    #: What to type as the lower bound.  Deliberately **between** the last
+    #: dropped point and the first kept one (log midpoint): typing the boundary
+    #: point's own frequency leaves it in or out depending on which way the
+    #: printed digits rounded.
+    threshold_hz: float
+    #: The same parameters' chi-square with those points left out.  Not a
+    #: refit: refitting goes further still (2.9e-5 against this 2.9e-4 on the
+    #: lab's file), because the tail was dragging the parameters too.
+    chi_squared_without: float
+
+
+def edge_misfit(frequency: np.ndarray, z: np.ndarray, fitted: np.ndarray,
+                n_params: int = 0) -> EdgeMisfit | None:
+    """Measure the low-frequency concentration of misfit, or ``None``.
 
     A tenth of the points (at least three) counting for more than half of the
-    squared residual is the trigger.  It is a report, not an action: nothing
-    is dropped, and the fit already used every point.
+    squared residual is the trigger.  Weighted the way the fit weights, so the
+    shares mean the same thing the chi-square does.
+
+    This is a report, not an action.  Nothing is dropped and the fit already
+    used every point it was given; what comes back is a number to type.
     """
     total = len(frequency)
-    if total < 12:
-        return ""
-    # `residuals` 는 실수부·허수부를 이어 붙인 것이라 점 하나가 두 자리다.
-    if len(residuals) != 2 * total:
-        return ""
-    per_point = residuals[:total] ** 2 + residuals[total:] ** 2
+    if total < 12 or len(z) != total or len(fitted) != total:
+        return None
+    magnitude = np.abs(z)
+    if not np.all(np.isfinite(magnitude)) or np.any(magnitude == 0):
+        return None
+    per_point = np.abs(fitted - z) ** 2 / magnitude ** 2
     if not np.isfinite(per_point).all() or per_point.sum() <= 0:
-        return ""
+        return None
 
     order = np.argsort(frequency)                   # 낮은 주파수부터
     take = max(3, total // 10)
     tail = order[:take]
     share = float(per_point[tail].sum() / per_point.sum())
     if share <= 0.5:
-        return ""
+        return None
 
     rest = float(per_point.sum() - per_point[tail].sum())
-    without = rest / max(dof, 1)
-    dropped_max = float(frequency[order[take - 1]])
-    kept_min = float(frequency[order[take]])
-    # 타이핑할 수 있는 문턱을 준다.  뺄 점들의 맨 위와 남길 점들의 맨 아래
-    # **사이**를 고른다 (로그 중점) -- 경계에 있는 점의 주파수를 그대로 적으면
-    # 반올림 한 자리에 따라 그 점이 들어가기도 하고 빠지기도 한다.
-    threshold = float(np.sqrt(dropped_max * kept_min))
-    return (f"오차의 {share * 100:.0f}% 가 가장 낮은 {take}개 점"
-            f"(≤ {dropped_max:.3g} Hz)에 몰려 있습니다 — 정점이 측정 대역 "
+    dof = max(2 * (total - take) - n_params, 1)
+    return EdgeMisfit(
+        count=take,
+        share=share,
+        upper_hz=float(frequency[order[take - 1]]),
+        threshold_hz=float(np.sqrt(frequency[order[take - 1]]
+                                   * frequency[order[take]])),
+        chi_squared_without=rest / dof,
+    )
+
+
+def _edge_misfit_note(edge: EdgeMisfit | None) -> str:
+    """The sentence the screen shows.  Empty when there is nothing to say."""
+    if edge is None:
+        return ""
+    return (f"오차의 {edge.share * 100:.0f}% 가 가장 낮은 {edge.count}개 점"
+            f"(≤ {edge.upper_hz:.3g} Hz)에 몰려 있습니다 — 정점이 측정 대역 "
             "아래에 있는 과정을 스윕이 끝까지 담지 못했을 때 이렇게 됩니다. "
-            f"맞출 주파수 하한을 {threshold:.3g} Hz 로 두고 다시 맞춰 보세요 "
-            f"(그 점들을 뺀 채로 지금 값의 χ² 가 {without:.2e} 이고, 다시 "
-            "맞추면 더 내려갑니다)")
+            f"맞출 주파수 하한을 {edge.threshold_hz:.3g} Hz 로 두고 다시 맞춰 "
+            f"보세요 (그 점들을 뺀 채로 지금 값의 χ² 가 "
+            f"{edge.chi_squared_without:.2e} 이고, 다시 맞추면 더 내려갑니다)")
 
 
 def _order_arcs_by_frequency(model, values, stderrs):

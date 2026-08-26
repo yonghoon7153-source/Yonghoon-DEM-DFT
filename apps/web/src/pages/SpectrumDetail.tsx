@@ -160,6 +160,19 @@ export function SpectrumDetail() {
     return { low: Math.min(...f), high: Math.max(...f) }
   }, [points.data])
 
+  // 추천 하한·상한.  **마지막으로 맞춘 결과**에서 나온다 — 저주파 끝에
+  // 오차가 몰렸는지는 맞춰 봐야 알 수 있는 것이라, 첫 피팅 전에는 하한 추천이
+  // 없다 (상한은 유도성 점만 보면 되므로 늘 있다).
+  const suggestion = useMemo(() => {
+    const seen = (record?.fits ?? []).find((item) => item.id === showFit)
+      ?? (record?.fits ?? [])[0]
+    return {
+      low: seen?.suggested_low_hz ?? null,
+      drops: seen?.suggested_low_drops ?? 0,
+      high: seen?.suggested_high_hz ?? null,
+    }
+  }, [record?.fits, showFit])
+
   async function runFit(mode?: 'auto') {
     if (!record) return
     setBusy(true)
@@ -392,6 +405,22 @@ export function SpectrumDetail() {
                   value={fitLow}
                   onChange={(event) => setFitLow(event.target.value)}
                 />
+                {/* 눌러서 넣는다.  숫자를 문장 속에서 찾아 손으로 옮겨 적는
+                    것이 이 칸의 실제 사용법이었는데, 경계에 선 점의 주파수를
+                    한 자리 반올림해 적으면 그 점이 도로 들어간다. */}
+                {suggestion.low !== null ? (
+                  <button
+                    type="button"
+                    className="sm ghost"
+                    style={{ marginTop: 5 }}
+                    onClick={() => setFitLow(String(suggestion.low))}
+                  >
+                    추천 {suggestion.low} Hz
+                    <span className="faint">
+                      {' '}· 저주파 {suggestion.drops}점을 뺍니다
+                    </span>
+                  </button>
+                ) : null}
               </Field>
               <Field label="맞출 주파수 상한" hint="비우면 끝까지">
                 <input
@@ -402,6 +431,17 @@ export function SpectrumDetail() {
                   value={fitHigh}
                   onChange={(event) => setFitHigh(event.target.value)}
                 />
+                {suggestion.high !== null ? (
+                  <button
+                    type="button"
+                    className="sm ghost"
+                    style={{ marginTop: 5 }}
+                    onClick={() => setFitHigh(String(suggestion.high))}
+                  >
+                    추천 {hertz(suggestion.high)}
+                    <span className="faint"> · 유도성 위쪽 끝</span>
+                  </button>
+                ) : null}
               </Field>
             </div>
             <div className="row">
