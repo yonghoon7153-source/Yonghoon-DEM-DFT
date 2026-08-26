@@ -276,15 +276,18 @@ export function SpectrumDetail() {
           items={[
             {
               label: '나이퀴스트',
-              title: "Z′ 와 −Z″ 두 열 — Origin 에서 -col(B) 를 다시 할 필요 없다",
+              title: `Z′ 와 −Z″ 두 열 (${zUnit}) — Origin 에서 -col(B) 를 다시 할 필요 없다`,
               disabled: !points.data,
-              build: () => (points.data ? nyquistTsv([points.data]) : ''),
+              // 화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 Ω·cm² 다.
+              build: () => (points.data
+                ? nyquistTsv([points.data], (value) => perArea(value, area)) : ''),
             },
             {
               label: '보드',
-              title: '주파수 · |Z| · 위상 세 열',
+              title: `주파수 (Hz) · |Z| (${zUnit}) · 위상 (°) 세 열`,
               disabled: !points.data,
-              build: () => (points.data ? bodeTsv([points.data]) : ''),
+              build: () => (points.data
+                ? bodeTsv([points.data], (value) => perArea(value, area)) : ''),
             },
             {
               label: '피팅 파라미터',

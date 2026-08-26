@@ -315,6 +315,16 @@ export async function copyText(text: string): Promise<void> {
 //
 // 위의 세 규칙을 그대로 따른다.  절차서의 마지막 단계가 "Copy to clipboard →
 // 엑셀 → Origin" 이므로, 여기서 나오는 것이 그 워크시트에 그대로 들어가야 한다.
+//
+// 그리고 화면이 Ω 를 Ω·cm² 로 바꿔 그리고 있으면 **여기도 같이 바뀐다**.
+// 축에 Ω·cm² 라고 적힌 그림을 보면서 붙여 넣은 열이 Ω 이면, 다른 것을 보고
+// 있다는 사실이 워크시트 안에서는 드러나지 않는다 — 두 수의 비가 면적이라
+// 소수점 자리만 다른 그럴듯한 수로 앉는다.
+
+/** 임피던스 값 하나를 화면과 같은 단위로. 안 주면 날 것(Ω) 그대로. */
+type Scale = (ohm: number) => number
+
+const ohms = (scale?: Scale): Scale => scale ?? ((value) => value)
 
 /** 나이퀴스트: Z′ 와 **−Z″**.
  *
@@ -322,8 +332,9 @@ export async function copyText(text: string): Promise<void> {
  *  붙여 넣은 사람이 Origin 에서 `-col(B)` 를 다시 해야 하고 (절차서가 실제로
  *  그렇게 시킨다), 한 번 잊으면 아크가 아래로 뒤집힌 그림이 나온다.
  */
-export function nyquistTsv(spectra: SpectrumPoints[]): string {
-  return stackedXy(spectra.map((item) => [item.z_re, item.z_im.map((v) => -v)]))
+export function nyquistTsv(spectra: SpectrumPoints[], scale?: Scale): string {
+  const z = ohms(scale)
+  return stackedXy(spectra.map((item) => [item.z_re.map(z), item.z_im.map((v) => z(-v))]))
 }
 
 /** 겹쳐 본 나이퀴스트 — 스펙트럼마다 (Z′, −Z″) 두 열.
@@ -331,8 +342,9 @@ export function nyquistTsv(spectra: SpectrumPoints[]): string {
  *  비교 화면 것이라 쌓지 않는다 (`widePairs` 머리말).  상세 화면의
  *  `nyquistTsv` 는 그대로 쌓는다 — 거기는 한 스펙트럼이다.
  */
-export function nyquistWideTsv(spectra: SpectrumPoints[]): string {
-  return widePairs(spectra, (item) => [item.z_re, item.z_im.map((v) => -v)])
+export function nyquistWideTsv(spectra: SpectrumPoints[], scale?: Scale): string {
+  const z = ohms(scale)
+  return widePairs(spectra, (item) => [item.z_re.map(z), item.z_im.map((v) => z(-v))])
 }
 
 /** 겹쳐 본 pseudo-OCV — 기록마다 (용량, 전압) 두 열.
@@ -352,11 +364,13 @@ export function pseudoOcvWideTsv(
  *  여기만 두 열이 아니다.  |Z| 와 위상은 축이 다르므로 쌓으면 한 축에 두
  *  단위가 섞인다.  스펙트럼이 여럿이면 세 열씩 나란히 놓는다.
  */
-export function bodeTsv(spectra: SpectrumPoints[]): string {
+export function bodeTsv(spectra: SpectrumPoints[], scale?: Scale): string {
+  const z = ohms(scale)
   const columns: string[][] = []
   for (const item of spectra) {
     columns.push(item.frequency_hz.map(cell))
-    columns.push(item.magnitude.map(cell))
+    // |Z| 만 나눈다.  주파수는 Hz 고 위상은 무차원이라 면적과 상관이 없다.
+    columns.push(item.magnitude.map((value) => cell(z(value))))
     columns.push(item.phase_deg.map(cell))
   }
   return columns.length ? tsvColumns(columns) : ''

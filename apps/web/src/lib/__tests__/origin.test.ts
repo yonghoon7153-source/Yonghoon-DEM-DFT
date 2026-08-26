@@ -303,11 +303,24 @@ describe('nyquistTsv', () => {
   it('없으면 빈 문자열 — 조용히 성공한 척하지 않는다', () => {
     expect(nyquistTsv([])).toBe('')
   })
+
+  it('화면이 Ω·cm² 로 그리고 있으면 두 열 다 Ω·cm² 로 나간다', () => {
+    // 면적을 적어 축이 Ω·cm² 로 바뀌었는데 붙여 넣은 열이 Ω 이면, 두 수의
+    // 비가 면적이라 워크시트 안에서는 그럴듯한 수로 앉는다 — 틀렸다는 것이
+    // 드러나지 않는 종류의 오류다.
+    expect(nyquistTsv([spectrumPoints()], (value) => value * 1.25))
+      .toBe('10\t1.5\n25\t15')
+  })
 })
 
 describe('bodeTsv', () => {
   it('세 열이다 — |Z| 와 위상은 축이 달라 쌓을 수 없다', () => {
     expect(bodeTsv([spectrumPoints()])).toBe('10000\t8.09\t-8.5\n100\t23.32\t-31')
+  })
+
+  it('면적으로 나누는 것은 |Z| 뿐이다 — 주파수는 Hz 고 위상은 무차원이다', () => {
+    expect(bodeTsv([spectrumPoints()], (value) => value * 2))
+      .toBe('10000\t16.18\t-8.5\n100\t46.64\t-31')
   })
 })
 
