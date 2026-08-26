@@ -633,6 +633,9 @@ export interface Spectrum {
   area_cm2: number | null
   /** 원형 펠릿의 지름 (mm).  면적이 비어 있으면 면적이 여기서 나온다. */
   diameter_mm?: number | null
+  /** 실제로 쓰이는 면적 (자기 값 → 지름에서 → 셀의 것).  `null` 이면 모른다 —
+   *  비교 화면은 그때 Ω·cm² 로 안 바꾸고 뺀 이름을 적는다. */
+  area_cm2_effective?: number | null
   /** 이 측정 자신의 조건 (ADR 0027).  셀에 안 붙어 있어도 쓸 수 있다. */
   group_id?: number | null
   test_date?: string

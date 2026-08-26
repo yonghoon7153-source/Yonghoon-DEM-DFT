@@ -766,6 +766,11 @@ class SpectrumOut(BaseModel):
     fit_count: int = 0
     best_chi_squared: float | None = None
     best_circuit: str = ""
+    #: 실제로 쓰이는 면적 (자기 값 → 지름에서 → 셀의 것).  목록에도 싣는 이유는
+    #: **비교 화면이 Ω·cm² 로 바꿀 수 있어야** 해서다: 어느 스펙트럼에 면적이
+    #: 없는지를 상세를 하나씩 열어 봐야 알 수 있으면, 그 화면은 면적이 없는
+    #: 것을 조용히 섞게 된다 (§0.4).  없으면 `None` 이다.
+    area_cm2_effective: float | None = None
 
 
 class SpectrumFitOut(BaseModel):
@@ -818,7 +823,6 @@ class SpectrumDetailOut(SpectrumOut):
     settings: dict[str, Any] = {}
     #: 실제로 쓰이는 기하 — 스펙트럼 자신의 값이 없으면 셀에서 온다.
     thickness_cm: float | None = None
-    area_cm2_effective: float | None = None
     fits: list[SpectrumFitOut] = []
 
 

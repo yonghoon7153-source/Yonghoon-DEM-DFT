@@ -242,6 +242,7 @@ def _out(session: Session, record: SpectrumRecord, *,
         best_chi_squared=best.chi_squared if best else None,
         best_circuit=best.circuit if best else "",
         duplicate=duplicate,
+        area_cm2_effective=_geometry(session, record)[1],
     )
 
 
@@ -337,7 +338,6 @@ def read_spectrum(spectrum_id: int, session: Session = Depends(get_session)):
         **_out(session, record).model_dump(),
         settings=json.loads(record.settings_json) if record.settings_json else {},
         thickness_cm=thickness_cm,
-        area_cm2_effective=area,
         fits=[_fit_out(session, record, fit) for fit in fits],
     )
 
