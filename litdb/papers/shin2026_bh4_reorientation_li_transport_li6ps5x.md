@@ -5,8 +5,11 @@
 > 본문 12 pp + SI 38 pp + **Video S1 (mp4, ⛔ 우리 미판독 — §8c)** · digested 2026-08-26 · status ✅
 > (본문 12 pp 전수 + **SI 38 pp 전수** 정독 · 그림 36장 크로핑 · **본문 `Fig. 1`–`Fig. 4` + `Fig. S8` 고해상 실물 판독**)
 >
-> elements: Li, P, S, B, H, Cl, Co, Ni, Mn, In
-> methods: DFT, AIMD, MD, DOS, NMR, XPS, Raman
+> elements: Li, P, S, B, H, Cl, Co
+> methods: DFT, AIMD, MD
+> *(⚠ 이 논문의 주력 기법인 **고체 NMR — MAS · SLR(1/T₁) · PFG · 2D EXSY** 는 webapp 용어집 어휘 목록에 없어
+>  `methods:` 줄에 못 넣는다. 기법 설명은 §4.3·§6·§12 에 있다. 계산 쪽은 순수 AIMD 이고
+>  DOS/COHP/Bader/NEB/BVSE/탄성/포논/ESW 는 **전부 0건**이다.)*
 >
 > 🎤 **관련 발표**: `talks/lee2026_skku_mlip_materials_design.md` §99-10 대기열 **8번** · **덱 밖**(덱은 2026-07 자료집, 이 논문은 랩 발표목록 **[20]**) ·
 > ⛔ 그 talk 은 citable=no — **이 논문이 정본이고, 덱/구술과 어긋나면 이 논문이 이긴다**
