@@ -764,3 +764,52 @@ def test_the_delta_columns_survive_a_what_if_mass(client, sample_id, wrd_bytes):
                       complete_only="true")
     assert base[1]["discharge_delta"] == pytest.approx(
         doubled[1]["discharge_delta"] * 2, rel=1e-6)
+
+
+def test_dashboard_puts_the_newest_upload_on_top(client, wrd_bytes,
+                                                 finished_wrd_bytes):
+    """방금 올린 셀이 맨 위여야 한다.
+
+    이름순은 실험이 쌓일수록 방금 올린 셀을 표 한가운데로 숨긴다 -- 지금 보려는
+    것이 늘 방금 올린 것인데도.  이름은 실험 조건으로 짓지 날짜로 짓지 않으므로
+    이름순과 시간순은 아무 관계가 없다.
+    """
+    from datetime import datetime
+
+    from sqlmodel import Session, select
+
+    from app.db import engine
+    from app.models import Run
+
+    # 이름은 일부러 거꾸로: 시간순으로 정렬되면 Z 가 위, 이름순이면 A 가 위.
+    older = client.post("/api/samples", json={"name": "AAA-먼저"}).json()["id"]
+    newer = client.post("/api/samples", json={"name": "ZZZ-나중"}).json()["id"]
+    _upload(client, older, wrd_bytes, name="older.wrd")
+    _upload(client, newer, finished_wrd_bytes, name="newer.wrd")
+
+    # 두 업로드가 같은 초에 들어가면 이 시험이 무엇을 재는지 모호해진다.
+    with Session(engine) as session:
+        for run in session.exec(select(Run)).all():
+            when = 2020 if run.sample_id == older else 2026
+            run.uploaded_at = datetime(when, 1, 1)
+            session.add(run)
+        session.commit()
+
+    rows = client.get("/api/dashboard").json()["rows"]
+    assert [r["sample_name"] for r in rows] == ["ZZZ-나중", "AAA-먼저"]
+    assert rows[0]["uploaded_at"].startswith("2026")
+
+
+def test_a_cell_with_no_file_goes_to_the_bottom(client, wrd_bytes):
+    """아직 아무것도 안 올린 셀이 맨 위를 차지하면 안 된다.
+
+    올린 것이 없으면 정렬 기준이 없다.  `None` 을 "가장 최근" 으로 읽으면 방금
+    만들기만 한 빈 셀이 방금 올린 셀을 밀어낸다.
+    """
+    filled = client.post("/api/samples", json={"name": "AAA-파일있음"}).json()["id"]
+    client.post("/api/samples", json={"name": "ZZZ-빈셀"})
+    _upload(client, filled, wrd_bytes, name="one.wrd")
+
+    rows = client.get("/api/dashboard").json()["rows"]
+    assert [r["sample_name"] for r in rows] == ["AAA-파일있음", "ZZZ-빈셀"]
+    assert rows[-1]["uploaded_at"] is None

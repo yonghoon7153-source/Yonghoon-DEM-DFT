@@ -7,6 +7,7 @@ request may override the sample's mass/area for a what-if without saving.
 from __future__ import annotations
 
 import json
+from datetime import datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
@@ -23,7 +24,7 @@ from wrdkit.ica import (
 
 from ..db import get_session
 from ..deps import get_run, get_sample, group_scope, resolved_cell_out, validate_basis
-from ..models import CycleRecord, ExperimentGroup, Sample
+from ..models import CycleRecord, ExperimentGroup, Run, Sample
 from ..schemas import (
     CycleOut,
     CycleTableOut,
@@ -1132,6 +1133,18 @@ def dashboard(session: Session = Depends(get_session),
         statement = statement.where(Sample.group_id.in_(group_scope(session, group_id)))
     samples = session.exec(statement.order_by(Sample.name)).all()
 
+    # 셀마다 "가장 최근에 올린 파일이 언제냐".  한 셀이 여러 파일로 쪼개지므로
+    # (`..._011.wrd`, `..._012.wrd`) 셀의 나이는 그 중 **가장 늦은** 것이다.
+    #
+    # 셀마다 물으면 셀 수만큼 조회가 는다.  한 번에 읽어 사전으로 만든다.
+    newest: dict[int, datetime] = {}
+    for run_sample_id, uploaded_at in session.exec(
+            select(Run.sample_id, Run.uploaded_at).where(Run.sample_id.is_not(None))):
+        if run_sample_id is None or uploaded_at is None:
+            continue
+        if uploaded_at > newest.get(run_sample_id, datetime.min):
+            newest[run_sample_id] = uploaded_at
+
     rows = []
     for sample in samples:
         cell = resolve_cell(sample)
@@ -1164,6 +1177,11 @@ def dashboard(session: Session = Depends(get_session),
                 trend, knee.onset_cycle if knee and knee.detected else None),
             "sample_id": sample.id,
             "sample_name": sample.name,
+            # 표의 기본 정렬 기준.  화면이 서버가 준 순서를 그대로 그리므로
+            # 값 자체도 함께 보낸다 -- 순서만 보내면 화면 쪽에서 다시 묶거나
+            # 거르는 날 조용히 이름순으로 돌아간다.
+            "uploaded_at": (newest[sample.id].isoformat()
+                            if sample.id in newest else None),
             "group_id": sample.group_id,
             # The group's own name, so the board can show it without a second
             # request and can count cells per group without asking the server
@@ -1210,6 +1228,18 @@ def dashboard(session: Session = Depends(get_session),
             # 셀이 섞이는데, 이름이 없으면 열어 봐야 안다 (ADR 0012).
             "owner": sample.created_by or "",
         })
+
+    # 최근에 올린 셀이 맨 위.  이름순은 실험이 쌓일수록 방금 올린 셀이 표
+    # 한가운데로 숨는다 -- 지금 보려는 것이 늘 방금 올린 것인데도.
+    #
+    # 정렬을 두 번 한다: 이름으로 한 번, 그다음 시각으로.  파이썬의 sort 는
+    # 안정 정렬이라 시각이 같은 셀끼리는 이름순이 남는다 (`reverse=True` 도
+    # 같은 값끼리는 뒤집지 않는다).  한 번에 튜플로 묶으면 시각은 내림차순,
+    # 이름은 오름차순이라는 서로 다른 방향을 한 키에 담을 수 없다.
+    #
+    # 파일이 하나도 없는 셀(방금 만들고 아직 안 올린 셀)은 맨 아래로 간다.
+    rows.sort(key=lambda row: row["sample_name"] or "")
+    rows.sort(key=lambda row: row["uploaded_at"] or "", reverse=True)
 
     used_bases = {row["basis"] for row in rows}
     response_basis = next(iter(used_bases)) if len(used_bases) == 1 else basis

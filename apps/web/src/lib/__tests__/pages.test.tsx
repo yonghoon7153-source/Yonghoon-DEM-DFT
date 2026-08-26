@@ -186,6 +186,7 @@ function dashboardRow(overrides: Partial<DashboardRow> = {}): DashboardRow {
   return {
     sample_id: 1,
     sample_name: 'A',
+    uploaded_at: null,
     group_id: null,
     cathode_type: '',
     c_rate: null,

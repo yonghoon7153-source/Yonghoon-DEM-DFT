@@ -460,6 +460,9 @@ export interface Report {
 export interface DashboardRow {
   sample_id: number
   sample_name: string
+  /** 이 셀의 파일 중 가장 최근에 올린 것의 시각 — 표의 기본 정렬.
+   *  아직 파일이 없는 셀은 `null` 이고 맨 아래로 간다. */
+  uploaded_at: string | null
   group_id: number | null
   group_name?: string
   /** 그 그룹이 소그룹이면 그 위 그룹의 이름.  최상위면 빈 문자열. */
