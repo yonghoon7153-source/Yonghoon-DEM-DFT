@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 # UMA-MD 라이브 점검. 1회 출력 (반복: watch -n 60 bash <이 파일> <루트>).
+#   ⚠ 루트는 **위치인자**다 (OUTROOT= 같은 환경변수가 아니다).
+#     bash watch_b2o3_md.sh /data/work/runs/arrhenius_6pt_traj
 #
 # 2026-08-20 확장 — 옛 판은 `$R/d0.00_cfg0/T{600,800,1000}/msd.json` **한 겹**만 봤다.
 #   highT_reseed 계열은 `$R/<sys>/s<N>/d0.00_cfg0/T<K>/` 로 두 겹 더 깊어서 아무것도
@@ -14,10 +16,21 @@
 #   (3) 죽은 런과 대기 중인 런 구별 — 프로세스가 없고 msd.json 도 없으면 둘 다 '대기'다.
 set +H
 
-R="${1:-/data/work/runs/b2o3_md}"
+# ⛔ 2026-08-26 — 기본값이 **은퇴한 legacy 계열**(b2o3_md, single-seed, traj 없음)이었다.
+#   인자 없이 돌리면 매번 "궤적 0개" 가짜 경보가 뜨고, 철회된 Ea 0.207 이 화면에 남았다.
+#   경보가 늘 뜨면 사람은 경보를 무시하게 된다 — 그게 F9 경보를 무력화한다.
+#   기본을 **현행 계열**로 바꾸고, 은퇴 계열을 보면 그렇다고 말한다.
+R="${1:-/data/work/runs/highT_reseed_traj}"
 TOTAL_PS="${2:-}"                    # equilib+prod [ps]. 비우면 md.log 진행률을 ps 로만 표시
 
 echo "════ $(date '+%m-%d %H:%M:%S')  UMA-MD  ($R) ════"
+case "$R" in
+  */b2o3_md*|*b2o3_full*)
+    echo "  ⛔ **은퇴한 legacy 계열이다** (single-seed, --save_traj 이전)."
+    echo "     여기 Ea·D 는 인용 불가고 '궤적 0개' 경보는 **가짜**다 —"
+    echo "     그 결함은 이미 기록돼 있다(db/properties/b2o3_md_arrhenius.json)."
+    echo "     현행: /data/work/runs/highT_reseed_traj · arrhenius_6pt_traj" ;;
+esac
 
 if P=$(pgrep -f disorder_ensemble_diffusion.py); then
   for p in $P; do
