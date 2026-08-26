@@ -375,21 +375,21 @@
           "overlap": 0.14274433296172429
         }
       ],
-      "origin_shift": 50.64116328125,
-      "fluid_gap_width": 3.0083859375,
+      "origin_shift": 51.1425609375,
+      "fluid_gap_width": 16.044725,
       "slab_lo": 16.044725,
       "slab_hi": 54.150946875,
       "slab_thickness": 38.106221875,
       "bin_width": 2.005590625,
-      "n_H_inside_slab": 67,
+      "n_H_inside_slab": 79,
       "n_H_S_inside_slab": 7,
-      "max_H_penetration_depth": 4.747602038050012,
-      "max_H_S_penetration_depth": 3.2775329904299966,
-      "mean_H_S_depth": -2.652699300764117,
-      "mean_H_O_depth": -4.885261500324876,
+      "max_H_penetration_depth": 5.248999694300011,
+      "max_H_S_penetration_depth": 3.3509729057000044,
+      "mean_H_S_depth": -2.9181451187788223,
+      "mean_H_O_depth": -4.906543322981415,
       "n_framework_in_fluid": {
-        "Li": 67,
-        "S": 16,
+        "Li": 64,
+        "S": 17,
         "Cl": 11,
         "P": 1
       }
@@ -775,23 +775,23 @@
           "overlap": 0.20832501449854066
         }
       ],
-      "origin_shift": 51.1425609375,
-      "fluid_gap_width": 2.005590625,
+      "origin_shift": 51.64395859375,
+      "fluid_gap_width": 11.0307484375,
       "slab_lo": 14.039134375,
       "slab_hi": 54.150946875,
       "slab_thickness": 40.1118125,
       "bin_width": 2.005590625,
-      "n_H_inside_slab": 157,
+      "n_H_inside_slab": 159,
       "n_H_S_inside_slab": 15,
-      "max_H_penetration_depth": 9.802877722700003,
-      "max_H_S_penetration_depth": 9.802877722700003,
-      "mean_H_S_depth": -0.5383268370989991,
-      "mean_H_O_depth": -3.32953758811543,
+      "max_H_penetration_depth": 10.30427537895001,
+      "max_H_S_penetration_depth": 10.30427537895001,
+      "mean_H_S_depth": -0.5717533475156652,
+      "mean_H_O_depth": -3.3958706619332117,
       "n_framework_in_fluid": {
-        "Li": 52,
-        "S": 23,
+        "Li": 58,
+        "S": 22,
         "Cl": 11,
-        "P": 4
+        "P": 3
       }
     }
   },
@@ -1233,24 +1233,24 @@
           "overlap": 0.15914320695429812
         }
       ],
-      "origin_shift": 52.896248484848485,
-      "fluid_gap_width": 5.988254545454546,
+      "origin_shift": 53.89429090909091,
+      "fluid_gap_width": 17.96476363636364,
       "slab_lo": 13.97259393939394,
-      "slab_hi": 55.89037575757576,
-      "slab_thickness": 41.91778181818182,
+      "slab_hi": 53.89429090909091,
+      "slab_thickness": 39.921696969696974,
       "bin_width": 1.9960848484848486,
-      "n_H_inside_slab": 154,
-      "n_H_S_inside_slab": 7,
-      "max_H_penetration_depth": 8.127149284424242,
-      "max_H_S_penetration_depth": 4.518088152424241,
-      "mean_H_S_depth": -1.7313399411118264,
-      "mean_H_O_depth": -2.352086346370497,
+      "n_H_inside_slab": 88,
+      "n_H_S_inside_slab": 5,
+      "max_H_penetration_depth": 7.129106860181821,
+      "max_H_S_penetration_depth": 3.5200457281818203,
+      "mean_H_S_depth": -2.729382365354251,
+      "mean_H_O_depth": -3.3501287706129217,
       "n_framework_in_fluid": {
-        "Li": 40,
-        "S": 16,
-        "Cl": 10,
+        "Li": 59,
+        "S": 20,
+        "Cl": 11,
         "P": 0,
-        "Sn": 0
+        "Sn": 1
       }
     }
   }
