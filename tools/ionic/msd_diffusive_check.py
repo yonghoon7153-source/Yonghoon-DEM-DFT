@@ -176,6 +176,7 @@ def elem_msd_from_traj(json_path, save_fs=None, cache=True):
     jp = pathlib.Path(json_path)
     traj = jp.parent / "traj.xyz"
     if not traj.exists():
+        print(f"   · {jp.parent.name}: traj.xyz 가 없다 — 골격 검사 원리적 불가")
         return None
     if save_fs is None:
         save_fs, assumed = 100.0, True
@@ -183,12 +184,20 @@ def elem_msd_from_traj(json_path, save_fs=None, cache=True):
         assumed = False
     src = pathlib.Path(__file__).resolve().parents[1] / "modelc_v3" / "aimd_mlip.py"
     if not src.exists():
+        print(f"   ⛔ {src} 가 없다 — 산식을 빌려올 곳이 없다")
         return None
     spec = importlib.util.spec_from_file_location("_aimd", src)
     mod = importlib.util.module_from_spec(spec)
     try:
         spec.loader.exec_module(mod)
-    except BaseException:
+    except BaseException as e:
+        # ⛔ 여기서 조용히 None 을 돌려주면 화면에는 "종별 MSD 없음" 으로만 보인다.
+        #   실제 원인은 대개 **환경**이다 — ase 가 이 conda 환경에 없는 것.
+        #   kgy (base) 에서 실측(2026-08-26): traj.xyz 가 14 MB 로 멀쩡히 있는데
+        #   10/10 이 "종별 MSD 없음" 으로 떨어졌고 이유가 어디에도 안 나왔다.
+        print(f"   ⛔ aimd_mlip 을 못 읽었다: {type(e).__name__}: {e}")
+        if isinstance(e, (ImportError, ModuleNotFoundError)):
+            print(f"      → 환경 문제다. `conda activate uma` 로 ase 가 있는 환경에서 다시.")
         return None
     print(f"   … {traj.parent.name}/traj.xyz 에서 종별 MSD 계산"
           + (f" (save_fs={save_fs:g} fs **가정**)" if assumed else f" (save_fs={save_fs:g} fs)"))
