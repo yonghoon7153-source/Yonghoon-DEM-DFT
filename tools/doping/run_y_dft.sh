@@ -79,8 +79,18 @@ HAS_MPI=0
 if command -v ldd >/dev/null && ldd "$(command -v "$PWX")" 2>/dev/null \
    | grep -qiE "libmpi|libmpich|libopenmpi"; then HAS_MPI=1; fi
 if [ "$HAS_MPI" = "1" ] && command -v mpirun >/dev/null && [ "$NP" -gt 1 ]; then
+  # ⛔ OpenMPI 는 **물리 코어**로 슬롯을 센다. nproc(논리 코어, HT 포함)로 -np 를
+  #   잡으면 "not enough slots" 로 즉시 죽는다 — kgy 실측(nproc 16, 물리 8, -np 12 실패).
+  PHYS=$(lscpu 2>/dev/null | awk -F: '/^Core\(s\) per socket/{c=$2}
+                                      /^Socket\(s\)/{s=$2}
+                                      END{gsub(/ /,"",c); gsub(/ /,"",s);
+                                          if(c>0&&s>0) print c*s}')
+  if [ -n "${PHYS:-}" ] && [ "$NP" -gt "$PHYS" ]; then
+    echo "⚠ NP=$NP > 물리 코어 $PHYS — OpenMPI 슬롯 한계에 걸린다. NP=$PHYS 로 낮춘다."
+    NP="$PHYS"
+  fi
   LAUNCH="mpirun -np $NP"
-  MPIKIND="MPI 빌드 · mpirun -np $NP"
+  MPIKIND="MPI 빌드 · mpirun -np $NP (물리 코어 ${PHYS:-?})"
 else
   LAUNCH=""
   if [ "$NP" -gt 1 ]; then
