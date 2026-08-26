@@ -18,7 +18,7 @@ import { KneeDetail, ReportCard } from '../components/ReportCard'
 import { Alert, Card, Empty, Field, KeyValues, Spinner, TableSkeleton } from '../components/ui'
 import { By } from '../components/WhoAmI'
 import { api } from '../lib/api'
-import { copyText, cycleAndEfficiencyTsv, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, profileTsv, skippedForCopy } from '../lib/origin'
+import { copyText, cycleAndEfficiencyTsv, dischargeTsv, dqdvTsv, dvdqTsv, efficiencyTsv, onlyCycles, profileTsv, skippedForCopy } from '../lib/origin'
 import { basisAxis, basisUnit, bytes, dateTime, num, seriesColor, spread } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import { ko } from '../lib/i18n'
@@ -133,6 +133,21 @@ export function SampleDetail() {
     const available = cycles.map((c) => c.cycle)
     return available.length ? spread(available, 5) : []
   }, [chosen, cycles])
+
+  // 사이클 관련 복사가 **전체**인가 **고른 것**인가.  기본은 전체 — 지금까지의
+  // 동작이고, 표에 보이는 것이 전체이므로 놀랄 일이 없다.
+  //
+  // 나눈 이유: 3·4 번만 보려고 골라 놓고 복사하면 200 사이클이 통째로 나왔다.
+  // 곡선(프로파일·dQ/dV)은 이미 고른 것만 나가는데 사이클 표만 전체였다 --
+  // 같은 화면에서 두 규칙이 다른 것이 그 자체로 함정이다.
+  const [cycleScope, setCycleScope] = useState<'all' | 'picked'>('all')
+  const copyCycles = useMemo(
+    () => onlyCycles(cycles, cycleScope === 'all' ? null : selected),
+    [cycleScope, cycles, selected],
+  )
+  const scopeNote = cycleScope === 'all'
+    ? `전체 ${cycles.length}개`
+    : `고른 ${copyCycles.length}개`
 
   const smoothingParams = {
     smoother,
@@ -646,12 +661,38 @@ export function SampleDetail() {
             >
               {copied === 'dV/dQ' ? '복사됨 ✓' : 'dV/dQ'}
             </button>
+            {/* 아래 세 단추(사이클 · 쿨롱효율 · 사이클+쿨롱)에만 걸린다.
+                곡선 쪽은 이미 고른 것만 나가므로 여기 걸 것이 없다. */}
+            <div className="segmented" style={{ marginLeft: 4 }}>
+              <button
+                type="button"
+                aria-pressed={cycleScope === 'all'}
+                className={cycleScope === 'all' ? 'on' : undefined}
+                title={`사이클 복사에 전체 ${cycles.length}개를 담습니다`}
+                onClick={() => setCycleScope('all')}
+              >
+                {/* "전체" 라고만 쓰면 이 화면에 같은 글자의 단추가 셋이 된다 --
+                    사이클 고르개의 '전체 선택' 과 그래프의 '전체 범위'. */}
+                전체 사이클
+              </button>
+              <button
+                type="button"
+                aria-pressed={cycleScope === 'picked'}
+                className={cycleScope === 'picked' ? 'on' : undefined}
+                title={selected.length
+                  ? `위에서 고른 ${selected.length}개만 담습니다 (${selected.join(', ')})`
+                  : '고른 사이클이 없습니다'}
+                onClick={() => setCycleScope('picked')}
+              >
+                고른 사이클
+              </button>
+            </div>
             <button
               type="button"
               className="link-btn"
               aria-label={copied === '사이클' ? '사이클 복사됨' : '사이클 복사'}
-              title={`사이클별 방전용량 · ${basisUnit(cycleState.data?.basis ?? basis)}`}
-              onClick={() => void copyBlock('사이클', dischargeTsv(cycles))}
+              title={`사이클별 방전용량 (${scopeNote}) · ${basisUnit(cycleState.data?.basis ?? basis)}`}
+              onClick={() => void copyBlock('사이클', dischargeTsv(copyCycles))}
             >
               {copied === '사이클' ? '복사됨 ✓' : '사이클'}
             </button>
@@ -659,8 +700,8 @@ export function SampleDetail() {
               type="button"
               className="link-btn"
               aria-label={copied === '쿨롱효율' ? '쿨롱효율 복사됨' : '쿨롱효율 복사'}
-              title="사이클별 쿨롱효율 (%)"
-              onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(cycles))}
+              title={`사이클별 쿨롱효율 (%) · ${scopeNote}`}
+              onClick={() => void copyBlock('쿨롱효율', efficiencyTsv(copyCycles))}
             >
               {copied === '쿨롱효율' ? '복사됨 ✓' : '쿨롱효율'}
             </button>
@@ -668,8 +709,8 @@ export function SampleDetail() {
               type="button"
               className="link-btn"
               aria-label={copied === '사이클+쿨롱' ? '사이클과 쿨롱효율 복사됨' : '사이클과 쿨롱효율 복사'}
-              title={`한 번에 세 열 — 사이클 · 방전용량(${basisUnit(cycleState.data?.basis ?? basis)}) · 쿨롱효율(%)`}
-              onClick={() => void copyBlock('사이클+쿨롱', cycleAndEfficiencyTsv(cycles))}
+              title={`한 번에 세 열 — 사이클 · 방전용량(${basisUnit(cycleState.data?.basis ?? basis)}) · 쿨롱효율(%) · ${scopeNote}`}
+              onClick={() => void copyBlock('사이클+쿨롱', cycleAndEfficiencyTsv(copyCycles))}
             >
               {copied === '사이클+쿨롱' ? '복사됨 ✓' : '사이클+쿨롱'}
             </button>

@@ -258,6 +258,23 @@ export function dischargeTsv(cycles: Cycle[]): string {
   return cycleColumnTsv(cycles, (cycle) => cycle.discharge_capacity)
 }
 
+/** 고른 사이클만 남긴다.  `want` 가 null 이면 전부 (지금까지의 동작).
+ *
+ *  3·4 번만 보려고 골라 놓고 복사했는데 200 사이클이 통째로 나온다는 제보에서
+ *  나왔다.  곡선(프로파일·dQ/dV)은 이미 고른 것만 나가는데 사이클 표만 전체라,
+ *  **같은 화면에서 두 규칙이 달랐다** — 그 자체가 함정이다.
+ *
+ *  순서는 `cycles` 쪽을 따른다.  고른 순서(사람이 누른 순서)로 내보내면 3·4 를
+ *  거꾸로 누른 사람의 워크시트만 거꾸로 앉는다.
+ */
+export function onlyCycles<T extends { cycle: number }>(
+  cycles: T[], want: readonly number[] | null,
+): T[] {
+  if (want === null) return cycles
+  const keep = new Set(want)
+  return cycles.filter((item) => keep.has(item.cycle))
+}
+
 /** Coulombic efficiency, per cycle. */
 export function efficiencyTsv(cycles: Cycle[]): string {
   return cycleColumnTsv(cycles, (cycle) => cycle.coulombic_efficiency)

@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest'
 import {
   bodeTsv,
   cycleAndEfficiencyTsv,
+  onlyCycles,
   diffusionTsv,
   dischargeTsv,
   dqdvTsv,
@@ -486,5 +487,34 @@ describe('비교 화면은 곡선마다 제 열을 갖는다', () => {
     const text = pseudoOcvWideTsv([{ x: [0, 1], y: [4.2, 4.1] }])
     expect(text.split('\n')[0]).toBe('0\t4.2')
     expect(text).not.toContain('용량')
+  })
+})
+
+
+describe('onlyCycles', () => {
+  const rows = [{ cycle: 1 }, { cycle: 3 }, { cycle: 4 }, { cycle: 100 }]
+
+  it('null 이면 전부 — 지금까지의 동작', () => {
+    expect(onlyCycles(rows, null)).toEqual(rows)
+  })
+
+  it('고른 것만 남긴다', () => {
+    expect(onlyCycles(rows, [3, 4])).toEqual([{ cycle: 3 }, { cycle: 4 }])
+  })
+
+  it('순서는 사이클 쪽을 따른다 — 누른 순서가 아니다', () => {
+    // 4·3 순으로 눌러도 워크시트는 3·4 로 앉는다.  누른 순서를 따르면 같은
+    // 두 사이클이 사람마다 다른 순서로 나간다.
+    expect(onlyCycles(rows, [4, 3])).toEqual([{ cycle: 3 }, { cycle: 4 }])
+  })
+
+  it('없는 번호는 조용히 무시한다', () => {
+    expect(onlyCycles(rows, [3, 999])).toEqual([{ cycle: 3 }])
+  })
+
+  it('아무것도 안 고르면 빈 배열 — 전부가 아니다', () => {
+    // null(전부)과 []( 아무것도)를 같게 다루면, 고르개를 비운 사람이 200
+    // 사이클을 통째로 붙여 넣게 된다.
+    expect(onlyCycles(rows, [])).toEqual([])
   })
 })
