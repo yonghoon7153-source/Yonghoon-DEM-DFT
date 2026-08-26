@@ -99,7 +99,7 @@ def cmd_scaling(a):
       · 짧은 구간(기본 20 스텝)의 속도라 **장시간 평균이 아니다** — 캐시·열 상태가 다르다.
       · 다른 작업이 같은 GPU 를 쓰면 값이 오염된다. 실행 전 `nvidia-smi` 를 볼 것.
     """
-    import json as _j, time
+    import json as _j, pathlib as _pl, time
     import numpy as np
     from ase.io import read as _read
     from ase.md.langevin import Langevin
@@ -141,7 +141,7 @@ def cmd_scaling(a):
         print(f"\n  ⛔ 속도만 잰 것이다. 그 셀에서 물리가 맞는지는 별개다 "
               f"(make_md_supercell.py 의 두 기준을 볼 것).")
     if a.out:
-        pathlib.Path(a.out).write_text(_j.dumps(
+        _pl.Path(a.out).write_text(_j.dumps(
             {"struct": a.struct, "device": a.device, "steps": a.steps, "dt_fs": a.dt,
              "temperature_K": a.temp, "rows": rows,
              "⛔_do_not": "속도만이다. MSD·β·유한크기 판정과 섞지 말 것"},
