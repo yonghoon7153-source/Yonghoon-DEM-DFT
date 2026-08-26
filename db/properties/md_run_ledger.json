@@ -1,685 +1,698 @@
 {
- "title": "MLIP-MD 런 장부 — 어느 서버·어느 경로에 무엇이 있나 (2026-08-25)",
- "date": "2026-08-25",
- "schema": "md_run_ledger/v1",
- "⛔_WHY_THIS_EXISTS": "**같은 경로 이름이 두 서버에 있고 내용이 다르다.** `highT_reseed_traj` 가 kgy 에는 b2o3, gabia 에는 modelc 다. 이걸 모르고 kgy 에서 modelc 를 중복 기동했다(2026-08-25). 메시지마다 반응하지 말고 **여기를 먼저 본다.**",
- "locations": [
-  {
-   "host": "kgy",
-   "path": "~/work/runs/highT_reseed_traj",
-   "system": "b2o3",
-   "T_K": [
-    800,
-    1000,
-    1200
-   ],
-   "seeds": [
-    "s2",
-    "s3",
-    "s4"
-   ],
-   "traj": "✓ 9/9",
-   "status": "완료"
-  },
-  {
-   "host": "kgy",
-   "path": "~/work/runs/highT_reseed_1200",
-   "system": "b2o3",
-   "T_K": [
-    1200
-   ],
-   "seeds": [
-    "s2",
-    "s3",
-    "s4"
-   ],
-   "traj": "✓ 3/3",
-   "status": "완료",
-   "note": "위 traj 세트의 1200 과 **독립 반복**이다 — 평균이 9.275e-05 vs 7.819e-05 로 19 % 벌어진다"
-  },
-  {
-   "host": "kgy",
-   "path": "~/work/runs/highT_reseed",
-   "system": [
-    "b2o3",
-    "modelc"
-   ],
-   "T_K": [
-    800,
-    1000
-   ],
-   "traj": "✗ (F9)",
-   "status": "완료·궤적없음",
-   "note": "Ea 0.199/0.197 의 원자료 — **지우지 말 것**. 골격 게이트는 불가"
-  },
-  {
-   "host": "kgy",
-   "path": "~/work/runs/arrhenius_6pt_traj",
-   "system": [
-    "modelc",
-    "lpsocl",
-    "b2o3"
-   ],
-   "T_K": [
-    700,
-    900
-   ],
-   "traj": "✓",
-   "status": "진행 중 (T700_s2)",
-   "note": "18런 MTO 캠페인"
-  },
-  {
-   "host": "kgy",
-   "path": "~/work/runs/lpsocl_600_long",
-   "system": "modelc",
-   "T_K": [
-    500,
-    700,
-    900
-   ],
-   "traj": "✓ 3",
-   "status": "완료"
-  },
-  {
-   "host": "kgy",
-   "path": "~/work/runs/mto_pilot",
-   "system": "modelc",
-   "T_K": [
-    700
-   ],
-   "traj": "✓ 1",
-   "status": "완료"
-  },
-  {
-   "host": "gabia",
-   "path": "/data/work/runs/highT_reseed_traj",
-   "system": "modelc",
-   "T_K": [
-    600,
-    800,
-    1000
-   ],
-   "seeds": [
-    "s2",
-    "s3",
-    "s4"
-   ],
-   "traj": "✓ 7 (+1 진행)",
-   "status": "진행 중 (s3/T600, 11h 경과)",
-   "★": "**b2o3 와 비교할 대조군이 여기 있다.** kgy 에서 같은 것을 또 돌릴 필요 없다"
-  },
-  {
-   "host": "gabia",
-   "path": "/data/work/b2o3md/runs/b2o3_600_reseed",
-   "system": "b2o3",
-   "T_K": [
-    600
-   ],
-   "traj": "✓ 3",
-   "status": "완료",
-   "note": "b2o3 온도계열의 저온 끝"
-  }
- ],
- "framework_beta_b2o3_2026_08_25": {
-  "source": "kgy highT_reseed_traj + highT_reseed_1200",
-  "per_T": {
-   "800": [
+  "title": "MLIP-MD 런 장부 — 어느 서버·어느 경로에 무엇이 있나 (2026-08-25)",
+  "date": "2026-08-25",
+  "schema": "md_run_ledger/v1",
+  "⛔_WHY_THIS_EXISTS": "**같은 경로 이름이 두 서버에 있고 내용이 다르다.** `highT_reseed_traj` 가 kgy 에는 b2o3, gabia 에는 modelc 다. 이걸 모르고 kgy 에서 modelc 를 중복 기동했다(2026-08-25). 메시지마다 반응하지 말고 **여기를 먼저 본다.**",
+  "locations": [
     {
-     "seed": "s2",
-     "worst": "Cl(16)",
-     "beta": 0.51,
-     "ratio": 0.064
+      "host": "kgy",
+      "path": "~/work/runs/highT_reseed_traj",
+      "system": "b2o3",
+      "T_K": [
+        800,
+        1000,
+        1200
+      ],
+      "seeds": [
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "traj": "✓ 9/9",
+      "status": "완료"
     },
     {
-     "seed": "s3",
-     "worst": "P(8)",
-     "beta": 0.79,
-     "ratio": 0.11
+      "host": "kgy",
+      "path": "~/work/runs/highT_reseed_1200",
+      "system": "b2o3",
+      "T_K": [
+        1200
+      ],
+      "seeds": [
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "traj": "✓ 3/3",
+      "status": "완료",
+      "note": "위 traj 세트의 1200 과 **독립 반복**이다 — 평균이 9.275e-05 vs 7.819e-05 로 19 % 벌어진다"
     },
     {
-     "seed": "s4",
-     "worst": "Cl(16)",
-     "beta": 0.54,
-     "ratio": 0.048
+      "host": "kgy",
+      "path": "~/work/runs/highT_reseed",
+      "system": [
+        "b2o3",
+        "modelc"
+      ],
+      "T_K": [
+        800,
+        1000
+      ],
+      "traj": "✗ (F9)",
+      "status": "완료·궤적없음",
+      "note": "Ea 0.199/0.197 의 원자료 — **지우지 말 것**. 골격 게이트는 불가"
+    },
+    {
+      "host": "kgy",
+      "path": "~/work/runs/arrhenius_6pt_traj",
+      "system": [
+        "modelc",
+        "lpsocl",
+        "b2o3"
+      ],
+      "T_K": [
+        700,
+        900
+      ],
+      "traj": "✓",
+      "status": "진행 중 (T700_s2)",
+      "note": "18런 MTO 캠페인"
+    },
+    {
+      "host": "kgy",
+      "path": "~/work/runs/lpsocl_600_long",
+      "system": "modelc",
+      "T_K": [
+        500,
+        700,
+        900
+      ],
+      "traj": "✓ 3",
+      "status": "완료"
+    },
+    {
+      "host": "kgy",
+      "path": "~/work/runs/mto_pilot",
+      "system": "modelc",
+      "T_K": [
+        700
+      ],
+      "traj": "✓ 1",
+      "status": "완료"
+    },
+    {
+      "host": "gabia",
+      "path": "/data/work/runs/highT_reseed_traj",
+      "system": "modelc",
+      "T_K": [
+        600,
+        800,
+        1000
+      ],
+      "seeds": [
+        "s2",
+        "s3",
+        "s4"
+      ],
+      "traj": "✓ 7 (+1 진행)",
+      "status": "진행 중 (s3/T600, 11h 경과)",
+      "★": "**b2o3 와 비교할 대조군이 여기 있다.** kgy 에서 같은 것을 또 돌릴 필요 없다"
+    },
+    {
+      "host": "gabia",
+      "path": "/data/work/b2o3md/runs/b2o3_600_reseed",
+      "system": "b2o3",
+      "T_K": [
+        600
+      ],
+      "traj": "✓ 3",
+      "status": "완료",
+      "note": "b2o3 온도계열의 저온 끝"
     }
-   ],
-   "1000": [
-    {
-     "seed": "s2",
-     "worst": "P(8)",
-     "beta": 0.5,
-     "ratio": 0.055
-    },
-    {
-     "seed": "s3",
-     "worst": "S(41)",
-     "beta": 0.78,
-     "ratio": 0.135
-    },
-    {
-     "seed": "s4",
-     "worst": "P(8)",
-     "beta": 0.47,
-     "ratio": 0.056
-    }
-   ],
-   "1200_trajset": [
-    {
-     "seed": "s2",
-     "worst": "Cl(16)",
-     "beta": 0.94
-    },
-    {
-     "seed": "s3",
-     "worst": "P(8)",
-     "beta": 1.15
-    },
-    {
-     "seed": "s4",
-     "worst": "S(41)",
-     "beta": 0.88
-    }
-   ],
-   "1200_1200set": [
-    {
-     "seed": "s2",
-     "worst": "S(41)",
-     "beta": 0.63
-    },
-    {
-     "seed": "s3",
-     "worst": "Cl(16)",
-     "beta": 1.01
-    },
-    {
-     "seed": "s4",
-     "worst": "Cl(16)",
-     "beta": 0.65
-    }
-   ]
-  },
-  "VERDICT": "사전 등록 기준(2026-08-25, 결과 보기 전 확정)의 **세 번째 갈래**: `800 ≥ 0.30 → 800 도 오염, b2o3 전도도 축 재수립`. 800·1000 모두 3/3 이 0.30 이상이다. **1200 만의 문제가 아니었다.**",
-  "⚠_caveat": "worst 가 `P(8)` 인 경우가 잦다 — 8원자는 도구 컷오프 경계라 한 원자가 한 번 뛰면 β 가 튄다. **Cl(16) 만 봐도 800 에서 0.51/0.54 라 결론은 안 바뀌지만**, s3/T800 은 P(8) 하나로 판정됐다. 종별 전체 표가 필요하다(도구는 worst 만 찍는다).",
-  "600K_missing": "gabia b2o3_600_reseed 에 궤적 3개가 있다 — **재실행 없이 측정 가능**"
- },
- "⛔_retracted_reference": "msd_diffusive_check.py L400 의 안내문 '실측: modelc 800/1000 K 는 0.03/0.08 인데 b2o3 는 0.59/0.63' 은 **철회된 값**이다. canonical_registry.json 2026-08-20a: '옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy) 에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound'. modelc 0.03/0.08 도 같은 세트다 ⇒ **'creep 이 b2o3 고유' 라고 말할 근거가 아직 없다.** gabia modelc 로 새로 재야 한다.",
- "next": [
-  "✅ ① gabia modelc 골격 β — 완료 (7/7 rigid)",
-  "✅ ② gabia b2o3 600 K — 완료 (2/3 rigid, s2 만 0.55)",
-  "✅ ③ 구제 시도 B — 완료 (9/9 재배열, 구제 불가)",
-  "✅ ④ b2o3 전도도 축 판정 — **인용 불가로 종결**",
-  "⏳ modelc s3/T600 (gabia) — 끝나면 대조군 3시드 완성",
-  "⏳ 18런 MTO 캠페인 (kgy T700 진행) — 요청 #1 임계경로",
-  "❓ mto900 대기자 자기참조 여부 — cmdline 확인 대기"
- ],
- "★_VERDICT_2026_08_25": {
-  "headline": "골격 creep 은 **b2o3 고유**다 — UMA 전반의 문제가 아니다.",
-  "modelc_control": {
-   "source": "gabia /data/work/runs/highT_reseed_traj/modelc",
-   "600": [
-    -0.01
-   ],
-   "800": [
-    0.03,
-    -0.05,
-    -0.01
-   ],
-   "1000": [
-    0.27,
-    0.04,
-    0.01
-   ],
-   "verdict": "7/7 framework_rigid. **1000 K 에서도 최대 0.27** — 같은 포텐셜·온도·프로토콜"
-  },
-  "b2o3": {
-   "600": [
-    0.55,
-    -0.04,
-    0.2
-   ],
-   "800": [
-    0.51,
-    0.79,
-    0.54
-   ],
-   "1000": [
-    0.5,
-    0.78,
-    0.47
-   ],
-   "1200": [
-    0.63,
-    1.01,
-    0.65,
-    0.94,
-    1.15,
-    0.88
-   ],
-   "verdict": "800 K 이상 3/3 오염. 600 K 도 1/3 이 0.55"
-  },
-  "small_N_caveat_CLOSED": "P(8) 이 worst 라 표본 문제를 의심했으나 **풀렸다** — modelc 의 Cl(8) 도 8원자인데 -0.01/-0.05/-0.01 이다. 그리고 b2o3 는 Cl(16) 0.54 · S(41) 0.78 처럼 **큰 종도 같이 높다.** 종 크기 아티팩트가 아니다.",
-  "⚠_CONTRADICTS_OUR_DFT": {
-   "dft_says": [
-    "b2o3_elastic_analysis_2026_07_03: 무도핑 modelc 대비 **+13 % 강화**",
-    "b2o3_elf_covalency_2026_07_02: 골격 공유결합성 **보존** + B–S(최강)·P–O 신규 motif"
-   ],
-   "md_says": "골격이 800 K 부터 기어간다",
-   "reading": "탄성률(0 K, 평균 강성)과 결함 이동도가 반드시 같은 방향일 필요는 없다. 다만 더 그럴듯한 읽기는 **UMA-s-1p1 이 황화물 환경의 B 를 잘 다루지 못한다**는 것이다. 그러면 b2o3 MD 가 **처음부터 못 믿을 것이었다**는 뜻이고, 2026-07-09 σ비율 철회 · 2026-08-23 Ea 3건 철회 · '굽음' 이 전부 한 원인으로 설명된다.",
-   "not_resolved": "둘 중 어느 쪽인지 이 데이터로는 못 가른다. 가르려면 b2o3 를 UMA 아닌 포텐셜(또는 짧은 AIMD)로 재봐야 한다 — 현재 범위 밖."
-  },
-  "consequence_b2o3": [
-   "**b2o3 의 UMA-MD 전도도 축은 인용 불가**로 확정한다 (600 K 도 1/3 오염, 800 K 이상 전부).",
-   "살아 있는 b2o3 축은 **0 K DFT** 뿐 — 밴드갭 1.9671 eV · 탄성 +13 % · ELF/ICOHP B–S·P–O.",
-   "modelc 의 MD 는 **영향 없다** (7/7 rigid). 비교 기준선은 그대로 선다."
   ],
-  "★_GENERALIZABLE_RULE": "UMA-MD 를 **새 조성**에 쓰기 전에 골격 게이트를 먼저 통과시킨다. CLAUDE.md 의 'UMA 는 Li₃N 에 사용 금지'(2026-06)에 이어 **두 번째 실패 조성**이다. 금지 목록을 늘리는 것보다 **조성마다 검사하는 것**이 맞다: `msd_diffusive_check.py --framework` 를 신규 조성 MD 의 필수 관문으로.",
-  "rescue_B_closed": "공동계 재계산 9/9 rearrangement (남는 몫 0.95–1.00) — **구제 불가 확정**. b2o3 MD 축은 여기서 닫는다.",
-  "why_CORRECTED": "⚠ **표현 정정 (2026-08-25)**: '골격이 Li 를 업고 가서 D 가 부풀려졌다' 는 **틀렸다** — 측정이 반박한다. 골격 MSD 는 Li 의 2–6 %(800 K: 2.8–9.9 vs 134–170 Å²)이고, COM 제거 후 Li MSD 가 279.9 → 281.6 으로 안 변한다. **덧셈 오염이 아니다.** 진짜 이유는 다르다: 골격 MSD 를 제곱근으로 보면 800 K 에서 RMS 1.7–3.1 Å 로 **결합 길이보다 크다** = 골격 원자가 제 자리를 떠났다(1200 K 는 10.2 Å). ⇒ 문제는 D 의 크기가 아니라 **무엇의 D 인가**다. 딱딱한 골격에서는 Li 가 고정된 자리 사이를 뛰어 Ea 가 이동 장벽이 되지만, 무른 골격에서는 **자리 지도 자체가 런 도중에 바뀐다**. 아레니우스 기울기는 'Li 도약 + 골격 이완' 의 혼합이고 둘은 온도 의존성이 다르다 — **구간 Ea 가 0.224 → 0.078 → 0.371 로 비단조였던 이유**다. 단일 메커니즘은 그럴 수 없다. 한 줄로: **200 ps 뒤의 셀이 우리가 재려던 그 결정이 아니다.** D 가 빠른 것 자체가 문제가 아니다(modelc 1000 K 6.8e-05 가 b2o3 3.7e-05 보다 빠르다) — b2o3 의 그 숫자가 **무엇을 잰 것인지 정의되지 않는다**는 것이 문제다."
- },
- "framework_split_preregistration_2026_08_25": {
-  "what": "b2o3 서술③('자유 음이온 부격자가 이동') 판정 — 결합S/자유S 분리 β",
-  "tool": "msd_diffusive_check.py --framework_split (aimd_mlip unwrap + b2o3_all_bond_lengths 결합창 재사용 — 복사 없음)",
-  "pre_registered_criteria": {
-   "free_anion_sublattice_mobile": "bonded-S β < 0.30 AND (free-S ≥ 0.30 OR Cl ≥ 0.30) → 서술③ 확정",
-   "polyanion_frame_mobile": "bonded-S β ≥ 0.30 → 서술③ 기각 (골격 자체가 움직임 — UMA 의심 강화)",
-   "inconsistent_with_elementwise": "둘 다 < 0.30 → 원소별 검사와 모순, 재조사"
+  "framework_beta_b2o3_2026_08_25": {
+    "source": "kgy highT_reseed_traj + highT_reseed_1200",
+    "per_T": {
+      "800": [
+        {
+          "seed": "s2",
+          "worst": "Cl(16)",
+          "beta": 0.51,
+          "ratio": 0.064
+        },
+        {
+          "seed": "s3",
+          "worst": "P(8)",
+          "beta": 0.79,
+          "ratio": 0.11
+        },
+        {
+          "seed": "s4",
+          "worst": "Cl(16)",
+          "beta": 0.54,
+          "ratio": 0.048
+        }
+      ],
+      "1000": [
+        {
+          "seed": "s2",
+          "worst": "P(8)",
+          "beta": 0.5,
+          "ratio": 0.055
+        },
+        {
+          "seed": "s3",
+          "worst": "S(41)",
+          "beta": 0.78,
+          "ratio": 0.135
+        },
+        {
+          "seed": "s4",
+          "worst": "P(8)",
+          "beta": 0.47,
+          "ratio": 0.056
+        }
+      ],
+      "1200_trajset": [
+        {
+          "seed": "s2",
+          "worst": "Cl(16)",
+          "beta": 0.94
+        },
+        {
+          "seed": "s3",
+          "worst": "P(8)",
+          "beta": 1.15
+        },
+        {
+          "seed": "s4",
+          "worst": "S(41)",
+          "beta": 0.88
+        }
+      ],
+      "1200_1200set": [
+        {
+          "seed": "s2",
+          "worst": "S(41)",
+          "beta": 0.63
+        },
+        {
+          "seed": "s3",
+          "worst": "Cl(16)",
+          "beta": 1.01
+        },
+        {
+          "seed": "s4",
+          "worst": "Cl(16)",
+          "beta": 0.65
+        }
+      ]
+    },
+    "VERDICT": "사전 등록 기준(2026-08-25, 결과 보기 전 확정)의 **세 번째 갈래**: `800 ≥ 0.30 → 800 도 오염, b2o3 전도도 축 재수립`. 800·1000 모두 3/3 이 0.30 이상이다. **1200 만의 문제가 아니었다.**",
+    "⚠_caveat": "worst 가 `P(8)` 인 경우가 잦다 — 8원자는 도구 컷오프 경계라 한 원자가 한 번 뛰면 β 가 튄다. **Cl(16) 만 봐도 800 에서 0.51/0.54 라 결론은 안 바뀌지만**, s3/T800 은 P(8) 하나로 판정됐다. 종별 전체 표가 필요하다(도구는 worst 만 찍는다).",
+    "600K_missing": "gabia b2o3_600_reseed 에 궤적 3개가 있다 — **재실행 없이 측정 가능**"
   },
-  "validated": "합성 양·음성: 결합S 0.04/자유S 0.87/Cl 0.92 → 확정 · 전부 걷는 반례 → 기각. 분류 selftest 4건 (주기경계 포함)",
-  "limitation": "분류는 첫 프레임 결합 기준 — 결합 불변(9/9)이 먼저 확인된 계에서만 유효",
-  "status": "⏳ kgy 실행 대기"
- },
- "framework_split_verdict_2026_08_25": {
-  "result": "**서술③ 기각 — 7/9 polyanion_frame_mobile** (사전 등록 기준 그대로)",
-  "counts": {
-   "polyanion_frame_mobile": 7,
-   "free_anion_sublattice_mobile": 2
-  },
-  "free_anion_runs": [
-   "s4/T800 (bonded_S β=0.23)",
-   "s2/T800 (붙여넣기에서 잘림 — 합계로 확인)"
+  "⛔_retracted_reference": "msd_diffusive_check.py L400 의 안내문 '실측: modelc 800/1000 K 는 0.03/0.08 인데 b2o3 는 0.59/0.63' 은 **철회된 값**이다. canonical_registry.json 2026-08-20a: '옛 beta 0.59/0.63 은 b2o3_full(single-seed legacy) 에서 잰 값이라 multiseed Ea 0.199 의 근거가 될 수 없다 → retracted + diagnostic_unbound'. modelc 0.03/0.08 도 같은 세트다 ⇒ **'creep 이 b2o3 고유' 라고 말할 근거가 아직 없다.** gabia modelc 로 새로 재야 한다.",
+  "next": [
+    "✅ ① gabia modelc 골격 β — 완료 (7/7 rigid)",
+    "✅ ② gabia b2o3 600 K — 완료 (2/3 rigid, s2 만 0.55)",
+    "✅ ③ 구제 시도 B — 완료 (9/9 재배열, 구제 불가)",
+    "✅ ④ b2o3 전도도 축 판정 — **인용 불가로 종결**",
+    "⏳ modelc s3/T600 (gabia) — 끝나면 대조군 3시드 완성",
+    "⏳ 18런 MTO 캠페인 (kgy T700 진행) — 요청 #1 임계경로",
+    "❓ mto900 대기자 자기참조 여부 — cmdline 확인 대기"
   ],
-  "beta_bonded_S": {
-   "800": {
-    "s3": 0.53,
-    "s4": 0.23
-   },
-   "1000": {
-    "s3": 0.76,
-    "s4": 0.43
-   },
-   "1200": {
-    "s3": 0.94,
-    "s4": 0.85
-   }
-  },
-  "msd_end_bonded_S_A2": {
-   "800": {
-    "s3": 10.6,
-    "s4": 3.2
-   },
-   "1000": {
-    "s3": 33.5,
-    "s4": 10.1
-   },
-   "1200": {
-    "s3": 100.0,
-    "s4": 39.7
-   }
-  },
-  "★_classification_self_consistency": "분류기가 bonded_S=35 · free_S=6 을 냈다. 드라이버 라벨은 free-S=12 인데 — **둘 다 맞다**: 무도핑 argyrodite 기준 자유 S 12개 중 6개를 B 가 BS₃ 로 묶었다 (P결합 29 + B결합 6 = 35). ELF/ICOHP 의 'B–S 신규 motif' 와 정확히 정합 — 분류가 화학을 재발견했다.",
-  "★_rotation_cap_analysis": "회전만으로 가능한 bonded-S MSD 상한 ≈ 2r² ≈ 8.4 Å² (P–S 2.05 Å, 무상관 최종 배향). 실측: 800 K s4 3.2(회전 이하) · s3 10.6(경계) / 1000 K 10–34 / 1200 K 40–100 — **상한의 4–12배**. 게다가 중심원자 P 자체의 MSD 가 s3/T800 9.6 Å² (회전이면 P 는 안 움직인다) ⇒ ≥1000 K 는 회전이 아니라 **단위째 병진**이다.",
-  "new_description_4": "서술④ (현재 최선): **공유결합은 끊기지 않은 채(결합 교환 9/9 = 0) 온전한 폴리음이온 단위(PS₄·PS₃O·PS₂O₂·BS₃)가 통째로 이동한다.** 800 K 는 시드에 따라 회전(rotor)+자유음이온 단계, ≥1000 K 는 단위 병진 — 음이온 부격자 전체가 유동화. UMA 안에서 b2o3 고유(modelc 7/7 rigid).",
-  "still_unresolved": "이것이 실제 물리인가 UMA-s-1p1 의 B 기술 실패인가 — 이 데이터로는 못 가른다 (기존 A/B 미결 그대로)",
-  "unchanged": "인용 불가 결론 불변 · modelc 기준선 무영향"
- },
- "modelc_refresh_2026_08_25": {
-  "goal": "traj-검증 대칭 3시드로 modelc Ea 재적합 (0.197 의 800/1000 은 traj 없는 구판)",
-  "new_gabia_100ps_traj": {
-   "D_cm2_s": {
-    "s2": {
-     "600": 6.471e-06,
-     "800": 1.673e-05,
-     "1000": 6.796e-05
+  "★_VERDICT_2026_08_25": {
+    "headline": "골격 creep 은 **b2o3 고유**다 — UMA 전반의 문제가 아니다.",
+    "modelc_control": {
+      "source": "gabia /data/work/runs/highT_reseed_traj/modelc",
+      "600": [
+        -0.01
+      ],
+      "800": [
+        0.03,
+        -0.05,
+        -0.01
+      ],
+      "1000": [
+        0.27,
+        0.04,
+        0.01
+      ],
+      "verdict": "7/7 framework_rigid. **1000 K 에서도 최대 0.27** — 같은 포텐셜·온도·프로토콜"
     },
-    "s3": {
-     "600": 1.705e-05,
-     "800": 2.152e-05,
-     "1000": 6.006e-05
+    "b2o3": {
+      "600": [
+        0.55,
+        -0.04,
+        0.2
+      ],
+      "800": [
+        0.51,
+        0.79,
+        0.54
+      ],
+      "1000": [
+        0.5,
+        0.78,
+        0.47
+      ],
+      "1200": [
+        0.63,
+        1.01,
+        0.65,
+        0.94,
+        1.15,
+        0.88
+      ],
+      "verdict": "800 K 이상 3/3 오염. 600 K 도 1/3 이 0.55"
     },
-    "s4": {
-     "800": 2.666e-05,
-     "1000": 3.169e-05
+    "small_N_caveat_CLOSED": "P(8) 이 worst 라 표본 문제를 의심했으나 **풀렸다** — modelc 의 Cl(8) 도 8원자인데 -0.01/-0.05/-0.01 이다. 그리고 b2o3 는 Cl(16) 0.54 · S(41) 0.78 처럼 **큰 종도 같이 높다.** 종 크기 아티팩트가 아니다.",
+    "⚠_CONTRADICTS_OUR_DFT": {
+      "dft_says": [
+        "b2o3_elastic_analysis_2026_07_03: 무도핑 modelc 대비 **+13 % 강화**",
+        "b2o3_elf_covalency_2026_07_02: 골격 공유결합성 **보존** + B–S(최강)·P–O 신규 motif"
+      ],
+      "md_says": "골격이 800 K 부터 기어간다",
+      "reading": "탄성률(0 K, 평균 강성)과 결함 이동도가 반드시 같은 방향일 필요는 없다. 다만 더 그럴듯한 읽기는 **UMA-s-1p1 이 황화물 환경의 B 를 잘 다루지 못한다**는 것이다. 그러면 b2o3 MD 가 **처음부터 못 믿을 것이었다**는 뜻이고, 2026-07-09 σ비율 철회 · 2026-08-23 Ea 3건 철회 · '굽음' 이 전부 한 원인으로 설명된다.",
+      "not_resolved": "둘 중 어느 쪽인지 이 데이터로는 못 가른다. 가르려면 b2o3 를 UMA 아닌 포텐셜(또는 짧은 AIMD)로 재봐야 한다 — 현재 범위 밖."
+    },
+    "consequence_b2o3": [
+      "**b2o3 의 UMA-MD 전도도 축은 인용 불가**로 확정한다 (600 K 도 1/3 오염, 800 K 이상 전부).",
+      "살아 있는 b2o3 축은 **0 K DFT** 뿐 — 밴드갭 1.9671 eV · 탄성 +13 % · ELF/ICOHP B–S·P–O.",
+      "modelc 의 MD 는 **영향 없다** (7/7 rigid). 비교 기준선은 그대로 선다."
+    ],
+    "★_GENERALIZABLE_RULE": "UMA-MD 를 **새 조성**에 쓰기 전에 골격 게이트를 먼저 통과시킨다. CLAUDE.md 의 'UMA 는 Li₃N 에 사용 금지'(2026-06)에 이어 **두 번째 실패 조성**이다. 금지 목록을 늘리는 것보다 **조성마다 검사하는 것**이 맞다: `msd_diffusive_check.py --framework` 를 신규 조성 MD 의 필수 관문으로.",
+    "rescue_B_closed": "공동계 재계산 9/9 rearrangement (남는 몫 0.95–1.00) — **구제 불가 확정**. b2o3 MD 축은 여기서 닫는다.",
+    "why_CORRECTED": "⚠ **표현 정정 (2026-08-25)**: '골격이 Li 를 업고 가서 D 가 부풀려졌다' 는 **틀렸다** — 측정이 반박한다. 골격 MSD 는 Li 의 2–6 %(800 K: 2.8–9.9 vs 134–170 Å²)이고, COM 제거 후 Li MSD 가 279.9 → 281.6 으로 안 변한다. **덧셈 오염이 아니다.** 진짜 이유는 다르다: 골격 MSD 를 제곱근으로 보면 800 K 에서 RMS 1.7–3.1 Å 로 **결합 길이보다 크다** = 골격 원자가 제 자리를 떠났다(1200 K 는 10.2 Å). ⇒ 문제는 D 의 크기가 아니라 **무엇의 D 인가**다. 딱딱한 골격에서는 Li 가 고정된 자리 사이를 뛰어 Ea 가 이동 장벽이 되지만, 무른 골격에서는 **자리 지도 자체가 런 도중에 바뀐다**. 아레니우스 기울기는 'Li 도약 + 골격 이완' 의 혼합이고 둘은 온도 의존성이 다르다 — **구간 Ea 가 0.224 → 0.078 → 0.371 로 비단조였던 이유**다. 단일 메커니즘은 그럴 수 없다. 한 줄로: **200 ps 뒤의 셀이 우리가 재려던 그 결정이 아니다.** D 가 빠른 것 자체가 문제가 아니다(modelc 1000 K 6.8e-05 가 b2o3 3.7e-05 보다 빠르다) — b2o3 의 그 숫자가 **무엇을 잰 것인지 정의되지 않는다**는 것이 문제다."
+  },
+  "framework_split_preregistration_2026_08_25": {
+    "what": "b2o3 서술③('자유 음이온 부격자가 이동') 판정 — 결합S/자유S 분리 β",
+    "tool": "msd_diffusive_check.py --framework_split (aimd_mlip unwrap + b2o3_all_bond_lengths 결합창 재사용 — 복사 없음)",
+    "pre_registered_criteria": {
+      "free_anion_sublattice_mobile": "bonded-S β < 0.30 AND (free-S ≥ 0.30 OR Cl ≥ 0.30) → 서술③ 확정",
+      "polyanion_frame_mobile": "bonded-S β ≥ 0.30 → 서술③ 기각 (골격 자체가 움직임 — UMA 의심 강화)",
+      "inconsistent_with_elementwise": "둘 다 < 0.30 → 원소별 검사와 모순, 재조사"
+    },
+    "validated": "합성 양·음성: 결합S 0.04/자유S 0.87/Cl 0.92 → 확정 · 전부 걷는 반례 → 기각. 분류 selftest 4건 (주기경계 포함)",
+    "limitation": "분류는 첫 프레임 결합 기준 — 결합 불변(9/9)이 먼저 확인된 계에서만 유효",
+    "status": "⏳ kgy 실행 대기"
+  },
+  "framework_split_verdict_2026_08_25": {
+    "result": "**서술③ 기각 — 7/9 polyanion_frame_mobile** (사전 등록 기준 그대로)",
+    "counts": {
+      "polyanion_frame_mobile": 7,
+      "free_anion_sublattice_mobile": 2
+    },
+    "free_anion_runs": [
+      "s4/T800 (bonded_S β=0.23)",
+      "s2/T800 (붙여넣기에서 잘림 — 합계로 확인)"
+    ],
+    "beta_bonded_S": {
+      "800": {
+        "s3": 0.53,
+        "s4": 0.23
+      },
+      "1000": {
+        "s3": 0.76,
+        "s4": 0.43
+      },
+      "1200": {
+        "s3": 0.94,
+        "s4": 0.85
+      }
+    },
+    "msd_end_bonded_S_A2": {
+      "800": {
+        "s3": 10.6,
+        "s4": 3.2
+      },
+      "1000": {
+        "s3": 33.5,
+        "s4": 10.1
+      },
+      "1200": {
+        "s3": 100.0,
+        "s4": 39.7
+      }
+    },
+    "★_classification_self_consistency": "분류기가 bonded_S=35 · free_S=6 을 냈다. 드라이버 라벨은 free-S=12 인데 — **둘 다 맞다**: 무도핑 argyrodite 기준 자유 S 12개 중 6개를 B 가 BS₃ 로 묶었다 (P결합 29 + B결합 6 = 35). ELF/ICOHP 의 'B–S 신규 motif' 와 정확히 정합 — 분류가 화학을 재발견했다.",
+    "★_rotation_cap_analysis": "회전만으로 가능한 bonded-S MSD 상한 ≈ 2r² ≈ 8.4 Å² (P–S 2.05 Å, 무상관 최종 배향). 실측: 800 K s4 3.2(회전 이하) · s3 10.6(경계) / 1000 K 10–34 / 1200 K 40–100 — **상한의 4–12배**. 게다가 중심원자 P 자체의 MSD 가 s3/T800 9.6 Å² (회전이면 P 는 안 움직인다) ⇒ ≥1000 K 는 회전이 아니라 **단위째 병진**이다.",
+    "new_description_4": "서술④ (현재 최선): **공유결합은 끊기지 않은 채(결합 교환 9/9 = 0) 온전한 폴리음이온 단위(PS₄·PS₃O·PS₂O₂·BS₃)가 통째로 이동한다.** 800 K 는 시드에 따라 회전(rotor)+자유음이온 단계, ≥1000 K 는 단위 병진 — 음이온 부격자 전체가 유동화. UMA 안에서 b2o3 고유(modelc 7/7 rigid).",
+    "still_unresolved": "이것이 실제 물리인가 UMA-s-1p1 의 B 기술 실패인가 — 이 데이터로는 못 가른다 (기존 A/B 미결 그대로)",
+    "unchanged": "인용 불가 결론 불변 · modelc 기준선 무영향"
+  },
+  "modelc_refresh_2026_08_25": {
+    "goal": "traj-검증 대칭 3시드로 modelc Ea 재적합 (0.197 의 800/1000 은 traj 없는 구판)",
+    "new_gabia_100ps_traj": {
+      "D_cm2_s": {
+        "s2": {
+          "600": 6.471e-06,
+          "800": 1.673e-05,
+          "1000": 6.796e-05
+        },
+        "s3": {
+          "600": 1.705e-05,
+          "800": 2.152e-05,
+          "1000": 6.006e-05
+        },
+        "s4": {
+          "800": 2.666e-05,
+          "1000": 3.169e-05
+        }
+      },
+      "beta_flags": {
+        "s2/600": 0.7,
+        "s2/800": 0.77,
+        "s4/1000": 0.7
+      },
+      "framework": "7/7 rigid (이미 판정)",
+      "⚠": "β 3/8 케이지 플래그 — 62원자 셀 소표본. --scan c-행 판별 전 Ea 재적합 금지"
+    },
+    "old_600_200ps": {
+      "beta_flags": {
+        "s4": 0.71
+      },
+      "note": "traj 없음(F9 세대) — STO β만"
+    },
+    "mto_700K_kgy": {
+      "D_cm2_s": {
+        "s2": 1.688e-05,
+        "s3": 1.627e-05,
+        "s4": 1.464e-05
+      },
+      "beta_mto": [
+        0.82,
+        0.89,
+        0.88
+      ],
+      "verdict": "3/3 확산 — MTO 곡선 · 200 ps · traj ✓",
+      "★": "**첫 MTO-검증 3시드 온도점** — 700 K 이 현재 modelc 에서 가장 깨끗한 다리"
+    },
+    "blockers": [
+      "gabia collect 는 env 함정으로 미완 (COLLECT_ONLY 모드 추가로 해소)",
+      "β 플래그 3건의 --scan 판별",
+      "lpsocl 6pt 레그 미착수 (kgy T700 만 완료)"
+    ],
+    "decision_rule_preregistered": "--scan 에서 c 가 창 불변(케이지 절편) → D 유지, β 플래그는 통계 문제로 기록. c 가 창 따라 증가(sub-diffusion) → 그 (시드,T) 를 적합에서 빼고 사유 기록. 판별 없이 Ea 재적합 금지 — 원하는 답에 맞춰 점을 고르게 된다.",
+    "scan_c_row_reading": {
+      "method": "--scan 창 6개의 c(절편)·m(기울기) 거동 — 확정은 MTO (사전 규칙 유지)",
+      "per_run": {
+        "s2/600 (200ps)": "c 4.5–6.8 상수 · m 0.32–0.40 상수 · β 후반 0.90–0.93 → **케이지 절편 잠정** (D 무사)",
+        "s2/800 (100ps)": "c ≈12 상수 · m ≈0.9 상수 · β 후반 0.86 → 케이지 절편 잠정",
+        "s3/1000 (100ps)": "c -4.6→+50 증가 · m 3.6→2.3 감소 · β 1.19→0.77 — 요약값은 sub-diffusion 모양이나 **초반 β>1(super)** 라 단일시드 100 ps 요동 의심 → MTO 필수",
+        "s3/600 (200ps)": "m 반토막 후 회복(1.02→0.49→0.60) — 요동 → MTO 필수",
+        "s4/1000 (100ps)": "c 7→-66 · m 1.9→3.8 **증가** · β 0.70→1.39 → **느린 전이(후반 가속)** — sub-diffusion 아님, 창이 이르다. 2–50 창 D 는 과소 가능",
+        "s4/800 (100ps)": "같은 가속 패턴, 게이트 통과",
+        "old s4/600 (200ps·traj無)": "판별 불가 — MTO 불가. 600 판정은 신판(s2/s3)으로"
+      },
+      "collect_v3": "위치(D_per_T) 폐기 → msd.json 경로 라벨. 이질 이력 fixture 재현·해소",
+      "campaign_note": "kgy: modelc T700 3/3 완료 → **lpsocl T700_s2 진행 중**. ⚠ lpsocl 600 재실행이 kgy·gabia 러너 어느 쪽 목록에도 없다(양쪽 LPSOCL_EXTRA=\"\") — 0.2867 보류 해제 경로가 계획에서 빠져 있음"
+    },
+    "mto_verdicts_2026_08_25": {
+      "800K": {
+        "beta_mto": [
+          0.84,
+          0.82,
+          0.88
+        ],
+        "verdict": "✅ 3/3 확산 — 확정",
+        "D": [
+          1.673e-05,
+          2.152e-05,
+          2.666e-05
+        ],
+        "spread_pct": 19
+      },
+      "1000K": {
+        "beta_mto": [
+          0.93,
+          0.95,
+          0.94
+        ],
+        "verdict": "✅ 3/3 확산 — 확정",
+        "D": [
+          6.796e-05,
+          6.006e-05,
+          3.169e-05
+        ],
+        "spread_pct": 29
+      },
+      "600K": {
+        "status": "⏳ n=2 (s2 6.471e-06 · s3 1.705e-05, 산포 45%) · s2 MTO β 0.78 경계 · **s4/T600 이 gabia mc600 세션에서 진행 중으로 추정** — 확인 대기",
+        "note": "mto900 대기자 무발화가 이걸로 설명됨 (MD 진행 중 = 정상 대기)"
+      },
+      "sto_flags_resolution": "STO 플래그 3건(0.70/0.77/0.70)은 전부 **시간원점 잡음** — MTO 에서 0.82–0.95 로 회복. 스캔 c-행 판독(케이지 절편/느린 전이)과 정합",
+      "refit_rule": "Ea 재적합은 600 K 3시드 + MTO 시드평균 β-bar 통과 후 — 부분 적합 발표 금지"
     }
-   },
-   "beta_flags": {
-    "s2/600": 0.7,
-    "s2/800": 0.77,
-    "s4/1000": 0.7
-   },
-   "framework": "7/7 rigid (이미 판정)",
-   "⚠": "β 3/8 케이지 플래그 — 62원자 셀 소표본. --scan c-행 판별 전 Ea 재적합 금지"
   },
-  "old_600_200ps": {
-   "beta_flags": {
-    "s4": 0.71
-   },
-   "note": "traj 없음(F9 세대) — STO β만"
+  "lpsocl_600_rerun_2026_08_25": {
+    "what": "lpsocl 600 재실행 3시드 — 0.2867 보류 해제의 열쇠 (보류 사유 = 600 게이트 탈락)",
+    "started": "2026-08-25 22:12 kgy (tmux lp600)",
+    "nat": 62,
+    "min_dist_gate": "1.559 Å OK",
+    "how": "ONLY=lpsocl TEMP_PROD='' LPSOCL_EXTRA='600:200' SEEDS='2 3 4' LOCK=/tmp/arr6_lp600.lock — 별도 lock (기존 러너 lock 에 튕기는 함정 회피)",
+    "co_run": "기존 러너(lpsocl T700 → b2o3 T700)와 동시 실행 — GPU 98 %, 3.2 GB/24 GB. 둘 다 감속하나 순차 대비 lp600 이 ~10 h 당겨짐 (사용자 결정: 대기자 없이 즉시)",
+    "output": "arrhenius_6pt_traj/lpsocl/T600_s{2,3,4} — 200 ps · MTO · traj",
+    "on_complete": "600 MTO 시드평균 β-bar 재판정 → 통과 시 lpsocl Ea 재적합 (보류 해제), 시드평균 MTO 곡선으로 논문 MSD 그림 정본 교체"
   },
-  "mto_700K_kgy": {
-   "D_cm2_s": {
-    "s2": 1.688e-05,
-    "s3": 1.627e-05,
-    "s4": 1.464e-05
-   },
-   "beta_mto": [
-    0.82,
-    0.89,
-    0.88
-   ],
-   "verdict": "3/3 확산 — MTO 곡선 · 200 ps · traj ✓",
-   "★": "**첫 MTO-검증 3시드 온도점** — 700 K 이 현재 modelc 에서 가장 깨끗한 다리"
+  "unit_split_preregistration_2026_08_25": {
+    "question": "b2o3 골격이 움직인 원인이 도핑이 넣은 BS₃ 단위인가, 호스트 PS₄ 자체가 무른 것인가.",
+    "why_now": "원자별 판정에서 B 는 n=2 라 FRAMEWORK_MIN_N=8 컷오프 아래여서 빠져 있었다. 결합 검사가 B–S 6→6 불변을 보였으므로 B 와 그 S 3개를 한 몸으로 묶으면 BS₃ 단위 = 8원자로 컷오프를 만족한다.",
+    "tool": "tools/ionic/msd_diffusive_check.py --framework_split (unit_verdict 순수함수 + selftest 47)",
+    "criteria_fixed_before_data": {
+      "ratio": "BS₃ MSD_end / PS₄ MSD_end (같은 런 안의 비 — 절대 β 는 온도 의존이라 계 간 비교 불가)",
+      "UNIT_RATIO_HI": 2.0,
+      "UNIT_RATIO_LO": 1.25,
+      "SPLIT_RIGID": 0.3,
+      "BS3_driven": "비 ≥ 2.0 AND PS₄ β < 0.30",
+      "host_wide": "비 ≤ 1.25 AND PS₄ β ≥ 0.30",
+      "both_mobile": "비 ≥ 2.0 AND PS₄ β ≥ 0.30",
+      "inconclusive": "그 외 (회색지대 1.25<비<2.0 포함 — 문턱을 사후에 늘리지 않는다)"
+    },
+    "interpretation_stakes": {
+      "BS3_driven": "메커니즘 특정: B₂O₃ 도핑이 이동성 BS₃ 단위를 넣어 음이온 부격자를 유동화한다.",
+      "host_wide": "호스트 PS₄ 까지 무르다 ⇒ UMA 아티팩트 쪽 무게↑ (modelc 7/7 rigid 와 충돌)",
+      "both_mobile": "둘 다 — 물리와 아티팩트가 섞여 있어 단독 인용 불가"
+    },
+    "planned_input": "kgy ~/work/runs/highT_reseed_traj/b2o3/s*/d0.00_cfg0/T*/msd.json (window 2–50 ps)",
+    "status": "사전 등록 완료 — 데이터 미열람",
+    "⛔_limits": "첫 프레임 결합 기준 분류다. 결합 불변(9/9)이 확인된 b2o3 에만 쓴다. MSD_end 비는 창 끝값 하나라 시드 산포를 담지 않는다 — 시드별로 따로 보고 부호가 갈리면 inconclusive 로 본다."
   },
-  "blockers": [
-   "gabia collect 는 env 함정으로 미완 (COLLECT_ONLY 모드 추가로 해소)",
-   "β 플래그 3건의 --scan 판별",
-   "lpsocl 6pt 레그 미착수 (kgy T700 만 완료)"
-  ],
-  "decision_rule_preregistered": "--scan 에서 c 가 창 불변(케이지 절편) → D 유지, β 플래그는 통계 문제로 기록. c 가 창 따라 증가(sub-diffusion) → 그 (시드,T) 를 적합에서 빼고 사유 기록. 판별 없이 Ea 재적합 금지 — 원하는 답에 맞춰 점을 고르게 된다.",
-  "scan_c_row_reading": {
-   "method": "--scan 창 6개의 c(절편)·m(기울기) 거동 — 확정은 MTO (사전 규칙 유지)",
-   "per_run": {
-    "s2/600 (200ps)": "c 4.5–6.8 상수 · m 0.32–0.40 상수 · β 후반 0.90–0.93 → **케이지 절편 잠정** (D 무사)",
-    "s2/800 (100ps)": "c ≈12 상수 · m ≈0.9 상수 · β 후반 0.86 → 케이지 절편 잠정",
-    "s3/1000 (100ps)": "c -4.6→+50 증가 · m 3.6→2.3 감소 · β 1.19→0.77 — 요약값은 sub-diffusion 모양이나 **초반 β>1(super)** 라 단일시드 100 ps 요동 의심 → MTO 필수",
-    "s3/600 (200ps)": "m 반토막 후 회복(1.02→0.49→0.60) — 요동 → MTO 필수",
-    "s4/1000 (100ps)": "c 7→-66 · m 1.9→3.8 **증가** · β 0.70→1.39 → **느린 전이(후반 가속)** — sub-diffusion 아님, 창이 이르다. 2–50 창 D 는 과소 가능",
-    "s4/800 (100ps)": "같은 가속 패턴, 게이트 통과",
-    "old s4/600 (200ps·traj無)": "판별 불가 — MTO 불가. 600 판정은 신판(s2/s3)으로"
-   },
-   "collect_v3": "위치(D_per_T) 폐기 → msd.json 경로 라벨. 이질 이력 fixture 재현·해소",
-   "campaign_note": "kgy: modelc T700 3/3 완료 → **lpsocl T700_s2 진행 중**. ⚠ lpsocl 600 재실행이 kgy·gabia 러너 어느 쪽 목록에도 없다(양쪽 LPSOCL_EXTRA=\"\") — 0.2867 보류 해제 경로가 계획에서 빠져 있음"
+  "unit_split_verdict_2026_08_25": {
+    "ran": "kgy ~/work/runs/highT_reseed_traj/b2o3/s{2,3,4}/d0.00_cfg0/T{800,1000,1200} — 9런, 재계산 0",
+    "tool": "tools/ionic/msd_diffusive_check.py --framework_split --window 2 50",
+    "criteria": "사전 등록: unit_split_preregistration_2026_08_25 (문턱 변경 없음)",
+    "★_headline": "BS3_driven **0/9**. 도핑이 넣은 BS₃ 단위는 유동화의 원인이 아니다.",
+    "counts": {
+      "BS3_driven": 0,
+      "host_wide": 5,
+      "both_mobile": 3,
+      "inconclusive": 1
+    },
+    "per_run": {
+      "s2/T800": {
+        "ratio_BS3_over_PS4": 0.4,
+        "PS4_beta": 0.0869,
+        "PS4_msd_end_A2": 2.1,
+        "BS3_beta": 0.0824,
+        "BS3_msd_end_A2": 0.8,
+        "verdict": "inconclusive"
+      },
+      "s3/T800": {
+        "ratio_BS3_over_PS4": 0.37,
+        "PS4_beta": 0.6936,
+        "PS4_msd_end_A2": 11.4,
+        "BS3_beta": -0.221,
+        "BS3_msd_end_A2": 4.2,
+        "verdict": "host_wide"
+      },
+      "s4/T800": {
+        "ratio_BS3_over_PS4": 0.1,
+        "PS4_beta": 0.3454,
+        "PS4_msd_end_A2": 3.5,
+        "BS3_beta": -0.408,
+        "BS3_msd_end_A2": 0.4,
+        "verdict": "host_wide"
+      },
+      "s2/T1000": {
+        "ratio_BS3_over_PS4": 0.78,
+        "PS4_beta": 0.4407,
+        "PS4_msd_end_A2": 15.3,
+        "BS3_beta": -0.0166,
+        "BS3_msd_end_A2": 11.9,
+        "verdict": "host_wide"
+      },
+      "s3/T1000": {
+        "ratio_BS3_over_PS4": 4.41,
+        "PS4_beta": 0.4605,
+        "PS4_msd_end_A2": 20.0,
+        "BS3_beta": 1.1716,
+        "BS3_msd_end_A2": 88.0,
+        "verdict": "both_mobile"
+      },
+      "s4/T1000": {
+        "ratio_BS3_over_PS4": 1.18,
+        "PS4_beta": 0.4207,
+        "PS4_msd_end_A2": 9.5,
+        "BS3_beta": 0.5323,
+        "BS3_msd_end_A2": 11.2,
+        "verdict": "host_wide"
+      },
+      "s2/T1200": {
+        "ratio_BS3_over_PS4": 0.93,
+        "PS4_beta": 0.6472,
+        "PS4_msd_end_A2": 12.9,
+        "BS3_beta": 0.8458,
+        "BS3_msd_end_A2": 12.0,
+        "verdict": "host_wide"
+      },
+      "s3/T1200": {
+        "ratio_BS3_over_PS4": 2.57,
+        "PS4_beta": 1.0095,
+        "PS4_msd_end_A2": 77.9,
+        "BS3_beta": 0.8047,
+        "BS3_msd_end_A2": 200.2,
+        "verdict": "both_mobile"
+      },
+      "s4/T1200": {
+        "ratio_BS3_over_PS4": 4.24,
+        "PS4_beta": 0.7416,
+        "PS4_msd_end_A2": 24.9,
+        "BS3_beta": 1.0579,
+        "BS3_msd_end_A2": 105.7,
+        "verdict": "both_mobile"
+      }
+    },
+    "reading_800K_UNANIMOUS": "800 K 3/3 에서 비 = 0.10 / 0.37 / 0.40 — **전부 1 미만**. BS₃ MSD 0.4 / 4.2 / 0.8 Å² 로 사실상 정지(β 0.08 / -0.22 / -0.41). 같은 런의 PS₄ 는 2.1 / 11.4 / 3.5 Å². ⇒ 아레니우스에 들어가는 최저온에서 **BS₃ 가 PS₄ 보다 딱딱하다**. ICOHP 순서(B–S -7.79 > P–S -6.02)와 같은 방향.",
+    "⚠_reading_1000_1200_NOT_unanimous": "1000 K 비 0.78 / 4.41 / 1.18, 1200 K 비 0.93 / 2.57 / 4.24 — **시드마다 갈린다**(5.7배 · 4.6배 폭). BS₃ 는 정지(0.4–12 Å²) 아니면 급발진(88–200 Å²)의 **양봉**이고 중간이 없다. 셀에 B 가 2개뿐이라 단위 8원자가 통째로 움직이면 **독립 객체는 사실상 2개** — 단발 사건 하나가 그룹 MSD 를 지배한다. ⇒ 800 K 이상에서 'BS₃ 가 딱딱하다/무르다' 어느 쪽도 단정하지 않는다.",
+    "★_why_verdict_survives_anyway": "BS3_driven 은 '비 ≥2.0 **그리고** PS₄ β<0.30' 이다. BS₃ 가 가장 날뛴 런(s3/T1000 비 4.41, MSD 88.0)에서도 PS₄ β = 0.46 으로 호스트가 같이 움직인다. **BS₃ 만 움직이고 호스트는 가만있는 런이 9개 중 하나도 없다.** 시드 산포와 무관하게 이 판정은 선다.",
+    "★_new_finding_seed_spread_at_800K": "같은 800 K · 같은 출발배치(cfg0) · 열욕 난수만 다른데 PS₄ β 가 0.087 / 0.345 / 0.694 로 **8배** 흔들린다. 수렴된 물리량의 모습이 아니다 — MD 축 은퇴 판정에 붙는 독립 근거 하나 추가.",
+    "verdict_on_mechanism": {
+      "cannot_write": "'B₂O₃ 도핑이 이동성 BS₃ 단위를 도입해 음이온 부격자를 유동화한다' — **반증됨(0/9)**",
+      "can_write": "무르게 움직이는 것은 **호스트 PS₄** 다 (host_wide 5/9, 나머지도 PS₄ β≥0.30)",
+      "weight": "MLIP 한계 쪽. 같은 UMA·같은 T 에서 modelc 호스트는 7/7 rigid(max β 0.27)인데 b2o3 의 같은 PS₄ 는 β 0.35–1.01. 그런데 0 K DFT 는 반대를 말한다 — ICOHP 호스트 결합 전부 5% 이내 불변 · B₀ +13% 더 딱딱. 호스트 결합이 안 변했는데 호스트만 무르다 = 결합 세기로 설명 불가.",
+      "⛔_not_proven": "'도펀트가 국소 좌절을 만들어 호스트를 진짜로 무르게 한다'는 물리 해석은 이 시험만으로 배제되지 않는다. 가르려면 AIMD 스팟체크나 다른 포텐셜이 필요하다. 세 시드가 같은 cfg0 을 쓰는 한계도 그대로."
+    },
+    "citation_status_unchanged": "b2o3 MD 축(D·Ea·σ)은 계속 인용 불가. 이 판정은 값을 살리지 않고 **원고 메커니즘 문장을 특정**한다."
   },
-  "mto_verdicts_2026_08_25": {
-   "800K": {
-    "beta_mto": [
-     0.84,
-     0.82,
-     0.88
+  "modelc_framework_gate_2026_08_26": {
+    "★_verdict": "**modelc 9/9 framework_rigid** (최대 β 0.27). b2o3 골격 이완이 b2o3 **고유**임을 같은 조건 대조로 확인했다.",
+    "why_it_matters": "지금까지 인용하던 'modelc 7/7 rigid, max 0.27' 은 **다른 run family** 값이었다. b2o3 MD 축 은퇴 판정의 핵심 근거가 그 대조 하나였는데, 그 대조가 계보상 매칭되지 않았다. 이제 같은 UMA(uma-s-1p1 omat) · 같은 온도(600/800/1000 K) · 같은 프로토콜(200 ps, dt 2 fs, friction 0.02) · 같은 창(2–50 ps)에서 잰 현행 궤적으로 재현됐다.",
+    "run": "gabia /data/work/runs/highT_reseed_traj/modelc/s{2,3,4}/d0.00_cfg0/T{600,800,1000}",
+    "tool": "tools/ionic/msd_diffusive_check.py --framework --from_traj --window 2 50",
+    "beta_per_run": {
+      "s2/T600": -0.01,
+      "s2/T800": 0.03,
+      "s2/T1000": 0.27,
+      "s3/T600": 0.13,
+      "s3/T800": -0.05,
+      "s3/T1000": 0.04,
+      "s4/T600": -0.02,
+      "s4/T800": -0.01,
+      "s4/T1000": 0.01
+    },
+    "max_beta": 0.27,
+    "threshold": 0.3,
+    "n_rigid": "9/9",
+    "D_Li_cm2_s": {
+      "600": {
+        "s2": 6.471e-06,
+        "s3": 1.705e-05,
+        "s4": 7.9e-06
+      },
+      "800": {
+        "s2": 1.673e-05,
+        "s3": 2.152e-05,
+        "s4": 2.666e-05
+      },
+      "1000": {
+        "s2": 6.796e-05,
+        "s3": 6.006e-05,
+        "s4": 3.169e-05
+      }
+    },
+    "★_contrast_vs_b2o3": "b2o3: 800·1000 K 3/3 · 1200 K 6/6 이 β≥0.30, 600 K 도 1/3 이 0.55. modelc: 9/9 가 β<0.30. **같은 조건에서 갈린다** ⇒ 골격 이완은 UMA 의 일반 성질이 아니라 b2o3 조성에서 나는 것이다.",
+    "⚠_reextraction_assumption": "s3/T600 · s4/T600 두 런은 msd.json 에 종별 MSD 가 없어 traj.xyz 에서 다시 뽑았다. 그때 도구가 **save_fs=100 fs 를 가정**한다. 이 런들의 실제 실행 인자가 --save_fs 100 이므로 가정이 맞다(watch 출력에서 확인). ⛔ 다른 런에 이 경로를 쓸 때는 save_fs 를 먼저 확인할 것 — 틀리면 시간축이 어긋나 β 가 통째로 틀린다. 도구가 계산 결과를 msd.json 에 되써넣으므로 잘못된 가정으로 한 번 돌리면 그 파일이 오염된다.",
+    "⛔_still_open": "Li 자신의 확산 게이트는 별건이다. MTO·시드평균 재판정에서 **s2/T600 β=0.78 · s4/T600 β=0.80** 이 케이지로 플래그됐다(문턱 0.80 바로 위·아래). c 행 판별이 남았고, 그 결정은 이 표로 하지 않는다 — 도구가 '세 계 같은 온도 집합 유지가 점 제거보다 우선' 이라고 적고 있다.",
+    "supersedes": "이전 'modelc 7/7 rigid (b2o3_full 대조 계열)' 인용을 대체한다.",
+    "li_diffusive_gate_600K": {
+      "verdict": "**판별 불가** (도구 자체 판정). 600 K 를 아레니우스에서 빼지 않는다.",
+      "flagged": {
+        "s2/T600": 0.78,
+        "s4/T600": 0.8,
+        "s3/T600": 0.82
+      },
+      "note_seed_straddles_threshold": "같은 조건인데 시드가 문턱(0.80) 위아래로 갈린다(0.78 / 0.80 / 0.82). 물리적 sub-diffusion 이라기보다 **문턱 근처 노이즈**의 모습이다.",
+      "window_scan_AVG3": {
+        "windows_ps": [
+          "2-50",
+          "10-50",
+          "25-100",
+          "50-100"
+        ],
+        "beta": [
+          0.8,
+          0.85,
+          0.84,
+          0.85
+        ],
+        "c_A2": [
+          2.39,
+          2.9,
+          5.69,
+          6.65
+        ],
+        "m_A2_per_ps": [
+          0.631,
+          0.616,
+          0.546,
+          0.534
+        ],
+        "abs_dbeta_max": 0.04
+      },
+      "★_two_criteria_disagree": "|Δβ|max 0.040 ≤ 0.05 는 **케이지** 를 시사하고, c 증가(2.8배) + m 감소(-15.4%) + β 평탄은 **sub-diffusion** 을 시사한다. 도구가 이 충돌을 알고 '판별 불가' 를 낸다 (MC 재검토: 오분류 8~13%, 중첩창 n_eff≈3.2, sub-diffusion vs 느린 전이는 동전).",
+      "beta_shape_hint": "β 가 0.80 → 0.85 로 오르고 그 뒤 평탄하다. 진짜 sub-diffusion 이면 **모든 창에서 낮게 유지**돼야 한다. 올라갔다 평탄해진 것은 **느린 전이**(창이 이른 것) 쪽 모양이고, 그 경우 처방은 점 제거가 아니라 **창 이동/연장**이다.",
+      "★_D_is_window_robust_where_it_matters": "2-50 → 10-50 에서 m 이 -2.4 % 밖에 안 변한다 = 케이지 절편이고 **D 무사**. -15.4 % 는 50-100 까지 갔을 때다. 정본 창(2-50) 부근에서는 D 가 안정하다.",
+      "why_not_drop_the_point": "도구 지침 그대로: '세 계 같은 온도 집합 유지가 점 제거보다 우선한다 — 비대칭 가감은 Ea 비교를 통째로 깨뜨린다.' comp1/modelc/b2o3 를 나란히 놓는 것이 목적이므로 modelc 만 600 K 를 빼면 Ea 비교가 무너진다.",
+      "⛔_what_would_settle_it": "600 K 를 **더 길게** 돌려 늦은 창에서 β 가 1 로 수렴하는지 보는 것. 200 ps 로는 tmax 가 100 ps 라 50-100 이 마지막 창이다. 점 제거가 아니라 런 연장이 옳은 처방이라는 것이 β 모양의 읽기다.",
+      "⚠_600K_is_the_weakest_point": "이 온도는 (1) β 가 문턱에 걸리고 (2) 시드 산포가 크다(D: 6.47e-06 / 1.705e-05 / 7.90e-06 — s3 가 s2 의 2.6배) (3) c 가 창 따라 2.8배 커진다. **Ea 를 인용할 때 600 K 가 지배적 잡음원**이라는 것을 같이 밝힐 것 (b2o3 에서 leave-one-out 으로 이미 확인된 것과 같은 방향)."
+    }
+  },
+  "three_system_framework_contrast_2026_08_26": {
+    "★_verdict": "**골격 이완은 b2o3 조성 고유다.** modelc(무도핑)와 lpsocl(O 도핑) 둘 다 1000 K 까지 rigid 인데 b2o3 만 **700 K 부터** 샌다.",
+    "why_it_matters": "이전 대조는 modelc 하나뿐이라 '도핑하면 무르다' 와 'B2O3 라서 무르다' 를 못 갈랐다. lpsocl 은 **O 를 도핑한 계**인데 rigid 다 ⇒ 도핑 자체가 원인이 아니다.",
+    "tool": "tools/ionic/msd_diffusive_check.py --framework --from_traj --window 2 50",
+    "results": {
+      "lpsocl": {
+        "T600": "6런 (arrhenius_6pt_traj 3 + lpsocl_new 3) 전부 rigid",
+        "T700": "3런 rigid (β 0.12 / -0.04 / 0.03, worst Cl(8)·S(21))",
+        "T1000": "3런 rigid (β 0.17 / 0.03 / 0.04)",
+        "max_beta": 0.17,
+        "raw": "kgy ~/work/runs/{arrhenius_6pt_traj,arrhenius_6pt/lpsocl_new}"
+      },
+      "modelc": {
+        "T600_800_1000": "9런 rigid (max β 0.27) — highT_reseed_traj",
+        "T700": "3런 rigid (β 0.05 / 0.07 / 0.12)",
+        "max_beta": 0.27
+      },
+      "b2o3": {
+        "T700": "s2 ⛔ β≥0.60 — **골격이 확산 쪽**",
+        "T800_T1000": "3/3 β≥0.30",
+        "T1200": "6/6 β≥0.30",
+        "T600": "1/3 이 0.55",
+        "note": "실패 개시가 700 K 로 내려왔다 (이전 최저 실패는 800 K)"
+      }
+    },
+    "★_reading": "modelc(무도핑) · lpsocl(O 도핑) 둘 다 1000 K 까지 골격이 고정인데 b2o3(B2O3 도핑)만 700 K 부터 샌다. **B 가 들어간 계에서만** 나는 현상이고, 앞서 BS3/PS4 단위 분리에서 'BS3 가 원인이 아니다(0/9)' 를 확인했으므로 — 호스트 PS4 기술이 B 존재 하에서 흐트러진다는 읽기와 정합한다.",
+    "⛔_still_open": [
+      "lpsocl **800 K** 는 아직 골격 검사 안 함 (lpsocl_md/reseed_hiT/s*/T800 에 궤적 여부 미확인).",
+      "b2o3 T700 은 s2 하나만 봤다 — s3·s4 는 실행 중/대기.",
+      "β 문턱 0.60 은 확산 판정이고 0.30 은 rigid 판정이다. b2o3 T700_s2 가 0.60 을 넘었다는 것은 '기어가는(creep)' 이 아니라 확산 쪽이라는 뜻 — 더 강한 신호다.",
+      "재추출이 save_fs=100 fs 를 **가정**한다. 이 런들의 실제 인자와 일치하는지 확인 필요 (modelc 는 확인함, lpsocl_new 는 미확인)."
+    ]
+  },
+  "supercell_ladder_never_ran_2026_08_26": {
+    "what": "🔴 `tools/ionic/run_comp1_supercell.sh` 가 **한 번도 돈 적이 없다** — 2026-08-11 작성 이래.",
+    "bug": "배너 줄에서 `$SEED` 를 참조하는데 SEED 는 **아래 루프 안에서만** 정의된다. 스크립트가 `set -u` 라 그 줄에서 즉시 죽는다 (`line 76: SEED: unbound variable`).",
+    "evidence": [
+      "gabia 2026-08-26: modelc 3×3×1 을 걸었는데 그 오류로 즉사",
+      "kgy `~/logs/c1sc.log` = **1189 B** (2026-08-11) — 즉시 죽은 크기와 일치",
+      "`bash -n` 은 **구문만** 보므로 이 부류를 못 잡는다 (내가 어제 그걸로 통과시켰다)"
     ],
-    "verdict": "✅ 3/3 확산 — 확정",
-    "D": [
-     1.673e-05,
-     2.152e-05,
-     2.666e-05
-    ],
-    "spread_pct": 19
-   },
-   "1000K": {
-    "beta_mto": [
-     0.93,
-     0.95,
-     0.94
-    ],
-    "verdict": "✅ 3/3 확산 — 확정",
-    "D": [
-     6.796e-05,
-     6.006e-05,
-     3.169e-05
-    ],
-    "spread_pct": 29
-   },
-   "600K": {
-    "status": "⏳ n=2 (s2 6.471e-06 · s3 1.705e-05, 산포 45%) · s2 MTO β 0.78 경계 · **s4/T600 이 gabia mc600 세션에서 진행 중으로 추정** — 확인 대기",
-    "note": "mto900 대기자 무발화가 이걸로 설명됨 (MD 진행 중 = 정상 대기)"
-   },
-   "sto_flags_resolution": "STO 플래그 3건(0.70/0.77/0.70)은 전부 **시간원점 잡음** — MTO 에서 0.82–0.95 로 회복. 스캔 c-행 판독(케이지 절편/느린 전이)과 정합",
-   "refit_rule": "Ea 재적합은 600 K 3시드 + MTO 시드평균 β-bar 통과 후 — 부분 적합 발표 금지"
+    "왜_중요한가": "`kb/open_items.md` #1·#2 가 *'셀 확대 후에야 닫힌다'* 로 멈춰 있었는데, 그 셀 확대를 **시도한 적이 없었다.** 비싸서 미룬 게 아니라 **스크립트가 죽고 있었다.**",
+    "fixed": "2026-08-26 — 배너를 `$SEEDS`(복수형)로. 나머지 `$SEED` 참조 5곳은 전부 루프 안이라 정상.",
+    "검증": "LADDER 기본값으로 돌려 배너 통과 + 드라이버 진입까지 확인 (fairchem 없는 컨테이너라 거기서 멈춤).",
+    "⛔_교훈": "`bash -n` 은 unbound variable 을 못 잡는다. **tmux 로 띄운 뒤 30초 안에 로그를 확인**하는 습관이 이걸 두 번 잡았다 (오늘 gabia 에서 두 번: tee 실패 · SEED 미정의)."
   }
- },
- "lpsocl_600_rerun_2026_08_25": {
-  "what": "lpsocl 600 재실행 3시드 — 0.2867 보류 해제의 열쇠 (보류 사유 = 600 게이트 탈락)",
-  "started": "2026-08-25 22:12 kgy (tmux lp600)",
-  "nat": 62,
-  "min_dist_gate": "1.559 Å OK",
-  "how": "ONLY=lpsocl TEMP_PROD='' LPSOCL_EXTRA='600:200' SEEDS='2 3 4' LOCK=/tmp/arr6_lp600.lock — 별도 lock (기존 러너 lock 에 튕기는 함정 회피)",
-  "co_run": "기존 러너(lpsocl T700 → b2o3 T700)와 동시 실행 — GPU 98 %, 3.2 GB/24 GB. 둘 다 감속하나 순차 대비 lp600 이 ~10 h 당겨짐 (사용자 결정: 대기자 없이 즉시)",
-  "output": "arrhenius_6pt_traj/lpsocl/T600_s{2,3,4} — 200 ps · MTO · traj",
-  "on_complete": "600 MTO 시드평균 β-bar 재판정 → 통과 시 lpsocl Ea 재적합 (보류 해제), 시드평균 MTO 곡선으로 논문 MSD 그림 정본 교체"
- },
- "unit_split_preregistration_2026_08_25": {
-  "question": "b2o3 골격이 움직인 원인이 도핑이 넣은 BS₃ 단위인가, 호스트 PS₄ 자체가 무른 것인가.",
-  "why_now": "원자별 판정에서 B 는 n=2 라 FRAMEWORK_MIN_N=8 컷오프 아래여서 빠져 있었다. 결합 검사가 B–S 6→6 불변을 보였으므로 B 와 그 S 3개를 한 몸으로 묶으면 BS₃ 단위 = 8원자로 컷오프를 만족한다.",
-  "tool": "tools/ionic/msd_diffusive_check.py --framework_split (unit_verdict 순수함수 + selftest 47)",
-  "criteria_fixed_before_data": {
-   "ratio": "BS₃ MSD_end / PS₄ MSD_end (같은 런 안의 비 — 절대 β 는 온도 의존이라 계 간 비교 불가)",
-   "UNIT_RATIO_HI": 2.0,
-   "UNIT_RATIO_LO": 1.25,
-   "SPLIT_RIGID": 0.3,
-   "BS3_driven": "비 ≥ 2.0 AND PS₄ β < 0.30",
-   "host_wide": "비 ≤ 1.25 AND PS₄ β ≥ 0.30",
-   "both_mobile": "비 ≥ 2.0 AND PS₄ β ≥ 0.30",
-   "inconclusive": "그 외 (회색지대 1.25<비<2.0 포함 — 문턱을 사후에 늘리지 않는다)"
-  },
-  "interpretation_stakes": {
-   "BS3_driven": "메커니즘 특정: B₂O₃ 도핑이 이동성 BS₃ 단위를 넣어 음이온 부격자를 유동화한다.",
-   "host_wide": "호스트 PS₄ 까지 무르다 ⇒ UMA 아티팩트 쪽 무게↑ (modelc 7/7 rigid 와 충돌)",
-   "both_mobile": "둘 다 — 물리와 아티팩트가 섞여 있어 단독 인용 불가"
-  },
-  "planned_input": "kgy ~/work/runs/highT_reseed_traj/b2o3/s*/d0.00_cfg0/T*/msd.json (window 2–50 ps)",
-  "status": "사전 등록 완료 — 데이터 미열람",
-  "⛔_limits": "첫 프레임 결합 기준 분류다. 결합 불변(9/9)이 확인된 b2o3 에만 쓴다. MSD_end 비는 창 끝값 하나라 시드 산포를 담지 않는다 — 시드별로 따로 보고 부호가 갈리면 inconclusive 로 본다."
- },
- "unit_split_verdict_2026_08_25": {
-  "ran": "kgy ~/work/runs/highT_reseed_traj/b2o3/s{2,3,4}/d0.00_cfg0/T{800,1000,1200} — 9런, 재계산 0",
-  "tool": "tools/ionic/msd_diffusive_check.py --framework_split --window 2 50",
-  "criteria": "사전 등록: unit_split_preregistration_2026_08_25 (문턱 변경 없음)",
-  "★_headline": "BS3_driven **0/9**. 도핑이 넣은 BS₃ 단위는 유동화의 원인이 아니다.",
-  "counts": {
-   "BS3_driven": 0,
-   "host_wide": 5,
-   "both_mobile": 3,
-   "inconclusive": 1
-  },
-  "per_run": {
-   "s2/T800": {
-    "ratio_BS3_over_PS4": 0.4,
-    "PS4_beta": 0.0869,
-    "PS4_msd_end_A2": 2.1,
-    "BS3_beta": 0.0824,
-    "BS3_msd_end_A2": 0.8,
-    "verdict": "inconclusive"
-   },
-   "s3/T800": {
-    "ratio_BS3_over_PS4": 0.37,
-    "PS4_beta": 0.6936,
-    "PS4_msd_end_A2": 11.4,
-    "BS3_beta": -0.221,
-    "BS3_msd_end_A2": 4.2,
-    "verdict": "host_wide"
-   },
-   "s4/T800": {
-    "ratio_BS3_over_PS4": 0.1,
-    "PS4_beta": 0.3454,
-    "PS4_msd_end_A2": 3.5,
-    "BS3_beta": -0.408,
-    "BS3_msd_end_A2": 0.4,
-    "verdict": "host_wide"
-   },
-   "s2/T1000": {
-    "ratio_BS3_over_PS4": 0.78,
-    "PS4_beta": 0.4407,
-    "PS4_msd_end_A2": 15.3,
-    "BS3_beta": -0.0166,
-    "BS3_msd_end_A2": 11.9,
-    "verdict": "host_wide"
-   },
-   "s3/T1000": {
-    "ratio_BS3_over_PS4": 4.41,
-    "PS4_beta": 0.4605,
-    "PS4_msd_end_A2": 20.0,
-    "BS3_beta": 1.1716,
-    "BS3_msd_end_A2": 88.0,
-    "verdict": "both_mobile"
-   },
-   "s4/T1000": {
-    "ratio_BS3_over_PS4": 1.18,
-    "PS4_beta": 0.4207,
-    "PS4_msd_end_A2": 9.5,
-    "BS3_beta": 0.5323,
-    "BS3_msd_end_A2": 11.2,
-    "verdict": "host_wide"
-   },
-   "s2/T1200": {
-    "ratio_BS3_over_PS4": 0.93,
-    "PS4_beta": 0.6472,
-    "PS4_msd_end_A2": 12.9,
-    "BS3_beta": 0.8458,
-    "BS3_msd_end_A2": 12.0,
-    "verdict": "host_wide"
-   },
-   "s3/T1200": {
-    "ratio_BS3_over_PS4": 2.57,
-    "PS4_beta": 1.0095,
-    "PS4_msd_end_A2": 77.9,
-    "BS3_beta": 0.8047,
-    "BS3_msd_end_A2": 200.2,
-    "verdict": "both_mobile"
-   },
-   "s4/T1200": {
-    "ratio_BS3_over_PS4": 4.24,
-    "PS4_beta": 0.7416,
-    "PS4_msd_end_A2": 24.9,
-    "BS3_beta": 1.0579,
-    "BS3_msd_end_A2": 105.7,
-    "verdict": "both_mobile"
-   }
-  },
-  "reading_800K_UNANIMOUS": "800 K 3/3 에서 비 = 0.10 / 0.37 / 0.40 — **전부 1 미만**. BS₃ MSD 0.4 / 4.2 / 0.8 Å² 로 사실상 정지(β 0.08 / -0.22 / -0.41). 같은 런의 PS₄ 는 2.1 / 11.4 / 3.5 Å². ⇒ 아레니우스에 들어가는 최저온에서 **BS₃ 가 PS₄ 보다 딱딱하다**. ICOHP 순서(B–S -7.79 > P–S -6.02)와 같은 방향.",
-  "⚠_reading_1000_1200_NOT_unanimous": "1000 K 비 0.78 / 4.41 / 1.18, 1200 K 비 0.93 / 2.57 / 4.24 — **시드마다 갈린다**(5.7배 · 4.6배 폭). BS₃ 는 정지(0.4–12 Å²) 아니면 급발진(88–200 Å²)의 **양봉**이고 중간이 없다. 셀에 B 가 2개뿐이라 단위 8원자가 통째로 움직이면 **독립 객체는 사실상 2개** — 단발 사건 하나가 그룹 MSD 를 지배한다. ⇒ 800 K 이상에서 'BS₃ 가 딱딱하다/무르다' 어느 쪽도 단정하지 않는다.",
-  "★_why_verdict_survives_anyway": "BS3_driven 은 '비 ≥2.0 **그리고** PS₄ β<0.30' 이다. BS₃ 가 가장 날뛴 런(s3/T1000 비 4.41, MSD 88.0)에서도 PS₄ β = 0.46 으로 호스트가 같이 움직인다. **BS₃ 만 움직이고 호스트는 가만있는 런이 9개 중 하나도 없다.** 시드 산포와 무관하게 이 판정은 선다.",
-  "★_new_finding_seed_spread_at_800K": "같은 800 K · 같은 출발배치(cfg0) · 열욕 난수만 다른데 PS₄ β 가 0.087 / 0.345 / 0.694 로 **8배** 흔들린다. 수렴된 물리량의 모습이 아니다 — MD 축 은퇴 판정에 붙는 독립 근거 하나 추가.",
-  "verdict_on_mechanism": {
-   "cannot_write": "'B₂O₃ 도핑이 이동성 BS₃ 단위를 도입해 음이온 부격자를 유동화한다' — **반증됨(0/9)**",
-   "can_write": "무르게 움직이는 것은 **호스트 PS₄** 다 (host_wide 5/9, 나머지도 PS₄ β≥0.30)",
-   "weight": "MLIP 한계 쪽. 같은 UMA·같은 T 에서 modelc 호스트는 7/7 rigid(max β 0.27)인데 b2o3 의 같은 PS₄ 는 β 0.35–1.01. 그런데 0 K DFT 는 반대를 말한다 — ICOHP 호스트 결합 전부 5% 이내 불변 · B₀ +13% 더 딱딱. 호스트 결합이 안 변했는데 호스트만 무르다 = 결합 세기로 설명 불가.",
-   "⛔_not_proven": "'도펀트가 국소 좌절을 만들어 호스트를 진짜로 무르게 한다'는 물리 해석은 이 시험만으로 배제되지 않는다. 가르려면 AIMD 스팟체크나 다른 포텐셜이 필요하다. 세 시드가 같은 cfg0 을 쓰는 한계도 그대로."
-  },
-  "citation_status_unchanged": "b2o3 MD 축(D·Ea·σ)은 계속 인용 불가. 이 판정은 값을 살리지 않고 **원고 메커니즘 문장을 특정**한다."
- },
- "modelc_framework_gate_2026_08_26": {
-  "★_verdict": "**modelc 9/9 framework_rigid** (최대 β 0.27). b2o3 골격 이완이 b2o3 **고유**임을 같은 조건 대조로 확인했다.",
-  "why_it_matters": "지금까지 인용하던 'modelc 7/7 rigid, max 0.27' 은 **다른 run family** 값이었다. b2o3 MD 축 은퇴 판정의 핵심 근거가 그 대조 하나였는데, 그 대조가 계보상 매칭되지 않았다. 이제 같은 UMA(uma-s-1p1 omat) · 같은 온도(600/800/1000 K) · 같은 프로토콜(200 ps, dt 2 fs, friction 0.02) · 같은 창(2–50 ps)에서 잰 현행 궤적으로 재현됐다.",
-  "run": "gabia /data/work/runs/highT_reseed_traj/modelc/s{2,3,4}/d0.00_cfg0/T{600,800,1000}",
-  "tool": "tools/ionic/msd_diffusive_check.py --framework --from_traj --window 2 50",
-  "beta_per_run": {
-   "s2/T600": -0.01,
-   "s2/T800": 0.03,
-   "s2/T1000": 0.27,
-   "s3/T600": 0.13,
-   "s3/T800": -0.05,
-   "s3/T1000": 0.04,
-   "s4/T600": -0.02,
-   "s4/T800": -0.01,
-   "s4/T1000": 0.01
-  },
-  "max_beta": 0.27,
-  "threshold": 0.3,
-  "n_rigid": "9/9",
-  "D_Li_cm2_s": {
-   "600": {
-    "s2": 6.471e-06,
-    "s3": 1.705e-05,
-    "s4": 7.9e-06
-   },
-   "800": {
-    "s2": 1.673e-05,
-    "s3": 2.152e-05,
-    "s4": 2.666e-05
-   },
-   "1000": {
-    "s2": 6.796e-05,
-    "s3": 6.006e-05,
-    "s4": 3.169e-05
-   }
-  },
-  "★_contrast_vs_b2o3": "b2o3: 800·1000 K 3/3 · 1200 K 6/6 이 β≥0.30, 600 K 도 1/3 이 0.55. modelc: 9/9 가 β<0.30. **같은 조건에서 갈린다** ⇒ 골격 이완은 UMA 의 일반 성질이 아니라 b2o3 조성에서 나는 것이다.",
-  "⚠_reextraction_assumption": "s3/T600 · s4/T600 두 런은 msd.json 에 종별 MSD 가 없어 traj.xyz 에서 다시 뽑았다. 그때 도구가 **save_fs=100 fs 를 가정**한다. 이 런들의 실제 실행 인자가 --save_fs 100 이므로 가정이 맞다(watch 출력에서 확인). ⛔ 다른 런에 이 경로를 쓸 때는 save_fs 를 먼저 확인할 것 — 틀리면 시간축이 어긋나 β 가 통째로 틀린다. 도구가 계산 결과를 msd.json 에 되써넣으므로 잘못된 가정으로 한 번 돌리면 그 파일이 오염된다.",
-  "⛔_still_open": "Li 자신의 확산 게이트는 별건이다. MTO·시드평균 재판정에서 **s2/T600 β=0.78 · s4/T600 β=0.80** 이 케이지로 플래그됐다(문턱 0.80 바로 위·아래). c 행 판별이 남았고, 그 결정은 이 표로 하지 않는다 — 도구가 '세 계 같은 온도 집합 유지가 점 제거보다 우선' 이라고 적고 있다.",
-  "supersedes": "이전 'modelc 7/7 rigid (b2o3_full 대조 계열)' 인용을 대체한다.",
-  "li_diffusive_gate_600K": {
-   "verdict": "**판별 불가** (도구 자체 판정). 600 K 를 아레니우스에서 빼지 않는다.",
-   "flagged": {
-    "s2/T600": 0.78,
-    "s4/T600": 0.8,
-    "s3/T600": 0.82
-   },
-   "note_seed_straddles_threshold": "같은 조건인데 시드가 문턱(0.80) 위아래로 갈린다(0.78 / 0.80 / 0.82). 물리적 sub-diffusion 이라기보다 **문턱 근처 노이즈**의 모습이다.",
-   "window_scan_AVG3": {
-    "windows_ps": [
-     "2-50",
-     "10-50",
-     "25-100",
-     "50-100"
-    ],
-    "beta": [
-     0.8,
-     0.85,
-     0.84,
-     0.85
-    ],
-    "c_A2": [
-     2.39,
-     2.9,
-     5.69,
-     6.65
-    ],
-    "m_A2_per_ps": [
-     0.631,
-     0.616,
-     0.546,
-     0.534
-    ],
-    "abs_dbeta_max": 0.04
-   },
-   "★_two_criteria_disagree": "|Δβ|max 0.040 ≤ 0.05 는 **케이지** 를 시사하고, c 증가(2.8배) + m 감소(-15.4%) + β 평탄은 **sub-diffusion** 을 시사한다. 도구가 이 충돌을 알고 '판별 불가' 를 낸다 (MC 재검토: 오분류 8~13%, 중첩창 n_eff≈3.2, sub-diffusion vs 느린 전이는 동전).",
-   "beta_shape_hint": "β 가 0.80 → 0.85 로 오르고 그 뒤 평탄하다. 진짜 sub-diffusion 이면 **모든 창에서 낮게 유지**돼야 한다. 올라갔다 평탄해진 것은 **느린 전이**(창이 이른 것) 쪽 모양이고, 그 경우 처방은 점 제거가 아니라 **창 이동/연장**이다.",
-   "★_D_is_window_robust_where_it_matters": "2-50 → 10-50 에서 m 이 -2.4 % 밖에 안 변한다 = 케이지 절편이고 **D 무사**. -15.4 % 는 50-100 까지 갔을 때다. 정본 창(2-50) 부근에서는 D 가 안정하다.",
-   "why_not_drop_the_point": "도구 지침 그대로: '세 계 같은 온도 집합 유지가 점 제거보다 우선한다 — 비대칭 가감은 Ea 비교를 통째로 깨뜨린다.' comp1/modelc/b2o3 를 나란히 놓는 것이 목적이므로 modelc 만 600 K 를 빼면 Ea 비교가 무너진다.",
-   "⛔_what_would_settle_it": "600 K 를 **더 길게** 돌려 늦은 창에서 β 가 1 로 수렴하는지 보는 것. 200 ps 로는 tmax 가 100 ps 라 50-100 이 마지막 창이다. 점 제거가 아니라 런 연장이 옳은 처방이라는 것이 β 모양의 읽기다.",
-   "⚠_600K_is_the_weakest_point": "이 온도는 (1) β 가 문턱에 걸리고 (2) 시드 산포가 크다(D: 6.47e-06 / 1.705e-05 / 7.90e-06 — s3 가 s2 의 2.6배) (3) c 가 창 따라 2.8배 커진다. **Ea 를 인용할 때 600 K 가 지배적 잡음원**이라는 것을 같이 밝힐 것 (b2o3 에서 leave-one-out 으로 이미 확인된 것과 같은 방향)."
-  }
- },
- "three_system_framework_contrast_2026_08_26": {
-  "★_verdict": "**골격 이완은 b2o3 조성 고유다.** modelc(무도핑)와 lpsocl(O 도핑) 둘 다 1000 K 까지 rigid 인데 b2o3 만 **700 K 부터** 샌다.",
-  "why_it_matters": "이전 대조는 modelc 하나뿐이라 '도핑하면 무르다' 와 'B2O3 라서 무르다' 를 못 갈랐다. lpsocl 은 **O 를 도핑한 계**인데 rigid 다 ⇒ 도핑 자체가 원인이 아니다.",
-  "tool": "tools/ionic/msd_diffusive_check.py --framework --from_traj --window 2 50",
-  "results": {
-   "lpsocl": {
-    "T600": "6런 (arrhenius_6pt_traj 3 + lpsocl_new 3) 전부 rigid",
-    "T700": "3런 rigid (β 0.12 / -0.04 / 0.03, worst Cl(8)·S(21))",
-    "T1000": "3런 rigid (β 0.17 / 0.03 / 0.04)",
-    "max_beta": 0.17,
-    "raw": "kgy ~/work/runs/{arrhenius_6pt_traj,arrhenius_6pt/lpsocl_new}"
-   },
-   "modelc": {
-    "T600_800_1000": "9런 rigid (max β 0.27) — highT_reseed_traj",
-    "T700": "3런 rigid (β 0.05 / 0.07 / 0.12)",
-    "max_beta": 0.27
-   },
-   "b2o3": {
-    "T700": "s2 ⛔ β≥0.60 — **골격이 확산 쪽**",
-    "T800_T1000": "3/3 β≥0.30",
-    "T1200": "6/6 β≥0.30",
-    "T600": "1/3 이 0.55",
-    "note": "실패 개시가 700 K 로 내려왔다 (이전 최저 실패는 800 K)"
-   }
-  },
-  "★_reading": "modelc(무도핑) · lpsocl(O 도핑) 둘 다 1000 K 까지 골격이 고정인데 b2o3(B2O3 도핑)만 700 K 부터 샌다. **B 가 들어간 계에서만** 나는 현상이고, 앞서 BS3/PS4 단위 분리에서 'BS3 가 원인이 아니다(0/9)' 를 확인했으므로 — 호스트 PS4 기술이 B 존재 하에서 흐트러진다는 읽기와 정합한다.",
-  "⛔_still_open": [
-   "lpsocl **800 K** 는 아직 골격 검사 안 함 (lpsocl_md/reseed_hiT/s*/T800 에 궤적 여부 미확인).",
-   "b2o3 T700 은 s2 하나만 봤다 — s3·s4 는 실행 중/대기.",
-   "β 문턱 0.60 은 확산 판정이고 0.30 은 rigid 판정이다. b2o3 T700_s2 가 0.60 을 넘었다는 것은 '기어가는(creep)' 이 아니라 확산 쪽이라는 뜻 — 더 강한 신호다.",
-   "재추출이 save_fs=100 fs 를 **가정**한다. 이 런들의 실제 인자와 일치하는지 확인 필요 (modelc 는 확인함, lpsocl_new 는 미확인)."
-  ]
- }
 }

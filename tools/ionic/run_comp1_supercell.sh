@@ -73,7 +73,10 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || { echo "⛔ 이미 돈다 �
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 mkdir -p "$OUTROOT"
 
-ts "${LABEL} 셀 확대 사다리 — 사다리 [$LADDER] · T [$TEMPS] K · prod ${PRODPS} ps · seed $SEED"
+# ⛔ 2026-08-26 — 여기서 `$SEED` 를 쓰고 있었다. SEED 는 **아래 루프 안에서만** 정의되는데
+#   `set -u` 라 배너에서 즉시 죽는다. 이 스크립트는 그래서 **한 번도 돈 적이 없다**
+#   (kgy c1sc.log 1189 B · gabia 2026-08-26 재현). 복수형 $SEEDS 가 맞다.
+ts "${LABEL} 셀 확대 사다리 — 사다리 [$LADDER] · T [$TEMPS] K · prod ${PRODPS} ps · seeds [$SEEDS]"
 ts "V0 $V0XYZ → $OUTROOT"
 
 # ⚠ 싼 칸부터 · 시드 안쪽 루프 — 한 셀의 3시드가 먼저 모여야 그 칸을 판정할 수 있다
