@@ -337,6 +337,11 @@ class SampleOut(BaseModel):
     updated_at: datetime
     run_count: int = 0
     cycle_count: int = 0
+    #: 이 셀에 붙은 임피던스 스펙트럼 수와, 그중 가장 잘 맞은 피팅의 전체 저항.
+    #: **비어 있는 것도 뜻이 된다**: 스펙트럼이 0 이면 아직 안 쟀고, 0 이 아닌데
+    #: 저항이 없으면 잰 것이 아직 안 맞았다 — 다음 행동이 다르다.
+    spectrum_count: int = 0
+    impedance_ohm: float | None = None
     resolved_cell: ResolvedCellOut
     created_by: str = ""
     updated_by: str = ""

@@ -88,6 +88,13 @@ export function EisUpload() {
               cell_config: config || undefined,
               purpose: purpose.trim() || undefined,
               sample_id: plan[index] ?? undefined,
+              // 올리면서 회로를 골라 맞춘다.  나중에 맞추면 목록에 저항이
+              // 빈 줄로 쌓이는데, 그 줄은 "이 셀은 안 맞는다" 와 "아직
+              // 아무도 안 눌러 봤다" 를 구분해 주지 않는다.
+              //
+              // 서버 기본은 꺼짐이다 — 스펙트럼 하나에 20 초쯤 걸려서,
+              // 기다리는 화면이 있을 때만 켤 만하다.  여기가 그 화면이다.
+              fit: 'auto',
             },
             settings ?? null,
           )
@@ -170,13 +177,13 @@ export function EisUpload() {
               <DropZone
                 accept=".mpr,.mpt,.mps"
                 label="여기에 .mpr 파일을 끌어다 놓으세요"
-                hint="또는 눌러서 선택 · 여러 개 한 번에 가능 · .mps 를 같이 던지면 진폭·장비 이름이 함께 들어갑니다"
+                hint="또는 눌러서 선택 · 여러 개 한 번에 가능 · .mps 를 같이 던지면 진폭·장비 이름이 함께 들어갑니다 · 올리면서 회로를 골라 맞춥니다"
                 onFiles={send}
               />
 
               {busy ? (
                 <div style={{ marginTop: 12 }}>
-                  <Spinner label="읽는 중 — 스윕이 여럿이면 줄이 여러 개 생깁니다" />
+                  <Spinner label="읽고 맞추는 중 — 회로를 몇 개 맞춰 보느라 파일당 20초쯤 걸립니다" />
                 </div>
               ) : null}
             </div>

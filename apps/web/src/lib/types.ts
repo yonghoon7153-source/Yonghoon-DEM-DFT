@@ -130,6 +130,11 @@ export interface Sample {
   updated_at: string
   run_count: number
   cycle_count: number
+  /** 이 셀에 붙은 임피던스 스펙트럼 수와, 가장 잘 맞은 피팅의 전체 저항.
+   *  비어 있는 것도 뜻이다: 0 이면 아직 안 쟀고, 0 이 아닌데 저항이 없으면
+   *  잰 것이 아직 안 맞았다. */
+  spectrum_count?: number
+  impedance_ohm?: number | null
   resolved_cell: ResolvedCell
   created_by?: string
   updated_by?: string

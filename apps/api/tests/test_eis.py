@@ -56,6 +56,56 @@ def test_the_original_mpr_comes_back_out_byte_for_byte(client):
     assert client.get("/api/export/spectra/9999/original").status_code == 404
 
 
+def test_upload_can_fit_on_the_way_in(client):
+    """올리면서 회로를 골라 맞춘다 — 목록에 저항이 빈 줄로 쌓이지 않게.
+
+    빈 줄은 "이 셀은 안 맞는다" 와 "아직 아무도 안 눌러 봤다" 를 구분해 주지
+    않는다.  기본은 꺼져 있고 (요청 하나가 20 초씩 서 있는 것은 화면이
+    기다릴 때나 괜찮다) 업로드 화면이 켜서 보낸다.
+    """
+    out = client.post("/api/eis/spectra/upload",
+                      params={"kind": "liquid", "fit": "auto"},
+                      files={"file": ("cell_01.mpr", mpr(),
+                                      "application/octet-stream")}).json()
+    detail = client.get(f"/api/eis/spectra/{out['id']}").json()
+    assert detail["fits"], "올리면서 맞춘 결과가 없다"
+    assert any(f["converged"] for f in detail["fits"])
+
+    # 안 켜면 안 맞춘다.
+    plain = client.post("/api/eis/spectra/upload",
+                        params={"kind": "liquid"},
+                        files={"file": ("cell_02.mpr", mpr(rs=7.0),
+                                        "application/octet-stream")}).json()
+    assert client.get(f"/api/eis/spectra/{plain['id']}").json()["fits"] == []
+
+
+def test_the_cell_library_carries_the_impedance(client, sample_id):
+    """셀 목록에서 임피던스가 있다/없다조차 안 보였다.
+
+    빈 칸을 셋으로 가른다: 안 쟀다 · 쟀는데 안 맞췄다 · 맞췄다.  가운데를
+    "—" 로 뭉뚱그리면 다음에 할 일이 안 보인다.
+    """
+    def cell():
+        rows = client.get("/api/samples").json()
+        return next(row for row in rows if row["id"] == sample_id)
+
+    assert cell()["spectrum_count"] == 0
+    assert cell()["impedance_ohm"] is None
+
+    out = client.post("/api/eis/spectra/upload",
+                      params={"kind": "liquid", "sample_id": sample_id},
+                      files={"file": ("cell_01.mpr", mpr(),
+                                      "application/octet-stream")}).json()
+    # 쟀지만 아직 안 맞췄다.
+    assert cell()["spectrum_count"] == 1
+    assert cell()["impedance_ohm"] is None
+
+    client.post(f"/api/eis/spectra/{out['id']}/fit",
+                params={"circuit": "R0-p(R1,CPE1)-p(R2,CPE2)"})
+    # R0 + R1 + R2 = 5 + 20 + 40.
+    assert cell()["impedance_ohm"] == pytest.approx(65.0, rel=0.02)
+
+
 # --- 올리기 ----------------------------------------------------------------
 
 def test_an_mpr_becomes_a_spectrum(client):

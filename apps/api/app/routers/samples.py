@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import json
 from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlmodel import Session, select
 
 from wrdkit import BASES
+from wrdkit.eis import total_resistance
 from wrdkit.health import DEFAULT_REFERENCE_CYCLE
 
 from .. import storage
@@ -19,6 +21,7 @@ from ..models import (
     GittRun,
     Run,
     Sample,
+    SpectrumFit,
     SpectrumRecord,
 )
 from ..schemas import (
@@ -36,10 +39,43 @@ from ..services import (
     sample_formation,
     sample_reference_cycle,
 )
+from .eis import _FitStub, _ParameterStub
 
 router = APIRouter(prefix="/api/samples", tags=["samples"])
 
 VALID_STATES = {"auto", "running", "finished"}
+
+
+def _impedance(session: Session, sample_id: int | None) -> tuple[int, float | None]:
+    """이 셀에 붙은 스펙트럼 수와, 그중 가장 잘 맞은 피팅의 전체 저항.
+
+    셀 라이브러리에서 임피던스는 "있다/없다" 조차 안 보였다.  저항 하나가
+    붙으면 셀 목록에서 바로 견줄 수 있고, **비어 있는 것도 뜻이 된다**:
+    스펙트럼 수가 0 이면 아직 안 쟀고, 0 이 아닌데 저항이 없으면 잰 것이
+    아직 안 맞았다는 뜻이다 — 그 둘은 다른 다음 행동을 부른다.
+
+    "가장 잘 맞은" 은 화면의 그것과 같은 뜻이다: 수렴한 것 중 χ² 최소.
+    """
+    if sample_id is None:
+        return 0, None
+    spectra = session.exec(
+        select(SpectrumRecord.id).where(SpectrumRecord.sample_id == sample_id)).all()
+    if not spectra:
+        return 0, None
+    fits = session.exec(
+        select(SpectrumFit)
+        .where(SpectrumFit.spectrum_id.in_(spectra))      # type: ignore[attr-defined]
+        .where(SpectrumFit.converged)
+        .where(SpectrumFit.chi_squared.is_not(None))      # type: ignore[attr-defined]
+        .order_by(SpectrumFit.chi_squared)                # type: ignore[arg-type]
+    ).all()
+    for fit in fits:
+        stub = _FitStub(circuit=fit.circuit, parameters=[
+            _ParameterStub(**p) for p in json.loads(fit.parameters_json or "[]")])
+        total = total_resistance(stub)
+        if total is not None:
+            return len(spectra), float(total)
+    return len(spectra), None
 
 
 def _out(session: Session, sample: Sample) -> SampleOut:
@@ -59,12 +95,15 @@ def _out(session: Session, sample: Sample) -> SampleOut:
     # 입력란은 저장값을 보여 줘야 하고, 화면 문구는 쓰이는 값을 말해야 한다.
     formation = sample_formation(sample)
     anchor, anchor_reason = sample_reference_cycle(sample)
+    spectrum_count, impedance = _impedance(session, sample.id)
     return SampleOut(
         **sample.model_dump(exclude={"composition_json"}),
         group_name=group_name,
         group_parent_name=parent_name,
         run_count=len(runs),
         cycle_count=cycles,
+        spectrum_count=spectrum_count,
+        impedance_ohm=impedance,
         composition=[ComponentOut(**c) for c in composition.to_json()],
         composition_label=composition.label(),
         resolved_cell=resolved_cell_out(resolve_cell(sample)),

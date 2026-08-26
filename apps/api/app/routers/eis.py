@@ -770,12 +770,28 @@ async def upload_spectrum(
     cell_config: str = Query(""),
     at_cycle: int | None = Query(None, ge=0),
     purpose: str = Query("", description="무엇을 보려고 잰 측정인가 (자유 입력)"),
+    fit: str = Query("none", pattern="^(auto|none)$",
+                     description="올리면서 회로를 골라 맞출지 (auto) 말지 (none)"),
     session: Session = Depends(get_session),
 ):
     """Store one ``.mpr`` or ``.mpt``, with its ``.mps`` when there is one.
 
     The same bytes twice is the same spectrum, as with cycling files: the same
     measurement reaches us from the instrument PC and from somebody's laptop.
+
+    ``fit=auto`` 는 올리면서 프리셋을 전부 맞춰 보고 가장 잘 맞은 것을 남긴다
+    (`_run_auto`).  올려 두고 나중에 맞추면 목록에 저항이 빈 줄로 쌓이고, 그
+    줄은 "안 맞는 셀" 과 "아직 안 눌러 본 셀" 을 구분해 주지 않는다 —
+    업로드 화면이 이것을 켜서 보낸다.
+
+    **기본은 끔이다.**  전고체 프리셋 셋을 다 맞추는 데 스펙트럼 하나당
+    20 초쯤 걸린다.  요청 하나가 그만큼 서 있는 것은 화면이 "올리는 중" 을
+    띄워 놓고 기다릴 때나 괜찮고, 스크립트나 대량 적재에서는 그냥 느린
+    업로드다.  비용을 내는 쪽이 켠다.
+
+    켜도 **첫 스윕만** 맞춘다.  SOC 스캔 하나가 스윕 스물한 개인데 프리셋이
+    셋이면 한 번 올리는 데 몇 분이 걸리고, 그동안 브라우저는 아무 말 없이
+    기다린다.  나머지는 목록에서 골라 한 번에 맞춘다 (`POST /spectra/fit`).
     """
     _validate_kind(kind)
     _validate_config(cell_config)
@@ -932,6 +948,20 @@ async def upload_spectrum(
     for record, sweep in zip(created, sweeps, strict=True):
         session.refresh(record)
         storage.cache_spectrum(record.id, sweep.spectrum, record.sha256)
+
+    if fit == AUTO and created:
+        # 맞추기가 실패해도 업로드는 성공이다.  파일은 이미 저장됐고 (§0.2),
+        # 여기서 500 을 내면 사람은 "안 올라갔다" 로 읽고 같은 파일을 다시
+        # 던진다 -- 그리고 다시 같은 자리에서 실패한다.
+        try:
+            _run_auto(session, created[0], sweeps[0].spectrum,
+                      drop_inductive=True, frequency_low_hz=None,
+                      frequency_high_hz=None, restarts=None)
+        except HTTPException:
+            raise
+        except Exception:                            # pragma: no cover
+            session.rollback()
+        session.refresh(created[0])
     return _out(session, created[0])
 
 

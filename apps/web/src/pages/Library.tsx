@@ -334,6 +334,9 @@ function SampleHead() {
         <th>온도</th>
         <th>파일</th>
         <th>사이클</th>
+        {/* 임피던스가 있다/없다조차 이 표에서는 안 보였다.  저항 하나가
+            붙으면 셀끼리 바로 견줄 수 있고, 비어 있는 것도 뜻이 된다. */}
+        <th>임피던스 (Ω)</th>
         {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그 글자가
             먼저 읽힌다 — 이 표는 셀을 찾으러 오는 곳이지 지우러 오는 곳이 아니다. */}
         <th />
@@ -343,7 +346,7 @@ function SampleHead() {
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 15
+const COLUMN_COUNT = 16
 
 function SampleRow({
   sample,
@@ -389,6 +392,15 @@ function SampleRow({
       <td>{sample.temperature_c !== null ? `${sample.temperature_c}°C` : '—'}</td>
       <td>{sample.run_count}</td>
       <td>{sample.cycle_count}</td>
+      {/* 셋을 가른다: 안 쟀다(—) · 쟀는데 안 맞췄다(N개 · 안 맞춤) · 맞췄다(값).
+          가운데를 '—' 로 뭉뚱그리면 다음에 할 일이 안 보인다. */}
+      <td className={sample.impedance_ohm != null ? 'headline' : 'dim'}>
+        {sample.impedance_ohm != null
+          ? num(sample.impedance_ohm, 4)
+          : sample.spectrum_count
+            ? <span className="tiny">{sample.spectrum_count}개 · 안 맞춤</span>
+            : '—'}
+      </td>
       <td style={{ whiteSpace: 'nowrap' }}>
         <DeleteSampleButton
           sampleId={sample.id}
