@@ -372,7 +372,10 @@ def _sample_wrd(sample: Sample, loaded: dict[int, WrdFile], *,
     cycles sheet still covered them all -- a workbook kept as a stand-in for
     the originals would have been missing half the experiment.
     """
-    runs = sorted((r for r in sample.runs if r.id is not None),
+    # 대체된 파일은 뺀다 (ADR 0032).  더 긴 파일이 그 행을 이미 담고 있어서,
+    # 넣으면 원본 대용으로 쓰라고 만든 이 시트에 같은 구간이 두 번 들어간다.
+    runs = sorted((r for r in sample.runs
+                   if r.id is not None and r.superseded_by is None),
                   key=lambda r: run_order_key(r.start_time, r.original_name, r.id))
     if not runs:
         raise HTTPException(404, "the sample's files are missing")

@@ -161,6 +161,14 @@ class Run(SQLModel, table=True):
     cycle_offset: int = 0
     cycle_offset_source: str = "auto"  # auto | manual
 
+    #: 같은 계측을 더 길게 담은 파일의 id.  이 파일은 그것에 **포함된다.**
+    #:
+    #: 구동 중인 셀을 114 사이클에서 한 번 내려받고, 200 사이클이 끝난 뒤 또
+    #: 내려받으면 두 파일이 생긴다.  뒤엣것은 앞엣것을 통째로 담고 있다 --
+    #: 이어 붙일 것이 아니라 갈아 끼울 것이다 (ADR 0032).  원본은 지우지
+    #: 않는다 (불변 규칙 2): 목록에는 남고, 셀의 사이클 표에서만 빠진다.
+    superseded_by: int | None = Field(default=None, index=True)
+
     parse_error: str = ""
     parsed_at: datetime | None = None
 

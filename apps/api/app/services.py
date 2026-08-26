@@ -134,6 +134,59 @@ def run_order_key(start_time: datetime | None, name: str, run_id: int | None):
     )
 
 
+def acquisition_key(run: Run) -> tuple:
+    """이 파일이 **어느 계측**의 것인가.
+
+    구동 중인 셀은 같은 계측을 여러 번 내려받게 된다 -- 114 사이클에서 한 번,
+    200 사이클이 끝난 뒤 또 한 번.  두 파일은 시작 시각이 같다: `.wrd` 의
+    start_time 은 "이 파일을 만든 때" 가 아니라 **계측이 시작된 때**다.
+
+    긴 실험이 쪼개진 `_011` · `_012` 는 이것이 다르다 -- 몇 시간씩 떨어져
+    시작한 별개의 계측이고, 그래서 이어 붙이는 것이 맞다.  둘을 가르는 것이
+    이 열쇠의 전부다.
+
+    장비·채널까지 넣는다.  같은 초에 시작한 서로 다른 채널의 셀을 한 셀에
+    붙여 놓았을 때, 시각만으로는 같은 계측으로 읽힌다.
+    """
+    moment = run.start_time or datetime.min
+    return (moment.replace(microsecond=0), run.serial_no or "", run.channel)
+
+
+def _mark_superseded(session: Session, runs: list[Run]) -> list[Run]:
+    """같은 계측이 여럿이면 **가장 긴 것만 남긴다.**  남은 것을 돌려준다.
+
+    이어 붙이지 않는 이유: 뒤엣것이 앞엣것을 통째로 담고 있다.  이어 붙이면
+    사이클이 1..114, 115..314 가 되고 -- 115번이 사실은 그 실험의 1번이라 --
+    유지율 곡선이 거기서 **도로 올라간다.**  셀이 스스로 회복한 그림이 되는데,
+    아무 오류도 안 나므로 그대로 보고서에 실린다 (실측 재현).
+
+    행 수로 고른다.  사이클 수는 마지막이 잘려 있으면 같아질 수 있지만 (114.5
+    사이클도 114 로 센다), 행 수는 언제나 뒤엣것이 더 많다.
+    """
+    groups: dict[tuple, list[Run]] = {}
+    for run in runs:
+        groups.setdefault(acquisition_key(run), []).append(run)
+
+    kept: list[Run] = []
+    for members in groups.values():
+        if len(members) == 1:
+            winner = members[0]
+        else:
+            winner = max(members, key=lambda r: (r.row_count, r.cycle_count, r.id or 0))
+        for run in members:
+            replaced = None if run is winner else winner.id
+            if run.superseded_by != replaced:
+                run.superseded_by = replaced
+                session.add(run)
+            # 대체된 파일은 번호 자리를 차지하지 않는다.  0 으로 되돌려 두면
+            # 나중에 그것만 남았을 때(이긴 파일을 지웠을 때) 곧바로 맞는다.
+            if replaced is not None and run.cycle_offset != 0:
+                run.cycle_offset = 0
+                session.add(run)
+        kept.append(winner)
+    return kept
+
+
 def renumber_sample_runs(session: Session, sample_id: int | None) -> None:
     """Recompute cycle offsets so a sample's files read as one experiment.
 
@@ -144,6 +197,10 @@ def renumber_sample_runs(session: Session, sample_id: int | None) -> None:
     if sample_id is None:
         return
     runs = list(session.exec(select(Run).where(Run.sample_id == sample_id)).all())
+    # 같은 계측을 두 번 내려받은 것은 **이어 붙일 것이 아니라 갈아 끼울 것**이다
+    # (ADR 0032).  번호를 나눠 주기 전에 먼저 가른다 -- 대체된 파일이 자리를
+    # 차지하면 뒤엣것이 그만큼 밀린다.
+    runs = _mark_superseded(session, runs)
     runs.sort(key=lambda r: run_order_key(r.start_time, r.original_name, r.id))
 
     # A hand-set offset is a reservation, not a suggestion.  Reserve those
@@ -198,8 +255,11 @@ def auto_cycle_offset(session: Session, sample_id: int | None,
     if not runs:
         return 0
     key = run_order_key(start_time, name, exclude_run_id)
+    # 대체된 파일은 세지 않는다 (ADR 0032) -- 그 사이클은 더 긴 파일이 이미
+    # 들고 있어서, 세면 새 파일이 그만큼 뒤로 밀린다.
     earlier = [r for r in runs
-               if run_order_key(r.start_time, r.original_name, r.id) < key]
+               if r.superseded_by is None
+               and run_order_key(r.start_time, r.original_name, r.id) < key]
     return sum(run.cycle_count for run in earlier)
 
 
@@ -409,8 +469,13 @@ def cycle_records(session: Session, run_ids: list[int]) -> list[CycleRecord]:
 
 
 def sample_cycle_records(session: Session, sample: Sample) -> list[CycleRecord]:
-    """Every cycle of a sample, across all its files, in cycle order."""
-    return cycle_records(session, [run.id for run in sample.runs if run.id])
+    """Every cycle of a sample, across all its files, in cycle order.
+
+    대체된 파일은 뺀다 (ADR 0032).  더 긴 파일이 그 사이클을 이미 담고 있어서,
+    넣으면 같은 사이클이 두 번 나온다.
+    """
+    return cycle_records(session, [run.id for run in sample.runs
+                                   if run.id and run.superseded_by is None])
 
 
 def records_to_summaries(records: list[CycleRecord]) -> list[CycleSummary]:

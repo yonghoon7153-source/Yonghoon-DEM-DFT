@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import synthetic
+
 
 def _upload(client, content, name="cell_012.wrd", sample_id=None):
     params = {"sample_id": sample_id} if sample_id else {}
@@ -394,3 +396,86 @@ def test_the_literal_reparse_path_is_not_read_as_a_run_id(client, wrd_bytes):
     response = client.post("/api/runs/reparse")
     assert response.status_code == 200, response.text
     assert set(response.json()) == {"total", "reparsed", "failed"}
+
+
+def _same_start_pair(short_cycles: int, long_cycles: int):
+    """같은 계측을 두 시점에 내려받은 두 파일 — 시작 시각이 같다."""
+    start = synthetic.ticks_ago(60 * 60 * 24)
+    def build(n):
+        return synthetic.build_wrd(
+            synthetic.make_cycles(n_cycles=n, points_per_branch=20,
+                                  start_ticks=start), start_ticks=start)
+    return build(short_cycles), build(long_cycles)
+
+
+def test_the_same_run_downloaded_twice_is_replaced_not_appended(client):
+    """구동 중인 셀을 두 번 내려받으면 뒤엣것이 앞엣것을 **담고 있다.**
+
+    이어 붙이면 사이클이 1..114, 115..314 가 되고 -- 115번이 사실 그 실험의
+    1번이라 -- 유지율 곡선이 거기서 도로 올라간다.  셀이 스스로 회복한 그림이
+    되는데 아무 오류도 안 난다 (실측 재현: 3+5 를 올렸더니 8 사이클, 용량이
+    5.0 4.9 4.8 **5.0** 4.9 …).
+    """
+    short, long_ = _same_start_pair(3, 5)
+    sample = client.post("/api/samples", json={"name": "구동셀"}).json()
+    for payload in (short, long_):
+        assert _upload(client, payload, name="cell.wrd",
+                       sample_id=sample["id"]).status_code == 201
+
+    cycles = client.get(f"/api/samples/{sample['id']}/cycles").json()["cycles"]
+    assert [c["cycle"] for c in cycles] == [1, 2, 3, 4, 5]
+    # 용량이 단조 감소여야 한다 -- 도로 올라가면 이어 붙인 것이다.
+    caps = [c["discharge_capacity"] for c in cycles]
+    assert caps == sorted(caps, reverse=True), caps
+
+    runs = client.get("/api/runs", params={"sample_id": sample["id"]}).json()
+    by_len = sorted(runs, key=lambda r: r["cycle_count"])
+    assert by_len[0]["superseded_by"] == by_len[-1]["id"]
+    assert by_len[-1]["superseded_by"] is None
+    # **원본은 지우지 않는다** (불변 규칙 2).  목록에는 남는다.
+    assert len(runs) == 2
+
+
+def test_a_run_restarted_after_an_eis_measurement_still_appends(client):
+    """돌리다 EIS 찍고 다시 돌린 것은 **이어 붙는 것이 맞다.**
+
+    그때는 계측이 새로 시작하므로 `.wrd` 의 시작 시각이 다르다.  같은 계측을
+    두 번 내려받은 것과 이것을 가르는 것이 `acquisition_key` 의 전부다 --
+    잘못 묶으면 뒤에 돌린 사이클이 통째로 사라진다.
+    """
+    first = synthetic.ticks_ago(60 * 60 * 48)
+    second = synthetic.ticks_ago(60 * 60 * 12)      # EIS 찍고 12시간 뒤 재시작
+    a = synthetic.build_wrd(synthetic.make_cycles(n_cycles=3, points_per_branch=20,
+                                                  start_ticks=first), start_ticks=first)
+    b = synthetic.build_wrd(synthetic.make_cycles(n_cycles=4, points_per_branch=20,
+                                                  start_ticks=second), start_ticks=second)
+    sample = client.post("/api/samples", json={"name": "EIS 끼인 셀"}).json()
+    for name, payload in (("a.wrd", a), ("b.wrd", b)):
+        _upload(client, payload, name=name, sample_id=sample["id"])
+
+    cycles = client.get(f"/api/samples/{sample['id']}/cycles").json()["cycles"]
+    assert [c["cycle"] for c in cycles] == [1, 2, 3, 4, 5, 6, 7]
+    assert all(r["superseded_by"] is None
+               for r in client.get("/api/runs",
+                                   params={"sample_id": sample["id"]}).json())
+
+
+def test_deleting_the_longer_file_gives_the_shorter_one_its_place_back(client):
+    """이긴 파일을 지우면 대체됐던 파일이 곧바로 셀의 사이클이 된다.
+
+    대체는 지우는 것이 아니라 **가리는 것**이다.  가린 것을 치웠는데 셀이 빈
+    채로 남으면, 실수로 지운 사람에게 데이터가 사라진 것으로 보인다.
+    """
+    short, long_ = _same_start_pair(3, 5)
+    sample = client.post("/api/samples", json={"name": "되돌아오나"}).json()
+    for payload in (short, long_):
+        _upload(client, payload, name="cell.wrd", sample_id=sample["id"])
+
+    runs = client.get("/api/runs", params={"sample_id": sample["id"]}).json()
+    longer = max(runs, key=lambda r: r["cycle_count"])
+    assert client.delete(f"/api/runs/{longer['id']}").status_code == 204
+
+    cycles = client.get(f"/api/samples/{sample['id']}/cycles").json()["cycles"]
+    assert [c["cycle"] for c in cycles] == [1, 2, 3]
+    left = client.get("/api/runs", params={"sample_id": sample["id"]}).json()
+    assert [r["superseded_by"] for r in left] == [None]

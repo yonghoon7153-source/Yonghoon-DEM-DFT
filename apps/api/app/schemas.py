@@ -374,6 +374,9 @@ class RunOut(BaseModel):
     schedule_path: str
     cycle_offset: int
     cycle_offset_source: str
+    #: 같은 계측을 더 길게 담은 파일의 id — 이 파일은 그것에 포함된다.
+    #: 목록에는 남지만 셀의 사이클 표에서는 빠진다 (ADR 0032).
+    superseded_by: int | None = None
     parse_error: str
     schedule: dict[str, Any] = Field(default_factory=dict)
 

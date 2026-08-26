@@ -194,6 +194,9 @@ export interface Run {
   schedule_path: string
   cycle_offset: number
   cycle_offset_source: 'auto' | 'manual'
+  /** 같은 계측을 더 길게 담은 파일의 id — 이 파일은 그것에 포함된다.
+   *  목록에는 남지만 셀의 사이클 표에서는 빠진다 (ADR 0032). */
+  superseded_by?: number | null
   parse_error: string
   schedule: Schedule
 }

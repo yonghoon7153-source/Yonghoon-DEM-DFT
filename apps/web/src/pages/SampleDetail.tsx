@@ -1201,6 +1201,18 @@ function RunRow({ run, onChanged }: { run: Run; onChanged: () => void }) {
         <span className="tiny faint nowrap">{bytes(run.size_bytes)}</span>
       </div>
 
+      {/* 같은 계측을 두 번 내려받은 파일.  목록에서 지우지 않는 이유는 원본이
+          불변이기 때문이고 (CLAUDE.md §0.2), 그렇다면 왜 이 파일의 사이클이
+          셀에 안 보이는지를 여기서 말해 줘야 한다 — 안 그러면 "203 사이클짜리를
+          올렸는데 표에 없다" 가 된다. */}
+      {run.superseded_by ? (
+        <div className="tiny faint">
+          <span className="badge warn">대체됨</span>{' '}
+          같은 계측을 더 길게 담은 파일이 있어 이 파일의 사이클은 셀에 넣지
+          않습니다. 원본은 그대로 있습니다.
+        </div>
+      ) : null}
+
       <KeyValues
         rows={[
           ['장비', `${run.device_model} ch${run.channel ?? '—'}`],
