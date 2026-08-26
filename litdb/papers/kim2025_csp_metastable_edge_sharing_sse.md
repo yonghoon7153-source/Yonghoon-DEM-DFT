@@ -27,6 +27,552 @@
 
 ---
 
+## 0.1 문단별 읽기 동반자 (논문세미나용) — 2026-08-26 신설
+
+> **쓰는 법**: 논문(본문 11 pp)을 옆에 펴 놓고, 지금 읽는 문단을 여기서 찾는다.
+> 각 항목은 **쪽 번호 + 단(좌/우) + 첫 5–8단어**로 위치를 특정했다.
+> ⚠ 줄은 **§9·§11·§19·§20·§21 에서 이미 확정된 판정**만 옮긴 것이다 — 새 추측은 넣지 않았다.
+> ⚠ 줄이 없는 문단은 **우리가 아는 문제가 없다**는 뜻이다.
+> 그림은 `litdb/figures/kim2025_csp_metastable_edge_sharing_sse/` 에 크로핑돼 있다.
+
+### 읽는 순서 제안 — 1쪽부터 읽지 마라
+
+**11 pp 를 앞에서부터 읽으면 논증이 제일 늦게 잡힌다.** 이 논문은 사실상 **그림 한 장(Fig. 3b–e)을
+설명하는 글**이고, 서론·방법은 그 그림을 정당화하는 장치다. 세미나 발표자라면 이 순서를 권한다.
+
+1. **Fig. 3b–e 부터 본다** (p.47385 상단, 그림). 축이 둘이다 — 마커 높이 = D_600K, 보라 막대 =
+   E_rel, x = 안정성 순위. 마커 모양 3종(파란 원 corner / **주황 사각** edge / 초록 삼각 mixed)만
+   읽으면 **논문의 결론이 여기서 끝난다**: 왼쪽(안정)이 바닥에 붙어 있고 오른쪽(준안정)이 떠 있다.
+2. **초록** (p.47381). 단 *"higher packing efficiency"* 는 **함정**이다 — 본문은 정반대로
+   *"lower α"* 라고 쓴다(§19-N2). 초록만 인용하면 뒤집힌다.
+3. **§3.2 ¶5** (p.47386 좌단 하단 → 우단). 이 논문에서 **제일 많이 인용될 두 문장**이 여기 한
+   문단에 같이 있다 — *"at least 2 orders of magnitude"*(자기 계산)와 *"over 3 orders of
+   magnitude"*(**ref 36 Huang 의 실험 소환**). 둘을 섞으면 덱 오류가 재발한다(§9-A).
+4. **§3.3 전체** (p.47387 우단 → p.47388). 기구가 여기서 **dead volume → α → Li–S₄ 부피 → CSM**
+   순서로 쌓인다. **Fig. 4d · Fig. 4e · Fig. 5 를 옆에 펴 놓고** 읽어야 따라간다.
+5. **§3.1 + Fig. 2** (p.47384). 검증. 여기서 🔴 SCAN 문장을 만난다. **발표에서 질문이 나온다면
+   십중팔구 이 자리다** — 미리 §11-3 을 읽어 두라.
+6. **§2 방법** (p.47382 우단 → p.47384 좌단). **결론을 알고 나서 읽어야** 어떤 파라미터가 결론을
+   떠받치는지 보인다. 특히 §2.3 의 **종료 조건**(실험 구조를 맞히면 종료 / 없으면 400세대 소진).
+7. **§1 서론 · §4 결론** (p.47381–82, p.47389). 마지막에 읽는다. 서론은 3–6 을 읽고 나면 5분이면
+   되고, 결론은 §3.3 의 재진술이라 **새 정보가 0** 이다.
+8. **SI 24 pp 는 전부 읽지 말고 세 곳만**: ① **eq 5–8**(MSD 정의식이 틀렸다, §20-M1)
+   ② **Fig. S4–S7**(MSD 원자료 40개 — 이 논문 D 의 절반이 확산이 아니라는 증거, §20d)
+   ③ **SI p 4 의 SCAN 자백 문장**(본문과 정반대로 적혀 있다, §20-M0).
+
+---
+
+### 초록 (p.47381 전폭, "Significant attention has been devoted to developing…")
+- **뭐라고 하나**: 조성 치환에만 매달려 온 SSE 연구에 **구조 자체를 바꾸는 축**을 넣자 — MTP 기반
+  CSP 로 12개 실험 구조를 재현하고, 4조성에서 **준안정 edge-sharing 상이 안정 corner-sharing 상보다
+  Li 이동도가 우수**함을 보였다.
+- **왜 여기 있나**: 논문 전체의 축약. **초록에만 있는 표현이 둘** 있으니 조심 — *"higher packing
+  efficiency"* 와 *"This superior conductivity"*.
+- **막히는 말**: **SSE**(solid-state electrolyte) · **ASSB**(all-solid-state battery) ·
+  **CSP** → §17 · **MTP** → §17 · **packing ratio / Li–S₄ 부격자 / CSM** → §17.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① *"The metastable phases feature **higher packing efficiency**"* — α 는 **비전도 부피 분율**이고
+  준안정 edge 상은 α 가 **더 낮다**. 표준 결정학의 "채움률"과 방향이 반대라 **그대로 옮기면
+  주장이 뒤집힌다**(§19-N2, §16 인용규칙). **"낮은 α"로만 쓴다.**
+  ② *"This superior **conductivity**"* — 논문은 **σ 를 한 번도 계산하지 않는다**. 잰 것은
+  **D_600K** 뿐이다(§9-A, §11-1). 인용할 때 "확산계수 기준"을 반드시 붙인다.
+
+---
+
+### §1 ¶1 (p.47381 좌단, "To pursue safer and more energy-dense lithium-ion batteries…")
+- **뭐라고 하나**: ASSB 가 왜 필요한가(안전·에너지밀도) → SSE 요구조건(이온전도·전기화학안정·계면정합)
+  → 지금까지는 Li₆PS₅Cl·Li₇P₃S₁₁·Li₃PS₄·LGPS 에 **치환/도핑**만 해 왔다 → 그건 **바닥 결정구조를
+  바꾸지 못한다** → 더 근본적인 전략이 필요하다.
+- **왜 여기 있나**: **이 논문의 적(敵)을 정의하는 문단.** "조성 최적화"를 한계로 규정해야 CSP 가
+  정당해진다. 앞 문단이 없으니 여기가 논증의 출발점이다.
+- **막히는 말**: **argyrodite**(Li₆PS₅Cl 계열의 구조 이름) · **LGPS**(Li₁₀GeP₂S₁₂).
+- ⚠ **우리가 아는 문제**: 이 문단이 한계로 지목하는 *"elemental substitution or doping with base
+  materials such as **Li₆PS₅Cl**"* 가 **정확히 우리 문제설정**이다(§10a). 이 논문은 우리와 같은
+  질문을 푸는 게 아니라 **우리 질문을 넘어서겠다고 선언**하는 것 — 세미나에서 이 대비를 먼저
+  못 박아야 뒤가 편하다.
+
+### §1 ¶2 (p.47381 우단, "With advancements in experimental synthesis techniques and instrumentation…")
+- **뭐라고 하나**: ICSD 20만 개 + MP/OQMD/AFLOW 가 쌓였지만 **아직 안 나온 구조가 많다**(실험 발견은
+  시행착오라서). CSP 는 조성에서 구조로 가는 길이고, 특히 **phase-diagram-guided CSP** 가 유망하다.
+- **왜 여기 있나**: ¶1 이 "치환은 부족하다"였다면 여기는 **"DB 도 부족하다"**. 두 문단이 합쳐져
+  "그러니 새로 만들어야 한다"가 된다. 깔때기의 입구를 넓히는 논증(→ §0.5).
+- **막히는 말**: **ICSD/MP/OQMD/AFLOW** — 각각 실험 DB / 계산 DB 3종. **phase-diagram-guided CSP**
+  = 상도(phase diagram)에서 "말이 되는 조성"을 먼저 고르고 그 조성에만 CSP 를 돌리는 것.
+- ⚠ **우리가 아는 문제**: *"phase-diagram-guided"* 의 실체는 **MP 상도에서 tie-line 위 1:1 점을
+  고른 것**이 전부다(§6). 방법론적 신규성이 아니라 **조성 선택의 정당화 장치**다. 그리고 그 근거
+  그림(Fig. S2)은 **진짜 4원계 convex-hull 단면이 아니다**(§20-M23) — 삼각형 꼭짓점이 Ge–S–Li 인데
+  Si 계 상들이 그 위에 겹쳐 찍혀 있다.
+
+### §1 ¶3 (p.47382 좌단, "While theoretical CSP based on density functional theory (DFT)…")
+- **뭐라고 하나**: DFT-CSP(입자군집·유전알고리즘·랜덤탐색)는 되긴 하는데 **비싸다** → MLIP 를
+  붙이면 DFT 정확도를 싼값에 얻는다 → 예: Google 이 **220만 구조**를 훑었다.
+- **왜 여기 있나**: 방법의 정당화. "왜 MLIP 를 쓰나"에 대한 답이고, **ref 35 = GNoME**(Merchant,
+  *Nature* 2023, 624, 80)이 외부 앵커다(§19c).
+- **막히는 말**: **particle swarm optimization**(CALYPSO 계열) · **random structure search**(AIRSS 계열)
+  · **genetic algorithm**(USPEX 계열) — CSP 탐색 알고리즘 3대 계보. **MLIP** = machine-learned
+  interatomic potential.
+- 📎 **우리 쪽 참고**: GNoME 원문은 `litdb/inbox/70. Merchant2023_GNoME_…pdf` 로 이미 들어와 있다.
+
+### §1 ¶4 (p.47382 좌단, "To validate the proposed MLIP-assisted CSP framework, we applied it to 14…")
+- **뭐라고 하나**: 14종 기지구조로 검증해 **12종 성공** → 4조성에 적용해 각 10개 저에너지 폴리모프를
+  얻고 **corner / edge / mixed** 로 분류 → 특히 **Li₂SiS₃ 의 준안정 edge 상**(Kanno 그룹이 변형
+  합성조건에서 얻었고 σ 가 3자릿수 높은 그것)을 맞혔다.
+- **왜 여기 있나**: **논문의 신뢰성 담보 문단.** "우리가 아는 것을 맞혔으니 모르는 것도 믿어라"는
+  구조다. Li₂SiS₃ 를 주 조성으로 고른 이유가 여기서 이미 드러난다(→ §6).
+- **막히는 말**: **폴리모프(polymorph)** = 조성이 같은데 구조가 다른 상. **준안정(metastable)** → §0.5.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **"12 of 14" 는 관대한 판정**이다 — Li₃YCl₆ 는 참조 P-3m1 → 예측 **P1**(대칭이 완전히 깨진 것)인데
+  "일치"에 들어간다(§5d). 인용할 때 이 관대함을 같이 적는다.
+  ② *"approximately **3 orders of magnitude**"* 는 **이 논문의 측정이 아니라 ref 36(Huang, JACS 2022,
+  144, 4989) 소환**이다(§9-A). 서론에서 이미 남의 숫자를 끌어다 쓰고 있다는 것을 표시해 두라.
+
+### §1 ¶5 (p.47382 좌단 하단 → 우단 상단, "To evaluate the impact of discovered structural motifs on Li-ion transport…")
+- **뭐라고 하나**: AIMD 를 돌려 보니 **안정 상은 corner 이고 확산이 낮았고, 준안정 edge 상이 빨랐다**
+  → 그 원인을 **Li 접근가능 부피(packing efficiency)** 와 **Li–S₄ 부격자의 동적 왜곡**으로 설명한다.
+- **왜 여기 있나**: **서론의 로드맵 문단** = 결과 전체의 예고편. 여기 나오는 두 개념이 §3.3 의 뼈대다.
+- **막히는 말**: **AIMD**(ab initio MD — 힘을 DFT 로 계산하는 MD. 우리 UMA-MD 와 **힘 계산 축이 다르다**,
+  §14) · **동적 왜곡(dynamic distortion)** = 정적 구조가 아니라 **MD 궤적 평균**으로 재는 왜곡.
+- ⚠ **우리가 아는 문제**: 여기서도 *"packing efficiency—defined as the fraction of the unit cell
+  volume occupied by **nonconductive** volume"* 라고 **정의는 옳게** 써 놓고, 초록에서는 방향을
+  뒤집어 쓴다(§19-N2). **같은 논문 안에서 같은 양의 방향이 흔들린다** — 이게 §11 의 반복 주제다.
+
+---
+
+### §2.1 (p.47382 우단 → p.47383 좌단 상단, "All DFT calculations and molecular dynamics simulations were performed…")
+- **뭐라고 하나**: 계산 설정 전부. **VASP 5.4.4 + LAMMPS**, **PAW + PBE(GGA)**, k-mesh **0.05 Å⁻¹ 간격**
+  Monkhorst–Pack, cutoff **500 eV**, 힘 **<0.04 eV/Å**, **3d 전이금속 계만 스핀 분극**, AIMD 는
+  **NVT + Nosé–Hoover**(셀·스핀·시간간격·온도는 **선행 연구 refs 46–49 승계**), USPEX **집단 100/세대**,
+  자손 연산 heredity/permutation/soft mutation/lattice mutation + **antiseed**, MTP 하이퍼파라미터
+  **w_e:w_f:w_s = 100:1:0.1**, **R_cut = 5 Å**, **lev_max = 20**.
+- **왜 여기 있나**: 이 논문 전체에서 **재현에 필요한 숫자가 모여 있는 유일한 문단.** 세미나에서
+  "그래서 뭘로 돌렸냐"는 질문의 답이 전부 여기 한 문단이다.
+- **막히는 말**: **PAW**(projector augmented wave — 핵 근처를 부드럽게 처리하는 전자구조 기법) ·
+  **Monkhorst–Pack**(역격자 k-점을 균일 격자로 뿌리는 표준 방식; "0.05 Å⁻¹ 간격"은 셀이 커지면
+  자동으로 k 를 줄인다는 뜻) · **NVT / Nosé–Hoover**(입자수·부피·온도를 고정하는 앙상블과 그
+  온도조절기) · **antiseed / soft mutation / lev_max** → §17.
+- ⚠ **우리가 아는 문제 (3건)**:
+  ① *"Based on our previous work, we used the same computational guidelines … including **cell size,
+  spin, time step**"* — **AIMD 의 핵심 파라미터를 본문에 안 적고 refs 46–49 로 떠넘긴다**(§11-9).
+  ref 47 = `papers/jun2022_argyrodite_ion_cage_size_descriptor.md` 를 봐야 실제 값이 나온다
+  (**dt 2 fs · Γ-only · 단위셀 ~52원자 · 배열×온도당 ≥3 시드**). 🆕 **셀 크기는 2026-08-26 에
+  데이터저장소로 부분 종결** — *"supercell … lattice dimension as close as possible to **~10 Å**"*(§21c).
+  ② **스핀은 이 문장으로 해소된다** — 표적 4조성(Li–Si/Ge/Sn–S)에는 3d 전이금속이 없으니 **비스핀**.
+  검증 14종 중 스핀 대상은 **LiMn₂O₄ 하나뿐**이다(§19c, Q2 종결).
+  ③ **"집단 100/세대"와 §2.2 의 "초기 집단 400" 은 충돌이 아니다** — 앞은 USPEX 세대 크기, 뒤는
+  **학습셋용 단일점 DFT 집합**이다(§19c). 세미나에서 자주 헷갈리는 지점.
+- → **SI 로 넘어가는 곳**: 문단 끝 *"Further details of the MTP are provided in Supporting
+  Information"* → **SI eq 1–4**(MTP 기저 정의). 실제 학습된 퍼텐셜의 헤더는 **§21b 에 실측**해 뒀다.
+
+### §2.2 ¶1 (p.47383 좌단, "Figure 1 illustrates the workflow of CSP with MTP, which consists of three main stages…")
+- **뭐라고 하나**: 워크플로는 3단(초기 학습셋 → CSP 루프 → 최종 예측). 새 구조를 찾는 게 목적이라
+  **기존 DB 를 학습셋으로 못 쓴다**(데이터 기근) → 그래서 **amorphous** 를 만든다:
+  **4500 K 5 ps 가열 → 2500 K 10 ps 융해 → 200 K/ps 로 300 K 급랭 → 500 K 4 ps 어닐**.
+- **왜 여기 있나**: **"학습 데이터를 어디서 구하나"** 라는, MLIP-CSP 의 진짜 병목에 대한 답의 전반부.
+- **막히는 말**: **PES**(potential energy surface — 원자 배치마다의 에너지 지형) ·
+  **melt-quench-anneal** → §17. **데이터 기근(data scarcity)** = 아직 존재하지 않는 구조라 라벨이 없다.
+- 📎 **Fig. 1 을 여기서 본다**: 좌상단 "Initial structures" 상자가 이 문단이다. 참고로 그림 안의
+  MTP–DFT 산점도는 표적 4조성이 아니라 **검증 조성 Li₃AuO₃** 의 것이다(범례 Initial/50/100/200 Gen).
+
+### §2.2 ¶2 (p.47383 우단, "Although these structures provide a broad coverage of the potential energy surface (PES)…")
+- **뭐라고 하나**: melt-quench 만으로는 **"정확한 구조 완화에 필요한 영역이 학습이 안 된 채 남는다"**
+  → 그래서 USPEX **초기 집단 400 구조**를 단일점 DFT 로 계산해 학습셋에 섞는다.
+- **왜 여기 있나**: ¶1 의 약점을 스스로 지적하고 메우는 문단. **두 갈래(amorphous + random)를 합치는
+  설계**의 근거가 여기다.
+- **막히는 말**: **single-point DFT** = 구조를 움직이지 않고 그 배치의 에너지·힘·응력만 한 번 계산.
+- 🔑 **우리 쪽 접점**: *"may still leave untrained regions that are insufficient for accurate
+  structural relaxation"* — 이 진단은 **우리 T1(UMA 외삽 등급)과 같은 문제의식**이다(§4b). "사전학습
+  모델이 우리가 실제로 지나가는 영역을 덮었나"를 묻는 것. 세미나에서 우리 얘기로 넘어가기 가장
+  좋은 다리다.
+
+### §2.3 ¶1 (p.47383 우단, "Based on the combined training data set, we conducted an iterative CSP loop comprising four major steps…")
+- **뭐라고 하나**: 루프 4단계 = **MTP 학습·평가 → USPEX 구조생성 + MTP 완화 → active learning →
+  query DFT**. 초기에는 **50세대**로 돌린다. 다만 초기 학습셋이 amorphous+random 뿐이라 **전역최소
+  근처를 정확히 완화하지 못한다** → 그래서 세대마다 나온 새 구조를 학습에 넣어야 한다 → 그런데
+  DFT 라벨 만들기가 병목이다.
+- **왜 여기 있나**: **문제 제기 문단.** 다음 문단의 active learning 을 도입하기 위한 무대 설치다.
+- **막히는 말**: **완화(relaxation)** = 힘이 0 이 될 때까지 원자·격자를 움직이는 것.
+  **전역최소(global minimum)** = 그 조성에서 에너지가 가장 낮은 구조.
+- 📎 **Fig. 1 하단 "CSP loop" 사각형**이 정확히 이 4단계다.
+
+### §2.3 ¶2 (p.47383 우단 하단 → p.47384 좌단 상단, "To mitigate this issue, we adopted an active learning approach…")
+- **뭐라고 하나**: 불확실도가 큰 구조(**query structure**)만 골라 **완전 완화 + 단일점 DFT** 를 돌려
+  학습셋에 넣는다 → 세대 수를 **100 → 200 → 400** 으로 올린다 → 종료 조건은
+  **(a) 실험 보고 구조를 루프 안에서 예측하면 종료**, **(b) 실험 구조가 없으면 400세대 소진**.
+  검증은 **공간군 비교 + RDF 비교**.
+- **왜 여기 있나**: **비용 문제의 해법 문단** = MLIP-CSP 가 실용적이 된 이유. §0.5 의 3문단이 여기 대응.
+- **막히는 말**: **active learning / query structure** → §17. **불확실도(uncertainty)** = MTP 가
+  "이 구조는 내 학습 범위 밖"이라고 스스로 판단하는 지표(MLIP 패키지의 extrapolation grade).
+  **공간군(space group)** = 결정의 대칭을 분류한 230개 유형.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **DFT query 총 횟수도 최종 학습셋 크기도 보고하지 않는다**(§4c). 이 논문에서 **"active learning
+  이 비용을 얼마나 아꼈나"를 검증할 방법이 없다.** 🆕 **2026-08-26 데이터저장소 실측으로 종결** —
+  학습셋은 **863 / 1,391 / 1,038 / 1,104 배열**이다(§21b). 예상보다 **작다**.
+  ② **종료 조건 (a)/(b) 가 조성별로 다르게 걸렸다** — Fig. S3 범례를 보면 **Li₂SiS₃ 만 200 Gen 까지**
+  있고 나머지 3조성은 400 Gen 이 있다(§20-M19). 즉 **Li₂SiS₃ 는 조기 종료(맞혔으니까), 나머지 3조성은
+  수렴 확인 없이 400세대를 소진하고 끝났다.** "400세대면 충분하다"는 근거는 논문에 없다.
+
+### §2.4 (p.47384 좌단, "With the fine-tuned MTP integrated into the CSP workflow, the final round…")
+- **뭐라고 하나**: 미세조정된 MTP 로 **400세대 초과** 전면 탐색을 한 번 더. 실험 참조가 있으면
+  공간군·RDF 로 대조하고, **없으면 DFT 안정성 계산으로 최종 랭킹**을 매긴다.
+- **왜 여기 있나**: 루프의 출구. **"최종 순위는 MTP 가 아니라 DFT 가 매긴다"** 는 이 한 문장이
+  §11-4 의 비판을 반쯤 막아 준다 — 세미나에서 반드시 짚어야 할 방어선이다.
+- ⚠ **우리가 아는 문제**: 그래도 **어떤 구조가 DFT 까지 올라오느냐는 MTP 가 정한다.** MTP 의
+  저에너지 영역 오차(MAE_f)가 **13.2 / 27.4 / 29.8 / 33.3 meV/atom** 인데 판별 대상인 E_hull 전 범위가
+  **0–42 meV/atom** 이다 — **놓친 저에너지 상이 있을 가능성은 정량화되지 않았다**(§11-4).
+
+---
+
+### §3.1 ¶1 (p.47384 좌단, "Although previous studies have combined USPEX with MTP for CSP, their efforts primarily focused on unary or binary…")
+- **뭐라고 하나**: 선행 USPEX+MTP 연구는 **1원계·2원계나 고압 조건**에 머물렀다 → SSE 는 이동 이온이
+  있고 이온·공유 결합이 섞여 PES 가 복잡하니 더 넓게 검증해야 한다 → **14종**(절연체·전도체·전극·SSE)
+  에 적용 → **Fig. 2a** 의 ΔE(예측 − 실험), **음수 = 예측이 더 안정** → **12종 성공**, **5종은 ΔE 음수**.
+- **왜 여기 있나**: 검증의 본문. **ΔE 부호 규약이 여기서 정의**되므로 놓치면 Fig. 2a 를 거꾸로 읽는다.
+- **막히는 말**: **1원계/2원계(unary/binary)** = 원소 종류 수. **ΔE** = E(예측 최안정) − E(실험 참조).
+- ⚠ **우리가 아는 문제**: *"**five** candidate compositions exhibited negative ΔE"* 와 다음 문단의
+  *"in five cases … **four** systems"* 는 **모순이 아니다** — 뒤의 4는 앞 5의 부분집합(구조까지
+  재현한 것)이고 빠진 1건은 **LiAlCl₄**(ΔE 음수지만 공간군 P2₁/m ≠ 참조 P2₁/c). 종전 digest 가
+  이것을 모순이라 적었던 것은 **우리 전사 오류였고 철회했다**(§19-R1). 세미나에서 이걸 "논문 오류"로
+  발표하면 안 된다.
+
+### §3.1 ¶2 (p.47384 좌단 하단 → 우단, "Despite its outstanding performance, the CSP method failed to reproduce…")
+- **뭐라고 하나**: **LiBiO₃ 와 LiGa(SeO₃)₂ 는 실패**. 진단은 MAE_a(전체) vs MAE_f(저에너지)로 —
+  LiBiO₃ 는 MAE_a 가 성공 계와 비슷하니 **세대가 더 필요**한 것이고, LiGa(SeO₃)₂(**80 atoms/cell**)는
+  **MAE_f 가 커서 저에너지 영역 정확도가 부족**하다. 그리고 성공한 5건 중 4건은 SCAN 으로도 확인했고,
+  **LGPS(50 atoms/cell 4원계)를 맞힌 것**이 확장성의 증거다.
+- **왜 여기 있나**: **실패를 스스로 해부하는 문단** = 논문의 가장 정직한 대목이자, **동시에 가장 큰
+  문제가 숨어 있는 대목**이다.
+- **막히는 말**: **MAE_a / MAE_f** → §17 (MAE_f = 최저에너지에서 0.2 eV/atom 이내만 걸러 낸 오차).
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① 🔴🔴 **본문이 자기 Fig. 2a 를 부인한다.** *"Their potential validity was **confirmed** through
+  SCAN calculations, **ruling out PBE-related artifacts**"* 라는데, 그 4건(Li₃PS₄·Na₃YBr₆·Na₃PS₄·Na₃YCl₆)
+  중 **Li₃PS₄ 는 −26 → +8**, **Na₃PS₄ 는 −8 → +23 meV/atom** 으로 SCAN 에서 **부호가 뒤집힌다**
+  (ΔE>0 = 예측이 참조보다 **덜** 안정). 즉 SCAN 은 확인한 게 아니라 **절반을 반증했다**(§19-N1, §11-3).
+  더구나 **SI p 4 는 정반대로 자백한다** — *"Although SCAN **corrected the mischaracterization** for
+  Li₃PS₄, LiAlCl₄, and Na₃PS₄…"*(§20-M0). **본문과 SI 가 같은 계산을 두고 반대로 쓴다.**
+  ⛔ *"SCAN 으로 검증됐다"* 는 **인용 금지**. 쓰려면 **논문 자신의 SI 문장**을 인용한다(§16).
+  ② **본론 4조성에는 SCAN 을 아예 안 돌렸다.** corner vs edge 의 E_rel 차가 **3–42 meV/atom** 인데
+  functional 하나로 그 크기의 역전이 이미 관측됐으니, **"corner 이 더 안정"이라는 순위 자체가
+  방법 의존일 수 있다**(§11-3). 우리 규율 언어로 **real difference 가 아니라 method-dependent claim**.
+- → **SI 로 넘어가는 곳**: *"A detailed analysis of both energetically improved predictions and
+  unsuccessful cases is provided in Supporting Information"* → **SI p 3–4**. ★ **여기가 SCAN 자백
+  문장이 있는 자리다.** 세미나 준비라면 이 두 쪽은 반드시 실물로 읽으라.
+
+### §3.2 ¶1 (p.47384 우단, "The CSP approach has proven to be an effective tool for exploring novel crystal structures in SSEs…")
+- **뭐라고 하나**: CSP 는 최안정 하나만 주는 게 아니라 **준안정 상을 무더기로 준다**, 그중에 고전도
+  상이 있을 수 있다 — 그래서 탐색 공간이 넓어진다.
+- **왜 여기 있나**: **논문 제목의 "metastable" 을 정당화하는 문단.** §3.1(검증)에서 §3.2(본론)로
+  넘어가는 경첩이고, 여기서부터 "안정 = 좋다"는 통념을 흔들기 시작한다.
+- **막히는 말**: 없음(전부 앞에서 나온 말).
+
+### §3.2 ¶2 (p.47384 우단 하단 → p.47385 좌단, "To systematically predict promising SSE structures, Li2SiS3 was selected as the primary composition…")
+- **뭐라고 하나**: 4조성을 왜 골랐나. **Li₂SiS₃ = 검증 벤치마크**(안정 corner 상과 준안정 edge 상이
+  **둘 다 실험 보고**된 유일한 계) · **Li₂GeS₃ = Si→Ge 단순 치환**(Ge⁴⁺ 67 pm > Si⁴⁺ 54 pm 이라
+  통로가 넓어질 것) · **Li₂SnS₃ 는 선행연구(ref 82)가 있어 제외** · **Li₄SiGeS₆·Li₄SiSnS₆ 는 상도에서
+  SiS₂ ↔ Li₄[Ge,Sn]S₄ 를 잇는 선 위의 1:1 지점**(Fig. S2).
+- **왜 여기 있나**: **조성 선택의 정당화** = "아무거나 고르지 않았다"를 보이는 문단. 우리
+  pool_provenance 규율의 그들 버전이다(§6).
+- **막히는 말**: **tie-line** = 상도에서 두 상을 잇는 직선. 그 위의 점은 두 상의 혼합으로 표현된다.
+  **이온반지름(pm)** = Shannon 반지름, 배위수에 따라 값이 달라진다.
+- 📎 **Fig. S2 를 여기서 본다**(상도). ⚠ 단 그 그림은 **도식이지 정량 근거가 아니다**(§20-M23).
+
+### §3.2 ¶3 (p.47385 우단, "Figures 3b−e shows the relative stabilities, polyhedral connectivity types, and Li-ion diffusivities…")
+- **뭐라고 하나**: 결과 요약. **corner 이 4조성 모두에서 가장 안정**하고(*"likely due to their
+  increased structural flexibility"*), **그럼에도 edge 가 확산이 훨씬 빠르다**.
+- **왜 여기 있나**: **논문의 중심 문장이 들어 있는 문단.** 여기 두 줄이 제목과 초록의 근거 전부다.
+- **막히는 말**: **polyhedral connectivity** → §6.5 (corner/edge/face 가 각각 꼭짓점 1개/2개/3개 공유).
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① *"**consistently** … across all four compositions"* 는 **확산 쪽에서 과하다.** "2자릿수 이분법"이
+  깨끗한 것은 **Li₂SiS₃·Li₂GeS₃ 뿐**이고, **Li₄SiGeS₆ 는 최고 corner(r8, D 0.64) vs 유일 edge(r5, 1.0)
+  = 1.6배**, **Li₄SiSnS₆ 는 2.6배**다(§20-M6). 인용할 때 조성을 명시한다(§20g).
+  ② *"likely due to their increased structural **flexibility**"* — **같은 단어가 §3.2 ¶6 에서는
+  edge 의 안정성 근거로 쓰인다**(§11-13). 한 논문 안에서 "유연해서 corner 이 안정하다"와 "유연해서
+  edge 가 안정하다"가 같이 나온다. **설명력이 없는 자유 변수**로 취급해야 한다.
+- → **SI 로 넘어가는 곳**: *"the mean square displacement (MSD) results … are shown in Figures
+  S4−S7"* → ★ **이 논문에서 가장 값나가는 SI 자료다**(§20d 에 40 궤적 전수 전사).
+  *"consistency between MTP and DFT … Figure S3"* → MAE 8값(§20-R3).
+
+### §3.2 ¶4 (p.47385 우단 하단 → p.47386 좌단, "To enable a thermodynamic comparison of the phases at 300 K beyond the 0 K DFT calculations…")
+- **뭐라고 하나**: 0 K DFT 만으로는 부족하니 **Gibbs 자유에너지**를 계산했다 → **300 K 에서도 4조성
+  전부 corner 이 더 안정**(Fig. S8) → 그리고 **E_hull 이 40구조 전부 50 meV/atom 미만**(Table S2)이라
+  합성 가능성이 높다.
+- **왜 여기 있나**: **"준안정 상을 실제로 만들 수 있나"에 대한 유일한 답변 문단.** 논문의 실용성
+  주장이 전부 이 두 문장(300 K 자유에너지 + E_hull)에 걸려 있다.
+- **막히는 말**: **Gibbs 자유에너지 G(T)** = E_DFT + F_vib + pV. 여기서 **F_vib = 진동 자유에너지**
+  (phonon 으로 계산, → §17 phonopy). **E_hull** → §17 (convex hull 위로 뜬 높이; <50 meV/atom 이면
+  합성 가능하다는 통설).
+- ⚠ **우리가 아는 문제 (3건)**:
+  ① **SI 본문과 Fig. S8 의 교차온도가 어긋난다** — SI 산문은 *"Li₂SiS₃ 와 Li₂GeS₃ 모두 ~480 K 위"*
+  라는데 Fig. S8a 는 **360 K** 다. **그림 값을 쓴다**(§11-10).
+  ② **"고온이면 edge 가 유리"는 4조성 중 2조성뿐이다.** Li₄SiGeS₆ 는 **방향이 반대**(280 K **위에서
+  corner 이 역전** — 영점에너지 효과), Li₄SiSnS₆ 는 **1000 K 까지 교차가 없다**(§20-M13).
+  ③ **phonon 의 supercell·q-mesh·허수모드 점검이 SI 어디에도 없다**(§20-M15). **준안정상 논문인데
+  동역학적 안정성을 한 번도 보고하지 않는다** — phonopy 를 돌렸으니 스펙트럼은 갖고 있는데도.
+  합성 논거가 *"E_hull < 50 meV/atom"* 한 줄뿐인 것(§11-8)과 같은 공백이다.
+  ※ 문단 끝 *"highly **like** to be experimentally synthesizable"* 는 likely 의 오타(§11-13).
+- → **SI 로 넘어가는 곳**: **Fig. S8**(G(T) 4패널) · **Table S2**(E_hull 40값 — §20c 에 전수 전사).
+
+### §3.2 ¶5 (p.47386 좌단 하단 → 우단, "Specifically, the CSP framework accurately reproduced the experimentally reported corner-sharing structure…")
+- **뭐라고 하나**: ★ **논문에서 가장 많이 인용될 문단.** Li₂SiS₃ 에서 (i) 실험 안정 corner 상을
+  **rank 1** 으로 재현, (ii) 실험 준안정 edge 상을 **rank 3** 으로 회수(RDF 로 확인, Fig. S9),
+  (iii) 그 edge 상의 확산이 corner 대비 **"at least 2 orders of magnitude"** 높고, (iv) 이는 실험의
+  **"over 3 orders of magnitude"**(ref 36) 와 정합하며, (v) 두 위상의 E_rel 차가 **<0.2 eV/atom** 이라
+  합성 가능하다.
+- **왜 여기 있나**: **검증(§3.1)과 발견(§3.2)이 만나는 지점.** "아는 것을 맞혔다 → 그러니 모르는
+  것도 믿어라"의 완성.
+- **막히는 말**: **RDF** → §17 (방사분포함수 g(r) — 두 구조가 같은지 값싸게 대조하는 도구).
+  **E_rel** → §17 (같은 조성의 **최안정 예측 구조 대비** 상대 퍼텐셜에너지. **생성에너지가 아니다**).
+- ⚠ **우리가 아는 문제 (3건)**:
+  ① **"2자릿수"(계산)와 "3자릿수"(실험)를 섞지 마라.** 뒤는 **ref 36 = Huang, JACS 2022, 144, 4989
+  소환**이고 이 논문의 측정이 아니다. 덱의 *"10⁻⁴ → 2.4 mS/cm = 4자릿수"* 는 **둘 다 아니고 출처
+  불명**이다(§9-A). ⛔ 그 σ 수치는 **인용 금지**.
+  ② **RDF 일치는 Si·S 만이다.** Fig. S9 의 edge 행에서 **Li 쌍**은 predicted 에 reported 에 없는
+  peak 가 **r ≈ 3.05 Å** 에 서 있다(§20-M17). **이온전도 논문에서 하필 Li 부격자가 안 맞는다** —
+  *"예측 edge 상 = 실험 edge 상"* 은 **"골격은 같고 Li 배열은 다르다"** 로 고쳐 읽는다.
+  ③ *"**<0.2 eV/atom**"* 은 Fig. 3b 실측 **~0.017 eV/atom** 과 한 자릿수 다르다. 상한 서술이라
+  형식상 거짓은 아니지만, 본문 4문장이 **0.1–0.3 eV/atom 스케일의 자기완결적 서사**를 만드는 반면
+  그림·표의 실제 세계는 **0.003–0.044 eV/atom** 이다(§9-B). ⛔ **본문 산문의 E_rel 값은 인용 금지,
+  Fig. 3 / Table S2 값만 쓴다.**
+
+### §3.2 ¶5 후반 = Li₂GeS₃ (p.47386 우단 끝 → p.47387 좌단, "Figure 3c exhibits a similar trend for Li2GeS3…" → "ologies. However, despite their promising ionic mobility…")
+> ※ **한 문단이 쪽을 넘어가며 잘린 것**이라 따로 뽑았다. 종이에서는 p.47386 마지막 줄과 p.47387
+> 첫 줄을 이어서 읽어야 한다.
+- **뭐라고 하나**: Li₂GeS₃ 도 edge 가 빠르지만 **E_rel 이 높아(≥0.3 eV/atom) 실험적으로 어렵다**
+  → 그래서 **실제로 보고된 Li₂GeS₃ 구조는 전부 corner-sharing** 이고 SSE 로 못 쓴다.
+- **왜 여기 있나**: **"확산은 좋은데 못 만든다"의 사례 문단.** 논문의 서사를 단조롭지 않게 만드는
+  장치이고, 동시에 §3.2 ¶6(Li₄SiGeS₆ 는 반대로 만들기 쉽다)의 대조군이다.
+- **막히는 말**: 없음.
+- ⚠ **우리가 아는 문제 (3건)**:
+  ① 🔴 **이 논문에서 유일하게 엄밀한 수치 모순이 여기다.** *"relatively high formation energies
+  (E_rel **≥ 0.3 eV/atom**)"* 는 **하한 서술**인데 Fig. 3c 실측은 **0.031·0.042 eV/atom** 이다 —
+  **정면 모순, 10× 과대**(§9-B). 다른 3문장은 상한 서술이라 형식상 참이지만 이건 아니다.
+  ② ⚠ **E_rel 을 "formation energy" 라 부른다.** E_rel 은 **같은 조성의 최안정 예측 구조 대비
+  상대 퍼텐셜에너지**이지 생성에너지가 아니다(§11-13). 용어가 표류한다.
+  ③ 🆕 **이 문단의 대상인 Li₂GeS₃ 가, 저자들이 공개한 구조 파일과 어긋난다.** 배포된 10개 CIF 를
+  독립 판정하니 **edge-sharing 은 #7(C2/m, Ge–Ge 3.23 Å) 하나뿐**이고 **#6·#10 은 corner-sharing
+  사슬**이다 — Fig. 3c 는 6·10 을 edge 로 찍는다(§21e, **Q9 신설**). **어느 쪽이 맞는지 우리는 판정
+  못 한다.** 다만 **배포 CIF 로 Li₂GeS₃ 를 재현하려 하면 Fig. 3c 와 안 맞는다**는 것은 확정이다.
+
+### §3.2 ¶6 (p.47387 좌단, "Figure 3d,e highlight the exceptional Li-ion transport properties of the metastable edge-sharing topologies…")
+- **뭐라고 하나**: 4원계 둘. **Li₄SiGeS₆ 의 edge 상은 E_rel 이 ≤0.1 eV/atom 로 낮아 가장 유망**하고,
+  그 이유는 **이종원소(Si–Ge) 연결**이라 *"구조적 무질서와 유연성이 커져 안정성이 좋아진다"*.
+  **Li₄SiSnS₆ 는 Sn⁴⁺(83 pm)이 커서 결합 기하가 유연해 mixed 위상이 가장 자주 나오는데**,
+  **mixed 는 확산이 전부 바닥**이다 — *"corner-sharing topologies act as **bottlenecks**"*.
+- **왜 여기 있나**: 본론의 마무리. **"edge 만이 고전도와 합성가능성을 동시에 준다"** 는 결론이 여기서 난다.
+- **막히는 말**: **이종원소/동종원소 연결(hetero-/homoelemental linkage)** = 이어진 두 다면체의 중심
+  원자가 다른 원소냐 같은 원소냐. **bottleneck(병목)** → §7.5.
+- 🔑 **우리 쪽 접점 (2건)**:
+  ① *"corner-sharing topologies act as bottlenecks"* → **mixed 는 두 성질의 평균이 아니라 최악값
+  지배**다. 이건 **우리 퍼콜레이션 프레임과 정확히 동형**이다(§7e, `kb/concepts/ordered_vs_disordered.md`
+  §4 의 F* 문턱). 세미나에서 우리 얘기로 넘어가기 두 번째로 좋은 다리.
+  ② **이종원소 혼합이 준안정상의 에너지 페널티를 깎는다** → 우리 **co-doping 교호작용**의 구조적
+  기구 후보(§10d). 단 논문은 **정성 서술뿐이고 정량 분해가 없다**.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **Li₄SiGeS₆ 의 "edge 가 최고"는 구조 1개에 기반한다** — 이 조성의 edge 표본은 **rank 5 하나뿐**
+  (§11-7). 그리고 그 조성의 최고 corner(rank 8)는 **MSD 28 Å² 로 edge(32)에 육박**한다(§20-M6).
+  ② 여기 나오는 *"enhances structural disorder and **flexibility**, thereby improving overall
+  stability"* 가 **§3.2 ¶3 의 "corner 이 유연해서 안정하다"와 정면으로 같은 어휘·반대 방향**이다
+  (§11-13).
+
+---
+
+### §3.3 ¶1 (p.47387 좌단 하단 → 우단 상단, "So far, we performed CSP on four sulfide electrolyte compositions, revealing that…")
+- **뭐라고 하나**: 지금까지를 요약하고 **"왜 하필 edge 인가는 아직 불분명하다"** 고 인정한다.
+  그리고 **선행 고속스크리닝 연구(ref 88)는 corner-sharing 산화물이 좋다고 한다** —
+  *"This observation **contradicts** the results obtained by this study, and further investigation
+  is essential."*
+- **왜 여기 있나**: **§3.3(기구) 전체의 동기 문단.** 그리고 **논문에서 가장 취약한 자리**다.
+- **막히는 말**: **고속스크리닝(high-throughput screening)** = 이미 있는 DB 를 대량으로 훑는 방식
+  (CSP 와 반대 — 있는 것 중 고르기).
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **ref 88 = Jun, K. et al., "Lithium superionic conductors with corner-sharing frameworks",
+  *Nat. Mater.* 2022, 21, 924 (Ceder 그룹)** — **정반대 주장**이다. 논문은 충돌을 **인정만 하고
+  넘어간다**. ⚠ 그러므로 **"edge-sharing 이 좋다"를 일반 명제로 인용하면 안 된다** —
+  **"황화물 4조성에서"** 라는 단서가 필수다(§11-5).
+  ② 🔑 **더 이상한 것**: 화해의 열쇠(**그쪽은 oxide, 이쪽은 sulfide**)를 **자기 문장 안에 이미
+  써 놓고도**(*"corner-sharing **oxide** structures"*) 그것을 근거로 삼지 않는다. 그리고 **두 쪽
+  뒤에서는 같은 ref 88 을 자기 기술자 ③(CSM)의 권위로 인용**한다(§11-5, §20-M21). **자기 결론을
+  반박하는 논문을 자기 도구의 근거로 쓰는 셈**이다.
+
+### §3.3 ¶2 (p.47387 우단, "To address this, the Li-ion migration behavior in the most stable corner-sharing phase…")
+- **뭐라고 하나**: Li₂SiS₃ 와 Li₄SiGeS₆ 의 corner/edge 대표 상에서 **Li 확률밀도 등가면**과
+  **van Hove 자기상관**을 봤다(**Fig. 4a,b**, 60 ps @600 K). corner 은 **r < 2 Å 에 단일 강피크가
+  60 ps 내내** = **갇힘**. edge 는 **첫 10 ps 만 그 피크, 이후 장거리로 넓게 분포** = **탈출 후 자유 이동**.
+- **왜 여기 있나**: **기구 논증의 1단계 = "무엇이 다른가"를 눈으로 보이는 문단.**
+- **막히는 말**: **등가면(isosurface)** = 3차원 스칼라장에서 값이 같은 면. 여기서는 "Li 가 있을
+  확률이 이 값 이상인 영역"의 껍질. **van Hove 자기상관 $4\pi r^2G_s(r,t)$** → §17
+  (시각 t 에 **같은 입자가** 출발점에서 거리 r 에 있을 확률밀도).
+- 🔑🔑 **우리 쪽 접점**: **van Hove 자기상관은 우리 MSD 파이프라인에 없는 진단**이고 이미
+  **T12** 로 등록돼 있다(§8a). 특히 **MSD 기울기로는 둘 다 "거의 0"이라 구분이 안 될 때 갇힘의
+  성격 자체를 보여준다**는 게 값이다. `lee2024` 에 이어 **두 번째 실증** → T12 우선순위 근거.
+  ⚠ 단 판정력이 있는 것은 **self-part 뿐이다** — distinct-part 는 σ 가 10⁴ 배 다른 배열들도
+  육안 구별이 안 된다(`jun2022` §20-N6, 3건 연속 같은 경고).
+- 📎 **Fig. 4a,b 를 실제로 볼 것**: x축이 **0–~57 ps**(60 이 아니다), y축 r = 0–10 Å. edge 패널의
+  흰 점선 상자가 *"Li diffuse"* 라벨 구간이다. **Li₄SiGeS₆ edge 는 Li₂SiS₃ edge 보다 눈에 띄게
+  약하다** — D 가 1.0 vs 2.35 인 것과 정합한다.
+
+### §3.3 ¶3 (p.47387 우단, "From the Li-ion transport analysis, no significant Li-ion migration was observed in the interstitial spaces…")
+- **뭐라고 하나**: ★ **이 논문의 개념적 신규성.** 연결된 다면체 **사이의 틈**에서는 corner 이든
+  edge 든 **Li 이동이 전혀 관측되지 않는다**(Fig. 4c) → 그 틈은 중심 양이온(Si⁴⁺/Ge⁴⁺/Sn⁴⁺)의
+  **정전 반발**로 Li 가 못 들어가는 **pseudopolyhedron void** 이고, 이것을 **dead volume** 이라
+  부른다(Fig. 4d) → *"most previous studies have **overlooked** these regions."*
+- **왜 여기 있나**: 기구 논증의 2단계 = **"빈 공간에도 죽은 빈 공간이 있다"**. 통념("빈 공간 =
+  전도 경로")을 깨는 자리이고, 뒤의 기술자 ①(α)이 여기서 태어난다.
+- **막히는 말**: **interstitial space(틈새 공간)** = 원자가 차지하지 않은 부분. **pseudopolyhedron
+  void** = 진짜 다면체는 아닌데 다면체처럼 둘러싸인 빈 공간. **dead volume** → §17.
+- 🔑 **우리 쪽 접점**: 이 언어를 **우리 BVSE 해석에 이식**하면 좋다(§10d, §15-G). 지금 우리는
+  "채널 %"라고만 쓰는데, **"above-min iso 밖의 공동 = dead volume"** 이라고 명명하면 물리가 선명해진다.
+- 📎 **Fig. 4d 를 반드시 볼 것**: 두 다면체가 꼭짓점을 공유하고, **그 사이를 둘러싼 S 들이 이루는
+  회색 다각형**이 "Dead volume" 이라 적혀 있고 양쪽에서 Li 가 ✕ 로 막힌다. **즉 스키마는 "이웃한
+  S 들의 볼록 다면체"를 시사한다** — 다만 **어느 S 를 꼭짓점으로 잡는지의 규칙이 없어** 여전히
+  재현 불가다(§21f 의 Q3 정밀화).
+
+### §3.3 ¶4 (p.47387 우단, "Figure 4e demonstrates that the edge-sharing topology features a shorter distance…")
+- **뭐라고 하나**: 왜 edge 의 dead volume 이 작은가, 두 단계. ① **기하** — edge 는 두 중심 양이온
+  거리가 짧다(**d_c > d_e**) → 틈이 작다. ② **정전** — edge 에서는 공유 음이온이 **두 이웃 양이온의
+  인력을 동시에** 받아 다면체가 **압축**된다 → 다면체 부피도 작아진다. 실측은 **Fig. 4f / S10**.
+- **왜 여기 있나**: 기구 논증의 3단계 = **"왜 그런가"의 물리.** 여기까지가 정성 논증이고 다음
+  문단부터 정량 기술자로 넘어간다.
+- **막히는 말**: **d_c / d_e** = corner / edge 에서의 중심–중심 거리. 우리 §21e 의 **M–M 거리**가
+  정확히 이 양이다(실측: edge **2.96–3.28 Å** vs corner **3.46–4.01 Å**, 완전히 갈린다).
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **Δdead volume 이 두 조성 모두 정확히 −0.69 Å³** 이고, **Li₂SiS₃ edge 의 dead volume 4.98 =
+  SiS₄ 다면체 부피 4.98** 로 완전히 같다(§19-N8). **독립 산출량 3개가 같은 값에 떨어진다** — 우연일
+  수도, 산출 방식의 인공물일 수도. **원자료 없이는 판정 불가.**
+  ② **각 범주의 표본이 3개뿐**이고, **Fig. S10 의 확대판이 이상치를 잘라낸다** — Li₄SiGeS₆ corner
+  dead volume 에 **~11.75 Å³ 짜리가 하나** 있어서, 넣으면 평균이 6.05 가 아니라 **7.96** 이다
+  (§20-M12). **인용값 6.05 는 평균이 아니라 최빈값**이다.
+- 📎 **Fig. 4f 를 볼 것**: 세로축 5.0–6.2 Å³. 파랑=corner, 주황=edge. **점이 각 무리마다 3–4개뿐인
+  것이 눈으로 보인다** — 이게 위 ②의 근거다.
+
+### §3.3 ¶5 (p.47387 우단 하단 → p.47388 좌단, "Based on the dead volume concept, we aimed to systematically analyze the key structural factors…")
+- **뭐라고 하나**: 빈 공간이 많은 것만으로는 부족하고 **"Li 가 실제로 쓸 수 있는" 부피**를 정량해야
+  한다 → 그래서 **packing ratio α** 를 도입한다. **α 가 낮을수록 유효 이동공간이 크고 전도가 좋다.**
+  다만 α 는 **국소 환경**을 못 그리므로 Li 동역학 쪽 분석이 따로 필요하다.
+- **왜 여기 있나**: **기술자 ①의 도입 문단**이자 기술자 ②③으로 넘어가는 다리.
+- **막히는 말**: **packing ratio α = (V_다면체 + V_dead)/V_셀** → §17.
+  ⚠ **표준 결정학의 "충전율"과 이름은 같고 뜻이 반대**라는 것을 여기서 확실히 해 두라.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① ⚠ **α 의 정의가 한 문단 안에서 자기모순이다.** *"quantifies proportion of the crystal volume
+  occupied by structural features that **hinder** Li-ion mobility"* → 바로 다음 문장 *"This parameter
+  represents the fraction of lattice space **available** for Li-ion transport"* — **정반대**다.
+  세 번째 문장(*"lower α = larger effective migration space"*)은 첫 정의와 정합한다(§19-N3).
+  ✅ **SI 쪽 정의는 일관되므로, 정의를 인용해야 하면 SI 를 인용한다**(§20-M11).
+  ② ⛔ **V_dead 의 알고리즘이 문서 어디에도 없다.** 본문은 *"as detailed in Supporting Information"*
+  으로 SI 에 넘기고, **SI p 7 은 *"provided in the main text"* 로 본문에 되돌린다** — **순환 위임**
+  (§20-M10). 그래서 **α 는 재구현 금지**이고, 우리는 **BVSE 채널 %** 라는 더 나은 것을 이미 갖고
+  있다(§10c). 🆕 **저자 공개 스크립트에도 V_dead 는 없다**(§21d) — 이제 문서가 아니라 **코드로도
+  확인된 부재**다.
+- → **SI 로 넘어가는 곳**: *"as detailed in Supporting Information"* → **SI eq 9**(α 정의).
+
+### §3.3 ¶6 (p.47388 좌단, "To this end, the investigation focused on the Li−S4 sublattice, which is a fundamental structural moiety…")
+- **뭐라고 하나**: 기술자 ②③의 도입. **Li–S₄ 부격자**(Li 하나를 S 4개가 사면체로 둘러싼 것)를 본다.
+  **Li–S 거리가 멀수록(부피가 클수록) 정전 인력이 약해 이동 유리**(Fig. S11a). 그리고 **다면체
+  왜곡이 크면 Li–음이온 상호작용 지형이 평탄해져 활성화에너지가 낮아진다**(Fig. S11b, refs 88·89)
+  → 그 왜곡을 **CSM** 으로 정량한다.
+- **왜 여기 있나**: **α(전역 부피) 로는 못 보는 국소 환경**을 채우는 문단. 세 기술자가 여기서 완성된다.
+- **막히는 말**: **moiety(구조 단위)** = 구조 안에서 반복되는 덩어리. **CSM(연속대칭척도)** → §17
+  (실제 다면체가 이상적 대칭 다면체에서 얼마나 벗어났나, 0=완벽).
+  **"평탄한 지형"** → §7.5 (우물이 너무 깊어도 안 좋다 — 자리들이 고르게 얕아야 잘 통한다).
+- 🔑 **우리 쪽 접점**: **ref 89 = Di Stefano et al., "Superionic diffusion through frustrated energy
+  landscape", *Chem* 2019, 5, 2450** — **우리 SDCP 자리에너지 산포 언어와 같은 계열**이다(§19c).
+- ⚠ **우리가 아는 문제**: **ref 88 은 §3.3 ¶1 에서 자기 결론을 반박하던 그 Jun/Ceder 논문**이다
+  (§20-M21). 두 쪽 만에 적에서 권위로 바뀐다.
+- → **SI 로 넘어가는 곳**: *"Further information on CSM is provided in Supporting Information"*
+  → **SI eq 10–11**. 🆕 단 **실제로 돌린 것은 eq 10–11 을 손으로 구현한 게 아니라 pymatgen
+  chemenv 의 `T:4` CSM 이다**(§21d) — 우리가 같은 수를 내려면 그 함수를 불러야 한다.
+
+### §3.3 ¶7 (p.47388 좌단 하단 → 우단, "Figure 5 presents the packing ratio (α), Li−S4 sublattice volume, and CSM for the 10 most stable…")
+- **뭐라고 하나**: **Fig. 5a(Li₂SiS₃)** 판독. edge 상이 **α 가 뚜렷이 낮고**(dead volume 이 작아서),
+  **Li–S₄ 부피와 CSM 은 높다** → 이동 유리. 반대로 corner 은 α 가 높고 부피·CSM 이 좁은 범위에
+  갇혀 있으며, **최안정 corner 상은 CSM 이 유난히 낮아**(*"exceptionally low CSM"*) 강직하고
+  Li 가 거의 안 움직인다 — Fig. 4a 및 실험의 극저 전도도와 정합.
+- **왜 여기 있나**: **세 기술자를 실제 데이터에 붙이는 문단** = 기구 논증의 결론부.
+- **막히는 말**: **Fig. 5 는 한 축에 정보 3개를 얹는다** — **초록 막대 높이 = α**(오른쪽 축),
+  **원의 높이 = Li–S₄ 부피**(왼쪽 축), **원의 색 = CSM**(컬러바 2.0–6.0). 원 하나가 **Li 자리 하나**의
+  **궤적 평균**이다(§21d 로 확정).
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① *"the structural characteristics of the edge-sharing topology with **high packing efficiency**"*
+  — 또 뒤집힌 표현이다. **α 는 낮다**(§19-N2). 같은 쪽 우단에서는 *"significantly **lower** α"*
+  라고 옳게 쓴다. **한 쪽 안에서 두 번 방향이 바뀐다.**
+  ② **α 막대 40개 중 16개(40 %)가 축 상한에서 잘려 값을 읽을 수 없다**(§20-M8). Fig. 5a 는 rank 2,
+  Fig. 5b 는 rank 1·7 이 **0.100 에서 클립**된다. **"predictive indicator" 주장의 실제 데이터 기반은
+  40점이 아니라 24점**이다.
+- 📎 **Fig. 5a 실측**(우리 판독): **edge = 0.0755–0.0797**(rank 3,4,5,8,9) vs **corner = 0.0834–≥0.100**
+  (rank 1,2,6,7,10) → **완전 분리**. 이건 **가장 깨끗한 기술자**다.
+
+### §3.3 ¶8 (p.47388 우단, "Contrasting trends between the corner- and edge-sharing phases appear consistently in Figures 5b and S12…")
+- **뭐라고 하나**: **Fig. 5b·S12** 에서도 같은 대비가 나타난다 — edge 는 **α 가 낮고 Li–S₄ 부피와
+  CSM 은 높다**. 그래서 세 기술자를 **"이온전도 예측 지표(predictive indicators)"** 로 확립한다.
+  그리고 곧바로 논문 전체의 결론 문장으로 넘어간다.
+- **왜 여기 있나**: **결과부의 마지막 문단이자 제목의 근거.** §4 결론은 이 문단의 재진술이다.
+- **막히는 말**: 없음.
+- ⚠ **우리가 아는 문제 (3건)**:
+  ① *"the edge-sharing phases in **both compositions** … CSM values are relatively higher"* 는
+  **Li₄SiGeS₆ 에서 CSM 에 대해 성립하지 않는다**(§11-6). Fig. 5b 재판독: edge(rank 5)는 **적/주황
+  CSM ≈ 3–4.5** 이고, **가장 밝은 점(흰색, CSM 5.5–6.0)은 corner rank 8·9·10 과 mixed rank 7** 에
+  몰려 있다. (Li–S₄ 부피 쪽은 성립한다.)
+  ② 🔑 **그런데 여기서 더 좋은 게 나온다** — CSM 이 가장 높은 corner rank **8·9·10** 은 Fig. 3d 에서
+  **corner 7개 중 D 가 0 이 아닌 유일한 셋**(0.64/0.22/0.14)이다. 즉 **CSM 은 D 를 따라가는데
+  연결방식은 안 따라간다**(§19-N5). 인과사슬 `edge → 왜곡↑ → D↑` 에서 **가운데 항만 독립적으로
+  작동**하고 첫 화살표가 끊긴다. ⭐ **우리에게는 이게 오히려 좋은 소식**이다 — 우리 host 에는
+  corner/edge 축이 없으니(§10b), CSM 이 **연결방식과 무관한 독립 기술자**라면 그대로 쓸 수 있다.
+  ③ ⭐ **"predictive indicator" 는 과한 표현이다.** **요약 통계(평균±표준편차)도, 상관계수도,
+  회귀도 논문에 없다.** 세 기술자와 D 의 관계는 **전부 육안 주장**이다(§11-6). 상관을 보였을 뿐
+  예측력을 시험한 적이 없다.
+- ⭐ **우리 판독이 찾은 규칙(논문의 주장이 아니다)**: **D > 0 ⟺ (Li–S₄ 부피 ≳ 7 Å³) ∧ (CSM ≳ 3)**
+  — **둘 다 커야 움직인다.** 결정적 반례가 **Li₄SiSnS₆ rank 9**(CSM 최고 ≈6 인데 **D = 0**, 부피가
+  5.0–5.7 로 최저)이고, **Fig. 5b 의 mixed rank 7 이 세 번째 사례**다(부피가 5.9–8.3 로 극단적으로
+  퍼져 있어 **한 자리도 두 조건을 동시에 만족하지 못한다** → D = 0.02). → **우리 47종에 얹을 때
+  단일 지표 회귀로 가면 반드시 깨진다. 결합 기준(2차원 격자)으로 설계한다**(§20e, 채택항목 H).
+- → **SI 로 넘어가는 곳**: **Fig. S12**(Li₂GeS₃·Li₄SiSnS₆ 판) — α 분리의 4조성 일반성 확인.
+
+---
+
+### §4 결론 (p.47389 좌단, "This study aimed to predict novel SSE structural phases to overcome the limitations…")
+- **뭐라고 하나**: 전체 재진술. 12조성 재현 → 4조성 CSP → **corner 은 안정하나 D 가 극히 낮고 edge 는
+  준안정이나 수송이 좋다** → dead volume 이 원인 → **α · Li–S₄ 부피 · CSM 을 예측 지표로 확립**.
+- **왜 여기 있나**: 요약. **새 정보가 없다** — 시간이 없으면 건너뛰어도 되는 유일한 절이다.
+- ⚠ **우리가 아는 문제 (2건)**:
+  ① **여기 적힌 기술자 3종이 "정본"이다** — **α / Li–S₄ 부격자 부피 / CSM**. 우리 덱 슬 29 는
+  이것을 **dead volume / distance of cation / Li–S₄ distortion** 이라 적었는데 **앞 둘은 기술자가
+  아니라 기구**다(§9-C). 덱 목록을 그대로 인용하면 **논문에 없는 기술자 2개를 만들어내는 셈**이다.
+  ② 결론에서도 **σ 는 한 번도 나오지 않는다.** 제목의 *"Superior Ionic Conductivity"* 는
+  **D 의 대리 서술**이다(§11-1).
+
+### ASSOCIATED CONTENT / Data Availability (p.47389 좌단 하단)
+- **뭐라고 하나**: 원자료는 **figshare `10.6084/m9.figshare.29468165.v4`**.
+- ⚠ **우리가 아는 문제**: 🆕 **논문은 GitHub 코드 저장소를 밝히지 않는다.** 그러나 실제로는
+  `github.com/jhkimmmmm/CSP_SSE` 에 **MTP 퍼텐셜·구조 CIF·CSM 분석 스크립트**가 올라와 있고
+  (우리가 확보 → §21), **LICENSE 가 없다.** ⛔ **재배포·우리 결과로 제시 금지, 내부 분석 전용.**
+
+---
+
+### SI 24 pp — 절 단위 안내 (문단별로 읽지 마라)
+
+> **SI 는 §20 에서 이미 전수 검증했다**(Fig S1–S12 + Table S1–S2 + MSD 궤적 40개). 여기서는
+> **본문에서 넘어가는 지점**과 **실제로 읽을 가치가 있는 세 곳**만 표시한다.
+
+| SI 위치 | 무엇 | 읽을 가치 | 우리 판정 |
+|---|---|---|---|
+| **eq 1–4** (p 1–3) | MTP 기저(moment tensor) 정의 | 낮음 — 원전(Shapeev 2016)이 낫다 | 실제 퍼텐셜 헤더는 **§21b 실측** |
+| **p 3–4** | 검증 성공/실패 상세 | ★★★ **높음** | **SCAN 자백 문장이 여기 있다**(§20-M0). 본문과 정반대 |
+| **eq 5–8** (p 4–5) | MSD·D·Arrhenius·Nernst–Einstein | ★★ **높음(반면교사)** | 🔴 **eq 5 가 "제곱의 차"로 틀렸다**(§20-M1). eq 7–8 은 **쓰이지 않은 보일러플레이트**(§11-1) |
+| **F_vib / G(T)** (p 5–6) | 자유에너지 절 | 중간 | ⚠ **supercell·q-mesh·허수모드 미보고**(§20-M15) |
+| **eq 9** (p 6–7) | packing ratio α | 중간 | ✅ **정의는 SI 가 일관**(§20-M11). ⛔ 단 **V_dead 알고리즘은 본문으로 되돌린다**(§20-M10) |
+| **eq 10–11** (p 7) | CSM | 중간 | 🆕 실제 계산은 **pymatgen chemenv `T:4`**(§21d) |
+| **Fig. S1 · Table S1** | 14종 공간군·MAE | 중간 | §5c–5d 에 전수 전사됨 |
+| **Fig. S2** | 상도 | 낮음 | ⚠ **진짜 hull 단면이 아니다**(§20-M23) |
+| **Fig. S3** | MTP–DFT 상관 + MAE | 중간 | ⚠ 단위 오기 **"eV/atom"→실제 meV** 8군데 · **Li₂SiS₃ 만 400 Gen 부재**(§20-M18·M19) |
+| **Fig. S4–S7** | ★ **MSD 원자료 40 궤적** | ★★★ **가장 높음** | 🔴 **감소 구간 2건 · 42 ps 궤적 1건 · 계단형에 D 부여 6건**(§20-M2·M3·M4). **§20d 에 전수 표** |
+| **Fig. S8** | G(T) 교차온도 | ★★ 높음 | **360/480/280/없음** — 산문(~480 K)과 어긋난다. **Li₄SiGeS₆ 는 방향 반대**(§20-M13) |
+| **Fig. S9** | RDF 검증 | ★★ 높음 | ⚠ **Si·S 는 맞고 Li 가 안 맞는다**(§20-M17) |
+| **Fig. S10** | 부피 분포 전체범위판 | 중간 | ⚠ **이상치 11.75 Å³ 를 확대판이 잘라낸다**(§20-M12) |
+| **Fig. S11** | Li–S₄ 개념도 | 낮음 | 기술자 ②③의 그림 설명 |
+| **Fig. S12** | Fig. 5 의 나머지 2조성 | ★★ 높음 | **α 4조성 전부 완전 분리** 확정(§20-R5·M9). 단 **막대 40 % 클립**(§20-M8) |
+| **Table S2** | E_hull 40값 | ★★ 높음 | **0–42 meV/atom 전원 통과** — §20c 전수 전사 |
+
+---
+
 ## 0.5 처음 읽는 사람을 위한 배경 (이 논문이 전제하는 것들)
 
 **CSP(결정구조 예측) — 깔때기의 입구를 바꾼다**
