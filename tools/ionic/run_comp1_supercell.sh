@@ -40,6 +40,9 @@ REPO="$(cd "$(dirname "$0")/../.." && pwd)"; cd "$REPO"
 unset LD_LIBRARY_PATH OPAL_PREFIX 2>/dev/null || true   # QE env 잔재가 torch 를 오염시킨다
 DRIVER=$REPO/tools/modelc_v3/disorder_ensemble_diffusion.py
 V0XYZ=${V0XYZ:-$REPO/db/structures/comp1_V0_k444.xyz}
+# ⚠ 2026-08-26 — 라벨이 comp1 로 박혀 있어 modelc·b2o3 에 쓰면 결과가 comp1 로 기록된다.
+#   V0XYZ 를 바꿔 쓸 수 있게 만들어 놨으면서 라벨만 고정한 것은 함정이다.
+LABEL=${LABEL:-comp1}
 OUTROOT=${OUTROOT:-$HOME/work/runs/comp1_supercell}
 # ★★ 2026-08-11 설계 변경 (Codex 재리뷰 + 자체검토) — **1시드 사다리는 판정을 못 한다.**
 #   실측: 이 캠페인의 3시드 그룹 7개에서 pooled within-condition SD(β) = **0.1065** 인데
@@ -70,7 +73,7 @@ command -v flock >/dev/null 2>&1 && { flock -n 9 || { echo "⛔ 이미 돈다 �
 ts(){ echo "[$(date +%m-%d\ %H:%M:%S)] $*"; }
 mkdir -p "$OUTROOT"
 
-ts "comp1 셀 확대 사다리 — 사다리 [$LADDER] · T [$TEMPS] K · prod ${PRODPS} ps · seed $SEED"
+ts "${LABEL} 셀 확대 사다리 — 사다리 [$LADDER] · T [$TEMPS] K · prod ${PRODPS} ps · seed $SEED"
 ts "V0 $V0XYZ → $OUTROOT"
 
 # ⚠ 싼 칸부터 · 시드 안쪽 루프 — 한 셀의 3시드가 먼저 모여야 그 칸을 판정할 수 있다
@@ -89,7 +92,7 @@ for SC in $LADDER; do
     #   이 슈퍼셀에 적용됨) — 복제본이 한 덩어리로 움직이는 copy symmetry 는 없다. 확인함.
     $PY "$DRIVER" \
         --v0_xyz "$V0XYZ" --supercell "$NA" "$NB" "$NC" \
-        --label "comp1_sc${SC}" --out_root "$d" \
+        --label "${LABEL}_sc${SC}" --out_root "$d" \
         --disorder_levels 0.0 --n_configs 1 \
         --temperatures $TEMPS \
         --equilib_ps 5 --prod_ps "$PRODPS" --timestep_fs 2 --friction 0.02 \
