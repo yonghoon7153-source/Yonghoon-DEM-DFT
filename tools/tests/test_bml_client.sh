@@ -932,13 +932,18 @@ check "serve 는 붙기 전에 최신화한다"   "$(sync_before_connect serve)"
 check "restart 도 붙기 전에 최신화한다" "$(sync_before_connect restart)" "sync connect "
 
 echo
-echo "restart 는 터널을 살려 둔다"
+echo "제자리에서 다시 띄우는 자리는 터널을 살려 둔다"
 # 터널은 localhost:5003 을 가리키므로 그 뒤의 서버가 몇 초 내려갔다 올라오는
-# 것은 견딘다.  그런데 restart 가 터널을 닫으면 **주소가 바뀐다** (실측: 열
-# 때마다 다른 이름).  그러면 코드를 고칠 때마다 기계마다 `bmlout <새 주소>` 를
-# 다시 쳐야 하고, 그 사이 노트북은 HTTP 503 을 본다.
-check "restart 만 --keep-tunnel 을 쓴다" \
-  "$(grep -c 'cmd_stop --keep-tunnel' "$BML")" "2"
+# 것은 견딘다.  그런데 닫으면 **주소가 바뀐다** (실측: 열 때마다 다른 이름).
+# 그러면 코드를 고칠 때마다 기계마다 `bmlout <새 주소>` 를 다시 쳐야 하고,
+# 그 사이 노트북은 HTTP 503 을 본다.
+#
+# 한때 `restart` 두 자리만 그랬다.  그런데 `bml` 이 낡은 서버를 발견해 갈아
+# 끼우는 두 갈래도 똑같이 제자리 재시작인데 거기서는 닫고 있었다 -- 실측
+# 2026-08-26: 새 커밋을 받은 `bml` 이 터널을 닫아 주소가 사라졌고, 그 뒤
+# `bml status` 는 공유에 대해 한 마디도 안 했다.  넷 다 살려 둔다.
+check "다시 띄우는 자리 넷이 --keep-tunnel 을 쓴다" \
+  "$(grep -c 'cmd_stop --keep-tunnel' "$BML")" "4"
 check "stop 은 그대로 닫는다" \
   "$(grep -cE '^\s+stop\|down\)\s+cmd_stop ;;' "$BML")" "1"
 # 살려 두는 것은 "곧 돌아온다" 는 약속이다.  다시 띄우다 실패하면 그 약속이
