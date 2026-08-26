@@ -2353,9 +2353,34 @@ process_alive() {
 #: cloudflared 는 QUIC 이든 http2 든 **이 포트로** 엣지에 붙는다.  443 이
 #: 열려 있어도 7844 가 막히면 터널은 안 된다 — 그런데 그때도 주소는 발급되고
 #: 로그에는 "dial tcp ...:7844" 만 남아서, 포트 문제인지 아닌지가 안 보인다.
-edge_port_open() {
-  timeout 8 bash -c 'exec 3<>/dev/tcp/region1.v2.argotunnel.com/7844' 2>/dev/null
+#: cloudflared 가 나갈 수 있는가 — 그리고 **못 나가면 무엇 때문인가.**
+#:
+#: 지금까지는 이름에 대고 한 번 붙어 보고, 실패하면 "7844/TCP 가 막혀 있습니다"
+#: 라고 했다.  그런데 이 망은 **이름을 가로챈다** (터널 도메인을 캠퍼스 IP 로
+#: 돌려준다 — ADR 0030).  이름이 엉뚱한 곳을 가리키면 붙을 리가 없고, 그때
+#: 화면은 애먼 포트를 탓한다.
+#:
+#: 대처가 정반대라서 갈라야 한다:
+#:   open      나간다.  Cloudflare 를 쓸 수 있다.
+#:   blocked   이름은 제대로 풀렸는데 7844 에 못 붙는다 — 이 망이 막는다.
+#:             cloudflared 는 **어떤 --protocol 로도** 못 붙는다 (quic 도 http2 도
+#:             같은 7844 를 쓰고, 443 은 갱신·토큰 확인용이지 데이터 길이 아니다).
+#:   no-dns    이름조차 못 구했다.  포트는 아직 아무것도 모른다.
+#:
+#: 공용 DNS 를 먼저 묻는다 — 이 망의 해석기는 거짓을 말할 수 있고, 우리가
+#: 알고 싶은 것은 "진짜 엣지에 붙는가" 다.
+edge_probe() {
+  local host="region1.v2.argotunnel.com" ip=""
+  ip="$(dns_public_ips "$host" 2>/dev/null | head -n 1)"
+  [ -n "$ip" ] || ip="$(getent ahostsv4 "$host" 2>/dev/null | awk '{print $1; exit}')"
+  if [ -z "$ip" ]; then printf 'no-dns'; return 1; fi
+  if timeout 8 bash -c "exec 3<>/dev/tcp/$ip/7844" 2>/dev/null; then
+    printf 'open %s' "$ip"; return 0
+  fi
+  printf 'blocked %s' "$ip"; return 1
 }
+
+edge_port_open() { edge_probe >/dev/null; }
 
 #: 000 은 어느 층에서 끊겼는지를 말해 주지 않는다.  한 층씩 짚어서 그것을 낸다.
 #:
@@ -3635,6 +3660,17 @@ cmd_share_key() {
 #: 다른 공유기에 있는 사람도 볼 수 있게 임시 터널을 연다 (ADR 0014).
 #: 켜는 동안만 열린다.  잊고 꺼 두는 쪽이 잊고 열어 두는 쪽보다 낫다.
 cmd_share() {
+  # 모르는 낱말을 **삼키지 않는다.**  예전에는 `bml share cf <토큰>` 이 그대로
+  # 터널을 열었다 -- 인자를 안 보고 지나갔기 때문이다.  하려던 일은 안 됐는데
+  # 화면은 성공이라, 사람은 다음 단계로 넘어가고 한참 뒤에 어긋난다.
+  case "${1:-}" in
+    ''|stop|off|close|down) ;;
+    *)
+      printf '%s✕%s bml share 가 모르는 말입니다: %s\n' "$RED" "$OFF" "$1" >&2
+      say "  ${DIM}쓸 수 있는 것:${OFF} ${GREEN}bml share${OFF} · ${GREEN}bml share stop${OFF} · ${GREEN}bml share cf <토큰>${OFF} · ${GREEN}bml share domain <이름>${OFF} · ${GREEN}bml share key <경로>${OFF}"
+      exit 1
+      ;;
+  esac
   case "${1:-}" in
     stop|off|close|down)
       if close_tunnel; then
@@ -3734,11 +3770,16 @@ cmd_share() {
       # cloudflared 는 어떤 --protocol 로도 못 붙는다 (QUIC 도 http2 도 그
       # 포트를 쓴다) — 그때는 SSH 쪽이 유일한 길이다.  찔러 보고 고른다.
       step "밖으로 나가는 길 확인 중"
-      if edge_port_open; then
-        tunnel_via_cloudflare 0; rc=$?
-      else
-        say "  ${DIM}7844/TCP 가 막혀 있습니다 — SSH 터널을 씁니다.${OFF}"
-      fi
+      local probe; probe="$(edge_probe)"
+      case "$probe" in
+        open*) tunnel_via_cloudflare 0; rc=$? ;;
+        # 무엇 때문에 못 나가는지까지 적는다.  대처가 정반대다 — 포트가 막혔으면
+        # Cloudflare 는 아예 못 쓰고, 이름만 못 구한 것이면 아직 모르는 것이다.
+        blocked*)
+          say "  ${DIM}7844/TCP 가 막혀 있습니다 (${probe#blocked } 에 못 붙습니다) — SSH 터널을 씁니다.${OFF}" ;;
+        *)
+          say "  ${DIM}엣지 이름을 못 구했습니다 — 포트는 확인하지 못했습니다. SSH 터널을 씁니다.${OFF}" ;;
+      esac
       # SSH 가 마지막 시도다 — 확인이 안 돼도 남긴다.
       [ "$rc" -eq 0 ] || { tunnel_via_ssh 1; rc=$?; }
       ;;
@@ -5383,6 +5424,11 @@ main() {
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift
+      # **여기에도 pull 이 필요하다.**  실측 2026-08-26: `bml share cf <토큰>` 을
+      # 시켰는데 그 기계의 bml 에는 `cf` 가 없어서, 아래 cmd_share 가 "cf" 를
+      # 그냥 무시하고 터널을 열었다 -- 화면은 "이미 열려 있습니다" 였고 토큰은
+      # 아무 데도 안 들어갔다.  아무 일도 안 하고 성공처럼 보이는 것이 최악이다.
+      sync_repo
       # `bml share key ...` 는 터널을 열지 않는다 -- 어느 키로 열지만 적는다.
       if [ "${1:-}" = "key" ]; then shift; cmd_share_key "${1:-}"
       elif [ "${1:-}" = "domain" ]; then shift; cmd_share_domain "${1:-}"

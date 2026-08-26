@@ -499,7 +499,7 @@ check "막혔을 때 그 길을 알려 준다" \
 # 자기 resolver 를 먼저 쓴다.  바로 위에서 이 주소로 curl 을 쳐서 200 을 봤으니
 # 대개 답을 안다 -- 공용 DNS 부터 물어보면 그것이 막힌 망에서 헛되이 실패한다.
 check "자기 resolver 를 먼저 쓴다" \
-  "$(grep -c "getent ahostsv4" "$HERE/../bml")" "1"
+  "$(awk '/^tunnel_ips\(\) \{/,/^\}/' "$HERE/../bml" | grep -c "getent ahostsv4")" "1"
 # 순서는 뒤집혔다 (아래 "DNS 가 거짓말을 하는 망" 을 보라) -- 공용 DNS 가 먼저고
 # 자기 resolver 가 그다음이다.  그 두 줄은 거기서 고정한다.
 # 조건문("못 찾는다고 하면")으로 두면 저쪽이 한 번 실패해 알려 주고 이쪽이
@@ -678,6 +678,38 @@ check "어디에 물어봤는지 적는다" \
   "$(grep -c '1\.1\.1\.1 · 8\.8\.8\.8 · 9\.9\.9\.9' "$HERE/../bml")" "1"
 check "휴대폰 갈래도 남긴다" \
   "$(grep -c '휴대폰(모바일 데이터)으로 그 주소를 열어 보면 갈립니다' "$HERE/../bml")" "2"
+
+echo
+echo "7844 이 막힌 것과 이름을 못 구한 것은 다르다"
+BML0="$HERE/../bml"
+# 이 망은 이름을 가로챈다 (ADR 0030).  이름이 엉뚱한 곳을 가리키면 붙을 리가
+# 없는데, 예전 코드는 그때도 "7844/TCP 가 막혀 있습니다" 라고 단정했다.
+# 대처가 정반대다: 포트가 막혔으면 Cloudflare 는 아예 못 쓰고 (quic 도 http2 도
+# 같은 7844 를 쓴다), 이름만 못 구한 것이면 아직 아무것도 모르는 것이다.
+check "이름부터 구한다"       "$(awk '/^edge_probe\(\) \{/,/^\}/' "$BML0" | grep -c 'dns_public_ips')" "1"
+check "못 구하면 no-dns"      "$(awk '/^edge_probe\(\) \{/,/^\}/' "$BML0" | grep -c "printf 'no-dns'")" "1"
+check "막혔으면 그 IP 도 낸다" "$(awk '/^edge_probe\(\) \{/,/^\}/' "$BML0" | grep -c "printf 'blocked %s'")" "1"
+# 실제로 갈리는지.  .invalid 는 절대 안 풀린다 (RFC 2606).
+probe_out="$( edge_probe() { local ip; ip=""; [ -z "$ip" ] && { printf 'no-dns'; return 1; }; }; edge_probe )"
+check "이름이 없으면 포트를 탓하지 않는다" "$probe_out" "no-dns"
+SH0="$(awk '/^cmd_share\(\) \{/,/^\}/' "$BML0")"
+check "화면도 둘을 갈라 말한다"  "$(printf '%s' "$SH0" | grep -c '엣지 이름을 못 구했습니다')" "1"
+check "막혔으면 어디에 못 붙었는지" "$(printf '%s' "$SH0" | grep -c '에 못 붙습니다')" "1"
+
+echo
+echo "모르는 말을 삼키지 않는다"
+# 실측 2026-08-26: `bml share cf <토큰>` 을 옛 bml 에서 쳤더니 "cf" 를 그냥
+# 무시하고 터널을 열었다 -- 화면은 "이미 열려 있습니다" 였고 토큰은 아무 데도
+# 안 들어갔다.  **아무 일도 안 하고 성공처럼 보이는 것**이 최악이다.
+check "모르는 하위 명령을 거절한다" \
+  "$(printf '%s' "$SH0" | grep -c 'bml share 가 모르는 말입니다')" "1"
+# 거절만 하고 끝내면 사람은 뭘 쳐야 할지 모른다.  주석 말고 **화면에 나오는
+# 줄**을 본다 -- 주석까지 세면 설명을 지워도 시험이 통과한다.
+check "쓸 수 있는 것을 나열한다" \
+  "$(printf '%s' "$SH0" | grep '^ *say ' | grep -c 'bml share cf <토큰>')" "1"
+# 그리고 애초에 그 기계가 옛 bml 을 들고 있으면 안 된다.  share 도 pull 한다.
+check "share 도 최신으로 맞추고 간다" \
+  "$(awk '/^    share\|tunnel\)/,/^      ;;/' "$BML0" | grep -c 'sync_repo')" "1"
 
 echo
 echo "우리 이름으로 여는 터널 (Cloudflare · ADR 0031)"
