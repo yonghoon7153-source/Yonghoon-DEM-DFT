@@ -384,6 +384,7 @@ def cmd_bench(a):
     if not rows:
         sys.exit("⛔ 프레임을 하나도 못 읽었다")
 
+    FR_l, FP_l = FR, FP                      # 프레임별 배열 (구간 분할용)
     FR, FP = np.concatenate(FR), np.concatenate(FP)
     fs = force_stats(FR, FP)
     dE = np.array([r["dE_meV_per_atom"] for r in rows])
@@ -399,8 +400,6 @@ def cmd_bench(a):
                 "same_sign_frames": f"{same_sign}/{len(dE)}"},
             "⛔_do_not": ["에너지 절대오차를 정확도로 읽지 말 것 — 기준 오프셋이 섞여 있다",
                           "이 값은 '이 데이터셋의 DFT 설정 대비' 다. 다른 설정과 섞지 말 것"]}
-    (out / f"bench_{a.engine}.json").write_text(
-        json.dumps(summ, ensure_ascii=False, indent=2))
     import csv as _csv
     with open(out / f"bench_{a.engine}.csv", "w", newline="") as fh:
         w = _csv.DictWriter(fh, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
@@ -416,8 +415,45 @@ def cmd_bench(a):
               f"— 1 보다 작으면 예측힘이 참조보다 작다(=PES 가 무르다). r 로는 안 보인다")
     print(f"  에너지  편향 {bias:+.2f} ± 산포 {scat:.2f} meV/atom  "
           f"(같은 부호 {same_sign}/{len(dE)} · 편향 제거 후 MAE {np.abs(dE-bias).mean():.2f})")
+    # ── 구간 분할 — melt/quench 처럼 **프레임 번호로 영역이 갈리는** 데이터셋용 ──
+    #   합산값만 보면 두 영역이 섞여, "고에너지에서 더 무른가" 를 **원리적으로 못 본다**.
+    if a.split_at:
+        seg = {}
+        for tag, keep in (("< %d" % a.split_at, lambda f: f < a.split_at),
+                          (">= %d" % a.split_at, lambda f: f >= a.split_at)):
+            idx = [i for i, r in enumerate(rows) if keep(r["frame"])]
+            if not idx:
+                print(f"\n  ⚠ 구간 [{tag}] 에 프레임이 없다 — --split_at 을 확인하라")
+                continue
+            fr = np.concatenate([FR_l[i] for i in idx])
+            fp = np.concatenate([FP_l[i] for i in idx])
+            g = force_stats(fr, fp)
+            de = np.array([rows[i]["dE_meV_per_atom"] for i in idx])
+            g["n_frames"] = len(idx)
+            g["energy_bias_meV_per_atom"] = float(de.mean())
+            g["energy_scatter_sd"] = float(de.std())
+            seg[tag] = g
+        summ["segments"] = seg
+        summ["split_at"] = a.split_at
+        if len(seg) == 2:
+            (t1, g1), (t2, g2) = list(seg.items())
+            d = g2["softening_slope"] - g1["softening_slope"]
+            summ["segment_softening_delta"] = d
+            print(f"\n  ── 구간 분할 (frame {a.split_at} 기준) ──")
+            for t, g in seg.items():
+                print(f"    [{t:>10}] n={g['n_frames']:>4}  힘 MAE {g['mae_eVA']:.4f}  "
+                      f"상대 {g['rel_mae_pct']:5.2f} %  **softening {g['softening_slope']:.4f}**  "
+                      f"(참조 RMS {g['rms_ref_eVA']:.3f})")
+            # ⛔ 부호를 해석해 주되, 크기 판정은 사람에게 남긴다
+            print(f"    Δsoftening = {d:+.4f}  "
+                  f"({'뒤 구간이 더 무름' if d < 0 else '뒤 구간이 더 경직' if d > 0 else '동일'})")
+            print(f"    ⚠ 이 Δ 가 유의한지는 **구간별 프레임 수와 산포**를 봐야 한다 — "
+                  f"이 도구는 판정하지 않는다")
+
     print(f"  ⛔ 에너지 절대오차 = 정확도가 아니다. **힘이 지표다.**")
     print(f"  📏 눈금: MTP 자체학습 0.073 · SevenNet-0 base 0.070 · 반응계 fine-tune 0.57 eV/Å")
+    (out / f"bench_{a.engine}.json").write_text(
+        json.dumps(summ, ensure_ascii=False, indent=2))
     print(f"\n✓ → {out}/bench_{a.engine}.{{json,csv}}")
     return 0
 
@@ -669,6 +705,9 @@ def main():
                    choices=["uma", "mace", "sevennet"])
     b.add_argument("--stride", type=int, default=250, help="이 간격으로만 계산 (기본 250)")
     b.add_argument("--limit", type=int, default=None, help="최대 프레임 수")
+    b.add_argument("--split_at", type=int, default=None,
+                   help="이 프레임 번호를 기준으로 앞/뒤 구간을 **따로** 집계 "
+                        "(예: li3po4 는 --split_at 25000 = melt|quench)")
     b.add_argument("--device", default="cuda"); b.add_argument("--out", required=True)
     b.set_defaults(fn=cmd_bench)
     t = sub.add_parser("selftest"); t.set_defaults(fn=cmd_selftest)
