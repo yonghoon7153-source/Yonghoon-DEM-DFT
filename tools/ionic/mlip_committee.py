@@ -219,11 +219,21 @@ def cmd_info(a):
         print(f"  **유효 수용영역 {rf:.1f} Å**" if rf else "  유효 수용영역 계산 불가")
         for n in r["notes"]:
             print(f"    {n}")
+    ok = all(r.get("effective_receptive_field_A") for r in rows)
     if a.out:
         Path(a.out).write_text(_j.dumps(rows, ensure_ascii=False, indent=2))
-        print(f"\n✓ → {a.out}")
-    # ⛔ 하나라도 못 알아냈으면 성공으로 끝내지 않는다 — 조용히 넘어가면 '확인했다' 로 기록된다
-    return 0 if all(r.get("effective_receptive_field_A") for r in rows) else 4
+        # ⛔ 실패했는데 `✓` 를 찍으면 화면만 보고 '확인됐다' 로 기록된다 (2026-08-26 실측).
+        #    파일을 쓴 것과 알아낸 것은 다른 일이다.
+        print(f"\n{'✓' if ok else '⚠ (미완)'} → {a.out}")
+    if not ok:
+        miss = [r["engine"] for r in rows if not r.get("effective_receptive_field_A")]
+        print(f"\n⛔ **알아내지 못했다**: {', '.join(miss)}")
+        env = [r["engine"] for r in rows
+               if any("No module named" in n for n in r["notes"])]
+        if env:
+            print(f"   → 모듈이 없다. **env 를 켜고 다시** 하라: "
+                  f"`conda activate uma` (uma) / `conda activate mlipx` (mace·sevennet)")
+    return 0 if ok else 4
 
 
 def cmd_predict(a):
@@ -243,6 +253,119 @@ def cmd_predict(a):
                         natoms=np.array([len(f) for f in frames]),
                         symbols=np.array(frames[0].get_chemical_symbols()))
     print(f"→ {d/f'pred_{a.engine}.npz'}  ({len(frames)} 프레임)")
+
+
+# ── 2b) DFT 라벨 대조 (bench) ───────────────────────────────────────────────
+def stream_labeled(path, stride, limit=None):
+    """extxyz 를 **스트리밍**으로 훑어 stride 간격 프레임만 돌려준다. → (idx, Atoms) 제너레이터
+
+    ⛔ `read(index='::N')` 을 쓰지 않는 이유: ase 는 그래도 전 파일을 파싱해 메모리에 올린다.
+      실측 대상이 550 MB · 25,000 프레임이라 그 방식은 못 쓴다.
+    ⛔ 이 함수가 못 하는 것: 프레임 총수를 미리 모른다 (한 번 훑기 전에는).
+    """
+    from ase.io import iread
+    n = 0
+    for i, at in enumerate(iread(str(path), format="extxyz")):
+        if i % stride:
+            continue
+        yield i, at
+        n += 1
+        if limit and n >= limit:
+            return
+
+
+def force_stats(f_ref, f_pred):
+    """참조힘 vs 예측힘 → dict. **성분 단위**로 잰다 (원자당 벡터가 아니라).
+
+    왜 성분인가: 문헌 관례(Shapeev 2016 · Park 2024 · 이상욱 랩 덱)가 전부 성분 MAE 다.
+    다른 정의로 재면 우리 값만 자릿수가 달라져 비교가 깨진다.
+
+    ★ **상대오차도 같이 낸다** — Shapeev 2016 이 전 성분 RMS(1.505 eV/Å)로 나눠
+      2.8 % 로 보고한다. 같은 0.05 eV/Å 도 딱딱한 계에선 훌륭하고 무른 계에선 형편없다.
+    """
+    d = (f_pred - f_ref).ravel()
+    r = f_ref.ravel()
+    rms_ref = float(np.sqrt((r ** 2).mean()))
+    return {"n_components": int(d.size),
+            "mae_eVA": float(np.abs(d).mean()),
+            "rmse_eVA": float(np.sqrt((d ** 2).mean())),
+            "max_abs_eVA": float(np.abs(d).max()),
+            "rms_ref_eVA": rms_ref,
+            "rel_mae_pct": float(np.abs(d).mean() / rms_ref * 100) if rms_ref else None,
+            # 성분 상관 — 부호까지 맞는지 (MAE 만으로는 못 본다)
+            "pearson_r": float(np.corrcoef(r, f_pred.ravel())[0, 1]) if d.size > 2 else None}
+
+
+def cmd_bench(a):
+    """**DFT 라벨이 붙은 extxyz** 에 엔진을 돌려 힘·에너지를 대조한다.
+
+    이게 왜 `analyze`(위원회)와 다른가: 위원회는 **정답 없이** 모델끼리 비교한다.
+    여기는 **정답지가 있다** — 문헌 데이터셋의 DFT 에너지·힘.
+
+    ⛔ **에너지 절대오차를 정확도로 읽지 마라.** 우리 엔진과 그들 DFT 는 pseudo·컷오프·
+      기준이 달라 **상수 오프셋**이 반드시 생긴다. 오프셋은 힘에 기여하지 않고 에너지 차이에서
+      상쇄된다(2026-08-26 실측: 이상욱 랩 가수분해 데이터에서 MAE 8.77 중 8.77 이 오프셋,
+      남는 산포는 1.35 meV/atom). 그래서 여기서는 **편향과 산포를 갈라서** 보고한다.
+    ⛔ **힘이 진짜 지표다.** 동역학을 지배하는 것은 힘이고, 힘에는 기준 오프셋이 없다.
+    """
+    from ase.io import read as _read
+    out = Path(a.out); out.mkdir(parents=True, exist_ok=True)
+    calc = get_calc(a.engine, a.device)
+
+    rows, FR, FP = [], [], []
+    print(f"  {a.xyz} · stride {a.stride}" + (f" · 최대 {a.limit} 프레임" if a.limit else ""))
+    for k, (idx, at) in enumerate(stream_labeled(a.xyz, a.stride, a.limit)):
+        try:
+            e_ref = float(at.get_potential_energy())
+            f_ref = np.asarray(at.get_forces(), dtype=float)
+        except Exception as e:
+            sys.exit(f"⛔ 프레임 {idx} 에 DFT 라벨이 없다 ({type(e).__name__}) — "
+                     f"이 파일은 bench 대상이 아니다")
+        nat = len(at)
+        at2 = at.copy(); at2.calc = calc
+        e_p = float(at2.get_potential_energy())
+        f_p = np.asarray(at2.get_forces(), dtype=float)
+        rows.append({"frame": idx, "n_atoms": nat,
+                     "E_ref_eV": e_ref, "E_pred_eV": e_p,
+                     "dE_meV_per_atom": (e_p - e_ref) / nat * 1000,
+                     "F_mae_eVA": float(np.abs(f_p - f_ref).mean()),
+                     "F_rms_ref_eVA": float(np.sqrt((f_ref ** 2).mean()))})
+        FR.append(f_ref); FP.append(f_p)
+        if (k + 1) % 20 == 0:
+            print(f"    {k+1} 프레임")
+    if not rows:
+        sys.exit("⛔ 프레임을 하나도 못 읽었다")
+
+    FR, FP = np.concatenate(FR), np.concatenate(FP)
+    fs = force_stats(FR, FP)
+    dE = np.array([r["dE_meV_per_atom"] for r in rows])
+    bias, scat = float(dE.mean()), float(dE.std())
+    same_sign = int((np.sign(dE) == np.sign(bias)).sum())
+
+    summ = {"xyz": str(a.xyz), "engine": a.engine, "n_frames": len(rows),
+            "stride": a.stride, "force": fs,
+            "energy_per_atom_meV": {
+                "bias": bias, "scatter_sd": scat,
+                "mae_raw": float(np.abs(dE).mean()),
+                "mae_after_bias_removal": float(np.abs(dE - bias).mean()),
+                "same_sign_frames": f"{same_sign}/{len(dE)}"},
+            "⛔_do_not": ["에너지 절대오차를 정확도로 읽지 말 것 — 기준 오프셋이 섞여 있다",
+                          "이 값은 '이 데이터셋의 DFT 설정 대비' 다. 다른 설정과 섞지 말 것"]}
+    (out / f"bench_{a.engine}.json").write_text(
+        json.dumps(summ, ensure_ascii=False, indent=2))
+    import csv as _csv
+    with open(out / f"bench_{a.engine}.csv", "w", newline="") as fh:
+        w = _csv.DictWriter(fh, fieldnames=list(rows[0])); w.writeheader(); w.writerows(rows)
+
+    print(f"\n══ {a.engine} vs DFT 라벨 · {len(rows)} 프레임 ══")
+    print(f"  힘  MAE  {fs['mae_eVA']:.4f} eV/Å   RMSE {fs['rmse_eVA']:.4f}   최대 {fs['max_abs_eVA']:.3f}")
+    print(f"      참조 RMS {fs['rms_ref_eVA']:.3f} eV/Å  →  **상대 {fs['rel_mae_pct']:.2f} %**   r={fs['pearson_r']:.5f}")
+    print(f"  에너지  편향 {bias:+.2f} ± 산포 {scat:.2f} meV/atom  "
+          f"(같은 부호 {same_sign}/{len(dE)} · 편향 제거 후 MAE {np.abs(dE-bias).mean():.2f})")
+    print(f"  ⛔ 에너지 절대오차 = 정확도가 아니다. **힘이 지표다.**")
+    print(f"  📏 눈금: MTP 자체학습 0.073 · SevenNet-0 base 0.070 · 반응계 fine-tune 0.57 eV/Å")
+    print(f"\n✓ → {out}/bench_{a.engine}.{{json,csv}}")
+    return 0
 
 
 # ── 3) 합의 분석 ────────────────────────────────────────────────────────────
@@ -435,7 +558,40 @@ def cmd_selftest(a=None):
         got = (cut * lay) if (cut and lay) else None
         chk(got == want, f"수용영역 {cut} × {lay} → {want}")
 
-    print(f"selftest {'PASS' if not bad else 'FAIL'} — {8 + 3 - len(bad)} ok, {len(bad)} bad")
+    # ── force_stats (bench) ──
+    ref = np.array([[1.0, -2.0, 0.5], [0.0, 3.0, -1.0]])
+    fs0 = force_stats(ref, ref.copy())
+    chk(fs0["mae_eVA"] == 0.0 and fs0["rel_mae_pct"] == 0.0,
+        "★ 완전 일치면 힘 MAE 0 · 상대오차 0")
+    chk(abs(fs0["pearson_r"] - 1.0) < 1e-12, "완전 일치면 r = 1")
+    fs1 = force_stats(ref, ref + 0.1)
+    chk(abs(fs1["mae_eVA"] - 0.1) < 1e-12, "일정 편차 0.1 → MAE 0.1")
+    chk(abs(fs1["rms_ref_eVA"] - float(np.sqrt((ref**2).mean()))) < 1e-12,
+        "★ 참조 RMS 로 정규화한다 (Shapeev 2016 관례 — 절대 eV/Å 만으로는 계 간 비교 불가)")
+    fsn = force_stats(ref, -ref)
+    chk(fsn["pearson_r"] < -0.99,
+        "★ [음성] 부호가 뒤집히면 r 이 음수 — MAE 만 보면 못 잡는 고장")
+
+    # ── 스트리밍 (bench) ──
+    import tempfile as _tf
+    from ase import Atoms
+    from ase.io import write as _w
+    from ase.calculators.singlepoint import SinglePointCalculator as _SP
+    with _tf.TemporaryDirectory() as td:
+        fp = Path(td) / "t.xyz"
+        frames = []
+        for i in range(10):
+            at = Atoms("H2", positions=[[0, 0, 0], [0, 0, 0.8 + 0.01 * i]], cell=[8, 8, 8], pbc=True)
+            at.calc = _SP(at, energy=-1.0 * i, forces=np.zeros((2, 3)))
+            frames.append(at)
+        _w(str(fp), frames, format="extxyz")
+        got = [i for i, _ in stream_labeled(fp, 3)]
+        chk(got == [0, 3, 6, 9], f"stride 3 이면 0,3,6,9 (얻음 {got})")
+        chk([i for i, _ in stream_labeled(fp, 1, limit=4)] == [0, 1, 2, 3], "limit 이 듣는다")
+        chk(len([1 for _ in stream_labeled(fp, 100)]) == 1,
+            "★ stride 가 총수보다 커도 최소 1프레임 (0 프레임으로 조용히 끝나지 않는다)")
+
+    print(f"selftest {'PASS' if not bad else 'FAIL'} — {8 + 3 + 8 - len(bad)} ok, {len(bad)} bad")
     return 1 if bad else 0
 
 
@@ -448,6 +604,13 @@ def main():
     p = sub.add_parser("predict"); p.add_argument("--dir", required=True)
     p.add_argument("--engine", required=True, choices=["uma", "mace", "sevennet"])
     p.add_argument("--device", default="cuda"); p.set_defaults(fn=cmd_predict)
+    b = sub.add_parser("bench", help="DFT 라벨 붙은 extxyz 에 엔진을 돌려 힘·에너지 대조")
+    b.add_argument("--xyz", required=True); b.add_argument("--engine", default="uma",
+                   choices=["uma", "mace", "sevennet"])
+    b.add_argument("--stride", type=int, default=250, help="이 간격으로만 계산 (기본 250)")
+    b.add_argument("--limit", type=int, default=None, help="최대 프레임 수")
+    b.add_argument("--device", default="cuda"); b.add_argument("--out", required=True)
+    b.set_defaults(fn=cmd_bench)
     t = sub.add_parser("selftest"); t.set_defaults(fn=cmd_selftest)
     i = sub.add_parser("info", help="엔진 배선(cutoff·층 수·유효 수용영역)")
     i.add_argument("--engines", nargs="+", default=["uma"],
@@ -459,8 +622,10 @@ def main():
                    help="다른 표본에서 잡은 committee_verdict.json — 주면 **탐지 모드**")
     n.set_defaults(fn=cmd_analyze)
     a = ap.parse_args()
-    a.fn(a)
+    # ⛔ 반환값을 버리면 **실패해도 종료코드 0** 이 된다 — 스크립트에서 `&&` 로 이어붙이면
+    #   실패가 성공으로 흘러간다 (2026-08-26 실측: info 가 4 를 돌려주는데 0 이 나갔다).
+    return a.fn(a) or 0
 
 
 if __name__ == "__main__":
-    main()
+    sys.exit(main())
