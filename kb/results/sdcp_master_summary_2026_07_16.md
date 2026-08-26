@@ -25,7 +25,13 @@ supersedes-headline-of: sdcp_linio2_binding_report.md (2026-06-01, UMA 시대)
 - v7c 구조 세대. 조성/원자수:
   | n | neutral | doped(라디칼, 알짜중성 doublet) |
   |---|---|---|
-  | 1 (monomer) | C₁₁H₁₆O₅S₂, 34 at | C₁₁H₁₅O₅S₂•, 33 at |
+  | 1 (monomer) | C₁₁H₁₆O₆S₂, 35 at | C₁₁H₁₅O₆S₂•, 34 at |
+  <!-- ⛔ 2026-08-26 정정: 이 행이 'C₁₁H₁₆O₅S₂ 34 at / C₁₁H₁₅O₅S₂ 33 at' 로
+       적혀 있었다 — O 하나·원자 하나씩 적었다. 정본은 구조 파일이다:
+       db/structures/sdcp_v7c_neutral.xyz  35 at C11H16O6S2 (162 e, singlet)
+       db/structures/sdcp_v7c_doped.xyz    34 at C11H15O6S2 (161 e, doublet)
+       n=2·n=3 행의 원자수(68/67, 101/100)는 파일과 일치해 문제 없다.
+       원고 문장과 make_phaseB_doped_v2.py 도 O₆ 를 쓴다 — 틀린 것은 이 표뿐이었다. -->
   | 2 (dimer, α–α, 이면각 60°) | 68 at, E=−3351.335544 Eh | 67 at, E=−3350.681182 Eh |
   | 3 (trimer, 이면각 130°) | 101 at, E=−5026.422091 Eh | mid 100 at −5025.775556 / end 100 at −5025.772950 Eh |
 - 분자 방법: **ORCA r2SCAN-3c Opt** (desktop WSL, 전부 bfgs 수렴), Loewdin 그룹 스핀 분해.
