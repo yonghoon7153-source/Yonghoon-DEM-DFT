@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 
 import { DeleteSampleButton } from '../components/DeleteSample'
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Alert, Card, Empty, Field, Spinner, TrashIcon } from '../components/ui'
 import { api } from '../lib/api'
@@ -226,6 +227,14 @@ function bucketOf(sample: Sample, key: GroupKey): string {
   }
 }
 
+/** 셀을 폴더 자리로 (ADR 0035).  `Sample` 과 대시보드 줄이 열 이름만 다르다. */
+const placeSample = (sample: Sample) => ({
+  id: sample.id,
+  groupId: sample.group_id,
+  groupName: sample.group_name ?? '',
+  groupParentName: sample.group_parent_name ?? '',
+})
+
 function SampleTable({
   samples,
   groupBy,
@@ -238,8 +247,13 @@ function SampleTable({
   // 실패는 표 바깥에 한 번만 그린다.  행 안에 끼우면 열이 밀리고, 묶은 표에서는
   // 구분 줄까지 함께 밀린다.
   const [deleteError, setDeleteError] = useState<string | null>(null)
+  // 그룹으로 묶을 때만 폴더다 (ADR 0035).  나머지 묶음(작성자·양극재·공정·
+  // 온도)은 값이지 자리가 아니라, 접을 트리가 없다 — 소그룹이 없으므로
+  // 접었다 펴도 얻는 것이 없고, 폴더 모양만 흉내 내면 그룹 트리와 헷갈린다.
+  const folders = useFolders('library', samples, placeSample)
+
   const sections = useMemo(() => {
-    if (groupBy === 'none') return null
+    if (groupBy === 'none' || groupBy === 'group') return null
     const buckets = new Map<string, Sample[]>()
     for (const sample of samples) {
       const key = bucketOf(sample, groupBy)
@@ -269,6 +283,23 @@ function SampleTable({
       <Alert kind="error">{deleteError}</Alert>
     </div>
   ) : null
+
+  if (groupBy === 'group') {
+    return (
+      <div className="table-wrap pin-first" style={{ maxHeight: 'none' }}>
+        <table>
+          <SampleHead />
+          {folders.folders.filter(folders.isVisible).map((folder) => (
+            <tbody key={folder.key}>
+              <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+              {folders.isFolded(folder.key) ? null : folder.items.map(row)}
+            </tbody>
+          ))}
+        </table>
+        {failure}
+      </div>
+    )
+  }
 
   if (sections) {
     return (

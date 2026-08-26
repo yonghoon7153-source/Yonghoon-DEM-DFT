@@ -1428,6 +1428,20 @@ table tr.section > th > .section-label {
   padding: 0 var(--s4);
 }
 
+/* 폴더 이름 끝의 `+2 −1` (ADR 0035).  **셀 수가 아니라 달라진 수**라, 옆의
+   "· 12개" 와 같은 회색으로 두면 둘이 한 덩어리로 읽힌다.  들어온 것과 나간
+   것이 색으로 갈리는 편이 훑을 때 빠르다. */
+.folder-change {
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.folder-change.more { background: var(--pos-wash); color: var(--pos); }
+.folder-change.less { background: var(--neg-wash); color: var(--neg); }
+
 /* 비교 화면의 셀 목록.  그래프 밑으로 내려오면서 가로가 넓어졌으므로 한 줄에
    하나씩 쌓지 않는다 — 스무 개짜리 묶음이 세로로 스무 줄이면 아래쪽 절반은
    스크롤해야 보인다.  높이 상한은 그대로 둔다: 목록이 화면을 밀어내면 그래프가

@@ -12,6 +12,7 @@ import { ActivityFeed } from '../components/ActivityFeed'
 import { DeleteSampleButton } from '../components/DeleteSample'
 import { PatchNotes } from '../components/PatchNotes'
 import { BasisSelect } from '../components/BasisSelect'
+import { FolderRow, useFolders } from '../components/FolderTree'
 import { GroupFilterFields, groupPath, useGroupChoice } from '../components/GroupFilter'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Sparkline } from '../components/Sparkline'
@@ -69,6 +70,7 @@ export function Dashboard() {
   // 그룹으로 서버에서 거르지 않는다.  칩마다 개수를 보여주려면 전체가 필요하고,
   // 그룹을 누를 때마다 다시 받아오지 않아도 되므로 전환이 즉시 된다.
   const group = useGroupChoice()
+  const [folderView, setFolderView] = useStickyState('bml.dashboardFolders', false)
   // 남이 무엇을 바꾸면 바로(`live`), 그리고 아무 편집이 없어도 30초마다
   // (`refreshMs`) 다시 읽는다.  둘 다 필요하다: 편집은 알림이 오지만, 구동 중인
   // 셀에 사이클이 붙는 것은 아무도 "편집" 하지 않으므로 알림이 오지 않는다.
@@ -176,6 +178,16 @@ export function Dashboard() {
             ))}
 
           </div>
+          {/* 폴더는 **끄고 시작한다.**  이 표의 기본 차례는 "방금 올린 것이
+              위로" 이고, 폴더로 묶으면 그 차례가 폴더 안으로 들어가 버린다 —
+              들어와서 무엇이 새로 왔는지 보는 것이 이 화면의 첫 용도다.
+              켜 두면 이 브라우저에 남는다 (ADR 0035). */}
+          <div className="segmented" role="group" aria-label="보기">
+            <button type="button" className={folderView ? '' : 'on'}
+                    onClick={() => setFolderView(false)}>목록</button>
+            <button type="button" className={folderView ? 'on' : ''}
+                    onClick={() => setFolderView(true)}>폴더</button>
+          </div>
           <span className="spacer" />
           {attention.length ? (
             <span className="badge warn" title="기준 사이클 대비 80% 미만">
@@ -194,7 +206,8 @@ export function Dashboard() {
         ) : board.loading && !board.data ? (
           <TableSkeleton rows={5} columns={8} />
         ) : rows.length ? (
-          <DashboardTable rows={rows} basis={basis} onDeleted={() => board.reload()} />
+          <DashboardTable rows={rows} basis={basis} folders={folderView}
+                          onDeleted={() => board.reload()} />
         ) : all.length ? (
           <Empty title="이 조건에 맞는 셀이 없습니다" icon="⌕">
             다른 상태 탭을 눌러 보세요.
@@ -282,12 +295,18 @@ function retentionClass(value: number | null): string {
 function DashboardTable({
   rows,
   basis,
+  folders: folderView,
   onDeleted,
 }: {
   rows: DashboardRow[]
   basis: Basis
+  folders: boolean
   onDeleted: () => void
 }) {
+  // 폴더는 라이브러리와 **같은 기억**을 쓰지 않는다.  두 화면이 거르는 것이
+  // 서로 달라서 (여기는 상태 탭, 저기는 날짜·양극재), 같은 기억을 나눠 쓰면
+  // 한쪽에서 걸러진 셀이 다른 쪽에서 "지워졌다" 로 세어진다.
+  const folders = useFolders('dashboard', rows, placeRow)
   // 지우기 버튼은 셀 라이브러리와 공유한다 (DeleteSampleButton) — 무엇이
   // 지워지는가를 설명하는 문구가 두 화면에서 갈라지면 안 된다.
   const [deleteError, setDeleteError] = useState<string | null>(null)
@@ -310,8 +329,23 @@ function DashboardTable({
             <th />
           </tr>
         </thead>
-        <tbody>
-          {rows.map((row) => (
+        {folderView ? folders.folders.filter(folders.isVisible).map((folder) => (
+          <tbody key={folder.key}>
+            <FolderRow folder={folder} view={folders} columns={COLUMN_COUNT} />
+            {folders.isFolded(folder.key) ? null : folder.items.map(cellRow)}
+          </tbody>
+        )) : <tbody>{rows.map(cellRow)}</tbody>}
+      </table>
+      {deleteError ? (
+        <div style={{ padding: '10px 14px 0' }}>
+          <Alert kind="error">{deleteError}</Alert>
+        </div>
+      ) : null}
+    </div>
+  )
+
+  function cellRow(row: DashboardRow) {
+    return (
             <tr key={row.sample_id}>
               <td className="text">
                 {row.group_name ? (
@@ -429,14 +463,19 @@ function DashboardTable({
                 />
               </td>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {deleteError ? (
-        <div style={{ padding: '10px 14px 0' }}>
-          <Alert kind="error">{deleteError}</Alert>
-        </div>
-      ) : null}
-    </div>
-  )
+    )
+  }
 }
+
+/** 대시보드 줄을 폴더 자리로 (ADR 0035).  라이브러리의 `placeSample` 과 짝이다. */
+const placeRow = (row: DashboardRow) => ({
+  id: row.sample_id,
+  groupId: row.group_id,
+  groupName: row.group_name ?? '',
+  groupParentName: row.group_parent_name ?? '',
+})
+
+/** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
+ *  가로로 밀려 표가 어긋난다 — 셀·상태·보고 사이클·용량·유지율·추세·급감·
+ *  초기 CE·기준·로딩·조건·지우기 = 12. */
+const COLUMN_COUNT = 12
