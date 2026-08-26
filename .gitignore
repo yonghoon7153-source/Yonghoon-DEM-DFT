@@ -70,7 +70,9 @@ data/workbench.db
 #   ⛔ 원본은 각 README 에 적힌 upstream 에서 다시 받는다 (commit 해시 기록해 둠).
 db/external/*/md_products/
 db/external/*/validation/
-db/external/*/structures/
-db/external/*/mtp/
-db/external/*/scripts/
+# ⚠ kim2025_csp_sse 는 **CC BY 4.0** (figshare 10.6084/m9.figshare.29468165) 이라 예외 —
+#    출처를 밝히면 재배포 가능하다. 아래 규칙에서 제외한다.
+db/external/kim2026_argyrodite_hydrolysis/structures/
+db/external/kim2026_argyrodite_hydrolysis/mtp/
+db/external/kim2026_argyrodite_hydrolysis/scripts/
 db/external/omat24/*.csv
