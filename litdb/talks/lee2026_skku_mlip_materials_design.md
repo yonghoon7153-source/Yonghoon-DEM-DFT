@@ -364,6 +364,25 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
 9. 🆕 **`Lev_max` 라는 말도 MTP 원논문에 없다** (같은 확인). 슬 16 의 `Lev_max = 12` 는 **MLIP 패키지(Novikov 2021) 용어**이고,
    Shapeev 2016 의 복잡도 손잡이는 `deg(B_α) ≤ N` (+ `#α`/`μ`/`ν` 상한)이다. 개념 계보는 이어지지만 **용어 출처는 갈라 적을 것**
    (같은 오기가 `papers/kim2024_mtp_argyrodite_disorder_gb.md` 에도 있어 함께 정정했다).
+10. 🆕🔴 **슬 8 의 `DFT PES ──softening──▶ uMLIP PES` 를 "GNN 계열의 성질"로 확장하면 안 된다**
+   (2026-08-26 · `papers/park2024_sevennet_parallel_gnn_md.md` 본문+SI 정독).
+   덱이 인쇄한 것은 **도해와 범례**(노란 점 = 평형 근처 훈련점 / 빨간 점 = 보강 필요한 고에너지 상태)뿐이고,
+   **덱에도 이 talk 에도 softening 을 잰 수치가 없다.** 이제 같은 계열의 **엔진 원전**을 확보했는데
+   **그 논문도 softening 을 재지 않았다** — `soften` 0회, **NVE/에너지보존 0 · 드리프트 0 ·
+   고온 스냅샷 MLIP↔DFT 재평가 0 · 포논/탄성 0 · D/Ea 0 · fine-tune 전후 비교 0**.
+   ⇒ **"softening 은 GNN 공통 성질" 도 "아니다" 도 문헌으로 말할 수 없다.**
+   ⚠⚠ 그리고 **덱 슬 8 의 기구는 SevenNet-0 쪽에 더 잘 들어맞는다** — SevenNet-0 훈련셋은
+   **MP 결정 이완 3스텝뿐**(저자 명시 *"liquid or amorphous are not present in the training set"*)인데도
+   **5000 K 초가열–급랭**을 구조적으로 통과했고, 우리 UMA 의 **OMat24 는 AIMD·Rattled 를 포함**한다.
+   즉 *"평형 근처 편중"* 진단이 결정적이라면 **더 좁게 학습한 쪽이 먼저 무너졌어야 한다.**
+11. 🆕🔴 **§99-3 의 정확도 대조표에 `base` 행이 빠져 있었다 — 그 공백이 오해를 만들었다**
+   (같은 확인). 덱 표는 **MTP(자체학습, 0.073 eV/Å)** 와 **SevenNet(fine-tuned, 반응계, 0.57 eV/Å)**
+   두 행만 나란히 놓아, *"GNN 계열은 힘을 8배 거칠게 본다"* 로 읽히기 쉽다.
+   **[Park24] §5.1 의 base 값을 넣으면 그 읽기가 무너진다**: **SevenNet-0 base = F MAE 0.070 eV/Å**
+   (MP 결정 89원소 test set) — **MTP 0.073 과 같은 자릿수**다.
+   ⇒ **0.57 은 아키텍처 탓이 아니라 계 탓**(H₂O 반응계·비평형)일 가능성이 크다.
+   ⛔ 네 행 전부 계·훈련셋·프로토콜이 달라 **우열 판정은 여전히 금지**. 바뀌는 것은
+   *"GNN 이라서 거칠다"* 라는 **기구 설명이 근거를 잃는다**는 점이다.
 
 ---
 
@@ -668,11 +687,20 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | 슬 17 | **MTP** (자체학습, 5,400 구조) | Li 11 · **LPSCl 5** meV/atom | 0.083 · **0.111** eV/Å | Li \| LPSCl 계면 |
 | 슬 14 | **MTP** (벌크) | **2.88** meV/atom | **0.073** eV/Å | Li₆PS₅Cl 벌크 |
 | 슬 22 | **SevenNet** (fine-tuned) | **8.8** meV/atom | **0.57** eV/Å | LPSCl + H₂O 가수분해 |
+| 🆕 **[Park24] §5.1** (**정본**) | **SevenNet-0** (base, GNN) | **25** meV/atom | **0.070** eV/Å | **MP 결정 89원소 test set** |
 
 ⚠ **이 표로 "uMLIP 이 8배 부정확하다"를 말하면 안 된다** — 슬 22 는 **H₂O 가 붙은 반응계**로
 난이도가 다르고, 훈련셋도 다르다. 말할 수 있는 것은 **"같은 랩이 같은 물질군에서 보고한 값의
-자릿수"** 까지다. 그래도 힘 MAE 가 **0.073 → 0.57 eV/Å (7.8×)** 라는 것은,
-**힘이 곧 동역학**이라는 점에서 A1 의 분업을 이해할 수 있게 해 준다.
+자릿수"** 까지다.
+
+🔴 **2026-08-26 정정 — 네 번째 행을 넣으면 읽기가 바뀐다** (`papers/park2024_sevennet_parallel_gnn_md.md`).
+종전에 우리는 *"힘 MAE 가 0.073 → 0.57 eV/Å (7.8×) 라는 것은 힘이 곧 동역학이라는 점에서 A1 의
+분업을 이해하게 해 준다"* 고 적었다. **그 문장은 base 행이 없어서 성립했다.**
+**SevenNet 계열의 base 모델은 평형 근처에서 F MAE 0.070 eV/Å** 로 **MTP 0.073 과 같은 자릿수**다.
+⇒ **0.57 은 "GNN 이라서" 가 아니라 "반응계라서"** 일 가능성이 크다.
+그래도 **A1 의 분업 자체는 다른 근거로 살아 있다 — 비용**: 등변 GNN 은 **1.58×10⁶ atom·ps/day per A100**
+이라(우리 산술, [Park24] 실측 `112,000원자·60 ps·12.7 h·8×A100` 에서) **7,000원자 × 20 ns 가 ≈89 A100-day** 다.
+⇒ **Q-T2 의 (i) 속도 읽기는 정량 근거를 얻었고, (ii) PES 품질 읽기는 여전히 근거가 없다.**
 
 #### Q2 (28:01) — 좌장
 > 초반에 스케일마다 다른 기술이 필요하고 그 사이 **bridging** 이 중요하다고 하셨는데, 앞으로
@@ -845,7 +873,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | **2** | **자료집 목차 페이지** (이상욱 섹션 앞뒤 1–2 pp) | §99-5 B1 (다음 발표자 이름) + 세션 번호·발표 시각 확정. **1분이면 되는 건** | ⛔ 이 PDF 는 내지 18 pp 만 |
 | **3** | **Shapeev 2016** *Moment Tensor Potentials* (Multiscale Model. Simul. 14, 1153) + **Novikov 2021** *MLIP package* (Mach. Learn.: Sci. Technol. 2, 025002) | MTP 의 **기저·γ(maxvol/D-optimality) 원정의**. 지금 우리는 γ 를 **덱 슬 16 숫자로만** 안다(γ_select 2 / γ_break 10↔5↔2). **T1(외삽 대리지표)** 을 설계하려면 원정의가 있어야 "UMA 에는 왜 이식 불가한가"를 정확히 쓸 수 있다 | ⛔ 없음 (인용만 6곳) |
 | **4** | **Merchant 2023 GNoME** (Nature 624, 80) | 슬 6 = 강의 서사의 출발점(`[STT 08:02]` 2.2 M / 38만). 지금은 **다른 digest 안의 참조로만** 존재 | ⛔ 자체 digest 없음 |
-| **5** | **Park 2024 SevenNet** (J. Chem. Theory Comput. 20, 4857) | 슬 8·22 의 엔진. **우리 UMA 와 같은 GNN 계열**이라 "softening 이 GNN 공통인가 모델별인가"를 가르는 데 필요 → **T1b 의 대조군** | ⛔ 없음 (언급 8곳) |
+| ~~**5**~~ ✅ | **Park 2024 SevenNet** (J. Chem. Theory Comput. 20, 4857) | 슬 8·22 의 엔진. → **확보·정독 완료** `papers/park2024_sevennet_parallel_gnn_md.md`. **판정: T1b 는 닫히지 않는다**(그 논문도 softening 미측정) + **정황 2개는 반대 방향** + **T3 비용 정량화** | ✅ **확보 2026-08-26** |
 | 6 | **Luo 2022** *ACS Energy Lett.* **7, 3064–3071** | 슬 19 의 **실험 앵커(~12 nm cryo-TEM)**. 우리가 Li\|LPSCl MD(T3)를 하면 **그대로 우리 대조군**이 된다 | ⛔ 없음 (수치만 전재) |
 | 7 | **Adv. Energy Mater.** (revision) — Dynamic properties 후속 | **Q5**(config-variance 오차막대 보강 여부) — 우리 §3-2 최강 카드의 **유효범위**가 여기 걸려 있다 | ⛔ 없음 |
 
@@ -877,7 +905,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | **3c** | `69. Novikov2021_MLIP_Package.pdf` | I. S. Novikov, K. Gubaev, E. V. Podryabinkin, A. V. Shapeev, **"The MLIP package: moment tensor potentials with MPI and active learning"**, *Mach. Learn.: Sci. Technol.* **2**, 025002 (2021) · DOI `10.1088/2632-2153/abc9fe` · arXiv **2007.08555** | ✅ **웹 확인** |
 | **3c′** (선택) | `69b. Podryabinkin2023_MLIP3.pdf` | **"MLIP-3: Active learning on atomic environments with moment tensor potentials"**, *J. Chem. Phys.* **159**, 084112 (2023) — 패키지 **현행판** | ✅ **웹 확인** |
 | **4** | `70. Merchant2023_GNoME_Scaling_Deep_Learning.pdf` | A. Merchant, S. Batzner, S. S. Schoenholz, M. Aykol, G. Cheon, E. D. Cubuk (Google DeepMind), **"Scaling deep learning for materials discovery"**, *Nature* **624**, 80–85 (2023) · PMID 38030720 | ✅ **웹 확인** |
-| **5** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf` | Y. Park, J. Kim, S. Hwang, S. Han (**서울대 한승우 그룹 MDIL**), **"Scalable Parallel Algorithm for Graph Neural Network Interatomic Potentials in Molecular Dynamics Simulations"**, *J. Chem. Theory Comput.* **20**, 4857–4868 (2024) · DOI `10.1021/acs.jctc.4c00190`. SevenNet = **S**calable **E**qui**V**ariance-**E**nabled **N**eural **NET**work, **NequIP 아키텍처 기반** | ✅ **웹 확인** |
+| ~~**5**~~ ✅ **완료 2026-08-26** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf`<br>`71. Sup) …`(5 pp) | Y. Park, J. Kim, S. Hwang, S. Han (**서울대 재료공학부 MDIL + RIAM**; Han = KIAS 겸직), **"Scalable Parallel Algorithm for Graph Neural Network Interatomic Potentials in Molecular Dynamics Simulations"**, *J. Chem. Theory Comput.* **20**, 4857–4868 (2024) · DOI `10.1021/acs.jctc.4c00190` — **표지 대조 완료, 서지 정확**(본문 12 pp · SI 5 pp · Fig 6+S2 · **Table 0개** · refs 58 · 접수 2024-02-14/게재 2024-05-30). SevenNet = **S**calable **E**qui**V**ariance-**E**nabled **N**eural **NET**work, **NequIP 아키텍처 기반** ✅ 확인. → **`papers/park2024_sevennet_parallel_gnn_md.md`** | ✅ **표지 확인** |
 | **6** | `72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf` | **"Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries"**, *ACS Energy Lett.* **7**(9), 3064–3071 (2022) · DOI `10.1021/acsenergylett.2c01543` | ✅ **웹 확인** |
 | **7** 🆕 | `73. KimYS2026_Moisture_Surface_Degradation_LPSC_DryRoom.pdf` | Y. S. Kim, J. D. Yi, S. Sung 외, **"Moisture-induced surface degradation mechanism of argyrodite Li₆PS₅Cl under dry-room conditions"**, *Nat. Commun.* (2026) · DOI `10.1038/s41467-026-75537-0` · Research Square rs-7583174 | ✅ **웹 확인** · **이상욱 랩 아님(다른 그룹)** — 아래 참조 |
 
@@ -927,7 +955,7 @@ Shapeev 2016 이 정본인 것은 **γ 의 전제**까지다 — 선형 기저(`
 | ~~**3a**~~ ✅ · **3b** | §5b(슬 16 γ_select 2 / γ_break 10↔5↔2) · §99-3 **A1** | **3a 결과(2026-08-26)**: 🔴 **Shapeev 2016 에 γ 가 없다**(전수검색 `maxvol`·`D-optimal`·`extrapolat`·`grade` 전부 0회). 확보한 것은 **γ 의 전제** — 선형 기저 `V=Σc_α B̃_α` + 설계행렬 `Xc=g` ⇒ *"UMA 는 비선형 GNN 이라 `X` 가 없어 maxvol 이 정의 불가"* 를 **원정의로 쓸 수 있게 됐다**. **γ 문턱값 2/5/10 의 원전은 여전히 미확보** → **3b′(Podryabinkin 2017)** 로 넘어감. ⚠ 그때까지 문턱 숫자는 **덱 인용(citable=no)** 으로만 |
 | **3c** | §5b · §5c(5,400 구조) | MTP **훈련 실무**(w_e:w_f:w_s · R_cut · lev_max · 비용) 원본 |
 | **4** | §9(슬 6) · §99-1 08:02 | 강의 서사의 출발점. **"MLIP 없이는 불가능했다"** 주장의 실물 근거 |
-| **5** | §7a(슬 22) · §99-3 A1 · §99-4 **A1** | ★ **T1b 대조군** — SevenNet 은 **우리 UMA 와 같은 GNN 계열**이다. PES softening 이 **GNN 공통 성질**인지 **모델별**인지를 가르는 유일한 대조 |
+| ~~**5**~~ ✅ | §7a(슬 22) · §99-3 A1 · §99-4 **A1** · §12-10 · §12-11 | **5 결과(2026-08-26)**: 🔴 **T1b 는 닫히지 않는다** — 그 논문도 **softening 을 재지 않았다**(`soften` 0회 · NVE/드리프트/고온 재평가/포논/탄성/D·Ea/fine-tune 전후 **전부 0**). **얻은 것 = 반대 방향 정황 2개**: ①**결정만** 학습한 SevenNet-0 이 **5000 K 초가열–급랭**을 구조적으로 통과(우리 UMA 의 OMat24 는 **AIMD·Rattled 포함** = 비평형 방향으로 우리가 더 넓다) ②**base 힘 MAE 0.070 eV/Å ≈ MTP 0.073** ⇒ 슬 22 의 **0.57 은 계 탓**일 가능성 (→ **§99-3 표에 base 행 추가**, §12-11 정정). ⚠ 경고: 비정질 생성에선 **골격 연화가 원리적으로 안 보인다** ⇒ **T1b 는 우리가 직접**. 부수 소득: **T3 비용 = 1.58×10⁶ atom·ps/day per A100** ⇒ 7,000원자×20 ns **≈89 A100-day** = **Q-T2 의 속도 쪽 절반** |
 | **6** | §6(슬 19) · §99-4 **A4** · §12-6 | **T3** 실험 앵커(~12 nm cryo-TEM) 확보 — 우리가 Li\|LPSCl MD 를 돌리면 그대로 대조군 |
 | **7** 🆕 | §7b(슬 23) · §99-2(?) | **우리 LPSOCl(+O) 축과 정면** — O-rich `Li₆PO₅Cl-like` 표면이 그들에겐 열화 산물, 우리에겐 설계 목표다. ⚠ 실험 XPS + 0 K DFT 라 우리 MD 창과 직접 비교 불가 |
 
