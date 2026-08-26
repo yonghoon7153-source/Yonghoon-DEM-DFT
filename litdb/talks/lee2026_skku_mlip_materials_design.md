@@ -352,6 +352,7 @@ Pre-mixing (Li₂S + LiCl + P₂S₅) → Material prepared (Li₆PS₅Cl) → R
    cryo-TEM(ACS EL 2022, 25 °C) 패널에 **`~12 nm` 라벨**이 찍혀 있어 **계산 11 nm vs 실험 ~12 nm**
    비교가 성립한다(정본 digest의 서술과 동일). 다만 **덱 본문에 "몇 % 일치" 문장은 없고**, 그림은
    **단일 시야·단일 시료**이며 우리 쪽 인용은 **"자릿수·두께 스케일이 맞다"** 수준까지만.
+  ✅ **2026-08-26 종결** — Luo 2022 원논문 서지·초록 확인(*ACS Energy Lett.* **7**(9), 3064–3071, DOI `10.1021/acsenergylett.2c01543`, 제목 *"Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries"*): 초록이 **25 °C 단결정 Li₂S ≈12 nm** / **60 °C 다결정 Li₂S + disorder–order 전이**를 명시한다 ⇒ **덱의 `25 °C` / `60 °C` 라벨은 실재**이고, 우리가 한때 적었던 `80 °C` 는 우리 오독이 맞다(이미 철회). ⚠ **본문은 아직 안 봤다** — 두께 측정 방식·오차는 미확인.
 7. **LFP SOC(슬 30)** 는 학생 프로젝트 수준이고 우리 축과 무관. 인용 가치 없음.
 
 ---
@@ -856,16 +857,44 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 > `⚠재구성` = 내가 기억에서 복원한 것이라 **표지로 대조하기 전에는 인용하지 말 것**.
 > 파일을 받으면 curator 가 **표지에서 서지를 다시 읽어 이 표를 정정**한다.
 
-| # | inbox 파일명 (이대로 주면 좋다) | 예상 slug | 서지 | 신뢰 |
-|---|---|---|---|---|
-| **1** | `66. Kim2026_Argyrodite_Hydrolysis_SevenNet_Sn.pdf`<br>`66. Sup) …` | `kim2026_argyrodite_hydrolysis_sevennet_sn` ⚠저자·연도는 표지 보고 확정 | **Adv. Funct. Mater.**, 이상욱 랩. 덱 표기 *"revision"*(2026-07 시점) → **이미 출판됐을 수 있다**. 검색어: `argyrodite hydrolysis machine learning potential H2S Sn doping Sungkyunkwan` / `Li6PS5Cl H2O reactive MD SevenNet` | ⚠서지 미상 |
-| **2** | `lee2026_skku_program_toc.pdf` → `litdb/talks/_transcripts/` (논문 아님) | — | 심포지엄 **자료집 목차 페이지**. 이상욱 섹션(pp.279–296) 앞뒤 1–2 pp | ✅ |
-| **3a** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | `shapeev2016_moment_tensor_potentials` | A. V. Shapeev, *Multiscale Model. Simul.* **2016**, 14(3), 1153–1173 · DOI `10.1137/15M1054183` · arXiv 1512.06054 | ⚠재구성 (연도·저널은 ✅) |
-| **3b** | `68. Gubaev2019_Active_Learning_Alloy_MTP.pdf` | `gubaev2019_active_learning_alloy_mtp` | Gubaev·Podryabinkin·Hart·Shapeev, *Comput. Mater. Sci.* **156** (2019) **148–156** — **γ(maxvol/D-optimality) 원전** | ✅ 권·쪽은 `kim2026_li_argyrodite_sei_reactive_md` ref [39] 에 기록됨 |
-| **3c** | `69. Novikov2021_MLIP_Package.pdf` | `novikov2021_mlip_package_mpi_active_learning` | Novikov·Gubaev·Podryabinkin·Shapeev, *Mach. Learn.: Sci. Technol.* **2021**, 2, 025002 · DOI `10.1088/2632-2153/abc9fe` | ⚠재구성 |
-| **4** | `70. Merchant2023_GNoME_Scaling_Deep_Learning.pdf` | `merchant2023_gnome_scaling_deep_learning_discovery` | Merchant·Batzner·Schoenholz·Aykol·Cheon·Cubuk, *Nature* **2023**, 624, 80–85 · DOI `10.1038/s41586-023-06735-9` | ⚠재구성 (Nature 2023·GNoME 은 ✅ — `kim2025_csp…` ref 35) |
-| **5** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf` | `park2024_sevennet_parallel_gnn_md` | Park·Kim·Hwang·Han (SNU), *J. Chem. Theory Comput.* **2024**, 20, 4857–4868 · DOI `10.1021/acs.jctc.4c00190` | ⚠재구성 |
-| **6** | `72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf` | `luo2022_cryotem_li_dendrite_sulfide_interphase` | *ACS Energy Lett.* **2022**, 7, **3064–3071** — "single Li dendrite ‖ sulfide electrolyte" **cryo-TEM interphase** | ✅ 권·쪽 (덱 슬 19 + SSRN ref [49] 이중 확인) · ⚠제목·저자 재구성 |
+| # | inbox 파일명 | 제목 · 서지 | 확인 |
+|---|---|---|---|
+| **1** | `66. Kim2026_Argyrodite_Hydrolysis_SevenNet_Sn.pdf`<br>`66. Sup) …` | **⛔ 서지 확정 실패** — 제목 검색으로 안 나온다. 덱 표기 *"Adv. Funct. Mater. (revision)"*(2026-07). 확보 경로는 **저자 페이지**뿐: Google Scholar `Sang Uck Lee` (id `0PEgjTEAAAAJ`) → 2025–26 필터 / SKKU CMS Lab publications / SSRN 저자 페이지 | ⛔ **미확인** |
+| **2** | `lee2026_skku_program_toc.pdf` → `_transcripts/` | 심포지엄 **자료집 목차** (이상욱 섹션 pp.279–296 앞뒤 1–2 pp). 논문 아님 | ✅ |
+| **3a** | `67. Shapeev2016_Moment_Tensor_Potentials.pdf` | A. V. Shapeev, **"Moment Tensor Potentials: A Class of Systematically Improvable Interatomic Potentials"**, *Multiscale Model. Simul.* **14**(3), 1153–1173 (2016) · arXiv **1512.06054** | ✅ **웹 확인** |
+| **3b** | `68. Gubaev2019_Active_Learning_Alloy_MTP.pdf` | K. Gubaev, E. V. Podryabinkin, G. L. W. Hart, A. V. Shapeev, **"Accelerating high-throughput searches for new alloys with active learning of interatomic potentials"**, *Comput. Mater. Sci.* **156**, 148–156 (2019) · arXiv **1806.10567** | ✅ **웹 확인** |
+| **3b′** 🆕 | `68b. Podryabinkin2017_Active_Learning_Linearly_Parametrized.pdf` | E. V. Podryabinkin, A. V. Shapeev, **"Active learning of linearly parametrized interatomic potentials"**, *Comput. Mater. Sci.* **140**, 171–180 (2017) · arXiv **1611.09346** | ✅ **웹 확인** · 🔴 **우리 기록 정정 후보** — 아래 참조 |
+| **3c** | `69. Novikov2021_MLIP_Package.pdf` | I. S. Novikov, K. Gubaev, E. V. Podryabinkin, A. V. Shapeev, **"The MLIP package: moment tensor potentials with MPI and active learning"**, *Mach. Learn.: Sci. Technol.* **2**, 025002 (2021) · DOI `10.1088/2632-2153/abc9fe` · arXiv **2007.08555** | ✅ **웹 확인** |
+| **3c′** (선택) | `69b. Podryabinkin2023_MLIP3.pdf` | **"MLIP-3: Active learning on atomic environments with moment tensor potentials"**, *J. Chem. Phys.* **159**, 084112 (2023) — 패키지 **현행판** | ✅ **웹 확인** |
+| **4** | `70. Merchant2023_GNoME_Scaling_Deep_Learning.pdf` | A. Merchant, S. Batzner, S. S. Schoenholz, M. Aykol, G. Cheon, E. D. Cubuk (Google DeepMind), **"Scaling deep learning for materials discovery"**, *Nature* **624**, 80–85 (2023) · PMID 38030720 | ✅ **웹 확인** |
+| **5** | `71. Park2024_SevenNet_Parallel_GNN_MD.pdf` | Y. Park, J. Kim, S. Hwang, S. Han (**서울대 한승우 그룹 MDIL**), **"Scalable Parallel Algorithm for Graph Neural Network Interatomic Potentials in Molecular Dynamics Simulations"**, *J. Chem. Theory Comput.* **20**, 4857–4868 (2024) · DOI `10.1021/acs.jctc.4c00190`. SevenNet = **S**calable **E**qui**V**ariance-**E**nabled **N**eural **NET**work, **NequIP 아키텍처 기반** | ✅ **웹 확인** |
+| **6** | `72. Luo2022_CryoTEM_Li_Dendrite_Sulfide_Interphase.pdf` | **"Nanostructure of the Interphase Layer between a Single Li Dendrite and Sulfide Electrolyte in All-Solid-State Li Batteries"**, *ACS Energy Lett.* **7**(9), 3064–3071 (2022) · DOI `10.1021/acsenergylett.2c01543` | ✅ **웹 확인** |
+| **7** 🆕 | `73. KimYS2026_Moisture_Surface_Degradation_LPSC_DryRoom.pdf` | Y. S. Kim, J. D. Yi, S. Sung 외, **"Moisture-induced surface degradation mechanism of argyrodite Li₆PS₅Cl under dry-room conditions"**, *Nat. Commun.* (2026) · DOI `10.1038/s41467-026-75537-0` · Research Square rs-7583174 | ✅ **웹 확인** · **이상욱 랩 아님(다른 그룹)** — 아래 참조 |
+
+#### 🔴 3b′ — **우리 기록의 "γ 원전" 지목이 어긋났을 수 있다**
+
+`kim2026_li_argyrodite_sei_reactive_md.md` §19 는 *"maxvol/D-optimality 기반 active learning 의
+**원전**은 [39] Gubaev 2019"* 라고 적었다. 그건 **그 논문이 인용한 것**이고, 웹 확인 결과
+**MTP 에 maxvol/D-optimality active learning 을 처음 도입한 것은 Podryabinkin & Shapeev 2017**
+(*Comput. Mater. Sci.* 140, 171–180 · arXiv 1611.09346) 쪽으로 보인다. Gubaev 2019 는
+그 방법을 **합금 고속탐색에 적용**한 편이다.
+
+⚠ **아직 판정하지 않는다** — 제목·서지만 확인했고 **본문을 안 봤다**. 둘 다 받아서 읽고
+`kb/open_items.md` T1 의 γ 서술을 그때 정정한다. 지금 상태는 *"원전 지목이 흔들린다"* 까지다.
+
+#### 🆕 7번 — **이상욱 랩이 아닌데 우리에게 더 급할 수 있다**
+
+1번(이상욱 랩 가수분해)을 찾다가 나왔다. **다른 그룹**(Y. S. Kim 외)이고 **DFT + depth-profiling XPS**
+(SevenNet MD 아님)인데, 초록의 5단 기구가 우리 축과 정면으로 겹친다:
+
+> (i) S-rich 표면에 H₂O 흡착 → (ii) **P–S 결합 약화** 후 **S→O 치환** → (iii) O 치환된 PS₄ 사면체
+> **회전**이 O 를 하부층으로 밀어넣음 → (iv) **O-rich Li₆PO₅Cl-like 표면** 형성 → (v) 부피수축 상분리
+
+🔑 **왜 우리 것인가**: (ii)의 **P–S 약화**는 이상욱 랩 구술 `[STT 21:22]` 과 같은 기구이고,
+덱 슬 21 의 훈련 부분집합 `LPSC "S ↔ O"` 가 바로 이 경로다. 그런데 (iv)의 **Li₆PO₅Cl-like O-rich 표면**은
+**우리 LPSOCl(+O) 조성이 가려던 방향 그 자체**다 — 우리는 그것을 *설계*로 넣었고 이 논문은
+*열화 산물*로 본다. **같은 상을 두 방향에서 만나는 셈**이라 판정에 직접 걸린다.
+⚠ 다만 **실험 XPS + 0 K DFT** 라 우리 MD 창과 직접 비교는 안 된다.
 
 #### 각 편이 **이 talk 의 어디에 매달리나** (curator 가 걸 앵커)
 
@@ -878,6 +907,7 @@ CSP 라인의 동기가 물리가 아니라 **IP 지형**이라는 것. 우리�
 | **4** | §9(슬 6) · §99-1 08:02 | 강의 서사의 출발점. **"MLIP 없이는 불가능했다"** 주장의 실물 근거 |
 | **5** | §7a(슬 22) · §99-3 A1 · §99-4 **A1** | ★ **T1b 대조군** — SevenNet 은 **우리 UMA 와 같은 GNN 계열**이다. PES softening 이 **GNN 공통 성질**인지 **모델별**인지를 가르는 유일한 대조 |
 | **6** | §6(슬 19) · §99-4 **A4** · §12-6 | **T3** 실험 앵커(~12 nm cryo-TEM) 확보 — 우리가 Li\|LPSCl MD 를 돌리면 그대로 대조군 |
+| **7** 🆕 | §7b(슬 23) · §99-2(?) | **우리 LPSOCl(+O) 축과 정면** — O-rich `Li₆PO₅Cl-like` 표면이 그들에겐 열화 산물, 우리에겐 설계 목표다. ⚠ 실험 XPS + 0 K DFT 라 우리 MD 창과 직접 비교 불가 |
 
 #### ⛔ curator 가 **하지 말아야 할 것**
 
