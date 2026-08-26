@@ -322,3 +322,75 @@ def test_cycle_numbers_are_unique_across_a_samples_runs(client, sample_id,
                client.get(f"/api/samples/{sample_id}/cycles").json()["cycles"]]
     assert len(numbers) == len(set(numbers)), "사이클 번호가 중복된다"
     assert numbers == sorted(numbers)
+
+
+def test_reparse_all_rereads_every_run(client, wrd_bytes, finished_wrd_bytes):
+    """계산이 바뀌면 **이미 올린 것도** 따라와야 한다.
+
+    사이클 요약은 올릴 때 계산해 DB 에 넣는다 (ADR 0003).  그래서 wrdkit 을
+    고쳐도 올려 둔 파일은 옛 숫자를 그대로 들고 있다 — 코드는 고쳤는데 화면은
+    안 바뀐다.  한 개씩 누르는 길만 두면 쌓인 것을 아무도 안 누르고, 고친 값과
+    안 고친 값이 한 저장소에 섞인다.
+    """
+    sample = client.post("/api/samples", json={"name": "재파싱 셀"}).json()
+    # 서로 **다른** 바이트여야 한다 — 같은 파일을 두 번 올리면 sha256 으로
+    # 하나로 묶인다 (불변 규칙 2).
+    for name, payload in (("a.wrd", wrd_bytes), ("b.wrd", finished_wrd_bytes)):
+        assert _upload(client, payload, name=name,
+                       sample_id=sample["id"]).status_code == 201
+
+    body = client.post("/api/runs/reparse").json()
+    assert body["total"] == 2
+    assert body["reparsed"] == 2
+    assert body["failed"] == []
+
+    # 값이 그대로 살아 있어야 한다 — 다시 읽는 것이지 지우는 것이 아니다.
+    runs = client.get("/api/runs", params={"sample_id": sample["id"]}).json()
+    assert len(runs) == 2
+    assert all(r["cycle_count"] > 0 for r in runs)
+
+
+def test_reparse_all_keeps_going_when_one_original_is_gone(
+        client, wrd_bytes, finished_wrd_bytes, monkeypatch):
+    """원본 하나가 사라졌다고 나머지가 옛 값으로 남으면 안 된다.
+
+    실패는 세는 것이 아니라 **이름을 적는다** — "실패 1건" 만으로는 어느 파일인지
+    알 수 없고, 그러면 고칠 수도 없다.
+    """
+    from app import storage
+
+    sample = client.post("/api/samples", json={"name": "반쪽 셀"}).json()
+    for name, payload in (("good.wrd", wrd_bytes), ("gone.wrd", finished_wrd_bytes)):
+        _upload(client, payload, name=name, sample_id=sample["id"])
+
+    runs = client.get("/api/runs", params={"sample_id": sample["id"]}).json()
+    doomed = next(r for r in runs if r["original_name"] == "gone.wrd")
+    real = storage.reparse
+
+    def one_is_missing(sha256):
+        if sha256 == doomed["sha256"]:
+            raise FileNotFoundError("원본이 없습니다")
+        return real(sha256)
+
+    monkeypatch.setattr(storage, "reparse", one_is_missing)
+    body = client.post("/api/runs/reparse").json()
+
+    assert body["total"] == 2
+    assert body["reparsed"] == 1
+    assert [f["name"] for f in body["failed"]] == ["gone.wrd"]
+    assert body["failed"][0]["reason"]
+
+
+def test_the_literal_reparse_path_is_not_read_as_a_run_id(client, wrd_bytes):
+    """`/api/runs/reparse` 가 run_id="reparse" 로 읽히지 않아야 한다.
+
+    오늘 라우터 모양에서는 순서를 바꿔도 맞게 걸린다 — 확인했다.  하지만 누가
+    `POST /{run_id}` 를 하나 붙이면 그 순간 이 창구가 422 로 바뀐다.  깨지는
+    곳과 원인이 다른 파일에 있어서, 그때 찾기 어렵다.
+    """
+    sample = client.post("/api/samples", json={"name": "순서"}).json()
+    _upload(client, wrd_bytes, name="a.wrd", sample_id=sample["id"])
+
+    response = client.post("/api/runs/reparse")
+    assert response.status_code == 200, response.text
+    assert set(response.json()) == {"total", "reparsed", "failed"}

@@ -14,6 +14,7 @@
 #   bmlonly [주소] 이 기계의 DNS 가 터널 도메인을 거를 때 — 공용 DNS·hosts·접속을 한 번에
 #   bml data       데이터가 어느 폴더에 있는지 (외장하드 등) — `bml data <경로>` 로 옮긴다
 #   bml data off   저장소 안의 data/ 로 되돌린다 (원본은 그 드라이브에 그대로)
+#   bml reparse    올려 둔 파일을 전부 다시 읽는다 (계산이 바뀌었을 때 — 원본은 그대로)
 #   bml host open  이 서버를 네트워크에 연다 (다른 기계가 보게) — `bml host local` 로 닫는다
 #   bml password <암호>  바깥에 열 때 쓸 공유 암호를 정한다
 #   bml share      임시 터널을 열어 다른 공유기에서도 접속하게 한다
@@ -4092,6 +4093,43 @@ cmd_only() {
   cmd_slot out "$url"
 }
 
+#: `bml reparse` — 올려 둔 파일을 전부 원본에서 다시 읽는다.
+#:
+#: **계산이 바뀌었을 때 쓰는 것이다.**  사이클 요약은 올릴 때 계산해 DB 에
+#: 넣으므로 (ADR 0003), `wrdkit` 을 고쳐도 이미 올린 파일은 옛 숫자를 그대로
+#: 들고 있다 — 코드는 고쳤는데 화면은 안 바뀐다.  실측 2026-08-26: 방전 용량
+#: 0.18 % 오차를 고쳤는데 "아직 값 차이가 난다" 는 말이 그 자리였다.
+#:
+#: 원본은 안 건드린다 (불변 규칙 2).  다시 읽어서 요약만 새로 쓴다.
+cmd_reparse() {
+  local url="${SERVER:-$URL}" out total done_ failed
+  if ! server_alive "$url" 8; then
+    die "서버가 응답하지 않습니다: $url — 먼저 ${GREEN}bml${OFF} 로 띄우세요."
+  fi
+  step "전부 다시 읽는 중 ${DIM}(원본은 그대로 · 요약만 새로 씁니다)${OFF}"
+  say "  ${DIM}파일이 많으면 몇 분 걸립니다.${OFF}"
+  out="$(curl -sS -m 3600 -X POST "$url/api/runs/reparse" 2>&1)" || {
+    printf '%s✕%s 다시 읽지 못했습니다.\n' "$RED" "$OFF" >&2
+    say "  ${DIM}${out}${OFF}"
+    exit 1
+  }
+  total="$(printf '%s' "$out" | sed -n 's/.*"total":[[:space:]]*\([0-9]*\).*/\1/p')"
+  done_="$(printf '%s' "$out" | sed -n 's/.*"reparsed":[[:space:]]*\([0-9]*\).*/\1/p')"
+  if [ -z "$total" ]; then
+    printf '%s✕%s 서버가 뜻 모를 답을 줬습니다.\n' "$RED" "$OFF" >&2
+    say "  ${DIM}${out}${OFF}"
+    exit 1
+  fi
+  ok "${done_}/${total} 개를 다시 읽었습니다."
+  failed=$(( total - done_ ))
+  if [ "$failed" -gt 0 ]; then
+    warn "${failed} 개는 못 읽었습니다 — 원본이 없거나 읽히지 않습니다."
+    # 이름을 적는다.  수만 세면 어느 파일인지 알 길이 없다.
+    printf '%s' "$out" | tr ',' '\n' | sed -n 's/.*"name":"\([^"]*\)".*/    \1/p'
+  fi
+  say "  ${DIM}화면을 새로고침하면 새 값이 보입니다.${OFF}"
+}
+
 #: `bml relay [stop]` -- 중계기를 보거나 내린다.
 #:
 #: 띄우는 것은 `bmlonly` 가 한다.  중계기 혼자 띄우는 명령을 따로 두지 않는
@@ -5130,6 +5168,7 @@ main() {
     # 집으면 두 번째 IP 부터 조용히 버려진다.
     only)              shift; sync_repo; cmd_only "$@"; cmd_connect ;;
     relay)             shift; cmd_relay "${1:-}" ;;
+    reparse|재파싱)    shift; sync_repo; cmd_reparse ;;
     password|passwd)   shift; cmd_password "${1:-}" ;;
     share|tunnel)
       shift

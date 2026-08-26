@@ -14,7 +14,7 @@ from .. import storage
 from ..db import get_session
 from ..deps import get_run
 from ..models import CycleRecord, Run, Sample
-from ..schemas import RunOut, RunUpdate
+from ..schemas import ReparseAllOut, RunOut, RunUpdate
 from ..services import (
     apply_schedule_defaults,
     auto_cycle_offset,
@@ -263,6 +263,48 @@ def update_run(run_id: int, payload: RunUpdate,
     session.commit()
     session.refresh(run)
     return _out(session, run)
+
+
+# 글자 그대로인 `/reparse` 를 파라미터 경로들 **앞에** 둔다.  오늘 모양에서는
+# 뒤에 둬도 맞게 걸리지만(POST 가 `/{run_id}/reparse` 뿐이라), 누가
+# `POST /{run_id}` 를 하나 붙이는 순간 `reparse` 가 run_id 로 읽혀 422 가 된다.
+# 그때 깨지는 것은 이 창구인데 원인은 새로 붙인 쪽에 있어 찾기 어렵다.
+@router.post("/reparse", response_model=ReparseAllOut)
+def reparse_all(session: Session = Depends(get_session)):
+    """모든 기록을 원본에서 다시 읽는다 — **계산이 바뀌었을 때 쓰는 것.**
+
+    사이클 요약은 올릴 때 계산해 `CycleRecord` 에 넣는다 (ADR 0003: 시계열은
+    디스크, 요약만 DB).  그래서 `wrdkit` 의 계산을 고쳐도 **이미 올린 파일은
+    옛 숫자를 그대로 들고 있다** -- 코드는 고쳤는데 화면은 안 바뀐다.
+
+    한 개짜리(`/{run_id}/reparse`)는 이미 있었지만, 계산이 바뀌는 종류의 수정은
+    본디 전부에 걸린다.  올려 둔 것을 하나씩 누르게 하면 아무도 안 누르고, 그러면
+    고친 값과 안 고친 값이 한 저장소에 섞인다 -- 그것이 제일 나쁘다.
+
+    한 파일이 실패해도 멈추지 않는다.  원본이 사라진 기록 하나 때문에 나머지
+    나머지가 옛 값으로 남으면 안 된다.  실패한 것은 세어서 이름과 함께 돌려준다.
+    """
+    runs = session.exec(select(Run).order_by(Run.id)).all()
+    done: list[int] = []
+    failed: list[dict] = []
+    touched: set[int | None] = set()
+    for run in runs:
+        try:
+            wrd = storage.reparse(run.sha256)
+        except (FileNotFoundError, WrdError) as exc:
+            failed.append({"run_id": run.id, "name": run.original_name,
+                           "reason": str(exc)})
+            continue
+        persist_parse(session, run, wrd)
+        session.add(run)
+        session.flush()
+        done.append(run.id)
+        touched.add(run.sample_id)
+    # 사이클 수가 바뀌면 같은 셀의 뒤 파일들 번호가 밀린다.  셀마다 한 번만.
+    for sample_id in touched:
+        renumber_sample_runs(session, sample_id)
+    session.commit()
+    return ReparseAllOut(total=len(runs), reparsed=len(done), failed=failed)
 
 
 @router.post("/{run_id}/reparse", response_model=RunOut)

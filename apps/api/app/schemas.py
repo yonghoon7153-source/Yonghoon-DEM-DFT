@@ -378,6 +378,20 @@ class RunOut(BaseModel):
     schedule: dict[str, Any] = Field(default_factory=dict)
 
 
+class ReparseFailure(BaseModel):
+    run_id: int
+    name: str
+    #: 왜 못 읽었나.  "실패 1건" 만 세면 어느 파일인지 알 길이 없다.
+    reason: str
+
+
+class ReparseAllOut(BaseModel):
+    """전부 다시 읽은 결과.  실패는 세는 것이 아니라 **이름을 적는다.**"""
+    total: int
+    reparsed: int
+    failed: list[ReparseFailure] = []
+
+
 class RunUpdate(BaseModel):
     sample_id: int | None = None
     cycle_offset: int | None = None
