@@ -16,6 +16,8 @@ import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { seriesColor } from '../lib/format'
+import { gittDivisor, splitByBasis, GITT_AXIS_LABEL, GITT_BASIS_LABEL,
+         type GittBasis } from '../lib/gittbasis'
 import { useAsync } from '../lib/hooks'
 import { pseudoOcvWideTsv } from '../lib/origin'
 import type { GittRun, Pocv } from '../lib/types'
@@ -35,6 +37,10 @@ export function GittCompare() {
 
   const runs = useAsync(() => api.listGittRuns(), [], { live: true })
   const group = useGroupChoice()
+  //: 용량 축.  기본은 mAh — 질량·면적이 없는 기록이 하나라도 있으면 다른
+  //  기준은 그것을 빼야 하고, 처음 여는 사람에게 곡선이 없어져 보이는 것보다
+  //  단위가 기록마다 다르다는 것이 덜 놀랍다.
+  const [basis, setBasis] = useState<GittBasis>('mAh')
   // 그룹은 셀의 성질이라 셀 표가 있어야 거를 수 있다.  EIS 비교와 같은 이유,
   // 같은 모양이다 (ADR 0024).
   const samples = useAsync(() => api.listSamples(), [], { live: true })
@@ -83,18 +89,31 @@ export function GittCompare() {
     return got === [...selected].sort().join(',')
   }, [curves.data, selected])
 
+  // 겹쳐 그릴 때 하나만 못 나눠도 그림이 거짓말을 한다: mAh 곡선과 mAh/cm²
+  // 곡선이 같은 가로눈금에 서면 길이 차이가 용량 차이인지 단위 차이인지 볼
+  // 방법이 없다.  빼고 이름을 적는다.
+  const shownRuns = useMemo(
+    () => splitByBasis(rows.filter((row) => selected.includes(row.id)), basis),
+    [rows, selected, basis])
+  const keptIds = useMemo(
+    () => new Set(shownRuns.kept.map((run) => run.id)), [shownRuns])
+
   const series = useMemo<PlotSeries[]>(() => {
     if (!fresh) return []
     const out: PlotSeries[] = []
     for (const curve of curves.data ?? []) {
       const run = rows.find((item) => item.id === curve.gitt_id)
+      if (!run || !keptIds.has(run.id)) continue
+      // 기록마다 나누는 수가 다르다 (질량·면적이 다르므로).  하나로 묶어서
+      // 나누면 그 순간 모든 곡선이 한 셀의 것이 된다.
+      const per = gittDivisor(run, basis) || 1
       const color = seriesColor(rows.findIndex((item) => item.id === curve.gitt_id))
       // 충전과 방전을 한 색의 실선·점선으로.  둘을 다른 색으로 주면 기록이
       // 넷일 때 색이 여덟이 되어 어느 둘이 한 셀인지 안 보인다.
       if (curve.charge.length) {
         out.push({
           label: `${run ? label(run) : curve.gitt_id} 충전`,
-          x: curve.charge.map((p) => p.capacity_mah),
+          x: curve.charge.map((p) => p.capacity_mah / per),
           y: curve.charge.map((p) => p.voltage_v),
           color, points: true, width: 1.4,
         })
@@ -102,14 +121,14 @@ export function GittCompare() {
       if (curve.discharge.length) {
         out.push({
           label: `${run ? label(run) : curve.gitt_id} 방전`,
-          x: curve.discharge.map((p) => p.capacity_mah),
+          x: curve.discharge.map((p) => p.capacity_mah / per),
           y: curve.discharge.map((p) => p.voltage_v),
           color, points: true, width: 1.4, dash: [4, 3],
         })
       }
     }
     return out
-  }, [curves.data, fresh, rows])
+  }, [curves.data, fresh, rows, basis, keptIds])
 
   const skipped = useMemo(
     () => (curves.data ?? []).reduce(
@@ -180,7 +199,32 @@ export function GittCompare() {
         </Card>
       ) : null}
 
-      <Card title="pseudo-OCV">
+      <Card
+        title="pseudo-OCV"
+        actions={
+          <div className="segmented" role="group" aria-label="용량 기준">
+            {(['mAh', 'mAh/g', 'mAh/cm2'] as GittBasis[]).map((choice) => (
+              <button key={choice} type="button"
+                      className={basis === choice ? 'on' : ''}
+                      onClick={() => setBasis(choice)}>
+                {GITT_BASIS_LABEL[choice]}
+              </button>
+            ))}
+          </div>
+        }
+      >
+        {/* 그 기준을 못 쓰는 기록은 **뺀다.**  섞으면 두 곡선의 길이 차이가
+            용량 차이인지 단위 차이인지 볼 방법이 없다 (§0.4). */}
+        {shownRuns.dropped.length ? (
+          <Alert kind="warn">
+            {basis === 'mAh/g' ? '활물질 질량' : '면적'}이 적혀 있지 않아{' '}
+            {shownRuns.dropped.length}개를 뺐습니다 —{' '}
+            {shownRuns.dropped.map((run) => run.name).join(' · ')}.
+            <span className="tiny faint">
+              {' '}정확한 비교가 안 됩니다. 기록 상세나 붙은 셀에 적어 주세요.
+            </span>
+          </Alert>
+        ) : null}
         <CopyBar
           items={[{
             label: 'pseudo-OCV',
@@ -205,7 +249,7 @@ export function GittCompare() {
         ) : curves.loading && !curves.data ? (
           <Spinner />
         ) : series.length ? (
-          <Plot series={series} xLabel="용량 (mAh)" yLabel="전압 (V)"
+          <Plot series={series} xLabel={GITT_AXIS_LABEL[basis]} yLabel="전압 (V)"
                 height={380} legend busy={curves.loading || !fresh} />
         ) : null}
       </Card>

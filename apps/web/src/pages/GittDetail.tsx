@@ -17,6 +17,8 @@ import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { dateTime, num, seriesColor } from '../lib/format'
 import { diffusionTsv, pocvTsv, skippedDiffusionPoints } from '../lib/origin'
+import { gittDivisor as divisor, GITT_BASIS_LABEL as BASIS_LABEL,
+         type GittBasis } from '../lib/gittbasis'
 import { useAsync } from '../lib/hooks'
 import type { GittRun } from '../lib/types'
 
@@ -30,25 +32,6 @@ type Mode = 'pocv' | 'diffusion'
  *  전고체에서는 같은 mAh/g 도 면적이 다르면 다른 전류밀도로 잰 것이 된다.
  *  그래서 랩이 실제로 쓰는 축은 mAh/cm² 다.
  */
-type GittBasis = 'mAh' | 'mAh/g' | 'mAh/cm2'
-
-const BASIS_LABEL: Record<GittBasis, string> = {
-  mAh: 'mAh',
-  'mAh/g': 'mAh/g',
-  'mAh/cm2': 'mAh/cm²',
-}
-
-/** 그 기준으로 나누는 수 — 없으면 `null` 이고, 그러면 그 기준을 못 쓴다.
- *
- *  나눌 수가 없을 때 1 로 나누지 않는다: mAh 를 mAh/cm² 라고 부르기만 한
- *  숫자가 되고, 그것은 측정한 면적용량과 화면에서 구별되지 않는다 (§0.4).
- */
-function divisor(record: GittRun, basis: GittBasis): number | null {
-  if (basis === 'mAh/g') return record.active_mass_g_effective || null
-  if (basis === 'mAh/cm2') return record.area_cm2_effective || null
-  return 1
-}
-
 export function GittDetail() {
   const params = useParams<{ id: string }>()
   const id = Number(params.id)
