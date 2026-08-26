@@ -46,6 +46,7 @@ from .routers import (  # noqa: E402
     changelog,
     eis,
     exports,
+    feedback,
     gitt,
     groups,
     presets,
@@ -171,6 +172,7 @@ app.include_router(exports.router)
 app.include_router(presets.router)
 app.include_router(activity.router)
 app.include_router(changelog.router)
+app.include_router(feedback.router)
 
 
 @app.get("/api/health")

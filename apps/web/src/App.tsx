@@ -1,5 +1,6 @@
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom'
 
+import { FeedbackBell } from './components/FeedbackBell'
 import { NavMenu, type NavSection } from './components/NavMenu'
 import { WhoAmI } from './components/WhoAmI'
 import { Compare } from './pages/Compare'
@@ -9,6 +10,7 @@ import { EisCompare } from './pages/EisCompare'
 import { EisDashboard } from './pages/EisDashboard'
 import { EisLibrary } from './pages/EisLibrary'
 import { EisUpload } from './pages/EisUpload'
+import { Feedback } from './pages/Feedback'
 import { GittCompare } from './pages/GittCompare'
 import { GittDashboard } from './pages/GittDashboard'
 import { GittDetail } from './pages/GittDetail'
@@ -81,6 +83,10 @@ export function App() {
           ))}
         </nav>
         <span className="spacer" />
+        {/* 오른쪽 위.  화면 어디에 있든 같은 자리에 있어야 "그때 적어 둬야지"
+            가 실제로 적는 것으로 이어진다 — 메뉴 안에 넣으면 찾아 들어가야
+            하고, 찾아 들어가야 하는 칸에는 아무도 안 적는다. */}
+        <FeedbackBell />
         <WhoAmI />
       </header>
 
@@ -107,6 +113,7 @@ export function App() {
         <Route path="/gitt/upload" element={<GittUpload />} />
         <Route path="/gitt/:id" element={<GittDetail />} />
         <Route path="/upload" element={<Upload />} />
+        <Route path="/feedback" element={<Feedback />} />
         <Route
           path="*"
           element={

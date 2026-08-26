@@ -11,6 +11,7 @@ import type {
   Activity, ChangeNote, CircuitCombination,
   CircuitKind, CompareResponse, CompositionPreset, DqdvResponse,
   Diffusion, Drt, DrtSweep, DvdqResponse, CycleTable, DashboardRow, Facets,
+  FeedbackKind, FeedbackNote,
   EisDashboard, GittDashboard, GittRun, Group, Measurements, Meta, Pocv,
   ProfileResponse, Report, Run, Sample, Scan, Spectrum, SpectrumDetail,
   SpectrumFit, SpectrumPoints,
@@ -111,6 +112,21 @@ export const api = {
 
   // -- 무엇이 바뀌었는지 (docs/log.md) ---------------------------------------
   changelog: (params?: Params) => request<ChangeNote[]>(`/api/changelog${query(params)}`),
+
+  // -- 의견 게시판 (ADR 0033) -----------------------------------------------
+  listFeedback: (params?: Params) =>
+    request<FeedbackNote[]>(`/api/feedback${query(params)}`),
+  createFeedback: (body: { kind: FeedbackKind; body: string }) =>
+    request<FeedbackNote>('/api/feedback', json('POST', body)),
+  updateFeedback: (id: number, body: {
+    kind?: FeedbackKind; body?: string; resolved?: boolean
+  }) => request<FeedbackNote>(`/api/feedback/${id}`, json('PATCH', body)),
+  deleteFeedback: (id: number) =>
+    request<void>(`/api/feedback/${id}`, { method: 'DELETE' }),
+  replyToFeedback: (id: number, body: { body: string }) =>
+    request<FeedbackNote>(`/api/feedback/${id}/replies`, json('POST', body)),
+  deleteFeedbackReply: (noteId: number, replyId: number) =>
+    request<void>(`/api/feedback/${noteId}/replies/${replyId}`, { method: 'DELETE' }),
 
   // -- groups --------------------------------------------------------------
   listGroups: () => request<Group[]>('/api/groups'),

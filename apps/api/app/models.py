@@ -546,3 +546,53 @@ class GittRun(SQLModel, table=True):
     created_by: str = ""
     updated_by: str = ""
     updated_at: datetime = Field(default_factory=_now)
+
+
+class FeedbackNote(SQLModel, table=True):
+    """쓰다가 걸린 것 하나 — 불편한 점, 질문, 하고 싶은 것.
+
+    이 저장소에서 제일 잘 사라지는 것이 **쓰는 사람의 말**이다.  카톡으로 오면
+    스크롤에 묻히고, 말로 하면 그 자리에서 끝난다.  `docs/log.md` 는 고친
+    사람의 기록이지 겪은 사람의 기록이 아니다.  그래서 겪은 자리에 적는 칸을
+    둔다 (ADR 0033).
+
+    **해결은 지우는 것이 아니다.**  `resolved_at` 을 찍어 접어 둘 뿐이고,
+    지우는 것은 따로 눌러야 한다.  같은 불편이 두 달 뒤에 다시 올라올 때,
+    "그때 이렇게 정리했다" 가 남아 있는 편이 훨씬 낫다.
+    """
+
+    __tablename__ = "feedback_note"
+
+    id: int | None = Field(default=None, primary_key=True)
+    created_at: datetime = Field(default_factory=_now, index=True)
+    updated_at: datetime = Field(default_factory=_now)
+    #: 로그인이 아니다 — 상단 막대에 적어 둔 이름이 그대로 온다 (ADR 0012).
+    created_by: str = ""
+    updated_by: str = ""
+
+    #: `issue` 불편한 점 · `question` 궁금한 것 · `idea` 이러면 좋겠다.
+    #: 셋으로 나누는 이유는 답이 다르기 때문이다: 불편은 고치고, 질문은
+    #: 답하고, 아이디어는 정한다.
+    kind: str = Field(default="issue", index=True)
+    body: str = ""
+
+    #: 언제 정리됐는지.  None 이면 아직 열려 있다.
+    resolved_at: datetime | None = Field(default=None, index=True)
+    resolved_by: str = ""
+
+
+class FeedbackReply(SQLModel, table=True):
+    """그 항목에 달린 한 마디.
+
+    항목과 나눠 두는 이유: 항목은 "무엇이 불편한가" 이고 답글은 "그래서 어떻게
+    됐나" 라서, 하나를 지운다고 다른 하나가 없어지면 안 된다.
+    """
+
+    __tablename__ = "feedback_reply"
+
+    id: int | None = Field(default=None, primary_key=True)
+    note_id: int = Field(foreign_key="feedback_note.id", index=True)
+    created_at: datetime = Field(default_factory=_now, index=True)
+    created_by: str = ""
+    updated_by: str = ""
+    body: str = ""

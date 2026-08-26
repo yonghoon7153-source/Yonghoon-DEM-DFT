@@ -36,6 +36,7 @@
 | [0030](adr/0030-a-local-relay-instead-of-editing-hosts.md) | 이름이 막힌 기계에서는 hosts 를 고치지 말고 중계기를 띄운다 | `bmlonly` 가 `/etc/hosts` 대신 127.0.0.1:5013 에 중계기를 띄워 터널 엣지의 IP 로 넘긴다 (SNI·Host 는 터널 이름), sudo·관리자 PowerShell·재부팅 복구가 사라진다 |
 | [0031](adr/0031-our-own-name-through-a-cloudflare-tunnel.md) | 고정 주소는 우리 도메인 + Cloudflare 터널로 얻는다 *(이 랩에서는 7844 가 막혀 못 씀 — 실측)* | 토큰과 이름이 둘 다 있을 때만 `cloudflared tunnel run --token` 으로 우리 이름을 열고, 실패해도 랜덤 주소로 흘러가지 않는다 — localhost.run 커스텀 도메인($9/월)과 결과가 같은데 무료다 |
 | [0032](adr/0032-the-same-run-downloaded-twice-replaces-not-appends.md) | 같은 계측을 두 번 내려받은 파일은 이어 붙이지 않고 갈아 끼운다 | 구동 중인 셀을 114·200 사이클에서 각각 내려받으면 뒤엣것이 앞엣것을 담고 있다 — 이어 붙이면 314 사이클이 되고 유지율이 도로 올라간다. `acquisition_key` 가 같으면 긴 쪽만 남기고 짧은 쪽은 가린다 (지우지 않는다) |
+| [0033](adr/0033-a-place-to-write-down-what-got-in-the-way.md) | 쓰다가 걸린 것을 겪은 자리에 적는다 | 상단 막대 오른쪽에 의견 칸 — 불편·질문·제안 셋으로 나누고, '정리됨' 은 지우는 것이 아니라 접는 것이며 다시 열 수 있다. 알림 점은 브라우저의 `localStorage` 로 판정한다 (로그인이 없으므로) |
 
 ## 리뷰 (외부 교차검증)
 
@@ -84,7 +85,8 @@
 `adr/0029-fit-the-way-zview-users-fit.md` ·
 `adr/0030-a-local-relay-instead-of-editing-hosts.md` ·
 `adr/0031-our-own-name-through-a-cloudflare-tunnel.md` ·
-`adr/0032-the-same-run-downloaded-twice-replaces-not-appends.md`
+`adr/0032-the-same-run-downloaded-twice-replaces-not-appends.md` ·
+`adr/0033-a-place-to-write-down-what-got-in-the-way.md`
 
 ## 스펙
 

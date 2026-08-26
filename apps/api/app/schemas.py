@@ -1220,3 +1220,40 @@ class GittDashboardRow(BaseModel):
 class GittDashboardOut(BaseModel):
     rows: list[GittDashboardRow] = []
     unattached: int = 0
+
+
+class FeedbackReplyOut(BaseModel):
+    id: int
+    note_id: int
+    created_at: datetime
+    created_by: str = ""
+    body: str
+
+
+class FeedbackNoteOut(BaseModel):
+    id: int
+    created_at: datetime
+    updated_at: datetime
+    created_by: str = ""
+    kind: str
+    body: str
+    resolved_at: datetime | None = None
+    resolved_by: str = ""
+    replies: list[FeedbackReplyOut] = []
+
+
+class FeedbackNoteIn(BaseModel):
+    kind: str = "issue"
+    body: str
+
+
+class FeedbackNoteUpdate(BaseModel):
+    """빈 값은 "안 건드림" 이다 — 셋 다 따로 눌린다."""
+    kind: str | None = None
+    body: str | None = None
+    #: True 면 정리됨으로 접고, False 면 다시 연다.
+    resolved: bool | None = None
+
+
+class FeedbackReplyIn(BaseModel):
+    body: str

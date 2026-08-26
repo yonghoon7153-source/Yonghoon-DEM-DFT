@@ -1033,3 +1033,34 @@ export interface Diffusion {
   usable: number
   total: number
 }
+
+
+// -- 의견 게시판 (ADR 0033) --------------------------------------------------
+
+/** `issue` 불편한 점 · `question` 궁금한 것 · `idea` 이러면 좋겠다.
+ *  셋으로 나누는 이유는 답이 다르기 때문이다: 불편은 고치고, 질문은 답하고,
+ *  아이디어는 정한다. */
+export type FeedbackKind = 'issue' | 'question' | 'idea'
+
+export interface FeedbackReply {
+  id: number
+  note_id: number
+  created_at: string
+  created_by: string
+  body: string
+}
+
+export interface FeedbackNote {
+  id: number
+  created_at: string
+  /** 항목이 마지막으로 움직인 때 — 답글이 붙은 것도 움직인 것이다.
+   *  알림 점이 이 값으로 판정한다. */
+  updated_at: string
+  created_by: string
+  kind: FeedbackKind
+  body: string
+  /** null 이면 아직 열려 있다. */
+  resolved_at: string | null
+  resolved_by: string
+  replies: FeedbackReply[]
+}
