@@ -1,6 +1,7 @@
 /** Small presentational pieces shared across pages. */
 
 import type { ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 import { basisUnit, num } from '../lib/format'
 import type { Basis, CellState, Component } from '../lib/types'
@@ -207,6 +208,51 @@ export function Alert({
       <span aria-hidden="true">{kind === 'error' ? '✕' : kind === 'warn' ? '!' : 'i'}</span>
       <span>{children}</span>
     </div>
+  )
+}
+
+/** 창(모달) — 화면 맨 위에 뜨는 것.
+ *
+ *  **`document.body` 로 옮겨 그린다 (portal).**  `position: fixed` 는 화면
+ *  기준처럼 보이지만, 조상 중에 `transform` · `filter` · `opacity < 1` 이
+ *  하나라도 있으면 그 조상이 기준이 되고 쌓임 순서도 그 안에 갇힌다.  실제로
+ *  그렇게 됐다: `.dim` 에 `opacity: 0.45` 가 들어가 있었고, 관계셀 칸이
+ *  `<td class="text dim">` 이라 창이 반투명해진 채 표 머리 아래로 깔렸다
+ *  (`z-index: 60` 이 `z-index: 1` 인 `thead th` 에 졌다).
+ *
+ *  그 규칙은 지웠지만, 창이 남의 DOM 안에 있는 한 같은 사고는 언제든 다시
+ *  난다 — 표 칸이든 카드든 나중에 누가 `transform` 하나 얹으면 그만이다.
+ *  `body` 로 올려 두면 조상이 아예 없다.
+ */
+export function Modal({
+  label,
+  className = '',
+  onClose,
+  children,
+}: {
+  /** 스크린리더가 읽을 창 이름.  표 안에서는 줄마다 달라야 한다. */
+  label: string
+  /** 창 폭 같은 것을 바꾸는 덧클래스 (`cell-picker`). */
+  className?: string
+  onClose: () => void
+  children: ReactNode
+}) {
+  return createPortal(
+    <div
+      className="modal-backdrop"
+      role="presentation"
+      onClick={(event) => {
+        // 창 안을 눌렀을 때는 닫지 않는다 -- 목록을 훑다 여백을 스치는 것이
+        // 창을 닫는 동작이 되면 고른 것을 잃는다.
+        if (event.target === event.currentTarget) onClose()
+      }}
+    >
+      <div className={className ? `modal ${className}` : 'modal'}
+           role="dialog" aria-modal="true" aria-label={label}>
+        {children}
+      </div>
+    </div>,
+    document.body,
   )
 }
 

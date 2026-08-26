@@ -21,7 +21,7 @@ import { ko } from '../lib/i18n'
 import type {
   Component, ComponentRole, CompositionPreset, PresetSettings, Sample,
 } from '../lib/types'
-import { Alert, CompositionChips, Field } from './ui'
+import { Alert, CompositionChips, Field, Modal } from './ui'
 
 const ROLE_LABELS: Record<ComponentRole, string> = {
   active: '활물질',
@@ -487,103 +487,95 @@ function PresetDialog({
   }
 
   return (
-    <div
-      className="modal-backdrop"
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
-    >
-      <div className="modal" role="dialog" aria-modal="true" aria-label="프리셋 저장">
-        <h3>프리셋 저장</h3>
+    <Modal label="프리셋 저장" onClose={onClose}>
+      <h3>프리셋 저장</h3>
 
-        {error ? <Alert kind="error">{error}</Alert> : null}
+      {error ? <Alert kind="error">{error}</Alert> : null}
 
-        <Field label="이름" hint="드롭박스에 이름과 조성 비율로 보입니다">
-          <input
-            type="text"
-            value={name}
-            autoFocus
-            aria-label="프리셋 이름"
-            placeholder="예: 건식 ASSB 80:17:3"
-            onChange={(event) => {
-              setName(event.target.value)
-              setClash(false)
-            }}
-            onKeyDown={(event) => {
-              if (event.key === 'Enter') void submit(clash)
-            }}
-          />
-        </Field>
+      <Field label="이름" hint="드롭박스에 이름과 조성 비율로 보입니다">
+        <input
+          type="text"
+          value={name}
+          autoFocus
+          aria-label="프리셋 이름"
+          placeholder="예: 건식 ASSB 80:17:3"
+          onChange={(event) => {
+            setName(event.target.value)
+            setClash(false)
+          }}
+          onKeyDown={(event) => {
+            if (event.key === 'Enter') void submit(clash)
+          }}
+        />
+      </Field>
 
-        {/* 무엇이 저장되는지 먼저 보여 준다.  프리셋 하나가 칸 다섯을 바꾸는데
-            그 목록이 보이지 않으면, 나중에 적용했을 때 어디서 온 값인지 알 수
-            없다. */}
-        <div className="preset-carry">
-          <div className="tiny dim">저장되는 값</div>
-          {blend ? <div className="mono tiny">{blend}</div> : null}
-          {carried.length ? (
-            <div className="mono tiny">{carried.join(' · ')}</div>
-          ) : null}
-          {empty ? (
-            <div className="tiny faint">
-              담을 것이 없습니다. 조성이나 지름·비용량·기준전극을 먼저 채우세요.
-            </div>
-          ) : (
-            <div className="tiny faint">질량은 셀마다 다르므로 담지 않습니다.</div>
-          )}
-        </div>
-
-        <div className="row">
-          <button
-            type="button"
-            className="primary"
-            disabled={!name.trim() || busy || empty}
-            onClick={() => submit(clash)}
-          >
-            {clash ? '덮어쓰기' : busy ? '저장 중…' : '저장'}
-          </button>
-          <button type="button" className="ghost" onClick={onClose}>
-            닫기
-          </button>
-        </div>
-
-        {presets.length ? (
-          <>
-            <div className="sep" />
-            <div className="tiny dim">저장된 프리셋 {presets.length}개</div>
-            <div className="col" style={{ gap: 0 }}>
-              {presets.map((preset) => (
-                <div key={preset.id} className="preset-row">
-                  <span className="col" style={{ gap: 1, minWidth: 0 }}>
-                    <span className="small truncate">{preset.name}</span>
-                    <span className="tiny faint mono truncate">
-                      {[preset.text, ...describeSettings(preset.settings)]
-                        .filter(Boolean)
-                        .join(' · ')}
-                    </span>
-                    {/* 목록이 공용이므로, 지우기 전에 누구 것인지 보여 준다. */}
-                    {preset.created_by ? (
-                      <span className="tiny faint">{preset.created_by}</span>
-                    ) : null}
-                  </span>
-                  <span className="spacer" />
-                  <button
-                    type="button"
-                    className="ghost sm"
-                    disabled={busy}
-                    aria-label={`"${preset.name}" 삭제`}
-                    title={`"${preset.name}" 삭제`}
-                    onClick={() => remove(preset)}
-                  >
-                    ✕
-                  </button>
-                </div>
-              ))}
-            </div>
-          </>
+      {/* 무엇이 저장되는지 먼저 보여 준다.  프리셋 하나가 칸 다섯을 바꾸는데
+          그 목록이 보이지 않으면, 나중에 적용했을 때 어디서 온 값인지 알 수
+          없다. */}
+      <div className="preset-carry">
+        <div className="tiny dim">저장되는 값</div>
+        {blend ? <div className="mono tiny">{blend}</div> : null}
+        {carried.length ? (
+          <div className="mono tiny">{carried.join(' · ')}</div>
         ) : null}
+        {empty ? (
+          <div className="tiny faint">
+            담을 것이 없습니다. 조성이나 지름·비용량·기준전극을 먼저 채우세요.
+          </div>
+        ) : (
+          <div className="tiny faint">질량은 셀마다 다르므로 담지 않습니다.</div>
+        )}
       </div>
-    </div>
+
+      <div className="row">
+        <button
+          type="button"
+          className="primary"
+          disabled={!name.trim() || busy || empty}
+          onClick={() => submit(clash)}
+        >
+          {clash ? '덮어쓰기' : busy ? '저장 중…' : '저장'}
+        </button>
+        <button type="button" className="ghost" onClick={onClose}>
+          닫기
+        </button>
+      </div>
+
+      {presets.length ? (
+        <>
+          <div className="sep" />
+          <div className="tiny dim">저장된 프리셋 {presets.length}개</div>
+          <div className="col" style={{ gap: 0 }}>
+            {presets.map((preset) => (
+              <div key={preset.id} className="preset-row">
+                <span className="col" style={{ gap: 1, minWidth: 0 }}>
+                  <span className="small truncate">{preset.name}</span>
+                  <span className="tiny faint mono truncate">
+                    {[preset.text, ...describeSettings(preset.settings)]
+                      .filter(Boolean)
+                      .join(' · ')}
+                  </span>
+                  {/* 목록이 공용이므로, 지우기 전에 누구 것인지 보여 준다. */}
+                  {preset.created_by ? (
+                    <span className="tiny faint">{preset.created_by}</span>
+                  ) : null}
+                </span>
+                <span className="spacer" />
+                <button
+                  type="button"
+                  className="ghost sm"
+                  disabled={busy}
+                  aria-label={`"${preset.name}" 삭제`}
+                  title={`"${preset.name}" 삭제`}
+                  onClick={() => remove(preset)}
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : null}
+    </Modal>
   )
 }

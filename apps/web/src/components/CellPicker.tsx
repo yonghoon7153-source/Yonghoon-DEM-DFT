@@ -13,7 +13,7 @@
 import { useEffect, useMemo, useState } from 'react'
 
 import { GroupFilterFields, groupPath, useGroupChoice } from './GroupFilter'
-import { Empty } from './ui'
+import { Empty, Modal } from './ui'
 import { dateTime } from '../lib/format'
 import type { Sample } from '../lib/types'
 
@@ -113,70 +113,61 @@ function CellPickerDialog({
   }, [samples, search, inGroup])
 
   return (
-    <div
-      className="modal-backdrop"
-      role="presentation"
-      onClick={(event) => {
-        if (event.target === event.currentTarget) onClose()
-      }}
-    >
-      <div className="modal cell-picker" role="dialog" aria-modal="true"
-           aria-label={`${title} 고르기`}>
-        <h3>{title}</h3>
+    <Modal label={`${title} 고르기`} className="cell-picker" onClose={onClose}>
+      <h3>{title}</h3>
 
-        <div className="grid cols-2" style={{ gap: 10 }}>
-          <GroupFilterFields pick={group} hint="묶음으로 좁히기" />
-        </div>
-        <input
-          type="text"
-          autoFocus
-          aria-label="셀 검색"
-          placeholder="이름 · 그룹 · 양극재로 좁히기…"
-          value={search}
-          onChange={(event) => setSearch(event.target.value)}
-        />
-
-        <div className="tiny faint">
-          {rows.length}개 · 최근에 고친 순서
-        </div>
-
-        <div className="cell-list">
-          <button
-            type="button"
-            className={`cell-row${value === null ? ' on' : ''}`}
-            onClick={() => onPick(null)}
-          >
-            <span className="faint">{emptyLabel}</span>
-          </button>
-          {rows.map((sample) => (
-            <button
-              key={sample.id}
-              type="button"
-              className={`cell-row${value === sample.id ? ' on' : ''}`}
-              onClick={() => onPick(sample.id)}
-            >
-              <span className="name truncate">{sample.name}</span>
-              <span className="tiny faint truncate">
-                {[groupPath(sample.group_name, sample.group_parent_name),
-                  sample.cathode_detail || sample.cathode_type,
-                  sample.run_count ? `파일 ${sample.run_count}개` : null]
-                  .filter(Boolean).join(' · ') || '조건 미입력'}
-              </span>
-              <span className="tiny faint when">{dateTime(sample.updated_at)}</span>
-            </button>
-          ))}
-          {!rows.length ? (
-            <Empty title="조건에 맞는 셀이 없습니다">
-              그룹을 넓히거나 검색어를 지워 보세요.
-            </Empty>
-          ) : null}
-        </div>
-
-        <div className="row">
-          <span className="spacer" />
-          <button type="button" className="ghost sm" onClick={onClose}>닫기</button>
-        </div>
+      <div className="grid cols-2" style={{ gap: 10 }}>
+        <GroupFilterFields pick={group} hint="묶음으로 좁히기" />
       </div>
-    </div>
+      <input
+        type="text"
+        autoFocus
+        aria-label="셀 검색"
+        placeholder="이름 · 그룹 · 양극재로 좁히기…"
+        value={search}
+        onChange={(event) => setSearch(event.target.value)}
+      />
+
+      <div className="tiny faint">
+        {rows.length}개 · 최근에 고친 순서
+      </div>
+
+      <div className="cell-list">
+        <button
+          type="button"
+          className={`cell-row${value === null ? ' on' : ''}`}
+          onClick={() => onPick(null)}
+        >
+          <span className="faint">{emptyLabel}</span>
+        </button>
+        {rows.map((sample) => (
+          <button
+            key={sample.id}
+            type="button"
+            className={`cell-row${value === sample.id ? ' on' : ''}`}
+            onClick={() => onPick(sample.id)}
+          >
+            <span className="name truncate">{sample.name}</span>
+            <span className="tiny faint truncate">
+              {[groupPath(sample.group_name, sample.group_parent_name),
+                sample.cathode_detail || sample.cathode_type,
+                sample.run_count ? `파일 ${sample.run_count}개` : null]
+                .filter(Boolean).join(' · ') || '조건 미입력'}
+            </span>
+            <span className="tiny faint when">{dateTime(sample.updated_at)}</span>
+          </button>
+        ))}
+        {!rows.length ? (
+          <Empty title="조건에 맞는 셀이 없습니다">
+            그룹을 넓히거나 검색어를 지워 보세요.
+          </Empty>
+        ) : null}
+      </div>
+
+      <div className="row">
+        <span className="spacer" />
+        <button type="button" className="ghost sm" onClick={onClose}>닫기</button>
+      </div>
+    </Modal>
   )
 }

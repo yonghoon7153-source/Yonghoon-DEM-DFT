@@ -9,6 +9,7 @@
 
 import { useEffect, useRef, useState } from 'react'
 
+import { Modal } from './ui'
 import { MAX_NAME, readName, writeName } from '../lib/who'
 
 export function WhoAmI() {
@@ -43,43 +44,35 @@ export function WhoAmI() {
       </button>
 
       {open ? (
-        <div
-          className="modal-backdrop"
-          role="presentation"
-          onClick={(event) => {
-            if (event.target === event.currentTarget) setOpen(false)
-          }}
-        >
-          <div className="modal" role="dialog" aria-modal="true" aria-label="이름">
-            <h3>이름을 적어 주세요</h3>
-            <p className="small dim" style={{ margin: 0 }}>
-              올린 파일과 고친 값에 이 이름이 붙습니다. 이 브라우저에만 저장되고,
-              비밀번호는 없습니다.
-            </p>
-            <input
-              ref={field}
-              type="text"
-              value={draft}
-              maxLength={MAX_NAME}
-              aria-label="이름"
-              placeholder="예: 안용훈"
-              onChange={(event) => setDraft(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === 'Enter') commit()
-                if (event.key === 'Escape') setOpen(false)
-              }}
-            />
-            <div className="row">
-              <button type="button" className="primary" onClick={commit}>
-                저장
-              </button>
-              {/* 이름 없이도 다 된다.  적기 싫은 사람을 붙잡아 두지 않는다. */}
-              <button type="button" className="ghost" onClick={() => setOpen(false)}>
-                나중에
-              </button>
-            </div>
+        <Modal label="이름" onClose={() => setOpen(false)}>
+          <h3>이름을 적어 주세요</h3>
+          <p className="small dim" style={{ margin: 0 }}>
+            올린 파일과 고친 값에 이 이름이 붙습니다. 이 브라우저에만 저장되고,
+            비밀번호는 없습니다.
+          </p>
+          <input
+            ref={field}
+            type="text"
+            value={draft}
+            maxLength={MAX_NAME}
+            aria-label="이름"
+            placeholder="예: 안용훈"
+            onChange={(event) => setDraft(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter') commit()
+              if (event.key === 'Escape') setOpen(false)
+            }}
+          />
+          <div className="row">
+            <button type="button" className="primary" onClick={commit}>
+              저장
+            </button>
+            {/* 이름 없이도 다 된다.  적기 싫은 사람을 붙잡아 두지 않는다. */}
+            <button type="button" className="ghost" onClick={() => setOpen(false)}>
+              나중에
+            </button>
           </div>
-        </div>
+        </Modal>
       ) : null}
     </>
   )
