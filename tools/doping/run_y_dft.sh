@@ -18,8 +18,9 @@
 #
 # 사용:
 #   nohup bash tools/doping/run_y_dft.sh > /data/work/runs/y_dft/run.log 2>&1 &
-#   NP=1 OMP_NUM_THREADS=8 PWX=~/apps/qe-7.4.1-gpu/bin/pw.x \
-#       bash tools/doping/run_y_dft.sh                    # GPU 빌드
+#   source ~/neb_env.sh                                  # GPU 빌드 (kgy)
+#   MPIRUN=$HPCX/bin/mpirun NP=1 PWX=~/apps/qe-7.4.1-gpu/bin/pw.x \
+#       bash tools/doping/run_y_dft.sh
 set -u
 set +H
 
@@ -99,10 +100,19 @@ export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
 # ⛔ **mpirun 을 무조건 쓰면 안 된다.** QE 가 serial 빌드면 mpirun -np N 이
 #   같은 계산을 N 번 통째로 돌리며 같은 파일에 동시에 쓴다 — 조용히 깨지거나
 #   즉시 죽는다. 빌드가 MPI 를 쓰는지 **확인하고** 정한다 (2026-08-26 kgy 실측).
+# ★ MPIRUN 을 명시하면 **그것을 쓴다** (NP=1 이어도). GPU 빌드는 보통 자기
+#   MPI 로 띄워야 런타임이 제대로 잡힌다 — kgy 의 성공 레시피가 그렇다:
+#     source ~/neb_env.sh && $HPCX/bin/mpirun -np 1 .../qe-7.4.1-gpu/bin/neb.x
+#   시스템 openmpi 로 띄우면 시스템 libgomp 가 libnvomp 를 이겨 'libgomp: TODO' 가 난다.
 HAS_MPI=0
 if command -v ldd >/dev/null && ldd "$(command -v "$PWX")" 2>/dev/null \
    | grep -qiE "libmpi|libmpich|libopenmpi"; then HAS_MPI=1; fi
-if [ "$HAS_MPI" = "1" ] && command -v mpirun >/dev/null && [ "$NP" -gt 1 ]; then
+if [ -n "${MPIRUN:-}" ]; then
+  command -v "$MPIRUN" >/dev/null || [ -x "$MPIRUN" ] || {
+    echo "⛔ MPIRUN=$MPIRUN 이 실행 가능하지 않다"; exit 1; }
+  LAUNCH="$MPIRUN -np $NP"
+  MPIKIND="지정 런처 · $MPIRUN -np $NP"
+elif [ "$HAS_MPI" = "1" ] && command -v mpirun >/dev/null && [ "$NP" -gt 1 ]; then
   # ⛔ OpenMPI 는 **물리 코어**로 슬롯을 센다. nproc(논리 코어, HT 포함)로 -np 를
   #   잡으면 "not enough slots" 로 즉시 죽는다 — kgy 실측(nproc 16, 물리 8, -np 12 실패).
   PHYS=$(lscpu 2>/dev/null | awk -F: '/^Core\(s\) per socket/{c=$2}
