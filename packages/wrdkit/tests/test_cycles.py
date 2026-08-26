@@ -246,3 +246,78 @@ def test_an_unknown_step_index_falls_back_to_the_direction():
     schedule = _plan()
     wrd = _FakeWrd(_rows(99, 4.3, 0.002), schedule)
     assert _ends_mid_step(wrd, 1) is True
+
+
+def _row(*, total_step, cell_status, charge_q, discharge_q, index):
+    """One packed row at a fixed 20 s cadence — the file that found this bug.
+
+    `charge_q`/`discharge_q` are given in **mAh** for readability; the column
+    itself is Ah when `UnitCoulomb` is false, which is what the writer wants.
+    """
+    from synthetic import Sample
+    tick = index * 20 * 10_000_000
+    return Sample(
+        date_ticks=tick, test_ticks=tick, step_ticks=tick, cycle_ticks=tick,
+        step_index=total_step, total_step=total_step, cycle_index=1,
+        cell_status=cell_status, i_range="1mA",
+        voltage=3.6 if cell_status == 3 else 3.4,
+        current=0.001 if cell_status == 3 else -0.001,
+        charge_q=charge_q / 1000.0, discharge_q=discharge_q / 1000.0,
+    )
+
+
+def test_a_step_keeps_the_charge_that_flowed_before_its_first_sample():
+    """스텝 경계는 샘플 **사이**에 떨어진다 — 그 사이의 전하도 이 스텝 것이다.
+
+    실측 (`cell16_… 0.5C_200cyc`, 20 s 샘플링): 방전 스텝의 첫 행이 이미
+    0.001~0.005 mAh 를 들고 있다.  스텝이 시작되고 첫 샘플이 찍히기까지 이미
+    14 초쯤 흘렀기 때문이다.  그것을 빼면 방전 용량이 **0.1~0.26 % 낮게** 나오고,
+    200 사이클 내내 그랬다 (평균 0.18 %).
+
+    계측기 자신의 엑셀은 그 전하를 담는다.  레지스터의 마지막 값이 그 표와
+    5e-6 mAh 안에서 일치했다.
+    """
+    from synthetic import build_wrd
+
+    # (총스텝, 상태, CHARGE Q, DISCHARGE Q) — mAh
+    spec = [
+        # 충전 스텝: 레지스터가 0 에서 시작해 5.0 까지.  첫 행이 이미 0.02 다.
+        (1, 3, 0.02, 0.0), (1, 3, 2.0, 0.0), (1, 3, 5.0, 0.0),
+        # 휴지: CHARGE Q 는 **값을 붙들고 있다** (0 으로 안 돌아간다).
+        (2, 1, 5.0, 0.0),
+        # 방전 스텝: DISCHARGE Q 가 0 에서 시작하지만 첫 행이 이미 0.03 이다.
+        (3, 4, 5.0, 0.03), (3, 4, 5.0, 2.0), (3, 4, 5.0, 4.8),
+    ]
+    rows = [_row(total_step=t, cell_status=st, charge_q=c, discharge_q=d, index=i)
+            for i, (t, st, c, d) in enumerate(spec)]
+
+    steps = segment_steps(read_wrd_bytes(build_wrd(rows)))
+    charge = next(s for s in steps if s.mode == "charge")
+    discharge = next(s for s in steps if s.mode == "discharge")
+
+    # 첫 행의 0.03 을 빼면 4.77 이 된다.  그것이 이 버그였다.
+    assert discharge.capacity_mah == pytest.approx(4.8)
+    assert charge.capacity_mah == pytest.approx(5.0)
+
+
+def test_a_step_that_continues_the_one_before_it_still_takes_the_difference():
+    """이어지는 스텝(CC 다음의 CV)은 **차분**이어야 한다 — 옛 동작을 지킨다.
+
+    레지스터가 이 스텝에서 다시 시작했는지는 첫 행이 앞 행보다 **낮은가**로
+    가른다.  낮으면 다시 시작한 것이라 마지막 값이 통째로 이 스텝의 것이고,
+    같거나 높으면 앞 스텝을 이어받은 것이라 그만큼 뺀다.
+    """
+    from synthetic import build_wrd
+
+    spec = [
+        (1, 3, 0.02), (1, 3, 3.0),             # CC 다리
+        (2, 3, 3.4), (2, 3, 4.0),              # CV 다리 — 3.0 을 이어받는다
+    ]
+    rows = [_row(total_step=t, cell_status=st, charge_q=c, discharge_q=0.0, index=i)
+            for i, (t, st, c) in enumerate(spec)]
+
+    steps = segment_steps(read_wrd_bytes(build_wrd(rows)))
+    cc, cv = [s for s in steps if s.mode == "charge"][:2]
+    assert cc.capacity_mah == pytest.approx(3.0)
+    # 4.0 - 3.0.  여기서 4.0 을 통째로 담으면 사이클 용량이 두 배 가까이 된다.
+    assert cv.capacity_mah == pytest.approx(1.0)

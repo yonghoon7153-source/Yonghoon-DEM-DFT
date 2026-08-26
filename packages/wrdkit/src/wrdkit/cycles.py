@@ -169,15 +169,49 @@ def segment_steps(wrd: WrdFile) -> list[StepSegment]:
     step_index = data["step_index"]
     cycle_index = data["cycle_index"]
 
+    def _gained(column: np.ndarray, start: int, stop: int) -> float:
+        """How much this step added to a running total.
+
+        **The baseline is zero when the register restarted at this step.**
+        That one decision is worth 0.2 % of every discharge capacity.
+
+        These columns are running totals that reset to zero when a branch
+        begins, count up through it, then *hold* their final value until the
+        next reset.  Two consequences, and the old code tripped on the first:
+
+        1.  By the time the step's first sample is written the register has
+            already been counting -- the step boundary falls between samples,
+            not on one.  On a 20 s file the first discharge row already reads
+            0.001-0.005 mAh, 0.1-0.26 % of the cycle.  Subtracting it threw
+            that charge away.  The instrument's own export keeps it: the
+            register's final value agrees with it to 5e-6 mAh over 200 cycles,
+            and so does a coulomb count of the current.
+        2.  The previous row is not a baseline either.  `CHARGE Q` holds the
+            *previous* cycle's total all through the rest and the discharge,
+            so subtracting it would make the charge come out negative.
+
+        So detect the reset instead of assuming one: a first sample **below**
+        the previous row means the register restarted here, and the whole final
+        value belongs to this step.  A first sample at or above it means this
+        step continues the one before (a CC leg followed by a CV leg), and the
+        difference is what this step added -- which is what the old code got
+        right and what must not regress.
+        """
+        if start == 0:
+            return float(column[stop - 1])
+        previous = float(column[start - 1])
+        restarted = float(column[start]) < previous
+        return float(column[stop - 1]) - (0.0 if restarted else previous)
+
     segments: list[StepSegment] = []
     for start, stop in _runs(total_step):
         mode = _mode_of(cell_status[start:stop], current[start:stop])
         if mode == "charge":
-            capacity = float(charge[stop - 1] - charge[start])
-            energy = float(charge_e[stop - 1] - charge_e[start])
+            capacity = _gained(charge, start, stop)
+            energy = _gained(charge_e, start, stop)
         elif mode == "discharge":
-            capacity = float(discharge[stop - 1] - discharge[start])
-            energy = float(discharge_e[stop - 1] - discharge_e[start])
+            capacity = _gained(discharge, start, stop)
+            energy = _gained(discharge_e, start, stop)
         else:
             capacity = energy = 0.0
         window = voltage[start:stop]
