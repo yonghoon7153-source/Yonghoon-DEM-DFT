@@ -232,8 +232,12 @@ def normal_axis(atoms, bin_w=1.0):
     return best["axis"], diag
 
 
-def slab_origin_shift(atoms, axis, bin_w=1.0):
-    """골격의 가장 넓은 빈틈(=물/진공층) 중앙이 셀 경계에 오도록 원점을 옮긴다.
+def slab_origin_shift(atoms, axis, bin_w=1.0, frac=0.15):
+    """골격의 가장 넓은 **저밀도 구간**(=물/진공층) 중앙이 셀 경계에 오도록 원점을 옮긴다.
+
+    ⚠ '정확히 0' 이 아니라 '플래토의 frac 미만' 으로 판정한다. 침출된 Li/S/Cl 이 물층에
+    흩어져 있으면 완전히 빈 빈이 거의 없어서 0-런 규칙이 3 Å 짜리 가짜 빈틈을 잡는다
+    (실제 겪음 — LPSC-H2O 에서 15 Å 물층을 3 Å 로 잘못 봤다).
 
     반환 (shift, gap_width). 옮긴 뒤 (z - shift) % L 로 쓰면 슬랩이 이어진다.
     """
@@ -243,7 +247,8 @@ def slab_origin_shift(atoms, axis, bin_w=1.0):
     fw = np.isin(sym, FRAMEWORK)
     nb = max(int(round(L / bin_w)), 8)
     h, edges = np.histogram(pos[fw, axis], bins=nb, range=(0, L))
-    empty = (h == 0).astype(int)
+    plateau = float(np.median(h[h > 0])) if (h > 0).any() else 0.0
+    empty = (h < frac * plateau).astype(int)
     if empty.sum() == 0:
         return 0.0, 0.0
     # 원형 배열에서 가장 긴 0-런

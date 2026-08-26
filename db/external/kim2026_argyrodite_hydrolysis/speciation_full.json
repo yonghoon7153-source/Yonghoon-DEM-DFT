@@ -23,35 +23,35 @@
     },
     "H_over_O": 2.0,
     "cutoffs": {
-      "P-S": 2.23,
+      "P-S": 2.29,
       "P-O": 2.1,
-      "H-O": 1.11,
-      "H-S": 1.51,
+      "H-O": 1.27,
+      "H-S": 1.47,
       "H-Cl": 1.7,
       "O-O": 1.8,
-      "Li-S": 2.99,
-      "Li-O": 2.45,
+      "Li-S": 3.25,
+      "Li-O": 2.89,
       "H-H": 0.9,
       "S-S": 2.4
     },
     "cutoff_rows": [
       {
         "pair": "P-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 3.5,
         "n_pairs_in_search_range": 576,
         "r_peak": 2.07,
         "g_peak": 41.39,
         "g_min": 0.0,
-        "cutoff_used": 2.23,
-        "valley_lo": 2.23,
-        "valley_hi": 3.49,
-        "valley_width": 1.26,
+        "cutoff_used": 2.29,
+        "valley_lo": 2.29,
+        "valley_hi": 3.87,
+        "valley_width": 1.58,
         "note": "",
-        "CN_total_at_lo": 574,
+        "CN_total_at_lo": 576,
         "CN_total_at_mid": 576,
         "CN_total_at_hi": 576,
-        "cut_invariant": "NO"
+        "cut_invariant": "YES"
       },
       {
         "pair": "P-O",
@@ -73,34 +73,34 @@
       },
       {
         "pair": "H-O",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 1.6,
         "n_pairs_in_search_range": 608,
         "r_peak": 0.99,
         "g_peak": 134.09,
         "g_min": 0.337,
-        "cutoff_used": 1.11,
-        "valley_lo": 1.11,
-        "valley_hi": 1.59,
-        "valley_width": 0.48,
+        "cutoff_used": 1.27,
+        "valley_lo": 1.27,
+        "valley_hi": 1.27,
+        "valley_width": 0.0,
         "note": "",
-        "CN_total_at_lo": 574,
-        "CN_total_at_mid": 586,
-        "CN_total_at_hi": 608,
-        "cut_invariant": "NO"
+        "CN_total_at_lo": "",
+        "CN_total_at_mid": "",
+        "CN_total_at_hi": "",
+        "cut_invariant": ""
       },
       {
         "pair": "H-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 1.9,
         "n_pairs_in_search_range": 19,
         "r_peak": 1.37,
         "g_peak": 0.82,
         "g_min": 0.0,
-        "cutoff_used": 1.51,
-        "valley_lo": 1.51,
-        "valley_hi": 1.83,
-        "valley_width": 0.32,
+        "cutoff_used": 1.47,
+        "valley_lo": 1.47,
+        "valley_hi": 1.85,
+        "valley_width": 0.38,
         "note": "",
         "CN_total_at_lo": 17,
         "CN_total_at_mid": 17,
@@ -145,39 +145,39 @@
       },
       {
         "pair": "Li-S",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 4.2,
         "n_pairs_in_search_range": 4417,
         "r_peak": 2.41,
         "g_peak": 6.72,
         "g_min": 0.487,
-        "cutoff_used": 2.99,
-        "valley_lo": 2.99,
-        "valley_hi": 3.57,
-        "valley_width": 0.58,
+        "cutoff_used": 3.25,
+        "valley_lo": 3.01,
+        "valley_hi": 3.53,
+        "valley_width": 0.52,
         "note": "",
-        "CN_total_at_lo": 2379,
-        "CN_total_at_mid": 2587,
-        "CN_total_at_hi": 2868,
+        "CN_total_at_lo": 2391,
+        "CN_total_at_mid": 2581,
+        "CN_total_at_hi": 2812,
         "cut_invariant": "NO"
       },
       {
         "pair": "Li-O",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 3.6,
         "n_pairs_in_search_range": 400,
         "r_peak": 1.91,
         "g_peak": 4.68,
         "g_min": 0.022,
-        "cutoff_used": 2.45,
-        "valley_lo": 2.45,
-        "valley_hi": 3.29,
-        "valley_width": 0.84,
+        "cutoff_used": 2.89,
+        "valley_lo": 2.89,
+        "valley_hi": 2.91,
+        "valley_width": 0.02,
         "note": "",
-        "CN_total_at_lo": 307,
+        "CN_total_at_lo": 321,
         "CN_total_at_mid": 321,
-        "CN_total_at_hi": 341,
-        "cut_invariant": "NO"
+        "CN_total_at_hi": 321,
+        "cut_invariant": "YES"
       },
       {
         "pair": "H-H",
@@ -220,34 +220,32 @@
       "P": {
         "n_centres": 144,
         "CN_S_dist": {
-          "3": 2,
-          "4": 142
+          "4": 144
         },
         "CN_O_dist": {
           "0": 144
         },
         "joint_S_O": {
-          "3S0O": 2,
-          "4S0O": 142
+          "4S0O": 144
         },
-        "mean_CN_S": 3.986111111111111,
+        "mean_CN_S": 4.0,
         "mean_CN_O": 0.0,
-        "n_intact_MX4": 142,
-        "n_pure_MS4": 142,
+        "n_intact_MX4": 144,
+        "n_pure_MS4": 144,
         "n_with_O": 0
       }
     },
     "sulfur": {
       "n_S": 720,
-      "n_S_in_MS4": 574,
-      "n_S_free": 146,
+      "n_S_in_MS4": 576,
+      "n_S_free": 144,
       "free_S_H_dist": {
-        "0": 129,
+        "0": 127,
         "1": 17
       },
       "n_H2S": 0,
       "n_SH_minus": 17,
-      "n_S2minus_bare": 129,
+      "n_S2minus_bare": 127,
       "n_framework_S_with_H": 0,
       "n_SH_bonds_total": 17,
       "n_SS_bonds": 0,
@@ -287,11 +285,11 @@
     "oxygen": {
       "n_O": 299,
       "O_H_dist": {
-        "1": 24,
-        "2": 275
+        "1": 16,
+        "2": 283
       },
-      "n_H2O": 275,
-      "n_OH": 24,
+      "n_H2O": 283,
+      "n_OH": 16,
       "n_H3O": 0,
       "n_bare_O": 0,
       "n_O_bonded_to_P": 0,
@@ -341,9 +339,8 @@
     "hydrogen": {
       "n_H": 598,
       "class_cutoff": {
-        "H-O": 574,
-        "H-S": 17,
-        "unbound": 7
+        "H-O": 581,
+        "H-S": 17
       },
       "nearest_heavy_element": {
         "O": 581,
@@ -352,36 +349,7 @@
       "n_H_S_bonds": 17,
       "n_H2_molecules": 0,
       "n_H_Cl_contacts": 0,
-      "unbound_nearest": [
-        {
-          "element": "O",
-          "d": 1.152
-        },
-        {
-          "element": "O",
-          "d": 1.123
-        },
-        {
-          "element": "O",
-          "d": 1.176
-        },
-        {
-          "element": "O",
-          "d": 1.205
-        },
-        {
-          "element": "O",
-          "d": 1.176
-        },
-        {
-          "element": "O",
-          "d": 1.156
-        },
-        {
-          "element": "O",
-          "d": 1.147
-        }
-      ]
+      "unbound_nearest": []
     },
     "zprofile": {
       "axis": 2,
@@ -418,7 +386,7 @@
       "max_H_penetration_depth": 4.747602038050012,
       "max_H_S_penetration_depth": 3.2775329904299966,
       "mean_H_S_depth": -2.652699300764117,
-      "mean_H_O_depth": -4.899645661514326,
+      "mean_H_O_depth": -4.885261500324876,
       "n_framework_in_fluid": {
         "Li": 67,
         "S": 16,
@@ -451,35 +419,35 @@
     },
     "H_over_O": 2.0066889632107023,
     "cutoffs": {
-      "P-S": 2.23,
+      "P-S": 2.33,
       "P-O": 2.1,
-      "H-O": 1.11,
+      "H-O": 1.25,
       "H-S": 1.51,
       "H-Cl": 1.7,
       "O-O": 1.8,
-      "Li-S": 3.07,
-      "Li-O": 2.35,
+      "Li-S": 3.15,
+      "Li-O": 2.77,
       "H-H": 0.9,
       "S-S": 2.4
     },
     "cutoff_rows": [
       {
         "pair": "P-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 3.5,
         "n_pairs_in_search_range": 575,
         "r_peak": 2.05,
         "g_peak": 42.27,
         "g_min": 0.0,
-        "cutoff_used": 2.23,
-        "valley_lo": 2.23,
-        "valley_hi": 3.49,
-        "valley_width": 1.26,
+        "cutoff_used": 2.33,
+        "valley_lo": 2.33,
+        "valley_hi": 3.93,
+        "valley_width": 1.6,
         "note": "",
-        "CN_total_at_lo": 572,
+        "CN_total_at_lo": 575,
         "CN_total_at_mid": 575,
         "CN_total_at_hi": 575,
-        "cut_invariant": "NO"
+        "cut_invariant": "YES"
       },
       {
         "pair": "P-O",
@@ -501,25 +469,25 @@
       },
       {
         "pair": "H-O",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 1.6,
         "n_pairs_in_search_range": 602,
         "r_peak": 0.99,
         "g_peak": 130.72,
         "g_min": 0.832,
-        "cutoff_used": 1.11,
-        "valley_lo": 1.11,
-        "valley_hi": 1.59,
-        "valley_width": 0.48,
+        "cutoff_used": 1.25,
+        "valley_lo": 1.23,
+        "valley_hi": 1.29,
+        "valley_width": 0.06,
         "note": "",
-        "CN_total_at_lo": 555,
-        "CN_total_at_mid": 577,
-        "CN_total_at_hi": 602,
+        "CN_total_at_lo": 569,
+        "CN_total_at_mid": 571,
+        "CN_total_at_hi": 572,
         "cut_invariant": "NO"
       },
       {
         "pair": "H-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 1.9,
         "n_pairs_in_search_range": 35,
         "r_peak": 1.37,
@@ -573,39 +541,39 @@
       },
       {
         "pair": "Li-S",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 4.2,
         "n_pairs_in_search_range": 4279,
         "r_peak": 2.47,
         "g_peak": 6.46,
         "g_min": 0.433,
-        "cutoff_used": 3.07,
-        "valley_lo": 3.07,
-        "valley_hi": 3.57,
-        "valley_width": 0.5,
+        "cutoff_used": 3.15,
+        "valley_lo": 3.09,
+        "valley_hi": 3.53,
+        "valley_width": 0.44,
         "note": "",
-        "CN_total_at_lo": 2429,
-        "CN_total_at_mid": 2605,
-        "CN_total_at_hi": 2824,
+        "CN_total_at_lo": 2446,
+        "CN_total_at_mid": 2594,
+        "CN_total_at_hi": 2778,
         "cut_invariant": "NO"
       },
       {
         "pair": "Li-O",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 3.6,
         "n_pairs_in_search_range": 457,
         "r_peak": 1.91,
         "g_peak": 5.98,
         "g_min": 0.024,
-        "cutoff_used": 2.35,
-        "valley_lo": 2.35,
-        "valley_hi": 3.51,
-        "valley_width": 1.16,
+        "cutoff_used": 2.77,
+        "valley_lo": 2.77,
+        "valley_hi": 2.77,
+        "valley_width": 0.0,
         "note": "",
-        "CN_total_at_lo": 345,
-        "CN_total_at_mid": 364,
-        "CN_total_at_hi": 436,
-        "cut_invariant": "NO"
+        "CN_total_at_lo": "",
+        "CN_total_at_mid": "",
+        "CN_total_at_hi": "",
+        "cut_invariant": ""
       },
       {
         "pair": "H-H",
@@ -648,36 +616,36 @@
       "P": {
         "n_centres": 144,
         "CN_S_dist": {
-          "3": 4,
-          "4": 140
+          "3": 1,
+          "4": 143
         },
         "CN_O_dist": {
           "0": 144
         },
         "joint_S_O": {
-          "3S0O": 4,
-          "4S0O": 140
+          "3S0O": 1,
+          "4S0O": 143
         },
-        "mean_CN_S": 3.9722222222222223,
+        "mean_CN_S": 3.9930555555555554,
         "mean_CN_O": 0.0,
-        "n_intact_MX4": 140,
-        "n_pure_MS4": 140,
+        "n_intact_MX4": 143,
+        "n_pure_MS4": 143,
         "n_with_O": 0
       }
     },
     "sulfur": {
       "n_S": 720,
-      "n_S_in_MS4": 572,
-      "n_S_free": 148,
+      "n_S_in_MS4": 575,
+      "n_S_free": 145,
       "free_S_H_dist": {
-        "0": 120,
-        "1": 26,
+        "0": 118,
+        "1": 25,
         "2": 2
       },
       "n_H2S": 2,
-      "n_SH_minus": 26,
-      "n_S2minus_bare": 120,
-      "n_framework_S_with_H": 0,
+      "n_SH_minus": 25,
+      "n_S2minus_bare": 118,
+      "n_framework_S_with_H": 1,
       "n_SH_bonds_total": 30,
       "n_SS_bonds": 0,
       "cutoff_sensitivity": [
@@ -716,11 +684,11 @@
     "oxygen": {
       "n_O": 299,
       "O_H_dist": {
-        "1": 43,
-        "2": 256
+        "1": 27,
+        "2": 272
       },
-      "n_H2O": 256,
-      "n_OH": 43,
+      "n_H2O": 272,
+      "n_OH": 27,
       "n_H3O": 0,
       "n_bare_O": 0,
       "n_O_bonded_to_P": 0,
@@ -770,10 +738,9 @@
     "hydrogen": {
       "n_H": 600,
       "class_cutoff": {
-        "H-O": 555,
+        "H-O": 568,
         "H-S": 30,
-        "H2": 2,
-        "unbound": 13
+        "H2": 2
       },
       "nearest_heavy_element": {
         "O": 570,
@@ -782,60 +749,7 @@
       "n_H_S_bonds": 30,
       "n_H2_molecules": 1,
       "n_H_Cl_contacts": 0,
-      "unbound_nearest": [
-        {
-          "element": "O",
-          "d": 1.159
-        },
-        {
-          "element": "O",
-          "d": 1.112
-        },
-        {
-          "element": "O",
-          "d": 1.133
-        },
-        {
-          "element": "O",
-          "d": 1.139
-        },
-        {
-          "element": "O",
-          "d": 1.137
-        },
-        {
-          "element": "O",
-          "d": 1.141
-        },
-        {
-          "element": "O",
-          "d": 1.161
-        },
-        {
-          "element": "O",
-          "d": 1.171
-        },
-        {
-          "element": "O",
-          "d": 1.196
-        },
-        {
-          "element": "O",
-          "d": 1.164
-        },
-        {
-          "element": "O",
-          "d": 1.131
-        },
-        {
-          "element": "O",
-          "d": 1.182
-        },
-        {
-          "element": "O",
-          "d": 1.128
-        }
-      ]
+      "unbound_nearest": []
     },
     "zprofile": {
       "axis": 2,
@@ -872,7 +786,7 @@
       "max_H_penetration_depth": 9.802877722700003,
       "max_H_S_penetration_depth": 9.802877722700003,
       "mean_H_S_depth": -0.5383268370989991,
-      "mean_H_O_depth": -3.3636486142723867,
+      "mean_H_O_depth": -3.32953758811543,
       "n_framework_in_fluid": {
         "Li": 52,
         "S": 23,
@@ -906,37 +820,37 @@
     },
     "H_over_O": 2.0066889632107023,
     "cutoffs": {
-      "P-S": 2.23,
+      "P-S": 2.25,
       "P-O": 2.1,
-      "Sn-S": 2.63,
+      "Sn-S": 2.67,
       "Sn-O": 2.5,
-      "H-O": 1.11,
-      "H-S": 1.51,
+      "H-O": 1.31,
+      "H-S": 1.47,
       "H-Cl": 1.97,
       "O-O": 1.8,
-      "Li-S": 2.93,
-      "Li-O": 2.45,
+      "Li-S": 3.17,
+      "Li-O": 2.65,
       "H-H": 0.9,
       "S-S": 2.4
     },
     "cutoff_rows": [
       {
         "pair": "P-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 3.5,
         "n_pairs_in_search_range": 432,
         "r_peak": 2.07,
         "g_peak": 37.99,
         "g_min": 0.0,
-        "cutoff_used": 2.23,
-        "valley_lo": 2.23,
-        "valley_hi": 3.49,
-        "valley_width": 1.26,
+        "cutoff_used": 2.25,
+        "valley_lo": 2.25,
+        "valley_hi": 3.17,
+        "valley_width": 0.92,
         "note": "",
-        "CN_total_at_lo": 430,
+        "CN_total_at_lo": 431,
         "CN_total_at_mid": 431,
-        "CN_total_at_hi": 432,
-        "cut_invariant": "NO"
+        "CN_total_at_hi": 431,
+        "cut_invariant": "YES"
       },
       {
         "pair": "P-O",
@@ -958,21 +872,21 @@
       },
       {
         "pair": "Sn-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 3.5,
         "n_pairs_in_search_range": 143,
         "r_peak": 2.41,
         "g_peak": 21.55,
         "g_min": 0.0,
-        "cutoff_used": 2.63,
-        "valley_lo": 2.63,
-        "valley_hi": 3.49,
-        "valley_width": 0.86,
+        "cutoff_used": 2.67,
+        "valley_lo": 2.67,
+        "valley_hi": 3.69,
+        "valley_width": 1.02,
         "note": "",
-        "CN_total_at_lo": 142,
+        "CN_total_at_lo": 143,
         "CN_total_at_mid": 143,
         "CN_total_at_hi": 143,
-        "cut_invariant": "NO"
+        "cut_invariant": "YES"
       },
       {
         "pair": "Sn-O",
@@ -994,34 +908,34 @@
       },
       {
         "pair": "H-O",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 1.6,
         "n_pairs_in_search_range": 608,
         "r_peak": 0.99,
         "g_peak": 137.42,
         "g_min": 0.306,
-        "cutoff_used": 1.11,
-        "valley_lo": 1.11,
-        "valley_hi": 1.59,
-        "valley_width": 0.48,
+        "cutoff_used": 1.31,
+        "valley_lo": 1.29,
+        "valley_hi": 1.31,
+        "valley_width": 0.02,
         "note": "",
-        "CN_total_at_lo": 566,
-        "CN_total_at_mid": 586,
-        "CN_total_at_hi": 607,
-        "cut_invariant": "NO"
+        "CN_total_at_lo": 585,
+        "CN_total_at_mid": 585,
+        "CN_total_at_hi": 585,
+        "cut_invariant": "YES"
       },
       {
         "pair": "H-S",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 1.9,
         "n_pairs_in_search_range": 23,
         "r_peak": 1.35,
         "g_peak": 0.96,
         "g_min": 0.0,
-        "cutoff_used": 1.51,
-        "valley_lo": 1.51,
+        "cutoff_used": 1.47,
+        "valley_lo": 1.47,
         "valley_hi": 1.73,
-        "valley_width": 0.22,
+        "valley_width": 0.26,
         "note": "",
         "CN_total_at_lo": 19,
         "CN_total_at_mid": 19,
@@ -1030,7 +944,7 @@
       },
       {
         "pair": "H-Cl",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 2.0,
         "n_pairs_in_search_range": 5,
         "r_peak": 1.93,
@@ -1066,39 +980,39 @@
       },
       {
         "pair": "Li-S",
-        "source": "rdf_first_min",
+        "source": "smoothed_argmin",
         "search_rmax": 4.2,
         "n_pairs_in_search_range": 4480,
         "r_peak": 2.43,
         "g_peak": 6.77,
         "g_min": 0.441,
-        "cutoff_used": 2.93,
-        "valley_lo": 2.93,
-        "valley_hi": 3.71,
-        "valley_width": 0.78,
+        "cutoff_used": 3.17,
+        "valley_lo": 2.97,
+        "valley_hi": 3.53,
+        "valley_width": 0.56,
         "note": "",
-        "CN_total_at_lo": 2462,
-        "CN_total_at_mid": 2743,
-        "CN_total_at_hi": 3147,
+        "CN_total_at_lo": 2494,
+        "CN_total_at_mid": 2692,
+        "CN_total_at_hi": 2920,
         "cut_invariant": "NO"
       },
       {
         "pair": "Li-O",
-        "source": "rdf_first_min",
+        "source": "empty_valley",
         "search_rmax": 3.6,
         "n_pairs_in_search_range": 434,
         "r_peak": 1.99,
         "g_peak": 4.0,
         "g_min": 0.0,
-        "cutoff_used": 2.45,
-        "valley_lo": 2.45,
-        "valley_hi": 3.23,
-        "valley_width": 0.78,
+        "cutoff_used": 2.65,
+        "valley_lo": 2.65,
+        "valley_hi": 2.91,
+        "valley_width": 0.26,
         "note": "",
-        "CN_total_at_lo": 328,
+        "CN_total_at_lo": 336,
         "CN_total_at_mid": 336,
-        "CN_total_at_hi": 357,
-        "cut_invariant": "NO"
+        "CN_total_at_hi": 336,
+        "cut_invariant": "YES"
       },
       {
         "pair": "H-H",
@@ -1141,54 +1055,54 @@
       "P": {
         "n_centres": 108,
         "CN_S_dist": {
-          "3": 2,
-          "4": 106
+          "3": 1,
+          "4": 107
         },
         "CN_O_dist": {
           "0": 108
         },
         "joint_S_O": {
-          "3S0O": 2,
-          "4S0O": 106
+          "3S0O": 1,
+          "4S0O": 107
         },
-        "mean_CN_S": 3.9814814814814814,
+        "mean_CN_S": 3.990740740740741,
         "mean_CN_O": 0.0,
-        "n_intact_MX4": 106,
-        "n_pure_MS4": 106,
+        "n_intact_MX4": 107,
+        "n_pure_MS4": 107,
         "n_with_O": 0
       },
       "Sn": {
         "n_centres": 36,
         "CN_S_dist": {
-          "3": 2,
-          "4": 34
+          "3": 1,
+          "4": 35
         },
         "CN_O_dist": {
           "0": 36
         },
         "joint_S_O": {
-          "3S0O": 2,
-          "4S0O": 34
+          "3S0O": 1,
+          "4S0O": 35
         },
-        "mean_CN_S": 3.9444444444444446,
+        "mean_CN_S": 3.9722222222222223,
         "mean_CN_O": 0.0,
-        "n_intact_MX4": 34,
-        "n_pure_MS4": 34,
+        "n_intact_MX4": 35,
+        "n_pure_MS4": 35,
         "n_with_O": 0
       }
     },
     "sulfur": {
       "n_S": 719,
-      "n_S_in_MS4": 572,
-      "n_S_free": 147,
+      "n_S_in_MS4": 574,
+      "n_S_free": 145,
       "free_S_H_dist": {
-        "0": 133,
+        "0": 131,
         "1": 13,
         "2": 1
       },
       "n_H2S": 1,
       "n_SH_minus": 13,
-      "n_S2minus_bare": 133,
+      "n_S2minus_bare": 131,
       "n_framework_S_with_H": 4,
       "n_SH_bonds_total": 19,
       "n_SS_bonds": 4,
@@ -1228,11 +1142,11 @@
     "oxygen": {
       "n_O": 299,
       "O_H_dist": {
-        "1": 32,
-        "2": 267
+        "1": 13,
+        "2": 286
       },
-      "n_H2O": 267,
-      "n_OH": 32,
+      "n_H2O": 286,
+      "n_OH": 13,
       "n_H3O": 0,
       "n_bare_O": 0,
       "n_O_bonded_to_P": 0,
@@ -1282,10 +1196,9 @@
     "hydrogen": {
       "n_H": 600,
       "class_cutoff": {
-        "H-O": 566,
+        "H-O": 579,
         "H-S": 19,
-        "H2": 2,
-        "unbound": 13
+        "H2": 2
       },
       "nearest_heavy_element": {
         "O": 581,
@@ -1294,60 +1207,7 @@
       "n_H_S_bonds": 19,
       "n_H2_molecules": 1,
       "n_H_Cl_contacts": 4,
-      "unbound_nearest": [
-        {
-          "element": "O",
-          "d": 1.202
-        },
-        {
-          "element": "O",
-          "d": 1.132
-        },
-        {
-          "element": "O",
-          "d": 1.112
-        },
-        {
-          "element": "O",
-          "d": 1.136
-        },
-        {
-          "element": "O",
-          "d": 1.131
-        },
-        {
-          "element": "O",
-          "d": 1.121
-        },
-        {
-          "element": "O",
-          "d": 1.194
-        },
-        {
-          "element": "O",
-          "d": 1.121
-        },
-        {
-          "element": "O",
-          "d": 1.176
-        },
-        {
-          "element": "O",
-          "d": 1.143
-        },
-        {
-          "element": "O",
-          "d": 1.12
-        },
-        {
-          "element": "O",
-          "d": 1.164
-        },
-        {
-          "element": "O",
-          "d": 1.165
-        }
-      ]
+      "unbound_nearest": []
     },
     "zprofile": {
       "axis": 2,
@@ -1384,7 +1244,7 @@
       "max_H_penetration_depth": 8.127149284424242,
       "max_H_S_penetration_depth": 4.518088152424241,
       "mean_H_S_depth": -1.7313399411118264,
-      "mean_H_O_depth": -2.3737200885647884,
+      "mean_H_O_depth": -2.352086346370497,
       "n_framework_in_fluid": {
         "Li": 40,
         "S": 16,

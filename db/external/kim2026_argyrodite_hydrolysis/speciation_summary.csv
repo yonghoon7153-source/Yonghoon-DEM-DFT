@@ -1,4 +1,4 @@
 system,n_P,n_PS4_intact,n_P_with_O,mean_CN_P_S,mean_CN_P_O,n_S_total,n_S_free,n_H2S,n_SH_minus,n_SH_bonds_total,n_framework_S_with_H,n_SS_bonds,n_H2O,n_OH,n_H3O,n_bare_O,n_O_bonded_to_P,n_H2_molecules,n_H_inside_slab,n_H_S_inside_slab,max_H_penetration_A,max_H_S_penetration_A,slab_thickness_A,normal_axis,n_Li_in_fluid,n_S_in_fluid,n_Cl_in_fluid,n_P_in_fluid,n_Sn,n_SnS4_intact,n_Sn_with_O,mean_CN_Sn_S,mean_CN_Sn_O,n_Sn_in_fluid
-LPSC-H2O,144,142,0,3.986,0.0,720,146,0,17,17,0,0,275,24,0,0,0,0,67,7,4.75,3.28,38.11,c,67,16,11,1,,,,,,
-LPSC-ion,144,140,0,3.972,0.0,720,148,2,26,30,0,0,256,43,0,0,0,1,157,15,9.8,9.8,40.11,c,52,23,11,4,,,,,,
-LPSnSC-ion,108,106,0,3.981,0.0,719,147,1,13,19,4,4,267,32,0,0,0,1,154,7,8.13,4.52,41.92,c,40,16,10,0,36,34,0,3.944,0.0,0
+LPSC-H2O,144,144,0,4.0,0.0,720,144,0,17,17,0,0,283,16,0,0,0,0,67,7,4.75,3.28,38.11,c,67,16,11,1,,,,,,
+LPSC-ion,144,143,0,3.993,0.0,720,145,2,25,30,1,0,272,27,0,0,0,1,157,15,9.8,9.8,40.11,c,52,23,11,4,,,,,,
+LPSnSC-ion,108,107,0,3.991,0.0,719,145,1,13,19,4,4,286,13,0,0,0,1,154,7,8.13,4.52,41.92,c,40,16,10,0,36,35,0,3.972,0.0,0
