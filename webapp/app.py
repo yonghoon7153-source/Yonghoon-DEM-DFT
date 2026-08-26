@@ -444,6 +444,10 @@ def sdcp_self_doping():
         title="⚗️ 자기도핑이란 무엇인가",
         content=md_html(md, ("tables", "fenced_code", "toc")),
         parent={"url": "/sdcp", "label": "SDCP wave1"},
+        # 공유용 HTML — 랩 밖(공저자·처음 보는 대학원생)에 링크로 던질 수 있는 판.
+        #   kb md 가 정본이고 이건 읽기용이다. 내용이 갈리면 md 를 고치고 다시 배포한다.
+        artifact="https://claude.ai/code/artifact/"
+                 "20cb81c9-9bab-468c-ac30-0752ece28d14",
         subtitle="프로톤이 아니라 수소 원자를 뗀다 — 원고 문장 하나가 "
                  "charge/multiplicity 를 바꾸는 이유")
 
