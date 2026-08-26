@@ -334,7 +334,14 @@ def force_stats(f_ref, f_pred):
             "rms_ref_eVA": rms_ref,
             "rel_mae_pct": float(np.abs(d).mean() / rms_ref * 100) if rms_ref else None,
             # 성분 상관 — 부호까지 맞는지 (MAE 만으로는 못 본다)
-            "pearson_r": float(np.corrcoef(r, f_pred.ravel())[0, 1]) if d.size > 2 else None}
+            "pearson_r": float(np.corrcoef(r, f_pred.ravel())[0, 1]) if d.size > 2 else None,
+            # ★ **softening 기울기** — OMat24 보충자료의 `force_softening` 과 같은 뜻.
+            #   원점을 지나는 최소제곱 기울기 s = Σ(F_ref·F_pred)/Σ(F_ref²).
+            #   s < 1 = 예측힘이 참조보다 **작다** = PES 가 무르다. s = 1 이 이상.
+            #   ⛔ r 로는 못 본다 — r 은 척도불변이라 힘을 전부 절반으로 줄여도 r=1 이다.
+            #   ⚠ 이 한 계에서의 기울기다. "이 모델은 무르다/안 무르다" 로 일반화하지 말 것.
+            "softening_slope": (float((r * f_pred.ravel()).sum() / (r ** 2).sum())
+                                if (r ** 2).sum() > 0 else None)}
 
 
 def cmd_bench(a):
@@ -401,6 +408,12 @@ def cmd_bench(a):
     print(f"\n══ {a.engine} vs DFT 라벨 · {len(rows)} 프레임 ══")
     print(f"  힘  MAE  {fs['mae_eVA']:.4f} eV/Å   RMSE {fs['rmse_eVA']:.4f}   최대 {fs['max_abs_eVA']:.3f}")
     print(f"      참조 RMS {fs['rms_ref_eVA']:.3f} eV/Å  →  **상대 {fs['rel_mae_pct']:.2f} %**   r={fs['pearson_r']:.5f}")
+    sl = fs.get("softening_slope")
+    if sl is not None:
+        tag = ("✅ 경직/중립" if sl >= 0.995 else
+               "⚠ 약한 softening" if sl >= 0.97 else "🔴 softening")
+        print(f"      **softening 기울기 {sl:.4f}**  ({tag})  "
+              f"— 1 보다 작으면 예측힘이 참조보다 작다(=PES 가 무르다). r 로는 안 보인다")
     print(f"  에너지  편향 {bias:+.2f} ± 산포 {scat:.2f} meV/atom  "
           f"(같은 부호 {same_sign}/{len(dE)} · 편향 제거 후 MAE {np.abs(dE-bias).mean():.2f})")
     print(f"  ⛔ 에너지 절대오차 = 정확도가 아니다. **힘이 지표다.**")
@@ -612,6 +625,12 @@ def cmd_selftest(a=None):
     fsn = force_stats(ref, -ref)
     chk(fsn["pearson_r"] < -0.99,
         "★ [음성] 부호가 뒤집히면 r 이 음수 — MAE 만 보면 못 잡는 고장")
+    chk(abs(fs0["softening_slope"] - 1.0) < 1e-12, "완전 일치면 softening 기울기 1")
+    fs_soft = force_stats(ref, ref * 0.5)
+    chk(abs(fs_soft["softening_slope"] - 0.5) < 1e-12,
+        "★ 힘을 절반으로 줄이면 기울기 0.5 — **이게 softening 이다**")
+    chk(abs(fs_soft["pearson_r"] - 1.0) < 1e-12,
+        "★ [음성] 그런데 **r 은 여전히 1** — r 로는 softening 을 원리적으로 못 본다")
 
     # ── 스트리밍 (bench) ──
     import tempfile as _tf
@@ -632,7 +651,7 @@ def cmd_selftest(a=None):
         chk(len([1 for _ in stream_labeled(fp, 100)]) == 1,
             "★ stride 가 총수보다 커도 최소 1프레임 (0 프레임으로 조용히 끝나지 않는다)")
 
-    print(f"selftest {'PASS' if not bad else 'FAIL'} — {8 + 3 + 8 - len(bad)} ok, {len(bad)} bad")
+    print(f"selftest {'PASS' if not bad else 'FAIL'} — {8 + 3 + 8 + 3 - len(bad)} ok, {len(bad)} bad")
     return 1 if bad else 0
 
 
