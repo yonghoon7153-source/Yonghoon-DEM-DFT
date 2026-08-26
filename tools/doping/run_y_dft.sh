@@ -38,9 +38,18 @@ if ! flock -n 9; then
 fi
 
 command -v "$PWX" >/dev/null || { echo "⛔ $PWX 가 없다"; exit 1; }
+# QE 가 CPU 빌드면 GPU 충돌 걱정이 없다 — 그 사실을 화면에 남긴다
+if command -v ldd >/dev/null && ldd "$(command -v "$PWX")" 2>/dev/null | grep -qi "libcud"; then
+  QEKIND="GPU 빌드 ⚠ 다른 GPU 런과 충돌 가능"
+else
+  QEKIND="CPU 빌드 ✅ GPU 를 안 건드린다"
+fi
+# ⛔ OpenMP 를 안 묶으면 mpirun 랭크마다 스레드를 다 잡아 코어를 초과 구독한다
+export OMP_NUM_THREADS="${OMP_NUM_THREADS:-1}"
 echo "════════ $(date '+%F %T') Y DFT 대조 ════════"
 echo "pw.x : $(command -v "$PWX")"
-echo "NP   : $NP"
+echo "NP   : $NP   (OMP_NUM_THREADS=$OMP_NUM_THREADS)"
+echo "빌드 : $QEKIND"
 if [ "$USE_GPU" = "1" ]; then
   echo "⚠ GPU 모드 — UMA MD 와 충돌 가능. nvidia-smi 확인했나?"
   nvidia-smi --query-gpu=memory.used,memory.total --format=csv,noheader
@@ -76,10 +85,13 @@ for name in $ORDER; do
     # relax 가 수렴했나 — 안 했으면 마지막 에너지는 바닥이 아니다
     if grep -aq "End of BFGS Geometry Optimization" "$OUT"; then
       CONV="✅ BFGS 수렴"
+    elif grep -aq "End of self-consistent calculation" "$OUT" \
+         && ! grep -aq "bfgs" "$OUT"; then
+      CONV="· scf (기하는 UMA 가 정한 것)"
     elif grep -aq "bfgs" "$OUT"; then
       CONV="⚠ **BFGS 미수렴** — 이 에너지는 바닥이 아니다"
     else
-      CONV="· (scf)"
+      CONV="⚠ 수렴 표시를 못 찾았다 — 출력을 직접 볼 것"
     fi
     printf "    끝  %5ds  E = %s Ry   %s\n" "$DT" "${E:-?}" "$CONV"
   else

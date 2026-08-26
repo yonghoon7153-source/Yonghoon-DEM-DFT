@@ -278,6 +278,16 @@ def main():
                          "/data/work/pseudo · KISTI /scratch/x3430a02/kgy/"
                          "manuscript_support/pseudo. 안 주면 KISTI 기본값이고, "
                          "다른 머신에서는 pw.x 가 조용히 죽는다.")
+    ap.add_argument("--calculation", default="scf", choices=["scf", "relax"],
+                    help="★ 기본 **scf**. 두 타깃은 이미 **같은 UMA 로** 이완돼 있어 "
+                         "기하 편향이 비교 가능한 상태다. CPU QE 로 100원자 BFGS 를 "
+                         "돌리면 며칠 걸리므로 **먼저 scf 로 부호를 보고**, 필요하면 "
+                         "그때 relax 로 다시 돈다. "
+                         "⛔ scf 결과는 '기하를 UMA 가 정한 상태에서의 DFT 에너지' 다 — "
+                         "부호가 UMA 와 갈리면 relax 없이 결론 내지 말 것.")
+    ap.add_argument("--phase_symmetry", action="store_true",
+                    help="기저 상은 이상적 결정이라 대칭을 켜면 훨씬 싸다 (nosym=.false.). "
+                         "타깃은 무질서라 항상 nosym=.true. 로 둔다.")
     ap.add_argument("--pseudo_map",
                     help="원소=파일명 쉼표 목록 (예 'Li=li_x.UPF,S=s_y.UPF'). "
                          "자동 탐색이 후보를 여럿 찾아 거부할 때 사람이 정한다.")
@@ -342,7 +352,8 @@ def main():
                         offhull.append(name)
                         continue
                 at = ad.get_atoms(d.structure)
-                pending.append((name, at, a.kpoints_phase))
+                pending.append((name, at, a.kpoints_phase,
+                                not a.phase_symmetry))
                 mp_used[name] = {"mp_id": d.material_id, "n_atoms": len(at),
                                  "mp_e_above_hull": float(d.energy_above_hull)}
                 need_pp.update(at.get_chemical_symbols())
@@ -351,7 +362,7 @@ def main():
         for tf in a.targets:
             at = read(tf)
             stem = Path(tf).stem
-            pending.append((stem, at, a.kpoints))
+            pending.append((stem, at, a.kpoints, True))   # 타깃은 항상 nosym
             need_pp.update(at.get_chemical_symbols())
             print(f"  ✓ {stem:<8} {len(at)} atoms  (target)")
 
@@ -378,10 +389,11 @@ def main():
             print(f"     → --pseudo_map 'Li=…,S=…' 로 지정하거나 파일을 넣을 것")
             return 3
         (out / "in").mkdir(parents=True, exist_ok=True)
-        for name, at, kp in pending:
+        for name, at, kp, nosym in pending:
             (out / "in" / f"{name}.in").write_text(
                 generate_pwin(at, name, a.ecutwfc, a.ecutrho, kp,
-                              pseudo_dir=str(pdir), pp_names=resolved))
+                              pseudo_dir=str(pdir), pp_names=resolved,
+                              calculation=a.calculation, nosym=nosym))
 
         if pdir.is_dir():
             print(f"\n  ▸ pseudo 해결 ({len(resolved)}종)")
@@ -402,6 +414,13 @@ def main():
                              "gabia SSSP 는 Y 가 USPP(Y_pbe_v1.uspp.F.UPF)이고 우리 "
                              "PSEUDOS 목록의 PAW 와 다르다 — **모든 계산에 같은 것을 쓰므로 "
                              "내부 일관성은 유지되나, 다른 머신 결과와 섞으면 안 된다.**",
+            "calculation": a.calculation,
+            "⛔_calculation_note": (
+                "scf 면 기하는 **UMA 가 정한 것**이다. 두 타깃이 같은 UMA 로 이완됐으므로 "
+                "기하 편향이 비교 가능하지만, Y 가 P 자리(빡빡한 사면체)와 Li 자리(느슨한 케이지)에서 "
+                "UMA 오차가 다를 수 있다 — **부호가 UMA 와 갈리면 relax 로 다시 확인**해야 한다."
+                if a.calculation == "scf" else
+                "relax — DFT 가 기하까지 정한다. 수렴 여부를 출력에서 확인할 것."),
             "ecutwfc": a.ecutwfc, "ecutrho": a.ecutrho,
             "kpoints_target": a.kpoints, "kpoints_phase": a.kpoints_phase,
             "basis": DEFAULT_BASIS, "basis_mp": mp_used,

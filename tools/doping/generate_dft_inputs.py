@@ -84,7 +84,8 @@ PSEUDOS = {
 
 
 def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
-                 kpoints='2 2 1', pseudo_dir=None, pp_names=None) -> str:
+                 kpoints='2 2 1', pseudo_dir=None, pp_names=None,
+                 calculation='relax', nosym=True) -> str:
     # ⛔ pseudo_dir 를 KISTI 로 박아두면 다른 머신에서 pw.x 가 조용히 죽는다
     #   (gabia 는 /data/work/pseudo). 호출부가 줄 수 있게 열어둔다.
     species = sorted(set(atoms.get_chemical_symbols()))
@@ -100,7 +101,7 @@ def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
 
     lines = []
     lines.append("&CONTROL")
-    lines.append("    calculation = 'relax'")
+    lines.append(f"    calculation = '{calculation}'")
     lines.append(f"    prefix      = '{prefix}'")
     lines.append("    outdir      = './tmp'")
     lines.append(f"    pseudo_dir  = '{pseudo_dir or PSEUDO_DIR_KISTI}'")
@@ -119,20 +120,21 @@ def generate_pwin(atoms, prefix: str, ecutwfc=52, ecutrho=520,
     lines.append("    occupations = 'smearing'")
     lines.append("    smearing    = 'mv'")
     lines.append("    degauss     = 0.01")
-    lines.append("    nosym       = .true.")
+    lines.append(f"    nosym       = .{str(bool(nosym)).lower()}.")
     lines.append("/")
     lines.append("&ELECTRONS")
     lines.append("    conv_thr     = 1.0d-8")
     lines.append("    mixing_beta  = 0.2")
     lines.append("    diagonalization = 'david'")
     lines.append("/")
-    lines.append("&IONS")
-    lines.append("    ion_dynamics = 'bfgs'")
-    lines.append("/")
-    lines.append("&CELL")
-    lines.append("    cell_dynamics = 'bfgs'")
-    lines.append("    press_conv_thr = 0.5")
-    lines.append("/")
+    if calculation != 'scf':
+        lines.append("&IONS")
+        lines.append("    ion_dynamics = 'bfgs'")
+        lines.append("/")
+        lines.append("&CELL")
+        lines.append("    cell_dynamics = 'bfgs'")
+        lines.append("    press_conv_thr = 0.5")
+        lines.append("/")
     lines.append("ATOMIC_SPECIES")
     for s in species:
         mass, ppf = PSEUDOS[s]
