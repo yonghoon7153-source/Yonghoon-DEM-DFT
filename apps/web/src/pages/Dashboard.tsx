@@ -30,6 +30,37 @@ const FILTERS: [Filter, string][] = [
   ['unknown', '불명'],
 ]
 
+/** 겹쳐 보기의 세로 범위 — 튄 곡선 하나가 나머지를 납작하게 만들지 않도록.
+ *
+ *  실측 2026-08-26: 한 셀의 유지율이 15,000 % 로 찍혔고, 그 한 줄 때문에 나머지
+ *  27개가 바닥에 붙은 선 하나가 됐다.  그림이 아무것도 말하지 않게 된 것이다.
+ *  (그런 값은 기준 사이클이 잘못 잡혔다는 뜻이다 — 그 자체가 봐야 할 신호지만,
+ *  그것을 보려고 나머지를 못 보게 되면 안 된다.)
+ *
+ *  **다 200 % 아래면 손대지 않는다.**  자를 것이 없는데 위를 200 으로 못 박으면
+ *  90~100 % 사이에서 갈리는 셀들이 아래쪽 절반에 눌린다 — 정작 읽어야 할 차이가
+ *  거기 있다.  `null` 은 uPlot 에게 "네가 맞춰라" 는 뜻이다.
+ *
+ *  자를 때도 **잘랐다고 말한다** (§0.4).  말 없이 자르면 그 셀은 화면에서
+ *  그냥 사라지고, 사라진 것은 아무 표시도 남기지 않는다.
+ */
+export const RETENTION_CEILING = 200
+
+export function overlayRange(series: { y: number[]; hidden?: boolean }[]): {
+  range: [number | null, number | null]
+  clipped: boolean
+} {
+  const shown = series.filter((line) => !line.hidden)
+  let top = 0
+  for (const line of shown) {
+    for (const value of line.y) {
+      if (Number.isFinite(value) && value > top) top = value
+    }
+  }
+  if (top <= RETENTION_CEILING) return { range: [null, null], clipped: false }
+  return { range: [null, RETENTION_CEILING], clipped: true }
+}
+
 export function Dashboard() {
   const [basis, setBasis] = useStickyState<Basis>('workbench.basis', 'mAh/g')
   const [filter, setFilter] = useState<Filter>('all')
@@ -104,6 +135,10 @@ export function Dashboard() {
         }),
     [rows, hiddenSeries],
   )
+
+  // 튄 곡선 하나가 나머지를 납작하게 만들지 않게 위를 잘라 준다.  범례에서
+  // 끈 곡선은 안 센다 — 사람이 이미 안 보겠다고 한 것이 범위를 정하면 안 된다.
+  const span = useMemo(() => overlayRange(overlay), [overlay])
 
   return (
     <main className="page">
@@ -188,8 +223,16 @@ export function Dashboard() {
               xLabel="사이클"
               yLabel="용량 유지율 (%)"
               height={260}
+              yRange={span.range}
               markers={[{ x: 0, label: '' }].slice(0, 0)}
             />
+            {span.clipped ? (
+              <div className="tiny faint" style={{ padding: '0 var(--s4) var(--s3)' }}>
+                {RETENTION_CEILING} % 위는 잘랐습니다 — 그 위로 튄 곡선 하나가
+                나머지를 납작하게 만듭니다. 그런 값은 대개 기준 사이클이 잘못
+                잡힌 것이니, 해당 셀을 열어 기준을 확인해 보세요.
+              </div>
+            ) : null}
             <PlotLegend
               series={overlay}
               onToggle={(label) =>
