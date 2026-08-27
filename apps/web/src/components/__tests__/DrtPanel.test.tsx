@@ -179,16 +179,28 @@ function fireRange(input: HTMLInputElement, value: number) {
 describe('τ 구간 이름', () => {
   it('τ 를 주파수와 그 시간대의 이름으로 옮긴다', () => {
     // 관례적인 구간이고 판정이 아니다 — 문장이 "…대" 로 끝난다.
-    expect(tauBand(-6)).toContain('kHz')
-    expect(tauBand(-6)).toContain('벌크')
-    expect(tauBand(-4)).toContain('입계')
-    expect(tauBand(-2)).toContain('전하이동')
-    expect(tauBand(0)).toContain('전송선')
-    expect(tauBand(2)).toContain('측정 대역 끝')
+    expect(tauBand(-6, 'log10')).toContain('kHz')
+    expect(tauBand(-6, 'log10')).toContain('벌크')
+    expect(tauBand(-4, 'log10')).toContain('입계')
+    expect(tauBand(-2, 'log10')).toContain('전하이동')
+    expect(tauBand(0, 'log10')).toContain('전송선')
+    expect(tauBand(2, 'log10')).toContain('측정 대역 끝')
   })
 
   it('τ 와 주파수는 ω τ = 1 로 이어져 있다', () => {
     // log τ = -2 → τ=0.01 s → f = 1/(2π·0.01) ≈ 15.9 Hz
-    expect(tauBand(-2)).toContain('15.9 Hz')
+    expect(tauBand(-2, 'log10')).toContain('15.9 Hz')
+  })
+
+  it('같은 숫자라도 축이 다르면 다른 대다 — 그래서 축을 반드시 받는다', () => {
+    // −6 은 log₁₀ 에서 1 µs (벌크 이온전도), ln 에서 2.5 ms (전하이동) 다.
+    // 기본값을 두면 축을 바꾼 화면이 조용히 다른 물리를 적는다.
+    expect(tauBand(-6, 'log10')).toContain('벌크')
+    expect(tauBand(-6, 'ln')).toContain('전하이동')
+    // 주파수도 3만 배 다르다 — 같은 눈금을 다르게 읽는다는 뜻이다.
+    expect(tauBand(-6, 'log10')).toContain('kHz')
+    expect(tauBand(-6, 'ln')).toContain('Hz')
+    // ln τ = 0 이나 log₁₀ τ = 0 이나 τ = 1 s 라 여기서는 같다.
+    expect(tauBand(0, 'ln')).toBe(tauBand(0, 'log10'))
   })
 })

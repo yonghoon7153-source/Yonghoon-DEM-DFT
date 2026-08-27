@@ -19,7 +19,11 @@ import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
+import {
+  TAU_AXES, TAU_AXIS_KEY, type TauAxis,
+  tauAxisLabel, tauAxisShort, tauAxisValue, validTauAxis,
+} from '../lib/tauaxis'
 import { perArea } from '../lib/areanorm'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, nyquistXy } from '../lib/eis'
@@ -109,6 +113,11 @@ export function EisCompare() {
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
   const [mode, setMode] = useState<Mode>('nyquist')
+  //: DRT 가로축의 밑.  상세 화면과 **같은 열쇠**를 쓴다 — 한쪽에서 `ln` 으로
+  //  보다 다른 쪽에서 `log₁₀` 이 나오면 같은 봉우리가 다른 자리에 있는 것처럼
+  //  보인다.  기본은 `ln` (`lib/tauaxis.ts` 에 이유).
+  const [storedTauAxis, setTauAxis] = useStickyState<TauAxis>(TAU_AXIS_KEY, 'ln')
+  const tauAxis = validTauAxis(storedTauAxis)
 
   const spectra = useAsync(
     () => api.listSpectra({ kind: kind || undefined }), [kind], { live: true })
@@ -238,7 +247,7 @@ export function EisCompare() {
           label: label(rows.find((row) => row.id === id) ?? ({} as Spectrum)),
           // γ 는 log₁₀ τ 위에서 읽는 것이다 — 선형 τ 로 그리면 고주파 봉우리
           // 열 개가 왼쪽 끝 한 점에 겹친다.
-          x: value.tau_s.map((tau) => Math.log10(tau)),
+          x: value.tau_s.map((tau) => tauAxisValue(tauAxis, tau)),
           y: value.gamma_ohm.map((gamma) => (area ? gamma * area : gamma)),
           color: seriesColor(rows.findIndex((row) => row.id === id)),
           width: 1.5,
@@ -281,7 +290,7 @@ export function EisCompare() {
         dash: [6, 4],
       }]
     })
-  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf])
+  }, [shown, fresh, rows, dropInductive, mode, drt.data, unit, areaOf, fitOf, tauAxis])
 
   // 겹쳐 놓으면 한 스펙트럼의 유도성 꼬리가 다른 것들의 아크까지 납작하게
   // 만든다 — 세로 눈금은 하나이기 때문이다.  몇 점이 빠졌는지는 적는다.
@@ -389,6 +398,17 @@ export function EisCompare() {
               <button type="button" className={unit === 'ohmcm2' ? 'on' : ''}
                       onClick={() => setUnit('ohmcm2')}>Ω·cm²</button>
             </div>
+            {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
+            {mode === 'drt' ? (
+              <div className="segmented" role="group" aria-label="가로축">
+                {TAU_AXES.map((one) => (
+                  <button key={one} type="button" className={tauAxis === one ? 'on' : ''}
+                          onClick={() => setTauAxis(one)}>
+                    {tauAxisShort(one)}
+                  </button>
+                ))}
+              </div>
+            ) : null}
           </div>
         }
       >
@@ -427,11 +447,11 @@ export function EisCompare() {
             {
               label: 'γ(τ)',
               title: mode === 'drt'
-                ? `스펙트럼마다 log₁₀τ·γ 두 열 (${unitLabel})`
+                ? `스펙트럼마다 ${tauAxisShort(tauAxis)}·γ 두 열 (${unitLabel})`
                 : `${MODE_TITLE[mode]} 를 보고 있습니다 — DRT 로 바꾸면 켜집니다`,
               disabled: mode !== 'drt' || !series.length,
               build: () => seriesWideTsv(series,
-                                         { x: 'log₁₀ τ (s)', y: `γ (${unitLabel})` }),
+                                         { x: tauAxisLabel(tauAxis), y: `γ (${unitLabel})` }),
             },
           ]}
         />
@@ -475,8 +495,9 @@ export function EisCompare() {
           <>
             {mode === 'drt' ? (
               // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
-              // log₁₀ 초, 세로는 저항이다.
-              <Plot series={series} xLabel="log₁₀ τ (s)" yLabel={`γ (${unitLabel})`}
+              // 로그 초, 세로는 저항이다.
+              <Plot series={series} xLabel={tauAxisLabel(tauAxis)}
+                    yLabel={`γ (${unitLabel})`}
                     height={380} legend busy={drt.loading} />
             ) : (
               <Plot series={series} xLabel={`Z′ (${unitLabel})`}

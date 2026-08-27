@@ -335,7 +335,10 @@ describe('fitParametersTsv', () => {
     // 없어서, 숫자로 내보내는 순간 확정값이 된다 (리뷰 #7).
     // 단위는 한 열로 함께 나간다: `R0  7.99` 만 붙여 넣으면 그것이 Ω 인지
     // Ω·cm² 인지 워크시트 안에서는 알 길이 없다.
-    expect(text).toBe('R0\t7.99\tΩ\t0.31\nCPE1_n\t--\t\t--')
+    // 머리말이 먼저 — 붙여 넣은 표에서 어느 열이 값이고 어느 열이 오차인지
+    // 말해 주는 것이 이 줄뿐이다 (넷 중 둘이 숫자라 눈으로도 안 갈린다).
+    expect(text).toBe(
+      '파라미터\t값\t단위\t± 1σ\nR0\t7.99\tΩ\t0.31\nCPE1_n\t--\t\t--')
   })
 
   it('화면이 면적으로 나눈 값을 보고 있으면 그 값 그대로 나간다', () => {
@@ -347,7 +350,7 @@ describe('fitParametersTsv', () => {
         unit: (parameter) => (parameter.unit === 'Ω' ? 'Ω·cm²' : parameter.unit),
       },
     )
-    expect(text).toBe('R0\t4\tΩ·cm²\t0.2')
+    expect(text).toBe('파라미터\t값\t단위\t± 1σ\nR0\t4\tΩ·cm²\t0.2')
   })
 })
 

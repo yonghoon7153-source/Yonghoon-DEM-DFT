@@ -451,6 +451,10 @@ export function bodeTsv(spectra: SpectrumPoints[], scale?: Scale): string {
  *  아니라 읽는 것이고, `R1` 없이 32.02 만 있는 열은 아무것도 아니다.
  *  절차서도 이 블록을 엑셀에 붙인다 ("Error값은 필요 없어 Delete 가능").
  */
+//: 붙여 넣은 표의 첫 줄.  화면의 파라미터 표와 **같은 낱말**이어야 한다 --
+//: 다르면 같은 표를 두 이름으로 부르게 된다.
+const HEADER = ['파라미터', '값', '단위', '± 1σ'].join('\t')
+
 export function fitParametersTsv(
   parameters: FitParameter[],
   /** 화면이 쓰는 것과 **같은** 단위로 내보내려고 받는다.  안 주면 날 것 그대로. */
@@ -470,7 +474,13 @@ export function fitParametersTsv(
   // `R2 (ohm)` 처럼 단위를 달고 다닌다.  그리고 화면이 면적으로 나눈 값을
   // 보여 주고 있으면 **그 값 그대로** 나간다 — 보는 수와 붙이는 수가 다르면
   // 어느 쪽이 맞는지 확인하는 데 왕복이 든다.
-  return parameters
+  // **머리말 한 줄이 먼저 나간다.**  이 블록은 워크시트에 그대로 붙고, 붙은
+  // 뒤에는 어느 열이 값이고 어느 열이 오차인지 말해 주는 것이 아무것도 없다 --
+  // 네 열 중 둘이 숫자라서 눈으로도 안 갈린다.  화면의 표가 이미 이 이름들을
+  // 달고 있으므로, 붙여 넣은 표도 같은 이름을 달고 있어야 두 화면이 같은
+  // 것으로 읽힌다.  ("Error값은 필요 없어 Delete 가능" 은 그 열을 **알아본**
+  // 다음의 이야기다.)
+  return [HEADER, ...parameters
     .map((p) =>
       p.determined
         ? [p.name,
@@ -479,7 +489,7 @@ export function fitParametersTsv(
            cell(p.stderr === null || p.stderr === undefined ? p.stderr
                 : scale ? scale.value(p, p.stderr) : p.stderr)].join('\t')
         : [p.name, MISSING, scale ? scale.unit(p) : p.unit, MISSING].join('\t'),
-    )
+    )]
     .join('\n')
 }
 
