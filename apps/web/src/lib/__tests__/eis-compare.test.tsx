@@ -181,3 +181,61 @@ describe('EIS 비교 — fitting', () => {
     expect(within(bar()).getByRole('button', { name: /나이퀴스트/ })).toBeDisabled()
   })
 })
+
+/** SOC 스캔 — 파일 하나가 스윕 여럿.
+ *
+ *  고르개에서 이것이 스무 줄로 깔리면 그 파일 하나로 화면이 가득 찬다.  한
+ *  줄로 접고, 펴서 스윕을 골라 겹친다 — SOC 별 나이퀴스트는 스윕마다 다른
+ *  곡선이라 그중 몇을 고르는 것이 이 화면의 쓰임이다.
+ */
+function sweep(id: number, index: number, capacity: number) {
+  return {
+    ...spectrum(id, 'SOC_scan', 0.785, 0),
+    sha256: 'sha-scan',
+    sweep_index: index,
+    sweep_count: 3,
+    capacity_mah: capacity,
+    potential_v: null,
+  }
+}
+
+function installScanFetch() {
+  const spy = vi.fn(async (url: string) => {
+    const body = (() => {
+      switch (path(url)) {
+        case '/api/eis/spectra':
+          return [sweep(11, 1, 0), sweep(12, 2, 1.0), sweep(13, 3, 2.0),
+                  spectrum(2, 'B_bare', 0.785, 0)]
+        case '/api/samples': return []
+        case '/api/groups': return []
+        case '/api/eis/points': return [points(12)]
+        default: return {}
+      }
+    })()
+    return { ok: true, status: 200, statusText: 'OK', json: async () => body }
+  })
+  vi.stubGlobal('fetch', spy)
+  return spy
+}
+
+describe('EIS 비교 — SOC 스캔', () => {
+  it('스캔은 한 줄로 접히고, 펴서 스윕 하나만 겹친다', async () => {
+    installScanFetch()
+    render(<MemoryRouter><EisCompare /></MemoryRouter>)
+
+    // 접힌 상태: 스캔 한 줄 + 낱장 한 줄.  스윕 셋이 그대로 깔리지 않는다.
+    const open = await screen.findByRole('button', { name: '스윕 고르기' })
+    expect(screen.getByText(/스윕 3개/)).toBeTruthy()
+    expect(screen.queryByText('#2')).toBeNull()
+
+    await userEvent.click(open)
+    await userEvent.click(screen.getByText('#2'))
+
+    // '고른 것' 표가 스윕 번호와 그 SOC 를 적는다 — 이름은 셋이 다 같아서
+    // 번호가 없으면 어느 줄이 어느 곡선인지 짚을 수가 없다.
+    const table = document.querySelector('table') as HTMLElement
+    expect(table.textContent).toContain('SOC_scan')
+    expect(table.textContent).toMatch(/#2 · 1\.00 mAh/)
+    expect(table.textContent).not.toContain('#3')
+  })
+})

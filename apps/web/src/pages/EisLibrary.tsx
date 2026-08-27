@@ -20,6 +20,7 @@ import { DeleteMeasurementButton, RelatedCellSelect } from '../components/Relate
 import { GroupTag, OwnerTag, leafOf } from '../components/RowTags'
 import { Alert, Card, Empty, Field, Spinner } from '../components/ui'
 import { api } from '../lib/api'
+import { isScan } from '../lib/eis'
 import { dateTime, num } from '../lib/format'
 import { useAsync, useStickyState } from '../lib/hooks'
 import type { EisKind, Spectrum } from '../lib/types'
@@ -42,9 +43,6 @@ const KINDS: [EisKind | '', string][] = [
 const CONFIG_LABEL: Record<string, string> = {
   full: '풀셀', half: '하프셀', sym: '대칭셀',
 }
-
-/** 이 줄이 스캔의 일부인가.  파일이 말하는 것이지 사람이 붙인 꼬리표가 아니다. */
-const isScan = (item: Spectrum) => (item.sweep_count ?? 1) > 1
 
 export function EisLibrary() {
   const [shape, setShape] = useState<Shape>('all')

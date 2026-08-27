@@ -17,7 +17,7 @@ import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
-import { nyquistXy } from '../lib/eis'
+import { nyquistXy, sweepAt } from '../lib/eis'
 import { useAsync } from '../lib/hooks'
 import { seriesWideTsv } from '../lib/origin'
 import type { ScanPoint } from '../lib/types'
@@ -110,11 +110,9 @@ export function ScanDetail() {
       const point = points[index]
       const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
       // 범례에 SOC 를 적는다.  `#3` 만으로는 어느 충전 상태인지 모르고,
-      // 그것이 이 화면을 여는 이유다.
-      const at = point && point.capacity_mah !== null
-        ? `${num(point.capacity_mah, 3)} mAh`
-        : point && point.potential_v !== null
-          ? `${num(point.potential_v, 3)} V` : ''
+      // 그것이 이 화면을 여는 이유다.  비교 화면도 같은 규칙을 쓴다
+      // (`lib/eis: sweepAt`) — 두 화면이 같은 스윕을 다르게 부르면 안 된다.
+      const at = point ? sweepAt(point) : ''
       return {
         label: `#${point?.sweep_index ?? index + 1}`,
         note: at || undefined,

@@ -1,7 +1,10 @@
 /** 임피던스 점 다루기 — 화면 여럿이 같은 규칙을 써야 하는 것들.
  *
- *  지금은 하나뿐이다: 실수축 **위**에 있는 점을 어떻게 볼 것인가.
+ *  둘이다: 실수축 **위**에 있는 점을 어떻게 볼 것인가, 그리고 한 파일의 스윕
+ *  여럿(SOC 스캔)을 어떻게 부를 것인가.
  */
+
+import { num } from './format'
 
 /** 유도성 점의 수 — 실수축 위(Z″ > 0)에 있는 것.
  *
@@ -51,4 +54,36 @@ export function nyquistXy(
     y.push(scale(-(zIm[i] ?? 0)))
   }
   return { x, y, dropped }
+}
+
+/** 이 줄이 SOC 스캔의 한 스윕인가.
+ *
+ *  파일이 말하는 것이지 사람이 붙인 꼬리표가 아니다 — 한 줄은 `(sha256,
+ *  sweep_index)` 이고 (ADR 0022), 스윕이 둘 이상이면 그 파일은 스캔이다.
+ *  라이브러리·비교·스캔 상세 세 화면이 같은 판정을 써야 한 화면에서 "스캔"
+ *  인 것이 다른 화면에서 낱장 스무 개로 흩어지지 않는다.
+ */
+export function isScan(item: { sweep_count?: number | null }): boolean {
+  return (item.sweep_count ?? 1) > 1
+}
+
+/** 이 스윕을 **어느 상태에서** 잰 것인가 — SOC 스캔에서 스윕을 구별하는 값.
+ *
+ *  용량이 있으면 용량, 없으면 전위.  `#3` 만으로는 순서밖에 모르는데, 사람이
+ *  고를 때 보는 것은 순서가 아니라 그 SOC 다.
+ *
+ *  둘 다 없으면 **빈 문자열**이다.  `0 mAh` 로 적으면 만방전과 구분되지 않는다
+ *  (§0.4: 모르면 모른다고 적는다).
+ */
+export function sweepAt(
+  item: { capacity_mah?: number | null; potential_v?: number | null },
+  digits = 3,
+): string {
+  if (item.capacity_mah !== null && item.capacity_mah !== undefined) {
+    return `${num(item.capacity_mah, digits)} mAh`
+  }
+  if (item.potential_v !== null && item.potential_v !== undefined) {
+    return `${num(item.potential_v, digits)} V`
+  }
+  return ''
 }

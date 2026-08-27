@@ -11,9 +11,16 @@
  *  있었다: 한쪽은 켜는 것을 막고, 한쪽은 막지 않고 서버가 422 를 냈다.  둘 다
  *  같은 규칙으로 — 상한에 닿으면 **끌 수는 있고 켤 수는 없다**, 그리고 왜인지를
  *  적는다.
+ *
+ *  **한 파일이 여러 줄인 것은 접는다** (`PickItem.fold`).  SOC 스캔은 파일
+ *  하나가 스윕 스물이고, 그 스물은 목록에서 서로 아무것도 구별해 주지 않는다 —
+ *  이름도 대역도 회로도 같다.  접지 않으면 고르개가 그 파일 하나로 가득 차서
+ *  다른 셀이 화면 밖으로 밀린다.  펴면 스윕을 하나씩 켤 수 있다: SOC 별
+ *  나이퀴스트는 스윕마다 다른 곡선이고, 그중 셋만 겹쳐 보는 것이 이 화면의
+ *  쓰임이다.
  */
 
-import { type ReactNode, useRef } from 'react'
+import { type ReactNode, useMemo, useRef, useState } from 'react'
 
 import { GroupFilterFields, type GroupChoice } from './GroupFilter'
 import { Card, Empty } from './ui'
@@ -35,6 +42,50 @@ export interface PickItem {
   done?: boolean
   /** 됐을 때 회색 줄 앞에 적을 말 (`fitting 완료`).  `done` 없이는 안 쓴다. */
   doneNote?: string
+  /** 이 항목이 **한 파일의 여러 줄 중 하나**인가 (SOC 스캔의 스윕).
+   *
+   *  같은 `key` 를 가진 것들이 한 줄로 접히고, 그 줄을 펴야 하나씩 보인다.
+   *  `key` 는 파일을 가리키는 것이라야 한다 (sha256) — 이름으로 묶으면 이름이
+   *  같은 다른 파일이 한 줄로 합쳐진다. */
+  fold?: { key: string; label: string; note?: string }
+}
+
+/** 목록을 그리는 단위.  접힌 파일 하나가 항목 여럿을 대신한다. */
+type Block =
+  | { kind: 'one'; item: PickItem }
+  | { kind: 'fold'; key: string; label: string; note?: string; items: PickItem[] }
+
+/** 평평한 목록을 접힌 덩어리로.  **첫 등장 자리**를 지킨다 — 스캔을 목록
+ *  끝으로 몰면 방금 올린 파일이 맨 밑에 가 있다. */
+export function foldItems(items: PickItem[]): Block[] {
+  const blocks: Block[] = []
+  const at = new Map<string, Extract<Block, { kind: 'fold' }>>()
+  for (const item of items) {
+    if (!item.fold) {
+      blocks.push({ kind: 'one', item })
+      continue
+    }
+    const seen = at.get(item.fold.key)
+    if (seen) {
+      seen.items.push(item)
+      continue
+    }
+    const block: Extract<Block, { kind: 'fold' }> = {
+      kind: 'fold',
+      key: item.fold.key,
+      label: item.fold.label,
+      note: item.fold.note,
+      items: [item],
+    }
+    at.set(item.fold.key, block)
+    blocks.push(block)
+  }
+  // 스윕이 하나뿐인 파일은 접을 것이 없다 — 접힌 줄과 안 접힌 줄이 같은 수를
+  // 대신하면 펴는 단추만 하나 더 있는 셈이다.
+  return blocks.map((block) =>
+    block.kind === 'fold' && block.items.length === 1
+      ? { kind: 'one' as const, item: block.items[0]! }
+      : block)
 }
 
 export function PickGrid({
@@ -67,6 +118,11 @@ export function PickGrid({
   empty?: ReactNode
 }) {
   const full = limit !== undefined && picked.length >= limit
+  const blocks = useMemo(() => foldItems(items), [items])
+  // 펴 놓은 파일.  **접힌 것이 기본**이다 — 스캔 하나가 스무 줄이면 그 파일
+  // 하나로 고르개가 가득 찬다.  편 것은 열어 둔 채로 두어야 스윕 셋을 차례로
+  // 켜는 동안 다시 펴지 않는다.
+  const [open, setOpen] = useState<string[]>([])
   // 고르개는 그림 **밑**에 있다.  체크를 하나 누르면 위쪽이 다시 그려지면서
   // 높이가 변하고 (범례가 한 줄 늘거나 줄고, 경고가 뜨거나 사라지고, '고른 것'
   // 표에 줄이 하나 붙는다), 고르개가 그만큼 위아래로 움직인다 — 다음에
@@ -82,6 +138,76 @@ export function PickGrid({
     // 없어서, 다른 것을 보려면 화면을 새로 고치는 수밖에 없다.
     if (full) return
     onChange([...picked, id])
+  }
+
+  /** 접힌 줄의 체크박스.  하나라도 켜져 있으면 **끄기**다 — 스무 개를 켠 뒤
+   *  다시 누를 때 원하는 것은 언제나 비우기이고, 그 반대(이미 켠 것 위에 더
+   *  얹기)는 상한 때문에 아무 일도 안 일어나는 클릭이 된다. */
+  const toggleFold = (block: Extract<Block, { kind: 'fold' }>) => {
+    const ids = block.items.map((item) => item.id)
+    const on = ids.filter((id) => picked.includes(id))
+    if (on.length) {
+      onChange(picked.filter((id) => !ids.includes(id)))
+      return
+    }
+    // 남은 자리만큼만.  상한을 넘겨 켜면 서버가 422 를 내거나 그림이 조용히
+    // 몇 개를 버린다 — 어느 쪽이든 화면의 칩과 곡선이 어긋난다.
+    const room = limit === undefined ? ids.length : Math.max(0, limit - picked.length)
+    onChange([...picked, ...ids.slice(0, room)])
+  }
+
+  const item = (one: PickItem, inFold = false) => {
+    const on = picked.includes(one.id)
+    return (
+      <label
+        key={one.id}
+        className="pick-item small"
+        // 접힌 파일 안에서는 이름이 `#3` 뿐이다 — 어느 파일의 3번인지는
+        // 머리말 줄에만 있어서, 스크롤이 그 줄을 지나면 사라진다.
+        title={[inFold ? one.fold?.label : null, one.name, one.note]
+          .filter(Boolean).join('\n')}
+        style={{
+          // 더 못 켜는 것은 흐리게.  누를 수는 있게 두면 아무 일도
+          // 안 일어나는 클릭이 되고, 그것이 고장으로 읽힌다.
+          cursor: !on && full ? 'default' : 'pointer',
+          opacity: !on && full ? 0.45 : 1,
+        }}
+      >
+        <input
+          type="checkbox"
+          checked={on}
+          disabled={!on && full}
+          onChange={() => toggle(one.id)}
+        />
+        <span style={{ minWidth: 0 }}>
+          <span className="truncate" style={{ display: 'block' }}>
+            {one.color ? (
+              <span
+                className="swatch"
+                style={{ background: on ? one.color : 'var(--line-strong)' }}
+              />
+            ) : null}
+            {/* 다 된 것은 이름 앞에 체크.  색이 아니라 글자인 이유는
+                정적 캡처와 색맹에서 색만으로는 안 보이기 때문이다. */}
+            {one.done ? <span className="done-mark" aria-hidden>✓</span> : null}
+            {one.name}
+          </span>
+          {one.note || (one.done && one.doneNote) ? (
+            <span className="tiny faint truncate" style={{ display: 'block' }}>
+              {/* 무엇이 됐는지를 **회색으로** 적는다.  체크만 있으면
+                  무엇이 됐다는 뜻인지 화면 어디에도 없다. */}
+              {one.done && one.doneNote ? (
+                <>
+                  <span className="done-note">{one.doneNote}</span>
+                  {one.note ? ' · ' : ''}
+                </>
+              ) : null}
+              {one.note}
+            </span>
+          ) : null}
+        </span>
+      </label>
+    )
   }
 
   return (
@@ -106,7 +232,7 @@ export function PickGrid({
             type="button"
             className="sm"
             onClick={() => {
-              const all = items.map((item) => item.id)
+              const all = items.map((one) => one.id)
               // 여기가 높이를 가장 크게 바꾼다 — 한 번에 열두 줄이 붙는다.
               keepInPlace(box.current)
               onChange(limit === undefined ? all : all.slice(0, limit))
@@ -133,56 +259,65 @@ export function PickGrid({
 
         {items.length ? (
           <div className="pick-grid">
-            {items.map((item) => {
-              const on = picked.includes(item.id)
+            {blocks.map((block) => {
+              if (block.kind === 'one') return item(block.item)
+
+              const ids = block.items.map((one) => one.id)
+              const on = ids.filter((id) => picked.includes(id)).length
+              const shown = open.includes(block.key)
               return (
-                <label
-                  key={item.id}
-                  className="pick-item small"
-                  title={item.note ? `${item.name}\n${item.note}` : item.name}
-                  style={{
-                    // 더 못 켜는 것은 흐리게.  누를 수는 있게 두면 아무 일도
-                    // 안 일어나는 클릭이 되고, 그것이 고장으로 읽힌다.
-                    cursor: !on && full ? 'default' : 'pointer',
-                    opacity: !on && full ? 0.45 : 1,
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={on}
-                    disabled={!on && full}
-                    onChange={() => toggle(item.id)}
-                  />
-                  <span style={{ minWidth: 0 }}>
-                    <span className="truncate" style={{ display: 'block' }}>
-                      {item.color ? (
-                        <span
-                          className="swatch"
-                          style={{ background: on ? item.color : 'var(--line-strong)' }}
-                        />
-                      ) : null}
-                      {/* 다 된 것은 이름 앞에 체크.  색이 아니라 글자인 이유는
-                          정적 캡처와 색맹에서 색만으로는 안 보이기 때문이다. */}
-                      {item.done ? (
-                        <span className="done-mark" aria-hidden>✓</span>
-                      ) : null}
-                      {item.name}
-                    </span>
-                    {item.note || (item.done && item.doneNote) ? (
-                      <span className="tiny faint truncate" style={{ display: 'block' }}>
-                        {/* 무엇이 됐는지를 **회색으로** 적는다.  체크만 있으면
-                            무엇이 됐다는 뜻인지 화면 어디에도 없다. */}
-                        {item.done && item.doneNote ? (
-                          <>
-                            <span className="done-note">{item.doneNote}</span>
-                            {item.note ? ' · ' : ''}
-                          </>
-                        ) : null}
-                        {item.note}
+                <div className="pick-fold" key={`fold:${block.key}`}>
+                  <div className="pick-fold-head">
+                    <label
+                      className="pick-item small"
+                      title={`${block.label}\n스윕 ${ids.length}개`}
+                      style={{
+                        cursor: !on && full ? 'default' : 'pointer',
+                        opacity: !on && full ? 0.45 : 1,
+                      }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={on > 0}
+                        // 일부만 켜진 것은 켜짐도 꺼짐도 아니다.  세모 표시가
+                        // 없으면 "스무 개 중 셋" 이 "스무 개 전부" 로 보인다.
+                        ref={(node) => { if (node) node.indeterminate = on > 0 && on < ids.length }}
+                        disabled={!on && full}
+                        onChange={() => toggleFold(block)}
+                      />
+                      <span style={{ minWidth: 0 }}>
+                        <span className="truncate" style={{ display: 'block' }}>
+                          {block.label}
+                        </span>
+                        <span className="tiny faint truncate" style={{ display: 'block' }}>
+                          스윕 {ids.length}개{on ? ` · ${on}개 켬` : ''}
+                          {block.note ? ` · ${block.note}` : ''}
+                        </span>
                       </span>
-                    ) : null}
-                  </span>
-                </label>
+                    </label>
+                    <button
+                      type="button"
+                      className="sm ghost pick-fold-toggle"
+                      aria-expanded={shown}
+                      onClick={() => {
+                        // 펴면 스무 줄이 한꺼번에 붙는다 — 단추를 누른 자리가
+                        // 그만큼 밀린다.  단추 클릭은 `change` 가 아니라서
+                        // 상자에 걸어 둔 걸쇠가 안 잡는다.
+                        keepInPlace(box.current)
+                        setOpen((was) => was.includes(block.key)
+                          ? was.filter((key) => key !== block.key)
+                          : [...was, block.key])
+                      }}
+                    >
+                      {shown ? '접기' : '스윕 고르기'}
+                    </button>
+                  </div>
+                  {shown ? (
+                    <div className="pick-fold-body">
+                      {block.items.map((one) => item(one, true))}
+                    </div>
+                  ) : null}
+                </div>
               )
             })}
           </div>

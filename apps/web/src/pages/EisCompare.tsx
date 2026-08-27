@@ -26,19 +26,30 @@ import {
 } from '../lib/tauaxis'
 import { perArea } from '../lib/areanorm'
 import { rememberedLambda } from '../lib/drtlambda'
-import { inductiveCount, nyquistXy } from '../lib/eis'
+import { inductiveCount, isScan, nyquistXy, sweepAt } from '../lib/eis'
 import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
 import type { EisKind, Spectrum, SpectrumFit, SpectrumPoints } from '../lib/types'
 
 /** 서버의 `/api/eis/points` 겹치기 상한과 같은 수. */
 const OVERLAY_LIMIT = 12
 
-/** 한 줄을 어떻게 부를까.  셀이 다르면 셀 이름이 먼저다 — 이 화면의 요점이
+/** 파일 하나를 어떻게 부를까.  셀이 다르면 셀 이름이 먼저다 — 이 화면의 요점이
  *  서로 다른 셀을 나란히 놓는 것이라, 이름만으로는 어느 셀 것인지 모른다. */
-function label(item: Spectrum): string {
+function fileLabel(item: Spectrum): string {
   const parts = [item.sample_name, item.name].filter(Boolean)
   const tail = item.at_cycle === null ? '' : ` (${item.at_cycle}c)`
   return `${parts.join(' · ')}${tail}`
+}
+
+/** 한 곡선을 어떻게 부를까.
+ *
+ *  SOC 스캔은 스윕 스물이 **이름도 사이클도 같다** (한 파일이니까).  그대로
+ *  두면 범례에 같은 글자가 스무 줄 서고, 그중 어느 것이 어느 SOC 인지는
+ *  아무 데도 없다 — 겹쳐 보는 이유가 바로 그 차이인데.  스윕 번호를 붙이고,
+ *  SOC 는 범례 꼬리표로 (`PlotSeries.note`) 단다.
+ */
+function label(item: Spectrum): string {
+  return isScan(item) ? `${fileLabel(item)} #${item.sweep_index ?? '?'}` : fileLabel(item)
 }
 
 /** 겹쳐 볼 때의 단위.
@@ -243,23 +254,29 @@ export function EisCompare() {
         if (!value) return []
         const area = unit === 'ohmcm2' ? areaOf(id) : null
         if (unit === 'ohmcm2' && !area) return []
+        const row = rows.find((one) => one.id === id) ?? ({} as Spectrum)
         return [{
-          label: label(rows.find((row) => row.id === id) ?? ({} as Spectrum)),
+          label: label(row),
+          // SOC 스캔이면 그 스윕이 어느 상태였는지.  `#3` 만으로는 순서밖에
+          // 모르는데, 곡선을 읽는 사람이 보는 것은 순서가 아니라 SOC 다.
+          note: (isScan(row) ? sweepAt(row) : '') || undefined,
           // γ 는 log₁₀ τ 위에서 읽는 것이다 — 선형 τ 로 그리면 고주파 봉우리
           // 열 개가 왼쪽 끝 한 점에 겹친다.
           x: value.tau_s.map((tau) => tauAxisValue(tauAxis, tau)),
           y: value.gamma_ohm.map((gamma) => (area ? gamma * area : gamma)),
-          color: seriesColor(rows.findIndex((row) => row.id === id)),
+          color: seriesColor(rows.findIndex((one) => one.id === id)),
           width: 1.5,
         }]
       })
     }
     return shown.kept.flatMap((item) => {
-      const index = rows.findIndex((row) => row.id === item.id)
-      const name = label(rows[index] ?? ({} as Spectrum))
+      const index = rows.findIndex((one) => one.id === item.id)
+      const row = rows[index] ?? ({} as Spectrum)
+      const name = label(row)
       const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
       const measured: PlotSeries = {
         label: name,
+        note: (isScan(row) ? sweepAt(row) : '') || undefined,
         x,
         y,
         color: seriesColor(index),
@@ -341,6 +358,14 @@ export function EisCompare() {
                   <tr key={row.id}>
                     <td className="text">
                       <Link to={`/eis/${row.id}`}>{row.name}</Link>
+                      {/* 스캔은 스무 줄이 같은 이름이라, 번호가 없으면 표에서
+                          어느 줄이 어느 곡선인지 짚을 수가 없다. */}
+                      {isScan(row) ? (
+                        <span className="tiny faint">
+                          {' '}#{row.sweep_index ?? '?'}
+                          {sweepAt(row) ? ` · ${sweepAt(row)}` : ''}
+                        </span>
+                      ) : null}
                     </td>
                     <td className="text dim">
                       {row.sample_id === null
@@ -555,18 +580,31 @@ export function EisCompare() {
         groupHint="이 측정 또는 붙은 셀의 묶음"
         limit={OVERLAY_LIMIT}
         limitNote={`한 번에 ${OVERLAY_LIMIT}개까지만 겹쳐 그립니다 — 하나를 꺼야 다른 것을 켤 수 있습니다.`}
-        items={rows.map((row, index) => ({
-          id: row.id,
-          name: label(row),
-          note: [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
-                 row.sample_name ? `셀: ${row.sample_name}` : null]
-            .filter(Boolean).join(' · '),
-          // fitting 이 있는지는 **고르기 전에** 알아야 한다.  골라 놓고
-          // 그림에서 "이건 곡선이 없네" 를 발견하면 다시 내려와야 한다.
-          done: row.fit_count > 0,
-          doneNote: 'fitting 완료',
-          color: seriesColor(index),
-        }))}
+        items={rows.map((row, index) => {
+          const common = [row.kind === 'solid' ? '전고체' : '액체', row.purpose,
+                          row.sample_name ? `셀: ${row.sample_name}` : null]
+            .filter(Boolean).join(' · ')
+          // **SOC 스캔은 파일 하나로 접는다.**  스윕 스물이 이름도 대역도
+          // 회로도 같아서, 펴 두면 고르개가 그 파일 하나로 가득 찬다.  펴면
+          // 스윕을 하나씩 켤 수 있다 — SOC 별 나이퀴스트는 스윕마다 다른
+          // 곡선이고, 그중 셋을 겹쳐 보는 것이 이 화면의 쓰임이다.
+          const scan = isScan(row)
+          return {
+            id: row.id,
+            // 접힌 안에서는 파일 이름이 머리말 줄에 이미 있다.  줄마다 되풀이하면
+            // 정작 서로 다른 것(스윕 번호와 SOC)이 잘려 안 보인다.
+            name: scan ? `#${row.sweep_index ?? '?'}` : label(row),
+            note: scan ? sweepAt(row) : common,
+            // fitting 이 있는지는 **고르기 전에** 알아야 한다.  골라 놓고
+            // 그림에서 "이건 곡선이 없네" 를 발견하면 다시 내려와야 한다.
+            done: row.fit_count > 0,
+            doneNote: 'fitting 완료',
+            color: seriesColor(index),
+            fold: scan
+              ? { key: row.sha256, label: fileLabel(row), note: common }
+              : undefined,
+          }
+        })}
         picked={selected}
         onChange={setChosen}
         empty={(

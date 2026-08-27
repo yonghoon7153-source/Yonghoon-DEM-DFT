@@ -1522,6 +1522,30 @@ tbody td .ghost.icon:first-child:focus-visible { opacity: 1; }
 
 .pick-item .swatch { margin-right: 5px; vertical-align: baseline; }
 
+/* 접힌 파일 한 덩어리 (SOC 스캔).  격자의 한 칸이 아니라 **한 줄을 통째로**
+   차지한다 — 펴면 그 안에 스윕이 여러 칸으로 깔리는데, 260px 짜리 한 칸 안에
+   그것을 넣으면 스윕 이름이 세로로 스무 줄 쌓인다. */
+.pick-fold {
+  grid-column: 1 / -1;
+  border-left: 2px solid var(--line);
+  padding-left: var(--s2);
+}
+
+.pick-fold-head { display: flex; align-items: center; gap: var(--s2); }
+/* 글 칸이 남는 자리를 먹어야 펴기 단추가 오른쪽 끝에 붙는다.  `min-width: 0`
+   이 없으면 긴 파일 이름이 단추를 칸 밖으로 밀어낸다. */
+.pick-fold-head > .pick-item { flex: 1; min-width: 0; }
+.pick-fold-toggle { flex: none; }
+
+/* 펴 놓은 스윕들.  이름이 `#3` 뿐이라 칸이 좁아도 된다 — 좁게 잡아야 스물이
+   서너 줄에 들어가고, 그래야 그림이 화면 밖으로 안 밀린다. */
+.pick-fold-body {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0 var(--s3);
+  padding: 2px 0 4px var(--s2);
+}
+
 /* 화면마다 다른 추가 필터(관계셀·목적·전해질·검색).  칸마다 폭을 손으로
    적어 두면 글자 수에 따라 들쭉날쭉해지므로, 같은 폭으로 나눠 아래끝을
    맞춘다. */

@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { inductiveCount, nyquistXy } from '../eis'
+import { inductiveCount, isScan, nyquistXy, sweepAt } from '../eis'
 
 describe('유도성 점', () => {
   const zRe = [10, 8, 7, 9, 20]
@@ -49,5 +49,33 @@ describe('유도성 점', () => {
     const { x, y } = nyquistXy([10, 20], [5, -10], true, (value) => value / 2)
     expect(x).toEqual([10])
     expect(y).toEqual([5])
+  })
+})
+
+/** 스캔의 한 스윕인가, 그리고 그 스윕은 어느 상태에서 잰 것인가.
+ *
+ *  라이브러리·비교·스캔 상세 세 화면이 같은 판정을 써야 한 화면에서 "스캔"
+ *  인 것이 다른 화면에서 낱장 스무 개로 흩어지지 않는다.
+ */
+describe('SOC 스캔의 스윕', () => {
+  it('스윕이 둘 이상이면 스캔이다 — 안 적힌 것은 낱장', () => {
+    expect(isScan({ sweep_count: 11 })).toBe(true)
+    expect(isScan({ sweep_count: 1 })).toBe(false)
+    expect(isScan({ sweep_count: null })).toBe(false)
+    expect(isScan({})).toBe(false)
+  })
+
+  it('용량이 있으면 용량, 없으면 전위', () => {
+    expect(sweepAt({ capacity_mah: 1.234, potential_v: 3.85 })).toBe('1.23 mAh')
+    expect(sweepAt({ capacity_mah: null, potential_v: 3.85 })).toBe('3.85 V')
+  })
+
+  it('만방전(0 mAh)은 "모름" 이 아니다', () => {
+    expect(sweepAt({ capacity_mah: 0 })).toBe('0 mAh')
+  })
+
+  it('둘 다 없으면 빈 문자열 — 0 으로 적으면 만방전과 구분되지 않는다', () => {
+    expect(sweepAt({ capacity_mah: null, potential_v: null })).toBe('')
+    expect(sweepAt({})).toBe('')
   })
 })
