@@ -669,7 +669,8 @@ def build(leg: str, out: Path | None = None) -> dict:
     #   섞임을 줄였을 뿐 set atomicity 가 아니어서, 첫 파일 뒤 중단하면 reader
     #   가 두 세대를 함께 봤다. cohort 전체의 immutable generation 을 만들고
     #   **pointer 하나**를 원자적으로 옮긴다.
-    promote_cohort_generation(_stage, _out, leg)
+    # ★ 38차 #9 — roster 는 **보존 원장**에서 온다. 산출물에서 유도하지 않는다.
+    promote_cohort_generation(_stage, _out, leg, roster=_ledger_roster(_out))
 
     return meta
 
@@ -717,55 +718,73 @@ def _fsync_dir(d: Path) -> None:
 #: `None` 인 것은 "CURRENT 가 아직 없어야 한다" 는 뜻이라 생략과 다르다).
 _UNSET = object()
 
-#: writer lock 이 죽은 채 남았다고 보는 시간. crash 로 남은 lock 이 영구히
-#: 게시를 막으면 그것대로 고장이므로, 이 시간이 지나면 회수한다.
-_LOCK_STALE_S = 600
-
-
 class _PublishLock:
-    """게시 전체를 덮는 writer critical section (37차 #9).
+    """게시 전체를 덮는 writer critical section (37차 #9 · 38차 #9).
 
-    ★ 36차판은 `read_current()` 로 expected 를 대조한 뒤 **별도의 무조건**
-      `os.replace` 로 게시했다. 두 writer 가 같은 옛 값을 읽고 차례로
-      replace 하면 뒤가 앞의 완전한 generation 을 조용히 지웠다. 대조와
-      전환이 한 임계 구역 안에 있어야 한다 — 대조를 한 줄 뒤로 옮기는 것은
-      창을 옮길 뿐이다.
+    ★ 37차판은 `O_CREAT|O_EXCL` + **mtime 600초** 였다. 그것이 상호배제를
+      다시 열었다:
 
-      `O_CREAT|O_EXCL` 은 같은 filesystem 안에서 원자적이다. 이것이 이
-      저장소가 가진 유일한 실물 CAS primitive 다.
+        · PID 를 쓰기만 하고 읽지 않았다 (owner liveness 미확인)
+        · heartbeat 가 없어 오래 걸리는 작업이 곧 stale 로 보였다
+        · `__exit__` 가 자기 lock 인지 확인 없이 unlink 했다 → ABA:
+          A 가 늦게 깨어나 **B 의 lock 을 지운다**
+
+    ★ 38차 — 시간 기반 lease 를 **버린다.** `fcntl.flock` 은 process 가 죽으면
+      kernel 이 자동으로 푼다. owner liveness·heartbeat·stale 판정·fencing 이
+      전부 필요 없어진다 — 있어야 할 것을 더 만드는 대신 필요 없게 만든다.
+      (단일 호스트 로컬 filesystem 전제다. 그것이 이 저장소의 실제 배치다.)
+
+    release 는 **token 을 대조**한다. 어떤 이유로든 lock 파일이 자기 것이
+    아니게 됐으면 지우지 않는다.
     """
 
     def __init__(self, out: Path):
         self.path = Path(out) / ".publish.lock"
         self.fd = None
+        self.token = None
 
     def __enter__(self):
+        import fcntl
+
         self.path.parent.mkdir(parents=True, exist_ok=True)
-        for _ in range(2):
-            try:
-                self.fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY,
-                                  0o644)
-                os.write(self.fd, str(os.getpid()).encode())
-                os.fsync(self.fd)
-                return self
-            except FileExistsError:
-                try:
-                    age = time.time() - self.path.stat().st_mtime
-                except FileNotFoundError:
-                    continue
-                if age < _LOCK_STALE_S:
-                    raise SystemExit(
-                        f"✗ 다른 게시가 진행 중이다: {self.path} "
-                        f"({age:.0f}초 전에 잡혔다). 끝난 뒤 다시 시도하라")
-                # crash 잔여로 본다 — 회수하고 한 번만 더 시도한다
-                self.path.unlink(missing_ok=True)
-        raise SystemExit(f"✗ 게시 lock 을 잡지 못했다: {self.path}")
+        self.fd = os.open(self.path, os.O_CREAT | os.O_RDWR, 0o644)
+        try:
+            fcntl.flock(self.fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except OSError:
+            os.close(self.fd)
+            self.fd = None
+            raise SystemExit(
+                f"✗ 다른 게시가 진행 중이다: {self.path} — 그 process 가 살아 "
+                "있다. 끝난 뒤 다시 시도하라")
+        self.token = uuid.uuid4().hex
+        os.ftruncate(self.fd, 0)
+        os.pwrite(self.fd, f"{os.getpid()} {self.token}".encode(), 0)
+        os.fsync(self.fd)
+        return self
 
     def __exit__(self, *exc):
-        if self.fd is not None:
+        import fcntl
+
+        if self.fd is None:
+            return False
+        try:
+            # ★ 38차 — **내 token 일 때만** 지운다. 아니면 남의 lock 이다.
+            cur = os.pread(self.fd, 4096, 0).decode("utf-8", "replace")
+            if self.token and self.token in cur:
+                self.path.unlink(missing_ok=True)
+        except OSError:
+            pass
+        finally:
+            try:
+                fcntl.flock(self.fd, fcntl.LOCK_UN)
+            except OSError:
+                pass
             os.close(self.fd)
-        self.path.unlink(missing_ok=True)
+            self.fd = None
         return False
+
+    def held(self) -> bool:
+        return self.fd is not None
 
 
 def _publish_pointer(out: Path, rec: dict) -> None:
@@ -785,7 +804,8 @@ def _publish_pointer(out: Path, rec: dict) -> None:
     _fsync_dir(out)
 
 
-def _promote_generation(stage: Path, out: Path, *, expect=_UNSET) -> dict:
+def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
+                        lock: "_PublishLock" = None) -> dict:
     """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다.
 
     ★ 36차 #9b — **비공개다.** 이 함수는 staging 을 그대로 믿으므로 한 파일
@@ -797,6 +817,13 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET) -> dict:
     `expect` 는 CURRENT 의 compare-and-swap 기대값이다 (36차 #9b). base 를
     읽은 뒤 게시까지 사이에 CURRENT 가 움직였으면 덮지 않고 거부한다.
     """
+    # ★ 38차 #9 — **유효한 lock 을 들고 있어야** pointer 를 옮길 수 있다.
+    #   37차판은 이 함수가 이름만 private 였고 lock 없이도 게시할 수 있었다.
+    #   "private 라는 이름은 trust boundary 가 아니다" 를 스스로 어겼다.
+    if lock is None or not getattr(lock, "held", lambda: False)():
+        raise SystemExit(
+            "✗ 게시 lock 없이 CURRENT 를 옮길 수 없다 — "
+            "`promote_cohort_generation()` 을 쓰라")
     stage, out = Path(stage), Path(out)
     _assert_writable(out)
     files = {p.name: _sha(p.read_bytes())
@@ -961,7 +988,7 @@ def _leg_of(name: str) -> str:
     return name.split(".", 1)[0]
 
 
-def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
+def promote_cohort_generation(stage: Path, out: Path, leg: str, *, roster) -> dict:
     """한 leg 를 갱신하되 **cohort 전체**의 새 generation 을 만든다.
 
     ★ 33차 #9 — 32차판은 `promote_generation(stage, out)` 을 그대로 쓰면
@@ -973,15 +1000,29 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
     # ★ 37차 #9 — base 읽기 · 완전성 판정 · generation 자재화 · pointer 전환을
     #   **한 임계 구역**으로 묶는다. 이 중 어느 둘 사이에 남의 게시가 끼면
     #   그 leg 가 조용히 사라진다.
-    with _PublishLock(out):
-        return _promote_cohort_locked(stage, out, leg)
+    # ★ 38차 #9 — `roster` 는 **필수**다. 선행 authority(보존 원장)가 선언한
+    #   cohort 구성이며, staged files 나 관측된 `CURRENT` 에서 유도하면 안 된다
+    #   — 그러면 자기 출력이 자기 근거가 된다. 37차판은 그렇게 했고, 원장에
+    #   빠진 leg 가 있는 base 를 그대로 영속화하거나 원장에 없는 leg 를 게시할
+    #   수 있었다.
+    #   빈 roster 와 "이 leg 가 명부 밖" 은 아래 `undeclared` 검사가 그대로
+    #   잡는다 (staging 에는 언제나 이 leg 가 들어 있다). 같은 규칙을 두 곳에
+    #   두면 강한 쪽을 지워도 초록이 된다 — 변이로 확인했다.
+    roster = set(roster or ())
+    with _PublishLock(out) as lock:
+        return _promote_cohort_locked(stage, out, leg, lock, roster)
 
 
-def _promote_cohort_locked(stage: Path, out: Path, leg: str) -> dict:
+def _promote_cohort_locked(stage: Path, out: Path, leg: str,
+                           lock: "_PublishLock", roster: set) -> dict:
     base: dict = {}
     gdir = None
     expect = None
     if (out / "CURRENT").is_file():
+        # ★ 38차 #9 — base 는 **명부 부분집합**이면 된다. 여기서 exact 를
+        #   요구하면 bootstrap 이 불가능하다: roster={a,b} 인 cohort 에 a 를
+        #   처음 게시할 때 base 는 비어 있고, b 를 게시하려면 base={a} 여야
+        #   한다. exact 는 **reader** 의 주장이다 (`_Snapshot` 이 그것을 한다).
         cur = read_current(out)
         base = dict(cur["files"])
         gdir = out / "gen" / cur["generation_id"]
@@ -1011,11 +1052,44 @@ def _promote_cohort_locked(stage: Path, out: Path, leg: str) -> dict:
     #   사본을 지웠던 것은 오판이었다: 변이가 안 문 것은 중복이어서가 아니라
     #   validator 가 약해서였다. 기대 명부는 base 에 있던 leg 들 ∪ {이번 leg}
     #   — 승격이 남의 leg 를 **줄이는** 것을 여기서 막는다.
-    want = {_leg_of(n) for n in keep} | {leg}
+    # ★ 38차 #9 — 명부에 대한 publisher 의 의무는 둘이다. exact 는 위에서
+    #   설명한 이유로 여기서 요구할 수 없고, **reader** 가 요구한다.
+    #     1) 명부에 없는 leg 를 만들지 않는다
+    #     2) 이미 있던 leg 를 **줄이지 않는다** (한 leg 갱신이 cohort 를 깎지
+    #        못하게 — 34차부터의 요구다)
     staged = {p.name: _sha(p.read_bytes())
               for p in sorted(stage.iterdir()) if p.is_file()}
-    assert_cohort_complete(staged, "staging", expect_legs=want)
-    return _promote_generation(stage, out, expect=expect)
+    have = {_leg_of(n) for n in staged}
+    undeclared = sorted(have - roster)
+    if undeclared:
+        raise SystemExit(
+            f"✗ 명부에 없는 다리를 게시하려 한다: {undeclared} "
+            f"(roster={sorted(roster)}) — 원장을 먼저 고쳐라")
+    #   (기존 leg 를 줄이는 것은 위 `keep` 복사가 구조로 막는다 — 검사를 하나
+    #    더 두려 했으나 도달 불가능이었다. 확인했고 두지 않는다.)
+    assert_cohort_complete(staged, "staging")
+    return _promote_generation(stage, out, expect=expect, lock=lock)
+
+
+def _ledger_roster(out: Path) -> set:
+    """이 cohort 디렉터리를 선언한 원장 항목의 `legs` (38차 #9).
+
+    선행 authority 다 — `CURRENT` 도 staging 도 아니다. 원장이 이 디렉터리를
+    모르면 게시하지 않는다 (fail-closed).
+    """
+    import yaml
+
+    reg_path = REPO / "docs" / "22p_gap" / "LEG_PRESERVATION.yaml"
+    if not reg_path.is_file():
+        raise SystemExit(f"✗ 보존 원장이 없다: {reg_path} — roster 를 알 수 없다")
+    reg = yaml.safe_load(reg_path.read_text(encoding="utf-8")) or {}
+    want = Path(out).resolve()
+    for c in reg.get("cohorts") or []:
+        if (REPO / c["dir"]).resolve() == want:
+            return set(c.get("legs") or ())
+    raise SystemExit(
+        f"✗ 원장이 모르는 cohort 디렉터리다: {out} — 먼저 "
+        "`LEG_PRESERVATION.yaml` 에 선언하라")
 
 
 def _frozen_cohort_dirs() -> dict[str, Path]:

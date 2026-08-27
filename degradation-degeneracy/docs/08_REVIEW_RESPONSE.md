@@ -3870,3 +3870,124 @@ validator)는 지난 라운드에 내가 중복으로 오판해 지웠던 것이
 |---|---|
 | 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version·delete-marker 의미는 고정 |
 | power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
+
+## 46. 37차 리뷰 대응 — 내가 만든 가짜 기능과, 시험이 production 을 안 지난 자리
+
+37차 리뷰는 좁은 항목 열한 개를 종결하고 일곱을 미종결로 남겼다. 그중 첫째가
+**내가 36차에 추가한 기능이 애초에 동작하지 않았다**는 것이었다.
+
+### 46.1 P0-1 발견 1 — 자동 갱신은 production 을 한 번도 지나지 않았다
+
+36차에 "만료된 lease 는 갱신한다" 를 넣고 시험을 붙였다. 그 시험은
+`retain()` **반환값의 digest 와 날짜만** 봤다. 실제 경로는 다르다:
+
+* `retain()` 직후 `verify_graph_before_registration()` 이 exact pin set 을
+  요구한다 — `pinned(leg) == graph ∪ {lease}`
+* `pinned()` 은 `list_versions()` 에 보이는 모든 historical pin 을 센다
+* 37차에 `delete` 를 계약에서 뺐으므로 만료 L0 를 퇴역시킬 수단이 없다
+
+→ `graph ∪ {L0, L1}` 이 되어 **"갱신 성공" 을 돌려준 같은 호출 안에서** 실패한다.
+production 경로(`finalize_only()`)로는 더 일찍 죽는다 — journal 의 만료 lease
+검증에서 멈춰 갱신에 도달조차 못 한다.
+
+이 저장소의 규칙("새 테스트가 처음부터 통과하면 fixture 가 진실을 가리고
+있었다")에 정확히 걸리는 경우였고, 내가 그 확인을 안 했다.
+
+**셋이 동시에 성립할 수 없다**: 모든 historical pin 을 active 로 셈 · delete
+없음 · 만료 시 새 lease. 세 번째를 **뺐다.** 자동 갱신은 되돌릴 수 없는 WORM
+잔여를 남기면서 아무것도 담보하지 못하는 가짜 기능이었다. 담보 기간이 지난
+것은 사람이 판단할 사건이다. 갱신이 실제로 필요해지면 active lease pointer 나
+exact-version retirement primitive 가 있어야 하며, 둘 다 설계 항목이지 여기서
+흉내낼 것이 아니다.
+
+### 46.2 P0-1 발견 2 — "후보가 있으면 안 만든다" 에 남은 구멍
+
+37차에 그렇게 선언했지만 `objects`·정책일수·store ID·URI·enforcement 불일치는
+여전히 `return None` 이었다. 가장 작은 정상 입력 반례: 같은 graph 에 **더 강한**
+`min_retention_days` 를 요청하면 두 번째 WORM lease 가 생긴다.
+
+순서도 위험했다. `repair_lease_locks()` 가 strict verifier **앞**에 있어서,
+부분적으로만 맞는 forged candidate 를 먼저 pin·content WORM 으로 만든 **뒤**
+"schema 가 틀렸다" 고 거부했다. 되돌릴 수 없는 상태 변경이 검증보다 앞섰다.
+
+이제 순수 validator(`_matches_lease`)가 전부 먼저 본다 — exact key set ·
+schema · leg · graph · 정책 · `pin_set_digest` · store · URI · enforcement.
+통과 못 하면 아무것도 바꾸지 않는다. orphan 입양도 같은 관문을 지난다
+(입양은 pin 을 만드는 mutation 이다).
+
+### 46.3 P0-1 발견 3·4 — exact version 이 lifecycle 전체로 이어지지 않았다
+
+37차는 `retrieve_retained()` 한 경로만 고쳤다. 나머지는 여전히 locator 를
+재탐색했다.
+
+| 자리 | 37차 | 38차 |
+|---|---|---|
+| `read_lease()` | version 없이 읽고 **나중에** lock 조회 | 봉인 version 으로 읽는다 |
+| `verify_pins()` | lease 의 version map 을 버림 | `versions=` 로 받는다 |
+| lease content | version proof 자체가 없음 | journal 에 `lease_content_version` 봉인 |
+| store identity | live-lock census (시간에 따라 답이 바뀜) | lease 에 `store_version_id`·`store_lock_mode` 봉인 |
+| canonical selector | `LOCK_MODES` (Governance 포함) | `DURABLE_MODES` (Compliance 만) |
+
+fake 도 고쳤다. `lock()` 이 `until` 을 단순 대입하고 mode 를 저장하지 않아
+**Compliance retention 을 짧게 덮을 수 있었고**, 전역 mode 변경이 과거 모든
+version 에 소급됐다. 이제 mode 는 잠글 때 봉인되고 Compliance 는 단조롭다.
+canary 가 실물보다 약하면 그 위의 모든 durable 주장이 그만큼 약하다 — 이
+저장소에서 31·32·37차에 이어 네 번째로 나온 실수다.
+
+### 46.4 #9 발견 1 — mtime lease 가 상호배제를 다시 열었다
+
+37차 `_PublishLock` 은 `O_CREAT|O_EXCL` + **mtime 600초** 였다. PID 를 쓰기만
+하고 읽지 않았고, heartbeat 가 없었으며, `__exit__` 가 자기 lock 인지 확인 없이
+unlink 했다. 살아 있는 owner 를 빼앗고, 옛 owner 가 새 owner 의 lock 을 지우는
+ABA 가 났다.
+
+**시간 기반 lease 를 버렸다.** `fcntl.flock` 은 process 가 죽으면 kernel 이
+자동으로 푼다 — owner liveness·heartbeat·stale 판정·fencing 이 **전부 필요
+없어진다**. 있어야 할 것을 더 만드는 대신 필요 없게 만드는 쪽이다. release 는
+token 을 대조한다 (그것과 독립된 불변식이다).
+
+`_promote_generation()` 도 **유효한 lock 을 들고 있어야** pointer 를 옮긴다.
+37차 회귀는 공개 이름이 없다는 것만 확인하고 underscore 함수는 오히려
+callable 이어야 한다고 요구했는데, 같은 요청문의 "private 라는 이름은 trust
+boundary 가 아니다" 와 정면으로 충돌했다.
+
+### 46.5 #9 발견 2·3 — 금지가 변수명이었고, roster 가 자기 유도였다
+
+37차 가드는 변수명 다섯 개의 `["dir"]` 만 봤다. 전역 `_WARM` 으로 generation
+파일을 여는 통로가 남아 있었고, 실제로 self-consistency 판정이 **active
+cohort 의 YAML 은 snapshot 에서 읽으면서 main gzip 은 frozen g1 에서** 열고
+있었다. 지금 두 cohort 의 payload 바이트가 같아 초록이었을 뿐이다.
+
+가드를 namespace 로 넓히자 리뷰가 지목한 한 곳 말고 **네 곳이 더** 나왔다
+(`_projection`·`_projection_rows`·`_restart_rows`·warm pair 시험). 전부
+`_snapshot_for_leg()` 로 옮겼다. `_sealed_projections()` 의 이중 snapshot
+(이름과 내용을 서로 다른 `CURRENT` 읽기로 얻던 것)도 하나로 합쳤다.
+
+roster 는 publisher 가 **자기 출력에서** 만들고 있었다. 이제 보존 원장이
+authority 다 (`_ledger_roster()`), 필수 인자이며 기본값이 없다. 다만 exact
+roster 를 publisher 에 요구할 수는 **없다** — roster={a,b} 인 cohort 에 a 를
+처음 게시할 때 b 는 존재할 수 없다 (bootstrap). 의무를 나눴다:
+
+* **publisher**: 명부에 없는 leg 를 만들지 않는다 (base 에서 물려받는 것 포함)
+* **reader**: exact roster 를 요구한다 (`_Snapshot`)
+
+### 46.6 변이 — 이번에도 물지 않은 것이 가르쳐 줬다
+
+| 물지 않은 변이 | 진단 | 처리 |
+|---|---|---|
+| content lock 의 바이트 대조 | 후보 filter 가 이미 한다 | **중복 삭제** |
+| store selector 의 Compliance 제한 | 두 mode 를 갈라 놓은 시험이 없었다 | 시험 보강 |
+| 봉인 store version 검증 | 변조 시험이 없었다 | 추가 |
+| `undeclared` vs `leg not in roster` vs `not roster` | 셋이 서로 가렸다 | **둘 삭제**, base drift 시험 추가 |
+| shrink 검사 | `keep` 복사가 구조로 막아 도달 불가 | **삭제** |
+| 만료 판정 | 갱신 축을 아무도 안 봤다 | (46.1 에서 기능 자체를 뺐다) |
+
+여섯 중 셋이 **중복이라 지웠고**, 셋은 시험이 축을 안 보던 것이었다.
+
+### 46.7 남은 것 (신고 유지)
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** — 계약 8연산·per-version·delete-marker·Compliance 단조성은 고정 |
+| power-loss ordering fault model | **미착수** — fault-injecting filesystem 필요 |
+| lease 갱신 | **미지원으로 신고** — active lease pointer 또는 retirement primitive 설계가 선행 |

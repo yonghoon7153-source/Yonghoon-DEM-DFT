@@ -1257,8 +1257,13 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
                 bad.append(f"{leg}: {key} 가 cohort 밖을 가리킨다 {rel!r}")
         if bad and bad[-1].startswith(f"{leg}: "):
             continue
-        gz = _WARM / m["projection_file"]
-        if not gz.is_file():
+        # ★ 38차 #9 — 37차판은 여기서 `_WARM / m["projection_file"]` 을 열었다.
+        #   `_WARM` 은 **frozen g1 의 고정 namespace** 다. active g2 의 YAML 은
+        #   snapshot 에서 읽으면서 payload 는 g1 에서 열고 있었다. 지금
+        #   `paired_fixed5_v4` 의 g1/g2 payload 바이트가 같아서 초록이었을 뿐,
+        #   active generation 의 gzip 이 달라지는 순간 옛 g1 을 검증하는
+        #   false-green 이 된다.
+        if not snap.has(m["projection_file"]):
             bad.append(f"{leg}: 투영 파일 없음 {m['projection_file']}")
             continue
         # ★ 23차 자체 발견 — 초판은 `!= 2` 로 **숫자를 박아** 뒀다. 스키마가 3 이
@@ -1276,7 +1281,7 @@ def test_warm_probe_row_projections_are_committed_and_self_consistent():
                 f"frozen 이면 손대지 마라")
             continue
         import gzip
-        raw = gzip.decompress(gz.read_bytes())
+        raw = gzip.decompress(snap.blob(m["projection_file"]))
         got = hashlib.sha256(raw).hexdigest()
         if got != m["projection_sha256"]:
             bad.append(f"{leg}: 투영 내용이 digest 와 다르다 {got[:16]} vs "
@@ -1346,15 +1351,17 @@ def test_warm_pairs_agree_row_by_row_on_the_first_objective():
     """
     import yaml
 
+    # ★ 38차 #9 — 고정 경로가 아니라 각 leg 의 cohort snapshot 에서 읽는다.
     need = [l for p in _WARM_PAIRS for l in p]
-    missing = [l for l in need if not (_WARM / f"{l}.projection.yaml").is_file()]
+    missing = [l for l in need
+               if not _snapshot_for_leg(l).has(f"{l}.projection.yaml")]
     assert not missing, (
         "warm 짝의 행 수준 투영이 없다 — "
         "`python docs/22p_gap/row_projection.py --all` 후 커밋할 것: " + str(missing))
 
     for nowarm, warm in _WARM_PAIRS:
-        a = yaml.safe_load((_WARM / f"{nowarm}.projection.yaml").read_text(encoding="utf-8"))
-        b = yaml.safe_load((_WARM / f"{warm}.projection.yaml").read_text(encoding="utf-8"))
+        a = _projection(nowarm)
+        b = _projection(warm)
         assert a["analysis_spec_sha256"] == b["analysis_spec_sha256"], (
             f"{nowarm}/{warm}: 투영 규격이 달라 digest 를 비교할 수 없다")
 
@@ -1396,8 +1403,8 @@ def _current_projection_schema() -> int:
 
 
 def _projection(leg: str) -> dict:
-    import yaml
-    return yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+    """★ 38차 #9 — 고정 경로가 아니라 그 leg 의 cohort snapshot 에서."""
+    return _snapshot_for_leg(leg).yaml(f"{leg}.projection.yaml")
 
 
 @pytest.mark.parametrize("a,b", _XDIGEST_EXACT)
@@ -1587,9 +1594,10 @@ _SLOT_EXPECT = {
 def _projection_rows(leg: str) -> list[dict]:
     import csv
     import gzip
-    import yaml
-    m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
-    raw = gzip.decompress((_WARM / m["projection_file"]).read_bytes())
+
+    snap = _snapshot_for_leg(leg)
+    m = snap.yaml(f"{leg}.projection.yaml")
+    raw = gzip.decompress(snap.blob(m["projection_file"]))
     return list(csv.DictReader(raw.decode("utf-8").splitlines(), delimiter="\t"))
 
 
@@ -1893,12 +1901,13 @@ def test_lean_review_base_resolution_in_four_git_states():
 def _restart_rows(leg: str) -> list[dict]:
     import csv
     import gzip
-    import yaml
-    m = yaml.safe_load((_WARM / f"{leg}.projection.yaml").read_text(encoding="utf-8"))
+
+    snap = _snapshot_for_leg(leg)
+    m = snap.yaml(f"{leg}.projection.yaml")
     assert m.get("restart_projection_file"), (
         f"{leg}: restart 수준 투영이 없다 (스키마 {m.get('projection_schema')}). "
         f"원자료가 있는 기계에서 `python docs/22p_gap/row_projection.py --all` 재실행 필요")
-    raw = gzip.decompress((_WARM / m["restart_projection_file"]).read_bytes())
+    raw = gzip.decompress(snap.blob(m["restart_projection_file"]))
     return list(csv.DictReader(raw.decode("utf-8").splitlines(), delimiter="\t"))
 
 
@@ -2075,10 +2084,14 @@ def test_stage3_contract_primary_table_matches_the_no_warm_projection():
     import csv
     import gzip
 
+    import io
+
     leg = "paired_fixed5_v4_nowarm_now"
-    f = _WARM / f"{leg}.projection.csv.gz"
-    assert f.is_file(), f"{leg} 투영이 없다"
-    with gzip.open(f, "rt", encoding="utf-8") as fh:
+    # ★ 38차 #9 — 고정 경로가 아니라 **그 leg 의 cohort snapshot** 에서 읽는다.
+    snap = _snapshot_for_leg(leg)
+    name = f"{leg}.projection.csv.gz"
+    assert snap.has(name), f"{leg} 투영이 없다"
+    with gzip.open(io.BytesIO(snap.blob(name)), "rt", encoding="utf-8") as fh:
         rows = {(r["cond_id"], r["objective"]): r
                 for r in csv.DictReader(fh, delimiter="\t")}
 
@@ -2804,6 +2817,18 @@ class _Snapshot:
 
 def _snapshot(c: dict, base=None) -> _Snapshot:
     return _Snapshot(c, base=base)
+
+
+def _snapshot_for_leg(leg: str) -> _Snapshot:
+    """그 leg 를 담은 cohort 의 snapshot (38차 #9).
+
+    소비자가 cohort 를 직접 고르고 경로를 조립하는 것을 없앤다 — 그 조립이
+    곧 고정 namespace 로 가는 통로였다.
+    """
+    for c in _cohorts():
+        if leg in (c.get("legs") or []):
+            return _snapshot(c)
+    raise AssertionError(f"어느 cohort 에도 없는 다리: {leg}")
 
 
 def _cohort_yaml(c: dict, name: str, base=None) -> dict:
@@ -3568,7 +3593,7 @@ def test_promotion_happens_only_after_the_recomputation_verdict():
     """
     src = (_REPO / "docs" / "22p_gap" / "row_projection.py").read_text(encoding="utf-8")
     i = src.index("_v = meta.get(\"재계산_검증\")")
-    j = src.index("promote_cohort_generation(_stage, _out, leg)")
+    j = src.index("promote_cohort_generation(_stage, _out, leg, roster=")
     assert i < j, "승격이 verdict 검사보다 먼저 온다"
     assert "shutil.rmtree(_stage" in src[i:j], (
         "verdict 가 실패해도 staging 을 버리지 않는다")
@@ -3655,12 +3680,17 @@ def _sealed_projections(leg_id: str) -> dict[str, dict]:
 
     ★ 34차 #9 — active cohort 는 **CURRENT 를 통해** 읽는다. fixed-name 사본은
       호환·표시용이며 어떤 active 판정의 authority 도 아니다.
+
+    ★ 38차 #9 — 37차판은 `_cohort_names()` 와 `_cohort_yaml()` 을 따로 불러
+      snapshot 을 **두 번** 만들었다. 두 호출 사이에 게시가 끼면 이름은 G0,
+      내용은 G1 일 수 있다. snapshot 을 하나만 만든다.
     """
     name = f"{leg_id}.projection.yaml"
     out = {}
     for c in _cohorts():
-        if name in _cohort_names(c):
-            out[c["cohort_id"]] = _cohort_yaml(c, name)
+        snap = _snapshot(c)
+        if snap.has(name):
+            out[c["cohort_id"]] = snap.yaml(name)
     return out
 
 
@@ -4081,7 +4111,7 @@ def test_promotion_publishes_an_immutable_generation_then_one_pointer(tmp_path):
     rp = _rp()
     out = tmp_path / "out"
     st = _leg3(tmp_path / "s0", "a", b"1")
-    rec = rp.promote_cohort_generation(st, out, "a")
+    rec = rp.promote_cohort_generation(st, out, "a", roster={"a"})
 
     gen = out / "gen" / rec["generation_id"]
     assert gen.is_dir(), "immutable generation directory 가 없다"
@@ -4092,10 +4122,10 @@ def test_promotion_publishes_an_immutable_generation_then_one_pointer(tmp_path):
                                  "a.projection.yaml"}
 
     # 같은 내용은 멱등, 다른 내용은 **새 generation** (덮지 않는다)
-    again = rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a")
+    again = rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a", roster={"a"})
     assert again["generation_id"] == rec["generation_id"]
 
-    two = rp.promote_cohort_generation(_leg3(tmp_path / "s2", "a", b"2"), out, "a")
+    two = rp.promote_cohort_generation(_leg3(tmp_path / "s2", "a", b"2"), out, "a", roster={"a"})
     assert two["generation_id"] != rec["generation_id"]
     assert gen.is_dir(), "옛 generation 이 사라졌다 — immutable 이 아니다"
     assert (gen / "a.projection.csv.gz").read_bytes() == b"rows-1"
@@ -4106,11 +4136,11 @@ def test_a_generation_directory_is_never_overwritten(tmp_path):
     """같은 generation_id 자리에 다른 바이트가 있으면 **거부**한다."""
     rp = _rp()
     out = tmp_path / "out"
-    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a", roster={"a"})
     victim = out / "gen" / rec["generation_id"] / "a.projection.yaml"
     victim.write_bytes(b"tampered\n")
     with pytest.raises(SystemExit) as ei:
-        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a")
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"1"), out, "a", roster={"a"})
     assert "generation" in str(ei.value)
 
 
@@ -4121,7 +4151,7 @@ def test_readers_follow_current_and_a_torn_pointer_is_refused(tmp_path):
     with pytest.raises(SystemExit):
         rp.read_current(out)                       # 아직 없다
 
-    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
+    rec = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a", roster={"a"})
     (out / "CURRENT").write_text("{oops", encoding="utf-8")
     with pytest.raises(SystemExit):
         rp.read_current(out)
@@ -4148,7 +4178,7 @@ def test_a_torn_pointer_write_never_replaces_a_good_one(tmp_path, monkeypatch):
     """
     rp = _rp()
     out = tmp_path / "out"
-    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
+    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a", roster={"a"})
 
     real_write = os.write
     state = {"armed": False}
@@ -4180,7 +4210,7 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
     """
     rp = _rp()
     out = tmp_path / "out"
-    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a")
+    first = rp.promote_cohort_generation(_leg3(tmp_path / "s0", "a", b"1"), out, "a", roster={"a"})
 
     boom = RuntimeError("pointer 직전에 죽었다 (주입)")
 
@@ -4189,7 +4219,7 @@ def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
 
     monkeypatch.setattr(rp, "_publish_pointer", die)
     with pytest.raises(RuntimeError):
-        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out, "a")
+        rp.promote_cohort_generation(_leg3(tmp_path / "s1", "a", b"2"), out, "a", roster={"a"})
 
     assert rp.read_current(out)["generation_id"] == first["generation_id"], (
         "pointer 가 안 옮겨졌는데 읽는 쪽이 새 generation 을 본다")
@@ -4251,16 +4281,16 @@ def test_a_cohort_generation_keeps_every_leg_and_switches_once(tmp_path):
 
     g0 = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
                             "a.projection.yaml": b"A0y",
-                            "a.restarts.csv.gz": b"A0r"} ), out, "a")
+                            "a.restarts.csv.gz": b"A0r"} ), out, "a", roster={"a", "b"})
     g0b = rp.promote_cohort_generation(_stage(tmp_path, **{"b.projection.csv.gz": b"B0c",
                             "b.projection.yaml": b"B0y",
-                            "b.restarts.csv.gz": b"B0r"} ), out, "b")
+                            "b.restarts.csv.gz": b"B0r"} ), out, "b", roster={"a", "b"})
     assert len(g0b["files"]) == 6, sorted(g0b["files"])
     assert g0b["generation_id"] != g0["generation_id"]
 
     g1 = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A1c",
                             "a.projection.yaml": b"A1y",
-                            "a.restarts.csv.gz": b"A1r"} ), out, "a")
+                            "a.restarts.csv.gz": b"A1r"} ), out, "a", roster={"a", "b"})
     assert len(g1["files"]) == 6, (
         f"한 leg 를 갱신했더니 cohort 가 줄었다: {sorted(g1['files'])}")
     for sfx in rp.LEG_SUFFIXES:
@@ -4292,7 +4322,7 @@ def test_the_production_writer_and_reader_go_through_current(tmp_path):
     out = tmp_path / "cohort"
     rec = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
                             "a.projection.yaml": b"A0y",
-                            "a.restarts.csv.gz": b"A0r"} ), out, "a")
+                            "a.restarts.csv.gz": b"A0r"} ), out, "a", roster={"a"})
     assert rp.cohort_bytes(out, "a.projection.yaml") == b"A0y"
 
     # CURRENT 가 가리키지 않는 이름은 못 읽는다 — fixed path 가 authority 가
@@ -4412,7 +4442,7 @@ def test_real_readers_see_only_the_new_generation_after_a_materialize_crash(
     g0 = rp.promote_cohort_generation(
         _stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
                             "a.projection.yaml": b"leg: a\nv: 0\n",
-                            "a.restarts.csv.gz": b"A0r"}), out, "a")
+                            "a.restarts.csv.gz": b"A0r"}), out, "a", roster={"a"})
     assert (out / "a.projection.yaml").read_bytes() == b"leg: a\nv: 0\n"
 
     boom = RuntimeError("materialize 중에 죽었다 (주입)")
@@ -4422,7 +4452,7 @@ def test_real_readers_see_only_the_new_generation_after_a_materialize_crash(
         rp.promote_cohort_generation(
             _stage(tmp_path, **{"a.projection.csv.gz": b"A1c",
                                 "a.projection.yaml": b"leg: a\nv: 1\n",
-                                "a.restarts.csv.gz": b"A1r"}), out, "a")
+                                "a.restarts.csv.gz": b"A1r"}), out, "a", roster={"a"})
     monkeypatch.undo()
 
     # pointer 는 G1, fixed 사본은 아직 G0 — 여기가 위험 구간이다
@@ -4457,7 +4487,7 @@ def test_a_partial_leg_stage_cannot_be_promoted(tmp_path, stage_files):
     rp = _rp()
     out = tmp_path / "cohort"
     with pytest.raises(SystemExit) as ei:
-        rp.promote_cohort_generation(_stage(tmp_path, **stage_files), out, "a")
+        rp.promote_cohort_generation(_stage(tmp_path, **stage_files), out, "a", roster={"a"})
     assert "세 파일" in str(ei.value) or "leg" in str(ei.value)
 
 
@@ -4474,7 +4504,7 @@ def test_the_lint_readers_follow_current_not_the_fixed_copies(tmp_path):
     rp.promote_cohort_generation(
         _stage(tmp_path, **{"a.projection.csv.gz": b"c0",
                             "a.projection.yaml": b"v: 0\n",
-                            "a.restarts.csv.gz": b"r0"}), out, "a")
+                            "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
 
     active = {"cohort_id": "gX", "dir": "unused", "status": "active"}
     frozen = {"cohort_id": "gF", "dir": "unused", "status": "frozen"}
@@ -4516,7 +4546,7 @@ def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
         rp.promote_cohort_generation(
             _stage(tmp_path, **{"a.projection.csv.gz": b"c",
                                 "a.projection.yaml": b"y",
-                                "a.restarts.csv.gz": b"r"}), out, "a")
+                                "a.restarts.csv.gz": b"r"}), out, "a", roster={"a"})
     assert "불완전" in str(ei.value)
 
 
@@ -4588,6 +4618,32 @@ def test_no_reader_touches_the_cohort_fixed_namespace():
         "cohort dir 을 snapshot 밖에서 꺼낸다 — 고정 namespace 로 가는 통로다:\n  "
         + "\n  ".join(bad))
 
+    # ★ 38차 #9 — 37차 가드는 변수명 다섯 개의 `["dir"]` 만 봤다. 전역
+    #   `_WARM` 으로 generation 파일을 직접 여는 통로가 그대로 남아 있었고,
+    #   실제로 self-consistency 판정이 active cohort 의 YAML 은 snapshot 에서
+    #   읽으면서 main gzip 은 frozen g1 에서 열고 있었다.
+    #   generation 파일 세 suffix 는 **snapshot 으로만** 닿을 수 있다.
+    gen_bad = []
+    for fn in ast.walk(tree):
+        if not isinstance(fn, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if fn.name in allowed:
+            continue
+        uses_warm = any(isinstance(n, ast.Name) and n.id == "_WARM"
+                        for n in ast.walk(fn))
+        if not uses_warm:
+            continue
+        touches_gen = any(
+            isinstance(n, ast.Constant) and isinstance(n.value, str)
+            and any(sfx in n.value for sfx in
+                    (".projection.", ".restarts."))
+            for n in ast.walk(fn))
+        if touches_gen:
+            gen_bad.append(f"{fn.name}:{fn.lineno}")
+    assert not gen_bad, (
+        "`_WARM` 고정 namespace 로 generation 파일을 연다 — snapshot 을 쓰라:\n  "
+        + "\n  ".join(gen_bad))
+
 
 def test_no_cohort_assertion_reads_a_fixed_path():
     """★ 36차 #9a — `_cohort_projections()` 가 우회로였다.
@@ -4640,7 +4696,7 @@ def test_a_crash_midway_through_materialize_never_moves_the_authority(tmp_path, 
     rp.promote_cohort_generation(
         _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
-                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
     old = {n: (out / n).read_bytes() for n in ("a.projection.csv.gz",
                                                "a.projection.yaml",
                                                "a.restarts.csv.gz")}
@@ -4660,7 +4716,7 @@ def test_a_crash_midway_through_materialize_never_moves_the_authority(tmp_path, 
         rp.promote_cohort_generation(
             _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
                                        "a.projection.yaml": b"v: 1\n",
-                                       "a.restarts.csv.gz": b"r1"}), out, "a")
+                                       "a.restarts.csv.gz": b"r1"}), out, "a", roster={"a"})
     monkeypatch.undo()
 
     # 1. 권위는 이미 새 generation 이고, 바이트도 새 것이다
@@ -4678,7 +4734,7 @@ def test_a_crash_midway_through_materialize_never_moves_the_authority(tmp_path, 
     rp.promote_cohort_generation(
         _stage(tmp_path / "s2", **{"a.projection.csv.gz": b"c1",
                                    "a.projection.yaml": b"v: 1\n",
-                                   "a.restarts.csv.gz": b"r1"}), out, "a")
+                                   "a.restarts.csv.gz": b"r1"}), out, "a", roster={"a"})
     assert rp.check_materialized(out)["generation_id"] == cur["generation_id"], (
         "재실행이 같은 generation 으로 복구하지 못했다")
 
@@ -4721,7 +4777,7 @@ def test_reading_current_refuses_an_incomplete_cohort(tmp_path):
     rp.promote_cohort_generation(
         _stage(tmp_path / "s", **{"a.projection.csv.gz": b"c0",
                                   "a.projection.yaml": b"v: 0\n",
-                                  "a.restarts.csv.gz": b"r0"}), out, "a")
+                                  "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
 
     # 세 파일 중 하나를 뺀 generation 을 **손으로** 만든다 (publisher 우회)
     files = {"a.projection.yaml": hashlib.sha256(b"v: 0\n").hexdigest(),
@@ -4753,7 +4809,7 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
     rp.promote_cohort_generation(
         _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
-                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a", "b"})
 
     real = rp.read_current
     ok = []
@@ -4767,7 +4823,7 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
                 rp.promote_cohort_generation(
                     _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
                                                "b.projection.yaml": b"v: b\n",
-                                               "b.restarts.csv.gz": b"br"}), o, "b")
+                                               "b.restarts.csv.gz": b"br"}), o, "b", roster={"a", "b"})
                 ok.append("b")
             except SystemExit:
                 pass                     # 직렬화로 거부됐다 — 정당하다
@@ -4780,7 +4836,7 @@ def test_a_lost_update_cannot_silently_drop_another_legs_generation(tmp_path):
             rp.promote_cohort_generation(
                 _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
                                            "a.projection.yaml": b"v: 1\n",
-                                           "a.restarts.csv.gz": b"r1"}), out, "a")
+                                           "a.restarts.csv.gz": b"r1"}), out, "a", roster={"a", "b"})
             ok.append("a")
         except SystemExit:
             pass
@@ -4824,7 +4880,7 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
     rp.promote_cohort_generation(
         _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
-                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a", "b"})
 
     real = rp.read_current
     state = {"seen": 0, "b_ok": False, "a_ok": False}
@@ -4838,7 +4894,7 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
                 rp.promote_cohort_generation(
                     _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
                                                "b.projection.yaml": b"v: b\n",
-                                               "b.restarts.csv.gz": b"br"}), o, "b")
+                                               "b.restarts.csv.gz": b"br"}), o, "b", roster={"a", "b"})
                 state["b_ok"] = True
             except SystemExit:
                 pass                     # 임계 구역이 막았다 — 정당하다
@@ -4851,7 +4907,7 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
             rp.promote_cohort_generation(
                 _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
                                            "a.projection.yaml": b"v: 1\n",
-                                           "a.restarts.csv.gz": b"r1"}), out, "a")
+                                           "a.restarts.csv.gz": b"r1"}), out, "a", roster={"a", "b"})
             state["a_ok"] = True
         except SystemExit:
             pass
@@ -4869,33 +4925,35 @@ def test_a_publish_between_compare_and_replace_cannot_be_lost(tmp_path):
             hashlib.sha256(b"v: 1\n").hexdigest()
 
 
-def test_a_live_publish_lock_blocks_and_a_stale_one_is_reclaimed(tmp_path):
-    """★ 37차 #9 — 임계 구역을 넣었으면 **crash 잔여 의미**도 정해야 한다.
+def test_a_publish_lock_blocks_a_second_writer_and_dies_with_its_owner(tmp_path):
+    """★ 37차 #9 → 38차 #9 — **시간 기반 lease 를 버렸다.**
 
-    lock 이 죽은 채 남아 영구히 게시를 막으면 그것대로 고장이다. 살아 있는
-    lock 은 막고, 오래된 lock 은 회수한다.
+    37차판은 mtime 600초로 stale 을 판정했고, 그것이 살아 있는 owner 를
+    빼앗고 ABA 를 만들었다. `fcntl.flock` 은 process 가 죽으면 kernel 이
+    자동으로 푼다 — owner liveness·heartbeat·stale 판정·fencing 이 전부
+    필요 없어진다. 있어야 할 것을 더 만드는 대신 **필요 없게** 만든다.
+
+    crash 잔여 lock 파일이 남아도 flock 은 잡히지 않으므로 게시를 막지 않는다.
     """
     rp = _rp()
     out = tmp_path / "cohort"
     out.mkdir(parents=True)
     lock = out / ".publish.lock"
 
-    lock.write_text("99999", encoding="utf-8")          # 방금 잡힌 lock
-    with pytest.raises(SystemExit) as ei:
-        rp.promote_cohort_generation(
-            _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
-                                       "a.projection.yaml": b"v: 0\n",
-                                       "a.restarts.csv.gz": b"r0"}), out, "a")
-    assert "진행 중" in str(ei.value)
+    # 잡고 있는 동안에는 두 번째 writer 가 막힌다
+    with rp._PublishLock(out):
+        with pytest.raises(SystemExit) as ei:
+            with rp._PublishLock(out):
+                pass
+        assert "진행 중" in str(ei.value)
 
-    old = time.time() - rp._LOCK_STALE_S - 60
-    os.utime(lock, (old, old))                          # crash 잔여로 늙힌다
+    # crash 로 파일만 남은 상태 — flock 은 이미 풀렸으므로 막지 않는다
+    lock.write_text("99999 deadbeef", encoding="utf-8")
     rec = rp.promote_cohort_generation(
-        _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c0",
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
-                                   "a.restarts.csv.gz": b"r0"}), out, "a")
-    assert rec["generation_id"], "늙은 lock 이 게시를 영구히 막았다"
-    assert not lock.exists(), "게시 뒤 lock 을 안 풀었다"
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
+    assert rec["generation_id"], "죽은 owner 의 잔여 파일이 게시를 영구히 막았다"
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -4929,11 +4987,11 @@ def test_a_whole_leg_missing_from_the_roster_is_not_complete(tmp_path):
     rp.promote_cohort_generation(
         _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"c0",
                                    "a.projection.yaml": b"v: 0\n",
-                                   "a.restarts.csv.gz": b"r0"}), out, "a")
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a", "b"})
     rp.promote_cohort_generation(
         _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
                                    "b.projection.yaml": b"v: b\n",
-                                   "b.restarts.csv.gz": b"br"}), out, "b")
+                                   "b.restarts.csv.gz": b"br"}), out, "b", roster={"a", "b"})
     assert set(rp.read_current(out)["files"]) >= {"b.projection.yaml"}, "전제"
 
     # B 를 통째로 뺀 generation 을 **바이트에서** 만든다 (publisher 우회)
@@ -4969,3 +5027,146 @@ def test_the_publisher_and_the_reader_share_one_validator():
     assert "read_current" in callers, "reader 가 validator 를 안 부른다"
     assert any(c.startswith("_promote") or c.startswith("promote")
                for c in callers), "publisher 가 validator 를 안 부른다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 38차 #9 — mtime-only stale takeover 가 상호배제를 다시 열었다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_a_live_owner_is_not_evicted_however_long_it_holds(tmp_path):
+    """★ 38차 #9 — 37차의 mtime 600초가 **살아 있는 owner** 를 빼앗았다.
+
+    PID 를 쓰기만 하고 읽지 않았고, heartbeat 도 없었으며, mtime 만 보고
+    unlink 했다. 큰 cohort 복사나 정지로 오래 걸리는 A 가 살아 있는데 B 가
+    진입했다.
+
+    이제 시간을 아예 안 본다 — lock 파일을 얼마나 늙혀도 owner 가 살아
+    있으면 못 빼앗는다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+
+    with rp._PublishLock(out):
+        lock = out / ".publish.lock"
+        old = time.time() - 86400                 # 하루 전으로 늙힌다
+        os.utime(lock, (old, old))
+        with pytest.raises(SystemExit) as ei:
+            with rp._PublishLock(out):
+                pass
+        assert "진행 중" in str(ei.value), str(ei.value)
+
+
+def test_an_old_owner_cannot_delete_the_new_owners_lock(tmp_path):
+    """★ 38차 #9 — release 가 **자기 lock 인지** 확인해야 한다.
+
+    37차판 `__exit__` 는 확인 없이 unlink 했다. 빼앗김이 가능한 구조에서는
+    A 가 늦게 깨어나 B 의 lock 을 지우는 ABA 가 난다.
+
+    지금은 빼앗김 자체가 불가능하지만 (`flock`), release 의 token 대조는
+    그것과 **독립된 불변식**이다 — 밖에서 파일이 갈렸을 때도 남의 것을
+    지우면 안 된다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    out.mkdir(parents=True)
+    lock = out / ".publish.lock"
+
+    a = rp._PublishLock(out).__enter__()
+    lock.write_text("12345 someone-elses-token", encoding="utf-8")
+    a.__exit__(None, None, None)
+    assert lock.exists(), "내 token 이 아닌 lock 파일을 지웠다"
+    lock.unlink()
+
+
+def test_the_internal_publisher_cannot_move_the_pointer_without_the_lock(tmp_path):
+    """★ 38차 #9 — `_promote_generation()` 이 lock 없이 pointer 를 옮겼다.
+
+    37차 회귀는 공개 이름 `promote_generation` 이 없다는 것만 확인하고
+    underscore 함수는 **callable 이어야 한다**고 요구했다. 같은 요청문의
+    "private 라는 이름은 trust boundary 가 아니다" 와 정면으로 충돌한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "s0", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a", roster={"a"})
+    before = rp.read_current(out)["generation_id"]
+
+    with pytest.raises((SystemExit, TypeError)):
+        rp._promote_generation(
+            _stage(tmp_path / "s1", **{"a.projection.csv.gz": b"c1",
+                                       "a.projection.yaml": b"v: 1\n",
+                                       "a.restarts.csv.gz": b"r1"}), out)
+    assert rp.read_current(out)["generation_id"] == before, (
+        "lock 없이 pointer 가 움직였다")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 38차 #9 — roster 가 reader 에만 선택적이고 publisher 는 자기 출력에서 유도
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_the_publisher_refuses_a_leg_the_roster_does_not_declare(tmp_path):
+    """★ 38차 #9 — 원장에 없는 leg 를 게시할 수 있었다.
+
+        원장 roster = {a}
+        b 를 게시 → want={a,b} 로 **자기 유도** → 정상 게시
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path / "sa", **{"a.projection.csv.gz": b"c0",
+                                   "a.projection.yaml": b"v: 0\n",
+                                   "a.restarts.csv.gz": b"r0"}), out, "a",
+        roster={"a"})
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "sb", **{"b.projection.csv.gz": b"bc",
+                                       "b.projection.yaml": b"v: b\n",
+                                       "b.restarts.csv.gz": b"br"}), out, "b",
+            roster={"a"})                 # 원장에 b 가 없다
+    assert "b" in str(ei.value)
+
+
+def test_the_roster_is_mandatory_for_the_publisher():
+    """★ 38차 #9 — 선행 authority 를 **필수 인자**로 만든다.
+
+    선택 인자로 두면 부르는 쪽이 빠뜨릴 수 있고, 37차에 실제로 그랬다.
+    """
+    import inspect
+
+    rp = _rp()
+    sig = inspect.signature(rp.promote_cohort_generation)
+    prm = sig.parameters.get("roster")
+    assert prm is not None, "publisher 가 roster 를 안 받는다"
+    assert prm.default is inspect.Parameter.empty, (
+        "roster 가 선택 인자다 — 부르는 쪽이 빠뜨릴 수 있다")
+
+
+def test_a_base_leg_the_roster_dropped_blocks_the_next_publish(tmp_path):
+    """★ 38차 #9 — base 에서 물려받는 leg 도 **명부 안**이어야 한다.
+
+    base 는 exact roster 로 읽지 않는다 (bootstrap 때문에 그럴 수 없다).
+    그래서 원장이 leg 를 뺐는데 `CURRENT` 에 남아 있으면, 다음 승격이 그것을
+    `keep` 으로 그대로 물려받는다. staged 전체를 명부와 대조해야 잡힌다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    for leg, tag in (("a", b"0"), ("b", b"1")):
+        rp.promote_cohort_generation(
+            _stage(tmp_path / f"s{leg}",
+                   **{f"{leg}.projection.csv.gz": b"c" + tag,
+                      f"{leg}.projection.yaml": b"v: " + tag + b"\n",
+                      f"{leg}.restarts.csv.gz": b"r" + tag}), out, leg,
+            roster={"a", "b"})
+
+    # 원장이 b 를 뺐다 — 그런데 CURRENT 에는 남아 있다
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(
+            _stage(tmp_path / "sa2", **{"a.projection.csv.gz": b"c9",
+                                        "a.projection.yaml": b"v: 9\n",
+                                        "a.restarts.csv.gz": b"r9"}), out, "a",
+            roster={"a"})
+    assert "b" in str(ei.value) and "명부" in str(ei.value), str(ei.value)
