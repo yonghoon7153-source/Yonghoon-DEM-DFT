@@ -258,8 +258,29 @@ def tau_int_geyer(series, d_origin_ps):
     }
 
 
+def cell_axis_info(cell):
+    """셀에서 **수직폭·종횡비·비직교성**을 낸다. `(widths, aspect, max_offdiag, angles_deg)`.
+
+    ⚠ 수직폭은 `|a|` 가 아니라 **`V/|b×c|`** 다 — 유한크기를 정하는 것은 그쪽이다.
+      실측(lpsocl V0): `|c| = 35.17 Å` 인데 수직폭은 28.83 Å.
+    """
+    import numpy as _np
+    C = _np.asarray(cell, dtype=float)
+    V = abs(_np.linalg.det(C))
+    if V <= 0:
+        return None
+    w = [V / _np.linalg.norm(_np.cross(C[(k + 1) % 3], C[(k + 2) % 3])) for k in range(3)]
+    off = max(abs(C[i][j]) for i in range(3) for j in range(3) if i != j)
+    ang = []
+    for i, j in ((0, 1), (0, 2), (1, 2)):
+        cs = float(_np.dot(C[i], C[j]) / (_np.linalg.norm(C[i]) * _np.linalg.norm(C[j])))
+        ang.append(_np.degrees(_np.arccos(max(-1.0, min(1.0, cs)))))
+    return w, max(w) / min(w), off, ang
+
+
 def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
-                           prefix_ps=None, max_lag_frac=0.5, n_origin=200):
+                           prefix_ps=None, max_lag_frac=0.5, n_origin=200,
+                           basis="cartesian"):
     """`traj.xyz` 에서 **확산텐서** `M_αβ(t) = ⟨Δr_α Δr_β⟩` 를 낸다 (다중 시간원점).
 
     왜 (2026-08-27, 교차리뷰 G/H): 우리 3×3×1 은 **이방 복제**라 scalar `L` 도 `m/6` 도
@@ -334,11 +355,37 @@ def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
                                       min(n_origin, nf - max_lag), dtype=int))
     if len(origins) < 2:
         return None
+    # ⛔⛔ 2026-08-27 — **결정축 투영.** 교차리뷰 G 가 요구한 것이고, 없으면 판독이 안 된다:
+    #   *"비직교 셀이면 fractional 성분을 그대로 쓰지 말고 orthonormal Cartesian 텐서를
+    #     계산한 뒤 결정축으로 회전해야 한다."*
+    #   실측 계기: lpsocl V0 의 비대각이 **3.48 Å** 라 Cartesian z 가 결정축 c 가 아니다.
+    #   그런데 우리가 `Dzz` 를 "복제 안 한 c 축" 으로 읽었다 — **근거 없는 독해**였다.
+    #   ⚠ 비직교 셀에서 â·b̂·ĉ 는 서로 직교하지 않으므로 이 성분들은 **적절한 텐서 분해가
+    #     아니다.** "a 방향으로의 평균제곱변위" 라는 뜻이고, 그게 복제 방향과 짝지어 볼 때
+    #     필요한 것이다. 각도를 같이 찍어 얼마나 기울었는지 보이게 한다.
+    #   ⚠⚠ **왜 â·b̂·ĉ 가 아니라 역격자 방향인가** (2026-08-27, 설계 결정):
+    #     비직교에서 `Δr·â` 는 공변 성분이고 `â` 로 전개한 반변 계수와 **다른 양**이다.
+    #     둘 다 정의는 되지만, **유한크기가 제약하는 것은 셀 벽까지의 수직 거리**이고
+    #     그 방향은 `b×c` (수직폭 `V/|b×c|` 와 짝) 다. 그래서 정규화한 **역격자 방향**
+    #     `b̂×c`, `ĉ×a`, `â×b` 로 투영한다 — 각 성분이 자기 수직폭과 정확히 짝지어진다.
+    #     (직교 셀에서는 셋이 x·y·z 와 같아지므로 기존 결과와 어긋나지 않는다.)
+    P = None
+    if basis == "crystal":
+        try:
+            C = _np.array(frames[0].get_cell(), dtype=float)
+            rec = _np.array([_np.cross(C[(k + 1) % 3], C[(k + 2) % 3]) for k in range(3)])
+            P = _np.array([r / _np.linalg.norm(r) for r in rec])
+        except Exception:
+            print("   ⚠ 셀을 못 읽어 결정축 투영을 건너뛴다 — Cartesian 으로 낸다")
+            P = None
+
     lags = _np.arange(1, max_lag)
     M = _np.zeros((3, 3, len(lags)))
     for k, L in enumerate(lags):
         d = pos[origins + L] - pos[origins]                 # (norig, nion, 3)
         d = d.reshape(-1, 3)
+        if P is not None:
+            d = d @ P.T                                     # 결정축 방향 성분
         M[:, :, k] = (d[:, :, None] * d[:, None, :]).mean(axis=0)
     return (lags * dt).tolist(), [[M[a][b].tolist() for b in range(3)] for a in range(3)]
 
@@ -359,6 +406,11 @@ def cmd_directional(a):
     print("방향별 확산텐서 — D_αβ = ½·dM_αβ/dt  (성분당 1차원이라 분모가 **2**)")
     print("⚠ 이방계에서도 총 MSD 기울기 m/6 은 Tr(D)/3 이다 — 'trace-average' 이지 "
           "'등방 D' 가 아니다 (회신 H 정정).")
+    _cry = getattr(a, "crystal_axes", False)
+    if _cry:
+        print("★ **결정축 투영** (â·b̂·ĉ) — 열 이름 Dxx/Dyy/Dzz 를 **Daa/Dbb/Dcc 로 읽는다**")
+        print("  ⚠ 비직교 셀에서 â·b̂·ĉ 는 서로 직교하지 않는다 — 적절한 텐서 분해가 아니라 "
+              "'그 방향으로의 평균제곱변위' 다. 아래 셀 줄의 각도를 같이 볼 것.")
     print(f"{'case':30s} {'prefix':>8s} {'Dxx':>9s} {'Dyy':>9s} {'Dzz':>9s} "
           f"{'Tr/3':>9s} {'이방비':>7s}  비대각 최대")
     n_done = 0
@@ -375,8 +427,24 @@ def cmd_directional(a):
                 sf = json.load(open(mj)).get("save_fs") or 100.0
             except Exception:
                 pass
+        # ★ 셀 정보를 먼저 찍는다 — 어느 축이 짧고 어디를 복제했는지 화면에서 보여야
+        #   `Dcc 가 낮다` 를 "복제 안 한 축" 과 짝지을 수 있다. 2026-08-27 에 우리가
+        #   **c 를 짧은 축으로 착각**했다 (실제로는 수직폭 28.83 Å 로 제일 긴 축이었다).
+        try:
+            from ase.io import read as _rd
+            _ci = cell_axis_info(_rd(str(traj), "0").get_cell())
+            if _ci:
+                _w, _asp, _off, _ang = _ci
+                print(f"   셀 수직폭 a/b/c = {_w[0]:.2f}/{_w[1]:.2f}/{_w[2]:.2f} Å · "
+                      f"최소 {min(_w):.2f} · **종횡비 {_asp:.2f}** · "
+                      f"각도 {_ang[0]:.1f}/{_ang[1]:.1f}/{_ang[2]:.1f}° · "
+                      f"비대각 {_off:.2f} Å"
+                      + ("" if _off < 1e-6 else "  ⚠ **비직교** — Cartesian 축이 결정축이 아니다"))
+        except Exception:
+            pass
         for pp in pre:
-            got = directional_msd_tensor(traj, save_fs=sf, prefix_ps=pp)
+            got = directional_msd_tensor(traj, save_fs=sf, prefix_ps=pp,
+                                         basis="crystal" if _cry else "cartesian")
             if got is None:
                 print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
                       f" ⛔ 프레임 부족 — 이 prefix 는 아직 못 잰다")
@@ -1206,6 +1274,51 @@ def selftest():
             "[음성] prefix 가 너무 짧으면 None — 프레임 20개 미만은 재지 않는다")
         chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, species="Xx") is None,
             "[음성] 없는 원소를 달라면 None — 빈 배열로 0 을 반환하지 않는다")
+
+        # ── 결정축 투영 (비직교) ─────────────────────────────────────────
+        # ⚠ **크기가 아니라 성질**을 검사한다. 60이온·600프레임에서 D 는 15–30 % 흔들려
+        #   숫자 일치로 검사하면 잡음에 걸려 깨진다. 견고한 것은 ① 등방은 어느 기저에서도
+        #   등방 ② 억제한 방향이 억제된 칸으로 나온다 ③ 직교 셀에서는 두 기저가 같다.
+        _Cn = _np.array([[20., 0., 0.], [0., 20., 0.], [10., 0., 30.]])   # 비직교
+        _ci = cell_axis_info(_Cn)
+        chk(_ci and _ci[2] > 1.0,
+            f"[양성] cell_axis_info 가 비직교를 잡는다 (비대각 {_ci[2]:.1f} Å)")
+        chk(_ci and abs(_ci[0][2] - 30.0) < 1e-6,
+            "[양성] 수직폭을 |c| 가 아니라 V/|a×b| 로 낸다 — 유한크기를 정하는 쪽이다")
+
+        def _mk(path, supp):
+            _s = _r.normal(0, 1, (600, 60, 3)) * _np.sqrt(2 * 0.30 * 0.1)
+            if supp is not None:                      # 역격자 세 번째 방향만 억제
+                _rc = _np.cross(_Cn[0], _Cn[1]); _k = _rc / _np.linalg.norm(_rc)
+                _s = _s + (supp - 1.0) * _np.outer(_s @ _k, _k).reshape(_s.shape)
+            _w(str(path), [_At("Li" * 60, positions=q, cell=_Cn, pbc=True)
+                           for q in _np.cumsum(_s, axis=0)])
+
+        def _ratio(path, cry):
+            _g = directional_msd_tensor(path, save_fs=100.0,
+                                        basis="crystal" if cry else "cartesian")
+            _t2, _M2 = _g
+            _i = [k for k, x in enumerate(_t2) if 2 <= x <= 20]
+            def _sl(s):
+                _x = [_t2[k] for k in _i]; _y = [s[k] for k in _i]; _N = len(_x)
+                _sx = sum(_x)
+                return ((_N * sum(p * q for p, q in zip(_x, _y)) - _sx * sum(_y))
+                        / (_N * sum(p * p for p in _x) - _sx * _sx) / 2.0)
+            _dd = [_sl(_M2[k][k]) for k in range(3)]
+            return max(_dd) / min(_dd), _dd
+
+        _mk(_d / "iso.xyz", None)
+        _mk(_d / "slow.xyz", 0.5)                     # 그 방향 D 를 1/4 로
+        for _cry in (False, True):
+            _ri, _ = _ratio(_d / "iso.xyz", _cry)
+            chk(_ri < 1.5, f"[양성] 등방은 {'결정축' if _cry else 'Cartesian'} 기저에서도 "
+                           f"등방이다 (비 {_ri:.2f})")
+            _rs, _ds = _ratio(_d / "slow.xyz", _cry)
+            chk(_rs > 2.5, f"[음성] 한 방향만 억제하면 **뭉개지 않고 잡아낸다** "
+                           f"({'결정축' if _cry else 'Cartesian'} 비 {_rs:.2f})")
+            chk(_ds.index(min(_ds)) == 2,
+                f"[음성] 억제한 방향이 **맞는 칸**에 나온다 (3번째, "
+                f"{'결정축' if _cry else 'Cartesian'})")
         import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
     except ImportError:
         print("  · (ase/numpy 없음 — 방향별 텐서 selftest 건너뜀)")
@@ -1258,6 +1371,9 @@ def main():
     ap.add_argument("--directional", action="store_true",
                     help="traj.xyz 에서 **확산텐서** D_αβ 를 낸다. 이방 셀(3×3×1 등)에서 "
                          "scalar D 를 쓰기 전에 등방성부터 확인하는 용도.")
+    ap.add_argument("--crystal_axes", action="store_true",
+                    help="변위를 **결정축 â·b̂·ĉ 로 투영**해서 잰다 (비직교 셀 필수). "
+                         "안 주면 Cartesian x·y·z 인데, 비직교면 그건 결정축이 아니다.")
     ap.add_argument("--prefixes", default="",
                     help="누적 prefix [ps] 쉼표목록 (예: 100,200,400). 각 시점에서 다시 잰다 "
                          "— D_inc plateau 가 이미 왔으면 완주 전에 끊을 수 있다.")
