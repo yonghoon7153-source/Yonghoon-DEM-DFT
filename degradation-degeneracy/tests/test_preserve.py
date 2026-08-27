@@ -2271,6 +2271,10 @@ class _LockingStore:
         return None if u is None else {"version_id": version, "mode": self.mode,
                                        "retain_until": u}
 
+    def head_version(self, key: str):
+        """★ 34차 P0-1 — digest 로 현재 version 을 재조회하는 계약."""
+        return self._head.get(key)
+
     def keys_under(self, prefix: str) -> list[str]:
         return sorted(k for k in self._head if k.startswith(prefix))
 
@@ -2566,3 +2570,125 @@ def test_a_provider_without_a_stable_identity_cannot_be_used(tmp_path):
     with pytest.raises(PreserveError) as ei:
         backend.uri
     assert "식별자" in ei.value.msg
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 34차 P0-1 — lease version proof 가 journal 전에는 회수 불가였다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_rerunning_an_object_lock_transaction_reuses_the_same_lease(tmp_path,
+                                                                    monkeypatch):
+    """★ 34차 P0-1 반례 A — 완료 뒤 같은 트랜잭션 재실행.
+
+    `_existing_lease()` 는 기존 lease 를 읽고 `verify_retention()` 을 부르는데
+    `lease_version` 을 넘기지 않는다. object-lock verifier 는 proof 가 없으면
+    **반드시 실패**하고, `_existing_lease()` 는 그 예외를 "기존 lease 없음"
+    으로 바꿔 `None` 을 돌려준다.
+
+    → 초 경계를 넘으면 두 번째 WORM lease 가 생기고 exact pin set 이 오염돼
+      **기존 정상 등록까지 거짓이 된다** (WORM 이라 지울 수도 없다).
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    a = run_transaction(PLANNED, run, backend, index, _hooks())
+    assert a["durable"] is True
+    b = run_transaction(PLANNED, run, backend, index, _hooks())
+
+    assert b["retention"]["lease_digest"] == a["retention"]["lease_digest"], (
+        "재실행이 두 번째 WORM lease 를 만들었다")
+    leases = backend.pinned(PLANNED.leg_id) - set(a["retention"]["objects"])
+    assert leases == {a["retention"]["lease_digest"]}, f"lease 가 {len(leases)}개다"
+    assert is_registered(index, PLANNED.leg_id, backend)
+    assert assert_durable_retention(backend, index, PLANNED.leg_id)
+
+
+def test_a_crash_between_lease_lock_and_journal_can_be_finalized(tmp_path):
+    """★ 34차 P0-1 반례 B — lease 를 잠근 직후 journal 전에 죽는다.
+
+    L0/V0 는 provider 에 잠겼는데 V0 를 기록한 journal 이 없다. 재개가 L0 를
+    재사용하지 못하면 L1 을 만들고, exact pin-set 검증이 L0 를 여분으로 보아
+    journal 조차 못 만든다. L0 는 WORM 이라 약속 기간 전 삭제도 안 된다 —
+    "재계산 없이 CAS 로 닫는다" 가 가장 필요한 상태가 장기 복구 불가가 된다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    # ★ 시계를 전진시킨다. 같은 초 안에서는 lease 바이트가 같아 우연히
+    #   재사용되므로, 그러면 이 시험이 아무 것도 시험하지 않는다.
+    base = dt.datetime(2026, 8, 27, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    _real_dt = P.dt.datetime
+    P.dt.datetime = _Clock
+
+    # retain() 직후 죽는다 (journal 전)
+    real = P.verify_graph_before_registration
+
+    def die(*a, **kw):
+        raise RuntimeError("lease lock 뒤 journal 전에 죽었다 (주입)")
+
+    P.verify_graph_before_registration = die
+    try:
+        with pytest.raises(RuntimeError):
+            run_transaction(PLANNED, run, backend, index, _hooks())
+    finally:
+        P.verify_graph_before_registration = real
+
+    assert not has_registration_journal(index, PLANNED.leg_id)
+    leased = backend.pinned(PLANNED.leg_id)
+    assert leased, "lease/graph 가 잠겼어야 한다 — 전제"
+
+    # 새 process 를 흉내낸다 — 새 provider·backend 객체로 재개
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(PLANNED.leg_id, fresh, index)
+    assert out["ok"] and out["durable"] is True
+    assert is_registered(index, PLANNED.leg_id, fresh)
+
+    after = fresh.pinned(PLANNED.leg_id)
+    leases = after - set(out["retention"]["objects"])
+    P.dt.datetime = _real_dt
+    assert leases == {out["retention"]["lease_digest"]}, (
+        f"재개가 lease 를 하나 더 만들었다: {sorted(leases)}")
+
+
+def test_the_provider_control_plane_is_locked_too(tmp_path):
+    """★ 34차 P0-1 — `store.json` 이 잠기지 않은 control-plane object 였다.
+
+    지우면 새 UUID 가 발급돼, content 와 lease 가 모두 남아 있어도 기존
+    receipt 가 복구 불가가 된다. false durable 은 아니지만 "12시간 계산을
+    재실행하지 않는다" 는 목적에 직접 영향을 준다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    run_transaction(PLANNED, run, backend, index, _hooks())
+
+    with pytest.raises(PermissionError):
+        store.delete("store.json")
+    with pytest.raises(PermissionError):
+        store.put("store.json", b"{}")

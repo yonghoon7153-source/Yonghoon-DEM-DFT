@@ -837,6 +837,10 @@ def cohort_bytes(out: Path, name: str) -> bytes:
     return data
 
 
+#: leg 하나가 반드시 갖는 세 파일. generation 완전성의 정본이다.
+LEG_SUFFIXES = (".projection.csv.gz", ".projection.yaml", ".restarts.csv.gz")
+
+
 def _leg_of(name: str) -> str:
     return name.split(".", 1)[0]
 
@@ -858,8 +862,24 @@ def promote_cohort_generation(stage: Path, out: Path, leg: str) -> dict:
         gdir = out / "gen" / cur["generation_id"]
 
     fresh = {p.name for p in stage.iterdir() if p.is_file()}
-    keep = {n: h for n, h in base.items()
-            if _leg_of(n) != leg and n not in fresh}
+    # ★ 34차 #9 — "완전한 snapshot" 을 **구조로** 강제한다. 초판은 stage 의
+    #   이름 집합을 얻은 뒤 그 leg 의 기존 파일을 base 에서 전부 제외했지만,
+    #   stage 가 exact set 인지 보지 않았다. `{a.projection.yaml}` 만 넘기면
+    #   그 leg 의 CSV·restart 를 **제거한** generation 이 정상 게시됐다.
+    want = {f"{leg}{sfx}" for sfx in LEG_SUFFIXES}
+    if fresh != want:
+        raise SystemExit(
+            f"✗ {leg} 의 staging 이 세 파일 exact set 이 아니다 — 남음 "
+            f"{sorted(fresh - want)} · 모자람 {sorted(want - fresh)}")
+    keep = {n: h for n, h in base.items() if _leg_of(n) != leg}
+    # base 도 leg 마다 완전해야 한다 — 불완전한 것을 물려받지 않는다
+    for other in sorted({_leg_of(n) for n in keep}):
+        have = {n for n in keep if _leg_of(n) == other}
+        need = {f"{other}{sfx}" for sfx in LEG_SUFFIXES}
+        if have != need:
+            raise SystemExit(
+                f"✗ 기존 generation 의 {other} 가 불완전하다: 모자람 "
+                f"{sorted(need - have)}")
 
     # base 에서 넘길 파일을 staging 에 복사한다 — generation 은 self-contained
     for name in sorted(keep):

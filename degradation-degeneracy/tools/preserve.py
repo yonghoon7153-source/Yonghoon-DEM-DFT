@@ -558,7 +558,7 @@ class CasBackend:
         #   **그것을 돌려준다** — 재시도가 상태를 늘리지 않는다.
         existing = self._existing_lease(leg_id, objs, min_retention_days)
         if existing is not None:
-            return existing
+            return existing        # `lease_version` 은 재발견된 값이 들어 있다
         self.pin(leg_id, objs)
         live = self.probe_enforcement()
         if live != self.enforcement:
@@ -619,7 +619,11 @@ class CasBackend:
                 or lease.get("enforcement") != self.probe_enforcement():
             return None
         try:
-            return self.verify_retention(leg_id, extra[0], expected=set(objs))
+            # ★ 34차 P0-1 — proof 를 **provider 에서 재발견**해 넘긴다.
+            #   초판은 넘기지 않아 object-lock lease 재사용이 언제나 실패했다.
+            return self.verify_retention(
+                leg_id, extra[0], expected=set(objs),
+                lease_version=self.recover_lease_version(leg_id, extra[0]))
         except PreserveError:
             return None       # 만료됐거나 어긋났다 — 새로 만든다
 
@@ -787,6 +791,20 @@ class CasBackend:
         """CAS object 쪽도 잠근다 — pin 만 잠그면 원본이 지워질 수 있다."""
         return None
 
+    def recover_lease_version(self, leg_id: str, lease_digest: str):
+        """이미 잠긴 lease 의 version 을 **digest 로 재조회**한다.
+
+        ★ 34차 P0-1 — lease version proof 는 journal 을 쓰기 전까지 메모리에만
+          있었다. 그래서 기존 lease 를 재사용하려는 모든 경로(재실행,
+          pre-journal crash 재개)가 proof 없이 verifier 를 불러 **반드시**
+          실패했고, 그때마다 두 번째 WORM lease 가 생겨 exact pin set 이
+          오염됐다. WORM 이라 지울 수도 없어 복구가 막혔다.
+
+          불변식: **lease 가 한 번 잠겼다면 어느 지점에서 죽어도 reopen 이
+          같은 lease digest 와 같은 provider version 을 재발견한다.**
+        """
+        return None
+
     def describe_locks(self, leg_id: str, versions: dict) -> dict:
         """version 별 **현재** lock 상태를 provider 에 묻는다.
 
@@ -859,8 +877,15 @@ class ObjectLockBackend(CasBackend):
             rec = None
         if isinstance(rec, dict) and _is_uuid_hex(rec.get("store_id") or ""):
             return rec["store_id"]
-        self.provider.put(key, canonical_bytes(
+        # ★ 34차 P0-1 — `store.json` 은 잠기지 않은 control-plane object 였다.
+        #   지우면 새 UUID 가 발급돼, content 와 lease 가 남아 있어도 기존
+        #   receipt 가 복구 불가가 된다.
+        vid = self.provider.put(key, canonical_bytes(
             {"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex}))
+        far = (dt.datetime.now(dt.timezone.utc)
+               + dt.timedelta(days=MIN_RETENTION_DAYS * 10)
+               ).strftime("%Y-%m-%dT%H:%M:%SZ")
+        self.provider.lock(key, vid, far)
         return load_canonical(self.provider.get(key))["store_id"]
 
     @property
@@ -890,6 +915,16 @@ class ObjectLockBackend(CasBackend):
         key = self._provider_obj_key(dg)
         vid = self.provider.put(key, self.read_back(dg))
         self.provider.lock(key, vid, until)
+
+    def recover_lease_version(self, leg_id: str, lease_digest: str):
+        """provider 에게 그 pin 의 **현재 version** 을 묻는다 (34차 P0-1)."""
+        head = getattr(self.provider, "head_version", None)
+        if not callable(head):
+            raise PreserveError(
+                "capability",
+                "provider 가 head_version 을 주지 않는다 — lease proof 를 "
+                "journal 없이 재발견할 수 없으면 재개가 새 lease 를 만든다")
+        return head(self._provider_key(leg_id, lease_digest))
 
     def probe_enforcement(self) -> str:
         st = self.query_object_lock()

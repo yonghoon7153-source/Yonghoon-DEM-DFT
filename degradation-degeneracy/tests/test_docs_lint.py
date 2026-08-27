@@ -2722,9 +2722,40 @@ def _cohorts() -> list[dict]:
     return cs
 
 
+def _cohort_names(c: dict, base=None) -> list[str]:
+    """cohort 가 담은 투영 YAML 이름 — **active 는 CURRENT 가 정본**이다.
+
+    ★ 34차 #9 — 33차판 reader 들은 `<cohort>/*.projection.yaml` 을 glob 했다.
+      writer 는 CURRENT 로 옮겼는데 실제 소비자는 fixed name 을 읽고 있었다.
+      그러면 pointer 전환 뒤 `_materialize` 중 죽었을 때 reader 가 stale G0
+      또는 G0/G1 혼합을 **읽는다** — 다음 suite 의 `check_materialized()` 가
+      나중에 잡는 것은 "reader authority 가 CURRENT" 라는 뜻이 아니다.
+
+    frozen cohort 는 원자료를 잃어 migration 할 수 없으므로 fixed layout
+    fallback 을 유지한다 (조용한 예외가 아니라 여기 적힌 예외다).
+    """
+    d = Path(base) if base is not None else _REPO / c["dir"]
+    if c.get("status") == "frozen":
+        return sorted(q.name for q in d.glob("*.projection.yaml"))
+    rp = _rp()
+    return sorted(n for n in rp.read_current(d)["files"]
+                  if n.endswith(".projection.yaml"))
+
+
+def _cohort_yaml(c: dict, name: str, base=None) -> dict:
+    """cohort 에서 투영 YAML 하나를 읽는다 — active 는 CURRENT 를 통해서."""
+    import yaml
+
+    d = Path(base) if base is not None else _REPO / c["dir"]
+    if c.get("status") == "frozen":
+        return yaml.safe_load((d / name).read_text(encoding="utf-8"))
+    return yaml.safe_load(_rp().cohort_bytes(d, name).decode("utf-8"))
+
+
 def _cohort_projections(c: dict) -> list[Path]:
+    """호환용 경로 목록. **판정에는 쓰지 않는다** — `_cohort_yaml` 을 쓴다."""
     d = _REPO / c["dir"]
-    return sorted(d.glob("*.projection.yaml"))
+    return [d / n for n in _cohort_names(c)]
 
 
 def test_every_projection_matches_its_own_cohort_pin():
@@ -2856,16 +2887,9 @@ def _sealed_source_digest(leg_id: str) -> str | None:
     """봉인된 투영이 적은 `source_digest` — 가변 원장이 아니라 이것이 근거다."""
     import yaml
 
-    projections = {}
-    active = None
-    for c in _cohorts():
-        if c.get("status") == "active":
-            active = c["cohort_id"]
-        y = _REPO / c["dir"] / f"{leg_id}.projection.yaml"
-        if y.is_file():
-            projections[c["cohort_id"]] = yaml.safe_load(
-                y.read_text(encoding="utf-8"))
-    return _pick_sealed_digest(projections, active)
+    active = next((c["cohort_id"] for c in _cohorts()
+                   if c.get("status") == "active"), None)
+    return _pick_sealed_digest(_sealed_projections(leg_id), active)
 
 
 def _current_generation(creg: dict) -> str:
@@ -3567,14 +3591,16 @@ def _manifest_bound_digest(leg_id: str) -> tuple[str, str] | None:
 
 
 def _sealed_projections(leg_id: str) -> dict[str, dict]:
-    """cohort 이름 → 그 cohort 의 봉인 투영."""
-    import yaml
+    """cohort 이름 → 그 cohort 의 봉인 투영.
 
+    ★ 34차 #9 — active cohort 는 **CURRENT 를 통해** 읽는다. fixed-name 사본은
+      호환·표시용이며 어떤 active 판정의 authority 도 아니다.
+    """
+    name = f"{leg_id}.projection.yaml"
     out = {}
     for c in _cohorts():
-        y = _REPO / c["dir"] / f"{leg_id}.projection.yaml"
-        if y.is_file():
-            out[c["cohort_id"]] = yaml.safe_load(y.read_text(encoding="utf-8"))
+        if name in _cohort_names(c):
+            out[c["cohort_id"]] = _cohort_yaml(c, name)
     return out
 
 
@@ -3707,17 +3733,20 @@ def _open_canonical_backend():
     return P.CasBackend(root=(_REPO / root))
 
 
-def _registered_legs(index_path, backend=None) -> dict[str, dict]:
-    """**검증된 receipt** 를 backend 에서 회수해 돌려준다.
+def _registered_legs(index_path, backend=None):
+    """**raw journal 을 열거해** 검증된 receipt 를 돌려준다.
 
-    ★ 31차 P2 — 30차판은 가변 원장의 optional `evidence.registered_receipt`
-      가 있는 다리만 registered 로 셌다.
-    ★ 32차 P2 — 31차판은 index entry 와 journal 의 `receipt_object` **문자열**
-      이 같으면 등록으로 셌다. index 의 사본은 대조 대상일 수는 있어도
-      **권위가 될 수 없다.**
-    ★ 33차 P2 — 32차판은 검증 실패를 `continue` 로 **숨겼다**. journal·index
-      는 있는데 CAS graph 나 lease 가 깨진 **가장 중요한 상태**가 "등록되지
-      않은 leg" 로 사라졌다. 이제 그 실패를 올린다.
+    ★ 31차 P2 — 30차판은 가변 원장의 optional 필드가 검사 대상을 골랐다.
+    ★ 32차 P2 — 31차판은 index/journal 의 **문자열** 일치로 등록을 셌다.
+    ★ 33차 P2 — 32차판은 검증 실패를 `continue` 로 숨겼다.
+    ★ 34차 P2 — 33차판은 후보를 `has_registration_journal()` 로 골랐다. 그
+      술어는 **raw 파일 존재 술어가 아니다** — JSON·schema·digest 가 깨지면
+      `registration()` 이 `None` 을 돌려주고, `receipt_object` 가 index 와
+      다르거나 index entry 가 없어도 `False` 다. 즉 "journal 은 있는데 검증
+      실패" 의 **가장 앞부분**을 후보 filter 가 다시 숨겼다.
+
+      이제 `registered/*.json` 과 `legs/*.json` 을 **직접 열거**한다. 발견은
+      semantic helper 가 아니라 raw namespace 에서 시작해야 한다.
 
     돌려주는 것: `(verified receipts, 오류 목록)`.
     """
@@ -3726,22 +3755,38 @@ def _registered_legs(index_path, backend=None) -> dict[str, dict]:
     import tools.preserve as P
 
     index_path = _P(index_path)
-    if not (index_path / "legs").is_dir():
+    raw_j = sorted(q.stem for q in (index_path / "registered").glob("*.json")) \
+        if (index_path / "registered").is_dir() else []
+    raw_e = sorted(q.stem for q in (index_path / "legs").glob("*.json")) \
+        if (index_path / "legs").is_dir() else []
+    if not raw_j and not raw_e:
         return {}, []
-    legs = list(P.index_entries(index_path))
-    if backend is None:
-        # journal 이 있는데 backend 를 못 열면 **판정 불가**다 — 조용히 빈
-        # 집합을 돌려주면 gate 가 공허하게 통과한다.
-        pending = [l for l in legs if P.has_registration_journal(index_path, l)]
-        if pending:
-            return {}, [f"등록 journal 이 있는데 backend 를 열 수 없다: "
-                        f"{sorted(pending)[:3]} — `{_PRESERVE_BACKEND.name}` 를 "
-                        "두거나 배선을 고쳐라"]
-        return {}, []
-    out, bad = {}, []
-    for leg in legs:
-        if not P.has_registration_journal(index_path, leg):
+
+    bad = []
+    if raw_j and backend is None:
+        return {}, [f"등록 journal 이 {len(raw_j)}개 있는데 backend 를 열 수 "
+                    f"없다: {raw_j[:3]} — `{_PRESERVE_BACKEND.name}` 를 두거나 "
+                    "배선을 고쳐라"]
+
+    entries = P.index_entries(index_path) if raw_e else {}
+    out = {}
+    for leg in raw_j:
+        # 1. raw journal 이 파싱·schema 를 만족하는가
+        j = P.registration(index_path, leg)
+        if j is None:
+            bad.append(f"{leg}: 등록 journal 이 있는데 파싱·schema 를 만족하지 "
+                       "않는다 (잘렸거나 키가 어긋났다)")
             continue
+        # 2. public index 에 대응 entry 가 있는가
+        e = entries.get(leg)
+        if e is None:
+            bad.append(f"{leg}: 등록 journal 이 있는데 public index 에 entry 가 없다")
+            continue
+        # 3. 같은 receipt 를 가리키는가
+        if j["receipt_object"] != e.get("receipt_object"):
+            bad.append(f"{leg}: journal 이 index 와 다른 receipt 를 가리킨다")
+            continue
+        # 4. graph 가 실제로 회수되는가
         try:
             out[leg] = P.verify_registered_graph(backend, index_path, leg)
         except P.PreserveError as ex:
@@ -3773,10 +3818,12 @@ def _generation_binding_problems(registered: dict, reg: dict,
                        f"{dg.get(env.get('source_digest'))!r} 와 다르다")
         # ★ 32차 P2 — index 의 사본은 **대조 대상**이다. receipt 와 갈리면
         #   그 자체가 오류다 (권위는 receipt).
+        # ★ 34차 P2 — `copy is not None` 조건이 **누락 자체**를 봐주고
+        #   있었다. 사본이 필수 계약이면 없는 것도 오류다.
         copy = (entries.get(leg) or {}).get("planned_envelope")
-        if copy is not None and copy != env:
+        if copy != env:
             bad.append(f"{leg}: public index 의 planned_envelope 사본이 "
-                       "등록 receipt 와 다르다")
+                       f"등록 receipt 와 다르다 ({'없다' if copy is None else '값이 다르다'})")
     # 반대 방향 — 원장이 등록을 주장하는데 실물이 없으면 그것도 거짓이다
     for leg, e in sorted(legs.items()):
         if (e.get("evidence") or {}).get("registered_receipt") and \
@@ -3832,15 +3879,25 @@ def test_the_generation_binding_bites_on_a_synthetic_registry(tmp_path):
         base["planned_envelope"].update(kw)
         return {leg: base}
 
+    def both(**kw):
+        """receipt 와 index 사본을 **함께** 넘긴다 — 사본 누락도 오류이므로."""
+        r = entry(**kw)
+        return r, {leg: {"planned_envelope": dict(r[leg]["planned_envelope"])}}
+
     # 1. 일치하면 통과
-    assert _generation_binding_problems(entry(), reg, creg) == []
+    r, ent = both()
+    assert _generation_binding_problems(r, reg, creg, entries=ent) == []
     # 2. receipt 의 source_digest 가 원장과 다르면 실패
-    bad = _generation_binding_problems(entry(source_digest="a72c0f3a485c19bb"),
-                                       reg, creg)
+    r, ent = both(source_digest="a72c0f3a485c19bb")
+    bad = _generation_binding_problems(r, reg, creg, entries=ent)
     assert any("source_digest" in b for b in bad), bad
     # 3. receipt 의 세대가 세대표와 다르면 실패
-    bad = _generation_binding_problems(entry(protocol_generation="v6"), reg, creg)
+    r, ent = both(protocol_generation="v6")
+    bad = _generation_binding_problems(r, reg, creg, entries=ent)
     assert any("protocol_generation" in b for b in bad), bad
+    # 3b. ★ 34차 P2 — index 사본이 **없으면** 그것도 오류다
+    bad = _generation_binding_problems(entry(), reg, creg, entries={})
+    assert any("사본이" in b and "없다" in b for b in bad), bad
     # 4. index 에 있는데 원장에 없으면 실패
     bad = _generation_binding_problems({"ghost_leg": {"planned_envelope": {}}},
                                        reg, creg)
@@ -4135,24 +4192,28 @@ def test_a_cohort_generation_keeps_every_leg_and_switches_once(tmp_path):
     rp = _rp()
     out = tmp_path / "cohort"
 
-    g0 = rp.promote_cohort_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"A0\n"}), out, "a")
-    g0b = rp.promote_cohort_generation(
-        _stage(tmp_path, **{"b.projection.yaml": b"B0\n"}), out, "b")
-    assert set(g0b["files"]) == {"a.projection.yaml", "b.projection.yaml"}
+    g0 = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
+                            "a.projection.yaml": b"A0y",
+                            "a.restarts.csv.gz": b"A0r"} ), out, "a")
+    g0b = rp.promote_cohort_generation(_stage(tmp_path, **{"b.projection.csv.gz": b"B0c",
+                            "b.projection.yaml": b"B0y",
+                            "b.restarts.csv.gz": b"B0r"} ), out, "b")
+    assert len(g0b["files"]) == 6, sorted(g0b["files"])
     assert g0b["generation_id"] != g0["generation_id"]
 
-    g1 = rp.promote_cohort_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"A1\n"}), out, "a")
-    assert set(g1["files"]) == {"a.projection.yaml", "b.projection.yaml"}, (
-        "한 leg 를 갱신했더니 cohort 가 줄었다")
-    assert g1["files"]["b.projection.yaml"] == g0b["files"]["b.projection.yaml"], (
-        "손대지 않은 leg 가 바뀌었다")
+    g1 = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A1c",
+                            "a.projection.yaml": b"A1y",
+                            "a.restarts.csv.gz": b"A1r"} ), out, "a")
+    assert len(g1["files"]) == 6, (
+        f"한 leg 를 갱신했더니 cohort 가 줄었다: {sorted(g1['files'])}")
+    for sfx in rp.LEG_SUFFIXES:
+        assert g1["files"]["b" + sfx] == g0b["files"]["b" + sfx], (
+            "손대지 않은 leg 가 바뀌었다")
     assert rp.read_current(out)["generation_id"] == g1["generation_id"]
 
     # 옛 generation 은 그대로 남아 있다 (immutable)
     assert (out / "gen" / g0b["generation_id"] / "a.projection.yaml"
-            ).read_bytes() == b"A0\n"
+            ).read_bytes() == b"A0y"
 
 
 def test_the_production_writer_and_reader_go_through_current(tmp_path):
@@ -4172,9 +4233,10 @@ def test_the_production_writer_and_reader_go_through_current(tmp_path):
 
     # reader authority
     out = tmp_path / "cohort"
-    rec = rp.promote_cohort_generation(
-        _stage(tmp_path, **{"a.projection.yaml": b"A0\n"}), out, "a")
-    assert rp.cohort_bytes(out, "a.projection.yaml") == b"A0\n"
+    rec = rp.promote_cohort_generation(_stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
+                            "a.projection.yaml": b"A0y",
+                            "a.restarts.csv.gz": b"A0r"} ), out, "a")
+    assert rp.cohort_bytes(out, "a.projection.yaml") == b"A0y"
 
     # CURRENT 가 가리키지 않는 이름은 못 읽는다 — fixed path 가 authority 가
     # 아니라는 뜻이다
@@ -4217,3 +4279,181 @@ def test_the_active_cohort_is_published_through_a_single_current_pointer():
     for c in frozen:
         assert not (_REPO / c["dir"] / "CURRENT").exists(), (
             f"{c['cohort_id']} 는 frozen 이다 — 새 layout 으로 바꾸지 않는다")
+
+
+@pytest.mark.parametrize("damage", ["truncated", "empty_object", "foreign_receipt",
+                                    "orphan_journal", "missing_index"])
+def test_a_damaged_raw_journal_is_an_error_not_an_absence(tmp_path, damage):
+    """★ 34차 P2 — 후보 filter 가 깨진 journal 을 graph verifier **앞에서** 숨겼다.
+
+    `has_registration_journal()` 은 raw 파일 존재 술어가 아니다 — 파싱·schema·
+    digest 가 깨지거나 `receipt_object` 가 index 와 다르거나 index entry 가
+    없으면 전부 `False` 다. 그래서 raw journal 파일이 **실제로 있는데도**
+    live gate 는 "등록 0건 · 오류 0건" 을 봤다.
+
+    33차 회귀는 parse-valid journal 을 둔 채 `pins/` 만 지웠으므로 filter 를
+    통과한 뒤의 실패만 증명했다 — 이름보다 범위가 한 단계 좁았다.
+    """
+    import sys as _sys
+
+    import tools.preserve as P
+
+    _sys.path.insert(0, str(_REPO / "tests"))
+    import test_preserve as TP
+
+    index = tmp_path / "index"
+    backend = P.CasBackend(root=tmp_path / "cas")
+    run = TP._make_run(tmp_path)
+    P.run_transaction(TP.PLANNED, run, backend, index, TP._hooks())
+    leg = TP.PLANNED.leg_id
+    j = index / "registered" / f"{leg}.json"
+
+    got, bad = _registered_legs(index, backend)
+    assert set(got) == {leg} and bad == [], "전제: 정상 상태"
+
+    if damage == "truncated":
+        j.write_bytes(j.read_bytes()[:20])
+    elif damage == "empty_object":
+        j.write_bytes(b"{}")
+    elif damage == "foreign_receipt":
+        rec = P.load_canonical(j.read_bytes())
+        j.write_bytes(P.canonical_bytes(dict(rec, receipt_object="a" * 64)))
+    elif damage == "orphan_journal":
+        (index / "registered" / "ghostleg.json").write_bytes(j.read_bytes())
+    elif damage == "missing_index":
+        (index / "legs" / f"{leg}.json").unlink()
+
+    got, bad = _registered_legs(index, backend)
+    assert bad, f"{damage}: raw journal 이 있는데 조용히 지나갔다"
+    if damage == "orphan_journal":
+        assert any("ghostleg" in b for b in bad), bad
+    else:
+        assert any(leg in b for b in bad), bad
+
+
+def test_raw_journals_without_a_backend_are_an_error(tmp_path):
+    """raw journal 이 있으면 backend 부재 자체가 오류다 — 조용한 통과가 아니라."""
+    index = tmp_path / "index"
+    (index / "registered").mkdir(parents=True)
+    (index / "registered" / "someleg.json").write_bytes(b"{}")
+    got, bad = _registered_legs(index, None)
+    assert got == {} and bad and "backend 를 열 수 없다" in bad[0]
+
+
+def test_real_readers_see_only_the_new_generation_after_a_materialize_crash(
+        tmp_path, monkeypatch):
+    """★ 34차 #9 — pointer 전환 뒤 `_materialize` 중 죽어도 **실제 reader** 가
+    새 generation 만 봐야 한다.
+
+    33차판은 writer 와 새 helper 만 CURRENT 를 썼고 실제 active reader 는
+    fixed name 을 읽었다. 그 상태에서 이 crash 가 나면 reader 가 stale G0 또는
+    G0/G1 혼합을 **읽는다**. 다음 suite 의 `check_materialized()` 가 나중에
+    잡는 것은 이미 벌어진 일을 되돌리지 못한다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    g0 = rp.promote_cohort_generation(
+        _stage(tmp_path, **{"a.projection.csv.gz": b"A0c",
+                            "a.projection.yaml": b"leg: a\nv: 0\n",
+                            "a.restarts.csv.gz": b"A0r"}), out, "a")
+    assert (out / "a.projection.yaml").read_bytes() == b"leg: a\nv: 0\n"
+
+    boom = RuntimeError("materialize 중에 죽었다 (주입)")
+    monkeypatch.setattr(rp, "_materialize",
+                        lambda *a, **kw: (_ for _ in ()).throw(boom))
+    with pytest.raises(RuntimeError):
+        rp.promote_cohort_generation(
+            _stage(tmp_path, **{"a.projection.csv.gz": b"A1c",
+                                "a.projection.yaml": b"leg: a\nv: 1\n",
+                                "a.restarts.csv.gz": b"A1r"}), out, "a")
+    monkeypatch.undo()
+
+    # pointer 는 G1, fixed 사본은 아직 G0 — 여기가 위험 구간이다
+    assert rp.read_current(out)["generation_id"] != g0["generation_id"]
+    assert (out / "a.projection.yaml").read_bytes() == b"leg: a\nv: 0\n", "전제"
+
+    # **실제 reader** 는 새 generation 을 본다
+    cohort = {"cohort_id": "gX", "dir": str(out.relative_to(_REPO))
+              if str(out).startswith(str(_REPO)) else None, "status": "active"}
+    assert rp.cohort_bytes(out, "a.projection.yaml") == b"leg: a\nv: 1\n"
+    assert rp.read_current(out)["files"]["a.projection.yaml"] == \
+        hashlib.sha256(b"leg: a\nv: 1\n").hexdigest()
+
+
+@pytest.mark.parametrize("stage_files", [
+    {"a.projection.yaml": b"only-yaml"},                      # csv·restart 없음
+    {"a.projection.csv.gz": b"c", "a.projection.yaml": b"y"},  # restart 없음
+    {"a.projection.csv.gz": b"c", "a.projection.yaml": b"y",
+     "a.restarts.csv.gz": b"r", "a.extra": b"x"},              # 남는 파일
+    {"a.projection.csv.gz": b"c", "b.projection.yaml": b"y",
+     "a.restarts.csv.gz": b"r"},                               # 다른 leg 섞임
+])
+def test_a_partial_leg_stage_cannot_be_promoted(tmp_path, stage_files):
+    """★ 34차 #9 — "완전한 snapshot" 이 **구조로 강제되지 않았다**.
+
+    `promote_cohort_generation()` 은 stage 의 이름 집합을 얻은 뒤 그 leg 의
+    기존 파일을 base 에서 전부 제외했지만, stage 가 `leg + 세 suffix` exact
+    set 인지 검사하지 않았다. `{a.projection.yaml}` 만 넘기면 A 의 CSV 와
+    restart 를 **제거한** generation 을 정상 게시하고 `read_current()` 도
+    통과했다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(_stage(tmp_path, **stage_files), out, "a")
+    assert "세 파일" in str(ei.value) or "leg" in str(ei.value)
+
+
+def test_the_lint_readers_follow_current_not_the_fixed_copies(tmp_path):
+    """★ 34차 #9 — **실제 lint reader** 가 CURRENT 를 따르는지.
+
+    33차판은 `_cohort_projections`·`_sealed_projections`·
+    `_sealed_source_digest` 가 fixed name 을 직접 읽었다. helper 가 맞는 것과
+    실제 소비자가 그것을 쓰는 것은 다른 축이다 — 그래서 여기서는 helper 가
+    아니라 **lint 가 쓰는 함수**를 부른다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    rp.promote_cohort_generation(
+        _stage(tmp_path, **{"a.projection.csv.gz": b"c0",
+                            "a.projection.yaml": b"v: 0\n",
+                            "a.restarts.csv.gz": b"r0"}), out, "a")
+
+    active = {"cohort_id": "gX", "dir": "unused", "status": "active"}
+    frozen = {"cohort_id": "gF", "dir": "unused", "status": "frozen"}
+    assert _cohort_names(active, base=out) == ["a.projection.yaml"]
+    assert _cohort_yaml(active, "a.projection.yaml", base=out) == {"v": 0}
+
+    # fixed 사본을 흔든다 — active reader 는 CURRENT 를 따라야 한다
+    (out / "a.projection.yaml").write_bytes(b"v: 99\n")
+    (out / "ghost.projection.yaml").write_bytes(b"v: 7\n")
+    assert _cohort_names(active, base=out) == ["a.projection.yaml"], (
+        "active reader 가 CURRENT 밖 파일을 봤다")
+    assert _cohort_yaml(active, "a.projection.yaml", base=out) == {"v": 0}, (
+        "active reader 가 흔들린 fixed 사본을 읽었다")
+
+    # frozen 은 fixed layout fallback 이다 (원자료를 잃어 migration 불가)
+    assert _cohort_names(frozen, base=out) == ["a.projection.yaml",
+                                               "ghost.projection.yaml"]
+    assert _cohort_yaml(frozen, "a.projection.yaml", base=out) == {"v": 99}
+
+
+def test_an_incomplete_base_generation_cannot_be_carried_forward(tmp_path):
+    """★ 34차 #9 — base 가 이미 불완전하면 물려받지 않는다.
+
+    stage 검사가 새 불완전 generation 을 막지만, 그 검사가 생기기 **전에**
+    만들어진 generation 이 있을 수 있다. 그것을 조용히 이어받으면 불완전
+    snapshot 이 영구화된다.
+    """
+    rp = _rp()
+    out = tmp_path / "cohort"
+    # 검사를 우회해 불완전 generation 을 만든다 (옛 판이 만든 상태 흉내)
+    rp.promote_generation(
+        _stage(tmp_path, **{"b.projection.yaml": b"y"}), out)
+
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_cohort_generation(
+            _stage(tmp_path, **{"a.projection.csv.gz": b"c",
+                                "a.projection.yaml": b"y",
+                                "a.restarts.csv.gz": b"r"}), out, "a")
+    assert "불완전" in str(ei.value)
