@@ -1,10 +1,16 @@
 # beta vs seed-to-seed D spread, 9 multiseed MD conditions (UMA-s-1p1/omat, STO seed-mean beta, window 2-50 ps).
-# Question (beta-gate.md S7-5 to-do 1): does a low beta predict seed divergence of D? Answer: hop count predicts it better.
-# Spearman(beta, CV_D) = -0.50 vs Spearman(n_hop, CV_D) = -0.78 (n=9) -> variance follows EVENT COUNT (He 2018 scaling), not the beta value.
 # n_hop = 6*D_mean*t_prod/d_hop^2, d_hop 3 A (hops_per_ion.py convention, upper-bound estimate).
 # CAUTION: CV from 3-4 seeds is itself noisy (~50% relative error); ranks, not absolute CVs, are the signal.
 # b2o3 rows: Li-transport axis RETIRED 2026-08-25 (anion-sublattice mobility) - rows kept as ESTIMATOR statistics only, never quote as transport.
 # Sources: beta = db/properties/msd_3sys_200ps_origin.csv headers; seeds = b2o3_vs_lpscl16_conductivity.csv (modelc, b2o3), lpsocl_md_arrhenius.json (lpsocl).
+# ⛔ RETRACTED CLAIM 2026-08-27 (Codex reply F). The original header claimed 'variance follows EVENT COUNT (He 2018 scaling), not the beta value'. That claim is WITHDRAWN.
+# Why: n_hop here is MSD@50/d_hop^2, which is essentially mean D -- Spearman(n_hop, mean D) = +0.95. And CV = sd(D)/mean(D) puts that same mean D in the DENOMINATOR.
+#   Substituting mean D for n_hop reproduces the correlation (-0.73 vs -0.78), so most of it is mechanical, not evidence of an event-count law.
+#   The difference between the two correlations is NOT established: Williams/Steiger t=2.026, df=6, p~0.089; bootstrap 95% CI on the difference spans -0.82..+0.14; leave-one-system-out flips the ordering (excluding modelc gives -0.943 for both).
+#   Exact permutation p: rho(beta,CV) = -0.5000 p=0.1777 (n.s.) ; rho(n_hop,CV) = -0.77825 p=0.0180.
+# Allowed wording: 'in an exploratory summary of 9 conditions an MSD-derived displacement proxy showed a stronger negative rank correlation with seed CV than beta did'. NOT 'predicts', NOT 'reproduces He 2018', NOT 'hop count is the cause'.
+# To actually test the event-count law: count real site transitions independently of D, correct for back-jumps and collective hops, and check that N_eff predicts seed variance in HELD-OUT conditions.
+# Column name n_hop_per_ion is kept for continuity but should be read as 'MSD-derived displacement proxy', not a jump count.
 system_T,beta_ensemble,n_seeds,traj_ps,n_hop_per_ion,CV_D_pct,D_max_over_min,D_seeds_1e5_cm2_s
 modelc/600K,0.868,3,199,13.8,25.3,1.64,"1.1718;1.2037;0.7351"
 modelc/800K,0.934,3,99,18.8,32.3,1.95,"2.8320;3.7720;1.9320"
