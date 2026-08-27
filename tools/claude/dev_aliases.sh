@@ -163,7 +163,22 @@ dftweb()  {                  # webapp 띄우기 (Ctrl-C 로 끈다)
 
 dftwebbg() {                 # 백그라운드로 띄우고 살아있는지 확인
   _dft_web_ready || return 1
-  pgrep -f "webapp/app.py" >/dev/null && { echo "⚠ 이미 떠 있다 — dftwebstop 후 다시"; return 1; }
+  # ⛔⛔ 2026-08-27 — 옛 판은 `pgrep -f webapp/app.py` 로 중복을 막았다. 그런데
+  #   `pkill` 직후에는 프로세스가 **종료 중(좀비 포함)** 으로 몇 초 남는다.
+  #   실측: `pkill …; sleep 2; dft` 라는 **가장 자연스러운 순서**가 그대로 막혔고,
+  #   `return 1` 이라 `dft` 가 조용히 끝나서 "왜 안 뜨지" 로 갔다.
+  #   → 중복 판정은 **포트가 실제로 응답하는가**로 한다. 살아 있으면 그렇다고 말하고
+  #     성공으로 끝낸다(막지 않는다). 죽어가는 프로세스는 포트를 이미 놨다.
+  if _dft_web_alive; then
+    echo "✅ 이미 떠 있다 → http://127.0.0.1:${DFT_PORT}"
+    return 0
+  fi
+  # 포트는 안 열렸는데 프로세스가 남아 있으면 — 정리하고 진행한다(사람 손 안 빌린다)
+  if pgrep -f "webapp/app.py" >/dev/null; then
+    echo "· 응답 없는 옛 프로세스가 남아 있다 — 정리하고 띄운다"
+    pkill -f "webapp/app.py" 2>/dev/null
+    sleep 2
+  fi
   local log="${TMPDIR:-/tmp}/dftweb.log"
   PORT="$DFT_PORT" nohup "$(_dft_py)" "$DFT_REPO/webapp/app.py" > "$log" 2>&1 &
   local i
