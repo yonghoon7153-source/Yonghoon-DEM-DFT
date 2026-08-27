@@ -207,9 +207,6 @@ export function EisLibrary() {
                   <th>사이클</th>
                   <th style={{ textAlign: 'left' }}>fitting</th>
                   <th>올린 때</th>
-                  {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
-                      글자가 먼저 읽힌다 -- 여기는 찾으러 오는 곳이다. */}
-                  <th />
                 </tr>
               </thead>
               {groupKey === 'group' ? (
@@ -245,6 +242,18 @@ export function EisLibrary() {
     return (
                   <tr key={item.id}>
                     <td className="text">
+                      {/* 지우기를 **이름 앞**에 둔다.  꼬리 열이던 것을 없애면
+                          표가 한 칸 좁아지고, 그만큼 가로 스크롤이 줄어든다 —
+                          값을 보려고 옆으로 미는 것이 이 표들의 가장 큰
+                          불편이었다. */}
+                      <DeleteMeasurementButton
+                        name={item.name}
+                        onError={setRowError}
+                        onDelete={async () => {
+                          await api.deleteSpectrum(item.id)
+                          bumpReload((value) => !value)
+                        }}
+                      />
                       {/* 그룹과 올린 사람을 이름 앞에 — 대시보드와 같은 모양이다.
                           `group_label` 은 이미 "부모 · 자식" 한 줄이라 잎만
                           칩에 적고 전체 길은 마우스로 돌린다. */}
@@ -298,16 +307,6 @@ export function EisLibrary() {
                         : '—'}
                     </td>
                     <td className="dim">{dateTime(item.uploaded_at)}</td>
-                    <td>
-                      <DeleteMeasurementButton
-                        name={item.name}
-                        onError={setRowError}
-                        onDelete={async () => {
-                          await api.deleteSpectrum(item.id)
-                          bumpReload((value) => !value)
-                        }}
-                      />
-                    </td>
                   </tr>
     )
   }
@@ -338,5 +337,5 @@ function bucketOf(item: Spectrum, key: GroupKey): string {
 
 /** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
  *  가로로 밀려 표가 어긋난다 — 이름·관계셀·측정·목적·주파수·점·사이클·
- *  피팅·올린 때·지우기 = 10. */
-const COLUMN_COUNT = 10
+ *  fitting·올린 때 = 9.  지우기는 이름 칸 안으로 들어갔다. */
+const COLUMN_COUNT = 9

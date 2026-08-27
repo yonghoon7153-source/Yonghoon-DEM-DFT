@@ -337,7 +337,6 @@ function DashboardTable({
             <th>기준</th>
             <th>로딩 (mg/cm²)</th>
             <th style={{ textAlign: 'left' }}>조건</th>
-            <th />
           </tr>
         </thead>
         {folderView ? folders.folders.filter(folders.isVisible).map((folder) => (
@@ -359,6 +358,16 @@ function DashboardTable({
     return (
             <tr key={row.sample_id}>
               <td className="text">
+                {/* 지우기를 **이름 앞**에 둔다.  꼬리 열이던 것을 없애면 표가
+                    한 칸 좁아지고, 그만큼 가로 스크롤이 줄어든다 — 값을 보려고
+                    옆으로 미는 것이 이 표들의 가장 큰 불편이었다.  붙박이
+                    첫 열(`pin-first`) 안이라 옆으로 밀어도 늘 손이 닿는다. */}
+                <DeleteSampleButton
+                  sampleId={row.sample_id}
+                  sampleName={row.sample_name}
+                  onDeleted={onDeleted}
+                  onError={setDeleteError}
+                />
                 {row.group_name ? (
                   <span
                     className="group-tag"
@@ -465,14 +474,6 @@ function DashboardTable({
                   .filter(Boolean)
                   .join(' · ') || '—'}
               </td>
-              <td style={{ whiteSpace: 'nowrap' }}>
-                <DeleteSampleButton
-                  sampleId={row.sample_id}
-                  sampleName={row.sample_name}
-                  onDeleted={onDeleted}
-                  onError={setDeleteError}
-                />
-              </td>
             </tr>
     )
   }
@@ -488,5 +489,5 @@ const placeRow = (row: DashboardRow) => ({
 
 /** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다.  틀리면 그 줄만
  *  가로로 밀려 표가 어긋난다 — 셀·상태·보고 사이클·용량·유지율·추세·급감·
- *  초기 CE·기준·로딩·조건·지우기 = 12. */
-const COLUMN_COUNT = 12
+ *  초기 CE·기준·로딩·조건 = 11.  지우기는 이름 칸 안으로 들어갔다. */
+const COLUMN_COUNT = 11

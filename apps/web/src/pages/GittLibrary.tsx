@@ -156,7 +156,6 @@ export function GittLibrary() {
                   <th>기간</th>
                   <th style={{ textAlign: 'left' }}>확산계수</th>
                   <th>올린 때</th>
-                  <th />
                 </tr>
               </thead>
               {groupKey === 'group' ? (
@@ -192,6 +191,19 @@ export function GittLibrary() {
     return (
                   <tr key={run.id}>
                     <td className="text">
+                      {/* 지우기를 **이름 앞**에 둔다.  꼬리 열이던 것을 없애면
+                          표가 한 칸 좁아지고, 그만큼 가로 스크롤이 줄어든다 —
+                          값을 보려고 옆으로 미는 것이 이 표들의 가장 큰
+                          불편이었다. */}
+                      {/* 붙어 있어도 지울 수 있다.  원본 `.wrd` 는 남는다. */}
+                      <DeleteMeasurementButton
+                        name={run.name}
+                        onError={setError}
+                        onDelete={async () => {
+                          await api.deleteGittRun(run.id)
+                          bumpReload((value) => !value)
+                        }}
+                      />
                       {/* EIS 라이브러리와 같은 이름표 — 두 표를 나란히 놓고 보는
                           화면이라 한쪽에만 붙으면 그것이 먼저 눈에 띈다. */}
                       <GroupTag name={leafOf(run.group_label)} path={run.group_label} />
@@ -230,17 +242,6 @@ export function GittLibrary() {
                         : '가능'}
                     </td>
                     <td className="dim">{dateTime(run.uploaded_at)}</td>
-                    <td>
-                      {/* 붙어 있어도 지울 수 있다.  원본 `.wrd` 는 남는다. */}
-                      <DeleteMeasurementButton
-                        name={run.name}
-                        onError={setError}
-                        onDelete={async () => {
-                          await api.deleteGittRun(run.id)
-                          bumpReload((value) => !value)
-                        }}
-                      />
-                    </td>
                   </tr>
     )
   }
@@ -269,5 +270,5 @@ function bucketOf(run: GittRun, key: GroupKey): string {
 }
 
 /** 폴더 줄이 표 전체 폭을 덮으려면 열 수가 맞아야 한다 — 이름·관계셀·목적·
- *  펄스·점·기간·확산계수·올린 때·지우기 = 9. */
-const COLUMN_COUNT = 9
+ *  펄스·점·기간·확산계수·올린 때 = 8.  지우기는 이름 칸 안으로 들어갔다. */
+const COLUMN_COUNT = 8

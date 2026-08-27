@@ -312,16 +312,13 @@ function SampleHead() {
         {/* 임피던스가 있다/없다조차 이 표에서는 안 보였다.  저항 하나가
             붙으면 셀끼리 바로 견줄 수 있고, 비어 있는 것도 뜻이 된다. */}
         <th>임피던스 (Ω)</th>
-        {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그 글자가
-            먼저 읽힌다 — 이 표는 셀을 찾으러 오는 곳이지 지우러 오는 곳이 아니다. */}
-        <th />
       </tr>
     </thead>
   )
 }
 
 /** 구분 줄이 걸치는 칸 수.  SampleHead 의 <th> 개수와 같아야 한다. */
-const COLUMN_COUNT = 16
+const COLUMN_COUNT = 15
 
 function SampleRow({
   sample,
@@ -336,6 +333,16 @@ function SampleRow({
   return (
     <tr>
       <td className="text">
+        {/* 지우기를 **이름 앞**에 둔다.  꼬리 열이던 것을 없애면 표가 한 칸
+            좁아지고, 그만큼 가로 스크롤이 줄어든다 — 값을 보려고 옆으로 미는
+            것이 이 표들의 가장 큰 불편이었다.  붙박이 첫 열(`pin-first`) 안이라
+            옆으로 밀어도 늘 손이 닿는다. */}
+        <DeleteSampleButton
+          sampleId={sample.id}
+          sampleName={sample.name}
+          onDeleted={onDeleted}
+          onError={onError}
+        />
         <Link to={`/samples/${sample.id}`}>{sample.name}</Link>
       </td>
       <td className="text dim">{sample.created_by || '—'}</td>
@@ -375,14 +382,6 @@ function SampleRow({
           : sample.spectrum_count
             ? <span className="tiny">{sample.spectrum_count}개 · fitting 안 됨</span>
             : '—'}
-      </td>
-      <td style={{ whiteSpace: 'nowrap' }}>
-        <DeleteSampleButton
-          sampleId={sample.id}
-          sampleName={sample.name}
-          onDeleted={onDeleted}
-          onError={onError}
-        />
       </td>
     </tr>
   )
