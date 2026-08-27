@@ -46,6 +46,7 @@ import argparse
 import os
 import shutil
 import tempfile
+import uuid
 import gzip
 import math
 import hashlib
@@ -670,6 +671,129 @@ def build(leg: str, out: Path | None = None) -> dict:
     _stage.rmdir()
 
     return meta
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# immutable generation + 단일 CURRENT (★ 32차 최소 증거 #9)
+# ─────────────────────────────────────────────────────────────────────────────
+#
+# 왜: 초판 승격은 **fixed-name 세 파일**을 하나씩 `os.replace` 했다. YAML 을
+#   마지막에 옮겨(manifest-last) 섞임을 줄였지만 set atomicity 는 아니다 —
+#   중간에 죽으면 새 payload 와 옛 YAML 이 공존한다. 27~31차 리뷰가 "다음
+#   checkpoint" 로 계속 지목한 자리다.
+#
+# 어떻게: generation 은 내용 주소를 이름으로 갖는 **immutable directory** 이고,
+#   덮어쓰지 않는다. 승격은 그 directory 를 만든 뒤 **단일 pointer** 하나를
+#   원자적으로 옮기는 것이다. 읽는 쪽은 pointer 를 따른다.
+#
+#       out/gen/<generation_id>/…      ← 한 번 쓰고 절대 안 고친다
+#       out/CURRENT                    ← 이 한 파일만 원자적으로 바뀐다
+
+CURRENT_SCHEMA = "projection-current/v1"
+
+
+def _sha(b: bytes) -> str:
+    return hashlib.sha256(b).hexdigest()
+
+
+def generation_id(files: dict) -> str:
+    """generation 의 내용 주소 — 이름 → 바이트 digest 의 정본 해시."""
+    payload = json.dumps({"schema": CURRENT_SCHEMA, "files": files},
+                         sort_keys=True, ensure_ascii=False,
+                         separators=(",", ":")).encode("utf-8")
+    return _sha(payload)
+
+
+def _fsync_dir(d: Path) -> None:
+    fd = os.open(d, os.O_RDONLY)
+    try:
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+
+
+def _publish_pointer(out: Path, rec: dict) -> None:
+    """CURRENT 를 **원자적으로** 옮긴다. 여기가 유일한 가시성 전환점이다."""
+    tmp = out / f".CURRENT.{uuid.uuid4().hex}.tmp"
+    data = json.dumps(rec, sort_keys=True, ensure_ascii=False,
+                      separators=(",", ":")).encode("utf-8")
+    fd = os.open(tmp, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+    try:
+        n = 0
+        while n < len(data):
+            n += os.write(fd, data[n:])
+        os.fsync(fd)
+    finally:
+        os.close(fd)
+    os.replace(tmp, out / "CURRENT")
+    _fsync_dir(out)
+
+
+def promote_generation(stage: Path, out: Path) -> dict:
+    """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다."""
+    stage, out = Path(stage), Path(out)
+    _assert_writable(out)
+    files = {p.name: _sha(p.read_bytes())
+             for p in sorted(stage.iterdir()) if p.is_file()}
+    if not files:
+        raise SystemExit(f"✗ staging 이 비었다: {stage}")
+    gid = generation_id(files)
+    gdir = out / "gen" / gid
+
+    if gdir.is_dir():
+        # 같은 내용이면 멱등. 다른 바이트가 있으면 **덮지 않고 거부**한다.
+        got = {p.name: _sha(p.read_bytes())
+               for p in sorted(gdir.iterdir()) if p.is_file()}
+        if got != files:
+            raise SystemExit(
+                f"✗ generation {gid[:16]} 자리에 다른 내용이 있다 — immutable "
+                f"generation 은 덮지 않는다 (기대 {sorted(files)} · 실제 {sorted(got)})")
+        shutil.rmtree(stage, ignore_errors=True)
+    else:
+        (out / "gen").mkdir(parents=True, exist_ok=True)
+        _fsync_dir(out)
+        tmp = out / "gen" / f".{gid}.{uuid.uuid4().hex}.tmp"
+        shutil.move(str(stage), str(tmp))
+        for p in sorted(tmp.iterdir()):
+            if p.is_file():
+                fd = os.open(p, os.O_RDONLY)
+                try:
+                    os.fsync(fd)
+                finally:
+                    os.close(fd)
+        _fsync_dir(tmp)
+        os.rename(tmp, gdir)              # generation 이 통째로 보인다
+        _fsync_dir(out / "gen")
+
+    rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files}
+    _publish_pointer(out, rec)
+    return rec
+
+
+def read_current(out: Path) -> dict:
+    """CURRENT 를 따라간다. 없거나 깨졌거나 실물과 어긋나면 **fail-closed**."""
+    out = Path(out)
+    p = out / "CURRENT"
+    if not p.is_file():
+        raise SystemExit(f"✗ CURRENT 가 없다: {p}")
+    try:
+        rec = json.loads(p.read_text(encoding="utf-8"))
+    except (ValueError, UnicodeDecodeError) as e:
+        raise SystemExit(f"✗ CURRENT 를 읽을 수 없다: {p} ({e})") from e
+    if not isinstance(rec, dict) or rec.get("schema") != CURRENT_SCHEMA \
+            or not isinstance(rec.get("files"), dict):
+        raise SystemExit(f"✗ CURRENT schema 가 계약이 아니다: {rec!r}")
+    gid = rec.get("generation_id")
+    if generation_id(rec["files"]) != gid:
+        raise SystemExit(f"✗ CURRENT 의 generation_id 가 files 와 다르다")
+    gdir = out / "gen" / str(gid)
+    if not gdir.is_dir():
+        raise SystemExit(f"✗ CURRENT 가 없는 generation 을 가리킨다: {gid[:16]}")
+    got = {q.name: _sha(q.read_bytes())
+           for q in sorted(gdir.iterdir()) if q.is_file()}
+    if got != rec["files"]:
+        raise SystemExit(f"✗ generation {gid[:16]} 의 실물이 CURRENT 와 다르다")
+    return rec
 
 
 def _frozen_cohort_dirs() -> dict[str, Path]:

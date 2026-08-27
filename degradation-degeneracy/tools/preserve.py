@@ -223,15 +223,18 @@ def _mkdir_durable(d: Path, stage: str) -> None:
       directory 에서 이름이 사라질 수 있었다.
     """
     d = Path(d)
-    if d.is_dir():
-        return
-    new = []
+    # ★ 32차 P0-3 — 초판은 `d.is_dir()` 이면 즉시 return 했다. "mkdir 은
+    #   성공했지만 parent fsync 가 실패한" 상태와 "이미 durable" 한 상태를
+    #   구별하지 못하므로, 재시도가 edge 를 다시 굳히지 않았다. 구별할 방법이
+    #   없으면 **항상 굳힌다** — fsync 는 멱등이고 비용은 재시도 때만 든다.
+    missing = []
     p = d
     while not p.exists():
-        new.append(p)
+        missing.append(p)
         p = p.parent
     d.mkdir(parents=True, exist_ok=True)
-    for made in reversed(new):        # 얕은 층부터 — 부모 entry 를 먼저 굳힌다
+    layers = list(reversed(missing)) or [d]
+    for made in layers:               # 얕은 층부터 — 부모 entry 를 먼저 굳힌다
         _fsync_dir_strict(made.parent, stage)
 
 
@@ -376,7 +379,10 @@ class CasBackend:
             if not _is_hex64(sid or "") and not _is_uuid_hex(sid or ""):
                 raise PreserveError("store", f"store.json 의 store_id 가 이상하다: {sid!r}")
             return sid
-        Path(self.root).mkdir(parents=True, exist_ok=True)
+        # ★ 32차 P0-3 — 초판은 `mkdir(parents=True)` 만 했다. CAS root 라는
+        #   **이름**을 담은 parent entry 를 굳히지 않아, power loss 뒤 CAS 가
+        #   통째로 사라지고 다른 filesystem 의 journal 만 남을 수 있었다.
+        _mkdir_durable(Path(self.root), "store")
         data = canonical_bytes({"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex})
         _exclusive_write(p, data)                 # 경쟁하면 먼저 쓴 쪽이 이긴다
         return load_canonical(p.read_bytes())["store_id"]
@@ -395,6 +401,11 @@ class CasBackend:
             if dst.read_bytes() != data:
                 raise PreserveError("cas_put",
                                     f"같은 digest 인데 저장된 바이트가 다르다: {dg[:16]}")
+            # ★ 32차 P0-3 — 이름이 보인다고 durable 한 것이 아니다. `os.replace`
+            #   성공 뒤 fsync 가 실패해 예외가 나갔어도 final name 은 남는다.
+            #   재시도가 여기로 들어와 그냥 성공하면 graph 이름은 비내구적인 채
+            #   journal 만 durable 하게 commit 될 수 있다. 성공 전에 굳힌다.
+            _fsync_dir_strict(dst.parent, "cas_put")
             return {"digest": dg, "stored": False, "idempotent": True}
 
         staging = self.root / "staging"
@@ -461,6 +472,8 @@ class CasBackend:
                 if got != dg:
                     raise PreserveError(
                         "pin", f"pin 자리에 다른 내용이 있다: {dg[:16]} ≠ {got[:16]}")
+                # ★ 32차 P0-3 — object 와 같은 이유로 성공 전에 굳힌다.
+                _fsync_dir_strict(dst.parent, "pin")
                 made.append(dg)
                 continue
             if not src.is_file():
@@ -612,14 +625,17 @@ class CasBackend:
         return lease
 
     def verify_retention(self, leg_id: str, lease_digest: str,
-                         expected: set | None = None) -> dict:
+                         expected: set | None = None,
+                         lease: dict | None = None) -> dict:
         """lease 가 **이 backend 에서 지금** 유효한가.
 
         읽은 바이트가 아니라 **상태**를 본다 — 그래서 전수 읽기가 끝난 뒤에
         한 번 더 부르면 그 사이의 삭제가 잡힌다 (30차 P0-1 의 마지막 창).
         """
         stage = "retention"
-        lease = self.read_lease(leg_id, lease_digest)
+        # `lease` 를 주면 그것을 본다 — 회귀가 lease 축만 변이할 수 있게 한다.
+        lease = dict(lease) if lease is not None else self.read_lease(leg_id, lease_digest)
+        lease.pop("lease_digest", None)
         want = {"schema", "leg_id", "store_id", "backend_uri", "enforcement",
                 "lock_mode", "object_versions",
                 "min_retention_days", "retain_until_utc", "objects", "pin_set_digest"}
@@ -690,12 +706,34 @@ class CasBackend:
                            f"{sorted(set(objs) - set(want_v))[:2]}")
             if not _nonempty_str(lease["lock_mode"] or ""):
                 raise PreserveError(stage, "object-lock lease 에 lock_mode 가 없다")
-            got_v = self.query_object_versions(leg_id, objs)
-            if got_v != want_v:
-                diff = sorted(d for d in want_v if got_v.get(d) != want_v[d])
+            # ★ 32차 P0-1 — version **값**이 유효해야 한다. 초판은 key set 만
+            #   봐서 `{digest: None}` 도 durable 로 통과했다.
+            weak = sorted(d for d, v in want_v.items() if not _nonempty_str(v or ""))
+            if weak:
                 raise PreserveError(
-                    stage, f"provider 의 object version 이 lease 와 다르다: "
-                           f"{diff[:2]} — 더 이상 잠겨 있지 않다")
+                    stage, f"lease 의 object version 이 비었다: {weak[:2]}")
+            # ★ 32차 P0-1 — 그 version 이 **지금도** 잠겨 있는지, 어떤 mode 로,
+            #   언제까지인지 provider 에 묻는다. 초판은 셋 다 안 물었다.
+            live_locks = self.describe_locks(leg_id, want_v)
+            gone = sorted(d for d, st in live_locks.items() if not isinstance(st, dict))
+            if gone:
+                raise PreserveError(
+                    stage, f"provider 에 잠긴 version 이 없다: {gone[:2]} — "
+                           "더 이상 잠겨 있지 않다")
+            for dg, st in sorted(live_locks.items()):
+                if st.get("version_id") != want_v[dg]:
+                    raise PreserveError(
+                        stage, f"provider 의 object version 이 lease 와 다르다: "
+                               f"{dg[:16]}")
+                if st.get("mode") != lease["lock_mode"]:
+                    raise PreserveError(
+                        stage, f"lock mode 가 lease 와 다르다: {st.get('mode')!r} "
+                               f"≠ {lease['lock_mode']!r}")
+                if str(st.get("retain_until") or "") < lease["retain_until_utc"]:
+                    raise PreserveError(
+                        stage, f"version 의 retain_until 이 lease 보다 짧다: "
+                               f"{dg[:16]} {st.get('retain_until')!r} < "
+                               f"{lease['retain_until_utc']}")
         elif want_v:
             raise PreserveError(stage, "advisory lease 인데 version 이 적혀 있다")
         on_disk = self.pinned(leg_id)
@@ -719,8 +757,14 @@ class CasBackend:
     def lock_objects(self, leg_id: str, digests, until: str) -> dict:
         return {}
 
-    def query_object_versions(self, leg_id: str, digests) -> dict:
-        return {}
+    def describe_locks(self, leg_id: str, versions: dict) -> dict:
+        """version 별 **현재** lock 상태를 provider 에 묻는다.
+
+        ★ 32차 P0-1 — 31차는 version **존재**만 봤다. 값이 유효한지, 지금 어떤
+          mode 인지, 그 version 의 retain-until 이 언제인지 하나도 안 물었다.
+          local 은 잠글 provider 가 없으므로 전부 `None` 이다.
+        """
+        return {dg: None for dg in versions}
 
     def retrieve_retained(self, lease: dict, dg: str) -> bytes:
         """lease 가 담보한 object 만 회수한다."""
@@ -730,33 +774,73 @@ class CasBackend:
 
 
 class ObjectLockBackend(CasBackend):
-    """provider 가 **강제하는** retention. 이 저장소에는 실제 adapter 가 없다.
+    """provider 가 **바이트를 소유하고 강제하는** retention.
 
-    ★ 31차 P0-1 — 리뷰: "단순 enum/string 이 아니라 provider 가 강제한 object
-      version, retain-until, lock mode 를 만들고 다시 조회하는 adapter 와
-      canary 가 있어야 한다."
+    ★ 31차 P0-1 — 타입 경계를 만들었지만, 그 backend 가 `CasBackend` 의
+      저장 연산을 **그대로 상속**해서 바이트는 여전히 local `objects/`·`pins/`
+      에 있었다. provider 에는 version/mode 장부만 적혔다. 32차 리뷰의 문장:
 
-      여기 있는 것은 **타입 경계**다. `ENFORCEMENT` 를 `object_lock` 으로
-      선언하는 것만으로는 아무 일도 일어나지 않는다 — `probe_enforcement()`
-      가 `query_object_lock()` 을 실제로 조회해 mode 와 정책 하한을 확인해야
-      하고, 그것이 없으면 `advisory_local` 로 떨어져 `retain()` 부터 실패한다.
+          "강제가 있는 쪽이 아니라 local bytes 와 독립된 metadata 장부가
+           있는 쪽이다."
 
-      실제 provider(S3 Object Lock 등) adapter 는 **아직 없다.** 이 클래스를
-      상속해 세 메서드를 구현하는 것이 남은 일이다:
+      그래서 `durable=True` 뒤에도 local pin 을 지울 수 있었다. 잠갔다는 말이
+      거짓이었다.
 
-          query_object_lock()      -> {"mode": …, "min_retain_days": …}
-          lock_objects(leg, digests, until) -> {digest: version_id}
-          query_object_versions(leg, digests) -> {digest: version_id}
+    ★ 32차 P0-1 — **바이트의 소유자를 provider 로 옮긴다.** put·read·pin·
+      read_pinned 가 전부 provider 를 지난다. local root 를 통째로 없애도
+      graph 가 회수돼야 하고, 약속 기간 전 delete/overwrite 는 provider 가
+      거부해야 한다.
+
+    adapter 가 구현할 provider 계약 (S3 Object Lock 의 성질 그대로):
+
+        put(key, data) -> version_id          # 잠긴 key 는 덮어쓰기 거부
+        get(key, version=None) -> bytes
+        delete(key, version=None)             # 잠긴 동안 거부
+        lock(key, version, until)
+        describe() -> {mode, min_retain_days}
+        describe_object(key, version) -> {version_id, mode, retain_until} | None
+        keys_under(prefix) -> [key]
     """
 
     ENFORCEMENT: ClassVar[str] = ENFORCEMENT_OBJECT_LOCK
-
-    #: provider 가 강제한다고 인정하는 lock mode
     LOCK_MODES: ClassVar[frozenset] = frozenset({"COMPLIANCE", "GOVERNANCE"})
 
+    #: 서브클래스가 붙이는 provider. 없으면 강제가 없는 것이다.
+    provider: object = None
+
+    # ── 키 공간 ─────────────────────────────────────────────────────────
+    def _provider_obj_key(self, dg: str) -> str:
+        return f"objects/{dg}"
+
+    def _provider_key(self, leg_id: str, dg: str) -> str:
+        return f"pins/{leg_id}/{dg}"
+
+    @property
+    def store_id(self) -> str:
+        """store 식별자도 **provider 안에** 둔다.
+
+        ★ 32차 P0-1 — 초판은 `<root>/store.json` 을 읽었다. local root 를
+          지우면 정체성이 사라져 "provider 가 소유한다" 가 거짓이 됐다.
+        """
+        key = "store.json"
+        try:
+            rec = load_canonical(self.provider.get(key))
+        except (KeyError, ValueError, UnicodeDecodeError):
+            rec = None
+        if isinstance(rec, dict) and _is_uuid_hex(rec.get("store_id") or ""):
+            return rec["store_id"]
+        self.provider.put(key, canonical_bytes(
+            {"schema": STORE_SCHEMA, "store_id": uuid.uuid4().hex}))
+        return load_canonical(self.provider.get(key))["store_id"]
+
+    @property
+    def uri(self) -> str:
+        """provider 가 소유하므로 local 경로가 아니라 provider 를 이름한다."""
+        return f"objectlock+cas://{type(self.provider).__name__}/{id(self.provider):x}"
+
+    # ── capability ──────────────────────────────────────────────────────
     def query_object_lock(self) -> dict | None:
-        """provider 의 **live** lock 설정. 구현이 없으면 강제가 없는 것이다."""
-        return None
+        return self.provider.describe() if self.provider is not None else None
 
     def probe_enforcement(self) -> str:
         st = self.query_object_lock()
@@ -770,8 +854,104 @@ class ObjectLockBackend(CasBackend):
             return ENFORCEMENT_ADVISORY
         return ENFORCEMENT_OBJECT_LOCK
 
+    # ── 바이트는 provider 가 소유한다 ───────────────────────────────────
+    def put_if_absent(self, data: bytes, *,
+                      faults: frozenset[str] = frozenset()) -> dict:
+        dg = hashlib.sha256(data).hexdigest()
+        key = self._provider_obj_key(dg)
+        try:
+            old = self.provider.get(key)
+        except KeyError:
+            old = None
+        if old is not None:
+            if old != data:
+                raise PreserveError("cas_put",
+                                    f"같은 digest 인데 저장된 바이트가 다르다: {dg[:16]}")
+            return {"digest": dg, "stored": False, "idempotent": True}
+        if "partial_upload" in faults:
+            raise PreserveError("cas_put", "업로드가 중간에 끊겼다 (주입)")
+        self.provider.put(key, data)
+        return {"digest": dg, "stored": True, "idempotent": False}
 
-#: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
+    def read_back(self, dg: str, *,
+                  faults: frozenset[str] = frozenset()) -> bytes:
+        if "no_read_access" in faults or not self.readable:
+            raise PreserveError("read_back", "backend 를 되읽을 권한이 없다")
+        try:
+            data = self.provider.get(self._provider_obj_key(dg))
+        except KeyError as ex:
+            raise PreserveError("read_back", f"object 가 없다: {dg[:16]}") from ex
+        if "read_back_corrupt" in faults:
+            data = data + b"\x00"
+        got = hashlib.sha256(data).hexdigest()
+        if got != dg:
+            raise PreserveError("read_back",
+                                f"되읽은 바이트가 다르다: {got[:16]} ≠ {dg[:16]}")
+        return data
+
+    def has(self, dg: str) -> bool:
+        try:
+            self.provider.get(self._provider_obj_key(dg))
+            return True
+        except KeyError:
+            return False
+
+    def pin(self, leg_id: str, digests) -> dict:
+        check_id(leg_id)
+        made = []
+        for dg in sorted(set(digests)):
+            data = self.read_back(dg)          # object 가 없으면 여기서 실패
+            key = self._provider_key(leg_id, dg)
+            try:
+                cur = self.provider.get(key)
+            except KeyError:
+                cur = None
+            if cur is not None and cur != data:
+                raise PreserveError("pin", f"pin 자리에 다른 내용이 있다: {dg[:16]}")
+            if cur is None:
+                self.provider.put(key, data)
+            made.append(dg)
+        return {"leg_id": leg_id, "pinned": made,
+                "pin_set_digest": pin_set_digest(leg_id, made)}
+
+    def pinned(self, leg_id: str) -> set:
+        pre = f"pins/{leg_id}/"
+        return {k[len(pre):] for k in self.provider.keys_under(pre)}
+
+    def read_pinned(self, leg_id: str, dg: str) -> bytes:
+        try:
+            data = self.provider.get(self._provider_key(leg_id, dg))
+        except KeyError as ex:
+            raise PreserveError("pin", f"pin 이 없다: {dg[:16]}") from ex
+        if hashlib.sha256(data).hexdigest() != dg:
+            raise PreserveError("pin", f"pin 바이트가 digest 와 다르다: {dg[:16]}")
+        return data
+
+    def orphans(self) -> list[Path]:
+        return []
+
+    # ── lock ────────────────────────────────────────────────────────────
+    def lock_objects(self, leg_id: str, digests, until: str) -> dict:
+        out = {}
+        for dg in sorted(set(digests)):
+            key = self._provider_key(leg_id, dg)
+            data = self.read_pinned(leg_id, dg)
+            vid = self.provider.put(key, data)       # 이미 있으면 같은 version
+            self.provider.lock(key, vid, until)
+            out[dg] = vid
+        return out
+
+    def describe_locks(self, leg_id: str, versions: dict) -> dict:
+        """version 별 **현재** lock 상태. 없으면 `None` 이 들어간다."""
+        return {dg: self.provider.describe_object(self._provider_key(leg_id, dg), v)
+                for dg, v in sorted(versions.items())}
+
+
+class LockedCasBackend(ObjectLockBackend):
+    """시험·canary 가 쓰는 구체 backend — provider 를 주입받는다."""
+
+
+#: payload manifest 의 닫힌 schema#: payload manifest 의 닫힌 schema. 키가 남거나 모자라면 거부한다.
 _MANIFEST_KEYS = {"schema", "n_members", "total_bytes", "members", "root_digest"}
 _MEMBER_KEYS = {"path", "bytes", "sha256"}
 MANIFEST_SCHEMA = "payload-manifest/v1"
@@ -2125,6 +2305,12 @@ def finalize_only(leg_id: str, backend: CasBackend, index_path: Path) -> dict:
     #   `run_transaction` 과 같은 typed retention 결과를 돌려준다.
     if registration(index_path, leg_id) is not None:
         lease = verified_retention(backend, index_path, leg_id)  # 실패하면 예외
+        # ★ 32차 P0-3 — journal 이 **보인다**고 durable 한 것이 아니다.
+        #   `during_journal_fsync` 에서 죽으면 이름은 보이는데 그 directory 가
+        #   아직 안 굳었다. 초판은 여기서 그대로 `ok=True` 를 돌려줘
+        #   interrupted commit 을 완료하지 않았다 — 뒤의 power loss 에서
+        #   journal 이 사라질 수 있었다. 재개가 commit 을 **끝낸다**.
+        _fsync_dir_strict(_reg_file(index_path, leg_id).parent, "register")
         return {"ok": True, "already": True, "retention": lease,
                 "durable": lease["enforcement"] == ENFORCEMENT_OBJECT_LOCK,
                 "receipt_object": e["receipt_object"]}

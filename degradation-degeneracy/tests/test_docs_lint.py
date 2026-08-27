@@ -17,6 +17,8 @@
 from __future__ import annotations
 
 import hashlib
+import json
+import os
 import re
 import subprocess
 import sys
@@ -3673,42 +3675,50 @@ def test_every_generation_entry_names_the_legs_that_attained_it():
 _PRESERVE_INDEX = _REPO / "docs" / "22p_gap" / "preserve_index"
 
 
-def _registered_legs(index_path) -> dict[str, dict]:
-    """**실제 index** 에서 등록된 다리를 찾는다.
+def _registered_legs(index_path, backend=None) -> dict[str, dict]:
+    """**검증된 receipt** 를 backend 에서 회수해 돌려준다.
 
-    ★ 31차 P2 — 30차판은 가변 `LEG_PRESERVATION.yaml` 의 **optional**
-      `evidence.registered_receipt` 필드가 있는 다리만 "registered" 로 셌다.
-      리뷰가 지적한 그대로다:
+    ★ 31차 P2 — 30차판은 가변 원장의 optional `evidence.registered_receipt`
+      가 있는 다리만 registered 로 셌다.
+    ★ 32차 P2 — 31차판은 index entry 와 journal 의 `receipt_object` **문자열**
+      이 같으면 등록으로 셌다. CAS·lease·pin graph·receipt bytes 를 하나도
+      읽지 않았고, generation 결속도 receipt 가 아니라 index 의 사본
+      (`entry["planned_envelope"]`) 을 읽었다. 리뷰의 반례:
 
-          실제 backend 에 등록 receipt 가 생김
-          + ledger 에서 evidence.registered_receipt 를 누락
-          ⇒ registered=[] ⇒ 결속 검사가 돌지 않음
+          index.planned_envelope = 원장과 일치
+          journal.receipt_object = index.receipt_object
+          actual receipt        = 없음 또는 다른 planned_envelope
+          ⇒ 통과
 
-      원장이 검사 대상을 스스로 고르는 구조였다. 이제 index 를 읽는다.
+      index 의 사본은 대조 대상일 수는 있어도 **권위가 될 수 없다.**
+      `verify_registered_graph()` 가 돌려준 receipt 를 쓴다. backend 없이는
+      "등록됨" 을 판정하지 않는다 — 31차에 API 에서 가른 그 구분이다.
     """
     from pathlib import Path as _P
 
     import tools.preserve as P
 
     index_path = _P(index_path)
-    if not (index_path / "legs").is_dir():
+    if backend is None or not (index_path / "legs").is_dir():
         return {}
     out = {}
-    for leg, entry in P.index_entries(index_path).items():
-        j = P.registration(index_path, leg)
-        if j is not None and j.get("receipt_object") == entry.get("receipt_object"):
-            out[leg] = entry
+    for leg in P.index_entries(index_path):
+        try:
+            out[leg] = P.verify_registered_graph(backend, index_path, leg)
+        except P.PreserveError:
+            continue                     # 등록이 성립하지 않는다
     return out
 
 
 def _generation_binding_problems(registered: dict, reg: dict,
-                                 creg: dict) -> list[str]:
-    """등록 실물 ↔ 원장 ↔ 세대표 결속. 순수 함수라 변이를 걸 수 있다."""
+                                 creg: dict, entries: dict | None = None) -> list[str]:
+    """등록 **receipt** ↔ 원장 ↔ 세대표 결속. 순수 함수라 변이를 걸 수 있다."""
     dg = creg.get("source_digest_generations") or {}
     legs = {e["leg_id"]: e for e in reg["legs"]}
+    entries = entries or {}
     bad = []
-    for leg, entry in sorted(registered.items()):
-        env = (entry.get("planned_envelope") or {})
+    for leg, receipt in sorted(registered.items()):
+        env = (receipt or {}).get("planned_envelope") or {}
         e = legs.get(leg)
         if e is None:
             bad.append(f"{leg}: index 에 등록돼 있는데 원장에 없다")
@@ -3721,11 +3731,17 @@ def _generation_binding_problems(registered: dict, reg: dict,
             bad.append(f"{leg}: 등록 receipt 의 protocol_generation "
                        f"{env.get('protocol_generation')!r} 가 세대표 "
                        f"{dg.get(env.get('source_digest'))!r} 와 다르다")
-    # 반대 방향 — 원장이 등록을 주장하는데 index 에 없으면 그것도 거짓이다
+        # ★ 32차 P2 — index 의 사본은 **대조 대상**이다. receipt 와 갈리면
+        #   그 자체가 오류다 (권위는 receipt).
+        copy = (entries.get(leg) or {}).get("planned_envelope")
+        if copy is not None and copy != env:
+            bad.append(f"{leg}: public index 의 planned_envelope 사본이 "
+                       "등록 receipt 와 다르다")
+    # 반대 방향 — 원장이 등록을 주장하는데 실물이 없으면 그것도 거짓이다
     for leg, e in sorted(legs.items()):
         if (e.get("evidence") or {}).get("registered_receipt") and \
                 leg not in registered:
-            bad.append(f"{leg}: 원장은 등록됐다는데 index 에 없다")
+            bad.append(f"{leg}: 원장은 등록됐다는데 검증된 등록이 없다")
     return bad
 
 
@@ -3789,26 +3805,227 @@ def test_the_generation_binding_bites_on_a_synthetic_registry(tmp_path):
                                               registered_receipt={"x": 1}))
                         if e["leg_id"] == leg else e for e in reg["legs"]]}
     bad = _generation_binding_problems({}, claimed, creg)
-    assert any("index 에 없다" in b for b in bad), bad
+    assert any("검증된 등록이 없다" in b for b in bad), bad
 
 
-def test_the_registry_reader_finds_a_real_registration(tmp_path):
-    """`_registered_legs()` 가 **실제 journal** 을 읽는지 — reader 자체의 시험."""
+def test_the_registry_reader_recovers_the_actual_receipt(tmp_path):
+    """★ 32차 P2 — reader 가 **실제 receipt** 를 회수하는지.
+
+    31차판 시험은 `planned_id="p"` · `receipt_digest="r"` 로 CAS·receipt·
+    backend 없이 `publish()` 와 private `_register()` 만 불러 놓고 그것을
+    "real registration" 이라고 불렀다. journal reader 를 증명했을 뿐
+    registered receipt discovery 를 증명하지 않았다.
+
+    여기서는 **진짜 트랜잭션**을 돌린다.
+    """
+    import sys as _sys
+
+    _sys.path.insert(0, str(_REPO / "tests"))
+    import test_preserve as TP
     import tools.preserve as P
 
     index = tmp_path / "index"
-    assert _registered_legs(index) == {}          # 없으면 비어 있다
+    backend = P.CasBackend(root=tmp_path / "cas")
+    assert _registered_legs(index, backend) == {}          # 없으면 비어 있다
 
-    e = {"leg_id": "legX", "planned_id": "p", "receipt_digest": "r",
-         "receipt_object": "a" * 64, "payload_root_digest": "d",
-         "payload_manifest_digest": "m", "backend_uri": "file+cas:///x",
-         "planned_envelope": {"source_digest": "d50295f980ccaa81",
-                              "protocol_generation": "v5"}}
-    P.publish(index, e)
-    assert _registered_legs(index) == {}, "publish 만으로는 등록이 아니다"
+    run = TP._make_run(tmp_path)
+    P.run_transaction(TP.PLANNED, run, backend, index, TP._hooks())
 
-    P._register(index, "legX", "a" * 64,
-                P.pin_set_digest("legX", ["b" * 64]), ["b" * 64], "c" * 64)
-    got = _registered_legs(index)
-    assert set(got) == {"legX"}
-    assert got["legX"]["planned_envelope"]["protocol_generation"] == "v5"
+    got = _registered_legs(index, backend)
+    assert set(got) == {TP.PLANNED.leg_id}
+    env = got[TP.PLANNED.leg_id]["planned_envelope"]
+    assert env["protocol_generation"] == TP.PLANNED.protocol_generation
+    assert env["source_digest"] == TP.PLANNED.source_digest
+
+    # backend 를 안 주면 판정하지 않는다 (31차에 API 에서 가른 구분)
+    assert _registered_legs(index) == {}
+
+    # graph 를 잃으면 등록이 아니다 — journal 문자열만으로는 못 센다
+    import shutil as _sh
+    _sh.rmtree(backend.root / "pins")
+    assert _registered_legs(index, backend) == {}
+
+
+def test_the_index_copy_is_compared_against_the_receipt(tmp_path):
+    """★ 32차 P2 — index 의 `planned_envelope` 사본은 **권위가 아니다**.
+
+    receipt 와 갈리면 그 자체가 오류여야 한다.
+    """
+    reg = _leg_preservation()
+    creg = _claim_status()
+    leg = "paired_fixed5_v4"
+    src = next(e for e in reg["legs"]
+               if e["leg_id"] == leg)["evidence"]["leg_source_digest"]
+    gen = creg["source_digest_generations"][src]
+    env = {"source_digest": src, "protocol_generation": gen}
+
+    receipts = {leg: {"planned_envelope": env}}
+    assert _generation_binding_problems(receipts, reg, creg,
+                                        entries={leg: {"planned_envelope": env}}) == []
+    bad = _generation_binding_problems(
+        receipts, reg, creg,
+        entries={leg: {"planned_envelope": dict(env, protocol_generation="v6")}})
+    assert any("사본이" in b for b in bad), bad
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 32차 최소 증거 #9 — immutable generation + 단일 CURRENT
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _rp():
+    import importlib.util
+    spec = importlib.util.spec_from_file_location(
+        "_rp_mod", _REPO / "docs" / "22p_gap" / "row_projection.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _stage(tmp_path, **files):
+    d = tmp_path / "stage"
+    d.mkdir(parents=True, exist_ok=True)
+    for n, b in files.items():
+        (d / n).write_bytes(b)
+    return d
+
+
+def test_promotion_publishes_an_immutable_generation_then_one_pointer(tmp_path):
+    """★ 32차 #9 — 승격이 **fixed-name 세 파일**이라 set atomicity 가 아니었다.
+
+    셋을 하나씩 `os.replace` 하므로 중간에 죽으면 새 payload 와 옛 YAML 이
+    섞일 수 있다 (manifest-last 로 완화했을 뿐 원자적이지 않다).
+
+    immutable generation directory 에 한 번 쓰고, **단일 pointer** 를 원자적
+    으로 옮긴다. generation 은 절대 덮지 않는다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    st = _stage(tmp_path, **{"a.projection.csv.gz": b"rows-1",
+                             "a.restarts.csv.gz": b"restarts-1",
+                             "a.projection.yaml": b"meta: 1\n"})
+    rec = rp.promote_generation(st, out)
+
+    gen = out / "gen" / rec["generation_id"]
+    assert gen.is_dir(), "immutable generation directory 가 없다"
+    assert not st.exists(), "staging 이 남았다"
+    cur = rp.read_current(out)
+    assert cur["generation_id"] == rec["generation_id"]
+    assert set(cur["files"]) == {"a.projection.csv.gz", "a.restarts.csv.gz",
+                                 "a.projection.yaml"}
+
+    # 같은 내용은 멱등, 다른 내용은 **새 generation** (덮지 않는다)
+    again = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.csv.gz": b"rows-1",
+                            "a.restarts.csv.gz": b"restarts-1",
+                            "a.projection.yaml": b"meta: 1\n"}), out)
+    assert again["generation_id"] == rec["generation_id"]
+
+    two = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.csv.gz": b"rows-2",
+                            "a.restarts.csv.gz": b"restarts-1",
+                            "a.projection.yaml": b"meta: 2\n"}), out)
+    assert two["generation_id"] != rec["generation_id"]
+    assert gen.is_dir(), "옛 generation 이 사라졌다 — immutable 이 아니다"
+    assert (gen / "a.projection.csv.gz").read_bytes() == b"rows-1"
+    assert rp.read_current(out)["generation_id"] == two["generation_id"]
+
+
+def test_a_generation_directory_is_never_overwritten(tmp_path):
+    """같은 generation_id 자리에 다른 바이트가 있으면 **거부**한다."""
+    rp = _rp()
+    out = tmp_path / "out"
+    rec = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    victim = out / "gen" / rec["generation_id"] / "a.projection.yaml"
+    victim.write_bytes(b"tampered\n")
+    with pytest.raises(SystemExit) as ei:
+        rp.promote_generation(
+            _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    assert "generation" in str(ei.value)
+
+
+def test_readers_follow_current_and_a_torn_pointer_is_refused(tmp_path):
+    """CURRENT 가 없거나 깨졌거나 없는 generation 을 가리키면 fail-closed."""
+    rp = _rp()
+    out = tmp_path / "out"
+    with pytest.raises(SystemExit):
+        rp.read_current(out)                       # 아직 없다
+
+    rec = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+    (out / "CURRENT").write_text("{oops", encoding="utf-8")
+    with pytest.raises(SystemExit):
+        rp.read_current(out)
+
+    # ★ 자기정합인데 **실물이 없는** pointer — 앞의 id 검사에 업히지 않게
+    #   `generation_id()` 로 직접 만든다. 그래야 "없는 generation" 축이 실제로
+    #   실행된다 (변이로 확인: 이 축을 지워도 초판 시험은 초록이었다).
+    ghost = {"ghost.yaml": hashlib.sha256(b"nope").hexdigest()}
+    (out / "CURRENT").write_text(
+        json.dumps({"schema": rp.CURRENT_SCHEMA,
+                    "generation_id": rp.generation_id(ghost), "files": ghost}),
+        encoding="utf-8")
+    with pytest.raises(SystemExit) as ei:
+        rp.read_current(out)
+    assert "없는 generation" in str(ei.value)
+
+
+def test_a_torn_pointer_write_never_replaces_a_good_one(tmp_path, monkeypatch):
+    """★ 32차 #9 — pointer 전환이 **원자적**이어야 한다.
+
+    CURRENT 를 제자리에서 쓰면 쓰다 죽었을 때 잘린 pointer 가 남고, 읽는 쪽은
+    옛 generation 도 새 generation 도 못 본다. temp + `os.replace` 는 옛
+    pointer 를 그대로 남긴다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    first = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+
+    real_write = os.write
+    state = {"armed": False}
+
+    def half(fd, data):
+        if state["armed"] and len(data) > 8:
+            real_write(fd, data[:8])
+            raise OSError("쓰다 죽었다 (주입)")
+        return real_write(fd, data)
+
+    monkeypatch.setattr(os, "write", half)
+    state["armed"] = True
+    with pytest.raises(OSError):
+        rp._publish_pointer(out, {"schema": rp.CURRENT_SCHEMA,
+                                  "generation_id": "9" * 64,
+                                  "files": {"x": "y" * 64}})
+    state["armed"] = False
+    monkeypatch.undo()
+
+    assert rp.read_current(out)["generation_id"] == first["generation_id"], (
+        "부분 쓰기가 옛 pointer 를 망가뜨렸다")
+
+
+def test_a_crash_between_generation_and_pointer_leaves_no_mixed_state(tmp_path,
+                                                                     monkeypatch):
+    """★ 32차 #9 — pointer 를 옮기기 **직전**에 죽어도 섞이지 않는다.
+
+    옛 CURRENT 가 옛 generation 을 계속 가리켜야 한다.
+    """
+    rp = _rp()
+    out = tmp_path / "out"
+    first = rp.promote_generation(
+        _stage(tmp_path, **{"a.projection.yaml": b"meta: 1\n"}), out)
+
+    boom = RuntimeError("pointer 직전에 죽었다 (주입)")
+
+    def die(*a, **kw):
+        raise boom
+
+    monkeypatch.setattr(rp, "_publish_pointer", die)
+    with pytest.raises(RuntimeError):
+        rp.promote_generation(
+            _stage(tmp_path, **{"a.projection.yaml": b"meta: 2\n"}), out)
+
+    assert rp.read_current(out)["generation_id"] == first["generation_id"], (
+        "pointer 가 안 옮겨졌는데 읽는 쪽이 새 generation 을 본다")
+    assert rp.read_current(out)["files"]["a.projection.yaml"] == \
+        hashlib.sha256(b"meta: 1\n").hexdigest()

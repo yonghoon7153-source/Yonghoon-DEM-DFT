@@ -36,7 +36,7 @@ from tools.preserve import (FAULTS, CasBackend, Hooks, PlannedLeg, PreserveError
                             assert_durable_retention, has_registration_journal,
                             check_envelope, check_output, check_output_claim, check_hook_validation,
                             pin_set_digest, ENFORCEMENT_OBJECT_LOCK, ENFORCEMENT_ADVISORY,
-                            MIN_RETENTION_DAYS, ObjectLockBackend)
+                            MIN_RETENTION_DAYS, ObjectLockBackend, LockedCasBackend)
 from tools.preserve import _is_hex64 as _is_hex64_str
 
 #: 고정 fixture 바이트 — 여기서 기대 semantic digest 가 결정된다.
@@ -56,6 +56,10 @@ PLANNED = PlannedLeg(
     total_start_budget=20,
     candidate_mode="legacy_slot_replace",
 )
+
+
+def _nonempty(v) -> bool:
+    return isinstance(v, str) and v != ""
 
 
 def _make_run(tmp: Path) -> Path:
@@ -1732,8 +1736,24 @@ def test_a_killed_process_never_leaves_a_journal_without_its_graph(tmp_path, sta
 
     # 그리고 재개는 **재계산 없이** 끝나야 한다 (hooks 를 받지 않는다)
     if index_entries(index):
-        out = finalize_only("crashleg", backend, index)
+        import tools.preserve as P
+
+        seen: list[str] = []
+        real = P._fsync_dir
+        P._fsync_dir = lambda d: (seen.append(d.name), real(d))[1]
+        try:
+            out = finalize_only("crashleg", backend, index)
+        finally:
+            P._fsync_dir = real
         assert out["ok"] and is_registered(index, "crashleg", backend)
+        if positive:
+            # ★ 32차 P0-3 — journal 이 **보이지만 durable 하지 않을 수 있는**
+            #   상태에서 재개했다. `already` 로 빠져나가면 interrupted commit
+            #   을 완료하지 않은 것이다. 복구가 journal directory 를 다시
+            #   굳혔는지 직접 본다.
+            assert "registered" in seen, (
+                "journal 이 보이는 상태로 재개했는데 registered/ 를 다시 "
+                "굳히지 않았다 — interrupted commit 이 완료되지 않았다")
 
 
 def test_re_running_a_registered_leg_does_not_mint_a_second_lease(tmp_path,
@@ -1865,74 +1885,19 @@ def test_finalize_only_returns_the_same_typed_retention_result(tmp_path):
     assert again["retention"]["lease_digest"] == fresh["retention"]["lease_digest"]
 
 
-class _FakeLockProvider:
-    """실제로 **강제하는** 가짜 provider. version ID · lock mode · retain-until.
-
-    ★ 31차 P0-1 — 리뷰가 요구한 canary 다. 이 저장소에는 붙일 수 있는 실제
-      provider 가 없으므로, 강제가 **있는** 쪽과 **없는** 쪽을 같은 타입
-      경계에 놓고 경계가 실제로 갈라지는지 본다.
-    """
-
-    MODE = "COMPLIANCE"
-
-    def __init__(self, min_retain_days=MIN_RETENTION_DAYS):
-        self.versions: dict[str, str] = {}
-        self.until: dict[str, str] = {}
-        self.min_retain_days = min_retain_days
-        self.deleted: list[str] = []
-
-    def put_locked(self, key: str, until: str) -> str:
-        vid = f"v{len(self.versions) + 1:04d}"
-        self.versions[key] = vid
-        self.until[key] = until
-        return vid
-
-    def delete(self, key: str) -> None:
-        if key in self.until:
-            raise PermissionError(f"object lock 이 삭제를 막았다: {key}")
-        self.deleted.append(key)
-
-    def describe(self) -> dict:
-        return {"mode": self.MODE, "min_retain_days": self.min_retain_days}
-
-
-class _LockedBackend(ObjectLockBackend):
-    """가짜 provider 를 붙인 object-lock backend."""
-
-    provider: object = None
-
-    def query_object_lock(self):
-        return self.provider.describe() if self.provider else None
-
-    def lock_objects(self, leg_id, digests, until):
-        return {d: self.provider.put_locked(f"{leg_id}/{d}", until)
-                for d in sorted(digests)}
-
-    def query_object_versions(self, leg_id, digests):
-        return {d: self.provider.versions.get(f"{leg_id}/{d}")
-                for d in sorted(digests)}
-
-
-def _locked(tmp_path, provider=None):
-    b = _LockedBackend(root=tmp_path / "cas")
-    object.__setattr__(b, "provider", provider or _FakeLockProvider())
-    return b
-
-
 def test_an_object_lock_backend_can_claim_durable_retention(tmp_path):
     """강제가 **있으면** durable 이 성립한다 — 경계가 한쪽으로만 닫히면 안 된다."""
     run = _make_run(tmp_path)
-    backend = _locked(tmp_path)
+    backend = _lockstore(tmp_path)
     index = tmp_path / "index"
     res = run_transaction(PLANNED, run, backend, index, _hooks())
 
     assert res["durable"] is True
     assert res["retention"]["enforcement"] == ENFORCEMENT_OBJECT_LOCK
     assert res["retention"]["lock_mode"] == "COMPLIANCE"
-    # provider 가 준 version ID 가 lease 에 들어 있고 다시 조회된다
     versions = res["retention"]["object_versions"]
     assert set(versions) == set(res["retention"]["objects"])
-    assert all(v for v in versions.values())
+    assert all(_nonempty(v) for v in versions.values())
     assert assert_durable_retention(backend, index, PLANNED.leg_id)
 
 
@@ -1942,46 +1907,22 @@ def test_a_provider_that_stops_enforcing_loses_durable_retention(tmp_path):
     등록 시점에 강제됐다는 사실이 지금도 강제된다는 뜻이 아니다.
     """
     run = _make_run(tmp_path)
-    prov = _FakeLockProvider()
-    backend = _locked(tmp_path, prov)
+    store = _LockingStore()
+    backend = _lockstore(tmp_path, store)
     index = tmp_path / "index"
     assert run_transaction(PLANNED, run, backend, index, _hooks())["durable"]
 
-    prov.min_retain_days = 1                      # 정책이 내려갔다
+    store.min_retain_days = 1                     # 정책이 내려갔다
     with pytest.raises(PreserveError):
         assert_durable_retention(backend, index, PLANNED.leg_id)
     assert not is_registered(index, PLANNED.leg_id, backend)
 
 
-def test_a_provider_that_forgets_a_version_loses_durable_retention(tmp_path):
-    """version ID 가 사라지면 그 object 는 더 이상 잠겨 있지 않다."""
-    run = _make_run(tmp_path)
-    prov = _FakeLockProvider()
-    backend = _locked(tmp_path, prov)
-    index = tmp_path / "index"
-    res = run_transaction(PLANNED, run, backend, index, _hooks())
-
-    victim = sorted(res["retention"]["object_versions"])[0]
-    prov.versions.pop(f"{PLANNED.leg_id}/{victim}")
-    with pytest.raises(PreserveError) as ei:
-        backend.verify_retention(PLANNED.leg_id,
-                                 res["retention"]["lease_digest"])
-    assert "version" in ei.value.msg
-
-
 def test_an_object_lock_backend_without_a_provider_is_advisory(tmp_path):
-    """★ 31차 P0-1 — 클래스 이름만으로는 강제가 아니다.
-
-    `ENFORCEMENT` 를 `object_lock` 으로 선언했어도 조회가 지지하지 않으면
-    lease 를 만들 수 없다. 이것이 "label 이 아니라 capability" 의 뜻이다.
-    """
-    backend = _LockedBackend(root=tmp_path / "cas")     # provider 없음
+    """★ 31차 P0-1 — 클래스 이름만으로는 강제가 아니다."""
+    backend = LockedCasBackend(root=tmp_path / "cas")     # provider 없음
     assert backend.enforcement == ENFORCEMENT_OBJECT_LOCK
     assert backend.probe_enforcement() == ENFORCEMENT_ADVISORY
-    dg = backend.put_if_absent(b"x")["digest"]
-    with pytest.raises(PreserveError) as ei:
-        backend.retain("legX", [dg], min_retention_days=MIN_RETENTION_DAYS)
-    assert "지지하지 않는다" in ei.value.msg
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2101,11 +2042,12 @@ def test_the_crash_drill_actually_reaches_a_visible_journal():
     assert set(_CRASH_POSITIVE) == {"after_pin", "after_publish",
                                     "after_register", "during_journal_fsync"}, (
         f"drill 이 다 돌지 않았다: {sorted(_CRASH_POSITIVE)}")
-    assert any(_CRASH_POSITIVE.values()), (
-        "어느 지점도 journal 양성 상태를 만들지 못했다 — 불변식의 전건이 "
-        "한 번도 참이 되지 않으면 그 시험은 공허하다")
-    assert not all(_CRASH_POSITIVE.values()), (
-        "음성 지점이 없다 — 음성 쪽도 고정해야 한다")
+    # ★ 32차 P0-3 — `any`/`not all` 은 너무 약하다. `during_journal_fsync` 가
+    #   다시 음성이 되어도 `after_register` 하나만 양성이면 통과했다.
+    #   요청문에 적은 **exact vector** 를 고정한다.
+    assert _CRASH_POSITIVE == {"after_pin": False, "after_publish": False,
+                               "after_register": True,
+                               "during_journal_fsync": True}, _CRASH_POSITIVE
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2247,3 +2189,280 @@ def test_a_backend_object_keeps_pointing_at_the_store_it_was_made_for(tmp_path,
     assert backend.uri == before, "cwd 를 바꿨더니 같은 객체가 다른 store 를 가리킨다"
     assert backend.store_id == sid
     assert backend.uri.startswith("file+cas:///"), backend.uri
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 32차 P0-1 — provider 가 **바이트를 소유하고 삭제를 거부**해야 한다
+# ─────────────────────────────────────────────────────────────────────────────
+
+class _LockingStore:
+    """실제로 강제하는 in-process object store.
+
+    ★ 32차 P0-1 — 31차의 `_FakeLockProvider` 는 **바이트를 보관하지 않고**
+      version/until dict 만 만들었다. 그래서 `durable=True` 뒤에도 local pin 을
+      지울 수 있었고 provider 장부는 그대로였다. 리뷰의 문장 그대로다 —
+      "강제가 있는 쪽이 아니라 local bytes 와 독립된 metadata 장부가 있는 쪽".
+
+      이 store 는 바이트를 **자기가 들고**, lock 이 걸린 동안 delete/overwrite
+      를 실제로 **거부**한다. 실제 provider(S3 Object Lock)의 성질을 그대로
+      흉내낸 것이고, adapter 를 붙일 때 이 계약을 만족하면 된다.
+    """
+
+    MODE = "COMPLIANCE"
+
+    def __init__(self, min_retain_days=MIN_RETENTION_DAYS, mode=None):
+        self._obj: dict[tuple[str, str], bytes] = {}     # (key, version) → bytes
+        self._head: dict[str, str] = {}                  # key → version
+        self._lock: dict[tuple[str, str], str] = {}      # (key, version) → until
+        self.min_retain_days = min_retain_days
+        self.mode = mode or self.MODE
+        self._n = 0
+
+    # ── 실제 provider 가 제공하는 연산 ──────────────────────────────────
+    def put(self, key: str, data: bytes) -> str:
+        cur = self._head.get(key)
+        if cur is not None and (key, cur) in self._lock:
+            if self._obj[(key, cur)] != data:
+                raise PermissionError(f"object lock 이 덮어쓰기를 막았다: {key}")
+            return cur
+        self._n += 1
+        vid = f"v{self._n:05d}"
+        self._obj[(key, vid)] = bytes(data)
+        self._head[key] = vid
+        return vid
+
+    def get(self, key: str, version: str | None = None) -> bytes:
+        v = version or self._head.get(key)
+        if v is None or (key, v) not in self._obj:
+            raise KeyError(key)
+        return self._obj[(key, v)]
+
+    def delete(self, key: str, version: str | None = None) -> None:
+        v = version or self._head.get(key)
+        if v is None:
+            return
+        if (key, v) in self._lock:
+            raise PermissionError(f"object lock 이 삭제를 막았다: {key}@{v}")
+        self._obj.pop((key, v), None)
+        if self._head.get(key) == v:
+            self._head.pop(key, None)
+
+    def lock(self, key: str, version: str, until: str) -> None:
+        self._lock[(key, version)] = until
+
+    def describe(self) -> dict:
+        return {"mode": self.mode, "min_retain_days": self.min_retain_days}
+
+    def describe_object(self, key: str, version: str) -> dict | None:
+        if (key, version) not in self._obj:
+            return None
+        u = self._lock.get((key, version))
+        return None if u is None else {"version_id": version, "mode": self.mode,
+                                       "retain_until": u}
+
+    def keys_under(self, prefix: str) -> list[str]:
+        return sorted(k for k in self._head if k.startswith(prefix))
+
+
+def _lockstore(tmp_path, store=None):
+    b = LockedCasBackend(root=tmp_path / "cas")
+    object.__setattr__(b, "provider", store or _LockingStore())
+    return b
+
+
+def test_a_locked_graph_survives_wiping_the_local_root(tmp_path):
+    """★ 32차 P0-1 — provider 가 **바이트를 소유**한다.
+
+    리뷰가 요구한 canary 다: local CAS/pins 를 통째로 없앤 뒤에도 provider
+    에서 receipt·manifest·member·산출 graph 전부를 회수할 수 있어야 한다.
+    31차 canary 는 local 이 바이트를 들고 있었으므로 이것을 못 보였다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore()
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    assert res["durable"] is True
+
+    # local 을 통째로 지운다 — provider 가 진짜 소유자라면 아무 일도 없다
+    shutil.rmtree(backend.root, ignore_errors=True)
+    assert is_registered(index, PLANNED.leg_id, backend), (
+        "local root 를 지웠더니 등록이 죽었다 — 바이트를 provider 가 들고 있지 않다")
+    assert assert_durable_retention(backend, index, PLANNED.leg_id)
+
+
+def test_the_provider_actually_refuses_to_delete_a_locked_object(tmp_path):
+    """★ 32차 P0-1 — 잠금이 **삭제를 실제로 막아야** 한다.
+
+    31차 canary 는 삭제를 시도조차 하지 않았다. "반환 직후 삭제 자체가
+    성공한 순간 durable retention 의 약속이 깨진다" 는 지적 그대로다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore()
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+
+    leg = PLANNED.leg_id
+    for dg in res["retention"]["objects"]:
+        with pytest.raises(PermissionError):
+            store.delete(backend._provider_key(leg, dg))
+        with pytest.raises(PermissionError):
+            store.put(backend._provider_key(leg, dg), b"overwritten")
+    assert is_registered(index, leg, backend)
+
+
+@pytest.mark.parametrize("axis", ["empty_version", "foreign_version",
+                                  "mode_changed", "until_shortened",
+                                  "lock_released"])
+def test_each_lock_axis_independently_loses_durable_retention(tmp_path, axis):
+    """★ 32차 P0-1 — verifier 의 세 구멍을 축마다 따로 물린다.
+
+    리뷰가 적은 그대로:
+      1. `object_versions` 값이 nonempty provider version 인지 안 봤다
+      2. lease 의 `lock_mode` 를 **현재** provider mode 와 비교하지 않았다
+      3. version 별 현재 `retain_until` 을 재조회하지 않았다
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore()
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    leg = PLANNED.leg_id
+    victim = sorted(res["retention"]["objects"])[0]
+    key = backend._provider_key(leg, victim)
+    vid = res["retention"]["object_versions"][victim]
+
+    if axis == "empty_version":
+        # lease 가 version 을 **안 적은** 경우 — provider 에 묻기 전에 걸린다
+        res["retention"]["object_versions"][victim] = ""
+        with pytest.raises(PreserveError) as ei:
+            backend.verify_retention(leg, res["retention"]["lease_digest"],
+                                     lease=res["retention"])
+        assert "비었다" in ei.value.msg, ei.value.msg
+        return
+    if axis == "foreign_version":
+        # 값은 있는데 provider 에 그런 version 이 **없는** 경우 — 조회가 잡는다
+        res["retention"]["object_versions"][victim] = "v99999"
+        with pytest.raises(PreserveError) as ei:
+            backend.verify_retention(leg, res["retention"]["lease_digest"],
+                                     lease=res["retention"])
+        assert "잠긴 version 이 없다" in ei.value.msg, ei.value.msg
+        return
+    if axis == "mode_changed":
+        store.mode = "GOVERNANCE"
+    elif axis == "until_shortened":
+        store._lock[(key, vid)] = "2026-08-28T00:00:00Z"
+    elif axis == "lock_released":
+        store._lock.pop((key, vid))
+
+    with pytest.raises(PreserveError):
+        assert_durable_retention(backend, index, leg)
+    assert not is_registered(index, leg, backend)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 32차 P0-3 — retry 재-fsync 가 index 한 경로에만 들어갔다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _flaky_fsync(monkeypatch, victim_name):
+    """`victim_name` directory 의 **첫** fsync 만 실패시킨다."""
+    import tools.preserve as P
+
+    n = {"hit": 0, "total": 0}
+    real = P._fsync_dir
+
+    def flaky(d):
+        n["total"] += 1
+        if d.name == victim_name:
+            n["hit"] += 1
+            if n["hit"] == 1:
+                return False
+        return real(d)
+
+    monkeypatch.setattr(P, "_fsync_dir", flaky)
+    return n
+
+
+def test_a_cas_object_retry_must_fsync_the_prefix_again(tmp_path, monkeypatch):
+    """★ 32차 P0-3 — `put_if_absent()` 의 기존-name branch 가 fsync 를 건너뛴다.
+
+    `os.replace` 성공 뒤 `objects/<prefix>` fsync 가 실패하면 final object
+    name 은 남은 채 예외가 나간다. 재시도는 `dst.exists()` 로 들어가 bytes 만
+    확인하고 즉시 return 했다 — 다시 굳히지 않았다. 31차에 이 형태를
+    `_exclusive_write()` **한 경로에서만** 고쳤다.
+    """
+    backend = CasBackend(root=tmp_path / "cas")
+    backend.store_id                                   # store 를 먼저 만든다
+    data = b"object-that-needs-a-new-prefix-directory"
+    n = _flaky_fsync(monkeypatch, hashlib.sha256(data).hexdigest()[:2])
+
+    with pytest.raises(PreserveError):
+        backend.put_if_absent(data)
+    assert backend.has(hashlib.sha256(data).hexdigest()), "이름은 이미 생겼다 — 전제"
+
+    before = n["hit"]
+    backend.put_if_absent(data)                        # 재시도
+    assert n["hit"] > before, "재시도가 object prefix 를 다시 굳히지 않았다"
+
+
+def test_a_pin_retry_must_fsync_the_pin_directory_again(tmp_path, monkeypatch):
+    """★ 32차 P0-3 — `pin()` 의 기존-pin branch 도 같은 형태였다."""
+    backend = CasBackend(root=tmp_path / "cas")
+    backend.store_id
+    dg = backend.put_if_absent(b"pin-me")["digest"]
+    n = _flaky_fsync(monkeypatch, "legX")
+
+    with pytest.raises(PreserveError):
+        backend.pin("legX", [dg])
+    assert backend.pinned("legX") == {dg}, "pin 이름은 이미 생겼다 — 전제"
+
+    before = n["hit"]
+    backend.pin("legX", [dg])                          # 재시도
+    assert n["hit"] > before, "재시도가 pin directory 를 다시 굳히지 않았다"
+
+
+def test_a_directory_that_exists_is_still_re_fsynced_on_retry(tmp_path,
+                                                              monkeypatch):
+    """★ 32차 P0-3 — `_mkdir_durable()` 이 "보이면 즉시 return" 했다.
+
+    `mkdir` 은 성공했지만 parent fsync 가 실패한 상태와 이미 durable 한
+    상태를 **구별하지 못한다**. 재시도가 parent edge 를 다시 굳히지 않았다.
+    """
+    import tools.preserve as P
+
+    seen: list[str] = []
+    real = P._fsync_dir
+    monkeypatch.setattr(P, "_fsync_dir",
+                        lambda d: (seen.append(d.name), real(d))[1])
+
+    d = tmp_path / "a" / "b"
+    P._mkdir_durable(d, "t")
+    first = list(seen)
+    assert first, "처음에는 굳혔다 — 전제"
+
+    seen.clear()
+    P._mkdir_durable(d, "t")            # 이미 있다
+    assert seen, "이미 있는 directory 라고 parent edge 를 건너뛰었다"
+
+
+def test_a_fresh_store_root_flushes_its_own_parent_entry(tmp_path, monkeypatch):
+    """★ 32차 P0-3 — `store_id` 가 CAS root **이름**을 안 굳혔다.
+
+    `backend.store_id` 는 `root.mkdir(parents=True)` 만 하고 `root.parent` 를
+    fsync 하지 않았다. 그 뒤 `_mkdir_durable(staging/objects/pins)` 도 root 가
+    이미 보인다는 이유로 그 edge 를 건너뛰었다. CAS 와 index 가 다른
+    filesystem 이면 power loss 뒤 CAS root 전체가 사라지고 journal 만 남는
+    ordering 이 가능하다.
+    """
+    import tools.preserve as P
+
+    seen: list[str] = []
+    real = P._fsync_dir
+    monkeypatch.setattr(P, "_fsync_dir",
+                        lambda d: (seen.append(str(d)), real(d))[1])
+
+    root = tmp_path / "deep" / "cas"
+    CasBackend(root=root).store_id
+    assert str(root.parent) in seen, "CAS root 이름을 담은 entry 를 안 굳혔다"
+    assert str(tmp_path) in seen, "그 위 층도 굳혀야 한다"
