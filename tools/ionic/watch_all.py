@@ -1055,14 +1055,21 @@ if want("vanhove"):
         L = open(f, errors="replace").read().splitlines()
         starts = [l for l in L if l.startswith("▶")]
         ver = [l for l in L if "⇒" in l]
+        # ⛔ 2026-08-28 — 첫 판은 "제자리" 로 cage 를 셌는데, **확산 판정 문구 안에도**
+        #   "cage 면 제자리에 머문다" 가 있어서 확산 줄이 양쪽에 다 세어졌다.
+        #   합계가 `중간 -12` 로 나왔다 — 음수가 화면에 뜨고서야 알았다.
+        #   ⇒ 고유 표지로 매치하고, **합이 안 맞으면 숨기지 말고 그렇게 말한다.**
         diff = sum(1 for l in ver if "확산한다" in l)
-        cage = sum(1 for l in ver if "제자리" in l)
+        cage = sum(1 for l in ver if "제자리다" in l)
         tr = sum(1 for l in ver if "잘려서" in l)
         mid = len(ver) - diff - cage - tr
         print(f"  로그 {os.path.basename(f)} · 궤적 {len(starts)}개 시작 · 판정 {len(ver)}건 · "
               f"{'🔄 진행 중' if run else '⏹ 끝'}")
         if ver:
-            print(f"    확산 {diff} · 제자리(cage) {cage} · 중간 {mid} · ⛔잘림 {tr}")
+            print(f"    확산 {diff} · 제자리(cage) {cage} · 중간 {max(mid,0)} · ⛔잘림 {tr}")
+            if mid < 0:
+                print(f"  ⛔ 분류 합({diff+cage+tr})이 판정 수({len(ver)})를 넘는다 — "
+                      f"**한 줄이 두 분류에 걸린다.** 분류기를 고칠 것")
         if tr:
             print("  ⛔ 잘린 궤적이 있다 — rmax 가 모자란다. --rmax 를 키워 그것만 다시 돌릴 것")
         if ver and not run:
