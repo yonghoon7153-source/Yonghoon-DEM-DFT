@@ -45,8 +45,12 @@ cycle_*.json
 rint_decomp.*
 docs/figures/mpm*_*.png
 
-# 코멘트 쓰기 락 (프로세스 간 flock 용, 내용 없음)
+# 코멘트·형광펜 쓰기 락 (프로세스 간 flock 용, 내용 없음)
+#   ⚠ 락만 무시한다 — 저장소 자체(file_comments.json · file_highlights.json)는
+#   1저자가 남긴 글이라 **추적한다.** 실수로 `db/file_*.json` 을 통째로 무시하면
+#   메모와 형광펜이 이 컨테이너와 함께 사라진다.
 db/file_comments.json.lock
+db/file_highlights.json.lock
 db/*.tmp*
 
 # ── 다른 브랜치(충방전 webapp)의 로컬 런타임 산출물 (2026-08-25) ────────────
