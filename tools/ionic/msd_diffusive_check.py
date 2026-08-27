@@ -188,6 +188,134 @@ def _elem_msd(d):
     return None
 
 
+def directional_msd_tensor(traj_path, save_fs=100.0, species="Li",
+                           prefix_ps=None, max_lag_frac=0.5, n_origin=200):
+    """`traj.xyz` 에서 **확산텐서** `M_αβ(t) = ⟨Δr_α Δr_β⟩` 를 낸다 (다중 시간원점).
+
+    왜 (2026-08-27, 교차리뷰 G/H): 우리 3×3×1 은 **이방 복제**라 scalar `L` 도 `m/6` 도
+      자동으로 정당화되지 않는다. *"수송이 등방인지 방향별 MSD 로 먼저 확인해야 한다."*
+      ⚠ 회신 H 정정: 이방계에서도 총 MSD 기울기 `m/6` 은 **수학적으로 `Tr(D)/3`** 이다.
+        틀린 계산이 아니라 **"등방 D" 가 아니라 trace-average 라고 불러야** 하는 문제다.
+
+    반환 `(t_ps, M)` — `M[a][b]` 가 각각 길이 len(t_ps) 인 리스트.
+      `D_αβ = ½ · dM_αβ/dt`  (성분당 1차원이므로 **분모가 6 이 아니라 2** 다)
+
+    ⛔ 이 함수가 못 하는 것:
+      · **골격 drift 를 제거하지 않는다** — 호출자가 `framework_com_split()` 등으로 먼저
+        보정해야 한다. Langevin `fixcm=True` 라 전체 CoM 은 고정이지만 **골격 기준**
+        drift 는 따로다.
+      · 오차막대를 안 준다. block/seed bootstrap 은 별도다 (τ_int 가 필요).
+      · 비직교 셀에서 결정축 회전을 안 한다 — Cartesian 성분 그대로다.
+        회신 H: *"비직교 셀이면 fractional 성분을 그대로 쓰지 말고 orthonormal Cartesian
+        텐서를 계산한 뒤 결정축으로 회전해야 한다."* 우리 셀이 직교인지 호출자가 확인할 것.
+    """
+    try:
+        import numpy as _np
+        from ase.io import read as _read
+    except ImportError as e:
+        print(f"   ⛔ {type(e).__name__}: {e} — `conda activate uma` 필요")
+        return None
+    tp = pathlib.Path(traj_path)
+    if not tp.exists():
+        return None
+    frames = _read(str(tp), ":")
+    if not frames:
+        return None
+    dt = save_fs / 1000.0                                   # ps
+    if prefix_ps:                                           # 누적 prefix 분석 (회신 G 권고 ①)
+        keep = int(prefix_ps / dt) + 1
+        frames = frames[:keep]
+        if len(frames) < 20:
+            return None
+    idx = [i for i, s in enumerate(frames[0].get_chemical_symbols()) if s == species]
+    if not idx:
+        return None
+    pos = _np.array([f.get_positions()[idx] for f in frames])   # (nframe, nion, 3)
+    nf = len(pos)
+    max_lag = max(3, int(nf * max_lag_frac))
+    # 시간원점을 균등 추출 — 전부 쓰면 O(nf²) 라 800 ps 에서 느리다
+    origins = _np.unique(_np.linspace(0, nf - max_lag - 1,
+                                      min(n_origin, nf - max_lag), dtype=int))
+    if len(origins) < 2:
+        return None
+    lags = _np.arange(1, max_lag)
+    M = _np.zeros((3, 3, len(lags)))
+    for k, L in enumerate(lags):
+        d = pos[origins + L] - pos[origins]                 # (norig, nion, 3)
+        d = d.reshape(-1, 3)
+        M[:, :, k] = (d[:, :, None] * d[:, None, :]).mean(axis=0)
+    return (lags * dt).tolist(), [[M[a][b].tolist() for b in range(3)] for a in range(3)]
+
+
+def cmd_directional(a):
+    """`--directional` — 확산텐서와 누적 prefix 표. 형상 비교(2×2×2 vs 3×3×1)의 도구다.
+
+    ⛔ 못 하는 것: 두 런을 **자동으로 판정하지 않는다.** 숫자를 나란히 놓을 뿐이고,
+      허용폭 안인지 밖인지는 사람이 사전 등록한 기준으로 정한다 (회신 H: p-value 아닌
+      사전 허용폭). 오차막대도 없다 — block/seed bootstrap 은 τ_int 확정 후.
+    """
+    import glob as _g
+    pre = [float(x) for x in a.prefixes.split(",") if x.strip()] or [None]
+    paths = sorted(_g.glob(os.path.expanduser(a.glob)))
+    if not paths:
+        print(f"⛔ glob 이 아무것도 못 잡았다: {a.glob}")
+        return 2
+    print("방향별 확산텐서 — D_αβ = ½·dM_αβ/dt  (성분당 1차원이라 분모가 **2**)")
+    print("⚠ 이방계에서도 총 MSD 기울기 m/6 은 Tr(D)/3 이다 — 'trace-average' 이지 "
+          "'등방 D' 가 아니다 (회신 H 정정).")
+    print(f"{'case':30s} {'prefix':>8s} {'Dxx':>9s} {'Dyy':>9s} {'Dzz':>9s} "
+          f"{'Tr/3':>9s} {'이방비':>7s}  비대각 최대")
+    n_done = 0
+    for p in paths:
+        d = pathlib.Path(p)
+        traj = d / "traj.xyz" if d.is_dir() else d.parent / "traj.xyz"
+        if not traj.exists():
+            print(f"{str(d)[-30:]:30s} {'—':>8s}  ⛔ traj.xyz 없음")
+            continue
+        sf = 100.0
+        mj = traj.parent / "msd.json"
+        if mj.exists():
+            try:
+                sf = json.load(open(mj)).get("save_fs") or 100.0
+            except Exception:
+                pass
+        for pp in pre:
+            got = directional_msd_tensor(traj, save_fs=sf, prefix_ps=pp)
+            if got is None:
+                print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
+                      f" ⛔ 프레임 부족 — 이 prefix 는 아직 못 잰다")
+                continue
+            t, M = got
+            lo, hi = a.window
+            sel = [i for i, x in enumerate(t) if lo <= x <= hi]
+            if len(sel) < 3:
+                print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
+                      f" ⛔ 창 {lo}-{hi} 에 점이 3개 미만")
+                continue
+            def _slope(series):
+                xs = [t[i] for i in sel]; ys = [series[i] for i in sel]
+                n = len(xs); sx = sum(xs); sy = sum(ys)
+                sxx = sum(x * x for x in xs); sxy = sum(x * y for x, y in zip(xs, ys))
+                den = n * sxx - sx * sx
+                return (n * sxy - sx * sy) / den / 2.0 if abs(den) > 1e-30 else float("nan")
+            Dd = [_slope(M[k][k]) for k in range(3)]
+            off = max(abs(_slope(M[i][j])) for i, j in ((0, 1), (0, 2), (1, 2)))
+            tr = sum(Dd) / 3.0
+            aniso = max(Dd) / min(Dd) if min(Dd) > 0 else float("nan")
+            print(f"{str(traj.parent)[-30:]:30s} {(pp or 'all'):>8} "
+                  f"{Dd[0]:9.4f} {Dd[1]:9.4f} {Dd[2]:9.4f} {tr:9.4f} {aniso:7.2f}  {off:.4f}")
+            n_done += 1
+    if not n_done:
+        print("⛔ **아무것도 재지 못했다** — 통과가 아니다.")
+        return 3
+    print()
+    print("  판독: `이방비` = max/min 대각성분. 1 에 가까우면 등방이다.")
+    print("  ⚠ 비대각이 0 과 양립하는지 봐야 한다 — 크면 결정축이 Cartesian 과 안 맞는 것이다.")
+    print("  ⛔ 두 셀을 비교할 때는 **같은 물리 방향끼리** 본다. 그리고 x·y 를 늘린 뒤")
+    print("     Dzz 가 변하는 것은 오류가 아니라 **방향 간 동역학 결합**의 정보다 (회신 H).")
+    return 0
+
+
 def elem_msd_from_traj(json_path, save_fs=None, cache=True):
     """`msd.json` 옆의 `traj.xyz` 에서 **종별 MSD 를 다시 계산**한다. 없으면 None.
 
@@ -904,6 +1032,48 @@ def selftest():
     chk(d_incremental(_t, _cage, 200, 300) is None,
         "[음성] 창이 궤적 밖이면 None — 빈 구간에서 0 을 반환하지 않는다")
 
+    # ── 방향별 확산텐서 (2026-08-27, 교차리뷰 G/H) ──────────────────────────
+    chk(directional_msd_tensor("/does/not/exist/traj.xyz") is None,
+        "[음성] 궤적 파일이 없으면 None — 빈 텐서를 만들지 않는다")
+    try:
+        import numpy as _np
+        from ase import Atoms as _At
+        from ase.io import write as _w
+        import tempfile as _tf
+        _rng = _np.random.default_rng(3)
+        _d = pathlib.Path(_tf.mkdtemp())
+        # 축별 D 를 다르게 준 브라운 운동 — 축당 분산 2·D·t 이므로 slope/2 = D
+        _D = _np.array([0.40, 0.40, 0.10]); _n, _ni, _dt = 400, 40, 0.1
+        _p = _np.cumsum(_rng.normal(0, 1, (_n, _ni, 3)) * _np.sqrt(2 * _D * _dt), axis=0)
+        _w(str(_d / "traj.xyz"),
+           [_At("Li" * _ni, positions=q, cell=[40, 40, 40], pbc=True) for q in _p])
+        _got = directional_msd_tensor(_d / "traj.xyz", save_fs=100.0)
+        chk(_got is not None, "[양성] 궤적에서 텐서를 낸다")
+        if _got:
+            _t, _M = _got
+            def _sl(s):
+                _i = [k for k, x in enumerate(_t) if 2 <= x <= 15]
+                _x = [_t[k] for k in _i]; _y = [s[k] for k in _i]
+                _N = len(_x); _sx = sum(_x); _sy = sum(_y)
+                return ((_N * sum(p * q for p, q in zip(_x, _y)) - _sx * _sy)
+                        / (_N * sum(p * p for p in _x) - _sx * _sx) / 2.0)
+            _dd = [_sl(_M[k][k]) for k in range(3)]
+            chk(all(abs(_dd[k] - _D[k]) < 0.5 * _D[k] for k in range(3)),
+                f"[양성] 축별 D 를 50 % 안에서 회수한다 ({_dd[0]:.2f}/{_dd[1]:.2f}/{_dd[2]:.2f} "
+                f"vs 참값 0.40/0.40/0.10)")
+            chk(_dd[0] / _dd[2] > 2.0,
+                "[음성] **이방을 등방으로 뭉개지 않는다** — z 가 x 보다 확실히 작다")
+            _off = max(abs(_sl(_M[i][j])) for i, j in ((0, 1), (0, 2), (1, 2)))
+            chk(_off < 0.3 * max(_dd),
+                "[음성] 축이 독립이면 비대각이 대각보다 훨씬 작다 — 상관을 지어내지 않는다")
+        chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, prefix_ps=0.5) is None,
+            "[음성] prefix 가 너무 짧으면 None — 프레임 20개 미만은 재지 않는다")
+        chk(directional_msd_tensor(_d / "traj.xyz", save_fs=100.0, species="Xx") is None,
+            "[음성] 없는 원소를 달라면 None — 빈 배열로 0 을 반환하지 않는다")
+        import shutil as _sh; _sh.rmtree(_d, ignore_errors=True)
+    except ImportError:
+        print("  · (ase/numpy 없음 — 방향별 텐서 selftest 건너뜀)")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -948,9 +1118,18 @@ def main():
     ap.add_argument("--scan", action="store_true",
                     help="여러 창에서 β 를 재서 **어디서부터 확산이 되는지** 찾는다. "
                          "케이지 판정이 나왔을 때 '재계산 없이 구제 가능한가'를 가른다.")
+    # ── 방향별·형상 비교 (2026-08-27, 교차리뷰 G/H) ──────────────────────────
+    ap.add_argument("--directional", action="store_true",
+                    help="traj.xyz 에서 **확산텐서** D_αβ 를 낸다. 이방 셀(3×3×1 등)에서 "
+                         "scalar D 를 쓰기 전에 등방성부터 확인하는 용도.")
+    ap.add_argument("--prefixes", default="",
+                    help="누적 prefix [ps] 쉼표목록 (예: 100,200,400). 각 시점에서 다시 잰다 "
+                         "— D_inc plateau 가 이미 왔으면 완주 전에 끊을 수 있다.")
     a = ap.parse_args()
     if a.selftest:
         return selftest()
+    if a.directional:
+        return cmd_directional(a)
     if not a.glob:
         ap.error('--glob 이 필요하다 (또는 --selftest)')
 
@@ -1498,6 +1677,10 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    # ⛔⛔ 2026-08-27 — 옛 판은 `main()` 만 부르고 **반환값을 버렸다.** 그래서
+    #   `--selftest` 가 FAIL 해도, glob 이 아무것도 못 잡아도, 아무것도 못 재도
+    #   **종료코드가 항상 0** 이었다. CI·watch·체인 스크립트에서 실패가 성공으로 읽힌다.
+    #   (mlip_committee.py 가 2026-08-26 에 똑같은 버그였다 — 같은 함정을 두 번 팠다.)
+    sys.exit(main() or 0)
 
 
