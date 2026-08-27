@@ -27,6 +27,7 @@ import {
 import { rememberedLambda } from '../lib/drtlambda'
 import { seriesWideTsv } from '../lib/origin'
 import { usePinnedColumns } from '../lib/pincols'
+import { depthGuide, stack } from '../lib/waterfall'
 import {
   DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
   drtAxisTick, drtAxisValue, validDrtAxis,
@@ -114,6 +115,10 @@ export function ScanDetail() {
   //: 나이퀴스트인가 DRT 인가.  **같은 스윕 선택을 함께 쓴다** — 나이퀴스트에서
   //  끈 스윕이 DRT 에서 도로 켜지면, 두 그림이 다른 집합을 말하게 된다.
   const [mode, setMode] = useState<'nyquist' | 'drt'>('nyquist')
+  //: 겹쳐 그릴까 비껴 쌓을까.  논문이 SOC 스캔을 실을 때 쓰는 그림이 뒤쪽이다 —
+  //  열한 곡선을 같은 축에 겹치면 가장 큰 것 하나만 보이고 나머지는 그 안에
+  //  숨는다 (`lib/waterfall.ts` 에 왜, 그리고 무엇을 잃는지).
+  const [solid, setSolid] = useState(false)
   //: DRT 가로축.  상세·비교 화면과 같은 열쇠 (`lib/tauaxis.ts`).
   const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
   const drtAxis = validDrtAxis(storedAxis)
@@ -217,9 +222,42 @@ export function ScanDetail() {
 
   //: 지금 그리는 것.  **껐다 켰다는 하나**라, 어느 그림을 보고 있든 같은 스윕이
   //  꺼져 있다.
-  const series = mode === 'drt' ? drtOverlay : overlay
+  const flat = mode === 'drt' ? drtOverlay : overlay
+
+  //: 비껴 쌓기 (3D).  깊이는 **전위(V)** 다 — 계측기가 SOC 를 % 로 말해 주지
+  //  않으므로, 논문의 `SOC 0/50/100 %` 자리에 실제 전위가 들어간다.
+  //
+  //  **켜 둔 것만 쌓는다.**  꺼 둔 스윕이 자리를 차지하고 있으면 계단에 빈 칸이
+  //  생기고, 그 빈 칸이 "여기 측정이 없다" 로 읽힌다.
+  const stacked = useMemo(() => {
+    if (!solid) return null
+    const shown = flat.filter((one) => !one.hidden)
+    if (shown.length < 2) return null
+    const byLabel = new Map(points.map(
+      (point) => [`#${point.sweep_index}`, point.potential_v ?? null]))
+    return stack(shown, shown.map((one) => byLabel.get(one.label) ?? null))
+  }, [solid, flat, points])
+
+  const series = useMemo<PlotSeries[]>(() => {
+    if (!stacked) return flat
+    // 깊이 축 안내선.  없으면 계단이 그냥 흩어진 곡선 열하나로 보인다.
+    const guide = depthGuide(stacked.offsets, { x: 0, y: 0 })
+    return [
+      {
+        label: stacked.span
+          ? `전위 ${num(stacked.span.low, 3)} → ${num(stacked.span.high, 3)} V`
+          : '스윕 차례',
+        x: guide.x,
+        y: guide.y,
+        color: 'var(--line-strong)',
+        width: 1,
+        dash: [4, 4],
+      },
+      ...stacked.series,
+    ]
+  }, [stacked, flat])
   const shownOverlay = useMemo(
-    () => series.filter((one) => !one.hidden), [series])
+    () => flat.filter((one) => !one.hidden), [flat])
 
   /** 범례 조각과 표의 줄이 **같은 것**을 누른다 (`#3` 을 껐다 켰다). */
   const toggleSweep = (sweep: number) =>
@@ -306,6 +344,16 @@ export function ScanDetail() {
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
+            {/* 겹쳐 그릴까 비껴 쌓을까.  열한 곡선을 같은 축에 겹치면 가장 큰
+                것 하나만 보이고 나머지는 그 안에 숨는다 — 논문이 SOC 스캔을
+                실을 때 계단으로 그리는 이유가 그것이다. */}
+            <div className="segmented" role="group" aria-label="보기">
+              <button type="button" className={solid ? '' : 'on'}
+                      onClick={() => setSolid(false)}>2D</button>
+              <button type="button" className={solid ? 'on' : ''}
+                      title="전위(V)를 깊이로 비껴 쌓습니다 — 값이 옮겨지므로 모양을 보는 그림입니다"
+                      onClick={() => setSolid(true)}>3D</button>
+            </div>
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (
               <div className="segmented" role="group" aria-label="가로축">
@@ -354,30 +402,51 @@ export function ScanDetail() {
           : raw.loading && !raw.data ? <div style={{ padding: 20 }}><Spinner /></div>
           : mode === 'drt' && drt.loading && !drt.data
             ? <div style={{ padding: 20 }}><Spinner label="DRT 를 푸는 중" /></div>
-          : series.length ? (
+          : flat.length ? (
             <>
               {mode === 'drt' ? (
                 // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
                 // 로그 시간(또는 주파수), 세로는 저항이다.
                 <Plot
                   series={series}
-                  xLabel={drtAxisLabel(drtAxis)}
-                  yLabel={`γ (${zUnit})`}
-                  height={380}
+                  xLabel={stacked ? `${drtAxisLabel(drtAxis)} + V 오프셋`
+                    : drtAxisLabel(drtAxis)}
+                  yLabel={stacked ? `γ (${zUnit}) + V 오프셋` : `γ (${zUnit})`}
+                  height={stacked ? 460 : 380}
                   busy={drt.loading}
-                  xTick={(value) => drtAxisTick(drtAxis, value)}
-                  xSplits={drtAxis === 'f' ? decadeSplits : undefined}
+                  // 쌓아 놓으면 눈금 값이 그 곡선의 것이 아니다 — 지수 표기를
+                  // 그대로 두면 옮겨진 자리를 주파수로 읽게 된다.
+                  xTick={stacked ? undefined : (value) => drtAxisTick(drtAxis, value)}
+                  xSplits={!stacked && drtAxis === 'f' ? decadeSplits : undefined}
                 />
               ) : (
                 <Plot
                   series={series}
-                  xLabel={`Z′ (${zUnit})`}
-                  yLabel={`−Z″ (${zUnit})`}
-                  height={380}
-                  equalAspect
-                  positiveFit
+                  xLabel={stacked ? `Z′ (${zUnit}) + V 오프셋` : `Z′ (${zUnit})`}
+                  yLabel={stacked ? `−Z″ (${zUnit}) + V 오프셋` : `−Z″ (${zUnit})`}
+                  height={stacked ? 460 : 380}
+                  // 쌓으면 두 축의 한 단위가 더는 같은 뜻이 아니다 (한쪽은
+                  // 저항, 한쪽은 저항 + 깊이) — 비율을 맞출 근거가 없어진다.
+                  equalAspect={!stacked}
+                  positiveFit={!stacked}
                 />
               )}
+              {/* **값이 옮겨졌다고 적는다.**  안 적으면 사람이 계단의 두 번째
+                  곡선에서 Z′ 를 읽고 그것을 그 스윕의 직렬저항으로 쓴다 — 그
+                  수는 옆으로 민 만큼 크다 (§0.4). */}
+              {stacked ? (
+                <div className="tiny warn" style={{ paddingTop: 6 }}>
+                  {stacked.span
+                    ? `전위 ${num(stacked.span.low, 3)} V → ${num(stacked.span.high, 3)} V `
+                      + '를 깊이로 오른쪽·위로 비껴 쌓았습니다.'
+                    : '전위를 모르는 스윕이 있어 **차례**로 비껴 쌓았습니다.'}
+                  <span className="tiny faint">
+                    {' '}민 만큼 값이 옮겨져 있으므로 눈금에서 저항을 읽지
+                    마세요 — 모양을 보는 그림입니다. 값은 2D 로 돌아가서
+                    읽습니다. 점선이 깊이 축입니다.
+                  </span>
+                </div>
+              ) : null}
               {mode === 'drt' ? (
                 <div className="tiny faint" style={{ paddingTop: 6 }}>
                   벌점 λ = {lambda.toExponential(2)} · 평활 차수 0 — 스펙트럼
@@ -420,11 +489,13 @@ export function ScanDetail() {
                   초기화
                 </button>
                 <span className="tiny faint" style={{ alignSelf: 'center' }}>
-                  {shownOverlay.length} / {series.length} 켬 — 조각을 눌러 켜고 끕니다
+                  {shownOverlay.length} / {flat.length} 켬 — 조각을 눌러 켜고 끕니다
                 </span>
               </div>
+              {/* 쌓아 놓아도 조각은 **스윕**의 것이다 — 깊이 축 안내선은
+                  켜고 끄는 것이 아니라 눈금이라 목록에 안 넣는다. */}
               <PlotLegend
-                series={series}
+                series={flat}
                 onToggle={(name) => toggleSweep(Number(name.replace('#', '')))}
               />
               {/* 범례와 클립보드가 붙어 있으면 조각 줄의 마지막 칸과 'Origin
@@ -438,7 +509,7 @@ export function ScanDetail() {
                   disabled: !shownOverlay.length,
                   // **켜 둔 것만 나간다.**  화면에서 끈 스윕이 클립보드에
                   // 따라가면, 붙여 넣은 표가 방금 본 그림과 다른 것이 된다.
-                  skipped: series.length - shownOverlay.length,
+                  skipped: flat.length - shownOverlay.length,
                   skippedNote: (n) => `꺼 둔 ${n}개는 빠졌습니다`,
                   build: () => seriesWideTsv(shownOverlay, mode === 'drt'
                     ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }

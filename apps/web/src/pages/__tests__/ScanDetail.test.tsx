@@ -305,6 +305,33 @@ describe('ScanDetail', () => {
     expect(cells[3]).toBe('—')
   })
 
+  /** 논문이 SOC 스캔을 실을 때 쓰는 그림.  겹쳐 놓으면 가장 큰 것 하나만
+   *  보이고 나머지는 그 안에 숨는다. */
+  it('3D 로 바꾸면 전위를 깊이로 쌓고, 값이 옮겨졌다고 적는다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 3, fitted: 3, parameters: ['R0'], area_cm2_effective: null,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 }), point(3, { R0: 7 })],
+    })
+    show()
+
+    await screen.findByRole('group', { name: '보기' })
+    expect(document.body.textContent).not.toContain('비껴 쌓았습니다')
+
+    await userEvent.click(screen.getByRole('button', { name: '3D' }))
+    // 깊이로 쓴 전위 범위를 적는다 — point(n) 의 전위는 3.5 + 0.1n 이다.
+    await waitFor(() =>
+      expect(document.body.textContent).toContain('비껴 쌓았습니다'))
+    expect(document.body.textContent).toContain('3.60 V')
+    expect(document.body.textContent).toContain('3.80 V')
+    // 값이 옮겨졌다는 말이 함께 있어야 한다 (§0.4).
+    expect(document.body.textContent).toContain('눈금에서 저항을 읽지 마세요')
+
+    // 조각은 여전히 **스윕**의 것이다 — 깊이 축 안내선은 목록에 안 들어간다.
+    expect(document.querySelectorAll('.legend-chip')).toHaveLength(3)
+  })
+
   it('스윕 표에 R₀ 와 그 변화가 나온다 — SOC 를 따라가는 값이 그것이다', async () => {
     installFetch({
       sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
