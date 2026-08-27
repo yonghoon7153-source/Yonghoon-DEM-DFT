@@ -4,14 +4,14 @@
 
 ```yaml
 브랜치:     origin/claude/14-gate-code-review-9qkx05
-대상 커밋:   e4f516736f0b4fd0b78b1ac05d4b0f0d5f7d7e40
+대상 커밋:   e4f51673dadcd205897a9ecc731954901408e833
 직전 대상:   988a5216…      (37차, 좁은 항목 11 종결 / P0-1·#9 NO-GO)
 
 source_digest:
   37차:  ccb3e2ad0f6145c0
   현재:  59ba034148cf8a60
 
-재현:      git checkout e4f516736f0b4fd0b78b1ac05d4b0f0d5f7d7e40
+재현:      git checkout e4f51673dadcd205897a9ecc731954901408e833
            cd degradation-degeneracy
 ```
 
@@ -34,7 +34,7 @@ source_digest:
 
 ```
 $ git rev-parse HEAD
-e4f516736f0b4fd0b78b1ac05d4b0f0d5f7d7e40
+e4f51673dadcd205897a9ecc731954901408e833
 $ git status --short
 (빈 출력)
 
