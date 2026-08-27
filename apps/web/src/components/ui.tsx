@@ -291,7 +291,11 @@ export function Field({
   children: ReactNode
 }) {
   return (
-    <label className="field">
+    // 설명을 `title` 로도 들려 준다.  거르개 줄처럼 좁은 자리에서는 이 설명이
+    // 화면에서 접히기 때문이다 (`.filter-row .hint`) — 접힌 곳에서 이것이
+    // 설명을 되찾는 유일한 길이다.  넓은 자리에서는 화면에 이미 있는 말을
+    // 한 번 더 하는 것이라 해가 없다.
+    <label className="field" title={hint ? `${label} · ${hint}` : undefined}>
       <span>
         {label}
         {hint ? <span className="hint"> · {hint}</span> : null}
