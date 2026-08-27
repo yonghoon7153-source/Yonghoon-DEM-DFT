@@ -600,11 +600,43 @@ def build_frozen(work, tag, radius, force=False):
     #   **그대로 Ea 에 들어간다**. 실측 재현: 0.4 Å 강체 오프셋이 게이트를 통과했다.
     #   → 고정 원자는 양쪽 다 mid[i] 를 쓴다(= 두 끝점의 평균, 대칭점).
     frozen_shift = max((dn[i] for i in range(len(dn)) if freeze[i]), default=0.0)
-    if frozen_shift > FROZEN_SHIFT_TOL_A and not force:
-        return 1, (f"⛔ 고정 대상 원자가 끝점 사이에서 {frozen_shift:.3f} Å 움직인다 "
-                   f"(문턱 {FROZEN_SHIFT_TOL_A} Å) — 국소 홉이 아니거나 반경이 너무 작다.\n"
-                   f"   고정 원자를 한 좌표에 못박으면 그 차이가 Ea 에 직접 들어간다. "
+
+    # ⛔⛔ 2026-08-27 실측 — 위 게이트는 **relax.in** 으로 잰다. 갓 지은 입력은 정의상
+    #   홉 외 변위가 0.000 이라 게이트가 **거저 통과한다.** 실제로 ccpath(2×2×2)는
+    #   0.000 으로 통과했는데, 같은 끝점의 **이완 좌표**로 재면 1.035 Å 였다.
+    #   ⇒ 그대로 뒀으면 고정 원자가 1 Å 어긋난 채 못박혀 그 차이가 Ea 에 직접 들어갔다.
+    #   (cc333 이 1.240 으로 막힌 것도 물리가 아니라 `_r2` 가 있어서 이완 좌표를 봤기 때문이다.)
+    #   → 전제 검사는 **이완 좌표**로 한다. 정렬(병진·라벨)까지 뺀 뒤의 잔여로 잰다.
+    relaxed_shift, relaxed_note = None, ""
+    _r = {}
+    for nm in ("ep_initial", "ep_final"):
+        rows, _err, _inf = read_relaxed(os.path.join(endpoint_dir(d, nm), "relax.out"),
+                                        allow_unconverged=True)
+        if rows and len(rows) == len(first):
+            _r[nm] = (rows, _inf)
+    if len(_r) == 2:
+        rep = align_report(_r["ep_initial"][0], _r["ep_final"][0], cell, far_r=radius)
+        if "error" not in rep:
+            relaxed_shift = rep["aligned_max_excl_hop_A"]
+            unconv = [k for k, (_x, i) in _r.items() if i.get("converged") is False]
+            relaxed_note = (f"   (이완 끝점 기준 · 병진 {rep['translation_norm_A']} Å·"
+                            f"라벨 {rep['n_relabeled']}개 제거 후"
+                            + (f" · ⚠ 미수렴: {', '.join(unconv)}" if unconv else "") + ")")
+    gate_val = max(frozen_shift, relaxed_shift or 0.0)
+    if gate_val > FROZEN_SHIFT_TOL_A and not force:
+        _src = ("갓 지은 좌표" if frozen_shift >= (relaxed_shift or 0.0) else "이완 좌표")
+        return 1, (f"⛔ 고정 대상 원자가 끝점 사이에서 {gate_val:.3f} Å 움직인다 "
+                   f"(문턱 {FROZEN_SHIFT_TOL_A} Å, {_src} 기준) — 국소 홉이 아니거나 반경이 너무 작다.\n"
+                   f"   갓 지은 좌표 {frozen_shift:.3f} · 이완 좌표 "
+                   f"{'—' if relaxed_shift is None else f'{relaxed_shift:.3f}'} Å\n"
+                   + (relaxed_note + "\n" if relaxed_note else "")
+                   + f"   고정 원자를 한 좌표에 못박으면 그 차이가 Ea 에 직접 들어간다. "
                    f"--relax_radius 를 키울 것 (--force 로 강행 가능)")
+    if relaxed_shift is None and not force:
+        return 1, ("⛔ 끝점 **이완 좌표가 없어** 전제(뛰는 원자 외에는 가만있다)를 검사할 수 없다.\n"
+                   "   갓 지은 좌표의 홉 외 변위는 정의상 0 이라 게이트가 거저 통과한다 "
+                   "(2026-08-27 실측: 통과한 ccpath 의 실제 값은 1.035 Å 였다).\n"
+                   "   끝점 relax 를 먼저 끝낼 것 (--force 로 강행 가능 — 권장 안 함)")
 
     def emit(sub, rows, fix_moving):
         os.makedirs(os.path.join(outd, sub), exist_ok=True)
@@ -1035,7 +1067,7 @@ def selftest():
     import math as _m
     CELL = [[14.0, 0, 0], [0, 14.0, 0], [0, 0, 14.0]]
 
-    def mkf(tag, sym, ini, fin, cell=CELL, e_fin="-100.0000"):
+    def mkf(tag, sym, ini, fin, cell=CELL, e_fin="-100.0000", out_rows=None, conv=True):
         d = os.path.join(td, tag)
         for n in ("ep_initial", "ep_final"):
             os.makedirs(os.path.join(d, n), exist_ok=True)
@@ -1046,13 +1078,20 @@ def selftest():
                "&SYSTEM\n    ibrav           = 0\n/\n\nATOMIC_SPECIES\n  Li 6.94 li.UPF\n\n")
         k = ("K_POINTS automatic\n  2 2 2 0 0 0\n\nCELL_PARAMETERS angstrom\n"
              + "".join("  %16.10f %16.10f %16.10f\n" % tuple(v) for v in cell))
-        for n, rows, en in (("ep_initial", ini, "-100.0000"), ("ep_final", fin, e_fin)):
-            body = "ATOMIC_POSITIONS angstrom\n" + "".join(
+        def _body(rows):
+            return "ATOMIC_POSITIONS angstrom\n" + "".join(
                 f"  {s:3s} {x:16.10f} {y:16.10f} {z:16.10f}\n" for s, (x, y, z) in rows)
-            open(os.path.join(d, n, "relax.in"), "w", encoding="utf-8").write(hdr + body + "\n" + k)
+        for idx, (n, rows, en) in enumerate((("ep_initial", ini, "-100.0000"),
+                                             ("ep_final", fin, e_fin))):
+            open(os.path.join(d, n, "relax.in"), "w", encoding="utf-8").write(
+                hdr + _body(rows) + "\n" + k)
+            # 이완 좌표는 입력과 **다를 수 있다** — out_rows 로 그 차이를 만든다
+            ob = _body(out_rows[idx] if out_rows else rows)
+            tail = f"!    total energy              =    {en} Ry\nJOB DONE.\n"
             open(os.path.join(d, n, "relax.out"), "w", encoding="utf-8").write(
-                "Begin final coordinates\n" + body + "End final coordinates\n"
-                f"!    total energy              =    {en} Ry\nJOB DONE.\n")
+                ("Begin final coordinates\n" + ob + "End final coordinates\n" + tail) if conv
+                else ("     Total force =     0.018000\n" + ob
+                      + "     The maximum number of steps has been reached\n" + tail))
         return d
 
     # 뛰는 Li 하나 + 근거리 이웃 + 원거리 원자들
@@ -1156,6 +1195,33 @@ def selftest():
     rc, msg = build_frozen(td, "fz_shift", 4.0)
     chk(rc == 1 and "고정 대상 원자가" in msg,
         "[핵심 F2] 고정 대상이 움직이면 거부한다 (Ea 오염 방지)")
+
+    # ★★ 2026-08-27 실측 회귀 (음성) — **갓 지은 좌표로는 통과하는데 이완 좌표로는 깨지는**
+    #   경우. ccpath 가 정확히 이랬다: relax.in 기준 0.000 통과 · 실제 이완 1.035 Å.
+    #   옛 게이트는 relax.in 만 봐서 이걸 놓쳤고, 고정 원자가 1 Å 어긋난 채 못박혔을 것이다.
+    FAR_REL = [("Li", (0.0, 0.0, 6.5)), ("Li", (6.5, 6.5, 7.5))]     # 이완에서 1.0 Å 이동
+    mkf("fz_relaxed_breaks", True, A2, B2,
+        out_rows=([("Li", (0.0, 0.0, 0.0))] + NEAR + FAR,
+                  [("Li", (3.667, 0.0, 0.0))] + NEAR + FAR_REL))
+    rc, msg = build_frozen(td, "fz_relaxed_breaks", 4.0)
+    chk(rc == 1 and "이완 좌표" in msg,
+        "[핵심·실측회귀] 갓 지은 좌표로 통과해도 **이완 좌표로 깨지면** 거부한다")
+
+    # ★ 그 짝(음성): 끝점 이완이 아직 없으면 전제를 **검사할 수 없다** — 거저 통과 금지
+    mkf("fz_no_relax", True, A2, B2)
+    for _n in ("ep_initial", "ep_final"):
+        os.remove(os.path.join(td, "fz_no_relax", _n, "relax.out"))
+    rc, msg = build_frozen(td, "fz_no_relax", 4.0)
+    chk(rc == 1 and "검사할 수 없다" in msg,
+        "[핵심·실측회귀] 이완 좌표가 없으면 통과시키지 않고 그렇게 말한다")
+
+    # ★ 미수렴 이완이어도 게이트는 돌되 **미수렴을 명시**한다 (조용히 쓰지 않는다)
+    mkf("fz_unconv", True, A2, B2, conv=False,
+        out_rows=([("Li", (0.0, 0.0, 0.0))] + NEAR + FAR,
+                  [("Li", (3.667, 0.0, 0.0))] + NEAR + FAR_REL))
+    rc, msg = build_frozen(td, "fz_unconv", 4.0)
+    chk(rc == 1 and "미수렴" in msg,
+        "[핵심·실측회귀] 미수렴 이완으로 막을 때 미수렴이라고 말한다")
 
     # ★ F5 회귀: 안 끝난 relax.out 에서 Ea 를 만들지 않는다
     for sub in ("endpoint", "saddle"):
@@ -1352,10 +1418,40 @@ def align_report(first, last, cell, far_r=FAR_FIELD_R_A):
         lo = hi
     out["by_distance"] = bins
 
-    if ff is None:
+    # ── 국소성: 변위장이 거리에 따라 주는가 (공공 중심 응답의 모양인가) ──────────
+    #   실측 계기(2026-08-27 cc333): 중앙값이 2–4 Å 0.44 · 6–8 Å 0.44 로 **안 준다.**
+    #   같은 날 ccpath 는 1.04 → 0.95 → 0.32 로 준다. 이 차이가 눈에 보여야 한다.
+    pop = [b for b in bins if b["n"] >= 3]
+    if len(pop) >= 2:
+        inner, outer = pop[0]["median_A"], pop[-1]["median_A"]
+        ratio = (outer / inner) if inner > 1e-9 else None
+        out["locality"] = {
+            "inner_bin": pop[0]["r_A"], "inner_median_A": inner,
+            "outer_bin": pop[-1]["r_A"], "outer_median_A": outer,
+            "outer_over_inner": None if ratio is None else round(ratio, 3),
+            "monotone_decreasing": all(pop[i]["median_A"] >= pop[i + 1]["median_A"]
+                                       for i in range(len(pop) - 1)),
+        }
+        if ratio is not None and ratio >= 0.5:
+            out["locality"]["note"] = ("⚠ 변위장이 거리에 따라 **안 준다** — 공공 중심 "
+                                       "국소 응답의 모양이 아니다. 전역 재배열이거나 "
+                                       "미수렴 optimizer 의 배회다 (이 도구는 못 가른다).")
+    out["max_distance_A"] = round(max(dist), 2)
+
+    if out["raw_max_excl_hop_A"] <= ARTIFACT_TOL_A:
+        # ⛔ 위양성 차단 (2026-08-27 실측에서 걸림) — 갓 지은 끝점은 정의상 홉 외 변위가 0 이다.
+        #   거기에 "인공물" 을 찍으면 *정렬이 뭔가를 걷어냈다* 는 정반대 인상을 준다.
+        out["verdict"] = "무정보"
+        out["verdict_text"] = (
+            f"⚪ 홉 외 원자가 **애초에 안 움직였다** (raw {out['raw_max_excl_hop_A']} Å). "
+            f"정렬이 뭘 걷어낸 게 아니라 **걷어낼 게 없었다** — 갓 지은 좌표의 지문이다. "
+            f"이 판정은 아무것도 보증하지 않는다. **이완 좌표(`--align_source out`)로 다시 볼 것.**")
+    elif ff is None:
         out["verdict"] = "판정불가"
-        out["verdict_text"] = (f"⚠ 홉 중점에서 {far_r} Å 밖에 원자가 없다 — 이 셀로는 "
-                               f"far-field 를 볼 수 없다. --far_r 를 줄이거나 큰 셀이 필요하다.")
+        out["verdict_text"] = (
+            f"⚠ 홉 중점에서 {far_r} Å 밖에 원자가 없다 (셀 최대거리 {out['max_distance_A']} Å) — "
+            f"이 셀로는 far-field 를 볼 수 없다. `--far_r {max(2.0, 0.6*out['max_distance_A']):.1f}` "
+            f"쯤으로 줄이거나 큰 셀이 필요하다. **위 거리별 표는 그대로 유효하다.**")
     elif ff <= ARTIFACT_TOL_A:
         out["verdict"] = "인공물"
         out["verdict_text"] = (f"❌ 정렬 뒤 far-field 최대가 {ff:.3f} Å ≤ {ARTIFACT_TOL_A} — "
@@ -1434,8 +1530,16 @@ def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverg
           "   거리별 잔여 [Å]:"]
     for b in rep["by_distance"]:
         L.append(f"     r {b['r_A']:>6}  n={b['n']:<4} 중앙 {b['median_A']:<8} 최대 {b['max_A']}")
-    L += [f"   far-field(>{far_r} Å, n={rep['n_far_field']}) 최대 = {rep['far_field_max_A']} Å",
-          "", "   " + rep["verdict_text"]]
+    L.append(f"   far-field(>{far_r} Å, n={rep['n_far_field']}) 최대 = {rep['far_field_max_A']} Å")
+    loc = rep.get("locality")
+    if loc:
+        L.append(f"   국소성: {loc['inner_bin']} 중앙 {loc['inner_median_A']} → "
+                 f"{loc['outer_bin']} 중앙 {loc['outer_median_A']} "
+                 f"(비 {loc['outer_over_inner']}, "
+                 f"{'단조감소' if loc['monotone_decreasing'] else '**단조감소 아님**'})")
+        if loc.get("note"):
+            L.append("   " + loc["note"])
+    L += ["", "   " + rep["verdict_text"]]
     op = os.path.join(d, f"align_report_{source}{'_base' if base_dirs else ''}.json")
     try:
         json.dump(rep, open(op, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
@@ -1516,9 +1620,46 @@ def selftest_align():
     bad = [(s if i else "Xx", p) for i, (s, p) in enumerate(base)]
     chk("error" in align_report(base, bad, cell), "[정렬·가드] 원소 구성이 다르면 거부")
 
-    # ── 가드 ⑥ far-field 원자가 없으면 판정하지 않는다 ──
+    # ── 가드 ⑥ far-field 원자가 없으면 판정하지 않는다 + 권장 far_r 를 준다 ──
     r = align_report(base, moved(far_move=6), cell, far_r=100.0)
-    chk(r["verdict"] == "판정불가", "[정렬·가드] far-field 가 비면 판정불가라고 말한다")
+    chk(r["verdict"] == "판정불가" and "--far_r" in r["verdict_text"],
+        "[정렬·가드] far-field 가 비면 판정불가 + 권장 far_r")
+
+    # ── ⑦ 위양성 차단(실측에서 걸린 것): **갓 지은 좌표**는 홉 외 변위가 정의상 0 이다.
+    #     거기에 '인공물' 을 찍으면 정렬이 뭔가를 걷어냈다는 정반대 인상을 준다.
+    r = align_report(base, moved(), cell)
+    chk(r["verdict"] == "무정보",
+        f"[정렬·위양성] 홉만 움직인 좌표는 '인공물' 이 아니라 **무정보** ({r['verdict']})")
+
+    # ── ⑧ 국소성: 거리에 따라 주는 장 vs 안 주는 장을 구분한다 ──
+    import math as _mm
+    ctr0 = base[hop_i][1]
+    # 거리에 무관한 0.5 Å 장. 방향은 index 로 결정론적으로 흩어 **강체 병진이 아니게** 한다
+    #   (전 원자를 같은 방향으로 밀면 그건 병진이라 도구가 옳게 걷어낸다).
+    flat = []
+    for i, (s, p) in enumerate(base):
+        v = [_mm.sin(i * 1.7), _mm.cos(i * 2.3), _mm.sin(i * 3.1)]
+        n = _mm.sqrt(sum(x * x for x in v)) or 1.0
+        flat.append((s, [p[k] + 0.5 * v[k] / n for k in range(3)]))
+    flat[hop_i] = (flat[hop_i][0], [base[hop_i][1][0] + 3.667] + base[hop_i][1][1:])
+    r = align_report(base, flat, cell)
+    _loc = r.get("locality") or {}
+    chk((_loc.get("outer_over_inner") or 0) >= 0.5 and "안 준다" in (_loc.get("note") or ""),
+        f"[정렬·국소성] 거리에 안 주는 장을 그렇게 부른다 (비 {_loc.get('outer_over_inner')})")
+    # 음성쌍: **방사형으로 감쇠하는** 장 = 점결함 응답의 교과서 모양. 경고가 붙으면 안 된다.
+    #   (방향을 방사형으로 두는 게 중요하다 — 전부 +x 로 밀면 그건 병진에 가까워
+    #    중앙값 제거가 먹어버리고, 그러면 이 검사가 감쇠를 본 게 아니게 된다.)
+    decay = []
+    for i, (s, p) in enumerate(base):
+        v = min_image([p[k] - ctr0[k] for k in range(3)], cell)
+        d = _mm.sqrt(sum(x * x for x in v)) or 1.0
+        amp = 2.0 * _mm.exp(-d / 2.0)
+        decay.append((s, [p[k] + amp * v[k] / d for k in range(3)]))
+    decay[hop_i] = (decay[hop_i][0], [base[hop_i][1][0] + 3.667] + base[hop_i][1][1:])
+    r = align_report(base, decay, cell)
+    _loc = r.get("locality") or {}
+    chk(_loc.get("monotone_decreasing") is True and "note" not in _loc,
+        f"[정렬·국소성·음성] 방사형 감쇠장에는 경고를 안 붙인다 (비 {_loc.get('outer_over_inner')})")
     return ok
 
 
