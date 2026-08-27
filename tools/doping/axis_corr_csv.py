@@ -69,9 +69,103 @@ DERIVED = {
 ABS_AXES = {"screen_dV_over_V0"}
 
 
+#: ⛔⛔ **이미 무효 판정이 난 축** — 2026-08-19 (kb/projects/cascade_pipeline_fixes_2026_08_19.md).
+#:   기준 구조가 미수렴이라 그 기준에 대한 상대·절대값이 둘 다 의미가 없다.
+#:   그런데 2026-08-28 A3 Pareto 를 **이 축들을 넣은 채로** 돌렸다 — 9일 전에 우리가
+#:   직접 내린 판정을 안 읽었다. front 160/681 은 그래서 물리가 아니라 진단이었다.
+#:   ⇒ 이제 **도구가 거부한다.** 사람이 기억하기를 기다리면 또 놓친다.
+INVALID_AXES = {
+    "screen_dV_over_V0":
+        "미수렴 기준 대비 미수렴 값 — 비율 자체가 무의미 (2026-08-19 판정)",
+    "screen_de_per_atom":
+        "기준이 미수렴이라 **절대값 인용 금지**. Pareto 는 설계간 절대 비교라 해당된다 "
+        "(2026-08-19 판정). 같은 cascade 안 상대 비교는 별개 문제다",
+}
+
+
+def axis_fill(rows, axes):
+    """축별 채움 수 → {키: n}. Pareto 를 돌리기 **전에** 본다.
+
+    ⛔⛔ 2026-08-28 실측 — 왜 이게 필요한가. 기본 축 6개로 돌렸더니 채점 가능한 행이
+      **0개**였다. 원인은 `sigma_300K_S_cm_NE` 와 `wad_J_m2_mean` 이 **3,615행 전부 비어
+      있어서**다. 한 축이라도 완전히 비면 교집합이 0 이 되어 front 가 통째로 사라진다.
+      그런데 예전 출력은 "채점 가능 0개" 한 줄뿐이라 **어느 축 때문인지** 안 보였다.
+      ⇒ 데이터가 아예 없는 축은 비교에 기여할 수 없으므로 **빼고, 뺐다고 크게 말한다.**
+    """
+    return {k: sum(1 for r in rows if _f(r.get(k)) is not None) for k, _l, _h in axes}
+
+
+def valid_axes(axes, allow_invalid=False):
+    """축 목록에서 무효 축을 걷어낸다 → (남은 축, 걷어낸 [(키, 사유)])."""
+    if allow_invalid:
+        return list(axes), []
+    keep = [a for a in axes if a[0] not in INVALID_AXES]
+    drop = [(a[0], INVALID_AXES[a[0]]) for a in axes if a[0] in INVALID_AXES]
+    return keep, drop
+
+
 def axis_value(key, v):
     """축 하나의 **읽는 값**. 절대값 축이면 크기로 바꾼다."""
     return None if v is None else (abs(v) if key in ABS_AXES else v)
+
+
+def design_key(row, comp_cols):
+    """**설계 하나**의 정체. 이름이 아니라 실제 조성으로 만든다.
+
+    ⛔⛔ 왜 필요한가 (2026-08-28, 리뷰 K) — 정본 CSV 3,615행은 3,615개 설계가 **아니다.**
+      `n_units = max(1, round(n_fu_actual × x))` 인데 `n_fu_actual = 4` 라서
+      x=0.02/0.05/0.10 이 전부 `round(...)=0 → max(1,0)=1` 로 접힌다. 실측:
+      **`concentration` 열이 3,615행 전부 0.25** 다. 즉 x020·x050·x100 은 같은 조성의
+      **다른 이름**이고, 거기에 시드 s00–s04 가 곱해져 있다.
+      ⇒ 이름으로 세면 3,615, 조성으로 세면 **237**. 그 차이를 표본 수로 쓰면
+      "3,615개 중 160개" 같은 문장이 만들어진다 — 표본이 15배 부풀려진 것이다.
+
+    ⛔ 못 하는 것
+      · **원자 매핑 해시가 아니다.** CSV 에 시작 구조 해시가 없어서 조성+자리+전하보상으로
+        대신한다. 같은 조성인데 도판트 **배치**가 다른 것은 여기서 같은 설계로 묶인다
+        (그건 사실상 시드다 — 그래서 묶는 게 맞지만, 구조가 진짜 다르면 놓친다).
+      · 이름 기반 셈(x 라벨 제거 후 229)과 **8개 차이**가 난다. 어느 쪽도 아직 검증 안 됐다.
+    """
+    return (tuple(row.get(c, "") for c in comp_cols),
+            row.get("cation_site", ""), row.get("anion_site", ""),
+            row.get("charge_compensation", ""))
+
+
+def _median(xs):
+    s = sorted(xs)
+    n = len(s)
+    return None if not n else (s[n // 2] if n % 2 else 0.5 * (s[n // 2 - 1] + s[n // 2]))
+
+
+def aggregate_designs(rows, axes):
+    """행 → **설계**. 축마다 복제본의 중앙값을 쓰고 산포를 같이 남긴다.
+
+    중앙값인 이유: 복제본은 시드(그리고 가짜 x 라벨)이고, 그중 일부는 미수렴이라
+    평균이 끌려간다. 순위 상관·Pareto 는 중앙값으로 충분하다.
+
+    돌려주는 것: (designs, info). designs 의 각 행은 원 CSV 행 모양 + `n_replicates`,
+    축별 `<축>__spread` (max−min).
+
+    ⛔ 못 하는 것
+      · 산포를 **오차막대로 쓰지 마라.** 시드 5개(+가짜 x 3개)는 같은 파이프라인의
+        같은 설정이라 계통오차가 공통이다. 통계오차 하한일 뿐이다.
+    """
+    comp_cols = [c for c in (rows[0] if rows else {}) if c.startswith("composition_")]
+    g = {}
+    for r in rows:
+        g.setdefault(design_key(r, comp_cols), []).append(r)
+    out = []
+    for _k, v in g.items():
+        base = dict(v[0])
+        base["n_replicates"] = len(v)
+        for key, _lab, _hi in axes:
+            vals = [x for x in (_f(r.get(key)) for r in v) if x is not None]
+            base[key] = "" if not vals else _median(vals)
+            base[key + "__spread"] = "" if len(vals) < 2 else (max(vals) - min(vals))
+        out.append(base)
+    return out, {"n_rows": len(rows), "n_designs": len(out),
+                 "comp_cols": len(comp_cols),
+                 "replicates_per_design": sorted({d["n_replicates"] for d in out})}
 
 
 def is_definitional(a, b):
@@ -245,14 +339,18 @@ def _selftest():
         "⑥ [음성] 같은 공식의 **재료끼리**는 정의상 아니다 (서로 독립 측정)")
 
     # ── Pareto (A3, 2026-08-28) — **음성 경로가 핵심**이다 ────────────────────
-    A = [("screen_de_per_atom", "낮을수록", False), ("wad_J_m2_mean", "높을수록", True)]
-    R = [{"id": "win_both", "screen_de_per_atom": "-1.0", "wad_J_m2_mean": "9.0"},
-         {"id": "lose_both", "screen_de_per_atom": "0.0", "wad_J_m2_mean": "1.0"},
-         {"id": "tradeoff_a", "screen_de_per_atom": "-2.0", "wad_J_m2_mean": "1.0"},
+    # ⚠ 2026-08-28 — 이 fixture 는 원래 `screen_de_per_atom` 을 썼는데 그 축이 **무효 판정**을
+    #   받아 도구가 거부한다. 여기서 시험하는 건 Pareto 역학이지 그 축이 아니므로,
+    #   유효한 "낮을수록 좋은" 축(Pugh G/B)으로 바꾼다. --allow_invalid 로 우회하지 않는다 —
+    #   그러면 거부 기능이 테스트에서만 꺼진 채 남는다.
+    A = [("elastic_pugh_GoverB", "낮을수록", False), ("wad_J_m2_mean", "높을수록", True)]
+    R = [{"id": "win_both", "elastic_pugh_GoverB": "-1.0", "wad_J_m2_mean": "9.0"},
+         {"id": "lose_both", "elastic_pugh_GoverB": "0.0", "wad_J_m2_mean": "1.0"},
+         {"id": "tradeoff_a", "elastic_pugh_GoverB": "-2.0", "wad_J_m2_mean": "1.0"},
          # ⚠ wad 를 10 으로 둔다 — 9 면 win_both(-1.0, 9.0) 에게 **지배당해서**
          #   "둘 다 남는다" 를 시험하지 못한다 (fixture 를 한 번 그렇게 짰다)
-         {"id": "tradeoff_b", "screen_de_per_atom": "0.0", "wad_J_m2_mean": "10.0"},
-         {"id": "missing", "screen_de_per_atom": "-9.0", "wad_J_m2_mean": ""}]
+         {"id": "tradeoff_b", "elastic_pugh_GoverB": "0.0", "wad_J_m2_mean": "10.0"},
+         {"id": "missing", "elastic_pugh_GoverB": "-9.0", "wad_J_m2_mean": ""}]
     fr, sc, _ax = pareto(R, axes=A, min_axes=2)
     ids = {r["id"] for r in fr}
     say("lose_both" not in ids, "[Pareto] 전 축에서 지는 점은 빠진다")
@@ -271,7 +369,7 @@ def _selftest():
     AV = [("screen_dV_over_V0", "|ΔV/V0|", False)]
     RV = [{"id": "small_shrink", "screen_dV_over_V0": "-0.05"},
           {"id": "huge_shrink", "screen_dV_over_V0": "-0.30"}]
-    frv, _s, _a = pareto(RV, axes=AV, min_axes=1)
+    frv, _s, _a = pareto(RV, axes=AV, min_axes=1, allow_invalid=True)
     say({r["id"] for r in frv} == {"small_shrink"},
         "[Pareto·실측회귀] |ΔV/V0| 는 **절대값**으로 읽는다 — 33 % 수축이 5 % 를 못 이긴다")
     #   파생 축은 기본 축 집합에서 빠진다 (같은 방향에 가중치 두 번 금지)
@@ -279,11 +377,65 @@ def _selftest():
     say(all(k != "li_mobility_score" for k, _l, _h in ax3),
         "[Pareto] 파생 축(li_mobility_score)은 기본 축에서 뺀다")
 
+    # ★★★ 무효 축 거부 (2026-08-28, 리뷰 K) — 9일 전 판정을 도구가 대신 기억한다 ★★★
+    say(all(k not in INVALID_AXES for k, _l, _h in ax3),
+        f"[무효축·양성] 기본 축 집합에 무효 축이 없다 ({sorted(INVALID_AXES)})")
+    _keep, _drop = valid_axes(AXES)
+    say({k for k, _w in _drop} == set(INVALID_AXES),
+        f"[무효축] 무효 축 {len(_drop)}개를 **사유와 함께** 걷어낸다")
+    # 음성: 무효 축만 주면 front 를 만들지 않고 **빈손으로** 돌려준다 (조용히 통과 금지)
+    _fi, _si, _ai = pareto(RV, axes=AV, min_axes=1)
+    say(_fi == [] and _ai == [],
+        "[무효축·음성] 무효 축만 주면 **front 를 안 만든다** (예전엔 그대로 돌았다)")
+    say(pareto(RV, axes=AV, min_axes=1, allow_invalid=True)[2] != [],
+        "[무효축] --allow_invalid_axes 로는 강제 통과된다 (진단용 경로가 살아 있다)")
+
+    # ★★★ 행 → 설계 묶기 (리뷰 K) — 3,615 는 설계 수가 아니다 ★★★
+    AG = [("screen_de_per_atom", "ΔE", False), ("elastic_G_hill_GPa", "G", True)]
+    RG = [{"composition_Mg": "1", "composition_O": "1", "cation_site": "Li_24g",
+           "anion_site": "S_16e", "charge_compensation": "cs",
+           "screen_de_per_atom": v, "elastic_G_hill_GPa": g}
+          for v, g in (("0.10", "10"), ("0.20", "12"), ("0.30", "14"))]
+    RG.append({"composition_Mg": "2", "composition_O": "1", "cation_site": "Li_24g",
+               "anion_site": "S_16e", "charge_compensation": "cs",
+               "screen_de_per_atom": "0.50", "elastic_G_hill_GPa": "9"})
+    dz, gi = aggregate_designs(RG, AG)
+    say(gi["n_rows"] == 4 and gi["n_designs"] == 2,
+        f"[묶기·양성] 같은 조성 3행이 **설계 1개**로 접힌다 (4행 → {gi['n_designs']}설계)")
+    big = [d for d in dz if d["n_replicates"] == 3][0]
+    say(abs(big["screen_de_per_atom"] - 0.20) < 1e-9,
+        f"[묶기] 복제본은 **중앙값**으로 접는다 ({big['screen_de_per_atom']})")
+    say(abs(big["screen_de_per_atom__spread"] - 0.20) < 1e-9,
+        f"[묶기] 산포(max−min)를 같이 남긴다 ({big['screen_de_per_atom__spread']})")
+    # 음성: 조성이 다르면 **묶이면 안 된다** (묶는 도구는 다 묶어도 통과할 수 있다)
+    say(len({d["n_replicates"] for d in dz}) == 2 and
+        sorted(d["n_replicates"] for d in dz) == [1, 3],
+        "[묶기·음성] 조성이 다른 행은 안 묶인다 (3+1 이지 4 가 아니다)")
+    # 음성: 자리만 달라도 다른 설계다
+    RS = [dict(RG[0]), dict(RG[0])]
+    RS[1]["anion_site"] = "S_4a"
+    _ds, gs = aggregate_designs(RS, AG)
+    say(gs["n_designs"] == 2, "[묶기·음성] 조성이 같아도 **자리가 다르면** 다른 설계다")
+
+    # ★★★ 빈 축 (2026-08-28 실측) — σ·W_ad 가 3,615행 **전부** 비어 있었다 ★★★
+    AF = [("elastic_G_hill_GPa", "G", True), ("sigma_300K_S_cm_NE", "σ", True)]
+    RF = [{"elastic_G_hill_GPa": "10", "sigma_300K_S_cm_NE": ""},
+          {"elastic_G_hill_GPa": "20", "sigma_300K_S_cm_NE": ""}]
+    ff = axis_fill(RF, AF)
+    say(ff["elastic_G_hill_GPa"] == 2 and ff["sigma_300K_S_cm_NE"] == 0,
+        f"[빈축·양성] 축별 채움을 센다 ({ff})")
+    # 음성: 빈 축을 그대로 두면 front 가 **0개**가 된다 — 그래서 빼야 한다는 근거
+    _fe, _se, _ae = pareto(RF, axes=AF, min_axes=2)
+    say(len(_se) == 0,
+        "[빈축·음성·실측회귀] 빈 축을 두면 채점 가능 행이 0 이 된다 (σ·W_ad 가 실제로 그랬다)")
+    _fk, _sk, _ak = pareto(RF, axes=AF[:1], min_axes=1)
+    say(len(_sk) == 2, "[빈축] 빈 축을 빼면 나머지 축으로 정상 채점된다")
+
     print("  " + ("✅ selftest 통과" if ok else "⛔ selftest 실패"))
     return 0 if ok else 1
 
 
-def pareto(rows, axes=None, min_axes=3):
+def pareto(rows, axes=None, min_axes=3, allow_invalid=False):
     """정본 CSV 의 **비지배 집합**. 가중합이 지우는 축 충돌을 그대로 남긴다.
 
     ⛔ 못 하는 것 (analyze_screening.pareto_front 와 같은 한계 + CSV 특유의 것)
@@ -298,6 +450,9 @@ def pareto(rows, axes=None, min_axes=3):
     """
     ax = axes or [(k, lab, hi) for k, lab, hi in AXES
                   if k not in DERIVED and k != "li_mobility_score"]
+    ax, _dropped = valid_axes(ax, allow_invalid)
+    if not ax:
+        return [], [], []
     pts, keep = [], []
     for r in rows:
         v = [axis_value(k, _f(r.get(k))) for k, _l, _h in ax]
@@ -347,6 +502,13 @@ def main():
     ap.add_argument("--min_n", type=int, default=MIN_N)
     ap.add_argument("--pareto", action="store_true",
                     help="비지배 집합도 낸다 (A3). 축이 다 찬 행에서만 — 결측 행은 뺀다")
+    ap.add_argument("--axes", default=None,
+                    help="Pareto 축을 직접 고른다 (쉼표 구분 열이름). 기본은 파생·무효 축을 뺀 전부")
+    ap.add_argument("--no_group", action="store_true",
+                    help="⛔ 행을 **설계로 묶지 않고** 그대로 쓴다. 표본이 15배 부풀려진다 "
+                         "— 진단 목적일 때만")
+    ap.add_argument("--allow_invalid_axes", action="store_true",
+                    help="⛔ 무효 판정된 축을 강제로 넣는다 (2026-08-19 판정을 무시)")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -355,10 +517,71 @@ def main():
         print(f"⛔ 없다: {a.csv}")
         return 2
     rows = load(a.csv)
-    report(analyse(rows, a.min_n))
+    # ⛔ 2026-08-28 (리뷰 K) — 상관도 **설계 단위**로 봐야 한다. 행 단위로 보면 n=681 인데
+    #   그중 독립인 것은 227뿐이라(복제본 3배) 유의성이 3배 부풀려진다. ρ 자체는 거의
+    #   안 변하지만 n 은 변하고, 우리가 인용하는 건 둘 다다.
+    if a.no_group:
+        corr_rows, ginfo = rows, {"n_rows": len(rows), "n_designs": len(rows), "comp_cols": 0,
+                                  "replicates_per_design": [1]}
+    else:
+        corr_rows, ginfo = aggregate_designs(rows, AXES)
+        print(f"■ 행 → 설계 묶기: **{ginfo['n_rows']}행 → {ginfo['n_designs']}설계** "
+              f"(조성 {ginfo['comp_cols']}열 + 자리 + 전하보상)")
+        print(f"   설계당 복제본 {ginfo['replicates_per_design']}개 — 가짜 x 라벨"
+              f"(x020/050/100 이 전부 실제 0.25) × 시드 s00–s04\n")
+    report(analyse(corr_rows, a.min_n))
     if a.pareto:
-        fr, sc, ax = pareto(rows)
-        print_pareto(fr, sc, ax, len(rows))
+        # ---- 축 선택 ----
+        if a.axes:
+            want = [w.strip() for w in a.axes.split(",") if w.strip()]
+            known = {k: (k, lab, hi) for k, lab, hi in AXES}
+            unknown = [w for w in want if w not in known]
+            if unknown:
+                print(f"⛔ 모르는 축: {unknown}\n   가능: {sorted(known)}")
+                return 2
+            ax0 = [known[w] for w in want]
+        else:
+            ax0 = [(k, lab, hi) for k, lab, hi in AXES
+                   if k not in DERIVED and k != "li_mobility_score"]
+        ax0, dropped = valid_axes(ax0, a.allow_invalid_axes)
+        if dropped:
+            print("\n⛔ **무효 판정된 축을 뺐다** (2026-08-19):")
+            for k, why in dropped:
+                print(f"     · {k} — {why}")
+            print("   (강제로 넣으려면 --allow_invalid_axes — 그럼 결과는 물리가 아니다)")
+        if a.allow_invalid_axes:
+            print("\n⛔⛔ `--allow_invalid_axes` — 무효 축이 들어간다. **인용 금지.**")
+        if not ax0:
+            print("⛔ 남은 축이 없다.")
+            return 2
+        # ---- 빈 축 걸러내기 (한 축이라도 비면 front 가 통째로 사라진다) ----
+        use = corr_rows
+        fill = axis_fill(use, ax0)
+        empty = [(k, l) for k, l, _h in ax0 if fill[k] == 0]
+        if empty:
+            print("\n⛔ **데이터가 하나도 없는 축을 뺐다** — 두면 교집합이 0 이 되어 "
+                  "front 가 통째로 사라진다:")
+            for k, l in empty:
+                print(f"     · {k} ({l}) — 0 / {len(use)}설계")
+            ax0 = [a for a in ax0 if fill[a[0]] > 0]
+        print("   축별 채움: " + " · ".join(
+            f"{l} {fill[k]}({100*fill[k]/max(len(use),1):.0f}%)" for k, l, _h in ax0))
+        if len(ax0) < 2:
+            print(f"⛔ 쓸 수 있는 축이 {len(ax0)}개다 — Pareto 는 2축부터다.")
+            return 2
+        if a.no_group:
+            print(f"\n⛔ `--no_group` — {len(use)}행을 그대로 쓴다. "
+                  f"**표본이 부풀려져 있다** (복제본을 독립 설계로 센다).")
+        fr, sc, ax = pareto(use, axes=ax0, allow_invalid=a.allow_invalid_axes)
+        print_pareto(fr, sc, ax, len(use))
+        # ---- provenance ----
+        import hashlib
+        with open(a.csv, "rb") as f:
+            sha = hashlib.sha256(f.read()).hexdigest()[:16]
+        print(f"\n[provenance] csv={os.path.basename(a.csv)} sha256:{sha} "
+              f"rows={ginfo['n_rows']} designs={ginfo['n_designs']} "
+              f"axes={[k for k, _l, _h in ax]} "
+              f"grouped={not a.no_group} allow_invalid={a.allow_invalid_axes}")
     return 0
 
 
