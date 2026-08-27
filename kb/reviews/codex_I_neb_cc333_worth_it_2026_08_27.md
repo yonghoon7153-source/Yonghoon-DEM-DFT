@@ -3,7 +3,7 @@ title: "교차리뷰 I — 3주짜리 NEB 를 재개할 값어치가 있나 (싼
 date: 2026-08-27
 updated: 2026-08-27
 tags: [review/codex, neb, li3nd, cell-convergence, vacancy]
-status: 리뷰대기
+status: 회신완료
 confidence: medium
 verificationStatus: unverified
 explored: false
@@ -14,6 +14,17 @@ evidenceScope: multi-source-primary
 ---
 
 > 아래 전문을 그대로 Codex 에 붙인다. 회신 F 의 **R4** 와 회신 G 의 **Q9–Q11** 후속이다.
+>
+> 🔴 **2026-08-27 회신 도착 — 이 질문지의 전제 세 개가 기각됐다.** 원문은 기록으로 남기고
+> 정정은 회신 카드에 있다: `kb/reviews/codex_I_reply_neb_hold_2026_08_27.md`
+>
+> | 이 문서의 문장 | 판정 |
+> |---|---|
+> | 제목 *"싼 우회로가 물리적으로 막혔다"* | ⛔ **철회** — dimer/minimum-mode following 은 전 원자를 자유롭게 두므로 안 막힌다. 확인 안 하고 한 말 |
+> | §1 *"1.240 Å 는 물리다"* | ⛔ **미확정** — 원자 index zip 이라 강체 표류·라벨 교환이 안 빠졌다 |
+> | §2 표 `1/32` · `1/108` | ⛔ **정정** — Li 부격자 기준 **1/24 (4.17 %)** · **1/81 (1.23 %)** |
+> | §2 *"셀 크기와 공공 농도가 섞여 무의미"* | ⚠ **반쯤 틀림** — dilute limit 목표면 이건 표준 경로다. 다만 두 점은 sensitivity 까지 |
+> | §4 잠정판단 *"comp1 처럼 NEB 가 틀린 관측량"* | ⛔ **기각** — collective MEP 는 유효. comp1 은 반응좌표가 **붕괴**했고 li3nd 는 안 했다 |
 
 ---
 

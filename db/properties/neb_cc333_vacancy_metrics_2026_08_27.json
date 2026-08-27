@@ -1,0 +1,83 @@
+{
+  "property": "li3nd NEB 셀 — 공공 농도·이미지 거리 정본 (분모 정정)",
+  "date": "2026-08-27",
+  "why": "교차리뷰 I · N2: '1/32·1/108 은 전체 원자 자리 기준 결손률이다. Li 공공 농도는 Li 부격자 기준으로 써야 한다.' 그리고 농도 하나만으로는 설계를 말할 수 없으니 이미지 거리·형상·배열을 같이 남긴다.",
+  "⛔_철회": {
+    "무엇": "2×2×2 = 1/32 (3.1 %) · 3×3×3 = 1/108 (0.93 %) 이라고 적었던 것.",
+    "왜_틀렸나": "분모가 **전체 원자 자리**였다. 공공은 Li 자리에만 있으므로 분모는 Li 부격자여야 한다.",
+    "결론은_안_흔들림": "비 = 81/24 = 3.375 로 같다. '농도가 3.4배 다르다' 는 문장 자체는 유지된다 — 적힌 숫자만 틀렸다.",
+    "어디에_있었나": ["kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md §4", "kb/reviews/codex_I_neb_cc333_worth_it_2026_08_27.md §2 (보낸 질문지 — 원문 보존, 주석으로 정정)"]
+  },
+  "산술_검산": {
+    "화학식": "Li₃Nd — 관용 셀당 4원자 (Li 3 + Nd 1)",
+    "2x2x2": "8 셀 × (3 Li + 1 Nd) = 24 Li + 8 Nd = 32 자리. 공공 1개 → **31 원자** ✔ (기록과 일치)",
+    "3x3x3": "27 셀 × (3 Li + 1 Nd) = 81 Li + 27 Nd = 108 자리. 공공 1개 → **107 원자** ✔ (기록과 일치)",
+    "판정": "회신의 1/24·1/81 은 **우리 원자 수와 정확히 맞는다**. 별도 계산 없이 확인됨."
+  },
+  "cells": {
+    "ccpath_2x2x2": {
+      "n_atoms": 31,
+      "n_sites_total": 32,
+      "n_sites_li": 24,
+      "n_vacancy": 1,
+      "vacancy_fraction_li_sublattice": 0.041667,
+      "vacancy_fraction_li_percent": 4.17,
+      "vacancy_fraction_all_sites_⛔철회": 0.03125,
+      "lattice_a_A": 5.185,
+      "supercell_edge_A": 10.37,
+      "shortest_vacancy_image_distance_A": 10.37,
+      "lambda1_A": 10.37,
+      "cell_shape": "cubic (등방 확대)",
+      "vacancy_arrangement": "셀당 1개 — 주기 배열, 배열 자유도 없음",
+      "n_vacancy_per_volume_nm3": 0.8635
+    },
+    "cc333_3x3x3": {
+      "n_atoms": 107,
+      "n_sites_total": 108,
+      "n_sites_li": 81,
+      "n_vacancy": 1,
+      "vacancy_fraction_li_sublattice": 0.012346,
+      "vacancy_fraction_li_percent": 1.23,
+      "vacancy_fraction_all_sites_⛔철회": 0.009259,
+      "lattice_a_A": 5.187,
+      "supercell_edge_A": 15.56,
+      "shortest_vacancy_image_distance_A": 15.56,
+      "lambda1_A": 15.56,
+      "cell_shape": "cubic (등방 확대)",
+      "vacancy_arrangement": "셀당 1개 — 주기 배열, 배열 자유도 없음",
+      "n_vacancy_per_volume_nm3": 0.2557
+    },
+    "ratio_3x3x3_over_2x2x2": {
+      "vacancy_fraction": 0.2963,
+      "vacancy_fraction_inverse": 3.375,
+      "image_distance": 1.5005,
+      "note": "두 지표가 같이 움직인다 — 이것이 '두 점으로는 못 가른다' 의 실체다."
+    }
+  },
+  "🔑_이것을_교란이라_부른_것이_반쯤_틀렸다": {
+    "회신_원문_취지": "목표가 **희박한 단일공공 장벽**이라면, 각 supercell 에 공공 하나를 두고 셀을 키우는 것은 표준적인 isolated-defect finite-supercell sequence 다. 셀이 커질수록 ① 주기 공공영상이 멀어지고 ② 허용 이완 부피가 커지고 ③ 명목 공공 농도가 낮아진다 — 이는 **분리해야 할 두 교란이 아니라 dilute limit 으로 가는 하나의 계산 경로**다.",
+    "우리_설계_판정": "현 설계는 A안(dilute one-vacancy)에 해당하며 **정당하다.**",
+    "그러나_두_점의_한계": [
+      "얻는 것: 같은 one-vacancy 모델에서 2×2×2 → 3×3×3 확장에 대한 **barrier sensitivity** 까지.",
+      "⛔ 못 하는 말: 희박한계에 수렴했다 · 차이가 순수 크기/순수 농도다 · 3×3×3 값이 상한·하한이다 · 두 값 차이가 잔여 유한크기 오차의 상한이다.",
+      "이유: 두 크기에서 장벽이 **단조일 이유가 없다**. 3점부터 제한적 scaling 을 논할 수 있다.",
+      "금속이라 오히려 비단조 위험이 크다 — Friedel 진동성 꼬리·Fermi level 변화·elastic dipole 이 남는다(회신 N5)."
+    ]
+  },
+  "유한농도를_따로_재려면_B안": {
+    "원칙": "공공 수가 셀 부피와 함께 증가해야 한다. 공공–공공 상호작용은 **제거할 잡음이 아니라 유한농도 물리의 일부**다.",
+    "pilot": [
+      {"cell": "2x2x4", "n_sites_li": 48, "low": "N_v=1, x=1/48", "high": "N_v=2, x=1/24"},
+      {"cell": "2x4x4", "n_sites_li": 96, "low": "N_v=2, x=1/48", "high": "N_v=4, x=1/24"}
+    ],
+    "가장_싼_방향성_검사": "2×2×2(N_v=1, x=1/24) vs 2×2×4(N_v=2, x=1/24) — 농도 고정, 셀만 확대.",
+    "⚠_그_검사의_한계": "c 방향 반복길이만 늘린 **shape-conditional** 시험이고 등방 셀 수렴이 아니다.",
+    "⛔_필수": "각 다중공공 corner 에서 **최대분리·중간분리·clustered** 배열을 최소한 구분해야 한다. ordered configuration 하나로 농도 ensemble 을 대표할 수 없다.",
+    "⛔_금지": "같은 셀의 N_v=1 vs 2 차이를 **보편적 농도 기울기**로 보고 2×2×2↔3×3×3 차이에서 빼는 것. 선형성·topology 보존·size×concentration 상호작용 0 — 근거가 없다. (pair/configuration interaction 을 보는 용도로는 유용하다.)"
+  },
+  "관련": [
+    "kb/reviews/codex_I_reply_neb_hold_2026_08_27.md",
+    "kb/results/sei_cc333_nd_lattice_hop_2026_08_17.md",
+    "db/properties/neb_cc333_force_history_2026_08_27.json"
+  ]
+}
