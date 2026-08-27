@@ -362,9 +362,9 @@ echo "503 은 확정 신호지만, 무엇이 끊겼는지까지는 아니다"
 DEAD="$( http_code_of() { printf '503'; }; server_unreachable_help https://a.lhr.life 2>&1 )"
 check "응답이 없다고 말한다"       "$(printf '%s\n' "$DEAD" | grep -c '뒤에서 응답이 없습니다')" "1"
 check "둘 다 가능하다고 말한다"    "$(printf '%s\n' "$DEAD" | grep -c '구분되지 않습니다')" "1"
-# 순서가 요점이다.  bml status 가 bml share stop 보다 먼저 나와야 한다.
+# 순서가 요점이다.  bml status 가 주소를 잃는 절차보다 먼저 나와야 한다.
 STATUS_LINE="$(printf '%s\n' "$DEAD" | grep -n 'bml status' | head -1 | cut -d: -f1)"
-SHARE_LINE="$(printf '%s\n' "$DEAD" | grep -n 'bml share stop' | head -1 | cut -d: -f1)"
+SHARE_LINE="$(printf '%s\n' "$DEAD" | grep -n 'bml share' | head -1 | cut -d: -f1)"
 if [ -n "$STATUS_LINE" ] && [ -n "$SHARE_LINE" ] && [ "$STATUS_LINE" -lt "$SHARE_LINE" ]; then
   pass=$((pass + 1)); printf '  ok   값싼 확인(status)을 먼저 시킨다\n'
 else
@@ -375,12 +375,17 @@ fi
 # 습관대로 터널부터 다시 연다.
 check "서버만 띄우면 주소가 그대로임을 말한다" \
   "$(printf '%s\n' "$DEAD" | grep -c '주소도 그대로')" "1"
-check "다시 여는 명령도 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share stop')" "1"
+check "다시 여는 명령도 준다"      "$(printf '%s\n' "$DEAD" | grep -c 'bml share')" "1"
 # 어느 줄을 보라고까지 말해야 한다.  '실행 중' 만 짚으면, 서버가 돌고 있는
-# 경우에 화면은 다 맞는 말을 했는데도 사람이 엉뚱한 곳을 판다 (실측: 그렇게
-# 됐다 — 답은 '공유 주소' 줄이 **없다** 는 것이었다).
+# 경우에 화면은 다 맞는 말을 했는데도 사람이 엉뚱한 곳을 판다.
 check "실행 중 줄을 짚는다"        "$(printf '%s\n' "$DEAD" | grep -c "'실행 중' 이 없다")" "1"
-check "공유 주소 줄도 짚는다"      "$(printf '%s\n' "$DEAD" | grep -c "'공유 주소' 가 없다")" "1"
+# **"없다" 로 적으면 안 된다.**  터널 프로그램이 살아 있으면 `bml status` 는
+# 공유 주소 줄을 내되 경고로 낸다 ("여기서는 확인이 안 됩니다").  "없으면" 을
+# 찾으라고 하면 그 줄이 있으므로 사람은 반대쪽 갈래로 간다 -- 실측
+# 2026-08-26 에 정확히 그래서 아무도 터널을 의심하지 않았다.
+check "공유 주소 줄도 짚는다"      "$(printf '%s\n' "$DEAD" | grep -c "'공유 주소' 가 경고")" "1"
+check "경고도 죽은 것이라고 말한다" \
+  "$(printf '%s\n' "$DEAD" | grep -c '또는 아예 없다')" "1"
 check "점검표를 훑게 하지 않는다"  "$(printf '%s\n' "$DEAD" | grep -c '중추 서버 쪽에서 순서대로')" "0"
 # 확정 코드가 있으면 curl 의 첫 대답은 안 찍는다.  두 번 물어보면 답이 다를 수
 # 있어서, 실제 화면에 `HTTP 000` 바로 밑에 `(HTTP 503)` 이 나란히 찍혔다 —
@@ -895,6 +900,79 @@ check "bml stop 이 중계기도 내린다" \
   "$(grep -c '중계기도 내렸습니다' "$HERE/../bml")" "1"
 check "status 가 무엇을 통해 보는지 적는다" \
   "$(grep -c '중계기     \${B}\${RELAY_URL}' "$HERE/../bml")" "1"
+
+# --- 열려 있다고 말하기 전에 실제로 찔러 본다 --------------------------------
+#
+# 실측 2026-08-26.  중추 서버의 `bml share` 는 "✓ 이미 열려 있습니다" 였는데
+# 주소를 받은 사람은 **503** 을 봤다.  `tunnel_running` 은 이 기계의 ssh 가
+# 살아 있는지만 보고, ssh 는 저쪽이 세션을 놓아 버려도 그대로 살아 있다.
+# 양쪽 화면이 서로 반대를 말하는 동안 무엇이 틀렸는지 아무도 몰랐다.
+#
+# 여기서는 `cmd_share` 를 **실제로 돌린다** — 소스에서 문자열을 세는 것으로는
+# "찔러 보고서 말한다" 를 확인할 수 없다.  갈래마다 대처가 다르므로 셋을 각각
+# 본다.
+#: 닫았는지는 **파일로** 본다.  `share_stale` 은 `close_tunnel` 을
+#: `>/dev/null 2>&1` 로 부르므로 (닫는 소리가 화면에 끼면 안 된다) 표준출력에
+#: 찍은 표식은 그 자리에서 삼켜진다.
+CLOSED_MARK="$(mktemp)"
+share_probe() {
+  # 인자: 터널이 응답하는가(yes/no) · 로컬 서버가 응답하는가(yes/no)
+  local tunnel="$1" server="$2"
+  : > "$CLOSED_MARK"
+  (
+    TUNNEL_PID_FILE="$(mktemp)"; echo 4242 > "$TUNNEL_PID_FILE"
+    tunnel_running()      { return 0; }
+    tunnel_url()          { printf 'https://stale.lhr.life'; }
+    wait_until_alive()    { [ "$tunnel" = yes ]; }
+    server_alive()        { [ "$server" = yes ]; }
+    close_tunnel()        { echo closed >> "$CLOSED_MARK"; }
+    tunnel_ip_hint()      { :; }
+    tunnel_account_note() { :; }
+    # 암호가 없으면 새로 여는 갈래가 그 자리에서 멈춘다 — 이 시험이 보려는
+    # 것은 거기까지다 (진짜 ssh 를 띄우지 않는다).
+    unset WORKBENCH_PASSWORD
+    cmd_share 2>&1
+    rm -f "$TUNNEL_PID_FILE"
+  )
+}
+
+#: 방금 돌린 갈래가 터널을 닫았는가.
+closed_it() { [ -s "$CLOSED_MARK" ]; }
+
+ALIVE="$(share_probe yes yes)"
+contains "터널이 응답하면 열려 있다고 말한다" "$ALIVE" "이미 열려 있습니다"
+contains "그때는 보낼 줄도 함께 낸다"         "$ALIVE" "bmlout https://stale.lhr.life"
+if closed_it; then
+  fail=$((fail + 1)); printf '  FAIL 멀쩡한 터널을 닫는다\n'
+else
+  pass=$((pass + 1)); printf '  ok   멀쩡한 터널은 안 건드린다\n'
+fi
+
+DEAD="$(share_probe no yes)"
+case "$DEAD" in
+  *"이미 열려 있습니다"*) fail=$((fail + 1))
+    printf '  FAIL 응답 없는 주소를 "이미 열려 있습니다" 로 말한다\n' ;;
+  *) pass=$((pass + 1)); printf '  ok   응답 없는 주소를 열려 있다고 하지 않는다\n' ;;
+esac
+contains "터널만 죽은 것이라고 말한다"   "$DEAD" "터널만 죽었습니다"
+contains "주소가 바뀐다고 미리 말한다"   "$DEAD" "주소가 바뀝니다"
+if closed_it; then
+  pass=$((pass + 1)); printf '  ok   그리고 닫는다\n'
+else
+  fail=$((fail + 1)); printf '  FAIL 죽은 터널을 닫지 않는다 — 다음 시도가 또 여기서 막힌다\n'
+fi
+
+# 서버가 내려간 것이면 **터널을 닫으면 안 된다.**  서버를 다시 띄우면 같은
+# 주소가 그대로 살아나므로, 여기서 닫는 것은 멀쩡한 주소를 버리는 짓이다.
+DOWN="$(share_probe no no)"
+contains "서버가 내려간 것이라고 말한다" "$DOWN" "서버가 내려가 있습니다"
+contains "같은 주소가 살아난다고 말한다" "$DOWN" "이 주소가 그대로 살아납니다"
+if closed_it; then
+  fail=$((fail + 1)); printf '  FAIL 서버가 죽었을 뿐인데 터널을 닫는다\n'
+else
+  pass=$((pass + 1)); printf '  ok   서버가 죽었을 때는 터널을 안 닫는다\n'
+fi
+rm -f "$CLOSED_MARK"
 
 echo
 if [ "$fail" -eq 0 ]; then

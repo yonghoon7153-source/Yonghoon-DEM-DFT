@@ -2785,7 +2785,12 @@ server_unreachable_help() {
           say "  ${B}중추 서버에서${OFF} ${GREEN}bml status${OFF} ${DIM}— 그 화면의 두 줄이 답을 가릅니다.${OFF}"
           say "    ${B}'실행 중' 이 없다${OFF}       ${DIM}서버가 내려갔습니다.${OFF} ${GREEN}bml${OFF} ${DIM}로 띄웁니다.${OFF}"
           say "                          ${DIM}터널은 그대로라 주소도 그대로입니다.${OFF}"
-          say "    ${B}'공유 주소' 가 없다${OFF}   ${DIM}터널이 죽었습니다.${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+          # **'없다' 가 아니다.**  터널 프로그램이 살아 있으면 `bml status` 는
+          # 공유 주소 줄을 내되 경고로 낸다 ("여기서는 확인이 안 됩니다") --
+          # 예전 문구대로 "없으면" 을 찾으면 그 줄이 있으므로 사람은 반대쪽
+          # 갈래로 간다.  실측 2026-08-26: 그래서 아무도 터널을 의심 안 했다.
+          say "    ${B}'공유 주소' 가 경고${OFF}   ${DIM}터널이 죽었습니다. 중추 서버에서${OFF} ${GREEN}bml share${OFF} ${DIM}한 번이면${OFF}"
+          say "    ${B}(또는 아예 없다)${OFF}      ${DIM}닫고 다시 엽니다.${OFF}"
           say "                          ${DIM}주소가 바뀌므로 여기서${OFF} ${GREEN}bmlout <새 주소>${OFF} ${DIM}를 다시 칩니다.${OFF}"
           say ""
           say "  ${DIM}지금 이 기계만의 데이터로 띄우려면${OFF}  ${GREEN}bml use off${OFF} ${DIM}후${OFF} ${GREEN}bml${OFF}"
@@ -3242,6 +3247,31 @@ relay_revive() {
   say "  ${DIM}터널 주소가 바뀌었을 수 있습니다 — 중추 서버의${OFF} ${GREEN}bml share${OFF} ${DIM}가 적어 준 줄로:${OFF}"
   say "    ${GREEN}bmlonly <새 주소> <그 IP>${OFF}"
   return 1
+}
+
+#: 적어 둔 주소가 응답하지 않는다.  **무엇이 죽었는지는 여기서 가를 수 있다.**
+#:
+#: 주소를 받은 쪽에서는 503 하나로 "터널이 끊겼다" 와 "그 뒤의 서버가 안 떠
+#: 있다" 가 구분되지 않는다 -- 그쪽에는 서버가 없으니 당연하다.  여기에는 둘
+#: 다 있으므로, 로컬 서버를 한 번 찔러 보면 갈린다.
+#: 돌려주는 값
+#:   0  터널만 죽었다 (닫아 뒀다).  부르는 쪽이 새로 열면 된다 -- 주소는 바뀐다.
+#:   1  서버가 내려가 있다.  터널은 **그대로 둔다** -- 서버를 다시 띄우면 같은
+#:      주소가 그대로 살아나므로, 여기서 닫으면 멀쩡한 주소를 버리는 것이 된다.
+share_stale() {
+  local url="$1"
+  if ! server_alive "$URL" 5; then
+    warn "서버가 내려가 있습니다 — 터널은 살아 있습니다."
+    say "  ${GREEN}bml${OFF} ${DIM}로 띄우면 이 주소가 그대로 살아납니다:${OFF} ${B}${url}${OFF}"
+    say "  ${DIM}터널은 안 건드렸습니다 — 지금 닫으면 멀쩡한 주소를 버리는 것이 됩니다.${OFF}"
+    return 1
+  fi
+  warn "적어 둔 주소가 응답하지 않습니다 ${DIM}(${url})${OFF}"
+  say "  ${DIM}서버는 여기서 멀쩡합니다 — 터널만 죽었습니다.  ssh 가 살아 있어도${OFF}"
+  say "  ${DIM}저쪽이 세션을 놓으면 그 이름은 503 을 돌려줍니다.${OFF}"
+  say "  ${DIM}닫고 새로 엽니다 —${OFF} ${B}주소가 바뀝니다.${OFF}"
+  close_tunnel >/dev/null 2>&1 || true
+  return 0
 }
 
 #: 터널 하나를 띄우고, 그 주소가 실제로 열릴 때까지 기다린다.
@@ -3854,21 +3884,39 @@ cmd_share() {
 
   # 이미 열려 있으면 새로 열지 않는다.  두 개를 열면 주소가 둘이 되고, 남에게
   # 알려 준 쪽이 어느 것인지 알 수 없게 된다.
+  #
+  # **살아 있는 것과 열려 있는 것은 다르다.**  `tunnel_running` 은 이 기계의
+  # 프로그램이 살아 있는지만 본다.  ssh 는 그대로인데 저쪽이 세션을 놓아
+  # 버리면 (망이 한 번 끊겼거나, localhost.run 이 접속을 거뒀거나) 엣지는 그
+  # 이름에 대해 503 을 준다.  그러면 여기 화면은 "이미 열려 있습니다" 인데
+  # 주소를 받은 사람은 오류를 본다 -- 실제로 그렇게 됐고, 양쪽 화면이 서로
+  # 반대를 말하는 동안 아무도 무엇이 틀렸는지 몰랐다.
+  #
+  # 그래서 **적어 둔 주소를 실제로 찔러 보고서야** 열려 있다고 말한다.  15초는
+  # 이미 붙어 있는 터널을 확인하는 데 넉넉하다 (여는 자리의 60초는 아직 붙는
+  # 중일 수 있어서 그렇게 길다).
   if tunnel_running && [ -n "$(tunnel_url)" ]; then
-    local open_url; open_url="$(tunnel_url)"
-    ok "이미 열려 있습니다 → ${B}${open_url}${OFF}"
-    say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${open_url}${OFF}"
-    # **이 갈래가 이제 제일 흔하다.**  터널이 서버 재시작을 살아남게 되면서
-    # (제자리 재시작은 --keep-tunnel), `bml share` 를 칠 때마다 여기로 온다.
-    # 그런데 여기에는 보낼 줄도, 저쪽이 키에 대해 한 말도 없었다 -- 정작 그
-    # 두 가지를 보려고 이 명령을 치는데, 열려 있다는 이유로 아무것도 안 줬다.
-    # 그러면 사람은 그것을 보려고 멀쩡한 터널을 닫았다 연다 (그리고 주소가
-    # 바뀐다).  여는 자리와 같은 것을 낸다.
-    tunnel_ip_hint "$open_url"
-    tunnel_account_note
-    say ""
-    say "  ${DIM}닫으려면${OFF}  ${GREEN}bml share stop${OFF}"
-    return 0
+    local open_url open_pid; open_url="$(tunnel_url)"
+    open_pid="$(cat "$TUNNEL_PID_FILE" 2>/dev/null)"
+    step "적어 둔 주소가 아직 열려 있는지 확인 중 ${DIM}(최대 15초)${OFF}"
+    if wait_until_alive "$open_url" 15 "$open_pid"; then
+      ok "이미 열려 있습니다 → ${B}${open_url}${OFF}"
+      say "  ${B}다른 기계에서${OFF}  ${GREEN}bmlout ${open_url}${OFF}"
+      # **이 갈래가 이제 제일 흔하다.**  터널이 서버 재시작을 살아남게 되면서
+      # (제자리 재시작은 --keep-tunnel), `bml share` 를 칠 때마다 여기로 온다.
+      # 그런데 여기에는 보낼 줄도, 저쪽이 키에 대해 한 말도 없었다 -- 정작 그
+      # 두 가지를 보려고 이 명령을 치는데, 열려 있다는 이유로 아무것도 안 줬다.
+      # 그러면 사람은 그것을 보려고 멀쩡한 터널을 닫았다 연다 (그리고 주소가
+      # 바뀐다).  여는 자리와 같은 것을 낸다.
+      tunnel_ip_hint "$open_url"
+      tunnel_account_note
+      say ""
+      say "  ${DIM}닫으려면${OFF}  ${GREEN}bml share stop${OFF}"
+      return 0
+    fi
+    # 응답이 없다.  서버가 죽은 것인지 터널이 죽은 것인지 가른다.
+    share_stale "$open_url" || return 1
+    # 터널만 죽었다 (share_stale 이 닫아 뒀다).  아래에서 새로 연다.
   fi
   close_tunnel >/dev/null 2>&1 || true
 
@@ -4438,7 +4486,7 @@ cmd_only() {
     say "  ${DIM}$(tunnel_code_meaning "$code")${OFF}"
     say "  ${DIM}/etc/hosts 는 건드리지 않았습니다 — 중추 서버에서${OFF} ${GREEN}bml status${OFF}${DIM}:${OFF}"
     say "    ${DIM}'실행 중' 이 없으면${OFF}   ${GREEN}bml${OFF} ${DIM}로 띄웁니다 (주소는 그대로)${OFF}"
-    say "    ${DIM}'공유 주소' 가 없으면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF} ${DIM}(새 주소)${OFF}"
+    say "    ${DIM}'공유 주소' 가 경고거나 없으면${OFF} ${GREEN}bml share${OFF} ${DIM}(닫고 다시 엽니다 — 새 주소)${OFF}"
     exit 1
   fi
   ok "터널이 살아 있습니다 ${DIM}(HTTP 200)${OFF}"
@@ -4895,7 +4943,7 @@ cmd_status() {
       if [ "$ours" -eq 0 ]; then
         say "  ${DIM}터널은 살아 있습니다 — 상대에게 그 주소를 그대로 주세요. 이 기계에서는${OFF} ${GREEN}http://localhost:${PORT}${OFF}"
       else
-        say "  ${DIM}방금 열었다면 10초쯤 뒤 다시${OFF} ${GREEN}bml status${OFF}${DIM}. 계속 이러면${OFF} ${GREEN}bml share stop${OFF} ${DIM}후${OFF} ${GREEN}bml share${OFF}"
+        say "  ${DIM}방금 열었다면 10초쯤 뒤 다시${OFF} ${GREEN}bml status${OFF}${DIM}. 계속 이러면${OFF} ${GREEN}bml share${OFF} ${DIM}— 죽은 터널을 알아서 닫고 다시 엽니다.${OFF}"
       fi
     fi
   fi
