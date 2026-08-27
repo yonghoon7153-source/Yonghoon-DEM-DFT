@@ -107,7 +107,7 @@ export function ScanDetail() {
 
       <MetricBand>
         <Metric label="스윕" value={head.sweeps} />
-        <Metric label="피팅된 스윕" value={`${head.fitted} / ${head.sweeps}`}
+        <Metric label="fitting 한 스윕" value={`${head.fitted} / ${head.sweeps}`}
                 muted={head.fitted === 0} />
         <Metric label="회로" value={points.find((p) => p.circuit)?.circuit || '—'}
                 muted={head.fitted === 0} />

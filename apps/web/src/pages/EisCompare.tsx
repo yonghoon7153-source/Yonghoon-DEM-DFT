@@ -56,7 +56,7 @@ type Mode = 'nyquist' | 'fit' | 'drt'
 
 const MODE_TITLE: Record<Mode, string> = {
   nyquist: '나이퀴스트',
-  fit: '맞춤 곡선',
+  fit: 'fitting 곡선',
   drt: 'DRT (이완 시간 분포)',
 }
 
@@ -271,7 +271,7 @@ export function EisCompare() {
       const curve = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
                               (value) => perArea(value, area))
       return [measured, {
-        label: `${name} 맞춤`,
+        label: `${name} fitting`,
         note: fit.circuit,
         x: curve.x,
         y: curve.y,
@@ -321,7 +321,7 @@ export function EisCompare() {
                   {/* 피팅이 없는 스펙트럼은 회로 칸이 비는데, 그 빈칸은
                       "안 맞췄다" 와 "맞췄는데 못 읽었다" 를 구분해 주지
                       않는다.  말로 적는다 (§0.4). */}
-                  <th style={{ textAlign: 'left' }}>피팅</th>
+                  <th style={{ textAlign: 'left' }}>fitting</th>
                   {/* 이 임피던스가 어느 충방전 곡선 옆에서 나온 것인지.  두
                       섹션은 따로 서지만 셀 하나로 이어져 있다 (ADR 0024). */}
                   <th style={{ textAlign: 'left' }}>충방전</th>
@@ -349,9 +349,9 @@ export function EisCompare() {
                     <td className="text dim mono">{row.best_circuit || '—'}</td>
                     <td className="text">
                       {row.fit_count ? (
-                        <span className="tiny">맞춤 {row.fit_count}개</span>
+                        <span className="tiny">fitting {row.fit_count}개</span>
                       ) : (
-                        <span className="tiny warn">아직 피팅 데이터가 없습니다</span>
+                        <span className="tiny warn">아직 fitting 데이터가 없습니다</span>
                       )}
                     </td>
                     <td className="text">
@@ -379,7 +379,7 @@ export function EisCompare() {
               <button type="button" className={mode === 'nyquist' ? 'on' : ''}
                       onClick={() => setMode('nyquist')}>나이퀴스트</button>
               <button type="button" className={mode === 'fit' ? 'on' : ''}
-                      onClick={() => setMode('fit')}>맞춤</button>
+                      onClick={() => setMode('fit')}>fitting</button>
               <button type="button" className={mode === 'drt' ? 'on' : ''}
                       onClick={() => setMode('drt')}>DRT</button>
             </div>
@@ -408,17 +408,17 @@ export function EisCompare() {
               skippedNote: (n) => `면적이 없어 ${n}개를 뺐습니다`,
             },
             {
-              label: '맞춤',
+              label: 'fitting',
               // 실측과 맞춤이 **번갈아** 나온다 (측정 Z′·−Z″, 맞춤 Z′·−Z″).
               // 맞춤만 내면 Origin 에서 무엇에 맞춘 곡선인지 알 수 없고, 그
               // 판단이 이 그림을 보는 이유다.
               title: mode === 'fit'
-                ? `스펙트럼마다 측정·맞춤 Z′·−Z″ 네 열 (${unitLabel})`
-                : `${MODE_TITLE[mode]} 를 보고 있습니다 — 맞춤으로 바꾸면 켜집니다`,
+                ? `스펙트럼마다 측정·fitting Z′·−Z″ 네 열 (${unitLabel})`
+                : `${MODE_TITLE[mode]} 를 보고 있습니다 — fitting 으로 바꾸면 켜집니다`,
               disabled: mode !== 'fit' || !fresh || !series.length,
               build: () => seriesWideTsv(series),
               skipped: unfitted.length,
-              skippedNote: (n) => `아직 피팅 데이터가 없어 ${n}개는 맞춤 열이 없습니다`,
+              skippedNote: (n) => `아직 fitting 데이터가 없어 ${n}개는 fitting 열이 없습니다`,
             },
             {
               label: 'γ(τ)',
@@ -449,11 +449,11 @@ export function EisCompare() {
             곡선만 조용히 빠지는데, 그 그림은 "이 셀은 잘 맞았다" 처럼 보인다. */}
         {mode === 'fit' && unfitted.length ? (
           <Alert kind="warn">
-            아직 피팅 데이터가 없습니다 —{' '}
+            아직 fitting 데이터가 없습니다 —{' '}
             {unfitted.map((item) => item.name).join(' · ')}.
             <span className="tiny faint">
               {' '}실측 점은 그대로 그렸습니다. 스펙트럼 상세에서 회로를 골라
-              맞추면 이 그림과 클립보드에 곡선이 함께 나옵니다.
+              fitting 하면 이 그림과 클립보드에 곡선이 함께 나옵니다.
             </span>
           </Alert>
         ) : null}
@@ -481,9 +481,9 @@ export function EisCompare() {
             )}
             {mode === 'fit' ? (
               <div className="tiny faint" style={{ padding: '6px 0 0' }}>
-                점이 측정, 파선이 맞춤입니다 — 같은 색이 한 쌍이고, 회로 이름은
+                점이 측정, 파선이 fitting 입니다 — 같은 색이 한 쌍이고, 회로 이름은
                 범례에 붙어 있습니다. 스펙트럼마다 가장 잘 맞은 것
-                하나(χ² 최소)를 그립니다. 맞춘 주파수 구간 안에서만 그리므로,
+                하나(χ² 최소)를 그립니다. fitting 한 주파수 구간 안에서만 그리므로,
                 구간을 좁혀 맞췄으면 곡선이 실측보다 짧습니다.
               </div>
             ) : null}

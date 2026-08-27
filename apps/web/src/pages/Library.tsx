@@ -368,7 +368,7 @@ function SampleRow({
         {sample.impedance_ohm != null
           ? num(sample.impedance_ohm, 4)
           : sample.spectrum_count
-            ? <span className="tiny">{sample.spectrum_count}개 · 안 맞춤</span>
+            ? <span className="tiny">{sample.spectrum_count}개 · fitting 안 됨</span>
             : '—'}
       </td>
       <td style={{ whiteSpace: 'nowrap' }}>

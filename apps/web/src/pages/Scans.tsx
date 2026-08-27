@@ -71,7 +71,7 @@ export function Scans() {
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th style={{ textAlign: 'left' }}>목적</th>
                   <th>스윕</th>
-                  <th>피팅</th>
+                  <th>fitting</th>
                 </tr>
               </thead>
               <tbody>

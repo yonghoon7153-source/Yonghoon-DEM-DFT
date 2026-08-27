@@ -75,7 +75,7 @@ export function EisDashboard() {
                   <th style={{ textAlign: 'left' }}>측정</th>
                   <th>스펙트럼</th>
                   <th>SOC 스캔</th>
-                  <th>피팅</th>
+                  <th>fitting</th>
                   <th style={{ textAlign: 'left' }}>회로</th>
                   <th>R₀ (Ω)</th>
                   <th>총저항 (Ω)</th>

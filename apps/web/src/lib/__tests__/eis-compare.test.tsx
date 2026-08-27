@@ -128,7 +128,7 @@ afterEach(() => {
   vi.restoreAllMocks()
 })
 
-/** 모드 단추와 복사 단추는 이름이 같다 ('맞춤').  둘을 뭉뚱그리면 무엇이
+/** 모드 단추와 복사 단추는 이름이 같다 ('fitting').  둘을 뭉뚱그리면 무엇이
  *  바뀐 건지 시험이 말해 주지 못하므로, 각자의 울타리 안에서 찾는다. */
 const modeButton = (name: string) =>
   within(screen.getByRole('group', { name: '그림' })).getByRole('button', { name })
@@ -139,8 +139,8 @@ async function renderPicked() {
   return () => document.querySelector('.copy-bar') as HTMLElement
 }
 
-describe('EIS 비교 — 맞춤', () => {
-  it('맞춤으로 바꾸기 전에는 곡선을 부르지 않는다', async () => {
+describe('EIS 비교 — fitting', () => {
+  it('fitting 으로 바꾸기 전에는 곡선을 부르지 않는다', async () => {
     const seen: string[] = []
     installFetch(seen)
     await renderPicked()
@@ -149,7 +149,7 @@ describe('EIS 비교 — 맞춤', () => {
       .toBe(true))
     expect(seen.some((url) => path(url) === '/api/eis/fits')).toBe(false)
 
-    await userEvent.click(modeButton('맞춤'))
+    await userEvent.click(modeButton('fitting'))
     await waitFor(() => expect(seen.some((url) => path(url) === '/api/eis/fits'))
       .toBe(true))
   })
@@ -159,9 +159,9 @@ describe('EIS 비교 — 맞춤', () => {
     installFetch()
     await renderPicked()
 
-    await userEvent.click(modeButton('맞춤'))
+    await userEvent.click(modeButton('fitting'))
     // 표에도 같은 문구가 있다.  경고문은 이름을 이어 붙이는 쪽이다.
-    const warning = await screen.findByText(/아직 피팅 데이터가 없습니다 —/)
+    const warning = await screen.findByText(/아직 fitting 데이터가 없습니다 —/)
     expect(warning.textContent).toContain('B_bare')
     expect(warning.textContent).not.toContain('A_fit')
   })
@@ -173,11 +173,11 @@ describe('EIS 비교 — 맞춤', () => {
     await waitFor(() =>
       expect(within(bar()).getByRole('button', { name: /나이퀴스트/ }))
         .toBeEnabled())
-    expect(within(bar()).getByRole('button', { name: /^맞춤/ })).toBeDisabled()
+    expect(within(bar()).getByRole('button', { name: /^fitting/ })).toBeDisabled()
 
-    await userEvent.click(modeButton('맞춤'))
+    await userEvent.click(modeButton('fitting'))
     await waitFor(() =>
-      expect(within(bar()).getByRole('button', { name: /^맞춤/ })).toBeEnabled())
+      expect(within(bar()).getByRole('button', { name: /^fitting/ })).toBeEnabled())
     expect(within(bar()).getByRole('button', { name: /나이퀴스트/ })).toBeDisabled()
   })
 })

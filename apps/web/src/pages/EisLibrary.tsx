@@ -200,7 +200,7 @@ export function EisLibrary() {
                   <th style={{ textAlign: 'left' }}>주파수</th>
                   <th>점</th>
                   <th>사이클</th>
-                  <th style={{ textAlign: 'left' }}>피팅</th>
+                  <th style={{ textAlign: 'left' }}>fitting</th>
                   <th>올린 때</th>
                   {/* 이름 없는 칸.  머리에 '삭제' 라고 적으면 표를 훑을 때 그
                       글자가 먼저 읽힌다 -- 여기는 찾으러 오는 곳이다. */}

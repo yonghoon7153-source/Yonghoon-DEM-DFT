@@ -110,7 +110,7 @@ export function SpectrumDetail() {
       const fitted = nyquistXy(fit.fitted_z_re, fit.fitted_z_im, dropInductive,
                                (value) => perArea(value, area))
       series.push({
-        label: `맞춤 (${fit.circuit})`,
+        label: `fitting (${fit.circuit})`,
         x: fitted.x,
         y: fitted.y,
         color: seriesColor(1),
@@ -290,7 +290,7 @@ export function SpectrumDetail() {
                 ? bodeTsv([points.data], (value) => perArea(value, area)) : ''),
             },
             {
-              label: '피팅 파라미터',
+              label: 'fitting 파라미터',
               title: '이름 · 값 · 단위 · 1σ — 엑셀에 붙여 넣는 표',
               disabled: !fit?.parameters.length,
               // 화면이 면적으로 나눈 값을 보여 주고 있으면 그 값 그대로
@@ -397,7 +397,7 @@ export function SpectrumDetail() {
           </Card>
         </div>
 
-        <Card title="등가회로 피팅">
+        <Card title="등가회로 fitting">
           <div className="col" style={{ gap: 10 }}>
             <Field label="회로" hint="비우면 이 종류의 기본 회로">
               <input
@@ -501,7 +501,7 @@ export function SpectrumDetail() {
               </button>
               {fits.length > 1 ? (
                 <select
-                  aria-label="지난 피팅"
+                  aria-label="지난 fitting"
                   value={fit?.id ?? ''}
                   onChange={(event) => setShowFit(Number(event.target.value))}
                 >
@@ -568,7 +568,7 @@ function FitReport({ fit, kind, area }: {
       ) : null}
       {fit.converged && fit.fitted_note ? (
         // 곡선을 못 그린 이유.  선이 그냥 없으면 "안 맞았다" 와 구분이 안 된다.
-        <Alert kind="warn">맞춤 곡선 없음 — {fit.fitted_note}</Alert>
+        <Alert kind="warn">fitting 곡선 없음 — {fit.fitted_note}</Alert>
       ) : null}
 
       <div className="row tiny faint" style={{ gap: 12, flexWrap: 'wrap' }}>
