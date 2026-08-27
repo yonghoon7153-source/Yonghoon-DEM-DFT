@@ -224,14 +224,27 @@ def _selftest():
     chk(abs(pk_w[-1] - pk_w[0]) > 0.5,
         "[vanHove·음성] wrap 된 좌표를 그대로 넣으면 **가짜 이동**이 보인다 — unwrap 이 필수다")
 
+    # ★★★ 배선 회귀 (2026-08-28) — 오늘 van Hove 버그 셋 중 **둘이 배선**이었다.
+    #   함수 기본값을 None 으로 고쳐놓고 CLI 기본값 8.0 을 안 고쳐서, 실제 실행에서는
+    #   적응형 rmax 가 한 번도 안 먹었다(33/33 궤적이 전부 잘림). selftest 는 함수를
+    #   직접 불러서 **CLI 를 안 탔고** 그래서 통과했다.
+    #   ⇒ 이제 파서 자체를 시험한다. 함수만 보는 테스트는 배선 버그를 못 잡는다.
+    _ap = _build_parser()
+    _d = {a.dest: a.default for a in _ap._actions}
+    chk(_d.get("rmax") is None,
+        f"[배선·실측회귀] `--rmax` **CLI 기본값이 None** 이어야 적응형이 산다 ({_d.get('rmax')})")
+    chk(_d.get("save_fs") is None,
+        "[배선] `--save_fs` 는 기본값을 두지 않는다 (추측하면 시간축이 통째로 틀린다)")
+    _ns = _ap.parse_args(["--traj", "x", "--label", "y", "--out_dir", "z"])
+    chk(_ns.rmax is None and _ns.lags_ps,
+        "[배선] 기본 인자로 파싱했을 때도 rmax 가 None 이다")
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
 
-def main():
+def _build_parser():
     ap = argparse.ArgumentParser()
-    if "--selftest" in sys.argv:
-        sys.exit(_selftest())
     ap.add_argument("--traj", required=True)
     ap.add_argument("--label", required=True)
     ap.add_argument("--out_dir", required=True)
@@ -245,8 +258,21 @@ def main():
     ap.add_argument("--hop_min_dist", type=float, default=2.5,
                     help="min unwrapped displacement (A) across a cage transition to count it "
                          "as a real inter-cage hop (excludes ~1 A rattle)")
-    ap.add_argument("--rmax", type=float, default=8.0)
+    # ⛔ 2026-08-28 — 여기가 **8.0 으로 남아 있어서** 함수 쪽 적응형 rmax 가
+    #   한 번도 안 먹었다. 실측 33/33 궤적이 전부 잘려서 못 읽는 상태로 나왔다.
+    #   함수 기본값만 고치고 **배선을 안 고친 것**이다 — selftest 는 함수를 직접
+    #   불러서 CLI 를 한 번도 안 탔고, 그래서 통과했다.
+    ap.add_argument("--rmax", type=float, default=None,
+                    help="기본 None = 가장 긴 lag 의 최대 변위에서 자동으로 잡는다. "
+                         "고정하면 빠른 계에서 분포가 잘린다")
     ap.add_argument("--nbins", type=int, default=160)
+    return ap
+
+
+def main():
+    if "--selftest" in sys.argv:
+        sys.exit(_selftest())
+    ap = _build_parser()
     args = ap.parse_args()
 
     out = Path(args.out_dir); out.mkdir(parents=True, exist_ok=True)
