@@ -303,15 +303,69 @@
    * 메모와 **저장소가 다르다**(/api/highlights). 자리 잡는 방식은 같다 — 글 지문.
    * ⛔ 못 하는 것: 한 문단에 같은 글이 여러 번이면 첫 번째만 · 문단을 가로지르는
    *   선택은 저장은 되나 다시 못 찾을 수 있다 · 색은 4종 고정. */
+  /* 글자 하나를 여러 텍스트 노드에 걸쳐서도 칠한다.
+   *
+   * ⛔ 2026-08-27 실측 — 첫 판은 `wrapFirst` 를 그대로 썼고, 그건 **한 텍스트 노드 안에
+   *   통째로 들어 있을 때만** 감싼다(`surroundContents` 가 원소 경계를 걸치면 던진다).
+   *   digest 본문은 <b>·<em>·<sub>·<code> 가 촘촘해서 사람이 문장 하나를 드래그하면
+   *   거의 항상 노드를 가로지른다 — **저장은 되는데 안 칠해졌다.** 1저자 신고로 드러났다.
+   *   → 블록의 텍스트를 정규화해 이어 붙여 찾고, **걸치는 노드마다 조각을 따로 감싼다.**
+   *     조각별로 감싸면 surroundContents 의 제약이 사라지고 화면에는 이어져 보인다.
+   *
+   * 못 하는 것: **문단(블록)을 가로지르는 선택**은 못 찾는다 — 블록 단위로 찾기 때문이다.
+   *   그 경우 호출부가 "자리를 못 찾음" 으로 세고 사용자에게 알린다. */
+  function paintText(block, needle, cls, hid, at) {
+    if (!needle || needle.length < 2) return false;
+    var nodes = [], full = "", map = [];
+    var w = document.createTreeWalker(block, NodeFilter.SHOW_TEXT, null), n;
+    while ((n = w.nextNode())) {
+      if (n.parentNode && n.parentNode.closest &&
+          n.parentNode.closest("mark.dn-hl,mark.dn-pen")) continue;
+      nodes.push(n);
+      var v = n.nodeValue;
+      for (var i = 0; i < v.length; i++) {
+        if (/\s/.test(v[i])) {
+          if (full.length && full[full.length - 1] === " ") continue;
+          full += " "; map.push({ n: n, o: i });
+        } else { full += v[i]; map.push({ n: n, o: i }); }
+      }
+    }
+    var p = full.indexOf(needle);
+    if (p < 0) return false;
+    // 걸치는 노드별로 [시작,끝) 구간을 모은다
+    var groups = [], k;
+    for (k = p; k < p + needle.length; k++) {
+      var m = map[k];
+      var g = groups[groups.length - 1];
+      if (g && g.n === m.n) g.e = m.o + 1;
+      else groups.push({ n: m.n, s: m.o, e: m.o + 1 });
+    }
+    groups.forEach(function (g) {
+      var t = g.n;
+      if (g.e < t.nodeValue.length) t.splitText(g.e);
+      if (g.s > 0) t = t.splitText(g.s);
+      var mk = document.createElement("mark");
+      mk.className = cls;
+      if (hid) mk.dataset.hid = hid;
+      mk.title = "형광펜 " + (at || "") + " — 펜 켜고 누르면 지워요";
+      t.parentNode.replaceChild(mk, t);
+      mk.appendChild(t);
+    });
+    return true;
+  }
+
   function paintPens() {
     if (!cur || !cur.pens) return;
-    var blocks = blockList();
+    var blocks = blockList(), miss = 0;
     cur.pens.forEach(function (h) {
-      for (var i = 0; i < blocks.length; i++) {
-        var mk = wrapFirst(blocks[i], h.text, "dn-pen dn-pen-" + (h.color || "yellow"), 2);
-        if (mk) { mk.dataset.hid = h.id; mk.title = "형광펜 " + (h.at || "") + " — 펜 켜고 누르면 지워요"; return; }
+      var done = false;
+      for (var i = 0; i < blocks.length && !done; i++) {
+        done = paintText(blocks[i], h.text,
+                         "dn-pen dn-pen-" + (h.color || "yellow"), h.id, h.at);
       }
+      if (!done) miss++;
     });
+    cur.penMiss = miss;
   }
 
   function loadPens() {
@@ -344,10 +398,14 @@
     var b = document.getElementById("docpen");
     if (!b) return;
     var on = !!(cur && cur.penOn), n = (cur && cur.pens ? cur.pens.length : 0);
+    var miss = (cur && cur.penMiss) || 0;
     b.classList.toggle("on", on);
-    b.textContent = (on ? "🖍 형광 켬" : "🖍 형광") + (n ? " " + n : "");
-    b.title = on ? "글을 드래그하면 칠해요 · 칠한 곳을 누르면 지워요 (다시 눌러 끄기)"
-                 : "형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요";
+    b.textContent = (on ? "🖍 형광 켬" : "🖍 형광") + (n ? " " + n : "")
+                    + (miss ? " ⚠" + miss : "");
+    b.title = (on ? "글을 드래그하면 칠해요 · 칠한 곳을 누르면 지워요 (다시 눌러 끄기)"
+                  : "형광펜을 켜요 — 켜면 드래그로 칠할 수 있어요")
+              + (miss ? "\n⚠ " + miss + "개는 본문에서 자리를 못 찾았어요 "
+                        + "(문단을 가로질러 고르면 그래요 — 한 문단 안에서 다시 칠해 주세요)" : "");
     document.body.classList.toggle("dn-pen-on", on);
   }
 

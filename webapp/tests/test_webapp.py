@@ -1899,3 +1899,32 @@ def test_highlights_are_separate_from_notes():
             assert D.file_highlights(rel) == []
         finally:
             D.HIGHLIGHTS_PATH, D.COMMENTS_PATH = oldh, oldc
+
+
+def test_docnote_highlight_paints_across_inline_tags():
+    """형광펜이 **실제 브라우저에서** 칠해지는가 (2026-08-27 1저자 신고).
+
+    첫 판은 한 텍스트 노드 안에 통째로 있을 때만 칠했다. digest 본문은 <b>·<sub>·<em>
+    이 촘촘해서 사람이 문장을 드래그하면 거의 항상 노드를 가로지른다 —
+    **저장은 되는데 안 칠해졌다.** 파이썬 테스트는 서버만 봐서 이걸 못 잡았다.
+    ⇒ 진짜 DOM 이 필요한 검증이라 브라우저로 돌린다. 도구가 없으면 skip 한다
+      (없는 것을 통과로 세지 않는다 — skip 은 skip 으로 보인다).
+    """
+    import shutil
+    import subprocess
+    node = shutil.which("node")
+    if not node:
+        pytest.skip("node 가 없다")
+    js = Path(__file__).parent / "docnote_paint.test.mjs"
+    env = dict(os.environ)
+    for c in (Path("/tmp/claude-0"), Path.home()):
+        hit = next(c.rglob("node_modules/playwright-core/package.json"), None) if c.exists() else None
+        if hit:
+            env["PW_CORE_FROM"] = str(hit.parents[2] / "package.json")
+            break
+    r = subprocess.run([node, str(js)], capture_output=True, text=True, env=env, timeout=180)
+    out = (r.stdout or "") + (r.stderr or "")
+    if "SKIP —" in out:
+        pytest.skip(out.strip().splitlines()[-1])
+    assert r.returncode == 0, out
+    assert "docnote paint PASS" in out, out
