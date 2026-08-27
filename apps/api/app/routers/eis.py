@@ -57,6 +57,11 @@ from ..schemas import (
 )
 from ..settings import settings
 
+#: 이 값을 만든 판정 규칙의 이름.  저장한 행마다 함께 남긴다 — 문턱을 나중에
+#: 옮기면 옛 숫자가 어느 규칙으로 나온 것인지 알아야 다시 판정할 수 있다
+#: (Codex 판정 리뷰 #6).  규칙을 바꾸면 이 이름도 올린다.
+DETERMINATION_POLICY = "eis-ident-v1"
+
 router = APIRouter(prefix="/api/eis", tags=["eis"])
 
 KINDS = (LIQUID, SOLID)
@@ -595,12 +600,13 @@ def dashboard(session: Session = Depends(get_session)):
         latest = items[-1]
         lead = _lead_sweep(latest, items)
         fit = _best_fit(session, latest.id or 0)
-        parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
+        parameters = apply_exchangeable(
+            fit.circuit, json.loads(fit.parameters_json)) if fit and fit.parameters_json else []
         total = None
         if parameters:
             total = total_resistance(_FitStub(
                 circuit=fit.circuit,
-                parameters=[_ParameterStub(**p) for p in parameters]))
+                parameters=_stub_parameters(fit.circuit, parameters)))
 
         group_id, group_name, parent_name = _group_names(session, sample)
         rows.append(EisDashboardRow(
@@ -647,12 +653,13 @@ def dashboard(session: Session = Depends(get_session)):
         latest = items[-1]
         lead = _lead_sweep(latest, items)
         fit = _best_fit(session, latest.id or 0)
-        parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
+        parameters = apply_exchangeable(
+            fit.circuit, json.loads(fit.parameters_json)) if fit and fit.parameters_json else []
         total = None
         if parameters:
             total = total_resistance(_FitStub(
                 circuit=fit.circuit,
-                parameters=[_ParameterStub(**p) for p in parameters]))
+                parameters=_stub_parameters(fit.circuit, parameters)))
         # 같은 파일의 스윕들이 저마다 다른 그룹일 수 있다.  하나로 모이지
         # 않으면 그룹을 비운다 -- 아무 하나를 골라 적으면 그 줄이 거짓말한다.
         own = {r.group_id for r in items if r.group_id}
@@ -756,7 +763,8 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
     point.circuit = fit.circuit
     point.chi_squared = fit.chi_squared
 
-    parameters = json.loads(fit.parameters_json) if fit.parameters_json else []
+    parameters = apply_exchangeable(
+        fit.circuit, json.loads(fit.parameters_json) if fit.parameters_json else [])
     # 미결정 파라미터는 빼고 넘긴다.  오차막대가 값을 삼킨 점을 추세선에
     # 얹으면, 화면은 그것을 다른 점과 똑같이 그리고 사람은 그것이 측정값인 줄
     # 안다 (§0.4).  뺀 자리는 선이 끊어져서 보인다.
@@ -773,13 +781,13 @@ def _scan_point(session: Session, record: SpectrumRecord) -> ScanPointOut:
         try:
             point.total_resistance_ohm = total_resistance(_FitStub(
                 circuit=fit.circuit,
-                parameters=[_ParameterStub(**p) for p in parameters]))
+                parameters=_stub_parameters(fit.circuit, parameters)))
         except (KeyError, TypeError, ValueError):
             # 총저항을 못 세는 회로가 있다 (전송선처럼).  모르면 비운다 (§0.4).
             point.total_resistance_ohm = None
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
-            _ParameterStub(**p) for p in parameters])
+            *_stub_parameters(fit.circuit, parameters)])
         point.labels = {m.parameter: m.label
                         for m in label_arcs(stub, record.kind, record.cell_config)}
     return point
@@ -1433,7 +1441,8 @@ def _fit_out(session: Session, record: SpectrumRecord,
     under; the record's current kind is what the screen asks about, so both are
     sent and the screen can say when they disagree.
     """
-    parameters = json.loads(fit.parameters_json) if fit.parameters_json else []
+    parameters = apply_exchangeable(
+        fit.circuit, json.loads(fit.parameters_json) if fit.parameters_json else [])
     thickness_cm, area = _geometry(session, record)
     fitted_frequency: list[float] | None = None
     fitted_re: list[float] | None = None
@@ -1485,7 +1494,7 @@ def _fit_out(session: Session, record: SpectrumRecord,
     conductivity: dict = {}
     if parameters:
         stub = _FitStub(circuit=fit.circuit, parameters=[
-            _ParameterStub(**p) for p in parameters])
+            *_stub_parameters(fit.circuit, parameters)])
         for meaning in label_arcs(stub, record.kind, record.cell_config):
             arcs.append({"parameter": meaning.parameter, "label": meaning.label,
                          "note": meaning.note, "value_ohm": meaning.value_ohm,
@@ -1523,12 +1532,61 @@ class _ParameterStub:
 
     def __init__(self, name: str, value: float, unit: str = "",
                  stderr: float | None = None, determined: bool = False,
-                 **_ignored) -> None:
+                 status: str = "", reason: str = "", spread: float | None = None,
+                 alias_of: str = "", **_ignored) -> None:
         self.name = name
         self.value = value
         self.unit = unit
         self.stderr = stderr
         self.determined = determined
+        #: 저장된 진단.  옛 행에는 없다 — 그때는 빈 문자열이고, 화면이
+        #: "왜 미결정인지 기록이 없다" 로 읽는다.
+        self.status = status
+        self.reason = reason
+        self.spread = spread
+        self.alias_of = alias_of
+
+
+def _stub_parameters(circuit: str, parameters: list[dict]) -> list[_ParameterStub]:
+    """저장된 JSON 을 읽으면서 **회로가 아는 축퇴를 소급 적용**한다.
+
+    `alias_of` 는 새로 맞출 때만 붙는다.  그래서 이번 수정 전에 맞춘 TL/TLR
+    행은 화면·내보내기에서 계속 "이온 레일 / 전자 레일 측정값" 으로 남았고,
+    같은 셀을 다시 맞춘 것만 미결정이 됐다 — 같은 식의 구조적 사실이 DB 안에서
+    작성 시점에 따라 달라졌다 (Codex 판정 리뷰 #3).
+
+    **이것만 소급한다.**  통계 문턱을 옛 행에 다시 씌우는 것은 그때의 진단이
+    없어서 못 하지만, 맞바꿔도 같은 곡선이라는 것은 **식의 성질**이라 데이터가
+    필요 없다.  옛 행이든 새 행이든 참이다.
+    """
+    return [_ParameterStub(**one) for one in apply_exchangeable(circuit, parameters)]
+
+
+def apply_exchangeable(circuit: str, parameters: list[dict]) -> list[dict]:
+    """저장된 파라미터 dict 에 회로의 축퇴를 씌운다 — **응답에 실리는 것에도**.
+
+    스텁에만 씌우면 아크 이름과 전도도만 고쳐지고, 화면이 실제로 그리는
+    `parameters` 목록에는 옛 `determined: true` 가 그대로 남는다.  같은 응답
+    안에서 두 자리가 서로 다른 말을 하게 된다.
+    """
+    try:
+        pairs = parse_circuit(circuit).exchangeable_pairs
+    except Exception:  # noqa: BLE001 — 못 읽는 회로는 그냥 손대지 않는다
+        return parameters
+    if not pairs:
+        return parameters
+    out = [dict(one) for one in parameters]
+    by_name = {one.get("name"): one for one in out}
+    for left, right in pairs:
+        for a, b in ((left, right), (right, left)):
+            one = by_name.get(a)
+            if one is None:
+                continue
+            one["alias_of"] = b
+            one["determined"] = False
+            one["status"] = "undetermined"
+            one["reason"] = "structural_alias"
+    return out
 
 
 class _FitStub:
@@ -1608,10 +1666,16 @@ def _run_fit(session: Session, spectrum_id: int, *, circuit: str | None,
         chi_squared=None if not np.isfinite(result.chi_squared)
         else float(result.chi_squared),
         reason=result.reason,
+        # **판정의 근거를 함께 남긴다.**  전에는 `determined` 불리언 하나만
+        # 저장해서, 그 참이 흩어짐을 통과한 것인지 검사를 아예 못 한 것인지
+        # 나중에 알 방법이 없었다 (Codex 판정 리뷰 #6).
         parameters_json=json.dumps([
             {"name": p.name, "value": p.value, "unit": p.unit,
              "stderr": p.stderr, "determined": p.determined,
-             "relative_error": p.relative_error}
+             "relative_error": p.relative_error,
+             "status": p.status, "reason": p.reason,
+             "spread": p.spread, "alias_of": p.alias_of,
+             "policy": DETERMINATION_POLICY}
             for p in result.parameters], ensure_ascii=False),
         dropped_inductive=result.dropped_inductive,
         dropped_out_of_range=result.dropped_out_of_range,

@@ -972,10 +972,37 @@ def test_one_solution_is_not_checked_and_is_not_a_measurement():
     assert scattered.reason == "seed_spread"
     assert not scattered.determined
 
+    # 오차 막대가 없는 이유가 셋이다 — 사람이 할 다음 일이 다르다.
     blind = Parameter(name="R0", value=10.0, stderr=None, spread=None)
     assert blind.status == "undetermined"
-    assert blind.reason == "no_error_bar"
+    assert blind.reason == "jacobian_insensitive"   # 값을 바꿔도 곡선이 안 움직인다
+    pinned = Parameter(name="CPE1_n", value=1.0, stderr=None,
+                       no_error_reason="at_upper_bound")
+    assert pinned.reason == "at_upper_bound"        # 경계값이 참값일 수도 있다
 
     fuzzy = Parameter(name="R0", value=10.0, stderr=8.0, spread=1.0)
     assert fuzzy.status == "undetermined"
     assert fuzzy.reason == "relative_stderr"
+
+
+def test_a_boundary_value_that_is_the_truth_is_not_called_a_broken_circuit():
+    """이상적인 축전기(`n = 1`)는 경계값이 **참값**이다 (Codex 판정 리뷰 #5).
+
+    그런데 맞춤은 χ² 1e-18 로 맞으면서 `CPE1_n` 을 상한에 앉히고, 예전에는
+    거기에 "회로가 이 스펙트럼을 설명하지 못한다" 를 붙였다.  맞는 회로를
+    틀렸다고 말한 것이다.
+    """
+    pytest.importorskip("scipy")
+    frequency = np.logspace(4, -2, 50)
+    omega = 2 * np.pi * frequency
+    z = 5.0 + 1 / (1e-4 * (1j * omega) ** 1.0)
+    result = fit_circuit(Spectrum(frequency, z.real, z.imag), "R0-CPE1",
+                         drop_inductive=False)
+    assert result.converged
+    assert result.chi_squared < 1e-12
+    n = next(p for p in result.parameters if p.name == "CPE1_n")
+    assert n.value == pytest.approx(1.0, rel=1e-6)
+    assert n.reason == "at_upper_bound"
+    # 문장은 "확인하지 못했다" 이지 "회로가 틀렸다" 가 아니다.
+    assert "확인하지 못했습니다" in result.reason
+    assert "설명하지 못한다" not in result.reason

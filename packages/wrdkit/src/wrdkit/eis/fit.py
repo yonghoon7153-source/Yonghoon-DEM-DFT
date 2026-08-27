@@ -70,6 +70,9 @@ class Parameter:
     #: 전에는 이 넷이 `spread is None` 하나로 뭉개져서, 화면이 "시작점 10/10"
     #: 과 "해가 하나여서 검사 안 함" 을 동시에 말했다 (Codex 판정 리뷰 #4).
     spread_missing: str = ""
+    #: 오차 막대가 없으면 왜 — ``at_lower_bound`` / ``at_upper_bound`` /
+    #: ``jacobian_insensitive``.  있으면 ``""``.
+    no_error_reason: str = ""
 
     @property
     def relative_error(self) -> float | None:
@@ -127,13 +130,21 @@ class Parameter:
         if self.alias_of:
             return "structural_alias"
         if self.stderr is None:
-            # 경계에 눌려 stderr 를 잃은 것과 야코비안이 특이한 것이 여기서
-            # 만난다.  둘 다 "이 값은 맞춤을 안 바꾼다" 이고, 화면에는 같은
-            # 말로 나가도 된다.
-            return "no_error_bar"
+            # **셋을 갈라 낸다.**  전에는 `no_error_bar` 하나였는데, 사람이 할
+            # 다음 일이 다 다르다 (Codex 판정 리뷰 #5):
+            #
+            #   at_lower_bound / at_upper_bound
+            #       한쪽이 제한에 잘렸다.  바깥쪽 오차가 없는 **한쪽 추정**이지
+            #       회로가 틀렸다는 뜻이 아니다 — 이상적인 축전기(`n = 1`)처럼
+            #       경계값이 참값인 경우가 있다.  경계가 물리적으로 맞는지 보고,
+            #       맞으면 그 자체가 답이다.
+            #   jacobian_insensitive
+            #       이 창에서 값을 바꿔도 곡선이 안 움직인다.  주파수창이나 그
+            #       과정을 다시 재야 한다.
+            return self.no_error_reason or "jacobian_insensitive"
         relative = self.relative_error
         if relative is None:
-            return "no_error_bar"
+            return "jacobian_insensitive"
         if relative >= 0.5:
             return "relative_stderr"
         if self.spread is None:
@@ -593,17 +604,24 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     at_bound = []
     for parameter, low, high in zip(parameters, model.lower, model.upper,
                                     strict=True):
-        if not (parameter.value <= low * 1.01 or parameter.value >= high * 0.99):
+        lower_hit = parameter.value <= low * 1.01
+        if not (lower_hit or parameter.value >= high * 0.99):
             continue
         at_bound.append(parameter.name)
         # 경계에 눌린 파라미터는 자유롭지 않다.  그 자리의 공분산은 "이 값을
         # 얼마나 잘 쟀나" 가 아니라 "벽이 얼마나 단단한가" 이고, 작은 오차
         # 막대는 가장 정밀해 보이는 숫자를 가장 못 본 숫자에 붙인다 (§0.4).
         parameter.stderr = None
+        parameter.no_error_reason = "at_lower_bound" if lower_hit else "at_upper_bound"
     notes = []
     if at_bound:
+        # **"회로가 틀렸다" 로 단정하지 않는다.**  경계값이 참값인 경우가 있다 —
+        # `R0-CPE1` 을 이상적인 축전기(`n = 1`)로 만든 스펙트럼을 맞추면
+        # χ² 가 1.8e-18 로 맞는데도 `CPE1_n` 이 상한에 앉는다.  그때 이 문장은
+        # 맞는 회로를 틀렸다고 말한다 (Codex 판정 리뷰 #5).
         notes.append("물리적 한계에 붙은 파라미터: " + ", ".join(at_bound)
-                     + " — 회로가 이 스펙트럼을 설명하지 못한다는 뜻일 수 있습니다")
+                     + " — 경계 밖을 확인하지 못했습니다 (실제 경계값일 수도, "
+                       "측정창이 좁을 수도, 회로가 안 맞을 수도 있습니다)")
     # 맞바꿔도 임피던스가 **정확히** 같은 짝은 회로가 안다 (circuit.py 의
     # `Element.exchangeable`).  전에는 여기서 이름 끝을 보고 알아냈는데, 그것은
     # 회로가 아는 것을 피팅이 다시 추측하는 것이었다.  이제 짝을 회로에서 받아
