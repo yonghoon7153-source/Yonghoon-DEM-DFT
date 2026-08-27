@@ -3,7 +3,7 @@ title: "교차리뷰 F — β 귀무모형이 뒤집혔다 (08-11 Q1 재개 + �
 date: 2026-08-27
 updated: 2026-08-27
 tags: [review/codex, statistics, md, beta-gate, neb, finite-size]
-status: 리뷰대기
+status: 회신수령-반영완료 (→ codex_G_reply_to_F_2026_08_27.md)
 confidence: medium
 verificationStatus: unverified
 explored: false
