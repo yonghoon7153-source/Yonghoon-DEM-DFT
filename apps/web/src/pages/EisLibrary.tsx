@@ -165,7 +165,12 @@ export function EisLibrary() {
       </div>
 
       <Card title="거르기" tight>
-        <div className="grid cols-4" style={{ padding: 12, gap: 10 }}>
+        {/* **한 줄에 넣는다.**  `cols-4` 로 두면 일곱 칸이 두 줄이 되고, 두
+            줄짜리 거르개는 그 밑의 목록을 화면 밖으로 민다.  칸마다 필요한
+            폭이 크게 달라서 균등 분할도 안 맞는다: `SOC 스캔` 은 단추 두 개라
+            좁아도 되고, `종류` 는 `단일 스펙트럼` 이 안 잘려야 하므로 넓어야
+            한다.  그래서 폭을 손으로 나눈다. */}
+        <div className="filter-row" style={{ padding: 12 }}>
           <GroupFilterFields pick={group} hint="셀에 붙은 것만 남습니다" />
           {/* 스캔을 접을지.  기본은 접기 — 스윕 스무 줄이 같은 파일이면 그
               스무 줄은 서로 아무것도 구별해 주지 않는다.  펴는 길은 남긴다:

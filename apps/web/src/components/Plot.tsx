@@ -11,6 +11,7 @@ import uPlot from 'uplot'
 import 'uplot/dist/uPlot.min.css'
 
 import { useElementWidth } from '../lib/hooks'
+import { arcWindow } from '../lib/eis'
 import { num, SERIES_COLORS, seriesColor } from '../lib/format'
 
 export interface PlotSeries {
@@ -802,6 +803,11 @@ export function Plot({
    *  `equalAspect` 가 켜져 있으면 두 축의 단위/픽셀을 맞춘 뒤 세로를 **옮겨서**
    *  0 에서 시작하게 한다 — 다시 좁히면 비율이 깨지고, 나이퀴스트에서 비율은
    *  물리다 (반원이 반원으로 보여야 한다).
+   *
+   *  **아크가 있으면 아크에 맞춘다** (`arcWindow`).  실수축 위를 빼는 것만으로는
+   *  확산 꼬리가 안 잘리고, 그 꼬리가 반원보다 높으면 세로 눈금이 통째로 늘어나
+   *  반원이 납작해진다.  꼬리가 반원보다 낮으면 안 자른다 — 그때는 전부 보이는
+   *  편이 낫다.
    */
   const fitPositive = () => {
     const plot = plotRef.current
@@ -823,6 +829,15 @@ export function Plot({
     // 아무 점도 0 위에 없으면 아무 일도 하지 않는다.  빈 화면으로 옮기는 것보다
     // 안 움직이는 편이 낫다 -- 버튼이 회색이므로 눌리지도 않는다.
     if (!Number.isFinite(xMin) || !Number.isFinite(yMax)) return
+    // **확산 꼬리는 한 번 더 자른다.**  `y ≥ 0` 은 실수축 위(유도성)만 빼는데,
+    // 저주파 45° 직선이 반원 높이의 몇 배까지 올라가면 정작 회로를 고를 때
+    // 보는 반원이 바닥에 눌린다.  아크가 사는 구간을 찾아서 (`lib/eis`) 거기에
+    // 맞춘다 — 꼬리가 아크보다 낮으면 `null` 이고, 그때는 예전 그대로다.
+    const arcs = arcWindow(visible)
+    if (arcs) {
+      xMax = Math.min(xMax, arcs.xMax)
+      yMax = arcs.yMax
+    }
     // 점 하나뿐이면 폭이 0 이다.  uPlot 은 min === max 를 그리지 못한다.
     const pad = (span: number, value: number) => (span > 0 ? span : Math.abs(value) * 0.1 || 1)
     let x: [number, number] = [xMin, xMax + (xMax > xMin ? 0 : pad(0, xMax))]

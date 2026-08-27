@@ -40,13 +40,35 @@ function sweepPoints(index: number) {
 /** **주소를 보고 답한다.**  하나로 뭉뚱그리면 `/points` 요청에도 스캔 객체가
  *  돌아오고, 화면은 그것을 배열로 여겨 죽는다 — 그런데 그 죽음은 "스캔을 못
  *  읽었다" 로 보여서, 실제 원인(엉뚱한 응답)과 정반대로 읽힌다. */
+/** 한 스윕의 γ(τ).  DRT 는 스윕마다 한 번씩 부르는 계산이라 주소가 또 다르다. */
+function drtOf(id: number) {
+  return {
+    spectrum_id: id,
+    regularisation: 1e-5,
+    derivative_order: 0,
+    tau_s: [1e-4, 1e-2, 1],
+    gamma_ohm: [2, 8, 1],
+    r_inf_ohm: 5,
+    inductance_h: null,
+    chi_squared: 1e-4,
+    residual_norm: 1e-3,
+    penalty_norm: 1,
+    peaks: [],
+    total_polarisation_ohm: 11,
+    dropped_inductive: 0,
+  }
+}
+
 function installFetch(scan: unknown, points: unknown[] = [
   sweepPoints(1), sweepPoints(2), sweepPoints(3),
 ]) {
-  vi.stubGlobal('fetch', vi.fn(async (url: string) => ({
-    ok: true, status: 200, statusText: 'OK',
-    json: async () => (String(url).endsWith('/points') ? points : scan),
-  })))
+  vi.stubGlobal('fetch', vi.fn(async (url: string) => {
+    const path = String(url).split('?')[0] ?? ''
+    const body = path.endsWith('/points') ? points
+      : path.includes('/drt') ? drtOf(Number(path.split('/')[4] ?? 1))
+      : scan
+    return { ok: true, status: 200, statusText: 'OK', json: async () => body }
+  }))
 }
 
 function show() {
@@ -54,6 +76,10 @@ function show() {
     <MemoryRouter initialEntries={['/scans/abc']}>
       <Routes>
         <Route path="/scans/:sha256" element={<ScanDetail />} />
+        {/* 이름 링크가 실제로 가는 자리.  안 세워 두면 클릭이 라우터를 빈
+            화면으로 보내고, 시험은 "줄이 안 꺼졌다" 대신 "아무것도 없다" 를
+            본다 — 두 실패가 같아 보인다. */}
+        <Route path="/eis/:id" element={<div>스펙트럼 상세</div>} />
       </Routes>
     </MemoryRouter>,
   )
@@ -165,13 +191,118 @@ describe('ScanDetail', () => {
       cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
       sweeps: 2, fitted: 2, parameters: ['R0'], area_cm2_effective: null,
       points: [point(1, { R0: 5 }), point(2, { R0: 6 })],
-    })
+    }, [sweepPoints(1), sweepPoints(2)])
     show()
 
     const button = await screen.findByRole('button', { name: 'Ω·cm²' })
     expect(button).toBeDisabled()
     // 왜 못 누르는지가 단추에 붙어 있어야 한다 — 흐린 단추만으로는 고장이다.
     expect(button.getAttribute('title')).toContain('면적')
+  })
+
+  /** 두 곳이 따로 놀면 표에서 흐린 줄이 그림에는 그려져 있고, 어느 쪽이 맞는지
+   *  화면이 말해 주지 않는다. */
+  it('범례와 표가 같은 선택을 쓴다 — 전체·초기화도 함께 움직인다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 3, fitted: 3, parameters: ['R0'], area_cm2_effective: null,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 }), point(3, { R0: 7 })],
+    })
+    show()
+
+    await waitFor(() =>
+      expect(document.querySelectorAll('.legend-chip')).toHaveLength(3))
+    const chips = () => [...document.querySelectorAll('.legend-chip')]
+    const rows = () => [...document.querySelectorAll('tbody tr')]
+    // 처음에는 전부 켜져 있다 — 스캔을 여는 이유가 전체 모양이다.
+    expect(chips().filter((chip) => chip.className.includes('off'))).toHaveLength(0)
+
+    // 표의 줄을 누르면 그림의 조각이 꺼진다.
+    await userEvent.click(rows()[1] as HTMLElement)
+    expect(chips()[1]!.className).toContain('off')
+    expect(rows()[1]!.className).toContain('dim')
+
+    await userEvent.click(screen.getByRole('button', { name: '초기화' }))
+    expect(chips().filter((chip) => chip.className.includes('off'))).toHaveLength(3)
+
+    await userEvent.click(screen.getByRole('button', { name: '전체' }))
+    expect(chips().filter((chip) => chip.className.includes('off'))).toHaveLength(0)
+  })
+
+  it('이름 링크를 눌러도 스윕이 꺼지지 않는다 — 그건 상세로 가는 길이다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0'], area_cm2_effective: null,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 })],
+    }, [sweepPoints(1), sweepPoints(2)])
+    show()
+
+    await waitFor(() =>
+      expect(document.querySelectorAll('.legend-chip')).toHaveLength(2))
+    await userEvent.click(await screen.findByRole('link', { name: 'sweep 1' }))
+    // 스펙트럼 상세로 갔다 — 줄을 끄지 않았다.
+    expect(await screen.findByText('스펙트럼 상세')).toBeInTheDocument()
+  })
+
+  it('DRT 로 바꾸면 같은 스윕을 γ 로 그리고, 축 고르개가 함께 뜬다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0'], area_cm2_effective: null,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 })],
+    }, [sweepPoints(1), sweepPoints(2)])
+    show()
+
+    // 나이퀴스트에는 τ 축이 없으므로 가로축 고르개도 없다.
+    await screen.findByRole('group', { name: '그림' })
+    expect(screen.queryByRole('group', { name: '가로축' })).toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: 'DRT' }))
+    expect(await screen.findByRole('group', { name: '가로축' })).toBeTruthy()
+    // 클립보드도 지금 보이는 그림을 따라간다.
+    await waitFor(() =>
+      expect(screen.getByRole('button', { name: /γ\(τ\) \(스윕 전부\)/ }))
+        .toBeInTheDocument())
+  })
+
+  it('면적을 알면 용량과 저항을 면적으로 나눈 열이 함께 나온다', async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 1, fitted: 1, parameters: ['R0'], area_cm2_effective: 2,
+      points: [{ ...point(1, { R0: 5 }), capacity_mah: 3,
+                 series_resistance_ohm: 5, total_resistance_ohm: 30 }],
+    }, [sweepPoints(1)])
+    show()
+
+    await screen.findByRole('columnheader', { name: '용량 (mAh/cm²)' })
+    const cells = [...document.querySelectorAll('tbody tr td')]
+      .map((cell) => cell.textContent)
+    expect(cells).toContain('1.500')   // 3 mAh / 2 cm²
+    expect(cells).toContain('10.00')   // 5 Ω × 2 cm²
+    expect(cells).toContain('60.00')   // 30 Ω × 2 cm²
+  })
+
+  it('면적을 모르면 그 열은 줄표다 — 0 으로 채우면 만방전과 구분되지 않는다',
+     async () => {
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 1, fitted: 1, parameters: ['R0'], area_cm2_effective: null,
+      points: [{ ...point(1, { R0: 5 }), capacity_mah: 3,
+                 series_resistance_ohm: 5, total_resistance_ohm: 30 }],
+    }, [sweepPoints(1)])
+    show()
+
+    await screen.findByRole('columnheader', { name: 'R₀ (Ω·cm²)' })
+    const row = document.querySelector('tbody tr')!
+    const cells = [...row.querySelectorAll('td')].map((cell) => cell.textContent)
+    // 용량 3, 그 다음 칸(mAh/cm²)이 줄표.
+    expect(cells[2]).toBe('3.000')
+    expect(cells[3]).toBe('—')
   })
 
   it('스윕 표에 R₀ 와 그 변화가 나온다 — SOC 를 따라가는 값이 그것이다', async () => {
@@ -183,7 +314,7 @@ describe('ScanDetail', () => {
         { ...point(1, { R0: 5 }), series_resistance_ohm: 5, total_resistance_ohm: 30 },
         { ...point(2, { R0: 6 }), series_resistance_ohm: 6.5, total_resistance_ohm: 28 },
       ],
-    })
+    }, [sweepPoints(1), sweepPoints(2)])
     show()
     await screen.findByRole('columnheader', { name: 'R₀ (Ω)' })
     // 첫 줄은 견줄 것이 없어 줄표, 둘째 줄이 +1.5 다.

@@ -136,14 +136,14 @@ export function EisDashboard() {
                       <OwnerTag owner={row.owner} />
                       {/* 이름이 곧 그 측정으로 가는 길이다 -- 셀 이름만으로는
                           어느 측정인지 모른다 (파일 이름에 조건이 적혀 있다). */}
-                      {/* 스캔이면 **스캔 화면**으로 간다.  이 줄에 `SOC 스캔
-                          1` 이라고 적어 놓고 1번 스윕으로 보내면, 누른 사람은
-                          열한 개 중 하나만 보고 나머지 열을 찾아 헤맨다. */}
-                      {row.scan_sha256
-                        ? <Link to={`/scans/${row.scan_sha256}`}>{row.name}</Link>
-                        : row.spectrum_id
-                          ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
-                          : (row.name || '—')}
+                      {/* 스캔이면 **1번 스윕**으로 간다 (서버가 그것을 골라
+                          보낸다).  거기가 조건을 적어 넣는 자리이고, 적은 것이
+                          스윕 전부에 퍼진다.  겹쳐 보는 화면은 그 페이지 머리의
+                          `스캔 · 스윕 N개` 로 한 번 더 가면 되고, 아래 `SOC
+                          스캔` 칸도 같은 곳으로 간다. */}
+                      {row.spectrum_id
+                        ? <Link to={`/eis/${row.spectrum_id}`}>{row.name}</Link>
+                        : (row.name || '—')}
                     </td>
                     <td className="text">
                       {/* 셀 칸이 비어 있다는 것 자체가 이 줄의 정보다: 아직
@@ -163,7 +163,14 @@ export function EisDashboard() {
                         : ''}
                     </td>
                     <td>{row.spectra}</td>
-                    <td className={row.scans ? '' : 'dim'}>{row.scans || '—'}</td>
+                    {/* 스윕을 한 그림에 겹쳐 보는 자리로 가는 길.  이름은
+                        1번 스윕(조건을 적는 자리)으로 가므로, 겹쳐보기는
+                        이 칸이 맡는다. */}
+                    <td className={row.scans ? '' : 'dim'}>
+                      {row.scans && row.scan_sha256
+                        ? <Link to={`/scans/${row.scan_sha256}`}>{row.scans}</Link>
+                        : (row.scans || '—')}
+                    </td>
                     <td className={row.fitted ? '' : 'dim'}>
                       {row.fitted} / {row.spectra}
                     </td>

@@ -593,6 +593,7 @@ def dashboard(session: Session = Depends(get_session)):
         scans = {r.sha256 for r in items if r.sweep_count > 1}
 
         latest = items[-1]
+        lead = _lead_sweep(latest, items)
         fit = _best_fit(session, latest.id or 0)
         parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
         total = None
@@ -606,7 +607,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_id=sample_id,
             sample_name=sample.name,
             name=latest.original_name or latest.name,
-            spectrum_id=latest.id,
+            spectrum_id=lead.id,
             scan_sha256=latest.sha256 if latest.sweep_count > 1 else "",
             group_id=group_id,
             group_name=group_name,
@@ -644,6 +645,7 @@ def dashboard(session: Session = Depends(get_session)):
         kinds = {r.kind for r in items}
         configs = {r.cell_config for r in items if r.cell_config}
         latest = items[-1]
+        lead = _lead_sweep(latest, items)
         fit = _best_fit(session, latest.id or 0)
         parameters = json.loads(fit.parameters_json) if fit and fit.parameters_json else []
         total = None
@@ -660,7 +662,7 @@ def dashboard(session: Session = Depends(get_session)):
             sample_id=None,
             sample_name="",
             name=latest.original_name or latest.name,
-            spectrum_id=latest.id,
+            spectrum_id=lead.id,
             scan_sha256=latest.sha256 if latest.sweep_count > 1 else "",
             attached=False,
             group_id=group_id,
@@ -812,6 +814,25 @@ def _scan_out(session: Session, records: list[SpectrumRecord], *,
         area_cm2_effective=area,
         points=points if with_points else [],
     )
+
+
+def _lead_sweep(latest: SpectrumRecord,
+                items: list[SpectrumRecord]) -> SpectrumRecord:
+    """The row's representative spectrum -- **sweep #1** for a SOC scan.
+
+    The list is sorted by measured time, so ``items[-1]`` is the *last* sweep.
+    That is the right answer for "what was measured most recently" and the
+    wrong one for "which one do I open": opening a scan lands you on sweep 11,
+    the far end of the SOC axis, with ten siblings you cannot see.  Sweep 1 is
+    where the conditions get filled in (and from there they spread to the rest
+    -- see ``_spread_over_scan``), so it is the one the name should open.
+
+    Only for scans.  A row of separate spectra of one cell keeps the newest.
+    """
+    if latest.sweep_count <= 1:
+        return latest
+    same_file = [one for one in items if one.sha256 == latest.sha256]
+    return min(same_file, key=lambda one: one.sweep_index, default=latest)
 
 
 def _auto_high_hz(record: SpectrumRecord) -> float | None:

@@ -735,6 +735,30 @@ tbody tr:last-child td { border-bottom: none; }
   background: var(--surface-2);
 }
 
+/* --- 왼쪽 여러 열 고정 (`lib/pincols.ts`) ------------------------------------
+
+   첫 열만 붙이는 `.pin-first` 와 달리 붙일 열이 아홉이고, 두 번째부터는 `left`
+   가 앞선 열들의 폭 합이라 CSS 에 적을 수가 없다 — 그 값은 자바스크립트가 재서
+   칸마다 넣고, 여기서는 나머지(배경·경계선·쌓임 순서)만 한다. */
+.table-wrap td.pin-col,
+.table-wrap th.pin-col {
+  position: sticky;
+  /* 불투명해야 한다.  기본 td 에는 배경이 없어서, 이대로 두면 밑으로 흘러가는
+     칸들이 붙여 둔 열 위에 겹쳐 보인다 — 고정이 아니라 글자가 두 겹이 된다. */
+  background: var(--surface);
+  z-index: 2;
+}
+.table-wrap thead th.pin-col { z-index: 3; background: var(--surface-2); }
+/* 붙은 구간이 어디서 끝나는지가 보여야 한다.  선이 없으면 그냥 안 움직이는
+   열로 읽히고, 사람은 스크롤이 고장 났다고 생각한다. */
+.table-wrap td.pin-edge,
+.table-wrap th.pin-edge { border-right: 1px solid var(--line); }
+/* 줄 배경(hover·선택)이 이 칸들만 빼놓고 칠해지면 한 줄이 두 색이 된다. */
+.table-wrap tbody tr:hover td.pin-col { background: var(--surface-2); }
+.table-wrap tbody tr.selected td.pin-col { background: var(--accent-wash); }
+/* 꺼 둔 스윕은 흐리게 — 붙인 칸도 같이 흐려야 한 줄로 읽힌다. */
+.table-wrap tbody tr.dim td.pin-col { background: var(--surface); }
+
 /* An inline bar behind a percentage, so a column of them reads as a shape. */
 .bar-cell { position: relative; }
 .bar-cell .bar {
@@ -1546,6 +1570,31 @@ tbody td .ghost.icon:first-child:focus-visible { opacity: 1; }
   padding: 2px 0 4px var(--s2);
 }
 
+/* EIS 라이브러리의 거르기 줄 — **한 줄**.
+   일곱 칸이 두 줄로 접히면 그 밑의 목록이 화면 밖으로 밀린다.  칸마다 필요한
+   폭이 달라서 균등 분할은 안 맞는다: `SOC 스캔` 은 단추 두 개라 좁아도 되고
+   `종류` 는 '단일 스펙트럼' 이 안 잘려야 해서 넓어야 한다.  좁은 화면에서는
+   접힌다 — 한 줄을 지키려고 글자를 자르지는 않는다. */
+.filter-row {
+  display: grid;
+  grid-template-columns:
+    minmax(130px, 1.1fr)   /* 그룹 */
+    minmax(130px, 1.1fr)   /* 소그룹 */
+    minmax(104px, 0.6fr)   /* SOC 스캔 — 단추 두 개 */
+    minmax(150px, 1.3fr)   /* 종류 — '단일 스펙트럼' 이 안 잘려야 한다 */
+    minmax(96px, 0.7fr)    /* 전해질 */
+    minmax(110px, 0.9fr)   /* 목적 */
+    minmax(130px, 1.2fr);  /* 검색 */
+  align-items: end;
+  gap: var(--s2) var(--s3);
+}
+.filter-row > .field { min-width: 0; }
+.filter-row select,
+.filter-row input { width: 100%; }
+@media (max-width: 1100px) {
+  .filter-row { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+}
+
 /* 화면마다 다른 추가 필터(관계셀·목적·전해질·검색).  칸마다 폭을 손으로
    적어 두면 글자 수에 따라 들쭉날쭉해지므로, 같은 폭으로 나눠 아래끝을
    맞춘다. */
@@ -1559,6 +1608,10 @@ tbody td .ghost.icon:first-child:focus-visible { opacity: 1; }
 .pick-extra > .field { min-width: 0; }
 .pick-extra select,
 .pick-extra input { width: 100%; }
+
+/* 뜻이 붙은 드롭박스 (`CPE2_Q — CPE 크기`).  기본 `select` 는 제 칸에 맞춰
+   좁아져서 이름만 남고 뜻이 잘린다 — 그러면 뜻을 붙인 보람이 없다. */
+.wide-select { min-width: 260px; max-width: 100%; }
 
 /* --------------------------------------------------------------- 셀 고르기 */
 /* 드롭다운이 아니라 버튼 + 창인 이유는 `CellPicker` 의 머리말에 있다.  버튼은

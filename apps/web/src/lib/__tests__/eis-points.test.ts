@@ -7,7 +7,7 @@
 
 import { describe, expect, it } from 'vitest'
 
-import { inductiveCount, isScan, nyquistXy, sweepAt } from '../eis'
+import { arcWindow, inductiveCount, isScan, nyquistXy, sweepAt } from '../eis'
 
 describe('유도성 점', () => {
   const zRe = [10, 8, 7, 9, 20]
@@ -77,5 +77,75 @@ describe('SOC 스캔의 스윕', () => {
   it('둘 다 없으면 빈 문자열 — 0 으로 적으면 만방전과 구분되지 않는다', () => {
     expect(sweepAt({ capacity_mah: null, potential_v: null })).toBe('')
     expect(sweepAt({})).toBe('')
+  })
+})
+
+/** 반원 하나 + 45° 확산 꼬리.  실제 전고체 풀셀의 모양이다. */
+function arcThenTail(tailTop: number) {
+  const x: number[] = []
+  const y: number[] = []
+  // 반원: 지름 20, 꼭대기 10.
+  for (let t = 0; t <= 20; t += 1) {
+    x.push(t)
+    y.push(Math.sqrt(Math.max(0, 100 - (t - 10) ** 2)))
+  }
+  // 45° 꼬리: 골짜기(20, 0)에서 올라간다.
+  for (let t = 1; t <= tailTop; t += 1) {
+    x.push(20 + t)
+    y.push(t)
+  }
+  return [{ x, y }]
+}
+
+describe('아크가 사는 구간', () => {
+  it('꼬리가 반원보다 높으면 반원까지만 남긴다', () => {
+    const window = arcWindow(arcThenTail(40))
+    expect(window).not.toBeNull()
+    // 반원 꼭대기가 세로 눈금이 된다 — 꼬리 40 이 아니라.
+    expect(window!.yMax).toBeCloseTo(10, 6)
+    // 가로는 골짜기(20)에서 조금 더.  꼬리 끝(60)까지 가지 않는다.
+    expect(window!.xMax).toBeGreaterThanOrEqual(20)
+    expect(window!.xMax).toBeLessThan(25)
+  })
+
+  it('꼬리가 반원보다 낮으면 자르지 않는다 — 전부 보이는 편이 낫다', () => {
+    expect(arcWindow(arcThenTail(4))).toBeNull()
+  })
+
+  it('꼬리가 아예 없으면 자르지 않는다', () => {
+    const x: number[] = []
+    const y: number[] = []
+    for (let t = 0; t <= 20; t += 1) {
+      x.push(t)
+      y.push(Math.sqrt(Math.max(0, 100 - (t - 10) ** 2)))
+    }
+    expect(arcWindow([{ x, y }])).toBeNull()
+  })
+
+  it('반원이 둘이면 **둘 다** 남긴다 — 첫 골짜기에서 자르면 두 번째를 잘라먹는다',
+     () => {
+    const x: number[] = []
+    const y: number[] = []
+    for (let t = 0; t <= 20; t += 1) {          // 첫 반원 (꼭대기 5)
+      x.push(t)
+      y.push(0.5 * Math.sqrt(Math.max(0, 100 - (t - 10) ** 2)))
+    }
+    for (let t = 1; t <= 20; t += 1) {          // 둘째 반원 (꼭대기 10)
+      x.push(20 + t)
+      y.push(Math.sqrt(Math.max(0, 100 - (t - 10) ** 2)))
+    }
+    for (let t = 1; t <= 40; t += 1) {          // 꼬리
+      x.push(40 + t)
+      y.push(t)
+    }
+    const window = arcWindow([{ x, y }])
+    expect(window).not.toBeNull()
+    expect(window!.yMax).toBeCloseTo(10, 6)
+    expect(window!.xMax).toBeGreaterThanOrEqual(40)
+  })
+
+  it('점이 너무 적으면 판단하지 않는다', () => {
+    expect(arcWindow([{ x: [1, 2], y: [1, 2] }])).toBeNull()
+    expect(arcWindow([])).toBeNull()
   })
 })

@@ -9,10 +9,11 @@
  *  그리면 화면이 없는 측정을 있는 것처럼 말하게 된다.
  */
 
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 
 import { CopyBar } from '../components/CopyBar'
+import { ParamName } from '../components/ParamName'
 import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
@@ -23,8 +24,21 @@ import { useAsync, useStickyState } from '../lib/hooks'
 import {
   Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, validZUnit, zUnitLabel,
 } from '../lib/zunit'
+import { rememberedLambda } from '../lib/drtlambda'
 import { seriesWideTsv } from '../lib/origin'
+import { usePinnedColumns } from '../lib/pincols'
+import {
+  DRT_AXES, DRT_AXIS_KEY, type DrtAxis, decadeSplits, drtAxisLabel, drtAxisShort,
+  drtAxisTick, drtAxisValue, validDrtAxis,
+} from '../lib/tauaxis'
 import type { ScanPoint } from '../lib/types'
+
+/** 스윕 표에서 붙여 둘 열의 수 — `#` 부터 `점` 까지.
+ *
+ *  거기까지가 "이 스윕이 무엇인가" 이고 그 뒤(회로·χ²·파라미터 열셋)가 맞춘
+ *  결과다.  오른쪽으로 밀면서 읽는 것은 결과이고, 그때 왼쪽에 남아야 하는 것이
+ *  이 아홉 열이다. */
+const PINNED_COLUMNS = 11
 
 const CONFIG_LABEL: Record<string, string> = {
   full: '풀셀', half: '하프셀', sym: '대칭셀',
@@ -51,6 +65,18 @@ export function delta(
     return `${change >= 0 ? '+' : '−'}${num(Math.abs(change), 3)}`
   }
   return '—'
+}
+
+/** 이 파라미터의 뜻 — 서버가 회로마다 붙여 보낸 것.
+ *
+ *  스윕마다 다른 회로가 이겼을 수 있어 **하나라도 아는 줄**에서 가져온다.
+ *  아무도 모르면 빈 문자열이다 — 이름을 뜻인 척 되풀이하지 않는다 (§0.4).
+ */
+function meaningOf(points: ScanPoint[], name: string): string {
+  for (const point of points) {
+    if (point.labels[name]) return point.labels[name]
+  }
+  return ''
 }
 
 /** 용량이 있으면 용량, 없으면 전위.  둘 다 없는 점은 놓을 자리가 없다. */
@@ -85,6 +111,12 @@ export function ScanDetail() {
   //  다른 크기로 나오고, 그 말은 축 이름에만 남는다.
   const [storedZUnit, setZUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohm')
   const zPick = validZUnit(storedZUnit, 'ohm')
+  //: 나이퀴스트인가 DRT 인가.  **같은 스윕 선택을 함께 쓴다** — 나이퀴스트에서
+  //  끈 스윕이 DRT 에서 도로 켜지면, 두 그림이 다른 집합을 말하게 된다.
+  const [mode, setMode] = useState<'nyquist' | 'drt'>('nyquist')
+  //: DRT 가로축.  상세·비교 화면과 같은 열쇠 (`lib/tauaxis.ts`).
+  const [storedAxis, setAxis] = useStickyState<DrtAxis>(DRT_AXIS_KEY, 'tau')
+  const drtAxis = validDrtAxis(storedAxis)
   const parameters = useMemo(() => scan.data?.parameters ?? [], [scan.data])
   //: 스윕 전부가 같은 면적일 때만 서버가 값을 준다 — 하나라도 어긋나면 `null`
   //  이고, 그때는 나눌 수가 없다 (섞인 수가 나온다).
@@ -119,8 +151,12 @@ export function ScanDetail() {
   //: 나이퀴스트 겹쳐보기.  색은 스윕 차례를 따라간다 — SOC 가 그 차례다.
   const overlay = useMemo<PlotSeries[]>(() => {
     const order = new Map(points.map((p, i) => [p.spectrum_id, i]))
-    return (raw.data ?? []).map((item) => {
-      const index = order.get(item.id) ?? 0
+    return (raw.data ?? []).flatMap((item) => {
+      // **모르는 스윕은 그리지 않는다.**  예전에는 못 찾으면 0번으로 떨어져서
+      // 그 곡선이 `#1` 이라는 이름과 1번의 색을 달고 나왔다 — 화면에 같은
+      // 이름이 두 줄 서고, 어느 쪽이 진짜 1번인지는 아무 데도 없다 (§0.4).
+      const index = order.get(item.id)
+      if (index === undefined) return []
       const point = points[index]
       const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive,
                                  (value) => perArea(value, area))
@@ -128,7 +164,7 @@ export function ScanDetail() {
       // 그것이 이 화면을 여는 이유다.  비교 화면도 같은 규칙을 쓴다
       // (`lib/eis: sweepAt`) — 두 화면이 같은 스윕을 다르게 부르면 안 된다.
       const at = point ? sweepAt(point) : ''
-      return {
+      return [{
         label: `#${point?.sweep_index ?? index + 1}`,
         note: at || undefined,
         x,
@@ -137,12 +173,65 @@ export function ScanDetail() {
         points: true,
         width: 1,
         hidden: hidden.includes(point?.sweep_index ?? -1),
-      }
+      }]
     })
   }, [raw.data, points, hidden, dropInductive, area])
 
+  //: DRT 는 **볼 때만** 부른다.  스윕마다 한 번씩 푸는 계산이라, 나이퀴스트만
+  //  보려던 사람이 그 시간을 대신 낼 이유가 없다.  λ 는 스펙트럼 상세에서
+  //  옮긴 값을 그대로 쓴다 — 두 화면이 다른 λ 를 쓰면 같은 γ 가 다르게 생겨서
+  //  나란히 놓는 이 화면이 곧바로 어긋난다.
+  const lambda = rememberedLambda()
+  const drt = useAsync(
+    () => (mode === 'drt' && points.length
+      ? Promise.all(points.map((point) =>
+          api.spectrumDrt(point.spectrum_id,
+                          { regularisation: lambda, derivative_order: 0 })
+            .then((value) => ({ id: point.spectrum_id, value }))
+            .catch(() => ({ id: point.spectrum_id, value: null }))))
+      : Promise.resolve([])),
+    [mode, points.map((p) => p.spectrum_id).join(','), lambda],
+  )
+
+  //: DRT 겹쳐보기.  나이퀴스트와 **같은 색·같은 이름·같은 껐다 켰다**를 쓴다.
+  const drtOverlay = useMemo<PlotSeries[]>(() => {
+    const order = new Map(points.map((point, index) => [point.spectrum_id, index]))
+    return (drt.data ?? []).flatMap(({ id, value }) => {
+      if (!value) return []
+      const index = order.get(id)
+      if (index === undefined) return []
+      const point = points[index]
+      return [{
+        label: `#${point?.sweep_index ?? index + 1}`,
+        note: point ? sweepAt(point) || undefined : undefined,
+        x: value.tau_s.map((tau) => drtAxisValue(drtAxis, tau)),
+        // γ 도 저항이다 — 나이퀴스트를 Ω·cm² 로 보면서 γ 만 Ω 로 두면 같은
+        // 화면의 두 그림이 다른 자로 그려진다.
+        y: value.gamma_ohm.map((gamma) => perArea(gamma, area)),
+        color: seriesColor(index),
+        width: 1.5,
+        hidden: hidden.includes(point?.sweep_index ?? -1),
+      }]
+    })
+  }, [drt.data, points, hidden, drtAxis, area])
+
+  //: 지금 그리는 것.  **껐다 켰다는 하나**라, 어느 그림을 보고 있든 같은 스윕이
+  //  꺼져 있다.
+  const series = mode === 'drt' ? drtOverlay : overlay
   const shownOverlay = useMemo(
-    () => overlay.filter((series) => !series.hidden), [overlay])
+    () => series.filter((one) => !one.hidden), [series])
+
+  /** 범례 조각과 표의 줄이 **같은 것**을 누른다 (`#3` 을 껐다 켰다). */
+  const toggleSweep = (sweep: number) =>
+    setHidden((current) => current.includes(sweep)
+      ? current.filter((one) => one !== sweep)
+      : [...current, sweep])
+
+  //: 스윕 표는 열이 스물이 넘는다 (파라미터가 열셋).  오른쪽으로 밀면 이름이
+  //  화면 밖으로 나가고, 그때부터는 어느 스윕의 줄인지 알 수 없다.  `점` 까지
+  //  붙여 둔다 — 거기까지가 "이 스윕이 무엇인가" 이고, 그 뒤가 맞춘 결과다.
+  const tableBox = useRef<HTMLDivElement>(null)
+  usePinnedColumns(tableBox, PINNED_COLUMNS, [points.length, parameters.length])
 
   const label = useMemo(() => {
     for (const point of points) {
@@ -205,9 +294,29 @@ export function ScanDetail() {
           움직이는가 하나다.  아래 파라미터 추세는 그것을 숫자로 요약한 것이고,
           요약을 먼저 보여 주면 원래 모양을 못 본 채로 읽게 된다. */}
       <Card
-        title="나이퀴스트 — 스윕 전부"
+        title={mode === 'drt' ? 'DRT — 스윕 전부' : '나이퀴스트 — 스윕 전부'}
         actions={
           <div className="row" style={{ gap: 10, alignItems: 'center' }}>
+            {/* 같은 스윕을 두 눈으로 본다.  나이퀴스트는 아크의 모양, DRT 는
+                그 아크가 몇 개인가 — SOC 를 따라 봉우리가 어떻게 옮겨 가는지가
+                DRT 쪽에서 훨씬 먼저 보인다. */}
+            <div className="segmented" role="group" aria-label="그림">
+              <button type="button" className={mode === 'nyquist' ? 'on' : ''}
+                      onClick={() => setMode('nyquist')}>나이퀴스트</button>
+              <button type="button" className={mode === 'drt' ? 'on' : ''}
+                      onClick={() => setMode('drt')}>DRT</button>
+            </div>
+            {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
+            {mode === 'drt' ? (
+              <div className="segmented" role="group" aria-label="가로축">
+                {DRT_AXES.map((one) => (
+                  <button key={one} type="button" className={drtAxis === one ? 'on' : ''}
+                          onClick={() => setAxis(one)}>
+                    {drtAxisShort(one)}
+                  </button>
+                ))}
+              </div>
+            ) : null}
             {/* 단위는 스캔 하나에 하나다 — 스윕끼리 견주는 화면이라 더 그렇다. */}
             <div className="segmented" role="group" aria-label="임피던스 단위">
               {Z_UNITS.map((one) => (
@@ -225,30 +334,58 @@ export function ScanDetail() {
                 </button>
               ))}
             </div>
-            <label className="tiny faint row" style={{ gap: 6, alignItems: 'center' }}>
-              <input
-                type="checkbox"
-                checked={dropInductive}
-                onChange={(event) => setDropInductive(event.target.checked)}
-              />
-              고주파 유도성 점 접기
-            </label>
+            {/* DRT 에는 뜻이 없다 — 서버가 풀 때 이미 뺀 점들이고, 여기 이
+                단추는 나이퀴스트의 세로 눈금을 지키는 것이다. */}
+            {mode === 'nyquist' ? (
+              <label className="tiny faint row" style={{ gap: 6, alignItems: 'center' }}>
+                <input
+                  type="checkbox"
+                  checked={dropInductive}
+                  onChange={(event) => setDropInductive(event.target.checked)}
+                />
+                고주파 유도성 점 접기
+              </label>
+            ) : null}
           </div>
         }
         tight
       >
         {raw.error ? <Alert kind="error">{raw.error}</Alert>
           : raw.loading && !raw.data ? <div style={{ padding: 20 }}><Spinner /></div>
-          : overlay.length ? (
+          : mode === 'drt' && drt.loading && !drt.data
+            ? <div style={{ padding: 20 }}><Spinner label="DRT 를 푸는 중" /></div>
+          : series.length ? (
             <>
-              <Plot
-                series={overlay}
-                xLabel={`Z′ (${zUnit})`}
-                yLabel={`−Z″ (${zUnit})`}
-                height={380}
-                equalAspect
-                positiveFit
-              />
+              {mode === 'drt' ? (
+                // DRT 는 두 축의 뜻이 달라서 `equalAspect` 가 없다 — 가로는
+                // 로그 시간(또는 주파수), 세로는 저항이다.
+                <Plot
+                  series={series}
+                  xLabel={drtAxisLabel(drtAxis)}
+                  yLabel={`γ (${zUnit})`}
+                  height={380}
+                  busy={drt.loading}
+                  xTick={(value) => drtAxisTick(drtAxis, value)}
+                  xSplits={drtAxis === 'f' ? decadeSplits : undefined}
+                />
+              ) : (
+                <Plot
+                  series={series}
+                  xLabel={`Z′ (${zUnit})`}
+                  yLabel={`−Z″ (${zUnit})`}
+                  height={380}
+                  equalAspect
+                  positiveFit
+                />
+              )}
+              {mode === 'drt' ? (
+                <div className="tiny faint" style={{ paddingTop: 6 }}>
+                  벌점 λ = {lambda.toExponential(2)} · 평활 차수 0 — 스펙트럼
+                  상세에서 옮긴 값을 그대로 씁니다. 두 화면이 다른 λ 를 쓰면
+                  같은 γ 가 다르게 생겨서, 나란히 놓는 이 화면이 곧바로
+                  어긋납니다.
+                </div>
+              ) : null}
               {/* 골라 둔 단위가 이 스캔에서 안 되면 **말한다.**  말없이 Ω 로
                   떨어뜨리면 화면은 Ω·cm² 를 고른 채로 Ω 를 그리고 있게 된다. */}
               {zPick === 'ohmcm2' && !scanArea ? (
@@ -265,27 +402,49 @@ export function ScanDetail() {
                   면적 {num(scanArea, 4)} cm² 로 나눈 값입니다.
                 </div>
               ) : null}
-              {/* 충방전 사이클 고르개와 같은 손놀림 — 조각을 눌러 켜고 끈다. */}
+              {/* 충방전 사이클 고르개와 같은 손놀림 — 조각을 눌러 켜고 끈다.
+                  **처음에는 전부 켜져 있다**: 스캔을 여는 이유가 전체 모양이고,
+                  그 다음에 몇 개를 빼면서 본다.  '초기화' 로 비우고 하나씩
+                  켜는 쪽이 편할 때도 있어 두 단추를 나란히 둔다.
+                  아래 스윕 표의 줄과 **같은 것을 누른다** (`toggleSweep`) —
+                  두 곳이 따로 놀면 표에서 흐린 줄이 그림에는 그려져 있다. */}
+              <div className="row" style={{ gap: 6, padding: '10px 0 2px' }}>
+                <button type="button" className="sm" onClick={() => setHidden([])}>
+                  전체
+                </button>
+                <button
+                  type="button"
+                  className="sm ghost"
+                  onClick={() => setHidden(points.map((point) => point.sweep_index))}
+                >
+                  초기화
+                </button>
+                <span className="tiny faint" style={{ alignSelf: 'center' }}>
+                  {shownOverlay.length} / {series.length} 켬 — 조각을 눌러 켜고 끕니다
+                </span>
+              </div>
               <PlotLegend
-                series={overlay}
-                onToggle={(name) => {
-                  const index = Number(name.replace('#', ''))
-                  setHidden((current) => current.includes(index)
-                    ? current.filter((one) => one !== index)
-                    : [...current, index])
-                }}
+                series={series}
+                onToggle={(name) => toggleSweep(Number(name.replace('#', '')))}
               />
-              <CopyBar items={[{
-                label: '나이퀴스트 (스윕 전부)',
-                title: `스윕마다 Z′·−Z″ 두 열 — 지금 켜 둔 ${shownOverlay.length}개`,
-                disabled: !shownOverlay.length,
-                // **켜 둔 것만 나간다.**  화면에서 끈 스윕이 클립보드에
-                // 따라가면, 붙여 넣은 표가 방금 본 그림과 다른 것이 된다.
-                skipped: overlay.length - shownOverlay.length,
-                skippedNote: (n) => `꺼 둔 ${n}개는 빠졌습니다`,
-                build: () => seriesWideTsv(shownOverlay,
-                                           { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
-              }]} />
+              {/* 범례와 클립보드가 붙어 있으면 조각 줄의 마지막 칸과 'Origin
+                  으로' 가 한 덩어리로 읽힌다 — 누르는 것이 다른 두 줄이다. */}
+              <div style={{ marginTop: 10 }}>
+                <CopyBar items={[{
+                  label: mode === 'drt' ? 'γ(τ) (스윕 전부)' : '나이퀴스트 (스윕 전부)',
+                  title: mode === 'drt'
+                    ? `스윕마다 ${drtAxisShort(drtAxis)}·γ 두 열 — 지금 켜 둔 ${shownOverlay.length}개`
+                    : `스윕마다 Z′·−Z″ 두 열 — 지금 켜 둔 ${shownOverlay.length}개`,
+                  disabled: !shownOverlay.length,
+                  // **켜 둔 것만 나간다.**  화면에서 끈 스윕이 클립보드에
+                  // 따라가면, 붙여 넣은 표가 방금 본 그림과 다른 것이 된다.
+                  skipped: series.length - shownOverlay.length,
+                  skippedNote: (n) => `꺼 둔 ${n}개는 빠졌습니다`,
+                  build: () => seriesWideTsv(shownOverlay, mode === 'drt'
+                    ? { x: drtAxisLabel(drtAxis), y: `γ (${zUnit})` }
+                    : { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
+                }]} />
+              </div>
             </>
           ) : (
             <Empty title="점을 읽지 못했습니다" icon="∿">
@@ -298,14 +457,23 @@ export function ScanDetail() {
         title={`${parameter || '파라미터'} vs SOC`}
         actions={
           parameters.length ? (
-            <Field label="파라미터">
+            // **이름만으로는 무엇인지 모른다.**  `CPE2_Q` 와 `Ws4_tau` 가
+            // 세로로 열세 줄 늘어선 드롭박스에서 고르는 일은 외우고 있는
+            // 사람만 할 수 있다.  서버가 회로마다 붙여 보내는 뜻
+            // (`ScanPoint.labels`)을 이름 옆에 적고, 칸을 넓혀 그 줄이 안
+            // 잘리게 한다.
+            <Field label="파라미터" hint="세로축에 무엇을 놓을까">
               <select
                 aria-label="파라미터"
+                className="wide-select"
                 value={parameter}
                 onChange={(event) => setParameter(event.target.value)}
               >
                 {parameters.map((name) => (
-                  <option key={name} value={name}>{name}</option>
+                  <option key={name} value={name}>
+                    {meaningOf(points, name)
+                      ? `${name} — ${meaningOf(points, name)}` : name}
+                  </option>
                 ))}
               </select>
             </Field>
@@ -342,45 +510,89 @@ export function ScanDetail() {
       </Card>
 
       <Card title={`스윕 ${points.length}개`} tight>
-        <div className="table-wrap">
+        {/* `점` 까지 붙여 두고 그 뒤로 민다 (`lib/pincols.ts`).  거기까지가
+            "이 스윕이 무엇인가" 이고, 그 뒤(회로·χ²·파라미터 열셋)가 맞춘
+            결과다 — 결과를 읽으려고 오른쪽으로 밀 때 왼쪽에 남아야 하는 것이
+            앞의 아홉 열이다. */}
+        <div className="table-wrap" ref={tableBox}>
           <table>
             <thead>
               <tr>
                 <th>#</th>
                 <th style={{ textAlign: 'left' }}>이름</th>
                 <th>용량 (mAh)</th>
+                {/* 셀끼리 견주려면 면적으로 나눈 값이라야 한다.  면적을 아직
+                    안 적었으면 **줄표** 다 — 0 으로 채우면 만방전과 구분되지
+                    않는다 (§0.4). */}
+                <th>용량 (mAh/cm²)</th>
                 <th>전위 (V)</th>
                 {/* **회로가 달라도 뜻이 같은 둘.**  파라미터 이름은 회로마다
                     달라서 (`R0`/`Rs`) 열이 될 수 없다 — 스캔 안에서 스윕마다
-                    다른 회로가 이겼을 수 있고, 그때도 이 두 열은 이어진다. */}
+                    다른 회로가 이겼을 수 있고, 그때도 이 두 열은 이어진다.
+                    **안 나눈 것과 나눈 것을 나란히** 둔다: ZView 결과와 맞춰
+                    보는 것은 Ω 이고, 논문에 적는 것은 Ω·cm² 다. */}
                 <th>R₀ (Ω)</th>
-                <th>ΔR₀</th>
+                <th>R₀ (Ω·cm²)</th>
+                <th>ΔR₀ (Ω)</th>
                 <th>총저항 (Ω)</th>
-                <th>Δ총저항</th>
+                <th>총저항 (Ω·cm²)</th>
+                <th>Δ총저항 (Ω)</th>
                 <th>점</th>
                 <th style={{ textAlign: 'left' }}>회로</th>
                 <th>χ²</th>
-                {parameters.map((name) => <th key={name}>{name}</th>)}
+                {/* 이름 위에 마우스를 올리면 뜻이 뜬다.  `CPE2_Q` 가 열셋
+                    나란히 있는 줄에서 이름만으로 고를 수 있는 사람은 외우고
+                    있는 사람뿐이다. */}
+                {parameters.map((name) => (
+                  <th key={name} title={meaningOf(points, name) || name}>
+                    <ParamName name={name} />
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
               {points.map((point, index) => (
+                // **줄을 누르면 그 스윕이 켜지고 꺼진다** — 위 범례 조각과 같은
+                // 것을 누른다.  두 곳이 따로 놀면 표에서 흐린 줄이 그림에는
+                // 그려져 있고, 어느 쪽이 맞는지 화면이 말해 주지 않는다.
+                // 이름은 링크라 눌러도 여기까지 안 온다 (스윕 상세로 간다).
                 <tr key={point.spectrum_id}
-                    className={hidden.includes(point.sweep_index) ? 'dim' : undefined}>
+                    className={`clickable${
+                      hidden.includes(point.sweep_index) ? ' dim' : ''}`}
+                    title={hidden.includes(point.sweep_index)
+                      ? '눌러서 그림에 켜기' : '눌러서 그림에서 끄기'}
+                    onClick={() => toggleSweep(point.sweep_index)}>
                   <td>{point.sweep_index}</td>
                   <td className="text">
-                    <Link to={`/eis/${point.spectrum_id}`}>{point.name}</Link>
+                    <Link to={`/eis/${point.spectrum_id}`}
+                          onClick={(event) => event.stopPropagation()}>
+                      {point.name}
+                    </Link>
                   </td>
                   <td>{point.capacity_mah === null ? '—' : num(point.capacity_mah, 4)}</td>
+                  <td className={point.capacity_mah === null || !scanArea ? 'dim' : ''}>
+                    {point.capacity_mah === null || !scanArea
+                      ? '—' : num(point.capacity_mah / scanArea, 4)}
+                  </td>
                   <td>{point.potential_v === null ? '—' : num(point.potential_v, 4)}</td>
                   <td className={point.series_resistance_ohm === null ? 'dim' : ''}>
                     {point.series_resistance_ohm === null
                       ? '—' : num(point.series_resistance_ohm, 4)}
                   </td>
+                  <td className={point.series_resistance_ohm === null || !scanArea
+                    ? 'dim' : ''}>
+                    {point.series_resistance_ohm === null || !scanArea
+                      ? '—' : num(point.series_resistance_ohm * scanArea, 4)}
+                  </td>
                   <td className="dim">{delta(points, index, 'series_resistance_ohm')}</td>
                   <td className={point.total_resistance_ohm === null ? 'dim' : ''}>
                     {point.total_resistance_ohm === null
                       ? '—' : num(point.total_resistance_ohm, 4)}
+                  </td>
+                  <td className={point.total_resistance_ohm === null || !scanArea
+                    ? 'dim' : ''}>
+                    {point.total_resistance_ohm === null || !scanArea
+                      ? '—' : num(point.total_resistance_ohm * scanArea, 4)}
                   </td>
                   <td className="dim">{delta(points, index, 'total_resistance_ohm')}</td>
                   <td className="dim">{point.n_points || '—'}</td>

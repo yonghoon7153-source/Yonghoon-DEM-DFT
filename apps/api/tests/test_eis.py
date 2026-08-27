@@ -932,6 +932,39 @@ def test_fitting_a_scan_that_does_not_exist_is_a_404(client):
     assert client.post("/api/eis/scans/" + "f" * 64 + "/fit").status_code == 404
 
 
+def test_the_dashboard_opens_a_scan_at_sweep_one(client):
+    """스캔 줄의 이름은 **1번 스윕**으로 간다.
+
+    줄을 대표하는 값들("가장 최근에 잰 것")은 마지막 스윕에서 나오는데, 열었을
+    때 나와야 하는 것은 그 반대다: 11번은 SOC 축의 먼 끝이고, 거기서는 형제
+    열이 안 보인다.  1번이 조건을 적어 넣는 자리이고 (적으면 나머지로 퍼진다),
+    겹쳐 보는 화면은 `SOC 스캔` 칸이 맡는다.
+    """
+    client.post("/api/eis/spectra/upload",
+                params={"kind": "liquid", "cell_config": "half"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=4),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    first = min(rows, key=lambda row: row["sweep_index"])
+
+    board = client.get("/api/eis/dashboard").json()
+    line = next(row for row in board["rows"] if row["scans"])
+    assert line["spectrum_id"] == first["id"]
+    assert line["scan_sha256"] == first["sha256"]
+
+
+def test_a_lone_spectrum_row_still_points_at_itself(client):
+    """스윕이 하나면 대표를 고를 것이 없다 — 그 하나다."""
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("one.mpr", scan_mpr(sweeps=1),
+                                "application/octet-stream")})
+    row = client.get("/api/eis/spectra").json()[0]
+    board = client.get("/api/eis/dashboard").json()
+    line = board["rows"][0]
+    assert line["spectrum_id"] == row["id"]
+    assert line["scan_sha256"] == ""
+
+
 def test_one_sweeps_geometry_becomes_the_whole_scans(client):
     """스윕 하나에 적은 지름이 열한 줄 전부에 간다.
 
