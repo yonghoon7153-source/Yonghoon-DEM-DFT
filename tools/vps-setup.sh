@@ -27,7 +27,9 @@ set -euo pipefail
 # --- 인자 -------------------------------------------------------------------
 
 CHECK_ONLY=0
+VERIFY_ONLY=0
 if [ "${1:-}" = "--check" ]; then CHECK_ONLY=1; shift; fi
+if [ "${1:-}" = "--verify" ]; then VERIFY_ONLY=1; shift; fi
 
 DOMAIN="${1:-}"
 EMAIL="${2:-}"
@@ -37,6 +39,7 @@ TUNNEL_USER="${TUNNEL_USER:-bml-tunnel}"
 usage() {
   echo "사용: sudo bash vps-setup.sh <도메인> <이메일> [포트]" >&2
   echo "      sudo bash vps-setup.sh --check <도메인>        (열렸는지만 봅니다)" >&2
+  echo "      sudo bash vps-setup.sh --verify <도메인>       (세운 것이 진짜 섰나)" >&2
   echo "  예:  sudo bash vps-setup.sh bml.bmlwork.kr you@hanyang.ac.kr" >&2
   exit 2
 }
@@ -58,7 +61,7 @@ valid_port() {
 [ -n "$DOMAIN" ] || usage
 valid_domain "$DOMAIN" || { echo "도메인 모양이 아닙니다: $DOMAIN" >&2; exit 2; }
 valid_port "$PORT" || { echo "포트가 1–65535 가 아닙니다: $PORT" >&2; exit 2; }
-if [ "$CHECK_ONLY" = "0" ]; then
+if [ "$CHECK_ONLY" = "0" ] && [ "$VERIFY_ONLY" = "0" ]; then
   [ -n "$EMAIL" ] || usage
   case "$EMAIL" in *@*.*) ;; *) echo "메일 주소 모양이 아닙니다: $EMAIL" >&2; exit 2 ;; esac
 fi
@@ -110,6 +113,135 @@ HINT
 if [ "$CHECK_ONLY" = "1" ]; then
   check_ports || true
   exit 0
+fi
+
+# --- 세운 것이 진짜 섰는가 (ADR 0034 '올리기 전에') ---------------------------
+
+#: **설치가 끝났다는 말과 제대로 섰다는 말은 다르다.**  이 저장소에는
+#: nginx·sshd·certbot 이 없어 설치본을 한 줄도 못 돌려 봤다 (Codex 리뷰가 그
+#: 경계를 짚었다).  그래서 실제 확인은 여기서, 그 기계 위에서 한다 — 그리고
+#: 사람이 열 줄을 손으로 치면서 한 줄씩 눈으로 재는 대신 기계가 센다.
+#:
+#: 사람이 손으로 치면 **빠뜨린 줄과 통과한 줄이 화면에서 같아 보인다.**
+#: 여기서는 못 잰 것을 `?` 로 낸다 — 통과가 아니다 (§0.4).
+VERIFY_FAIL=0
+say_pass() { printf '  \033[32m✓\033[0m %s\n' "$1"; }
+say_fail() { printf '  \033[31m✕\033[0m %s\n' "$1"; VERIFY_FAIL=1; }
+say_unknown() { printf '  \033[33m?\033[0m %s\n' "$1"; VERIFY_FAIL=1; }
+
+verify_all() {
+  echo "▸ 세운 것을 확인합니다 ($DOMAIN, 포트 $PORT)"
+  echo
+
+  # 1. nginx 설정이 유효한가.  `reload` 는 유효할 때만 먹으므로, 지금 도는
+  #    설정과 디스크의 설정이 갈라져 있을 수 있다 -- 그러면 재부팅에서 진다.
+  if command -v nginx >/dev/null 2>&1; then
+    if nginx -t >/dev/null 2>&1; then say_pass "nginx 설정이 유효합니다"
+    else say_fail "nginx -t 가 실패합니다 (재부팅하면 대문이 안 섭니다)"; fi
+  else say_unknown "nginx 가 없습니다"; fi
+
+  # 2. 재부팅 뒤에도 서는가.  지금 떠 있는 것과 다음에도 뜨는 것은 다르다.
+  if systemctl is-enabled nginx >/dev/null 2>&1; then say_pass "nginx 가 부팅에 등록돼 있습니다"
+  else say_fail "nginx 가 부팅에 등록돼 있지 않습니다"; fi
+  if systemctl is-active nginx >/dev/null 2>&1; then say_pass "nginx 가 떠 있습니다"
+  else say_fail "nginx 가 안 떠 있습니다"; fi
+
+  # 3. **실효** GatewayPorts (Codex #4).  파일 한 곳을 보는 것으로는 모른다 --
+  #    include 와 Match 가 값을 뒤집는다.
+  if command -v sshd >/dev/null 2>&1; then
+    local effective
+    effective="$(sshd -T -C "user=$TUNNEL_USER,host=lab.example,addr=203.0.113.10" \
+                 2>/dev/null | grep -i '^gatewayports' || true)"
+    case "$effective" in
+      *no) say_pass "sshd 실효값이 gatewayports no 입니다" ;;
+      '')  say_unknown "sshd -T 를 못 읽었습니다 (값을 모릅니다 — 통과가 아닙니다)" ;;
+      *)   say_fail "sshd 실효값이 '$effective' 입니다 — 전달 포트가 밖으로 열립니다" ;;
+    esac
+  else say_unknown "sshd 가 없습니다"; fi
+
+  # 4. 전달 포트가 **loopback 하나**인가.  0.0.0.0·[::] 은 nginx·TLS 를
+  #    우회하는 구멍이고, `[::1]` 만 있는 것도 실패다 -- nginx 는 127.0.0.1 을
+  #    보므로 그때 공개 주소는 502 다 (Codex #3 의 그 자리).
+  local listeners v4 bad
+  listeners="$(ss -H -ltn "sport = :$PORT" 2>/dev/null | awk '{print $4}' || true)"
+  if [ -z "$listeners" ]; then
+    echo "  · $PORT 을 아무도 안 듣고 있습니다 — 랩 PC 에서 bml share 를 켜고 다시 보세요"
+  else
+    v4="$(printf '%s\n' "$listeners" | grep -c '^127\.0\.0\.1:' || true)"
+    bad="$(printf '%s\n' "$listeners" | grep -cv '^127\.0\.0\.1:' || true)"
+    if [ "$v4" = "1" ] && [ "$bad" = "0" ]; then
+      say_pass "$PORT 은 127.0.0.1 하나만 듣습니다"
+    else
+      say_fail "$PORT 리스너가 이상합니다: $(printf '%s' "$listeners" | tr '\n' ' ')"
+    fi
+  fi
+
+  # 5. 인증서.  없으면 https 가 아예 없고, 있으면 갱신이 도는지가 다음 질문이다.
+  if [ -s "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]; then
+    say_pass "인증서가 있습니다 (/etc/letsencrypt/live/$DOMAIN)"
+    if systemctl list-timers --all 2>/dev/null | grep -q certbot \
+       || systemctl is-enabled certbot.timer >/dev/null 2>&1; then
+      say_pass "갱신 타이머가 있습니다 (그래도 --dry-run 은 한 번 돌려 보세요)"
+    else
+      say_unknown "갱신 타이머를 못 찾았습니다 — sudo certbot renew --dry-run 으로 확인하세요"
+    fi
+  else say_fail "인증서가 없습니다"; fi
+
+  # 6. 우리 지시어가 **실효 설정**에 있는가 (Codex #1 의 뒤끝).  certbot 이
+  #    443 블록을 새로 쓰므로, 파일 하나만 봐서는 HTTPS 에도 실렸는지 모른다.
+  #    `nginx -T` 는 include 를 다 편 최종 설정을 낸다.
+  if command -v nginx >/dev/null 2>&1 && nginx -T >/dev/null 2>&1; then
+    local dumped
+    dumped="$(nginx -T 2>/dev/null)"
+    printf '%s' "$dumped" | grep -q 'client_max_body_size 520m' \
+      && say_pass "업로드 상한 520m 이 실효 설정에 있습니다" \
+      || say_fail "업로드 상한이 실효 설정에 없습니다 (HTTPS 에서만 413 이 납니다)"
+    printf '%s' "$dumped" | grep -q 'proxy_request_buffering off' \
+      && say_pass "요청을 쌓아 두지 않습니다" \
+      || say_fail "proxy_request_buffering 이 기본(on)입니다"
+    printf '%s' "$dumped" | grep -q 'proxy_read_timeout 75s' \
+      && say_pass "/api/events 가 75s 로 잡혀 있습니다" \
+      || say_fail "SSE timeout 이 안 잡혀 있습니다"
+    printf '%s' "$dumped" | grep -qE 'listen[[:space:]]+443' \
+      && say_pass "443 이 서 있습니다" \
+      || say_fail "443 블록이 없습니다 (certbot 이 안 붙였습니다)"
+  else say_unknown "nginx -T 를 못 읽었습니다"; fi
+
+  # 7. 전용 계정에 셸이 없는가 (Codex #7).  키가 새도 forwarding 하나로 끝나야
+  #    한다 -- 그것이 이 계정을 따로 만든 이유의 전부다.
+  if id "$TUNNEL_USER" >/dev/null 2>&1; then
+    case "$(getent passwd "$TUNNEL_USER" | awk -F: '{print $7}')" in
+      */nologin|*/false) say_pass "$TUNNEL_USER 에 셸이 없습니다" ;;
+      *) say_fail "$TUNNEL_USER 가 셸을 갖고 있습니다 — 키가 새면 셸까지 샙니다" ;;
+    esac
+    if grep -q 'permitlisten' "/home/$TUNNEL_USER/.ssh/authorized_keys" 2>/dev/null; then
+      say_pass "키에 permitlisten 제한이 붙어 있습니다"
+    elif [ -s "/home/$TUNNEL_USER/.ssh/authorized_keys" ]; then
+      say_fail "키에 제한이 없습니다 (restrict,permitlisten=\"127.0.0.1:$PORT\")"
+    else
+      echo "  · 아직 키가 안 올라왔습니다 — 랩 PC 의 공개키를 넣고 다시 보세요"
+    fi
+  else say_fail "$TUNNEL_USER 계정이 없습니다"; fi
+
+  echo
+  if [ "$VERIFY_FAIL" = "0" ]; then
+    echo "✓ 여기까지는 통과입니다."
+    echo
+    echo "  **여기서 못 재는 것이 셋 남습니다** — 이 기계 안에서는 알 수 없습니다:"
+    echo "    · 밖에서  nc -vz <이 기계> $PORT  → 실패해야 합니다 (두 번째 층)"
+    echo "    · 랩 PC 를 재우거나 랜을 뽑았다 꽂기 → 90초 안에 저절로 돌아오나"
+    echo "    · 이 기계 재부팅 뒤 대문이 저절로 서나"
+    echo "  그 셋은 docs/guides/vps-first-run.md 의 6~9 번입니다."
+  else
+    echo "✕ 위의 ✕ 와 ? 를 먼저 보세요.  ? 는 '못 쟀다' 이지 통과가 아닙니다."
+  fi
+  return "$VERIFY_FAIL"
+}
+
+if [ "$VERIFY_ONLY" = "1" ]; then
+  [ "$(id -u)" = "0" ] || { echo "sudo 로 돌려 주세요 (sshd -T·certbot 을 읽습니다)." >&2; exit 2; }
+  verify_all
+  exit $?
 fi
 
 [ "$(id -u)" = "0" ] || { echo "sudo 로 돌려 주세요." >&2; exit 2; }
