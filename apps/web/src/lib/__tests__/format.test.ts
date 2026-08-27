@@ -159,6 +159,16 @@ describe('massFromName 의 g 표기 (가드)', () => {
   it('둘을 적었으면 단위와 상관없이 뒤의 것이 이긴다', () => {
     expect(massFromName('sep_5mg_cathode_0.0175g')).toBe(17.5)
     expect(massFromName('sep_0.005g_cathode_17.5mg')).toBe(17.5)
+
+    // 밑줄이 소수점인 표기 — 이 랩의 이름은 밑줄로 칸을 가르므로 마침표를
+    // 못 쓰는 자리에서 이렇게 적는 사람이 있다 (실측 2026-08-27).
+    expect(massFromName('260810_No2_0_0270g_13pi_80wt%_T30_0.2C_100cyc')).toBe(27)
+    expect(massFromName('cell_0_0175g')).toBe(17.5)
+    // 정수부가 0 일 때만 읽는다.  밑줄은 칸 구분자라 `4_0270g` 는 "4번 칸" +
+    // "0270g" 일 수 있고, 그것을 4.027 g 로 읽으면 4027 mg 이 힌트로 뜬다.
+    expect(massFromName('cell_4_0270g')).toBeNull()
+    // 범위 밖은 그대로 거절 (`G_RANGE`) — 0.09 mg 는 전극이 아니다.
+    expect(massFromName('cell_0_00009g')).toBeNull()
   })
 
   it('적힌 그대로를 함께 낸다 — 환산만 보이면 다른 값으로 읽힌다', async () => {
