@@ -2083,7 +2083,7 @@ def selftest_trace():
     return ok
 
 
-def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
+def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY, kgrid=None):
     """① smearing 사다리 입력 — **고정 기하**로 끝점·안장을 각 degauss 에서 SCF.
 
     ⛔ 이 검사가 **못 하는 것** (먼저 읽을 것)
@@ -2109,7 +2109,14 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
         return 1, (f"⛔ 최고에너지가 **끝점**(image {isad+1})이다 — 경로가 단조라 "
                    f"안장이 없다. 이 상태로 장벽 민감도를 재는 것은 뜻이 없다.")
     picks = [("ep_initial", frames[0]), ("saddle", frames[isad]), ("ep_final", frames[-1])]
-    out = os.path.join(d, "smear_ladder")
+    if kgrid:
+        # 리뷰 J1 — "smearing 을 조이면 k 를 늘려야 한다" 는 금속의 상식. 같은 기하에서
+        #   dense-k 로 한 귀퉁이를 찍어 **사다리 결론이 k 에 딸려 있지 않은지** 본다.
+        hdr = dict(hdr)
+        hdr["kpts"] = ("automatic", kgrid)
+    sub = "smear_ladder" + (f"_k{kgrid.split()[0]}{kgrid.split()[1]}{kgrid.split()[2]}"
+                            if kgrid else "")
+    out = os.path.join(d, sub)
     made = []
     for g in ladder:
         gt = f"{g:g}".replace(".", "p")
@@ -2132,13 +2139,16 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
             "⛔_한계": ["기하는 0.02 에서 최적화된 것 — 이완을 다시 하지 않는다",
                       "k-point 고정 — smearing 과 k 는 짝이라 '수렴' 은 못 말한다",
                       "안장은 NEB 최고에너지 이미지 (CI 안 켰으면 격자에 걸린 값)"]}
+    meta["kpts"] = list(hdr["kpts"])
+    meta["kgrid_override"] = kgrid
     json.dump(meta, open(os.path.join(out, "meta.json"), "w", encoding="utf-8"),
               ensure_ascii=False, indent=2)
-    L = [f"■ smearing 사다리 입력 — {tag}",
+    L = [f"■ smearing 사다리 입력 — {tag}" + (f"  [dense-k {kgrid}]" if kgrid else ""),
          f"   프로토콜 출처: {hdr['src']} (degauss {hdr['degauss']:g} Ry · "
          f"{hdr['smearing']} · q {hdr['tot_charge']:.1f} · k {hdr['kpts'][1]})",
          f"   이미지 {len(frames)}개 · **안장 = image {isad+1}** · "
          f"런의 장벽 {max(en)-en[0]:.4f} eV",
+         f"   k-point: **{hdr['kpts'][1]}**" + ("  ← 덮어씀" if kgrid else "  (런과 동일)"),
          f"   만든 입력 {len(made)}개 → {out}/g<degauss>/{{ep_initial,saddle,ep_final}}/scf.in",
          "",
          "   돌리는 법 (한 폴더씩, 같은 셸에서):",
@@ -2152,14 +2162,14 @@ def smear_ladder(work, tag, ladder=SMEAR_LADDER_RY):
     return 0, "\n".join(L)
 
 
-def collect_ladder(work, tag):
+def collect_ladder(work, tag, sub="smear_ladder"):
     """① 사다리 회수 — **fail-closed.** 설정한 전 점이 갖춰지지 않으면 판정하지 않는다.
 
     ⛔ 2026-08-27 (리뷰 J · P0-1) — 옛 판은 일부 degauss 만 있어도 판정하고 **rc=0 으로
       성공 종료**했다. 그러면 "3점 사다리" 라고 적힌 결과가 실제로는 2점일 수 있고,
       화면만 보고는 그걸 모른다. 빠진 게 하나라도 있으면 **거부한다.**
     """
-    d = os.path.join(work, tag, "smear_ladder")
+    d = os.path.join(work, tag, sub)
     mp = os.path.join(d, "meta.json")
     if not os.path.isfile(mp):
         return 1, f"⛔ 없음: {mp} — 먼저 --smear_ladder 로 입력을 만들 것"
@@ -2217,7 +2227,22 @@ def collect_ladder(work, tag):
         L.append(f"     {r['degauss_Ry']:<8g} {r['barrier_fwd_eV']:<14.4f} "
                  f"{r['barrier_rev_eV']:<14.4f} {r['endpoint_split_meV']:<16.2f} "
                  f"{(max(fv) if fv else float('nan')):.3f}")
-    out = {"tag": tag, "rows": rows, "fixed_geometry": True}
+    out = {"tag": tag, "rows": rows, "fixed_geometry": True, "sub": sub}
+    # ── sentinel (리뷰 J1) — 런 자신의 degauss 에서 **NEB 가 준 장벽을 재현하는가** ──
+    #   이게 안 맞으면 사다리를 읽을 이유가 없다. 좌표·PP·k 중 뭔가가 런과 다르다는 뜻이다.
+    g0, b0 = meta.get("degauss_of_run_Ry"), meta.get("barrier_of_run_eV")
+    sent = [r for r in rows if g0 is not None and abs(r["degauss_Ry"] - g0) < 1e-12]
+    if sent and b0 is not None:
+        dv = (sent[0]["barrier_fwd_eV"] - b0) * 1000
+        out["sentinel_delta_meV"] = round(dv, 3)
+        L += ["", f"   ★ sentinel (degauss {g0:g} = 런과 동일): SCF {sent[0]['barrier_fwd_eV']:.4f} "
+                  f"vs NEB {b0:.4f} eV → **Δ {dv:+.1f} meV**"]
+        if abs(dv) <= 5:
+            L.append("      ⇒ ✅ 고정좌표 에너지를 재현한다 — 사다리를 읽어도 된다.")
+        else:
+            L.append(f"      ⇒ ⛔ **재현이 안 된다.** 좌표·PP·k·전하 중 무언가가 런과 다르다. "
+                     f"사다리 해석 전에 여기부터 맞출 것 (리뷰 J1).")
+            out["sentinel_ok"] = False
     verdict = []
     for key, nm in (("barrier_fwd_eV", "정방향"), ("barrier_rev_eV", "역방향")):
         b = [r[key] for r in rows]
@@ -2944,6 +2969,11 @@ def main():
                     help="① degauss 사다리 SCF 입력 (kb 2026-08-11 선행조건 · 회신 I N5). "
                          "고정 기하 — 이완을 다시 하지 않는다")
     ap.add_argument("--collect_ladder", action="store_true", help="① 사다리 결과 회수")
+    ap.add_argument("--kgrid", default=None,
+                    help="① dense-k corner check 용 k-grid 덮어쓰기 (예: '4 4 4 0 0 0'). "
+                         "리뷰 J1 — smearing 을 조이면 k 를 늘려야 한다")
+    ap.add_argument("--sub", default="smear_ladder",
+                    help="① 회수할 하위폴더 (dense-k 는 smear_ladder_k444 처럼 따로 생긴다)")
     ap.add_argument("--mode_scan", action="store_true",
                     help="② pristine ±δ 모드 스캔 입력 (회신 I P0-2 의 싼 판). "
                          "공공을 메운 셀을 관측한 이완 모드로 밀어 E(λ) 를 본다")
@@ -2966,9 +2996,10 @@ def main():
         print(m)
         return r
     for _flag, _fn, _arg in (
-            ("smear_ladder", smear_ladder, tuple(float(x) for x in a.ladder.split(","))),
+            ("smear_ladder", (lambda w, t, L: smear_ladder(w, t, L, a.kgrid)),
+             tuple(float(x) for x in a.ladder.split(","))),
             ("mode_scan", mode_scan, tuple(float(x) for x in a.lambdas.split(","))),
-            ("collect_ladder", collect_ladder, None),
+            ("collect_ladder", (lambda w, t: collect_ladder(w, t, a.sub)), None),
             ("collect_scan", collect_scan, None)):
         if getattr(a, _flag):
             r, m = (_fn(a.work, a.tag, _arg) if _arg is not None else _fn(a.work, a.tag))
