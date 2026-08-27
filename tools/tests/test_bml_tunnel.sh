@@ -1173,6 +1173,90 @@ else
 fi
 rm -rf "$GEN"
 
+echo "IP 를 여러 개 줬을 때 (bml share 가 그렇게 적어 준다)"
+
+# **실측 2026-08-27 에 여기서 터졌다.**  `bml share` 가 화면에
+#   bmlonly https://xxxx.lhr.life 3.208.46.244 3.234.18.192 54.172.225.3
+# 를 적어 주는데, `bmlonly` 가 그 셋을 `--resolve` 한 항목에 이어 붙였다.
+# curl 은 항목을 못 읽고 exit 49 (`Couldn't parse CURLOPT_RESOLVE entry`) 로
+# 끝나면서 `-w` 로 000 을 찍고, 화면에는 "이 기계가 그 주소로 나가지
+# 못했습니다" 가 떴다 -- 나가지 못한 것은 이 기계가 아니라 우리가 준 인자였다.
+# **우리가 권한 명령이 우리 때문에 실패했다.**
+#
+# 그래서 여기서는 진짜 서버가 아니라 **curl 이 무엇을 받았는지**를 본다.
+# 이 결함은 네트워크가 아니라 인자에서 났으므로, 인자를 보는 것이 곧 결함을
+# 보는 것이다.  (bash 는 함수를 외부 명령보다 먼저 찾으므로 stub 이 먹는다.)
+PDIR="$(mktemp -d)"
+CURL_SEEN="$PDIR/seen"
+# 이름 충돌 조심: `tunnel_probe_by_ip` 의 `local url ips host port one out best`
+# 가 stub 에서도 보인다 (bash 는 동적 스코프다).  그래서 stub 은 그 이름을
+# 하나도 안 쓰고, 고정값은 WANT_ 로 시작한다.
+WANT_OK=""
+WANT_503=""
+curl() {
+  local arg prev="" got=""
+  for arg in "$@"; do
+    [ "$prev" = "--resolve" ] && got="${arg##*:}"
+    prev="$arg"
+  done
+  printf '%s\n' "$got" >> "$CURL_SEEN"
+  case "$got" in
+    "$WANT_OK")  printf '200' ;;
+    "$WANT_503") printf '503' ;;
+    *)           printf '000' ;;
+  esac
+}
+
+probe_seen() {   # $1 = IP 목록 -> 넘긴 --resolve 주소를 한 줄에 하나씩
+  : > "$CURL_SEEN"
+  tunnel_probe_by_ip "https://probe.invalid" "$1" >/dev/null
+  cat "$CURL_SEEN"
+}
+
+# **한 항목에 주소 하나.**  이 줄이 회귀 시험이다 -- 고치기 전에는 한 줄에
+# 셋이 공백으로 이어져 있었고, curl 은 그것을 아예 못 읽었다.
+check "IP 셋이면 curl 을 세 번 부른다" \
+  "$(probe_seen "192.0.2.1 192.0.2.2 192.0.2.3" | wc -l | tr -d ' ')" "3"
+check "한 항목에 주소가 하나씩" \
+  "$(probe_seen "192.0.2.1 192.0.2.2 192.0.2.3" | grep -c ' ')" "0"
+check "줄바꿈으로 갈린 목록도 갈라 넣는다" \
+  "$(probe_seen "$(printf '192.0.2.1\n192.0.2.2\n')" | wc -l | tr -d ' ')" "2"
+check "IP 하나면 한 번" \
+  "$(probe_seen "192.0.2.9" | wc -l | tr -d ' ')" "1"
+
+# 200 을 만나면 거기서 멈춘다 -- 나머지는 물어볼 이유가 없다.
+WANT_OK="192.0.2.2"
+check "200 이면 거기서 멈춘다" \
+  "$(probe_seen "192.0.2.1 192.0.2.2 192.0.2.3" | wc -l | tr -d ' ')" "2"
+check "그리고 200 을 돌려준다" \
+  "$( : > "$CURL_SEEN"; tunnel_probe_by_ip "https://probe.invalid" "192.0.2.1 192.0.2.2" )" "200"
+WANT_OK=""
+
+# **000 보다 아무 숫자나 낫다.**  503 은 "엣지까지는 갔다" 는 증거라 대처가
+# 완전히 다르다 (터널을 다시 열어라 / 이 망이 막는다).  하나가 000 이라고
+# 그것으로 덮어 버리면 그 구분이 사라진다.
+WANT_503="192.0.2.2"
+check "503 을 000 으로 덮지 않는다" \
+  "$( : > "$CURL_SEEN"; tunnel_probe_by_ip "https://probe.invalid" "192.0.2.1 192.0.2.2 192.0.2.3" )" "503"
+WANT_503=""
+
+check "다 죽었으면 000" \
+  "$( : > "$CURL_SEEN"; tunnel_probe_by_ip "https://probe.invalid" "192.0.2.1 192.0.2.3" )" "000"
+check "빈 목록이면 curl 을 안 부른다" \
+  "$(probe_seen "" | wc -l | tr -d ' ')" "0"
+check "빈 목록도 000" \
+  "$( : > "$CURL_SEEN"; tunnel_probe_by_ip "https://probe.invalid" "" )" "000"
+
+unset -f curl
+rm -rf "$PDIR"
+
+# `bml share` 가 적어 주는 줄과 `bmlonly` 가 받는 것이 **같은 모양**이어야
+# 한다.  한쪽이 목록을 주는데 다른 쪽이 하나만 받으면 위의 일이 또 난다.
+check "안내가 IP 를 목록으로 적어 준다" \
+  "$(grep -c 'bmlonly \${url} \${ip}' "$HERE/../bml")" "1"
+check "여럿인 것이 정상이라고 적어 준다" \
+  "$(grep -c 'IP 가 여럿인 것은 정상입니다' "$HERE/../bml")" "1"
+
 echo "공개 주소가 정말 우리 서버인가 (Codex #8)"
 
 # **문자열이 아니라 진짜 HTTP 서버 둘을 띄운다.**  이 결함의 요점이 "200 을

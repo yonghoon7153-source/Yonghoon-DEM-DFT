@@ -2640,17 +2640,38 @@ EOF
 #: 망에서도 진짜 답이 나온다.  이것이 있기 전에는 "이름이 잡히는 것과 터널이
 #: 살아 있는 것은 다릅니다 -- 휴대폰으로 열어 봐야 압니다" 까지가 끝이었다.
 #: 사람에게 다른 기계를 꺼내라고 하기 전에, 여기서 알 수 있는 것은 여기서 안다.
+#: 두 번째 인자는 **IP 하나가 아니라 목록**이다 (공백·줄바꿈으로 갈린 것).
+#: 엣지가 회전 풀이라 부르는 쪽이 늘 여러 개를 들고 있다 -- `dns_public_ips`
+#: 도 셋을 주고, `bml share` 가 화면에 적어 주는 `bmlonly <주소> <IP> <IP> <IP>`
+#: 도 셋이다.
+#:
+#: **한 항목에 이어 붙이면 안 된다.**  `curl --resolve` 는 항목 하나에 주소
+#: 하나(또는 쉼표로 이은 것)만 받는다.  공백으로 이어 붙이면 curl 이 항목
+#: 자체를 못 읽고 exit 49 (`Couldn't parse CURLOPT_RESOLVE entry`) 로 끝나는데,
+#: 그때도 `-w` 는 `000` 을 찍는다.  그러면 화면에는 "이 기계가 그 주소로
+#: 나가지 못했습니다" 가 뜨고, 정작 못 나간 것은 이 기계가 아니라 **우리가 준
+#: 인자**다.  실측 2026-08-27: `bml share` 가 IP 셋을 적어 주고 `bmlonly` 가
+#: 그것을 그대로 받아 000 으로 죽었다 — 우리가 권한 명령이 우리 때문에 실패했다.
+#: 그래서 하나씩 넣는다.
 tunnel_probe_by_ip() {
-  local url="$1" ip="$2" host port out
+  local url="$1" ips="$2" host port one out best="000"
   host="$(url_host "$url")" || { printf '000'; return; }
   case "$url" in https://*) port=443 ;; *) port=80 ;; esac
-  # **curl 은 실패해도 `-w` 를 이미 찍는다** (`000`).  그 뒤에 `|| printf '000'`
-  # 을 붙여 뒀더니 둘이 이어져 화면에 `HTTP 000000` 이 나왔다 (실측).  숫자만
-  # 남기고 뒤 세 자리를 쓴다 — 코드가 세 자리라는 것이 이 값의 전부다.
-  out="$(curl -sS -o /dev/null -m 12 --resolve "${host}:${port}:${ip}" \
-         -w '%{http_code}' "$url/api/health" 2>/dev/null)"
-  out="$(printf '%s' "$out" | tr -dc '0-9' | tail -c 3)"
-  printf '%s' "${out:-000}"
+  for one in $ips; do
+    # **curl 은 실패해도 `-w` 를 이미 찍는다** (`000`).  그 뒤에 `|| printf '000'`
+    # 을 붙여 뒀더니 둘이 이어져 화면에 `HTTP 000000` 이 나왔다 (실측).  숫자만
+    # 남기고 뒤 세 자리를 쓴다 — 코드가 세 자리라는 것이 이 값의 전부다.
+    out="$(curl -sS -o /dev/null -m 12 --resolve "${host}:${port}:${one}" \
+           -w '%{http_code}' "$url/api/health" 2>/dev/null)"
+    out="$(printf '%s' "$out" | tr -dc '0-9' | tail -c 3)"
+    out="${out:-000}"
+    [ "$out" = "200" ] && { printf '200'; return; }
+    # **000 보다 아무 숫자나 낫다.**  503 은 "엣지까지는 갔다" 는 증거라
+    # 대처가 완전히 다르다 (터널을 다시 열어라 / 이 망이 막는다).  하나가
+    # 000 이라고 그것으로 덮어 버리면 그 구분이 사라진다.
+    [ "$best" = "000" ] && best="$out"
+  done
+  printf '%s' "$best"
 }
 
 #: 이름을 건너뛰고 **IP 로 직접** 터널을 확인한다.  받은 코드를 찍는다.
@@ -2690,13 +2711,11 @@ tunnel_account_note() {
 }
 
 tunnel_verify_by_ip() {
-  local url="${1:-}" host ip code
+  local url="${1:-}" host
   host="$(url_host "$url" 2>/dev/null)" || { printf '000'; return; }
-  for ip in $(tunnel_ips "$host"); do
-    code="$(tunnel_probe_by_ip "$url" "$ip")"
-    case "$code" in 200) printf '200'; return ;; esac
-  done
-  printf '%s' "${code:-000}"
+  # 돌려 가며 시도하는 것은 `tunnel_probe_by_ip` 가 한다 -- 여기서 한 번 더
+  # 돌면 같은 규칙이 두 군데가 되고, 한쪽만 고치는 날이 온다.
+  tunnel_probe_by_ip "$url" "$(tunnel_ips "$host")"
 }
 
 tunnel_block_layer() {
