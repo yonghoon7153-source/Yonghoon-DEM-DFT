@@ -65,7 +65,7 @@ import tempfile
 import unicodedata
 import uuid
 from dataclasses import dataclass
-from typing import ClassVar
+from typing import ClassVar, NamedTuple
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -284,6 +284,25 @@ PROVIDER_CONTRACT: tuple[str, ...] = (
     "store_uri",        # store_uri() -> str — 재시작을 견디는 안정 식별자
     "versions",         # versions(key) -> [version_id] (최신순)
 )
+
+
+class VerifiedBytes(NamedTuple):
+    """검증이 **읽은 바로 그것** — key·version·digest·bytes 를 함께 든다.
+
+    ★ 42차 P1 — 41차까지 검증 phase 는 exact `(key, version)` 을 읽어 판정하고
+      **digest 문자열 하나만** 다음 phase 로 넘겼다. 다음 phase 는 그 digest 로
+      namespace 를 다시 뒤졌고, 그 사이 hostile locked head 하나가 있으면
+      **검증에 성공한 바이트가 있는데도** 재개가 막혔다 (orphan 입양 ·
+      content 수리 둘 다 그랬다).
+
+      즉시 bool 로 끝나는 predicate 는 digest 로 충분하다. 판정이 **phase 를
+      넘어가면** 그때는 locator 여야 한다 — 이것이 그 경계다.
+    """
+
+    key: str
+    version: str
+    digest: str
+    data: bytes
 
 
 #: store record 의 **닫힌** schema. 남는 key 도 모자란 key 도 거부한다 (37차 P0-1).
@@ -760,8 +779,9 @@ class CasBackend:
             orphan = self._orphan_lease(leg_id, objs, min_retention_days)
             if orphan is None:
                 return None             # 후보가 없다 — 새로 만드는 것이 맞다
-            self.pin(leg_id, [orphan])  # 잔여를 **입양**한다
-            extra = [orphan]
+            # ★ 42차 P1 — 검증이 읽은 **exact version/bytes** 로 입양한다.
+            self.adopt_orphan(leg_id, orphan)
+            extra = [orphan.digest]
         # ★ 37차 P0-1 — **후보가 하나라도 있으면 새 state 를 만들지 않는다.**
         #   36차판은 후보 손상·모호성·repair 실패를 전부 `None` 으로 접어
         #   "기존 lease 없음" 과 같이 취급했고, 그래서 두 번째 WORM lease 가
@@ -875,9 +895,13 @@ class CasBackend:
                    " — 만료 전 불일치 위에 새 lease 를 얹지 않는다")) from ex
 
     def _orphan_lease(self, leg_id: str, objs: list,
-                      min_retention_days: int) -> str | None:
+                      min_retention_days: int) -> "VerifiedBytes | None":
         """pin 되지 않은 채 남은 lease content. local backend 에는 없다."""
         return None
+
+    def adopt_orphan(self, leg_id: str, lease: "VerifiedBytes") -> None:
+        """local backend 는 version 이 없으므로 digest 로 pin 해도 같다."""
+        self.pin(leg_id, [lease.digest])
 
     #: lease record 의 **닫힌** 계약. `verify_retention()` 이 쓰는 것과 같은
     #: 집합이며, 여기서 먼저 본다 — 검증이 mutation 보다 앞서야 한다.
@@ -1272,7 +1296,7 @@ class CasBackend:
     def lock_objects(self, leg_id: str, digests, until: str) -> dict:
         return {}
 
-    def lock_content_object(self, dg: str, until: str):
+    def lock_content_object(self, dg: str, until: str, *, data: bytes = None):
         """CAS object 쪽도 잠근다 — local 에는 잠글 것이 없다."""
         return None
 
@@ -1431,7 +1455,7 @@ class ObjectLockBackend(CasBackend):
                 return v
         return None
 
-    def _locked_versions(self, key: str, modes=None) -> list:
+    def _locked_versions(self, key: str, modes=None, until: str | None = None) -> list:
         """그 key 에서 **지금 잠겨 있는** version 전부 (최신순).
 
         ★ 40차 P1 — `modes` 를 주면 그 mode 만 후보다. proof lookup 은 담보
@@ -1446,10 +1470,17 @@ class ObjectLockBackend(CasBackend):
         out = []
         for v in vs(key) or []:
             st = self.provider.describe_object(key, v)
-            if isinstance(st, dict) and st.get("mode") in want \
-                    and _is_utc_stamp(st.get("retain_until")) \
-                    and _stamp(st["retain_until"]) > _stamp(now):
-                out.append(v)
+            if not (isinstance(st, dict) and st.get("mode") in want
+                    and _is_utc_stamp(st.get("retain_until"))
+                    and _stamp(st["retain_until"]) > _stamp(now)):
+                continue
+            # ★ 42차 P1 — `until` 을 주면 **그 기한을 덮는** version 만 proof 다.
+            #   이것이 없으면 "이미 담보인가" 를 물을 수 없어서, 기한이 짧은
+            #   version 위에 새로 잠그거나 반대로 충분한 proof 를 못 알아본다.
+            if until is not None and (not _is_utc_stamp(until)
+                                      or _stamp(st["retain_until"]) < _stamp(until)):
+                continue
+            out.append(v)
         return out
 
     def _bytes_match(self, key: str, version: str, dg: str) -> bool:
@@ -1621,8 +1652,13 @@ class ObjectLockBackend(CasBackend):
     def query_object_lock(self) -> dict | None:
         return self.provider.describe() if self.provider is not None else None
 
-    def lock_content_object(self, dg: str, until: str):
+    def lock_content_object(self, dg: str, until: str, *, data: bytes = None):
         """CAS object 쪽도 잠근다. 잠근 **version ID** 를 돌려준다.
+
+        ★ 42차 P1 — `data` 를 주면 **그 바이트**로 새 version 을 만든다.
+          호출자가 이미 digest 검증을 지난 바이트를 들고 있는데 여기서
+          namespace 를 다시 뒤지면 phase 결속이 풀린다.
+
 
         ★ 38차 P0-1 — 그 version 이 journal 에 봉인할 content proof 다.
 
@@ -1636,10 +1672,11 @@ class ObjectLockBackend(CasBackend):
           **재유도**한다. 40차는 `_existing_version()` 이 고른 최신 same-bytes
           version 을 그대로 proof 로 돌려줬다.
         """
-        return self._lock_to_proof(self._provider_obj_key(dg), dg, until,
-                                   lambda: self.read_back(dg))
+        return self._lock_to_proof(
+            self._provider_obj_key(dg), dg, until,
+            (lambda: data) if data is not None else (lambda: self.read_back(dg)))
 
-    def _version_for(self, key: str, dg: str):
+    def _version_for(self, key: str, dg: str, until: str | None = None):
         """**담보 proof** — 잠겨 있고 mode 가 담보이고 바이트가 `dg` 인 version.
 
         ★ 40차 P1 — 39차는 이 하나로 proof lookup 과 **수리 source** 를 함께
@@ -1651,7 +1688,7 @@ class ObjectLockBackend(CasBackend):
           `after_lease_pin` 창에서는 올바른 v1 이 아직 안 잠겼으므로, 이 함수
           하나로는 복구 가능한 상태를 못 찾았다.
         """
-        for v in self._locked_versions(key):
+        for v in self._locked_versions(key, until=until):
             if self._bytes_match(key, v, dg):
                 return v
         return None
@@ -1716,17 +1753,33 @@ class ObjectLockBackend(CasBackend):
         수리가 고른 target ID 를 그대로 proof 로 믿지 않는다 — target selector
         와 proof selector 는 묻는 것이 다르므로, 잠근 **뒤** proof selector 를
         다시 돌려 typed proof 를 얻는다. 그것이 없으면 수리가 실패한 것이다.
+
+        ★ 42차 P1 — 순서가 틀려 있었다. 41차판은 무조건
+        `repair target → lock → proof 재탐색` 이라, **요청 기한을 이미 덮는
+        Compliance proof 가 있는데도** 그 위의 same-bytes unlocked head 를
+        새로 WORM-lock 했다. 수리가 필요 없는 상태에서 되돌릴 수 없는 version
+        을 늘리는 비멱등 경로였다.
+
+            proof lookup(요청 기한 포함) → 없을 때만 target → 없으면 검증된
+            bytes 로 새 version → lock → proof 재유도(같은 기한)
+
+        `make_bytes` 는 **이미 digest 검증을 지난 바이트**를 줘야 한다.
+        namespace 를 다시 뒤지는 callback 을 넘기면 phase 결속이 다시 풀린다
+        (42차 P1: hostile locked head 하나에 수리가 막혔다).
         """
+        proof = self._version_for(key, dg, until=until)
+        if proof is not None:
+            return proof                    # 이미 담보다 — 아무것도 만들지 않는다
         vid = self._repair_target(key, dg)
         if vid is None:
             vid = self.provider.put(key, make_bytes())
         self.provider.lock(key, vid, until)
-        proof = self._version_for(key, dg)
+        proof = self._version_for(key, dg, until=until)
         if proof is None:
             raise PreserveError(
                 "retention",
                 f"{key} 를 담보로 만들지 못했다 (version {str(vid)[:16]}) — "
-                "잠근 뒤에도 담보 proof 가 없다")
+                "잠근 뒤에도 요청 기한을 덮는 담보 proof 가 없다")
         return proof
 
     def repair_lease_locks(self, leg_id: str, lease_digest: str,
@@ -1749,12 +1802,21 @@ class ObjectLockBackend(CasBackend):
         key = self._provider_key(leg_id, lease_digest)
         data = self.read_pinned(leg_id, lease_digest,
                                 version=self._repair_source(key, lease_digest))
-        if not self.has(lease_digest):
-            # content 가 지워졌다 — pin 바이트로 되살린다 (digest 가 같으므로
-            # 같은 object 다). 되살린 뒤 잠가야 같은 창이 다시 열리지 않는다.
-            self.put_if_absent(data)
+        # ★ 42차 P1 — 41차판은 여기서 `has()` 에 물어 content 존재를 판단하고,
+        #   없을 때만 `put_if_absent(data)` 로 되살렸다. `has()` 는 protected
+        #   version 을 **읽을 수 있으면** True 이고 바이트 hash 를 안 본다.
+        #   그래서 올바른 content 가 지워지고 wrong-bytes locked head 가
+        #   올라온 창에서, 방금 pin 에서 **검증해 읽은 정본 bytes 를 들고
+        #   있으면서** 복원을 건너뛰고 그 head 를 다시 읽다가 죽었다.
+        #   (`has()` 만 strict 하게 고쳐도 뒤이어 부를 `put_if_absent()` 가
+        #    같은 protected read 로 collision 을 낸다 — 검사 하나의 문제가
+        #    아니라 검증된 bytes 를 버리는 것이 문제였다.)
+        #
+        #   존재 판정과 복원을 함께 없앤다: `lock_content_object()` 에 **그
+        #   bytes 를 직접 준다.** exact bytes version 이 없으면 그것으로 새
+        #   version 을 만들고, 있으면 그것을 잠근다.
         self.lock_objects(leg_id, [lease_digest], until)
-        self.lock_content_object(lease_digest, until)
+        self.lock_content_object(lease_digest, until, data=data)
 
     def recover_content_version(self, lease_digest: str):
         """lease CAS content 의 **담보 version** 을 재발견한다 (38차 P0-1).
@@ -1778,32 +1840,57 @@ class ObjectLockBackend(CasBackend):
                                  lease_digest)
 
     def _orphan_lease(self, leg_id: str, objs: list,
-                      min_retention_days: int) -> str | None:
+                      min_retention_days: int) -> "VerifiedBytes | None":
         """`objects/` 에만 남은 lease content 를 찾는다 (37차 P0-1).
 
         `after_lease_put` 창의 잔여다 — content 는 있고 pin 은 없다. 이것을
         못 보면 재개가 새 lease 를 만들고, 그 창을 지날 때마다 orphan 이
         하나씩 쌓인다 (lease 바이트가 초마다 달라져 CAS dedup 도 안 걸린다).
+
+        ★ 42차 P1 — **검증한 exact version 과 그 bytes 를 함께 돌려준다.**
+          41차판은 `(key, version)` 을 읽어 판정하고 digest 만 넘겼고,
+          호출자의 `pin()` 이 그 digest 로 namespace 를 다시 읽었다 —
+          `read_back()` 은 최신 담보 version 을 고르므로, 같은 key 에
+          wrong-bytes locked head 가 하나 있으면 온전한 orphan 이 있는데도
+          입양이 digest mismatch 로 죽었다.
         """
         pins = self.pinned(leg_id)
         graph = set(objs)
-        found: list[str] = []
+        found: list[VerifiedBytes] = []
+        seen = {v.digest for v in found}
         for key, ver in self.provider.list_versions("objects/"):
             dg = key.split("/", 1)[1]
-            if dg in pins or dg in graph or dg in found:
+            if dg in pins or dg in graph or dg in seen:
                 continue
             try:
-                rec = load_canonical(self.provider.get(key, ver))
+                raw = self.provider.get(key, ver)
+                rec = load_canonical(raw)
             except (KeyError, ValueError, UnicodeDecodeError):
                 continue
+            # 읽은 바이트가 정말 그 digest 인가 — locator 로 넘길 것이므로
+            # 여기서 못 박는다 (다음 phase 는 다시 안 읽는다).
+            if hashlib.sha256(raw).hexdigest() != dg:
+                continue
             if self._matches_lease(leg_id, objs, min_retention_days, rec):
-                found.append(dg)
+                found.append(VerifiedBytes(key, ver, dg, raw))
+                seen.add(dg)
         if len(found) > 1:
             raise PreserveError(
                 "retention",
                 f"{leg_id}: pin 없는 lease 잔여가 {len(found)}개다 "
-                f"({[d[:16] for d in found]}) — 어느 것이 정본인지 정할 수 없다")
+                f"({[v.digest[:16] for v in found]}) — 어느 것이 정본인지 정할 수 없다")
         return found[0] if found else None
+
+    def adopt_orphan(self, leg_id: str, lease: "VerifiedBytes") -> None:
+        """검증이 읽은 **바로 그 바이트**로 pin 을 만든다 (42차 P1).
+
+        `pin()` 은 digest 로 CAS namespace 를 다시 읽으므로 hostile head 하나에
+        막힌다. 여기서는 locator 가 든 bytes 를 그대로 쓴다 — 이미 digest
+        검증을 지났으므로 다시 탐색할 이유가 없다.
+        """
+        key = self._provider_key(leg_id, lease.digest)
+        if self._repair_source(key, lease.digest) is None:
+            self.provider.put(key, lease.data)
 
     def probe_enforcement(self) -> str:
         # ★ 36차 P0-1 — 계약 전체를 만족하지 못하는 provider 는 담보가 아니다.

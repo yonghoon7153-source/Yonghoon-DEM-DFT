@@ -4323,3 +4323,60 @@ selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpo
 | power-loss ordering fault model | **미착수** |
 | 두 writer + 원장 전환 동시성 (조건 10) | **부분** — 원장 재확인과 full pointer CAS 는 넣었고, 두 process 동시 게시 회귀는 아직 없다 |
 | roster generation ↔ cohort generation 의 단일 승인 전환 | **미착수** (설계 항목) |
+
+---
+
+## 50. 41차 리뷰 대응 — 검증한 것이 commit 까지 따라가지 않았다
+
+**대상 커밋**: `283251fd` · **판정**: NO-GO (#9 P0 · retention P1)
+**source_digest**: `b587816c40999e27` → `3e5aa23c80d90243`
+
+41차 리뷰는 40차 P0-1(store locator) 을 **종결**로 인정했다. 조건 1·2 는 다시
+열리지 않는다. 남은 병은 이름이 하나 더 옮겨간 것이었다:
+
+> 검사에 이름을 붙이는 것이 불변식을 만들지 않는다 → **검증이 끝난 값이
+> 다음 단계까지 따라가지 않으면 검증은 그 단계에 대해 아무것도 말하지 않는다.**
+
+세 자리에서 같은 형태였다.
+
+1. `assert_held_for()` 를 unbound 로 불러도 **그 안이 다시 virtual** 이었다.
+2. lock pathname 과 pointer bytes 는 검사 시점에만 결속되고 **commit 까지
+   따라가지 않았다**.
+3. retention 의 orphan·content 수리는 exact version 과 검증된 bytes 를 읽고
+   **digest 문자열만** 다음 phase 로 넘겼다 (다음 phase 가 namespace 를 다시
+   뒤졌다).
+
+### 발견별 대응
+
+| # | 41차 지적 | 이번에 한 것 | 시험 |
+|---|---|---|---|
+| P0-1 | unbound outer call 안에서 kernel proof 가 다시 virtual dispatch | 내부도 unbound: `_PublishLock._assert_plain_sentinel(self.fd)` · `_PublishLock._reassert_kernel_lock(self)` | `..._exact_lock_cannot_blank_its_own_inner_check` |
+| P0-2 | 마지막 sentinel 검사 뒤 pathname 교체 | `_commit_guard()` — pointer 를 옮기기 **직전에** lock 결속과 원장을 다시 본다. 실패하면 굳은 generation 은 비활성 잔여로만 남는다 (가시성 전환점은 pointer 하나다) | `..._replacing_the_lock_pathname_after_the_check_refuses_the_commit` |
+| P0-3 | parsed record 와 CAS fingerprint 가 다른 read | pointer 를 **각각 한 번만** 읽고 (`_pointer_bytes`) 그 bytes 에서 parse·기대 digest·존재 판정을 전부 유도한다. `_pointer_snapshot()` 은 쓰이지 않게 되어 삭제 | `..._base_pointer_record_and_its_fingerprint_come_from_one_read` |
+| P1-3b | bootstrap 에서 stale pending 의 base mismatch 가 거부되지 않는다 | `.PENDING` 에 **닫힌 schema**(`_PENDING_KEYS`) + `base_generation` 불일치를 **명시적 거부**로. "base 가 다르다" 와 "CURRENT 가 없다" 를 같은 분기로 안 다룬다 | `..._stale_bootstrap_pending_is_refused_not_inherited[wrong_base·missing_base_key]` |
+| P1-4 | orphan 검증이 exact locator 를 버린다 | `VerifiedBytes(key, version, digest, data)` 를 돌려주고 `adopt_orphan()` 이 **그 bytes** 로 pin 한다. locator 자체의 digest 일관성도 못 박는다 | `..._orphan_lease_is_adopted_by_its_exact_version` · `..._orphan_locator_never_carries_bytes_from_another_key` |
+| P1-5 | content 수리가 검증된 bytes 를 버리고 bytes-blind `has()` 를 믿는다 | `has()`/`put_if_absent()` 왕복을 **삭제**하고 `lock_content_object(..., data=data)` 로 검증된 bytes 를 직접 넘긴다 | `..._content_repair_uses_the_bytes_it_already_verified` |
+| P1-6 | `_lock_to_proof()` 가 existing proof 를 먼저 안 찾아 WORM 이 비멱등 | 순서를 `proof lookup(요청 기한 포함) → target → 새 version → lock → proof 재유도` 로. `_version_for(..., until=)` · `_locked_versions(..., until=)` 추가 | `..._locking_an_already_durable_object_adds_no_version` · `..._short_horizon_proof_is_not_accepted_and_gets_extended` |
+| P1-7 | `_WARM` guard 가 attribute·lambda 를 놓친다 | `ast.Attribute(attr="_WARM")` 도 위반. `Lambda` 를 **새 scope**(`<lambda>`) 로 | `..._warm_guard_catches_attribute_and_lambda_bypasses[some_reader·_warm_summary]` |
+| P2 | selector 증거가 helper 에서 멈춘다 | 소비자를 부른다 — `_snapshot_for_leg("L", cohort_id="gDUP")` | `..._snapshot_selector_itself_refuses_a_duplicate_cohort_id` |
+| Q4 | `no-truncate` 가 masked | 불변식 이름을 **"stable opaque sentinel"** 로 바꾸고 marker 바이트로 관측 가능하게 | `..._lock_sentinel_is_a_stable_opaque_inode` |
+| 조건 10 | 두 process·원장 전환 | 독립 `subprocess` 두 schedule + 게시 직전 원장 재확인(`_assert_ledger_unchanged`) | `..._second_process_holding_the_lock_blocks_and_loses_nothing` · `..._ledger_change_during_publication_is_refused` |
+
+### 변이 시험 — 17축 전부 물었다
+
+처음에 셋이 안 물었다. triage:
+
+| 안 문 변이 | 왜 | 처리 |
+|---|---|---|
+| `orphan-locator-digest-check` | 그 반례에는 "key 가 말하는 digest ≠ bytes" 인 version 이 없었다 | 시험 추가 (`..._never_carries_bytes_from_another_key`) |
+| `single-read-snapshot` | 존재 확인·parse·fingerprint 로 pointer 를 세 번 읽고 있어 주입 시점이 흐려졌다 | **코드를 고쳤다** — pointer 를 각각 한 번만 읽는다. 그러자 변이가 물었다 |
+| `flock-refuses-second-writer` | 취득 거부와 `_reassert_kernel_lock` 이 서로를 가린다 (심층 방어) | 2-site 변이로 재실행 |
+
+### 아직 아닌 것
+
+| 항 | 상태 |
+|---|---|
+| 실제 object-lock provider adapter | **미구현** |
+| power-loss ordering fault model | **미착수** |
+| lock namespace 의 write authority 를 publisher 하나로 제한 | **미착수** (설계) — `_commit_guard()` 는 창을 좁힐 뿐 없애지 못한다 |
+| 원장 세대 ↔ cohort 세대의 단일 승인 전환 | **미착수** (설계) — 지금은 게시 직전 **재확인**이다 |

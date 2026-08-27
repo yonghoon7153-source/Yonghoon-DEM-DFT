@@ -1,10 +1,12 @@
 # 41차 게이트 리뷰 요청 — 40차 반증 조건 10개 대응
 
-> **대상 커밋**: `283251fd279f5251813fac0d9dd07ef4145a4ff5`
-> **직전 대상**: `f0aa24f11d7aa0ce4bf339027235a96fa4422aae`
-> **브랜치**: `claude/14-gate-code-review-9qkx05`
-> **source_digest**: `db34cc3d3aeca5e2` → `b587816c40999e27`
-> **원장**: `docs/08_REVIEW_RESPONSE.md` §49
+```yaml
+브랜치:     origin/claude/14-gate-code-review-9qkx05
+대상 커밋:   283251fd279f5251813fac0d9dd07ef4145a4ff5
+직전 대상:   f0aa24f1…      (40차, P0-1 store locator NO-GO)
+source_digest: db34cc3d3aeca5e2 → b587816c40999e27
+원장:       docs/08_REVIEW_RESPONSE.md §49
+```
 
 40차 판정은 NO-GO 였고, "반증 조건 1~11 전부 종결" 이라는 내 주장을 기각했다.
 그 기각을 수용한다. 40차가 준 **최소 반증 조건 10개**를 조건별로 아래에 적는다.

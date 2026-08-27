@@ -4902,3 +4902,224 @@ def test_a_lock_that_does_not_produce_a_durable_version_fails_closed(tmp_path):
     with pytest.raises(PreserveError) as ei:
         backend.lock_content_object(dg, until)
     assert "담보" in str(ei.value), str(ei.value)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 41차 P1 — 검증한 exact locator·bytes 가 phase 경계에서 버려진다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def _crash_at(tmp_path, monkeypatch, phase):
+    """`retain()` 의 그 창에서 죽인 상태를 만들고 (store, backend, index, clock).
+
+    시계를 monkeypatch 한 채로 돌려준다 — 호출자가 `monkeypatch.undo()` 뒤
+    다시 붙여야 재개 경로가 같은 시계를 본다 (기존 창 시험들과 같은 방식).
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 28, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, phase)
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    return store, backend, index
+
+
+def test_an_orphan_lease_is_adopted_by_its_exact_version(tmp_path, monkeypatch):
+    """★ 41차 P1 — orphan 검증이 exact version 을 읽고 **버린다.**
+
+    `_orphan_lease()` 는 `(key, version)` 을 돌며 **그 exact version bytes** 로
+    후보를 검증한다. 그런데 돌려주는 것은 digest 문자열 하나다. 호출자는
+    `pin(leg, [digest])` 를 부르고, `pin()` 은 `read_back(digest)` 로 **다시**
+    namespace 를 읽는다 — 그것은 최신 담보 version 을 고른다.
+
+        after_lease_put:
+          objects/<D> v1 = 올바른 orphan lease bytes, unlocked
+          objects/<D> v2 = wrong bytes, Compliance locked, newer
+
+        `_orphan_lease()`  → exact v1 을 읽고 유효 판정 · version 은 버리고 D 반환
+        `_existing_lease()`→ pin(D)
+        `pin()`            → read_back(D) → protected v2 → digest mismatch
+
+    올바른 v1 이 provider 에 그대로 있는데 hostile head 하나 때문에 재개가
+    막힌다. 검증 결과가 phase 를 넘어가면 digest/bool 로는 부족하다 —
+    **검증한 바로 그 version 과 bytes** 를 들고 가야 한다.
+    """
+    store, backend, index = _crash_at(tmp_path, monkeypatch, "after_lease_put")
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: orphan lease content 가 있다"
+    assert ld not in backend.pinned(leg), "전제: 아직 pin 이 없다 (orphan)"
+
+    key = backend._provider_obj_key(ld)
+    v2 = store.put(key, b"hostile-newer-locked-content")
+    store.lock(key, v2, "2099-01-01T00:00:00Z")
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == ld, (
+        "hostile locked head 때문에 온전한 orphan 을 입양하지 못했다")
+
+
+def test_content_repair_uses_the_bytes_it_already_verified(tmp_path, monkeypatch):
+    """★ 41차 P1 — 수리가 **이미 검증한 pin bytes 를 버리고** `has()` 를 믿는다.
+
+    `repair_lease_locks()` 는 pin 의 exact repair source 에서 올바른 lease
+    bytes 를 읽어 `data` 에 담는다. 그런데 content 존재 여부는 `has()` 에
+    묻는다 — `has()` 는 protected version 을 **읽을 수 있으면** True 이고
+    바이트 hash 를 안 본다.
+
+        after_lease_pin:
+          pins/<leg>/<D>      = 올바른 lease bytes
+          objects/<D> 의 올바른 unlocked v1 = **삭제**
+          objects/<D> v2      = wrong bytes, Compliance locked
+
+        has(D)                → v2 를 읽을 수 있으므로 True → 복원 생략
+        lock_content_object() → namespace 를 다시 읽다가 v2 hash mismatch
+
+    `has()` 만 strict 하게 고쳐도 끝나지 않는다: 뒤이어 부를
+    `put_if_absent()` 도 version 없는 protected read 로 v2 를 보고 collision 을
+    낸다. 검증된 bytes 를 그대로 들고 가서 **새 exact version** 을 만들어야 한다.
+    """
+    store, backend, index = _crash_at(tmp_path, monkeypatch, "after_lease_pin")
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+
+    key = backend._provider_obj_key(ld)
+    v1 = store.versions(key)[0]
+    good = store.get(key, v1)                   # 올바른 content bytes
+    # ★ version 없는 delete 는 marker 만 얹고 v1 을 남긴다 (실물 S3 의미).
+    #   이 창의 v1 은 아직 안 잠겼으므로 **exact version delete** 가 통한다.
+    store.delete(key, version=v1)
+    v2 = store.put(key, b"hostile-locked-content-head")
+    store.lock(key, v2, "2099-01-01T00:00:00Z")
+    assert hashlib.sha256(good).hexdigest() == ld, "전제: pin 바이트가 정본이다"
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_digest"] == ld
+    cv = out["retention"]["lease_content_version"]
+    assert store.get(key, cv) == good, (
+        "content proof 가 검증된 바이트를 담고 있지 않다")
+
+
+def test_locking_an_already_durable_object_adds_no_version(tmp_path):
+    """★ 41차 P1 — `_lock_to_proof()` 가 **existing proof 를 먼저 안 찾는다.**
+
+    지금 순서는 무조건 `repair target → lock → proof 재탐색` 이다. 그래서
+    충분한 Compliance proof v1 이 이미 있는데 그 위에 exact same-bytes
+    **unlocked** v2 가 생기면, `_repair_target()` 이 최신 v2 를 골라 새로
+    WORM-lock 한다. v1 만으로 이미 담보였고 아무 수리도 필요 없었다 —
+    이 상태를 반복하면 되돌릴 수 없는 version 이 계속 쌓인다.
+
+    올바른 순서는 **proof lookup 이 먼저**다 (요청 기한을 덮는가).
+    """
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"already-durable")["digest"]
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    v1 = backend.lock_content_object(dg, until)
+
+    key = backend._provider_obj_key(dg)
+    store.put(key, store.get(key, v1))          # 같은 바이트의 unlocked head
+
+    before_v = _version_census(store)
+    before_lock = dict(store._lock)
+    got = backend.lock_content_object(dg, until)
+
+    assert got == v1, f"이미 담보인 proof 대신 다른 version 을 돌려줬다: {got}"
+    assert _version_census(store) == before_v, (
+        "이미 담보인데 version 이 늘었다 (되돌릴 수 없는 WORM 잔여)")
+    assert dict(store._lock) == before_lock, "이미 담보인데 새 잠금이 생겼다"
+
+
+def test_an_orphan_locator_never_carries_bytes_from_another_key(tmp_path):
+    """★ 42차 P1 — locator 는 **자기 안에서 일관**해야 한다.
+
+    `_orphan_lease()` 는 이제 `(key, version, digest, bytes)` 를 다음 phase 로
+    넘긴다. 그 bytes 가 key 가 말하는 digest 와 다르면, 입양이 그 바이트를
+    `pins/<leg>/<그 digest>` 에 넣고 뒤이은 `read_pinned()` 가 digest mismatch
+    로 죽는다 — 검증이 통과한 뒤에 깨지는 형태다.
+
+    유효한 lease record 의 바이트를 **다른 digest 의 key** 에 올려 둔다.
+    locator 를 만들기 전에 걸러야 한다.
+    """
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    leg = "hc22p_v6_armA_b20"
+    objs = sorted(backend.put_if_absent(b"g%d" % i)["digest"] for i in range(2))
+    backend.pin(leg, objs)
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    backend.store_id
+    backend.ensure_store_lock(until)
+    versions = backend.lock_objects(leg, objs, until)
+    rec = {
+        "schema": P_RETENTION_SCHEMA, "leg_id": leg, "objects": objs,
+        "min_retention_days": MIN_RETENTION_DAYS, "retain_until_utc": until,
+        "store_id": backend.store_id,
+        "store_version_id": backend.store_version_id,
+        "store_lock_mode": backend.store_lock_mode,
+        "backend_uri": backend.uri,
+        "enforcement": backend.probe_enforcement(),
+        "lock_mode": "COMPLIANCE",
+        "object_versions": dict(versions),
+        "pin_set_digest": pin_set_digest(leg, objs),
+    }
+    payload = canonical_bytes(rec)
+    assert backend._matches_lease(leg, objs, MIN_RETENTION_DAYS, rec), (
+        "전제: 이 record 자체는 유효한 lease 다")
+
+    wrong = hashlib.sha256(b"a-different-object-entirely").hexdigest()
+    store.put(backend._provider_obj_key(wrong), payload)   # key ≠ bytes
+
+    got = backend._orphan_lease(leg, objs, MIN_RETENTION_DAYS)
+    assert got is None, (
+        f"key 가 말하는 digest 와 다른 바이트로 locator 를 만들었다: {got}")
+    assert wrong not in backend.pinned(leg), "그 위조 위에 pin 을 만들었다"
+
+
+def test_a_short_horizon_proof_is_not_accepted_and_gets_extended(tmp_path):
+    """★ 42차 P1 — proof lookup 은 **요청 기한을 덮는가**를 물어야 한다.
+
+    `_lock_to_proof()` 가 proof 를 먼저 찾도록 고쳤는데, 그 lookup 이 "지금
+    잠겨 있다" 만 보면 **기한이 짧은** version 을 proof 로 받아들이고 요청한
+    기한까지 연장하지 않는다. 그러면 lease 가 신고한 기한보다 짧은 담보로
+    `durable=True` 가 된다.
+
+    짧은 기한으로 먼저 잠근 뒤 더 긴 기한을 요청한다.
+    """
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"short-then-long")["digest"]
+    now = dt.datetime.now(dt.timezone.utc)
+    short = (now + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    long = (now + dt.timedelta(days=MIN_RETENTION_DAYS * 3)).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+    v1 = backend.lock_content_object(dg, short)
+    got = backend.lock_content_object(dg, long)
+    st = store.describe_object(backend._provider_obj_key(dg), got)
+    assert st and st["retain_until"] >= long, (
+        f"기한이 짧은 version 을 proof 로 받아들였다: {st} (요청 {long})")
+    assert got == v1, "같은 version 을 연장하면 되는데 새 version 을 만들었다"

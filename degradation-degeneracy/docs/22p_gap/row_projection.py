@@ -898,8 +898,13 @@ class _PublishLock:
             raise SystemExit(
                 "✗ lock 파일의 inode 가 바뀌었다 — 잡고 있는 것이 그 파일이 "
                 "아니다 (pathname 이 교체됐다)")
-        self._assert_plain_sentinel(self.fd)
-        self._reassert_kernel_lock()
+        # ★ 42차 #9 — **내부도 unbound 로 부른다.** 41차는 바깥 호출만 unbound
+        #   였고 안에서 다시 `self.` 로 dispatch 했다. 정확한 `_PublishLock`
+        #   인스턴스도 평범한 객체라 속성을 붙일 수 있으므로, subclass 없이
+        #   마지막 kernel proof 하나만 no-op 으로 덮으면 registry·pid·fd·inode
+        #   가 전부 진짜인 채로 통과했다 — B 가 잠근 상태에서도.
+        _PublishLock._assert_plain_sentinel(self.fd)
+        _PublishLock._reassert_kernel_lock(self)
 
 
 def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT") -> None:
@@ -927,7 +932,7 @@ def _publish_pointer(out: Path, rec: dict, name: str = "CURRENT") -> None:
 def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
                         lock: "_PublishLock" = None, roster=None,
                         base_ptr: str = "CURRENT", roster_digest: str = "",
-                        base_generation=None) -> dict:
+                        base_generation=None, recheck=None) -> dict:
     """staging 을 immutable generation 으로 굳히고 CURRENT 를 옮긴다.
 
     ★ 36차 #9b — **비공개다.** 이 함수는 staging 을 그대로 믿으므로 한 파일
@@ -995,6 +1000,27 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
         _fsync_dir(out / "gen")
 
     rec = {"schema": CURRENT_SCHEMA, "generation_id": gid, "files": files}
+    def _commit_guard():
+        """**가시성 전환 직전에** capability 와 authority 를 다시 결속한다.
+
+        ★ 42차 #9 — 41차의 마지막 lock 검사는 이 함수 초입에서 끝났다. 그
+          뒤 staging scan · generation 자재화 · fsync · CAS 가 이어지는 동안
+          sentinel pathname 을 새 inode 로 갈아 끼우면 다른 writer 가 그것을
+          잡을 수 있었고, 둘 다 자기 proof 를 통과한 채 게시로 갔다. 원장
+          authority 도 임계 구역 초입에서 한 번만 읽었다.
+
+          그래서 pointer 를 옮기기 **바로 전에** 둘 다 다시 본다. 실패하면
+          이미 굳은 generation directory 는 immutable 잔여로 남을 뿐 어떤
+          reader 에게도 보이지 않는다 (가시성 전환점은 pointer 하나다).
+
+          이 재검사가 검사-직후 창까지 없애지는 못한다. 그것을 없애려면 lock
+          namespace 의 write authority 를 publisher 하나로 제한해야 하고,
+          그것은 설계 항목으로 신고한다.
+        """
+        _PublishLock.assert_held_for(lock, out)
+        if recheck is not None:
+            recheck()
+
     if expect is not _UNSET:
         # ★ 39차 #9 — base 를 읽은 **그 pointer** 와 대조한다. bootstrap 중에는
         #   base 가 `.PENDING` 이므로 `CURRENT` 와 비교하면 언제나 어긋난다.
@@ -1021,11 +1047,13 @@ def _promote_generation(stage: Path, out: Path, *, expect=_UNSET,
             # bootstrap 중이다 — generation 은 굳었지만 **active 가 아니다.**
             # 다음 leg 가 base 로 삼을 수 있게 pending pointer 에만 적는다.
             # ★ 40차 #9 — **어느 명부·어느 base 의 것인지** 함께 봉인한다.
+            _commit_guard()
             _publish_pointer(out, dict(rec, roster_digest=roster_digest,
                                        base_generation=base_generation),
                              name=".PENDING")
             return dict(rec, published=False,
                         pending=sorted(set(roster) - seen))
+    _commit_guard()
     _publish_pointer(out, rec)
     (out / ".PENDING").unlink(missing_ok=True)     # 명부가 찼다 — 더는 필요 없다
     _materialize(out, rec)      # 호환 사본 — 권위는 CURRENT 다
@@ -1044,6 +1072,17 @@ def _roster_digest(roster) -> str:
     ).hexdigest()
 
 
+def _pointer_bytes(out: Path, name: str):
+    """pointer 파일의 raw bytes — **읽는 자리는 여기 하나다** (42차 #9).
+
+    parse 와 fingerprint 를 서로 다른 read 에서 얻으면 그 사이에 교체된
+    authority 를 못 본다 (41차가 그랬다). 모든 소비자가 이 함수를 지나고,
+    한 판정에 쓰이는 값들은 **한 번의 반환값**에서 나온다.
+    """
+    p = Path(out) / name
+    return p.read_bytes() if p.is_file() else None
+
+
 def _pointer_fingerprint(out: Path, name: str):
     """그 pointer 파일의 **바이트 전체** digest — CAS 의 기대값 (41차 #9).
 
@@ -1051,23 +1090,43 @@ def _pointer_fingerprint(out: Path, name: str):
     `roster_digest`·`base_generation` 은 그 밖이므로, gid 로 CAS 하면 같은
     generation·다른 authority metadata 교체가 통과한다.
     """
-    p = Path(out) / name
-    return _sha(p.read_bytes()) if p.is_file() else None
+    raw = _pointer_bytes(out, name)
+    return _sha(raw) if raw is not None else None
 
 
 def _read_pointer(out: Path, name: str, expect_legs=None,
-                  complete: bool = True) -> dict:
+                  complete: bool = True, pending: bool = False) -> dict:
+    raw = _pointer_bytes(out, name)
+    if raw is None:
+        raise SystemExit(f"✗ CURRENT 가 없다: {Path(out) / name}")
+    return _parse_pointer(out, name, raw, expect_legs=expect_legs,
+                          complete=complete, pending=pending)
+
+
+#: `.PENDING` 이 싣는 **닫힌** key 집합 (42차 #9). authority 를 담는 pointer 는
+#: 계약이 닫혀 있어야 한다 — key 가 빠지면 `.get()` 이 `None` 을 돌려주고,
+#: 그 `None` 이 "bootstrap 이다" 와 구별되지 않는다.
+_PENDING_KEYS = {"schema", "generation_id", "files",
+                 "roster_digest", "base_generation"}
+
+
+def _parse_pointer(out: Path, name: str, raw: bytes, expect_legs=None,
+                   complete: bool = True, pending: bool = False) -> dict:
     out = Path(out)
     p = out / name
-    if not p.is_file():
-        raise SystemExit(f"✗ CURRENT 가 없다: {p}")
     try:
-        rec = json.loads(p.read_text(encoding="utf-8"))
+        rec = json.loads(raw.decode("utf-8"))
     except (ValueError, UnicodeDecodeError) as e:
         raise SystemExit(f"✗ CURRENT 를 읽을 수 없다: {p} ({e})") from e
     if not isinstance(rec, dict) or rec.get("schema") != CURRENT_SCHEMA \
             or not isinstance(rec.get("files"), dict):
         raise SystemExit(f"✗ CURRENT schema 가 계약이 아니다: {rec!r}")
+    if pending and set(rec) != _PENDING_KEYS:
+        raise SystemExit(
+            f"✗ `.PENDING` 의 key 가 계약과 다르다: "
+            f"{sorted(set(rec) ^ _PENDING_KEYS)} — authority 를 담는 pointer 는 "
+            "닫힌 schema 여야 한다 (빠진 key 의 `None` 은 bootstrap 과 "
+            "구별되지 않는다)")
     gid = rec.get("generation_id")
     if generation_id(rec["files"]) != gid:
         raise SystemExit(f"✗ CURRENT 의 generation_id 가 files 와 다르다")
@@ -1224,27 +1283,46 @@ def _promote_cohort_locked(stage: Path, out: Path, leg: str,
     #   호환의 뜻: 그 pending 이 **같은 명부** 아래, **지금의 CURRENT** 를
     #   base 로 만들어졌다. 아니면 승인되지 않은 구성이 이어져 버린다.
     rd = _roster_digest(roster)
-    cur_gid = (_read_pointer(out, "CURRENT")["generation_id"]
-               if (out / "CURRENT").is_file() else None)
-    base_ptr = "CURRENT" if (out / "CURRENT").is_file() else ".PENDING"
-    if (out / ".PENDING").is_file():
-        pend = _read_pointer(out, ".PENDING", complete=False)
-        if pend.get("roster_digest") != rd:
+    # ★ 42차 #9 — pointer 를 **각각 한 번만** 읽고 그 bytes 에서 parse·기대
+    #   digest·존재 판정을 전부 유도한다. 41차는 같은 파일을 존재 확인 →
+    #   parse → fingerprint 로 세 번 읽었고, 그 사이 교체된 authority 를
+    #   못 봤다 (옛 record 로 만든 generation 이 새 authority 아래 게시됐다).
+    cur_raw = _pointer_bytes(out, "CURRENT")
+    pend_raw = _pointer_bytes(out, ".PENDING")
+    cur_gid = (_parse_pointer(out, "CURRENT", cur_raw)["generation_id"]
+               if cur_raw is not None else None)
+    base_ptr = "CURRENT" if cur_raw is not None else ".PENDING"
+    if pend_raw is not None:
+        # ★ 42차 #9 — pending 은 **닫힌 schema** 로 읽는다. key 가 빠지면
+        #   `.get()` 의 `None` 이 "bootstrap 이다" 와 구별되지 않는다.
+        pend = _parse_pointer(out, ".PENDING", pend_raw,
+                              complete=False, pending=True)
+        if pend["roster_digest"] != rd:
             raise SystemExit(
                 f"✗ 남아 있는 `.PENDING` 이 다른 명부의 것이다 "
-                f"({str(pend.get('roster_digest'))[:12]} ≠ {rd[:12]}) — "
+                f"({str(pend['roster_digest'])[:12]} ≠ {rd[:12]}) — "
                 "승인되지 않은 구성을 이어받지 않는다. 원장을 확정한 뒤 "
-                "그 명부로 처음부터 다시 쌓아라")
-        if pend.get("base_generation") == cur_gid:
-            base_ptr = ".PENDING"
-    if (out / base_ptr).is_file():
+                "그 명부로 처음부터 다시 쌓아라. (`.PENDING` 을 지우고 시작하라)")
+        # ★ 42차 #9 — 41차는 여기서 **불일치면 아무 말 없이 CURRENT 로**
+        #   떨어졌다. `CURRENT` 가 아예 없는 bootstrap 중에는 `base_ptr` 이
+        #   이미 `.PENDING` 이라 그 fallback 이 곧 **stale pending 상속**이었다.
+        #   "base 가 다르다" 와 "CURRENT 가 없다" 를 같은 분기로 다루지 않는다.
+        if pend["base_generation"] != cur_gid:
+            raise SystemExit(
+                f"✗ 남아 있는 `.PENDING` 이 다른 base 위에서 만들어졌다 "
+                f"(pending base {str(pend['base_generation'])[:12]} ≠ 현재 "
+                f"{str(cur_gid)[:12]}) — 승인되지 않은 구성을 이어받지 않는다. "
+                "`.PENDING` 을 지우고 지금의 base 에서 다시 쌓아라")
+        base_ptr = ".PENDING"
+    base_raw = pend_raw if base_ptr == ".PENDING" else cur_raw
+    if base_raw is not None:
         # base 는 **명부 부분집합**이면 된다. 여기서 exact 를 요구하면
         # bootstrap 이 불가능하다. exact 는 **reader** 의 주장이다.
-        cur = _read_pointer(out, base_ptr)
+        # ★ 42차 #9 — record 와 기대 digest 가 **같은 바이트**에서 나온다.
+        cur = _parse_pointer(out, base_ptr, base_raw)
         base = dict(cur["files"])
         gdir = out / "gen" / cur["generation_id"]
-        # ★ 41차 #9 — 읽은 **그 바이트**를 기대값으로 든다 (gid 가 아니다).
-        expect = _pointer_fingerprint(out, base_ptr)
+        expect = _sha(base_raw)
 
     fresh = {p.name for p in stage.iterdir() if p.is_file()}
     # ★ 34차 #9 — "완전한 snapshot" 을 **구조로** 강제한다. 초판은 stage 의
@@ -1288,7 +1366,26 @@ def _promote_cohort_locked(stage: Path, out: Path, leg: str,
     assert_cohort_complete(staged, "staging")
     return _promote_generation(stage, out, expect=expect, lock=lock,
                                roster=roster, base_ptr=base_ptr,
-                               roster_digest=rd, base_generation=cur_gid)
+                               roster_digest=rd, base_generation=cur_gid,
+                               recheck=lambda: _assert_ledger_unchanged(out, roster))
+
+
+def _assert_ledger_unchanged(out: Path, roster) -> None:
+    """게시 직전에 **원장을 다시 읽어** 근거가 그대로인지 본다 (42차 #9).
+
+    41차는 원장을 임계 구역 **초입에서 한 번만** 읽었다. 그 뒤 원장이 바뀌면
+    옛 명부로 게시된다 — lock 은 다른 publisher 를 막을 뿐 원장 편집은 막지
+    않는다.
+
+    이것은 부분 대응이다. 원장 세대와 cohort 세대를 **한 승인 전환**으로 묶는
+    설계는 아직 없다 (신고 항목).
+    """
+    now = _ledger_roster(out)
+    if now != set(roster):
+        raise SystemExit(
+            f"✗ 원장이 게시 도중에 바뀌었다 (시작 {sorted(set(roster))} → 지금 "
+            f"{sorted(now)}) — 옛 명부로 게시하지 않는다. 원장을 확정한 뒤 "
+            "다시 시도하라")
 
 
 def _ledger_cohorts() -> list[dict]:
