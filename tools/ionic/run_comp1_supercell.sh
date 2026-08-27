@@ -73,6 +73,22 @@ grep -q '"--supercell"' "$DRIVER" || { echo "⛔ 드라이버에 --supercell 이
 #   아니다. 이 스크립트는 OUTROOT·V0XYZ·LABEL 로 매개변수화돼 있어서 서로 다른 실험을
 #   동시에 돌리는 게 **정상 용법**이다.
 #   → 락 이름을 OUTROOT 에서 뽑는다. 같은 OUTROOT 는 여전히 막고, 다른 실험은 안 막는다.
+# ⛔⛔ 2026-08-27 — **환경 선점검.** tmux 가 `uma` 아닌 env(base)에서 뜨면
+#   `from fairchem.core import ...` 가 **드라이버 안쪽에서** 터진다. 그때는 이미
+#   OUTROOT·런 폴더·run_meta.json 이 만들어진 뒤라 화면상 "걸린 것처럼" 보이고,
+#   watch 는 빈 표를 찍는다 — "안 걸렸나 / 죽었나" 를 가르는 데 시간이 든다.
+#   실측(2026-08-27): 3분을 기다린 뒤에야 로그에서 ModuleNotFoundError 를 봤다.
+#   → **아무것도 만들기 전에** 여기서 끊고, 고치는 법을 같이 찍는다.
+if ! "${PY:-python3}" -c "import fairchem" 2>/dev/null; then
+  echo "⛔ fairchem(UMA) 을 못 찾는다 — 이 셸의 conda env 가 틀렸다."
+  echo "   지금 python: $(command -v "${PY:-python3}")"
+  echo "   고치는 법: tmux 명령 안에서 env 를 켠다 —"
+  echo "     tmux new -d -s <이름> \"source <conda>/etc/profile.d/conda.sh && conda activate uma && cd \$PWD && ... \""
+  echo "   (gabia 는 /data/apps/miniforge3, kgy 는 ~/apps/miniforge3)"
+  echo "   ⚠ 폴더를 아무것도 만들지 않고 끊었다 — 다시 걸면 된다."
+  exit 1
+fi
+
 _LB=$(basename "$OUTROOT")
 _LH=$(printf '%s' "$OUTROOT" | cksum | cut -d' ' -f1)   # 경로 전체를 반영 (basename 충돌 방지)
 LOCK=${LOCK:-/tmp/comp1_supercell_${_LB}_${_LH}.lock}
