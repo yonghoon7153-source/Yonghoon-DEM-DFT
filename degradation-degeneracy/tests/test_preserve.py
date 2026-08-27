@@ -2871,11 +2871,11 @@ def _phase_kill(monkeypatch, phase: str):
             raise boom                      # lease pin 은 있고 잠금은 없다
         return real_lock(self, leg_id, digests, until)
 
-    def content(self, dg, until):
+    def content(self, dg, until, **kw):
         n["content"] += 1
         if phase == "after_pin_lock" and n["content"] == 1:
             raise boom                      # pin 은 잠겼고 content 는 안 잠겼다
-        return real_content(self, dg, until)
+        return real_content(self, dg, until, **kw)
 
     monkeypatch.setattr(cls, "pin", pin)
     monkeypatch.setattr(cls, "lock_objects", lock)
@@ -5123,3 +5123,188 @@ def test_a_short_horizon_proof_is_not_accepted_and_gets_extended(tmp_path):
     assert st and st["retain_until"] >= long, (
         f"기한이 짧은 version 을 proof 로 받아들였다: {st} (요청 {long})")
     assert got == v1, "같은 version 을 연장하면 되는데 새 version 을 만들었다"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 43차 P1 — 수리가 찾은 proof 를 버리고 기한 없는 live search 를 다시 한다
+# ─────────────────────────────────────────────────────────────────────────────
+
+@pytest.mark.parametrize("where", ["pin", "content"])
+def test_the_repaired_proof_is_handed_to_verify_not_researched(tmp_path, where):
+    """★ 43차 P1 — `repair_lease_locks()` 가 wrapper 가 돌려준 proof ID 둘을
+    버리고 `None` 을 반환한다. 그 뒤 `_existing_lease()` 는 **기한 인자 없는**
+    `recover_lease_version()` · `recover_content_version()` 으로 다시 찾는다.
+
+        v1: exact same bytes · Compliance · lease 기한을 **충분히 덮는다**
+        v2: exact same bytes · Compliance · 아직 유효하지만 **lease 기한보다 짧다** · newer
+
+        repair : v1 을 정확히 찾는다 → ID 를 버린다
+        recover: 기한을 안 물으므로 최신인 v2 를 고른다
+        verify : v2 가 기한을 못 덮어 실패
+
+    온전한 v1 이 그대로 있는데 재개가 막힌다. 42차 시험은 wrapper 반환만
+    따로 봤으므로 이 결합을 못 봤다.
+    """
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+    res = run_transaction(PLANNED, run, backend, index, _hooks())
+    lease, leg = res["retention"], PLANNED.leg_id
+    ld = lease["lease_digest"]
+
+    key = (backend._provider_key(leg, ld) if where == "pin"
+           else backend._provider_obj_key(ld))
+    v1 = (lease["lease_version"] if where == "pin"
+          else lease["lease_content_version"])
+    st1 = store.describe_object(key, v1)
+    assert st1 and st1["mode"] == "COMPLIANCE", "전제: v1 이 담보다"
+    assert st1["retain_until"] >= lease["retain_until_utc"], (
+        "전제: v1 이 lease 기한을 덮는다")
+
+    # **같은 바이트**의 더 최신 Compliance version — 다만 기한이 짧다
+    short = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS - 1)
+             ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert short < lease["retain_until_utc"], "전제: 더 짧은 기한이다"
+    v2 = store.put(key, store.get(key, v1))
+    store.lock(key, v2, short)
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    proof = fresh.repair_lease_locks(leg, ld, lease["retain_until_utc"])
+    got = proof.lease_version if where == "pin" else proof.content_version
+    assert got == v1, (
+        f"기한을 덮는 v1 이 있는데 짧은 v2 를 proof 로 골랐다: {got}")
+    assert proof.until == lease["retain_until_utc"], "proof 가 기한을 안 든다"
+    # 그리고 **기한 없는** live search 는 실제로 v2 를 고른다 — 이 시험이
+    # 보는 것이 "찾은 것을 버리고 다시 찾으면 달라진다" 임을 못 박는다.
+    live = (fresh.recover_lease_version(leg, ld) if where == "pin"
+            else fresh.recover_content_version(ld))
+    assert live == v2, f"전제: 기한 없는 재탐색은 v2 를 고른다 (got {live})"
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 43차 P2 — 되돌릴 수 없는 lock 보다 검증이 먼저다
+# ─────────────────────────────────────────────────────────────────────────────
+
+def test_wrong_bytes_are_never_locked(tmp_path):
+    """★ 43차 — `_lock_to_proof()` 의 새-version 경로는 `put` 한 뒤 **곧바로**
+    `lock` 한다. caller 가 준 bytes 가 digest 와 다르면 되돌릴 수 없는 WORM
+    version 이 먼저 생기고 그 다음에야 proof 재탐색이 실패한다.
+
+    lock 은 되돌릴 수 없다 — 검증이 먼저다.
+    """
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"the-real-payload")["digest"]
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    key = backend._provider_obj_key(dg)
+    store.delete(key, version=store.versions(key)[0])      # exact bytes 를 없앤다
+
+    before_lock = dict(store._lock)
+    before_v = _version_census(store)
+    with pytest.raises(PreserveError):
+        backend.lock_content_object(dg, until, data=b"not-the-payload")
+    assert dict(store._lock) == before_lock, (
+        "digest 와 다른 바이트를 WORM 으로 잠갔다")
+    # ★ 43차 — 잠그지 않는 것만으로는 부족하다. digest 와 다른 바이트를 CAS
+    #   namespace 에 **올리는 것 자체**가 잔여다 (읽기 경로가 그 head 를
+    #   protected 로 오인할 수 있고, 그것이 42차 hostile head 반례의 재료다).
+    assert _version_census(store) == before_v, (
+        "digest 와 다른 바이트로 version 을 만들었다")
+
+
+def test_a_provider_that_returns_the_wrong_version_locks_nothing(tmp_path):
+    """★ 43차 — provider 가 `put` 에서 **다른 version ID** 를 돌려주면?
+
+    adapter 계약 위반이지만, 그 경우 우리는 남의 version 을 잠근다. 되돌릴 수
+    없는 연산이므로 계약을 믿지 말고 **그 exact version 을 읽어 확인한 뒤**
+    잠근다.
+    """
+    class _LyingPut(_LockingStore):
+        lie = False
+
+        def put(self, key, data):
+            v = super().put(key, data)
+            if self.lie and key.startswith("objects/"):
+                other = super().put(key, b"someone-elses-bytes")
+                return other                      # 계약 위반: 다른 version 을 신고
+            return v
+
+    store = _LyingPut(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    dg = backend.put_if_absent(b"honest-payload")["digest"]
+    until = (dt.datetime.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    key = backend._provider_obj_key(dg)
+    data = store.get(key, store.versions(key)[0])
+    store.delete(key, version=store.versions(key)[0])
+
+    store.lie = True
+    before_lock = dict(store._lock)
+    with pytest.raises(PreserveError):
+        backend.lock_content_object(dg, until, data=data)
+    assert dict(store._lock) == before_lock, (
+        "provider 가 신고한 version 을 확인 없이 잠갔다")
+
+
+def test_a_pre_journal_finalize_uses_the_repaired_pin_proof(tmp_path, monkeypatch):
+    """★ 43차 P1 — journal **이전** 창이 handoff 가 실제로 쓰이는 자리다.
+
+    journal 이 생긴 뒤에는 runtime verifier 가 봉인된 exact ID 를 쓰므로
+    (그 배선은 맞다) 이 축이 안 보인다. `after_pin_lock` 창은 pin 이 긴 기한
+    으로 잠겨 있고 content 는 아직 안 잠긴 상태이며 journal 이 없다.
+
+        pin v1: exact bytes · Compliance · lease 기한을 덮는다
+        pin v2: exact bytes · Compliance · **더 짧은** 기한 · newer
+
+    수리는 v1 을 정확히 찾는다. 그 ID 를 버리고 기한 없는 `recover_*()` 로
+    다시 찾으면 v2 가 나오고 검증이 실패한다.
+    """
+    import tools.preserve as P
+
+    run = _make_run(tmp_path)
+    store = _LockingStore(name=str(tmp_path))
+    backend = _lockstore(tmp_path, store)
+    index = tmp_path / "index"
+
+    base = dt.datetime(2026, 8, 29, 12, 0, 0, tzinfo=dt.timezone.utc)
+    ticks = iter(range(0, 100000, 37))
+
+    class _Clock(dt.datetime):
+        @classmethod
+        def now(cls, tz=None):
+            return base + dt.timedelta(seconds=next(ticks))
+
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+    _phase_kill(monkeypatch, "after_pin_lock")
+    with pytest.raises(RuntimeError):
+        run_transaction(PLANNED, run, backend, index, _hooks())
+    monkeypatch.undo()
+    monkeypatch.setattr(P.dt, "datetime", _Clock)
+
+    leg = PLANNED.leg_id
+    ld = _crashed_lease_digest(store, backend, leg)
+    assert ld, "전제: lease 후보가 있다"
+    key = backend._provider_key(leg, ld)
+    v1 = backend.protected_version(key)
+    assert v1, "전제: pin 이 이미 잠겨 있다 (after_pin_lock)"
+    st1 = store.describe_object(key, v1)
+    want = st1["retain_until"]
+
+    short = (_Clock.now(dt.timezone.utc)
+             + dt.timedelta(days=MIN_RETENTION_DAYS - 1)
+             ).strftime("%Y-%m-%dT%H:%M:%SZ")
+    assert short < want, "전제: 더 짧은 기한이다"
+    v2 = store.put(key, store.get(key, v1))
+    store.lock(key, v2, short)
+
+    fresh = _lockstore(tmp_path, _LockingStore(name=store.name))
+    out = finalize_only(leg, fresh, index)
+    monkeypatch.undo()
+
+    assert out["ok"] and out["durable"] is True
+    assert out["retention"]["lease_version"] == v1, (
+        "수리가 찾은 긴-기한 proof 대신 짧은 v2 를 봉인했다: "
+        f"{out['retention']['lease_version']}")

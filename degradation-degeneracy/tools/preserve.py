@@ -305,6 +305,21 @@ class VerifiedBytes(NamedTuple):
     data: bytes
 
 
+class RetentionProof(NamedTuple):
+    """수리가 **실제로 만든** 담보 proof — 기한까지 함께 든다 (43차 P1).
+
+    ★ 42차까지 `repair_lease_locks()` 는 두 wrapper 가 돌려준 proof ID 를
+      버리고 `None` 을 반환했다. 호출자는 곧바로 **기한 인자 없는**
+      `recover_*()` 로 다시 찾았고, 같은 바이트의 더 최신·더 짧은 Compliance
+      version 이 있으면 그것을 골라 검증에서 죽었다 — 기한을 덮는 v1 이
+      그대로 있는데도. 찾은 것을 버리고 다시 찾으면 phase 결속이 풀린다.
+    """
+
+    lease_version: str
+    content_version: str
+    until: str
+
+
 #: store record 의 **닫힌** schema. 남는 key 도 모자란 key 도 거부한다 (37차 P0-1).
 _STORE_KEYS = {"schema", "store_id"}
 
@@ -843,7 +858,8 @@ class CasBackend:
         #   죽으면 pin 또는 content 한쪽만 잠긴 lease 가 남는데, 초판은 그것을
         #   "기존 lease 없음" 으로 보고 두 번째 WORM lease 를 만들었다.
         try:
-            self.repair_lease_locks(leg_id, extra[0], lease["retain_until_utc"])
+            proof = self.repair_lease_locks(leg_id, extra[0],
+                                            lease["retain_until_utc"])
         except (PreserveError, KeyError, TypeError) as ex:
             raise PreserveError(
                 "retention",
@@ -861,10 +877,14 @@ class CasBackend:
             #   같은 바이트의 Governance head 가 있으면 그것이 넘어가서
             #   "lock mode 가 lease 와 다르다" 로 죽었다. 수리가 끝난 **뒤**
             #   proof selector 를 다시 돌린다.
+            # ★ 43차 P1 — 수리가 **만든 그 proof** 를 그대로 넘긴다. 42차는
+            #   버리고 기한 없는 `recover_*()` 로 다시 찾았고, 같은 바이트의
+            #   더 최신·더 짧은 Compliance version 이 있으면 그것을 골라
+            #   검증에서 죽었다 (기한을 덮는 v1 이 그대로 있는데도).
             return self.verify_retention(
                 leg_id, extra[0], expected=set(objs),
-                lease_version=self.recover_lease_version(leg_id, extra[0]),
-                lease_content_version=self.recover_content_version(extra[0]))
+                lease_version=proof.lease_version,
+                lease_content_version=proof.content_version)
         except PreserveError as ex:
             # ★ 38차 P0-1 — 37차판은 만료면 `None` 을 돌려 **자동 갱신**했다.
             #   그 갱신은 production 에서 동작한 적이 없다: 새 L1 을 만들어도
@@ -1301,22 +1321,28 @@ class CasBackend:
         return None
 
     def repair_lease_locks(self, leg_id: str, lease_digest: str,
-                           until: str) -> None:
-        """lease 의 **누락된 잠금**을 채운다 (advisory 는 할 일이 없다).
+                           until: str) -> "RetentionProof":
+        """lease 의 **누락된 잠금**을 채우고 proof 를 준다 (advisory 는 빈 proof).
 
         ★ 35차 P0-1 — `retain()` 의 네 durable 단계 사이에서 죽으면 lease 의
           pin 또는 CAS content 한쪽만 잠긴 상태가 남는다. 초판은 그 상태를
           **repair 하지 않아서**, 앞 경계는 두 번째 WORM lease 를 만들고 뒤
           경계는 content 가 삭제 가능한데도 `durable=True` 까지 갔다.
           `lock` 은 멱등이므로 재개가 빠진 쪽을 채우면 된다.
-        """
-        return None
 
-    def recover_content_version(self, lease_digest: str):
+        ★ 43차 P1 — advisory backend 에는 version 이 없으므로 빈 proof 다.
+          `None` 을 돌려주면 호출자가 다시 분기해야 하고, 그 분기가 곧
+          "찾은 것을 버리고 다시 찾는" 통로가 된다.
+        """
+        return RetentionProof(lease_version=None, content_version=None,
+                              until=until)
+
+    def recover_content_version(self, lease_digest: str, until: str = None):
         """local 에는 version 이 없다."""
         return None
 
-    def recover_lease_version(self, leg_id: str, lease_digest: str):
+    def recover_lease_version(self, leg_id: str, lease_digest: str,
+                              until: str = None):
         """이미 잠긴 lease 의 version 을 **digest 로 재조회**한다.
 
         ★ 34차 P0-1 — lease version proof 는 journal 을 쓰기 전까지 메모리에만
@@ -1772,7 +1798,22 @@ class ObjectLockBackend(CasBackend):
             return proof                    # 이미 담보다 — 아무것도 만들지 않는다
         vid = self._repair_target(key, dg)
         if vid is None:
-            vid = self.provider.put(key, make_bytes())
+            # ★ 43차 — **되돌릴 수 없는 lock 보다 검증이 먼저다.** 42차판은
+            #   `put` 한 version 을 곧바로 잠갔다. caller 의 bytes 가 digest 와
+            #   다르거나 provider 가 계약을 어기고 다른 version ID 를 신고하면,
+            #   먼저 WORM 잔여가 생기고 그 다음에야 proof 재탐색이 실패했다.
+            data = make_bytes()
+            if hashlib.sha256(data).hexdigest() != dg:
+                raise PreserveError(
+                    "retention",
+                    f"{key} 에 넣으려는 바이트가 digest 와 다르다 — 잠그기 전에 "
+                    "거부한다 (lock 은 되돌릴 수 없다)")
+            vid = self.provider.put(key, data)
+            if not self._bytes_match(key, vid, dg):
+                raise PreserveError(
+                    "retention",
+                    f"{key} 의 새 version {str(vid)[:16]} 이 방금 넣은 바이트가 "
+                    "아니다 — provider 가 신고한 version 을 확인 없이 잠그지 않는다")
         self.provider.lock(key, vid, until)
         proof = self._version_for(key, dg, until=until)
         if proof is None:
@@ -1783,8 +1824,8 @@ class ObjectLockBackend(CasBackend):
         return proof
 
     def repair_lease_locks(self, leg_id: str, lease_digest: str,
-                           until: str) -> None:
-        """lease 의 pin 과 CAS content **둘 다** 잠겨 있게 만든다 (35차 P0-1).
+                           until: str) -> "RetentionProof":
+        """lease 의 pin 과 CAS content **둘 다** 잠그고 그 proof 를 준다 (35차 P0-1).
 
         ★ 37차 P0-1 — 36차판은 `pin()` 부터 불렀고, `pin()` 은 CAS content 를
           `read_back()` 한다. lease content 가 아직 안 잠긴 창에서 그것이
@@ -1815,19 +1856,26 @@ class ObjectLockBackend(CasBackend):
         #   존재 판정과 복원을 함께 없앤다: `lock_content_object()` 에 **그
         #   bytes 를 직접 준다.** exact bytes version 이 없으면 그것으로 새
         #   version 을 만들고, 있으면 그것을 잠근다.
-        self.lock_objects(leg_id, [lease_digest], until)
-        self.lock_content_object(lease_digest, until, data=data)
+        # ★ 43차 P1 — 만든 proof 를 **그대로 돌려준다.** 42차는 버리고
+        #   호출자가 기한 없는 live search 로 다시 찾게 했다.
+        pinned = self.lock_objects(leg_id, [lease_digest], until)
+        return RetentionProof(
+            lease_version=pinned[lease_digest],
+            content_version=self.lock_content_object(lease_digest, until,
+                                                     data=data),
+            until=until)
 
-    def recover_content_version(self, lease_digest: str):
+    def recover_content_version(self, lease_digest: str, until: str = None):
         """lease CAS content 의 **담보 version** 을 재발견한다 (38차 P0-1).
 
         잠긴 version 중 **바이트가 digest 와 같은** 것이다. "아무 잠긴
         version" 은 proof 가 아니다.
         """
         return self._version_for(self._provider_obj_key(lease_digest),
-                                 lease_digest)
+                                 lease_digest, until=until)
 
-    def recover_lease_version(self, leg_id: str, lease_digest: str):
+    def recover_lease_version(self, leg_id: str, lease_digest: str,
+                              until: str = None):
         """lease pin 의 **담보 version** 을 재발견한다 (34차 P0-1 · 39차 P0-1).
 
         ★ 39차 — 38차판은 "가장 최신 담보 version" 을 돌려주고 **그 version 의
@@ -1837,7 +1885,7 @@ class ObjectLockBackend(CasBackend):
           결속이 없었다.
         """
         return self._version_for(self._provider_key(leg_id, lease_digest),
-                                 lease_digest)
+                                 lease_digest, until=until)
 
     def _orphan_lease(self, leg_id: str, objs: list,
                       min_retention_days: int) -> "VerifiedBytes | None":

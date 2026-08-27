@@ -4380,3 +4380,57 @@ selector 도 닫았다: `cohort_id` 와 `purpose` 동시 지정, 모르는 purpo
 | power-loss ordering fault model | **미착수** |
 | lock namespace 의 write authority 를 publisher 하나로 제한 | **미착수** (설계) — `_commit_guard()` 는 창을 좁힐 뿐 없애지 못한다 |
 | 원장 세대 ↔ cohort 세대의 단일 승인 전환 | **미착수** (설계) — 지금은 게시 직전 **재확인**이다 |
+
+---
+
+## 51. 42차 리뷰 대응 — 근거를 하나의 authority snapshot 으로 모은다
+
+**대상 커밋**: `c8265c4d` · **판정**: NO-GO (#9 P0 셋 · retention P1 둘)
+**source_digest**: `3e5aa23c80d90243` → `9a18ed9776de34f3`
+
+42차 리뷰는 조건 1·3·4·5·6·9 와 stable-sentinel 을 종결로 인정했다. 남은 것은
+**근거의 범위**였다:
+
+> 검사를 늘려도, 그 검사가 보는 것이 근거의 **일부**이거나 근거를 **인자로
+> 받을 수 있으면** 불변식이 아니다.
+
+세 자리에서 같은 형태였다.
+
+1. raw publisher 가 `roster` 를 인자로 받고 `recheck=None` 으로 원장을 통째로
+   우회할 수 있었다.
+2. `CURRENT` 와 `.PENDING` 은 별개 authority 인데 **고른 한 쪽만** CAS 했고,
+   그 CAS 는 최종 guard **밖**에서 끝났다.
+3. 최종 원장 재확인이 record 가 아니라 `set(legs)` 만 봤다 (같은 legs 로
+   `active → frozen` 이 되어도 옛 writer 가 게시했다).
+
+### 발견별 대응
+
+| # | 42차 지적 | 이번에 한 것 | 시험 |
+|---|---|---|---|
+| P0-1 | raw publisher 가 원장을 optional 로 만든다 | `_Authority` + `_authority()` — lock·원장 record·두 pointer 를 **한 번에** 고정한다. `_promote_generation(stage, auth)` 는 인자가 둘뿐이고, `auth` 는 registry 에 등록된 것만 받는다 | `..._raw_publisher_takes_no_caller_authority` (signature + 조립 authority 거부) |
+| P0-2 | pointer CAS 가 한 쪽만·guard 밖에서 | 대조를 전부 `_commit_guard()` 안으로 옮기고 **두 pointer 를 다** 본다 | `..._pointer_moved_by_another_writer_is_never_overwritten[writable·ledger_seal]` |
+| P0-3 | 원장 재확인이 `set(legs)` 만 | `_ledger_cohort()`(record 전체) + `_ledger_seal()`(정규 digest). guard 가 seal 을 대조한다 | `..._same_roster_ledger_change_is_refused` (`active → frozen`, legs 동일) |
+| #9 증거 | subprocess A 가 publisher 가 아니다 | A 가 **임계 구역 안에서** barrier 를 치고 그대로 commit 한다. A·B 가 서로 다른 leg 를 게시하고 최종 CURRENT 에 둘 다 남는다 | `..._two_independent_publishers_lose_no_leg` |
+| P1-4 | 수리가 찾은 proof 를 버리고 기한 없는 live search | `RetentionProof(lease_version, content_version, until)` 를 돌려주고 verify 가 그대로 소비한다. `recover_*` 에 `until` 을 넣었다 | `..._repaired_proof_is_handed_to_verify_not_researched[pin·content]` · `..._pre_journal_finalize_uses_the_repaired_pin_proof` |
+| P2 | lock 전에 새 version 을 검증하지 않는다 | `put` 전 digest 확인 + `put` 뒤 그 exact version read-back 확인 → 그 다음에 lock | `..._wrong_bytes_are_never_locked` · `..._a_provider_that_returns_the_wrong_version_locks_nothing` |
+| P1-5 | warm guard 가 syntax blacklist 다 | **global 을 없앴다** — `_warm_accessors()` closure 가 경로를 갖고 accessor 셋만 내보낸다. 이름이 없으면 `getattr`·`globals()` 가 찾을 것이 없다. guard 는 재발 방지 회귀로 남긴다 (문자열 상수·lambda default 축 추가) | `..._warm_root_is_not_a_module_global` · `..._warm_guard_catches_indirect_namespace_lookups[3축]` |
+| 증거 | "17축 전부 물었다" 는 과장 | 맞다. `_assert_plain_sentinel` 축은 kernel 검사에 가려 있었다 | `..._exact_lock_cannot_blank_its_sentinel_check` (hardlink 로 nlink=2, kernel lock 은 정상) |
+
+### 변이 시험 — 14축 전부 물었다
+
+처음에 둘이 안 물었다:
+
+| 안 문 변이 | 왜 | 처리 |
+|---|---|---|
+| `proof-handoff-to-verify` | 시험이 journal **이후** 상태를 썼다. 그때는 runtime verifier 가 봉인 exact ID 를 쓰므로 handoff 축이 안 보인다 | **시험을 옮겼다** — `after_pin_lock` crash(= pre-journal)로 |
+| `prelock-digest-check` | read-back 검사가 가렸다 (잠그지는 않았다) | **시험 보강** — 잠금뿐 아니라 **version 이 생기지 않는 것**도 본다 |
+
+### 아직 아닌 것 (설계·인프라)
+
+| 항 | 상태 |
+|---|---|
+| lock namespace 의 write authority 를 publisher 하나로 제한 | **미착수** — `_commit_guard()` 는 창을 좁힐 뿐 TOCTOU 를 없애지 못한다 |
+| roster 를 cohort lifetime 동안 immutable 로 (변경은 새 cohort ID) | **미착수** — 지금은 seal 대조다 |
+| same-process hostile Python | 보안 경계 아님 — `_Authority` 는 우연한 우회를 막을 뿐 |
+| 실제 object-lock provider adapter | **미구현** (별도 acceptance gate) |
+| power-loss ordering fault model | **미착수** (별도 acceptance gate) |
