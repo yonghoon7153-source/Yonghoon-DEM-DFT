@@ -885,6 +885,31 @@ def test_a_missing_scan_is_a_404_not_an_empty_scan(client):
     assert client.get("/api/eis/scans/" + "f" * 64).status_code == 404
 
 
+def test_a_scan_carries_one_area_only_when_every_sweep_agrees(client):
+    """Ω → Ω·cm² 는 스윕 전부가 같은 면적일 때만.
+
+    한 스캔은 한 파일이고 한 셀이라 보통 같다.  스윕 하나의 면적만 손으로
+    고쳐 두면 다른데, 그때 대표값 하나로 전부를 나누면 그림에 섞인 수가 나오고
+    섞였다는 표시는 어디에도 안 남는다 (§0.4).
+    """
+    client.post("/api/eis/spectra/upload", params={"kind": "liquid"},
+                files={"file": ("scan.mpr", scan_mpr(sweeps=3),
+                                "application/octet-stream")})
+    rows = client.get("/api/eis/spectra").json()
+    sha = rows[0]["sha256"]
+
+    # 아직 아무 면적도 안 적었다 — 나눌 수가 없다.
+    assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] is None
+
+    for row in rows:
+        client.patch(f"/api/eis/spectra/{row['id']}", json={"area_cm2": 1.5})
+    assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] == 1.5
+
+    # 하나만 다르게 고쳐 두면 대표값이 없다.
+    client.patch(f"/api/eis/spectra/{rows[1]['id']}", json={"area_cm2": 0.785})
+    assert client.get(f"/api/eis/scans/{sha}").json()["area_cm2_effective"] is None
+
+
 def test_the_circuit_presets_say_what_each_one_is_for(client):
     body = client.get("/api/eis/circuits").json()
     kinds = {entry["kind"]: entry for entry in body["kinds"]}

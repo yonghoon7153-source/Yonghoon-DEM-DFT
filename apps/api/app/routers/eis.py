@@ -781,6 +781,14 @@ def _scan_out(session: Session, records: list[SpectrumRecord], *,
     head = records[0]
     sample = session.get(Sample, head.sample_id) if head.sample_id else None
     points = [_scan_point(session, r) for r in records]
+    # 스윕 전부가 같은 면적일 때만 넘긴다.  한 스캔은 한 파일이고 한 셀이라
+    # 보통 같지만, 스윕 하나의 면적을 손으로 고쳤으면 다르다 — 그때 대표값
+    # 하나로 전부를 나누면 그림에 섞인 수가 나오고, 섞였다는 표시는 어디에도
+    # 안 남는다 (§0.4).  하나라도 비거나 어긋나면 `None` 이고, 화면은 Ω 로
+    # 그리면서 왜인지를 적는다.
+    areas = [_geometry(session, r)[1] for r in records]
+    area = areas[0] if areas and all(
+        one is not None and one == areas[0] for one in areas) else None
     parameters: list[str] = []
     for point in points:
         for name in point.values:
@@ -798,6 +806,7 @@ def _scan_out(session: Session, records: list[SpectrumRecord], *,
         sweeps=len(records),
         fitted=sum(1 for p in points if p.fit_id is not None),
         parameters=parameters,
+        area_cm2_effective=area,
         points=points if with_points else [],
     )
 

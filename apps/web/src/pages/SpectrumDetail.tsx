@@ -19,12 +19,15 @@ import { Plot, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Field, KeyValues, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { areaUnit, perArea, scalesWithArea } from '../lib/areanorm'
+import {
+  Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, validZUnit, zUnitLabel,
+} from '../lib/zunit'
 import { cellConfigFromName, dateTime, num, seriesColor, thicknessFromName }
   from '../lib/format'
 import { inductiveCount, nyquistXy } from '../lib/eis'
 import { isHeadline, paramMeaning } from '../lib/params'
 import { bodeTsv, fitParametersTsv, nyquistTsv } from '../lib/origin'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
 import type { CellConfig, CircuitKind, CircuitPreset, EisKind, SpectrumDetail as Detail, SpectrumFit }
   from '../lib/types'
 import { frequencySpan, hertz } from './Eis'
@@ -75,16 +78,26 @@ export function SpectrumDetail() {
     [fits, showFit],
   )
 
-  /** 면적이 적혀 있으면 Ω → Ω·cm².  없으면 1 배 (= 안 나눈다).
+  /** Ω 인가 Ω·cm² 인가 — 그리고 실제로 나눌 면적.
    *
    *  같은 전극이라도 지름 10 mm 와 16 mm 는 저항이 2.5 배 다르다.  셀끼리
    *  비교하려면 면적으로 나눈 값이라야 하고, 논문의 값도 대개 그것이다.
+   *  그런데 **계측기가 준 수는 Ω 다** — ZView 결과와 대조하거나 이 셀 하나의
+   *  사이클 변화만 볼 때는 안 나눈 쪽이 맞다.  그래서 고르게 두고, 고른 것은
+   *  비교 화면과 **같은 열쇠**로 이 브라우저에 남는다 (`lib/zunit.ts`): 같은
+   *  R₀ 가 한 화면에서 15.6, 다른 화면에서 12.3 으로 나오면 두 수가 다른
+   *  단위라는 말이 축 이름에만 남는다.
+   *
    *  **모르면 안 나눈다** — 추정 면적으로 나눈 수는 실측 ASR 과 똑같이 생겼다
-   *  (§0.4).  그래서 면적을 적는 순간 세 곳이 한꺼번에 바뀐다: 나이퀴스트,
-   *  보드의 |Z|, 그리고 피팅 파라미터의 저항들.
+   *  (§0.4).  `areaFor` 가 그때 `null` 을 주고 화면은 Ω 로 그리면서 왜인지를
+   *  적는다.  한 번 정해진 이 값이 네 곳을 한꺼번에 움직인다: 나이퀴스트,
+   *  보드의 |Z|, 피팅 파라미터의 저항들, 그리고 DRT.
    */
-  const area = record?.area_cm2_effective ?? null
-  const zUnit = area ? 'Ω·cm²' : 'Ω'
+  const cellArea = record?.area_cm2_effective ?? null
+  const [storedZUnit, setZUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohmcm2')
+  const zPick = validZUnit(storedZUnit, 'ohmcm2')
+  const area = areaFor(zPick, cellArea)
+  const zUnit = zUnitLabel(area ? 'ohmcm2' : 'ohm')
 
   const nyquist = useMemo<PlotSeries[]>(() => {
     if (!points.data) return []
@@ -268,6 +281,42 @@ export function SpectrumDetail() {
             bumpReload((value) => !value)
           }}
         />
+      </div>
+
+      {/* **단위는 화면 하나에 하나다.**  나이퀴스트·보드·파라미터 표·DRT 가 다
+          이것을 따라가고, 클립보드도 따라간다 — 보는 수와 붙여 넣는 수가 다르면
+          어느 쪽이 맞는지 확인하는 데 왕복이 든다.  그래서 그림마다 두지 않고
+          여기 한 줄에 둔다 (GITT 상세의 가로축 고르개와 같은 모양). */}
+      <div className="row" style={{ gap: 6, marginBottom: 10 }}>
+        <span className="tiny faint">임피던스 단위</span>
+        <div className="segmented" role="group" aria-label="임피던스 단위">
+          {Z_UNITS.map((one) => (
+            <button
+              key={one}
+              type="button"
+              className={zPick === one ? 'on' : ''}
+              // 면적이 없으면 Ω·cm² 는 **누를 수 없다.**  누르게 두면 아무 일도
+              // 안 일어나거나, 더 나쁘게는 안 나눈 수에 `Ω·cm²` 만 붙는다.
+              disabled={one === 'ohmcm2' && !cellArea}
+              title={one === 'ohmcm2' && !cellArea
+                ? '면적이 적혀 있지 않습니다 — 아래 "측정 정보" 에서 면적이나 지름을 적어 주세요'
+                : undefined}
+              onClick={() => setZUnit(one)}
+            >
+              {zUnitLabel(one)}
+            </button>
+          ))}
+        </div>
+        {/* 골라 둔 것이 이 스펙트럼에서 안 되면 **말한다.**  말없이 Ω 로
+            떨어뜨리면 화면은 Ω·cm² 를 고른 채로 Ω 를 그리고 있게 된다. */}
+        {zPick === 'ohmcm2' && !cellArea ? (
+          <span className="tiny warn">면적이 없어 Ω 로 그립니다</span>
+        ) : null}
+        {area ? (
+          <span className="tiny faint">
+            면적 {num(cellArea, 4)} cm² 로 나눈 값입니다
+          </span>
+        ) : null}
       </div>
 
       {/* 절차서의 마지막 단계가 "Copy to clipboard → 엑셀 → Origin" 이다. */}
@@ -526,7 +575,7 @@ export function SpectrumDetail() {
       </div>
 
       <div style={{ marginTop: 14 }}>
-        <DrtPanel spectrumId={record.id} />
+        <DrtPanel spectrumId={record.id} area={area} />
       </div>
 
       <div style={{ marginTop: 14 }}>

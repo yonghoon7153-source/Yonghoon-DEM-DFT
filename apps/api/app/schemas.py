@@ -914,6 +914,10 @@ class ScanOut(BaseModel):
     fitted: int
     #: 이 스캔에서 추세선을 그릴 수 있는 파라미터 이름들 (한 점이라도 있는 것).
     parameters: list[str] = []
+    #: Ω → Ω·cm² 로 바꿀 면적.  **스윕 전부가 같은 면적일 때만 값이 있다** —
+    #: 한 스캔은 한 파일이고 한 셀이라 보통 같지만, 스윕 하나의 면적을 손으로
+    #: 고쳤으면 다르다.  그때 대표값 하나로 전부를 나누면 섞인 수가 나온다.
+    area_cm2_effective: float | None = None
     points: list[ScanPointOut] = []
 
 

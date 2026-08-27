@@ -133,6 +133,47 @@ describe('ScanDetail', () => {
     expect(chips[1]!.className).toContain('off')
   })
 
+  /** 단위는 화면 하나에 하나다.  나이퀴스트를 Ω 로 보다 비교 화면에서
+   *  Ω·cm² 로 보면 같은 아크가 다른 크기로 나오고, 그 말은 축 이름에만 남는다. */
+  it('면적이 있으면 Ω·cm² 로 바꿀 수 있다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 3, fitted: 3, parameters: ['R0'], area_cm2_effective: 2,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 }), point(3, { R0: 7 })],
+    })
+    show()
+
+    // 기본은 Ω — 계측기가 준 수다.  안 나눴으면 나눴다는 말도 없다.
+    const ohm = await screen.findByRole('button', { name: 'Ω' })
+    expect(ohm.className).toContain('on')
+    expect(document.body.textContent).not.toContain('나눈 값입니다')
+
+    await userEvent.click(screen.getByRole('button', { name: 'Ω·cm²' }))
+    // **나눴으면 무엇으로 나눴는지 적는다.**  축 이름은 그림 안에 있어서
+    // 캡처를 붙여 넣으면 따라가지만, 이 줄은 화면에서 바로 읽힌다.
+    await waitFor(() =>
+      expect(document.body.textContent).toContain('면적 2.000 cm² 로 나눈 값입니다'))
+    expect(screen.getByRole('button', { name: 'Ω' }).className).not.toContain('on')
+  })
+
+  it('면적이 없거나 스윕마다 다르면 Ω·cm² 를 못 누르고, 왜인지 적는다', async () => {
+    window.localStorage.clear()
+    installFetch({
+      sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',
+      cell_config: 'half', purpose: 'SOC별', sample_id: null, sample_name: null,
+      sweeps: 2, fitted: 2, parameters: ['R0'], area_cm2_effective: null,
+      points: [point(1, { R0: 5 }), point(2, { R0: 6 })],
+    })
+    show()
+
+    const button = await screen.findByRole('button', { name: 'Ω·cm²' })
+    expect(button).toBeDisabled()
+    // 왜 못 누르는지가 단추에 붙어 있어야 한다 — 흐린 단추만으로는 고장이다.
+    expect(button.getAttribute('title')).toContain('면적')
+  })
+
   it('스윕 표에 R₀ 와 그 변화가 나온다 — SOC 를 따라가는 값이 그것이다', async () => {
     installFetch({
       sha256: 'abc', name: '스캔', original_name: 'scan.mpr', kind: 'liquid',

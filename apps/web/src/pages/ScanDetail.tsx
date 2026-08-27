@@ -17,8 +17,12 @@ import { Plot, PlotLegend, type PlotSeries } from '../components/Plot'
 import { Alert, Card, Empty, Field, Metric, MetricBand, Spinner } from '../components/ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
+import { perArea } from '../lib/areanorm'
 import { nyquistXy, sweepAt } from '../lib/eis'
-import { useAsync } from '../lib/hooks'
+import { useAsync, useStickyState } from '../lib/hooks'
+import {
+  Z_UNITS, Z_UNIT_KEY, type ZUnit, areaFor, validZUnit, zUnitLabel,
+} from '../lib/zunit'
 import { seriesWideTsv } from '../lib/origin'
 import type { ScanPoint } from '../lib/types'
 
@@ -76,7 +80,17 @@ export function ScanDetail() {
   //: 고주파 유도성 점을 접을까.  겹쳐 보는 화면에서는 세로 눈금이 하나라,
   //  한 스윕의 꼬리가 나머지 전부의 아크를 납작하게 만든다.
   const [dropInductive, setDropInductive] = useState(true)
+  //: Ω 인가 Ω·cm² 인가.  상세·비교 화면과 **같은 열쇠**를 쓴다 (`lib/zunit.ts`) —
+  //  한 스캔의 스윕을 여기서 Ω 로 보다 비교 화면에서 Ω·cm² 로 보면 같은 아크가
+  //  다른 크기로 나오고, 그 말은 축 이름에만 남는다.
+  const [storedZUnit, setZUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohm')
+  const zPick = validZUnit(storedZUnit, 'ohm')
   const parameters = useMemo(() => scan.data?.parameters ?? [], [scan.data])
+  //: 스윕 전부가 같은 면적일 때만 서버가 값을 준다 — 하나라도 어긋나면 `null`
+  //  이고, 그때는 나눌 수가 없다 (섞인 수가 나온다).
+  const scanArea = scan.data?.area_cm2_effective ?? null
+  const area = areaFor(zPick, scanArea)
+  const zUnit = zUnitLabel(area ? 'ohmcm2' : 'ohm')
   const axis = useMemo(() => axisOf(points), [points])
 
   // 목록이 오기 전에는 고를 것이 없다.  첫 파라미터를 기본으로 세우되,
@@ -108,7 +122,8 @@ export function ScanDetail() {
     return (raw.data ?? []).map((item) => {
       const index = order.get(item.id) ?? 0
       const point = points[index]
-      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive)
+      const { x, y } = nyquistXy(item.z_re, item.z_im, dropInductive,
+                                 (value) => perArea(value, area))
       // 범례에 SOC 를 적는다.  `#3` 만으로는 어느 충전 상태인지 모르고,
       // 그것이 이 화면을 여는 이유다.  비교 화면도 같은 규칙을 쓴다
       // (`lib/eis: sweepAt`) — 두 화면이 같은 스윕을 다르게 부르면 안 된다.
@@ -124,7 +139,7 @@ export function ScanDetail() {
         hidden: hidden.includes(point?.sweep_index ?? -1),
       }
     })
-  }, [raw.data, points, hidden, dropInductive])
+  }, [raw.data, points, hidden, dropInductive, area])
 
   const shownOverlay = useMemo(
     () => overlay.filter((series) => !series.hidden), [overlay])
@@ -192,14 +207,33 @@ export function ScanDetail() {
       <Card
         title="나이퀴스트 — 스윕 전부"
         actions={
-          <label className="tiny faint row" style={{ gap: 6, alignItems: 'center' }}>
-            <input
-              type="checkbox"
-              checked={dropInductive}
-              onChange={(event) => setDropInductive(event.target.checked)}
-            />
-            고주파 유도성 점 접기
-          </label>
+          <div className="row" style={{ gap: 10, alignItems: 'center' }}>
+            {/* 단위는 스캔 하나에 하나다 — 스윕끼리 견주는 화면이라 더 그렇다. */}
+            <div className="segmented" role="group" aria-label="임피던스 단위">
+              {Z_UNITS.map((one) => (
+                <button
+                  key={one}
+                  type="button"
+                  className={zPick === one ? 'on' : ''}
+                  disabled={one === 'ohmcm2' && !scanArea}
+                  title={one === 'ohmcm2' && !scanArea
+                    ? '스윕들의 면적이 비었거나 서로 다릅니다 — 스펙트럼 상세에서 면적이나 지름을 적어 주세요'
+                    : undefined}
+                  onClick={() => setZUnit(one)}
+                >
+                  {zUnitLabel(one)}
+                </button>
+              ))}
+            </div>
+            <label className="tiny faint row" style={{ gap: 6, alignItems: 'center' }}>
+              <input
+                type="checkbox"
+                checked={dropInductive}
+                onChange={(event) => setDropInductive(event.target.checked)}
+              />
+              고주파 유도성 점 접기
+            </label>
+          </div>
         }
         tight
       >
@@ -209,12 +243,28 @@ export function ScanDetail() {
             <>
               <Plot
                 series={overlay}
-                xLabel="Z′ (Ω)"
-                yLabel="−Z″ (Ω)"
+                xLabel={`Z′ (${zUnit})`}
+                yLabel={`−Z″ (${zUnit})`}
                 height={380}
                 equalAspect
                 positiveFit
               />
+              {/* 골라 둔 단위가 이 스캔에서 안 되면 **말한다.**  말없이 Ω 로
+                  떨어뜨리면 화면은 Ω·cm² 를 고른 채로 Ω 를 그리고 있게 된다. */}
+              {zPick === 'ohmcm2' && !scanArea ? (
+                <div className="tiny warn" style={{ paddingTop: 6 }}>
+                  스윕들의 면적이 비었거나 서로 다릅니다 — Ω 로 그립니다.
+                  <span className="tiny faint">
+                    {' '}한 스캔은 한 셀이라 면적이 같아야 하는데, 스윕 하나의
+                    면적만 고쳐 두면 대표값으로 나눈 수가 섞입니다.
+                  </span>
+                </div>
+              ) : null}
+              {area ? (
+                <div className="tiny faint" style={{ paddingTop: 6 }}>
+                  면적 {num(scanArea, 4)} cm² 로 나눈 값입니다.
+                </div>
+              ) : null}
               {/* 충방전 사이클 고르개와 같은 손놀림 — 조각을 눌러 켜고 끈다. */}
               <PlotLegend
                 series={overlay}
@@ -234,7 +284,7 @@ export function ScanDetail() {
                 skipped: overlay.length - shownOverlay.length,
                 skippedNote: (n) => `꺼 둔 ${n}개는 빠졌습니다`,
                 build: () => seriesWideTsv(shownOverlay,
-                                           { x: 'Z′ (Ω)', y: '−Z″ (Ω)' }),
+                                           { x: `Z′ (${zUnit})`, y: `−Z″ (${zUnit})` }),
               }]} />
             </>
           ) : (

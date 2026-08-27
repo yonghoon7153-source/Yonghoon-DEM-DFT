@@ -25,6 +25,7 @@ import {
   tauAxisLabel, tauAxisShort, tauAxisValue, validTauAxis,
 } from '../lib/tauaxis'
 import { perArea } from '../lib/areanorm'
+import { Z_UNIT_KEY, type ZUnit, validZUnit, zUnitLabel } from '../lib/zunit'
 import { rememberedLambda } from '../lib/drtlambda'
 import { inductiveCount, isScan, nyquistXy, sweepAt } from '../lib/eis'
 import { nyquistWideTsv, seriesWideTsv } from '../lib/origin'
@@ -51,14 +52,6 @@ function fileLabel(item: Spectrum): string {
 function label(item: Spectrum): string {
   return isScan(item) ? `${fileLabel(item)} #${item.sweep_index ?? '?'}` : fileLabel(item)
 }
-
-/** 겹쳐 볼 때의 단위.
- *
- *  같은 전극을 지름 10 mm 로 찍은 것과 16 mm 로 찍은 것은 저항이 2.5 배 다르다.
- *  재료가 같아도 그렇다 — **셀끼리 비교하려면 면적으로 나눈 값(ASR)이라야
- *  한다** (`lib/areanorm`).  논문의 값도 대개 그것이다.
- */
-type Unit = 'ohm' | 'ohmcm2'
 
 /** 어느 그림인가.
  *
@@ -117,10 +110,16 @@ export function EisCompare() {
   // 몇 점을 뺐는지 그림 밑에 적고, 그 자리에서 도로 켤 수 있다 — 유도성
   // 아크가 진짜인 셀(리튬 도금 같은)을 보러 온 사람이 막히지 않게.
   const [dropInductive, setDropInductive] = useState(true)
-  //: Ω 인가 Ω·cm² 인가.  기본은 Ω — 면적이 없는 스펙트럼이 하나라도 있으면
+  //: Ω 인가 Ω·cm² 인가.  **기본은 Ω** — 면적이 없는 스펙트럼이 하나라도 있으면
   //  Ω·cm² 는 그것을 빼야 하고, 처음 여는 사람에게 스펙트럼이 없어져 보이는
-  //  것보다 단위가 셀마다 다르다는 것이 덜 놀랍다.
-  const [unit, setUnit] = useState<Unit>('ohm')
+  //  것보다 단위가 셀마다 다르다는 것이 덜 놀랍다.  (상세 화면의 기본은
+  //  반대다 — 거기는 스펙트럼이 하나라 사라질 것이 없다.)
+  //
+  //  고른 것은 상세 화면과 **같은 열쇠**로 남는다 (`lib/zunit.ts`): 같은 R₀ 가
+  //  한 화면에서 15.6, 다른 화면에서 12.3 으로 나오면 두 수가 다른 단위라는
+  //  말이 축 이름에만 남고, 눈은 축까지 안 간다.
+  const [storedUnit, setUnit] = useStickyState<ZUnit>(Z_UNIT_KEY, 'ohm')
+  const unit = validZUnit(storedUnit, 'ohm')
   //: 어느 그림을 보고 있나.  Origin 클립보드가 이것을 따라간다 — 안 보이는
   //  그림을 복사할 수 있으면 사람은 방금 본 것을 복사했다고 믿는다.
   const [mode, setMode] = useState<Mode>('nyquist')
@@ -206,7 +205,7 @@ export function EisCompare() {
              dropped: split.dropped }
   }, [points.data, unit, areaOf])
 
-  const unitLabel = unit === 'ohm' ? 'Ω' : 'Ω·cm²'
+  const unitLabel = zUnitLabel(unit)
 
   // DRT 는 볼 때만 부른다.  스펙트럼마다 한 번씩 푸는 계산이라, 안 보는 동안
   // 부르면 나이퀴스트만 보려던 사람이 그 시간을 대신 낸다.
@@ -419,9 +418,9 @@ export function EisCompare() {
             </div>
             <div className="segmented" role="group" aria-label="단위">
               <button type="button" className={unit === 'ohm' ? 'on' : ''}
-                      onClick={() => setUnit('ohm')}>Ω</button>
+                      onClick={() => setUnit('ohm')}>{zUnitLabel('ohm')}</button>
               <button type="button" className={unit === 'ohmcm2' ? 'on' : ''}
-                      onClick={() => setUnit('ohmcm2')}>Ω·cm²</button>
+                      onClick={() => setUnit('ohmcm2')}>{zUnitLabel('ohmcm2')}</button>
             </div>
             {/* DRT 를 볼 때만 뜬다 — 나이퀴스트에는 τ 축이 없다. */}
             {mode === 'drt' ? (

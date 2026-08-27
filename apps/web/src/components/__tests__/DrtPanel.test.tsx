@@ -135,10 +135,35 @@ describe('DRT 화면', () => {
     render(<DrtPanel spectrumId={1} />)
 
     // 넓이가 저항이라는 것이 DRT 를 그림이 아니라 수로 만든다.
-    const table = (await screen.findByText('저항')).closest('table')!
+    const table = (await screen.findByText('저항 (Ω)')).closest('table')!
     const cells = within(table).getAllByRole('cell').map((cell) => cell.textContent)
     expect(cells).toContain('20.00 Ω')
     expect(cells).toContain('40.00 Ω')
+  })
+
+  /** γ 도 저항이다 — 봉우리 아래 넓이가 곧 그 과정의 저항이다.  나이퀴스트를
+   *  Ω·cm² 로 보면서 γ 만 Ω 로 두면 같은 화면의 두 그림이 다른 자로 그려지고,
+   *  R∞ 는 나이퀴스트에서 읽는 수와 곧바로 견주는 값이라 더 그렇다. */
+  it('면적을 받으면 γ · R∞ · 봉우리 저항이 함께 Ω·cm² 가 된다', async () => {
+    installFetch((url) =>
+      path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
+    render(<DrtPanel spectrumId={1} area={2} />)
+
+    // 5.0 Ω × 2 cm² = 10 Ω·cm².
+    expect(await screen.findByText('10.00 Ω·cm²')).toBeInTheDocument()
+    const table = screen.getByText('저항 (Ω·cm²)').closest('table')!
+    const cells = within(table).getAllByRole('cell').map((cell) => cell.textContent)
+    expect(cells).toContain('40.00 Ω·cm²')
+    expect(cells).not.toContain('20.00 Ω')
+  })
+
+  it('면적이 없으면 안 나눈다 — 이름도 Ω 그대로', async () => {
+    installFetch((url) =>
+      path(url) === '/api/eis/spectra/1/drt/sweep' ? sweep(2) : {})
+    render(<DrtPanel spectrumId={1} area={null} />)
+
+    expect(await screen.findByText('5.000 Ω')).toBeInTheDocument()
+    expect(screen.queryByText(/Ω·cm²/)).toBeNull()
   })
 
   it('뺀 유도성 점을 말한다', async () => {

@@ -796,6 +796,9 @@ export interface Scan {
   sweeps: number
   fitted: number
   parameters: string[]
+  /** Ω → Ω·cm² 로 바꿀 면적.  **스윕 전부가 같을 때만 값이 있다** — 하나라도
+   *  비거나 어긋나면 `null` 이고, 화면은 Ω 로 그리면서 왜인지를 적는다. */
+  area_cm2_effective: number | null
   /** 목록에서는 비어 있다.  한 스캔을 열었을 때만 채워진다. */
   points: ScanPoint[]
 }

@@ -498,9 +498,14 @@ export function fitParametersTsv(
  *  τ 를 그대로 낸다 — log 를 취하는 것은 그리는 쪽의 선택이고, 로그로 내보내면
  *  워크시트에서 원래 시간을 되돌릴 수 없다.
  */
-export function drtTsv(drt: { tau_s: number[]; gamma_ohm: number[] }): string {
+export function drtTsv(
+  drt: { tau_s: number[]; gamma_ohm: number[] },
+  /** γ 의 눈금 바꾸기 (Ω → Ω·cm²).  **τ 는 안 탄다** — 시간은 면적과 무관하다.
+   *  화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 그것이라야 한다. */
+  scale: (value: number) => number = (value) => value,
+): string {
   if (!drt.tau_s.length) return ''
-  return tsvColumns([drt.tau_s.map(cell), drt.gamma_ohm.map(cell)])
+  return tsvColumns([drt.tau_s.map(cell), drt.gamma_ohm.map((value) => cell(scale(value)))])
 }
 
 /** pOCV: 용량과 전압.  충전과 방전을 `--` 한 줄로 갈라 쌓는다. */

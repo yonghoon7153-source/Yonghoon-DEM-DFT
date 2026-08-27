@@ -16,6 +16,7 @@ import { Plot, type PlotSeries } from './Plot'
 import { Alert, Card, KeyValues, Spinner } from './ui'
 import { api } from '../lib/api'
 import { num, seriesColor } from '../lib/format'
+import { perArea } from '../lib/areanorm'
 import { drtTsv } from '../lib/origin'
 import { nearestLambdaIndex, rememberedLambda, rememberLambda } from '../lib/drtlambda'
 import { useAsync, useStickyState } from '../lib/hooks'
@@ -86,7 +87,16 @@ const WIDTH_NOTE =
  */
 const DEFAULT_ORDER = 0
 
-export function DrtPanel({ spectrumId }: { spectrumId: number }) {
+export function DrtPanel({ spectrumId, area = null }: {
+  spectrumId: number
+  /** 나눌 면적 (cm²).  `null` 이면 안 나눈다 — Ω 그대로다.
+   *
+   *  **γ 도 저항이다.**  봉우리 아래 넓이가 곧 그 과정의 저항이라, 나이퀴스트를
+   *  Ω·cm² 로 보면서 γ 만 Ω 로 두면 같은 화면의 두 그림이 다른 자로 그려진다 —
+   *  R∞ 와 전체 분극은 나이퀴스트에서 읽는 수와 곧바로 견주는 값이라 더 그렇다.
+   *  판정은 화면이 하고 (`lib/zunit: areaFor`) 여기는 받은 대로 곱한다. */
+  area?: number | null
+}) {
   const [order, setOrder] = useState(DEFAULT_ORDER)
   const [index, setIndex] = useState<number | null>(null)
   const sweep = useAsync(
@@ -129,6 +139,10 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
   const shown: Drt | null =
     !fresh || index === null ? null : (results[index] ?? null)
 
+  // 적을 단위 이름.  **수를 곱한 것과 같은 판정에서 나온다** — 이름을 따로
+  // 받으면 안 나눈 수에 `Ω·cm²` 만 붙는 화면이 만들어진다.
+  const zUnit = area ? 'Ω·cm²' : 'Ω'
+
   const series = useMemo<PlotSeries[]>(() => {
     if (!shown) return []
     return [{
@@ -136,11 +150,11 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
       // 가로축은 로그 τ 다.  τ 자체를 쓰면 여섯 자리가 한 점에 뭉친다.
       // 밑을 고를 수 있고 기본은 `ln` 이다 (`lib/tauaxis.ts` 에 이유).
       x: shown.tau_s.map((value) => tauAxisValue(axis, value)),
-      y: shown.gamma_ohm,
+      y: shown.gamma_ohm.map((value) => perArea(value, area)),
       color: seriesColor(0),
       width: 2,
     }]
-  }, [shown, axis])
+  }, [shown, axis, area])
 
   if (sweep.error) {
     return (
@@ -271,7 +285,7 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
         <Plot
           series={series}
           xLabel={tauAxisLabel(axis)}
-          yLabel="γ (Ω)"
+          yLabel={`γ (${zUnit})`}
           height={280}
           legend
           describeX={(value) => tauBand(value, axis)}
@@ -286,18 +300,20 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
           items={[{
             label: 'γ(τ)',
             // τ 를 그대로 낸다 -- 로그로 내보내면 워크시트에서 되돌릴 수 없다.
-            title: 'τ 와 γ 두 열 · 지금 보고 있는 λ 의 것',
-            build: () => drtTsv(shown),
+            title: `τ (s) 와 γ (${zUnit}) 두 열 · 지금 보고 있는 λ 의 것`,
+            // 화면이 Ω·cm² 로 그리고 있으면 붙여 넣는 열도 Ω·cm² 다.
+            build: () => drtTsv(shown, (value) => perArea(value, area)),
           }]}
         />
 
         <KeyValues
           cols={2}
           rows={[
-            ['R∞', `${num(shown.r_inf_ohm, 4)} Ω`],
+            ['R∞', `${num(perArea(shown.r_inf_ohm, area), 4)} ${zUnit}`],
             ['전체 분극', kept < 0.95
-              ? `${num(shown.total_polarisation_ohm, 4)} Ω · 벌점 없는 답의 ${(kept * 100).toFixed(0)}%`
-              : `${num(shown.total_polarisation_ohm, 4)} Ω`],
+              ? `${num(perArea(shown.total_polarisation_ohm, area), 4)} ${zUnit}`
+                + ` · 벌점 없는 답의 ${(kept * 100).toFixed(0)}%`
+              : `${num(perArea(shown.total_polarisation_ohm, area), 4)} ${zUnit}`],
             ['χ²', num(shown.chi_squared, 4)],
             ['봉우리', `${shown.peaks.length}개`],
             ...(shown.dropped_inductive
@@ -313,8 +329,8 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
                 <tr>
                   <th>주파수</th>
                   <th>τ</th>
-                  <th>저항</th>
-                  <th>γ 최대</th>
+                  <th>저항 ({zUnit})</th>
+                  <th>γ 최대 ({zUnit})</th>
                 </tr>
               </thead>
               <tbody>
@@ -323,8 +339,8 @@ export function DrtPanel({ spectrumId }: { spectrumId: number }) {
                     <td>{format(peak.frequency_hz)} Hz</td>
                     <td>{format(peak.tau_s)} s</td>
                     {/* 봉우리 아래 넓이 — DRT 를 그림이 아니라 수로 만드는 것. */}
-                    <td>{num(peak.resistance_ohm, 4)} Ω</td>
-                    <td className="dim">{num(peak.gamma_ohm, 3)}</td>
+                    <td>{num(perArea(peak.resistance_ohm, area), 4)} {zUnit}</td>
+                    <td className="dim">{num(perArea(peak.gamma_ohm, area), 3)}</td>
                   </tr>
                 ))}
               </tbody>
