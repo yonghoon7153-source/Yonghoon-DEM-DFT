@@ -1028,8 +1028,9 @@ if want("prereq"):
         #   스스로 찍는 **"못 하는 것" 안내문**도 ⛔ 로 시작한다 — 한계 설명이지 문제가 아니다.
         #   그걸 실패로 세면 오탐이고, 화면 아래 "조치 필요 N건" 카운트까지 오염된다.
         #   ⇒ **체인이 직접 찍은 줄**(ts() 가 붙이는 시각 접두)만 실패로 센다.
-        bad = [l for l in txt.splitlines()
-               if re.match(r"^\[\d\d-\d\d \d\d:\d\d:\d\d\]\s*⛔", l)]
+        # 체인이 die() 로 찍는 **명시 표지**만 실패로 센다 (2026-08-28).
+        #   시각 접두만으로 세면 옛 selftest 가 남긴 ⛔ 한 줄에도 가짜 경보가 난다 — 실제로 났다.
+        bad = [l for l in txt.splitlines() if "[CHAIN-FAIL]" in l]
         npt = txt.count("  ▶ ")
         if run:
             live()          # ⛔ 이걸 안 찍으면 **도는 중인데도 접힌다** (2026-08-28 실측)
