@@ -1373,17 +1373,22 @@ def align_report(first, last, cell, far_r=FAR_FIELD_R_A):
     return out
 
 
-def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverged=True):
+def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverged=True,
+                    base_dirs=False):
     """P0-1 진단: 두 끝점의 겉보기 변위에서 병진·라벨을 뺀다.
 
     source="in"  → 갓 지은 좌표 (relax.in)   · source="out" → 이완 좌표 (relax.out)
     **둘 다 돌려서 비교하는 것이 이 도구의 용법**이다: in 이 깨끗한데 out 이 크면
     그 차이는 이완(또는 이완 표류)에서 온 것이다.
+
+    base_dirs=True 면 `_r2`·`_r3` 이어달리기를 **따라가지 않고** `ep_initial/`·`ep_final/`
+    원본을 본다. 08-17 사고가 정확히 여기였다 — 한쪽은 갓 지은 입력을, 다른 쪽은
+    이완본을 보고 "다른 홉" 이라는 결론을 냈다. 두 규약을 나란히 돌려야 그게 안 숨는다.
     """
     d = os.path.join(work, tag)
     got, conv = {}, {}
     for nm in ("ep_initial", "ep_final"):
-        ed = endpoint_dir(d, nm)
+        ed = os.path.join(d, nm) if base_dirs else endpoint_dir(d, nm)
         if source == "in":
             p = os.path.join(ed, "relax.in")
             if not os.path.isfile(p):
@@ -1395,8 +1400,8 @@ def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverg
                 return 1, f"⛔ {nm}: {err}"
             got[nm], conv[nm] = rows, info.get("converged")
         got[nm + "_dir"] = ed
-    cell = parse_cell(os.path.join(endpoint_dir(d, "ep_initial"), "relax.in"))
-    cell2 = parse_cell(os.path.join(endpoint_dir(d, "ep_final"), "relax.in"))
+    cell = parse_cell(os.path.join(got["ep_initial_dir"], "relax.in"))
+    cell2 = parse_cell(os.path.join(got["ep_final_dir"], "relax.in"))
     if cell is None:
         return 1, "⛔ CELL_PARAMETERS 를 못 읽었다"
     if cell2 and max(abs(cell[i][k] - cell2[i][k]) for i in range(3) for k in range(3)) > 1e-6:
@@ -1406,10 +1411,12 @@ def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverg
     if "error" in rep:
         return 1, rep["error"]
     rep["source"] = source
+    rep["endpoint_convention"] = "base(ep_*)" if base_dirs else "resolved(_r* 우선)"
     rep["endpoint_dirs"] = [got["ep_initial_dir"], got["ep_final_dir"]]
     rep["relax_converged"] = {k: conv[k] for k in ("ep_initial", "ep_final")}
 
-    L = [f"■ 끝점 정렬 진단 — {tag} (source=relax.{source})",
+    L = [f"■ 끝점 정렬 진단 — {tag} (source=relax.{source} · "
+         f"{'원본 ep_*' if base_dirs else '수렴본 _r* 우선'})",
          f"   끝점: {os.path.basename(got['ep_initial_dir'])} · "
          f"{os.path.basename(got['ep_final_dir'])}"]
     if source == "out":
@@ -1429,7 +1436,7 @@ def align_endpoints(work, tag, source="in", far_r=FAR_FIELD_R_A, allow_unconverg
         L.append(f"     r {b['r_A']:>6}  n={b['n']:<4} 중앙 {b['median_A']:<8} 최대 {b['max_A']}")
     L += [f"   far-field(>{far_r} Å, n={rep['n_far_field']}) 최대 = {rep['far_field_max_A']} Å",
           "", "   " + rep["verdict_text"]]
-    op = os.path.join(d, f"align_report_{source}.json")
+    op = os.path.join(d, f"align_report_{source}{'_base' if base_dirs else ''}.json")
     try:
         json.dump(rep, open(op, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
         L.append(f"   → {op}")
@@ -1539,6 +1546,10 @@ def main():
                     help="in=갓 지은 좌표 · out=이완 좌표 · both=둘 다(권장)")
     ap.add_argument("--far_r", type=float, default=FAR_FIELD_R_A,
                     help=f"far-field 기준 거리 [Å] (기본 {FAR_FIELD_R_A})")
+    ap.add_argument("--align_base", action="store_true",
+                    help="이어달리기(_r2·_r3)를 따라가지 않고 **원본 ep_initial/ep_final** 을 본다. "
+                         "08-17 사고(한쪽은 갓 지은 입력·한쪽은 이완본)를 드러내려면 "
+                         "이것과 기본 규약을 나란히 돌린다")
     ap.add_argument("--selftest", action="store_true")
     a = ap.parse_args()
     if a.selftest:
@@ -1550,7 +1561,8 @@ def main():
         for s in srcs:
             # ⚠ 미수렴 좌표를 **일부러** 읽는다 — 미수렴 표류를 보는 것이 이 진단의 목적이다.
             #   대신 보고서가 미수렴을 ⛔ 로 명시한다 (조용히 쓰지 않는다).
-            r, m = align_endpoints(a.work, a.tag, s, a.far_r, allow_unconverged=True)
+            r, m = align_endpoints(a.work, a.tag, s, a.far_r, allow_unconverged=True,
+                                   base_dirs=a.align_base)
             print(m)
             print()
             rc = rc or r
