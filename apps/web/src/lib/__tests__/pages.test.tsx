@@ -284,6 +284,9 @@ describe('Dashboard capacity column', () => {
 
 describe('Dashboard 유지율 그림', () => {
   function installRows(rows: unknown[]) {
+    // 곡선 수 선택은 이 브라우저에 남는다 (useStickyState).  안 지우면 앞
+    // 시험에서 누른 '전부' 가 다음 시험의 기본이 된다.
+    window.localStorage.clear()
     installFetch((url) => {
       if (path(url) === '/api/groups') return []
       if (path(url) === '/api/dashboard') {
@@ -316,6 +319,55 @@ describe('Dashboard 유지율 그림', () => {
     installRows([dashboardRow({ sample_id: 1, sample_name: 'A', trend: [100] })])
     await screen.findByRole('link', { name: 'A' })
     expect(screen.queryByText(/용량 유지율/)).toBeNull()
+  })
+
+  //: 범례 조각만 센다.  표 안에도 셀 이름이 붙은 단추가 있어 (지우기), 역할과
+  //: 이름으로 고르면 한 셀이 둘로 세어진다.
+  const chips = () => [...document.querySelectorAll<HTMLElement>('.legend-chip')]
+
+  const many = (count: number) =>
+    Array.from({ length: count }, (_, i) =>
+      dashboardRow({ sample_id: i + 1, sample_name: `cell-${i + 1}` }))
+
+  it('열 개를 넘으면 최근 열 개만 그린다 — 쉰 개를 겹치면 아무것도 안 보인다',
+     async () => {
+    installRows(many(51))
+    expect(await screen.findByRole('button', { name: '최근 10개' })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: '전부 51개' })).toBeInTheDocument()
+    // 범례 조각은 **그린 것만** 이어야 한다 -- 안 그린 곡선의 이름이 범례에
+    // 남으면 그 이름을 눌러도 아무 일이 안 난다.
+    expect(chips()).toHaveLength(10)
+    // 차례는 표와 같다: 서버가 준 순서의 위 열 줄.
+    const names = chips().map((chip) => chip.textContent)
+    expect(names.some((name) => name?.startsWith('cell-10'))).toBe(true)
+    expect(names.some((name) => name?.startsWith('cell-11'))).toBe(false)
+  })
+
+  it('잘랐다고 그림 아래에 적는다 — 캡처만 보는 사람이 속으면 안 된다', async () => {
+    installRows(many(51))
+    // 문장이 조각으로 나뉘어 있으므로 (`<strong>`) 담고 있는 요소로 찾는다.
+    const note = await screen.findByText((_, node) =>
+      node?.className === 'tiny faint'
+      && (node.textContent ?? '').includes('51개 중')
+      && (node.textContent ?? '').includes('최근 10개'))
+    expect(note).toBeInTheDocument()
+  })
+
+  it("'전부' 를 누르면 다 그린다", async () => {
+    installRows(many(51))
+    await userEvent.click(await screen.findByRole('button', { name: '전부 51개' }))
+    expect(chips()).toHaveLength(51)
+    // 다 그렸으면 잘랐다는 말이 남아 있으면 안 된다 -- 그것이 곧 거짓말이다.
+    expect(screen.queryByText(/51개 중/)).toBeNull()
+  })
+
+  it('열 개 이하면 단추가 아예 없다 — 누를 것이 하나뿐인 단추는 자리만 찬다',
+     async () => {
+    installRows(many(4))
+    await screen.findByText('용량 유지율 겹쳐보기')
+    expect(screen.queryByRole('button', { name: /^최근 /})).toBeNull()
+    expect(screen.queryByRole('button', { name: /^전부 /})).toBeNull()
+    expect(chips()).toHaveLength(4)
   })
 })
 

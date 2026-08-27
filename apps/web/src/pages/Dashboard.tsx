@@ -112,7 +112,7 @@ export function Dashboard() {
 
   // Built from the sparkline data already in the response, so overlaying every
   // visible cell costs no extra request.
-  const overlay: PlotSeries[] = useMemo(
+  const everyCurve: PlotSeries[] = useMemo(
     () =>
       rows
         .filter((row) => row.trend.length > 1 && row.trend_first_cycle !== null)
@@ -143,8 +143,28 @@ export function Dashboard() {
     [rows, hiddenSeries],
   )
 
+  //: **쉰 개를 겹치면 아무것도 안 보인다.**  실측: 51 곡선에 범례가 51 조각.
+  //: 그림이 "무엇이 어떻게 늙는가" 대신 색 뭉치가 된다.
+  //:
+  //: 그래서 기본은 **최근 열 개**다.  차례는 표와 같은 것을 쓴다 (`rows` 가
+  //: 이미 그 차례다) — 표에서 위에 있는 열 줄이 그림에도 있어야, 표를 보다
+  //: 그림을 볼 때 눈이 다시 찾지 않는다.  "최근" 의 뜻도 거기서 온다:
+  //: 시험일을 안 적은 것이 먼저(올린 때 최신순), 그다음이 시험일 최신순.
+  //:
+  //: **열 개 이하면 단추 자체가 없다.**  누를 것이 하나뿐인 단추는 화면만
+  //: 차지하고, 그때는 이미 다 보이고 있다.
+  const [allCurves, setAllCurves] = useStickyState('bml.dashboardAllCurves', false)
+  const limited = !allCurves && everyCurve.length > OVERLAY_LIMIT
+  const overlay = useMemo(
+    () => (limited ? everyCurve.slice(0, OVERLAY_LIMIT) : everyCurve),
+    [everyCurve, limited],
+  )
+
   // 튄 곡선 하나가 나머지를 납작하게 만들지 않게 위를 잘라 준다.  범례에서
   // 끈 곡선은 안 센다 — 사람이 이미 안 보겠다고 한 것이 범위를 정하면 안 된다.
+  //
+  // **그리는 것만 센다.**  안 그린 곡선이 세로 범위를 정하면 그림이 제 곡선들
+  // 위아래로 빈 칸을 크게 남긴다 -- 보이지 않는 것 때문에.
   const span = useMemo(() => overlayRange(overlay), [overlay])
 
   return (
@@ -235,9 +255,23 @@ export function Dashboard() {
           <Card
             title={overlay.length > 1 ? '용량 유지율 겹쳐보기' : '용량 유지율'}
             actions={
-              <span className="tiny faint">
-                각 셀의 기준 사이클 대비 · 자세한 비교는{' '}
-                <Link to="/compare">비교 화면</Link>
+              <span className="row" style={{ gap: 10, alignItems: 'center' }}>
+                {everyCurve.length > OVERLAY_LIMIT ? (
+                  <div className="segmented" role="group" aria-label="그릴 곡선">
+                    <button type="button" className={allCurves ? '' : 'on'}
+                            onClick={() => setAllCurves(false)}>
+                      최근 {OVERLAY_LIMIT}개
+                    </button>
+                    <button type="button" className={allCurves ? 'on' : ''}
+                            onClick={() => setAllCurves(true)}>
+                      전부 {everyCurve.length}개
+                    </button>
+                  </div>
+                ) : null}
+                <span className="tiny faint">
+                  각 셀의 기준 사이클 대비 · 자세한 비교는{' '}
+                  <Link to="/compare">비교 화면</Link>
+                </span>
               </span>
             }
             tight
@@ -250,6 +284,17 @@ export function Dashboard() {
               yRange={span.range}
               markers={[{ x: 0, label: '' }].slice(0, 0)}
             />
+            {/* **캡처만 보는 사람이 속으면 안 된다.**  단추는 화면에 있지만
+                그림만 잘라 붙이면 "이 그룹에는 열 셀뿐" 으로 읽힌다 — 잘린
+                그림에 잘렸다고 적는 것은 이 저장소가 이미 부분 사이클에서
+                한 번 배운 것이다. */}
+            {limited ? (
+              <div className="tiny faint" style={{ padding: '0 var(--s4) var(--s3)' }}>
+                {everyCurve.length}개 중 <strong>최근 {OVERLAY_LIMIT}개</strong>만
+                그렸습니다 — 표의 위 열 줄과 같은 것입니다. 나머지는 위의{' '}
+                <strong>전부</strong> 로.
+              </div>
+            ) : null}
             {span.clipped ? (
               <div className="tiny faint" style={{ padding: '0 var(--s4) var(--s3)' }}>
                 {RETENTION_CEILING} % 위는 잘랐습니다 — 그 위로 튄 곡선 하나가
@@ -491,3 +536,10 @@ const placeRow = (row: DashboardRow) => ({
  *  가로로 밀려 표가 어긋난다 — 셀·상태·보고 사이클·용량·유지율·추세·급감·
  *  초기 CE·기준·로딩·조건 = 11.  지우기는 이름 칸 안으로 들어갔다. */
 const COLUMN_COUNT = 11
+
+/** 겹쳐 그릴 곡선의 기본 상한.
+ *
+ *  열 개는 색으로 가를 수 있는 대략의 한계이자, 범례가 한두 줄에 들어가는 수다.
+ *  실측 51개에서는 그림도 범례도 읽히지 않았다.
+ */
+const OVERLAY_LIMIT = 10
