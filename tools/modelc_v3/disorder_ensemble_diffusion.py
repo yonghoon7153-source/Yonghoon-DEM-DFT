@@ -227,7 +227,28 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     md.run(int(equilib_ps * 1000 / dt_fs))
     save_int = max(1, int(save_fs / dt_fs))
     frames = []
-    md.attach(lambda: frames.append(atoms.copy()), interval=save_int)
+    # ⭐⭐ 2026-08-27 — **궤적을 진행 중에 쓴다** (Codex 회신 G 권고 ①).
+    #   옛 판은 frames 를 메모리에만 쌓고 `write(traj.xyz)` 를 **끝에 한 번** 했다. 두 가지가 깨졌다:
+    #     (a) 진행 중 누적 prefix(100/200/400 ps) 분석이 **원리적으로 불가능**했다 —
+    #         디스크에 아무것도 없으니 D_inc plateau 를 보고 조기 종료할 수가 없다.
+    #         800 ps 런에서 이건 곧 "20시간 넘게 더 돌지 말지" 를 못 정한다는 뜻이다.
+    #     (b) 45시간짜리가 죽으면 **궤적과 MSD 가 통째로** 날아간다. md.log 는 ASE
+    #         MDLogger 라 위치가 없어 아무것도 복구 못 한다.
+    #   → 스냅샷마다 append 한다. 메모리 목록은 그대로 유지해 MSD 계산 경로를 안 바꾼다
+    #     (기존 D 값이 그대로 재현돼야 한다 — 아래 ⚠ 규약).
+    if save_traj:
+        _trj = out_dir / "traj.xyz"
+        _trj.unlink(missing_ok=True)          # resume 시 옛 프레임에 이어붙지 않게
+
+        def _snap():
+            a = atoms.copy()
+            frames.append(a)
+            # ⚠ append=True 는 프레임마다 열고 닫는다. save_fs 100 fs 면 8050 프레임 =
+            #   45시간에 걸쳐 20초당 한 번이라 비용이 무시할 만하다.
+            write(str(_trj), a, append=True)
+        md.attach(_snap, interval=save_int)
+    else:
+        md.attach(lambda: frames.append(atoms.copy()), interval=save_int)
     md.run(int(prod_ps * 1000 / dt_fs))
     D, t_ps, msd, extra = li_diffusion_from_frames(frames, save_fs, fit_window_ps)
     # ⚠ D_Li_cm2_s / times_ps / msd_Li_A2 의 정의는 **바꾸지 않는다** — 이미 나간 값들이
@@ -236,9 +257,10 @@ def run_md(atoms, calc, T, equilib_ps, prod_ps, dt_fs, friction, save_fs,
     #   resume 이 msd.json 을 보고 건너뛰어 **traj 가 영영 안 생겼다** — --save_traj 를
     #   넣은 목적(소급 MTO·홉 통계 복구)이 정확히 그 상황에서 깨진다.
     if save_traj:
-        # full production trajectory (extended-xyz) for jump stats / Li-density
-        # cube / van Hove. + sidecar meta so downstream tools auto-read save_fs.
-        write(str(out_dir / "traj.xyz"), frames)
+        # 궤적은 위에서 **이미 증분으로 다 썼다** — 여기서 다시 쓰지 않는다.
+        # ⚠ 옛 판의 `write(traj.xyz, frames)` 를 남겨두면 같은 파일을 통째로 덮어써서
+        #   증분 기록의 의미가 사라진다(그리고 8050 프레임을 한 번 더 직렬화한다).
+        # sidecar meta 는 그대로 — downstream 도구가 save_fs 를 자동으로 읽는다.
         (out_dir / "aimd_results.json").write_text(json.dumps(
             {"T_K": T, "save_fs": save_fs, "n_frames": len(frames),
              "prod_ps": prod_ps, "dt_fs": dt_fs}, indent=2))
