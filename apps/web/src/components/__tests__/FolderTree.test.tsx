@@ -49,8 +49,25 @@ beforeEach(() => window.localStorage.clear())
 afterEach(() => window.localStorage.clear())
 
 describe('폴더 줄', () => {
-  it('최상위를 접으면 그 소그룹까지 같이 숨는다', async () => {
+  it('처음에는 다 접혀 있다 — 그래야 첫 화면이 곧 요약이다', () => {
     render(<Harness />)
+    // 최상위 폴더 이름과 수만 보인다.
+    expect(screen.getByText('Mid_Ni')).toBeInTheDocument()
+    expect(screen.getByText('묶음 없음')).toBeInTheDocument()
+    // 소그룹도 셀도 아직 없다 — 펴야 나온다.
+    expect(screen.queryByText('4.4V')).toBeNull()
+    expect(screen.queryByText('셀 1')).toBeNull()
+    expect(screen.queryByText('셀 3')).toBeNull()
+  })
+
+  it('최상위를 펴면 소그룹이 나오고, 다시 접으면 같이 숨는다', async () => {
+    render(<Harness />)
+    await userEvent.click(screen.getByRole('button', { name: 'Mid_Ni 펼치기' }))
+    // 소그룹 줄은 나오지만 그 안의 셀은 아직 접혀 있다 — 한 단계씩 편다.
+    expect(screen.getByText('4.4V')).toBeInTheDocument()
+    expect(screen.queryByText('셀 1')).toBeNull()
+
+    await userEvent.click(screen.getByRole('button', { name: '4.4V 펼치기' }))
     expect(screen.getByText('셀 1')).toBeInTheDocument()
 
     await userEvent.click(screen.getByRole('button', { name: 'Mid_Ni 접기' }))
@@ -59,18 +76,17 @@ describe('폴더 줄', () => {
     expect(screen.queryByText('셀 1')).toBeNull()
     // 형제 폴더는 그대로.
     expect(screen.getByText('묶음 없음')).toBeInTheDocument()
-
-    await userEvent.click(screen.getByRole('button', { name: 'Mid_Ni 펼치기' }))
-    expect(screen.getByText('셀 1')).toBeInTheDocument()
   })
 
-  it('접힘은 새로고침 뒤에도 남는다 — 화면 상태이지 데이터가 아니다', async () => {
+  it('펴 둔 것은 새로고침 뒤에도 펴져 있다 — 화면 상태이지 데이터가 아니다', async () => {
     const first = render(<Harness />)
-    await userEvent.click(screen.getByRole('button', { name: '4.4V 접기' }))
+    await userEvent.click(screen.getByRole('button', { name: 'Mid_Ni 펼치기' }))
+    await userEvent.click(screen.getByRole('button', { name: '4.4V 펼치기' }))
     first.unmount()
 
     render(<Harness />)
-    expect(await screen.findByRole('button', { name: '4.4V 펼치기' })).toBeInTheDocument()
+    expect(await screen.findByRole('button', { name: '4.4V 접기' })).toBeInTheDocument()
+    expect(screen.getByText('셀 1')).toBeInTheDocument()
   })
 
   it('처음 보는 사람에게는 표시가 없다 — 기억이 없는 것은 새 것이 아니다', () => {
@@ -90,10 +106,12 @@ describe('폴더 줄', () => {
       { id: 3, group: null, name: '', parent: '' },
     ]} />)
     // 들어온 것과 나간 것은 따로 그린다 — 색이 다르므로 조각도 둘이다.
+    // **접힌 채로도 보여야 한다.**  그것이 `subtree` 로 세는 이유다 — 첫
+    // 화면에서 어느 묶음이 움직였는지 훑는 것이 이 수의 용도다.
     const badges = screen.getAllByTitle(/지난번에 이 화면을 떠날 때/)
-    expect(badges.map((node) => node.textContent)).toEqual(['+1', '−1', '+1', '−1'])
-    //                            ↑ Mid_Ni 는 4.4V 것을 합쳐 세므로 같은 수가 두 벌
+    expect(badges.map((node) => node.textContent)).toEqual(['+1', '−1'])
     expect(badges[0]!.className).toContain('more')
     expect(badges[1]!.className).toContain('less')
+    expect(screen.queryByText('4.4V')).toBeNull()
   })
 })

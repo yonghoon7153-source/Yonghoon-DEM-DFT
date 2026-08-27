@@ -14,7 +14,13 @@ import {
 } from '../lib/folders'
 
 const SNAPSHOT_PREFIX = 'bml.folders.'
-const FOLD_PREFIX = 'bml.folded.'
+//: **펼친 것**을 적어 둔다, 접은 것이 아니라.  기본이 "다 접힘" 이라
+//: (아래 `useFolders` 참고) 빈 목록이 곧 기본이 되어야 하기 때문이다.
+//:
+//: 열쇠 이름을 바꾼 것은 뜻이 뒤집혀서다.  옛 `bml.folded.*` 에 남아 있던
+//: 목록을 그대로 "펼친 것" 으로 읽으면 정확히 반대로 접힌다 — 한 번 쓰고
+//: 버리는 값이므로 옛 열쇠는 그냥 안 읽는다.
+const OPEN_PREFIX = 'bml.folders.open.'
 
 function readSnapshot(key: string): FolderSnapshot | null {
   try {
@@ -55,7 +61,11 @@ export interface FolderView<T> {
 export function useFolders<T>(
   scope: string, items: T[], place: (item: T) => Placed,
 ): FolderView<T> {
-  const [folded, setFolded] = useStickyState<string[]>(FOLD_PREFIX + scope, [])
+  //: **기본은 다 접힘.**  펴 놓은 것이 기본이면 화면은 예전의 평평한 목록과
+  //: 똑같아서 폴더가 있으나 마나이고, 무엇보다 폴더 이름 끝의 `+2 −1` 을
+  //: 훑을 수가 없다 — 그 수를 보려고 스물여덟 줄을 스크롤해야 한다면 그 수는
+  //: 아무것도 안 알려 준 것이다.  접혀 있으면 첫 화면이 곧 요약이다.
+  const [opened, setOpened] = useStickyState<string[]>(OPEN_PREFIX + scope, [])
   // 처음 한 번만 읽는다.  매 렌더마다 읽으면 아래에서 저장한 것을 도로 읽어
   // 기준선이 "지금" 이 되고, 그러면 아무것도 안 바뀐 것으로 보인다.
   const baseline = useRef<FolderSnapshot | null>(null)
@@ -84,7 +94,7 @@ export function useFolders<T>(
     writeSnapshot(scope, snapshot)
   }, [scope, snapshot, folders.length])
 
-  const isFolded = (key: string) => folded.includes(key)
+  const isFolded = (key: string) => !opened.includes(key)
   return {
     folders,
     isFolded,
@@ -92,9 +102,9 @@ export function useFolders<T>(
       folder.depth === 0
       || !folders.some((top) => top.children.includes(folder.key) && isFolded(top.key)),
     toggle: (folder) =>
-      setFolded(isFolded(folder.key)
-        ? folded.filter((key) => key !== folder.key)
-        : [...folded, folder.key]),
+      setOpened(opened.includes(folder.key)
+        ? opened.filter((key) => key !== folder.key)
+        : [...opened, folder.key]),
     change: (folder) => folderDelta(
       snapshot[folder.key] ?? [],
       baseline.current?.[folder.key],
