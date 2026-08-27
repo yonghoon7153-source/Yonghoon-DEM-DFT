@@ -1,6 +1,6 @@
 # Codex 적대 리뷰 요청 R8 — W4 측정과 그 해석 (2026-08-27)
 
-브랜치 `manuscript-track` @ `0923b20d`.  대상 문서:
+브랜치 `manuscript-track` @ **`381e8b8c`** (⚠ 옛 표기 `0923b20d` 정정 — R8 판정 기준은 381e8b8c 전체 상태).  대상 문서:
 - `docs/reviews/table_s3_data_20260827.md` (이번 리뷰의 주 대상)
 - `docs/reviews/w2_bed_regeneration_20260827.md`
 - `docs/reviews/a_track_status_20260827.md` §4
