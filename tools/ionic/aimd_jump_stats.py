@@ -80,7 +80,7 @@ def free_anions(sym, pos0, cell):
         np.array(["S"] * len(freeS) + ["Cl"] * len(Cl))
 
 
-def van_hove(uw, dt_ps, lags_ps, rmax=8.0, nbins=160):
+def van_hove(uw, dt_ps, lags_ps, rmax=None, nbins=160):
     """자기 van Hove — P(|Δr| = r, 시간간격 dt). uw = **unwrap 된** (T, N, 3).
 
     읽는 법: 짧은 dt 는 진동 봉우리 하나(~0.5 Å)뿐이다. dt 를 늘렸을 때
@@ -90,25 +90,45 @@ def van_hove(uw, dt_ps, lags_ps, rmax=8.0, nbins=160):
     ★ 왜 MSD 와 다른가: 이건 **창을 안 고른다.** MSD 기울기는 어느 구간을 잡느냐에
       달렸지만(β·D_inc 논쟁 전부), 여기서는 분포 모양이 직접 답한다.
 
+    ⛔⛔ 2026-08-28 실측 수정 — **판정 기준이 틀렸었다.**
+      첫 판은 *"자리 간격에 두 번째 봉우리가 자라는가"* 로 봤다. 그건 합성 궤적(모든
+      원자가 정확히 한 번, 정확히 3 Å 점프)에서는 보이지만 **진짜 확산에서는 안 보인다** —
+      긴 lag 에서 분포는 이산 봉우리가 아니라 **넓은 분포로 퍼지고 봉우리가 밖으로 이동**한다.
+      실측 대조(합성):
+          cage      1st peak 0.68 → 0.62 → 0.68 → 0.73 Å  (안 움직인다)
+          diffusive 1st peak 0.68 → 0.93 → 1.58 → 3.03 Å  (밖으로 이동한다)
+      ⇒ **주 지표는 봉우리 위치의 이동**이다. 두 번째 봉우리는 부차 정보로만 남긴다.
+      내 selftest 가 이걸 못 잡은 이유: 합성 fixture 가 *한 번씩 딱 3 Å 점프* 라
+      실제 확산이 아니라 **이산 홉만** 시험하고 있었다. 진짜 데이터가 잡아줬다.
+
+    ⛔⛔ rmax 를 8 Å 로 고정했던 것도 틀렸다 — 빠른 계는 50 ps 에 RMS 가 그걸 넘어
+      **분포가 잘린 채** 봉우리가 범위 밖으로 나간다. rmax=None 이면 자동으로 잡고,
+      잘린 비율을 같이 보고한다.
+
     ⛔ 못 하는 것
       · 절대 D 를 안 준다 — "확산 중인가" 만 본다.
       · 반드시 **unwrap 된 좌표**를 넣어야 한다. wrap 된 걸 넣으면 경계를 넘은 원자가
         셀 크기만 한 변위로 잡혀 없는 봉우리가 생긴다.
       · 시간원점을 전부 쓰므로 이웃 원점끼리 상관돼 있다 — 오차막대의 근거가 아니다.
     """
+    T = len(uw)
+    use = [l for l in lags_ps if max(1, int(round(l / dt_ps))) < T]
+    skipped = [l for l in lags_ps if l not in use]
+    if rmax is None and use:
+        lag = max(1, int(round(max(use) / dt_ps)))
+        dmax = float(np.linalg.norm(uw[lag:] - uw[:-lag], axis=2).max())
+        rmax = max(8.0, 1.15 * dmax)      # 잘리면 봉우리가 범위 밖으로 나간다
+    rmax = rmax or 8.0
     edges = np.linspace(0, rmax, nbins + 1)
     rc = 0.5 * (edges[:-1] + edges[1:])
-    T = len(uw)
-    cols, hdr, skipped = [], [], []
-    for lag_ps in lags_ps:
+    cols, hdr, trunc = [], [], []
+    for lag_ps in use:
         lag = max(1, int(round(lag_ps / dt_ps)))
-        if lag >= T:
-            skipped.append(lag_ps)
-            continue
         d = np.linalg.norm(uw[lag:] - uw[:-lag], axis=2).ravel()
         h, _ = np.histogram(d, bins=edges, density=True)
         cols.append(h); hdr.append(f"Gs_dt{lag_ps:g}ps")
-    return rc, cols, hdr, skipped
+        trunc.append(float((d > rmax).mean()))
+    return rc, cols, hdr, skipped, {"rmax_A": round(rmax, 2), "trunc_frac": trunc}
 
 
 def second_peak(rc, g, rmin=2.0):
@@ -149,46 +169,61 @@ def _selftest():
 
     # ① cage 안 흔들림만 — 긴 lag 에서도 두 번째 봉우리가 **생기면 안 된다**
     uw = rattle()
-    rc, cols, hdr, _sk = van_hove(uw, dt, [0.5, 20.0, 100.0])
+    rc, cols, hdr, _sk, _i = van_hove(uw, dt, [0.5, 20.0, 100.0])
     r2, h2 = second_peak(rc, cols[-1])
     chk(h2 < 0.02, f"[vanHove·음성] 흔들림만이면 3 Å 대 봉우리가 없다 (h={h2:.4f})")
     r1 = rc[int(np.argmax(cols[0]))]
     chk(0.2 < r1 < 1.2, f"[vanHove] 짧은 lag 은 진동 봉우리 하나 (r={r1:.2f} Å)")
 
-    # ② 같은 흔들림 + 3.0 Å 홉 — 긴 lag 에서 두 번째 봉우리가 **자라야 한다**
-    uw2 = rattle()
-    for i in range(N):                            # 원자마다 한 번씩 3 Å 점프
-        t0 = int(rng.integers(T // 4, 3 * T // 4))
-        uw2[t0:, i, 0] += 3.0
-    rc, cols2, hdr2, _sk = van_hove(uw2, dt, [0.5, 20.0, 100.0])
-    r2b, h2b = second_peak(rc, cols2[-1])
-    chk(r2b is not None and 2.4 < r2b < 3.6,
-        f"[vanHove·양성] 홉이 있으면 자리 간격에 봉우리가 선다 (r={r2b} Å)")
-    chk(h2b > 5 * max(h2, 1e-6),
-        f"[vanHove·판별력] 홉 쪽 봉우리가 흔들림 쪽보다 훨씬 크다 ({h2b:.4f} vs {h2:.4f})")
+    # ★★ 2026-08-28 실측 수정 — 첫 판 fixture 는 *한 번씩 딱 3 Å 점프* 라
+    #   **이산 홉만** 시험했다. 진짜 확산은 그런 봉우리를 안 만든다(분포가 퍼진다).
+    #   그래서 실제 궤적에서 modelc T1000(확실히 확산하는 계)이 "cage 지배" 로 찍혔다.
+    #   ⇒ **브라운 운동을 fixture 에 넣고, 판정은 봉우리 이동으로** 바꾼다.
+    def peaks(uw_, lags=(0.5, 2.0, 10.0, 50.0)):
+        rc_, cs, _h, _sk, info = van_hove(uw_, dt, list(lags))
+        return [float(rc_[int(np.argmax(g))]) for g in cs], info
 
-    # ③ 짧은 lag 에서는 홉이 있어도 아직 안 보인다 (시간 의존성이 옳은가)
-    r2c, h2c = second_peak(rc, cols2[0])
-    chk(h2c < h2b / 5, f"[vanHove] 짧은 lag 에서는 그 봉우리가 아직 없다 ({h2c:.4f})")
+    pk_cage, _i = peaks(uw)
+    chk(max(pk_cage) - min(pk_cage) < 0.3,
+        f"[vanHove·음성] cage 는 봉우리가 **제자리**다 ({pk_cage[0]:.2f}→{pk_cage[-1]:.2f} Å)")
+
+    step = rng.normal(0, 0.10, (T, N, 3))
+    walk = site[None] + np.cumsum(step, axis=0) + rng.normal(0, 0.3, (T, N, 3))
+    pk_diff, info_d = peaks(walk)
+    chk(pk_diff[-1] - pk_diff[0] >= 0.5,
+        f"[vanHove·양성·실측회귀] **확산은 봉우리가 밖으로 이동**한다 "
+        f"({pk_diff[0]:.2f}→{pk_diff[-1]:.2f} Å) — 옛 판정(두 번째 봉우리)은 이걸 놓쳤다")
+    chk(all(a <= b + 1e-9 for a, b in zip(pk_diff, pk_diff[1:])),
+        "[vanHove] 확산이면 봉우리가 lag 과 함께 **단조로** 밀려난다")
+
+    # ③ rmax 자동: 빠른 계가 잘리지 않아야 한다 (8 Å 고정이 실제로 잘랐다)
+    fast = site[None] + np.cumsum(rng.normal(0, 0.5, (T, N, 3)), axis=0)
+    _rc, _c, _h, _sk, inf = van_hove(fast, dt, [50.0])
+    chk(inf["rmax_A"] > 8.0 and inf["trunc_frac"][0] < 0.02,
+        f"[vanHove·실측회귀] 빠른 계는 rmax 를 키운다 ({inf['rmax_A']} Å · "
+        f"잘림 {100*inf['trunc_frac'][0]:.2f} %)")
+    _rc, _c, _h, _sk, inf8 = van_hove(fast, dt, [50.0], rmax=8.0)
+    chk(inf8["trunc_frac"][0] > 0.02,
+        f"[vanHove·음성] rmax 8 Å 로 고정하면 실제로 잘린다 "
+        f"({100*inf8['trunc_frac'][0]:.1f} %) — 그래서 잘림 비율을 보고한다")
 
     # ④ 가드: 궤적보다 긴 lag 은 조용히 버리지 않고 **보고**한다
-    _rc, _c, _h, sk = van_hove(uw, dt, [1.0, 9999.0])
+    _rc, _c, _h, sk, _i = van_hove(uw, dt, [1.0, 9999.0])
     chk(sk == [9999.0], f"[vanHove·가드] 궤적보다 긴 lag 을 보고한다 ({sk})")
 
-    # ⑤ 가드: **wrap 된 좌표**를 넣으면 셀 크기의 가짜 변위가 생긴다 —
-    #    unwrap 이 실제로 그걸 없애는지 확인한다 (오늘 min-image 에서 데인 유형)
+    # ⑤ 가드: wrap 된 좌표는 unwrap 이 없으면 가짜 변위를 만든다
     L = 12.0
     cell = np.eye(3) * L
     drift = np.zeros((T, N, 3))
-    drift[:, :, 0] = np.linspace(0, 3 * L, T)[:, None]      # 셀을 3번 가로지른다
+    drift[:, :, 0] = np.linspace(0, 3 * L, T)[:, None]
     wrapped = (site[None] + drift) % L
     uwr = unwrap(wrapped, cell)
-    step = np.abs(np.diff(uwr, axis=0)).max()
-    chk(step < L / 2, f"[vanHove·가드] unwrap 뒤 한 스텝 이동이 셀 절반 미만 ({step:.2f} < {L/2})")
-    _rc, cw, _h, _s = van_hove(wrapped, dt, [50.0])
-    _r, hw = second_peak(_rc, cw[0])
-    chk(hw > 0.01, "[vanHove·음성] wrap 된 좌표를 그대로 넣으면 **가짜 봉우리**가 생긴다 "
-                   "— 그래서 unwrap 이 필수다")
+    step_max = np.abs(np.diff(uwr, axis=0)).max()
+    chk(step_max < L / 2, f"[vanHove·가드] unwrap 뒤 한 스텝이 셀 절반 미만 ({step_max:.2f})")
+    pk_w, _i = peaks(wrapped, lags=(0.5, 50.0))
+    chk(abs(pk_w[-1] - pk_w[0]) > 0.5,
+        "[vanHove·음성] wrap 된 좌표를 그대로 넣으면 **가짜 이동**이 보인다 — unwrap 이 필수다")
+
     print("selftest " + ("PASS" if ok else "FAIL"))
     return 0 if ok else 1
 
@@ -251,7 +286,8 @@ def main():
                np.c_[t, msd], delimiter=",", header="t_ps,MSD_A2", comments="")
 
     # ---- Van Hove self Gs(r, dt) ----
-    rc, cols, hdr, skipped = van_hove(Li_uw, dt_ps, args.lags_ps, args.rmax, args.nbins)
+    rc, cols, hdr, skipped, vhinfo = van_hove(Li_uw, dt_ps, args.lags_ps,
+                                             args.rmax, args.nbins)
     if skipped:
         print(f"  ! lag {skipped} ps 는 궤적({T*dt_ps:.1f} ps)보다 길어 건너뛴다")
     np.savetxt(out / f"{args.label}_vanhove.csv", np.c_[[rc] + cols].T,
@@ -259,21 +295,32 @@ def main():
     # ★ 25개를 쓸어 담을 때 CSV 25장을 눈으로 볼 수는 없다 — **판정을 한 줄로** 찍는다.
     #   보는 것: 긴 lag 에서 자리 간격(≳2 Å)에 두 번째 봉우리가 자랐는가.
     vh_verdict = []
-    for lp, g in zip([x for x in args.lags_ps if x not in skipped], cols):
+    for lp, g, tf in zip([x for x in args.lags_ps if x not in skipped], cols,
+                         vhinfo["trunc_frac"]):
         r2, h2 = second_peak(rc, g)
         r1 = float(rc[int(np.argmax(g))])
         vh_verdict.append({"lag_ps": lp, "first_peak_A": round(r1, 2),
                            "second_peak_A": None if r2 is None else round(r2, 2),
-                           "second_peak_h": round(h2, 5)})
+                           "second_peak_h": round(h2, 5), "trunc_frac": round(tf, 4)})
     if vh_verdict:
         a, b = vh_verdict[0], vh_verdict[-1]
-        grew = b["second_peak_h"] > 5 * max(a["second_peak_h"], 1e-6) and b["second_peak_A"]
-        print(f"  vanHove: dt {a['lag_ps']:g}→{b['lag_ps']:g} ps · 1st {a['first_peak_A']}→"
-              f"{b['first_peak_A']} Å · 2nd {a['second_peak_A']}→{b['second_peak_A']} Å "
-              f"(h {a['second_peak_h']:.4f}→{b['second_peak_h']:.4f})")
-        print("  ⇒ " + ("**홉이 보인다** — 자리 간격에 두 번째 봉우리가 자란다"
-                        if grew else
-                        "⚠ **두 번째 봉우리가 안 자란다** — 이 창에서는 cage 안 흔들림이 지배적이다"))
+        shift = b["first_peak_A"] - a["first_peak_A"]
+        print(f"  vanHove: dt {a['lag_ps']:g}→{b['lag_ps']:g} ps · **1st peak "
+              f"{a['first_peak_A']} → {b['first_peak_A']} Å (Δ{shift:+.2f})** · "
+              f"rmax {vhinfo['rmax_A']} Å · 잘림 {100*b['trunc_frac']:.1f} %")
+        # ★ 주 지표는 **봉우리 이동**이다 (2026-08-28 실측 수정 — van_hove docstring 참조)
+        if b["trunc_frac"] > 0.02:
+            print(f"  ⇒ ⛔ 분포의 {100*b['trunc_frac']:.1f} % 가 rmax 밖이다 — **잘려서 못 읽는다.** "
+                  f"--rmax 를 키울 것")
+        elif shift >= 0.5:
+            print(f"  ⇒ **확산한다** — 봉우리가 {shift:+.2f} Å 밖으로 이동했다 "
+                  f"(cage 면 제자리에 머문다)")
+        elif shift <= 0.2:
+            print(f"  ⇒ ⚠ **봉우리가 제자리다** ({shift:+.2f} Å) — 이 창에서는 "
+                  f"cage 안 흔들림이 지배적이다")
+        else:
+            print(f"  ⇒ ⚠ 중간 ({shift:+.2f} Å) — 어느 쪽도 주장하지 않는다. "
+                  f"더 긴 lag 이 필요하다")
 
     # ---- cage-resolved hops (inter-cage), flicker-robust ----
     # naive "nearest-centre changed" counts boundary vibration as hops. Instead:
@@ -328,7 +375,7 @@ def main():
         "transient_cage_flickers": flick,
         "hop_smooth_frames": sw,
         "hop_min_dist_A": args.hop_min_dist,
-        "van_hove": vh_verdict,
+        "van_hove": vh_verdict, "van_hove_info": vhinfo,
         "files": [f"{args.label}_{s}.csv" for s in ("vanhove", "msd", "intercage_hopdist")],
     }
     (out / f"{args.label}_jumpstats.json").write_text(json.dumps(summary, indent=2))
