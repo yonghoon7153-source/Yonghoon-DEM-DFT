@@ -54,6 +54,14 @@ class Parameter:
     #: chi-square (max / min).  ``None`` when there was only one such solution --
     #: that is "we did not see it move", not "it does not move" (§0.4).
     spread: float | None = None
+    #: True when the circuit makes this parameter **exchangeable with another**
+    #: -- the two transmission-line rails are the case here.  Swapping them
+    #: gives exactly the same impedance, so no spectrum can tell them apart and
+    #: no amount of re-seeding will: the fit reports whichever the optimiser
+    #: happened to land on, with a tiny standard error, and both rows read as
+    #: measurements (Codex #2).  The circuit knows this before any data
+    #: arrives, so it is not left to chance.
+    alias_of: str = ""
 
     @property
     def relative_error(self) -> float | None:
@@ -62,10 +70,71 @@ class Parameter:
         return abs(self.stderr / self.value)
 
     @property
+    def status(self) -> str:
+        """``determined`` | ``not_checked`` | ``undetermined``.
+
+        A boolean was not enough (Codex #8).  ``미결정`` on screen could mean
+        four different things -- the error bar swamped the value, the value
+        moved between seeds, the circuit cannot tell this parameter from
+        another, or the Jacobian was singular -- and the screen showed the same
+        dash for all of them.  Someone looking at a blank cell could not tell
+        "this cell is odd" from "this circuit is wrong for this cell".
+
+        ``not_checked`` is the middle answer, and it is the honest one for a
+        fit where only **one** starting point reached a solution: nothing ever
+        moved, so nothing was ever compared, and "we did not see it move" is
+        not "it does not move".  Such a value is still reported -- withholding
+        every number from a single-solution fit would empty the screen -- but
+        it is reported saying which check did not run.
+        """
+        if self.alias_of:
+            return "undetermined"
+        relative = self.relative_error
+        if relative is None:
+            return "undetermined"
+        if relative >= 0.5:
+            return "undetermined"
+        if self.spread is None:
+            return "not_checked"
+        if self.spread >= _SPREAD_LIMIT:
+            return "undetermined"
+        return "determined"
+
+    @property
+    def reason(self) -> str:
+        """Which check failed or did not run -- a fixed set, ``""`` when clean.
+
+        Stored alongside the number rather than re-derived on the screen, so
+        that moving a threshold later can be argued against the values that
+        were actually recorded instead of re-running every fit.
+
+        ``structural_alias`` / ``no_error_bar`` / ``relative_stderr`` /
+        ``seed_spread`` mean undetermined; ``single_solution`` means the
+        scatter check never ran.
+        """
+        if self.alias_of:
+            return "structural_alias"
+        if self.stderr is None:
+            # 경계에 눌려 stderr 를 잃은 것과 야코비안이 특이한 것이 여기서
+            # 만난다.  둘 다 "이 값은 맞춤을 안 바꾼다" 이고, 화면에는 같은
+            # 말로 나가도 된다.
+            return "no_error_bar"
+        relative = self.relative_error
+        if relative is None:
+            return "no_error_bar"
+        if relative >= 0.5:
+            return "relative_stderr"
+        if self.spread is None:
+            return "single_solution"
+        if self.spread >= _SPREAD_LIMIT:
+            return "seed_spread"
+        return ""
+
+    @property
     def determined(self) -> bool:
         """False when the number is not a measurement.
 
-        Two ways to fail, and the second is the one that bites:
+        Three ways to fail, and the last two are the ones that bite:
 
         1. **The error bar swamps the value.**  One standard error from the
            covariance at the solution, relative to the value itself.  ZView
@@ -82,16 +151,15 @@ class Parameter:
            re-seeding moved the same number across nine decades at an
            indistinguishable chi-square.  A number like that is a starting
            guess wearing a measurement's clothes.
-        """
-        relative = self.relative_error
-        if relative is None:
-            return False
-        if relative >= 0.5:
-            return False
-        # 흩어짐을 못 본 것(``None``)은 통과를 막지 않는다.  막으면 시작점이
-        # 하나뿐인 맞춤이 통째로 미결정이 된다 — 못 본 것과 나쁜 것은 다르다.
-        return self.spread is None or self.spread < _SPREAD_LIMIT
 
+        3. **The circuit cannot tell it from another parameter.**  The two
+           transmission-line rails are exchangeable *exactly*: swap them and
+           the impedance is unchanged to the last bit.  No spectrum decides
+           that and no re-seeding finds it -- the standard errors come back at
+           1e-12 and both rows look measured (Codex #2).  The circuit knows
+           this before the data does, so it is settled there, not by luck.
+        """
+        return self.status != "undetermined"
 
 @dataclass
 class FitResult:
@@ -481,13 +549,25 @@ def fit_circuit(spectrum: Spectrum, circuit: str | Circuit, *,
     if at_bound:
         notes.append("물리적 한계에 붙은 파라미터: " + ", ".join(at_bound)
                      + " — 회로가 이 스펙트럼을 설명하지 못한다는 뜻일 수 있습니다")
-    # 전송선의 두 레일은 맞바꿔도 임피던스가 **정확히** 같다 (circuit.py 의
-    # `transmission_line` 을 보라).  둘을 서로 다른 측정값처럼 읽으면 안 되는데,
-    # 화면에는 이름이 다른 두 줄로 나오므로 여기서 한 번 말해 준다.
-    swappable = sorted({name.split("_")[0] for name in model.parameter_names
-                        if name.endswith(("_Ri", "_Re"))})
-    if swappable:
-        notes.append(", ".join(f"{name}_Ri ↔ {name}_Re" for name in swappable)
+    # 맞바꿔도 임피던스가 **정확히** 같은 짝은 회로가 안다 (circuit.py 의
+    # `Element.exchangeable`).  전에는 여기서 이름 끝을 보고 알아냈는데, 그것은
+    # 회로가 아는 것을 피팅이 다시 추측하는 것이었다.  이제 짝을 회로에서 받아
+    # **양쪽 파라미터에 표시를 달고** (`alias_of`), 화면이 그 표시를 읽는다.
+    #
+    # 표시가 필요한 이유: 두 값은 같은 chi^2 에서 **아주 작은** 오차 막대를 달고
+    # 나온다 (실측에서 1e-12).  씨앗을 아무리 흩어도 마찬가지다 — 두 순서가
+    # 정확히 같은 답이라, "흩어졌다" 는 검사에도 안 걸린다.  표시가 없으면 둘
+    # 다 잘 잰 값으로 읽힌다 (Codex #2).
+    by_name = {parameter.name: parameter for parameter in parameters}
+    swapped = []
+    for left, right in model.exchangeable_pairs:
+        if left not in by_name or right not in by_name:
+            continue
+        by_name[left].alias_of = right
+        by_name[right].alias_of = left
+        swapped.append(f"{left} ↔ {right}")
+    if swapped:
+        notes.append(", ".join(swapped)
                      + " 는 맞바꿔도 같은 곡선입니다 — 스펙트럼은 둘의 짝만 "
                        "정하고 어느 쪽이 이온인지는 말하지 않습니다")
     fitted_z = model.impedance(values, working.frequency_hz)

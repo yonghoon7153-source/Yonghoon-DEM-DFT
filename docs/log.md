@@ -6319,3 +6319,31 @@ Codex 재현: 100 kHz~0.01 Hz 스무 점 중 **아래쪽** 다섯이 양수인 �
 
 시험 일곱 (wrdkit 셋, 웹 넷). 기존 시험 하나가 오히려 **가운데 양수점 삭제를
 정답으로 고정**하고 있어서 그것부터 고쳤다. `make check` 통과 (636 web).
+
+## [2026-08-27] fix | 회로가 아는 축퇴를 회로에서 받는다 — 그리고 안 돈 검사
+
+Codex #2·#8 의 과학 계층.
+
+**#2.** `TL1_Ri ↔ TL1_Re` 는 맞바꿔도 임피던스가 **비트까지** 같다 (새 테스트
+`test_swapping_the_rails_does_not_move_the_curve_at_all` 가 `array_equal` 로
+고정). 그런데 화면에는 각각 오차 막대 1e-12 를 달고 서로 다른 측정값처럼
+나왔다 — 씨앗 흩기로도 안 잡힌다. 정확히 같은 χ² 라 "흩어졌다" 가 성립하지
+않기 때문이다. 그래서 `Element.exchangeable` 로 회로가 짝을 선언하고
+(`parse_circuit` 이 `Circuit.exchangeable_pairs` 로 이름을 완성),
+`fit.py` 가 양쪽 `Parameter.alias_of` 에 상대 이름을 넣는다. 전에는 fit 이
+이름 끝(`_Ri`/`_Re`)을 보고 **다시 추측**했다 — 회로가 아는 것을.
+
+**#8.** `determined` 불리언 하나로 네 가지를 뭉개고 있었다. `Parameter.status`
+(`determined`/`not_checked`/`undetermined`) 와 `reason`
+(`structural_alias`/`no_error_bar`/`relative_stderr`/`single_solution`/
+`seed_spread`) 을 붙였다. `not_checked` 는 **답이 하나뿐이라 흩어짐 검사가
+돌지 않은** 경우다 — 값은 그대로 낸다 (감추면 답이 하나인 피팅의 화면이
+통째로 빈다), 안 돈 검사만 적는다. `determined` 는 `status != "undetermined"`
+이라 기존 소비자(총저항·전도도)의 뜻이 안 바뀐다.
+
+건드리지 말 것: `total_resistance`/`label_arcs` 는 **plain R** 만 본다
+(`"_" not in name`). 레일을 미결정으로 돌려도 총저항이 안 사라지는 것이 그
+덕분이다 — 여기에 `_` 이름을 넣으면 TL 회로의 총저항이 전부 `—` 가 된다.
+
+아직 안 한 것: API·화면으로 `status`/`reason`/`spread` 를 실어 나르는 배관
+(#8 의 나머지). 지금은 wrdkit 안에서만 산다.

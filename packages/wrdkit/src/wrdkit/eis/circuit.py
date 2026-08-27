@@ -40,6 +40,15 @@ class Element:
     #: Units, for the screen.
     units: tuple[str, ...]
     description: str
+    #: Suffix pairs this element can **swap without changing its impedance**.
+    #: A property of the formula, so it is written down here rather than
+    #: discovered per fit -- the two transmission-line rails enter only as
+    #: ``Ri+Re``, ``Ri·Re`` and ``Ri²+Re²``, all symmetric, so swapping them
+    #: gives the identical curve to the last bit.  A fit cannot find this out
+    #: by re-seeding: both orders sit at exactly the same chi-square with tiny
+    #: standard errors, and the two rows read as separate measurements when
+    #: only their unordered pair was measured (Codex #2).
+    exchangeable: tuple[tuple[str, str], ...] = ()
 
     @property
     def size(self) -> int:
@@ -239,14 +248,16 @@ ELEMENTS: dict[str, Element] = {
     "TLR": _TLR("TLR", ("_Ri", "_Re", "_Rct", "_Q", "_n"),
                 ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0)),
                 ("Ω", "Ω", "Ω", "S·sⁿ", ""),
-                "전송선 — 이온·전자 레일 + 계면 (Rct∥CPE)"),
+                "전송선 — 이온·전자 레일 + 계면 (Rct∥CPE)",
+                exchangeable=(("_Ri", "_Re"),)),
     # `_Wn` 의 상한이 1.0 이 아니라 0.8 인 이유는 `_TL` 의 docstring 에 있다:
     # 그 위는 확산이 아니라 극점이 늘어선 무손실 선로다.
     "TL": _TL("TL", ("_Ri", "_Re", "_Rct", "_Q", "_n", "_Wr", "_Wn", "_Wt"),
               ((1e-9, 1e9), (1e-9, 1e9), (1e-9, 1e9), (1e-15, 1e3), (0.3, 1.0),
                (1e-9, 1e9), (0.1, 0.8), (1e-6, 1e6)),
               ("Ω", "Ω", "Ω", "S·sⁿ", "", "Ω", "", "s"),
-              "전송선 — 계면에 유한 확산까지 (CPE∥(Rct+W))"),
+              "전송선 — 계면에 유한 확산까지 (CPE∥(Rct+W))",
+              exchangeable=(("_Ri", "_Re"),)),
 }
 
 
@@ -325,6 +336,11 @@ class Circuit:
     parameter_units: tuple[str, ...]
     lower: np.ndarray
     upper: np.ndarray
+    #: Fully-qualified parameter pairs that can be swapped without changing the
+    #: impedance -- ``("TL1_Ri", "TL1_Re")`` and the like.  The circuit knows
+    #: this before any data arrives, so the fit does not have to guess it from
+    #: how the numbers came out.
+    exchangeable_pairs: tuple[tuple[str, str], ...] = ()
 
     def impedance(self, values, frequency_hz) -> np.ndarray:
         values = np.asarray(values, dtype=float)
@@ -460,6 +476,7 @@ def parse_circuit(text: str) -> Circuit:
     units: list[str] = []
     lower: list[float] = []
     upper: list[float] = []
+    pairs: list[tuple[str, str]] = []
 
     def walk(node):
         if isinstance(node, _Leaf):
@@ -470,6 +487,8 @@ def parse_circuit(text: str) -> Circuit:
                 units.append(unit)
                 lower.append(low)
                 upper.append(high)
+            for left, right in element.exchangeable:
+                pairs.append((node.name + left, node.name + right))
             return
         for part in node.parts:
             walk(part)
@@ -482,4 +501,5 @@ def parse_circuit(text: str) -> Circuit:
             + " -- give them different numbers")
     return Circuit(text=text.strip(), _root=root,
                    parameter_names=tuple(names), parameter_units=tuple(units),
-                   lower=np.array(lower), upper=np.array(upper))
+                   lower=np.array(lower), upper=np.array(upper),
+                   exchangeable_pairs=tuple(pairs))

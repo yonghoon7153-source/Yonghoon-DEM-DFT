@@ -842,3 +842,93 @@ def test_the_run_is_found_by_frequency_not_array_order():
     mask = inductive_mask(spectrum)
     # 가장 높은 10 kHz 하나만 배선이다.  100 Hz 의 양수는 남는다.
     assert list(mask) == [False, False, False, False, True]
+
+
+# --- 회로가 아는 축퇴, 그리고 "무엇이 안 걸렸나" (Codex #2·#8) ----------------
+
+
+def test_the_circuit_declares_its_exchangeable_pair():
+    """짝은 회로가 안다 — 피팅이 이름 끝을 보고 알아내는 것이 아니라."""
+    from wrdkit.eis.circuit import parse_circuit
+
+    assert parse_circuit("R0-TL1").exchangeable_pairs == (("TL1_Ri", "TL1_Re"),)
+    assert parse_circuit("R0-TLR2").exchangeable_pairs == (("TLR2_Ri", "TLR2_Re"),)
+    # 축퇴가 없는 회로는 빈 채로 둔다.  "모르면 아무 말도 안 한다".
+    assert parse_circuit("R0-p(R1,CPE1)").exchangeable_pairs == ()
+
+
+def test_swapping_the_rails_does_not_move_the_curve_at_all():
+    """짝이 축퇴라는 근거 — 두 값을 맞바꾼 임피던스가 **비트까지** 같다.
+
+    이것이 성립하니까 `alias_of` 가 정당하다: 어떤 스펙트럼도, 어떤 재시작도
+    둘을 가를 수 없다.  가를 수 있었다면 씨앗 흩기가 잡았을 것이다.
+    """
+    from wrdkit.eis.circuit import parse_circuit
+
+    circuit = parse_circuit("R0-TL1")
+    frequency = np.logspace(5, -2, 40)
+    straight = np.array([5.0, 40.0, 12.0, 60.0, 1e-4, 0.8, 3.0, 0.5, 10.0])
+    swapped = straight.copy()
+    swapped[1], swapped[2] = straight[2], straight[1]
+    assert np.array_equal(circuit.impedance(straight, frequency),
+                          circuit.impedance(swapped, frequency))
+
+
+def test_both_rails_are_marked_undetermined_with_the_reason():
+    """맞바꿔도 같은 두 값은 **각각 측정된 값이 아니다** (Codex #2).
+
+    오차 막대로는 절대 안 잡힌다 — 두 순서가 정확히 같은 chi² 라, 곡률도 같고
+    씨앗 흩기에도 안 걸린다.  회로에서 표시를 받아 온다.
+    """
+    pytest.importorskip("scipy")
+    from wrdkit.eis.circuit import parse_circuit
+
+    circuit = parse_circuit("R0-TL1")
+    frequency = np.logspace(4, -1.5, 45)
+    truth = np.array([5.0, 40.0, 12.0, 60.0, 1e-4, 0.8, 3.0, 0.5, 10.0])
+    z = circuit.impedance(truth, frequency)
+    spectrum = Spectrum(frequency_hz=frequency, z_re=z.real, z_im=z.imag)
+
+    result = fit_circuit(spectrum, "R0-TL1", restarts=4)
+    rails = {p.name: p for p in result.parameters if p.name.endswith(("_Ri", "_Re"))}
+    assert set(rails) == {"TL1_Ri", "TL1_Re"}
+    for name, parameter in rails.items():
+        assert parameter.alias_of == ("TL1_Re" if name == "TL1_Ri" else "TL1_Ri")
+        assert parameter.status == "undetermined"
+        assert parameter.reason == "structural_alias"
+        assert not parameter.determined
+    assert "TL1_Ri ↔ TL1_Re" in result.reason
+    # R0 는 이 축퇴와 무관하다 — 표시가 회로 전체로 번지면 안 된다.
+    r0 = next(p for p in result.parameters if p.name == "R0")
+    assert r0.alias_of == ""
+
+
+def test_one_solution_is_not_checked_rather_than_determined():
+    """비교할 답이 하나뿐이면 흩어짐 검사는 **돌지 않은** 것이다 (Codex #8).
+
+    값은 그대로 낸다 — 답이 하나인 피팅의 모든 수를 감추면 화면이 빈다 —
+    대신 어떤 검사가 안 돌았는지를 값 옆에 적는다.
+    """
+    from wrdkit.eis.fit import Parameter
+
+    quiet = Parameter(name="R0", value=10.0, stderr=0.1, spread=None)
+    assert quiet.status == "not_checked"
+    assert quiet.reason == "single_solution"
+    assert quiet.determined            # 숫자는 나온다
+
+    checked = Parameter(name="R0", value=10.0, stderr=0.1, spread=1.2)
+    assert checked.status == "determined"
+    assert checked.reason == ""
+
+    scattered = Parameter(name="R0", value=10.0, stderr=0.1, spread=9.0)
+    assert scattered.status == "undetermined"
+    assert scattered.reason == "seed_spread"
+    assert not scattered.determined
+
+    blind = Parameter(name="R0", value=10.0, stderr=None, spread=None)
+    assert blind.status == "undetermined"
+    assert blind.reason == "no_error_bar"
+
+    fuzzy = Parameter(name="R0", value=10.0, stderr=8.0, spread=1.0)
+    assert fuzzy.status == "undetermined"
+    assert fuzzy.reason == "relative_stderr"
