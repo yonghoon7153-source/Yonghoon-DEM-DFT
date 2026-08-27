@@ -81,6 +81,30 @@ def lin_fit(t, y, lo, hi):
     return m, c, (1.0 - ss / st if st > 1e-30 else float("nan"))
 
 
+def d_incremental(t, y, lo, hi):
+    """구간 증분 확산계수 `D_inc = [MSD(t2)−MSD(t1)] / [6(t2−t1)]` [Å²/ps]. 점 부족이면 None.
+
+    **왜 이게 c 행보다 낫나** (2026-08-27, Codex 회신 F 권고를 받아들인 것):
+      자유절편 `c` 는 관측 범위 **밖인 t=0 으로의 외삽**이고 `c`–`m` 오차가 강하게 얽혀
+      있어서, 늦은 창에서 c 가 음수로 튀거나(실측: modelc/T700 −4.68 Å²) 요동만으로도
+      "커진다/작아진다" 가 뒤집힌다. 반면 **차분은 상수 절편을 대수적으로 소거한다**:
+        MSD = c + 6Dt  →  MSD(t2) − MSD(t1) = 6D(t2 − t1)   (c 가 사라진다)
+      그래서 케이지 절편이면 창을 옮겨도 D_inc 가 **평평**하고, 진짜 t^α 면
+      `D_inc ∝ t^(α−1)` 로 계속 움직인다. **케이지 vs 멱함수를 c 보다 곧게 가른다.**
+
+    ⛔ 이 함수가 못 하는 것:
+      · **느린 전이 vs 진짜 멱함수는 여전히 못 가른다.** 둘 다 D_inc 가 움직인다 —
+        가르려면 더 긴 궤적에서 plateau 도달 여부를 봐야 한다.
+      · 오차막대를 안 준다. 끝점 두 개만 쓰므로 잡음에 그대로 노출된다
+        (실무 확정은 block/seed bootstrap CI 로 — 아직 미구현).
+      · lag 이 궤적 길이에 가까우면 MSD(t2) 자체가 시간원점 부족으로 못 믿는다.
+    """
+    pts = [(a, b) for a, b in zip(t, y) if lo <= a <= hi]
+    if len(pts) < 3 or pts[-1][0] - pts[0][0] <= 0:
+        return None
+    return (pts[-1][1] - pts[0][1]) / (6.0 * (pts[-1][0] - pts[0][0]))
+
+
 def loglog_slope(t, y, lo, hi):
     """[lo,hi] ps 구간의 log-log 기울기. 점이 3개 미만이면 None."""
     pts = [(math.log(a), math.log(b)) for a, b in zip(t, y)
@@ -861,6 +885,25 @@ def selftest():
     chk(unit_verdict(None, 0.10) == "inconclusive",
         "[음성] 비가 없으면 판정 없음")
 
+    # ── D_inc — 절편 없는 축 (2026-08-27, Codex 회신 F) ──────────────────────
+    _t = [i * 0.1 for i in range(1, 1001)]                      # 0.1–100 ps
+    _cage = [3.0 + 0.6 * x for x in _t]                         # MSD = c + 6Dt, D=0.1
+    d1 = d_incremental(_t, _cage, 2, 50); d2 = d_incremental(_t, _cage, 50, 100)
+    chk(d1 is not None and d2 is not None and abs(d1 - 0.1) < 1e-6 and abs(d2 - 0.1) < 1e-6,
+        "[양성] 상수 절편이면 D_inc 가 창과 무관하게 참값(0.1)이다 — c 가 소거된다")
+    _b = [loglog_slope(_t, _cage, lo, hi) for lo, hi in ((2, 50), (50, 100))]
+    chk(_b[0] is not None and _b[0] < 0.95 and d1 is not None and abs(d1 - 0.1) < 1e-6,
+        "[음성] **같은 곡선에서 β 는 0.95 밑으로 떨어지는데 D_inc 는 정확하다** — "
+        "β 가 낮다고 D 가 틀린 게 아니다(게이트 폐기의 근거)")
+    _sub = [1.5 * (x ** 0.6) for x in _t]                        # 진짜 t^0.6
+    s1 = d_incremental(_t, _sub, 2, 50); s2 = d_incremental(_t, _sub, 50, 100)
+    chk(s1 is not None and s2 is not None and s2 < 0.75 * s1,
+        "[음성] 진짜 t^0.6 이면 D_inc 가 창 따라 **떨어진다** — 케이지와 갈린다")
+    chk(d_incremental([1.0, 2.0], [1.0, 2.0], 0, 100) is None,
+        "[음성] 점이 3개 미만이면 None — 두 점으로 기울기를 만들지 않는다")
+    chk(d_incremental(_t, _cage, 200, 300) is None,
+        "[음성] 창이 궤적 밖이면 None — 빈 구간에서 0 을 반환하지 않는다")
+
     print(f"selftest {'PASS' if not n_bad else 'FAIL'} — {n_ok} ok, {n_bad} bad")
     return 1 if n_bad else 0
 
@@ -1088,16 +1131,49 @@ def main():
         if tmax_all > 250:
             print(f"(궤적 tmax {tmax_all:.0f} ps → 늦은 창 자동 추가: "
                   f"{', '.join(f'{l}-{h}' for l, h in WINS[6:])})")
+
+        # ⛔⛔ 2026-08-27 (Codex 회신 F, P0) — **tmax 를 넘는 창을 라벨 그대로 찍고 있었다.**
+        #   tmax=100 궤적에서 `50-150` 과 `50-200` 이 **둘 다 50–100 을 잰다.** 화면에는
+        #   서로 다른 두 창으로 나오고 값이 같으니 "두 창이 일치한다" 로 읽힌다 —
+        #   실제로는 **같은 창을 두 번 찍은 것**이다. 2026-08-27 R2b 표가 이 함정에
+        #   걸렸다(lpsocl/T700 의 c 15.07 이 두 열에 같은 값으로 나와 추세로 읽혔다).
+        #   → tmax 로 자르고 중복을 없앤다. 자른 창은 라벨에 그렇게 쓴다.
+        _seen, _W = set(), []
+        for lo, hi in WINS:
+            h = min(hi, tmax_all)
+            if lo >= tmax_all or h - lo < 5:      # 범위 밖이거나 너무 짧다
+                continue
+            key = (lo, int(round(h)))
+            if key in _seen:
+                continue
+            _seen.add(key); _W.append(key)
+        if len(_W) < len(WINS):
+            print(f"(궤적 tmax {tmax_all:.0f} ps → 창 {len(WINS)}개 중 "
+                  f"**{len(WINS) - len(_W)}개가 범위 밖/중복이라 제거됨**)")
+        WINS = _W
+
+        # ⚠ He/Zhu/Mo 2018 — 최대 lag 이 궤적 길이에 가까우면 그 lag 의 **시간원점이 거의
+        #   없다**(lag t 에서 원점 수 ≈ (T−t)/Δ). 상한을 총 길이의 30–70 % 아래로 두라는
+        #   권고다. 우리는 자르지 않고 **표시**한다 — 자르면 늦은 창 구제가 아예 막힌다.
+        LAG_WARN_FRAC = 0.70
+        HOT = {w for w in WINS if tmax_all and w[1] > LAG_WARN_FRAC * tmax_all}
         # ★ --average 를 같이 주면 **평균 곡선**으로 돈다. 늦은 창이 살아나는 유일한
         #   공짜 수단이다 (개별 런은 lag 이 길어지면 유효 표본이 몇 개 안 남아 붕괴한다).
         scan_items = ([(k, t, y) for k, (t, y) in sorted(avg_curves.items())]
                       if avg_curves else None)
         print("\n창 스캔 — β 가 1 에 가까워지는 창이 있으면 재계산 없이 구제된다"
               + ("  **[시드 평균 곡선]**" if scan_items else ""))
-        head = " ".join(f"{lo}-{hi}".rjust(8) for lo, hi in WINS)
+        head = " ".join((f"{lo}-{hi}" + ("!" if (lo, hi) in HOT else "")).rjust(8)
+                        for lo, hi in WINS)
         print(f"{'case':34s} {head}   tmax")
-        print(f"{'':34s} " + " ".join(f"{'c=' + w:>8s}" for w in [])
-              + "  (아래 줄: 각 창의 **절편 c [Å²]** — 상수면 케이지, 커지면 sub-diffusion)")
+        if HOT:
+            print(f"   ⚠ `!` = 최대 lag 이 궤적의 {LAG_WARN_FRAC:.0%} 를 넘는 창 — "
+                  f"그 lag 의 **시간원점이 거의 없다**(He 2018). 이 열만으로 판정하지 말 것.")
+        print("   (행: β · 절편 c [Å²] · 기울기 m [Å²/ps] · **D_inc** = 창 구간 증분기울기/6)")
+        print("   ★ **D_inc 가 주 판정축이다** (2026-08-27 Codex 회신 F 반영) — 상수 절편이"
+              " 대수적으로 소거되므로")
+        print("     케이지 절편이면 창이 바뀌어도 **평평**하고, 진짜 t^α 면 계속 움직인다."
+              " c 행은 t=0 외삽이라 보조다.")
         def _spearman(v):
             vv = [x for x in v if x is not None]
             if len(vv) < 4:
@@ -1123,16 +1199,22 @@ def main():
                 if not t or not y:
                     continue
                 tag = case_label(_it)
-            cells, ints, slps = [], [], []
+            cells, ints, slps, dincs = [], [], [], []
             for lo, hi in WINS:
                 b = loglog_slope(t, y, lo, hi)
                 cells.append("   —".rjust(8) if b is None else f"{b:8.2f}")
                 lf = lin_fit(t, y, lo, hi)
                 ints.append("   —".rjust(8) if lf is None else f"{lf[1]:8.2f}")
                 slps.append("   —".rjust(8) if lf is None else f"{lf[0]:8.3f}")
+                # ★ D_inc — **상수 절편이 대수적으로 빠지는** 축 (Codex 회신 F 권고).
+                #   MSD(t2)−MSD(t1) 은 c 를 소거하므로, c 가 상수 케이지면 창을 옮겨도
+                #   평평하다. t^α 면 D_inc ∝ t^(α−1) 로 계속 움직인다.
+                di = d_incremental(t, y, lo, hi)
+                dincs.append("   —".rjust(8) if di is None else f"{di:8.3f}")
             print(f"{tag:34s} {' '.join(cells)}   {max(t):.0f}")
             print(f"{'  └ c [Å²]':34s} {' '.join(ints)}")
             print(f"{'  └ m [Å²/ps]':34s} {' '.join(slps)}")
+            print(f"{'  └ ★D_inc [Å²/ps]/6':34s} {' '.join(dincs)}")
             # ── 추세 통계 (⚠⚠ 2026-08-11 재검토로 **자동 판정 → 진단 제안** 격하) ──
             #   MC 4000회 재검토 실측이 초판 규칙을 죽였다:
             #   · 중첩창 6개의 유효 표본은 n_eff ≈ 3.2 (corr(2-50,10-50)=+0.97) —
