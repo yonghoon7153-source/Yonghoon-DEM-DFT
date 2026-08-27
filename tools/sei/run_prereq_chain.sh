@@ -34,9 +34,11 @@ TAG="${TAG:-li3nd}"
 PY="${PY:-python3}"
 SS="$REPO/tools/sei/symmetric_saddle.py"
 LOG="${LOG:-/data/work/runs/prereq_chain_$(date +%m%d_%H%M).log}"
-H_MPI="${H_MPI:-/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi}"
-MPIRUN="${MPIRUN:-$H_MPI/bin/mpirun}"
-PW="${PW:-/data/apps/qe-7.4.1-gpu/bin/pw.x}"
+# ⛔ 2026-08-28 — 첫 판은 MPIRUN·PW **경로만** 챙기고 환경변수를 통째로 빠뜨렸다.
+#   pw.x 가 `libgomp: TODO` 로 즉사했고 밤샘 체인이 첫 점에서 끝났다.
+#   기존 run_sei_neb.sh 는 그 블록을 갖고 있었다 — 이제 **같은 파일을 둘이 source** 한다.
+# shellcheck disable=SC1090
+. "$(dirname "${BASH_SOURCE[0]}")/qe_env.sh"
 GPU_FREE_MIB="${GPU_FREE_MIB:-20000}"     # 이만큼 비어야 시작한다
 DRY=0; WAIT=0; STAGE=2; SELFTEST=0
 while [ $# -gt 0 ]; do
@@ -120,6 +122,17 @@ fi
 # ═══ 본 실행 ═══════════════════════════════════════════════════════════════
 ts "═══ li3nd 선행검사 체인 (리뷰 J 순서) · stage ${STAGE} 부터 · WORK=$WORK"
 [ -f "$SS" ] || die "도구가 없다: $SS  (repo 를 먼저 당길 것)"
+[ -x "$PW" ] || die "pw.x 가 없다: $PW"
+# ⛔ 환경이 맞는지 **첫 점을 태우기 전에** 본다. libgomp 사고를 두 번 겪지 않는다.
+if [ "$DRY" != 1 ]; then
+  _T=$(mktemp -d); printf '&CONTROL\n/\n' > "$_T/x.in"
+  ( cd "$_T" && timeout 60 $MPIRUN -np 1 --oversubscribe "$PW" -in x.in > x.out 2>&1 )
+  if grep -aqE "libgomp|unable to launch|error while loading shared" "$_T/x.out" 2>/dev/null; then
+    ts "⛔ pw.x 환경이 틀렸다 — 꼬리:"; sed -n '1,6p' "$_T/x.out" | sed 's/^/     /' | tee -a "$LOG"
+    rm -rf "$_T"; die "환경 preflight (qe_env.sh 를 볼 것)"
+  fi
+  rm -rf "$_T"; ts "· pw.x 환경 preflight 통과"
+fi
 [ -d "$WORK/$TAG" ] || die "런 폴더가 없다: $WORK/$TAG"
 [ "$DRY" = 1 ] || gpu_gate || die "GPU 게이트"
 

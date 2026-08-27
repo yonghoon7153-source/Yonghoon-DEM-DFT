@@ -22,11 +22,10 @@ set -uo pipefail; set +H
 REPO="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK=${WORK:-/data/work/runs/sei_neb}
 NEB=${NEB:-/data/apps/qe-7.4.1-gpu/bin/neb.x}
-H_MPI=/data/apps/nvhpc/Linux_x86_64/24.11/comm_libs/12.6/hpcx/hpcx-2.20/ompi
-MPIRUN=${MPIRUN:-$H_MPI/bin/mpirun}
-export PATH=$H_MPI/bin:$PATH OPAL_PREFIX=$H_MPI OMP_NUM_THREADS=1 CUDA_VISIBLE_DEVICES=0
-export OMPI_ALLOW_RUN_AS_ROOT=1 OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
-export LD_LIBRARY_PATH=$H_MPI/lib:/data/apps/nvhpc/Linux_x86_64/24.11/compilers/lib:/usr/local/cuda-12.6/lib64
+# ⛔ 2026-08-28 — 이 블록이 여기에만 있어서, 새 스크립트(run_prereq_chain.sh)가 이걸
+#   빠뜨리고 `libgomp: TODO` 로 죽었다. 정본을 파일로 뽑고 둘이 같이 쓴다.
+# shellcheck disable=SC1090
+. "$(dirname "$0")/qe_env.sh"
 ts(){ echo "[$(date +%H:%M:%S)] $*"; }
 
 # ── 이어달리기 안전장치 (현재 폴더에서 동작) ────────────────────────────────
