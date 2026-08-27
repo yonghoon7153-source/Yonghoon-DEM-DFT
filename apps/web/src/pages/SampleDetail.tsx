@@ -817,6 +817,14 @@ export function SampleDetail() {
                   basis={cycleState.data?.basis ?? basis}
                   partial={includePartial ? partialCycles : []}
                 />
+                {/* 누른 자리에도 표시를 둔다.  그림 위의 것은 스크롤을 내려야
+                    보이는데, `전체` 를 누른 손은 아직 여기 있다. */}
+                {curve.loading ? (
+                  <span className="row tiny faint" style={{ gap: 6 }} role="status">
+                    <span className="spinner" aria-hidden />
+                    {selected.length}개 사이클 그리는 중
+                  </span>
+                ) : null}
               </div>
               {/* 숫자가 없는 사이클도 곡선은 실측이다.  실측 파일(multi-step
                   CCCV)은 방전이 아예 없어서 표가 비었는데, 2.9 → 4.25 V 로
@@ -882,6 +890,12 @@ export function SampleDetail() {
                     xRange={xRange}
                     yRange={yLock.range}
                     height={400}
+                    // **다시 받는 동안에도 표시가 있어야 한다.**  `useAsync` 는
+                    // 옛 곡선을 지우지 않으므로 (그게 맞다 — 질량을 고칠 때마다
+                    // 화면이 깜빡이면 못 쓴다) 첫 사이클에서 전체로 넘어갈 때는
+                    // 옛 그림이 그대로 서 있고 아무 일도 안 일어나 보인다.
+                    // 200 사이클이면 몇 초가 걸리는데 그동안 화면은 조용하다.
+                    busy={curve.loading}
                   />
                   {/* 축 고정.  안 잠그면 사이클을 하나만 골랐을 때 y 축이 그
                       곡선에 맞춰 다시 잡혀, 같은 곡선이 훨씬 뚱뚱해 보인다 —
