@@ -743,13 +743,59 @@ check "곧바로 끊기면 멈춘다"    "$(printf '%s' "$KA" | grep -c 'quick.*
 
 SETUP="$HERE/../vps-setup.sh"
 check "VPS 설치본이 있다"       "$([ -f "$SETUP" ] && echo yes)" "yes"
-# 같은 이유로 저쪽 sshd 도 GatewayPorts 를 끈다.
-check "저쪽도 GatewayPorts 를 끈다" "$(grep -c 'GatewayPorts no' "$SETUP")" "1"
+# **여기 있는 것은 전부 문자열 세기다.**  이 컨테이너에 nginx·sshd·certbot 이
+# 없어 `nginx -t` 도 `sshd -T` 도 못 돌린다 -- 그것을 아는 채로 셀 수 있는
+# 것만 센다 (Codex 도 실물 없이 판정했다).  진짜 검사는 일회용 VPS 에서
+# 한 번 돌려 보는 것이고, 그 절차는 ADR 0034 에 적어 두었다.
+
+# 인증서를 받기 **전에** `listen 443 ssl` 을 쓰면 nginx 가 그 설정을 거절하고
+# certbot 이 제 검사에서 멎는다 (Codex #1).  80 만 써 두고 443 은 certbot 이
+# 붙이게 한다.
+check "certbot 전에 443 을 쓰지 않는다" "$(grep -cE '^[[:space:]]+listen 443' "$SETUP")" "0"
+check "80 만 먼저 세운다"       "$(grep -cE '^[[:space:]]+listen 80' "$SETUP")" "2"
+# 그 대신 우리 지시어를 snippet 으로 빼서, certbot 이 만든 443 블록도 같은
+# 것을 include 하게 한다 -- 안 그러면 업로드 상한과 SSE timeout 이 HTTPS
+# 에서만 사라진다.
+check "proxy 설정을 snippet 으로 뺀다" "$(grep -c 'snippets/bml-proxy.conf' "$SETUP")" "3"
+
+# 저쪽 sshd.  메인 파일을 sed 로 고치지 않고 drop-in 을 두고, **실효값**을
+# `sshd -T` 로 확인하고서야 넘어간다 (Codex #4) -- include·Match 때문에 한
+# 모양만 봐서는 실효값을 모른다.
+check "drop-in 으로 끈다"       "$(grep -c 'sshd_config.d/60-bml-tunnel.conf' "$SETUP")" "1"
+check "실효값을 확인한다"       "$(grep -c 'sshd -T -C' "$SETUP")" "2"
+check "메인 파일을 sed 로 안 고친다" "$(grep -c "sed -i.*sshd_config" "$SETUP")" "0"
+# 전용 사용자 + 키 제한.  평범한 계정에 키를 올리면 그 키가 새는 순간 셸과
+# (관리 계정이면) sudo 까지 함께 샌다 (Codex #7).
+check "전용 사용자를 만든다"    "$(grep -c 'useradd --create-home --shell /usr/sbin/nologin' "$SETUP")" "1"
+check "listen 을 한 곳으로 묶는다" "$(grep -c 'PermitListen 127.0.0.1' "$SETUP")" "1"
+check "키에도 제한을 붙이라고 한다" "$(grep -c 'permitlisten' "$SETUP")" "1"
+# 랩 PC 가 자면 저쪽 listener 가 포트를 계속 잡는다 (Codex #10).
+check "저쪽도 살아 있는지 묻는다" "$(grep -c 'ClientAliveInterval' "$SETUP")" "1"
+
 # SSE 를 버퍼링하면 화면이 남이 고친 것을 영영 못 받는다.
-check "SSE 버퍼링을 끈다"       "$(grep -c 'proxy_buffering off' "$SETUP")" "1"
-# 여기서 막으면 413 이 나는데, 그 413 은 워크벤치가 준 것이 아니라 화면이
-# 엉뚱한 곳을 가리킨다.
-check "업로드 상한을 맞춘다"    "$(grep -c 'client_max_body_size 512m' "$SETUP")" "1"
+check "SSE 버퍼링을 끈다"       "$(grep -c 'proxy_buffering off' "$SETUP")" "2"
+# `proxy_read_timeout` 은 **응답을 기다리는** 시간이지 업로드 보호가 아니다.
+# SSE 를 한 시간이나 열어 두면 멎은 스트림의 재연결도 그만큼 늦다 (Codex #17).
+check "SSE 는 짧게 잡는다"      "$(grep -c 'proxy_read_timeout 75s' "$SETUP")" "1"
+check "한 시간짜리 read timeout 은 없다" "$(grep -c 'proxy_read_timeout 3600s' "$SETUP")" "0"
+# 요청을 다 받아 두고 넘기면 암호를 모르는 사람도 디스크를 채운다 (Codex #9).
+check "요청을 쌓아 두지 않는다" "$(grep -c 'proxy_request_buffering off' "$SETUP")" "1"
+# 파일 상한(512 MiB)에 multipart 머리말 몫을 더한다 (Codex #19) -- 정확히
+# 512 MiB 인 파일이 boundary 때문에 문 앞에서 먼저 막히면 안 된다.
+check "업로드 상한에 여유를 둔다" "$(grep -c 'client_max_body_size 520m' "$SETUP")" "1"
+# 있는 설정을 말없이 덮지 않고, default 도 지우지 않는다 (Codex #6 · #22).
+check "있는 것을 덮지 않는다"   "$(grep -c 'BML_REPLACE' "$SETUP")" "2"
+check "default 를 지우지 않는다" "$(grep -c 'rm -f /etc/nginx/sites-enabled/default' "$SETUP")" "0"
+check "모르는 Host 는 거절한다" "$(grep -c 'return 444' "$SETUP")" "1"
+# 도메인·포트를 아무것도 바꾸기 전에 검증한다 (Codex #5).
+check "도메인 모양을 본다"      "$(grep -c 'valid_domain' "$SETUP")" "2"
+check "경로가 그 폴더 안인지 본다" "$(grep -c 'realpath -m' "$SETUP")" "2"
+# 재부팅 뒤에도 서야 한다.  실패를 숨기고 "됐습니다" 를 내면 거짓말이다 (#21).
+check "enable 실패를 숨기지 않는다" "$(grep -c 'systemctl enable nginx >/dev/null 2>&1 || true' "$SETUP")" "0"
+check "선 것을 확인한다"        "$(grep -c 'systemctl is-active' "$SETUP")" "1"
+# 두 층 방화벽 (Codex #16).
+check "OCI 두 층을 안내한다"    "$(grep -c 'Security List' "$SETUP")" "2"
+check "먼저 재 볼 길을 준다"    "$(grep -c 'check_ports' "$SETUP")" "2"
 # 회색 구름이어야 한다 — 주황 구름은 올리는 파일을 100 MB 로 막는다.
 check "회색 구름을 안내한다"    "$(grep -c '회색 구름' "$BV")" "1"
 

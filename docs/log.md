@@ -5412,3 +5412,53 @@ EIS 비교의 고르개는 이름과 조건만 보여 줬다. fitting 이 있는
 세 가지는 결함으로 세지 않았다는 것도 원문에 있다: `Connection "upgrade"` 는
 지금 SSE 를 깨는 반례를 못 찾았고, PID 재사용 TERM 은 이 호스트에서 재현이 안
 됐고, 좀비는 fd 가 닫혀 저쪽 포트를 못 잡는다.
+
+## [2026-08-27] fix | Codex VPS 리뷰 — 저쪽 설치본을 다시 쓴다 (#1 #4 #5 #6 #7 #9 #10 #16 #17 #19 #21 #22)
+
+[리뷰 결과](reviews/2026-08-27-codex-vps-result.md) 22건 중 VPS 쪽 열두 건.
+`tools/vps-setup.sh` 는 사실상 새로 썼다 (108줄 → 296줄).
+
+- **#1 (높음) 설치가 인증서 앞에서 반드시 멎었다.** 인증서가 없는데
+  `listen 443 ssl` 을 써 놓았다. nginx 는 `ssl_certificate` 없는 443 블록을
+  거절하고, certbot 은 제 안에서 `nginx -t` 를 먼저 돌리므로 **certbot 이
+  제 실패를 우리 설정 탓에 낸다.** 이제 80 만 세우고 443 은 certbot 이 붙인다.
+  그 대신 우리 지시어(`client_max_body_size`·SSE)를 `snippets/bml-proxy.conf`
+  로 빼서 certbot 이 만든 443 블록도 같은 것을 include 하게 했다 — 안 그러면
+  업로드 상한이 **HTTPS 에서만** 사라진다.
+- **#7 (높음) 키를 평범한 계정에 올렸다.** 그 키가 새면 셸이 새고 sudo 까지
+  샌다. 이제 `bml-tunnel` nologin 전용 계정을 만들고, `authorized_keys` 줄에
+  `restrict,permitlisten="127.0.0.1:5003"` 를 붙이라고 출력한다.
+- **#4 (높음) `sshd_config` 를 sed 로 고치고 모양만 확인했다.** include 와
+  Match 때문에 파일 한 곳을 봐서는 실효값을 모른다. drop-in
+  `/etc/ssh/sshd_config.d/60-bml-tunnel.conf` 를 두고 `sshd -T -C` 로 **실효값**
+  을 확인한 뒤에야 넘어간다.
+- **#5 (높음) 도메인을 검증 없이 경로에 이어 붙였다.** `../../ssh/sshd_config`
+  같은 인자는 `sites-available/` 밖의 파일을 `>` 로 자른다. `valid_domain`
+  ·`valid_port` 로 먼저 보고, `realpath -m` 으로 그 폴더 안인지 확인한다.
+- **#9 (높음) 요청을 nginx 가 통째로 받아 뒀다.** 512 MB 업로드가 디스크에
+  먼저 쌓이고서 워크벤치에 간다 — 암호를 모르는 사람도 VPS 디스크를 채울 수
+  있다. `proxy_request_buffering off`. (`proxy_buffering off` 는 **응답**
+  방향이라 이것과 다른 문제였다.)
+- **#6 · #22 (높음·낮음) 남의 설정을 말없이 덮고 default 를 지웠다.** 이제
+  있으면 멈추고 `BML_REPLACE=1` 을 요구한다. default 도 지우지 않고,
+  `000-bml-default` 로 **모르는 Host 는 444** 로 끊는다 (도메인을 안 거치고
+  IP 로 오는 것도 막힌다).
+- **#10 (높음) 랩 PC 가 자면 저쪽 listener 가 포트를 계속 잡는다.** 다시
+  깨어난 ssh 가 붙지 못해 502 가 남는다. `ClientAliveInterval 30` ·
+  `ClientAliveCountMax 3` 으로 저쪽이 90초 안에 정리한다.
+- **#17 (중간) `proxy_read_timeout 3600s`.** 이것은 업로드 보호가 아니라
+  **응답을 기다리는** 시간이다. SSE 를 한 시간 열어 두면 멎은 스트림의
+  재연결도 한 시간 늦다. `/api/events` 만 따로 75s.
+- **#19 (중간) 상한이 정확히 512m 이었다.** multipart boundary·머리말이
+  얹히므로 딱 512 MiB 인 파일이 문 앞에서 막힌다. 520m.
+- **#21 (중간) `systemctl enable ... || true`.** 실패를 삼키고 "됐습니다" 를
+  냈다 — 재부팅하면 대문이 안 선다. 이제 `enable --now` 뒤 `is-active` 를
+  확인하고 아니면 멈춘다.
+- **#16 (중간) 두 층 방화벽.** Oracle 은 VCN Security List 와 인스턴스
+  iptables 가 따로 논다. `--check` 모드를 붙여 **아무것도 바꾸기 전에**
+  80·443 이 밖에서 닿는지 재 보고, 두 층 다 고치는 명령을 출력한다.
+
+**이 컨테이너에는 nginx·sshd·certbot 이 없어 한 줄도 못 돌려 봤다.** 시험은
+전부 문자열 세기이고, 시험 주석에 그렇게 적었다. 진짜 검사는 버릴 수 있는
+VPS 에서 열 단계를 통과하는 것이고 그 절차를 ADR 0034 '올리기 전에' 에 적었다.
+**그 전에는 실제 이름으로 올리지 않는다.**
