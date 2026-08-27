@@ -14,7 +14,7 @@ import { useElementWidth } from '../lib/hooks'
 import { arcWindow } from '../lib/eis'
 import { num, SERIES_COLORS, seriesColor } from '../lib/format'
 import {
-  composePng, downloadCanvas, PNG_SCALE, scaleFont,
+  axisPx, composePng, downloadCanvas, PNG_SCALE, PNG_TICK_ROOM, scaleFont,
   type PngLegendItem,
 } from '../lib/pngsave'
 
@@ -525,9 +525,16 @@ export function Plot({
     ): uPlot.Options => {
     const s = (value: number) => value * pxScale
     const line = (value: number) => Math.max(1, value * pxScale)
+    // uPlot 의 눈금 간격·띠 두께는 CSS 픽셀이라 배수를 곱해야 한다.  안 하면
+    // 저장한 그림의 눈금만 세 배로 촘촘해진다 (`lib/pngsave: AXIS_PX`).
+    //
+    // 저장할 때는 한 번 더 성기게 한다 (`PNG_TICK_ROOM`).  화면은 커서를 올려
+    // 값을 읽을 수 있지만 종이에는 커서가 없다 — 눈금이 촘촘하면 읽히는 것이
+    // 아니라 안 읽힌다.
+    const still = frozen !== undefined
+    const px = axisPx(pxScale, still ? PNG_TICK_ROOM : undefined)
     const axisFont = scaleFont(AXIS_FONT, pxScale)
     const labelFont = scaleFont(LABEL_FONT, pxScale)
-    const still = frozen !== undefined
     return {
       width: Math.round(width * pxScale),
       height: Math.round(height * pxScale),
@@ -604,6 +611,8 @@ export function Plot({
           label: xLabel,
           labelSize: s(28),
           labelGap: s(4),
+          space: px.xSpace,
+          size: px.xSize,
           stroke: text,
           ...(xSplits
             ? { splits: (_u: uPlot, _i: number, min: number, max: number) =>
@@ -623,12 +632,13 @@ export function Plot({
           label: yLabel,
           labelSize: s(40),
           labelGap: s(4),
+          space: px.ySpace,
           stroke: text,
           grid: { stroke: grid, width: line(1), dash: [line(1), line(3)] },
           ticks: { stroke: grid, width: line(1), size: s(4) },
           font: axisFont,
           labelFont,
-          size: s(58),
+          size: px.ySize,
           gap: s(4),
         },
       ],
