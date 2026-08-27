@@ -1178,7 +1178,15 @@ tr.row-dim{opacity:.62}
 .dn-text{white-space:pre-wrap;word-break:break-word}
 .dn-in{width:100%;box-sizing:border-box;font:inherit;font-size:.76rem;
   border:1px solid var(--border);border-radius:6px;padding:6px 7px;background:var(--surface);
-  color:inherit;resize:vertical}
+  color:inherit;resize:vertical;min-height:4.6em;overflow-y:auto;line-height:1.5}
+/* 고칠 때는 카드가 **왼쪽으로 넓어진다** (1저자 2026-08-27: "수정할 때 창이 작아져서 불편해").
+   여백 칸이 288px 이라 다섯 줄짜리 메모가 세 줄 상자에 눌렸다 — 읽을 때보다 덜 보였다.
+   본문 위로 잠깐 덮는 형태다(z-index:3 은 이미 있다). 칸이 아래로 접히는 좁은 화면에서는
+   덮을 곳이 없으므로 넓히지 않는다. */
+@media(min-width:1101px){
+  .dn-card.dn-editing{left:-300px;box-shadow:0 14px 38px rgba(16,24,40,.24)}
+  .dn-draft{left:-300px;box-shadow:0 14px 38px rgba(16,24,40,.24)}
+}
 .dn-act{display:flex;justify-content:flex-end;margin-top:6px}
 /* 메모 글 안의 인라인 서식 (Ctrl+B / Ctrl+H) */
 .dn-text b{font-weight:700}

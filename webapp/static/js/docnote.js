@@ -52,6 +52,18 @@
       .replace(/==([^=\n]+)==/g, '<mark class="dn-penmk">$1</mark>');
   }
 
+  /* 입력창을 내용에 맞춰 늘린다 (1저자 2026-08-27: "수정할 때 창이 작아져서 불편해").
+   * 카드에 보이던 글이 rows=3 상자로 눌려서, 고치려고 열면 오히려 **덜 보였다** —
+   * 읽을 때보다 고칠 때 더 안 보이는 건 거꾸로다.
+   * 화면 높이의 55 % 를 넘지는 않는다 (그 위로는 상자 안에서 스크롤한다).
+   * ⚠ 높이가 바뀌면 여백 카드 배치가 어긋나므로 **layout() 을 같이 부른다.** */
+  function autosize(ta) {
+    if (!ta) return;
+    ta.style.height = "auto";
+    var max = Math.round((global.innerHeight || 800) * 0.55);
+    ta.style.height = Math.min(ta.scrollHeight + 2, max) + "px";
+  }
+
   /* textarea 선택 영역을 표시로 감싼다/벗긴다 (Ctrl+B). 선택이 없으면 커서 자리에
    * 빈 표시를 넣고 그 안으로 커서를 옮긴다 — 워드에서 굵게를 먼저 켜는 것과 같다. */
   function wrapSel(ta, mk) {
@@ -164,6 +176,7 @@
       '<button type="button" class="btn sm dn-save">저장</button></div>';
     var ta = box.querySelector(".dn-in");
     ta.value = nt ? nt.text : "";
+    autosize(ta);
     layout();
     ta.focus();
     ta.setSelectionRange(ta.value.length, ta.value.length);
@@ -455,6 +468,7 @@
     cur.gut.appendChild(d);
     layout();
     var ta = d.querySelector(".dn-in");
+    autosize(ta);
     ta.focus();
     d.scrollIntoView({ block: "nearest" });
   }
@@ -596,6 +610,12 @@
     }
     if (editing()) { e.stopPropagation(); e.preventDefault(); closeEdit(); }
   }, true);
+
+  document.addEventListener("input", function (e) {
+    if (!cur) return;
+    var ta = e.target.closest && e.target.closest(".dn-in");
+    if (ta) { autosize(ta); layout(); }
+  });
 
   document.addEventListener("keydown", function (e) {
     if (!cur) return;

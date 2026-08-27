@@ -17,6 +17,9 @@ import path from "node:path";
 
 const ROOT = path.resolve(new URL(".", import.meta.url).pathname, "../..");
 const JS = path.join(ROOT, "webapp/static/js/docnote.js");
+// ⚠ CSS 도 같이 물린다. 안 물리면 `.dn-card` 가 static 으로 놓여서 **자리·크기 검사가
+//   아무것도 재지 않는다** — 통과해도 보증이 없다 (2026-08-27 자체 발견).
+const CSS = path.join(ROOT, "webapp/static/css/style.css");
 
 let chromium;
 try {
@@ -43,28 +46,42 @@ const HL = [
   { id: "h5", text: "첫 문단 끝 두 번째 문단 시작", color: "yellow", at: "2026-08-27" },
 ];
 
+// 실제 모달과 같은 격자(본문 | 288px 여백칸)를 흉내 낸다 — 그래야 '왼쪽으로 넓어진다' 가
+// 뜻을 갖는다. 클래스 이름은 style.css 의 것을 그대로 쓴다.
 const PAGE = `
+<div id="pmbox" class="dnote-on" style="max-width:1180px;margin:0 auto">
+<div class="modal-head"></div>
 <div id="host"><div id="body" class="doc">
   <p>여기 <em>기울임</em> 이 있고 <span>한 노드 안에 통째로</span> 들어 있는 문단이다. 첫 문단 끝</p>
   <p>두 번째 문단 시작 — <b>굵은 글자</b>를 지나 이어지는 문장 이 있다.</p>
   <ul><li>지금까지는 Li<sub>6</sub>PS<sub>5</sub>Cl 과 <b>LGPS</b> 에 <em>치환/도핑</em>만 해 왔다 → 끝</li></ul>
-</div></div>`;
+</div></div></div>`;
 
 const b = await chromium.launch({ executablePath: EXE });
 const pg = await b.newPage();
 await pg.setContent(`<!doctype html><meta charset="utf-8">${PAGE}`);
-await pg.evaluate((hl) => {
+const NOTE = {
+  id: "n1", at: "2026-08-27 23:06", anchor: "한 노드 안에 통째로",
+  text: "초록 (p.47381 전폭)\n\nmore distorted — dead volume / packing ratio (α):\n"
+      + "결정 안에 공간은 있는데 중심 양이온(Si⁴⁺ 등)의 정전기 반발 때문에\n"
+      + "Li 가 못 들어가는 죽은 공간. **굵게** 도 된다.",
+};
+await pg.evaluate(({ hl, note }) => {
   window.__calls = [];
   window.fetch = function (url, opt) {
     window.__calls.push([url, opt && opt.method]);
-    const items = String(url).includes("/api/highlights/") ? hl : [];
-    return Promise.resolve({ ok: true, json: () => Promise.resolve({ items }) });
+    const hi = String(url).includes("/api/highlights/");
+    return Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ items: hi ? hl : [note] }),
+    });
   };
-}, HL);
+}, { hl: HL, note: NOTE });
+await pg.addStyleTag({ path: CSS });
 await pg.addScriptTag({ path: JS });
 await pg.evaluate(() =>
   window.mountDocNotes(document.getElementById("body"), "kb/x.md",
-                       document.getElementById("host")));
+                       document.getElementById("pmbox")));
 await pg.waitForFunction(() => document.querySelectorAll("mark.dn-pen").length > 0,
                          null, { timeout: 5000 }).catch(() => {});
 
@@ -110,6 +127,36 @@ const dbl = await pg.evaluate(() => {
   return document.querySelectorAll("mark.dn-pen mark.dn-pen").length;
 });
 chk(dbl === 0, "[형광] 형광펜 안에 형광펜이 겹쳐 들어가지 않는다");
+
+// ── 고치기 상자가 내용에 맞춰 커지는가 (1저자 2026-08-27 "수정할 때 창이 작아져서 불편해")
+await pg.setViewportSize({ width: 1400, height: 900 });
+const box = await pg.evaluate(() => {
+  const card = document.querySelector(".dn-card");
+  if (!card) return { err: "메모 카드가 없다" };
+  const shown = card.querySelector(".dn-text").getBoundingClientRect().height;
+  card.querySelector(".dn-edit").click();
+  const ta = card.querySelector(".dn-in");
+  if (!ta) return { err: "입력창이 안 열렸다" };
+  const r = ta.getBoundingClientRect();
+  const before = { h: r.height, w: r.width, scroll: ta.scrollHeight,
+                   cardLeft: card.getBoundingClientRect().left, shown: shown };
+  ta.value += "\n덧붙이는 줄 1\n덧붙이는 줄 2\n덧붙이는 줄 3";
+  ta.dispatchEvent(new Event("input", { bubbles: true }));
+  return Object.assign(before, { after: ta.getBoundingClientRect().height });
+});
+chk(!box.err, `[고치기] 입력창이 열린다 ${box.err || ""}`);
+if (!box.err) {
+  chk(box.h + 2 >= box.scroll,
+      `[고치기·실측회귀] 상자가 **내용을 다 담는다** (높이 ${Math.round(box.h)} ≥ 내용 ${box.scroll})`);
+  chk(box.h > 60, `[고치기] rows=3 (약 46px) 보다 크다 (${Math.round(box.h)}px)`);
+  chk(box.after > box.h + 20,
+      `[고치기] 줄을 더 치면 더 커진다 (${Math.round(box.h)} → ${Math.round(box.after)}px)`);
+  // 여백칸은 288px 이고 카드는 좌우 10px 안쪽이라 평소 입력창은 ~250px 다.
+  //   고칠 때는 본문 위로 왼쪽으로 넓어져야 한다.
+  chk(box.w > 400,
+      `[고치기] 고칠 때 입력창이 여백칸(≈250px)보다 넓어진다 (${Math.round(box.w)}px, `
+      + `카드 left ${Math.round(box.cardLeft)}px)`);
+}
 
 await b.close();
 console.log(ok ? "docnote paint PASS" : "docnote paint FAIL");
