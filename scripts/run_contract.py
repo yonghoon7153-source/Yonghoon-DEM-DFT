@@ -131,6 +131,11 @@ CLI_ACCOUNTING = {
     # ── numeric (수치 방법.  해에 영향은 있으나 규약은 아니다) ──────────────
     '--step3-gpu': ('numeric', None), '--step3-amg': ('numeric', None),
     '--step3-maxiter': ('numeric', None),
+    #  ★ `--step3-require-gpu` = **numeric** 이다 (규약 아님) — backend 는 σ 를 안 바꾼다
+    #    (같은 행렬·같은 rtol).  이 플래그는 GPU 가 죽었을 때 CPU 폴백을 **금지**해 거부될
+    #    계산을 미리 멈출 뿐이고, 성공한 런의 결과는 플래그 유무에 무관하게 동일하다.
+    #    ⇒ 규약 해시에 들어가면 안 된다 (넣으면 같은 물리가 두 규약으로 갈린다).
+    '--step3-require-gpu': ('numeric', None),
     # ── solve (σ_e/σ_ion 밖 채널) ───────────────────────────────────────────
     '--k-carbon': ('solve', None),        # thermal k 표 (`_s3.thermal_k_table`)
     '--i0-a-m2': ('solve', None),         # STEP4 교환전류 (σ_e 를 다시 풀지 않는다)

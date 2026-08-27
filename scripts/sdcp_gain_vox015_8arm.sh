@@ -90,6 +90,15 @@ if [ "${SDCP_YIELD_VGCF:-0}" = "1" ]; then
   YV_FLAG=" --step3-sdcp-yield-to-vgcf"; YV_TAG="_yvgcf"
   echo "[p2] ★ **진단 팔** — SDCP 가 VGCF 셀에 양보 (σ-치환 채널 OFF).  생산 규약 아님"
 fi
+# ── ★ GPU 폴백 fail-closed (2026-08-26, kgy 실측 사고) ────────────────────────────
+#   `EXPECT_BACKEND=gpu` (기본) 로 봉인하는 런에서 GPU OOM 이 나면 STEP3 는 **조용히
+#   CPU 로 내려가** 수 시간을 풀고, 그 결과는 `sr01_stamp_compare --expect-backend` 가
+#   **반드시 거부**한다 = 계산을 다 하고 버린다.  실측: vox 0.15 arm 15 에서 1 시간 낭비
+#   (다른 프로세스가 GPU 를 물고 있었고, 그것이 끝난 뒤에도 폴백은 되돌릴 수 없다 —
+#   backend 는 솔브 진입 시 한 번 정해진다).  ⇒ 기대가 gpu 면 폴백을 **막는다**.
+#   ⚠ `EXPECT_BACKEND=cpu` 로 돌리는 런은 영향 없음 (폴백이 정상 경로다).
+RQG_FLAG=""
+[ "${EXPECT_BACKEND:-gpu}" = "gpu" ] && RQG_FLAG=" --step3-require-gpu"
 #  ★ PTFE 스탬프 감도 팔 (2026-08-18, CL-49 · CL-46 편차 검증) — **생산 규약이 아니다.**
 #    `SIGMA_PTFE=1e-16` 이면 payload 가 phase-4 점을 격자에 찍는다 (`_cond_ph` 게이트).
 #    PTFE 는 상 루프에서 VGCF·SDCP **뒤**라 그 셀을 덮는다 = 탄소망을 실제로 끊는다.
@@ -453,7 +462,7 @@ PY
   local SHF="$RUN/${TAG}.$$.sh"
   ( cd "$RUN" && P2_SCR="$SCR" python3 "$SCR/sr01_stamp_compare.py" \
       --extract-payload "$KIT/run_mpm.sh" --stamp "$FIBRE_STAMP" \
-      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
+      --extra-flags "--sigma-vgcf $SIGMA --step3-vox $VOX --step3-bridge-um $BRIDGE_UM --step3-origin-shift $SH$SD_FLAG$YV_FLAG$PT_FLAG$PS_FLAG$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG$LEAN_FLAGS${P2_EXTRA:+ $P2_EXTRA}" \
       --tag "$TAG" --out-name "$(basename "$OUT")" > "$SHF.body" ) || return 1
   { echo 'set -uo pipefail'; echo "KIT=\"$KIT\""; echo "SCR=\"$SCR\"";
     #  ★ R4-CX-03 — `:+` 는 값 `0` 도 nonempty 라 켰다.  `= 1` 만 켠다.

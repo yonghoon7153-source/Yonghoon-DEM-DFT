@@ -982,6 +982,19 @@ def runner_extra_flags(env, runner=None):
              #    그 죽음이 L_LEANDEFAULT('None') 같은 엉뚱한 오류로 위장된다 (실측).
              'SBRG_FLAG=',
              'LEAN_FLAGS=', 'P2_EXTRA=', 'XP_FLAG=']
+    #  ★★★ 2026-08-27 — **손으로 유지하는 seed 목록은 이 부류를 두 번 놓쳤다**
+    #    (`SBRG_FLAG` 2026-08-25 · `RQG_FLAG` 오늘).  조립 줄에 새 변수를 넣을 때마다
+    #    여기를 같이 고쳐야 하는데, 안 고치면 `set -u` 프로브가 통째로 죽고 그 죽음이
+    #    **엉뚱한 오류로 위장**된다 (실측: L_LEANDEFAULT('None') · L_EXPECT 빈 문자열).
+    #    ⇒ 리포의 반복 교훈 그대로 **목록을 다시 적지 않는다**: 조립 줄이 참조하는 변수 중
+    #    **러너가 실제로 대입하는 것**만 자동으로 빈 값 seed 한다.
+    #    ⚠ "러너가 대입한다" 는 조건이 오타 검출력을 지킨다 — 러너에 없는 이름은 그대로
+    #    unbound 로 죽어 프로브가 **소리 내어** 실패한다 (자동 seed 가 오타를 덮지 않는다).
+    _seeded = {x.split('=', 1)[0] for x in _seed}
+    _assigned = set(re.findall(r'^\s*(?:local\s+)?([A-Z][A-Z0-9_]*)=', '\n'.join(lines), re.M))
+    for _v in sorted(set(re.findall(r'\$\{?([A-Z][A-Z0-9_]*)', _lit + ' '.join(_ep + _xp)))):
+        if _v not in _seeded and _v in _assigned:
+            _seed.append(f'{_v}=')
     probe = '\n'.join(['set -u', *_seed, *_ep, *_xp,
                         'printf "%s\\n" "' + _lit + '"'])
     _env = _hermetic_env(env)
@@ -2229,6 +2242,13 @@ def _selftest():
     import tempfile as _tl, shutil as _sl
     _RSRC = open(os.path.join(ROOT, L_RUNNER), encoding='utf-8').read()
 
+    #  ── ★ 프로브 자동 seed (2026-08-27) — 두 축을 **따로** 시험한다 ─────────────────
+    #    이 부류가 두 번 났다 (`SBRG_FLAG` · `RQG_FLAG`): 조립 줄에 변수를 넣고 seed 를
+    #    안 고치면 `set -u` 프로브가 죽고, 그 죽음이 엉뚱한 오류로 위장된다.
+    #    ⓐ 러너가 **대입하는** 새 변수는 자동 seed 되어 통과해야 한다 (재발 방지)
+    #    ⓑ 러너에 **없는** 이름(오타)은 여전히 죽어야 한다 (자동 seed 가 오타를 덮으면
+    #       이 수정이 검출력을 판 것이다 — 실제로 확인한다)
+
     #  ★★ 변이 러너 파일명은 **프로세스-고유**여야 한다 (2026-08-25 실측 사고):
     #    고정 이름 `mutant_runner.sh` 를 쓰던 시절, 이 selftest 두 인스턴스가 같은 리포에서
     #    **동시에** 돌자 서로의 변이체를 읽고 지워 L-11 이 `(0건)` 오탐 FAIL — check_all 과
@@ -2259,13 +2279,21 @@ def _selftest():
             return check_runner_integration(verbose=False, runner=_rel)[0]
         finally:
             os.remove(_abs)
+    _m0a = _rmut('$SBRG_FLAG$RQG_FLAG', '$SBRG_FLAG$RQG_FLAG$NEWAXIS_FLAG')
+    _seed_ok = any('NEWAXIS_FLAG' in str(x) for x in _m0a)
+    chk(f'L-1b: ★ 러너에 **없는** 변수를 조립 줄에 넣으면 프로브가 죽는다 (오타 검출력 '
+        f'유지 — 자동 seed 가 덮지 않는다)', _seed_ok)
+    _src_new = _RSRC.replace('RQG_FLAG=""', 'RQG_FLAG=""\nNEWAXIS_FLAG=""', 1).replace(
+        '$SBRG_FLAG$RQG_FLAG', '$SBRG_FLAG$RQG_FLAG$NEWAXIS_FLAG', 1)
+    chk('L-1c: ★★ 러너가 **대입하는** 새 축은 seed 목록을 안 고쳐도 통과한다 '
+        '(SBRG·RQG 에서 두 번 난 부류의 재발 방지)', _rmut_src(_src_new) == [])
     _m1 = _rmut('LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore --no-collector"',
                 'LEAN_FLAGS=" --no-step4 --no-thermal --no-trackb --no-field --no-ion --no-pore"')
     chk(f'L-2: ★ LEAN=2 에서 `--no-collector` 를 빼면 **잡는다** ({len(_m1)}건)',
         any(x.startswith('L_LEAN2') and 'no-collector' in x for x in _m1))
     #  ⚠ 조립 문자열에 SBRG_FLAG(SDCP_BRIDGE 축, 2026-08-25)가 끼면서 리터럴 갱신 —
     #    변이의 **의도는 불변**(EP_FLAG 를 빼도 검사기가 무는가)
-    _m2 = _rmut('$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$XP_FLAG$FS_FLAG')
+    _m2 = _rmut('$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$RQG_FLAG$XP_FLAG$FS_FLAG')
     chk(f'L-3: ★★ `$EP_FLAG` 를 인자열에서 빼면 **잡는다** — 변수는 그대로 있고 '
         f'**쓰이지 않을 뿐**이라 grep 으로는 안 보인다 ({len(_m2)}건)',
         any(x.startswith('L_EXPECT') for x in _m2))
@@ -2391,7 +2419,7 @@ def _selftest():
     chk(f'L-11: ★★ `P2_EXTRA` 금지 검사를 무력화하면 **잡는다** — 주의 주석은 게이트가 '
         f'아니다 ({len(_m11)}건)',
         any(x.startswith('L_P2EXTRA') for x in _m11))
-    _m7 = _rmut('$SBRG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$EP_FLAG$FS_FLAG')
+    _m7 = _rmut('$SBRG_FLAG$RQG_FLAG$EP_FLAG$XP_FLAG$FS_FLAG', '$SBRG_FLAG$RQG_FLAG$EP_FLAG$FS_FLAG')
     chk(f'L-8: ★★ 러너 자기설정 선언(`$XP_FLAG`)이 인자열에서 빠지면 **잡는다** — '
         f'첫 팔의 id 를 베끼면 첫 팔이 진리가 된다 (조건 4) ({len(_m7)}건)',
         any(x.startswith('L_EXPECTPHYS') for x in _m7))

@@ -913,6 +913,13 @@ def main():
     ap.add_argument('--step3-gpu', action='store_true',
                     help='run the STEP3 Kirchhoff CG on GPU (CuPy cuSPARSE) — ~10-50× faster, esp. fine '
                          'vox; auto-falls back to scipy CPU if CuPy/CUDA missing (same σ either way).')
+    ap.add_argument('--step3-require-gpu', action='store_true',
+                    help='★ GPU 폴백을 **막는다** (fail-closed).  `EXPECT_BACKEND=gpu` 로 봉인된 '
+                         '런에서 GPU OOM 이 나면 STEP3 는 조용히 CPU 로 내려가 수 시간을 푸는데, '
+                         '그 결과는 backend 봉인(`sr01_stamp_compare` --expect-backend)이 **반드시 '
+                         '거부**한다 = 계산을 다 하고 버린다.  이 플래그는 폴백 순간 중단해 자원을 '
+                         '아끼고 원인을 즉시 드러낸다.  ⚠ 기본 off (웹앱·CPU 환경은 폴백이 정상 '
+                         '경로).  2026-08-26 kgy 실측(vox 0.15 arm 15 에서 1 h 낭비) 대응.')
     ap.add_argument('--step3-maxiter', type=int, default=0,
                     help='STEP3 CG 최대 반복 (기본 0 = 코드 기본 30000 유지).  조건수가 나쁜 '
                          '진단 팔(예: --sigma-vgcf 7854 → σ 대비 785,400x)이 rtol 1e-8 에 '
@@ -1378,6 +1385,7 @@ def main():
             import time as _time
             import step3_sigma as _s3
             _s3.GPU_SOLVE = a.step3_gpu                     # CuPy CG backend (auto CPU fallback)
+            _s3.REQUIRE_GPU = bool(getattr(a, 'step3_require_gpu', False))   # 폴백 fail-closed
             _s3.AMG_SOLVE = a.step3_amg                     # SR-03: CPU 전처리 (기본 OFF=Jacobi)
             _t0 = _time.time()
             _off = np.array([SW[0], SW[0], FLOOR])

@@ -271,6 +271,16 @@ MUTANTS = [
      "        if not dirty:\n            un = _sp.run(['git', '-C', script_dir, 'ls-files', '--others',\n                          '--exclude-standard', '--', script_dir],\n                         capture_output=True, text=True, timeout=20)\n            dirty = bool((un.stdout or '').strip())            # scripts/ 안 untracked = shadowing 위험\n",
      "",
      RC, ('RCPT-sha-shadow',)),
+    #  ── GPU 폴백 fail-closed (kgy 실측: 거부될 CPU 결과를 몇 시간 계산) ─────────────
+    ('폴백 가드 제거 (선언해도 조용히 CPU 로 내려간다)', 'step3_sigma.py',
+     "            if REQUIRE_GPU:",
+     "            if False:",
+     STEP3, ('require-gpu',)),
+    ('폴백 가드를 GPU 미요청에도 물게 (과잉차단 — CPU 전용 환경을 막는다)', 'step3_sigma.py',
+     "\nREQUIRE_GPU = False\n",
+     "\nREQUIRE_GPU = True\n",
+     #  기본이 True 면 ⓒ(GPU 미요청 무해)는 그대로지만 ⓐ(폴백 허용 팔)가 중단된다.
+     STEP3, ('require-gpu',)),
     ('R5-CX-05 미등록 component 조용한 통과 복원', 'run_contract.py',
      "            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",
      "            continue\n        if False:\n            return False, (f'EVID|{comp}|unregistered| 이 component 의 증거 계약이 ",

@@ -123,6 +123,17 @@ SID_NAME = {1: 'AM_S', 2: 'AM_P', 3: 'VGCF', 4: 'SuperP', 5: 'SDCP', 6: 'SE', 7:
 # CuPy/CUDA is unavailable, so it is always safe to leave on.
 GPU_SOLVE = False
 
+#: ★★ GPU 폴백을 **막을** 것인가 (2026-08-26, kgy 실측 사고) — `--step3-require-gpu`.
+#   왜: `EXPECT_BACKEND=gpu` 를 선언한 런에서 GPU OOM 이 나면 이 파일은 **조용히 CPU 로
+#   내려가** 26.5 M dof 를 몇 시간 푼다.  그런데 그 결과는 `sr01_stamp_compare.py:307`
+#   (`backend 가 cpu 인데 지금 돌면 gpu — 두 팔이 갈린다`) 이 **반드시 거부**한다.
+#   ⇒ 계산을 다 하고 버리는 것이 확정된 경로다.  실측: vox 0.15 arm 15 에서 1 시간 낭비
+#   (다른 프로세스가 GPU 를 물고 있었고, 그것이 끝난 뒤에도 이 프로세스는 못 돌아온다 —
+#   폴백은 솔브 진입 시 한 번 정해진다).  a2/a4 는 dof 1.7배라 더 크게 당할 자리다.
+#   ⇒ 선언한 런에서는 **폴백 순간 즉시 중단**해 자원을 아끼고 원인을 즉시 드러낸다.
+#   ⚠ 기본 False = 현행 거동 (웹앱·CPU 전용 환경은 폴백이 정상 경로다).
+REQUIRE_GPU = False
+
 # ── SR-03: CPU CG 전처리 (기본 OFF = 현행 Jacobi 경로와 **bitwise 동일**) ─────────────────
 #   합성 침대 실측 (전자 채널 σ 대비 1e5, rtol 1e-8, scripts/sr03_precond_bench.py — STEP3 의
 #   **실제** solve_sigma_z 를 돌리며 전처리만 교체해 σ_eff 까지 비교):
@@ -218,6 +229,15 @@ def _solve_cg(L, b):
             return cp.asnumpy(xg), int(info)
         except Exception as _e:
             LAST_BACKEND['fallback_reason'] = f'{type(_e).__name__}: {_e}'
+            if REQUIRE_GPU:
+                #  fail-closed — 폴백 결과는 backend 봉인이 어차피 거부한다 (sr01:307).
+                #  몇 시간 CPU 를 태우고 버리는 대신 **지금** 멈춘다.
+                raise SystemExit(
+                    f'STEP3 ABORT — GPU 솔브 실패인데 `--step3-require-gpu` 다: '
+                    f'{type(_e).__name__}: {_e}\n'
+                    f'     CPU 폴백은 backend 봉인(expect gpu)이 거부하므로 계산을 버리게 된다.\n'
+                    f'     조치: GPU 를 비우고(nvidia-smi 로 점유 PID 확인) 같은 명령으로 재개하면 '
+                    f'끝난 팔은 SKIP 되고 이 팔만 다시 돈다.')
             print(f'    STEP3 GPU solve unavailable ({type(_e).__name__}: {_e}) → CPU fallback', flush=True)
     LAST_BACKEND['used'] = 'cpu'
     Minv = _amg_M(L) if AMG_SOLVE else None                # SR-03 opt-in; None → 현행 Jacobi
@@ -2002,6 +2022,38 @@ def _selftest():
     ok &= _e5f
     print(f"ptfe-block-ion-drop: σ_ion {_rQ['sigma_eff']:.4f} → {_rB['sigma_eff']:.4f} "
           f"(차단이 솔브까지 관통)  {'OK' if _e5f else 'FAIL'}")
+    #  ── ★ GPU 폴백 fail-closed (`REQUIRE_GPU`, 2026-08-26) ─────────────────────────
+    #    이 환경엔 CuPy 가 없으므로 `GPU_SOLVE=True` 면 import 가 실패해 **폴백 경로가
+    #    실제로 실행된다** = 가드를 진짜로 시험할 수 있다 (모의가 아니다).
+    global GPU_SOLVE, REQUIRE_GPU
+    _g0, _r0 = GPU_SOLVE, REQUIRE_GPU
+    _La = sparse.diags([2.0, 2.0]).tocsr(); _ba = np.array([1.0, 1.0])
+    try:
+        GPU_SOLVE, REQUIRE_GPU = True, False
+        _x, _i = _solve_cg(_La, _ba)                    # 폴백 허용 → CPU 로 푼다
+        _e6a = (LAST_BACKEND['used'] == 'cpu' and LAST_BACKEND['fallback_reason'] is not None
+                and np.allclose(_x, 0.5))
+        GPU_SOLVE, REQUIRE_GPU = True, True
+        try:
+            _solve_cg(_La, _ba)                         # 폴백 금지 → 즉시 중단해야 한다
+            _e6b = False
+        except SystemExit as _se:
+            _e6b = 'require-gpu' in str(_se) or 'GPU' in str(_se)
+        GPU_SOLVE, REQUIRE_GPU = False, True
+        _x2, _ = _solve_cg(_La, _ba)                    # GPU 미요청이면 가드가 안 문다
+        _e6c = np.allclose(_x2, 0.5)
+    finally:
+        GPU_SOLVE, REQUIRE_GPU = _g0, _r0
+    #  ★★ 기본값 계약 — 세 하위시험이 값을 **명시로** 덮으므로 기본값 경로를 안 지난다
+    #    (브리지 `sdcp-bridge-zero-is-off` 와 같은 부류: 배터리가 잡았다).  ⇒ 직접 단언한다.
+    #    `_r0` 는 selftest 진입 시점 값 = 모듈 기본값 (그 전에 아무도 안 바꾼다).
+    _e6d = (_r0 is False)
+    _all6 = _e6a and _e6b and _e6c and _e6d
+    ok &= _all6
+    print(f"require-gpu: 폴백 허용 시 CPU 로 푼다 ({_e6a}) · **금지 시 즉시 중단** ({_e6b}) · "
+          f"GPU 미요청이면 무해 ({_e6c}) · **기본 = 폴백 허용** ({_e6d}, 웹앱·CPU 환경 불변)  "
+          f"{'OK' if _all6 else 'FAIL'}")
+
     #  ⓗ 주기 wrap (펠릿 RVE 전용) — x 경계의 PTFE 가 **반대편 끝** SE 를 wrap 거리로
     #    차단한다.  비주기에서는 같은 배치가 (실거리 > 반경이라) 아무것도 안 바꾼다.
     _wp = np.full((8, 4, 4), 6, np.int8); _wp[0, 1, 1] = 7
