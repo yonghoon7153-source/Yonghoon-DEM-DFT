@@ -282,6 +282,43 @@ describe('Dashboard capacity column', () => {
   })
 })
 
+describe('Dashboard 유지율 그림', () => {
+  function installRows(rows: unknown[]) {
+    installFetch((url) => {
+      if (path(url) === '/api/groups') return []
+      if (path(url) === '/api/dashboard') {
+        return { basis: 'mAh/g', basis_label: 'mAh g⁻¹', rows }
+      }
+      return []
+    })
+    render(<MemoryRouter><Dashboard /></MemoryRouter>)
+  }
+
+  it('셀이 하나뿐이어도 그린다 — 그룹을 좁혀 하나만 남기는 것이 가장 흔하다',
+     async () => {
+    installRows([dashboardRow({ sample_id: 1, sample_name: 'A' })])
+    // 제목도 하나에 맞춘다 -- 곡선 하나를 "겹쳐보기" 라 부르면 뭔가 빠진 것처럼
+    // 읽힌다.
+    expect(await screen.findByText('용량 유지율')).toBeInTheDocument()
+    expect(screen.queryByText('용량 유지율 겹쳐보기')).toBeNull()
+  })
+
+  it('둘 이상이면 겹쳐보기다', async () => {
+    installRows([
+      dashboardRow({ sample_id: 1, sample_name: 'A' }),
+      dashboardRow({ sample_id: 2, sample_name: 'B' }),
+    ])
+    expect(await screen.findByText('용량 유지율 겹쳐보기')).toBeInTheDocument()
+  })
+
+  it('그릴 것이 없으면 안 그린다 — 빈 그래프는 고장처럼 보인다', async () => {
+    // 추세가 한 점뿐이면 곡선이 아니다.
+    installRows([dashboardRow({ sample_id: 1, sample_name: 'A', trend: [100] })])
+    await screen.findByRole('link', { name: 'A' })
+    expect(screen.queryByText(/용량 유지율/)).toBeNull()
+  })
+})
+
 // -- compare ---------------------------------------------------------------
 
 describe('비교 · dQ/dV 와 dV/dQ', () => {
